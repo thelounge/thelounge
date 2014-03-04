@@ -24,7 +24,7 @@ function Client() {
 		.on("init", function(data) { self.init(data); });
 
 	/**
-	 * Setup new socket connections.
+	 * Set up new socket connections.
 	 *
 	 * @param {String} data
 	 * @public
