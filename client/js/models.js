@@ -1,7 +1,7 @@
 (function(exports) {
 	
 	/**
-	 * Declare the namespaces.
+	 * Declare the namespace.
 	 *
 	 * @namespace
 	 */
@@ -137,6 +137,55 @@
 		 */
 
 		 this.user = "";
+	};
+
+	/**
+	 * Event model.
+	 *
+	 * Used when pushing changes between the server
+	 * and the clients.
+	 *
+	 * @public
+	 */
+
+	models.Event = function() {
+
+		/**
+		 * Action to perform.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+
+		this.action = "";
+
+		/**
+		 * Model type.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+
+		this.type = "";
+
+		/**
+		 * The target network or channel.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+
+		this.target = undefined;
+
+		/**
+		 * The data.
+		 *
+		 * @type {Int|String|Object}
+		 * @public
+		 */
+
+		this.data = "";
+
 	};
 
 })(this);

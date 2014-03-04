@@ -1,6 +1,6 @@
 var argv = require("commander")
 	.option("-p, --port <n>", "port to use", parseInt)
-	.parse(process.argv);
+		.parse(process.argv);
 
 PORT = 80; // Default port.
 if (argv.port) {

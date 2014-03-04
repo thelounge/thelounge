@@ -1,5 +1,5 @@
 /**
- * The Client class
+ * The Client class.
  *
  * @public
  */
@@ -7,32 +7,54 @@
 function Client() {
 
 	/**
-	 * Self references.
+	 * Self reference.
 	 *
 	 * @private
 	 */
 	
 	var self = this;
+
+	/**
+	 * List of networks.
+	 *
+	 * @type {Array<Network>}
+	 * @public
+	 */
+
+	this.networks = [];
 	
 	/**
 	 * The active socket.
 	 *
-	 * @private
+	 * @type {Socket}
+	 * @public
 	 */
-	
-	var socket = io.connect("")
-		.on("init", function(data) { self.init(data); });
+
+	this.socket;
 
 	/**
-	 * Set up new socket connections.
+	 * Connect to the server via WebSockets and start listening
+	 * to events sent by the server.
 	 *
-	 * @param {String} data
+	 * @param {String} host
 	 * @public
 	 */
 	
-	this.init = function(data) {
-		// Debug
-		console.log(data);
+	this.connect = function(host) {
+		this.socket = io.connect(host)
+			.on("init", function(networks) { self.networks = networks; })
+				.on("event", this.handleEvent);
 	};
 
+	/**
+	 * Handle events sent by the server.
+	 *
+	 * @param {Event} event
+	 * @public
+	 */
+	
+	this.handleEvent = function(event) {
+		// Debug
+		console.log(event);
+	};
 };
