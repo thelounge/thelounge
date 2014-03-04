@@ -1,0 +1,6 @@
+{
+	"dependencies": {
+		"connect": "2.13.0",
+		"commander": "2.1.0"
+	}
+}
