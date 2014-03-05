@@ -36,32 +36,37 @@ function Client() {
 	 * The active socket.
 	 *
 	 * @type {Socket}
-	 * @public
+	 * @private
 	 */
 	
-	this.socket;
+	var socket;
 
 	/**
 	 * List of networks.
 	 *
 	 * @type {Array<Network>}
-	 * @public
+	 * @private
 	 */
 
-	this.networks = [];
+	var networks = [];
 
 	/**
 	 * Initialize new socket connections.
 	 *
-	 * @param {Array<Network>}
+	 * @param {Array<Network>} data
 	 * @public
 	 */
 	
-	this.init = function(networks) {
-		this.networks = networks;
-		this.socket.on("event", self.handleEvent);
-		chat.render(this.networks);
-		sidebar.render(this.networks);
+	this.init = function(data) {
+		networks = data;
+
+		chat.render(data);
+		sidebar.render(data);
+		
+		socket.on(
+			"event",
+			self.handleEvent
+		);
 	};
 
 	/**
@@ -73,7 +78,7 @@ function Client() {
 	 */
 	
 	this.connect = function(host) {
-		this.socket = io.connect(host).on("init", self.init)
+		socket = io.connect(host).on("init", self.init)
 	};
 
 	/**
@@ -87,6 +92,34 @@ function Client() {
 		// Debug
 		console.log(event);
 	};
+	
+	/**
+	 * Set up user events.
+	 *
+	 * @private
+	 */
+	
+	// Handle window focus.
+	sidebar.element.on("click", ".channel", function(e) {
+		e.preventDefault();
+		var target = $(this).data("id");
+		chat.element.find(".window[data-id='" + target + "']")
+			.bringToTop();
+	});
+
+	// Emit events on user input.
+	chat.element.on("submit", "form", function() {
+		var form = $(this);
+		var input = form.find(".input");
+		if (input.val() != "") {
+			var text = input.val();
+			input.val("");
+			socket.emit("input", {
+				target: form.closest(".window").data("id"),
+				text: text
+			});
+		}
+	});
 
 };
 
@@ -117,6 +150,16 @@ views.Sidebar = function() {
 	};
 
 	/**
+	 * This is the target element where we will
+	 * render the view.
+	 *
+	 * @type {jQuery.Object}
+	 * @public
+	 */
+	
+	this.element = $("#sidebar");
+
+	/**
 	 * Render the view.
 	 *
 	 * @param {Array<Network>} networks
@@ -124,9 +167,9 @@ views.Sidebar = function() {
 	 */
 	
 	this.render = function(networks) {
-		$("#sidebar").html(Mustache.render(tpl.networks, {networks: networks}));
+		this.element.html(Mustache.render(tpl.networks, {networks: networks}));
 	};
-	
+
 };
 
 /**
@@ -239,4 +282,18 @@ views.Chat = function() {
 	this.remove = function(id) {
 		this.element.find("[data-id='" + id + "']").remove();
 	};
+
 };
+
+/**
+ * Bring element to top of the z-index stack.
+ *
+ * @public
+ */
+
+(function() {
+	var highest = 1;
+	$.fn.bringToTop = function() {
+		this.css('z-index', highest++);
+	};
+})();

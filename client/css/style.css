@@ -33,8 +33,12 @@ h2 {
 #sidebar .channel {
 	clear: both;
 	color: #f00;
+	cursor: pointer;
 	float: left;
 	margin-left: 20px;
+}
+#sidebar .channel:hover {
+	color: #999;
 }
 #sidebar .network {
 	color: #000;
