@@ -1,13 +1,66 @@
 <!doctype html>
 <html>
-	<head></head>
+	<head>
+	
+	<link rel="stylesheet" href="/css/style.css"/>
+	
+	</head>
 	<body>
 
-	Hello, world.
+	<aside id="sidebar"></aside>
+	<div id="chat"></div>
 
-	<script src="//code.jquery.com/jquery-2.1.0.min.js"></script>
+	<script type="text/html" id="networks">
+	{{#networks}}
+	<div class="network">
+		{{#channels}}
+		<div class="channel {{type}}" data-id="{{id}}">
+			{{name}}
+		</div>
+		{{/channels}}
+	</div>
+	{{/networks}}
+	</script>
+
+	<script type="text/html" id="channels">
+	{{#channels}}
+	<div class="window {{type}}" data-id="{{id}}">
+		<h1 class="title">{{name}}</h1>
+		<div class="users">
+			{{> users}}
+		</div>
+		<div class="messages">
+			{{> messages}}
+		</div>
+		<form onSubmit="return false;">
+			<input type="text"/>
+			<input type="submit" style="display: none;"/>
+		</form>
+	</div>
+	{{/channels}}
+	</script>
+
+	<script type="text/html" id="users">
+	{{#users}}
+	<div class="user" data-id="{{id}}">
+		{{name}}
+	</div>
+	{{/users}}
+	</script>
+
+	<script type="text/html" id="messages">
+	{{#messages}}
+	<div class="message">
+		<span class="time">{{time}}</span>
+		<span class="user">{{user}}</span>
+		{{text}}
+	</div>
+	{{/messages}}
+	</script>
+
 	<script src="/socket.io/socket.io.js"></script>
-
+	<script src="/js/lib/mustache.min.js"></script>
+	<script src="/js/lib/jquery-2.1.0.min.js"></script>
 	<script src="/js/models.js"></script>
 	<script src="/js/client.js"></script>
 

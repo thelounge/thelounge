@@ -11,12 +11,30 @@
 			: window.models = {};
 	
 	/**
+	 * Use this to create unique identifiers.
+	 *
+	 * @type {Int}
+	 * @private
+	 */
+	
+	var id = 0;
+
+	/**
 	 * Network model.
 	 *
 	 * @public
 	 */
 	
 	models.Network = function() {
+		
+		/**
+		 * Unique identifier.
+		 *
+		 * @type {Int}
+		 * @public
+		 */
+
+		this.id = id++;
 		
 		/**
 		 * The network address.
@@ -36,6 +54,15 @@
 
 		this.channels = [];
 
+		/**
+		 * User nickname.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+
+		this.nick = "";
+
 	};
 
 	/**
@@ -47,6 +74,15 @@
 	models.Channel = function() {
 		
 		/**
+		 * Unique identifier.
+		 *
+		 * @type {Int}
+		 * @public
+		 */
+
+		this.id = id++;
+		
+		/**
 		 * The channel name.
 		 *
 		 * @type {String}
@@ -54,6 +90,16 @@
 		 */
 
 		this.name = "";
+		
+		/**
+		 * The channel type.
+		 * This property should be either `network` or `channel`.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		
+		this.type = "channel";
 
 		/**
 		 * The current channel topic.
@@ -91,6 +137,15 @@
 	 */
 	
 	models.User = function() {
+		
+		/**
+		 * Unique identifier.
+		 *
+		 * @type {Int}
+		 * @public
+		 */
+
+		this.id = id++;
 		
 		/**
 		 * The user name.
@@ -171,11 +226,11 @@
 		/**
 		 * The target network or channel.
 		 *
-		 * @type {String}
+		 * @type {Int|String|Object}
 		 * @public
 		 */
 
-		this.target = undefined;
+		this.target = "";
 
 		/**
 		 * The data.
