@@ -20,24 +20,37 @@ $(function() {
 	var View = {};
 
 	View.refresh = function(event) {
-		chat.html("");
-		event.data.forEach(function(network) {
-			chat.append(Mustache.render(channels, network, {
-				users: users,
-				messages: messages
-			}));
-		});
-		chat.find(".messages").scrollToBottom();
+		var data = event.data;
+
 		sidebar.html(
 			Mustache.render(networks, {
-				networks: event.data
+				networks: data
 			})
 		);
+
+		chat.html("");
+		var partials = {
+			users: users,
+			messages: messages
+		};
+		data.forEach(function(network) {
+			chat.append(Mustache.render(channels, network, partials));
+		});
+
+		chat.find(".messages").scrollToBottom();
+		chat.find(".window")
+			// Sort windows by `data-id` value.
+			.sort(function(a, b) { return ($(a).data("id") - $(b).data("id")); })
+			.last()
+			.bringToTop()
+			.find(".input")
+				.focus();
 	};
 
 	View.add = function(event) {
 		var target = "";
 		var render = "";
+
 		switch (event.type) {
 		case "user":
 			target = ".users";
@@ -45,6 +58,7 @@ $(function() {
 				users, {users: event.data}
 			);
 			break;
+
 		case "message":
 			target = ".messages";
 			render = Mustache.render(
@@ -52,6 +66,7 @@ $(function() {
 			);
 			break;
 		}
+
 		if (target != "") {
 			target = $("[data-id='" + event.target + "'] " + target);
 			var keepAtBottom = target.isScrollBottom();
@@ -92,11 +107,11 @@ $(function() {
 (function() {
 	var highest = 1;
 	$.fn.bringToTop = function() {
-		this.css('z-index', highest++);
+		return this.css('z-index', highest++);
 	};
 
 	$.fn.scrollToBottom = function() {
-		this.scrollTop(this.prop("scrollHeight"));
+		return this.scrollTop(this.prop("scrollHeight"));
 	};
 
 	$.fn.isScrollBottom = function() {
