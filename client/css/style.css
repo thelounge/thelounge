@@ -27,22 +27,25 @@ h2 {
 	border-right: 1px solid #ccc;
 	float: left;
 	height: 100%;
-	line-height: 20px;
+	line-height: 36px;
 	width: 199px;
 }
 #sidebar .channel {
-	clear: both;
+	border-bottom: 1px solid transparent;
 	color: #f00;
 	cursor: pointer;
-	float: left;
-	margin-left: 20px;
+	padding: 0 12px;
+}
+#sidebar .channel[data-id='0'] {
+	background: #eaeaea;
+	border-bottom-color: #e5e5e5;
+}
+#sidebar .channel:first-child {
+	color: #333;
+	overflow: hidden;
 }
 #sidebar .channel:hover {
-	color: #999;
-}
-#sidebar .channel.network {
-	margin-top: 10px;
-	overflow: hidden;
+	text-decoration: underline;
 }
 #chat {
 	bottom: 0;

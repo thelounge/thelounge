@@ -3,6 +3,7 @@ $(function() {
 	socket.on(
 		"event",
 		function(event) {
+			console.log(event);
 			View[event.action](event);
 		}
 	);
@@ -18,7 +19,7 @@ $(function() {
 
 	var View = {};
 
-	View.redraw = function(event) {
+	View.refresh = function(event) {
 		if (event.data == undefined || event.data == []) {
 			return;
 		}
