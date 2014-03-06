@@ -115,14 +115,15 @@ h2 {
 	padding: 0px 8px;
 }
 #chat .messages {
+	bottom: 26px;
 	left: 0;
 	overflow-y: auto;
 	padding: 6px 0;
 	position: absolute;
 	right: 160px;
 	top: 36px;
+	word-wrap: break-word;
 	z-index: 0;
-	bottom: 26px;
 }
 #chat .messages .message {
 	padding: 0 8px;

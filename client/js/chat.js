@@ -20,9 +20,6 @@ $(function() {
 	var View = {};
 
 	View.refresh = function(event) {
-		if (event.data == undefined || event.data == []) {
-			return;
-		}
 		chat.html("");
 		event.data.forEach(function(network) {
 			chat.append(Mustache.render(channels, network, {
@@ -30,6 +27,7 @@ $(function() {
 				messages: messages
 			}));
 		});
+		chat.find(".messages").scrollToBottom();
 		sidebar.html(
 			Mustache.render(networks, {
 				networks: event.data
@@ -44,19 +42,23 @@ $(function() {
 		case "user":
 			target = ".users";
 			render = Mustache.render(
-				$("#users").html(), {users: event.data}
+				users, {users: event.data}
 			);
 			break;
 		case "message":
 			target = ".messages";
 			render = Mustache.render(
-				$("#messages").html(), {messages: event.data}
+				messages, {messages: event.data}
 			);
 			break;
 		}
 		if (target != "") {
 			target = $("[data-id='" + event.target + "'] " + target);
+			var keepAtBottom = target.isScrollBottom();
 			target.append(render);
+			if (keepAtBottom) {
+				target.scrollToBottom();
+			}
 		}
 	};
 
@@ -86,9 +88,22 @@ $(function() {
 	});
 });
 
+
 (function() {
 	var highest = 1;
 	$.fn.bringToTop = function() {
 		this.css('z-index', highest++);
+	};
+
+	$.fn.scrollToBottom = function() {
+		this.scrollTop(this.prop("scrollHeight"));
+	};
+
+	$.fn.isScrollBottom = function() {
+		var height = this.outerHeight();
+		var scroll = this.scrollTop();
+		if ((scroll + height + 5) >= this.prop("scrollHeight")) {
+			return true;
+		}
 	};
 })();
