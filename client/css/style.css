@@ -40,8 +40,7 @@ h2 {
 #sidebar .channel:hover {
 	color: #999;
 }
-#sidebar .network {
-	color: #000;
+#sidebar .channel.network {
 	margin-top: 10px;
 	overflow: hidden;
 }

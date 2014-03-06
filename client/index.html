@@ -12,7 +12,7 @@
 
 	<script type="text/html" id="networks">
 	{{#networks}}
-	<div class="network">
+	<div class="network" data-id="{{id}}">
 		{{#channels}}
 		<div class="channel {{type}}" data-id="{{id}}">
 			{{name}}
@@ -33,7 +33,7 @@
 			{{> messages}}
 		</div>
 		<form onSubmit="return false;">
-			<input type="text" class="input"/>
+			<input type="text" class="input" data-target="{{id}}"/>
 			<input type="submit" style="display: none;"/>
 		</form>
 	</div>
@@ -61,13 +61,7 @@
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="/js/lib/mustache.min.js"></script>
 	<script src="/js/lib/jquery-2.1.0.min.js"></script>
-	<script src="/js/models.js"></script>
-	<script src="/js/client.js"></script>
-
-	<script>
-	// Run the client!
-	new Client().connect("");
-	</script>
+	<script src="/js/chat.js"></script>
 
 	</body>
 </html>
