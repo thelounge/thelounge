@@ -1,12 +1,8 @@
 $(function() {
 	var socket = io.connect("");
-	socket.on(
-		"event",
-		function(event) {
-			console.log(event);
-			View[event.action](event);
-		}
-	);
+	socket.on("event", function(event) {
+		render(event);
+	});
 
 	var chat = $("#chat");
 	var sidebar = $("#sidebar");
@@ -17,11 +13,77 @@ $(function() {
 	var messages = $("#messages").html();
 	var users = $("#users").html()
 
+	function render(event) {
+		var type = event.type;
+		var data = event.data;
+		var action = event.action;
+		var target = event.target;
+
+		if (action == "REMOVE") {
+			remove(target);
+			return;
+		}
+		if (target != "") {
+			target = $("[data-id='" + target + "']");
+		}
+
+		switch (type) {
+		
+		case "NETWORK":
+		case "CHANNEL":
+			refresh(data);
+			break;
+
+		case "USER":
+			target = target.find(".users");
+			target.html(Mustache.render(users, {users: event.data}));
+			break;
+		
+		case "MESSAGE":
+			var keepAtBottom = target.isScrollBottom();
+			target = target.find(".messages");
+			target.append(Mustache.render(messages, {messages: event.data}));
+			if (keepAtBottom) {
+				target.scrollToBottom();
+			}
+			break;
+	
+		}
+	}
+
+	function remove(id) {
+		$("[data-id='" + id + "']").remove();
+	}
+
+	function refresh(data) {
+		chat.html("");
+		var partials = {
+			users: users,
+			messages: messages
+		};
+		data.forEach(function(network) {
+			chat.append(Mustache.render(channels, network, partials));
+		});
+		sidebar.html(
+			Mustache.render(networks, {
+				networks: data
+			})
+		);
+
+		chat.find(".messages").scrollToBottom();
+		chat.find(".window")
+			// Sort windows by `data-id` value.
+			.sort(function(a, b) { return ($(a).data("id") - $(b).data("id")); })
+			.last()
+			.bringToTop()
+			.find(".input")
+				.focus();
+	}
+
 	var View = {};
 
 	View.refresh = function(event) {
 		var data = event.data;
-
 		sidebar.html(
 			Mustache.render(networks, {
 				networks: data
@@ -48,41 +110,28 @@ $(function() {
 	};
 
 	View.add = function(event) {
-		var target = "";
-		var render = "";
-
+		var target = $("[data-id='" + event.target + "'] ");
 		switch (event.type) {
-		case "user":
-			target = ".users";
-			render = Mustache.render(
-				users, {users: event.data}
-			);
+
+		case "users":
+			target = target.find(".users");
+			target.html(Mustache.render(users, {users: event.data}));
 			break;
 
-		case "message":
-			target = ".messages";
-			render = Mustache.render(
-				messages, {messages: event.data}
-			);
-			break;
-		}
-
-		if (target != "") {
-			target = $("[data-id='" + event.target + "'] " + target);
+		case "messages":
 			var keepAtBottom = target.isScrollBottom();
-			target.append(render);
+			target = target.find(".messages");
+			target.append(Mustache.render(messages, {messages: event.data}));
 			if (keepAtBottom) {
 				target.scrollToBottom();
 			}
+			break;
+
 		}
 	};
 
 	View.remove = function(event) {
 		$("[data-id='" + event.target + "']").remove();
-	};
-
-	View.change = function(event) {
-		// ..
 	};
 
 	chat.on("submit", "form", function() {
@@ -107,7 +156,10 @@ $(function() {
 (function() {
 	var highest = 1;
 	$.fn.bringToTop = function() {
-		return this.css('z-index', highest++);
+		return this
+			.css('z-index', highest++)
+			.find("input")
+			.focus();
 	};
 
 	$.fn.scrollToBottom = function() {

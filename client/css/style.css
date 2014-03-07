@@ -36,16 +36,16 @@ h2 {
 	cursor: pointer;
 	padding: 0 12px;
 }
-#sidebar .channel[data-id='0'] {
-	background: #eaeaea;
-	border-bottom-color: #e5e5e5;
-}
 #sidebar .channel:first-child {
 	color: #333;
 	overflow: hidden;
 }
 #sidebar .channel:hover {
 	text-decoration: underline;
+}
+#sidebar .network:first-child .channel:first-child {
+	background: #eaeaea;
+	border-bottom-color: #e5e5e5;
 }
 #chat {
 	bottom: 0;
