@@ -31,7 +31,7 @@ $(function() {
 			})
 		);
 
-		chat.find(".messages").sticky();
+		chat.find(".messages").sticky().scrollToBottom();
 		chat.find(".window")
 			// Sort windows by `data-id` value.
 			.sort(function(a, b) { return ($(a).data("id") - $(b).data("id")); })

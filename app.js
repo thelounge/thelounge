@@ -12,6 +12,7 @@ var server =
 		.listen(PORT);
 
 // Temp
+/*
 
 var models = require("./lib/models.js");
 var network = new models.Network({host: "irc.network.org"});
@@ -26,5 +27,6 @@ network.get("channels").add(new models.Channel({
 	users: [
 		new models.User({name: "user"}),
 		new models.User({name: "other_user"}),
-	]
+	]:
 }));
+*/
