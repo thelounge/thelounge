@@ -31,7 +31,7 @@ $(function() {
 			})
 		);
 
-		chat.find(".messages").scrollToBottom();
+		chat.find(".messages").sticky();
 		chat.find(".window")
 			// Sort windows by `data-id` value.
 			.sort(function(a, b) { return ($(a).data("id") - $(b).data("id")); })
@@ -59,8 +59,7 @@ $(function() {
 	});
 });
 
-
-(function() {
+(function($) {
 	var highest = 1;
 	$.fn.bringToTop = function() {
 		return this
@@ -68,16 +67,46 @@ $(function() {
 			.find("input")
 			.focus();
 	};
+})(jQuery);
 
-	$.fn.scrollToBottom = function() {
-		return this.scrollTop(this.prop("scrollHeight"));
+// Sticky plugin
+// https://github.com/erming/sticky
+
+(function($) {
+	var append = $.fn.append;
+	$.fn.append = function() {
+		return append.apply(this, arguments).trigger("append");
 	};
 
-	$.fn.isScrollBottom = function() {
-		var height = this.outerHeight();
-		var scroll = this.scrollTop();
-		if ((scroll + height + 5) >= this.prop("scrollHeight")) {
+	$.fn.sticky = function() {
+		var self = this;
+		if (self.size() > 1) {
+			return self.each(function() {
+				$(this).sticky();
+			});
+		}
+
+		var sticky = false;
+		self.on("scroll", function() {
+			sticky = self.isScrollAtBottom();
+		});
+		self.trigger("scroll");
+		self.on("append", function() {
+			if (sticky) {
+				self.scrollToBottom();
+			}
+		});
+
+		return this;
+	};
+
+	$.fn.scrollToBottom = function() {
+		this.scrollTop(this.prop("scrollHeight"));
+	};
+
+	$.fn.isScrollAtBottom = function() {
+		if ((this.scrollTop() + this.outerHeight()) >= this.prop("scrollHeight")) {
 			return true;
 		}
 	};
-})();
+})(jQuery);
