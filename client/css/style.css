@@ -108,11 +108,12 @@ h2 {
 }
 #chat .users {
 	border-left: 1px solid #ccc;
-	float: right;
-	height: 100%;
-	margin-top: 36px;
+	bottom: 26px;
 	overflow-y: auto;
-	padding-top: 6px;
+	padding: 4px 0;
+	position: absolute;
+	right: 0px;
+	top: 36px;
 	width: 159px;
 }
 #chat .users .user {
@@ -125,7 +126,7 @@ h2 {
 	bottom: 26px;
 	left: 0;
 	overflow-y: auto;
-	padding: 6px 0;
+	padding: 4px 0;
 	position: absolute;
 	right: 160px;
 	top: 36px;
