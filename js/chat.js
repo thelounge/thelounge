@@ -1,15 +1,10 @@
 $(function() {
 	var socket = io.connect("");
-
-	$.each([
-		"networks",
-		"channels",
-		"user",
-		"messages"
-	], function(i, type) {
-		socket.on(type, function(data) {
-			render(type, data);
-		});
+	socket.on("event", function(data) {
+		render(data);
+		
+		// Debug
+		console.log(data);
 	});
 
 	var chat = $("#chat");
@@ -21,48 +16,29 @@ $(function() {
 	var messages = $("#messages").html();
 	var users = $("#users").html()
 
-	function render(type, data) {
-		var target;
-		if (typeof data.target !== "undefined") {
-			target = $(".window[data-id='" + data.target + "']");
-		}
+	function render(data) {
+		chat.html("");
+		var partials = {
+			users: users,
+			messages: messages
+		};
+		data.forEach(function(network) {
+			chat.append(Mustache.render(channels, network, partials));
+		});
+		sidebar.html(
+			Mustache.render(networks, {
+				networks: data
+			})
+		);
 
-		switch (type) {
-		case "networks":
-			var partials = {
-				users: users,
-				messages: messages
-			};
-			chat.html("");
-			data.forEach(function(network) {
-				chat.append(Mustache.render(channels, network, partials));
-			});
-			sidebar.html(
-				Mustache.render(networks, {
-					networks: data
-				})
-			);
-
-			chat.find(".messages").sticky().scrollToBottom();
-			chat.find(".window")
-				// Sort windows by `data-id` value.
-				.sort(function(a, b) { return ($(a).data("id") - $(b).data("id")); })
-				.last()
-				.bringToTop()
-				.find(".input")
-					.focus();
-			break;
-
-		case "users":
-			target = target.find(".users");
-			target.html(Mustache.render(users, {users: data.data}));
-			break;
-
-		case "messages":
-			target = target.find(".messages");
-			target.append(Mustache.render(messages, {messages: data.data}));
-			break;
-		}
+		chat.find(".messages").sticky().scrollToBottom();
+		chat.find(".window")
+			// Sort windows by `data-id` value.
+			.sort(function(a, b) { return ($(a).data("id") - $(b).data("id")); })
+			.last()
+			.bringToTop()
+			.find(".input")
+				.focus();
 	}
 
 	chat.on("submit", "form", function() {
