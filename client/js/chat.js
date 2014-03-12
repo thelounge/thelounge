@@ -4,7 +4,7 @@ $(function() {
 	$.each([
 		"networks",
 		"channels",
-		"user",
+		"users",
 		"messages"
 	], function(i, type) {
 		socket.on(type, function(data) {
@@ -56,6 +56,7 @@ $(function() {
 		case "users":
 			target = target.find(".users");
 			target.html(Mustache.render(users, {users: data.data}));
+			console.log("RENDER USERS");
 			break;
 
 		case "messages":
