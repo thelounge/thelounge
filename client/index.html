@@ -50,10 +50,10 @@
 
 	<script type="text/html" id="messages">
 	{{#messages}}
-	<div class="message">
+	<div class="message {{type}}">
 		<span class="time">{{time}}</span>
 		<span class="user">{{user}}</span>
-		{{text}}
+		<span class="text">{{text}}</span>
 	</div>
 	{{/messages}}
 	</script>

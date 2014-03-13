@@ -126,19 +126,22 @@ h2 {
 	bottom: 26px;
 	left: 0;
 	overflow-y: auto;
-	padding: 4px 0;
+	padding: 4px 8px;
 	position: absolute;
 	right: 160px;
 	top: 36px;
 	word-wrap: break-word;
 	z-index: 0;
 }
-#chat .messages .message {
-	padding: 0 8px;
-}
-#chat .messages .time {
+#chat .message .time {
 	color: #bbb;
 }
-#chat .messages .user {
+#chat .message .user {
 	color: #f00;
+}
+#chat .message .text {
+	color: #999;
+}
+#chat .message.normal .text {
+	color: #000;
 }
