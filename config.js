@@ -1,7 +1,9 @@
 module.exports = {
+	nick: "temp_name",
+	fullname: "Temporary Name",
+	autoConnect: true,
 	host: "irc.freenode.org",
-	nick: "temp_user",
 	channels: [
 		"#temp_chan"
-	]
+	],
 };
