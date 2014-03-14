@@ -110,9 +110,28 @@ $(function() {
 			});
 		}
 
+		var timer;
+		var resizing = false;
+		$(window).on("resize", function() {
+			// This will prevent the scroll event from triggering
+			// while resizing the window.
+			resizing = true;
+
+			clearTimeout(timer);
+			timer = setTimeout(function() {
+				resizing = false;
+			}, 100);
+
+			if (sticky) {
+				self.scrollToBottom();
+			}
+		});
+
 		var sticky = false;
 		self.on("scroll", function() {
-			sticky = self.isScrollAtBottom();
+			if (!resizing) {
+				sticky = self.isScrollAtBottom();
+			}
 		});
 		self.trigger("scroll");
 		self.on("append", function() {
