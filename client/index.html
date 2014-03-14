@@ -29,7 +29,10 @@
 	<script type="text/html" id="channels">
 	{{#channels}}
 	<div class="window {{type}}" data-id="{{id}}">
-		<h1 class="title">{{name}}</h1>
+		<div class="title">
+			<h1>{{name}}</h1>
+			<button class="close btn btn-danger btn-sm ">Leave</button>
+		</div>
 		<div class="users">
 			{{> users}}
 		</div>
@@ -56,7 +59,7 @@
 	{{#messages}}
 	<div class="message {{type}}">
 		<span class="time">{{time}}</span>
-		<span class="user">{{user}}</span>
+		<span class="user">{{mode}}{{user}}</span>
 		<span class="text">{{text}}</span>
 	</div>
 	{{/messages}}

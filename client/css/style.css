@@ -65,6 +65,9 @@ h2 {
 	position: absolute;
 	width: 100%;
 }
+#chat .network .close {
+	display: none;
+}
 #chat .network .users {
 	display: none;
 }
@@ -73,14 +76,24 @@ h2 {
 }
 #chat .title {
 	border-bottom: 1px solid #ccc;
-	color: #333;
-	font-size: 18px;
-	height: 42px;
-	line-height: 42px;
+	height: 43px;
 	padding-left: 10px;
 	position: absolute;
 	top: 0;
 	width: 100%;
+}
+#chat .title h1 {
+	color: #333;
+	display: inline-block;
+	font-size: 18px;
+	line-height: 43px;
+}
+#chat .title .btn {
+	float: right;
+	margin: 6px 6px 0 0;
+}
+#chat .title .btn:focus {
+	outline: none;
 }
 #chat .users {
 	border-left: 1px solid #ccc;
@@ -89,7 +102,7 @@ h2 {
 	padding: 4px 0;
 	position: absolute;
 	right: 0px;
-	top: 42px;
+	top: 43px;
 	width: 159px;
 }
 #chat .users .user {
@@ -105,7 +118,7 @@ h2 {
 	padding: 4px 8px;
 	position: absolute;
 	right: 160px;
-	top: 42px;
+	top: 43px;
 	word-wrap: break-word;
 	z-index: 0;
 }

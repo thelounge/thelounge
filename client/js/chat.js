@@ -2,10 +2,10 @@ $(function() {
 	var socket = io.connect("");
 
 	$.each([
-		"networks",
-		"channels",
-		"users",
-		"messages"
+		"NETWORKS",
+		"CHANNELS",
+		"MESSAGES",
+		"USERS"
 	], function(i, type) {
 		socket.on(type, function(data) {
 			render(type, data);
@@ -28,7 +28,7 @@ $(function() {
 		}
 
 		switch (type) {
-		case "networks":
+		case "NETWORKS":
 			var partials = {
 				users: users,
 				messages: messages
@@ -53,12 +53,12 @@ $(function() {
 				.bringToTop();
 			break;
 
-		case "users":
+		case "USERS":
 			target = target.find(".users");
 			target.html(Mustache.render(users, {users: data.data}));
 			break;
 
-		case "messages":
+		case "MESSAGES":
 			target = target.find(".messages");
 			target.append(Mustache.render(messages, {messages: data.data}));
 			break;
@@ -76,16 +76,22 @@ $(function() {
 			});
 		}
 	});
-
+	
+	chat.on("click", ".close", function() {
+		var btn = $(this);
+		btn.prop("disabled", true);
+		socket.emit("input", {
+			id: btn.closest(".window").data("id"),
+			text: "/leave"
+		});
+	});
+	
 	sidebar.on("click", ".channel", function(e) {
+		e.preventDefault();
 		sidebar.find(".active").removeClass("active");
 		$(this).addClass("active");
-
 		chat.find(".window[data-id='" + $(this).data("id") + "']")
 			.bringToTop();
-
-		// Prevent link from triggering
-		e.preventDefault();
 	});
 });
 
