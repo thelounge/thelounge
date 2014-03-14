@@ -1,9 +1,13 @@
 <!doctype html>
 <html>
 	<head>
-	
-	<link rel="stylesheet" href="/css/style.css"/>
-	
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+	<link rel="stylesheet" href="/css/bootstrap.css">
+	<link rel="stylesheet" href="/css/style.css">
+
 	</head>
 	<body>
 
@@ -12,11 +16,11 @@
 
 	<script type="text/html" id="networks">
 	{{#networks}}
-	<div class="network" data-id="{{id}}">
+	<div class="network list-group" data-id="{{id}}">
 		{{#channels}}
-		<div class="channel" data-id="{{id}}">
+		<a href="" class="channel list-group-item" data-id="{{id}}">
 			{{name}}
-		</div>
+		</a>
 		{{/channels}}
 	</div>
 	{{/networks}}

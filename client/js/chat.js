@@ -77,7 +77,8 @@ $(function() {
 		}
 	});
 
-	sidebar.on("click", ".channel", function() {
+	sidebar.on("click", ".channel", function(e) {
+		e.preventDefault();
 		chat.find(".window[data-id='" + $(this).data("id") + "']")
 			.bringToTop();
 	});
