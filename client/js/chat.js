@@ -14,7 +14,7 @@ $(function() {
 
 	var chat = $("#chat");
 	var sidebar = $("#sidebar");
-	
+
 	// Templates
 	var networks = $("#networks").html();
 	var channels = $("#channels").html();
@@ -41,16 +41,16 @@ $(function() {
 				Mustache.render(networks, {
 					networks: data
 				})
-			);
+			).find(".channel")
+				.last()
+				.addClass("active");
 
 			chat.find(".messages").sticky().scrollToBottom();
 			chat.find(".window")
 				// Sort windows by `data-id` value.
 				.sort(function(a, b) { return ($(a).data("id") - $(b).data("id")); })
 				.last()
-				.bringToTop()
-				.find(".input")
-					.focus();
+				.bringToTop();
 			break;
 
 		case "users":
@@ -78,19 +78,28 @@ $(function() {
 	});
 
 	sidebar.on("click", ".channel", function(e) {
-		e.preventDefault();
+		sidebar.find(".active").removeClass("active");
+		$(this).addClass("active");
+
 		chat.find(".window[data-id='" + $(this).data("id") + "']")
 			.bringToTop();
+
+		// Prevent link from triggering
+		e.preventDefault();
 	});
 });
 
 (function($) {
 	var highest = 1;
 	$.fn.bringToTop = function() {
-		return this
-			.css('z-index', highest++)
-			.find("input")
-			.focus();
+		return this.css('z-index', highest++)
+			.addClass("active")
+			.find(".input")
+			.focus()
+			.end()
+			.siblings()
+			.removeClass("active")
+			.end();
 	};
 })(jQuery);
 

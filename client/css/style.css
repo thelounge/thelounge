@@ -31,12 +31,6 @@ h2 {
 	margin: 10px 0;
 	padding: 0 10px;
 }
-#sidebar .list-group-item:hover {
-	color: #000;
-}
-#sidebar .list-group-item:first-child {
-	background: #f5f5f5;
-}
 #chat {
 	bottom: 0;
 	left: 200px;
