@@ -59,8 +59,12 @@ $(function() {
 			break;
 
 		case "MESSAGES":
+			var message = data.data;
+			if (message.type == "error") {
+				target = target.parent().find(".active");
+			}
 			target = target.find(".messages");
-			target.append(Mustache.render(messages, {messages: data.data}));
+			target.append(Mustache.render(messages, {messages: message}));
 			break;
 		}
 	}
