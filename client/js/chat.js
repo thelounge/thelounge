@@ -160,7 +160,7 @@ $(function() {
 	};
 
 	$.fn.scrollToBottom = function() {
-		this.scrollTop(1e10);
+		this.scrollTop(this.prop("scrollHeight"));
 	};
 
 	$.fn.isScrollAtBottom = function() {
