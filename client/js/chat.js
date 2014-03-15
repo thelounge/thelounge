@@ -86,11 +86,22 @@ $(function() {
 		});
 	});
 	
+	chat.on("append", ".window", function() {
+		var id = $(this).data("id");
+		var badge = sidebar.find(".channel[data-id='" + id + "']:not(.active) .badge");
+		badge.html((parseInt(badge.html()) + 1) || "1");
+	});
+	
 	sidebar.on("click", ".channel", function(e) {
 		e.preventDefault();
 		sidebar.find(".active").removeClass("active");
-		$(this).addClass("active");
-		chat.find(".window[data-id='" + $(this).data("id") + "']")
+		var item = $(this)
+			.addClass("active")
+			.find(".badge")
+			.html("")
+			.end();
+		var id = item.data("id");
+		chat.find(".window[data-id='" + id + "']")
 			.bringToTop();
 	});
 });

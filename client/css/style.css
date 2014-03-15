@@ -3,13 +3,6 @@ body {
 	font: 12px Consolas, monospace;
 	height: 100%;
 }
-a {
-	color: inherit;
-	text-decoration: none;
-}
-a:hover {
-	text-decoration: underline;
-}
 ul,
 li {
 	list-style: none;
@@ -30,6 +23,14 @@ h2 {
 #sidebar .list-group {
 	margin: 10px 0;
 	padding: 0 10px;
+}
+#sidebar .list-group-item {
+	padding: 10px 12px;
+}
+#sidebar .list-group-item .badge {
+	font-size: 11px;
+	font-weight: normal;
+	margin-top: -1px;
 }
 #chat {
 	bottom: 0;
@@ -103,7 +104,7 @@ h2 {
 	position: absolute;
 	right: 0px;
 	top: 43px;
-	width: 159px;
+	width: 160px;
 }
 #chat .users .user {
 	clear: both;
