@@ -59,20 +59,23 @@ h2 {
 	padding: 0 10px;
 	width: 100%;
 }
-#chat .channel,
-#chat .network {
+#chat .window {
 	background: #fff;
 	height: 100%;
 	position: absolute;
 	width: 100%;
 }
-#chat .network .close {
-	display: none;
-}
+#chat .network .close,
 #chat .network .users {
 	display: none;
 }
 #chat .network .messages {
+	right: 0;
+}
+#chat .query .users {
+	display: none;
+}
+#chat .query .messages {
 	right: 0;
 }
 #chat .title {

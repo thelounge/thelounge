@@ -18,7 +18,7 @@
 	{{#networks}}
 	<div class="network list-group" data-id="{{id}}">
 		{{#channels}}
-		<a href="" class="channel list-group-item" data-id="{{id}}">
+		<a href="" class="channel list-group-item" data-id="{{id}}" data-name="{{name}}">
 			<span class="badge pull-right"></span>
 			{{name}}
 		</a>
@@ -50,9 +50,9 @@
 
 	<script type="text/html" id="users">
 	{{#users}}
-	<div class="user">
+	<a href="{{name}}" class="user">
 		{{mode}}{{name}}
-	</div>
+	</a>
 	{{/users}}
 	</script>
 
@@ -60,7 +60,7 @@
 	{{#messages}}
 	<div class="message {{type}}">
 		<span class="time">{{time}}</span>
-		<span class="user">{{mode}}{{user}}</span>
+		<a href="{{user}}" class="user">{{mode}}{{user}}</a>
 		<span class="text">{{text}}</span>
 	</div>
 	{{/messages}}

@@ -65,33 +65,6 @@ $(function() {
 		}
 	}
 
-	chat.on("submit", "form", function() {
-		var input = $(this).find(".input");
-		var text = input.val();
-		if (text != "") {
-			input.val("");
-			socket.emit("input", {
-				id: input.data("target"),
-				text: text
-			});
-		}
-	});
-	
-	chat.on("click", ".close", function() {
-		var btn = $(this);
-		btn.prop("disabled", true);
-		socket.emit("input", {
-			id: btn.closest(".window").data("id"),
-			text: "/leave"
-		});
-	});
-	
-	chat.on("append", ".window", function() {
-		var id = $(this).data("id");
-		var badge = sidebar.find(".channel[data-id='" + id + "']:not(.active) .badge");
-		badge.html((parseInt(badge.html()) + 1) || "1");
-	});
-	
 	sidebar.on("click", ".channel", function(e) {
 		e.preventDefault();
 		sidebar.find(".active").removeClass("active");
@@ -103,6 +76,56 @@ $(function() {
 		var id = item.data("id");
 		chat.find(".window[data-id='" + id + "']")
 			.bringToTop();
+	});
+
+	chat.on("submit", "form", function() {
+		var input = $(this).find(".input");
+		var text = input.val();
+		if (text != "") {
+			input.val("");
+			socket.emit("input", {
+				id: input.data("target"),
+				text: text
+			});
+		}
+	});
+
+	chat.on("click", ".close", function() {
+		var btn = $(this);
+		btn.prop("disabled", true);
+		socket.emit("input", {
+			id: btn.closest(".window").data("id"),
+			text: "/LEAVE"
+		});
+	});
+
+	chat.on("append", ".window", function() {
+		var id = $(this).data("id");
+		var badge = sidebar.find(".channel[data-id='" + id + "']:not(.active) .badge");
+		badge.html((parseInt(badge.html()) + 1) || "1");
+	});
+
+	chat.on("click", ".user", function(e) {
+		e.preventDefault();
+	});
+
+	chat.on("dblclick", ".user", function() {
+		var user = $(this);
+		var id = user.closest(".window").data("id");
+		var name = user.attr("href");
+		
+		var channel = sidebar
+			.find(".channel[data-id='" + id + "']")
+			.siblings(".channel[data-name='" + name + "']");
+		if (channel.size() != 0) {
+			channel.trigger("click");
+			return;
+		}
+
+		socket.emit("input", {
+			id: id,
+			text: "/QUERY " + name
+		});
 	});
 });
 
