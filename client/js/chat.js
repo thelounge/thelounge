@@ -60,7 +60,7 @@ $(function() {
 
 		case "MESSAGES":
 			var message = data.data;
-			if (message.type == "error") {
+			if (message.type == "error" || message.type == "notice") {
 				target = target.parent().find(".active");
 			}
 			target = target.find(".messages");
