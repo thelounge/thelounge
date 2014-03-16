@@ -2,6 +2,8 @@
 <html>
 	<head>
 
+	<title>Chat</title>
+
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
@@ -12,17 +14,32 @@
 	<body>
 
 	<aside id="sidebar">
-		<header class="header">
+
+	<header class="header">
 		<ul class="nav nav-tabs">
 			<li class="active"><a href="#list" data-toggle="tab">Channels</a></li>
 			<li><a href="#settings" data-toggle="tab">Settings</a></li>
 		</ul>
-		</header>
-		<div class="tab-content">
-			<div id="list" class="tab-pane fade in active list"></div>
-			<div id="settings" class="tab-pane fade"></div>
+	</header>
+	<div class="tab-content">
+		<div id="list" class="tab-pane active"></div>
+		<div id="settings" class="tab-pane">
+			<div class="panel panel-default">
+			<div class="panel-heading">
+				Show/hide events
+			</div>
+			<div class="panel-body">
+				<input type="checkbox" value="join"/>
+				<input type="checkbox" value="part"/>
+				<input type="checkbox" value="nick"/>
+				<input type="checkbox" value="quit"/>
+			</div>
+			</div>
 		</div>
+	</div>
+
 	</aside>
+
 	<div id="chat"></div>
 
 	<script type="text/html" id="networks">

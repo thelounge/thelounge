@@ -37,7 +37,7 @@ $(function() {
 			data.forEach(function(network) {
 				chat.append(Mustache.render(channels, network, partials));
 			});
-			sidebar.find(".list").html(
+			sidebar.find("#list").html(
 				Mustache.render(networks, {
 					networks: data
 				})
@@ -71,7 +71,7 @@ $(function() {
 
 	sidebar.on("click", ".channel", function(e) {
 		e.preventDefault();
-		sidebar.find(".list .active").removeClass("active");
+		sidebar.find("#list .active").removeClass("active");
 		var item = $(this)
 			.addClass("active")
 			.find(".badge")
@@ -80,6 +80,18 @@ $(function() {
 		var id = item.data("id");
 		chat.find(".window[data-id='" + id + "']")
 			.bringToTop();
+	});
+
+	sidebar.find("input[type=checkbox]").each(function() {
+		var input = $(this);
+		var value = input.val();
+		input.prop("checked", true).wrap("<label>").parent().append(value);
+		input.on("change", function() {
+			chat.toggleClass(
+				"hide-" + value,
+				!input.prop("checked")
+			);
+		});
 	});
 
 	chat.on("submit", "form", function() {

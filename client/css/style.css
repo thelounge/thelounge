@@ -46,6 +46,24 @@ h2 {
 	font-weight: normal;
 	margin-top: -1px;
 }
+#sidebar .panel {
+	margin: 10px;
+}
+#sidebar .panel label {
+	display: inline-block;
+	cursor: pointer;
+	margin-left: 5px;
+	padding: 5px 0;
+	width: 60px;
+}
+#sidebar .panel label.first {
+	margin-top: 10px;
+}
+#sidebar .panel input[type=checkbox] {
+	float: left;
+	margin-top: 1px;
+	margin-right: 10px;
+}
 #chat {
 	bottom: 0;
 	left: 200px;
@@ -72,6 +90,12 @@ h2 {
 	outline: none;
 	padding: 0 10px;
 	width: 100%;
+}
+#chat.hide-join .join,
+#chat.hide-part .part,
+#chat.hide-nick .nick,
+#chat.hide-quit .quit {
+	display: none;
 }
 #chat .window {
 	background: #fff;
