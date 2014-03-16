@@ -22,6 +22,9 @@
 		"browser"
 	],
 	"main": "./app.js",
+	"scripts": {
+		"start": "nodemon index.js -p 9000"
+	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/erming/chat.git"
