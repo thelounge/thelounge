@@ -37,7 +37,7 @@ $(function() {
 			data.forEach(function(network) {
 				chat.append(Mustache.render(channels, network, partials));
 			});
-			sidebar.html(
+			sidebar.find(".list").html(
 				Mustache.render(networks, {
 					networks: data
 				})
@@ -71,7 +71,7 @@ $(function() {
 
 	sidebar.on("click", ".channel", function(e) {
 		e.preventDefault();
-		sidebar.find(".active").removeClass("active");
+		sidebar.find(".list .active").removeClass("active");
 		var item = $(this)
 			.addClass("active")
 			.find(".badge")
@@ -198,11 +198,13 @@ $(function() {
 	};
 
 	$.fn.scrollToBottom = function() {
-		this.scrollTop(this.prop("scrollHeight"));
+		return this.each(function() {
+			this.scrollTop = this.scrollHeight;
+		});
 	};
 
 	$.fn.isScrollAtBottom = function() {
-		if ((this.scrollTop() + this.outerHeight()) >= this.prop("scrollHeight")) {
+		if ((this.scrollTop() + this.outerHeight() + 1) >= this.prop("scrollHeight")) {
 			return true;
 		}
 	};

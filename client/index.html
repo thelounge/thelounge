@@ -11,14 +11,25 @@
 	</head>
 	<body>
 
-	<aside id="sidebar"></aside>
+	<aside id="sidebar">
+		<header class="header">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#list" data-toggle="tab">Channels</a></li>
+			<li><a href="#settings" data-toggle="tab">Settings</a></li>
+		</ul>
+		</header>
+		<div class="tab-content">
+			<div id="list" class="tab-pane fade in active list"></div>
+			<div id="settings" class="tab-pane fade"></div>
+		</div>
+	</aside>
 	<div id="chat"></div>
 
 	<script type="text/html" id="networks">
 	{{#networks}}
 	<div class="network list-group" data-id="{{id}}">
 		{{#channels}}
-		<a href="" class="channel list-group-item" data-id="{{id}}" data-name="{{name}}">
+		<a href="{{name}}" class="channel list-group-item" data-id="{{id}}" data-name="{{name}}">
 			<span class="badge pull-right"></span>
 			{{name}}
 		</a>
@@ -69,6 +80,7 @@
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="/js/lib/mustache.min.js"></script>
 	<script src="/js/lib/jquery-2.1.0.min.js"></script>
+	<script src="/js/lib/bootstrap.js"></script>
 	<script src="/js/chat.js"></script>
 
 	</body>

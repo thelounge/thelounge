@@ -3,22 +3,36 @@ body {
 	font: 12px Consolas, monospace;
 	height: 100%;
 }
-ul,
-li {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-}
 h1,
 h2 {
 	font: inherit;
 	margin: 0;
 }
 #sidebar {
-	border-right: 1px solid #ccc;
+	background: #f7f7f9;
+	border-right: 1px solid #e1e1e8;
 	float: left;
 	height: 100%;
 	width: 200px;
+}
+#sidebar .header {
+	background: #fff;
+	height: 43px;
+	overflow: hidden;
+	position: relative;
+}
+#sidebar .header .nav {
+	bottom: 0;
+	margin: 0;
+	padding-left: 10px;
+	position: absolute;
+	width: 100%;
+}
+#sidebar .header .nav a {
+	line-height: 1em;
+}
+#sidebar .header .nav .active a {
+	background: #f7f7f9;
 }
 #sidebar .list-group {
 	margin: 10px 0;
@@ -43,9 +57,9 @@ h2 {
 	top: 0;
 }
 #chat form {
-	border-top: 1px solid #ccc;
+	border-top: 1px solid #ddd;
 	bottom: 0;
-	height: 32px;
+	height: 30px;
 	left: 0;
 	position: absolute;
 	right: 0;
@@ -53,7 +67,7 @@ h2 {
 #chat form input {
 	border: 0;
 	font: inherit;
-	height: 32px;
+	height: 30px;
 	margin: 0;
 	outline: none;
 	padding: 0 10px;
@@ -69,22 +83,25 @@ h2 {
 #chat .network .users {
 	display: none;
 }
+#chat .network .title,
 #chat .network .messages {
 	right: 0;
 }
 #chat .query .users {
 	display: none;
 }
+#chat .query .title,
 #chat .query .messages {
 	right: 0;
 }
 #chat .title {
-	border-bottom: 1px solid #ccc;
+	border-bottom: 1px solid #ddd;
 	height: 43px;
+	left: 0;
 	padding-left: 10px;
 	position: absolute;
+	right: 160px;
 	top: 0;
-	width: 100%;
 }
 #chat .title h1 {
 	color: #333;
@@ -100,23 +117,23 @@ h2 {
 	outline: none;
 }
 #chat .users {
-	border-left: 1px solid #ccc;
-	bottom: 32px;
+	border-left: 1px solid #ddd;
+	bottom: 30px;
 	overflow-y: auto;
 	padding: 4px 0;
 	position: absolute;
-	right: 0px;
-	top: 43px;
+	right: 0;
+	top: 0;
 	width: 160px;
 }
 #chat .users .user {
 	clear: both;
 	color: #f00;
 	float: left;
-	padding: 0px 8px;
+	padding: 0 8px;
 }
 #chat .messages {
-	bottom: 32px;
+	bottom: 30px;
 	left: 0;
 	overflow-y: auto;
 	padding: 4px 8px;
