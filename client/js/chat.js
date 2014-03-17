@@ -8,6 +8,7 @@ $(function() {
 		"USERS"
 	], function(i, type) {
 		socket.on(type, function(data) {
+			console.log(data);
 			render(type, data);
 		});
 	});
@@ -16,59 +17,84 @@ $(function() {
 	var sidebar = $("#sidebar");
 
 	// Templates
-	var networks = $("#networks").html();
-	var channels = $("#channels").html();
-	var messages = $("#messages").html();
-	var users = $("#users").html()
+	var network_tpl = $("#network").html();
+	var channel_tpl = $("#channel").html();
+	var window_tpl = $("#window").html();
+	var message_tpl = $("#message").html();
+	var user_tpl = $("#user").html()
 
 	function render(type, data) {
-		var target;
-		if (typeof data.target !== "undefined") {
-			target = $(".window[data-id='" + data.target + "']");
-		}
-
 		switch (type) {
+
 		case "NETWORKS":
-			var partials = {
-				users: users,
-				messages: messages
-			};
 			var windows = chat
 				.find("#windows")
 				.html("");
 			data.forEach(function(network) {
-				windows.append(Mustache.render(channels, network, partials));
+				windows.append(Mustache.render(window_tpl, network, {
+					users: user_tpl,
+					messages: message_tpl
+				}));
 			});
 			sidebar.find("#list").html(
-				Mustache.render(networks, {
-					networks: data
+				Mustache.render(network_tpl, {networks: data}, {
+					channels: channel_tpl
 				})
-			);
-			sidebar.find(".channel")
-				.last()
+			).find(".channel")
+				.first()
 				.addClass("active");
 
 			chat.find(".messages").sticky().scrollToBottom();
 			chat.find(".window")
-				// Sort windows by `data-id` value.
-				.sort(function(a, b) { return ($(a).data("id") - $(b).data("id")); })
-				.last()
+				.first()
 				.bringToTop();
 			break;
 
+		case "CHANNELS":
+			if (data.action == "remove") {
+				chat.find(".window[data-id='" + data.data.id + "']").remove();
+				sidebar.find(".channel[data-id='" + data.data.id + "']").remove();
+				return;
+			}
+
+			sidebar.find(".network[data-id='" + data.target + "']").append(
+				Mustache.render(channel_tpl, {channels: data.data}, {
+					channels: channel_tpl
+				})
+			);
+			chat.find("#windows").append(
+				Mustache.render(window_tpl, {channels: data.data}, {
+					users: user_tpl,
+					messages: message_tpl
+				})
+			);
+			break;
+
 		case "USERS":
+			var target;
+			if (typeof data.target !== "undefined") {
+				target = chat.find(".window[data-id='" + data.target + "']");
+			}
+
 			target = target.find(".users");
-			target.html(Mustache.render(users, {users: data.data}));
+			target.html(Mustache.render(user_tpl, {users: data.data}));
 			break;
 
 		case "MESSAGES":
+			var target;
+			if (typeof data.target !== "undefined") {
+				target = chat.find(".window[data-id='" + data.target + "']");
+			}
+
 			var message = data.data;
-			if (message.type == "error" || message.type == "notice") {
+			if (message.type == "error") {
 				target = target.parent().find(".active");
 			}
+
 			target = target.find(".messages");
-			target.append(Mustache.render(messages, {messages: message}));
+			target.append(Mustache.render(message_tpl, {messages: message}));
 			break;
+
 		}
 	}
 
@@ -122,10 +148,6 @@ $(function() {
 			id: btn.closest(".window").data("id"),
 			text: "/LEAVE"
 		});
-	});
-	
-	chat.on("click", ".messages", function() {
-		$(this).next("form").find("input:first").focus();
 	});
 
 	chat.on("append", ".window", function() {

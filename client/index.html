@@ -55,20 +55,24 @@
 	
 	<div id="scripts">
 
-	<script type="text/html" id="networks">
+	<script type="text/html" id="network">
 	{{#networks}}
 	<div class="network list-group" data-id="{{id}}">
-		{{#channels}}
-		<a href="{{name}}" class="channel list-group-item" data-id="{{id}}" data-name="{{name}}">
-			<span class="badge pull-right"></span>
-			{{name}}
-		</a>
-		{{/channels}}
+		{{> channels}}
 	</div>
 	{{/networks}}
 	</script>
 
-	<script type="text/html" id="channels">
+	<script type="text/html" id="channel">
+	{{#channels}}
+	<a href="{{name}}" class="channel list-group-item" data-id="{{id}}" data-name="{{name}}">
+		<span class="badge pull-right"></span>
+		{{name}}
+	</a>
+	{{/channels}}
+	</script>
+
+	<script type="text/html" id="window">
 	{{#channels}}
 	<div class="window {{type}}" data-id="{{id}}">
 		<div class="toggle">
@@ -93,7 +97,7 @@
 	{{/channels}}
 	</script>
 
-	<script type="text/html" id="users">
+	<script type="text/html" id="user">
 	{{#users}}
 	<a href="{{name}}" class="user">
 		{{mode}}{{name}}
@@ -101,7 +105,7 @@
 	{{/users}}
 	</script>
 
-	<script type="text/html" id="messages">
+	<script type="text/html" id="message">
 	{{#messages}}
 	<div class="message {{type}}">
 		<span class="time">{{time}}</span>

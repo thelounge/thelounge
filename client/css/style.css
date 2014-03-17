@@ -153,7 +153,7 @@ h2 {
 #chat .users {
 	background: #fff;
 	border-left: 1px solid #ddd;
-	bottom: 0;
+	bottom: 30px;
 	overflow-y: auto;
 	padding: 4px 0;
 	position: absolute;
@@ -255,6 +255,7 @@ h2 {
 		display: none;
 	}
 	#chat .users {
+		bottom: 0;
 		right: -160px;
 	}
 	#chat .users a {
