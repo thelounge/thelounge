@@ -33,15 +33,18 @@ $(function() {
 				users: users,
 				messages: messages
 			};
-			chat.html("");
+			var windows = chat
+				.find("#windows")
+				.html("");
 			data.forEach(function(network) {
-				chat.append(Mustache.render(channels, network, partials));
+				windows.append(Mustache.render(channels, network, partials));
 			});
 			sidebar.find("#list").html(
 				Mustache.render(networks, {
 					networks: data
 				})
-			).find(".channel")
+			);
+			sidebar.find(".channel")
 				.last()
 				.addClass("active");
 
@@ -72,6 +75,7 @@ $(function() {
 	sidebar.on("click", ".channel", function(e) {
 		e.preventDefault();
 		sidebar.find("#list .active").removeClass("active");
+		$("#viewport").removeClass();
 		var item = $(this)
 			.addClass("active")
 			.find(".badge")
@@ -81,7 +85,7 @@ $(function() {
 		chat.find(".window[data-id='" + id + "']")
 			.bringToTop();
 	});
-
+	
 	sidebar.find("input[type=checkbox]").each(function() {
 		var input = $(this);
 		var value = input.val();
@@ -92,6 +96,11 @@ $(function() {
 				!input.prop("checked")
 			);
 		});
+	});
+
+	chat.on("click touchstart", ".toggle a", function(e) {
+		e.preventDefault();
+		$("#viewport").toggleClass($(this).attr("class"));
 	});
 
 	chat.on("submit", "form", function() {
@@ -113,6 +122,10 @@ $(function() {
 			id: btn.closest(".window").data("id"),
 			text: "/LEAVE"
 		});
+	});
+	
+	chat.on("click", ".messages", function() {
+		$(this).next("form").find("input:first").focus();
 	});
 
 	chat.on("append", ".window", function() {
@@ -151,7 +164,6 @@ $(function() {
 		return this.css('z-index', highest++)
 			.addClass("active")
 			.find(".input")
-			.focus()
 			.end()
 			.siblings()
 			.removeClass("active")

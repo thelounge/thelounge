@@ -5,23 +5,29 @@
 	<title>Chat</title>
 
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<meta name="viewport" content="width=device-width, user-scalable=no">
 
 	<link rel="stylesheet" href="/css/bootstrap.css">
+	<link rel="stylesheet" href="/css/font-awesome.min.css">
 	<link rel="stylesheet" href="/css/style.css">
 
 	</head>
 	<body>
+	
+	<div id="wrap">
+	<div id="viewport">
 
 	<aside id="sidebar">
+		<header class="header">
 
-	<header class="header">
 		<ul class="nav nav-tabs">
 			<li class="active"><a href="#list" data-toggle="tab">Channels</a></li>
 			<li><a href="#settings" data-toggle="tab">Settings</a></li>
 		</ul>
-	</header>
-	<div class="tab-content">
+
+		</header>
+		<div class="tab-content">
+
 		<div id="list" class="tab-pane active"></div>
 		<div id="settings" class="tab-pane">
 			<div class="panel panel-default">
@@ -36,11 +42,18 @@
 			</div>
 			</div>
 		</div>
-	</div>
 
+		</div>
 	</aside>
-
-	<div id="chat"></div>
+	<div id="chat">
+		<div id="windows">
+		</div>
+	</div>
+	
+	</div>
+	</div>
+	
+	<div id="scripts">
 
 	<script type="text/html" id="networks">
 	{{#networks}}
@@ -58,6 +71,10 @@
 	<script type="text/html" id="channels">
 	{{#channels}}
 	<div class="window {{type}}" data-id="{{id}}">
+		<div class="toggle">
+			<a href="#" class="left"><i class="fa fa-toggle-right"></i></a>
+			<a href="#" class="right"><i class="fa fa-toggle-left"></i></a>
+		</div>
 		<div class="title">
 			<h1>{{name}}</h1>
 			<button class="close btn btn-danger btn-sm ">Leave</button>
@@ -99,6 +116,8 @@
 	<script src="/js/lib/jquery-2.1.0.min.js"></script>
 	<script src="/js/lib/bootstrap.js"></script>
 	<script src="/js/chat.js"></script>
+	
+	</div>
 
 	</body>
 </html>
