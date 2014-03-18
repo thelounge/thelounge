@@ -8,7 +8,6 @@ $(function() {
 		"USERS"
 	], function(i, type) {
 		socket.on(type, function(data) {
-			console.log(data);
 			render(type, data);
 		});
 	});
@@ -27,18 +26,16 @@ $(function() {
 		switch (type) {
 
 		case "NETWORKS":
-			var windows = chat
-				.find("#windows")
-				.html("");
+			var html = "";
 			data.forEach(function(network) {
-				windows.append(Mustache.render(window_tpl, network, {
-					users: user_tpl,
-					messages: message_tpl
-				}));
+				html += Mustache.render(window_tpl, network);
 			});
+
+			$("#windows")[0].innerHTML = html;
+
 			sidebar.find("#list").html(
-				Mustache.render(network_tpl, {networks: data}, {
-					channels: channel_tpl
+				Mustache.render(network_tpl, {
+					networks: data
 				})
 			).find(".channel")
 				.first()
@@ -51,23 +48,35 @@ $(function() {
 			break;
 
 		case "CHANNELS":
+			var target = data.target;
 			if (data.action == "remove") {
-				chat.find(".window[data-id='" + data.data.id + "']").remove();
-				sidebar.find(".channel[data-id='" + data.data.id + "']").remove();
+				$("[data-id='" + data.data.id + "']").remove();
 				return;
 			}
 
-			sidebar.find(".network[data-id='" + data.target + "']").append(
-				Mustache.render(channel_tpl, {channels: data.data}, {
-					channels: channel_tpl
+			var network = sidebar
+				.find(".network")
+				.find(".channel")
+				.removeClass("active")
+				.end();
+
+			network = network.filter("[data-id='" + data.target + "']").append(
+				Mustache.render(channel_tpl, {
+					channels: data.data
 				})
-			);
-			chat.find("#windows").append(
-				Mustache.render(window_tpl, {channels: data.data}, {
-					users: user_tpl,
-					messages: message_tpl
+			).find(".channel")
+				.last()
+				.addClass("active");
+
+			$("#windows").append(
+				Mustache.render(window_tpl, {
+					channels: data.data
 				})
-			);
+			).find(".window")
+				.last()
+				.bringToTop()
+				.find(".messages")
+				.sticky();
 			break;
 
 		case "USERS":
@@ -77,7 +86,9 @@ $(function() {
 			}
 
 			target = target.find(".users");
-			target.html(Mustache.render(user_tpl, {users: data.data}));
+			target.html(Mustache.render(user_tpl, {
+				users: data.data
+			}));
 			break;
 
 		case "MESSAGES":
@@ -92,7 +103,9 @@ $(function() {
 			}
 
 			target = target.find(".messages");
-			target.append(Mustache.render(message_tpl, {messages: message}));
+			target.append(Mustache.render(message_tpl, {
+				messages: message
+			}));
 			break;
 
 		}
@@ -141,6 +154,10 @@ $(function() {
 		}
 	});
 
+	chat.on("focus", "input[type=text]", function() {
+		$(this).closest(".window").find(".messages").scrollToBottom();
+	});
+
 	chat.on("click", ".close", function() {
 		var btn = $(this);
 		btn.prop("disabled", true);
@@ -185,8 +202,9 @@ $(function() {
 	$.fn.bringToTop = function() {
 		return this.css('z-index', highest++)
 			.addClass("active")
-			.find(".input")
-			.end()
+			//.find(".input")
+			//.focus()
+			//.end()
 			.siblings()
 			.removeClass("active")
 			.end();
