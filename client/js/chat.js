@@ -202,9 +202,9 @@ $(function() {
 	$.fn.bringToTop = function() {
 		return this.css('z-index', highest++)
 			.addClass("active")
-			//.find(".input")
-			//.focus()
-			//.end()
+			.find(".input")
+			.focus()
+			.end()
 			.siblings()
 			.removeClass("active")
 			.end();

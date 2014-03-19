@@ -3,7 +3,6 @@ body {
 	font: 12px Consolas, monospace;
 	height: 100%;
 }
-
 a:focus {
 	outline: 0;
 }
@@ -162,9 +161,8 @@ h2 {
 	width: 160px;
 }
 #chat .users .user {
-	clear: both;
+	display: block;
 	color: #f00;
-	float: left;
 	padding: 0 8px;
 }
 #chat .messages {
@@ -220,8 +218,9 @@ h2 {
 	}
 	#chat .toggle {
 		background: #f00;
-		display: inherit;
+		display: block;
 		font-size: 14px;
+		position: relative;
 	}
 	#chat .toggle a {
 		color: #000;
@@ -230,7 +229,6 @@ h2 {
 		width: 46px;
 		position: absolute;
 		text-align: center;
-		z-index: 9999;
 	}
 	#chat .toggle .left {
 		border-left: 0;
@@ -249,6 +247,7 @@ h2 {
 		display: inherit;
 	}
 	#chat .title {
+		padding: 0;
 		text-align: center;
 	}
 	#chat .title .btn {
