@@ -1,12 +1,6 @@
 $(function() {
 	var socket = io.connect("");
-
-	$.each([
-		"NETWORKS",
-		"CHANNELS",
-		"MESSAGES",
-		"USERS"
-	], function(i, type) {
+	$.each(["NETWORKS", "CHANNELS", "MESSAGES", "USERS"], function(i, type) {
 		socket.on(type, function(json) {
 			event(type, json);
 		});
@@ -50,7 +44,7 @@ $(function() {
 				.first()
 				.addClass("active");
 
-			chat.find(".messages").sticky().scrollToBottom();
+			chat.find(".messages").scrollGlue({animate: 400}).scrollToBottom();
 			chat.find(".window")
 				.first()
 				.bringToTop();
@@ -81,7 +75,7 @@ $(function() {
 				.last()
 				.bringToTop()
 				.find(".messages")
-				.sticky();
+				.scrollGlue({animate: 400});
 			break;
 
 		case "USERS":
@@ -125,7 +119,7 @@ $(function() {
 		chat.find(".window[data-id='" + id + "']")
 			.bringToTop();
 	});
-	
+
 	sidebar.find("input[type=checkbox]").each(function() {
 		var input = $(this);
 		var value = input.val();
@@ -196,9 +190,7 @@ $(function() {
 			text: "/QUERY " + name
 		});
 	});
-});
 
-(function($) {
 	var highest = 1;
 	$.fn.bringToTop = function() {
 		return this.css('z-index', highest++)
@@ -210,67 +202,4 @@ $(function() {
 			.removeClass("active")
 			.end();
 	};
-})(jQuery);
-
-// Sticky plugin
-// https://github.com/erming/sticky
-
-(function($) {
-	var append = $.fn.append;
-	$.fn.append = function() {
-		return append.apply(this, arguments).trigger("append");
-	};
-
-	$.fn.sticky = function() {
-		var self = this;
-		if (self.size() > 1) {
-			return self.each(function() {
-				$(this).sticky();
-			});
-		}
-
-		var timer;
-		var resizing = false;
-		$(window).on("resize", function() {
-			// This will prevent the scroll event from triggering
-			// while resizing the window.
-			resizing = true;
-
-			clearTimeout(timer);
-			timer = setTimeout(function() {
-				resizing = false;
-			}, 100);
-
-			if (sticky) {
-				self.scrollToBottom();
-			}
-		});
-
-		var sticky = false;
-		self.on("scroll", function() {
-			if (!resizing) {
-				sticky = self.isScrollAtBottom();
-			}
-		});
-		self.trigger("scroll");
-		self.on("append", function() {
-			if (sticky) {
-				self.scrollToBottom();
-			}
-		});
-
-		return this;
-	};
-
-	$.fn.scrollToBottom = function() {
-		return this.each(function() {
-			this.scrollTop = this.scrollHeight;
-		});
-	};
-
-	$.fn.isScrollAtBottom = function() {
-		if ((this.scrollTop() + this.outerHeight() + 1) >= this.prop("scrollHeight")) {
-			return true;
-		}
-	};
-})(jQuery);
+});
