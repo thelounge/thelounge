@@ -107,9 +107,13 @@ h2 {
 }
 #chat .window {
 	background: #fff;
+	display: none;
 	height: 100%;
 	position: absolute;
 	width: 100%;
+}
+#chat .window.active {
+	display: block;
 }
 #chat .network .close,
 #chat .network .users {

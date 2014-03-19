@@ -7,36 +7,45 @@ $(function() {
 		"MESSAGES",
 		"USERS"
 	], function(i, type) {
-		socket.on(type, function(data) {
-			render(type, data);
+		socket.on(type, function(json) {
+			event(type, json);
 		});
 	});
 
 	var chat = $("#chat");
 	var sidebar = $("#sidebar");
 
-	// Templates
-	var network_tpl = $("#network").html();
-	var channel_tpl = $("#channel").html();
-	var window_tpl = $("#window").html();
-	var message_tpl = $("#message").html();
-	var user_tpl = $("#user").html()
+	var tpl = [];
+	function render(id, json, partials) {
+		tpl[id] = tpl[id] || $(id).html();
+		if (!json) {
+			// If no data is supplied, return the template instead.
+			// Used when fetching partials.
+			return tpl[id];
+		}
+		return Mustache.render(
+			tpl[id],
+			json,
+			partials || {}
+		);
+	}
 
-	function render(type, data) {
+	function event(type, json) {
 		switch (type) {
 
 		case "NETWORKS":
 			var html = "";
-			data.forEach(function(network) {
-				html += Mustache.render(window_tpl, network);
+			var partials = {
+				messages: render("#message"),
+				users: render("#user")
+			};
+			json.forEach(function(network) {
+				html += render("#window", network, partials);
 			});
-
 			$("#windows")[0].innerHTML = html;
 
 			sidebar.find("#list").html(
-				Mustache.render(network_tpl, {
-					networks: data
-				})
+				render("#network", {networks: json}, {channels: render("#channel")})
 			).find(".channel")
 				.first()
 				.addClass("active");
@@ -48,9 +57,9 @@ $(function() {
 			break;
 
 		case "CHANNELS":
-			var target = data.target;
-			if (data.action == "remove") {
-				$("[data-id='" + data.data.id + "']").remove();
+			var target = json.target;
+			if (json.action == "remove") {
+				$("[data-id='" + json.data.id + "']").remove();
 				return;
 			}
 
@@ -60,18 +69,14 @@ $(function() {
 				.removeClass("active")
 				.end();
 
-			network = network.filter("[data-id='" + data.target + "']").append(
-				Mustache.render(channel_tpl, {
-					channels: data.data
-				})
+			network = network.filter("[data-id='" + json.target + "']").append(
+				render("#channel", {channels: json.data})
 			).find(".channel")
 				.last()
 				.addClass("active");
 
 			$("#windows").append(
-				Mustache.render(window_tpl, {
-					channels: data.data
-				})
+				render("#window", {channels: json.data})
 			).find(".window")
 				.last()
 				.bringToTop()
@@ -81,31 +86,27 @@ $(function() {
 
 		case "USERS":
 			var target;
-			if (typeof data.target !== "undefined") {
-				target = chat.find(".window[data-id='" + data.target + "']");
+			if (typeof json.target !== "undefined") {
+				target = chat.find(".window[data-id='" + json.target + "']");
 			}
 
 			target = target.find(".users");
-			target.html(Mustache.render(user_tpl, {
-				users: data.data
-			}));
+			target.html(render("#user", {users: json.data}));
 			break;
 
 		case "MESSAGES":
 			var target;
-			if (typeof data.target !== "undefined") {
-				target = chat.find(".window[data-id='" + data.target + "']");
+			if (typeof json.target !== "undefined") {
+				target = chat.find(".window[data-id='" + json.target + "']");
 			}
 
-			var message = data.data;
+			var message = json.data;
 			if (message.type == "error") {
 				target = target.parent().find(".active");
 			}
 
 			target = target.find(".messages");
-			target.append(Mustache.render(message_tpl, {
-				messages: message
-			}));
+			target.append(render("#message", {messages: message}));
 			break;
 
 		}

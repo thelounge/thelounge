@@ -58,12 +58,7 @@
 	<script type="text/html" id="network">
 	{{#networks}}
 	<div class="network list-group" data-id="{{id}}">
-		{{#channels}}
-		<a href="{{name}}" class="channel list-group-item" data-id="{{id}}" data-name="{{name}}">
-			<span class="badge pull-right"></span>
-			{{name}}
-		</a>
-		{{/channels}}
+		{{> channels}}
 	</div>
 	{{/networks}}
 	</script>
@@ -89,20 +84,10 @@
 			<button class="close btn btn-danger btn-sm ">Leave</button>
 		</div>
 		<div class="users">
-			{{#users}}
-			<a href="{{name}}" class="user">
-				{{mode}}{{name}}
-			</a>
-			{{/users}}
+			{{> users}}
 		</div>
 		<div class="messages">
-			{{#messages}}
-			<div class="message {{type}}">
-				<span class="time">{{time}}</span>
-				<a href="{{user}}" class="user">{{mode}}{{user}}</a>
-				<span class="text">{{text}}</span>
-			</div>
-			{{/messages}}
+			{{> messages}}
 		</div>
 		<form onSubmit="return false;">
 			<input type="text" class="input" data-target="{{id}}"/>
