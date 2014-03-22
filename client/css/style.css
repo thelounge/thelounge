@@ -194,10 +194,14 @@ h2 {
 	color: #f00;
 }
 #chat .message .text {
-	color: #999;
+	color: inherit;
 }
-#chat .message.normal .text {
-	color: #000;
+#chat .message.join,
+#chat .message.part,
+#chat .message.nick,
+#chat .message.quit,
+#chat .message.notice {
+	color: #999;
 }
 
 @media screen and (max-width: 480px) {

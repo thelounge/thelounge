@@ -57,7 +57,7 @@
 
 	<script type="text/html" id="network">
 	{{#networks}}
-	<div class="network list-group" data-id="{{id}}">
+	<div class="network list-group" data-id="{{id}}" data-nick="{{nick}}">
 		{{> channels}}
 	</div>
 	{{/networks}}
@@ -110,7 +110,7 @@
 	<div class="message {{type}}">
 		<span class="time">{{time}}</span>
 		<a href="{{user}}" class="user">{{mode}}{{user}}</a>
-		<span class="text">{{text}}</span>
+		<span class="text">{{type}} {{text}}</span>
 	</div>
 	{{/messages}}
 	</script>
