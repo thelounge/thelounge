@@ -99,11 +99,18 @@ h2 {
 	padding: 0 10px;
 	width: 100%;
 }
-#chat.hide-join .join,
-#chat.hide-part .part,
-#chat.hide-nick .nick,
-#chat.hide-quit .quit {
+#chat .join,
+#chat .part,
+#chat .nick,
+#chat .quit {
+	/* Hidden by default */
 	display: none;
+}
+#chat.show-join .join,
+#chat.show-part .part,
+#chat.show-nick .nick,
+#chat.show-quit .quit {
+	display: block;
 }
 #chat .window {
 	background: #fff;

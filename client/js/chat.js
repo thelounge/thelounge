@@ -14,7 +14,7 @@ $(function() {
 		tpl[id] = tpl[id] || $(id).html();
 		if (!json) {
 			// If no data is supplied, return the template instead.
-			// Used when fetching partials.
+			// Handy when fetching partials.
 			return tpl[id];
 		}
 		return Mustache.render(
@@ -123,11 +123,35 @@ $(function() {
 	sidebar.find("input[type=checkbox]").each(function() {
 		var input = $(this);
 		var value = input.val();
-		input.prop("checked", true).wrap("<label>").parent().append(value);
+		
+		var checked = true;
+		if (($.cookie("hidden") || []).indexOf(value) !== -1) {
+			checked = false;
+		}
+		
+		input.prop("checked", checked)
+			.wrap("<label>")
+			.parent()
+			.append(value);
+		
+		if (checked) {
+			chat.addClass("show-" + value);
+		}
+		
 		input.on("change", function() {
+			var hidden = $.cookie("hidden") || "";
+			if (input.prop("checked")) {
+				hidden = hidden.replace(value, "");
+			} else {
+				hidden += value;
+			}
+			
+			// Save the cookie with the new values.
+			$.cookie("hidden", hidden);
+			
 			chat.toggleClass(
-				"hide-" + value,
-				!input.prop("checked")
+				"show-" + value,
+				input.prop("checked")
 			);
 		});
 	});
