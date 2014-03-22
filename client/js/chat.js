@@ -14,7 +14,7 @@ $(function() {
 		tpl[id] = tpl[id] || Handlebars.compile($(id).html());
 		return tpl[id](json);
 	}
-
+	
 	function event(type, json) {
 		switch (type) {
 
@@ -213,4 +213,11 @@ $(function() {
 			.removeClass("active")
 			.end();
 	};
+});
+
+Handlebars.registerHelper("autoLink", function(text) {
+	var text = Handlebars.Utils.escapeExpression(text);
+	return URI.withinString(text, function(url) {
+		return "<a href='" + url + "' target='_blank'>" + url + "</a>";
+	});
 });

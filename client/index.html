@@ -100,7 +100,7 @@
 			<div class="message {{type}}">
 				<span class="time">{{time}}</span>
 				<a href="{{user}}" class="user">{{mode}}{{user}}</a>
-				<span class="text">{{type}} {{text}}</span>
+				<span class="text">{{type}} {{{autoLink text}}}</span>
 			</div>
 			{{/each}}
 		</div>
@@ -125,7 +125,7 @@
 	<div class="message {{type}}">
 		<span class="time">{{time}}</span>
 		<a href="{{user}}" class="user">{{mode}}{{user}}</a>
-		<span class="text">{{type}} {{text}}</span>
+		<span class="text">{{type}} {{{autoLink text}}}</span>
 	</div>
 	{{/messages}}
 	</script>
@@ -136,6 +136,7 @@
 	<script src="/js/lib/jquery.cookie.js"></script>
 	<script src="/js/lib/jquery.scrollGlue.js"></script>
 	<script src="/js/lib/bootstrap.js"></script>
+	<script src="/js/lib/URI.js"></script>
 	<script src="/js/chat.js"></script>
 
 	</div>
