@@ -2,12 +2,13 @@
  * jquery-scroll-glue
  * https://github.com/erming/jquery-scroll-glue
  *
- * Copyright 2014 Mattias Erming <mattias@mattiaserming.com>
- * MIT License
+ * Copyright (c) 2014 Mattias Erming <mattias@mattiaserming.com>
+ * Licensed under the MIT License.
+ *
+ * Version 0.1.1
  */
 
 (function($) {
-
 	var append = $.fn.append;
 	$.fn.append = function() {
 		return append.apply(this, arguments).trigger("append");
@@ -81,8 +82,9 @@
 		}
 	};
 
-	// Find elements with the 'scroll-glue' attribute and
-	// activate the plugin.
-	$("[scroll-glue]").scrollGlue();
-
+	$(function() {
+		// Find elements with the 'scroll-glue' attribute and
+		// activate the plugin.
+		$("[scroll-glue]").scrollGlue();
+	});
 })(jQuery);
