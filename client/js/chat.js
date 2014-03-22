@@ -10,18 +10,9 @@ $(function() {
 	var sidebar = $("#sidebar");
 
 	var tpl = [];
-	function render(id, json, partials) {
-		tpl[id] = tpl[id] || $(id).html();
-		if (!json) {
-			// If no data is supplied, return the template instead.
-			// Handy when fetching partials.
-			return tpl[id];
-		}
-		return Mustache.render(
-			tpl[id],
-			json,
-			partials || {}
-		);
+	function render(id, json) {
+		tpl[id] = tpl[id] || Handlebars.compile($(id).html());
+		return tpl[id](json);
 	}
 
 	function event(type, json) {
@@ -29,17 +20,13 @@ $(function() {
 
 		case "NETWORKS":
 			var html = "";
-			var partials = {
-				messages: render("#message"),
-				users: render("#user")
-			};
 			json.forEach(function(network) {
-				html += render("#window", network, partials);
+				html += render("#window", network);
 			});
 			$("#windows")[0].innerHTML = html;
 
 			sidebar.find("#list").html(
-				render("#network", {networks: json}, {channels: render("#channel")})
+				render("#network", {networks: json})
 			).find(".channel")
 				.first()
 				.addClass("active");

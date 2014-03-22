@@ -58,7 +58,12 @@
 	<script type="text/html" id="network">
 	{{#networks}}
 	<div class="network list-group" data-id="{{id}}" data-nick="{{nick}}">
-		{{> channels}}
+		{{#each channels}}
+		<a href="{{name}}" class="channel list-group-item" data-id="{{id}}" data-name="{{name}}">
+			<span class="badge pull-right"></span>
+			{{name}}
+		</a>
+		{{/each}}
 	</div>
 	{{/networks}}
 	</script>
@@ -84,10 +89,20 @@
 			<button class="close btn btn-danger btn-sm ">Leave</button>
 		</div>
 		<div class="users">
-			{{> users}}
+			{{#each users}}
+			<a href="{{name}}" class="user">
+				{{mode}}{{name}}
+			</a>
+			{{/each}}
 		</div>
 		<div class="messages">
-			{{> messages}}
+			{{#each messages}}
+			<div class="message {{type}}">
+				<span class="time">{{time}}</span>
+				<a href="{{user}}" class="user">{{mode}}{{user}}</a>
+				<span class="text">{{type}} {{text}}</span>
+			</div>
+			{{/each}}
 		</div>
 		<form onSubmit="return false;">
 			<input type="text" class="input" data-target="{{id}}"/>
@@ -116,7 +131,7 @@
 	</script>
 
 	<script src="/socket.io/socket.io.js"></script>
-	<script src="/js/lib/mustache.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.2/handlebars.min.js"></script>
 	<script src="/js/lib/jquery.js"></script>
 	<script src="/js/lib/jquery.cookie.js"></script>
 	<script src="/js/lib/jquery.scrollGlue.js"></script>

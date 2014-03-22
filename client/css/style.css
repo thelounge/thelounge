@@ -200,7 +200,8 @@ h2 {
 #chat .message.part,
 #chat .message.nick,
 #chat .message.quit,
-#chat .message.notice {
+#chat .message.notice,
+#chat .message.error {
 	color: #999;
 }
 
