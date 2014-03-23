@@ -1,6 +1,6 @@
 html,
 body {
-	font: 12px Consolas, monospace;
+	font: 13px "Consolas", monospace;
 	height: 100%;
 }
 a:focus {
@@ -164,6 +164,7 @@ h2 {
 	background: #fff;
 	border-left: 1px solid #ddd;
 	bottom: 30px;
+	line-height: 1.4em;
 	overflow-y: auto;
 	padding: 4px 0;
 	position: absolute;
@@ -173,19 +174,22 @@ h2 {
 }
 #chat .users .user {
 	display: block;
-	color: #f00;
 	padding: 0 8px;
 }
 #chat .messages {
 	bottom: 30px;
 	left: 0;
 	overflow-y: auto;
-	padding: 4px 8px;
+	padding: 4px 0;
 	position: absolute;
 	right: 160px;
 	top: 43px;
 	word-wrap: break-word;
 	z-index: 0;
+}
+#chat .message {
+	line-height: 1.4em;
+	padding: 0 6px;
 }
 #chat .message .time {
 	color: #bbb;

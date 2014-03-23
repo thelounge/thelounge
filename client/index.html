@@ -90,7 +90,7 @@
 		</div>
 		<div class="users">
 			{{#each users}}
-			<a href="{{name}}" class="user">
+			<a href="{{name}}" class="user" style="color: {{color name}}">
 				{{mode}}{{name}}
 			</a>
 			{{/each}}
@@ -99,8 +99,8 @@
 			{{#each messages}}
 			<div class="message {{type}}">
 				<span class="time">{{time}}</span>
-				<a href="{{user}}" class="user">{{mode}}{{user}}</a>
-				<span class="text">{{type}} {{{autoLink text}}}</span>
+				<a href="{{user}}" class="user" style="color: {{color user}}">{{mode}}{{user}}</a>
+				<span class="text">{{type}} {{{link text}}}</span>
 			</div>
 			{{/each}}
 		</div>
@@ -114,7 +114,7 @@
 
 	<script type="text/html" id="user">
 	{{#users}}
-	<a href="{{name}}" class="user">
+	<a href="{{name}}" class="user" style="color: {{color name}}">
 		{{mode}}{{name}}
 	</a>
 	{{/users}}
@@ -124,8 +124,8 @@
 	{{#messages}}
 	<div class="message {{type}}">
 		<span class="time">{{time}}</span>
-		<a href="{{user}}" class="user">{{mode}}{{user}}</a>
-		<span class="text">{{type}} {{{autoLink text}}}</span>
+		<a href="{{user}}" class="user" style="color: {{color user}}">{{mode}}{{user}}</a>
+		<span class="text">{{type}} {{{link text}}}</span>
 	</div>
 	{{/messages}}
 	</script>

@@ -215,9 +215,58 @@ $(function() {
 	};
 });
 
-Handlebars.registerHelper("autoLink", function(text) {
+Handlebars.registerHelper("link", function(text) {
 	var text = Handlebars.Utils.escapeExpression(text);
 	return URI.withinString(text, function(url) {
 		return "<a href='" + url + "' target='_blank'>" + url + "</a>";
 	});
 });
+
+Handlebars.registerHelper("color", function(text) {
+	return get_color(text);
+});
+
+// colornicks
+// https://github.com/avidal
+
+function clean_nick(nick) {
+	// attempts to clean up a nickname
+	// by removing alternate characters from the end
+	// nc_ becomes nc, avidal` becomes avidal
+	
+	nick = nick.toLowerCase();
+	
+	// typically ` and _ are used on the end alone
+	nick = nick.replace(/[`_]+$/, '');
+	
+	// remove |<anything> from the end
+	nick = nick.replace(/|.*$/, '');
+	
+	return nick;
+}
+
+function hash(nick) {
+	var cleaned = clean_nick(nick);
+	var h = 0;
+	
+	for(var i = 0; i < cleaned.length; i++) {
+		h = cleaned.charCodeAt(i) + (h << 6) + (h << 16) - h;
+	}
+	
+	return h;
+}
+
+function get_color(nick) {
+	var nickhash = hash(nick);
+	
+	// get a random value for the hue
+	var h = nickhash % 360;
+	
+	var l = 50;
+	var s = 100;
+	
+	// playing around with some numbers
+	h = 360 + (h % 40);
+	
+	return "hsl(" + h + "," + s + "%," + l + "%)";
+}
