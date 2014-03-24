@@ -1,6 +1,6 @@
 {
 	"name": "chat",
-	"description": "A web-based client/server IRC chat", 
+	"description": "Web client/server IRC chat", 
 	"version": "0.1.0",
 	"author": {
 		"name": "Mattias Erming",
@@ -8,7 +8,6 @@
 	},
 	"dependencies": {
 		"backbone": "1.1.2",
-		"commander": "2.1.0",
 		"connect": "2.13.0",
 		"irc": "0.3.6",
 		"lodash": "2.4.1",
@@ -24,7 +23,7 @@
 	],
 	"main": "./index.js",
 	"scripts": {
-		"start": "nodemon index.js -p 9000"
+		"start": "nodemon index.js"
 	},
 	"repository": {
 		"type": "git",
