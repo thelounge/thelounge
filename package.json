@@ -1,6 +1,7 @@
 {
 	"name": "chat",
 	"description": "A web-based client/server IRC chat", 
+	"version": "0.1.0",
 	"author": {
 		"name": "Mattias Erming",
 		"email": "mattias@mattiaserming.com"
@@ -21,7 +22,7 @@
 		"web",
 		"browser"
 	],
-	"main": "./app.js",
+	"main": "./index.js",
 	"scripts": {
 		"start": "nodemon index.js -p 9000"
 	},
