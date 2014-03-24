@@ -1,32 +1,33 @@
 {
-	"name": "chat",
-	"description": "Web client/server IRC chat", 
-	"version": "0.1.0",
-	"author": {
-		"name": "Mattias Erming",
-		"email": "mattias@mattiaserming.com"
-	},
-	"dependencies": {
-		"backbone": "1.1.2",
-		"connect": "2.13.0",
-		"irc": "0.3.6",
-		"lodash": "2.4.1",
-		"moment": "2.5.1",
-		"socket.io": "0.9.16"
-	},
-	"keywords": [
-		"chat",
-		"irc",
-		"server",
-		"web",
-		"browser"
-	],
-	"main": "./index.js",
-	"scripts": {
-		"start": "nodemon index.js"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/erming/chat.git"
-	}
+  "name": "chat",
+  "description": "Web client/server IRC chat",
+  "version": "0.1.0",
+  "author": {
+    "name": "Mattias Erming",
+    "email": "mattias@mattiaserming.com"
+  },
+  "dependencies": {
+    "backbone": "1.1.2",
+    "connect": "2.13.0",
+    "irc": "0.3.6",
+    "lodash": "2.4.1",
+    "moment": "2.5.1",
+    "socket.io": "0.9.16",
+    "slate-irc": "~0.4.0"
+  },
+  "keywords": [
+    "chat",
+    "irc",
+    "server",
+    "web",
+    "browser"
+  ],
+  "main": "./index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/erming/chat.git"
+  }
 }
