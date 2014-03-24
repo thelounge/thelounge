@@ -1,6 +1,6 @@
 $(function() {
 	var socket = io.connect("");
-	$.each(["networks", "channels", "messages", "users"], function(i, type) {
+	$.each(["network", "channel", "message", "user"], function(i, type) {
 		socket.on(type, function(json) {
 			event(type, json);
 		});
@@ -16,9 +16,10 @@ $(function() {
 	}
 	
 	function event(type, json) {
+		console.log(json);
 		switch (type) {
 
-		case "networks":
+		case "network":
 			var html = "";
 			json.forEach(function(network) {
 				html += render("#window", network);
@@ -37,7 +38,7 @@ $(function() {
 				.bringToTop();
 			break;
 
-		case "channels":
+		case "channel":
 			var target = json.target;
 			if (json.action == "remove") {
 				$("[data-id='" + json.data.id + "']").remove();
@@ -65,7 +66,7 @@ $(function() {
 				.scrollGlue({animate: 400});
 			break;
 
-		case "users":
+		case "user":
 			var target;
 			if (typeof json.target !== "undefined") {
 				target = chat.find(".window[data-id='" + json.target + "']");
@@ -75,7 +76,7 @@ $(function() {
 			target.html(render("#user", {users: json.data}));
 			break;
 
-		case "messages":
+		case "message":
 			var target;
 			if (typeof json.target !== "undefined") {
 				target = chat.find(".window[data-id='" + json.target + "']");

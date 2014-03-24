@@ -7,13 +7,12 @@
     "email": "mattias@mattiaserming.com"
   },
   "dependencies": {
-    "backbone": "1.1.2",
-    "connect": "2.13.0",
-    "irc": "0.3.6",
-    "lodash": "2.4.1",
-    "moment": "2.5.1",
-    "socket.io": "0.9.16",
-    "slate-irc": "~0.4.0"
+    "lodash": "~2.4.1",
+    "backbone": "~1.1.2",
+    "slate-irc": "~0.4.0",
+    "moment": "~2.5.1",
+    "connect": "~2.14.3",
+    "socket.io": "~0.9.16"
   },
   "keywords": [
     "chat",
