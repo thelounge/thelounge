@@ -17,7 +17,6 @@ $(function() {
 	
 	function event(type, json) {
 		console.log(json);
-		console.log(type);
 
 		switch (type) {
 		
