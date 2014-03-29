@@ -17,8 +17,10 @@ $(function() {
 	
 	function event(type, json) {
 		console.log(json);
-		switch (type) {
+		console.log(type);
 
+		switch (type) {
+		
 		case "network":
 			var html = "";
 			json.forEach(function(network) {
@@ -81,7 +83,7 @@ $(function() {
 			if (typeof json.target !== "undefined") {
 				target = chat.find(".window[data-id='" + json.target + "']");
 			}
-
+			
 			var message = json.data;
 			if (message.type == "error") {
 				target = target.parent().find(".active");
