@@ -175,10 +175,21 @@ $(function() {
 		});
 	});
 
-	chat.on("append", ".window", function() {
-		var id = $(this).data("id");
-		var badge = sidebar.find(".channel[data-id='" + id + "']:not(.active) .badge");
-		badge.html((parseInt(badge.html()) + 1) || "1");
+	chat.on("append", ".messages", function(e) {
+		var item = $(this);
+		var last = item.find(".message:last");
+		var type = last[0].classList[1];
+		if (type && !chat.hasClass("show-" + type)) {
+			return;
+		}
+		
+		var id = item.parent().data("id");
+		var badge = sidebar
+			.find(".channel[data-id='" + id + "']:not(.active)")
+			.find(".badge");
+		
+		var num = (parseInt(badge.html()) + 1) || "1";
+		badge.html(num);
 	});
 
 	chat.on("click", ".user", function(e) {
@@ -223,52 +234,3 @@ Handlebars.registerHelper("link", function(text) {
 		return "<a href='" + url + "' target='_blank'>" + url + "</a>";
 	});
 });
-
-Handlebars.registerHelper("color", function(text) {
-	return get_color(text);
-});
-
-// colornicks
-// https://github.com/avidal
-
-function clean_nick(nick) {
-	// attempts to clean up a nickname
-	// by removing alternate characters from the end
-	// nc_ becomes nc, avidal` becomes avidal
-	
-	nick = nick.toLowerCase();
-	
-	// typically ` and _ are used on the end alone
-	nick = nick.replace(/[`_]+$/, '');
-	
-	// remove |<anything> from the end
-	nick = nick.replace(/|.*$/, '');
-	
-	return nick;
-}
-
-function hash(nick) {
-	var cleaned = clean_nick(nick);
-	var h = 0;
-	
-	for(var i = 0; i < cleaned.length; i++) {
-		h = cleaned.charCodeAt(i) + (h << 6) + (h << 16) - h;
-	}
-	
-	return h;
-}
-
-function get_color(nick) {
-	var nickhash = hash(nick);
-	
-	// get a random value for the hue
-	var h = nickhash % 360;
-	
-	var l = 50;
-	var s = 100;
-	
-	// playing around with some numbers
-	h = 360 + (h % 40);
-	
-	return "hsl(" + h + "," + s + "%," + l + "%)";
-}
