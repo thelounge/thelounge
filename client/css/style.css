@@ -11,6 +11,9 @@ h2 {
 	font: inherit;
 	margin: 0;
 }
+.nav > li > a:hover {
+	background: #f9f9f9;
+}
 #wrap,
 #viewport {
 	height: 100%;

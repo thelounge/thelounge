@@ -99,7 +99,7 @@
 			{{#each messages}}
 			<div class="message {{type}}">
 				<span class="time">{{time}}</span>
-				<a href="{{user}}" class="user">{{mode}}{{user}}</a>
+				<a href="{{from}}" class="user">{{mode}}{{from}}</a>
 				<span class="text">{{type}} {{{link message}}}</span>
 			</div>
 			{{/each}}
@@ -124,7 +124,7 @@
 	{{#messages}}
 	<div class="message {{type}}">
 		<span class="time">{{time}}</span>
-		<a href="{{user}}" class="user">{{mode}}{{user}}</a>
+		<a href="{{from}}" class="user">{{mode}}{{from}}</a>
 		<span class="text">{{type}} {{{link message}}}</span>
 	</div>
 	{{/messages}}
