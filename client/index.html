@@ -23,7 +23,7 @@
 			<li class="active"><a href="#list" data-toggle="tab">Channels</a></li>
 			<li><a href="#settings" data-toggle="tab">Settings</a></li>
 		</ul>
-
+		
 		</header>
 		<div class="tab-content">
 
@@ -56,9 +56,9 @@
 
 	<script type="text/html" id="network">
 	{{#networks}}
-	<div class="network list-group" data-id="{{id}}" data-nick="{{nick}}">
+	<div id="network-{{id}}" class="network list-group">
 		{{#each channels}}
-		<a href="{{name}}" class="channel list-group-item" data-id="{{id}}" data-name="{{name}}">
+		<a href="{{name}}" id="channel-{{id}}" class="channel list-group-item">
 			<span class="badge pull-right"></span>
 			{{name}}
 		</a>
@@ -69,7 +69,7 @@
 
 	<script type="text/html" id="channel">
 	{{#channels}}
-	<a href="{{name}}" class="channel list-group-item" data-id="{{id}}" data-name="{{name}}">
+	<a href="{{name}}" id="channel-{{id}}" class="channel list-group-item">
 		<span class="badge pull-right"></span>
 		{{name}}
 	</a>
@@ -78,7 +78,7 @@
 
 	<script type="text/html" id="window">
 	{{#channels}}
-	<div class="window {{type}}" data-id="{{id}}">
+	<div id="window-{{id}}" class="window {{type}}">
 		<div class="title">
 			<div class="toggle">
 				<a href="#" class="left">Channels</a>

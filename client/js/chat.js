@@ -16,8 +16,6 @@ $(function() {
 	}
 	
 	function event(type, json) {
-		console.log(json);
-
 		switch (type) {
 		
 		case "network":
@@ -40,19 +38,16 @@ $(function() {
 			break;
 
 		case "channel":
-			var target = json.target;
+			var id     = json.data.id;
+			console.log(json.data);
 			if (json.action == "remove") {
-				$("[data-id='" + json.data.id + "']").remove();
+				$("#channel-" + id + ", #window-" + id).remove();
 				return;
 			}
 
-			var network = sidebar
-				.find(".network")
-				.find(".channel")
-				.removeClass("active")
-				.end();
-
-			network = network.filter("[data-id='" + json.target + "']").append(
+			sidebar.find(".channel").removeClass("active");
+			
+			$("#network-" + json.target).append(
 				render("#channel", {channels: json.data})
 			).find(".channel")
 				.last()
@@ -70,7 +65,7 @@ $(function() {
 		case "user":
 			var target;
 			if (typeof json.target !== "undefined") {
-				target = chat.find(".window[data-id='" + json.target + "']");
+				target = chat.find("#window-" + json.target);
 			}
 
 			target = target.find(".users");
@@ -80,7 +75,7 @@ $(function() {
 		case "message":
 			var target;
 			if (typeof json.target !== "undefined") {
-				target = chat.find(".window[data-id='" + json.target + "']");
+				target = $("#window-" + json.target);
 			}
 			
 			var message = json.data;
@@ -104,29 +99,24 @@ $(function() {
 			.find(".badge")
 			.html("")
 			.end();
-		var id = item.data("id");
-		chat.find(".window[data-id='" + id + "']")
+		$("#window-" + item.attr("id").replace("channel-", ""))
 			.bringToTop();
 	});
 
 	sidebar.find("input[type=checkbox]").each(function() {
 		var input = $(this);
 		var value = input.val();
-		
 		var checked = true;
 		if (($.cookie("hidden") || []).indexOf(value) !== -1) {
 			checked = false;
 		}
-		
 		input.prop("checked", checked)
 			.wrap("<label>")
 			.parent()
 			.append(value);
-		
 		if (checked) {
 			chat.addClass("show-" + value);
 		}
-		
 		input.on("change", function() {
 			var hidden = $.cookie("hidden") || "";
 			if (input.prop("checked")) {
@@ -134,47 +124,14 @@ $(function() {
 			} else {
 				hidden += value;
 			}
-			
-			// Save the cookie with the new values.
-			$.cookie("hidden", hidden);
-			
+			$.cookie("hidden", hidden); // Save the cookie with the new values.
 			chat.toggleClass(
 				"show-" + value,
 				input.prop("checked")
 			);
 		});
 	});
-
-	chat.on("click touchstart", ".toggle a", function(e) {
-		e.preventDefault();
-		$("#viewport").toggleClass($(this).attr("class"));
-	});
-
-	chat.on("submit", "form", function() {
-		var input = $(this).find(".input");
-		var text = input.val();
-		if (text != "") {
-			input.val("");
-			socket.emit("input", {
-				id: input.data("target"),
-				text: text
-			});
-		}
-	});
-
-	chat.on("focus", "input[type=text]", function() {
-		$(this).closest(".window").find(".messages").scrollToBottom();
-	});
-
-	chat.on("click", ".close", function() {
-		var btn = $(this);
-		btn.prop("disabled", true);
-		socket.emit("input", {
-			id: btn.closest(".window").data("id"),
-			text: "/LEAVE"
-		});
-	});
-
+	
 	chat.on("append", ".messages", function(e) {
 		var item = $(this);
 		var last = item.find(".message:last");
@@ -182,37 +139,40 @@ $(function() {
 		if (type && !chat.hasClass("show-" + type)) {
 			return;
 		}
-		
-		var id = item.parent().data("id");
+		var id = item.parent()
+			.attr("id")
+			.replace("window-", "");
 		var badge = sidebar
-			.find(".channel[data-id='" + id + "']:not(.active)")
+			.find("#channel-" + id + ":not(.active)")
 			.find(".badge");
-		
 		var num = (parseInt(badge.html()) + 1) || "1";
 		badge.html(num);
 	});
 
-	chat.on("click", ".user", function(e) {
-		e.preventDefault();
+	chat.on("click touchstart", ".toggle a", function(e) {
+		$("#viewport").toggleClass($(this).attr("class"));
+		return false;
 	});
 
-	chat.on("dblclick", ".user", function() {
-		var user = $(this);
-		var id = user.closest(".window").data("id");
-		var name = user.attr("href");
-		
-		var channel = sidebar
-			.find(".channel[data-id='" + id + "']")
-			.siblings(".channel[data-name='" + name + "']");
-		if (channel.size() != 0) {
-			channel.trigger("click");
-			return;
+	chat.on("submit", "form", function() {
+		var input = $(this).find(".input");
+		var text = input.val();
+		if (text == "") {
+			return false;
 		}
-
+		input.val("");
 		socket.emit("input", {
-			id: id,
-			text: "/QUERY " + name
+			id: input.data("target"),
+			text: text
 		});
+	});
+
+	chat.on("focus", "input[type=text]", function() {
+		$(this).closest(".window").find(".messages").scrollToBottom();
+	});
+
+	chat.on("click", ".user", function(e) {
+		e.preventDefault();
 	});
 
 	var highest = 1;
