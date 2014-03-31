@@ -212,7 +212,7 @@ h2 {
 	color: #999;
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-device-width: 480px) {
 	#wrap {
 		overflow: hidden;
 		height: 100%;
@@ -240,16 +240,15 @@ h2 {
 		width: 100%;
 	}
 	#chat .toggle {
-		background: #f00;
 		display: block;
-		font-size: 14px;
+		font-size: 12px;
 		position: relative;
 	}
 	#chat .toggle a {
 		color: #000;
 		height: 42px;
 		line-height: 46px;
-		width: 46px;
+		margin: 0 10px;
 		position: absolute;
 		text-align: center;
 	}
