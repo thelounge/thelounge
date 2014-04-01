@@ -10,9 +10,18 @@ $(function() {
 	var sidebar = $("#sidebar");
 
 	var tpl = [];
-	function render(id, json) {
-		tpl[id] = tpl[id] || Handlebars.compile($(id).html());
-		return tpl[id](json);
+	function render(id, json, partials) {
+		tpl[id] = tpl[id] || $(id).html();
+		if (!json) {
+			// If no data is supplied, return the template instead.
+			// Handy when fetching partials.
+			return tpl[id];
+		}
+		return Mustache.render(
+			tpl[id],
+			json,
+			partials || {}
+		);
 	}
 	
 	function event(type, json) {
@@ -20,13 +29,17 @@ $(function() {
 		
 		case "network":
 			var html = "";
+			var partials = {
+				users: render("#user"),
+				messages: render("#message")
+			};
 			json.forEach(function(network) {
-				html += render("#window", network);
+				html += render("#window", network, partials);
 			});
 			$("#windows")[0].innerHTML = html;
 
 			sidebar.find("#list").html(
-				render("#network", {networks: json})
+				render("#network", {networks: json}, {channels: render("#channel")})
 			).find(".channel")
 				.first()
 				.addClass("active");
@@ -38,8 +51,7 @@ $(function() {
 			break;
 
 		case "channel":
-			var id     = json.data.id;
-			console.log(json.data);
+			var id = json.data.id;
 			if (json.action == "remove") {
 				$("#channel-" + id + ", #window-" + id).remove();
 				return;
@@ -63,9 +75,9 @@ $(function() {
 			break;
 
 		case "user":
-			var target;
-			if (typeof json.target !== "undefined") {
-				target = chat.find("#window-" + json.target);
+			var target = chat.find("#window-" + json.target);
+			if (target.size() == 0) {
+				return;
 			}
 
 			target = target.find(".users");
@@ -73,9 +85,9 @@ $(function() {
 			break;
 
 		case "message":
-			var target;
-			if (typeof json.target !== "undefined") {
-				target = $("#window-" + json.target);
+			var target = $("#window-" + json.target);
+			if (target.size() == 0) {
+				return;
 			}
 			
 			var message = json.data;
@@ -188,9 +200,9 @@ $(function() {
 	};
 });
 
-Handlebars.registerHelper("link", function(text) {
-	var text = Handlebars.Utils.escapeExpression(text);
-	return URI.withinString(text, function(url) {
-		return "<a href='" + url + "' target='_blank'>" + url + "</a>";
-	});
-});
+//Handlebars.registerHelper("link", function(text) {
+//	var text = Handlebars.Utils.escapeExpression(text);
+//	return URI.withinString(text, function(url) {
+//		return "<a href='" + url + "' target='_blank'>" + url + "</a>";
+//	});
+//});

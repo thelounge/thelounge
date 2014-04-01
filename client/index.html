@@ -57,12 +57,7 @@
 	<script type="text/html" id="network">
 	{{#networks}}
 	<div id="network-{{id}}" class="network list-group">
-		{{#each channels}}
-		<a href="{{name}}" id="channel-{{id}}" class="channel list-group-item">
-			<span class="badge pull-right"></span>
-			{{name}}
-		</a>
-		{{/each}}
+		{{> channels}}
 	</div>
 	{{/networks}}
 	</script>
@@ -85,23 +80,15 @@
 				<a href="#" class="right">Users</a>
 			</div>
 			<h1>{{name}}</h1>
-			<button class="close btn btn-danger btn-sm ">Leave</button>
+			<button class="close btn btn-danger btn-sm ">
+				Leave
+			</button>
 		</div>
 		<div class="users">
-			{{#each users}}
-			<a href="{{name}}" class="user">
-				{{mode}}{{name}}
-			</a>
-			{{/each}}
+			{{> users}}
 		</div>
 		<div class="messages">
-			{{#each messages}}
-			<div class="message {{type}}">
-				<span class="time">{{time}}</span>
-				<a href="{{from}}" class="user">{{mode}}{{from}}</a>
-				<span class="text">{{type}} {{{link message}}}</span>
-			</div>
-			{{/each}}
+			{{> messages}}
 		</div>
 		<form onSubmit="return false;">
 			<input type="text" class="input" data-target="{{id}}"/>
@@ -124,16 +111,16 @@
 	<div class="message {{type}}">
 		<span class="time">{{time}}</span>
 		<a href="{{from}}" class="user">{{mode}}{{from}}</a>
-		<span class="text">{{type}} {{{link message}}}</span>
+		<span class="text">{{type}} {{message}}</span>
 	</div>
 	{{/messages}}
 	</script>
 	
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.0/jquery.cookie.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.2/handlebars.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.2/mustache.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/URI.js/1.11.2/URI.min.js"></script>
-
+	
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="/js/lib/jquery.scrollGlue.js"></script>
 	<script src="/js/lib/bootstrap.js"></script>
