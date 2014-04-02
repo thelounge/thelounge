@@ -31,7 +31,7 @@ $(function() {
 			var html = "";
 			var partials = {
 				users: render("#user"),
-				messages: render("#message")
+				messages: render("#message"),
 			};
 			json.forEach(function(network) {
 				html += render("#window", network, partials);

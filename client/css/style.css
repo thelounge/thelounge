@@ -194,6 +194,9 @@ h2 {
 	line-height: 1.4em;
 	padding: 0 6px;
 }
+#chat .message div {
+	display: inline;
+}
 #chat .message .time {
 	color: #bbb;
 }

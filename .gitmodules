@@ -1,0 +1,3 @@
+[submodule "node_modules/slate-irc"]
+	path = node_modules/slate-irc
+	url = http://github.com/erming/slate-irc
