@@ -175,16 +175,24 @@ $(function() {
 		input.val("");
 		socket.emit("input", {
 			id: input.data("target"),
-			text: text
+			text: text,
 		});
+	});
+
+	chat.on("click", ".close", function() {
+		var id = parseInt($(this).closest(".window").attr("id").replace("window-", ""));
+		socket.emit("input", {
+			id: id,
+			text: "/part",
+		});
+	});
+	
+	chat.on("click", ".user", function(e) {
+		e.preventDefault();
 	});
 
 	chat.on("focus", "input[type=text]", function() {
 		$(this).closest(".window").find(".messages").scrollToBottom();
-	});
-
-	chat.on("click", ".user", function(e) {
-		e.preventDefault();
 	});
 
 	var highest = 1;
