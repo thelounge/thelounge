@@ -180,7 +180,7 @@ h2 {
 	padding: 0 8px;
 }
 #chat .messages {
-	border-left: 8px solid #f0f0f0;
+	border-left: 8px solid #fafafa;
 	bottom: 30px;
 	left: 0;
 	overflow-y: auto;
