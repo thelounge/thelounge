@@ -1,4 +1,24 @@
 $(function() {
+	var commands = [
+		"/connect",
+		"/deop",
+		"/devoice",
+		"/disconnect",
+		"/join",
+		"/kick",
+		"/leave",
+		"/mode",
+		"/nick",
+		"/op",
+		"/part",
+		"/query",
+		"/quit",
+		"/server",
+		"/topic",
+		"/voice",
+		"/whois",
+	];
+	
 	var socket = io.connect("");
 	$.each(["network", "channel", "message", "user"], function(i, type) {
 		socket.on(type, function(json) {
@@ -46,8 +66,12 @@ $(function() {
 
 			chat.find(".messages").scrollGlue({animate: 400}).scrollToBottom();
 			chat.find(".window")
+				.find("input")
+				.tabComplete(commands)
+				.end()
 				.first()
-				.bringToTop();
+				.bringToTop()
+				.end();
 			break;
 
 		case "channel":
@@ -69,9 +93,13 @@ $(function() {
 				render("#window", {channels: json.data})
 			).find(".window")
 				.last()
+				.find("input")
+				.tabComplete(commands)
+				.end()
 				.bringToTop()
 				.find(".messages")
-				.scrollGlue({animate: 400});
+				.scrollGlue({animate: 400})
+				.end();
 			break;
 
 		case "user":

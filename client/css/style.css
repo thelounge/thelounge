@@ -180,6 +180,7 @@ h2 {
 	padding: 0 8px;
 }
 #chat .messages {
+	border-left: 8px solid #f0f0f0;
 	bottom: 30px;
 	left: 0;
 	overflow-y: auto;
@@ -192,7 +193,7 @@ h2 {
 }
 #chat .message {
 	line-height: 1.4em;
-	padding: 0 6px;
+	padding: 0 8px;
 }
 #chat .message div {
 	display: inline;
@@ -203,6 +204,7 @@ h2 {
 #chat .message .user {
 	color: #f00;
 }
+#chat .message .type,
 #chat .message .text {
 	color: inherit;
 }

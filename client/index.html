@@ -1,24 +1,24 @@
 <!doctype html>
 <html>
 	<head>
-
+	
 	<title>Chat</title>
-
+	
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no">
-
+	
 	<link rel="stylesheet" href="/css/bootstrap.css">
 	<link rel="stylesheet" href="/css/style.css">
-
+	
 	</head>
 	<body>
 	
 	<div id="wrap">
 	<div id="viewport">
-
+	
 	<aside id="sidebar">
 		<header class="header">
-
+		
 		<ul class="nav nav-tabs">
 			<li class="active"><a href="#list" data-toggle="tab">Channels</a></li>
 			<li><a href="#settings" data-toggle="tab">Settings</a></li>
@@ -26,7 +26,7 @@
 		
 		</header>
 		<div class="tab-content">
-
+		
 		<div id="list" class="tab-pane active"></div>
 		<div id="settings" class="tab-pane">
 			<div class="panel panel-default">
@@ -41,7 +41,7 @@
 			</div>
 			</div>
 		</div>
-
+		
 		</div>
 	</aside>
 	<div id="chat">
@@ -53,7 +53,7 @@
 	</div>
 	
 	<div id="scripts">
-
+	
 	<script type="text/html" id="network">
 	{{#networks}}
 	<div id="network-{{id}}" class="network list-group">
@@ -61,7 +61,6 @@
 	</div>
 	{{/networks}}
 	</script>
-
 	<script type="text/html" id="channel">
 	{{#channels}}
 	<a href="{{name}}" id="channel-{{id}}" class="channel list-group-item">
@@ -70,7 +69,6 @@
 	</a>
 	{{/channels}}
 	</script>
-
 	<script type="text/html" id="window">
 	{{#channels}}
 	<div id="window-{{id}}" class="window {{type}}">
@@ -97,7 +95,6 @@
 	</div>
 	{{/channels}}
 	</script>
-
 	<script type="text/html" id="user">
 	{{#users}}
 	<a href="{{name}}" class="user">
@@ -105,13 +102,13 @@
 	</a>
 	{{/users}}
 	</script>
-
 	<script type="text/html" id="message">
 	{{#messages}}
 	<div class="message {{type}}">
 		<div class="time">{{time}}</div>
 		<div class="user">{{from}}</div>
-		<div class="text">{{type}} {{message}}</div>
+		<div class="type">{{type}}</div>
+		<div class="text">{{message}}</div>
 	</div>
 	{{/messages}}
 	</script>
@@ -122,11 +119,12 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/URI.js/1.11.2/URI.min.js"></script>
 	
 	<script src="/socket.io/socket.io.js"></script>
-	<script src="/js/lib/jquery.scrollGlue.js"></script>
 	<script src="/js/lib/bootstrap.js"></script>
+	<script src="/js/lib/jquery.scrollGlue.js"></script>
+	<script src="/js/lib/jquery.tabComplete.js"></script>
 	<script src="/js/chat.js"></script>
-
+	
 	</div>
-
+	
 	</body>
 </html>
