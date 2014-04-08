@@ -67,7 +67,7 @@ $(function() {
 			chat.find(".messages").scrollGlue({animate: 400}).scrollToBottom();
 			chat.find(".window")
 				.find("input")
-				.tabComplete(commands)
+				.tabComplete(commands, {appendSpace: true})
 				.end()
 				.first()
 				.bringToTop()
@@ -94,7 +94,7 @@ $(function() {
 			).find(".window")
 				.last()
 				.find("input")
-				.tabComplete(commands)
+				.tabComplete(commands, {appendSpace: true})
 				.end()
 				.bringToTop()
 				.find(".messages")

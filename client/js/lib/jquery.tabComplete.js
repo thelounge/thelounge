@@ -5,17 +5,25 @@
  * Copyright (c) 2014 Mattias Erming <mattias@mattiaserming.com>
  * Licensed under the MIT License.
  *
- * Version 0.1.0
+ * Version 0.2.0
  */
 
 (function($) {
-	$.fn.tabComplete = function(list) {
+	$.fn.tabComplete = function(list, options) {
+		var settings = $.extend({
+			appendSpace: false,
+			caseSensitive: false,
+		}, options);
+		
 		var self = this;
 		if (self.size() > 1) {
 			return self.each(function() {
-				$(this).tabComplete(list);
+				$(this).tabComplete(list, options);
 			});
 		}
+		
+		// Keep the list stored in the DOM via jQuery.data() variable.
+		self.data('list', list);
 		
 		var match = [];
 		self.on('keydown', function(e) {
@@ -25,12 +33,20 @@
 				return;
 			}
 			
-			var text = self.val().split(' ');
+			var text = self.val().trim().split(' ');
 			var last = text.splice(-1)[0];
 			
 			if (!match.length) {
-				match = $.grep(list, function(w) {
-					return last != '' && w.indexOf(last) !== -1;
+				match = $.grep(self.data('list'), function(w) {
+					var l = last;
+					if (l == '') {
+						return;
+					}
+					if (!settings.caseSensitive) {
+						l = l.toLowerCase();
+						w = w.toLowerCase();
+					}
+					return w.indexOf(l) !== -1;
 				});
 			}
 			
@@ -44,7 +60,7 @@
 			}
 			
 			text.push(last);
-			self.val(text.join(' '));
+			self.val(text.join(' ') + (settings.appendSpace ? ' ' : ''));
 			return false;
 		});
 	};
