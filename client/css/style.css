@@ -105,14 +105,18 @@ h2 {
 #chat .join,
 #chat .part,
 #chat .nick,
-#chat .quit {
+#chat .quit,
+#chat .mode,
+#chat .kick {
 	/* Hidden by default */
 	display: none;
 }
 #chat.show-join .join,
 #chat.show-part .part,
 #chat.show-nick .nick,
-#chat.show-quit .quit {
+#chat.show-quit .quit,
+#chat.show-mode .mode,
+#chat.show-kick .kick {
 	display: block;
 }
 #chat .window {

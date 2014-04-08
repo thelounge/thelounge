@@ -25,10 +25,10 @@ $(function() {
 			event(type, json);
 		});
 	});
-
+	
 	var chat = $("#chat");
 	var sidebar = $("#sidebar");
-
+	
 	var tpl = [];
 	function render(id, json, partials) {
 		tpl[id] = tpl[id] || $(id).html();
