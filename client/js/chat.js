@@ -220,7 +220,7 @@ $(function() {
 		var id = parseInt(link.closest(".window").attr("id").replace("window-", ""));
 		socket.emit("input", {
 			id: id,
-			text: "/whois " + link.text(),
+			text: "/whois " + link.text().trim(),
 		});
 	});
 
