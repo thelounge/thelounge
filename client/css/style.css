@@ -11,8 +11,13 @@ h2 {
 	font: inherit;
 	margin: 0;
 }
-.nav > li > a:hover {
+.nav a[data-toggle]:hover {
 	background: #f9f9f9;
+}
+.user {
+	color: #f00;
+	cursor: pointer;
+	-webkit-user-select: none;
 }
 #wrap,
 #viewport {
@@ -184,7 +189,7 @@ h2 {
 	padding: 0 8px;
 }
 #chat .messages {
-	border-left: 8px solid #fafafa;
+	border-left: 8px solid #f7f7f9;
 	bottom: 30px;
 	left: 0;
 	overflow-y: auto;
@@ -204,9 +209,6 @@ h2 {
 }
 #chat .message .time {
 	color: #bbb;
-}
-#chat .message .user {
-	color: #f00;
 }
 #chat .message .type,
 #chat .message .text {

@@ -215,8 +215,13 @@ $(function() {
 		});
 	});
 	
-	chat.on("click", ".user", function(e) {
-		e.preventDefault();
+	chat.on("dblclick", ".user", function() {
+		var link = $(this);
+		var id = parseInt(link.closest(".window").attr("id").replace("window-", ""));
+		socket.emit("input", {
+			id: id,
+			text: "/whois " + link.text(),
+		});
 	});
 
 	chat.on("focus", "input[type=text]", function() {
