@@ -64,7 +64,12 @@ $(function() {
 				.first()
 				.addClass("active");
 
-			chat.find(".messages").scrollGlue({animate: 400}).scrollToBottom();
+			chat.find(".messages")
+				.scrollGlue({animate: 400})
+				.scrollToBottom()
+				.find(".text")
+				.uri()
+				.end();
 			chat.find(".window")
 				.find("input")
 				.tabComplete(commands, {appendSpace: true})
@@ -122,9 +127,14 @@ $(function() {
 			if (message.type == "error") {
 				target = target.parent().find(".active");
 			}
-
+			
+			var msg = $(render("#message", {messages: message}))
+				.find(".text")
+				.uri()
+				.end();
+			
 			target = target.find(".messages");
-			target.append(render("#message", {messages: message}));
+			target.append(msg);
 			break;
 
 		}
@@ -247,7 +257,20 @@ $(function() {
 			.removeClass("active")
 			.end();
 	};
+	
+	$.fn.uri = function() {
+		return this.each(function() {
+			var html = $(this).html();
+			return $(this).html(URI.withinString(html, function(url) {
+				return "<a href='" + url + "' target='_blank'>" + url + "</a>";
+			}));
+		});
+	};
 });
+
+function linkify(text) {
+	
+}
 
 //Handlebars.registerHelper("link", function(text) {
 //	var text = Handlebars.Utils.escapeExpression(text);
