@@ -17,7 +17,9 @@ h2 {
 .user {
 	color: #f00;
 	cursor: pointer;
-	-webkit-user-select: none;
+}
+.user:hover {
+	color: #999;
 }
 #wrap,
 #viewport {
@@ -232,20 +234,20 @@ h2 {
 	}
 	#viewport {
 		-webkit-transition: -webkit-transform .2s ease-out;
-			transition:         transform .2s ease-out;
+		        transition:         transform .2s ease-out;
 		-webkit-transform: translateX(0);
-			transform: translateX(0);
+		        transform: translateX(0);
 		height: 100%;
 		margin-left: -200px;
 		width: 100%;
 	}
 	#viewport.left {
 		-webkit-transform: translateX(200px);
-			transform: translateX(200px);
+		        transform: translateX(200px);
 	}
 	#viewport.right {
 		-webkit-transform: translateX(-160px);
-			transform: translateX(-160px);
+		        transform: translateX(-160px);
 	}
 	#chat {
 		width: 100%;

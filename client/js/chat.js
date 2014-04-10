@@ -215,9 +215,17 @@ $(function() {
 		});
 	});
 	
+	chat.on("mousedown", ".user", function(e) {
+		return false;
+	});
+
 	chat.on("dblclick", ".user", function() {
 		var link = $(this);
 		var id = parseInt(link.closest(".window").attr("id").replace("window-", ""));
+		var name = link.text().trim();
+		if (name == "-!-" || name.indexOf(".") != -1) {
+			return;
+		}
 		socket.emit("input", {
 			id: id,
 			text: "/whois " + link.text().trim(),

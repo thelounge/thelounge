@@ -11,7 +11,7 @@
 (function($) {
 	$.fn.tabComplete = function(list, options) {
 		var settings = $.extend({
-			appendSpace: false,
+			after: '',
 			caseSensitive: false,
 		}, options);
 		
@@ -56,11 +56,10 @@
 			}
 			
 			if (match.length) {
-				last = match[i];
+				text.push(match[i]);
+				self.val(text.join(' ') + settings.after);
 			}
 			
-			text.push(last);
-			self.val(text.join(' ') + (settings.appendSpace ? ' ' : ''));
 			return false;
 		});
 	};
