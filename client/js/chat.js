@@ -267,14 +267,3 @@ $(function() {
 		});
 	};
 });
-
-function linkify(text) {
-	
-}
-
-//Handlebars.registerHelper("link", function(text) {
-//	var text = Handlebars.Utils.escapeExpression(text);
-//	return URI.withinString(text, function(url) {
-//		return "<a href='" + url + "' target='_blank'>" + url + "</a>";
-//	});
-//});
