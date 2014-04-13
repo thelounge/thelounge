@@ -72,7 +72,7 @@ $(function() {
 				.end();
 			chat.find(".window")
 				.find("input")
-				.tabComplete(commands, {appendSpace: true})
+				.tabComplete({after: " ", list: commands})
 				.end()
 				.first()
 				.bringToTop()
@@ -99,7 +99,7 @@ $(function() {
 			).find(".window")
 				.last()
 				.find("input")
-				.tabComplete(commands, {appendSpace: true})
+				.tabComplete({after: " ", list: commands})
 				.end()
 				.bringToTop()
 				.find(".messages")
