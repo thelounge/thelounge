@@ -92,6 +92,9 @@ h2 {
 	right: 0;
 	top: 0;
 }
+#chat a {
+	color: inherit;
+}
 #chat form {
 	border-top: 1px solid #ddd;
 	bottom: 1px;

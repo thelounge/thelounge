@@ -53,8 +53,10 @@ $(function() {
 				users: render("#user"),
 				messages: render("#message"),
 			};
-			json.forEach(function(network) {
-				html += render("#window", network, partials);
+			json.forEach(function(n) {
+				html += render(
+					"#window", n, partials
+				);
 			});
 			$("#windows")[0].innerHTML = html;
 
@@ -62,13 +64,12 @@ $(function() {
 				render("#network", {networks: json}, {channels: render("#channel")})
 			).find(".channel")
 				.first()
-				.addClass("active");
+				.addClass("active")
+				.end();
 
 			chat.find(".messages")
 				.scrollGlue({animate: 400})
 				.scrollToBottom()
-				.find(".text")
-				.uri()
 				.end();
 			chat.find(".window")
 				.find("input")
@@ -129,9 +130,6 @@ $(function() {
 			}
 			
 			var msg = $(render("#message", {messages: message}))
-				.find(".text")
-				.uri()
-				.end();
 			
 			target = target.find(".messages");
 			target.append(msg);
@@ -245,6 +243,19 @@ $(function() {
 	chat.on("focus", "input[type=text]", function() {
 		$(this).closest(".window").find(".messages").scrollToBottom();
 	});
+	
+	chat.on("mouseover", ".text", function() {
+		var self = $(this);
+		if (!self.hasClass("parsed")) {
+			self.addClass("parsed").html(uri(self.html()));
+		}
+	});
+	
+	function uri(text) {
+		return URI.withinString(text, function(url) {
+			return "<a href='" + url + "' target='_blank'>" + url + "</a>";
+		});
+	}
 
 	var highest = 1;
 	$.fn.bringToTop = function() {
@@ -256,14 +267,5 @@ $(function() {
 			.siblings()
 			.removeClass("active")
 			.end();
-	};
-	
-	$.fn.uri = function() {
-		return this.each(function() {
-			var html = $(this).html();
-			return $(this).html(URI.withinString(html, function(url) {
-				return "<a href='" + url + "' target='_blank'>" + url + "</a>";
-			}));
-		});
 	};
 });
