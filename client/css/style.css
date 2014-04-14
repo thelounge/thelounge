@@ -189,8 +189,11 @@ h2 {
 	top: 0;
 	width: 160px;
 }
+#chat .users .count {
+	color: #bbb;
+	padding: 0 8px;
+}
 #chat .users .user {
-	display: block;
 	padding: 0 8px;
 }
 #chat .messages {

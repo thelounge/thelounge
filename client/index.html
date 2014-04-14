@@ -39,6 +39,7 @@
 				<input type="checkbox" value="nick"/>
 				<input type="checkbox" value="quit"/>
 				<input type="checkbox" value="mode"/>
+				<input type="checkbox" value="kick"/>
 			</div>
 			</div>
 		</div>
@@ -97,6 +98,9 @@
 	{{/channels}}
 	</script>
 	<script type="text/html" id="user">
+	<div class="count">
+		Users: {{users.length}}
+	</div>
 	{{#users}}
 	<div class="user">
 		{{name}}

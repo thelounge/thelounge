@@ -123,12 +123,7 @@ $(function() {
 			break;
 
 		case "user":
-			var target = chat.find("#window-" + json.target);
-			if (target.size() == 0) {
-				return;
-			}
-
-			target = target.find(".users");
+			var target = chat.find("#window-" + json.target).find(".users");
 			target.html(render("#user", {users: json.data}));
 			break;
 
