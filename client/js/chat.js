@@ -85,6 +85,18 @@ $(function() {
 			var id = json.data.id;
 			if (json.action == "remove") {
 				$("#channel-" + id + ", #window-" + id).remove();
+				var highest = 0;
+				var next = null;
+				$(".window").each(function() {
+					var z = $(this).css("z-index");
+					if (z > highest) {
+						highest = z;
+						next = $(this);
+					}
+				});
+				if (next != null) {
+					next.addClass("active");
+				}
 				return;
 			}
 
