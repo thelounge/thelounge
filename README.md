@@ -26,4 +26,4 @@ These are the commands currently implemented:
 ### Screenshot
 Here's what it currently looks like:
 
-![](http://placehold.it/720x647)
+![](https://raw.github.com/erming/chat/master/screenshot.png)
