@@ -1,12 +1,12 @@
 [submodule "node_modules/slate-irc"]
 	path = node_modules/slate-irc
 	url = http://github.com/erming/slate-irc
-[submodule "client/js/lib/jquery-scroll-glue"]
-	path = client/js/lib/jquery-scroll-glue
-	url = http://github.com/erming/jquery-scroll-glue
-[submodule "client/js/lib/jquery-input-history"]
-	path = client/js/lib/jquery-input-history
-	url = http://github.com/erming/jquery-input-history
-[submodule "client/js/lib/jquery-tab-complete"]
-	path = client/js/lib/jquery-tab-complete
-	url = http://github.com/erming/jquery-tab-complete
+[submodule "client/js/lib/scrollGlue"]
+	path = client/js/lib/scrollGlue
+	url = http://github.com/erming/scrollGlue
+[submodule "client/js/lib/inputHistory"]
+	path = client/js/lib/inputHistory
+	url = http://github.com/erming/inputHistory
+[submodule "client/js/lib/tabComplete"]
+	path = client/js/lib/tabComplete
+	url = http://github.com/erming/tabComplete
