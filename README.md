@@ -22,8 +22,3 @@ These are the commands currently implemented:
 - `/topic`
 - `/voice`
 - `/whois`
-
-### Screenshot
-Here's what it currently looks like:
-
-![](https://raw.github.com/erming/chat/master/screenshot.png)
