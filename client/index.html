@@ -46,24 +46,21 @@
 		
 		</div>
 	</aside>
+	
 	<div id="chat">
-		<div id="windows">
-		</div>
 	</div>
 	
 	</div>
 	</div>
 	
-	<div id="scripts">
-	
-	<script type="text/html" id="network">
+	<script type="text/html" id="networks">
 	{{#networks}}
 	<div id="network-{{id}}" class="network list-group">
 		{{> channels}}
 	</div>
 	{{/networks}}
 	</script>
-	<script type="text/html" id="channel">
+	<script type="text/html" id="channels">
 	{{#channels}}
 	<a href="{{name}}" id="channel-{{id}}" class="channel list-group-item">
 		<span class="badge pull-right"></span>
@@ -71,8 +68,8 @@
 	</a>
 	{{/channels}}
 	</script>
-	<script type="text/html" id="window">
-	{{#channels}}
+	<script type="text/html" id="windows">
+	{{#windows}}
 	<div id="window-{{id}}" class="window {{type}}">
 		<div class="title">
 			<div class="toggle">
@@ -95,9 +92,9 @@
 			<input type="submit" style="display: none;"/>
 		</form>
 	</div>
-	{{/channels}}
+	{{/windows}}
 	</script>
-	<script type="text/html" id="user">
+	<script type="text/html" id="users">
 	<div class="count">
 		Users: {{users.length}}
 	</div>
@@ -107,7 +104,7 @@
 	</div>
 	{{/users}}
 	</script>
-	<script type="text/html" id="message">
+	<script type="text/html" id="messages">
 	{{#messages}}
 	<div class="message {{type}}">
 		<div class="time">{{time}}</div>
@@ -124,13 +121,11 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/URI.js/1.11.2/URI.min.js"></script>
 	
 	<script src="/socket.io/socket.io.js"></script>
-	<script src="/js/lib/bootstrap.js"></script>
-	<script src="/js/lib/inputHistory/jquery.inputHistory.js"></script>
-	<script src="/js/lib/scrollGlue/jquery.scrollGlue.js"></script>
-	<script src="/js/lib/tabComplete/jquery.tabComplete.js"></script>
+	<script src="/js/bootstrap.js"></script>
+	<script src="/js/inputHistory/jquery.inputHistory.js"></script>
+	<script src="/js/scrollGlue/jquery.scrollGlue.js"></script>
+	<script src="/js/tabComplete/jquery.tabComplete.js"></script>
 	<script src="/js/chat.js"></script>
-	
-	</div>
 	
 	</body>
 </html>

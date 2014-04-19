@@ -1,12 +1,12 @@
 [submodule "node_modules/slate-irc"]
 	path = node_modules/slate-irc
 	url = http://github.com/erming/slate-irc
-[submodule "client/js/lib/scrollGlue"]
-	path = client/js/lib/scrollGlue
+[submodule "client/js/scrollGlue"]
+	path = client/js/scrollGlue
 	url = http://github.com/erming/scrollGlue
-[submodule "client/js/lib/inputHistory"]
-	path = client/js/lib/inputHistory
+[submodule "client/js/inputHistory"]
+	path = client/js/inputHistory
 	url = http://github.com/erming/inputHistory
-[submodule "client/js/lib/tabComplete"]
-	path = client/js/lib/tabComplete
+[submodule "client/js/tabComplete"]
+	path = client/js/tabComplete
 	url = http://github.com/erming/tabComplete

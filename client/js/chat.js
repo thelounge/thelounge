@@ -1,4 +1,7 @@
 $(function() {
+	var chat = $("#chat");
+	var sidebar = $("#sidebar");
+	
 	var commands = [
 		"/connect",
 		"/deop",
@@ -20,14 +23,11 @@ $(function() {
 	];
 	
 	var socket = io.connect("");
-	$.each(["network", "channel", "message", "user"], function(i, type) {
-		socket.on(type, function(json) {
-			event(type, json);
+	$.each(["network", "channel", "user", "message"], function(i, event) {
+		socket.on(event, function(json) {
+			handleEvent(event, json);
 		});
 	});
-	
-	var chat = $("#chat");
-	var sidebar = $("#sidebar");
 	
 	var tpl = [];
 	function render(id, json, partials) {
@@ -44,24 +44,25 @@ $(function() {
 		);
 	}
 	
-	function event(type, json) {
-		switch (type) {
+	function handleEvent(event, json) {
+		var data = json.data;
+		switch (event) {
 		
 		case "network":
 			var html = "";
 			var partials = {
-				users: render("#user"),
-				messages: render("#message"),
+				users: render("#users"),
+				messages: render("#messages"),
 			};
-			json.forEach(function(n) {
+			data.forEach(function(n) {
 				html += render(
-					"#window", n, partials
+					"#windows", {windows: n.channels}, partials
 				);
 			});
-			$("#windows")[0].innerHTML = html;
+			chat[0].innerHTML = html;
 
 			sidebar.find("#list").html(
-				render("#network", {networks: json}, {channels: render("#channel")})
+				render("#networks", {networks: data}, {channels: render("#channels")})
 			).find(".channel")
 				.first()
 				.addClass("active")
@@ -82,7 +83,7 @@ $(function() {
 			break;
 
 		case "channel":
-			var id = json.data.id;
+			var id = data.id;
 			if (json.action == "remove") {
 				$("#channel-" + id + ", #window-" + id).remove();
 				var highest = 0;
@@ -103,13 +104,13 @@ $(function() {
 			sidebar.find(".channel").removeClass("active");
 			
 			$("#network-" + json.target).append(
-				render("#channel", {channels: json.data})
+				render("#channels", {channels: data})
 			).find(".channel")
 				.last()
 				.addClass("active");
 
-			$("#windows").append(
-				render("#window", {channels: json.data})
+			chat.append(
+				render("#windows", {windows: data})
 			).find(".window")
 				.last()
 				.find("input")
@@ -124,7 +125,7 @@ $(function() {
 
 		case "user":
 			var target = chat.find("#window-" + json.target).find(".users");
-			target.html(render("#user", {users: json.data}));
+			target.html(render("#users", {users: data}));
 			break;
 
 		case "message":
@@ -133,12 +134,11 @@ $(function() {
 				return;
 			}
 			
-			var message = json.data;
-			if (message.type == "error") {
+			if (data.type == "error") {
 				target = target.parent().find(".active");
 			}
 			
-			var msg = $(render("#message", {messages: message}))
+			var msg = $(render("#messages", {messages: data}))
 			
 			target = target.find(".messages");
 			target.append(msg);
@@ -181,7 +181,7 @@ $(function() {
 			} else {
 				hidden += value;
 			}
-			$.cookie("hidden", hidden); // Save the cookie with the new values.
+			$.cookie("hidden", hidden);
 			chat.toggleClass(
 				"show-" + value,
 				input.prop("checked")
