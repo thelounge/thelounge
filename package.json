@@ -1,7 +1,7 @@
 {
-  "name": "chat",
-  "description": "Web client/server IRC chat",
-  "version": "0.2.1",
+  "name": "shout",
+  "description": "The modern IRC client",
+  "version": "0.2.2",
   "author": {
     "name": "Mattias Erming",
     "email": "mattias@mattiaserming.com"
@@ -9,24 +9,25 @@
   "dependencies": {
     "lodash": "~2.4.1",
     "backbone": "~1.1.2",
-    "slate-irc": "~0.4.0",
+    "slate-irc": "~0.5.0",
     "moment": "~2.5.1",
     "connect": "~2.14.3",
     "socket.io": "~0.9.16"
   },
   "keywords": [
+    "browser",
     "chat",
+		"client",
     "irc",
     "server",
-    "web",
-    "browser"
+    "web"
   ],
   "main": "./index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodejs index.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/erming/chat.git"
+    "url": "https://github.com/erming/shout.git"
   }
 }
