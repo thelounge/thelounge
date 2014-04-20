@@ -30,19 +30,17 @@ $(function() {
 	});
 	
 	var tpl = [];
-	function render(id, json, partials) {
-		tpl[id] = tpl[id] || $(id).html();
-		if (!json) {
-			// If no data is supplied, return the template instead.
-			// Handy when fetching partials.
-			return tpl[id];
-		}
-		return Mustache.render(
-			tpl[id],
-			json,
-			partials || {}
-		);
+	function render(id, json) {
+		tpl[id] = tpl[id] || Handlebars.compile($(id).html());
+		return tpl[id](json);
 	}
+	
+	Handlebars.registerHelper(
+		"partial",
+		function(id) {
+			return new Handlebars.SafeString(render(id, this));
+		}
+	);
 	
 	function handleEvent(event, json) {
 		var data = json.data;
@@ -50,19 +48,13 @@ $(function() {
 		
 		case "network":
 			var html = "";
-			var partials = {
-				users: render("#users"),
-				messages: render("#messages"),
-			};
 			data.forEach(function(n) {
-				html += render(
-					"#windows", {windows: n.channels}, partials
-				);
+				html += render("#windows", {windows: n.channels});
 			});
 			chat[0].innerHTML = html;
 
 			sidebar.find("#list").html(
-				render("#networks", {networks: data}, {channels: render("#channels")})
+				render("#networks", {networks: data})
 			).find(".channel")
 				.first()
 				.addClass("active")
@@ -104,13 +96,13 @@ $(function() {
 			sidebar.find(".channel").removeClass("active");
 			
 			$("#network-" + json.target).append(
-				render("#channels", {channels: data})
+				render("#channels", {channels: [data]})
 			).find(".channel")
 				.last()
 				.addClass("active");
 
 			chat.append(
-				render("#windows", {windows: data})
+				render("#windows", {windows: [data]})
 			).find(".window")
 				.last()
 				.find("input")
@@ -124,8 +116,8 @@ $(function() {
 			break;
 
 		case "user":
-			var target = chat.find("#window-" + json.target).find(".users");
-			target.html(render("#users", {users: data}));
+			var html = render("#users", {users: data});
+			var target = chat.find("#window-" + json.target + " .users").html(html);
 			break;
 
 		case "message":
@@ -138,7 +130,7 @@ $(function() {
 				target = target.parent().find(".active");
 			}
 			
-			var msg = $(render("#messages", {messages: data}))
+			var msg = $(render("#messages", {messages: [data]}));
 			
 			target = target.find(".messages");
 			target.append(msg);
@@ -251,13 +243,6 @@ $(function() {
 
 	chat.on("focus", "input[type=text]", function() {
 		$(this).closest(".window").find(".messages").scrollToBottom();
-	});
-	
-	chat.on("mouseover", ".text", function() {
-		var self = $(this);
-		if (!self.hasClass("parsed")) {
-			self.addClass("parsed").html(uri(self.html()));
-		}
 	});
 	
 	function uri(text) {

@@ -53,23 +53,25 @@
 	</div>
 	</div>
 	
-	<script type="text/html" id="networks">
-	{{#networks}}
+	<script type="text/x-handlebars-template" id="networks">
+	{{#each networks}}
 	<div id="network-{{id}}" class="network list-group">
-		{{> channels}}
+		{{partial "#channels"}}
 	</div>
-	{{/networks}}
+	{{/each}}
 	</script>
-	<script type="text/html" id="channels">
-	{{#channels}}
+	
+	<script type="text/x-handlebars-template" id="channels">
+	{{#each channels}}
 	<a href="{{name}}" id="channel-{{id}}" class="channel list-group-item">
 		<span class="badge pull-right"></span>
 		{{name}}
 	</a>
-	{{/channels}}
+	{{/each}}
 	</script>
-	<script type="text/html" id="windows">
-	{{#windows}}
+	
+	<script type="text/x-handlebars-template" id="windows">
+	{{#each windows}}
 	<div id="window-{{id}}" class="window {{type}}">
 		<div class="title">
 			<div class="toggle">
@@ -82,42 +84,44 @@
 			</button>
 		</div>
 		<div class="users">
-			{{> users}}
+			{{partial "#users"}}
 		</div>
 		<div class="messages">
-			{{> messages}}
+			{{partial "#messages"}}
 		</div>
 		<form onSubmit="return false;">
 			<input type="text" class="input" data-target="{{id}}"/>
 			<input type="submit" style="display: none;"/>
 		</form>
 	</div>
-	{{/windows}}
+	{{/each}}
 	</script>
-	<script type="text/html" id="users">
+	
+	<script type="text/x-handlebars-template" id="users">
 	<div class="count">
 		Users: {{users.length}}
 	</div>
-	{{#users}}
+	{{#each users}}
 	<div class="user">
 		{{name}}
 	</div>
-	{{/users}}
+	{{/each}}
 	</script>
-	<script type="text/html" id="messages">
-	{{#messages}}
+	
+	<script type="text/x-handlebars-template" id="messages">
+	{{#each messages}}
 	<div class="message {{type}}">
 		<div class="time">{{time}}</div>
 		<div class="user">{{from}}</div>
 		<div class="type">{{type}}</div>
 		<div class="text">{{message}}</div>
 	</div>
-	{{/messages}}
+	{{/each}}
 	</script>
 	
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.0/jquery.cookie.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.2/mustache.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.3.0/handlebars.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/URI.js/1.11.2/URI.min.js"></script>
 	
 	<script src="/socket.io/socket.io.js"></script>
