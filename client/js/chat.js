@@ -36,7 +36,7 @@ $(function() {
 	}
 	
 	function handleEvent(event, json) {
-		var data = json.data;
+		var data = [].concat(json.data);
 		switch (event) {
 		
 		case "network":
@@ -68,7 +68,7 @@ $(function() {
 			break;
 
 		case "channel":
-			var id = data.id;
+			var id = data[0].id;
 			if (json.action == "remove") {
 				$("#channel-" + id + ", #window-" + id).remove();
 				var highest = 0;
@@ -89,13 +89,13 @@ $(function() {
 			sidebar.find(".channel").removeClass("active");
 			
 			$("#network-" + json.target).append(
-				render("#channels", {channels: [data]})
+				render("#channels", {channels: data})
 			).find(".channel")
 				.last()
 				.addClass("active");
 
 			chat.append(
-				render("#windows", {windows: [data]})
+				render("#windows", {windows: data})
 			).find(".window")
 				.last()
 				.find("input")
@@ -123,7 +123,7 @@ $(function() {
 				target = target.parent().find(".active");
 			}
 			
-			var msg = $(render("#messages", {messages: [data]}));
+			var msg = $(render("#messages", {messages: data}));
 			
 			target = target.find(".messages");
 			target.append(msg);
