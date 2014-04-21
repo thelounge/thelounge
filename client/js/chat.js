@@ -75,13 +75,15 @@ $(function() {
 				var next = null;
 				$(".window").each(function() {
 					var z = $(this).css("z-index");
+					if (z == "auto") z = 0;
 					if (z > highest) {
 						highest = z;
 						next = $(this);
 					}
 				});
 				if (next != null) {
-					next.addClass("active");
+					$("#channel-" + next.attr("id").replace("window-", "")).addClass("active");
+					next.bringToTop();
 				}
 				return;
 			}
