@@ -35,13 +35,6 @@ $(function() {
 		return tpl[id](json);
 	}
 	
-	Handlebars.registerHelper(
-		"partial",
-		function(id) {
-			return new Handlebars.SafeString(render(id, this));
-		}
-	);
-	
 	function handleEvent(event, json) {
 		var data = json.data;
 		switch (event) {
@@ -244,12 +237,6 @@ $(function() {
 	chat.on("focus", "input[type=text]", function() {
 		$(this).closest(".window").find(".messages").scrollToBottom();
 	});
-	
-	function uri(text) {
-		return URI.withinString(text, function(url) {
-			return "<a href='" + url + "' target='_blank'>" + url + "</a>";
-		});
-	}
 
 	var highest = 1;
 	$.fn.bringToTop = function() {
@@ -262,4 +249,34 @@ $(function() {
 			.removeClass("active")
 			.end();
 	};
+	
+	function uri(text) {
+		return URI.withinString(text, function(url) {
+			return "<a href='" + url + "' target='_blank'>" + url + "</a>";
+		});
+	}
+	
+	function escape(string) {
+		var e = {
+			"<": "&lt;",
+			">": "&gt;",
+		};
+		return string.replace(/[<>]/g, function (s) {
+			return e[s];
+		});
+	}
+	
+	Handlebars.registerHelper(
+		"uri",
+		function(text) {
+			return uri(escape(text));
+		}
+	);
+	
+	Handlebars.registerHelper(
+		"partial",
+		function(id) {
+			return new Handlebars.SafeString(render(id, this));
+		}
+	);
 });
