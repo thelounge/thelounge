@@ -196,7 +196,7 @@ h2 {
 	padding: 0 8px;
 }
 #chat .messages {
-	border-left: 8px solid #f7f7f9;
+	box-shadow: inset 8px 0 0 #f7f7f9;
 	bottom: 30px;
 	left: 0;
 	overflow-y: auto;
@@ -208,6 +208,7 @@ h2 {
 	z-index: 0;
 }
 #chat .message {
+	border-left: 8px solid #f7f7f9;
 	line-height: 1.4em;
 	padding: 0 8px;
 }
@@ -228,6 +229,14 @@ h2 {
 #chat .message.notice,
 #chat .message.error {
 	color: #999;
+}
+#chat .message.highlight {
+	background: #fcf8e3;
+	border-left-color: #faebcc;
+	color: #8a6d3b;
+}
+#chat .message.highlight .type {
+	display: none;
 }
 
 @media screen and (max-device-width: 480px) {
