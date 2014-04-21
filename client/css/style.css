@@ -222,21 +222,28 @@ h2 {
 #chat .message .text {
 	color: inherit;
 }
-#chat .message.join,
-#chat .message.part,
-#chat .message.nick,
-#chat .message.quit,
-#chat .message.notice,
-#chat .message.error {
+#chat .join,
+#chat .part,
+#chat .nick,
+#chat .quit,
+#chat .notice,
+#chat .error {
 	color: #999;
 }
-#chat .message.highlight {
+#chat .highlight,
+#chat .topic {
 	background: #fcf8e3;
 	border-left-color: #faebcc;
 	color: #8a6d3b;
 }
-#chat .message.highlight .type {
+#chat .highlight .type {
 	display: none;
+}
+#chat .topic .type {
+	opacity: 0.5;
+}
+#chat .topic .type:after {
+	content: ":";
 }
 
 @media screen and (max-device-width: 480px) {
