@@ -193,11 +193,6 @@ $(function() {
 		badge.html(num);
 	});
 
-	chat.on("click touchstart", ".toggle a", function(e) {
-		$("#viewport").toggleClass($(this).attr("class"));
-		return false;
-	});
-
 	chat.on("submit", "form", function() {
 		var input = $(this).find(".input");
 		var text = input.val();
@@ -211,14 +206,6 @@ $(function() {
 		});
 	});
 
-	chat.on("click", ".close", function() {
-		var id = parseInt($(this).closest(".window").attr("id").replace("window-", ""));
-		socket.emit("input", {
-			id: id,
-			text: "/part",
-		});
-	});
-	
 	chat.on("mousedown", ".user", function(e) {
 		return false;
 	});
