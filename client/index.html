@@ -7,8 +7,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no">
 	
-	<link rel="stylesheet" href="/css/bootstrap.css">
-	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/style.css">
 	
 	</head>
 	<body>
@@ -16,57 +15,27 @@
 	<div id="wrap">
 	<div id="viewport">
 	
-	<aside id="sidebar">
-		<header class="header">
-		
-		<ul class="nav nav-tabs">
-			<li class="active"><a href="#list" data-toggle="tab">Channels</a></li>
-			<li><a href="#settings" data-toggle="tab">Settings</a></li>
-		</ul>
-		
-		</header>
-		<div class="tab-content">
-		
-		<div id="list" class="tab-pane active"></div>
-		<div id="settings" class="tab-pane">
-			<div class="panel panel-default">
-			<div class="panel-heading">
-				Show/hide events
-			</div>
-			<div class="panel-body">
-				<input type="checkbox" value="join"/>
-				<input type="checkbox" value="part"/>
-				<input type="checkbox" value="nick"/>
-				<input type="checkbox" value="quit"/>
-				<input type="checkbox" value="mode"/>
-				<input type="checkbox" value="kick"/>
-			</div>
-			</div>
-		</div>
-		
-		</div>
-	</aside>
-	
-	<div id="chat">
-	</div>
+	<aside id="sidebar"></aside>
+	<div id="chat"></div>
 	
 	</div>
 	</div>
 	
 	<script type="text/x-handlebars-template" id="networks">
 	{{#each networks}}
-	<div id="network-{{id}}" class="network list-group">
+	<ul id="network-{{id}}" class="network">
 		{{partial "#channels"}}
-	</div>
+	</ul>
 	{{/each}}
 	</script>
 	
 	<script type="text/x-handlebars-template" id="channels">
 	{{#each channels}}
-	<a href="{{name}}" id="channel-{{id}}" class="channel list-group-item">
-		<span class="badge pull-right"></span>
+	<li>
+	<button id="channel-{{id}}" class="channel">
 		{{name}}
-	</a>
+	</button>
+	</li>
 	{{/each}}
 	</script>
 	
@@ -95,19 +64,29 @@
 		Users: {{users.length}}
 	</div>
 	{{#each users}}
-	<div class="user">
+	<button class="user">
 		{{name}}
-	</div>
+	</button>
 	{{/each}}
 	</script>
 	
 	<script type="text/x-handlebars-template" id="messages">
 	{{#each messages}}
-	<div class="message {{type}}">
-		<div class="time">{{time}}</div>
-		<div class="user">{{from}}</div>
-		<div class="type">{{type}}</div>
-		<div class="text">{{{uri text}}}</div>
+	<div class="{{type}}">
+		<span class="time">
+			{{time}}
+		</span>
+		<button class="user">
+			{{from}}
+		</button>
+		{{#if type}}
+		<span class="type">
+			{{type}}
+		</span>
+		{{/if}}
+		<span class="text">
+			{{{uri text}}}
+		</span>
 	</div>
 	{{/each}}
 	</script>
@@ -117,7 +96,6 @@
 	<script src="/js/uri.js"></script>
 	<script src="/js/handlebars.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
-	<script src="/js/bootstrap.js"></script>
 	<script src="/js/chat.js"></script>
 	
 	</body>

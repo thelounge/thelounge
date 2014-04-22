@@ -1,0 +1,165 @@
+* {
+	box-sizing: border-box;
+}
+html,
+body {
+	font: 12px "Consolas", monospace;
+	height: 100%;
+	margin: 0;
+}
+a:focus,
+button:focus {
+	outline: 0;
+}
+h1,
+h2 {
+	font: inherit;
+	margin: 0;
+}
+ul,
+li {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.user {
+	background: none;
+	border: 0;
+	font: inherit;
+	margin: 0;
+	padding: 0;
+}
+.user:hover {
+	color: #f00;
+	cursor: pointer;
+}
+#wrap,
+#viewport {
+	height: 100%;
+	min-width: 640px;
+	position: relative;
+	width: 100%;
+}
+#sidebar {
+	border-right: 1px solid #e1e1e8;
+	float: left;
+	height: 100%;
+	width: 200px;
+}
+#sidebar .network {
+	margin: 20px;
+}
+#sidebar li {
+	margin-left: 10px;
+}
+#sidebar li:first-child {
+	margin-left: 0;
+}
+#chat {
+	bottom: 0;
+	left: 200px;
+	line-height: 16px;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+#chat a {
+	color: inherit;
+}
+#chat form {
+	border-top: 1px solid #ddd;
+	bottom: 1px;
+	height: 30px;
+	left: 0;
+	position: absolute;
+	right: 0;
+}
+#chat form input {
+	border: 0;
+	font: inherit;
+	height: 30px;
+	margin: 0;
+	outline: none;
+	padding: 0 10px;
+	width: 100%;
+}
+#chat .network .users {
+	display: none;
+}
+#chat .network .title,
+#chat .network .messages {
+	right: 0;
+}
+#chat .window {
+	background: #fff;
+	height: 100%;
+	position: absolute;
+	width: 100%;
+}
+#chat .title {
+	border-bottom: 1px solid #ddd;
+	height: 43px;
+	left: 0;
+	overflow: hidden;
+	padding-left: 10px;
+	position: absolute;
+	right: 160px;
+	top: 0;
+}
+#chat .title h1 {
+	color: #333;
+	display: inline-block;
+	font-size: 18px;
+	line-height: 43px;
+}
+#chat .messages {
+	bottom: 30px;
+	left: 0;
+	overflow-y: auto;
+	padding: 4px 0;
+	position: absolute;
+	right: 160px;
+	top: 43px;
+	word-wrap: break-word;
+	z-index: 0;
+}
+#chat .messages div {
+	line-height: 1.3em;
+	padding: 2px 8px;
+}
+#chat .time {
+	color: #999;
+}
+#chat .user {
+	color: #f00;
+}
+#chat .error,
+#chat .join,
+#chat .kick,
+#chat .mode,
+#chat .nick,
+#chat .notice,
+#chat .part,
+#chat .quit,
+#chat .topic {
+	color: #999;
+}
+#chat .users {
+	background: #fff;
+	border-left: 1px solid #ddd;
+	bottom: 30px;
+	line-height: 1.4em;
+	overflow-y: auto;
+	padding: 4px 8px;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 160px;
+}
+#chat .users .count {
+	color: #999;
+}
+#chat .users .user {
+	display: block;
+	padding: 2px 0;
+}

@@ -46,7 +46,7 @@ $(function() {
 			});
 			chat[0].innerHTML = html;
 
-			sidebar.find("#list").html(
+			sidebar.html(
 				render("#networks", {networks: data})
 			).find(".channel")
 				.first()
@@ -136,7 +136,7 @@ $(function() {
 
 	sidebar.on("click", ".channel", function(e) {
 		e.preventDefault();
-		sidebar.find("#list .active").removeClass("active");
+		sidebar.find(".active").removeClass("active");
 		$("#viewport").removeClass();
 		var item = $(this)
 			.addClass("active")
@@ -147,55 +147,9 @@ $(function() {
 			.bringToTop();
 	});
 
-	sidebar.find("input[type=checkbox]").each(function() {
-		var input = $(this);
-		var value = input.val();
-		var checked = true;
-		if (($.cookie("hidden") || []).indexOf(value) !== -1) {
-			checked = false;
-		}
-		input.prop("checked", checked)
-			.wrap("<label>")
-			.parent()
-			.append(value);
-		if (checked) {
-			chat.addClass("show-" + value);
-		}
-		input.on("change", function() {
-			var hidden = $.cookie("hidden") || "";
-			if (input.prop("checked")) {
-				hidden = hidden.replace(value, "");
-			} else {
-				hidden += value;
-			}
-			$.cookie("hidden", hidden);
-			chat.toggleClass(
-				"show-" + value,
-				input.prop("checked")
-			);
-		});
-	});
-	
-	chat.on("append", ".messages", function(e) {
-		var item = $(this);
-		var last = item.find(".message:last");
-		var type = last[0].classList[1];
-		if (type && !chat.hasClass("show-" + type)) {
-			return;
-		}
-		var id = item.parent()
-			.attr("id")
-			.replace("window-", "");
-		var badge = sidebar
-			.find("#channel-" + id + ":not(.active)")
-			.find(".badge");
-		var num = (parseInt(badge.html()) + 1) || "1";
-		badge.html(num);
-	});
-
 	chat.on("submit", "form", function() {
 		var input = $(this).find(".input");
-		var text = input.val();
+		var text  = input.val();
 		if (text == "") {
 			return false;
 		}
@@ -206,13 +160,9 @@ $(function() {
 		});
 	});
 
-	chat.on("mousedown", ".user", function(e) {
-		return false;
-	});
-
 	chat.on("dblclick", ".user", function() {
 		var link = $(this);
-		var id = parseInt(link.closest(".window").attr("id").replace("window-", ""));
+		var id   = parseInt(link.closest(".window").attr("id").replace("window-", ""));
 		var name = link.text().trim();
 		if (name == "-!-" || name.indexOf(".") != -1) {
 			return;
