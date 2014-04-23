@@ -44,9 +44,6 @@ $(function() {
 	}
 	
 	function event(e, data) {
-		// Debug
-		console.log(arguments);
-		
 		switch (e) {
 		case "join":
 			chat.append(render("#windows", {
@@ -130,10 +127,9 @@ $(function() {
 		var input = $(this).parents().eq(1).find(".messages").scrollToBottom();
 	});
 	
-	chat.on("click", ".user", function(e) {
-		e.preventDefault();
+	chat.on("click", ".user", function() {
 		var user = $(this);
-		var id = parseInt(user.closest(".window").attr("id").replace("window-", ""));
+		var id = user.closest(".window").find(".input").data("target");
 		var name = user.text().trim();
 		if (name == "-!-" || name.indexOf(".") != -1) {
 			return;
@@ -141,6 +137,14 @@ $(function() {
 		socket.emit("input", {
 			id: id,
 			text: "/whois " + name,
+		});
+	});
+	
+	chat.on("click", ".close", function() {
+		var id = $(this).closest(".window").find(".input").data("target");
+		socket.emit("input", {
+			id: id,
+			text: "/part",
 		});
 	});
 

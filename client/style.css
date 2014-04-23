@@ -85,10 +85,14 @@ li {
 	padding: 0 10px;
 	width: 100%;
 }
-#chat .lobby .users {
+#chat .query .users,
+#chat .lobby .users,
+#chat .lobby .close {
 	display: none;
 }
+#chat .query .title,
 #chat .lobby .title,
+#chat .query .messages,
 #chat .lobby .messages {
 	right: 0;
 }
@@ -98,12 +102,16 @@ li {
 	position: absolute;
 	width: 100%;
 }
+#chat .close {
+	float: right;
+	margin-top: 10px;
+}
 #chat .title {
 	border-bottom: 1px solid #ddd;
 	height: 43px;
 	left: 0;
 	overflow: hidden;
-	padding-left: 10px;
+	padding: 0 10px;
 	position: absolute;
 	right: 160px;
 	top: 0;
@@ -130,7 +138,7 @@ li {
 	padding: 2px 8px;
 }
 #chat .time {
-	color: #999;
+	color: #aaa;
 }
 #chat .user {
 	color: #f00;
@@ -145,7 +153,7 @@ li {
 #chat .quit,
 #chat .topic,
 #chat .whois {
-	color: #999;
+	color: #888;
 }
 #chat .motd .type,
 #chat .notice .type,
@@ -165,7 +173,7 @@ li {
 	width: 160px;
 }
 #chat .users .count {
-	color: #999;
+	color: #888;
 }
 #chat .users .user {
 	display: block;

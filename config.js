@@ -1,13 +1,13 @@
 module.exports = {
 	defaults: {
-		nick: "j_doe",
-		realname: "John Doe",
+		nick: "shout_user",
+		realname: "http://github.com/erming/shout",
 	},
 	networks: [{
 		host: "irc.freenode.org",
 		port: 6667,
 		channels: [
-			"#t_chan",
+			"#shout-irc",
 		],
 	}]
 };
