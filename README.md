@@ -1,4 +1,4 @@
-## Chat
+## shout
 Run your IRC client on a server and access it from the web browser. This gives you a persistent connection and allows you to chat from multiple devices at the same time.
 
 ### Commands
@@ -28,10 +28,10 @@ These are the commands currently implemented:
 `sudo apt-get -y install nodejs npm`
 
 2. Clone the project from GitHub  
-`git clone --recursive http://github.com/erming/chat`
+`git clone http://github.com/erming/shout`
 
 3. Open folder  
-`cd chat/`
+`cd shout/`
 
 4. Install Node packages  
 `npm install`
