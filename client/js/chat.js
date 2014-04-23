@@ -11,6 +11,7 @@ $(function() {
 		"/kick",
 		"/leave",
 		"/mode",
+		"/msg",
 		"/nick",
 		"/op",
 		"/part",
@@ -23,133 +24,98 @@ $(function() {
 	];
 	
 	var socket = io.connect("");
-	$.each(["network", "channel", "user", "message"], function(i, event) {
-		socket.on(event, function(json) {
-			handleEvent(event, json);
+	var events = [
+		"join",
+		"msg",
+		"networks",
+		"nick",
+		"part",
+		"users",
+	].forEach(function(e) {
+		socket.on(e, function(data) {
+			event(e, data);
 		});
 	});
 	
 	var tpl = [];
-	function render(id, json) {
-		tpl[id] = tpl[id] || Handlebars.compile($(id).html());
-		return tpl[id](json);
+	function render(id, data) {
+		tpl[id] = tpl[id] || Handlebars.compile($(id).remove().html());
+		return tpl[id](data);
 	}
 	
-	function handleEvent(event, json) {
-		var data = [].concat(json.data);
-		switch (event) {
+	function event(e, data) {
+		// Debug
+		console.log(arguments);
 		
-		case "network":
-			var html = "";
-			data.forEach(function(n) {
-				html += render("#windows", {windows: n.channels});
-			});
-			chat[0].innerHTML = html;
-
-			sidebar.html(
-				render("#networks", {networks: data})
-			).find(".channel")
-				.first()
-				.addClass("active")
-				.end();
-
-			chat.find(".messages")
-				.scrollGlue({animate: 400})
-				.scrollToBottom()
-				.end();
-			chat.find(".window")
-				.find("input")
-				.tabComplete({after: " ", list: commands})
-				.inputHistory({submit: true})
-				.end()
-				.first()
-				.bringToTop()
-				.end();
-			break;
-
-		case "channel":
-			var id = data[0].id;
-			if (json.action == "remove") {
-				$("#channel-" + id + ", #window-" + id).remove();
-				var highest = 0;
-				var next = null;
-				$(".window").each(function() {
-					var z = $(this).css("z-index");
-					if (z == "auto") z = 0;
-					if (z > highest) {
-						highest = z;
-						next = $(this);
-					}
-				});
-				if (next != null) {
-					$("#channel-" + next.attr("id").replace("window-", "")).addClass("active");
-					next.bringToTop();
-				}
-				return;
-			}
-
-			sidebar.find(".channel").removeClass("active");
-			
-			$("#network-" + json.target).append(
-				render("#channels", {channels: data})
-			).find(".channel")
+		switch (e) {
+		case "join":
+			chat.append(render("#windows", {
+				windows: [data.chan],
+			})).find(".window")
 				.last()
-				.addClass("active");
-
-			chat.append(
-				render("#windows", {windows: data})
-			).find(".window")
-				.last()
-				.find("input")
+				.find(".input")
 				.tabComplete({after: " ", list: commands})
 				.inputHistory({submit: true})
 				.end()
 				.bringToTop()
 				.find(".messages")
-				.scrollGlue({animate: 400})
+				.scrollGlue({speed: 400})
+				.end();
+			$("#network-" + data.id).append(render("#channels", {
+				channels: [data.chan],
+			})).find(".channel")
+				.last()
+				.uniqueClass("active")
 				.end();
 			break;
-
-		case "user":
-			var html = render("#users", {users: data});
-			var target = chat.find("#window-" + json.target + " .users").html(html);
+		
+		case "msg":
+			$("#window-" + data.id).find(".messages").append(render("#messages", {
+				messages: [data.msg],
+			}));
 			break;
-
-		case "message":
-			var target = $("#window-" + json.target);
-			if (target.size() == 0) {
-				return;
-			}
-			
-			if (data.type == "error") {
-				target = target.parent().find(".active");
-			}
-			
-			var msg = $(render("#messages", {messages: data}));
-			
-			target = target.find(".messages");
-			target.append(msg);
+		
+		case "networks":
+			chat.html(render("#windows", {
+				windows: $.map(data.networks, function(n) { return n.channels; }),
+			})).find(".window")
+				.find(".input")
+				.tabComplete({after: " ", list: commands})
+				.inputHistory({submit: true})
+				.end()
+				.find(".messages")
+				.scrollGlue({speed: 400})
+				.end()
+				.last()
+				.bringToTop()
+				.end();
+			sidebar.html(render("#networks", {
+				networks: data.networks,
+			})).find(".channel")
+				.last()
+				.addClass("active")
+				.end();
 			break;
-
+		
+		case "nick":
+			// Not yet implemented.
+			break;
+		
+		case "part":
+			$("#channel-" + data.id + ", #window-" + data.id).remove();
+			break;
+		
+		case "users":
+			$("#window-" + data.id).find(".users").html(render("#users", {
+				users: data.users,
+			}));
+			break;
 		}
 	}
-
-	sidebar.on("click", ".channel", function(e) {
-		e.preventDefault();
-		sidebar.find(".active").removeClass("active");
-		$("#viewport").removeClass();
-		var item = $(this)
-			.addClass("active")
-			.find(".badge")
-			.html("")
-			.end();
-		$("#window-" + item.attr("id").replace("channel-", ""))
-			.bringToTop();
-	});
-
+	
 	chat.on("submit", "form", function() {
 		var input = $(this).find(".input");
-		var text  = input.val();
+		var text = input.val();
 		if (text == "") {
 			return false;
 		}
@@ -159,39 +125,36 @@ $(function() {
 			text: text,
 		});
 	});
-
-	chat.on("dblclick", ".user", function() {
-		var link = $(this);
-		var id   = parseInt(link.closest(".window").attr("id").replace("window-", ""));
-		var name = link.text().trim();
+	
+	chat.on("focus", ".input", function() {
+		var input = $(this).parents().eq(1).find(".messages").scrollToBottom();
+	});
+	
+	chat.on("click", ".user", function(e) {
+		e.preventDefault();
+		var user = $(this);
+		var id = parseInt(user.closest(".window").attr("id").replace("window-", ""));
+		var name = user.text().trim();
 		if (name == "-!-" || name.indexOf(".") != -1) {
 			return;
 		}
 		socket.emit("input", {
 			id: id,
-			text: "/whois " + link.text().trim(),
+			text: "/whois " + name,
 		});
 	});
 
-	chat.on("focus", "input[type=text]", function() {
-		$(this).closest(".window").find(".messages").scrollToBottom();
+	sidebar.on("click", ".channel", function(e) {
+		e.preventDefault();
+		$("#window-" + $(this).attr("id").replace("channel-", ""))
+			.bringToTop();
 	});
-
-	var highest = 1;
-	$.fn.bringToTop = function() {
-		return this.css('z-index', highest++)
-			.addClass("active")
-			.find(".input")
-			.focus()
-			.end()
-			.siblings()
-			.removeClass("active")
-			.end();
-	};
+	
+	// Utils
 	
 	function uri(text) {
 		return URI.withinString(text, function(url) {
-			return "<a href='" + url + "' target='_blank'>" + url + "</a>";
+			return "<a href='" + url.replace(/^www/, "//www") + "' target='_blank'>" + url + "</a>";
 		});
 	}
 	
@@ -204,6 +167,8 @@ $(function() {
 			return e[s];
 		});
 	}
+	
+	// Helpers
 	
 	Handlebars.registerHelper(
 		"uri",

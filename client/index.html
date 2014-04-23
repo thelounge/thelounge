@@ -2,7 +2,7 @@
 <html>
 	<head>
 	
-	<title>Chat</title>
+	<title>Shout — The modern IRC client</title>
 	
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no">
@@ -21,25 +21,23 @@
 	</div>
 	</div>
 	
-	<script type="text/x-handlebars-template" id="networks">
+	<script type="text/html" id="networks">
 	{{#each networks}}
-	<ul id="network-{{id}}" class="network">
+	<div id="network-{{id}}" data-nick="{{nick}}" class="network">
 		{{partial "#channels"}}
-	</ul>
+	</div>
 	{{/each}}
 	</script>
 	
-	<script type="text/x-handlebars-template" id="channels">
+	<script type="text/html" id="channels">
 	{{#each channels}}
-	<li>
 	<button id="channel-{{id}}" class="channel">
 		{{name}}
 	</button>
-	</li>
 	{{/each}}
 	</script>
 	
-	<script type="text/x-handlebars-template" id="windows">
+	<script type="text/html" id="windows">
 	{{#each windows}}
 	<div id="window-{{id}}" class="window {{type}}">
 		<div class="title">
@@ -59,7 +57,7 @@
 	{{/each}}
 	</script>
 	
-	<script type="text/x-handlebars-template" id="users">
+	<script type="text/html" id="users">
 	<div class="count">
 		Users: {{users.length}}
 	</div>
@@ -70,9 +68,9 @@
 	{{/each}}
 	</script>
 	
-	<script type="text/x-handlebars-template" id="messages">
+	<script type="text/html" id="messages">
 	{{#each messages}}
-	<div class="{{type}}">
+	<div class="msg {{type}}">
 		<span class="time">
 			{{time}}
 		</span>

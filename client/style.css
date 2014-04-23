@@ -49,10 +49,12 @@ li {
 #sidebar .network {
 	margin: 20px;
 }
-#sidebar li {
+#sidebar .channel {
+	display: block;
+	margin: 5px;
 	margin-left: 10px;
 }
-#sidebar li:first-child {
+#sidebar .channel:first-child {
 	margin-left: 0;
 }
 #chat {
@@ -83,11 +85,11 @@ li {
 	padding: 0 10px;
 	width: 100%;
 }
-#chat .network .users {
+#chat .lobby .users {
 	display: none;
 }
-#chat .network .title,
-#chat .network .messages {
+#chat .lobby .title,
+#chat .lobby .messages {
 	right: 0;
 }
 #chat .window {
@@ -141,8 +143,14 @@ li {
 #chat .notice,
 #chat .part,
 #chat .quit,
-#chat .topic {
+#chat .topic,
+#chat .whois {
 	color: #999;
+}
+#chat .motd .type,
+#chat .notice .type,
+#chat .whois .type {
+	display: none;
 }
 #chat .users {
 	background: #fff;

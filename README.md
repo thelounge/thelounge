@@ -11,6 +11,7 @@ These are the commands currently implemented:
 - `/kick`
 - `/leave`
 - `/mode`
+- `/msg`
 - `/nick`
 - `/op`
 - `/part`

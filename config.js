@@ -1,11 +1,13 @@
 module.exports = {
-	port: 9000,
 	defaults: {
-		nick: "t_user",
-		realname: "Temp User",
+		nick: "j_doe",
+		realname: "John Doe",
 	},
-	servers: [{
+	networks: [{
 		host: "irc.freenode.org",
-		channels: ["#t_chan"],
+		port: 6667,
+		channels: [
+			"#t_chan",
+		],
 	}]
 };

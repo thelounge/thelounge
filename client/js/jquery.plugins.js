@@ -1,4 +1,28 @@
 /*!
+ * uniqueClass
+ * https://gist.github.com/erming/11212325
+ */
+(function($) {
+	$.fn.uniqueClass = function(name) {
+		return this.addClass(name).siblings().removeClass(name).end();
+	};
+})(jQuery);
+
+/*!
+ * bringToTop
+ * https://gist.github.com/erming/11193183
+ */
+(function($) {
+	var highest = 1;
+	$.fn.bringToTop = function() {
+		return this.css('z-index', highest++).uniqueClass('active')
+			.find(".input")
+			.focus()
+			.end();
+	};
+})(jQuery);
+
+/*!
  * inputHistory
  * https://github.com/erming/inputHistory
  *
@@ -7,7 +31,6 @@
  *
  * Version 0.1.1
  */
-
 (function($) {
 	$.fn.inputHistory = function(options) {
 		var settings = $.extend({
@@ -72,13 +95,13 @@
  * Copyright (c) 2014 Mattias Erming <mattias@mattiaserming.com>
  * Licensed under the MIT License.
  *
- * Version 0.2.1
+ * Version 0.2.2
  */
-
 (function($) {
 	$.fn.scrollGlue = function(options) {
 		var settings = $.extend({
-			speed: 0
+			speed: 0,
+			scrollToBottom: true,
 		}, options);
 
 		var self = this;
@@ -86,6 +109,10 @@
 			return self.each(function() {
 				$(this).scrollGlue(options);
 			});
+		}
+		
+		if (settings.scrollToBottom) {
+			self.scrollToBottom();
 		}
 
 		$(window).on('resize', function() {
@@ -147,7 +174,6 @@
  *
  * Version 0.2.2
  */
-
 (function($) {
 	$.fn.tabComplete = function(options) {
 		var settings = $.extend({
