@@ -123,6 +123,7 @@ li {
 	line-height: 43px;
 }
 #chat .messages {
+	box-shadow: inset 8px 0 0 #f5f5f5;
 	bottom: 30px;
 	left: 0;
 	overflow-y: auto;
@@ -133,12 +134,17 @@ li {
 	word-wrap: break-word;
 	z-index: 0;
 }
-#chat .messages div {
+#chat .msg {
+	border-left: 8px solid transparent;
 	line-height: 1.3em;
 	padding: 2px 8px;
 }
 #chat .time {
 	color: #aaa;
+}
+#chat .highlight {
+	background: #fcf8e3;
+	border-left-color: #faebcc;
 }
 #chat .user {
 	color: #f00;
@@ -155,6 +161,7 @@ li {
 #chat .whois {
 	color: #888;
 }
+#chat .highlight .type,
 #chat .motd .type,
 #chat .notice .type,
 #chat .whois .type {
