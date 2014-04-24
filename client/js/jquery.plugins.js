@@ -133,14 +133,16 @@
 		return this;
 	};
 
-	var append = $.fn.append;
-	$.fn.append = function() {
-		return append.apply(this, arguments).trigger('append');
-	};
+	// Overrides
 	
 	var prepend = $.fn.prepend;
 	$.fn.prepend = function() {
 		return prepend.apply(this, arguments).trigger('append');
+	};
+	
+	var append = $.fn.append;
+	$.fn.append = function() {
+		return append.apply(this, arguments).trigger('append');
 	};
 
 	var html = $.fn.html;
@@ -151,6 +153,8 @@
 		}
 		return result;
 	};
+	
+	// Utils
 	
 	$.fn.scrollToBottom = function(speed) {
 		return this.each(function() {
