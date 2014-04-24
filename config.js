@@ -1,4 +1,5 @@
 module.exports = {
+	theme: "/themes/default.css",
 	defaults: {
 		nick: "shout_user",
 		realname: "http://github.com/erming/shout",
