@@ -84,12 +84,11 @@ $(function() {
 				.tabComplete({after: " ", list: commands})
 				.inputHistory({submit: true})
 				.end()
-				.find(".messages")
-				.scrollGlue({speed: 400})
-				.end()
 				.find(".hidden")
 				.prev(".show-more")
 				.show()
+				.parent()
+				.scrollGlue({speed: 400})
 				.end();
 			
 			sidebar.html(render("#networks", {networks: data.networks}))
@@ -155,11 +154,10 @@ $(function() {
 		});
 	});
 	
-	chat.on("click", ".show-more", function() {
-		var btn = $(this);
-		btn.replaceWith($.parseHTML(
-			btn.next(".hidden").remove().html()
-		));
+	chat.on("click", ".show-more-button", function() {
+		var more = $(this).parent();
+		var html = $.parseHTML(more.next(".hidden").remove().html());
+		more.replaceWith(html);
 	});
 
 	sidebar.on("click", ".channel", function(e) {

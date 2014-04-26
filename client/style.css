@@ -16,12 +16,6 @@ h2 {
 	font: inherit;
 	margin: 0;
 }
-ul,
-li {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-}
 .user {
 	background: none;
 	border: 0;
@@ -136,7 +130,11 @@ li {
 }
 #chat .show-more {
 	display: none;
-	margin-left: 14px;
+	padding: 2px 8px 0 16px;
+}
+#chat .show-more-button {
+	padding: 6px 0;
+	width: 100%;
 }
 #chat .msg {
 	border-left: 8px solid transparent;
