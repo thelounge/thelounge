@@ -41,3 +41,60 @@ These are the commands currently implemented:
 
 6. Open your browser  
 `http://localhost:9000`
+
+## Events
+Using [Socket.IO](http://socket.io/)  
+Events sent from the __server__ to the __browser__:
+```javascript
+// Event: "join"
+// Sent when joining a new channel/query.
+socket.emit("join", {
+  id: 0,
+  chan: {
+    id: 0,
+    name: "",
+    type: "",
+    messages: [],
+    users: [],
+  }
+});
+
+// Event: "msg"
+// Sent when receiving a message.
+socket.emit("msg", {
+  id: 0,
+  msg: {
+    time: "",
+    type: "",
+    from: "",
+    text: "",
+  }
+});
+
+// Event: "networks"
+// Sent upon connecting to the server.
+socket.emit("networks", {
+  networks: [{
+    id: 0,
+    host: "",
+    nick: "",
+    channels: [],
+  }]
+});
+
+// Event: "part"
+// Sent when leaving a channel/query.
+socket.emit("part", {
+  id: 0
+});
+
+// Event: "users"
+// Sent whenever the list of users changes.
+socket.emit("users", {
+  id: 0,
+  users: [{
+    mode: "",
+    name: "",
+  }]
+});
+```
