@@ -37,7 +37,7 @@ These are the commands currently implemented:
 `npm install`
 
 5. Run the server  
-`npm start` or `nodejs index.js`
+`npm start` or `node index.js`
 
 6. Open your browser  
 `http://localhost:9000`

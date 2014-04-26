@@ -182,12 +182,6 @@ $(function() {
 		"partial": function(id) {
 			return new Handlebars.SafeString(render(id, this));
 		},
-		"uri": function(text) {
-			text = escape(text);
-			return URI.withinString(text, function(url) {
-				return "<a href='" + url.replace(/^www/, "//www") + "' target='_blank'>" + url + "</a>";
-			});
-		},
 		"slice": function(items, block) {
 			var limit = block.hash.limit;
 			var rows = $.map(items, function(i) {
@@ -202,6 +196,12 @@ $(function() {
 			}
 			html += rows.slice(-limit).join("");
 			return html;
-		}
+		},
+		"uri": function(text) {
+			text = escape(text);
+			return URI.withinString(text, function(url) {
+				return "<a href='" + url.replace(/^www/, "//www") + "' target='_blank'>" + url + "</a>";
+			});
+		},
 	});
 });

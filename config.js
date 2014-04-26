@@ -1,4 +1,5 @@
 module.exports = {
+	port: 9000,
 	theme: "/themes/default.css",
 	defaults: {
 		nick: "shout_user",
