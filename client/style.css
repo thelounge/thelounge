@@ -134,6 +134,10 @@ li {
 	word-wrap: break-word;
 	z-index: 0;
 }
+#chat .show-more {
+	display: none;
+	margin-left: 14px;
+}
 #chat .msg {
 	border-left: 8px solid transparent;
 	line-height: 1.3em;

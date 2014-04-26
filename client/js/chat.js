@@ -46,9 +46,8 @@ $(function() {
 	function event(e, data) {
 		switch (e) {
 		case "join":
-			chat.append(render("#windows", {
-				windows: [data.chan],
-			})).find(".window")
+			chat.append(render("#windows", {windows: [data.chan]}))
+				.find(".window")
 				.last()
 				.find(".input")
 				.tabComplete({after: " ", list: commands})
@@ -58,24 +57,29 @@ $(function() {
 				.find(".messages")
 				.scrollGlue({speed: 400})
 				.end();
-			$("#network-" + data.id).append(render("#channels", {
-				channels: [data.chan],
-			})).find(".channel")
+
+			// Sidebar
+			$("#network-" + data.id)
+				.append(render("#channels", {channels: [data.chan]}))
+				.find(".channel")
 				.last()
 				.uniqueClass("active")
 				.end();
 			break;
 		
 		case "msg":
-			$("#window-" + data.id).find(".messages").append(render("#messages", {
-				messages: [data.msg],
-			}));
+			$("#window-" + data.id)
+				.find(".messages")
+				.append(render("#messages", {messages: [data.msg]}));
 			break;
 		
 		case "networks":
-			chat.html(render("#windows", {
-				windows: $.map(data.networks, function(n) { return n.channels; }),
-			})).find(".window")
+			var channels = $.map(data.networks, function(n) { return n.channels; });
+			chat.html(render("#windows", {windows: channels}))
+				.find(".window")
+				.last()
+				.bringToTop()
+				.end()
 				.find(".input")
 				.tabComplete({after: " ", list: commands})
 				.inputHistory({submit: true})
@@ -83,29 +87,32 @@ $(function() {
 				.find(".messages")
 				.scrollGlue({speed: 400})
 				.end()
-				.last()
-				.bringToTop()
+				.find(".hidden")
+				.prev(".show-more")
+				.show()
 				.end();
-			sidebar.html(render("#networks", {
-				networks: data.networks,
-			})).find(".channel")
+			
+			sidebar.html(render("#networks", {networks: data.networks}))
+				.find(".channel")
 				.last()
 				.addClass("active")
 				.end();
 			break;
 		
 		case "nick":
-			// Not yet implemented.
+			// ..
 			break;
 		
 		case "part":
-			$("#channel-" + data.id + ", #window-" + data.id).remove();
+			$("#channel-" + data.id)
+				.add("#window-" + data.id)
+				.remove();
 			break;
 		
 		case "users":
-			$("#window-" + data.id).find(".users").html(render("#users", {
-				users: data.users,
-			}));
+			$("#window-" + data.id)
+				.find(".users")
+				.html(render("#users", {users: data.users}));
 			break;
 		}
 	}
@@ -147,6 +154,13 @@ $(function() {
 			text: "/part",
 		});
 	});
+	
+	chat.on("click", ".show-more", function() {
+		var btn = $(this);
+		btn.replaceWith($.parseHTML(
+			btn.next(".hidden").remove().html()
+		));
+	});
 
 	sidebar.on("click", ".channel", function(e) {
 		e.preventDefault();
@@ -154,37 +168,40 @@ $(function() {
 			.bringToTop();
 	});
 	
-	// Utils
-	
-	function uri(text) {
-		return URI.withinString(text, function(url) {
-			return "<a href='" + url.replace(/^www/, "//www") + "' target='_blank'>" + url + "</a>";
-		});
-	}
-	
-	function escape(string) {
+	function escape(text) {
 		var e = {
 			"<": "&lt;",
-			">": "&gt;",
+			">": "&gt;"
 		};
-		return string.replace(/[<>]/g, function (s) {
-			return e[s];
+		return text.replace(/[<>]/g, function (c) {
+			return e[c];
 		});
 	}
 	
-	// Helpers
-	
-	Handlebars.registerHelper(
-		"uri",
-		function(text) {
-			return uri(escape(text));
-		}
-	);
-	
-	Handlebars.registerHelper(
-		"partial",
-		function(id) {
+	Handlebars.registerHelper({
+		"partial": function(id) {
 			return new Handlebars.SafeString(render(id, this));
+		},
+		"uri": function(text) {
+			text = escape(text);
+			return URI.withinString(text, function(url) {
+				return "<a href='" + url.replace(/^www/, "//www") + "' target='_blank'>" + url + "</a>";
+			});
+		},
+		"slice": function(items, block) {
+			var limit = block.hash.limit;
+			var rows = $.map(items, function(i) {
+				return block.fn(i);
+			});
+			var html = "";
+			var hide = rows
+				.slice(0, Math.max(0, rows.length - limit))
+				.join("");
+			if (hide != "") {
+				html = "<script type='text/html' class='hidden'>" + hide + "</script>";
+			}
+			html += rows.slice(-limit).join("");
+			return html;
 		}
-	);
+	});
 });

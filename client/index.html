@@ -49,6 +49,7 @@
 			{{partial "#users"}}
 		</div>
 		<div class="messages">
+			<button class="show-more">Show more</button>
 			{{partial "#messages"}}
 		</div>
 		<form onSubmit="return false;">
@@ -71,7 +72,7 @@
 	</script>
 	
 	<script type="text/html" id="messages">
-	{{#each messages}}
+	{{#slice messages limit="100"}}
 	<div class="msg {{type}}">
 		<span class="time">
 			{{time}}
@@ -88,7 +89,7 @@
 			{{{uri text}}}
 		</span>
 	</div>
-	{{/each}}
+	{{/slice}}
 	</script>
 	
 	<script src="/js/jquery.js"></script>
