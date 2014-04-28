@@ -44,13 +44,14 @@ $(function() {
 	}
 	
 	function event(e, data) {
+		console.log(arguments);
 		switch (e) {
 		case "join":
 			chat.append(render("#windows", {windows: [data.chan]}))
 				.find(".window")
 				.last()
 				.find(".input")
-				.tabComplete({after: " ", list: commands})
+				.tabComplete({list: commands})
 				.inputHistory({submit: true})
 				.end()
 				.bringToTop()
@@ -81,15 +82,15 @@ $(function() {
 				.bringToTop()
 				.end()
 				.find(".input")
-				.tabComplete({after: " ", list: commands})
+				.tabComplete({list: commands})
 				.inputHistory({submit: true})
+				.end()
+				.find(".messages")
+				.scrollGlue({speed: 400})
 				.end()
 				.find(".hidden")
 				.prev(".show-more")
-				.show()
-				.parent()
-				.scrollGlue({speed: 400})
-				.end();
+				.show();
 			
 			sidebar.html(render("#networks", {networks: data.networks}))
 				.find(".channel")
@@ -109,9 +110,15 @@ $(function() {
 			break;
 		
 		case "users":
+			var users = $.map(data.users, function(u) { return u.name; });
+			var tabComplete = commands.concat(users);
 			$("#window-" + data.id)
+				.find(".input")
+				.data("list", tabComplete)
+				.end()
 				.find(".users")
-				.html(render("#users", {users: data.users}));
+				.html(render("#users", {users: data.users}))
+				.end();
 			break;
 		}
 	}

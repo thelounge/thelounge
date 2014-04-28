@@ -29,7 +29,7 @@
  * Copyright (c) 2014 Mattias Erming <mattias@mattiaserming.com>
  * Licensed under the MIT License.
  *
- * Version 0.1.1
+ * Version 0.1.2
  */
 (function($) {
 	$.fn.inputHistory = function(options) {
@@ -95,13 +95,15 @@
  * Copyright (c) 2014 Mattias Erming <mattias@mattiaserming.com>
  * Licensed under the MIT License.
  *
- * Version 0.2.2
+ * Version 1.1.0
  */
 (function($) {
 	$.fn.scrollGlue = function(options) {
 		var settings = $.extend({
-			speed: 0,
+			disableManualScroll: false,
+			overflow: "scroll",
 			scrollToBottom: true,
+			speed: 0
 		}, options);
 
 		var self = this;
@@ -111,6 +113,7 @@
 			});
 		}
 		
+		self.css("overflow-y", settings.overflow);
 		if (settings.scrollToBottom) {
 			self.scrollToBottom();
 		}
@@ -119,9 +122,13 @@
 			self.finish();
 		});
 
-		var sticky = false;
+		var sticky = true;
 		self.on('scroll', function() {
-			sticky = self.isScrollAtBottom();
+			if (settings.disableManualScroll) {
+				self.scrollToBottom();
+			} else {
+				sticky = self.isScrollAtBottom();
+			}
 		});
 		self.trigger('scroll');
 		self.on('append', function() {
@@ -133,8 +140,6 @@
 		return this;
 	};
 
-	// Overrides
-	
 	var prepend = $.fn.prepend;
 	$.fn.prepend = function() {
 		return prepend.apply(this, arguments).trigger('append');
@@ -153,8 +158,6 @@
 		}
 		return result;
 	};
-	
-	// Utils
 	
 	$.fn.scrollToBottom = function(speed) {
 		return this.each(function() {
@@ -176,7 +179,7 @@
  * Copyright (c) 2014 Mattias Erming <mattias@mattiaserming.com>
  * Licensed under the MIT License.
  *
- * Version 0.2.2
+ * Version 0.2.3
  */
 (function($) {
 	$.fn.tabComplete = function(options) {
