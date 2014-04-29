@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "lodash": "~2.4.1",
-    "slate-irc": "~0.5.0",
+    "slate-irc": "https://github.com/erming/slate-irc/tarball/master",
     "moment": "~2.5.1",
     "connect": "~2.14.3",
     "socket.io": "~0.9.16"
