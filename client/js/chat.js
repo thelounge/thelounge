@@ -108,12 +108,7 @@ $(function() {
 			break;
 		
 		case "users":
-			var users = $.map(data.users, function(u) { return u.name; });
-			var tabComplete = commands.concat(users);
 			$("#window-" + data.id)
-				.find(".input")
-				.data("list", tabComplete)
-				.end()
 				.find(".users")
 				.html(render("#users", {users: data.users}))
 				.end();
@@ -159,7 +154,7 @@ $(function() {
 		});
 	});
 	
-	chat.on("click", ".show-more-button", function() {
+	chat.on("click", ".show-more .btn", function() {
 		var more = $(this).parent();
 		var html = $.parseHTML(more.next(".hidden").remove().html());
 		more.replaceWith(html);

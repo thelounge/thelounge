@@ -1,6 +1,6 @@
 module.exports = {
 	port: 9000,
-	theme: "/themes/default.css",
+	theme: "",
 	defaults: {
 		nick: "shout_user",
 		realname: "http://github.com/erming/shout",
