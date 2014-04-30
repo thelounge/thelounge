@@ -44,7 +44,6 @@ $(function() {
 	}
 	
 	function event(e, data) {
-		console.log(arguments);
 		switch (e) {
 		case "join":
 			chat.append(render("#windows", {windows: [data.chan]}))
@@ -59,7 +58,6 @@ $(function() {
 				.scrollGlue({speed: 400})
 				.end();
 
-			// Sidebar
 			$("#network-" + data.id)
 				.append(render("#channels", {channels: [data.chan]}))
 				.find(".channel")
@@ -85,12 +83,12 @@ $(function() {
 				.tabComplete({list: commands})
 				.inputHistory({submit: true})
 				.end()
-				.find(".messages")
-				.scrollGlue({speed: 400})
-				.end()
 				.find(".hidden")
 				.prev(".show-more")
 				.show();
+			chat.find(".messages")
+				.scrollGlue({speed: 400})
+				.end();
 			
 			sidebar.html(render("#networks", {networks: data.networks}))
 				.find(".channel")
@@ -169,7 +167,8 @@ $(function() {
 
 	sidebar.on("click", ".channel", function(e) {
 		e.preventDefault();
-		$("#window-" + $(this).attr("id").replace("channel-", ""))
+		sidebar.find(".channel").removeClass("active");
+		$("#window-" + $(this).addClass("active").attr("id").replace("channel-", ""))
 			.bringToTop();
 	});
 	

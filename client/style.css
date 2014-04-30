@@ -23,9 +23,14 @@ h2 {
 	margin: 0;
 	padding: 0;
 }
+
 .user:hover {
 	color: #f00;
 	cursor: pointer;
+}
+.user::-moz-focus-inner {
+    padding: 0;
+    border: 0
 }
 #wrap,
 #viewport {
@@ -102,19 +107,19 @@ h2 {
 }
 #chat .title {
 	border-bottom: 1px solid #ddd;
-	height: 43px;
+	height: 42px;
 	left: 0;
 	overflow: hidden;
 	padding: 0 10px;
 	position: absolute;
-	right: 160px;
+	right: 0;
 	top: 0;
 }
 #chat .title h1 {
 	color: #333;
 	display: inline-block;
 	font-size: 18px;
-	line-height: 43px;
+	line-height: 42px;
 }
 #chat .messages {
 	box-shadow: inset 8px 0 0 #f5f5f5;
@@ -124,7 +129,7 @@ h2 {
 	padding: 4px 0;
 	position: absolute;
 	right: 160px;
-	top: 43px;
+	top: 42px;
 	word-wrap: break-word;
 	z-index: 0;
 }
@@ -178,7 +183,7 @@ h2 {
 	padding: 4px 8px;
 	position: absolute;
 	right: 0;
-	top: 0;
+	top: 42px;
 	width: 160px;
 }
 #chat .users .count {
