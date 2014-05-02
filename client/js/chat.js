@@ -51,6 +51,7 @@ $(function() {
 				.last()
 				.scrollGlue({speed: 200})
 				.end()
+				.end()
 				.find(".input")
 				.tabComplete({list: commands})
 				.end();
@@ -84,9 +85,10 @@ $(function() {
 			
 			$("#networks")
 				.html(render("networks", {networks: data.networks}))
-				.find(".channel")
-				.last()
-				.addClass("active")
+				.parent()
+				.find("button")
+				.first()
+				.trigger("click")
 				.end();
 			break;
 		
@@ -111,9 +113,9 @@ $(function() {
 		var target = button.data("target");
 		sidebar.find(".active").removeClass("active");
 		button.addClass("active")
-		$(target)
-			.css({"z-index": z++})
-			.find(".input")
+		$(target).css({
+			"z-index": z++
+		}).find("input")
 			.focus()
 			.end();
 	});
@@ -131,11 +133,14 @@ $(function() {
 		if (name == "-!-" || name.indexOf(".") != -1) {
 			return;
 		}
-		console.log({id: id, text: "/whois " + name});
 		socket.emit("input", {
 			id: id,
 			text: "/whois " + name,
 		});
+	});
+	
+	chat.on("focus", ".input", function() {
+		$(this).closest(".window").find(".messages").scrollToBottom();
 	});
 	
 	chat.on("submit", "form", function() {
@@ -151,10 +156,7 @@ $(function() {
 			text: text,
 		});
 	});
-	
-	chat.on("focus", ".input", function() {
-		var input = $(this).parents().eq(1).find(".messages").scrollToBottom();
-	});
+
 	
 	Handlebars.registerHelper(
 		"partial", function(id) {

@@ -12,16 +12,12 @@ h2 {
 	margin: 0;
 }
 a {
+	color: #1abc9c;
 	text-decoration: none;
-}
-a,
-.user {
-	color: #16a085;
 	transition: all .25s;
 }
-a:hover,
-.user:hover {
-	color: #1abc9c;
+a:hover {
+	text-decoration: underline;
 }
 a:focus,
 button:focus,
@@ -74,7 +70,7 @@ button::-moz-focus-inner {
 }
 #sidebar button {
 	border-radius: 2px;
-	color: #16a085;
+	color: #1abc9c;
 	display: block;
 	font-size: 15px;
 	font-weight: bold;
@@ -88,7 +84,6 @@ button::-moz-focus-inner {
 }
 #sidebar button:hover {
 	background-color: #f1f2f3;
-	color: #1abc9c;
 }
 #sidebar button.active {
 	background-color: #ebedef;
@@ -138,6 +133,9 @@ button::-moz-focus-inner {
 	font: 13px "Consolas", monospace;
 	height: 100%;
 }
+#chat .lobby .from {
+	display: none;
+}
 #chat .lobby .messages,
 #chat .query .messages {
 	right: 0;
@@ -150,7 +148,7 @@ button::-moz-focus-inner {
 #chat .users {
 	bottom: 35px;
 	overflow: hidden;
-	overflow-y: auto;
+	overflow-y: scroll;
 	position: absolute;
 	top: 0;
 }
@@ -158,6 +156,12 @@ button::-moz-focus-inner {
 	left: 0px;
 	padding: 2px 0;
 	right: 160px;
+}
+#chat .messages .user {
+	color: #95a5a6;
+}
+#chat .messages .user:before {
+	content: '* ';
 }
 #chat .show-more {
 	display: none;
@@ -174,10 +178,31 @@ button::-moz-focus-inner {
 #chat .type {
 	color: #bdc3c7;
 }
-#chat .motd .type,
-#chat .notice .type,
-#chat .whois .type {
+#chat .users .user,
+#chat .normal .user {
+	color: #e74c3c;
+	transition: all .25s;
+}
+#chat .normal .user:before {
+	content: '<';
+}
+#chat .normal .user:after {
+	content: '>';
+}
+#chat .type {
 	display: none;
+}
+#chat .join .type,
+#chat .kick .type,
+#chat .mode .type,
+#chat .nick .type,
+#chat .part .type,
+#chat .topic .type,
+#chat .quit .type {
+	display: inherit;
+} 
+#chat .nick .text {
+	color: #95a5a6;
 }
 #chat .users {
 	background: #fff;

@@ -6,11 +6,11 @@ Handlebars.registerHelper(
 			rows.push(block.fn(i));
 		});
 		var html = "";
-		var hide = rows
+		var hidden = rows
 			.slice(0, Math.max(0, rows.length - limit))
 			.join("");
-		if (hide != "") {
-			html = "<script type='text/html' class='hidden'>" + hide + "</script>";
+		if (hidden != "") {
+			html = "<script type='text/html' class='hidden'>" + hidden + "</script>";
 		}
 		html += rows.slice(-limit).join("");
 		return html;

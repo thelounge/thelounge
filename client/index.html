@@ -17,10 +17,10 @@
 		<aside id="sidebar">
 			<div id="menu">
 				<h2>Shout Client</h2>
+				<button data-target="#start">Start</button>
 				<button data-target="#settings">Settings</button>
 			</div>
-			<div id="networks">
-			</div>
+			<div id="networks"></div>
 			<footer id="footer">
 				<a href="<%= homepage %>" target="_blank" class="btn">
 					<strong><%= name %></strong>
@@ -30,11 +30,10 @@
 		</aside>
 		<div id="main">
 			<div id="windows">
-				<div id="settings" class="window">
-				</div>
+				<div id="start" class="window"></div>
+				<div id="settings" class="window"></div>
 			</div>
-			<div id="chat">
-			</div>
+			<div id="chat"></div>
 		</div>
 	</div>
 	
@@ -95,9 +94,9 @@
 			<span class="time">
 				{{time}}
 			</span>
-			<button class="user">
-				{{from}}
-			</button>
+			<span class="from">
+				<button class="user">{{from}}</button>
+			</span>
 			<span class="text">
 				{{#if type}}
 				<em class="type">{{type}}</em>

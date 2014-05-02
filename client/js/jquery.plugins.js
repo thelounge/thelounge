@@ -1,28 +1,4 @@
 /*!
- * uniqueClass
- * https://gist.github.com/erming/11212325
- */
-(function($) {
-	$.fn.uniqueClass = function(name) {
-		return this.addClass(name).siblings().removeClass(name).end();
-	};
-})(jQuery);
-
-/*!
- * bringToTop
- * https://gist.github.com/erming/11193183
- */
-(function($) {
-	var highest = 1;
-	$.fn.bringToTop = function() {
-		return this.css('z-index', highest++).uniqueClass('active')
-			.find(".input")
-			.focus()
-			.end();
-	};
-})(jQuery);
-
-/*!
  * inputHistory
  * https://github.com/erming/inputHistory
  *
