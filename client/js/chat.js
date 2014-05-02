@@ -49,7 +49,7 @@ $(function() {
 			chat.append(render("windows", {windows: [data.chan]}))
 				.find(".messages")
 				.last()
-				.scrollGlue({speed: 200})
+				.scrollGlue({speed: 400})
 				.end()
 				.end()
 				.find(".input")
@@ -80,7 +80,7 @@ $(function() {
 				.prev(".show-more")
 				.show();
 			chat.find(".messages")
-				.scrollGlue({speed: 200})
+				.scrollGlue({speed: 400})
 				.end();
 			
 			$("#networks")

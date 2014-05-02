@@ -15,6 +15,7 @@ a {
 	color: #1abc9c;
 	text-decoration: none;
 	transition: all .25s;
+	word-break: break-all;
 }
 a:hover {
 	text-decoration: underline;
@@ -28,12 +29,10 @@ button {
 	background: none;
 	border: 0;
 	color: inherit;
+	cursor: pointer;
 	font: inherit;
 	margin: 0;
 	padding: 0;
-}
-button {
-	cursor: pointer;
 }
 button::-moz-focus-inner {
 	padding: 0;
@@ -50,6 +49,7 @@ button::-moz-focus-inner {
 .btn:hover {
 	border-color: #7f8c8d;
 	color: #7f8c8d;
+	text-decoration: none;
 }
 #wrap {
 	height: 100%;
@@ -60,7 +60,7 @@ button::-moz-focus-inner {
 	border-right: 4px solid #bdc3c7;
 	position: absolute;
 	height: 100%;
-	width: 240px;
+	width: 220px;
 }
 #sidebar h2 {
 	color: #aeb6bf;
@@ -120,7 +120,7 @@ button::-moz-focus-inner {
 #main {
 	position: absolute;
 	height: 100%;
-	left: 240px;
+	left: 220px;
 	right: 0;
 }
 #main .window {
@@ -132,9 +132,6 @@ button::-moz-focus-inner {
 #chat {
 	font: 13px "Consolas", monospace;
 	height: 100%;
-}
-#chat .lobby .from {
-	display: none;
 }
 #chat .lobby .messages,
 #chat .query .messages {
@@ -153,43 +150,45 @@ button::-moz-focus-inner {
 	top: 0;
 }
 #chat .messages {
+	box-shadow: inset 140px 0 #f3f5f5;
 	left: 0px;
-	padding: 2px 0;
+	padding: 4px 0;
 	right: 160px;
 }
 #chat .messages .user {
 	color: #95a5a6;
 }
-#chat .messages .user:before {
-	content: '* ';
+#chat .user,
+#chat .highlight .user,
+#chat .normal .user,
+#chat .topic .user {
+	color: #e74c3c;
 }
 #chat .show-more {
 	display: none;
-	margin: 6px 8px 4px;
+	margin: 6px 8px 4px 148px;
 }
 #chat .show-more .btn {
 	width: 100%;
 }
 #chat .msg {
+	display: table-row;
 	line-height: 1.4;
-	margin: 2px 8px;
 }
-#chat .time,
+#chat .msg span {
+	display: table-cell;
+}
+#chat .from {
+	background: #f3f5f5;
+	max-width: 140px;
+	min-width: 140px;
+	overflow: hidden;
+	padding: 2px 8px;
+	text-align: right;
+	white-space: nowrap;
+}
 #chat .type {
 	color: #bdc3c7;
-}
-#chat .users .user,
-#chat .normal .user {
-	color: #e74c3c;
-	transition: all .25s;
-}
-#chat .normal .user:before {
-	content: '<';
-}
-#chat .normal .user:after {
-	content: '>';
-}
-#chat .type {
 	display: none;
 }
 #chat .join .type,
@@ -199,10 +198,28 @@ button::-moz-focus-inner {
 #chat .part .type,
 #chat .topic .type,
 #chat .quit .type {
-	display: inherit;
-} 
+	display: inline;
+}
+#chat .text {
+	padding: 2px 8px;
+	width: 100%;
+}
 #chat .nick .text {
 	color: #95a5a6;
+}
+#chat .highlight {
+	background: #fcf8e3;
+	color: #8a6d3b;
+}
+#chat .highlight .from {
+	background: #faebcc;
+}
+#chat .highlight .time {
+	color: #d3c2a5;
+}
+#chat .time {
+	color: #dee0e2;
+	padding: 2px 10px;
 }
 #chat .users {
 	background: #fff;

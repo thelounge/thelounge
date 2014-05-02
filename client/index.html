@@ -91,9 +91,7 @@
 		<script type="text/html" class="messages">
 		{{#slice messages limit=100}}
 		<div class="msg {{type}}">
-			<span class="time">
-				{{time}}
-			</span>
+
 			<span class="from">
 				<button class="user">{{from}}</button>
 			</span>
@@ -102,6 +100,9 @@
 				<em class="type">{{type}}</em>
 				{{/if}}
 				{{{uri text}}}
+			</span>
+			<span class="time">
+				{{time}}
 			</span>
 		</div>
 		{{/slice}}
