@@ -7,102 +7,114 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no">
 	
-	<link rel="stylesheet" href="/normalize.css">
-	<link rel="stylesheet" href="/style.css">
-	<link rel="stylesheet" href="<%= typeof theme !== 'undefined' ? theme : '' %>">
+	<link rel="stylesheet" href="/css/normalize.css">
+	<link rel="stylesheet" href="/css/style.css">
 	
 	</head>
 	<body>
 	
-	<div id="wrap">
-	<div id="viewport">
-	
-	<aside id="sidebar"></aside>
-	<div id="chat"></div>
-	
-	<footer id="footer">
-	<a href="<%= homepage %>" target="_blank" class="btn">
-		<strong><%= name %></strong>
-		<%= version %>
-	</a>
-	</footer>
-	
-	</div>
-	</div>
-	
-	<script type="text/html" id="networks">
-	{{#each networks}}
-	<div id="network-{{id}}" data-nick="{{nick}}" class="network">
-		<h2 class="header">{{host}}</h2>
-		{{partial "#channels"}}
-	</div>
-	{{/each}}
-	</script>
-	
-	<script type="text/html" id="channels">
-	{{#each channels}}
-	<button id="channel-{{id}}" class="channel">
-		{{name}}
-	</button>
-	{{/each}}
-	</script>
-	
-	<script type="text/html" id="windows">
-	{{#each windows}}
-	<div id="window-{{id}}" class="window {{type}}">
-		<div class="users">
-			{{partial "#users"}}
-		</div>
-		<div class="messages">
-			<div class="show-more">
-				<button class="btn">Show more</button>
+	<div id="wrap" class="table">
+		<aside id="sidebar">
+			<div id="menu">
+				<h2>Shout Client</h2>
+				<button data-target="#settings">Settings</button>
 			</div>
-			{{partial "#messages"}}
+			<div id="networks">
+			</div>
+			<footer id="footer">
+				<a href="<%= homepage %>" target="_blank" class="btn">
+					<strong><%= name %></strong>
+					<%= version %>
+				</a>
+			</footer>
+		</aside>
+		<div id="main">
+			<div id="windows">
+				<div id="settings" class="window">
+				</div>
+			</div>
+			<div id="chat">
+			</div>
 		</div>
-		<form onSubmit="return false;">
-			<input type="text" class="input" data-target="{{id}}"/>
-			<input type="submit" style="display: none;"/>
-		</form>
 	</div>
-	{{/each}}
-	</script>
 	
-	<script type="text/html" id="users">
-	<div class="count">
-		Users: {{users.length}}
-	</div>
-	{{#each users}}
-	<button class="user">
-		{{mode}}{{name}}
-	</button>
-	{{/each}}
-	</script>
-	
-	<script type="text/html" id="messages">
-	{{#slice messages limit="20"}}
-	<div class="msg {{type}}">
-		<span class="time">
-			{{time}}
-		</span>
-		<button class="user">
-			{{from}}
+	<div id="templates">
+		<script type="text/html" class="networks">
+		{{#each networks}}
+		<div id="network-{{id}}" class="network">
+			<h2>{{name}}</h2>
+			{{partial "channels"}}
+		</div>
+		{{/each}}
+		</script>
+		
+		<script type="text/html" class="channels">
+		{{#each channels}}
+		<button id="channel-{{id}}" class="channel" data-target="#window-{{id}}">
+			<span class="badge"></span>
+			{{name}}
 		</button>
-		<span class="text">
-			{{#if type}}
-			<em class="type">{{type}}</em>
-			{{/if}}
-			{{{uri text}}}
-		</span>
-
+		{{/each}}
+		</script>
+		
+		<script type="text/html" class="windows">
+		{{#each windows}}
+		<div id="window-{{id}}" class="window {{type}}">
+			<div class="chat">
+				<div class="messages">
+					<div class="show-more">
+						<button class="btn">Show more</button>
+					</div>
+					{{partial "messages"}}
+				</div>
+				<div class="users">
+					{{partial "users"}}
+				</div>
+			</div>
+			<form class="form" onSubmit="return false" data-target="{{id}}">
+				<input type="text" class="input">
+			</form>
+		</div>
+		{{/each}}
+		</script>
+		
+		<script type="text/html" class="users">
+		<div class="count">
+			Users: {{users.length}}
+		</div>
+		{{#each users}}
+		<button class="user">
+			{{mode}}{{name}}
+		</button>
+		{{/each}}
+		</script>
+		
+		<script type="text/html" class="messages">
+		{{#slice messages limit=100}}
+		<div class="msg {{type}}">
+			<span class="time">
+				{{time}}
+			</span>
+			<button class="user">
+				{{from}}
+			</button>
+			<span class="text">
+				{{#if type}}
+				<em class="type">{{type}}</em>
+				{{/if}}
+				{{{uri text}}}
+			</span>
+		</div>
+		{{/slice}}
+		</script>
 	</div>
-	{{/slice}}
-	</script>
 	
+	<script src="/socket.io/socket.io.js"></script>
 	<script src="/js/jquery.js"></script>
 	<script src="/js/jquery.plugins.js"></script>
 	<script src="/js/uri.js"></script>
 	<script src="/js/handlebars.js"></script>
-	<script src="/socket.io/socket.io.js"></script>
+	<script src="/js/handlebars.helpers.js"></script>
 	<script src="/js/chat.js"></script>
 	
 	</body>

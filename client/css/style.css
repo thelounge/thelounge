@@ -1,0 +1,212 @@
+* {
+	box-sizing: border-box;
+}
+html,
+body {
+	height: 100%;
+	font: 14px sans-serif;
+	margin: 0;
+}
+h1,
+h2 {
+	margin: 0;
+}
+a {
+	text-decoration: none;
+}
+a,
+.user {
+	color: #16a085;
+	transition: all .25s;
+}
+a:hover,
+.user:hover {
+	color: #1abc9c;
+}
+a:focus,
+button:focus,
+input {
+	outline: 0;
+}
+button {
+	background: none;
+	border: 0;
+	color: inherit;
+	font: inherit;
+	margin: 0;
+	padding: 0;
+}
+button {
+	cursor: pointer;
+}
+button::-moz-focus-inner {
+	padding: 0;
+	border: 0;
+}
+.btn {
+	border: 2px solid #bdc3c7;
+	border-radius: 3px;
+	color: #aeb6bf;
+	padding: 8px 12px;
+	text-decoration: none;
+	transition: all .25s;
+}
+.btn:hover {
+	border-color: #7f8c8d;
+	color: #7f8c8d;
+}
+#wrap {
+	height: 100%;
+	min-width: 640px;
+	width: 100%;
+}
+#sidebar {
+	border-right: 4px solid #bdc3c7;
+	position: absolute;
+	height: 100%;
+	width: 240px;
+}
+#sidebar h2 {
+	color: #aeb6bf;
+	font: bold 13px sans-serif;
+	padding: 6px 12px;
+	text-transform: uppercase;
+}
+#sidebar button {
+	border-radius: 2px;
+	color: #16a085;
+	display: block;
+	font-size: 15px;
+	font-weight: bold;
+	line-height: 21px;
+	margin-bottom: 3px;
+	padding: 6px 13px;
+	text-align: left;
+	transition: all .25s;
+	white-space: nowrap;
+	width: 100%;
+}
+#sidebar button:hover {
+	background-color: #f1f2f3;
+	color: #1abc9c;
+}
+#sidebar button.active {
+	background-color: #ebedef;
+	color: #526476;
+}
+#sidebar .badge {
+	color: #bdc3c7;
+	font: 12px sans-serif;
+	line-height: 21px;
+}
+#menu,
+#networks {
+	margin: 20px;
+}
+#networks .network + .network {
+	border-top: 2px solid #ebedef;
+	margin-top: 14px;
+	padding-top: 14px;
+}
+#networks .badge {
+	float: right;
+}
+#footer {
+	bottom: 0;
+	position: absolute;
+	width: 100%;
+}
+#footer .btn {
+	background: #fff;
+	display: block;
+	text-align: center;
+	margin: 20px;
+}
+#main {
+	position: absolute;
+	height: 100%;
+	left: 240px;
+	right: 0;
+}
+#main .window {
+	background: #fff;
+	height: 100%;
+	position: absolute;
+	width: 100%;
+}
+#chat {
+	font: 13px "Consolas", monospace;
+	height: 100%;
+}
+#chat .lobby .messages,
+#chat .query .messages {
+	right: 0;
+}
+#chat .lobby .users,
+#chat .query .users {
+	display: none;
+}
+#chat .messages,
+#chat .users {
+	bottom: 35px;
+	overflow: hidden;
+	overflow-y: auto;
+	position: absolute;
+	top: 0;
+}
+#chat .messages {
+	left: 0px;
+	padding: 2px 0;
+	right: 160px;
+}
+#chat .show-more {
+	display: none;
+	margin: 6px 8px 4px;
+}
+#chat .show-more .btn {
+	width: 100%;
+}
+#chat .msg {
+	line-height: 1.4;
+	margin: 2px 8px;
+}
+#chat .time,
+#chat .type {
+	color: #bdc3c7;
+}
+#chat .motd .type,
+#chat .notice .type,
+#chat .whois .type {
+	display: none;
+}
+#chat .users {
+	background: #fff;
+	border-left: 4px solid #bdc3c7;
+	padding-bottom: 6px;
+	right: 0;
+	width: 160px;
+}
+#chat .users .user {
+	display: block;
+	padding: 4px 12px;
+}
+#chat .count {
+	background: #ecf0f1;
+	color: #aeb6bf;
+	margin-bottom: 4px;
+	padding: 10px 12px;
+}
+#chat .form {
+	bottom: 0;
+	height: 35px;
+	position: absolute;
+	right: 0;
+	left: 0;
+}
+#chat .input {
+	border: 0;
+	border-top: 1px solid #bdc3c7;
+	height: 35px;
+	padding: 0 10px;
+	width: 100%;
+}
