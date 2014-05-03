@@ -13,6 +13,7 @@ $(function() {
 		"/mode",
 		"/msg",
 		"/nick",
+		"/notice",
 		"/op",
 		"/part",
 		"/query",

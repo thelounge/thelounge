@@ -13,6 +13,7 @@ These are the commands currently implemented:
 - `/mode`
 - `/msg`
 - `/nick`
+- `/notice`
 - `/op`
 - `/part`
 - `/query`

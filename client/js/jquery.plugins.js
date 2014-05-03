@@ -71,17 +71,17 @@
  * Copyright (c) 2014 Mattias Erming <mattias@mattiaserming.com>
  * Licensed under the MIT License.
  *
- * Version 1.1.0
+ * Version 1.2.0
  */
 (function($) {
 	$.fn.scrollGlue = function(options) {
 		var settings = $.extend({
 			disableManualScroll: false,
-			overflow: "scroll",
+			overflow: 'scroll',
 			scrollToBottom: true,
 			speed: 0
 		}, options);
-
+		
 		var self = this;
 		if (self.size() > 1) {
 			return self.each(function() {
@@ -89,62 +89,68 @@
 			});
 		}
 		
-		self.css("overflow-y", settings.overflow);
+		self.css('overflow-y', settings.overflow);
 		if (settings.scrollToBottom) {
 			self.scrollToBottom();
 		}
-
+		
+		var timer;
+		var resizing = false;
 		$(window).on('resize', function() {
 			self.finish();
+			
+			// This will prevent the scroll event from triggering
+			// while resizing the browser.
+			resizing = true;
+			
+			clearTimeout(timer);
+			timer = setTimeout(function() {
+				resizing = false;
+			}, 100);
+			
+			if (sticky) {
+				self.scrollToBottom();
+			}
 		});
-
+		
 		var sticky = true;
 		self.on('scroll', function() {
 			if (settings.disableManualScroll) {
 				self.scrollToBottom();
-			} else {
+			} else if (!resizing) {
 				sticky = self.isScrollAtBottom();
 			}
 		});
 		self.trigger('scroll');
-		self.on('append', function() {
+		self.on('prepend append', function() {
 			if (sticky) {
 				self.scrollToBottom(settings.speed);
 			}
 		});
-
+		
 		return this;
 	};
-
-	var prepend = $.fn.prepend;
-	$.fn.prepend = function() {
-		return prepend.apply(this, arguments).trigger('append');
-	};
 	
-	var append = $.fn.append;
-	$.fn.append = function() {
-		return append.apply(this, arguments).trigger('append');
-	};
-
-	var html = $.fn.html;
-	$.fn.html = function(string) {
-		var result = html.apply(this, arguments);
-		if (typeof string !== 'undefined') {
-			this.trigger('append');
+	// Normally, these functions won't trigger any events.
+	// Lets override them.
+	var events = ['prepend', 'append'];
+	$.each(events, function(i, e) {
+		var fn = $.fn[e];
+		$.fn[e] = function() {
+			return fn.apply(this, arguments).trigger(e);
+		};
+	});
+	
+	$.fn.isScrollAtBottom = function() {
+		if ((this.scrollTop() + this.outerHeight() + 1) >= this.prop('scrollHeight')) {
+			return true;
 		}
-		return result;
 	};
 	
 	$.fn.scrollToBottom = function(speed) {
 		return this.each(function() {
 			$(this).finish().animate({scrollTop: this.scrollHeight}, speed || 0);
 		});
-	};
-
-	$.fn.isScrollAtBottom = function() {
-		if ((this.scrollTop() + this.outerHeight() + 1) >= this.prop('scrollHeight')) {
-			return true;
-		}
 	};
 })(jQuery);
 
