@@ -164,6 +164,13 @@ button::-moz-focus-inner {
 #chat .topic .user {
 	color: #e74c3c;
 }
+#chat .action,
+#chat .action .user {
+	color: #f39c12;
+}
+#chat .action .user:before {
+	content: '* ';
+}
 #chat .show-more {
 	display: none;
 	margin: 6px 8px 4px 148px;

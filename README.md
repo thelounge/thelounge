@@ -10,6 +10,7 @@ These are the commands currently implemented:
 - `/join`
 - `/kick`
 - `/leave`
+- `/me`
 - `/mode`
 - `/msg`
 - `/nick`

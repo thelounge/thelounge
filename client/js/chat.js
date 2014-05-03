@@ -119,14 +119,11 @@ $(function() {
 	chat.on("append", ".messages", function() {
 		var messages = $(this);
 		var id = messages.closest(".window").find(".form").data("target");
-		var badge = $("#channel-" + id + ":not(.active)")
-			.find(".badge");
-		console.log(badge);
-		if (badge.length == 0) {
-			return;
+		var badge = $("#channel-" + id + ":not(.active) .badge");
+		if (badge.length != 0) {
+			var i = (parseInt(badge.html()) || 0) + 1;
+			badge.html(i);
 		}
-		var i = (parseInt(badge.html()) || 0) + 1;
-		badge.html(i);
 	});
 	
 	chat.on("click", ".show-more .btn", function() {
