@@ -54,15 +54,13 @@ $(function() {
 				.end()
 				.end()
 				.find(".input")
-				.tabComplete({list: commands})
-				.end();
+				.tabComplete({list: commands});
 			
 			$("#network-" + data.id)
 				.append(render("channels", {channels: [data.chan]}))
 				.find(".channel")
 				.last()
-				.trigger("click")
-				.end();
+				.trigger("click");
 			break;
 		
 		case "msg":
@@ -81,16 +79,14 @@ $(function() {
 				.prev(".show-more")
 				.show();
 			chat.find(".messages")
-				.scrollGlue({speed: 400})
-				.end();
+				.scrollGlue({speed: 400});
 			
 			$("#networks")
 				.html(render("networks", {networks: data.networks}))
 				.parent()
 				.find("button")
 				.first()
-				.trigger("click")
-				.end();
+				.trigger("click");
 			break;
 		
 		case "part":
@@ -102,8 +98,7 @@ $(function() {
 		case "users":
 			$("#window-" + data.id)
 				.find(".users")
-				.html(render("users", {users: data.users}))
-				.end();
+				.html(render("users", {users: data.users}));
 			break;
 		}
 	}
@@ -114,11 +109,24 @@ $(function() {
 		var target = button.data("target");
 		sidebar.find(".active").removeClass("active");
 		button.addClass("active")
-		$(target).css({
-			"z-index": z++
-		}).find("input")
-			.focus()
-			.end();
+			.find(".badge")
+			.empty();
+		$(target).css("z-index", z++)
+			.find("input")
+			.focus();
+	});
+	
+	chat.on("append", ".messages", function() {
+		var messages = $(this);
+		var id = messages.closest(".window").find(".form").data("target");
+		var badge = $("#channel-" + id + ":not(.active)")
+			.find(".badge");
+		console.log(badge);
+		if (badge.length == 0) {
+			return;
+		}
+		var i = (parseInt(badge.html()) || 0) + 1;
+		badge.html(i);
 	});
 	
 	chat.on("click", ".show-more .btn", function() {
@@ -131,7 +139,7 @@ $(function() {
 		var user = $(this);
 		var id = user.closest(".window").find(".form").data("target");
 		var name = user.html().replace(/[\s+@]/g, "");
-		if (name == "-!-" || name.indexOf(".") != -1) {
+		if (name.match(/[#.]|-!-/) != null) {
 			return;
 		}
 		socket.emit("input", {
