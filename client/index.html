@@ -58,51 +58,59 @@
 		{{#each windows}}
 		<div id="window-{{id}}" class="window {{type}}">
 			<div class="chat">
-				<div class="messages">
-					<div class="show-more">
+				<ul class="messages">
+					<li class="show-more">
 						<button class="btn">Show more</button>
-					</div>
+					</li>
 					{{partial "messages"}}
-				</div>
-				<div class="users">
+				</ul>
+				<ul class="users">
 					{{partial "users"}}
-				</div>
+				</ul>
 			</div>
-			<form class="form" onSubmit="return false" data-target="{{id}}">
-				<input type="text" class="input">
+			<form onSubmit="return false" data-target="{{id}}">
+				<input class="input">
 			</form>
 		</div>
 		{{/each}}
 		</script>
 		
 		<script type="text/html" class="users">
-		<div class="count">
-			Users: {{users.length}}
-		</div>
+		<li class="count">
+			<span>
+				Users:
+				{{users.length}}
+			</span>
+		</li>
 		{{#each users}}
-		<button class="user">
-			{{mode}}{{name}}
-		</button>
+		<li>
+			<button class="user">
+				{{mode}}{{name}}
+			</button>
+		</li>
 		{{/each}}
 		</script>
 		
 		<script type="text/html" class="messages">
 		{{#slice messages limit=100}}
-		<div class="msg {{type}}">
-
+		<li class="msg {{type}}">
 			<span class="from">
-				<button class="user">{{from}}</button>
+				<button class="user">
+					{{from}}
+				</button>
 			</span>
 			<span class="text">
 				{{#if type}}
-				<em class="type">{{type}}</em>
+				<em class="type">
+					{{type}}
+				</em>
 				{{/if}}
 				{{{uri text}}}
 			</span>
 			<span class="time">
 				{{time}}
 			</span>
-		</div>
+		</li>
 		{{/slice}}
 		</script>
 	</div>

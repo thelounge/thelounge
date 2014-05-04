@@ -11,6 +11,12 @@ h1,
 h2 {
 	margin: 0;
 }
+ul,
+li {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
 a {
 	color: #1abc9c;
 	text-decoration: none;
@@ -133,6 +139,20 @@ button::-moz-focus-inner {
 	font: 13px "Consolas", monospace;
 	height: 100%;
 }
+#chat form {
+	bottom: 0;
+	height: 35px;
+	position: absolute;
+	right: 0;
+	left: 0;
+}
+#chat form .input {
+	border: 0;
+	border-top: 1px solid #bdc3c7;
+	height: 35px;
+	padding: 0 10px;
+	width: 100%;
+}
 #chat .lobby .messages,
 #chat .query .messages {
 	right: 0;
@@ -235,27 +255,25 @@ button::-moz-focus-inner {
 	right: 0;
 	width: 160px;
 }
+#chat .users li {
+	display: table-row;
+	text-align: left;
+}
+
 #chat .users .user {
-	display: block;
 	padding: 4px 12px;
+	text-align: left;
+	width: 160px;
 }
 #chat .count {
 	background: #ecf0f1;
 	color: #aeb6bf;
 	margin-bottom: 4px;
+}
+#chat .count span {
+	display: block;
 	padding: 10px 12px;
 }
-#chat .form {
-	bottom: 0;
-	height: 35px;
-	position: absolute;
-	right: 0;
-	left: 0;
-}
-#chat .input {
-	border: 0;
-	border-top: 1px solid #bdc3c7;
-	height: 35px;
-	padding: 0 10px;
-	width: 100%;
+#chat .count + li .user {
+	padding-top: 8px
 }
