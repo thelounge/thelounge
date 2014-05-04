@@ -95,11 +95,6 @@ button::-moz-focus-inner {
 	background-color: #ebedef;
 	color: #526476;
 }
-#sidebar .badge {
-	color: #bdc3c7;
-	font: 12px sans-serif;
-	line-height: 21px;
-}
 #menu,
 #networks {
 	margin: 20px;
@@ -110,7 +105,20 @@ button::-moz-focus-inner {
 	padding-top: 14px;
 }
 #networks .badge {
+	background: #f7f9fa;
+	border-radius: 4px;
+	color: #aeb6bf;
 	float: right;
+	font: 12px sans-serif;
+	line-height: 21px;
+	padding: 0 6px;
+}
+#networks .badge.highlight {
+	background: #f8f5f5;
+	color: #e74c3c;
+}
+#networks .badge:empty {
+	display: none;
 }
 #footer {
 	bottom: 0;
