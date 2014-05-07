@@ -79,14 +79,24 @@ $(function() {
 				.prev(".show-more")
 				.show();
 			chat.find(".messages")
-				.scrollGlue({speed: 400});
+				.scrollGlue({speed: 400})
+				.end();
 			
-			$("#networks")
-				.html(render("networks", {networks: data.networks}))
-				.parent()
-				.find("button")
-				.first()
-				.trigger("click");
+			var networks = $("#networks")
+				.html(render("networks", {networks: data.networks}));
+				
+			var target = null;
+			if (location.hash) {
+				var id = location.hash;
+				target = sidebar
+					.find("button[data-target='" + id + "']");
+			} else {
+				target = sidebar
+					.find("button")
+					.first()
+			}
+			
+			target.trigger("click");
 			break;
 		
 		case "part":
@@ -107,12 +117,17 @@ $(function() {
 	sidebar.on("click", "button", function() {
 		var button = $(this);
 		var target = button.data("target");
+		
+		location.hash = target;
+		
 		sidebar.find(".active").removeClass("active");
 		button.addClass("active")
 			.find(".badge")
 			.removeClass("highlight")
 			.empty();
-		$(target).css("z-index", z++)
+		
+		var window = $(target)
+			.css("z-index", z++)
 			.find("input")
 			.focus();
 	});
