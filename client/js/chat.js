@@ -18,6 +18,7 @@ $(function() {
 		"/part",
 		"/query",
 		"/quit",
+		"/send",
 		"/server",
 		"/topic",
 		"/voice",

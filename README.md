@@ -19,6 +19,7 @@ These are the commands currently implemented:
 - `/part`
 - `/query`
 - `/quit`
+- `/send`
 - `/server`
 - `/topic`
 - `/voice`
