@@ -95,6 +95,10 @@ button::-moz-focus-inner {
 	background-color: #ebedef;
 	color: #526476;
 }
+#logo {
+	margin: 30px 0 30px;
+	text-align: center;
+}
 #menu,
 #networks {
 	margin: 20px;
@@ -254,7 +258,7 @@ button::-moz-focus-inner {
 }
 #chat .time {
 	color: #dee0e2;
-	padding: 2px 10px;
+	/*padding: 2px 10px;*/
 }
 #chat .users {
 	background: #fff;
