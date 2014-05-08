@@ -93,8 +93,9 @@ $(function() {
 					.find("button[data-target='" + id + "']");
 			} else {
 				target = sidebar
+					.find("#networks")
 					.find("button")
-					.first()
+					.last()
 			}
 			
 			target.trigger("click");
@@ -118,6 +119,9 @@ $(function() {
 	sidebar.on("click", "button", function() {
 		var button = $(this);
 		var target = button.data("target");
+		if (!target) {
+			return;
+		}
 		
 		location.hash = target;
 		
@@ -131,6 +135,10 @@ $(function() {
 			.css("z-index", z++)
 			.find("input")
 			.focus();
+	});
+	
+	sidebar.on("click", "#menu .btn", function() {
+		$("#menu").toggleClass("visible");
 	});
 	
 	chat.on("append", ".messages", function() {

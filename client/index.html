@@ -17,24 +17,29 @@
 		<aside id="sidebar">
 			<div id="logo">
 				<a href="<%= homepage %>" target="_blank">
-					<img src="/img/play.svg" width="122" height="122">
+					<img src="/img/play.svg" title="Work in progress" width="122" height="122">
 				</a>
 			</div>
 			<div id="menu">
-				<h2>Shout Client</h2>
-				<button data-target="#settings">Settings</button>
+				<button class="btn">
+					Menu
+				</button>
+				<div class="options">
+					<button class="opt" data-target="#settings">
+						Settings
+					</button>
+					<hr/>
+					<button class="opt" data-target="#sign-out">
+						Sign out
+					</button>
+				</div>
 			</div>
 			<div id="networks"></div>
-			<footer id="footer">
-				<a href="<%= homepage %>" target="_blank" class="btn">
-					<strong><%= name %></strong>
-					<%= version %>
-				</a>
-			</footer>
 		</aside>
 		<div id="main">
 			<div id="windows">
 				<div id="settings" class="window"></div>
+				<div id="sign-out" class="window"></div>
 			</div>
 			<div id="chat"></div>
 		</div>
