@@ -49,13 +49,13 @@ $(function() {
 		switch (e) {
 		case "join":
 			chat.append(render("windows", {windows: [data.chan]}))
-				.find(".messages")
+				.find(".window")
 				.last()
+				.find(".messages")
 				.scrollGlue({speed: 400})
 				.end()
-				.end()
 				.find(".input")
-				.tabComplete({list: commands});
+				.tabComplete(commands);
 			
 			$("#network-" + data.id)
 				.append(render("channels", {channels: [data.chan]}))
@@ -74,7 +74,7 @@ $(function() {
 			var channels = $.map(data.networks, function(n) { return n.channels; });
 			chat.html(render("windows", {windows: channels}))
 				.find(".input")
-				.tabComplete({list: commands})
+				.tabComplete(commands)
 				.end()
 				.find(".hidden")
 				.prev(".show-more")
@@ -122,15 +122,12 @@ $(function() {
 		if (!target) {
 			return;
 		}
-		
 		location.hash = target;
-		
 		sidebar.find(".active").removeClass("active");
 		button.addClass("active")
 			.find(".badge")
 			.removeClass("highlight")
 			.empty();
-		
 		var window = $(target)
 			.css("z-index", z++)
 			.find("input")
@@ -179,7 +176,7 @@ $(function() {
 	
 	chat.on("submit", "form", function() {
 		var form = $(this);
-		var input = form.find(".input");
+		var input = form.find(".input:not(.hint)");
 		var text = input.val();
 		if (text == "") {
 			return;

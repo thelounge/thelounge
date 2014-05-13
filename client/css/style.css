@@ -200,6 +200,9 @@ button::-moz-focus-inner {
 	padding: 0 10px;
 	width: 100%;
 }
+#chat form .hint {
+	color: #bdc3c7;
+}
 #chat .lobby .messages,
 #chat .query .messages {
 	right: 0;
