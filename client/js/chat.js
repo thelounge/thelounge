@@ -140,7 +140,7 @@ $(function() {
 	
 	chat.on("append", ".messages", function() {
 		var messages = $(this);
-		var id = messages.closest(".window").find(".input").parent().data("target");
+		var id = messages.closest(".window").find(".form").data("target");
 		var badge = $("#channel-" + id + ":not(.active) .badge");
 		if (badge.length != 0) {
 			var i = (parseInt(badge.html()) || 0) + 1;
@@ -159,7 +159,7 @@ $(function() {
 	
 	chat.on("click", ".user", function() {
 		var user = $(this);
-		var id = user.closest(".window").find(".input").parent().data("target");
+		var id = user.closest(".window").find(".form").data("target");
 		var name = user.html().replace(/[\s+@]/g, "");
 		if (name.match(/[#.]|-!-/) != null) {
 			return;

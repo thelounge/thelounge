@@ -116,6 +116,7 @@ button::-moz-focus-inner {
 	transition: all .25s;
 	width: 100%;
 }
+#menu .opt.active,
 #menu .opt:hover {
 	background: #e1e4e7;
 	color: #34495e;
@@ -164,7 +165,7 @@ button::-moz-focus-inner {
 	padding: 0 6px;
 }
 #networks .badge.highlight {
-	background: #f8f5f5;
+	background: #f8e2e2;
 	color: #e74c3c;
 }
 #networks .badge:empty {
