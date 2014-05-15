@@ -5,7 +5,7 @@ Run your IRC client on a server and access it from the web browser. This gives y
 These are the commands currently implemented:
 - [ ] /ame
 - [ ] /amsg
-- [ ] /close
+- [x] /close
 - [x] /connect
 - [x] /deop
 - [x] /devoice
@@ -25,7 +25,7 @@ These are the commands currently implemented:
 - [ ] /partall
 - [x] /query
 - [x] /quit
-- [ ] /raw
+- [x] /raw
 - [x] /say
 - [x] /send
 - [x] /server

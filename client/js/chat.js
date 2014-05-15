@@ -3,6 +3,7 @@ $(function() {
 	var sidebar = $("#sidebar");
 	
 	var commands = [
+		"/close",
 		"/connect",
 		"/deop",
 		"/devoice",
@@ -18,6 +19,7 @@ $(function() {
 		"/part",
 		"/query",
 		"/quit",
+		"/raw",
 		"/say",
 		"/send",
 		"/server",
