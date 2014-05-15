@@ -3,27 +3,27 @@ Run your IRC client on a server and access it from the web browser. This gives y
 
 ### Commands
 These are the commands currently implemented:
-- `/connect`
-- `/deop`
-- `/devoice`
-- `/disconnect`
-- `/join`
-- `/kick`
-- `/leave`
-- `/me`
-- `/mode`
-- `/msg`
-- `/nick`
-- `/notice`
-- `/op`
-- `/part`
-- `/query`
-- `/quit`
-- `/send`
-- `/server`
-- `/topic`
-- `/voice`
-- `/whois`
+- [ ] /connect
+- [ ] /deop
+- [ ] /devoice
+- [ ] /disconnect
+- [ ] /join
+- [ ] /kick
+- [ ] /leave
+- [ ] /me
+- [ ] /mode
+- [ ] /msg
+- [ ] /nick
+- [ ] /notice
+- [ ] /op
+- [ ] /part
+- [ ] /query
+- [ ] /quit
+- [ ] /send
+- [ ] /server
+- [ ] /topic
+- [ ] /voice
+- [ ] /whois
 
 ## Install
 
