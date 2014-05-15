@@ -26,7 +26,7 @@ These are the commands currently implemented:
 - [x] /query
 - [x] /quit
 - [ ] /raw
-- [ ] /say
+- [x] /say
 - [x] /send
 - [x] /server
 - [ ] /time
