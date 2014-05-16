@@ -22,7 +22,7 @@ These are the commands currently implemented:
 - [x] /notice
 - [x] /op
 - [x] /part
-- [ ] /partall
+- [x] /partall
 - [x] /query
 - [x] /quit
 - [x] /raw

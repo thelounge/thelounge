@@ -17,6 +17,7 @@ $(function() {
 		"/notice",
 		"/op",
 		"/part",
+		"/partall",
 		"/query",
 		"/quit",
 		"/raw",
