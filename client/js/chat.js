@@ -8,6 +8,7 @@ $(function() {
 		"/deop",
 		"/devoice",
 		"/disconnect",
+		"/invite",
 		"/join",
 		"/kick",
 		"/leave",

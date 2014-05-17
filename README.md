@@ -11,7 +11,7 @@ These are the commands currently implemented:
 - [x] /devoice
 - [x] /disconnect
 - [ ] /help
-- [ ] /invite
+- [x] /invite
 - [x] /join
 - [x] /kick
 - [x] /leave
