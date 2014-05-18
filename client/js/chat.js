@@ -3,6 +3,8 @@ $(function() {
 	var sidebar = $("#sidebar");
 	
 	var commands = [
+		"/ame",
+		"/amsg",
 		"/close",
 		"/connect",
 		"/deop",
@@ -187,6 +189,7 @@ $(function() {
 			return;
 		}
 		input.val("");
+		input.prev(".hint").val("");
 		socket.emit("input", {
 			id: form.data("target"),
 			text: text,

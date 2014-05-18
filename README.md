@@ -3,8 +3,8 @@ Run your IRC client on a server and access it from the web browser. This gives y
 
 ### Commands
 These are the commands currently implemented:
-- [ ] /ame
-- [ ] /amsg
+- [x] /ame
+- [x] /amsg
 - [x] /close
 - [x] /connect
 - [x] /deop
@@ -29,6 +29,7 @@ These are the commands currently implemented:
 - [x] /say
 - [x] /send
 - [x] /server
+- [ ] /slap
 - [ ] /time
 - [x] /topic
 - [ ] /version
