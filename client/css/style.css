@@ -75,59 +75,8 @@ button::-moz-focus-inner {
 	padding: 6px 12px;
 	text-transform: uppercase;
 }
-#logo {
-	margin: 30px 0 30px;
-	text-align: center;
-	transition: all .5s;
-}
-#menu,
 #networks {
 	margin: 20px;
-}
-#menu hr {
-	background: #e5e5e5;
-	border: 0;
-	height: 1px;
-	margin: 3px 0;
-}
-#menu.visible .btn {
-	border-color: #7f8c8d;
-	color: #7f8c8d;
-}
-#menu.visible .options {
-	display: block;
-}
-#menu .btn {
-	width: 100%;
-}
-#menu .options {
-	background: #f3f5f5;
-	border-radius: 3px;
-	display: none;
-	margin-top: 15px;
-}
-#menu .opt {
-	color: rgba(52, 73, 94, 0.75);
-	display: block;
-	font-size: 14px;
-	font-weight: bold;
-	padding: 6px 15px 8px;
-	text-align: left;
-	transition: all .25s;
-	width: 100%;
-}
-#menu .opt.active,
-#menu .opt:hover {
-	background: #e1e4e7;
-	color: #34495e;
-}
-#menu .opt:first-child {
-	border-radius: 3px 3px 0 0;
-	padding-top: 10px;
-}
-#menu .opt:last-child {
-	border-radius: 0 0 3px 3px;
-	padding-bottom: 10px;
 }
 #networks button {
 	border-radius: 3px;
@@ -150,7 +99,7 @@ button::-moz-focus-inner {
 	background-color: #ebedef;
 	color: #526476;
 }
-#networks .network {
+#networks .network + .network {
 	border-top: 2px solid #ebedef;
 	margin-top: 14px;
 	padding-top: 14px;
@@ -234,6 +183,10 @@ button::-moz-focus-inner {
 #chat .normal .user,
 #chat .topic .user {
 	color: #e74c3c;
+	transition: all .1s;
+}
+#chat .user:hover {
+	color: #000;
 }
 #chat .action,
 #chat .action .user {
@@ -327,11 +280,4 @@ button::-moz-focus-inner {
 }
 #chat .count + li .user {
 	padding-top: 8px
-}
-
-@media (max-height: 480px) {
-	#logo {
-		display: block !important;
-		margin-top: -135px;
-	}
 }

@@ -92,20 +92,6 @@ $(function() {
 			
 			var networks = $("#networks")
 				.html(render("networks", {networks: data.networks}));
-				
-			var target = null;
-			if (location.hash) {
-				var id = location.hash;
-				target = sidebar
-					.find("button[data-target='" + id + "']");
-			} else {
-				target = sidebar
-					.find("#networks")
-					.find("button")
-					.last()
-			}
-			
-			target.trigger("click");
 			break;
 		
 		case "part":
@@ -129,7 +115,6 @@ $(function() {
 		if (!target) {
 			return;
 		}
-		location.hash = target;
 		sidebar.find(".active").removeClass("active");
 		button.addClass("active")
 			.find(".badge")
