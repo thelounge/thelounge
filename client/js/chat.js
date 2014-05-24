@@ -126,8 +126,15 @@ $(function() {
 			.focus();
 	});
 	
-	sidebar.on("click", "#menu .btn", function() {
-		$("#menu").toggleClass("visible");
+	sidebar.on("click", ".close", function() {
+		var link = $(this);
+		var channel = link.closest(".channel");
+		var id = parseInt(channel.attr("id").split("-")[1]);
+		socket.emit("input", {
+			id: id,
+			text: "/close",
+		});
+		return false;
 	});
 	
 	chat.on("append", ".messages", function() {

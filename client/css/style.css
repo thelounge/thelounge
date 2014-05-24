@@ -78,7 +78,12 @@ button::-moz-focus-inner {
 #networks {
 	margin: 20px;
 }
-#networks button {
+#networks .network + .network {
+	border-top: 2px solid #ebedef;
+	margin-top: 14px;
+	padding-top: 14px;
+}
+#networks .channel {
 	border-radius: 3px;
 	color: #1abc9c;
 	display: block;
@@ -92,17 +97,35 @@ button::-moz-focus-inner {
 	white-space: nowrap;
 	width: 100%;
 }
-#networks button:hover {
-	background-color: #f1f2f3;
-}
 #networks button.active {
 	background-color: #ebedef;
 	color: #526476;
 }
-#networks .network + .network {
-	border-top: 2px solid #ebedef;
-	margin-top: 14px;
-	padding-top: 14px;
+#networks button:hover {
+	background-color: #f1f2f3;
+}
+#networks button:hover .badge {
+	opacity: 0;
+}
+#networks button:hover .close {
+	opacity: .2;
+}
+#networks .close {
+	background: no-repeat url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iMTZweCIgaGVpZ2h0PSIxNnB4IiB2aWV3Qm94PSIwIDAgMTYgMTYiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDE2IDE2IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxwYXRoIGQ9Ik0xMi44NzIsMS41NjJjMC4xOTUsMC4xOTQsMC4xOTUsMC41MTMsMCwwLjcwN0w4Ljk4Myw2LjE2Yy0wLjE5MywwLjE5NC0wLjE5MywwLjUxMywwLDAuNzA4bDMuODg3LDMuODkyDQoJYzAuMTk1LDAuMTk0LDAuMTk1LDAuNTEzLDAsMC43MDdsLTEuNDE2LDEuNDEzYy0wLjE5MywwLjE5NC0wLjUxMiwwLjE5NC0wLjcwNywwTDYuODYyLDguOTg4Yy0wLjE5NC0wLjE5NC0wLjUxMy0wLjE5NC0wLjcwNywwDQoJbC0zLjg4OSwzLjg4OWMtMC4xOTQsMC4xOTUtMC41MTMsMC4xOTUtMC43MDcsMGwtMS40MTQtMS40MTZjLTAuMTk0LTAuMTkzLTAuMTk0LTAuNTEyLDAtMC43MDdsMy44OS0zLjg4OQ0KCWMwLjE5NC0wLjE5NCwwLjE5NC0wLjUxMywwLTAuNzA4TDAuMTQ4LDIuMjY2Yy0wLjE5NC0wLjE5NS0wLjE5NC0wLjUxMywwLTAuNzA3bDEuNDE1LTEuNDE0YzAuMTk0LTAuMTk0LDAuNTEzLTAuMTk0LDAuNzA3LDANCglsMy44ODUsMy44OTFjMC4xOTQsMC4xOTUsMC41MTMsMC4xOTUsMC43MDcsMC4wMDFsMy44ODgtMy44OWMwLjE5NS0wLjE5MywwLjUxNC0wLjE5MywwLjcwNywwTDEyLjg3MiwxLjU2MnoiLz4NCjwvc3ZnPg0K);
+	background-size: 50%;
+	background-position: 6px 6px;
+	border-radius: 2px;
+	height: 19px;
+	margin-top: 1px;
+	opacity: 0;
+	position: absolute;
+	right: 28px;
+	transition: all .25s;
+	width: 20px;
+}
+#networks .close:hover {
+	background-color: rgba(0, 0, 0, .1);
+	opacity: .6 !important;
 }
 #networks .badge {
 	background: #f7f9fa;
@@ -112,6 +135,9 @@ button::-moz-focus-inner {
 	font: 12px sans-serif;
 	line-height: 21px;
 	padding: 0 6px;
+	position: absolute;
+	right: 28px;
+	transition: all .25s;
 }
 #networks .badge.highlight {
 	background: #f8e2e2;
@@ -197,7 +223,7 @@ button::-moz-focus-inner {
 }
 #chat .show-more {
 	display: none;
-	margin: 6px 8px 4px 148px;
+	margin: 4px 8px 4px 148px;
 }
 #chat .show-more .btn {
 	width: 100%;
