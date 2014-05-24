@@ -1,72 +1,6 @@
 /*!
- * inputHistory
- * https://github.com/erming/inputHistory
- *
- * Copyright (c) 2014 Mattias Erming <mattias@mattiaserming.com>
- * Licensed under the MIT License.
- *
- * Version 0.1.2
- */
-(function($) {
-	$.fn.inputHistory = function(options) {
-		var settings = $.extend({
-			history: [],
-			submit: false,
-		}, options);
-		
-		var self = this;
-		if (self.size() > 1) {
-			return self.each(function() {
-				$(this).inputHistory(options);
-			});
-		}
-		
-		self.data('history', settings.history.concat(['']));
-		
-		var i = 0;
-		self.on('keydown', function(e) {
-			var history = self.data('history');
-			var key = e.which;
-			switch (key) {
-			
-			case 13: // Enter
-				if (self.val() != '') {
-					i = history.length;
-					history[i - 1] = self.val();
-					history.push('');
-				}
-				if (settings.submit) {
-					self.parents('form').eq(0).submit();
-				}
-				self.val('');
-				break;
-			
-			case 38: // Up
-			case 40: // Down
-				history[i] = self.val();
-				if (key == 38 && i != 0) {
-					i--;
-				} else if (key == 40 && i < history.length - 1) {
-					i++;
-				}
-				self.val(history[i]);
-				break;
-			
-			default:
-				return;
-			
-			}
-			
-			return false;
-		});
-		
-		return this;
-	}
-})(jQuery);
-
-/*!
- * scrollGlue
- * https://github.com/erming/scrollGlue
+ * stickyScroll
+ * https://github.com/erming/stickyScroll
  *
  * Copyright (c) 2014 Mattias Erming <mattias@mattiaserming.com>
  * Licensed under the MIT License.
@@ -74,7 +8,7 @@
  * Version 1.2.1
  */
 (function($) {
-	$.fn.scrollGlue = function(options) {
+	$.fn.sticky = function(options) {
 		var settings = $.extend({
 			disableManualScroll: false,
 			overflow: 'scroll',
@@ -85,7 +19,7 @@
 		var self = this;
 		if (self.size() > 1) {
 			return self.each(function() {
-				$(this).scrollGlue(options);
+				$(this).sticky(options);
 			});
 		}
 		
@@ -156,43 +90,52 @@
 
 /*!
  * tabComplete
+ * Lightweight tab completion for <input> and <textarea>
+ *
+ * Source:
  * https://github.com/erming/tabComplete
  *
  * Copyright (c) 2014 Mattias Erming <mattias@mattiaserming.com>
  * Licensed under the MIT License.
  *
- * Version 1.0.0-alpha2
+ * Version 1.1.1
  */
 (function($) {
-	var defaults = {
-		after: "",
-		caseSensitive: false,
-		hint: true,
-		minLength: 1,
+	var keys = {
+		tab: 9,
+		up: 38,
+		down: 40
 	};
 	
 	$.fn.tabComplete = function(args, options) {
-		var self = this;
-		options = $.extend(
-			{}, defaults, options
-		);
-		
 		if (this.length > 1) {
 			return this.each(function() {
 				$(this).tabComplete(args, options);
 			});
 		}
 		
-		if (options.hint) {
-			// Lets turn on hinting.
-			hint.call(self, "");
+		// Only enable the plugin on <input> and <textarea> elements.
+		var tag = this.prop("tagName");
+		if (tag != "INPUT" && tag != "TEXTAREA") {
+			return;
 		}
+		
+		// Set default options.
+		options = $.extend({
+			after: "",
+			arrowKeys: tag == "INPUT" ? true : false,
+			caseSensitive: false,
+			hint: true,
+			minLength: 1,
+			onTabComplete: $.noop
+		}, options);
 		
 		// Unbind namespace.
 		// This allows us to override the plugin if necessary.
 		this.unbind(".tabComplete");
 		
-		var i = 0;
+		var self = this;
+		var i = -1;
 		var words = [];
 		var last = "";
 		
@@ -201,7 +144,7 @@
 			var word = input.split(/ |\n/).pop();
 			
 			if (!word) {
-				i = 0;
+				i = -1;
 				words = [];
 				last = "";
 			} else if (typeof args === "function") {
@@ -212,6 +155,9 @@
 				// Otherwise, call the .match() function.
 				words = match(args, word, options.caseSensitive);
 			}
+			
+			// Emit the number of matching words with the 'match' event.
+			self.trigger("match", words.length);
 			
 			if (options.hint) {
 				if (word.length >= options.minLength && words.length) {
@@ -226,12 +172,26 @@
 		
 		this.on("keydown.tabComplete", function(e) {
 			var key = e.which;
-			if (key == 9) {
+			if (key == keys.tab || (options.arrowKeys && (key == keys.up || key == keys.down))) { 
 				// Don't lose focus on tab click.
 				e.preventDefault();
 				
+				// Iterate the matches with tab and the up and down keys by incrementing
+				// or decrementing the 'i' variable.
+				if (key != keys.up) {
+					i++;
+				} else {
+					if (i == -1) return;
+					if (i == 0) {
+						// Jump to the last word.
+						i = words.length - 1;
+					} else {
+						i--;
+					}
+				}
+					
 				// Get next match.
-				var word = words[i++ % words.length];
+				var word = words[i % words.length];
 				if (!word) {
 					return;
 				}
@@ -252,12 +212,23 @@
 				// Remember the word until next time.
 				last = word;
 				
+				// Trigger callback.
+				options.onTabComplete(last);
+				
+				// Trigger the 'tabComplete' event on a successful complete.
+				self.trigger("tabComplete", last);
+				
 				if (options.hint) {
 					// Turn off any additional hinting.
 					hint.call(self, "");
 				}
 			}
 		});
+		
+		if (options.hint) {
+			// If enabled, turn on hinting.
+			hint.call(this, "");
+		}
 		
 		return this;
 	}
@@ -277,7 +248,7 @@
 		);
 	}
 
-	// Add input hinting.
+	// Input hinting.
 	// This works by creating a copy of the input and placing it behind
 	// the real input.
 	function hint(word) {
@@ -297,7 +268,7 @@
 			);
 			clone = input
 				.clone()
-				.prop("disabled", true)
+				.attr("tabindex", -1)
 				.removeAttr("id name placeholder")
 				.addClass("hint")
 				.insertBefore(input);

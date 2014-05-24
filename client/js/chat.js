@@ -59,7 +59,7 @@ $(function() {
 				.find(".window")
 				.last()
 				.find(".messages")
-				.scrollGlue({speed: 400})
+				.sticky({speed: 400})
 				.end()
 				.find(".input")
 				.tabComplete(commands);
@@ -87,7 +87,7 @@ $(function() {
 				.prev(".show-more")
 				.show();
 			chat.find(".messages")
-				.scrollGlue({speed: 400})
+				.sticky({speed: 400})
 				.end();
 			
 			var networks = $("#networks")
