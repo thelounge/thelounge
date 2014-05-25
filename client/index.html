@@ -50,15 +50,31 @@
 		{{#each windows}}
 		<div id="window-{{id}}" class="window {{type}}">
 			<div class="chat">
-				<ul class="messages">
-					<li class="show-more">
-						<button class="btn">Show more</button>
-					</li>
-					{{partial "messages"}}
-				</ul>
-				<ul class="users">
-					{{partial "users"}}
-				</ul>
+				<div class="main">
+					<div class="title">
+						<h1>
+						{{type}}:
+						<strong>{{name}}</strong>
+						</h1>
+					</div>
+					<ul class="messages">
+						<li class="show-more">
+							<button class="btn">Show more</button>
+						</li>
+						{{partial "messages"}}
+					</ul>
+				</div>
+				<aside class="sidebar">
+					<div class="title">
+						<span>
+						Users:
+						{{users.length}}
+						</span>
+					</div>
+					<ul class="users">
+						{{partial "users"}}
+					</ul>
+				</aside>
 			</div>
 			<form class="form" onSubmit="return false" data-target="{{id}}">
 				<input class="input">
@@ -69,12 +85,6 @@
 		</script>
 		
 		<script type="text/html" class="users">
-		<li class="count">
-			<span>
-				Users:
-				{{users.length}}
-			</span>
-		</li>
 		{{#each users}}
 		<li>
 			<button class="user">

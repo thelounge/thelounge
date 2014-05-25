@@ -161,6 +161,14 @@ button::-moz-focus-inner {
 #chat {
 	font: 13px "Consolas", monospace;
 	height: 100%;
+	position: relative;
+}
+#chat h1 {
+	font-size: 18px;
+	font-weight: normal;
+}
+#chat h1:first-letter {
+	text-transform: uppercase;
 }
 #chat form {
 	bottom: 0;
@@ -179,27 +187,48 @@ button::-moz-focus-inner {
 #chat form .hint {
 	color: #bdc3c7;
 }
-#chat .lobby .messages,
-#chat .query .messages {
+#chat .lobby .main,
+#chat .query .sidebar {
 	right: 0;
 }
-#chat .lobby .users,
-#chat .query .users {
+#chat .lobby .sidebar,
+#chat .query .sidebar {
 	display: none;
 }
-#chat .messages,
-#chat .users {
+#chat .main,
+#chat .sidebar {
 	bottom: 35px;
 	overflow: hidden;
-	overflow-y: scroll;
 	position: absolute;
 	top: 0;
 }
+#chat .main {
+	left: 0;
+	right: 160px;
+}
+#chat .title {
+	background: #ecf0f1;
+	border-bottom: 1px solid #ddd;
+	color: #7F8C8D;
+	height: 44px;
+	line-height: 44px;
+	padding: 0 14px;
+}
+#chat .sidebar .title {
+	color: #95a5a6;
+}
+#chat .messages,
+#chat .users {
+	bottom: 0;
+	display: block;
+	overflow: hidden;
+	overflow-y: scroll;
+	position: absolute;
+	top: 44px;
+}
 #chat .messages {
 	box-shadow: inset 140px 0 #f3f5f5;
-	left: 0px;
 	padding: 4px 0;
-	right: 160px;
 }
 #chat .messages .user {
 	color: #95a5a6;
@@ -236,7 +265,6 @@ button::-moz-focus-inner {
 	display: table-cell;
 }
 #chat .from {
-	background: #f3f5f5;
 	max-width: 140px;
 	min-width: 140px;
 	overflow: hidden;
@@ -278,22 +306,23 @@ button::-moz-focus-inner {
 	color: #dee0e2;
 	padding: 2px 10px;
 }
-#chat .users {
+#chat .sidebar {
 	background: #fff;
 	border-left: 4px solid #bdc3c7;
-	padding-bottom: 6px;
 	right: 0;
 	width: 160px;
+}
+#chat .users {
+	padding-bottom: 6px;
+	width: 156px;
 }
 #chat .users li {
 	display: table-row;
 	text-align: left;
 }
-
 #chat .users .user {
-	padding: 4px 12px;
+	padding: 4px 8px;
 	text-align: left;
-	width: 160px;
 }
 #chat .count {
 	background: #ecf0f1;
