@@ -208,14 +208,14 @@ button::-moz-focus-inner {
 }
 #chat .title {
 	background: #ecf0f1;
-	border-bottom: 1px solid #ddd;
-	color: #7F8C8D;
+	border-bottom: 1px solid #dbe4e6;
+	box-shadow: 0 4px rgba(0, 0, 0, .05);
+	color: #7f8c8d;
 	height: 44px;
 	line-height: 44px;
 	padding: 0 14px;
-}
-#chat .sidebar .title {
-	color: #95a5a6;
+	position: absolute;
+	width: 100%;
 }
 #chat .messages,
 #chat .users {
@@ -225,6 +225,7 @@ button::-moz-focus-inner {
 	overflow-y: scroll;
 	position: absolute;
 	top: 44px;
+	width: 100%;
 }
 #chat .messages {
 	box-shadow: inset 140px 0 #f3f5f5;
@@ -314,25 +315,14 @@ button::-moz-focus-inner {
 }
 #chat .users {
 	padding-bottom: 6px;
+	top: 0;
 	width: 156px;
 }
-#chat .users li {
-	display: table-row;
-	text-align: left;
-}
-#chat .users .user {
+#chat .users button,
+#chat .users span {
 	padding: 4px 8px;
-	text-align: left;
 }
 #chat .count {
-	background: #ecf0f1;
-	color: #aeb6bf;
-	margin-bottom: 4px;
-}
-#chat .count span {
-	display: block;
-	padding: 10px 12px;
-}
-#chat .count + li .user {
-	padding-top: 8px
+	color: #bdc3c7;
+	margin-top: 6px;
 }

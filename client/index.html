@@ -51,26 +51,20 @@
 		<div id="window-{{id}}" class="window {{type}}">
 			<div class="chat">
 				<div class="main">
-					<div class="title">
-						<h1>
-						{{type}}:
-						<strong>{{name}}</strong>
-						</h1>
-					</div>
 					<ul class="messages">
 						<li class="show-more">
 							<button class="btn">Show more</button>
 						</li>
 						{{partial "messages"}}
 					</ul>
+					<div class="title">
+						<h1>
+						{{type}}:
+						<strong>{{name}}</strong>
+						</h1>
+					</div>
 				</div>
 				<aside class="sidebar">
-					<div class="title">
-						<span>
-						Users:
-						{{users.length}}
-						</span>
-					</div>
 					<ul class="users">
 						{{partial "users"}}
 					</ul>
@@ -85,6 +79,12 @@
 		</script>
 		
 		<script type="text/html" class="users">
+		<li class="count">
+			<span>
+			Users:
+			{{users.length}}
+			</span>
+		</li>
 		{{#each users}}
 		<li>
 			<button class="user">

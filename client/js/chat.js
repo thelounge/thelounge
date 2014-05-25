@@ -132,6 +132,14 @@ $(function() {
 		var cmd = "/close";
 		if (channel.hasClass("lobby")) {
 			cmd = "/quit";
+			var server = channel
+				.clone()
+				.remove("span")
+				.text()
+				.trim();
+			if (!confirm("Disconnect from " + server + "?")) {
+				return false;
+			}
 		}
 		socket.emit("input", {
 			id: id,
