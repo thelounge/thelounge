@@ -121,18 +121,25 @@ $(function() {
 			.removeClass("highlight")
 			.empty();
 		var window = $(target)
-			.css("z-index", z++)
+			.css("z-index", z++) 
 			.find("input")
 			.focus();
 	});
 	
 	sidebar.on("click", ".close", function() {
-		var link = $(this);
-		var channel = link.closest(".channel");
+		var channel = $(this).closest(".channel");
 		var id = parseInt(channel.attr("id").split("-")[1]);
+		var cmd = "/close";
+		if (channel.hasClass("lobby")) {
+			cmd = "/quit";
+		}
 		socket.emit("input", {
 			id: id,
-			text: "/close",
+			text: cmd,
+		});
+		channel.css({
+			transition: "none",
+			opacity: .4
 		});
 		return false;
 	});
