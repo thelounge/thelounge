@@ -55,18 +55,19 @@ $(function() {
 	function event(e, data) {
 		switch (e) {
 		case "join":
+			console.log(render("windows", {windows: [data.chan]}));
 			chat.append(render("windows", {windows: [data.chan]}))
 				.find(".window")
 				.last()
-				.find(".messages")
-				.sticky({speed: 400})
+				.find(".chat")
+				.sticky({speed: 400, overflow: "auto"})
 				.end()
 				.find(".input")
 				.tabComplete(commands);
 			
 			$("#network-" + data.id)
 				.append(render("channels", {channels: [data.chan]}))
-				.find(".channel")
+				.find("a")
 				.last()
 				.trigger("click");
 			break;
@@ -86,12 +87,15 @@ $(function() {
 				.find(".hidden")
 				.prev(".show-more")
 				.show();
-			chat.find(".messages")
-				.sticky({speed: 400})
+			chat.find(".chat")
+				.sticky({speed: 400, overflow: "auto"})
 				.end();
 			
 			var networks = $("#networks")
-				.html(render("networks", {networks: data.networks}));
+				.html(render("networks", {networks: data.networks}))
+				.find("a")
+				.last()
+				.trigger("click");
 			break;
 		
 		case "part":
@@ -109,14 +113,14 @@ $(function() {
 	}
 	
 	var z = 1;
-	sidebar.on("click", "button", function() {
-		var button = $(this);
-		var target = button.data("target");
+	sidebar.on("click", "a", function() {
+		var link = $(this);
+		var target = link.attr("href");
 		if (!target) {
 			return;
 		}
 		sidebar.find(".active").removeClass("active");
-		button.addClass("active")
+		link.addClass("active")
 			.find(".badge")
 			.removeClass("highlight")
 			.empty();
@@ -127,7 +131,7 @@ $(function() {
 	});
 	
 	sidebar.on("click", ".close", function() {
-		var channel = $(this).closest(".channel");
+		var channel = $(this).closest("a");
 		var id = parseInt(channel.attr("id").split("-")[1]);
 		var cmd = "/close";
 		if (channel.hasClass("lobby")) {
@@ -185,10 +189,11 @@ $(function() {
 	});
 	
 	chat.on("focus", ".input", function() {
-		$(this).closest(".window").find(".messages").scrollToBottom();
+		$(this).closest(".window").find(".chat").scrollToBottom();
 	});
 	
-	chat.on("submit", "form", function() {
+	chat.on("submit", "form", function(e) {
+		e.preventDefault();
 		var form = $(this);
 		var input = form.find(".input:not(.hint)");
 		var text = input.val();
@@ -202,6 +207,25 @@ $(function() {
 			text: text,
 		});
 	});
+	
+	function escape(text) {
+		var e = {
+			"<": "&lt;",
+			">": "&gt;"
+		};
+		return text.replace(/[<>]/g, function (c) {
+			return e[c];
+		});
+	}
+	
+	Handlebars.registerHelper(
+		"uri", function(text) {
+			text = escape(text);
+			return URI.withinString(text, function(url) {
+				return "<a href='" + url.replace(/^www/, "//www") + "' target='_blank'>" + url + "</a>";
+			});
+		}
+	);
 	
 	Handlebars.registerHelper(
 		"partial", function(id) {

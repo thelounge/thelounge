@@ -13,9 +13,14 @@
 	</head>
 	<body>
 	
-	<div id="wrap" class="table">
+	<div id="viewport">
+	<div id="wrap">
 		<aside id="sidebar">
-			<div id="networks"></div>
+			<section>
+				<h1>Shout</h1>
+			</section>
+			<div id="networks">
+			</div>
 		</aside>
 		<div id="main">
 			<div id="windows">
@@ -25,24 +30,25 @@
 			</div>
 		</div>
 	</div>
+	</div>
 	
 	<div id="templates">
 		<script type="text/html" class="networks">
 		{{#each networks}}
-		<div id="network-{{id}}" class="network">
+		<section id="network-{{id}}" class="network">
 			<h2>{{name}}</h2>
 			{{partial "channels"}}
-		</div>
+		</section>
 		{{/each}}
 		</script>
 		
 		<script type="text/html" class="channels">
 		{{#each channels}}
-		<button id="channel-{{id}}" class="channel {{type}}" data-target="#window-{{id}}">
+		<a href="#window-{{id}}" id="channel-{{id}}" class="{{type}}">
 			<span class="badge"></span>
 			<span class="close"></span>
 			{{name}}
-		</button>
+		</a>
 		{{/each}}
 		</script>
 		
@@ -50,71 +56,67 @@
 		{{#each windows}}
 		<div id="window-{{id}}" class="window {{type}}">
 			<div class="chat">
-				<div class="main">
-					<ul class="messages">
-						<li class="show-more">
-							<button class="btn">Show more</button>
-						</li>
-						{{partial "messages"}}
-					</ul>
-					<div class="title">
-						<h1>
-						{{type}}:
-						<strong>{{name}}</strong>
-						</h1>
-					</div>
-				</div>
-				<aside class="sidebar">
-					<ul class="users">
-						{{partial "users"}}
-					</ul>
-				</aside>
+				<table class="messages">
+					{{partial "messages"}}
+				</table>
 			</div>
-			<form class="form" onSubmit="return false" data-target="{{id}}">
+			<div class="meta">
+				<h1>
+					{{name}}
+				</h1>
+				{{#if users}}
+				<div class="count">
+					Users:
+					{{users.length}}
+				</div>
+				{{else}}
+				<div class="type">
+					{{type}}
+				</div>
+				{{/if}}
+			</div>
+			<ul class="users">
+				{{partial "users"}}
+			</ul>
+			<form class="form" data-target="{{id}}">
+				<input class="submit" tabindex="-1" type="submit" >
 				<input class="input">
-				<input type="submit" style="display: none">
 			</form>
 		</div>
 		{{/each}}
 		</script>
 		
 		<script type="text/html" class="users">
-		<li class="count">
-			<span>
-			Users:
-			{{users.length}}
-			</span>
-		</li>
 		{{#each users}}
 		<li>
-			<button class="user">
+			<a href="#{{name}}" class="user">
 				{{mode}}{{name}}
-			</button>
+			</a>
 		</li>
 		{{/each}}
 		</script>
 		
 		<script type="text/html" class="messages">
-		{{#slice messages limit=100}}
-		<li class="msg {{type}}">
-			<span class="from">
-				<button class="user">
+		{{#each messages}}
+		<tr class="msg {{type}}">
+			<td class="from">
+				<a href="#{{from}}" class="user">
 					{{from}}
-				</button>
-			</span>
-			<span class="text">
+				</a>
+			</td>
+			<td class="text">
 				{{#if type}}
 				<em class="type">
 					{{type}}
 				</em>
 				{{/if}}
 				{{{uri text}}}
-			</span>
-			<span class="time">
+			</td>
+			<td class="time">
 				{{time}}
-			</span>
-		</li>
-		{{/slice}}
+			</td>
+		</tr>
+		{{/each}}
 		</script>
 	</div>
 	
@@ -123,7 +125,6 @@
 	<script src="/js/jquery.plugins.js"></script>
 	<script src="/js/uri.js"></script>
 	<script src="/js/handlebars.js"></script>
-	<script src="/js/handlebars.helpers.js"></script>
 	<script src="/js/chat.js"></script>
 	
 	</body>
