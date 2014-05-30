@@ -13,8 +13,8 @@
 	</head>
 	<body>
 	
-	<div id="viewport">
 	<div id="wrap">
+	<div id="viewport">
 		<aside id="sidebar">
 			<section>
 				<h1>Shout</h1>
@@ -55,29 +55,48 @@
 		<script type="text/html" class="windows">
 		{{#each windows}}
 		<div id="window-{{id}}" class="window {{type}}">
-			<div class="chat">
-				<table class="messages">
-					{{partial "messages"}}
-				</table>
-			</div>
-			<div class="meta">
+			<div class="sidebar">
+				<div class="meta">
 				<h1>
 					{{name}}
 				</h1>
 				{{#if users}}
 				<div class="count">
-					Users:
 					{{users.length}}
+					users
 				</div>
 				{{else}}
 				<div class="type">
 					{{type}}
 				</div>
 				{{/if}}
+				</div>
+				<ul class="users">
+					{{partial "users"}}
+				</ul>
 			</div>
-			<ul class="users">
-				{{partial "users"}}
-			</ul>
+			<div class="chat">
+				<div class="messages">
+					{{partial "messages"}}
+				</div>
+			</div>
+			<header class="header">
+				<button class="lt"></button>
+				<button class="rt"></button>
+				<h1>
+					{{name}}
+				</h1>
+				{{#if users}}
+				<span class="count">
+					{{users.length}}
+					users
+				</span>
+				{{else}}
+				<span class="type">
+					{{type}}
+				</span>
+				{{/if}}
+			</header>
 			<form class="form" data-target="{{id}}">
 				<input class="submit" tabindex="-1" type="submit" >
 				<input class="input">
@@ -98,24 +117,25 @@
 		
 		<script type="text/html" class="messages">
 		{{#each messages}}
-		<tr class="msg {{type}}">
-			<td class="from">
+		<div class="row {{type}}">
+			
+			<span class="from">
 				<a href="#{{from}}" class="user">
 					{{from}}
 				</a>
-			</td>
-			<td class="text">
+			</span>
+			<span class="text">
 				{{#if type}}
 				<em class="type">
 					{{type}}
 				</em>
 				{{/if}}
 				{{{uri text}}}
-			</td>
-			<td class="time">
+			</span>
+			<span class="time">
 				{{time}}
-			</td>
-		</tr>
+			</span>
+		</div>
 		{{/each}}
 		</script>
 	</div>

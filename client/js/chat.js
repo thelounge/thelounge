@@ -113,7 +113,8 @@ $(function() {
 	}
 	
 	var z = 1;
-	sidebar.on("click", "a", function() {
+	sidebar.on("click", "a", function(e) {
+		e.preventDefault();
 		var link = $(this);
 		var target = link.attr("href");
 		if (!target) {
@@ -125,7 +126,11 @@ $(function() {
 			.removeClass("highlight")
 			.empty();
 		var window = $(target)
-			.css("z-index", z++) 
+			.siblings()
+			.removeClass("active")
+			.end()
+			.css("z-index", z++)
+			.addClass("active")
 			.find("input")
 			.focus();
 	});
@@ -156,6 +161,16 @@ $(function() {
 		return false;
 	});
 	
+	var viewport = $("#viewport");
+	chat.on("click", ".lt, .rt", function() {
+		var btn = $(this);
+		viewport.toggleClass(btn.attr("class"));
+	});
+	
+	chat.on("focus", ".input", function() {
+		viewport.removeClass();
+	});
+	
 	chat.on("append", ".messages", function() {
 		var messages = $(this);
 		var id = messages.closest(".window").find(".form").data("target");
@@ -175,7 +190,8 @@ $(function() {
 		target.replaceWith(html);
 	});
 	
-	chat.on("click", ".user", function() {
+	chat.on("click", ".user", function(e) {
+		e.preventDefault();
 		var user = $(this);
 		var id = user.closest(".window").find(".form").data("target");
 		var name = user.html().replace(/[\s+@]/g, "");
