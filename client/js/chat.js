@@ -161,16 +161,6 @@ $(function() {
 		return false;
 	});
 	
-	var viewport = $("#viewport");
-	chat.on("click", ".lt, .rt", function() {
-		var btn = $(this);
-		viewport.toggleClass(btn.attr("class"));
-	});
-	
-	chat.on("focus", ".input", function() {
-		viewport.removeClass();
-	});
-	
 	chat.on("append", ".messages", function() {
 		var messages = $(this);
 		var id = messages.closest(".window").find(".form").data("target");
@@ -222,6 +212,20 @@ $(function() {
 			id: form.data("target"),
 			text: text,
 		});
+	});
+	
+	// Toggle sidebars
+	var viewport = $("#viewport");
+	var toggle = "click";
+	if ($("#detect").css("display") == "none") {
+		toggle = "touchstart";
+	}
+	chat.on(toggle, ".lt, .rt", function() {
+		var btn = $(this);
+		viewport.toggleClass(btn.attr("class"));
+	});
+	chat.on("focus", ".input", function() {
+		viewport.removeClass();
 	});
 	
 	function escape(text) {

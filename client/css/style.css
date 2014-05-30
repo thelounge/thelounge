@@ -48,6 +48,11 @@ button {
 	height: 100%;
 	position: relative;
 	width: 100%;
+	transition: all .5s;
+	-webkit-transform: translateZ(0);
+	        transform: translateZ(0);
+	-webkit-perspective: 1000;
+	        perspective: 1000;
 }
 #sidebar {
 	background: #262c36;
@@ -55,6 +60,7 @@ button {
 	left: 0;
 	line-height: 2em;
 	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
 	padding: 50px;
 	position: absolute;
 	top: 0;
@@ -197,6 +203,8 @@ button {
 	bottom: 35px;
 	box-shadow: inset 160px 0 #f9f9f9;
 	left: 0;
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
 	position: absolute;
 	right: 180px;
 	top: 0;
@@ -263,10 +271,14 @@ button {
 }
 #chat .sidebar {
 	bottom: 0;
+	display: none;
 	position: absolute;
 	right: 0;
 	width: 180px;
 	top: 0;
+}
+#chat .active .sidebar {
+	display: block;
 }
 #chat .meta {
 	border: 1px solid #eee;
@@ -288,6 +300,7 @@ button {
 	bottom: 0;
 	line-height: 1.6em;
 	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
 	padding: 15px 20px;
 	position: absolute;
 	top: 80px;
@@ -323,13 +336,12 @@ button {
 
 @media (max-width: 768px) {
 	#viewport.lt {
-		margin-left: 240px;
+		-webkit-transform: translate3d(240px, 0, 0);
+		        transform: translate3d(240px, 0, 0);
 	}
 	#viewport.rt {
-		margin-left: -180px;
-	}
-	#viewport.rt .active .sidebar {
-		display: block;
+		-webkit-transform: translate3d(-180px, 0, 0);
+		        transform: translate3d(-180px, 0, 0);
 	}
 	#sidebar {
 		margin-left: -240px;
@@ -353,12 +365,11 @@ button {
 		right: 0;
 	}
 	#chat .sidebar {
-		display: none;
 		margin-right: -180px;
 	}
 	#chat .messages {
 		display: block;
-		padding: 4px 6px;
+		padding: 4px 10px;
 	}
 	#chat .row {
 		display: block;
@@ -369,6 +380,12 @@ button {
 		padding: 0;
 	}
 	#chat .row .time {
+		display: none;
+	}
+}
+
+@media screen and (max-device-width: 768px) {
+	#detect {
 		display: none;
 	}
 }
