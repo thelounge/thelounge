@@ -27,6 +27,7 @@ $(function() {
 		"/say",
 		"/send",
 		"/server",
+		"/slap",
 		"/topic",
 		"/voice",
 		"/whois",
@@ -62,7 +63,7 @@ $(function() {
 				.sticky({speed: 400, overflow: "auto"})
 				.end()
 				.find(".input")
-				.tabComplete(commands);
+				.tabComplete(commands, {hint: false});
 			
 			$("#network-" + data.id)
 				.append(render("channels", {channels: [data.chan]}))
@@ -81,7 +82,7 @@ $(function() {
 			var channels = $.map(data.networks, function(n) { return n.channels; });
 			chat.html(render("windows", {windows: channels}))
 				.find(".input")
-				.tabComplete(commands)
+				.tabComplete(commands, {hint: false})
 				.end()
 				.find(".hidden")
 				.prev(".show-more")

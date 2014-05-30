@@ -29,7 +29,7 @@ These are the commands currently implemented:
 - [x] /say
 - [x] /send
 - [x] /server
-- [ ] /slap
+- [x] /slap
 - [ ] /time
 - [x] /topic
 - [ ] /version
