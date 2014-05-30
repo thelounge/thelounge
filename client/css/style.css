@@ -213,7 +213,13 @@ button {
 #chat .row span {
 	display: table-cell;
 	padding-top: 2px;
-	padding-bottom: 3px;
+	padding-bottom: 2px;
+}
+#chat .row:first-child span {
+	padding-top: 6px;
+}
+#chat .row:last-child span {
+	padding-bottom: 6px;
 }
 #chat .row:hover .time {
 	color: #aaa;

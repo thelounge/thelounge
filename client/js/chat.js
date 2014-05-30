@@ -55,7 +55,6 @@ $(function() {
 	function event(e, data) {
 		switch (e) {
 		case "join":
-			console.log(render("windows", {windows: [data.chan]}));
 			chat.append(render("windows", {windows: [data.chan]}))
 				.find(".window")
 				.last()
