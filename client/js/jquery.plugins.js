@@ -1,17 +1,17 @@
 /*!
- * stickyScroll
- * https://github.com/erming/stickyScroll
+ * stickyscroll
+ * https://github.com/erming/stickyscroll
  *
  * Copyright (c) 2014 Mattias Erming <mattias@mattiaserming.com>
  * Licensed under the MIT License.
  *
- * Version 1.2.1
+ * Version 1.3.1
  */
 (function($) {
 	$.fn.sticky = function(options) {
 		var settings = $.extend({
 			disableManualScroll: false,
-			overflow: 'scroll',
+			overflow: 'auto',
 			scrollToBottom: true,
 			speed: 0
 		}, options);
@@ -24,11 +24,12 @@
 		}
 		
 		self.css('overflow-y', settings.overflow);
+		self.css('-webkit-overflow-scrolling', 'touch');
 		if (settings.scrollToBottom) {
 			self.scrollToBottom();
 		}
 		
-		var timer;
+		var resizeTimer;
 		var resizing = false;
 		$(window).on('resize', function() {
 			self.finish();
@@ -37,8 +38,8 @@
 			// while resizing the browser.
 			resizing = true;
 			
-			clearTimeout(timer);
-			timer = setTimeout(function() {
+			clearTimeout(resizeTimer);
+			resizeTimer = setTimeout(function() {
 				resizing = false;
 			}, 100);
 			
@@ -47,12 +48,16 @@
 			}
 		});
 		
+		var scrollTimer;
 		var sticky = true;
 		self.on('scroll', function() {
 			if (settings.disableManualScroll) {
 				self.scrollToBottom();
 			} else if (!resizing) {
-				sticky = self.isScrollAtBottom();
+				clearTimeout(scrollTimer);
+				scrollTimer = setTimeout(function() {
+					sticky = self.isScrollAtBottom();
+				}, 50);
 			}
 		});
 		self.trigger('scroll');

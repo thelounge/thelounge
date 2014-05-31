@@ -60,7 +60,7 @@ $(function() {
 				.find(".window")
 				.last()
 				.find(".chat")
-				.sticky({speed: 400, overflow: "auto"})
+				.sticky()
 				.end()
 				.find(".input")
 				.tabComplete(commands, {hint: false});
@@ -88,7 +88,7 @@ $(function() {
 				.prev(".show-more")
 				.show();
 			chat.find(".chat")
-				.sticky({speed: 400, overflow: "auto"})
+				.sticky()
 				.end();
 			
 			var networks = $("#networks")
@@ -112,6 +112,9 @@ $(function() {
 		}
 	}
 	
+	var viewport = $("#viewport");
+	var touchDevice = ($("#detect").css("display") == "none");
+	
 	var z = 1;
 	sidebar.on("click", "a", function(e) {
 		e.preventDefault();
@@ -120,6 +123,7 @@ $(function() {
 		if (!target) {
 			return;
 		}
+		viewport.removeClass();
 		sidebar.find(".active").removeClass("active");
 		link.addClass("active")
 			.find(".badge")
@@ -130,9 +134,11 @@ $(function() {
 			.removeClass("active")
 			.end()
 			.css("z-index", z++)
-			.addClass("active")
-			.find("input")
-			.focus();
+			.addClass("active");
+		
+		if (!touchDevice) {
+			window.find("input").focus();
+		}
 	});
 	
 	sidebar.on("click", ".close", function() {
@@ -215,17 +221,13 @@ $(function() {
 	});
 	
 	// Toggle sidebars
-	var viewport = $("#viewport");
 	var toggle = "click";
-	if ($("#detect").css("display") == "none") {
+	if (touchDevice) {
 		toggle = "touchstart";
 	}
 	chat.on(toggle, ".lt, .rt", function() {
 		var btn = $(this);
 		viewport.toggleClass(btn.attr("class"));
-	});
-	chat.on("focus", ".input", function() {
-		viewport.removeClass();
 	});
 	
 	function escape(text) {
