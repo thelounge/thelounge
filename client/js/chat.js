@@ -113,7 +113,7 @@ $(function() {
 	}
 	
 	var viewport = $("#viewport");
-	var touchDevice = ($("#detect").css("display") == "none");
+	var touchDevice = (window.screen.width <= 768);
 	
 	var z = 1;
 	sidebar.on("click", "a", function(e) {
@@ -220,7 +220,6 @@ $(function() {
 		});
 	});
 	
-	// Toggle sidebars
 	var toggle = "click";
 	if (touchDevice) {
 		toggle = "touchstart";

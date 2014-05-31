@@ -383,9 +383,3 @@ button {
 		display: none;
 	}
 }
-
-@media screen and (max-device-width: 768px) {
-	#detect {
-		display: none;
-	}
-}
