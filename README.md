@@ -1,6 +1,9 @@
 ## shout
 Run your IRC client on a server and access it from the web browser. This gives you a persistent connection and allows you to chat from multiple devices at the same time.
 
+### Screenshot
+![](https://raw.github.com/erming/shout/master/shout.png)  
+
 ### Commands
 These are the commands currently implemented:
 - [x] /ame
