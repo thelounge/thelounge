@@ -36,6 +36,7 @@ $(function() {
 	var socket = io.connect("");
 	var events = [
 		"join",
+		"messages",
 		"msg",
 		"networks",
 		"nick",
@@ -72,10 +73,22 @@ $(function() {
 				.trigger("click");
 			break;
 		
+		case "messages":
 		case "msg":
-			$("#window-" + data.id)
-				.find(".messages")
-				.append(render("messages", {messages: [data.msg]}));
+			var target = $("#window-" + data.id).find(".messages");
+			var html = render(
+				"messages",
+				{messages: toArray(data.msg)}
+			);
+			switch (e) {
+			case "messages":
+				target.prepend(html);
+				break;
+			
+			case "msg":
+				target.append(html);
+				break;
+			}
 			break;
 		
 		case "networks":
@@ -180,20 +193,29 @@ $(function() {
 		}
 	});
 	
-	chat.on("click", ".show-more .btn", function() {
-		var target = $(this).parent();
-		var html = $.parseHTML(target.next(".hidden").remove().html());
-		target.replaceWith(html);
+	chat.on("click", ".show-more", function() {
+		var btn = $(this);
+		var messages = btn.closest(".chat").find(".messages").children();
+		socket.emit("fetch", {
+			id: btn.data("id"),
+			count: messages.length,
+		});
+		btn.attr("disabled", true);
 	});
 	
 	chat.on("click", ".user", function(e) {
 		e.preventDefault();
 		var user = $(this);
-		var id = user.closest(".window").find(".form").data("target");
+		var id = user
+			.closest(".window")
+			.data("id");
+		
+		// Remove modes
 		var name = user.html().replace(/[\s+@]/g, "");
 		if (name.match(/[#.]|-!-/) != null) {
 			return;
 		}
+		
 		socket.emit("input", {
 			id: id,
 			text: "/whois " + name,
@@ -229,6 +251,10 @@ $(function() {
 		viewport.toggleClass(btn.attr("class"));
 	});
 	
+	function toArray(val) {
+		return Array.isArray(val) ? val : [val];
+	}
+
 	function escape(text) {
 		var e = {
 			"<": "&lt;",

@@ -209,6 +209,25 @@ button {
 	right: 180px;
 	top: 0;
 }
+#chat .show-more {
+	border-bottom: 1px solid #eee;
+	color: #bec5d0;
+	font: 12px Lato, sans-serif;
+	line-height: 1.8em;
+	padding: 10px 0;
+	text-align: center;
+	text-transform: uppercase;
+	width: 100%;
+	word-spacing: 2px;
+}
+#chat .show-more:hover {
+	color: #33b0f7;
+}
+#chat .show-more:disabled {
+	color: #bec5d0;
+	opacity: .4;
+	text-decoration: line-through;
+}
 #chat .messages {
 	display: table;
 	width: 100%;

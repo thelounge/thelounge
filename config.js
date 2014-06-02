@@ -1,5 +1,6 @@
 module.exports = {
 	port: 9000,
+	messages: 100,
 	defaults: {
 		nick: "shout_user",
 		realname: "http://github.com/erming/shout",

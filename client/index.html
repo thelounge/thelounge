@@ -54,7 +54,7 @@
 		
 		<script type="text/html" class="windows">
 		{{#each windows}}
-		<div id="window-{{id}}" class="window {{type}}">
+		<div id="window-{{id}}" class="window {{type}}" data-id="{{id}}">
 			<div class="sidebar">
 				<div class="meta">
 				<h1>
@@ -76,6 +76,9 @@
 				</ul>
 			</div>
 			<div class="chat">
+				<button class="show-more" data-id="{{id}}">
+					Show more
+				</button>
 				<div class="messages">
 					{{partial "messages"}}
 				</div>

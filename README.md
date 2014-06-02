@@ -71,9 +71,17 @@ socket.emit("join", {
     id: 0,
     name: "",
     type: "",
+    count: 0,
     messages: [],
     users: [],
   }
+});
+
+// Event: "messages"
+// Sent after the server receives a "fetch" request from client.
+socket.emit("messages", {
+  id: 0,
+  msg: []
 });
 
 // Event: "msg"
