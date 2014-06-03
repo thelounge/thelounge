@@ -61,10 +61,10 @@ button {
 	line-height: 2em;
 	overflow-y: auto;
 	-webkit-overflow-scrolling: touch;
-	padding: 50px;
+	padding: 40px;
 	position: absolute;
 	top: 0;
-	width: 240px;
+	width: 220px;
 }
 #sidebar a {
 	color: #7c838d;
@@ -133,7 +133,7 @@ button {
 }
 #main {
 	bottom: 0;
-	left: 240px;
+	left: 220px;
 	position: absolute;
 	right: 0;
 	top: 0;
@@ -206,7 +206,7 @@ button {
 	overflow-y: auto;
 	-webkit-overflow-scrolling: touch;
 	position: absolute;
-	right: 180px;
+	right: 160px;
 	top: 0;
 }
 #chat .show-more {
@@ -293,7 +293,7 @@ button {
 	display: none;
 	position: absolute;
 	right: 0;
-	width: 180px;
+	width: 160px;
 	top: 0;
 }
 #chat .active .sidebar {

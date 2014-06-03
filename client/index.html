@@ -2,10 +2,11 @@
 <html>
 	<head>
 	
-	<title>Shout — The modern IRC client</title>
-	
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimal-ui">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	
+	<title>Shout</title>
 	
 	<link rel="stylesheet" href="/css/normalize.css">
 	<link rel="stylesheet" href="/css/style.css">
@@ -123,9 +124,7 @@
 		<div class="row {{type}}">
 			
 			<span class="from">
-				<a href="#{{from}}" class="user">
-					{{from}}
-				</a>
+				<a href="#{{from}}" class="user">{{from}}</a>
 			</span>
 			<span class="text">
 				{{#if type}}
