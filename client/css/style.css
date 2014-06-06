@@ -224,9 +224,10 @@ button {
 	color: #33b0f7;
 }
 #chat .show-more:disabled {
-	color: #bec5d0;
+	display: none;
+	/*color: #bec5d0;
 	opacity: .4;
-	text-decoration: line-through;
+	text-decoration: line-through;*/
 }
 #chat .messages {
 	display: table;
@@ -336,7 +337,7 @@ button {
 	height: 35px;
 	left: 0;
 	position: absolute;
-	right: 180px;
+	right: 160px;
 }
 #chat .form .hint {
 	color: #bbb;
