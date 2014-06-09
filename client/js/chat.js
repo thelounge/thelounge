@@ -118,9 +118,17 @@ $(function() {
 			break;
 		
 		case "users":
-			$("#window-" + data.id)
+			var target = $("#window-" + data.id);
+			var json = {
+				name: target.find("h1").html(),
+				users: data.users
+			};
+			target.find(".meta")
+				.replaceWith(render("meta", json))
+				.end()
 				.find(".users")
-				.html(render("users", {users: data.users}));
+				.html(render("users", json))
+				.end();
 			break;
 		}
 	}
