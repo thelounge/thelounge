@@ -1,10 +1,13 @@
 ## shout
+
 Run your IRC client on a server and access it from the web browser. This gives you a persistent connection and allows you to chat from multiple devices at the same time.
 
 ### Screenshot
+
 ![](https://raw.github.com/erming/shout/master/shout.png)  
 
 ### Commands
+
 These are the commands currently implemented:
 - [x] /ame
 - [x] /amsg
@@ -13,7 +16,6 @@ These are the commands currently implemented:
 - [x] /deop
 - [x] /devoice
 - [x] /disconnect
-- [ ] /help
 - [x] /invite
 - [x] /join
 - [x] /kick
@@ -33,9 +35,7 @@ These are the commands currently implemented:
 - [x] /send
 - [x] /server
 - [x] /slap
-- [ ] /time
 - [x] /topic
-- [ ] /version
 - [x] /voice
 - [x] /whois
 
@@ -60,6 +60,7 @@ These are the commands currently implemented:
 `http://localhost:9000`
 
 ## Events
+
 Using [Socket.IO](http://socket.io/)  
 Events sent from the __server__ to the __browser__:
 ```javascript

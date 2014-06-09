@@ -206,7 +206,7 @@ button {
 	overflow-y: auto;
 	-webkit-overflow-scrolling: touch;
 	position: absolute;
-	right: 160px;
+	right: 180px;
 	top: 0;
 }
 #chat .show-more {
@@ -292,7 +292,7 @@ button {
 	display: none;
 	position: absolute;
 	right: 0;
-	width: 160px;
+	width: 180px;
 	top: 0;
 }
 #chat .active .sidebar {
@@ -335,7 +335,7 @@ button {
 	height: 35px;
 	left: 0;
 	position: absolute;
-	right: 160px;
+	right: 180px;
 }
 #chat .form .hint {
 	color: #bbb;
@@ -358,8 +358,8 @@ button {
 		        transform: translate3d(220px, 0, 0);
 	}
 	#viewport.rt {
-		-webkit-transform: translate3d(-160px, 0, 0);
-		        transform: translate3d(-160px, 0, 0);
+		-webkit-transform: translate3d(-180px, 0, 0);
+		        transform: translate3d(-180px, 0, 0);
 	}
 	#sidebar {
 		margin-left: -220px;
@@ -383,7 +383,7 @@ button {
 		right: 0;
 	}
 	#chat .sidebar {
-		margin-right: -160px;
+		margin-right: -180px;
 	}
 	#chat .messages {
 		display: block;

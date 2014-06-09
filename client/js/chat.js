@@ -125,8 +125,8 @@ $(function() {
 			};
 			target.find(".meta")
 				.replaceWith(render("meta", json))
-				.end()
-				.find(".users")
+				.end();
+			target.find(".users")
 				.html(render("users", json))
 				.end();
 			break;
