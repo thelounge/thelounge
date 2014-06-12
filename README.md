@@ -37,6 +37,7 @@ These are the commands currently implemented:
 - [x] /slap
 - [x] /topic
 - [x] /voice
+- [x] /whoami
 - [x] /whois
 
 ## Install

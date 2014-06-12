@@ -30,6 +30,7 @@ $(function() {
 		"/slap",
 		"/topic",
 		"/voice",
+		"/whoami",
 		"/whois",
 	];
 	
