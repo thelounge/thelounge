@@ -6,6 +6,29 @@ Run your IRC client on a server and access it from the web browser. This gives y
 
 ![](https://raw.github.com/erming/shout/master/shout.png)  
 
+And also..  
+[Mobile interface](https://www.dropbox.com/s/snpxgi3w7zaijmm/shout-mobile.png)
+
+## Install
+
+1. Install Node.js and NPM  
+`sudo apt-get -y install nodejs npm`
+
+2. Clone the project from GitHub  
+`git clone http://github.com/erming/shout`
+
+3. Open folder  
+`cd shout/`
+
+4. Install Node packages  
+`npm install`
+
+5. Run the server  
+`npm start` or `node index.js`
+
+6. Open your browser  
+`http://localhost:9000`
+
 ### Commands
 
 These are the commands currently implemented:
@@ -39,26 +62,6 @@ These are the commands currently implemented:
 - [x] /voice
 - [x] /whoami
 - [x] /whois
-
-## Install
-
-1. Install Node.js and NPM  
-`sudo apt-get -y install nodejs npm`
-
-2. Clone the project from GitHub  
-`git clone http://github.com/erming/shout`
-
-3. Open folder  
-`cd shout/`
-
-4. Install Node packages  
-`npm install`
-
-5. Run the server  
-`npm start` or `node index.js`
-
-6. Open your browser  
-`http://localhost:9000`
 
 ## Events
 
