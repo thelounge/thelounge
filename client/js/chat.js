@@ -65,7 +65,8 @@ $(function() {
 				.sticky()
 				.end()
 				.find(".input")
-				.tabcomplete(commands, {hint: false});
+				.tabcomplete(commands, {hint: false})
+				.history();
 			
 			$("#network-" + data.id)
 				.append(render("channels", {channels: [data.chan]}))
@@ -97,6 +98,7 @@ $(function() {
 			chat.html(render("windows", {windows: channels}))
 				.find(".input")
 				.tabcomplete(commands, {hint: false})
+				.history()
 				.end()
 				.find(".hidden")
 				.prev(".show-more")
