@@ -77,7 +77,8 @@ $(function() {
 		
 		case "messages":
 		case "msg":
-			var target = $("#window-" + data.id).find(".messages");
+			var target = (data.id ? $("#window-" + data.id) : $("#chat .active"))
+				.find(".messages");
 			var html = render(
 				"messages",
 				{messages: toArray(data.msg)}
@@ -122,10 +123,7 @@ $(function() {
 		
 		case "users":
 			var target = $("#window-" + data.id);
-			var json = {
-				name: target.find("h1").html(),
-				users: data.users
-			};
+			var json = {name: target.find("h1").html(), users: data.users};
 			target.find(".meta")
 				.replaceWith(render("meta", json))
 				.end();

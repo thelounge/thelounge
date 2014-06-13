@@ -265,6 +265,7 @@ button {
 	color: #bbb;
 }
 #chat .action .type,
+#chat .error .type,
 #chat .highlight .type,
 #chat .motd .type,
 #chat .normal .type,
@@ -278,6 +279,8 @@ button {
 #chat .action .user:before {
 	content: '* ';
 }
+#chat .error,
+#chat .error .from a,
 #chat .highlight,
 #chat .highlight .from a {
 	color: #f00;
