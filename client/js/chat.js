@@ -255,9 +255,17 @@ $(function() {
 	if (touchDevice) {
 		toggle = "touchstart";
 	}
-	chat.on(toggle, ".lt, .rt", function() {
+	
+	chat.on(toggle, ".lt, .rt", function(e) {
 		var btn = $(this);
 		viewport.toggleClass(btn.attr("class"));
+		if (viewport.hasClass("lt")) {
+			e.stopPropagation();
+			viewport.find("#main").one(toggle, function(e) {
+				viewport.removeClass("lt");
+			});
+		}
+		
 	});
 	
 	function toArray(val) {
