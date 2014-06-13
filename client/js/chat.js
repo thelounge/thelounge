@@ -192,7 +192,33 @@ $(function() {
 	chat.on("append", ".messages", function() {
 		var messages = $(this);
 		var id = messages.closest(".window").find(".form").data("target");
-		var badge = $("#channel-" + id + ":not(.active) .badge");
+		
+		var link = $("#channel-" + id + ":not(.active)");
+		if (link.length == 0) {
+			return;
+		}
+		
+		link.addClass("pulse");
+		setTimeout(function() {
+			link.removeClass("pulse");
+		}, 500);
+		
+		var last = messages.find(".row:last-child");
+		var type = last.attr("class");
+		
+		var ignore = [
+			"join",
+			"part",
+			"quit",
+			"nick",
+		];
+		for (var i = 0; i < ignore.length; i++) {
+			if (type.indexOf(ignore[i]) !== -1) {
+				return;
+			}
+		}
+		
+		var badge = link.find(".badge");
 		if (badge.length != 0) {
 			var i = (parseInt(badge.html()) || 0) + 1;
 			badge.html(i);

@@ -67,16 +67,24 @@ button {
 	width: 220px;
 }
 #sidebar a {
+	border: 1px solid transparent;
+	border-radius: 2px;
 	color: #7c838d;
 	display: block;
 	font: 14px Lato;
-	transition: all .1s;
-	padding: 5px 0;
+	margin: 1px -10px;
+	padding: 6px 10px 8px;
 	position: relative;
+	transition: background .1s, color 5s;
 }
-#sidebar a:hover,
+#sidebar a:hover {
+	background: rgba(255, 255, 255, 0.025);
+}
 #sidebar a.active {
+	background: rgba(255, 255, 255, 0.06);
+	border-color: rgba(255, 255, 255, .025);
 	color: #fff;
+	transition: color 0s;
 }
 #sidebar a:hover .badge {
 	opacity: 0;
@@ -96,11 +104,13 @@ button {
 }
 #sidebar .close {
 	background: no-repeat url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+DQogPGc+DQogIDx0aXRsZT5MYXllciAxPC90aXRsZT4NCiAgPHBhdGggZmlsbD0iI2ZmZmZmZiIgaWQ9InN2Z18xIiBkPSJtMTIuODcyLDEuNTYyYzAuMTk1MDAxLDAuMTk0IDAuMTk1MDAxLDAuNTEzIDAsMC43MDdsLTMuODg5LDMuODkxYy0wLjE5MywwLjE5NCAtMC4xOTMsMC41MTMgMCwwLjcwOGwzLjg4NywzLjg5MmMwLjE5NSwwLjE5NCAwLjE5NSwwLjUxMyAwLDAuNzA3bC0xLjQxNTk5OSwxLjQxM2MtMC4xOTMwMDEsMC4xOTQgLTAuNTEyLDAuMTk0IC0wLjcwNzAwMSwwbC0zLjg4NSwtMy44OTJjLTAuMTk0LC0wLjE5NCAtMC41MTMsLTAuMTk0IC0wLjcwNywwbC0zLjg4OSwzLjg4OWMtMC4xOTQsMC4xOTUgLTAuNTEzLDAuMTk1IC0wLjcwNywwbC0xLjQxNCwtMS40MTU5OTljLTAuMTk0LC0wLjE5MzAwMSAtMC4xOTQsLTAuNTEyIDAsLTAuNzA3MDAxbDMuODksLTMuODg5YzAuMTk0LC0wLjE5NCAwLjE5NCwtMC41MTMgMCwtMC43MDhsLTMuODg3LC0zLjg5MWMtMC4xOTQsLTAuMTk1IC0wLjE5NCwtMC41MTMgMCwtMC43MDdsMS40MTUsLTEuNDE0YzAuMTk0LC0wLjE5NCAwLjUxMywtMC4xOTQgMC43MDcsMGwzLjg4NSwzLjg5MWMwLjE5NCwwLjE5NSAwLjUxMywwLjE5NSAwLjcwNywwLjAwMWwzLjg4OCwtMy44OWMwLjE5NSwtMC4xOTMgMC41MTQsLTAuMTkzIDAuNzA3LDBsMS40MTUsMS40MTV6Ii8+DQogPC9nPg0KPC9zdmc+);
+	background-color: rgba(0, 0, 0, .2);
 	background-size: 50%;
 	background-position: 5px 6px;
 	border-radius: 3px;
 	height: 18px;
 	margin-top: 1px;
+	margin-right: 10px;
 	opacity: 0;
 	position: absolute;
 	right: 0;
@@ -108,11 +118,11 @@ button {
 	width: 18px;
 }
 #sidebar .close:hover {
-	background-color: rgba(0, 0, 0, .2);
+	background-color: rgba(0, 0, 0, .4);
 	opacity: .8 !important;
 }
 #sidebar .badge {
-	background: rgba(255, 255, 255, .1);
+	background: rgba(255, 255, 255, .06);
 	border-radius: 3px;
 	color: #afb6c0;
 	float: right;
@@ -127,6 +137,10 @@ button {
 }
 #sidebar .badge:empty {
 	display: none;
+}
+#sidebar .pulse {
+	color: #fff;
+	transition: color 0s;
 }
 #sidebar .network {
 	margin-top: 30px;
