@@ -221,8 +221,8 @@ $(function() {
 			.closest(".window")
 			.data("id");
 		
-		// Remove modes
-		var name = user.html().replace(/[\s+@]/g, "");
+		// Strip modes.
+		var name = user.html().trim().replace(/[+%@~]/, "");
 		if (name.match(/[#.]|-!-/) != null) {
 			return;
 		}
