@@ -63,9 +63,11 @@
 				</ul>
 			</div>
 			<div class="chat">
+				{{#equal <%= messages %> messages.length}}
 				<button class="show-more" data-id="{{id}}">
 					Show more
 				</button>
+				{{/equal}}
 				<div class="messages">
 					{{partial "messages"}}
 				</div>

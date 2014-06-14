@@ -65,7 +65,7 @@ $(function() {
 				.sticky()
 				.end()
 				.find(".input")
-				.tabcomplete(commands, {hint: false})
+				.tabcomplete(complete, {hint: false})
 				.history();
 			
 			$("#network-" + data.id)
@@ -97,16 +97,12 @@ $(function() {
 		case "networks":
 			var channels = $.map(data.networks, function(n) { return n.channels; });
 			chat.html(render("windows", {windows: channels}))
-				.find(".input")
-				.tabcomplete(commands, {hint: false})
-				.history()
-				.end()
-				.find(".hidden")
-				.prev(".show-more")
-				.show();
-			chat.find(".chat")
+				.find(".chat")
 				.sticky()
-				.end();
+				.end()
+				.find(".input")
+				.tabcomplete(complete, {hint: false})
+				.history();
 			
 			var networks = $("#networks")
 				.html(render("networks", {networks: data.networks}))
@@ -294,6 +290,15 @@ $(function() {
 		
 	});
 	
+	function complete(word) {
+		return $.grep(
+			commands,
+			function(cmd) {
+				return !cmd.indexOf(word);
+			}
+		);
+	}
+	
 	function toArray(val) {
 		return Array.isArray(val) ? val : [val];
 	}
@@ -307,6 +312,16 @@ $(function() {
 			return e[c];
 		});
 	}
+	
+	Handlebars.registerHelper(
+		"equal", function(a, b, opt) {
+			a = parseInt(a);
+			b = parseInt(b);
+			if (a == b) {
+				return opt.fn(this);
+			}
+		}
+	);
 	
 	Handlebars.registerHelper(
 		"uri", function(text) {
