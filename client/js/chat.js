@@ -61,12 +61,12 @@ $(function() {
 			chat.append(render("windows", {windows: [data.chan]}))
 				.find(".window")
 				.last()
-				.find(".chat")
-				.sticky()
-				.end()
 				.find(".input")
 				.tabcomplete(complete, {hint: false})
-				.history();
+				.history()
+				.end()
+				.find(".chat")
+				.sticky();
 			
 			$("#network-" + data.id)
 				.append(render("channels", {channels: [data.chan]}))
@@ -97,12 +97,12 @@ $(function() {
 		case "networks":
 			var channels = $.map(data.networks, function(n) { return n.channels; });
 			chat.html(render("windows", {windows: channels}))
-				.find(".chat")
-				.sticky()
-				.end()
 				.find(".input")
 				.tabcomplete(complete, {hint: false})
-				.history();
+				.history()
+				.end()
+				.find(".chat")
+				.sticky();
 			
 			var networks = $("#networks")
 				.html(render("networks", {networks: data.networks}))
@@ -291,8 +291,14 @@ $(function() {
 	});
 	
 	function complete(word) {
+		var words = commands;
+		var users = $(this).closest(".window")
+			.find(".users .user")
+			.each(function() {
+				words.push(this.getAttribute("href").slice(1));
+			});
 		return $.grep(
-			commands,
+			words,
 			function(cmd) {
 				return !cmd.indexOf(word);
 			}

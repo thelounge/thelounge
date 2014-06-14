@@ -175,7 +175,7 @@
 				if (typeof args === "function") {
 					// If the user supplies a function, invoke it
 					// and keep the result.
-					words = args(word);
+					words = args.call(self, word);
 				} else {
 					// Otherwise, call the .match() function.
 					words = match(word, args, options.caseSensitive);
