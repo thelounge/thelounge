@@ -1,8 +1,13 @@
-## shout
+# Shout
 
 Run your IRC client on a server and access it from the web browser. This gives you a persistent connection and allows you to chat from multiple devices at the same time.
 
-### Screenshot
+### Contributing
+
+Shout is __open source__ and __open for contributions__. Any sort of help is appreciated!  
+Come join #shout-irc on Freenode
+
+### Screenshots
 
 ![](https://raw.github.com/erming/shout/master/screenshots/shout.png)  
 
