@@ -65,8 +65,8 @@ $(function() {
 	function event(e, data) {
 		switch (e) {
 		case "auth":
-			chat.add($("#networks")).empty();
-			$("#sign-in").addClass("active").find("#sign-in-input").focus();
+			$("#networks").add(chat).empty();
+			$("#login").trigger("click");
 			break;
 		
 		case "debug":
@@ -119,6 +119,11 @@ $(function() {
 				.end()
 				.find(".chat")
 				.sticky();
+			
+			$("#login").hide();
+			$("#logout").show().on("click", function(e) {
+				e.stopPropagation();
+			});
 			
 			var networks = $("#networks")
 				.html(render("networks", {networks: data.networks}))

@@ -19,7 +19,10 @@
 		<aside id="sidebar">
 			<section>
 				<h1>Shout</h1>
-				<a href="#sign-in">Sign in</a>
+				<% if (password) { %>
+				<a id="login" href="#sign-in">Sign in</a>
+				<a id="logout" href="" style="display: none;">Sign out</a>
+				<% } %>
 			</section>
 			<div id="networks">
 			</div>
@@ -32,7 +35,7 @@
 					<h2>You need to sign in to continue.</h2>
 					<form id="sign-in-form" method="post">
 						<h3>Password:</h3>
-						<input type="password" id="sign-in-input">
+						<input id="sign-in-input" type="password" autofocus>
 						<button type="submit" class="btn">
 							Sign in
 						</button>
