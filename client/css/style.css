@@ -186,7 +186,6 @@ button {
 	display: none;
 	left: 0;
 	position: absolute;
-	overflow: auto;
 	right: 0;
 	top: 0;
 }
@@ -196,6 +195,7 @@ button {
 #main .wrap {
 	margin: 0 auto;
 	max-width: 480px;
+	overflow: auto;
 	padding: 0 20px;
 }
 #windows a {
@@ -237,6 +237,7 @@ button {
 }
 #sign-in {
 	padding: 12.5% 0;
+	overflow: auto;
 }
 #sign-in h1,
 #sign-in h2 {
