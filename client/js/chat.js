@@ -291,7 +291,7 @@ $(function() {
 	});
 	
 	function complete(word) {
-		var words = commands;
+		var words = commands.slice();
 		var users = $(this).closest(".window")
 			.find(".users .user")
 			.each(function() {
