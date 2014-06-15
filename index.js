@@ -1,2 +1,3 @@
 process.chdir(__dirname);
-require("./lib/server")();
+var listen = require("./lib/server");
+listen();

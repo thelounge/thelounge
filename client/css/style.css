@@ -120,6 +120,9 @@ button {
 #sidebar a:hover .close {
 	opacity: .4;
 }
+#sidebar a[href="#sign-in"] {
+	display: none;
+}
 #sidebar h1,
 #sidebar h2 {
 	color: #fff;
