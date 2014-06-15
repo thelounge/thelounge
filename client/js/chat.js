@@ -1,6 +1,7 @@
 $(function() {
 	var chat = $("#chat");
 	var sidebar = $("#sidebar");
+	var windows = $("#windows");
 
 	setTimeout(function() {
 		// Enable transitions.
@@ -41,6 +42,7 @@ $(function() {
 	
 	var socket = io.connect("");
 	var events = [
+		"debug",
 		"join",
 		"messages",
 		"msg",
@@ -62,6 +64,10 @@ $(function() {
 	
 	function event(e, data) {
 		switch (e) {
+		case "debug":
+			console.log(data);
+			break;
+		
 		case "join":
 			chat.append(render("windows", {windows: [data.chan]}))
 				.find(".window")
@@ -293,6 +299,12 @@ $(function() {
 			});
 		}
 		
+	});
+	
+	windows.on("submit", "#sign-in-form", function(e) {
+		e.preventDefault();
+		var password = $("#sign-in-input").val();
+		socket.emit("debug", password);
 	});
 	
 	function complete(word) {
