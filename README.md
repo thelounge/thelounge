@@ -4,10 +4,10 @@ Run your IRC client on a server and access it from the web browser. This gives y
 
 ### Screenshot
 
-![](https://raw.github.com/erming/shout/master/shout.png)  
+![](https://raw.github.com/erming/shout/master/screenshots/shout.png)  
 
 And also..  
-[Mobile interface](https://www.dropbox.com/s/snpxgi3w7zaijmm/shout-mobile.png)
+[Mobile interface](https://raw.github.com/erming/shout/master/screenshots/shout-mobile.png)
 
 ## Install
 
