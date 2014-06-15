@@ -1,14 +1,17 @@
 /* http://www.google.com/fonts/specimen/Lato */
-@import url(http://fonts.googleapis.com/css?family=Lato:400,700);
+@import url(http://fonts.googleapis.com/css?family=Lato:300,400,700);
 
 * {
 	box-sizing: border-box;
 }
+.preload * {
+	transition: none !important;
+}
 html,
 body {
 	color: #222;
+	font: 16px Lato, sans-serif;
 	height: 100%;
-	font: 14px Lato, sans-serif;
 	margin: 0;
 }
 body {
@@ -18,6 +21,9 @@ body {
 a {
 	color: inherit; 
 	text-decoration: none;
+}
+a:visited {
+	color: #f00;
 }
 h1,
 h2 {
@@ -37,6 +43,27 @@ button {
 	margin: 0;
 	outline: none;
 	padding: 0;
+}
+.btn {
+	border: 2px solid #95a5a6;
+	border-radius: 5px;
+	color: #95a5a6;
+	display: inline-block;
+	font: bold 12px Lato, sans-serif;
+	letter-spacing: 1px;
+	margin-bottom: 10px;
+	padding: 12px 18px;
+	text-transform: uppercase;
+	transition: background .2s, border-color .2s, color .2s;
+	word-spacing: 3px;
+}
+.btn:hover {
+	background: #95a5a6;
+	color: #fff;
+}
+.btn:active {
+	box-shadow: none;
+	opacity: .8;
 }
 #wrap {
 	height: 100%;
@@ -72,7 +99,8 @@ button {
 	color: #7c838d;
 	display: block;
 	font: 14px Lato;
-	margin: 1px -10px;
+	margin: 1px -11px;
+	outline: 0;
 	padding: 6px 10px 8px;
 	position: relative;
 	transition: background .1s, color 5s;
@@ -96,10 +124,10 @@ button {
 #sidebar h2 {
 	color: #fff;
 	font: bold 15px Lato;
+	margin-bottom: 6px;
 }
 #sidebar h2 {
 	color: #84d1ff;
-	margin-bottom: 6px;
 	text-transform: capitalize;
 }
 #sidebar .close {
@@ -155,10 +183,72 @@ button {
 #main .window {
 	background: #fff;
 	bottom: 0;
+	display: none;
 	left: 0;
 	position: absolute;
+	overflow: auto;
 	right: 0;
 	top: 0;
+}
+#main .window.active {
+	display: block;
+}
+#main .wrap {
+	margin: 0 auto;
+	max-width: 480px;
+	padding: 0 20px;
+}
+#windows a {
+	color: inherit;
+	transition: all .2s;
+}
+#windows a:hover {
+	color: #00c165;
+	text-decoration: none;
+}
+#windows h1,
+#windows h2 {
+	color: #2c3e50;
+	font: 300 48px Lato, sans-serif;
+	line-height: 1.5;
+}
+#windows h2 {
+	color: #7f8c8d;
+	font-size: 26px;
+}
+#windows h3 {
+	color: #95a5a6;
+	font-size: 18px;
+	font-weight: normal;
+}
+#windows input {
+	border: 2px solid #e9ecef;
+	border-radius: 4px;
+	font-size: 24px;
+	outline: 0;
+	padding: 10px 14px;
+	transition: border-color .2s;
+	-webkit-appearance: none;
+	width: 100%;
+}
+#windows input:hover,
+#windows input:focus {
+	border-color: #95a5a6;
+}
+#sign-in {
+	padding: 12.5% 0;
+}
+#sign-in h1,
+#sign-in h2 {
+	text-align: center;
+}
+#sign-in form {
+	margin: 0 auto;
+	max-width: 250px;
+}
+#sign-in-input {
+	margin-bottom: 20px;
+	width: 100%;
 }
 #chat {
 	font: 13px "Consolas", monospace;

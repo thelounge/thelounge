@@ -1,6 +1,11 @@
 $(function() {
 	var chat = $("#chat");
 	var sidebar = $("#sidebar");
+
+	setTimeout(function() {
+		// Enable transitions.
+		$("body").removeClass("preload");
+	}, 500);
 	
 	var commands = [
 		"/ame",
