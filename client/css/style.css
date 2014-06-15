@@ -247,6 +247,7 @@ button {
 	max-width: 250px;
 }
 #sign-in-input {
+	color: #95a5a6;
 	margin-bottom: 20px;
 	width: 100%;
 }

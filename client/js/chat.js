@@ -66,7 +66,7 @@ $(function() {
 		switch (e) {
 		case "auth":
 			chat.add($("#networks")).empty();
-			$("#sign-in").addClass("active");
+			$("#sign-in").addClass("active").find("#sign-in-input").focus();
 			break;
 		
 		case "debug":
@@ -163,10 +163,9 @@ $(function() {
 			.find(".badge")
 			.removeClass("highlight")
 			.empty();
+		
+		$("#main .active").removeClass("active");
 		var window = $(target)
-			.siblings()
-			.removeClass("active")
-			.end()
 			.css("z-index", z++)
 			.addClass("active");
 		
