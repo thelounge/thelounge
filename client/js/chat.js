@@ -128,9 +128,23 @@ $(function() {
 			break;
 		
 		case "part":
-			$("#channel-" + data.id)
-				.add("#window-" + data.id)
-				.remove();
+			var chan = $("#channel-" + data.id).add("#window-" + data.id).remove();
+			if (!chan.hasClass("active")) {
+				break;
+			}
+			
+			var next = null;
+			var z = 0;
+			$("#main .window").each(function() {
+				var index = parseInt($(this).css("zIndex"));
+				if (index > z) {
+					z = index;
+					next = this;
+				}
+			});
+			if (typeof next !== "undefined") {
+				$("#channel-" + $(next).data("id")).trigger("click");
+			}
 			break;
 		
 		case "users":
