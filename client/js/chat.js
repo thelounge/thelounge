@@ -165,6 +165,9 @@ $(function() {
 		}
 	}
 	
+	var pop = new Audio();
+	pop.src = "/audio/pop.ogg";
+	
 	var viewport = $("#viewport");
 	var touchDevice = (window.screen.width <= 768);
 	
@@ -225,6 +228,10 @@ $(function() {
 	chat.on("append", ".messages", function() {
 		var messages = $(this);
 		var id = messages.closest(".window").find(".form").data("target");
+		var last = messages.find(".row:last-child");
+		if (last.hasClass("highlight")) {
+			pop.play();
+		}
 		
 		var link = $("#channel-" + id + ":not(.active)");
 		if (link.length == 0) {
@@ -236,9 +243,7 @@ $(function() {
 			link.removeClass("pulse");
 		}, 500);
 		
-		var last = messages.find(".row:last-child");
 		var type = last.attr("class");
-		
 		var ignore = [
 			"join",
 			"part",
@@ -255,7 +260,7 @@ $(function() {
 		if (badge.length != 0) {
 			var i = (parseInt(badge.html()) || 0) + 1;
 			badge.html(i);
-			if (messages.children().last().hasClass("highlight")) {
+			if (last.hasClass("highlight")) {
 				badge.addClass("highlight");
 			}
 		}
