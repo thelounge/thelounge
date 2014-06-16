@@ -345,8 +345,8 @@ $(function() {
 			});
 		return $.grep(
 			words,
-			function(cmd) {
-				return !cmd.indexOf(word);
+			function(w) {
+				return !w.toLowerCase().indexOf(word.toLowerCase());
 			}
 		);
 	}
