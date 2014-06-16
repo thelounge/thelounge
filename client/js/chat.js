@@ -186,7 +186,10 @@ $(function() {
 		$("#main .active").removeClass("active");
 		var window = $(target)
 			.css("z-index", z++)
-			.addClass("active");
+			.addClass("active")
+			.find(".chat")
+			.scrollToBottom()
+			.end();
 		
 		if (!touchDevice) {
 			window.find("input").focus();
