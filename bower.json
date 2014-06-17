@@ -1,9 +1,0 @@
-{
-  "name": "shout",
-  "dependencies": {
-    "jquery": "~2.1.1",
-    "favico.js": "~0.3.4",
-    "stickyscroll": "~1.3.1",
-    "jquery-cookie": "~1.4.1"
-  }
-}

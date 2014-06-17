@@ -5,12 +5,7 @@ module.exports = function(grunt) {
 		uglify: {
 			js: {
 				files: {
-					"client/js/libs.js": [
-						"client/components/jquery/dist/jquery.js",
-						"client/components/stickyscroll/stickyscroll.js",
-						"client/components/jquery-cookie/jquery.cookie.js",
-						"client/components/favico.js/favico.js"
-					]
+					"client/js/components.min.js": ["client/components/*.js"]
 				}
 			}
 		}

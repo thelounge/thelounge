@@ -74,7 +74,7 @@ $(function() {
 				.last()
 				.find(".input")
 				.tabcomplete(complete, {hint: false})
-				.history()
+				.history({submit: true})
 				.end()
 				.find(".chat")
 				.sticky();
@@ -110,7 +110,7 @@ $(function() {
 			chat.html(render("windows", {windows: channels}))
 				.find(".input")
 				.tabcomplete(complete, {hint: false})
-				.history()
+				.history({submit: true})
 				.end()
 				.find(".chat")
 				.sticky();
