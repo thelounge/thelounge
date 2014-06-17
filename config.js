@@ -9,8 +9,11 @@ module.exports = {
   networks: [{
     host: "irc.freenode.org",
     port: 6667,
-    channels: [
-      "#shout-irc",
-    ],
+    onConnect: {
+      commands: [""],
+      join: [
+				"#shout-irc",
+			]
+    }
   }]
 };
