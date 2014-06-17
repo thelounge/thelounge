@@ -1,6 +1,7 @@
 module.exports = {
   password: "",
   port: 9000,
+  theme: "",
   defaults: {
     nick: "shout-user",
     realname: "http://github.com/erming/shout",
