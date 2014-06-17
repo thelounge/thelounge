@@ -5,9 +5,11 @@ module.exports = function(grunt) {
 		uglify: {
 			js: {
 				files: {
-					"client/grunt/test.min.js": [
-						"client/grunt/test-1.js",
-						"client/grunt/test-2.js"
+					"client/js/libs.js": [
+						"client/components/jquery/dist/jquery.js",
+						"client/components/stickyscroll/stickyscroll.js",
+						"client/components/jquery-cookie/jquery.cookie.js",
+						"client/components/favico.js/favico.js"
 					]
 				}
 			}

@@ -1,0 +1,35 @@
+{
+  "name": "stickyscroll",
+  "version": "1.3.1",
+  "homepage": "https://github.com/erming/stickyscroll",
+  "authors": [
+    "Mattias Erming <mattias@mattiaserming.com>"
+  ],
+  "description": "Make your scrollbars stick when scrolled to the bottom",
+  "main": "stickyscroll.js",
+  "keywords": [
+    "scroll",
+    "scrollbar",
+    "sticky",
+    "bottom"
+  ],
+  "dependencies": {
+    "jquery": ">=1.9"
+  },
+  "license": "MIT",
+  "ignore": [
+    "index.html",
+    "README.md",
+    "stickyscroll.jquery.json",
+    "style.css"
+  ],
+  "_release": "1.3.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.3.1",
+    "commit": "c7627cbc0ca90ad97fc46305b92b3ee978b18034"
+  },
+  "_source": "git://github.com/erming/stickyscroll.git",
+  "_target": "~1.3.1",
+  "_originalSource": "stickyscroll"
+}

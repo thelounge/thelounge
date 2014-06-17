@@ -1,0 +1,34 @@
+{
+  "name": "favico.js",
+  "version": "0.3.4",
+  "homepage": "http://lab.ejci.net/favico.js/",
+  "authors": [
+    "Miroslav Magda <magda.miroslav@gmail.com>"
+  ],
+  "description": "Favico.js is a library to manipulate the favicon, adding alert badges, render images or videos.",
+  "main": "favico.js",
+  "keywords": [
+    "favicon",
+    "badge"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "page",
+    "example-simple",
+    "example-angular",
+    "tests"
+  ],
+  "_release": "0.3.4",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.3.4",
+    "commit": "fe580b81a240fba23cf324b018402cec96618cd1"
+  },
+  "_source": "git://github.com/ejci/favico.js.git",
+  "_target": "~0.3.4",
+  "_originalSource": "favico.js"
+}
