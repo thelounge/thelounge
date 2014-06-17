@@ -168,7 +168,7 @@ button {
 }
 #sidebar .pulse {
 	color: #fff;
-	transition: color 0s;
+	transition: color 0.2s;
 }
 #sidebar .network {
 	margin-top: 30px;

@@ -1,12 +1,7 @@
 $(function() {
 	var chat = $("#chat");
 	var sidebar = $("#sidebar");
-	
-	setTimeout(function() {
-		// Enable transitions.
-		$("body").removeClass("preload");
-	}, 500);
-	
+
 	var commands = [
 		"/ame",
 		"/amsg",
@@ -165,8 +160,23 @@ $(function() {
 		}
 	}
 	
+	setTimeout(function() {
+		// Enable transitions.
+		$("body").removeClass("preload");
+	}, 500);
+	
 	var pop = new Audio();
 	pop.src = "/audio/pop.ogg";
+	
+	var favicon = new Favico({
+		animation: "none"
+	});
+	
+	document.addEventListener("visibilitychange", function() {
+		if (sidebar.find(".highlight").length == 0) {
+			favicon.badge("");
+		}
+	});
 	
 	var viewport = $("#viewport");
 	var touchDevice = (window.screen.width <= 768);
@@ -179,12 +189,17 @@ $(function() {
 		if (!target) {
 			return;
 		}
+		
 		viewport.removeClass();
 		sidebar.find(".active").removeClass("active");
 		link.addClass("active")
 			.find(".badge")
 			.removeClass("highlight")
 			.empty();
+		
+		if (sidebar.find(".highlight").length == 0) {
+			favicon.badge("");
+		}
 		
 		$("#main .active").removeClass("active");
 		var window = $(target)
@@ -231,6 +246,9 @@ $(function() {
 		var last = messages.find(".row:last-child");
 		if (last.hasClass("highlight")) {
 			pop.play();
+			if (document.hidden) {
+				favicon.badge("!");
+			}
 		}
 		
 		var link = $("#channel-" + id + ":not(.active)");
