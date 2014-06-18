@@ -5,7 +5,7 @@ Run your IRC client on a server and access it from the web browser. This gives y
 ### Contributing
 
 Shout is __open source__ and __open for contributions__. Any sort of help is appreciated!  
-Come join #shout-irc on Freenode
+Come join #shout-irc on Freenode!
 
 ### Screenshots
 
@@ -26,7 +26,7 @@ And also..
 `cd shout/`
 
 4. Install Node packages  
-`npm install`
+`sudo npm install`
 
 5. Run the server  
 `npm start` or `node index.js`

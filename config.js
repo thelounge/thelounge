@@ -13,8 +13,8 @@ module.exports = {
     onConnect: {
       commands: [""],
       join: [
-				"#shout-irc",
-			]
+        "#shout-irc",
+      ]
     }
   }]
 };
