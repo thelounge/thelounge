@@ -1,6 +1,7 @@
 module.exports = {
-  password: "",
   port: 9000,
+  password: "",
+  log: true,
   theme: "",
   defaults: {
     nick: "shout-user",
