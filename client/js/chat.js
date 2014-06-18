@@ -395,10 +395,19 @@ $(function() {
 	
 	Handlebars.registerHelper(
 		"uri", function(text) {
-			text = escape(text);
-			return URI.withinString(text, function(url) {
-				return "<a href='" + url.replace(/^www/, "//www") + "' target='_blank'>" + url + "</a>";
+			var urls = [];
+			text = URI.withinString(text, function(url) {
+				urls.push(url);
+				return "{" + (urls.length - 1) + "}";
 			});
+			text = escape(text);
+			for (var i in urls) {
+				text = text.replace(
+					"{" + i + "}",
+					"<a href='" + urls[i].replace(/^www/, "//www") + "' target='_blank'>" + urls[i] + "</a>"
+				);
+			}
+			return text;
 		}
 	);
 	
