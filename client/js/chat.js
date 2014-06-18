@@ -120,11 +120,17 @@ $(function() {
 				e.stopPropagation();
 			});
 			
-			var networks = $("#networks")
-				.html(render("networks", {networks: data.networks}))
-				.find("a")
-				.last()
+			var networks = render("networks", {networks: data.networks});
+			var current = $("#networks")
+				.html(networks)
+				.find("a[href='" + $.cookie("current") + "']")
 				.trigger("click");
+			if (!current.length) {
+				$("#networks")
+					.find("a")
+					.last()
+					.trigger("click");
+			}
 			break;
 		
 		case "part":
@@ -196,6 +202,8 @@ $(function() {
 			.find(".badge")
 			.removeClass("highlight")
 			.empty();
+		
+		$.cookie("current", target);
 		
 		if (sidebar.find(".highlight").length == 0) {
 			favicon.badge("");
