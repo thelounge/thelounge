@@ -7,8 +7,9 @@ module.exports = {
     realname: "http://github.com/erming/shout",
   },
   networks: [{
-    host: "irc.freenode.org",
-    port: 6667,
+    host: "chat.freenode.net",
+    port: 6697,
+    tls: true,
     onConnect: {
       commands: [""],
       join: [
