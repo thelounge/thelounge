@@ -307,7 +307,7 @@ button {
 	background: #fff;
 	border-bottom: 1px solid #eee;
 	bottom: 35px;
-	box-shadow: inset 160px 0 #f9f9f9;
+	box-shadow: inset 180px 0 #f9f9f9;
 	left: 0;
 	overflow-y: auto;
 	-webkit-overflow-scrolling: touch;
@@ -348,10 +348,10 @@ button {
 	padding-bottom: 2px;
 }
 #chat .row:first-child span {
-	padding-top: 6px;
+	padding-top: 5px;
 }
 #chat .row:last-child span {
-	padding-bottom: 6px;
+	padding-bottom: 5px;
 }
 #chat .row:hover .time {
 	color: #aaa;
@@ -359,7 +359,7 @@ button {
 #chat .from {
 	padding-right: 10px;
 	text-align: right;
-	width: 160px;
+	width: 134px;
 }
 #chat .text {
 	padding-left: 10px;
@@ -393,8 +393,8 @@ button {
 }
 #chat .time {
 	color: #ddd;
-	text-align: center;
-	width: 50px;
+	text-align: right;
+	width: 46px;
 }
 #chat .sidebar {
 	bottom: 0;

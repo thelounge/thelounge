@@ -136,6 +136,9 @@
 		<script type="text/html" class="messages">
 		{{#each messages}}
 		<div class="row {{type}}">
+			<span class="time">
+				{{time}}
+			</span>
 			<span class="from">
 				<a href="#{{from}}" class="user">{{from}}</a>
 			</span>
@@ -146,9 +149,6 @@
 				</em>
 				{{/if}}
 				{{{uri text}}}
-			</span>
-			<span class="time">
-				{{time}}
 			</span>
 		</div>
 		{{/each}}
