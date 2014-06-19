@@ -26,7 +26,7 @@ And also..
 `cd shout/`
 
 4. Install Node packages  
-`sudo npm install`
+`npm install --production`
 
 5. Run the server  
 `npm start` or `node index.js`
