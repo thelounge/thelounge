@@ -410,9 +410,10 @@ $(function() {
 			});
 			text = escape(text);
 			for (var i in urls) {
+				var url = escape(urls[i]);
 				text = text.replace(
 					"{" + i + "}",
-					"<a href='" + urls[i].replace(/^www/, "//www") + "' target='_blank'>" + urls[i] + "</a>"
+					"<a href='" + url.replace(/^www/, "//www") + "' target='_blank'>" + url + "</a>"
 				);
 			}
 			return text;
