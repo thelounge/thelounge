@@ -143,11 +143,14 @@
 				<a href="#{{from}}" class="user">{{from}}</a>
 			</span>
 			<span class="text">
-				{{#if type}}
+				{{#contains type "toggle"}}
+					<button class="toggle" data-type="{{type}}">
+						<i class="tri"></i>
+					</button>
+				{{/contains}}
 				<em class="type">
 					{{type}}
 				</em>
-				{{/if}}
 				{{{uri text}}}
 			</span>
 		</div>

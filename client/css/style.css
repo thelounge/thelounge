@@ -339,7 +339,7 @@ button {
 }
 #chat .row {
 	display: table-row;
-	word-break: break-word;
+	word-break: break-all;
 	word-wrap: break-word;
 }
 #chat .row span {
@@ -395,6 +395,39 @@ button {
 	color: #ddd;
 	text-align: right;
 	width: 46px;
+}
+#chat .motd {
+	opacity: 0;
+	position: absolute;
+}
+#chat .motd-toggle .motd {
+	opacity: 1;
+	position: inherit;
+}
+#chat .toggle {
+	background: #f9f9f9;
+	border: 1px solid #eee;
+	border-radius: 2px;
+	color: #999;
+	float: left;
+	font-size: 14px;
+	line-height: 0px;
+	margin: 2px 9px 0 0;
+	overflow: hidden;
+}
+#chat .toggle:hover {
+	border-color: #ddd;
+}
+#chat .toggle .tri {
+	border: 3px solid transparent;
+	border-top-color: #666;
+	float: left;
+	margin: 5px 4px 1px;
+}
+#chat .toggle.open .tri {
+	border-top-color: transparent;
+	border-bottom-color: #666;
+	margin: 1px 4px 5px;
 }
 #chat .sidebar {
 	bottom: 0;

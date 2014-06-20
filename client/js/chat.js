@@ -168,7 +168,7 @@ $(function() {
 	
 	setTimeout(function() {
 		// Enable transitions.
-		$("body").removeClass("preload");
+		//$("body").removeClass("preload");
 	}, 500);
 	
 	var pop = new Audio();
@@ -341,6 +341,14 @@ $(function() {
 		});
 	});
 	
+	chat.on("click", ".toggle", function() {
+		var chat = $(this)
+			.toggleClass("open")
+			.closest(".chat")
+			.toggleClass($(this).data("type"))
+			.end();
+	});
+	
 	var toggle = "click";
 	if (touchDevice) {
 		toggle = "touchstart";
@@ -390,17 +398,7 @@ $(function() {
 			return e[c];
 		});
 	}
-	
-	Handlebars.registerHelper(
-		"equal", function(a, b, opt) {
-			a = parseInt(a);
-			b = parseInt(b);
-			if (a == b) {
-				return opt.fn(this);
-			}
-		}
-	);
-	
+
 	Handlebars.registerHelper(
 		"uri", function(text) {
 			var urls = [];
@@ -423,6 +421,24 @@ $(function() {
 	Handlebars.registerHelper(
 		"partial", function(id) {
 			return new Handlebars.SafeString(render(id, this));
+		}
+	);
+	
+	Handlebars.registerHelper(
+		"equal", function(a, b, opt) {
+			a = a.toString();
+			b = b.toString();
+			if (a == b) {
+				return opt.fn(this);
+			}
+		}
+	);
+	
+	Handlebars.registerHelper(
+		"contains", function(a, b, opt) {
+			if (a.indexOf(b) !== -1) {
+				return opt.fn(this);
+			}
 		}
 	);
 });
