@@ -168,7 +168,7 @@ $(function() {
 	
 	setTimeout(function() {
 		// Enable transitions.
-		//$("body").removeClass("preload");
+		$("body").removeClass("preload");
 	}, 500);
 	
 	var pop = new Audio();
