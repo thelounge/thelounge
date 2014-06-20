@@ -339,7 +339,6 @@ button {
 }
 #chat .row {
 	display: table-row;
-	word-break: break-all;
 	word-wrap: break-word;
 }
 #chat .row span {
@@ -363,6 +362,7 @@ button {
 }
 #chat .text {
 	padding-left: 10px;
+	padding-right: 5px;
 }
 #chat .text a {
 	word-break: break-all;

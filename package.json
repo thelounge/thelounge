@@ -24,11 +24,11 @@
     "url": "https://github.com/erming/shout.git"
   },
   "dependencies": {
-    "lodash": "~2.4.1",
+    "connect": "^2.19.6",
+    "lodash": "^2.4.1",
+    "moment": "^2.7.0",
     "slate-irc": "https://github.com/erming/slate-irc/tarball/master",
-    "moment": "~2.5.1",
-    "connect": "~2.14.3",
-    "socket.io": "~0.9.16"
+    "socket.io": "^1.0.6"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
