@@ -204,6 +204,7 @@ $(function() {
 			.empty();
 		
 		$.cookie("current", target);
+		document.title = link.data("name") + " — Shout";
 		
 		if (sidebar.find(".highlight").length == 0) {
 			favicon.badge("");

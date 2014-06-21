@@ -113,7 +113,7 @@ socket.emit("networks", {
   networks: [{
     id: 0,
     host: "",
-    nick: "",
+		name: "",
     channels: [],
   }]
 });
