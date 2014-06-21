@@ -126,8 +126,10 @@ button {
 	font: bold 15px Lato;
 	margin-bottom: 6px;
 }
-#sidebar h2 {
-	color: #84d1ff;
+#sidebar .lobby {
+	color: #84d1ff !important;
+	font-size: 15px;
+	font-weight: bold;
 	text-transform: capitalize;
 }
 #sidebar .close {
@@ -168,10 +170,27 @@ button {
 }
 #sidebar .pulse {
 	color: #fff;
-	transition: color 0.2s;
+	transition: color .2s;
 }
 #sidebar .network {
 	margin-top: 30px;
+}
+#sidebar .footer {
+	bottom: 0;
+	height: 50px;
+	left: 0;
+	padding: 0 40px;
+	position: absolute;
+	right: 0;
+}
+#sidebar .footer small {
+	color: #7c838d;
+	display: block;
+	font-size: 12px;
+	opacity: .4;
+	text-align: center;
+	text-transform: uppercase;
+	word-spacing: 3px;
 }
 #main {
 	bottom: 0;
@@ -280,25 +299,24 @@ button {
 	font-size: 15px;
 }
 #chat .header button {
-	background: no-repeat url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNi4wLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB3aWR0aD0iMTZweCIgaGVpZ2h0PSIxNnB4IiB2aWV3Qm94PSIwIDAgMTYgMTYiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDE2IDE2IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnPg0KCTxnPg0KCQk8cGF0aCBkPSJNMTUuNDk5LDAuMDFIMC41MDFjLTAuMjc1LDAtMC41LDAuMjQtMC41LDAuNTM0djEuOTQ4YzAsMC4yODIsMC4yMjUsMC41MTMsMC41LDAuNTEzaDE0Ljk5OGMwLjI3NSwwLDAuNS0wLjIzLDAuNS0wLjUxMw0KCQkJVjAuNTQ0QzE1Ljk5OSwwLjI1LDE1Ljc3NCwwLjAxLDE1LjQ5OSwwLjAxeiBNMTUuNDk5LDUuMDFIMC41MDFjLTAuMjc1LDAtMC41LDAuMjQtMC41LDAuNTM1djEuOTQ3DQoJCQljMCwwLjI4MywwLjIyNSwwLjUxMywwLjUsMC41MTNoMTQuOTk4YzAuMjc1LDAsMC41LTAuMjMsMC41LTAuNTEzVjUuNTQ0QzE1Ljk5OSw1LjI1LDE1Ljc3NCw1LjAxLDE1LjQ5OSw1LjAxeiBNMTUuNDk5LDEwLjAxDQoJCQlIMC41MDFjLTAuMjc1LDAtMC41LDAuMjQtMC41LDAuNTM1djEuOTQ3YzAsMC4yODEsMC4yMjUsMC41MTIsMC41LDAuNTEyaDE0Ljk5OGMwLjI3NSwwLDAuNS0wLjIzLDAuNS0wLjUxMnYtMS45NDcNCgkJCUMxNS45OTksMTAuMjUsMTUuNzc0LDEwLjAxLDE1LjQ5OSwxMC4wMXoiLz4NCgk8L2c+DQo8L2c+DQo8L3N2Zz4NCg==);
-	background-position: 8px 10px;
+	color: #aaa;
 	height: 32px;
-	opacity: .2;
-	transition: all .1s;
+	font-size: 18px !important;
+	opacity: .5;
+	top: 1px;
+	transition: opacity .2s;
 	width: 32px;
 }
 #chat .header button:hover {
-	opacity: .5;
+	opacity: 1;
 }
 #chat .header .lt {
 	left: 4px;
 	position: absolute;
-	top: 4px;
 }
 #chat .header .rt {
 	position: absolute;
 	right: 4px;
-	top: 4px;
 }
 #chat .header .type {
 	text-transform: capitalize;
@@ -541,5 +559,12 @@ button {
 	}
 	#chat .row .time {
 		display: none;
+	}
+}
+
+@media (max-device-width: 767px) {
+	#chat .header .rt,
+	#chat .header .lt {
+		top: 3px;
 	}
 }

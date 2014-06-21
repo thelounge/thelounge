@@ -10,6 +10,7 @@
 	
 	<link rel="stylesheet" href="/css/normalize.css">
 	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="<%= typeof theme !== "undefined" ? theme : "" %>">
 	
 	<link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png" />
@@ -28,8 +29,12 @@
 				<a id="logout" href="" style="display: none;">Sign out</a>
 				<% } %>
 			</section>
-			<div id="networks">
-			</div>
+			<div id="networks"></div>
+			<footer class="footer">
+				<small>
+					Shout <%= version %>
+				</small>
+			</footer>
 		</aside>
 		<div id="main">
 			<div id="windows">
@@ -57,7 +62,6 @@
 		<script type="text/html" class="networks">
 		{{#each networks}}
 		<section id="network-{{id}}" class="network">
-			<h2>{{name}}</h2>
 			{{partial "channels"}}
 		</section>
 		{{/each}}
@@ -93,8 +97,12 @@
 				</div>
 			</div>
 			<header class="header">
-				<button class="lt"></button>
-				<button class="rt"></button>
+				<button class="lt">
+					<i class="fa fa-navicon"></i>
+				</button>
+				<button class="rt">
+					<i class="fa fa-navicon"></i>
+				</button>
 				{{partial "meta"}}
 			</header>
 			<form class="form" data-target="{{id}}">
