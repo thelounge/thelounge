@@ -24,12 +24,12 @@
 		<aside id="sidebar">
 			<section>
 				<h1>Shout</h1>
-				<a href="#settings">
+				<a id="settings-link" href="#settings" data-name="Settings">
 					<i class="octicon octicon-clippy"></i>
 					Settings
 				</a>
 				<% if (password) { %>
-				<a id="login" href="#sign-in">
+				<a id="login" href="#sign-in" data-name="Sign in">
 					<i class="octicon octicon-sign-in"></i>
 					Sign in
 				</a>
@@ -51,6 +51,46 @@
 			<div id="settings" class="window">
 				<div class="wrap">
 					<h1>Settings</h1>
+					<section>
+						<h2>Messages</h2>
+						<div class="options">
+							<label class="opt">
+								<input type="checkbox" name="join">
+								Show joins
+							</label>
+							<label class="opt">
+								<input type="checkbox" name="nick">
+								Show nick changes
+							</label>
+							<label class="opt">
+								<input type="checkbox" name="part">
+								Show parts
+							</label>
+							<label class="opt">
+								<input type="checkbox" name="mode">
+								Show modes
+							</label>
+							<label class="opt">
+								<input type="checkbox" name="quit">
+								Show quits
+							</label>
+						</div>
+					</section>
+					<section>
+						<h2>Sound</h2>
+						<div class="options">
+							<label class="opt wide">
+								<input type="checkbox" name="notification">
+								Enable notification sound
+							</label>
+							<label class="opt wide">
+								<button id="notification">
+									<i class="octicon octicon-unmute"></i>
+									Play sound
+								</button>
+							</label>
+						</div>
+					</section>
 				</div>
 			</div>
 			<div id="sign-in" class="window">

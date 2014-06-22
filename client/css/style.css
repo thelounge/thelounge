@@ -37,6 +37,9 @@ li {
 	margin: 0;
 	padding: 0;
 }
+input {
+	outline: 0;
+}
 button {
 	border: none;
 	background: none;
@@ -107,6 +110,7 @@ button {
 	padding: 6px 10px 8px;
 	position: relative;
 	transition: background .1s, color 5s;
+	z-index: 2;
 }
 #sidebar a:hover {
 	background: rgba(255, 255, 255, 0.025);
@@ -247,7 +251,7 @@ button {
 	font-size: 18px;
 	font-weight: normal;
 }
-#windows input {
+#windows input[type=text] {
 	border: 2px solid #e9ecef;
 	border-radius: 4px;
 	font-size: 24px;
@@ -257,23 +261,57 @@ button {
 	-webkit-appearance: none;
 	width: 100%;
 }
-#windows input:hover,
-#windows input:focus {
+#windows input[type=text]:hover,
+#windows input[type=text]:focus {
 	border-color: #95a5a6;
+}
+#windows .window {
+	padding: 12% 0;
+	overflow: auto;
 }
 #settings {
 	
 }
-#sign-in {
-	padding: 12.5% 0;
-	overflow: auto;
+#settings h2 {
+	border-bottom: 1px solid #eee;
+	margin-bottom: 10px;
 }
-#sign-in h1,
-#sign-in h2 {
-	text-align: center;
+#settings section {
+	margin-top: 20px;
+}
+#settings button:hover {
+	opacity: 0.85;
+}
+#settings button:active {
+	opacity: 0.70;
+}
+#settings .options {
+	overflow: hidden;
+	margin: 0 -10px;
+}
+#settings .opt {
+	float: left;
+	margin: 10px 20px;
+	width: 180px;
+}
+#settings .opt input {
+	float: left;
+	margin-top: 4px;
+	margin-right: 10px;
+}
+#settings .opt.wide {
+	width: 400px;
+}
+#settings .octicon {
+	float: left;
+	margin-top: 3px;
+	margin-right: 8px;
+}
+#settings #notification {
+	color: #7f8c8d;
 }
 #sign-in form {
-	margin: 0 auto;
+	margin: 0 0;
 	max-width: 250px;
 }
 #sign-in-input {
@@ -431,6 +469,13 @@ button {
 #chat .motd-toggle .motd {
 	opacity: 1;
 	position: inherit;
+}
+#chat.hide-join .join,
+#chat.hide-nick .nick,
+#chat.hide-part .nick,
+#chat.hide-mode .mode,
+#chat.hide-quit .quit {
+	display: none;
 }
 #chat .toggle {
 	background: #f9f9f9;

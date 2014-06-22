@@ -123,6 +123,7 @@ $(function() {
 			var networks = render("networks", {networks: data.networks});
 			var current = $("#networks")
 				.html(networks)
+				.closest("#sidebar")
 				.find("a[href='" + $.cookie("current") + "']")
 				.trigger("click");
 			if (!current.length) {
@@ -165,6 +166,46 @@ $(function() {
 			break;
 		}
 	}
+	
+	var settings = $("#settings");
+	var options = {
+		join: true,
+		nick: true,
+		part: true,
+		mode: true,
+		quit: true,
+		notification: true,
+	};
+
+	$.cookie.json = true;
+	$.cookie("settings", $.cookie("settings") || options);
+	$.extend(options, $.cookie("settings")); 
+	
+	for (var i in options) {
+		if (options[i]) {
+			settings.find("input[name=" + i + "]").prop("checked", true);
+		}
+	}
+	
+	settings.on("change", "input", function() {
+		settings.find("input").each(function() {
+			var input = $(this);
+			var name = input.attr("name");
+			if ([
+				"join",
+				"nick",
+				"part",
+				"mode",
+				"quit",
+			].indexOf(name) !== -1) {
+				chat.toggleClass("hide-" + name, !this.checked);
+			}
+			options[name] = this.checked;
+			$.cookie("settings", options);
+		});
+	}).find("input")
+		.first()
+		.trigger("change");
 	
 	setTimeout(function() {
 		// Enable transitions.
@@ -254,7 +295,9 @@ $(function() {
 		var id = messages.closest(".window").find(".form").data("target");
 		var last = messages.find(".row:last-child");
 		if (last.hasClass("highlight")) {
-			pop.play();
+			if ($.cookie("settings").notification) {
+				pop.play();
+			}
 			if (document.hidden) {
 				favicon.badge("!");
 			}
@@ -369,6 +412,10 @@ $(function() {
 	$("#sign-in-form").on("submit", function(e) {
 		e.preventDefault();
 		socket.emit("auth", $("#sign-in-input").val());
+	});
+	
+	$("#notification").on("click", function() {
+		pop.play();
 	});
 	
 	function complete(word) {
