@@ -65,6 +65,9 @@ button {
 	box-shadow: none;
 	opacity: .8;
 }
+.mega-octicon {
+	font-size: 24px;
+}
 #wrap {
 	height: 100%;
 	position: relative;
@@ -125,6 +128,11 @@ button {
 	color: #fff;
 	font: bold 15px Lato;
 	margin-bottom: 6px;
+}
+#sidebar .octicon {
+	float: left;
+	margin-top: 2px;
+	margin-right: 8px;
 }
 #sidebar .lobby {
 	color: #84d1ff !important;
@@ -252,6 +260,9 @@ button {
 #windows input:hover,
 #windows input:focus {
 	border-color: #95a5a6;
+}
+#settings {
+	
 }
 #sign-in {
 	padding: 12.5% 0;
@@ -564,6 +575,6 @@ button {
 @media (max-device-width: 767px) {
 	#chat .header .rt,
 	#chat .header .lt {
-		top: 3px;
+		top: 4px;
 	}
 }

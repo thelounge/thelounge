@@ -9,8 +9,8 @@
 	<title>Shout</title>
 	
 	<link rel="stylesheet" href="/css/normalize.css">
+	<link rel="stylesheet" href="/css/icons/octicons.css">
 	<link rel="stylesheet" href="/css/style.css">
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="<%= typeof theme !== "undefined" ? theme : "" %>">
 	
 	<link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png" />
@@ -24,9 +24,19 @@
 		<aside id="sidebar">
 			<section>
 				<h1>Shout</h1>
+				<a href="#settings">
+					<i class="octicon octicon-clippy"></i>
+					Settings
+				</a>
 				<% if (password) { %>
-				<a id="login" href="#sign-in">Sign in</a>
-				<a id="logout" href="" style="display: none;">Sign out</a>
+				<a id="login" href="#sign-in">
+					<i class="octicon octicon-sign-in"></i>
+					Sign in
+				</a>
+				<a id="logout" href="" style="display: none;">
+					<i class="octicon octicon-sign-out"></i>
+					Sign out
+				</a>
 				<% } %>
 			</section>
 			<div id="networks"></div>
@@ -38,6 +48,11 @@
 		</aside>
 		<div id="main">
 			<div id="windows">
+			<div id="settings" class="window">
+				<div class="wrap">
+					<h1>Settings</h1>
+				</div>
+			</div>
 			<div id="sign-in" class="window">
 				<div class="wrap">
 					<h1>Shout</h1>
@@ -98,10 +113,10 @@
 			</div>
 			<header class="header">
 				<button class="lt">
-					<i class="fa fa-navicon"></i>
+					<i class="mega-octicon octicon-three-bars"></i>
 				</button>
 				<button class="rt">
-					<i class="fa fa-navicon"></i>
+					<i class="mega-octicon octicon-three-bars"></i>
 				</button>
 				{{partial "meta"}}
 			</header>
