@@ -84,7 +84,7 @@ button {
 	height: 100%;
 	position: relative;
 	width: 100%;
-	transition: all .5s;
+	transition: all .4s;
 	-webkit-transform: translateZ(0);
 	        transform: translateZ(0);
 	-webkit-perspective: 1000;
@@ -242,8 +242,49 @@ button {
 	margin: 0 auto;
 	max-width: 480px;
 	overflow: auto;
-	-webkit-overflow-scrolling: touch;
 	padding: 0 20px;
+}
+#header {
+	background: #fff;
+	border-bottom: 1px solid #eee;
+	display: none;
+	left: 0;
+	font-size: 13px;
+	height: 40px;
+	line-height: 40px;
+	position: absolute;
+	right: 0;
+	text-align: center;	
+	top: 0px;
+	z-index: 999;
+}
+#header button {
+	color: #aaa;
+	height: 32px;
+	opacity: .5;
+	top: 4px;
+	transition: opacity .2s;
+	width: 32px;
+}
+#header button:hover {
+	opacity: 1;
+}
+#header h1 {
+	color: #222;
+	display: inline;
+	font-size: 15px;
+}
+#header .channel #rt {
+	display: block;
+}
+#header #lt {
+	left: 4px;
+	position: absolute;
+}
+#header #rt {
+	display: none;
+	position: absolute;
+	right: 4px;
 }
 #windows a {
 	color: inherit;
@@ -304,6 +345,7 @@ button {
 #windows .window {
 	padding: 12% 0;
 	overflow: auto;
+	-webkit-overflow-scrolling: touch;
 }
 #settings section {
 	margin-top: 20px;
@@ -350,45 +392,6 @@ button {
 #chat a:hover {
 	opacity: .6;
 }
-#chat .header {
-	background: #fff;
-	border-bottom: 1px solid #eee;
-	color: #ccc;
-	display: none;
-	font-size: 13px;
-	height: 40px;
-	line-height: 40px;
-	position: relative;
-	text-align: center;
-}
-#chat .header h1 {
-	color: #222;
-	display: inline;
-	font-size: 15px;
-}
-#chat .header button {
-	color: #aaa;
-	height: 32px;
-	font-size: 18px !important;
-	opacity: .5;
-	top: 1px;
-	transition: opacity .2s;
-	width: 32px;
-}
-#chat .header button:hover {
-	opacity: 1;
-}
-#chat .header .lt {
-	left: 4px;
-	position: absolute;
-}
-#chat .header .rt {
-	position: absolute;
-	right: 4px;
-}
-#chat .header .type {
-	text-transform: capitalize;
-}
 #chat .chat {
 	background: #fff;
 	border-bottom: 1px solid #eee;
@@ -421,7 +424,7 @@ button {
 }
 #chat .messages {
 	display: table;
-	margin: 5px 0;
+	margin: 3px 0;
 	width: 100%;
 }
 #chat .row {
@@ -606,7 +609,6 @@ button {
 	}
 	#chat .chat {
 		box-shadow: none;
-		top: 40px;
 	}
 	#chat .chat,
 	#chat .form {
@@ -614,6 +616,7 @@ button {
 	}
 	#chat .sidebar {
 		margin-right: -180px;
+		top: -40px;
 	}
 	#chat .messages {
 		display: block;
@@ -629,6 +632,20 @@ button {
 	}
 	#chat .row .time {
 		display: none;
+	}
+	#header {
+		display: block;
+	}
+	#windows,
+	#chat {
+		bottom: 0;
+		left: 0;
+		position: absolute;
+		right: 0;
+		top: 40px;
+	}
+	#windows .window {
+		padding-top: 6%;
 	}
 }
 

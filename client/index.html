@@ -45,6 +45,11 @@
 			</footer>
 		</aside>
 		<div id="main">
+			<header id="header">
+				<button id="lt" class="mega-octicon octicon-three-bars"></button>
+				<button id="rt" class="mega-octicon octicon-three-bars"></button>
+				<h1></h1>
+			</header>
 			<div id="windows">
 			<div id="settings" class="window">
 				<div class="wrap">
@@ -150,15 +155,6 @@
 					{{partial "messages"}}
 				</div>
 			</div>
-			<header class="header">
-				<button class="lt">
-					<i class="mega-octicon octicon-three-bars"></i>
-				</button>
-				<button class="rt">
-					<i class="mega-octicon octicon-three-bars"></i>
-				</button>
-				{{partial "meta"}}
-			</header>
 			<form class="form" data-target="{{id}}">
 				<input class="submit" tabindex="-1" type="submit" >
 				<input class="input">

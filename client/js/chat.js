@@ -244,8 +244,12 @@ $(function() {
 			.removeClass("highlight")
 			.empty();
 		
+		var title = link.data("name");
+		var header = $("#header");
+		header.find("h1").html(title).end().find("#rt").toggle(title.charAt(0) == "#");
+		
 		$.cookie("current", target);
-		document.title = link.data("name") + " — Shout";
+		document.title = title + " — Shout";
 		
 		if (sidebar.find(".highlight").length == 0) {
 			favicon.badge("");
@@ -402,13 +406,13 @@ $(function() {
 		toggle = "touchstart";
 	}
 	
-	chat.on(toggle, ".lt, .rt", function(e) {
+	$("#rt, #lt").on(toggle, function(e) {
 		var btn = $(this);
-		viewport.toggleClass(btn.attr("class"));
-		if (viewport.hasClass("lt")) {
+		viewport.toggleClass(btn.attr("id").replace("#", ""));
+		if (viewport.is(".lt, .rt")) {
 			e.stopPropagation();
-			viewport.find("#main").one(toggle, function(e) {
-				viewport.removeClass("lt");
+			chat.find(".chat").one(toggle, function(e) {
+				viewport.removeClass("lt rt");
 			});
 		}
 	});
