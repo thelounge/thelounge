@@ -260,7 +260,11 @@ $(function() {
 			.end();
 		
 		if (!touchDevice) {
-			window.find("input").focus();
+			if (window.is("#sign-in")) {
+				window.find("input[name='user']").focus();
+			} else {
+				window.find("input:last").focus();
+			}
 		}
 	});
 	
@@ -411,8 +415,16 @@ $(function() {
 	
 	$("#sign-in-form").on("submit", function(e) {
 		e.preventDefault();
-		socket.emit("auth", $("#sign-in-input").val());
-	});
+		var user = $(this).find(".name").val();
+		var password = $(this).find(".password").val();
+		$.cookie("user", user);
+		$("#logout").removeClass("hidden");
+		socket.emit("auth", {
+			user: user,
+			password: password
+		});
+	}).find(".name")
+		.val($.cookie("user") || "");
 	
 	$("#notification").on("click", function() {
 		pop.play();

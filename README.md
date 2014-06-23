@@ -81,8 +81,6 @@ socket.emit("join", {
     id: 0,
     name: "",
     type: "",
-    network: "",
-    count: 0,
     messages: [],
     users: [],
   }
@@ -113,7 +111,7 @@ socket.emit("networks", {
   networks: [{
     id: 0,
     host: "",
-		name: "",
+    name: "",
     channels: [],
   }]
 });

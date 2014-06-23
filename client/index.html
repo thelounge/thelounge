@@ -28,16 +28,14 @@
 					<i class="octicon octicon-clippy"></i>
 					Settings
 				</a>
-				<% if (password) { %>
 				<a id="login" href="#sign-in" data-name="Sign in">
 					<i class="octicon octicon-sign-in"></i>
 					Sign in
 				</a>
-				<a id="logout" href="">
+				<a id="logout" href="" class="hidden">
 					<i class="octicon octicon-sign-out"></i>
 					Sign out
 				</a>
-				<% } %>
 			</section>
 			<div id="networks"></div>
 			<footer class="footer">
@@ -95,11 +93,12 @@
 			</div>
 			<div id="sign-in" class="window">
 				<div class="wrap">
-					<h1>Shout</h1>
-					<h2>You need to sign in to continue.</h2>
+					<h1>Sign in</h1>
 					<form id="sign-in-form" method="post">
+						<h4>Username:</h4>
+						<input name="user" class="name input" autocomplete="off">
 						<h4>Password:</h4>
-						<input id="sign-in-input" class="input" type="password" autofocus>
+						<input name="password" class="password input" type="password">
 						<button type="submit" class="btn">
 							Sign in
 						</button>

@@ -57,7 +57,7 @@ button {
 	font: bold 12px Lato, sans-serif;
 	letter-spacing: 1px;
 	margin-bottom: 10px;
-	padding: 12px 18px;
+	padding: 10px 18px;
 	text-transform: uppercase;
 	transition: background .2s, border-color .2s, color .2s;
 	word-spacing: 3px;
@@ -138,12 +138,7 @@ button {
 }
 #sidebar .octicon {
 	float: left;
-	margin-top: 1px;
-	margin-right: 8px;
-}
-#sidebar .octicon-plus {
-	margin-left: 1px;
-	margin-right: 11px;
+	margin: 1px 8px 0 1px;
 }
 #sidebar .lobby {
 	color: #84d1ff !important;
@@ -221,6 +216,9 @@ button {
 #sidebar.signed-in #settings-link {
 	display: block;
 }
+#sidebar .hidden {
+	display: none !important;
+}
 #main {
 	bottom: 0;
 	left: 220px;
@@ -244,6 +242,7 @@ button {
 	margin: 0 auto;
 	max-width: 480px;
 	overflow: auto;
+	-webkit-overflow-scrolling: touch;
 	padding: 0 20px;
 }
 #windows a {
@@ -258,7 +257,8 @@ button {
 #windows h2 {
 	color: #2c3e50;
 	font: 300 48px Lato, sans-serif;
-	line-height: 1.5;
+	line-height: 1.4;
+	margin-bottom: 16px;
 }
 #windows h2,
 #windows h3 {
@@ -268,7 +268,6 @@ button {
 #windows h3 {
 	border-bottom: 1px solid #eee;
 	font-weight: 300;
-	
 	margin-bottom: 10px;
 	padding-bottom: 7px;
 }
@@ -276,20 +275,24 @@ button {
 	color: #95a5a6;
 	font-size: 18px;
 	font-weight: normal;
+	margin-top: 0;
 	margin-bottom: 10px;
 }
 #windows form {
 	margin: 0 0;
 	max-width: 250px;
 }
+#windows .btn {
+	margin-top: 8px;
+}
 #windows .input {
 	border: 2px solid #e9ecef;
 	border-radius: 4px;
 	color: #95a5a6;
-	font-size: 24px;
+	font-size: 18px;
 	margin-bottom: 16px;
 	outline: 0;
-	padding: 10px 14px;
+	padding: 8px 10px;
 	transition: border-color .2s;
 	-webkit-appearance: none;
 	width: 100%;
@@ -418,6 +421,7 @@ button {
 }
 #chat .messages {
 	display: table;
+	margin: 5px 0;
 	width: 100%;
 }
 #chat .row {
@@ -428,12 +432,6 @@ button {
 	display: table-cell;
 	padding-top: 2px;
 	padding-bottom: 2px;
-}
-#chat .row:first-child span {
-	padding-top: 5px;
-}
-#chat .row:last-child span {
-	padding-bottom: 5px;
 }
 #chat .row:hover .time {
 	color: #aaa;
