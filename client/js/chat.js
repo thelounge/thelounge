@@ -62,6 +62,7 @@ $(function() {
 		case "auth":
 			$("#networks").add(chat).empty();
 			$("#login").trigger("click");
+			$.cookie("current", null);
 			break;
 		
 		case "debug":
@@ -115,8 +116,8 @@ $(function() {
 				.find(".chat")
 				.sticky();
 			
-			$("#login").hide();
-			$("#logout").show().on("click", function(e) {
+			sidebar.addClass("signed-in");
+			$("#logout").on("click", function(e) {
 				e.stopPropagation();
 			});
 			
@@ -167,19 +168,18 @@ $(function() {
 		}
 	}
 	
-	var settings = $("#settings");
-	var options = {
-		join: true,
-		nick: true,
-		part: true,
-		mode: true,
-		quit: true,
-		notification: true,
-	};
-
 	$.cookie.json = true;
 	$.cookie("settings", $.cookie("settings") || options);
-	$.extend(options, $.cookie("settings")); 
+	
+	var settings = $("#settings");
+	var options = $.extend({
+		join: true,
+		mode: true,
+		nick: true,
+		notification: true,
+		part: true,
+		quit: true,
+	}, $.cookie("settings"));
 	
 	for (var i in options) {
 		if (options[i]) {
@@ -191,6 +191,8 @@ $(function() {
 		settings.find("input").each(function() {
 			var input = $(this);
 			var name = input.attr("name");
+			options[name] = input.prop("checked");
+			$.cookie("settings", options);
 			if ([
 				"join",
 				"nick",
@@ -198,10 +200,8 @@ $(function() {
 				"mode",
 				"quit",
 			].indexOf(name) !== -1) {
-				chat.toggleClass("hide-" + name, !this.checked);
+				chat.toggleClass("hide-" + name, !input.prop("checked"));
 			}
-			options[name] = this.checked;
-			$.cookie("settings", options);
 		});
 	}).find("input")
 		.first()

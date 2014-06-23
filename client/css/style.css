@@ -49,8 +49,10 @@ button {
 }
 .btn {
 	border: 2px solid #95a5a6;
+	border: 2px solid #84d1ff;
 	border-radius: 5px;
 	color: #95a5a6;
+	color: #84d1ff;
 	display: inline-block;
 	font: bold 12px Lato, sans-serif;
 	letter-spacing: 1px;
@@ -62,6 +64,7 @@ button {
 }
 .btn:hover {
 	background: #95a5a6;
+	background: #84d1ff;
 	color: #fff;
 }
 .btn:active {
@@ -135,8 +138,12 @@ button {
 }
 #sidebar .octicon {
 	float: left;
-	margin-top: 2px;
+	margin-top: 1px;
 	margin-right: 8px;
+}
+#sidebar .octicon-plus {
+	margin-left: 1px;
+	margin-right: 11px;
 }
 #sidebar .lobby {
 	color: #84d1ff !important;
@@ -203,6 +210,17 @@ button {
 	text-transform: uppercase;
 	word-spacing: 3px;
 }
+#sidebar #logout,
+#sidebar #settings-link {
+	display: none;
+}
+#sidebar.signed-in #login {
+	display: none;
+}
+#sidebar.signed-in #logout,
+#sidebar.signed-in #settings-link {
+	display: block;
+}
 #main {
 	bottom: 0;
 	left: 220px;
@@ -242,39 +260,47 @@ button {
 	font: 300 48px Lato, sans-serif;
 	line-height: 1.5;
 }
-#windows h2 {
+#windows h2,
+#windows h3 {
 	color: #7f8c8d;
 	font-size: 26px;
 }
 #windows h3 {
+	border-bottom: 1px solid #eee;
+	font-weight: 300;
+	
+	margin-bottom: 10px;
+	padding-bottom: 7px;
+}
+#windows h4 {
 	color: #95a5a6;
 	font-size: 18px;
 	font-weight: normal;
+	margin-bottom: 10px;
 }
-#windows input[type=text] {
+#windows form {
+	margin: 0 0;
+	max-width: 250px;
+}
+#windows .input {
 	border: 2px solid #e9ecef;
 	border-radius: 4px;
+	color: #95a5a6;
 	font-size: 24px;
+	margin-bottom: 16px;
 	outline: 0;
 	padding: 10px 14px;
 	transition: border-color .2s;
 	-webkit-appearance: none;
 	width: 100%;
 }
-#windows input[type=text]:hover,
-#windows input[type=text]:focus {
-	border-color: #95a5a6;
+#windows .input:hover,
+#windows .input:focus {
+	border-color: #bdc3c7;
 }
 #windows .window {
 	padding: 12% 0;
 	overflow: auto;
-}
-#settings {
-	
-}
-#settings h2 {
-	border-bottom: 1px solid #eee;
-	margin-bottom: 10px;
 }
 #settings section {
 	margin-top: 20px;
@@ -309,15 +335,6 @@ button {
 }
 #settings #notification {
 	color: #7f8c8d;
-}
-#sign-in form {
-	margin: 0 0;
-	max-width: 250px;
-}
-#sign-in-input {
-	color: #95a5a6;
-	margin-bottom: 20px;
-	width: 100%;
 }
 #chat {
 	font: 13px "Consolas", monospace;
