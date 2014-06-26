@@ -1,6 +1,13 @@
 module.exports = function(grunt) {
-	var files = ["*.js", "lib/*"];
+	var files = [
+		"./lib/**/*.js",
+		"./client/js/shout.js"
+	];
 	grunt.initConfig({
+		watch: {
+			files: files,
+			tasks: ["jshint"]
+		},
 		jshint: {
 			files: files
 		},
@@ -10,18 +17,14 @@ module.exports = function(grunt) {
 					"client/js/components.min.js": ["client/components/*.js"]
 				}
 			}
-		},
-		watch: {
-			files: files,
-			tasks: ["default"]
 		}
 	});
-	["jshint", "uglify", "watch"]
+	["watch", "jshint", "uglify"]
 		.forEach(function(task) {
 			grunt.loadNpmTasks("grunt-contrib-" + task);
 		});
 	grunt.registerTask(
 		"default",
-		["jshint", "uglify"]
+		["uglify"]
 	);
 };
