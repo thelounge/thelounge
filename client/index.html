@@ -8,216 +8,86 @@
 	
 	<title>Shout</title>
 	
-	<link rel="stylesheet" href="/css/normalize.css">
-	<link rel="stylesheet" href="/css/icons/octicons.css">
-	<link rel="stylesheet" href="/css/style.css">
-	<link rel="stylesheet" href="<%= typeof theme !== "undefined" ? theme : "" %>">
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/style.css">
 	
 	<link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png" />
 	<link rel="shortcut icon" href="/img/favicon.png">
 	
 	</head>
-	<body class="preload">
+	<body>
 	
-	<div id="wrap">
-	<div id="viewport">
-		<aside id="sidebar">
-			<section>
-				<h1>Shout</h1>
-				<a id="settings-link" href="#settings" data-name="Settings">
-					<i class="octicon octicon-clippy"></i>
-					Settings
-				</a>
-				<a id="login" href="#sign-in" data-name="Sign in">
-					<i class="octicon octicon-sign-in"></i>
-					Sign in
-				</a>
-				<a id="logout" href="" class="hidden">
-					<i class="octicon octicon-sign-out"></i>
-					Sign out
-				</a>
-			</section>
-			<div id="networks"></div>
-			<footer class="footer">
-				<small>
-					Shout <%= version %>
-				</small>
-			</footer>
-		</aside>
-		<div id="main">
-			<header id="header">
-				<button id="lt" class="mega-octicon octicon-three-bars"></button>
-				<button id="rt" class="mega-octicon octicon-three-bars"></button>
-				<h1></h1>
-			</header>
-			<div id="windows">
-			<div id="settings" class="window">
-				<div class="wrap">
-					<h1>Settings</h1>
-					<section>
-						<h3>Messages</h3>
-						<div class="options">
-							<label class="opt">
-								<input type="checkbox" name="join">
-								Show joins
-							</label>
-							<label class="opt">
-								<input type="checkbox" name="nick">
-								Show nick changes
-							</label>
-							<label class="opt">
-								<input type="checkbox" name="part">
-								Show parts
-							</label>
-							<label class="opt">
-								<input type="checkbox" name="mode">
-								Show modes
-							</label>
-							<label class="opt">
-								<input type="checkbox" name="quit">
-								Show quits
-							</label>
-						</div>
-					</section>
-					<section>
-						<h3>Sound</h3>
-						<div class="options">
-							<label class="opt wide">
-								<input type="checkbox" name="notification">
-								Enable notification sound
-							</label>
-							<label class="opt wide">
-								<button id="notification">
-									<i class="octicon octicon-unmute"></i>
-									Play sound
-								</button>
-							</label>
-						</div>
-					</section>
-				</div>
-			</div>
-			<div id="sign-in" class="window">
-				<div class="wrap">
-					<h1>Sign in</h1>
-					<form id="sign-in-form" method="post">
-						<h4>Username:</h4>
-						<input name="user" class="name input" autocomplete="off">
-						<h4>Password:</h4>
-						<input name="password" class="password input" type="password">
-						<button type="submit" class="btn">
-							Sign in
-						</button>
-					</form>
-				</div>
-			</div>
-			</div>
-			<div id="chat">
-			</div>
-		</div>
-	</div>
-	</div>
-	
-	<div id="templates">
-		<script type="text/html" class="networks">
-		{{#each networks}}
-		<section id="network-{{id}}" class="network">
-			{{partial "channels"}}
-		</section>
-		{{/each}}
-		</script>
-		
-		<script type="text/html" class="channels">
-		{{#each channels}}
-		<a href="#window-{{id}}" id="channel-{{id}}" class="{{type}}" data-name="{{name}}">
-			<span class="badge"></span>
-			<span class="close"></span>
-			{{name}}
-		</a>
-		{{/each}}
-		</script>
-		
-		<script type="text/html" class="windows">
-		{{#each windows}}
-		<div id="window-{{id}}" class="window {{type}}" data-id="{{id}}">
-			<div class="sidebar">
-				{{partial "meta"}}
-				<ul class="users">
-					{{partial "users"}}
-				</ul>
-			</div>
-			<div class="chat">
-				{{#equal 100 messages.length}}
-				<button class="show-more" data-id="{{id}}">
-					Show more
+	<aside id="sidebar">
+		<div id="channels">
+			<section class="network">
+				<button class="chan">
+					Network
 				</button>
-				{{/equal}}
-				<div class="messages">
-					{{partial "messages"}}
+				<button class="chan active">
+					#channel
+				</button>
+				<button class="chan">
+					<span class="badge">16</span>
+					#chan
+				</button>
+			</section>
+		</div>
+		<footer id="footer">
+			<button id="connect" class="active"></button>
+			<button id="settings"></button>
+		</footer>
+	</aside>
+	<div id="main">
+		<header id="header">
+			<button id="lt"></button>
+			<button id="rt"></button>
+			<h1>#channel</h1>
+		</header> 
+		<div id="windows">
+			<div id="chat">
+				<div class="chat">
+					<div id="messages">
+					<div class="msg">
+						<span class="time">00:00</span>
+						<span class="from">
+							<button>foo</button>
+						</span>
+						<span class="text">
+							<em class="type">join</em>
+						</span>
+					</div>
+					<div class="msg">
+						<span class="time">00:00</span>
+						<span class="from">
+							<button>foo</button>
+						</span>
+						<span class="text">
+							<em class="type"></em>
+							Hello, world!
+						</span>
+					</div>
+					</div>
 				</div>
+				<aside class="sidebar">
+					<div id="meta">
+						<h1>#channel</h1>
+						<div class="count">2 users</div>
+					</div>
+					<div id="users">
+						<button>foo</button>
+						<button>bar</button>
+					</div>
+				</aside>
+				<form action="">
+					<input id="submit" tabindex="-1" type="submit">
+					<input id="input">
+				</form>
 			</div>
-			<form class="form" data-target="{{id}}">
-				<input class="submit" tabindex="-1" type="submit" >
-				<input class="input">
-			</form>
 		</div>
-		{{/each}}
-		</script>
-		
-		<script type="text/html" class="meta">
-		<div class="meta">
-			<h1>
-				{{name}}
-			</h1>
-			{{#if users}}
-			<span class="count">
-				{{users.length}}
-				users
-			</span>
-			{{else}}
-			<span class="type">
-				{{type}}
-			</span>
-			{{/if}}
-		</div>
-		</script>
-		
-		<script type="text/html" class="users">
-		{{#each users}}
-		<li>
-			<a href="#{{name}}" class="user">
-				{{mode}}{{name}}
-			</a>
-		</li>
-		{{/each}}
-		</script>
-		
-		<script type="text/html" class="messages">
-		{{#each messages}}
-		<div class="row {{type}}">
-			<span class="time">
-				{{time}}
-			</span>
-			<span class="from">
-				<a href="#{{from}}" class="user">{{from}}</a>
-			</span>
-			<span class="text">
-				{{#contains type "toggle"}}
-					<button class="toggle" data-type="{{type}}">
-						<i class="tri"></i>
-					</button>
-				{{/contains}}
-				<em class="type">
-					{{type}}
-				</em>
-				{{{uri text}}}
-			</span>
-		</div>
-		{{/each}}
-		</script>
 	</div>
 	
-	<script src="/js/components.min.js"></script>
-	<script src="/js/chat.js"></script>
+	<script src="js/components.min.js"></script>
+	<script src="js/shout.js"></script>
 	
 	</body>
 </html>

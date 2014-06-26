@@ -1,20 +1,27 @@
 module.exports = function(grunt) {
-	// Project configuration.
+	var files = ["*.js", "lib/*"];
 	grunt.initConfig({
-		pkg: grunt.file.readJSON("package.json"),
+		jshint: {
+			files: files
+		},
 		uglify: {
 			js: {
 				files: {
 					"client/js/components.min.js": ["client/components/*.js"]
 				}
 			}
+		},
+		watch: {
+			files: files,
+			tasks: ["default"]
 		}
 	});
-
-	// Load and run uglify.
-	grunt.loadNpmTasks("grunt-contrib-uglify");
+	["jshint", "uglify", "watch"]
+		.forEach(function(task) {
+			grunt.loadNpmTasks("grunt-contrib-" + task);
+		});
 	grunt.registerTask(
 		"default",
-		["uglify"]
+		["jshint", "uglify"]
 	);
 };
