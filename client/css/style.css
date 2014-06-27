@@ -36,10 +36,11 @@ button {
 	padding: 0;
 }
 #sidebar {
-	bottom: 0;
 	background: #262c36;
+	bottom: 0;
 	left: 0;
-	padding-bottom: 60px;
+	overflow: auto;
+	overflow-x: hidden;
 	position: absolute;
 	top: 0;
 	width: 220px;
@@ -61,9 +62,8 @@ button {
 	color: #fff;
 }
 #channels {
-	max-height: 100%;
-	overflow: auto;
-	padding: 30px 40px;
+	min-height: 100%;
+	padding: 30px 40px 80px;
 }
 #channels .network + .network {
 	margin-top: 30px;
@@ -94,12 +94,11 @@ button {
 	transition: all .1s;
 }
 #footer {
-	bottom: 0;
 	height: 80px;
 	line-height: 80px;
-	position: absolute;
+	margin-top: -80px;
 	text-align: center;
-	width: 100%;
+	width: 220px;
 }
 #footer button {
 	font: 18px Octicons;

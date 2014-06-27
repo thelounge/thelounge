@@ -86,6 +86,57 @@
 		</div>
 	</div>
 	
+	<div id="templates">
+		<script type="text/html" class="networks">
+		{{#each networks}}
+		<section class="network">
+			{{partial "channels"}}
+		</section>
+		{{/each}}
+		</script>
+		
+		<script type="text/html" class="channels">
+		{{#each channels}}
+		<button class="chan">
+			<span class="badge"></span>
+			Network
+		</button>
+		{{/each}}
+		</script>
+		
+		<script type="text/html" class="users">
+		<div id="meta">
+			<h1>{{name}}</h1>
+			<div class="count">
+				{{users.length}}
+				users
+			</div>
+		</div>
+		<div id="users">
+			{{#each users}}
+			<button>{{mode}}{{name}}</button>
+			{{/each}}
+		</div>
+		</script>
+		
+		<script type="text/html" class="messages">
+		{{#each messages}}
+		<div class="msg">
+			<span class="time">
+				{{time}}
+			</span>
+			<span class="from">
+				<button>{{from}}</button>
+			</span>
+			<span class="text">
+				<em class="type">{{type}}</em>
+				{{{uri text}}}
+			</span>
+		</div>
+		{{/each}}
+		</script>
+	</div>
+	
 	<script src="js/components.min.js"></script>
 	<script src="js/shout.js"></script>
 	
