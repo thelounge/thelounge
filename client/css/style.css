@@ -74,7 +74,7 @@ button {
 	padding: 6px 10px 8px;
 	position: relative;
 	text-align: left;
-	transition: background .1s, color 5s;
+	transition: all .2s;
 	width: 160px;
 }
 #channels .chan:first-child {
