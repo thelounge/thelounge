@@ -16,63 +16,61 @@ function Shout() {
 		"quit",
 		"users"
 	].forEach(function(e) {
-		socket.on(e, function() {
-			client[e].call(client, socket);
-		});
+		client[e].call(client, socket);
 	});
 }
 
 Shout.prototype.auth = function(socket) {
-	socket.on("auth", function(json) {
-		console.log(json);
+	socket.on("auth", function(data) {
+		console.log(data);
 	});
 };
 
 Shout.prototype.init = function(socket) {
-	socket.on("init", function(json) {
-		console.log(json);
+	socket.on("init", function(data) {
+		console.log(data);
 	});
 };
 
 Shout.prototype.join = function(socket) {
-	socket.on("join", function(json) {
-		console.log(json);
+	socket.on("join", function(data) {
+		console.log(data);
 	});
 };
 
 Shout.prototype.msg = function(socket) {
-	socket.on("msg", function(json) {
-		console.log(json);
+	socket.on("msg", function(data) {
+		console.log(data);
 	});
 };
 
 Shout.prototype.network = function(socket) {
-	socket.on("network", function(json) {
-		console.log(json);
+	socket.on("network", function(data) {
+		console.log(data);
 	});
 };
 
 Shout.prototype.nick = function(socket) {
-	socket.on("nick", function(json) {
-		console.log(json);
+	socket.on("nick", function(data) {
+		console.log(data);
 	});
 };
 
 Shout.prototype.part = function(socket) {
-	socket.on("part", function(json) {
-		console.log(json);
+	socket.on("part", function(data) {
+		console.log(data);
 	});
 };
 
 Shout.prototype.quit = function(socket) {
-	socket.on("quit", function(json) {
-		console.log(json);
+	socket.on("quit", function(data) {
+		console.log(data);
 	});
 };
 
 Shout.prototype.users = function(socket) {
-	socket.on("quit", function(json) {
-		console.log(json);
+	socket.on("users", function(data) {
+		console.log(data);
 	});
 };
 
