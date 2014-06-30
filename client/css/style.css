@@ -61,14 +61,14 @@ button {
 	background: #323841;
 	color: #fff;
 }
-#channels {
+#networks {
 	min-height: 100%;
 	padding: 30px 40px 80px;
 }
-#channels .network + .network {
+#networks .network + .network {
 	margin-top: 30px;
 }
-#channels .chan {
+#networks .chan {
 	display: block;
 	margin: 1px -10px;
 	padding: 6px 10px 8px;
@@ -77,12 +77,12 @@ button {
 	transition: all .2s;
 	width: 160px;
 }
-#channels .chan:first-child {
+#networks .chan:first-child {
 	color: #84d1ff;
 	font-size: 15px;
 	font-weight: bold;
 }
-#channels .badge {
+#networks .badge {
 	background: rgba(255, 255, 255, .06);
 	border-radius: 3px;
 	color: #afb6c0;
@@ -92,6 +92,9 @@ button {
 	position: absolute;
 	right: 10px;
 	transition: all .1s;
+}
+#networks .badge:empty {
+	display: none;
 }
 #footer {
 	height: 80px;
@@ -163,17 +166,10 @@ button {
 	position: relative;
 	width: 100%;
 }
-#chat form {
-	bottom: 0;
-	height: 40px;
-	left: 0;
-	position: absolute;
-	right: 180px;
-}
 #chat button:hover {
 	opacity: .6;
 }
-#chat .chat {
+#chat .window {
 	bottom: 40px;
 	left: 0;
 	position: absolute;
@@ -220,10 +216,13 @@ button {
 }
 #messages .from {
 	background: #f9f9f9;
-	color: #33b0f7;
+	color: #ddd;
 	padding-right: 10px;
 	text-align: right;
 	width: 134px;
+}
+#messages .from button {
+	color: #33b0f7;
 }
 #messages .text {
 	padding-left: 10px;
@@ -231,6 +230,16 @@ button {
 }
 #messages .type {
 	color: #ccc;
+	display: none;
+}
+#messages .join .type,
+#messages .part .type,
+#messages .mode .type,
+#messages .nick .type,
+#messages .kick .type,
+#messages .quit .type,
+#messages .quit .type {
+	display: inline;
 }
 #meta {
 	border-bottom: 1px solid #e9ecef;
@@ -244,6 +253,9 @@ button {
 #meta .count {
 	color: #ccc;
 }
+#meta .type {
+	text-transform: capitalize;
+}
 #users {
 	bottom: 0;
 	overflow: auto;
@@ -256,7 +268,14 @@ button {
 	display: block;
 	line-height: 1.6em;
 }
-#input {
+#form {
+	bottom: 0;
+	height: 40px;
+	left: 0;
+	position: absolute;
+	right: 180px;
+}
+#form input {
 	border: 0;
 	border-top: 1px solid #e9ecef;
 	height: 100%;

@@ -18,20 +18,7 @@
 	<body>
 	
 	<aside id="sidebar">
-		<div id="channels">
-			<section class="network">
-				<button class="chan">
-					Network
-				</button>
-				<button class="chan active">
-					#channel
-				</button>
-				<button class="chan">
-					<span class="badge">16</span>
-					#chan
-				</button>
-			</section>
-		</div>
+		<div id="networks"></div>
 		<footer id="footer">
 			<button id="connect" class="active"></button>
 			<button id="settings"></button>
@@ -44,52 +31,18 @@
 			<h1>#channel</h1>
 		</header> 
 		<div id="windows">
-			<div id="chat">
-				<div class="chat">
-					<div id="messages">
-					<div class="msg">
-						<span class="time">00:00</span>
-						<span class="from">
-							<button>foo</button>
-						</span>
-						<span class="text">
-							<em class="type">join</em>
-						</span>
-					</div>
-					<div class="msg">
-						<span class="time">00:00</span>
-						<span class="from">
-							<button>foo</button>
-						</span>
-						<span class="text">
-							<em class="type"></em>
-							Hello, world!
-						</span>
-					</div>
-					</div>
-				</div>
-				<aside class="sidebar">
-					<div id="meta">
-						<h1>#channel</h1>
-						<div class="count">2 users</div>
-					</div>
-					<div id="users">
-						<button>foo</button>
-						<button>bar</button>
-					</div>
-				</aside>
-				<form action="">
-					<input id="submit" tabindex="-1" type="submit">
-					<input id="input">
-				</form>
-			</div>
+			<div id="chat"></div>
+			<form id="form" action="">
+				<input id="submit" tabindex="-1" type="submit">
+				<input id="input">
+			</form>
 		</div>
 	</div>
 	
 	<div id="templates">
 		<script type="text/html" class="networks">
 		{{#each networks}}
-		<section class="network">
+		<section class="network" data-id="{{id}}">
 			{{partial "channels"}}
 		</section>
 		{{/each}}
@@ -97,19 +50,35 @@
 		
 		<script type="text/html" class="channels">
 		{{#each channels}}
-		<button class="chan">
+		<button class="chan" data-id="{{id}}" data-type="{{type}}">
 			<span class="badge"></span>
-			Network
+			{{name}}
 		</button>
 		{{/each}}
+		</script>
+		
+		<script type="text/html" class="chat">
+			<div class="window">
+				<div id="messages">
+					{{partial "messages"}}
+				</div>
+			</div>
+			<aside class="sidebar">
+				{{partial "users"}}
+			</aside>
 		</script>
 		
 		<script type="text/html" class="users">
 		<div id="meta">
 			<h1>{{name}}</h1>
 			<div class="count">
-				{{users.length}}
-				users
+			{{#if users.length}}
+			{{users.length}} users
+			{{else}}
+			<span class="type">
+				{{type}}
+			</span>
+			{{/if}}
 			</div>
 		</div>
 		<div id="users">
@@ -121,12 +90,16 @@
 		
 		<script type="text/html" class="messages">
 		{{#each messages}}
-		<div class="msg">
+		<div class="msg {{type}}">
 			<span class="time">
 				{{time}}
 			</span>
 			<span class="from">
+				{{#if from}}
 				<button>{{from}}</button>
+				{{else}}
+				//
+				{{/if}}
 			</span>
 			<span class="text">
 				<em class="type">{{type}}</em>
@@ -138,7 +111,7 @@
 	</div>
 	
 	<script src="js/components.min.js"></script>
-	<script src="js/shout.js"></script>
+	<script src="js/chat.js"></script>
 	
 	</body>
 </html>

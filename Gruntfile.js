@@ -1,4 +1,5 @@
 module.exports = function(grunt) {
+	var components = "";
 	var files = [
 		"./lib/**/*.js",
 		"./client/js/shout.js"
@@ -14,7 +15,10 @@ module.exports = function(grunt) {
 		uglify: {
 			js: {
 				files: {
-					"client/js/components.min.js": ["client/components/*.js"]
+					"client/js/components.min.js": [
+						"client/components/*.js",
+						"client/components/jquery/*.js"
+					]
 				}
 			}
 		}
