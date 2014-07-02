@@ -216,6 +216,7 @@ button {
 }
 #messages .from {
 	background: #f9f9f9;
+	border-right: 1px solid #f4f4f4;
 	color: #ddd;
 	padding-right: 10px;
 	text-align: right;

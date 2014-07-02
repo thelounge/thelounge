@@ -120,17 +120,6 @@ $(function() {
 		}
 	});
 	
-	networks.on("click", ".chan", function() {
-		var id = $(this).data("id");
-		var chan = find(id);
-		if (typeof chan !== "undefined") {
-			activeChannel = chan;
-			chat.html(
-				render("chat", chan)
-			);
-		}
-	});
-	
 	var input = $("#input").tab(complete, {
 		hint: false
 	});
@@ -140,8 +129,21 @@ $(function() {
 		var value = input.val();
 		input.val("");
 		socket.emit("input", {
-			// ..
+			target: chat.data("target"),
+			text: value
 		});
+	});
+	
+	networks.on("click", ".chan", function() {
+		var id = $(this).data("id");
+		var chan = find(id);
+		chat.data("target", id);
+		if (typeof chan !== "undefined") {
+			activeChannel = chan;
+			chat.html(
+				render("chat", chan)
+			);
+		}
 	});
 	
 	function isActive(chan) {
