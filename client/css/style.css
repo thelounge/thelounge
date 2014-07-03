@@ -239,7 +239,9 @@ button {
 #messages .nick .type,
 #messages .kick .type,
 #messages .quit .type,
-#messages .quit .type {
+#messages .quit .type,
+#messages .notice .type,
+#messages .topic .type {
 	display: inline;
 }
 #meta {

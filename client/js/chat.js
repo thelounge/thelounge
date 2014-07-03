@@ -102,11 +102,12 @@ $(function() {
 	});
 	
 	socket.on("part", function(data) {
-		console.log(data);
+		networks.find(".chan[data-id='" + data.chan + "']").remove();
 	});
 	
 	socket.on("quit", function(data) {
 		console.log(data);
+		networks.find(".network[data-id='" + data.network + "']").remove();
 	});
 	
 	socket.on("users", function(data) {
