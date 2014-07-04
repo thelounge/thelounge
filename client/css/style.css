@@ -11,6 +11,7 @@ body {
 	height: 100%;
 }
 body {
+	background: #fff;
 	color: #222;
 	font: 16px Lato, sans-serif;
 	margin: 0;
@@ -245,7 +246,7 @@ button {
 	display: inline;
 }
 #meta {
-	border-bottom: 1px solid #e9ecef;
+	
 	height: 80px;
 	padding: 25px 0 0 20px;
 }
@@ -253,18 +254,46 @@ button {
 	color: #222;
 	font-size: 15px;
 }
-#meta .count {
-	color: #ccc;
-}
 #meta .type {
+	color: #ccc;
 	text-transform: capitalize;
+}
+#count {
+	background: #f9f9f9;
+	border-top: 1px dashed #e9ecef;
+	border-bottom: 1px solid #e9ecef;
+	height: 40px;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 80px;
+}
+#count:before {
+	color: #eee;
+	font: 16px Octicons;
+	content: "\f02e";
+	position: absolute;
+	right: 18px;
+	line-height: 40px;
+	transition: color .2s;
+}
+#search {
+	color: #222;
+	border: 0;
+	background: none;
+	font: inherit;
+	outline: 0;
+	padding: 12px 20px;
+	position: relative;
+	width: 100%;
+	z-index: 2;
 }
 #users {
 	bottom: 0;
 	overflow: auto;
 	padding: 15px 20px;
 	position: absolute;
-	top: 80px;
+	top: 120px;
 	width: 100%;
 }
 #users button {

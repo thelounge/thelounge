@@ -2,7 +2,7 @@ module.exports = function(grunt) {
 	var components = "";
 	var files = [
 		"./lib/**/*.js",
-		"./client/js/shout.js"
+		"./client/js/chat.js"
 	];
 	grunt.initConfig({
 		watch: {

@@ -71,16 +71,15 @@
 		<script type="text/html" class="users">
 		<div id="meta">
 			<h1>{{name}}</h1>
-			<div class="count">
-			{{#if users.length}}
-			{{users.length}} users
-			{{else}}
 			<span class="type">
 				{{type}}
 			</span>
-			{{/if}}
-			</div>
 		</div>
+		{{#if users.length}}
+		<div id="count">
+			<input id="search" placeholder="{{users.length}} users">
+		</div>
+		{{/if}}
 		<div id="users">
 			{{#each users}}
 			<button>{{mode}}{{name}}</button>

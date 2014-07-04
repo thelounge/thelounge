@@ -49,7 +49,7 @@ $(function() {
 	});
 	
 	socket.on("init", function(data) {
-		networks.empty()
+		networks.empty();
 		channels = $.map(data.networks, function(n) {
 			return n.channels;
 		});
@@ -102,12 +102,21 @@ $(function() {
 	});
 	
 	socket.on("part", function(data) {
-		networks.find(".chan[data-id='" + data.chan + "']").remove();
+		networks.find(".chan[data-id='" + data.chan + "']")
+			.remove()
+			.end()
+			.find(".chan")
+			.eq(0)
+			.trigger("click");
 	});
 	
 	socket.on("quit", function(data) {
-		console.log(data);
-		networks.find(".network[data-id='" + data.network + "']").remove();
+		networks.find(".network[data-id='" + data.network + "']")
+			.remove()
+			.end()
+			.find(".chan")
+			.eq(0)
+			.trigger("click");
 	});
 	
 	socket.on("users", function(data) {
@@ -136,15 +145,33 @@ $(function() {
 	});
 	
 	networks.on("click", ".chan", function() {
-		var id = $(this).data("id");
-		var chan = find(id);
+		var self = $(this);
+		var id = self.data("id");
+		
+		networks.find(".active").removeClass("active");
+		self.addClass("active");
+		
 		chat.data("target", id);
+		
+		var chan = find(id);
 		if (typeof chan !== "undefined") {
 			activeChannel = chan;
 			chat.html(
 				render("chat", chan)
 			);
 		}
+	});
+	
+	chat.on("input", "#search", function() {
+		var val = $(this).val();
+		$("#users").find("button").each(function() {
+			var btn = $(this);
+			if (btn.text().toLowerCase().indexOf(val) === 0) {
+				btn.show();
+			} else {
+				btn.hide();
+			}
+		});
 	});
 	
 	function isActive(chan) {
