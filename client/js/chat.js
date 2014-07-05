@@ -49,6 +49,7 @@ $(function() {
 	});
 	
 	socket.on("init", function(data) {
+		console.log("INIT");
 		networks.empty();
 		channels = $.map(data.networks, function(n) {
 			return n.channels;
@@ -73,6 +74,9 @@ $(function() {
 				channels: [data.chan]
 			})
 		);
+		network.find(".chan")
+			.last()
+			.trigger("click");
 	});
 	
 	socket.on("msg", function(data) {
@@ -156,9 +160,10 @@ $(function() {
 		var chan = find(id);
 		if (typeof chan !== "undefined") {
 			activeChannel = chan;
-			chat.html(
-				render("chat", chan)
-			);
+			chat.html(render("chat", chan));
+			chat.find(".window")
+				.sticky()
+				.scrollBottom();
 		}
 	});
 	

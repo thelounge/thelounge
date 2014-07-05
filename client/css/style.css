@@ -174,7 +174,6 @@ button {
 	bottom: 40px;
 	left: 0;
 	position: absolute;
-	overflow: auto;
 	right: 180px;
 	top: 0;
 }
@@ -229,6 +228,9 @@ button {
 #messages .text {
 	padding-left: 10px;
 	padding-right: 6px;
+}
+#messages .text a {
+	word-break: break-all;
 }
 #messages .type {
 	color: #ccc;
@@ -310,9 +312,10 @@ button {
 #form input {
 	border: 0;
 	border-top: 1px solid #e9ecef;
+	font: 13px Consolas, monospace;
 	height: 100%;
 	outline: none;
-	padding: 0 10px;
+	padding: 0 12px;
 	width: 100%;
 }
 #submit {
