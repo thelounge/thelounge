@@ -134,9 +134,9 @@ $(function() {
 		}
 	});
 	
-	var input = $("#input").tab(complete, {
-		hint: false
-	});
+	var input = $("#input")
+		.history()
+		.tab(complete, {hint: false});
 	
 	var form = $("#form").on("submit", function(e) {
 		e.preventDefault();

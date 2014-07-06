@@ -6,7 +6,7 @@
 (function($) {
 	$.fn.sticky = function() {
 		if (this.size() > 1) {
-			return self.each(function() {
+			return this.each(function() {
 				$(this).sticky(options);
 			});
 		}
