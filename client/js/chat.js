@@ -28,7 +28,6 @@ $(function() {
 		"/slap",
 		"/topic",
 		"/voice",
-		"/whoami",
 		"/whois"
 	];
 	
@@ -49,7 +48,6 @@ $(function() {
 	});
 	
 	socket.on("init", function(data) {
-		console.log("INIT");
 		networks.empty();
 		channels = $.map(data.networks, function(n) {
 			return n.channels;
@@ -94,6 +92,8 @@ $(function() {
 	});
 	
 	socket.on("network", function(data) {
+		var lobby = data.network.channels[0];
+		channels.push(lobby);
 		networks.append(
 			render("networks", {
 				networks: [data.network]
@@ -151,11 +151,13 @@ $(function() {
 	networks.on("click", ".chan", function() {
 		var self = $(this);
 		var id = self.data("id");
-		
-		networks.find(".active").removeClass("active");
-		self.addClass("active");
+		if (self.hasClass("active")) {
+			return;
+		}
 		
 		chat.data("target", id);
+		networks.find(".active").removeClass("active");
+		self.addClass("active");
 		
 		var chan = find(id);
 		if (typeof chan !== "undefined") {

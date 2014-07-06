@@ -1,3 +1,3 @@
 process.chdir(__dirname);
-var shout = require("./lib/shout");
+var shout = require("./lib/server");
 shout();

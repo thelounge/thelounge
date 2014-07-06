@@ -42,6 +42,7 @@ button {
 	left: 0;
 	overflow: auto;
 	overflow-x: hidden;
+	-webkit-overflow-scrolling: touch;
 	position: absolute;
 	top: 0;
 	width: 220px;
@@ -173,6 +174,9 @@ button {
 #chat .window {
 	bottom: 40px;
 	left: 0;
+	overflow: auto;
+	overflow-x: hidden;
+	-webkit-overflow-scrolling: touch;
 	position: absolute;
 	right: 180px;
 	top: 0;
@@ -293,6 +297,7 @@ button {
 #users {
 	bottom: 0;
 	overflow: auto;
+	-webkit-overflow-scrolling: touch;
 	padding: 15px 20px;
 	position: absolute;
 	top: 120px;
