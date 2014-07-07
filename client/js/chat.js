@@ -31,11 +31,12 @@ $(function() {
 		"/whois"
 	];
 	
+	var sidebar = $("#sidebar");
 	var chat = $("#chat");
-	var networks = $("#networks");
 	
+	var networks = $("#networks");
 	var channels = [];
-	var activeChannel = null;
+	var active = null;
 	
 	var tpl = [];
 	function render(name, data) {
@@ -56,16 +57,19 @@ $(function() {
 			render("networks", {
 				networks: data.networks
 			})
-		);
-		networks.find(".chan")
-			.eq(0)
-			.trigger("click");
+		).fadeIn();
+		var active = $($.cookie("active"));
+		if (active.length === 0) {
+			active = networks.find(".chan").eq(0);
+		}
+		active.trigger("click");
 	});
 	
 	socket.on("join", function(data) {
 		channels.push(data.chan);
+		var id = data.network;
 		var network = networks
-			.find(".network[data-id='" + data.network + "']")
+			.find("#network-" + id)
 			.eq(0);
 		network.append(
 			render("channels", {
@@ -83,9 +87,7 @@ $(function() {
 			chan.messages.push(data.msg);
 			if (isActive(chan)) {
 				chat.find("#messages").append(
-					render("messages", {
-						messages: [data.msg]
-					})
+					render("messages", {messages: [data.msg]})
 				);
 			}
 		}
@@ -99,6 +101,9 @@ $(function() {
 				networks: [data.network]
 			})
 		);
+		networks.find(".chan")
+			.last()
+			.trigger("click");
 	});
 	
 	socket.on("nick", function(data) {
@@ -106,7 +111,8 @@ $(function() {
 	});
 	
 	socket.on("part", function(data) {
-		networks.find(".chan[data-id='" + data.chan + "']")
+		var id = data.chan;
+		networks.find("#chan-" + id)
 			.remove()
 			.end()
 			.find(".chan")
@@ -115,7 +121,8 @@ $(function() {
 	});
 	
 	socket.on("quit", function(data) {
-		networks.find(".network[data-id='" + data.network + "']")
+		var id = data.network;
+		networks.find("#network-" + id)
 			.remove()
 			.end()
 			.find(".chan")
@@ -128,8 +135,7 @@ $(function() {
 		if (typeof chan !== "undefined") {
 			chan.users = data.users;
 			if (isActive(chan)) {
-				chat.find(".sidebar")
-					.html(render("users", chan));
+				chat.find(".sidebar").html(render("users", chan));
 			}
 		}
 	});
@@ -143,29 +149,39 @@ $(function() {
 		var value = input.val();
 		input.val("");
 		socket.emit("input", {
-			target: chat.data("target"),
+			target: active.id || -1,
 			text: value
 		});
 	});
 	
-	networks.on("click", ".chan", function() {
-		var self = $(this);
-		var id = self.data("id");
-		if (self.hasClass("active")) {
-			return;
-		}
+	sidebar.on("click", "button:not(.active)", function() {
+		var btn = $(this);
+		var id = "#" + btn.attr("id");
 		
-		chat.data("target", id);
-		networks.find(".active").removeClass("active");
-		self.addClass("active");
+		$.cookie("active", id);
 		
-		var chan = find(id);
-		if (typeof chan !== "undefined") {
-			activeChannel = chan;
-			chat.html(render("chat", chan));
-			chat.find(".window")
-				.sticky()
-				.scrollBottom();
+		sidebar.find(".active").removeClass("active");
+		btn.addClass("active");
+		
+		active = null;
+		if (btn.hasClass("chan")) {
+			var chan = find(id.replace("#chan-", ""));
+			if (typeof chan !== "undefined") {
+				active = chan;
+				chat.fadeIn();
+				chat.siblings().hide();
+				chat.html(render("chat", chan));
+				chat.find(".window")
+					.sticky()
+					.scrollBottom();
+			}
+		} else {
+			chat.empty();
+			var target = $(btn.data("target"));
+			if (target.length !== 0) {
+				target.fadeIn();
+				target.siblings().hide();
+			}
 		}
 	});
 	
@@ -181,8 +197,19 @@ $(function() {
 		});
 	});
 	
+	chat.on("click", ".user", function() {
+		var user = $(this).text();
+		if (user.indexOf("#") !== -1) {
+			return;
+		}
+		socket.emit("input", {
+			target: active.id || -1,
+			text: "/whois " + user
+		});
+	});
+	
 	function isActive(chan) {
-		return activeChannel !== null && chan == activeChannel;
+		return active !== null && chan == active;
 	}
 	
 	function find(id) {

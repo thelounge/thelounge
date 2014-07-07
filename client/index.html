@@ -20,8 +20,8 @@
 	<aside id="sidebar">
 		<div id="networks"></div>
 		<footer id="footer">
-			<button id="connect" class="active"></button>
-			<button id="settings"></button>
+			<button id="btn-1" data-target="#connect"></button>
+			<button id="btn-2" data-target="#settings"></button>
 		</footer>
 	</aside>
 	<div id="main">
@@ -32,17 +32,31 @@
 		</header> 
 		<div id="windows">
 			<div id="chat"></div>
-			<form id="form" action="">
-				<input id="submit" tabindex="-1" type="submit">
-				<input id="input">
-			</form>
+			<div id="connect" class="container">
+				<div class="row">
+					<div class="col-sm-12">
+						<h1>Connect</h1>
+					</div>
+				</div>
+			</div>
+			<div id="settings" class="container">
+				<div class="row">
+					<div class="col-sm-12">
+						<h1>Settings</h1>
+					</div>
+				</div>
+			</div>
 		</div>
+		<form id="form" action="">
+			<input id="submit" tabindex="-1" type="submit">
+			<input id="input">
+		</form>
 	</div>
 	
 	<div id="templates">
 		<script type="text/html" class="networks">
 		{{#each networks}}
-		<section class="network" data-id="{{id}}">
+		<section id="network-{{id}}" class="network">
 			{{partial "channels"}}
 		</section>
 		{{/each}}
@@ -50,7 +64,7 @@
 		
 		<script type="text/html" class="channels">
 		{{#each channels}}
-		<button class="chan" data-id="{{id}}" data-type="{{type}}">
+		<button id="chan-{{id}}" class="chan" data-type="{{type}}">
 			<span class="badge"></span>
 			{{name}}
 		</button>
@@ -82,7 +96,7 @@
 		{{/if}}
 		<div id="users">
 			{{#each users}}
-			<button>{{mode}}{{name}}</button>
+			<button class="user">{{mode}}{{name}}</button>
 			{{/each}}
 		</div>
 		</script>
@@ -95,7 +109,7 @@
 			</span>
 			<span class="from">
 				{{#if from}}
-				<button>{{from}}</button>
+				<button class="user">{{from}}</button>
 				{{else}}
 				//
 				{{/if}}

@@ -29,6 +29,10 @@ h2 {
 	line-height: inherit;
 	margin: 0;
 }
+h1 {
+	color: #2c3e50;
+	font: 300 48px Lato, sans-serif;
+}
 button {
 	background: 0;
 	border: none;
@@ -36,12 +40,20 @@ button {
 	outline: 0;
 	padding: 0;
 }
+.container {
+	margin: 10% auto;
+	max-width: 480px;
+	overflow: hidden;
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
+	padding: 0 30px;
+}
 #sidebar {
 	background: #262c36;
 	bottom: 0;
 	left: 0;
-	overflow: auto;
-	overflow-x: hidden;
+	overflow: hidden;
+	overflow-y: auto;
 	-webkit-overflow-scrolling: touch;
 	position: absolute;
 	top: 0;
@@ -64,6 +76,7 @@ button {
 	color: #fff;
 }
 #networks {
+	display: none;
 	min-height: 100%;
 	padding: 30px 40px 80px;
 }
@@ -109,10 +122,10 @@ button {
 	font: 18px Octicons;
 	padding: 8px 12px;
 }
-#connect:before {
+#footer #btn-1:before {
 	content: "\f085";
 }
-#settings:before {
+#footer #btn-2:before {
 	content: "\f02f";
 }
 #main {
@@ -157,10 +170,14 @@ button {
 	content: "\f05e";
 }
 #windows {
-	bottom: 0;
+	bottom: 40px;
 	position: absolute;
+	overflow: auto;
 	top: 0px;
 	width: 100%;
+}
+#windows > div {
+	display: none;
 }
 #chat {
 	font: 13px Consolas, monospace;
@@ -172,7 +189,7 @@ button {
 	opacity: .6;
 }
 #chat .window {
-	bottom: 40px;
+	bottom: 0;
 	left: 0;
 	overflow: auto;
 	overflow-x: hidden;
@@ -193,6 +210,7 @@ button {
 }
 #messages {
 	display: table;
+	table-layout: fixed;
 	height: 100%;
 	width: 100%;
 }
@@ -226,6 +244,7 @@ button {
 	text-align: right;
 	width: 134px;
 }
+#messages a,
 #messages .from button {
 	color: #33b0f7;
 }
@@ -312,7 +331,7 @@ button {
 	height: 40px;
 	left: 0;
 	position: absolute;
-	right: 180px;
+	right: 0px;
 }
 #form input {
 	border: 0;
@@ -323,9 +342,11 @@ button {
 	padding: 0 12px;
 	width: 100%;
 }
-#submit {
-	margin-left: -999px;
+#form #submit {
+	height: 0;
+	margin-left: -9999px;
 	position: absolute;
+	width: 0;
 }
 
 @media (max-width: 767px) {
