@@ -1,5 +1,5 @@
 @import url(
-	http://fonts.googleapis.com/css?family=Lato:300,400,700
+	http://fonts.googleapis.com/css?family=Lato:400,700
 );
 @font-face {
 	font-family: "Octicons";
@@ -28,10 +28,6 @@ h2 {
 	font: inherit;
 	line-height: inherit;
 	margin: 0;
-}
-h1 {
-	color: #2c3e50;
-	font: 300 48px Lato, sans-serif;
 }
 button {
 	background: 0;
@@ -75,15 +71,14 @@ button {
 	background: #323841;
 	color: #fff;
 }
-#networks {
-	display: none;
+#sidebar .networks {
 	min-height: 100%;
 	padding: 30px 40px 80px;
 }
-#networks .network + .network {
+#sidebar .network + .network {
 	margin-top: 30px;
 }
-#networks .chan {
+#sidebar .chan {
 	display: block;
 	margin: 1px -10px;
 	padding: 6px 10px 8px;
@@ -92,12 +87,12 @@ button {
 	transition: all .2s;
 	width: 160px;
 }
-#networks .chan:first-child {
+#sidebar .chan:first-child {
 	color: #84d1ff;
 	font-size: 15px;
 	font-weight: bold;
 }
-#networks .badge {
+#sidebar .badge {
 	background: rgba(255, 255, 255, .06);
 	border-radius: 3px;
 	color: #afb6c0;
@@ -108,7 +103,7 @@ button {
 	right: 10px;
 	transition: all .1s;
 }
-#networks .badge:empty {
+#sidebar .badge:empty {
 	display: none;
 }
 #footer {
@@ -176,8 +171,14 @@ button {
 	top: 0px;
 	width: 100%;
 }
-#windows > div {
-	display: none;
+#windows > div,
+#windows .chan {
+	background: #fff;
+	bottom: 0;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
 }
 #chat {
 	font: 13px Consolas, monospace;
@@ -188,7 +189,7 @@ button {
 #chat button:hover {
 	opacity: .6;
 }
-#chat .window {
+#chat .chat {
 	bottom: 0;
 	left: 0;
 	overflow: auto;
@@ -206,37 +207,36 @@ button {
 	right: 0;
 	top: 0;
 	width: 180px;
-	z-index: 1;
 }
-#messages {
+#chat .messages {
 	display: table;
 	table-layout: fixed;
 	height: 100%;
 	width: 100%;
 }
-#messages .msg {
+#chat .msg {
 	display: table-row;
 	word-wrap: break-word;
 }
-#messages .msg:last-child {
+#chat .msg:last-child {
 	height: 100%;
 }
-#messages .msg:last-child .text {
+#chat .msg:last-child .text {
 	padding-bottom: 5px;
 }
-#messages .time,
-#messages .from,
-#messages .text {
+#chat .time,
+#chat .from,
+#chat .text {
 	display: table-cell;
 	padding: 5px 0 0;
 }
-#messages .time {
+#chat .time {
 	background: #f9f9f9;
 	color: #ddd;
 	text-align: right;
 	width: 46px;
 }
-#messages .from {
+#chat .from {
 	background: #f9f9f9;
 	border-right: 1px solid #f4f4f4;
 	color: #ddd;
@@ -244,46 +244,46 @@ button {
 	text-align: right;
 	width: 134px;
 }
-#messages a,
-#messages .from button {
+#chat a,
+#chat .from button {
 	color: #33b0f7;
 }
-#messages .text {
+#chat .text {
 	padding-left: 10px;
 	padding-right: 6px;
 }
-#messages .text a {
+#chat .text a {
 	word-break: break-all;
 }
-#messages .type {
+#chat .type {
 	color: #ccc;
 	display: none;
 }
-#messages .join .type,
-#messages .part .type,
-#messages .mode .type,
-#messages .nick .type,
-#messages .kick .type,
-#messages .quit .type,
-#messages .quit .type,
-#messages .notice .type,
-#messages .topic .type {
+#chat .join .type,
+#chat .part .type,
+#chat .mode .type,
+#chat .nick .type,
+#chat .kick .type,
+#chat .quit .type,
+#chat .quit .type,
+#chat .notice .type,
+#chat .topic .type {
 	display: inline;
 }
-#meta {
+#chat .meta {
 	
 	height: 80px;
 	padding: 25px 0 0 20px;
 }
-#meta h1 {
+#chat .meta h1 {
 	color: #222;
 	font-size: 15px;
 }
-#meta .type {
+#chat .meta .type {
 	color: #ccc;
 	text-transform: capitalize;
 }
-#count {
+#chat .count {
 	background: #f9f9f9;
 	border-top: 1px dashed #e9ecef;
 	border-bottom: 1px solid #e9ecef;
@@ -293,7 +293,7 @@ button {
 	right: 0;
 	top: 80px;
 }
-#count:before {
+#chat .count:before {
 	color: #eee;
 	font: 16px Octicons;
 	content: "\f02e";
@@ -301,8 +301,9 @@ button {
 	right: 18px;
 	line-height: 40px;
 	transition: color .2s;
+	z-index: -1;
 }
-#search {
+#chat .search {
 	color: #222;
 	border: 0;
 	background: none;
@@ -311,9 +312,8 @@ button {
 	padding: 12px 20px;
 	position: relative;
 	width: 100%;
-	z-index: 2;
 }
-#users {
+#chat .names {
 	bottom: 0;
 	overflow: auto;
 	-webkit-overflow-scrolling: touch;
@@ -322,7 +322,7 @@ button {
 	top: 120px;
 	width: 100%;
 }
-#users button {
+#chat .names button {
 	display: block;
 	line-height: 1.6em;
 }

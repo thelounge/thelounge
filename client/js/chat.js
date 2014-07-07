@@ -34,10 +34,6 @@ $(function() {
 	var sidebar = $("#sidebar");
 	var chat = $("#chat");
 	
-	var networks = $("#networks");
-	var channels = [];
-	var active = null;
-	
 	var tpl = [];
 	function render(name, data) {
 		tpl[name] = tpl[name] || Handlebars.compile($("#templates ." + name).html());
@@ -49,59 +45,61 @@ $(function() {
 	});
 	
 	socket.on("init", function(data) {
-		networks.empty();
-		channels = $.map(data.networks, function(n) {
+		var channels = $.map(data.networks, function(n) {
 			return n.channels;
 		});
-		networks.append(
+		sidebar.find(".networks").html(
 			render("networks", {
 				networks: data.networks
 			})
-		).fadeIn();
-		var active = $($.cookie("active"));
-		if (active.length === 0) {
-			active = networks.find(".chan").eq(0);
+		);
+		chat.html(
+			render("chat", {
+				channels: channels
+			})
+		);
+		var id = $.cookie("target");
+		var target = sidebar.find("[data-target=" + id + "]");
+		if (target.length !== 0) {
+			target.trigger("click");
+		} else {
+			sidebar.find(".chan")
+				.eq(0)
+				.trigger("click");
 		}
-		active.trigger("click");
 	});
 	
 	socket.on("join", function(data) {
-		channels.push(data.chan);
 		var id = data.network;
-		var network = networks
-			.find("#network-" + id)
-			.eq(0);
+		var network = sidebar.find("#network-" + id);
 		network.append(
 			render("channels", {
 				channels: [data.chan]
 			})
 		);
-		network.find(".chan")
+		chat.append(
+			render("chat", {
+				channels: [data.chan]
+			})
+		);
+		sidebar.find(".chan")
 			.last()
 			.trigger("click");
 	});
 	
 	socket.on("msg", function(data) {
-		var chan = find(data.chan);
-		if (typeof chan !== "undefined") {
-			chan.messages.push(data.msg);
-			if (isActive(chan)) {
-				chat.find("#messages").append(
-					render("messages", {messages: [data.msg]})
-				);
-			}
-		}
+		chat.find("#chan-" + data.chan)
+			.find(".messages")
+			.append(render("messages", {messages: [data.msg]}));
 	});
 	
 	socket.on("network", function(data) {
-		var lobby = data.network.channels[0];
-		channels.push(lobby);
-		networks.append(
+		sidebar.find(".networks").append(
 			render("networks", {
 				networks: [data.network]
 			})
 		);
-		networks.find(".chan")
+		sidebar.find(".chan")
 			.last()
 			.trigger("click");
 	});
@@ -112,7 +110,7 @@ $(function() {
 	
 	socket.on("part", function(data) {
 		var id = data.chan;
-		networks.find("#chan-" + id)
+		sidebar.find("[data-target=#chan-" + id + "]")
 			.remove()
 			.end()
 			.find(".chan")
@@ -122,7 +120,7 @@ $(function() {
 	
 	socket.on("quit", function(data) {
 		var id = data.network;
-		networks.find("#network-" + id)
+		sidebar.find("#network-" + id)
 			.remove()
 			.end()
 			.find(".chan")
@@ -131,13 +129,9 @@ $(function() {
 	});
 	
 	socket.on("users", function(data) {
-		var chan = find(data.chan);
-		if (typeof chan !== "undefined") {
-			chan.users = data.users;
-			if (isActive(chan)) {
-				chat.find(".sidebar").html(render("users", chan));
-			}
-		}
+		chat.find("#chan-" + data.chan)
+			.find(".users")
+			.html(render("users", data));
 	});
 	
 	var input = $("#input")
@@ -149,45 +143,41 @@ $(function() {
 		var value = input.val();
 		input.val("");
 		socket.emit("input", {
-			target: active.id || -1,
+			target: chat.data("id"),
 			text: value
 		});
 	});
 	
+	var top = 1;
 	sidebar.on("click", "button:not(.active)", function() {
-		var btn = $(this);
-		var id = "#" + btn.attr("id");
+		var self = $(this);
+		var target = self.data("target");
+		if (!target) {
+			return;
+		}
 		
-		$.cookie("active", id);
+		$.cookie("target", target);
+		chat.data(
+			"id",
+			self.data("id")
+		);
 		
 		sidebar.find(".active").removeClass("active");
-		btn.addClass("active");
+		self.addClass("active")
+			.find(".badge")
+			.removeClass("highlight")
+			.empty();
 		
-		active = null;
-		if (btn.hasClass("chan")) {
-			var chan = find(id.replace("#chan-", ""));
-			if (typeof chan !== "undefined") {
-				active = chan;
-				chat.fadeIn();
-				chat.siblings().hide();
-				chat.html(render("chat", chan));
-				chat.find(".window")
-					.sticky()
-					.scrollBottom();
-			}
-		} else {
-			chat.empty();
-			var target = $(btn.data("target"));
-			if (target.length !== 0) {
-				target.fadeIn();
-				target.siblings().hide();
-			}
-		}
+		var chan = $(target)
+			.css("z-index", top++)
+			.find(".chat")
+			.sticky();
 	});
 	
-	chat.on("input", "#search", function() {
+	chat.on("input", ".search", function() {
 		var val = $(this).val();
-		$("#users").find("button").each(function() {
+		var names = $(this).closest(".users").find(".names");
+		names.find("button").each(function() {
 			var btn = $(this);
 			if (btn.text().toLowerCase().indexOf(val) === 0) {
 				btn.show();
@@ -203,19 +193,13 @@ $(function() {
 			return;
 		}
 		socket.emit("input", {
-			target: active.id || -1,
+			target: active,
 			text: "/whois " + user
 		});
 	});
 	
 	function isActive(chan) {
 		return active !== null && chan == active;
-	}
-	
-	function find(id) {
-		return $.grep(channels, function(c) {
-			return c.id == id;
-		})[0];
 	}
 	
 	function complete(word) {

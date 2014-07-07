@@ -11,14 +11,17 @@
 			});
 		}
 		
+		console.log("YES");
+		
 		var isBottom = false;
 		var self = this;
 		
-		this.on("beforeAppend", function() {
+		this.unbind(".sticky");
+		this.on("beforeAppend.sticky", function() {
 			isBottom = isScrollBottom.call(self);
 		});
 		
-		this.on("afterAppend", function() {
+		this.on("afterAppend.sticky", function() {
 			if (isBottom) {
 				self.scrollBottom();
 			}
@@ -32,6 +35,8 @@
 			"overflow-y": overflow
 		});
 		
+		
+		this.scrollBottom();
 		return this;
 	};
 

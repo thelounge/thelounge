@@ -18,7 +18,7 @@
 	<body>
 	
 	<aside id="sidebar">
-		<div id="networks"></div>
+		<div class="networks"></div>
 		<footer id="footer">
 			<button id="btn-1" data-target="#connect"></button>
 			<button id="btn-2" data-target="#settings"></button>
@@ -32,18 +32,22 @@
 		</header> 
 		<div id="windows">
 			<div id="chat"></div>
-			<div id="connect" class="container">
+			<div id="connect">
+				<div class="container">
 				<div class="row">
 					<div class="col-sm-12">
 						<h1>Connect</h1>
 					</div>
 				</div>
+				</div>
 			</div>
-			<div id="settings" class="container">
+			<div id="settings">
+				<div class="container">
 				<div class="row">
 					<div class="col-sm-12">
 						<h1>Settings</h1>
 					</div>
+				</div>
 				</div>
 			</div>
 		</div>
@@ -64,7 +68,7 @@
 		
 		<script type="text/html" class="channels">
 		{{#each channels}}
-		<button id="chan-{{id}}" class="chan" data-type="{{type}}">
+		<button data-id="{{id}}" data-target="#chan-{{id}}" class="chan">
 			<span class="badge"></span>
 			{{name}}
 		</button>
@@ -72,29 +76,33 @@
 		</script>
 		
 		<script type="text/html" class="chat">
-			<div class="window">
-				<div id="messages">
+		{{#each channels}}
+		<div id="chan-{{id}}" data-type="{{type}}" class="chan">
+			<div class="chat">
+				<div class="messages">
 					{{partial "messages"}}
 				</div>
 			</div>
 			<aside class="sidebar">
-				{{partial "users"}}
+				<div class="meta">
+					<h1>{{name}}</h1>
+					<span class="type">{{type}}</span>
+				</div>
+				<div class="users">
+					{{partial "users"}}
+				</div>
 			</aside>
+		</div>
+		{{/each}}
 		</script>
 		
 		<script type="text/html" class="users">
-		<div id="meta">
-			<h1>{{name}}</h1>
-			<span class="type">
-				{{type}}
-			</span>
-		</div>
 		{{#if users.length}}
-		<div id="count">
-			<input id="search" placeholder="{{users.length}} users">
+		<div class="count">
+			<input class="search" placeholder="{{users.length}} users">
 		</div>
 		{{/if}}
-		<div id="users">
+		<div class="names">
 			{{#each users}}
 			<button class="user">{{mode}}{{name}}</button>
 			{{/each}}
