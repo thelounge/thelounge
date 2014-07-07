@@ -1,32 +1,17 @@
 module.exports = function(grunt) {
-	var components = "";
-	var files = [
-		"./lib/**/*.js",
-		"./client/js/chat.js"
-	];
 	grunt.initConfig({
-		watch: {
-			files: files,
-			tasks: ["jshint"]
-		},
-		jshint: {
-			files: files
-		},
 		uglify: {
 			js: {
 				files: {
 					"client/js/components.min.js": [
 						"client/components/*.js",
-						"client/components/jquery/*.js"
+						"client/components/**/*.js"
 					]
 				}
 			}
 		}
 	});
-	["watch", "jshint", "uglify"]
-		.forEach(function(task) {
-			grunt.loadNpmTasks("grunt-contrib-" + task);
-		});
+	grunt.loadNpmTasks("grunt-contrib-uglify");
 	grunt.registerTask(
 		"default",
 		["uglify"]

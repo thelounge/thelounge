@@ -47,13 +47,9 @@ button {
 #wrap {
 	height: 100%;
 	overflow: hidden;
-	position: relative;
-	width: 100%;
 }
 #viewport {
 	height: 100%;
-	position: relative;
-	width: 100%;
 	transition: all .4s;
 	-webkit-transform: translateZ(0);
 	        transform: translateZ(0);
@@ -118,6 +114,10 @@ button {
 	position: absolute;
 	right: 10px;
 	transition: all .1s;
+}
+#sidebar .badge.highlight {
+	background: #fff;
+	color: #49505a;
 }
 #sidebar .badge:empty {
 	display: none;
@@ -203,11 +203,17 @@ button {
 	right: 0;
 	top: 0;
 }
+#windows .chan,
+#settings,
+#connect {
+	display: none;
+}
+#windows .active {
+	display: block;
+}
 #chat {
 	font: 13px Consolas, monospace;
-	height: 100%;
 	position: relative;
-	width: 100%;
 }
 #chat button:hover {
 	opacity: .6;
@@ -216,7 +222,6 @@ button {
 	bottom: 0;
 	left: 0;
 	overflow: auto;
-	overflow-x: hidden;
 	-webkit-overflow-scrolling: touch;
 	position: absolute;
 	right: 180px;
@@ -233,7 +238,6 @@ button {
 }
 #chat .messages {
 	display: table;
-	table-layout: fixed;
 	height: 100%;
 	width: 100%;
 }
@@ -293,6 +297,12 @@ button {
 #chat .topic .type {
 	display: inline;
 }
+#chat .error,
+#chat .error .user,
+#chat .highlight,
+#chat .highlight .user {
+	color: #f00;
+}
 #chat .meta {
 	
 	height: 80px;
@@ -324,7 +334,7 @@ button {
 	right: 18px;
 	line-height: 40px;
 	transition: color .2s;
-	z-index: -1;
+	z-index: 0;
 }
 #chat .search {
 	color: #222;

@@ -31,11 +31,24 @@ $(function() {
 	var sidebar = $("#sidebar");
 	var chat = $("#chat");
 	
+	var pop = new Audio();
+	pop.src = "/audio/pop.ogg";
+	
+	var favico = new Favico({
+		animation: "none"
+	});
+	
 	var tpl = [];
 	function render(name, data) {
 		tpl[name] = tpl[name] || Handlebars.compile($("#templates ." + name).html());
 		return tpl[name](data);
 	}
+	
+	Handlebars.registerHelper(
+		"partial", function(id) {
+			return new Handlebars.SafeString(render(id, this));
+		}
+	);
 
 	socket.on("auth", function(data) {
 		console.log(data);
@@ -85,9 +98,14 @@ $(function() {
 	});
 	
 	socket.on("msg", function(data) {
-		chat.find("#chan-" + data.chan)
+		var target = "#chan-" + data.chan;
+		chat.find(target)
 			.find(".messages")
-			.append(render("messages", {messages: [data.msg]}));
+			.append(render("messages", {messages: [data.msg]}))
+			.trigger("msg", [
+				target,
+				data.msg
+			]);
 	});
 	
 	socket.on("network", function(data) {
@@ -177,12 +195,18 @@ $(function() {
 			.removeClass("highlight")
 			.empty();
 		
+		if (sidebar.find(".highlight").length == 0) {
+			favico.badge("");
+		}
+		
 		$("#rt").toggle(self.hasClass("chan"));
 		$("#header").find("h1").html(self.data("title"));
 		viewport.removeClass();
 		
+		$("#windows .active").removeClass("active");
 		var chan = $(target)
 			.css("z-index", top++)
+			.addClass("active")
 			.find(".chat")
 			.sticky();
 	});
@@ -206,14 +230,45 @@ $(function() {
 			return;
 		}
 		var text = "/whois " + user;
-		console.log({
-			target: chat.data("id"),
-			text: text
-		});
 		socket.emit("input", {
 			target: chat.data("id"),
 			text: text
 		});
+	});
+	
+	chat.on("msg", ".messages", function(e, target, msg) {
+		var type = msg.type;
+		var highlight = type.contains("highlight");
+		if (highlight) {
+			pop.play();
+			if (document.hidden || !$(target).hasClass("active")) {
+				favico.badge("!");
+			}
+		}
+		
+		var btn = sidebar.find(".chan[data-target=" + target + "]:not(.active)");
+		if (btn.length === 0) {
+			return;
+		}
+		
+		var ignore = [
+			"join",
+			"part",
+			"quit",
+			"nick"
+		];
+		if ($.inArray(type, ignore) !== -1){
+			return;
+		}
+		
+		var badge = btn.find(".badge");
+		if (badge.length !== 0) {
+			var i = (parseInt(badge.html()) || 0) + 1;
+			badge.html(i);
+			if (highlight) {
+				badge.addClass("highlight");
+			}
+		}
 	});
 	
 	function isActive(chan) {
@@ -229,38 +284,12 @@ $(function() {
 		);
 	}
 	
-	function escape(text) {
-		var e = {
-			"<": "&lt;",
-			">": "&gt;"
-		};
-		return text.replace(/[<>]/g, function (c) {
-			return e[c];
-		});
-	}
-	
-	Handlebars.registerHelper(
-		"partial", function(id) {
-			return new Handlebars.SafeString(render(id, this));
-		}
-	);
-	
-	Handlebars.registerHelper(
-		"uri", function(text) {
-			var urls = [];
-			text = URI.withinString(text, function(url) {
-				urls.push(url);
-				return "$(" + (urls.length - 1) + ")";	
-			});
-			text = escape(text);
-			for (var i in urls) {
-				var url = escape(urls[i]);
-				text = text.replace(
-					"$(" + i + ")",
-					"<a href='" + url.replace(/^www/, "//www") + "' target='_blank'>" + url + "</a>"
-				);
+	document.addEventListener(
+		"visibilitychange",
+		function() {
+			if (sidebar.find(".highlight").length == 0) {
+				favico.badge("");
 			}
-			return text;
 		}
 	);
 });
