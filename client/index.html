@@ -17,44 +17,48 @@
 	</head>
 	<body>
 	
-	<aside id="sidebar">
-		<div class="networks"></div>
-		<footer id="footer">
-			<button id="btn-1" data-target="#connect"></button>
-			<button id="btn-2" data-target="#settings"></button>
-		</footer>
-	</aside>
-	<div id="main">
-		<header id="header">
-			<button id="lt"></button>
-			<button id="rt"></button>
-			<h1>#channel</h1>
-		</header> 
-		<div id="windows">
-			<div id="chat"></div>
-			<div id="connect">
-				<div class="container">
-				<div class="row">
-					<div class="col-sm-12">
-						<h1>Connect</h1>
+	<div id="wrap">
+	<div id="viewport">
+		<aside id="sidebar">
+			<div class="networks"></div>
+			<footer id="footer">
+				<button id="btn-1" data-target="#connect" data-title="Connect"></button>
+				<button id="btn-2" data-target="#settings" data-title="Settings"></button>
+			</footer>
+		</aside>
+		<div id="main">
+			<header id="header">
+				<button id="lt"></button>
+				<button id="rt"></button>
+				<h1>#channel</h1>
+			</header> 
+			<div id="windows">
+				<div id="chat"></div>
+				<div id="connect">
+					<div class="container">
+					<div class="row">
+						<div class="col-sm-12">
+							<h1>Connect</h1>
+						</div>
+					</div>
 					</div>
 				</div>
-				</div>
-			</div>
-			<div id="settings">
-				<div class="container">
-				<div class="row">
-					<div class="col-sm-12">
-						<h1>Settings</h1>
+				<div id="settings">
+					<div class="container">
+					<div class="row">
+						<div class="col-sm-12">
+							<h1>Settings</h1>
+						</div>
+					</div>
 					</div>
 				</div>
-				</div>
 			</div>
+			<form id="form" action="">
+				<input id="submit" tabindex="-1" type="submit">
+				<input id="input">
+			</form>
 		</div>
-		<form id="form" action="">
-			<input id="submit" tabindex="-1" type="submit">
-			<input id="input">
-		</form>
+	</div>
 	</div>
 	
 	<div id="templates">
@@ -68,7 +72,7 @@
 		
 		<script type="text/html" class="channels">
 		{{#each channels}}
-		<button data-id="{{id}}" data-target="#chan-{{id}}" class="chan">
+		<button data-id="{{id}}" data-target="#chan-{{id}}" data-title="{{name}}" class="chan">
 			<span class="badge"></span>
 			{{name}}
 		</button>

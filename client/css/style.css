@@ -44,6 +44,22 @@ button {
 	-webkit-overflow-scrolling: touch;
 	padding: 0 30px;
 }
+#wrap {
+	height: 100%;
+	overflow: hidden;
+	position: relative;
+	width: 100%;
+}
+#viewport {
+	height: 100%;
+	position: relative;
+	width: 100%;
+	transition: all .4s;
+	-webkit-transform: translateZ(0);
+	        transform: translateZ(0);
+	-webkit-perspective: 1000;
+	        perspective: 1000;
+}
 #sidebar {
 	background: #262c36;
 	bottom: 0;
@@ -145,8 +161,10 @@ button {
 	text-align: center;
 }
 #header button {
-	color: #aaa;
-	font: 24px Octicons;
+	border: 1px solid #bdc3c7;
+	border-radius: 2px;
+	color: #666;
+	font: 16px Octicons;
 	height: 32px;
 	opacity: .5;
 	position: absolute;
@@ -154,20 +172,25 @@ button {
 	transition: opacity .2s;
 	width: 32px;
 }
-#header #lt {
+#header button:hover {
+	border-color: #bdc3c7;
+	opacity: 1;
+}
+#header #lt {	
 	left: 4px;
 }
 #header #rt {
 	right: 4px;
 }
-#header #lt:before,
-#header #rt:before {
+#header #lt:before {
 	content: "\f05e";
+}
+#header #rt:before {
+	content: "\f037";
 }
 #windows {
 	bottom: 40px;
 	position: absolute;
-	overflow: auto;
 	top: 0px;
 	width: 100%;
 }
@@ -224,6 +247,10 @@ button {
 #chat .msg:last-child .text {
 	padding-bottom: 5px;
 }
+#chat .msg .type {
+	color: #ccc;
+	display: none;
+}
 #chat .time,
 #chat .from,
 #chat .text {
@@ -254,10 +281,6 @@ button {
 }
 #chat .text a {
 	word-break: break-all;
-}
-#chat .type {
-	color: #ccc;
-	display: none;
 }
 #chat .join .type,
 #chat .part .type,
@@ -340,6 +363,7 @@ button {
 	height: 100%;
 	outline: none;
 	padding: 0 12px;
+	-webkit-appearance: none;
 	width: 100%;
 }
 #form #submit {
@@ -349,11 +373,63 @@ button {
 	width: 0;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
+	#viewport.rt {
+		-webkit-transform: translate3d(-180px, 0, 0);
+		        transform: translate3d(-180px, 0, 0);
+	}
 	#header {
 		display: block;
 	}
+	#header #lt {
+		display: none;
+	}
 	#windows {
 		top: 40px;
+	}
+	#chat .chat {
+		right: 0;
+	}
+	#chat .sidebar {
+		bottom: -40px;
+		right: -180px;
+		top: -40px;
+	}
+}
+
+@media (max-width: 480px) {
+	#viewport.lt {
+		-webkit-transform: translate3d(220px, 0, 0);
+		        transform: translate3d(220px, 0, 0);
+	}
+	#header #lt {
+		display: inherit;
+	}
+	#sidebar {
+		left: -220px;
+	}
+	#main {
+		left: 0;
+	}
+	#chat .messages {
+		display: block;
+		padding: 5px 10px;
+	}
+	#chat .msg {
+		display: block;
+		padding: 2px 0;
+	}
+	#chat .msg:last-child {
+		height: auto;
+	}
+	#chat .from,
+	#chat .text {
+		background: none;
+		border: 0;
+		display: inline;
+		padding: 0;
+	}
+	#chat .time {
+		display: none;
 	}
 }

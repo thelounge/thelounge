@@ -1,8 +1,6 @@
 $(function() {
 	var socket = io();
 	var commands = [
-		"/ame",
-		"/amsg",
 		"/close",
 		"/connect",
 		"/deop",
@@ -18,7 +16,6 @@ $(function() {
 		"/notice",
 		"/op",
 		"/part",
-		"/partall",
 		"/query",
 		"/quit",
 		"/raw",
@@ -134,17 +131,29 @@ $(function() {
 			.html(render("users", data));
 	});
 	
+	var viewport = $("#viewport");
+	$("#rt, #lt").on("click", function(e) {
+		var self = $(this);
+		viewport.toggleClass(self.attr("id"));
+		if (viewport.is(".lt, .rt")) {
+			e.stopPropagation();
+			chat.find(".chat").one("click", function() {
+				viewport.removeClass("lt rt");
+			});
+		}
+	});
+	
 	var input = $("#input")
 		.history()
 		.tab(complete, {hint: false});
 	
 	var form = $("#form").on("submit", function(e) {
 		e.preventDefault();
-		var value = input.val();
+		var text = input.val();
 		input.val("");
 		socket.emit("input", {
 			target: chat.data("id"),
-			text: value
+			text: text
 		});
 	});
 	
@@ -168,6 +177,10 @@ $(function() {
 			.removeClass("highlight")
 			.empty();
 		
+		$("#rt").toggle(self.hasClass("chan"));
+		$("#header").find("h1").html(self.data("title"));
+		viewport.removeClass();
+		
 		var chan = $(target)
 			.css("z-index", top++)
 			.find(".chat")
@@ -175,11 +188,11 @@ $(function() {
 	});
 	
 	chat.on("input", ".search", function() {
-		var val = $(this).val();
+		var value = $(this).val();
 		var names = $(this).closest(".users").find(".names");
 		names.find("button").each(function() {
 			var btn = $(this);
-			if (btn.text().toLowerCase().indexOf(val) === 0) {
+			if (btn.text().toLowerCase().indexOf(value) === 0) {
 				btn.show();
 			} else {
 				btn.hide();
@@ -188,13 +201,18 @@ $(function() {
 	});
 	
 	chat.on("click", ".user", function() {
-		var user = $(this).text();
+		var user = $(this).html().trim().replace(/[+%@~]/, "");
 		if (user.indexOf("#") !== -1) {
 			return;
 		}
+		var text = "/whois " + user;
+		console.log({
+			target: chat.data("id"),
+			text: text
+		});
 		socket.emit("input", {
-			target: active,
-			text: "/whois " + user
+			target: chat.data("id"),
+			text: text
 		});
 	});
 	

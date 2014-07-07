@@ -11,8 +11,6 @@
 			});
 		}
 		
-		console.log("YES");
-		
 		var isBottom = false;
 		var self = this;
 		
