@@ -20,42 +20,81 @@
 	<div id="wrap">
 	<div id="viewport">
 		<aside id="sidebar">
-			<div class="networks"></div>
+			<div class="networks">
+				<div class="empty">
+					You're not connected to any networks yet.
+				</div>
+			</div>
 			<footer id="footer">
-				<button id="btn-1" data-target="#connect" data-title="Connect"></button>
-				<button id="btn-2" data-target="#settings" data-title="Settings"></button>
+				<button class="connect" data-target="#connect" data-title="Connect"></button>
+				<button class="settings" data-target="#settings" data-title="Settings"></button>
 			</footer>
 		</aside>
 		<div id="main">
 			<header id="header">
 				<button id="lt"></button>
 				<button id="rt"></button>
-				<h1>#channel</h1>
+				<h1></h1>
 			</header> 
 			<div id="windows">
 				<div id="chat"></div>
-				<div id="connect">
-					<div class="container">
-					<div class="row">
-						<div class="col-sm-12">
-							<h1>Connect</h1>
+				<div id="connect" class="window">
+					<form class="container" action="">
+						<div class="row">
+							<div class="col-xs-12">
+								<h1 class="title">Connect</h1>
+							</div>
+							<div class="col-xs-8">
+								<label>
+								Server
+								<input name="host" placeholder="irc.freenode.org">
+								</label>
+							</div>
+							<div class="col-xs-4">
+								<label class="port">
+								Port
+								<input name="port" placeholder="6667">
+								</label>
+							</div>
+							<div class="col-xs-5">
+								<label>
+								Nick
+								<input name="nick" placeholder="shout">
+								</label>
+							</div>
+							<div class="col-xs-7">
+								<label>
+								Real Name
+								<input name="realname" class="input" placeholder="Shout User">
+								</label>
+							</div>
+							<div class="col-xs-12">
+								<label>
+								Channels
+								<input name="join" class="input" placeholder="#shout-irc">
+								</label>
+							</div>
+							<div class="col-xs-12">
+								<button type="submit" class="btn">
+									Connect
+								</button>
+							</div>
 						</div>
-					</div>
-					</div>
+					</form>
 				</div>
-				<div id="settings">
+				<div id="settings" class="window">
 					<div class="container">
-					<div class="row">
-						<div class="col-sm-12">
-							<h1>Settings</h1>
+						<div class="row">
+							<div class="col-sm-12">
+								<h1 class="title">Settings</h1>
+							</div>
 						</div>
-					</div>
 					</div>
 				</div>
 			</div>
 			<form id="form" action="">
 				<input id="submit" tabindex="-1" type="submit">
-				<input id="input">
+				<input id="input" autofocus>
 			</form>
 		</div>
 	</div>

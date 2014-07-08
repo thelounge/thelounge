@@ -55,27 +55,34 @@ $(function() {
 	});
 	
 	socket.on("init", function(data) {
-		var channels = $.map(data.networks, function(n) {
-			return n.channels;
-		});
-		sidebar.find(".networks").html(
+		if (data.networks.length === 0) {
+			$("#footer").find(".connect").trigger("click");
+			return;
+		}
+		
+		sidebar.find(".networks").append(
 			render("networks", {
 				networks: data.networks
 			})
 		);
+		var channels = $.map(data.networks, function(n) {
+			return n.channels;
+		});
 		chat.html(
 			render("chat", {
 				channels: channels
 			})
 		);
+		
 		var id = $.cookie("target");
-		var target = sidebar.find("[data-target=" + id + "]");
-		if (target.length !== 0) {
-			target.trigger("click");
-		} else {
-			sidebar.find(".chan")
+		var target = sidebar.find("[data-target=" + id + "]").trigger("click");
+		if (target.length === 0) {
+			var first = sidebar.find(".chan")
 				.eq(0)
 				.trigger("click");
+			if (first.length === 0) {
+				$("#footer").find(".connect").trigger("click");
+			}
 		}
 	});
 	
@@ -109,9 +116,16 @@ $(function() {
 	});
 	
 	socket.on("network", function(data) {
+		$("#connect").find(".btn").prop("disabled", false);
+		sidebar.find(".empty").hide();
 		sidebar.find(".networks").append(
 			render("networks", {
 				networks: [data.network]
+			})
+		);
+		chat.append(
+			render("chat", {
+				channels: data.network.channels
 			})
 		);
 		sidebar.find(".chan")
@@ -216,7 +230,8 @@ $(function() {
 		var names = $(this).closest(".users").find(".names");
 		names.find("button").each(function() {
 			var btn = $(this);
-			if (btn.text().toLowerCase().indexOf(value) === 0) {
+			var name = btn.text().toLowerCase().replace(/[+%@~]/, "");
+			if (name.indexOf(value) === 0) {
 				btn.show();
 			} else {
 				btn.hide();
@@ -271,9 +286,25 @@ $(function() {
 		}
 	});
 	
-	function isActive(chan) {
-		return active !== null && chan == active;
-	}
+	var connect = $("#connect");
+	connect.on("submit", "form", function(e) {
+		e.preventDefault();
+		var form = $(this)
+			.find(".btn")
+			.attr("disabled", true)
+			.end();
+		
+		var post = {};
+		var values = form.serializeArray();
+		
+		$.each(values, function(i, obj) {
+			if (obj.value !== "") {
+				post[obj.name] = obj.value;
+			}
+		});
+		
+		socket.emit("conn", post);
+	});
 	
 	function complete(word) {
 		return $.grep(
