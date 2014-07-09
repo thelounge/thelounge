@@ -15,7 +15,15 @@
     "irc",
     "server"
   ],
-  "main": "./index.js",
+  "main": "http://localhost:9000/",
+	"node-main": "./index.js",
+	"single-instance": false,
+	"window": {
+		"title": "Shout",
+		"toolbar": false,
+		"height": 640,
+		"width": 1024
+	},
   "scripts": {
     "start": "node index.js"
   },
@@ -32,8 +40,7 @@
   },
   "devDependencies": {
     "grunt": "~0.4.5",
-    "grunt-contrib-jshint": "~0.10.0",
-    "grunt-contrib-watch": "~0.6.1",
-    "grunt-contrib-uglify": "~0.5.0"
+    "grunt-contrib-uglify": "~0.5.0",
+    "grunt-node-webkit-builder": "~0.1.21"
   }
 }
