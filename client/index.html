@@ -111,8 +111,9 @@
 		
 		<script type="text/html" class="channels">
 		{{#each channels}}
-		<button data-id="{{id}}" data-target="#chan-{{id}}" data-title="{{name}}" class="chan">
+		<button data-id="{{id}}" data-target="#chan-{{id}}" data-title="{{name}}" class="chan {{type}}">
 			<span class="badge"></span>
+			<span class="close"></span>
 			{{name}}
 		</button>
 		{{/each}}

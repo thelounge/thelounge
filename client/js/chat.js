@@ -225,6 +225,31 @@ $(function() {
 			.sticky();
 	});
 	
+	sidebar.on("click", ".close", function() {
+		var cmd = "/close";
+		var chan = $(this).closest(".chan");
+		if (chan.hasClass("lobby")) {
+			cmd = "/quit";
+			var server = chan
+				.clone()
+				.remove("span")
+				.text()
+				.trim();
+			if (!confirm("Disconnect from " + server + "?")) {
+				return false;
+			}
+		}
+		socket.emit("input", {
+			target: chan.data("id"),
+			text: cmd
+		});
+		chan.css({
+			transition: "none",
+			opacity: .4
+		});
+		return false;
+	});
+	
 	chat.on("input", ".search", function() {
 		var value = $(this).val();
 		var names = $(this).closest(".users").find(".names");
