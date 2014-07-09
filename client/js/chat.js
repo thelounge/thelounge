@@ -384,6 +384,11 @@ $(function() {
 			.each(function() {
 				words.push($(this).text().replace(/[+%@~]/, ""));
 			});
+		var channels = sidebar.find(".channel")
+			.each(function() {
+				var chan = $(this).clone().remove("span").text().trim();
+				words.push(chan);
+			});
 		return $.grep(
 			words,
 			function(w) {
