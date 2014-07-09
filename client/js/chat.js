@@ -307,8 +307,15 @@ $(function() {
 	});
 	
 	function complete(word) {
+		var words = commands.slice();
+		var users = chat.find(".active")
+			.find(".names")
+			.children()
+			.each(function() {
+				words.push($(this).text().replace(/[+%@~]/, ""));
+			});
 		return $.grep(
-			commands,
+			words,
 			function(w) {
 				return !w.toLowerCase().indexOf(word.toLowerCase());
 			}

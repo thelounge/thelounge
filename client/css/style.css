@@ -434,6 +434,7 @@ button {
 #chat .names {
 	bottom: 0;
 	overflow: auto;
+	overflow-x: hidden;
 	-webkit-overflow-scrolling: touch;
 	padding: 15px 20px;
 	position: absolute;
