@@ -34,6 +34,8 @@ $(function() {
 	var pop = new Audio();
 	pop.src = "/audio/pop.ogg";
 	
+	$("#play").on("click", function() { pop.play(); });
+	
 	var favico = new Favico({
 		animation: "none"
 	});
@@ -105,7 +107,11 @@ $(function() {
 	});
 	
 	socket.on("msg", function(data) {
-		var target = "#chan-" + data.chan;
+		var target = data.chan;
+		if (data.msg.type == "error") {
+			target = chat.find(".active").data("id");
+		}
+		target = "#chan-" + target;
 		chat.find(target)
 			.find(".messages")
 			.append(render("messages", {messages: [data.msg]}))
@@ -116,7 +122,6 @@ $(function() {
 	});
 	
 	socket.on("network", function(data) {
-		$("#connect").find(".btn").prop("disabled", false);
 		sidebar.find(".empty").hide();
 		sidebar.find(".networks").append(
 			render("networks", {
@@ -131,6 +136,11 @@ $(function() {
 		sidebar.find(".chan")
 			.last()
 			.trigger("click");
+		connect.find(".btn")
+			.prop("disabled", false)
+			.end()
+			.find("input")
+			.val("");
 	});
 	
 	socket.on("nick", function(data) {
@@ -162,6 +172,41 @@ $(function() {
 			.find(".users")
 			.html(render("users", data));
 	});
+	
+	$.cookie.json = true;
+	var settings = $("#settings");
+	var options = $.extend({
+		join: true,
+		mode: true,
+		nick: true,
+		notification: true,
+		part: true,
+		quit: true,
+	}, $.cookie("settings"));
+	
+	for (var i in options) {
+		if (options[i]) {
+			settings.find("input[name=" + i + "]").prop("checked", true);
+		}
+	}
+	
+	settings.on("change", "input", function() {
+		var self = $(this);
+		var name = self.attr("name");
+		options[name] = self.prop("checked");
+		$.cookie("settings", options);
+		if ([
+			"join",
+			"nick",
+			"part",
+			"mode",
+			"quit",
+		].indexOf(name) !== -1) {
+			chat.toggleClass("hide-" + name, !self.prop("checked"));
+		}
+	}).find("input")
+		.eq(0)
+		.trigger("change");
 	
 	var viewport = $("#viewport");
 	$("#rt, #lt").on("click", function(e) {

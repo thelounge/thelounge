@@ -278,6 +278,22 @@ button {
 	top: 0px;
 	width: 100%;
 }
+#windows .input {
+	border: 2px solid #e9ecef;
+	border-radius: 4px;
+	color: #222;
+	font-size: 14px;
+	margin: 2px 0;
+	outline: 0;
+	padding: 8px 10px;
+	transition: border-color .2s;
+	-webkit-appearance: none;
+	width: 100%;
+}
+#windows .input:hover,
+#windows .input:focus {
+	border-color: #bdc3c7;
+}
 #windows .chan,
 #windows .window {
 	background: #fff;
@@ -293,22 +309,6 @@ button {
 }
 #windows .window h1 {
 	font: 36px Lato;
-}
-#windows .window input {
-	border: 2px solid #e9ecef;
-	border-radius: 4px;
-	color: #222;
-	font-size: 14px;
-	margin: 2px 0;
-	outline: 0;
-	padding: 8px 10px;
-	transition: border-color .2s;
-	-webkit-appearance: none;
-	width: 100%;
-}
-#windows .window input:hover,
-#windows .window input:focus {
-	border-color: #bdc3c7;
 }
 #windows .active {
 	display: block;
@@ -402,18 +402,26 @@ button {
 #chat .kick .type,
 #chat .quit .type,
 #chat .quit .type,
-#chat .notice .type,
 #chat .topic .type {
 	display: inline;
 }
 #chat .error,
-#chat .error .user,
+#chat .error .from,
 #chat .highlight,
-#chat .highlight .user {
+#chat .highlight .from {
 	color: #f00;
 }
+#chat.hide-join .join,
+#chat.hide-nick .nick,
+#chat.hide-part .nick,
+#chat.hide-mode .mode,
+#chat.hide-quit .quit {
+	display: none !important;
+}
+#chat .notice .type {
+	display: none;
+}
 #chat .meta {
-	
 	height: 80px;
 	padding: 25px 0 0 20px;
 }
@@ -486,6 +494,32 @@ button {
 }
 #connect .btn {
 	margin-top: 30px;
+}
+#settings h2 {
+	border-bottom: 1px solid #eee;
+	color: #7f8c8d;
+	font-size: 26px;
+	margin: 30px 0 10px;
+	padding-bottom: 7px;
+}
+#settings .opt {
+	display: block;
+	padding: 10px 0 10px 1px;
+}
+#settings .opt input {
+	float: left;
+	margin: 4px 10px 0 0;
+}
+#settings #play {
+	color: #7f8c8d;
+}
+#settings #play:hover {
+	opacity: .8;
+}
+#settings #play:before {
+	content: "\f0ba";
+	font: 16px Octicons;
+	margin-right: 9px;
 }
 #form {
 	bottom: 0;

@@ -47,31 +47,31 @@
 							<div class="col-xs-8">
 								<label>
 								Server
-								<input name="host" placeholder="irc.freenode.org">
+								<input class="input" name="host" placeholder="irc.freenode.org">
 								</label>
 							</div>
 							<div class="col-xs-4">
 								<label class="port">
 								Port
-								<input name="port" placeholder="6667">
+								<input class="input" name="port" placeholder="6667">
 								</label>
 							</div>
 							<div class="col-xs-5">
 								<label>
 								Nick
-								<input name="nick" placeholder="shout">
+								<input class="input" name="nick" placeholder="shout">
 								</label>
 							</div>
 							<div class="col-xs-7">
 								<label>
 								Real Name
-								<input name="realname" class="input" placeholder="Shout User">
+								<input class="input" name="realname" class="input" placeholder="Shout User">
 								</label>
 							</div>
 							<div class="col-xs-12">
 								<label>
 								Channels
-								<input name="join" class="input" placeholder="#shout-irc">
+								<input class="input" name="join" class="input" placeholder="#shout-irc">
 								</label>
 							</div>
 							<div class="col-xs-12">
@@ -87,6 +87,53 @@
 						<div class="row">
 							<div class="col-sm-12">
 								<h1 class="title">Settings</h1>
+							</div>
+							<div class="col-sm-12">
+								<h2>Messages</h2>
+							</div>
+							<div class="col-sm-6">
+								<label class="opt">
+									<input type="checkbox" name="join">
+									Show joins
+								</label>
+							</div>
+							<div class="col-sm-6">
+								<label class="opt">
+									<input type="checkbox" name="nick">
+									Show nick changes
+								</label>
+							</div>
+							<div class="col-sm-6">
+								<label class="opt">
+									<input type="checkbox" name="part">
+									Show parts
+								</label>
+							</div>
+							<div class="col-sm-6">
+								<label class="opt">
+									<input type="checkbox" name="mode">
+									Show mode
+								</label>
+							</div>
+							<div class="col-sm-6">
+								<label class="opt">
+									<input type="checkbox" name="quit">
+									Show quits
+								</label>
+							</div>
+							<div class="col-sm-12">
+								<h2>Sound</h2>
+							</div>
+							<div class="col-sm-12">
+								<label class="opt">
+									<input type="checkbox" name="notification">
+									Enable notification sound
+								</label>
+							</div>
+							<div class="col-sm-12">
+								<div class="opt">
+									<button id="play">Play sound</button>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -121,7 +168,7 @@
 		
 		<script type="text/html" class="chat">
 		{{#each channels}}
-		<div id="chan-{{id}}" data-type="{{type}}" class="chan">
+		<div id="chan-{{id}}" data-id="{{id}}" data-type="{{type}}" class="chan">
 			<div class="chat">
 				<div class="messages">
 					{{partial "messages"}}
