@@ -27,25 +27,26 @@ $(function() {
 		"/voice",
 		"/whois"
 	];
-	
+
 	var sidebar = $("#sidebar");
 	var chat = $("#chat");
-	
+
 	var pop = new Audio();
 	pop.src = "/audio/pop.ogg";
-	
+
 	$("#play").on("click", function() { pop.play(); });
-	
+	$("#footer button").tooltip();
+
 	var favico = new Favico({
 		animation: "none"
 	});
-	
+
 	var tpl = [];
 	function render(name, data) {
 		tpl[name] = tpl[name] || Handlebars.compile($("#templates ." + name).html());
 		return tpl[name](data);
 	}
-	
+
 	Handlebars.registerHelper(
 		"partial", function(id) {
 			return new Handlebars.SafeString(render(id, this));
@@ -55,13 +56,13 @@ $(function() {
 	socket.on("auth", function(data) {
 		console.log(data);
 	});
-	
+
 	socket.on("init", function(data) {
 		if (data.networks.length === 0) {
 			$("#footer").find(".connect").trigger("click");
 			return;
 		}
-		
+
 		sidebar.find(".networks").append(
 			render("networks", {
 				networks: data.networks
@@ -75,7 +76,7 @@ $(function() {
 				channels: channels
 			})
 		);
-		
+
 		var id = $.cookie("target");
 		var target = sidebar.find("[data-target=" + id + "]").trigger("click");
 		if (target.length === 0) {
@@ -87,7 +88,7 @@ $(function() {
 			}
 		}
 	});
-	
+
 	socket.on("join", function(data) {
 		var id = data.network;
 		var network = sidebar.find("#network-" + id);
@@ -105,7 +106,7 @@ $(function() {
 			.last()
 			.trigger("click");
 	});
-	
+
 	socket.on("msg", function(data) {
 		var target = data.chan;
 		if (data.msg.type == "error") {
@@ -120,7 +121,7 @@ $(function() {
 				data.msg
 			]);
 	});
-	
+
 	socket.on("network", function(data) {
 		sidebar.find(".empty").hide();
 		sidebar.find(".networks").append(
@@ -142,11 +143,11 @@ $(function() {
 			.find("input")
 			.val("");
 	});
-	
+
 	socket.on("nick", function(data) {
 		console.log(data);
 	});
-	
+
 	socket.on("part", function(data) {
 		var id = data.chan;
 		sidebar.find("[data-target=#chan-" + id + "]")
@@ -156,7 +157,7 @@ $(function() {
 			.eq(0)
 			.trigger("click");
 	});
-	
+
 	socket.on("quit", function(data) {
 		var id = data.network;
 		sidebar.find("#network-" + id)
@@ -166,13 +167,13 @@ $(function() {
 			.eq(0)
 			.trigger("click");
 	});
-	
+
 	socket.on("users", function(data) {
 		chat.find("#chan-" + data.chan)
 			.find(".users")
 			.html(render("users", data));
 	});
-	
+
 	$.cookie.json = true;
 	var settings = $("#settings");
 	var options = $.extend({
@@ -183,13 +184,13 @@ $(function() {
 		part: true,
 		quit: true,
 	}, $.cookie("settings"));
-	
+
 	for (var i in options) {
 		if (options[i]) {
 			settings.find("input[name=" + i + "]").prop("checked", true);
 		}
 	}
-	
+
 	settings.on("change", "input", function() {
 		var self = $(this);
 		var name = self.attr("name");
@@ -207,7 +208,7 @@ $(function() {
 	}).find("input")
 		.eq(0)
 		.trigger("change");
-	
+
 	var viewport = $("#viewport");
 	$("#rt, #lt").on("click", function(e) {
 		var self = $(this);
@@ -219,11 +220,11 @@ $(function() {
 			});
 		}
 	});
-	
+
 	var input = $("#input")
 		.history()
 		.tab(complete, {hint: false});
-	
+
 	var form = $("#form").on("submit", function(e) {
 		e.preventDefault();
 		var text = input.val();
@@ -233,7 +234,7 @@ $(function() {
 			text: text
 		});
 	});
-	
+
 	var top = 1;
 	sidebar.on("click", "button:not(.active)", function() {
 		var self = $(this);
@@ -241,27 +242,27 @@ $(function() {
 		if (!target) {
 			return;
 		}
-		
+
 		$.cookie("target", target);
 		chat.data(
 			"id",
 			self.data("id")
 		);
-		
+
 		sidebar.find(".active").removeClass("active");
 		self.addClass("active")
 			.find(".badge")
 			.removeClass("highlight")
 			.empty();
-		
+
 		if (sidebar.find(".highlight").length == 0) {
 			favico.badge("");
 		}
-		
+
 		$("#rt").toggle(self.hasClass("chan"));
 		$("#header").find("h1").html(self.data("title"));
 		viewport.removeClass();
-		
+
 		$("#windows .active").removeClass("active");
 		var chan = $(target)
 			.css("z-index", top++)
@@ -269,7 +270,7 @@ $(function() {
 			.find(".chat")
 			.sticky();
 	});
-	
+
 	sidebar.on("click", ".close", function() {
 		var cmd = "/close";
 		var chan = $(this).closest(".chan");
@@ -294,7 +295,7 @@ $(function() {
 		});
 		return false;
 	});
-	
+
 	chat.on("input", ".search", function() {
 		var value = $(this).val();
 		var names = $(this).closest(".users").find(".names");
@@ -308,7 +309,7 @@ $(function() {
 			}
 		});
 	});
-	
+
 	chat.on("click", ".user", function() {
 		var user = $(this).html().trim().replace(/[+%@~]/, "");
 		if (user.indexOf("#") !== -1) {
@@ -320,7 +321,7 @@ $(function() {
 			text: text
 		});
 	});
-	
+
 	chat.on("msg", ".messages", function(e, target, msg) {
 		var type = msg.type;
 		var highlight = type.contains("highlight");
@@ -330,12 +331,12 @@ $(function() {
 				favico.badge("!");
 			}
 		}
-		
+
 		var btn = sidebar.find(".chan[data-target=" + target + "]:not(.active)");
 		if (btn.length === 0) {
 			return;
 		}
-		
+
 		var ignore = [
 			"join",
 			"part",
@@ -345,7 +346,7 @@ $(function() {
 		if ($.inArray(type, ignore) !== -1){
 			return;
 		}
-		
+
 		var badge = btn.find(".badge");
 		if (badge.length !== 0) {
 			var i = (parseInt(badge.html()) || 0) + 1;
@@ -355,7 +356,7 @@ $(function() {
 			}
 		}
 	});
-	
+
 	var connect = $("#connect");
 	connect.on("submit", "form", function(e) {
 		e.preventDefault();
@@ -363,19 +364,19 @@ $(function() {
 			.find(".btn")
 			.attr("disabled", true)
 			.end();
-		
+
 		var post = {};
 		var values = form.serializeArray();
-		
+
 		$.each(values, function(i, obj) {
 			if (obj.value !== "") {
 				post[obj.name] = obj.value;
 			}
 		});
-		
+
 		socket.emit("conn", post);
 	});
-	
+
 	function complete(word) {
 		var words = commands.slice();
 		var users = chat.find(".active")
@@ -396,7 +397,7 @@ $(function() {
 			}
 		);
 	}
-	
+
 	document.addEventListener(
 		"visibilitychange",
 		function() {

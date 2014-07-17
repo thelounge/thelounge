@@ -39,6 +39,14 @@ button {
 	outline: none;
 	padding: 0;
 }
+.tooltip-inner {
+	background: #fff;
+	border-radius: 2px;
+	color: #262c36;
+}
+.tooltip.top .tooltip-arrow {
+	border-top-color: #fff;
+}
 .btn {
 	border: 2px solid #95a5a6;
 	border: 2px solid #84d1ff;
@@ -257,7 +265,7 @@ button {
 #header button:hover {
 	opacity: 1;
 }
-#header #lt {	
+#header #lt {
 	left: 4px;
 	text-align: left;
 }

@@ -1,23 +1,23 @@
 <!doctype html>
 <html>
 	<head>
-	
+
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimal-ui">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	
+
 	<title>Shout</title>
-	
+
 	<link rel="stylesheet" href="css/bootstrap.css">
 	<link rel="stylesheet" href="css/style.css">
 	<link id="theme" rel="stylesheet" href="<%= typeof theme !== "undefined" ? theme : "" %>">
-	
+
 	<link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png" />
 	<link rel="shortcut icon" href="/img/favicon.png">
-	
+
 	</head>
 	<body>
-	
+
 	<div id="wrap">
 	<div id="viewport">
 		<aside id="sidebar">
@@ -27,8 +27,8 @@
 				</div>
 			</div>
 			<footer id="footer">
-				<button class="connect" data-target="#connect" data-title="Connect"></button>
-				<button class="settings" data-target="#settings" data-title="Settings"></button>
+				<button class="connect" data-target="#connect" data-title="Connect" data-placement="top" title="Connect to network"></button>
+				<button class="settings" data-target="#settings" data-title="Settings" data-placement="top" title="Client settings"></button>
 			</footer>
 		</aside>
 		<div id="main">
@@ -36,7 +36,7 @@
 				<button id="lt"></button>
 				<button id="rt"></button>
 				<h1></h1>
-			</header> 
+			</header>
 			<div id="windows">
 				<div id="chat"></div>
 				<div id="connect" class="window">
@@ -147,7 +147,7 @@
 		</div>
 	</div>
 	</div>
-	
+
 	<div id="templates">
 		<script type="text/html" class="networks">
 		{{#each networks}}
@@ -156,7 +156,7 @@
 		</section>
 		{{/each}}
 		</script>
-		
+
 		<script type="text/html" class="channels">
 		{{#each channels}}
 		<button data-id="{{id}}" data-target="#chan-{{id}}" data-title="{{name}}" class="chan {{type}}">
@@ -166,7 +166,7 @@
 		</button>
 		{{/each}}
 		</script>
-		
+
 		<script type="text/html" class="chat">
 		{{#each channels}}
 		<div id="chan-{{id}}" data-id="{{id}}" data-type="{{type}}" class="chan">
@@ -187,7 +187,7 @@
 		</div>
 		{{/each}}
 		</script>
-		
+
 		<script type="text/html" class="users">
 		{{#if users.length}}
 		<div class="count">
@@ -200,7 +200,7 @@
 			{{/each}}
 		</div>
 		</script>
-		
+
 		<script type="text/html" class="messages">
 		{{#each messages}}
 		<div class="msg {{type}}">
@@ -222,9 +222,9 @@
 		{{/each}}
 		</script>
 	</div>
-	
+
 	<script src="js/components.min.js"></script>
 	<script src="js/chat.js"></script>
-	
+
 	</body>
 </html>
