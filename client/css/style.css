@@ -84,14 +84,14 @@ button {
 	padding: 0 30px;
 }
 ::-moz-placeholder {
-	color: rgba(0, 0, 0, .5);
+	color: rgba(0, 0, 0, .25);
 	opacity: 1;
 }
 ::-webkit-input-placeholder {
-	color: rgba(0, 0, 0, .5);
+	color: rgba(0, 0, 0, .25);
 }
 :-ms-input-placeholder {
-	color: rgba(0, 0, 0, .5) !important;
+	color: rgba(0, 0, 0, .25) !important;
 }
 #wrap {
 	height: 100%;
@@ -220,15 +220,35 @@ button {
 	width: 220px;
 }
 #footer button {
-	font: 18px Octicons;
+	font: 16px Octicons;
 	line-height: 34px;
 	padding: 0px 12px;
+}
+.signed-out #footer .sign-in {
+	display: inline-block;
+}
+.signed-out #footer .connect,
+.signed-out #footer .sign-out {
+	display: none;
+}
+.public #footer .sign-in,
+.public #footer .sign-out {
+	display: none;
+}
+#footer .sign-in {
+	display: none;
+}
+#footer .sign-in:before {
+	content: "\f036";
 }
 #footer .connect:before {
 	content: "\f085";
 }
 #footer .settings:before {
 	content: "\f02f";
+}
+#footer .sign-out:before {
+	content: "\f032";
 }
 #main {
 	bottom: 0;
@@ -485,8 +505,15 @@ button {
 	display: block;
 	line-height: 1.6em;
 }
-#connect input {
-	width: 100%;
+#sign-in label {
+	display: block;
+	margin-top: 10px;
+}
+#sign-in .title {
+	margin-bottom: 10px;
+}
+#sign-in .btn {
+	margin-top: 25px;
 }
 #connect label {
 	display: block;
@@ -501,14 +528,17 @@ button {
 	position: absolute;
 }
 #connect .btn {
-	margin-top: 30px;
+	margin-top: 25px;
 }
 #settings h2 {
 	border-bottom: 1px solid #eee;
 	color: #7f8c8d;
-	font-size: 26px;
+	font-size: 22px;
 	margin: 30px 0 10px;
 	padding-bottom: 7px;
+}
+#settings .title {
+	margin-bottom: -10px;
 }
 #settings .opt {
 	display: block;
@@ -579,6 +609,9 @@ button {
 }
 
 @media (max-width: 480px) {
+	.container {
+		margin-bottom: 5%;
+	}
 	#viewport.lt {
 		-webkit-transform: translate3d(220px, 0, 0);
 		        transform: translate3d(220px, 0, 0);
@@ -614,9 +647,6 @@ button {
 		padding: 0;
 	}
 	#chat .time {
-		display: none;
-	}
-	#windows .title {
 		display: none;
 	}
 }

@@ -10,13 +10,13 @@
 
 	<link rel="stylesheet" href="css/bootstrap.css">
 	<link rel="stylesheet" href="css/style.css">
-	<link id="theme" rel="stylesheet" href="<%= typeof theme !== "undefined" ? theme : "" %>">
+	<link id="theme" rel="stylesheet" href="<%=theme%>">
 
 	<link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png" />
 	<link rel="shortcut icon" href="/img/favicon.png">
 
 	</head>
-	<body>
+	<body class="<%= public ? "public" : "signed-out" %>">
 
 	<div id="wrap">
 	<div id="viewport">
@@ -27,8 +27,10 @@
 				</div>
 			</div>
 			<footer id="footer">
+				<button class="sign-in" data-target="#sign-in" data-title="Sign in" data-placement="top" title="Sign in to Shout"></button>
 				<button class="connect" data-target="#connect" data-title="Connect" data-placement="top" title="Connect to network"></button>
 				<button class="settings" data-target="#settings" data-title="Settings" data-placement="top" title="Client settings"></button>
+				<button class="sign-out" data-placement="top" title="Sign out user"></button>
 			</footer>
 		</aside>
 		<div id="main">
@@ -39,6 +41,32 @@
 			</header>
 			<div id="windows">
 				<div id="chat"></div>
+				<div id="sign-in" class="window">
+					<form class="container" action="">
+						<div class="row">
+							<div class="col-xs-12">
+								<h1 class="title">Sign in</h1>
+							</div>
+							<div class="col-xs-12">
+								<label>
+								Username
+								<input class="input" name="user">
+								</label>
+							</div>
+							<div class="col-xs-12">
+								<label class="port">
+								Password
+								<input class="input" name="password">
+								</label>
+							</div>
+							<div class="col-xs-12">
+								<button type="submit" class="btn">
+									Sign in
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
 				<div id="connect" class="window">
 					<form class="container" action="">
 						<div class="row">

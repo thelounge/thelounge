@@ -54,12 +54,14 @@ $(function() {
 	);
 
 	socket.on("auth", function(data) {
-		console.log(data);
+		$("#footer").find(".sign-in").trigger("click");
+		$("#sign-in input:first").focus();
 	});
 
 	socket.on("init", function(data) {
 		if (data.networks.length === 0) {
 			$("#footer").find(".connect").trigger("click");
+			$("#connect input:first").focus();
 			return;
 		}
 
