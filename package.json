@@ -1,7 +1,7 @@
 {
   "name": "shout",
   "description": "The modern IRC client",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "homepage": "http://github.com/erming/shout",
   "author": {
     "name": "Mattias Erming",
