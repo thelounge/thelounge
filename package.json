@@ -16,14 +16,14 @@
     "server"
   ],
   "main": "http://localhost:9000/",
-	"node-main": "./index.js",
-	"single-instance": false,
-	"window": {
-		"title": "Shout",
-		"toolbar": false,
-		"height": 640,
-		"width": 1024
-	},
+  "node-main": "./index.js",
+  "single-instance": false,
+  "window": {
+    "title": "Shout",
+    "toolbar": false,
+    "height": 640,
+    "width": 1024
+  },
   "scripts": {
     "start": "node index.js"
   },

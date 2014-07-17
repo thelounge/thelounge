@@ -1,4 +1,5 @@
 module.exports = {
 	port: 9000,
-	public: true
+	public: true,
+	theme: "themes/example.css"
 };
