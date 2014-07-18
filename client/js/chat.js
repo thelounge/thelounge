@@ -376,6 +376,7 @@ $(function() {
 			}
 		});
 
+		console.log(post);
 		socket.emit("conn", post);
 	});
 
