@@ -403,6 +403,7 @@ button {
 	color: #ddd;
 	text-align: right;
 	width: 46px;
+	min-width: 46px;
 }
 #chat .from {
 	background: #f9f9f9;
@@ -411,6 +412,7 @@ button {
 	padding-right: 10px;
 	text-align: right;
 	width: 134px;
+	min-width: 134px;
 }
 #chat a,
 #chat .from button {
