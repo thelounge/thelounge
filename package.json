@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "connect": "~2.19.6",
-    "indicator": "^0.1.2",
     "lodash": "~2.4.1",
     "moment": "~2.7.0",
     "slate-irc": "~0.6.0",
