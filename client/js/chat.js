@@ -53,19 +53,28 @@ $(function() {
 		}
 	);
 
+	socket.on("error", function(e) {
+		console.log(e);
+	});
+
 	socket.on("auth", function(data) {
-		$("#footer").find(".sign-in").trigger("click");
-		$("#sign-in input:first").focus();
+		$("body").addClass("signed-out");
+		sidebar.find(".sign-in")
+			.click()
+			.end()
+			.find(".networks")
+			.html("")
+			.next()
+			.show();
 	});
 
 	socket.on("init", function(data) {
 		if (data.networks.length === 0) {
 			$("#footer").find(".connect").trigger("click");
-			$("#connect input:first").focus();
 			return;
 		}
 
-		sidebar.find(".networks").append(
+		sidebar.find(".networks").html(
 			render("networks", {
 				networks: data.networks
 			})
@@ -78,6 +87,9 @@ $(function() {
 				channels: channels
 			})
 		);
+
+		sidebar.find(".chan").eq(0).trigger("click"); sidebar.find(".empty").hide();
+		$("body").removeClass("signed-out");
 
 		var id = $.cookie("target");
 		var target = sidebar.find("[data-target=" + id + "]").trigger("click");
@@ -139,7 +151,8 @@ $(function() {
 		sidebar.find(".chan")
 			.last()
 			.trigger("click");
-		connect.find(".btn")
+		$("#connect")
+			.find(".btn")
 			.prop("disabled", false)
 			.end()
 			.find("input")
@@ -164,10 +177,13 @@ $(function() {
 		var id = data.network;
 		sidebar.find("#network-" + id)
 			.remove()
-			.end()
-			.find(".chan")
+			.end();
+		var chan = sidebar.find(".chan")
 			.eq(0)
 			.trigger("click");
+		if (chan.length === 0) {
+			sidebar.find(".empty").show();
+		}
 	});
 
 	socket.on("users", function(data) {
@@ -359,25 +375,25 @@ $(function() {
 		}
 	});
 
-	var connect = $("#connect");
-	connect.on("submit", "form", function(e) {
-		e.preventDefault();
-		var form = $(this)
-			.find(".btn")
-			.attr("disabled", true)
-			.end();
-
-		var post = {};
-		var values = form.serializeArray();
-
-		$.each(values, function(i, obj) {
+	$("#sign-in, #connect").on("submit", "form", function(e) {
+		e.preventDefault()
+		var event = "auth";
+		var form = $(this);
+		if (form.closest(".window").attr("id") == "connect") {
+			event = "conn";
+			form.find(".btn")
+				.attr("disabled", true)
+				.end();
+		}
+		var values = {};
+		$.each(form.serializeArray(), function(i, obj) {
 			if (obj.value !== "") {
-				post[obj.name] = obj.value;
+				values[obj.name] = obj.value;
 			}
 		});
-
-		console.log(post);
-		socket.emit("conn", post);
+		socket.emit(
+			event, values
+		);
 	});
 
 	function complete(word) {

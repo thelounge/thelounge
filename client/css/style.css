@@ -144,8 +144,10 @@ button {
 	color: #7c838d;
 	line-height: 1.6;
 	font-size: 12px;
+	padding: 25px 40px 80px;
 	text-align: center;
-	width: 140px;
+	position: absolute;
+	top: 0;
 }
 #sidebar .empty:before {
 	content: "\f085";

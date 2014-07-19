@@ -1,7 +1,10 @@
 {
 	"user": "example",
 	"password": "password",
-	"servers": [
-		{}
+	"networks": [
+		{
+			"host": "irc.rizon.net",
+			"nick": "example"
+		}
 	]
 }

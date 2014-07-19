@@ -21,10 +21,9 @@
 	<div id="wrap">
 	<div id="viewport">
 		<aside id="sidebar">
-			<div class="networks">
-				<div class="empty">
-					You're not connected to any networks yet.
-				</div>
+			<div class="networks"></div>
+			<div class="empty">
+				You're not connected to any networks yet.
 			</div>
 			<footer id="footer">
 				<button class="sign-in" data-target="#sign-in" data-title="Sign in" data-placement="top" title="Sign in to Shout"></button>
@@ -76,31 +75,31 @@
 							<div class="col-xs-8">
 								<label>
 								Server
-								<input class="input" name="host" placeholder="<%=defaults.host%>">
+								<input class="input" name="host" placeholder="irc.freenode.org">
 								</label>
 							</div>
 							<div class="col-xs-4">
 								<label class="port">
 								Port
-								<input class="input" name="port" placeholder="<%=defaults.port%>">
+								<input class="input" name="port" placeholder="6667">
 								</label>
 							</div>
 							<div class="col-xs-5">
 								<label>
 								Nick
-								<input class="input" name="nick" placeholder="<%=defaults.nick%>">
+								<input class="input" name="nick" placeholder="shout-user">
 								</label>
 							</div>
 							<div class="col-xs-7">
 								<label>
 								Real Name
-								<input class="input" name="realname" class="input" placeholder="<%=defaults.realname%>">
+								<input class="input" name="realname" class="input" placeholder="Shout User">
 								</label>
 							</div>
 							<div class="col-xs-12">
 								<label>
 								Channels
-								<input class="input" name="join" class="input" placeholder="<%=defaults.join%>">
+								<input class="input" name="join" class="input" placeholder="#shout-irc">
 								</label>
 							</div>
 							<div class="col-xs-12">
