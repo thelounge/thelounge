@@ -29,7 +29,7 @@
 				<button class="icon sign-in" data-target="#sign-in" data-title="Sign in" data-placement="top" title="Sign in to Shout"></button>
 				<button class="icon connect" data-target="#connect" data-title="Connect" data-placement="top" title="Connect to network"></button>
 				<button class="icon settings" data-target="#settings" data-title="Settings" data-placement="top" title="Client settings"></button>
-				<a href="" class="icon sign-out" data-placement="top" title="Sign out user"></a>
+				<a href="" class="icon sign-out" data-placement="top" title="Sign out"></a>
 			</footer>
 		</aside>
 		<div id="main">
@@ -198,6 +198,11 @@
 		{{#each channels}}
 		<div id="chan-{{id}}" data-id="{{id}}" data-type="{{type}}" class="chan">
 			<div class="chat">
+				{{#equal 100 messages.length}}
+				<button class="show-more" data-id="{{id}}">
+					Show more
+				</button>
+				{{/equal}}
 				<div class="messages">
 					{{partial "messages"}}
 				</div>
@@ -237,8 +242,6 @@
 			<span class="from">
 				{{#if from}}
 				<button class="user">{{from}}</button>
-				{{else}}
-				//
 				{{/if}}
 			</span>
 			<span class="text">

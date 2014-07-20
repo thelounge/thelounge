@@ -48,7 +48,6 @@ button {
 	border-top-color: #fff;
 }
 .btn {
-	border: 2px solid #95a5a6;
 	border: 2px solid #84d1ff;
 	border-radius: 5px;
 	color: #95a5a6;
@@ -62,9 +61,11 @@ button {
 	transition: background .2s, border-color .2s, color .2s;
 	word-spacing: 3px;
 }
+.btn:focus {
+	background: #f2fbff;
+}
 .btn:disabled,
 .btn:hover {
-	background: #95a5a6;
 	background: #84d1ff;
 	color: #fff;
 }
@@ -338,6 +339,7 @@ button {
 }
 #windows .window {
 	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
 }
 #windows .window h1 {
 	font: 36px Lato;
@@ -376,6 +378,17 @@ button {
 }
 #chat .sidebar button {
 	color: #33b0f7;
+}
+#chat .show-more {
+	color: #33b0f7;
+	position: absolute;
+	width: 100%;
+	border-bottom: 1px solid #ddd;
+	height: 41px;
+	background: #fff;
+}
+#chat .show-more + .messages .msg:first-child span {
+	padding-top: 46px;
 }
 #chat .messages {
 	display: table;

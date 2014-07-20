@@ -80,6 +80,7 @@ $(function() {
 				networks: data.networks
 			})
 		);
+
 		var channels = $.map(data.networks, function(n) {
 			return n.channels;
 		});
@@ -89,7 +90,9 @@ $(function() {
 			})
 		);
 
-		sidebar.find(".chan").eq(0).trigger("click"); sidebar.find(".empty").hide();
+		sidebar.find(".chan").eq(0).trigger("click");
+		sidebar.find(".empty").hide();
+
 		$("body").removeClass("signed-out");
 
 		var id = $.cookie("target");
@@ -135,6 +138,17 @@ $(function() {
 				target,
 				data.msg
 			]);
+	});
+
+	socket.on("showMore", function(data) {
+		var target = data.chan;
+		chat.find("#chan-" + target)
+			.find(".show-more")
+			.remove()
+			.end()
+			.find(".messages")
+			.prepend(render("messages", {messages: data.messages}))
+			.end();
 	});
 
 	socket.on("network", function(data) {
@@ -377,14 +391,27 @@ $(function() {
 		}
 	});
 
-	$("#windows").on("show", ".window", function() {
+	chat.on("click", ".show-more", function() {
+		var self = $(this);
+		var id = self.data("id");
+		var count = self.next(".messages").children().length;
+		socket.emit("showMore", {
+			target: id,
+			count: count
+		});
+	});
+
+	var windows = $("#windows");
+	var forms = $("#sign-in, #connect");
+
+	windows.on("show", ".window", function() {
 		var self = $(this);
 		setTimeout(function() {
 			self.find("input").eq(0).focus();
 		}, 0);
 	});
 
-	$("#sign-in, #connect").on("submit", "form", function(e) {
+	forms.on("submit", "form", function(e) {
 		e.preventDefault()
 		var event = "auth";
 		var form = $(this);
