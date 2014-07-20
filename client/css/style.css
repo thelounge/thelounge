@@ -468,6 +468,13 @@ button {
 #chat .notice .type {
 	display: none;
 }
+#chat .action,
+#chat .action .user {
+	color: #f39c12;
+}
+#chat .action .user:before {
+	content: '* ';
+}
 #chat .meta {
 	height: 80px;
 	padding: 25px 0 0 20px;

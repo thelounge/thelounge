@@ -4,7 +4,10 @@
 	"networks": [
 		{
 			"host": "irc.rizon.net",
-			"nick": "example"
+			"port": 6667,
+			"nick": "example",
+			"realname": "Example",
+			"join": "#chan"
 		}
 	]
 }
