@@ -35,7 +35,7 @@ $(function() {
 	pop.src = "/audio/pop.ogg";
 
 	$("#play").on("click", function() { pop.play(); });
-	$("#footer button").tooltip();
+	$("#footer .icon").tooltip();
 
 	var favico = new Favico({
 		animation: "none"
@@ -59,6 +59,7 @@ $(function() {
 
 	socket.on("auth", function(data) {
 		$("body").addClass("signed-out");
+		$("#sign-in input[name='user']").val($.cookie("user") || "");
 		sidebar.find(".sign-in")
 			.click()
 			.end()
@@ -285,6 +286,7 @@ $(function() {
 		var chan = $(target)
 			.css("z-index", top++)
 			.addClass("active")
+			.trigger("show")
 			.find(".chat")
 			.sticky();
 	});
@@ -375,6 +377,13 @@ $(function() {
 		}
 	});
 
+	$("#windows").on("show", ".window", function() {
+		var self = $(this);
+		setTimeout(function() {
+			self.find("input").eq(0).focus();
+		}, 0);
+	});
+
 	$("#sign-in, #connect").on("submit", "form", function(e) {
 		e.preventDefault()
 		var event = "auth";
@@ -391,6 +400,9 @@ $(function() {
 				values[obj.name] = obj.value;
 			}
 		});
+		if (values.user) {
+			$.cookie("user", values.user);
+		}
 		socket.emit(
 			event, values
 		);
