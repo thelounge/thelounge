@@ -404,14 +404,16 @@ $(function() {
 	var windows = $("#windows");
 	var forms = $("#sign-in, #connect");
 
-	windows.on("show", ".window", function() {
-		// Temporary.
-		return;
-
+	windows.on("show", "#sign-in", function() {
 		var self = $(this);
-		setTimeout(function() {
-			self.find("input").eq(0).focus().select();
-		}, 0);
+		var inputs = self.find("input");
+		inputs.each(function() {
+			var self = $(this);
+			if (self.val() === "") {
+				self.focus();
+				return false;
+			}
+		})
 	});
 
 	windows.on("click", ".input", function() {
