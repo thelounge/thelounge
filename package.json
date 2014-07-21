@@ -1,7 +1,7 @@
 {
   "name": "shout",
-  "description": "The modern IRC client",
-  "version": "0.8.3",
+  "description": "A web IRC client",
+  "version": "0.8.4",
   "homepage": "http://github.com/erming/shout",
   "author": {
     "name": "Mattias Erming",
@@ -20,9 +20,10 @@
   "single-instance": false,
   "window": {
     "title": "Shout",
+		"icon": "client/img/favicon.png",
     "toolbar": false,
-    "height": 640,
-    "width": 1024
+    "width": 1024,
+    "height": 640
   },
   "scripts": {
     "start": "node index.js"

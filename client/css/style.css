@@ -347,7 +347,7 @@ button {
 }
 #chat {
 	bottom: 0;
-	font: 13px Consolas, monospace;
+	font: 12px Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Courier New, monospace;
 	left: 0;
 	position: absolute;
 	right: 0;
@@ -474,6 +474,7 @@ button {
 	content: '* ';
 }
 #chat .meta {
+	font-family: "Lato";
 	height: 80px;
 	padding: 25px 0 0 20px;
 }
@@ -483,6 +484,7 @@ button {
 }
 #chat .meta .type {
 	color: #ccc;
+	font-size: 12px;
 	text-transform: capitalize;
 }
 #chat .count {

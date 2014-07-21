@@ -12,7 +12,7 @@ _Some highlights:_
 
 ## Screenshot
 
-![](https://raw.github.com/erming/shout/master/screenshot.png)  
+![](https://raw.github.com/erming/shout/master/screenshots/shout.png)  
 
 ## Install
 
