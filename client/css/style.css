@@ -49,7 +49,7 @@ button {
 }
 .btn {
 	border: 2px solid #84d1ff;
-	border-radius: 5px;
+	border-radius: 3px;
 	color: #95a5a6;
 	color: #84d1ff;
 	display: inline-block;
@@ -119,19 +119,23 @@ button {
 	width: 220px;
 	z-index: 2;
 }
-#sidebar button {
+#sidebar button,
+#sidebar .sign-out {
 	border: 1px solid transparent;
 	border-radius: 2px;
-	color: #7c838d;
+	color: #818b9e;
 	font-size: 14px;
 }
 #sidebar button:hover,
 #sidebar .active {
-	background: #2a303a;
-	border-color: rgba(255, 255, 255, .025);
+	background: #818b9e;
+	background: rgba(129, 139, 158, .05);
+	border-color: rgba(129, 139, 158, .03);
 }
 #sidebar button.active {
-	background: #323841;
+	background: #818b9e;
+	background: rgba(129, 139, 158, .1);
+	border-color: rgba(129, 139, 158, .06);
 	color: #fff;
 }
 #sidebar .networks {
@@ -142,22 +146,16 @@ button {
 	margin-top: 30px;
 }
 #sidebar .empty {
-	color: #7c838d;
+	background: no-repeat url(../img/logo.svg);
+	background-size: 100% 140px;
+	color: #818b9e;
 	line-height: 1.6;
 	font-size: 12px;
-	padding: 25px 40px 80px;
+	margin-top: 20px;
+	padding: 150px 40px 80px;
 	text-align: center;
 	position: absolute;
 	top: 0;
-}
-#sidebar .empty:before {
-	content: "\f085";
-	display:  block;
-	margin-top: 20px;
-	font: 64px Octicons;
-	opacity: .4;
-	margin-bottom: 24px;
-	text-align: center;
 }
 #sidebar .chan {
 	display: block;
@@ -177,7 +175,7 @@ button {
 	opacity: 0;
 }
 #sidebar .chan:hover .close {
-	opacity: .2;
+	opacity: .1;
 }
 #sidebar .badge {
 	background: rgba(255, 255, 255, .06);
@@ -212,7 +210,7 @@ button {
 	width: 18px;
 }
 #sidebar .close:hover {
-	background-color: rgba(0, 0, 0, .2);
+	background-color: rgba(0, 0, 0, .1);
 	opacity: .7 !important;
 }
 #footer {
@@ -223,7 +221,7 @@ button {
 	width: 220px;
 }
 #footer .icon {
-	color: #7c838d;
+	color: #818b9e;
 	display: inline-block;
 	font: 16px Octicons;
 	line-height: 34px;
@@ -312,8 +310,8 @@ button {
 	width: 100%;
 }
 #windows .input {
-	border: 2px solid #e9ecef;
-	border-radius: 4px;
+	border: 1px solid #cdd3da;
+	border-radius: 3px;
 	color: #222;
 	font-size: 14px;
 	margin: 2px 0;
@@ -325,7 +323,7 @@ button {
 }
 #windows .input:hover,
 #windows .input:focus {
-	border-color: #bdc3c7;
+	border-color: #79838c;
 }
 #windows .chan,
 #windows .window {

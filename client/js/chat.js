@@ -405,10 +405,17 @@ $(function() {
 	var forms = $("#sign-in, #connect");
 
 	windows.on("show", ".window", function() {
+		// Temporary.
+		return;
+
 		var self = $(this);
 		setTimeout(function() {
-			self.find("input").eq(0).focus();
+			self.find("input").eq(0).focus().select();
 		}, 0);
+	});
+
+	windows.on("click", ".input", function() {
+		$(this).select();
 	});
 
 	forms.on("submit", "form", function(e) {
