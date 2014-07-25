@@ -305,6 +305,10 @@ $(function() {
 			.sticky();
 	});
 
+	sidebar.on("click", "#sign-out", function() {
+		location.reload();
+	});
+
 	sidebar.on("click", ".close", function() {
 		var cmd = "/close";
 		var chan = $(this).closest(".chan");
