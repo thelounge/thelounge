@@ -578,6 +578,7 @@ button {
 	float: left;
 	margin: 4px 10px 0 0;
 }
+#settings .about,
 #settings #play {
 	color: #7f8c8d;
 }
@@ -588,6 +589,11 @@ button {
 	content: "\f0ba";
 	font: 16px Octicons;
 	margin-right: 9px;
+}
+#settings .about {
+	font-size: 14px;
+	padding-top: 2px;
+	line-height: 1.8;
 }
 #form {
 	bottom: 0;
