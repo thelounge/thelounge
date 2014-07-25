@@ -90,13 +90,11 @@ $(function() {
 			})
 		);
 
-		sidebar.find(".chan").eq(0).trigger("click");
 		sidebar.find(".empty").hide();
-
 		$("body").removeClass("signed-out");
 
 		var id = $.cookie("target");
-		var target = sidebar.find("[data-target=" + id + "]").trigger("click");
+		var target = sidebar.find("[data-target='" + id + "']").trigger("click");
 		if (target.length === 0) {
 			var first = sidebar.find(".chan")
 				.eq(0)
@@ -276,7 +274,9 @@ $(function() {
 			return;
 		}
 
-		$.cookie("target", target);
+		if (self.hasClass("chan")) {
+			$.cookie("target", target);
+		}
 		chat.data(
 			"id",
 			self.data("id")
