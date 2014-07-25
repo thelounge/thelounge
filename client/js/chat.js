@@ -58,8 +58,16 @@ $(function() {
 	});
 
 	socket.on("auth", function(data) {
-		$("body").addClass("signed-out");
-		$("#sign-in input[name='user']").val($.cookie("user") || "");
+		var body = $("body");
+		var login = $("#sign-in");
+		if (body.hasClass("signed-out")) {
+			var error = login.find(".error");
+			error.show().closest("form").one("submit", function() {
+				error.hide();
+			});
+		}
+		body.addClass("signed-out");
+		login.find("input[name='user']").val($.cookie("user") || "");
 		sidebar.find(".sign-in")
 			.click()
 			.end()

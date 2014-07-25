@@ -541,6 +541,10 @@ button {
 #sign-in .btn {
 	margin-top: 25px;
 }
+#sign-in .error {
+	color: #e74c3c;
+	margin-top: 1em;
+}
 #connect label {
 	display: block;
 	margin-top: 10px;

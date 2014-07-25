@@ -15,7 +15,7 @@
 	<link rel="shortcut icon" href="/img/favicon.png">
 
 	</head>
-	<body class="<%= public ? "public" : "signed-out" %>">
+	<body class="<%= public ? "public" : "" %>">
 
 	<div id="wrap">
 	<div id="viewport">
@@ -56,6 +56,9 @@
 								Password
 								<input class="input" type="password" name="password">
 								</label>
+							</div>
+							<div class="col-xs-12 error" style="display: none;">
+								Authentication failed.
 							</div>
 							<div class="col-xs-12">
 								<button type="submit" class="btn">
