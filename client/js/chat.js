@@ -369,20 +369,21 @@ $(function() {
 	});
 
 	chat.on("msg", ".messages", function(e, target, msg) {
+		var btn = sidebar.find(".chan[data-target=" + target + "]:not(.active)");
+		var query = btn.hasClass("query");
 		var type = msg.type;
 		var highlight = type.contains("highlight");
-		if (highlight) {
+		if (highlight || query) {
 			pop.play();
 			if (document.hidden || !$(target).hasClass("active")) {
 				favico.badge("!");
 			}
 		}
 
-		var btn = sidebar.find(".chan[data-target=" + target + "]:not(.active)");
 		if (btn.length === 0) {
 			return;
 		}
-
+		
 		var ignore = [
 			"join",
 			"part",
@@ -397,7 +398,7 @@ $(function() {
 		if (badge.length !== 0) {
 			var i = (parseInt(badge.html()) || 0) + 1;
 			badge.html(i);
-			if (highlight) {
+			if (highlight || query) {
 				badge.addClass("highlight");
 			}
 		}
