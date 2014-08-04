@@ -275,7 +275,7 @@ $(function() {
 	});
 
 	var top = 1;
-	sidebar.on("click", "button:not(.active)", function() {
+	sidebar.on("click", "button", function() {
 		var self = $(this);
 		var target = self.data("target");
 		if (!target) {
@@ -306,11 +306,16 @@ $(function() {
 
 		$("#windows .active").removeClass("active");
 		var chan = $(target)
-			.css("z-index", top++)
 			.addClass("active")
 			.trigger("show")
+			.css("z-index", top++)
 			.find(".chat")
-			.sticky();
+			.sticky()
+			.end();
+		
+		if (chan.hasClass("chan")) {
+			input.focus();
+		}
 	});
 
 	sidebar.on("click", "#sign-out", function() {
