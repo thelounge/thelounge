@@ -1,7 +1,7 @@
 /*!
  * stickyscroll
  * https://github.com/erming/stickyscroll
- * v2.1.0
+ * v2.1.1
  */
 (function($) {
 	$.fn.sticky = function() {
@@ -33,6 +33,10 @@
 			"overflow-y": overflow
 		});
 		
+		$(window).unbind(".sticky");
+		$(window).on("resize.sticky", function() {
+				self.scrollBottom();
+		});
 		
 		this.scrollBottom();
 		return this;
