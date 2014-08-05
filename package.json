@@ -1,7 +1,7 @@
 {
   "name": "shout",
   "description": "A web IRC client",
-  "version": "0.8.10",
+  "version": "0.8.11",
   "homepage": "http://github.com/erming/shout",
   "author": {
     "name": "Mattias Erming",
@@ -33,6 +33,7 @@
     "url": "https://github.com/erming/shout.git"
   },
   "dependencies": {
+    "commander": "^2.3.0",
     "connect": "~2.19.6",
     "lodash": "~2.4.1",
     "moment": "~2.7.0",

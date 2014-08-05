@@ -41,8 +41,10 @@ module.exports = function() {
 		}
 	});
 
-	console.log("Server started.");
+	console.log("");
 	console.log("Shout is now running on port " + port);
+	console.log("Press ctrl-c to stop");
+	console.log("");
 
 	if (config.public) {
 		return;
