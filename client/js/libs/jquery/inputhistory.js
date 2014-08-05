@@ -1,7 +1,7 @@
 /*!
  * inputhistory
  * https://github.com/erming/inputhistory
- * v0.3.0
+ * v0.3.1
  */
 (function($) {
 	$.inputhistory = {};
@@ -49,6 +49,9 @@
 			
 			case 38: // Up
 			case 40: // Down
+				if (e.ctrlKey) {
+					break;
+				}
 				history[i] = self.val();
 				if (key == 38 && i != 0) {
 					i--;

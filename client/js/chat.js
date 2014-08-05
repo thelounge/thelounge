@@ -263,7 +263,7 @@ $(function() {
 	var input = $("#input")
 		.history()
 		.tab(complete, {hint: false});
-
+	
 	var form = $("#form").on("submit", function(e) {
 		e.preventDefault();
 		var text = input.val();
@@ -460,6 +460,21 @@ $(function() {
 		socket.emit(
 			event, values
 		);
+	});
+
+	Mousetrap.bind(["ctrl+up", "ctrl+down"], function(e, keys) {
+		var active = sidebar.find(".active");
+		switch (keys) {
+		case "ctrl+up":
+			var prev = active.prev(".chan");
+			prev.click();
+			break;
+		
+		case "ctrl+down":
+			var next = active.next(".chan");
+			next.click();
+			break;
+		}
 	});
 
 	function complete(word) {
