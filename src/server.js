@@ -25,8 +25,8 @@ var inputs = [
 	"whois"
 ];
 
-module.exports = function() {
-	var port = config.port || 9000;
+module.exports = function(port) {
+	var port = port || config.port || 9000;
 	var app = http()
 		.use(index)
 		.use(http.static("client"))

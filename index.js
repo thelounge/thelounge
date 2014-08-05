@@ -2,15 +2,19 @@
 
 process.chdir(__dirname);
 
+var config = require("./config.json");
 var program = require("commander");
 var shout = require("./src/server.js");
-var version = require("./package.json").version;
+
+program
+	.option("-p, --port <port>");
 
 program
 	.command("start")
-	.description("Starts the server.")
+	.description("Start the server")
 	.action(function() {
-		shout();
+		var port = program.port || config.port;
+		shout(port);
 	});
 
 program.parse(process.argv)
