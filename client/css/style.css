@@ -11,6 +11,7 @@ body {
 }
 body {
 	background: #fff;
+	background: #505d70;
 	color: #222;
 	font: 16px Lato, sans-serif;
 	margin: 0;
@@ -106,9 +107,7 @@ button {
 	        perspective: 1000;
 }
 #sidebar {
-	background: #262c36;
 	bottom: 0;
-	color: #fff;
 	left: 0;
 	overflow: hidden;
 	overflow-y: auto;
@@ -122,19 +121,14 @@ button {
 #sidebar .sign-out {
 	border: 1px solid transparent;
 	border-radius: 2px;
-	color: #818b9e;
+	color: #bcc4d3;
 	font-size: 14px;
 }
 #sidebar button:hover,
 #sidebar .active {
-	background: #818b9e;
-	background: rgba(129, 139, 158, .05);
-	border-color: rgba(129, 139, 158, .03);
+	color: #fff;
 }
 #sidebar button.active {
-	background: #818b9e;
-	background: rgba(129, 139, 158, .1);
-	border-color: rgba(129, 139, 158, .06);
 	color: #fff;
 }
 #sidebar .networks {
@@ -164,15 +158,19 @@ button {
 	width: 160px;
 }
 #sidebar .chan:first-child {
-	color: #84d1ff;
+	color: #84ce88;
 	font-size: 15px;
 	font-weight: bold;
+}
+#sidebar .chan:first-child:hover,
+#sidebar .chan:first-child.active {
+	color: #c0f8c3;
 }
 #sidebar .chan:hover .badge {
 	opacity: 0;
 }
 #sidebar .chan:hover .close {
-	opacity: .1;
+	opacity: .2;
 }
 #sidebar .badge {
 	background: rgba(255, 255, 255, .06);
@@ -211,11 +209,18 @@ button {
 	opacity: .7 !important;
 }
 #footer {
-	height: 80px;
-	line-height: 80px;
-	margin-top: -80px;
+	height: 70px;
+	line-height: 70px;
+	margin-top: -70px;
+	padding: 0 8px;
 	text-align: center;
 	width: 220px;
+}
+#footer button {
+	border: 0;
+}
+#footer button.active {
+	background: none;
 }
 #footer .icon {
 	color: #818b9e;
@@ -251,11 +256,13 @@ button {
 	content: "\f032";
 }
 #main {
-	bottom: 0;
+	border-radius: 2px;
+	bottom: 4px;
 	left: 220px;
+	overflow: hidden;
 	position: absolute;
-	right: 0;
-	top: 0;
+	right: 5px;
+	top: 4px;
 }
 #header {
 	border-bottom: 1px solid #e9ecef;
@@ -301,7 +308,7 @@ button {
 	content: "\f037";
 }
 #windows {
-	bottom: 40px;
+	bottom: 48px;
 	position: absolute;
 	top: 0px;
 	width: 100%;
@@ -593,22 +600,31 @@ button {
 	line-height: 1.8;
 }
 #form {
+	background: #e4eaee;
+	border-top: 1px solid #cfdae1;
 	bottom: 0;
-	height: 40px;
+	height: 48px;
 	left: 0;
 	position: absolute;
 	right: 0px;
 	z-index: 1;
 }
 #form input {
-	border: 0;
-	border-top: 1px solid #e9ecef;
+	border: 1px solid #cfdae1;
 	font: 13px Consolas, monospace;
+	border-radius: 2px;
 	height: 100%;
 	outline: none;
 	padding: 0 12px;
 	-webkit-appearance: none;
 	width: 100%;
+}
+#form .inner {
+	bottom: 7px;
+	left: 7px;
+	position: absolute;
+	right: 7px;
+	top: 6px;
 }
 #form #submit {
 	height: 0;
