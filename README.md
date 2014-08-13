@@ -4,35 +4,23 @@ Run your IRC client on a server and access it from the web browser. This allows 
 
 ### [Try the Shout client](http://shout-irc.com:9090/)
 
-_Some highlights:_
-
-- [x] Multiple user support
-- [x] Supports anonymous (public) or passworded connections
-- [x] Works on your smartphone
-
-## Screenshot
-
-![](https://raw.github.com/erming/shout/master/screenshots/shout.png)  
-
 ## Install
 
-1. Install Node.js and npm  
-`sudo apt-get install nodejs-legacy npm`
+```
+sudo npm install -g shout
+```
 
-2. Clone the project from GitHub  
-`git clone http://github.com/erming/shout`
+## Usage
 
-3. Open folder  
-`cd shout/`
+When the install is complete, go ahead and start the server:
 
-4. Install packages  
-`sudo npm install --production`
+```
+shout start --port 9000
+```
 
-5. Run the server  
-`npm start` or `node index.js`
+## Screenshots
 
-6. Open your browser  
-`http://localhost:9000`
+![](https://raw.github.com/erming/shout/master/screenshots/shout.png)  
 
 ### Commands
 
