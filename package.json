@@ -15,7 +15,7 @@
     "irc",
     "server"
   ],
-  "main": "http://localhost:9090/",
+  "main": "http://localhost:9000/",
   "node-main": "./index.js",
   "single-instance": false,
   "window": {

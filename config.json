@@ -1,5 +1,5 @@
 {
-  "port": 9090,
+  "port": 9000,
   "theme": "themes/example.css",
   "public": true
 }
