@@ -4,8 +4,18 @@ var Client = require("./client");
 module.exports = ClientManager;
 
 function ClientManager() {
-	this.clients = {};
+	this.clients = [];
 }
+
+ClientManager.prototype.findClient = function(name) {
+	for (var i in this.clients) {
+		var client = this.clients[i];
+		if (client.name == name) {
+			return client;
+		}
+	}
+	return false;
+};
 
 ClientManager.prototype.loadUsers = function(sockets) {
 	var users = this.getUsers();
@@ -18,11 +28,11 @@ ClientManager.prototype.loadUsers = function(sockets) {
 		if (!json) {
 			continue;
 		}
-		if (!this.clients[name]) {
-			this.clients[name] = new Client(
+		if (!this.findClient(name)) {
+			this.clients.push(new Client(
 				sockets,
 				json
-			);
+			));
 		}
 	}
 };

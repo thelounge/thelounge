@@ -26,12 +26,14 @@ var inputs = [
 	"whois"
 ];
 
-module.exports = function(port) {
-	var port = port || config.port || 9000;
+module.exports = function(port, public) {
+	config.port = port || config.port,
+	config.public = public || config.public
+
 	var app = http()
 		.use(index)
 		.use(http.static("client"))
-		.listen(port);
+		.listen(config.port);
 
 	sockets = io(app);
 	sockets.on("connect", function(socket) {
@@ -43,7 +45,7 @@ module.exports = function(port) {
 	});
 
 	console.log("");
-	console.log("Shout is now running on port " + port);
+	console.log("Shout is now running on port " + config.port);
 	console.log("Press ctrl-c to stop");
 	console.log("");
 
@@ -100,9 +102,9 @@ function auth(data) {
 	var socket = this;
 	if (config.public) {
 		var client = new Client(sockets);
-		clients.push(client);
+		manager.clients.push(client);
 		socket.on("disconnect", function() {
-			clients = _.without(clients, client);
+			manager.clients = _.without(manager.clients, client);
 			client.quit();
 		});
 		init(socket, client);

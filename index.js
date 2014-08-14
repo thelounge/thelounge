@@ -8,14 +8,14 @@ var program = require("commander");
 var shout = require("./src/server.js");
 
 program
-	.option("-p, --port <port>");
+	.option("-p, --port <port>")
+	.option("-P, --public");
 
 program
 	.command("start")
 	.description("Start the server")
 	.action(function() {
-		var port = program.port || config.port;
-		shout(port);
+		shout(program.port, program.public);
 	});
 
 program
