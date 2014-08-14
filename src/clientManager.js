@@ -1,3 +1,4 @@
+var _ = require("lodash");
 var fs = require("fs");
 var Client = require("./client");
 
@@ -20,9 +21,6 @@ ClientManager.prototype.findClient = function(name) {
 ClientManager.prototype.loadUsers = function(sockets) {
 	var users = this.getUsers();
 	for (var i in users) {
-		if (name == "example") {
-			continue;
-		}
 		var name = users[i];
 		var json = this.loadUser(name);
 		if (!json) {
@@ -56,14 +54,17 @@ ClientManager.prototype.getUsers = function() {
 		console.log(e);
 		return;
 	}
+	users = _.without(
+		users,
+		"example"
+	);
 	return users;
 };
 
 ClientManager.prototype.addUser = function(name, password) {
 	var users = this.getUsers();
 	if (users.indexOf(name) !== -1) {
-		console.log("User '" + name + "' already exist.");
-		return;
+		return false;
 	}
 	try {
 		var path = "users/" + name;
@@ -80,16 +81,13 @@ ClientManager.prototype.addUser = function(name, password) {
 	} catch(e) {
 		throw e;
 	}
-	console.log(
-		"Added '" + name + "'."
-	);
+	return true;
 };
 
 ClientManager.prototype.removeUser = function(name) {
 	var users = this.getUsers();
 	if (users.indexOf(name) === -1) {
-		console.log("User '" + name + "' doesn't exist.");
-		return;
+		return false;
 	}
 	try {
 		var path = "users/" + name;
@@ -98,7 +96,5 @@ ClientManager.prototype.removeUser = function(name) {
 	} catch(e) {
 		throw e;
 	}
-	console.log(
-		"Removed '" + name + "'."
-	);
+	return true;
 };
