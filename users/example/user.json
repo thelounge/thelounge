@@ -6,8 +6,8 @@
 			"host": "irc.rizon.net",
 			"port": 6667,
 			"nick": "example",
-			"realname": "Example",
-			"join": "#chan"
+			"realname": "Example User",
+			"join": "#foo, #bar"
 		}
 	]
 }

@@ -1,12 +1,13 @@
 var _ = require("lodash");
 var Client = require("./client");
+var ClientManager = require("./clientManager");
 var config = require("../config.json");
 var fs = require("fs");
 var http = require("connect");
 var io = require("socket.io");
 
 var sockets = null;
-var clients = [];
+var manager = new ClientManager();
 
 var inputs = [
 	"action",
@@ -46,34 +47,9 @@ module.exports = function(port) {
 	console.log("Press ctrl-c to stop");
 	console.log("");
 
-	if (config.public) {
-		return;
+	if (!config.public) {
+		manager.loadUsers(sockets);
 	}
-
-	fs.readdir("users/", function(err, files) {
-		if (err) {
-			console.log(err);
-			return;
-		}
-		_.each(files, function(file) {
-			fs.readFile("users/" + file + "/user.json", "utf-8", function(err, json) {
-				if (err) {
-					console.log(err);
-					return;
-				}
-				try {
-					json = JSON.parse(json);
-				} catch(e) {
-					console.log(e);
-					return;
-				}
-				clients.push(new Client(
-					sockets,
-					json
-				));
-			});
-		});
-	});
 };
 
 function index(req, res, next) {
@@ -132,7 +108,7 @@ function auth(data) {
 		init(socket, client);
 	} else {
 		var success = 0;
-		_.each(clients, function(client) {
+		_.each(manager.clients, function(client) {
 			if (client.config.name == data.name && client.config.password == data.password) {
 				init(socket, client);
 				success++;

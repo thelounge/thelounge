@@ -3,8 +3,8 @@
 process.chdir(__dirname);
 
 var config = require("./config.json");
+var ClientManager= new require("./src/clientManager");
 var program = require("commander");
-var ClientManager = require("./src/clientManager");
 var shout = require("./src/server.js");
 
 program
@@ -24,8 +24,8 @@ program
 	.action(function() {
 		var manager = new ClientManager();
 		var users = manager.getUsers();
-		for (var u in users) {
-			console.log(users[u]);
+		for (var i = 0; i < users.length; i++) {
+			console.log((i + 1) + " " + users[i]);
 		}
 	});
 
@@ -34,7 +34,18 @@ program
 	.description("Add a new user")
 	.action(function(name) {
 		var manager = new ClientManager();
-		manager.addUser(name);
+		require("read")({
+			prompt: "Password: "
+		}, function(err, password) {
+			if (err) {
+				console.log("");
+				return;
+			}
+			manager.addUser(
+				name,
+				password
+			);
+		});
 	});
 
 program
