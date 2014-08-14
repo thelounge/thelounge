@@ -49,7 +49,8 @@
 			
 			case 38: // Up
 			case 40: // Down
-				if (e.ctrlKey) {
+				// NOTICE: This is specific to the Shout client.
+				if (e.ctrlKey || e.metaKey) {
 					break;
 				}
 				history[i] = self.val();

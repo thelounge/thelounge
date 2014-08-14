@@ -462,17 +462,25 @@ $(function() {
 		);
 	});
 
-	Mousetrap.bind(["ctrl+up", "ctrl+down"], function(e, keys) {
-		var active = sidebar.find(".active");
-		switch (keys) {
-		case "ctrl+up":
-			var prev = active.prev(".chan");
-			prev.click();
+	Mousetrap.bind([
+		"command+up",
+		"command+down",
+		"ctrl+up",
+		"ctrl+down"
+	], function(e, keys) {
+		var channels = sidebar.find(".chan");
+		var index = channels.index(channels.filter(".active"));
+
+		var direction = keys.split("+").pop();
+		switch (direction) {
+		case "up":
+			var i = Math.max(0, index - 1);
+			channels.eq(i).click();
 			break;
 		
-		case "ctrl+down":
-			var next = active.next(".chan");
-			next.click();
+		case "down":
+			var i = Math.min(channels.length, index + 1);
+			channels.eq(i).click();
 			break;
 		}
 	});
