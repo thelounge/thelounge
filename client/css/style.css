@@ -16,7 +16,7 @@ body {
 	margin: 0;
 }
 a {
-	/*transition: opacity .2s;*/
+	transition: opacity .2s;
 }
 a:hover {
 	text-decoration: none;
@@ -349,12 +349,14 @@ button {
 	margin: 6px 12px 0 -12px;
 	width: 36px;
 }
-#chat .header .lt:before {
+#chat .header .lt:before,
+#chat .header .rt:before {
 	font: 16px Octicons;
 	content: "\f05e";
 }
 #chat .header .rt {
 	float: right;
+	margin: 6px -12px 0 12px;
 }
 #chat .header .title {
 	font: 16px Lato;
@@ -643,9 +645,8 @@ button {
 		-webkit-transform: translate3d(220px, 0, 0);
 		        transform: translate3d(220px, 0, 0);
 	}
-	#viewport.rt {
-		-webkit-transform: translate3d(-180px, 0, 0);
-		        transform: translate3d(-180px, 0, 0);
+	#viewport.rt #chat .sidebar {
+		right: 0px;
 	}
 	#sidebar {
 		left: -220px;
@@ -660,11 +661,13 @@ button {
 	#chat .chat {
 		right: 0;
 	}
-	#chat .header .lt {
+	#chat .header .lt,
+	#chat .channel .header .rt {
 		display: block;
 	}
 	#chat .sidebar {
 		right: -180px;
+		transition: .2s right;
 	}
 }
 

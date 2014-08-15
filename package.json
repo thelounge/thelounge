@@ -1,8 +1,7 @@
 {
   "name": "shout",
   "description": "A web IRC client",
-  "version": "0.9.6",
-  "homepage": "http://github.com/erming/shout",
+  "version": "0.9.8",
   "author": "Mattias Erming",
   "preferGlobal": true,
   "bin": {
@@ -13,7 +12,7 @@
     "url": "https://github.com/erming/shout.git"
   },
   "scripts": {
-    "start": "node index.js start"
+    "start": "node index start"
   },
   "keywords": [
     "browser",
