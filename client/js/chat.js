@@ -249,9 +249,10 @@ $(function() {
 		.trigger("change");
 
 	var viewport = $("#viewport");
-	$("#rt, #lt").on("click", function(e) {
+
+	viewport.on("click", ".lt, .rt", function(e) {
 		var self = $(this);
-		viewport.toggleClass(self.attr("id"));
+		viewport.toggleClass(self.attr("class"));
 		if (viewport.is(".lt, .rt")) {
 			e.stopPropagation();
 			chat.find(".chat").one("click", function() {
@@ -300,8 +301,6 @@ $(function() {
 			favico.badge("");
 		}
 
-		$("#rt").toggle(self.hasClass("chan"));
-		$("#header").find("h1").html(self.data("title"));
 		viewport.removeClass();
 
 		$("#windows .active").removeClass("active");

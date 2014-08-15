@@ -32,11 +32,6 @@
 			</footer>
 		</aside>
 		<div id="main">
-			<header id="header">
-				<button id="lt"></button>
-				<button id="rt"></button>
-				<h1></h1>
-			</header>
 			<div id="windows">
 				<div id="chat"></div>
 				<div id="sign-in" class="window">
@@ -211,7 +206,13 @@
 
 		<script type="text/html" class="chat">
 		{{#each channels}}
-		<div id="chan-{{id}}" data-id="{{id}}" data-type="{{type}}" class="chan">
+		<div id="chan-{{id}}" data-id="{{id}}" data-type="{{type}}" class="chan {{type}}">
+			<div class="header">
+				<button class="lt"></button>
+				<button class="rt"></button>
+				<span class="title">{{name}}</span>
+				<span class="topic">{{type}} </span>
+			</div>
 			<div class="chat">
 				{{#equal 100 messages.length}}
 				<button class="show-more" data-id="{{id}}">
@@ -223,10 +224,6 @@
 				</div>
 			</div>
 			<aside class="sidebar">
-				<div class="meta">
-					<h1>{{name}}</h1>
-					<span class="type">{{type}}</span>
-				</div>
 				<div class="users">
 					{{partial "users"}}
 				</div>

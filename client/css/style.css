@@ -14,10 +14,9 @@ body {
 	color: #222;
 	font: 16px Lato, sans-serif;
 	margin: 0;
-	min-width: 780px;
 }
 a {
-	transition: opacity .2s;
+	/*transition: opacity .2s;*/
 }
 a:hover {
 	text-decoration: none;
@@ -76,7 +75,7 @@ button {
 	opacity: .6;
 }
 .container {
-	margin: 10% auto;
+	margin: 80px auto;
 	max-width: 420px;
 	overflow: hidden;
 	overflow-y: auto;
@@ -114,7 +113,6 @@ button {
 	position: absolute;
 	top: 0;
 	width: 220px;
-	z-index: 2;
 }
 #sidebar button,
 #sidebar .sign-out {
@@ -255,6 +253,7 @@ button {
 	content: "\f032";
 }
 #main {
+	background: #fff;
 	border-radius: 2px;
 	bottom: 4px;
 	left: 220px;
@@ -264,47 +263,11 @@ button {
 	top: 4px;
 }
 #header {
-	border-bottom: 1px solid #e9ecef;
 	display: none;
 	height: 40px;
 	position: absolute;
 	top: 0;
 	width: 100%;
-}
-#header h1 {
-	color: #222;
-	font-size: 15px;
-	line-height: 40px;
-	text-align: center;
-}
-#header button {
-	color: #666;
-	font: 16px Octicons;
-	height: 32px;
-	opacity: .5;
-	position: absolute;
-	top: 4px;
-	transition: opacity .2s;
-	padding: 0 10px;
-	width: 64px;
-}
-#header button:hover {
-	opacity: 1;
-}
-#header #lt {
-	left: 4px;
-	text-align: left;
-}
-#header #rt {
-	display: none;
-	right: 4px;
-	text-align: right;
-}
-#header #lt:before {
-	content: "\f05e";
-}
-#header #rt:before {
-	content: "\f037";
 }
 #windows {
 	bottom: 48px;
@@ -332,7 +295,7 @@ button {
 #windows .chan:before {
 	background: #f4f4f4;
 	background-image: linear-gradient(#f4f4f4, #ececec);
-	border-bottom: 1px solid #ddd;
+	border-bottom: 1px solid #d7d7d7;
 	content: " ";
 	display: block;
 	height: 10px;
@@ -370,6 +333,41 @@ button {
 #chat button:hover {
 	opacity: .6;
 }
+#chat .header {
+	border-bottom: 1px solid #e7e7e7;
+	line-height: 50px;
+	height: 48px;
+	padding: 0 20px;
+}
+#chat .header .lt,
+#chat .header .rt {
+	color: #ccc;
+	display: none;
+	float: left;
+	line-height: 40px;
+	height: 36px;
+	margin: 6px 12px 0 -12px;
+	width: 36px;
+}
+#chat .header .lt:before {
+	font: 16px Octicons;
+	content: "\f05e";
+}
+#chat .header .rt {
+	float: right;
+}
+#chat .header .title {
+	font: 16px Lato;
+}
+#chat .header .topic {
+	color: #777;
+	margin-left: 8px;
+	text-transform: capitalize;
+}
+#chat .chat,
+#chat .sidebar {
+	top: 58px;
+}
 #chat .chat {
 	bottom: 0;
 	left: 0;
@@ -377,23 +375,28 @@ button {
 	-webkit-overflow-scrolling: touch;
 	position: absolute;
 	right: 180px;
-	top: 10px;
 }
 #chat .sidebar {
 	background: #fff;
-	border-left: 1px solid #e9ecef;
-	border-left: 1px solid #e4eaee;
+	border-left: 1px solid #e7e7e7;
 	bottom: 0;
 	position: absolute;
 	right: 0;
-	top: 10px;
 	width: 180px;
+}
+#chat .lobby .chat,
+#chat .query .chat {
+	right: 0;
+}
+#chat .lobby .sidebar,
+#chat .query .sidebar {
+	display: none;
 }
 #chat .show-more {
 	color: #b1c3ce;
 	position: absolute;
 	width: 100%;
-	border-bottom: 1px solid #ddd;
+	border-bottom: 1px solid #e7e7e7;
 	height: 41px;
 	background: #fff;
 }
@@ -431,6 +434,7 @@ button {
 }
 #chat .time {
 	background: #fcfdfd;
+	background: #fcfcfc;
 	color: #e4eaee;
 	text-align: right;
 	width: 46px;
@@ -438,7 +442,9 @@ button {
 }
 #chat .from {
 	background: #fcfdfd;
+	background: #fcfcfc;
 	border-right: 1px solid #f6f8f9;
+	border-right: 1px solid #f6f6f6;
 	color: #b1c3ce;
 	padding-right: 10px;
 	text-align: right;
@@ -446,7 +452,7 @@ button {
 	min-width: 134px;
 }
 #chat a,
-#chat .message .from button,
+#chat .from button,
 #chat .sidebar button {
 	color: #84ce88;
 }
@@ -490,29 +496,15 @@ button {
 #chat .action .user:before {
 	content: '* ';
 }
-#chat .meta {
-	font-family: "Lato";
-	height: 80px;
-	padding: 25px 0 0 20px;
-}
-#chat .meta h1 {
-	color: #222;
-	font-size: 15px;
-}
-#chat .meta .type {
-	color: #ccc;
-	color: #b1c3ce;
-	font-size: 12px;
-	text-transform: capitalize;
-}
 #chat .count {
-	border-top: 1px dashed #e4eaee;
-	border-bottom: 1px solid #e4eaee;
-	height: 40px;
+	background: #fcfcfc;
+	background: #fff;
+	border-bottom: 1px dashed #e7e7e7;
+	height: 48px;
 	left: 0;
 	position: absolute;
 	right: 0;
-	top: 80px;
+	top: 0;
 }
 #chat .count:before {
 	color: #eee;
@@ -520,7 +512,7 @@ button {
 	content: "\f02e";
 	position: absolute;
 	right: 18px;
-	line-height: 40px;
+	line-height: 50px;
 	transition: color .2s;
 	z-index: 0;
 }
@@ -530,7 +522,7 @@ button {
 	background: none;
 	font: inherit;
 	outline: 0;
-	padding: 12px 20px;
+	padding: 18px 16px;
 	position: relative;
 	width: 100%;
 }
@@ -539,9 +531,9 @@ button {
 	overflow: auto;
 	overflow-x: hidden;
 	-webkit-overflow-scrolling: touch;
-	padding: 15px 20px;
+	padding: 12px 16px;
 	position: absolute;
-	top: 120px;
+	top: 48px;
 	width: 100%;
 }
 #chat .names button {
@@ -646,44 +638,14 @@ button {
 	width: 0;
 }
 
-/*
 @media (max-width: 768px) {
-	#viewport.rt {
-		-webkit-transform: translate3d(-180px, 0, 0);
-		        transform: translate3d(-180px, 0, 0);
-	}
-	#header {
-		display: block;
-	}
-	#header #lt {
-		display: none;
-	}
-	#windows {
-		top: 40px;
-	}
-	#chat .chat {
-		right: 0;
-	}
-	#chat .sidebar {
-		bottom: -40px;
-		right: -180px;
-		top: -40px;
-	}
-}
-
-@media (max-width: 480px) {
-	.title {
-		display: none;
-	}
-	.container {
-		margin-bottom: 5%;
-	}
 	#viewport.lt {
 		-webkit-transform: translate3d(220px, 0, 0);
 		        transform: translate3d(220px, 0, 0);
 	}
-	#header #lt {
-		display: inherit;
+	#viewport.rt {
+		-webkit-transform: translate3d(-180px, 0, 0);
+		        transform: translate3d(-180px, 0, 0);
 	}
 	#sidebar {
 		left: -220px;
@@ -692,8 +654,21 @@ button {
 		margin-top: 0;
 	}
 	#main {
-		left: 0;
+		left: 5px;
+		right: 5px;
 	}
+	#chat .chat {
+		right: 0;
+	}
+	#chat .header .lt {
+		display: block;
+	}
+	#chat .sidebar {
+		right: -180px;
+	}
+}
+
+@media (max-width: 480px) {
 	#chat .messages {
 		display: block;
 		padding: 5px 10px;
@@ -716,4 +691,3 @@ button {
 		display: none;
 	}
 }
-*/
