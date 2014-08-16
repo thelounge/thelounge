@@ -1,5 +1,9 @@
 var _ = require("lodash");
 var Msg = require("../../models/msg");
+var config = require("../../../config.json");
+var fs = require("fs");
+var mkdirp = require("mkdirp");
+var http = require("http");
 
 module.exports = function(irc, network) {
 	var client = this;
@@ -20,15 +24,40 @@ module.exports = function(irc, network) {
 		if (typeof chan === "undefined") {
 			return;
 		}
-		var msg = new Msg({
-			type: Msg.Type.THUMB,
-			from: data.from,
-			text: "http://placehold.it/320x320" // image
-		});
-		chan.messages.push(msg);
-		client.emit("msg", {
-			chan: chan.id,
-			msg: msg
+		fetchImage(image, function(name) {
+			var msg = new Msg({
+				type: Msg.Type.THUMB,
+				from: data.from,
+				text: "thumbs/" + name
+			});
+			chan.messages.push(msg);
+			client.emit("msg", {
+				chan: chan.id,
+				msg: msg
+			});
 		});
 	});
 };
+
+function fetchImage(url, callback) {
+	var path = process.env.HOME + "/.shout/cache/thumbs";
+	var name = new Date().getTime().toString()
+	mkdirp(path, function(e) {
+		if (e) {
+			console.log(e);
+		}
+		var stream = fs.createWriteStream(path + "/" + name);
+		stream.on("error", function(e) {
+			// ..
+		});
+		http.get(url, function(res) {
+			res.on("data", function(chunk) {
+				stream.write(chunk);
+			});
+			res.on("end", function() {
+				stream.end();
+				callback(name);
+			});
+		});
+	});
+}

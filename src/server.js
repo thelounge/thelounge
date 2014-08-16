@@ -33,6 +33,7 @@ module.exports = function(port, public) {
 	var app = http()
 		.use(index)
 		.use(http.static("client"))
+		.use(http.static(process.env.HOME + "/.shout/cache"))
 		.listen(config.port);
 
 	sockets = io(app);

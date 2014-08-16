@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 process.chdir(__dirname);
 
 var config = require("./config.json");
