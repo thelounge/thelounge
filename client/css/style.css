@@ -277,7 +277,7 @@ button {
 }
 #windows .input {
 	border: 1px solid #cdd3da;
-	border-radius: 3px;
+	border-radius: 2px;
 	color: #222;
 	font-size: 14px;
 	margin: 2px 0;
@@ -481,13 +481,6 @@ button {
 #chat .highlight .from {
 	color: #f00;
 }
-#chat.hide-join .join,
-#chat.hide-nick .nick,
-#chat.hide-part .nick,
-#chat.hide-mode .mode,
-#chat.hide-quit .quit {
-	display: none !important;
-}
 #chat .notice .type {
 	display: none;
 }
@@ -593,6 +586,9 @@ button {
 #settings #play {
 	color: #7f8c8d;
 }
+#settings .about small {
+	margin-left: 2px;
+}
 #settings #play:hover {
 	opacity: .8;
 }
@@ -646,7 +642,8 @@ button {
 		        transform: translate3d(220px, 0, 0);
 	}
 	#viewport.rt #chat .sidebar {
-		right: 0px;
+		-webkit-transform: translate3d(-180px, 0, 0);
+		        transform: translate3d(-180px, 0, 0);
 	}
 	#sidebar {
 		left: -220px;
@@ -667,7 +664,11 @@ button {
 	}
 	#chat .sidebar {
 		right: -180px;
-		transition: .2s right;
+		transition: all .4s;
+		-webkit-transform: translateZ(0);
+				transform: translateZ(0);
+		-webkit-perspective: 1000;
+				perspective: 1000;
 	}
 }
 
