@@ -1,7 +1,7 @@
 {
   "name": "shout",
   "description": "A web IRC client",
-  "version": "0.9.10",
+  "version": "0.9.11",
   "author": "Mattias Erming",
   "preferGlobal": true,
   "bin": {
@@ -30,8 +30,7 @@
     "moment": "~2.7.0",
     "read": "^1.0.5",
     "slate-irc": "~0.6.0",
-    "socket.io": "~1.0.6",
-    "superagent": "^0.18.2"
+    "socket.io": "~1.0.6"
   },
   "devDependencies": {
     "grunt": "~0.4.5",
