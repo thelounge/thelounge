@@ -433,6 +433,7 @@ button {
 #chat .text {
 	display: table-cell;
 	padding: 4px 0;
+	vertical-align: top;
 }
 #chat .time {
 	background: #fcfdfd;
@@ -490,6 +491,10 @@ button {
 }
 #chat .action .user:before {
 	content: '* ';
+}
+#chat .thumb {
+	max-height: 120px;
+	max-width: 240px;
 }
 #chat .count {
 	background: #fcfcfc;

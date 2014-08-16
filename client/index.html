@@ -223,7 +223,11 @@
 			</span>
 			<span class="text">
 				<em class="type">{{type}}</em>
+				{{#equal type "thumb"}}
+				<img src="{{text}}" class="thumb">
+				{{else}}
 				{{{uri text}}}
+				{{/equal}}
 			</span>
 		</div>
 		{{/each}}

@@ -8,7 +8,6 @@ module.exports = function(irc, network) {
 		if (data === null) {
 			return;
 		}
-		
 		var chan = _.findWhere(network.channels, {name: data.nickname});
 		if (typeof chan === "undefined") {
 			chan = new Chan({
@@ -21,7 +20,6 @@ module.exports = function(irc, network) {
 				chan: chan
 			});
 		}
-		
 		var prefix = {
 			hostname: "from",
 			realname: "is",

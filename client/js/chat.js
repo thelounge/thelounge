@@ -367,6 +367,7 @@ $(function() {
 	});
 
 	chat.on("msg", ".messages", function(e, target, msg) {
+		console.log(msg);
 		var btn = sidebar.find(".chan[data-target=" + target + "]:not(.active)");
 		var query = btn.hasClass("query");
 		var type = msg.type;

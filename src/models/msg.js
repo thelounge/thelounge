@@ -13,6 +13,7 @@ Msg.Type = {
 	NOTICE: "notice",
 	PART: "part",
 	QUIT: "quit",
+	THUMB: "thumb",
 	TOPIC: "topic",
 	WHOIS: "whois"
 };
