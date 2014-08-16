@@ -30,7 +30,7 @@ $(function() {
 
 	var sidebar = $("#sidebar");
 	var chat = $("#chat");
-
+	
 	var pop = new Audio();
 	pop.src = "/audio/pop.ogg";
 
@@ -306,7 +306,7 @@ $(function() {
 			.sticky()
 			.end();
 		
-		if (chan.hasClass("chan")) {
+		if (screen.width > 768 && chan.hasClass("chan")) {
 			input.focus();
 		}
 	});
