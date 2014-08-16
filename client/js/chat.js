@@ -224,15 +224,9 @@ $(function() {
 		});
 
 	$.cookie.json = true;
+
 	var settings = $("#settings");
-	var options = $.extend({
-		join: true,
-		mode: true,
-		nick: true,
-		notification: true,
-		part: true,
-		quit: true,
-	}, $.cookie("settings"));
+	var options = $.extend({notification: true}, $.cookie("settings"));
 
 	for (var i in options) {
 		if (options[i]) {
@@ -242,18 +236,8 @@ $(function() {
 
 	settings.on("change", "input", function() {
 		var self = $(this);
-		var name = self.attr("name");
-		options[name] = self.prop("checked");
+		options[self.attr("name")] = self.prop("checked");
 		$.cookie("settings", options);
-		if ([
-			"join",
-			"nick",
-			"part",
-			"mode",
-			"quit",
-		].indexOf(name) !== -1) {
-			chat.toggleClass("hide-" + name, !self.prop("checked"));
-		}
 	}).find("input")
 		.eq(0)
 		.trigger("change");
