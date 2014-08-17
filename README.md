@@ -2,7 +2,7 @@
 
 Run your IRC client on a server and access it from the web browser. This allows you to chat from multiple devices at the same time and you will stay connected to IRC even when you close your browser.
 
-### [Try the Shout client](http://shout-irc.com:9090/)
+### [Try the Shout client](http://shout-irc.com:9000/)
 
 ## Install
 
@@ -15,10 +15,10 @@ sudo npm install -g shout
 When the install is complete, go ahead and start the server:
 
 ```
-shout start --port 9000
+shout --port 9000
 ```
 
-## Screenshots
+## Screenshot
 
 ![](https://raw.github.com/erming/shout/master/screenshots/shout.png)  
 
