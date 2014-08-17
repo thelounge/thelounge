@@ -15,14 +15,31 @@ sudo npm install -g shout
 When the install is complete, go ahead and start the server:
 
 ```
-shout --port 9000
+shout
+```
+
+For more information:
+```
+shout --help
 ```
 
 ## Screenshot
 
-![](https://raw.github.com/erming/shout/master/screenshots/shout.png)  
+![](https://raw.github.com/erming/shout/master/screenshots/shout.png)
 
-### Commands
+## Configuration
+
+Open your `config.json` file and edit:
+
+__port__  
+The default port to be used.  
+You can override this by running `shout --port 80`
+
+__public__  
+Set to either `true|false`.  
+When set to `false`, a login will be required for connecting users.
+
+## Commands
 
 These are the commands currently implemented:
 
