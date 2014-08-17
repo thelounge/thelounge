@@ -492,7 +492,7 @@ button {
 #chat .action .user:before {
 	content: '* ';
 }
-#chat .thumb {
+#chat .image {
 	max-height: 120px;
 	max-width: 240px;
 }

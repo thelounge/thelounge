@@ -10,6 +10,7 @@ module.exports = Client;
 var id = 0;
 var events = [
 	"error",
+	"image",
 	"join",
 	"kick",
 	"mode",
@@ -20,7 +21,6 @@ var events = [
 	"notice",
 	"part",
 	"quit",
-	"thumb",
 	"topic",
 	"welcome",
 	"whois"

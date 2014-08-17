@@ -4,6 +4,7 @@ var moment = require("moment");
 Msg.Type = {
 	ACTION: "action",
 	ERROR: "error",
+	IMAGE: "image",
 	JOIN: "join",
 	KICK: "kick",
 	MESSAGE: "message",
@@ -13,7 +14,6 @@ Msg.Type = {
 	NOTICE: "notice",
 	PART: "part",
 	QUIT: "quit",
-	THUMB: "thumb",
 	TOPIC: "topic",
 	WHOIS: "whois"
 };
