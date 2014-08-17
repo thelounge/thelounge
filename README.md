@@ -1,7 +1,5 @@
 # Shout [![](https://badge.fury.io/js/shout.png)](https://www.npmjs.org/package/shout)
 
-Run your IRC client on a server and access it from the web browser. This allows you to chat from multiple devices at the same time and you will stay connected to IRC even when you close your browser.
-
 ### [Try the Shout client](http://shout-irc.com:9000/)
 
 ## Install
