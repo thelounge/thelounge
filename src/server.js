@@ -26,9 +26,9 @@ var inputs = [
 	"whois"
 ];
 
-module.exports = function(port, public) {
-	config.port = port || config.port,
-	config.public = public || config.public
+module.exports = function(port, isPublic) {
+	config.port = port;
+	config.public = isPublic;
 
 	var app = http()
 		.use(index)

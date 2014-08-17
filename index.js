@@ -8,26 +8,26 @@ var shout = require("./src/server.js");
 var fs = require("fs");
 
 program
-	.option("-p, --port <port>")
-	.option("-P, --public");
+	.option("-p, --port <port>");
 
 program
 	.command("start")
 	.description("Start the server")
 	.action(function() {
 		var users = new ClientManager().getUsers();
-		if (!program.public && !users.length) {
+		if (!config.public && !users.length) {
 			console.log("");
 			console.log("No users found!");
 			console.log("Create a new user with 'shout add-user <name>'.")
 			console.log("");
 		} else {
-			shout(program.port, program.public);
+			var port = program.port || config.port;
+			shout(port, config.public);
 		}
 	});
 
 program
-	.command("list-users")
+	.command("list")
 	.description("List all existing users")
 	.action(function() {
 		var users = new ClientManager().getUsers();
@@ -39,14 +39,14 @@ program
 			console.log("");
 			console.log("Users:");
 			for (var i = 0; i < users.length; i++) {
-				console.log((i + 1) + ": " + users[i]);
+				console.log("  " + (i + 1) + ". " + users[i]);
 			}
 			console.log("");
 		}
 	});
 
 program
-	.command("add-user <name>")
+	.command("add <name>")
 	.description("Add a new user")
 	.action(function(name) {
 		try {
@@ -86,7 +86,7 @@ program
 	});
 
 program
-	.command("remove-user <name>")
+	.command("remove <name>")
 	.description("Remove an existing user")
 	.action(function(name) {
 		try {
@@ -117,5 +117,5 @@ program
 program.parse(process.argv)
 
 if (!program.args.length) {
-	program.help();
+	program.parse(process.argv.concat("start"));
 }
