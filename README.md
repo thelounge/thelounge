@@ -37,6 +37,29 @@ __public__
 Set to either `true|false`.  
 When set to `false`, a login will be required for connecting users.
 
+## User Management
+
+Go ahead and run `shout --help`:
+
+```
+Usage: shout [options] [command]
+
+Commands:
+
+  list
+    List all existing users
+  
+  add <name>
+    Add a new user
+  
+  remove <name>
+    Remove an existing user
+```
+
+Pretty simple, huh?
+
+If you want to edit users manually, see `users/example/user.json`.
+
 ## Commands
 
 These are the commands currently implemented:
