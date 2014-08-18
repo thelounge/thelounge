@@ -224,7 +224,9 @@
 			<span class="text">
 				<em class="type">{{type}}</em>
 				{{#equal type "image"}}
-				<img src="{{text}}" class="image">
+				<a href="{{text}}" target="_blank">
+					<img src="{{text}}" class="image">
+				</a>
 				{{else}}
 				{{{uri text}}}
 				{{/equal}}

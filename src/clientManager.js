@@ -76,7 +76,8 @@ ClientManager.prototype.addUser = function(name, password) {
 		fs.mkdirSync(path);
 		fs.writeFileSync(
 			path + "/user.json",
-			JSON.stringify(user, null, "  ")
+			JSON.stringify(user, null, "  "),
+			{mode: "0777"}
 		);
 	} catch(e) {
 		throw e;

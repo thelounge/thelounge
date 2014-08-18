@@ -45,12 +45,20 @@ function fetchImage(url, callback) {
 	mkdirp(path, function(e) {
 		if (e) {
 			console.log(e);
+			return;
 		}
-		var stream = fs.createWriteStream(path + "/" + name);
+		var stream = fs.createWriteStream(
+			path + "/" + name,
+			{mode: "0777"}
+		);
 		var req = request.get(url);
 		req.pipe(stream);
-		req.on("end", function() {
+		req.on("error", function(e) {
+			console.log(e);
+		});
+		req.on("end", function(e, res) {
 			callback(name);
 		});
+		
 	});
 }

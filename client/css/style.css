@@ -324,7 +324,7 @@ button {
 }
 #chat {
 	bottom: 0;
-	font: 12px Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Courier New, monospace;
+	font: 13px Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace;
 	left: 0;
 	position: absolute;
 	right: 0;
@@ -395,15 +395,16 @@ button {
 	display: none;
 }
 #chat .show-more {
+	background: #fff;
+	border-bottom: 1px solid #e7e7e7;
 	color: #b1c3ce;
+	height: 48px;
+	line-height: 50px;
 	position: absolute;
 	width: 100%;
-	border-bottom: 1px solid #e7e7e7;
-	height: 41px;
-	background: #fff;
 }
 #chat .show-more + .messages .msg:first-child span {
-	padding-top: 46px;
+	padding-top: 54px;
 }
 #chat .messages {
 	display: table;
@@ -432,7 +433,7 @@ button {
 #chat .from,
 #chat .text {
 	display: table-cell;
-	padding: 4px 0;
+	padding: 3px 0;
 	vertical-align: top;
 }
 #chat .time {
@@ -538,7 +539,7 @@ button {
 }
 #chat .names button {
 	display: block;
-	line-height: 1.8em;
+	line-height: 1.6;
 }
 #sign-in label {
 	display: block;
@@ -671,9 +672,9 @@ button {
 		right: -180px;
 		transition: all .4s;
 		-webkit-transform: translateZ(0);
-				transform: translateZ(0);
+		        transform: translateZ(0);
 		-webkit-perspective: 1000;
-				perspective: 1000;
+		        perspective: 1000;
 	}
 }
 
