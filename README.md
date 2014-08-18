@@ -1,5 +1,19 @@
 # Shout [![](https://badge.fury.io/js/shout.png)](https://www.npmjs.org/package/shout)
 
+__What is it?__  
+Shout is a web IRC client that you host on your own server.
+
+__What features does it have?__  
+- Multiple user support
+- Stays connected even when you close the browser
+- Connect from multiple devices at once
+- Responsive layout — works well on your smartphone
+
+
+_It works great when running it on the Amazon EC2 micro instance!_
+
+Here's my Shout server running in public mode, which allows for anonymous connections:
+
 ### [Try the Shout client](http://shout-irc.com:9000/)
 
 ## Install
