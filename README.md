@@ -30,6 +30,7 @@ shout
 ```
 
 For more information:
+
 ```
 shout --help
 ```
@@ -40,7 +41,13 @@ shout --help
 
 ## Configuration
 
-Open your `config.json` file and edit:
+Open the `config.json` file by running:
+
+```
+shout config
+```
+
+The settings:
 
 __port__  
 The default port to be used.  
@@ -49,6 +56,7 @@ You can override this by running `shout --port 80`
 __public__  
 Set to either `true|false`.  
 When set to `false`, a login will be required for connecting users.
+
 
 ## User Management
 

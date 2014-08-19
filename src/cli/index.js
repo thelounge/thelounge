@@ -1,6 +1,7 @@
 var program = require("commander");
 
 require("./start");
+require("./config");
 require("./list");
 require("./add");
 require("./remove");
