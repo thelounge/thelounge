@@ -56,8 +56,10 @@ function fetchImage(url, callback) {
 		req.on("error", function(e) {
 			console.log(e);
 		});
-		req.on("end", function(e, res) {
-			callback(name);
+		req.on("end", function() {
+			if (this.req.res.statusCode == 200) {
+				callback(name);	
+			}
 		});
 		
 	});
