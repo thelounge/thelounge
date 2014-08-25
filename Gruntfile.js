@@ -1,5 +1,5 @@
 module.exports = function(grunt) {
-	var libs = "client/js/libs/**/*.js";
+	var libs = "client/js/**/*.js";
 	grunt.initConfig({
 		watch: {
 			files: libs,
@@ -11,7 +11,7 @@ module.exports = function(grunt) {
 			},
 			js: {
 				files: {
-					"client/js/libs.min.js": libs
+					"client/dist/build.js": libs
 				}
 			}
 		}
