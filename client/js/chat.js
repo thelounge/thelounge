@@ -126,7 +126,9 @@ $(function() {
 				channels: [data.chan]
 			})
 		);
+
 		sidebar.find(".chan")
+			.sort(function(a, b) { return $(a).data("id") - $(b).data("id") })
 			.last()
 			.trigger("click");
 	});
