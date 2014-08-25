@@ -4,7 +4,7 @@ var child = require("child_process");
 
 program
 	.command("edit <name>")
-	.description("Edit existing user")
+	.description("Edit an existing user")
 	.action(function(name) {
 		var users = new ClientManager().getUsers();
 		if (users.indexOf(name) === -1) {

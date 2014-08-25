@@ -75,6 +75,9 @@ Commands:
   
   remove <name>
     Remove an existing user
+
+  edit <name>
+    Edit an existing user
 ```
 
 Pretty simple, huh?
@@ -103,6 +106,7 @@ These are the commands currently implemented:
 - [x] /part
 - [x] /query
 - [x] /quit
+- [x] /quote
 - [x] /raw
 - [x] /say
 - [x] /send
