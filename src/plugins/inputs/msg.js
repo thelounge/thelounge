@@ -27,15 +27,10 @@ module.exports = function(network, chan, cmd, args) {
 	irc.send(target, text);
 	
 	if (target == chan.name && typeof chan !== "undefined") {
-		var msg = new Msg({
-			type: Msg.Type.MESSAGE,
+		irc.emit("message", {
 			from: irc.me,
-			text: text
-		});
-		chan.messages.push(msg);
-		client.emit("msg", {
-			chan: chan.id,
-			msg: msg
+			to: chan.name,
+			message: text
 		});
 	}
 };
