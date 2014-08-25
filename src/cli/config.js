@@ -7,7 +7,7 @@ program
 	.action(function() {
 		child.spawn(
 			"sudo",
-			["vim", process.cwd() + "/config.json"],
+			["vi", process.cwd() + "/config.json"],
 			{stdio: "inherit"}
 		);
 	});

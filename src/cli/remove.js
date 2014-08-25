@@ -19,8 +19,7 @@ program
 			return;
 		}
 		var manager = new ClientManager();
-		var success = manager.removeUser(name);
-		if (success) {
+		if (manager.removeUser(name)) {
 			console.log("");
 			console.log("Removed '" + name + "'.");
 			console.log("");

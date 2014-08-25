@@ -5,6 +5,7 @@ require("./config");
 require("./list");
 require("./add");
 require("./remove");
+require("./edit");
 
 program
 	.option("-p, --port <port>")
