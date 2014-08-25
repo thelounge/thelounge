@@ -41,10 +41,8 @@ $(function() {
 		animation: "none"
 	});
 
-	var tpl = [];
 	function render(name, data) {
-		tpl[name] = tpl[name] || Handlebars.compile($("#templates ." + name).html());
-		return tpl[name](data);
+		return Handlebars.templates[name](data);
 	}
 
 	Handlebars.registerHelper(
@@ -84,7 +82,7 @@ $(function() {
 		}
 
 		sidebar.find(".networks").html(
-			render("networks", {
+			render("network", {
 				networks: data.networks
 			})
 		);
@@ -117,7 +115,7 @@ $(function() {
 		var id = data.network;
 		var network = sidebar.find("#network-" + id);
 		network.append(
-			render("channels", {
+			render("chan", {
 				channels: [data.chan]
 			})
 		);
@@ -141,7 +139,7 @@ $(function() {
 		target = "#chan-" + target;
 		chat.find(target)
 			.find(".messages")
-			.append(render("messages", {messages: [data.msg]}))
+			.append(render("msg", {messages: [data.msg]}))
 			.trigger("msg", [
 				target,
 				data.msg
@@ -155,14 +153,14 @@ $(function() {
 			.remove()
 			.end()
 			.find(".messages")
-			.prepend(render("messages", {messages: data.messages}))
+			.prepend(render("msg", {messages: data.messages}))
 			.end();
 	});
 
 	socket.on("network", function(data) {
 		sidebar.find(".empty").hide();
 		sidebar.find(".networks").append(
-			render("networks", {
+			render("network", {
 				networks: [data.network]
 			})
 		);
@@ -215,7 +213,7 @@ $(function() {
 	socket.on("users", function(data) {
 		chat.find("#chan-" + data.chan)
 			.find(".users")
-			.html(render("users", data));
+			.html(render("user", data));
 	});
 
 	$("#connect")
