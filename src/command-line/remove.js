@@ -2,12 +2,14 @@ var ClientManager = new require("../clientManager");
 var fs = require("fs");
 var program = require("commander");
 
+const HOME = process.env.HOME + "/.shout";
+
 program
 	.command("remove <name>")
 	.description("Remove an existing user")
 	.action(function(name) {
 		try {
-			var path = process.cwd() + "/users";
+			var path = HOME + "/users";
 			var test = path + "/.test";
 			fs.mkdirSync(test);
 			fs.rmdirSync(test);

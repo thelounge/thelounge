@@ -2,6 +2,8 @@ var ClientManager = new require("../clientManager");
 var program = require("commander");
 var child = require("child_process");
 
+const HOME = process.env.HOME + "/.shout";
+
 program
 	.command("edit <name>")
 	.description("Edit an existing user")
@@ -13,9 +15,10 @@ program
 			console.log("");
 			return;
 		}
+		var path = HOME + "/users/";
 		child.spawn(
-			"sudo",
-			["vi", process.cwd() + "/users/" + name + "/user.json"],
+			"vi",
+			[path + name + "/user.json"],
 			{stdio: "inherit"}
 		);
 	});
