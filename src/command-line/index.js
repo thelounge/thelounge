@@ -1,4 +1,5 @@
 var program = require("commander");
+var pkg = require("../../package.json");
 
 require("./start");
 require("./config");
@@ -7,9 +8,7 @@ require("./add");
 require("./remove");
 require("./edit");
 
-program
-	.option("-p, --port <port>")
-	.parse(process.argv);
+program.parse(process.argv);
 
 if (!program.args.length) {
 	program.parse(process.argv.concat("start"));

@@ -4,6 +4,7 @@ var program = require("commander");
 var shout = require("../server");
 
 program
+	.option("-p, --port <port>")
 	.command("start")
 	.description("Start the server")
 	.action(function() {
