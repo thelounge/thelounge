@@ -6,7 +6,10 @@ module.exports = function(irc, network) {
 	var client = this;
 	irc.on("message", function(data) {
 		var target = data.to;
-		var chan = _.findWhere(network.channels, {name: target.charAt(0) == "#" ? target : data.from});
+		if (target == irc.me) {
+			target = data.from;
+		}
+		var chan = _.findWhere(network.channels, {name: target});
 		if (typeof chan === "undefined") {
 			chan = new Chan({
 				type: Chan.Type.QUERY,
