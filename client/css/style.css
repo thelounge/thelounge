@@ -2,8 +2,8 @@
 	http://fonts.googleapis.com/css?family=Lato:400,700
 );
 @font-face {
-	font-family: "Octicons";
-	src: url("fonts/octicons.svg") format("svg"), url("fonts/octicons.woff") format("woff");
+	font-family: "FontAwesome";
+	src: url("fonts/fontawesome.svg") format("svg"), url("fonts/fontawesome.woff") format("woff");
 }
 html,
 body {
@@ -119,6 +119,7 @@ button {
 	border: 1px solid transparent;
 	border-radius: 2px;
 	color: #bcc4d3;
+	color: #99a2b4;
 	font-size: 14px;
 }
 #sidebar button:hover,
@@ -130,7 +131,7 @@ button {
 }
 #sidebar .networks {
 	min-height: 100%;
-	padding: 25px 40px 80px;
+	padding: 20px 30px 80px;
 }
 #sidebar .network + .network {
 	margin-top: 30px;
@@ -152,7 +153,7 @@ button {
 	position: relative;
 	text-align: left;
 	transition: all .2s;
-	width: 160px;
+	width: 180px;
 }
 #sidebar .chan:first-child {
 	color: #84ce88;
@@ -162,6 +163,30 @@ button {
 #sidebar .chan:first-child:hover,
 #sidebar .chan:first-child.active {
 	color: #c0f8c3;
+}
+#sidebar .chan:before,
+#chat .title:before {
+		font: 14px FontAwesome;
+		float: left;
+		margin-top: 3px;
+		margin-right: 12px;
+		width: 14px;
+		text-align: center;
+}
+#chat .title:before {
+		margin-top: 17px;
+}
+#sidebar .chan.lobby:before,
+#chat .lobby .title:before {
+		content: "\f0a0";
+}
+#sidebar .chan.query:before,
+#chat .query .title:before {
+		content: "\f0e6";
+}
+#sidebar .chan.channel:before,
+#chat .channel .title:before {
+		content: "\f0f6";
 }
 #sidebar .chan:hover .badge {
 	opacity: 0;
@@ -209,9 +234,7 @@ button {
 	height: 70px;
 	line-height: 70px;
 	margin-top: -70px;
-	padding: 0 8px;
 	text-align: center;
-	width: 220px;
 }
 #footer button {
 	border: 0;
@@ -222,7 +245,7 @@ button {
 #footer .icon {
 	color: #818b9e;
 	display: inline-block;
-	font: 16px Octicons;
+	font: 14px FontAwesome;
 	line-height: 34px;
 	padding: 0px 12px;
 }
@@ -241,16 +264,16 @@ button {
 	display: none;
 }
 #footer .sign-in:before {
-	content: "\f036";
+	content: "\f090";
 }
 #footer .connect:before {
-	content: "\f085";
+	content: "\f1eb";
 }
 #footer .settings:before {
-	content: "\f02f";
+	content: "\f02d";
 }
 #footer .sign-out:before {
-	content: "\f032";
+	content: "\f13e";
 }
 #main {
 	background: #fff;
@@ -351,8 +374,8 @@ button {
 }
 #chat .header .lt:before,
 #chat .header .rt:before {
-	font: 16px Octicons;
-	content: "\f05e";
+	font: 14px FontAwesome;
+	content: "\f0c9";
 }
 #chat .header .rt {
 	float: right;
@@ -362,6 +385,8 @@ button {
 	font: 16px Lato;
 }
 #chat .header .topic {
+	/* Hidden for now */
+	display: none;
 	color: #777;
 	margin-left: 8px;
 	text-transform: capitalize;
@@ -509,8 +534,8 @@ button {
 }
 #chat .count:before {
 	color: #eee;
-	font: 16px Octicons;
-	content: "\f02e";
+	font: 14px FontAwesome;
+	content: "\f002";
 	position: absolute;
 	right: 18px;
 	line-height: 50px;
@@ -599,8 +624,8 @@ button {
 	opacity: .8;
 }
 #settings #play:before {
-	content: "\f0ba";
-	font: 16px Octicons;
+	content: "\f028";
+	font: 14px FontAwesome;
 	margin-right: 9px;
 }
 #settings .about {
@@ -675,6 +700,9 @@ button {
 		        transform: translateZ(0);
 		-webkit-perspective: 1000;
 		        perspective: 1000;
+	}
+	#chat .title:before {
+		display: none;
 	}
 }
 

@@ -11,7 +11,7 @@ module.exports = function(grunt) {
 			},
 			js: {
 				files: {
-					"client/dist/build.js": libs
+					"client/build/build.js": libs
 				}
 			}
 		}
