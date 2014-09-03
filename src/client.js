@@ -9,6 +9,7 @@ module.exports = Client;
 
 var id = 0;
 var events = [
+	"ctcp",
 	"error",
 	"image",
 	"join",
