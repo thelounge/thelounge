@@ -7,6 +7,14 @@
   "bin": {
     "shout": "index.js"
   },
+	"main": "http://localhost:9000/",
+	"node-main": "./index.js",
+	"window": {
+		"title": "Shout",
+		"toolbar": false,
+		"height": 640,
+		"width": 1024
+	},
   "repository": {
     "type": "git",
     "url": "https://github.com/erming/shout.git"
