@@ -11,9 +11,9 @@ function Network(attr) {
 		connected: false,
 		host: "",
 		id: id++,
-		irc: null,
-		name: prettify(attr.host)
+		irc: null
 	}, attr));
+  this.name = attr.name || prettify(attr.host);
 	this.channels.unshift(
 		new Chan({name: this.name, type: Chan.Type.LOBBY})
 	);

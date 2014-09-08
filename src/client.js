@@ -74,7 +74,8 @@ Client.prototype.connect = function(args) {
 	var client = this;
 	var server = {
 		host: args.host || "irc.freenode.org",
-		port: args.port || 6667
+		port: args.port || 6667,
+		name: args.name
 	};
 
 	var stream = args.tls ? tls.connect(server) : net.connect(server);
@@ -92,6 +93,7 @@ Client.prototype.connect = function(args) {
 
 	var network = new Network({
 		host: server.host,
+		name: server.name,
 		irc: irc
 	});
 
