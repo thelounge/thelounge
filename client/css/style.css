@@ -1,6 +1,4 @@
-@import url(
-	http://fonts.googleapis.com/css?family=Lato:400,700
-);
+@import url('//fonts.googleapis.com/css?family=Lato:400,700');
 @font-face {
 	font-family: "FontAwesome";
 	src: url("fonts/fontawesome.svg") format("svg"), url("fonts/fontawesome.woff") format("woff");
