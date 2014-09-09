@@ -72,10 +72,11 @@ Client.prototype.find = function(id) {
 
 Client.prototype.connect = function(args) {
 	var client = this;
-	var server = {
-		host: args.host || "irc.freenode.org",
-		port: args.port || 6667
-	};
+	var server = _.defaults(_.pick(args, ['host', 'port', 'rejectUnauthorized']), {
+		host: "irc.freenode.org",
+		port: 6667,
+		rejectUnauthorized: true
+	});
 
 	var stream = args.tls ? tls.connect(server) : net.connect(server);
 	stream.on("error", function(e) {
@@ -86,6 +87,11 @@ Client.prototype.connect = function(args) {
 	var realname = args.realname || "Shout User";
 
 	var irc = slate(stream);
+
+	if (args.password) {
+		irc.pass(args.password);
+	}
+
 	irc.me = nick;
 	irc.nick(nick);
 	irc.user(nick, realname);
