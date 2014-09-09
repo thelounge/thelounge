@@ -47,7 +47,7 @@ module.exports = function(port, host, isPublic) {
 	});
 
 	console.log("");
-	console.log("Shout is now running on host/port " + config.host + ":" + config.port);
+	console.log("Shout is now running on http://" + config.host + ":" + config.port + "/");
 	console.log("Press ctrl-c to stop");
 	console.log("");
 
