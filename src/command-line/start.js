@@ -4,6 +4,7 @@ var program = require("commander");
 var shout = require("../server");
 
 program
+	.option("-h, --host <ip>")
 	.option("-p, --port <port>")
 	.command("start")
 	.description("Start the server")
@@ -15,7 +16,8 @@ program
 			console.log("Create a new user with 'shout add <name>'.")
 			console.log("");
 		} else {
+			var host = program.host || config.host;
 			var port = program.port || config.port;
-			shout(port, config.public);
+			shout(port, host, config.public);
 		}
 	});
