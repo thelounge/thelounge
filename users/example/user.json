@@ -2,6 +2,7 @@
 	"user": "example",
 	"password": "password",
 	"networks": [{
+		"name": "Rizon",
 		"host": "irc.rizon.net",
 		"port": 6667,
 		"password": "serverpw"

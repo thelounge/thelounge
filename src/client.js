@@ -88,7 +88,7 @@ Client.prototype.find = function(id) {
 
 Client.prototype.connect = function(args) {
 	var client = this;
-	var server = _.defaults(_.pick(args, ['host', 'port', 'rejectUnauthorized']), {
+	var server = _.defaults(_.pick(args, ['host', 'port', 'rejectUnauthorized', 'name']), {
 		host: "irc.freenode.org",
 		port: 6667,
 		rejectUnauthorized: true
@@ -114,6 +114,7 @@ Client.prototype.connect = function(args) {
 
 	var network = new Network({
 		host: server.host,
+		name: server.name,
 		irc: irc
 	});
 
