@@ -15,8 +15,6 @@ Here's a Shout server running in public mode, which allows for anonymous connect
 
 ### [Try the Demo](http://shout-irc.com:9000/)
 
-_Note: If lots of people are trying the demo, you might want to try another network than `irc.freenode.org`. Freenode only allows ~5 connections._ 
-
 ## Install
 
 ```
