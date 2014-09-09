@@ -26,15 +26,16 @@ var inputs = [
 	"whois"
 ];
 
-module.exports = function(port, isPublic) {
+module.exports = function(port, host, isPublic) {
 	config.port = port;
+	config.host = host;
 	config.public = isPublic;
 
 	var app = http()
 		.use(index)
 		.use(http.static("client"))
 		.use(http.static(process.env.HOME + "/.shout/cache"))
-		.listen(config.port);
+		.listen(config.port, config.host);
 
 	sockets = io(app);
 	sockets.on("connect", function(socket) {
@@ -46,7 +47,7 @@ module.exports = function(port, isPublic) {
 	});
 
 	console.log("");
-	console.log("Shout is now running on port " + config.port);
+	console.log("Shout is now running on host/port " + config.host + ":" + config.port);
 	console.log("Press ctrl-c to stop");
 	console.log("");
 
