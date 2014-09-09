@@ -4,6 +4,7 @@
 	"networks": [{
 		"host": "irc.rizon.net",
 		"port": 6667,
+		"password": "serverpw"
 		"nick": "example",
 		"realname": "Example User",
 		"join": "#foo, #bar"
