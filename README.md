@@ -1,7 +1,5 @@
 # Shout [![](https://badge.fury.io/js/shout.png)](https://www.npmjs.org/package/shout)
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
-
 __What is it?__  
 Shout is a web IRC client that you host on your own server.
 
@@ -15,7 +13,7 @@ __What features does it have?__
 __Ok, you caught my attention. I want to try it!__  
 Here's a Shout server running in public mode, which allows for anonymous connections:
 
-### [Try the Shout client](http://shout-irc.com:9000/)
+### [Try the Demo](http://shout-irc.com:9000/)
 
 _Note: If lots of people are trying the demo, you might want to try another network than `irc.freenode.org`. Freenode only allows ~5 connections._ 
 
@@ -24,6 +22,10 @@ _Note: If lots of people are trying the demo, you might want to try another netw
 ```
 sudo npm install -g shout
 ```
+
+Or you could try: _(experimental)_
+
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
 ## Usage
 
