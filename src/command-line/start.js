@@ -16,8 +16,8 @@ program
 			console.log("Create a new user with 'shout add <name>'.")
 			console.log("");
 		} else {
-			var host = program.host || config.host;
-			var port = program.port || config.port;
+			var host = program.host || process.env.IP || config.host;
+			var port = program.port || process.env.PORT || config.port;
 			shout(port, host, config.public);
 		}
 	});
