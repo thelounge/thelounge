@@ -113,7 +113,7 @@ function auth(data) {
 	} else {
 		var success = 0;
 		_.each(manager.clients, function(client) {
-			if (client.config.name == data.name && client.config.password == data.password) {
+			if (client.config.user == data.user && client.config.password == data.password) {
 				init(socket, client);
 				success++;
 			}
