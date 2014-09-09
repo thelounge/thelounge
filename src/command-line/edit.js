@@ -6,7 +6,7 @@ const HOME = process.env.HOME + "/.shout";
 
 program
 	.command("edit <name>")
-	.description("Edit an existing user")
+	.description("Edit user: '" + HOME + "/users/<name>/user.json'")
 	.action(function(name) {
 		var users = new ClientManager().getUsers();
 		if (users.indexOf(name) === -1) {

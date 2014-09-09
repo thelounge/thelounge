@@ -1,13 +1,15 @@
 var program = require("commander");
 var child = require("child_process");
 
+var CONFIG_PATH = process.cwd() + "/config.json";
+
 program
 	.command("config")
-	.description("Open the config")
+	.description("Edit config: '" + CONFIG_PATH + "'")
 	.action(function() {
 		child.spawn(
 			"sudo",
-			["vi", process.cwd() + "/config.json"],
+			["vi", CONFIG_PATH],
 			{stdio: "inherit"}
 		);
 	});
