@@ -1,5 +1,7 @@
 # Shout [![](https://badge.fury.io/js/shout.png)](https://www.npmjs.org/package/shout)
 
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+
 __What is it?__  
 Shout is a web IRC client that you host on your own server.
 
