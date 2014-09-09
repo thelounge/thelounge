@@ -1,6 +1,7 @@
 var ClientManager = new require("../clientManager");
 var fs = require("fs");
 var program = require("commander");
+var mkdirp = require("mkdirp");
 
 const HOME = process.env.HOME + "/.shout";
 
@@ -8,6 +9,16 @@ program
 	.command("add <name>")
 	.description("Add a new user")
 	.action(function(name) {
+		try {
+			var path = HOME + "/users";
+			mkdirp.sync(path);
+		} catch (e) {
+			console.log("");
+			console.log("Could not create " + path);
+			console.log("Try running the command as sudo.");
+			console.log("");
+			return;
+		}
 		try {
 			var path = HOME + "/users";
 			var test = path + "/.test";
