@@ -21,9 +21,12 @@ module.exports = function(network, chan, cmd, args) {
 	}
 	var text = args.join(" ");
 	irc.send(target, text);
-	irc.emit("message", {
-		from: irc.me,
-		to: target,
-		message: text
-	});
+	var channel = _.find(network.channels, {name: target});
+	if (typeof channel !== "undefined") {
+		irc.emit("message", {
+			from: irc.me,
+			to: channel.name,
+			message: text
+		});
+	}
 };
