@@ -21,11 +21,9 @@ module.exports = function(network, chan, cmd, args) {
 	}
 	var text = args.join(" ");
 	irc.send(target, text);
-	if (target == chan.name && typeof chan !== "undefined") {
-		irc.emit("message", {
-			from: irc.me,
-			to: chan.name,
-			message: text
-		});
-	}
+	irc.emit("message", {
+		from: irc.me,
+		to: target,
+		message: text
+	});
 };

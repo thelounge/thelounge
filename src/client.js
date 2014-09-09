@@ -26,6 +26,22 @@ var events = [
 	"welcome",
 	"whois"
 ];
+var inputs = [
+	"action",
+	"connect",
+	"invite",
+	"join",
+	"kick",
+	"mode",
+	"msg",
+	"nick",
+	"notice",
+	"part",
+	"quit",
+	"raw",
+	"topic",
+	"whois"
+];
 
 function Client(sockets, config) {
 	_.merge(this, {
@@ -114,11 +130,58 @@ Client.prototype.connect = function(args) {
 		]);
 	});
 
-	var join = (args.join || "#shout-irc").replace(/\,/g, " ").split(/\s+/g);
-	irc.on("welcome", function() {
-		irc.join(join);
+	irc.once("welcome", function() {
+		var delay = 1000;
+		var commands = args.commands;
+		if (Array.isArray(commands)) {
+			commands.forEach(function(cmd) {
+				setTimeout(function() {
+					client.input({
+						target: network.channels[0].id,
+						text: cmd
+					});
+				}, delay);
+				delay += 1000;
+			});
+		}
+		setTimeout(function() {
+			irc.write("PING " + network.host);
+		}, delay);
+	});
+
+	irc.once("pong", function() {
+		var join = (args.join || "");
+		if (join) {
+			join = join.replace(/\,/g, " ").split(/\s+/g);
+			irc.join(join);
+		}
 	});
 };
+
+Client.prototype.input = function(data) {
+	var client = this;
+	var text = data.text;
+	var target = client.find(data.target);
+	if (text.charAt(0) !== "/") {
+		text = "/say " + text;
+	}
+	var args = text.split(" ");
+	var cmd = args.shift().replace("/", "").toLowerCase();
+	_.each(inputs, function(plugin) {
+		try {
+			var path = "./plugins/inputs/" + plugin;
+			var fn = require(path);
+			fn.apply(client, [
+				target.network,
+				target.chan,
+				cmd,
+				args
+			]);
+		} catch (e) {
+			console.log(path + ": " + e);
+		}
+	});
+}
 
 Client.prototype.quit = function() {
 	this.networks.forEach(function(network) {

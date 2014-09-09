@@ -9,23 +9,6 @@ var io = require("socket.io");
 var sockets = null;
 var manager = new ClientManager();
 
-var inputs = [
-	"action",
-	"connect",
-	"invite",
-	"join",
-	"kick",
-	"mode",
-	"msg",
-	"nick",
-	"notice",
-	"part",
-	"quit",
-	"raw",
-	"topic",
-	"whois"
-];
-
 module.exports = function(port, host, isPublic) {
 	config.port = port;
 	config.host = host;
@@ -78,7 +61,7 @@ function init(socket, client) {
 		socket.on(
 			"input",
 			function(data) {
-				input(client, data);
+				client.input(data);
 			}
 		);
 		socket.on(
@@ -122,32 +105,6 @@ function auth(data) {
 			socket.emit("auth");
 		}
 	}
-}
-
-function input(client, data) {
-	var text = data.text;
-	var target = client.find(data.target);
-	if (text.charAt(0) !== "/") {
-		text = "/say " + text;
-	}
-
-	var args = text.split(" ");
-	var cmd = args.shift().replace("/", "").toLowerCase();
-
-	_.each(inputs, function(plugin) {
-		try {
-			var path = "./plugins/inputs/" + plugin;
-			var fn = require(path);
-			fn.apply(client, [
-				target.network,
-				target.chan,
-				cmd,
-				args
-			]);
-		} catch (e) {
-			console.log(path + ": " + e);
-		}
-	});
 }
 
 function showMore(client, data) {

@@ -7,6 +7,10 @@
 		"password": "serverpw"
 		"nick": "example",
 		"realname": "Example User",
+		"commands": [
+			"/msg NickServ identify password",
+			"/msg ChanServ op #chan"
+		],
 		"join": "#foo, #bar"
 	}]
 }
