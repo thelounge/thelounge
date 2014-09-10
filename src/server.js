@@ -65,9 +65,9 @@ function init(socket, client) {
 			}
 		);
 		socket.on(
-			"showMore",
+			"more",
 			function(data) {
-				showMore(client, data);
+				client.more(data);
 			}
 		);
 		socket.on(
@@ -105,17 +105,4 @@ function auth(data) {
 			socket.emit("auth");
 		}
 	}
-}
-
-function showMore(client, data) {
-	var target = client.find(data.target);
-	if (!target) {
-		return;
-	}
-	var chan = target.chan;
-	var messages = chan.messages.slice(0, chan.messages.length - (data.count || 0));
-	client.emit("showMore", {
-		chan: chan.id,
-		messages: messages
-	});
 }

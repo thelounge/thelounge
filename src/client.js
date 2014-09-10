@@ -193,6 +193,21 @@ Client.prototype.input = function(data) {
 	});
 }
 
+Client.prototype.more = function(data) {
+	var client = this;
+	var target = client.find(data.target);
+	if (!target) {
+		return;
+	}
+	var chan = target.chan;
+	var count = chan.messages.length - (data.count || 0);
+	var messages = chan.messages.slice(Math.max(0, count - 100), count);
+	client.emit("more", {
+		chan: chan.id,
+		messages: messages
+	});
+}
+
 Client.prototype.quit = function() {
 	this.networks.forEach(function(network) {
 		var irc = network.irc;

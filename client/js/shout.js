@@ -30,7 +30,7 @@ $(function() {
 
 	var sidebar = $("#sidebar");
 	var chat = $("#chat");
-	
+
 	try {
 		var pop = new Audio();
 		pop.src = "/audio/pop.ogg";
@@ -152,15 +152,18 @@ $(function() {
 			]);
 	});
 
-	socket.on("showMore", function(data) {
+	socket.on("more", function(data) {
 		var target = data.chan;
-		chat.find("#chan-" + target)
-			.find(".show-more")
-			.remove()
-			.end()
+		var chan = chat
+			.find("#chan-" + target)
 			.find(".messages")
 			.prepend(render("msg", {messages: data.messages}))
 			.end();
+		if (data.messages.length != 100) {
+			var more = chan
+				.find(".show-more")
+				.remove();
+		}
 	});
 
 	socket.on("network", function(data) {
@@ -264,7 +267,7 @@ $(function() {
 	var input = $("#input")
 		.history()
 		.tab(complete, {hint: false});
-	
+
 	var form = $("#form").on("submit", function(e) {
 		e.preventDefault();
 		var text = input.val();
@@ -311,7 +314,7 @@ $(function() {
 			.find(".chat")
 			.sticky()
 			.end();
-		
+
 		if (screen.width > 768 && chan.hasClass("chan")) {
 			input.focus();
 		}
@@ -387,7 +390,7 @@ $(function() {
 		if (btn.length === 0) {
 			return;
 		}
-		
+
 		var ignore = [
 			"join",
 			"part",
@@ -412,7 +415,7 @@ $(function() {
 		var self = $(this);
 		var id = self.data("id");
 		var count = self.next(".messages").children().length;
-		socket.emit("showMore", {
+		socket.emit("more", {
 			target: id,
 			count: count
 		});
@@ -476,7 +479,7 @@ $(function() {
 			var i = Math.max(0, index - 1);
 			channels.eq(i).click();
 			break;
-		
+
 		case "down":
 			var i = Math.min(channels.length, index + 1);
 			channels.eq(i).click();
