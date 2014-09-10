@@ -31,8 +31,14 @@ $(function() {
 	var sidebar = $("#sidebar");
 	var chat = $("#chat");
 	
-	var pop = new Audio();
-	pop.src = "/audio/pop.ogg";
+	try {
+		var pop = new Audio();
+		pop.src = "/audio/pop.ogg";
+	} catch(e) {
+		var pop = {
+			play: $.noop
+		};
+	}
 
 	$("#play").on("click", function() { pop.play(); });
 	$("#footer .icon").tooltip();
