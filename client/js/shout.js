@@ -309,7 +309,12 @@ $(function() {
 
 		viewport.removeClass();
 
-		$("#windows .active").removeClass("active");
+		var active = $("#windows .active").removeClass("active");
+
+		if (active.attr('id') == 'sign-in') {
+			active.detach();
+		}
+
 		var chan = $(target)
 			.addClass("active")
 			.trigger("show")
