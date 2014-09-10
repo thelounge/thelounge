@@ -103,6 +103,25 @@ button {
 	-webkit-perspective: 1000;
 	        perspective: 1000;
 }
+#viewport .lt,
+#viewport .rt {
+	color: #ccc;
+	display: none;
+	float: left;
+	line-height: 40px;
+	height: 36px;
+	margin: 6px 12px 0 -12px;
+	width: 36px;
+}
+#viewport .lt:before,
+#viewport .rt:before {
+	font: 14px FontAwesome;
+	content: "\f0c9";
+}
+#viewport .rt {
+	float: right;
+	margin: 6px -12px 0 12px;
+}
 #sidebar {
 	bottom: 0;
 	left: 0;
@@ -351,6 +370,10 @@ button {
 #windows .active {
 	display: block;
 }
+#windows .window .lt {
+	margin-top: 4px;
+	margin-left: 8px;
+}
 #chat {
 	bottom: 0;
 	font: 13px Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace;
@@ -367,25 +390,6 @@ button {
 	line-height: 50px;
 	height: 48px;
 	padding: 0 20px;
-}
-#chat .header .lt,
-#chat .header .rt {
-	color: #ccc;
-	display: none;
-	float: left;
-	line-height: 40px;
-	height: 36px;
-	margin: 6px 12px 0 -12px;
-	width: 36px;
-}
-#chat .header .lt:before,
-#chat .header .rt:before {
-	font: 14px FontAwesome;
-	content: "\f0c9";
-}
-#chat .header .rt {
-	float: right;
-	margin: 6px -12px 0 12px;
 }
 #chat .header .title {
 	font: 16px Lato;
@@ -698,8 +702,8 @@ button {
 	#chat .chat {
 		right: 0;
 	}
-	#chat .header .lt,
-	#chat .channel .header .rt {
+	#viewport .lt,
+	#viewport .channel .rt {
 		display: block;
 	}
 	#chat .sidebar {

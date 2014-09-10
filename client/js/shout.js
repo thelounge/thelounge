@@ -332,10 +332,8 @@ $(function() {
 		}
 
 		viewport.removeClass();
-
 		var active = $("#windows .active").removeClass("active");
-
-		if (active.attr('id') == 'sign-in') {
+		if (active.attr("id") == "sign-in") {
 			active.detach();
 		}
 
