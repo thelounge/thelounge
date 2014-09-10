@@ -9,6 +9,7 @@ body {
 }
 body {
 	background: #505d70;
+	background: #455164;
 	color: #222;
 	font: 16px Lato, sans-serif;
 	margin: 0;
@@ -81,14 +82,14 @@ button {
 	padding: 0 30px;
 }
 ::-moz-placeholder {
-	color: rgba(0, 0, 0, .25);
+	color: rgba(0, 0, 0, .35);
 	opacity: 1;
 }
 ::-webkit-input-placeholder {
-	color: rgba(0, 0, 0, .25);
+	color: rgba(0, 0, 0, .35);
 }
 :-ms-input-placeholder {
-	color: rgba(0, 0, 0, .25) !important;
+	color: rgba(0, 0, 0, .35) !important;
 }
 #wrap {
 	height: 100%;
@@ -135,7 +136,7 @@ button {
 	margin-top: 30px;
 }
 #sidebar .empty {
-	color: #818b9e;
+	color: #9ca5b4;
 	line-height: 1.6;
 	font-size: 12px;
 	margin-top: 20px;
@@ -241,7 +242,7 @@ button {
 	background: none;
 }
 #footer .icon {
-	color: #818b9e;
+	color: #9ca5b4;
 	display: inline-block;
 	font: 14px FontAwesome;
 	line-height: 34px;
@@ -262,13 +263,13 @@ button {
 	display: none;
 }
 #footer .sign-in:before {
-	content: "\f090";
+	content: "\f023";
 }
 #footer .connect:before {
-	content: "\f1eb";
+	content: "\f067";
 }
 #footer .settings:before {
-	content: "\f02d";
+	content: "\f013";
 }
 #footer .sign-out:before {
 	content: "\f13e";
@@ -339,6 +340,13 @@ button {
 }
 #windows .window h1 {
 	font: 36px Lato;
+}
+#windows .window h2 {
+	border-bottom: 1px solid #eee;
+	color: #7f8c8d;
+	font-size: 22px;
+	margin: 30px 0 10px;
+	padding-bottom: 7px;
 }
 #windows .active {
 	display: block;
@@ -460,17 +468,12 @@ button {
 	vertical-align: top;
 }
 #chat .time {
-	background: #fcfdfd;
-	background: #fcfcfc;
-	color: #e4eaee;
+	color: #d0dbe2;
 	text-align: right;
 	width: 46px;
 	min-width: 46px;
 }
 #chat .from {
-	background: #fcfdfd;
-	background: #fcfcfc;
-	border-right: 1px solid #f6f8f9;
 	border-right: 1px solid #f6f6f6;
 	color: #b1c3ce;
 	padding-right: 10px;
@@ -521,9 +524,7 @@ button {
 	max-width: 240px;
 }
 #chat .count {
-	background: #fcfcfc;
-	background: #fff;
-	border-bottom: 1px dashed #e7e7e7;
+	background: #fafafa;
 	height: 48px;
 	left: 0;
 	position: absolute;
@@ -531,7 +532,7 @@ button {
 	top: 0;
 }
 #chat .count:before {
-	color: #eee;
+	color: #cfcfcf;
 	font: 14px FontAwesome;
 	content: "\f002";
 	position: absolute;
@@ -590,15 +591,18 @@ button {
 	margin: 28px 0 0 -17px;
 	position: absolute;
 }
-#connect .btn {
-	margin-top: 25px;
+#connect .tls {
+	float: left;
+	font-size: 14px;
+	padding: 10px 2px;
 }
-#settings h2 {
-	border-bottom: 1px solid #eee;
-	color: #7f8c8d;
-	font-size: 22px;
-	margin: 30px 0 10px;
-	padding-bottom: 7px;
+#connect .tls input {
+	float: left;
+	margin: 3px 10px 0 0;
+}
+#connect .btn {
+	float: left;
+	margin-top: 25px;
 }
 #settings .title {
 	margin-bottom: -10px;
@@ -705,6 +709,9 @@ button {
 }
 
 @media (max-width: 480px) {
+	.container {
+		margin: 40px 0;
+	}
 	#chat .messages {
 		display: block;
 		padding: 5px 10px;

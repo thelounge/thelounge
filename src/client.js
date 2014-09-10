@@ -1,6 +1,7 @@
 var _ = require("lodash");
 var config = require("../config.json");
 var net = require("net");
+var Msg = require("./models/msg");
 var Network = require("./models/network");
 var slate = require("slate-irc");
 var tls = require("tls");
@@ -90,13 +91,21 @@ Client.prototype.connect = function(args) {
 	var client = this;
 	var server = _.defaults(_.pick(args, ['host', 'port', 'rejectUnauthorized', 'name']), {
 		host: "irc.freenode.org",
-		port: 6667,
-		rejectUnauthorized: true
+		port: 6697,
+		rejectUnauthorized: false
 	});
 
 	var stream = args.tls ? tls.connect(server) : net.connect(server);
 	stream.on("error", function(e) {
-		console.log(e);
+		console.log("Client#connect():\n" + e);
+		stream.end();
+		var msg = new Msg({
+			type: Msg.Type.ERROR,
+			text: "Connection error."
+		});
+		client.emit("msg", {
+			msg: msg
+		});
 	});
 
 	var nick = args.nick || "shout-user";
