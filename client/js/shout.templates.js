@@ -100,10 +100,10 @@ templates['network'] = template({"1":function(depth0,helpers,partials,data) {
   return buffer;
 },"useData":true});
 templates['user'] = template({"1":function(depth0,helpers,partials,data) {
-  var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression;
+  var stack1, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "<div class=\"count\">\n	<input class=\"search\" placeholder=\""
-    + escapeExpression(lambda(((stack1 = (depth0 != null ? depth0.users : depth0)) != null ? stack1.length : stack1), depth0))
-    + " users\">\n</div>\n";
+    + escapeExpression(((helpers.users || (depth0 && depth0.users) || helperMissing).call(depth0, ((stack1 = (depth0 != null ? depth0.users : depth0)) != null ? stack1.length : stack1), {"name":"users","hash":{},"data":data})))
+    + "\">\n</div>\n";
 },"3":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "	<button class=\"user\">"

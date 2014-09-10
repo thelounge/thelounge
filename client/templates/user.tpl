@@ -1,6 +1,6 @@
 {{#if users.length}}
 <div class="count">
-	<input class="search" placeholder="{{users.length}} users">
+	<input class="search" placeholder="{{users users.length}}">
 </div>
 {{/if}}
 <div class="names">
