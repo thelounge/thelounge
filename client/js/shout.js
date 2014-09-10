@@ -61,9 +61,17 @@ $(function() {
 		console.log(e);
 	});
 
+	socket.on("connect_error", function(e) {
+		location.reload();
+	});
+
 	socket.on("auth", function(data) {
 		var body = $("body");
 		var login = $("#sign-in");
+		if (!login.length) {
+			location.reload();
+			return;
+		}
 		if (body.hasClass("signed-out")) {
 			var error = login.find(".error");
 			error.show().closest("form").one("submit", function() {
@@ -265,7 +273,6 @@ $(function() {
 			"mode",
 			"quit",
 		].indexOf(name) !== -1) {
-			console.log("toggle " + name);
 			chat.toggleClass("hide-" + name, !self.prop("checked"));
 		}
 	}).find("input")
