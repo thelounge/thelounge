@@ -71,7 +71,10 @@ $(function() {
 			});
 		}
 		body.addClass("signed-out");
-		login.find("input[name='user']").val($.cookie("user") || "");
+		var input = login.find("input[name='user']");
+		if (input.val() === "") {
+			input.val($.cookie("user") || "");
+		}
 		sidebar.find(".sign-in")
 			.click()
 			.end()
