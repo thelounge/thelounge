@@ -509,6 +509,13 @@ button {
 #chat .highlight .from {
 	color: #f00;
 }
+#chat.hide-join .join span,
+#chat.hide-nick .nick span,
+#chat.hide-part .part span,
+#chat.hide-mode .mode span,
+#chat.hide-quit .quit span {
+	display: none !important;
+}
 #chat .notice .type {
 	display: none;
 }
