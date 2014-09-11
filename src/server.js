@@ -1,4 +1,5 @@
 var _ = require("lodash");
+var bcrypt = require("bcrypt");
 var Client = require("./client");
 var ClientManager = require("./clientManager");
 var config = require("../config.json");
@@ -94,11 +95,13 @@ function auth(data) {
 		});
 		init(socket, client);
 	} else {
-		var success = 0;
+		var success = false;
 		_.each(manager.clients, function(client) {
-			if (client.config.user == data.user && client.config.password == data.password) {
-				init(socket, client);
-				success++;
+			if (client.config.user == data.user) {
+				if (bcrypt.compareSync(data.password, client.config.password)) {
+					init(socket, client);
+					success = true;
+				}
 			}
 		});
 		if (!success) {

@@ -1,4 +1,5 @@
 var ClientManager = new require("../clientManager");
+var bcrypt = require("bcrypt");
 var fs = require("fs");
 var program = require("commander");
 var mkdirp = require("mkdirp");
@@ -46,11 +47,16 @@ program
 			if (err) {
 				return;
 			}
-			var success = manager.addUser(
-				name,
-				password
-			);
-			console.log("Added '" + name + "'.");
-			console.log("");
+			bcrypt.hash(password, 8, function(err, hash) {
+				if (err) {
+					return;
+				}
+				manager.addUser(
+					name,
+					hash
+				);
+				console.log("Added '" + name + "'.");
+				console.log("");
+			});
 		});
 	});

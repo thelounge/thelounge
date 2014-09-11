@@ -1,20 +1,20 @@
 {
   "name": "shout",
   "description": "A web IRC client",
-  "version": "0.24.0",
+  "version": "0.25.0",
   "author": "Mattias Erming",
   "preferGlobal": true,
   "bin": {
     "shout": "index.js"
   },
-	"main": "http://localhost:9000/",
-	"node-main": "./index.js",
-	"window": {
-		"title": "Shout",
-		"toolbar": false,
-		"height": 640,
-		"width": 1024
-	},
+  "main": "http://localhost:9000/",
+  "node-main": "./index.js",
+  "window": {
+    "title": "Shout",
+    "toolbar": false,
+    "height": 640,
+    "width": 1024
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/erming/shout.git"
@@ -32,6 +32,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^0.8.0",
     "commander": "^2.3.0",
     "connect": "~2.19.6",
     "lodash": "~2.4.1",
