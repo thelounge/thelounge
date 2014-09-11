@@ -115,6 +115,7 @@ $(function() {
 
 		sidebar.find(".empty").hide();
 		$("body").removeClass("signed-out");
+		$("#sign-in").detach();
 
 		var id = $.cookie("target");
 		var target = sidebar.find("[data-target='" + id + "']").trigger("click");
@@ -332,10 +333,7 @@ $(function() {
 		}
 
 		viewport.removeClass();
-		var active = $("#windows .active").removeClass("active");
-		if (active.attr("id") == "sign-in") {
-			active.detach();
-		}
+		$("#windows .active").removeClass("active");
 
 		var chan = $(target)
 			.addClass("active")
