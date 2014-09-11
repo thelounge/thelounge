@@ -47,16 +47,12 @@ program
 			if (err) {
 				return;
 			}
-			bcrypt.hash(password, 8, function(err, hash) {
-				if (err) {
-					return;
-				}
-				manager.addUser(
-					name,
-					hash
-				);
-				console.log("Added '" + name + "'.");
-				console.log("");
-			});
+			var hash = hashSync(password, 8);
+			manager.addUser(
+				name,
+				hash
+			);
+			console.log("Added '" + name + "'.");
+			console.log("");
 		});
 	});
