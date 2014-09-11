@@ -88,6 +88,9 @@ $ shout --help
     remove <name>
        Remove an existing user
 
+    reset <name>
+       Reset user password
+
     edit <name>
        Edit user: '/home/erming/.shout/users/<name>/user.json'
 
