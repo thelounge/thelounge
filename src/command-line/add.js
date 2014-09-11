@@ -47,7 +47,7 @@ program
 			if (err) {
 				return;
 			}
-			var hash = hashSync(password, 8);
+			var hash = bcrypt.hashSync(password, 8);
 			manager.addUser(
 				name,
 				hash

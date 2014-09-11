@@ -1,7 +1,7 @@
 {
   "name": "shout",
   "description": "A web IRC client",
-  "version": "0.25.1",
+  "version": "0.25.2",
   "author": "Mattias Erming",
   "preferGlobal": true,
   "bin": {
