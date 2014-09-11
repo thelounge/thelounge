@@ -6,7 +6,7 @@ module.exports = function(irc, network) {
 	var client = this;
 	irc.on("message", function(data) {
 		var target = data.to;
-		if (target == irc.me) {
+		if (target.toLowerCase() == irc.me.toLowerCase()) {
 			target = data.from;
 		}
 		var chan = _.findWhere(network.channels, {name: target});
