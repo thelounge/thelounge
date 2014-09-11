@@ -67,21 +67,36 @@ When set to `false`, a login will be required for connecting users.
 Go ahead and run `shout --help`:
 
 ```
-Usage: shout [options] [command]
+$ shout --help
 
-Commands:
+  Usage: shout [options] [command]
 
-  list
-    List all existing users
-  
-  add <name>
-    Add a new user
-  
-  remove <name>
-    Remove an existing user
+  Commands:
 
-  edit <name>
-    Edit an existing user
+    start
+       Start the server
+
+    config
+       Edit config: '/usr/lib/node_modules/shout/config.json'
+
+    list
+       List all existing users
+
+    add <name>
+       Add a new user
+
+    remove <name>
+       Remove an existing user
+
+    edit <name>
+       Edit user: '/home/erming/.shout/users/<name>/user.json'
+
+
+  Options:
+
+    -h, --help         output usage information
+    -h, --host <ip>    host
+    -p, --port <port>  port
 ```
 
 Pretty simple, huh?
