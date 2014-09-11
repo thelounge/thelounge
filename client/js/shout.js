@@ -250,6 +250,7 @@ $(function() {
 	var options = $.extend({
 		join: true,
 		mode: true,
+		motd: false,
 		nick: true,
 		notification: true,
 		part: true,
@@ -269,9 +270,10 @@ $(function() {
 		$.cookie("settings", options);
 		if ([
 			"join",
+			"mode",
+			"motd",
 			"nick",
 			"part",
-			"mode",
 			"quit",
 		].indexOf(name) !== -1) {
 			chat.toggleClass("hide-" + name, !self.prop("checked"));
