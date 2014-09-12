@@ -327,6 +327,7 @@ $(function() {
 		self.addClass("active")
 			.find(".badge")
 			.removeClass("highlight")
+			.data("count", "")
 			.empty();
 
 		if (sidebar.find(".highlight").length == 0) {
@@ -432,8 +433,9 @@ $(function() {
 
 		var badge = btn.find(".badge");
 		if (badge.length !== 0) {
-			var i = (parseInt(badge.html()) || 0) + 1;
-			badge.html(i);
+			var i = (badge.data("count") || 0) + 1;
+			badge.data("count", i);
+			badge.html(i > 999 ? (i / 1000).toFixed(1) + "k" : i);
 			if (highlight || query) {
 				badge.addClass("highlight");
 			}
