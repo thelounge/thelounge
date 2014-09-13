@@ -47,6 +47,8 @@ function index(req, res, next) {
 			require("../package.json"),
 			config
 		);
+		res.setHeader("Content-Type", "text/html");
+		res.writeHead(200);
 		res.end(_.template(
 			file,
 			data
