@@ -1,4 +1,5 @@
 @import url('//fonts.googleapis.com/css?family=Lato:400,700');
+@import url('//fonts.googleapis.com/css?family=Open+Sans:300,400,700');
 @font-face {
 	font-family: "FontAwesome";
 	src: url("fonts/fontawesome.svg") format("svg"), url("fonts/fontawesome.woff") format("woff");
@@ -75,7 +76,7 @@ button {
 }
 .container {
 	margin: 80px auto;
-	max-width: 420px;
+	max-width: 480px;
 	overflow: hidden;
 	overflow-y: auto;
 	-webkit-overflow-scrolling: touch;
@@ -316,12 +317,16 @@ button {
 	top: 0px;
 	width: 100%;
 }
+#windows label {
+	font-size: 14px;
+}
 #windows .input {
 	border: 1px solid #cdd3da;
 	border-radius: 2px;
 	color: #222;
 	font-size: 14px;
 	margin: 2px 0;
+	margin-bottom: 10px;
 	outline: 0;
 	padding: 8px 10px;
 	transition: border-color .2s;
@@ -354,6 +359,7 @@ button {
 	top: 0;
 }
 #windows .window {
+	bottom: -44px !important;
 	overflow-y: auto;
 	-webkit-overflow-scrolling: touch;
 }
@@ -370,36 +376,38 @@ button {
 #windows .active {
 	display: block;
 }
-#windows .window .lt {
-	margin-top: 4px;
-	margin-left: 8px;
-}
-#chat {
-	bottom: 0;
-	font: 13px Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace;
-	left: 0;
-	position: absolute;
-	right: 0;
-	top: 0;
-}
-#chat button:hover {
-	opacity: .6;
-}
-#chat .header {
+#windows .header {
 	border-bottom: 1px solid #e7e7e7;
 	line-height: 50px;
 	height: 48px;
 	padding: 0 20px;
 }
-#chat .header .title {
+#windows .header .title {
 	font: 16px Lato;
 }
-#chat .header .topic {
+#windows .header .topic {
 	/* Hidden for now */
 	display: none;
 	color: #777;
 	margin-left: 8px;
 	text-transform: capitalize;
+}
+#windows .window .header {
+	display: none;
+}
+#chat {
+	bottom: 0;
+	left: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+#chat,
+#windows .header {
+	font: 13px Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace;
+}
+#chat button:hover {
+	opacity: .6;
 }
 #chat .chat,
 #chat .sidebar {
@@ -591,22 +599,25 @@ button {
 	color: #e74c3c;
 	margin-top: 1em;
 }
+#sign-in .container {
+	margin-top: 120px;
+}
 #connect label {
 	display: block;
-	margin-top: 10px;
+	margin-top: 11px;
 }
 #connect .title {
 	margin-bottom: 10px;
 }
 #connect .port:before {
 	content: ":";
-	margin: 28px 0 0 -17px;
+	margin: 9px 0 0 -17px;
 	position: absolute;
 }
 #connect .tls {
 	float: left;
 	font-size: 14px;
-	padding: 10px 2px;
+	margin-top: 6px;
 }
 #connect .tls input {
 	float: left;
@@ -614,7 +625,7 @@ button {
 }
 #connect .btn {
 	float: left;
-	margin-top: 25px;
+	margin-top: 30px;
 }
 #settings .title {
 	margin-bottom: -10px;
@@ -655,7 +666,7 @@ button {
 	left: 0;
 	position: absolute;
 	right: 0px;
-	z-index: 1;
+	/*z-index: 1;*/
 }
 #form input {
 	border: 1px solid #cfdae1;
@@ -682,6 +693,9 @@ button {
 }
 
 @media (max-width: 768px) {
+	.container {
+		margin-top: 60px !important;
+	}
 	#viewport.lt {
 		-webkit-transform: translate3d(220px, 0, 0);
 		        transform: translate3d(220px, 0, 0);
@@ -707,6 +721,9 @@ button {
 	#viewport .channel .rt {
 		display: block;
 	}
+	#windows .window .header {
+		display: block;
+	}
 	#chat .sidebar {
 		right: -180px;
 		transition: all .4s;
@@ -720,9 +737,15 @@ button {
 	}
 }
 
-@media (max-width: 480px) {
+@media (max-width: 479px) {
 	.container {
-		margin: 40px 0;
+		margin: 40px 0 !important;
+	}
+	#connect .tls {
+		margin: 20px 0;
+	}
+	#windows .input {
+		margin-bottom: 2px;
 	}
 	#chat .messages {
 		display: block;

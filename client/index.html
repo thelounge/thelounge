@@ -35,7 +35,9 @@
 			<div id="windows">
 				<div id="chat"></div>
 				<div id="sign-in" class="window">
-					<button class="lt"></button>
+					<div class="header">
+						<button class="lt"></button>
+					</div>
 					<form class="container" action="">
 						<div class="row">
 							<div class="col-xs-12">
@@ -65,53 +67,66 @@
 					</form>
 				</div>
 				<div id="connect" class="window">
-					<button class="lt"></button>
+					<div class="header">
+						<button class="lt"></button>
+					</div>
 					<form class="container" action="">
 						<div class="row">
-							<div class="col-xs-12">
+							<div class="col-sm-12">
 								<h1 class="title">Connect</h1>
 							</div>
-							<div class="col-xs-8">
-								<label>
-								Server
+							<div class="col-sm-12">
+								<h2>Network settings</h2>
+							</div>
+							<div class="col-sm-3">
+								<label>Server</label>
+							</div>
+							<div class="col-sm-6 col-xs-8">
 								<input class="input" name="host" value="irc.freenode.org">
-								</label>
 							</div>
-							<div class="col-xs-4">
-								<label class="port">
-								Port
-								<input class="input" name="port" value="6697">
-								</label>
+							<div class="col-sm-3 col-xs-4">
+								<div class="port">
+									<input class="input" name="port" value="6697">
+								</div>
 							</div>
-							<div class="col-xs-12">
+							<div class="clearfix"></div>
+							<div class="col-sm-3">
+								<label>Password</label>
+							</div>
+							<div class="col-sm-9">
+								<input class="input" type="password" name="password">
+							</div>
+							<div class="col-sm-3"></div>
+							<div class="col-sm-9">
 								<label class="tls">
 									<input type="checkbox" name="tls" checked="checked">
 									Enable TLS/SSL
 								</label>
 							</div>
 							<div class="clearfix"></div>
-							<div class="col-xs-12">
-								<h2>User Preferences</h2>
+							<div class="col-sm-12">
+								<h2>User preferences</h2>
 							</div>
-							<div class="col-xs-5">
-								<label>
-								Nick
+							<div class="col-sm-3">
+								<label>Nick</label>
+							</div>
+							<div class="col-sm-9">
 								<input class="input" name="nick" value="shout-user">
-								</label>
 							</div>
-							<div class="col-xs-7">
-								<label>
-								Real Name
+							<div class="col-sm-3">
+								<label>Real Name</label>
+							</div>
+							<div class="col-sm-9">
 								<input class="input" name="realname" class="input" value="Shout User">
-								</label>
 							</div>
-							<div class="col-xs-12">
-								<label>
-								Channels
-								<input class="input" name="join" class="input" value="#shout-irc">
-								</label>
+							<div class="col-sm-3">
+								<label>Channels</label>
 							</div>
-							<div class="col-xs-12">
+							<div class="col-sm-9">
+								<input class="input" name="join" class="input" value="#foo, #shout-irc">
+							</div>
+							<div class="col-sm-3 clearfix"></div>
+							<div class="col-sm-9">
 								<button type="submit" class="btn">
 									Connect
 								</button>
@@ -120,7 +135,9 @@
 					</form>
 				</div>
 				<div id="settings" class="window">
-					<button class="lt"></button>
+					<div class="header">
+						<button class="lt"></button>
+					</div>
 					<div class="container">
 						<div class="row">
 							<div class="col-sm-12">
