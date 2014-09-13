@@ -13,9 +13,9 @@ __What features does it have?__
 __Ok, you caught my attention. I want to try it!__  
 Here's a Shout server running in public mode, which allows for anonymous connections:
 
-### [Try the Demo](http://shout-irc.com:9000/)
+### [Try the Demo](http://demo.shout-irc.com/)
 
-_Temporarily down. Moving the server._
+_Clicking the link above will open http://demo.shout-irc.com/_
 
 ## Install
 
