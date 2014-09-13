@@ -1,12 +1,11 @@
 var ClientManager = new require("../clientManager");
 var program = require("commander");
 var child = require("child_process");
-
-const HOME = process.env.HOME + "/.shout";
+var Helper = require("../helper");
 
 program
 	.command("edit <name>")
-	.description("Edit user: '" + HOME + "/users/<name>/user.json'")
+	.description("Edit user: '" + Helper.resolveHomePath("users", "<name>", "user.json") + "'")
 	.action(function(name) {
 		var users = new ClientManager().getUsers();
 		if (users.indexOf(name) === -1) {
@@ -15,10 +14,9 @@ program
 			console.log("");
 			return;
 		}
-		var path = HOME + "/users/";
 		child.spawn(
 			"vi",
-			[path + name + "/user.json"],
+			[Helper.resolveHomePath("users", name, "user.json")],
 			{stdio: "inherit"}
 		);
 	});

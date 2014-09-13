@@ -6,6 +6,7 @@ var config = require("../config.json");
 var fs = require("fs");
 var http = require("connect");
 var io = require("socket.io");
+var Helper = require("./helper");
 
 var sockets = null;
 var manager = new ClientManager();
@@ -18,7 +19,7 @@ module.exports = function(port, host, isPublic) {
 	var app = http()
 		.use(index)
 		.use(http.static("client"))
-		.use(http.static(process.env.HOME + "/.shout/cache"))
+		.use(http.static(Helper.resolveHomePath("cache")))
 		.listen(config.port, config.host);
 
 	sockets = io(app);
