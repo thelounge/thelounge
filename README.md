@@ -21,14 +21,12 @@ Here's a Shout server running in public mode, which allows for anonymous connect
 sudo npm install -g shout
 ```
 
-__Experimental Heroku Deployment__
+### Experimental Heroku Deployment
 
-
-In order to run your own Shout instance, just hit the following button: [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
-
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
 Please note, that this will result in a public Shout instance. In order to make it private
-and to register users, you need to do these steps:
+and to register users, you need to follow these steps:
 
 ```
 git clone git@heroku.com:<your-app>.git
