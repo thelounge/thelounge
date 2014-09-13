@@ -330,7 +330,7 @@ $(function() {
 			.data("count", "")
 			.empty();
 
-		if (sidebar.find(".highlight").length == 0) {
+		if (sidebar.find(".highlight").length === 0) {
 			favico.badge("");
 		}
 
@@ -542,7 +542,7 @@ $(function() {
 	document.addEventListener(
 		"visibilitychange",
 		function() {
-			if (sidebar.find(".highlight").length == 0) {
+			if (sidebar.find(".highlight").length === 0) {
 				favico.badge("");
 			}
 		}
