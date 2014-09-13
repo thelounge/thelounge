@@ -54,15 +54,12 @@ function Client(sockets, config) {
 	});
 	if (config) {
 		var client = this;
-		var wait_total = 0;
-		_.each(config.networks || [], function(n) {
-			if (wait_total == 0)
+		var delay = 0;
+		(config.networks || []).forEach(function(n) {
+			setTimeout(function() {
 				client.connect(n);
-			else
-				setTimeout(function() {
-					client.connect(n);
-				}, wait_total);
-			wait_total += 500;
+			}, delay);
+			delay += 1000;
 		});
 	}
 }
@@ -96,11 +93,12 @@ Client.prototype.find = function(id) {
 
 Client.prototype.connect = function(args) {
 	var client = this;
-	var server = _.defaults(_.pick(args, ['host', 'port', 'rejectUnauthorized', 'name']), {
-		host: "irc.freenode.org",
-		port: args.tls ? 6697 : 6667,
+	var server = {
+		host: args.host || "irc.freenode.org",
+		port: args.port || (args.tls ? 6697 : 6667),
+		name: args.name || "",
 		rejectUnauthorized: false
-	});
+	};
 
 	var stream = args.tls ? tls.connect(server) : net.connect(server);
 	stream.on("error", function(e) {
