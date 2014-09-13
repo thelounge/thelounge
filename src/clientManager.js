@@ -2,8 +2,7 @@ var _ = require("lodash");
 var fs = require("fs");
 var Client = require("./client");
 var mkdirp = require("mkdirp");
-
-const HOME = process.env.HOME + "/.shout";
+var Helper = require("./helper");
 
 module.exports = ClientManager;
 
@@ -41,7 +40,7 @@ ClientManager.prototype.loadUsers = function(sockets) {
 ClientManager.prototype.loadUser = function(name) {
 	try {
 		var json = fs.readFileSync(
-			HOME + "/users/" + name + "/user.json",
+			Helper.resolveHomePath("users", name, "user.json"),
 			"utf-8"
 		);
 		json = JSON.parse(json);
@@ -54,8 +53,10 @@ ClientManager.prototype.loadUser = function(name) {
 
 ClientManager.prototype.getUsers = function() {
 	var users = [];
-	var path = HOME + "/users/";
+	var path = Helper.resolveHomePath("users");
+
 	mkdirp.sync(path);
+
 	try {
 		users = fs.readdirSync(path);
 	} catch(e) {
@@ -75,7 +76,7 @@ ClientManager.prototype.addUser = function(name, password) {
 		return false;
 	}
 	try {
-		var path = HOME + "/users/" + name;
+		var path = Helper.resolveHomePath("users", name);
 		var user = {
 			user: name,
 			password: password || "",
@@ -99,7 +100,7 @@ ClientManager.prototype.removeUser = function(name) {
 		return false;
 	}
 	try {
-		var path = HOME + "/users/" + name;
+		var path = Helper.resolveHomePath("users", name);
 		fs.unlinkSync(path + "/user.json");
 		fs.rmdirSync(path);
 	} catch(e) {

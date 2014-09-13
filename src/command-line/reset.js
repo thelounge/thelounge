@@ -2,8 +2,7 @@ var bcrypt = require("bcrypt");
 var ClientManager = new require("../clientManager");
 var fs = require("fs");
 var program = require("commander");
-
-const HOME = process.env.HOME + "/.shout";
+var Helper = require("../helper");
 
 program
 	.command("reset <name>")
@@ -16,7 +15,7 @@ program
 			console.log("");
 			return;
 		}
-		var path = HOME + "/users/";
+		var path = Helper.resolveHomePath("users");
 		var file = path + name + "/user.json";
 		var user = require(file);
 		require("read")({

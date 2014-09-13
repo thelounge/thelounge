@@ -3,15 +3,14 @@ var bcrypt = require("bcrypt");
 var fs = require("fs");
 var program = require("commander");
 var mkdirp = require("mkdirp");
-
-const HOME = process.env.HOME + "/.shout";
+var Helper = require("../helper");
 
 program
 	.command("add <name>")
 	.description("Add a new user")
 	.action(function(name) {
 		try {
-			var path = HOME + "/users";
+			var path = Helper.resolveHomePath("users");
 			mkdirp.sync(path);
 		} catch (e) {
 			console.log("");
@@ -21,7 +20,7 @@ program
 			return;
 		}
 		try {
-			var path = HOME + "/users";
+			var path = Helper.resolveHomePath("users");
 			var test = path + "/.test";
 			fs.mkdirSync(test);
 			fs.rmdirSync(test);

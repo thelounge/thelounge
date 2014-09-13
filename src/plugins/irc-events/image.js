@@ -4,6 +4,7 @@ var config = require("../../../config.json");
 var fs = require("fs");
 var mkdirp = require("mkdirp");
 var request = require("superagent");
+var Helper = require("../../helper");
 
 module.exports = function(irc, network) {
 	var client = this;
@@ -40,7 +41,7 @@ module.exports = function(irc, network) {
 };
 
 function fetchImage(url, callback) {
-	var path = process.env.HOME + "/.shout/cache/thumbs";
+	var path = Helper.resolveHomePath("cache", "thumbs");
 	var name = new Date().getTime().toString();
 	mkdirp(path, function(e) {
 		if (e) {
@@ -58,9 +59,9 @@ function fetchImage(url, callback) {
 		});
 		req.on("end", function() {
 			if (this.req.res.statusCode == 200) {
-				callback(name);	
+				callback(name);
 			}
 		});
-		
+
 	});
 }
