@@ -507,13 +507,11 @@ $(function() {
 		var direction = keys.split("+").pop();
 		switch (direction) {
 		case "up":
-			var i = Math.max(0, index - 1);
-			channels.eq(i).click();
+			channels.eq(Math.max(0, index - 1)).click();
 			break;
 
 		case "down":
-			var i = Math.min(channels.length, index + 1);
-			channels.eq(i).click();
+			channels.eq(Math.min(channels.length, index + 1)).click();
 			break;
 		}
 	});
