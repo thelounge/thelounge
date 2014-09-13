@@ -54,8 +54,15 @@ function Client(sockets, config) {
 	});
 	if (config) {
 		var client = this;
+		var wait_total = 0;
 		_.each(config.networks || [], function(n) {
-			client.connect(n);
+			if (wait_total == 0)
+				client.connect(n);
+			else
+				setTimeout(function() {
+					client.connect(n);
+				}, wait_total);
+			wait_total += 500;
 		});
 	}
 }
