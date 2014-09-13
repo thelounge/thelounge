@@ -40,6 +40,11 @@ $(function() {
 		};
 	}
 
+	// Request notification permissions if we don't already have it
+	if (Notification.permission !== 'granted') {
+		Notification.requestPermission();
+	}
+
 	$("#play").on("click", function() { pop.play(); });
 	$("#footer .icon").tooltip();
 
@@ -412,8 +417,22 @@ $(function() {
 		var highlight = type.contains("highlight");
 		if (highlight || query) {
 			pop.play();
-			if (document.hidden || !$(target).hasClass("active")) {
+			if (!document.hasFocus() || !$(target).hasClass("active")) {
 				favico.badge("!");
+				if (Notification.permission === 'granted') {
+					var n = new Notification( msg.from + ' - ' + btn.data('title'), {
+						body: msg.text
+					} );
+					n.onclick = function() {
+						window.focus();
+						btn.click();
+						this.close();
+					};
+					// Close notification after 2s
+					window.setTimeout(function() {
+						n.close();
+					}, 2 * 1000);
+				}
 			}
 		}
 
