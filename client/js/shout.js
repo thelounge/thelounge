@@ -374,7 +374,7 @@ $(function() {
 		});
 		chan.css({
 			transition: "none",
-			opacity: .4
+			opacity: 0.4
 		});
 		return false;
 	});
