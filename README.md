@@ -15,6 +15,8 @@ Here's a Shout server running in public mode, which allows for anonymous connect
 
 ### [Try the Demo](http://shout-irc.com:9000/)
 
+_Temporarily down. Moving the server._
+
 ## Install
 
 ```
