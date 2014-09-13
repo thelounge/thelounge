@@ -431,7 +431,7 @@ $(function() {
 					// Close notification after 2s
 					window.setTimeout(function() {
 						n.close();
-					}, 2 * 1000);
+					}, 5 * 1000);
 				}
 			}
 		}
