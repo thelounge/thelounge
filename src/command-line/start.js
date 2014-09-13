@@ -13,7 +13,7 @@ program
 		if (!config.public && !users.length) {
 			console.log("");
 			console.log("No users found!");
-			console.log("Create a new user with 'shout add <name>'.")
+			console.log("Create a new user with 'shout add <name>'.");
 			console.log("");
 		} else {
 			var host = program.host || process.env.IP || config.host;

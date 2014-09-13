@@ -44,11 +44,11 @@ ClientManager.prototype.loadUser = function(name) {
 			"utf-8"
 		);
 		json = JSON.parse(json);
+		return json;
 	} catch(e) {
 		console.log(e);
 		return;
 	}
-	return json;
 };
 
 ClientManager.prototype.getUsers = function() {

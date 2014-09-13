@@ -196,7 +196,7 @@ Client.prototype.input = function(data) {
 			console.log(path + ": " + e);
 		}
 	});
-}
+};
 
 Client.prototype.more = function(data) {
 	var client = this;
@@ -211,7 +211,7 @@ Client.prototype.more = function(data) {
 		chan: chan.id,
 		messages: messages
 	});
-}
+};
 
 Client.prototype.quit = function() {
 	this.networks.forEach(function(network) {

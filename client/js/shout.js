@@ -143,7 +143,7 @@ $(function() {
 			})
 		);
 		sidebar.find(".chan")
-			.sort(function(a, b) { return $(a).data("id") - $(b).data("id") })
+			.sort(function(a, b) { return $(a).data("id") - $(b).data("id"); })
 			.last()
 			.trigger("click");
 	});
@@ -330,7 +330,7 @@ $(function() {
 			.data("count", "")
 			.empty();
 
-		if (sidebar.find(".highlight").length == 0) {
+		if (sidebar.find(".highlight").length === 0) {
 			favico.badge("");
 		}
 
@@ -374,7 +374,7 @@ $(function() {
 		});
 		chan.css({
 			transition: "none",
-			opacity: .4
+			opacity: 0.4
 		});
 		return false;
 	});
@@ -464,7 +464,7 @@ $(function() {
 				self.focus();
 				return false;
 			}
-		})
+		});
 	});
 
 	windows.on("click", ".input", function() {
@@ -472,7 +472,7 @@ $(function() {
 	});
 
 	forms.on("submit", "form", function(e) {
-		e.preventDefault()
+		e.preventDefault();
 		var event = "auth";
 		var form = $(this);
 		if (form.closest(".window").attr("id") == "connect") {
@@ -507,13 +507,11 @@ $(function() {
 		var direction = keys.split("+").pop();
 		switch (direction) {
 		case "up":
-			var i = Math.max(0, index - 1);
-			channels.eq(i).click();
+			channels.eq(Math.max(0, index - 1)).click();
 			break;
 
 		case "down":
-			var i = Math.min(channels.length, index + 1);
-			channels.eq(i).click();
+			channels.eq(Math.min(channels.length, index + 1)).click();
 			break;
 		}
 	});
@@ -542,7 +540,7 @@ $(function() {
 	document.addEventListener(
 		"visibilitychange",
 		function() {
-			if (sidebar.find(".highlight").length == 0) {
+			if (sidebar.find(".highlight").length === 0) {
 				favico.badge("");
 			}
 		}
