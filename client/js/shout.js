@@ -143,7 +143,7 @@ $(function() {
 			})
 		);
 		sidebar.find(".chan")
-			.sort(function(a, b) { return $(a).data("id") - $(b).data("id") })
+			.sort(function(a, b) { return $(a).data("id") - $(b).data("id"); })
 			.last()
 			.trigger("click");
 	});
@@ -464,7 +464,7 @@ $(function() {
 				self.focus();
 				return false;
 			}
-		})
+		});
 	});
 
 	windows.on("click", ".input", function() {
@@ -472,7 +472,7 @@ $(function() {
 	});
 
 	forms.on("submit", "form", function(e) {
-		e.preventDefault()
+		e.preventDefault();
 		var event = "auth";
 		var form = $(this);
 		if (form.closest(".window").attr("id") == "connect") {
