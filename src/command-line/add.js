@@ -41,7 +41,8 @@ program
 			return;
 		}
 		require("read")({
-			prompt: "Password: "
+			prompt: "Password: ",
+			silent: true
 		}, function(err, password) {
 			console.log("");
 			if (err) {
