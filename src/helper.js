@@ -2,7 +2,7 @@ var path = require("path");
 
 var Helper = module.exports = {
   getConfig: function () {
-    return require(path.resolve(__dirname, "..", "config.json"));
+    return require(path.resolve(__dirname, "..", "config"));
   },
 
   getHomeDirectory: function () {

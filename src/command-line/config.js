@@ -1,7 +1,7 @@
 var program = require("commander");
 var child = require("child_process");
 
-var CONFIG_PATH = process.cwd() + "/config.json";
+var CONFIG_PATH = process.cwd() + "/config.js";
 
 program
 	.command("config")

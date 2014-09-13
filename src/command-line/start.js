@@ -1,4 +1,4 @@
-var config = require("../../config.json");
+var config = require("../../config");
 var ClientManager = new require("../clientManager");
 var program = require("commander");
 var shout = require("../server");

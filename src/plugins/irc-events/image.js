@@ -1,6 +1,6 @@
 var _ = require("lodash");
 var Msg = require("../../models/msg");
-var config = require("../../../config.json");
+var config = require("../../../config");
 var fs = require("fs");
 var mkdirp = require("mkdirp");
 var request = require("superagent");

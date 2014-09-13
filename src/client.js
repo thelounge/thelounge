@@ -1,5 +1,5 @@
 var _ = require("lodash");
-var config = require("../config.json");
+var config = require("../config");
 var net = require("net");
 var Msg = require("./models/msg");
 var Network = require("./models/network");
