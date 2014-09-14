@@ -421,7 +421,8 @@ $(function() {
 				favico.badge("!");
 				if (Notification.permission === 'granted') {
 					var n = new Notification( msg.from + ' - ' + btn.data('title'), {
-						body: msg.text
+						body: msg.text,
+						icon: '/img/favicon.png'
 					} );
 					n.onclick = function() {
 						window.focus();
