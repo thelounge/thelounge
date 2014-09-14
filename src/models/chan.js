@@ -27,8 +27,9 @@ Chan.prototype.sortUsers = function() {
 	);
 	var modes = [
 		"~",
-		"%",
+		"&",
 		"@",
+		"%",
 		"+",
 	].reverse();
 	modes.forEach(function(mode) {
