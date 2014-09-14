@@ -26,6 +26,6 @@ function Msg(attr) {
 		text: "",
 		time: moment().utc().format("HH:mm:ss"),
 		type: Msg.Type.MESSAGE,
-		from_me: false,
+		self: false
 	}, attr));
 }

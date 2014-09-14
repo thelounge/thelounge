@@ -3,6 +3,7 @@ var Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
 	var client = this;
+	var self = false;
 	irc.on("nick", function(data) {
 		if (data["new"] == irc.me) {
 			var lobby = network.channels[0];
@@ -14,6 +15,7 @@ module.exports = function(irc, network) {
 				chan: lobby.id,
 				msg: msg
 			});
+			self = true;
 		}
 		network.channels.forEach(function(chan) {
 			var user = _.findWhere(chan.users, {name: data.nick});
@@ -29,7 +31,8 @@ module.exports = function(irc, network) {
 			var msg = new Msg({
 				type: Msg.Type.NICK,
 				from: data.nick,
-				text: data["new"]
+				text: data["new"],
+				self: self
 			});
 			chan.messages.push(msg);
 			client.emit("msg", {

@@ -30,15 +30,15 @@ module.exports = function(irc, network) {
 		text.split(" ").forEach(function(w) {
 			if (w.indexOf(irc.me) === 0) type += " highlight";
 		});
-		var from_me = false
-		if (data.from.toLowerCase() == irc.me.toLowerCase() ) {
-			from_me = true
+		var self = false;
+		if (data.from.toLowerCase() == irc.me.toLowerCase()) {
+			self = true;
 		}
 		var msg = new Msg({
 			type: type || Msg.Type.MESSAGE,
 			from: data.from,
 			text: text,
-			from_me: from_me
+			self: self
 		});
 		chan.messages.push(msg);
 		client.emit("msg", {

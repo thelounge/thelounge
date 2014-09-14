@@ -17,10 +17,6 @@ module.exports = function(irc, network) {
 				chan: chan
 			});
 		}
-		var from_me = false
-		if (data.from.toLowerCase() == irc.me.toLowerCase() ) {
-			from_me = true
-		}
 		var users = chan.users;
 		users.push(new User({name: data.nick}));
 		chan.sortUsers();
@@ -28,10 +24,14 @@ module.exports = function(irc, network) {
 			chan: chan.id,
 			users: users
 		});
+		var self = false;
+		if (data.nick.toLowerCase() == irc.me.toLowerCase()) {
+			self = true;
+		}
 		var msg = new Msg({
 			from: data.nick,
 			type: Msg.Type.JOIN,
-			from_me: from_me
+			self: self
 		});
 		chan.messages.push(msg);
 		client.emit("msg", {

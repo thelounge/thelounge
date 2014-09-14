@@ -454,10 +454,6 @@ button {
 	height: 100%;
 	width: 100%;
 }
-
-#chat .from_me .text {
-	color: #999;
-}
 #chat .msg {
 	display: table-row;
 	word-wrap: break-word;
@@ -482,7 +478,6 @@ button {
 	display: table-cell;
 	padding: 3px 0;
 	vertical-align: top;
-
 }
 #chat .time {
 	color: #d0dbe2;
@@ -509,6 +504,9 @@ button {
 }
 #chat .text a {
 	word-break: break-all;
+}
+#chat .self .text {
+	color: #999;
 }
 #chat .join .type,
 #chat .part .type,

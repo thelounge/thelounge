@@ -17,15 +17,15 @@ module.exports = function(irc, network) {
 			chan: chan.id,
 			users: chan.users
 		});
-		var from_me = false
-		if (data.nick.toLowerCase() == irc.me.toLowerCase() ) {
-			from_me = true
+		var self = false;
+		if (data.nick.toLowerCase() == irc.me.toLowerCase()) {
+			self = true;
 		}
 		var msg = new Msg({
 			type: Msg.Type.KICK,
 			from: data.nick,
 			text: data.client,
-			from_me: from_me
+			self: self
 		});
 		chan.messages.push(msg);
 		client.emit("msg", {
