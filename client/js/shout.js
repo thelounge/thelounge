@@ -422,7 +422,7 @@ $(function() {
 				if (Notification.permission === "granted") {
 					var n = new Notification(msg.from + " says:", {
 						body: msg.text.trim(),
-						icon: ""
+						icon: "/img/logo-64.png"
 					} );
 					n.onclick = function() {
 						window.focus();
