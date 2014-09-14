@@ -23,28 +23,6 @@ _Clicking the link above will open http://demo.shout-irc.com/_
 sudo npm install -g shout
 ```
 
-### Experimental Heroku Deployment
-
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
-
-Please note, that this will result in a public Shout instance. In order to make it private
-and to register users, you need to follow these steps:
-
-```
-git clone git@heroku.com:<your-app>.git
-cd your-app
-npm install
-vim config.js
-  # set public to false
-  # set home to __dirname
-git add config.js
-git commit -m "Make shout private and use repo dir as shout home"
-node src/command-line/index.js add <username>
-git add -f users/<username>
-git commit -m "Add user <username>"
-git push heroku master
-```
-
 ## Usage
 
 When the install is complete, go ahead and start the server:
