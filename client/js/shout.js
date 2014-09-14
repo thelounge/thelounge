@@ -429,7 +429,7 @@ $(function() {
 						btn.click();
 						this.close();
 					};
-					// Close notification after 2s
+					// Close notification after 5s
 					window.setTimeout(function() {
 						n.close();
 					}, 5 * 1000);
