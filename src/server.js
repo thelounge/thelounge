@@ -101,7 +101,7 @@ function auth(data) {
 		var success = false;
 		_.each(manager.clients, function(client) {
 			if (client.config.user == data.user) {
-				if (bcrypt.compareSync(data.password, client.config.password)) {
+				if (bcrypt.compareSync(data.password || "", client.config.password)) {
 					init(socket, client);
 					success = true;
 				}

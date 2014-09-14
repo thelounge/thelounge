@@ -40,7 +40,6 @@ $(function() {
 		};
 	}
 
-	// Request notification permissions if we don't already have it
 	if (Notification.permission !== "granted") {
 		Notification.requestPermission();
 	}
@@ -100,23 +99,21 @@ $(function() {
 	socket.on("init", function(data) {
 		if (data.networks.length === 0) {
 			$("#footer").find(".connect").trigger("click");
-			return;
+		} else {
+			sidebar.find(".networks").html(
+				render("network", {
+					networks: data.networks
+				})
+			);
+			var channels = $.map(data.networks, function(n) {
+				return n.channels;
+			});
+			chat.html(
+				render("chat", {
+					channels: channels
+				})
+			);
 		}
-
-		sidebar.find(".networks").html(
-			render("network", {
-				networks: data.networks
-			})
-		);
-
-		var channels = $.map(data.networks, function(n) {
-			return n.channels;
-		});
-		chat.html(
-			render("chat", {
-				channels: channels
-			})
-		);
 
 		sidebar.find(".empty").hide();
 		$("body").removeClass("signed-out");
