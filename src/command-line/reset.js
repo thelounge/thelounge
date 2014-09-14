@@ -18,7 +18,8 @@ program
 		var file = Helper.resolveHomePath("users/" + name + "/user.json");
 		var user = require(file);
 		require("read")({
-			prompt: "Password: "
+			prompt: "Password: ",
+			silent: true
 		}, function(err, password) {
 			console.log("");
 			if (err) {
