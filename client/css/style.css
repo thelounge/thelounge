@@ -404,7 +404,7 @@ button {
 }
 #chat,
 #windows .header {
-	font: 13px Consolas, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace;
+	font: 13px Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace;
 }
 #chat button:hover {
 	opacity: .6;
@@ -673,7 +673,7 @@ button {
 }
 #form input {
 	border: 1px solid #cfdae1;
-	font: 13px Consolas, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace;
+	font: 13px Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace;
 	border-radius: 2px;
 	height: 100%;
 	outline: none;
