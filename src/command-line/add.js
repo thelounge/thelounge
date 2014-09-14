@@ -5,8 +5,6 @@ var program = require("commander");
 var mkdirp = require("mkdirp");
 var Helper = require("../helper");
 
-const HOME = process.env.HOME + "/.shout";
-
 program
 	.command("add <name>")
 	.description("Add a new user")
