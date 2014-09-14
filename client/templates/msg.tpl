@@ -1,5 +1,9 @@
 {{#each messages}}
+{{#if from_me}}
+<div class="msg {{type}} from_me">
+{{else}}
 <div class="msg {{type}}">
+{{/if}}
 	<span class="time">
 		{{tz time}}
 	</span>
