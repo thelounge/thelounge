@@ -197,12 +197,7 @@ $(function() {
 		$("#connect")
 			.find(".btn")
 			.prop("disabled", false)
-			.end()
-			.find("input")
-			.each(function() {
-				var self = $(this);
-				self.val(self.data("default"));
-			});
+			.end();
 	});
 
 	socket.on("nick", function(data) {
@@ -237,13 +232,6 @@ $(function() {
 			.find(".users")
 			.html(render("user", data));
 	});
-
-	$("#connect")
-		.find("input")
-		.each(function() {
-			var self = $(this);
-			self.data("default", self.val());
-		});
 
 	$.cookie.json = true;
 
