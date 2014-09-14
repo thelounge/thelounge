@@ -13,10 +13,15 @@ module.exports = function(irc, network) {
 			if (nick.indexOf(".") !== -1) {
 				nick = data.target;
 			}
+			var from_me = false
+			if (nick.toLowerCase() == irc.me.toLowerCase() ) {
+				from_me = true
+			}
 			var msg = new Msg({
 				type: Msg.Type.MODE,
 				from: nick,
 				text: data.mode + " " + data.client,
+				from_me: from_me
 			});
 			chan.messages.push(msg);
 			client.emit("msg", {

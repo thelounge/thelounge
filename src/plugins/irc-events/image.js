@@ -25,11 +25,16 @@ module.exports = function(irc, network) {
 		if (typeof chan === "undefined") {
 			return;
 		}
+		var from_me = false
+		if (data.from.toLowerCase() == irc.me.toLowerCase() ) {
+			from_me = true
+		}
 		fetchImage(image, function(name) {
 			var msg = new Msg({
 				type: Msg.Type.IMAGE,
 				from: data.from,
-				text: "thumbs/" + name
+				text: "thumbs/" + name,
+				from_me = from_me
 			});
 			chan.messages.push(msg);
 			client.emit("msg", {
