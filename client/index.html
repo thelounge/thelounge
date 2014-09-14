@@ -12,7 +12,7 @@
 	<link rel="stylesheet" href="css/style.css">
 	<link id="theme" rel="stylesheet" href="<%=theme%>">
 
-	<link rel="shortcut icon" href="/img/favicon.png">
+	<link rel="shortcut icon" href="/img/logo-32.png">
 
 	</head>
 	<body class="<%= public ? "public" : "" %>">
@@ -225,6 +225,7 @@
 	<script src="js/libs/handlebars/equal.js"></script>
 	<script src="js/libs/handlebars/tz.js"></script>
 	<script src="js/libs/handlebars/uri.js"></script>
+	<script src="js/libs/handlebars/users.js"></script>
 	<script src="js/libs/jquery.js"></script>
 	<script src="js/libs/jquery/bootstrap.js"></script>
 	<script src="js/libs/jquery/cookie.js"></script>
@@ -233,14 +234,16 @@
 	<script src="js/libs/jquery/stickyscroll.js"></script>
 	<script src="js/libs/jquery/tabcomplete.js"></script>
 	<script src="js/libs/moment.js"></script>
+	<script src="js/libs/notification.js"></script>
 	<script src="js/libs/socket.io.js"></script>
 	<script src="js/libs/string.contains.js"></script>
 	<script src="js/libs/uri.js"></script>
 	<% } else { %>
 	<script src="js/libs.min.js"></script>
+	<% } %>
+
 	<script src="js/shout.templates.js"></script>
 	<script src="js/shout.js"></script>
-	<% } %>
 
 	</body>
 </html>

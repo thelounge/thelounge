@@ -41,7 +41,7 @@ $(function() {
 	}
 
 	// Request notification permissions if we don't already have it
-	if (Notification.permission !== 'granted') {
+	if (Notification.permission !== "granted") {
 		Notification.requestPermission();
 	}
 
@@ -411,25 +411,24 @@ $(function() {
 	});
 
 	chat.on("msg", ".messages", function(e, target, msg) {
-		var btn = sidebar.find(".chan[data-target=" + target + "]:not(.active)");
-		var query = btn.hasClass("query");
+		var button = sidebar.find(".chan[data-target=" + target + "]");
+		var isQuery = button.hasClass("query");
 		var type = msg.type;
 		var highlight = type.contains("highlight");
-		if (highlight || query) {
+		if (highlight || isQuery) {
 			pop.play();
 			if (!document.hasFocus() || !$(target).hasClass("active")) {
 				favico.badge("!");
-				if (Notification.permission === 'granted') {
-					var n = new Notification( msg.from + ' - ' + btn.data('title'), {
-						body: msg.text,
-						icon: '/img/favicon.png'
+				if (Notification.permission === "granted") {
+					var n = new Notification(msg.from + " says:", {
+						body: msg.text.trim(),
+						icon: ""
 					} );
 					n.onclick = function() {
 						window.focus();
-						btn.click();
+						button.click();
 						this.close();
 					};
-					// Close notification after 5s
 					window.setTimeout(function() {
 						n.close();
 					}, 5 * 1000);
@@ -437,7 +436,8 @@ $(function() {
 			}
 		}
 
-		if (btn.length === 0) {
+		button = button.filter(":not(.active)");
+		if (button.length === 0) {
 			return;
 		}
 
@@ -451,12 +451,12 @@ $(function() {
 			return;
 		}
 
-		var badge = btn.find(".badge");
+		var badge = button.find(".badge");
 		if (badge.length !== 0) {
 			var i = (badge.data("count") || 0) + 1;
 			badge.data("count", i);
 			badge.html(i > 999 ? (i / 1000).toFixed(1) + "k" : i);
-			if (highlight || query) {
+			if (highlight || isQuery) {
 				badge.addClass("highlight");
 			}
 		}
