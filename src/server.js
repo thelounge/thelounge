@@ -57,7 +57,7 @@ function index(req, res, next) {
 	});
 }
 
-function init(socket, client) {
+function init(socket, client, token) {
 	if (!client) {
 		socket.emit("auth");
 		socket.on("auth", auth);
@@ -82,7 +82,8 @@ function init(socket, client) {
 		);
 		socket.join(client.id);
 		socket.emit("init", {
-			networks: client.networks
+			networks: client.networks,
+			token: token || ""
 		});
 	}
 }
@@ -100,15 +101,27 @@ function auth(data) {
 	} else {
 		var success = false;
 		_.each(manager.clients, function(client) {
-			if (client.config.user == data.user) {
+			if (data.token) {
+				if (data.token == client.token) {
+					success = true;
+				}
+			} else if (client.config.user == data.user) {
 				if (bcrypt.compareSync(data.password || "", client.config.password)) {
-					init(socket, client);
 					success = true;
 				}
 			}
+			if (success) {
+				var token;
+				if (data.remember || data.token) {
+					token = client.token;
+				}
+				init(socket, client, token);
+			}
 		});
 		if (!success) {
-			socket.emit("auth");
+			if (!data.token) {
+				socket.emit("auth");
+			}
 		}
 	}
 }

@@ -1,5 +1,6 @@
 var _ = require("lodash");
 var config = require("../config");
+var crypto = require("crypto");
 var net = require("net");
 var Msg = require("./models/msg");
 var Network = require("./models/network");
@@ -52,8 +53,11 @@ function Client(sockets, config) {
 		networks: [],
 		sockets: sockets
 	});
+	var client = this;
+	crypto.randomBytes(48, function(err, buf) {
+		client.token = buf.toString("hex");
+	});
 	if (config) {
-		var client = this;
 		var delay = 0;
 		(config.networks || []).forEach(function(n) {
 			setTimeout(function() {

@@ -72,6 +72,11 @@ $(function() {
 			refresh();
 			return;
 		}
+		var token = $.cookie("token");
+		if (token) {
+			$.removeCookie("token");
+			socket.emit("auth", {token: token});
+		}
 		if (body.hasClass("signed-out")) {
 			var error = login.find(".error");
 			error.show().closest("form").one("submit", function() {
@@ -83,13 +88,18 @@ $(function() {
 		if (input.val() === "") {
 			input.val($.cookie("user") || "");
 		}
-		sidebar.find(".sign-in")
-			.click()
-			.end()
-			.find(".networks")
-			.html("")
-			.next()
-			.show();
+		setTimeout(function() {
+			if (!body.hasClass("signed-out")) {
+				return;
+			}
+			sidebar.find(".sign-in")
+				.click()
+				.end()
+				.find(".networks")
+				.html("")
+				.next()
+				.show();
+		}, token ? 200 : 0);
 	});
 
 	socket.on("init", function(data) {
@@ -111,6 +121,10 @@ $(function() {
 				})
 			);
 			confirmExit();
+		}
+
+		if (data.token) {
+			$.cookie("token", data.token);
 		}
 
 		$("body").removeClass("signed-out");
@@ -230,7 +244,7 @@ $(function() {
 	});
 
 	socket.on("users", function(data) {
-		chat.find("#chan-" + data.chan)
+		var users = chat.find("#chan-" + data.chan)
 			.find(".users")
 			.html(render("user", data));
 	});
@@ -276,7 +290,7 @@ $(function() {
 	$("#badge").on("change", function() {
 		var self = $(this);
 		if (self.prop("checked")) {
-			if (Notification.permission !== "granted") {
+			if (Notification.permission != "granted") {
 				Notification.requestPermission();
 			}
 		}
@@ -353,6 +367,7 @@ $(function() {
 	});
 
 	sidebar.on("click", "#sign-out", function() {
+		$.removeCookie("token");
 		location.reload();
 	});
 
@@ -416,9 +431,12 @@ $(function() {
 		var highlight = type.contains("highlight");
 		if (highlight || isQuery) {
 			if (!document.hasFocus() || !$(target).hasClass("active")) {
-				pop.play();
+				var settings = $.cookie("settings") || {};
+				if (settings.notification) {
+					pop.play();
+				}
 				favico.badge("!");
-				if (Notification.permission === "granted") {
+				if (settings.badge && Notification.permission == "granted") {
 					var n = new Notification(msg.from + " says:", {
 						body: msg.text.trim(),
 						icon: "/img/logo-64.png"
