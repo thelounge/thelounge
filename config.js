@@ -7,9 +7,9 @@ module.exports = {
 	//
 	// @type     boolean
 	// @default  false
-	// 
+	//
 	public: true,
-	
+
 	//
 	// Allow connections from this host.
 	//
@@ -17,7 +17,7 @@ module.exports = {
 	// @default  "0.0.0.0"
 	//
 	host: "0.0.0.0",
-	
+
 	//
 	// Set the port to listen on.
 	//
@@ -50,5 +50,77 @@ module.exports = {
 	// @type     string
 	// @default  false
 	//
-	debug: false
+	debug: false,
+
+	//
+	// Default values for the 'Connect' form.
+	//
+	// @type     object
+	// @default  {}
+	//
+	defaults: {
+		//
+		// Name
+		//
+		// @type     string
+		// @default  "Freenode"
+		//
+		name: "Freenode",
+
+		//
+		// Host
+		//
+		// @type     string
+		// @default  "irc.freenode.org"
+		//
+		host: "irc.freenode.org",
+
+		//
+		// Port
+		//
+		// @type     int
+		// @default  6697
+		//
+		port: 6697,
+
+		//
+		// Password
+		//
+		// @type     string
+		// @default  ""
+		//
+		password: "",
+
+		//
+		// Enable TLS/SSL
+		//
+		// @type     boolean
+		// @default  true
+		//
+		tls: true,
+
+		//
+		// Nick
+		//
+		// @type     string
+		// @default  "shout-user"
+		//
+		nick: "shout-user",
+
+		//
+		// Real Name
+		//
+		// @type     string
+		// @default  "Shout User"
+		//
+		realname: "Shout User",
+
+		//
+		// Channels
+		//
+		// @type     string
+		// @default  "#foo, #shout-irc"
+		//
+		join: "#foo, #shout-irc"
+	}
 };
