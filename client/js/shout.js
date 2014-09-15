@@ -40,10 +40,6 @@ $(function() {
 		};
 	}
 
-	if (Notification.permission !== "granted") {
-		Notification.requestPermission();
-	}
-
 	$("#play").on("click", function() { pop.play(); });
 	$("#footer .icon").tooltip();
 
@@ -100,6 +96,7 @@ $(function() {
 		if (data.networks.length === 0) {
 			$("#footer").find(".connect").trigger("click");
 		} else {
+			sidebar.find(".empty").hide();
 			sidebar.find(".networks").html(
 				render("network", {
 					networks: data.networks
@@ -115,7 +112,6 @@ $(function() {
 			);
 		}
 
-		sidebar.find(".empty").hide();
 		$("body").removeClass("signed-out");
 		$("#sign-in").detach();
 
@@ -237,6 +233,7 @@ $(function() {
 
 	var settings = $("#settings");
 	var options = $.extend({
+		badge: false,
 		join: true,
 		mode: true,
 		motd: false,
@@ -269,6 +266,15 @@ $(function() {
 		}
 	}).find("input")
 		.trigger("change");
+
+	$("#badge").on("change", function() {
+		var self = $(this);
+		if (self.prop("checked")) {
+			if (Notification.permission !== "granted") {
+				Notification.requestPermission();
+			}
+		}
+	});
 
 	var viewport = $("#viewport");
 
@@ -401,8 +407,8 @@ $(function() {
 		var type = msg.type;
 		var highlight = type.contains("highlight");
 		if (highlight || isQuery) {
-			pop.play();
 			if (!document.hasFocus() || !$(target).hasClass("active")) {
+				pop.play();
 				favico.badge("!");
 				if (Notification.permission === "granted") {
 					var n = new Notification(msg.from + " says:", {
