@@ -6,6 +6,8 @@ var shout = require("../server");
 program
 	.option("-h, --host <ip>", "host")
 	.option("-p, --port <port>", "port")
+	.option("    --public")
+	.option("    --private")
 	.command("start")
 	.description("Start the server")
 	.action(function() {
@@ -18,6 +20,12 @@ program
 		} else {
 			var host = program.host || process.env.IP || config.host;
 			var port = program.port || process.env.PORT || config.port;
-			shout(port, host, config.public);
+			var mode = config.public;
+			if (program.public) {
+				mode = true;
+			} else if (program.private) {
+				mode = false;
+			}
+			shout(port, host, mode);
 		}
 	});
