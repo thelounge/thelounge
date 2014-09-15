@@ -62,14 +62,14 @@ $(function() {
 	});
 
 	socket.on("connect_error", function(e) {
-		location.reload();
+		refresh();
 	});
 
 	socket.on("auth", function(data) {
 		var body = $("body");
 		var login = $("#sign-in");
 		if (!login.length) {
-			location.reload();
+			refresh();
 			return;
 		}
 		if (body.hasClass("signed-out")) {
@@ -110,6 +110,7 @@ $(function() {
 					channels: channels
 				})
 			);
+			confirmExit();
 		}
 
 		$("body").removeClass("signed-out");
@@ -198,6 +199,7 @@ $(function() {
 			.find(".btn")
 			.prop("disabled", false)
 			.end();
+		confirmExit();
 	});
 
 	socket.on("nick", function(data) {
@@ -556,6 +558,17 @@ $(function() {
 				return !w.toLowerCase().indexOf(word.toLowerCase());
 			}
 		);
+	}
+
+	function confirmExit() {
+		window.onbeforeunload = function() {
+			return "Are you sure you want to navigate away from this page?";
+		};
+	}
+
+	function refresh() {
+		window.onbeforeunload = null;
+		location.reload();
 	}
 
 	document.addEventListener(
