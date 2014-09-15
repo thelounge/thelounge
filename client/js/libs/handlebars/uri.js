@@ -1,9 +1,10 @@
 function escape(text) {
 	var e = {
 		"<": "&lt;",
-		">": "&gt;"
+		">": "&gt;",
+		"'": "&quot;"
 	};
-	return text.replace(/[<>]/g, function (c) {
+	return text.replace(/[<>']/g, function (c) {
 		return e[c];
 	});
 }
@@ -18,9 +19,12 @@ Handlebars.registerHelper(
 		text = escape(text);
 		for (var i in urls) {
 			var url = escape(urls[i]);
+			var replace = url;
+			if (url.indexOf("javascript:") !== 0) {
+				replace = "<a href='" + url.replace(/^www/, "//www") + "' target='_blank'>" + url + "</a>";
+			}
 			text = text.replace(
-				"$(" + i + ")",
-				"<a href='" + url.replace(/^www/, "//www") + "' target='_blank'>" + url + "</a>"
+				"$(" + i + ")", replace
 			);
 		}
 		return text;
