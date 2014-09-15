@@ -4,10 +4,10 @@ var program = require("commander");
 var shout = require("../server");
 
 program
-	.option("-h, --host <ip>", "host")
+	.option("-H, --host <ip>", "host")
 	.option("-p, --port <port>", "port")
-	.option("    --public")
-	.option("    --private")
+	.option("    --public", "mode")
+	.option("    --private", "mode")
 	.command("start")
 	.description("Start the server")
 	.action(function() {

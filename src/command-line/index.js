@@ -1,6 +1,8 @@
 var program = require("commander");
 var pkg = require("../../package.json");
 
+program.version(pkg.version, "-v, --version");
+
 require("./start");
 require("./config");
 require("./list");
