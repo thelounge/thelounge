@@ -140,10 +140,14 @@ $(function() {
 				channels: [data.chan]
 			})
 		);
-		sidebar.find(".chan")
+		var chan = sidebar.find(".chan")
 			.sort(function(a, b) { return $(a).data("id") - $(b).data("id"); })
-			.last()
-			.trigger("click");
+			.last();
+		if (!whois) {
+			chan = chan.filter(":not(.query)");
+		}
+		whois = false;
+		chan.click();
 	});
 
 	socket.on("msg", function(data) {
@@ -389,11 +393,13 @@ $(function() {
 		});
 	});
 
+	var whois = false;
 	chat.on("click", ".user", function() {
 		var user = $(this).html().trim().replace(/[+%@~]/, "");
 		if (user.indexOf("#") !== -1) {
 			return;
 		}
+		whois = true;
 		var text = "/whois " + user;
 		socket.emit("input", {
 			target: chat.data("id"),
