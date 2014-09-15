@@ -6,9 +6,9 @@ var mkdirp = require("mkdirp");
 var Helper = require("../helper");
 
 program
-	.command("add <name>")
+	.command("add <name> [<password>]")
 	.description("Add a new user")
-	.action(function(name) {
+	.action(function(name, password) {
 		var path = Helper.resolveHomePath("users");
 		try {
 			mkdirp.sync(path);
@@ -38,20 +38,25 @@ program
 			console.log("");
 			return;
 		}
-		require("read")({
-			prompt: "Password: ",
-			silent: true
-		}, function(err, password) {
-			console.log("");
-			if (err) {
-				return;
-			}
-			var hash = bcrypt.hashSync(password, 8);
-			manager.addUser(
-				name,
-				hash
-			);
-			console.log("Added '" + name + "'.");
-			console.log("");
-		});
+		if (password) {
+			add(manager, name, password);
+		} else {
+			require("read")({
+				prompt: "Password: ",
+				silent: true
+			}, function(err, password) {
+				if (!err) add(manager, name, password);
+			});
+		}
 	});
+
+	function add(manager, name, password) {
+		console.log("");
+		var hash = bcrypt.hashSync(password, 8);
+		manager.addUser(
+			name,
+			hash
+		);
+		console.log("Added '" + name + "'.");
+		console.log("");
+	}
