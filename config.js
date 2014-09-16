@@ -53,6 +53,33 @@ module.exports = {
 	debug: false,
 
 	//
+	// Log settings
+	//
+	// Logging has to be enabled per user. If enabled, logs will be stored in
+	// the '/users/<user>/logs/' folder.
+	//
+	// @type     object
+	// @default  {}
+	//
+	logs: {
+		//
+		// Timestamp format
+		//
+		// @type     string
+		// @default  "YYYY-MM-DD HH:mm:ss"
+		//
+		format: "YYYY-MM-DD HH:mm:ss",
+
+		//
+		// Timezone
+		//
+		// @type     string
+		// @default  "UTC+00:00"
+		//
+		timezone: "UTC+00:00"
+	},
+
+	//
 	// Default values for the 'Connect' form.
 	//
 	// @type     object

@@ -1,6 +1,7 @@
 {
 	"user": "example",
 	"password": "password",
+	"log": false,
 	"networks": [{
 		"name": "Freenode",
 		"host": "irc.freenode.net",

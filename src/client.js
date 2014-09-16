@@ -1,6 +1,7 @@
 var _ = require("lodash");
 var config = require("../config");
 var crypto = require("crypto");
+var log = require("./log");
 var net = require("net");
 var Msg = require("./models/msg");
 var Network = require("./models/network");
@@ -45,11 +46,11 @@ var inputs = [
 	"whois"
 ];
 
-function Client(sockets, config) {
+function Client(sockets, name, config) {
 	_.merge(this, {
 		config: config,
 		id: id++,
-		name: "",
+		name: name,
 		networks: [],
 		sockets: sockets
 	});
@@ -71,6 +72,14 @@ function Client(sockets, config) {
 Client.prototype.emit = function(event, data) {
 	if (this.sockets !== null) {
 		this.sockets.in(this.id).emit(event, data);
+	}
+	if (this.config.log === true) {
+		if (event == "msg") {
+			var target = this.find(data.chan);
+			if (target) {
+				log.write(this, target.network, target.chan, data.msg);
+			}
+		}
 	}
 };
 

@@ -31,6 +31,7 @@ ClientManager.prototype.loadUsers = function(sockets) {
 		if (!this.findClient(name)) {
 			this.clients.push(new Client(
 				sockets,
+				name,
 				json
 			));
 		}
