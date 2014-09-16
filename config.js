@@ -47,7 +47,7 @@ module.exports = {
 	// Enable debug mode.
 	// This is only useful for development.
 	//
-	// @type     string
+	// @type     boolean
 	// @default  false
 	//
 	debug: false,

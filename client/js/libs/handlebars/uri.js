@@ -2,7 +2,7 @@ function escape(text) {
 	var e = {
 		"<": "&lt;",
 		">": "&gt;",
-		"'": "&quot;"
+		"'": "&#39;"
 	};
 	return text.replace(/[<>']/g, function (c) {
 		return e[c];

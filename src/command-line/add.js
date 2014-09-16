@@ -50,13 +50,14 @@ program
 		}
 	});
 
-	function add(manager, name, password) {
-		console.log("");
-		var hash = bcrypt.hashSync(password, 8);
-		manager.addUser(
-			name,
-			hash
-		);
-		console.log("Added '" + name + "'.");
-		console.log("");
-	}
+function add(manager, name, password) {
+	console.log("");
+	var hash = bcrypt.hashSync(password, 8);
+	manager.addUser(
+		name,
+		hash
+	);
+	console.log("User '" + name + "' created:");
+	console.log(Helper.resolveHomePath("users", name, "user.json"));
+	console.log("");
+}

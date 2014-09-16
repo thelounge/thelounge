@@ -3,8 +3,8 @@ var Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
 	var client = this;
-	var self = false;
 	irc.on("nick", function(data) {
+		var self = false;
 		if (data["new"] == irc.me) {
 			var lobby = network.channels[0];
 			var msg = new Msg({
