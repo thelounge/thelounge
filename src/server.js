@@ -116,6 +116,7 @@ function auth(data) {
 					token = client.token;
 				}
 				init(socket, client, token);
+				return false;
 			}
 		});
 		if (!success) {
