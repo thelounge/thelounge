@@ -5,14 +5,8 @@ var moment = require("moment");
 var Helper = require("./helper");
 
 module.exports = {
-	write: function(client, network, chan, msg) {
-		var path = Helper.resolveHomePath(
-			"users",
-			client.name,
-			"logs",
-			network.host
-		);
-
+	write: function(user, network, chan, msg) {
+		var path = Helper.resolveHomePath("users", user, "logs", network);
 		try {
 			mkdirp.sync(path);
 		} catch(e) {
@@ -23,7 +17,6 @@ module.exports = {
 		var tz = (config.logs || {}).timezone || "UTC+00:00";
 
 		var time = moment().zone(tz).format(format);
-		var name = chan.type == "lobby" ? network.host : chan.name;
 		var line = "[" + time + "] ";
 
 		if (msg.type == "message") {
@@ -41,7 +34,7 @@ module.exports = {
 
 		try {
 			fs.appendFile(
-				path + "/" + name + ".log",
+				path + "/" + chan + ".log",
 				line + "\n"
 			);
 		} catch(e) {

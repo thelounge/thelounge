@@ -1,5 +1,6 @@
 var _ = require("lodash");
 var config = require("../config");
+var Chan = require("./models/chan");
 var crypto = require("crypto");
 var log = require("./log");
 var net = require("net");
@@ -77,7 +78,16 @@ Client.prototype.emit = function(event, data) {
 		if (event == "msg") {
 			var target = this.find(data.chan);
 			if (target) {
-				log.write(this, target.network, target.chan, data.msg);
+				var chan = target.chan.name;
+				if (target.chan.type == Chan.Type.LOBBY) {
+					chan = target.network.host;
+				}
+				log.write(
+					this.name,
+					target.network.host,
+					chan,
+					data.msg
+				);
 			}
 		}
 	}
