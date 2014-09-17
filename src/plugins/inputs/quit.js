@@ -7,11 +7,12 @@ module.exports = function(network, chan, cmd, args) {
 	
 	var client = this;
 	var irc = network.irc;
+	var quitMessage = args[0] ? args.join(" ") : "";
 	
 	client.networks = _.without(client.networks, network);
 	client.emit("quit", {
 		network: network.id
 	});
 	
-	irc.quit();
+	irc.quit(quitMessage);
 };
