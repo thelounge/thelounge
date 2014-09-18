@@ -323,6 +323,16 @@ $(function() {
 		});
 	});
 
+	chat.on("click", focus);
+	$(window).on("focus", focus);
+
+	function focus() {
+		var chan = chat.find(".active");
+		if (screen.width > 768 && chan.hasClass("chan")) {
+			input.focus();
+		}
+	}
+
 	var top = 1;
 	sidebar.on("click", "button", function() {
 		var self = $(this);
