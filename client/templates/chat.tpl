@@ -11,6 +11,10 @@
 		<button class="show-more" data-id="{{id}}">
 			Show more
 		</button>
+		{{else}}
+		<button class="show-more hidden" data-id="{{id}}">
+			Show more
+		</button>
 		{{/equal}}
 		<div class="messages">
 			{{partial "msg"}}

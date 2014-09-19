@@ -33,7 +33,7 @@ templates['chat'] = template({"1":function(depth0,helpers,partials,data) {
     + "</span>\n		<span class=\"topic\">"
     + escapeExpression(((helper = (helper = helpers.type || (depth0 != null ? depth0.type : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"type","hash":{},"data":data}) : helper)))
     + " </span>\n	</div>\n	<div class=\"chat\">\n";
-  stack1 = ((helpers.equal || (depth0 && depth0.equal) || helperMissing).call(depth0, 100, ((stack1 = (depth0 != null ? depth0.messages : depth0)) != null ? stack1.length : stack1), {"name":"equal","hash":{},"fn":this.program(2, data),"inverse":this.noop,"data":data}));
+  stack1 = ((helpers.equal || (depth0 && depth0.equal) || helperMissing).call(depth0, 100, ((stack1 = (depth0 != null ? depth0.messages : depth0)) != null ? stack1.length : stack1), {"name":"equal","hash":{},"fn":this.program(2, data),"inverse":this.program(4, data),"data":data}));
   if (stack1 != null) { buffer += stack1; }
   return buffer + "		<div class=\"messages\">\n			"
     + escapeExpression(((helpers.partial || (depth0 && depth0.partial) || helperMissing).call(depth0, "msg", {"name":"partial","hash":{},"data":data})))
@@ -43,6 +43,11 @@ templates['chat'] = template({"1":function(depth0,helpers,partials,data) {
 },"2":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
   return "		<button class=\"show-more\" data-id=\""
+    + escapeExpression(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"id","hash":{},"data":data}) : helper)))
+    + "\">\n			Show more\n		</button>\n";
+},"4":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "		<button class=\"show-more hidden\" data-id=\""
     + escapeExpression(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"id","hash":{},"data":data}) : helper)))
     + "\">\n			Show more\n		</button>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {

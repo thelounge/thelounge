@@ -104,18 +104,11 @@ Pretty simple, huh?
 
 If you want to edit users manually, see `users/example/user.json`.
 
-## Custom paths
-
-You can define Shout's file storage path via the following options:
-
-- Add an entry called `home` to the `config.json` file.
-- Set the environment variable `SHOUT_HOME` before calling the shout executable.
-- Use the default of `$HOME/.shout`.
-
 ## Commands
 
 These are the commands currently implemented:
 
+- [x] /clear
 - [x] /close
 - [x] /connect
 - [x] /deop

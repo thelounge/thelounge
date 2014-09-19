@@ -190,7 +190,7 @@ $(function() {
 		if (data.messages.length != 100) {
 			var more = chan
 				.find(".show-more")
-				.remove();
+				.addClass("hidden");
 		}
 	});
 
@@ -317,6 +317,9 @@ $(function() {
 		e.preventDefault();
 		var text = input.val();
 		input.val("");
+		if (text.indexOf("/clear") === 0) {
+			return clear();
+		}
 		socket.emit("input", {
 			target: chat.data("id"),
 			text: text
@@ -572,11 +575,15 @@ $(function() {
 		"ctrl+l",
 		"ctrl+shift+l"
 	], function (e) {
-		// Only clear the chat if the main input is focused.
-		if( e.target === input[0] ) {
-			chat.find(".active .chat .messages").empty();
+		if(e.target === input[0]) {
+			clear();
 		}
 	});
+
+	function clear() {
+		chat.find(".active .messages").empty();
+		chat.find(".active .show-more").removeClass("hidden");
+	}
 
 	function complete(word) {
 		var words = commands.slice();

@@ -446,8 +446,8 @@ button {
 	position: absolute;
 	width: 100%;
 }
-#chat .show-more + .messages .msg:first-child span {
-	padding-top: 54px;
+#chat .show-more:hover {
+	opacity: 1;
 }
 #chat .messages {
 	display: table;
