@@ -568,9 +568,14 @@ $(function() {
 	});
 
 	Mousetrap.bind([
-		"command+k"
-	], function (e, keys) {
-		chat.find(".active .chat .messages").empty();
+		"command+k",
+		"ctrl+l",
+		"ctrl+shift+l"
+	], function (e) {
+		// Only clear the chat if the main input is focused.
+		if( e.target === input[0] ) {
+			chat.find(".active .chat .messages").empty();
+		}
 	});
 
 	function complete(word) {
