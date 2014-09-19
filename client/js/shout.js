@@ -224,12 +224,29 @@ $(function() {
 
 	socket.on("part", function(data) {
 		var id = data.chan;
-		sidebar.find("[data-target=#chan-" + id + "]")
-			.remove()
-			.end()
-			.find(".chan")
-			.eq(0)
-			.trigger("click");
+		console.log(id);
+		sidebar.find(".chan[data-id='" + id + "']").remove();
+		$("#chan-" + id).remove();
+
+		var next = null;
+		var highest = -1;
+		chat.find(".chan").each(function() {
+			var self = $(this);
+			var z = parseInt(self.css("z-index"));
+			if (z > highest) {
+				highest = z;
+				next = self;
+			}
+		});
+
+		if (next !== null) {
+			var id = next.data("id");
+			sidebar.find("[data-id=" + id + "]").click();
+		} else {
+			sidebar.find(".chan")
+				.eq(0)
+				.click();
+		}
 	});
 
 	socket.on("quit", function(data) {
