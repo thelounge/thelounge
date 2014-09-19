@@ -567,6 +567,12 @@ $(function() {
 		}
 	});
 
+	Mousetrap.bind([
+		"command+k"
+	], function (e, keys) {
+		chat.find(".active .chat .messages").empty();
+	});
+
 	function complete(word) {
 		var words = commands.slice();
 		var users = chat.find(".active")
