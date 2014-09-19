@@ -567,6 +567,17 @@ $(function() {
 		}
 	});
 
+	Mousetrap.bind([
+		"command+k",
+		"ctrl+l",
+		"ctrl+shift+l"
+	], function (e) {
+		// Only clear the chat if the main input is focused.
+		if( e.target === input[0] ) {
+			chat.find(".active .chat .messages").empty();
+		}
+	});
+
 	function complete(word) {
 		var words = commands.slice();
 		var users = chat.find(".active")
