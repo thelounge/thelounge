@@ -124,7 +124,7 @@ button {
 	margin: 6px -12px 0 12px;
 }
 #sidebar {
-	bottom: 0;
+	bottom: 64px;
 	left: 0;
 	overflow: hidden;
 	overflow-y: auto;
@@ -145,12 +145,12 @@ button {
 #sidebar .active {
 	color: #fff;
 }
-#sidebar button.active {
-	color: #fff;
-}
 #sidebar .networks {
 	min-height: 100%;
-	padding: 20px 30px 80px;
+	padding: 20px 30px 40px;
+}
+#sidebar .networks:empty {
+	padding: 0;
 }
 #sidebar .network + .network {
 	margin-top: 30px;
@@ -162,8 +162,6 @@ button {
 	margin-top: 20px;
 	padding: 20px 40px;
 	text-align: center;
-	position: absolute;
-	top: 0;
 }
 #sidebar .chan {
 	display: block;
@@ -249,17 +247,26 @@ button {
 	background-color: rgba(0, 0, 0, .1);
 	opacity: .7 !important;
 }
+#sidebar .tse-scrollbar {
+	top: 2px;
+	right: 3px;
+}
 #footer {
-	height: 70px;
-	line-height: 70px;
-	margin-top: -70px;
+	background: rgba(0, 0, 0, .06);
+	border-radius: 2px;
+	bottom: 4px;
+	height: 60px;
+	left: 5px;
+	line-height: 60px;
+	position: absolute;
 	text-align: center;
+	width: 210px;
 }
 #footer button {
 	border: 0;
 }
 #footer button.active {
-	background: none;
+	color: #fff;
 }
 #footer .icon {
 	color: #9ca5b4;
@@ -704,6 +711,57 @@ button {
 	width: 0;
 }
 
+/**
+ * TrackpadScrollEmulator
+ * Version: 1.0.6
+ * Author: Jonathan Nicol @f6design
+ * https://github.com/jnicol/trackpad-scroll-emulator
+ */
+.tse-scrollable {
+	position: relative;
+	overflow: hidden;
+}
+.tse-scrollable .tse-scroll-content {
+	overflow: hidden;
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
+}
+.tse-scrollable .tse-scroll-content::-webkit-scrollbar {
+	width: 0;
+	height: 0;
+}
+.tse-scrollbar {
+	z-index: 99;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 11px;
+}
+.tse-scrollbar .drag-handle {
+	position: absolute;
+	right: 2px;
+	border-radius: 2px;
+	min-height: 10px;
+	width: 6px;
+	opacity: 0.1;
+	transition: opacity 0.2s linear;
+	background: #000;
+	-webkit-background-clip: padding-box;
+	-moz-background-clip: padding;
+}
+.tse-scrollbar:hover .drag-handle {
+	opacity: 0.25;
+	transition: opacity 0 linear;
+}
+.tse-scrollbar .drag-handle.visible {
+	opacity: 0.2;
+}
+.scrollbar-width-tester::-webkit-scrollbar {
+	width: 0;
+	height: 0;
+}
+
 @media (max-width: 768px) {
 	.container {
 		margin-top: 60px !important;
@@ -718,6 +776,10 @@ button {
 	}
 	#sidebar {
 		left: -220px;
+	}
+	#footer {
+		left: -215px;
+		width: 215px;
 	}
 	#sidebar .empty:before {
 		margin-top: 0;

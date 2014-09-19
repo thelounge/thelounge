@@ -28,7 +28,7 @@ $(function() {
 		"/whois"
 	];
 
-	var sidebar = $("#sidebar");
+	var sidebar = $("#sidebar, #footer");
 	var chat = $("#chat");
 
 	try {
@@ -42,6 +42,8 @@ $(function() {
 
 	$("#play").on("click", function() { pop.play(); });
 	$("#footer .icon").tooltip();
+
+	$(".tse-scrollable").TrackpadScrollEmulator();
 
 	var favico = new Favico({
 		animation: "none"
