@@ -399,6 +399,23 @@ button {
 	margin-left: 8px;
 	text-transform: capitalize;
 }
+#windows .header .right {
+	float: right;
+	margin-right: -10px;
+	margin-top: -2px;
+}
+#windows .header .button {
+	background: #f4f4f4;
+	background-image: linear-gradient(#f4f4f4, #ececec);
+	border: 1px solid #d7d7d7;
+	border-bottom-color: #b7b7b7;
+	border-radius: 2px;
+	color: #555;
+	font: 12px Lato, sans-serif;
+	height: 25px;
+	line-height: 0;
+	padding: 0 10px;
+}
 #windows .window .header {
 	display: none;
 }
@@ -811,6 +828,9 @@ button {
 	#viewport .lt,
 	#viewport .channel .rt {
 		display: block;
+	}
+	#viewport .rt {
+		margin-left: 18px;
 	}
 	#windows .window .header {
 		display: block;

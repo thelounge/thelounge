@@ -3,11 +3,20 @@
 	<div class="header">
 		<button class="lt"></button>
 		<button class="rt"></button>
+		<div class="right">
+			<button class="button close">
+				{{#equal type "lobby"}}
+					Disconnect
+				{{else}}
+					Leave
+				{{/equal}}
+			</button>
+		</div>
 		<span class="title">{{name}}</span>
 		<span class="topic">{{type}} </span>
 	</div>
 	<div class="chat">
-		{{#equal 100 messages.length}}
+		{{#equal messages.length 100}}
 		<button class="show-more" data-id="{{id}}">
 			Show more
 		</button>

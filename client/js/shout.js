@@ -224,7 +224,6 @@ $(function() {
 
 	socket.on("part", function(data) {
 		var id = data.chan;
-		console.log(id);
 		sidebar.find(".chan[data-id='" + id + "']").remove();
 		$("#chan-" + id).remove();
 
@@ -463,6 +462,15 @@ $(function() {
 			target: chat.data("id"),
 			text: text
 		});
+	});
+
+	chat.on("click", ".close", function() {
+		var id = $(this)
+			.closest(".chan")
+			.data("id");
+		sidebar.find(".chan[data-id='" + id + "']")
+			.find(".close")
+			.click();
 	});
 
 	chat.on("msg", ".messages", function(e, target, msg) {
