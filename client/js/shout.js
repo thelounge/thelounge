@@ -332,17 +332,26 @@ $(function() {
 		.history()
 		.tab(complete, {hint: false});
 
-	var form = $("#form").on("submit", function(e) {
+	var form = $("#form");
+	var submit = $("#submit");
+
+	form.on("submit", function(e) {
 		e.preventDefault();
 		var text = input.val();
 		input.val("");
 		if (text.indexOf("/clear") === 0) {
-			return clear();
+			clear();
+			return;
 		}
+		submit.removeClass("enabled");
 		socket.emit("input", {
 			target: chat.data("id"),
 			text: text
 		});
+	});
+
+	form.on("input", "#input", function() {
+		submit.toggleClass("enabled", $(this).val() != "");
 	});
 
 	chat.on("click", focus);

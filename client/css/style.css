@@ -685,7 +685,6 @@ button {
 	left: 0;
 	position: absolute;
 	right: 0px;
-	/*z-index: 1;*/
 }
 #form input {
 	border: 1px solid #cfdae1;
@@ -693,7 +692,7 @@ button {
 	border-radius: 2px;
 	height: 100%;
 	outline: none;
-	padding: 0 12px;
+	padding: 0 10px;
 	-webkit-appearance: none;
 	width: 100%;
 }
@@ -704,11 +703,29 @@ button {
 	right: 7px;
 	top: 6px;
 }
+#form .input {
+	left: 0;
+	height: 34px;
+	margin-right: 60px;
+	position: relative;
+}
 #form #submit {
-	height: 0;
-	margin-left: -9999px;
+	background: #f4f4f4;
+	background-image: linear-gradient(#f4f4f4, #ececec);
+	border: 1px solid #d7d7d7;
+	border-bottom-color: #b7b7b7;
+	border-radius: 2px;
+	font: 12px Lato, sans-serif;
+	color: #555;
+	height: 34px;
+	opacity: .5;
 	position: absolute;
-	width: 0;
+	right: 0;
+	transition: opacity .3s;
+	width: 54px;
+}
+#form #submit.enabled {
+	opacity: 1;
 }
 
 /**
