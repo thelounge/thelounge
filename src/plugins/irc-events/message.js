@@ -9,6 +9,7 @@ module.exports = function(irc, network) {
 		if (target.toLowerCase() == irc.me.toLowerCase()) {
 			target = data.from;
 		}
+
 		var chan = _.findWhere(network.channels, {name: target});
 		if (typeof chan === "undefined") {
 			chan = new Chan({
@@ -21,19 +22,27 @@ module.exports = function(irc, network) {
 				chan: chan
 			});
 		}
+
 		var type = "";
 		var text = data.message;
 		if (text.split(" ")[0] === "\u0001ACTION") {
 			type = Msg.Type.ACTION;
 			text = text.replace(/\u0001|ACTION/g, "");
 		}
+
 		text.split(" ").forEach(function(w) {
 			if (w.indexOf(irc.me) === 0) type += " highlight";
 		});
+
 		var self = false;
 		if (data.from.toLowerCase() == irc.me.toLowerCase()) {
 			self = true;
 		}
+
+		if (chan.id != client.activeChannel) {
+			chan.unread++;
+		}
+
 		var msg = new Msg({
 			type: type || Msg.Type.MESSAGE,
 			from: data.from,

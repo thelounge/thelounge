@@ -132,8 +132,8 @@ $(function() {
 		$("body").removeClass("signed-out");
 		$("#sign-in").detach();
 
-		var id = $.cookie("target");
-		var target = sidebar.find("[data-target='" + id + "']").trigger("click");
+		var id = data.active;
+		var target = sidebar.find("[data-id='" + id + "']").trigger("click");
 		if (target.length === 0) {
 			var first = sidebar.find(".chan")
 				.eq(0)
@@ -371,11 +371,12 @@ $(function() {
 			return;
 		}
 
-		if (self.hasClass("chan")) {
-			$.cookie("target", target);
-		}
 		chat.data(
 			"id",
+			self.data("id")
+		);
+		socket.emit(
+			"open",
 			self.data("id")
 		);
 

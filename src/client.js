@@ -49,6 +49,7 @@ var inputs = [
 
 function Client(sockets, name, config) {
 	_.merge(this, {
+		activeChannel: -1,
 		config: config,
 		id: id++,
 		name: name,
@@ -234,6 +235,14 @@ Client.prototype.more = function(data) {
 		chan: chan.id,
 		messages: messages
 	});
+};
+
+Client.prototype.open = function(data) {
+	var target = this.find(data);
+	if (target) {
+		target.chan.unread = 0;
+		this.activeChannel = target.chan.id;
+	}
 };
 
 Client.prototype.quit = function() {

@@ -80,8 +80,15 @@ function init(socket, client, token) {
 				client.connect(data);
 			}
 		);
+		socket.on(
+			"open",
+			function(data) {
+				client.open(data);
+			}
+		)
 		socket.join(client.id);
 		socket.emit("init", {
+			active: client.activeChannel,
 			networks: client.networks,
 			token: token || ""
 		});
