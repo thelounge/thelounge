@@ -16,7 +16,7 @@ function Chan(attr) {
 		messages: [],
 		name: "",
 		type: Chan.Type.CHANNEL,
-		unread: 5,
+		unread: 0,
 		users: []
 	}, attr));
 }
