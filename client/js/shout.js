@@ -487,17 +487,17 @@ $(function() {
 				}
 				favico.badge("!");
 				if (settings.badge && Notification.permission == "granted") {
-					var n = new Notification(msg.from + " says:", {
+					var notify = new Notification(msg.from + " says:", {
 						body: msg.text.trim(),
 						icon: "/img/logo-64.png"
-					} );
-					n.onclick = function() {
+					});
+					notify.onclick = function() {
 						window.focus();
 						button.click();
 						this.close();
 					};
 					window.setTimeout(function() {
-						n.close();
+						notify.close();
 					}, 5 * 1000);
 				}
 			}
