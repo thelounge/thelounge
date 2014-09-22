@@ -126,7 +126,12 @@ $(function() {
 		}
 
 		if (data.token) {
-			$.cookie("token", data.token);
+			$.cookie(
+				"token",
+				data.token, {
+					expires: expire(30)
+				}
+			);
 		}
 
 		$("body").removeClass("signed-out");
@@ -291,7 +296,12 @@ $(function() {
 		var self = $(this);
 		var name = self.attr("name");
 		options[name] = self.prop("checked");
-		$.cookie("settings", options);
+		$.cookie(
+			"settings",
+			options, {
+				expires: expire(365)
+			}
+		);
 		if ([
 			"join",
 			"mode",
@@ -575,7 +585,12 @@ $(function() {
 			}
 		});
 		if (values.user) {
-			$.cookie("user", values.user);
+			$.cookie(
+				"user",
+				values.user, {
+					expires: expire(30)
+				}
+			);
 		}
 		socket.emit(
 			event, values
@@ -652,6 +667,12 @@ $(function() {
 	function refresh() {
 		window.onbeforeunload = null;
 		location.reload();
+	}
+
+	function expire(days) {
+		var date = new Date();
+		date.setTime(date.getTime() + ((3600 * 1000 * 24) * days));
+		return date;
 	}
 
 	document.addEventListener(
