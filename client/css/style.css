@@ -134,14 +134,16 @@ button {
 	width: 220px;
 }
 #sidebar button,
+#sidebar .chan,
 #sidebar .sign-out {
 	border: 1px solid transparent;
 	border-radius: 2px;
-	color: #bcc4d3;
 	color: #99a2b4;
+	cursor: pointer;
 	font-size: 14px;
 }
 #sidebar button:hover,
+#sidebar .chan:hover,
 #sidebar .active {
 	color: #fff;
 }

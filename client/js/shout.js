@@ -374,7 +374,7 @@ $(function() {
 	}
 
 	var top = 1;
-	sidebar.on("click", "button", function() {
+	sidebar.on("click", ".chan, button", function() {
 		var self = $(this);
 		var target = self.data("target");
 		if (!target) {
@@ -427,11 +427,7 @@ $(function() {
 		var chan = $(this).closest(".chan");
 		if (chan.hasClass("lobby")) {
 			cmd = "/quit";
-			var server = chan
-				.clone()
-				.remove("span")
-				.text()
-				.trim();
+			var server = chan.find(".name").html();
 			if (!confirm("Disconnect from " + server + "?")) {
 				return false;
 			}
