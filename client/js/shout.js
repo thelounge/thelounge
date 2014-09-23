@@ -147,6 +147,8 @@ $(function() {
 				$("#footer").find(".connect").trigger("click");
 			}
 		}
+
+		sortable();
 	});
 
 	socket.on("join", function(data) {
@@ -221,6 +223,7 @@ $(function() {
 			.prop("disabled", false)
 			.end();
 		confirmExit();
+		sortable();
 	});
 
 	socket.on("nick", function(data) {
@@ -669,6 +672,32 @@ $(function() {
 		var date = new Date();
 		date.setTime(date.getTime() + ((3600 * 1000 * 24) * days));
 		return date;
+	}
+
+	function sortable() {
+		sidebar.sortable({
+			axis: "y",
+			containment: "parent",
+			cursor: "grabbing",
+			items: ".network",
+			handle: ".lobby",
+			placeholder: "network-placeholder",
+			forcePlaceholderSize: true,
+			update: function() {
+				// ..
+			}
+		});
+		sidebar.find(".network").sortable({
+			axis: "y",
+			containment: "parent",
+			cursor: "grabbing",
+			items: ".chan:not(.lobby)",
+			placeholder: "chan-placeholder",
+			forcePlaceholderSize: true,
+			update: function() {
+				// ..
+			}
+		});
 	}
 
 	document.addEventListener(
