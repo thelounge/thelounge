@@ -363,7 +363,7 @@ $(function() {
 		submit.toggleClass("enabled", $(this).val() != "");
 	});
 
-	chat.on("click", focus);
+	chat.on("click", ".messages", focus);
 	$(window).on("focus", focus);
 
 	function focus() {
