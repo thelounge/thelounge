@@ -283,6 +283,9 @@ Client.prototype.sort = function(data) {
 };
 
 Client.prototype.quit = function() {
+	this.sockets.in(this.id).sockets.forEach(function(socket) {
+		socket.disconnect(true);
+	});
 	this.networks.forEach(function(network) {
 		var irc = network.irc;
 		if (network.connected) {

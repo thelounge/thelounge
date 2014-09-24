@@ -63,7 +63,11 @@ $(function() {
 		console.log(e);
 	});
 
-	socket.on("connect_error", function(e) {
+	socket.on("connect_error", function() {
+		refresh();
+	});
+
+	socket.on("disconnect", function() {
 		refresh();
 	});
 

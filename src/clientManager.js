@@ -3,6 +3,7 @@ var fs = require("fs");
 var Client = require("./client");
 var mkdirp = require("mkdirp");
 var Helper = require("./helper");
+var moment = require("moment");
 
 module.exports = ClientManager;
 
@@ -20,21 +21,10 @@ ClientManager.prototype.findClient = function(name) {
 	return false;
 };
 
-ClientManager.prototype.loadUsers = function(sockets) {
+ClientManager.prototype.loadUsers = function() {
 	var users = this.getUsers();
 	for (var i in users) {
-		var name = users[i];
-		var json = this.loadUser(name);
-		if (!json) {
-			continue;
-		}
-		if (!this.findClient(name)) {
-			this.clients.push(new Client(
-				sockets,
-				name,
-				json
-			));
-		}
+		this.loadUser(users[i]);
 	}
 };
 
@@ -45,10 +35,19 @@ ClientManager.prototype.loadUser = function(name) {
 			"utf-8"
 		);
 		json = JSON.parse(json);
-		return json;
 	} catch(e) {
 		console.log(e);
 		return;
+	}
+	if (!json) {
+		return;
+	}
+	if (!this.findClient(name)) {
+		this.clients.push(new Client(
+			this.sockets,
+			name,
+			json
+		));
 	}
 };
 
@@ -108,4 +107,39 @@ ClientManager.prototype.removeUser = function(name) {
 		throw e;
 	}
 	return true;
+};
+
+ClientManager.prototype.autoload = function(sockets) {
+	var self = this;
+	var loaded = ["erming"];
+	setInterval(function() {
+		var loaded = _.pluck(
+			self.clients,
+			"name"
+		);
+
+		var added = _.difference(self.getUsers(), loaded);
+		_.each(added, function(name) {
+			self.loadUser(name);
+			console.log(
+				"User '" + name + "' loaded."
+			);
+		});
+
+		var removed = _.difference(loaded, self.getUsers());
+		_.each(removed, function(name) {
+			var client = _.find(
+				self.clients, {
+					name: name
+				}
+			);
+			if (client) {
+				client.quit();
+				self.clients = _.without(self.clients, client);
+				console.log(
+					"User '" + name + "' disconnected."
+				);
+			}
+		});
+	}, 1000);
 };

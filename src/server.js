@@ -31,13 +31,18 @@ module.exports = function(port, host, isPublic) {
 		}
 	});
 
+	manager.sockets = sockets;
+
 	console.log("");
 	console.log("Shout is now running on http://" + config.host + ":" + config.port + "/");
 	console.log("Press ctrl-c to stop");
 	console.log("");
 
 	if (!config.public) {
-		manager.loadUsers(sockets);
+		manager.loadUsers();
+		if (config.autoload) {
+			manager.autoload();
+		}
 	}
 };
 

@@ -44,6 +44,16 @@ module.exports = {
 	home: "",
 
 	//
+	// Autoload users
+	//
+	// When this setting is enabled, your 'users/' folder will be monitored. This is useful
+	// if you want to add/remove users while the server is running.
+	//
+	// @type     boolean
+	// @default  true
+	//
+	autoload: true,
+
 	// Enable debug mode.
 	// This is only useful for development.
 	//
