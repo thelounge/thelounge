@@ -9,6 +9,7 @@
 		"tls": true,
 		"password": "serverpw",
 		"nick": "john",
+		"username": "john",
 		"realname": "John Doe",
 		"commands": [
 			"/msg NickServ identify password",
