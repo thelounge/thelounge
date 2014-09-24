@@ -246,6 +246,42 @@ Client.prototype.open = function(data) {
 	}
 };
 
+Client.prototype.sort = function(data) {
+	var self = this;
+
+	var type = data.type;
+	var order = data.order || [];
+
+	switch (type) {
+	case "networks":
+		var sorted = [];
+		_.each(order, function(i) {
+			var find = _.find(self.networks, {id: i});
+			if (find) {
+				sorted.push(find);
+			}
+		});
+		self.networks = sorted;
+		break;
+
+	case "channels":
+		var target = data.target;
+		var network = _.find(self.networks, {id: target});
+		if (!network) {
+			return;
+		}
+		var sorted = [];
+		_.each(order, function(i) {
+			var find = _.find(network.channels, {id: i});
+			if (find) {
+				sorted.push(find);
+			}
+		});
+		network.channels = sorted;
+		break;
+	}
+};
+
 Client.prototype.quit = function() {
 	this.networks.forEach(function(network) {
 		var irc = network.irc;

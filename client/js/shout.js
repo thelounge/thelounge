@@ -684,7 +684,17 @@ $(function() {
 			placeholder: "network-placeholder",
 			forcePlaceholderSize: true,
 			update: function() {
-				// ..
+				var order = [];
+				sidebar.find(".network").each(function() {
+					var id = $(this).data("id");
+					order.push(id);
+				});
+				socket.emit(
+					"sort", {
+						type: "networks",
+						order: order
+					}
+				);
 			}
 		});
 		sidebar.find(".network").sortable({
@@ -694,8 +704,20 @@ $(function() {
 			items: ".chan:not(.lobby)",
 			placeholder: "chan-placeholder",
 			forcePlaceholderSize: true,
-			update: function() {
-				// ..
+			update: function(e, ui) {
+				var order = [];
+				var network = ui.item.parent();
+				network.find(".chan").each(function() {
+					var id = $(this).data("id");
+					order.push(id);
+				});
+				socket.emit(
+					"sort", {
+						type: "channels",
+						target: network.data("id"),
+						order: order
+					}
+				);
 			}
 		});
 	}

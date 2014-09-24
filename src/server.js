@@ -85,7 +85,13 @@ function init(socket, client, token) {
 			function(data) {
 				client.open(data);
 			}
-		)
+		);
+		socket.on(
+			"sort",
+			function(data) {
+				client.sort(data);
+			}
+		);
 		socket.join(client.id);
 		socket.emit("init", {
 			active: client.activeChannel,
