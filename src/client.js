@@ -138,6 +138,7 @@ Client.prototype.connect = function(args) {
 	});
 
 	var nick = args.nick || "shout-user";
+	var username = args.username || nick;
 	var realname = args.realname || "Shout User";
 
 	var irc = slate(stream);
@@ -148,7 +149,7 @@ Client.prototype.connect = function(args) {
 
 	irc.me = nick;
 	irc.nick(nick);
-	irc.user(nick, realname);
+	irc.user(username, realname);
 
 	var network = new Network({
 		host: server.host,
