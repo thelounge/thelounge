@@ -560,7 +560,7 @@ button {
 #chat.hide-motd .motd span,
 #chat.hide-nick .nick span,
 #chat.hide-part .part span,
-#chat.hide-quit .quit span {
+#chat.hide-quit .quit {
 	display: none !important;
 }
 #chat .notice .type {
@@ -909,6 +909,14 @@ button {
 	}
 	#chat .time {
 		display: none;
+	}
+	#chat.hide-join .join,
+	#chat.hide-mode .mode,
+	#chat.hide-motd .motd,
+	#chat.hide-nick .nick,
+	#chat.hide-part .part,
+	#chat.hide-quit .quit {
+		display: none !important;
 	}
 }
 
