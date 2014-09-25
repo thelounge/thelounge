@@ -822,6 +822,12 @@ button {
 		left: -215px;
 		width: 215px;
 	}
+	#sidebar .close {
+		display: none;
+	}
+	#sidebar .chan:hover .badge {
+		opacity: 1;
+	}
 	#sidebar .empty:before {
 		margin-top: 0;
 	}
