@@ -435,7 +435,8 @@ button {
 }
 #chat,
 #windows .header {
-	font: 13px Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace;
+	font: 12px Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace;
+	line-height: 1.4;
 }
 #chat button:hover {
 	opacity: .6;
@@ -499,19 +500,18 @@ button {
 	padding-bottom: 10px;
 }
 #chat .msg .type {
-	color: #ccc;
-	color: #d0dbe2;
+	color: #ddd;
 	display: none;
 }
 #chat .time,
 #chat .from,
 #chat .text {
 	display: table-cell;
-	padding: 3px 0;
+	padding: 2px 0;
 	vertical-align: top;
 }
 #chat .time {
-	color: #d0dbe2;
+	color: #ddd;
 	text-align: right;
 	width: 46px;
 	min-width: 46px;
@@ -710,16 +710,7 @@ button {
 	position: absolute;
 	right: 0px;
 }
-#form input {
-	border: 1px solid #cfdae1;
-	font: 13px Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace;
-	border-radius: 2px;
-	height: 100%;
-	outline: none;
-	padding: 0 10px;
-	-webkit-appearance: none;
-	width: 100%;
-}
+
 #form .inner {
 	bottom: 7px;
 	left: 7px;
@@ -728,10 +719,37 @@ button {
 	top: 6px;
 }
 #form .input {
+	font: 12px Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace;
 	left: 0;
 	height: 34px;
 	margin-right: 60px;
 	position: relative;
+}
+#form #nick {
+	background: #f6f6f6;
+	color: #aaa;
+	position: absolute;
+	font: inherit;
+	font-size: 11px;
+	margin: 5px;
+	line-height: 26px;
+	height: 24px;
+	padding: 0 10px;
+	border-radius: 1px;
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	    -ms-user-select: none;
+	        user-select: none;
+}
+#form #input {
+	border: 1px solid #cfdae1;
+	font: inherit;
+	border-radius: 2px;
+	height: 100%;
+	outline: none;
+	padding: 0 10px;
+	-webkit-appearance: none;
+	width: 100%;
 }
 #form #submit {
 	background: #f4f4f4;

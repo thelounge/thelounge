@@ -20,7 +20,8 @@ function Network(attr) {
 }
 
 Network.prototype.toJSON = function() {
-	return _.omit(this, "irc");
+	var json = _.extend(this, {nick: (this.irc || {}).me || ""});
+	return _.omit(json, "irc");
 };
 
 function prettify(host) {

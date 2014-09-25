@@ -116,6 +116,8 @@ templates['network'] = template({"1":function(depth0,helpers,partials,data) {
     + escapeExpression(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"id","hash":{},"data":data}) : helper)))
     + "\" class=\"network\" data-id=\""
     + escapeExpression(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"id","hash":{},"data":data}) : helper)))
+    + "\" data-nick=\""
+    + escapeExpression(((helper = (helper = helpers.nick || (depth0 != null ? depth0.nick : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"nick","hash":{},"data":data}) : helper)))
     + "\">\n	"
     + escapeExpression(((helpers.partial || (depth0 && depth0.partial) || helperMissing).call(depth0, "chan", {"name":"partial","hash":{},"data":data})))
     + "\n</section>\n";

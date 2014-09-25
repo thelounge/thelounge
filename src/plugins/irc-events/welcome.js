@@ -6,13 +6,18 @@ module.exports = function(irc, network) {
 		network.connected = true;
 		irc.write("PING " + network.host);
 		var lobby = network.channels[0];
+		var nick = data;
 		var msg = new Msg({
-			text: "You're now known as " + data
+			text: "You're now known as " + nick
 		});
 		lobby.messages.push(msg);
 		client.emit("msg", {
 			chan: lobby.id,
 			msg: msg
+		});
+		client.emit("nick", {
+			network: network.id,
+			nick: nick
 		});
 	});
 };

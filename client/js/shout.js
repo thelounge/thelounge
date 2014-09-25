@@ -63,12 +63,10 @@ $(function() {
 		console.log(e);
 	});
 
-	socket.on("connect_error", function() {
-		refresh();
-	});
-
-	socket.on("disconnect", function() {
-		refresh();
+	$.each(["connect_error", "disconnect"], function(i, e) {
+		socket.on(e, function() {
+			refresh();
+		});
 	});
 
 	socket.on("auth", function(data) {
@@ -231,7 +229,12 @@ $(function() {
 	});
 
 	socket.on("nick", function(data) {
-		console.log(data);
+		var id = data.network;
+		var nick = data.nick;
+		var network = sidebar.find("#network-" + id).data("nick", nick);
+		if (network.find(".active").length) {
+			setNick(nick);
+		}
 	});
 
 	socket.on("part", function(data) {
@@ -418,6 +421,15 @@ $(function() {
 			.find(".chat")
 			.sticky()
 			.end();
+
+		if (self.hasClass("chan")) {
+			var nick = self
+				.closest(".network")
+				.data("nick");
+			if (nick) {
+				setNick(nick);
+			}
+		}
 
 		if (screen.width > 768 && chan.hasClass("chan")) {
 			input.focus();
@@ -724,6 +736,16 @@ $(function() {
 				);
 			}
 		});
+	}
+
+	function setNick(nick) {
+		var width = $("#nick")
+			.html(nick + ":")
+			.width();
+		if (width) {
+			width += 34;
+			input.css("padding-left", width);
+		}
 	}
 
 	document.addEventListener(
