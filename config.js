@@ -159,5 +159,39 @@ module.exports = {
 		// @default  "#foo, #shout-irc"
 		//
 		join: "#foo, #shout-irc"
+	},
+
+	//
+	// Run Shout with HTTPS support.
+	//
+	// @type     object
+	// @default  {}
+	//
+	https: {
+		//
+		// Enable HTTPS support.
+		//
+		// @type     boolean
+		// @default  false
+		//
+		enable: false,
+
+		//
+		// Path to the key.
+		//
+		// @type     string
+		// @example  "sslcert/key.pem"
+		// @default  ""
+		//
+		key: "",
+
+		//
+		// Path to the certificate.
+		//
+		// @type     string
+		// @example  "sslcert/key-cert.pem"
+		// @default  ""
+		//
+		certificate: ""
 	}
 };
