@@ -3,8 +3,8 @@ var bcrypt = require("bcrypt");
 var Client = require("./client");
 var ClientManager = require("./clientManager");
 var config = require("../config");
+var express = require("express");
 var fs = require("fs");
-var http = require("connect");
 var io = require("socket.io");
 var Helper = require("./helper");
 
@@ -16,10 +16,10 @@ module.exports = function(port, host, isPublic) {
 	config.host = host;
 	config.public = isPublic;
 
-	var app = http()
+	var app = express()
 		.use(index)
-		.use(http.static("client"))
-		.use(http.static(Helper.resolveHomePath("cache")))
+		.use(express.static("client"))
+		.use(express.static(Helper.resolveHomePath("cache")))
 		.listen(config.port, config.host);
 
 	sockets = io(app);
