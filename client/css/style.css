@@ -703,7 +703,9 @@ button {
 }
 #form {
 	background: #e4eaee;
+	background: #eee;
 	border-top: 1px solid #cfdae1;
+	border-top: 1px solid #ddd;
 	bottom: 0;
 	height: 48px;
 	left: 0;
@@ -722,19 +724,19 @@ button {
 	font: 12px Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace;
 	left: 0;
 	height: 34px;
-	margin-right: 60px;
+	margin-right: 64px;
 	position: relative;
 }
 #form #nick {
 	background: #f6f6f6;
-	color: #aaa;
+	color: #666;
 	position: absolute;
 	font: inherit;
 	font-size: 11px;
 	margin: 5px;
 	line-height: 26px;
 	height: 24px;
-	padding: 0 10px;
+	padding: 0 9px;
 	border-radius: 1px;
 	-webkit-user-select: none;
 	   -moz-user-select: none;
@@ -743,6 +745,7 @@ button {
 }
 #form #input {
 	border: 1px solid #cfdae1;
+	border: 1px solid #ddd;
 	font: inherit;
 	border-radius: 2px;
 	height: 100%;
@@ -760,14 +763,10 @@ button {
 	font: 12px Lato, sans-serif;
 	color: #555;
 	height: 34px;
-	opacity: .5;
 	position: absolute;
 	right: 0;
 	transition: opacity .3s;
-	width: 54px;
-}
-#form #submit.enabled {
-	opacity: 1;
+	width: 58px;
 }
 
 /**

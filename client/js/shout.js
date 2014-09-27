@@ -362,15 +362,10 @@ $(function() {
 			clear();
 			return;
 		}
-		submit.removeClass("enabled");
 		socket.emit("input", {
 			target: chat.data("id"),
 			text: text
 		});
-	});
-
-	form.on("input", "#input", function() {
-		submit.toggleClass("enabled", $(this).val() != "");
 	});
 
 	chat.on("click", ".messages", focus);
@@ -743,7 +738,7 @@ $(function() {
 			.html(nick + ":")
 			.width();
 		if (width) {
-			width += 34;
+			width += 31;
 			input.css("padding-left", width);
 		}
 	}
