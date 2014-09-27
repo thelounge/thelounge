@@ -195,3 +195,7 @@ module.exports = {
 		certificate: ""
 	}
 };
+
+if ("SHOUT_CONFIG" in process.env) {
+	module.exports = require(process.env.SHOUT_CONFIG);
+}
