@@ -200,7 +200,7 @@ Client.prototype.connect = function(args) {
 
 Client.prototype.input = function(data) {
 	var client = this;
-	var text = data.text;
+	var text = data.text.trim();
 	var target = client.find(data.target);
 	if (text.charAt(0) !== "/") {
 		text = "/say " + text;
