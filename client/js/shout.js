@@ -278,7 +278,7 @@ $(function() {
 
 	socket.on("toggle", function(data) {
 		var toggle = $("#toggle-" + data.id);
-		toggle.parent().after(render("toggle", data));
+		toggle.parent().after(render("toggle", {toggle: data}));
 		switch (data.type) {
 		case "link":
 			if (options.links) {

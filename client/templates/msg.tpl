@@ -11,11 +11,14 @@
 	<span class="text">
 		<em class="type">{{type}}</em>
 		{{#equal type "toggle"}}
-		<div class="force-newline">
-			<button id="toggle-{{id}}" class="toggle-button">···</button>
-		</div>
+			<div class="force-newline">
+				<button id="toggle-{{id}}" class="toggle-button">···</button>
+			</div>
+			{{#if toggle}}
+				{{partial "toggle"}}
+			{{/if}}
 		{{else}}
-		{{{parse text}}}
+			{{{parse text}}}
 		{{/equal}}
 	</span>
 </div>

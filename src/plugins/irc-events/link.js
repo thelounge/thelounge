@@ -37,42 +37,41 @@ module.exports = function(irc, network) {
 
 		_.each(links, function(url) {
 			fetch(url, function(res) {
-				parse(msg.id, url, res, client);
+				parse(msg, url, res, client);
 			});
 		});
 	});
 };
 
-function parse(id, url, res, client) {
-	var type = "";
-	var head = "";
-	var body = "";
-	var link = url;
+function parse(msg, url, res, client) {
+	var toggle = msg.toggle = {
+		id: msg.id,
+		type: "",
+		head: "",
+		body: "",
+		link: url
+	};
+
 	switch (res.type) {
 	case "text/html":
 		var $ = cheerio.load(res.res.text);
-		type = "link";
-		head = $("title").text();
-		body = "No description found.";
+		toggle.type = "link";
+		toggle.head = $("title").text();
+		toggle.body = "No description found.";
 		break;
 
 	case "image/png":
 	case "image/gif":
 	case "image/jpg":
 	case "image/jpeg":
-		type = "image";
+		toggle.type = "image";
 		break;
 
 	default:
 		return;
 	}
-	client.emit("toggle", {
-		id: id,
-		type: type,
-		head: head,
-		body: body,
-		link: link,
-	});
+
+	client.emit("toggle", toggle);
 }
 
 function fetch(url, cb) {

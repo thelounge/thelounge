@@ -1,3 +1,4 @@
+{{#toggle}}
 <div class="toggle-content">
 	{{#equal type "image"}}
 		<a href="{{link}}" target="_blank">
@@ -13,3 +14,4 @@
 	{{/equal}}
 	</div>
 </div>
+{{/toggle}}
