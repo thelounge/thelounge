@@ -5,6 +5,11 @@ var Msg = require("../../models/msg");
 module.exports = function(irc, network) {
 	var client = this;
 	irc.on("message", function(data) {
+		if (data.message.indexOf("\001") === 0) {
+			// Hide ctcp messages.
+			return;
+		}
+
 		var target = data.to;
 		if (target.toLowerCase() == irc.me.toLowerCase()) {
 			target = data.from;
