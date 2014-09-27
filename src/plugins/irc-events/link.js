@@ -1,4 +1,5 @@
 var _ = require("lodash");
+var cheerio = require("cheerio");
 var Msg = require("../../models/msg");
 var request = require("superagent");
 
@@ -43,12 +44,16 @@ module.exports = function(irc, network) {
 };
 
 function parse(id, url, res, client) {
+	var type = "";
 	var head = "";
 	var body = "";
-	var type = "";
+	var link = url;
 	switch (res.type) {
 	case "text/html":
+		var $ = cheerio.load(res.res.text);
 		type = "link";
+		head = $("title").text();
+		body = "No description found.";
 		break;
 
 	case "image/png":
@@ -56,7 +61,6 @@ function parse(id, url, res, client) {
 	case "image/jpg":
 	case "image/jpeg":
 		type = "image";
-		body = url;
 		break;
 
 	default:
@@ -65,8 +69,9 @@ function parse(id, url, res, client) {
 	client.emit("toggle", {
 		id: id,
 		type: type,
-		head: type,
-		body: body
+		head: head,
+		body: body,
+		link: link,
 	});
 }
 
