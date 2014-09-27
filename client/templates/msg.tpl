@@ -15,7 +15,7 @@
 			<button id="toggle-{{id}}" class="toggle-button">···</button>
 		</div>
 		{{else}}
-		{{{uri text}}}
+		{{{parse text}}}
 		{{/equal}}
 	</span>
 </div>

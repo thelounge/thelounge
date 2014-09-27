@@ -101,7 +101,7 @@ templates['msg'] = template({"1":function(depth0,helpers,partials,data) {
     + "\" class=\"toggle-button\">···</button>\n		</div>\n";
 },"8":function(depth0,helpers,partials,data) {
   var stack1, helperMissing=helpers.helperMissing, buffer = "		";
-  stack1 = ((helpers.uri || (depth0 && depth0.uri) || helperMissing).call(depth0, (depth0 != null ? depth0.text : depth0), {"name":"uri","hash":{},"data":data}));
+  stack1 = ((helpers.parse || (depth0 && depth0.parse) || helperMissing).call(depth0, (depth0 != null ? depth0.text : depth0), {"name":"parse","hash":{},"data":data}));
   if (stack1 != null) { buffer += stack1; }
   return buffer + "\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {

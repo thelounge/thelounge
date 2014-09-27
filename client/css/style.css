@@ -533,7 +533,9 @@ button {
 	padding-left: 10px;
 	padding-right: 6px;
 }
+#chat .wrap,
 #chat .text a {
+	font-style: normal;
 	word-break: break-all;
 }
 #chat .self .text {
