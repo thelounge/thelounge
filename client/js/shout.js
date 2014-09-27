@@ -277,7 +277,21 @@ $(function() {
 	});
 
 	socket.on("toggle", function(data) {
-		$("#toggle-" + data.id).parent().after(render("toggle", data));
+		var toggle = $("#toggle-" + data.id);
+		toggle.parent().after(render("toggle", data));
+		switch (data.type) {
+		case "link":
+			if (options.links) {
+				toggle.click();
+			}
+			break;
+
+		case "image":
+			if (options.thumbnails) {
+				toggle.click();
+			}
+			break;
+		}
 	});
 
 	socket.on("users", function(data) {
@@ -292,11 +306,13 @@ $(function() {
 	var options = $.extend({
 		badge: false,
 		join: true,
+		links: true,
 		mode: true,
 		motd: false,
 		nick: true,
 		notification: true,
 		part: true,
+		thumbnails: true,
 		quit: true,
 	}, $.cookie("settings"));
 
