@@ -54,14 +54,6 @@ module.exports = {
 	//
 	autoload: true,
 
-	// Enable debug mode.
-	// This is only useful for development.
-	//
-	// @type     boolean
-	// @default  false
-	//
-	debug: false,
-
 	//
 	// Log settings
 	//
