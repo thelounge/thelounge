@@ -573,9 +573,31 @@ button {
 #chat .action .user:before {
 	content: '* ';
 }
-#chat .image {
-	max-height: 120px;
-	max-width: 240px;
+#chat .toggle-button {
+	background: #eee;
+	border-radius: 2px;
+	display: inline-block;
+	color: #666;
+	height: 1em;
+	line-height: 0px;
+	padding: 0px 6px;
+}
+#chat .toggle-content {
+	background: #f5f5f5;
+	border-radius: 2px;
+	display: none;
+	color: #222;
+	font: 12px Lato;
+	max-width: 220px;
+	padding: 6px 8px;
+	margin-top: 2px;
+}
+#chat .toggle-content.show {
+	display: inline-block !important;
+}
+#chat .toggle-content img {
+	max-width: 100%;
+	max-height: 100%;
 }
 #chat .count {
 	background: #fafafa;

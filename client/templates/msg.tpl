@@ -10,8 +10,10 @@
 	</span>
 	<span class="text">
 		<em class="type">{{type}}</em>
-		{{#equal type "image"}}
-		<img src="{{text}}" class="image">
+		{{#equal type "toggle"}}
+		<div class="force-newline">
+			<button id="toggle-{{id}}" class="toggle-button">···</button>
+		</div>
 		{{else}}
 		{{{uri text}}}
 		{{/equal}}

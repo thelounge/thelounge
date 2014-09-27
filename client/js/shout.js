@@ -276,6 +276,10 @@ $(function() {
 		}
 	});
 
+	socket.on("toggle", function(data) {
+		$("#toggle-" + data.id).parent().after(render("toggle", data));
+	});
+
 	socket.on("users", function(data) {
 		var users = chat.find("#chan-" + data.chan)
 			.find(".users")
@@ -557,6 +561,11 @@ $(function() {
 			target: id,
 			count: count
 		});
+	});
+
+	chat.on("click", ".toggle-button", function() {
+		var self = $(this);
+		self.parent().next(".toggle-content").toggleClass("show");
 	});
 
 	var windows = $("#windows");

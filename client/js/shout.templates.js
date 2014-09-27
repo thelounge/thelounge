@@ -84,7 +84,7 @@ templates['msg'] = template({"1":function(depth0,helpers,partials,data) {
   buffer += "	</span>\n	<span class=\"text\">\n		<em class=\"type\">"
     + escapeExpression(((helper = (helper = helpers.type || (depth0 != null ? depth0.type : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"type","hash":{},"data":data}) : helper)))
     + "</em>\n";
-  stack1 = ((helpers.equal || (depth0 && depth0.equal) || helperMissing).call(depth0, (depth0 != null ? depth0.type : depth0), "image", {"name":"equal","hash":{},"fn":this.program(6, data),"inverse":this.program(8, data),"data":data}));
+  stack1 = ((helpers.equal || (depth0 && depth0.equal) || helperMissing).call(depth0, (depth0 != null ? depth0.type : depth0), "toggle", {"name":"equal","hash":{},"fn":this.program(6, data),"inverse":this.program(8, data),"data":data}));
   if (stack1 != null) { buffer += stack1; }
   return buffer + "	</span>\n</div>\n";
 },"2":function(depth0,helpers,partials,data) {
@@ -96,9 +96,9 @@ templates['msg'] = template({"1":function(depth0,helpers,partials,data) {
     + "</button>\n";
 },"6":function(depth0,helpers,partials,data) {
   var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "		<img src=\""
-    + escapeExpression(((helper = (helper = helpers.text || (depth0 != null ? depth0.text : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"text","hash":{},"data":data}) : helper)))
-    + "\" class=\"image\">\n";
+  return "		<div class=\"force-newline\">\n			<button id=\"toggle-"
+    + escapeExpression(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"id","hash":{},"data":data}) : helper)))
+    + "\" class=\"toggle-button\">···</button>\n		</div>\n";
 },"8":function(depth0,helpers,partials,data) {
   var stack1, helperMissing=helpers.helperMissing, buffer = "		";
   stack1 = ((helpers.uri || (depth0 && depth0.uri) || helperMissing).call(depth0, (depth0 != null ? depth0.text : depth0), {"name":"uri","hash":{},"data":data}));
@@ -126,6 +126,26 @@ templates['network'] = template({"1":function(depth0,helpers,partials,data) {
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.networks : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
   return buffer;
+},"useData":true});
+templates['toggle'] = template({"1":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "		<a href=\""
+    + escapeExpression(((helper = (helper = helpers.body || (depth0 != null ? depth0.body : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"body","hash":{},"data":data}) : helper)))
+    + "\" target=\"_blank\">\n			<img src=\""
+    + escapeExpression(((helper = (helper = helpers.body || (depth0 != null ? depth0.body : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"body","hash":{},"data":data}) : helper)))
+    + "\">\n		</a>\n";
+},"3":function(depth0,helpers,partials,data) {
+  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  return "		<div class=\"head\">"
+    + escapeExpression(((helper = (helper = helpers.head || (depth0 != null ? depth0.head : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"head","hash":{},"data":data}) : helper)))
+    + "</div>\n		<div class=\"body\">\n			"
+    + escapeExpression(((helper = (helper = helpers.body || (depth0 != null ? depth0.body : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"body","hash":{},"data":data}) : helper)))
+    + "\n		</div>\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, helperMissing=helpers.helperMissing, buffer = "<div class=\"toggle-content\">\n";
+  stack1 = ((helpers.equal || (depth0 && depth0.equal) || helperMissing).call(depth0, (depth0 != null ? depth0.type : depth0), "image", {"name":"equal","hash":{},"fn":this.program(1, data),"inverse":this.program(3, data),"data":data}));
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "	</div>\n</div>\n";
 },"useData":true});
 templates['user'] = template({"1":function(depth0,helpers,partials,data) {
   var stack1, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
