@@ -19,7 +19,8 @@ module.exports = {
 		var time = moment().zone(tz).format(format);
 		var line = "[" + time + "] ";
 
-		if (msg.type == "message") {
+		var type = msg.type.trim();
+		if (type == "message" || type == "highlight") {
 			// Format:
 			// [2014-01-01 00:00:00] <Arnold> Put that cookie down.. Now!!
 			line += "<" + msg.from + "> " + msg.text;
