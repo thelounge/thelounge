@@ -12,6 +12,5 @@
 			</div>
 		</a>
 	{{/equal}}
-	</div>
 </div>
 {{/toggle}}
