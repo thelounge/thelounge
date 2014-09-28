@@ -397,7 +397,7 @@ button {
 	padding: 0 20px;
 }
 #windows .header .title {
-	font: 16px Lato;
+	font: 14px Lato;
 }
 #windows .header .topic {
 	/* Hidden for now */
@@ -422,6 +422,9 @@ button {
 	height: 25px;
 	line-height: 0;
 	padding: 0 10px;
+}
+#windows .header .button:hover {
+	opacity: 1;
 }
 #windows .window .header {
 	display: none;
@@ -470,15 +473,30 @@ button {
 	display: none;
 }
 #chat .show-more {
-	background: #fff;
-	border-bottom: 1px solid #e7e7e7;
-	color: #b1c3ce;
-	height: 48px;
-	line-height: 50px;
+	display: none;
+	padding: 10px;
 	position: absolute;
 	width: 100%;
 }
-#chat .show-more:hover {
+#chat .show-more.show + .messages .msg:first-child {
+	padding-top: 47px !important;
+}
+#chat .show-more.show + .messages .msg:first-child > span {
+	padding-top: 52px !important;
+}
+#chat .show-more-button {
+	background: #f4f4f4;
+	background-image: linear-gradient(#f4f4f4, #ececec);
+	border: 1px solid #d7d7d7;
+	border-bottom-color: #b7b7b7;
+	border-radius: 2px;
+	color: #555;
+	font: 12px Lato, sans-serif;
+	height: 34px;
+	line-height: 0;
+	width: 100%;
+}
+#chat .show-more-button:hover {
 	opacity: 1;
 }
 #chat .messages {

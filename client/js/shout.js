@@ -199,9 +199,7 @@ $(function() {
 			.prepend(render("msg", {messages: data.messages}))
 			.end();
 		if (data.messages.length != 100) {
-			var more = chan
-				.find(".show-more")
-				.addClass("hidden");
+			chan.find(".show-more").removeClass("show");
 		}
 	});
 
@@ -569,12 +567,11 @@ $(function() {
 		}
 	});
 
-	chat.on("click", ".show-more", function() {
+	chat.on("click", ".show-more-button", function() {
 		var self = $(this);
-		var id = self.data("id");
-		var count = self.next(".messages").children().length;
+		var count = self.parent().next(".messages").children().length;
 		socket.emit("more", {
-			target: id,
+			target: self.data("id"),
 			count: count
 		});
 	});

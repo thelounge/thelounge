@@ -16,15 +16,11 @@
 		<span class="topic">{{type}} </span>
 	</div>
 	<div class="chat">
-		{{#equal messages.length 100}}
-		<button class="show-more" data-id="{{id}}">
-			Show more
-		</button>
-		{{else}}
-		<button class="show-more hidden" data-id="{{id}}">
-			Show more
-		</button>
-		{{/equal}}
+		<div class="show-more {{#equal messages.length 100}}show{{/equal}}">
+			<button class="show-more-button" data-id="{{id}}">
+				Show more
+			</button>
+		</div>
 		<div class="messages">
 			{{partial "msg"}}
 		</div>
