@@ -283,9 +283,14 @@ Client.prototype.sort = function(data) {
 };
 
 Client.prototype.quit = function() {
-	this.sockets.in(this.id).sockets.forEach(function(socket) {
-		socket.disconnect(true);
-	});
+	var sockets = this.sockets.sockets;
+	var room = sockets.adapter.rooms[this.id] || [];
+	for (var user in room) {
+		var socket = sockets.adapter.nsp.connected[user];
+		if (socket) {
+			socket.disconnect();
+		}
+	}
 	this.networks.forEach(function(network) {
 		var irc = network.irc;
 		if (network.connected) {
