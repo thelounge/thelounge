@@ -386,7 +386,20 @@ $(function() {
 		});
 	});
 
-	chat.on("click", ".messages", focus);
+	chat.on("click", ".messages", function() {
+		setTimeout(function() {
+			var text = "";
+			if (window.getSelection) {
+				text = window.getSelection().toString();
+			} else if (document.selection && document.selection.type != "Control") {
+				text = document.selection.createRange().text;
+			}
+			if (!text) {
+				focus();
+			}
+		}, 2);
+	});
+
 	$(window).on("focus", focus);
 
 	function focus() {
@@ -641,13 +654,13 @@ $(function() {
 		var direction = keys.split("+").pop();
 		switch (direction) {
 		case "up":
-			// Wrap around!
+			// Loop
 			var upTarget = (channels.length + (index - 1 + channels.length)) % channels.length;
 			channels.eq(upTarget).click();
 			break;
 
 		case "down":
-			// Wrap aroud!
+			// Loop
 			var downTarget = (channels.length + (index + 1 + channels.length)) % channels.length;
 			channels.eq(downTarget).click();
 			break;
