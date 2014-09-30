@@ -48,6 +48,9 @@ ClientManager.prototype.loadUser = function(name) {
 			name,
 			json
 		));
+		console.log(
+			"User '" + name + "' loaded."
+		);
 	}
 };
 
@@ -121,9 +124,6 @@ ClientManager.prototype.autoload = function(sockets) {
 		var added = _.difference(self.getUsers(), loaded);
 		_.each(added, function(name) {
 			self.loadUser(name);
-			console.log(
-				"User '" + name + "' loaded."
-			);
 		});
 
 		var removed = _.difference(loaded, self.getUsers());

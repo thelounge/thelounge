@@ -738,7 +738,7 @@ button {
 }
 #settings .opt {
 	display: block;
-	padding: 10px 0 10px 1px;
+	padding: 5px 0 10px 1px;
 }
 #settings .opt input {
 	float: left;

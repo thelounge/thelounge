@@ -33,13 +33,14 @@ module.exports = {
 			}
 		}
 
-		try {
-			fs.appendFile(
-				path + "/" + chan + ".log",
-				line + "\n"
-			);
-		} catch(e) {
-			return;
-		}
+		fs.appendFile(
+			path + "/" + chan + ".log",
+			line + "\n",
+			function(e) {
+				if (e) {
+					console.log("Log#write():\n" + e)
+				}
+			}
+		);
 	}
 };
