@@ -303,6 +303,7 @@ $(function() {
 	var settings = $("#settings");
 	var options = $.extend({
 		badge: false,
+		colors: false,
 		join: true,
 		links: true,
 		mode: true,
@@ -339,6 +340,9 @@ $(function() {
 			"quit",
 		].indexOf(name) !== -1) {
 			chat.toggleClass("hide-" + name, !self.prop("checked"));
+		}
+		if (name == "colors") {
+			chat.toggleClass("no-colors", !self.prop("checked"));
 		}
 	}).find("input")
 		.trigger("change");
@@ -504,7 +508,7 @@ $(function() {
 
 	var whois = false;
 	chat.on("click", ".user", function() {
-		var user = $(this).html().trim().replace(/[+%@~]/, "");
+		var user = $(this).text().trim().replace(/[+%@~&]/, "");
 		if (user.indexOf("#") !== -1) {
 			return;
 		}

@@ -84,8 +84,10 @@ templates['msg'] = template({"1":function(depth0,helpers,partials,data) {
 },"2":function(depth0,helpers,partials,data) {
   return "self";
   },"4":function(depth0,helpers,partials,data) {
-  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "		<button class=\"user\">"
+  var helper, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, functionType="function";
+  return "		<button class=\"user\" style=\"color: #"
+    + escapeExpression(((helpers.stringcolor || (depth0 && depth0.stringcolor) || helperMissing).call(depth0, (depth0 != null ? depth0.from : depth0), {"name":"stringcolor","hash":{},"data":data})))
+    + "\">"
     + escapeExpression(((helper = (helper = helpers.from || (depth0 != null ? depth0.from : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"from","hash":{},"data":data}) : helper)))
     + "</button>\n";
 },"6":function(depth0,helpers,partials,data) {
@@ -162,8 +164,10 @@ templates['user'] = template({"1":function(depth0,helpers,partials,data) {
     + escapeExpression(((helpers.users || (depth0 && depth0.users) || helperMissing).call(depth0, ((stack1 = (depth0 != null ? depth0.users : depth0)) != null ? stack1.length : stack1), {"name":"users","hash":{},"data":data})))
     + "\">\n</div>\n";
 },"3":function(depth0,helpers,partials,data) {
-  var helper, functionType="function", helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-  return "	<button class=\"user\">"
+  var helper, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, functionType="function";
+  return "		<button class=\"user\" style=\"color: #"
+    + escapeExpression(((helpers.stringcolor || (depth0 && depth0.stringcolor) || helperMissing).call(depth0, (depth0 != null ? depth0.name : depth0), {"name":"stringcolor","hash":{},"data":data})))
+    + "\">"
     + escapeExpression(((helper = (helper = helpers.mode || (depth0 != null ? depth0.mode : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"mode","hash":{},"data":data}) : helper)))
     + escapeExpression(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"name","hash":{},"data":data}) : helper)))
     + "</button>\n";
@@ -171,9 +175,9 @@ templates['user'] = template({"1":function(depth0,helpers,partials,data) {
   var stack1, buffer = "";
   stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 != null ? depth0.users : depth0)) != null ? stack1.length : stack1), {"name":"if","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
-  buffer += "<div class=\"names\">\n";
+  buffer += "<div class=\"names\">\n	<div class=\"inner\">\n";
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.users : depth0), {"name":"each","hash":{},"fn":this.program(3, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
-  return buffer + "</div>\n";
+  return buffer + "	</div>\n</div>\n";
 },"useData":true});
 })();

@@ -190,27 +190,27 @@ button {
 }
 #sidebar .chan:before,
 #chat .title:before {
-		font: 14px FontAwesome;
-		float: left;
-		margin-top: 3px;
-		margin-right: 12px;
-		width: 14px;
-		text-align: center;
+	font: 14px FontAwesome;
+	float: left;
+	margin-top: 3px;
+	margin-right: 12px;
+	width: 14px;
+	text-align: center;
 }
 #chat .title:before {
-		margin-top: 17px;
+	margin-top: 17px;
 }
 #sidebar .chan.lobby:before,
 #chat .lobby .title:before {
-		content: "\f0a0";
+	content: "\f0a0";
 }
 #sidebar .chan.query:before,
 #chat .query .title:before {
-		content: "\f0e6";
+	content: "\f0e6";
 }
 #sidebar .chan.channel:before,
 #chat .channel .title:before {
-		content: "\f0f6";
+	content: "\f0f6";
 }
 #sidebar .chan:hover .badge {
 	opacity: 0;
@@ -518,8 +518,9 @@ button {
 	padding-bottom: 10px;
 }
 #chat .msg .type {
-	color: #ddd;
+	color: #ccc;
 	display: none;
+	font-style: normal;
 }
 #chat .time,
 #chat .from,
@@ -542,10 +543,12 @@ button {
 	width: 134px;
 	min-width: 134px;
 }
-#chat a,
-#chat .from button,
-#chat .sidebar button {
+#chat a {
 	color: #84ce88;
+}
+#chat.no-colors .from button,
+#chat.no-colors .sidebar button {
+	color: #84ce88 !important;
 }
 #chat .text {
 	padding-left: 10px;
@@ -592,7 +595,10 @@ button {
 	color: #f39c12;
 }
 #chat .action .user:before {
-	content: '* ';
+	content: "* ";
+}
+#chat .action .user:after {
+	content: "";
 }
 #chat .toggle-button {
 	background: #f5f5f5;
@@ -672,6 +678,9 @@ button {
 #chat .names button {
 	display: block;
 	line-height: 1.6;
+}
+#chat .names .inner {
+	width: 300px;
 }
 #sign-in label {
 	display: block;
@@ -766,7 +775,6 @@ button {
 	position: absolute;
 	right: 0px;
 }
-
 #form .inner {
 	bottom: 7px;
 	left: 7px;

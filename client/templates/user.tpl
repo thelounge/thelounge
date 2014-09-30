@@ -4,7 +4,9 @@
 </div>
 {{/if}}
 <div class="names">
-	{{#each users}}
-	<button class="user">{{mode}}{{name}}</button>
-	{{/each}}
+	<div class="inner">
+		{{#each users}}
+		<button class="user" style="color: #{{stringcolor name}}">{{mode}}{{name}}</button>
+		{{/each}}
+	</div>
 </div>
