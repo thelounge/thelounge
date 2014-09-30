@@ -615,7 +615,7 @@ button {
 	display: none;
 	color: #222;
 	font: 12px Lato;
-	max-width: 480px;
+	max-width: 100%;
 	padding: 6px 8px;
 	margin-top: 2px;
 }

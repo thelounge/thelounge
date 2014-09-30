@@ -595,7 +595,21 @@ $(function() {
 
 	chat.on("click", ".toggle-button", function() {
 		var self = $(this);
-		self.parent().next(".toggle-content").toggleClass("show");
+		var chat = self.closest(".chat");
+		var bottom = chat.isScrollBottom();
+		var content = self.parent().next(".toggle-content");
+		if (bottom && !content.hasClass("show")) {
+			var img = content.find("img");
+			if (img.length != 0 && !img.width()) {
+				img.on("load", function() {
+					chat.scrollBottom();
+				});
+			}
+		}
+		content.toggleClass("show");
+		if (bottom) {
+			chat.scrollBottom();
+		}
 	});
 
 	var windows = $("#windows");

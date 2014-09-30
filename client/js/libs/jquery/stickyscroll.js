@@ -1,7 +1,7 @@
 /*!
  * stickyscroll
  * https://github.com/erming/stickyscroll
- * v2.1.1
+ * v2.2.0
  */
 (function($) {
 	$.fn.sticky = function() {
@@ -10,21 +10,21 @@
 				$(this).sticky(options);
 			});
 		}
-		
+
 		var isBottom = false;
 		var self = this;
-		
+
 		this.unbind(".sticky");
 		this.on("beforeAppend.sticky", function() {
 			isBottom = isScrollBottom.call(self);
 		});
-		
+
 		this.on("afterAppend.sticky", function() {
 			if (isBottom) {
 				self.scrollBottom();
 			}
 		});
-		
+
 		var overflow = this.css("overflow-y");
 		if (overflow == "visible") {
 			overflow = "auto";
@@ -32,12 +32,12 @@
 		this.css({
 			"overflow-y": overflow
 		});
-		
+
 		$(window).unbind(".sticky");
 		$(window).on("resize.sticky", function() {
 				self.scrollBottom();
 		});
-		
+
 		this.scrollBottom();
 		return this;
 	};
@@ -47,6 +47,8 @@
 			$(this).animate({scrollTop: this.scrollHeight}, 0);
 		});
 	};
+
+	$.fn.isScrollBottom = isScrollBottom;
 
 	function isScrollBottom() {
 		if ((this.scrollTop() + this.outerHeight() + 1) >= this.prop("scrollHeight")) {
