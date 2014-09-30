@@ -26,6 +26,8 @@ When the install is complete, go ahead and run this in your terminal:
 shout --help
 ```
 
+For more information, read the [documentation](http://shout-irc.com/docs/).
+
 ## License
 
 Available under [the MIT license](http://mths.be/mit).
