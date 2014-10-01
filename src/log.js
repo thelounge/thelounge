@@ -1,8 +1,8 @@
-var config = require("../config");
 var fs = require("fs");
 var mkdirp = require("mkdirp");
 var moment = require("moment");
 var Helper = require("./helper");
+var config = Helper.getConfig();
 
 module.exports = {
 	write: function(user, network, chan, msg) {

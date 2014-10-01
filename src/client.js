@@ -1,5 +1,4 @@
 var _ = require("lodash");
-var config = require("../config");
 var Chan = require("./models/chan");
 var crypto = require("crypto");
 var log = require("./log");
@@ -8,6 +7,8 @@ var Msg = require("./models/msg");
 var Network = require("./models/network");
 var slate = require("slate-irc");
 var tls = require("tls");
+var Helper = require("./helper");
+var config = Helper.getConfig();
 
 module.exports = Client;
 

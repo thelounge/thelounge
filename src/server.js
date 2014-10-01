@@ -2,11 +2,11 @@ var _ = require("lodash");
 var bcrypt = require("bcrypt");
 var Client = require("./client");
 var ClientManager = require("./clientManager");
-var config = require("../config");
 var express = require("express");
 var fs = require("fs");
 var io = require("socket.io");
 var Helper = require("./helper");
+var config = Helper.getConfig();
 
 var sockets = null;
 var manager = new ClientManager();
