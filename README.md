@@ -1,5 +1,7 @@
 # Shout [![](https://badge.fury.io/js/shout.png)](https://www.npmjs.org/package/shout)
 
+### [Try the Demo](http://demo.shout-irc.com/)
+
 __What is it?__  
 Shout is a web IRC client that you host on your own server.
 
@@ -9,8 +11,6 @@ __What features does it have?__
 - Connect from multiple devices at once
 - Responsive layout — works well on your smartphone
 - _.. and more!_
-
-#### [Try the Demo](http://demo.shout-irc.com/)
 
 ## Install
 
