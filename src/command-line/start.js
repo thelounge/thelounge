@@ -1,7 +1,8 @@
-var config = require("../../config");
 var ClientManager = new require("../clientManager");
 var program = require("commander");
 var shout = require("../server");
+var Helper = require("../helper");
+var config = Helper.getConfig();
 
 program
 	.option("-H, --host <ip>", "host")
