@@ -1,13 +1,21 @@
+var fs = require("fs");
 var path = require("path");
 
 var Helper = module.exports = {
 	getConfig: function () {
-		return require(path.resolve(__dirname, "..", "config"));
+		var filename = process.env.SHOUT_CONFIG;
+		if(!filename || !fs.exists(filename)) {
+			filename = this.resolveHomePath("config.js");
+			if(!fs.exists(filename)) {
+				filename = path.resolve(__dirname, "..", "config");
+			}
+		}
+		return require(filename);
 	},
 
 	getHomeDirectory: function () {
 		return (
-			this.getConfig().home
+			(process.env.SHOUT_CONFIG && fs.exists(process.env.SHOUT_CONFIG) && this.getConfig().home)
 			|| process.env.SHOUT_HOME
 			|| path.resolve(process.env.HOME, ".shout")
 		);
