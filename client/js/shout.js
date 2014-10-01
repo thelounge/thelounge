@@ -703,8 +703,7 @@ $(function() {
 	function complete(word) {
 		var words = commands.slice();
 		var users = chat.find(".active")
-			.find(".names")
-			.children()
+			.find(".names .user")
 			.each(function() {
 				words.push($(this).text().replace(/[+%@~]/, ""));
 			});
