@@ -6,10 +6,10 @@ var child = require("child_process");
 var Helper = require("../helper");
 
 var CONFIG_PATH = process.env.SHOUT_CONFIG;
-if(!CONFIG_PATH) {
+if (!CONFIG_PATH) {
 	CONFIG_PATH = Helper.resolveHomePath("config.js");
 }
-if(!fs.exists(CONFIG_PATH)) {
+if (!fs.existsSync(CONFIG_PATH)) {
 	mkdirp.sync(Helper.getHomeDirectory());
 	var configFile = fs.readFileSync(path.resolve(__dirname, "..", "..", "config.js"));
 	fs.writeFileSync(CONFIG_PATH, configFile);
