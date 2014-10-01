@@ -20,8 +20,8 @@ program
 	.description("Edit config: '" + CONFIG_PATH + "'")
 	.action(function() {
 		child.spawn(
-			"sudo",
-			["vi", CONFIG_PATH],
+			"vi",
+			[CONFIG_PATH],
 			{stdio: "inherit"}
 		);
 	});
