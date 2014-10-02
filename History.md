@@ -1,4 +1,9 @@
 
+0.40.3 / 2014-10-02
+==================
+
+  * Fix issue where actions from other users do not display
+
 0.40.2 / 2014-10-01
 ==================
 
