@@ -5,7 +5,7 @@ var Msg = require("../../models/msg");
 module.exports = function(irc, network) {
 	var client = this;
 	irc.on("message", function(data) {
-		if (data.message.indexOf("\u0001") === 0 && !data.message.match(/\u0001ACTION.*\u001/)) {
+		if (data.message.indexOf("\u0001") === 0 && data.message.substring(0, 7) != "\u0001ACTION") {
 			// Hide ctcp messages.
 			return;
 		}
