@@ -1,7 +1,0 @@
-{
-  "name": "Shout IRC Web Client",
-  "description": "A Node.js IRC Web App ",
-  "repository": "https://github.com/erming/shout",
-  "logo": "https://cloud.githubusercontent.com/assets/8410903/4194421/d5b69f9a-37ad-11e4-9972-b1874d0b284e.png",
-  "keywords": ["node", "IRC"]
-}
