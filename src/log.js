@@ -2,17 +2,17 @@ var fs = require("fs");
 var mkdirp = require("mkdirp");
 var moment = require("moment");
 var Helper = require("./helper");
-var config = Helper.getConfig();
 
 module.exports = {
 	write: function(user, network, chan, msg) {
-		var path = Helper.resolveHomePath("users", user, "logs", network);
+		var path = Helper.HOME + "/users/" + user + "/logs/" + network;
 		try {
 			mkdirp.sync(path);
 		} catch(e) {
 			return;
 		}
 
+		var config = Helper.getConfig();
 		var format = (config.logs || {}).format || "YYYY-MM-DD HH:mm:ss";
 		var tz = (config.logs || {}).timezone || "UTC+00:00";
 

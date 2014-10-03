@@ -3,7 +3,7 @@ var program = require("commander");
 
 program
 	.command("list")
-	.description("List all existing users")
+	.description("List all users")
 	.action(function() {
 		var users = new ClientManager().getUsers();
 		if (!users.length) {

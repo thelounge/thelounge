@@ -6,20 +6,20 @@ var express = require("express");
 var fs = require("fs");
 var io = require("socket.io");
 var Helper = require("./helper");
-var config = Helper.getConfig();
+var config = {};
 
 var sockets = null;
 var manager = new ClientManager();
 
 module.exports = function(port, host, isPublic) {
+	config = Helper.getConfig();
 	config.port = port;
 	config.host = host;
 	config.public = isPublic;
 
 	var app = express()
 		.use(index)
-		.use(express.static("client"))
-		.use(express.static(Helper.resolveHomePath("cache")));
+		.use(express.static("client"));
 
 	var server = null;
 	var https = config.https || {};

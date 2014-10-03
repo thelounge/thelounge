@@ -35,15 +35,6 @@ module.exports = {
 	theme: "themes/example.css",
 
 	//
-	// Override home directory.
-	// Leaving this field empty will default to '~/.shout/'.
-	//
-	// @type     string
-	// @default  ""
-	//
-	home: "",
-
-	//
 	// Autoload users
 	//
 	// When this setting is enabled, your 'users/' folder will be monitored. This is useful

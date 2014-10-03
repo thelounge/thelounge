@@ -31,7 +31,7 @@ ClientManager.prototype.loadUsers = function() {
 ClientManager.prototype.loadUser = function(name) {
 	try {
 		var json = fs.readFileSync(
-			Helper.resolveHomePath("users", name, "user.json"),
+			Helper.HOME + "/users/" + name + "/user.json",
 			"utf-8"
 		);
 		json = JSON.parse(json);
@@ -56,10 +56,8 @@ ClientManager.prototype.loadUser = function(name) {
 
 ClientManager.prototype.getUsers = function() {
 	var users = [];
-	var path = Helper.resolveHomePath("users");
-
+	var path = Helper.HOME + "/users";
 	mkdirp.sync(path);
-
 	try {
 		users = fs.readdirSync(path);
 	} catch(e) {
@@ -103,7 +101,7 @@ ClientManager.prototype.removeUser = function(name) {
 		return false;
 	}
 	try {
-		var path = Helper.resolveHomePath("users", name);
+		var path = Helper.HOME + "/users/" + name;
 		fs.unlinkSync(path + "/user.json");
 		fs.rmdirSync(path);
 	} catch(e) {

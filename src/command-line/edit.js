@@ -5,7 +5,7 @@ var Helper = require("../helper");
 
 program
 	.command("edit <name>")
-	.description("Edit user: '" + Helper.resolveHomePath("users", "<name>", "user.json") + "'")
+	.description("Edit user: '" + Helper.HOME + "/users/<name>/user.json'")
 	.action(function(name) {
 		var users = new ClientManager().getUsers();
 		if (users.indexOf(name) === -1) {

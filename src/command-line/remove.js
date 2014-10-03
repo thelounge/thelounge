@@ -8,7 +8,7 @@ program
 	.description("Remove an existing user")
 	.action(function(name) {
 		try {
-			var path = Helper.resolveHomePath("users");
+			var path = Helper.HOME + "/users";
 			var test = path + "/.test";
 			fs.mkdirSync(test);
 			fs.rmdirSync(test);

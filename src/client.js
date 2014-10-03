@@ -8,7 +8,6 @@ var Network = require("./models/network");
 var slate = require("slate-irc");
 var tls = require("tls");
 var Helper = require("./helper");
-var config = Helper.getConfig();
 
 module.exports = Client;
 

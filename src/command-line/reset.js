@@ -15,7 +15,7 @@ program
 			console.log("");
 			return;
 		}
-		var file = Helper.resolveHomePath("users/" + name + "/user.json");
+		var file = Helper.HOME + "/users/" + name + "/user.json";
 		var user = require(file);
 		require("read")({
 			prompt: "Password: ",

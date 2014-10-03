@@ -9,7 +9,7 @@ program
 	.command("add <name> [<password>]")
 	.description("Add a new user")
 	.action(function(name, password) {
-		var path = Helper.resolveHomePath("users");
+		var path = Helper.HOME + "/users";
 		try {
 			mkdirp.sync(path);
 		} catch (e) {
@@ -59,6 +59,6 @@ function add(manager, name, password) {
 		hash
 	);
 	console.log("User '" + name + "' created:");
-	console.log(Helper.resolveHomePath("users", name, "user.json"));
+	console.log(Helper.HOME + "/users/" + name + "/user.json");
 	console.log("");
 }
