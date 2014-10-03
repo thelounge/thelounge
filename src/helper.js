@@ -1,5 +1,5 @@
 module.exports = {
-	HOME: process.env.HOME + "/.shout",
+	HOME: (process.env.HOME || process.env.USERPROFILE) + "/.shout",
 	getConfig: getConfig
 };
 
