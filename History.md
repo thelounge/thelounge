@@ -1,4 +1,10 @@
 
+0.41.0 / 2014-10-03
+==================
+
+  * Use 'bcrypt-nodejs' package
+  * No need to compile with node-gyp during install
+
 0.40.3 / 2014-10-02
 ==================
 
