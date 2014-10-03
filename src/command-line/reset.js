@@ -1,4 +1,4 @@
-var bcrypt = require("bcrypt");
+var bcrypt = require("bcrypt-nodejs");
 var ClientManager = new require("../clientManager");
 var fs = require("fs");
 var program = require("commander");
@@ -25,7 +25,8 @@ program
 			if (err) {
 				return;
 			}
-			var hash = bcrypt.hashSync(password, 8);
+			var salt = bcrypt.genSaltSync(8);
+			var hash = bcrypt.hashSync(password, salt);
 			user.password = hash;
 			fs.writeFileSync(
 				file,

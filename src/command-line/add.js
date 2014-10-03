@@ -1,5 +1,5 @@
 var ClientManager = new require("../clientManager");
-var bcrypt = require("bcrypt");
+var bcrypt = require("bcrypt-nodejs");
 var fs = require("fs");
 var program = require("commander");
 var mkdirp = require("mkdirp");
@@ -52,7 +52,8 @@ program
 
 function add(manager, name, password) {
 	console.log("");
-	var hash = bcrypt.hashSync(password, 8);
+	var salt = bcrypt.genSaltSync(8);
+	var hash = bcrypt.hashSync(password, salt);
 	manager.addUser(
 		name,
 		hash

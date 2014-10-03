@@ -32,7 +32,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "bcrypt": "^0.8.0",
+    "bcrypt-nodejs": "0.0.3",
     "cheerio": "^0.17.0",
     "commander": "^2.3.0",
     "express": "^4.9.5",
