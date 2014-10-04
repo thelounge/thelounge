@@ -5,8 +5,16 @@
 {{/if}}
 <div class="names">
 	<div class="inner">
+		{{#diff "reset"}}{{/diff}}
 		{{#each users}}
-		<button class="user" style="color: #{{stringcolor name}}">{{mode}}{{name}}</button>
+			{{#diff mode}}
+			{{#unless @first}}
+				</div>
+			{{/unless}}
+			<div class="user-mode {{modes mode}}">
+			{{/diff}}
+			<button class="user" style="color: #{{stringcolor name}}">{{mode}}{{name}}</button>
 		{{/each}}
+		</div>
 	</div>
 </div>

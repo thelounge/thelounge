@@ -165,20 +165,36 @@ templates['user'] = template({"1":function(depth0,helpers,partials,data) {
     + escapeExpression(((helpers.users || (depth0 && depth0.users) || helperMissing).call(depth0, ((stack1 = (depth0 != null ? depth0.users : depth0)) != null ? stack1.length : stack1), {"name":"users","hash":{},"data":data})))
     + "\">\n</div>\n";
 },"3":function(depth0,helpers,partials,data) {
-  var helper, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, functionType="function";
-  return "		<button class=\"user\" style=\"color: #"
+  return "";
+},"5":function(depth0,helpers,partials,data) {
+  var stack1, helper, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, functionType="function", buffer = "";
+  stack1 = ((helpers.diff || (depth0 && depth0.diff) || helperMissing).call(depth0, (depth0 != null ? depth0.mode : depth0), {"name":"diff","hash":{},"fn":this.program(6, data),"inverse":this.noop,"data":data}));
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "			<button class=\"user\" style=\"color: #"
     + escapeExpression(((helpers.stringcolor || (depth0 && depth0.stringcolor) || helperMissing).call(depth0, (depth0 != null ? depth0.name : depth0), {"name":"stringcolor","hash":{},"data":data})))
     + "\">"
     + escapeExpression(((helper = (helper = helpers.mode || (depth0 != null ? depth0.mode : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"mode","hash":{},"data":data}) : helper)))
     + escapeExpression(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"name","hash":{},"data":data}) : helper)))
     + "</button>\n";
-},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var stack1, buffer = "";
+},"6":function(depth0,helpers,partials,data) {
+  var stack1, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, buffer = "";
+  stack1 = helpers.unless.call(depth0, (data && data.first), {"name":"unless","hash":{},"fn":this.program(7, data),"inverse":this.noop,"data":data});
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "			<div class=\"user-mode "
+    + escapeExpression(((helpers.modes || (depth0 && depth0.modes) || helperMissing).call(depth0, (depth0 != null ? depth0.mode : depth0), {"name":"modes","hash":{},"data":data})))
+    + "\">\n";
+},"7":function(depth0,helpers,partials,data) {
+  return "				</div>\n";
+  },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, helperMissing=helpers.helperMissing, buffer = "";
   stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 != null ? depth0.users : depth0)) != null ? stack1.length : stack1), {"name":"if","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
-  buffer += "<div class=\"names\">\n	<div class=\"inner\">\n";
-  stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.users : depth0), {"name":"each","hash":{},"fn":this.program(3, data),"inverse":this.noop,"data":data});
+  buffer += "<div class=\"names\">\n	<div class=\"inner\">\n		";
+  stack1 = ((helpers.diff || (depth0 && depth0.diff) || helperMissing).call(depth0, "reset", {"name":"diff","hash":{},"fn":this.program(3, data),"inverse":this.noop,"data":data}));
   if (stack1 != null) { buffer += stack1; }
-  return buffer + "	</div>\n</div>\n";
+  buffer += "\n";
+  stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.users : depth0), {"name":"each","hash":{},"fn":this.program(5, data),"inverse":this.noop,"data":data});
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "		</div>\n	</div>\n</div>\n";
 },"useData":true});
 })();

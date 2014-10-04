@@ -670,7 +670,7 @@ button {
 	overflow: auto;
 	overflow-x: hidden;
 	-webkit-overflow-scrolling: touch;
-	padding: 12px 16px;
+	padding-bottom: 10px;
 	position: absolute;
 	top: 48px;
 	width: 100%;
@@ -678,9 +678,33 @@ button {
 #chat .names button {
 	display: block;
 	line-height: 1.6;
+	padding: 0 16px;
 }
 #chat .names .inner {
 	width: 300px;
+}
+#chat .user-mode:before {
+	content: "";
+	border-bottom: 1px solid #eee;
+	display: block;
+	line-height: 1.6;
+	padding: 12px 16px 10px;
+	margin-bottom: 10px;
+}
+#chat .user-mode.owner:before {
+	content: "Owners";
+}
+#chat .user-mode.admin:before {
+	content: "Administrators";
+}
+#chat .user-mode.op:before {
+	content: "Operators";
+}
+#chat .user-mode.voice:before {
+	content: "Voiced";
+}
+#chat .user-mode.normal:before {
+	content: "Users";
 }
 #sign-in label {
 	display: block;

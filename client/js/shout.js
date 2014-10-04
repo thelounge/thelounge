@@ -727,6 +727,8 @@ $(function() {
 	}
 
 	function refresh() {
+	console.log("REF");
+	return;
 		window.onbeforeunload = null;
 		location.reload();
 	}
