@@ -9,17 +9,18 @@ module.exports = function(irc, network) {
 			setTimeout(function() {
 				irc.write("NAMES " + data.target);
 			}, 200);
-			var nick = data.nick;
-			if (nick.indexOf(".") !== -1) {
-				nick = data.target;
+			var from = data.nick;
+			if (from.indexOf(".") !== -1) {
+				from = data.target;
 			}
 			var self = false;
-			if (nick.toLowerCase() == irc.me.toLowerCase()) {
+			if (from.toLowerCase() == irc.me.toLowerCase()) {
 				self = true;
 			}
 			var msg = new Msg({
 				type: Msg.Type.MODE,
-				from: nick,
+				mode: chan.getMode(from),
+				from: from,
 				text: data.mode + " " + data.client,
 				self: self
 			});

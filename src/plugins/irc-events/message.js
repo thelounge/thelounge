@@ -48,9 +48,11 @@ module.exports = function(irc, network) {
 			chan.unread++;
 		}
 
+		var name = data.from;
 		var msg = new Msg({
 			type: type || Msg.Type.MESSAGE,
-			from: data.from,
+			mode: chan.getMode(name),
+			from: name,
 			text: text,
 			self: self
 		});

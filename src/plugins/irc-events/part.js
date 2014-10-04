@@ -8,13 +8,14 @@ module.exports = function(irc, network) {
 		if (typeof chan === "undefined") {
 			return;
 		}
-		if (data.nick == irc.me) {
+		var from = data.nick;
+		if (from == irc.me) {
 			network.channels = _.without(network.channels, chan);
 			client.emit("part", {
 				chan: chan.id
 			});
 		} else {
-			var user = _.findWhere(chan.users, {name: data.nick});
+			var user = _.findWhere(chan.users, {name: from});
 			chan.users = _.without(chan.users, user);
 			client.emit("users", {
 				chan: chan.id,
@@ -22,7 +23,8 @@ module.exports = function(irc, network) {
 			});
 			var msg = new Msg({
 				type: Msg.Type.PART,
-				from: data.nick
+				mode: chan.getMode(from),
+				from: from
 			});
 			chan.messages.push(msg);
 			client.emit("msg", {

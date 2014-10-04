@@ -11,7 +11,7 @@ if ! type handlebars &> /dev/null; then
 fi
 
 # Compile the templates
-handlebars -e tpl -f client/js/shout.templates.js client/templates/
+handlebars -e tpl -f client/js/shout.templates.js client/views/
 
 # Uglify the javascript libraries
 # See: Gruntfile.js

@@ -5,7 +5,8 @@ module.exports = function(irc, network) {
 	var client = this;
 	irc.on("quit", function(data) {
 		network.channels.forEach(function(chan) {
-			var user = _.findWhere(chan.users, {name: data.nick});
+			var from = data.nick;
+			var user = _.findWhere(chan.users, {name: from});
 			if (typeof user === "undefined") {
 				return;
 			}
@@ -16,7 +17,8 @@ module.exports = function(irc, network) {
 			});
 			var msg = new Msg({
 				type: Msg.Type.QUIT,
-				from: data.nick
+				mode: chan.getMode(from),
+				from: from
 			});
 			chan.messages.push(msg);
 			client.emit("msg", {
