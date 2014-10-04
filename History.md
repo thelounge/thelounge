@@ -1,4 +1,10 @@
 
+0.42.0 / 2014-10-04
+==================
+
+  * Split users by mode in the sidebar
+  * Show user mode in channel
+
 0.41.1 / 2014-10-03
 ==================
 
