@@ -77,7 +77,7 @@ ClientManager.prototype.addUser = function(name, password) {
 		return false;
 	}
 	try {
-		var path = Helper.resolveHomePath("users", name);
+		var path = Helper.HOME + "/users/" + name;
 		var user = {
 			user: name,
 			password: password || "",
