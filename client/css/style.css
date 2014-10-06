@@ -700,6 +700,9 @@ button {
 #chat .user-mode.op:before {
 	content: "Operators";
 }
+#chat .user-mode.half-op:before {
+	content: "Half-Operators";
+}
 #chat .user-mode.voice:before {
 	content: "Voiced";
 }
