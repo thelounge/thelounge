@@ -87,23 +87,23 @@ $(function() {
 				error.hide();
 			});
 		}
-		body.addClass("signed-out");
+		if (!token) {
+			body.addClass("signed-out");
+		}
 		var input = login.find("input[name='user']");
 		if (input.val() === "") {
 			input.val($.cookie("user") || "");
 		}
-		setTimeout(function() {
-			if (!body.hasClass("signed-out")) {
-				return;
-			}
-			sidebar.find(".sign-in")
-				.click()
-				.end()
-				.find(".networks")
-				.html("")
-				.next()
-				.show();
-		}, token ? 200 : 0);
+		if (token) {
+			return;
+		}
+		sidebar.find(".sign-in")
+			.click()
+			.end()
+			.find(".networks")
+			.html("")
+			.next()
+			.show();
 	});
 
 	socket.on("init", function(data) {

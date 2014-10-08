@@ -152,9 +152,7 @@ function auth(data) {
 			}
 		});
 		if (!success) {
-			if (!data.token) {
-				socket.emit("auth");
-			}
+			socket.emit("auth");
 		}
 	}
 }
