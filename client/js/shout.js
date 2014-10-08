@@ -177,18 +177,35 @@ $(function() {
 	});
 
 	socket.on("msg", function(data) {
-		var target = data.chan;
+		var target = "#chan-" + data.chan;
 		if (data.msg.type == "error") {
-			target = chat.find(".active").data("id");
+			target = "#chan-" + chat.find(".active").data("id");
 		}
-		target = "#chan-" + target;
-		chat.find(target)
-			.find(".messages")
+
+		var chan = chat.find(target);
+		var from = data.msg.from;
+
+		chan.find(".messages")
 			.append(render("msg", {messages: [data.msg]}))
 			.trigger("msg", [
 				target,
 				data.msg
 			]);
+
+		if (!chan.hasClass("channel")) {
+			return;
+		}
+
+		var type = data.msg.type;
+		if (type == "message" || type == "action") {
+			var nicks = chan.find(".users").data("nicks");
+			if (nicks) {
+				var find = nicks.indexOf(from);
+				if (find !== -1 && typeof move === "function") {
+					move(nicks, find, 0);
+				}
+			}
+		}
 	});
 
 	socket.on("more", function(data) {
@@ -293,9 +310,12 @@ $(function() {
 	});
 
 	socket.on("users", function(data) {
-		var users = chat.find("#chan-" + data.chan)
-			.find(".users")
-			.html(render("user", data));
+		var users = chat.find("#chan-" + data.chan).find(".users").html(render("user", data));
+		var nicks = [];
+		for (var i in data.users) {
+			nicks.push(data.users[i].name);
+		}
+		users.data("nicks", nicks);
 	});
 
 	$.cookie.json = true;
@@ -668,7 +688,6 @@ $(function() {
 	], function(e, keys) {
 		var channels = sidebar.find(".chan");
 		var index = channels.index(channels.filter(".active"));
-
 		var direction = keys.split("+").pop();
 		switch (direction) {
 		case "up":
@@ -702,16 +721,30 @@ $(function() {
 
 	function complete(word) {
 		var words = commands.slice();
-		var users = chat.find(".active")
-			.find(".names .user")
-			.each(function() {
-				words.push($(this).text().replace(/[+%@~]/, ""));
+		var users = chat.find(".active").find(".users");
+		var nicks = users.data("nicks");
+
+		if (!nicks) {
+			nicks = [];
+			users.find(".user").each(function() {
+				var nick = $(this).text().replace(/[~&@%+]/, "");
+				nicks.push(nick);
 			});
-		var channels = sidebar.find(".channel")
+			users.data("nicks", nicks);
+		}
+
+		for (var i in nicks) {
+			words.push(nicks[i]);
+		}
+
+		var channels = sidebar.find(".chan")
 			.each(function() {
-				var chan = $(this).clone().remove("span").text().trim();
-				words.push(chan);
+				var self = $(this);
+				if (!self.hasClass("lobby")) {
+					words.push(self.data("title"));
+				}
 			});
+
 		return $.grep(
 			words,
 			function(w) {
@@ -727,8 +760,6 @@ $(function() {
 	}
 
 	function refresh() {
-	console.log("REF");
-	return;
 		window.onbeforeunload = null;
 		location.reload();
 	}
@@ -796,6 +827,17 @@ $(function() {
 			input.css("padding-left", width);
 		}
 	}
+
+	function move(array, old_index, new_index) {
+		if (new_index >= array.length) {
+			var k = new_index - array.length;
+			while ((k--) + 1) {
+				this.push(undefined);
+			}
+		}
+		array.splice(new_index, 0, array.splice(old_index, 1)[0]);
+		return array;
+	};
 
 	document.addEventListener(
 		"visibilitychange",
