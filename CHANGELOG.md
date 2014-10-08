@@ -1,4 +1,12 @@
 
+0.43.0 / 2014-10-08
+==================
+
+  * Smarter nick completion
+  * Prevent multiple logins
+  * Fix highlight checking by lower-casing everything
+  * Allow relative '--home' path
+
 0.42.0 / 2014-10-04
 ==================
 
