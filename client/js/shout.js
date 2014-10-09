@@ -76,6 +76,7 @@ $(function() {
 			refresh();
 			return;
 		}
+		login.find(".btn").prop("disabled", false);
 		var token = $.cookie("token");
 		if (token) {
 			$.removeCookie("token");
@@ -655,11 +656,11 @@ $(function() {
 		e.preventDefault();
 		var event = "auth";
 		var form = $(this);
+		form.find(".btn")
+			.attr("disabled", true)
+			.end();
 		if (form.closest(".window").attr("id") == "connect") {
 			event = "conn";
-			form.find(".btn")
-				.attr("disabled", true)
-				.end();
 		}
 		var values = {};
 		$.each(form.serializeArray(), function(i, obj) {
