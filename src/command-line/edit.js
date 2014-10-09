@@ -15,8 +15,8 @@ program
 			return;
 		}
 		child.spawn(
-			"vi",
-			[Helper.resolveHomePath("users", name, "user.json")],
+			process.env.EDITOR || "vi",
+			[require("path").join(Helper.HOME, "users", name, "user.json")],
 			{stdio: "inherit"}
 		);
 	});
