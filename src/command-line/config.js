@@ -10,7 +10,7 @@ program
 	.description("Edit config: '" + Helper.HOME + "/config.js'")
 	.action(function() {
 		child.spawn(
-			"vi",
+			process.env.EDITOR || "vi",
 			[Helper.HOME + "/config.js"],
 			{stdio: "inherit"}
 		);
