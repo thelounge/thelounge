@@ -155,7 +155,7 @@ Client.prototype.connect = function(args) {
 	});
 
 	stream.on("close", function() {
-		identd.addConnection(identdItem);
+		identd.removeConnection(identdItem);
 	});
 
 	var irc = slate(stream);
