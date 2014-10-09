@@ -1,4 +1,10 @@
 
+0.43.1 / 2014-10-09
+==================
+
+  * Disable login button on authentication
+  * Fix 'shout edit' command 
+
 0.43.0 / 2014-10-08
 ==================
 
