@@ -8,6 +8,7 @@ var Network = require("./models/network");
 var slate = require("slate-irc");
 var tls = require("tls");
 var Helper = require("./helper");
+var identd = require("./identd");
 
 module.exports = Client;
 
@@ -137,9 +138,25 @@ Client.prototype.connect = function(args) {
 		});
 	});
 
+
 	var nick = args.nick || "shout-user";
 	var username = args.username || nick;
 	var realname = args.realname || "Shout User";
+	var identdItem = null;
+
+	stream.on("connect", function() {
+		identdItem = {
+			"remoteIp": stream.remoteAddress,
+			"remotePort": stream.remotePort,
+			"localPort": stream.localPort,
+			"username": username
+		};
+		identd.addConnection(identdItem);
+	});
+
+	stream.on("close", function() {
+		identd.addConnection(identdItem);
+	});
 
 	var irc = slate(stream);
 
