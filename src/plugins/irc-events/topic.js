@@ -13,17 +13,23 @@ module.exports = function(irc, network) {
 		if (from.toLowerCase() == irc.me.toLowerCase()) {
 			self = true;
 		}
+		var topic = data.topic;
 		var msg = new Msg({
 			type: Msg.Type.TOPIC,
 			mode: chan.getMode(from),
 			from: from,
-			text: data.topic,
+			text: topic,
 			self: self
 		});
 		chan.messages.push(msg);
 		client.emit("msg", {
 			chan: chan.id,
 			msg: msg
+		});
+		chan.topic = topic
+		client.emit("topic", {
+			chan: chan.id,
+			topic: topic
 		});
 	});
 };

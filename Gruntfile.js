@@ -19,7 +19,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-contrib-uglify");
 	grunt.loadNpmTasks("grunt-contrib-watch");
 	grunt.registerTask(
-		"handlebars",
+		"build",
 		function() {
 			grunt.util.spawn({
 				cmd: "node",
@@ -36,6 +36,6 @@ module.exports = function(grunt) {
 	);
 	grunt.registerTask(
 		"default",
-		["uglify", "handlebars"]
+		["uglify", "build"]
 	);
 };

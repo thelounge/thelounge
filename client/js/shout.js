@@ -309,6 +309,10 @@ $(function() {
 			break;
 		}
 	});
+	
+	socket.on("topic", function(data) {
+		$("#chan-" + data.chan).find(".header .topic").html(data.topic);
+	});
 
 	socket.on("users", function(data) {
 		var users = chat.find("#chan-" + data.chan).find(".users").html(render("user", data));

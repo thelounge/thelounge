@@ -13,7 +13,7 @@
 			</button>
 		</div>
 		<span class="title">{{name}}</span>
-		<span class="topic">{{type}} </span>
+		<span class="topic">{{{parse topic}}}</span>
 	</div>
 	<div class="chat">
 		<div class="show-more {{#equal messages.length 100}}show{{/equal}}">

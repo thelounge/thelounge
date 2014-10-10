@@ -15,6 +15,7 @@ function Chan(attr) {
 		id: id++,
 		messages: [],
 		name: "",
+		topic: "",
 		type: Chan.Type.CHANNEL,
 		unread: 0,
 		users: []
