@@ -209,6 +209,7 @@
 									Enable colored nicknames
 								</label>
 							</div>
+							<% if (typeof prefetch === "undefined" || prefetch !== false) { %>
 							<div class="col-sm-12">
 								<h2>Links and URLs</h2>
 							</div>
@@ -224,6 +225,7 @@
 									Auto-expand links
 								</label>
 							</div>
+							<% } %>
 							<div class="col-sm-12">
 								<h2>Notifications</h2>
 							</div>

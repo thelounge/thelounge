@@ -44,6 +44,17 @@ module.exports = {
 	// @default  true
 	//
 	autoload: true,
+	
+	//
+	// Prefetch URLs
+	//
+	// If enabled, Shout will try to load thumbnails and site descriptions from
+	// URLs posted in channels.
+	//
+	// @type     boolean
+	// @default  true
+	//
+	prefetch: true,
 
 	//
 	// Log settings

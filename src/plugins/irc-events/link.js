@@ -2,10 +2,16 @@ var _ = require("lodash");
 var cheerio = require("cheerio");
 var Msg = require("../../models/msg");
 var request = require("superagent");
+var Helper = require("../../helper");
 
 module.exports = function(irc, network) {
 	var client = this;
 	irc.on("message", function(data) {
+		var config = Helper.getConfig();
+		if (!config.prefetch) {
+			return;
+		}
+		
 		var links = [];
 		var split = data.message.split(" ");
 		_.each(split, function(w) {
