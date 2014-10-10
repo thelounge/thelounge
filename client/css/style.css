@@ -438,7 +438,7 @@ button {
 }
 #chat,
 #windows .header {
-	font: 12px Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace;
+	font: 12px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
 	line-height: 1.4;
 }
 #chat button:hover {
@@ -545,10 +545,12 @@ button {
 }
 #chat a {
 	color: #84ce88;
+	color: #50a656;
 }
 #chat.no-colors .from button,
 #chat.no-colors .sidebar button {
 	color: #84ce88 !important;
+	color: #50a656 !important;
 }
 #chat .text {
 	padding-left: 10px;
@@ -810,7 +812,7 @@ button {
 	top: 6px;
 }
 #form .input {
-	font: 12px Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Courier New", monospace;
+	font: 12px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
 	left: 0;
 	height: 34px;
 	margin-right: 64px;
