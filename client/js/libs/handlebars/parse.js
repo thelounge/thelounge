@@ -1,3 +1,28 @@
+Handlebars.registerHelper(
+	"parse", function(text) {
+		var wrap = wraplong(text);
+		text = escape(text);
+		text = colors(text);
+		text = uri(text);
+		if (wrap) {
+			return "<i class='wrap'>" + text + "</i>";
+		} else {
+			return text;
+		}
+	}
+);
+
+function wraplong(text) {
+	var wrap = false;
+	var split = text.split(" ");
+	for (var i in split) {
+		if (split[i].length > 40) {
+			wrap = true;
+		}
+	}
+	return wrap;
+}
+
 function escape(text) {
 	var e = {
 		"<": "&lt;",
@@ -9,45 +34,49 @@ function escape(text) {
 	});
 }
 
-Handlebars.registerHelper(
-	"parse", function(text) {
-		text = uri(text);
-		text = wraplong(text);
-		return text;
-	}
-);
-
 function uri(text) {
-	var urls = [];
-	text = URI.withinString(text, function(url) {
-		urls.push(url);
-		return "$(" + (urls.length - 1) + ")";
-	});
-	text = escape(text);
-	for (var i in urls) {
-		var url = escape(urls[i]);
-		var replace = url;
+	return URI.withinString(text, function(url) {
 		if (url.indexOf("javascript:") !== 0) {
-			replace = "<a href='" + url.replace(/^www/, "//www") + "' target='_blank'>" + url + "</a>";
+			console.log(url);
+			return "<a href='" + url.replace(/^www/, "//www") + "' target='_blank'>" + url + "</a>";
+		} else {
+			return url;
 		}
-		text = text.replace(
-			"$(" + i + ")", replace
-		);
-	}
-	return text;
+	});
 }
 
-function wraplong(text) {
-	var wrap = false;
-	var split = text.split(" ");
-	for (var i in split) {
-		if (split[i].length > 40) {
-			wrap = true;
-		}
-	}
-	if (wrap) {
-		return "<i class='wrap'>" + text + "</i>";
-	} else {
+function colors(text) {
+	if (!text) {
 		return text;
 	}
+    var regex = /\003([0-9]{1,2})[,]?([0-9]{1,2})?([^\003]+)/;
+    if (regex.test(text)) {
+    	var match;
+        while (match = regex.exec(text)) {
+            var color = "color-" + match[1];
+            var bg = match[2];
+            if (bg) {
+           		color += " bg-" + bg;
+           	}
+            var text = text.replace(
+            	match[0],
+            	"<span class='" + color + "'>" + match[3] + "</span>"
+            );
+        }
+    }
+    var styles = [
+        [/\002([^\002]+)(\002)?/, ["<b>", "</b>"]],
+        [/\037([^\037]+)(\037)?/, ["<u>", "</u>"]],
+    ];
+    for (var i in styles) {
+        var regex = styles[i][0];
+        var style = styles[i][1];
+        if (regex.test(text)) {
+        	var match;
+            while (match = regex.exec(text)) {
+                text = text.replace(match[0], style[0] + match[1] + style[1]);
+            }
+        }
+    }
+    return text;
 }

@@ -870,6 +870,44 @@ button {
 	width: 58px;
 }
 
+
+/**
+ * Colors
+ * http://clrs.cc/
+ */
+.color-0 { color: #fff; }
+.color-1 { color: #000; }
+.color-2 { color: #001f3f; }
+.color-3 { color: #2ecc40; }
+.color-4 { color: #ff4136; }
+.color-5 { color: #85144b; }
+.color-6 { color: #b10dc9; }
+.color-7 { color: #ff851b; }
+.color-8 { color: #ffdc00; }
+.color-9 { color: #01ff70; }
+.color-10 { color: #39cccc; }
+.color-11 { color: #7fdbff; }
+.color-12 { color: #0074d9; }
+.color-13 { color: #f012be; }
+.color-14 { color: #aaa; }
+.color-15 { color: #ddd; }
+.bg-0 { background: #fff; }
+.bg-1 { background: #000; }
+.bg-2 { background: #001f3f; }
+.bg-3 { background: #2ecc40; }
+.bg-4 { background: #ff4136; }
+.bg-5 { background: #85144b; }
+.bg-6 { background: #b10dc9; }
+.bg-7 { background: #ff851b; }
+.bg-8 { background: #ffdc00; }
+.bg-9 { background: #01ff70; }
+.bg-10 { background: #39cccc; }
+.bg-11 { background: #7fdbff; }
+.bg-12 { background: #0074d9; }
+.bg-13 { background: #f012be; }
+.bg-14 { background: #aaa; }
+.bg-15 { background: #ddd; }
+
 /**
  * TrackpadScrollEmulator
  * Version: 1.0.6
