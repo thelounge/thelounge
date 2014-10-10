@@ -1,4 +1,12 @@
 
+0.44.0 / 2014-10-11
+==================
+
+  * Added text color
+  * Added 'prefetch' option
+  * Added drag-and-drop tolerance
+  * Always show right toggle
+
 0.43.1 / 2014-10-09
 ==================
 
