@@ -385,7 +385,7 @@ $(function() {
 		if (viewport.is(".lt, .rt")) {
 			e.stopPropagation();
 			chat.find(".chat").one("click", function() {
-				viewport.removeClass("lt rt");
+				viewport.removeClass("lt");
 			});
 		}
 	});
@@ -462,7 +462,7 @@ $(function() {
 			favico.badge("");
 		}
 
-		viewport.removeClass();
+		viewport.removeClass("lt");
 		$("#windows .active").removeClass("active");
 
 		var chan = $(target)

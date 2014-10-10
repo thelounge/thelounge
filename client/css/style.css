@@ -120,8 +120,13 @@ button {
 	content: "\f0c9";
 }
 #viewport .rt {
+	display: block;
 	float: right;
 	margin: 6px -12px 0 12px;
+}
+#viewport.rt #chat .sidebar {
+	-webkit-transform: translate3d(180px, 0, 0);
+	        transform: translate3d(180px, 0, 0);
 }
 #sidebar {
 	bottom: 52px;
@@ -463,6 +468,11 @@ button {
 	position: absolute;
 	right: 0;
 	width: 180px;
+	transition: all .4s;
+	-webkit-transform: translateZ(0);
+	        transform: translateZ(0);
+	-webkit-perspective: 1000;
+	        perspective: 1000;
 }
 #chat .lobby .chat,
 #chat .query .chat {
@@ -958,11 +968,6 @@ button {
 	}
 	#chat .sidebar {
 		right: -180px;
-		transition: all .4s;
-		-webkit-transform: translateZ(0);
-		        transform: translateZ(0);
-		-webkit-perspective: 1000;
-		        perspective: 1000;
 	}
 	#chat .title:before {
 		display: none;
