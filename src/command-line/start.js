@@ -6,6 +6,7 @@ var Helper = require("../helper");
 program
 	.option("-H, --host <ip>", "host")
 	.option("-p, --port <port>", "port")
+	.option("-B, --bind <ip>", "bind")
 	.option("    --public", "mode")
 	.option("    --private", "mode")
 	.command("start")
@@ -27,6 +28,7 @@ program
 		} else {
 			var host = program.host || process.env.IP || config.host;
 			var port = program.port || process.env.PORT || config.port;
-			shout(port, host, mode);
+			var bind = program.bind || process.env.BIND || config.bind;
+			shout(port, host, mode, bind);
 		}
 	});

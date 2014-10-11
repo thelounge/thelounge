@@ -27,6 +27,14 @@ module.exports = {
 	port: 9000,
 
 	//
+	// Set the local IP to bind to.
+	//
+	// @type     string
+	// @default  "0.0.0.0"
+	//
+	bind: undefined,
+
+	//
 	// Set the default theme.
 	//
 	// @type     string
