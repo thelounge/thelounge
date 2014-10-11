@@ -7,7 +7,7 @@ function Identd() {
 	this.connections = [];
 	this.server = null;
 	this.config = {
-		enabled: false,
+		enable: false,
 		port: 30113,
 		default: "shout"
 	};
@@ -16,7 +16,12 @@ function Identd() {
 Identd.prototype.respond = function(remoteIp, localPort, remotePort) {
 	// Build the first part (always the same)
 	var response = localPort + ", " + remotePort + " : ";
-	var connection = _.where(this.connections, {"remoteIp": remoteIp, "remotePort": remotePort, "localPort": localPort});
+	var params = {"remoteIp": remoteIp, "remotePort": remotePort, "localPort": localPort};
+	var connection = _.where(this.connections, params);
+	if (connection.length == 0) {
+		params["localPort"] = undefined;
+		connection = _.where(this.connections, params);
+	}
 
 	if (connection.length > 0) {
 		// We have some connections, but we only want the first
@@ -25,7 +30,14 @@ Identd.prototype.respond = function(remoteIp, localPort, remotePort) {
 		// We're done with that connection. Remove it
 		this.removeConnection(connection);
 	} else {
-		response += " ERROR : NOUSER";
+		if (this.config.default == null) {
+			response += " ERROR : NOUSER";
+		} else {
+			var ident = this.config.default.replace(/\?/g, function(a) {
+				return Math.floor(Math.random() * 10);
+			});
+			response += " USERID : UNIX : " + ident;
+		}
 	}
 	// responses must end with CR+LF
 	return response + "\r\n";
@@ -33,7 +45,7 @@ Identd.prototype.respond = function(remoteIp, localPort, remotePort) {
 
 Identd.prototype.parse = function(request) {
 	// myPort, theirPort\r\n
-	request = request.split(/,\s*/);
+	request = request.toString().split(/,\s*/);
 	if (request.length == 2) {
 		var localPort = parseInt(request[0]),
 			remotePort = parseInt(request[1]);
@@ -43,21 +55,21 @@ Identd.prototype.parse = function(request) {
 
 Identd.prototype.start = function(config) {
 	_.merge(this.config, config.identd);
-
-	if (this.config.enabled) {
+	
+	if (this.config.enable) {
 		var self = this;
 
 		// create the server
 		this.server = net.createServer(function(socket) {
 			socket.on('data', function(data) {
-				var parsed = this.parse(data);
+				var parsed = self.parse(data);
 				// parse and generate a response
-				var response = this.respond(socket.remoteAddress, parsed[0], parsed[1]);
+				var response = self.respond(socket.remoteAddress, parsed[0], parsed[1]);
 				socket.write(response);
 				socket.end();
 			});
 		});
-		console.log("Starting identd on " + this.config.port);
+		log("Starting identd on " + this.config.port);
 		this.server.listen(this.config.port);
 	}
 
@@ -65,13 +77,17 @@ Identd.prototype.start = function(config) {
 };
 
 Identd.prototype.addConnection = function(connection) {
-	if (this.config.enabled)
+	if (this.config.enable) {
 		this.connections.push(connection);
+		log("Identd: adding:", connection);
+	}
 };
 
 Identd.prototype.removeConnection = function(connection) {
-	if (this.config.enabled)
+	if (this.config.enable) {
 		this.connections = _.without(this.connections, connection);
+		log("Identd: removing:", connection);
+	}
 };
 
-module.exports = new Identd().start(Helper.getConfig());
+module.exports = new Identd();

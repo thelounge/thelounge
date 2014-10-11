@@ -125,7 +125,26 @@ Client.prototype.connect = function(args) {
 		rejectUnauthorized: false
 	};
 
-	var stream = args.tls ? tls.connect(server) : net.connect(server);
+	var identdItem = null;
+	
+	var cb = function() {
+		identdItem = {
+			"remoteIp": stream.remoteAddress,
+			"remotePort": stream.remotePort,
+			"localPort": stream.localPort,
+			"username": username
+		};
+
+		identd.addConnection(identdItem);
+	};
+
+	var stream;
+	if (args.tls) {
+		stream = tls.connect(server);
+		stream.socket.on('connect', cb);
+	} else {
+		stream = net.connect(server, cb);
+	}
 	stream.on("error", function(e) {
 		console.log("Client#connect():\n" + e);
 		stream.end();
@@ -137,26 +156,13 @@ Client.prototype.connect = function(args) {
 			msg: msg
 		});
 	});
-
+	stream.on("close", function() {
+		identd.removeConnection(identdItem);
+	});
 
 	var nick = args.nick || "shout-user";
 	var username = args.username || nick;
 	var realname = args.realname || "Shout User";
-	var identdItem = null;
-
-	stream.on("connect", function() {
-		identdItem = {
-			"remoteIp": stream.remoteAddress,
-			"remotePort": stream.remotePort,
-			"localPort": stream.localPort,
-			"username": username
-		};
-		identd.addConnection(identdItem);
-	});
-
-	stream.on("close", function() {
-		identd.removeConnection(identdItem);
-	});
 
 	var irc = slate(stream);
 
