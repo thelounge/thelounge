@@ -10,6 +10,7 @@ module.exports = function(network, chan, cmd, args) {
 	var quitMessage = args[0] ? args.join(" ") : "";
 	
 	client.networks = _.without(client.networks, network);
+	client.save();
 	client.emit("quit", {
 		network: network.id
 	});

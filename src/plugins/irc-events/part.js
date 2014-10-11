@@ -11,6 +11,7 @@ module.exports = function(irc, network) {
 		var from = data.nick;
 		if (from == irc.me) {
 			network.channels = _.without(network.channels, chan);
+			client.save();
 			client.emit("part", {
 				chan: chan.id
 			});

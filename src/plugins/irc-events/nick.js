@@ -17,6 +17,7 @@ module.exports = function(irc, network) {
 				msg: msg
 			});
 			self = true;
+			client.save();
 			client.emit("nick", {
 				network: network.id,
 				nick: nick
