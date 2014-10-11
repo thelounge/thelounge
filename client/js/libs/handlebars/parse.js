@@ -37,7 +37,6 @@ function escape(text) {
 function uri(text) {
 	return URI.withinString(text, function(url) {
 		if (url.indexOf("javascript:") !== 0) {
-			console.log(url);
 			return "<a href='" + url.replace(/^www/, "//www") + "' target='_blank'>" + url + "</a>";
 		} else {
 			return url;
@@ -45,14 +44,20 @@ function uri(text) {
 	});
 }
 
+var regex = {
+	color: /\003([0-9]{1,2})[,]?([0-9]{1,2})?([^\003]+)/,
+	styles: [
+        [/\002([^\002]+)(\002)?/, ["<b>", "</b>"]],
+        [/\037([^\037]+)(\037)?/, ["<u>", "</u>"]],
+    ]
+};
 function colors(text) {
 	if (!text) {
 		return text;
 	}
-    var regex = /\003([0-9]{1,2})[,]?([0-9]{1,2})?([^\003]+)/;
-    if (regex.test(text)) {
+    if (regex.color.test(text)) {
     	var match;
-        while (match = regex.exec(text)) {
+        while (match = regex.color.exec(text)) {
             var color = "color-" + match[1];
             var bg = match[2];
             if (bg) {
@@ -64,16 +69,12 @@ function colors(text) {
             );
         }
     }
-    var styles = [
-        [/\002([^\002]+)(\002)?/, ["<b>", "</b>"]],
-        [/\037([^\037]+)(\037)?/, ["<u>", "</u>"]],
-    ];
-    for (var i in styles) {
-        var regex = styles[i][0];
-        var style = styles[i][1];
-        if (regex.test(text)) {
+    for (var i in regex.styles) {
+        var pattern = regex.styles[i][0];
+        var style = regex.styles[i][1];
+        if (pattern.test(text)) {
         	var match;
-            while (match = regex.exec(text)) {
+            while (match = pattern.exec(text)) {
                 text = text.replace(match[0], style[0] + match[1] + style[1]);
             }
         }
