@@ -195,5 +195,34 @@ module.exports = {
 		// @default  ""
 		//
 		certificate: ""
+	},
+
+	//
+	// Allows shout to run as an identd
+	//
+	// @type     object
+	// @default  {}
+	identd: {
+		//
+		// Enable Identd daemon
+		//
+		// @type     boolean
+		// @default  true
+		enable: true,
+
+		//
+		// Port to listen for ident requests
+		//
+		// @type     int
+		// @default  30113
+		port: 30113,
+
+		//
+		// Default user to return on unknown request
+		// if false, will return NOUSER
+		//
+		// @type     string
+		// @default  shout
+		default: "shout"
 	}
 };

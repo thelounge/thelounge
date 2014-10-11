@@ -8,6 +8,7 @@ var Network = require("./models/network");
 var slate = require("slate-irc");
 var tls = require("tls");
 var Helper = require("./helper");
+var identd = require("./identd");
 
 module.exports = Client;
 
@@ -135,6 +136,25 @@ Client.prototype.connect = function(args) {
 	}
 
 	var stream = args.tls ? tls.connect(server) : net.connect(server);
+	var identdItem = null;
+	var cb = function() {
+		identdItem = {
+			"remoteIp": stream.remoteAddress,
+			"remotePort": stream.remotePort,
+			"localPort": stream.localPort,
+			"username": username
+		};
+
+		identd.addConnection(identdItem);
+	};
+
+	var stream;
+	if (args.tls) {
+		stream = tls.connect(server);
+		stream.socket.on('connect', cb);
+	} else {
+		stream = net.connect(server, cb);
+	}
 
 	stream.on("error", function(e) {
 		console.log("Client#connect():\n" + e);
@@ -146,6 +166,10 @@ Client.prototype.connect = function(args) {
 		client.emit("msg", {
 			msg: msg
 		});
+	});
+
+	stream.on("close", function() {
+		identd.removeConnection(identdItem);
 	});
 
 	var nick = args.nick || "shout-user";

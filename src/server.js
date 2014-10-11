@@ -36,6 +36,10 @@ module.exports = function(options) {
 		}, app).listen(port, host)
 	}
 
+	if (config.identd && config.identd.enable) {
+		require("./identd").start(config);
+	}
+
 	sockets = io(server);
 	sockets.on("connect", function(socket) {
 		if (config.public) {
