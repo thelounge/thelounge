@@ -1,6 +1,7 @@
 var _ = require("lodash");
 var Chan = require("./models/chan");
 var crypto = require("crypto");
+var fs = require("fs");
 var identd = require("./identd");
 var log = require("./log");
 var net = require("net");
@@ -133,7 +134,7 @@ Client.prototype.connect = function(args) {
 			server.socket = socket;
 		}
 	}
-
+	
 	var stream = args.tls ? tls.connect(server) : net.connect(server);
 	
 	(stream.socket || stream).on("error", function(e) {
@@ -167,7 +168,7 @@ Client.prototype.connect = function(args) {
 		name: server.name,
 		host: server.host,
 		port: server.port,
-		tls: args.tls,
+		tls: !!args.tls,
 		password: args.password,
 		username: username,
 		realname: realname,
@@ -320,5 +321,39 @@ Client.prototype.quit = function() {
 };
 
 Client.prototype.save = function() {
-	var networks = _.map(this.networks, function(n) { return n.export(); });
+	var name = this.name;
+	var path = Helper.HOME + "/users/" + name + "/user.json";
+	
+	var networks = _.map(
+		this.networks,
+		function(n) {
+			return n.export();
+		}
+	);
+	
+	var json = {};
+	fs.readFile(path, "utf-8", function(err, data) {
+		if (err) {
+			console.log(err);
+			return;
+		}
+		
+		try {
+			json = JSON.parse(data);
+			json.networks = networks;
+		} catch(e) {
+			console.log(e);
+		}
+		
+		fs.writeFile(
+			path,
+			JSON.stringify(json, null, "  "),
+			{mode: "0777"},
+			function(err) {
+				if (err) {
+					console.log(err);
+				}
+			}
+		);
+	});
 };

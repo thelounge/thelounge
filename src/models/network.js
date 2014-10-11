@@ -21,7 +21,10 @@ function Network(attr) {
 	}, attr));
 	this.name = attr.name || prettify(attr.host);
 	this.channels.unshift(
-		new Chan({name: this.name, type: Chan.Type.LOBBY})
+		new Chan({
+			name: this.name,
+			type: Chan.Type.LOBBY
+		})
 	);
 }
 
@@ -31,15 +34,20 @@ Network.prototype.toJSON = function() {
 };
 
 Network.prototype.export = function() {
-	var network = _.pick(
-		this,
-		["name", "host", "port", "tls", "password", "username", "realname"]
-	);
+	var network = _.pick(this, [
+		"name",
+		"host",
+		"port",
+		"tls",
+		"password",
+		"username",
+		"realname"
+	]);
 	network.nick = (this.irc || {}).me;
 	network.join = _.pluck(
 		_.where(this.channels, {type: "channel"}),
 		"name"
-	);
+	).join(",");
 	return network;
 };
 
