@@ -198,31 +198,26 @@ module.exports = {
 	},
 
 	//
-	// Allows shout to run as an identd
+	// Run Shout with identd support.
 	//
 	// @type     object
 	// @default  {}
+	//
 	identd: {
 		//
-		// Enable Identd daemon
+		// Run the identd daemon on server start.
 		//
 		// @type     boolean
-		// @default  true
-		enable: true,
+		// @default  false
+		//
+		enable: false,
 
 		//
-		// Port to listen for ident requests
+		// Port to listen for ident requests.
 		//
 		// @type     int
-		// @default  30113
-		port: 30113,
-
+		// @default  113
 		//
-		// Default user to return on unknown request
-		// if false, will return NOUSER
-		//
-		// @type     string
-		// @default  shout
-		default: "shout"
+		port: 113
 	}
 };

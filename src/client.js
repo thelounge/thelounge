@@ -1,6 +1,7 @@
 var _ = require("lodash");
 var Chan = require("./models/chan");
 var crypto = require("crypto");
+var identd = require("./identd");
 var log = require("./log");
 var net = require("net");
 var Msg = require("./models/msg");
@@ -8,7 +9,6 @@ var Network = require("./models/network");
 var slate = require("slate-irc");
 var tls = require("tls");
 var Helper = require("./helper");
-var identd = require("./identd");
 
 module.exports = Client;
 
@@ -126,9 +126,8 @@ Client.prototype.connect = function(args) {
 		rejectUnauthorized: false
 	};
 
-	if(config.bind) {
+	if (config.bind) {
 		server.localAddress = config.bind;
-
 		if(args.tls) {
 			var socket = net.connect(server);
 			server.socket = socket;
@@ -136,27 +135,8 @@ Client.prototype.connect = function(args) {
 	}
 
 	var stream = args.tls ? tls.connect(server) : net.connect(server);
-	var identdItem = null;
-	var cb = function() {
-		identdItem = {
-			"remoteIp": stream.remoteAddress,
-			"remotePort": stream.remotePort,
-			"localPort": stream.localPort,
-			"username": username
-		};
-
-		identd.addConnection(identdItem);
-	};
-
-	var stream;
-	if (args.tls) {
-		stream = tls.connect(server);
-		stream.socket.on('connect', cb);
-	} else {
-		stream = net.connect(server, cb);
-	}
-
-	stream.on("error", function(e) {
+	
+	(stream.socket || stream).on("error", function(e) {
 		console.log("Client#connect():\n" + e);
 		stream.end();
 		var msg = new Msg({
@@ -168,15 +148,12 @@ Client.prototype.connect = function(args) {
 		});
 	});
 
-	stream.on("close", function() {
-		identd.removeConnection(identdItem);
-	});
-
 	var nick = args.nick || "shout-user";
 	var username = args.username || nick;
 	var realname = args.realname || "Shout User";
 
 	var irc = slate(stream);
+	identd.hook(stream, username);
 
 	if (args.password) {
 		irc.pass(args.password);
