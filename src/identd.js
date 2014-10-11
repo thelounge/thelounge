@@ -69,7 +69,6 @@ Identd.prototype.start = function(config) {
 				socket.end();
 			});
 		});
-		log("Starting identd on " + this.config.port);
 		this.server.listen(this.config.port);
 	}
 
@@ -79,14 +78,12 @@ Identd.prototype.start = function(config) {
 Identd.prototype.addConnection = function(connection) {
 	if (this.config.enable) {
 		this.connections.push(connection);
-		log("Identd: adding:", connection);
 	}
 };
 
 Identd.prototype.removeConnection = function(connection) {
 	if (this.config.enable) {
 		this.connections = _.without(this.connections, connection);
-		log("Identd: removing:", connection);
 	}
 };
 
