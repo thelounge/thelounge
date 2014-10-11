@@ -1,14 +1,15 @@
+var _ = require("lodash");
 var ClientManager = new require("../clientManager");
 var program = require("commander");
 var shout = require("../server");
 var Helper = require("../helper");
 
 program
-	.option("-H, --host <ip>", "host")
-	.option("-p, --port <port>", "port")
-	.option("-B, --bind <ip>", "bind")
-	.option("    --public", "mode")
-	.option("    --private", "mode")
+	.option("-H, --host <ip>"   , "host")
+	.option("-P, --port <port>" , "port")
+	.option("-B, --bind <ip>"   , "bind")
+	.option("    --public"      , "mode")
+	.option("    --private"     , "mode")
 	.command("start")
 	.description("Start the server")
 	.action(function() {
@@ -26,9 +27,11 @@ program
 			console.log("Create a new user with 'shout add <name>'.");
 			console.log("");
 		} else {
-			var host = program.host || process.env.IP || config.host;
-			var port = program.port || process.env.PORT || config.port;
-			var bind = program.bind || process.env.BIND || config.bind;
-			shout(port, host, mode, bind);
+			shout({
+				host: program.host || config.host,
+				port: program.port || config.port,
+				bind: program.bind || config.bind,
+				public: mode
+			});
 		}
 	});

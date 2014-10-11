@@ -11,12 +11,9 @@ var config = {};
 var sockets = null;
 var manager = new ClientManager();
 
-module.exports = function(port, host, isPublic, localIp) {
+module.exports = function(options) {
 	config = Helper.getConfig();
-	config.port = port;
-	config.host = host;
-	config.public = isPublic;
-	config.bind = localIp;
+	config = _.extend(config, options);
 
 	var app = express()
 		.use(index)
@@ -25,6 +22,8 @@ module.exports = function(port, host, isPublic, localIp) {
 	var server = null;
 	var https = config.https || {};
 	var protocol = https.enable ? "https" : "http";
+	var port = config.port;
+	var host = config.host;
 
 	if (!https.enable){
 		server = require("http");
