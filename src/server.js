@@ -11,11 +11,12 @@ var config = {};
 var sockets = null;
 var manager = new ClientManager();
 
-module.exports = function(port, host, isPublic) {
+module.exports = function(port, host, isPublic, localIp) {
 	config = Helper.getConfig();
 	config.port = port;
 	config.host = host;
 	config.public = isPublic;
+	config.bind = localIp;
 
 	var app = express()
 		.use(index)

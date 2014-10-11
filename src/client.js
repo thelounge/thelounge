@@ -116,6 +116,7 @@ Client.prototype.find = function(id) {
 };
 
 Client.prototype.connect = function(args) {
+	var config = Helper.getConfig();
 	var client = this;
 	var server = {
 		host: args.host || "irc.freenode.org",
@@ -124,7 +125,17 @@ Client.prototype.connect = function(args) {
 		rejectUnauthorized: false
 	};
 
+	if(config.bind) {
+		server.localAddress = config.bind;
+
+		if(args.tls) {
+			var socket = net.connect(server);
+			server.socket = socket;
+		}
+	}
+
 	var stream = args.tls ? tls.connect(server) : net.connect(server);
+
 	stream.on("error", function(e) {
 		console.log("Client#connect():\n" + e);
 		stream.end();
