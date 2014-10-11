@@ -7,9 +7,15 @@ var id = 0;
 
 function Network(attr) {
 	_.merge(this, _.extend({
+		name: "",
+		host: "",
+		port: 6667,
+		tls: false,
+		password: "",
+		username: "",
+		realname: "",
 		channels: [],
 		connected: false,
-		host: "",
 		id: id++,
 		irc: null,
 	}, attr));
@@ -21,7 +27,20 @@ function Network(attr) {
 
 Network.prototype.toJSON = function() {
 	var json = _.extend(this, {nick: (this.irc || {}).me || ""});
-	return _.omit(json, "irc");
+	return _.omit(json, "irc", "password");
+};
+
+Network.prototype.export = function() {
+	var network = _.pick(
+		this,
+		["name", "host", "port", "tls", "password", "username", "realname"]
+	);
+	network.nick = (this.irc || {}).me;
+	network.join = _.pluck(
+		_.where(this.channels, {type: "channel"}),
+		"name"
+	);
+	return network;
 };
 
 function prettify(host) {

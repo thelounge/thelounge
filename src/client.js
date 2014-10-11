@@ -120,9 +120,9 @@ Client.prototype.connect = function(args) {
 	var config = Helper.getConfig();
 	var client = this;
 	var server = {
+		name: args.name || "",
 		host: args.host || "irc.freenode.org",
 		port: args.port || (args.tls ? 6697 : 6667),
-		name: args.name || "",
 		rejectUnauthorized: false
 	};
 
@@ -164,10 +164,16 @@ Client.prototype.connect = function(args) {
 	irc.user(username, realname);
 
 	var network = new Network({
-		host: server.host,
 		name: server.name,
-		irc: irc
+		host: server.host,
+		port: server.port,
+		tls: args.tls,
+		password: args.password,
+		username: username,
+		realname: realname,
 	});
+
+	network.irc = irc;
 
 	client.networks.push(network);
 	client.emit("network", {
@@ -311,4 +317,8 @@ Client.prototype.quit = function() {
 			irc.stream.end();
 		}
 	});
+};
+
+Client.prototype.save = function() {
+	var networks = _.map(this.networks, function(n) { return n.export(); });
 };
