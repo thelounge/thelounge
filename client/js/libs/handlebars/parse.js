@@ -35,12 +35,16 @@ function escape(text) {
 }
 
 function uri(text) {
-	return URI.withinString(text, function(url) {
-		if (url.indexOf("javascript:") !== 0) {
-			return "<a href='" + url.replace(/^www/, "//www") + "' target='_blank'>" + url + "</a>";
-		} else {
+	return URI.withinString(text, function(url, start, end, source) {
+		if (url.indexOf("javascript:") === 0) {
 			return url;
 		}
+		var split = url.split("<");
+		url = "<a href='" + split[0].replace(/^www/, "//www") + "' target='_blank'>" + split[0] + "</a>";
+		if (split[1]) {
+			url += "<" + split[1];
+		}
+		return url;
 	});
 }
 

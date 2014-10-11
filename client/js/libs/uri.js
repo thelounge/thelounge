@@ -1,7 +1,7 @@
 /*!
  * URI.js - Mutating URLs
  *
- * Version: 1.13.2
+ * Version: 1.14.1
  *
  * Author: Rodney Rehm
  * Web: http://medialize.github.io/URI.js/
@@ -57,7 +57,7 @@
     return this;
   }
 
-  URI.version = '1.13.2';
+  URI.version = '1.14.1';
 
   var p = URI.prototype;
   var hasOwn = Object.prototype.hasOwnProperty;
@@ -225,7 +225,9 @@
     'embed': 'src',
     'source': 'src',
     'track': 'src',
-    'input': 'src' // but only if type="image"
+    'input': 'src', // but only if type="image"
+    'audio': 'src',
+    'video': 'src'
   };
   URI.getDomAttribute = function(node) {
     if (!node || !node.nodeName) {
@@ -365,9 +367,17 @@
   var _part;
   var generateAccessor = function(_group, _part) {
     return function(string) {
-      return URI[_part](string + '').replace(URI.characters[_group][_part].expression, function(c) {
-        return URI.characters[_group][_part].map[c];
-      });
+      try {
+        return URI[_part](string + '').replace(URI.characters[_group][_part].expression, function(c) {
+          return URI.characters[_group][_part].map[c];
+        });
+      } catch (e) {
+        // we're not going to mess with weird encodings,
+        // give up and return the undecoded original string
+        // see https://github.com/medialize/URI.js/issues/87
+        // see https://github.com/medialize/URI.js/issues/92
+        return string;
+      }
     };
   };
 
@@ -414,9 +424,6 @@
         if (parts.protocol && !parts.protocol.match(URI.protocol_expression)) {
           // : may be within the path
           parts.protocol = undefined;
-        } else if (parts.protocol === 'file') {
-          // the file scheme: does not contain an authority
-          string = string.substring(pos + 3);
         } else if (string.substring(pos + 1, pos + 3) === '//') {
           string = string.substring(pos + 3);
 
@@ -480,11 +487,7 @@
   URI.parseUserinfo = function(string, parts) {
     // extract username:password
     var firstSlash = string.indexOf('/');
-    /*jshint laxbreak: true */
-    var pos = firstSlash > -1
-      ? string.lastIndexOf('@', firstSlash)
-      : string.indexOf('@');
-    /*jshint laxbreak: false */
+    var pos = string.lastIndexOf('@', firstSlash > -1 ? firstSlash : string.length - 1);
     var t;
 
     // authority@ must come before /path
@@ -524,7 +527,7 @@
       // no "=" is null according to http://dvcs.w3.org/hg/url/raw-file/tip/Overview.html#collect-url-parameters
       value = v.length ? URI.decodeQuery(v.join('='), escapeQuerySpace) : null;
 
-      if (items[name]) {
+      if (hasOwn.call(items, name)) {
         if (typeof items[name] === 'string') {
           items[name] = [items[name]];
         }
@@ -657,7 +660,7 @@
         value = [value];
       }
 
-      data[name] = data[name].concat(value);
+      data[name] = (data[name] || []).concat(value);
     } else {
       throw new TypeError('URI.addQuery() accepts an object, string as the name parameter');
     }
@@ -882,9 +885,8 @@
     return this.build(false)._string;
   };
 
-  // generate simple accessors
-  _parts = {protocol: 'protocol', username: 'username', password: 'password', hostname: 'hostname',  port: 'port'};
-  generateAccessor = function(_part){
+
+  function generateSimpleAccessor(_part){
     return function(v, build) {
       if (v === undefined) {
         return this._parts[_part] || '';
@@ -894,15 +896,9 @@
         return this;
       }
     };
-  };
-
-  for (_part in _parts) {
-    p[_part] = generateAccessor(_parts[_part]);
   }
 
-  // generate accessors with optionally prefixed input
-  _parts = {query: '?', fragment: '#'};
-  generateAccessor = function(_part, _key){
+  function generatePrefixAccessor(_part, _key){
     return function(v, build) {
       if (v === undefined) {
         return this._parts[_part] || '';
@@ -919,24 +915,24 @@
         return this;
       }
     };
-  };
-
-  for (_part in _parts) {
-    p[_part] = generateAccessor(_part, _parts[_part]);
   }
 
-  // generate accessors with prefixed output
-  _parts = {search: ['?', 'query'], hash: ['#', 'fragment']};
-  generateAccessor = function(_part, _key){
-    return function(v, build) {
-      var t = this[_part](v, build);
-      return typeof t === 'string' && t.length ? (_key + t) : t;
-    };
-  };
+  p.protocol = generateSimpleAccessor('protocol');
+  p.username = generateSimpleAccessor('username');
+  p.password = generateSimpleAccessor('password');
+  p.hostname = generateSimpleAccessor('hostname');
+  p.port = generateSimpleAccessor('port');
+  p.query = generatePrefixAccessor('query', '?');
+  p.fragment = generatePrefixAccessor('fragment', '#');
 
-  for (_part in _parts) {
-    p[_part] = generateAccessor(_parts[_part][1], _parts[_part][0]);
-  }
+  p.search = function(v, build) {
+    var t = this.query(v, build);
+    return typeof t === 'string' && t.length ? ('?' + t) : t;
+  };
+  p.hash = function(v, build) {
+    var t = this.fragment(v, build);
+    return typeof t === 'string' && t.length ? ('#' + t) : t;
+  };
 
   p.pathname = function(v, build) {
     if (v === undefined || v === true) {
@@ -978,8 +974,8 @@
       href = href.toString();
     }
 
-    if (typeof href === 'string') {
-      this._parts = URI.parse(href, this._parts);
+    if (typeof href === 'string' || href instanceof String) {
+      this._parts = URI.parse(String(href), this._parts);
     } else if (_URI || _object) {
       var src = _URI ? href._parts : href;
       for (key in src) {
@@ -1485,7 +1481,7 @@
 
           segments.push(v[i]);
         }
-      } else if (v || (typeof v === 'string')) {
+      } else if (v || typeof v === 'string') {
         if (segments[segments.length -1] === '') {
           // empty trailing elements have to be overwritten
           // to prevent results such as /foo//bar
@@ -1495,7 +1491,7 @@
         }
       }
     } else {
-      if (v || (typeof v === 'string' && v.length)) {
+      if (v) {
         segments[segment] = v;
       } else {
         segments.splice(segment, 1);
@@ -1531,7 +1527,7 @@
     }
 
     if (!isArray(v)) {
-      v = typeof v === 'string' ? URI.encode(v) : v;
+      v = (typeof v === 'string' || v instanceof String) ? URI.encode(v) : v;
     } else {
       for (i = 0, l = v.length; i < l; i++) {
         v[i] = URI.decode(v[i]);
@@ -1563,14 +1559,14 @@
   p.setQuery = function(name, value, build) {
     var data = URI.parseQuery(this._parts.query, this._parts.escapeQuerySpace);
 
-    if (typeof name === 'object') {
+    if (typeof name === 'string' || name instanceof String) {
+      data[name] = value !== undefined ? value : null;
+    } else if (typeof name === 'object') {
       for (var key in name) {
         if (hasOwn.call(name, key)) {
           data[key] = name[key];
         }
       }
-    } else if (typeof name === 'string') {
-      data[name] = value !== undefined ? value : null;
     } else {
       throw new TypeError('URI.addQuery() accepts an object, string as the name parameter');
     }
@@ -2004,3 +2000,4 @@
 
   return URI;
 }));
+
