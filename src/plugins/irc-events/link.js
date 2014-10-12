@@ -63,7 +63,8 @@ function parse(msg, url, res, client) {
 		var $ = cheerio.load(res.res.text);
 		toggle.type = "link";
 		toggle.head = $("title").text();
-		toggle.body = "No description found.";
+		toggle.body = $('meta[name=description]').attr('content') ||
+					$('meta[property="og:description"]').attr('content') || "";
 		break;
 
 	case "image/png":
