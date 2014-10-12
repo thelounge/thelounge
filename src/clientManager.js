@@ -8,7 +8,14 @@ var moment = require("moment");
 module.exports = ClientManager;
 
 function ClientManager() {
+	var self = this;
 	this.clients = [];
+	if(!/^win/.test(process.platform)) {
+		process.on('SIGHUP', function() {
+			console.log("Received 'SIGHUP'. Reloading Users.");
+			self.loadUsers();
+		});
+	}
 }
 
 ClientManager.prototype.findClient = function(name) {
