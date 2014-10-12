@@ -640,6 +640,10 @@ button {
 	display: block;
 	margin: 2px 0;
 }
+#chat .toggle-content .thumb {
+	max-height: 110px;
+	max-width: 210px;
+}
 #chat .toggle-content .head {
 	font-weight: bold;
 }
