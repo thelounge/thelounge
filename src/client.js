@@ -150,7 +150,7 @@ Client.prototype.connect = function(args) {
 	});
 
 	var nick = args.nick || "shout-user";
-	var username = args.username || nick;
+	var username = args.username || nick.replace(/[^a-zA-Z0-9]/g, '');
 	var realname = args.realname || "Shout User";
 
 	var irc = slate(stream);
