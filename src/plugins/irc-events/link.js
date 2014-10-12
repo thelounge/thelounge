@@ -55,6 +55,7 @@ function parse(msg, url, res, client) {
 		type: "",
 		head: "",
 		body: "",
+		thumb: "",
 		link: url
 	};
 
@@ -65,6 +66,8 @@ function parse(msg, url, res, client) {
 		toggle.head = $("title").text();
 		toggle.body = $('meta[name=description]').attr('content') ||
 					$('meta[property="og:description"]').attr('content') || "";
+		toggle.thumb = $('meta[property="og:image"]').attr('content') ||
+					$('meta[name="twitter:image:src"]').attr('content') || "";
 		break;
 
 	case "image/png":
