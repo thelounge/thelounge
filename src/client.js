@@ -323,6 +323,11 @@ Client.prototype.quit = function() {
 var timer;
 Client.prototype.save = function(force) {
 	var client = this;
+	var config = Helper.getConfig();
+
+	if(config.public) {
+		return;
+	}
 	
 	if (!force) {
 		clearTimeout(timer);
