@@ -320,7 +320,18 @@ Client.prototype.quit = function() {
 	});
 };
 
-Client.prototype.save = function() {
+var timer;
+Client.prototype.save = function(force) {
+	var client = this;
+	
+	if (!force) {
+		clearTimeout(timer);
+		timer = setTimeout(function() {
+			client.save(true);
+		}, 1000);
+		return;
+	}
+	
 	var name = this.name;
 	var path = Helper.HOME + "/users/" + name + "/user.json";
 	
@@ -343,6 +354,7 @@ Client.prototype.save = function() {
 			json.networks = networks;
 		} catch(e) {
 			console.log(e);
+			return;
 		}
 		
 		fs.writeFile(
