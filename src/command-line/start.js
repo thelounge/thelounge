@@ -28,8 +28,8 @@ program
 			console.log("");
 		} else {
 			shout({
-				host: program.host || config.host,
-				port: program.port || config.port,
+				host: program.host || process.env.IP   || config.host,
+				port: program.port || process.env.PORT || config.port,
 				bind: program.bind || config.bind,
 				public: mode
 			});
