@@ -56,9 +56,11 @@ ClientManager.prototype.getUsers = function() {
 	var path = Helper.HOME + "/users";
 	mkdirp.sync(path);
 	try {
-		users = fs.readdirSync(path);
-		users =_.map(users, function(name) {
-			return name.replace(".json", "");
+		var files = fs.readdirSync(path);
+		files.forEach(function(file) {
+			if (file.indexOf(".json") !== -1) {
+				users.push(file.replace(".json", ""));
+			}
 		});
 	} catch(e) {
 		console.log(e);
@@ -114,12 +116,10 @@ ClientManager.prototype.autoload = function(sockets) {
 			self.clients,
 			"name"
 		);
-
 		var added = _.difference(self.getUsers(), loaded);
 		_.each(added, function(name) {
 			self.loadUser(name);
 		});
-
 		var removed = _.difference(loaded, self.getUsers());
 		_.each(removed, function(name) {
 			var client = _.find(
