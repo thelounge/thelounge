@@ -1,4 +1,15 @@
 
+0.45.0 / 2014-10-14
+==================
+
+  * Added identd daemon
+  * Remember user networks and channels on restart
+  * Show link thumbnails
+  * Pull link description from meta tags
+  * Allow binding to local IP via `--bind <ip>`
+  * Change 'users/' folder structure
+  * Change 'logs/' location
+
 0.44.0 / 2014-10-11
 ==================
 
