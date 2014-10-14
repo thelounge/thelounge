@@ -77,7 +77,8 @@ Client.prototype.emit = function(event, data) {
 	if (this.sockets !== null) {
 		this.sockets.in(this.id).emit(event, data);
 	}
-	if ((this.config || {}).log === true) {
+	var config = this.config || {};
+	if (config.log === true) {
 		if (event == "msg") {
 			var target = this.find(data.chan);
 			if (target) {
