@@ -8,14 +8,7 @@ var moment = require("moment");
 module.exports = ClientManager;
 
 function ClientManager() {
-	var self = this;
 	this.clients = [];
-	if(!/^win/.test(process.platform)) {
-		process.on('SIGHUP', function() {
-			console.log("Received 'SIGHUP'. Reloading Users.");
-			self.reloadUsers();
-		});
-	}
 }
 
 ClientManager.prototype.findClient = function(name) {
@@ -55,35 +48,9 @@ ClientManager.prototype.loadUser = function(name) {
 			name,
 			json
 		));
-		console.log("User '%s' loaded.", name);
-	}
-};
-
-ClientManager.prototype.reloadUsers = function() {
-	var users = this.getUsers();
-	for (var i in users) {
-		this.reloadUser(users[i]);
-	}
-};
-
-ClientManager.prototype.reloadUser = function(name) {
-	var client = this.findClient(name);
-	if (client) {
-		try {
-			var json = fs.readFileSync(
-				Helper.HOME + "/users/" + name + "/user.json",
-				"utf-8"
-			);
-			json = JSON.parse(json);
-		} catch(e) {
-			console.log(e);
-			return;
-		}
-		if (!json) {
-			return;
-		}
-		client.config = json;
-		console.log("User '%s' reloaded.", name);
+		console.log(
+			"User '" + name + "' loaded."
+		);
 	}
 };
 
@@ -144,66 +111,35 @@ ClientManager.prototype.removeUser = function(name) {
 	return true;
 };
 
-ClientManager.prototype.watchUser = function(name) {
-	var self = this;
-	var client = this.findClient(name);
-	if(!client || client.watcher) {
-		return;
-	}
-	var path = Helper.HOME + "/users/" + client.name + "/user.json";
-	var lastReload = Date.now();
-	client.watcher = fs.watch(path, {persistent: false}, function(event, filename) {
-		switch (event) {
-		case "change":
-			// user.json modified
-			if(Date.now() - lastReload > 50) {
-				self.reloadUser(client.name);
-				lastReload = Date.now();
-			}
-			break;
-		default:
-			break;
-		}
-	});
-};
-
 ClientManager.prototype.autoload = function(sockets) {
 	var self = this;
+	var loaded = [];
+	setInterval(function() {
+		var loaded = _.pluck(
+			self.clients,
+			"name"
+		);
 
-	// Listen to new users being added/removed
-	fs.watch(Helper.HOME + "/users/", { persistent: false }, function(event, filename) {
-		switch (event) {
-		case "rename":
-			if(filename === null) {
-				// User removed.
-				var removed = _(self.clients)
-							.pluck('name')
-							.difference(self.getUsers())
-							.value();
-				_.each(removed, function(name) {
-					var client = self.findClient(name);
-					if (client) {
-						client.quit();
-						if(client.watcher) {
-							client.watcher.close();
-						}
-						self.clients = _.without(self.clients, client);
-						console.log("User '%s' disconnected.", name);
-					}
-				});
-			} else {
-				// User created.
-				self.loadUser(filename);
-				self.watchUser(filename);
+		var added = _.difference(self.getUsers(), loaded);
+		_.each(added, function(name) {
+			self.loadUser(name);
+		});
+
+		var removed = _.difference(loaded, self.getUsers());
+		_.each(removed, function(name) {
+			var client = _.find(
+				self.clients, {
+					name: name
+				}
+			);
+			if (client) {
+				client.quit();
+				self.clients = _.without(self.clients, client);
+				console.log(
+					"User '" + name + "' disconnected."
+				);
 			}
-			break;
-		default:
-			break;
-		}
-	});
-
-	// Listen to user modification
-	_.each(this.clients, function(client) {
-		self.watchUser(client.name);
-	});
+		});
+	}, 1000);
 };
+
