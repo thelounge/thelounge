@@ -31,15 +31,12 @@ ClientManager.prototype.loadUsers = function() {
 ClientManager.prototype.loadUser = function(name) {
 	try {
 		var json = fs.readFileSync(
-			Helper.HOME + "/users/" + name + "/user.json",
+			Helper.HOME + "/users/" + name + ".json",
 			"utf-8"
 		);
 		json = JSON.parse(json);
 	} catch(e) {
 		console.log(e);
-		return;
-	}
-	if (!json) {
 		return;
 	}
 	if (!this.findClient(name)) {
@@ -60,14 +57,13 @@ ClientManager.prototype.getUsers = function() {
 	mkdirp.sync(path);
 	try {
 		users = fs.readdirSync(path);
+		users =_.map(users, function(name) {
+			return name.replace(".json", "");
+		});
 	} catch(e) {
 		console.log(e);
 		return;
 	}
-	users = _.without(
-		users,
-		"example"
-	);
 	return users;
 };
 
@@ -77,16 +73,16 @@ ClientManager.prototype.addUser = function(name, password) {
 		return false;
 	}
 	try {
-		var path = Helper.HOME + "/users/" + name;
+		var path = Helper.HOME + "/users";
 		var user = {
 			user: name,
 			password: password || "",
 			log: false,
 			networks: []
 		};
-		fs.mkdirSync(path);
+		mkdirp.sync(path);
 		fs.writeFileSync(
-			path + "/user.json",
+			path + "/" + name + ".json",
 			JSON.stringify(user, null, "  "),
 			{mode: "0777"}
 		);
@@ -102,9 +98,8 @@ ClientManager.prototype.removeUser = function(name) {
 		return false;
 	}
 	try {
-		var path = Helper.HOME + "/users/" + name;
-		fs.unlinkSync(path + "/user.json");
-		fs.rmdirSync(path);
+		var path = Helper.HOME + "/users/" + name + ".json";
+		fs.unlinkSync(path);
 	} catch(e) {
 		throw e;
 	}

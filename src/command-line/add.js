@@ -54,11 +54,11 @@ function add(manager, name, password) {
 	console.log("");
 	var salt = bcrypt.genSaltSync(8);
 	var hash = bcrypt.hashSync(password, salt);
-	manager.addUser(
+	var x = manager.addUser(
 		name,
 		hash
 	);
 	console.log("User '" + name + "' created:");
-	console.log(Helper.HOME + "/users/" + name + "/user.json");
+	console.log(Helper.HOME + "/users/" + name + ".json");
 	console.log("");
 }

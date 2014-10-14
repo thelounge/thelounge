@@ -18,6 +18,8 @@ module.exports = function(options) {
 	var app = express()
 		.use(index)
 		.use(express.static("client"));
+	
+	app.enable("trust proxy");
 
 	var server = null;
 	var https = config.https || {};
