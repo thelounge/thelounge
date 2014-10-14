@@ -5,8 +5,6 @@ var mkdirp = require("mkdirp");
 var Helper = require("../helper");
 
 program.version(pkg.version, "-v, --version");
-program.option("");
-program.option("    --home <path>", "home path");
 
 require("./start");
 require("./config");
@@ -24,7 +22,7 @@ if (program.home) {
 	var config = Helper.HOME + "/config.js";
 	if (!fs.existsSync(config)) {
 		mkdirp.sync(Helper.HOME);
-		fs.writeFileSync(config, fs.readFileSync(__dirname + "/../../config.js"));
+		fs.writeFileSync(config, fs.readFileSync(__dirname + "/../../defaults/config.js"));
 	}
 }
 

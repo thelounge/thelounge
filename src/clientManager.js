@@ -114,6 +114,7 @@ ClientManager.prototype.addUser = function(name, password) {
 		var user = {
 			user: name,
 			password: password || "",
+			logs: false,
 			networks: []
 		};
 		fs.mkdirSync(path);
