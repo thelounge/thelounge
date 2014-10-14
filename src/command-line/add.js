@@ -54,7 +54,7 @@ function add(manager, name, password) {
 	console.log("");
 	var salt = bcrypt.genSaltSync(8);
 	var hash = bcrypt.hashSync(password, salt);
-	var x = manager.addUser(
+	manager.addUser(
 		name,
 		hash
 	);

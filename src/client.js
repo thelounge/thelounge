@@ -339,7 +339,7 @@ Client.prototype.save = function(force) {
 	}
 	
 	var name = this.name;
-	var path = Helper.HOME + "/users/" + name + "/user.json";
+	var path = Helper.HOME + "/users/" + name + ".json";
 	
 	var networks = _.map(
 		this.networks,

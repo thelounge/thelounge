@@ -5,8 +5,6 @@ var shout = require("../server");
 var Helper = require("../helper");
 
 program
-	.option("")
-	.option("    --home <path>" , "home path")
 	.option("-H, --host <ip>"   , "host")
 	.option("-P, --port <port>" , "port")
 	.option("-B, --bind <ip>"   , "bind")
