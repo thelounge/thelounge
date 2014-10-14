@@ -64,10 +64,14 @@ function parse(msg, url, res, client) {
 		var $ = cheerio.load(res.res.text);
 		toggle.type = "link";
 		toggle.head = $("title").text();
-		toggle.body = $('meta[name=description]').attr('content') ||
-					$('meta[property="og:description"]').attr('content') || "No description found.";
-		toggle.thumb = $('meta[property="og:image"]').attr('content') ||
-					$('meta[name="twitter:image:src"]').attr('content') || "";
+		toggle.body =
+			   $('meta[name=description]').attr('content')
+			|| $('meta[property="og:description"]').attr('content')
+			|| "No description found.";
+		toggle.thumb = 
+			   $('meta[property="og:image"]').attr('content')
+			|| $('meta[name="twitter:image:src"]').attr('content')
+			|| "";
 		break;
 
 	case "image/png":
