@@ -138,7 +138,7 @@ Client.prototype.connect = function(args) {
 	
 	var stream = args.tls ? tls.connect(server) : net.connect(server);
 	
-	(stream.socket || stream).on("error", function(e) {
+	stream.on("error", function(e) {
 		console.log("Client#connect():\n" + e);
 		stream.end();
 		var msg = new Msg({
