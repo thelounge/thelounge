@@ -592,7 +592,8 @@ $(function() {
 			"join",
 			"part",
 			"quit",
-			"nick"
+			"nick",
+			"mode",
 		];
 		if ($.inArray(type, ignore) !== -1){
 			return;
