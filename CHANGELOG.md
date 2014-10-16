@@ -1,4 +1,10 @@
 
+0.45.2 / 2014-10-16
+==================
+
+  * Fix crash on failed TLS connect
+  * Hide mode from badge count
+
 0.45.0 / 2014-10-14
 ==================
 
