@@ -60,10 +60,12 @@ function colors(text) {
 		return text;
 	}
     if (regex.color.test(text)) {
-    	var match;
+    	var match, bg;
         while (match = regex.color.exec(text)) {
             var color = "color-" + match[1];
-            var bg = match[2];
+            if (match[2]) {
+            	bg = match[2];
+            }
             if (bg) {
            		color += " bg-" + bg;
            	}
