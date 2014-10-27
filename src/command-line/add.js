@@ -6,7 +6,7 @@ var mkdirp = require("mkdirp");
 var Helper = require("../helper");
 
 program
-	.command("add <name> [<password>]")
+	.command("add <name>")
 	.description("Add a new user")
 	.action(function(name, password) {
 		var path = Helper.HOME + "/users";
@@ -38,16 +38,12 @@ program
 			console.log("");
 			return;
 		}
-		if (password) {
-			add(manager, name, password);
-		} else {
-			require("read")({
-				prompt: "Password: ",
-				silent: true
-			}, function(err, password) {
-				if (!err) add(manager, name, password);
-			});
-		}
+		require("read")({
+			prompt: "Password: ",
+			silent: true
+		}, function(err, password) {
+			if (!err) add(manager, name, password);
+		});
 	});
 
 function add(manager, name, password) {
