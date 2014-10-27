@@ -1,9 +1,19 @@
+var _ = require("lodash");
 var Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
 	var client = this;
 	irc.on("notice", function(data) {
-		var lobby = network.channels[0];
+		var target = data.to;
+		if (target.toLowerCase() == irc.me.toLowerCase()) {
+			target = data.from;
+		}
+
+		var chan = _.findWhere(network.channels, {name: target});
+		if (typeof chan === "undefined") {
+			chan = network.channels[0];
+		}
+
 		var from = data.from || "";
 		if (data.to == "*" || data.from.indexOf(".") !== -1) {
 			from = "";
@@ -13,9 +23,9 @@ module.exports = function(irc, network) {
 			from: from,
 			text: data.message
 		});
-		lobby.messages.push(msg);
+		chan.messages.push(msg);
 		client.emit("msg", {
-			chan: lobby.id,
+			chan: chan.id,
 			msg: msg
 		});
 	});
