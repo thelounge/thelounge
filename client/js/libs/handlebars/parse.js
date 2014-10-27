@@ -50,40 +50,44 @@ function uri(text) {
 
 var regex = {
 	color: /\003([0-9]{1,2})[,]?([0-9]{1,2})?([^\003]+)/,
+	terminator: /\x0D/,
 	styles: [
-        [/\002([^\002]+)(\002)?/, ["<b>", "</b>"]],
-        [/\037([^\037]+)(\037)?/, ["<u>", "</u>"]],
-    ]
+		[/\002([^\002]+)(\002)?/, ["<b>", "</b>"]],
+		[/\037([^\037]+)(\037)?/, ["<u>", "</u>"]],
+	]
 };
 function colors(text) {
 	if (!text) {
 		return text;
 	}
-    if (regex.color.test(text)) {
-    	var match, bg;
-        while (match = regex.color.exec(text)) {
-            var color = "color-" + match[1];
-            if (match[2]) {
-            	bg = match[2];
-            }
-            if (bg) {
-           		color += " bg-" + bg;
-           	}
-            var text = text.replace(
-            	match[0],
-            	"<span class='" + color + "'>" + match[3] + "</span>"
-            );
-        }
-    }
-    for (var i in regex.styles) {
-        var pattern = regex.styles[i][0];
-        var style = regex.styles[i][1];
-        if (pattern.test(text)) {
-        	var match;
-            while (match = pattern.exec(text)) {
-                text = text.replace(match[0], style[0] + match[1] + style[1]);
-            }
-        }
-    }
-    return text;
+	if (regex.terminator.test(text)) {
+		return $.map(text.split(regex.terminator), colors);
+	}
+	if (regex.color.test(text)) {
+		var match, bg;
+		while (match = regex.color.exec(text)) {
+			var color = "color-" + match[1];
+			if (match[2]) {
+				bg = match[2];
+			}
+			if (bg) {
+				color += " bg-" + bg;
+			}
+			var text = text.replace(
+				match[0],
+				"<span class='" + color + "'>" + match[3] + "</span>"
+			);
+		}
+	}
+	for (var i in regex.styles) {
+		var pattern = regex.styles[i][0];
+		var style = regex.styles[i][1];
+		if (pattern.test(text)) {
+			var match;
+			while (match = pattern.exec(text)) {
+				text = text.replace(match[0], style[0] + match[1] + style[1]);
+			}
+		}
+	}
+	return text;
 }
