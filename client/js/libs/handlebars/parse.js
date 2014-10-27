@@ -41,8 +41,8 @@ function uri(text) {
 		}
 		var split = url.split("<");
 		url = "<a href='" + split[0].replace(/^www/, "//www") + "' target='_blank'>" + split[0] + "</a>";
-		if (split[1]) {
-			url += "<" + split[1];
+		if (split.length > 1) {
+			url += "<" + split.slice(1).join("<");
 		}
 		return url;
 	});
