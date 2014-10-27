@@ -1,4 +1,13 @@
 
+0.45.3 / 2014-10-27
+==================
+
+  * Remove password argument from add command
+  * Support MIRC style terminators
+	* Fix edit command
+  * Fix URLs preventing proper closure of bold and color tags
+  * Send NOTICE messages to the correct channel
+
 0.45.2 / 2014-10-16
 ==================
 
