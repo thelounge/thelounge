@@ -1,4 +1,10 @@
 
+0.45.4 / 2014-11-05
+==================
+
+  * Added username input
+  * Added 'morning' theme by @rikukissa
+
 0.45.3 / 2014-10-27
 ==================
 
