@@ -147,6 +147,14 @@ module.exports = {
 		nick: "shout-user",
 
 		//
+		// Username
+		//
+		// @type     string
+		// @default  ""
+		//
+		username: "",
+
+		//
 		// Real Name
 		//
 		// @type     string
