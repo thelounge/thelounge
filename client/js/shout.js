@@ -685,6 +685,11 @@ $(function() {
 			event, values
 		);
 	});
+	
+	forms.on("input", "#nick", function() {
+		var nick = $(this).val();
+		$("#username").val(nick);
+	});
 
 	Mousetrap.bind([
 		"command+up",

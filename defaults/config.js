@@ -150,9 +150,9 @@ module.exports = {
 		// Username
 		//
 		// @type     string
-		// @default  ""
+		// @default  "shout-user"
 		//
-		username: "",
+		username: "shout-user",
 
 		//
 		// Real Name
