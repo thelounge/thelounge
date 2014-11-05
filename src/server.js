@@ -18,7 +18,7 @@ module.exports = function(options) {
 	var app = express()
 		.use(index)
 		.use(express.static("client"));
-	
+
 	app.enable("trust proxy");
 
 	var server = null;
@@ -26,6 +26,7 @@ module.exports = function(options) {
 	var protocol = https.enable ? "https" : "http";
 	var port = config.port;
 	var host = config.host;
+	var transports = config.transports || ['websocket', 'polling'];
 
 	if (!https.enable){
 		server = require("http");
@@ -42,7 +43,10 @@ module.exports = function(options) {
 		require("./identd").start(config.identd.port);
 	}
 
-	sockets = io(server);
+	sockets = io(server, {
+		transports: transports
+	});
+
 	sockets.on("connect", function(socket) {
 		if (config.public) {
 			auth.call(socket);
