@@ -170,13 +170,14 @@ module.exports = {
 		//
 		join: "#foo, #shout-irc"
 	},
+
 	//
 	// Set socket.io transports
 	//
 	// @type     array
-	// @default  ['polling', 'websocket']
+	// @default  ["polling', "websocket"]
 	//
-	transports: ['polling', 'websocket']
+	transports: ["polling", "websocket"],
 
 	//
 	// Run Shout with HTTPS support.

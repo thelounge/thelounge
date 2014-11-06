@@ -24,8 +24,12 @@ if (program.home) {
 var config = Helper.HOME + "/config.js";
 if (!fs.existsSync(config)) {
 	mkdirp.sync(Helper.HOME);
-	fs.writeFileSync(config, fs.readFileSync(__dirname + "/../../defaults/config.js"));
-	console.log("Config created:" + config);
+	fs.writeFileSync(
+		config,
+		fs.readFileSync(__dirname + "/../../defaults/config.js")
+	);
+	console.log("Config created:");
+	console.log(config);
 }
 
 program.parse(argv.args);
