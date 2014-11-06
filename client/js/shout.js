@@ -686,9 +686,9 @@ $(function() {
 		);
 	});
 	
-	forms.on("input", "#nick", function() {
+	forms.on("input", ".nick", function() {
 		var nick = $(this).val();
-		$("#username").val(nick);
+		forms.find(".username").val(nick);
 	});
 
 	Mousetrap.bind([
