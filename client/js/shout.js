@@ -476,7 +476,13 @@ $(function() {
 			.find(".chat")
 			.sticky()
 			.end();
-
+		
+		var title = "Shout";
+		if (chan.data("title")) {
+			title = chan.data("title") + " — " + title;
+		}
+		document.title = title;
+		
 		if (self.hasClass("chan")) {
 			var nick = self
 				.closest(".network")

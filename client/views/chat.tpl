@@ -1,5 +1,5 @@
 {{#each channels}}
-<div id="chan-{{id}}" data-id="{{id}}" data-type="{{type}}" class="chan {{type}}">
+<div id="chan-{{id}}" data-title="{{name}}" data-id="{{id}}" data-type="{{type}}" class="chan {{type}}">
 	<div class="header">
 		<button class="lt"></button>
 		<button class="rt"></button>
