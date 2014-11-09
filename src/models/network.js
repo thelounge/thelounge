@@ -12,6 +12,7 @@ function Network(attr) {
 		port: 6667,
 		tls: false,
 		password: "",
+		commands: [],
 		username: "",
 		realname: "",
 		channels: [],
@@ -41,7 +42,8 @@ Network.prototype.export = function() {
 		"tls",
 		"password",
 		"username",
-		"realname"
+		"realname",
+		"commands"
 	]);
 	network.nick = (this.irc || {}).me;
 	network.join = _.pluck(

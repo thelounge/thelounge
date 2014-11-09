@@ -135,9 +135,9 @@ Client.prototype.connect = function(args) {
 			server.socket = socket;
 		}
 	}
-	
+
 	var stream = args.tls ? tls.connect(server) : net.connect(server);
-	
+
 	stream.on("error", function(e) {
 		console.log("Client#connect():\n" + e);
 		stream.end();
@@ -173,6 +173,7 @@ Client.prototype.connect = function(args) {
 		password: args.password,
 		username: username,
 		realname: realname,
+		commands: args.commands
 	});
 
 	network.irc = irc;
@@ -329,7 +330,7 @@ Client.prototype.save = function(force) {
 	if(config.public) {
 		return;
 	}
-	
+
 	if (!force) {
 		clearTimeout(timer);
 		timer = setTimeout(function() {
@@ -337,24 +338,24 @@ Client.prototype.save = function(force) {
 		}, 1000);
 		return;
 	}
-	
+
 	var name = this.name;
 	var path = Helper.HOME + "/users/" + name + ".json";
-	
+
 	var networks = _.map(
 		this.networks,
 		function(n) {
 			return n.export();
 		}
 	);
-	
+
 	var json = {};
 	fs.readFile(path, "utf-8", function(err, data) {
 		if (err) {
 			console.log(err);
 			return;
 		}
-		
+
 		try {
 			json = JSON.parse(data);
 			json.networks = networks;
@@ -362,7 +363,7 @@ Client.prototype.save = function(force) {
 			console.log(e);
 			return;
 		}
-		
+
 		fs.writeFile(
 			path,
 			JSON.stringify(json, null, "  "),
