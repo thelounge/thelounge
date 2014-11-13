@@ -1,4 +1,11 @@
 
+0.46.0 / 2014-11-14
+==================
+
+  * Fix commands being removed from user.json
+  * Added dynamic title
+  * Turn off input autocomplete
+
 0.45.5 / 2014-11-05
 ==================
 
