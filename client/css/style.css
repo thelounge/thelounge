@@ -38,6 +38,9 @@ button {
 	outline: none;
 	padding: 0;
 }
+.web-app-mode {
+	padding-top: 20px;
+}
 .tooltip-inner {
 	background: #fff;
 	border-radius: 2px;

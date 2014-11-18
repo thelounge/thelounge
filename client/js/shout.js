@@ -31,6 +31,10 @@ $(function() {
 	var sidebar = $("#sidebar, #footer");
 	var chat = $("#chat");
 
+	if (navigator.standalone) {
+		$("html").addClass("web-app-mode");
+	}
+
 	try {
 		var pop = new Audio();
 		pop.src = "/audio/pop.ogg";
