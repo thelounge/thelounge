@@ -915,6 +915,18 @@ button {
 .bg-14 { background: #aaa; }
 .bg-15 { background: #ddd; }
 
+.irc-bold {
+    font-weight: bold;
+}
+
+.irc-underline {
+    text-decoration: underline;
+}
+
+.irc-italic {
+    font-style:italic
+}
+
 /**
  * TrackpadScrollEmulator
  * Version: 1.0.6
