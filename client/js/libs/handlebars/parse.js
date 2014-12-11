@@ -62,9 +62,9 @@ var styleCheck_Re = /[\x00-\x1F]/,
     styleBreak = "\x0F";
 
 
-var styleTemplate = function(settings) {
+function styleTemplate(settings) {
     return "<span class='" + settings.style + "'>" + settings.text + "</span>";
-};
+}
 
 var styles = [
     ["normal", "\x00", ""], ["underline", "\x1F"],
@@ -83,8 +83,8 @@ var styles = [
 var colourMap = {};
 for (var colour = 0; colour < 16; colour++) {
     colourMap[colour] = {
-        fore: "color-" + colour,
-        back: "bg-" + colour
+        fore: "irc-fg" + colour,
+        back: "irc-bg" + colour
     };
 }
 
