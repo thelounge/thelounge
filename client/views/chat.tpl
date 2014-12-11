@@ -8,7 +8,11 @@
 				{{#equal type "lobby"}}
 					Disconnect
 				{{else}}
-					Leave
+					{{#equal type "query"}}
+						Close
+					{{else}}
+						Leave
+					{{/equal}}
 				{{/equal}}
 			</button>
 		</div>

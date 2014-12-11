@@ -46,7 +46,7 @@ templates['chat'] = template({"1":function(depth0,helpers,partials,data) {
   stack1 = ((helpers.parse || (depth0 && depth0.parse) || helperMissing).call(depth0, (depth0 != null ? depth0.topic : depth0), {"name":"parse","hash":{},"data":data}));
   if (stack1 != null) { buffer += stack1; }
   buffer += "</span>\n	</div>\n	<div class=\"chat\">\n		<div class=\"show-more ";
-  stack1 = ((helpers.equal || (depth0 && depth0.equal) || helperMissing).call(depth0, ((stack1 = (depth0 != null ? depth0.messages : depth0)) != null ? stack1.length : stack1), 100, {"name":"equal","hash":{},"fn":this.program(6, data),"inverse":this.noop,"data":data}));
+  stack1 = ((helpers.equal || (depth0 && depth0.equal) || helperMissing).call(depth0, ((stack1 = (depth0 != null ? depth0.messages : depth0)) != null ? stack1.length : stack1), 100, {"name":"equal","hash":{},"fn":this.program(9, data),"inverse":this.noop,"data":data}));
   if (stack1 != null) { buffer += stack1; }
   return buffer + "\">\n			<button class=\"show-more-button\" data-id=\""
     + escapeExpression(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"id","hash":{},"data":data}) : helper)))
@@ -58,8 +58,15 @@ templates['chat'] = template({"1":function(depth0,helpers,partials,data) {
 },"2":function(depth0,helpers,partials,data) {
   return "					Disconnect\n";
   },"4":function(depth0,helpers,partials,data) {
-  return "					Leave\n";
-  },"6":function(depth0,helpers,partials,data) {
+  var stack1, helperMissing=helpers.helperMissing, buffer = "";
+  stack1 = ((helpers.equal || (depth0 && depth0.equal) || helperMissing).call(depth0, (depth0 != null ? depth0.type : depth0), "query", {"name":"equal","hash":{},"fn":this.program(5, data),"inverse":this.program(7, data),"data":data}));
+  if (stack1 != null) { buffer += stack1; }
+  return buffer;
+},"5":function(depth0,helpers,partials,data) {
+  return "						Close\n";
+  },"7":function(depth0,helpers,partials,data) {
+  return "						Leave\n";
+  },"9":function(depth0,helpers,partials,data) {
   return "show";
   },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, buffer = "";
