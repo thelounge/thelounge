@@ -879,41 +879,54 @@ button {
 
 
 /**
- * Colors
- * http://clrs.cc/
- */
-.color-0, .color-00 { color: #fff; }
-.color-1, .color-01 { color: #000; }
-.color-2, .color-02 { color: #001f3f; }
-.color-3, .color-03 { color: #2ecc40; }
-.color-4, .color-04 { color: #ff4136; }
-.color-5, .color-05 { color: #85144b; }
-.color-6, .color-06 { color: #b10dc9; }
-.color-7, .color-07 { color: #ff851b; }
-.color-8, .color-08 { color: #ffdc00; }
-.color-9, .color-09 { color: #01ff70; }
-.color-10 { color: #39cccc; }
-.color-11 { color: #7fdbff; }
-.color-12 { color: #0074d9; }
-.color-13 { color: #f012be; }
-.color-14 { color: #aaa; }
-.color-15 { color: #ddd; }
-.bg-0, .bg-00 { background: #fff; }
-.bg-1, .bg-01 { background: #000; }
-.bg-2, .bg-02 { background: #001f3f; }
-.bg-3, .bg-03 { background: #2ecc40; }
-.bg-4, .bg-04 { background: #ff4136; }
-.bg-5, .bg-05 { background: #85144b; }
-.bg-6, .bg-06 { background: #b10dc9; }
-.bg-7, .bg-07 { background: #ff851b; }
-.bg-8, .bg-08 { background: #ffdc00; }
-.bg-9, .bg-09 { background: #01ff70; }
-.bg-10 { background: #39cccc; }
-.bg-11 { background: #7fdbff; }
-.bg-12 { background: #0074d9; }
-.bg-13 { background: #f012be; }
-.bg-14 { background: #aaa; }
-.bg-15 { background: #ddd; }
+  * IRC Message Styling
+  * https://github.com/megawac/irc-style-parser
+  * Colours are credit to http://clrs.cc/
+  */
+.irc-fg0 { color: #fff; }
+.irc-fg1 { color: #000; }
+.irc-fg2 { color: #001f3f; }
+.irc-fg3 { color: #2ecc40; }
+.irc-fg4 { color: #ff4136; }
+.irc-fg5 { color: #85144b; }
+.irc-fg6 { color: #b10dc9; }
+.irc-fg7 { color: #ff851b; }
+.irc-fg8 { color: #ffdc00; }
+.irc-fg9 { color: #01ff70; }
+.irc-fg10 { color: #39cccc; }
+.irc-fg11 { color: #7fdbff; }
+.irc-fg12 { color: #0074d9; }
+.irc-fg13 { color: #f012be; }
+.irc-fg14 { color: #aaa; }
+.irc-fg15 { color: #ddd; }
+.irc-bg0 { background: #fff; }
+.irc-bg1 { background: #000; }
+.irc-bg2 { background: #001f3f; }
+.irc-bg3 { background: #2ecc40; }
+.irc-bg4 { background: #ff4136; }
+.irc-bg5 { background: #85144b; }
+.irc-bg6 { background: #b10dc9; }
+.irc-bg7 { background: #ff851b; }
+.irc-bg8 { background: #ffdc00; }
+.irc-bg9 { background: #01ff70; }
+.irc-bg10 { background: #39cccc; }
+.irc-bg11 { background: #7fdbff; }
+.irc-bg12 { background: #0074d9; }
+.irc-bg13 { background: #f012be; }
+.irc-bg14 { background: #aaa; }
+.irc-bg15 { background: #ddd; }
+
+.irc-bold {
+    font-weight: bold;
+}
+
+.irc-underline {
+    text-decoration: underline;
+}
+
+.irc-italic {
+    font-style:italic
+}
 
 /**
  * TrackpadScrollEmulator
