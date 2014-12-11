@@ -71,7 +71,7 @@ module.exports = function(options) {
 };
 
 function index(req, res, next) {
-	if (req.url != "/") return next();
+	if (req.url.split("?")[0] != "/") return next();
 	return fs.readFile("client/index.html", "utf-8", function(err, file) {
 		var data = _.merge(
 			require("../package.json"),
