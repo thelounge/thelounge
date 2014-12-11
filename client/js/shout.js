@@ -313,7 +313,7 @@ $(function() {
 			break;
 		}
 	});
-	
+
 	socket.on("topic", function(data) {
 		$("#chan-" + data.chan).find(".header .topic").html(data.topic);
 	});
@@ -480,13 +480,13 @@ $(function() {
 			.find(".chat")
 			.sticky()
 			.end();
-		
+
 		var title = "Shout";
 		if (chan.data("title")) {
 			title = chan.data("title") + " — " + title;
 		}
 		document.title = title;
-		
+
 		if (self.hasClass("chan")) {
 			var nick = self
 				.closest(".network")
@@ -695,7 +695,7 @@ $(function() {
 			event, values
 		);
 	});
-	
+
 	forms.on("input", ".nick", function() {
 		var nick = $(this).val();
 		forms.find(".username").val(nick);
@@ -775,9 +775,11 @@ $(function() {
 	}
 
 	function confirmExit() {
-		window.onbeforeunload = function() {
-			return "Are you sure you want to navigate away from this page?";
-		};
+		if ($("body").hasClass("public")) {
+			window.onbeforeunload = function() {
+				return "Are you sure you want to navigate away from this page?";
+			};
+		}
 	}
 
 	function refresh() {
