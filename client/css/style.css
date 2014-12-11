@@ -652,6 +652,9 @@ button {
 }
 #chat .toggle-content .body {
 	color: #999;
+	max-width: 460px;
+	word-break: normal;
+	word-wrap: break-word;
 }
 #chat .toggle-content.show {
 	display: inline-block !important;

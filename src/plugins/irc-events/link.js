@@ -11,7 +11,7 @@ module.exports = function(irc, network) {
 		if (!config.prefetch) {
 			return;
 		}
-		
+
 		var links = [];
 		var split = data.message.split(" ");
 		_.each(split, function(w) {
@@ -41,10 +41,9 @@ module.exports = function(irc, network) {
 			msg: msg
 		});
 
-		_.each(links, function(url) {
-			fetch(url, function(res) {
-				parse(msg, url, res, client);
-			});
+		var link = links[0];
+		fetch(link, function(res) {
+			parse(msg, link, res, client);
 		});
 	});
 };
@@ -68,7 +67,7 @@ function parse(msg, url, res, client) {
 			   $('meta[name=description]').attr('content')
 			|| $('meta[property="og:description"]').attr('content')
 			|| "No description found.";
-		toggle.thumb = 
+		toggle.thumb =
 			   $('meta[property="og:image"]').attr('content')
 			|| $('meta[name="twitter:image:src"]').attr('content')
 			|| "";
