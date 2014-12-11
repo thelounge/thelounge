@@ -1,23 +1,18 @@
 var _ = require("lodash");
 
 module.exports = function(network, chan, cmd, args) {
-	if (cmd != "say" && cmd != "msg") {
+	if (cmd != "ns" && cmd != "cs" && cmd != "hs") {
 		return;
 	}
-	if (args.length === 0 || args[0] === "") {
+	var target = ({
+		"ns": "nickserv",
+		"cs": "chanserv",
+		"hs": "hostserv",
+	})[cmd];
+	if (!target || args.length === 0 || args[0] === "") {
 		return;
 	}
-	var client = this;
 	var irc = network.irc;
-	var target = "";
-	if (cmd == "msg") {
-		target = args.shift();
-		if (args.length === 0) {
-			return;
-		}
-	} else {
-		target = chan.name;
-	}
 	var msg = args.join(" ");
 	irc.send(target, msg);
 	var channel = _.find(network.channels, {name: target});

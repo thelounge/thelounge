@@ -45,6 +45,7 @@ var inputs = [
 	"part",
 	"quit",
 	"raw",
+	"services",
 	"topic",
 	"whois"
 ];
