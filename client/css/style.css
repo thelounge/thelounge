@@ -606,8 +606,8 @@ button {
 	display: none;
 }
 #chat .action,
-#chat .action .user {
-	color: #f39c12;
+#chat .chan .action .user {
+	color: #f39c12 !important;
 }
 #chat .action .user:before {
 	content: "* ";
