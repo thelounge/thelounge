@@ -1,8 +1,9 @@
 var _ = require("lodash");
 var cheerio = require("cheerio");
 var Msg = require("../../models/msg");
-var request = require("superagent");
+var request = require("hyperquest");
 var Helper = require("../../helper");
+var es = require('event-stream');
 
 module.exports = function(irc, network) {
 	var client = this;
@@ -60,7 +61,7 @@ function parse(msg, url, res, client) {
 
 	switch (res.type) {
 	case "text/html":
-		var $ = cheerio.load(res.res.text);
+		var $ = cheerio.load(res.text);
 		toggle.type = "link";
 		toggle.head = $("title").text();
 		toggle.body =
@@ -89,9 +90,33 @@ function parse(msg, url, res, client) {
 
 function fetch(url, cb) {
 	var req = request.get(url);
-	req.end(function(e, res) {
-		if (res) {
-			cb(res);
+	var length = 0;
+	var limit = 1024;
+	req.on('response', function(res) {
+		if (!(/(text\/html|application\/json)/.test(res.headers['content-type']))) {
+			// stop wasting precious bandwidth <3
+		  res.req.abort();
 		}
 	});
+	req.pipe(es.map(function(data, next) {
+		length += data.length;
+		if (length > limit) {
+			req.response.req.abort();
+		}
+		next(null, data);
+	})).pipe(es.wait(function(err, data) {
+		var body;
+		try {
+			body = JSON.parse(data);
+		} catch(e) {
+			console.log(data, e);
+			body = {};
+		}
+		data = {
+			text: data,
+			body: body,
+			type: req.response.headers['content-type'].split(';').shift()
+		};
+		if (!err) cb(data);
+	}));
 }
