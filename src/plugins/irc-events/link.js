@@ -109,7 +109,6 @@ function fetch(url, cb) {
 		try {
 			body = JSON.parse(data);
 		} catch(e) {
-			console.log(data, e);
 			body = {};
 		}
 		data = {
