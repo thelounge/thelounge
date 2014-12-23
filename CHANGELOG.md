@@ -1,3 +1,10 @@
+
+0.49.0 / 2014-12-23 
+==================
+
+ * Replaced superagent with request
+ * Solves a problem where some links would crash the server
+
 0.48.0 / 2014-12-12
 ===================
 
