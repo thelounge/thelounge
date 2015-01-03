@@ -109,15 +109,21 @@ function fetch(url, cb) {
 		.pipe(es.wait(function(err, data) {
 			if (err) return;
 			var body;
+			var type;
 			try {
 				body = JSON.parse(data);
 			} catch(e) {
 				body = {};
 			}
+			try {
+				type = req.response.headers['content-type'].split(/ *; */).shift();
+			} catch(e) {
+				type = {};
+			}
 			data = {
 				text: data,
 				body: body,
-				type: req.response.headers['content-type'].split(/ *; */).shift()
+				type: type
 			};
 			cb(data);
 		}));
