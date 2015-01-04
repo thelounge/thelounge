@@ -89,7 +89,11 @@ function parse(msg, url, res, client) {
 }
 
 function fetch(url, cb) {
-	var req = request.get(url);
+	try {
+		var req = request.get(url);
+	} catch(e) {
+		return;
+	}
 	var length = 0;
 	var limit = 1024 * 10;
 	req
