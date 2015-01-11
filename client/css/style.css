@@ -514,7 +514,6 @@ button {
 }
 #chat .messages {
 	display: table;
-	height: 100%;
 	width: 100%;
 }
 #chat .msg {
