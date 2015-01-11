@@ -1,4 +1,11 @@
 
+0.49.3 / 2015-01-04 
+==================
+
+ * Fully expand chat when userlist is hidden
+ * Remove vertical whitespace in chat windows
+ * Support @mention
+
 0.49.2 / 2015-01-04 
 ==================
 
