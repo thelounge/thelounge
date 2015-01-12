@@ -32,7 +32,25 @@ QUIT #bc6c4c
 }
 
 #settings, #sign-in, #connect {
+  color: #dcdccc;
+}
+
+#settings, #sign-in, #connect .title {
   color: #88b090;
+}
+
+#settings, #sign-in, #connect .opt {
+  color: #dcdccc;
+}
+
+#sidebar {
+  background: #2b2b2b;
+  bottom: 48px;
+}
+
+#footer {
+  background: #33332f;
+  border-top: 1px solid #000;
 }
 
 #chat .sidebar {
@@ -59,7 +77,6 @@ QUIT #bc6c4c
 #chat .sidebar {
   border-color: #333333;
 }
-
 
 /* Attach chat to window borders */
 #windows .window:before, #windows .chan:before {
@@ -120,7 +137,7 @@ QUIT #bc6c4c
 #form #input {
   background-color: #434443;
   border-color: #101010;
-  color: #88b090;
+  color: #dcdccc;
   padding-left: 1em !important;
 }
 
@@ -128,16 +145,15 @@ QUIT #bc6c4c
   display: none;
 }
 
-
 #chat .header {
   color: #d2d39b;
 }
+
 /* Hide unnecessary buttons */
 #windows .header .button,
 #form #submit {
   display: none;
 }
-
 
 /* Setup text colors */
 #chat .msg {
@@ -155,17 +171,13 @@ QUIT #bc6c4c
 #chat .error .from,
 #chat .highlight,
 #chat .highlight .from {
-  color: #7cac7c;
-}
-
-#chat .highlight:not(.self) {
-  font-size: 1.2em;
+  color: #bc6c4c;
 }
 
 #chat .msg.quit .time,
 #chat .msg.quit .from button,
 #chat .msg.quit .type {
-  color: #bc6c4c !important;
+  color: ##bc6c9c !important;
 }
 
 #chat .msg.topic {
