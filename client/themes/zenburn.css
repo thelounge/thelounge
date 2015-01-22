@@ -1,0 +1,208 @@
+/*
+Zenburn theme for Shout.
+Based on the Morning Theme by Riku Rouvila
+
+Installation instructions can be found here
+http://shout-irc.com/docs/server/configuration.html#theme
+
+Author: JP Smith
+GitHub: https://github.com/japesinator
+*/
+
+/*
+BACKGROUND #3f3f3f
+INPUT BACKGROUND #434443
+PRIMARY #dcdccc
+SECONDARY #d2d39b
+BORDERS #333333
+QUIT #bc6c4c
+*/
+
+#windows .chan, #windows .window {
+  background: #3f3f3f;
+}
+
+#main #chat,
+#main #form,
+#form .input,
+#chat,
+#windows .header {
+  font-family: 'Open Sans', sans-serif !important;
+  font-size: 13px;
+}
+
+#settings, #sign-in, #connect {
+  color: #dcdccc;
+}
+
+#settings, #sign-in, #connect .title {
+  color: #88b090;
+}
+
+#settings, #sign-in, #connect .opt {
+  color: #dcdccc;
+}
+
+#sidebar {
+  background: #2b2b2b;
+  bottom: 48px;
+}
+
+#footer {
+  background: #33332f;
+  border-top: 1px solid #000;
+}
+
+#chat .sidebar {
+  background: #3f3f3f;
+}
+
+#chat .count {
+  background-color: #434443;
+}
+
+#chat .search {
+  color: #88b090;
+  padding: 15px 16px;
+}
+
+#chat .search::-webkit-input-placeholder {
+   color: #d2d39b;
+   opacity: 0.5;
+}
+
+/* Borders */
+#chat .from, #windows .header,
+#chat .user-mode:before,
+#chat .sidebar {
+  border-color: #333333;
+}
+
+/* Attach chat to window borders */
+#windows .window:before, #windows .chan:before {
+  display: none;
+}
+
+#footer {
+  left: 0;
+  bottom: 0;
+  width: 220px;
+}
+
+#main {
+  top: 0;
+  bottom: 0;
+  right: 0;
+  border-radius: 0;
+}
+
+#chat .chat, #chat .sidebar {
+  top: 48px;
+}
+
+/* User list */
+#chat .user-mode {
+  color: #dcdccc;
+}
+
+/* Nicknames */
+#chat.no-colors .from button,
+#chat.no-colors .sidebar button {
+  color: #bc8cbc !important;
+}
+
+#chat.no-colors .from button:hover,
+#chat.no-colors .sidebar button:hover {
+  color: #dcdccc !important;
+}
+
+#chat a {
+  color: #8c8cbc;
+}
+
+#chat button:hover {
+  opacity: 1;
+}
+
+/* Message form */
+#form {
+  background: #333333;
+  border-color: #101010;
+}
+
+#form .input {
+  margin-right: 0;
+}
+
+#form #input {
+  background-color: #434443;
+  border-color: #101010;
+  color: #dcdccc;
+  padding-left: 1em !important;
+}
+
+#form #nick {
+  display: none;
+}
+
+#chat .header {
+  color: #d2d39b;
+}
+
+/* Hide unnecessary buttons */
+#windows .header .button,
+#form #submit {
+  display: none;
+}
+
+/* Setup text colors */
+#chat .msg {
+  color: #ffcfaf;
+}
+#chat .message {
+  color: #dcdccc;
+}
+
+#chat .self .text {
+  color: #d2d39b;
+}
+
+#chat .error,
+#chat .error .from,
+#chat .highlight,
+#chat .highlight .from {
+  color: #bc6c4c;
+}
+
+#chat .msg.quit .time,
+#chat .msg.quit .from button,
+#chat .msg.quit .type {
+  color: ##bc6c9c !important;
+}
+
+#chat .msg.topic {
+  color: #dcdccc;
+}
+#chat .msg .type {
+  margin-right: 0.5em;
+}
+
+#chat .msg.join .time,
+#chat .msg.join .from button,
+#chat .msg.join .type {
+  color: #8cd0d3 !important;
+}
+/* Embeds */
+#chat .toggle-content,
+#chat .toggle-button {
+  background: #93b3a3;
+  color: #dcdccc;
+}
+#chat .toggle-content img {
+  float: left;
+  margin-right: 0.5em;
+}
+
+#chat .toggle-content .body {
+  color: #d2d39b;
+}
