@@ -29,7 +29,7 @@ module.exports = function(irc, network) {
 		chan.topic = topic
 		client.emit("topic", {
 			chan: chan.id,
-			topic: topic
+			topic: _.escape(topic)
 		});
 	});
 };
