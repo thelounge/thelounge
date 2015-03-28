@@ -608,6 +608,12 @@ button {
 	display: none;
 	font-style: normal;
 }
+#chat .msg .inline-channel {
+	cursor: pointer;
+}
+#chat .msg .inline-channel:hover {
+	opacity: .6;
+}
 #chat .time,
 #chat .from,
 #chat .text {
