@@ -34,8 +34,8 @@ To run the app from source, just clone the code and run this in your terminal:
 
 ```
 npm install
-grunt build
-node index.js
+grunt
+./index.js --port 8080
 ```
 
 ## License
