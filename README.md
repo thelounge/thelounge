@@ -38,6 +38,8 @@ grunt
 ./index.js --port 8080
 ```
 
+And if you don't have [grunt](http://gruntjs.com/getting-started) installed already, just run `npm install -g grunt-cli`.
+
 ## License
 
 Available under [the MIT license](http://mths.be/mit).
