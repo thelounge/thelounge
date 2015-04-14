@@ -1,8 +1,18 @@
-@import url('//fonts.googleapis.com/css?family=Lato:400,700');
-@import url('//fonts.googleapis.com/css?family=Open+Sans:300,400,700');
 @font-face {
-	font-family: "FontAwesome";
+	font-family: "Lato";
+	src: url("fonts/lato.woff") format("woff");
+}
+@font-face {
+	font-family: "Lato Black";
+	src: url("fonts/lato-black.woff") format("woff");
+}
+@font-face {
+	font-family: "Font Awesome";
 	src: url("fonts/fontawesome.svg") format("svg"), url("fonts/fontawesome.woff") format("woff");
+}
+@font-face {
+	font-family: "Droid Sans Mono";
+	src: url("fonts/droidsansmono.svg") format("svg"), url("fonts/droidsansmono.woff") format("woff");
 }
 html,
 body {
@@ -56,7 +66,7 @@ button {
 	color: #84d1ff;
 	color: #84ce88;
 	display: inline-block;
-	font: bold 12px Lato, sans-serif;
+	font: bold 12px "Lato Black", sans-serif;
 	letter-spacing: 1px;
 	margin-bottom: 10px;
 	padding: 9px 17px;
@@ -119,7 +129,7 @@ button {
 }
 #viewport .lt:before,
 #viewport .rt:before {
-	font: 14px FontAwesome;
+	font: 14px "Font Awesome";
 	content: "\f0c9";
 }
 #viewport .rt {
@@ -198,7 +208,7 @@ button {
 }
 #sidebar .chan:before,
 #chat .title:before {
-	font: 14px FontAwesome;
+	font: 14px "Font Awesome";
 	float: left;
 	margin-top: 3px;
 	margin-right: 12px;
@@ -286,7 +296,7 @@ button {
 #footer .icon {
 	color: #9ca5b4;
 	display: inline-block;
-	font: 14px FontAwesome;
+	font: 14px "Font Awesome";
 	line-height: 34px;
 	padding: 0px 12px;
 }
@@ -446,7 +456,7 @@ button {
 }
 #chat,
 #windows .header {
-	font: 12px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
+	font: 12px "Droid Sans Mono", monospace;
 	line-height: 1.4;
 }
 #chat button:hover {
@@ -671,7 +681,7 @@ button {
 }
 #chat .count:before {
 	color: #cfcfcf;
-	font: 14px FontAwesome;
+	font: 14px "Font Awesome";
 	content: "\f002";
 	position: absolute;
 	right: 18px;
@@ -807,7 +817,7 @@ button {
 }
 #settings #play:before {
 	content: "\f028";
-	font: 14px FontAwesome;
+	font: 14px "Font Awesome";
 	margin-right: 9px;
 }
 #settings .about {
@@ -834,7 +844,7 @@ button {
 	top: 6px;
 }
 #form .input {
-	font: 12px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
+	font: 12px "Droid Sans Mono", monospace;
 	left: 0;
 	height: 34px;
 	margin-right: 64px;

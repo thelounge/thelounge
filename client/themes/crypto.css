@@ -1,0 +1,102 @@
+/*
+Crypto theme for Shout.
+
+Installation instructions can be found here
+http://shout-irc.com/docs/server/configuration.html#theme
+
+Author: Aynik
+GitHub: https://github.com/aynik
+*/
+
+body {
+    background: #000;
+	font: 16px "Droid Sans Mono", monospace;
+}
+
+a, #chat a {
+    color: #00FF0E;
+}
+
+a:hover, #chat a:hover {
+    color: #3EFF48;
+}
+
+#windows .window h2 {
+    color: #666;
+    font: 14px regular Leto, sans-serif;
+    border-bottom: none;
+}
+
+#main {
+    right: 0px;
+    bottom: 0px;
+    top: 0px;
+    border-radius: 0px;
+}
+
+#sign-in label {
+    font: 14px Lato, sans-serif;
+    color: #666;
+}
+
+#sign-in label input {
+    margin-top: 10px !important;
+    font: 14px "Droid Sans Mono", monospace;
+}
+
+.btn {
+    border-color: #00FF0E;
+    color: #00FF0E;
+}
+
+.btn:disabled, .btn:hover {
+    background: #00FF0E;
+}
+
+#windows .window:before, #windows .chan:before {
+    content: none;
+}
+
+#settings .opt {
+    line-height: 20px;
+    font-size: 12px;
+}
+
+#sign-in .remember {
+    font: 12px "Droid Sans Mono", monospace;
+    line-height: 30px;
+}
+
+.chan:first-child.activeat .msg .type,
+#sidebar .chan:first-child {
+    color: #00FF0E;
+}
+
+#sidebar button, 
+#sidebar .chan, 
+#sidebar .sign-out, 
+#chat .time, 
+#chat .msg .type, 
+#chat .count:before,
+#sidebar .empty {
+    color: #666;
+}
+
+#sidebar .active {
+    color: #fff;
+}
+
+#chat.no-colors .from button, #chat.no-colors .sidebar button {
+    color: #000 !important;
+    font-weight: bold
+}
+
+#footer .icon {
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    #main  {
+        left: 0px;
+    }
+}
