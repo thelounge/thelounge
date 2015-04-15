@@ -458,8 +458,8 @@ button {
 }
 #chat,
 #windows .header {
-	font: 11px Inconsolata-g, monospace;
-	line-height: 1.4;
+	font: 12px Inconsolata-g, monospace;
+	line-height: 1.8;
 }
 #chat button:hover {
 	opacity: .6;
