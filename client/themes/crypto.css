@@ -10,7 +10,7 @@ GitHub: https://github.com/aynik
 
 body {
     background: #000;
-	font: 16px "Droid Sans Mono", monospace;
+	font: 16px Inconsolata-g, monospace;
 }
 
 a, #chat a {
@@ -23,7 +23,7 @@ a:hover, #chat a:hover {
 
 #windows .window h2 {
     color: #666;
-    font: 14px regular Leto, sans-serif;
+    font: regular 14px Leto, sans-serif;
     border-bottom: none;
 }
 
@@ -45,7 +45,7 @@ a:hover, #chat a:hover {
 
 #sign-in label input {
     margin-top: 10px !important;
-    font: 14px "Droid Sans Mono", monospace;
+    font: 14px Inconsolata-g, monospace;
 }
 
 .btn {
@@ -67,7 +67,7 @@ a:hover, #chat a:hover {
 }
 
 #sign-in .remember {
-    font: 12px "Droid Sans Mono", monospace;
+    font: 12px Inconsolata-g, monospace;
     line-height: 30px;
 }
 

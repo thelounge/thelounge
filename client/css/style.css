@@ -1,18 +1,20 @@
 @font-face {
-	font-family: "Lato";
+	font-family: Lato;
 	src: url("fonts/lato.woff") format("woff");
+    font-weight: 400;
 }
 @font-face {
-	font-family: "Lato Black";
+	font-family: Lato;
 	src: url("fonts/lato-black.woff") format("woff");
+    font-weight: 700;
 }
 @font-face {
-	font-family: "Font Awesome";
+	font-family: FontAwesome;
 	src: url("fonts/fontawesome.svg") format("svg"), url("fonts/fontawesome.woff") format("woff");
 }
 @font-face {
-	font-family: "Droid Sans Mono";
-	src: url("fonts/droidsansmono.svg") format("svg"), url("fonts/droidsansmono.woff") format("woff");
+	font-family: Inconsolata-g;
+	src: url("fonts/inconsolatag.woff") format("woff"), url("fonts/inconsolatag.ttf") format("ttf");
 }
 html,
 body {
@@ -66,7 +68,7 @@ button {
 	color: #84d1ff;
 	color: #84ce88;
 	display: inline-block;
-	font: bold 12px "Lato Black", sans-serif;
+	font: bold 12px Lato, sans-serif;
 	letter-spacing: 1px;
 	margin-bottom: 10px;
 	padding: 9px 17px;
@@ -129,7 +131,7 @@ button {
 }
 #viewport .lt:before,
 #viewport .rt:before {
-	font: 14px "Font Awesome";
+	font: 14px FontAwesome;
 	content: "\f0c9";
 }
 #viewport .rt {
@@ -208,7 +210,7 @@ button {
 }
 #sidebar .chan:before,
 #chat .title:before {
-	font: 14px "Font Awesome";
+	font: 14px FontAwesome;
 	float: left;
 	margin-top: 3px;
 	margin-right: 12px;
@@ -296,7 +298,7 @@ button {
 #footer .icon {
 	color: #9ca5b4;
 	display: inline-block;
-	font: 14px "Font Awesome";
+	font: 14px FontAwesome;
 	line-height: 34px;
 	padding: 0px 12px;
 }
@@ -456,7 +458,7 @@ button {
 }
 #chat,
 #windows .header {
-	font: 12px "Droid Sans Mono", monospace;
+	font: 12px Inconsolata-g, monospace;
 	line-height: 1.4;
 }
 #chat button:hover {
@@ -681,7 +683,7 @@ button {
 }
 #chat .count:before {
 	color: #cfcfcf;
-	font: 14px "Font Awesome";
+	font: 14px FontAwesome;
 	content: "\f002";
 	position: absolute;
 	right: 18px;
@@ -817,7 +819,7 @@ button {
 }
 #settings #play:before {
 	content: "\f028";
-	font: 14px "Font Awesome";
+	font: 14px FontAwesome;
 	margin-right: 9px;
 }
 #settings .about {
@@ -844,7 +846,7 @@ button {
 	top: 6px;
 }
 #form .input {
-	font: 12px "Droid Sans Mono", monospace;
+	font: 12px Inconsolata-g, monospace;
 	left: 0;
 	height: 34px;
 	margin-right: 64px;
