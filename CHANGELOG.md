@@ -1,3 +1,9 @@
+0.51.0 / 2015-04-16
+==================
+
+ * Added 'Crypto' theme by @aynik
+ * Link preview now ignores links from localhost
+ * Added 'displayNetwork' setting
 
 0.49.3 / 2015-01-04 
 ==================
