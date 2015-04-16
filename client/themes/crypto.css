@@ -8,9 +8,14 @@ Author: Aynik
 GitHub: https://github.com/aynik
 */
 
+@font-face {
+    font-family: Inconsolata-g;
+    src: url("fonts/inconsolatag.woff") format("woff"), url("fonts/inconsolatag.ttf") format("ttf");
+}
+
 body {
     background: #000;
-	font: 16px Inconsolata-g, monospace;
+    font: 16px Inconsolata-g, monospace;
 }
 
 a, #chat a {
@@ -76,11 +81,11 @@ a:hover, #chat a:hover {
     color: #00FF0E;
 }
 
-#sidebar button, 
-#sidebar .chan, 
-#sidebar .sign-out, 
-#chat .time, 
-#chat .msg .type, 
+#sidebar button,
+#sidebar .chan,
+#sidebar .sign-out,
+#chat .time,
+#chat .msg .type,
 #chat .count:before,
 #sidebar .empty {
     color: #666;
@@ -90,9 +95,19 @@ a:hover, #chat a:hover {
     color: #fff;
 }
 
+#chat,
+#windows .header {
+    font: 12px Inconsolata-g, monospace;
+    line-height: 1.8;
+}
+
 #chat.no-colors .from button, #chat.no-colors .sidebar button {
     color: #000 !important;
     font-weight: bold
+}
+
+#form .input {
+    font: 12px Inconsolata-g, monospace;
 }
 
 #footer .icon {
