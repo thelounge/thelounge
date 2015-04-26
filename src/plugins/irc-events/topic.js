@@ -9,27 +9,24 @@ module.exports = function(irc, network) {
 			return;
 		}
 		var from = data.nick || chan.name;
-		var self = false;
-		if (from.toLowerCase() == irc.me.toLowerCase()) {
-			self = true;
-		}
 		var topic = data.topic;
+
 		var msg = new Msg({
 			type: Msg.Type.TOPIC,
 			mode: chan.getMode(from),
 			from: from,
 			text: topic,
-			self: self
+			self: (from.toLowerCase() === irc.me.toLowerCase())
 		});
 		chan.messages.push(msg);
 		client.emit("msg", {
 			chan: chan.id,
 			msg: msg
 		});
-		chan.topic = topic
+		chan.topic = topic;
 		client.emit("topic", {
 			chan: chan.id,
-			topic: _.escape(topic)
+			topic: chan.topic
 		});
 	});
 };

@@ -403,16 +403,14 @@ button {
 	line-height: 50px !important;
 	height: 48px;
 	padding: 0 20px;
+	overflow: hidden;
 }
 #windows .header .title {
 	font: 14px Lato;
 }
 #windows .header .topic {
-	/* Hidden for now */
-	display: none;
 	color: #777;
 	margin-left: 8px;
-	text-transform: capitalize;
 }
 #windows .header .right {
 	float: right;
