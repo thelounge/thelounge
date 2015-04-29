@@ -1,3 +1,8 @@
+0.51.1 / 2015-04-29
+===================
+
+* Increase process.setMaxListeners to prevent link preview to cause a crash
+
 0.51.0 / 2015-04-16
 ==================
 
@@ -6,24 +11,24 @@
  * Added 'displayNetwork' setting
 
 0.49.3 / 2015-01-04 
-==================
+===================
 
  * Fully expand chat when userlist is hidden
  * Remove vertical whitespace in chat windows
  * Support @mention
 
 0.49.2 / 2015-01-04 
-==================
+===================
 
  * Fix crash on broken links
 
 0.49.1 / 2015-01-04 
-==================
+===================
 
  * Fix undefined content-type (link plugin)
 
 0.49.0 / 2014-12-23 
-==================
+===================
 
  * Replaced superagent with request
  * Solves a problem where some links would crash the server

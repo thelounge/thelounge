@@ -5,6 +5,8 @@ var request = require("request");
 var Helper = require("../../helper");
 var es = require('event-stream');
 
+process.setMaxListeners(0);
+
 module.exports = function(irc, network) {
 	var client = this;
 	irc.on("message", function(data) {
