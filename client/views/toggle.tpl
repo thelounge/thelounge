@@ -9,7 +9,7 @@
 			{{#if thumb}}
 				<img src="{{thumb}}" class="thumb">
 			{{/if}}
-			<div class="head">{{{head}}}</div>
+			<div class="head">{{{parse head}}}</div>
 			<div class="body">
 				{{body}}
 			</div>
