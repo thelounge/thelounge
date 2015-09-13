@@ -1,5 +1,6 @@
 [![npm version](https://img.shields.io/npm/v/shout.svg)](https://www.npmjs.org/package/shout)
 [![Build Status](https://travis-ci.org/erming/shout.svg?branch=master)](https://travis-ci.org/erming/shout)
+[![Dependency Status](https://david-dm.org/erming/shout.svg)](https://david-dm.org/erming/shout)
 
 # Shout
 
