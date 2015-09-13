@@ -6,10 +6,10 @@
 
 ### [Try the Demo](http://demo.shout-irc.com/)
 
-__What is it?__  
+__What is it?__
 Shout is a web IRC client that you host on your own server.
 
-__What features does it have?__  
+__What features does it have?__
 - Multiple user support
 - Stays connected even when you close the browser
 - Connect from multiple devices at once
