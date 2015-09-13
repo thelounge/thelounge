@@ -1,4 +1,6 @@
-# Shout [![](https://badge.fury.io/js/shout.png)](https://www.npmjs.org/package/shout)
+[![npm version](https://img.shields.io/npm/v/shout.svg)](https://www.npmjs.org/package/shout)
+
+# Shout
 
 ### [Try the Demo](http://demo.shout-irc.com/)
 
