@@ -160,7 +160,7 @@ templates['toggle'] = template({"1":function(depth0,helpers,partials,data) {
   stack1 = helpers['if'].call(depth0, (depth0 != null ? depth0.thumb : depth0), {"name":"if","hash":{},"fn":this.program(5, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
   buffer += "			<div class=\"head\">";
-  stack1 = ((helper = (helper = helpers.head || (depth0 != null ? depth0.head : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"head","hash":{},"data":data}) : helper));
+  stack1 = ((helpers.parse || (depth0 && depth0.parse) || helperMissing).call(depth0, (depth0 != null ? depth0.head : depth0), {"name":"parse","hash":{},"data":data}));
   if (stack1 != null) { buffer += stack1; }
   return buffer + "</div>\n			<div class=\"body\">\n				"
     + escapeExpression(((helper = (helper = helpers.body || (depth0 != null ? depth0.body : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"body","hash":{},"data":data}) : helper)))
