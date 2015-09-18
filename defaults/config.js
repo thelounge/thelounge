@@ -62,7 +62,7 @@ module.exports = {
 	// @type     boolean
 	// @default  true
 	//
-	prefetch: true,
+	prefetch: false,
 
 	//
 	// Display network
