@@ -723,11 +723,11 @@ $(function() {
 
 	Mousetrap.bind([
 		"command+k",
-		"ctrl+l",
 		"ctrl+shift+l"
 	], function (e) {
 		if(e.target === input[0]) {
 			clear();
+			e.preventDefault();
 		}
 	});
 
