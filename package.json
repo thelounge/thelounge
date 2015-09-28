@@ -13,7 +13,7 @@
   },
   "scripts": {
     "start": "node index",
-    "test": "mocha test/**/*.js"
+    "test": "HOME=test/fixtures mocha test/**/*.js"
   },
   "keywords": [
     "browser",
