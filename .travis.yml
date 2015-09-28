@@ -4,7 +4,4 @@ node_js:
   - "0.12"
   - "4.0"
   - "4.1"
-before_script:
-  - mkdir ~/.shout
-  - cp defaults/config.js ~/.shout
 sudo: false
