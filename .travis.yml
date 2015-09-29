@@ -4,3 +4,4 @@ node_js:
 before_script:
   - mkdir ~/.shout
   - cp defaults/config.js ~/.shout
+sudo: false
