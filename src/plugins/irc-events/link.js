@@ -18,9 +18,6 @@ module.exports = function(irc, network) {
 		var links = [];
 		var split = data.message.split(" ");
 		_.each(split, function(w) {
-			if (w.match(/^(http|https):\/\/localhost/g)) {
-				return;
-			}
 			var match = w.indexOf("http://") === 0 || w.indexOf("https://") === 0;
 			if (match) {
 				links.push(w);
