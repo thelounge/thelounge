@@ -3,7 +3,6 @@ var fs = require("fs");
 var Client = require("./client");
 var mkdirp = require("mkdirp");
 var Helper = require("./helper");
-var moment = require("moment");
 
 module.exports = ClientManager;
 
@@ -14,7 +13,7 @@ function ClientManager() {
 ClientManager.prototype.findClient = function(name) {
 	for (var i in this.clients) {
 		var client = this.clients[i];
-		if (client.name == name) {
+		if (client.name === name) {
 			return client;
 		}
 	}
@@ -35,7 +34,7 @@ ClientManager.prototype.loadUser = function(name) {
 			"utf-8"
 		);
 		json = JSON.parse(json);
-	} catch(e) {
+	} catch (e) {
 		console.log(e);
 		return;
 	}
@@ -62,7 +61,7 @@ ClientManager.prototype.getUsers = function() {
 				users.push(file.replace(".json", ""));
 			}
 		});
-	} catch(e) {
+	} catch (e) {
 		console.log(e);
 		return;
 	}
@@ -88,7 +87,7 @@ ClientManager.prototype.addUser = function(name, password) {
 			JSON.stringify(user, null, "  "),
 			{mode: "0777"}
 		);
-	} catch(e) {
+	} catch (e) {
 		throw e;
 	}
 	return true;
@@ -102,15 +101,14 @@ ClientManager.prototype.removeUser = function(name) {
 	try {
 		var path = Helper.HOME + "/users/" + name + ".json";
 		fs.unlinkSync(path);
-	} catch(e) {
+	} catch (e) {
 		throw e;
 	}
 	return true;
 };
 
-ClientManager.prototype.autoload = function(sockets) {
+ClientManager.prototype.autoload = function(/* sockets */) {
 	var self = this;
-	var loaded = [];
 	setInterval(function() {
 		var loaded = _.pluck(
 			self.clients,

@@ -26,7 +26,7 @@ module.exports = function(irc, network) {
 			users: users
 		});
 		var self = false;
-		if (data.nick.toLowerCase() == irc.me.toLowerCase()) {
+		if (data.nick.toLowerCase() === irc.me.toLowerCase()) {
 			self = true;
 		}
 		var msg = new Msg({

@@ -26,7 +26,6 @@ module.exports = function(irc, network) {
 			channels: "on",
 			server: "using"
 		};
-		var i = 0;
 		for (var k in data) {
 			var key = prefix[k];
 			if (!key || data[k].toString() === "") {

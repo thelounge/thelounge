@@ -4,7 +4,7 @@ var net = require("net");
 var users = {};
 
 module.exports.start = function(port) {
-	var server = net.createServer(init).listen(port || 113);
+	net.createServer(init).listen(port || 113);
 };
 
 module.exports.hook = function(stream, user) {

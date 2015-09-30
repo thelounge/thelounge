@@ -80,11 +80,11 @@ Client.prototype.emit = function(event, data) {
 	}
 	var config = this.config || {};
 	if (config.log === true) {
-		if (event == "msg") {
+		if (event === "msg") {
 			var target = this.find(data.chan);
 			if (target) {
 				var chan = target.chan.name;
-				if (target.chan.type == Chan.Type.LOBBY) {
+				if (target.chan.type === Chan.Type.LOBBY) {
 					chan = target.network.host;
 				}
 				log.write(
@@ -131,7 +131,7 @@ Client.prototype.connect = function(args) {
 
 	if (config.bind) {
 		server.localAddress = config.bind;
-		if(args.tls) {
+		if (args.tls) {
 			var socket = net.connect(server);
 			server.socket = socket;
 		}
@@ -152,7 +152,7 @@ Client.prototype.connect = function(args) {
 	});
 
 	var nick = args.nick || "shout-user";
-	var username = args.username || nick.replace(/[^a-zA-Z0-9]/g, '');
+	var username = args.username || nick.replace(/[^a-zA-Z0-9]/g, "");
 	var realname = args.realname || "Shout User";
 
 	var irc = slate(stream);
@@ -273,10 +273,10 @@ Client.prototype.sort = function(data) {
 
 	var type = data.type;
 	var order = data.order || [];
+	var sorted = [];
 
 	switch (type) {
 	case "networks":
-		var sorted = [];
 		_.each(order, function(i) {
 			var find = _.find(self.networks, {id: i});
 			if (find) {
@@ -292,7 +292,6 @@ Client.prototype.sort = function(data) {
 		if (!network) {
 			return;
 		}
-		var sorted = [];
 		_.each(order, function(i) {
 			var find = _.find(network.channels, {id: i});
 			if (find) {
@@ -328,7 +327,7 @@ Client.prototype.save = function(force) {
 	var client = this;
 	var config = Helper.getConfig();
 
-	if(config.public) {
+	if (config.public) {
 		return;
 	}
 
@@ -360,7 +359,7 @@ Client.prototype.save = function(force) {
 		try {
 			json = JSON.parse(data);
 			json.networks = networks;
-		} catch(e) {
+		} catch (e) {
 			console.log(e);
 			return;
 		}

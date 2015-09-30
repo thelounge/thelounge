@@ -9,7 +9,7 @@ module.exports = function(irc, network) {
 			return;
 		}
 		var from = data.nick;
-		if (from == irc.me) {
+		if (from === irc.me) {
 			network.channels = _.without(network.channels, chan);
 			client.save();
 			client.emit("part", {

@@ -1,7 +1,7 @@
 var _ = require("lodash");
 
 module.exports = function(network, chan, cmd, args) {
-	if (cmd != "ns" && cmd != "cs" && cmd != "hs") {
+	if (cmd !== "ns" && cmd !== "cs" && cmd !== "hs") {
 		return;
 	}
 	var target = ({

@@ -12,7 +12,7 @@ module.exports = function(irc, network) {
 			return;
 		}
 
-		if (data.client == irc.me) {
+		if (data.client === irc.me) {
 			chan.users = [];
 		} else {
 			chan.users = _.without(chan.users, _.findWhere(chan.users, {name: data.client}));
@@ -24,7 +24,7 @@ module.exports = function(irc, network) {
 		});
 
 		var self = false;
-		if (data.nick.toLowerCase() == irc.me.toLowerCase()) {
+		if (data.nick.toLowerCase() === irc.me.toLowerCase()) {
 			self = true;
 		}
 

@@ -1,5 +1,5 @@
 module.exports = function(network, chan, cmd, args) {
-	if (cmd != "kick") {
+	if (cmd !== "kick") {
 		return;
 	}
 	if (args.length !== 0) {

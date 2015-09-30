@@ -1,19 +1,19 @@
 module.exports = function(network, chan, cmd, args) {
-	if (cmd != "mode" && cmd != "op" && cmd != "voice" && cmd != "deop" && cmd != "devoice") {
+	if (cmd !== "mode" && cmd !== "op" && cmd !== "voice" && cmd !== "deop" && cmd !== "devoice") {
 		return;
 	} else if (args.length === 0) {
 		return;
 	}
-	
+
 	var mode;
 	var user;
-	if (cmd != "mode") {
+	if (cmd !== "mode") {
 		user = args[0];
 		mode = {
-		     "op": "+o",
-		  "voice": "+v",
-		   "deop": "-o",
-		"devoice": "-v"
+			"op": "+o",
+			"voice": "+v",
+			"deop": "-o",
+			"devoice": "-v"
 		}[cmd];
 	} else if (args.length === 1) {
 		return;
