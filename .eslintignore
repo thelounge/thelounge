@@ -1,0 +1,3 @@
+client/js/libs.min.js
+client/js/libs/**/*.js
+client/js/shout.templates.js
