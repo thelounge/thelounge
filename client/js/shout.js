@@ -314,6 +314,14 @@ $(function() {
 		}
 	});
 
+	socket.on("topic", function(data) {
+		// .text() escapes HTML but not quotes. That only matters with text inside attributes.
+		var topic = $("#chan-" + data.chan).find(".header .topic");
+		topic.text(data.topic);
+		// .attr() is safe escape-wise but consider the capabilities of the attribute
+		topic.attr("title", data.topic);
+	});
+
 	socket.on("users", function(data) {
 		var users = chat.find("#chan-" + data.chan).find(".users").html(render("user", data));
 		var nicks = [];
