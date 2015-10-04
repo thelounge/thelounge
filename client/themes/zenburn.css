@@ -18,6 +18,10 @@ BORDERS #333333
 QUIT #bc6c4c
 */
 
+body {
+	background: #2b2b2b;
+}
+
 #windows .chan, #windows .window {
   background: #3f3f3f;
 }
@@ -205,4 +209,11 @@ QUIT #bc6c4c
 
 #chat .toggle-content .body {
   color: #d2d39b;
+}
+
+@media (max-width: 768px) {
+	#footer {
+		left: -220px;
+		width: 225px;
+	}
 }
