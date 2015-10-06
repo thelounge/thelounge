@@ -42,4 +42,6 @@ And if you don't have [grunt](http://gruntjs.com/getting-started) installed alre
 
 ## License
 
-Available under [the MIT license](http://mths.be/mit).
+Available under the [MIT License](http://mths.be/mit).
+
+Some fonts licensed under [SIL OFL](http://scripts.sil.org/OFL) and the [Apache License](http://www.apache.org/licenses/).
