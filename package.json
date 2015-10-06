@@ -13,6 +13,7 @@
   },
   "scripts": {
     "start": "node index",
+    "build": "grunt",
     "test": "HOME=test/fixtures mocha test/**/*.js"
   },
   "keywords": [

@@ -34,8 +34,8 @@ To run the app from source, just clone the code and run this in your terminal:
 
 ```
 npm install
-grunt
-./index.js --port 8080
+npm run build
+npm start -- --port 8080
 ```
 
 And if you don't have [grunt](http://gruntjs.com/getting-started) installed already, just run `npm install -g grunt-cli`.
