@@ -66,6 +66,8 @@ several labels. Here is what they mean:
 - **question**: Tickets that are actually support cases.
 - **quick and easy**: Tickets that should be fairly simple to implement, even
   for developers not yet involved in the project.
+- **second review needed**: A first reviewer gave his :+1: but now expects a
+  second reviewer to step in before this PR can be merged.
 - **security**: Tickets that describe a security concern or PRs that must be
   reviewed with extra care regarding security.
 - **wontfix**: Tickets that, after discussion and explanation, will not be fixed
