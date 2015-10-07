@@ -3,6 +3,48 @@
 Welcome to the Shout community, it's great to have you here! We thank you in
 advance for your contributions.
 
+### I have a question
+
+Find us on the #shout-irc channel. You might not get an answer right away, but
+this channel is filled with nice people who will be happy to help you.
+
+### I want to report a bug
+
+First of all, look at the
+[open issues](https://github.com/erming/shout/issues) and [closed
+issues](https://github.com/erming/shout/issues?q=is%3Aissue+is%3Aclosed)
+to see if this was not alredy discussed before.
+
+### I want to contribute to the code
+
+A good starting point if you want to help us but do not have a clear idea of
+what you can do specifically is to
+look at the open issues labeled as [*quick and
+easy*](https://github.com/erming/shout/issues?q=is%3Aopen+is%3Aissue+label%3Abug+label%3A%22quick+and+easy%22)
+or [*help
+wanted*](https://github.com/erming/shout/issues?q=is%3Aopen+is%3Aissue+label%3Abug+label%3A%22help+wanted%22).
+
+When you submit some code, make sure it respects the overall coding style that
+is currently in place. If you do not, our reviewers will surely let you know you
+should :smile: (that is, until an automated checker takes over the yelling).
+
+Also, make sure that your PRs do not contain unnecessary commits. If you think
+some of your commits should be merged into a single one, feel free to [squash
+them](https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History).
+
+Additionally, give extra care to your commit messages, as they will help us
+review your PRs as well as help other contributors in the future, when exploring
+the history. The general rules are to [use the imperative present
+tense](https://git-scm.com/book/ch5-2.html#Commit-Guidelines), to start with a
+single concise line, followed by a blank line and a more detailed explanation
+when necessary. Tim Pope wrote an [excellent
+article](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+on how one should format their commit messages.
+
+When you send your PR, expect two different reviews from the project
+maintainers. They will make comments and give their respective :+1: before your
+changes can go into production.
+
 ### Labels
 
 When you open an [issue](https://github.com/erming/shout/issues) or send us a
