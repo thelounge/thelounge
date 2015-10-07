@@ -1,5 +1,71 @@
-@import url("https://fonts.googleapis.com/css?family=Lato:400,700");
-@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,700");
+@font-face {
+  font-family: 'Lato';
+  font-weight: 400;
+  font-style: normal;
+  src: url('fonts/Lato-regular/Lato-regular.eot');
+  src: url('fonts/Lato-regular/Lato-regular.eot?#iefix') format('embedded-opentype'),
+       local('Lato Regular'),
+       local('Lato-regular'),
+       url('fonts/Lato-regular/Lato-regular.woff2') format('woff2'),
+       url('fonts/Lato-regular/Lato-regular.woff') format('woff'),
+       url('fonts/Lato-regular/Lato-regular.ttf') format('truetype'),
+       url('fonts/Lato-regular/Lato-regular.svg#Lato') format('svg');
+}
+
+@font-face {
+  font-family: 'Lato';
+  font-weight: 700;
+  font-style: normal;
+  src: url('fonts/Lato-700/Lato-700.eot');
+  src: url('fonts/Lato-700/Lato-700.eot?#iefix') format('embedded-opentype'),
+       local('Lato Bold'),
+       local('Lato-700'),
+       url('fonts/Lato-700/Lato-700.woff2') format('woff2'),
+       url('fonts/Lato-700/Lato-700.woff') format('woff'),
+       url('fonts/Lato-700/Lato-700.ttf') format('truetype'),
+       url('fonts/Lato-700/Lato-700.svg#Lato') format('svg');
+}
+@font-face {
+  font-family: 'Open Sans';
+  font-weight: 300;
+  font-style: normal;
+  src: url('fonts/Open-Sans-300/Open-Sans-300.eot');
+  src: url('fonts/Open-Sans-300/Open-Sans-300.eot?#iefix') format('embedded-opentype'),
+       local('Open Sans Light'),
+       local('Open-Sans-300'),
+       url('fonts/Open-Sans-300/Open-Sans-300.woff2') format('woff2'),
+       url('fonts/Open-Sans-300/Open-Sans-300.woff') format('woff'),
+       url('fonts/Open-Sans-300/Open-Sans-300.ttf') format('truetype'),
+       url('fonts/Open-Sans-300/Open-Sans-300.svg#OpenSans') format('svg');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-weight: 400;
+  font-style: normal;
+  src: url('fonts/Open-Sans-regular/Open-Sans-regular.eot');
+  src: url('fonts/Open-Sans-regular/Open-Sans-regular.eot?#iefix') format('embedded-opentype'),
+       local('Open Sans'),
+       local('Open-Sans-regular'),
+       url('fonts/Open-Sans-regular/Open-Sans-regular.woff2') format('woff2'),
+       url('fonts/Open-Sans-regular/Open-Sans-regular.woff') format('woff'),
+       url('fonts/Open-Sans-regular/Open-Sans-regular.ttf') format('truetype'),
+       url('fonts/Open-Sans-regular/Open-Sans-regular.svg#OpenSans') format('svg');
+}
+
+@font-face {
+  font-family: 'Open Sans';
+  font-weight: 700;
+  font-style: normal;
+  src: url('fonts/Open-Sans-700/Open-Sans-700.eot');
+  src: url('fonts/Open-Sans-700/Open-Sans-700.eot?#iefix') format('embedded-opentype'),
+       local('Open Sans Bold'),
+       local('Open-Sans-700'),
+       url('fonts/Open-Sans-700/Open-Sans-700.woff2') format('woff2'),
+       url('fonts/Open-Sans-700/Open-Sans-700.woff') format('woff'),
+       url('fonts/Open-Sans-700/Open-Sans-700.ttf') format('truetype'),
+       url('fonts/Open-Sans-700/Open-Sans-700.svg#OpenSans') format('svg');
+}
 @font-face {
 	font-family: FontAwesome;
 	src: url("fonts/fontawesome.svg") format("svg"), url("fonts/fontawesome.woff") format("woff");
