@@ -183,10 +183,17 @@ button {
 	margin: 6px 12px 0 -12px;
 	width: 36px;
 }
-#viewport .lt:before,
-#viewport .rt:before {
+#viewport .lt:before {
 	font: 14px FontAwesome;
 	content: "\f0c9";
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+#viewport .rt:before {
+	font: 14px FontAwesome;
+	content: "\f0c0";
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 #viewport .rt {
 	display: block;
