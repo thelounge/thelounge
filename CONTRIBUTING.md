@@ -45,6 +45,9 @@ When you send your PR, expect two different reviews from the project
 maintainers. They will make comments and give their respective :+1: before your
 changes can go into production.
 
+Please document any relevant changes in the shout documentation that can be
+found [in its own repository](https://github.com/erming/shout-website).
+
 ### Labels
 
 When you open an [issue](https://github.com/erming/shout/issues) or send us a
