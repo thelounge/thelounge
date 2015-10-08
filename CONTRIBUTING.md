@@ -41,9 +41,13 @@ when necessary. Tim Pope wrote an [excellent
 article](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
 on how one should format their commit messages.
 
-When you send your PR, expect two different reviews from the project
-maintainers. They will make comments and give their respective :+1: before your
-changes can go into production.
+When you send a PR, expect two different reviews from the project maintainers.
+If necessary, they will make comments and ask for changes. When everything looks
+good to them, they will both express their consent by commenting your PR with a
+:+1:. Typically, the first reviewer will give a thorough report and exchange
+with you, give his :+1:, then ask the second reviewer to confirm the changes.
+When this happens (when you get your second required :+1:), then your PR can be
+merged.
 
 Please document any relevant changes in the shout documentation that can be
 found [in its own repository](https://github.com/erming/shout-website).
