@@ -41,7 +41,8 @@ when necessary. Tim Pope wrote an [excellent
 article](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
 on how one should format their commit messages.
 
-When you send a PR, expect two different reviews from the project maintainers.
+When you send a PR, expect two different reviews from the [project
+maintainers](https://github.com/erming/shout/blob/master/CONTRIBUTING.md#project-maintainers).
 If necessary, they will make comments and ask for changes. When everything looks
 good to them, they will both express their consent by commenting your PR with a
 :+1:. Typically, the first reviewer will give a thorough report and exchange
@@ -79,3 +80,9 @@ several labels. Here is what they mean:
   reviewed with extra care regarding security.
 - **wontfix**: Tickets that, after discussion and explanation, will not be fixed
   or implemented.
+
+### Project maintainers
+
+- [Mattias Erming](https://github.com/erming) (`erming` on IRC)
+- [Jocelyn Delalande](https://github.com/JocelynDelalande) (`JocelynD` on IRC)
+- [Jérémie Astori](https://github.com/astorije) (`astorije` on IRC)
