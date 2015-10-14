@@ -34,7 +34,9 @@ module.exports.write = function(user, network, chan, msg) {
 	}
 
 	fs.appendFile(
-		path + "/" + chan + ".log",
+		// Quick fix to escape pre-escape channel names that contain % using %%,
+		// and / using %. **This does not escape all reserved words**
+		path + "/" + chan.replace(/%/g, "%%").replace(/\//g, "%") + ".log",
 		line + "\n",
 		function(e) {
 			if (e) {
