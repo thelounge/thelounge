@@ -195,3 +195,10 @@ QUIT #d0907d
 #chat .toggle-content .body {
   color: #99a2b4;
 }
+
+@media (max-width: 768px) {
+	#footer {
+		left: -220px;
+		width: 225px;
+	}
+}
