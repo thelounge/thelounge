@@ -10,7 +10,7 @@ deploy:
   provider: npm
   email: jeremie@astori.fr
   api_key:
-    secure: brBqbjzM+sV2GF7Mdnixf7yT8ZXyG0cGwo+tLrZkec/uE4QnDm4hMFjLny9CxCDt+CiRkpsWhG9Prqu2eFnbSkVpjBzAQx8IYCqMj8RvaQn0PXkft8vWPWdDTZzgDfO4EQpuzB9EDy30JnHa/epbXdLr7KuJS9U5mhLpY9JULcw=
+    secure: dbfoL5w4SuXZJxQJ6bIlb5dXLdafJt4n9nOgTsAaFTkzBbf/L9JDTWAsSXqnelwVFgu+jNqFN5l9CyMpQ0o9IBdWEaryh3FzFeaNGIGV4+2StYKoxx2c4ZUBejbr++HVa0Ha9HWZCWkpIGiLI1W52hEu+QuFnoAbeQvG+lyhQsY=
   on:
     node: '0.10'
     tags: true
