@@ -6,3 +6,12 @@ node_js:
 - '4.1'
 - '4.2'
 sudo: false
+deploy:
+  provider: npm
+  email: jeremie@astori.fr
+  api_key:
+    secure: brBqbjzM+sV2GF7Mdnixf7yT8ZXyG0cGwo+tLrZkec/uE4QnDm4hMFjLny9CxCDt+CiRkpsWhG9Prqu2eFnbSkVpjBzAQx8IYCqMj8RvaQn0PXkft8vWPWdDTZzgDfO4EQpuzB9EDy30JnHa/epbXdLr7KuJS9U5mhLpY9JULcw=
+  on:
+    node: '0.10'
+    tags: true
+    repo: erming/shout
