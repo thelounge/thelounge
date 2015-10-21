@@ -86,3 +86,4 @@ several labels. Here is what they mean:
 - [Mattias Erming](https://github.com/erming) (`erming` on IRC)
 - [Jocelyn Delalande](https://github.com/JocelynDelalande) (`JocelynD` on IRC)
 - [Jérémie Astori](https://github.com/astorije) (`astorije` on IRC)
+- [Paul Friederichsen](https://github.com/floogulinc) (`floogulinc` on IRC)
