@@ -7,4 +7,4 @@ module.exports = {
 
 function getConfig() {
 	return require(path.resolve(this.HOME) + "/config");
-};
+}

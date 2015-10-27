@@ -1,0 +1,32 @@
+---
+
+root: true
+
+env:
+  browser: true
+  mocha: true
+  node: true
+
+rules:
+  comma-dangle: 0
+  curly: [2, multi-line]
+  eqeqeq: 2
+  indent: [2, tab]
+  linebreak-style: [2, unix]
+  object-curly-spacing: [2, never]
+  semi: [2, always]
+  space-after-keywords: [2, always]
+  space-before-function-paren: [2, never]
+  spaced-comment: [2, always]
+  no-console: 0
+  no-trailing-spaces: 2
+  quotes: [2, double]
+
+globals:
+  $: false
+  Favico: false
+  Handlebars: false
+  io: false
+  Mousetrap: false
+
+extends: eslint:recommended

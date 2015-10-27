@@ -5,13 +5,13 @@ var Msg = require("../../models/msg");
 module.exports = function(irc, network) {
 	var client = this;
 	irc.on("message", function(data) {
-		if (data.message.indexOf("\u0001") === 0 && data.message.substring(0, 7) != "\u0001ACTION") {
+		if (data.message.indexOf("\u0001") === 0 && data.message.substring(0, 7) !== "\u0001ACTION") {
 			// Hide ctcp messages.
 			return;
 		}
 
 		var target = data.to;
-		if (target.toLowerCase() == irc.me.toLowerCase()) {
+		if (target.toLowerCase() === irc.me.toLowerCase()) {
 			target = data.from;
 		}
 
@@ -40,11 +40,11 @@ module.exports = function(irc, network) {
 		});
 
 		var self = false;
-		if (data.from.toLowerCase() == irc.me.toLowerCase()) {
+		if (data.from.toLowerCase() === irc.me.toLowerCase()) {
 			self = true;
 		}
 
-		if (chan.id != client.activeChannel) {
+		if (chan.id !== client.activeChannel) {
 			chan.unread++;
 		}
 

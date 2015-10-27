@@ -26,7 +26,7 @@ module.exports = function(options) {
 	var protocol = https.enable ? "https" : "http";
 	var port = config.port;
 	var host = config.host;
-	var transports = config.transports || ['websocket', 'polling'];
+	var transports = config.transports || ["websocket", "polling"];
 
 	if (!https.enable){
 		server = require("http");
@@ -36,7 +36,7 @@ module.exports = function(options) {
 		server = server.createServer({
 			key: fs.readFileSync(https.key),
 			cert: fs.readFileSync(https.certificate)
-		}, app).listen(port, host)
+		}, app).listen(port, host);
 	}
 
 	if ((config.identd || {}).enable) {
@@ -71,7 +71,7 @@ module.exports = function(options) {
 };
 
 function index(req, res, next) {
-	if (req.url.split("?")[0] != "/") return next();
+	if (req.url.split("?")[0] !== "/") return next();
 	return fs.readFile("client/index.html", "utf-8", function(err, file) {
 		var data = _.merge(
 			require("../package.json"),
@@ -144,10 +144,10 @@ function auth(data) {
 		var success = false;
 		_.each(manager.clients, function(client) {
 			if (data.token) {
-				if (data.token == client.token) {
+				if (data.token === client.token) {
 					success = true;
 				}
-			} else if (client.config.user == data.user) {
+			} else if (client.config.user === data.user) {
 				if (bcrypt.compareSync(data.password || "", client.config.password)) {
 					success = true;
 				}

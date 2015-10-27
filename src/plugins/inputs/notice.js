@@ -1,5 +1,5 @@
 module.exports = function(network, chan, cmd, args) {
-	if (cmd != "notice" || !args[1]) {
+	if (cmd !== "notice" || !args[1]) {
 		return;
 	}
 	var irc = network.irc;

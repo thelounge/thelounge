@@ -1,4 +1,3 @@
-var _ = require("lodash");
 var ClientManager = new require("../clientManager");
 var program = require("commander");
 var shout = require("../server");

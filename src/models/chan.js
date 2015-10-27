@@ -37,7 +37,7 @@ Chan.prototype.sortUsers = function() {
 	modes.forEach(function(mode) {
 		this.users = _.remove(
 			this.users,
-			function(u) { return u.mode == mode; }
+			function(u) { return u.mode === mode; }
 		).concat(this.users);
 	}, this);
 };

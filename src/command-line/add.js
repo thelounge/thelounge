@@ -8,7 +8,7 @@ var Helper = require("../helper");
 program
 	.command("add <name>")
 	.description("Add a new user")
-	.action(function(name, password) {
+	.action(function(name/* , password */) {
 		var path = Helper.HOME + "/users";
 		try {
 			mkdirp.sync(path);

@@ -35,11 +35,12 @@ $(function() {
 		$("html").addClass("web-app-mode");
 	}
 
+	var pop;
 	try {
-		var pop = new Audio();
+		pop = new Audio();
 		pop.src = "/audio/pop.ogg";
-	} catch(e) {
-		var pop = {
+	} catch (e) {
+		pop = {
 			play: $.noop
 		};
 	}
@@ -73,7 +74,7 @@ $(function() {
 		});
 	});
 
-	socket.on("auth", function(data) {
+	socket.on("auth", function(/* data */) {
 		var body = $("body");
 		var login = $("#sign-in");
 		if (!login.length) {
@@ -183,7 +184,7 @@ $(function() {
 
 	socket.on("msg", function(data) {
 		var target = "#chan-" + data.chan;
-		if (data.msg.type == "error") {
+		if (data.msg.type === "error") {
 			target = "#chan-" + chat.find(".active").data("id");
 		}
 
@@ -202,7 +203,7 @@ $(function() {
 		}
 
 		var type = data.msg.type;
-		if (type == "message" || type == "action") {
+		if (type === "message" || type === "action") {
 			var nicks = chan.find(".users").data("nicks");
 			if (nicks) {
 				var find = nicks.indexOf(from);
@@ -220,7 +221,7 @@ $(function() {
 			.find(".messages")
 			.prepend(render("msg", {messages: data.messages}))
 			.end();
-		if (data.messages.length != 100) {
+		if (data.messages.length !== 100) {
 			chan.find(".show-more").removeClass("show");
 		}
 	});
@@ -274,7 +275,7 @@ $(function() {
 		});
 
 		if (next !== null) {
-			var id = next.data("id");
+			id = next.data("id");
 			sidebar.find("[data-id=" + id + "]").click();
 		} else {
 			sidebar.find(".chan")
@@ -374,7 +375,7 @@ $(function() {
 		].indexOf(name) !== -1) {
 			chat.toggleClass("hide-" + name, !self.prop("checked"));
 		}
-		if (name == "colors") {
+		if (name === "colors") {
 			chat.toggleClass("no-colors", !self.prop("checked"));
 		}
 	}).find("input")
@@ -383,7 +384,7 @@ $(function() {
 	$("#badge").on("change", function() {
 		var self = $(this);
 		if (self.prop("checked")) {
-			if (Notification.permission != "granted") {
+			if (Notification.permission !== "granted") {
 				Notification.requestPermission();
 			}
 		}
@@ -407,7 +408,6 @@ $(function() {
 		.tab(complete, {hint: false});
 
 	var form = $("#form");
-	var submit = $("#submit");
 
 	form.on("submit", function(e) {
 		e.preventDefault();
@@ -428,7 +428,7 @@ $(function() {
 			var text = "";
 			if (window.getSelection) {
 				text = window.getSelection().toString();
-			} else if (document.selection && document.selection.type != "Control") {
+			} else if (document.selection && document.selection.type !==  "Control") {
 				text = document.selection.createRange().text;
 			}
 			if (!text) {
@@ -580,7 +580,7 @@ $(function() {
 					pop.play();
 				}
 				favico.badge("!");
-				if (settings.badge && Notification.permission == "granted") {
+				if (settings.badge && Notification.permission === "granted") {
 					var notify = new Notification(msg.from + " says:", {
 						body: msg.text.trim(),
 						icon: "/img/logo-64.png"
@@ -640,7 +640,7 @@ $(function() {
 		var content = self.parent().next(".toggle-content");
 		if (bottom && !content.hasClass("show")) {
 			var img = content.find("img");
-			if (img.length != 0 && !img.width()) {
+			if (img.length !== 0 && !img.width()) {
 				img.on("load", function() {
 					chat.scrollBottom();
 				});
@@ -678,7 +678,7 @@ $(function() {
 		form.find(".btn")
 			.attr("disabled", true)
 			.end();
-		if (form.closest(".window").attr("id") == "connect") {
+		if (form.closest(".window").attr("id") === "connect") {
 			event = "conn";
 		}
 		var values = {};
@@ -732,8 +732,8 @@ $(function() {
 	Mousetrap.bind([
 		"command+k",
 		"ctrl+shift+l"
-	], function (e) {
-		if(e.target === input[0]) {
+	], function(e) {
+		if (e.target === input[0]) {
 			clear();
 			e.preventDefault();
 		}
@@ -771,7 +771,7 @@ $(function() {
 			words.push(nicks[i]);
 		}
 
-		var channels = sidebar.find(".chan")
+		sidebar.find(".chan")
 			.each(function() {
 				var self = $(this);
 				if (!self.hasClass("lobby")) {
@@ -875,7 +875,7 @@ $(function() {
 		}
 		array.splice(new_index, 0, array.splice(old_index, 1)[0]);
 		return array;
-	};
+	}
 
 	document.addEventListener(
 		"visibilitychange",

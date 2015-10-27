@@ -7,7 +7,7 @@ module.exports.write = function(user, network, chan, msg) {
 	try {
 		var path = Helper.HOME + "/logs/" + user + "/" + network;
 		mkdirp.sync(path);
-	} catch(e) {
+	} catch (e) {
 		console.log(e);
 		return;
 	}
@@ -20,7 +20,7 @@ module.exports.write = function(user, network, chan, msg) {
 	var line = "[" + time + "] ";
 
 	var type = msg.type.trim();
-	if (type == "message" || type == "highlight") {
+	if (type === "message" || type === "highlight") {
 		// Format:
 		// [2014-01-01 00:00:00] <Arnold> Put that cookie down.. Now!!
 		line += "<" + msg.from + "> " + msg.text;
@@ -38,7 +38,7 @@ module.exports.write = function(user, network, chan, msg) {
 		line + "\n",
 		function(e) {
 			if (e) {
-				console.log("Log#write():\n" + e)
+				console.log("Log#write():\n" + e);
 			}
 		}
 	);

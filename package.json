@@ -14,7 +14,8 @@
   "scripts": {
     "start": "node index",
     "build": "grunt",
-    "test": "HOME=test/fixtures mocha test/**/*.js"
+    "test": "HOME=test/fixtures mocha test/**/*.js && npm run lint",
+    "lint": "eslint index.js Gruntfile.js src/ test/ client/ defaults/"
   },
   "keywords": [
     "browser",
@@ -40,6 +41,7 @@
     "socket.io": "~1.0.6"
   },
   "devDependencies": {
+    "eslint": "^1.5.1",
     "grunt": "~0.4.5",
     "grunt-contrib-uglify": "~0.5.0",
     "grunt-contrib-watch": "^0.6.1",

@@ -1,5 +1,5 @@
 module.exports = function(network, chan, cmd, args) {
-	if (cmd != "join") {
+	if (cmd !== "join") {
 		return;
 	}
 	if (args.length !== 0) {
