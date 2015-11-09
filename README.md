@@ -35,7 +35,7 @@ To run the app from source, just clone the code and run this in your terminal:
 ```
 npm install
 npm run build
-npm start -- --port 8080
+npm start
 ```
 
 ## License
