@@ -52,6 +52,7 @@ module.exports = function(irc, network) {
 };
 
 function parse(msg, url, res, client) {
+	var config = Helper.getConfig();
 	var toggle = msg.toggle = {
 		id: msg.id,
 		type: "",
@@ -61,6 +62,9 @@ function parse(msg, url, res, client) {
 		link: url
 	};
 
+	if (!config.prefetchMaxImageSize) {
+		config.prefetchMaxImageSize = 512;
+	}
 	switch (res.type) {
 	case "text/html":
 		var $ = cheerio.load(res.text);
@@ -80,7 +84,12 @@ function parse(msg, url, res, client) {
 	case "image/gif":
 	case "image/jpg":
 	case "image/jpeg":
-		toggle.type = "image";
+		if (res.size < (config.prefetchMaxImageSize * 1024)) {
+			toggle.type = "image";
+		}
+		else {
+			return;
+		}
 		break;
 
 	default:
@@ -116,6 +125,7 @@ function fetch(url, cb) {
 			if (err) return;
 			var body;
 			var type;
+			var size = req.response.headers["content-length"];
 			try {
 				body = JSON.parse(data);
 			} catch (e) {
@@ -129,7 +139,8 @@ function fetch(url, cb) {
 			data = {
 				text: data,
 				body: body,
-				type: type
+				type: type,
+				size: size
 			};
 			cb(data);
 		}));

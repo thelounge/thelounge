@@ -65,6 +65,17 @@ module.exports = {
 	prefetch: false,
 
 	//
+	// Prefetch URLs Image Preview size limit
+	//
+	// If prefetch is enabled, Shout will only display content under the maximum size.
+	// Default value is 512 (in kB)
+	//
+	// @type     int
+	// @default  512
+	//
+	prefetchMaxImageSize: 512,
+
+	//
 	// Display network
 	//
 	// If set to false Shout will not expose network settings in login
