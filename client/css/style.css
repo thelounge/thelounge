@@ -647,6 +647,7 @@ button {
 	font-style: normal;
 	word-break: break-all;
 	word-wrap: break-word;
+	display: inline-block;
 }
 #chat .self .text {
 	color: #999;
