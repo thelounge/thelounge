@@ -5,7 +5,7 @@
 	</span>
 	<span class="from">
 		{{#if from}}
-		<a href="" class="user" style="color: #{{stringcolor from}}">{{mode}}{{from}}</a>
+		<button class="user" style="color: #{{stringcolor from}}">{{mode}}{{from}}</button>
 		{{/if}}
 	</span>
 	<span class="text">
