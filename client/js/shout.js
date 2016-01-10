@@ -373,6 +373,7 @@ $(function() {
 		part: true,
 		thumbnails: true,
 		quit: true,
+		notifyAllMessages: false,
 	}, $.cookie("settings"));
 
 	for (var i in options) {
@@ -398,6 +399,7 @@ $(function() {
 			"nick",
 			"part",
 			"quit",
+			"notifyAllMessages",
 		].indexOf(name) !== -1) {
 			chat.toggleClass("hide-" + name, !self.prop("checked"));
 		}
@@ -599,9 +601,10 @@ $(function() {
 		var isQuery = button.hasClass("query");
 		var type = msg.type;
 		var highlight = type.contains("highlight");
-		if (highlight || isQuery) {
+		var message = type.contains("message");
+		var settings = $.cookie("settings") || {};
+		if (highlight || isQuery || (settings.notifyAllMessages && message)) {
 			if (!document.hasFocus() || !$(target).hasClass("active")) {
-				var settings = $.cookie("settings") || {};
 				if (settings.notification) {
 					pop.play();
 				}
