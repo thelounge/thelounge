@@ -1,11 +1,15 @@
-# Shout [![](https://badge.fury.io/js/shout.png)](https://www.npmjs.org/package/shout)
+[![npm version](https://img.shields.io/npm/v/shout.svg)](https://www.npmjs.org/package/shout)
+[![Build Status](https://travis-ci.org/erming/shout.svg?branch=master)](https://travis-ci.org/erming/shout)
+[![Dependency Status](https://david-dm.org/erming/shout.svg)](https://david-dm.org/erming/shout)
+
+# Shout
 
 ### [Try the Demo](http://demo.shout-irc.com/)
 
-__What is it?__  
+__What is it?__
 Shout is a web IRC client that you host on your own server.
 
-__What features does it have?__  
+__What features does it have?__
 - Multiple user support
 - Stays connected even when you close the browser
 - Connect from multiple devices at once
