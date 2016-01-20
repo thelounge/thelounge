@@ -181,7 +181,7 @@ body {
 #chat .msg.quit .time,
 #chat .msg.quit .from button,
 #chat .msg.quit .type {
-  color: ##bc6c9c !important;
+  color: #bc6c9c !important;
 }
 
 #chat .msg.topic {
