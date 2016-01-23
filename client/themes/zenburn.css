@@ -179,21 +179,16 @@ body {
 }
 
 #chat .msg.quit .time,
-#chat .msg.quit .from button,
-#chat .msg.quit .type {
+#chat .msg.quit .from button {
   color: #bc6c9c !important;
 }
 
 #chat .msg.topic {
   color: #dcdccc;
 }
-#chat .msg .type {
-  margin-right: 0.5em;
-}
 
 #chat .msg.join .time,
-#chat .msg.join .from button,
-#chat .msg.join .type {
+#chat .msg.join .from button {
   color: #8cd0d3 !important;
 }
 /* Embeds */

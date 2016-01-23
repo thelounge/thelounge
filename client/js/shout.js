@@ -185,13 +185,39 @@ $(function() {
 	});
 
 	function buildChatMessage(data) {
+		var type = data.msg.type;
 		var target = "#chan-" + data.chan;
-		if (data.msg.type === "error") {
+		if (type === "error") {
 			target = "#chan-" + chat.find(".active").data("id");
 		}
 
 		var chan = chat.find(target);
 		var from = data.msg.from;
+
+		if ([
+			"join",
+			"mode",
+			"kick",
+			"nick",
+			"part",
+			"quit",
+			"topic",
+			"action",
+		].indexOf(type) !== -1) {
+			switch (type) {
+			case "join": data.msg.formattedAction = "has joined the channel"; break;
+			case "mode": data.msg.formattedAction = "sets mode"; break;
+			case "kick": data.msg.formattedAction = "has kicked"; break;
+			case "nick": data.msg.formattedAction = "is now known as"; break;
+			case "part": data.msg.formattedAction = "has left the channel"; break;
+			case "quit": data.msg.formattedAction = "has quit"; break;
+			case "topic": data.msg.formattedAction = "has changed the topic to:"; break;
+			default: data.msg.formattedAction = "";
+			}
+
+			var action = $(render("msg_action", data.msg));
+			return action;
+		}
 
 		var msg = $(render("msg", data.msg));
 
@@ -220,15 +246,12 @@ $(function() {
 				}
 			});
 
-		if (chan.hasClass("channel")) {
-			var type = data.msg.type;
-			if (type === "message" || type === "action") {
-				var nicks = chan.find(".users").data("nicks");
-				if (nicks) {
-					var find = nicks.indexOf(from);
-					if (find !== -1 && typeof move === "function") {
-						move(nicks, find, 0);
-					}
+		if ((type === "message" || type === "action") && chan.hasClass("channel")) {
+			var nicks = chan.find(".users").data("nicks");
+			if (nicks) {
+				var find = nicks.indexOf(from);
+				if (find !== -1 && typeof move === "function") {
+					move(nicks, find, 0);
 				}
 			}
 		}

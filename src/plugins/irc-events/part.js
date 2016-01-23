@@ -22,9 +22,14 @@ module.exports = function(irc, network) {
 				chan: chan.id,
 				users: chan.users
 			});
+			var reason = data.message || "";
+			if (reason.length > 0) {
+				reason = "(" + reason + ")";
+			}
 			var msg = new Msg({
 				type: Msg.Type.PART,
 				mode: chan.getMode(from),
+				text: reason,
 				from: from
 			});
 			chan.messages.push(msg);

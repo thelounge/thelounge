@@ -8,7 +8,6 @@
 		{{/if}}
 	</span>
 	<span class="text">
-		<em class="type">{{type}}</em>
 		{{#equal type "toggle"}}
 			<div class="force-newline">
 				<button id="toggle-{{id}}" class="toggle-button">···</button>

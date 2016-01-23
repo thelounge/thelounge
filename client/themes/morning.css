@@ -164,21 +164,16 @@ QUIT #d0907d
 }
 
 #chat .msg.quit .time,
-#chat .msg.quit .from button,
-#chat .msg.quit .type {
+#chat .msg.quit .from button {
   color: #d0907d !important;
 }
 
 #chat .msg.topic {
   color: #fefefe;
 }
-#chat .msg .type {
-  margin-right: 0.5em;
-}
 
 #chat .msg.join .time,
-#chat .msg.join .from button,
-#chat .msg.join .type {
+#chat .msg.join .from button {
   color: #84ce88 !important;
 }
 /* Embeds */

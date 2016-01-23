@@ -21,7 +21,7 @@ module.exports = function(irc, network) {
 				type: Msg.Type.MODE,
 				mode: chan.getMode(from),
 				from: from,
-				text: data.mode + " " + data.client,
+				text: data.mode + " " + (data.client || ""),
 				self: self
 			});
 			chan.messages.push(msg);
