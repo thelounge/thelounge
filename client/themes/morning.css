@@ -1,7 +1,6 @@
 /*
-Darker theme for Shout.
-Has a bit more eye-friendly color scheme and hides some IMO unnecessary features such as
-"Leave" and "Submit" buttons.
+Morning theme for Shout.
+Has a bit more eye-friendly color scheme.
 
 Installation instructions can be found here
 http://shout-irc.com/docs/server/configuration.html#theme
@@ -19,7 +18,10 @@ BORDERS #2a323d
 QUIT #d0907d
 */
 
-#windows .chan, #windows .window {
+#main,
+#chat .sidebar,
+#windows .chan,
+#windows .window {
   background: #333c4a;
 }
 
@@ -34,10 +36,6 @@ QUIT #d0907d
 
 #settings, #sign-in, #connect {
   color: #cccccc;
-}
-
-#chat .sidebar {
-  background: #333c4a;
 }
 
 #chat .count {
@@ -114,31 +112,36 @@ QUIT #d0907d
   border-color: #242a33;
 }
 
-#form .input {
-  margin-right: 0;
-}
-
 #form #input {
   background-color: #2e3642;
   border-color: #242a33;
   color: #cccccc;
-  padding-left: 1em !important;
 }
 
 #form #nick {
-  display: none;
+  background: #242a33;
+  color: #CCC;
+}
+
+/* Buttons */
+#chat .show-more-button,
+#form #submit,
+#windows .header .button {
+  background: #2e3642;
+  border-color: #242a33;
+  color: #CCC;
+}
+
+#chat .show-more-button:hover,
+#form #submit:hover,
+#windows .header .button:hover {
+  color: #FFF;
 }
 
 
 #chat .header {
   color: #99a2b4;
 }
-/* Hide unnecessary buttons */
-#windows .header .button,
-#form #submit {
-  display: none;
-}
-
 
 /* Setup text colors */
 #chat .msg {
@@ -197,6 +200,9 @@ QUIT #d0907d
 }
 
 @media (max-width: 768px) {
+	#main {
+		left: 0;
+	}
 	#footer {
 		left: -220px;
 		width: 225px;
