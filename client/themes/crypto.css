@@ -76,7 +76,6 @@ a:hover, #chat a:hover {
     line-height: 30px;
 }
 
-.chan:first-child.activeat .msg .type,
 #sidebar .chan:first-child {
     color: #00FF0E;
 }
@@ -85,7 +84,6 @@ a:hover, #chat a:hover {
 #sidebar .chan,
 #sidebar .sign-out,
 #chat .time,
-#chat .msg .type,
 #chat .count:before,
 #sidebar .empty {
     color: #666;

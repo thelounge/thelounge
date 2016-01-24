@@ -20,6 +20,7 @@ module.exports = function(irc, network) {
 		}
 		var msg = new Msg({
 			type: Msg.Type.NOTICE,
+			mode: chan.getMode(from),
 			from: from,
 			text: data.message
 		});

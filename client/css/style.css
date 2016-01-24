@@ -603,11 +603,6 @@ button {
 #chat .msg:last-child .text {
 	padding-bottom: 10px;
 }
-#chat .msg .type {
-	color: #ccc;
-	display: none;
-	font-style: normal;
-}
 #chat .msg .inline-channel {
 	cursor: pointer;
 }
@@ -641,7 +636,6 @@ button {
 }
 #chat.no-colors .from button,
 #chat.no-colors .sidebar button {
-	color: #84ce88 !important;
 	color: #50a656 !important;
 }
 #chat .text {
@@ -657,16 +651,6 @@ button {
 #chat .self .text {
 	color: #999;
 }
-#chat .join .type,
-#chat .part .type,
-#chat .mode .type,
-#chat .nick .type,
-#chat .kick .type,
-#chat .quit .type,
-#chat .quit .type,
-#chat .topic .type {
-	display: inline;
-}
 #chat .error,
 #chat .error .from,
 #chat .highlight,
@@ -681,19 +665,55 @@ button {
 #chat.hide-quit .quit {
 	display: none !important;
 }
-#chat .notice .type {
-	display: none;
+#chat .join .from:before {
+    font-family: FontAwesome;
+	content: "\f090";
+	color: #2ECC40;
 }
-#chat .action,
-#chat .chan .action .user {
-	color: #f39c12 !important;
+#chat .kick .from:before {
+    font-family: FontAwesome;
+	content: "\f05e";
+	color: #FF4136;
 }
-#chat .action .user:before {
-	content: "* ";
+#chat .part .from:before,
+#chat .quit .from:before {
+    font-family: FontAwesome;
+	content: "\f08b";
+	color: #FF4136;
 }
-#chat .action .user:after {
-	content: "";
+#chat .topic .from:before {
+    font-family: FontAwesome;
+	content: "\f0a1";
+	color: #2ECC40;
 }
+#chat .mode .from:before {
+    font-family: FontAwesome;
+	content: "\f05a";
+	color: #2ECC40;
+}
+#chat .nick .from:before {
+    font-family: FontAwesome;
+	content: "\f007";
+	color: #2ECC40;
+}
+#chat .action .text,
+#chat .action .user {
+	color: #F39C12;
+}
+#chat .action .from:before {
+    font-family: FontAwesome;
+	content: "\f005";
+	color: #F39C12;
+}
+#chat .notice .time,
+#chat .notice .text,
+#chat .chan .notice .user {
+	color: #0074D9 !important;
+}
+#chat .notice .user:before {
+	content: "Notice: ";
+}
+
 #chat .toggle-button {
 	background: #f5f5f5;
 	border-radius: 2px;
