@@ -656,7 +656,8 @@ $(function() {
 				if (settings.badge && Notification.permission === "granted") {
 					var notify = new Notification(msg.from + " says:", {
 						body: msg.text.trim(),
-						icon: "/img/logo-64.png"
+						icon: "/img/logo-64.png",
+						tag: target
 					});
 					notify.onclick = function() {
 						window.focus();
