@@ -37,7 +37,7 @@
     "moment": "~2.7.0",
     "read": "^1.0.5",
     "request": "^2.51.0",
-    "slate-irc": "~0.7.3",
+    "slate-irc": "~0.8.1",
     "socket.io": "~1.0.6"
   },
   "devDependencies": {
