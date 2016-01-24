@@ -22,7 +22,10 @@ body {
 	background: #2b2b2b;
 }
 
-#windows .chan, #windows .window {
+#main,
+#chat .sidebar,
+#windows .chan,
+#windows .window {
   background: #3f3f3f;
 }
 
@@ -55,10 +58,6 @@ body {
 #footer {
   background: #33332f;
   border-top: 1px solid #000;
-}
-
-#chat .sidebar {
-  background: #3f3f3f;
 }
 
 #chat .count {
@@ -134,29 +133,35 @@ body {
   border-color: #101010;
 }
 
-#form .input {
-  margin-right: 0;
-}
-
 #form #input {
   background-color: #434443;
   border-color: #101010;
   color: #dcdccc;
-  padding-left: 1em !important;
 }
 
 #form #nick {
-  display: none;
+  background: #101010;
+  color: #dcdccc;
 }
+
+/* Buttons */
+#chat .show-more-button,
+#form #submit,
+#windows .header .button {
+  background: #434443;
+  border-color: #101010;
+  color: #dcdccc;
+}
+
+#chat .show-more-button:hover,
+#form #submit:hover,
+#windows .header .button:hover {
+  color: #FFF;
+}
+
 
 #chat .header {
   color: #d2d39b;
-}
-
-/* Hide unnecessary buttons */
-#windows .header .button,
-#form #submit {
-  display: none;
 }
 
 /* Setup text colors */
@@ -212,6 +217,9 @@ body {
 }
 
 @media (max-width: 768px) {
+	#main {
+		left: 0;
+	}
 	#footer {
 		left: -220px;
 		width: 225px;
