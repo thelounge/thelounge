@@ -25,9 +25,7 @@
 				Show more
 			</button>
 		</div>
-		<div class="messages">
-			{{partial "msg"}}
-		</div>
+		<div class="messages"></div>
 	</div>
 	<aside class="sidebar">
 		<div class="users">

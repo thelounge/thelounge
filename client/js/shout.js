@@ -130,6 +130,7 @@ $(function() {
 					channels: channels
 				})
 			);
+			channels.forEach(renderChannelMessages);
 			confirmExit();
 		}
 
@@ -172,6 +173,7 @@ $(function() {
 				channels: [data.chan]
 			})
 		);
+		renderChannelMessages(data.chan);
 		var chan = sidebar.find(".chan")
 			.sort(function(a, b) { return $(a).data("id") - $(b).data("id"); })
 			.last();
@@ -182,7 +184,7 @@ $(function() {
 		chan.click();
 	});
 
-	socket.on("msg", function(data) {
+	function buildChatMessage(data) {
 		var target = "#chan-" + data.chan;
 		if (data.msg.type === "error") {
 			target = "#chan-" + chat.find(".active").data("id");
@@ -191,13 +193,7 @@ $(function() {
 		var chan = chat.find(target);
 		var from = data.msg.from;
 
-		var msg = $(render("msg", {messages: [data.msg]}));
-		chan.find(".messages")
-			.append(msg)
-			.trigger("msg", [
-				target,
-				data.msg
-			]);
+		var msg = $(render("msg", data.msg));
 
 		var text = msg.find(".text");
 		if (text.find("i").size() === 1) {
@@ -224,28 +220,54 @@ $(function() {
 				}
 			});
 
-		if (!chan.hasClass("channel")) {
-			return;
-		}
-
-		var type = data.msg.type;
-		if (type === "message" || type === "action") {
-			var nicks = chan.find(".users").data("nicks");
-			if (nicks) {
-				var find = nicks.indexOf(from);
-				if (find !== -1 && typeof move === "function") {
-					move(nicks, find, 0);
+		if (chan.hasClass("channel")) {
+			var type = data.msg.type;
+			if (type === "message" || type === "action") {
+				var nicks = chan.find(".users").data("nicks");
+				if (nicks) {
+					var find = nicks.indexOf(from);
+					if (find !== -1 && typeof move === "function") {
+						move(nicks, find, 0);
+					}
 				}
 			}
 		}
+
+		return msg;
+	}
+
+	function buildChannelMessages(channel, messages) {
+		return messages.reduce(function(docFragment, message) {
+			docFragment.append(buildChatMessage({
+				chan: channel,
+				msg: message
+			}));
+			return docFragment;
+		}, $(document.createDocumentFragment()));
+	}
+
+	function renderChannelMessages(data) {
+		var documentFragment = buildChannelMessages(data.id, data.messages);
+		chat.find("#chan-" + data.id + " .messages").append(documentFragment);
+	}
+
+	socket.on("msg", function(data) {
+		var msg = buildChatMessage(data);
+		var target = "#chan-" + data.chan;
+		chat.find(target + " .messages")
+			.append(msg)
+			.trigger("msg", [
+				target,
+				data.msg
+			]);
 	});
 
 	socket.on("more", function(data) {
-		var target = data.chan;
+		var documentFragment = buildChannelMessages(data.chan, data.messages);
 		var chan = chat
-			.find("#chan-" + target)
+			.find("#chan-" + data.chan)
 			.find(".messages")
-			.prepend(render("msg", {messages: data.messages}))
+			.prepend(documentFragment)
 			.end();
 		if (data.messages.length !== 100) {
 			chan.find(".show-more").removeClass("show");
