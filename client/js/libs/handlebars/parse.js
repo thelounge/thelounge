@@ -56,8 +56,8 @@ function uri(text) {
  * https://github.com/megawac/irc-style-parser/tree/shout
  */
 var styleCheck_Re = /[\x00-\x1F]/,
-    back_re = /^(\d{1,2})(,(\d{1,2}))?/,
-    colourKey = "\x03", colour_re = /\x03/g,
+    back_re = /^([0-9]{1,2})(,([0-9]{1,2}))?/,
+    colourKey = "\x03",
     // breaks all open styles ^O (\x0F)
     styleBreak = "\x0F";
 
@@ -79,15 +79,6 @@ var styles = [
     };
 });
 
-//http://www.mirc.com/colors.html
-var colourMap = {};
-for (var colour = 0; colour < 16; colour++) {
-    colourMap[colour] = {
-        fore: "irc-fg" + colour,
-        back: "irc-bg" + colour
-    };
-}
-
 function colors(line) {
     // http://www.mirc.com/colors.html
     // http://www.aviran.org/stripremove-irc-client-control-characters/
@@ -108,20 +99,19 @@ function colors(line) {
     for (var i = 0; i < parseArr.length; i++) {
         text = parseArr[i];
         match = text.match(back_re);
-        colour = match && colourMap[+match[1]];
-        if (!match || !colour) {
+        if (!match) {
             // ^C (no colour) ending. Escape current colour and carry on
             background = "";
             continue;
         }
-        // set the background colour
-        // we don't overide the background local var to support nesting
-        if (colourMap[+match[3]]) {
-            background = " " + colourMap[+match[3]].back;
-        }
+		colour = "irc-fg" + +match[1];
+		// set the background colour
+		if (match[3]) {
+			background = " irc-bg" + +match[3];
+		}
         // update the parsed text result
         result = result.replace(colourKey + text, styleTemplate({
-            style: colour.fore + background,
+            style: colour + background,
             text: text.slice(match[0].length)
         }));
     }
@@ -138,6 +128,5 @@ function colors(line) {
         });
     });
 
-    //replace the reminent colour terminations and be done with it
-    return result.replace(colour_re, "");
+    return result;
 }
