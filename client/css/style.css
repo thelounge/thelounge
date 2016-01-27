@@ -678,9 +678,11 @@ button, .user {
 }
 #chat .part .from:before,
 #chat .quit .from:before {
-    font-family: FontAwesome;
+	font-family: FontAwesome;
 	content: "\f08b";
 	color: #FF4136;
+	display: inline-block;
+	transform: rotate(180deg);
 }
 #chat .topic .from:before {
     font-family: FontAwesome;
