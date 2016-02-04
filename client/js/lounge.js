@@ -1,5 +1,5 @@
 $(function() {
-	var socket = io();
+	var socket = io({path:"./socket.io/"});
 	var commands = [
 		"/close",
 		"/connect",
@@ -38,7 +38,7 @@ $(function() {
 	var pop;
 	try {
 		pop = new Audio();
-		pop.src = "/audio/pop.ogg";
+		pop.src = "audio/pop.ogg";
 	} catch (e) {
 		pop = {
 			play: $.noop
@@ -656,7 +656,7 @@ $(function() {
 				if (settings.badge && Notification.permission === "granted") {
 					var notify = new Notification(msg.from + " says:", {
 						body: msg.text.trim(),
-						icon: "/img/logo-64.png",
+						icon: "img/logo-64.png",
 						tag: target
 					});
 					notify.onclick = function() {
