@@ -6,7 +6,7 @@ module.exports = {
 	// Set to 'false' to enable users.
 	//
 	// @type     boolean
-	// @default  false
+	// @default  true
 	//
 	public: true,
 
@@ -30,7 +30,7 @@ module.exports = {
 	// Set the local IP to bind to.
 	//
 	// @type     string
-	// @default  "0.0.0.0"
+	// @default  undefined
 	//
 	bind: undefined,
 
@@ -60,7 +60,7 @@ module.exports = {
 	// URLs posted in channels.
 	//
 	// @type     boolean
-	// @default  true
+	// @default  false
 	//
 	prefetch: false,
 
