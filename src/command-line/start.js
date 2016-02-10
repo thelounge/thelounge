@@ -23,7 +23,7 @@ program
 		if (!mode && !users.length) {
 			console.log("");
 			console.log("No users found!");
-			console.log("Create a new user with 'shout add <name>'.");
+			console.log("Create a new user with 'lounge add <name>'.");
 			console.log("");
 		} else {
 			shout({

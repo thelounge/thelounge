@@ -104,7 +104,7 @@ function fetch(url, cb) {
 		var req = request.get({
 			url: url,
 			headers: {
-				"User-Agent": "Mozilla/5.0 (compatible; Shout IRC Client; +https://github.com/erming/shout)"
+				"User-Agent": "Mozilla/5.0 (compatible; The Lounge IRC Client; +https://github.com/thelounge/lounge)"
 			}
 		});
 	} catch (e) {

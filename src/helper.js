@@ -1,7 +1,7 @@
 var path = require("path");
 
 module.exports = {
-	HOME: (process.env.HOME || process.env.USERPROFILE) + "/.shout",
+	HOME: (process.env.HOME || process.env.USERPROFILE) + "/.lounge",
 	getConfig: getConfig
 };
 
