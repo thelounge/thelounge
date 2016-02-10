@@ -27,7 +27,7 @@ module.exports = function(grunt) {
 					"node_modules/handlebars/bin/handlebars",
 					"client/views/",
 					"-e", "tpl",
-					"-f", "client/js/shout.templates.js"
+					"-f", "client/js/lounge.templates.js"
 				]
 			}, function(err) {
 				if (err) console.log(err);
