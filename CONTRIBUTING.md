@@ -1,28 +1,27 @@
 ## Contributing
 
-Welcome to the Shout community, it's great to have you here! We thank you in
-advance for your contributions.
+Welcome to The Lounge, it's great to have you here! We thank you in advance for
+your contributions.
 
 ### I have a question
 
-Find us on the #shout-irc channel. You might not get an answer right away, but
-this channel is filled with nice people who will be happy to help you.
+Find us on #thelounge channel on Freenode. You might not get an answer right
+away, but this channel is filled with nice people who will be happy to help you.
 
 ### I want to report a bug
 
 First of all, look at the
-[open issues](https://github.com/erming/shout/issues) and [closed
-issues](https://github.com/erming/shout/issues?q=is%3Aissue+is%3Aclosed)
-to see if this was not alredy discussed before.
+[open and closed issues](https://github.com/thelounge/lounge/issues?q=is%3Aissue)
+to see if this was not already discussed before.
 
 ### I want to contribute to the code
 
 A good starting point if you want to help us but do not have a clear idea of
 what you can do specifically is to
 look at the open issues labeled as [*quick and
-easy*](https://github.com/erming/shout/issues?q=is%3Aopen+is%3Aissue+label%3Abug+label%3A%22quick+and+easy%22)
+easy*](https://github.com/thelounge/lounge/issues?q=is%3Aopen+is%3Aissue+label%3Abug+label%3A%22quick+and+easy%22)
 or [*help
-wanted*](https://github.com/erming/shout/issues?q=is%3Aopen+is%3Aissue+label%3Abug+label%3A%22help+wanted%22).
+wanted*](https://github.com/thelounge/lounge/issues?q=is%3Aopen+is%3Aissue+label%3Abug+label%3A%22help+wanted%22).
 
 When you submit some code, make sure it respects the overall coding style that
 is currently in place. If you do not, our reviewers will surely let you know you
@@ -46,7 +45,7 @@ article](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
 on how one should format their commit messages.
 
 When you send a PR, expect two different reviews from the [project
-maintainers](https://github.com/erming/shout/blob/master/CONTRIBUTING.md#project-maintainers).
+maintainers](https://github.com/thelounge/lounge/blob/master/CONTRIBUTING.md#project-maintainers).
 If necessary, they will make comments and ask for changes. When everything looks
 good to them, they will both express their consent by commenting your PR with a
 :+1:. Typically, the first reviewer will give a thorough report and exchange
@@ -54,14 +53,14 @@ with you, give his :+1:, then ask the second reviewer to confirm the changes.
 When this happens (when you get your second required :+1:), then your PR can be
 merged.
 
-Please document any relevant changes in the shout documentation that can be
-found [in its own repository](https://github.com/erming/shout-website).
+Please document any relevant changes in the documentation that can be found
+[in its own repository](https://github.com/thelounge/thelounge.github.io).
 
 ### Labels
 
-When you open an [issue](https://github.com/erming/shout/issues) or send us a
-[PR](https://github.com/erming/shout/pulls), it will most likely be given one or
-several labels. Here is what they mean:
+When you open an [issue](https://github.com/thelounge/lounge/issues) or send us
+a [PR](https://github.com/thelounge/lounge/pulls), it will most likely be given
+one or several labels. Here is what they mean:
 
 - **bug**: Issues that report and PRs that solve any defects that cause
   unexpected behaviors.
