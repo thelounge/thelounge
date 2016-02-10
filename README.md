@@ -10,6 +10,8 @@ __What is it?__
 
 The Lounge is a web IRC client that you host on your own server.
 
+*This is the official, community-managed fork of @erming's great initiative, the [Shout](https://github.com/erming/shout) project.*
+
 __What features does it have?__
 
 - Multiple user support
