@@ -1,6 +1,6 @@
 var ClientManager = new require("../clientManager");
 var program = require("commander");
-var shout = require("../server");
+var server = require("../server");
 var Helper = require("../helper");
 
 program
@@ -26,7 +26,7 @@ program
 			console.log("Create a new user with 'lounge add <name>'.");
 			console.log("");
 		} else {
-			shout({
+			server({
 				host: program.host || process.env.IP   || config.host,
 				port: program.port || process.env.PORT || config.port,
 				bind: program.bind || config.bind,
