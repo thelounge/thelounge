@@ -1,16 +1,19 @@
-![#shout-irc IRC channel on freenode](https://img.shields.io/badge/irc%20channel-%23shout--irc%20on%20freenode-blue.svg)
-[![npm version](https://img.shields.io/npm/v/shout.svg)](https://www.npmjs.org/package/shout)
-[![Build Status](https://travis-ci.org/erming/shout.svg?branch=master)](https://travis-ci.org/erming/shout)
-[![Dependency Status](https://david-dm.org/erming/shout.svg)](https://david-dm.org/erming/shout)
+![#thelounge IRC channel on freenode](https://img.shields.io/badge/irc%20channel-%23thelounge%20on%20freenode-blue.svg)
+[![npm version](https://img.shields.io/npm/v/thelounge.svg)](https://www.npmjs.org/package/thelounge)
+[![Build Status](https://travis-ci.org/thelounge/lounge.svg?branch=master)](https://travis-ci.org/thelounge/lounge)
+[![Dependency Status](https://david-dm.org/thelounge/lounge.svg)](https://david-dm.org/thelounge/lounge)
+[![devDependency Status](https://david-dm.org/thelounge/lounge/dev-status.svg)](https://david-dm.org/thelounge/lounge#info=devDependencies)
 
-# Shout
-
-### [Try the Demo](http://demo.shout-irc.com/)
+# The Lounge
 
 __What is it?__
-Shout is a web IRC client that you host on your own server.
+
+The Lounge is a web IRC client that you host on your own server.
+
+*This is the official, community-managed fork of @erming's great initiative, the [Shout](https://github.com/erming/shout) project.*
 
 __What features does it have?__
+
 - Multiple user support
 - Stays connected even when you close the browser
 - Connect from multiple devices at once
@@ -20,7 +23,7 @@ __What features does it have?__
 ## Install
 
 ```
-sudo npm install -g shout
+sudo npm install -g thelounge
 ```
 
 ## Usage
@@ -28,10 +31,10 @@ sudo npm install -g shout
 When the install is complete, go ahead and run this in your terminal:
 
 ```
-shout --help
+lounge --help
 ```
 
-For more information, read the [documentation](http://shout-irc.com/docs/).
+For more information, read the [documentation](https://thelounge.github.io/docs/).
 
 ## Development setup
 

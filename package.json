@@ -1,15 +1,14 @@
 {
-  "name": "shout",
+  "name": "thelounge",
   "description": "The self-hosted Web IRC client",
   "version": "0.53.0",
-  "author": "Mattias Erming",
   "preferGlobal": true,
   "bin": {
-    "shout": "index.js"
+    "lounge": "index.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/erming/shout.git"
+    "url": "https://github.com/thelounge/lounge.git"
   },
   "scripts": {
     "start": "node index",

@@ -58,7 +58,7 @@ module.exports = function(options) {
 	manager.sockets = sockets;
 
 	console.log("");
-	console.log("Shout is now running on " + protocol + "://" + config.host + ":" + config.port + "/");
+	console.log("The Lounge is now running on " + protocol + "://" + config.host + ":" + config.port + "/");
 	console.log("Press ctrl-c to stop");
 	console.log("");
 
