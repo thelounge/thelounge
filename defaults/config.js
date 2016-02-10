@@ -56,7 +56,7 @@ module.exports = {
 	//
 	// Prefetch URLs
 	//
-	// If enabled, Shout will try to load thumbnails and site descriptions from
+	// If enabled, The Lounge will try to load thumbnails and site descriptions from
 	// URLs posted in channels.
 	//
 	// @type     boolean
@@ -67,7 +67,7 @@ module.exports = {
 	//
 	// Prefetch URLs Image Preview size limit
 	//
-	// If prefetch is enabled, Shout will only display content under the maximum size.
+	// If prefetch is enabled, The Lounge will only display content under the maximum size.
 	// Default value is 512 (in kB)
 	//
 	// @type     int
@@ -78,7 +78,7 @@ module.exports = {
 	//
 	// Display network
 	//
-	// If set to false Shout will not expose network settings in login
+	// If set to false The Lounge will not expose network settings in login
 	// form, limiting client to connect to the configured network.
 	//
 	// @type     boolean
@@ -164,33 +164,33 @@ module.exports = {
 		// Nick
 		//
 		// @type     string
-		// @default  "shout-user"
+		// @default  "lounge-user"
 		//
-		nick: "shout-user",
+		nick: "lounge-user",
 
 		//
 		// Username
 		//
 		// @type     string
-		// @default  "shout-user"
+		// @default  "lounge-user"
 		//
-		username: "shout-user",
+		username: "lounge-user",
 
 		//
 		// Real Name
 		//
 		// @type     string
-		// @default  "Shout User"
+		// @default  "The Lounge User"
 		//
-		realname: "Shout User",
+		realname: "The Lounge User",
 
 		//
 		// Channels
 		//
 		// @type     string
-		// @default  "#foo, #shout-irc"
+		// @default  "#foo, #thelounge"
 		//
-		join: "#foo, #shout-irc"
+		join: "#foo, #thelounge"
 	},
 
 	//
@@ -202,7 +202,7 @@ module.exports = {
 	transports: ["polling", "websocket"],
 
 	//
-	// Run Shout with HTTPS support.
+	// Run The Lounge with HTTPS support.
 	//
 	// @type     object
 	// @default  {}
@@ -236,7 +236,7 @@ module.exports = {
 	},
 
 	//
-	// Run Shout with identd support.
+	// Run The Lounge with identd support.
 	//
 	// @type     object
 	// @default  {}
