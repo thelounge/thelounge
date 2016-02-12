@@ -36,9 +36,9 @@ Don't forget to thank the PR authors in a commit comment, and copy/paste the rel
 
 This is the first release of **The Lounge**, picking up where Shout `v0.53.0` left off!
 
-### Added
+### Added
 
-- Enable notifications on all messages, which can be disabled in the settings ([#540](https://github.com/erming/shout/pull/540) by [@nickel715](https://github.com/nickel715))
+- Enable notifications on all messages, which can be controlled in the settings ([#540](https://github.com/erming/shout/pull/540) by [@nickel715](https://github.com/nickel715))
 - Add Travis CI and David DM badges on the README ([#465](https://github.com/erming/shout/pull/465) by [@astorije](https://github.com/astorije))
 - Add a configurable limit for inline image sizes during prefetching
 - Emit sent notice back to the user ([#590](https://github.com/erming/shout/pull/590) by [@xPaw](https://github.com/xPaw)) ([#598](https://github.com/erming/shout/pull/598) by [@xPaw](https://github.com/xPaw))
@@ -68,6 +68,5 @@ This is the first release of **The Lounge**, picking up where Shout `v0.53.0` le
 
 ---
 
-All previous changes can be found on
-[Shout's CHANGELOG, starting at `v0.53.0`](https://github.com/erming/shout/blob/master/CHANGELOG.md#0530--2016-01-07
+All previous changes can be found on [Shout's CHANGELOG, starting at `v0.53.0`](https://github.com/erming/shout/blob/master/CHANGELOG.md#0530--2016-01-07
 ).
