@@ -6,3 +6,14 @@ node_js:
 - '4.3'
 - '0.12'
 - '0.10'
+
+deploy:
+  provider: npm
+  email:
+    secure: RJkmOloAFQadJX52ryfgznBfB/2GBtJ+37V7wATp8/JqH/gXRuWeh/oTBO/Z8xbD9mXMkmsW6GNqzXu6GAEj1l1mB7VZGelYg0oOyHGdjP2DiuaU9PQ/WYDqmWddFhM2cuDNiXADSpL97ANam3Hs+GO5ufHOvhFCdLGBrH0UbB4=
+  api_key:
+    secure: cA+pCw3TABQ5+F4zxvoTrOl6lq+BEJUO+IrajeMdhGl8dMjDIBk7x7PFqZCkWRE/RLuqhpT6A0/CmEH3d7hOO8cVyotxU+/bRO8AoYifl0u7B1Qt6qVgb46P0VV/fd6QoWKyebZBAyFY+secgbyxc6UPpNYuEd2SCPbJpE73m1I=
+  on:
+    node: '5.6'
+    tags: true
+    repo: thelounge/lounge
