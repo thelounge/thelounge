@@ -17,6 +17,7 @@ var id = 0;
 var events = [
 	"ctcp",
 	"error",
+	"invite",
 	"join",
 	"kick",
 	"mode",

@@ -193,8 +193,10 @@ $(function() {
 
 		var chan = chat.find(target);
 		var from = data.msg.from;
+		var msg;
 
 		if ([
+			"invite",
 			"join",
 			"mode",
 			"kick",
@@ -205,6 +207,7 @@ $(function() {
 			"action",
 		].indexOf(type) !== -1) {
 			switch (type) {
+			case "invite": data.msg.formattedAction = "invited " + data.msg.target + " to"; break;
 			case "join": data.msg.formattedAction = "has joined the channel"; break;
 			case "mode": data.msg.formattedAction = "sets mode"; break;
 			case "kick": data.msg.formattedAction = "has kicked"; break;
@@ -215,11 +218,10 @@ $(function() {
 			default: data.msg.formattedAction = "";
 			}
 
-			var action = $(render("msg_action", data.msg));
-			return action;
+			msg = $(render("msg_action", data.msg));
+		} else {
+			msg = $(render("msg", data.msg));
 		}
-
-		var msg = $(render("msg", data.msg));
 
 		var text = msg.find(".text");
 		if (text.find("i").size() === 1) {
