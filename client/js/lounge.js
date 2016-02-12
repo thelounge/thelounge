@@ -675,50 +675,29 @@ $(function() {
 	});
 
 	chat.on("msg", ".messages", function(e, target, msg) {
-		var button = sidebar.find(".chan[data-target='" + target + "']");
+		if (msg.self) {
+			return;
+		}
+
+		var button = sidebar.find(".chan[data-target=" + target + "]");
+		var isActive = button.hasClass("active");
+		var type = msg.type;
+		var highlight = type.contains("highlight");
 		var isQuery = button.hasClass("query");
-		if (msg.type === "invite" || msg.highlight || isQuery || (options.notifyAllMessages && msg.type === "message")) {
-			if (!document.hasFocus() || !$(target).hasClass("active")) {
-				if (options.notification) {
-					pop.play();
-				}
-				toggleFaviconNotification(true);
 
-				if (options.badge && Notification.permission === "granted") {
-					var title;
-					var body;
-
-					if (msg.type === "invite") {
-						title = "New channel invite:";
-						body = msg.from + " invited you to " + msg.text;
-					} else {
-						title = msg.from;
-						if (!isQuery) {
-							title += " (" + button.text().trim() + ")";
-						}
-						title += " says:";
-						body = msg.text.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "").trim();
-					}
-
-					var notify = new Notification(title, {
-						body: body,
-						icon: "img/logo-64.png",
-						tag: target
-					});
-					notify.onclick = function() {
-						window.focus();
-						button.click();
-						this.close();
-					};
-					window.setTimeout(function() {
-						notify.close();
-					}, 5 * 1000);
+		if (!isActive) {
+			var badge = button.find(".badge");
+			if (badge.length !== 0) {
+				var i = (badge.data("count") || 0) + 1;
+				badge.data("count", i);
+				badge.html(i > 999 ? (i / 1000).toFixed(1) + "k" : i);
+				if (highlight || isQuery) {
+					badge.addClass("highlight");
 				}
 			}
 		}
 
-		button = button.filter(":not(.active)");
-		if (button.length === 0) {
+		if (isActive && document.hasFocus()) {
 			return;
 		}
 
@@ -728,18 +707,48 @@ $(function() {
 			"quit",
 			"nick",
 			"mode",
+			"whois"
 		];
-		if ($.inArray(msg.type, ignore) !== -1){
+		if ($.inArray(type, ignore) !== -1){
 			return;
 		}
 
-		var badge = button.find(".badge");
-		if (badge.length !== 0) {
-			var i = (badge.data("count") || 0) + 1;
-			badge.data("count", i);
-			badge.html(i > 999 ? (i / 1000).toFixed(1) + "k" : i);
-			if (msg.highlight || isQuery) {
-				badge.addClass("highlight");
+		var message = type.contains("message");
+		if (msg.type === "invite" || highlight || isQuery || (options.notifyAllMessages && message)) {
+			if (options.notification) {
+				pop.play();
+			}
+			toggleFaviconNotification(true);
+
+			if (options.badge && Notification.permission === "granted") {
+				var title;
+				var body;
+
+				if (msg.type === "invite") {
+					title = "New channel invite:";
+					body = msg.from + " invited you to " + msg.text;
+				} else {
+					title = msg.from;
+					if (!isQuery) {
+						title += " (" + button.text().trim() + ")";
+					}
+					title += " says:";
+					body = msg.text.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "").trim();
+				}
+
+				var notify = new Notification(title, {
+					body: body,
+					icon: "img/logo-64.png",
+					tag: target
+				});
+				notify.onclick = function() {
+					window.focus();
+					button.click();
+					this.close();
+				};
+				window.setTimeout(function() {
+					notify.close();
+				}, 5 * 1000);
 			}
 		}
 	});
