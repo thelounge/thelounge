@@ -1,4 +1,4 @@
-<a href="#" class="user">{{mode}}{{from}}</a>
+<a href="#" class="user" data-name="{{from}}">{{mode}}{{from}}</a>
 <i class="hostmask">({{hostmask}})</i>
 has left the channel
 {{#if text}}
