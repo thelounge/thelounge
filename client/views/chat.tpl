@@ -2,7 +2,9 @@
 <div id="chan-{{id}}" data-title="{{name}}" data-id="{{id}}" data-type="{{type}}" class="chan {{type}}">
 	<div class="header">
 		<button class="lt"></button>
-		<button class="rt"></button>
+		{{#equal type "channel"}}
+			<button class="rt"></button>
+		{{/equal}}
 		<div class="right">
 			<button class="button close">
 				{{#equal type "lobby"}}
