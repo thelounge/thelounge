@@ -1,3 +1,35 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+This project adheres to [Semantic Versioning](http://semver.org/).
+
+<!--
+Use the following template for each new release, built on recommendations from http://keepachangelog.com/.
+
+```md
+## vX.Y.Z - YYYY-MM-DD
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/vPRE.VIO.US...vX.Y.Z)
+
+OPTIONAL DESCRIPTION, ANNOUNCEMENT, ...
+
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+```
+
+All sections are explained on the link above, they are all optional, and each of them should contain a list of PRs formatted as such:
+
+```md
+- Description ([#PR_NUMBER](https://github.com/thelounge/lounge/pull/PR_NUMBER) by [@GITHUB_USERNAME](https://github.com/GITHUB_USERNAME))
+```
+
+Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
+-->
+
 ## v1.0.0 - 2016-02-12
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/baadc3df3534fb22515a8c2ea29218fbbc1228b4...v1.0.0)
