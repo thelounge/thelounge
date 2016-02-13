@@ -28,6 +28,7 @@ module.exports = {
 
 	//
 	// Set the local IP to bind to.
+	// To listen on all IPs, set to undefined.
 	//
 	// @type     string
 	// @default  undefined
