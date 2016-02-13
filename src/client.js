@@ -124,7 +124,7 @@ Client.prototype.connect = function(args) {
 	var client = this;
 	var server = {
 		name: args.name || "",
-		host: args.host || "irc.freenode.org",
+		host: args.host || "chat.freenode.net",
 		port: args.port || (args.tls ? 6697 : 6667),
 		rejectUnauthorized: false
 	};
