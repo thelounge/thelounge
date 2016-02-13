@@ -68,5 +68,4 @@ This is the first release of **The Lounge**, picking up where Shout `v0.53.0` le
 
 ---
 
-All previous changes can be found on [Shout's CHANGELOG, starting at `v0.53.0`](https://github.com/erming/shout/blob/master/CHANGELOG.md#0530--2016-01-07
-).
+All previous changes can be found on [Shout's CHANGELOG, starting at `v0.53.0`](https://github.com/erming/shout/blob/35587f3c35d0a8ac78a2495934ff9eaa8f1aa71c/CHANGELOG.md#0530--2016-01-07).
