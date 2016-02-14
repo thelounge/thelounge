@@ -74,10 +74,3 @@ one or several labels. Here is what they mean:
   reviewed with extra care regarding security.
 - **wontfix**: Tickets that, after discussion and explanation, will not be fixed
   or implemented.
-
-### Project maintainers
-
-- [Mattias Erming](https://github.com/erming) (`erming` on IRC)
-- [Jocelyn Delalande](https://github.com/JocelynDelalande) (`JocelynD` on IRC)
-- [Jérémie Astori](https://github.com/astorije) (`astorije` on IRC)
-- [Paul Friederichsen](https://github.com/floogulinc) (`floogulinc` on IRC)
