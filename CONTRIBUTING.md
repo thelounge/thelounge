@@ -40,14 +40,9 @@ when necessary. Tim Pope wrote an [excellent
 article](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
 on how one should format their commit messages.
 
-When you send a PR, expect two different reviews from the [project
-maintainers](https://github.com/thelounge/lounge/blob/master/CONTRIBUTING.md#project-maintainers).
-If necessary, they will make comments and ask for changes. When everything looks
-good to them, they will both express their consent by commenting your PR with a
-:+1:. Typically, the first reviewer will give a thorough report and exchange
-with you, give his :+1:, then ask the second reviewer to confirm the changes.
-When this happens (when you get your second required :+1:), then your PR can be
-merged.
+When you send a PR, expect two different reviews from the project
+maintainers. You can read more about this in the [maintainers'
+corner](https://github.com/thelounge/lounge/wiki/Maintainers'-corner).
 
 Please document any relevant changes in the documentation that can be found
 [in its own repository](https://github.com/thelounge/thelounge.github.io).
