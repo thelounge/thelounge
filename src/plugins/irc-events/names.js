@@ -4,7 +4,7 @@ var User = require("../../models/user");
 module.exports = function(irc, network) {
 	var client = this;
 	irc.on("names", function(data) {
-		var chan = _.findWhere(network.channels, {name: data.channel});
+		var chan = _.find(network.channels, {name: data.channel});
 		if (typeof chan === "undefined") {
 			return;
 		}

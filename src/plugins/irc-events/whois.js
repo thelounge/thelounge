@@ -8,7 +8,7 @@ module.exports = function(irc, network) {
 		if (data === null) {
 			return;
 		}
-		var chan = _.findWhere(network.channels, {name: data.nickname});
+		var chan = _.find(network.channels, {name: data.nickname});
 		if (typeof chan === "undefined") {
 			chan = new Chan({
 				type: Chan.Type.QUERY,
