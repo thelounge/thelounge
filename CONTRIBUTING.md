@@ -23,10 +23,6 @@ easy*](https://github.com/thelounge/lounge/issues?q=is%3Aopen+is%3Aissue+label%3
 or [*help
 wanted*](https://github.com/thelounge/lounge/issues?q=is%3Aopen+is%3Aissue+label%3Abug+label%3A%22help+wanted%22).
 
-When you submit some code, make sure it respects the overall coding style that
-is currently in place. If you do not, our reviewers will surely let you know you
-should :smile: (that is, until an automated checker takes over the yelling).
-
 Also, make sure that your PRs do not contain unnecessary commits. If you think
 some of your commits should be merged into a single one, feel free to [squash
 them](https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History).
