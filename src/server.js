@@ -77,12 +77,10 @@ function index(req, res, next) {
 			require("../package.json"),
 			config
 		);
+		var template = _.template(file);
 		res.setHeader("Content-Type", "text/html");
 		res.writeHead(200);
-		res.end(_.template(
-			file,
-			data
-		));
+		res.end(template(data));
 	});
 }
 

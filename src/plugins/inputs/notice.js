@@ -10,7 +10,7 @@ module.exports = function(network, chan, cmd, args) {
 	var irc = network.irc;
 	irc.notice(args[0], message);
 
-	var targetChan = _.findWhere(network.channels, {name: args[0]});
+	var targetChan = _.find(network.channels, {name: args[0]});
 	if (typeof targetChan === "undefined") {
 		message = "{to " + args[0] + "} " + message;
 		targetChan = chan;

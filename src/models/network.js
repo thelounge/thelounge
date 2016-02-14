@@ -46,8 +46,8 @@ Network.prototype.export = function() {
 		"commands"
 	]);
 	network.nick = (this.irc || {}).me;
-	network.join = _.pluck(
-		_.where(this.channels, {type: "channel"}),
+	network.join = _.map(
+		_.filter(this.channels, {type: "channel"}),
 		"name"
 	).join(",");
 	return network;

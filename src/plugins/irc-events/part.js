@@ -4,7 +4,7 @@ var Msg = require("../../models/msg");
 module.exports = function(irc, network) {
 	var client = this;
 	irc.on("part", function(data) {
-		var chan = _.findWhere(network.channels, {name: data.channels[0]});
+		var chan = _.find(network.channels, {name: data.channels[0]});
 		if (typeof chan === "undefined") {
 			return;
 		}
@@ -16,7 +16,7 @@ module.exports = function(irc, network) {
 				chan: chan.id
 			});
 		} else {
-			var user = _.findWhere(chan.users, {name: from});
+			var user = _.find(chan.users, {name: from});
 			chan.users = _.without(chan.users, user);
 			client.emit("users", {
 				chan: chan.id,

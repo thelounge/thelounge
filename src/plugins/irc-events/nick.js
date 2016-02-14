@@ -24,7 +24,7 @@ module.exports = function(irc, network) {
 			});
 		}
 		network.channels.forEach(function(chan) {
-			var user = _.findWhere(chan.users, {name: data.nick});
+			var user = _.find(chan.users, {name: data.nick});
 			if (typeof user === "undefined") {
 				return;
 			}
