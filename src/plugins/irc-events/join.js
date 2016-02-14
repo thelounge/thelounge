@@ -18,12 +18,11 @@ module.exports = function(irc, network) {
 				chan: chan
 			});
 		}
-		var users = chan.users;
-		users.push(new User({name: data.nick}));
+		chan.users.push(new User({name: data.nick}));
 		chan.sortUsers();
 		client.emit("users", {
 			chan: chan.id,
-			users: users
+			users: chan.users
 		});
 		var self = false;
 		if (data.nick.toLowerCase() === irc.me.toLowerCase()) {
