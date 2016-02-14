@@ -187,11 +187,12 @@ module.exports = {
 
 		//
 		// Channels
+		// This is a comma-separated list.
 		//
 		// @type     string
-		// @default  "#foo, #thelounge"
+		// @default  "#thelounge"
 		//
-		join: "#foo, #thelounge"
+		join: "#thelounge"
 	},
 
 	//
