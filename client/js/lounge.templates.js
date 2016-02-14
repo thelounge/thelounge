@@ -37,8 +37,11 @@ templates['chat'] = template({"1":function(depth0,helpers,partials,data) {
     + escapeExpression(((helper = (helper = helpers.type || (depth0 != null ? depth0.type : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"type","hash":{},"data":data}) : helper)))
     + "\" class=\"chan "
     + escapeExpression(((helper = (helper = helpers.type || (depth0 != null ? depth0.type : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"type","hash":{},"data":data}) : helper)))
-    + "\">\n	<div class=\"header\">\n		<button class=\"lt\"></button>\n		<button class=\"rt\"></button>\n		<div class=\"right\">\n			<button class=\"button close\">\n";
-  stack1 = ((helpers.equal || (depth0 && depth0.equal) || helperMissing).call(depth0, (depth0 != null ? depth0.type : depth0), "lobby", {"name":"equal","hash":{},"fn":this.program(2, data),"inverse":this.program(4, data),"data":data}));
+    + "\">\n	<div class=\"header\">\n		<button class=\"lt\"></button>\n";
+  stack1 = ((helpers.equal || (depth0 && depth0.equal) || helperMissing).call(depth0, (depth0 != null ? depth0.type : depth0), "channel", {"name":"equal","hash":{},"fn":this.program(2, data),"inverse":this.noop,"data":data}));
+  if (stack1 != null) { buffer += stack1; }
+  buffer += "		<div class=\"right\">\n			<button class=\"button close\">\n";
+  stack1 = ((helpers.equal || (depth0 && depth0.equal) || helperMissing).call(depth0, (depth0 != null ? depth0.type : depth0), "lobby", {"name":"equal","hash":{},"fn":this.program(4, data),"inverse":this.program(6, data),"data":data}));
   if (stack1 != null) { buffer += stack1; }
   buffer += "			</button>\n		</div>\n		<span class=\"title\">"
     + escapeExpression(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"name","hash":{},"data":data}) : helper)))
@@ -46,7 +49,7 @@ templates['chat'] = template({"1":function(depth0,helpers,partials,data) {
   stack1 = ((helpers.parse || (depth0 && depth0.parse) || helperMissing).call(depth0, (depth0 != null ? depth0.topic : depth0), {"name":"parse","hash":{},"data":data}));
   if (stack1 != null) { buffer += stack1; }
   buffer += "</span>\n	</div>\n	<div class=\"chat\">\n		<div class=\"show-more ";
-  stack1 = ((helpers.equal || (depth0 && depth0.equal) || helperMissing).call(depth0, ((stack1 = (depth0 != null ? depth0.messages : depth0)) != null ? stack1.length : stack1), 100, {"name":"equal","hash":{},"fn":this.program(9, data),"inverse":this.noop,"data":data}));
+  stack1 = ((helpers.equal || (depth0 && depth0.equal) || helperMissing).call(depth0, ((stack1 = (depth0 != null ? depth0.messages : depth0)) != null ? stack1.length : stack1), 100, {"name":"equal","hash":{},"fn":this.program(11, data),"inverse":this.noop,"data":data}));
   if (stack1 != null) { buffer += stack1; }
   return buffer + "\">\n			<button class=\"show-more-button\" data-id=\""
     + escapeExpression(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : helperMissing),(typeof helper === functionType ? helper.call(depth0, {"name":"id","hash":{},"data":data}) : helper)))
@@ -54,17 +57,19 @@ templates['chat'] = template({"1":function(depth0,helpers,partials,data) {
     + escapeExpression(((helpers.partial || (depth0 && depth0.partial) || helperMissing).call(depth0, "user", {"name":"partial","hash":{},"data":data})))
     + "\n		</div>\n	</aside>\n</div>\n";
 },"2":function(depth0,helpers,partials,data) {
-  return "					Disconnect\n";
+  return "			<button class=\"rt\"></button>\n";
   },"4":function(depth0,helpers,partials,data) {
+  return "					Disconnect\n";
+  },"6":function(depth0,helpers,partials,data) {
   var stack1, helperMissing=helpers.helperMissing, buffer = "";
-  stack1 = ((helpers.equal || (depth0 && depth0.equal) || helperMissing).call(depth0, (depth0 != null ? depth0.type : depth0), "query", {"name":"equal","hash":{},"fn":this.program(5, data),"inverse":this.program(7, data),"data":data}));
+  stack1 = ((helpers.equal || (depth0 && depth0.equal) || helperMissing).call(depth0, (depth0 != null ? depth0.type : depth0), "query", {"name":"equal","hash":{},"fn":this.program(7, data),"inverse":this.program(9, data),"data":data}));
   if (stack1 != null) { buffer += stack1; }
   return buffer;
-},"5":function(depth0,helpers,partials,data) {
+},"7":function(depth0,helpers,partials,data) {
   return "						Close\n";
-  },"7":function(depth0,helpers,partials,data) {
-  return "						Leave\n";
   },"9":function(depth0,helpers,partials,data) {
+  return "						Leave\n";
+  },"11":function(depth0,helpers,partials,data) {
   return "show";
   },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, buffer = "";
