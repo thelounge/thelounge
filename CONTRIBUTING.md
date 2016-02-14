@@ -46,31 +46,3 @@ corner](https://github.com/thelounge/lounge/wiki/Maintainers'-corner).
 
 Please document any relevant changes in the documentation that can be found
 [in its own repository](https://github.com/thelounge/thelounge.github.io).
-
-### Labels
-
-When you open an [issue](https://github.com/thelounge/lounge/issues) or send us
-a [PR](https://github.com/thelounge/lounge/pulls), it will most likely be given
-one or several labels. Here is what they mean:
-
-- **bug**: Issues that report and PRs that solve any defects that cause
-  unexpected behaviors.
-- **documentation**: Tickets that mention a lack of documentation, suggest their
-  improvement, or PRs that address these.
-- **duplicate**: Tickets already solved in the past or already open. Such
-  tickets should always link to the previous one on the subject.
-- **enhancement**: Tickets that describe a desired feature or PRs that add them
-  to the project.
-- **help wanted**: Tickets that we would like the community to help us with, by
-  either answering questions or send us PRs.
-- **priority**: Tickets that the core team deemed critical and PRs that the core
-  team should look at before others.
-- **question**: Tickets that are actually support cases.
-- **quick and easy**: Tickets that should be fairly simple to implement, even
-  for developers not yet involved in the project.
-- **second review needed**: A first reviewer gave his :+1: but now expects a
-  second reviewer to step in before this PR can be merged.
-- **security**: Tickets that describe a security concern or PRs that must be
-  reviewed with extra care regarding security.
-- **wontfix**: Tickets that, after discussion and explanation, will not be fixed
-  or implemented.
