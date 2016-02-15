@@ -30,6 +30,21 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
+## v1.0.2 - 2016-02-15
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v1.0.1...v1.0.2)
+
+### Changed
+
+- Remove `#foo` channel from the default configuration file ([#22](https://github.com/thelounge/lounge/pull/22) by [@astorije](https://github.com/astorije))
+- Change the Freenode URL to `chat.freenode.net` in the default configuration file ([#13](https://github.com/thelounge/lounge/pull/13) by [@dubzi](https://github.com/dubzi))
+- Ensure all `.js` files are linted ([#42](https://github.com/thelounge/lounge/pull/42) by [@williamboman](https://github.com/williamboman))
+
+### Fixed
+
+- Hide the user list button on a server or private message window ([#32](https://github.com/thelounge/lounge/pull/32) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Correctly sort the user list whenever a user joins ([#33](https://github.com/thelounge/lounge/pull/33) by [@xPaw](https://github.com/xPaw))
+
 ## v1.0.1 - 2016-02-14
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v1.0.0...v1.0.1)
