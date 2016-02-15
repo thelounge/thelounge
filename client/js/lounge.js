@@ -641,38 +641,13 @@ $(function() {
 	});
 
 	chat.on("msg", ".messages", function(e, target, msg) {
-		var button = sidebar.find(".chan[data-target=" + target + "]");
-		var isQuery = button.hasClass("query");
-		var type = msg.type;
-		var highlight = type.contains("highlight");
-		var message = type.contains("message");
-		var settings = $.cookie("settings") || {};
-		if (highlight || isQuery || (settings.notifyAllMessages && message)) {
-			if (!document.hasFocus() || !$(target).hasClass("active")) {
-				if (settings.notification) {
-					pop.play();
-				}
-				favico.badge("!");
-				if (settings.badge && Notification.permission === "granted") {
-					var notify = new Notification(msg.from + " says:", {
-						body: msg.text.trim(),
-						icon: "/img/logo-64.png",
-						tag: target
-					});
-					notify.onclick = function() {
-						window.focus();
-						button.click();
-						this.close();
-					};
-					window.setTimeout(function() {
-						notify.close();
-					}, 5 * 1000);
-				}
-			}
+		if (msg.self) {
+			return;
 		}
 
-		button = button.filter(":not(.active)");
-		if (button.length === 0) {
+		var button = sidebar.find(".chan[data-target=" + target + "]");
+		var isActive = button.hasClass("active");
+		if (isActive && document.hasFocus()) {
 			return;
 		}
 
@@ -682,18 +657,47 @@ $(function() {
 			"quit",
 			"nick",
 			"mode",
+			"whois"
 		];
+		var type = msg.type;
 		if ($.inArray(type, ignore) !== -1){
 			return;
 		}
 
-		var badge = button.find(".badge");
-		if (badge.length !== 0) {
-			var i = (badge.data("count") || 0) + 1;
-			badge.data("count", i);
-			badge.html(i > 999 ? (i / 1000).toFixed(1) + "k" : i);
-			if (highlight || isQuery) {
-				badge.addClass("highlight");
+		var isQuery = button.hasClass("query");
+		var highlight = type.contains("highlight");
+		var message = type.contains("message");
+		if (highlight || isQuery || (options.notifyAllMessages && message)) {
+			if (options.notification) {
+				pop.play();
+			}
+			favico.badge("!");
+			if (options.badge && Notification.permission === "granted") {
+				var notify = new Notification(msg.from + " says:", {
+					body: msg.text.trim(),
+					icon: "/img/logo-64.png",
+					tag: target
+				});
+				notify.onclick = function() {
+					window.focus();
+					button.click();
+					this.close();
+				};
+				window.setTimeout(function() {
+					notify.close();
+				}, 5 * 1000);
+			}
+		}
+
+		if (!isActive) {
+			var badge = button.find(".badge");
+			if (badge.length !== 0) {
+				var i = (badge.data("count") || 0) + 1;
+				badge.data("count", i);
+				badge.html(i > 999 ? (i / 1000).toFixed(1) + "k" : i);
+				if (highlight || isQuery) {
+					badge.addClass("highlight");
+				}
 			}
 		}
 	});
