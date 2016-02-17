@@ -12,8 +12,7 @@ module.exports = function(irc, network) {
 			}
 			chan.users = _.without(chan.users, user);
 			client.emit("users", {
-				chan: chan.id,
-				users: chan.users
+				chan: chan.id
 			});
 			var reason = data.message || "";
 			if (reason.length > 0) {

@@ -31,8 +31,7 @@ module.exports = function(irc, network) {
 			user.name = nick;
 			chan.sortUsers();
 			client.emit("users", {
-				chan: chan.id,
-				users: chan.users
+				chan: chan.id
 			});
 			var msg = new Msg({
 				type: Msg.Type.NICK,

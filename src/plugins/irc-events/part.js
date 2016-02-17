@@ -19,8 +19,7 @@ module.exports = function(irc, network) {
 			var user = _.findWhere(chan.users, {name: from});
 			chan.users = _.without(chan.users, user);
 			client.emit("users", {
-				chan: chan.id,
-				users: chan.users
+				chan: chan.id
 			});
 			var reason = data.message || "";
 			if (reason.length > 0) {

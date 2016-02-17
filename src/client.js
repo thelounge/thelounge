@@ -303,6 +303,19 @@ Client.prototype.sort = function(data) {
 	}
 };
 
+Client.prototype.names = function(data) {
+	var client = this;
+	var target = client.find(data.target);
+	if (!target) {
+		return;
+	}
+
+	client.emit("names", {
+		chan: target.chan.id,
+		users: target.chan.users
+	});
+};
+
 Client.prototype.quit = function() {
 	var sockets = this.sockets.sockets;
 	var room = sockets.adapter.rooms[this.id] || [];

@@ -14,8 +14,7 @@ module.exports = function(irc, network) {
 		});
 		chan.sortUsers();
 		client.emit("users", {
-			chan: chan.id,
-			users: chan.users
+			chan: chan.id
 		});
 	});
 };
