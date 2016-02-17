@@ -1,7 +1,6 @@
 var _ = require("lodash");
 var Chan = require("./models/chan");
 var crypto = require("crypto");
-var fs = require("fs");
 var identd = require("./identd");
 var log = require("./log");
 var net = require("net");
@@ -51,14 +50,15 @@ var inputs = [
 	"whois"
 ];
 
-function Client(sockets, name, config) {
+function Client(manager, name, config) {
 	_.merge(this, {
 		activeChannel: -1,
 		config: config,
 		id: id++,
 		name: name,
 		networks: [],
-		sockets: sockets
+		sockets: manager.sockets,
+		manager: manager
 	});
 	var client = this;
 	crypto.randomBytes(48, function(err, buf) {
@@ -221,6 +221,21 @@ Client.prototype.connect = function(args) {
 	});
 };
 
+Client.prototype.setPassword = function(hash) {
+	var client = this;
+	client.manager.updateUser(client.name, {password:hash});
+	// re-read the hash off disk to ensure we use whatever is saved. this will
+	// prevent situations where the password failed to save properly and so
+	// a restart of the server would forget the change and use the old
+	// password again.
+	var user = client.manager.readUserConfig(client.name);
+	if (user.password === hash) {
+		client.config.password = hash;
+		return true;
+	}
+	return false;
+};
+
 Client.prototype.input = function(data) {
 	var client = this;
 	var text = data.text.trim();
@@ -353,9 +368,6 @@ Client.prototype.save = function(force) {
 		return;
 	}
 
-	var name = this.name;
-	var path = Helper.HOME + "/users/" + name + ".json";
-
 	var networks = _.map(
 		this.networks,
 		function(n) {
@@ -364,29 +376,6 @@ Client.prototype.save = function(force) {
 	);
 
 	var json = {};
-	fs.readFile(path, "utf-8", function(err, data) {
-		if (err) {
-			console.log(err);
-			return;
-		}
-
-		try {
-			json = JSON.parse(data);
-			json.networks = networks;
-		} catch (e) {
-			console.log(e);
-			return;
-		}
-
-		fs.writeFile(
-			path,
-			JSON.stringify(json, null, "  "),
-			{mode: "0777"},
-			function(err) {
-				if (err) {
-					console.log(err);
-				}
-			}
-		);
-	});
+	json.networks = networks;
+	client.manager.updateUser(client.name, json);
 };

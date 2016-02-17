@@ -29,18 +29,14 @@ ClientManager.prototype.loadUsers = function() {
 
 ClientManager.prototype.loadUser = function(name) {
 	try {
-		var json = fs.readFileSync(
-			Helper.HOME + "/users/" + name + ".json",
-			"utf-8"
-		);
-		json = JSON.parse(json);
+		var json = this.readUserConfig(name);
 	} catch (e) {
 		console.log(e);
 		return;
 	}
 	if (!this.findClient(name)) {
 		this.clients.push(new Client(
-			this.sockets,
+			this,
 			name,
 			json
 		));
@@ -91,6 +87,50 @@ ClientManager.prototype.addUser = function(name, password) {
 		throw e;
 	}
 	return true;
+};
+
+ClientManager.prototype.updateUser = function(name, opts) {
+	var users = this.getUsers();
+	if (users.indexOf(name) === -1) {
+		return false;
+	}
+	if (typeof opts === "undefined") {
+		return false;
+	}
+	var path = Helper.HOME + "/users/" + name + ".json";
+	var user = {};
+
+	try {
+		user = this.readUserConfig(name);
+		_.merge(user, opts);
+	} catch (e) {
+		console.log(e);
+		return;
+	}
+
+	fs.writeFileSync(
+		path,
+		JSON.stringify(user, null, " "),
+		{mode: "0777"},
+		function(err) {
+			if (err) {
+				console.log(err);
+			}
+		}
+	);
+	return true;
+};
+
+ClientManager.prototype.readUserConfig = function(name) {
+	var users = this.getUsers();
+	if (users.indexOf(name) === -1) {
+		return false;
+	}
+	var path = Helper.HOME + "/users/" + name + ".json";
+	var user = {};
+	var data = fs.readFileSync(path, "utf-8");
+	user = JSON.parse(data);
+	return user;
 };
 
 ClientManager.prototype.removeUser = function(name) {

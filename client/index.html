@@ -265,6 +265,31 @@
 									Enable notification for all messages
 								</label>
 							</div>
+							<% if (!public) { %>
+							<div id="change-password">
+								<form action="" method="post">
+									<div class="col-sm-12">
+										<h2>Change password</h2>
+									</div>
+									<div class="col-sm-12">
+										<label for="old_password" class="sr-only">Enter current password</label>
+										<input type="password" name="old_password" class="input" placeholder="Enter current password">
+									</div>
+									<div class="col-sm-12">
+										<label for="new_password" class="sr-only">Enter desired new password</label>
+										<input type="password" name="new_password" class="input" placeholder="Enter desired new password">
+									</div>
+									<div class="col-sm-12">
+										<label for="verify_password" class="sr-only">Repeat new password</label>
+										<input type="password" name="verify_password" class="input" placeholder="Repeat new password">
+									</div>
+									<div class="col-sm-12 feedback"></div>
+									<div class="col-sm-12">
+										<button type="submit" class="btn">Change password</button>
+									</div>
+								</form>
+							</div>
+							<% } %>
 							<div class="col-sm-12">
 								<h2>About The Lounge</h2>
 							</div>
