@@ -1,3 +1,4 @@
+var jQuery = $ = require("jquery");
 /*!
  * Bootstrap v3.2.0 (http://getbootstrap.com)
  * Copyright 2011-2014 Twitter, Inc.

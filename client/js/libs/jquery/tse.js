@@ -1,3 +1,5 @@
+var jQuery = $ = require("jquery");
+
 /**
  * TrackpadScrollEmulator
  * Version: 1.0.6

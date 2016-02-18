@@ -1,3 +1,4 @@
+var jQuery = $ = require("jquery");
 /*!
  * stringcolor
  * Generate a consistent color from any string.

@@ -1,3 +1,5 @@
+var jQuery = $ = require("jquery");
+
 /*!
  * tabcomplete
  * http://github.com/erming/tabcomplete

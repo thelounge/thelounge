@@ -1,3 +1,4 @@
+var jQuery = $ = require("jquery");
 /*!
  * inputhistory
  * https://github.com/erming/inputhistory

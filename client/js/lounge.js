@@ -1,4 +1,12 @@
+window.$ = jQuery = require("jquery");
+window.Handlebars = require("handlebars");
+
 $(function() {
+
+	require("jquery-ui");
+	var io = require("socket.io-client");
+	var Favico = require("favico.js");
+	var Mousetrap = require("mousetrap");
 	var socket = io();
 	var commands = [
 		"/close",
@@ -641,7 +649,7 @@ $(function() {
 	});
 
 	chat.on("msg", ".messages", function(e, target, msg) {
-		var button = sidebar.find(".chan[data-target=" + target + "]");
+		var button = sidebar.find(".chan[data-target='" + target + "']");
 		var isQuery = button.hasClass("query");
 		var type = msg.type;
 		var highlight = type.contains("highlight");

@@ -1,3 +1,5 @@
+var jQuery = $ = require("jquery");
+
 /*!
  * stickyscroll
  * https://github.com/erming/stickyscroll

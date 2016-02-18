@@ -1,3 +1,5 @@
+var Handlebars = require("handlebars");
+var URI = require("urijs");
 Handlebars.registerHelper(
 	"parse", function(text) {
 		var wrap = wraplong(text);

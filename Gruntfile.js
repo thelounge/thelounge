@@ -1,9 +1,17 @@
 module.exports = function(grunt) {
 	var libs = "client/js/libs/**/*.js";
+
 	grunt.initConfig({
 		watch: {
 			files: libs,
 			tasks: ["uglify"]
+		},
+		browserify: {
+			dist: {
+		    	files: {
+		      		'client/js/libs.js': [libs, 'client/js/libs/*.js', 'client/js/lounge.js', 'client/js/lounge.templates.js']
+		    	}
+		  	}
 		},
 		uglify: {
 			options: {
@@ -11,11 +19,13 @@ module.exports = function(grunt) {
 			},
 			js: {
 				files: {
-					"client/js/libs.min.js": libs
+					"client/js/libs.min.js": "client/js/libs.js"
 				}
 			}
 		}
 	});
+	
+	grunt.loadNpmTasks("grunt-browserify");
 	grunt.loadNpmTasks("grunt-contrib-uglify");
 	grunt.loadNpmTasks("grunt-contrib-watch");
 	grunt.registerTask(
@@ -36,6 +46,6 @@ module.exports = function(grunt) {
 	);
 	grunt.registerTask(
 		"default",
-		["uglify", "build"]
+		["browserify", "uglify", "build"]
 	);
 };
