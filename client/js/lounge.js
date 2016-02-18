@@ -1,3 +1,7 @@
+var $ = require('jquery-browserify');
+var io = require('socket.io');
+var Favico = require('favico.js');
+var Handlebars = require('handlebars');
 $(function() {
 	var path = window.location.pathname + "socket.io/";
 	var socket = io({path:path});

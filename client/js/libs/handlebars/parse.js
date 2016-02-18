@@ -1,3 +1,4 @@
+var Handlebars = require('handlebars');
 Handlebars.registerHelper(
 	"parse", function(text) {
 		var wrap = wraplong(text);

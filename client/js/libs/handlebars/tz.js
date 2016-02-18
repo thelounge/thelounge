@@ -1,3 +1,5 @@
+var Handlebars = require('handlebars');
+var moment = require('moment');
 Handlebars.registerHelper(
 	"tz", function(time) {
 		if (time) {
