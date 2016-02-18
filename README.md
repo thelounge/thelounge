@@ -42,9 +42,11 @@ To run the app from source, just clone the code and run this in your terminal:
 
 ```
 npm install
-npm run build
 npm start
 ```
+
+You will have to run `npm run build` if you change or add anything in
+`client/js/libs` or `client/views.`
 
 ## License
 
