@@ -83,9 +83,9 @@ $(function() {
 			return;
 		}
 		login.find(".btn").prop("disabled", false);
-		var token = $.cookie("token");
+		var token = window.localStorage.getItem("token");
 		if (token) {
-			$.removeCookie("token");
+			window.localStorage.removeItem("token");
 			socket.emit("auth", {token: token});
 		}
 		if (body.hasClass("signed-out")) {
@@ -99,7 +99,7 @@ $(function() {
 		}
 		var input = login.find("input[name='user']");
 		if (input.val() === "") {
-			input.val($.cookie("user") || "");
+			input.val(window.localStorage.getItem("user") || "");
 		}
 		if (token) {
 			return;
@@ -136,12 +136,7 @@ $(function() {
 		}
 
 		if (data.token) {
-			$.cookie(
-				"token",
-				data.token, {
-					expires: expire(30)
-				}
-			);
+			window.localStorage.setItem("token", data.token);
 		}
 
 		$("body").removeClass("signed-out");
@@ -418,8 +413,6 @@ $(function() {
 		users.data("nicks", nicks);
 	});
 
-	$.cookie.json = true;
-
 	var settings = $("#settings");
 	var options = $.extend({
 		badge: false,
@@ -434,7 +427,7 @@ $(function() {
 		thumbnails: true,
 		quit: true,
 		notifyAllMessages: false,
-	}, $.cookie("settings"));
+	}, JSON.parse(window.localStorage.getItem("settings")));
 
 	for (var i in options) {
 		if (options[i]) {
@@ -446,12 +439,7 @@ $(function() {
 		var self = $(this);
 		var name = self.attr("name");
 		options[name] = self.prop("checked");
-		$.cookie(
-			"settings",
-			options, {
-				expires: expire(365)
-			}
-		);
+		window.localStorage.setItem("settings", JSON.stringify(options));
 		if ([
 			"join",
 			"mode",
@@ -599,7 +587,7 @@ $(function() {
 	});
 
 	sidebar.on("click", "#sign-out", function() {
-		$.removeCookie("token");
+		window.localStorage.removeItem("token");
 		location.reload();
 	});
 
@@ -667,14 +655,13 @@ $(function() {
 		var type = msg.type;
 		var highlight = type.contains("highlight");
 		var message = type.contains("message");
-		var settings = $.cookie("settings") || {};
-		if (highlight || isQuery || (settings.notifyAllMessages && message)) {
+		if (highlight || isQuery || (options.notifyAllMessages && message)) {
 			if (!document.hasFocus() || !$(target).hasClass("active")) {
-				if (settings.notification) {
+				if (options.notification) {
 					pop.play();
 				}
 				favico.badge("!");
-				if (settings.badge && Notification.permission === "granted") {
+				if (options.badge && Notification.permission === "granted") {
 					var notify = new Notification(msg.from + " says:", {
 						body: msg.text.trim(),
 						icon: "img/logo-64.png",
@@ -783,12 +770,7 @@ $(function() {
 			}
 		});
 		if (values.user) {
-			$.cookie(
-				"user",
-				values.user, {
-					expires: expire(30)
-				}
-			);
+			window.localStorage.setItem("user", values.user);
 		}
 		socket.emit(
 			event, values
@@ -893,12 +875,6 @@ $(function() {
 	function refresh() {
 		window.onbeforeunload = null;
 		location.reload();
-	}
-
-	function expire(days) {
-		var date = new Date();
-		date.setTime(date.getTime() + ((3600 * 1000 * 24) * days));
-		return date;
 	}
 
 	function sortable() {
