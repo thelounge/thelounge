@@ -1,3 +1,4 @@
+var Handlebars = require('handlebars');
 Handlebars.registerHelper(
 	"equal", function(a, b, opt) {
 		a = a.toString();

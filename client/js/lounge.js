@@ -1,3 +1,7 @@
+var $ = require('jquery-browserify');
+var io = require('socket.io');
+var favico = require('favico.js');
+var Handlebars = require('handlebars');
 $(function() {
 	var socket = io();
 	var commands = [
@@ -50,7 +54,7 @@ $(function() {
 
 	$(".tse-scrollable").TrackpadScrollEmulator();
 
-	var favico = new Favico({
+	favico = new Favico({
 		animation: "none"
 	});
 

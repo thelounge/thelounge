@@ -1,5 +1,5 @@
 var diff;
-
+var Handlebars = require('handlebars');
 Handlebars.registerHelper(
 	"diff", function(a, opt) {
 		if (a != diff) {
