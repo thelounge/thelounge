@@ -13,6 +13,7 @@
   "scripts": {
     "start": "node index",
     "build": "grunt",
+    "dev": "grunt dev",
     "test": "HOME=test/fixtures mocha test/**/*.js && npm run lint",
     "lint": "eslint ."
   },
@@ -45,7 +46,8 @@
     "slate-irc": "0.8.1",
     "socket.io": "~1.0.6",
     "socket.io-client": "^1.4.5",
-    "urijs": "^1.17.0"
+    "urijs": "^1.17.0",
+    "watchify": "^3.7.0"
   },
   "devDependencies": {
     "eslint": "^1.5.1",

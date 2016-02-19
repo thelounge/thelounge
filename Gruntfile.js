@@ -10,6 +10,9 @@ module.exports = function(grunt) {
 			dist: {
 		    	files: {
 		      		'client/js/compiled/lounge.js': [libs, 'client/js/libs/*.js', 'client/js/lounge.js', 'client/js/lounge.templates.js']
+		    	},
+		    	options: {
+		    		 watch: true
 		    	}
 		  	}
 		},
@@ -48,5 +51,9 @@ module.exports = function(grunt) {
 	grunt.registerTask(
 		"default",
 		["browserify", "uglify", "build"]
+	);
+	grunt.registerTask(
+		"dev",
+		["browserify", "uglify", "watch"]
 	);
 };
