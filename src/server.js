@@ -121,6 +121,12 @@ function init(socket, client, token) {
 				client.sort(data);
 			}
 		);
+		socket.on(
+			"names",
+			function(data) {
+				client.names(data);
+			}
+		);
 		socket.join(client.id);
 		socket.emit("init", {
 			active: client.activeChannel,

@@ -21,8 +21,7 @@ module.exports = function(irc, network) {
 		chan.users.push(new User({name: data.nick}));
 		chan.sortUsers();
 		client.emit("users", {
-			chan: chan.id,
-			users: chan.users
+			chan: chan.id
 		});
 		var self = false;
 		if (data.nick.toLowerCase() === irc.me.toLowerCase()) {

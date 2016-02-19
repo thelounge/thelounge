@@ -19,8 +19,7 @@ module.exports = function(irc, network) {
 		}
 
 		client.emit("users", {
-			chan: chan.id,
-			users: chan.users
+			chan: chan.id
 		});
 
 		var self = false;

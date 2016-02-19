@@ -395,6 +395,19 @@ $(function() {
 	});
 
 	socket.on("users", function(data) {
+		var chan = chat.find("#chan-" + data.chan);
+
+		if (chan.hasClass("active")) {
+			socket.emit("names", {
+				target: data.chan
+			});
+		}
+		else {
+			chan.data("needsNamesRefresh", true);
+		}
+	});
+
+	socket.on("names", function(data) {
 		var users = chat.find("#chan-" + data.chan).find(".users").html(render("user", data));
 		var nicks = [];
 		for (var i in data.users) {
@@ -571,6 +584,11 @@ $(function() {
 			if (nick) {
 				setNick(nick);
 			}
+		}
+
+		if (chan.data("needsNamesRefresh") === true) {
+			chan.data("needsNamesRefresh", false);
+			socket.emit("names", {target: self.data("id")});
 		}
 
 		if (screen.width > 768 && chan.hasClass("chan")) {
