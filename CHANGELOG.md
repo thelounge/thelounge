@@ -30,6 +30,28 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
+## v1.1.0 - 2016-02-19
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v1.0.2...v1.1.0)
+
+### Added
+
+- Allow The Lounge to be proxied behind a `/path/` URL ([#27](https://github.com/thelounge/lounge/pull/27) by [@gdamjan](https://github.com/gdamjan))
+
+### Changed
+
+- Simplify a great deal the CONTRIBUTING file ([#40](https://github.com/thelounge/lounge/pull/40) by [@astorije](https://github.com/astorije))
+- Use a Font Awesome icon for the channel closing button ([#48](https://github.com/thelounge/lounge/pull/48) by [@xPaw](https://github.com/xPaw))
+
+### Removed
+
+- Remove Node 0.10 from Travis CI ([#60](https://github.com/thelounge/lounge/pull/60) by [@astorije](https://github.com/astorije))
+
+### Fixed
+
+- Suppress deprecation warning for `moment().zone` ([#37](https://github.com/thelounge/lounge/pull/37) by [@deiu](https://github.com/deiu))
+- Fix a bug preventing the closing of a channel when the user was kicked out ([#34](https://github.com/thelounge/lounge/pull/34) by [@xPaw](https://github.com/xPaw))
+
 ## v1.0.2 - 2016-02-15
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v1.0.1...v1.0.2)
