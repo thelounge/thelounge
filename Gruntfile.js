@@ -9,17 +9,18 @@ module.exports = function(grunt) {
 		browserify: {
 			dist: {
 		    	files: {
-		      		'client/js/libs.js': [libs, 'client/js/libs/*.js', 'client/js/lounge.js', 'client/js/lounge.templates.js']
+		      		'client/js/compiled/lounge.js': [libs, 'client/js/libs/*.js', 'client/js/lounge.js', 'client/js/lounge.templates.js']
 		    	}
 		  	}
 		},
 		uglify: {
 			options: {
-				compress: false
+				compress: false,
+				sourceMap: true
 			},
 			js: {
 				files: {
-					"client/js/libs.min.js": "client/js/libs.js"
+					"client/js/compiled/lounge.js": "client/js/compiled/lounge.js"
 				}
 			}
 		}
