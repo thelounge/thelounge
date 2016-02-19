@@ -17,7 +17,7 @@ OPTIONAL DESCRIPTION, ANNOUNCEMENT, ...
 ### Changed
 ### Deprecated
 ### Removed
-### Fixed
+### Fixed
 ### Security
 ```
 
@@ -29,6 +29,14 @@ All sections are explained on the link above, they are all optional, and each of
 
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
+
+## v1.1.1 - 2016-02-19
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v1.1.0...v1.1.1)
+
+### Changed
+
+- Remove compiled assets and generate them at prepublish time ([#63](https://github.com/thelounge/lounge/pull/63) by [@astorije](https://github.com/astorije))
 
 ## v1.1.0 - 2016-02-19
 
@@ -76,7 +84,7 @@ Don't forget to thank the PR authors in a commit comment, and copy/paste the rel
 - In the change log, use a permanent URL to link the previous history of The Lounge to Shout ([#12](https://github.com/thelounge/lounge/pull/12) by [@xPaw](https://github.com/xPaw))
 - Update some dependencies and pin versions ([#8](https://github.com/thelounge/lounge/pull/8) by [@xPaw](https://github.com/xPaw))
 
-### Fixed
+### Fixed
 
 - Add missing form methods that were causing LastPass to trigger a warning ([#19](https://github.com/thelounge/lounge/pull/19) by [@maxpoulin64](https://github.com/maxpoulin64))
 - Fix comments in the configuration file ([#1](https://github.com/thelounge/lounge/pull/1) by [@FryDay](https://github.com/FryDay))
