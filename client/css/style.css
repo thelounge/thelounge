@@ -672,6 +672,13 @@ button, .user {
 #chat.hide-quit .quit {
 	display: none !important;
 }
+
+#chat .invite .from:before {
+	font-family: FontAwesome;
+	content: "\f003";
+	color: #2ECC40;
+}
+
 #chat .join .from:before {
     font-family: FontAwesome;
 	content: "\f090";
