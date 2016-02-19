@@ -54,6 +54,6 @@ module.exports = function(grunt) {
 	);
 	grunt.registerTask(
 		"dev",
-		["browserify", "uglify", "watch"]
+		["browserify", "watch"]
 	);
 };
