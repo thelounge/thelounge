@@ -47,7 +47,7 @@ Don't forget to thank the PR authors in a commit comment, and copy/paste the rel
 
 - Remove Node 0.10 from Travis CI ([#60](https://github.com/thelounge/lounge/pull/60) by [@astorije](https://github.com/astorije))
 
-### Fixed
+### Fixed
 
 - Suppress deprecation warning for `moment().zone` ([#37](https://github.com/thelounge/lounge/pull/37) by [@deiu](https://github.com/deiu))
 - Fix a bug preventing the closing of a channel when the user was kicked out ([#34](https://github.com/thelounge/lounge/pull/34) by [@xPaw](https://github.com/xPaw))
