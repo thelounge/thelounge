@@ -47,7 +47,6 @@ $(function() {
 	}
 
 	$("#play").on("click", function() { pop.play(); });
-	$("#footer .icon").tooltip();
 
 	$(".tse-scrollable").TrackpadScrollEmulator();
 
