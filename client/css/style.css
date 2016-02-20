@@ -315,7 +315,7 @@ button, .user {
 	color: #49505a;
 }
 #sidebar .badge:empty {
-	display: none;
+	opacity: 0;
 }
 #sidebar .close {
 	border-radius: 3px;
