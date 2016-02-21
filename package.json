@@ -14,7 +14,7 @@
     "start": "node index",
     "build": "grunt",
     "test": "HOME=test/fixtures mocha test/**/*.js && npm run lint",
-    "lint": "eslint .",
+    "lint": "eslint . && stylelint \"**/*.css\"",
     "prepublish": "npm run build"
   },
   "keywords": [
@@ -41,6 +41,7 @@
     "socket.io": "~1.0.6"
   },
   "devDependencies": {
+    "stylelint": "4.3.3",
     "eslint": "^1.5.1",
     "grunt": "~0.4.5",
     "grunt-cli": "^0.1.13",

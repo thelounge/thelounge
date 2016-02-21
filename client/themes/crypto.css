@@ -9,75 +9,79 @@ GitHub: https://github.com/aynik
 */
 
 @font-face {
-    font-family: Inconsolata-g;
-    src: url("fonts/inconsolatag.woff") format("woff"), url("fonts/inconsolatag.ttf") format("ttf");
+	font-family: Inconsolata-g;
+	src: url("fonts/inconsolatag.woff") format("woff"), url("fonts/inconsolatag.ttf") format("ttf");
 }
 
 body {
-    background: #000;
-    font: 16px Inconsolata-g, monospace;
+	background: #000;
+	font: 16px Inconsolata-g, monospace;
 }
 
-a, #chat a {
-    color: #00FF0E;
+a,
+#chat a {
+	color: #00ff0e;
 }
 
-a:hover, #chat a:hover {
-    color: #3EFF48;
+a:hover,
+#chat a:hover {
+	color: #3eff48;
 }
 
 #windows .window h2 {
-    color: #666;
-    font: regular 14px Leto, sans-serif;
-    border-bottom: none;
+	color: #666;
+	font: regular 14px Leto, sans-serif;
+	border-bottom: none;
 }
 
 #main {
-    right: 0px;
-    bottom: 0px;
-    top: 0px;
-    border-radius: 0px;
+	right: 0;
+	bottom: 0;
+	top: 0;
+	border-radius: 0;
 }
 
 .container {
-    margin: 40px auto;
+	margin: 40px auto;
 }
 
 #sign-in label {
-    font: 14px Lato, sans-serif;
-    color: #666;
+	font: 14px Lato, sans-serif;
+	color: #666;
 }
 
 #sign-in label input {
-    margin-top: 10px !important;
-    font: 14px Inconsolata-g, monospace;
+	margin-top: 10px !important;
+	font: 14px Inconsolata-g, monospace;
 }
 
 .btn {
-    border-color: #00FF0E;
-    color: #00FF0E;
+	border-color: #00ff0e;
+	color: #00ff0e;
 }
 
-.btn:disabled, .btn:hover {
-    background: #00FF0E;
+.btn:disabled,
+.btn:hover {
+	background: #00ff0e;
 }
 
-#windows .window:before, #windows .chan:before {
-    content: none;
+#windows .window:before,
+#windows .chan:before {
+	content: none;
 }
 
 #settings .opt {
-    line-height: 20px;
-    font-size: 12px;
+	line-height: 20px;
+	font-size: 12px;
 }
 
 #sign-in .remember {
-    font: 12px Inconsolata-g, monospace;
-    line-height: 30px;
+	font: 12px Inconsolata-g, monospace;
+	line-height: 30px;
 }
 
 #sidebar .chan:first-child {
-    color: #00FF0E;
+	color: #00ff0e;
 }
 
 #sidebar button,
@@ -86,39 +90,40 @@ a:hover, #chat a:hover {
 #chat .time,
 #chat .count:before,
 #sidebar .empty {
-    color: #666;
+	color: #666;
 }
 
 #sidebar .active {
-    color: #fff;
+	color: #fff;
 }
 
 #chat,
 #windows .header {
-    font: 12px Inconsolata-g, monospace;
-    line-height: 1.8;
+	font: 12px Inconsolata-g, monospace;
+	line-height: 1.8;
 }
 
 #chat .chat,
 #chat .sidebar {
-    top: 48px;
+	top: 48px;
 }
 
-#chat.no-colors .from button, #chat.no-colors .sidebar button {
-    color: #000 !important;
-    font-weight: bold
+#chat.no-colors .from button,
+#chat.no-colors .sidebar button {
+	color: #000 !important;
+	font-weight: bold;
 }
 
 #form .input {
-    font: 12px Inconsolata-g, monospace;
+	font: 12px Inconsolata-g, monospace;
 }
 
 #footer .icon {
-    color: #666;
+	color: #666;
 }
 
 @media (max-width: 768px) {
-    #main  {
-        left: 0px;
-    }
+	#main {
+		left: 0;
+	}
 }
