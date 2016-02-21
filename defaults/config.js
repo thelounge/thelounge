@@ -79,13 +79,23 @@ module.exports = {
 	//
 	// Display network
 	//
-	// If set to false The Lounge will not expose network settings in login
-	// form, limiting client to connect to the configured network.
+	// If set to false network settings will not be shown in the login form.
 	//
 	// @type     boolean
 	// @default  true
 	//
 	displayNetwork: true,
+
+	//
+	// Lock network
+	//
+	// If set to true, users will not be able to modify host, port and tls
+	// settings and will be limited to the configured network.
+	//
+	// @type     boolean
+	// @default  false
+	//
+	lockNetwork: false,
 
 	//
 	// Log settings

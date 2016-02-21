@@ -123,12 +123,42 @@ Client.prototype.find = function(id) {
 Client.prototype.connect = function(args) {
 	var config = Helper.getConfig();
 	var client = this;
+
+	if (config.lockNetwork) {
+		// This check is needed to prevent invalid user configurations
+		if (args.host && args.host.length > 0 && args.host !== config.defaults.host) {
+			var invalidHostnameMsg = new Msg({
+				type: Msg.Type.ERROR,
+				text: "Hostname you specified is not allowed."
+			});
+			client.emit("msg", {
+				msg: invalidHostnameMsg
+			});
+			return;
+		}
+
+		args.host = config.defaults.host;
+		args.port = config.defaults.port;
+		args.tls = config.defaults.tls;
+	}
+
 	var server = {
 		name: args.name || "",
-		host: args.host || "chat.freenode.net",
-		port: args.port || (args.tls ? 6697 : 6667),
+		host: args.host || "",
+		port: parseInt(args.port, 10) || (args.tls ? 6697 : 6667),
 		rejectUnauthorized: false
 	};
+
+	if (server.host.length === 0) {
+		var emptyHostnameMsg = new Msg({
+			type: Msg.Type.ERROR,
+			text: "You must specify a hostname to connect."
+		});
+		client.emit("msg", {
+			msg: emptyHostnameMsg
+		});
+		return;
+	}
 
 	if (config.bind) {
 		server.localAddress = config.bind;
