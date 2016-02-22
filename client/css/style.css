@@ -123,16 +123,6 @@ button,
 	padding-top: 20px;
 }
 
-.tooltip-inner {
-	background: #fff;
-	border-radius: 2px;
-	color: #262c36;
-}
-
-.tooltip.top .tooltip-arrow {
-	border-top-color: #fff;
-}
-
 .btn {
 	border: 2px solid #84ce88;
 	border-radius: 3px;
@@ -1159,6 +1149,162 @@ button,
 	right: 0;
 	transition: opacity .3s;
 	width: 58px;
+}
+
+/**
+  * Tooltips
+  * See http://primercss.io/tooltips/
+  */
+.tooltipped {
+	position: relative;
+}
+
+.tooltipped:after {
+	position: absolute;
+	z-index: 1000000;
+	display: inline-block;
+	visibility: hidden;
+	opacity: 0;
+	padding: 5px 8px;
+	font-size: 12px;
+	line-height: 1.2;
+	color: #262c36;
+	text-align: center;
+	text-decoration: none;
+	text-shadow: none;
+	text-transform: none;
+	letter-spacing: normal;
+	word-wrap: break-word;
+	white-space: pre;
+	pointer-events: none;
+	content: attr(aria-label);
+	background: #fff;
+	border-radius: 3px;
+	-webkit-font-smoothing: subpixel-antialiased;
+	transition: .2s;
+}
+
+.tooltipped:before {
+	position: absolute;
+	z-index: 1000001;
+	display: inline-block;
+	visibility: hidden;
+	opacity: 0;
+	width: 0;
+	height: 0;
+	color: #262c36;
+	pointer-events: none;
+	content: "";
+	border: 5px solid transparent;
+	transition: .2s;
+}
+
+.tooltipped:hover:before,
+.tooltipped:hover:after,
+.tooltipped:active:before,
+.tooltipped:active:after,
+.tooltipped:focus:before,
+.tooltipped:focus:after {
+	visibility: visible;
+	opacity: 1;
+	text-decoration: none;
+}
+
+.tooltipped-s:after,
+.tooltipped-se:after,
+.tooltipped-sw:after {
+	top: 100%;
+	right: 50%;
+	margin-top: 5px;
+}
+
+.tooltipped-s:before,
+.tooltipped-se:before,
+.tooltipped-sw:before {
+	top: auto;
+	right: 50%;
+	bottom: -5px;
+	margin-right: -5px;
+	border-bottom-color: #fff;
+}
+
+.tooltipped-se:after {
+	right: auto;
+	left: 50%;
+	margin-left: -15px;
+}
+
+.tooltipped-sw:after {
+	margin-right: -15px;
+}
+
+.tooltipped-n:after,
+.tooltipped-ne:after,
+.tooltipped-nw:after {
+	right: 50%;
+	bottom: 100%;
+	margin-bottom: 5px;
+}
+
+.tooltipped-n:before,
+.tooltipped-ne:before,
+.tooltipped-nw:before {
+	top: -5px;
+	right: 50%;
+	bottom: auto;
+	margin-right: -5px;
+	border-top-color: #fff;
+}
+
+.tooltipped-ne:after {
+	right: auto;
+	left: 50%;
+	margin-left: -15px;
+}
+
+.tooltipped-nw:after {
+	margin-right: -15px;
+}
+
+.tooltipped-s:after,
+.tooltipped-n:after {
+	-webkit-transform: translateX(50%);
+	-ms-transform: translateX(50%);
+	transform: translateX(50%);
+}
+
+.tooltipped-w:after {
+	right: 100%;
+	bottom: 50%;
+	margin-right: 5px;
+	-webkit-transform: translateY(50%);
+	-ms-transform: translateY(50%);
+	transform: translateY(50%);
+}
+
+.tooltipped-w:before {
+	top: 50%;
+	bottom: 50%;
+	left: -5px;
+	margin-top: -5px;
+	border-left-color: #fff;
+}
+
+.tooltipped-e:after {
+	bottom: 50%;
+	left: 100%;
+	margin-left: 5px;
+	-webkit-transform: translateY(50%);
+	-ms-transform: translateY(50%);
+	transform: translateY(50%);
+}
+
+.tooltipped-e:before {
+	top: 50%;
+	right: -5px;
+	bottom: 50%;
+	margin-top: -5px;
+	border-right-color: #fff;
 }
 
 /**

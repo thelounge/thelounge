@@ -34,15 +34,15 @@
 			</div>
 		</aside>
 		<footer id="footer">
-			<button class="icon sign-in" data-target="#sign-in" data-title="Sign in" data-placement="top" title="Sign in to The Lounge"></button>
-			<button class="icon connect" data-target="#connect" data-title="Connect" data-placement="top" title="Connect to network"></button>
-			<button class="icon settings" data-target="#settings" data-title="Settings" data-placement="top" title="Client settings"></button>
-			<button id="sign-out" class="icon sign-out" data-placement="top" title="Sign out"></button>
+			<span class="tooltipped tooltipped-n" aria-label="Sign in to The Lounge"><button class="icon sign-in" data-target="#sign-in"></button></span>
+			<span class="tooltipped tooltipped-n" aria-label="Connect to network"><button class="icon connect" data-target="#connect"></button></span>
+			<span class="tooltipped tooltipped-n" aria-label="Client settings"><button class="icon settings" data-target="#settings"></button></span>
+			<span class="tooltipped tooltipped-n" aria-label="Sign out"><button class="icon sign-out" id="sign-out"></button></span>
 		</footer>
 		<div id="main">
 			<div id="windows">
 				<div id="chat" class="no-colors"></div>
-				<div id="sign-in" data-title="Sign in" class="window">
+				<div id="sign-in" class="window">
 					<div class="header">
 						<button class="lt"></button>
 					</div>
@@ -80,7 +80,7 @@
 						</div>
 					</form>
 				</div>
-				<div id="connect" data-title="Connect" class="window">
+				<div id="connect" class="window">
 					<div class="header">
 						<button class="lt"></button>
 					</div>
@@ -164,7 +164,7 @@
 						</div>
 					</form>
 				</div>
-				<div id="settings" data-title="Settings" class="window">
+				<div id="settings" class="window">
 					<div class="header">
 						<button class="lt"></button>
 					</div>
