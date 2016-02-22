@@ -277,7 +277,7 @@ button,
 #sidebar .chan-placeholder {
 	display: block;
 	margin: 1px -10px;
-	padding: 6px 10px 8px;
+	padding: 6px 10px 8px 36px;
 	position: relative;
 	text-align: left;
 	transition: color .2s;
@@ -309,6 +309,12 @@ button,
 	text-align: center;
 }
 
+#sidebar .chan:before {
+	position: absolute;
+	top: 4px;
+	left: 10px;
+}
+
 #chat .title:before {
 	margin-top: 17px;
 }
@@ -330,10 +336,36 @@ button,
 
 #sidebar .chan:hover .badge {
 	opacity: 0;
+	position: absolute;
+	z-index: 1;
+	right: 10px;
 }
 
 #sidebar .chan:hover .close {
 	opacity: .2;
+}
+
+#sidebar .chan:hover .name {
+	margin-right: 16px;
+}
+
+#sidebar .chan .name {
+	position: relative;
+	z-index: 0;
+	display: block;
+	overflow: hidden;
+	white-space: nowrap;
+	margin-right: 5px;
+}
+
+#sidebar .chan .name:after {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 20px;
+	background: linear-gradient(to right, rgba(69, 81, 100, 0) 0%, rgba(69, 81, 100, 1) 100%);
+	content: " ";
 }
 
 #sidebar .badge {
@@ -342,10 +374,11 @@ button,
 	color: #afb6c0;
 	font-size: 10px;
 	margin-top: 1px;
+	margin-right: -5px;
+	margin-left: 5px;
 	padding: 3px 6px;
-	position: absolute;
-	right: 5px;
-	transition: all .2s;
+	float: right;
+	transition: opacity .2s;
 }
 
 #sidebar .badge.highlight {
@@ -362,6 +395,7 @@ button,
 	margin-right: 5px;
 	opacity: 0;
 	position: absolute;
+	z-index: 2;
 	right: 0;
 	transition: all .2s;
 }
