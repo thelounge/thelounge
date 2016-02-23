@@ -1,11 +1,8 @@
-var Msg = require("../../models/msg");
-
 module.exports = function(network, chan, cmd, args) {
 	if (cmd !== "slap" && cmd !== "me") {
 		return;
 	}
 
-	var client = this;
 	var irc = network.irc;
 
 	switch (cmd) {
@@ -22,17 +19,10 @@ module.exports = function(network, chan, cmd, args) {
 			chan.name,
 			text
 		);
-
-		var msg = new Msg({
-			type: Msg.Type.ACTION,
-			mode: chan.getMode(irc.me),
+		irc.emit("message", {
 			from: irc.me,
-			text: text
-		});
-		chan.messages.push(msg);
-		client.emit("msg", {
-			chan: chan.id,
-			msg: msg
+			to: chan.name,
+			message: "\u0001ACTION " + text
 		});
 		break;
 	}

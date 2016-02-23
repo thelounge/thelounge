@@ -1,4 +1,4 @@
-<div class="msg {{type}} {{#if self}}self{{/if}}">
+<div class="msg {{type}}{{#if self}} self{{/if}}{{#if highlight}} highlight{{/if}}">
 	<span class="time">
 		{{tz time}}
 	</span>

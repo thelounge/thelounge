@@ -640,10 +640,7 @@ $(function() {
 	chat.on("msg", ".messages", function(e, target, msg) {
 		var button = sidebar.find(".chan[data-target='" + target + "']");
 		var isQuery = button.hasClass("query");
-		var type = msg.type;
-		var highlight = type.contains("highlight");
-		var message = type.contains("message");
-		if (highlight || isQuery || (options.notifyAllMessages && message)) {
+		if (msg.highlight || isQuery || (options.notifyAllMessages && msg.type === "message")) {
 			if (!document.hasFocus() || !$(target).hasClass("active")) {
 				if (options.notification) {
 					pop.play();
@@ -679,7 +676,7 @@ $(function() {
 			"nick",
 			"mode",
 		];
-		if ($.inArray(type, ignore) !== -1){
+		if ($.inArray(msg.type, ignore) !== -1){
 			return;
 		}
 
@@ -688,7 +685,7 @@ $(function() {
 			var i = (badge.data("count") || 0) + 1;
 			badge.data("count", i);
 			badge.html(i > 999 ? (i / 1000).toFixed(1) + "k" : i);
-			if (highlight || isQuery) {
+			if (msg.highlight || isQuery) {
 				badge.addClass("highlight");
 			}
 		}
