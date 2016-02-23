@@ -209,7 +209,7 @@ $(function() {
 			case "nick": data.msg.formattedAction = "is now known as"; break;
 			case "part": data.msg.formattedAction = "has left the channel"; break;
 			case "quit": data.msg.formattedAction = "has quit"; break;
-			case "topic": data.msg.formattedAction = "has changed the topic to:"; break;
+			case "topic": data.msg.formattedAction = data.msg.isSetByChan ? "topic:" : "has set the topic to:"; break;
 			default: data.msg.formattedAction = "";
 			}
 
