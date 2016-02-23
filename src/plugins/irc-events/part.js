@@ -21,14 +21,11 @@ module.exports = function(irc, network) {
 			client.emit("users", {
 				chan: chan.id
 			});
-			var reason = data.message || "";
-			if (reason.length > 0) {
-				reason = "(" + reason + ")";
-			}
 			var msg = new Msg({
 				type: Msg.Type.PART,
 				mode: chan.getMode(from),
-				text: reason,
+				text: data.message || "",
+				hostmask:data.hostmask.username + "@" + data.hostmask.hostname,
 				from: from
 			});
 			chan.messages.push(msg);

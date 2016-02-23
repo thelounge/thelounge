@@ -4,8 +4,6 @@
 	</span>
 	<span class="from"></span>
 	<span class="text">
-		<a href="#" class="user">{{mode}}{{from}}</a>
-		{{formattedAction}}
-		{{{parse text}}}
+		{{partial template}}
 	</span>
 </div>
