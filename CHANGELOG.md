@@ -30,6 +30,30 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
+## v1.2.0 - 2016-02-24
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v1.1.1...v1.2.0)
+
+Note that this release will reset client-side settings to their defaults. Current users will have to re-set them in the settings page. This is [a conscious trade-off](https://github.com/thelounge/lounge/pull/70#issuecomment-186717859) as the fork is rather new and there are not many settings overall.
+
+### Added
+
+- Add support for the `/invite <nickname> <channel>` command ([#7](https://github.com/thelounge/lounge/pull/7) by [@xPaw](https://github.com/xPaw))
+- Add a command shorthand to invite in the current channel with `/invite <nickname>` ([#76](https://github.com/thelounge/lounge/pull/76) by [@astorije](https://github.com/astorije))
+- Add style linting for all CSS files in the repository ([#43](https://github.com/thelounge/lounge/pull/43) by [@xPaw](https://github.com/xPaw))
+
+### Changed
+
+- Improve client performance by updating the users' list only when it's needed ([#58](https://github.com/thelounge/lounge/pull/58) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Let the badge counter hide with a fade-out ([#73](https://github.com/thelounge/lounge/pull/73) by [@xPaw](https://github.com/xPaw))
+- Update `lodash` dependency to the latest major version ([#38](https://github.com/thelounge/lounge/pull/38) by [@xPaw](https://github.com/xPaw))
+- Use `localStorage` instead of cookies for client-side settings storage ([#70](https://github.com/thelounge/lounge/pull/70) by [@xPaw](https://github.com/xPaw))
+- Replace Bootstrap's tooltips with CSS tooltips from GitHub's Primer ([#79](https://github.com/thelounge/lounge/pull/79) by [@xPaw](https://github.com/xPaw))
+
+### Fixed
+
+- Fade long channel names in the sidebar instead of breaking to another line ([#75](https://github.com/thelounge/lounge/pull/75) by [@maxpoulin64](https://github.com/maxpoulin64))
+
 ## v1.1.1 - 2016-02-19
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v1.1.0...v1.1.1)
