@@ -50,9 +50,7 @@ $(function() {
 
 	$(".tse-scrollable").TrackpadScrollEmulator();
 
-	var favico = new Favico({
-		animation: "none"
-	});
+	var favicon = $("#favicon");
 
 	function render(name, data) {
 		return Handlebars.templates[name](data);
@@ -535,7 +533,7 @@ $(function() {
 			.empty();
 
 		if (sidebar.find(".highlight").length === 0) {
-			favico.badge("");
+			toggleFaviconNotification(false);
 		}
 
 		viewport.removeClass("lt");
@@ -648,7 +646,7 @@ $(function() {
 				if (options.notification) {
 					pop.play();
 				}
-				favico.badge("!");
+				toggleFaviconNotification(true);
 				if (options.badge && Notification.permission === "granted") {
 					var notify = new Notification(msg.from + " says:", {
 						body: msg.text.trim(),
@@ -936,11 +934,20 @@ $(function() {
 		return array;
 	}
 
+	function toggleFaviconNotification(newState) {
+		if (favicon.data("toggled") !== newState) {
+			var old = favicon.attr("href");
+			favicon.attr("href", favicon.data("other"));
+			favicon.data("other", old);
+			favicon.data("toggled", newState);
+		}
+	}
+
 	document.addEventListener(
 		"visibilitychange",
 		function() {
 			if (sidebar.find(".highlight").length === 0) {
-				favico.badge("");
+				toggleFaviconNotification(false);
 			}
 		}
 	);
