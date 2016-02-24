@@ -685,16 +685,15 @@ button,
 #chat .show-more {
 	display: none;
 	padding: 10px;
-	position: absolute;
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+	position: relative;
+>>>>>>> 6682fd7... Fix show-more being displayed over chat messages
+=======
+	position: relative;
+>>>>>>> 2e19518... Fix show-more being displayed over chat messages
 	width: 100%;
-}
-
-#chat .show-more.show + .messages .msg:first-child {
-	padding-top: 47px !important;
-}
-
-#chat .show-more.show + .messages .msg:first-child > span {
-	padding-top: 52px !important;
 }
 
 #chat .show-more-button {
@@ -722,10 +721,6 @@ button,
 #chat .msg {
 	display: table-row;
 	word-wrap: break-word;
-}
-
-#chat .msg:first-child > span {
-	padding-top: 10px;
 }
 
 #chat .msg:last-child {
