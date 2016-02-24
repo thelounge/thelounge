@@ -685,6 +685,13 @@ button,
 #chat .show-more {
 	display: none;
 	padding: 10px;
+<<<<<<< d21b31981081912207b6d1359cb99b27575f2bd3
+=======
+<<<<<<< HEAD
+=======
+	position: relative;
+>>>>>>> 2e19518... Fix show-more being displayed over chat messages
+>>>>>>> Fix show-more being displayed over chat messages
 	width: 100%;
 }
 
@@ -1652,6 +1659,19 @@ button,
 }
 
 ::-webkit-scrollbar {
+	width: 8px;
+	background-color: rgba(0, 0, 0, 0);
+}
+
+::-webkit-scrollbar:hover {
+	background-color: rgba(0, 0, 0, .09);
+}
+
+::-webkit-scrollbar-thumb:vertical {
+	background: rgba(0, 0, 0, .5);
+	border-radius: 100px;
+}
+ {
 	width: 8px;
 	background-color: rgba(0, 0, 0, 0);
 }
