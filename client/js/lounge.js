@@ -649,7 +649,7 @@ $(function() {
 	});
 
 	chat.on("msg", ".messages", function(e, target, msg) {
-		var button = sidebar.find(".chan[data-target=" + target + "]");
+		var button = sidebar.find(".chan[data-target='" + target + "']");
 		var isQuery = button.hasClass("query");
 		var type = msg.type;
 		var highlight = type.contains("highlight");
