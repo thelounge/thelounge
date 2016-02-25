@@ -84,6 +84,10 @@ a:hover,
 	color: #00ff0e;
 }
 
+#sidebar .chan .name:after {
+	background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+}
+
 #sidebar button,
 #sidebar .chan,
 #sidebar .sign-out,
