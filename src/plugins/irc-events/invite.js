@@ -9,7 +9,7 @@ module.exports = function(irc, network) {
 			target = "you";
 		}
 
-		var chan = _.findWhere(network.channels, {name: data.channel});
+		var chan = _.find(network.channels, {name: data.channel});
 		if (typeof chan === "undefined") {
 			chan = network.channels[0];
 		}
