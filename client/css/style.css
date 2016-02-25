@@ -689,14 +689,6 @@ button,
 	width: 100%;
 }
 
-#chat .show-more.show + .messages .msg:first-child {
-	padding-top: 47px !important;
-}
-
-#chat .show-more.show + .messages .msg:first-child > span {
-	padding-top: 52px !important;
-}
-
 #chat .show-more-button {
 	background: #f4f4f4;
 	background-image: linear-gradient(#f4f4f4, #ececec);
@@ -722,10 +714,6 @@ button,
 #chat .msg {
 	display: table-row;
 	word-wrap: break-word;
-}
-
-#chat .msg:first-child > span {
-	padding-top: 10px;
 }
 
 #chat .msg:last-child {
