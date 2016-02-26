@@ -685,16 +685,7 @@ button,
 #chat .show-more {
 	display: none;
 	padding: 10px;
-	position: absolute;
 	width: 100%;
-}
-
-#chat .show-more.show + .messages .msg:first-child {
-	padding-top: 47px !important;
-}
-
-#chat .show-more.show + .messages .msg:first-child > span {
-	padding-top: 52px !important;
 }
 
 #chat .show-more-button {
@@ -722,10 +713,6 @@ button,
 #chat .msg {
 	display: table-row;
 	word-wrap: break-word;
-}
-
-#chat .msg:first-child > span {
-	padding-top: 10px;
 }
 
 #chat .msg:last-child {
@@ -1665,6 +1652,19 @@ button,
 }
 
 ::-webkit-scrollbar {
+	width: 8px;
+	background-color: rgba(0, 0, 0, 0);
+}
+
+::-webkit-scrollbar:hover {
+	background-color: rgba(0, 0, 0, .09);
+}
+
+::-webkit-scrollbar-thumb:vertical {
+	background: rgba(0, 0, 0, .5);
+	border-radius: 100px;
+}
+ {
 	width: 8px;
 	background-color: rgba(0, 0, 0, 0);
 }
