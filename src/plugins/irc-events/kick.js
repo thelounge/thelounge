@@ -26,15 +26,12 @@ module.exports = function(irc, network) {
 		if (data.nick.toLowerCase() === irc.me.toLowerCase()) {
 			self = true;
 		}
-		var reason = data.message || "";
-		if (reason.length > 0) {
-			reason = " (" + reason + ")";
-		}
 		var msg = new Msg({
 			type: Msg.Type.KICK,
 			mode: mode,
 			from: from,
-			text: data.client + reason,
+			target: data.client,
+			text: data.message || "",
 			self: self
 		});
 		chan.messages.push(msg);
