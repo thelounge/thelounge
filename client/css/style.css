@@ -685,6 +685,10 @@ button,
 #chat .show-more {
 	display: none;
 	padding: 10px;
+<<<<<<< HEAD
+=======
+	position: relative;
+>>>>>>> origin/master
 	width: 100%;
 }
 
