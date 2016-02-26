@@ -30,6 +30,20 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
+## v1.2.1 - 2016-02-26
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v1.2.0...v1.2.1)
+
+### Changed
+
+- Bump and pin mocha version ([#104](https://github.com/thelounge/lounge/pull/104) by [@astorije](https://github.com/astorije))
+
+### Fixed
+
+- Fix CSS selector syntax in channel message handler ([#102](https://github.com/thelounge/lounge/pull/102) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Fix fading channel name in sidebar of Crypto and Zenburn themes ([#105](https://github.com/thelounge/lounge/pull/105) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Fix `/invite` command broken by lodash bump ([#106](https://github.com/thelounge/lounge/pull/106) by [@JocelynDelalande](https://github.com/JocelynDelalande))
+
 ## v1.2.0 - 2016-02-24
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v1.1.1...v1.2.0)

@@ -16,6 +16,7 @@ module.exports = function(irc, network) {
 			mode: chan.getMode(from),
 			from: from,
 			text: topic,
+			isSetByChan: from === chan.name,
 			self: (from.toLowerCase() === irc.me.toLowerCase())
 		});
 		chan.messages.push(msg);

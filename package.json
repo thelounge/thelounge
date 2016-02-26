@@ -1,7 +1,7 @@
 {
   "name": "thelounge",
   "description": "The self-hosted Web IRC client",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "preferGlobal": true,
   "bin": {
     "lounge": "index.js"
@@ -48,6 +48,6 @@
     "grunt-contrib-uglify": "~0.5.0",
     "grunt-contrib-watch": "^0.6.1",
     "handlebars": "^2.0.0",
-    "mocha": "~2.0.1"
+    "mocha": "2.4.5"
   }
 }

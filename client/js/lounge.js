@@ -201,18 +201,7 @@ $(function() {
 			"topic",
 			"action",
 		].indexOf(type) !== -1) {
-			switch (type) {
-			case "invite": data.msg.formattedAction = "invited " + data.msg.target + " to"; break;
-			case "join": data.msg.formattedAction = "has joined the channel"; break;
-			case "mode": data.msg.formattedAction = "sets mode"; break;
-			case "kick": data.msg.formattedAction = "has kicked"; break;
-			case "nick": data.msg.formattedAction = "is now known as"; break;
-			case "part": data.msg.formattedAction = "has left the channel"; break;
-			case "quit": data.msg.formattedAction = "has quit"; break;
-			case "topic": data.msg.formattedAction = "has changed the topic to:"; break;
-			default: data.msg.formattedAction = "";
-			}
-
+			data.msg.template = "actions/" + type;
 			msg = $(render("msg_action", data.msg));
 		} else {
 			msg = $(render("msg", data.msg));
@@ -649,7 +638,7 @@ $(function() {
 	});
 
 	chat.on("msg", ".messages", function(e, target, msg) {
-		var button = sidebar.find(".chan[data-target=" + target + "]");
+		var button = sidebar.find(".chan[data-target='" + target + "']");
 		var isQuery = button.hasClass("query");
 		var type = msg.type;
 		var highlight = type.contains("highlight");
