@@ -685,16 +685,7 @@ button,
 #chat .show-more {
 	display: none;
 	padding: 10px;
-	position: absolute;
 	width: 100%;
-}
-
-#chat .show-more.show + .messages .msg:first-child {
-	padding-top: 47px !important;
-}
-
-#chat .show-more.show + .messages .msg:first-child > span {
-	padding-top: 52px !important;
 }
 
 #chat .show-more-button {
@@ -717,23 +708,12 @@ button,
 #chat .messages {
 	display: table;
 	width: 100%;
+	padding: 10px 0;
 }
 
 #chat .msg {
 	display: table-row;
 	word-wrap: break-word;
-}
-
-#chat .msg:first-child > span {
-	padding-top: 10px;
-}
-
-#chat .msg:last-child {
-	height: 100%;
-}
-
-#chat .msg:last-child .text {
-	padding-bottom: 10px;
 }
 
 #chat .msg .inline-channel {
