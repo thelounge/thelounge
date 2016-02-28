@@ -28,15 +28,19 @@ module.exports = function(irc, network) {
 			});
 		}
 
-		var type = "";
+		var type = Msg.Type.MESSAGE;
 		var text = data.message;
-		if (text.split(" ")[0] === "\u0001ACTION") {
+		var textSplit = text.split(" ");
+		if (textSplit[0] === "\u0001ACTION") {
 			type = Msg.Type.ACTION;
 			text = text.replace(/^\u0001ACTION|\u0001$/g, "");
 		}
 
-		text.split(" ").forEach(function(w) {
-			if (w.replace(/^@/, "").toLowerCase().indexOf(irc.me.toLowerCase()) === 0) type += " highlight";
+		var highlight = false;
+		textSplit.forEach(function(w) {
+			if (w.replace(/^@/, "").toLowerCase().indexOf(irc.me.toLowerCase()) === 0) {
+				highlight = true;
+			}
 		});
 
 		var self = false;
@@ -50,11 +54,12 @@ module.exports = function(irc, network) {
 
 		var name = data.from;
 		var msg = new Msg({
-			type: type || Msg.Type.MESSAGE,
+			type: type,
 			mode: chan.getMode(name),
 			from: name,
 			text: text,
-			self: self
+			self: self,
+			highlight: highlight
 		});
 		chan.messages.push(msg);
 		client.emit("msg", {
