@@ -669,25 +669,32 @@ $(function() {
 		var highlight = type.contains("highlight");
 		var message = type.contains("message");
 		if (highlight || isQuery || (options.notifyAllMessages && message)) {
-			if (!document.hasFocus() || !$(target).hasClass("active")) {
-				if (options.notification) {
-					pop.play();
+			try {
+				if (!document.hasFocus() || !$(target).hasClass("active")) {
+					if (options.notification) {
+						pop.play();
+					}
+					favico.badge("!");
+					if (options.badge && Notification.permission === "granted") {
+						var notify = new Notification(msg.from + " says:", {
+							body: msg.text.trim(),
+							icon: "img/logo-64.png",
+							tag: target
+						});
+						notify.onclick = function() {
+							window.focus();
+							button.click();
+							this.close();
+						};
+						window.setTimeout(function() {
+							notify.close();
+						}, 5 * 1000);
+					}
 				}
-				favico.badge("!");
-				if (options.badge && Notification.permission === "granted") {
-					var notify = new Notification(msg.from + " says:", {
-						body: msg.text.trim(),
-						icon: "img/logo-64.png",
-						tag: target
-					});
-					notify.onclick = function() {
-						window.focus();
-						button.click();
-						this.close();
-					};
-					window.setTimeout(function() {
-						notify.close();
-					}, 5 * 1000);
+			}
+			catch (e) {
+				if (console) {
+					console.warn("Failed to set up badge or send notification: ", e);
 				}
 			}
 		}
