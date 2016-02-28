@@ -765,10 +765,6 @@ $(function() {
 		});
 	});
 
-	windows.on("click", ".input", function() {
-		$(this).select();
-	});
-
 	forms.on("submit", "form", function(e) {
 		e.preventDefault();
 		var event = "auth";
