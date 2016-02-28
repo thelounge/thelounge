@@ -672,7 +672,13 @@ $(function() {
 				}
 				favico.badge("!");
 				if (options.badge && Notification.permission === "granted") {
-					var notify = new Notification(msg.from + " says:", {
+					var title = msg.from;
+					if (!isQuery) {
+						title += " (" + button.text().trim() + ")";
+					}
+					title += " says:";
+
+					var notify = new Notification(title, {
 						body: msg.text.trim(),
 						icon: "img/logo-64.png",
 						tag: target
