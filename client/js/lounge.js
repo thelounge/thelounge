@@ -426,6 +426,7 @@ $(function() {
 		users.data("nicks", nicks);
 	});
 
+	var userStyles = $("#user-specified-css");
 	var settings = $("#settings");
 	var options = $.extend({
 		badge: false,
@@ -440,19 +441,34 @@ $(function() {
 		thumbnails: true,
 		quit: true,
 		notifyAllMessages: false,
+		userStyles: userStyles.text(),
 	}, JSON.parse(window.localStorage.getItem("settings")));
 
 	for (var i in options) {
+		if (i === "userStyles") {
+			if (!/[\?&]nocss/.test(window.location.search)) {
+				$(document.head).find("#user-specified-css").html(options[i]);
+			}
+			settings.find("#user-specified-css-input").val(options[i]);
+			continue;
+		}
 		if (options[i]) {
 			settings.find("input[name=" + i + "]").prop("checked", true);
 		}
 	}
 
-	settings.on("change", "input", function() {
+	settings.on("change", "input, textarea", function() {
 		var self = $(this);
 		var name = self.attr("name");
-		options[name] = self.prop("checked");
+
+		if (self.attr("type") === "checkbox") {
+			options[name] = self.prop("checked");
+		} else {
+			options[name] = self.val();
+		}
+
 		window.localStorage.setItem("settings", JSON.stringify(options));
+
 		if ([
 			"join",
 			"mode",
@@ -466,6 +482,9 @@ $(function() {
 		}
 		if (name === "colors") {
 			chat.toggleClass("no-colors", !self.prop("checked"));
+		}
+		if (name === "userStyles") {
+			$(document.head).find("#user-specified-css").html(options[name]);
 		}
 	}).find("input")
 		.trigger("change");
