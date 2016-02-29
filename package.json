@@ -11,6 +11,7 @@
     "url": "https://github.com/thelounge/lounge.git"
   },
   "scripts": {
+    "debug": "node debug index",
     "start": "node index",
     "build": "grunt",
     "test": "HOME=test/fixtures mocha test/**/*.js && npm run lint",
