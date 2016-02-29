@@ -15,6 +15,7 @@
 	<link rel="stylesheet" href="css/bootstrap.css">
 	<link rel="stylesheet" href="css/style.css">
 	<link id="theme" rel="stylesheet" href="<%= theme %>">
+	<style id="user-specified-css"></style>
 
 	<link rel="shortcut icon" href="img/favicon.png" data-other="img/favicon-notification.png" data-toggled="false" id="favicon">
 	<link rel="apple-touch-icon" sizes="120x120" href="img/apple-touch-icon-120x120.png">
@@ -289,6 +290,12 @@
 								</form>
 							</div>
 							<% } %>
+							<div class="col-sm-12">
+								<h2>Custom Stylesheet</h2>
+							</div>
+							<div class="col-sm-12">
+								<textarea class="input" name="userStyles" id="user-specified-css-input" placeholder="You can override any style with CSS here"></textarea>
+							</div>
 							<div class="col-sm-12">
 								<h2>About The Lounge</h2>
 							</div>
