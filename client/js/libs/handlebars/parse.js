@@ -1,8 +1,9 @@
 Handlebars.registerHelper(
 	"parse", function(text) {
 		var wrap = wraplong(text);
-		text = escape(text);
+		text = Handlebars.Utils.escapeExpression(text);
 		text = colors(text);
+		text = channels(text);
 		text = uri(text);
 		if (wrap) {
 			return "<i class='wrap'>" + text + "</i>";
@@ -23,17 +24,6 @@ function wraplong(text) {
 	return wrap;
 }
 
-function escape(text) {
-	var e = {
-		"<": "&lt;",
-		">": "&gt;",
-		"'": "&#39;"
-	};
-	return text.replace(/[<>']/g, function (c) {
-		return e[c];
-	});
-}
-
 function uri(text) {
 	return URI.withinString(text, function(url, start, end, source) {
 		if (url.indexOf("javascript:") === 0) {
@@ -48,6 +38,19 @@ function uri(text) {
 	});
 }
 
+/**
+ * Channels names are strings of length up to fifty (50) characters.
+ * The only restriction on a channel name is that it SHALL NOT contain
+ * any spaces (' '), a control G (^G or ASCII 7), a comma (',').
+ * Channel prefix '&' is handled as '&amp;' because this parser is executed
+ * after entities in the message have been escaped. This prevents a couple of bugs.
+ */
+function channels(text) {
+	return text.replace(
+		/(^|\s|\x07|,)((?:#|&amp;)[^\x07\s\,]{1,49})/g,
+		'$1<span class="inline-channel" role="button" tabindex="0" data-chan="$2">$2</span>'
+	);
+}
 
 /**
  * MIRC compliant colour and style parser
