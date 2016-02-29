@@ -682,21 +682,31 @@ $(function() {
 	chat.on("msg", ".messages", function(e, target, msg) {
 		var button = sidebar.find(".chan[data-target='" + target + "']");
 		var isQuery = button.hasClass("query");
-		if (msg.highlight || isQuery || (options.notifyAllMessages && msg.type === "message")) {
+		if (msg.type === "invite" || msg.highlight || isQuery || (options.notifyAllMessages && msg.type === "message")) {
 			if (!document.hasFocus() || !$(target).hasClass("active")) {
 				if (options.notification) {
 					pop.play();
 				}
 				toggleFaviconNotification(true);
+
 				if (options.badge && Notification.permission === "granted") {
-					var title = msg.from;
-					if (!isQuery) {
-						title += " (" + button.text().trim() + ")";
+					var title;
+					var body;
+
+					if (msg.type === "invite") {
+						title = "New channel invite:";
+						body = msg.from + " invited you to " + msg.text;
+					} else {
+						title = msg.from;
+						if (!isQuery) {
+							title += " (" + button.text().trim() + ")";
+						}
+						title += " says:";
+						body = msg.text.trim();
 					}
-					title += " says:";
 
 					var notify = new Notification(title, {
-						body: msg.text.trim(),
+						body: body,
 						icon: "img/logo-64.png",
 						tag: target
 					});
