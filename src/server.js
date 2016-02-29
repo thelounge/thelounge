@@ -8,7 +8,6 @@ var io = require("socket.io");
 var Helper = require("./helper");
 var config = {};
 
-var sockets = null;
 var manager = new ClientManager();
 
 module.exports = function(options) {
@@ -43,7 +42,7 @@ module.exports = function(options) {
 		require("./identd").start(config.identd.port);
 	}
 
-	sockets = io(server, {
+	var sockets = io(server, {
 		transports: transports
 	});
 
@@ -182,7 +181,7 @@ function init(socket, client, token) {
 function auth(data) {
 	var socket = this;
 	if (config.public) {
-		var client = new Client(sockets);
+		var client = new Client(manager);
 		manager.clients.push(client);
 		socket.on("disconnect", function() {
 			manager.clients = _.without(manager.clients, client);
