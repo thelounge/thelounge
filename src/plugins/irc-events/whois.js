@@ -28,6 +28,9 @@ module.exports = function(irc, network) {
 		};
 		for (var k in data) {
 			var key = prefix[k];
+			if (key === "on") {
+				data[k] = data[k].join(", ");
+			}
 			if (!key || data[k].toString() === "") {
 				continue;
 			}
