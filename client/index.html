@@ -103,11 +103,11 @@
 									<label>Server</label>
 								</div>
 								<div class="col-sm-6 col-xs-8">
-									<input class="input" name="host" value="<%= defaults.host %>">
+									<input class="input" name="host" value="<%= defaults.host %>" <%= typeof(lockNetwork) !== "undefined" && lockNetwork ? 'disabled' : ''%>>
 								</div>
 								<div class="col-sm-3 col-xs-4">
 									<div class="port">
-										<input class="input" name="port" value="<%= defaults.port %>">
+										<input class="input" name="port" value="<%= defaults.port %>" <%= typeof(lockNetwork) !== "undefined" && lockNetwork ? 'disabled' : ''%>>
 									</div>
 								</div>
 								<div class="clearfix"></div>
@@ -120,7 +120,7 @@
 								<div class="col-sm-3"></div>
 								<div class="col-sm-9">
 									<label class="tls">
-										<input type="checkbox" name="tls" <%= defaults.tls ? 'checked="checked"' : '' %>>
+										<input type="checkbox" name="tls" <%= defaults.tls ? 'checked="checked"' : '' %> <%= typeof(lockNetwork) !== "undefined" && lockNetwork ? 'disabled' : ''%>>
 										Enable TLS/SSL
 									</label>
 								</div>
