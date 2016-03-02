@@ -65,7 +65,7 @@
 							</div>
 							<div class="col-xs-12">
 								<label class="remember">
-									<input type="checkbox" name="remember" checked="checked">
+									<input type="checkbox" name="remember" checked>
 									Stay signed in
 								</label>
 							</div>
@@ -103,11 +103,11 @@
 									<label>Server</label>
 								</div>
 								<div class="col-sm-6 col-xs-8">
-									<input class="input" name="host" value="<%= defaults.host %>" <%= typeof(lockNetwork) !== "undefined" && lockNetwork ? 'disabled' : ''%>>
+									<input class="input" name="host" value="<%= defaults.host %>" <%= typeof(lockNetwork) !== "undefined" && lockNetwork ? "disabled" : "" %>>
 								</div>
 								<div class="col-sm-3 col-xs-4">
 									<div class="port">
-										<input class="input" name="port" value="<%= defaults.port %>" <%= typeof(lockNetwork) !== "undefined" && lockNetwork ? 'disabled' : ''%>>
+										<input class="input" name="port" value="<%= defaults.port %>" <%= typeof(lockNetwork) !== "undefined" && lockNetwork ? "disabled" : "" %>>
 									</div>
 								</div>
 								<div class="clearfix"></div>
@@ -120,7 +120,7 @@
 								<div class="col-sm-3"></div>
 								<div class="col-sm-9">
 									<label class="tls">
-										<input type="checkbox" name="tls" <%= defaults.tls ? 'checked="checked"' : '' %> <%= typeof(lockNetwork) !== "undefined" && lockNetwork ? 'disabled' : ''%>>
+										<input type="checkbox" name="tls" <%= defaults.tls ? "checked" : "" %> <%= typeof(lockNetwork) !== "undefined" && lockNetwork ? "disabled" : "" %>>
 										Enable TLS/SSL
 									</label>
 								</div>
@@ -147,13 +147,13 @@
 								<label>Real name</label>
 							</div>
 							<div class="col-sm-9">
-								<input class="input" name="realname" class="input" value="<%= defaults.realname %>">
+								<input class="input" name="realname" value="<%= defaults.realname %>">
 							</div>
 							<div class="col-sm-3">
 								<label>Channels</label>
 							</div>
 							<div class="col-sm-9">
-								<input class="input" name="join" class="input" value="<%= defaults.join %>">
+								<input class="input" name="join" value="<%= defaults.join %>">
 							</div>
 							<div class="col-sm-3 clearfix"></div>
 							<div class="col-sm-9">
@@ -272,16 +272,16 @@
 										<h2>Change password</h2>
 									</div>
 									<div class="col-sm-12">
-										<label for="old_password" class="sr-only">Enter current password</label>
-										<input type="password" name="old_password" class="input" placeholder="Enter current password">
+										<label for="old_password_input" class="sr-only">Enter current password</label>
+										<input type="password" id="old_password_input" name="old_password" class="input" placeholder="Enter current password">
 									</div>
 									<div class="col-sm-12">
-										<label for="new_password" class="sr-only">Enter desired new password</label>
-										<input type="password" name="new_password" class="input" placeholder="Enter desired new password">
+										<label for="new_password_input" class="sr-only">Enter desired new password</label>
+										<input type="password" id="new_password_input" name="new_password" class="input" placeholder="Enter desired new password">
 									</div>
 									<div class="col-sm-12">
-										<label for="verify_password" class="sr-only">Repeat new password</label>
-										<input type="password" name="verify_password" class="input" placeholder="Repeat new password">
+										<label for="verify_password_input" class="sr-only">Repeat new password</label>
+										<input type="password" id="verify_password_input" name="verify_password" class="input" placeholder="Repeat new password">
 									</div>
 									<div class="col-sm-12 feedback"></div>
 									<div class="col-sm-12">
@@ -301,8 +301,8 @@
 							</div>
 							<div class="col-sm-12">
 								<p class="about">
-									You're currently running version <small><%= version %></small><br>
-									<a href="https://github.com/thelounge/lounge/blob/master/CHANGELOG.md#readme" target="_blank">View the changelog</a>
+									You're currently running version <%= version %><br>
+									<a href="https://github.com/thelounge/lounge/blob/master/CHANGELOG.md#readme" target="_blank">View the change log</a>
 								</p>
 							</div>
 						</div>
