@@ -702,7 +702,7 @@ $(function() {
 							title += " (" + button.text().trim() + ")";
 						}
 						title += " says:";
-						body = msg.text.trim();
+						body = msg.text.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/, "").trim();
 					}
 
 					var notify = new Notification(title, {
