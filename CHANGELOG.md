@@ -30,6 +30,39 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
+## v1.3.0 - 2016-03-03
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v1.2.1...v1.3.0)
+
+### Added
+
+- Add hostmask in `join`/`part`/`quit` messages and move actions to templates ([#94](https://github.com/thelounge/lounge/pull/94) by [@xPaw](https://github.com/xPaw))
+- Add a section in the README explaining why a fork was created ([#95](https://github.com/thelounge/lounge/pull/95) by [@almet](https://github.com/almet))
+- Add the ability to let users change their password from the settings page ([#57](https://github.com/thelounge/lounge/pull/57) by [@diddledan](https://github.com/diddledan))
+- Add the ability to let users set custom CSS in their settings ([#83](https://github.com/thelounge/lounge/pull/83) by [@xPaw](https://github.com/xPaw))
+- Add notifications for channel invites ([#127](https://github.com/thelounge/lounge/pull/127) by [@astorije](https://github.com/astorije))
+- Allow locking network configuration ([#82](https://github.com/thelounge/lounge/pull/82) by [@xPaw](https://github.com/xPaw))
+
+### Changed
+
+- Add target channel name in notifications ([#118](https://github.com/thelounge/lounge/pull/118) by [@astorije](https://github.com/astorije))
+- Bump `grunt-contrib-uglify` and pin versions of `grunt`-related dependencies ([#119](https://github.com/thelounge/lounge/pull/119) by [@astorije](https://github.com/astorije))
+- Switch to a power-off icon for logging out ([#131](https://github.com/thelounge/lounge/pull/131) by [@astorije](https://github.com/astorije))
+
+### Removed
+
+- Remove auto-select on input fields ([#120](https://github.com/thelounge/lounge/pull/120) by [@astorije](https://github.com/astorije))
+
+### Fixed
+
+- Fix the "Show more" button being displayed over chat messages and message paddings when `join`/`part`/`quit` messages are hidden ([`b53e5c4`](https://github.com/thelounge/lounge/commit/b53e5c407c7ca90e9741791b4e0d927fb5f54ea1) by [@xPaw](https://github.com/xPaw))
+- Fix how highlights are handled and highlighted ([#91](https://github.com/thelounge/lounge/pull/91) by [@xPaw](https://github.com/xPaw))
+- Fix favicon highlight on Chrome and remove `Favico.js` library ([#100](https://github.com/thelounge/lounge/pull/100) by [@xPaw](https://github.com/xPaw))
+- Fix complete crash when refreshing a public instance, introduced by this release ([#125](https://github.com/thelounge/lounge/pull/125) by [@astorije](https://github.com/astorije))
+- Fix clickable "you" in the text of an `/invite`, introduced by this release ([#122](https://github.com/thelounge/lounge/pull/122) by [@xPaw](https://github.com/xPaw))
+- Fix minor issues with the main HTML file ([#134](https://github.com/thelounge/lounge/pull/134) by [@astorije](https://github.com/astorije))
+- Strip control codes from notifications ([#123](https://github.com/thelounge/lounge/pull/123) by [@xPaw](https://github.com/xPaw))
+
 ## v1.2.1 - 2016-02-26
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v1.2.0...v1.2.1)
