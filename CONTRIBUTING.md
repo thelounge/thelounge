@@ -3,6 +3,9 @@
 Welcome to The Lounge, it's great to have you here! We thank you in advance for
 your contributions.
 
+Please note that this project is released with a Contributor Code of Conduct. By
+participating in this project you agree to abide by its terms.
+
 ### I have a question
 
 - Find us on the Freenode channel `#thelounge`. You might not get an answer
