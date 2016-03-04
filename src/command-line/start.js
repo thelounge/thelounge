@@ -20,7 +20,7 @@ program
 		} else if (program.private) {
 			mode = false;
 		}
-		if (!mode && !users.length) {
+		if (!mode && !users.length && !config.ldap.enable) {
 			console.log("");
 			console.log("No users found!");
 			console.log("Create a new user with 'lounge add <name>'.");

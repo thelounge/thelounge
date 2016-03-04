@@ -6,9 +6,12 @@ var express = require("express");
 var fs = require("fs");
 var io = require("socket.io");
 var Helper = require("./helper");
+var ldap = require("ldapjs");
 var config = {};
 
 var manager = new ClientManager();
+var ldapclient = null;
+var authFunction = localAuth;
 
 module.exports = function(options) {
 	config = Helper.getConfig();
@@ -40,6 +43,13 @@ module.exports = function(options) {
 
 	if ((config.identd || {}).enable) {
 		require("./identd").start(config.identd.port);
+	}
+
+	if ((config.ldap || {}).enable) {
+		ldapclient = ldap.createClient({
+			url: config.ldap.url
+		});
+		authFunction = ldapAuth;
 	}
 
 	var sockets = io(server, {
@@ -178,6 +188,23 @@ function init(socket, client, token) {
 	}
 }
 
+function localAuth(client, user, password, callback) {
+	callback(!bcrypt.compareSync(data.password || "", client.config.password));
+}
+
+function ldapAuth(client, user, password, callback) {
+	var bindDN = config.ldap.primaryKey + '=' + user + ',' + config.ldap.baseDN;
+
+	ldapclient.bind(bindDN, password, function(err) {
+		if (!err && !client) {
+			if (!manager.addUser(user, null)) {
+				console.log("Unable to create new user", user);
+			}
+		}
+		callback(!err);
+	});
+}
+
 function auth(data) {
 	var socket = this;
 	if (config.public) {
@@ -189,28 +216,24 @@ function auth(data) {
 		});
 		init(socket, client);
 	} else {
-		var success = false;
-		_.each(manager.clients, function(client) {
-			if (data.token) {
-				if (data.token === client.token) {
-					success = true;
-				}
-			} else if (client.config.user === data.user) {
-				if (bcrypt.compareSync(data.password || "", client.config.password)) {
-					success = true;
-				}
-			}
+		var client = manager.findClient(data.user, data.token);
+		var token;
+
+		if (data.remember || data.token) {
+			token = client.token;
+		}
+
+		authFunction(client, data.user, data.password, function(success) {
 			if (success) {
-				var token;
-				if (data.remember || data.token) {
-					token = client.token;
+				if (!client) {
+					// LDAP just created a user
+					manager.loadUser(data.user);
+					client = manager.findClient(data.user);
 				}
 				init(socket, client, token);
-				return false;
+			} else {
+				socket.emit("auth");
 			}
 		});
-		if (!success) {
-			socket.emit("auth");
-		}
 	}
 }
