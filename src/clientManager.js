@@ -10,10 +10,12 @@ function ClientManager() {
 	this.clients = [];
 }
 
-ClientManager.prototype.findClient = function(name) {
+ClientManager.prototype.findClient = function(name, token) {
 	for (var i in this.clients) {
 		var client = this.clients[i];
 		if (client.name === name) {
+			return client;
+		} else if (token && token === client.token) {
 			return client;
 		}
 	}
