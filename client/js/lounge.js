@@ -948,7 +948,14 @@ $(function() {
 	}
 
 	function complete(word) {
-		var words = commands.slice();
+
+		var firstWord=$("#input").val().lastIndexOf(word) === 0;
+		var words;
+		if (firstWord){
+			words = commands.slice();
+		} else {
+			words = [];
+		}
 		var users = chat.find(".active").find(".users");
 		var nicks = users.data("nicks");
 
@@ -962,7 +969,11 @@ $(function() {
 		}
 
 		for (var i in nicks) {
-			words.push(nicks[i]);
+			if (firstWord){
+				words.push(nicks[i]+": ");
+			} else {
+				words.push(nicks[i]+" ");
+			}
 		}
 
 		sidebar.find(".chan")
