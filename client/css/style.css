@@ -1096,19 +1096,6 @@ button,
 	line-height: 1.8;
 }
 
-#settings #change-password .error,
-#settings #change-password .success {
-	margin-bottom: 1em;
-}
-
-#settings #change-password .error {
-	color: #e74c3c;
-}
-
-#settings #change-password .success {
-	color: #2ecc40;
-}
-
 #form {
 	background: #eee;
 	border-top: 1px solid #ddd;
