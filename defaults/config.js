@@ -269,5 +269,40 @@ module.exports = {
 		// @default  113
 		//
 		port: 113
+	},
+
+	// LDAP authentication settings (only available if public=false)
+	// @type    object
+	// @default {}
+	ldap: {
+		//
+		// Enable LDAP user authentication
+		//
+		// @type     boolean
+		// @default  false
+		//
+		enable: false,
+
+		//
+		// LDAP server URL
+		//
+		// @type     string
+		//
+		//url: "ldaps://example.com",
+
+		//
+		// LDAP base dn
+		//
+		// @type     string
+		//
+		//baseDN: "ou=accounts,dc=example,dc=com",
+
+		//
+		// LDAP primary key
+		//
+		// @type     string
+		// @default  "uid"
+		//
+		primaryKey: "uid"
 	}
 };

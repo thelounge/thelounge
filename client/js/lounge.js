@@ -110,31 +110,6 @@ $(function() {
 			.show();
 	});
 
-	socket.on("change-password", function(data) {
-		var passwordForm = $("#change-password");
-		if (data.error || data.success) {
-			var message = data.success ? data.success : data.error;
-			var feedback = passwordForm.find(".feedback");
-
-			if (data.success) {
-				feedback.addClass("success").removeClass("error");
-			} else {
-				feedback.addClass("error").removeClass("success");
-			}
-
-			feedback.text(message).show();
-			feedback.closest("form").one("submit", function() {
-				feedback.hide();
-			});
-		}
-		passwordForm
-			.find("input")
-			.val("")
-			.end()
-			.find(".btn")
-			.prop("disabled", false);
-	});
-
 	socket.on("init", function(data) {
 		if (data.networks.length === 0) {
 			$("#footer").find(".connect").trigger("click");
@@ -773,7 +748,7 @@ $(function() {
 	});
 
 	var windows = $("#windows");
-	var forms = $("#sign-in, #connect, #change-password");
+	var forms = $("#sign-in, #connect");
 
 	windows.on("show", "#sign-in", function() {
 		var self = $(this);
@@ -796,8 +771,6 @@ $(function() {
 			.end();
 		if (form.closest(".window").attr("id") === "connect") {
 			event = "conn";
-		} else if (form.closest("div").attr("id") === "change-password") {
-			event = "change-password";
 		}
 		var values = {};
 		$.each(form.serializeArray(), function(i, obj) {
