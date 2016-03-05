@@ -102,20 +102,14 @@ ClientManager.prototype.updateUser = function(name, opts) {
 	try {
 		user = this.readUserConfig(name);
 		_.merge(user, opts);
+		fs.writeFileSync(
+			path,
+			JSON.stringify(user, null, " ")
+		);
 	} catch (e) {
 		console.log(e);
 		return;
 	}
-
-	fs.writeFileSync(
-		path,
-		JSON.stringify(user, null, " "),
-		function(err) {
-			if (err) {
-				console.log(err);
-			}
-		}
-	);
 	return true;
 };
 
