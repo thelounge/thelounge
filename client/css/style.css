@@ -774,13 +774,6 @@ button,
 	color: #999;
 }
 
-#chat .error,
-#chat .error .from,
-#chat .highlight,
-#chat .highlight .from {
-	color: #f00;
-}
-
 #chat.hide-join .join span,
 #chat.hide-mode .mode span,
 #chat.hide-motd .motd span,
@@ -794,6 +787,14 @@ button,
 	font-family: FontAwesome;
 	content: "\f003";
 	color: #2ecc40;
+}
+
+#chat .join .text,
+#chat .kick .text,
+#chat .part .text,
+#chat .quit .text,
+#chat .nick .text {
+	color: #999;
 }
 
 #chat .join .from:before {
@@ -835,6 +836,7 @@ button,
 	color: #2ecc40;
 }
 
+#chat .action .from,
 #chat .action .text,
 #chat .action .user {
 	color: #f39c12;
@@ -843,7 +845,6 @@ button,
 #chat .action .from:before {
 	font-family: FontAwesome;
 	content: "\f005";
-	color: #f39c12;
 }
 
 #chat .notice .time,
@@ -854,6 +855,14 @@ button,
 
 #chat .notice .user:before {
 	content: "Notice: ";
+}
+
+#chat .error,
+#chat .error .from,
+#chat .highlight .from,
+#chat .highlight .text,
+#chat .highlight .user {
+	color: #f00;
 }
 
 #chat .toggle-button {
