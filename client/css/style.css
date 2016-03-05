@@ -716,11 +716,11 @@ button,
 	word-wrap: break-word;
 }
 
-#chat .msg .inline-channel {
+.inline-channel {
 	cursor: pointer;
 }
 
-#chat .msg .inline-channel:hover {
+.inline-channel:hover {
 	opacity: .6;
 }
 
