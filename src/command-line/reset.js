@@ -30,8 +30,7 @@ program
 			user.password = hash;
 			fs.writeFileSync(
 				file,
-				JSON.stringify(user, null, "  "),
-				{mode: "0777"}
+				JSON.stringify(user, null, "  ")
 			);
 			console.log("Successfully reset password for '" + name + "'.");
 			console.log("");
