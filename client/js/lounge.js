@@ -694,7 +694,7 @@ $(function() {
 					} else {
 						title = msg.from;
 						if (!isQuery) {
-							title += " (" + button.text().trim() + ")";
+							title += " (" + button.data("title").trim() + ")";
 						}
 						title += " says:";
 						body = msg.text.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/, "").trim();
