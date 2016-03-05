@@ -3,5 +3,6 @@ npm-debug.log
 
 # Built assets created at npm install/prepublish time
 # See https://docs.npmjs.com/misc/scripts
+client/js/libs.min.js.map
 client/js/libs.min.js
 client/js/lounge.templates.js
