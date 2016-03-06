@@ -407,17 +407,17 @@ $(function() {
 	var userStyles = $("#user-specified-css");
 	var settings = $("#settings");
 	var options = $.extend({
-		badge: false,
-		colors: false,
-		join: true,
+		badge: true,
+		colors: true,
+		join: false,
 		links: true,
-		mode: true,
+		mode: false,
 		motd: false,
-		nick: true,
-		notification: true,
-		part: true,
+		nick: false,
+		notification: false,
+		part: false,
 		thumbnails: true,
-		quit: true,
+		quit: false,
 		notifyAllMessages: false,
 		userStyles: userStyles.text(),
 	}, JSON.parse(window.localStorage.getItem("settings")));
