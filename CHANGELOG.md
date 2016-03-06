@@ -30,6 +30,24 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
+## v1.3.1 - 2016-03-05
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v1.3.0...v1.3.1)
+
+### Removed
+
+- Remove attempts to set file modes ([#117](https://github.com/thelounge/lounge/pull/117) by [@maxpoulin64](https://github.com/maxpoulin64))
+
+### Fixed
+
+- Correctly handle inline channels in messages ([#128](https://github.com/thelounge/lounge/pull/128) by [@xPaw](https://github.com/xPaw))
+- Fix crash, introduced by this release ([#143](https://github.com/thelounge/lounge/pull/143) by [@xPaw](https://github.com/xPaw))
+- Fix highlighted actions and mute colors of some of the actions ([#47](https://github.com/thelounge/lounge/pull/47) by [@xPaw](https://github.com/xPaw))
+- Fix stripping multiple colors from notifications ([#145](https://github.com/thelounge/lounge/pull/145) by [@xPaw](https://github.com/xPaw))
+- Correctly display channel name in notifications ([#148](https://github.com/thelounge/lounge/pull/148) by [@xPaw](https://github.com/xPaw))
+- Fix hover effect on channels in topics ([#149](https://github.com/thelounge/lounge/pull/149) by [@xPaw](https://github.com/xPaw))
+- Add missing mode action to muted colors ([#150](https://github.com/thelounge/lounge/pull/150) by [@astorije](https://github.com/astorije))
+
 ## v1.3.0 - 2016-03-03
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v1.2.1...v1.3.0)
