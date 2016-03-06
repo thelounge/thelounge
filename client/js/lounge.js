@@ -407,7 +407,7 @@ $(function() {
 	var userStyles = $("#user-specified-css");
 	var settings = $("#settings");
 	var options = $.extend({
-		badge: false,
+		desktopNotifications: false,
 		colors: false,
 		join: true,
 		links: true,
@@ -467,11 +467,11 @@ $(function() {
 	}).find("input")
 		.trigger("change");
 
-	$("#badge").on("change", function() {
+	$("#desktopNotifications").on("change", function() {
 		var self = $(this);
 		if (self.prop("checked")) {
 			if (Notification.permission !== "granted") {
-				Notification.requestPermission();
+				Notification.requestPermission(updateDesktopNotificationStatus);
 			}
 		}
 	});
@@ -757,7 +757,7 @@ $(function() {
 				}
 				toggleFaviconNotification(true);
 
-				if (options.badge && Notification.permission === "granted") {
+				if (options.desktopNotifications && Notification.permission === "granted") {
 					var title;
 					var body;
 
@@ -859,6 +859,8 @@ $(function() {
 			}
 		});
 	});
+
+	windows.on("show", "#settings", updateDesktopNotificationStatus);
 
 	forms.on("submit", "form", function(e) {
 		e.preventDefault();
@@ -990,6 +992,23 @@ $(function() {
 	function refresh() {
 		window.onbeforeunload = null;
 		location.reload();
+	}
+
+	function updateDesktopNotificationStatus(){
+		var checkbox = $("#desktopNotifications");
+		var warning = $("#warnDisabledDesktopNotifications");
+
+		if (Notification.permission === "denied"){
+			checkbox.attr("disabled", true);
+			checkbox.attr("checked", false);
+			warning.show();
+		} else {
+			if (Notification.permission === "default" && checkbox.prop("checked")){
+				checkbox.attr("checked", false);
+			}
+			checkbox.attr("disabled", false);
+			warning.hide();
+		}
 	}
 
 	function sortable() {

@@ -1128,6 +1128,11 @@ button,
 	color: #2ecc40;
 }
 
+#settings .error {
+	color: #e74c3c;
+	margin-top: .2em;
+}
+
 #form {
 	background: #eee;
 	border-top: 1px solid #ddd;
