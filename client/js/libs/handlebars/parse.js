@@ -120,10 +120,10 @@ function parseMessage(msg, parser) {
 
 	// Define which parsers to use and their order
 	var parsers = [
-		parseUrl,
-		parseInlineChannel,
 		parseFormatting,
 		parseColors,
+		parseUrl,
+		parseInlineChannel,
 		parseText
 	];
 

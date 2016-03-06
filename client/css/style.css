@@ -1348,69 +1348,101 @@ button,
   * https://github.com/megawac/irc-style-parser
   * Colours are credit to http://clrs.cc/
   */
-.irc-fg0 { color: #fff; }
+.irc-fg0,
+#chat .text .irc-fg0 a { color: #fff; }
 
-.irc-fg1 { color: #000; }
+.irc-fg1,
+#chat .text .irc-fg1 a { color: #000; }
 
-.irc-fg2 { color: #001f3f; }
+.irc-fg2,
+#chat .text .irc-fg2 a { color: #001f3f; }
 
-.irc-fg3 { color: #2ecc40; }
+.irc-fg3,
+#chat .text .irc-fg3 a { color: #2ecc40; }
 
-.irc-fg4 { color: #ff4136; }
+.irc-fg4,
+#chat .text .irc-fg4 a { color: #ff4136; }
 
-.irc-fg5 { color: #85144b; }
+.irc-fg5,
+#chat .text .irc-fg5 a { color: #85144b; }
 
-.irc-fg6 { color: #b10dc9; }
+.irc-fg6,
+#chat .text .irc-fg6 a { color: #b10dc9; }
 
-.irc-fg7 { color: #ff851b; }
+.irc-fg7,
+#chat .text .irc-fg7 a { color: #ff851b; }
 
-.irc-fg8 { color: #ffdc00; }
+.irc-fg8,
+#chat .text .irc-fg8 a { color: #ffdc00; }
 
-.irc-fg9 { color: #01ff70; }
+.irc-fg9,
+#chat .text .irc-fg9 a { color: #01ff70; }
 
-.irc-fg10 { color: #39cccc; }
+.irc-fg10,
+#chat .text .irc-fg10 a { color: #39cccc; }
 
-.irc-fg11 { color: #7fdbff; }
+.irc-fg11,
+#chat .text .irc-fg11 a { color: #7fdbff; }
 
-.irc-fg12 { color: #0074d9; }
+.irc-fg12,
+#chat .text .irc-fg12 a { color: #0074d9; }
 
-.irc-fg13 { color: #f012be; }
+.irc-fg13,
+#chat .text .irc-fg13 a { color: #f012be; }
 
-.irc-fg14 { color: #aaa; }
+.irc-fg14,
+#chat .text .irc-fg14 a { color: #aaa; }
 
-.irc-fg15 { color: #ddd; }
+.irc-fg15,
+#chat .text .irc-fg15 a { color: #ddd; }
 
-.irc-bg0 { background: #fff; }
+.irc-bg0,
+#chat .text .irc-bg0 a { background: #fff; }
 
-.irc-bg1 { background: #000; }
+.irc-bg1,
+#chat .text .irc-bg1 a { background: #000; }
 
-.irc-bg2 { background: #001f3f; }
+.irc-bg2,
+#chat .text .irc-bg2 a { background: #001f3f; }
 
-.irc-bg3 { background: #2ecc40; }
+.irc-bg3,
+#chat .text .irc-bg3 a { background: #2ecc40; }
 
-.irc-bg4 { background: #ff4136; }
+.irc-bg4,
+#chat .text .irc-bg4 a { background: #ff4136; }
 
-.irc-bg5 { background: #85144b; }
+.irc-bg5,
+#chat .text .irc-bg5 a { background: #85144b; }
 
-.irc-bg6 { background: #b10dc9; }
+.irc-bg6,
+#chat .text .irc-bg6 a { background: #b10dc9; }
 
-.irc-bg7 { background: #ff851b; }
+.irc-bg7,
+#chat .text .irc-bg7 a { background: #ff851b; }
 
-.irc-bg8 { background: #ffdc00; }
+.irc-bg8,
+#chat .text .irc-bg8 a { background: #ffdc00; }
 
-.irc-bg9 { background: #01ff70; }
+.irc-bg9,
+#chat .text .irc-bg9 a { background: #01ff70; }
 
-.irc-bg10 { background: #39cccc; }
+.irc-bg10,
+#chat .text .irc-bg10 a { background: #39cccc; }
 
-.irc-bg11 { background: #7fdbff; }
+.irc-bg11,
+#chat .text .irc-bg11 a { background: #7fdbff; }
 
-.irc-bg12 { background: #0074d9; }
+.irc-bg12,
+#chat .text .irc-bg12 a { background: #0074d9; }
 
-.irc-bg13 { background: #f012be; }
+.irc-bg13,
+#chat .text .irc-bg13 a { background: #f012be; }
 
-.irc-bg14 { background: #aaa; }
+.irc-bg14,
+#chat .text .irc-bg14 a { background: #aaa; }
 
-.irc-bg15 { background: #ddd; }
+.irc-bg15,
+#chat .text .irc-bg15 a { background: #ddd; }
 
 .irc-bold {
 	font-weight: bold;
