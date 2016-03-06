@@ -5,14 +5,14 @@ module.exports = function(network, chan, cmd, args) {
 		return;
 	}
 	if (args.length === 0 || args[0] === "") {
-		return;
+		return true;
 	}
 	var irc = network.irc;
 	var target = "";
 	if (cmd === "msg") {
 		target = args.shift();
 		if (args.length === 0) {
-			return;
+			return true;
 		}
 	} else {
 		target = chan.name;
@@ -27,4 +27,6 @@ module.exports = function(network, chan, cmd, args) {
 			message: msg
 		});
 	}
+
+	return true;
 };

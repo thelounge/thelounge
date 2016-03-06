@@ -16,7 +16,7 @@ module.exports = function(network, chan, cmd, args) {
 			"devoice": "-v"
 		}[cmd];
 	} else if (args.length === 1) {
-		return;
+		return true;
 	} else {
 		mode = args[0];
 		user = args[1];
@@ -27,4 +27,6 @@ module.exports = function(network, chan, cmd, args) {
 		mode,
 		user
 	);
+
+	return true;
 };

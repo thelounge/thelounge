@@ -10,4 +10,6 @@ module.exports = function(network, chan, cmd, args) {
 	}	else if (args.length === 1 && chan.type === "channel") {
 		irc.invite(args[0], chan.name); // Current channel
 	}
+
+	return true;
 };

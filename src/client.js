@@ -33,20 +33,21 @@ var events = [
 	"whois"
 ];
 var inputs = [
+	// These inputs are sorted in order that is most likely to be used
+	"msg",
+	"whois",
+	"part",
 	"action",
 	"connect",
 	"invite",
 	"join",
 	"kick",
 	"mode",
-	"msg",
 	"nick",
 	"notice",
-	"part",
 	"quit",
 	"raw",
 	"topic",
-	"whois"
 ];
 
 function Client(manager, name, config) {
@@ -269,16 +270,22 @@ Client.prototype.input = function(data) {
 	var client = this;
 	var text = data.text.trim();
 	var target = client.find(data.target);
-	if (text.charAt(0) !== "/") {
-		text = "/say " + text;
+
+	// This is either a normal message or a command escaped with a leading '/'
+	if (text.charAt(0) !== "/" || text.charAt(1) === "/") {
+		text = "say " + text.replace(/^\//, "");
+	} else {
+		text = text.substr(1);
 	}
+
 	var args = text.split(" ");
-	var cmd = args.shift().replace("/", "").toLowerCase();
-	_.each(inputs, function(plugin) {
+	var cmd = args.shift().toLowerCase();
+
+	var result = inputs.some(function(plugin) {
 		try {
 			var path = "./plugins/inputs/" + plugin;
 			var fn = require(path);
-			fn.apply(client, [
+			return fn.apply(client, [
 				target.network,
 				target.chan,
 				cmd,
@@ -288,6 +295,10 @@ Client.prototype.input = function(data) {
 			console.log(path + ": " + e);
 		}
 	});
+
+	if (result !== true) {
+		target.network.irc.write(text);
+	}
 };
 
 Client.prototype.more = function(data) {
