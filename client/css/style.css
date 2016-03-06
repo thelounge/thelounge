@@ -794,7 +794,8 @@ button,
 #chat .mode .text,
 #chat .nick .text,
 #chat .part .text,
-#chat .quit .text {
+#chat .quit .text,
+#chat .topic .text {
 	color: #999;
 }
 
