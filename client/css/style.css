@@ -791,9 +791,10 @@ button,
 
 #chat .join .text,
 #chat .kick .text,
+#chat .mode .text,
+#chat .nick .text,
 #chat .part .text,
-#chat .quit .text,
-#chat .nick .text {
+#chat .quit .text {
 	color: #999;
 }
 
