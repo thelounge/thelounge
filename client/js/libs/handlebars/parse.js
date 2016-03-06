@@ -1,135 +1,137 @@
-Handlebars.registerHelper(
-	"parse", function(text) {
-		var wrap = wraplong(text);
-		text = Handlebars.Utils.escapeExpression(text);
-		text = colors(text);
-		text = channels(text);
-		text = uri(text);
-		if (wrap) {
-			return "<i class='wrap'>" + text + "</i>";
-		} else {
-			return text;
-		}
-	}
-);
-
-function wraplong(text) {
-	var wrap = false;
-	var split = text.split(" ");
-	for (var i in split) {
-		if (split[i].length > 40) {
-			wrap = true;
-		}
-	}
-	return wrap;
-}
-
-function uri(text) {
-	return URI.withinString(text, function(url, start, end, source) {
-		if (url.indexOf("javascript:") === 0) {
-			return url;
-		}
-		var split = url.split("<");
-		url = "<a href='" + split[0].replace(/^www/, "//www") + "' target='_blank'>" + split[0] + "</a>";
-		if (split.length > 1) {
-			url += "<" + split.slice(1).join("<");
-		}
-		return url;
-	});
-}
-
-/**
- * Channels names are strings of length up to fifty (50) characters.
- * The only restriction on a channel name is that it SHALL NOT contain
- * any spaces (' '), a control G (^G or ASCII 7), a comma (',').
- * Channel prefix '&' is handled as '&amp;' because this parser is executed
- * after entities in the message have been escaped. This prevents a couple of bugs.
- */
-function channels(text) {
-	return text.replace(
-		/(^|\s|\x07|,)((?:#|&amp;)[^\x07\s\,]{1,49})/g,
-		'$1<span class="inline-channel" role="button" tabindex="0" data-chan="$2">$2</span>'
-	);
-}
-
-/**
- * MIRC compliant colour and style parser
- * Unfortuanately this is a non trivial operation
- * See this branch for source and tests
- * https://github.com/megawac/irc-style-parser/tree/shout
- */
-var styleCheck_Re = /[\x00-\x1F]/,
-    back_re = /^([0-9]{1,2})(,([0-9]{1,2}))?/,
-    colourKey = "\x03",
-    // breaks all open styles ^O (\x0F)
-    styleBreak = "\x0F";
-
-
-function styleTemplate(settings) {
-    return "<span class='" + settings.style + "'>" + settings.text + "</span>";
-}
-
-var styles = [
-    ["normal", "\x00", ""], ["underline", "\x1F"],
-    ["bold", "\x02"], ["italic", "\x1D"]
-].map(function(style) {
-    var escaped = encodeURI(style[1]).replace("%", "\\x");
-    return {
-        name: style[0],
-        style: style[2] != null ? style[2] : "irc-" + style[0],
-        key: style[1],
-        keyregex: new RegExp(escaped + "(.*?)(" + escaped + "|$)")
-    };
+Handlebars.registerHelper("parse", function(msg) {
+	return parseMessage(msg, 0);
 });
 
-function colors(line) {
-    // http://www.mirc.com/colors.html
-    // http://www.aviran.org/stripremove-irc-client-control-characters/
-    // https://github.com/perl6/mu/blob/master/examples/rules/Grammar-IRC.pm
-    // regexs are cruel to parse this thing
 
-    // already done?
-    if (!styleCheck_Re.test(line)) return line;
+/**
+ * Parses an IRC message and converts it into HTML
+ */
+function parseMessage(msg, parser) {
+	var processed = false;
 
-    // split up by the irc style break character ^O
-    if (line.indexOf(styleBreak) >= 0) {
-        return line.split(styleBreak).map(colors).join("");
-    }
+	/**
+	 * Parses URLs
+	 *
+	 * https://tools.ietf.org/html/rfc3986#section-2
+	 */
+	function parseUrl(msg) {
+		return msg.replace(
+			/^(.*?<?)([a-z]+:\/\/[a-z0-9-._~:\/?#[\]@!$&'()*+,;=]+)(>?.*)$/i,
+			function(match, before, url, after) {
+				url = parseText(url);
+				return parseMessage(before, parser)
+					+ "<a href='"+ url + "' target='_blank'>" + url + "</a>"
+					+ parseMessage(after, parser);
+			}
+		);
+	}
 
-    var result = line;
-    var parseArr = result.split(colourKey);
-    var text, match, colour, background = "";
-    for (var i = 0; i < parseArr.length; i++) {
-        text = parseArr[i];
-        match = text.match(back_re);
-        if (!match) {
-            // ^C (no colour) ending. Escape current colour and carry on
-            background = "";
-            continue;
-        }
-		colour = "irc-fg" + +match[1];
-		// set the background colour
-		if (match[3]) {
-			background = " irc-bg" + +match[3];
-		}
-        // update the parsed text result
-        result = result.replace(colourKey + text, styleTemplate({
-            style: colour + background,
-            text: text.slice(match[0].length)
-        }));
-    }
 
-    // Matching styles (italics/bold/underline)
-    // if only colours were this easy...
-    styles.forEach(function(style) {
-        if (result.indexOf(style.key) < 0) return;
-        result = result.replace(style.keyregex, function(match, text) {
-            return styleTemplate({
-                "style": style.style,
-                "text": text
-            });
-        });
-    });
+	/**
+	 * Parses channel names and make them clickable
+	 *
+	 * Channels names are strings (beginning with a '&', '#', '+' or '!'
+	 * character) of length up to fifty (50) characters.  Apart from the
+	 * requirement that the first character is either '&', '#', '+' or '!',
+	 * the only restriction on a channel name is that it SHALL NOT contain
+	 * any spaces (' '), a control G (^G or ASCII 7), a comma (',').  Space
+	 * is used as parameter separator and command is used as a list item
+	 * separator by the protocol).  A colon (':') can also be used as a
+	 * delimiter for the channel mask.  Channel names are case insensitive.
+	 *
+	 * https://tools.ietf.org/html/rfc2812#section-1.3
+	 */
+	function parseInlineChannel(msg) {
+		return msg.replace(
+			/^(.*)([#&+!][^\s\x07,]{1,49})(.*)$/,
+			function(match, before, channel, after) {
+				channel = parseText(channel);
+				return parseMessage(before, parser)
+					+ "<span class='inline-channel' role='button' tabindex='0' data-chan='"
+						+ channel + "'>" + channel + "</span>"
+					+ parseMessage(after, parser);
+			}
+		);
+	}
 
-    return result;
+
+	/**
+	 * Parse mIRC formatting (bold, italic and underline)
+	 * https://github.com/myano/jenni/wiki/IRC-String-Formatting
+	 */
+	function parseFormatting(msg) {
+		return msg.replace(
+			/^(.*?)(\x02|\x1D|\x1F)([^\x0F\2]+)[\x0F\2]?(.*)$/,
+			function(match, before, format, formatted, after) {
+				processed = true;
+
+				var classes = {
+					"\x02": "irc-bold",
+					"\x1D": "irc-italic",
+					"\x1F": "irc-underline"
+				};
+
+				return parseMessage(before, parser+1)
+					+ "<span class='" + classes[format] + "'>"
+					+ parseMessage(formatted, parser)
+					+ "</span>"
+					+ parseMessage(after, parser);
+			}
+		);
+	}
+
+
+	/**
+	 * Parse mIRC color formatting
+	 * https://github.com/myano/jenni/wiki/IRC-String-Formatting
+	 */
+	function parseColors(msg) {
+		return msg.replace(
+			/^(.*?)\x03([0-9]{1,2})(?:,([0-9]{1,2}))?([^\x0F\x03]+)\x0F?(.*)$/,
+			function(match, before, fg, bg, formatted, after) {
+				processed = true;
+
+				var classes = "irc-fg" + parseInt(fg, 10);
+
+				if (bg) {
+					classes += " irc-bg" + parseInt(bg, 10);
+				}
+
+				return parseMessage(before, parser+1)
+					+ "<span class='" + classes + "'>"
+					+ parseMessage(formatted, parser)
+					+ "</span>"
+					+ parseMessage(after, parser);
+			}
+		);
+	}
+
+
+	/**
+	 * Parses plaintext into safe HTML
+	 */
+	function parseText(msg) {
+		processed = true;
+		return msg.replace(/[&<>"'`=]/g, function(c) {
+			return "&#" + c.charCodeAt(0) + ";";
+		}).replace(/[\x02\x03\x1D\x1F\x0F]/g, "");
+	}
+
+
+	// Define which parsers to use and their order
+	var parsers = [
+		parseUrl,
+		parseInlineChannel,
+		parseFormatting,
+		parseColors,
+		parseText
+	];
+
+	// Pass the input text through all parsers
+	while (processed === false && parser < parsers.length) {
+		msg = parsers[parser](msg);
+		parser++;
+	}
+
+	return msg;
 }
