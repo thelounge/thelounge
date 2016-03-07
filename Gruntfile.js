@@ -7,6 +7,7 @@ module.exports = function(grunt) {
 		},
 		uglify: {
 			options: {
+				sourceMap: true,
 				compress: false
 			},
 			js: {
@@ -19,23 +20,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-contrib-uglify");
 	grunt.loadNpmTasks("grunt-contrib-watch");
 	grunt.registerTask(
-		"build",
-		function() {
-			grunt.util.spawn({
-				cmd: "node",
-				args: [
-					"node_modules/handlebars/bin/handlebars",
-					"client/views/",
-					"-e", "tpl",
-					"-f", "client/js/lounge.templates.js"
-				]
-			}, function(err) {
-				if (err) console.log(err);
-			});
-		}
-	);
-	grunt.registerTask(
 		"default",
-		["uglify", "build"]
+		["uglify"]
 	);
 };
