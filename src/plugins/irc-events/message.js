@@ -36,16 +36,15 @@ module.exports = function(irc, network) {
 			text = text.replace(/^\u0001ACTION|\u0001$/g, "");
 		}
 
-		var highlight = false;
-		textSplit.forEach(function(w) {
-			if (w.replace(/^@/, "").toLowerCase().indexOf(irc.me.toLowerCase()) === 0) {
-				highlight = true;
-			}
-		});
+		var self = (data.from.toLowerCase() === irc.me.toLowerCase());
 
-		var self = false;
-		if (data.from.toLowerCase() === irc.me.toLowerCase()) {
-			self = true;
+		var highlight = false;
+		if (!self) { // Self messages should never be highlighted
+			textSplit.forEach(function(w) {
+				if (w.replace(/^@/, "").toLowerCase().indexOf(irc.me.toLowerCase()) === 0) {
+					highlight = true;
+				}
+			});
 		}
 
 		if (chan.id !== client.activeChannel) {
