@@ -840,6 +840,12 @@ button,
 	color: #2ecc40;
 }
 
+#chat .whois .from:before {
+	font-family: FontAwesome;
+	content: "\f007";
+	color: #2ecc40;
+}
+
 #chat .nick .from:before {
 	font-family: FontAwesome;
 	content: "\f007";
