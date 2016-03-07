@@ -20,8 +20,8 @@ exports.input = function(network, chan, cmd, args) {
 
 	var msg = new Msg({
 		type: Msg.Type.NOTICE,
-		mode: targetChan.getMode(irc.me),
-		from: irc.me,
+		mode: targetChan.getMode(irc.user.nick),
+		from: irc.user.nick,
 		text: message
 	});
 	targetChan.messages.push(msg);

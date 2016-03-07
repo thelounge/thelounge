@@ -3,11 +3,9 @@ var Chan = require("./models/chan");
 var crypto = require("crypto");
 var identd = require("./identd");
 var log = require("./log");
-var net = require("net");
 var Msg = require("./models/msg");
 var Network = require("./models/network");
-var slate = require("slate-irc");
-var tls = require("tls");
+var ircFramework = require("irc-framework");
 var Helper = require("./helper");
 
 module.exports = Client;
@@ -25,7 +23,6 @@ var events = [
 	"link",
 	"names",
 	"nick",
-	"notice",
 	"part",
 	"quit",
 	"topic",
@@ -33,7 +30,6 @@ var events = [
 	"whois"
 ];
 var inputs = [
-	// These inputs are sorted in order that is most likely to be used
 	"msg",
 	"part",
 	"action",
@@ -129,96 +125,68 @@ Client.prototype.connect = function(args) {
 	var config = Helper.getConfig();
 	var client = this;
 
-	if (config.lockNetwork) {
-		// This check is needed to prevent invalid user configurations
-		if (args.host && args.host.length > 0 && args.host !== config.defaults.host) {
-			var invalidHostnameMsg = new Msg({
-				type: Msg.Type.ERROR,
-				text: "Hostname you specified is not allowed."
-			});
-			client.emit("msg", {
-				msg: invalidHostnameMsg
-			});
-			return;
-		}
+	var nick = args.nick || "lounge-user";
 
-		args.host = config.defaults.host;
-		args.port = config.defaults.port;
-		args.tls = config.defaults.tls;
-	}
-
-	var server = {
+	var network = new Network({
 		name: args.name || "",
 		host: args.host || "",
 		port: parseInt(args.port, 10) || (args.tls ? 6697 : 6667),
-		rejectUnauthorized: false
-	};
-
-	if (server.host.length === 0) {
-		var emptyHostnameMsg = new Msg({
-			type: Msg.Type.ERROR,
-			text: "You must specify a hostname to connect."
-		});
-		client.emit("msg", {
-			msg: emptyHostnameMsg
-		});
-		return;
-	}
-
-	if (config.bind) {
-		server.localAddress = config.bind;
-		if (args.tls) {
-			var socket = net.connect(server);
-			server.socket = socket;
-		}
-	}
-
-	var stream = args.tls ? tls.connect(server) : net.connect(server);
-
-	stream.on("error", function(e) {
-		console.log("Client#connect():\n" + e);
-		stream.end();
-		var msg = new Msg({
-			type: Msg.Type.ERROR,
-			text: "Connection error."
-		});
-		client.emit("msg", {
-			msg: msg
-		});
-	});
-
-	var nick = args.nick || "lounge-user";
-	var username = args.username || nick.replace(/[^a-zA-Z0-9]/g, "");
-	var realname = args.realname || "The Lounge User";
-
-	var irc = slate(stream);
-	identd.hook(stream, username);
-
-	if (args.password) {
-		irc.pass(args.password);
-	}
-
-	irc.me = nick;
-	irc.nick(nick);
-	irc.user(username, realname);
-
-	var network = new Network({
-		name: server.name,
-		host: server.host,
-		port: server.port,
 		tls: !!args.tls,
 		password: args.password,
-		username: username,
-		realname: realname,
+		username: args.username || nick.replace(/[^a-zA-Z0-9]/g, ""),
+		realname: args.realname || "The Lounge User",
 		commands: args.commands
 	});
-
-	network.irc = irc;
 
 	client.networks.push(network);
 	client.emit("network", {
 		network: network
 	});
+
+	if (config.lockNetwork) {
+		// This check is needed to prevent invalid user configurations
+		if (args.host && args.host.length > 0 && args.host !== config.defaults.host) {
+			client.emit("msg", {
+				chan: network.channels[0].id,
+				msg: new Msg({
+					type: Msg.Type.ERROR,
+					text: "Hostname you specified is not allowed."
+				})
+			});
+			return;
+		}
+
+		network.host = config.defaults.host;
+		network.port = config.defaults.port;
+		network.tls = config.defaults.tls;
+	}
+
+	if (network.host.length === 0) {
+		client.emit("msg", {
+			chan: network.channels[0].id,
+			msg: new Msg({
+				type: Msg.Type.ERROR,
+				text: "You must specify a hostname to connect."
+			})
+		});
+		return;
+	}
+
+	var irc = new ircFramework.Client();
+	irc.connect({
+		host: network.host,
+		port: network.port,
+		nick: nick,
+		username: network.username,
+		gecos: network.realname,
+		password: network.password,
+		tls: network.tls,
+		localAddress: config.bind,
+		rejectUnauthorized: false,
+		auto_reconnect: false, // TODO: Enable auto reconnection
+	});
+
+	network.irc = irc;
 
 	events.forEach(function(plugin) {
 		var path = "./plugins/irc-events/" + plugin;
@@ -228,7 +196,39 @@ Client.prototype.connect = function(args) {
 		]);
 	});
 
-	irc.once("welcome", function() {
+	irc.on("raw socket connected", function() {
+		identd.hook(irc.socket, network.username);
+	});
+
+	irc.on("socket connected", function() {
+		client.emit("msg", {
+			chan: network.channels[0].id,
+			msg: new Msg({
+				text: "Connected to the network."
+			})
+		});
+	});
+
+	irc.on("socket close", function() {
+		client.emit("msg", {
+			chan: network.channels[0].id,
+			msg: new Msg({
+				type: Msg.Type.ERROR,
+				text: "Disconnected from the network."
+			})
+		});
+	});
+
+	irc.on("reconnecting", function() {
+		client.emit("msg", {
+			chan: network.channels[0].id,
+			msg: new Msg({
+				text: "Reconnecting..."
+			})
+		});
+	});
+
+	irc.on("registered", function() {
 		var delay = 1000;
 		var commands = args.commands;
 		if (Array.isArray(commands)) {
@@ -242,16 +242,13 @@ Client.prototype.connect = function(args) {
 				delay += 1000;
 			});
 		}
-		setTimeout(function() {
-			irc.write("PING " + network.host);
-		}, delay);
-	});
 
-	irc.once("pong", function() {
 		var join = (args.join || "");
 		if (join) {
-			join = join.replace(/\,/g, " ").split(/\s+/g);
-			irc.join(join);
+			setTimeout(function() {
+				join = join.replace(/\,/g, " ").split(/\s+/g);
+				irc.join(join);
+			}, delay);
 		}
 	});
 };

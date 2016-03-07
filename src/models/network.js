@@ -30,7 +30,7 @@ function Network(attr) {
 }
 
 Network.prototype.toJSON = function() {
-	var json = _.extend(this, {nick: (this.irc || {}).me || ""});
+	var json = _.extend(this, {nick: (this.irc && this.irc.user.nick) || ""});
 	return _.omit(json, "irc", "password");
 };
 
@@ -45,7 +45,7 @@ Network.prototype.export = function() {
 		"realname",
 		"commands"
 	]);
-	network.nick = (this.irc || {}).me;
+	network.nick = (this.irc && this.irc.user.nick) || "";
 	network.join = _.map(
 		_.filter(this.channels, {type: "channel"}),
 		"name"

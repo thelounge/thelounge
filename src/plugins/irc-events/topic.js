@@ -17,7 +17,7 @@ module.exports = function(irc, network) {
 			from: from,
 			text: topic,
 			isSetByChan: from === chan.name,
-			self: (from.toLowerCase() === irc.me.toLowerCase())
+			self: from === irc.user.nick
 		});
 		chan.messages.push(msg);
 		client.emit("msg", {

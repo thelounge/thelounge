@@ -18,20 +18,16 @@ module.exports = function(irc, network) {
 				chan: chan
 			});
 		}
-		chan.users.push(new User({name: data.nick}));
+		chan.users.push(new User({nick: data.nick, modes: ""}));
 		chan.sortUsers();
 		client.emit("users", {
 			chan: chan.id
 		});
-		var self = false;
-		if (data.nick.toLowerCase() === irc.me.toLowerCase()) {
-			self = true;
-		}
 		var msg = new Msg({
 			from: data.nick,
-			hostmask: data.hostmask.username + "@" + data.hostmask.hostname,
+			hostmask: data.ident + "@" + data.hostname,
 			type: Msg.Type.JOIN,
-			self: self
+			self: data.nick === irc.user.nick
 		});
 		chan.messages.push(msg);
 		client.emit("msg", {

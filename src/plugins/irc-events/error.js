@@ -14,7 +14,7 @@ module.exports = function(irc, network) {
 		});
 		if (!network.connected) {
 			if (data.cmd === "ERR_NICKNAMEINUSE") {
-				var random = irc.me + Math.floor(10 + (Math.random() * 89));
+				var random = irc.user.nick + Math.floor(10 + (Math.random() * 89));
 				irc.nick(random);
 			}
 		}

@@ -1,22 +1,15 @@
 var pkg = require(process.cwd() + "/package.json");
 
 module.exports = function(irc/* , network */) {
-	irc.on("message", function(data) {
-		if (data.message.indexOf("\001") !== 0) {
-			return;
-		}
-		var msg = data.message.replace(/\001/g, "");
-		var split = msg.split(" ");
-		switch (split[0]) {
+	irc.on("ctcp request", function(data) {
+		switch (data.type) {
 		case "VERSION":
-			irc.ctcp(
-				data.from,
-				"VERSION " + pkg.name + " " + pkg.version
-			);
+			irc.ctcpResponse(data.nick, "VERSION " + pkg.name + " " + pkg.version);
 			break;
 		case "PING":
+			var split = data.msg.split(" ");
 			if (split.length === 2) {
-				irc.ctcp(data.from, "PING " + split[1]);
+				irc.ctcpResponse(data.nick, "PING " + split[1]);
 			}
 			break;
 		}

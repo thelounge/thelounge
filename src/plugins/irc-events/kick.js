@@ -12,7 +12,7 @@ module.exports = function(irc, network) {
 			return;
 		}
 
-		if (data.client === irc.me) {
+		if (data.client === irc.user.nick) {
 			chan.users = [];
 		} else {
 			chan.users = _.without(chan.users, _.find(chan.users, {name: data.client}));
@@ -22,17 +22,13 @@ module.exports = function(irc, network) {
 			chan: chan.id
 		});
 
-		var self = false;
-		if (data.nick.toLowerCase() === irc.me.toLowerCase()) {
-			self = true;
-		}
 		var msg = new Msg({
 			type: Msg.Type.KICK,
 			mode: mode,
 			from: from,
 			target: data.client,
 			text: data.message || "",
-			self: self
+			self: data.nick === irc.user.nick
 		});
 		chan.messages.push(msg);
 		client.emit("msg", {

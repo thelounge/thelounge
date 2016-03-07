@@ -27,7 +27,7 @@ module.exports = function(irc, network) {
 			return;
 		}
 
-		var self = data.to.toLowerCase() === irc.me.toLowerCase();
+		var self = data.to.toLowerCase() === irc.user.nick.toLowerCase();
 		var chan = _.find(network.channels, {name: self ? data.from : data.to});
 		if (typeof chan === "undefined") {
 			return;

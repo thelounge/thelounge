@@ -18,7 +18,7 @@ exports.input = function(network, chan, cmd, args) {
 			text
 		);
 		irc.emit("message", {
-			from: irc.me,
+			from: irc.user.nick,
 			to: chan.name,
 			message: "\u0001ACTION " + text
 		});

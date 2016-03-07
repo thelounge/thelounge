@@ -6,7 +6,7 @@ module.exports = function(irc, network) {
 	irc.on("nick", function(data) {
 		var self = false;
 		var nick = data["new"];
-		if (nick === irc.me) {
+		if (nick === irc.user.nick) {
 			var lobby = network.channels[0];
 			var msg = new Msg({
 				text: "You're now known as " + nick,

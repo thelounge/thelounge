@@ -3,13 +3,13 @@ var User = require("../../models/user");
 
 module.exports = function(irc, network) {
 	var client = this;
-	irc.on("names", function(data) {
+	irc.on("userlist", function(data) {
 		var chan = _.find(network.channels, {name: data.channel});
 		if (typeof chan === "undefined") {
 			return;
 		}
 		chan.users = [];
-		_.each(data.names, function(u) {
+		_.each(data.users, function(u) {
 			chan.users.push(new User(u));
 		});
 		chan.sortUsers();

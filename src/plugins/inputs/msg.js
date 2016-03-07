@@ -21,7 +21,7 @@ exports.input = function(network, chan, cmd, args) {
 	var channel = _.find(network.channels, {name: target});
 	if (typeof channel !== "undefined") {
 		irc.emit("message", {
-			from: irc.me,
+			from: irc.user.nick,
 			to: channel.name,
 			message: msg
 		});
