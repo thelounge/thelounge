@@ -36,17 +36,13 @@ module.exports = function(irc, network) {
 			text = text.replace(/^\u0001ACTION|\u0001$/g, "");
 		}
 
-		var highlight = false;
-		textSplit.forEach(function(w) {
-			if (w.replace(/^@/, "").toLowerCase().indexOf(irc.me.toLowerCase()) === 0) {
-				highlight = true;
-			}
-		});
+		var self = (data.from.toLowerCase() === irc.me.toLowerCase());
 
-		var self = false;
-		if (data.from.toLowerCase() === irc.me.toLowerCase()) {
-			self = true;
-		}
+		// Self messages are never highlighted
+		// Non-self messages are highlighted as soon as the nick is detected
+		var highlight = !self && textSplit.some(function(w) {
+			return (w.replace(/^@/, "").toLowerCase().indexOf(irc.me.toLowerCase()) === 0);
+		});
 
 		if (chan.id !== client.activeChannel) {
 			chan.unread++;
