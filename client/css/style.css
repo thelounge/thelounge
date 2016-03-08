@@ -719,6 +719,16 @@ button,
 	padding: 10px 0;
 }
 
+#chat .line {
+	display: table-row;
+}
+
+#chat .non-content {
+	background-color: #eee;
+	height: 3px;
+	display: table-cell;
+}
+
 #chat .msg {
 	display: table-row;
 	word-wrap: break-word;
