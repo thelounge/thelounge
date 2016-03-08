@@ -221,6 +221,7 @@ $(function() {
 			"part",
 			"quit",
 			"topic",
+			"topic_set_by",
 			"action",
 			"whois",
 		].indexOf(type) !== -1) {

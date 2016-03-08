@@ -15,6 +15,7 @@ Msg.Type = {
 	QUIT: "quit",
 	TOGGLE: "toggle",
 	TOPIC: "topic",
+	TOPIC_SET_BY: "topic_set_by",
 	WHOIS: "whois"
 };
 

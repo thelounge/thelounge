@@ -4,7 +4,7 @@ var Msg = require("../../models/msg");
 module.exports = function(irc, network) {
 	var client = this;
 	irc.on("part", function(data) {
-		var chan = _.find(network.channels, {name: data.channels[0]});
+		var chan = _.find(network.channels, {name: data.channel});
 		if (typeof chan === "undefined") {
 			return;
 		}
@@ -23,9 +23,9 @@ module.exports = function(irc, network) {
 			});
 			var msg = new Msg({
 				type: Msg.Type.PART,
-				mode: chan.getMode(from),
+				mode: user.mode || "",
 				text: data.message || "",
-				hostmask:data.hostmask.username + "@" + data.hostmask.hostname,
+				hostmask: data.ident + "@" + data.hostname,
 				from: from
 			});
 			chan.messages.push(msg);
