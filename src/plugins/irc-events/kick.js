@@ -4,18 +4,15 @@ var Msg = require("../../models/msg");
 module.exports = function(irc, network) {
 	var client = this;
 	irc.on("kick", function(data) {
-		var from = data.nick;
 		var chan = _.find(network.channels, {name: data.channel});
-		var mode = chan.getMode(from);
-
 		if (typeof chan === "undefined") {
 			return;
 		}
 
-		if (data.client === irc.user.nick) {
+		if (data.kicked === irc.user.nick) {
 			chan.users = [];
 		} else {
-			chan.users = _.without(chan.users, _.find(chan.users, {name: data.client}));
+			chan.users = _.without(chan.users, _.find(chan.users, {name: data.kicked}));
 		}
 
 		client.emit("users", {
@@ -24,10 +21,11 @@ module.exports = function(irc, network) {
 
 		var msg = new Msg({
 			type: Msg.Type.KICK,
-			mode: mode,
-			from: from,
-			target: data.client,
+			mode: chan.getMode(data.nick),
+			from: data.nick,
+			target: data.kicked,
 			text: data.message || "",
+			highlight: data.kicked === irc.user.nick,
 			self: data.nick === irc.user.nick
 		});
 		chan.messages.push(msg);
