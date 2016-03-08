@@ -23,22 +23,23 @@ module.exports = function(irc, network) {
 	});
 
 	function handleMessage(data) {
-		var target = data.target;
-		if (target.toLowerCase() === irc.user.nick.toLowerCase()) {
-			target = data.nick;
-		}
-
-		var chan = _.find(network.channels, {name: target});
+		// First, try to find current target
+		var chan = _.find(network.channels, {name: data.target});
 		if (typeof chan === "undefined") {
-			chan = new Chan({
-				type: Chan.Type.QUERY,
-				name: data.nick
-			});
-			network.channels.push(chan);
-			client.emit("join", {
-				network: network.id,
-				chan: chan
-			});
+			// If current target doesn't exist, try to find by nick
+			chan = _.find(network.channels, {name: data.nick});
+			// If neither target or nick channels exist, create one for the nick
+			if (typeof chan === "undefined") {
+				chan = new Chan({
+					type: Chan.Type.QUERY,
+					name: data.nick
+				});
+				network.channels.push(chan);
+				client.emit("join", {
+					network: network.id,
+					chan: chan
+				});
+			}
 		}
 
 		var self = data.nick === irc.user.nick;
