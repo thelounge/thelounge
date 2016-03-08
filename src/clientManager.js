@@ -29,6 +29,8 @@ ClientManager.prototype.writeUser = function(userDict) {
 		user_path,
 		JSON.stringify(userDict, null, "  ")
 	);
+	// No effect on Windows (and no easy way to do something equivalent)
+	fs.chmodSync(user_path, "0660");
 };
 
 ClientManager.prototype.loadUsers = function() {
