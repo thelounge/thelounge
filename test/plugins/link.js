@@ -26,7 +26,7 @@ describe("Link plugin", function() {
 		});
 
 		this.irc.createMessage({
-			message: "http://localhost:9002/basic"
+			msg: "http://localhost:9002/basic"
 		});
 
 		this.irc.once("toggle", function(data) {

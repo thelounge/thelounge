@@ -4,7 +4,7 @@ var _ = require("lodash");
 var express = require("express");
 
 function MockClient(opts) {
-	this.me = "test-user";
+	this.user = {nick: "test-user"};
 
 	for (var k in opts) {
 		this[k] = opts[k];
@@ -15,12 +15,12 @@ util.inherits(MockClient, EventEmitter);
 MockClient.prototype.createMessage = function(opts) {
 
 	var message = _.extend({
-		message: "dummy message",
-		from: "test-user",
-		to: "test-channel"
+		msg: "dummy message",
+		nick: "test-user",
+		target: "#test-channel"
 	}, opts);
 
-	this.emit("message", message);
+	this.emit("privmsg", message);
 };
 
 module.exports = {
@@ -30,7 +30,7 @@ module.exports = {
 	createNetwork: function() {
 		return {
 			channels: [{
-				name: "test-channel",
+				name: "#test-channel",
 				messages: []
 			}]
 		};
