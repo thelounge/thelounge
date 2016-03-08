@@ -3,7 +3,6 @@ var Msg = require("../../models/msg");
 module.exports = function(irc, network) {
 	var client = this;
 	irc.on("registered", function(data) {
-		network.connected = true;
 		network.nick = data.nick;
 		var lobby = network.channels[0];
 		var msg = new Msg({

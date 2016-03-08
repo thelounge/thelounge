@@ -1,7 +1,6 @@
 var _ = require("lodash");
 var Chan = require("./models/chan");
 var crypto = require("crypto");
-var identd = require("./identd");
 var log = require("./log");
 var Msg = require("./models/msg");
 var Network = require("./models/network");
@@ -12,6 +11,7 @@ module.exports = Client;
 
 var id = 0;
 var events = [
+	"connection",
 	"ctcp",
 	"error",
 	"invite",
@@ -172,8 +172,8 @@ Client.prototype.connect = function(args) {
 		return;
 	}
 
-	var irc = new ircFramework.Client();
-	irc.connect({
+	network.irc = new ircFramework.Client();
+	network.irc.connect({
 		host: network.host,
 		port: network.port,
 		nick: nick,
@@ -186,49 +186,7 @@ Client.prototype.connect = function(args) {
 		auto_reconnect: false, // TODO: Enable auto reconnection
 	});
 
-	network.irc = irc;
-
-	events.forEach(function(plugin) {
-		var path = "./plugins/irc-events/" + plugin;
-		require(path).apply(client, [
-			irc,
-			network
-		]);
-	});
-
-	irc.on("raw socket connected", function() {
-		identd.hook(irc.socket, network.username);
-	});
-
-	irc.on("socket connected", function() {
-		client.emit("msg", {
-			chan: network.channels[0].id,
-			msg: new Msg({
-				text: "Connected to the network."
-			})
-		});
-	});
-
-	irc.on("socket close", function() {
-		client.emit("msg", {
-			chan: network.channels[0].id,
-			msg: new Msg({
-				type: Msg.Type.ERROR,
-				text: "Disconnected from the network."
-			})
-		});
-	});
-
-	irc.on("reconnecting", function() {
-		client.emit("msg", {
-			chan: network.channels[0].id,
-			msg: new Msg({
-				text: "Reconnecting..."
-			})
-		});
-	});
-
-	irc.on("registered", function() {
+	network.irc.on("registered", function() {
 		var delay = 1000;
 		var commands = args.commands;
 		if (Array.isArray(commands)) {
@@ -247,9 +205,17 @@ Client.prototype.connect = function(args) {
 		if (join) {
 			setTimeout(function() {
 				join = join.replace(/\,/g, " ").split(/\s+/g);
-				irc.join(join);
+				network.irc.join(join);
 			}, delay);
 		}
+	});
+
+	events.forEach(function(plugin) {
+		var path = "./plugins/irc-events/" + plugin;
+		require(path).apply(client, [
+			network.irc,
+			network
+		]);
 	});
 };
 
@@ -373,10 +339,8 @@ Client.prototype.quit = function() {
 	}
 	this.networks.forEach(function(network) {
 		var irc = network.irc;
-		if (network.connected) {
-			irc.quit();
-		} else {
-			irc.stream.end();
+		if (irc.connection) {
+			irc.connection.end();
 		}
 	});
 };

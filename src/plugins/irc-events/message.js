@@ -42,6 +42,11 @@ module.exports = function(irc, network) {
 			}
 		}
 
+		// Server messages go to server window
+		if (data.from_server) {
+			chan = network.channels[0];
+		}
+
 		var self = data.nick === irc.user.nick;
 
 		// Self messages are never highlighted

@@ -16,9 +16,11 @@ function Network(attr) {
 		username: "",
 		realname: "",
 		channels: [],
-		connected: false,
 		id: id++,
 		irc: null,
+		serverOptions: {
+			PREFIX: [],
+		},
 	}, attr));
 	this.name = attr.name || prettify(attr.host);
 	this.channels.unshift(
