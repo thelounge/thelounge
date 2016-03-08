@@ -1,5 +1,4 @@
 var _ = require("lodash");
-var Msg = require("../../models/msg");
 
 exports.commands = ["notice"];
 
@@ -18,16 +17,10 @@ exports.input = function(network, chan, cmd, args) {
 		targetChan = chan;
 	}
 
-	var msg = new Msg({
-		type: Msg.Type.NOTICE,
-		mode: targetChan.getMode(irc.user.nick),
-		from: irc.user.nick,
-		text: message
-	});
-	targetChan.messages.push(msg);
-	this.emit("msg", {
-		chan: targetChan.id,
-		msg: msg
+	irc.emit("notice", {
+		nick: irc.user.nick,
+		target: targetChan.name,
+		msg: message
 	});
 
 	return true;

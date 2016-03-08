@@ -27,6 +27,6 @@ module.exports = function(irc, network) {
 		});
 
 		var random = irc.user.nick + Math.floor(10 + (Math.random() * 89));
-		irc.raw("NICK", random);
+		irc.changeNick(random);
 	});
 };
