@@ -243,6 +243,7 @@ $(function() {
 			"action",
 			"whois",
 			"ctcp",
+			"channel_list",
 		].indexOf(type) !== -1) {
 			data.msg.template = "actions/" + type;
 			template = "msg_action";
@@ -601,7 +602,7 @@ $(function() {
 			output += render("contextmenu_divider");
 			output += render("contextmenu_item", {
 				class: "close",
-				text: target.hasClass("lobby") ? "Disconnect" : target.hasClass("query") ? "Close" : "Leave",
+				text: target.hasClass("lobby") ? "Disconnect" : target.hasClass("channel") ? "Leave" : "Close",
 				data: target.data("target")
 			});
 		}
