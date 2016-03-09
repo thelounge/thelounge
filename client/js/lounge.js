@@ -802,7 +802,7 @@ $(function() {
 			"nick",
 			"mode",
 		];
-		if ($.inArray(msg.type, ignore) !== -1){
+		if ($.inArray(msg.type, ignore) !== -1) {
 			return;
 		}
 
@@ -994,16 +994,16 @@ $(function() {
 		location.reload();
 	}
 
-	function updateDesktopNotificationStatus(){
+	function updateDesktopNotificationStatus() {
 		var checkbox = $("#desktopNotifications");
 		var warning = $("#warnDisabledDesktopNotifications");
 
-		if (Notification.permission === "denied"){
+		if (Notification.permission === "denied") {
 			checkbox.attr("disabled", true);
 			checkbox.attr("checked", false);
 			warning.show();
 		} else {
-			if (Notification.permission === "default" && checkbox.prop("checked")){
+			if (Notification.permission === "default" && checkbox.prop("checked")) {
 				checkbox.attr("checked", false);
 			}
 			checkbox.attr("disabled", false);
