@@ -6,9 +6,12 @@ var express = require("express");
 var fs = require("fs");
 var io = require("socket.io");
 var Helper = require("./helper");
+var ldap = require("ldapjs");
 var config = {};
 
 var manager = new ClientManager();
+var ldapclient = null;
+var authFunction = localAuth;
 
 module.exports = function(options) {
 	config = Helper.getConfig();
@@ -27,6 +30,10 @@ module.exports = function(options) {
 	var host = config.host;
 	var transports = config.transports || ["websocket", "polling"];
 
+	if (config.public && (config.ldap || {}).enable) {
+		throw "Server is public and set to use LDAP. Please disable public if trying to use LDAP authentication.";
+	}
+
 	if (!https.enable){
 		server = require("http");
 		server = server.createServer(app).listen(port, host);
@@ -40,6 +47,13 @@ module.exports = function(options) {
 
 	if ((config.identd || {}).enable) {
 		require("./identd").start(config.identd.port);
+	}
+
+	if ((config.ldap || {}).enable) {
+		ldapclient = ldap.createClient({
+			url: config.ldap.url
+		});
+		authFunction = ldapAuth;
 	}
 
 	var sockets = io(server, {
@@ -106,7 +120,7 @@ function init(socket, client, token) {
 				client.connect(data);
 			}
 		);
-		if (!config.public) {
+		if (!config.public && !config.ldap.enable) {
 			socket.on(
 				"change-password",
 				function(data) {
@@ -178,10 +192,38 @@ function init(socket, client, token) {
 	}
 }
 
+function localAuth(client, user, password, callback) {
+	var result = false;
+	try {
+		result = bcrypt.compareSync(password || "", client.config.password);
+	} catch (error) {
+		if (error === "Not a valid BCrypt hash.") {
+			console.error("User (" + user + ") with no local password set tried signed in. (Probably a ldap user)");
+		}
+		result = false;
+	} finally {
+		callback(result);
+	}
+}
+
+function ldapAuth(client, user, password, callback) {
+	var bindDN = config.ldap.primaryKey + "=" + user + "," + config.ldap.baseDN;
+
+	ldapclient.bind(bindDN, password, function(err) {
+		if (!err && !client) {
+			if (!manager.addUser(user, null)) {
+				console.log("Unable to create new user", user);
+			}
+		}
+		callback(!err);
+	});
+}
+
 function auth(data) {
 	var socket = this;
+	var client;
 	if (config.public) {
-		var client = new Client(manager);
+		client = new Client(manager);
 		manager.clients.push(client);
 		socket.on("disconnect", function() {
 			manager.clients = _.without(manager.clients, client);
@@ -189,28 +231,31 @@ function auth(data) {
 		});
 		init(socket, client);
 	} else {
-		var success = false;
-		_.each(manager.clients, function(client) {
-			if (data.token) {
-				if (data.token === client.token) {
-					success = true;
-				}
-			} else if (client.config.user === data.user) {
-				if (bcrypt.compareSync(data.password || "", client.config.password)) {
-					success = true;
-				}
-			}
+		client = manager.findClient(data.user, data.token);
+		var signedIn = data.token && client && client.token === data.token;
+		var token;
+
+		if (data.remember || data.token) {
+			token = client.token;
+		}
+
+		var authCallback = function(success) {
 			if (success) {
-				var token;
-				if (data.remember || data.token) {
-					token = client.token;
+				if (!client) {
+					// LDAP just created a user
+					manager.loadUser(data.user);
+					client = manager.findClient(data.user);
 				}
 				init(socket, client, token);
-				return false;
+			} else {
+				socket.emit("auth");
 			}
-		});
-		if (!success) {
-			socket.emit("auth");
+		};
+
+		if (signedIn) {
+			authCallback(true);
+		} else {
+			authFunction(client, data.user, data.password, authCallback);
 		}
 	}
 }

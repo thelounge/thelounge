@@ -266,7 +266,7 @@
 									Enable notification for all messages
 								</label>
 							</div>
-							<% if (!public) { %>
+							<% if (!public && !ldap.enable) { %>
 							<div id="change-password">
 								<form action="" method="post">
 									<div class="col-sm-12">
