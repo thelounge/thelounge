@@ -210,7 +210,6 @@ $(function() {
 		}
 
 		var chan = chat.find(target);
-		var from = data.msg.from;
 		var msg;
 
 		if ([
@@ -223,6 +222,7 @@ $(function() {
 			"quit",
 			"topic",
 			"action",
+			"whois",
 		].indexOf(type) !== -1) {
 			data.msg.template = "actions/" + type;
 			msg = $(render("msg_action", data.msg));
@@ -238,7 +238,7 @@ $(function() {
 		if ((type === "message" || type === "action") && chan.hasClass("channel")) {
 			var nicks = chan.find(".users").data("nicks");
 			if (nicks) {
-				var find = nicks.indexOf(from);
+				var find = nicks.indexOf(data.msg.from);
 				if (find !== -1 && typeof move === "function") {
 					move(nicks, find, 0);
 				}

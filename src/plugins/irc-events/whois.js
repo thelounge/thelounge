@@ -20,27 +20,14 @@ module.exports = function(irc, network) {
 				chan: chan
 			});
 		}
-		var prefix = {
-			hostname: "from",
-			realname: "is",
-			channels: "on",
-			server: "using"
-		};
-		for (var k in data) {
-			var key = prefix[k];
-			if (!key || data[k].toString() === "") {
-				continue;
-			}
-			var msg = new Msg({
-				type: Msg.Type.WHOIS,
-				from: data.nickname,
-				text: key + " " + data[k]
-			});
-			chan.messages.push(msg);
-			client.emit("msg", {
-				chan: chan.id,
-				msg: msg
-			});
-		}
+		var msg = new Msg({
+			type: Msg.Type.WHOIS,
+			whois: data
+		});
+		chan.messages.push(msg);
+		client.emit("msg", {
+			chan: chan.id,
+			msg: msg
+		});
 	});
 };
