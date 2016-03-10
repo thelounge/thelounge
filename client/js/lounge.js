@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
 	var path = window.location.pathname + "socket.io/";
 	var socket = io({path:path});
 	var commands = [
@@ -591,11 +591,12 @@ $(function() {
 		return false;
 	});
 
+	var form = $("#form");
+
 	var input = $("#input")
 		.history()
-		.tab(complete, {hint: false});
-
-	var form = $("#form");
+		.tab(complete, {hint: false})
+		.autogrow();
 
 	form.on("submit", function(e) {
 		e.preventDefault();
@@ -605,10 +606,13 @@ $(function() {
 			clear();
 			return;
 		}
-		socket.emit("input", {
-			target: chat.data("id"),
-			text: text
-		});
+		text = text.split("\n");
+		for (var i = 0; i < text.length; i++) {
+			socket.emit("input", {
+				target: chat.data("id"),
+				text: text[i]
+			});
+		}
 	});
 
 	chat.on("click", ".inline-channel", function() {

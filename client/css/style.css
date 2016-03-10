@@ -1193,9 +1193,10 @@ button,
 	border-radius: 2px;
 	height: 100%;
 	outline: none;
-	padding: 0 34px 0 10px;
+	padding: 7px 10px 7px 92px;
 	-webkit-appearance: none;
 	width: 100%;
+	resize: none;
 }
 
 #form #submit {
