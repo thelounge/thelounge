@@ -8,19 +8,26 @@ env:
   node: true
 
 rules:
+  block-spacing: [2, always]
   comma-dangle: 0
   curly: [2, multi-line]
   eqeqeq: 2
   indent: [2, tab]
+  keyword-spacing: [2, {before: true, after: true}]
   linebreak-style: [2, unix]
-  object-curly-spacing: [2, never]
-  semi: [2, always]
-  space-after-keywords: [2, always]
-  space-before-function-paren: [2, never]
-  spaced-comment: [2, always]
   no-console: 0
+  no-inner-declarations: 2
+  no-invalid-regexp: 2
+  no-irregular-whitespace: 2
   no-trailing-spaces: 2
+  no-unexpected-multiline: 2
+  no-unreachable: 2
+  object-curly-spacing: [2, never]
   quotes: [2, double, avoid-escape]
+  semi: [2, always]
+  space-before-blocks: 2
+  space-infix-ops: 2
+  spaced-comment: [2, always]
 
 globals:
   $: false
