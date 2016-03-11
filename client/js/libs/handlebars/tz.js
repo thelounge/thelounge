@@ -1,10 +1,17 @@
 Handlebars.registerHelper(
 	"tz", function(time) {
-		if (time) {
-			var utc = moment.utc(time, "HH:mm:ss").toDate();
-			return moment(utc).format("HH:mm");
-		} else {
-			return "";
+		time = new Date(time);
+		var h = time.getHours();
+		var m = time.getMinutes();
+
+		if (h < 10) {
+			h = "0" + h;
 		}
+
+		if (m < 10) {
+			m = "0" + m;
+		}
+
+		return h + ":" + m;
 	}
 );

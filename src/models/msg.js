@@ -1,5 +1,4 @@
 var _ = require("lodash");
-var moment = require("moment");
 
 Msg.Type = {
 	ACTION: "action",
@@ -28,7 +27,7 @@ function Msg(attr) {
 		from: "",
 		id: id++,
 		text: "",
-		time: moment().utc().format("HH:mm:ss"),
+		time: new Date(),
 		type: Msg.Type.MESSAGE,
 		self: false
 	}, attr));
