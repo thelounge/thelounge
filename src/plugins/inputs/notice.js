@@ -27,4 +27,6 @@ module.exports = function(network, chan, cmd, args) {
 		chan: targetChan.id,
 		msg: msg
 	});
+
+	return true;
 };

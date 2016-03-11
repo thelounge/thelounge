@@ -9,4 +9,6 @@ module.exports = function(network, chan, cmd, args) {
 
 	var irc = network.irc;
 	irc.write(msg);
+
+	return true;
 };

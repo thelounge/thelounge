@@ -26,4 +26,6 @@ module.exports = function(network, chan, cmd, args) {
 		});
 		break;
 	}
+
+	return true;
 };

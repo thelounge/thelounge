@@ -16,4 +16,6 @@ module.exports = function(network, chan, cmd, args) {
 	});
 
 	irc.quit(quitMessage);
+
+	return true;
 };
