@@ -334,21 +334,6 @@ button,
 	content: "\f0f6";
 }
 
-#sidebar .chan:hover .badge {
-	opacity: 0;
-	position: absolute;
-	z-index: 1;
-	right: 10px;
-}
-
-#sidebar .chan:hover .close {
-	opacity: .2;
-}
-
-#sidebar .chan:hover .name {
-	margin-right: 16px;
-}
-
 #sidebar .chan .name {
 	position: relative;
 	z-index: 0;
@@ -378,7 +363,7 @@ button,
 	margin-left: 5px;
 	padding: 3px 6px;
 	float: right;
-	transition: opacity .2s;
+	transition: opacity .2s, background-color .2s, color .2s;
 }
 
 #sidebar .badge.highlight {
@@ -386,6 +371,7 @@ button,
 	color: #49505a;
 }
 
+#sidebar .chan.active .badge,
 #sidebar .badge:empty {
 	opacity: 0;
 }
@@ -393,11 +379,12 @@ button,
 #sidebar .close {
 	border-radius: 3px;
 	margin-right: 5px;
+	visibility: hidden;
 	opacity: 0;
 	position: absolute;
 	z-index: 2;
 	right: 0;
-	transition: all .2s;
+	transition: opacity .2s, background-color .2s;
 }
 
 #sidebar .close:before {
@@ -412,9 +399,14 @@ button,
 	color: #fff;
 }
 
-#sidebar .close:hover {
+#sidebar .chan.active .close {
+	visibility: visible;
+	opacity: .4;
+}
+
+#sidebar .chan.active .close:hover {
 	background-color: rgba(0, 0, 0, .1);
-	opacity: .7 !important;
+	opacity: 1;
 }
 
 #sidebar .tse-scrollbar {
@@ -1564,14 +1556,6 @@ button,
 	#footer {
 		left: -215px;
 		width: 215px;
-	}
-
-	#sidebar .close {
-		display: none;
-	}
-
-	#sidebar .chan:hover .badge {
-		opacity: 1;
 	}
 
 	#sidebar .empty:before {
