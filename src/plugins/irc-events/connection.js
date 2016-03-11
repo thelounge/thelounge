@@ -1,3 +1,4 @@
+var _ = require("lodash");
 var identd = require("../../identd");
 var Msg = require("../../models/msg");
 
@@ -57,6 +58,12 @@ module.exports = function(irc, network) {
 		if (network.serverOptions.PREFIX === data.options.PREFIX) {
 			return;
 		}
+
+		network.prefixLookup = {};
+
+		_.each(data.options.PREFIX, function(mode) {
+			network.prefixLookup[mode.mode] = mode.symbol;
+		});
 
 		network.serverOptions.PREFIX = data.options.PREFIX;
 
