@@ -162,15 +162,13 @@ body {
 }
 
 /* Buttons */
-#chat .show-more-button,
-#windows .header .button {
+#chat .show-more-button {
 	background: #434443;
 	border-color: #101010;
 	color: #dcdccc;
 }
 
-#chat .show-more-button:hover,
-#windows .header .button:hover {
+#chat .show-more-button:hover {
 	color: #fff;
 }
 

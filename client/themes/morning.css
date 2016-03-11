@@ -132,15 +132,13 @@ QUIT #d0907d
 }
 
 /* Buttons */
-#chat .show-more-button,
-#windows .header .button {
+#chat .show-more-button {
 	background: #2e3642;
 	border-color: #242a33;
 	color: #ccc;
 }
 
-#chat .show-more-button:hover,
-#windows .header .button:hover {
+#chat .show-more-button:hover {
 	color: #fff;
 }
 

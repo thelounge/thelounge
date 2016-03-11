@@ -738,15 +738,6 @@ $(function() {
 		});
 	});
 
-	chat.on("click", ".close", function() {
-		var id = $(this)
-			.closest(".chan")
-			.data("id");
-		sidebar.find(".chan[data-id='" + id + "']")
-			.find(".close")
-			.click();
-	});
-
 	chat.on("msg", ".messages", function(e, target, msg) {
 		var button = sidebar.find(".chan[data-target='" + target + "']");
 		var isQuery = button.hasClass("query");

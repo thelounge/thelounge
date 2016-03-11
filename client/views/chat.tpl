@@ -5,19 +5,6 @@
 		{{#equal type "channel"}}
 			<button class="rt"></button>
 		{{/equal}}
-		<div class="right">
-			<button class="button close">
-				{{#equal type "lobby"}}
-					Disconnect
-				{{else}}
-					{{#equal type "query"}}
-						Close
-					{{else}}
-						Leave
-					{{/equal}}
-				{{/equal}}
-			</button>
-		</div>
 		<span class="title">{{name}}</span>
 		<span class="topic">{{{parse topic}}}</span>
 	</div>
