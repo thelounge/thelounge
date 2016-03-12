@@ -24,6 +24,7 @@ module.exports = function(irc, network) {
 			}
 
 			var msg = new Msg({
+				time: data.time,
 				type: Msg.Type.MODE,
 				mode: (targetChan.type !== Chan.Type.LOBBY && targetChan.getMode(data.nick)) || "",
 				from: data.nick,

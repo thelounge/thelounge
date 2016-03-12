@@ -28,8 +28,13 @@ function Msg(attr) {
 		from: "",
 		id: id++,
 		text: "",
-		time: new Date(),
 		type: Msg.Type.MESSAGE,
 		self: false
 	}, attr));
+
+	if (attr.time > 0) {
+		attr.time = new Date(attr.time);
+	} else {
+		attr.time = new Date();
+	}
 }

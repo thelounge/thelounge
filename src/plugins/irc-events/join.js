@@ -24,6 +24,7 @@ module.exports = function(irc, network) {
 			chan: chan.id
 		});
 		var msg = new Msg({
+			time: data.time,
 			from: data.nick,
 			hostmask: data.ident + "@" + data.hostname,
 			type: Msg.Type.JOIN,

@@ -21,6 +21,7 @@ module.exports = function(irc, network) {
 
 		var msg = new Msg({
 			type: Msg.Type.KICK,
+			time: data.time,
 			mode: chan.getMode(data.nick),
 			from: data.nick,
 			target: data.kicked,

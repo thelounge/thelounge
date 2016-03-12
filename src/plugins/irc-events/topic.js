@@ -10,6 +10,7 @@ module.exports = function(irc, network) {
 		}
 
 		var msg = new Msg({
+			time: data.time,
 			type: Msg.Type.TOPIC,
 			mode: (data.nick && chan.getMode(data.nick)) || "",
 			from: data.nick,

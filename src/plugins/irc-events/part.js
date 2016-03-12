@@ -23,6 +23,7 @@ module.exports = function(irc, network) {
 			});
 			var msg = new Msg({
 				type: Msg.Type.PART,
+				time: data.time,
 				mode: (user && user.mode) || "",
 				text: data.message || "",
 				hostmask: data.ident + "@" + data.hostname,
