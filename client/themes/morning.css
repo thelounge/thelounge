@@ -127,9 +127,12 @@ QUIT #d0907d
 	color: #ccc;
 }
 
+#form #submit:hover {
+	opacity: 1;
+}
+
 /* Buttons */
 #chat .show-more-button,
-#form #submit,
 #windows .header .button {
 	background: #2e3642;
 	border-color: #242a33;
@@ -137,7 +140,6 @@ QUIT #d0907d
 }
 
 #chat .show-more-button:hover,
-#form #submit:hover,
 #windows .header .button:hover {
 	color: #fff;
 }

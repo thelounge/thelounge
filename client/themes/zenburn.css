@@ -157,9 +157,12 @@ body {
 	color: #dcdccc;
 }
 
+#form #submit:hover {
+	opacity: 1;
+}
+
 /* Buttons */
 #chat .show-more-button,
-#form #submit,
 #windows .header .button {
 	background: #434443;
 	border-color: #101010;
@@ -167,7 +170,6 @@ body {
 }
 
 #chat .show-more-button:hover,
-#form #submit:hover,
 #windows .header .button:hover {
 	color: #fff;
 }
