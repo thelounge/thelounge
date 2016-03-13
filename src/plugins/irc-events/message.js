@@ -46,6 +46,10 @@ module.exports = function(irc, network) {
 
 		if (chan.id !== client.activeChannel) {
 			chan.unread++;
+
+			if (highlight) {
+				chan.highlight = true;
+			}
 		}
 
 		var name = data.from;
