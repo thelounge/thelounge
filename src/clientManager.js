@@ -20,6 +20,19 @@ ClientManager.prototype.findClient = function(name) {
 	return false;
 };
 
+ClientManager.prototype.writeUser = function(userDict) {
+	var users_path = Helper.HOME + "/users" ;
+	var user_path = users_path + "/" + userDict.user + ".json";
+
+	mkdirp(users_path);
+	fs.writeFileSync(
+		user_path,
+		JSON.stringify(userDict, null, "  ")
+	);
+	// No effect on Windows (and no easy way to do something equivalent)
+	fs.chmodSync(user_path, "0660");
+};
+
 ClientManager.prototype.loadUsers = function() {
 	var users = this.getUsers();
 	for (var i in users) {
@@ -70,18 +83,13 @@ ClientManager.prototype.addUser = function(name, password) {
 		return false;
 	}
 	try {
-		var path = Helper.HOME + "/users";
 		var user = {
 			user: name,
 			password: password || "",
 			log: false,
 			networks: []
 		};
-		mkdirp.sync(path);
-		fs.writeFileSync(
-			path + "/" + name + ".json",
-			JSON.stringify(user, null, "  ")
-		);
+		this.writeUser(user);
 	} catch (e) {
 		throw e;
 	}
@@ -96,16 +104,12 @@ ClientManager.prototype.updateUser = function(name, opts) {
 	if (typeof opts === "undefined") {
 		return false;
 	}
-	var path = Helper.HOME + "/users/" + name + ".json";
 	var user = {};
 
 	try {
 		user = this.readUserConfig(name);
 		_.merge(user, opts);
-		fs.writeFileSync(
-			path,
-			JSON.stringify(user, null, " ")
-		);
+		this.writeUser(user);
 	} catch (e) {
 		console.log(e);
 		return;
