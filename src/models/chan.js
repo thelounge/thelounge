@@ -27,14 +27,8 @@ Chan.prototype.sortUsers = function() {
 		this.users,
 		function(u) { return u.name.toLowerCase(); }
 	);
-	var modes = [
-		"~",
-		"&",
-		"@",
-		"%",
-		"+",
-	].reverse();
-	modes.forEach(function(mode) {
+
+	["+", "%", "@", "&", "~"].forEach(function(mode) {
 		this.users = _.remove(
 			this.users,
 			function(u) { return u.mode === mode; }
