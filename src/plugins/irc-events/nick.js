@@ -29,7 +29,7 @@ module.exports = function(irc, network) {
 				return;
 			}
 			user.name = data.newnick;
-			chan.sortUsers();
+			chan.sortUsers(irc);
 			client.emit("users", {
 				chan: chan.id
 			});
