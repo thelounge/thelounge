@@ -1,8 +1,6 @@
-module.exports = function(network, chan, cmd, args) {
-	if (cmd !== "connect" && cmd !== "server") {
-		return;
-	}
+exports.commands = ["connect", "server"];
 
+exports.input = function(network, chan, cmd, args) {
 	if (args.length !== 0) {
 		var client = this;
 		client.connect({

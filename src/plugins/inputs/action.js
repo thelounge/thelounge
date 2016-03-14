@@ -1,8 +1,6 @@
-module.exports = function(network, chan, cmd, args) {
-	if (cmd !== "slap" && cmd !== "me") {
-		return;
-	}
+exports.commands = ["slap", "me"];
 
+exports.input = function(network, chan, cmd, args) {
 	var irc = network.irc;
 
 	switch (cmd) {

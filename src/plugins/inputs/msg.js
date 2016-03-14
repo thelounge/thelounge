@@ -1,9 +1,8 @@
 var _ = require("lodash");
 
-module.exports = function(network, chan, cmd, args) {
-	if (cmd !== "say" && cmd !== "msg") {
-		return;
-	}
+exports.commands = ["msg", "say"];
+
+exports.input = function(network, chan, cmd, args) {
 	if (args.length === 0 || args[0] === "") {
 		return true;
 	}

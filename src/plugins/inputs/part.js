@@ -1,10 +1,8 @@
 var _ = require("lodash");
 
-module.exports = function(network, chan, cmd, args) {
-	if (cmd !== "part" && cmd !== "leave" && cmd !== "close") {
-		return;
-	}
+exports.commands = ["close", "leave", "part"];
 
+exports.input = function(network, chan, cmd, args) {
 	if (chan.type !== "query") {
 		var irc = network.irc;
 		if (args.length === 0) {
