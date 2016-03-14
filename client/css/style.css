@@ -402,6 +402,7 @@ button,
 
 #sidebar .close:before {
 	font-size: 18px;
+	font-weight: normal;
 	display: inline-block;
 	line-height: 18px;
 	width: 18px;
