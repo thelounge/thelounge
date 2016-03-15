@@ -1,8 +1,6 @@
-module.exports = function(network, chan, cmd, args) {
-	if (cmd !== "invite") {
-		return;
-	}
+exports.commands = ["invite"];
 
+exports.input = function(network, chan, cmd, args) {
 	var irc = network.irc;
 
 	if (args.length === 2) {

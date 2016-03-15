@@ -48,7 +48,14 @@ var inputs = [
 	"quit",
 	"raw",
 	"topic",
-];
+].reduce(function(plugins, name) {
+	var path = "./plugins/inputs/" + name;
+	var plugin = require(path);
+	plugin.commands.forEach(function(command) {
+		plugins[command] = plugin.input;
+	});
+	return plugins;
+}, {});
 
 function Client(manager, name, config) {
 	_.merge(this, {
@@ -281,22 +288,9 @@ Client.prototype.input = function(data) {
 	var args = text.split(" ");
 	var cmd = args.shift().toLowerCase();
 
-	var result = inputs.some(function(plugin) {
-		try {
-			var path = "./plugins/inputs/" + plugin;
-			var fn = require(path);
-			return fn.apply(client, [
-				target.network,
-				target.chan,
-				cmd,
-				args
-			]);
-		} catch (e) {
-			console.log(path + ": " + e);
-		}
-	});
-
-	if (result !== true) {
+	if (cmd in inputs) {
+		inputs[cmd].apply(client, [target.network, target.chan, cmd, args]);
+	} else {
 		target.network.irc.write(text);
 	}
 };

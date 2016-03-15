@@ -1,8 +1,6 @@
-module.exports = function(network, chan, cmd, args) {
-	if (cmd !== "topic") {
-		return;
-	}
+exports.commands = ["topic"];
 
+exports.input = function(network, chan, cmd, args) {
 	var msg = "TOPIC";
 	msg += " " + chan.name;
 	msg += args[0] ? (" :" + args.join(" ")) : "";

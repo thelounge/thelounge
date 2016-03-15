@@ -1,7 +1,7 @@
-module.exports = function(network, chan, cmd, args) {
-	if (cmd !== "mode" && cmd !== "op" && cmd !== "voice" && cmd !== "deop" && cmd !== "devoice") {
-		return;
-	} else if (args.length === 0) {
+exports.commands = ["mode", "op", "voice", "deop", "devoice"];
+
+exports.input = function(network, chan, cmd, args) {
+	if (args.length === 0) {
 		return;
 	}
 

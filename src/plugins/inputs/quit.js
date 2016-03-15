@@ -1,10 +1,8 @@
 var _ = require("lodash");
 
-module.exports = function(network, chan, cmd, args) {
-	if (cmd !== "quit" && cmd !== "disconnect") {
-		return;
-	}
+exports.commands = ["quit", "disconnect"];
 
+exports.input = function(network, chan, cmd, args) {
 	var client = this;
 	var irc = network.irc;
 	var quitMessage = args[0] ? args.join(" ") : "";

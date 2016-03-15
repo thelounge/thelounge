@@ -1,8 +1,10 @@
 var _ = require("lodash");
 var Msg = require("../../models/msg");
 
-module.exports = function(network, chan, cmd, args) {
-	if (cmd !== "notice" || !args[1]) {
+exports.commands = ["notice"];
+
+exports.input = function(network, chan, cmd, args) {
+	if (!args[1]) {
 		return;
 	}
 
