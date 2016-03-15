@@ -51,7 +51,7 @@ module.exports = function(irc, network) {
 
 		// Self messages are never highlighted
 		// Non-self messages are highlighted as soon as the nick is detected
-		var highlight = !self && data.msg.split(" ").some(function(w) {
+		var highlight = !self && data.message.split(" ").some(function(w) {
 			return (w.replace(/^@/, "").toLowerCase().indexOf(irc.user.nick.toLowerCase()) === 0);
 		});
 
@@ -68,7 +68,7 @@ module.exports = function(irc, network) {
 			time: data.time,
 			mode: chan.getMode(data.nick),
 			from: data.nick,
-			text: data.msg,
+			text: data.message,
 			self: self,
 			highlight: highlight
 		});

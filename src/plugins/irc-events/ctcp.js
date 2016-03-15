@@ -7,7 +7,7 @@ module.exports = function(irc/* , network */) {
 			irc.ctcpResponse(data.nick, "VERSION " + pkg.name + " " + pkg.version);
 			break;
 		case "PING":
-			var split = data.msg.split(" ");
+			var split = data.message.split(" ");
 			if (split.length === 2) {
 				irc.ctcpResponse(data.nick, "PING " + split[1]);
 			}

@@ -1,7 +1,7 @@
 <div>
 	<a href="#" class="user" data-name="{{whois.nick}}">{{whois.nick}}</a>
 	<i class="hostmask">({{whois.user}}@{{whois.host}})</i>:
-	<b>{{whois.realname}}</b>
+	<b>{{whois.real_name}}</b>
 </div>
 {{#if whois.account}}
 <div>
