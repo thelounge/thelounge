@@ -41,13 +41,14 @@
     "socket.io": "1.4.5"
   },
   "devDependencies": {
-    "stylelint": "4.3.3",
+    "chai": "3.5.0",
     "eslint": "2.3.0",
     "grunt": "0.4.5",
     "grunt-cli": "0.1.13",
     "grunt-contrib-uglify": "0.11.1",
     "grunt-contrib-watch": "0.6.1",
     "handlebars": "4.0.5",
-    "mocha": "2.4.5"
+    "mocha": "2.4.5",
+    "stylelint": "4.3.3"
   }
 }
