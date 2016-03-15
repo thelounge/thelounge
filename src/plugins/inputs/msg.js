@@ -1,16 +1,8 @@
 var _ = require("lodash");
 
-<<<<<<< fbbb3d20d287243d2c3c5525d86801f54f903603
 exports.commands = ["msg", "say"];
 
 exports.input = function(network, chan, cmd, args) {
-=======
-module.exports = function(network, chan, cmd, args) {
-	if (cmd !== "say" && cmd !== "msg") {
-		return;
-	}
-
->>>>>>> Update commands
 	if (args.length === 0 || args[0] === "") {
 		return true;
 	}
@@ -34,7 +26,7 @@ module.exports = function(network, chan, cmd, args) {
 		irc.emit("privmsg", {
 			nick: irc.user.nick,
 			target: channel.name,
-			msg: msg
+			message: msg
 		});
 	}
 

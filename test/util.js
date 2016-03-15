@@ -15,7 +15,7 @@ util.inherits(MockClient, EventEmitter);
 MockClient.prototype.createMessage = function(opts) {
 
 	var message = _.extend({
-		msg: "dummy message",
+		message: "dummy message",
 		nick: "test-user",
 		target: "#test-channel"
 	}, opts);

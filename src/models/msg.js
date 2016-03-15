@@ -32,9 +32,9 @@ function Msg(attr) {
 		self: false
 	}, attr));
 
-	if (attr.time > 0) {
-		attr.time = new Date(attr.time);
+	if (this.time > 0) {
+		this.time = new Date(this.time);
 	} else {
-		attr.time = new Date();
+		this.time = new Date();
 	}
 }

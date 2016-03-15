@@ -19,7 +19,7 @@ exports.input = function(network, chan, cmd, args) {
 		irc.emit("action", {
 			nick: irc.user.nick,
 			target: chan.name,
-			msg: text
+			message: text
 		});
 		break;
 	}
