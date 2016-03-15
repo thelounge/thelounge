@@ -18,6 +18,7 @@ function Chan(attr) {
 		topic: "",
 		type: Chan.Type.CHANNEL,
 		unread: 0,
+		highlight: false,
 		users: []
 	}, attr));
 }
