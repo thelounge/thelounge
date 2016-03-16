@@ -204,8 +204,8 @@ Client.prototype.connect = function(args) {
 		var join = (args.join || "");
 		if (join) {
 			setTimeout(function() {
-				join = join.replace(/\,/g, " ").split(/\s+/g);
-				network.irc.join(join);
+				join = join.split(/\s+/);
+				network.irc.join(join[0], join[1]);
 			}, delay);
 		}
 	});
