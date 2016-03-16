@@ -16,11 +16,18 @@ module.exports = function(irc, network) {
 			}
 		}
 
+		var usersUpdated;
+
 		for (var i = 0; i < data.modes.length; i++) {
 			var mode = data.modes[i];
 			var text = mode.mode;
 			if (mode.param) {
 				text += " " + mode.param;
+
+				var user = _.find(targetChan.users, {name: mode.param});
+				if (typeof user !== "undefined") {
+					usersUpdated = true;
+				}
 			}
 
 			var msg = new Msg({
@@ -36,6 +43,11 @@ module.exports = function(irc, network) {
 				chan: targetChan.id,
 				msg: msg,
 			});
+		}
+
+		if (usersUpdated) {
+			// TODO: This is horrible
+			irc.raw("NAMES", data.target);
 		}
 	});
 };

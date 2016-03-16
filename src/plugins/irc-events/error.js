@@ -4,10 +4,14 @@ module.exports = function(irc, network) {
 	var client = this;
 	irc.on("irc_error", function(data) {
 		console.log(data);
+		var text = data.error;
+		if (data.reason) {
+			text = data.reason + " (" + text + ")";
+		}
 		var lobby = network.channels[0];
 		var msg = new Msg({
 			type: Msg.Type.ERROR,
-			text: data.error,
+			text: text,
 		});
 		client.emit("msg", {
 			chan: lobby.id,
