@@ -23,16 +23,22 @@ module.exports = function(irc, network) {
 	});
 
 	function handleMessage(data) {
-		// First, try to find current target
-		var chan = _.find(network.channels, {name: data.target});
-		if (typeof chan === "undefined") {
-			// If current target doesn't exist, try to find by nick
-			chan = _.find(network.channels, {name: data.nick});
-			// If neither target or nick channels exist, create one for the nick
+		// Server messages go to server window, no questions asked
+		if (data.from_server) {
+			chan = network.channels[0];
+		} else {
+			var target = data.target;
+
+			// If the message is targeted at us, use sender as target instead
+			if (target.toLowerCase() === irc.user.nick.toLowerCase()) {
+				target = data.nick;
+			}
+
+			var chan = _.find(network.channels, {name: target});
 			if (typeof chan === "undefined") {
 				chan = new Chan({
 					type: Chan.Type.QUERY,
-					name: data.nick
+					name: target
 				});
 				network.channels.push(chan);
 				client.emit("join", {
@@ -40,11 +46,6 @@ module.exports = function(irc, network) {
 					chan: chan
 				});
 			}
-		}
-
-		// Server messages go to server window
-		if (data.from_server) {
-			chan = network.channels[0];
 		}
 
 		var self = data.nick === irc.user.nick;
