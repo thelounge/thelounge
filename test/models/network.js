@@ -22,7 +22,7 @@ describe("Network", function() {
 				username: "",
 				realname: "",
 				commands: [],
-				nick: undefined,
+				nick: "",
 				join: "#thelounge,&foobar",
 			});
 		});

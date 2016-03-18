@@ -5,8 +5,9 @@ var expect = require("chai").expect;
 var Chan = require("../../src/models/chan");
 var User = require("../../src/models/user");
 
-function makeUser(name, mode) {
-	return new User({name: name, mode: mode});
+function makeUser(name) {
+	// TODO Update/Fix this when User constructor gets reworked (see its TODO)
+	return new User({nick: name, mode: ""});
 }
 
 function getUserNames(chan) {
@@ -14,13 +15,20 @@ function getUserNames(chan) {
 }
 
 describe("Chan", function() {
-	describe("#sortUsers()", function() {
+	describe("#sortUsers(irc)", function() {
+		var fullNetworkPrefix = [
+			{symbol: "~", mode: "q"},
+			{symbol: "&", mode: "a"},
+			{symbol: "@", mode: "o"},
+			{symbol: "%", mode: "h"},
+			{symbol: "+", mode: "v"}
+		];
 
 		it("should sort a simple user list", function() {
 			var chan = new Chan({users: [
 				"JocelynD", "YaManicKill", "astorije", "xPaw", "Max-P"
 			].map(makeUser)});
-			chan.sortUsers();
+			chan.sortUsers({network: {options: {PREFIX: fullNetworkPrefix}}});
 
 			expect(getUserNames(chan)).to.deep.equal([
 				"astorije", "JocelynD", "Max-P", "xPaw", "YaManicKill"
@@ -35,7 +43,7 @@ describe("Chan", function() {
 				new User({name: "xPaw", mode: "~"}),
 				new User({name: "Max-P", mode: "@"}),
 			]});
-			chan.sortUsers();
+			chan.sortUsers({network: {options: {PREFIX: fullNetworkPrefix}}});
 
 			expect(getUserNames(chan)).to.deep.equal([
 				"xPaw", "JocelynD", "Max-P", "astorije", "YaManicKill"
@@ -50,7 +58,7 @@ describe("Chan", function() {
 				new User({name: "xPaw"}),
 				new User({name: "Max-P", mode: "@"}),
 			]});
-			chan.sortUsers();
+			chan.sortUsers({network: {options: {PREFIX: fullNetworkPrefix}}});
 
 			expect(getUserNames(chan)).to.deep.equal(
 				["Max-P", "YaManicKill", "astorije", "JocelynD", "xPaw"]
@@ -59,7 +67,7 @@ describe("Chan", function() {
 
 		it("should be case-insensitive", function() {
 			var chan = new Chan({users: ["aB", "Ad", "AA", "ac"].map(makeUser)});
-			chan.sortUsers();
+			chan.sortUsers({network: {options: {PREFIX: fullNetworkPrefix}}});
 
 			expect(getUserNames(chan)).to.deep.equal(["AA", "aB", "ac", "Ad"]);
 		});
@@ -69,7 +77,7 @@ describe("Chan", function() {
 				"[foo", "]foo", "(foo)", "{foo}", "<foo>", "_foo", "@foo", "^foo",
 				"&foo", "!foo", "+foo", "Foo"
 			].map(makeUser)});
-			chan.sortUsers();
+			chan.sortUsers({network: {options: {PREFIX: fullNetworkPrefix}}});
 
 			expect(getUserNames(chan)).to.deep.equal([
 				"!foo", "&foo", "(foo)", "+foo", "<foo>", "@foo", "[foo", "]foo",
