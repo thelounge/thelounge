@@ -747,6 +747,20 @@ $(function() {
 			.click();
 	});
 
+	var debouncedHistoryTrim = debounce(function(target) {
+		target = chat.find(target);
+
+		// If by the time debounced function fired and
+		// the channel became active, do nothing
+		if (target.hasClass("active")) {
+			return;
+		}
+
+		if (target.children(".messages").slice(0, -100).remove().length) {
+			target.find(".show-more").addClass("show");
+		}
+	}, 5000);
+
 	chat.on("msg", ".messages", function(e, target, msg) {
 		var button = sidebar.find(".chan[data-target='" + target + "']");
 		var isQuery = button.hasClass("query");
@@ -790,8 +804,8 @@ $(function() {
 			}
 		}
 
-		button = button.filter(":not(.active)");
-		if (button.length === 0) {
+		if (!button.hasClass("active")) {
+			debouncedHistoryTrim(target);
 			return;
 		}
 
@@ -933,15 +947,6 @@ $(function() {
 		contextMenuContainer.hide();
 	});
 
-	setInterval(function() {
-		chat.find(".chan:not(.active)").each(function() {
-			var chan = $(this);
-			if (chan.find(".messages").children().slice(0, -100).remove().length) {
-				chan.find(".show-more").addClass("show");
-			}
-		});
-	}, 1000 * 10);
-
 	function clear() {
 		chat.find(".active .messages").empty();
 		chat.find(".active .show-more").addClass("show");
@@ -1080,6 +1085,22 @@ $(function() {
 		}
 		array.splice(new_index, 0, array.splice(old_index, 1)[0]);
 		return array;
+	}
+
+	// Returns a function, that, as long as it continues to be
+	// invoked, will not be triggered. The function will be called
+	// after it stops being called for N milliseconds.
+	function debounce(func, wait) {
+		var timeout;
+		return function() {
+			var context = this, args = arguments;
+			var later = function() {
+				timeout = null;
+				func.apply(context, args);
+			};
+			clearTimeout(timeout);
+			timeout = setTimeout(later, wait);
+		};
 	}
 
 	function toggleFaviconNotification(newState) {
