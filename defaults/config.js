@@ -209,7 +209,7 @@ module.exports = {
 	// Set socket.io transports
 	//
 	// @type     array
-	// @default  ["polling', "websocket"]
+	// @default  ["polling", "websocket"]
 	//
 	transports: ["polling", "websocket"],
 

@@ -25,7 +25,7 @@ module.exports = function(options) {
 	var protocol = https.enable ? "https" : "http";
 	var port = config.port;
 	var host = config.host;
-	var transports = config.transports || ["websocket", "polling"];
+	var transports = config.transports || ["polling", "websocket"];
 
 	if (!https.enable) {
 		server = require("http");
