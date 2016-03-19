@@ -19,8 +19,6 @@ module.exports = function(options) {
 		.use(index)
 		.use(express.static("client"));
 
-	app.enable("trust proxy");
-
 	var server = null;
 	var https = config.https || {};
 	var protocol = https.enable ? "https" : "http";
