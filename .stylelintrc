@@ -54,12 +54,12 @@
 		"number-leading-zero": "never",
 		"number-no-trailing-zeros": true,
 		"number-zero-length-no-unit": true,
-		"rule-no-duplicate-properties": true,
-		"rule-no-shorthand-property-overrides": true,
+		"declaration-block-no-duplicate-properties": true,
+		"declaration-block-no-shorthand-property-overrides": true,
 		"rule-non-nested-empty-line-before": ["always-multi-line", {
 			"ignore": ["after-comment"]
 		}],
-		"rule-trailing-semicolon": "always",
+		"declaration-block-trailing-semicolon": "always",
 		"selector-combinator-space-after": "always",
 		"selector-combinator-space-before": "always",
 		"selector-list-comma-newline-after": "always",
