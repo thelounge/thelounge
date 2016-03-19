@@ -38,7 +38,8 @@
     "read": "1.0.7",
     "request": "2.69.0",
     "slate-irc": "0.8.1",
-    "socket.io": "1.4.5"
+    "socket.io": "1.4.5",
+    "spdy": "3.2.3"
   },
   "devDependencies": {
     "chai": "3.5.0",

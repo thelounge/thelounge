@@ -31,7 +31,7 @@ module.exports = function(options) {
 		server = require("http");
 		server = server.createServer(app).listen(port, host);
 	} else {
-		server = require("https");
+		server = require("spdy");
 		server = server.createServer({
 			key: fs.readFileSync(https.key),
 			cert: fs.readFileSync(https.certificate)
