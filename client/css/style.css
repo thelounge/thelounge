@@ -189,7 +189,8 @@ button,
 }
 
 #viewport .lt,
-#viewport .rt {
+#viewport .rt,
+#chat button.menu {
 	color: #ccc;
 	display: none;
 	float: left;
@@ -213,10 +214,23 @@ button,
 	-moz-osx-font-smoothing: grayscale;
 }
 
+#chat button.menu:before {
+	font: 14px FontAwesome;
+	content: "\f142";
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
 #viewport .rt {
 	display: block;
 	float: right;
-	margin: 6px -12px 0 12px;
+	margin: 6px -12px 0 0;
+}
+
+#chat button.menu {
+	display: block;
+	float: right;
+	margin: 6px -8px 0 12px;
 }
 
 #viewport.rt #chat .sidebar {
@@ -1574,10 +1588,6 @@ button,
 	#viewport .lt,
 	#viewport .channel .rt {
 		display: block;
-	}
-
-	#viewport .rt {
-		margin-left: 18px;
 	}
 
 	#windows .window .header {
