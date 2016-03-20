@@ -338,10 +338,7 @@ Client.prototype.quit = function() {
 		}
 	}
 	this.networks.forEach(function(network) {
-		var irc = network.irc;
-		if (irc.connection) {
-			irc.connection.end();
-		}
+		network.irc.quit("Page closed");
 	});
 };
 

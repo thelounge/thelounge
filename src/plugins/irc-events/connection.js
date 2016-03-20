@@ -13,7 +13,7 @@ module.exports = function(irc, network) {
 	});
 
 	irc.on("raw socket connected", function() {
-		identd.hook(irc.socket, network.username);
+		identd.hook(irc.connection.socket, network.username);
 	});
 
 	irc.on("socket connected", function() {
