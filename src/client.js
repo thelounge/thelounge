@@ -252,7 +252,7 @@ Client.prototype.input = function(data) {
 	if (cmd in inputs) {
 		inputs[cmd].apply(client, [target.network, target.chan, cmd, args]);
 	} else {
-		target.network.irc.write(text);
+		target.network.irc.raw(text);
 	}
 };
 
