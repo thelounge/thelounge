@@ -1,1 +1,1 @@
-Topic set by {{nick}} on {{when}}
+Topic set by {{nick}} on {{localeDate when}}

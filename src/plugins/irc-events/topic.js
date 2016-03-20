@@ -39,7 +39,7 @@ module.exports = function(irc, network) {
 			type: Msg.Type.TOPIC_SET_BY,
 			mode: chan.getMode(data.nick),
 			nick: data.nick,
-			when: data.when,
+			when: new Date(data.when * 1000),
 			self: data.nick === irc.user.nick
 		});
 		chan.messages.push(msg);
