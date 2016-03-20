@@ -1221,15 +1221,19 @@ button,
 	border-radius: 2px;
 }
 
-.context-menu-item:first-child {
-	border-bottom: 1px solid rgba(61, 70, 77, .1);
+.context-menu-divider {
+	height: 1px;
+	margin: 6px 0;
+	background-color: rgba(0, 0, 0, .1);
 }
 
 .context-menu-item {
 	cursor: pointer;
 	display: block;
-	padding: 6px 8px;
+	padding: 4px 8px;
 	color: #333;
+	margin-top: 6px;
+	margin-bottom: 6px;
 }
 
 .context-menu-item:hover {

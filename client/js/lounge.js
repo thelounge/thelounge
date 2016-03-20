@@ -533,6 +533,7 @@ $(function() {
 				text: target.data("title"),
 				data: target.data("target")
 			});
+			output += render("contextmenu_divider");
 			output += render("contextmenu_item", {
 				class: "close",
 				text: target.hasClass("lobby") ? "Disconnect" : target.hasClass("query") ? "Close" : "Leave",
