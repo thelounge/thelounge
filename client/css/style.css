@@ -1244,6 +1244,8 @@ button,
 	font-family: FontAwesome;
 	width: 20px;
 	display: inline-block;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 .context-menu-user:before {
@@ -1255,7 +1257,7 @@ button,
 }
 
 .context-menu-close:before {
-	content: "\f057";
+	content: "\f00d";
 }
 
 /**
