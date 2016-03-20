@@ -10,7 +10,7 @@ module.exports = function(irc, network) {
 		if (data.target === irc.user.nick) {
 			targetChan = network.channels[0];
 		} else {
-			targetChan = _.find(network.channels, {name: data.target});
+			targetChan = network.getChannel(data.target);
 			if (typeof targetChan === "undefined") {
 				return;
 			}

@@ -1,11 +1,10 @@
-var _ = require("lodash");
 var Chan = require("../../models/chan");
 var Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
 	var client = this;
 	irc.on("whois", function(data) {
-		var chan = _.find(network.channels, {name: data.nick});
+		var chan = network.getChannel(data.nick);
 		if (typeof chan === "undefined") {
 			chan = new Chan({
 				type: Chan.Type.QUERY,

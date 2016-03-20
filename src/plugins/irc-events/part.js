@@ -4,7 +4,7 @@ var Msg = require("../../models/msg");
 module.exports = function(irc, network) {
 	var client = this;
 	irc.on("part", function(data) {
-		var chan = _.find(network.channels, {name: data.channel});
+		var chan = network.getChannel(data.channel);
 		if (typeof chan === "undefined") {
 			return;
 		}

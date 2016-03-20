@@ -1,5 +1,3 @@
-var _ = require("lodash");
-
 exports.commands = ["msg", "say"];
 
 exports.input = function(network, chan, cmd, args) {
@@ -21,7 +19,7 @@ exports.input = function(network, chan, cmd, args) {
 	var msg = args.join(" ");
 	irc.say(target, msg);
 
-	var channel = _.find(network.channels, {name: target});
+	var channel = network.getChannel(target);
 	if (typeof channel !== "undefined") {
 		irc.emit("privmsg", {
 			nick: irc.user.nick,

@@ -55,6 +55,14 @@ Network.prototype.export = function() {
 	return network;
 };
 
+Network.prototype.getChannel = function(name) {
+	name = name.toLowerCase();
+
+	return _.find(this.channels, function(that) {
+		return that.name.toLowerCase() === name;
+	});
+};
+
 function prettify(host) {
 	var name = capitalize(host.split(".")[1]);
 	if (!name) {

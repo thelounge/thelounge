@@ -27,7 +27,7 @@ module.exports = function(irc, network) {
 			return;
 		}
 
-		var chan = _.find(network.channels, {name: data.target});
+		var chan = network.getChannel(data.target);
 		if (typeof chan === "undefined") {
 			return;
 		}

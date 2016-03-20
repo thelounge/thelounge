@@ -1,4 +1,3 @@
-var _ = require("lodash");
 var Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
@@ -6,7 +5,7 @@ module.exports = function(irc, network) {
 	irc.on("invite", function(data) {
 		var target = data.to;
 
-		var chan = _.find(network.channels, {name: data.channel});
+		var chan = network.getChannel(data.channel);
 		if (typeof chan === "undefined") {
 			chan = network.channels[0];
 		}
