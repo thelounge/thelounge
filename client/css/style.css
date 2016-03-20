@@ -189,7 +189,8 @@ button,
 }
 
 #viewport .lt,
-#viewport .rt {
+#viewport .rt,
+#chat button.menu {
 	color: #ccc;
 	display: none;
 	float: left;
@@ -213,10 +214,23 @@ button,
 	-moz-osx-font-smoothing: grayscale;
 }
 
+#chat button.menu:before {
+	font: 14px FontAwesome;
+	content: "\f142";
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
 #viewport .rt {
 	display: block;
 	float: right;
-	margin: 6px -12px 0 12px;
+	margin: 6px -12px 0 0;
+}
+
+#chat button.menu {
+	display: block;
+	float: right;
+	margin: 6px -8px 0 12px;
 }
 
 #viewport.rt #chat .sidebar {
@@ -334,21 +348,6 @@ button,
 	content: "\f0f6";
 }
 
-#sidebar .chan:hover .badge {
-	opacity: 0;
-	position: absolute;
-	z-index: 1;
-	right: 10px;
-}
-
-#sidebar .chan:hover .close {
-	opacity: .2;
-}
-
-#sidebar .chan:hover .name {
-	margin-right: 16px;
-}
-
 #sidebar .chan .name {
 	position: relative;
 	z-index: 0;
@@ -378,7 +377,7 @@ button,
 	margin-left: 5px;
 	padding: 3px 6px;
 	float: right;
-	transition: opacity .2s;
+	transition: opacity .2s, background-color .2s, color .2s;
 }
 
 #sidebar .badge.highlight {
@@ -386,6 +385,7 @@ button,
 	color: #49505a;
 }
 
+#sidebar .chan.active .badge,
 #sidebar .badge:empty {
 	opacity: 0;
 }
@@ -393,11 +393,12 @@ button,
 #sidebar .close {
 	border-radius: 3px;
 	margin-right: 5px;
+	visibility: hidden;
 	opacity: 0;
 	position: absolute;
 	z-index: 2;
 	right: 0;
-	transition: all .2s;
+	transition: opacity .2s, background-color .2s;
 }
 
 #sidebar .close:before {
@@ -412,9 +413,14 @@ button,
 	color: #fff;
 }
 
-#sidebar .close:hover {
+#sidebar .chan.active .close {
+	visibility: visible;
+	opacity: .4;
+}
+
+#sidebar .chan.active .close:hover {
 	background-color: rgba(0, 0, 0, .1);
-	opacity: .7 !important;
+	opacity: 1;
 }
 
 #sidebar .tse-scrollbar {
@@ -601,29 +607,6 @@ button,
 #windows .header .topic {
 	color: #777;
 	margin-left: 8px;
-}
-
-#windows .header .right {
-	float: right;
-	margin-right: -10px;
-	margin-top: -2px;
-}
-
-#windows .header .button {
-	background: #f4f4f4;
-	background-image: linear-gradient(#f4f4f4, #ececec);
-	border: 1px solid #d7d7d7;
-	border-bottom-color: #b7b7b7;
-	border-radius: 2px;
-	color: #555;
-	font: 12px Lato, sans-serif;
-	height: 25px;
-	line-height: 0;
-	padding: 0 10px;
-}
-
-#windows .header .button:hover {
-	opacity: 1;
 }
 
 #windows .window .header {
@@ -1589,14 +1572,6 @@ button,
 		width: 215px;
 	}
 
-	#sidebar .close {
-		display: none;
-	}
-
-	#sidebar .chan:hover .badge {
-		opacity: 1;
-	}
-
 	#sidebar .empty:before {
 		margin-top: 0;
 	}
@@ -1613,10 +1588,6 @@ button,
 	#viewport .lt,
 	#viewport .channel .rt {
 		display: block;
-	}
-
-	#viewport .rt {
-		margin-left: 18px;
 	}
 
 	#windows .window .header {
