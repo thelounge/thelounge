@@ -1216,8 +1216,9 @@ button,
 	min-width: 160px;
 	font-size: 14px;
 	background-color: #fff;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
-	border: 1px solid rgba(61, 70, 77, .1);
+	box-shadow: 0 3px 12px rgba(0, 0, 0, .15);
+	border: 1px solid rgba(0, 0, 0, .15);
+	border-radius: 2px;
 }
 
 .context-menu-item:first-child {
