@@ -30,6 +30,54 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
+## v1.4.0 - 2016-03-20
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v1.3.1...v1.4.0)
+
+Note that this release will reset users' notification settings to their defaults. This unfortunate side effect is the consequence of an improvement of how this setting is handled in the application.
+
+### Added
+
+- Add context menu when right-clicking on a sidebar item ([#9](https://github.com/thelounge/lounge/pull/9) by [@xPaw](https://github.com/xPaw))
+- Add tests for the `Chan#sortUsers` method ([#197](https://github.com/thelounge/lounge/pull/197) by [@astorije](https://github.com/astorije))
+- Add a very basic test for `Network#export` ([#198](https://github.com/thelounge/lounge/pull/198) by [@astorije](https://github.com/astorije))
+- Link to the demo from the IRC channel badge on the README ([#203](https://github.com/thelounge/lounge/pull/203) by [@Henni](https://github.com/Henni))
+- Add support for HTTP/2 ([#174](https://github.com/thelounge/lounge/pull/174) by [@xPaw](https://github.com/xPaw))
+- Support port in `/connect` command ([#210](https://github.com/thelounge/lounge/pull/210) by [@xPaw](https://github.com/xPaw))
+
+### Changed
+
+- Update Handlebars to 4.0.5 ([#140](https://github.com/thelounge/lounge/pull/140) by [@xPaw](https://github.com/xPaw))
+- Update Socket.IO to 1.4.5 and use client library provided by the dependency ([#142](https://github.com/thelounge/lounge/pull/142) by [@xPaw](https://github.com/xPaw))
+- Update ESLint to 2.3.0 and add stricter rules ([#171](https://github.com/thelounge/lounge/pull/171) by [@xPaw](https://github.com/xPaw))
+- Mute color of the topic actions ([#151](https://github.com/thelounge/lounge/pull/151) by [@astorije](https://github.com/astorije))
+- Rename "badge" setting and rely on browser choice for desktop notifications ([#28](https://github.com/thelounge/lounge/pull/28) by [@lpoujol](https://github.com/lpoujol))
+- Invoke `handlebars` outside of `grunt` and generate a sourcemap ([#144](https://github.com/thelounge/lounge/pull/144) by [@xPaw](https://github.com/xPaw))
+- Make `whois` a client action template and improve its output ([#161](https://github.com/thelounge/lounge/pull/161) by [@xPaw](https://github.com/xPaw))
+- Handle commands in a better way and send unknown commands to the IRC server ([#154](https://github.com/thelounge/lounge/pull/154) by [@xPaw](https://github.com/xPaw))
+- Switch the Send button to a paper plane icon ([#182](https://github.com/thelounge/lounge/pull/182) by [@astorije](https://github.com/astorije))
+- Keep track of highlights when user is offline ([#190](https://github.com/thelounge/lounge/pull/190) by [@xPaw](https://github.com/xPaw))
+- Load input plugins at startup and call them directly when a command is received ([#191](https://github.com/thelounge/lounge/pull/191) by [@astorije](https://github.com/astorije))
+- Make defaults for socket.io transports consistent to use polling before websocket ([#202](https://github.com/thelounge/lounge/pull/202) by [@xPaw](https://github.com/xPaw))
+- Update all server dependencies to current stable versions ([#200](https://github.com/thelounge/lounge/pull/200) by [@xPaw](https://github.com/xPaw))
+- Update configuration file to reflect HTTP/2 support addition ([#206](https://github.com/thelounge/lounge/pull/206) by [@astorije](https://github.com/astorije))
+- Change close button behavior and add a dropdown context menu ([#184](https://github.com/thelounge/lounge/pull/184) by [@xPaw](https://github.com/xPaw))
+- Minor enhancements of the context menu UI ([#212](https://github.com/thelounge/lounge/pull/212) by [@astorije](https://github.com/astorije))
+
+### Removed
+
+- Remove `string.contains` library ([#163](https://github.com/thelounge/lounge/pull/163) by [@xPaw](https://github.com/xPaw))
+- Remove Moment.js library from the client ([#183](https://github.com/thelounge/lounge/pull/183) by [@xPaw](https://github.com/xPaw))
+- Disabled emails from Travis CI on successful builds ([#172](https://github.com/thelounge/lounge/pull/172) by [@xPaw](https://github.com/xPaw))
+- Remove unnecessary operation when sorting users ([#193](https://github.com/thelounge/lounge/pull/193) by [@astorije](https://github.com/astorije))
+
+### Fixed
+
+- Make sure self messages are never highlighted and improve highlight lookup ([#157](https://github.com/thelounge/lounge/pull/157) by [@astorije](https://github.com/astorije))
+- Fix Send button style on Zenburn and Morning themes, introduced by this release ([#187](https://github.com/thelounge/lounge/pull/187) by [@astorije](https://github.com/astorije))
+- Make sure all close buttons in the sidebar have same weight ([#192](https://github.com/thelounge/lounge/pull/192) by [@astorije](https://github.com/astorije))
+- Disallow parting from lobbies ([#209](https://github.com/thelounge/lounge/pull/209) by [@xPaw](https://github.com/xPaw))
+
 ## v1.3.1 - 2016-03-05
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v1.3.0...v1.3.1)
