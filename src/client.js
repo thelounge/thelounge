@@ -35,15 +35,12 @@ var events = [
 var inputs = [
 	// These inputs are sorted in order that is most likely to be used
 	"msg",
-	"whois",
 	"part",
 	"action",
 	"connect",
 	"invite",
-	"join",
 	"kick",
 	"mode",
-	"nick",
 	"notice",
 	"quit",
 	"raw",
