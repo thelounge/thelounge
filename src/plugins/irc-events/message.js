@@ -33,18 +33,16 @@ module.exports = function(irc, network) {
 			chan = network.channels[0];
 		} else {
 			var target = data.target;
-			var targetedAtUser = false;
 
 			// If the message is targeted at us, use sender as target instead
 			if (target.toLowerCase() === irc.user.nick.toLowerCase()) {
-				targetedAtUser = true;
 				target = data.nick;
 			}
 
 			var chan = network.getChannel(target);
 			if (typeof chan === "undefined") {
 				// Send notices that are not targeted at us into the server window
-				if (data.type === Msg.Type.NOTICE && !targetedAtUser) {
+				if (data.type === Msg.Type.NOTICE) {
 					chan = network.channels[0];
 				} else {
 					chan = new Chan({
