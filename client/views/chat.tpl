@@ -18,9 +18,7 @@
 		<div class="messages"></div>
 	</div>
 	<aside class="sidebar">
-		<div class="users">
-			{{partial "user"}}
-		</div>
+		<div class="users"></div>
 	</aside>
 </div>
 {{/each}}

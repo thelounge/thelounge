@@ -153,7 +153,7 @@ $(function() {
 					channels: channels
 				})
 			);
-			channels.forEach(renderChannelMessages);
+			channels.forEach(renderChannel);
 			confirmExit();
 		}
 
@@ -191,7 +191,7 @@ $(function() {
 				channels: [data.chan]
 			})
 		);
-		renderChannelMessages(data.chan);
+		renderChannel(data.chan);
 		var chan = sidebar.find(".chan")
 			.sort(function(a, b) { return $(a).data("id") - $(b).data("id"); })
 			.last();
@@ -260,9 +260,36 @@ $(function() {
 		}, $(document.createDocumentFragment()));
 	}
 
+	function renderChannel(data) {
+		renderChannelMessages(data);
+		renderChannelUsers(data);
+	}
+
 	function renderChannelMessages(data) {
 		var documentFragment = buildChannelMessages(data.id, data.messages);
 		chat.find("#chan-" + data.id + " .messages").append(documentFragment);
+	}
+
+	function renderChannelUsers(data) {
+		var users = chat.find("#chan-" + data.id).find(".users");
+		var nicks = users.data("nicks") || [];
+		var i, oldSortOrder = {};
+
+		for (i in nicks) {
+			oldSortOrder[nicks[i]] = i;
+		}
+
+		nicks = [];
+
+		for (i in data.users) {
+			nicks.push(data.users[i].name);
+		}
+
+		nicks = nicks.sort(function(a, b) {
+			return (oldSortOrder[a] || Number.MAX_VALUE) - (oldSortOrder[b] || Number.MAX_VALUE);
+		});
+
+		users.html(render("user", data)).data("nicks", nicks);
 	}
 
 	socket.on("msg", function(data) {
@@ -401,14 +428,7 @@ $(function() {
 		}
 	});
 
-	socket.on("names", function(data) {
-		var users = chat.find("#chan-" + data.chan).find(".users").html(render("user", data));
-		var nicks = [];
-		for (var i in data.users) {
-			nicks.push(data.users[i].name);
-		}
-		users.data("nicks", nicks);
-	});
+	socket.on("names", renderChannelUsers);
 
 	var userStyles = $("#user-specified-css");
 	var settings = $("#settings");
@@ -965,15 +985,6 @@ $(function() {
 		var words = commands.slice();
 		var users = chat.find(".active").find(".users");
 		var nicks = users.data("nicks");
-
-		if (!nicks) {
-			nicks = [];
-			users.find(".user").each(function() {
-				var nick = $(this).text().replace(/[~&@%+]/, "");
-				nicks.push(nick);
-			});
-			users.data("nicks", nicks);
-		}
 
 		for (var i in nicks) {
 			words.push(nicks[i]);
