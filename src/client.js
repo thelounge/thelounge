@@ -42,6 +42,7 @@ var inputs = [
 	"kick",
 	"mode",
 	"notice",
+	"query",
 	"quit",
 	"raw",
 	"topic",
