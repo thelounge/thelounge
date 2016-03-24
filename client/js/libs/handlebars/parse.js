@@ -1,28 +1,12 @@
 Handlebars.registerHelper(
 	"parse", function(text) {
-		var wrap = wraplong(text);
 		text = Handlebars.Utils.escapeExpression(text);
 		text = colors(text);
 		text = channels(text);
 		text = uri(text);
-		if (wrap) {
-			return "<i class='wrap'>" + text + "</i>";
-		} else {
-			return text;
-		}
+		return text;
 	}
 );
-
-function wraplong(text) {
-	var wrap = false;
-	var split = text.split(" ");
-	for (var i in split) {
-		if (split[i].length > 40) {
-			wrap = true;
-		}
-	}
-	return wrap;
-}
 
 function uri(text) {
 	return URI.withinString(text, function(url, start, end, source) {
