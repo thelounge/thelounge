@@ -868,6 +868,10 @@ button,
 	color: #f00;
 }
 
+#chat .msg.toggle .time {
+	visibility: hidden;
+}
+
 #chat .toggle-button {
 	background: #f5f5f5;
 	border-radius: 2px;
