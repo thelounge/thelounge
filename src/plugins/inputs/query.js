@@ -14,6 +14,11 @@ exports.input = function(network, chan, cmd, args) {
 		return;
 	}
 
+	// If target doesn't start with an allowed character, ignore
+	if (!/^[a-zA-Z_\\\[\]{}^`|]/.test(target)) {
+		return;
+	}
+
 	var newChan = new Chan({
 		type: Chan.Type.QUERY,
 		name: target
