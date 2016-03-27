@@ -30,6 +30,7 @@ var events = [
 	"whois"
 ];
 var inputs = [
+	"ctcp",
 	"msg",
 	"part",
 	"action",

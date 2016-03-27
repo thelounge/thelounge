@@ -225,6 +225,7 @@ $(function() {
 			"topic_set_by",
 			"action",
 			"whois",
+			"ctcp",
 		].indexOf(type) !== -1) {
 			data.msg.template = "actions/" + type;
 			msg = $(render("msg_action", data.msg));

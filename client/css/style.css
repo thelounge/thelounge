@@ -827,6 +827,11 @@ button,
 	color: #2ecc40;
 }
 
+#chat .ctcp .from:before {
+	font-family: FontAwesome;
+	content: "\f0f6";
+}
+
 #chat .whois .from:before {
 	font-family: FontAwesome;
 	content: "\f007";
