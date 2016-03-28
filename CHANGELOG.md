@@ -30,6 +30,24 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
+## v1.4.1 - 2016-03-28
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v1.4.0...v1.4.1)
+
+As of this release, running `/query nick` will simply open a chat window with user `nick`, instead of calling `whois` for this user.
+
+### Changed
+
+- Remove `join`, `nick` and `whois` inputs, they are cleanly handled by the server ([#208](https://github.com/thelounge/lounge/pull/208) by [@xPaw](https://github.com/xPaw))
+- Add a `/query` command that simply opens a query window ([#218](https://github.com/thelounge/lounge/pull/218) by [@xPaw](https://github.com/xPaw))
+- Disallow `/query` on non-nicks ([#221](https://github.com/thelounge/lounge/pull/221) by [@astorije](https://github.com/astorije))
+
+### Fixed
+
+- Fix message and topic text wrapping ([#215](https://github.com/thelounge/lounge/pull/215) by [@xPaw](https://github.com/xPaw))
+- Fix `/part` command ([#222](https://github.com/thelounge/lounge/pull/222) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Harden URL fetcher and don't crash on non-ASCII urls ([#219](https://github.com/thelounge/lounge/pull/219) by [@xPaw](https://github.com/xPaw))
+
 ## v1.4.0 - 2016-03-20
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v1.3.1...v1.4.0)
