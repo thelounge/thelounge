@@ -16,10 +16,9 @@ module.exports = function(irc, network) {
 		}
 
 		var links = [];
-		var split = data.message.split(" ");
+		var split = data.message.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "").split(" ");
 		_.each(split, function(w) {
-			var match = w.indexOf("http://") === 0 || w.indexOf("https://") === 0;
-			if (match) {
+			if (/^https?:\/\//.test(w)) {
 				links.push(w);
 			}
 		});
@@ -44,7 +43,7 @@ module.exports = function(irc, network) {
 			msg: msg
 		});
 
-		var link = links[0];
+		var link = escapeHeader(links[0]);
 		fetch(link, function(res) {
 			parse(msg, link, res, client);
 		});
@@ -103,6 +102,8 @@ function fetch(url, cb) {
 	try {
 		var req = request.get({
 			url: url,
+			maxRedirects: 5,
+			timeout: 5000,
 			headers: {
 				"User-Agent": "Mozilla/5.0 (compatible; The Lounge IRC Client; +https://github.com/thelounge/lounge)"
 			}
@@ -149,4 +150,14 @@ function fetch(url, cb) {
 			};
 			cb(data);
 		}));
+}
+
+// https://github.com/request/request/issues/2120
+// https://github.com/nodejs/node/issues/1693
+// https://github.com/alexeyten/descript/commit/50ee540b30188324198176e445330294922665fc
+function escapeHeader(header) {
+	return header
+		.replace(/([\uD800-\uDBFF][\uDC00-\uDFFF])+/g, encodeURI)
+		.replace(/[\uD800-\uDFFF]/g, "")
+		.replace(/[\u0000-\u001F\u007F-\uFFFF]+/g, encodeURI);
 }
