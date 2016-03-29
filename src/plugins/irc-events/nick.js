@@ -8,7 +8,7 @@ module.exports = function(irc, network) {
 		if (data.nick === irc.user.nick) {
 			var lobby = network.channels[0];
 			var msg = new Msg({
-				text: "You're now known as " + data.newnick,
+				text: "You're now known as " + data.new_nick,
 			});
 			lobby.messages.push(msg);
 			client.emit("msg", {
@@ -19,7 +19,7 @@ module.exports = function(irc, network) {
 			client.save();
 			client.emit("nick", {
 				network: network.id,
-				nick: data.newnick
+				nick: data.new_nick
 			});
 		}
 
@@ -28,7 +28,7 @@ module.exports = function(irc, network) {
 			if (typeof user === "undefined") {
 				return;
 			}
-			user.name = data.newnick;
+			user.name = data.new_nick;
 			chan.sortUsers(irc);
 			client.emit("users", {
 				chan: chan.id
@@ -36,9 +36,9 @@ module.exports = function(irc, network) {
 			var msg = new Msg({
 				time: data.time,
 				type: Msg.Type.NICK,
-				mode: chan.getMode(data.newnick),
+				mode: chan.getMode(data.new_nick),
 				nick: data.nick,
-				newnick: data.newnick,
+				new_nick: data.new_nick,
 				self: self
 			});
 			chan.messages.push(msg);
