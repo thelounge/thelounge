@@ -30,6 +30,16 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
+## v1.4.2 - 2016-03-31
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v1.4.1...v1.4.2)
+
+This PR fixes a bug introduced in v1.4.1 causing timestamps to use most of the screen.
+
+### Fixed
+
+- Hide options will now remove the entire row ([#227](https://github.com/thelounge/lounge/pull/227) by [@xPaw](https://github.com/xPaw))
+
 ## v1.4.1 - 2016-03-28
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v1.4.0...v1.4.1)
