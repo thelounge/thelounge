@@ -3,6 +3,7 @@ var fs = require("fs");
 var Client = require("./client");
 var mkdirp = require("mkdirp");
 var Helper = require("./helper");
+var path = require("path");
 
 module.exports = ClientManager;
 
@@ -67,19 +68,25 @@ ClientManager.prototype.addUser = function(name, password) {
 		return false;
 	}
 	try {
-		var path = Helper.HOME + "/users";
+		var usersPath = path.join(Helper.HOME, "users");
+		mkdirp.sync(usersPath);
+
+		if (path.basename(name) !== name) {
+			throw new Error(name + " is an invalid username.");
+		}
+
 		var user = {
 			user: name,
 			password: password || "",
 			log: false,
 			networks: []
 		};
-		mkdirp.sync(path);
 		fs.writeFileSync(
-			path + "/" + name + ".json",
+			path.join(usersPath, name + ".json"),
 			JSON.stringify(user, null, "  ")
 		);
 	} catch (e) {
+		log.error("Failed to add user " + name, e);
 		throw e;
 	}
 	return true;
