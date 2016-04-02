@@ -30,6 +30,16 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
+## v1.4.3 - 2016-04-02
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v1.4.2...v1.4.3)
+
+This PR fixes a bug introduced in v1.3.0 which prevents deleting disconnected networks from users' configuration files.
+
+### Fixed
+
+- Fix not being able to remove networks from user config ([#233](https://github.com/thelounge/lounge/pull/233) by [@xPaw](https://github.com/xPaw))
+
 ## v1.4.2 - 2016-03-31
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v1.4.1...v1.4.2)
