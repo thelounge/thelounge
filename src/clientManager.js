@@ -101,7 +101,7 @@ ClientManager.prototype.updateUser = function(name, opts) {
 
 	try {
 		user = this.readUserConfig(name);
-		_.merge(user, opts);
+		_.assign(user, opts);
 		fs.writeFileSync(
 			path,
 			JSON.stringify(user, null, " ")
