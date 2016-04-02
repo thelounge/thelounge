@@ -760,6 +760,14 @@ button,
 	color: #999;
 }
 
+#chat .msg.motd .text,
+#chat .msg.message .text,
+#chat .msg.action .action-text,
+#chat .msg.notice .text {
+	white-space: pre-wrap;
+	overflow: hidden;
+}
+
 #chat.hide-join .join,
 #chat.hide-mode .mode,
 #chat.hide-motd .motd,
