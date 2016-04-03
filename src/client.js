@@ -47,7 +47,7 @@ var inputs = [
 	var path = "./plugins/inputs/" + name;
 	var plugin = require(path);
 	plugin.commands.forEach(function(command) {
-		plugins[command] = plugin.input;
+		plugins[command] = plugin;
 	});
 	return plugins;
 }, {});
@@ -250,10 +250,27 @@ Client.prototype.input = function(data) {
 	var args = text.split(" ");
 	var cmd = args.shift().toLowerCase();
 
+	var irc = target.network.irc;
+	var connected = irc && irc.connection && irc.connection.connected;
+
 	if (cmd in inputs) {
-		inputs[cmd].apply(client, [target.network, target.chan, cmd, args]);
-	} else {
-		target.network.irc.raw(text);
+		var plugin = inputs[cmd];
+		if (connected || plugin.allowDisconnected) {
+			connected = true;
+			plugin.input.apply(client, [target.network, target.chan, cmd, args]);
+		}
+	} else if (connected) {
+		irc.raw(text);
+	}
+
+	if (!connected) {
+		this.emit("msg", {
+			chan: target.chan.id,
+			msg: new Msg({
+				type: Msg.Type.ERROR,
+				text: "You are not connected to the IRC network, unable to send your command."
+			})
+		});
 	}
 };
 
