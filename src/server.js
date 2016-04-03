@@ -6,6 +6,7 @@ var ClientManager = require("./clientManager");
 var express = require("express");
 var fs = require("fs");
 var io = require("socket.io");
+var dns = require("dns");
 var Helper = require("./helper");
 var config = {};
 
@@ -71,6 +72,14 @@ module.exports = function(options) {
 	}
 };
 
+function getClientIp(req) {
+	if (!config.reverseProxy) {
+		return req.connection.remoteAddress;
+	} else {
+		return req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+	}
+}
+
 function index(req, res, next) {
 	if (req.url.split("?")[0] !== "/") {
 		return next();
@@ -108,6 +117,9 @@ function init(socket, client, token) {
 		socket.on(
 			"conn",
 			function(data) {
+				// prevent people from overriding webirc settings
+				data.ip = null;
+				data.hostname = null;
 				client.connect(data);
 			}
 		);
@@ -183,6 +195,20 @@ function init(socket, client, token) {
 	}
 }
 
+function reverseDnsLookup(socket, client, token) {
+	client.ip = getClientIp(socket.request);
+
+	dns.reverse(client.ip, function(err, host) {
+		if (!err && host.length) {
+			client.hostname = host[0];
+		} else {
+			client.hostname = client.ip;
+		}
+
+		init(socket, client, token);
+	});
+}
+
 function auth(data) {
 	var socket = this;
 	if (config.public) {
@@ -192,7 +218,11 @@ function auth(data) {
 			manager.clients = _.without(manager.clients, client);
 			client.quit();
 		});
-		init(socket, client);
+		if (config.webirc) {
+			reverseDnsLookup(socket, client);
+		} else {
+			init(socket, client);
+		}
 	} else {
 		var success = false;
 		_.each(manager.clients, function(client) {
@@ -210,7 +240,11 @@ function auth(data) {
 				if (data.remember || data.token) {
 					token = client.token;
 				}
-				init(socket, client, token);
+				if (config.webirc !== null && !client.config["ip"]) {
+					reverseDnsLookup(socket, client, token);
+				} else {
+					init(socket, client, token);
+				}
 				return false;
 			}
 		});

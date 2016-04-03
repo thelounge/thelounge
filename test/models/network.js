@@ -24,6 +24,8 @@ describe("Network", function() {
 				commands: [],
 				nick: "",
 				join: "#thelounge,&foobar",
+				ip: null,
+				hostname: null
 			});
 		});
 	});

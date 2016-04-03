@@ -16,6 +16,8 @@ function Network(attr) {
 		username: "",
 		realname: "",
 		channels: [],
+		ip: null,
+		hostname: null,
 		id: id++,
 		irc: null,
 		serverOptions: {
@@ -45,7 +47,9 @@ Network.prototype.export = function() {
 		"password",
 		"username",
 		"realname",
-		"commands"
+		"commands",
+		"ip",
+		"hostname"
 	]);
 	network.nick = (this.irc && this.irc.user.nick) || "";
 	network.join = _.map(

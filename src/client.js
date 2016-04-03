@@ -129,6 +129,7 @@ Client.prototype.connect = function(args) {
 	var client = this;
 
 	var nick = args.nick || "lounge-user";
+	var webirc = null;
 
 	var network = new Network({
 		name: args.name || "",
@@ -138,7 +139,9 @@ Client.prototype.connect = function(args) {
 		password: args.password,
 		username: args.username || nick.replace(/[^a-zA-Z0-9]/g, ""),
 		realname: args.realname || "The Lounge User",
-		commands: args.commands
+		commands: args.commands,
+		ip: args.ip,
+		hostname: args.hostname,
 	});
 
 	client.networks.push(network);
@@ -169,6 +172,26 @@ Client.prototype.connect = function(args) {
 		return;
 	}
 
+	if (config.webirc !== null && network.host in config.webirc) {
+		args.ip = args.ip || (client.config && client.config.ip) || client.ip;
+		args.hostname = args.hostname || (client.config && client.config.hostname) || client.hostname || args.ip;
+
+		if (args.ip) {
+			if (config.webirc[network.host] instanceof Function) {
+				webirc = config.webirc[network.host](client, args);
+			} else {
+				webirc = {
+					password: config.webirc[network.host],
+					address: args.ip,
+					hostname: args.hostname
+				};
+			}
+		} else {
+			log.warn("Cannot find a valid WEBIRC configuration for " + nick
+				+ "!" + network.username + "@" + network.host);
+		}
+	}
+
 	network.irc = new ircFramework.Client();
 	network.irc.requestCap([
 		"echo-message",
@@ -185,6 +208,7 @@ Client.prototype.connect = function(args) {
 		localAddress: config.bind,
 		rejectUnauthorized: false,
 		auto_reconnect: false, // TODO: Enable auto reconnection
+		webirc: webirc,
 	});
 
 	network.irc.on("registered", function() {
