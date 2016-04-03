@@ -339,7 +339,9 @@ Client.prototype.quit = function() {
 		}
 	}
 	this.networks.forEach(function(network) {
-		network.irc.quit("Page closed");
+		if (network.irc) {
+			network.irc.quit("Page closed");
+		}
 	});
 };
 
