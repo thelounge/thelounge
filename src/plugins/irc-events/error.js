@@ -40,4 +40,19 @@ module.exports = function(irc, network) {
 		var random = irc.user.nick + Math.floor(10 + (Math.random() * 89));
 		irc.changeNick(random);
 	});
+
+	irc.on("nick invalid", function(data) {
+		var lobby = network.channels[0];
+		var msg = new Msg({
+			type: Msg.Type.ERROR,
+			text: "Nickname " + data.nick + " is invalid: " + data.reason,
+		});
+		client.emit("msg", {
+			chan: lobby.id,
+			msg: msg
+		});
+
+		var random = "i" + Math.random().toString(36).substr(2, 10); // 'i' so it never begins with a number
+		irc.changeNick(random);
+	});
 };
