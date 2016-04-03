@@ -125,6 +125,17 @@ module.exports = {
 	},
 
 	//
+	// Maximum number of history lines per channel
+	//
+	// Defines the maximum number of history lines that will be kept in
+	// memory per channel/query, in order to reduce the memory usage of
+	// the server. Negative means unlimited.
+	//
+	// @type     integer
+	// @default  -1
+	maxHistory: -1,
+
+	//
 	// Default values for the 'Connect' form.
 	//
 	// @type     object

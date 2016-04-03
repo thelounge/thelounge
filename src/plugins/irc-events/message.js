@@ -1,9 +1,12 @@
 var _ = require("lodash");
 var Chan = require("../../models/chan");
 var Msg = require("../../models/msg");
+var Helper = require("../../helper");
 
 module.exports = function(irc, network) {
 	var client = this;
+	var config = Helper.getConfig();
+
 	irc.on("message", function(data) {
 		if (data.message.indexOf("\u0001") === 0 && data.message.substring(0, 7) !== "\u0001ACTION") {
 			// Hide ctcp messages.
@@ -62,6 +65,11 @@ module.exports = function(irc, network) {
 			highlight: highlight
 		});
 		chan.messages.push(msg);
+
+		if (config.maxHistory >= 0 && chan.messages.length > config.maxHistory) {
+			chan.messages.splice(0, chan.messages.length - config.maxHistory);
+		}
+
 		client.emit("msg", {
 			chan: chan.id,
 			msg: msg
