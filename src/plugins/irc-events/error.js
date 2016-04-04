@@ -30,14 +30,14 @@ module.exports = function(irc, network) {
 		var lobby = network.channels[0];
 		var msg = new Msg({
 			type: Msg.Type.ERROR,
-			text: "Nickname " + data.nick + " is already in use: " + data.reason,
+			text: data.nick + ": " + (data.reason || "Nickname is already in use."),
 		});
 		client.emit("msg", {
 			chan: lobby.id,
 			msg: msg
 		});
 
-		var random = irc.user.nick + Math.floor(10 + (Math.random() * 89));
+		var random = (data.nick || irc.user.nick) + Math.floor(10 + (Math.random() * 89));
 		irc.changeNick(random);
 	});
 
@@ -45,7 +45,7 @@ module.exports = function(irc, network) {
 		var lobby = network.channels[0];
 		var msg = new Msg({
 			type: Msg.Type.ERROR,
-			text: "Nickname " + data.nick + " is invalid: " + data.reason,
+			text: data.nick + ": " + (data.reason || "Nickname is invalid."),
 		});
 		client.emit("msg", {
 			chan: lobby.id,
