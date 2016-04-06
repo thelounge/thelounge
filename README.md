@@ -1,4 +1,4 @@
-[![#thelounge IRC channel on freenode](https://img.shields.io/badge/irc%20channel-%23thelounge%20on%20freenode-blue.svg)](http://avatar.playat.ch:1000/)
+[![#thelounge IRC channel on freenode](https://img.shields.io/badge/irc%20channel-%23thelounge%20on%20freenode-blue.svg)](https://webchat.freenode.net/?nick=Lounge-user&channels=#thelounge)
 [![npm version](https://img.shields.io/npm/v/thelounge.svg)](https://www.npmjs.org/package/thelounge)
 [![Build Status](https://travis-ci.org/thelounge/lounge.svg?branch=master)](https://travis-ci.org/thelounge/lounge)
 [![Dependency Status](https://david-dm.org/thelounge/lounge.svg)](https://david-dm.org/thelounge/lounge)
@@ -11,6 +11,8 @@ __What is it?__
 The Lounge is a web IRC client that you host on your own server.
 
 *This is the official, community-managed fork of @erming's great initiative, the [Shout](https://github.com/erming/shout) project.*
+
+[Try the demo](http://avatar.playat.ch:1000)
 
 __What features does it have?__
 
