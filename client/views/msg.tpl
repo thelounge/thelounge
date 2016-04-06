@@ -7,16 +7,17 @@
 		<a href="#" class="user" style="color: #{{stringcolor from}}" data-name="{{from}}">{{mode}}{{from}}</a>
 		{{/if}}
 	</span>
-	<span class="text">
-		{{#equal type "toggle"}}
+	{{#equal type "toggle"}}
+		<span class="text">
 			<div class="force-newline">
 				<button id="toggle-{{id}}" class="toggle-button">···</button>
 			</div>
 			{{#if toggle}}
 				{{partial "toggle"}}
 			{{/if}}
-		{{else}}
-			{{{parse text}}}
-		{{/equal}}
+		</span>
+	{{else}}
+		<span class="text">{{{parse text}}}</span>
+	{{/equal}}
 	</span>
 </div>
