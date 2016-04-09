@@ -18,7 +18,7 @@ program
 		var file = Helper.HOME + "/users/" + name + ".json";
 		var user = require(file);
 		require("read")({
-			prompt: "Password: ",
+			prompt: "[thelounge] New password: ",
 			silent: true
 		}, function(err, password) {
 			console.log("");

@@ -39,7 +39,7 @@ program
 			return;
 		}
 		require("read")({
-			prompt: "Password: ",
+			prompt: "[thelounge] Enter password: ",
 			silent: true
 		}, function(err, password) {
 			if (!err) add(manager, name, password);
