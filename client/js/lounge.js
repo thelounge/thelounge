@@ -146,7 +146,6 @@ $(function() {
 				})
 			);
 			var channels = $.map(data.networks, function(n) {
-				sidebar.find("#network-" + n.id).data("options", n.serverOptions);
 				return n.channels;
 			});
 			chat.html(
@@ -296,7 +295,6 @@ $(function() {
 				networks: [data.network]
 			})
 		);
-		sidebar.find("#network-" + data.network.id).data("options", data.network.serverOptions);
 		chat.append(
 			render("chat", {
 				channels: data.network.channels
