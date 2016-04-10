@@ -1157,6 +1157,7 @@ button,
 	font: inherit;
 	font-size: 11px;
 	margin: 5px;
+	margin-right: 10px;
 	line-height: 26px;
 	height: 24px;
 	padding: 0 9px;
@@ -1165,6 +1166,14 @@ button,
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+}
+
+#form #nick:empty {
+	visibility: hidden;
+}
+
+#form #nick:after {
+	content: ":";
 }
 
 #form #input {

@@ -667,12 +667,7 @@ $(function() {
 		document.title = title;
 
 		if (self.hasClass("chan")) {
-			var nick = self
-				.closest(".network")
-				.data("nick");
-			if (nick) {
-				setNick(nick);
-			}
+			setNick(self.closest(".network").data("nick"));
 		}
 
 		if (chan.data("needsNamesRefresh") === true) {
@@ -1069,12 +1064,9 @@ $(function() {
 
 	function setNick(nick) {
 		var width = $("#nick")
-			.html(nick + ":")
-			.width();
-		if (width) {
-			width += 31;
-			input.css("padding-left", width);
-		}
+			.html(nick)
+			.outerWidth(true);
+		input.css("padding-left", width);
 	}
 
 	function move(array, old_index, new_index) {
