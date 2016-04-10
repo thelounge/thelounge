@@ -37,8 +37,10 @@ module.exports = function(irc, network) {
 			msg: msg
 		});
 
-		var random = (data.nick || irc.user.nick) + Math.floor(10 + (Math.random() * 89));
-		irc.changeNick(random);
+		if (irc.connection.registered === false) {
+			var random = (data.nick || irc.user.nick) + Math.floor(10 + (Math.random() * 89));
+			irc.changeNick(random);
+		}
 	});
 
 	irc.on("nick invalid", function(data) {
@@ -52,7 +54,9 @@ module.exports = function(irc, network) {
 			msg: msg
 		});
 
-		var random = "i" + Math.random().toString(36).substr(2, 10); // 'i' so it never begins with a number
-		irc.changeNick(random);
+		if (irc.connection.registered === false) {
+			var random = "i" + Math.random().toString(36).substr(2, 10); // 'i' so it never begins with a number
+			irc.changeNick(random);
+		}
 	});
 };
