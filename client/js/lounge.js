@@ -775,7 +775,7 @@ $(function() {
 
 					if (msg.type === "invite") {
 						title = "New channel invite:";
-						body = msg.from + " invited you to " + msg.text;
+						body = msg.from + " invited you to " + msg.channel;
 					} else {
 						title = msg.from;
 						if (!isQuery) {
