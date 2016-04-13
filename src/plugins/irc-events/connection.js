@@ -19,9 +19,9 @@ module.exports = function(irc, network) {
 		}));
 	});
 
-	irc.on("socket close", function() {
+	irc.on("close", function() {
 		network.channels[0].pushMessage(client, new Msg({
-			text: "Disconnected from the network."
+			text: "Disconnected from the network, and will not reconnect."
 		}));
 	});
 
@@ -35,7 +35,7 @@ module.exports = function(irc, network) {
 
 	irc.on("reconnecting", function() {
 		network.channels[0].pushMessage(client, new Msg({
-			text: "Reconnecting..."
+			text: "Disconnected from the network. Reconnecting..."
 		}));
 	});
 
