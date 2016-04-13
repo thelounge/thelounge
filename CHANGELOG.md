@@ -30,6 +30,29 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
+## v1.5.0 - 2016-04-13
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v1.4.3...v1.5.0)
+
+With this release, administrators can now define a maximum size for channel history.
+While this is not optimal nor the definitive solution, it aims at reducing stability issues where The Lounge would crash after filling up the server's memory.
+
+Other changes noticeable by users include removing custom print styles and preventing sequences of white spaces to collapse into one.
+
+### Added
+
+- Add config option to limit in-memory history size ([#243](https://github.com/thelounge/lounge/pull/243) by [@maxpoulin64](https://github.com/maxpoulin64))
+
+### Changed
+
+- Do not parse link titles for IRC formatting ([#245](https://github.com/thelounge/lounge/pull/245) by [@xPaw](https://github.com/xPaw))
+- Display multiple white spaces properly ([#239](https://github.com/thelounge/lounge/pull/239) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Reword password prompt of `add` and `reset` CLI commands ([#230](https://github.com/thelounge/lounge/pull/230) by [@williamboman](https://github.com/williamboman))
+
+### Removed
+
+- Remove print styles ([#228](https://github.com/thelounge/lounge/pull/228) by [@xPaw](https://github.com/xPaw))
+
 ## v1.4.3 - 2016-04-02
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v1.4.2...v1.4.3)
