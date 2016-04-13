@@ -2,6 +2,7 @@ var _ = require("lodash");
 var Msg = require("../../models/msg");
 
 exports.commands = ["close", "leave", "part"];
+exports.allowDisconnected = true;
 
 exports.input = function(network, chan, cmd, args) {
 	if (chan.type === "lobby") {
@@ -15,8 +16,8 @@ exports.input = function(network, chan, cmd, args) {
 		return;
 	}
 
-	if (chan.type === "channel") {
-		var irc = network.irc;
+	var irc = network.irc;
+	if (irc && chan.type === "channel") {
 		irc.part(chan.name, args.join(" "));
 	}
 

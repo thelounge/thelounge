@@ -1,6 +1,3 @@
-var _ = require("lodash");
-var Msg = require("../../models/msg");
-
 exports.commands = ["notice"];
 
 exports.input = function(network, chan, cmd, args) {
@@ -12,22 +9,16 @@ exports.input = function(network, chan, cmd, args) {
 	var irc = network.irc;
 	irc.notice(args[0], message);
 
-	var targetChan = _.find(network.channels, {name: args[0]});
+	var targetChan = network.getChannel(args[0]);
 	if (typeof targetChan === "undefined") {
 		message = "{to " + args[0] + "} " + message;
 		targetChan = chan;
 	}
 
-	var msg = new Msg({
-		type: Msg.Type.NOTICE,
-		mode: targetChan.getMode(irc.me),
-		from: irc.me,
-		text: message
-	});
-	targetChan.messages.push(msg);
-	this.emit("msg", {
-		chan: targetChan.id,
-		msg: msg
+	irc.emit("notice", {
+		nick: irc.user.nick,
+		target: targetChan.name,
+		message: message
 	});
 
 	return true;

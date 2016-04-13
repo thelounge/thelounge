@@ -23,18 +23,21 @@ function Chan(attr) {
 	}, attr));
 }
 
-Chan.prototype.sortUsers = function() {
-	this.users = _.sortBy(
-		this.users,
-		function(u) { return u.name.toLowerCase(); }
-	);
+Chan.prototype.sortUsers = function(irc) {
+	var userModeSortPriority = {};
+	irc.network.options.PREFIX.forEach(function(prefix, index) {
+		userModeSortPriority[prefix.symbol] = index;
+	});
 
-	["+", "%", "@", "&", "~"].forEach(function(mode) {
-		this.users = _.remove(
-			this.users,
-			function(u) { return u.mode === mode; }
-		).concat(this.users);
-	}, this);
+	userModeSortPriority[""] = 99; // No mode is lowest
+
+	this.users = this.users.sort(function(a, b) {
+		if (a.mode === b.mode) {
+			return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
+		}
+
+		return userModeSortPriority[a.mode] - userModeSortPriority[b.mode];
+	});
 };
 
 Chan.prototype.getMode = function(name) {

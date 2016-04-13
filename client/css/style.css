@@ -789,7 +789,8 @@ button,
 #chat .nick .text,
 #chat .part .text,
 #chat .quit .text,
-#chat .topic .text {
+#chat .topic .text,
+#chat .topic_set_by .text {
 	color: #999;
 }
 
@@ -824,6 +825,11 @@ button,
 	font-family: FontAwesome;
 	content: "\f05a";
 	color: #2ecc40;
+}
+
+#chat .ctcp .from:before {
+	font-family: FontAwesome;
+	content: "\f0f6";
 }
 
 #chat .whois .from:before {
@@ -865,6 +871,10 @@ button,
 #chat .highlight .text,
 #chat .highlight .user {
 	color: #f00;
+}
+
+#chat .msg.toggle .time {
+	visibility: hidden;
 }
 
 #chat .toggle-button {

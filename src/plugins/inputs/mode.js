@@ -21,12 +21,9 @@ exports.input = function(network, chan, cmd, args) {
 		mode = args[0];
 		user = args[1];
 	}
+
 	var irc = network.irc;
-	irc.mode(
-		chan.name,
-		mode,
-		user
-	);
+	irc.raw("MODE", chan.name, mode, user);
 
 	return true;
 };

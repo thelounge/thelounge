@@ -1,4 +1,3 @@
-var _ = require("lodash");
 var Chan = require("../../models/chan");
 var Msg = require("../../models/msg");
 var Helper = require("../../helper");
@@ -7,44 +6,64 @@ module.exports = function(irc, network) {
 	var client = this;
 	var config = Helper.getConfig();
 
-	irc.on("message", function(data) {
-		if (data.message.indexOf("\u0001") === 0 && data.message.substring(0, 7) !== "\u0001ACTION") {
-			// Hide ctcp messages.
-			return;
+	irc.on("notice", function(data) {
+		// Some servers send notices without any nickname
+		if (!data.nick) {
+			data.from_server = true;
+			data.nick = network.host;
 		}
 
-		var target = data.to;
-		if (target.toLowerCase() === irc.me.toLowerCase()) {
-			target = data.from;
+		data.type = Msg.Type.NOTICE;
+		handleMessage(data);
+	});
+
+	irc.on("action", function(data) {
+		data.type = Msg.Type.ACTION;
+		handleMessage(data);
+	});
+
+	irc.on("privmsg", function(data) {
+		data.type = Msg.Type.MESSAGE;
+		handleMessage(data);
+	});
+
+	function handleMessage(data) {
+		// Server messages go to server window, no questions asked
+		if (data.from_server) {
+			chan = network.channels[0];
+		} else {
+			var target = data.target;
+
+			// If the message is targeted at us, use sender as target instead
+			if (target.toLowerCase() === irc.user.nick.toLowerCase()) {
+				target = data.nick;
+			}
+
+			var chan = network.getChannel(target);
+			if (typeof chan === "undefined") {
+				// Send notices that are not targeted at us into the server window
+				if (data.type === Msg.Type.NOTICE) {
+					chan = network.channels[0];
+				} else {
+					chan = new Chan({
+						type: Chan.Type.QUERY,
+						name: target
+					});
+					network.channels.push(chan);
+					client.emit("join", {
+						network: network.id,
+						chan: chan
+					});
+				}
+			}
 		}
 
-		var chan = _.find(network.channels, {name: target});
-		if (typeof chan === "undefined") {
-			chan = new Chan({
-				type: Chan.Type.QUERY,
-				name: data.from
-			});
-			network.channels.push(chan);
-			client.emit("join", {
-				network: network.id,
-				chan: chan
-			});
-		}
-
-		var type = Msg.Type.MESSAGE;
-		var text = data.message;
-		var textSplit = text.split(" ");
-		if (textSplit[0] === "\u0001ACTION") {
-			type = Msg.Type.ACTION;
-			text = text.replace(/^\u0001ACTION|\u0001$/g, "");
-		}
-
-		var self = (data.from.toLowerCase() === irc.me.toLowerCase());
+		var self = data.nick === irc.user.nick;
 
 		// Self messages are never highlighted
 		// Non-self messages are highlighted as soon as the nick is detected
-		var highlight = !self && textSplit.some(function(w) {
-			return (w.replace(/^@/, "").toLowerCase().indexOf(irc.me.toLowerCase()) === 0);
+		var highlight = !self && data.message.split(" ").some(function(w) {
+			return (w.replace(/^@/, "").toLowerCase().indexOf(irc.user.nick.toLowerCase()) === 0);
 		});
 
 		if (chan.id !== client.activeChannel) {
@@ -55,12 +74,12 @@ module.exports = function(irc, network) {
 			}
 		}
 
-		var name = data.from;
 		var msg = new Msg({
-			type: type,
-			mode: chan.getMode(name),
-			from: name,
-			text: text,
+			type: data.type,
+			time: data.time,
+			mode: chan.getMode(data.nick),
+			from: data.nick,
+			text: data.message,
 			self: self,
 			highlight: highlight
 		});
@@ -74,5 +93,5 @@ module.exports = function(irc, network) {
 			chan: chan.id,
 			msg: msg
 		});
-	});
+	}
 };

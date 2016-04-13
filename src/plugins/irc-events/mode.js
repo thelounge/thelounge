@@ -1,34 +1,53 @@
 var _ = require("lodash");
+var Chan = require("../../models/chan");
 var Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
 	var client = this;
 	irc.on("mode", function(data) {
-		var chan = _.find(network.channels, {name: data.target});
-		if (typeof chan !== "undefined") {
-			setTimeout(function() {
-				irc.write("NAMES " + data.target);
-			}, 200);
-			var from = data.nick;
-			if (from.indexOf(".") !== -1) {
-				from = data.target;
+		var targetChan;
+
+		if (data.target === irc.user.nick) {
+			targetChan = network.channels[0];
+		} else {
+			targetChan = network.getChannel(data.target);
+			if (typeof targetChan === "undefined") {
+				return;
 			}
-			var self = false;
-			if (from.toLowerCase() === irc.me.toLowerCase()) {
-				self = true;
+		}
+
+		var usersUpdated;
+
+		for (var i = 0; i < data.modes.length; i++) {
+			var mode = data.modes[i];
+			var text = mode.mode;
+			if (mode.param) {
+				text += " " + mode.param;
+
+				var user = _.find(targetChan.users, {name: mode.param});
+				if (typeof user !== "undefined") {
+					usersUpdated = true;
+				}
 			}
+
 			var msg = new Msg({
+				time: data.time,
 				type: Msg.Type.MODE,
-				mode: chan.getMode(from),
-				from: from,
-				text: data.mode + " " + (data.client || ""),
-				self: self
+				mode: (targetChan.type !== Chan.Type.LOBBY && targetChan.getMode(data.nick)) || "",
+				from: data.nick,
+				text: text,
+				self: data.nick === irc.user.nick
 			});
-			chan.messages.push(msg);
+			targetChan.messages.push(msg);
 			client.emit("msg", {
-				chan: chan.id,
+				chan: targetChan.id,
 				msg: msg,
 			});
+		}
+
+		if (usersUpdated) {
+			// TODO: This is horrible
+			irc.raw("NAMES", data.target);
 		}
 	});
 };

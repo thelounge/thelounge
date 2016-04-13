@@ -15,10 +15,11 @@ module.exports = function(irc, network) {
 				chan: chan.id
 			});
 			var msg = new Msg({
+				time: data.time,
 				type: Msg.Type.QUIT,
-				mode: chan.getMode(from),
+				mode: user.mode || "",
 				text: data.message || "",
-				hostmask: data.hostmask.username + "@" + data.hostmask.hostname,
+				hostmask: data.ident + "@" + data.hostname,
 				from: from
 			});
 			chan.messages.push(msg);

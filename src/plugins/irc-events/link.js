@@ -9,7 +9,7 @@ process.setMaxListeners(0);
 
 module.exports = function(irc, network) {
 	var client = this;
-	irc.on("message", function(data) {
+	irc.on("privmsg", function(data) {
 		var config = Helper.getConfig();
 		if (!config.prefetch) {
 			return;
@@ -27,15 +27,13 @@ module.exports = function(irc, network) {
 			return;
 		}
 
-		var self = data.to.toLowerCase() === irc.me.toLowerCase();
-		var chan = _.find(network.channels, {name: self ? data.from : data.to});
+		var chan = network.getChannel(data.target);
 		if (typeof chan === "undefined") {
 			return;
 		}
 
 		var msg = new Msg({
 			type: Msg.Type.TOGGLE,
-			time: ""
 		});
 		chan.messages.push(msg);
 		client.emit("msg", {

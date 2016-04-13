@@ -2,9 +2,10 @@ var EventEmitter = require("events").EventEmitter;
 var util = require("util");
 var _ = require("lodash");
 var express = require("express");
+var Network = require("../src/models/network");
 
 function MockClient(opts) {
-	this.me = "test-user";
+	this.user = {nick: "test-user"};
 
 	for (var k in opts) {
 		this[k] = opts[k];
@@ -13,14 +14,13 @@ function MockClient(opts) {
 util.inherits(MockClient, EventEmitter);
 
 MockClient.prototype.createMessage = function(opts) {
-
 	var message = _.extend({
 		message: "dummy message",
-		from: "test-user",
-		to: "test-channel"
+		nick: "test-user",
+		target: "#test-channel"
 	}, opts);
 
-	this.emit("message", message);
+	this.emit("privmsg", message);
 };
 
 module.exports = {
@@ -28,12 +28,13 @@ module.exports = {
 		return new MockClient();
 	},
 	createNetwork: function() {
-		return {
+		return new Network({
+			host: "example.com",
 			channels: [{
-				name: "test-channel",
+				name: "#test-channel",
 				messages: []
 			}]
-		};
+		});
 	},
 	createWebserver: function() {
 		return express();

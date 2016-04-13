@@ -2,25 +2,24 @@ exports.commands = ["slap", "me"];
 
 exports.input = function(network, chan, cmd, args) {
 	var irc = network.irc;
+	var text;
 
 	switch (cmd) {
 	case "slap":
-		var slap = "slaps " + args[0] + " around a bit with a large trout";
+		text = "slaps " + args[0] + " around a bit with a large trout";
 		/* fall through */
 	case "me":
 		if (args.length === 0) {
 			break;
 		}
 
-		var text = slap || args.join(" ");
-		irc.action(
-			chan.name,
-			text
-		);
-		irc.emit("message", {
-			from: irc.me,
-			to: chan.name,
-			message: "\u0001ACTION " + text
+		text = text || args.join(" ");
+
+		irc.say(chan.name, "\u0001ACTION " + text + "\u0001");
+		irc.emit("action", {
+			nick: irc.user.nick,
+			target: chan.name,
+			message: text
 		});
 		break;
 	}

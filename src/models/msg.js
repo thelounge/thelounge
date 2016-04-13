@@ -14,7 +14,9 @@ Msg.Type = {
 	PART: "part",
 	QUIT: "quit",
 	TOGGLE: "toggle",
+	CTCP: "ctcp",
 	TOPIC: "topic",
+	TOPIC_SET_BY: "topic_set_by",
 	WHOIS: "whois"
 };
 
@@ -27,8 +29,13 @@ function Msg(attr) {
 		from: "",
 		id: id++,
 		text: "",
-		time: new Date(),
 		type: Msg.Type.MESSAGE,
 		self: false
 	}, attr));
+
+	if (this.time > 0) {
+		this.time = new Date(this.time);
+	} else {
+		this.time = new Date();
+	}
 }

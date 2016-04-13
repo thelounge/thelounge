@@ -1,4 +1,5 @@
 exports.commands = ["connect", "server"];
+exports.allowDisconnected = true;
 
 exports.input = function(network, chan, cmd, args) {
 	if (args.length === 0) {

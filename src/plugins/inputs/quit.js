@@ -1,6 +1,7 @@
 var _ = require("lodash");
 
 exports.commands = ["quit", "disconnect"];
+exports.allowDisconnected = true;
 
 exports.input = function(network, chan, cmd, args) {
 	var client = this;
@@ -13,7 +14,9 @@ exports.input = function(network, chan, cmd, args) {
 		network: network.id
 	});
 
-	irc.quit(quitMessage);
+	if (irc) {
+		irc.quit(quitMessage);
+	}
 
 	return true;
 };

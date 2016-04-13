@@ -3,7 +3,7 @@ invited
 {{#if invitedYou}}
 	you
 {{else}}
-	<a href="#" class="user" data-name="{{target}}">{{target}}</a>
+	<a href="#" class="user" data-name="{{invited}}">{{invited}}</a>
 {{/if}}
 to
-{{{parse text}}}
+{{{parse channel}}}

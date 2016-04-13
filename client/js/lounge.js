@@ -221,8 +221,10 @@ $(function() {
 			"part",
 			"quit",
 			"topic",
+			"topic_set_by",
 			"action",
 			"whois",
+			"ctcp",
 		].indexOf(type) !== -1) {
 			data.msg.template = "actions/" + type;
 			msg = $(render("msg_action", data.msg));
@@ -307,6 +309,10 @@ $(function() {
 			.end();
 		confirmExit();
 		sortable();
+	});
+
+	socket.on("network_changed", function(data) {
+		sidebar.find("#network-" + data.network).data("options", data.serverOptions);
 	});
 
 	socket.on("nick", function(data) {
@@ -769,7 +775,7 @@ $(function() {
 
 					if (msg.type === "invite") {
 						title = "New channel invite:";
-						body = msg.from + " invited you to " + msg.text;
+						body = msg.from + " invited you to " + msg.channel;
 					} else {
 						title = msg.from;
 						if (!isQuery) {
