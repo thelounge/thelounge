@@ -1,7 +1,7 @@
 var _ = require("lodash");
 var Chan = require("./models/chan");
 var crypto = require("crypto");
-var log = require("./log");
+var userLog = require("./userLog");
 var Msg = require("./models/msg");
 var Network = require("./models/network");
 var ircFramework = require("irc-framework");
@@ -90,7 +90,7 @@ Client.prototype.emit = function(event, data) {
 				if (target.chan.type === Chan.Type.LOBBY) {
 					chan = target.network.host;
 				}
-				log.write(
+				userLog.write(
 					this.name,
 					target.network.host,
 					chan,
