@@ -13,8 +13,8 @@
   "scripts": {
     "start": "node index",
     "build": "grunt && handlebars client/views/ -e tpl -f client/js/lounge.templates.js",
-    "test": "HOME=test/fixtures mocha test/**/*.js && npm run lint",
-    "lint": "eslint . && stylelint \"**/*.css\"",
+    "test": "node run-all HOME=test/fixtures mocha test/**/*.js + npm run lint",
+    "lint": "node run-all eslint . + stylelint '**/*.css'",
     "prepublish": "npm run build"
   },
   "keywords": [
