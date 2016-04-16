@@ -13,10 +13,8 @@ program
 		try {
 			mkdirp.sync(path);
 		} catch (e) {
-			console.log("");
-			console.log("Could not create " + path);
-			console.log("Try running the command as sudo.");
-			console.log("");
+			log.error("Could not create", path);
+			log.info("Try running the command as sudo.");
 			return;
 		}
 		try {
@@ -24,18 +22,14 @@ program
 			fs.mkdirSync(test);
 			fs.rmdirSync(test);
 		} catch (e) {
-			console.log("");
-			console.log("You have no permissions to write to " + path);
-			console.log("Try running the command as sudo.");
-			console.log("");
+			log.error("You have no permissions to write to", path);
+			log.info("Try running the command as sudo.");
 			return;
 		}
 		var manager = new ClientManager();
 		var users = manager.getUsers();
 		if (users.indexOf(name) !== -1) {
-			console.log("");
-			console.log("User '" + name + "' already exists.");
-			console.log("");
+			log.error("User '" + name + "' already exists.");
 			return;
 		}
 		require("read")({
@@ -47,14 +41,12 @@ program
 	});
 
 function add(manager, name, password) {
-	console.log("");
 	var salt = bcrypt.genSaltSync(8);
 	var hash = bcrypt.hashSync(password, salt);
 	manager.addUser(
 		name,
 		hash
 	);
-	console.log("User '" + name + "' created:");
-	console.log(Helper.HOME + "/users/" + name + ".json");
-	console.log("");
+	log.info("User '" + name + "' created:");
+	log.info(Helper.HOME + "/users/" + name + ".json");
 }

@@ -56,10 +56,8 @@ module.exports = function(options) {
 
 	manager.sockets = sockets;
 
-	console.log("");
-	console.log("The Lounge is now running on " + protocol + "://" + config.host + ":" + config.port + "/");
-	console.log("Press ctrl-c to stop");
-	console.log("");
+	log.info("The Lounge is now running on", protocol + "://" + config.host + ":" + config.port + "/");
+	log.info("Press ctrl-c to stop");
 
 	if (!config.public) {
 		manager.loadUsers();

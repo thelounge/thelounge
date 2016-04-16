@@ -30,6 +30,7 @@ rules:
   spaced-comment: [2, always]
 
 globals:
+  log: false
   $: false
   Favico: false
   Handlebars: false

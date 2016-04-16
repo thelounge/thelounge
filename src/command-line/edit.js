@@ -9,9 +9,7 @@ program
 	.action(function(name) {
 		var users = new ClientManager().getUsers();
 		if (users.indexOf(name) === -1) {
-			console.log("");
-			console.log("User '" + name + "' doesn't exist.");
-			console.log("");
+			log.error("User '" + name + "' doesn't exist.");
 			return;
 		}
 		child.spawn(

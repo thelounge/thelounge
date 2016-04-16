@@ -8,7 +8,7 @@ module.exports.write = function(user, network, chan, msg) {
 		var path = Helper.HOME + "/logs/" + user + "/" + network;
 		mkdirp.sync(path);
 	} catch (e) {
-		console.log(e);
+		log.error("Unabled to create logs directory", e);
 		return;
 	}
 
@@ -39,9 +39,7 @@ module.exports.write = function(user, network, chan, msg) {
 		path + "/" + chan.replace(/%/g, "%%").replace(/\//g, "%") + ".log",
 		line + "\n",
 		function(e) {
-			if (e) {
-				console.log("Log#write():\n" + e);
-			}
+			log.error("Failed to write user log", e);
 		}
 	);
 };

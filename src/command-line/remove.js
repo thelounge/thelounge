@@ -13,20 +13,14 @@ program
 			fs.mkdirSync(test);
 			fs.rmdirSync(test);
 		} catch (e) {
-			console.log("");
-			console.log("You have no permissions to delete from " + path);
-			console.log("Try running the command as sudo.");
-			console.log("");
+			log.warn("You have no permissions to delete from " + path);
+			log.info("Try running the command as sudo.");
 			return;
 		}
 		var manager = new ClientManager();
 		if (manager.removeUser(name)) {
-			console.log("");
-			console.log("Removed '" + name + "'.");
-			console.log("");
+			log.info("Removed user '" + name + "'.");
 		} else {
-			console.log("");
-			console.log("User '" + name + "' doesn't exist.");
-			console.log("");
+			log.error("User '" + name + "' doesn't exist.");
 		}
 	});

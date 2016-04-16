@@ -31,7 +31,7 @@ ClientManager.prototype.loadUser = function(name) {
 	try {
 		var json = this.readUserConfig(name);
 	} catch (e) {
-		console.log(e);
+		log.error("Failed to read user config", e);
 		return;
 	}
 	if (!this.findClient(name)) {
@@ -40,9 +40,6 @@ ClientManager.prototype.loadUser = function(name) {
 			name,
 			json
 		));
-		console.log(
-			"User '" + name + "' loaded."
-		);
 	}
 };
 
@@ -58,7 +55,7 @@ ClientManager.prototype.getUsers = function() {
 			}
 		});
 	} catch (e) {
-		console.log(e);
+		log.error("Failed to get users", e);
 		return;
 	}
 	return users;
@@ -107,7 +104,7 @@ ClientManager.prototype.updateUser = function(name, opts) {
 			JSON.stringify(user, null, " ")
 		);
 	} catch (e) {
-		console.log(e);
+		log.error("Failed to update user", e);
 		return;
 	}
 	return true;
@@ -160,9 +157,7 @@ ClientManager.prototype.autoload = function(/* sockets */) {
 			if (client) {
 				client.quit();
 				self.clients = _.without(self.clients, client);
-				console.log(
-					"User '" + name + "' disconnected."
-				);
+				log.info("User '" + name + "' disconnected");
 			}
 		});
 	}, 1000);

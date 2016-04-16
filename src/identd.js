@@ -4,7 +4,9 @@ var net = require("net");
 var users = {};
 
 module.exports.start = function(port) {
-	net.createServer(init).listen(port || 113);
+	port = port || 113;
+	log.info("Starting identd server on port", port);
+	net.createServer(init).listen(port);
 };
 
 module.exports.hook = function(stream, user) {
@@ -44,4 +46,3 @@ function parse(data) {
 	data = data.split(",");
 	return parseInt(data[0]) + ", " + parseInt(data[1]);
 }
-

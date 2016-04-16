@@ -21,10 +21,8 @@ program
 			mode = false;
 		}
 		if (!mode && !users.length) {
-			console.log("");
-			console.log("No users found!");
-			console.log("Create a new user with 'lounge add <name>'.");
-			console.log("");
+			log.warn("No users found!");
+			log.info("Create a new user with 'lounge add <name>'.");
 		} else {
 			server({
 				host: program.host || process.env.IP   || config.host,
