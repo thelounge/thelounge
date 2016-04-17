@@ -1,67 +1,34 @@
-/*!
- * stickyscroll
- * https://github.com/erming/stickyscroll
- * v2.2.0
- */
 (function($) {
+	$.fn.unsticky = function() {
+		return this.unbind(".sticky");
+	};
+
 	$.fn.sticky = function() {
-		if (this.size() > 1) {
-			return this.each(function() {
-				$(this).sticky(options);
-			});
-		}
-
-		var isBottom = false;
 		var self = this;
+		var stuckToBottom = true;
 
-		this.unbind(".sticky");
-		this.on("beforeAppend.sticky", function() {
-			isBottom = isScrollBottom.call(self);
-		});
+		self
+			.on("scroll.sticky", function(e) {
+				stuckToBottom = self.isScrollBottom();
+			})
+			.on("msg.sticky", function() {
+				if (stuckToBottom) {
+					self.scrollBottom();
+				}
+			})
+			.scrollBottom();
 
-		this.on("afterAppend.sticky", function() {
-			if (isBottom) {
-				self.scrollBottom();
-			}
-		});
-
-		var overflow = this.css("overflow-y");
-		if (overflow == "visible") {
-			overflow = "auto";
-		}
-		this.css({
-			"overflow-y": overflow
-		});
-
-		$(window).unbind(".sticky");
-		$(window).on("resize.sticky", function() {
-				self.scrollBottom();
-		});
-
-		this.scrollBottom();
-		return this;
+		return self;
 	};
 
 	$.fn.scrollBottom = function() {
-		return this.each(function() {
-			$(this).animate({scrollTop: this.scrollHeight}, 0);
-		});
-	};
-
-	$.fn.isScrollBottom = isScrollBottom;
-
-	function isScrollBottom() {
-		if ((this.scrollTop() + this.outerHeight() + 1) >= this.prop("scrollHeight")) {
-			return true;
-		} else {
-			return false;
-		}
-	};
-
-	var append = $.fn.append;
-	$.fn.append = function() {
-		this.trigger("beforeAppend");
-		append.apply(this, arguments).trigger("afterAppend")
+		var el = this[0];
+		this.scrollTop(el.scrollHeight);
 		return this;
+	};
+
+	$.fn.isScrollBottom = function() {
+		var el = this[0];
+		return el.scrollHeight - el.scrollTop - el.offsetHeight <= 30;
 	};
 })(jQuery);
