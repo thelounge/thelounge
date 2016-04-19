@@ -16,10 +16,6 @@ module.exports = function(irc, network) {
 			channel: data.channel,
 			invitedYou: data.invited === irc.user.nick
 		});
-		chan.messages.push(msg);
-		client.emit("msg", {
-			chan: chan.id,
-			msg: msg
-		});
+		chan.pushMessage(client, msg);
 	});
 };

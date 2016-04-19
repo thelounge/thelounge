@@ -1,10 +1,8 @@
 var Chan = require("../../models/chan");
 var Msg = require("../../models/msg");
-var Helper = require("../../helper");
 
 module.exports = function(irc, network) {
 	var client = this;
-	var config = Helper.getConfig();
 
 	irc.on("notice", function(data) {
 		// Some servers send notices without any nickname
@@ -83,15 +81,6 @@ module.exports = function(irc, network) {
 			self: self,
 			highlight: highlight
 		});
-		chan.messages.push(msg);
-
-		if (config.maxHistory >= 0 && chan.messages.length > config.maxHistory) {
-			chan.messages.splice(0, chan.messages.length - config.maxHistory);
-		}
-
-		client.emit("msg", {
-			chan: chan.id,
-			msg: msg
-		});
+		chan.pushMessage(client, msg);
 	}
 };

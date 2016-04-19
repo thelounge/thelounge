@@ -29,10 +29,6 @@ module.exports = function(irc, network) {
 			type: Msg.Type.JOIN,
 			self: data.nick === irc.user.nick
 		});
-		chan.messages.push(msg);
-		client.emit("msg", {
-			chan: chan.id,
-			msg: msg
-		});
+		chan.pushMessage(client, msg);
 	});
 };

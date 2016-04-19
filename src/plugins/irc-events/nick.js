@@ -10,11 +10,7 @@ module.exports = function(irc, network) {
 			var msg = new Msg({
 				text: "You're now known as " + data.new_nick,
 			});
-			lobby.messages.push(msg);
-			client.emit("msg", {
-				chan: lobby.id,
-				msg: msg
-			});
+			lobby.pushMessage(client, msg);
 			self = true;
 			client.save();
 			client.emit("nick", {
@@ -41,11 +37,7 @@ module.exports = function(irc, network) {
 				new_nick: data.new_nick,
 				self: self
 			});
-			chan.messages.push(msg);
-			client.emit("msg", {
-				chan: chan.id,
-				msg: msg
-			});
+			chan.pushMessage(client, msg);
 		});
 	});
 };

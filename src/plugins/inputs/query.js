@@ -17,25 +17,19 @@ exports.input = function(network, chan, cmd, args) {
 
 	var char = target[0];
 	if (network.irc.network.options.CHANTYPES && network.irc.network.options.CHANTYPES.indexOf(char) !== -1) {
-		this.emit("msg", {
-			chan: chan.id,
-			msg: new Msg({
-				type: Msg.Type.ERROR,
-				text: "You can not open query windows for channels, use /join instead."
-			})
-		});
+		chan.pushMessage(this, new Msg({
+			type: Msg.Type.ERROR,
+			text: "You can not open query windows for channels, use /join instead."
+		}));
 		return;
 	}
 
 	for (var i = 0; i < network.irc.network.options.PREFIX.length; i++) {
 		if (network.irc.network.options.PREFIX[i].symbol === char) {
-			this.emit("msg", {
-				chan: chan.id,
-				msg: new Msg({
-					type: Msg.Type.ERROR,
-					text: "You can not open query windows for names starting with a user prefix."
-				})
-			});
+			chan.pushMessage(this, new Msg({
+				type: Msg.Type.ERROR,
+				text: "You can not open query windows for names starting with a user prefix."
+			}));
 			return;
 		}
 	}

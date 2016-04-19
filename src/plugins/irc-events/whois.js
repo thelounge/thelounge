@@ -30,10 +30,6 @@ module.exports = function(irc, network) {
 			});
 		}
 
-		chan.messages.push(msg);
-		client.emit("msg", {
-			chan: chan.id,
-			msg: msg
-		});
+		chan.pushMessage(client, msg);
 	});
 };

@@ -1,4 +1,5 @@
 var _ = require("lodash");
+var Helper = require("../helper");
 
 module.exports = Chan;
 
@@ -9,6 +10,7 @@ Chan.Type = {
 };
 
 var id = 0;
+var config = Helper.getConfig();
 
 function Chan(attr) {
 	_.merge(this, _.extend({
@@ -22,6 +24,19 @@ function Chan(attr) {
 		users: []
 	}, attr));
 }
+
+Chan.prototype.pushMessage = function(client, msg) {
+	this.messages.push(msg);
+
+	if (config.maxHistory >= 0 && this.messages.length > config.maxHistory) {
+		this.messages.splice(0, this.messages.length - config.maxHistory);
+	}
+
+	client.emit("msg", {
+		chan: this.id,
+		msg: msg
+	});
+};
 
 Chan.prototype.sortUsers = function(irc) {
 	var userModeSortPriority = {};

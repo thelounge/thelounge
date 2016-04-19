@@ -11,11 +11,7 @@ module.exports = function(irc, network) {
 					type: Msg.Type.MOTD,
 					text: text
 				});
-				lobby.messages.push(msg);
-				client.emit("msg", {
-					chan: lobby.id,
-					msg: msg
-				});
+				lobby.pushMessage(client, msg);
 			});
 		}
 
@@ -24,11 +20,7 @@ module.exports = function(irc, network) {
 				type: Msg.Type.MOTD,
 				text: data.error
 			});
-			lobby.messages.push(msg);
-			client.emit("msg", {
-				chan: lobby.id,
-				msg: msg
-			});
+			lobby.pushMessage(client, msg);
 		}
 	});
 };

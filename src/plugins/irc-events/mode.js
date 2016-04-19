@@ -38,11 +38,7 @@ module.exports = function(irc, network) {
 				text: text,
 				self: data.nick === irc.user.nick
 			});
-			targetChan.messages.push(msg);
-			client.emit("msg", {
-				chan: targetChan.id,
-				msg: msg,
-			});
+			targetChan.pushMessage(client, msg);
 		}
 
 		if (usersUpdated) {
