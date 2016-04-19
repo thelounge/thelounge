@@ -3,6 +3,7 @@ var util = require("util");
 var _ = require("lodash");
 var express = require("express");
 var Network = require("../src/models/network");
+var Chan = require("../src/models/chan");
 
 function MockClient(opts) {
 	this.user = {nick: "test-user"};
@@ -30,10 +31,9 @@ module.exports = {
 	createNetwork: function() {
 		return new Network({
 			host: "example.com",
-			channels: [{
-				name: "#test-channel",
-				messages: []
-			}]
+			channels: [new Chan({
+				name: "#test-channel"
+			})]
 		});
 	},
 	createWebserver: function() {
