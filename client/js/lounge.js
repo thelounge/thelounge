@@ -51,6 +51,10 @@ $(function() {
 	$(".tse-scrollable").TrackpadScrollEmulator();
 
 	var favicon = $("#favicon");
+	
+	function dimmer(dim) {
+		document.body.style.opacity = dim ? 0.5 : 1;
+	}
 
 	function render(name, data) {
 		return Handlebars.templates[name](data);
@@ -65,10 +69,14 @@ $(function() {
 	socket.on("error", function(e) {
 		console.log(e);
 	});
+	
+	socket.on("connect", function (e) {
+		dimmer(false);
+  	});
 
 	$.each(["connect_error", "disconnect"], function(i, e) {
 		socket.on(e, function() {
-			refresh();
+			dimmer(true);
 		});
 	});
 
