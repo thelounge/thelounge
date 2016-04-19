@@ -8,14 +8,6 @@ program.version(pkg.version, "-v, --version");
 program.option("");
 program.option("    --home <path>" , "home path");
 
-require("./start");
-require("./config");
-require("./list");
-require("./add");
-require("./remove");
-require("./reset");
-require("./edit");
-
 var argv = program.parseOptions(process.argv);
 if (program.home) {
 	Helper.HOME = program.home;
@@ -31,6 +23,14 @@ if (!fs.existsSync(config)) {
 	console.log("Config created:");
 	console.log(config);
 }
+
+require("./start");
+require("./config");
+require("./list");
+require("./add");
+require("./remove");
+require("./reset");
+require("./edit");
 
 program.parse(argv.args);
 
