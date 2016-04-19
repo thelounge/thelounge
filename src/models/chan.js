@@ -26,16 +26,22 @@ function Chan(attr) {
 }
 
 Chan.prototype.pushMessage = function(client, msg) {
+	client.emit("msg", {
+		chan: this.id,
+		msg: msg
+	});
+
+	// Never store messages in public mode as the session
+	// is completely destroyed when the page gets closed
+	if (config.public) {
+		return;
+	}
+
 	this.messages.push(msg);
 
 	if (config.maxHistory >= 0 && this.messages.length > config.maxHistory) {
 		this.messages.splice(0, this.messages.length - config.maxHistory);
 	}
-
-	client.emit("msg", {
-		chan: this.id,
-		msg: msg
-	});
 };
 
 Chan.prototype.sortUsers = function(irc) {
