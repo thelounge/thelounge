@@ -174,6 +174,10 @@ Client.prototype.connect = function(args) {
 	}
 
 	network.irc = new ircFramework.Client();
+	network.irc.requestCap([
+		"echo-message",
+		"znc.in/self-message",
+	]);
 	network.irc.connect({
 		host: network.host,
 		port: network.port,

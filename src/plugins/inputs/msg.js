@@ -19,13 +19,15 @@ exports.input = function(network, chan, cmd, args) {
 	var msg = args.join(" ");
 	irc.say(target, msg);
 
-	var channel = network.getChannel(target);
-	if (typeof channel !== "undefined") {
-		irc.emit("privmsg", {
-			nick: irc.user.nick,
-			target: channel.name,
-			message: msg
-		});
+	if (!network.irc.network.cap.isEnabled("echo-message")) {
+		var channel = network.getChannel(target);
+		if (typeof channel !== "undefined") {
+			irc.emit("privmsg", {
+				nick: irc.user.nick,
+				target: channel.name,
+				message: msg
+			});
+		}
 	}
 
 	return true;

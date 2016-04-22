@@ -15,11 +15,13 @@ exports.input = function(network, chan, cmd, args) {
 		targetChan = chan;
 	}
 
-	irc.emit("notice", {
-		nick: irc.user.nick,
-		target: targetChan.name,
-		message: message
-	});
+	if (!network.irc.network.cap.isEnabled("echo-message")) {
+		irc.emit("notice", {
+			nick: irc.user.nick,
+			target: targetChan.name,
+			message: message
+		});
+	}
 
 	return true;
 };
