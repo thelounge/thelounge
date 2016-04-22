@@ -761,8 +761,7 @@ $(function() {
 
 	chat.on("msg", ".messages", function(e, target, msg) {
 		var button = sidebar.find(".chan[data-target='" + target + "']");
-		var isQuery = button.hasClass("query");
-		if (msg.type === "invite" || msg.highlight || isQuery || (options.notifyAllMessages && msg.type === "message")) {
+		if (msg.highlight || (options.notifyAllMessages && msg.type === "message")) {
 			if (!document.hasFocus() || !$(target).hasClass("active")) {
 				if (options.notification) {
 					pop.play();
@@ -778,7 +777,7 @@ $(function() {
 						body = msg.from + " invited you to " + msg.channel;
 					} else {
 						title = msg.from;
-						if (!isQuery) {
+						if (!button.hasClass("query")) {
 							title += " (" + button.data("title").trim() + ")";
 						}
 						title += " says:";
@@ -823,7 +822,7 @@ $(function() {
 			var i = (badge.data("count") || 0) + 1;
 			badge.data("count", i);
 			badge.html(i > 999 ? (i / 1000).toFixed(1) + "k" : i);
-			if (msg.highlight || isQuery) {
+			if (msg.highlight) {
 				badge.addClass("highlight");
 			}
 		}
