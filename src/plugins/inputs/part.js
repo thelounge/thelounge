@@ -6,13 +6,10 @@ exports.allowDisconnected = true;
 
 exports.input = function(network, chan, cmd, args) {
 	if (chan.type === "lobby") {
-		this.emit("msg", {
-			chan: chan.id,
-			msg: new Msg({
-				type: Msg.Type.ERROR,
-				text: "You can not part from networks, use /quit instead."
-			})
-		});
+		chan.pushMessage(this, new Msg({
+			type: Msg.Type.ERROR,
+			text: "You can not part from networks, use /quit instead."
+		}));
 		return;
 	}
 

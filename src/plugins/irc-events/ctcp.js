@@ -17,11 +17,7 @@ module.exports = function(irc, network) {
 			ctcpType: data.type,
 			ctcpMessage: data.message
 		});
-		chan.messages.push(msg);
-		client.emit("msg", {
-			chan: chan.id,
-			msg: msg
-		});
+		chan.pushMessage(client, msg);
 	});
 
 	irc.on("ctcp request", function(data) {

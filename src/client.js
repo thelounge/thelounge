@@ -147,13 +147,10 @@ Client.prototype.connect = function(args) {
 	if (config.lockNetwork) {
 		// This check is needed to prevent invalid user configurations
 		if (args.host && args.host.length > 0 && args.host !== config.defaults.host) {
-			client.emit("msg", {
-				chan: network.channels[0].id,
-				msg: new Msg({
-					type: Msg.Type.ERROR,
-					text: "Hostname you specified is not allowed."
-				})
-			});
+			network.channels[0].pushMessage(client, new Msg({
+				type: Msg.Type.ERROR,
+				text: "Hostname you specified is not allowed."
+			}));
 			return;
 		}
 
@@ -163,13 +160,10 @@ Client.prototype.connect = function(args) {
 	}
 
 	if (network.host.length === 0) {
-		client.emit("msg", {
-			chan: network.channels[0].id,
-			msg: new Msg({
-				type: Msg.Type.ERROR,
-				text: "You must specify a hostname to connect."
-			})
-		});
+		network.channels[0].pushMessage(client, new Msg({
+			type: Msg.Type.ERROR,
+			text: "You must specify a hostname to connect."
+		}));
 		return;
 	}
 
@@ -264,13 +258,10 @@ Client.prototype.input = function(data) {
 	}
 
 	if (!connected) {
-		this.emit("msg", {
-			chan: target.chan.id,
-			msg: new Msg({
-				type: Msg.Type.ERROR,
-				text: "You are not connected to the IRC network, unable to send your command."
-			})
-		});
+		target.chan.pushMessage(this, new Msg({
+			type: Msg.Type.ERROR,
+			text: "You are not connected to the IRC network, unable to send your command."
+		}));
 	}
 };
 
