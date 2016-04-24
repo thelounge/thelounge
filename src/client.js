@@ -182,6 +182,12 @@ Client.prototype.connect = function(args) {
 	});
 
 	network.irc.on("registered", function() {
+		if (network.irc.network.cap.enabled.length > 0) {
+			network.channels[0].pushMessage(client, new Msg({
+				text: "Enabled capabilities: " + network.irc.network.cap.enabled.join(", ")
+			}));
+		}
+
 		var delay = 1000;
 		var commands = args.commands;
 		if (Array.isArray(commands)) {
