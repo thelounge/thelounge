@@ -220,7 +220,7 @@ $(function() {
 		}
 
 		var chan = chat.find(target);
-		var msg;
+		var template = "msg";
 
 		if (highlights.some(function(h) {
 			return data.msg.text.indexOf(h) > -1;
@@ -243,10 +243,12 @@ $(function() {
 			"ctcp",
 		].indexOf(type) !== -1) {
 			data.msg.template = "actions/" + type;
-			msg = $(render("msg_action", data.msg));
-		} else {
-			msg = $(render("msg", data.msg));
+			template = "msg_action";
+		} else if (type === "unhandled") {
+			template = "msg_unhandled";
 		}
+
+		var msg = $(render(template, data.msg));
 
 		var text = msg.find(".text");
 		if (text.find("i").size() === 1) {

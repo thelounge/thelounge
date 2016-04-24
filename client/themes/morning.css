@@ -195,6 +195,10 @@ body {
 	color: #f92772;
 }
 
+#chat .unhandled .from {
+	color: #99a2b4;
+}
+
 #chat .msg.quit .time,
 #chat .msg.quit .from button {
 	color: #d0907d !important;

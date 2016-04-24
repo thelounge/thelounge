@@ -1,6 +1,7 @@
 var _ = require("lodash");
 
 Msg.Type = {
+	UNHANDLED: "unhandled",
 	ACTION: "action",
 	ERROR: "error",
 	INVITE: "invite",
