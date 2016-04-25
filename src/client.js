@@ -6,6 +6,7 @@ var Msg = require("./models/msg");
 var Network = require("./models/network");
 var ircFramework = require("irc-framework");
 var Helper = require("./helper");
+var Settings = require("./clientSettings");
 
 module.exports = Client;
 
@@ -60,7 +61,8 @@ function Client(manager, name, config) {
 		name: name,
 		networks: [],
 		sockets: manager.sockets,
-		manager: manager
+		manager: manager,
+		settings: new Settings(),
 	});
 	var client = this;
 	crypto.randomBytes(48, function(err, buf) {
@@ -74,7 +76,13 @@ function Client(manager, name, config) {
 			}, delay);
 			delay += 1000;
 		});
+
+		if ("settings" in config) {
+			this.settings.replace(config.settings);
+		}
 	}
+
+	this.settings.bindToClient(this);
 }
 
 Client.prototype.emit = function(event, data) {

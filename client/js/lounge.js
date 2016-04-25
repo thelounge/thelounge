@@ -176,6 +176,8 @@ $(function() {
 		}
 
 		sortable();
+
+		settings.mergeFromServer(data.settings);
 	});
 
 	socket.on("join", function(data) {
@@ -368,13 +370,13 @@ $(function() {
 		toggle.parent().after(render("toggle", {toggle: data}));
 		switch (data.type) {
 		case "link":
-			if (options.links) {
+			if (settings.get("links")) {
 				toggle.click();
 			}
 			break;
 
 		case "image":
-			if (options.thumbnails) {
+			if (settings.get("thumbnails")) {
 				toggle.click();
 			}
 			break;
@@ -410,50 +412,203 @@ $(function() {
 		users.data("nicks", nicks);
 	});
 
-	var userStyles = $("#user-specified-css");
-	var settings = $("#settings");
-	var options = $.extend({
-		desktopNotifications: false,
-		colors: false,
-		join: true,
-		links: true,
-		mode: true,
-		motd: false,
-		nick: true,
-		notification: true,
-		part: true,
-		thumbnails: true,
-		quit: true,
-		notifyAllMessages: false,
-		userStyles: userStyles.text(),
-	}, JSON.parse(window.localStorage.getItem("settings")));
+	function Settings(element, defaults) {
+		var self = this;
 
-	for (var i in options) {
-		if (i === "userStyles") {
-			if (!/[\?&]nocss/.test(window.location.search)) {
-				$(document.head).find("#user-specified-css").html(options[i]);
-			}
-			settings.find("#user-specified-css-input").val(options[i]);
-			continue;
-		}
-		if (options[i]) {
-			settings.find("input[name=" + i + "]").prop("checked", true);
-		}
+		this.element = element;
+
+		this.options = $.extend({
+			desktopNotifications: false,
+			colors: false,
+			join: true,
+			links: true,
+			mode: true,
+			motd: false,
+			nick: true,
+			notification: true,
+			part: true,
+			thumbnails: true,
+			quit: true,
+			notifyAllMessages: false,
+			userStyles: "",
+		}, defaults);
+
+		this.serverOptions = {};
+
+		this.on("change", function(event, key, value) {
+			self.trigger("change:" + key, [value, key]);
+		});
+
+		this.on("sync", function(event, key, value) {
+			self.trigger("sync:" + key, [value, key]);
+		});
 	}
 
-	settings.on("change", "input, textarea", function() {
-		var self = $(this);
-		var name = self.attr("name");
+	Settings.prototype = {
+		get: function(key, def) {
+			if (key in this.serverOptions) {
+				return this.serverOptions[key];
+			}
+			else if (key in this.options) {
+				return this.options[key];
+			}
+			else {
+				return def;
+			}
+		},
 
-		if (self.attr("type") === "checkbox") {
-			options[name] = self.prop("checked");
-		} else {
-			options[name] = self.val();
+		set: function(key, value) {
+			this.options[key] = value;
+
+			if (key in this.serverOptions) {
+				this.serverOptions[key] = this.options[key] = value;
+			}
+			else {
+				this.options[key] = value;
+			}
+
+			this.trigger("change", [key, value]);
+		},
+
+		sync: function(key, status) {
+			if (status) {
+				this.serverOptions[key] = this.options[key];
+			}
+			else {
+				delete this.serverOptions[key];
+			}
+
+			this.trigger("sync", [key, !!status]);
+		},
+
+		isSync: function(key) {
+			return key in this.serverOptions;
+		},
+
+		on: function(event, callback) {
+			this.element.on("setting:" + event, callback);
+		},
+
+		trigger: function(event, data) {
+			this.element.trigger("setting:" + event, data);
+		},
+
+		mergeFromServer: function(data) {
+			for (var key in this.serverOptions) {
+				this.sync(key, false);
+			}
+
+			for (key in data) {
+				this.set(key, data[key]);
+				this.sync(key, true);
+			}
+		},
+
+		loadFromLocalStorage: function() {
+			var options = JSON.parse(window.localStorage.getItem("settings"));
+
+			for (var k in options) {
+				this.set(k, options[k]);
+			}
+		},
+
+		saveToLocalStorage: function() {
+			window.localStorage.setItem("settings", JSON.stringify(this.options));
+		}
+	};
+
+	var settings = new Settings($("#settings"));
+
+	// Bind the settings page inputs
+	(function() {
+		function bindCheckbox(el, name) {
+			el.prop("checked", settings.get(name));
+			el.change(function() {
+				settings.set(name, el.prop("checked"));
+			});
+			settings.on("change:" + name, function(event, value) {
+				el.prop("checked", !!value);
+			});
 		}
 
-		window.localStorage.setItem("settings", JSON.stringify(options));
+		function bindOther(el, name) {
+			el.prop("value", settings.get(name));
+			el.change(function() {
+				settings.set(name, el.prop("value"));
+			});
+			settings.on("change:" + name, function(event, value) {
+				el.prop("value", value);
+			});
+		}
 
-		if ([
+		settings.element.find("input[name^='setting:'], textarea[name^='setting:']").each(function() {
+			var el = $(this);
+			var name = el.prop("name").substr("setting:".length);
+
+			if (el.prop("type") === "checkbox") {
+				bindCheckbox(el, name);
+			}
+			else {
+				bindOther(el, name);
+			}
+		});
+
+		settings.element.find("input[name^='sync:']").each(function() {
+			var el = $(this);
+			var name = $(this).prop("name").substr("sync:".length);
+
+			el.prop("checked", settings.isSync(name));
+			el.on("change", function() {
+				settings.sync(name, el.prop("checked"));
+			});
+			settings.on("sync:" + name, function(e, value) {
+				el.prop("checked", value);
+			});
+		});
+	})();
+
+	// Server synchronization
+	(function() {
+		var inHandler = false;
+
+		socket.on("settings:set", function(data) {
+			inHandler = true;
+			settings.set(data.key, data.value);
+			settings.sync(data.key, true);
+			inHandler = false;
+		});
+
+		socket.on("settings:unset", function(data) {
+			inHandler = true;
+			settings.sync(data.key, false);
+			inHandler = false;
+		});
+
+		settings.on("change", function(event, key, value) {
+			settings.saveToLocalStorage();
+
+			if (!inHandler && settings.isSync(key)) {
+				socket.emit("settings:set", {key: key, value: value});
+			}
+		});
+
+		settings.on("sync", function(event, key, status) {
+			if (!inHandler) {
+				if (status) {
+					socket.emit("settings:set", {key: key, value: settings.get(key)});
+				}
+				else {
+					socket.emit("settings:unset", {key: key});
+				}
+			}
+		});
+	})();
+
+	// Settings handlers
+	(function() {
+		var userStyles = $(document.head).find("#user-specified-css");
+
+		[
 			"join",
 			"mode",
 			"motd",
@@ -461,26 +616,31 @@ $(function() {
 			"part",
 			"quit",
 			"notifyAllMessages",
-		].indexOf(name) !== -1) {
-			chat.toggleClass("hide-" + name, !self.prop("checked"));
-		}
-		if (name === "colors") {
-			chat.toggleClass("no-colors", !self.prop("checked"));
-		}
-		if (name === "userStyles") {
-			$(document.head).find("#user-specified-css").html(options[name]);
-		}
-	}).find("input")
-		.trigger("change");
+		].forEach(function(key) {
+			settings.on("change:" + key, function(event, value) {
+				chat.toggleClass("hide-" + key, !value);
+			});
+		});
 
-	$("#desktopNotifications").on("change", function() {
-		var self = $(this);
-		if (self.prop("checked")) {
-			if (Notification.permission !== "granted") {
+		settings.on("change:colors", function(event, value) {
+			chat.toggleClass("no-colors", !value);
+		});
+
+		settings.on("change:desktopNotifications", function(event, value) {
+			if (value === true && Notification.permission !== "granted") {
 				Notification.requestPermission(updateDesktopNotificationStatus);
 			}
-		}
-	});
+		});
+
+		settings.on("change:userStyles", function(event, value) {
+			if (!/[\?&]nocss/.test(window.location.search)) {
+				userStyles.html(value);
+			}
+		});
+	})();
+
+	settings.loadFromLocalStorage();
+
 
 	var viewport = $("#viewport");
 	var contextMenuContainer = $("#context-menu-container");
@@ -762,14 +922,14 @@ $(function() {
 	chat.on("msg", ".messages", function(e, target, msg) {
 		var button = sidebar.find(".chan[data-target='" + target + "']");
 		var isQuery = button.hasClass("query");
-		if (msg.type === "invite" || msg.highlight || isQuery || (options.notifyAllMessages && msg.type === "message")) {
+		if (msg.type === "invite" || msg.highlight || isQuery || (settings.get("notifyAllMessages") && msg.type === "message")) {
 			if (!document.hasFocus() || !$(target).hasClass("active")) {
-				if (options.notification) {
+				if (settings.get("notification")) {
 					pop.play();
 				}
 				toggleFaviconNotification(true);
 
-				if (options.desktopNotifications && Notification.permission === "granted") {
+				if (settings.get("desktopNotifications") && Notification.permission === "granted") {
 					var title;
 					var body;
 

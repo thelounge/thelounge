@@ -173,8 +173,11 @@ function init(socket, client, token) {
 		socket.emit("init", {
 			active: client.activeChannel,
 			networks: client.networks,
-			token: token || ""
+			token: token || "",
+			settings: client.settings.options,
 		});
+
+		client.settings.bindToSocket(socket);
 	}
 }
 
