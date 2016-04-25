@@ -390,4 +390,11 @@ module.exports = {
 		//
 		raw: false,
 	},
+
+	// Run super alpha ghetto monkey-paching packages
+	//
+	// @type     array<package-name>
+	// @default  []
+	//
+	packages: [],
 };
