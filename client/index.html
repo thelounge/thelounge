@@ -169,143 +169,126 @@
 						<button class="lt"></button>
 					</div>
 					<div class="container">
-						<div class="row">
-							<div class="col-sm-12">
-								<h1 class="title">Settings</h1>
-							</div>
-							<div class="col-sm-12">
-								<h2>Messages</h2>
-							</div>
-							<div class="col-sm-6">
-								<label class="opt">
-									<input type="checkbox" name="setting:join">
-									Show joins
-								</label>
-							</div>
-							<div class="col-sm-6">
-								<label class="opt">
-									<input type="checkbox" name="setting:motd">
-									Show motd
-								</label>
-							</div>
-							<div class="col-sm-6">
-								<label class="opt">
-									<input type="checkbox" name="setting:part">
-									Show parts
-								</label>
-							</div>
-							<div class="col-sm-6">
-								<label class="opt">
-									<input type="checkbox" name="setting:nick">
-									Show nick changes
-								</label>
-							</div>
-							<div class="col-sm-6">
-								<label class="opt">
-									<input type="checkbox" name="setting:mode">
-									Show mode
-								</label>
-							</div>
-							<div class="col-sm-6">
-								<label class="opt">
-									<input type="checkbox" name="setting:quit">
-									Show quits
-								</label>
-							</div>
-							<div class="col-sm-12">
-								<h2>Visual Aids</h2>
-							</div>
-							<div class="col-sm-12">
-								<label class="opt">
-									<input type="checkbox" name="setting:colors">
-									Enable colored nicknames
-								</label>
-							</div>
+						<div class="col-sm-12">
+							<h1 class="title">Settings</h1>
+						</div>
+						
+						<table class="settings">
+							<tr>
+								<th class="section-title">Messages</th>
+								<th class="icon" title="Enabled"> &#xf046; </th>
+								<th class="icon" title="Synchronize to server"> &#xf0c2; </th>
+							</tr>
+							<tr>
+								<td> <label for="setting:motd">Show motd</label> </td>
+								<td> <input type="checkbox" id="setting:motd" name="setting:motd"> </td>
+								<td> <input type="checkbox" id="sync:motd"    name="sync:motd"> </td>
+							</tr>
+							<tr>
+								<td> <label for="setting:join">Show joins</label> </td>
+								<td> <input type="checkbox" id="setting:join" name="setting:join"> </td>
+								<td> <input type="checkbox" id="sync:join"    name="sync:join"> </td>
+							</tr>
+							<tr>
+								<td> <label for="setting:part">Show parts</label> </td>
+								<td> <input type="checkbox" id="setting:part" name="setting:part"> </td>
+								<td> <input type="checkbox" id="sync:part"    name="sync:part"> </td>
+							</tr>
+							<tr>
+								<td> <label for="setting:quit">Show quits</label> </td>
+								<td> <input type="checkbox" id="setting:quit" name="setting:quit"> </td>
+								<td> <input type="checkbox" id="sync:quit"    name="sync:quit"> </td>
+							</tr>
+							<tr>
+								<td> <label for="setting:nick">Show nick changes</label> </td>
+								<td> <input type="checkbox" id="setting:nick" name="setting:nick"> </td>
+								<td> <input type="checkbox" id="sync:nick"    name="sync:nick"> </td>
+							</tr>
+							<tr>
+								<td> <label for="setting:mode">Show mode changes</label> </td>
+								<td> <input type="checkbox" id="setting:mode" name="setting:mode"> </td>
+								<td> <input type="checkbox" id="sync:mode"    name="sync:mode"> </td>
+							</tr>
+						</table>
+						
+						<table class="settings">
+							<tr>
+								<th class="section-title">Visual Aids</th>
+								<th class="icon"></th>
+								<th class="icon"></th>
+							</tr>
+							<tr>
+								<td> <label for="setting:colors">Enable colored nicknames</label> </td>
+								<td> <input type="checkbox" id="setting:colors" name="setting:colors"> </td>
+								<td> <input type="checkbox" id="sync:colors"    name="sync:colors"> </td>
+							</tr>
 							<% if (typeof prefetch === "undefined" || prefetch !== false) { %>
-							<div class="col-sm-12">
-								<h2>Links and URLs</h2>
-							</div>
-							<div class="col-sm-6">
-								<label class="opt">
-									<input type="checkbox" name="setting:thumbnails">
-									Auto-expand thumbnails
-								</label>
-							</div>
-							<div class="col-sm-6">
-								<label class="opt">
-									<input type="checkbox" name="setting:links">
-									Auto-expand links
-								</label>
-							</div>
+							<tr>
+								<td> <label for="setting:thumbnails">Auto-expand thumbnails</label> </td>
+								<td> <input type="checkbox" id="setting:thumbnails" name="setting:thumbnails"> </td>
+								<td> <input type="checkbox" id="sync:thumbnails"    name="sync:thumbnails"> </td>
+							</tr>
+							<tr>
+								<td> <label for="setting:links">Auto-expand links</label> </td>
+								<td> <input type="checkbox" id="setting:links" name="setting:links"> </td>
+								<td> <input type="checkbox" id="sync:links"    name="sync:links"> </td>
+							</tr>
 							<% } %>
-							<div class="col-sm-12">
-								<h2>Notifications</h2>
-							</div>
-							<div class="col-sm-12">
-								<label class="opt">
-								<input id="desktopNotifications" type="checkbox" name="setting:desktopNotifications">
-								Enable desktop notifications<br>
-								<div class="error" id="warnDisabledDesktopNotifications"><strong>Warning</strong>: Desktop notifications are blocked by your web browser</div>
-								</label>
-							</div>
-							<div class="col-sm-12">
-								<label class="opt">
-								<input type="checkbox" name="setting:notification">
-								Enable notification sound
-								</label>
-							</div>
-							<div class="col-sm-12">
-								<div class="opt">
-									<button id="play">Play sound</button>
-								</div>
-							</div>
-
-							<div class="col-sm-12">
-								<label class="opt">
-									<input type="checkbox" name="setting:notifyAllMessages">
-									Enable notification for all messages
-								</label>
-							</div>
-							<% if (!public) { %>
-							<div id="change-password">
-								<form action="" method="post">
-									<div class="col-sm-12">
-										<h2>Change password</h2>
+						</table>
+						
+						<table class="settings">
+							<tr>
+								<th class="section-title">Notifications</th>
+								<th class="icon"></th>
+								<th class="icon"></th>
+							</tr>
+							<tr>
+								<td>
+									<label for="setting:desktopNotifications">Enable desktop notifications</label>
+									<div class="error" id="warnDisabledDesktopNotifications">
+										<strong>Warning</strong>: Desktop notifications are blocked by your web browser
 									</div>
-									<div class="col-sm-12">
-										<label for="old_password_input" class="sr-only">Enter current password</label>
-										<input type="password" id="old_password_input" name="old_password" class="input" placeholder="Enter current password">
-									</div>
-									<div class="col-sm-12">
-										<label for="new_password_input" class="sr-only">Enter desired new password</label>
-										<input type="password" id="new_password_input" name="new_password" class="input" placeholder="Enter desired new password">
-									</div>
-									<div class="col-sm-12">
-										<label for="verify_password_input" class="sr-only">Repeat new password</label>
-										<input type="password" id="verify_password_input" name="verify_password" class="input" placeholder="Repeat new password">
-									</div>
-									<div class="col-sm-12 feedback"></div>
-									<div class="col-sm-12">
-										<button type="submit" class="btn">Change password</button>
-									</div>
-								</form>
-							</div>
-							<% } %>
-							<div class="col-sm-12">
-								<h2>Custom Stylesheet</h2>
-							</div>
-							<div class="col-sm-12">
-								<textarea class="input" name="setting:userStyles" id="user-specified-css-input" placeholder="You can override any style with CSS here"></textarea>
-							</div>
-							<div class="col-sm-12">
-								<h2>About The Lounge</h2>
-							</div>
-							<div class="col-sm-12">
-								<p class="about">
-									You're currently running version <%= version %><br>
-									<a href="https://github.com/thelounge/lounge/blob/master/CHANGELOG.md#readme" target="_blank">View the change log</a>
-								</p>
-							</div>
+								</td>
+								<td> <input type="checkbox" id="setting:desktopNotifications" name="setting:desktopNotifications"> </td>
+								<td> <input type="checkbox" id="sync:desktopNotifications"    name="sync:desktopNotifications"> </td>
+							</tr>
+							<tr>
+								<td>
+									<label for="setting:notification">Enable notification sound</label>
+									<button id="play">(<span class="icon"></span> play sound)</button>
+								</td>
+								<td> <input type="checkbox" id="setting:notification" name="setting:notification"> </td>
+								<td> <input type="checkbox" id="sync:notification"    name="sync:notification"> </td>
+							</tr>
+							<tr>
+								<td> <label for="setting:notifyAllMessages">Enable notification for all messages</label> </td>
+								<td> <input type="checkbox" id="setting:notifyAllMessages" name="setting:notifyAllMessages"> </td>
+								<td> <input type="checkbox" id="sync:notifyAllMessages"    name="sync:notifyAllMessages"> </td>
+							</tr>
+						</table>
+						
+						<div class="col-sm-12">
+							<h2>
+								Custom Stylesheet
+								<% if (!public) { %>
+								<span class="sync-header">
+									<input type="checkbox" id="sync:userStyles" name="sync:userStyles">
+									<span class="icon" title="Synchronize to server"> &#xf0c2; </span>
+								</span>
+								<% } %>
+							</h2>
+						</div>
+						<div class="col-sm-12">
+							<textarea class="input" name="setting:userStyles" id="user-specified-css-input" placeholder="You can override any style with CSS here"></textarea>
+						</div>
+						<div class="col-sm-12">
+							<h2>About The Lounge</h2>
+						</div>
+						<div class="col-sm-12">
+							<p class="about">
+								You're currently running version <%= version %><br>
+								<a href="https://github.com/thelounge/lounge/blob/master/CHANGELOG.md#readme" target="_blank">View the change log</a>
+							</p>
 						</div>
 					</div>
 				</div>
