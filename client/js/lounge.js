@@ -807,14 +807,12 @@ $(function() {
 			return;
 		}
 
-		var ignore = [
-			"join",
-			"part",
-			"quit",
-			"nick",
-			"mode",
+		var whitelistedActions = [
+			"message",
+			"notice",
+			"action",
 		];
-		if ($.inArray(msg.type, ignore) !== -1) {
+		if (whitelistedActions.indexOf(msg.type) === -1) {
 			return;
 		}
 
