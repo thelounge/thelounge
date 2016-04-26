@@ -4,6 +4,7 @@ var Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
 	var client = this;
+	var identHandler = this.manager.identHandler;
 
 	network.channels[0].pushMessage(client, new Msg({
 		text: "Network created, connecting to " + network.host + ":" + network.port + "..."
@@ -24,6 +25,18 @@ module.exports = function(irc, network) {
 	if (identd.isEnabled()) {
 		irc.on("socket connected", function() {
 			identd.hook(irc.connection.socket, client.name || network.username);
+		});
+	}
+
+	if (identHandler) {
+		irc.on("socket connected", function() {
+			identHandler.addSocket(irc.connection.socket, client.name || network.username);
+			identHandler.refresh();
+		});
+
+		irc.on("socket close", function() {
+			identHandler.removeSocket(irc.connection.socket);
+			identHandler.refresh();
 		});
 	}
 

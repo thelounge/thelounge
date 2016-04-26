@@ -3,11 +3,18 @@ var fs = require("fs");
 var Client = require("./client");
 var mkdirp = require("mkdirp");
 var Helper = require("./helper");
+var oidentd = require("./oidentd");
 
 module.exports = ClientManager;
 
 function ClientManager() {
+	var config = Helper.getConfig();
+
 	this.clients = [];
+
+	if (typeof config.oidentd === "string") {
+		this.identHandler = new oidentd(config.oidentd);
+	}
 }
 
 ClientManager.prototype.findClient = function(name) {

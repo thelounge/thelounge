@@ -10,9 +10,10 @@ var dns = require("dns");
 var Helper = require("./helper");
 var config = {};
 
-var manager = new ClientManager();
+var manager = null;
 
 module.exports = function(options) {
+	manager = new ClientManager();
 	config = Helper.getConfig();
 	config = _.extend(config, options);
 
