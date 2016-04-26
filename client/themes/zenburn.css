@@ -40,18 +40,14 @@ body {
 
 #settings,
 #sign-in,
-#connect {
-	color: #dcdccc;
-}
-
-#settings,
-#sign-in,
 #connect .title {
 	color: #88b090;
 }
 
-#settings,
-#sign-in,
+table.settings td {
+	color: inherit;
+}
+
 #connect .opt {
 	color: #dcdccc;
 }
@@ -88,7 +84,8 @@ body {
 #chat .from,
 #windows .header,
 #chat .user-mode:before,
-#chat .sidebar {
+#chat .sidebar,
+table.settings td {
 	border-color: #333;
 }
 
