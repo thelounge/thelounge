@@ -41,6 +41,10 @@ module.exports = function(options) {
 	}
 
 	if ((config.identd || {}).enable) {
+		if (manager.identHandler) {
+			log.warn("Using both identd and oidentd at the same time!");
+		}
+
 		require("./identd").start(config.identd.port);
 	}
 
