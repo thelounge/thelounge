@@ -760,6 +760,10 @@ $(function() {
 	});
 
 	chat.on("msg", ".messages", function(e, target, msg) {
+		if (msg.self) {
+			return;
+		}
+
 		var button = sidebar.find(".chan[data-target='" + target + "']");
 		var isQuery = button.hasClass("query");
 		if (msg.type === "invite" || msg.highlight || isQuery || (options.notifyAllMessages && msg.type === "message")) {

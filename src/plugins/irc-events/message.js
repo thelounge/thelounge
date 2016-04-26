@@ -64,7 +64,7 @@ module.exports = function(irc, network) {
 			return (w.replace(/^@/, "").toLowerCase().indexOf(irc.user.nick.toLowerCase()) === 0);
 		});
 
-		if (chan.id !== client.activeChannel) {
+		if (!self && chan.id !== client.activeChannel) {
 			chan.unread++;
 
 			if (highlight) {
