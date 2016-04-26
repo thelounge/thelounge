@@ -9,10 +9,6 @@ module.exports = function(irc, network) {
 		text: "Network created, connecting to " + network.host + ":" + network.port + "..."
 	}));
 
-	irc.on("raw socket connected", function() {
-		identd.hook(irc.connection.socket, network.username);
-	});
-
 	irc.on("socket connected", function() {
 		network.channels[0].pushMessage(client, new Msg({
 			text: "Connected to the network."
@@ -24,6 +20,12 @@ module.exports = function(irc, network) {
 			text: "Disconnected from the network, and will not reconnect."
 		}));
 	});
+
+	if (identd.isEnabled()) {
+		irc.on("socket connected", function() {
+			identd.hook(irc.connection.socket, client.name || network.username);
+		});
+	}
 
 	irc.on("socket error", function(err) {
 		log.debug("IRC socket error", err);
