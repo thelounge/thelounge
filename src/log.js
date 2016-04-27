@@ -14,7 +14,7 @@ function timestamp(type, messageArgs) {
 	return messageArgs;
 }
 
-exports.err = function() {
+exports.error = function() {
 	console.error.apply(console, timestamp(colors.red("[ERROR]"), arguments));
 };
 
