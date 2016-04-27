@@ -33,8 +33,8 @@ module.exports = function(options) {
 	} else {
 		server = require("spdy");
 		server = server.createServer({
-			key: fs.readFileSync(https.key),
-			cert: fs.readFileSync(https.certificate)
+			key: fs.readFileSync(Helper.expandHome(https.key)),
+			cert: fs.readFileSync(Helper.expandHome(https.certificate))
 		}, app).listen(port, host);
 	}
 
