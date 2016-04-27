@@ -10,9 +10,7 @@ program
 	.action(function(name) {
 		var users = new ClientManager().getUsers();
 		if (users.indexOf(name) === -1) {
-			console.log("");
-			console.log("User '" + name + "' doesn't exist.");
-			console.log("");
+			log.error("User '" + name + "' doesn't exist.");
 			return;
 		}
 		var file = Helper.HOME + "/users/" + name + ".json";
@@ -21,7 +19,6 @@ program
 			prompt: "[thelounge] New password: ",
 			silent: true
 		}, function(err, password) {
-			console.log("");
 			if (err) {
 				return;
 			}
@@ -32,7 +29,6 @@ program
 				file,
 				JSON.stringify(user, null, "  ")
 			);
-			console.log("Successfully reset password for '" + name + "'.");
-			console.log("");
+			log.info("Successfully reset password for '" + name + "'.");
 		});
 	});

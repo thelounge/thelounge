@@ -1,3 +1,5 @@
+GLOBAL.log = require("../log.js");
+
 var program = require("commander");
 var pkg = require("../../package.json");
 var fs = require("fs");
@@ -20,8 +22,7 @@ if (!fs.existsSync(config)) {
 		config,
 		fs.readFileSync(__dirname + "/../../defaults/config.js")
 	);
-	console.log("Config created:");
-	console.log(config);
+	log.info("Config created:", config);
 }
 
 require("./start");

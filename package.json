@@ -29,6 +29,7 @@
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "cheerio": "0.20.0",
+    "colors": "1.1.2",
     "commander": "2.9.0",
     "event-stream": "3.3.2",
     "express": "4.13.4",
