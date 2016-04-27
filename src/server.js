@@ -1,4 +1,5 @@
 var _ = require("lodash");
+var package = require("../package.json");
 var bcrypt = require("bcrypt-nodejs");
 var Client = require("./client");
 var ClientManager = require("./clientManager");
@@ -56,8 +57,13 @@ module.exports = function(options) {
 
 	manager.sockets = sockets;
 
-	log.info("The Lounge is now running on", protocol + "://" + config.host + ":" + config.port + "/");
-	log.info("Press ctrl-c to stop");
+	log.info("The Lounge v" + package.version + " is now running on", protocol + "://" + config.host + ":" + config.port + "/");
+	log.info("Press ctrl-c to stop\n");
+
+	if (!require("semver").satisfies(process.version, package.engines.node)) {
+		log.warn("The oldest supported Node.js version is ", package.engines.node);
+		log.warn("We strongly encourage you to upgrade, see https://nodejs.org/en/download/package-manager/ for more details\n");
+	}
 
 	if (!config.public) {
 		manager.loadUsers();
@@ -71,7 +77,7 @@ function index(req, res, next) {
 	if (req.url.split("?")[0] !== "/") return next();
 	return fs.readFile("client/index.html", "utf-8", function(err, file) {
 		var data = _.merge(
-			require("../package.json"),
+			package,
 			config
 		);
 		var template = _.template(file);

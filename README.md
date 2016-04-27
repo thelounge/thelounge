@@ -35,6 +35,12 @@ the review process quicker and more streamlined.
 
 ## Install
 
+To use The Lounge you must have [Node.js](https://nodejs.org/en/download/) installed.
+The oldest Node.js version we support is 4.2.0.
+
+If you still use 0.10 or 0.12 we strongly advise you to upgrade before installing The Lounge.
+For more information on how to upgrade, read the [documentation](https://nodejs.org/en/download/package-manager/).
+
 ```
 sudo npm install -g thelounge
 ```
