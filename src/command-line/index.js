@@ -1,4 +1,4 @@
-GLOBAL.log = require("../log.js");
+global.log = require("../log.js");
 
 var program = require("commander");
 var pkg = require("../../package.json");
