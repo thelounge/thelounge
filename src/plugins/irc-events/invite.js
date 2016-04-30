@@ -14,6 +14,7 @@ module.exports = function(irc, network) {
 			from: data.nick,
 			invited: data.invited,
 			channel: data.channel,
+			highlight: true,
 			invitedYou: data.invited === irc.user.nick
 		});
 		chan.pushMessage(client, msg);
