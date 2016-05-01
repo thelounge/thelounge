@@ -36,7 +36,9 @@ program
 			prompt: "[thelounge] Enter password: ",
 			silent: true
 		}, function(err, password) {
-			if (!err) add(manager, name, password);
+			if (!err) {
+				add(manager, name, password);
+			}
 		});
 	});
 

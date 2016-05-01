@@ -9,8 +9,9 @@ env:
 
 rules:
   block-spacing: [2, always]
+  brace-style: [2, 1tbs]
   comma-dangle: 0
-  curly: [2, multi-line]
+  curly: [2, all]
   eqeqeq: 2
   indent: [2, tab]
   keyword-spacing: [2, {before: true, after: true}]
