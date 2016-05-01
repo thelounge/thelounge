@@ -344,7 +344,7 @@ Client.prototype.names = function(data) {
 	}
 
 	client.emit("names", {
-		chan: target.chan.id,
+		id: target.chan.id,
 		users: target.chan.users
 	});
 };
