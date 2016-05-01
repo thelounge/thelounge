@@ -46,7 +46,9 @@ $(function() {
 		};
 	}
 
-	$("#play").on("click", function() { pop.play(); });
+	$("#play").on("click", function() {
+		pop.play();
+	});
 
 	$(".tse-scrollable").TrackpadScrollEmulator();
 
@@ -193,7 +195,9 @@ $(function() {
 		);
 		renderChannel(data.chan);
 		var chan = sidebar.find(".chan")
-			.sort(function(a, b) { return $(a).data("id") - $(b).data("id"); })
+			.sort(function(a, b) {
+				return $(a).data("id") - $(b).data("id");
+			})
 			.last();
 		if (!whois) {
 			chan = chan.filter(":not(.query)");
@@ -422,8 +426,7 @@ $(function() {
 			socket.emit("names", {
 				target: data.chan
 			});
-		}
-		else {
+		} else {
 			chan.data("needsNamesRefresh", true);
 		}
 	});
@@ -552,8 +555,7 @@ $(function() {
 				text: target.text(),
 				data: target.data("name")
 			});
-		}
-		else if (target.hasClass("chan")) {
+		} else if (target.hasClass("chan")) {
 			output = render("contextmenu_item", {
 				class: "chan",
 				text: target.data("title"),

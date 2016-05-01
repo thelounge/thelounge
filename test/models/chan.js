@@ -11,7 +11,9 @@ function makeUser(name) {
 }
 
 function getUserNames(chan) {
-	return chan.users.map(function(u) { return u.name; });
+	return chan.users.map(function(u) {
+		return u.name;
+	});
 }
 
 describe("Chan", function() {

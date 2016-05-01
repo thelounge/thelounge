@@ -79,8 +79,7 @@ function parse(msg, url, res, client) {
 	case "image/jpeg":
 		if (res.size < (config.prefetchMaxImageSize * 1024)) {
 			toggle.type = "image";
-		}
-		else {
+		} else {
 			return;
 		}
 		break;
@@ -122,7 +121,10 @@ function fetch(url, cb) {
 			next(null, data);
 		}))
 		.pipe(es.wait(function(err, data) {
-			if (err) return;
+			if (err) {
+				return;
+			}
+
 			var body;
 			var type;
 			var size = req.response.headers["content-length"];
