@@ -172,7 +172,7 @@ Client.prototype.connect = function(args) {
 		return;
 	}
 
-	if (config.webirc !== null && network.host in config.webirc) {
+	if (config.webirc && network.host in config.webirc) {
 		args.ip = args.ip || (client.config && client.config.ip) || client.ip;
 		args.hostname = args.hostname || (client.config && client.config.hostname) || client.hostname || args.ip;
 
