@@ -12,9 +12,14 @@
   },
   "scripts": {
     "start": "node index",
-    "build": "grunt && handlebars client/views/ -e tpl -f client/js/lounge.templates.js",
-    "test": "HOME=test/fixtures mocha test/**/*.js && npm run lint",
-    "lint": "eslint . && stylelint \"**/*.css\"",
+    "build": "npm run build:grunt && npm run build:handlebars",
+    "build:grunt": "grunt",
+    "build:handlebars": "handlebars client/views/ -e tpl -f client/js/lounge.templates.js",
+    "test": "npm run test:mocha; npm run lint",
+    "test:mocha": "mocha -r test/fixtures/env.js test/**/*.js",
+    "lint": "npm run lint:js; npm run lint:css",
+    "lint:js": "eslint .",
+    "lint:css": "stylelint \"**/*.css\"",
     "prepublish": "npm run build"
   },
   "keywords": [

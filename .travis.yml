@@ -18,3 +18,9 @@ deploy:
     node: '4'
     tags: true
     repo: thelounge/lounge
+
+script:
+- npm run test:mocha
+- npm run lint:js
+- npm run lint:css
+
