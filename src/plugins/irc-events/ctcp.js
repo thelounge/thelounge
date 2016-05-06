@@ -1,4 +1,3 @@
-var pkg = require(process.cwd() + "/package.json");
 var Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
@@ -22,9 +21,6 @@ module.exports = function(irc, network) {
 
 	irc.on("ctcp request", function(data) {
 		switch (data.type) {
-		case "VERSION":
-			irc.ctcpResponse(data.nick, "VERSION", pkg.name + " " + pkg.version);
-			break;
 		case "PING":
 			var split = data.message.split(" ");
 			if (split.length === 2) {

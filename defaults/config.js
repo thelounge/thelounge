@@ -118,7 +118,7 @@ module.exports = {
 	// Format (function):
 	//   {"irc.example.net": function(client, args, trusted) {
 	//       // here, we return a webirc object fed directly to `irc-framework`
-	//       return {password: "hunter1", address: args.ip, hostname: "webirc/"+args.hostname};
+	//       return {username: "thelounge", password: "hunter1", address: args.ip, hostname: "webirc/"+args.hostname};
 	//   }}
 	//
 	// @type     string | function(client, args):object(webirc)

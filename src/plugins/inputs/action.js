@@ -15,7 +15,7 @@ exports.input = function(network, chan, cmd, args) {
 
 		text = text || args.join(" ");
 
-		irc.say(chan.name, "\u0001ACTION " + text + "\u0001");
+		irc.action(chan.name, text);
 
 		if (!network.irc.network.cap.isEnabled("echo-message")) {
 			irc.emit("action", {

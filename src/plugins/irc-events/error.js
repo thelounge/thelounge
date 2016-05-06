@@ -3,14 +3,7 @@ var Msg = require("../../models/msg");
 module.exports = function(irc, network) {
 	var client = this;
 
-	// TODO: remove later
-	irc.on("irc_error", function(data) {
-		log.debug("Got an irc_error");
-		irc.emit("error", data);
-	});
-
-	irc.on("error", function(data) {
-		log.debug("error", data);
+	irc.on("irc error", function(data) {
 		var text = data.error;
 		if (data.reason) {
 			text = data.reason + " (" + text + ")";
