@@ -13,15 +13,18 @@ exports.input = function(network, chan, cmd, args) {
 		return;
 	}
 
-	var irc = network.irc;
-	if (irc && chan.type === "channel") {
-		irc.part(chan.name, args.join(" "));
-	}
-
 	network.channels = _.without(network.channels, chan);
 	this.emit("part", {
 		chan: chan.id
 	});
+
+	if (chan.type === "channel") {
+		this.save();
+
+		if (network.irc) {
+			network.irc.part(chan.name, args.join(" "));
+		}
+	}
 
 	return true;
 };
