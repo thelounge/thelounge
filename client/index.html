@@ -94,31 +94,30 @@
 									<h2>Network settings</h2>
 								</div>
 								<div class="col-sm-3">
-								<label>Name</label>
-									</div>
+									<label for="connect:name">Name</label>
+								</div>
 								<div class="col-sm-9">
-									<input class="input" name="name" value="<%= defaults.name %>">
+									<input class="input" id="connect:name" name="name" value="<%= defaults.name %>">
 								</div>
 								<div class="col-sm-3">
-									<label>Server</label>
+									<label for="connect:host">Server</label>
 								</div>
 								<div class="col-sm-6 col-xs-8">
-									<input class="input" name="host" value="<%= defaults.host %>" <%= typeof(lockNetwork) !== "undefined" && lockNetwork ? "disabled" : "" %>>
+									<input class="input" id="connect:host" name="host" value="<%= defaults.host %>" aria-label="Server address" <%= typeof(lockNetwork) !== "undefined" && lockNetwork ? "disabled" : "" %>>
 								</div>
 								<div class="col-sm-3 col-xs-4">
 									<div class="port">
-										<input class="input" name="port" value="<%= defaults.port %>" <%= typeof(lockNetwork) !== "undefined" && lockNetwork ? "disabled" : "" %>>
+										<input class="input" type="number" min="1" max="65535" name="port" value="<%= defaults.port %>" aria-label="Server port" <%= typeof(lockNetwork) !== "undefined" && lockNetwork ? "disabled" : "" %>>
 									</div>
 								</div>
 								<div class="clearfix"></div>
 								<div class="col-sm-3">
-									<label>Password</label>
+									<label for="connect:password">Password</label>
 								</div>
 								<div class="col-sm-9">
-									<input class="input" type="password" name="password" value="<%= defaults.password %>">
+									<input class="input" id="connect:password" type="password" name="password" value="<%= defaults.password %>">
 								</div>
-								<div class="col-sm-3"></div>
-								<div class="col-sm-9">
+								<div class="col-sm-9 col-sm-offset-3">
 									<label class="tls">
 										<input type="checkbox" name="tls" <%= defaults.tls ? "checked" : "" %> <%= typeof(lockNetwork) !== "undefined" && lockNetwork ? "disabled" : "" %>>
 										Enable TLS/SSL
@@ -130,36 +129,31 @@
 								<h2>User preferences</h2>
 							</div>
 							<div class="col-sm-3">
-								<label>Nick</label>
-							</div>
-							<div class="col-sm-5">
-								<input class="input nick" name="nick" value="<%= defaults.nick %>">
-							</div>
-							<div class="clearfix"></div>
-							<div class="col-sm-3">
-								<label>Username</label>
-							</div>
-							<div class="col-sm-5">
-								<input class="input username" name="username" value="<%= defaults.username %>">
-							</div>
-							<div class="clearfix"></div>
-							<div class="col-sm-3">
-								<label>Real name</label>
+								<label for="connect:nick">Nick</label>
 							</div>
 							<div class="col-sm-9">
-								<input class="input" name="realname" value="<%= defaults.realname %>">
+								<input class="input nick" id="connect:nick" name="nick" value="<%= defaults.nick %>">
 							</div>
 							<div class="col-sm-3">
-								<label>Channels</label>
+								<label for="connect:username">Username</label>
 							</div>
 							<div class="col-sm-9">
-								<input class="input" name="join" value="<%= defaults.join %>">
+								<input class="input username" id="connect:username" name="username" value="<%= defaults.username %>">
 							</div>
-							<div class="col-sm-3 clearfix"></div>
+							<div class="col-sm-3">
+								<label for="connect:realname">Real name</label>
+							</div>
 							<div class="col-sm-9">
-								<button type="submit" class="btn">
-									Connect
-								</button>
+								<input class="input" id="connect:realname" name="realname" value="<%= defaults.realname %>">
+							</div>
+							<div class="col-sm-3">
+								<label for="connect:channels">Channels</label>
+							</div>
+							<div class="col-sm-9">
+								<input class="input" id="connect:channels" name="join" value="<%= defaults.join %>">
+							</div>
+							<div class="col-sm-9 col-sm-offset-3">
+								<button type="submit" class="btn">Connect</button>
 							</div>
 						</div>
 					</form>
