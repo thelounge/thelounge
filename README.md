@@ -65,7 +65,7 @@ npm start
 ```
 
 You will have to run `npm run build` if you change or add anything in
-`client/js/libs` or `client/views.`
+`client/js/libs` or `client/views`.
 
 ## License
 
