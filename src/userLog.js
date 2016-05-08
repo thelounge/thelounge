@@ -5,7 +5,7 @@ var Helper = require("./helper");
 
 module.exports.write = function(user, network, chan, msg) {
 	try {
-		var path = Helper.HOME + "/logs/" + user + "/" + network;
+		var path = require("path").join(Helper.HOME, "logs", user, network);
 		mkdirp.sync(path);
 	} catch (e) {
 		log.error("Unabled to create logs directory", e);

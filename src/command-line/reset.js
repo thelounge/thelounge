@@ -13,7 +13,7 @@ program
 			log.error("User '" + name + "' doesn't exist.");
 			return;
 		}
-		var file = Helper.HOME + "/users/" + name + ".json";
+		var file = Helper.getUserConfigPath(name);
 		var user = require(file);
 		require("read")({
 			prompt: "[thelounge] New password: ",

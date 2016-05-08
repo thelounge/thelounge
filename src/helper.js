@@ -1,17 +1,26 @@
 var path = require("path");
 var os = require("os");
 
+var HOME = expandHome("~/.lounge");
+
 module.exports = {
-	HOME: (process.env.HOME || process.env.USERPROFILE) + "/.lounge",
-	getConfig: getConfig,
+	HOME: HOME,
+	CONFIG_PATH: path.join(HOME, "config.js"),
+	USERS_PATH: path.join(HOME, "users"),
 	expandHome: expandHome,
+	getConfig: getConfig,
+	getUserConfigPath: getUserConfigPath,
 };
 
-function getConfig() {
-	return require(path.resolve(this.HOME) + "/config");
+function getUserConfigPath(name) {
+	return path.join(this.USERS_PATH, name + ".json");
 }
 
-function expandHome(path) {
+function getConfig() {
+	return require(this.CONFIG_PATH);
+}
+
+function expandHome(shortenedPath) {
 	var home;
 
 	if (os.homedir) {
@@ -24,6 +33,5 @@ function expandHome(path) {
 
 	home = home.replace("$", "$$$$");
 
-	return path.replace(/^~($|\/|\\)/, home + "$1");
+	return path.resolve(shortenedPath.replace(/^~($|\/|\\)/, home + "$1"));
 }
-

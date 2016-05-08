@@ -8,12 +8,11 @@ program
 	.description("Remove an existing user")
 	.action(function(name) {
 		try {
-			var path = Helper.HOME + "/users";
-			var test = path + "/.test";
+			var test = require("path").join(Helper.USERS_PATH, ".test");
 			fs.mkdirSync(test);
 			fs.rmdirSync(test);
 		} catch (e) {
-			log.warn("You have no permissions to delete from " + path);
+			log.warn("You have no permissions to delete from " + Helper.USERS_PATH);
 			log.info("Try running the command as sudo.");
 			return;
 		}
