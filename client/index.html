@@ -34,17 +34,17 @@
 			</div>
 		</aside>
 		<footer id="footer">
-			<span class="tooltipped tooltipped-n" aria-label="Sign in to The Lounge"><button class="icon sign-in" data-target="#sign-in"></button></span>
-			<span class="tooltipped tooltipped-n" aria-label="Connect to network"><button class="icon connect" data-target="#connect"></button></span>
-			<span class="tooltipped tooltipped-n" aria-label="Client settings"><button class="icon settings" data-target="#settings"></button></span>
-			<span class="tooltipped tooltipped-n" aria-label="Sign out"><button class="icon sign-out" id="sign-out"></button></span>
+			<span class="tooltipped tooltipped-n" aria-label="Sign in"><button class="icon sign-in" data-target="#sign-in" aria-label="Sign in"></button></span>
+			<span class="tooltipped tooltipped-n" aria-label="Connect to network"><button class="icon connect" data-target="#connect" aria-label="Connect to network"></button></span>
+			<span class="tooltipped tooltipped-n" aria-label="Client settings"><button class="icon settings" data-target="#settings" aria-label="Client settings"></button></span>
+			<span class="tooltipped tooltipped-n" aria-label="Sign out"><button class="icon sign-out" id="sign-out" aria-label="Sign out"></button></span>
 		</footer>
 		<div id="main">
 			<div id="windows">
 				<div id="chat" class="no-colors"></div>
 				<div id="sign-in" class="window">
 					<div class="header">
-						<button class="lt"></button>
+						<button class="lt" aria-label="Toggle channel list"></button>
 					</div>
 					<form class="container" method="post" action="">
 						<div class="row">
@@ -82,7 +82,7 @@
 				</div>
 				<div id="connect" class="window">
 					<div class="header">
-						<button class="lt"></button>
+						<button class="lt" aria-label="Toggle channel list"></button>
 					</div>
 					<form class="container" method="post" action="">
 						<div class="row">
@@ -160,7 +160,7 @@
 				</div>
 				<div id="settings" class="window">
 					<div class="header">
-						<button class="lt"></button>
+						<button class="lt" aria-label="Toggle channel list"></button>
 					</div>
 					<div class="container">
 						<div class="row">
@@ -308,7 +308,7 @@
 				<div class="inner">
 					<div class="input">
 						<label for="input" id="nick"></label>
-						<button id="submit" type="submit" title="Send"></button>
+						<button id="submit" type="submit" title="Send" aria-label="Send message"></button>
 						<input id="input" class="mousetrap">
 					</div>
 				</div>
