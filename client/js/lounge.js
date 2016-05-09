@@ -670,7 +670,7 @@ $(function() {
 		self.addClass("active")
 			.find(".badge")
 			.removeClass("highlight")
-			.data("count", "")
+			.data("count", 0)
 			.empty();
 
 		if (sidebar.find(".highlight").length === 0) {
@@ -845,7 +845,7 @@ $(function() {
 		if (badge.length !== 0) {
 			var i = (badge.data("count") || 0) + 1;
 			badge.data("count", i);
-			badge.html(i > 999 ? (i / 1000).toFixed(1) + "k" : i);
+			badge.html(Handlebars.helpers.roundBadgeNumber(i));
 			if (msg.highlight) {
 				badge.addClass("highlight");
 			}
