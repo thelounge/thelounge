@@ -12,9 +12,8 @@ program.option("");
 program.option("    --home <path>" , "home path");
 
 var argv = program.parseOptions(process.argv);
-if (program.home) {
-	Helper.HOME = path.resolve(program.home);
-}
+
+Helper.setHome(program.home);
 
 if (!fs.existsSync(Helper.CONFIG_PATH)) {
 	mkdirp.sync(Helper.HOME, {mode: "0700"});

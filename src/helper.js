@@ -1,16 +1,20 @@
 var path = require("path");
 var os = require("os");
 
-var HOME = expandHome("~/.lounge");
-
-module.exports = {
-	HOME: HOME,
-	CONFIG_PATH: path.join(HOME, "config.js"),
-	USERS_PATH: path.join(HOME, "users"),
+var Helper = {
 	expandHome: expandHome,
 	getConfig: getConfig,
 	getUserConfigPath: getUserConfigPath,
+	setHome: setHome,
 };
+
+module.exports = Helper;
+
+function setHome(homePath) {
+	this.HOME = expandHome(homePath || "~/.lounge");
+	this.CONFIG_PATH = path.join(this.HOME, "config.js");
+	this.USERS_PATH = path.join(this.HOME, "users");
+}
 
 function getUserConfigPath(name) {
 	return path.join(this.USERS_PATH, name + ".json");
