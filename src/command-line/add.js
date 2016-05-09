@@ -1,6 +1,5 @@
 var ClientManager = new require("../clientManager");
 var bcrypt = require("bcrypt-nodejs");
-var fs = require("fs");
 var program = require("commander");
 var mkdirp = require("mkdirp");
 var Helper = require("../helper");
@@ -12,17 +11,6 @@ program
 		try {
 			mkdirp.sync(Helper.USERS_PATH);
 		} catch (e) {
-			log.error("Could not create", Helper.USERS_PATH);
-			log.info("Try running the command as sudo.");
-			return;
-		}
-		try {
-			var test = require("path").join(Helper.USERS_PATH, ".test");
-			fs.mkdirSync(test);
-			fs.rmdirSync(test);
-		} catch (e) {
-			log.error("You have no permissions to write to", Helper.USERS_PATH);
-			log.info("Try running the command as sudo.");
 			log.error("Could not create", Helper.USERS_PATH);
 			return;
 		}
