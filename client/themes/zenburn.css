@@ -122,13 +122,13 @@ body {
 }
 
 /* Nicknames */
-#chat.no-colors .from button,
-#chat.no-colors .sidebar button {
+#chat.no-colors .from .user,
+#chat.no-colors .sidebar .user {
 	color: #bc8cbc !important;
 }
 
-#chat.no-colors .from button:hover,
-#chat.no-colors .sidebar button:hover {
+#chat.no-colors .from .user:hover,
+#chat.no-colors .sidebar .user:hover {
 	color: #dcdccc !important;
 }
 
