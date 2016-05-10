@@ -123,11 +123,13 @@ body {
 
 /* Nicknames */
 #chat.no-colors .from .user,
+#chat.no-colors .text .user,
 #chat.no-colors .sidebar .user {
 	color: #bc8cbc !important;
 }
 
 #chat.no-colors .from .user:hover,
+#chat.no-colors .text .user:hover,
 #chat.no-colors .sidebar .user:hover {
 	color: #dcdccc !important;
 }

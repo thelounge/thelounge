@@ -113,6 +113,7 @@ a:hover,
 }
 
 #chat.no-colors .from .user,
+#chat.no-colors .text .user,
 #chat.no-colors .sidebar .user {
 	color: #000 !important;
 	font-weight: bold;
