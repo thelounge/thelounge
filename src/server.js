@@ -137,12 +137,6 @@ function init(socket, client, token) {
 					var old = data.old_password;
 					var p1 = data.new_password;
 					var p2 = data.verify_password;
-					if (typeof old === "undefined" || old === "") {
-						socket.emit("change-password", {
-							error: "Please enter your current password"
-						});
-						return;
-					}
 					if (typeof p1 === "undefined" || p1 === "") {
 						socket.emit("change-password", {
 							error: "Please enter a new password"
