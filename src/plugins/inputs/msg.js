@@ -1,19 +1,11 @@
 exports.commands = ["msg", "say"];
 
 exports.input = function(network, chan, cmd, args) {
-	if (args.length === 0 || args[0] === "") {
-		return true;
-	}
-
 	var irc = network.irc;
-	var target = "";
-	if (cmd === "msg") {
-		target = args.shift();
-		if (args.length === 0) {
-			return true;
-		}
-	} else {
-		target = chan.name;
+	var target = cmd === "msg" ? args.shift() : chan.name;
+
+	if (args.length === 0 || !target) {
+		return true;
 	}
 
 	var msg = args.join(" ");
