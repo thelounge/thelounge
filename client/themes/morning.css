@@ -168,10 +168,6 @@ QUIT #d0907d
 	color: #f92772;
 }
 
-#chat .highlight:not(.self) {
-	font-size: 1.2em;
-}
-
 #chat .msg.quit .time,
 #chat .msg.quit .from button {
 	color: #d0907d !important;
