@@ -1,3 +1,3 @@
-<a href="#" class="user" data-name="{{nick}}" style="color:#{{stringcolor nick}}">{{mode}}{{nick}}</a>
+<a href="#" class="user {{colorClass nick}}" data-name="{{nick}}">{{mode}}{{nick}}</a>
 is now known as
-<a href="#" class="user" data-name="{{new_nick}}" style="color:#{{stringcolor new_nick}}">{{mode}}{{new_nick}}</a>
+<a href="#" class="user {{colorClass new_nick}}" data-name="{{new_nick}}">{{mode}}{{new_nick}}</a>
