@@ -1,5 +1,5 @@
 Handlebars.registerHelper(
 	"stringcolor", function(str) {
-		return stringcolor(str);
+		return window.stringcolor(str);
 	}
 );
