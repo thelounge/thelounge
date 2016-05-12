@@ -1,5 +1,5 @@
 Handlebars.registerHelper(
 	"users", function(count) {
-		return count + " " + (count == 1 ? "user" : "users");
+		return count + " " + (count === 1 ? "user" : "users");
 	}
 );
