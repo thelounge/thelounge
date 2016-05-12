@@ -144,6 +144,7 @@ Client.prototype.connect = function(args) {
 		ip: args.ip,
 		hostname: args.hostname,
 	});
+	network.setNick(nick);
 
 	client.networks.push(network);
 	client.emit("network", {
