@@ -4,10 +4,16 @@ node_js:
 - '5'
 - '4'
 - '4.2.0'
+
+branches:
+  only:
+    - master
+
 notifications:
   email:
     on_success: never
     on_failure: always
+
 deploy:
   provider: npm
   email:
@@ -23,4 +29,3 @@ script:
 - npm run test:mocha
 - npm run lint:js
 - npm run lint:css
-
