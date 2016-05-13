@@ -33,13 +33,34 @@ function Network(attr) {
 	);
 }
 
+Network.prototype.setNick = function(nick) {
+	this.nick = nick;
+	this.highlightRegex = new RegExp(
+		// Do not match characters and numbers (unless IRC color)
+		"(?:^|[^a-z0-9]|\x03[0-9]{1,2})" +
+
+		// Escape nickname, as it may contain regex stuff
+		nick.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&") +
+
+		// Do not match characters and numbers
+		"(?:[^a-z0-9]|$)",
+
+		// Case insensitive search
+		"i"
+	);
+};
+
 Network.prototype.toJSON = function() {
-	var json = _.extend(this, {nick: (this.irc && this.irc.user.nick) || ""});
-	return _.omit(json, "irc", "password");
+	return _.omit(this, [
+		"irc",
+		"password",
+		"highlightRegex"
+	]);
 };
 
 Network.prototype.export = function() {
 	var network = _.pick(this, [
+		"nick",
 		"name",
 		"host",
 		"port",
@@ -51,11 +72,12 @@ Network.prototype.export = function() {
 		"ip",
 		"hostname"
 	]);
-	network.nick = (this.irc && this.irc.user.nick) || "";
+
 	network.join = _.map(
 		_.filter(this.channels, {type: "channel"}),
 		"name"
 	).join(",");
+
 	return network;
 };
 
