@@ -285,7 +285,20 @@ $(function() {
 
 	function renderChannelMessages(data) {
 		var documentFragment = buildChannelMessages(data.id, data.messages);
-		chat.find("#chan-" + data.id + " .messages").append(documentFragment);
+		var channel = chat.find("#chan-" + data.id + " .messages").append(documentFragment);
+
+		if (data.firstUnread > 0) {
+			var first = channel.find("#msg-" + data.firstUnread);
+
+			// TODO: If the message is far off in the history, we still need to append the marker into DOM
+			if (!first.length) {
+				channel.prepend(render("unread_marker"));
+			} else {
+				first.before(render("unread_marker"));
+			}
+		} else {
+			channel.append(render("unread_marker"));
+		}
 	}
 
 	function renderChannelUsers(data) {
@@ -313,12 +326,20 @@ $(function() {
 	socket.on("msg", function(data) {
 		var msg = buildChatMessage(data);
 		var target = "#chan-" + data.chan;
-		chat.find(target + " .messages")
+		var container = chat.find(target + " .messages");
+
+		container
 			.append(msg)
 			.trigger("msg", [
 				target,
 				data.msg
 			]);
+
+		if (data.msg.self) {
+			container
+				.find(".unread-marker")
+				.appendTo(container);
+		}
 	});
 
 	socket.on("more", function(data) {
@@ -751,10 +772,16 @@ $(function() {
 		}
 
 		viewport.removeClass("lt");
-		$("#windows .active")
+		var lastActive = $("#windows .active");
+
+		lastActive
 			.removeClass("active")
 			.find(".chat")
 			.unsticky();
+
+		lastActive
+			.find(".unread-marker")
+			.appendTo(lastActive.find(".messages"));
 
 		var chan = $(target)
 			.addClass("active")
@@ -1029,14 +1056,14 @@ $(function() {
 	setInterval(function() {
 		chat.find(".chan:not(.active)").each(function() {
 			var chan = $(this);
-			if (chan.find(".messages").children().slice(0, -100).remove().length) {
+			if (chan.find(".messages .msg:not(.unread-marker)").slice(0, -100).remove().length) {
 				chan.find(".show-more").addClass("show");
 			}
 		});
 	}, 1000 * 10);
 
 	function clear() {
-		chat.find(".active .messages").empty();
+		chat.find(".active .messages .msg:not(.unread-marker)").remove();
 		chat.find(".active .show-more").addClass("show");
 	}
 

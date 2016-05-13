@@ -679,6 +679,7 @@ button {
 #chat .show-more {
 	display: none;
 	padding: 10px;
+	padding-bottom: 0;
 	width: 100%;
 }
 
@@ -709,6 +710,17 @@ button {
 #chat .msg {
 	display: table-row;
 	word-wrap: break-word;
+}
+
+#chat .unread-marker span {
+	padding: 0;
+	height: 1px;
+	border-color: #455164;
+	background-color: #455164;
+}
+
+#chat .unread-marker:last-child {
+	display: none;
 }
 
 .inline-channel {
@@ -1625,16 +1637,22 @@ button {
 		padding: 2px 0;
 	}
 
-	#chat .msg:last-child {
-		height: auto;
-	}
-
 	#chat .time,
 	#chat .from,
 	#chat .text {
 		border: 0;
 		display: inline;
 		padding: 0;
+	}
+
+	#chat .unread-marker .time,
+	#chat .unread-marker .from {
+		display: none;
+	}
+
+	#chat .unread-marker .text {
+		display: block;
+		width: 100%;
 	}
 }
 
