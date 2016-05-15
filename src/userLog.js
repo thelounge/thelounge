@@ -39,7 +39,9 @@ module.exports.write = function(user, network, chan, msg) {
 		path + "/" + chan.replace(/%/g, "%%").replace(/\//g, "%") + ".log",
 		line + "\n",
 		function(e) {
-			log.error("Failed to write user log", e);
+			if (e) {
+				log.error("Failed to write user log", e);
+			}
 		}
 	);
 };
