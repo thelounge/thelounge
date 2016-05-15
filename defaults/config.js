@@ -129,7 +129,7 @@ module.exports = {
 	// Log settings
 	//
 	// Logging has to be enabled per user. If enabled, logs will be stored in
-	// the '/users/<user>/logs/' folder.
+	// the 'logs/<user>/<network>/' folder.
 	//
 	// @type     object
 	// @default  {}
