@@ -5,6 +5,7 @@ var Helper = {
 	expandHome: expandHome,
 	getConfig: getConfig,
 	getUserConfigPath: getUserConfigPath,
+	getUserLogsPath: getUserLogsPath,
 	setHome: setHome,
 };
 
@@ -18,6 +19,10 @@ function setHome(homePath) {
 
 function getUserConfigPath(name) {
 	return path.join(this.USERS_PATH, name + ".json");
+}
+
+function getUserLogsPath(name, network) {
+	return path.join(this.HOME, "logs", name, network);
 }
 
 function getConfig() {
