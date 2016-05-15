@@ -437,7 +437,7 @@ $(function() {
 	var settings = $("#settings");
 	var options = $.extend({
 		desktopNotifications: false,
-		colors: false,
+		coloredNicks: true,
 		join: true,
 		links: true,
 		mode: true,
@@ -487,8 +487,8 @@ $(function() {
 		].indexOf(name) !== -1) {
 			chat.toggleClass("hide-" + name, !self.prop("checked"));
 		}
-		if (name === "colors") {
-			chat.toggleClass("no-colors", !self.prop("checked"));
+		if (name === "coloredNicks") {
+			chat.toggleClass("colored-nicks", self.prop("checked"));
 		}
 		if (name === "userStyles") {
 			$(document.head).find("#user-specified-css").html(options[name]);

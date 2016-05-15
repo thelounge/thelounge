@@ -746,44 +746,44 @@ button,
 	color: #50a656;
 }
 
-#chat.no-colors .from .user,
-#chat.no-colors .text .user,
-#chat.no-colors .sidebar .user {
-	color: #50a656 !important;
+/* Nicknames */
+
+#chat .user {
+	color: #50a656;
 }
 
-#chat .user.color-1 { color: #1396cf; }
-#chat .user.color-2 { color: #ffcf89; }
-#chat .user.color-3 { color: #00dc5f; }
-#chat .user.color-4 { color: #ff5bc8; }
-#chat .user.color-5 { color: #ff0e1b; }
-#chat .user.color-6 { color: #000094; }
-#chat .user.color-7 { color: #006441; }
-#chat .user.color-8 { color: #00566e; }
-#chat .user.color-9 { color: #ff0078; }
-#chat .user.color-10 { color: #15d5a3; }
-#chat .user.color-11 { color: #006b3b; }
-#chat .user.color-12 { color: #00c5ba; }
-#chat .user.color-13 { color: #00465b; }
-#chat .user.color-14 { color: #ffafce; }
-#chat .user.color-15 { color: #ff3b12; }
-#chat .user.color-16 { color: #16cc6a; }
-#chat .user.color-17 { color: #ff0072; }
-#chat .user.color-18 { color: #ff5877; }
-#chat .user.color-19 { color: #ff1753; }
-#chat .user.color-20 { color: #007a56; }
-#chat .user.color-21 { color: #095092; }
-#chat .user.color-22 { color: #000bde; }
-#chat .user.color-23 { color: #00bca9; }
-#chat .user.color-24 { color: #00367d; }
-#chat .user.color-25 { color: #009ec4; }
-#chat .user.color-26 { color: #006119; }
-#chat .user.color-27 { color: #008bb8; }
-#chat .user.color-28 { color: #469c00; }
-#chat .user.color-29 { color: #ff0f95; }
-#chat .user.color-30 { color: #ff7615; }
-#chat .user.color-31 { color: #ff4846; }
-#chat .user.color-32 { color: #ff199b; }
+#chat.colored-nicks .user.color-1 { color: #1396cf; }
+#chat.colored-nicks .user.color-2 { color: #ffcf89; }
+#chat.colored-nicks .user.color-3 { color: #00dc5f; }
+#chat.colored-nicks .user.color-4 { color: #ff5bc8; }
+#chat.colored-nicks .user.color-5 { color: #ff0e1b; }
+#chat.colored-nicks .user.color-6 { color: #000094; }
+#chat.colored-nicks .user.color-7 { color: #006441; }
+#chat.colored-nicks .user.color-8 { color: #00566e; }
+#chat.colored-nicks .user.color-9 { color: #ff0078; }
+#chat.colored-nicks .user.color-10 { color: #15d5a3; }
+#chat.colored-nicks .user.color-11 { color: #006b3b; }
+#chat.colored-nicks .user.color-12 { color: #00c5ba; }
+#chat.colored-nicks .user.color-13 { color: #00465b; }
+#chat.colored-nicks .user.color-14 { color: #ffafce; }
+#chat.colored-nicks .user.color-15 { color: #ff3b12; }
+#chat.colored-nicks .user.color-16 { color: #16cc6a; }
+#chat.colored-nicks .user.color-17 { color: #ff0072; }
+#chat.colored-nicks .user.color-18 { color: #ff5877; }
+#chat.colored-nicks .user.color-19 { color: #ff1753; }
+#chat.colored-nicks .user.color-20 { color: #007a56; }
+#chat.colored-nicks .user.color-21 { color: #095092; }
+#chat.colored-nicks .user.color-22 { color: #000bde; }
+#chat.colored-nicks .user.color-23 { color: #00bca9; }
+#chat.colored-nicks .user.color-24 { color: #00367d; }
+#chat.colored-nicks .user.color-25 { color: #009ec4; }
+#chat.colored-nicks .user.color-26 { color: #006119; }
+#chat.colored-nicks .user.color-27 { color: #008bb8; }
+#chat.colored-nicks .user.color-28 { color: #469c00; }
+#chat.colored-nicks .user.color-29 { color: #ff0f95; }
+#chat.colored-nicks .user.color-30 { color: #ff7615; }
+#chat.colored-nicks .user.color-31 { color: #ff4846; }
+#chat.colored-nicks .user.color-32 { color: #ff199b; }
 
 #chat .text {
 	padding-left: 10px;
