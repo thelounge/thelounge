@@ -595,6 +595,12 @@ $(function() {
 		.history()
 		.tab(complete, {hint: false});
 
+	$("#nick").on("touchstart", function(e) {
+		e.type = "keydown.tabcomplete";
+		e.which = 9;
+		input.triggerHandler(e);
+	});
+
 	var form = $("#form");
 
 	form.on("submit", function(e) {
