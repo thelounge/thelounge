@@ -46,7 +46,6 @@ module.exports = function(irc, network) {
 				if (data.type === Msg.Type.NOTICE) {
 					chan = network.channels[0];
 				} else {
-					highlight = !self;
 					chan = new Chan({
 						type: Chan.Type.QUERY,
 						name: target
@@ -58,10 +57,14 @@ module.exports = function(irc, network) {
 					});
 				}
 			}
+
+			// Query messages (unless self) always highlight
+			if (chan.type === Chan.Type.QUERY) {
+				highlight = !self;
+			}
 		}
 
-		// Query messages (unless self) always highlight
-		// Self messages are never highlighted
+		// Self messages in channels are never highlighted
 		// Non-self messages are highlighted as soon as the nick is detected
 		if (!highlight && !self) {
 			highlight = network.highlightRegex.test(data.message);
