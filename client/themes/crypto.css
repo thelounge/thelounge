@@ -112,10 +112,8 @@ a:hover,
 	top: 48px;
 }
 
-#chat.no-colors .from .user,
-#chat.no-colors .text .user,
-#chat.no-colors .sidebar .user {
-	color: #000 !important;
+#chat .user {
+	color: black;
 	font-weight: bold;
 }
 
