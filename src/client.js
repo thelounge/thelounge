@@ -271,7 +271,7 @@ Client.prototype.setPassword = function(hash) {
 
 Client.prototype.input = function(data) {
 	var client = this;
-	var text = data.text.trim();
+	var text = data.text;
 	var target = client.find(data.target);
 
 	// This is either a normal message or a command escaped with a leading '/'
