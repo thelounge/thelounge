@@ -3,7 +3,6 @@ var fs = require("fs");
 var Client = require("./client");
 var mkdirp = require("mkdirp");
 var Helper = require("./helper");
-var path = require("path");
 
 module.exports = ClientManager;
 
@@ -46,10 +45,9 @@ ClientManager.prototype.loadUser = function(name) {
 
 ClientManager.prototype.getUsers = function() {
 	var users = [];
-	var path = Helper.HOME + "/users";
-	mkdirp.sync(path);
+	mkdirp.sync(Helper.USERS_PATH);
 	try {
-		var files = fs.readdirSync(path);
+		var files = fs.readdirSync(Helper.USERS_PATH);
 		files.forEach(function(file) {
 			if (file.indexOf(".json") !== -1) {
 				users.push(file.replace(".json", ""));
@@ -68,10 +66,9 @@ ClientManager.prototype.addUser = function(name, password) {
 		return false;
 	}
 	try {
-		var usersPath = path.join(Helper.HOME, "users");
-		mkdirp.sync(usersPath);
+		mkdirp.sync(Helper.USERS_PATH);
 
-		if (path.basename(name) !== name) {
+		if (require("path").basename(name) !== name) {
 			throw new Error(name + " is an invalid username.");
 		}
 
@@ -82,7 +79,7 @@ ClientManager.prototype.addUser = function(name, password) {
 			networks: []
 		};
 		fs.writeFileSync(
-			path.join(usersPath, name + ".json"),
+			Helper.getUserConfigPath(name),
 			JSON.stringify(user, null, "  ")
 		);
 	} catch (e) {
@@ -100,14 +97,13 @@ ClientManager.prototype.updateUser = function(name, opts) {
 	if (typeof opts === "undefined") {
 		return false;
 	}
-	var path = Helper.HOME + "/users/" + name + ".json";
-	var user = {};
 
+	var user = {};
 	try {
 		user = this.readUserConfig(name);
 		_.assign(user, opts);
 		fs.writeFileSync(
-			path,
+			Helper.getUserConfigPath(name),
 			JSON.stringify(user, null, " ")
 		);
 	} catch (e) {
@@ -122,9 +118,8 @@ ClientManager.prototype.readUserConfig = function(name) {
 	if (users.indexOf(name) === -1) {
 		return false;
 	}
-	var path = Helper.HOME + "/users/" + name + ".json";
 	var user = {};
-	var data = fs.readFileSync(path, "utf-8");
+	var data = fs.readFileSync(Helper.getUserConfigPath(name), "utf-8");
 	user = JSON.parse(data);
 	return user;
 };
@@ -135,8 +130,7 @@ ClientManager.prototype.removeUser = function(name) {
 		return false;
 	}
 	try {
-		var path = Helper.HOME + "/users/" + name + ".json";
-		fs.unlinkSync(path);
+		fs.unlinkSync(Helper.getUserConfigPath(name));
 	} catch (e) {
 		throw e;
 	}

@@ -1,6 +1,5 @@
 var ClientManager = new require("../clientManager");
 var bcrypt = require("bcrypt-nodejs");
-var fs = require("fs");
 var program = require("commander");
 var mkdirp = require("mkdirp");
 var Helper = require("../helper");
@@ -9,21 +8,10 @@ program
 	.command("add <name>")
 	.description("Add a new user")
 	.action(function(name/* , password */) {
-		var path = Helper.HOME + "/users";
 		try {
-			mkdirp.sync(path);
+			mkdirp.sync(Helper.USERS_PATH);
 		} catch (e) {
-			log.error("Could not create", path);
-			log.info("Try running the command as sudo.");
-			return;
-		}
-		try {
-			var test = path + "/.test";
-			fs.mkdirSync(test);
-			fs.rmdirSync(test);
-		} catch (e) {
-			log.error("You have no permissions to write to", path);
-			log.info("Try running the command as sudo.");
+			log.error("Could not create", Helper.USERS_PATH);
 			return;
 		}
 		var manager = new ClientManager();
@@ -50,5 +38,5 @@ function add(manager, name, password) {
 		hash
 	);
 	log.info("User '" + name + "' created:");
-	log.info(Helper.HOME + "/users/" + name + ".json");
+	log.info(Helper.getUserConfigPath(name));
 }
