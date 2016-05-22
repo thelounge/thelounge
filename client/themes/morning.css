@@ -192,8 +192,8 @@ QUIT #d0907d
 
 #chat .error,
 #chat .error .from,
-#chat .highlight,
-#chat .highlight .from {
+#chat .channel .highlight,
+#chat .channel .highlight .from {
 	color: #f92772;
 }
 

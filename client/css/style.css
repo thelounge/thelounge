@@ -901,9 +901,9 @@ button,
 
 #chat .error,
 #chat .error .from,
-#chat .highlight .from,
-#chat .highlight .text,
-#chat .highlight .user {
+#chat .channel .highlight .from,
+#chat .channel .highlight .text,
+#chat .channel .highlight .user {
 	color: #f00;
 }
 

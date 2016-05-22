@@ -827,8 +827,7 @@ $(function() {
 			}
 		}
 
-		button = button.filter(":not(.active)");
-		if (button.length === 0) {
+		if (button.hasClass("active")) {
 			return;
 		}
 
