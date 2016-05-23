@@ -30,6 +30,10 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
+## v2.0.0-pre.1 - 2016-05-22
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v1.5.0...v2.0.0-pre.1)
+
 ## v1.5.0 - 2016-04-13
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v1.4.3...v1.5.0)
