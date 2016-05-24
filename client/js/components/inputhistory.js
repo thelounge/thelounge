@@ -1,4 +1,5 @@
-/*!
+/* global jQuery */
+/*
  * inputhistory
  * https://github.com/erming/inputhistory
  * v0.3.1
@@ -60,9 +61,9 @@
 					break;
 				}
 				history[i] = self.val();
-				if (key == 38 && i != 0) {
+				if (key === 38 && i !== 0) {
 					i--;
-				} else if (key == 40 && i < history.length - 1) {
+				} else if (key === 40 && i < history.length - 1) {
 					i++;
 				}
 				self.val(history[i]);
@@ -73,5 +74,5 @@
 		});
 
 		return this;
-	}
+	};
 })(jQuery);
