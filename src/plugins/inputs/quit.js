@@ -1,6 +1,6 @@
 var _ = require("lodash");
 
-exports.commands = ["quit", "disconnect"];
+exports.commands = ["quit"];
 exports.allowDisconnected = true;
 
 exports.input = function(network, chan, cmd, args) {
