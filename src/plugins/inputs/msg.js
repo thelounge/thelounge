@@ -9,6 +9,11 @@ exports.input = function(network, chan, cmd, args) {
 	}
 
 	var msg = args.join(" ");
+
+	if (msg.length === 0) {
+		return true;
+	}
+
 	irc.say(target, msg);
 
 	if (!network.irc.network.cap.isEnabled("echo-message")) {

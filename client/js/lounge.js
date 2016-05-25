@@ -604,11 +604,18 @@ $(function() {
 	form.on("submit", function(e) {
 		e.preventDefault();
 		var text = input.val();
+
+		if (text.length === 0) {
+			return;
+		}
+
 		input.val("");
+
 		if (text.indexOf("/clear") === 0) {
 			clear();
 			return;
 		}
+
 		socket.emit("input", {
 			target: chat.data("id"),
 			text: text
