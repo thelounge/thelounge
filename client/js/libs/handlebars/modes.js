@@ -3,6 +3,7 @@ Handlebars.registerHelper(
 		var modes = {
 			"~": "owner",
 			"&": "admin",
+			"!": "admin",
 			"@": "op",
 			"%": "half-op",
 			"+": "voice",
