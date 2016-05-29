@@ -307,13 +307,11 @@
 				</div>
 			</div>
 			<form id="form" method="post" action="">
-				<div class="inner">
-					<div class="input">
-						<label for="input" id="nick"></label>
-						<button id="submit" type="submit" title="Send" aria-label="Send message"></button>
-						<input id="input" class="mousetrap">
-					</div>
-				</div>
+				<label for="input" id="nick"></label>
+				<span id="submit-wrap" class="tooltipped tooltipped-nw" aria-label="Send message">
+					<button id="submit" type="submit" aria-label="Send message"></button>
+				</span>
+				<input id="input" class="mousetrap" placeholder="Write…">
 			</form>
 		</div>
 	</div>

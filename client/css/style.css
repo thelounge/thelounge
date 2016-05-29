@@ -1170,60 +1170,36 @@ button,
 }
 
 #form {
-	background: #eee;
+	background: rgba(0, 0, 0, .02);
 	border-top: 1px solid #ddd;
 	bottom: 0;
 	height: 48px;
+	line-height: 48px;
 	left: 0;
 	position: absolute;
 	right: 0;
-}
-
-#form .inner {
-	bottom: 7px;
-	left: 7px;
-	position: absolute;
-	right: 7px;
-	top: 6px;
-}
-
-#form .input {
-	font: 12px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
-	left: 0;
-	height: 34px;
-	position: relative;
+	font-size: 14px;
 }
 
 #form #nick {
-	background: #f6f6f6;
+	background: #ddd;
 	color: #666;
 	position: absolute;
 	font: inherit;
-	font-size: 11px;
-	margin: 5px;
+	font-size: 12px;
 	margin-right: 10px;
-	line-height: 26px;
-	height: 24px;
-	padding: 0 9px;
-	border-radius: 1px;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
+	height: 100%;
+	padding: 0 12px;
 }
 
 #form #nick:empty {
 	visibility: hidden;
 }
 
-#form #nick:after {
-	content: ":";
-}
-
 #form #input {
-	border: 1px solid #ddd;
+	border: 0;
 	font: inherit;
-	border-radius: 2px;
+	background: inherit;
 	height: 100%;
 	outline: none;
 	padding: 0 34px 0 10px;
@@ -1231,14 +1207,16 @@ button,
 	width: 100%;
 }
 
-#form #submit {
-	color: #9ca5b4;
-	height: 34px;
-	line-height: 34px;
+#form #submit-wrap {
 	position: absolute;
 	right: 0;
-	transition: opacity .3s;
-	width: 34px;
+	height: inherit;
+}
+
+#form #submit {
+	color: #9ca5b4;
+	transition: background .3s;
+	width: 48px;
 }
 
 #form #submit:before {
@@ -1249,7 +1227,7 @@ button,
 }
 
 #form #submit:hover {
-	opacity: .6;
+	background: #ddd;
 }
 
 #context-menu-container {

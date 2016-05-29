@@ -143,23 +143,14 @@ QUIT #d0907d
 
 /* Message form */
 #form {
-	background: #2a323d;
-	border-color: #242a33;
-}
-
-#form #input {
-	background-color: #2e3642;
-	border-color: #242a33;
+	background: #2e3642;
+	border-color: #2a323d;
 	color: #ccc;
 }
 
 #form #nick {
-	background: #242a33;
+	background: #2a323d;
 	color: #ccc;
-}
-
-#form #submit:hover {
-	opacity: 1;
 }
 
 /* Buttons */

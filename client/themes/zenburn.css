@@ -173,11 +173,6 @@ body {
 
 /* Message form */
 #form {
-	background: #333;
-	border-color: #101010;
-}
-
-#form #input {
 	background-color: #434443;
 	border-color: #101010;
 	color: #dcdccc;
@@ -186,10 +181,6 @@ body {
 #form #nick {
 	background: #101010;
 	color: #dcdccc;
-}
-
-#form #submit:hover {
-	opacity: 1;
 }
 
 /* Buttons */
