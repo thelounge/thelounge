@@ -323,7 +323,7 @@ button {
 }
 
 #sidebar {
-	bottom: 52px;
+	bottom: 48px;
 	left: 0;
 	overflow: auto;
 	overflow-x: hidden;
@@ -505,15 +505,14 @@ button {
 
 #footer {
 	background: rgba(0, 0, 0, .06);
-	border-radius: 2px;
-	bottom: 4px;
+	bottom: 0;
 	height: 45px;
-	left: 5px;
+	left: 0;
 	font-size: 14px;
 	line-height: 45px;
 	position: absolute;
 	text-align: center;
-	width: 210px;
+	width: 220px;
 }
 
 #footer button.active {
@@ -546,11 +545,11 @@ button {
 }
 
 #main {
-	bottom: 4px;
+	bottom: 0;
 	left: 220px;
 	position: absolute;
-	right: 5px;
-	top: 4px;
+	right: 0;
+	top: 0;
 	display: -webkit-flex;
 	display: flex;
 	-webkit-flex-direction: column;
@@ -600,20 +599,8 @@ button {
 	border-color: #79838c;
 }
 
-#windows .window:before {
-	background: #f4f4f4;
-	background-image: linear-gradient(#f4f4f4, #ececec);
-	border-bottom: 1px solid #d7d7d7;
-	content: " ";
-	display: block;
-	height: 10px;
-	position: relative;
-	z-index: 10;
-}
-
 #windows .window {
 	background: #fff;
-	border-radius: 2px;
 	bottom: 0;
 	display: none;
 	left: 0;
@@ -1600,13 +1587,9 @@ button {
 		transform: translate3d(-180px, 0, 0);
 	}
 
-	#sidebar {
-		left: -220px;
-	}
-
+	#sidebar,
 	#footer {
-		left: -215px;
-		width: 215px;
+		left: -220px;
 	}
 
 	#sidebar .empty:before {
@@ -1614,8 +1597,7 @@ button {
 	}
 
 	#main {
-		left: 5px;
-		right: 5px;
+		left: 0;
 	}
 
 	#chat .chat {

@@ -52,7 +52,6 @@ body {
 
 #sidebar {
 	background: #2b2b2b;
-	bottom: 48px;
 }
 
 #sidebar .chan .name:after {
@@ -84,34 +83,6 @@ body {
 #chat .user-mode:before,
 #chat .sidebar {
 	border-color: #333;
-}
-
-/* Attach chat to window borders */
-#windows .window:before,
-#windows .chan:before {
-	display: none;
-}
-
-#footer {
-	left: 0;
-	bottom: 0;
-	width: 220px;
-	border-radius: 0;
-}
-
-#main {
-	top: 0;
-	bottom: 0;
-	right: 0;
-}
-
-#windows .window {
-	border-radius: 0;
-}
-
-#chat .chat,
-#chat .sidebar {
-	top: 48px;
 }
 
 /* User list */
@@ -270,14 +241,4 @@ body {
 
 #chat .toggle-content .body {
 	color: #d2d39b;
-}
-
-@media (max-width: 768px) {
-	#main {
-		left: 0;
-	}
-	#footer {
-		left: -220px;
-		width: 225px;
-	}
 }
