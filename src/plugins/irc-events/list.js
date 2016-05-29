@@ -3,11 +3,10 @@ var Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
 	var client = this;
-	var chanCache = {};
 	var MAX_CHANS = 1000;
 
 	irc.on("channel list start", function() {
-		chanCache[network.id] = [];
+		network.chanCache = [];
 
 		updateListStatus(new Msg({
 			text: "Loading channel list, this can take a moment...",
@@ -16,23 +15,23 @@ module.exports = function(irc, network) {
 	});
 
 	irc.on("channel list", function(channels) {
-		Array.prototype.push.apply(chanCache[network.id], channels);
+		Array.prototype.push.apply(network.chanCache, channels);
 	});
 
 	irc.on("channel list end", function() {
 		updateListStatus(new Msg({
 			type: "channel_list",
-			channels: chanCache[network.id].slice(0, MAX_CHANS)
+			channels: network.chanCache.slice(0, MAX_CHANS)
 		}));
 
-		if (chanCache[network.id].length > MAX_CHANS) {
+		if (network.chanCache.length > MAX_CHANS) {
 			updateListStatus(new Msg({
 				type: "channel_list_truncated",
 				text: "Channel list is too large: truncated to " + MAX_CHANS + " channels."
 			}));
 		}
 
-		chanCache[network.id] = [];
+		network.chanCache = [];
 	});
 
 	function updateListStatus(msg) {
