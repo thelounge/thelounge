@@ -1311,6 +1311,18 @@ button,
 	content: "\f0f6";
 }
 
+.context-menu-user-kick:before {
+	content: "\f112";
+}
+
+.context-menu-user-ban:before {
+	content: "\f05e";
+}
+
+.context-menu-user-kickban:before {
+	content: "\f235";
+}
+
 .context-menu-close:before {
 	content: "\f00d";
 }
