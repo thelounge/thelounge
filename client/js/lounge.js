@@ -206,16 +206,18 @@ $(function() {
 			})
 		);
 		renderChannel(data.chan);
-		var chan = sidebar.find(".chan")
+
+		// Queries do not automatically focus, unless the user did a whois
+		if (data.chan.type === "query" && !data.shouldOpen) {
+			return;
+		}
+
+		sidebar.find(".chan")
 			.sort(function(a, b) {
 				return $(a).data("id") - $(b).data("id");
 			})
-			.last();
-		if (!whois) {
-			chan = chan.filter(":not(.query)");
-		}
-		whois = false;
-		chan.click();
+			.last()
+			.click();
 	});
 
 	function buildChatMessage(data) {
@@ -630,19 +632,44 @@ $(function() {
 		});
 	});
 
-	chat.on("click", ".inline-channel", function() {
-		var chan = $(".network")
-			.find(".chan.active")
+	function findCurrentNetworkChan(name) {
+		name = name.toLowerCase();
+
+		return $(".network .chan.active")
 			.parent(".network")
-			.find(".chan[data-title='" + $(this).data("chan") + "']");
-		if (chan.size() === 1) {
+			.find(".chan")
+			.filter(function() {
+				return $(this).data("title").toLowerCase() === name;
+			})
+			.first();
+	}
+
+	chat.on("click", ".inline-channel", function() {
+		var name = $(this).data("chan");
+		var chan = findCurrentNetworkChan(name);
+
+		if (chan.length) {
 			chan.click();
 		} else {
 			socket.emit("input", {
 				target: chat.data("id"),
-				text: "/join " + $(this).data("chan")
+				text: "/join " + name
 			});
 		}
+	});
+
+	chat.on("click", ".user", function() {
+		var name = $(this).data("name");
+		var chan = findCurrentNetworkChan(name);
+
+		if (chan.length) {
+			chan.click();
+		}
+
+		socket.emit("input", {
+			target: chat.data("id"),
+			text: "/whois " + name
+		});
 	});
 
 	chat.on("click", ".chat", function() {
@@ -783,20 +810,6 @@ $(function() {
 			} else {
 				btn.hide();
 			}
-		});
-	});
-
-	var whois = false;
-	chat.on("click", ".user", function() {
-		var user = $(this).text().trim().replace(/[+%@~&]/, "");
-		if (user.indexOf("#") !== -1) {
-			return;
-		}
-		whois = true;
-		var text = "/whois " + user;
-		socket.emit("input", {
-			target: chat.data("id"),
-			text: text
 		});
 	});
 
