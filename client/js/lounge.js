@@ -637,7 +637,7 @@ $(function() {
 		}
 	});
 
-	chat.on("click", ".messages", function() {
+	chat.on("click", ".chat", function() {
 		setTimeout(function() {
 			var text = "";
 			if (window.getSelection) {
