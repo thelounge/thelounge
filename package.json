@@ -13,7 +13,8 @@
   "homepage": "https://thelounge.github.io/",
   "scripts": {
     "start": "node index",
-    "build": "npm run build:grunt && npm run build:handlebars",
+    "build": "npm run build:font-awesome && npm run build:grunt && npm run build:handlebars",
+    "build:font-awesome": "mkdir -p client/fonts && cp node_modules/font-awesome/fonts/fontawesome-webfont.* client/fonts",
     "build:grunt": "grunt",
     "build:handlebars": "handlebars client/views/ -e tpl -f client/js/lounge.templates.js",
     "test": "(npm run test:mocha || true) && npm run lint",
@@ -55,6 +56,7 @@
   "devDependencies": {
     "chai": "3.5.0",
     "eslint": "2.8.0",
+    "font-awesome": "4.6.3",
     "grunt": "1.0.1",
     "grunt-contrib-uglify": "1.0.1",
     "grunt-contrib-watch": "1.0.0",
