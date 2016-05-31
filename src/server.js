@@ -109,7 +109,7 @@ function index(req, res, next) {
 	});
 }
 
-function init(socket, client, token) {
+function init(socket, client) {
 	if (!client) {
 		socket.emit("auth");
 		socket.on("auth", auth);
@@ -160,16 +160,21 @@ function init(socket, client, token) {
 						});
 						return;
 					}
+
 					var salt = bcrypt.genSaltSync(8);
 					var hash = bcrypt.hashSync(p1, salt);
-					if (client.setPassword(hash)) {
-						socket.emit("change-password", {
-							success: "Successfully updated your password"
-						});
-						return;
-					}
-					socket.emit("change-password", {
-						error: "Failed to update your password"
+
+					client.setPassword(hash, function(success) {
+						var obj = {};
+
+						if (success) {
+							obj.success = "Successfully updated your password, all your other sessions were logged out";
+							obj.token = client.config.token;
+						} else {
+							obj.error = "Failed to update your password";
+						}
+
+						socket.emit("change-password", obj);
 					});
 				}
 			);
@@ -196,12 +201,12 @@ function init(socket, client, token) {
 		socket.emit("init", {
 			active: client.activeChannel,
 			networks: client.networks,
-			token: token || ""
+			token: client.config.token
 		});
 	}
 }
 
-function reverseDnsLookup(socket, client, token) {
+function reverseDnsLookup(socket, client) {
 	client.ip = getClientIp(socket.request);
 
 	dns.reverse(client.ip, function(err, host) {
@@ -211,7 +216,7 @@ function reverseDnsLookup(socket, client, token) {
 			client.hostname = client.ip;
 		}
 
-		init(socket, client, token);
+		init(socket, client);
 	});
 }
 
@@ -233,7 +238,7 @@ function auth(data) {
 		var success = false;
 		_.each(manager.clients, function(client) {
 			if (data.token) {
-				if (data.token === client.token) {
+				if (data.token === client.config.token) {
 					success = true;
 				}
 			} else if (client.config.user === data.user) {
@@ -242,14 +247,10 @@ function auth(data) {
 				}
 			}
 			if (success) {
-				var token;
-				if (data.remember || data.token) {
-					token = client.token;
-				}
 				if (config.webirc !== null && !client.config["ip"]) {
-					reverseDnsLookup(socket, client, token);
+					reverseDnsLookup(socket, client);
 				} else {
-					init(socket, client, token);
+					init(socket, client);
 				}
 				return false;
 			}
