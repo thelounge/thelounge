@@ -111,7 +111,7 @@ function index(req, res, next) {
 
 function init(socket, client, token) {
 	if (!client) {
-		socket.emit("auth");
+		socket.emit("auth", {success: true});
 		socket.on("auth", auth);
 	} else {
 		socket.on(
@@ -255,7 +255,7 @@ function auth(data) {
 			}
 		});
 		if (!success) {
-			socket.emit("auth");
+			socket.emit("auth", {success: success});
 		}
 	}
 }
