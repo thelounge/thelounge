@@ -91,7 +91,11 @@ QUIT #d0907d
 	color: #fefefe;
 }
 
-/* Nicknames */
+/**
+ * Nickname colors
+ */
+
+/* Single color used for all nicknames when colored nicknames are disabled */
 #chat .user {
 	color: #b0bacf;
 }
@@ -100,6 +104,7 @@ QUIT #d0907d
 	color: #fefefe;
 }
 
+/* Color palette used when colored nicknames are enabled */
 #chat.colored-nicks .user.color-1 { color: #f7adf7; }
 #chat.colored-nicks .user.color-2 { color: #abf99f; }
 #chat.colored-nicks .user.color-3 { color: #86efdc; }
@@ -132,6 +137,10 @@ QUIT #d0907d
 #chat.colored-nicks .user.color-30 { color: #9676e2; }
 #chat.colored-nicks .user.color-31 { color: #f2a4eb; }
 #chat.colored-nicks .user.color-32 { color: #85f27d; }
+
+/**
+ * END Nickname colors
+ */
 
 #chat a {
 	color: #428bca;

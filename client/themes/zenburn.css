@@ -121,7 +121,11 @@ body {
 	color: #dcdccc;
 }
 
-/* Nicknames */
+/**
+ * Nickname colors
+ */
+
+/* Single color used for all nicknames when colored nicknames are disabled */
 #chat .user {
 	color: #bc8cbc;
 }
@@ -130,6 +134,7 @@ body {
 	color: #dcdccc;
 }
 
+/* Color palette used when colored nicknames are enabled */
 #chat.colored-nicks .user.color-1 { color: #f7adf7; }
 #chat.colored-nicks .user.color-2 { color: #abf99f; }
 #chat.colored-nicks .user.color-3 { color: #86efdc; }
@@ -162,6 +167,10 @@ body {
 #chat.colored-nicks .user.color-30 { color: #9676e2; }
 #chat.colored-nicks .user.color-31 { color: #f2a4eb; }
 #chat.colored-nicks .user.color-32 { color: #85f27d; }
+
+/**
+ * END Nickname colors
+ */
 
 #chat a {
 	color: #8c8cbc;
