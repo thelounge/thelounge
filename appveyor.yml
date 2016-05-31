@@ -17,7 +17,9 @@ install:
 test_script:
   - node --version
   - npm --version
-  - npm test
+  - npm run test:mocha
+  - npm run lint:js
+  - npm run lint:css
 
 # Don't actually build
 build: off
