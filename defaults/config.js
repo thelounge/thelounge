@@ -309,5 +309,15 @@ module.exports = {
 		// @default  113
 		//
 		port: 113
-	}
+	},
+
+	//
+	// Enable oidentd support using the specified file
+	//
+	// Example: oidentd: "~/.oidentd.conf",
+	//
+	// @type     string
+	// @default  null
+	//
+	oidentd: null,
 };
