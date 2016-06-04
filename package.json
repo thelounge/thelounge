@@ -14,7 +14,7 @@
   "scripts": {
     "start": "node index",
     "build": "npm run build:font-awesome && npm run build:grunt && npm run build:handlebars",
-    "build:font-awesome": "mkdir -p client/fonts && cp node_modules/font-awesome/fonts/fontawesome-webfont.* client/fonts",
+    "build:font-awesome": "node scripts/build-fontawesome.js",
     "build:grunt": "grunt",
     "build:handlebars": "handlebars client/views/ -e tpl -f client/js/lounge.templates.js",
     "test": "(npm run test:mocha || true) && npm run lint",
@@ -43,6 +43,7 @@
     "commander": "2.9.0",
     "event-stream": "3.3.2",
     "express": "4.13.4",
+    "fs-extra": "0.30.0",
     "irc-framework": "2.0.0",
     "lodash": "4.11.2",
     "mkdirp": "0.5.1",
