@@ -1,6 +1,6 @@
 $(function() {
 	var path = window.location.pathname + "socket.io/";
-	var socket = io({path:path});
+	var socket = io({path: path});
 	var commands = [
 		"/close",
 		"/connect",

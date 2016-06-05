@@ -7,7 +7,7 @@ Handlebars.registerHelper(
 			"@": "op",
 			"%": "half-op",
 			"+": "voice",
-			"" : "normal"
+			"": "normal"
 		};
 		return modes[mode];
 	}
