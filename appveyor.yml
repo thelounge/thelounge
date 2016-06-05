@@ -22,5 +22,10 @@ test_script:
   - npm run lint:js
   - npm run lint:css
 
+# cache npm modules
+cache:
+  - node_modules
+  - '%APPDATA%\npm-cache'
+
 # Don't actually build
 build: off
