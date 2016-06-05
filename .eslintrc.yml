@@ -14,9 +14,11 @@ rules:
   curly: [2, all]
   eqeqeq: 2
   indent: [2, tab]
+  key-spacing: [2, {beforeColon: false, afterColon: true}]
   keyword-spacing: [2, {before: true, after: true}]
   linebreak-style: [2, unix]
   no-console: 0
+  no-control-regex: 0
   no-inner-declarations: 2
   no-invalid-regexp: 2
   no-irregular-whitespace: 2

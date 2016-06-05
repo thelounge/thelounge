@@ -257,7 +257,7 @@ Client.prototype.connect = function(args) {
 
 Client.prototype.setPassword = function(hash) {
 	var client = this;
-	client.manager.updateUser(client.name, {password:hash});
+	client.manager.updateUser(client.name, {password: hash});
 	// re-read the hash off disk to ensure we use whatever is saved. this will
 	// prevent situations where the password failed to save properly and so
 	// a restart of the server would forget the change and use the old
