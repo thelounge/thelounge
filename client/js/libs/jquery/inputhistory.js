@@ -32,6 +32,10 @@
 			var key = e.which;
 			switch (key) {
 			case 13: // Enter
+				if (e.shiftKey) {
+					return; // multiline input
+				}
+				
 				if (self.val() != "") {
 					i = history.length;
 					history[i - 1] = self.val();
@@ -53,6 +57,17 @@
 				if (e.ctrlKey || e.metaKey) {
 					break;
 				}
+				
+				if (
+					this.value.indexOf("\n") >= 0
+					&&
+					(key === 38 && this.selectionStart > 0)
+					||
+					(key === 40 && this.selectionStart < this.value.length))
+				{
+					return; // don't prevent default
+				}
+
 				history[i] = self.val();
 				if (key == 38 && i != 0) {
 					i--;

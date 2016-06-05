@@ -301,6 +301,14 @@ Client.prototype.setPassword = function(hash, callback) {
 
 Client.prototype.input = function(data) {
 	var client = this;
+	data.text.split("\n").forEach(function(line) {
+		data.text = line;
+		client.inputLine(data);
+	});
+};
+
+Client.prototype.inputLine = function(data) {
+	var client = this;
 	var text = data.text;
 	var target = client.find(data.target);
 

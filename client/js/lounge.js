@@ -621,6 +621,19 @@ $(function() {
 
 	var input = $("#input")
 		.history()
+		.on("input keyup", function() {
+			var style = window.getComputedStyle(this);
+			this.style.height = "0px";
+			this.offsetHeight; // force reflow
+			this.style.height = Math.min(
+				Math.round(window.innerHeight - 100), // prevent overflow
+				this.scrollHeight
+				+ Math.round(parseFloat(style.borderTopWidth) || 0)
+				+ Math.round(parseFloat(style.borderBottomWidth) || 0)
+			) + "px";
+
+			$("#chat .chan.active .chat").trigger("msg.sticky"); // fix growing
+		})
 		.tab(complete, {hint: false});
 
 	var form = $("#form");
@@ -1133,10 +1146,7 @@ $(function() {
 	}
 
 	function setNick(nick) {
-		var width = $("#nick")
-			.html(nick)
-			.outerWidth(true);
-		input.css("padding-left", width);
+		$("#nick").text(nick);
 	}
 
 	function move(array, old_index, new_index) {
