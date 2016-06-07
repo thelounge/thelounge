@@ -52,7 +52,7 @@ a:hover,
 
 #sign-in label input {
 	margin-top: 10px !important;
-	font: 14px Inconsolata-g, monospace;
+	font-size: 14px;
 }
 
 .btn {
@@ -76,7 +76,7 @@ a:hover,
 }
 
 #sign-in .remember {
-	font: 12px Inconsolata-g, monospace;
+	font-size: 12px;
 	line-height: 30px;
 }
 
@@ -103,7 +103,7 @@ a:hover,
 
 #chat,
 #windows .header {
-	font: 12px Inconsolata-g, monospace;
+	font-size: 12px;
 	line-height: 1.8;
 }
 
@@ -118,7 +118,7 @@ a:hover,
 }
 
 #form .input {
-	font: 12px Inconsolata-g, monospace;
+	font-size: 12px;
 }
 
 #footer .icon {
