@@ -13,6 +13,8 @@ environment:
 install:
   - ps: Install-Product node $env:nodejs_version
   - npm install
+  - npm install mocha-appveyor-reporter
+  - echo --reporter mocha-appveyor-reporter >> test/mocha.opts
 
 test_script:
   - node --version
