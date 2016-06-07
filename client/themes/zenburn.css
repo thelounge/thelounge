@@ -20,6 +20,7 @@ QUIT #bc6c4c
 
 body {
 	background: #2b2b2b;
+	color: #dcdccc;
 }
 
 #main,
@@ -36,12 +37,6 @@ body {
 #windows .header {
 	font-family: "Open Sans", sans-serif !important;
 	font-size: 13px;
-}
-
-#settings,
-#sign-in,
-#connect {
-	color: #dcdccc;
 }
 
 #settings,
