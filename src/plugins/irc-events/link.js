@@ -10,8 +10,7 @@ process.setMaxListeners(0);
 module.exports = function(irc, network) {
 	var client = this;
 	irc.on("privmsg", function(data) {
-		var config = Helper.getConfig();
-		if (!config.prefetch) {
+		if (!Helper.config.prefetch) {
 			return;
 		}
 
@@ -45,7 +44,6 @@ module.exports = function(irc, network) {
 };
 
 function parse(msg, url, res, client) {
-	var config = Helper.getConfig();
 	var toggle = msg.toggle = {
 		id: msg.id,
 		type: "",
@@ -55,9 +53,6 @@ function parse(msg, url, res, client) {
 		link: url
 	};
 
-	if (!config.prefetchMaxImageSize) {
-		config.prefetchMaxImageSize = 512;
-	}
 	switch (res.type) {
 	case "text/html":
 		var $ = cheerio.load(res.text);
@@ -77,7 +72,7 @@ function parse(msg, url, res, client) {
 	case "image/gif":
 	case "image/jpg":
 	case "image/jpeg":
-		if (res.size < (config.prefetchMaxImageSize * 1024)) {
+		if (res.size < (Helper.config.prefetchMaxImageSize * 1024)) {
 			toggle.type = "image";
 		} else {
 			return;

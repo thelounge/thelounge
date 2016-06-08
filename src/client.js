@@ -132,7 +132,7 @@ Client.prototype.find = function(id) {
 };
 
 Client.prototype.connect = function(args) {
-	var config = Helper.getConfig();
+	var config = Helper.config;
 	var client = this;
 
 	var nick = args.nick || "lounge-user";
@@ -402,9 +402,8 @@ Client.prototype.quit = function() {
 var timer;
 Client.prototype.save = function(force) {
 	var client = this;
-	var config = Helper.getConfig();
 
-	if (config.public) {
+	if (Helper.config.public) {
 		return;
 	}
 

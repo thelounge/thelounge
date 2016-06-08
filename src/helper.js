@@ -1,9 +1,10 @@
+var _ = require("lodash");
 var path = require("path");
 var os = require("os");
 
 var Helper = {
+	config: null,
 	expandHome: expandHome,
-	getConfig: getConfig,
 	getUserConfigPath: getUserConfigPath,
 	getUserLogsPath: getUserLogsPath,
 	setHome: setHome,
@@ -11,10 +12,21 @@ var Helper = {
 
 module.exports = Helper;
 
+Helper.config = require(path.resolve(path.join(
+	__dirname,
+	"..",
+	"defaults",
+	"config.js"
+)));
+
 function setHome(homePath) {
 	this.HOME = expandHome(homePath || "~/.lounge");
 	this.CONFIG_PATH = path.join(this.HOME, "config.js");
 	this.USERS_PATH = path.join(this.HOME, "users");
+
+	// Reload config from new home location
+	var userConfig = require(this.CONFIG_PATH);
+	this.config = _.extend(this.config, userConfig);
 }
 
 function getUserConfigPath(name) {
@@ -23,10 +35,6 @@ function getUserConfigPath(name) {
 
 function getUserLogsPath(name, network) {
 	return path.join(this.HOME, "logs", name, network);
-}
-
-function getConfig() {
-	return require(this.CONFIG_PATH);
 }
 
 function expandHome(shortenedPath) {

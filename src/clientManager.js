@@ -7,12 +7,10 @@ var Oidentd = require("./oidentd");
 module.exports = ClientManager;
 
 function ClientManager() {
-	var config = Helper.getConfig();
-
 	this.clients = [];
 
-	if (typeof config.oidentd === "string") {
-		this.identHandler = new Oidentd(config.oidentd);
+	if (typeof Helper.config.oidentd === "string") {
+		this.identHandler = new Oidentd(Helper.config.oidentd);
 	}
 }
 
