@@ -30,9 +30,71 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
-## v2.0.0-pre.1 - 2016-05-22
+## v2.0.0-pre.1 - 2016-05-22 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v1.5.0...v2.0.0-pre.1)
+
+This is a pre-release to allow early adopters to use The Lounge with [`irc-framework`](https://github.com/kiwiirc/irc-framework) as our underlying IRC library instead of [`slate`](https://github.com/slate/slate-irc). This change itself solves a lot of issues and adds many features, most of them [listed here](https://github.com/thelounge/lounge/pull/167#issue-139286868): IRCv3 compliance, user feedback improvement, etc.
+
+It also adds WEBIRC support, a better server logging capability, a web app manifest, improves the sticky scroll, and fixes a ton of bugs.
+
+### Added
+
+- Log enabled capabilities ([#272](https://github.com/thelounge/lounge/pull/272) by [@xPaw](https://github.com/xPaw))
+- Add global logging helper ([#257](https://github.com/thelounge/lounge/pull/257) by [@xPaw](https://github.com/xPaw))
+- Add support for `~` home folder expansion ([#284](https://github.com/thelounge/lounge/pull/284) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Document supported node version ([#280](https://github.com/thelounge/lounge/pull/280) by [@xPaw](https://github.com/xPaw))
+- Add support for echo-message and znc.in/self-message caps ([#270](https://github.com/thelounge/lounge/pull/270) by [@xPaw](https://github.com/xPaw))
+- Implement WEBIRC ([#240](https://github.com/thelounge/lounge/pull/240) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Add `manifest.json` for nicer mobile experience ([#310](https://github.com/thelounge/lounge/pull/310) by [@xPaw](https://github.com/xPaw))
+
+### Changed
+
+- Drop `slate-irc`, switch to `irc-framework` ([#167](https://github.com/thelounge/lounge/pull/167) by [@xPaw](https://github.com/xPaw))
+- Create a single helper function to write messages ([#266](https://github.com/thelounge/lounge/pull/266) by [@xPaw](https://github.com/xPaw))
+- Update dependencies ([#281](https://github.com/thelounge/lounge/pull/281) by [@xPaw](https://github.com/xPaw))
+- Improve sticky scroll ([#262](https://github.com/thelounge/lounge/pull/262) by [@xPaw](https://github.com/xPaw))
+- Change license link to point at our license file ([#290](https://github.com/thelounge/lounge/pull/290) by [@xPaw](https://github.com/xPaw))
+- Stricter eslint rule for curly brackets ([#291](https://github.com/thelounge/lounge/pull/291) by [@xPaw](https://github.com/xPaw))
+- Bump patch version of lodash to 4.11.2 ([#306](https://github.com/thelounge/lounge/pull/306) by [@astorije](https://github.com/astorije))
+- Minor wording changes for better clarity ([#305](https://github.com/thelounge/lounge/pull/305) by [@astorije](https://github.com/astorije))
+- Improve tests execution ([#260](https://github.com/thelounge/lounge/pull/260) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Update irc-framework ([#324](https://github.com/thelounge/lounge/pull/324) by [@xPaw](https://github.com/xPaw))
+- Do not ignore our handlebars plugins in ESLint ([#329](https://github.com/thelounge/lounge/pull/329) by [@xPaw](https://github.com/xPaw))
+- Improve nick highlights ([#327](https://github.com/thelounge/lounge/pull/327) by [@xPaw](https://github.com/xPaw))
+- CSS classes in themes for nick colors ([#325](https://github.com/thelounge/lounge/pull/325) by [@astorije](https://github.com/astorije))
+- Replace all concatenated paths with Node's path.join ([#307](https://github.com/thelounge/lounge/pull/307) by [@astorije](https://github.com/astorije))
+
+### Removed
+
+- Do not increase font size on highlight in morning theme ([#321](https://github.com/thelounge/lounge/pull/321) by [@xPaw](https://github.com/xPaw))
+
+### Fixed
+
+- Only increase unread counter for whitelisted actions ([#273](https://github.com/thelounge/lounge/pull/273) by [@xPaw](https://github.com/xPaw))
+- Parse CTCP replies ([#278](https://github.com/thelounge/lounge/pull/278) by [@xPaw](https://github.com/xPaw))
+- Do not count your own messages as unread ([#279](https://github.com/thelounge/lounge/pull/279) by [@xPaw](https://github.com/xPaw))
+- Use lowercase global to avoid a deprecation warning in Node.js 6 ([`d9a0dd9`](https://github.com/thelounge/lounge/commit/d9a0dd9406e8fb22d7a5ee1ed4ed7aa8e5f0fa01) by [@xPaw](https://github.com/xPaw))
+- Do not display incorrect nick when switching to a non connected network ([#252](https://github.com/thelounge/lounge/pull/252) by [@xPaw](https://github.com/xPaw))
+- Keep autocompletion sort whenever user list updates ([#217](https://github.com/thelounge/lounge/pull/217) by [@xPaw](https://github.com/xPaw))
+- Make sure app does not crash when webirc is not defined in the configuration ([#294](https://github.com/thelounge/lounge/pull/294) by [@astorije](https://github.com/astorije))
+- Save user when parting channels ([#297](https://github.com/thelounge/lounge/pull/297) by [@xPaw](https://github.com/xPaw))
+- Add labels in connect window ([#300](https://github.com/thelounge/lounge/pull/300) by [@xPaw](https://github.com/xPaw))
+- Add missing `aria-label` on icon buttons ([#303](https://github.com/thelounge/lounge/pull/303) by [@astorije](https://github.com/astorije))
+- Fix unread counter not being formatted on page load ([#308](https://github.com/thelounge/lounge/pull/308) by [@xPaw](https://github.com/xPaw))
+- Fix wrong CSS for disabled colored nicknames on themes ([#318](https://github.com/thelounge/lounge/pull/318) by [@astorije](https://github.com/astorije))
+- Fix missing colors in action messages ([#317](https://github.com/thelounge/lounge/pull/317) by [@astorije](https://github.com/astorije))
+- Don't falsely report failed write if it didn't fail ([`e6990e0`](https://github.com/thelounge/lounge/commit/e6990e0fc7641d18a5bcbabddca1aacf2254ae52) by [@xPaw](https://github.com/xPaw))
+- Fix sending messages starting with a space ([#320](https://github.com/thelounge/lounge/pull/320) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Fix notifications in query windows ([#334](https://github.com/thelounge/lounge/pull/334) by [@xPaw](https://github.com/xPaw))
+
+### Security
+
+- Restrict access to the home directory by default ([#205](https://github.com/thelounge/lounge/pull/205) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Update demo link to HTTPS ([#302](https://github.com/thelounge/lounge/pull/302) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Add security headers to minimize XSS damage ([#292](https://github.com/thelounge/lounge/pull/292) by [@xPaw](https://github.com/xPaw))
+- Do not write user configs outside of the app's users directory ([#238](https://github.com/thelounge/lounge/pull/238) by [@williamboman](https://github.com/williamboman))
+- Don't check for existing password emptiness ([#315](https://github.com/thelounge/lounge/pull/315) by [@maxpoulin64](https://github.com/maxpoulin64))
 
 ## v1.5.0 - 2016-04-13
 
