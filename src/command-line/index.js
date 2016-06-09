@@ -3,7 +3,7 @@ global.log = require("../log.js");
 var program = require("commander");
 var pkg = require("../../package.json");
 var fs = require("fs");
-var mkdirp = require("mkdirp");
+var fsextra = require("fs-extra");
 var path = require("path");
 var Helper = require("../helper");
 
@@ -16,7 +16,8 @@ var argv = program.parseOptions(process.argv);
 Helper.setHome(program.home);
 
 if (!fs.existsSync(Helper.CONFIG_PATH)) {
-	mkdirp.sync(Helper.HOME, {mode: "0700"});
+	fsextra.ensureDirSync(Helper.HOME);
+	fs.chmod(Helper.HOME, 0700)
 	fs.writeFileSync(
 		Helper.CONFIG_PATH,
 		fs.readFileSync(path.resolve(path.join(
