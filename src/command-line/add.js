@@ -1,7 +1,7 @@
 var ClientManager = new require("../clientManager");
 var bcrypt = require("bcrypt-nodejs");
 var program = require("commander");
-var mkdirp = require("mkdirp");
+var fsextra = require("fs-extra");
 var Helper = require("../helper");
 
 program
@@ -9,7 +9,7 @@ program
 	.description("Add a new user")
 	.action(function(name/* , password */) {
 		try {
-			mkdirp.sync(Helper.USERS_PATH);
+			fsextra.ensureDirSync(Helper.USERS_PATH);
 		} catch (e) {
 			log.error("Could not create", Helper.USERS_PATH);
 			return;

@@ -1,7 +1,6 @@
 var _ = require("lodash");
 var fs = require("fs");
 var Client = require("./client");
-var mkdirp = require("mkdirp");
 var Helper = require("./helper");
 var oidentd = require("./oidentd");
 
@@ -52,7 +51,6 @@ ClientManager.prototype.loadUser = function(name) {
 
 ClientManager.prototype.getUsers = function() {
 	var users = [];
-	mkdirp.sync(Helper.USERS_PATH);
 	try {
 		var files = fs.readdirSync(Helper.USERS_PATH);
 		files.forEach(function(file) {
@@ -73,7 +71,6 @@ ClientManager.prototype.addUser = function(name, password) {
 		return false;
 	}
 	try {
-		mkdirp.sync(Helper.USERS_PATH);
 
 		if (require("path").basename(name) !== name) {
 			throw new Error(name + " is an invalid username.");
