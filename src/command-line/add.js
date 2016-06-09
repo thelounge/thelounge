@@ -1,19 +1,12 @@
 var ClientManager = new require("../clientManager");
 var bcrypt = require("bcrypt-nodejs");
 var program = require("commander");
-var mkdirp = require("mkdirp");
 var Helper = require("../helper");
 
 program
 	.command("add <name>")
 	.description("Add a new user")
 	.action(function(name/* , password */) {
-		try {
-			mkdirp.sync(Helper.USERS_PATH);
-		} catch (e) {
-			log.error("Could not create", Helper.USERS_PATH);
-			return;
-		}
 		var manager = new ClientManager();
 		var users = manager.getUsers();
 		if (users.indexOf(name) !== -1) {

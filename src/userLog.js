@@ -1,12 +1,12 @@
 var fs = require("fs");
-var mkdirp = require("mkdirp");
+var fsextra = require("fs-extra");
 var moment = require("moment");
 var Helper = require("./helper");
 
 module.exports.write = function(user, network, chan, msg) {
 	try {
 		var path = Helper.getUserLogsPath(user, network);
-		mkdirp.sync(path);
+		fsextra.ensureDirSync(path);
 	} catch (e) {
 		log.error("Unabled to create logs directory", e);
 		return;
