@@ -30,6 +30,34 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
+## v2.0.0-pre.2 - 2016-06-09 [Pre-release]
+
+This pre-release adds a very, very long-awaited feature: auto-reconnection! It also extends our support of ident with oidentd, shows timestamps on small screens and fix bugs around notifications and sticky scroll.
+
+### Added
+
+- Enable auto reconnection ([#254](https://github.com/thelounge/lounge/pull/254) by [@xPaw](https://github.com/xPaw))
+- Add "!" modechar for admin ([#354](https://github.com/thelounge/lounge/pull/354) by [@omnicons](https://github.com/omnicons))
+- Add CI tool for Windows builds ([#367](https://github.com/thelounge/lounge/pull/367) by [@astorije](https://github.com/astorije))
+- Add support for oidentd spoofing ([#256](https://github.com/thelounge/lounge/pull/256) by [@maxpoulin64](https://github.com/maxpoulin64))
+
+### Changed
+
+- Update Font Awesome to v4.6.3 ([#355](https://github.com/thelounge/lounge/pull/355) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Do not hide timestamps on small viewports ([#376](https://github.com/thelounge/lounge/pull/376) by [@xPaw](https://github.com/xPaw))
+- Fetch Font Awesome from npm instead of embedded in repo ([#361](https://github.com/thelounge/lounge/pull/361) by [@astorije](https://github.com/astorije))
+- Cache npm modules on appveyor ([#381](https://github.com/thelounge/lounge/pull/381) by [@xPaw](https://github.com/xPaw))
+- Update eslint and enforce key-spacing ([#384](https://github.com/thelounge/lounge/pull/384) by [@xPaw](https://github.com/xPaw))
+- Use `npm-run-all` in npm scripts for testing and linting ([#375](https://github.com/thelounge/lounge/pull/375) by [@williamboman](https://github.com/williamboman))
+- Upload test results on appveyor builds ([#382](https://github.com/thelounge/lounge/pull/382) by [@xPaw](https://github.com/xPaw))
+
+### Fixed
+
+- Turn favicon red on page load if there are highlights ([#344](https://github.com/thelounge/lounge/pull/344) by [@xPaw](https://github.com/xPaw))
+- Do not send completely empty messages ([#345](https://github.com/thelounge/lounge/pull/345) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Make sure npm test script gets run on AppVeyor ([#372](https://github.com/thelounge/lounge/pull/372) by [@astorije](https://github.com/astorije))
+- Keep chat stickied to the bottom on resize ([#346](https://github.com/thelounge/lounge/pull/346) by [@maxpoulin64](https://github.com/maxpoulin64))
+
 ## v2.0.0-pre.1 - 2016-05-22 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v1.5.0...v2.0.0-pre.1)
