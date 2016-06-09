@@ -32,6 +32,8 @@ Don't forget to thank the PR authors in a commit comment, and copy/paste the rel
 
 ## v2.0.0-pre.2 - 2016-06-09 [Pre-release]
 
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.0.0-pre.1...v2.0.0-pre.2)
+
 This pre-release adds a very, very long-awaited feature: auto-reconnection! It also extends our support of ident with oidentd, shows timestamps on small screens and fix bugs around notifications and sticky scroll.
 
 ### Added
