@@ -4,10 +4,20 @@ node_js:
 - '5'
 - '4'
 - '4.2.0'
+
+os:
+  - linux
+  - osx
+
+cache:
+  directories:
+    - node_modules
+
 notifications:
   email:
     on_success: never
     on_failure: always
+
 deploy:
   provider: npm
   email:
