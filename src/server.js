@@ -102,7 +102,7 @@ function index(req, res, next) {
 			config
 		);
 		var template = _.template(file);
-		res.setHeader("Content-Security-Policy", "default-src *; style-src * 'unsafe-inline'; script-src 'self'; child-src 'none'; object-src 'none'; form-action 'none'; referrer no-referrer;");
+		res.setHeader("Content-Security-Policy", "default-src *; style-src * 'unsafe-inline'; script-src 'self'; object-src 'none'; form-action 'none'; referrer no-referrer;");
 		res.setHeader("Content-Type", "text/html");
 		res.writeHead(200);
 		res.end(template(data));
