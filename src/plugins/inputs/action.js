@@ -6,7 +6,7 @@ exports.input = function (network, chan, cmd, args) {
 
 	switch (cmd) {
 	case "shrug":
-		text = "¯\\_(ツ)_/¯";
+		text = "¯\\_(ツ)_/¯ " + args.join(" ");
 		handleMe(text);
 		break;
 	case "slap":
