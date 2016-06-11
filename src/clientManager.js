@@ -125,10 +125,8 @@ ClientManager.prototype.readUserConfig = function(name) {
 	if (users.indexOf(name) === -1) {
 		return false;
 	}
-	var user = {};
 	var data = fs.readFileSync(Helper.getUserConfigPath(name), "utf-8");
-	user = JSON.parse(data);
-	return user;
+	return JSON.parse(data);
 };
 
 ClientManager.prototype.removeUser = function(name) {
