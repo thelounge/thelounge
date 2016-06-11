@@ -24,6 +24,7 @@ $(function() {
 		"/send",
 		"/server",
 		"/slap",
+		"/shrug",
 		"/topic",
 		"/voice",
 		"/whois"
