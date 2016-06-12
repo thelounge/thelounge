@@ -542,19 +542,22 @@ $(function() {
 	});
 
 	var viewport = $("#viewport");
+	var sidebarSlide = window.slideoutMenu(viewport[0], sidebar[0]);
 	var contextMenuContainer = $("#context-menu-container");
 	var contextMenu = $("#context-menu");
 
-	viewport.on("click", ".lt, .rt", function(e) {
+	$("#main").on("click", function(e) {
+		if ($(e.target).is(".lt")) {
+			sidebarSlide.toggle(!sidebarSlide.isOpen());
+		} else if (sidebarSlide.isOpen()) {
+			sidebarSlide.toggle(false);
+		}
+	});
+
+	viewport.on("click", ".rt", function(e) {
 		var self = $(this);
 		viewport.toggleClass(self.attr("class"));
-		if (viewport.is(".lt, .rt")) {
-			e.stopPropagation();
-			chat.find(".chat").one("click", function(e) {
-				e.stopPropagation();
-				viewport.removeClass("lt");
-			});
-		}
+		e.stopPropagation();
 	});
 
 	function positionContextMenu(that, e) {
@@ -761,7 +764,8 @@ $(function() {
 			toggleNotificationMarkers(false);
 		}
 
-		viewport.removeClass("lt");
+		sidebarSlide.toggle(false);
+
 		var lastActive = $("#windows > .active");
 
 		lastActive
