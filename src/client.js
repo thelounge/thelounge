@@ -363,6 +363,8 @@ Client.prototype.sort = function(data) {
 		network.channels = sorted;
 		break;
 	}
+
+	self.save();
 };
 
 Client.prototype.names = function(data) {
