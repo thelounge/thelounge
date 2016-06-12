@@ -2,7 +2,7 @@ var _ = require("lodash");
 var fs = require("fs");
 var Client = require("./client");
 var Helper = require("./helper");
-var oidentd = require("./oidentd");
+var Oidentd = require("./oidentd");
 
 module.exports = ClientManager;
 
@@ -12,7 +12,7 @@ function ClientManager() {
 	this.clients = [];
 
 	if (typeof config.oidentd === "string") {
-		this.identHandler = new oidentd(config.oidentd);
+		this.identHandler = new Oidentd(config.oidentd);
 	}
 }
 
