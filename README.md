@@ -54,6 +54,8 @@ When the install is complete, go ahead and run this in your terminal:
 lounge --help
 ```
 
+To get a more native look and feel on your client computer try [nativefier](https://github.com/jiahaog/nativefier).
+
 For more information, read the [documentation](https://thelounge.github.io/docs/).
 
 ## Development setup
