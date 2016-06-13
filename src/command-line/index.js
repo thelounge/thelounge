@@ -13,7 +13,7 @@ program.option("    --home <path>" , "home path");
 
 var argv = program.parseOptions(process.argv);
 
-Helper.setHome(program.home);
+Helper.setHome(program.home || process.env.LOUNGE_HOME);
 
 if (!fs.existsSync(Helper.CONFIG_PATH)) {
 	fsextra.ensureDirSync(Helper.HOME);
