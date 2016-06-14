@@ -320,4 +320,30 @@ module.exports = {
 	// @default  null
 	//
 	oidentd: null,
+
+	//
+	// Get a notification on message reception using pushover
+	// https://pushover.net/
+	//
+	// @type     object
+	// @default  {}
+	//
+	pushover: {
+		//
+		// User token
+		//
+		// @type     string
+		// @default  ""
+		//
+		userToken: "",
+
+		//
+		// Application token
+		//
+		// @type     string
+		// @default  ""
+		//
+		appToken: ""
+	},
+
 };
