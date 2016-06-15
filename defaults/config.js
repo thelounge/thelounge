@@ -11,7 +11,8 @@ module.exports = {
 	public: true,
 
 	//
-	// Allow connections from this host.
+	// IP address or hostname for the web server to listen on.
+	// Setting this to "0.0.0.0" will listen on all interfaces.
 	//
 	// @type     string
 	// @default  "0.0.0.0"
@@ -27,8 +28,8 @@ module.exports = {
 	port: 9000,
 
 	//
-	// Set the local IP to bind to.
-	// To listen on all IPs, set to undefined.
+	// Set the local IP to bind to for outgoing connections. Leave to undefined
+	// to let the operating system pick its preferred one.
 	//
 	// @type     string
 	// @default  undefined
