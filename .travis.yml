@@ -1,13 +1,23 @@
 language: node_js
 node_js:
-- '6'
-- '5'
-- '4'
-- '4.2.0'
+- 6
+- 4
+
+matrix:
+  fast_finish: true
+  include:
+  - os: osx
+    node_js: 4
+
+cache:
+  directories:
+    - node_modules
+
 notifications:
   email:
     on_success: never
     on_failure: always
+
 deploy:
   provider: npm
   email:
