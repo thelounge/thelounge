@@ -54,7 +54,8 @@
     "request": "2.72.0",
     "semver": "5.1.0",
     "socket.io": "1.4.5",
-    "spdy": "3.3.2"
+    "spdy": "3.3.2",
+    "pushover-notifications": "0.2.3"
   },
   "devDependencies": {
     "chai": "3.5.0",
