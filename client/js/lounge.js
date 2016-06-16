@@ -129,6 +129,11 @@ $(function() {
 				feedback.hide();
 			});
 		}
+
+		if (data.token && window.localStorage.getItem("token") !== null) {
+			window.localStorage.setItem("token", data.token);
+		}
+
 		passwordForm
 			.find("input")
 			.val("")
@@ -163,8 +168,10 @@ $(function() {
 			}
 		}
 
-		if (data.token) {
+		if (data.token && $("#sign-in-remember").is(":checked")) {
 			window.localStorage.setItem("token", data.token);
+		} else {
+			window.localStorage.removeItem("token");
 		}
 
 		$("body").removeClass("signed-out");

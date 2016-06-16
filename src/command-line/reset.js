@@ -23,6 +23,7 @@ program
 				return;
 			}
 			user.password = bcrypt.hashSync(password, bcrypt.genSaltSync(8));
+			user.token = null; // Will be regenerated when the user is loaded
 			fs.writeFileSync(
 				file,
 				JSON.stringify(user, null, "  ")

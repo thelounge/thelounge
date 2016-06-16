@@ -64,10 +64,15 @@ function Client(manager, name, config) {
 		sockets: manager.sockets,
 		manager: manager
 	});
+
 	var client = this;
-	crypto.randomBytes(48, function(err, buf) {
-		client.token = buf.toString("hex");
-	});
+
+	if (!client.config.token) {
+		client.updateToken(function() {
+			client.manager.updateUser(client.name, {token: client.config.token});
+		});
+	}
+
 	if (config) {
 		var delay = 0;
 		(config.networks || []).forEach(function(n) {
@@ -255,19 +260,36 @@ Client.prototype.connect = function(args) {
 	});
 };
 
-Client.prototype.setPassword = function(hash) {
+Client.prototype.updateToken = function(callback) {
 	var client = this;
-	client.manager.updateUser(client.name, {password: hash});
-	// re-read the hash off disk to ensure we use whatever is saved. this will
-	// prevent situations where the password failed to save properly and so
-	// a restart of the server would forget the change and use the old
-	// password again.
-	var user = client.manager.readUserConfig(client.name);
-	if (user.password === hash) {
-		client.config.password = hash;
-		return true;
-	}
-	return false;
+
+	crypto.randomBytes(48, function(err, buf) {
+		client.config.token = buf.toString("hex");
+		callback();
+	});
+};
+
+Client.prototype.setPassword = function(hash, callback) {
+	var client = this;
+
+	client.updateToken(function() {
+		client.manager.updateUser(client.name, {
+			token: client.config.token,
+			password: hash
+		});
+
+		// re-read the hash off disk to ensure we use whatever is saved. this will
+		// prevent situations where the password failed to save properly and so
+		// a restart of the server would forget the change and use the old
+		// password again.
+		var user = client.manager.readUserConfig(client.name);
+		if (user.password === hash) {
+			client.config.password = hash;
+			callback(true);
+		} else {
+			callback(false);
+		}
+	});
 };
 
 Client.prototype.input = function(data) {
