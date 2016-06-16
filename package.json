@@ -1,7 +1,7 @@
 {
   "name": "thelounge",
   "description": "The self-hosted Web IRC client",
-  "version": "2.0.0-pre.2",
+  "version": "2.0.0-pre.3",
   "publishConfig": {
     "tag": "next"
   },
