@@ -1,5 +1,9 @@
+# Make sure to keep this file and .npmignore in sync
+
 node_modules/
 npm-debug.log
+
+coverage/
 
 # Built assets created at npm install/prepublish time
 # See https://docs.npmjs.com/misc/scripts

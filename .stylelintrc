@@ -1,6 +1,7 @@
 {
 	"ignoreFiles": [
-		"client/css/bootstrap.css"
+		"client/css/bootstrap.css",
+		"coverage/**/*.css"
 	],
 	"rules": {
 		"at-rule-empty-line-before": ["always", {
