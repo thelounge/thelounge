@@ -14,7 +14,7 @@ function uri(text) {
 			return url;
 		}
 		var split = url.split("<");
-		url = "<a href='" + split[0].replace(/^www/, "//www") + "' target='_blank' rel='noopener'>" + split[0] + "</a>";
+		url = "<a href='" + split[0].replace(/^www/, "http://www") + "' target='_blank' rel='noopener'>" + split[0] + "</a>";
 		if (split.length > 1) {
 			url += "<" + split.slice(1).join("<");
 		}
