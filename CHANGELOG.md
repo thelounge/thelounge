@@ -30,6 +30,30 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
+## v2.0.0-pre.3 - 2016-06-15 [Pre-release]
+
+This release introduces a few internal changes as well as two noticeable ones. When using the CLI, the home path can now be set with the `LOUNGE_HOME` environment variable, to avoid repeating `--home` over and over. On the client, sorting channels will now be saved in the user configuration.
+
+### Added
+
+- Fall back to LOUNGE_HOME env variable when using the CLI ([#402](https://github.com/thelounge/lounge/pull/402) by [@williamboman](https://github.com/williamboman))
+
+### Changed
+
+- Rename package variable to pkg, as "package" is reserved. ([#399](https://github.com/thelounge/lounge/pull/399) by [@hogofwar](https://github.com/hogofwar))
+- Capitalise constructor Oidentd ([#396](https://github.com/thelounge/lounge/pull/396) by [@hogofwar](https://github.com/hogofwar))
+- Bump stylelint and update Travis CI configuration to include OSX builds and package caching ([#403](https://github.com/thelounge/lounge/pull/403) by [@xPaw](https://github.com/xPaw))
+
+### Removed
+
+- Supersede `mkdirp` with `fs-extra` ([#390](https://github.com/thelounge/lounge/pull/390) by [@hogofwar](https://github.com/hogofwar))
+- Remove redundant variables ([#397](https://github.com/thelounge/lounge/pull/397) by [@hogofwar](https://github.com/hogofwar))
+
+### Fixed
+
+- Save user's channels when they sort the channel list ([#401](https://github.com/thelounge/lounge/pull/401) by [@xPaw](https://github.com/xPaw))
+- Fix description of `host` and `bind` config options ([#378](https://github.com/thelounge/lounge/pull/378) by [@maxpoulin64](https://github.com/maxpoulin64))
+
 ## v2.0.0-pre.2 - 2016-06-09 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v2.0.0-pre.1...v2.0.0-pre.2)
