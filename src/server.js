@@ -65,11 +65,6 @@ module.exports = function(options) {
 	log.info("The Lounge v" + pkg.version + " is now running on", protocol + "://" + config.host + ":" + config.port + "/");
 	log.info("Press ctrl-c to stop\n");
 
-	if (!require("semver").satisfies(process.version, pkg.engines.node)) {
-		log.warn("The oldest supported Node.js version is ", pkg.engines.node);
-		log.warn("We strongly encourage you to upgrade, see https://nodejs.org/en/download/package-manager/ for more details\n");
-	}
-
 	if (!config.public) {
 		manager.loadUsers();
 		if (config.autoload) {
