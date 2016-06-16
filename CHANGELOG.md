@@ -32,6 +32,8 @@ Don't forget to thank the PR authors in a commit comment, and copy/paste the rel
 
 ## v2.0.0-pre.3 - 2016-06-15 [Pre-release]
 
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.0.0-pre.2...v2.0.0-pre.3)
+
 This release introduces a few internal changes as well as two noticeable ones. When using the CLI, the home path can now be set with the `LOUNGE_HOME` environment variable, to avoid repeating `--home` over and over. On the client, sorting channels will now be saved in the user configuration.
 
 ### Added
