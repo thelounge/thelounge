@@ -15,6 +15,7 @@
   },
   "homepage": "https://thelounge.github.io/",
   "scripts": {
+    "coverage": "istanbul cover node_modules/mocha/bin/_mocha -r test/fixtures/env.js test/**/*.js",
     "start": "node index",
     "build": "npm run build:font-awesome && npm run build:grunt && npm run build:handlebars",
     "build:font-awesome": "node scripts/build-fontawesome.js",
@@ -64,6 +65,7 @@
     "grunt-contrib-uglify": "1.0.1",
     "grunt-contrib-watch": "1.0.0",
     "handlebars": "4.0.5",
+    "istanbul": "0.4.3",
     "mocha": "2.4.5",
     "npm-run-all": "2.1.1",
     "stylelint": "6.6.0"
