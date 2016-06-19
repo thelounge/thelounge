@@ -13,6 +13,8 @@ describe("Network", function() {
 			network.setNick("chillin`");
 			network.channels.push(new Chan({name: "#thelounge"}));
 			network.channels.push(new Chan({name: "&foobar"}));
+			network.channels.push(new Chan({name: "Lobby", type: Chan.Type.LOBBY}));
+			network.channels.push(new Chan({name: "PrivateChat", type: Chan.Type.QUERY}));
 
 			expect(network.export()).to.deep.equal({
 				name: "networkName",
@@ -24,9 +26,12 @@ describe("Network", function() {
 				realname: "",
 				commands: [],
 				nick: "chillin`",
-				join: "#thelounge,&foobar",
 				ip: null,
-				hostname: null
+				hostname: null,
+				channels: [
+					{"name": "#thelounge"},
+					{"name": "&foobar"},
+				]
 			});
 		});
 	});
