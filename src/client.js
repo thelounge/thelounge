@@ -137,6 +137,16 @@ Client.prototype.connect = function(args) {
 
 	var nick = args.nick || "lounge-user";
 	var webirc = null;
+	var channels = [];
+
+	if (args.join) {
+		var join = args.join.replace(/\,/g, " ").split(/\s+/g);
+		join.forEach(function(chan) {
+			channels.push(new Chan({
+				name: chan
+			}));
+		});
+	}
 
 	var network = new Network({
 		name: args.name || "",
@@ -149,6 +159,7 @@ Client.prototype.connect = function(args) {
 		commands: args.commands,
 		ip: args.ip,
 		hostname: args.hostname,
+		channels: channels,
 	});
 	network.setNick(nick);
 
@@ -219,36 +230,6 @@ Client.prototype.connect = function(args) {
 		rejectUnauthorized: false,
 		auto_reconnect: true,
 		webirc: webirc,
-	});
-
-	network.irc.on("registered", function() {
-		if (network.irc.network.cap.enabled.length > 0) {
-			network.channels[0].pushMessage(client, new Msg({
-				text: "Enabled capabilities: " + network.irc.network.cap.enabled.join(", ")
-			}));
-		}
-
-		var delay = 1000;
-		var commands = args.commands;
-		if (Array.isArray(commands)) {
-			commands.forEach(function(cmd) {
-				setTimeout(function() {
-					client.input({
-						target: network.channels[0].id,
-						text: cmd
-					});
-				}, delay);
-				delay += 1000;
-			});
-		}
-
-		var join = (args.join || "");
-		if (join) {
-			setTimeout(function() {
-				join = join.split(/\s+/);
-				network.irc.join(join[0], join[1]);
-			}, delay);
-		}
 	});
 
 	events.forEach(function(plugin) {
