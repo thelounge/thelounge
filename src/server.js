@@ -196,7 +196,7 @@ function init(socket, client) {
 		socket.emit("init", {
 			active: client.activeChannel,
 			networks: client.networks,
-			token: client.config.token
+			token: client.config ? client.config.token : null
 		});
 	}
 }
