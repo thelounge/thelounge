@@ -67,13 +67,13 @@ function Client(manager, name, config) {
 
 	var client = this;
 
-	if (!client.config.token) {
-		client.updateToken(function() {
-			client.manager.updateUser(client.name, {token: client.config.token});
-		});
-	}
-
 	if (config) {
+		if (!config.token) {
+			client.updateToken(function() {
+				client.manager.updateUser(client.name, {token: config.token});
+			});
+		}
+
 		var delay = 0;
 		(config.networks || []).forEach(function(n) {
 			setTimeout(function() {
