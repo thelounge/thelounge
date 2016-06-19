@@ -26,7 +26,7 @@ program
 			user.token = null; // Will be regenerated when the user is loaded
 			fs.writeFileSync(
 				file,
-				JSON.stringify(user, null, "  ")
+				JSON.stringify(user, null, "\t")
 			);
 			log.info("Successfully reset password for '" + name + "'.");
 		});
