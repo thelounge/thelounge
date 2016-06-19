@@ -18,6 +18,10 @@ BORDERS #2a323d
 QUIT #d0907d
 */
 
+body {
+	color: #ccc;
+}
+
 #main,
 #chat .sidebar,
 #windows .chan,
@@ -32,12 +36,6 @@ QUIT #d0907d
 #windows .header {
 	font-family: "Open Sans", sans-serif !important;
 	font-size: 13px;
-}
-
-#settings,
-#sign-in,
-#connect {
-	color: #ccc;
 }
 
 #chat .count {
