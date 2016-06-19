@@ -81,9 +81,9 @@ function Client(manager, name, config) {
 			}, delay);
 			delay += 1000;
 		});
-	}
 
-	log.info("User '" + name + "' loaded");
+		log.info("User '" + name + "' loaded");
+	}
 }
 
 Client.prototype.emit = function(event, data) {
