@@ -74,28 +74,32 @@ $(function() {
 		});
 	});
 
-	socket.on("auth", function(/* data */) {
+	socket.on("auth", function(data) {
 		var body = $("body");
 		var login = $("#sign-in");
 		if (!login.length) {
 			refresh();
 			return;
 		}
+
 		login.find(".btn").prop("disabled", false);
-		var token = window.localStorage.getItem("token");
-		if (token) {
+
+		if (!data.success) {
+			body.addClass("signed-out");
+
 			window.localStorage.removeItem("token");
-			socket.emit("auth", {token: token});
-		}
-		if (body.hasClass("signed-out")) {
+
 			var error = login.find(".error");
 			error.show().closest("form").one("submit", function() {
 				error.hide();
 			});
+		} else {
+			var token = window.localStorage.getItem("token");
+			if (token) {
+				socket.emit("auth", {token: token});
+			}
 		}
-		if (!token) {
-			body.addClass("signed-out");
-		}
+
 		var input = login.find("input[name='user']");
 		if (input.val() === "") {
 			input.val(window.localStorage.getItem("user") || "");
