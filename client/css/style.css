@@ -512,6 +512,10 @@ button,
 	top: 4px;
 }
 
+.signed-out #main {
+	left: 5px;
+}
+
 #header {
 	display: none;
 	height: 40px;
