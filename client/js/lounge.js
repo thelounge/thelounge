@@ -224,6 +224,12 @@ $(function() {
 		var chan = chat.find(target);
 		var msg;
 
+		if (highlights.some(function(h) {
+			return data.msg.text.indexOf(h) > -1;
+		})) {
+			data.msg.highlight = true;
+		}
+
 		if ([
 			"invite",
 			"join",
@@ -466,11 +472,14 @@ $(function() {
 			}
 			settings.find("#user-specified-css-input").val(options[i]);
 			continue;
-		}
-		if (options[i]) {
+		} else if (i === "highlights") {
+			settings.find("input[name=" + i + "]").val(options[i]);
+		} else if (options[i]) {
 			settings.find("input[name=" + i + "]").prop("checked", true);
 		}
 	}
+
+	var highlights = [];
 
 	settings.on("change", "input, textarea", function() {
 		var self = $(this);
@@ -500,6 +509,16 @@ $(function() {
 		}
 		if (name === "userStyles") {
 			$(document.head).find("#user-specified-css").html(options[name]);
+		}
+		if (name === "highlights") {
+			var highlightString = options[name];
+			highlights = highlightString.split(",").map(function(h) {
+				return h.trim();
+			}).filter(function(h) {
+				// Ensure we don't have empty string in the list of highlights
+				// otherwise, users get notifications for everything
+				return h !== "";
+			});
 		}
 	}).find("input")
 		.trigger("change");
