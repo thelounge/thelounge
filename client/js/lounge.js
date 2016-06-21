@@ -77,14 +77,11 @@ $(function() {
 	});
 
 	socket.on("auth", function(data) {
-		var body = $("body");
 		var login = $("#sign-in");
 
 		login.find(".btn").prop("disabled", false);
 
 		if (!data.success) {
-			body.addClass("signed-out");
-
 			window.localStorage.removeItem("token");
 
 			var error = login.find(".error");
