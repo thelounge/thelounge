@@ -43,22 +43,21 @@
 		</footer>
 		<div id="main">
 			<div id="windows">
-				<div id="chat">
-					<div class="window" style="display:block">
-						<div class="container">
-							<div class="row">
-								<div class="col-xs-12">
-									<h2 class="title">The Lounge is loading…</h2>
-								</div>
-								<div class="col-xs-12">
-									<p id="loading-page-message">Loading the app… <a href="http://enable-javascript.com/" target="_blank">Make sure to have JavaScript enabled.</a></p>
-									<p id="loading-slow" style="display:none">This is taking longer than it should, there might be connectivity issues.</p>
-									<script async src="js/loading-slow-alert.js"></script>
-								</div>
+				<div id="loading" class="window active">
+					<div class="container">
+						<div class="row">
+							<div class="col-xs-12">
+								<h1 class="title">The Lounge is loading…</h1>
+							</div>
+							<div class="col-xs-12">
+								<p id="loading-page-message">Loading the app… <a href="http://enable-javascript.com/" target="_blank">Make sure to have JavaScript enabled.</a></p>
+								<p id="loading-slow">This is taking longer than it should, there might be connectivity issues.</p>
+								<script async src="js/loading-slow-alert.js"></script>
 							</div>
 						</div>
 					</div>
 				</div>
+				<div id="chat"></div>
 				<div id="sign-in" class="window">
 					<form class="container" method="post" action="">
 						<div class="row">
