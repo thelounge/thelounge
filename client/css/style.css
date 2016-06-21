@@ -612,7 +612,8 @@ button {
 	word-break: break-all;
 }
 
-#windows .window .header {
+.private #connect-title-public,
+.public #connect-title {
 	display: none;
 }
 
@@ -1649,10 +1650,6 @@ button {
 
 	#viewport .lt,
 	#viewport .channel .rt {
-		display: block;
-	}
-
-	#windows .window .header {
 		display: block;
 	}
 
