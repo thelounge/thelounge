@@ -7,9 +7,9 @@ var es = require("event-stream");
 
 process.setMaxListeners(0);
 
-module.exports = function(irc, network) {
+module.exports = function (irc, network) {
 	var client = this;
-	irc.on("privmsg", function(data) {
+	irc.on("privmsg", function (data) {
 		var config = Helper.getConfig();
 		if (!config.prefetch) {
 			return;
@@ -17,7 +17,7 @@ module.exports = function(irc, network) {
 
 		var links = [];
 		var split = data.message.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "").split(" ");
-		_.each(split, function(w) {
+		_.each(split, function (w) {
 			if (/^https?:\/\//.test(w)) {
 				links.push(w);
 			}
@@ -38,7 +38,7 @@ module.exports = function(irc, network) {
 		chan.pushMessage(client, msg);
 
 		var link = escapeHeader(links[0]);
-		fetch(link, function(res) {
+		fetch(link, function (res) {
 			parse(msg, link, res, client);
 		});
 	});
@@ -60,17 +60,46 @@ function parse(msg, url, res, client) {
 	}
 	switch (res.type) {
 	case "text/html":
-		var $ = cheerio.load(res.text);
-		toggle.type = "link";
-		toggle.head = $("title").text();
-		toggle.body =
-			$("meta[name=description]").attr("content")
-			|| $("meta[property=\"og:description\"]").attr("content")
-			|| "No description found.";
-		toggle.thumb =
-			$("meta[property=\"og:image\"]").attr("content")
-			|| $("meta[name=\"twitter:image:src\"]").attr("content")
-			|| "";
+		// Handle Spotify URLs (It's pretty ugly, i'll give you that)
+		if (url.indexOf("open.spotify.com") > 0) {
+			var spotify = url.split("/");
+			if (url.indexOf("open.spotify.com/track/") > 0) {
+				toggle.type = "spotify.track";
+				toggle.body = "https://embed.spotify.com/?uri=spotify:track:" + spotify[4];
+			}
+
+			if (url.indexOf("open.spotify.com/album/") > 0) {
+				toggle.type = "spotify.album";
+				toggle.body = "https://embed.spotify.com/?uri=spotify:album:" + spotify[4];
+			}
+
+			if (url.indexOf("open.spotify.com") > 0 && url.indexOf("/playlist/") > 0) {
+				toggle.type = "spotify.playlist";
+				toggle.body = "https://embed.spotify.com/?uri=spotify:playlist:" + spotify[6];
+			}
+
+			if (url.indexOf("open.spotify.com/artist/") > 0) {
+				toggle.type = "spotify.artist";
+				toggle.body = "https://embed.spotify.com/follow/1/?uri=spotify:artist:" + spotify[4] + "&size=detail";
+			}
+
+			if (url.indexOf("open.spotify.com/user/") > 0) {
+				toggle.type = "spotify.user";
+				toggle.body = "https://embed.spotify.com/follow/1/?uri=spotify:user:" + spotify[4] + "&size=detail";
+			}
+		} else {
+			var $ = cheerio.load(res.text);
+			toggle.type = "link";
+			toggle.head = $("title").text();
+			toggle.body =
+				$("meta[name=description]").attr("content")
+				|| $("meta[property=\"og:description\"]").attr("content")
+				|| "No description found.";
+			toggle.thumb =
+				$("meta[property=\"og:image\"]").attr("content")
+				|| $("meta[name=\"twitter:image:src\"]").attr("content")
+				|| "";
+		}
 		break;
 
 	case "image/png":
@@ -107,20 +136,21 @@ function fetch(url, cb) {
 	var length = 0;
 	var limit = 1024 * 10;
 	req
-		.on("response", function(res) {
+		.on("response", function (res) {
 			if (!(/(text\/html|application\/json)/.test(res.headers["content-type"]))) {
 				res.req.abort();
 			}
 		})
-		.on("error", function() {})
-		.pipe(es.map(function(data, next) {
+		.on("error", function () {
+		})
+		.pipe(es.map(function (data, next) {
 			length += data.length;
 			if (length > limit) {
 				req.response.req.abort();
 			}
 			next(null, data);
 		}))
-		.pipe(es.wait(function(err, data) {
+		.pipe(es.wait(function (err, data) {
 			if (err) {
 				return;
 			}
