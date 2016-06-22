@@ -48,8 +48,6 @@ $(function() {
 		pop.play();
 	});
 
-	$(".tse-scrollable").TrackpadScrollEmulator();
-
 	var favicon = $("#favicon");
 
 	function render(name, data) {

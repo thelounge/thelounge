@@ -243,7 +243,8 @@ button {
 #sidebar {
 	bottom: 52px;
 	left: 0;
-	overflow: hidden;
+	overflow: auto;
+	overflow-x: hidden;
 	-webkit-overflow-scrolling: touch;
 	position: absolute;
 	top: 0;
@@ -267,7 +268,6 @@ button {
 }
 
 #sidebar .networks {
-	min-height: 100%;
 	padding: 20px 30px 0;
 }
 
@@ -542,6 +542,10 @@ button {
 	transition: border-color .2s;
 	-webkit-appearance: none;
 	width: 100%;
+}
+
+#user-specified-css-input {
+	resize: vertical;
 }
 
 #windows .input:hover,
@@ -1012,10 +1016,6 @@ button {
 	display: block;
 	line-height: 1.6;
 	padding: 0 16px;
-}
-
-#chat .names .inner {
-	width: 300px;
 }
 
 #chat .user-mode:before {
@@ -1552,64 +1552,6 @@ button {
 	font-style: italic;
 }
 
-/**
- * TrackpadScrollEmulator
- * Version: 1.0.6
- * Author: Jonathan Nicol @f6design
- * https://github.com/jnicol/trackpad-scroll-emulator
- */
-.tse-scrollable {
-	position: relative;
-	overflow: hidden;
-}
-
-.tse-scrollable .tse-scroll-content {
-	overflow: hidden;
-	overflow-y: scroll;
-	-webkit-overflow-scrolling: touch;
-}
-
-.tse-scrollable .tse-scroll-content::-webkit-scrollbar {
-	width: 0;
-	height: 0;
-}
-
-.tse-scrollbar {
-	z-index: 99;
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	width: 11px;
-}
-
-.tse-scrollbar .drag-handle {
-	position: absolute;
-	right: 2px;
-	border-radius: 2px;
-	min-height: 10px;
-	width: 6px;
-	opacity: .1;
-	transition: opacity .2s linear;
-	background: #000;
-	-webkit-background-clip: padding-box;
-	-moz-background-clip: padding;
-}
-
-.tse-scrollbar:hover .drag-handle {
-	opacity: .25;
-	transition: opacity 0 linear;
-}
-
-.tse-scrollbar .drag-handle.visible {
-	opacity: .2;
-}
-
-.scrollbar-width-tester::-webkit-scrollbar {
-	width: 0;
-	height: 0;
-}
-
 @media (max-width: 768px) {
 	.container {
 		margin-top: 60px !important;
@@ -1713,4 +1655,8 @@ button {
 ::-webkit-scrollbar-thumb:vertical {
 	background: rgba(0, 0, 0, .5);
 	border-radius: 100px;
+}
+
+::-webkit-scrollbar-thumb:vertical:active {
+	background: rgba(0, 0, 0, .6);
 }
