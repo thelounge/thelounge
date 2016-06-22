@@ -29,11 +29,7 @@ module.exports = function(irc, network) {
 				hostmask: data.ident + "@" + data.hostname,
 				from: from
 			});
-			chan.messages.push(msg);
-			client.emit("msg", {
-				chan: chan.id,
-				msg: msg
-			});
+			chan.pushMessage(client, msg);
 		}
 	});
 };

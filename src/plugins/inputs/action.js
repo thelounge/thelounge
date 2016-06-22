@@ -15,12 +15,16 @@ exports.input = function(network, chan, cmd, args) {
 
 		text = text || args.join(" ");
 
-		irc.say(chan.name, "\u0001ACTION " + text + "\u0001");
-		irc.emit("action", {
-			nick: irc.user.nick,
-			target: chan.name,
-			message: text
-		});
+		irc.action(chan.name, text);
+
+		if (!network.irc.network.cap.isEnabled("echo-message")) {
+			irc.emit("action", {
+				nick: irc.user.nick,
+				target: chan.name,
+				message: text
+			});
+		}
+
 		break;
 	}
 

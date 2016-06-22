@@ -74,8 +74,11 @@
 }
 
 @font-face {
-	font-family: FontAwesome;
-	src: url("fonts/fontawesome.svg") format("svg"), url("fonts/fontawesome.woff") format("woff");
+	font-family: "FontAwesome";
+	src: url("../fonts/fontawesome-webfont.eot?v=4.6.3");
+	src: url("../fonts/fontawesome-webfont.eot?#iefix&v=4.6.3") format("embedded-opentype"), url("../fonts/fontawesome-webfont.woff2?v=4.6.3") format("woff2"), url("../fonts/fontawesome-webfont.woff?v=4.6.3") format("woff"), url("../fonts/fontawesome-webfont.ttf?v=4.6.3") format("truetype"), url("../fonts/fontawesome-webfont.svg?v=4.6.3#fontawesomeregular") format("svg");
+	font-weight: normal;
+	font-style: normal;
 }
 
 html,
@@ -104,6 +107,10 @@ h2 {
 	font: inherit;
 	line-height: inherit;
 	margin: 0;
+}
+
+h1.title {
+	margin-bottom: 10px;
 }
 
 input {
@@ -509,6 +516,10 @@ button,
 	top: 4px;
 }
 
+.signed-out #main {
+	left: 5px;
+}
+
 #header {
 	display: none;
 	height: 40px;
@@ -742,14 +753,49 @@ button,
 	min-width: 134px;
 }
 
+#loading a,
 #chat a {
 	color: #50a656;
 }
 
-#chat.no-colors .from .user,
-#chat.no-colors .sidebar .user {
-	color: #50a656 !important;
+/* Nicknames */
+
+#chat .user {
+	color: #50a656;
 }
+
+#chat.colored-nicks .user.color-1 { color: #1396cf; }
+#chat.colored-nicks .user.color-2 { color: #ffcf89; }
+#chat.colored-nicks .user.color-3 { color: #00dc5f; }
+#chat.colored-nicks .user.color-4 { color: #ff5bc8; }
+#chat.colored-nicks .user.color-5 { color: #ff0e1b; }
+#chat.colored-nicks .user.color-6 { color: #000094; }
+#chat.colored-nicks .user.color-7 { color: #006441; }
+#chat.colored-nicks .user.color-8 { color: #00566e; }
+#chat.colored-nicks .user.color-9 { color: #ff0078; }
+#chat.colored-nicks .user.color-10 { color: #15d5a3; }
+#chat.colored-nicks .user.color-11 { color: #006b3b; }
+#chat.colored-nicks .user.color-12 { color: #00c5ba; }
+#chat.colored-nicks .user.color-13 { color: #00465b; }
+#chat.colored-nicks .user.color-14 { color: #ffafce; }
+#chat.colored-nicks .user.color-15 { color: #ff3b12; }
+#chat.colored-nicks .user.color-16 { color: #16cc6a; }
+#chat.colored-nicks .user.color-17 { color: #ff0072; }
+#chat.colored-nicks .user.color-18 { color: #ff5877; }
+#chat.colored-nicks .user.color-19 { color: #ff1753; }
+#chat.colored-nicks .user.color-20 { color: #007a56; }
+#chat.colored-nicks .user.color-21 { color: #095092; }
+#chat.colored-nicks .user.color-22 { color: #000bde; }
+#chat.colored-nicks .user.color-23 { color: #00bca9; }
+#chat.colored-nicks .user.color-24 { color: #00367d; }
+#chat.colored-nicks .user.color-25 { color: #009ec4; }
+#chat.colored-nicks .user.color-26 { color: #006119; }
+#chat.colored-nicks .user.color-27 { color: #008bb8; }
+#chat.colored-nicks .user.color-28 { color: #469c00; }
+#chat.colored-nicks .user.color-29 { color: #ff0f95; }
+#chat.colored-nicks .user.color-30 { color: #ff7615; }
+#chat.colored-nicks .user.color-31 { color: #ff4846; }
+#chat.colored-nicks .user.color-32 { color: #ff199b; }
 
 #chat .text {
 	padding-left: 10px;
@@ -867,9 +913,9 @@ button,
 
 #chat .error,
 #chat .error .from,
-#chat .highlight .from,
-#chat .highlight .text,
-#chat .highlight .user {
+#chat .channel .highlight .from,
+#chat .channel .highlight .text,
+#chat .channel .highlight .user {
 	color: #f00;
 }
 
@@ -1014,13 +1060,22 @@ button,
 	content: "Users";
 }
 
-#sign-in label {
-	display: block;
+#loading {
+	font-size: 14px;
+	z-index: 1;
+}
+
+#loading p {
 	margin-top: 10px;
 }
 
-#sign-in .title {
-	margin-bottom: 10px;
+#loading-slow {
+	display: none;
+}
+
+#sign-in label {
+	display: block;
+	margin-top: 10px;
 }
 
 #sign-in .remember {
@@ -1043,17 +1098,9 @@ button,
 	margin-top: 1em;
 }
 
-#sign-in .container {
-	margin-top: 120px;
-}
-
 #connect label {
 	display: block;
 	margin-top: 11px;
-}
-
-#connect .title {
-	margin-bottom: 10px;
 }
 
 #connect .port:before {
@@ -1076,10 +1123,6 @@ button,
 #connect .btn {
 	float: left;
 	margin-top: 30px;
-}
-
-#settings .title {
-	margin-bottom: -10px;
 }
 
 #settings .opt {
@@ -1167,6 +1210,7 @@ button,
 	font: inherit;
 	font-size: 11px;
 	margin: 5px;
+	margin-right: 10px;
 	line-height: 26px;
 	height: 24px;
 	padding: 0 9px;
@@ -1175,6 +1219,14 @@ button,
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+}
+
+#form #nick:empty {
+	visibility: hidden;
+}
+
+#form #nick:after {
+	content: ":";
 }
 
 #form #input {
@@ -1649,16 +1701,12 @@ button,
 		height: auto;
 	}
 
+	#chat .time,
 	#chat .from,
 	#chat .text {
-		background: none;
 		border: 0;
 		display: inline;
 		padding: 0;
-	}
-
-	#chat .time {
-		display: none;
 	}
 }
 

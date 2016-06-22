@@ -1,0 +1,27 @@
+{
+	"name": "The Lounge",
+	"short_name": "The Lounge",
+	"description": "Self-hosted web IRC client",
+	"display": "standalone",
+	"orientation": "any",
+	"theme_color": "#455164",
+	"background_color": "#455164",
+	"icons":
+	[
+		{
+			"src": "img/touch-icon-192x192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "img/apple-touch-icon-120x120.png",
+			"sizes": "120x120",
+			"type": "image/png"
+		},
+		{
+			"src": "img/favicon.png",
+			"sizes": "64x64",
+			"type": "image/png"
+		}
+	]
+}

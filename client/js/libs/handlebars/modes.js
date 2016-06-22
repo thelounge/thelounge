@@ -3,10 +3,11 @@ Handlebars.registerHelper(
 		var modes = {
 			"~": "owner",
 			"&": "admin",
+			"!": "admin",
 			"@": "op",
 			"%": "half-op",
 			"+": "voice",
-			"" : "normal"
+			"": "normal"
 		};
 		return modes[mode];
 	}

@@ -1,3 +1,5 @@
 # This should match the .gitignore file without the generated assets
 # npm-debug.log and node_modules/ are ignored by default.
 # See https://docs.npmjs.com/misc/developers#keeping-files-out-of-your-package
+
+coverage/

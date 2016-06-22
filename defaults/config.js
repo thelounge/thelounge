@@ -11,7 +11,8 @@ module.exports = {
 	public: true,
 
 	//
-	// Allow connections from this host.
+	// IP address or hostname for the web server to listen on.
+	// Setting this to "0.0.0.0" will listen on all interfaces.
 	//
 	// @type     string
 	// @default  "0.0.0.0"
@@ -27,13 +28,22 @@ module.exports = {
 	port: 9000,
 
 	//
-	// Set the local IP to bind to.
-	// To listen on all IPs, set to undefined.
+	// Set the local IP to bind to for outgoing connections. Leave to undefined
+	// to let the operating system pick its preferred one.
 	//
 	// @type     string
 	// @default  undefined
 	//
 	bind: undefined,
+
+	//
+	// Sets whether the server is behind a reverse proxy and should honor the
+	// X-Forwarded-For header or not.
+	//
+	// @type     boolean
+	// @default  false
+	//
+	reverseProxy: false,
 
 	//
 	// Set the default theme.
@@ -98,10 +108,29 @@ module.exports = {
 	lockNetwork: false,
 
 	//
+	// WEBIRC support
+	//
+	// If enabled, The Lounge will pass the connecting user's host and IP to the
+	// IRC server. Note that this requires to obtain a password from the IRC network
+	// The Lounge will be connecting to and generally involves a lot of trust from the
+	// network you are connecting to.
+	//
+	// Format (standard): {"irc.example.net": "hunter1", "irc.example.org": "passw0rd"}
+	// Format (function):
+	//   {"irc.example.net": function(client, args, trusted) {
+	//       // here, we return a webirc object fed directly to `irc-framework`
+	//       return {username: "thelounge", password: "hunter1", address: args.ip, hostname: "webirc/"+args.hostname};
+	//   }}
+	//
+	// @type     string | function(client, args):object(webirc)
+	// @default  null
+	webirc: null,
+
+	//
 	// Log settings
 	//
 	// Logging has to be enabled per user. If enabled, logs will be stored in
-	// the '/users/<user>/logs/' folder.
+	// the 'logs/<user>/<network>/' folder.
 	//
 	// @type     object
 	// @default  {}
@@ -281,5 +310,15 @@ module.exports = {
 		// @default  113
 		//
 		port: 113
-	}
+	},
+
+	//
+	// Enable oidentd support using the specified file
+	//
+	// Example: oidentd: "~/.oidentd.conf",
+	//
+	// @type     string
+	// @default  null
+	//
+	oidentd: null,
 };

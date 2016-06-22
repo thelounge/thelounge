@@ -4,13 +4,13 @@
 	</span>
 	<span class="from">
 		{{#if from}}
-		<a href="#" class="user" style="color: #{{stringcolor from}}" data-name="{{from}}">{{mode}}{{from}}</a>
+		<a href="#" class="user {{colorClass from}}" data-name="{{from}}">{{mode}}{{from}}</a>
 		{{/if}}
 	</span>
 	{{#equal type "toggle"}}
 		<span class="text">
 			<div class="force-newline">
-				<button id="toggle-{{id}}" class="toggle-button">···</button>
+				<button id="toggle-{{id}}" class="toggle-button" aria-label="Toggle prefetched media">···</button>
 			</div>
 			{{#if toggle}}
 				{{partial "toggle"}}

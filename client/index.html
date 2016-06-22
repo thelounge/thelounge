@@ -9,6 +9,7 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="referrer" content="no-referrer">
+	<meta name="theme-color" content="#455164">
 
 	<title>The Lounge</title>
 
@@ -19,9 +20,10 @@
 
 	<link rel="shortcut icon" href="img/favicon.png" data-other="img/favicon-notification.png" data-toggled="false" id="favicon">
 	<link rel="apple-touch-icon" sizes="120x120" href="img/apple-touch-icon-120x120.png">
+	<link rel="manifest" href="manifest.json">
 
 	</head>
-	<body class="<%= public ? "public" : "" %>">
+	<body class="signed-out <%= public ? "public" : "" %>">
 
 	<div id="wrap">
 	<div id="viewport">
@@ -34,18 +36,29 @@
 			</div>
 		</aside>
 		<footer id="footer">
-			<span class="tooltipped tooltipped-n" aria-label="Sign in to The Lounge"><button class="icon sign-in" data-target="#sign-in"></button></span>
-			<span class="tooltipped tooltipped-n" aria-label="Connect to network"><button class="icon connect" data-target="#connect"></button></span>
-			<span class="tooltipped tooltipped-n" aria-label="Client settings"><button class="icon settings" data-target="#settings"></button></span>
-			<span class="tooltipped tooltipped-n" aria-label="Sign out"><button class="icon sign-out" id="sign-out"></button></span>
+			<span class="tooltipped tooltipped-n" aria-label="Sign in"><button class="icon sign-in" data-target="#sign-in" aria-label="Sign in"></button></span>
+			<span class="tooltipped tooltipped-n" aria-label="Connect to network"><button class="icon connect" data-target="#connect" aria-label="Connect to network"></button></span>
+			<span class="tooltipped tooltipped-n" aria-label="Client settings"><button class="icon settings" data-target="#settings" aria-label="Client settings"></button></span>
+			<span class="tooltipped tooltipped-n" aria-label="Sign out"><button class="icon sign-out" id="sign-out" aria-label="Sign out"></button></span>
 		</footer>
 		<div id="main">
 			<div id="windows">
-				<div id="chat" class="no-colors"></div>
-				<div id="sign-in" class="window">
-					<div class="header">
-						<button class="lt"></button>
+				<div id="loading" class="window active">
+					<div class="container">
+						<div class="row">
+							<div class="col-xs-12">
+								<h1 class="title">The Lounge is loading…</h1>
+							</div>
+							<div class="col-xs-12">
+								<p id="loading-page-message">Loading the app… <a href="http://enable-javascript.com/" target="_blank">Make sure to have JavaScript enabled.</a></p>
+								<p id="loading-slow">This is taking longer than it should, there might be connectivity issues.</p>
+								<script async src="js/loading-slow-alert.js"></script>
+							</div>
+						</div>
 					</div>
+				</div>
+				<div id="chat"></div>
+				<div id="sign-in" class="window">
 					<form class="container" method="post" action="">
 						<div class="row">
 							<div class="col-xs-12">
@@ -65,7 +78,7 @@
 							</div>
 							<div class="col-xs-12">
 								<label class="remember">
-									<input type="checkbox" name="remember" checked>
+									<input type="checkbox" name="remember" id="sign-in-remember" checked>
 									Stay signed in
 								</label>
 							</div>
@@ -82,7 +95,7 @@
 				</div>
 				<div id="connect" class="window">
 					<div class="header">
-						<button class="lt"></button>
+						<button class="lt" aria-label="Toggle channel list"></button>
 					</div>
 					<form class="container" method="post" action="">
 						<div class="row">
@@ -94,31 +107,30 @@
 									<h2>Network settings</h2>
 								</div>
 								<div class="col-sm-3">
-								<label>Name</label>
-									</div>
+									<label for="connect:name">Name</label>
+								</div>
 								<div class="col-sm-9">
-									<input class="input" name="name" value="<%= defaults.name %>">
+									<input class="input" id="connect:name" name="name" value="<%= defaults.name %>">
 								</div>
 								<div class="col-sm-3">
-									<label>Server</label>
+									<label for="connect:host">Server</label>
 								</div>
 								<div class="col-sm-6 col-xs-8">
-									<input class="input" name="host" value="<%= defaults.host %>" <%= typeof(lockNetwork) !== "undefined" && lockNetwork ? "disabled" : "" %>>
+									<input class="input" id="connect:host" name="host" value="<%= defaults.host %>" aria-label="Server address" <%= typeof(lockNetwork) !== "undefined" && lockNetwork ? "disabled" : "" %>>
 								</div>
 								<div class="col-sm-3 col-xs-4">
 									<div class="port">
-										<input class="input" name="port" value="<%= defaults.port %>" <%= typeof(lockNetwork) !== "undefined" && lockNetwork ? "disabled" : "" %>>
+										<input class="input" type="number" min="1" max="65535" name="port" value="<%= defaults.port %>" aria-label="Server port" <%= typeof(lockNetwork) !== "undefined" && lockNetwork ? "disabled" : "" %>>
 									</div>
 								</div>
 								<div class="clearfix"></div>
 								<div class="col-sm-3">
-									<label>Password</label>
+									<label for="connect:password">Password</label>
 								</div>
 								<div class="col-sm-9">
-									<input class="input" type="password" name="password" value="<%= defaults.password %>">
+									<input class="input" id="connect:password" type="password" name="password" value="<%= defaults.password %>">
 								</div>
-								<div class="col-sm-3"></div>
-								<div class="col-sm-9">
+								<div class="col-sm-9 col-sm-offset-3">
 									<label class="tls">
 										<input type="checkbox" name="tls" <%= defaults.tls ? "checked" : "" %> <%= typeof(lockNetwork) !== "undefined" && lockNetwork ? "disabled" : "" %>>
 										Enable TLS/SSL
@@ -130,43 +142,38 @@
 								<h2>User preferences</h2>
 							</div>
 							<div class="col-sm-3">
-								<label>Nick</label>
-							</div>
-							<div class="col-sm-5">
-								<input class="input nick" name="nick" value="<%= defaults.nick %>">
-							</div>
-							<div class="clearfix"></div>
-							<div class="col-sm-3">
-								<label>Username</label>
-							</div>
-							<div class="col-sm-5">
-								<input class="input username" name="username" value="<%= defaults.username %>">
-							</div>
-							<div class="clearfix"></div>
-							<div class="col-sm-3">
-								<label>Real name</label>
+								<label for="connect:nick">Nick</label>
 							</div>
 							<div class="col-sm-9">
-								<input class="input" name="realname" value="<%= defaults.realname %>">
+								<input class="input nick" id="connect:nick" name="nick" value="<%= defaults.nick %>">
 							</div>
 							<div class="col-sm-3">
-								<label>Channels</label>
+								<label for="connect:username">Username</label>
 							</div>
 							<div class="col-sm-9">
-								<input class="input" name="join" value="<%= defaults.join %>">
+								<input class="input username" id="connect:username" name="username" value="<%= defaults.username %>">
 							</div>
-							<div class="col-sm-3 clearfix"></div>
+							<div class="col-sm-3">
+								<label for="connect:realname">Real name</label>
+							</div>
 							<div class="col-sm-9">
-								<button type="submit" class="btn">
-									Connect
-								</button>
+								<input class="input" id="connect:realname" name="realname" value="<%= defaults.realname %>">
+							</div>
+							<div class="col-sm-3">
+								<label for="connect:channels">Channels</label>
+							</div>
+							<div class="col-sm-9">
+								<input class="input" id="connect:channels" name="join" value="<%= defaults.join %>">
+							</div>
+							<div class="col-sm-9 col-sm-offset-3">
+								<button type="submit" class="btn">Connect</button>
 							</div>
 						</div>
 					</form>
 				</div>
 				<div id="settings" class="window">
 					<div class="header">
-						<button class="lt"></button>
+						<button class="lt" aria-label="Toggle channel list"></button>
 					</div>
 					<div class="container">
 						<div class="row">
@@ -185,7 +192,7 @@
 							<div class="col-sm-6">
 								<label class="opt">
 									<input type="checkbox" name="motd">
-									Show motd
+									Show <abbr title="Message Of The Day">MOTD</abbr>
 								</label>
 							</div>
 							<div class="col-sm-6">
@@ -217,7 +224,7 @@
 							</div>
 							<div class="col-sm-12">
 								<label class="opt">
-									<input type="checkbox" name="colors">
+									<input type="checkbox" name="coloredNicks">
 									Enable colored nicknames
 								</label>
 							</div>
@@ -314,7 +321,7 @@
 				<div class="inner">
 					<div class="input">
 						<label for="input" id="nick"></label>
-						<button id="submit" type="submit" title="Send"></button>
+						<button id="submit" type="submit" title="Send" aria-label="Send message"></button>
 						<input id="input" class="mousetrap">
 					</div>
 				</div>

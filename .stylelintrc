@@ -1,6 +1,7 @@
 {
 	"ignoreFiles": [
-		"client/css/bootstrap.css"
+		"client/css/bootstrap.css",
+		"coverage/**/*.css"
 	],
 	"rules": {
 		"at-rule-empty-line-before": ["always", {
@@ -38,7 +39,7 @@
 		"function-parentheses-newline-inside": "always-multi-line",
 		"function-parentheses-space-inside": "never-single-line",
 		"function-whitespace-after": "always",
-		"function-url-quotes": "double",
+		"function-url-quotes": "always",
 		"indentation": "tab",
 		"max-empty-lines": 1,
 		"media-feature-colon-space-after": "always",
@@ -53,7 +54,7 @@
 		"no-missing-eof-newline": true,
 		"number-leading-zero": "never",
 		"number-no-trailing-zeros": true,
-		"number-zero-length-no-unit": true,
+		"length-zero-no-unit": true,
 		"declaration-block-no-duplicate-properties": true,
 		"declaration-block-no-shorthand-property-overrides": true,
 		"rule-non-nested-empty-line-before": ["always-multi-line", {

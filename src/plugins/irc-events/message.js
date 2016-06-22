@@ -1,10 +1,8 @@
 var Chan = require("../../models/chan");
 var Msg = require("../../models/msg");
-var Helper = require("../../helper");
 
 module.exports = function(irc, network) {
 	var client = this;
-	var config = Helper.getConfig();
 
 	irc.on("notice", function(data) {
 		// Some servers send notices without any nickname
@@ -28,6 +26,9 @@ module.exports = function(irc, network) {
 	});
 
 	function handleMessage(data) {
+		var highlight = false;
+		var self = data.nick === irc.user.nick;
+
 		// Server messages go to server window, no questions asked
 		if (data.from_server) {
 			chan = network.channels[0];
@@ -56,17 +57,20 @@ module.exports = function(irc, network) {
 					});
 				}
 			}
+
+			// Query messages (unless self) always highlight
+			if (chan.type === Chan.Type.QUERY) {
+				highlight = !self;
+			}
 		}
 
-		var self = data.nick === irc.user.nick;
-
-		// Self messages are never highlighted
+		// Self messages in channels are never highlighted
 		// Non-self messages are highlighted as soon as the nick is detected
-		var highlight = !self && data.message.split(" ").some(function(w) {
-			return (w.replace(/^@/, "").toLowerCase().indexOf(irc.user.nick.toLowerCase()) === 0);
-		});
+		if (!highlight && !self) {
+			highlight = network.highlightRegex.test(data.message);
+		}
 
-		if (chan.id !== client.activeChannel) {
+		if (!self && chan.id !== client.activeChannel) {
 			chan.unread++;
 
 			if (highlight) {
@@ -83,15 +87,6 @@ module.exports = function(irc, network) {
 			self: self,
 			highlight: highlight
 		});
-		chan.messages.push(msg);
-
-		if (config.maxHistory >= 0 && chan.messages.length > config.maxHistory) {
-			chan.messages.splice(0, chan.messages.length - config.maxHistory);
-		}
-
-		client.emit("msg", {
-			chan: chan.id,
-			msg: msg
-		});
+		chan.pushMessage(client, msg);
 	}
 };

@@ -1,6 +1,7 @@
-[![#thelounge IRC channel on freenode](https://img.shields.io/badge/irc%20channel-%23thelounge%20on%20freenode-blue.svg)](http://avatar.playat.ch:1000/)
+[![#thelounge IRC channel on freenode](https://img.shields.io/badge/irc%20channel-%23thelounge%20on%20freenode-blue.svg)](https://avatar.playat.ch:1000/)
 [![npm version](https://img.shields.io/npm/v/thelounge.svg)](https://www.npmjs.org/package/thelounge)
-[![Build Status](https://travis-ci.org/thelounge/lounge.svg?branch=master)](https://travis-ci.org/thelounge/lounge)
+[![Travis CI Build Status](https://travis-ci.org/thelounge/lounge.svg?branch=master)](https://travis-ci.org/thelounge/lounge)
+[![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/deymtp0lldq78s8t/branch/master?svg=true)](https://ci.appveyor.com/project/astorije/lounge/branch/master)
 [![Dependency Status](https://david-dm.org/thelounge/lounge.svg)](https://david-dm.org/thelounge/lounge)
 [![devDependency Status](https://david-dm.org/thelounge/lounge/dev-status.svg)](https://david-dm.org/thelounge/lounge#info=devDependencies)
 
@@ -35,6 +36,12 @@ the review process quicker and more streamlined.
 
 ## Install
 
+To use The Lounge you must have [Node.js](https://nodejs.org/en/download/) installed.
+The oldest Node.js version we support is 4.2.0.
+
+If you still use 0.10 or 0.12 we strongly advise you to upgrade before installing The Lounge.
+For more information on how to upgrade, read the [documentation](https://nodejs.org/en/download/package-manager/).
+
 ```
 sudo npm install -g thelounge
 ```
@@ -59,10 +66,10 @@ npm start
 ```
 
 You will have to run `npm run build` if you change or add anything in
-`client/js/libs` or `client/views.`
+`client/js/libs` or `client/views`.
 
 ## License
 
-Available under the [MIT License](http://mths.be/mit).
+Available under the [MIT License](LICENSE).
 
 Some fonts licensed under [SIL OFL](http://scripts.sil.org/OFL) and the [Apache License](http://www.apache.org/licenses/).

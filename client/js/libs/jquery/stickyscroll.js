@@ -1,67 +1,53 @@
-/*!
- * stickyscroll
- * https://github.com/erming/stickyscroll
- * v2.2.0
- */
 (function($) {
+	$.fn.unsticky = function() {
+		return this.trigger("unstick.sticky").unbind(".sticky");
+	};
+
 	$.fn.sticky = function() {
-		if (this.size() > 1) {
-			return this.each(function() {
-				$(this).sticky(options);
-			});
-		}
-
-		var isBottom = false;
 		var self = this;
+		var stuckToBottom = true;
+		var lastStick = 0;
 
-		this.unbind(".sticky");
-		this.on("beforeAppend.sticky", function() {
-			isBottom = isScrollBottom.call(self);
-		});
-
-		this.on("afterAppend.sticky", function() {
-			if (isBottom) {
+		var keepToBottom = function() {
+			if (stuckToBottom) {
 				self.scrollBottom();
 			}
-		});
+		};
 
-		var overflow = this.css("overflow-y");
-		if (overflow == "visible") {
-			overflow = "auto";
-		}
-		this.css({
-			"overflow-y": overflow
-		});
+		$(window).on("resize.sticky", keepToBottom);
+		self
+			.on("unstick.sticky", function() {
+				$(window).off("resize.sticky", keepToBottom);
+			})
+			.on("scroll.sticky", function() {
+				// When resizing, sometimes the browser sends a bunch of extra scroll events due to content
+				// reflow, so if we resized within 250ms we can assume it's one of those. The order of said
+				// events is not predictable, and scroll can happen last, so not setting stuckToBottom is
+				// not enough, we have to force the scroll still.
+				if (stuckToBottom && Date.now() - lastStick < 250) {
+					self.scrollBottom();
+				} else {
+					stuckToBottom = self.isScrollBottom();
+				}
+			})
+			.on("scrollBottom.sticky", function() {
+				stuckToBottom = true;
+				lastStick = Date.now();
+				this.scrollTop = this.scrollHeight;
+			})
+			.on("msg.sticky", keepToBottom)
+			.scrollBottom();
 
-		$(window).unbind(".sticky");
-		$(window).on("resize.sticky", function() {
-				self.scrollBottom();
-		});
-
-		this.scrollBottom();
-		return this;
+		return self;
 	};
 
 	$.fn.scrollBottom = function() {
-		return this.each(function() {
-			$(this).animate({scrollTop: this.scrollHeight}, 0);
-		});
-	};
-
-	$.fn.isScrollBottom = isScrollBottom;
-
-	function isScrollBottom() {
-		if ((this.scrollTop() + this.outerHeight() + 1) >= this.prop("scrollHeight")) {
-			return true;
-		} else {
-			return false;
-		}
-	};
-
-	var append = $.fn.append;
-	$.fn.append = function() {
-		this.trigger("beforeAppend");
-		append.apply(this, arguments).trigger("afterAppend")
+		this.trigger("scrollBottom.sticky");
 		return this;
+	};
+
+	$.fn.isScrollBottom = function() {
+		var el = this[0];
+		return el.scrollHeight - el.scrollTop - el.offsetHeight <= 30;
 	};
 })(jQuery);

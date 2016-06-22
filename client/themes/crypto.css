@@ -112,9 +112,8 @@ a:hover,
 	top: 48px;
 }
 
-#chat.no-colors .from button,
-#chat.no-colors .sidebar button {
-	color: #000 !important;
+#chat .user {
+	color: black;
 	font-weight: bold;
 }
 

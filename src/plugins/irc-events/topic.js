@@ -16,11 +16,7 @@ module.exports = function(irc, network) {
 			text: data.topic,
 			self: data.nick === irc.user.nick
 		});
-		chan.messages.push(msg);
-		client.emit("msg", {
-			chan: chan.id,
-			msg: msg
-		});
+		chan.pushMessage(client, msg);
 
 		chan.topic = data.topic;
 		client.emit("topic", {
@@ -42,10 +38,6 @@ module.exports = function(irc, network) {
 			when: new Date(data.when * 1000),
 			self: data.nick === irc.user.nick
 		});
-		chan.messages.push(msg);
-		client.emit("msg", {
-			chan: chan.id,
-			msg: msg
-		});
+		chan.pushMessage(client, msg);
 	});
 };

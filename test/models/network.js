@@ -10,6 +10,7 @@ describe("Network", function() {
 
 		it("should produce an valid object", function() {
 			var network = new Network({name: "networkName"});
+			network.setNick("chillin`");
 			network.channels.push(new Chan({name: "#thelounge"}));
 			network.channels.push(new Chan({name: "&foobar"}));
 
@@ -22,8 +23,10 @@ describe("Network", function() {
 				username: "",
 				realname: "",
 				commands: [],
-				nick: "",
+				nick: "chillin`",
 				join: "#thelounge,&foobar",
+				ip: null,
+				hostname: null
 			});
 		});
 	});

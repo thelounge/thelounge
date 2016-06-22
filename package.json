@@ -1,7 +1,10 @@
 {
   "name": "thelounge",
   "description": "The self-hosted Web IRC client",
-  "version": "1.5.0",
+  "version": "2.0.0-pre.3",
+  "publishConfig": {
+    "tag": "next"
+  },
   "preferGlobal": true,
   "bin": {
     "lounge": "index.js"
@@ -10,11 +13,19 @@
     "type": "git",
     "url": "https://github.com/thelounge/lounge.git"
   },
+  "homepage": "https://thelounge.github.io/",
   "scripts": {
+    "coverage": "istanbul cover node_modules/mocha/bin/_mocha -r test/fixtures/env.js test/**/*.js",
     "start": "node index",
-    "build": "grunt && handlebars client/views/ -e tpl -f client/js/lounge.templates.js",
-    "test": "HOME=test/fixtures mocha test/**/*.js && npm run lint",
-    "lint": "eslint . && stylelint \"**/*.css\"",
+    "build": "npm run build:font-awesome && npm run build:grunt && npm run build:handlebars",
+    "build:font-awesome": "node scripts/build-fontawesome.js",
+    "build:grunt": "grunt",
+    "build:handlebars": "handlebars client/views/ -e tpl -f client/js/lounge.templates.js",
+    "test": "npm-run-all -c test:mocha lint",
+    "test:mocha": "mocha -r test/fixtures/env.js test/**/*.js",
+    "lint": "npm-run-all -c lint:js lint:css",
+    "lint:js": "eslint .",
+    "lint:css": "stylelint \"**/*.css\"",
     "prepublish": "npm run build"
   },
   "keywords": [
@@ -26,31 +37,37 @@
     "server"
   ],
   "license": "MIT",
+  "engines": {
+    "node": ">=4.2.0"
+  },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "cheerio": "0.20.0",
+    "colors": "1.1.2",
     "commander": "2.9.0",
     "event-stream": "3.3.2",
     "express": "4.13.4",
-    "lodash": "4.6.1",
-    "irc-framework": "1.0.10",
-    "mkdirp": "0.5.1",
-    "moment": "2.12.0",
+    "fs-extra": "0.30.0",
+    "irc-framework": "2.0.0",
+    "lodash": "4.11.2",
+    "moment": "2.13.0",
     "read": "1.0.7",
-    "request": "2.69.0",
-    "slate-irc": "0.8.1",
+    "request": "2.72.0",
+    "semver": "5.1.0",
     "socket.io": "1.4.5",
-    "spdy": "3.2.3"
+    "spdy": "3.3.2"
   },
   "devDependencies": {
     "chai": "3.5.0",
-    "eslint": "2.4.0",
-    "grunt": "0.4.5",
-    "grunt-cli": "0.1.13",
-    "grunt-contrib-uglify": "1.0.0",
+    "eslint": "2.11.1",
+    "font-awesome": "4.6.3",
+    "grunt": "1.0.1",
+    "grunt-contrib-uglify": "1.0.1",
     "grunt-contrib-watch": "1.0.0",
     "handlebars": "4.0.5",
+    "istanbul": "0.4.3",
     "mocha": "2.4.5",
-    "stylelint": "5.0.1"
+    "npm-run-all": "2.1.1",
+    "stylelint": "6.6.0"
   }
 }

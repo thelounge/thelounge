@@ -35,11 +35,7 @@ module.exports = function(irc, network) {
 		var msg = new Msg({
 			type: Msg.Type.TOGGLE,
 		});
-		chan.messages.push(msg);
-		client.emit("msg", {
-			chan: chan.id,
-			msg: msg
-		});
+		chan.pushMessage(client, msg);
 
 		var link = escapeHeader(links[0]);
 		fetch(link, function(res) {
@@ -83,8 +79,7 @@ function parse(msg, url, res, client) {
 	case "image/jpeg":
 		if (res.size < (config.prefetchMaxImageSize * 1024)) {
 			toggle.type = "image";
-		}
-		else {
+		} else {
 			return;
 		}
 		break;
@@ -126,7 +121,10 @@ function fetch(url, cb) {
 			next(null, data);
 		}))
 		.pipe(es.wait(function(err, data) {
-			if (err) return;
+			if (err) {
+				return;
+			}
+
 			var body;
 			var type;
 			var size = req.response.headers["content-length"];

@@ -4,54 +4,89 @@ var Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
 	var client = this;
+	var identHandler = this.manager.identHandler;
 
-	client.emit("msg", {
-		chan: network.channels[0].id,
-		msg: new Msg({
-			text: "Network created, connecting to " + network.host + ":" + network.port + "..."
-		})
-	});
+	network.channels[0].pushMessage(client, new Msg({
+		text: "Network created, connecting to " + network.host + ":" + network.port + "..."
+	}));
 
-	irc.on("raw socket connected", function() {
-		identd.hook(irc.connection.socket, network.username);
+	irc.on("registered", function() {
+		if (network.irc.network.cap.enabled.length > 0) {
+			network.channels[0].pushMessage(client, new Msg({
+				text: "Enabled capabilities: " + network.irc.network.cap.enabled.join(", ")
+			}));
+		}
+
+		var delay = 1000;
+		var commands = network.commands;
+		if (Array.isArray(commands)) {
+			commands.forEach(function(cmd) {
+				setTimeout(function() {
+					client.input({
+						target: network.channels[0].id,
+						text: cmd
+					});
+				}, delay);
+				delay += 1000;
+			});
+		}
+
+		network.channels.forEach(function(chan) {
+			setTimeout(function() {
+				network.irc.join(chan.name);
+			}, delay);
+			delay += 100;
+		});
 	});
 
 	irc.on("socket connected", function() {
-		client.emit("msg", {
-			chan: network.channels[0].id,
-			msg: new Msg({
-				text: "Connected to the network."
-			})
-		});
+		network.channels[0].pushMessage(client, new Msg({
+			text: "Connected to the network."
+		}));
 	});
 
-	irc.on("socket close", function() {
-		client.emit("msg", {
-			chan: network.channels[0].id,
-			msg: new Msg({
-				text: "Disconnected from the network."
-			})
-		});
+	irc.on("close", function() {
+		network.channels[0].pushMessage(client, new Msg({
+			text: "Disconnected from the network, and will not reconnect."
+		}));
 	});
+
+	if (identd.isEnabled()) {
+		irc.on("socket connected", function() {
+			identd.hook(irc.connection.socket, client.name || network.username);
+		});
+	}
+
+	if (identHandler) {
+		irc.on("socket connected", function() {
+			identHandler.addSocket(irc.connection.socket, client.name || network.username);
+			identHandler.refresh();
+		});
+
+		irc.on("socket close", function() {
+			identHandler.removeSocket(irc.connection.socket);
+			identHandler.refresh();
+		});
+	}
 
 	irc.on("socket error", function(err) {
-		console.log(err);
-		client.emit("msg", {
-			chan: network.channels[0].id,
-			msg: new Msg({
-				type: Msg.Type.ERROR,
-				text: "Socket error: " + err
-			})
-		});
+		log.debug("IRC socket error", err);
+		network.channels[0].pushMessage(client, new Msg({
+			type: Msg.Type.ERROR,
+			text: "Socket error: " + err
+		}));
 	});
 
 	irc.on("reconnecting", function() {
-		client.emit("msg", {
-			chan: network.channels[0].id,
-			msg: new Msg({
-				text: "Reconnecting..."
-			})
-		});
+		network.channels[0].pushMessage(client, new Msg({
+			text: "Disconnected from the network. Reconnecting..."
+		}));
+	});
+
+	irc.on("ping timeout", function() {
+		network.channels[0].pushMessage(client, new Msg({
+			text: "Ping timeout, disconnecting..."
+		}));
 	});
 
 	irc.on("server options", function(data) {

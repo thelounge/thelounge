@@ -1,6 +1,8 @@
 $(function() {
+	$("#loading-page-message").text("Connecting…");
+
 	var path = window.location.pathname + "socket.io/";
-	var socket = io({path:path});
+	var socket = io({path: path});
 	var commands = [
 		"/close",
 		"/connect",
@@ -46,7 +48,9 @@ $(function() {
 		};
 	}
 
-	$("#play").on("click", function() { pop.play(); });
+	$("#play").on("click", function() {
+		pop.play();
+	});
 
 	$(".tse-scrollable").TrackpadScrollEmulator();
 
@@ -80,28 +84,26 @@ $(function() {
 		});
 	});
 
-	socket.on("auth", function(/* data */) {
-		var body = $("body");
+	socket.on("auth", function(data) {
 		var login = $("#sign-in");
-		if (!login.length) {
-			refresh();
-			return;
-		}
+
 		login.find(".btn").prop("disabled", false);
-		var token = window.localStorage.getItem("token");
-		if (token) {
+
+		if (!data.success) {
 			window.localStorage.removeItem("token");
-			socket.emit("auth", {token: token});
-		}
-		if (body.hasClass("signed-out")) {
+
 			var error = login.find(".error");
 			error.show().closest("form").one("submit", function() {
 				error.hide();
 			});
+		} else {
+			var token = window.localStorage.getItem("token");
+			if (token) {
+				$("#loading-page-message").text("Authorizing…");
+				socket.emit("auth", {token: token});
+			}
 		}
-		if (!token) {
-			body.addClass("signed-out");
-		}
+
 		var input = login.find("input[name='user']");
 		if (input.val() === "") {
 			input.val(window.localStorage.getItem("user") || "");
@@ -135,6 +137,11 @@ $(function() {
 				feedback.hide();
 			});
 		}
+
+		if (data.token && window.localStorage.getItem("token") !== null) {
+			window.localStorage.setItem("token", data.token);
+		}
+
 		passwordForm
 			.find("input")
 			.val("")
@@ -161,16 +168,23 @@ $(function() {
 					channels: channels
 				})
 			);
-			channels.forEach(renderChannelMessages);
+			channels.forEach(renderChannel);
 			confirmExit();
+
+			if (sidebar.find(".highlight").length) {
+				toggleFaviconNotification(true);
+			}
 		}
 
-		if (data.token) {
+		if (data.token && $("#sign-in-remember").is(":checked")) {
 			window.localStorage.setItem("token", data.token);
+		} else {
+			window.localStorage.removeItem("token");
 		}
 
 		$("body").removeClass("signed-out");
-		$("#sign-in").detach();
+		$("#loading").remove();
+		$("#sign-in").remove();
 
 		var id = data.active;
 		var target = sidebar.find("[data-id='" + id + "']").trigger("click");
@@ -199,9 +213,11 @@ $(function() {
 				channels: [data.chan]
 			})
 		);
-		renderChannelMessages(data.chan);
+		renderChannel(data.chan);
 		var chan = sidebar.find(".chan")
-			.sort(function(a, b) { return $(a).data("id") - $(b).data("id"); })
+			.sort(function(a, b) {
+				return $(a).data("id") - $(b).data("id");
+			})
 			.last();
 		if (!whois) {
 			chan = chan.filter(":not(.query)");
@@ -268,9 +284,36 @@ $(function() {
 		}, $(document.createDocumentFragment()));
 	}
 
+	function renderChannel(data) {
+		renderChannelMessages(data);
+		renderChannelUsers(data);
+	}
+
 	function renderChannelMessages(data) {
 		var documentFragment = buildChannelMessages(data.id, data.messages);
 		chat.find("#chan-" + data.id + " .messages").append(documentFragment);
+	}
+
+	function renderChannelUsers(data) {
+		var users = chat.find("#chan-" + data.id).find(".users");
+		var nicks = users.data("nicks") || [];
+		var i, oldSortOrder = {};
+
+		for (i in nicks) {
+			oldSortOrder[nicks[i]] = i;
+		}
+
+		nicks = [];
+
+		for (i in data.users) {
+			nicks.push(data.users[i].name);
+		}
+
+		nicks = nicks.sort(function(a, b) {
+			return (oldSortOrder[a] || Number.MAX_VALUE) - (oldSortOrder[b] || Number.MAX_VALUE);
+		});
+
+		users.html(render("user", data)).data("nicks", nicks);
 	}
 
 	socket.on("msg", function(data) {
@@ -403,26 +446,18 @@ $(function() {
 			socket.emit("names", {
 				target: data.chan
 			});
-		}
-		else {
+		} else {
 			chan.data("needsNamesRefresh", true);
 		}
 	});
 
-	socket.on("names", function(data) {
-		var users = chat.find("#chan-" + data.chan).find(".users").html(render("user", data));
-		var nicks = [];
-		for (var i in data.users) {
-			nicks.push(data.users[i].name);
-		}
-		users.data("nicks", nicks);
-	});
+	socket.on("names", renderChannelUsers);
 
 	var userStyles = $("#user-specified-css");
 	var settings = $("#settings");
 	var options = $.extend({
 		desktopNotifications: false,
-		colors: false,
+		coloredNicks: true,
 		join: true,
 		links: true,
 		mode: true,
@@ -472,8 +507,8 @@ $(function() {
 		].indexOf(name) !== -1) {
 			chat.toggleClass("hide-" + name, !self.prop("checked"));
 		}
-		if (name === "colors") {
-			chat.toggleClass("no-colors", !self.prop("checked"));
+		if (name === "coloredNicks") {
+			chat.toggleClass("colored-nicks", self.prop("checked"));
 		}
 		if (name === "userStyles") {
 			$(document.head).find("#user-specified-css").html(options[name]);
@@ -540,8 +575,7 @@ $(function() {
 				text: target.text(),
 				data: target.data("name")
 			});
-		}
-		else if (target.hasClass("chan")) {
+		} else if (target.hasClass("chan")) {
 			output = render("contextmenu_item", {
 				class: "chan",
 				text: target.data("title"),
@@ -586,11 +620,18 @@ $(function() {
 	form.on("submit", function(e) {
 		e.preventDefault();
 		var text = input.val();
+
+		if (text.length === 0) {
+			return;
+		}
+
 		input.val("");
+
 		if (text.indexOf("/clear") === 0) {
 			clear();
 			return;
 		}
+
 		socket.emit("input", {
 			target: chat.data("id"),
 			text: text
@@ -612,7 +653,7 @@ $(function() {
 		}
 	});
 
-	chat.on("click", ".messages", function() {
+	chat.on("click", ".chat", function() {
 		setTimeout(function() {
 			var text = "";
 			if (window.getSelection) {
@@ -656,7 +697,7 @@ $(function() {
 		self.addClass("active")
 			.find(".badge")
 			.removeClass("highlight")
-			.data("count", "")
+			.data("count", 0)
 			.empty();
 
 		if (sidebar.find(".highlight").length === 0) {
@@ -664,15 +705,20 @@ $(function() {
 		}
 
 		viewport.removeClass("lt");
-		$("#windows .active").removeClass("active");
+		$("#windows .active")
+			.removeClass("active")
+			.find(".chat")
+			.unsticky();
 
 		var chan = $(target)
 			.addClass("active")
 			.trigger("show")
-			.css("z-index", top++)
-			.find(".chat")
-			.sticky()
-			.end();
+			.css("z-index", top++);
+
+		var chanChat = chan.find(".chat");
+		if (chanChat.length > 0) {
+			chanChat.sticky();
+		}
 
 		var title = "The Lounge";
 		if (chan.data("title")) {
@@ -681,12 +727,7 @@ $(function() {
 		document.title = title;
 
 		if (self.hasClass("chan")) {
-			var nick = self
-				.closest(".network")
-				.data("nick");
-			if (nick) {
-				setNick(nick);
-			}
+			setNick(self.closest(".network").data("nick"));
 		}
 
 		if (chan.data("needsNamesRefresh") === true) {
@@ -768,9 +809,12 @@ $(function() {
 	});
 
 	chat.on("msg", ".messages", function(e, target, msg) {
+		if (msg.self) {
+			return;
+		}
+
 		var button = sidebar.find(".chan[data-target='" + target + "']");
-		var isQuery = button.hasClass("query");
-		if (msg.type === "invite" || msg.highlight || isQuery || (options.notifyAllMessages && msg.type === "message")) {
+		if (msg.highlight || (options.notifyAllMessages && msg.type === "message")) {
 			if (!document.hasFocus() || !$(target).hasClass("active")) {
 				if (options.notification) {
 					pop.play();
@@ -786,7 +830,7 @@ $(function() {
 						body = msg.from + " invited you to " + msg.channel;
 					} else {
 						title = msg.from;
-						if (!isQuery) {
+						if (!button.hasClass("query")) {
 							title += " (" + button.data("title").trim() + ")";
 						}
 						title += " says:";
@@ -810,19 +854,16 @@ $(function() {
 			}
 		}
 
-		button = button.filter(":not(.active)");
-		if (button.length === 0) {
+		if (button.hasClass("active")) {
 			return;
 		}
 
-		var ignore = [
-			"join",
-			"part",
-			"quit",
-			"nick",
-			"mode",
+		var whitelistedActions = [
+			"message",
+			"notice",
+			"action",
 		];
-		if ($.inArray(msg.type, ignore) !== -1) {
+		if (whitelistedActions.indexOf(msg.type) === -1) {
 			return;
 		}
 
@@ -830,8 +871,8 @@ $(function() {
 		if (badge.length !== 0) {
 			var i = (badge.data("count") || 0) + 1;
 			badge.data("count", i);
-			badge.html(i > 999 ? (i / 1000).toFixed(1) + "k" : i);
-			if (msg.highlight || isQuery) {
+			badge.html(Handlebars.helpers.roundBadgeNumber(i));
+			if (msg.highlight) {
 				badge.addClass("highlight");
 			}
 		}
@@ -972,15 +1013,6 @@ $(function() {
 		var users = chat.find(".active").find(".users");
 		var nicks = users.data("nicks");
 
-		if (!nicks) {
-			nicks = [];
-			users.find(".user").each(function() {
-				var nick = $(this).text().replace(/[~&@%+]/, "");
-				nicks.push(nick);
-			});
-			users.data("nicks", nicks);
-		}
-
 		for (var i in nicks) {
 			words.push(nicks[i]);
 		}
@@ -1083,12 +1115,9 @@ $(function() {
 
 	function setNick(nick) {
 		var width = $("#nick")
-			.html(nick + ":")
-			.width();
-		if (width) {
-			width += 31;
-			input.css("padding-left", width);
-		}
+			.html(nick)
+			.outerWidth(true);
+		input.css("padding-left", width);
 	}
 
 	function move(array, old_index, new_index) {

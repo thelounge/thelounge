@@ -1,7 +1,8 @@
 var _ = require("lodash");
+var package = require("../package.json");
 var Chan = require("./models/chan");
 var crypto = require("crypto");
-var log = require("./log");
+var userLog = require("./userLog");
 var Msg = require("./models/msg");
 var Network = require("./models/network");
 var ircFramework = require("irc-framework");
@@ -35,6 +36,7 @@ var inputs = [
 	"part",
 	"action",
 	"connect",
+	"disconnect",
 	"invite",
 	"kick",
 	"mode",
@@ -62,11 +64,16 @@ function Client(manager, name, config) {
 		sockets: manager.sockets,
 		manager: manager
 	});
+
 	var client = this;
-	crypto.randomBytes(48, function(err, buf) {
-		client.token = buf.toString("hex");
-	});
+
 	if (config) {
+		if (!config.token) {
+			client.updateToken(function() {
+				client.manager.updateUser(client.name, {token: config.token});
+			});
+		}
+
 		var delay = 0;
 		(config.networks || []).forEach(function(n) {
 			setTimeout(function() {
@@ -74,6 +81,8 @@ function Client(manager, name, config) {
 			}, delay);
 			delay += 1000;
 		});
+
+		log.info("User '" + name + "' loaded");
 	}
 }
 
@@ -90,7 +99,7 @@ Client.prototype.emit = function(event, data) {
 				if (target.chan.type === Chan.Type.LOBBY) {
 					chan = target.network.host;
 				}
-				log.write(
+				userLog.write(
 					this.name,
 					target.network.host,
 					chan,
@@ -127,6 +136,17 @@ Client.prototype.connect = function(args) {
 	var client = this;
 
 	var nick = args.nick || "lounge-user";
+	var webirc = null;
+	var channels = [];
+
+	if (args.join) {
+		var join = args.join.replace(/\,/g, " ").split(/\s+/g);
+		join.forEach(function(chan) {
+			channels.push(new Chan({
+				name: chan
+			}));
+		});
+	}
 
 	var network = new Network({
 		name: args.name || "",
@@ -136,8 +156,12 @@ Client.prototype.connect = function(args) {
 		password: args.password,
 		username: args.username || nick.replace(/[^a-zA-Z0-9]/g, ""),
 		realname: args.realname || "The Lounge User",
-		commands: args.commands
+		commands: args.commands,
+		ip: args.ip,
+		hostname: args.hostname,
+		channels: channels,
 	});
+	network.setNick(nick);
 
 	client.networks.push(network);
 	client.emit("network", {
@@ -147,13 +171,10 @@ Client.prototype.connect = function(args) {
 	if (config.lockNetwork) {
 		// This check is needed to prevent invalid user configurations
 		if (args.host && args.host.length > 0 && args.host !== config.defaults.host) {
-			client.emit("msg", {
-				chan: network.channels[0].id,
-				msg: new Msg({
-					type: Msg.Type.ERROR,
-					text: "Hostname you specified is not allowed."
-				})
-			});
+			network.channels[0].pushMessage(client, new Msg({
+				type: Msg.Type.ERROR,
+				text: "Hostname you specified is not allowed."
+			}));
 			return;
 		}
 
@@ -163,18 +184,41 @@ Client.prototype.connect = function(args) {
 	}
 
 	if (network.host.length === 0) {
-		client.emit("msg", {
-			chan: network.channels[0].id,
-			msg: new Msg({
-				type: Msg.Type.ERROR,
-				text: "You must specify a hostname to connect."
-			})
-		});
+		network.channels[0].pushMessage(client, new Msg({
+			type: Msg.Type.ERROR,
+			text: "You must specify a hostname to connect."
+		}));
 		return;
 	}
 
+	if (config.webirc && network.host in config.webirc) {
+		args.ip = args.ip || (client.config && client.config.ip) || client.ip;
+		args.hostname = args.hostname || (client.config && client.config.hostname) || client.hostname || args.ip;
+
+		if (args.ip) {
+			if (config.webirc[network.host] instanceof Function) {
+				webirc = config.webirc[network.host](client, args);
+			} else {
+				webirc = {
+					password: config.webirc[network.host],
+					username: package.name,
+					address: args.ip,
+					hostname: args.hostname
+				};
+			}
+		} else {
+			log.warn("Cannot find a valid WEBIRC configuration for " + nick
+				+ "!" + network.username + "@" + network.host);
+		}
+	}
+
 	network.irc = new ircFramework.Client();
+	network.irc.requestCap([
+		"echo-message",
+		"znc.in/self-message",
+	]);
 	network.irc.connect({
+		version: package.name + " " + package.version + " -- " + package.homepage,
 		host: network.host,
 		port: network.port,
 		nick: nick,
@@ -184,31 +228,8 @@ Client.prototype.connect = function(args) {
 		tls: network.tls,
 		localAddress: config.bind,
 		rejectUnauthorized: false,
-		auto_reconnect: false, // TODO: Enable auto reconnection
-	});
-
-	network.irc.on("registered", function() {
-		var delay = 1000;
-		var commands = args.commands;
-		if (Array.isArray(commands)) {
-			commands.forEach(function(cmd) {
-				setTimeout(function() {
-					client.input({
-						target: network.channels[0].id,
-						text: cmd
-					});
-				}, delay);
-				delay += 1000;
-			});
-		}
-
-		var join = (args.join || "");
-		if (join) {
-			setTimeout(function() {
-				join = join.split(/\s+/);
-				network.irc.join(join[0], join[1]);
-			}, delay);
-		}
+		auto_reconnect: true,
+		webirc: webirc,
 	});
 
 	events.forEach(function(plugin) {
@@ -220,24 +241,41 @@ Client.prototype.connect = function(args) {
 	});
 };
 
-Client.prototype.setPassword = function(hash) {
+Client.prototype.updateToken = function(callback) {
 	var client = this;
-	client.manager.updateUser(client.name, {password:hash});
-	// re-read the hash off disk to ensure we use whatever is saved. this will
-	// prevent situations where the password failed to save properly and so
-	// a restart of the server would forget the change and use the old
-	// password again.
-	var user = client.manager.readUserConfig(client.name);
-	if (user.password === hash) {
-		client.config.password = hash;
-		return true;
-	}
-	return false;
+
+	crypto.randomBytes(48, function(err, buf) {
+		client.config.token = buf.toString("hex");
+		callback();
+	});
+};
+
+Client.prototype.setPassword = function(hash, callback) {
+	var client = this;
+
+	client.updateToken(function() {
+		client.manager.updateUser(client.name, {
+			token: client.config.token,
+			password: hash
+		});
+
+		// re-read the hash off disk to ensure we use whatever is saved. this will
+		// prevent situations where the password failed to save properly and so
+		// a restart of the server would forget the change and use the old
+		// password again.
+		var user = client.manager.readUserConfig(client.name);
+		if (user.password === hash) {
+			client.config.password = hash;
+			callback(true);
+		} else {
+			callback(false);
+		}
+	});
 };
 
 Client.prototype.input = function(data) {
 	var client = this;
-	var text = data.text.trim();
+	var text = data.text;
 	var target = client.find(data.target);
 
 	// This is either a normal message or a command escaped with a leading '/'
@@ -264,13 +302,10 @@ Client.prototype.input = function(data) {
 	}
 
 	if (!connected) {
-		this.emit("msg", {
-			chan: target.chan.id,
-			msg: new Msg({
-				type: Msg.Type.ERROR,
-				text: "You are not connected to the IRC network, unable to send your command."
-			})
-		});
+		target.chan.pushMessage(this, new Msg({
+			type: Msg.Type.ERROR,
+			text: "You are not connected to the IRC network, unable to send your command."
+		}));
 	}
 };
 
@@ -331,6 +366,8 @@ Client.prototype.sort = function(data) {
 		network.channels = sorted;
 		break;
 	}
+
+	self.save();
 };
 
 Client.prototype.names = function(data) {
@@ -341,7 +378,7 @@ Client.prototype.names = function(data) {
 	}
 
 	client.emit("names", {
-		chan: target.chan.id,
+		id: target.chan.id,
 		users: target.chan.users
 	});
 };
