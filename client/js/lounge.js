@@ -34,10 +34,6 @@ $(function() {
 	var sidebar = $("#sidebar, #footer");
 	var chat = $("#chat");
 
-	if (navigator.standalone) {
-		$("html").addClass("web-app-mode");
-	}
-
 	var pop;
 	try {
 		pop = new Audio();
