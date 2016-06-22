@@ -57,7 +57,7 @@ $(function() {
 	var favicon = $("#favicon");
 
 	function dimmer(dim) {
-		$('body').toggleClass('dimmed', dim);
+		$('body').toggleClass("dimmed", dim);
 	}
 
 	function render(name, data) {
