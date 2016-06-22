@@ -181,6 +181,10 @@ button,
 	color: rgba(0, 0, 0, .35) !important;
 }
 
+.dimmed {
+	opacity: .5;
+}
+
 #wrap {
 	height: 100%;
 	overflow: hidden;
