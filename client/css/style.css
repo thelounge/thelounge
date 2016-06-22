@@ -117,8 +117,7 @@ input {
 	outline: 0;
 }
 
-button,
-.user {
+button {
 	border: none;
 	background: none;
 	margin: 0;
@@ -451,10 +450,6 @@ button,
 	width: 210px;
 }
 
-#footer button {
-	border: 0;
-}
-
 #footer button.active {
 	color: #fff;
 }
@@ -635,11 +630,6 @@ button,
 	line-height: 1.4;
 }
 
-#chat button:hover,
-.user:hover {
-	opacity: .6;
-}
-
 #chat .chat,
 #chat .sidebar {
 	top: 58px;
@@ -757,7 +747,12 @@ button,
 /* Nicknames */
 
 #chat .user {
+	cursor: pointer;
 	color: #50a656;
+}
+
+#chat .user:hover {
+	opacity: .6;
 }
 
 #chat.colored-nicks .user.color-1 { color: #1396cf; }
@@ -1013,7 +1008,7 @@ button,
 	width: 100%;
 }
 
-#chat .names button {
+#chat .names .user {
 	display: block;
 	line-height: 1.6;
 	padding: 0 16px;

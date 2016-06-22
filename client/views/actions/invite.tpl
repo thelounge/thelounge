@@ -1,9 +1,9 @@
-<a href="#" class="user {{colorClass from}}" data-name="{{from}}">{{from}}</a>
+<span role="button" class="user {{colorClass from}}" data-name="{{from}}">{{from}}</span>
 invited
 {{#if invitedYou}}
 	you
 {{else}}
-	<a href="#" class="user {{colorClass invited}}" data-name="{{invited}}">{{invited}}</a>
+	<span role="button" class="user {{colorClass invited}}" data-name="{{invited}}">{{invited}}</span>
 {{/if}}
 to
 {{{parse channel}}}
