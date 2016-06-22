@@ -175,7 +175,8 @@ $(function() {
 		}
 
 		$("body").removeClass("signed-out");
-		$("#sign-in").detach();
+		$("#loading").remove();
+		$("#sign-in").remove();
 
 		var id = data.active;
 		var target = sidebar.find("[data-id='" + id + "']").trigger("click");

@@ -109,6 +109,10 @@ h2 {
 	margin: 0;
 }
 
+h1.title {
+	margin-bottom: 10px;
+}
+
 input {
 	outline: 0;
 }
@@ -749,6 +753,7 @@ button,
 	min-width: 134px;
 }
 
+#loading a,
 #chat a {
 	color: #50a656;
 }
@@ -1055,13 +1060,22 @@ button,
 	content: "Users";
 }
 
-#sign-in label {
-	display: block;
+#loading {
+	font-size: 14px;
+	z-index: 1;
+}
+
+#loading p {
 	margin-top: 10px;
 }
 
-#sign-in .title {
-	margin-bottom: 10px;
+#loading-slow {
+	display: none;
+}
+
+#sign-in label {
+	display: block;
+	margin-top: 10px;
 }
 
 #sign-in .remember {
@@ -1084,17 +1098,9 @@ button,
 	margin-top: 1em;
 }
 
-#sign-in .container {
-	margin-top: 120px;
-}
-
 #connect label {
 	display: block;
 	margin-top: 11px;
-}
-
-#connect .title {
-	margin-bottom: 10px;
 }
 
 #connect .port:before {
@@ -1117,10 +1123,6 @@ button,
 #connect .btn {
 	float: left;
 	margin-top: 30px;
-}
-
-#settings .title {
-	margin-bottom: -10px;
 }
 
 #settings .opt {
