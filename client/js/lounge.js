@@ -771,7 +771,7 @@ $(function() {
 	chat.on("input", ".search", function() {
 		var value = $(this).val().toLowerCase();
 		var names = $(this).closest(".users").find(".names");
-		names.find("button").each(function() {
+		names.find(".user").each(function() {
 			var btn = $(this);
 			var name = btn.text().toLowerCase().replace(/[+%@~]/, "");
 			if (name.indexOf(value) === 0) {
