@@ -12,12 +12,12 @@ module.exports = {
 
 	//
 	// IP address or hostname for the web server to listen on.
-	// Setting this to "0.0.0.0" will listen on all interfaces.
+	// Setting this to undefined will listen on all interfaces.
 	//
 	// @type     string
-	// @default  "0.0.0.0"
+	// @default  undefined
 	//
-	host: "0.0.0.0",
+	host: undefined,
 
 	//
 	// Set the port to listen on.
