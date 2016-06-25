@@ -10,6 +10,35 @@ module.exports = function(irc, network) {
 		text: "Network created, connecting to " + network.host + ":" + network.port + "..."
 	}));
 
+	irc.on("registered", function() {
+		if (network.irc.network.cap.enabled.length > 0) {
+			network.channels[0].pushMessage(client, new Msg({
+				text: "Enabled capabilities: " + network.irc.network.cap.enabled.join(", ")
+			}));
+		}
+
+		var delay = 1000;
+		var commands = network.commands;
+		if (Array.isArray(commands)) {
+			commands.forEach(function(cmd) {
+				setTimeout(function() {
+					client.input({
+						target: network.channels[0].id,
+						text: cmd
+					});
+				}, delay);
+				delay += 1000;
+			});
+		}
+
+		network.channels.forEach(function(chan) {
+			setTimeout(function() {
+				network.irc.join(chan.name);
+			}, delay);
+			delay += 100;
+		});
+	});
+
 	irc.on("socket connected", function() {
 		network.channels[0].pushMessage(client, new Msg({
 			text: "Connected to the network."

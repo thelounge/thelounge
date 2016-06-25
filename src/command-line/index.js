@@ -3,7 +3,7 @@ global.log = require("../log.js");
 var program = require("commander");
 var pkg = require("../../package.json");
 var fs = require("fs");
-var mkdirp = require("mkdirp");
+var fsextra = require("fs-extra");
 var path = require("path");
 var Helper = require("../helper");
 
@@ -13,22 +13,22 @@ program.option("    --home <path>" , "home path");
 
 var argv = program.parseOptions(process.argv);
 
-Helper.setHome(program.home);
+Helper.setHome(program.home || process.env.LOUNGE_HOME);
 
 if (!fs.existsSync(Helper.CONFIG_PATH)) {
-	mkdirp.sync(Helper.HOME, {mode: "0700"});
-	fs.writeFileSync(
-		Helper.CONFIG_PATH,
-		fs.readFileSync(path.resolve(path.join(
-			__dirname,
-			"..",
-			"..",
-			"defaults",
-			"config.js"
-		)))
-	);
+	fsextra.ensureDirSync(Helper.HOME);
+	fs.chmodSync(Helper.HOME, "0700");
+	fsextra.copySync(path.resolve(path.join(
+		__dirname,
+		"..",
+		"..",
+		"defaults",
+		"config.js"
+	)), Helper.CONFIG_PATH);
 	log.info("Config created:", Helper.CONFIG_PATH);
 }
+
+fsextra.ensureDirSync(Helper.USERS_PATH);
 
 require("./start");
 require("./config");

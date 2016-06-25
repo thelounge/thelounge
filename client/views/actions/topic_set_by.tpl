@@ -1,3 +1,3 @@
 Topic set by
-<a href="#" class="user {{colorClass nick}}" data-name="{{nick}}">{{mode}}{{nick}}</a>
+<span role="button" class="user {{colorClass nick}}" data-name="{{nick}}">{{mode}}{{nick}}</span>
 on {{localeDate when}}

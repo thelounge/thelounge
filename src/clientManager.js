@@ -1,9 +1,8 @@
 var _ = require("lodash");
 var fs = require("fs");
 var Client = require("./client");
-var mkdirp = require("mkdirp");
 var Helper = require("./helper");
-var oidentd = require("./oidentd");
+var Oidentd = require("./oidentd");
 
 module.exports = ClientManager;
 
@@ -13,7 +12,7 @@ function ClientManager() {
 	this.clients = [];
 
 	if (typeof config.oidentd === "string") {
-		this.identHandler = new oidentd(config.oidentd);
+		this.identHandler = new Oidentd(config.oidentd);
 	}
 }
 
@@ -52,7 +51,6 @@ ClientManager.prototype.loadUser = function(name) {
 
 ClientManager.prototype.getUsers = function() {
 	var users = [];
-	mkdirp.sync(Helper.USERS_PATH);
 	try {
 		var files = fs.readdirSync(Helper.USERS_PATH);
 		files.forEach(function(file) {
@@ -73,7 +71,6 @@ ClientManager.prototype.addUser = function(name, password) {
 		return false;
 	}
 	try {
-		mkdirp.sync(Helper.USERS_PATH);
 
 		if (require("path").basename(name) !== name) {
 			throw new Error(name + " is an invalid username.");
@@ -87,7 +84,7 @@ ClientManager.prototype.addUser = function(name, password) {
 		};
 		fs.writeFileSync(
 			Helper.getUserConfigPath(name),
-			JSON.stringify(user, null, "  ")
+			JSON.stringify(user, null, "\t")
 		);
 	} catch (e) {
 		log.error("Failed to add user " + name, e);
@@ -111,7 +108,7 @@ ClientManager.prototype.updateUser = function(name, opts) {
 		_.assign(user, opts);
 		fs.writeFileSync(
 			Helper.getUserConfigPath(name),
-			JSON.stringify(user, null, " ")
+			JSON.stringify(user, null, "\t")
 		);
 	} catch (e) {
 		log.error("Failed to update user", e);
@@ -125,10 +122,8 @@ ClientManager.prototype.readUserConfig = function(name) {
 	if (users.indexOf(name) === -1) {
 		return false;
 	}
-	var user = {};
 	var data = fs.readFileSync(Helper.getUserConfigPath(name), "utf-8");
-	user = JSON.parse(data);
-	return user;
+	return JSON.parse(data);
 };
 
 ClientManager.prototype.removeUser = function(name) {

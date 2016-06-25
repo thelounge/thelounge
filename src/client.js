@@ -64,11 +64,16 @@ function Client(manager, name, config) {
 		sockets: manager.sockets,
 		manager: manager
 	});
+
 	var client = this;
-	crypto.randomBytes(48, function(err, buf) {
-		client.token = buf.toString("hex");
-	});
+
 	if (config) {
+		if (!config.token) {
+			client.updateToken(function() {
+				client.manager.updateUser(client.name, {token: config.token});
+			});
+		}
+
 		var delay = 0;
 		(config.networks || []).forEach(function(n) {
 			setTimeout(function() {
@@ -76,9 +81,9 @@ function Client(manager, name, config) {
 			}, delay);
 			delay += 1000;
 		});
-	}
 
-	log.info("User '" + name + "' loaded");
+		log.info("User '" + name + "' loaded");
+	}
 }
 
 Client.prototype.emit = function(event, data) {
@@ -132,6 +137,16 @@ Client.prototype.connect = function(args) {
 
 	var nick = args.nick || "lounge-user";
 	var webirc = null;
+	var channels = [];
+
+	if (args.join) {
+		var join = args.join.replace(/\,/g, " ").split(/\s+/g);
+		join.forEach(function(chan) {
+			channels.push(new Chan({
+				name: chan
+			}));
+		});
+	}
 
 	var network = new Network({
 		name: args.name || "",
@@ -144,6 +159,7 @@ Client.prototype.connect = function(args) {
 		commands: args.commands,
 		ip: args.ip,
 		hostname: args.hostname,
+		channels: channels,
 	});
 	network.setNick(nick);
 
@@ -216,36 +232,6 @@ Client.prototype.connect = function(args) {
 		webirc: webirc,
 	});
 
-	network.irc.on("registered", function() {
-		if (network.irc.network.cap.enabled.length > 0) {
-			network.channels[0].pushMessage(client, new Msg({
-				text: "Enabled capabilities: " + network.irc.network.cap.enabled.join(", ")
-			}));
-		}
-
-		var delay = 1000;
-		var commands = args.commands;
-		if (Array.isArray(commands)) {
-			commands.forEach(function(cmd) {
-				setTimeout(function() {
-					client.input({
-						target: network.channels[0].id,
-						text: cmd
-					});
-				}, delay);
-				delay += 1000;
-			});
-		}
-
-		var join = (args.join || "");
-		if (join) {
-			setTimeout(function() {
-				join = join.split(/\s+/);
-				network.irc.join(join[0], join[1]);
-			}, delay);
-		}
-	});
-
 	events.forEach(function(plugin) {
 		var path = "./plugins/irc-events/" + plugin;
 		require(path).apply(client, [
@@ -255,19 +241,36 @@ Client.prototype.connect = function(args) {
 	});
 };
 
-Client.prototype.setPassword = function(hash) {
+Client.prototype.updateToken = function(callback) {
 	var client = this;
-	client.manager.updateUser(client.name, {password: hash});
-	// re-read the hash off disk to ensure we use whatever is saved. this will
-	// prevent situations where the password failed to save properly and so
-	// a restart of the server would forget the change and use the old
-	// password again.
-	var user = client.manager.readUserConfig(client.name);
-	if (user.password === hash) {
-		client.config.password = hash;
-		return true;
-	}
-	return false;
+
+	crypto.randomBytes(48, function(err, buf) {
+		client.config.token = buf.toString("hex");
+		callback();
+	});
+};
+
+Client.prototype.setPassword = function(hash, callback) {
+	var client = this;
+
+	client.updateToken(function() {
+		client.manager.updateUser(client.name, {
+			token: client.config.token,
+			password: hash
+		});
+
+		// re-read the hash off disk to ensure we use whatever is saved. this will
+		// prevent situations where the password failed to save properly and so
+		// a restart of the server would forget the change and use the old
+		// password again.
+		var user = client.manager.readUserConfig(client.name);
+		if (user.password === hash) {
+			client.config.password = hash;
+			callback(true);
+		} else {
+			callback(false);
+		}
+	});
 };
 
 Client.prototype.input = function(data) {
@@ -363,6 +366,8 @@ Client.prototype.sort = function(data) {
 		network.channels = sorted;
 		break;
 	}
+
+	self.save();
 };
 
 Client.prototype.names = function(data) {

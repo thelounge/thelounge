@@ -22,12 +22,11 @@ program
 			if (err) {
 				return;
 			}
-			var salt = bcrypt.genSaltSync(8);
-			var hash = bcrypt.hashSync(password, salt);
-			user.password = hash;
+			user.password = bcrypt.hashSync(password, bcrypt.genSaltSync(8));
+			user.token = null; // Will be regenerated when the user is loaded
 			fs.writeFileSync(
 				file,
-				JSON.stringify(user, null, "  ")
+				JSON.stringify(user, null, "\t")
 			);
 			log.info("Successfully reset password for '" + name + "'.");
 		});

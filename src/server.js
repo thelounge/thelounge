@@ -1,5 +1,5 @@
 var _ = require("lodash");
-var package = require("../package.json");
+var pkg = require("../package.json");
 var bcrypt = require("bcrypt-nodejs");
 var Client = require("./client");
 var ClientManager = require("./clientManager");
@@ -62,13 +62,8 @@ module.exports = function(options) {
 
 	manager.sockets = sockets;
 
-	log.info("The Lounge v" + package.version + " is now running on", protocol + "://" + config.host + ":" + config.port + "/");
+	log.info("The Lounge v" + pkg.version + " is now running on", protocol + "://" + (config.host || "*") + ":" + config.port + "/");
 	log.info("Press ctrl-c to stop\n");
-
-	if (!require("semver").satisfies(process.version, package.engines.node)) {
-		log.warn("The oldest supported Node.js version is ", package.engines.node);
-		log.warn("We strongly encourage you to upgrade, see https://nodejs.org/en/download/package-manager/ for more details\n");
-	}
 
 	if (!config.public) {
 		manager.loadUsers();
@@ -98,7 +93,7 @@ function index(req, res, next) {
 
 	return fs.readFile("client/index.html", "utf-8", function(err, file) {
 		var data = _.merge(
-			package,
+			pkg,
 			config
 		);
 		var template = _.template(file);
@@ -109,9 +104,9 @@ function index(req, res, next) {
 	});
 }
 
-function init(socket, client, token) {
+function init(socket, client) {
 	if (!client) {
-		socket.emit("auth");
+		socket.emit("auth", {success: true});
 		socket.on("auth", auth);
 	} else {
 		socket.on(
@@ -160,16 +155,21 @@ function init(socket, client, token) {
 						});
 						return;
 					}
+
 					var salt = bcrypt.genSaltSync(8);
 					var hash = bcrypt.hashSync(p1, salt);
-					if (client.setPassword(hash)) {
-						socket.emit("change-password", {
-							success: "Successfully updated your password"
-						});
-						return;
-					}
-					socket.emit("change-password", {
-						error: "Failed to update your password"
+
+					client.setPassword(hash, function(success) {
+						var obj = {};
+
+						if (success) {
+							obj.success = "Successfully updated your password, all your other sessions were logged out";
+							obj.token = client.config.token;
+						} else {
+							obj.error = "Failed to update your password";
+						}
+
+						socket.emit("change-password", obj);
 					});
 				}
 			);
@@ -196,12 +196,12 @@ function init(socket, client, token) {
 		socket.emit("init", {
 			active: client.activeChannel,
 			networks: client.networks,
-			token: token || ""
+			token: client.config ? client.config.token : null
 		});
 	}
 }
 
-function reverseDnsLookup(socket, client, token) {
+function reverseDnsLookup(socket, client) {
 	client.ip = getClientIp(socket.request);
 
 	dns.reverse(client.ip, function(err, host) {
@@ -211,7 +211,7 @@ function reverseDnsLookup(socket, client, token) {
 			client.hostname = client.ip;
 		}
 
-		init(socket, client, token);
+		init(socket, client);
 	});
 }
 
@@ -233,7 +233,7 @@ function auth(data) {
 		var success = false;
 		_.each(manager.clients, function(client) {
 			if (data.token) {
-				if (data.token === client.token) {
+				if (data.token === client.config.token) {
 					success = true;
 				}
 			} else if (client.config.user === data.user) {
@@ -242,20 +242,16 @@ function auth(data) {
 				}
 			}
 			if (success) {
-				var token;
-				if (data.remember || data.token) {
-					token = client.token;
-				}
 				if (config.webirc !== null && !client.config["ip"]) {
-					reverseDnsLookup(socket, client, token);
+					reverseDnsLookup(socket, client);
 				} else {
-					init(socket, client, token);
+					init(socket, client);
 				}
 				return false;
 			}
 		});
 		if (!success) {
-			socket.emit("auth");
+			socket.emit("auth", {success: success});
 		}
 	}
 }

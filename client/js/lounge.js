@@ -1,4 +1,6 @@
 $(function() {
+	$("#loading-page-message").text("Connecting…");
+
 	var path = window.location.pathname + "socket.io/";
 	var socket = io({path: path});
 	var commands = [
@@ -31,10 +33,6 @@ $(function() {
 
 	var sidebar = $("#sidebar, #footer");
 	var chat = $("#chat");
-
-	if (navigator.standalone) {
-		$("html").addClass("web-app-mode");
-	}
 
 	var pop;
 	try {
@@ -74,28 +72,26 @@ $(function() {
 		});
 	});
 
-	socket.on("auth", function(/* data */) {
-		var body = $("body");
+	socket.on("auth", function(data) {
 		var login = $("#sign-in");
-		if (!login.length) {
-			refresh();
-			return;
-		}
+
 		login.find(".btn").prop("disabled", false);
-		var token = window.localStorage.getItem("token");
-		if (token) {
+
+		if (!data.success) {
 			window.localStorage.removeItem("token");
-			socket.emit("auth", {token: token});
-		}
-		if (body.hasClass("signed-out")) {
+
 			var error = login.find(".error");
 			error.show().closest("form").one("submit", function() {
 				error.hide();
 			});
+		} else {
+			var token = window.localStorage.getItem("token");
+			if (token) {
+				$("#loading-page-message").text("Authorizing…");
+				socket.emit("auth", {token: token});
+			}
 		}
-		if (!token) {
-			body.addClass("signed-out");
-		}
+
 		var input = login.find("input[name='user']");
 		if (input.val() === "") {
 			input.val(window.localStorage.getItem("user") || "");
@@ -129,6 +125,11 @@ $(function() {
 				feedback.hide();
 			});
 		}
+
+		if (data.token && window.localStorage.getItem("token") !== null) {
+			window.localStorage.setItem("token", data.token);
+		}
+
 		passwordForm
 			.find("input")
 			.val("")
@@ -163,12 +164,15 @@ $(function() {
 			}
 		}
 
-		if (data.token) {
+		if (data.token && $("#sign-in-remember").is(":checked")) {
 			window.localStorage.setItem("token", data.token);
+		} else {
+			window.localStorage.removeItem("token");
 		}
 
 		$("body").removeClass("signed-out");
-		$("#sign-in").detach();
+		$("#loading").remove();
+		$("#sign-in").remove();
 
 		var id = data.active;
 		var target = sidebar.find("[data-id='" + id + "']").trigger("click");
@@ -637,7 +641,7 @@ $(function() {
 		}
 	});
 
-	chat.on("click", ".messages", function() {
+	chat.on("click", ".chat", function() {
 		setTimeout(function() {
 			var text = "";
 			if (window.getSelection) {
@@ -767,7 +771,7 @@ $(function() {
 	chat.on("input", ".search", function() {
 		var value = $(this).val().toLowerCase();
 		var names = $(this).closest(".users").find(".names");
-		names.find("button").each(function() {
+		names.find(".user").each(function() {
 			var btn = $(this);
 			var name = btn.text().toLowerCase().replace(/[+%@~]/, "");
 			if (name.indexOf(value) === 0) {

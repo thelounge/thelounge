@@ -109,21 +109,20 @@ h2 {
 	margin: 0;
 }
 
+h1.title {
+	margin-bottom: 10px;
+}
+
 input {
 	outline: 0;
 }
 
-button,
-.user {
+button {
 	border: none;
 	background: none;
 	margin: 0;
 	outline: none;
 	padding: 0;
-}
-
-.web-app-mode {
-	padding-top: 20px;
 }
 
 .btn {
@@ -452,10 +451,6 @@ button,
 	width: 210px;
 }
 
-#footer button {
-	border: 0;
-}
-
 #footer button.active {
 	color: #fff;
 }
@@ -511,6 +506,10 @@ button,
 	position: absolute;
 	right: 5px;
 	top: 4px;
+}
+
+.signed-out #main {
+	left: 5px;
 }
 
 #header {
@@ -632,11 +631,6 @@ button,
 	line-height: 1.4;
 }
 
-#chat button:hover,
-.user:hover {
-	opacity: .6;
-}
-
 #chat .chat,
 #chat .sidebar {
 	top: 58px;
@@ -746,6 +740,7 @@ button,
 	min-width: 134px;
 }
 
+#loading a,
 #chat a {
 	color: #50a656;
 }
@@ -753,7 +748,12 @@ button,
 /* Nicknames */
 
 #chat .user {
+	cursor: pointer;
 	color: #50a656;
+}
+
+#chat .user:hover {
+	opacity: .6;
 }
 
 #chat.colored-nicks .user.color-1 { color: #1396cf; }
@@ -1009,7 +1009,7 @@ button,
 	width: 100%;
 }
 
-#chat .names button {
+#chat .names .user {
 	display: block;
 	line-height: 1.6;
 	padding: 0 16px;
@@ -1052,13 +1052,22 @@ button,
 	content: "Users";
 }
 
-#sign-in label {
-	display: block;
+#loading {
+	font-size: 14px;
+	z-index: 1;
+}
+
+#loading p {
 	margin-top: 10px;
 }
 
-#sign-in .title {
-	margin-bottom: 10px;
+#loading-slow {
+	display: none;
+}
+
+#sign-in label {
+	display: block;
+	margin-top: 10px;
 }
 
 #sign-in .remember {
@@ -1081,17 +1090,9 @@ button,
 	margin-top: 1em;
 }
 
-#sign-in .container {
-	margin-top: 120px;
-}
-
 #connect label {
 	display: block;
 	margin-top: 11px;
-}
-
-#connect .title {
-	margin-bottom: 10px;
 }
 
 #connect .port:before {
@@ -1114,10 +1115,6 @@ button,
 #connect .btn {
 	float: left;
 	margin-top: 30px;
-}
-
-#settings .title {
-	margin-bottom: -10px;
 }
 
 #settings .opt {

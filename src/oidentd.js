@@ -1,7 +1,7 @@
 var fs = require("fs");
 var Helper = require("./helper");
 
-function oidentdFile(file) {
+function OidentdFile(file) {
 	this.file = Helper.expandHome(file);
 	this.connectionId = 0;
 	this.connections = {};
@@ -9,7 +9,7 @@ function oidentdFile(file) {
 	this.refresh();
 }
 
-oidentdFile.prototype = {
+OidentdFile.prototype = {
 	hookSocket: function(socket, user) {
 		var that = this;
 		var id = null;
@@ -70,4 +70,4 @@ oidentdFile.prototype = {
 	},
 };
 
-module.exports = oidentdFile;
+module.exports = OidentdFile;
