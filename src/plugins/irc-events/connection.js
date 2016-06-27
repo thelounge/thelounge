@@ -35,7 +35,7 @@ module.exports = function(irc, network) {
 			setTimeout(function() {
 				network.irc.join(chan.name);
 			}, delay);
-			delay += 100;
+			delay += 1000;
 		});
 	});
 
