@@ -30,6 +30,54 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
+## v2.0.0-pre.4 - 2016-06-29 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.0.0-pre.3...v2.0.0-pre.4)
+
+This pre-release adds a loading window, helpful on slow connections.
+It also implements token persistency, ensuring users do not have to authenticate at every server restart. As a side effect, security is improved by forcing logging out users on all devices when changing their password.
+
+All generated URLs are now HTTP by default, except when explicitly set to HTTPS. For example, `www.example.com` will link to `http://www.example.com`. One needs to share `https://www.example.com` to point others to a HTTPS location.
+
+As a few users have been having issues when running The Lounge with a non-supported Node.js version, we now detect it early to avoid cryptic errors.
+
+This pre-release also adds minor UI improvements, and fixes from the previous version.
+While The Lounge still needs a lot of efforts to be fully accessible, this version slightly improves accessibility on clickable nickname.
+
+Internally, we now keep track of our code coverage, which we do not enforce strictly at the moment.
+
+### Added
+
+- Add code coverage ([#408](https://github.com/thelounge/lounge/pull/408) by [@astorije](https://github.com/astorije))
+- Display a loading message instead of blank page ([#386](https://github.com/thelounge/lounge/pull/386) by [@xPaw](https://github.com/xPaw))
+
+### Changed
+
+- Perform node version check as soon as possible ([#409](https://github.com/thelounge/lounge/pull/409) by [@xPaw](https://github.com/xPaw))
+- Prepend http protocol to www. links in chat ([#410](https://github.com/thelounge/lounge/pull/410) by [@xPaw](https://github.com/xPaw))
+- Use tabs when saving user configs ([#418](https://github.com/thelounge/lounge/pull/418) by [@xPaw](https://github.com/xPaw))
+- Do not display the sidebar on sign-in page ([#420](https://github.com/thelounge/lounge/pull/420) by [@astorije](https://github.com/astorije))
+- Make style of loading page similar to other pages ([#423](https://github.com/thelounge/lounge/pull/423) by [@astorije](https://github.com/astorije))
+- Change default configuration for `host` to allow OS to decide and use both IPv4 and IPv6 ([#432](https://github.com/thelounge/lounge/pull/432) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Change nicks from links to spans everywhere ([#428](https://github.com/thelounge/lounge/pull/428) by [@xPaw](https://github.com/xPaw))
+- Increase join delay at connection to 1000ms ([#434](https://github.com/thelounge/lounge/pull/434) by [@williamboman](https://github.com/williamboman))
+
+### Removed
+
+- Remove navigator.standalone detection ([#427](https://github.com/thelounge/lounge/pull/427) by [@xPaw](https://github.com/xPaw))
+
+### Fixed
+
+- Do not lose authentication token when the connection gets lost ([#369](https://github.com/thelounge/lounge/pull/369) by [@xPaw](https://github.com/xPaw))
+- Fix crash in public mode ([#413](https://github.com/thelounge/lounge/pull/413) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Do not print user loaded message in public mode ([#415](https://github.com/thelounge/lounge/pull/415) by [@xPaw](https://github.com/xPaw))
+- Fix focusing input when clicking chat container on the client ([#364](https://github.com/thelounge/lounge/pull/364) by [@williamboman](https://github.com/williamboman))
+- Fix channel join regression and fix possibly joining parted channels ([#411](https://github.com/thelounge/lounge/pull/411) by [@xPaw](https://github.com/xPaw))
+
+### Security
+
+- Implement user token persistency ([#370](https://github.com/thelounge/lounge/pull/370) by [@xPaw](https://github.com/xPaw))
+
 ## v2.0.0-pre.3 - 2016-06-15 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v2.0.0-pre.2...v2.0.0-pre.3)
