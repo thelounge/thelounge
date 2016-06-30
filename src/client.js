@@ -69,8 +69,8 @@ function Client(manager, name, config) {
 
 	if (config) {
 		if (!config.token) {
-			client.updateToken(function() {
-				client.manager.updateUser(client.name, {token: config.token});
+			client.updateToken(function(token) {
+				client.manager.updateUser(client.name, {token: token});
 			});
 		}
 
@@ -245,17 +245,16 @@ Client.prototype.updateToken = function(callback) {
 	var client = this;
 
 	crypto.randomBytes(48, function(err, buf) {
-		client.config.token = buf.toString("hex");
-		callback();
+		callback(client.config.token = buf.toString("hex"));
 	});
 };
 
 Client.prototype.setPassword = function(hash, callback) {
 	var client = this;
 
-	client.updateToken(function() {
+	client.updateToken(function(token) {
 		client.manager.updateUser(client.name, {
-			token: client.config.token,
+			token: token,
 			password: hash
 		});
 
