@@ -55,6 +55,9 @@ var inputs = [
 }, {});
 
 function Client(manager, name, config) {
+	if (typeof config !== "object") {
+		config = {};
+	}
 	_.merge(this, {
 		activeChannel: -1,
 		config: config,
@@ -67,22 +70,22 @@ function Client(manager, name, config) {
 
 	var client = this;
 
-	if (config) {
-		if (!config.token) {
-			client.updateToken(function(token) {
-				client.manager.updateUser(client.name, {token: token});
-			});
-		}
-
-		var delay = 0;
-		(config.networks || []).forEach(function(n) {
-			setTimeout(function() {
-				client.connect(n);
-			}, delay);
-			delay += 1000;
+	if (client.name && !client.config.token) {
+		client.updateToken(function(token) {
+			client.manager.updateUser(client.name, {token: token});
 		});
+	}
 
-		log.info("User '" + name + "' loaded");
+	var delay = 0;
+	(client.config.networks || []).forEach(function(n) {
+		setTimeout(function() {
+			client.connect(n);
+		}, delay);
+		delay += 1000;
+	});
+
+	if (client.name) {
+		log.info("User '" + client.name + "' loaded");
 	}
 }
 
@@ -90,8 +93,7 @@ Client.prototype.emit = function(event, data) {
 	if (this.sockets !== null) {
 		this.sockets.in(this.id).emit(event, data);
 	}
-	var config = this.config || {};
-	if (config.log === true) {
+	if (this.config.log === true) {
 		if (event === "msg") {
 			var target = this.find(data.chan);
 			if (target) {
