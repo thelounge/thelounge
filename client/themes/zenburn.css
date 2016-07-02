@@ -213,15 +213,18 @@ body {
 }
 
 #chat .error,
-#chat .error .from,
-#chat .channel .highlight,
-#chat .channel .highlight .from,
-#chat .channel .highlight .text {
+#chat .error .from {
 	color: #bc6c4c;
 }
 
 #chat .unhandled .from {
 	color: #aaa;
+}
+
+#chat .channel .highlight .time,
+#chat .channel .highlight .from {
+	background-color: #709080;
+	border-color: #709080;
 }
 
 #chat .msg.quit .time,
