@@ -140,26 +140,7 @@ $(function() {
 		if (data.networks.length === 0) {
 			$("#footer").find(".connect").trigger("click");
 		} else {
-			sidebar.find(".empty").hide();
-			sidebar.find(".networks").html(
-				render("network", {
-					networks: data.networks
-				})
-			);
-			var channels = $.map(data.networks, function(n) {
-				return n.channels;
-			});
-			chat.html(
-				render("chat", {
-					channels: channels
-				})
-			);
-			channels.forEach(renderChannel);
-			confirmExit();
-
-			if (sidebar.find(".highlight").length) {
-				toggleNotificationMarkers(true);
-			}
+			renderNetworks(data);
 		}
 
 		if (data.token && $("#sign-in-remember").is(":checked")) {
@@ -182,8 +163,6 @@ $(function() {
 				$("#footer").find(".connect").trigger("click");
 			}
 		}
-
-		sortable();
 	});
 
 	socket.on("join", function(data) {
@@ -325,6 +304,32 @@ $(function() {
 		users.html(render("user", data)).data("nicks", nicks);
 	}
 
+	function renderNetworks(data) {
+		sidebar.find(".empty").hide();
+		sidebar.find(".networks").append(
+			render("network", {
+				networks: data.networks
+			})
+		);
+
+		var channels = $.map(data.networks, function(n) {
+			return n.channels;
+		});
+		chat.append(
+			render("chat", {
+				channels: channels
+			})
+		);
+		channels.forEach(renderChannel);
+
+		confirmExit();
+		sortable();
+
+		if (sidebar.find(".highlight").length) {
+			toggleNotificationMarkers(true);
+		}
+	}
+
 	socket.on("msg", function(data) {
 		var msg = buildChatMessage(data);
 		var target = "#chan-" + data.chan;
@@ -357,26 +362,16 @@ $(function() {
 	});
 
 	socket.on("network", function(data) {
-		sidebar.find(".empty").hide();
-		sidebar.find(".networks").append(
-			render("network", {
-				networks: [data.network]
-			})
-		);
-		chat.append(
-			render("chat", {
-				channels: data.network.channels
-			})
-		);
+		renderNetworks(data);
+
 		sidebar.find(".chan")
 			.last()
 			.trigger("click");
+
 		$("#connect")
 			.find(".btn")
 			.prop("disabled", false)
 			.end();
-		confirmExit();
-		sortable();
 	});
 
 	socket.on("network_changed", function(data) {

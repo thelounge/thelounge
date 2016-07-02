@@ -189,7 +189,7 @@ Client.prototype.connect = function(args) {
 
 	client.networks.push(network);
 	client.emit("network", {
-		network: network
+		networks: [network]
 	});
 
 	if (config.lockNetwork) {
