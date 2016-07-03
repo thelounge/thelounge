@@ -222,7 +222,7 @@ $(function() {
 		var chan = chat.find(target);
 		var msg;
 
-		if (highlights.some(function(h) {
+		if (!data.msg.highlight && !data.msg.self && (type === "message" || type === "notice") && highlights.some(function(h) {
 			return data.msg.text.indexOf(h) > -1;
 		})) {
 			data.msg.highlight = true;
