@@ -539,7 +539,8 @@ $(function() {
 		viewport.toggleClass(self.attr("class"));
 		if (viewport.is(".lt, .rt")) {
 			e.stopPropagation();
-			chat.find(".chat").one("click", function() {
+			chat.find(".chat").one("click", function(e) {
+				e.stopPropagation();
 				viewport.removeClass("lt");
 			});
 		}
