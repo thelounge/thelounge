@@ -141,13 +141,34 @@ Client.prototype.connect = function(args) {
 	var webirc = null;
 	var channels = [];
 
-	if (args.join) {
-		var join = args.join.replace(/\,/g, " ").split(/\s+/g);
-		join.forEach(function(chan) {
+	if (args.channels) {
+		var badName = false;
+
+		args.channels.forEach(function(chan) {
+			if (!chan.name) {
+				badName = true;
+				return;
+			}
+
 			channels.push(new Chan({
-				name: chan
+				name: chan.name
 			}));
 		});
+
+		if (badName && client.name) {
+			log.warn("User '" + client.name + "' on network '" + args.name + "' has an invalid channel which has been ignored");
+		}
+	// `join` is kept for backwards compatibility when updating from versions <2.0
+	// also used by the "connect" window
+	} else if (args.join) {
+		channels = args.join
+			.replace(/\,/g, " ")
+			.split(/\s+/g)
+			.map(function(chan) {
+				return new Chan({
+					name: chan
+				});
+			});
 	}
 
 	var network = new Network({
