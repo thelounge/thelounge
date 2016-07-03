@@ -12,6 +12,7 @@ module.exports = function(irc, network) {
 			});
 			network.channels.push(chan);
 			client.emit("join", {
+				shouldOpen: true,
 				network: network.id,
 				chan: chan
 			});
