@@ -70,7 +70,7 @@ module.exports = function(irc, network) {
 	}
 
 	irc.on("debug", function(message) {
-		log.debug("[" + client.name + " on " + network.host + ":" + network.port + "]", message);
+		log.debug("[" + client.name + " (#" + client.id + ") on " + network.name + " (#" + network.id + ")]", message);
 	});
 
 	irc.on("socket error", function(err) {
