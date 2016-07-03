@@ -1,6 +1,7 @@
 var _ = require("lodash");
 var identd = require("../../identd");
 var Msg = require("../../models/msg");
+var Chan = require("../../models/chan");
 
 module.exports = function(irc, network) {
 	var client = this;
@@ -32,6 +33,10 @@ module.exports = function(irc, network) {
 		}
 
 		network.channels.forEach(function(chan) {
+			if (chan.type !== Chan.Type.CHANNEL) {
+				return;
+			}
+
 			setTimeout(function() {
 				network.irc.join(chan.name);
 			}, delay);

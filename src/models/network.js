@@ -74,7 +74,7 @@ Network.prototype.export = function() {
 	]);
 
 	network.join = _.map(
-		_.filter(this.channels, {type: "channel"}),
+		_.filter(this.channels, {type: Chan.Type.CHANNEL}),
 		"name"
 	).join(",");
 
