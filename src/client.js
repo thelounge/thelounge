@@ -236,10 +236,20 @@ Client.prototype.connect = function(args) {
 	}
 
 	network.irc = new ircFramework.Client();
+
 	network.irc.requestCap([
 		"echo-message",
 		"znc.in/self-message",
 	]);
+
+	events.forEach(function(plugin) {
+		var path = "./plugins/irc-events/" + plugin;
+		require(path).apply(client, [
+			network.irc,
+			network
+		]);
+	});
+
 	network.irc.connect({
 		version: package.name + " " + package.version + " -- " + package.homepage,
 		host: network.host,
@@ -255,14 +265,6 @@ Client.prototype.connect = function(args) {
 		auto_reconnect_wait: 10000 + Math.floor(Math.random() * 1000), // If multiple users are connected to the same network, randomize their reconnections a little
 		auto_reconnect_max_retries: 360, // At least one hour (plus timeouts) worth of reconnections
 		webirc: webirc,
-	});
-
-	events.forEach(function(plugin) {
-		var path = "./plugins/irc-events/" + plugin;
-		require(path).apply(client, [
-			network.irc,
-			network
-		]);
 	});
 };
 
