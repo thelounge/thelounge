@@ -1,6 +1,7 @@
 var _ = require("lodash");
 var path = require("path");
 var os = require("os");
+var fs = require("fs");
 
 var Helper = {
 	config: null,
@@ -25,8 +26,10 @@ function setHome(homePath) {
 	this.USERS_PATH = path.join(this.HOME, "users");
 
 	// Reload config from new home location
-	var userConfig = require(this.CONFIG_PATH);
-	this.config = _.extend(this.config, userConfig);
+	if (fs.existsSync(this.CONFIG_PATH)) {
+		var userConfig = require(this.CONFIG_PATH);
+		this.config = _.extend(this.config, userConfig);
+	}
 }
 
 function getUserConfigPath(name) {
