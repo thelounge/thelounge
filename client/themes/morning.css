@@ -175,6 +175,14 @@ body {
 	color: #99a2b4;
 }
 
+#chat .unread-marker {
+	opacity: 1;
+}
+
+#chat .unread-marker-text:before {
+	background-color: #333c4a;
+}
+
 /* Setup text colors */
 #chat .msg {
 	color: #f3f3f3;
