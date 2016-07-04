@@ -12,9 +12,8 @@ module.exports.write = function(user, network, chan, msg) {
 		return;
 	}
 
-	var config = Helper.getConfig();
-	var format = (config.logs || {}).format || "YYYY-MM-DD HH:mm:ss";
-	var tz = (config.logs || {}).timezone || "UTC+00:00";
+	var format = Helper.config.logs.format || "YYYY-MM-DD HH:mm:ss";
+	var tz = Helper.config.logs.timezone || "UTC+00:00";
 
 	var time = moment().utcOffset(tz).format(format);
 	var line = "[" + time + "] ";

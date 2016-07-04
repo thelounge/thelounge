@@ -10,7 +10,6 @@ Chan.Type = {
 };
 
 var id = 0;
-var config = Helper.getConfig();
 
 function Chan(attr) {
 	_.merge(this, _.extend({
@@ -33,14 +32,14 @@ Chan.prototype.pushMessage = function(client, msg) {
 
 	// Never store messages in public mode as the session
 	// is completely destroyed when the page gets closed
-	if (config.public) {
+	if (Helper.config.public) {
 		return;
 	}
 
 	this.messages.push(msg);
 
-	if (config.maxHistory >= 0 && this.messages.length > config.maxHistory) {
-		this.messages.splice(0, this.messages.length - config.maxHistory);
+	if (Helper.config.maxHistory >= 0 && this.messages.length > Helper.config.maxHistory) {
+		this.messages.splice(0, this.messages.length - Helper.config.maxHistory);
 	}
 };
 
