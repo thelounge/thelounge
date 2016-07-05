@@ -172,7 +172,7 @@ body {
 	border-color: #101010;
 }
 
-#form #input {
+#form .input {
 	background-color: #434443;
 	border-color: #101010;
 	color: #dcdccc;
