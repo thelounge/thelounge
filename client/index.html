@@ -55,7 +55,16 @@
 						</div>
 					</div>
 				</div>
-				<div id="chat"></div>
+				<div id="chat-container" class="window">
+					<div id="chat"></div>
+					<form id="form" method="post" action="">
+						<div class="input">
+							<label for="input" id="nick"></label>
+							<textarea id="input" class="mousetrap"></textarea>
+							<button id="submit" type="submit" title="Send" aria-label="Send message"></button>
+						</div>
+					</form>
+				</div>
 				<div id="sign-in" class="window">
 					<form class="container" method="post" action="">
 						<div class="row">
@@ -323,13 +332,6 @@
 					</div>
 				</div>
 			</div>
-			<form id="form" method="post" action="">
-				<div class="input">
-					<label for="input" id="nick"></label>
-					<textarea id="input" class="mousetrap"></textarea>
-					<button id="submit" type="submit" title="Send" aria-label="Send message"></button>
-				</div>
-			</form>
 		</div>
 	</div>
 	</div>

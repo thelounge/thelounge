@@ -745,7 +745,6 @@ $(function() {
 		}
 	}
 
-	var top = 1;
 	sidebar.on("click", ".chan, button", function() {
 		var self = $(this);
 		var target = self.data("target");
@@ -774,7 +773,7 @@ $(function() {
 		}
 
 		viewport.removeClass("lt");
-		var lastActive = $("#windows .active");
+		var lastActive = $("#windows .chan.active");
 
 		lastActive
 			.removeClass("active")
@@ -785,10 +784,11 @@ $(function() {
 			.find(".unread-marker")
 			.appendTo(lastActive.find(".messages"));
 
+		$("#chat-container").addClass("active");
+
 		var chan = $(target)
 			.addClass("active")
-			.trigger("show")
-			.css("z-index", top++);
+			.trigger("show");
 
 		var chanChat = chan.find(".chat");
 		if (chanChat.length > 0) {

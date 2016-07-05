@@ -520,12 +520,6 @@ button {
 	width: 100%;
 }
 
-#windows {
-	position: relative;
-	overflow: hidden;
-	flex: 1;
-}
-
 #windows label {
 	font-size: 14px;
 }
@@ -553,8 +547,7 @@ button {
 	border-color: #79838c;
 }
 
-#windows .window:before,
-#windows .chan:before {
+#windows .window:before {
 	background: #f4f4f4;
 	background-image: linear-gradient(#f4f4f4, #ececec);
 	border-bottom: 1px solid #d7d7d7;
@@ -565,7 +558,6 @@ button {
 	z-index: 10;
 }
 
-#windows .chan,
 #windows .window {
 	background: #fff;
 	bottom: 0;
@@ -574,10 +566,6 @@ button {
 	position: absolute;
 	right: 0;
 	top: 0;
-}
-
-#windows .window {
-	bottom: -44px !important;
 	overflow-y: auto;
 	-webkit-overflow-scrolling: touch;
 }
@@ -620,12 +608,32 @@ button {
 	display: none;
 }
 
-#chat {
+#chat-container,
+#chat .chan {
+	position: absolute;
+	top: 0;
+	right: 0;
 	bottom: 0;
 	left: 0;
-	position: absolute;
-	right: 0;
-	top: 0;
+}
+
+#windows #chat-container.active {
+	display: flex;
+	flex-direction: column;
+}
+
+#chat {
+	position: relative;
+	overflow: hidden;
+	flex: 1;
+}
+
+#chat .chan {
+	display: none;
+}
+
+#chat .chan.active {
+	display: block;
 }
 
 #chat,
@@ -634,9 +642,13 @@ button {
 	line-height: 1.4;
 }
 
+#windows #chat .header {
+	display: block;
+}
+
 #chat .chat,
 #chat .sidebar {
-	top: 58px;
+	top: 48px;
 }
 
 #chat .chat {
@@ -1202,15 +1214,16 @@ button {
 #form {
 	background: #eee;
 	border-top: 1px solid #ddd;
-	min-height: 48px;
 	flex: 0 0 auto;
-	padding: 7px;
+	padding: 5px;
 }
 
-#form .input {
+#windows #form .input {
 	font: 12px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
 	border: 1px solid #ddd;
 	border-radius: 2px;
+	margin: 0;
+	padding: 0;
 	background: white;
 	display: flex;
 	align-items: flex-end;
@@ -1222,7 +1235,6 @@ button {
 	font: inherit;
 	font-size: 11px;
 	margin: 5px;
-	margin-right: 10px;
 	line-height: 26px;
 	height: 24px;
 	padding: 0 9px;
