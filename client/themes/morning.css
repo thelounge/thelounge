@@ -146,8 +146,8 @@ body {
 }
 
 #form .input {
-	background-color: #2e3642;
-	border-color: #242a33;
+	background-color: #2e3642 !important;
+	border-color: #242a33 !important;
 	color: #ccc;
 }
 
