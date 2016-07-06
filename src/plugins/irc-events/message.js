@@ -72,10 +72,6 @@ module.exports = function(irc, network) {
 
 		if (!self && chan.id !== client.activeChannel) {
 			chan.unread++;
-
-			if (highlight) {
-				chan.highlight = true;
-			}
 		}
 
 		var msg = new Msg({

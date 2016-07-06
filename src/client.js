@@ -362,6 +362,7 @@ Client.prototype.more = function(data) {
 Client.prototype.open = function(data) {
 	var target = this.find(data);
 	if (target) {
+		target.chan.firstUnread = 0;
 		target.chan.unread = 0;
 		target.chan.highlight = false;
 		this.activeChannel = target.chan.id;

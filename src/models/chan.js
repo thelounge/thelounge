@@ -18,6 +18,7 @@ function Chan(attr) {
 		name: "",
 		topic: "",
 		type: Chan.Type.CHANNEL,
+		firstUnread: 0,
 		unread: 0,
 		highlight: false,
 		users: []
@@ -40,6 +41,16 @@ Chan.prototype.pushMessage = function(client, msg) {
 
 	if (Helper.config.maxHistory >= 0 && this.messages.length > Helper.config.maxHistory) {
 		this.messages.splice(0, this.messages.length - Helper.config.maxHistory);
+	}
+
+	if (!msg.self && this.id !== client.activeChannel) {
+		if (!this.firstUnread) {
+			this.firstUnread = msg.id;
+		}
+
+		if (msg.highlight) {
+			this.highlight = true;
+		}
 	}
 };
 

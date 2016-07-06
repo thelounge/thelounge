@@ -117,6 +117,10 @@ a:hover,
 	font-weight: bold;
 }
 
+#chat .unread-marker-text:before {
+	font: bold 12px Inconsolata-g, monospace;
+}
+
 #form .input {
 	font: 12px Inconsolata-g, monospace;
 }

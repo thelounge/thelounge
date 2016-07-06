@@ -679,6 +679,7 @@ button {
 #chat .show-more {
 	display: none;
 	padding: 10px;
+	padding-bottom: 0;
 	width: 100%;
 }
 
@@ -700,15 +701,40 @@ button {
 }
 
 #chat .messages {
-	display: table;
-	table-layout: fixed;
 	width: 100%;
 	padding: 10px 0;
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+	word-break: break-word;
 }
 
-#chat .msg {
-	display: table-row;
-	word-wrap: break-word;
+#chat .unread-marker {
+	position: relative;
+	text-align: center;
+	opacity: .5;
+	margin: 0 10px;
+}
+
+#chat .unread-marker:before {
+	position: absolute;
+	z-index: -1;
+	content: "";
+	left: 0;
+	right: 0;
+	top: 50%;
+	border-top: 1px solid #e74c3c;
+}
+
+#chat .unread-marker-text:before {
+	content: "New messages";
+	background-color: white;
+	color: #e74c3c;
+	padding: 0 10px;
+	font: bold 12px Lato;
+}
+
+#chat .unread-marker:last-child {
+	display: none;
 }
 
 .inline-channel {
@@ -739,7 +765,7 @@ button {
 	color: #b1c3ce;
 	padding-right: 10px;
 	text-align: right;
-	width: 134px;
+	max-width: 134px;
 	min-width: 134px;
 }
 
@@ -1629,16 +1655,16 @@ button {
 		padding: 2px 0;
 	}
 
-	#chat .msg:last-child {
-		height: auto;
-	}
-
 	#chat .time,
 	#chat .from,
 	#chat .text {
 		border: 0;
 		display: inline;
 		padding: 0;
+	}
+
+	#chat .unread-marker {
+		margin: 0;
 	}
 }
 
