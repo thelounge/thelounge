@@ -773,7 +773,7 @@ $(function() {
 		}
 
 		viewport.removeClass("lt");
-		var lastActive = $("#windows .chan.active");
+		var lastActive = $("#windows > .active");
 
 		lastActive
 			.removeClass("active")
@@ -781,10 +781,8 @@ $(function() {
 			.unsticky();
 
 		lastActive
-			.find(".unread-marker")
-			.appendTo(lastActive.find(".messages"));
-
-		$("#chat-container").addClass("active");
+			.find(".chan.active")
+			.removeClass("active");
 
 		var chan = $(target)
 			.addClass("active")
@@ -802,6 +800,7 @@ $(function() {
 		document.title = title;
 
 		if (self.hasClass("chan")) {
+			$("#chat-container").addClass("active");
 			setNick(self.closest(".network").data("nick"));
 		}
 
