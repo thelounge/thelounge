@@ -1227,6 +1227,7 @@ button {
 	background: white;
 	display: flex;
 	align-items: flex-end;
+	min-height: 37px;
 }
 
 #form #nick {

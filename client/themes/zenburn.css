@@ -173,9 +173,9 @@ body {
 }
 
 #form .input {
-	background-color: #434443;
-	border-color: #101010;
-	color: #dcdccc;
+	background-color: #434443 !important;
+	border-color: #101010 !important;
+	color: #dcdccc !important;
 }
 
 #form #nick {
