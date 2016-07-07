@@ -32,6 +32,7 @@ module.exports = function(irc, network) {
 		}
 
 		var msg = new Msg({
+			self: data.nick === irc.user.nick,
 			type: Msg.Type.TOGGLE,
 		});
 		chan.pushMessage(client, msg);
