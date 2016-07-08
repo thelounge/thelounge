@@ -15,7 +15,7 @@
 
 	<link rel="stylesheet" href="css/bootstrap.css">
 	<link rel="stylesheet" href="css/style.css">
-	<link id="theme" rel="stylesheet" href="<%= theme %>">
+	<link id="theme" rel="stylesheet" href="<%= typeof(theme) !== "undefined" ? theme : "themes/example.css" %>">
 	<style id="user-specified-css"></style>
 
 	<link rel="shortcut icon" href="img/favicon.png" data-other="img/favicon-notification.png" data-toggled="false" id="favicon">
