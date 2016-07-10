@@ -158,7 +158,7 @@ $(function() {
 			confirmExit();
 
 			if (sidebar.find(".highlight").length) {
-				toggleFaviconNotification(true);
+				toggleNotificationMarkers(true);
 			}
 		}
 
@@ -769,7 +769,7 @@ $(function() {
 			.empty();
 
 		if (sidebar.find(".highlight").length === 0) {
-			toggleFaviconNotification(false);
+			toggleNotificationMarkers(false);
 		}
 
 		viewport.removeClass("lt");
@@ -879,7 +879,7 @@ $(function() {
 				if (options.notification) {
 					pop.play();
 				}
-				toggleFaviconNotification(true);
+				toggleNotificationMarkers(true);
 
 				if (options.desktopNotifications && Notification.permission === "granted") {
 					var title;
@@ -1188,20 +1188,24 @@ $(function() {
 		return array;
 	}
 
-	function toggleFaviconNotification(newState) {
+	function toggleNotificationMarkers(newState) {
+		// Toggles the favicon to red when there are unread notifications
 		if (favicon.data("toggled") !== newState) {
 			var old = favicon.attr("href");
 			favicon.attr("href", favicon.data("other"));
 			favicon.data("other", old);
 			favicon.data("toggled", newState);
 		}
+
+		// Toggles a dot on the menu icon when there are unread notifications
+		$("#viewport .lt").toggleClass("notified", newState);
 	}
 
 	document.addEventListener(
 		"visibilitychange",
 		function() {
 			if (sidebar.find(".highlight").length === 0) {
-				toggleFaviconNotification(false);
+				toggleNotificationMarkers(false);
 			}
 		}
 	);

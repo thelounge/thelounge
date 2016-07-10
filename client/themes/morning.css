@@ -175,6 +175,11 @@ body {
 	color: #99a2b4;
 }
 
+/* Notification dot on the top right corner of the menu icon */
+#viewport .lt:after {
+	border-color: #333c4a;
+}
+
 #chat .unread-marker {
 	opacity: 1;
 }

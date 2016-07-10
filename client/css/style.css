@@ -209,6 +209,29 @@ button {
 	-moz-osx-font-smoothing: grayscale;
 }
 
+#viewport .lt {
+	position: relative;
+}
+
+/* Notification dot on the top right corner of the menu icon */
+#viewport .lt:after {
+	content: "";
+	position: absolute;
+	top: 9px;
+	right: 7px;
+	background-color: #e74c3c;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	border: 2px solid white;
+	opacity: 0;
+	transition: opacity .2s;
+}
+
+#viewport .lt.notified:after {
+	opacity: 1;
+}
+
 #viewport .rt:before {
 	font: 14px FontAwesome;
 	content: "\f0c0";

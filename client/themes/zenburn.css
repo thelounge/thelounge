@@ -202,6 +202,11 @@ body {
 	color: #d2d39b;
 }
 
+/* Notification dot on the top right corner of the menu icon */
+#viewport .lt:after {
+	border-color: #3f3f3f;
+}
+
 #chat .unread-marker {
 	opacity: 1;
 }
