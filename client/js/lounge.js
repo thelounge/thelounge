@@ -788,11 +788,6 @@ $(function() {
 			.addClass("active")
 			.trigger("show");
 
-		var chanChat = chan.find(".chat");
-		if (chanChat.length > 0) {
-			chanChat.sticky();
-		}
-
 		var title = "The Lounge";
 		if (chan.data("title")) {
 			title = chan.data("title") + " — " + title;
@@ -802,6 +797,11 @@ $(function() {
 		if (self.hasClass("chan")) {
 			$("#chat-container").addClass("active");
 			setNick(self.closest(".network").data("nick"));
+		}
+
+		var chanChat = chan.find(".chat");
+		if (chanChat.length > 0) {
+			chanChat.sticky();
 		}
 
 		if (chan.data("needsNamesRefresh") === true) {
