@@ -725,6 +725,7 @@ button {
 	text-align: center;
 	opacity: .5;
 	margin: 0 10px;
+	z-index: 0;
 }
 
 #chat .unread-marker:before {
