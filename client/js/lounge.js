@@ -395,13 +395,13 @@ $(function() {
 	socket.on("part", function(data) {
 		var chanMenuItem = sidebar.find(".chan[data-id='" + data.chan + "']");
 
-		// When parting from the active channel/query, jump to the network's lobby
-		if (chanMenuItem.hasClass("active")) {
-			chanMenuItem.parent(".network").find(".lobby").click();
-		}
-
 		chanMenuItem.remove();
 		$("#chan-" + data.chan).remove();
+
+		if (chanMenuItem.hasClass("active")) {
+			var nextChanId = chat.children().last().data("id");
+			sidebar.find(".chan[data-id='" + nextChanId + "']").click();
+		}
 	});
 
 	socket.on("quit", function(data) {
@@ -781,6 +781,7 @@ $(function() {
 		document.title = title;
 
 		if (self.hasClass("chan")) {
+			chan.appendTo(chat);
 			$("#chat-container").addClass("active");
 			setNick(self.closest(".network").data("nick"));
 		}
