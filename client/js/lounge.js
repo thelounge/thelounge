@@ -393,29 +393,15 @@ $(function() {
 	});
 
 	socket.on("part", function(data) {
-		var id = data.chan;
-		sidebar.find(".chan[data-id='" + id + "']").remove();
-		$("#chan-" + id).remove();
+		var chanMenuItem = sidebar.find(".chan[data-id='" + data.chan + "']");
 
-		var next = null;
-		var highest = -1;
-		chat.find(".chan").each(function() {
-			var self = $(this);
-			var z = parseInt(self.css("z-index"));
-			if (z > highest) {
-				highest = z;
-				next = self;
-			}
-		});
-
-		if (next !== null) {
-			id = next.data("id");
-			sidebar.find("[data-id=" + id + "]").click();
-		} else {
-			sidebar.find(".chan")
-				.eq(0)
-				.click();
+		// When parting from the active channel/query, jump to the network's lobby
+		if (chanMenuItem.hasClass("active")) {
+			chanMenuItem.parent(".network").find(".lobby").click();
 		}
+
+		chanMenuItem.remove();
+		$("#chan-" + data.chan).remove();
 	});
 
 	socket.on("quit", function(data) {
