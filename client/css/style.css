@@ -713,11 +713,14 @@ button {
 }
 
 #chat .messages {
+	display: table;
+	table-layout: fixed;
 	width: 100%;
 	padding: 10px 0;
-	overflow-wrap: break-word;
+}
+
+#chat .msg {
 	word-wrap: break-word;
-	word-break: break-word;
 }
 
 #chat .unread-marker {
@@ -769,7 +772,7 @@ button {
 #chat .time {
 	color: #ddd;
 	text-align: right;
-	width: 46px;
+	max-width: 46px;
 	min-width: 46px;
 }
 
