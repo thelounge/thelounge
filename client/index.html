@@ -110,6 +110,7 @@
 								<h1 class="title">
 									<%= public ? "The Lounge - " : "" %>
 									Connect
+									<%= !displayNetwork && lockNetwork ? "to " + defaults.name : "" %>
 								</h1>
 							</div>
 							<div <%= typeof(displayNetwork) !== "undefined" && !displayNetwork ? 'style="display: none;"' : ''%>>
