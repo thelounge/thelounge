@@ -23,7 +23,7 @@
 	<link rel="manifest" href="manifest.json">
 
 	</head>
-	<body class="signed-out <%= public ? "public" : "" %>">
+	<body class="signed-out <%= public ? "public" : "private" %>">
 
 	<div id="wrap">
 	<div id="viewport">
@@ -42,6 +42,9 @@
 		<div id="main">
 			<div id="windows">
 				<div id="loading" class="window active">
+					<div class="header">
+						<span class="title">The Lounge</span>
+					</div>
 					<div class="container">
 						<div class="row">
 							<div class="col-xs-12">
@@ -66,6 +69,9 @@
 					</form>
 				</div>
 				<div id="sign-in" class="window">
+					<div class="header">
+						<span class="title">The Lounge</span>
+					</div>
 					<form class="container" method="post" action="">
 						<div class="row">
 							<div class="col-xs-12">
@@ -103,12 +109,11 @@
 				<div id="connect" class="window">
 					<div class="header">
 						<button class="lt" aria-label="Toggle channel list"></button>
+						<span id="connect-title-public" class="title">The Lounge</span>
+						<span id="connect-title" class="title">Connect to a network</span>
 					</div>
 					<form class="container" method="post" action="">
 						<div class="row">
-							<div class="col-sm-12">
-								<h1 class="title">Connect</h1>
-							</div>
 							<div <%= typeof(displayNetwork) !== "undefined" && !displayNetwork ? 'style="display: none;"' : ''%>>
 								<div class="col-sm-12">
 									<h2>Network settings</h2>
@@ -181,12 +186,10 @@
 				<div id="settings" class="window">
 					<div class="header">
 						<button class="lt" aria-label="Toggle channel list"></button>
+						<span class="title">Settings</span>
 					</div>
 					<div class="container">
 						<div class="row">
-							<div class="col-sm-12">
-								<h1 class="title">Settings</h1>
-							</div>
 							<div class="col-sm-12">
 								<h2>Messages</h2>
 							</div>
