@@ -69,7 +69,7 @@
 					<form class="container" method="post" action="">
 						<div class="row">
 							<div class="col-xs-12">
-								<h1 class="title">Sign in</h1>
+								<h1 class="title">Sign in to The Lounge</h1>
 							</div>
 							<div class="col-xs-12">
 								<label>
@@ -107,7 +107,10 @@
 					<form class="container" method="post" action="">
 						<div class="row">
 							<div class="col-sm-12">
-								<h1 class="title">Connect</h1>
+								<h1 class="title">
+									<%= public ? "The Lounge - " : "" %>
+									Connect
+								</h1>
 							</div>
 							<div <%= typeof(displayNetwork) !== "undefined" && !displayNetwork ? 'style="display: none;"' : ''%>>
 								<div class="col-sm-12">
