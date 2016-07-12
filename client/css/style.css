@@ -205,6 +205,97 @@ button {
 	-moz-osx-font-smoothing: grayscale;
 }
 
+#viewport .lt:before { content: "\f0c9"; /* http://fontawesome.io/icon/bars/ */ }
+#viewport .rt:before { content: "\f0c0"; /* http://fontawesome.io/icon/users/ */ }
+#chat button.menu:before { content: "\f142"; /* http://fontawesome.io/icon/ellipsis-v/ */ }
+
+.context-menu-user:before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
+.context-menu-chan:before { content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */ }
+.context-menu-close:before { content: "\f00d"; /* http://fontawesome.io/icon/times/ */ }
+
+#sidebar .chan.lobby:before,
+#chat .lobby .title:before { content: "\f0a0"; /* http://fontawesome.io/icon/hdd-o/ */ }
+
+#sidebar .chan.query:before,
+#chat .query .title:before { content: "\f0e6"; /* http://fontawesome.io/icon/comments-o/ */ }
+
+#sidebar .chan.channel:before,
+#chat .channel .title:before { content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */ }
+
+#footer .sign-in:before { content: "\f023"; /* http://fontawesome.io/icon/lock/ */ }
+#footer .connect:before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
+#footer .settings:before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
+#footer .sign-out:before { content: "\f011"; /* http://fontawesome.io/icon/power-off/ */ }
+
+#form #submit:before { content: "\f1d8"; /* http://fontawesome.io/icon/paper-plane/ */ }
+
+#chat .invite .from:before {
+	content: "\f003"; /* http://fontawesome.io/icon/envelope-o/ */
+	color: #2ecc40;
+}
+
+#chat .part .from:before,
+#chat .quit .from:before {
+	content: "\f08b"; /* http://fontawesome.io/icon/sign-out/ */
+	color: #ff4136;
+	display: inline-block;
+	transform: rotate(180deg);
+}
+
+#chat .topic .from:before {
+	content: "\f0a1"; /* http://fontawesome.io/icon/bullhorn/ */
+	color: #2ecc40;
+}
+
+#chat .mode .from:before {
+	content: "\f05a"; /* http://fontawesome.io/icon/info-circle/ */
+	color: #2ecc40;
+}
+
+#chat .ctcp .from:before {
+	content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */
+}
+
+#chat .whois .from:before {
+	content: "\f007"; /* http://fontawesome.io/icon/user/ */
+	color: #2ecc40;
+}
+
+#chat .nick .from:before {
+	content: "\f007"; /* http://fontawesome.io/icon/user/ */
+	color: #2ecc40;
+}
+
+#chat .join .from:before {
+	content: "\f090"; /* http://fontawesome.io/icon/sign-in/ */
+	color: #2ecc40;
+}
+
+#chat .kick .from:before {
+	content: "\f05e"; /* http://fontawesome.io/icon/ban/ */
+	color: #ff4136;
+}
+
+#chat .action .from:before {
+	content: "\f005"; /* http://fontawesome.io/icon/star/ */
+}
+
+#chat .count:before {
+	color: #cfcfcf;
+	content: "\f002"; /* http://fontawesome.io/icon/search/ */
+	position: absolute;
+	right: 18px;
+	font-size: 14px;
+	line-height: 50px;
+}
+
+#settings #play:before {
+	content: "\f028"; /* http://fontawesome.io/icon/volume-up/ */
+	margin-right: 9px;
+}
+
+/* End icons */
+
 #wrap {
 	height: 100%;
 	overflow: hidden;
@@ -232,10 +323,6 @@ button {
 	width: 36px;
 }
 
-#viewport .lt:before {
-	content: "\f0c9"; /* http://fontawesome.io/icon/bars/ */
-}
-
 #viewport .lt {
 	position: relative;
 }
@@ -257,14 +344,6 @@ button {
 
 #viewport .lt.notified:after {
 	opacity: 1;
-}
-
-#viewport .rt:before {
-	content: "\f0c0"; /* http://fontawesome.io/icon/users/ */
-}
-
-#chat button.menu:before {
-	content: "\f142"; /* http://fontawesome.io/icon/ellipsis-v/ */
 }
 
 #viewport .rt {
@@ -375,21 +454,6 @@ button {
 
 #chat .title:before {
 	margin-top: 17px;
-}
-
-#sidebar .chan.lobby:before,
-#chat .lobby .title:before {
-	content: "\f0a0"; /* http://fontawesome.io/icon/hdd-o/ */
-}
-
-#sidebar .chan.query:before,
-#chat .query .title:before {
-	content: "\f0e6"; /* http://fontawesome.io/icon/comments-o/ */
-}
-
-#sidebar .chan.channel:before,
-#chat .channel .title:before {
-	content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */
 }
 
 #sidebar .chan .name {
@@ -520,22 +584,6 @@ button {
 
 #footer .sign-in {
 	display: none;
-}
-
-#footer .sign-in:before {
-	content: "\f023"; /* http://fontawesome.io/icon/lock/ */
-}
-
-#footer .connect:before {
-	content: "\f067"; /* http://fontawesome.io/icon/plus/ */
-}
-
-#footer .settings:before {
-	content: "\f013"; /* http://fontawesome.io/icon/cog/ */
-}
-
-#footer .sign-out:before {
-	content: "\f011"; /* http://fontawesome.io/icon/power-off/ */
 }
 
 #main {
@@ -902,11 +950,6 @@ button {
 	display: none !important;
 }
 
-#chat .invite .from:before {
-	content: "\f003"; /* http://fontawesome.io/icon/envelope-o/ */
-	color: #2ecc40;
-}
-
 #chat .join .text,
 #chat .kick .text,
 #chat .mode .text,
@@ -918,56 +961,10 @@ button {
 	color: #999;
 }
 
-#chat .join .from:before {
-	content: "\f090"; /* http://fontawesome.io/icon/sign-in/ */
-	color: #2ecc40;
-}
-
-#chat .kick .from:before {
-	content: "\f05e"; /* http://fontawesome.io/icon/ban/ */
-	color: #ff4136;
-}
-
-#chat .part .from:before,
-#chat .quit .from:before {
-	content: "\f08b"; /* http://fontawesome.io/icon/sign-out/ */
-	color: #ff4136;
-	display: inline-block;
-	transform: rotate(180deg);
-}
-
-#chat .topic .from:before {
-	content: "\f0a1"; /* http://fontawesome.io/icon/bullhorn/ */
-	color: #2ecc40;
-}
-
-#chat .mode .from:before {
-	content: "\f05a"; /* http://fontawesome.io/icon/info-circle/ */
-	color: #2ecc40;
-}
-
-#chat .ctcp .from:before {
-	content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */
-}
-
-#chat .whois .from:before {
-	content: "\f007"; /* http://fontawesome.io/icon/user/ */
-	color: #2ecc40;
-}
-
-#chat .nick .from:before {
-	content: "\f007"; /* http://fontawesome.io/icon/user/ */
-	color: #2ecc40;
-}
-
 #chat .action .from,
 #chat .action .text,
 #chat .action .user {
 	color: #f39c12;
-}
-
-#chat .action .from:before {
-	content: "\f005"; /* http://fontawesome.io/icon/star/ */
 }
 
 #chat .notice .time,
@@ -1055,16 +1052,6 @@ button {
 	position: absolute;
 	right: 0;
 	top: 0;
-}
-
-#chat .count:before {
-	color: #cfcfcf;
-	content: "\f002"; /* http://fontawesome.io/icon/search/ */
-	position: absolute;
-	right: 18px;
-	font-size: 14px;
-	line-height: 50px;
-	z-index: 0;
 }
 
 #chat .search {
@@ -1221,11 +1208,6 @@ button {
 	opacity: .8;
 }
 
-#settings #play:before {
-	content: "\f028"; /* http://fontawesome.io/icon/volume-up/ */
-	margin-right: 9px;
-}
-
 #settings .about {
 	font-size: 14px;
 	padding-top: 2px;
@@ -1319,10 +1301,6 @@ button {
 	flex: 0 0 auto;
 }
 
-#form #submit:before {
-	content: "\f1d8"; /* http://fontawesome.io/icon/paper-plane/ */
-}
-
 #form #submit:hover {
 	opacity: .6;
 }
@@ -1373,18 +1351,6 @@ button {
 .context-menu-item:before {
 	width: 20px;
 	display: inline-block;
-}
-
-.context-menu-user:before {
-	content: "\f007"; /* http://fontawesome.io/icon/user/ */
-}
-
-.context-menu-chan:before {
-	content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */
-}
-
-.context-menu-close:before {
-	content: "\f00d"; /* http://fontawesome.io/icon/times/ */
 }
 
 /**
