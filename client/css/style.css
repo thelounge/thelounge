@@ -1064,7 +1064,6 @@ button {
 	right: 18px;
 	font-size: 14px;
 	line-height: 50px;
-	transition: color .2s;
 	z-index: 0;
 }
 
@@ -1215,6 +1214,7 @@ button {
 
 #settings #play {
 	font-size: 14px;
+	transition: opacity .2s;
 }
 
 #settings #play:hover {
@@ -1314,7 +1314,7 @@ button {
 	color: #9ca5b4;
 	font-size: 14px;
 	height: 34px;
-	transition: opacity .3s;
+	transition: opacity .2s;
 	width: 34px;
 	flex: 0 0 auto;
 }
