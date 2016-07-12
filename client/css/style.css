@@ -186,12 +186,7 @@ button {
 #footer .icon,
 #chat .count:before,
 #settings #play:before,
-#form #submit:before {
-	font: 14px FontAwesome;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
-
+#form #submit:before,
 #chat .invite .from:before,
 #chat .join .from:before,
 #chat .kick .from:before,
@@ -204,7 +199,8 @@ button {
 #chat .nick .from:before,
 #chat .action .from:before,
 .context-menu-item:before {
-	font-family: FontAwesome;
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit; /* Can't have font-size inherit on line above, so need to override */
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
@@ -229,7 +225,8 @@ button {
 	color: #ccc;
 	display: none;
 	float: left;
-	line-height: 40px;
+	font-size: 14px;
+	line-height: 1;
 	height: 36px;
 	margin: 6px 12px 0 -12px;
 	width: 36px;
@@ -489,6 +486,7 @@ button {
 	bottom: 4px;
 	height: 48px;
 	left: 5px;
+	font-size: 14px;
 	line-height: 48px;
 	position: absolute;
 	text-align: center;
@@ -1064,6 +1062,7 @@ button {
 	content: "\f002"; /* http://fontawesome.io/icon/search/ */
 	position: absolute;
 	right: 18px;
+	font-size: 14px;
 	line-height: 50px;
 	transition: color .2s;
 	z-index: 0;
@@ -1214,6 +1213,10 @@ button {
 	margin-left: 2px;
 }
 
+#settings #play {
+	font-size: 14px;
+}
+
 #settings #play:hover {
 	opacity: .8;
 }
@@ -1309,8 +1312,8 @@ button {
 
 #form #submit {
 	color: #9ca5b4;
+	font-size: 14px;
 	height: 34px;
-	line-height: 34px;
 	transition: opacity .3s;
 	width: 34px;
 	flex: 0 0 auto;
