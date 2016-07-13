@@ -324,8 +324,13 @@
 							</div>
 							<div class="col-sm-12">
 								<p class="about">
-									The Lounge is in version <strong><%= version %></strong>
-									(<a href="https://github.com/thelounge/lounge/releases/tag/v<%= version %>" target="_blank">See release notes</a>).<br>
+									<% if (gitCommit) { %>
+										The Lounge is running from source
+										(<a href="https://github.com/thelounge/lounge/tree/<%= gitCommit %>" target="_blank"><code><%= gitCommit %></code></a>).<br>
+									<% } else { %>
+										The Lounge is in version <strong><%= version %></strong>
+										(<a href="https://github.com/thelounge/lounge/releases/tag/v<%= version %>" target="_blank">See release notes</a>).<br>
+									<% } %>
 
 									<a href="https://thelounge.github.io/" target="_blank">Website</a><br>
 									<a href="https://thelounge.github.io/docs/" target="_blank">Documentation</a><br>
