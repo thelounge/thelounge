@@ -25,10 +25,12 @@ function Network(attr) {
 		},
 	}, attr));
 	this.name = attr.name || prettify(attr.host);
+	this.hostname = attr.hostname;
 	this.channels.unshift(
 		new Chan({
 			name: this.name,
-			type: Chan.Type.LOBBY
+			type: Chan.Type.LOBBY,
+			hostname: this.hostname
 		})
 	);
 }

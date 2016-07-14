@@ -1,5 +1,6 @@
 var _ = require("lodash");
 var Helper = require("../helper");
+var db = require("../database.js");
 
 module.exports = Chan;
 
@@ -21,7 +22,8 @@ function Chan(attr) {
 		firstUnread: 0,
 		unread: 0,
 		highlight: false,
-		users: []
+		users: [],
+    hostname: ""
 	}, attr));
 }
 
@@ -30,6 +32,10 @@ Chan.prototype.pushMessage = function(client, msg) {
 		chan: this.id,
 		msg: msg
 	});
+  if (Helper.config.mysql === true && msg.type == 'message' && msg.from != '') {
+    console.log(this, msg);
+    db.log(msg.from, this.hostname, this.name, msg.text);
+  }
 
 	// Never store messages in public mode as the session
 	// is completely destroyed when the page gets closed
