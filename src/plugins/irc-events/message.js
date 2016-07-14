@@ -1,5 +1,7 @@
 var Chan = require("../../models/chan");
 var Msg = require("../../models/msg");
+var Helper = require("../../helper");
+var db = require("../../database.js");
 
 module.exports = function(irc, network) {
 	var client = this;
@@ -34,7 +36,6 @@ module.exports = function(irc, network) {
 			chan = network.channels[0];
 		} else {
 			var target = data.target;
-
 			// If the message is targeted at us, use sender as target instead
 			if (target.toLowerCase() === irc.user.nick.toLowerCase()) {
 				target = data.nick;
@@ -84,5 +85,9 @@ module.exports = function(irc, network) {
 			highlight: highlight
 		});
 		chan.pushMessage(client, msg);
+    // Log to mysql
+    if (Helper.config.mysql === true && data.type == 'message' && msg.from != '') {
+      db.log(msg.from, network.name, chan.name, msg.text);
+    }
 	}
 };
