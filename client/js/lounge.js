@@ -632,8 +632,11 @@ $(function() {
 		.history()
 		.on("input keyup", function() {
 			var style = window.getComputedStyle(this);
-			this.style.height = "0px";
-			this.offsetHeight; // force reflow
+
+			// Start by resetting height before computing as scrollHeight does not
+			// decrease when deleting characters
+			this.style.height = this.style.minHeight;
+
 			this.style.height = Math.min(
 				Math.round(window.innerHeight - 100), // prevent overflow
 				this.scrollHeight

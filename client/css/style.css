@@ -1263,6 +1263,7 @@ button {
 	background: transparent;
 	border: none;
 	font: inherit;
+	min-height: 18px; /* Required when computing input height at char deletion */
 	height: 18px;
 	max-height: 90px;
 	line-height: 1.5;
