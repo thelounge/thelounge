@@ -1,5 +1,3 @@
-# Make sure to keep this file and .npmignore in sync
-
 node_modules/
 npm-debug.log
 
