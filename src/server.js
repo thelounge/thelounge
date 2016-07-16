@@ -80,6 +80,16 @@ function allRequests(req, res, next) {
 	return next();
 }
 
+// Information to populate the About section in UI, either from npm or from git
+try {
+	var gitCommit = require("child_process")
+		.execSync("git rev-parse --short HEAD") // Returns hash of current commit
+		.toString()
+		.trim();
+} catch (e) {
+	// Not a git repository or git is not installed: treat it as npm release
+}
+
 function index(req, res, next) {
 	if (req.url.split("?")[0] !== "/") {
 		return next();
@@ -90,6 +100,7 @@ function index(req, res, next) {
 			pkg,
 			Helper.config
 		);
+		data.gitCommit = gitCommit;
 		var template = _.template(file);
 		res.setHeader("Content-Security-Policy", "default-src *; style-src * 'unsafe-inline'; script-src 'self'; child-src 'none'; object-src 'none'; form-action 'none'; referrer no-referrer;");
 		res.setHeader("Content-Type", "text/html");
