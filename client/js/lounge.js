@@ -632,6 +632,8 @@ $(function() {
 		.history()
 		.on("input keyup", function() {
 			var style = window.getComputedStyle(this);
+			var origHeight = this.style.height;
+
 			this.style.height = "0px";
 			this.offsetHeight; // force reflow
 			this.style.height = Math.min(
@@ -641,7 +643,9 @@ $(function() {
 				+ Math.round(parseFloat(style.borderBottomWidth) || 0)
 			) + "px";
 
-			$("#chat .chan.active .chat").trigger("msg.sticky"); // fix growing
+			if (this.style.height !== origHeight) {
+				$("#chat .chan.active .chat").trigger("msg.sticky"); // fix growing
+			}
 		})
 		.tab(complete, {hint: false});
 
