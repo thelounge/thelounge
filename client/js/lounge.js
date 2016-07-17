@@ -50,6 +50,10 @@ $(function() {
 
 	var favicon = $("#favicon");
 
+	function dimmer(dim) {
+		$('body').toggleClass("dimmed", dim);
+	}
+
 	function render(name, data) {
 		return Handlebars.templates[name](data);
 	}
@@ -64,9 +68,13 @@ $(function() {
 		console.log(e);
 	});
 
+	socket.on("connect", function (e) {
+		dimmer(false);
+	});
+
 	$.each(["connect_error", "disconnect"], function(i, e) {
 		socket.on(e, function() {
-			refresh();
+			dimmer(true);
 		});
 	});
 
