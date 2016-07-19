@@ -7,7 +7,7 @@
 		{{/equal}}
 		<button class="menu" aria-label="Open the context menu"></button>
 		<span class="title">{{name}}</span>
-		<span class="topic">{{{parse topic}}}</span>
+		<span title="{{topic}}" class="topic">{{{parse topic}}}</span>
 	</div>
 	<div class="chat">
 		<div class="show-more {{#equal messages.length 100}}show{{/equal}}">
