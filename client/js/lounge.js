@@ -592,6 +592,24 @@ $(function() {
 				text: target.text(),
 				data: target.data("name")
 			});
+			if (target.data("name") !== $("#nick").text()) {
+				output += render("contextmenu_divider");
+				output += render("contextmenu_item", {
+					class: "user-kick",
+					text: "Kick",
+					data: target.data("name")
+				});
+				output += render("contextmenu_item", {
+					class: "user-ban",
+					text: "Ban",
+					data: target.data("name")
+				});
+				output += render("contextmenu_item", {
+					class: "user-kickban",
+					text: "Kickban",
+					data: target.data("name")
+				});
+			}
 		} else if (target.hasClass("chan")) {
 			output = render("contextmenu_item", {
 				class: "chan",
@@ -829,6 +847,10 @@ $(function() {
 		return false;
 	});
 
+	function applyCommandToUser(command) {
+		socket.emit("input", {target: chat.data("id"), text: command + " " + $(this).data("data")});
+	}
+
 	contextMenu.on("click", ".context-menu-item", function() {
 		switch ($(this).data("action")) {
 		case "close":
@@ -840,6 +862,15 @@ $(function() {
 		case "user":
 			$(".channel.active .users .user[data-name=" + $(this).data("data") + "]").click();
 			break;
+		case "user-ban":
+			applyCommandToUser("/mode +b");
+			break;
+		case "user-kick":
+			applyCommandToUser("/kick");
+			break;
+		case "user-kickban":
+			applyCommandToUser("/mode +b");
+			applyCommandToUser("/kick");
 		}
 	});
 
