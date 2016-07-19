@@ -1,3 +1,5 @@
+"use strict";
+
 var _ = require("lodash");
 var pkg = require("../package.json");
 var bcrypt = require("bcrypt-nodejs");
@@ -81,9 +83,10 @@ function allRequests(req, res, next) {
 }
 
 // Information to populate the About section in UI, either from npm or from git
+var gitCommit = null;
 try {
-	var gitCommit = require("child_process")
-		.execSync("git rev-parse --short HEAD") // Returns hash of current commit
+	gitCommit = require("child_process")
+		.execSync("git rev-parse --short HEAD 2> /dev/null") // Returns hash of current commit
 		.toString()
 		.trim();
 } catch (e) {
