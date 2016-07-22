@@ -176,6 +176,126 @@ button {
 	color: rgba(0, 0, 0, .35) !important;
 }
 
+/* Icons */
+
+#viewport .lt:before,
+#viewport .rt:before,
+#chat button.menu:before,
+#sidebar .chan:before,
+#chat .title:before,
+#footer .icon,
+#chat .count:before,
+#settings #play:before,
+#form #submit:before,
+#chat .invite .from:before,
+#chat .join .from:before,
+#chat .kick .from:before,
+#chat .part .from:before,
+#chat .quit .from:before,
+#chat .topic .from:before,
+#chat .mode .from:before,
+#chat .ctcp .from:before,
+#chat .whois .from:before,
+#chat .nick .from:before,
+#chat .action .from:before,
+.context-menu-item:before {
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: inherit; /* Can't have font-size inherit on line above, so need to override */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+#viewport .lt:before { content: "\f0c9"; /* http://fontawesome.io/icon/bars/ */ }
+#viewport .rt:before { content: "\f0c0"; /* http://fontawesome.io/icon/users/ */ }
+#chat button.menu:before { content: "\f142"; /* http://fontawesome.io/icon/ellipsis-v/ */ }
+
+.context-menu-user:before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
+.context-menu-chan:before { content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */ }
+.context-menu-close:before { content: "\f00d"; /* http://fontawesome.io/icon/times/ */ }
+
+#sidebar .chan.lobby:before,
+#chat .lobby .title:before { content: "\f0a0"; /* http://fontawesome.io/icon/hdd-o/ */ }
+
+#sidebar .chan.query:before,
+#chat .query .title:before { content: "\f0e6"; /* http://fontawesome.io/icon/comments-o/ */ }
+
+#sidebar .chan.channel:before,
+#chat .channel .title:before { content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */ }
+
+#footer .sign-in:before { content: "\f023"; /* http://fontawesome.io/icon/lock/ */ }
+#footer .connect:before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
+#footer .settings:before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
+#footer .sign-out:before { content: "\f011"; /* http://fontawesome.io/icon/power-off/ */ }
+
+#form #submit:before { content: "\f1d8"; /* http://fontawesome.io/icon/paper-plane/ */ }
+
+#chat .invite .from:before {
+	content: "\f003"; /* http://fontawesome.io/icon/envelope-o/ */
+	color: #2ecc40;
+}
+
+#chat .part .from:before,
+#chat .quit .from:before {
+	content: "\f08b"; /* http://fontawesome.io/icon/sign-out/ */
+	color: #ff4136;
+	display: inline-block;
+	transform: rotate(180deg);
+}
+
+#chat .topic .from:before {
+	content: "\f0a1"; /* http://fontawesome.io/icon/bullhorn/ */
+	color: #2ecc40;
+}
+
+#chat .mode .from:before {
+	content: "\f05a"; /* http://fontawesome.io/icon/info-circle/ */
+	color: #2ecc40;
+}
+
+#chat .ctcp .from:before {
+	content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */
+}
+
+#chat .whois .from:before {
+	content: "\f007"; /* http://fontawesome.io/icon/user/ */
+	color: #2ecc40;
+}
+
+#chat .nick .from:before {
+	content: "\f007"; /* http://fontawesome.io/icon/user/ */
+	color: #2ecc40;
+}
+
+#chat .join .from:before {
+	content: "\f090"; /* http://fontawesome.io/icon/sign-in/ */
+	color: #2ecc40;
+}
+
+#chat .kick .from:before {
+	content: "\f05e"; /* http://fontawesome.io/icon/ban/ */
+	color: #ff4136;
+}
+
+#chat .action .from:before {
+	content: "\f005"; /* http://fontawesome.io/icon/star/ */
+}
+
+#chat .count:before {
+	color: #cfcfcf;
+	content: "\f002"; /* http://fontawesome.io/icon/search/ */
+	position: absolute;
+	right: 18px;
+	font-size: 14px;
+	line-height: 50px;
+}
+
+#settings #play:before {
+	content: "\f028"; /* http://fontawesome.io/icon/volume-up/ */
+	margin-right: 9px;
+}
+
+/* End icons */
+
 #wrap {
 	height: 100%;
 	overflow: hidden;
@@ -196,17 +316,11 @@ button {
 	color: #ccc;
 	display: none;
 	float: left;
-	line-height: 40px;
+	font-size: 14px;
+	line-height: 1;
 	height: 36px;
 	margin: 6px 12px 0 -12px;
 	width: 36px;
-}
-
-#viewport .lt:before {
-	font: 14px FontAwesome;
-	content: "\f0c9";
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
 }
 
 #viewport .lt {
@@ -230,20 +344,6 @@ button {
 
 #viewport .lt.notified:after {
 	opacity: 1;
-}
-
-#viewport .rt:before {
-	font: 14px FontAwesome;
-	content: "\f0c0";
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
-
-#chat button.menu:before {
-	font: 14px FontAwesome;
-	content: "\f142";
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
 }
 
 #viewport .rt {
@@ -340,11 +440,9 @@ button {
 
 #sidebar .chan:before,
 #chat .title:before {
-	font: 14px FontAwesome;
 	float: left;
 	margin-top: 3px;
 	margin-right: 12px;
-	width: 14px;
 	text-align: center;
 }
 
@@ -356,21 +454,6 @@ button {
 
 #chat .title:before {
 	margin-top: 17px;
-}
-
-#sidebar .chan.lobby:before,
-#chat .lobby .title:before {
-	content: "\f0a0";
-}
-
-#sidebar .chan.query:before,
-#chat .query .title:before {
-	content: "\f0e6";
-}
-
-#sidebar .chan.channel:before,
-#chat .channel .title:before {
-	content: "\f0f6";
 }
 
 #sidebar .chan .name {
@@ -467,6 +550,7 @@ button {
 	bottom: 4px;
 	height: 48px;
 	left: 5px;
+	font-size: 14px;
 	line-height: 48px;
 	position: absolute;
 	text-align: center;
@@ -480,7 +564,6 @@ button {
 #footer .icon {
 	color: #9ca5b4;
 	display: inline-block;
-	font: 14px FontAwesome;
 	line-height: 34px;
 	padding: 0 12px;
 }
@@ -501,22 +584,6 @@ button {
 
 #footer .sign-in {
 	display: none;
-}
-
-#footer .sign-in:before {
-	content: "\f023";
-}
-
-#footer .connect:before {
-	content: "\f067";
-}
-
-#footer .settings:before {
-	content: "\f013";
-}
-
-#footer .sign-out:before {
-	content: "\f011";
 }
 
 #main {
@@ -883,12 +950,6 @@ button {
 	display: none !important;
 }
 
-#chat .invite .from:before {
-	font-family: FontAwesome;
-	content: "\f003";
-	color: #2ecc40;
-}
-
 #chat .join .text,
 #chat .kick .text,
 #chat .mode .text,
@@ -900,65 +961,10 @@ button {
 	color: #999;
 }
 
-#chat .join .from:before {
-	font-family: FontAwesome;
-	content: "\f090";
-	color: #2ecc40;
-}
-
-#chat .kick .from:before {
-	font-family: FontAwesome;
-	content: "\f05e";
-	color: #ff4136;
-}
-
-#chat .part .from:before,
-#chat .quit .from:before {
-	font-family: FontAwesome;
-	content: "\f08b";
-	color: #ff4136;
-	display: inline-block;
-	transform: rotate(180deg);
-}
-
-#chat .topic .from:before {
-	font-family: FontAwesome;
-	content: "\f0a1";
-	color: #2ecc40;
-}
-
-#chat .mode .from:before {
-	font-family: FontAwesome;
-	content: "\f05a";
-	color: #2ecc40;
-}
-
-#chat .ctcp .from:before {
-	font-family: FontAwesome;
-	content: "\f0f6";
-}
-
-#chat .whois .from:before {
-	font-family: FontAwesome;
-	content: "\f007";
-	color: #2ecc40;
-}
-
-#chat .nick .from:before {
-	font-family: FontAwesome;
-	content: "\f007";
-	color: #2ecc40;
-}
-
 #chat .action .from,
 #chat .action .text,
 #chat .action .user {
 	color: #f39c12;
-}
-
-#chat .action .from:before {
-	font-family: FontAwesome;
-	content: "\f005";
 }
 
 #chat .notice .time,
@@ -1046,17 +1052,6 @@ button {
 	position: absolute;
 	right: 0;
 	top: 0;
-}
-
-#chat .count:before {
-	color: #cfcfcf;
-	font: 14px FontAwesome;
-	content: "\f002";
-	position: absolute;
-	right: 18px;
-	line-height: 50px;
-	transition: color .2s;
-	z-index: 0;
 }
 
 #chat .search {
@@ -1204,14 +1199,13 @@ button {
 	margin-left: 2px;
 }
 
-#settings #play:hover {
-	opacity: .8;
+#settings #play {
+	font-size: 14px;
+	transition: opacity .2s;
 }
 
-#settings #play:before {
-	content: "\f028";
-	font: 14px FontAwesome;
-	margin-right: 9px;
+#settings #play:hover {
+	opacity: .8;
 }
 
 #settings .about {
@@ -1300,18 +1294,11 @@ button {
 
 #form #submit {
 	color: #9ca5b4;
+	font-size: 14px;
 	height: 34px;
-	line-height: 34px;
-	transition: opacity .3s;
+	transition: opacity .2s;
 	width: 34px;
 	flex: 0 0 auto;
-}
-
-#form #submit:before {
-	font: 14px FontAwesome;
-	content: "\f1d8";
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
 }
 
 #form #submit:hover {
@@ -1362,23 +1349,8 @@ button {
 }
 
 .context-menu-item:before {
-	font-family: FontAwesome;
 	width: 20px;
 	display: inline-block;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
-
-.context-menu-user:before {
-	content: "\f007";
-}
-
-.context-menu-chan:before {
-	content: "\f0f6";
-}
-
-.context-menu-close:before {
-	content: "\f00d";
 }
 
 /**
