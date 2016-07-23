@@ -1105,6 +1105,7 @@ kbd {
 	max-width: 100%;
 	padding: 6px 8px;
 	margin-top: 2px;
+	overflow: hidden;
 }
 
 #chat .toggle-content a {
@@ -1113,18 +1114,23 @@ kbd {
 
 #chat .toggle-content img {
 	max-width: 100%;
-	max-height: 250px;
+	max-height: 128px;
 	display: block;
 	margin: 2px 0;
 }
 
 #chat .toggle-content .thumb {
-	max-height: 110px;
-	max-width: 210px;
+	float: left;
+	margin-right: 10px;
+	max-width: 48px;
+	max-height: 36px;
 }
 
 #chat .toggle-content .head {
 	font-weight: bold;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 
 #chat .toggle-content .body {
@@ -1132,10 +1138,17 @@ kbd {
 	max-width: 460px;
 	word-break: normal;
 	word-wrap: break-word;
+	overflow: hidden;
+	max-height: 30px;
+	text-overflow: ellipsis;
 }
 
 #chat .toggle-content.show {
-	display: inline-block !important;
+	display: block;
+}
+
+#chat .toggle-content.toggle-type-image.show {
+	display: inline;
 }
 
 #chat .count {
