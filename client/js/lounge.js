@@ -764,9 +764,13 @@ $(function() {
 			.find(".chat")
 			.unsticky();
 
-		lastActive
+		var lastActiveChan = lastActive
 			.find(".chan.active")
 			.removeClass("active");
+
+		lastActiveChan
+			.find(".unread-marker")
+			.appendTo(lastActiveChan.find(".messages"));
 
 		var chan = $(target)
 			.addClass("active")
