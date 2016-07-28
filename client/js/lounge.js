@@ -353,11 +353,19 @@ $(function() {
 		var documentFragment = buildChannelMessages(data.chan, data.messages);
 		var chan = chat
 			.find("#chan-" + data.chan)
-			.find(".messages")
-			.prepend(documentFragment)
-			.end();
+			.find(".messages");
+
+		// get the scrollable wrapper around messages
+		var scrollable = chan.closest(".chat");
+		var heightOld = chan.height();
+		chan.prepend(documentFragment).end();
+
+		// restore scroll position
+		var position = chan.height() - heightOld;
+		scrollable.scrollTop(position);
+
 		if (data.messages.length !== 100) {
-			chan.find(".show-more").removeClass("show");
+			scrollable.find(".show-more").removeClass("show");
 		}
 	});
 
