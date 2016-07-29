@@ -59,7 +59,13 @@
 					<div id="chat"></div>
 					<form id="form" method="post" action="">
 						<div class="input">
-							<label for="input" id="nick"></label>
+							<span id="nick">
+								<span id="nick-value" spellcheck="false"></span><!-- Comments here remove spaces between elements
+								--><button id="set-nick" type="button" title="Set Nick" aria-label="Set nick"></button><!--
+								--><button id="cancel-nick" type="button" title="Cancel Nick" aria-label="Cancel nick"></button><!--
+								--><button id="submit-nick" type="button" title="Submit Nick" aria-label="Submit nick"></button>
+								</span>
+							</span>
 							<textarea id="input" class="mousetrap"></textarea>
 							<span class="tooltipped tooltipped-w" aria-label="Send message">
 								<button id="submit" type="submit" aria-label="Send message"></button>

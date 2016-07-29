@@ -160,7 +160,8 @@ button {
 #chat .whois .from:before,
 #chat .nick .from:before,
 #chat .action .from:before,
-.context-menu-item:before {
+.context-menu-item:before,
+#nick button:before {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-size: inherit; /* Can't have font-size inherit on line above, so need to override */
 	-webkit-font-smoothing: antialiased;
@@ -258,6 +259,18 @@ button {
 #settings #play:before {
 	content: "\f028"; /* http://fontawesome.io/icon/volume-up/ */
 	margin-right: 9px;
+}
+
+#set-nick:before {
+	content: "\f040"; /* http://fontawesome.io/icon/pencil/ */
+}
+
+#submit-nick:before {
+	content: "\f00c"; /* http://fontawesome.io/icon/check/ */
+}
+
+#cancel-nick:before {
+	content: "\f00d"; /* http://fontawesome.io/icon/times/ */
 }
 
 /* End icons */
@@ -1284,31 +1297,60 @@ button {
 	align-items: flex-end;
 }
 
+[contenteditable]:focus {
+	outline: none;
+}
+
+/* Nick editor */
+
 #form #nick {
 	background: #f6f6f6;
 	color: #666;
 	font: inherit;
 	font-size: 11px;
 	margin: 4px;
-	line-height: 26px;
+	line-height: 22px;
 	height: 24px;
-	padding: 0 9px;
-	border-radius: 1px;
+	padding-left: 9px;
+	padding-right: 5px;
+	border-radius: 2px;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
 	-webkit-flex: 0 0 auto;
 	flex: 0 0 auto;
+	border: 1px solid transparent;
+	transition: border-color .2s;
 }
 
-#form #nick:empty {
-	visibility: hidden;
+#form #nick-value {
+	padding-right: 5px;
 }
 
-#form #nick:after {
-	content: ":";
+#form #nick.editable {
+	border-color: black;
 }
+
+#nick button#set-nick,
+#nick button#submit-nick,
+#nick button#cancel-nick {
+	color: #aaa;
+	width: 18px;
+}
+
+#nick.editable button#set-nick,
+#nick button#submit-nick,
+#nick button#cancel-nick {
+	display: none;
+}
+
+#nick.editable button#submit-nick,
+#nick.editable button#cancel-nick {
+	display: inline-block;
+}
+
+/* End nick editor */
 
 #form #input {
 	background: transparent;

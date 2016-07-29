@@ -713,6 +713,61 @@ $(function() {
 			.first();
 	}
 
+	$("button#set-nick").on("click", function() {
+		toggleNickEditor(true);
+
+		// Selects existing nick in the editable text field
+		var element = document.querySelector("#nick-value");
+		element.focus();
+		var range = document.createRange();
+		range.selectNodeContents(element);
+		var selection = window.getSelection();
+		selection.removeAllRanges();
+		selection.addRange(range);
+	});
+
+	$("button#cancel-nick").on("click", cancelNick);
+	$("button#submit-nick").on("click", submitNick);
+
+	function toggleNickEditor(toggle) {
+		$("#nick").toggleClass("editable", toggle);
+		$("#nick-value").attr("contenteditable", toggle);
+	}
+
+	// FIXME Reset content when new nick is invalid (already in use, forbidden chars, ...)
+	function submitNick() {
+		var newNick = $("#nick-value").text();
+
+		socket.emit("input", {
+			target: chat.data("id"),
+			text: "/nick " + newNick
+		});
+
+		toggleNickEditor(false);
+	}
+
+	function cancelNick() {
+		setNick(sidebar.find(".chan.active").closest(".network").data("nick"));
+	}
+
+	$("#nick-value").keypress(function(e) {
+		switch (e.keyCode ? e.keyCode : e.which) {
+		case 13: // Enter
+			// Ensures a new line is not added when pressing Enter
+			e.preventDefault();
+			break;
+		}
+	}).keyup(function(e) {
+		switch (e.keyCode ? e.keyCode : e.which) {
+		case 13: // Enter
+			submitNick();
+			break;
+		case 27: // Escape
+			cancelNick();
+			break;
+		}
+	});
+
 	chat.on("click", ".inline-channel", function() {
 		var name = $(this).data("chan");
 		var chan = findCurrentNetworkChan(name);
@@ -1198,7 +1253,10 @@ $(function() {
 	}
 
 	function setNick(nick) {
-		$("#nick").text(nick);
+		$("#nick-value").text(nick);
+		// Closes the nick editor when canceling, changing channel, or when a nick
+		// is set in a different tab / browser / device.
+		toggleNickEditor(false);
 	}
 
 	function move(array, old_index, new_index) {
