@@ -591,6 +591,7 @@ button {
 	border-radius: 2px;
 	bottom: 4px;
 	left: 220px;
+	overflow: hidden; /* Without this, border-radius has no effect */
 	position: absolute;
 	right: 5px;
 	top: 4px;
