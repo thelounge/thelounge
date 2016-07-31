@@ -70,11 +70,15 @@ module.exports = function() {
 };
 
 function getClientIp(req) {
+	var ip;
+
 	if (!Helper.config.reverseProxy) {
-		return req.connection.remoteAddress;
+		ip = req.connection.remoteAddress;
 	} else {
-		return req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+		ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 	}
+
+	return ip.replace(/^::ffff:/, "");
 }
 
 function allRequests(req, res, next) {
