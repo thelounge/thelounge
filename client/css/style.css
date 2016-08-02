@@ -548,10 +548,10 @@ button {
 	background: rgba(0, 0, 0, .06);
 	border-radius: 2px;
 	bottom: 4px;
-	height: 48px;
+	height: 45px;
 	left: 5px;
 	font-size: 14px;
-	line-height: 48px;
+	line-height: 45px;
 	position: absolute;
 	text-align: center;
 	width: 210px;
@@ -1249,7 +1249,6 @@ button {
 	background: white;
 	display: flex;
 	align-items: flex-end;
-	min-height: 37px;
 }
 
 #form #nick {
@@ -1257,7 +1256,7 @@ button {
 	color: #666;
 	font: inherit;
 	font-size: 11px;
-	margin: 5px;
+	margin: 4px;
 	line-height: 26px;
 	height: 24px;
 	padding: 0 9px;
@@ -1296,9 +1295,9 @@ button {
 #form #submit {
 	color: #9ca5b4;
 	font-size: 14px;
-	height: 34px;
+	height: 32px;
 	transition: opacity .2s;
-	width: 34px;
+	width: 32px;
 	flex: 0 0 auto;
 }
 
