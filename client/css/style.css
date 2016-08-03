@@ -346,9 +346,12 @@ button {
 	opacity: 1;
 }
 
+#viewport .rt-tooltip {
+	float: right;
+}
+
 #viewport .rt {
 	display: block;
-	float: right;
 	margin: 6px -12px 0 0;
 }
 
