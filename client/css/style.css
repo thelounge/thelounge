@@ -1340,8 +1340,11 @@ button {
 }
 
 #nick.editable button#set-nick,
+#nick.editable #set-nick-tooltip,
 #nick button#submit-nick,
-#nick button#cancel-nick {
+#nick:not(.editable) #save-nick-tooltip,
+#nick button#cancel-nick,
+#nick:not(.editable) #cancel-nick-tooltip {
 	display: none;
 }
 
