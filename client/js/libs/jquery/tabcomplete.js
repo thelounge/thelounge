@@ -112,7 +112,7 @@
 		
 		this.on("keydown.tabcomplete", function(e) {
 			var key = e.which;
-			if (key == keys.tab
+			if (key == keys.tab && !e.ctrlKey
 				|| (options.arrowKeys && (key == keys.up || key == keys.down))) {
 				
 				// Don't lose focus on tab click.
