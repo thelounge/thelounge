@@ -1147,7 +1147,7 @@ $(function() {
 			axis: "y",
 			containment: "parent",
 			cursor: "grabbing",
-			cursorAt: { bottom: 1 },
+			cursorAt: {bottom: 1},
 			distance: 12,
 			items: ".chan:not(.lobby)",
 			placeholder: "chan-placeholder",
