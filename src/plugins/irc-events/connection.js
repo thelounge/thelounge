@@ -2,6 +2,7 @@ var _ = require("lodash");
 var identd = require("../../identd");
 var Msg = require("../../models/msg");
 var Chan = require("../../models/chan");
+var Helper = require("../../helper");
 
 module.exports = function(irc, network) {
 	var client = this;
@@ -74,10 +75,11 @@ module.exports = function(irc, network) {
 		});
 	}
 
-	// TODO Add a debug mode. See https://github.com/thelounge/lounge/issues/459
-	// irc.on("debug", function(message) {
-	// 	log.debug("[" + client.name + " (#" + client.id + ") on " + network.name + " (#" + network.id + ")]", message);
-	// });
+	if (Helper.config.debug) {
+		irc.on("debug", function(message) {
+			log.debug("[" + client.name + " (#" + client.id + ") on " + network.name + " (#" + network.id + ")]", message);
+		});
+	}
 
 	irc.on("socket error", function(err) {
 		network.channels[0].pushMessage(client, new Msg({
