@@ -54,7 +54,7 @@ When the install is complete, go ahead and run this in your terminal:
 lounge --help
 ```
 
-For more information, read the [documentation](https://thelounge.github.io/docs/).
+For more information, read the [documentation](https://thelounge.github.io/docs/) or [wiki](https://github.com/thelounge/lounge/wiki).
 
 ## Development setup
 
