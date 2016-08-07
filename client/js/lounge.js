@@ -672,6 +672,8 @@ $(function() {
 			target: chat.data("id"),
 			text: text
 		});
+
+		input.focus();
 	});
 
 	function findCurrentNetworkChan(name) {
