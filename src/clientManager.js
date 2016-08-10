@@ -17,7 +17,7 @@ function ClientManager() {
 ClientManager.prototype.findClient = function(name, token) {
 	for (var i in this.clients) {
 		var client = this.clients[i];
-		if (client.name === name || (token && token === client.token)) {
+		if (client.name === name || (token && token === client.config.token)) {
 			return client;
 		}
 	}
