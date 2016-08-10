@@ -30,6 +30,18 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
+## v2.0.0-pre.6 - 2016-08-10 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.0.0-pre.5...v2.0.0-pre.6)
+
+LDAP! That's all there is to be found in this pre-release, but it should please some administrators out there. Big thanks to [@thisisdarshan](https://github.com/thisisdarshan) and [@lindskogen](https://github.com/lindskogen) for sticking with us on this one.
+
+This feature will remain in beta version until the official v2.0.0 release.
+
+### Added
+
+- LDAP support ([#477](https://github.com/thelounge/lounge/pull/477) by [@thisisdarshan](https://github.com/thisisdarshan) and [@lindskogen](https://github.com/lindskogen))
+
 ## v2.0.0-pre.5 - 2016-08-07 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v2.0.0-pre.4...v2.0.0-pre.5)
