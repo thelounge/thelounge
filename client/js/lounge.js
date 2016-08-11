@@ -631,6 +631,10 @@ $(function() {
 		return false;
 	});
 
+	function resetInputHeight(input) {
+		input.style.height = input.style.minHeight;
+	}
+
 	var input = $("#input")
 		.history()
 		.on("input keyup", function() {
@@ -638,7 +642,7 @@ $(function() {
 
 			// Start by resetting height before computing as scrollHeight does not
 			// decrease when deleting characters
-			this.style.height = this.style.minHeight;
+			resetInputHeight(this);
 
 			this.style.height = Math.min(
 				Math.round(window.innerHeight - 100), // prevent overflow
@@ -662,6 +666,7 @@ $(function() {
 		}
 
 		input.val("");
+		resetInputHeight(input.get(0));
 
 		if (text.indexOf("/clear") === 0) {
 			clear();
