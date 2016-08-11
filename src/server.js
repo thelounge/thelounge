@@ -28,7 +28,7 @@ module.exports = function() {
 	var server = null;
 
 	if (config.public && (config.ldap || {}).enable) {
-		throw "Server is public and set to use LDAP. Please disable public if trying to use LDAP authentication.";
+		log.warn("Server is public and set to use LDAP. Set to private mode if trying to use LDAP authentication.");
 	}
 
 	if (!config.https.enable) {
@@ -50,7 +50,7 @@ module.exports = function() {
 		require("./identd").start(config.identd.port);
 	}
 
-	if ((config.ldap || {}).enable) {
+	if (!config.public && (config.ldap || {}).enable) {
 		ldapclient = ldap.createClient({
 			url: config.ldap.url
 		});
@@ -243,7 +243,7 @@ function localAuth(client, user, password, callback) {
 		result = bcrypt.compareSync(password || "", client.config.password);
 	} catch (error) {
 		if (error === "Not a valid BCrypt hash.") {
-			console.error("User (" + user + ") with no local password set tried signed in. (Probably a ldap user)");
+			log.error("User (" + user + ") with no local password set tried to sign in. (Probably a LDAP user)");
 		}
 		result = false;
 	} finally {
@@ -258,7 +258,7 @@ function ldapAuth(client, user, password, callback) {
 	ldapclient.bind(bindDN, password, function(err) {
 		if (!err && !client) {
 			if (!manager.addUser(user, null)) {
-				console.log("Unable to create new user", user);
+				log.error("Unable to create new user", user);
 			}
 		}
 		callback(!err);
