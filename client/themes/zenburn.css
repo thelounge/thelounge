@@ -30,12 +30,10 @@ body {
 	background: #3f3f3f;
 }
 
-#main #chat,
-#main #form,
-#windows #form .input,
-#chat,
-#windows .header {
-	font-family: "Open Sans", sans-serif !important;
+#windows .header .topic,
+.messages .msg,
+.sidebar {
+	font-family: inherit;
 	font-size: 13px;
 }
 
@@ -172,7 +170,8 @@ body {
 	border-color: #101010;
 }
 
-#form .input {
+#windows #form .input {
+	font-family: inherit;
 	background-color: #434443 !important;
 	border-color: #101010 !important;
 	color: #dcdccc !important;
