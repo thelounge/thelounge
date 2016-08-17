@@ -204,7 +204,7 @@ $(function() {
 		var template = "msg";
 
 		if (!data.msg.highlight && !data.msg.self && (type === "message" || type === "notice") && highlights.some(function(h) {
-			return data.msg.text.indexOf(h) > -1;
+			return data.msg.text.toLocaleLowerCase().indexOf(h.toLocaleLowerCase()) > -1;
 		})) {
 			data.msg.highlight = true;
 		}
