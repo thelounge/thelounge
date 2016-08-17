@@ -126,6 +126,10 @@ a:hover,
 	font-size: 12px;
 }
 
+#windows select.input {
+	height: 38px;
+}
+
 #footer .icon {
 	color: #666;
 }

@@ -581,8 +581,11 @@ button {
 	outline: 0;
 	padding: 8px 10px;
 	transition: border-color .2s;
-	-webkit-appearance: none;
 	width: 100%;
+}
+
+#windows select.input {
+	height: 35px;
 }
 
 #user-specified-css-input {

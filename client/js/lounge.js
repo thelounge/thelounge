@@ -493,7 +493,7 @@ $(function() {
 
 	var highlights = [];
 
-	settings.on("change", "input, textarea", function() {
+	settings.on("change", "input, select, textarea", function() {
 		var self = $(this);
 		var name = self.attr("name");
 
