@@ -349,6 +349,12 @@ $(function() {
 			container
 				.find(".unread-marker")
 				.appendTo(container);
+
+			// Channel is marked as read on the server
+			socket.emit(
+				"open",
+				data.chan
+			);
 		}
 	});
 
