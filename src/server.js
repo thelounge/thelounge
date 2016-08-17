@@ -122,6 +122,11 @@ function index(req, res, next) {
 			Helper.config
 		);
 		data.gitCommit = gitCommit;
+		data.themes = fs.readdirSync("client/themes/").filter(function(file) {
+			return file.endsWith(".css");
+		}).map(function(css) {
+			return css.slice(0, -4);
+		});
 		var template = _.template(file);
 		res.setHeader("Content-Security-Policy", "default-src *; style-src * 'unsafe-inline'; script-src 'self'; child-src 'none'; object-src 'none'; form-action 'none'; referrer no-referrer;");
 		res.setHeader("Content-Type", "text/html");
