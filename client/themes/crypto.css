@@ -129,6 +129,10 @@ a:hover,
 	color: #666;
 }
 
+.tooltipped:after {
+	font-family: Inconsolata-g, monospace;
+}
+
 @media (max-width: 768px) {
 	#main {
 		left: 0;
