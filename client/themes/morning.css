@@ -70,12 +70,16 @@ body {
 	left: 0;
 	bottom: 0;
 	width: 220px;
+	border-radius: 0;
 }
 
 #main {
 	top: 0;
 	bottom: 0;
 	right: 0;
+}
+
+#windows .window {
 	border-radius: 0;
 }
 
