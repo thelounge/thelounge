@@ -815,6 +815,7 @@ button {
 
 #chat .msg {
 	word-wrap: break-word;
+	word-break: break-word; /* Webkit-specific */
 }
 
 #chat .unread-marker {
