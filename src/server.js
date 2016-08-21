@@ -286,10 +286,10 @@ function auth(data) {
 		}
 	} else {
 		client = manager.findClient(data.user, data.token);
-		var signedIn = data.token && data.token === client.config.token;
+		var signedIn = data.token && client && data.token === client.config.token;
 		var token;
 
-		if (data.remember || data.token) {
+		if (client && (data.remember || data.token)) {
 			token = client.config.token;
 		}
 
