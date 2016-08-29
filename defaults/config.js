@@ -357,6 +357,13 @@ module.exports = {
 		// @default  "uid"
 		//
 		primaryKey: "uid"
-	}
+	},
 
+	// Enables extra debugging output. Turn this on if you experience
+	// IRC connection issues and want to file a bug report.
+	//
+	// @type     boolean
+	// @default  false
+	//
+	debug: false,
 };
