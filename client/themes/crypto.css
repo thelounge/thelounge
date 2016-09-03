@@ -30,7 +30,7 @@ a:hover,
 
 #windows .window h2 {
 	color: #666;
-	font: regular 14px Leto, sans-serif;
+	font: regular 14px Lato, sans-serif;
 	border-bottom: none;
 }
 
@@ -52,7 +52,7 @@ a:hover,
 
 #sign-in label input {
 	margin-top: 10px !important;
-	font: 14px Inconsolata-g, monospace;
+	font-size: 14px;
 }
 
 .btn {
@@ -76,7 +76,7 @@ a:hover,
 }
 
 #sign-in .remember {
-	font: 12px Inconsolata-g, monospace;
+	font-size: 12px;
 	line-height: 30px;
 }
 
@@ -101,8 +101,9 @@ a:hover,
 	color: #fff;
 }
 
-#chat,
-#windows .header {
+#windows .header .topic,
+.messages .msg,
+.sidebar {
 	font: 12px Inconsolata-g, monospace;
 	line-height: 1.8;
 }
@@ -117,12 +118,9 @@ a:hover,
 	font-weight: bold;
 }
 
-#chat .unread-marker-text:before {
-	font: bold 12px Inconsolata-g, monospace;
-}
-
 #windows #form .input {
-	font: 12px Inconsolata-g, monospace;
+	font-family: inherit;
+	font-size: 12px;
 }
 
 #footer .icon {

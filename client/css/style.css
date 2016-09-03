@@ -29,51 +29,6 @@
 }
 
 @font-face {
-	font-family: "Open Sans";
-	font-weight: 300;
-	font-style: normal;
-	src: url("fonts/Open-Sans-300/Open-Sans-300.eot");
-	src:
-		url("fonts/Open-Sans-300/Open-Sans-300.eot?#iefix") format("embedded-opentype"),
-		local("Open Sans Light"),
-		local("Open-Sans-300"),
-		url("fonts/Open-Sans-300/Open-Sans-300.woff2") format("woff2"),
-		url("fonts/Open-Sans-300/Open-Sans-300.woff") format("woff"),
-		url("fonts/Open-Sans-300/Open-Sans-300.ttf") format("truetype"),
-		url("fonts/Open-Sans-300/Open-Sans-300.svg#OpenSans") format("svg");
-}
-
-@font-face {
-	font-family: "Open Sans";
-	font-weight: 400;
-	font-style: normal;
-	src: url("fonts/Open-Sans-regular/Open-Sans-regular.eot");
-	src:
-		url("fonts/Open-Sans-regular/Open-Sans-regular.eot?#iefix") format("embedded-opentype"),
-		local("Open Sans"),
-		local("Open-Sans-regular"),
-		url("fonts/Open-Sans-regular/Open-Sans-regular.woff2") format("woff2"),
-		url("fonts/Open-Sans-regular/Open-Sans-regular.woff") format("woff"),
-		url("fonts/Open-Sans-regular/Open-Sans-regular.ttf") format("truetype"),
-		url("fonts/Open-Sans-regular/Open-Sans-regular.svg#OpenSans") format("svg");
-}
-
-@font-face {
-	font-family: "Open Sans";
-	font-weight: 700;
-	font-style: normal;
-	src: url("fonts/Open-Sans-700/Open-Sans-700.eot");
-	src:
-		url("fonts/Open-Sans-700/Open-Sans-700.eot?#iefix") format("embedded-opentype"),
-		local("Open Sans Bold"),
-		local("Open-Sans-700"),
-		url("fonts/Open-Sans-700/Open-Sans-700.woff2") format("woff2"),
-		url("fonts/Open-Sans-700/Open-Sans-700.woff") format("woff"),
-		url("fonts/Open-Sans-700/Open-Sans-700.ttf") format("truetype"),
-		url("fonts/Open-Sans-700/Open-Sans-700.svg#OpenSans") format("svg");
-}
-
-@font-face {
 	font-family: "FontAwesome";
 	src: url("../fonts/fontawesome-webfont.eot?v=4.6.3");
 	src: url("../fonts/fontawesome-webfont.eot?#iefix&v=4.6.3") format("embedded-opentype"), url("../fonts/fontawesome-webfont.woff2?v=4.6.3") format("woff2"), url("../fonts/fontawesome-webfont.woff?v=4.6.3") format("woff"), url("../fonts/fontawesome-webfont.ttf?v=4.6.3") format("truetype"), url("../fonts/fontawesome-webfont.svg?v=4.6.3#fontawesomeregular") format("svg");
@@ -130,7 +85,8 @@ button {
 	border-radius: 3px;
 	color: #84ce88;
 	display: inline-block;
-	font: bold 12px Lato, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
 	letter-spacing: 1px;
 	margin-bottom: 10px;
 	padding: 9px 17px;
@@ -665,7 +621,7 @@ button {
 }
 
 #windows .window h1 {
-	font: 36px Lato;
+	font-size: 36px;
 }
 
 #windows .window h2 {
@@ -682,14 +638,14 @@ button {
 
 #windows .header {
 	border-bottom: 1px solid #e7e7e7;
-	line-height: 50px !important;
+	line-height: 48px;
 	height: 48px;
 	padding: 0 20px;
 	overflow: hidden;
 }
 
 #windows .header .title {
-	font: 14px Lato;
+	font-size: 14px;
 }
 
 #windows .header .topic {
@@ -730,8 +686,9 @@ button {
 	display: block;
 }
 
-#chat,
-#windows .header {
+#windows .header .topic,
+.messages .msg,
+.sidebar {
 	font: 12px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
 	line-height: 1.4;
 }
@@ -796,7 +753,7 @@ button {
 	border-bottom-color: #b7b7b7;
 	border-radius: 2px;
 	color: #555;
-	font: 12px Lato, sans-serif;
+	font-size: 12px;
 	height: 34px;
 	line-height: 0;
 	width: 100%;
@@ -824,6 +781,8 @@ button {
 	opacity: .5;
 	margin: 0 10px;
 	z-index: 0;
+	font-weight: bold;
+	font-size: 12px;
 }
 
 #chat .unread-marker:before {
@@ -841,7 +800,6 @@ button {
 	background-color: white;
 	color: #e74c3c;
 	padding: 0 10px;
-	font: bold 12px Lato;
 }
 
 #chat .unread-marker:last-child {
@@ -1013,7 +971,7 @@ button {
 	border-radius: 2px;
 	display: none;
 	color: #222;
-	font: 12px Lato;
+	font-size: 12px;
 	max-width: 100%;
 	padding: 6px 8px;
 	margin-top: 2px;
