@@ -546,11 +546,8 @@ button {
 }
 
 #main {
-	background: #fff;
-	border-radius: 2px;
 	bottom: 4px;
 	left: 220px;
-	overflow: hidden; /* Without this, border-radius has no effect */
 	position: absolute;
 	right: 5px;
 	top: 4px;
@@ -610,6 +607,7 @@ button {
 
 #windows .window {
 	background: #fff;
+	border-radius: 2px;
 	bottom: 0;
 	display: none;
 	left: 0;
