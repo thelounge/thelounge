@@ -7,6 +7,9 @@ env:
   mocha: true
   node: true
 
+parserOptions:
+  ecmaVersion: 6
+
 rules:
   block-spacing: [2, always]
   brace-style: [2, 1tbs]
