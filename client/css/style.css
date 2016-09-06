@@ -572,6 +572,7 @@ button {
 }
 
 #windows .input {
+	background-color: white;
 	border: 1px solid #cdd3da;
 	border-radius: 2px;
 	color: #222;
