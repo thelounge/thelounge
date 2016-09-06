@@ -10,7 +10,7 @@ GitHub: https://github.com/aynik
 
 @font-face {
 	font-family: Inconsolata-g;
-	src: url("fonts/inconsolatag.woff") format("woff"), url("fonts/inconsolatag.ttf") format("ttf");
+	src: url("../css/fonts/inconsolatag.woff") format("woff"), url("../css/fonts/inconsolatag.ttf") format("ttf");
 }
 
 body {
@@ -124,6 +124,10 @@ a:hover,
 #windows #form .input {
 	font-family: inherit;
 	font-size: 12px;
+}
+
+#windows select.input {
+	height: 38px;
 }
 
 #footer .icon {

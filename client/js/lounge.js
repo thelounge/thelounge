@@ -462,18 +462,19 @@ $(function() {
 	var userStyles = $("#user-specified-css");
 	var settings = $("#settings");
 	var options = $.extend({
-		desktopNotifications: false,
 		coloredNicks: true,
+		desktopNotifications: false,
 		join: true,
 		links: true,
 		mode: true,
 		motd: false,
 		nick: true,
 		notification: true,
-		part: true,
-		thumbnails: true,
-		quit: true,
 		notifyAllMessages: false,
+		part: true,
+		quit: true,
+		theme: $("#theme").attr("href").replace(/^themes\/(.*).css$/, "$1"), // Extracts default theme name, set on the server configuration
+		thumbnails: true,
 		userStyles: userStyles.text(),
 	}, JSON.parse(window.localStorage.getItem("settings")));
 
@@ -483,9 +484,11 @@ $(function() {
 				$(document.head).find("#user-specified-css").html(options[i]);
 			}
 			settings.find("#user-specified-css-input").val(options[i]);
-			continue;
 		} else if (i === "highlights") {
 			settings.find("input[name=" + i + "]").val(options[i]);
+		} else if (i === "theme") {
+			$("#theme").attr("href", "themes/" + options[i] + ".css");
+			settings.find("select[name=" + i + "]").val(options[i]);
 		} else if (options[i]) {
 			settings.find("input[name=" + i + "]").prop("checked", true);
 		}
@@ -493,7 +496,7 @@ $(function() {
 
 	var highlights = [];
 
-	settings.on("change", "input, textarea", function() {
+	settings.on("change", "input, select, textarea", function() {
 		var self = $(this);
 		var name = self.attr("name");
 
@@ -515,14 +518,13 @@ $(function() {
 			"notifyAllMessages",
 		].indexOf(name) !== -1) {
 			chat.toggleClass("hide-" + name, !self.prop("checked"));
-		}
-		if (name === "coloredNicks") {
+		} else if (name === "coloredNicks") {
 			chat.toggleClass("colored-nicks", self.prop("checked"));
-		}
-		if (name === "userStyles") {
+		} else if (name === "theme") {
+			$("#theme").attr("href", "themes/" + options[name] + ".css");
+		} else if (name === "userStyles") {
 			$(document.head).find("#user-specified-css").html(options[name]);
-		}
-		if (name === "highlights") {
+		} else if (name === "highlights") {
 			var highlightString = options[name];
 			highlights = highlightString.split(",").map(function(h) {
 				return h.trim();

@@ -15,7 +15,7 @@
 
 	<link rel="stylesheet" href="css/bootstrap.css">
 	<link rel="stylesheet" href="css/style.css">
-	<link id="theme" rel="stylesheet" href="<%= typeof(theme) !== "undefined" ? theme : "themes/example.css" %>">
+	<link id="theme" rel="stylesheet" href="<%= theme %>">
 	<style id="user-specified-css"></style>
 
 	<link rel="shortcut icon" href="img/favicon.png" data-other="img/favicon-notification.png" data-toggled="false" id="favicon">
@@ -240,6 +240,19 @@
 									<input type="checkbox" name="coloredNicks">
 									Enable colored nicknames
 								</label>
+							</div>
+							<div class="col-sm-12">
+								<h2>Theme</h2>
+							</div>
+							<div class="col-sm-12">
+								<label for="theme-select" class="sr-only">Theme</label>
+								<select id="theme-select" name="theme" class="input">
+									<% themes.forEach(function(themeName) { %>
+										<option value="<%= themeName %>">
+											<%= themeName.charAt(0).toUpperCase() + themeName.slice(1) %>
+										</option>
+									<% }) %>
+								</select>
 							</div>
 							<% if (typeof prefetch === "undefined" || prefetch !== false) { %>
 							<div class="col-sm-12">
