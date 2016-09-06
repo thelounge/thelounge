@@ -905,14 +905,11 @@ $(function() {
 						icon: "img/logo-64.png",
 						tag: target
 					});
-					notify.onclick = function() {
+					notify.addEventListener("click", function() {
 						window.focus();
 						button.click();
 						this.close();
-					};
-					window.setTimeout(function() {
-						notify.close();
-					}, 5 * 1000);
+					});
 				}
 			}
 		}
