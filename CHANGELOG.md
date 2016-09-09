@@ -30,6 +30,37 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
+## v2.0.0-pre.7 - 2016-08-08 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.0.0-pre.6...v2.0.0-pre.7)
+
+This prerelease fixes a lot of bugs on both the server and the client. It also adds a theme selector on the client and connection debug log level on the server. Additionally, custom highlights are now case-insensitive.
+
+### Added
+
+- Add tooltips on every clickable icons ([#540](https://github.com/thelounge/lounge/pull/540) by [@astorije](https://github.com/astorije))
+- Add debug config option for `irc-framework` debug log ([#547](https://github.com/thelounge/lounge/pull/547) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Client-side theme selector ([#568](https://github.com/thelounge/lounge/pull/568) by [@astorije](https://github.com/astorije))
+
+### Changed
+
+- Use our logger instead of `console.log` and `console.error` for LDAP logs ([#552](https://github.com/thelounge/lounge/pull/552) by [@astorije](https://github.com/astorije))
+- Make custom highlights case-insensitive ([#565](https://github.com/thelounge/lounge/pull/565) by [@astorije](https://github.com/astorije))
+- Bump `request` dependency to 2.74.0 ([#563](https://github.com/thelounge/lounge/pull/563) by [@astorije](https://github.com/astorije))
+- Mention wiki in README ([#548](https://github.com/thelounge/lounge/pull/548) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Support ES6 features in JS linting outside of client code ([#593](https://github.com/thelounge/lounge/pull/593) by [@williamboman](https://github.com/williamboman))
+
+### Fixed
+
+- Fix token persistency across server refreshes ([#553](https://github.com/thelounge/lounge/pull/553) by [@astorije](https://github.com/astorije))
+- Make sure input height is reset when submitting with icon ([#555](https://github.com/thelounge/lounge/pull/555) by [@astorije](https://github.com/astorije))
+- Fix webirc and 4-in-6 addresses ([#535](https://github.com/thelounge/lounge/pull/535) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Allow long URLs to break onto next line on Chrome ([#576](https://github.com/thelounge/lounge/pull/576) by [@astorije](https://github.com/astorije))
+- Make sure users with wrong tokens are locked out instead of crashing the app ([#570](https://github.com/thelounge/lounge/pull/570) by [@astorije](https://github.com/astorije))
+- Remove font family redundancy, fix missed fonts, remove Open Sans ([#562](https://github.com/thelounge/lounge/pull/562) by [@astorije](https://github.com/astorije))
+- Do not set app orientation in manifest to use user setting at OS level ([#587](https://github.com/thelounge/lounge/pull/587) by [@astorije](https://github.com/astorije))
+- Move border-radius from `#main` to `.window elements` to fix radius once and for all ([#572](https://github.com/thelounge/lounge/pull/572) by [@astorije](https://github.com/astorije))
+
 ## v2.0.0-pre.6 - 2016-08-10 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v2.0.0-pre.5...v2.0.0-pre.6)
