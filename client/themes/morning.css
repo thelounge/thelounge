@@ -30,6 +30,7 @@ body {
 }
 
 #windows .header .topic,
+#windows #form .input,
 .messages .msg,
 .sidebar {
 	font-family: inherit;
@@ -148,7 +149,6 @@ body {
 }
 
 #windows #form .input {
-	font-family: inherit;
 	background-color: #2e3642 !important;
 	border-color: #242a33 !important;
 	color: #ccc;
