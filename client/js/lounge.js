@@ -1055,6 +1055,8 @@ $(function() {
 		"escape"
 	], function() {
 		contextMenuContainer.hide();
+		var marker = chat.find(".active .messages .unread-marker");
+		marker.parent().append(marker);
 	});
 
 	setInterval(function() {
