@@ -1,3 +1,8 @@
+import React from "react";
+import ReactDOM from "react-dom";
+
+import UserList from "./UserList";
+
 $(function() {
 	$("#loading-page-message").text("Connecting…");
 
@@ -301,7 +306,9 @@ $(function() {
 			return (oldSortOrder[a] || Number.MAX_VALUE) - (oldSortOrder[b] || Number.MAX_VALUE);
 		});
 
-		users.html(render("user", data)).data("nicks", nicks);
+		users.data("nicks", nicks);
+
+		ReactDOM.render(<UserList users={data.users} />, users[0]);
 	}
 
 	function renderNetworks(data) {
@@ -855,20 +862,6 @@ $(function() {
 			$(".channel.active .users .user[data-name=" + $(this).data("data") + "]").click();
 			break;
 		}
-	});
-
-	chat.on("input", ".search", function() {
-		var value = $(this).val().toLowerCase();
-		var names = $(this).closest(".users").find(".names");
-		names.find(".user").each(function() {
-			var btn = $(this);
-			var name = btn.text().toLowerCase().replace(/[+%@~]/, "");
-			if (name.indexOf(value) === 0) {
-				btn.show();
-			} else {
-				btn.hide();
-			}
-		});
 	});
 
 	chat.on("msg", ".messages", function(e, target, msg) {

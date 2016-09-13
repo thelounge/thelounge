@@ -62,10 +62,13 @@
     "ldapjs": "1.0.0"
   },
   "devDependencies": {
+    "babel-eslint": "6.1.2",
     "babel-loader": "6.2.5",
     "babel-preset-es2015": "6.14.0",
+    "babel-preset-react": "6.11.1",
     "chai": "3.5.0",
     "eslint": "2.11.1",
+    "eslint-plugin-react": "6.3.0",
     "font-awesome": "4.6.3",
     "grunt": "1.0.1",
     "grunt-contrib-uglify": "1.0.1",
@@ -74,6 +77,8 @@
     "istanbul": "0.4.3",
     "mocha": "2.4.5",
     "npm-run-all": "2.1.1",
+    "react": "15.3.1",
+    "react-dom": "15.3.1",
     "stylelint": "6.6.0",
     "webpack": "1.13.2"
   }
