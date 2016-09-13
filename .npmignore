@@ -16,4 +16,3 @@ test/
 .stylelintrc
 .travis.yml
 appveyor.yml
-Gruntfile.js

@@ -3,7 +3,5 @@
 		{{tz time}}
 	</span>
 	<span class="from"></span>
-	<span class="text">
-		{{partial template}}
-	</span>
+	<span class="text"></span>
 </div>
