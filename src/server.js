@@ -208,6 +208,7 @@ function init(socket, client) {
 		socket.on(
 			"open",
 			function(data) {
+				client.lastActiveSocket = socket;
 				client.open(data);
 			}
 		);
@@ -221,6 +222,14 @@ function init(socket, client) {
 			"names",
 			function(data) {
 				client.names(data);
+			}
+		);
+		socket.on(
+			"disconnect",
+			function() {
+				if (socket === client.lastActiveSocket) {
+					client.lastActiveSocket = null;
+				}
 			}
 		);
 		socket.join(client.id);

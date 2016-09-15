@@ -43,7 +43,10 @@ Chan.prototype.pushMessage = function(client, msg) {
 		this.messages.splice(0, this.messages.length - Helper.config.maxHistory);
 	}
 
-	if (!msg.self && this.id !== client.activeChannel) {
+	// If this is a message sent by someone else in a channel other than the one
+	// most recently opened, OR the socket that opened that channel has since
+	// disconnected, mark it as unread.
+	if (!msg.self && (this.id !== client.activeChannel || !client.lastActiveSocket)) {
 		if (!this.firstUnread) {
 			this.firstUnread = msg.id;
 		}
