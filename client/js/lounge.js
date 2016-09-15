@@ -1,13 +1,82 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import {createStore, applyMiddleware, bindActionCreators} from "redux";
+import {Provider} from "react-redux";
+import thunk from "redux-thunk";
 
-import UserList from "./UserList";
+import Chats from "./Chats";
+
+import app from "./reducers";
+import * as actionCreators from "./actions";
 
 $(function() {
 	$("#loading-page-message").text("Connecting…");
 
 	var path = window.location.pathname + "socket.io/";
 	var socket = io({path: path});
+
+	let createEmitMiddleware = socket => () => next => action => {
+		if (action.type === "EMIT") {
+			socket.emit(action.name, action.payload);
+		}
+		return next(action);
+	};
+
+	let store = createStore(
+		app,
+		applyMiddleware(
+			thunk,
+			createEmitMiddleware(socket)
+		)
+	);
+
+	let actions = bindActionCreators(actionCreators, store.dispatch);
+
+	function getChannel(channelId) {
+		return store.getState().channels[channelId];
+	}
+
+	function fillPreviewData(messageId, previewData) {
+		debugger; // TODO reduxify
+		// TODO: optimize
+		/*
+		for (let network of state.networks)
+			for (let channel of network.channels)
+				for (let message of channel.messages)
+					if (message.id === messageId)
+						message.previewData = previewData;
+						*/
+		// renderChats();
+	}
+
+	function clearChannel(channelId) {
+		debugger; // TODO reduxify
+		/*
+		for (let network of state.networks)
+			for (let channel of network.channels)
+				if (channel.id == channelId) {
+					channel.messages = [];
+					channel.hasMore = true;
+				}
+				*/
+				// renderChats();
+	}
+
+	function pruneOldMessages() {
+		debugger; // TODO reduxify
+		/*
+		for (let network of state.networks)
+			for (let channel of network.channels)
+				// XXX: external data dependency
+				if (channel.id != chat.data("id")) {
+					if (channel.messages.length > 100)
+						channel.hasMore = true;
+					channel.messages = channel.messages.slice(channel.messages.length - 100, channel.messages.length);
+				}
+				//renderChats();
+				//*/
+	}
+
 	var commands = [
 		"/close",
 		"/connect",
@@ -38,6 +107,13 @@ $(function() {
 
 	var sidebar = $("#sidebar, #footer");
 	var chat = $("#chat");
+
+	ReactDOM.render(
+		<Provider store={store}>
+			<Chats />
+		</Provider>,
+		chat[0]
+	);
 
 	var pop;
 	try {
@@ -145,6 +221,7 @@ $(function() {
 		if (data.networks.length === 0) {
 			$("#footer").find(".connect").trigger("click");
 		} else {
+			actions.initialDataReceived(data);
 			renderNetworks(data);
 		}
 
@@ -178,12 +255,7 @@ $(function() {
 				channels: [data.chan]
 			})
 		);
-		chat.append(
-			render("chat", {
-				channels: [data.chan]
-			})
-		);
-		renderChannel(data.chan);
+		actions.joinedChannel(data.network, data.chan);
 
 		// Queries do not automatically focus, unless the user did a whois
 		if (data.chan.type === "query" && !data.shouldOpen) {
@@ -198,119 +270,6 @@ $(function() {
 			.click();
 	});
 
-	function buildChatMessage(data) {
-		var type = data.msg.type;
-		var target = "#chan-" + data.chan;
-		if (type === "error") {
-			target = "#chan-" + chat.find(".active").data("id");
-		}
-
-		var chan = chat.find(target);
-		var template = "msg";
-
-		if (!data.msg.highlight && !data.msg.self && (type === "message" || type === "notice") && highlights.some(function(h) {
-			return data.msg.text.toLocaleLowerCase().indexOf(h.toLocaleLowerCase()) > -1;
-		})) {
-			data.msg.highlight = true;
-		}
-
-		if ([
-			"invite",
-			"join",
-			"mode",
-			"kick",
-			"nick",
-			"part",
-			"quit",
-			"topic",
-			"topic_set_by",
-			"action",
-			"whois",
-			"ctcp",
-		].indexOf(type) !== -1) {
-			data.msg.template = "actions/" + type;
-			template = "msg_action";
-		} else if (type === "unhandled") {
-			template = "msg_unhandled";
-		}
-
-		var msg = $(render(template, data.msg));
-
-		var text = msg.find(".text");
-		if (text.find("i").size() === 1) {
-			text = text.find("i");
-		}
-
-		if ((type === "message" || type === "action") && chan.hasClass("channel")) {
-			var nicks = chan.find(".users").data("nicks");
-			if (nicks) {
-				var find = nicks.indexOf(data.msg.from);
-				if (find !== -1 && typeof move === "function") {
-					move(nicks, find, 0);
-				}
-			}
-		}
-
-		return msg;
-	}
-
-	function buildChannelMessages(channel, messages) {
-		return messages.reduce(function(docFragment, message) {
-			docFragment.append(buildChatMessage({
-				chan: channel,
-				msg: message
-			}));
-			return docFragment;
-		}, $(document.createDocumentFragment()));
-	}
-
-	function renderChannel(data) {
-		renderChannelMessages(data);
-		renderChannelUsers(data);
-	}
-
-	function renderChannelMessages(data) {
-		var documentFragment = buildChannelMessages(data.id, data.messages);
-		var channel = chat.find("#chan-" + data.id + " .messages").append(documentFragment);
-
-		if (data.firstUnread > 0) {
-			var first = channel.find("#msg-" + data.firstUnread);
-
-			// TODO: If the message is far off in the history, we still need to append the marker into DOM
-			if (!first.length) {
-				channel.prepend(render("unread_marker"));
-			} else {
-				first.before(render("unread_marker"));
-			}
-		} else {
-			channel.append(render("unread_marker"));
-		}
-	}
-
-	function renderChannelUsers(data) {
-		var users = chat.find("#chan-" + data.id).find(".users");
-		var nicks = users.data("nicks") || [];
-		var i, oldSortOrder = {};
-
-		for (i in nicks) {
-			oldSortOrder[nicks[i]] = i;
-		}
-
-		nicks = [];
-
-		for (i in data.users) {
-			nicks.push(data.users[i].name);
-		}
-
-		nicks = nicks.sort(function(a, b) {
-			return (oldSortOrder[a] || Number.MAX_VALUE) - (oldSortOrder[b] || Number.MAX_VALUE);
-		});
-
-		users.data("nicks", nicks);
-
-		ReactDOM.render(<UserList users={data.users} />, users[0]);
-	}
-
 	function renderNetworks(data) {
 		sidebar.find(".empty").hide();
 		sidebar.find(".networks").append(
@@ -318,16 +277,6 @@ $(function() {
 				networks: data.networks
 			})
 		);
-
-		var channels = $.map(data.networks, function(n) {
-			return n.channels;
-		});
-		chat.append(
-			render("chat", {
-				channels: channels
-			})
-		);
-		channels.forEach(renderChannel);
 
 		confirmExit();
 		sortable();
@@ -337,47 +286,33 @@ $(function() {
 		}
 	}
 
+	function matchesSomeHighlight(msg) {
+		return highlights.some(h =>
+			msg.text.toLocaleLowerCase().indexOf(h.toLocaleLowerCase()) > -1
+		);
+	}
+	function shouldHighlight(msg) {
+		return (
+			!msg.self &&
+			["message", "notice", "action"].indexOf(msg.type) >= 0 &&
+			matchesSomeHighlight(msg)
+		);
+	}
 	socket.on("msg", function(data) {
-		var msg = buildChatMessage(data);
-		var target = "#chan-" + data.chan;
-		var container = chat.find(target + " .messages");
+		data.msg.highlight = data.msg.highlight || shouldHighlight(data.msg);
 
-		container
-			.append(msg)
-			.trigger("msg", [
-				target,
-				data.msg
-			]);
+		actions.messageReceived(data.chan, data.msg);
 
-		if (data.msg.self) {
-			container
-				.find(".unread-marker")
-				.appendTo(container);
-		}
+		updateSidebar(data.chan, data.msg);
 	});
 
 	socket.on("more", function(data) {
-		var documentFragment = buildChannelMessages(data.chan, data.messages);
-		var chan = chat
-			.find("#chan-" + data.chan)
-			.find(".messages");
-
-		// get the scrollable wrapper around messages
-		var scrollable = chan.closest(".chat");
-		var heightOld = chan.height();
-		chan.prepend(documentFragment).end();
-
-		// restore scroll position
-		var position = chan.height() - heightOld;
-		scrollable.scrollTop(position);
-
-		if (data.messages.length !== 100) {
-			scrollable.find(".show-more").removeClass("show");
-		}
+		actions.receivedMore(data.chan, data.messages);
 	});
 
 	socket.on("network", function(data) {
 		renderNetworks(data);
+		actions.joinedNetwork(data.networks);
 
 		sidebar.find(".chan")
 			.last()
@@ -411,7 +346,8 @@ $(function() {
 		}
 
 		chanMenuItem.remove();
-		$("#chan-" + data.chan).remove();
+
+		actions.leftChannel(data.chan);
 	});
 
 	socket.on("quit", function(data) {
@@ -425,6 +361,7 @@ $(function() {
 		if (chan.length === 0) {
 			sidebar.find(".empty").show();
 		}
+		actions.leftNetwork(id);
 	});
 
 	socket.on("toggle", function(data) {
@@ -445,26 +382,9 @@ $(function() {
 		}
 	});
 
-	socket.on("topic", function(data) {
-		var topic = $("#chan-" + data.chan).find(".header .topic");
-		topic.html(Handlebars.helpers.parse(data.topic));
-		// .attr() is safe escape-wise but consider the capabilities of the attribute
-		topic.attr("title", data.topic);
-	});
-
-	socket.on("users", function(data) {
-		var chan = chat.find("#chan-" + data.chan);
-
-		if (chan.hasClass("active")) {
-			socket.emit("names", {
-				target: data.chan
-			});
-		} else {
-			chan.data("needsNamesRefresh", true);
-		}
-	});
-
-	socket.on("names", renderChannelUsers);
+	socket.on("topic", ({chan, topic}) => actions.topicChanged(chan, topic));
+	socket.on("users", ({chan}) => actions.channelUsersChanged(chan));
+	socket.on("names", ({id, users}) => actions.receivedChannelUsers(id, users));
 
 	var userStyles = $("#user-specified-css");
 	var settings = $("#settings");
@@ -659,8 +579,6 @@ $(function() {
 				+ Math.round(parseFloat(style.borderTopWidth) || 0)
 				+ Math.round(parseFloat(style.borderBottomWidth) || 0)
 			) + "px";
-
-			$("#chat .chan.active .chat").trigger("msg.sticky"); // fix growing
 		})
 		.tab(complete, {hint: false});
 
@@ -782,17 +700,7 @@ $(function() {
 		var lastActive = $("#windows > .active");
 
 		lastActive
-			.removeClass("active")
-			.find(".chat")
-			.unsticky();
-
-		var lastActiveChan = lastActive
-			.find(".chan.active")
 			.removeClass("active");
-
-		lastActiveChan
-			.find(".unread-marker")
-			.appendTo(lastActiveChan.find(".messages"));
 
 		var chan = $(target)
 			.addClass("active")
@@ -809,15 +717,10 @@ $(function() {
 			setNick(self.closest(".network").data("nick"));
 		}
 
-		var chanChat = chan.find(".chat");
-		if (chanChat.length > 0) {
-			chanChat.sticky();
+		if (self.data("id")) {
+			actions.channelOpened(self.data("id"));
 		}
-
-		if (chan.data("needsNamesRefresh") === true) {
-			chan.data("needsNamesRefresh", false);
-			socket.emit("names", {target: self.data("id")});
-		}
+		actions.changeActiveChannel(self.data("id"));
 
 		if (screen.width > 768 && chan.hasClass("chan")) {
 			input.focus();
@@ -864,10 +767,11 @@ $(function() {
 		}
 	});
 
-	chat.on("msg", ".messages", function(e, target, msg) {
+	function updateSidebar(chan, msg) {
 		if (msg.self) {
 			return;
 		}
+		var target = "#chan-" + chan;
 
 		var button = sidebar.find(".chan[data-target='" + target + "']");
 		if (msg.highlight || (options.notifyAllMessages && msg.type === "message")) {
@@ -932,34 +836,13 @@ $(function() {
 				badge.addClass("highlight");
 			}
 		}
-	});
-
-	chat.on("click", ".show-more-button", function() {
-		var self = $(this);
-		var count = self.parent().next(".messages").children().length;
-		socket.emit("more", {
-			target: self.data("id"),
-			count: count
-		});
-	});
+	}
 
 	chat.on("click", ".toggle-button", function() {
-		var self = $(this);
-		var chat = self.closest(".chat");
-		var bottom = chat.isScrollBottom();
-		var content = self.parent().next(".toggle-content");
-		if (bottom && !content.hasClass("show")) {
-			var img = content.find("img");
-			if (img.length !== 0 && !img.width()) {
-				img.on("load", function() {
-					chat.scrollBottom();
-				});
-			}
-		}
-		content.toggleClass("show");
-		if (bottom) {
-			chat.scrollBottom();
-		}
+		$(this)
+			.parent()
+			.next(".toggle-content")
+			.toggleClass("show");
 	});
 
 	var windows = $("#windows");
@@ -1051,42 +934,33 @@ $(function() {
 	});
 
 	setInterval(function() {
-		chat.find(".chan:not(.active)").each(function() {
-			var chan = $(this);
-			if (chan.find(".messages .msg:not(.unread-marker)").slice(0, -100).remove().length) {
-				chan.find(".show-more").addClass("show");
-			}
-		});
+		// pruneOldMessages(); // TODO
 	}, 1000 * 10);
 
 	function clear() {
-		chat.find(".active .messages .msg:not(.unread-marker)").remove();
-		chat.find(".active .show-more").addClass("show");
+		clearChannel(chat.data("id"));
 	}
 
-	function complete(word) {
-		var words = commands.slice();
-		var users = chat.find(".active").find(".users");
-		var nicks = users.data("nicks");
-
-		for (var i in nicks) {
-			words.push(nicks[i]);
+	function complete(partialWord) {
+		let chan = getChannel(chat.data("id"));
+		let recentSpeakers =
+			chan.messages
+				.filter(m => (m.type === "message" || m.type === "action") && !m.self)
+				.map(m => m.from)
+				.reverse();
+		let recentSpeakerSet = new Set(recentSpeakers);
+		let nicks = chan.users.map(u => u.name).filter(n => !recentSpeakerSet.has(n));
+		let chans = [];
+		for (let channelId in store.getState().channels) {
+			let channel = store.getState().channels[channelId];
+			if (channel.type !== "lobby") {
+				chans.push(channel.name);
+			}
 		}
 
-		sidebar.find(".chan")
-			.each(function() {
-				var self = $(this);
-				if (!self.hasClass("lobby")) {
-					words.push(self.data("title"));
-				}
-			});
+		let words = commands.concat(recentSpeakers).concat(nicks).concat(chans);
 
-		return $.grep(
-			words,
-			function(w) {
-				return !w.toLowerCase().indexOf(word.toLowerCase());
-			}
-		);
+		return words.filter(w => w.toLowerCase().indexOf(partialWord.toLowerCase()) === 0);
 	}
 
 	function confirmExit() {
@@ -1171,17 +1045,6 @@ $(function() {
 
 	function setNick(nick) {
 		$("#nick").text(nick);
-	}
-
-	function move(array, old_index, new_index) {
-		if (new_index >= array.length) {
-			var k = new_index - array.length;
-			while ((k--) + 1) {
-				this.push(undefined);
-			}
-		}
-		array.splice(new_index, 0, array.splice(old_index, 1)[0]);
-		return array;
 	}
 
 	function toggleNotificationMarkers(newState) {

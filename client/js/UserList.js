@@ -27,6 +27,9 @@ export default class UserList extends React.Component {
 		let query = this.state.query.trim().toLowerCase();
 		return query.length === 0 || user.name.toLowerCase().indexOf(query) === 0;
 	}
+	shouldComponentUpdate(nextProps) {
+		return this.props.users !== nextProps.users;
+	}
 	render() {
 		let users = {};
 		for (let user of this.props.users) {

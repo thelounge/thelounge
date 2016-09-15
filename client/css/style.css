@@ -701,6 +701,7 @@ button {
 }
 
 #chat .chat {
+	display: flex;
 	bottom: 0;
 	left: 0;
 	overflow: auto;
@@ -740,7 +741,7 @@ button {
 #chat .show-more {
 	display: none;
 	padding: 10px;
-	padding-bottom: 0;
+	flex-shrink: 0;
 	width: 100%;
 }
 
@@ -762,8 +763,9 @@ button {
 }
 
 #chat .messages {
-	display: table;
-	table-layout: fixed;
+	overflow: auto;
+	display: flex;
+	flex-direction: column-reverse;
 	width: 100%;
 	padding: 10px 0;
 }
