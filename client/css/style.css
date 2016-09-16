@@ -1557,6 +1557,24 @@ button {
 }
 
 @media (max-width: 768px) {
+	/**
+	  * TODO Replace this with `@media (hover: hover)` when Firefox supports it
+	  * See:
+	  * - http://stackoverflow.com/a/28058919/1935861
+	  * - http://caniuse.com/#feat=css-media-interaction
+	  * - https://www.w3.org/TR/mediaqueries-4/
+	  * - https://developer.mozilla.org/en-US/docs/Web/CSS/@media/hover
+	  */
+	.tooltipped:hover:before,
+	.tooltipped:hover:after,
+	.tooltipped:active:before,
+	.tooltipped:active:after,
+	.tooltipped:focus:before,
+	.tooltipped:focus:after {
+		visibility: hidden;
+		opacity: 0;
+	}
+
 	.container {
 		margin-top: 60px !important;
 	}
