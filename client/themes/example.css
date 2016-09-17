@@ -5,3 +5,7 @@
 body {
 	margin: 0;
 }
+
+.signed-out #main {
+	left: 5px;
+}
