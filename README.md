@@ -41,9 +41,17 @@ The oldest Node.js version we support is 4.2.0.
 
 If you still use 0.10 or 0.12 we strongly advise you to upgrade before installing The Lounge.
 For more information on how to upgrade, read the [documentation](https://nodejs.org/en/download/package-manager/).
-
 ```
 sudo npm install -g thelounge
+```
+
+## Updating
+
+Lounge keeps configuration files in users home directory. If you want to update, you can install new versions without rewriting your configuration in home.
+
+```
+npm install -g thelounge@v2.0.0-rc.1 # install specific build
+npm install -g thelounge@next #install latest dev build  
 ```
 
 ## Usage
@@ -53,6 +61,32 @@ When the install is complete, go ahead and run this in your terminal:
 ```
 lounge --help
 ```
+
+## Configure
+
+After installing and first run, lounge generates config file to your home directory and uses it. If you want to use other configuration or run multiple instances of Lounge, you need to use different home directory for Lounge.
+
+```
+lounge --home ~/test #uses test directory as home
+```
+## Installing locally
+
+Installing Lounge locally is recommended only for testing. For development, use git instead.
+```
+npm install thelounge # install latest stable build
+npm install thelounge@v2.0.0-rc.1 # install specific build
+npm install thelounge@next #install latest dev build  
+```
+
+## Running locally
+
+For testing, lounge home directory should be different as home directory.
+
+```
+./node_modules/.bin/lounge --home ./../../  
+#uses install directory as lounge home
+```
+-----
 
 For more information, read the [documentation](https://thelounge.github.io/docs/) or [wiki](https://github.com/thelounge/lounge/wiki).
 
