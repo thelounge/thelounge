@@ -30,7 +30,30 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
-## v2.0.0-pre.7 - 2016-08-08 [Pre-release]
+## v2.0.0-rc.1 - 2016-09-17 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.0.0-pre.7...v2.0.0-rc.1)
+
+Prior to this release, users of Safari 10 were not able to access The Lounge anymore, because of a conscious change the WebKit made to their support of CSP, as [explained here](https://webkit.org/blog/6830/a-refined-content-security-policy/). This release addresses this issue.
+
+Another notable change is the removal of tooltips on mobiles, as hovering states on mobile devices breaks in different kind of ways. Hopefully there will be a better solution in the future, or better support across mobiles.
+
+This is also the first release candidate for v2.0.0. This means only critical bug fixes will be merged before releasing v2.0.0.
+
+### Changed
+
+- Explicitly authorize websockets in CSP header ([#597](https://github.com/thelounge/lounge/pull/597) by [@astorije](https://github.com/astorije))
+
+### Removed
+
+- Disable tooltips on mobile to prevent them to stay after clicking ([#612](https://github.com/thelounge/lounge/pull/612) by [@astorije](https://github.com/astorije))
+
+### Fixed
+
+- Fix small input text on Morning and Zenburn ([#601](https://github.com/thelounge/lounge/pull/601) by [@astorije](https://github.com/astorije))
+- Fix a left margin appearing on all non-default themes ([#615](https://github.com/thelounge/lounge/pull/615) by [@astorije](https://github.com/astorije))
+
+## v2.0.0-pre.7 - 2016-09-08 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v2.0.0-pre.6...v2.0.0-pre.7)
 
