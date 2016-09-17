@@ -555,10 +555,6 @@ button {
 	flex-direction: column;
 }
 
-.signed-out #main {
-	left: 5px;
-}
-
 #header {
 	display: none;
 	height: 40px;
