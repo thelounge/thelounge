@@ -46,6 +46,12 @@ body {
 	color: #222;
 	font: 16px Lato, sans-serif;
 	margin: 0;
+
+	/**
+	  * Disable pull-to-refresh on mobile that conflicts with scrolling the message list.
+	  * See http://stackoverflow.com/a/29313685/1935861
+	  */
+	overflow-y: hidden;
 }
 
 a {
