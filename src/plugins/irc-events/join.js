@@ -1,3 +1,4 @@
+var _ = require("lodash");
 var Chan = require("../../models/chan");
 var Msg = require("../../models/msg");
 var User = require("../../models/user");
@@ -17,11 +18,15 @@ module.exports = function(irc, network) {
 				chan: chan
 			});
 		}
-		chan.users.push(new User({nick: data.nick, modes: ""}));
-		chan.sortUsers(irc);
-		client.emit("users", {
-			chan: chan.id
-		});
+
+		if (!_.find(chan.users, {nick: data.nick})) {
+			chan.users.push(new User({nick: data.nick, modes: ""}));
+			chan.sortUsers(irc);
+			client.emit("users", {
+				chan: chan.id
+			});
+		}
+
 		var msg = new Msg({
 			time: data.time,
 			from: data.nick,
