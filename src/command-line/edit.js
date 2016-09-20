@@ -12,9 +12,12 @@ program
 			log.error("User '" + name + "' doesn't exist.");
 			return;
 		}
-		child.spawn(
+		var child_spawn = child.spawn(
 			process.env.EDITOR || "vi",
 			[Helper.getUserConfigPath(name)],
 			{stdio: "inherit"}
 		);
+		child_spawn.on("error", function() {
+			log.error("Unable to open " + Helper.getUserConfigPath(name) + ". $EDITOR is not set, and vi was not found.");
+		});
 	});
