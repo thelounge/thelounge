@@ -81,9 +81,3 @@ Before submitting any change, make sure to:
 - Read the [Contributing instructions](https://github.com/thelounge/lounge/blob/master/CONTRIBUTING.md#contributing)
 - Run `npm test` to execute linters and test suite
 - Run `npm run build` if you change or add anything in `client/js/libs` or `client/views`
-
-## License
-
-Available under the [MIT License](LICENSE).
-
-Some fonts licensed under [SIL OFL](http://scripts.sil.org/OFL) and the [Apache License](http://www.apache.org/licenses/).
