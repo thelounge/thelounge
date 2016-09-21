@@ -1,4 +1,4 @@
-FROM node
+FROM node:4
 MAINTAINER cha2maru <cha2maru@suou.waseda.jp>
 
 RUN mkdir /root/work
