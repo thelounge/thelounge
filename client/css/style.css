@@ -551,7 +551,9 @@ button {
 	position: absolute;
 	right: 5px;
 	top: 4px;
+	display: -webkit-flex;
 	display: flex;
+	-webkit-flex-direction: column;
 	flex-direction: column;
 }
 
@@ -666,13 +668,16 @@ button {
 }
 
 #windows #chat-container.active {
+	display: -webkit-flex;
 	display: flex;
+	-webkit-flex-direction: column;
 	flex-direction: column;
 }
 
 #chat {
 	position: relative;
 	overflow: hidden;
+	-webkit-flex: 1;
 	flex: 1;
 }
 
@@ -1196,6 +1201,7 @@ button {
 #form {
 	background: #eee;
 	border-top: 1px solid #ddd;
+	-webkit-flex: 0 0 auto;
 	flex: 0 0 auto;
 	padding: 5px;
 }
@@ -1207,7 +1213,9 @@ button {
 	margin: 0;
 	padding: 0;
 	background: white;
+	display: -webkit-flex;
 	display: flex;
+	-webkit-align-items: flex-end;
 	align-items: flex-end;
 }
 
@@ -1225,6 +1233,7 @@ button {
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
+	-webkit-flex: 0 0 auto;
 	flex: 0 0 auto;
 }
 
@@ -1248,6 +1257,7 @@ button {
 	margin: 5px;
 	padding: 0;
 	resize: none;
+	-webkit-flex: 1 0 auto;
 	flex: 1 0 auto;
 	align-self: center;
 }
@@ -1258,6 +1268,7 @@ button {
 	height: 32px;
 	transition: opacity .2s;
 	width: 32px;
+	-webkit-flex: 0 0 auto;
 	flex: 0 0 auto;
 }
 
