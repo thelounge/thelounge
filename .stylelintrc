@@ -55,7 +55,9 @@
 		"number-leading-zero": "never",
 		"number-no-trailing-zeros": true,
 		"length-zero-no-unit": true,
-		"declaration-block-no-duplicate-properties": true,
+		"declaration-block-no-duplicate-properties": [true, {
+			"ignore": ["consecutive-duplicates"]
+		}],
 		"declaration-block-no-shorthand-property-overrides": true,
 		"rule-non-nested-empty-line-before": ["always-multi-line", {
 			"ignore": ["after-comment"]
