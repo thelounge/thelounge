@@ -30,6 +30,16 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
+## v2.0.0-rc.2 - 2016-09-21 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.0.0-rc.1...v2.0.0-rc.2)
+
+This release candidate only fixes a UI bug affecting iOS 8 users, introduced in v2.0.0-pre.5.
+
+### Fixed
+
+- Fix flexboxes to work on iOS 8 ([#626](https://github.com/thelounge/lounge/pull/626) by [@Gilles123](https://github.com/Gilles123))
+
 ## v2.0.0-rc.1 - 2016-09-17 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v2.0.0-pre.7...v2.0.0-rc.1)
