@@ -143,6 +143,11 @@ function channels(state = {}, action) {
 		return {...state, [channelId]: channel};
 	}
 
+	case actions.CLEAR_CHANNEL: {
+		let {channelId} = action;
+		return updateIn(state, [channelId], channel => ({...channel, messages: [], hasMore: true}));
+	}
+
 	default:
 		return state;
 	}
@@ -187,6 +192,35 @@ function unreadTracking(state, action) {
 	}
 }
 
+function pruneChannelHistory(channel) {
+	updateIn(channel, ["messages"], ms => ms.slice(ms.length - 100));
+}
+
+function messagePruning(state, action) {
+	switch (action.type) {
+	case actions.MESSAGE_RECEIVED: {
+		let {channelId} = action;
+		if (channelId !== state.activeChannelId) {
+			return updateIn(state, ["channels", channelId], pruneChannelHistory);
+		} else {
+			return state;
+		}
+	}
+
+	case actions.CHANGE_ACTIVE_CHANNEL: {
+		let {channelId} = action;
+		if (state.activeChannelId in state.channels && channelId !== state.activeChannelId) {
+			return updateIn(state, ["channels", state.activeChannelId], pruneChannelHistory);
+		} else {
+			return state;
+		}
+	}
+
+	default:
+		return state;
+	}
+}
+
 function reduceReducers(...reducers) {
 	return (state, action) =>
 		reducers.reduce(
@@ -198,6 +232,7 @@ function reduceReducers(...reducers) {
 const app =
 	reduceReducers(
 		unreadTracking,
+		messagePruning,
 		combineReducers({
 			activeChannelId,
 			networks,

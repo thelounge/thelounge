@@ -10,6 +10,7 @@ export const MESSAGE_RECEIVED = "MESSAGE_RECEIVED";
 export const TOPIC_CHANGED = "TOPIC_CHANGED";
 export const CHANNEL_USERS_INVALIDATED = "CHANNEL_USERS_INVALIDATED";
 export const REQUESTED_NAMES = "REQUESTED_NAMES";
+export const CLEAR_CHANNEL = "CLEAR_CHANNEL";
 export const EMIT = "EMIT";
 
 export function initialDataReceived(data) {
@@ -91,4 +92,8 @@ export function requestMore(channelId) {
 
 export function receivedMore(channelId, messages) {
 	return {type: RECEIVED_MORE, channelId, messages};
+}
+
+export function clearChannel(channelId) {
+	return {type: CLEAR_CHANNEL, channelId};
 }

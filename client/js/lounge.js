@@ -36,47 +36,6 @@ $(function() {
 		return store.getState().channels[channelId];
 	}
 
-	function fillPreviewData(messageId, previewData) {
-		debugger; // TODO reduxify
-		// TODO: optimize
-		/*
-		for (let network of state.networks)
-			for (let channel of network.channels)
-				for (let message of channel.messages)
-					if (message.id === messageId)
-						message.previewData = previewData;
-						*/
-		// renderChats();
-	}
-
-	function clearChannel(channelId) {
-		debugger; // TODO reduxify
-		/*
-		for (let network of state.networks)
-			for (let channel of network.channels)
-				if (channel.id == channelId) {
-					channel.messages = [];
-					channel.hasMore = true;
-				}
-				*/
-				// renderChats();
-	}
-
-	function pruneOldMessages() {
-		debugger; // TODO reduxify
-		/*
-		for (let network of state.networks)
-			for (let channel of network.channels)
-				// XXX: external data dependency
-				if (channel.id != chat.data("id")) {
-					if (channel.messages.length > 100)
-						channel.hasMore = true;
-					channel.messages = channel.messages.slice(channel.messages.length - 100, channel.messages.length);
-				}
-				//renderChats();
-				//*/
-	}
-
 	var commands = [
 		"/close",
 		"/connect",
@@ -933,12 +892,8 @@ $(function() {
 		contextMenuContainer.hide();
 	});
 
-	setInterval(function() {
-		// pruneOldMessages(); // TODO
-	}, 1000 * 10);
-
 	function clear() {
-		clearChannel(chat.data("id"));
+		actions.clearChannel(chat.data("id"));
 	}
 
 	function complete(partialWord) {
