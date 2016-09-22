@@ -16,8 +16,9 @@ $(function() {
 	var socket = io({path: path});
 
 	let createEmitMiddleware = socket => () => next => action => {
-		if (action.type === "EMIT") {
-			socket.emit(action.name, action.payload);
+		if (action.meta && action.meta.socket) {
+			const {channel, data} = action.meta.socket;
+			socket.emit(channel, data);
 		}
 		return next(action);
 	};

@@ -110,12 +110,7 @@ function channels(state = {}, action) {
 
 	case actions.RECEIVED_CHANNEL_USERS: {
 		let {channelId, users} = action;
-		return setIn(state, [channelId, "users"], users);
-	}
-
-	case actions.REQUESTED_NAMES: {
-		let {channelId} = action;
-		return setIn(state, [channelId, "needsNamesRefresh"], false);
+		return updateIn(state, [channelId], chan => ({...chan, users, needsNamesRefresh: false}));
 	}
 
 	case actions.CHANNEL_USERS_INVALIDATED: {
@@ -153,7 +148,7 @@ function channels(state = {}, action) {
 	}
 }
 
-function activeChannelId(state = undefined, action) {
+function activeChannelId(state = null, action) {
 	switch (action.type) {
 	case actions.CHANGE_ACTIVE_CHANNEL:
 		return action.channelId;
@@ -193,7 +188,11 @@ function unreadTracking(state, action) {
 }
 
 function pruneChannelHistory(channel) {
-	updateIn(channel, ["messages"], ms => ms.slice(ms.length - 100));
+	return {
+		...channel,
+		messages: channel.messages.slice(-100),
+		hasMore: channel.messages.length > 100
+	}
 }
 
 function messagePruning(state, action) {

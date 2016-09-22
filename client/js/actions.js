@@ -4,14 +4,14 @@ export const LEFT_NETWORK = "LEFT_NETWORK";
 export const JOINED_CHANNEL = "JOINED_CHANNEL";
 export const LEFT_CHANNEL = "LEFT_CHANNEL";
 export const RECEIVED_CHANNEL_USERS = "RECEIVED_CHANNEL_USERS";
+export const REQUEST_MORE = "REQUEST_MORE";
 export const RECEIVED_MORE = "RECEIVED_MORE";
 export const CHANGE_ACTIVE_CHANNEL = "CHANGE_ACTIVE_CHANNEL";
 export const MESSAGE_RECEIVED = "MESSAGE_RECEIVED";
 export const TOPIC_CHANGED = "TOPIC_CHANGED";
 export const CHANNEL_USERS_INVALIDATED = "CHANNEL_USERS_INVALIDATED";
-export const REQUESTED_NAMES = "REQUESTED_NAMES";
+export const REQUEST_NAMES = "REQUEST_NAMES";
 export const CLEAR_CHANNEL = "CLEAR_CHANNEL";
-export const EMIT = "EMIT";
 
 export function initialDataReceived(data) {
 	return {type: INITIAL_DATA_RECEIVED, data};
@@ -37,23 +37,14 @@ export function receivedChannelUsers(channelId, users) {
 	return {type: RECEIVED_CHANNEL_USERS, channelId, users};
 }
 
-export function emit(name, payload) {
-	return {type: EMIT, name, payload};
-}
-
-export function requestedNames(channelId) {
-	return {type: REQUESTED_NAMES, channelId};
-}
-
 export function refreshNames(channelId) {
-	return emit("names", {target: channelId});
+	return {type: REQUEST_NAMES, channelId, meta: {socket: {channel: "names", data: {target: channelId}}}}
 }
 
 export function channelOpened(channelId) {
 	return (dispatch, getState) => {
 		let channel = getState().channels[channelId];
 		if (channel.needsNamesRefresh) {
-			dispatch(requestedNames(channelId));
 			dispatch(refreshNames(channelId));
 		}
 	};
@@ -62,9 +53,9 @@ export function channelOpened(channelId) {
 export function channelUsersChanged(channelId) {
 	return (dispatch, getState) => {
 		if (channelId === getState().activeChannelId) {
-			return dispatch(refreshNames(channelId));
+			dispatch(refreshNames(channelId));
 		} else {
-			return dispatch({type: CHANNEL_USERS_INVALIDATED, channelId});
+			dispatch({type: CHANNEL_USERS_INVALIDATED, channelId});
 		}
 	};
 }
@@ -77,16 +68,25 @@ export function messageReceived(channelId, message) {
 	return {type: MESSAGE_RECEIVED, channelId, message};
 }
 
-export function changeActiveChannel(channelId) {
+export function changeActiveChannel(channelId = null) {
 	return {type: CHANGE_ACTIVE_CHANNEL, channelId};
 }
 
 export function requestMore(channelId) {
-	return function(dispatch, getState) {
-		dispatch(emit("more", {
-			target: channelId,
-			count: getState().channels[channelId].messages.length
-		}));
+	return (dispatch, getState) => {
+		dispatch({
+			type: REQUEST_MORE,
+			channelId,
+			meta: {
+				socket: {
+					channel: "more",
+					data: {
+						target: channelId,
+						count: getState().channels[channelId].messages.length
+					}
+				}
+			}
+		});
 	};
 }
 
