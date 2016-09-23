@@ -557,6 +557,10 @@ button {
 	flex-direction: column;
 }
 
+.signed-out #main {
+	left: 0; /* Hide the sidebar when user is signed out */
+}
+
 #header {
 	display: none;
 	height: 40px;
