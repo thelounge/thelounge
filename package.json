@@ -1,7 +1,7 @@
 {
   "name": "thelounge",
   "description": "The self-hosted Web IRC client",
-  "version": "2.0.0-pre.4",
+  "version": "2.0.0-rc.2",
   "publishConfig": {
     "tag": "next"
   },
@@ -24,7 +24,9 @@
     "test": "npm-run-all -c test:mocha lint",
     "test:mocha": "mocha -r test/fixtures/env.js test/**/*.js",
     "lint": "npm-run-all -c lint:js lint:css",
-    "lint:js": "eslint .",
+    "lint:js": "npm-run-all -c lint:js:es5 lint:js:es6",
+    "lint:js:es5": "eslint --parser-options=\"ecmaVersion:5\" client/",
+    "lint:js:es6": "eslint --ignore-pattern client/ .",
     "lint:css": "stylelint \"**/*.css\"",
     "prepublish": "npm run build"
   },
@@ -53,10 +55,11 @@
     "moment": "^2.13.0",
     "mysql": "^2.11.1",
     "read": "1.0.7",
-    "request": "2.72.0",
+    "request": "2.74.0",
     "semver": "5.1.0",
     "socket.io": "1.4.5",
-    "spdy": "3.3.2"
+    "spdy": "3.3.2",
+    "ldapjs": "1.0.0"
   },
   "devDependencies": {
     "chai": "3.5.0",

@@ -1,3 +1,5 @@
+"use strict";
+
 var _ = require("lodash");
 var pkg = require("../package.json");
 var bcrypt = require("bcrypt-nodejs");
@@ -8,8 +10,11 @@ var fs = require("fs");
 var io = require("socket.io");
 var dns = require("dns");
 var Helper = require("./helper");
+var ldap = require("ldapjs");
 
 var manager = null;
+var ldapclient = null;
+var authFunction = localAuth;
 
 module.exports = function() {
 	manager = new ClientManager();
@@ -21,6 +26,10 @@ module.exports = function() {
 
 	var config = Helper.config;
 	var server = null;
+
+	if (config.public && (config.ldap || {}).enable) {
+		log.warn("Server is public and set to use LDAP. Set to private mode if trying to use LDAP authentication.");
+	}
 
 	if (!config.https.enable) {
 		server = require("http");
@@ -39,6 +48,13 @@ module.exports = function() {
 		}
 
 		require("./identd").start(config.identd.port);
+	}
+
+	if (!config.public && (config.ldap || {}).enable) {
+		ldapclient = ldap.createClient({
+			url: config.ldap.url
+		});
+		authFunction = ldapAuth;
 	}
 
 	var sockets = io(server, {
@@ -68,16 +84,31 @@ module.exports = function() {
 };
 
 function getClientIp(req) {
+	var ip;
+
 	if (!Helper.config.reverseProxy) {
-		return req.connection.remoteAddress;
+		ip = req.connection.remoteAddress;
 	} else {
-		return req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+		ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 	}
+
+	return ip.replace(/^::ffff:/, "");
 }
 
 function allRequests(req, res, next) {
 	res.setHeader("X-Content-Type-Options", "nosniff");
 	return next();
+}
+
+// Information to populate the About section in UI, either from npm or from git
+var gitCommit = null;
+try {
+	gitCommit = require("child_process")
+		.execSync("git rev-parse --short HEAD 2> /dev/null") // Returns hash of current commit
+		.toString()
+		.trim();
+} catch (e) {
+	// Not a git repository or git is not installed: treat it as npm release
 }
 
 function index(req, res, next) {
@@ -90,8 +121,14 @@ function index(req, res, next) {
 			pkg,
 			Helper.config
 		);
+		data.gitCommit = gitCommit;
+		data.themes = fs.readdirSync("client/themes/").filter(function(file) {
+			return file.endsWith(".css");
+		}).map(function(css) {
+			return css.slice(0, -4);
+		});
 		var template = _.template(file);
-		res.setHeader("Content-Security-Policy", "default-src *; style-src * 'unsafe-inline'; script-src 'self'; child-src 'none'; object-src 'none'; form-action 'none'; referrer no-referrer;");
+		res.setHeader("Content-Security-Policy", "default-src *; connect-src 'self' ws: wss:; style-src * 'unsafe-inline'; script-src 'self'; child-src 'none'; object-src 'none'; form-action 'none'; referrer no-referrer;");
 		res.setHeader("Content-Type", "text/html");
 		res.writeHead(200);
 		res.end(template(data));
@@ -124,7 +161,7 @@ function init(socket, client) {
 				client.connect(data);
 			}
 		);
-		if (!Helper.config.public) {
+		if (!Helper.config.public && !Helper.config.ldap.enable) {
 			socket.on(
 				"change-password",
 				function(data) {
@@ -209,10 +246,39 @@ function reverseDnsLookup(socket, client) {
 	});
 }
 
+function localAuth(client, user, password, callback) {
+	var result = false;
+	try {
+		result = bcrypt.compareSync(password || "", client.config.password);
+	} catch (error) {
+		if (error === "Not a valid BCrypt hash.") {
+			log.error("User (" + user + ") with no local password set tried to sign in. (Probably a LDAP user)");
+		}
+		result = false;
+	} finally {
+		callback(result);
+	}
+}
+
+function ldapAuth(client, user, password, callback) {
+	var userDN = user.replace(/([,\\\/#+<>;"= ])/g, "\\$1");
+	var bindDN = Helper.config.ldap.primaryKey + "=" + userDN + "," + Helper.config.ldap.baseDN;
+
+	ldapclient.bind(bindDN, password, function(err) {
+		if (!err && !client) {
+			if (!manager.addUser(user, null)) {
+				log.error("Unable to create new user", user);
+			}
+		}
+		callback(!err);
+	});
+}
+
 function auth(data) {
 	var socket = this;
+	var client;
 	if (Helper.config.public) {
-		var client = new Client(manager);
+		client = new Client(manager);
 		manager.clients.push(client);
 		socket.on("disconnect", function() {
 			manager.clients = _.without(manager.clients, client);
@@ -224,28 +290,35 @@ function auth(data) {
 			init(socket, client);
 		}
 	} else {
-		var success = false;
-		_.each(manager.clients, function(client) {
-			if (data.token) {
-				if (data.token === client.config.token) {
-					success = true;
-				}
-			} else if (client.config.user === data.user) {
-				if (bcrypt.compareSync(data.password || "", client.config.password)) {
-					success = true;
-				}
-			}
+		client = manager.findClient(data.user, data.token);
+		var signedIn = data.token && client && data.token === client.config.token;
+		var token;
+
+		if (client && (data.remember || data.token)) {
+			token = client.config.token;
+		}
+
+		var authCallback = function(success) {
 			if (success) {
+				if (!client) {
+					// LDAP just created a user
+					manager.loadUser(data.user);
+					client = manager.findClient(data.user);
+				}
 				if (Helper.config.webirc !== null && !client.config["ip"]) {
 					reverseDnsLookup(socket, client);
 				} else {
-					init(socket, client);
+					init(socket, client, token);
 				}
-				return false;
+			} else {
+				socket.emit("auth", {success: success});
 			}
-		});
-		if (!success) {
-			socket.emit("auth", {success: success});
+		};
+
+		if (signedIn) {
+			authCallback(true);
+		} else {
+			authFunction(client, data.user, data.password, authCallback);
 		}
 	}
 }

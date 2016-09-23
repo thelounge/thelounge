@@ -140,26 +140,7 @@ $(function() {
 		if (data.networks.length === 0) {
 			$("#footer").find(".connect").trigger("click");
 		} else {
-			sidebar.find(".empty").hide();
-			sidebar.find(".networks").html(
-				render("network", {
-					networks: data.networks
-				})
-			);
-			var channels = $.map(data.networks, function(n) {
-				return n.channels;
-			});
-			chat.html(
-				render("chat", {
-					channels: channels
-				})
-			);
-			channels.forEach(renderChannel);
-			confirmExit();
-
-			if (sidebar.find(".highlight").length) {
-				toggleFaviconNotification(true);
-			}
+			renderNetworks(data);
 		}
 
 		if (data.token && $("#sign-in-remember").is(":checked")) {
@@ -182,8 +163,6 @@ $(function() {
 				$("#footer").find(".connect").trigger("click");
 			}
 		}
-
-		sortable();
 	});
 
 	socket.on("join", function(data) {
@@ -225,7 +204,7 @@ $(function() {
 		var template = "msg";
 
 		if (!data.msg.highlight && !data.msg.self && (type === "message" || type === "notice") && highlights.some(function(h) {
-			return data.msg.text.indexOf(h) > -1;
+			return data.msg.text.toLocaleLowerCase().indexOf(h.toLocaleLowerCase()) > -1;
 		})) {
 			data.msg.highlight = true;
 		}
@@ -325,6 +304,32 @@ $(function() {
 		users.html(render("user", data)).data("nicks", nicks);
 	}
 
+	function renderNetworks(data) {
+		sidebar.find(".empty").hide();
+		sidebar.find(".networks").append(
+			render("network", {
+				networks: data.networks
+			})
+		);
+
+		var channels = $.map(data.networks, function(n) {
+			return n.channels;
+		});
+		chat.append(
+			render("chat", {
+				channels: channels
+			})
+		);
+		channels.forEach(renderChannel);
+
+		confirmExit();
+		sortable();
+
+		if (sidebar.find(".highlight").length) {
+			toggleNotificationMarkers(true);
+		}
+	}
+
 	socket.on("msg", function(data) {
 		var msg = buildChatMessage(data);
 		var target = "#chan-" + data.chan;
@@ -348,35 +353,33 @@ $(function() {
 		var documentFragment = buildChannelMessages(data.chan, data.messages);
 		var chan = chat
 			.find("#chan-" + data.chan)
-			.find(".messages")
-			.prepend(documentFragment)
-			.end();
+			.find(".messages");
+
+		// get the scrollable wrapper around messages
+		var scrollable = chan.closest(".chat");
+		var heightOld = chan.height();
+		chan.prepend(documentFragment).end();
+
+		// restore scroll position
+		var position = chan.height() - heightOld;
+		scrollable.scrollTop(position);
+
 		if (data.messages.length !== 100) {
-			chan.find(".show-more").removeClass("show");
+			scrollable.find(".show-more").removeClass("show");
 		}
 	});
 
 	socket.on("network", function(data) {
-		sidebar.find(".empty").hide();
-		sidebar.find(".networks").append(
-			render("network", {
-				networks: [data.network]
-			})
-		);
-		chat.append(
-			render("chat", {
-				channels: data.network.channels
-			})
-		);
+		renderNetworks(data);
+
 		sidebar.find(".chan")
 			.last()
 			.trigger("click");
+
 		$("#connect")
 			.find(".btn")
 			.prop("disabled", false)
 			.end();
-		confirmExit();
-		sortable();
 	});
 
 	socket.on("network_changed", function(data) {
@@ -393,29 +396,15 @@ $(function() {
 	});
 
 	socket.on("part", function(data) {
-		var id = data.chan;
-		sidebar.find(".chan[data-id='" + id + "']").remove();
-		$("#chan-" + id).remove();
+		var chanMenuItem = sidebar.find(".chan[data-id='" + data.chan + "']");
 
-		var next = null;
-		var highest = -1;
-		chat.find(".chan").each(function() {
-			var self = $(this);
-			var z = parseInt(self.css("z-index"));
-			if (z > highest) {
-				highest = z;
-				next = self;
-			}
-		});
-
-		if (next !== null) {
-			id = next.data("id");
-			sidebar.find("[data-id=" + id + "]").click();
-		} else {
-			sidebar.find(".chan")
-				.eq(0)
-				.click();
+		// When parting from the active channel/query, jump to the network's lobby
+		if (chanMenuItem.hasClass("active")) {
+			chanMenuItem.parent(".network").find(".lobby").click();
 		}
+
+		chanMenuItem.remove();
+		$("#chan-" + data.chan).remove();
 	});
 
 	socket.on("quit", function(data) {
@@ -473,18 +462,19 @@ $(function() {
 	var userStyles = $("#user-specified-css");
 	var settings = $("#settings");
 	var options = $.extend({
-		desktopNotifications: false,
 		coloredNicks: true,
+		desktopNotifications: false,
 		join: true,
 		links: true,
 		mode: true,
 		motd: false,
 		nick: true,
 		notification: true,
-		part: true,
-		thumbnails: true,
-		quit: true,
 		notifyAllMessages: false,
+		part: true,
+		quit: true,
+		theme: $("#theme").attr("href").replace(/^themes\/(.*).css$/, "$1"), // Extracts default theme name, set on the server configuration
+		thumbnails: true,
 		userStyles: userStyles.text(),
 	}, JSON.parse(window.localStorage.getItem("settings")));
 
@@ -494,9 +484,11 @@ $(function() {
 				$(document.head).find("#user-specified-css").html(options[i]);
 			}
 			settings.find("#user-specified-css-input").val(options[i]);
-			continue;
 		} else if (i === "highlights") {
 			settings.find("input[name=" + i + "]").val(options[i]);
+		} else if (i === "theme") {
+			$("#theme").attr("href", "themes/" + options[i] + ".css");
+			settings.find("select[name=" + i + "]").val(options[i]);
 		} else if (options[i]) {
 			settings.find("input[name=" + i + "]").prop("checked", true);
 		}
@@ -504,7 +496,7 @@ $(function() {
 
 	var highlights = [];
 
-	settings.on("change", "input, textarea", function() {
+	settings.on("change", "input, select, textarea", function() {
 		var self = $(this);
 		var name = self.attr("name");
 
@@ -526,14 +518,13 @@ $(function() {
 			"notifyAllMessages",
 		].indexOf(name) !== -1) {
 			chat.toggleClass("hide-" + name, !self.prop("checked"));
-		}
-		if (name === "coloredNicks") {
+		} else if (name === "coloredNicks") {
 			chat.toggleClass("colored-nicks", self.prop("checked"));
-		}
-		if (name === "userStyles") {
+		} else if (name === "theme") {
+			$("#theme").attr("href", "themes/" + options[name] + ".css");
+		} else if (name === "userStyles") {
 			$(document.head).find("#user-specified-css").html(options[name]);
-		}
-		if (name === "highlights") {
+		} else if (name === "highlights") {
 			var highlightString = options[name];
 			highlights = highlightString.split(",").map(function(h) {
 				return h.trim();
@@ -642,12 +633,19 @@ $(function() {
 		return false;
 	});
 
+	function resetInputHeight(input) {
+		input.style.height = input.style.minHeight;
+	}
+
 	var input = $("#input")
 		.history()
 		.on("input keyup", function() {
 			var style = window.getComputedStyle(this);
-			this.style.height = "0px";
-			this.offsetHeight; // force reflow
+
+			// Start by resetting height before computing as scrollHeight does not
+			// decrease when deleting characters
+			resetInputHeight(this);
+
 			this.style.height = Math.min(
 				Math.round(window.innerHeight - 100), // prevent overflow
 				this.scrollHeight
@@ -670,6 +668,7 @@ $(function() {
 		}
 
 		input.val("");
+		resetInputHeight(input.get(0));
 
 		if (text.indexOf("/clear") === 0) {
 			clear();
@@ -769,7 +768,7 @@ $(function() {
 			.empty();
 
 		if (sidebar.find(".highlight").length === 0) {
-			toggleFaviconNotification(false);
+			toggleNotificationMarkers(false);
 		}
 
 		viewport.removeClass("lt");
@@ -780,9 +779,13 @@ $(function() {
 			.find(".chat")
 			.unsticky();
 
-		lastActive
+		var lastActiveChan = lastActive
 			.find(".chan.active")
 			.removeClass("active");
+
+		lastActiveChan
+			.find(".unread-marker")
+			.appendTo(lastActiveChan.find(".messages"));
 
 		var chan = $(target)
 			.addClass("active")
@@ -879,7 +882,7 @@ $(function() {
 				if (options.notification) {
 					pop.play();
 				}
-				toggleFaviconNotification(true);
+				toggleNotificationMarkers(true);
 
 				if (options.desktopNotifications && Notification.permission === "granted") {
 					var title;
@@ -1188,20 +1191,24 @@ $(function() {
 		return array;
 	}
 
-	function toggleFaviconNotification(newState) {
+	function toggleNotificationMarkers(newState) {
+		// Toggles the favicon to red when there are unread notifications
 		if (favicon.data("toggled") !== newState) {
 			var old = favicon.attr("href");
 			favicon.attr("href", favicon.data("other"));
 			favicon.data("other", old);
 			favicon.data("toggled", newState);
 		}
+
+		// Toggles a dot on the menu icon when there are unread notifications
+		$("#viewport .lt").toggleClass("notified", newState);
 	}
 
 	document.addEventListener(
 		"visibilitychange",
 		function() {
 			if (sidebar.find(".highlight").length === 0) {
-				toggleFaviconNotification(false);
+				toggleNotificationMarkers(false);
 			}
 		}
 	);

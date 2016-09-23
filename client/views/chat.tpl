@@ -3,11 +3,13 @@
 	<div class="header">
 		<button class="lt" aria-label="Toggle channel list"></button>
 		{{#equal type "channel"}}
-			<button class="rt" aria-label="Toggle user list"></button>
+			<span class="rt-tooltip tooltipped tooltipped-w" aria-label="Toggle user list">
+				<button class="rt" aria-label="Toggle user list"></button>
+			</span>
 		{{/equal}}
 		<button class="menu" aria-label="Open the context menu"></button>
 		<span class="title">{{name}}</span>
-		<span class="topic">{{{parse topic}}}</span>
+		<span title="{{topic}}" class="topic">{{{parse topic}}}</span>
 	</div>
 	<div class="chat">
 		<div class="show-more {{#equal messages.length 100}}show{{/equal}}">

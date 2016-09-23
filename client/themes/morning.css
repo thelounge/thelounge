@@ -29,12 +29,11 @@ body {
 	background: #333c4a;
 }
 
-#main #chat,
-#main #form,
-#form .input,
-#chat,
-#windows .header {
-	font-family: "Open Sans", sans-serif !important;
+#windows .header .topic,
+#windows #form .input,
+.messages .msg,
+.sidebar {
+	font-family: inherit;
 	font-size: 13px;
 }
 
@@ -70,12 +69,16 @@ body {
 	left: 0;
 	bottom: 0;
 	width: 220px;
+	border-radius: 0;
 }
 
 #main {
 	top: 0;
 	bottom: 0;
 	right: 0;
+}
+
+#windows .window {
 	border-radius: 0;
 }
 
@@ -145,7 +148,7 @@ body {
 	border-color: #242a33;
 }
 
-#form .input {
+#windows #form .input {
 	background-color: #2e3642 !important;
 	border-color: #242a33 !important;
 	color: #ccc;
@@ -173,6 +176,11 @@ body {
 
 #chat .header {
 	color: #99a2b4;
+}
+
+/* Notification dot on the top right corner of the menu icon */
+#viewport .lt:after {
+	border-color: #333c4a;
 }
 
 #chat .unread-marker {
