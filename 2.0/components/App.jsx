@@ -3,7 +3,10 @@ import { connect } from 'react-redux';
 
 import { setSomething } from 'clientUI/redux/chat';
 
+import 'expose?$!expose?jQuery!jquery';
+
 import 'font-awesome-webpack';
+import 'bootstrap-webpack';
 import './App.styl';
 
 
