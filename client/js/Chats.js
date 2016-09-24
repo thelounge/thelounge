@@ -5,14 +5,14 @@ import * as actions from "./actions";
 
 import Chat from "./Chat";
 
-const Chats = ({channels, activeChannelId, actions}) => {
+const Chats = ({channels, activeChannelId, activeWindowId, actions}) => {
 	return (
 		<div>
 			{Object.keys(channels).map(channelId =>
 				<Chat
 					key={channelId}
 					channel={channels[channelId]}
-					isActive={Number(channelId) === activeChannelId}
+					isActive={activeWindowId === "chat-container" && Number(channelId) === activeChannelId}
 					actions={actions}
 				/>
 			)}
@@ -21,7 +21,7 @@ const Chats = ({channels, activeChannelId, actions}) => {
 };
 
 const mapStateToProps = state =>
-	({channels: state.channels, activeChannelId: state.activeChannelId});
+	({channels: state.channels, activeChannelId: state.activeChannelId, activeWindowId: state.activeWindowId});
 const mapDispatchToProps = dispatch =>
 	({actions: bindActionCreators(actions, dispatch)});
 

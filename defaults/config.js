@@ -217,7 +217,7 @@ module.exports = {
 		// @type     string
 		// @default  "lounge-user"
 		//
-		nick: "lounge-user",
+		nick: "nornagon-noise",
 
 		//
 		// Username
@@ -242,7 +242,7 @@ module.exports = {
 		// @type     string
 		// @default  "#thelounge"
 		//
-		join: "#thelounge"
+		join: "#nornagon-noise"
 	},
 
 	//

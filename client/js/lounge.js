@@ -1,13 +1,33 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import {createStore, applyMiddleware, bindActionCreators} from "redux";
-import {Provider} from "react-redux";
+import {Provider, connect} from "react-redux";
 import thunk from "redux-thunk";
+import createLogger from "redux-logger";
 
 import Chats from "./Chats";
+import Sidebar from "./Sidebar";
+
+import complete from './completion';
 
 import app from "./reducers";
 import * as actionCreators from "./actions";
+
+function observeStore(store, select, onChange) {
+  let currentState;
+
+  function handleChange() {
+    let nextState = select(store.getState());
+    if (nextState !== currentState) {
+      currentState = nextState;
+      onChange(currentState);
+    }
+  }
+
+  let unsubscribe = store.subscribe(handleChange);
+  handleChange();
+  return unsubscribe;
+}
 
 $(function() {
 	$("#loading-page-message").text("Connecting…");
@@ -27,52 +47,81 @@ $(function() {
 		app,
 		applyMiddleware(
 			thunk,
-			createEmitMiddleware(socket)
+			createEmitMiddleware(socket),
+			createLogger({collapsed: true})
 		)
 	);
 
 	let actions = bindActionCreators(actionCreators, store.dispatch);
 
-	function getChannel(channelId) {
-		return store.getState().channels[channelId];
-	}
-
-	var commands = [
-		"/close",
-		"/connect",
-		"/deop",
-		"/devoice",
-		"/disconnect",
-		"/invite",
-		"/join",
-		"/kick",
-		"/leave",
-		"/mode",
-		"/msg",
-		"/nick",
-		"/notice",
-		"/op",
-		"/part",
-		"/query",
-		"/quit",
-		"/raw",
-		"/say",
-		"/send",
-		"/server",
-		"/slap",
-		"/topic",
-		"/voice",
-		"/whois"
-	];
-
 	var sidebar = $("#sidebar, #footer");
 	var chat = $("#chat");
+	var viewport = $("#viewport");
+	var contextMenuContainer = $("#context-menu-container");
+	var contextMenu = $("#context-menu");
 
 	ReactDOM.render(
 		<Provider store={store}>
 			<Chats />
 		</Provider>,
 		chat[0]
+	);
+
+	let sidebarRoot = document.getElementById("sidebar");
+	ReactDOM.render(
+		<Provider store={store}>
+			<Sidebar />
+		</Provider>,
+		sidebarRoot
+	);
+	sidebarRoot.parentNode.insertBefore(sidebarRoot.children[0], sidebarRoot);
+	sidebarRoot.remove();
+
+	const getActiveNick = (state) => {
+		if (state.activeChannelId && state.channels[state.activeChannelId]) {
+			let networkId = state.channels[state.activeChannelId].networkId;
+			let network = state.networks.find(n => n.id === networkId);
+			return network.nick;
+		} else {
+			return "";
+		}
+	};
+	const CurrentNick = connect(
+		(state) => ({nick: getActiveNick(state)})
+	)(({nick}) => <span>{nick}</span>);
+
+	ReactDOM.render(
+		<Provider store={store}>
+			<CurrentNick />
+		</Provider>,
+		document.getElementById("nick")
+	);
+
+	observeStore(
+		store,
+		state => state.activeWindowId,
+		activeWindowId => {
+			$("#windows > .active").removeClass("active");
+			$(document.getElementById(activeWindowId)).addClass("active");
+			viewport.removeClass("lt");
+		}
+	);
+
+	observeStore(
+		store,
+		state => state.activeChannelId,
+		(activeChannelId) => {
+			viewport.removeClass("lt");
+			focus();
+			let title = "The Lounge";
+			if (activeChannelId) {
+				let chanTitle = store.getState().channels[activeChannelId].name;
+				if (chanTitle) {
+					title = `${chanTitle} - ${title}`;
+				}
+			}
+			document.title = title;
+		}
 	);
 
 	var pop;
@@ -179,10 +228,10 @@ $(function() {
 
 	socket.on("init", function(data) {
 		if (data.networks.length === 0) {
-			$("#footer").find(".connect").trigger("click");
+			actions.changeActiveWindow("connect");
 		} else {
 			actions.initialDataReceived(data);
-			renderNetworks(data);
+			// renderNetworks(data);
 		}
 
 		if (data.token && $("#sign-in-remember").is(":checked")) {
@@ -194,56 +243,19 @@ $(function() {
 		$("body").removeClass("signed-out");
 		$("#loading").remove();
 		$("#sign-in").remove();
-
-		var id = data.active;
-		var target = sidebar.find("[data-id='" + id + "']").trigger("click");
-		if (target.length === 0) {
-			var first = sidebar.find(".chan")
-				.eq(0)
-				.trigger("click");
-			if (first.length === 0) {
-				$("#footer").find(".connect").trigger("click");
-			}
-		}
 	});
 
-	socket.on("join", function(data) {
-		var id = data.network;
-		var network = sidebar.find("#network-" + id);
-		network.append(
-			render("chan", {
-				channels: [data.chan]
-			})
-		);
-		actions.joinedChannel(data.network, data.chan);
-
-		// Queries do not automatically focus, unless the user did a whois
-		if (data.chan.type === "query" && !data.shouldOpen) {
-			return;
-		}
-
-		sidebar.find(".chan")
-			.sort(function(a, b) {
-				return $(a).data("id") - $(b).data("id");
-			})
-			.last()
-			.click();
-	});
+	socket.on("join", ({network, chan}) => actions.joinedChannel(network, chan));
 
 	function renderNetworks(data) {
-		sidebar.find(".empty").hide();
-		sidebar.find(".networks").append(
-			render("network", {
-				networks: data.networks
-			})
-		);
-
 		confirmExit();
-		sortable();
+		// sortable();
 
+		/*
 		if (sidebar.find(".highlight").length) {
 			toggleNotificationMarkers(true);
 		}
+		*/
 	}
 
 	function matchesSomeHighlight(msg) {
@@ -263,20 +275,13 @@ $(function() {
 
 		actions.messageReceived(data.chan, data.msg);
 
-		updateSidebar(data.chan, data.msg);
+		maybeNotify(data.chan, data.msg);
 	});
 
-	socket.on("more", function(data) {
-		actions.receivedMore(data.chan, data.messages);
-	});
+	socket.on("more", ({chan, messages}) => actions.receivedMore(chan, messages));
 
 	socket.on("network", function(data) {
-		renderNetworks(data);
-		actions.joinedNetwork(data.networks);
-
-		sidebar.find(".chan")
-			.last()
-			.trigger("click");
+		actions.joinedNetwork(data.network);
 
 		$("#connect")
 			.find(".btn")
@@ -285,44 +290,14 @@ $(function() {
 	});
 
 	socket.on("network_changed", function(data) {
-		sidebar.find("#network-" + data.network).data("options", data.serverOptions);
+		// sidebar.find("#network-" + data.network).data("options", data.serverOptions);
+		// TODO: ^ seems unused?
 	});
 
-	socket.on("nick", function(data) {
-		var id = data.network;
-		var nick = data.nick;
-		var network = sidebar.find("#network-" + id).data("nick", nick);
-		if (network.find(".active").length) {
-			setNick(nick);
-		}
-	});
+	socket.on("nick", ({network, nick}) => actions.nickChanged(network, nick));
 
-	socket.on("part", function(data) {
-		var chanMenuItem = sidebar.find(".chan[data-id='" + data.chan + "']");
-
-		// When parting from the active channel/query, jump to the network's lobby
-		if (chanMenuItem.hasClass("active")) {
-			chanMenuItem.parent(".network").find(".lobby").click();
-		}
-
-		chanMenuItem.remove();
-
-		actions.leftChannel(data.chan);
-	});
-
-	socket.on("quit", function(data) {
-		var id = data.network;
-		sidebar.find("#network-" + id)
-			.remove()
-			.end();
-		var chan = sidebar.find(".chan")
-			.eq(0)
-			.trigger("click");
-		if (chan.length === 0) {
-			sidebar.find(".empty").show();
-		}
-		actions.leftNetwork(id);
-	});
+	socket.on("part", ({chan}) => actions.leftChannel(chan));
+	socket.on("quit", ({network}) => actions.leftNetwork(network));
 
 	socket.on("toggle", function(data) {
 		var toggle = $("#toggle-" + data.id);
@@ -433,10 +408,6 @@ $(function() {
 		}
 	});
 
-	var viewport = $("#viewport");
-	var contextMenuContainer = $("#context-menu-container");
-	var contextMenu = $("#context-menu");
-
 	viewport.on("click", ".lt, .rt", function(e) {
 		var self = $(this);
 		viewport.toggleClass(self.attr("class"));
@@ -540,7 +511,7 @@ $(function() {
 				+ Math.round(parseFloat(style.borderBottomWidth) || 0)
 			) + "px";
 		})
-		.tab(complete, {hint: false});
+		.tab((partialWord => complete(store.getState(), partialWord)), {hint: false});
 
 	var form = $("#form");
 
@@ -561,49 +532,45 @@ $(function() {
 		}
 
 		socket.emit("input", {
-			target: chat.data("id"),
+			target: store.getState().activeChannelId,
 			text: text
 		});
 	});
 
-	function findCurrentNetworkChan(name) {
+	function findChannelByName(name) {
 		name = name.toLowerCase();
 
-		return $(".network .chan.active")
-			.parent(".network")
-			.find(".chan")
-			.filter(function() {
-				return $(this).data("title").toLowerCase() === name;
-			})
-			.first();
+		const {channels, activeChannelId} = store.getState();
+		const activeNetworkId = channels[activeChannelId].networkId;
+		for (let k in channels) {
+			const channel = channels[k];
+			if (channel.networkId === activeNetworkId && channel.name.toLowerCase() === name) {
+				return channel.id;
+			}
+		}
+	}
+
+	function switchToChannel(name, action) {
+		const channelId = findChannelByName(name);
+		if (channelId) {
+			actions.changeActiveChannel(channelId);
+		} else {
+			const {activeChannelId} = store.getState();
+			socket.emit("input", {
+				target: activeChannelId,
+				text: `${action} ${name}`
+			});
+		}
 	}
 
 	chat.on("click", ".inline-channel", function() {
-		var name = $(this).data("chan");
-		var chan = findCurrentNetworkChan(name);
-
-		if (chan.length) {
-			chan.click();
-		} else {
-			socket.emit("input", {
-				target: chat.data("id"),
-				text: "/join " + name
-			});
-		}
+		const name = $(this).data("chan");
+		switchToChannel(name, "/join");
 	});
 
 	chat.on("click", ".user", function() {
-		var name = $(this).data("name");
-		var chan = findCurrentNetworkChan(name);
-
-		if (chan.length) {
-			chan.click();
-		}
-
-		socket.emit("input", {
-			target: chat.data("id"),
-			text: "/whois " + name
-		});
+		const name = $(this).data("name");
+		switchToChannel(name, "/whois");
 	});
 
 	chat.on("click", ".chat", function() {
@@ -629,62 +596,14 @@ $(function() {
 		}
 	}
 
-	sidebar.on("click", ".chan, button", function() {
+	$("#footer").on("click", "button", function() {
 		var self = $(this);
 		var target = self.data("target");
 		if (!target) {
 			return;
 		}
 
-		chat.data(
-			"id",
-			self.data("id")
-		);
-		socket.emit(
-			"open",
-			self.data("id")
-		);
-
-		sidebar.find(".active").removeClass("active");
-		self.addClass("active")
-			.find(".badge")
-			.removeClass("highlight")
-			.data("count", 0)
-			.empty();
-
-		if (sidebar.find(".highlight").length === 0) {
-			toggleNotificationMarkers(false);
-		}
-
-		viewport.removeClass("lt");
-		var lastActive = $("#windows > .active");
-
-		lastActive
-			.removeClass("active");
-
-		var chan = $(target)
-			.addClass("active")
-			.trigger("show");
-
-		var title = "The Lounge";
-		if (chan.data("title")) {
-			title = chan.data("title") + " — " + title;
-		}
-		document.title = title;
-
-		if (self.hasClass("chan")) {
-			$("#chat-container").addClass("active");
-			setNick(self.closest(".network").data("nick"));
-		}
-
-		if (self.data("id")) {
-			actions.channelOpened(self.data("id"));
-		}
-		actions.changeActiveChannel(self.data("id"));
-
-		if (screen.width > 768 && chan.hasClass("chan")) {
-			input.focus();
-		}
+		actions.changeActiveWindow(target.slice(1));
 	});
 
 	sidebar.on("click", "#sign-out", function() {
@@ -692,109 +611,69 @@ $(function() {
 		location.reload();
 	});
 
-	sidebar.on("click", ".close", function() {
-		var cmd = "/close";
-		var chan = $(this).closest(".chan");
-		if (chan.hasClass("lobby")) {
-			cmd = "/quit";
-			var server = chan.find(".name").html();
-			if (!confirm("Disconnect from " + server + "?")) {
-				return false;
-			}
-		}
-		socket.emit("input", {
-			target: chan.data("id"),
-			text: cmd
-		});
-		chan.css({
-			transition: "none",
-			opacity: 0.4
-		});
-		return false;
-	});
-
 	contextMenu.on("click", ".context-menu-item", function() {
 		switch ($(this).data("action")) {
 		case "close":
+			// TODO
 			$(".networks .chan[data-target=" + $(this).data("data") + "] .close").click();
 			break;
 		case "chan":
+			// TODO
 			$(".networks .chan[data-target=" + $(this).data("data") + "]").click();
 			break;
 		case "user":
+			// TODO
 			$(".channel.active .users .user[data-name=" + $(this).data("data") + "]").click();
 			break;
 		}
 	});
 
-	function updateSidebar(chan, msg) {
-		if (msg.self) {
-			return;
-		}
-		var target = "#chan-" + chan;
+	function maybeNotify(chan, msg) {
+		let isImportantMessage = !msg.self && (msg.highlight || (options.notifyAllMessages && msg.type === "message"));
+		let {activeChannelId, activeWindowId} = store.getState();
+		let chanHasFocus = document.hasFocus() && activeWindowId === "chat-container" && chan === activeChannelId;
 
-		var button = sidebar.find(".chan[data-target='" + target + "']");
-		if (msg.highlight || (options.notifyAllMessages && msg.type === "message")) {
-			if (!document.hasFocus() || !$(target).hasClass("active")) {
-				if (options.notification) {
-					pop.play();
+		if (isImportantMessage && !chanHasFocus) {
+			notify(chan, msg);
+		}
+	}
+
+	function notify(chan, msg) {
+		let channel = store.getState().channels[chan];
+		if (options.notification) {
+			pop.play();
+		}
+		toggleNotificationMarkers(true);
+
+		if (options.desktopNotifications && Notification.permission === "granted") {
+			var title;
+			var body;
+
+			if (msg.type === "invite") {
+				title = "New channel invite:";
+				body = msg.from + " invited you to " + msg.channel;
+			} else {
+				title = msg.from;
+				if (channel.type !== "query") {
+					title += " (" + channel.name.trim() + ")";
 				}
-				toggleNotificationMarkers(true);
-
-				if (options.desktopNotifications && Notification.permission === "granted") {
-					var title;
-					var body;
-
-					if (msg.type === "invite") {
-						title = "New channel invite:";
-						body = msg.from + " invited you to " + msg.channel;
-					} else {
-						title = msg.from;
-						if (!button.hasClass("query")) {
-							title += " (" + button.data("title").trim() + ")";
-						}
-						title += " says:";
-						body = msg.text.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "").trim();
-					}
-
-					var notify = new Notification(title, {
-						body: body,
-						icon: "img/logo-64.png",
-						tag: target
-					});
-					notify.onclick = function() {
-						window.focus();
-						button.click();
-						this.close();
-					};
-					window.setTimeout(function() {
-						notify.close();
-					}, 5 * 1000);
-				}
+				title += " says:";
+				body = msg.text.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "").trim();
 			}
-		}
 
-		if (button.hasClass("active")) {
-			return;
-		}
-
-		var whitelistedActions = [
-			"message",
-			"notice",
-			"action",
-		];
-		if (whitelistedActions.indexOf(msg.type) === -1) {
-			return;
-		}
-
-		var badge = button.find(".badge");
-		if (badge.length !== 0) {
-			var i = (badge.data("count") || 0) + 1;
-			badge.data("count", i);
-			badge.html(Handlebars.helpers.roundBadgeNumber(i));
-			if (msg.highlight) {
-				badge.addClass("highlight");
-			}
+			var notify = new Notification(title, {
+				body: body,
+				icon: "img/logo-64.png",
+				tag: target
+			});
+			notify.onclick = function() {
+				window.focus();
+				actions.changeActiveChannel(channel.id);
+				this.close();
+			};
+			window.setTimeout(function() {
+				notify.close();
+			}, 5 * 1000);
 		}
 	}
 
@@ -853,29 +732,8 @@ $(function() {
 		forms.find(".username").val(nick);
 	});
 
-	Mousetrap.bind([
-		"command+up",
-		"command+down",
-		"ctrl+up",
-		"ctrl+down"
-	], function(e, keys) {
-		var channels = sidebar.find(".chan");
-		var index = channels.index(channels.filter(".active"));
-		var direction = keys.split("+").pop();
-		switch (direction) {
-		case "up":
-			// Loop
-			var upTarget = (channels.length + (index - 1 + channels.length)) % channels.length;
-			channels.eq(upTarget).click();
-			break;
-
-		case "down":
-			// Loop
-			var downTarget = (channels.length + (index + 1 + channels.length)) % channels.length;
-			channels.eq(downTarget).click();
-			break;
-		}
-	});
+	Mousetrap.bind(["command+up", "ctrl+up"], () => actions.surfChannel(-1));
+	Mousetrap.bind(["command+down", "ctrl+down"], () => actions.surfChannel(1));
 
 	Mousetrap.bind([
 		"command+k",
@@ -894,29 +752,7 @@ $(function() {
 	});
 
 	function clear() {
-		actions.clearChannel(chat.data("id"));
-	}
-
-	function complete(partialWord) {
-		let chan = getChannel(chat.data("id"));
-		let recentSpeakers =
-			chan.messages
-				.filter(m => (m.type === "message" || m.type === "action") && !m.self)
-				.map(m => m.from)
-				.reverse();
-		let recentSpeakerSet = new Set(recentSpeakers);
-		let nicks = chan.users.map(u => u.name).filter(n => !recentSpeakerSet.has(n));
-		let chans = [];
-		for (let channelId in store.getState().channels) {
-			let channel = store.getState().channels[channelId];
-			if (channel.type !== "lobby") {
-				chans.push(channel.name);
-			}
-		}
-
-		let words = commands.concat(recentSpeakers).concat(nicks).concat(chans);
-
-		return words.filter(w => w.toLowerCase().indexOf(partialWord.toLowerCase()) === 0);
+		actions.clearChannel(store.getState().activeChannelId);
 	}
 
 	function confirmExit() {
@@ -949,6 +785,7 @@ $(function() {
 		}
 	}
 
+	/*
 	function sortable() {
 		sidebar.sortable({
 			axis: "y",
@@ -998,11 +835,9 @@ $(function() {
 			}
 		});
 	}
+	*/
 
-	function setNick(nick) {
-		$("#nick").text(nick);
-	}
-
+	// TODO
 	function toggleNotificationMarkers(newState) {
 		// Toggles the favicon to red when there are unread notifications
 		if (favicon.data("toggled") !== newState) {
