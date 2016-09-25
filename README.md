@@ -34,42 +34,50 @@ This fork aims to be community managed, meaning that the decisions are taken
 in a collegial fashion, and that a bunch of maintainers should be able to make
 the review process quicker and more streamlined.
 
-## Install
+## Installation and usage
 
-To use The Lounge you must have [Node.js](https://nodejs.org/en/download/) installed.
-The oldest Node.js version we support is 4.2.0.
+The Lounge requires [Node.js](https://nodejs.org/) v4 or more recent.
 
-If you still use 0.10 or 0.12 we strongly advise you to upgrade before installing The Lounge.
-For more information on how to upgrade, read the [documentation](https://nodejs.org/en/download/package-manager/).
+### Running stable releases from npm (recommended)
 
+Run this in a terminal to install (or upgrade) the latest stable release from
+[npm](https://www.npmjs.com/):
+
+```sh
+[sudo] npm install -g thelounge
 ```
-sudo npm install -g thelounge
+
+When installation is complete, run:
+
+```sh
+lounge start
 ```
 
-## Usage
+For more information, read the [documentation](https://thelounge.github.io/docs/), [wiki](https://github.com/thelounge/lounge/wiki), or run:
 
-When the install is complete, go ahead and run this in your terminal:
-
-```
+```sh
 lounge --help
 ```
 
-For more information, read the [documentation](https://thelounge.github.io/docs/) or [wiki](https://github.com/thelounge/lounge/wiki).
+### Running from source
 
-## Development setup
+The following commands install the development version of The Lounge. A word of
+caution: while it is the most recent codebase, this is not production-ready!
 
-To run the app from source, just clone the code and run this in your terminal:
-
-```
+```sh
+git clone https://github.com/thelounge/lounge.git
+cd lounge
 npm install
 npm start
 ```
 
-You will have to run `npm run build` if you change or add anything in
-`client/js/libs` or `client/views`.
+## Development setup
 
-## License
+Simply follow the instructions to run The Lounge from source above, on your own
+fork.
 
-Available under the [MIT License](LICENSE).
+Before submitting any change, make sure to:
 
-Some fonts licensed under [SIL OFL](http://scripts.sil.org/OFL) and the [Apache License](http://www.apache.org/licenses/).
+- Read the [Contributing instructions](https://github.com/thelounge/lounge/blob/master/CONTRIBUTING.md#contributing)
+- Run `npm test` to execute linters and test suite
+- Run `npm run build` if you change or add anything in `client/js/libs` or `client/views`
