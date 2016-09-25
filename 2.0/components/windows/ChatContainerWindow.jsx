@@ -1,17 +1,29 @@
 import React from 'react';
 
+import Chat from '../chat/Chat';
+
+
 export default class ChatContainerWindow extends React.Component {
+	handleSubmit () {
+		console.warn('TODO');
+	}
+
 	render () {
 		return (
-			<div id="chat-container" className="window cmpt-chat-container-window">
-				<div id="chat"></div>
-				<form id="form" method="post" action="">
+			<div className="window cmpt-chat-container-window">
+				<Chat />
+				<form className="chat-form" method="post" action="">
 					<div className="input">
 						{/* for="input" */}
-						<label id="nick"></label>
-						<textarea id="input" className="mousetrap"></textarea>
+						<label className="nick"></label>
+						<textarea className="mousetrap input" />
 						<span className="tooltipped tooltipped-w" aria-label="Send message">
-							<button id="submit" type="submit" aria-label="Send message"></button>
+							<button
+								className="submit"
+								type="submit"
+								aria-label="Send message"
+								onClick={this.handleSubmit.bind(this)}
+							/>
 						</span>
 					</div>
 				</form>

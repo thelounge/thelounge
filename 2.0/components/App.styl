@@ -98,24 +98,24 @@ button
 
 #viewport .lt:before,
 #viewport .rt:before,
-#chat button.menu:before,
+.chat-cmpt button.menu:before,
 #sidebar .chan:before,
-#chat .title:before,
+.chat-cmpt .title:before,
 #footer .icon,
-#chat .count:before,
+.chat-cmpt .count:before,
 #settings #play:before,
-#form #submit:before,
-#chat .invite .from:before,
-#chat .join .from:before,
-#chat .kick .from:before,
-#chat .part .from:before,
-#chat .quit .from:before,
-#chat .topic .from:before,
-#chat .mode .from:before,
-#chat .ctcp .from:before,
-#chat .whois .from:before,
-#chat .nick .from:before,
-#chat .action .from:before,
+.chat-form .submit:before,
+.chat-cmpt .invite .from:before,
+.chat-cmpt .join .from:before,
+.chat-cmpt .kick .from:before,
+.chat-cmpt .part .from:before,
+.chat-cmpt .quit .from:before,
+.chat-cmpt .topic .from:before,
+.chat-cmpt .mode .from:before,
+.chat-cmpt .ctcp .from:before,
+.chat-cmpt .whois .from:before,
+.chat-cmpt .nick .from:before,
+.chat-cmpt .action .from:before,
 .context-menu-item:before
 	font normal normal normal 14px/1 FontAwesome
 	/* Can't have font-size inherit on line above, so need to override */
@@ -129,7 +129,7 @@ button
 #viewport .rt:before
 	/* http://fontawesome.io/icon/users/ */
 	content "\f0c0"
-#chat button.menu:before
+.chat-cmpt button.menu:before
 	/* http://fontawesome.io/icon/ellipsis-v/ */
 	content "\f142"
 
@@ -144,17 +144,17 @@ button
 	content "\f00d"
 
 #sidebar .chan.lobby:before,
-#chat .lobby .title:before
+.chat-cmpt .lobby .title:before
 	/* http://fontawesome.io/icon/hdd-o/ */
 	content "\f0a0"
 
 #sidebar .chan.query:before,
-#chat .query .title:before
+.chat-cmpt .query .title:before
 	/* http://fontawesome.io/icon/comments-o/ */
 	content "\f0e6"
 
 #sidebar .chan.channel:before,
-#chat .channel .title:before
+.chat-cmpt .channel .title:before
 	/* http://fontawesome.io/icon/file-text-o/ */
 	content "\f0f6"
 
@@ -171,11 +171,11 @@ button
 	/* http://fontawesome.io/icon/power-off/ */
 	content "\f011"
 
-#form #submit:before
+.chat-form .submit:before
 	/* http://fontawesome.io/icon/paper-plane/ */
 	content "\f1d8"
 
-#chat
+.chat-cmpt
 	.invite .from:before
 		/* http://fontawesome.io/icon/envelope-o/ */
 		content "\f003"
@@ -255,7 +255,7 @@ button
 
 #viewport .lt,
 #viewport .rt,
-#chat button.menu
+.chat-cmpt button.menu
 	color #ccc
 	display none
 	float left
@@ -293,12 +293,12 @@ button
 		display block
 		margin 6px -12px 0 0
 
-#chat button.menu
+.chat-cmpt button.menu
 	display block
 	float right
 	margin 6px -8px 0 12px
 
-#viewport.rt #chat .sidebar
+#viewport.rt .chat-cmpt .sidebar
 	transform translate3d(180px, 0, 0)
 
 #sidebar
@@ -366,7 +366,7 @@ button
 		color #c0f8c3
 
 #sidebar .chan:before,
-#chat .title:before
+.chat-cmpt .title:before
 	float left
 	margin-top 3px
 	margin-right 12px
@@ -377,7 +377,7 @@ button
 	top 4px
 	left 10px
 
-#chat .title:before
+.chat-cmpt .title:before
 	margin-top 17px
 
 #sidebar
@@ -588,19 +588,19 @@ button
 	.window .header
 		display none
 
-#chat-container,
-#chat .chan
+.cmpt-chat-container-window,
+.chat-cmpt .chan
 	position absolute
 	top 0
 	right 0
 	bottom 0
 	left 0
 
-.windows #chat-container.active
+.windows .cmpt-chat-container-window.active
 	display flex
 	flex-direction column
 
-#chat
+.chat-cmpt
 	position relative
 	overflow hidden
 	flex 1
@@ -617,10 +617,10 @@ button
 	font 12px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace
 	line-height 1.4
 
-.windows #chat .header
+.windows .chat-cmpt .header
 	display block
 
-#chat
+.chat-cmpt
 	.chat,
 	.sidebar
 		top 48px
@@ -637,7 +637,7 @@ button
 #viewport.rt .chat
 	right 0
 
-#chat
+.chat-cmpt
 	.sidebar
 		background #fff
 		border-left 1px solid #e7e7e7
@@ -723,7 +723,7 @@ button
 	&:hover
 		opacity .6
 
-#chat
+.chat-cmpt
 	.time,
 	.from,
 	.text
@@ -746,12 +746,12 @@ button
 		min-width 134px
 
 #loading a,
-#chat a
+.chat-cmpt a
 	color #50a656
 
 /* Nicknames */
 
-#chat
+.chat-cmpt
 	.user
 		cursor pointer
 		color #50a656
@@ -1051,13 +1051,13 @@ button
 		color #e74c3c
 		margin-top .2em
 
-#form
+.chat-form
 	background #eee
 	border-top 1px solid #ddd
 	flex 0 0 auto
 	padding 5px
 
-.windows #form .input
+.windows .chat-form .input
 	font 12px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace
 	border 1px solid #ddd
 	border-radius 2px
@@ -1067,8 +1067,8 @@ button
 	display flex
 	align-items flex-end
 
-#form
-	#nick
+.chat-form
+	.nick
 		background #f6f6f6
 		color #666
 		font inherit
@@ -1087,7 +1087,7 @@ button
 		&:after
 			content ":"
 
-	#input
+	.input
 		background transparent
 		border none
 		font inherit
@@ -1103,7 +1103,7 @@ button
 		flex 1 0 auto
 		align-self center
 
-	#submit
+	.submit
 		color #9ca5b4
 		font-size 14px
 		height 32px
@@ -1184,7 +1184,7 @@ button
 	#viewport.lt
 		transform translate3d(220px, 0, 0)
 
-	#viewport.rt #chat .sidebar
+	#viewport.rt .chat-cmpt .sidebar
 		transform translate3d(-180px, 0, 0)
 
 	#sidebar
@@ -1201,7 +1201,7 @@ button
 		left 5px
 		right 5px
 
-	#chat .chat
+	.chat-cmpt .chat
 		right 0
 
 	#viewport .lt,
@@ -1211,7 +1211,7 @@ button
 	.windows .window .header
 		display block
 
-	#chat
+	.chat-cmpt
 		.sidebar
 			right -180px
 
@@ -1228,7 +1228,7 @@ button
 	.windows .input
 		margin-bottom 2px
 
-	#chat
+	.chat-cmpt
 		.messages
 			display block
 			padding 5px 10px
