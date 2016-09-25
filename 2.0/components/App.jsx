@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { setSomething } from 'clientUI/redux/chat';
+// import { setSomething } from 'clientUI/redux/chat';
 
 import 'expose?$!expose?jQuery!jquery';
 
@@ -62,7 +62,8 @@ const mapStateToProps = state => {
 	};
 };
 
-const mapDispatchToProps = dispatch => {
+// (dispatch)
+const mapDispatchToProps = () => {
 	return { };
 };
 

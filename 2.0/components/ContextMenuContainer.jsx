@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 export default class ContextMenuContainer extends React.Component {
 	render () {

@@ -8,100 +8,91 @@
 	height 100%
 
 
+// Vendor
+perspective()
+	vendor('perspective', arguments, only: webkit official)
+
 
 html, body, #main
 	height 100%
 
-body {
-	background: #455164;
-	color: #222;
-	font: 16px Lato, sans-serif;
-	margin: 0;
-}
+$body-bg-color = #455164
 
-a {
-	transition: opacity .2s;
-}
+body
+	background $body-bg-color
+	color #222
+	font 16px Lato, sans-serif
+	margin 0
 
-a:hover {
-	text-decoration: none;
-	opacity: .8;
-}
+a
+	transition opacity .2s
 
-h1,
-h2 {
-	font: inherit;
-	line-height: inherit;
-	margin: 0;
-}
+a:hover
+	text-decoration none
+	opacity .8
 
-h1.title {
-	margin-bottom: 10px;
-}
+h1, h2
+	font inherit
+	line-height inherit
+	margin 0
 
-input {
-	outline: 0;
-}
+h1.title
+	margin-bottom 10px
 
-button {
-	border: none;
-	background: none;
-	margin: 0;
-	outline: none;
-	padding: 0;
-}
+input
+	outline 0
 
-.btn {
-	border: 2px solid #84ce88;
-	border-radius: 3px;
-	color: #84ce88;
-	display: inline-block;
-	font-size: 12px;
-	font-weight: bold;
-	letter-spacing: 1px;
-	margin-bottom: 10px;
-	padding: 9px 17px;
-	text-transform: uppercase;
-	transition: background .2s, border-color .2s, color .2s;
-	word-spacing: 3px;
-}
+button
+	border none
+	background none
+	margin 0
+	outline none
+	padding 0
 
-.btn:disabled,
-.btn:hover {
-	background: #84ce88;
-	color: #fff;
-}
+.btn
+	border 2px solid #84ce88
+	border-radius 3px
+	color #84ce88
+	display inline-block
+	font-size 12px
+	font-weight bold
+	letter-spacing 1px
+	margin-bottom 10px
+	padding 9px 17px
+	text-transform uppercase
+	transition background .2s, border-color .2s, color .2s
+	word-spacing 3px
 
-.btn:active {
-	box-shadow: none;
-	opacity: .8;
-}
+	&:disabled,
+	&:hover
+		background #84ce88
+		color #fff
 
-.btn:disabled {
-	opacity: .6;
-}
+	&:active
+		box-shadow none
+		opacity .8
 
-.container {
-	margin: 80px auto;
-	max-width: 480px;
-	overflow: hidden;
-	overflow-y: auto;
-	-webkit-overflow-scrolling: touch;
-	padding: 0 30px;
-}
+	&:disabled
+		opacity .6
 
-::-moz-placeholder {
-	color: rgba(0, 0, 0, .35);
-	opacity: 1;
-}
+.container
+	margin 80px auto
+	max-width 480px
+	overflow hidden
+	overflow-y auto
+	-webkit-overflow-scrolling touch
+	padding 0 30px
 
-::-webkit-input-placeholder {
-	color: rgba(0, 0, 0, .35);
-}
+::-moz-placeholder
+	color rgba(0, 0, 0, .35)
+	opacity 1
 
-:-ms-input-placeholder {
-	color: rgba(0, 0, 0, .35) !important;
-}
+::-webkit-input-placeholder
+	color rgba(0, 0, 0, .35)
+
+:-ms-input-placeholder
+	color rgba(0, 0, 0, .35) !important
+
 
 /* Icons */
 
@@ -125,1529 +116,1146 @@ button {
 #chat .whois .from:before,
 #chat .nick .from:before,
 #chat .action .from:before,
-.context-menu-item:before {
-	font: normal normal normal 14px/1 FontAwesome;
-	font-size: inherit; /* Can't have font-size inherit on line above, so need to override */
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
+.context-menu-item:before
+	font normal normal normal 14px/1 FontAwesome
+	/* Can't have font-size inherit on line above, so need to override */
+	font-size inherit
+	-webkit-font-smoothing antialiased
+	-moz-osx-font-smoothing grayscale
 
-#viewport .lt:before { content: "\f0c9"; /* http://fontawesome.io/icon/bars/ */ }
-#viewport .rt:before { content: "\f0c0"; /* http://fontawesome.io/icon/users/ */ }
-#chat button.menu:before { content: "\f142"; /* http://fontawesome.io/icon/ellipsis-v/ */ }
+#viewport .lt:before
+	/* http://fontawesome.io/icon/bars/ */
+	content "\f0c9"
+#viewport .rt:before
+	/* http://fontawesome.io/icon/users/ */
+	content "\f0c0"
+#chat button.menu:before
+	/* http://fontawesome.io/icon/ellipsis-v/ */
+	content "\f142"
 
-.context-menu-user:before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
-.context-menu-chan:before { content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */ }
-.context-menu-close:before { content: "\f00d"; /* http://fontawesome.io/icon/times/ */ }
+.context-menu-user:before
+	/* http://fontawesome.io/icon/user/ */
+	content "\f007"
+.context-menu-chan:before
+	/* http://fontawesome.io/icon/file-text-o/ */
+	content "\f0f6"
+.context-menu-close:before
+	/* http://fontawesome.io/icon/times/ */
+	content "\f00d"
 
 #sidebar .chan.lobby:before,
-#chat .lobby .title:before { content: "\f0a0"; /* http://fontawesome.io/icon/hdd-o/ */ }
+#chat .lobby .title:before
+	/* http://fontawesome.io/icon/hdd-o/ */
+	content "\f0a0"
 
 #sidebar .chan.query:before,
-#chat .query .title:before { content: "\f0e6"; /* http://fontawesome.io/icon/comments-o/ */ }
+#chat .query .title:before
+	/* http://fontawesome.io/icon/comments-o/ */
+	content "\f0e6"
 
 #sidebar .chan.channel:before,
-#chat .channel .title:before { content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */ }
+#chat .channel .title:before
+	/* http://fontawesome.io/icon/file-text-o/ */
+	content "\f0f6"
 
-#footer .sign-in:before { content: "\f023"; /* http://fontawesome.io/icon/lock/ */ }
-#footer .connect:before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
-#footer .settings:before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
-#footer .sign-out:before { content: "\f011"; /* http://fontawesome.io/icon/power-off/ */ }
+#footer .sign-in:before
+	/* http://fontawesome.io/icon/lock/ */
+	content "\f023"
+#footer .connect:before
+	/* http://fontawesome.io/icon/plus/ */
+	content "\f067"
+#footer .settings:before
+	/* http://fontawesome.io/icon/cog/ */
+	content "\f013"
+#footer .sign-out:before
+	/* http://fontawesome.io/icon/power-off/ */
+	content "\f011"
 
-#form #submit:before { content: "\f1d8"; /* http://fontawesome.io/icon/paper-plane/ */ }
+#form #submit:before
+	/* http://fontawesome.io/icon/paper-plane/ */
+	content "\f1d8"
 
-#chat .invite .from:before {
-	content: "\f003"; /* http://fontawesome.io/icon/envelope-o/ */
-	color: #2ecc40;
-}
+#chat
+	.invite .from:before
+		/* http://fontawesome.io/icon/envelope-o/ */
+		content "\f003"
+		color #2ecc40
 
-#chat .part .from:before,
-#chat .quit .from:before {
-	content: "\f08b"; /* http://fontawesome.io/icon/sign-out/ */
-	color: #ff4136;
-	display: inline-block;
-	transform: rotate(180deg);
-}
+	.part .from:before,
+	.quit .from:before
+		/* http://fontawesome.io/icon/sign-out/ */
+		content "\f08b"
+		color #ff4136
+		display inline-block
+		transform rotate(180deg)
 
-#chat .topic .from:before {
-	content: "\f0a1"; /* http://fontawesome.io/icon/bullhorn/ */
-	color: #2ecc40;
-}
+	.topic .from:before
+		/* http://fontawesome.io/icon/bullhorn/ */
+		content "\f0a1"
+		color #2ecc40
 
-#chat .mode .from:before {
-	content: "\f05a"; /* http://fontawesome.io/icon/info-circle/ */
-	color: #2ecc40;
-}
+	.mode .from:before
+		/* http://fontawesome.io/icon/info-circle/ */
+		content "\f05a"
+		color #2ecc40
 
-#chat .ctcp .from:before {
-	content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */
-}
+	.ctcp .from:before
+		/* http://fontawesome.io/icon/file-text-o/ */
+		content "\f0f6"
 
-#chat .whois .from:before {
-	content: "\f007"; /* http://fontawesome.io/icon/user/ */
-	color: #2ecc40;
-}
+	.whois .from:before
+		/* http://fontawesome.io/icon/user/ */
+		content "\f007"
+		color #2ecc40
 
-#chat .nick .from:before {
-	content: "\f007"; /* http://fontawesome.io/icon/user/ */
-	color: #2ecc40;
-}
+	.nick .from:before
+		/* http://fontawesome.io/icon/user/ */
+		content "\f007"
+		color #2ecc40
 
-#chat .join .from:before {
-	content: "\f090"; /* http://fontawesome.io/icon/sign-in/ */
-	color: #2ecc40;
-}
+	.join .from:before
+		/* http://fontawesome.io/icon/sign-in/ */
+		content "\f090"
+		color #2ecc40
 
-#chat .kick .from:before {
-	content: "\f05e"; /* http://fontawesome.io/icon/ban/ */
-	color: #ff4136;
-}
+	.kick .from:before
+		/* http://fontawesome.io/icon/ban/ */
+		content "\f05e"
+		color #ff4136
 
-#chat .action .from:before {
-	content: "\f005"; /* http://fontawesome.io/icon/star/ */
-}
+	.action .from:before
+		/* http://fontawesome.io/icon/star/ */
+		content "\f005"
 
-#chat .count:before {
-	color: #cfcfcf;
-	content: "\f002"; /* http://fontawesome.io/icon/search/ */
-	position: absolute;
-	right: 18px;
-	font-size: 14px;
-	line-height: 50px;
-}
+	.count:before
+		color #cfcfcf
+		/* http://fontawesome.io/icon/search/ */
+		content "\f002"
+		position absolute
+		right 18px
+		font-size 14px
+		line-height 50px
 
-#settings #play:before {
-	content: "\f028"; /* http://fontawesome.io/icon/volume-up/ */
-	margin-right: 9px;
-}
+#settings #play:before
+	/* http://fontawesome.io/icon/volume-up/ */
+	content "\f028"
+	margin-right 9px
 
 /* End icons */
 
-#wrap {
-	height: 100%;
-	overflow: hidden;
-}
+#wrap
+	height 100%
+	overflow hidden
 
-#viewport {
-	height: 100%;
-	transition: all .4s;
-	-webkit-transform: translateZ(0);
-	transform: translateZ(0);
-	-webkit-perspective: 1000;
-	perspective: 1000;
-}
+#viewport
+	height 100%
+	transition all .4s
+	transform translateZ(0)
+	perspective 1000
 
 #viewport .lt,
 #viewport .rt,
-#chat button.menu {
-	color: #ccc;
-	display: none;
-	float: left;
-	font-size: 14px;
-	line-height: 1;
-	height: 36px;
-	margin: 6px 12px 0 -12px;
-	width: 36px;
-}
+#chat button.menu
+	color #ccc
+	display none
+	float left
+	font-size 14px
+	line-height 1
+	height 36px
+	margin 6px 12px 0 -12px
+	width 36px
 
-#viewport .lt {
-	position: relative;
-}
+#viewport
+	.lt
+		position relative
 
-/* Notification dot on the top right corner of the menu icon */
-#viewport .lt:after {
-	content: "";
-	position: absolute;
-	top: 9px;
-	right: 7px;
-	background-color: #e74c3c;
-	width: 10px;
-	height: 10px;
-	border-radius: 50%;
-	border: 2px solid white;
-	opacity: 0;
-	transition: opacity .2s;
-}
+		/* Notification dot on the top right corner of the menu icon */
+		&:after
+			content ""
+			position absolute
+			top 9px
+			right 7px
+			background-color #e74c3c
+			width 10px
+			height 10px
+			border-radius 50%
+			border 2px solid white
+			opacity 0
+			transition opacity .2s
 
-#viewport .lt.notified:after {
-	opacity: 1;
-}
+		&.notified:after
+			opacity 1
 
-#viewport .rt-tooltip {
-	float: right;
-}
+	.rt-tooltip
+		float right
 
-#viewport .rt {
-	display: block;
-	margin: 6px -12px 0 0;
-}
+	.rt
+		display block
+		margin 6px -12px 0 0
 
-#chat button.menu {
-	display: block;
-	float: right;
-	margin: 6px -8px 0 12px;
-}
+#chat button.menu
+	display block
+	float right
+	margin 6px -8px 0 12px
 
-#viewport.rt #chat .sidebar {
-	-webkit-transform: translate3d(180px, 0, 0);
-	transform: translate3d(180px, 0, 0);
-}
+#viewport.rt #chat .sidebar
+	transform translate3d(180px, 0, 0)
 
-#sidebar {
-	bottom: 52px;
-	left: 0;
-	overflow: auto;
-	overflow-x: hidden;
-	-webkit-overflow-scrolling: touch;
-	position: absolute;
-	top: 0;
-	width: 220px;
-}
+#sidebar
+	bottom 52px
+	left 0
+	overflow auto
+	overflow-x hidden
+	-webkit-overflow-scrolling touch
+	position absolute
+	top 0
+	width 220px
 
-#sidebar button,
-#sidebar .chan,
-#sidebar .sign-out {
-	border: 1px solid transparent;
-	border-radius: 2px;
-	color: #99a2b4;
-	cursor: pointer;
-	font-size: 14px;
-}
+	button,
+	.chan,
+	.sign-out
+		border 1px solid transparent
+		border-radius 2px
+		color #99a2b4
+		cursor pointer
+		font-size 14px
 
-#sidebar button:hover,
-#sidebar .chan:hover,
-#sidebar .active {
-	color: #fff;
-}
+	button:hover,
+	.chan:hover,
+	.active
+		color #fff
 
-#sidebar .networks {
-	padding: 20px 30px 0;
-}
+	.networks
+		padding 20px 30px 0
 
-#sidebar .networks:empty {
-	padding: 0;
-}
+	.networks:empty
+		padding 0
 
-#sidebar .network,
-#sidebar .network-placeholder {
-	margin-bottom: 30px;
-}
+	.network,
+	.network-placeholder
+		margin-bottom 30px
 
-#sidebar .empty {
-	color: #9ca5b4;
-	line-height: 1.6;
-	font-size: 12px;
-	margin-top: 20px;
-	padding: 20px 40px;
-	text-align: center;
-}
+	.empty
+		color #9ca5b4
+		line-height 1.6
+		font-size 12px
+		margin-top 20px
+		padding 20px 40px
+		text-align center
 
-#sidebar .chan,
-#sidebar .chan-placeholder {
-	display: block;
-	margin: 1px -10px;
-	padding: 6px 10px 8px 36px;
-	position: relative;
-	text-align: left;
-	transition: color .2s;
-	width: 180px;
-}
+	.chan,
+	.chan-placeholder
+		display block
+		margin 1px -10px
+		padding 6px 10px 8px 36px
+		position relative
+		text-align left
+		transition color .2s
+		width 180px
 
-#sidebar .chan-placeholder {
-	padding-bottom: 10px;
-}
+	.chan-placeholder
+		padding-bottom 10px
 
-#sidebar .chan:first-child {
-	color: #84ce88;
-	font-size: 15px;
-	font-weight: bold;
-}
+	.chan:first-child
+		color #84ce88
+		font-size 15px
+		font-weight bold
 
-#sidebar .chan:first-child:hover,
-#sidebar .chan:first-child.active {
-	color: #c0f8c3;
-}
+	.chan:first-child:hover,
+	.chan:first-child.active
+		color #c0f8c3
 
 #sidebar .chan:before,
-#chat .title:before {
-	float: left;
-	margin-top: 3px;
-	margin-right: 12px;
-	text-align: center;
-}
+#chat .title:before
+	float left
+	margin-top 3px
+	margin-right 12px
+	text-align center
 
-#sidebar .chan:before {
-	position: absolute;
-	top: 4px;
-	left: 10px;
-}
+#sidebar .chan:before
+	position absolute
+	top 4px
+	left 10px
 
-#chat .title:before {
-	margin-top: 17px;
-}
+#chat .title:before
+	margin-top 17px
 
-#sidebar .chan .name {
-	position: relative;
-	z-index: 0;
-	display: block;
-	overflow: hidden;
-	white-space: nowrap;
-	margin-right: 5px;
-}
+#sidebar
+	.chan
+		.name
+			position relative
+			z-index 0
+			display block
+			overflow hidden
+			white-space nowrap
+			margin-right 5px
 
-#sidebar .chan .name:after {
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	width: 20px;
-	background: linear-gradient(to right, rgba(69, 81, 100, 0) 0%, rgba(69, 81, 100, 1) 100%);
-	content: " ";
-}
+			&:after
+				position absolute
+				top 0
+				right 0
+				bottom 0
+				width 20px
+				background linear-gradient(to right, rgba(69, 81, 100, 0) 0%, rgba(69, 81, 100, 1) 100%)
+				content " "
 
-#sidebar .badge {
-	background: rgba(255, 255, 255, .06);
-	border-radius: 3px;
-	color: #afb6c0;
-	font-size: 10px;
-	margin-top: 1px;
-	margin-right: -5px;
-	margin-left: 5px;
-	padding: 3px 6px;
-	float: right;
-	transition: opacity .2s, background-color .2s, color .2s;
-}
+	.badge
+		background rgba(255, 255, 255, .06)
+		border-radius 3px
+		color #afb6c0
+		font-size 10px
+		margin-top 1px
+		margin-right -5px
+		margin-left 5px
+		padding 3px 6px
+		float right
+		transition opacity .2s, background-color .2s, color .2s
 
-#sidebar .badge.highlight {
-	background: #fff;
-	color: #49505a;
-}
+		&.highlight
+			background #fff
+			color #49505a
 
-#sidebar .chan.active .badge,
-#sidebar .badge:empty {
-	opacity: 0;
-}
+	.chan.active .badge,
+	.badge:empty
+		opacity 0
 
-#sidebar .close {
-	border-radius: 3px;
-	margin-right: 5px;
-	visibility: hidden;
-	opacity: 0;
-	position: absolute;
-	z-index: 2;
-	right: 0;
-	transition: opacity .2s, background-color .2s;
-}
+	.close
+		border-radius 3px
+		margin-right 5px
+		visibility hidden
+		opacity 0
+		position absolute
+		z-index 2
+		right 0
+		transition opacity .2s, background-color .2s
 
-#sidebar .close:before {
-	font-size: 18px;
-	font-weight: normal;
-	display: inline-block;
-	line-height: 18px;
-	width: 18px;
-	height: 18px;
-	text-align: center;
-	content: "×";
-	color: #fff;
-}
+		&:before
+			font-size 18px
+			font-weight normal
+			display inline-block
+			line-height 18px
+			width 18px
+			height 18px
+			text-align center
+			content "×"
+			color #fff
 
-#sidebar .chan.active .close {
-	visibility: visible;
-	opacity: .4;
-}
+	.chan.active .close
+		visibility visible
+		opacity .4
 
-#sidebar .chan.active .close:hover {
-	background-color: rgba(0, 0, 0, .1);
-	opacity: 1;
-}
+		&:hover
+			background-color rgba(0, 0, 0, .1)
+			opacity 1
 
-#sidebar .tse-scrollbar {
-	top: 2px;
-	right: 3px;
-}
+	.tse-scrollbar
+		top 2px
+		right 3px
 
 #sidebar,
-#footer {
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-}
+#footer
+	user-select none
 
-#footer {
-	background: rgba(0, 0, 0, .06);
-	border-radius: 2px;
-	bottom: 4px;
-	height: 45px;
-	left: 5px;
-	font-size: 14px;
-	line-height: 45px;
-	position: absolute;
-	text-align: center;
-	width: 210px;
-}
+#footer
+	background rgba(0, 0, 0, .06)
+	border-radius 2px
+	bottom 4px
+	height 45px
+	left 5px
+	font-size 14px
+	line-height 45px
+	position absolute
+	text-align center
+	width 210px
 
-#footer button.active {
-	color: #fff;
-}
+	button.active
+		color #fff
 
-#footer .icon {
-	color: #9ca5b4;
-	display: inline-block;
-	line-height: 34px;
-	padding: 0 12px;
-}
+	.icon
+		color #9ca5b4
+		display inline-block
+		line-height 34px
+		padding 0 12px
 
-.signed-out #footer .sign-in {
-	display: inline-block;
-}
+.signed-out
+	#footer .sign-in
+		display inline-block
 
-.signed-out #footer .connect,
-.signed-out #footer .sign-out {
-	display: none;
-}
+	#footer .connect,
+	#footer .sign-out
+		display none
 
 .public #footer .sign-in,
-.public #footer .sign-out {
-	display: none;
-}
+.public #footer .sign-out
+	display none
 
-#footer .sign-in {
-	display: none;
-}
+#footer .sign-in
+	display none
 
-.main {
-	bottom: 4px;
-	left: 220px;
-	position: absolute;
-	right: 5px;
-	top: 4px;
-	display: flex;
-	flex-direction: column;
-}
+.main
+	bottom 4px
+	left 220px
+	position absolute
+	right 5px
+	top 4px
+	display flex
+	flex-direction column
 
-#header {
-	display: none;
-	height: 40px;
-	position: absolute;
-	top: 0;
-	width: 100%;
-}
+#header
+	display none
+	height 40px
+	position absolute
+	top 0
+	width 100%
 
-.windows label {
-	font-size: 14px;
-}
+#user-specified-css-input
+	resize vertical
 
-.windows .input {
-	background-color: white;
-	border: 1px solid #cdd3da;
-	border-radius: 2px;
-	color: #222;
-	font-size: 14px;
-	margin: 2px 0;
-	margin-bottom: 10px;
-	outline: 0;
-	padding: 8px 10px;
-	transition: border-color .2s;
-	width: 100%;
-}
+.windows
+	label
+		font-size 14px
 
-.windows select.input {
-	height: 35px;
-}
+	.input
+		background-color white
+		border 1px solid #cdd3da
+		border-radius 2px
+		color #222
+		font-size 14px
+		margin 2px 0
+		margin-bottom 10px
+		outline 0
+		padding 8px 10px
+		transition border-color .2s
+		width 100%
 
-#user-specified-css-input {
-	resize: vertical;
-}
+	select.input
+		height 35px
 
-.windows .input:hover,
-.windows .input:focus {
-	border-color: #79838c;
-}
+	.input:hover,
+	.input:focus
+		border-color #79838c
 
-.windows .window:before {
-	background: #f4f4f4;
-	background-image: linear-gradient(#f4f4f4, #ececec);
-	border-bottom: 1px solid #d7d7d7;
-	content: " ";
-	display: block;
-	height: 10px;
-	position: relative;
-	z-index: 10;
-}
+	.window
+		background #fff
+		border-radius 2px
+		bottom 0
+		display none
+		left 0
+		position absolute
+		right 0
+		top 0
+		overflow-y auto
+		-webkit-overflow-scrolling touch
 
-.windows .window {
-	background: #fff;
-	border-radius: 2px;
-	bottom: 0;
-	display: none;
-	left: 0;
-	position: absolute;
-	right: 0;
-	top: 0;
-	overflow-y: auto;
-	-webkit-overflow-scrolling: touch;
-}
+		&:before
+			background #f4f4f4
+			background-image linear-gradient(#f4f4f4, #ececec)
+			border-bottom 1px solid #d7d7d7
+			content " "
+			display block
+			height 10px
+			position relative
+			z-index 10
 
-.windows .window h1 {
-	font-size: 36px;
-}
+		h1
+			font-size 36px
 
-.windows .window h2 {
-	border-bottom: 1px solid #eee;
-	color: #7f8c8d;
-	font-size: 22px;
-	margin: 30px 0 10px;
-	padding-bottom: 7px;
-}
+		h2
+			border-bottom 1px solid #eee
+			color #7f8c8d
+			font-size 22px
+			margin 30px 0 10px
+			padding-bottom 7px
 
-.windows .active {
-	display: block;
-}
+	.active
+		display block
 
-.windows .header {
-	border-bottom: 1px solid #e7e7e7;
-	line-height: 48px;
-	height: 48px;
-	padding: 0 20px;
-	overflow: hidden;
-}
+	.header
+		border-bottom 1px solid #e7e7e7
+		line-height 48px
+		height 48px
+		padding 0 20px
+		overflow hidden
 
-.windows .header .title {
-	font-size: 14px;
-}
+		.title
+			font-size 14px
 
-.windows .header .topic {
-	color: #777;
-	margin-left: 8px;
-	word-break: break-all;
-}
+		.topic
+			color #777
+			margin-left 8px
+			word-break break-all
 
-.windows .window .header {
-	display: none;
-}
+	.window .header
+		display none
 
 #chat-container,
-#chat .chan {
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-}
+#chat .chan
+	position absolute
+	top 0
+	right 0
+	bottom 0
+	left 0
 
-.windows #chat-container.active {
-	display: flex;
-	flex-direction: column;
-}
+.windows #chat-container.active
+	display flex
+	flex-direction column
 
-#chat {
-	position: relative;
-	overflow: hidden;
-	flex: 1;
-}
+#chat
+	position relative
+	overflow hidden
+	flex 1
 
-#chat .chan {
-	display: none;
-}
+	.chan
+		display none
 
-#chat .chan.active {
-	display: block;
-}
+	.chan.active
+		display block
 
 .windows .header .topic,
 .messages .msg,
-.sidebar {
-	font: 12px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
-	line-height: 1.4;
-}
+.sidebar
+	font 12px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace
+	line-height 1.4
 
-.windows #chat .header {
-	display: block;
-}
+.windows #chat .header
+	display block
 
-#chat .chat,
-#chat .sidebar {
-	top: 48px;
-}
+#chat
+	.chat,
+	.sidebar
+		top 48px
 
-#chat .chat {
-	display: flex;
-	bottom: 0;
-	left: 0;
-	overflow: auto;
-	-webkit-overflow-scrolling: touch;
-	position: absolute;
-	right: 180px;
-}
+	.chat
+		display flex
+		bottom 0
+		left 0
+		overflow auto
+		-webkit-overflow-scrolling touch
+		position absolute
+		right 180px
 
-#viewport.rt .chat {
-	right: 0;
-}
+#viewport.rt .chat
+	right 0
 
-#chat .sidebar {
-	background: #fff;
-	border-left: 1px solid #e7e7e7;
-	bottom: 0;
-	position: absolute;
-	right: 0;
-	width: 180px;
-	transition: all .4s;
-	-webkit-transform: translateZ(0);
-	transform: translateZ(0);
-	-webkit-perspective: 1000;
-	perspective: 1000;
-}
+#chat
+	.sidebar
+		background #fff
+		border-left 1px solid #e7e7e7
+		bottom 0
+		position absolute
+		right 0
+		width 180px
+		transition all .4s
+		transform translateZ(0)
+		perspective 1000
 
-#chat .lobby .chat,
-#chat .query .chat {
-	right: 0;
-}
+	.lobby .chat,
+	.query .chat
+		right 0
 
-#chat .lobby .sidebar,
-#chat .query .sidebar {
-	display: none;
-}
+	.lobby .sidebar,
+	.query .sidebar
+		display none
 
-#chat .show-more {
-	display: none;
-	padding: 10px;
-	flex-shrink: 0;
-	width: 100%;
-}
+	.show-more
+		display none
+		padding 10px
+		flex-shrink 0
+		width 100%
 
-#chat .show-more-button {
-	background: #f4f4f4;
-	background-image: linear-gradient(#f4f4f4, #ececec);
-	border: 1px solid #d7d7d7;
-	border-bottom-color: #b7b7b7;
-	border-radius: 2px;
-	color: #555;
-	font-size: 12px;
-	height: 34px;
-	line-height: 0;
-	width: 100%;
-}
+	.show-more-button
+		background #f4f4f4
+		background-image linear-gradient(#f4f4f4, #ececec)
+		border 1px solid #d7d7d7
+		border-bottom-color #b7b7b7
+		border-radius 2px
+		color #555
+		font-size 12px
+		height 34px
+		line-height 0
+		width 100%
 
-#chat .show-more-button:hover {
-	opacity: 1;
-}
+		&:hover
+			opacity 1
 
-#chat .messages {
-	overflow: auto;
-	display: flex;
-	flex-direction: column-reverse;
-	width: 100%;
-	padding: 10px 0;
-}
+	.messages
+		overflow auto
+		display flex
+		flex-direction column-reverse
+		width 100%
+		padding 10px 0
 
-#chat .msg {
-	word-wrap: break-word;
-	word-break: break-word; /* Webkit-specific */
-}
+	.msg
+		word-wrap break-word
+		word-break break-word /* Webkit-specific */
 
-#chat .unread-marker {
-	position: relative;
-	text-align: center;
-	opacity: .5;
-	margin: 0 10px;
-	z-index: 0;
-	font-weight: bold;
-	font-size: 12px;
-}
+	.unread-marker
+		position relative
+		text-align center
+		opacity .5
+		margin 0 10px
+		z-index 0
+		font-weight bold
+		font-size 12px
 
-#chat .unread-marker:before {
-	position: absolute;
-	z-index: -1;
-	content: "";
-	left: 0;
-	right: 0;
-	top: 50%;
-	border-top: 1px solid #e74c3c;
-}
+		&:before
+			position absolute
+			z-index -1
+			content ""
+			left 0
+			right 0
+			top 50%
+			border-top 1px solid #e74c3c
 
-#chat .unread-marker-text:before {
-	content: "New messages";
-	background-color: white;
-	color: #e74c3c;
-	padding: 0 10px;
-}
+	.unread-marker-text:before
+		content "New messages"
+		background-color white
+		color #e74c3c
+		padding 0 10px
 
-#chat .unread-marker:last-child {
-	display: none;
-}
+	.unread-marker:last-child
+		display none
 
-.inline-channel {
-	cursor: pointer;
-}
 
-.inline-channel:hover {
-	opacity: .6;
-}
+.inline-channel
+	cursor pointer
 
-#chat .time,
-#chat .from,
-#chat .text {
-	display: table-cell;
-	padding: 2px 0;
-	vertical-align: top;
-}
+	&:hover
+		opacity .6
 
-#chat .time {
-	color: #ddd;
-	text-align: right;
-	max-width: 46px;
-	min-width: 46px;
-}
+#chat
+	.time,
+	.from,
+	.text
+		display table-cell
+		padding 2px 0
+		vertical-align top
 
-#chat .from {
-	border-right: 1px solid #f6f6f6;
-	color: #b1c3ce;
-	padding-right: 10px;
-	text-align: right;
-	max-width: 134px;
-	min-width: 134px;
-}
+	.time
+		color #ddd
+		text-align right
+		max-width 46px
+		min-width 46px
+
+	.from
+		border-right 1px solid #f6f6f6
+		color #b1c3ce
+		padding-right 10px
+		text-align right
+		max-width 134px
+		min-width 134px
 
 #loading a,
-#chat a {
-	color: #50a656;
-}
+#chat a
+	color #50a656
 
 /* Nicknames */
 
-#chat .user {
-	cursor: pointer;
-	color: #50a656;
-}
-
-#chat .user:hover {
-	opacity: .6;
-}
-
-#chat.colored-nicks .user.color-1 { color: #1396cf; }
-#chat.colored-nicks .user.color-2 { color: #ffcf89; }
-#chat.colored-nicks .user.color-3 { color: #00dc5f; }
-#chat.colored-nicks .user.color-4 { color: #ff5bc8; }
-#chat.colored-nicks .user.color-5 { color: #ff0e1b; }
-#chat.colored-nicks .user.color-6 { color: #000094; }
-#chat.colored-nicks .user.color-7 { color: #006441; }
-#chat.colored-nicks .user.color-8 { color: #00566e; }
-#chat.colored-nicks .user.color-9 { color: #ff0078; }
-#chat.colored-nicks .user.color-10 { color: #15d5a3; }
-#chat.colored-nicks .user.color-11 { color: #006b3b; }
-#chat.colored-nicks .user.color-12 { color: #00c5ba; }
-#chat.colored-nicks .user.color-13 { color: #00465b; }
-#chat.colored-nicks .user.color-14 { color: #ffafce; }
-#chat.colored-nicks .user.color-15 { color: #ff3b12; }
-#chat.colored-nicks .user.color-16 { color: #16cc6a; }
-#chat.colored-nicks .user.color-17 { color: #ff0072; }
-#chat.colored-nicks .user.color-18 { color: #ff5877; }
-#chat.colored-nicks .user.color-19 { color: #ff1753; }
-#chat.colored-nicks .user.color-20 { color: #007a56; }
-#chat.colored-nicks .user.color-21 { color: #095092; }
-#chat.colored-nicks .user.color-22 { color: #000bde; }
-#chat.colored-nicks .user.color-23 { color: #00bca9; }
-#chat.colored-nicks .user.color-24 { color: #00367d; }
-#chat.colored-nicks .user.color-25 { color: #009ec4; }
-#chat.colored-nicks .user.color-26 { color: #006119; }
-#chat.colored-nicks .user.color-27 { color: #008bb8; }
-#chat.colored-nicks .user.color-28 { color: #469c00; }
-#chat.colored-nicks .user.color-29 { color: #ff0f95; }
-#chat.colored-nicks .user.color-30 { color: #ff7615; }
-#chat.colored-nicks .user.color-31 { color: #ff4846; }
-#chat.colored-nicks .user.color-32 { color: #ff199b; }
-
-#chat .text {
-	padding-left: 10px;
-	padding-right: 6px;
-}
-
-#chat .self .text {
-	color: #999;
-}
-
-#chat .msg.motd .text,
-#chat .msg.message .text,
-#chat .msg.action .action-text,
-#chat .msg.notice .text {
-	white-space: pre-wrap;
-	overflow: hidden;
-}
-
-#chat.hide-join .join,
-#chat.hide-mode .mode,
-#chat.hide-motd .motd,
-#chat.hide-nick .nick,
-#chat.hide-part .part,
-#chat.hide-quit .quit {
-	display: none !important;
-}
-
-#chat .join .text,
-#chat .kick .text,
-#chat .mode .text,
-#chat .nick .text,
-#chat .part .text,
-#chat .quit .text,
-#chat .topic .text,
-#chat .topic_set_by .text {
-	color: #999;
-}
-
-#chat .action .from,
-#chat .action .text,
-#chat .action .user {
-	color: #f39c12;
-}
-
-#chat .notice .time,
-#chat .notice .text,
-#chat .chan .notice .user {
-	color: #0074d9 !important;
-}
-
-#chat .notice .user:before {
-	content: "Notice: ";
-}
-
-#chat .error,
-#chat .error .from,
-#chat .channel .highlight .from,
-#chat .channel .highlight .text,
-#chat .channel .highlight .user {
-	color: #f00;
-}
-
-#chat .unhandled .from {
-	color: #eee;
-}
-
-#chat .msg.toggle .time {
-	visibility: hidden;
-}
-
-#chat .toggle-button {
-	background: #f5f5f5;
-	border-radius: 2px;
-	display: inline-block;
-	color: #666;
-	height: 1em;
-	line-height: 0;
-	padding: 0 6px;
-}
-
-#chat .toggle-content {
-	background: #f5f5f5;
-	border-radius: 2px;
-	display: none;
-	color: #222;
-	font-size: 12px;
-	max-width: 100%;
-	padding: 6px 8px;
-	margin-top: 2px;
-}
-
-#chat .toggle-content a {
-	color: inherit;
-}
-
-#chat .toggle-content img {
-	max-width: 100%;
-	max-height: 250px;
-	display: block;
-	margin: 2px 0;
-}
-
-#chat .toggle-content .thumb {
-	max-height: 110px;
-	max-width: 210px;
-}
-
-#chat .toggle-content .head {
-	font-weight: bold;
-}
-
-#chat .toggle-content .body {
-	color: #999;
-	max-width: 460px;
-	word-break: normal;
-	word-wrap: break-word;
-}
-
-#chat .toggle-content.show {
-	display: inline-block !important;
-}
-
-#chat .count {
-	background: #fafafa;
-	height: 48px;
-	left: 0;
-	position: absolute;
-	right: 0;
-	top: 0;
-}
-
-#chat .search {
-	color: #222;
-	border: 0;
-	background: none;
-	font: inherit;
-	outline: 0;
-	padding: 18px 16px;
-	position: relative;
-	width: 100%;
-}
-
-#chat .names {
-	bottom: 0;
-	overflow: auto;
-	overflow-x: hidden;
-	-webkit-overflow-scrolling: touch;
-	padding-bottom: 10px;
-	position: absolute;
-	top: 48px;
-	width: 100%;
-}
-
-#chat .names .user {
-	display: block;
-	line-height: 1.6;
-	padding: 0 16px;
-}
-
-#chat .user-mode:before {
-	content: "";
-	border-bottom: 1px solid #eee;
-	display: block;
-	line-height: 1.6;
-	padding: 12px 16px 10px;
-	margin-bottom: 10px;
-}
-
-#chat .user-mode.owner:before {
-	content: "Owners";
-}
-
-#chat .user-mode.admin:before {
-	content: "Administrators";
-}
-
-#chat .user-mode.op:before {
-	content: "Operators";
-}
-
-#chat .user-mode.half-op:before {
-	content: "Half-Operators";
-}
-
-#chat .user-mode.voice:before {
-	content: "Voiced";
-}
-
-#chat .user-mode.normal:before {
-	content: "Users";
-}
-
-#loading {
-	font-size: 14px;
-	z-index: 1;
-}
-
-#loading p {
-	margin-top: 10px;
-}
-
-#loading-slow {
-	display: none;
-}
-
-#sign-in label {
-	display: block;
-	margin-top: 10px;
-}
-
-#sign-in .remember {
-	float: left;
-	font-size: 14px;
-	margin-top: 12px;
-}
-
-#sign-in .remember input {
-	float: left;
-	margin: 3px 10px 0 0;
-}
-
-#sign-in .btn {
-	margin-top: 25px;
-}
-
-#sign-in .error {
-	color: #e74c3c;
-	margin-top: 1em;
-}
-
-#connect label {
-	display: block;
-	margin-top: 11px;
-}
-
-#connect .port:before {
-	content: ":";
-	margin: 9px 0 0 -17px;
-	position: absolute;
-}
-
-#connect .tls {
-	float: left;
-	font-size: 14px;
-	margin-top: 6px;
-}
-
-#connect .tls input {
-	float: left;
-	margin: 3px 10px 0 0;
-}
-
-#connect .btn {
-	float: left;
-	margin-top: 30px;
-}
-
-#settings .opt {
-	display: block;
-	padding: 5px 0 10px 1px;
-}
-
-#settings .opt input {
-	float: left;
-	margin: 4px 10px 0 0;
-}
-
-#settings .about,
-#settings #play {
-	color: #7f8c8d;
-}
-
-#settings .about small {
-	margin-left: 2px;
-}
-
-#settings #play {
-	font-size: 14px;
-	transition: opacity .2s;
-}
-
-#settings #play:hover {
-	opacity: .8;
-}
-
-#settings .about {
-	font-size: 14px;
-	padding-top: 2px;
-	line-height: 1.8;
-}
-
-#settings #change-password .error,
-#settings #change-password .success {
-	margin-bottom: 1em;
-}
-
-#settings #change-password .error {
-	color: #e74c3c;
-}
-
-#settings #change-password .success {
-	color: #2ecc40;
-}
-
-#settings .error {
-	color: #e74c3c;
-	margin-top: .2em;
-}
-
-#form {
-	background: #eee;
-	border-top: 1px solid #ddd;
-	flex: 0 0 auto;
-	padding: 5px;
-}
-
-.windows #form .input {
-	font: 12px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
-	border: 1px solid #ddd;
-	border-radius: 2px;
-	margin: 0;
-	padding: 0;
-	background: white;
-	display: flex;
-	align-items: flex-end;
-}
-
-#form #nick {
-	background: #f6f6f6;
-	color: #666;
-	font: inherit;
-	font-size: 11px;
-	margin: 4px;
-	line-height: 26px;
-	height: 24px;
-	padding: 0 9px;
-	border-radius: 1px;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	flex: 0 0 auto;
-}
-
-#form #nick:empty {
-	visibility: hidden;
-}
-
-#form #nick:after {
-	content: ":";
-}
-
-#form #input {
-	background: transparent;
-	border: none;
-	font: inherit;
-	min-height: 18px; /* Required when computing input height at char deletion */
-	height: 18px;
-	max-height: 90px;
-	line-height: 1.5;
-	outline: none;
-	margin: 5px;
-	padding: 0;
-	resize: none;
-	flex: 1 0 auto;
-	align-self: center;
-}
-
-#form #submit {
-	color: #9ca5b4;
-	font-size: 14px;
-	height: 32px;
-	transition: opacity .2s;
-	width: 32px;
-	flex: 0 0 auto;
-}
-
-#form #submit:hover {
-	opacity: .6;
-}
-
-#context-menu-container {
-	display: none;
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 1000;
-	background: transparent;
-}
-
-#context-menu {
-	position: absolute;
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	min-width: 160px;
-	font-size: 14px;
-	background-color: #fff;
-	box-shadow: 0 3px 12px rgba(0, 0, 0, .15);
-	border: 1px solid rgba(0, 0, 0, .15);
-	border-radius: 2px;
-}
-
-.context-menu-divider {
-	height: 1px;
-	margin: 6px 0;
-	background-color: rgba(0, 0, 0, .1);
-}
-
-.context-menu-item {
-	cursor: pointer;
-	display: block;
-	padding: 4px 8px;
-	color: #333;
-	margin-top: 6px;
-	margin-bottom: 6px;
-}
-
-.context-menu-item:hover {
-	background-color: #f6f6f6;
-}
-
-.context-menu-item:before {
-	width: 20px;
-	display: inline-block;
-}
-
-/**
-  * Tooltips
-  * See http://primercss.io/tooltips/
-  */
-.tooltipped {
-	position: relative;
-}
-
-.tooltipped:after {
-	position: absolute;
-	z-index: 1000000;
-	display: inline-block;
-	visibility: hidden;
-	opacity: 0;
-	padding: 5px 8px;
-	font: 12px Lato;
-	line-height: 1.2;
-	color: #fff;
-	text-align: center;
-	text-decoration: none;
-	text-shadow: none;
-	text-transform: none;
-	letter-spacing: normal;
-	word-wrap: break-word;
-	white-space: pre;
-	pointer-events: none;
-	content: attr(aria-label);
-	background: #222;
-	border-radius: 3px;
-	-webkit-font-smoothing: subpixel-antialiased;
-	transition: .2s;
-}
-
-.tooltipped:before {
-	position: absolute;
-	z-index: 1000001;
-	display: inline-block;
-	visibility: hidden;
-	opacity: 0;
-	width: 0;
-	height: 0;
-	color: #fff;
-	pointer-events: none;
-	content: "";
-	border: 5px solid transparent;
-	transition: .2s;
-}
-
-.tooltipped:hover:before,
-.tooltipped:hover:after,
-.tooltipped:active:before,
-.tooltipped:active:after,
-.tooltipped:focus:before,
-.tooltipped:focus:after {
-	visibility: visible;
-	opacity: 1;
-	text-decoration: none;
-}
-
-.tooltipped-s:after,
-.tooltipped-se:after,
-.tooltipped-sw:after {
-	top: 100%;
-	right: 50%;
-	margin-top: 5px;
-}
-
-.tooltipped-s:before,
-.tooltipped-se:before,
-.tooltipped-sw:before {
-	top: auto;
-	right: 50%;
-	bottom: -5px;
-	margin-right: -5px;
-	border-bottom-color: #222;
-}
-
-.tooltipped-se:after {
-	right: auto;
-	left: 50%;
-	margin-left: -15px;
-}
-
-.tooltipped-sw:after {
-	margin-right: -15px;
-}
-
-.tooltipped-n:after,
-.tooltipped-ne:after,
-.tooltipped-nw:after {
-	right: 50%;
-	bottom: 100%;
-	margin-bottom: 5px;
-}
-
-.tooltipped-n:before,
-.tooltipped-ne:before,
-.tooltipped-nw:before {
-	top: -5px;
-	right: 50%;
-	bottom: auto;
-	margin-right: -5px;
-	border-top-color: #222;
-}
-
-.tooltipped-ne:after {
-	right: auto;
-	left: 50%;
-	margin-left: -15px;
-}
-
-.tooltipped-nw:after {
-	margin-right: -15px;
-}
-
-.tooltipped-s:after,
-.tooltipped-n:after {
-	-webkit-transform: translateX(50%);
-	-ms-transform: translateX(50%);
-	transform: translateX(50%);
-}
-
-.tooltipped-w:after {
-	right: 100%;
-	bottom: 50%;
-	margin-right: 5px;
-	-webkit-transform: translateY(50%);
-	-ms-transform: translateY(50%);
-	transform: translateY(50%);
-}
-
-.tooltipped-w:before {
-	top: 50%;
-	bottom: 50%;
-	left: -5px;
-	margin-top: -5px;
-	border-left-color: #222;
-}
-
-.tooltipped-e:after {
-	bottom: 50%;
-	left: 100%;
-	margin-left: 5px;
-	-webkit-transform: translateY(50%);
-	-ms-transform: translateY(50%);
-	transform: translateY(50%);
-}
-
-.tooltipped-e:before {
-	top: 50%;
-	right: -5px;
-	bottom: 50%;
-	margin-top: -5px;
-	border-right-color: #222;
-}
-
-/* End tooltips */
-
-/**
-  * IRC Message Styling
-  * https://github.com/megawac/irc-style-parser
-  * Colours are credit to http://clrs.cc/
-  */
-.irc-fg0 { color: #fff; }
-
-.irc-fg1 { color: #000; }
-
-.irc-fg2 { color: #001f3f; }
-
-.irc-fg3 { color: #2ecc40; }
-
-.irc-fg4 { color: #ff4136; }
-
-.irc-fg5 { color: #85144b; }
-
-.irc-fg6 { color: #b10dc9; }
-
-.irc-fg7 { color: #ff851b; }
-
-.irc-fg8 { color: #ffdc00; }
-
-.irc-fg9 { color: #01ff70; }
-
-.irc-fg10 { color: #39cccc; }
-
-.irc-fg11 { color: #7fdbff; }
-
-.irc-fg12 { color: #0074d9; }
-
-.irc-fg13 { color: #f012be; }
-
-.irc-fg14 { color: #aaa; }
-
-.irc-fg15 { color: #ddd; }
-
-.irc-bg0 { background: #fff; }
-
-.irc-bg1 { background: #000; }
-
-.irc-bg2 { background: #001f3f; }
-
-.irc-bg3 { background: #2ecc40; }
-
-.irc-bg4 { background: #ff4136; }
-
-.irc-bg5 { background: #85144b; }
-
-.irc-bg6 { background: #b10dc9; }
-
-.irc-bg7 { background: #ff851b; }
-
-.irc-bg8 { background: #ffdc00; }
-
-.irc-bg9 { background: #01ff70; }
-
-.irc-bg10 { background: #39cccc; }
-
-.irc-bg11 { background: #7fdbff; }
-
-.irc-bg12 { background: #0074d9; }
-
-.irc-bg13 { background: #f012be; }
-
-.irc-bg14 { background: #aaa; }
-
-.irc-bg15 { background: #ddd; }
-
-.irc-bold {
-	font-weight: bold;
-}
-
-.irc-underline {
-	text-decoration: underline;
-}
-
-.irc-italic {
-	font-style: italic;
-}
-
-@media (max-width: 768px) {
+#chat
+	.user
+		cursor pointer
+		color #50a656
+		&:hover
+			opacity .6
+
+	&.colored-nicks
+		.user.color-1 { color: #1396cf; }
+		.user.color-2 { color: #ffcf89; }
+		.user.color-3 { color: #00dc5f; }
+		.user.color-4 { color: #ff5bc8; }
+		.user.color-5 { color: #ff0e1b; }
+		.user.color-6 { color: #000094; }
+		.user.color-7 { color: #006441; }
+		.user.color-8 { color: #00566e; }
+		.user.color-9 { color: #ff0078; }
+		.user.color-10 { color: #15d5a3; }
+		.user.color-11 { color: #006b3b; }
+		.user.color-12 { color: #00c5ba; }
+		.user.color-13 { color: #00465b; }
+		.user.color-14 { color: #ffafce; }
+		.user.color-15 { color: #ff3b12; }
+		.user.color-16 { color: #16cc6a; }
+		.user.color-17 { color: #ff0072; }
+		.user.color-18 { color: #ff5877; }
+		.user.color-19 { color: #ff1753; }
+		.user.color-20 { color: #007a56; }
+		.user.color-21 { color: #095092; }
+		.user.color-22 { color: #000bde; }
+		.user.color-23 { color: #00bca9; }
+		.user.color-24 { color: #00367d; }
+		.user.color-25 { color: #009ec4; }
+		.user.color-26 { color: #006119; }
+		.user.color-27 { color: #008bb8; }
+		.user.color-28 { color: #469c00; }
+		.user.color-29 { color: #ff0f95; }
+		.user.color-30 { color: #ff7615; }
+		.user.color-31 { color: #ff4846; }
+		.user.color-32 { color: #ff199b; }
+
+	.text
+		padding-left 10px
+		padding-right 6px
+
+	.self .text
+		color #999
+
+	.msg.motd .text,
+	.msg.message .text,
+	.msg.action .action-text,
+	.msg.notice .text
+		white-space pre-wrap
+		overflow hidden
+
+	&.hide-join .join,
+	&.hide-mode .mode,
+	&.hide-motd .motd,
+	&.hide-nick .nick,
+	&.hide-part .part,
+	&.hide-quit .quit
+		display none !important
+
+	.join .text,
+	.kick .text,
+	.mode .text,
+	.nick .text,
+	.part .text,
+	.quit .text,
+	.topic .text,
+	.topic_set_by .text
+		color #999
+
+	.action .from,
+	.action .text,
+	.action .user
+		color #f39c12
+
+	.notice .time,
+	.notice .text,
+	.chan .notice .user
+		color #0074d9 !important
+
+	.notice .user:before
+		content "Notice: "
+
+	.error,
+	.error .from,
+	.channel .highlight .from,
+	.channel .highlight .text,
+	.channel .highlight .user
+		color #f00
+
+	.unhandled .from
+		color #eee
+
+	.msg.toggle .time
+		visibility hidden
+
+	.toggle-button
+		background #f5f5f5
+		border-radius 2px
+		display inline-block
+		color #666
+		height 1em
+		line-height 0
+		padding 0 6px
+
+	.toggle-content
+		background #f5f5f5
+		border-radius 2px
+		display none
+		color #222
+		font-size 12px
+		max-width 100%
+		padding 6px 8px
+		margin-top 2px
+
+		a
+			color inherit
+
+		img
+			max-width 100%
+			max-height 250px
+			display block
+			margin 2px 0
+
+		.thumb
+			max-height 110px
+			max-width 210px
+
+		.head
+			font-weight bold
+
+		.body
+			color #999
+			max-width 460px
+			word-break normal
+			word-wrap break-word
+
+		&.show
+			display inline-block !important
+
+	.count
+		background #fafafa
+		height 48px
+		left 0
+		position absolute
+		right 0
+		top 0
+
+	.search
+		color #222
+		border 0
+		background none
+		font inherit
+		outline 0
+		padding 18px 16px
+		position relative
+		width 100%
+
+	.names
+		bottom 0
+		overflow auto
+		overflow-x hidden
+		-webkit-overflow-scrolling touch
+		padding-bottom 10px
+		position absolute
+		top 48px
+		width 100%
+
+		.user
+			display block
+			line-height 1.6
+			padding 0 16px
+
+	.user-mode
+		&:before
+			content ""
+			border-bottom 1px solid #eee
+			display block
+			line-height 1.6
+			padding 12px 16px 10px
+			margin-bottom 10px
+
+		&.owner:before
+			content "Owners"
+
+		&.admin:before
+			content "Administrators"
+
+		&.op:before
+			content "Operators"
+
+		&.half-op:before
+			content "Half-Operators"
+
+		&.voice:before
+			content "Voiced"
+
+		&.normal:before
+			content "Users"
+
+#loading
+	font-size 14px
+	z-index 1
+
+	p
+		margin-top 10px
+
+#loading-slow
+	display none
+
+#sign-in
+	label
+		display block
+		margin-top 10px
+
+	.remember
+		float left
+		font-size 14px
+		margin-top 12px
+
+		input
+			float left
+			margin 3px 10px 0 0
+
+	.btn
+		margin-top 25px
+
+	.error
+		color #e74c3c
+		margin-top 1em
+
+#connect
+	label
+		display block
+		margin-top 11px
+
+	.port:before
+		content ""
+		margin 9px 0 0 -17px
+		position absolute
+
+	.tls
+		float left
+		font-size 14px
+		margin-top 6px
+
+		input
+			float left
+			margin 3px 10px 0 0
+
+	.btn
+		float left
+		margin-top 30px
+
+#settings
+	.opt
+		display block
+		padding 5px 0 10px 1px
+
+		input
+			float left
+			margin 4px 10px 0 0
+
+	.about,
+	#play
+		color #7f8c8d
+
+	.about small
+		margin-left 2px
+
+	#play
+		font-size 14px
+		transition opacity .2s
+
+		&:hover
+			opacity .8
+
+	.about
+		font-size 14px
+		padding-top 2px
+		line-height 1.8
+
+	#change-password
+		.error,
+		.success
+			margin-bottom 1em
+
+		.error
+			color #e74c3c
+
+		.success
+			color #2ecc40
+
+	.error
+		color #e74c3c
+		margin-top .2em
+
+#form
+	background #eee
+	border-top 1px solid #ddd
+	flex 0 0 auto
+	padding 5px
+
+.windows #form .input
+	font 12px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace
+	border 1px solid #ddd
+	border-radius 2px
+	margin 0
+	padding 0
+	background white
+	display flex
+	align-items flex-end
+
+#form
+	#nick
+		background #f6f6f6
+		color #666
+		font inherit
+		font-size 11px
+		margin 4px
+		line-height 26px
+		height 24px
+		padding 0 9px
+		border-radius 1px
+		user-select none
+		flex 0 0 auto
+
+		&:empty
+			visibility hidden
+
+		&:after
+			content ":"
+
+	#input
+		background transparent
+		border none
+		font inherit
+		/* Required when computing input height at char deletion */
+		min-height 18px
+		height 18px
+		max-height 90px
+		line-height 1.5
+		outline none
+		margin 5px
+		padding 0
+		resize none
+		flex 1 0 auto
+		align-self center
+
+	#submit
+		color #9ca5b4
+		font-size 14px
+		height 32px
+		transition opacity .2s
+		width 32px
+		flex 0 0 auto
+
+	&:hover
+		opacity .6
+
+#context-menu-container
+	display none
+	position absolute
+	top 0
+	left 0
+	width 100%
+	height 100%
+	z-index 1000
+	background transparent
+
+#context-menu
+	position absolute
+	list-style none
+	margin 0
+	padding 0
+	min-width 160px
+	font-size 14px
+	background-color #fff
+	box-shadow 0 3px 12px rgba(0, 0, 0, .15)
+	border 1px solid rgba(0, 0, 0, .15)
+	border-radius 2px
+
+.context-menu-divider
+	height 1px
+	margin 6px 0
+	background-color rgba(0, 0, 0, .1)
+
+.context-menu-item
+	cursor pointer
+	display block
+	padding 4px 8px
+	color #333
+	margin-top 6px
+	margin-bottom 6px
+
+	&:hover
+		background-color #f6f6f6
+
+	&:before
+		width 20px
+		display inline-block
+
+@require '~primer-tooltips/build/build.css'
+
+@require '~irc-style-parser/irc-colours.css'
+
+@media (max-width: 768px)
 	/**
-	  * TODO Replace this with `@media (hover: hover)` when Firefox supports it
-	  * See:
-	  * - http://stackoverflow.com/a/28058919/1935861
-	  * - http://caniuse.com/#feat=css-media-interaction
-	  * - https://www.w3.org/TR/mediaqueries-4/
-	  * - https://developer.mozilla.org/en-US/docs/Web/CSS/@media/hover
-	  */
+  * TODO Replace this with `@media (hover: hover)` when Firefox supports it
+  * See:
+  * - http://stackoverflow.com/a/28058919/1935861
+  * - http://caniuse.com/#feat=css-media-interaction
+  * - https://www.w3.org/TR/mediaqueries-4/
+  * - https://developer.mozilla.org/en-US/docs/Web/CSS/@media/hover
+  */
 	.tooltipped:hover:before,
 	.tooltipped:hover:after,
 	.tooltipped:active:before,
 	.tooltipped:active:after,
 	.tooltipped:focus:before,
-	.tooltipped:focus:after {
-		visibility: hidden;
-		opacity: 0;
-	}
+	.tooltipped:focus:after
+		visibility hidden
+		opacity 0
 
-	.container {
-		margin-top: 60px !important;
-	}
+	.container
+		margin-top 60px !important
 
-	#viewport.lt {
-		-webkit-transform: translate3d(220px, 0, 0);
-		transform: translate3d(220px, 0, 0);
-	}
+	#viewport.lt
+		transform translate3d(220px, 0, 0)
 
-	#viewport.rt #chat .sidebar {
-		-webkit-transform: translate3d(-180px, 0, 0);
-		transform: translate3d(-180px, 0, 0);
-	}
+	#viewport.rt #chat .sidebar
+		transform translate3d(-180px, 0, 0)
 
-	#sidebar {
-		left: -220px;
-	}
+	#sidebar
+		left -220px
 
-	#footer {
-		left: -215px;
-		width: 215px;
-	}
+	#footer
+		left -215px
+		width 215px
 
-	#sidebar .empty:before {
-		margin-top: 0;
-	}
+	#sidebar .empty:before
+		margin-top 0
 
-	.main {
-		left: 5px;
-		right: 5px;
-	}
+	.main
+		left 5px
+		right 5px
 
-	#chat .chat {
-		right: 0;
-	}
+	#chat .chat
+		right 0
 
 	#viewport .lt,
-	#viewport .channel .rt {
-		display: block;
-	}
+	#viewport .channel .rt
+		display block
 
-	.windows .window .header {
-		display: block;
-	}
+	.windows .window .header
+		display block
 
-	#chat .sidebar {
-		right: -180px;
-	}
+	#chat
+		.sidebar
+			right -180px
 
-	#chat .title:before {
-		display: none;
-	}
-}
+		.title:before
+			display none
 
-@media (max-width: 479px) {
-	.container {
-		margin: 40px 0 !important;
-	}
+@media (max-width: 479px)
+	.container
+		margin 40px 0 !important
 
-	#connect .tls {
-		margin: 20px 0;
-	}
+	#connect .tls
+		margin 20px 0
 
-	.windows .input {
-		margin-bottom: 2px;
-	}
+	.windows .input
+		margin-bottom 2px
 
-	#chat .messages {
-		display: block;
-		padding: 5px 10px;
-	}
+	#chat
+		.messages
+			display block
+			padding 5px 10px
 
-	#chat .msg {
-		display: block;
-		padding: 2px 0;
-	}
+		.msg
+			display block
+			padding 2px 0
 
-	#chat .time,
-	#chat .from,
-	#chat .text {
-		border: 0;
-		display: inline;
-		padding: 0;
-	}
+		.time,
+		.from,
+		.text
+			border 0
+			display inline
+			padding 0
 
-	#chat .unread-marker {
-		margin: 0;
-	}
-}
+		.unread-marker
+			margin 0
 
-::-webkit-scrollbar {
-	width: 8px;
-	background-color: rgba(0, 0, 0, 0);
-}
+::-webkit-scrollbar
+	width 8px
+	background-color rgba(0, 0, 0, 0)
 
-::-webkit-scrollbar:hover {
-	background-color: rgba(0, 0, 0, .09);
-}
+	&:hover
+		background-color rgba(0, 0, 0, .09)
 
-::-webkit-scrollbar-thumb:vertical {
-	background: rgba(0, 0, 0, .5);
-	border-radius: 100px;
-}
-
-::-webkit-scrollbar-thumb:vertical:active {
-	background: rgba(0, 0, 0, .6);
-}
+::-webkit-scrollbar-thumb:vertical
+	background rgba(0, 0, 0, .5)
+	border-radius 100px
+	&:active
+		background rgba(0, 0, 0, .6)

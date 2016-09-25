@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 export default class SignInWindow extends React.Component {
 	render () {
