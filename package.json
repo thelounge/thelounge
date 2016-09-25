@@ -26,7 +26,7 @@
     "lint": "npm-run-all -c lint:js lint:css",
     "lint:js": "npm-run-all -c lint:js:es5 lint:js:es6",
     "lint:js:es5": "eslint --parser-options=\"ecmaVersion:5\" client/",
-    "lint:js:es6": "eslint --env es6 --ignore-pattern client/ .",
+    "lint:js:es6": "eslint --ignore-pattern client/ .",
     "lint:css": "stylelint \"**/*.css\"",
     "prepublish": "npm run build"
   },
