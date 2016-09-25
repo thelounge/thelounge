@@ -80,6 +80,10 @@ $(function() {
 		});
 	});
 
+	socket.on("authorized", function() {
+		$("#loading-page-message").text("Authorized, loading messages…");
+	});
+
 	socket.on("auth", function(data) {
 		var login = $("#sign-in");
 
@@ -147,6 +151,8 @@ $(function() {
 	});
 
 	socket.on("init", function(data) {
+		$("#loading-page-message").text("Rendering…");
+
 		if (data.networks.length === 0) {
 			$("#footer").find(".connect").trigger("click");
 		} else {
