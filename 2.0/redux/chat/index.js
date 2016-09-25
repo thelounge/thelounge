@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 
-import unreadTracking from './unreadTracking';
-import messagePruning from './messagePruning';
+import * as unreadTracking from './unreadTracking';
+import * as messagePruning from './messagePruning';
 
 import {
 	INITIAL_DATA_RECEIVED,
@@ -88,9 +88,9 @@ export function messageReceived(channelId, message) {
 	return {type: MESSAGE_RECEIVED, channelId, message};
 }
 
-export function changeActiveChannel(channelId = null) {
-	return {type: CHANGE_ACTIVE_CHANNEL, channelId};
-}
+export const changeActiveChannel = (channelId = null) => (
+	{ type: CHANGE_ACTIVE_CHANNEL, channelId }
+);
 
 export function requestMore(channelId) {
 	return (dispatch, getState) => {
@@ -143,8 +143,9 @@ function normalizeNetwork(network) {
 }
 
 // Reducers
-// FIXME: no default state
-function networks(state = [], action) {
+const DEFAULT_STATE_NETWORKS = [];
+
+function networks(state = DEFAULT_STATE_NETWORKS, action) {
 	switch (action.type) {
 	case INITIAL_DATA_RECEIVED: {
 		return action.data.networks.map(normalizeNetwork);
@@ -179,8 +180,9 @@ function networks(state = [], action) {
 	}
 }
 
-// FIXME: no default state
-function channels(state = {}, action) {
+const DEFAULT_STATE_CHANNELS = [];
+
+function channels(state = DEFAULT_STATE_CHANNELS, action) {
 	switch (action.type) {
 	case INITIAL_DATA_RECEIVED: {
 		let channels = {};
@@ -243,10 +245,10 @@ function channels(state = {}, action) {
 		return setIn(state, [channelId, 'topic'], topic);
 	}
 
-	case MESSAGE_RECEIVED: {
-		let {channelId, message} = action;
-		return updateIn(state, [channelId, 'messages'], ms => ms.concat([message]));
-	}
+	// case MESSAGE_RECEIVED: {
+	// 	let {channelId, message} = action;
+	// 	return updateIn(state, [channelId, 'messages'], ms => ms.concat([message]));
+	// }
 
 	case RECEIVED_MORE: {
 		let {channelId, messages} = action;
@@ -268,11 +270,36 @@ function channels(state = {}, action) {
 	}
 }
 
-// FIXME: no default state
-function activeChannelId(state = null, action) {
+// Reducer!
+const DEAFULT_STATE = {
+	activeChannelId: -1,
+	activeWindowId: '',
+	channels: [],
+	networks: []
+};
+
+export default function (state = DEAFULT_STATE, action) {
 	switch (action.type) {
-	case CHANGE_ACTIVE_CHANNEL:
-		return action.channelId;
+	case CHANGE_ACTIVE_CHANNEL: {
+		const newState = Object.assign({}, state, {
+			activeChannelId: action.channelId
+		});
+		// TODO: move these in to proper reducers again
+		unreadTracking.onChangeActiveChannel(newState, action);
+		messagePruning.onChangeActiveChannel(newState, action);
+		return newState;
+	}
+
+	case MESSAGE_RECEIVED: {
+		const newState = Object.assign({}, state);
+		let {channelId, message} = action;
+		// TODO: each channel should have a reducer
+		const channel = state.channels[channelId];
+		channel.messages = channel.messages.map(ms => ms.concat([message]));
+		unreadTracking.onMessageReceived(newState, action);
+		messagePruning.onMessageReceived(newState, action);
+		return newState;
+	}
 
 	default:
 		return state;
@@ -280,13 +307,13 @@ function activeChannelId(state = null, action) {
 }
 
 
-const reducers = combineReducers({
-	unreadTracking,
-	messagePruning,
-	activeChannelId,
-	networks,
-	channels,
-});
+// const reducers = combineReducers({
+// 	unreadTracking,
+// 	messagePruning,
+// 	activeChannelId,
+// 	networks,
+// 	channels,
+// });
 
 
-export default reducers;
+// export default reducers;
