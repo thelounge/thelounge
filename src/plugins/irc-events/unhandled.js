@@ -13,6 +13,6 @@ module.exports = function(irc, network) {
 			type: Msg.Type.UNHANDLED,
 			command: command.command,
 			params: command.params
-		}));
+		}), true);
 	});
 };

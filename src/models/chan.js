@@ -25,11 +25,17 @@ function Chan(attr) {
 	}, attr));
 }
 
-Chan.prototype.pushMessage = function(client, msg) {
-	client.emit("msg", {
+Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
+	var obj = {
 		chan: this.id,
 		msg: msg
-	});
+	};
+
+	if (increasesUnread && this.id !== client.activeChannel) {
+		obj.unread = ++this.unread;
+	}
+
+	client.emit("msg", obj);
 
 	// Never store messages in public mode as the session
 	// is completely destroyed when the page gets closed

@@ -198,7 +198,7 @@ Client.prototype.connect = function(args) {
 			network.channels[0].pushMessage(client, new Msg({
 				type: Msg.Type.ERROR,
 				text: "Hostname you specified is not allowed."
-			}));
+			}), true);
 			return;
 		}
 
@@ -211,7 +211,7 @@ Client.prototype.connect = function(args) {
 		network.channels[0].pushMessage(client, new Msg({
 			type: Msg.Type.ERROR,
 			text: "You must specify a hostname to connect."
-		}));
+		}), true);
 		return;
 	}
 
