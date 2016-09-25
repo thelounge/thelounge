@@ -17,6 +17,8 @@ import SignInWindow from './windows/SignInWindow';
 import ConnectWindow from './windows/ConnectWindow';
 import SettingsWindow from './windows/SettingsWindow';
 
+import ContextMenuContainer from './ContextMenuContainer';
+
 
 class App extends React.Component {
 	render () {
@@ -45,9 +47,7 @@ class App extends React.Component {
 					</div>
 				</div>
 
-				<div id="context-menu-container">
-					<ul id="context-menu"></ul>
-				</div>
+				<ContextMenuContainer />
 			</div>
 		);
 	}
