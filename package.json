@@ -14,9 +14,9 @@
   "scripts": {
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha -r test/fixtures/env.js test/**/*.js",
     "start": "node index",
-    "build": "npm run build:font-awesome && npm run build:grunt && npm run build:handlebars",
+    "build": "npm-run-all build:*",
     "build:font-awesome": "node scripts/build-fontawesome.js",
-    "build:grunt": "grunt",
+    "build:libs": "uglifyjs client/js/libs/*.js client/js/libs/jquery/*.js client/js/libs/handlebars/*.js -o client/js/libs.min.js --source-map client/js/libs.min.js.map --source-map-url libs.min.js.map -p relative",
     "build:handlebars": "handlebars client/views/ -e tpl -f client/js/lounge.templates.js",
     "test": "npm-run-all -c test:mocha lint",
     "test:mocha": "mocha -r test/fixtures/env.js test/**/*.js",
@@ -61,13 +61,11 @@
     "chai": "3.5.0",
     "eslint": "2.11.1",
     "font-awesome": "4.6.3",
-    "grunt": "1.0.1",
-    "grunt-contrib-uglify": "1.0.1",
-    "grunt-contrib-watch": "1.0.0",
     "handlebars": "4.0.5",
     "istanbul": "0.4.3",
     "mocha": "2.4.5",
     "npm-run-all": "2.1.1",
-    "stylelint": "6.6.0"
+    "stylelint": "6.6.0",
+    "uglify-js": "2.7.3"
   }
 }
