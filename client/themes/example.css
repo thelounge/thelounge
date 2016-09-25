@@ -9,3 +9,50 @@ body {
 .signed-out #main {
 	left: 5px;
 }
+
+#sidebar {
+	bottom: 52px;
+}
+
+#footer {
+	border-radius: 2px;
+	bottom: 4px;
+	left: 5px;
+	width: 210px;
+}
+
+#main {
+	bottom: 4px;
+	right: 5px;
+	top: 4px;
+}
+
+#windows .window:before {
+	background: #f4f4f4;
+	background-image: linear-gradient(#f4f4f4, #ececec);
+	border-bottom: 1px solid #d7d7d7;
+	content: " ";
+	display: block;
+	height: 10px;
+	position: relative;
+	z-index: 10;
+}
+
+#windows .window {
+	border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+	#sidebar {
+		left: -220px;
+	}
+
+	#footer {
+		left: -215px;
+		width: 215px;
+	}
+
+	#main {
+		left: 5px;
+	}
+}

@@ -34,16 +34,6 @@ a:hover,
 	border-bottom: none;
 }
 
-#main {
-	right: 0;
-	bottom: 0;
-	top: 0;
-}
-
-#windows .window {
-	border-radius: 0;
-}
-
 .container {
 	margin: 40px auto;
 }
@@ -66,11 +56,6 @@ a:hover,
 .btn:disabled,
 .btn:hover {
 	background: #00ff0e;
-}
-
-#windows .window:before,
-#windows .chan:before {
-	content: none;
 }
 
 #settings .opt {
@@ -111,11 +96,6 @@ a:hover,
 	line-height: 1.8;
 }
 
-#chat .chat,
-#chat .sidebar {
-	top: 48px;
-}
-
 #chat .user {
 	color: black;
 	font-weight: bold;
@@ -136,10 +116,4 @@ a:hover,
 
 .tooltipped:after {
 	font-family: Inconsolata-g, monospace;
-}
-
-@media (max-width: 768px) {
-	#main {
-		left: 0;
-	}
 }
