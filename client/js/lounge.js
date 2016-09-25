@@ -54,6 +54,16 @@ $(function() {
 		return Handlebars.templates[name](data);
 	}
 
+	function setLocalStorageItem(key, value) {
+		try {
+			window.localStorage.setItem(key, value);
+		} catch (e) {
+			// Do nothing. If we end up here, web storage quota exceeded, or user is
+			// in Safari's private browsing where localStorage's setItem is not
+			// available. See http://stackoverflow.com/q/14555347/1935861.
+		}
+	}
+
 	Handlebars.registerHelper(
 		"partial", function(id) {
 			return new Handlebars.SafeString(render(id, this));
@@ -125,7 +135,7 @@ $(function() {
 		}
 
 		if (data.token && window.localStorage.getItem("token") !== null) {
-			window.localStorage.setItem("token", data.token);
+			setLocalStorageItem("token", data.token);
 		}
 
 		passwordForm
@@ -144,7 +154,7 @@ $(function() {
 		}
 
 		if (data.token && $("#sign-in-remember").is(":checked")) {
-			window.localStorage.setItem("token", data.token);
+			setLocalStorageItem("token", data.token);
 		} else {
 			window.localStorage.removeItem("token");
 		}
@@ -506,7 +516,7 @@ $(function() {
 			options[name] = self.val();
 		}
 
-		window.localStorage.setItem("settings", JSON.stringify(options));
+		setLocalStorageItem("settings", JSON.stringify(options));
 
 		if ([
 			"join",
@@ -1005,7 +1015,7 @@ $(function() {
 			}
 		});
 		if (values.user) {
-			window.localStorage.setItem("user", values.user);
+			setLocalStorageItem("user", values.user);
 		}
 		socket.emit(
 			event, values
