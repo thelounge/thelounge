@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
 
-const configure = (configurator) => {
+const configure = (configurator, options) => {
 	configurator.merge({
 		entry: {
 			clientUI: path.resolve(__dirname, '2.0'),
@@ -27,6 +27,8 @@ const configure = (configurator) => {
 		template: path.resolve(__dirname, '2.0', 'index.html'),
 		chunks: ['clientUI']
 	}]);
+
+	options.useReactHot = true;
 
 	return configurator;
 };

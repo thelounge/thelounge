@@ -29,14 +29,13 @@ class App extends React.Component {
 						<aside id="sidebar">
 							<div className="networks"></div>
 							<div className="empty">
-								You're not connected to any networks yet.
+								You're not connected to any networks yet. asdf
 							</div>
 						</aside>
-						<Footer
-							{/* TODO: handle button presses */}
-						/>
-						<div id="main">
-							<div id="windows">
+						{/* TODO: handle button presses */}
+						<Footer />
+						<div className="main">
+							<div className="windows">
 								<LoadingWindow />
 								<ChatContainerWindow />
 								<SignInWindow />

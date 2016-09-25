@@ -9,10 +9,8 @@
 
 
 
-html,
-body {
-	height: 100%;
-}
+html, body, #main
+	height 100%
 
 body {
 	background: #455164;
@@ -518,7 +516,7 @@ button {
 	display: none;
 }
 
-#main {
+.main {
 	bottom: 4px;
 	left: 220px;
 	position: absolute;
@@ -536,11 +534,11 @@ button {
 	width: 100%;
 }
 
-#windows label {
+.windows label {
 	font-size: 14px;
 }
 
-#windows .input {
+.windows .input {
 	background-color: white;
 	border: 1px solid #cdd3da;
 	border-radius: 2px;
@@ -554,7 +552,7 @@ button {
 	width: 100%;
 }
 
-#windows select.input {
+.windows select.input {
 	height: 35px;
 }
 
@@ -562,12 +560,12 @@ button {
 	resize: vertical;
 }
 
-#windows .input:hover,
-#windows .input:focus {
+.windows .input:hover,
+.windows .input:focus {
 	border-color: #79838c;
 }
 
-#windows .window:before {
+.windows .window:before {
 	background: #f4f4f4;
 	background-image: linear-gradient(#f4f4f4, #ececec);
 	border-bottom: 1px solid #d7d7d7;
@@ -578,7 +576,7 @@ button {
 	z-index: 10;
 }
 
-#windows .window {
+.windows .window {
 	background: #fff;
 	border-radius: 2px;
 	bottom: 0;
@@ -591,11 +589,11 @@ button {
 	-webkit-overflow-scrolling: touch;
 }
 
-#windows .window h1 {
+.windows .window h1 {
 	font-size: 36px;
 }
 
-#windows .window h2 {
+.windows .window h2 {
 	border-bottom: 1px solid #eee;
 	color: #7f8c8d;
 	font-size: 22px;
@@ -603,11 +601,11 @@ button {
 	padding-bottom: 7px;
 }
 
-#windows .active {
+.windows .active {
 	display: block;
 }
 
-#windows .header {
+.windows .header {
 	border-bottom: 1px solid #e7e7e7;
 	line-height: 48px;
 	height: 48px;
@@ -615,17 +613,17 @@ button {
 	overflow: hidden;
 }
 
-#windows .header .title {
+.windows .header .title {
 	font-size: 14px;
 }
 
-#windows .header .topic {
+.windows .header .topic {
 	color: #777;
 	margin-left: 8px;
 	word-break: break-all;
 }
 
-#windows .window .header {
+.windows .window .header {
 	display: none;
 }
 
@@ -638,7 +636,7 @@ button {
 	left: 0;
 }
 
-#windows #chat-container.active {
+.windows #chat-container.active {
 	display: flex;
 	flex-direction: column;
 }
@@ -657,14 +655,14 @@ button {
 	display: block;
 }
 
-#windows .header .topic,
+.windows .header .topic,
 .messages .msg,
 .sidebar {
 	font: 12px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
 	line-height: 1.4;
 }
 
-#windows #chat .header {
+.windows #chat .header {
 	display: block;
 }
 
@@ -1175,7 +1173,7 @@ button {
 	padding: 5px;
 }
 
-#windows #form .input {
+.windows #form .input {
 	font: 12px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
 	border: 1px solid #ddd;
 	border-radius: 2px;
@@ -1573,7 +1571,7 @@ button {
 		margin-top: 0;
 	}
 
-	#main {
+	.main {
 		left: 5px;
 		right: 5px;
 	}
@@ -1587,7 +1585,7 @@ button {
 		display: block;
 	}
 
-	#windows .window .header {
+	.windows .window .header {
 		display: block;
 	}
 
@@ -1609,7 +1607,7 @@ button {
 		margin: 20px 0;
 	}
 
-	#windows .input {
+	.windows .input {
 		margin-bottom: 2px;
 	}
 
