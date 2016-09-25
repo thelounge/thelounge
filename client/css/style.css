@@ -195,6 +195,7 @@ button {
 	content: "\f08b"; /* http://fontawesome.io/icon/sign-out/ */
 	color: #ff4136;
 	display: inline-block;
+	-webkit-transform: rotate(180deg);
 	transform: rotate(180deg);
 }
 
@@ -1446,7 +1447,6 @@ button {
 .tooltipped-s:after,
 .tooltipped-n:after {
 	-webkit-transform: translateX(50%);
-	-ms-transform: translateX(50%);
 	transform: translateX(50%);
 }
 
@@ -1455,7 +1455,6 @@ button {
 	bottom: 50%;
 	margin-right: 5px;
 	-webkit-transform: translateY(50%);
-	-ms-transform: translateY(50%);
 	transform: translateY(50%);
 }
 
@@ -1472,7 +1471,6 @@ button {
 	left: 100%;
 	margin-left: 5px;
 	-webkit-transform: translateY(50%);
-	-ms-transform: translateY(50%);
 	transform: translateY(50%);
 }
 
