@@ -116,6 +116,22 @@ $(function() {
 			.show();
 	});
 
+	socket.on("signed-up", function(data) {
+		var signUp = $("#sign-up");
+
+		signUp.find(".btn").prop("disabled", false);
+
+		if (!data.success) {
+			var error = signUp.find(".error");
+			error.show().closest("form").one("submit", function() {
+				error.hide();
+			});
+			return;
+		}
+
+		signUp.find(".success").show();
+	});
+
 	socket.on("change-password", function(data) {
 		var passwordForm = $("#change-password");
 		if (data.error || data.success) {
@@ -980,7 +996,18 @@ $(function() {
 	});
 
 	var windows = $("#windows");
-	var forms = $("#sign-in, #connect, #change-password");
+	var forms = $("#sign-in, #sign-up, #connect, #change-password");
+	var windowLinksToSidebar = windows.find("a[data-target]");
+	var sidebarLinks = sidebar.find("button[data-target]");
+	windowLinksToSidebar.on("click", function(e) {
+		var target = e.target.getAttribute('data-target');
+		sidebarLinks.toArray().forEach(function(linkElement) {
+			if (linkElement.getAttribute('data-target') === target) {
+				e.preventDefault();
+				linkElement.click();
+			}
+		})
+	});
 
 	windows.on("show", "#sign-in", function() {
 		var self = $(this);
@@ -1005,6 +1032,8 @@ $(function() {
 			.end();
 		if (form.closest(".window").attr("id") === "connect") {
 			event = "conn";
+		} else if (form.closest(".window").attr("id") === "sign-up") {
+			event = "sign-up";
 		} else if (form.closest("div").attr("id") === "change-password") {
 			event = "change-password";
 		}
