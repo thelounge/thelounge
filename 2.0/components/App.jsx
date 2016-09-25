@@ -36,7 +36,9 @@ class App extends React.Component {
 						<Footer />
 						<div className="main">
 							<div className="windows">
-								<LoadingWindow />
+								<LoadingWindow
+									loadingSlow={false}
+								/>
 								<ChatContainerWindow />
 								<SignInWindow />
 								<ConnectWindow />
