@@ -29,7 +29,7 @@ class App extends React.Component {
 						<aside id="sidebar">
 							<div className="networks"></div>
 							<div className="empty">
-								You're not connected to any networks yet. asdf
+								You're not connected to any networks yet.
 							</div>
 						</aside>
 						{/* TODO: handle button presses */}

@@ -1,8 +1,6 @@
 import React, { PropTypes } from 'react';
 
 export default class LoadingWindow extends React.Component {
-
-
 	render () {
 		let status;
 		if (!this.props.loadingSlow) {
