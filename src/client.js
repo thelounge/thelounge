@@ -63,7 +63,8 @@ function Client(manager, name, config) {
 		config = {};
 	}
 	_.merge(this, {
-		activeChannel: -1,
+		lastActiveChannel: -1,
+		attachedClients: {},
 		config: config,
 		id: id++,
 		name: name,
@@ -201,7 +202,7 @@ Client.prototype.connect = function(args) {
 			network.channels[0].pushMessage(client, new Msg({
 				type: Msg.Type.ERROR,
 				text: "Hostname you specified is not allowed."
-			}));
+			}), true);
 			return;
 		}
 
@@ -214,7 +215,7 @@ Client.prototype.connect = function(args) {
 		network.channels[0].pushMessage(client, new Msg({
 			type: Msg.Type.ERROR,
 			text: "You must specify a hostname to connect."
-		}));
+		}), true);
 		return;
 	}
 
@@ -319,6 +320,13 @@ Client.prototype.inputLine = function(data) {
 	var client = this;
 	var text = data.text;
 	var target = client.find(data.target);
+	if (!target) {
+		return;
+	}
+
+	// Sending a message to a channel is higher priority than merely opening one
+	// so that reloading the page will open this channel
+	this.lastActiveChannel = target.chan.id;
 
 	// This is either a normal message or a command escaped with a leading '/'
 	if (text.charAt(0) !== "/" || text.charAt(1) === "/") {
@@ -366,14 +374,20 @@ Client.prototype.more = function(data) {
 	});
 };
 
-Client.prototype.open = function(data) {
+Client.prototype.open = function(socketId, data) {
 	var target = this.find(data);
-	if (target) {
-		target.chan.firstUnread = 0;
-		target.chan.unread = 0;
-		target.chan.highlight = false;
-		this.activeChannel = target.chan.id;
+	if (!target) {
+		return;
 	}
+
+	target.chan.firstUnread = 0;
+	target.chan.unread = 0;
+	target.chan.highlight = false;
+
+	this.attachedClients[socketId] = target.chan.id;
+	this.lastActiveChannel = target.chan.id;
+
+	this.emit("open", target.chan.id);
 };
 
 Client.prototype.sort = function(data) {
@@ -440,6 +454,14 @@ Client.prototype.quit = function() {
 			network.irc.quit("Page closed");
 		}
 	});
+};
+
+Client.prototype.clientAttach = function(socketId) {
+	this.attachedClients[socketId] = this.lastActiveChannel;
+};
+
+Client.prototype.clientDetach = function(socketId) {
+	delete this.attachedClients[socketId];
 };
 
 var timer;

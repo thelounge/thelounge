@@ -15,7 +15,7 @@ module.exports = function(irc, network) {
 			msg = new Msg({
 				text: "You're now known as " + data.new_nick,
 			});
-			lobby.pushMessage(client, msg);
+			lobby.pushMessage(client, msg, true);
 			self = true;
 			client.save();
 			client.emit("nick", {
