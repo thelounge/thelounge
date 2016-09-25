@@ -11,6 +11,7 @@ var io = require("socket.io");
 var dns = require("dns");
 var Helper = require("./helper");
 var ldap = require("ldapjs");
+var he = require("he");
 
 var manager = null;
 var ldapclient = null;
@@ -81,6 +82,7 @@ module.exports = function() {
 			manager.autoload();
 		}
 	}
+	return server;
 };
 
 function getClientIp(req) {
@@ -121,6 +123,17 @@ function index(req, res, next) {
 			pkg,
 			Helper.config
 		);
+		if (Helper.config.enableOverrides) {
+			var url_config_items = ["password", "nick", "username", "realname", "join"];
+			if (!Helper.config.lockNetwork) {
+				url_config_items.push("host", "port", "tls");
+			}
+			for (var key of url_config_items) {
+				if (key in req.query) {
+					data.defaults[key] = he.encode(req.query[key]);
+				}
+			}
+		}
 		data.gitCommit = gitCommit;
 		data.themes = fs.readdirSync("client/themes/").filter(function(file) {
 			return file.endsWith(".css");
