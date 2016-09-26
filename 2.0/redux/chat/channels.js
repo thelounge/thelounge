@@ -1,3 +1,4 @@
+import globals from 'clientUI/globals';
 import {
 	INITIAL_DATA_RECEIVED,
 	JOINED_NETWORK,
@@ -11,6 +12,12 @@ import {
 	CLEAR_CHANNEL,
 	MESSAGE_RECEIVED
 } from './actions';
+
+
+export const getChannel = (channelId) => {
+	const state = globals.store.getState();
+	return state.chat.channels[channelId];
+};
 
 
 // Reducers

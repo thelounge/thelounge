@@ -1,3 +1,4 @@
+import globals from 'clientUI/globals';
 import {
 	INITIAL_DATA_RECEIVED,
 	JOINED_NETWORK,
@@ -32,6 +33,12 @@ export function leftChannel (channelId) {
 export function nickChanged(networkId, nick) {
 	return {type: NICK_CHANGED, networkId, nick};
 }
+
+
+export const getNetwork = (networkId) => {
+	const state = globals.store.getState();
+	return state.chat.networks[networkId];
+};
 
 
 const normalizeNetwork = (state) => {

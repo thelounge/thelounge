@@ -24,6 +24,7 @@ if (debugQuery) {
 	debug.disable('*');
 }
 
+
 // Initialize the redux store
 let store;
 if (process.env.NODE_ENV === 'production') {
@@ -32,6 +33,7 @@ if (process.env.NODE_ENV === 'production') {
 	store = createStore(reducers, applyMiddleware(createLogger()));
 }
 setGlobal('store', store);
+
 
 // Start up the socket client
 socketClient.connect();

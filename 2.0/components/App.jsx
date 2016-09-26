@@ -18,6 +18,7 @@ import ConnectWindow from './windows/ConnectWindow';
 import SettingsWindow from './windows/SettingsWindow';
 
 import ContextMenuContainer from './ContextMenuContainer';
+import Sidebar from './sidebar/Sidebar';
 
 
 class App extends React.Component {
@@ -26,12 +27,7 @@ class App extends React.Component {
 			<div className='app-cmpt'>
 				<div id='wrap'>
 					<div id="viewport">
-						<aside id="sidebar">
-							<div className="networks"></div>
-							<div className="empty">
-								You're not connected to any networks yet.
-							</div>
-						</aside>
+						<Sidebar />
 						{/* TODO: handle button presses */}
 						<Footer />
 						<div className="main">
