@@ -3,8 +3,10 @@ import {
 	JOINED_NETWORK,
 	LEFT_NETWORK,
 	JOINED_CHANNEL,
-	LEFT_CHANNEL
+	LEFT_CHANNEL,
+	NICK_CHANGED
 } from './actions';
+
 
 // Action Generators
 export function initialDataReceived (data) {
@@ -25,6 +27,10 @@ export function joinedChannel (networkId, channelInitialData) {
 
 export function leftChannel (channelId) {
 	return {type: LEFT_CHANNEL, channelId};
+}
+
+export function nickChanged(networkId, nick) {
+	return {type: NICK_CHANGED, networkId, nick};
 }
 
 
@@ -59,6 +65,13 @@ export default function (state = DEFAULT_STATE, action) {
 			...state,
 			[networkInitialData.id]: networkInitialData
 		};
+	}
+
+	case NICK_CHANGED: {
+		let {networkId, nick} = action;
+		const network = state[networkId];
+		network.nick = nick;
+		return state;
 	}
 
 	case LEFT_NETWORK: {

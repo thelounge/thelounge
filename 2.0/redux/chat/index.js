@@ -1,5 +1,3 @@
-import { combineReducers } from 'redux';
-
 import * as unreadTracking from './unreadTracking';
 import * as messagePruning from './messagePruning';
 
@@ -13,6 +11,7 @@ import {
 	TOPIC_CHANGED,
 	MESSAGE_RECEIVED,
 	CHANGE_ACTIVE_CHANNEL,
+	CHANGE_ACTIVE_WINDOW,
 	REQUEST_MORE,
 	RECEIVED_MORE,
 	CLEAR_CHANNEL
@@ -70,6 +69,10 @@ export const changeActiveChannel = (channelId = null) => (
 	{ type: CHANGE_ACTIVE_CHANNEL, channelId }
 );
 
+export const changeActiveWindow = (windowId) => (
+	{ type: CHANGE_ACTIVE_WINDOW, windowId }
+);
+
 export function requestMore(channelId) {
 	return (dispatch, getState) => {
 		dispatch({
@@ -116,6 +119,14 @@ const reducer = (state = DEAFULT_STATE, action) => {
 		return newState;
 	}
 
+	case CHANGE_ACTIVE_WINDOW: {
+		return {
+			...state,
+			activeWindowId: action.windowId
+		};
+	}
+
+
 	// case MESSAGE_RECEIVED: {
 	// 	const newState = Object.assign({}, state);
 	// 	let {channelId, message} = action;
@@ -133,14 +144,9 @@ const reducer = (state = DEAFULT_STATE, action) => {
 };
 
 
-const childReducers = combineReducers({
-	networks,
-	channels,
-});
-
-
 export default function (state, action) {
 	let newState = reducer(state, action);
-	newState = childReducers(newState, action);
+	newState.networks = networks(newState.networks, action);
+	newState.channels = channels(newState.channels, action);
 	return newState;
 }
