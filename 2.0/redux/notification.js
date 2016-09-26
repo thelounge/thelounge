@@ -75,7 +75,9 @@ export const maybeNotify = (chan, msg) => {
 
 const PERMISSIONS = {
 	NONE: 'none',
-	GRANTED: 'granted'
+	GRANTED: 'granted',
+	DENIED: 'denied',
+	DEFAULT: 'default'
 };
 
 // Reducer

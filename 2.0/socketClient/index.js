@@ -1,4 +1,6 @@
 import EventEmitter from 'events';
+import url from 'url';
+import debug from 'debug';
 
 import io from 'socket.io-client';
 
@@ -38,6 +40,7 @@ import {
 class SocketClient extends EventEmitter {
 	constructor () {
 		super();
+		this.logger = debug('lounge:socketClient');
 		this.socket = null;
 	}
 
@@ -46,8 +49,26 @@ class SocketClient extends EventEmitter {
 		location.reload();
 	}
 
-	connect (path) {
-		this.socket = io({ path });
+	getConnectURL () {
+		const parsed = url.parse(location.href, true);
+		const urlParam = parsed.query && parsed.query.wsURL;
+		let host;
+		if (urlParam) {
+			host = urlParam;
+		} else {
+			// Fallback to whatever the window pathname is
+			host = window.location.pathname + 'socket.io/';
+		}
+		const protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+		return protocol + host;
+	}
+
+	connect (socketUrl) {
+		if (!socketUrl) {
+			socketUrl = this.getConnectURL();
+		}
+		this.logger('Connecting to:', socketUrl);
+		this.socket = io(socketUrl);
 
 		this.socket.on('error', (e) => {
 			console.error('Socket error', e);
@@ -66,8 +87,7 @@ class SocketClient extends EventEmitter {
 			setLoginEnabled(true);
 
 			if (!data.success) {
-				window.localStorage.removeItem('token');
-
+				setLoginToken(null);
 				setLoginError(null);
 			} else {
 				const token = getLoginToken();
