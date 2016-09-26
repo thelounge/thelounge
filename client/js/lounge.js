@@ -1000,13 +1000,13 @@ $(function() {
 	var windowLinksToSidebar = windows.find("a[data-target]");
 	var sidebarLinks = sidebar.find("button[data-target]");
 	windowLinksToSidebar.on("click", function(e) {
-		var target = e.target.getAttribute('data-target');
+		var target = e.target.getAttribute("data-target");
 		sidebarLinks.toArray().forEach(function(linkElement) {
-			if (linkElement.getAttribute('data-target') === target) {
+			if (linkElement.getAttribute("data-target") === target) {
 				e.preventDefault();
 				linkElement.click();
 			}
-		})
+		});
 	});
 
 	windows.on("show", "#sign-in", function() {

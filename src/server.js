@@ -161,13 +161,13 @@ function init(socket, client) {
 
 			if (!addUserResult) {
 				socket.emit("signed-up", {
-					error: 'Username sounds already in use'
+					error: "Username sounds already in use"
 				});
 				return;
 			}
 
 			socket.emit("signed-up", {
-				'success': 'OK'
+				success: "OK"
 			});
 		});
 	} else {
