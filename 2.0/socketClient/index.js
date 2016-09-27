@@ -18,7 +18,8 @@ import {
 	messageReceived,
 	receivedMore,
 	channelUsersChanged,
-	receivedChannelUsers
+	receivedChannelUsers,
+	WINDOW_TYPES
 } from 'clientUI/redux/chat';
 import {
 	setLoginEnabled,
@@ -127,7 +128,7 @@ class SocketClient extends EventEmitter {
 			this.store.dispatch(setLoaderState(LOADER_STATES.DONE));
 
 			if (data.networks.length === 0) {
-				this.store.dispatch(changeActiveWindow('connect'));
+				this.store.dispatch(changeActiveWindow(WINDOW_TYPES.CONNECT));
 			} else {
 				this.store.dispatch(initialDataReceived(data));
 				// renderNetworks(data);
@@ -205,6 +206,10 @@ class SocketClient extends EventEmitter {
 		this.socket.on('names', ({id, users}) => {
 			this.store.dispatch(receivedChannelUsers(id, users));
 		});
+	}
+
+	emit (...args) {
+		return this.socket.emit(...args);
 	}
 }
 
