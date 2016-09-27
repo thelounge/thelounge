@@ -1,9 +1,18 @@
 import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 
-export default class LoadingWindow extends React.Component {
+import { LOGIN_STATES } from 'clientUI/redux/auth';
+
+
+class LoadingWindow extends React.Component {
 	render () {
+		const loadingSlow = false; // TODO
+
+		const { loginState } = this.props;
 		let status;
-		if (!this.props.loadingSlow) {
+		if (loginState === LOGIN_STATES.IN_PROGRESS) {
+			status = <p>Authorizing...</p>;
+		} else if (!loadingSlow) {
 			status = (
 				<p>
 					Loading the app...
@@ -38,6 +47,16 @@ export default class LoadingWindow extends React.Component {
 	}
 }
 
+
 LoadingWindow.propTypes = {
-	loadingSlow: PropTypes.boolean
+	loginState: PropTypes.string.isRequired
 };
+
+
+const mapStateToProps = state => ({
+	loginState: state.auth.state
+});
+const mapDispatchToProps = dispatch => ({}); // eslint-disable-line
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoadingWindow);
+

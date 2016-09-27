@@ -35,6 +35,10 @@ import {
 import {
 	maybeNotify
 } from 'clientUI/redux/notification';
+import {
+	setLoadingState,
+	LOADER_STATES
+} from 'clientUI/redux/loader';
 
 
 class SocketClient extends EventEmitter {
@@ -115,6 +119,8 @@ class SocketClient extends EventEmitter {
 		});
 
 		this.socket.on('init', (data) => {
+			setLoadingState(LOADER_STATES.DONE);
+
 			if (data.networks.length === 0) {
 				changeActiveWindow('connect');
 			} else {

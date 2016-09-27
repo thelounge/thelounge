@@ -15,8 +15,8 @@ import App from './components/App';
 const parsed = url.parse(location.href, true);
 const debugQuery = parsed.query && parsed.query.debug;
 if (debugQuery) {
-	debug.enable(debugQuery);
 	debug.disable(null);
+	debug.enable(debugQuery);
 } else {
 	debug.enable(null);
 	debug.disable('*');

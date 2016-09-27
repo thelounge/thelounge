@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 
 // import { setSomething } from 'clientUI/redux/chat';
 
@@ -8,6 +9,9 @@ import 'expose?$!expose?jQuery!jquery';
 import 'font-awesome-webpack';
 import 'bootstrap-webpack';
 import './App.styl';
+
+import { LOADER_STATES } from 'clientUI/redux/loader';
+import { LOGIN_STATES } from 'clientUI/redux/auth';
 
 import Footer from './Footer';
 
@@ -23,8 +27,14 @@ import Sidebar from './sidebar/Sidebar';
 
 class App extends React.Component {
 	render () {
+		const { authState, loaderState } = this.props;
+
 		return (
-			<div className='app-cmpt'>
+			<div
+				className={classNames('app-cmpt', {
+					'signed-out': authState !== LOGIN_STATES.SUCCESS
+				})}
+			>
 				<div id='wrap'>
 					<div id="viewport">
 						<Sidebar />
@@ -32,11 +42,13 @@ class App extends React.Component {
 						<Footer />
 						<div className="main">
 							<div className="windows">
-								<LoadingWindow
-									loadingSlow={false}
-								/>
+								{loaderState !== LOADER_STATES.DONE &&
+									<LoadingWindow />
+								}
 								<ChatContainerWindow />
-								<SignInWindow />
+								{loaderState !== LOADER_STATES.DONE &&
+									<SignInWindow />
+								}
 								<ConnectWindow />
 								<SettingsWindow />
 							</div>
@@ -50,19 +62,17 @@ class App extends React.Component {
 	}
 }
 
+
 App.propTypes = {
-	something: PropTypes.number
+	authState: PropTypes.string.isRequired,
+	loaderState: PropTypes.string.isRequired
 };
 
-const mapStateToProps = state => {
-	return {
-		something: state.chat.something
-	};
-};
 
-// (dispatch)
-const mapDispatchToProps = () => {
-	return { };
-};
+const mapStateToProps = state => ({
+	authState: state.auth.state,
+	loaderState: state.loader.state
+});
+const mapDispatchToProps = dispatch => ({}); // eslint-disable-line
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
