@@ -63,7 +63,11 @@ class Chat extends React.Component {
 
 		return (
 			<div
-				className={classNames('chat-cmpt', channel.type, { active: isActive })}
+				className={classNames(
+					'chat-cmpt',
+					channel.type,
+					{ active: isActive }
+				)}
 			>
 				<div className="header">
 					<button className="lt" aria-label="Toggle channel list" />

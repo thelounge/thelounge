@@ -14,7 +14,7 @@ class Sidebar extends React.Component {
 		return (
 			<aside id="sidebar">
 				<div className="networks">
-					{networks.map(network =>
+					{networks.length && networks.map(network =>
 						<Network
 							network={network}
 							key={network.id}

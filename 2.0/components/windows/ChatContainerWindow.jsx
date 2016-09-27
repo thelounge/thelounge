@@ -16,9 +16,10 @@ class ChatContainerWindow extends React.Component {
 
 		return (
 			<div className="window cmpt-chat-container-window">
-				<Chat
-					channel={chatChannel}
-				/>
+				{chatChannel
+					? <Chat channel={chatChannel} />
+					: null
+				}
 				<form className="chat-form" method="post" action="">
 					<div className="input">
 						{/* for="input" */}
