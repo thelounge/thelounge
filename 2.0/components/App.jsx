@@ -12,6 +12,7 @@ import './App.styl';
 
 import { LOADER_STATES } from 'clientUI/redux/loader';
 import { LOGIN_STATES } from 'clientUI/redux/auth';
+import { WINDOW_TYPES } from 'clientUI/redux/chat';
 
 import Footer from './Footer';
 
@@ -25,7 +26,20 @@ import ContextMenuContainer from './ContextMenuContainer';
 import Sidebar from './sidebar/Sidebar';
 
 
+
 class App extends React.Component {
+	renderActiveWindow () {
+		const activeWindowId = this.props.activeWindowId;
+		if (activeWindowId === WINDOW_TYPES.CONNECT) {
+			return <ConnectWindow />;
+		} else if (activeWindowId === WINDOW_TYPES.CHAT) {
+			return <ChatContainerWindow />;
+		} else if (activeWindowId === WINDOW_TYPES.SETTINGS) {
+			return <SettingsWindow />;
+		}
+		return null;
+	}
+
 	render () {
 		const { authState, loaderState } = this.props;
 
@@ -42,15 +56,13 @@ class App extends React.Component {
 						<Footer />
 						<div className="main">
 							<div className="windows">
+								{this.renderActiveWindow()}
 								{loaderState !== LOADER_STATES.DONE &&
 									<LoadingWindow />
 								}
-								<ChatContainerWindow />
 								{loaderState !== LOADER_STATES.DONE &&
 									<SignInWindow />
 								}
-								<ConnectWindow />
-								<SettingsWindow />
 							</div>
 						</div>
 					</div>
@@ -65,13 +77,15 @@ class App extends React.Component {
 
 App.propTypes = {
 	authState: PropTypes.string.isRequired,
-	loaderState: PropTypes.string.isRequired
+	loaderState: PropTypes.string.isRequired,
+	activeWindowId: PropTypes.string.isRequired
 };
 
 
 const mapStateToProps = state => ({
 	authState: state.auth.state,
-	loaderState: state.loader.state
+	loaderState: state.loader.state,
+	activeWindowId: state.chat.activeWindowId
 });
 const mapDispatchToProps = dispatch => ({}); // eslint-disable-line
 

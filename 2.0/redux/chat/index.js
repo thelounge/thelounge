@@ -100,6 +100,13 @@ export function clearChannel(channelId) {
 }
 
 
+export const WINDOW_TYPES = {
+	CONNECT: 'connect',
+	CHAT: 'chat',
+	SETTINGS: 'settings'
+};
+
+
 // Reducer!
 const DEAFULT_STATE = {
 	activeChannelId: -1,
