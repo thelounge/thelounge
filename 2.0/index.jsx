@@ -2,15 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import url from 'url';
 import debug from 'debug';
+import { Provider } from 'react-redux';
 
-import App from './components/App';
-
-import {createStore, applyMiddleware} from 'redux';
-import {Provider} from 'react-redux';
-import createLogger from 'redux-logger';
-import { set as setGlobal } from './globals';
+import { initStore, getStore } from 'clientUI/redux/store';
 import reducers from './redux/reducers';
 import socketClient from './socketClient';
+
+import App from './components/App';
 
 
 // Initialize debug
@@ -26,13 +24,7 @@ if (debugQuery) {
 
 
 // Initialize the redux store
-let store;
-if (process.env.NODE_ENV === 'production') {
-	store = createStore(reducers);
-} else {
-	store = createStore(reducers, applyMiddleware(createLogger()));
-}
-setGlobal('store', store);
+initStore(reducers);
 
 
 // Start up the socket client
@@ -40,7 +32,7 @@ socketClient.connect();
 
 
 ReactDOM.render(
-	<Provider store={store}>
+	<Provider store={getStore()}>
 		<App />
 	</Provider>,
 	document.getElementById('main')

@@ -1,4 +1,4 @@
-import globals from 'clientUI/globals';
+import { getState } from 'clientUI/redux/store';
 import {
 	INITIAL_DATA_RECEIVED,
 	JOINED_NETWORK,
@@ -36,8 +36,7 @@ export function nickChanged(networkId, nick) {
 
 
 export const getNetwork = (networkId) => {
-	const state = globals.store.getState();
-	return state.chat.networks[networkId];
+	return getState().chat.networks[networkId];
 };
 
 

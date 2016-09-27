@@ -1,4 +1,4 @@
-import globals from 'clientUI/globals';
+import { getState } from 'clientUI/redux/store';
 import {
 	INITIAL_DATA_RECEIVED,
 	JOINED_NETWORK,
@@ -15,8 +15,7 @@ import {
 
 
 export const getChannel = (channelId) => {
-	const state = globals.store.getState();
-	return state.chat.channels[channelId];
+	return getState().chat.channels[channelId];
 };
 
 

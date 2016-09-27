@@ -1,4 +1,4 @@
-import globals from 'clientUI/globals';
+import { getState } from 'clientUI/redux/store';
 
 
 // Actions
@@ -30,7 +30,7 @@ export const LOGIN_STATES = {
 };
 
 export const getUsername = () => {
-	const state = globals.store.getState().auth;
+	const state = getState().auth;
 	return state.username || window.localStorage.getItem('user') || '';
 };
 
@@ -39,12 +39,12 @@ export const setLoginToken = (value) => (
 );
 
 export const getLoginToken = () => {
-	const state = globals.store.getState().auth;
+	const state = getState().auth;
 	return state.token || window.localStorage.getItem('token') || null;
 };
 
 export const getRememberToken = () => {
-	const state = globals.store.getState().auth;
+	const state = getState().auth;
 	return state.rememberToken;
 };
 

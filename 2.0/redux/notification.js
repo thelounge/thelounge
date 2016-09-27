@@ -1,4 +1,4 @@
-import globals from 'clientUI/globals';
+import { getState } from 'clientUI/redux/store';
 import { playPop } from 'clientUI/Audio';
 
 
@@ -12,7 +12,7 @@ export const add = (notification) => (
 );
 
 export const notify = (chan, msg) => {
-	const state = globals.store.getState();
+	const state = getState();
 
 	if (state.options.notification) {
 		playPop();
@@ -50,7 +50,7 @@ export const notify = (chan, msg) => {
 };
 
 export const maybeNotify = (chan, msg) => {
-	const state = globals.store.getState();
+	const state = getState();
 
 	let isImportantMessage = (
 		!msg.self &&
