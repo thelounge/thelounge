@@ -155,13 +155,13 @@ function init(socket, client) {
 				);
 			} catch (e) {
 				socket.emit("signed-up", {
-					error: "The username sounds invalid"
+					error: "The username is invalid"
 				});
 			}
 
 			if (!addUserResult) {
 				socket.emit("signed-up", {
-					error: "Username sounds already in use"
+					error: "Username is already in use"
 				});
 				return;
 			}
