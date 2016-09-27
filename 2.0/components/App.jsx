@@ -36,7 +36,10 @@ class App extends React.Component {
 			return <ChatContainerWindow />;
 		} else if (activeWindowId === WINDOW_TYPES.SETTINGS) {
 			return <SettingsWindow />;
+		} else if (activeWindowId === WINDOW_TYPES.SIGN_IN) {
+			return <SignInWindow />;
 		}
+		console.warn('Unknown activeWindowId');
 		return null;
 	}
 
@@ -59,9 +62,6 @@ class App extends React.Component {
 								{this.renderActiveWindow()}
 								{loaderState !== LOADER_STATES.DONE &&
 									<LoadingWindow />
-								}
-								{loaderState !== LOADER_STATES.DONE &&
-									<SignInWindow />
 								}
 							</div>
 						</div>

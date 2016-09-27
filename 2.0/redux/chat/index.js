@@ -101,6 +101,7 @@ export function clearChannel(channelId) {
 
 
 export const WINDOW_TYPES = {
+	SIGN_IN: 'sign-in',
 	CONNECT: 'connect',
 	CHAT: 'chat',
 	SETTINGS: 'settings'
