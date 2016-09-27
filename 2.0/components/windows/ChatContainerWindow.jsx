@@ -1,17 +1,24 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 
-import Chat from '../chat/Chat';
+import { getChannel } from 'clientUI/redux/chat/channels';
+
+import Chat from 'clientUI/components/chat/Chat';
 
 
-export default class ChatContainerWindow extends React.Component {
+class ChatContainerWindow extends React.Component {
 	handleSubmit () {
 		console.warn('TODO');
 	}
 
 	render () {
+		const chatChannel = getChannel(this.props.activeChannelId);
+
 		return (
 			<div className="window cmpt-chat-container-window">
-				<Chat />
+				<Chat
+					channel={chatChannel}
+				/>
 				<form className="chat-form" method="post" action="">
 					<div className="input">
 						{/* for="input" */}
@@ -31,3 +38,16 @@ export default class ChatContainerWindow extends React.Component {
 		);
 	}
 }
+
+
+ChatContainerWindow.propTypes = {
+	activeChannelId: PropTypes.number
+};
+
+
+const mapStateToProps = state => ({
+	activeChannelId: state.activeChannelId
+});
+const mapDispatchToProps = dispatch => ({}); // eslint-disable-line
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChatContainerWindow);

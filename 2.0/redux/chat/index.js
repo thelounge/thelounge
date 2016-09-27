@@ -73,7 +73,7 @@ export const changeActiveWindow = (windowId) => (
 	{ type: CHANGE_ACTIVE_WINDOW, windowId }
 );
 
-export function requestMore(channelId) {
+export const requestMore = (channelId) => {
 	return (dispatch, getState) => {
 		dispatch({
 			type: REQUEST_MORE,
@@ -89,7 +89,7 @@ export function requestMore(channelId) {
 			}
 		});
 	};
-}
+};
 
 export function receivedMore(channelId, messages) {
 	return {type: RECEIVED_MORE, channelId, messages};
