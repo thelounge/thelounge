@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
 
 import socketClient from 'clientUI/socketClient';
+import { useState } from 'clientUI/utils/forms';
 
 
 class ConnectWindow extends React.Component {
@@ -26,34 +26,10 @@ class ConnectWindow extends React.Component {
 		};
 	}
 
-	/** Hacky little method to update our state object */
-	onChange (breadcrumb, event) {
-		const type = event.target.type;
-		let value;
-
-		if (type === 'checkbox') {
-			value = event.target.checked;
-		} else if (type === 'number') {
-			value = event.target.valueAsNumber;
-		} else {
-			value = event.target.value;
-		}
-		// We need to manually deep merge, since react doesnt
-		const newState = _.extend({}, this.state);
-		newState.formValues[breadcrumb] = value;
-		// _.set(newState, breadcrumb, value);
-		this.setState(newState);
-	}
-
 	handleSubmit (evt) {
 		evt.preventDefault();
-		const event = 'conn';
 		this.setState({ submitting: true });
-		// TODO: username?  this should dispatch
-		// if (values.user) {
-		// 	window.localStorage.setItem('user', values.user);
-		// }
-		socketClient.emit(event, this.state.formValues);
+		socketClient.emit('conn', this.state.formValues);
 	}
 
 	renderNetworkSettings () {
@@ -71,8 +47,7 @@ class ConnectWindow extends React.Component {
 					<input
 						id="connect:name"
 						className="input"
-						value={this.state.formValues.name}
-						onChange={this.onChange.bind(this, 'name')}
+						{...useState(this, 'formValues.name')}
 					/>
 				</div>
 				<div className="col-sm-3">
@@ -82,8 +57,7 @@ class ConnectWindow extends React.Component {
 					<input
 						id="connect:host"
 						className="input"
-						value={this.state.formValues.host}
-						onChange={this.onChange.bind(this, 'host')}
+						{...useState(this, 'formValues.host')}
 						aria-label="Server address"
 						disabled={lockNetwork}
 					/>
@@ -96,8 +70,7 @@ class ConnectWindow extends React.Component {
 							type="number"
 							min="1"
 							max="65535"
-							value={this.state.formValues.port}
-							onChange={this.onChange.bind(this, 'serverPort')}
+							{...useState(this, 'formValues.port')}
 							aria-label="Server port"
 							disabled={lockNetwork}
 						/>
@@ -112,8 +85,7 @@ class ConnectWindow extends React.Component {
 						id="connect:password"
 						className="input"
 						type="password"
-						value={this.state.formValues.password}
-						onChange={this.onChange.bind(this, 'password')}
+						{...useState(this, 'formValues.password')}
 					/>
 				</div>
 				<div className="col-sm-9 col-sm-offset-3">
@@ -121,8 +93,7 @@ class ConnectWindow extends React.Component {
 						<input
 							type="checkbox"
 							name="tls"
-							checked={this.state.formValues.tls}
-							onChange={this.onChange.bind(this, 'tls')}
+							{...useState(this, 'formValues.tls', 'checked')}
 							disabled={lockNetwork}
 						/>
 						Enable TLS/SSL
@@ -168,8 +139,7 @@ class ConnectWindow extends React.Component {
 							<input
 								id="connect:nick"
 								className="input nick"
-								value={this.state.formValues.nick}
-								onChange={this.onChange.bind(this, 'nick')}
+								{...useState(this, 'formValues.nick')}
 							/>
 						</div>
 						<div className="col-sm-3">
@@ -179,8 +149,7 @@ class ConnectWindow extends React.Component {
 							<input
 								id="connect:username"
 								className="input username"
-								value={this.state.formValues.username}
-								onChange={this.onChange.bind(this, 'username')}
+								{...useState(this, 'formValues.username')}
 							/>
 						</div>
 						<div className="col-sm-3">
@@ -190,8 +159,7 @@ class ConnectWindow extends React.Component {
 							<input
 								id="connect:realname"
 								className="input"
-								value={this.state.formValues.realname}
-								onChange={this.onChange.bind(this, 'realname')}
+								{...useState(this, 'formValues.realname')}
 							/>
 						</div>
 						<div className="col-sm-3">
@@ -201,8 +169,7 @@ class ConnectWindow extends React.Component {
 							<input
 								id="connect:channels"
 								className="input"
-								value={this.state.formValues.channels}
-								onChange={this.onChange.bind(this, 'channels')}
+								{...useState(this, 'formValues.join')}
 							/>
 						</div>
 						<div className="col-sm-9 col-sm-offset-3">

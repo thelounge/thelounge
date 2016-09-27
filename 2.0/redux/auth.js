@@ -8,6 +8,8 @@ export const SET_LOGIN_STATE = 'auth/SET_LOGIN_STATE';
 export const SET_LOGIN_TOKEN = 'auth/SET_LOGIN_TOKEN';
 export const SET_CHANGE_PASSWORD_RESULT = 'auth/SET_CHANGE_PASSWORD_RESULT';
 export const SET_CHANGE_PASSWORD_STATE = 'auth/SET_CHANGE_PASSWORD_STATE';
+export const SET_USERNAME = 'auth/SET_USERNAME';
+
 
 // Aciton Generators
 export const setLoginEnabled = (value) => (
@@ -28,6 +30,10 @@ export const LOGIN_STATES = {
 	SUCCESS: 'success',
 	ERROR: 'error'
 };
+
+export const setUsername = (username) => (
+	{ type: SET_USERNAME, value: username }
+);
 
 export const getUsername = () => {
 	const state = getState().auth;
@@ -100,6 +106,12 @@ export default function (state = DEFAULT_STATE, action) {
 		return { ...state, changePasswordState: action.value };
 	case SET_CHANGE_PASSWORD_RESULT:
 		return { ...state, changePasswordResult: action.value };
+	case SET_USERNAME: {
+		if (!action.value) {
+			window.localStorage.removeItem('user');
+		}
+		return { ...state, username: action.value };
+	}
 	default:
 		return state;
 	}
