@@ -59,13 +59,13 @@
   },
   "devDependencies": {
     "chai": "3.5.0",
-    "eslint": "2.11.1",
+    "eslint": "3.6.0",
     "font-awesome": "4.6.3",
     "handlebars": "4.0.5",
-    "istanbul": "0.4.3",
-    "mocha": "2.4.5",
-    "npm-run-all": "2.1.1",
-    "stylelint": "6.6.0",
+    "istanbul": "0.4.5",
+    "mocha": "3.0.2",
+    "npm-run-all": "3.1.0",
+    "stylelint": "7.3.1",
     "uglify-js": "2.7.3"
   }
 }
