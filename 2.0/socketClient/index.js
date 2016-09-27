@@ -36,9 +36,11 @@ import {
 	maybeNotify
 } from 'clientUI/redux/notification';
 import {
-	setLoadingState,
+	setLoaderState,
 	LOADER_STATES
 } from 'clientUI/redux/loader';
+
+import { getStore } from 'clientUI/redux/store';
 
 
 class SocketClient extends EventEmitter {
@@ -46,6 +48,7 @@ class SocketClient extends EventEmitter {
 		super();
 		this.logger = debug('lounge:socketClient');
 		this.socket = null;
+		this.store = null;
 	}
 
 	refresh () {
@@ -74,6 +77,8 @@ class SocketClient extends EventEmitter {
 		this.logger('Connecting to:', socketUrl);
 		this.socket = io(socketUrl);
 
+		this.store = getStore();
+
 		this.socket.on('error', (e) => {
 			console.error('Socket error', e);
 		});
@@ -88,15 +93,15 @@ class SocketClient extends EventEmitter {
 		});
 
 		this.socket.on('auth', (data) => {
-			setLoginEnabled(true);
+			this.store.dispatch(setLoginEnabled(true));
 
 			if (!data.success) {
-				setLoginToken(null);
-				setLoginError(null);
+				this.store.dispatch(setLoginToken(null));
+				this.store.dispatch(setLoginError(null));
 			} else {
 				const token = getLoginToken();
 				if (token) {
-					setLoginState(LOGIN_STATES.IN_PROGRESS);
+					this.store.dispatch(setLoginState(LOGIN_STATES.IN_PROGRESS));
 					this.socket.emit('auth', { token: token });
 				} else {
 					throw new Error('No token to login with');
@@ -106,37 +111,37 @@ class SocketClient extends EventEmitter {
 
 		this.socket.on('change-password', (data) => {
 			if (data.success) {
-				setChangePasswordState(CHANGE_PASSWORD_STATES.SUCCESS);
-				setChangePasswordResult(data.success);
+				this.store.dispatch(setChangePasswordState(CHANGE_PASSWORD_STATES.SUCCESS));
+				this.store.dispatch(setChangePasswordResult(data.success));
 			} else if (data.error) {
-				setChangePasswordState(CHANGE_PASSWORD_STATES.ERROR);
-				setChangePasswordResult(data.error);
+				this.store.dispatch(setChangePasswordState(CHANGE_PASSWORD_STATES.ERROR));
+				this.store.dispatch(setChangePasswordResult(data.error));
 			}
 
 			if (data.token) {
-				setLoginToken(data.token);
+				this.store.dispatch(setLoginToken(data.token));
 			}
 		});
 
 		this.socket.on('init', (data) => {
-			setLoadingState(LOADER_STATES.DONE);
+			this.store.dispatch(setLoaderState(LOADER_STATES.DONE));
 
 			if (data.networks.length === 0) {
-				changeActiveWindow('connect');
+				this.store.dispatch(changeActiveWindow('connect'));
 			} else {
-				initialDataReceived(data);
+				this.store.dispatch(initialDataReceived(data));
 				// renderNetworks(data);
 			}
 
 			if (data.token && getRememberToken()) {
-				setLoginToken(data.token);
+				this.store.dispatch(setLoginToken(data.token));
 			} else {
-				setLoginToken(null);
+				this.store.dispatch(setLoginToken(null));
 			}
 		});
 
 		this.socket.on('join', (data) => {
-			joinedChannel(data.network, data.chan);
+			this.store.dispatch(joinedChannel(data.network, data.chan));
 		});
 
 		const matchesSomeHighlight = (msg) => { // eslint-disable-line
@@ -156,17 +161,17 @@ class SocketClient extends EventEmitter {
 		this.socket.on('msg', (data) => {
 			data.msg.highlight = data.msg.highlight || shouldHighlight(data.msg);
 
-			messageReceived(data.chan, data.msg);
+			this.store.dispatch(messageReceived(data.chan, data.msg));
 
 			maybeNotify(data.chan, data.msg);
 		});
 
 		this.socket.on('more', ({chan, messages}) => {
-			receivedMore(chan, messages);
+			this.store.dispatch(receivedMore(chan, messages));
 		});
 
 		this.socket.on('network', (data) => {
-			joinedNetwork(data.network);
+			this.store.dispatch(joinedNetwork(data.network));
 		});
 
 		this.socket.on('network_changed', (data) => {
@@ -176,14 +181,14 @@ class SocketClient extends EventEmitter {
 		});
 
 		this.socket.on('nick', ({network, nick}) => {
-			nickChanged(network, nick);
+			this.store.dispatch(nickChanged(network, nick));
 		});
 
 		this.socket.on('part', ({chan}) => {
-			leftChannel(chan);
+			this.store.dispatch(leftChannel(chan));
 		});
 		this.socket.on('quit', ({network}) => {
-			leftNetwork(network);
+			this.store.dispatch(leftNetwork(network));
 		});
 
 		this.socket.on('toggle', (data) => {
@@ -192,13 +197,13 @@ class SocketClient extends EventEmitter {
 		});
 
 		this.socket.on('topic', ({chan, topic}) => {
-			topicChanged(chan, topic);
+			this.store.dispatch(topicChanged(chan, topic));
 		});
 		this.socket.on('users', ({chan}) => {
-			channelUsersChanged(chan);
+			this.store.dispatch(channelUsersChanged(chan));
 		});
 		this.socket.on('names', ({id, users}) => {
-			receivedChannelUsers(id, users);
+			this.store.dispatch(receivedChannelUsers(id, users));
 		});
 	}
 }

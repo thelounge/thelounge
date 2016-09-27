@@ -1,4 +1,4 @@
-import { getState } from 'clientUI/redux/store';
+import { getState, getStore } from 'clientUI/redux/store';
 import { playPop } from 'clientUI/Audio';
 
 
@@ -40,12 +40,12 @@ export const notify = (chan, msg) => {
 			body = msg.text.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, '').trim();
 		}
 
-		add({
+		getStore().dispatch(add({
 			title: title,
 			body: body,
 			icon: require('clientUI/img/logo-64.png')
 			// tag: target
-		});
+		}));
 	}
 };
 
