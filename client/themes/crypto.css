@@ -85,6 +85,10 @@ a:hover,
 	color: #666;
 }
 
+#chat .unhandled .from {
+	color: #ddd;
+}
+
 #sidebar .active {
 	color: #fff;
 }
