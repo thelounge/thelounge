@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 import _ from 'lodash';
 
-// import { useState } from 'clientUI/utils/forms';
+import { getValue } from 'clientUI/utils/forms';
+import { setOption } from 'clientUI/redux/options';
 
 
-export default class SettingsWindow extends React.Component {
+class SettingsWindow extends React.Component {
 	constructor () {
 		super();
 	}
@@ -22,13 +24,19 @@ export default class SettingsWindow extends React.Component {
 				</div>
 				<div className="col-sm-6">
 					<label className="opt">
-						<input type="checkbox" name="thumbnails" />
+						<input
+							type="checkbox"
+							{...this.mapInput('thumbnails')}
+						/>
 						Auto-expand thumbnails
 					</label>
 				</div>
 				<div className="col-sm-6">
 					<label className="opt">
-						<input type="checkbox" name="links" />
+						<input
+							type="checkbox"
+							{...this.mapInput('links')}
+						/>
 						Auto-expand links
 					</label>
 				</div>
@@ -43,6 +51,7 @@ export default class SettingsWindow extends React.Component {
 			return null;
 		}
 
+		// TODO: input states
 		return (
 			<div id="change-password">
 				<form>
@@ -135,6 +144,20 @@ export default class SettingsWindow extends React.Component {
 		</p>);
 	}
 
+	mapInput (key, valueAttr = 'checked') {
+		return {
+			name: key,
+			onChange: this.onChange.bind(this),
+			[valueAttr]: this.props[key]
+		};
+	}
+
+	onChange (evt) {
+		const name = evt.target.name;
+		const value = getValue(evt.target);
+		this.props.setOption(name, value);
+	}
+
 	render () {
 		const themes = [].map(themeName => ( // TODO
 			<option value={themeName}>
@@ -157,37 +180,55 @@ export default class SettingsWindow extends React.Component {
 						</div>
 						<div className="col-sm-6">
 							<label className="opt">
-								<input type="checkbox" name="join" />
+								<input
+									type="checkbox"
+									{...this.mapInput('join')}
+								/>
 								Show joins
 							</label>
 						</div>
 						<div className="col-sm-6">
 							<label className="opt">
-								<input type="checkbox" name="motd" />
+								<input
+									type="checkbox"
+									{...this.mapInput('motd')}
+								/>
 								Show <abbr title="Message Of The Day">MOTD</abbr>
 							</label>
 						</div>
 						<div className="col-sm-6">
 							<label className="opt">
-								<input type="checkbox" name="part" />
+								<input
+									type="checkbox"
+									{...this.mapInput('part')}
+								/>
 								Show parts
 							</label>
 						</div>
 						<div className="col-sm-6">
 							<label className="opt">
-								<input type="checkbox" name="nick" />
+								<input
+									type="checkbox"
+									{...this.mapInput('nick')}
+								/>
 								Show nick changes
 							</label>
 						</div>
 						<div className="col-sm-6">
 							<label className="opt">
-								<input type="checkbox" name="mode" />
+								<input
+									type="checkbox"
+									{...this.mapInput('mode')}
+								/>
 								Show mode
 							</label>
 						</div>
 						<div className="col-sm-6">
 							<label className="opt">
-								<input type="checkbox" name="quit" />
+								<input
+									type="checkbox"
+									{...this.mapInput('quit')}
+								/>
 								Show quits
 							</label>
 						</div>
@@ -196,7 +237,10 @@ export default class SettingsWindow extends React.Component {
 						</div>
 						<div className="col-sm-12">
 							<label className="opt">
-								<input type="checkbox" name="coloredNicks" />
+								<input
+									type="checkbox"
+									{...this.mapInput('coloredNicks')}
+								/>
 								Enable colored nicknames
 							</label>
 						</div>
@@ -222,14 +266,21 @@ export default class SettingsWindow extends React.Component {
 						</div>
 						<div className="col-sm-12">
 							<label className="opt">
-								<input id="desktopNotifications" type="checkbox" name="desktopNotifications" />
+								<input
+									id="desktopNotifications"
+									type="checkbox"
+									{...this.mapInput('desktopNotifications')}
+								/>
 								Enable desktop notifications<br />
 								<div className="error" id="warnDisabledDesktopNotifications"><strong>Warning</strong>: Desktop notifications are blocked by your web browser</div>
 							</label>
 						</div>
 						<div className="col-sm-12">
 							<label className="opt">
-								<input type="checkbox" name="notification" />
+								<input
+									type="checkbox"
+									{...this.mapInput('notification')}
+								/>
 								Enable notification sound
 							</label>
 						</div>
@@ -241,7 +292,10 @@ export default class SettingsWindow extends React.Component {
 
 						<div className="col-sm-12">
 							<label className="opt">
-								<input type="checkbox" name="notifyAllMessages" />
+								<input
+									type="checkbox"
+									{...this.mapInput('notifyAllMessages')}
+								/>
 								Enable notification for all messages
 							</label>
 						</div>
@@ -257,7 +311,7 @@ export default class SettingsWindow extends React.Component {
 								<input
 									type="text"
 									id="highlights"
-									name="highlights"
+									{...this.mapInput('highlights', 'value')}
 									className="input"
 									placeholder="Custom highlights (comma-separated keywords)"
 								/>
@@ -270,7 +324,12 @@ export default class SettingsWindow extends React.Component {
 							<h2>Custom Stylesheet</h2>
 						</div>
 						<div className="col-sm-12">
-							<textarea className="input" name="userStyles" id="user-specified-css-input" placeholder="You can override any style with CSS here"></textarea>
+							<textarea
+								className="input"
+								{...this.mapInput('userStyles', 'value')}
+								id="user-specified-css-input"
+								placeholder="You can override any style with CSS here"
+							/>
 						</div>
 						<div className="col-sm-12">
 							<h2>About The Lounge</h2>
@@ -290,3 +349,20 @@ export default class SettingsWindow extends React.Component {
 		);
 	}
 }
+
+
+SettingsWindow.propTypes = {
+	setOption: PropTypes.func.isRequired
+};
+
+
+const mapStateToProps = state => {
+	return {
+		...state.options
+	};
+};
+const mapDispatchToProps = dispatch => ({
+	setOption: (k, v) => dispatch(setOption(k, v))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsWindow);

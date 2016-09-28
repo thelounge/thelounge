@@ -1,19 +1,20 @@
 import _ from 'lodash';
 
 
+export const getValue = (element) => {
+	const type = element.type;
+	if (type === 'checkbox') {
+		return element.checked;
+	} else if (type === 'number') {
+		return element.valueAsNumber;
+	}
+	return element.value;
+};
+
+
 /** Hacky little method to update our state object */
 export const onChange = (self, breadcrumb, event) => {
-	const type = event.target.type;
-	let value;
-
-	if (type === 'checkbox') {
-		value = event.target.checked;
-	} else if (type === 'number') {
-		value = event.target.valueAsNumber;
-	} else {
-		value = event.target.value;
-	}
-
+	const value = getValue(event.target);
 	// We need to manually deep merge, since react doesnt
 	const newState = _.extend({}, self.state);
 	_.set(newState, breadcrumb, value);
