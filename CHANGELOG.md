@@ -30,6 +30,30 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
+## v2.0.1 - 2016-09-28
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.0.0...v2.0.1)
+
+This is a minor house-keeping release with mostly two sets of changes.
+
+First, a few bugs were fixed, including one simply preventing The Lounge to run in Safari's private browsing.
+
+Additionally, the developer experience has been made a tiny bit better, with better documentation, lighter dependencies and simpler theme creation.
+
+### Changed
+
+- Add info on README about how to run from source, how to upgrade ([#621](https://github.com/thelounge/lounge/pull/621) by [@astorije](https://github.com/astorije))
+- Move uglify invocation into npm scripts and remove grunt ([#628](https://github.com/thelounge/lounge/pull/628) by [@nornagon](https://github.com/nornagon))
+- Move Shout theme borders to example theme ([#359](https://github.com/thelounge/lounge/pull/359) by [@xPaw](https://github.com/xPaw))
+- Update developer dependencies ([#639](https://github.com/thelounge/lounge/pull/639) by [@xPaw](https://github.com/xPaw))
+
+### Fixed
+
+- Remove -ms-transform and add missed -webkit-transform ([#629](https://github.com/thelounge/lounge/pull/629) by [@xPaw](https://github.com/xPaw))
+- Ensure localStorage cannot fail because of quota or Safari private browsing ([#625](https://github.com/thelounge/lounge/pull/625) by [@astorije](https://github.com/astorije))
+- Disable pull-to-refresh on mobile that conflicts with scrolling the message list ([#618](https://github.com/thelounge/lounge/pull/618) by [@astorije](https://github.com/astorije))
+- Handle stderr when using edit or config command ([#622](https://github.com/thelounge/lounge/pull/622) by [@MaxLeiter](https://github.com/MaxLeiter))
+
 ## v2.0.0 - 2016-09-24
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v1.5.0...v2.0.0)
