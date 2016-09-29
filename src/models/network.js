@@ -20,6 +20,7 @@ function Network(attr) {
 		hostname: null,
 		id: id++,
 		irc: null,
+		encoding: "utf8",
 		serverOptions: {
 			PREFIX: [],
 		},
@@ -70,7 +71,8 @@ Network.prototype.export = function() {
 		"realname",
 		"commands",
 		"ip",
-		"hostname"
+		"hostname",
+		"encoding"
 	]);
 
 	network.channels = this.channels

@@ -196,6 +196,24 @@ module.exports = {
 		port: 6697,
 
 		//
+		// Encoding
+		//
+		// Format: <inputencoding>[:auto][/<outputencoding>]
+		// inputencoding iconv-lite supported encoding string
+		// outputcoding iconv-lite supported encoding string, default inputencoding
+		// :auto autoconverts miscoded mojibike characters
+		// Examples:
+		// iso-8859-1
+		// iso-8859-1:auto
+		// iso-8859-1/utf8
+		// iso-8859-1:auto/utf8
+		//
+		// @type     string
+		// @default  utf8
+		//
+		encoding: "utf8",
+
+		//
 		// Password
 		//
 		// @type     string

@@ -50,7 +50,7 @@
     "event-stream": "3.3.2",
     "express": "4.13.4",
     "fs-extra": "0.30.0",
-    "irc-framework": "2.5.0",
+    "irc-framework": "git://github.com/metsjeesus/irc-framework.git#encoding",
     "lodash": "4.11.2",
     "moment": "2.13.0",
     "read": "1.0.7",
