@@ -184,6 +184,9 @@ button {
 #sidebar .chan.channel:before,
 #chat .channel .title:before { content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */ }
 
+#sidebar .chan.special:before,
+#chat .channel .title:before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
+
 #footer .sign-in:before { content: "\f023"; /* http://fontawesome.io/icon/lock/ */ }
 #footer .connect:before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
 #footer .settings:before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
@@ -712,6 +715,10 @@ button {
 	right: 180px;
 }
 
+#chat .special {
+	bottom: -47px;
+}
+
 #viewport.rt .chat {
 	right: 0;
 }
@@ -731,11 +738,13 @@ button {
 }
 
 #chat .lobby .chat,
+#chat .special .chat,
 #chat .query .chat {
 	right: 0;
 }
 
 #chat .lobby .sidebar,
+#chat .special .sidebar,
 #chat .query .sidebar {
 	display: none;
 }
@@ -840,6 +849,11 @@ button {
 }
 
 #loading a,
+#chat .special .time,
+#chat .special .from {
+	display: none;
+}
+
 #chat a {
 	color: #50a656;
 }
@@ -903,6 +917,46 @@ button {
 #chat .msg.notice .text {
 	white-space: pre-wrap;
 	overflow: hidden;
+}
+
+#chat .msg.channel_list_loading .text {
+	color: #999;
+	font-style: italic;
+	padding-left: 20px;
+}
+
+#chat .msg.channel_list_truncated .text {
+	color: #f00;
+	padding-left: 20px;
+}
+
+#chat table.channel-list {
+	margin: 5px 10px;
+	width: calc(100% - 30px);
+}
+
+#chat table.channel-list th,
+#chat table.channel-list td {
+	padding: 5px;
+	vertical-align: top;
+	border-bottom: #eee 1px solid;
+}
+
+#chat table.channel-list .channel,
+#chat table.channel-list .topic {
+	text-align: left;
+}
+
+#chat table.channel-list .users {
+	text-align: center;
+}
+
+#chat table.channel-list td.channel .inline-channel {
+	color: #428bca;
+}
+
+#chat table.channel-list td {
+	color: #555;
 }
 
 #chat.hide-join .join,
