@@ -179,7 +179,8 @@ body {
 #chat .error,
 #chat .error .from,
 #chat .channel .highlight,
-#chat .channel .highlight .from {
+#chat .channel .highlight .from,
+#chat .channel .highlight .text {
 	color: #f92772;
 }
 
