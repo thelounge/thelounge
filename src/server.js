@@ -140,6 +140,8 @@ function init(socket, client) {
 		socket.emit("auth", {success: true});
 		socket.on("auth", auth);
 	} else {
+		socket.emit("authorized");
+
 		socket.on(
 			"input",
 			function(data) {
