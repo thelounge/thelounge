@@ -269,11 +269,24 @@ button {
 
 #viewport {
 	height: 100%;
-	transition: all .4s;
+	transition: transform 160ms, -webkit-transform 160ms;
 	-webkit-transform: translateZ(0);
 	transform: translateZ(0);
 	-webkit-perspective: 1000;
 	perspective: 1000;
+}
+
+#viewport.menu-open {
+	-webkit-transform: translate3d(220px, 0, 0);
+	transform: translate3d(220px, 0, 0);
+}
+
+#viewport.menu-dragging {
+	transition: none !important;
+}
+
+#viewport.menu-open .messages {
+	pointer-events: none;
 }
 
 #viewport .lt,
@@ -1635,11 +1648,6 @@ button {
 		margin-top: 60px !important;
 	}
 
-	#viewport.lt {
-		-webkit-transform: translate3d(220px, 0, 0);
-		transform: translate3d(220px, 0, 0);
-	}
-
 	#viewport.rt #chat .sidebar {
 		-webkit-transform: translate3d(-180px, 0, 0);
 		transform: translate3d(-180px, 0, 0);
@@ -1677,6 +1685,17 @@ button {
 
 	#chat .title:before {
 		display: none;
+	}
+}
+
+@media (min-width: 769px) {
+	#viewport {
+		-webkit-transform: none !important;
+		transform: none !important;
+	}
+
+	#viewport.menu-open {
+		transition: none;
 	}
 }
 
