@@ -185,7 +185,7 @@ button {
 #chat .channel .title:before { content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */ }
 
 #sidebar .chan.special:before,
-#chat .channel .title:before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
+#chat .special .title:before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
 
 #footer .sign-in:before { content: "\f023"; /* http://fontawesome.io/icon/lock/ */ }
 #footer .connect:before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
