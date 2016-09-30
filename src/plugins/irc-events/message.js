@@ -70,10 +70,6 @@ module.exports = function(irc, network) {
 			highlight = network.highlightRegex.test(data.message);
 		}
 
-		if (!self && chan.id !== client.activeChannel) {
-			chan.unread++;
-		}
-
 		var msg = new Msg({
 			type: data.type,
 			time: data.time,
@@ -83,6 +79,6 @@ module.exports = function(irc, network) {
 			self: self,
 			highlight: highlight
 		});
-		chan.pushMessage(client, msg);
+		chan.pushMessage(client, msg, !self);
 	}
 };
