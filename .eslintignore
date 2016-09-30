@@ -1,4 +1,5 @@
 # built by tools
+client/js/bundle.js
 client/js/libs.min.js
 client/js/lounge.templates.js
 
