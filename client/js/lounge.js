@@ -734,16 +734,20 @@ $(function() {
 		$("#nick-value").attr("contenteditable", toggle);
 	}
 
-	// FIXME Reset content when new nick is invalid (already in use, forbidden chars, ...)
 	function submitNick() {
-		var newNick = $("#nick-value").text();
+		var newNick = $("#nick-value").text().trim();
+
+		if (newNick.length === 0) {
+			cancelNick();
+			return;
+		}
+
+		toggleNickEditor(false);
 
 		socket.emit("input", {
 			target: chat.data("id"),
 			text: "/nick " + newNick
 		});
-
-		toggleNickEditor(false);
 	}
 
 	function cancelNick() {
@@ -1253,10 +1257,11 @@ $(function() {
 	}
 
 	function setNick(nick) {
-		$("#nick-value").text(nick);
 		// Closes the nick editor when canceling, changing channel, or when a nick
 		// is set in a different tab / browser / device.
 		toggleNickEditor(false);
+
+		$("#nick-value").text(nick);
 	}
 
 	function move(array, old_index, new_index) {
