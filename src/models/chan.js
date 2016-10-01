@@ -35,10 +35,9 @@ function Chan(attr) {
 					var msg = new Msg({
 						type: "message",
 						from: row.name,
-						text: row.text,
+						text: row.message,
 					});
 					chan.messages.push(msg);
-					console.log(msg);
 				});
 			}
 		});
