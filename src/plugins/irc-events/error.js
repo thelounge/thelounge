@@ -28,6 +28,11 @@ module.exports = function(irc, network) {
 			var random = (data.nick || irc.user.nick) + Math.floor(10 + (Math.random() * 89));
 			irc.changeNick(random);
 		}
+
+		client.emit("nick", {
+			network: network.id,
+			nick: irc.user.nick
+		});
 	});
 
 	irc.on("nick invalid", function(data) {
@@ -42,5 +47,10 @@ module.exports = function(irc, network) {
 			var random = "i" + Math.random().toString(36).substr(2, 10); // 'i' so it never begins with a number
 			irc.changeNick(random);
 		}
+
+		client.emit("nick", {
+			network: network.id,
+			nick: irc.user.nick
+		});
 	});
 };
