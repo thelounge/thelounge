@@ -350,7 +350,8 @@ $(function() {
 	socket.on("msg", function(data) {
 		var msg = buildChatMessage(data);
 		var target = "#chan-" + data.chan;
-		var container = chat.find(target + " .messages");
+		var channel = chat.find(target);
+		var container = channel.find(".messages");
 
 		container
 			.append(msg)
@@ -359,10 +360,18 @@ $(function() {
 				data.msg
 			]);
 
-		if (data.msg.self) {
+		// Unread marker is "hidden" (moved to bottom) if message comes from own
+		// user or if the channel is both active and focused
+		if (data.msg.self || (channel.hasClass("active") && document.hasFocus())) {
 			container
 				.find(".unread-marker")
 				.appendTo(container);
+
+			// Channel is marked as read on the server
+			socket.emit(
+				"open",
+				data.chan
+			);
 		}
 	});
 
