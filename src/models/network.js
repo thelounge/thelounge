@@ -25,7 +25,7 @@ function Network(attr) {
 		},
 	}, attr));
 	this.name = attr.name || prettify(attr.host);
-	this.channels = attr.channels;
+	this.channels = attr.channels || [];
 	this.channels.unshift(
 		new Chan({
 			name: this.name,
