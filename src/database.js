@@ -11,13 +11,13 @@ var pool = mysql.createPool({
 });
 
 exports.getChannelLogs = function(channel, callback) {
-	var sql = "SELECT * FROM logs WHERE channel=?";
+	var sql = "SELECT * FROM logs WHERE channel=? LIMIT ?";
 	pool.getConnection(function(err, connection) {
 		if (err) {
 			console.log(err); callback(true);
 			return;
 		}
-		connection.query(sql, [channel], function(err, results) {
+		connection.query(sql, [channel, Helper.config.mysqlMaxLogs], function(err, results) {
 			connection.release();
 			if (err) {
 				console.log(err); callback(true);
