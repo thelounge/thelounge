@@ -63,7 +63,7 @@ ClientManager.prototype.getUsers = function() {
 	return users;
 };
 
-ClientManager.prototype.addUser = function(name, password, email) {
+ClientManager.prototype.addUser = function(name, password) {
 	var users = this.getUsers();
 	if (users.indexOf(name) !== -1) {
 		return false;
@@ -77,7 +77,6 @@ ClientManager.prototype.addUser = function(name, password, email) {
 		var user = {
 			user: name,
 			password: password || "",
-			email,
 			log: false,
 			networks: []
 		};

@@ -142,7 +142,6 @@ function init(socket, client) {
 		socket.on("sign-up", (data) => {
 			const user = data.user;
 			const password = data.password;
-			const email = data.email;
 			const salt = bcrypt.genSaltSync(8);
 			const hash = bcrypt.hashSync(password, salt);
 			let addUserResult;
@@ -150,8 +149,7 @@ function init(socket, client) {
 			try {
 				addUserResult = manager.addUser(
 					user,
-					hash,
-					email
+					hash
 				);
 			} catch (e) {
 				socket.emit("signed-up", {
