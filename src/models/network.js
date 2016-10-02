@@ -6,7 +6,7 @@ module.exports = Network;
 var id = 0;
 
 function Network(attr) {
-	_.merge(this, _.extend({
+	_.defaults(this, attr, {
 		name: "",
 		host: "",
 		port: 6667,
@@ -24,7 +24,8 @@ function Network(attr) {
 			PREFIX: [],
 		},
 		chanCache: [],
-	}, attr));
+	});
+
 	this.name = attr.name || prettify(attr.host);
 	this.channels.unshift(
 		new Chan({
@@ -53,9 +54,10 @@ Network.prototype.setNick = function(nick) {
 
 Network.prototype.toJSON = function() {
 	return _.omit(this, [
+		"chanCache",
+		"highlightRegex",
 		"irc",
 		"password",
-		"highlightRegex"
 	]);
 };
 
