@@ -86,7 +86,7 @@ module.exports = function(irc, network) {
 		});
 		chan.pushMessage(client, msg);
     // Log to mysql
-		if (Helper.config.mysql === true && data.type === "message" && msg.from !== "") {
+		if (Helper.config.mysql.enabled && data.type === "message" && msg.from !== "") {
 			db.log(msg.from, network.name, chan.name, msg.text);
 		}
 	}

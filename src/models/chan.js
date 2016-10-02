@@ -25,7 +25,7 @@ function Chan(attr) {
 		highlight: false,
 		users: []
 	}, attr));
-	if (Helper.config.mysql === true && this.type === Chan.Type.CHANNEL) {
+	if (Helper.config.mysql.enabled && this.type === Chan.Type.CHANNEL) {
 		var chan = this;
 		db.getChannelLogs(this.name, function(err, results) {
 			if (err) {

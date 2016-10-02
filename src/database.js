@@ -2,10 +2,10 @@ var mysql = require("mysql");
 var Helper = require("./helper");
 
 var pool = mysql.createPool({
-	host: Helper.config.dbhost,
-	user: Helper.config.dbuser,
-	password: Helper.config.dbpass,
-	database: Helper.config.database,
+	host: Helper.config.mysql.dbhost,
+	user: Helper.config.mysql.dbuser,
+	password: Helper.config.mysql.dbpass,
+	database: Helper.config.mysql.database,
 	connectionLimit: 10,
 	supportBigNumbers: true
 });
@@ -17,7 +17,7 @@ exports.getChannelLogs = function(channel, callback) {
 			console.log(err); callback(true);
 			return;
 		}
-		connection.query(sql, [channel, Helper.config.mysqlMaxLogs], function(err, results) {
+		connection.query(sql, [channel, Helper.config.mysql.maxLogs], function(err, results) {
 			connection.release();
 			if (err) {
 				console.log(err); callback(true);
