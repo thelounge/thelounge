@@ -26,6 +26,19 @@ module.exports.read = function(user, network, chan) {
 				from: result[2],
 				text: result[3]
 			}));
+			return;
+		}
+
+		result = /^\[(.*)\] \* (.*) action (.*)$/.exec(line);
+
+		if (result) {
+			messages.push(new Msg({
+				// time: result[1],
+				from: result[2],
+				text: result[3],
+				type: "action"
+			}));
+			return;
 		}
 	});
 
