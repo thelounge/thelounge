@@ -54,6 +54,16 @@ $(function() {
 		return Handlebars.templates[name](data);
 	}
 
+	function setLocalStorageItem(key, value) {
+		try {
+			window.localStorage.setItem(key, value);
+		} catch (e) {
+			// Do nothing. If we end up here, web storage quota exceeded, or user is
+			// in Safari's private browsing where localStorage's setItem is not
+			// available. See http://stackoverflow.com/q/14555347/1935861.
+		}
+	}
+
 	Handlebars.registerHelper(
 		"partial", function(id) {
 			return new Handlebars.SafeString(render(id, this));
@@ -68,6 +78,10 @@ $(function() {
 		socket.on(e, function() {
 			refresh();
 		});
+	});
+
+	socket.on("authorized", function() {
+		$("#loading-page-message").text("Authorized, loading messages…");
 	});
 
 	socket.on("auth", function(data) {
@@ -125,7 +139,7 @@ $(function() {
 		}
 
 		if (data.token && window.localStorage.getItem("token") !== null) {
-			window.localStorage.setItem("token", data.token);
+			setLocalStorageItem("token", data.token);
 		}
 
 		passwordForm
@@ -137,6 +151,8 @@ $(function() {
 	});
 
 	socket.on("init", function(data) {
+		$("#loading-page-message").text("Rendering…");
+
 		if (data.networks.length === 0) {
 			$("#footer").find(".connect").trigger("click");
 		} else {
@@ -144,7 +160,7 @@ $(function() {
 		}
 
 		if (data.token && $("#sign-in-remember").is(":checked")) {
-			window.localStorage.setItem("token", data.token);
+			setLocalStorageItem("token", data.token);
 		} else {
 			window.localStorage.removeItem("token");
 		}
@@ -222,6 +238,7 @@ $(function() {
 			"action",
 			"whois",
 			"ctcp",
+			"channel_list",
 		].indexOf(type) !== -1) {
 			data.msg.template = "actions/" + type;
 			template = "msg_action";
@@ -506,7 +523,7 @@ $(function() {
 			options[name] = self.val();
 		}
 
-		window.localStorage.setItem("settings", JSON.stringify(options));
+		setLocalStorageItem("settings", JSON.stringify(options));
 
 		if ([
 			"join",
@@ -547,19 +564,22 @@ $(function() {
 	});
 
 	var viewport = $("#viewport");
+	var sidebarSlide = window.slideoutMenu(viewport[0], sidebar[0]);
 	var contextMenuContainer = $("#context-menu-container");
 	var contextMenu = $("#context-menu");
 
-	viewport.on("click", ".lt, .rt", function(e) {
+	$("#main").on("click", function(e) {
+		if ($(e.target).is(".lt")) {
+			sidebarSlide.toggle(!sidebarSlide.isOpen());
+		} else if (sidebarSlide.isOpen()) {
+			sidebarSlide.toggle(false);
+		}
+	});
+
+	viewport.on("click", ".rt", function(e) {
 		var self = $(this);
 		viewport.toggleClass(self.attr("class"));
-		if (viewport.is(".lt, .rt")) {
-			e.stopPropagation();
-			chat.find(".chat").one("click", function(e) {
-				e.stopPropagation();
-				viewport.removeClass("lt");
-			});
-		}
+		e.stopPropagation();
 	});
 
 	function positionContextMenu(that, e) {
@@ -606,7 +626,7 @@ $(function() {
 			output += render("contextmenu_divider");
 			output += render("contextmenu_item", {
 				class: "close",
-				text: target.hasClass("lobby") ? "Disconnect" : target.hasClass("query") ? "Close" : "Leave",
+				text: target.hasClass("lobby") ? "Disconnect" : target.hasClass("channel") ? "Leave" : "Close",
 				data: target.data("target")
 			});
 		}
@@ -693,6 +713,65 @@ $(function() {
 			.first();
 	}
 
+	$("button#set-nick").on("click", function() {
+		toggleNickEditor(true);
+
+		// Selects existing nick in the editable text field
+		var element = document.querySelector("#nick-value");
+		element.focus();
+		var range = document.createRange();
+		range.selectNodeContents(element);
+		var selection = window.getSelection();
+		selection.removeAllRanges();
+		selection.addRange(range);
+	});
+
+	$("button#cancel-nick").on("click", cancelNick);
+	$("button#submit-nick").on("click", submitNick);
+
+	function toggleNickEditor(toggle) {
+		$("#nick").toggleClass("editable", toggle);
+		$("#nick-value").attr("contenteditable", toggle);
+	}
+
+	function submitNick() {
+		var newNick = $("#nick-value").text().trim();
+
+		if (newNick.length === 0) {
+			cancelNick();
+			return;
+		}
+
+		toggleNickEditor(false);
+
+		socket.emit("input", {
+			target: chat.data("id"),
+			text: "/nick " + newNick
+		});
+	}
+
+	function cancelNick() {
+		setNick(sidebar.find(".chan.active").closest(".network").data("nick"));
+	}
+
+	$("#nick-value").keypress(function(e) {
+		switch (e.keyCode ? e.keyCode : e.which) {
+		case 13: // Enter
+			// Ensures a new line is not added when pressing Enter
+			e.preventDefault();
+			break;
+		}
+	}).keyup(function(e) {
+		switch (e.keyCode ? e.keyCode : e.which) {
+		case 13: // Enter
+			submitNick();
+			break;
+		case 27: // Escape
+			cancelNick();
+			break;
+		}
+	});
+
 	chat.on("click", ".inline-channel", function() {
 		var name = $(this).data("chan");
 		var chan = findCurrentNetworkChan(name);
@@ -771,7 +850,8 @@ $(function() {
 			toggleNotificationMarkers(false);
 		}
 
-		viewport.removeClass("lt");
+		sidebarSlide.toggle(false);
+
 		var lastActive = $("#windows > .active");
 
 		lastActive
@@ -1005,7 +1085,7 @@ $(function() {
 			}
 		});
 		if (values.user) {
-			window.localStorage.setItem("user", values.user);
+			setLocalStorageItem("user", values.user);
 		}
 		socket.emit(
 			event, values
@@ -1177,7 +1257,11 @@ $(function() {
 	}
 
 	function setNick(nick) {
-		$("#nick").text(nick);
+		// Closes the nick editor when canceling, changing channel, or when a nick
+		// is set in a different tab / browser / device.
+		toggleNickEditor(false);
+
+		$("#nick-value").text(nick);
 	}
 
 	function move(array, old_index, new_index) {

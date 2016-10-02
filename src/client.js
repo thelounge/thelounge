@@ -29,6 +29,7 @@ var events = [
 	"quit",
 	"topic",
 	"welcome",
+	"list",
 	"whois"
 ];
 var inputs = [
@@ -41,11 +42,13 @@ var inputs = [
 	"invite",
 	"kick",
 	"mode",
+	"nick",
 	"notice",
 	"query",
 	"quit",
 	"raw",
 	"topic",
+	"list",
 ].reduce(function(plugins, name) {
 	var path = "./plugins/inputs/" + name;
 	var plugin = require(path);

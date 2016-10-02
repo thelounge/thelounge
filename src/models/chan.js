@@ -8,7 +8,8 @@ module.exports = Chan;
 Chan.Type = {
 	CHANNEL: "channel",
 	LOBBY: "lobby",
-	QUERY: "query"
+	QUERY: "query",
+	SPECIAL: "special",
 };
 
 var id = 0;

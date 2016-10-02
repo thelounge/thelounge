@@ -23,6 +23,7 @@ function Network(attr) {
 		serverOptions: {
 			PREFIX: [],
 		},
+		chanCache: [],
 	}, attr));
 	this.name = attr.name || prettify(attr.host);
 	this.channels = attr.channels || [];

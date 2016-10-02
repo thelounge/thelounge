@@ -1,5 +1,5 @@
 <div class="msg {{type}}{{#if self}} self{{/if}}{{#if highlight}} highlight{{/if}}" id="msg-{{id}}">
-	<span class="time">
+	<span class="time" title="{{localetime time}}">
 		{{tz time}}
 	</span>
 	<span class="from"></span>
