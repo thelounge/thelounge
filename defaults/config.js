@@ -108,6 +108,17 @@ module.exports = {
 	lockNetwork: false,
 
 	//
+	// Enable overrides
+	//
+	// If set to true, URL query parameters for overriding defaults will
+	// be ignored.
+	//
+	// @type     boolean
+	// @default  false
+	//
+	enableOverrides: false,
+
+	//
 	// WEBIRC support
 	//
 	// If enabled, The Lounge will pass the connecting user's host and IP to the
