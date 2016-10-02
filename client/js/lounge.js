@@ -997,7 +997,7 @@ $(function() {
 
 	var windows = $("#windows");
 	var forms = $("#sign-in, #sign-up, #connect, #change-password");
-	var windowLinksToSidebar = windows.find("a[data-target]");
+	var windowLinksToSidebar = windows.find("button[data-target]");
 	var sidebarLinks = sidebar.find("button[data-target]");
 	windowLinksToSidebar.on("click", function(e) {
 		var target = e.target.getAttribute("data-target");
