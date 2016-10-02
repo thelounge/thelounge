@@ -4,6 +4,33 @@ var fs = require("fs");
 var fsextra = require("fs-extra");
 var moment = require("moment");
 var Helper = require("./helper");
+const Msg = require("./models/msg");
+
+module.exports.read = function(user, network, chan) {
+	var data = fs.readFileSync(
+		`${Helper.getUserLogsPath(user, network)}/${chan}.log`,
+		"utf-8"
+	).toString().split("\n");
+
+	// var format = Helper.config.logs.format || "YYYY-MM-DD HH:mm:ss";
+	// var tz = Helper.config.logs.timezone || "UTC+00:00";
+
+	var messages = [];
+
+	data.forEach(line => {
+		let result = /^\[(.*)\] <(.*)> (.*)$/.exec(line);
+
+		if (result) {
+			messages.push(new Msg({
+				// time: result[1],
+				from: result[2],
+				text: result[3]
+			}));
+		}
+	});
+
+	return messages;
+};
 
 module.exports.write = function(user, network, chan, msg) {
 	const path = Helper.getUserLogsPath(user, network);

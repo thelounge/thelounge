@@ -171,10 +171,16 @@ Client.prototype.connect = function(args) {
 				return;
 			}
 
-			channels.push(new Chan({
+			const channel = new Chan({
 				name: chan.name,
 				key: chan.key || "",
-			}));
+			});
+
+			channels.push(channel);
+
+			userLog
+				.read(client.name, args.host, channel.name)
+				.forEach((message) => channel.pushMessage(client, message));
 		});
 
 		if (badName && client.name) {
