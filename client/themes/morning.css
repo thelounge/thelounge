@@ -155,12 +155,22 @@ body {
 	border-color: #333c4a;
 }
 
-#chat .unread-marker {
+#chat .unread-marker,
+#chat .date-marker {
 	opacity: 1;
 }
 
 #chat .unread-marker-text:before {
 	background-color: #333c4a;
+}
+
+#chat .date-marker:before {
+	border-color: #97ea70;
+}
+
+#chat .date-marker-text:before {
+	background-color: #333c4a;
+	color: #97ea70;
 }
 
 /* Setup text colors */
