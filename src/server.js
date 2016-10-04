@@ -36,9 +36,19 @@ module.exports = function() {
 		server = server.createServer(app).listen(config.port, config.host);
 	} else {
 		server = require("spdy");
+		const keyPath = Helper.expandHome(config.https.key);
+		const certPath = Helper.expandHome(config.https.certificate);
+		if (!config.https.key.length || !fs.existsSync(keyPath)) {
+			log.error("Path to SSL key is invalid. Stopping server...");
+			process.exit();
+		}
+		if (!config.https.certificate.length || !fs.existsSync(certPath)) {
+			log.error("Path to SSL certificate is invalid. Stopping server...");
+			process.exit();
+		}
 		server = server.createServer({
-			key: fs.readFileSync(Helper.expandHome(config.https.key)),
-			cert: fs.readFileSync(Helper.expandHome(config.https.certificate))
+			key: fs.readFileSync(keyPath),
+			cert: fs.readFileSync(certPath)
 		}, app).listen(config.port, config.host);
 	}
 
