@@ -721,6 +721,12 @@ $(function() {
 		})
 		.tab(complete, {hint: false});
 
+	// Cycle through nicks for the current word, just like hitting "Tab"
+	$("#cycle-nicks").on("click", function() {
+		input.triggerHandler($.Event("keydown.tabcomplete", {which: 9}));
+		focus();
+	});
+
 	$("#form").on("submit", function(e) {
 		e.preventDefault();
 		var text = input.val();
