@@ -27,6 +27,10 @@ body {
 	top: 4px;
 }
 
+#chat .unhandled .from {
+	color: #ddd;
+}
+
 #windows .window:before {
 	background: #f4f4f4;
 	background-image: linear-gradient(#f4f4f4, #ececec);

@@ -1029,10 +1029,6 @@ button {
 	color: #f00;
 }
 
-#chat .unhandled .from {
-	color: #eee;
-}
-
 #chat .msg.toggle .time {
 	visibility: hidden;
 }
