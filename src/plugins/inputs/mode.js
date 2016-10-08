@@ -2,30 +2,60 @@
 
 exports.commands = ["mode", "op", "voice", "deop", "devoice"];
 
+var Chan = require("../../models/chan");
+var Msg = require("../../models/msg");
+
+exports.commands = [
+	"mode",
+	"op",
+	"deop",
+	"hop",
+	"dehop",
+	"voice",
+	"devoice",
+];
+
 exports.input = function(network, chan, cmd, args) {
-	if (args.length === 0) {
+	if (cmd !== "mode") {
+		if (chan.type !== Chan.Type.CHANNEL) {
+			chan.pushMessage(this, new Msg({
+				type: Msg.Type.ERROR,
+				text: `${cmd} command can only be used in channels.`
+			}));
+
+			return;
+		}
+
+		if (args.length === 0) {
+			chan.pushMessage(this, new Msg({
+				type: Msg.Type.ERROR,
+				text: `Usage: /${cmd} <nick> [...nick]`
+			}));
+
+			return;
+		}
+
+		const mode = {
+			op: "+o",
+			hop: "+h",
+			voice: "+v",
+			deop: "-o",
+			dehop: "-h",
+			devoice: "-v"
+		}[cmd];
+
+		args.forEach(function(target) {
+			network.irc.raw("MODE", chan.name, mode, target);
+		});
+
 		return;
 	}
 
-	var mode;
-	var user;
-	if (cmd !== "mode") {
-		user = args[0];
-		mode = {
-			op: "+o",
-			voice: "+v",
-			deop: "-o",
-			devoice: "-v"
-		}[cmd];
-	} else if (args.length === 1) {
-		return true;
-	} else {
-		mode = args[0];
-		user = args[1];
+	if (args.length === 0 || args[0][0] === "+" || args[0][0] === "-") {
+		args.unshift(chan.type === Chan.Type.CHANNEL || chan.type === Chan.Type.QUERY ? chan.name : network.nick);
 	}
 
-	var irc = network.irc;
-	irc.raw("MODE", chan.name, mode, user);
+	args.unshift("MODE");
 
-	return true;
+	network.irc.raw.apply(network.irc, args);
 };
