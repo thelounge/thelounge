@@ -8,18 +8,17 @@ module.exports = function(irc, network) {
 		if (typeof chan === "undefined") {
 			return;
 		}
-		chan.users = [];
-		_.each(data.users, function(u) {
-			var user = new User(u);
 
-			// irc-framework sets characater mode, but lounge works with symbols
-			if (user.mode) {
-				user.mode = network.prefixLookup[user.mode];
-			}
+		chan.users = [];
+
+		_.each(data.users, function(u) {
+			var user = new User(u, network.prefixLookup);
 
 			chan.users.push(user);
 		});
+
 		chan.sortUsers(irc);
+
 		client.emit("users", {
 			chan: chan.id
 		});

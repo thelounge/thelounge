@@ -2,13 +2,16 @@ var _ = require("lodash");
 
 module.exports = User;
 
-function User(attr) {
-	// TODO: Remove this
-	attr.name = attr.name || attr.nick;
-	attr.mode = attr.mode || (attr.modes && attr.modes[0]) || "";
-
+function User(attr, prefixLookup) {
 	_.merge(this, _.extend({
-		mode: "",
-		name: ""
+		modes: [],
+		nick: ""
 	}, attr));
+
+	// irc-framework sets character mode, but lounge works with symbols
+	this.modes = this.modes.map(mode => prefixLookup[mode]);
+
+	// TODO: Remove this
+	this.name = this.nick;
+	this.mode = (this.modes && this.modes[0]) || "";
 }
