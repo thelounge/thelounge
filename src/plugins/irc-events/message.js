@@ -25,6 +25,12 @@ module.exports = function(irc, network) {
 		handleMessage(data);
 	});
 
+	irc.on("wallops", function(data) {
+		data.from_server = true;
+		data.type = Msg.Type.NOTICE;
+		handleMessage(data);
+	});
+
 	function handleMessage(data) {
 		var highlight = false;
 		var self = data.nick === irc.user.nick;
