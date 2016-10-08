@@ -680,6 +680,7 @@ kbd {
 	font-size: 14px;
 }
 
+.message-search-input,
 #windows .input {
 	background-color: white;
 	border: 1px solid #cdd3da;
@@ -702,6 +703,8 @@ kbd {
 	resize: vertical;
 }
 
+.message-search-input:hover,
+.message-search-input:focus,
 #windows .input:hover,
 #windows .input:focus {
 	border-color: #79838c;
@@ -2019,6 +2022,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 /* Image viewer */
 
+#message-search,
+#message-search .close-btn,
 #image-viewer,
 #image-viewer .close-btn {
 	/* Vertically and horizontally center stuff */
@@ -2028,6 +2033,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	justify-content: center;
 }
 
+#message-search,
 #image-viewer {
 	position: fixed;
 	top: 0;
@@ -2041,15 +2047,18 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	z-index: 999;
 }
 
+.message-search-opened #wrap,
 .image-viewer-opened #wrap {
 	filter: blur(4px);
 }
 
+.message-search-opened #message-search,
 .image-viewer-opened #image-viewer {
 	visibility: visible;
 	opacity: 1;
 }
 
+#message-search .close-btn,
 #image-viewer .close-btn {
 	position: fixed;
 	top: 0;
@@ -2063,6 +2072,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	transition: .2s opacity;
 }
 
+#message-search .close-btn:hover,
 #image-viewer .close-btn:hover {
 	opacity: 1;
 }
