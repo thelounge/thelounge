@@ -88,6 +88,7 @@ $(function() {
 
 	socket.on("auth", function(data) {
 		var login = $("#sign-in");
+		var token;
 
 		login.find(".btn").prop("disabled", false);
 
@@ -99,7 +100,7 @@ $(function() {
 				error.hide();
 			});
 		} else {
-			var token = window.localStorage.getItem("token");
+			token = window.localStorage.getItem("token");
 			if (token) {
 				$("#loading-page-message").text("Authorizing…");
 				socket.emit("auth", {token: token});
@@ -476,7 +477,7 @@ $(function() {
 	socket.on("names", renderChannelUsers);
 
 	var userStyles = $("#user-specified-css");
-	var settings = $("#settings");
+	var highlights = [];
 	var options = $.extend({
 		coloredNicks: true,
 		desktopNotifications: false,
@@ -494,73 +495,75 @@ $(function() {
 		userStyles: userStyles.text(),
 	}, JSON.parse(window.localStorage.getItem("settings")));
 
-	for (var i in options) {
-		if (i === "userStyles") {
-			if (!/[\?&]nocss/.test(window.location.search)) {
-				$(document.head).find("#user-specified-css").html(options[i]);
-			}
-			settings.find("#user-specified-css-input").val(options[i]);
-		} else if (i === "highlights") {
-			settings.find("input[name=" + i + "]").val(options[i]);
-		} else if (i === "theme") {
-			$("#theme").attr("href", "themes/" + options[i] + ".css");
-			settings.find("select[name=" + i + "]").val(options[i]);
-		} else if (options[i]) {
-			settings.find("input[name=" + i + "]").prop("checked", true);
-		}
-	}
+	(function SettingsScope() {
+		var settings = $("#settings");
 
-	var highlights = [];
-
-	settings.on("change", "input, select, textarea", function() {
-		var self = $(this);
-		var name = self.attr("name");
-
-		if (self.attr("type") === "checkbox") {
-			options[name] = self.prop("checked");
-		} else {
-			options[name] = self.val();
-		}
-
-		setLocalStorageItem("settings", JSON.stringify(options));
-
-		if ([
-			"join",
-			"mode",
-			"motd",
-			"nick",
-			"part",
-			"quit",
-			"notifyAllMessages",
-		].indexOf(name) !== -1) {
-			chat.toggleClass("hide-" + name, !self.prop("checked"));
-		} else if (name === "coloredNicks") {
-			chat.toggleClass("colored-nicks", self.prop("checked"));
-		} else if (name === "theme") {
-			$("#theme").attr("href", "themes/" + options[name] + ".css");
-		} else if (name === "userStyles") {
-			$(document.head).find("#user-specified-css").html(options[name]);
-		} else if (name === "highlights") {
-			var highlightString = options[name];
-			highlights = highlightString.split(",").map(function(h) {
-				return h.trim();
-			}).filter(function(h) {
-				// Ensure we don't have empty string in the list of highlights
-				// otherwise, users get notifications for everything
-				return h !== "";
-			});
-		}
-	}).find("input")
-		.trigger("change");
-
-	$("#desktopNotifications").on("change", function() {
-		var self = $(this);
-		if (self.prop("checked")) {
-			if (Notification.permission !== "granted") {
-				Notification.requestPermission(updateDesktopNotificationStatus);
+		for (var i in options) {
+			if (i === "userStyles") {
+				if (!/[\?&]nocss/.test(window.location.search)) {
+					$(document.head).find("#user-specified-css").html(options[i]);
+				}
+				settings.find("#user-specified-css-input").val(options[i]);
+			} else if (i === "highlights") {
+				settings.find("input[name=" + i + "]").val(options[i]);
+			} else if (i === "theme") {
+				$("#theme").attr("href", "themes/" + options[i] + ".css");
+				settings.find("select[name=" + i + "]").val(options[i]);
+			} else if (options[i]) {
+				settings.find("input[name=" + i + "]").prop("checked", true);
 			}
 		}
-	});
+
+		settings.on("change", "input, select, textarea", function() {
+			var self = $(this);
+			var name = self.attr("name");
+
+			if (self.attr("type") === "checkbox") {
+				options[name] = self.prop("checked");
+			} else {
+				options[name] = self.val();
+			}
+
+			setLocalStorageItem("settings", JSON.stringify(options));
+
+			if ([
+				"join",
+				"mode",
+				"motd",
+				"nick",
+				"part",
+				"quit",
+				"notifyAllMessages",
+			].indexOf(name) !== -1) {
+				chat.toggleClass("hide-" + name, !self.prop("checked"));
+			} else if (name === "coloredNicks") {
+				chat.toggleClass("colored-nicks", self.prop("checked"));
+			} else if (name === "theme") {
+				$("#theme").attr("href", "themes/" + options[name] + ".css");
+			} else if (name === "userStyles") {
+				userStyles.html(options[name]);
+			} else if (name === "highlights") {
+				var highlightString = options[name];
+				highlights = highlightString.split(",").map(function(h) {
+					return h.trim();
+				}).filter(function(h) {
+					// Ensure we don't have empty string in the list of highlights
+					// otherwise, users get notifications for everything
+					return h !== "";
+				});
+			}
+		}).find("input")
+			.trigger("change");
+
+		$("#desktopNotifications").on("change", function() {
+			var self = $(this);
+			if (self.prop("checked")) {
+				if (Notification.permission !== "granted") {
+					Notification.requestPermission(updateDesktopNotificationStatus);
+				}
+			}
+		});
+	}());
 
 	var viewport = $("#viewport");
 	var sidebarSlide = window.slideoutMenu(viewport[0], sidebar[0]);
@@ -676,9 +679,7 @@ $(function() {
 		})
 		.tab(complete, {hint: false});
 
-	var form = $("#form");
-
-	form.on("submit", function(e) {
+	$("#form").on("submit", function(e) {
 		e.preventDefault();
 		var text = input.val();
 
@@ -804,7 +805,7 @@ $(function() {
 			var text = "";
 			if (window.getSelection) {
 				text = window.getSelection().toString();
-			} else if (document.selection && document.selection.type !==  "Control") {
+			} else if (document.selection && document.selection.type !== "Control") {
 				text = document.selection.createRange().text;
 			}
 			if (!text) {
@@ -1027,20 +1028,20 @@ $(function() {
 
 	chat.on("click", ".toggle-button", function() {
 		var self = $(this);
-		var chat = self.closest(".chat");
-		var bottom = chat.isScrollBottom();
+		var localChat = self.closest(".chat");
+		var bottom = localChat.isScrollBottom();
 		var content = self.parent().next(".toggle-content");
 		if (bottom && !content.hasClass("show")) {
 			var img = content.find("img");
 			if (img.length !== 0 && !img.width()) {
 				img.on("load", function() {
-					chat.scrollBottom();
+					localChat.scrollBottom();
 				});
 			}
 		}
 		content.toggleClass("show");
 		if (bottom) {
-			chat.scrollBottom();
+			localChat.scrollBottom();
 		}
 	});
 
@@ -1048,9 +1049,7 @@ $(function() {
 	var forms = $("#sign-in, #connect, #change-password");
 
 	windows.on("show", "#sign-in", function() {
-		var self = $(this);
-		var inputs = self.find("input");
-		inputs.each(function() {
+		$(this).find("input").each(function() {
 			var self = $(this);
 			if (self.val() === "") {
 				self.focus();

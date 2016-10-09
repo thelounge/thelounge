@@ -6,8 +6,8 @@ Handlebars.registerHelper(
 		b = b.toString();
 		if (a === b) {
 			return opt.fn(this);
-		} else {
-			return opt.inverse(this);
 		}
+
+		return opt.inverse(this);
 	}
 );

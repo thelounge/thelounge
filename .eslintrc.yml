@@ -11,27 +11,34 @@ parserOptions:
   ecmaVersion: 6
 
 rules:
+  block-scoped-var: 2
   block-spacing: [2, always]
   brace-style: [2, 1tbs]
   comma-dangle: 0
   curly: [2, all]
+  dot-notation: 2
   eqeqeq: 2
+  handle-callback-err: 2
   indent: [2, tab]
   key-spacing: [2, {beforeColon: false, afterColon: true}]
   keyword-spacing: [2, {before: true, after: true}]
   linebreak-style: [2, unix]
   no-console: 0
   no-control-regex: 0
-  no-inner-declarations: 2
-  no-invalid-regexp: 2
-  no-irregular-whitespace: 2
+  no-else-return: 2
+  no-implicit-globals: 2
+  no-multi-spaces: 2
+  no-shadow: 2
+  no-template-curly-in-string: 2
   no-trailing-spaces: 2
-  no-unexpected-multiline: 2
-  no-unreachable: 2
+  no-unsafe-negation: 2
+  no-useless-escape: 2
   object-curly-spacing: [2, never]
+  quote-props: [2, as-needed]
   quotes: [2, double, avoid-escape]
   semi: [2, always]
   space-before-blocks: 2
+  space-before-function-paren: [2, never]
   space-infix-ops: 2
   spaced-comment: [2, always]
   strict: 2

@@ -90,8 +90,9 @@ function parse(msg, url, res, client) {
 }
 
 function fetch(url, cb) {
+	let req;
 	try {
-		var req = request.get({
+		req = request.get({
 			url: url,
 			maxRedirects: 5,
 			timeout: 5000,

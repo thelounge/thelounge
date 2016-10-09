@@ -127,13 +127,17 @@ function index(req, res, next) {
 	}
 
 	return fs.readFile("client/index.html", "utf-8", function(err, file) {
+		if (err) {
+			throw err;
+		}
+
 		var data = _.merge(
 			pkg,
 			Helper.config
 		);
 		data.gitCommit = gitCommit;
-		data.themes = fs.readdirSync("client/themes/").filter(function(file) {
-			return file.endsWith(".css");
+		data.themes = fs.readdirSync("client/themes/").filter(function(themeFile) {
+			return themeFile.endsWith(".css");
 		}).map(function(css) {
 			return css.slice(0, -4);
 		});
@@ -317,7 +321,7 @@ function auth(data) {
 					manager.loadUser(data.user);
 					client = manager.findClient(data.user);
 				}
-				if (Helper.config.webirc !== null && !client.config["ip"]) {
+				if (Helper.config.webirc !== null && !client.config.ip) {
 					reverseDnsLookup(socket, client);
 				} else {
 					init(socket, client, token);

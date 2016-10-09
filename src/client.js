@@ -118,12 +118,12 @@ Client.prototype.emit = function(event, data) {
 	}
 };
 
-Client.prototype.find = function(id) {
+Client.prototype.find = function(channelId) {
 	var network = null;
 	var chan = null;
 	for (var i in this.networks) {
 		var n = this.networks[i];
-		chan = _.find(n.channels, {id: id});
+		chan = _.find(n.channels, {id: channelId});
 		if (chan) {
 			network = n;
 			break;
@@ -134,9 +134,9 @@ Client.prototype.find = function(id) {
 			network: network,
 			chan: chan
 		};
-	} else {
-		return false;
 	}
+
+	return false;
 };
 
 Client.prototype.connect = function(args) {
@@ -168,7 +168,7 @@ Client.prototype.connect = function(args) {
 	// also used by the "connect" window
 	} else if (args.join) {
 		channels = args.join
-			.replace(/\,/g, " ")
+			.replace(/,/g, " ")
 			.split(/\s+/g)
 			.map(function(chan) {
 				return new Chan({
@@ -278,6 +278,10 @@ Client.prototype.updateToken = function(callback) {
 	var client = this;
 
 	crypto.randomBytes(48, function(err, buf) {
+		if (err) {
+			throw err;
+		}
+
 		callback(client.config.token = buf.toString("hex"));
 	});
 };

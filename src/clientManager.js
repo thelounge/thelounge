@@ -34,8 +34,9 @@ ClientManager.prototype.loadUsers = function() {
 };
 
 ClientManager.prototype.loadUser = function(name) {
+	let json;
 	try {
-		var json = this.readUserConfig(name);
+		json = this.readUserConfig(name);
 	} catch (e) {
 		log.error("Failed to read user config", e);
 		return;

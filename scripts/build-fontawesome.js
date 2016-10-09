@@ -9,13 +9,13 @@ var fonts = [
 	"fontawesome-webfont.woff2"
 ];
 
-fs.ensureDir(destDir, function (err) {
-	if (err) {
-		console.error(err);
+fs.ensureDir(destDir, function(dirErr) {
+	if (dirErr) {
+		console.error(dirErr);
 	}
 
-	fonts.forEach(function (font) {
-		fs.copy(srcDir + font, destDir + font, function (err) {
+	fonts.forEach(function(font) {
+		fs.copy(srcDir + font, destDir + font, function(err) {
 			if (err) {
 				console.error(err);
 			} else {
