@@ -1,3 +1,5 @@
+"use strict";
+
 $(function() {
 	$("#loading-page-message").text("Connecting…");
 

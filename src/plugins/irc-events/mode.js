@@ -1,3 +1,5 @@
+"use strict";
+
 var _ = require("lodash");
 var Chan = require("../../models/chan");
 var Msg = require("../../models/msg");

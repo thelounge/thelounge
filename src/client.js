@@ -1,3 +1,5 @@
+"use strict";
+
 var _ = require("lodash");
 var package = require("../package.json");
 var Chan = require("./models/chan");

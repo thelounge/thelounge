@@ -1,3 +1,5 @@
+"use strict";
+
 var fs = require("fs");
 var fsextra = require("fs-extra");
 var moment = require("moment");

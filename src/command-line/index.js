@@ -1,3 +1,5 @@
+"use strict";
+
 global.log = require("../log.js");
 
 var program = require("commander");

@@ -1,3 +1,5 @@
+"use strict";
+
 exports.commands = ["kick"];
 
 exports.input = function(network, chan, cmd, args) {

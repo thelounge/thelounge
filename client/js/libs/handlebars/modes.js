@@ -1,3 +1,5 @@
+"use strict";
+
 Handlebars.registerHelper(
 	"modes", function(mode) {
 		var modes = {

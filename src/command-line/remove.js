@@ -1,3 +1,5 @@
+"use strict";
+
 var ClientManager = new require("../clientManager");
 var program = require("commander");
 

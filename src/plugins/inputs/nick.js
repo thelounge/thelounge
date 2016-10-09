@@ -1,3 +1,5 @@
+"use strict";
+
 var Msg = require("../../models/msg");
 
 exports.commands = ["nick"];

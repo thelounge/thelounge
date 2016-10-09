@@ -1,3 +1,5 @@
+"use strict";
+
 Handlebars.registerHelper(
 	"roundBadgeNumber", function(count) {
 		if (count < 1000) {

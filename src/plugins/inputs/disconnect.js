@@ -1,3 +1,5 @@
+"use strict";
+
 exports.commands = ["disconnect"];
 
 exports.input = function(network, chan, cmd, args) {

@@ -1,3 +1,5 @@
+"use strict";
+
 var colors = require("colors/safe");
 var moment = require("moment");
 var Helper = require("./helper");

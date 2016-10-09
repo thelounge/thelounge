@@ -1,3 +1,5 @@
+"use strict";
+
 /*
  * This is a separate file for two reasons:
  * 1. CSP policy does not allow inline javascript
