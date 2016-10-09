@@ -1,3 +1,5 @@
+"use strict";
+
 var _ = require("lodash");
 var identd = require("../../identd");
 var Msg = require("../../models/msg");

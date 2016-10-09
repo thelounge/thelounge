@@ -1,3 +1,5 @@
+"use strict";
+
 var EventEmitter = require("events").EventEmitter;
 var util = require("util");
 var _ = require("lodash");

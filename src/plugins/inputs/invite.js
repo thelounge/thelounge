@@ -1,3 +1,5 @@
+"use strict";
+
 var Chan = require("../../models/chan");
 
 exports.commands = ["invite"];

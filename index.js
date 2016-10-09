@@ -1,4 +1,7 @@
 #!/usr/bin/env node
+
+"use strict";
+
 process.chdir(__dirname);
 
 // Perform node version check before loading any other files or modules

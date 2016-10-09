@@ -1,3 +1,5 @@
+"use strict";
+
 var _ = require("lodash");
 var path = require("path");
 var os = require("os");

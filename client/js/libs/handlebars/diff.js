@@ -1,3 +1,5 @@
+"use strict";
+
 var diff;
 
 Handlebars.registerHelper(

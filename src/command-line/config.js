@@ -1,3 +1,5 @@
+"use strict";
+
 var program = require("commander");
 var child = require("child_process");
 var Helper = require("../helper");

@@ -1,3 +1,5 @@
+"use strict";
+
 exports.commands = ["msg", "say"];
 
 exports.input = function(network, chan, cmd, args) {

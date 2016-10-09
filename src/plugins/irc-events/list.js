@@ -1,3 +1,5 @@
+"use strict";
+
 var Chan = require("../../models/chan");
 var Msg = require("../../models/msg");
 

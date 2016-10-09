@@ -1,3 +1,5 @@
+"use strict";
+
 Handlebars.registerHelper(
 	"equal", function(a, b, opt) {
 		a = a.toString();

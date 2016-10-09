@@ -1,3 +1,5 @@
+"use strict";
+
 Handlebars.registerHelper(
 	"tz", function(time) {
 		time = new Date(time);

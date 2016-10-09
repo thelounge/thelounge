@@ -1,3 +1,5 @@
+"use strict";
+
 var _ = require("lodash");
 var cheerio = require("cheerio");
 var Msg = require("../../models/msg");

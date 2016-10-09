@@ -1,3 +1,5 @@
+"use strict";
+
 var bcrypt = require("bcrypt-nodejs");
 var ClientManager = new require("../clientManager");
 var fs = require("fs");

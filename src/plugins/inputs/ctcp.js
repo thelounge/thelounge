@@ -1,3 +1,5 @@
+"use strict";
+
 exports.commands = ["ctcp"];
 
 exports.input = function(network, chan, cmd, args) {

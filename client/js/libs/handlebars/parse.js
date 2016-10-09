@@ -1,3 +1,5 @@
+"use strict";
+
 Handlebars.registerHelper(
 	"parse", function(text) {
 		text = Handlebars.Utils.escapeExpression(text);

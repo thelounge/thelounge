@@ -1,3 +1,5 @@
+"use strict";
+
 exports.commands = ["mode", "op", "voice", "deop", "devoice"];
 
 exports.input = function(network, chan, cmd, args) {

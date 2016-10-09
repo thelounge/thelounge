@@ -1,3 +1,5 @@
+"use strict";
+
 exports.commands = ["list"];
 
 exports.input = function(network, chan, cmd, args) {
