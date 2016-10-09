@@ -6,8 +6,9 @@ var moment = require("moment");
 var Helper = require("./helper");
 
 module.exports.write = function(user, network, chan, msg) {
+	const path = Helper.getUserLogsPath(user, network);
+
 	try {
-		var path = Helper.getUserLogsPath(user, network);
 		fsextra.ensureDirSync(path);
 	} catch (e) {
 		log.error("Unabled to create logs directory", e);

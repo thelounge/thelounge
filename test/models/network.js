@@ -29,8 +29,8 @@ describe("Network", function() {
 				ip: null,
 				hostname: null,
 				channels: [
-					{"name": "#thelounge"},
-					{"name": "&foobar"},
+					{name: "#thelounge"},
+					{name: "&foobar"},
 				]
 			});
 		});

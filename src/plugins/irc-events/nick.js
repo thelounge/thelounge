@@ -6,12 +6,13 @@ var Msg = require("../../models/msg");
 module.exports = function(irc, network) {
 	var client = this;
 	irc.on("nick", function(data) {
+		let msg;
 		var self = false;
 		if (data.nick === irc.user.nick) {
 			network.setNick(data.new_nick);
 
 			var lobby = network.channels[0];
-			var msg = new Msg({
+			msg = new Msg({
 				text: "You're now known as " + data.new_nick,
 			});
 			lobby.pushMessage(client, msg);
@@ -33,7 +34,7 @@ module.exports = function(irc, network) {
 			client.emit("users", {
 				chan: chan.id
 			});
-			var msg = new Msg({
+			msg = new Msg({
 				time: data.time,
 				type: Msg.Type.NICK,
 				mode: chan.getMode(data.new_nick),

@@ -12,10 +12,10 @@ exports.input = function(network, chan, cmd, args) {
 	if (cmd !== "mode") {
 		user = args[0];
 		mode = {
-			"op": "+o",
-			"voice": "+v",
-			"deop": "-o",
-			"devoice": "-v"
+			op: "+o",
+			voice: "+v",
+			deop: "-o",
+			devoice: "-v"
 		}[cmd];
 	} else if (args.length === 1) {
 		return true;

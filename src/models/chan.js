@@ -78,9 +78,9 @@ Chan.prototype.getMode = function(name) {
 	var user = _.find(this.users, {name: name});
 	if (user) {
 		return user.mode;
-	} else {
-		return "";
 	}
+
+	return "";
 };
 
 Chan.prototype.toJSON = function() {

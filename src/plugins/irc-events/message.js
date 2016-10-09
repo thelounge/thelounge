@@ -34,8 +34,9 @@ module.exports = function(irc, network) {
 	});
 
 	function handleMessage(data) {
-		var highlight = false;
-		var self = data.nick === irc.user.nick;
+		let chan;
+		let highlight = false;
+		const self = data.nick === irc.user.nick;
 
 		// Server messages go to server window, no questions asked
 		if (data.from_server) {
@@ -48,7 +49,7 @@ module.exports = function(irc, network) {
 				target = data.nick;
 			}
 
-			var chan = network.getChannel(target);
+			chan = network.getChannel(target);
 			if (typeof chan === "undefined") {
 				// Send notices that are not targeted at us into the server window
 				if (data.type === Msg.Type.NOTICE) {
