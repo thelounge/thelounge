@@ -1,7 +1,7 @@
 "use strict";
 
 var _ = require("lodash");
-var package = require("../package.json");
+var pkg = require("../package.json");
 var Chan = require("./models/chan");
 var crypto = require("crypto");
 var userLog = require("./userLog");
@@ -230,7 +230,7 @@ Client.prototype.connect = function(args) {
 			} else {
 				webirc = {
 					password: config.webirc[network.host],
-					username: package.name,
+					username: pkg.name,
 					address: args.ip,
 					hostname: args.hostname
 				};
@@ -257,7 +257,7 @@ Client.prototype.connect = function(args) {
 	});
 
 	network.irc.connect({
-		version: package.name + " " + package.version + " -- " + package.homepage,
+		version: pkg.name + " " + pkg.version + " -- " + pkg.homepage,
 		host: network.host,
 		port: network.port,
 		nick: nick,
