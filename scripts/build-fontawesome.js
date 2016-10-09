@@ -5,9 +5,6 @@ var fs = require("fs-extra");
 var srcDir = "./node_modules/font-awesome/fonts/";
 var destDir = "./client/fonts/";
 var fonts = [
-	"fontawesome-webfont.eot",
-	"fontawesome-webfont.svg",
-	"fontawesome-webfont.ttf",
 	"fontawesome-webfont.woff",
 	"fontawesome-webfont.woff2"
 ];
