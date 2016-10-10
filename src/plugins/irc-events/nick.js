@@ -36,9 +36,9 @@ module.exports = function(irc, network) {
 			});
 			msg = new Msg({
 				time: data.time,
+				from: data.nick,
 				type: Msg.Type.NICK,
 				mode: chan.getMode(data.new_nick),
-				nick: data.nick,
 				new_nick: data.new_nick,
 				self: self
 			});
