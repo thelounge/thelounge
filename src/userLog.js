@@ -64,6 +64,58 @@ module.exports.read = function(user, network, chan) {
 			}));
 			return;
 		}
+
+		result = /^\[(.*)\] \* (.*) \((.*)\) (part|quit) (.*)$/.exec(line);
+
+		if (result) {
+			messages.push(new Msg({
+				// time: result[1],
+				from: result[2],
+				hostmask: result[3],
+				text: result[5],
+				type: result[4],
+			}));
+			return;
+		}
+
+		// Support for older log format missing hostmask
+		result = /^\[(.*)\] \* (.*) (part|quit) (.*)$/.exec(line);
+
+		if (result) {
+			messages.push(new Msg({
+				// time: result[1],
+				from: result[2],
+				text: result[4],
+				type: result[3],
+			}));
+			return;
+		}
+
+		// Parts and quits without a reason
+		result = /^\[(.*)\] \* (.*) \((.*)\) (part|quit)$/.exec(line);
+
+		if (result) {
+			messages.push(new Msg({
+				// time: result[1],
+				from: result[2],
+				hostmask: result[3],
+				type: result[4],
+			}));
+			return;
+		}
+
+		// Parts and quits without a reason
+		// Support for older log format missing hostmask
+		result = /^\[(.*)\] \* (.*) (part|quit)$/.exec(line);
+
+		if (result) {
+			messages.push(new Msg({
+				// time: result[1],
+				from: result[2],
+				type: result[3],
+			}));
+			return;
+		}
 	});
 
 	return messages;
