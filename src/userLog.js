@@ -116,6 +116,18 @@ module.exports.read = function(user, network, chan) {
 			}));
 			return;
 		}
+
+		result = /^\[(.*)\] \* (.*) nick (.*)$/.exec(line);
+
+		if (result) {
+			messages.push(new Msg({
+				// time: result[1],
+				from: result[2],
+				new_nick: result[3],
+				type: "nick",
+			}));
+			return;
+		}
 	});
 
 	return messages;
