@@ -40,6 +40,30 @@ module.exports.read = function(user, network, chan) {
 			}));
 			return;
 		}
+
+		result = /^\[(.*)\] \* (.*) \((.*)\) join$/.exec(line);
+
+		if (result) {
+			messages.push(new Msg({
+				// time: result[1],
+				from: result[2],
+				hostmask: result[3],
+				type: "join"
+			}));
+			return;
+		}
+
+		// Support for older log format missing hostmask
+		result = /^\[(.*)\] \* (.*) join$/.exec(line);
+
+		if (result) {
+			messages.push(new Msg({
+				// time: result[1],
+				from: result[2],
+				type: "join"
+			}));
+			return;
+		}
 	});
 
 	return messages;
