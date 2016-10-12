@@ -22,7 +22,7 @@ module.exports = function(irc, network) {
 		var supportsMultiPrefix = network.irc.network.cap.isEnabled("multi-prefix");
 		var userModeSortPriority = {};
 
-		irc.network.options.PREFIX.forEach(function(prefix, index) {
+		irc.network.options.PREFIX.forEach((prefix, index) => {
 			userModeSortPriority[prefix.symbol] = index;
 		});
 

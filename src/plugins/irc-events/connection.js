@@ -1,6 +1,5 @@
 "use strict";
 
-var _ = require("lodash");
 var identd = require("../../identd");
 var Msg = require("../../models/msg");
 var Chan = require("../../models/chan");
@@ -24,7 +23,7 @@ module.exports = function(irc, network) {
 		var delay = 1000;
 		var commands = network.commands;
 		if (Array.isArray(commands)) {
-			commands.forEach(function(cmd) {
+			commands.forEach(cmd => {
 				setTimeout(function() {
 					client.input({
 						target: network.channels[0].id,
@@ -35,7 +34,7 @@ module.exports = function(irc, network) {
 			});
 		}
 
-		network.channels.forEach(function(chan) {
+		network.channels.forEach(chan => {
 			if (chan.type !== Chan.Type.CHANNEL) {
 				return;
 			}
@@ -114,7 +113,7 @@ module.exports = function(irc, network) {
 
 		network.prefixLookup = {};
 
-		_.each(data.options.PREFIX, function(mode) {
+		data.options.PREFIX.forEach(mode => {
 			network.prefixLookup[mode.mode] = mode.symbol;
 		});
 
