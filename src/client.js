@@ -458,14 +458,7 @@ Client.prototype.save = function(force) {
 		return;
 	}
 
-	var networks = _.map(
-		this.networks,
-		function(n) {
-			return n.export();
-		}
-	);
-
 	var json = {};
-	json.networks = networks;
+	json.networks = this.networks.map(n => n.export());
 	client.manager.updateUser(client.name, json);
 };

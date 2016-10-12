@@ -143,10 +143,7 @@ ClientManager.prototype.removeUser = function(name) {
 ClientManager.prototype.autoload = function(/* sockets */) {
 	var self = this;
 	setInterval(function() {
-		var loaded = _.map(
-			self.clients,
-			"name"
-		);
+		var loaded = self.clients.map(c => c.name);
 		var added = _.difference(self.getUsers(), loaded);
 		added.forEach(name => self.loadUser(name));
 
