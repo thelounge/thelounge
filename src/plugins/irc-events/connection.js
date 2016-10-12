@@ -48,6 +48,11 @@ module.exports = function(irc, network) {
 	});
 
 	irc.on("socket connected", function() {
+		network.prefixLookup = {};
+		irc.network.options.PREFIX.forEach(function(mode) {
+			network.prefixLookup[mode.mode] = mode.symbol;
+		});
+
 		network.channels[0].pushMessage(client, new Msg({
 			text: "Connected to the network."
 		}));
