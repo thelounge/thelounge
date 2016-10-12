@@ -11,7 +11,7 @@ matrix:
 
 cache:
   directories:
-    - node_modules
+    - ~/.npm
 
 notifications:
   email:
