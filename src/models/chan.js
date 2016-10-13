@@ -2,6 +2,8 @@
 
 var _ = require("lodash");
 var Helper = require("../helper");
+var db = require("../database");
+var Msg = require("../models/msg");
 
 module.exports = Chan;
 
@@ -26,6 +28,23 @@ function Chan(attr) {
 		highlight: false,
 		users: []
 	}, attr));
+	if (Helper.config.mysql.enabled && this.type === Chan.Type.CHANNEL) {
+		var chan = this;
+		db.getChannelLogs(this.name, function(err, results) {
+			if (err) {
+				console.log(err);
+			} else {
+				results.forEach(function(row) {
+					var msg = new Msg({
+						type: "message",
+						from: row.name,
+						text: row.message,
+					});
+					chan.messages.push(msg);
+				});
+			}
+		});
+	}
 }
 
 Chan.prototype.pushMessage = function(client, msg) {

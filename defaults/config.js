@@ -361,6 +361,56 @@ module.exports = {
 		primaryKey: "uid"
 	},
 
+	//
+	// MySQL logging - Requires additional setup; see README.md
+	// @type    object
+	// @default {}
+	//
+	mysql: {
+
+		//
+		// Enable MySQL logging
+		// @type boolean
+		// @default false
+		//
+		enabled: false,
+
+		//
+		// Database Name
+		// @type string
+		// @default irclogs
+		//
+		database: "irclogs",
+
+		//
+		// Database Username
+		// @type string
+		// @default "lounge"
+		//
+		dbuser: "lounge",
+
+		//
+		// Database Password
+		// @type string
+		// @default ""
+		//
+		dbpass: "",
+
+		//
+		// Database hostname
+		// @type string
+		// @default localhost
+		//
+		dbhost: "localhost",
+
+		//
+		// Maximum number of lines to load  per channel from MySQL on lounge startup, when a client connects.
+		// @type int
+		// @default 100
+		//
+		maxLogs: 100,
+	},
+
 	// Enables extra debugging output. Turn this on if you experience
 	// IRC connection issues and want to file a bug report.
 	//
