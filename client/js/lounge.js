@@ -355,14 +355,17 @@ $(function() {
 		var target = "#chan-" + data.chan;
 		var container = chat.find(target + " .messages");
 
-		container.append(msg);
+		container
+			.append(msg)
+			.trigger("msg", [
+				target,
+				data.msg
+			]);
 
 		if (data.msg.self) {
 			container
 				.find(".unread-marker")
 				.appendTo(container);
-		} else {
-			chatMessageShown(target, data.msg);
 		}
 	});
 
@@ -951,7 +954,11 @@ $(function() {
 		});
 	});
 
-	function chatMessageShown(target, msg) {
+	chat.on("msg", ".messages", function(e, target, msg) {
+		if (msg.self) {
+			return;
+		}
+
 		var button = sidebar.find(".chan[data-target='" + target + "']");
 		if (msg.highlight || (options.notifyAllMessages && msg.type === "message")) {
 			if (!document.hasFocus() || !$(target).hasClass("active")) {
@@ -1015,7 +1022,7 @@ $(function() {
 				badge.addClass("highlight");
 			}
 		}
-	}
+	});
 
 	chat.on("click", ".show-more-button", function() {
 		var self = $(this);
