@@ -54,7 +54,7 @@ ClientManager.prototype.getUsers = function() {
 	var users = [];
 	try {
 		var files = fs.readdirSync(Helper.USERS_PATH);
-		files.forEach(function(file) {
+		files.forEach(file => {
 			if (file.indexOf(".json") !== -1) {
 				users.push(file.replace(".json", ""));
 			}
@@ -143,16 +143,12 @@ ClientManager.prototype.removeUser = function(name) {
 ClientManager.prototype.autoload = function(/* sockets */) {
 	var self = this;
 	setInterval(function() {
-		var loaded = _.map(
-			self.clients,
-			"name"
-		);
+		var loaded = self.clients.map(c => c.name);
 		var added = _.difference(self.getUsers(), loaded);
-		_.each(added, function(name) {
-			self.loadUser(name);
-		});
+		added.forEach(name => self.loadUser(name));
+
 		var removed = _.difference(loaded, self.getUsers());
-		_.each(removed, function(name) {
+		removed.forEach(name => {
 			var client = _.find(
 				self.clients, {
 					name: name

@@ -1,6 +1,5 @@
 "use strict";
 
-var _ = require("lodash");
 var expect = require("chai").expect;
 
 var Chan = require("../../src/models/chan");
@@ -24,7 +23,7 @@ describe("Chan", function() {
 
 		var prefixLookup = {};
 
-		_.each(network.network.options.PREFIX, function(mode) {
+		network.network.options.PREFIX.forEach(mode => {
 			prefixLookup[mode.mode] = mode.symbol;
 		});
 

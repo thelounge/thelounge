@@ -54,9 +54,7 @@ var inputs = [
 ].reduce(function(plugins, name) {
 	var path = "./plugins/inputs/" + name;
 	var plugin = require(path);
-	plugin.commands.forEach(function(command) {
-		plugins[command] = plugin;
-	});
+	plugin.commands.forEach(command => plugins[command] = plugin);
 	return plugins;
 }, {});
 
@@ -83,7 +81,7 @@ function Client(manager, name, config) {
 	}
 
 	var delay = 0;
-	(client.config.networks || []).forEach(function(n) {
+	(client.config.networks || []).forEach(n => {
 		setTimeout(function() {
 			client.connect(n);
 		}, delay);
@@ -150,7 +148,7 @@ Client.prototype.connect = function(args) {
 	if (args.channels) {
 		var badName = false;
 
-		args.channels.forEach(function(chan) {
+		args.channels.forEach(chan => {
 			if (!chan.name) {
 				badName = true;
 				return;
@@ -248,7 +246,7 @@ Client.prototype.connect = function(args) {
 		"znc.in/self-message",
 	]);
 
-	events.forEach(function(plugin) {
+	events.forEach(plugin => {
 		var path = "./plugins/irc-events/" + plugin;
 		require(path).apply(client, [
 			network.irc,
@@ -311,7 +309,7 @@ Client.prototype.setPassword = function(hash, callback) {
 
 Client.prototype.input = function(data) {
 	var client = this;
-	data.text.split("\n").forEach(function(line) {
+	data.text.split("\n").forEach(line => {
 		data.text = line;
 		client.inputLine(data);
 	});
@@ -387,7 +385,7 @@ Client.prototype.sort = function(data) {
 
 	switch (type) {
 	case "networks":
-		_.each(order, function(i) {
+		order.forEach(i => {
 			var find = _.find(self.networks, {id: i});
 			if (find) {
 				sorted.push(find);
@@ -402,7 +400,7 @@ Client.prototype.sort = function(data) {
 		if (!network) {
 			return;
 		}
-		_.each(order, function(i) {
+		order.forEach(i => {
 			var find = _.find(network.channels, {id: i});
 			if (find) {
 				sorted.push(find);
@@ -437,7 +435,7 @@ Client.prototype.quit = function() {
 			socket.disconnect();
 		}
 	}
-	this.networks.forEach(function(network) {
+	this.networks.forEach(network => {
 		if (network.irc) {
 			network.irc.quit("Page closed");
 		}
@@ -460,14 +458,7 @@ Client.prototype.save = function(force) {
 		return;
 	}
 
-	var networks = _.map(
-		this.networks,
-		function(n) {
-			return n.export();
-		}
-	);
-
 	var json = {};
-	json.networks = networks;
+	json.networks = this.networks.map(n => n.export());
 	client.manager.updateUser(client.name, json);
 };

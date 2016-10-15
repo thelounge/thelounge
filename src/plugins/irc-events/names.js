@@ -1,6 +1,5 @@
 "use strict";
 
-var _ = require("lodash");
 var User = require("../../models/user");
 
 module.exports = function(irc, network) {
@@ -11,13 +10,7 @@ module.exports = function(irc, network) {
 			return;
 		}
 
-		chan.users = [];
-
-		_.each(data.users, function(u) {
-			var user = new User(u, network.prefixLookup);
-
-			chan.users.push(user);
-		});
+		chan.users = data.users.map(u => new User(u, network.prefixLookup));
 
 		chan.sortUsers(irc);
 

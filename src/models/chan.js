@@ -59,7 +59,7 @@ Chan.prototype.pushMessage = function(client, msg) {
 
 Chan.prototype.sortUsers = function(irc) {
 	var userModeSortPriority = {};
-	irc.network.options.PREFIX.forEach(function(prefix, index) {
+	irc.network.options.PREFIX.forEach((prefix, index) => {
 		userModeSortPriority[prefix.symbol] = index;
 	});
 
