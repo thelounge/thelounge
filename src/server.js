@@ -81,8 +81,10 @@ module.exports = function() {
 
 	manager.sockets = sockets;
 
-	var protocol = config.https.enable ? "https" : "http";
-	log.info("The Lounge v" + pkg.version + " is now running on", protocol + "://" + (config.host || "*") + ":" + config.port + "/", (config.public ? "in public mode" : "in private mode"));
+	let protocol = config.https.enable ? "https" : "http";
+	let host = config.host || "*";
+	log.info("The Lounge", Helper.getVersion(), "is now running");
+	log.info(`Available on: ${protocol}://${host}:${config.port}/ in ${config.public ? "public" : "private"} mode`);
 	log.info("Press ctrl-c to stop\n");
 
 	if (!config.public) {
@@ -110,17 +112,6 @@ function allRequests(req, res, next) {
 	return next();
 }
 
-// Information to populate the About section in UI, either from npm or from git
-var gitCommit = null;
-try {
-	gitCommit = require("child_process")
-		.execSync("git rev-parse --short HEAD 2> /dev/null") // Returns hash of current commit
-		.toString()
-		.trim();
-} catch (e) {
-	// Not a git repository or git is not installed: treat it as npm release
-}
-
 function index(req, res, next) {
 	if (req.url.split("?")[0] !== "/") {
 		return next();
@@ -135,7 +126,7 @@ function index(req, res, next) {
 			pkg,
 			Helper.config
 		);
-		data.gitCommit = gitCommit;
+		data.gitCommit = Helper.getGitCommit();
 		data.themes = fs.readdirSync("client/themes/").filter(function(themeFile) {
 			return themeFile.endsWith(".css");
 		}).map(function(css) {

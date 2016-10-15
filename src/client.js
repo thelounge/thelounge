@@ -257,7 +257,7 @@ Client.prototype.connect = function(args) {
 	});
 
 	network.irc.connect({
-		version: pkg.name + " " + pkg.version + " -- " + pkg.homepage,
+		version: pkg.name + " " + Helper.getVersion() + " -- " + pkg.homepage,
 		host: network.host,
 		port: network.port,
 		nick: nick,
