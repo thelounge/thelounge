@@ -37,7 +37,9 @@ module.exports.write = function(user, network, chan, msg) {
 
 		line += msg.type;
 
-		if (msg.text) {
+		if (msg.new_nick) { // `/nick <new_nick>`
+			line += ` ${msg.new_nick}`;
+		} else if (msg.text) {
 			line += ` ${msg.text}`;
 		}
 	}
