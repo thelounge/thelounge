@@ -6,6 +6,9 @@
 [![devDependency Status](https://david-dm.org/thelounge/lounge/dev-status.svg)](https://david-dm.org/thelounge/lounge?type=dev)
 
 # The Lounge
+<p align="center">
+	<img src="https://raw.githubusercontent.com/thelounge/thelounge.github.io/master/img/screenshots/example_css.png" width="550" />
+</p>
 
 __What is it?__
 
