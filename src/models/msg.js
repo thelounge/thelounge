@@ -28,13 +28,13 @@ module.exports = Msg;
 var id = 0;
 
 function Msg(attr) {
-	_.merge(this, _.extend({
+	_.defaults(this, attr, {
 		from: "",
 		id: id++,
 		text: "",
 		type: Msg.Type.MESSAGE,
 		self: false
-	}, attr));
+	});
 
 	if (this.time > 0) {
 		this.time = new Date(this.time);

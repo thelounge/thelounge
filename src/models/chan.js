@@ -15,7 +15,7 @@ Chan.Type = {
 var id = 0;
 
 function Chan(attr) {
-	_.merge(this, _.extend({
+	_.defaults(this, attr, {
 		id: id++,
 		messages: [],
 		name: "",
@@ -25,7 +25,7 @@ function Chan(attr) {
 		unread: 0,
 		highlight: false,
 		users: []
-	}, attr));
+	});
 }
 
 Chan.prototype.pushMessage = function(client, msg) {
