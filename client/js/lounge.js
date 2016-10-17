@@ -1064,7 +1064,31 @@ $(function() {
 			}
 		});
 	});
+	if ($("body").hasClass("public")) {
+		$("#connect").one("show", function() {
+			var params = window.URI(document.location.search);
+			params = params.search(true);
+			// Possible parameters:  name, host, port, password, tls, nick, username, realname, join
+			// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in#Iterating_over_own_properties_only
+			for (var key in params) {
+				if (params.hasOwnProperty(key)) {
+					var value = params[key];
+					// \W searches for non-word characters
+					key = key.replace(/\W/g, "");
 
+					var element = $("#connect input[name='" + key + "']");
+					// if the element exists, it isn't disabled, and it isn't hidden
+					if (element.length > 0 && !element.is(":disabled") && !element.is(":hidden")) {
+						if (element.is(":checkbox")) {
+							element.prop("checked", (value === "1" || value === "true") ? true : false);
+						} else {
+							element.val(value);
+						}
+					}
+				}
+			}
+		});
+	}
 	windows.on("show", "#settings", updateDesktopNotificationStatus);
 
 	forms.on("submit", "form", function(e) {
