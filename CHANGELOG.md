@@ -30,6 +30,49 @@ All sections are explained on the link above, they are all optional, and each of
 Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
 
+## v2.1.0 - 2016-10-17
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.0.1...v2.1.0)
+
+Here comes another release with some nice additions!
+
+While the administrators will notice some bug fixes, most of the changes are client-side: support for `/list`, a slideout menu on mobile, editing one's nick from the UI, wallops message handling.
+
+Enjoy!
+
+### Added
+
+- Implement `/list` ([#258](https://github.com/thelounge/lounge/pull/258) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Add touch slideout menu for mobile ([#400](https://github.com/thelounge/lounge/pull/400) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Display extra steps when loading the app ([#637](https://github.com/thelounge/lounge/pull/637) by [@xPaw](https://github.com/xPaw))
+- Display localized timestamp in title of message times ([#660](https://github.com/thelounge/lounge/pull/660) by [@astorije](https://github.com/astorije))
+- Changing nick in the UI ([#551](https://github.com/thelounge/lounge/pull/551) by [@astorije](https://github.com/astorije))
+- Add hostmasks in logs when possible ([#670](https://github.com/thelounge/lounge/pull/670) by [@astorije](https://github.com/astorije))
+- Display wallops in server window ([#658](https://github.com/thelounge/lounge/pull/658) by [@xPaw](https://github.com/xPaw))
+
+### Changed
+
+- Make use of multi-prefix cap and remove NAMES spam on mode changes ([#632](https://github.com/thelounge/lounge/pull/632) by [@xPaw](https://github.com/xPaw))
+- Strict mode for all JS files ([#684](https://github.com/thelounge/lounge/pull/684) by [@astorije](https://github.com/astorije))
+- Enforce more ESLint rules ([#681](https://github.com/thelounge/lounge/pull/681) by [@xPaw](https://github.com/xPaw))
+- Use CI caches for downloaded files instead of installed ones ([#687](https://github.com/thelounge/lounge/pull/687) by [@astorije](https://github.com/astorije))
+- Consolidate version numbers throughout all interfaces  ([#592](https://github.com/thelounge/lounge/pull/592) by [@williamboman](https://github.com/williamboman))
+- Replace lodash's each/map with ES5 native forEach/map ([#689](https://github.com/thelounge/lounge/pull/689) by [@astorije](https://github.com/astorije))
+
+### Removed
+
+- Remove all font files except WOFF ([#682](https://github.com/thelounge/lounge/pull/682) by [@xPaw](https://github.com/xPaw))
+
+### Fixed
+
+- Themes: Fixed CSS rule selectors for highlight messages ([#652](https://github.com/thelounge/lounge/pull/652) by [@DamonGant](https://github.com/DamonGant))
+- Fix unhandled message color in default and Crypto themes ([#653](https://github.com/thelounge/lounge/pull/653) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Check if SSL key and certificate files exist ([#673](https://github.com/thelounge/lounge/pull/673) by [@toXel](https://github.com/toXel))
+- Fix loading fonts in Microsoft Edge ([#683](https://github.com/thelounge/lounge/pull/683) by [@xPaw](https://github.com/xPaw))
+- Fill in prefixLookup on network initialization ([#647](https://github.com/thelounge/lounge/pull/647) by [@nornagon](https://github.com/nornagon))
+- Fix nick changes not being properly reported in the logs ([#685](https://github.com/thelounge/lounge/pull/685) by [@astorije](https://github.com/astorije))
+- Fix memory and reference shuffling when creating models ([#664](https://github.com/thelounge/lounge/pull/664) by [@xPaw](https://github.com/xPaw))
+
 ## v2.0.1 - 2016-09-28
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v2.0.0...v2.0.1)
