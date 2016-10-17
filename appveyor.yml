@@ -23,7 +23,7 @@ test_script:
 
 # cache npm modules
 cache:
-  - '%AppData%/npm-cache'
+  - '%AppData%\npm-cache'
 
 # Don't actually build
 build: off
