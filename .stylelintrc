@@ -1,6 +1,7 @@
 {
 	"ignoreFiles": [
 		"client/css/bootstrap.css",
+		"client/css/embed.min.css",
 		"coverage/**/*.css"
 	],
 	"rules": {

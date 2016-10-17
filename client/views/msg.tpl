@@ -7,13 +7,13 @@
 		<span role="button" class="user {{colorClass from}}" data-name="{{from}}">{{mode}}{{from}}</span>
 		{{/if}}
 	</span>
-	{{#equal type "toggle"}}
+	{{#equal type "url"}}
 		<span class="text">
 			<div class="force-newline">
 				<button id="toggle-{{id}}" class="toggle-button" aria-label="Toggle prefetched media">···</button>
 			</div>
-			{{#if toggle}}
-				{{partial "toggle"}}
+			{{#if url}}
+				{{partial "url"}}
 			{{/if}}
 		</span>
 	{{else}}

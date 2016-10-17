@@ -440,22 +440,45 @@ $(function() {
 		}
 	});
 
-	socket.on("toggle", function(data) {
+	socket.on("url", function(data) {
 		var toggle = $("#toggle-" + data.id);
-		toggle.parent().after(render("toggle", {toggle: data}));
-		switch (data.type) {
-		case "link":
-			if (options.links) {
-				toggle.click();
-			}
-			break;
+		var rendered = false;
 
-		case "image":
-			if (options.thumbnails) {
-				toggle.click();
+		toggle.on("click", function() {
+			var $element = $("#msg-" + (data.id - 1)).find(".text").find("a").next();
+			if (rendered) {
+				$element.hide();
+			} else {
+				$element.show();
 			}
-			break;
-		}
+			rendered = !rendered;
+		});
+
+		toggle.parent().after(function() {
+			var embed = new EmbedJS({
+				input: document.getElementById("msg-" + (data.id - 1)).getElementsByClassName("text")[0],
+				link: false,
+				locationEmbed: false,
+				codeEmbedHeight: 200,
+				tweetsEmbed: true,
+				tweetOptions: {
+					maxWidth: 400,
+					hideMedia: true,
+					hideThread: true,
+					align: "none",
+					lang: "en"
+				},
+				imageOptions: {
+					maxHeight: 20,
+					maxWidth: 20
+				},
+				plugins: {
+					twitter: window.twttr
+				}
+			});
+			embed.render();
+			rendered = true;
+		});
 	});
 
 	socket.on("topic", function(data) {
@@ -485,7 +508,6 @@ $(function() {
 		coloredNicks: true,
 		desktopNotifications: false,
 		join: true,
-		links: true,
 		mode: true,
 		motd: false,
 		nick: true,
@@ -494,7 +516,7 @@ $(function() {
 		part: true,
 		quit: true,
 		theme: $("#theme").attr("href").replace(/^themes\/(.*).css$/, "$1"), // Extracts default theme name, set on the server configuration
-		thumbnails: true,
+		media: true,
 		userStyles: userStyles.text(),
 	}, JSON.parse(window.localStorage.getItem("settings")));
 
@@ -1031,25 +1053,6 @@ $(function() {
 			target: self.data("id"),
 			count: count
 		});
-	});
-
-	chat.on("click", ".toggle-button", function() {
-		var self = $(this);
-		var localChat = self.closest(".chat");
-		var bottom = localChat.isScrollBottom();
-		var content = self.parent().next(".toggle-content");
-		if (bottom && !content.hasClass("show")) {
-			var img = content.find("img");
-			if (img.length !== 0 && !img.width()) {
-				img.on("load", function() {
-					localChat.scrollBottom();
-				});
-			}
-		}
-		content.toggleClass("show");
-		if (bottom) {
-			localChat.scrollBottom();
-		}
 	});
 
 	var windows = $("#windows");

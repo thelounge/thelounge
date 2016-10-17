@@ -69,8 +69,8 @@ module.exports = {
 	//
 	// Prefetch URLs
 	//
-	// If enabled, The Lounge will try to load thumbnails and site descriptions from
-	// URLs posted in channels.
+	// If enabled, The Lounge will try to embed URLs
+	// posted in channels.
 	//
 	// @type     boolean
 	// @default  false
