@@ -28,11 +28,20 @@ function Chan(attr) {
 	});
 }
 
-Chan.prototype.pushMessage = function(client, msg) {
-	client.emit("msg", {
+Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
+	var obj = {
 		chan: this.id,
 		msg: msg
-	});
+	};
+
+	// If this channel is open in any of the clients, do not increase unread counter
+	var isOpen = _.includes(client.attachedClients, this.id);
+
+	if ((increasesUnread || msg.highlight) && !isOpen) {
+		obj.unread = ++this.unread;
+	}
+
+	client.emit("msg", obj);
 
 	// Never store messages in public mode as the session
 	// is completely destroyed when the page gets closed
@@ -46,7 +55,7 @@ Chan.prototype.pushMessage = function(client, msg) {
 		this.messages.splice(0, this.messages.length - Helper.config.maxHistory);
 	}
 
-	if (!msg.self && this.id !== client.activeChannel) {
+	if (!msg.self && !isOpen) {
 		if (!this.firstUnread) {
 			this.firstUnread = msg.id;
 		}
