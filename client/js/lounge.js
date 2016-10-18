@@ -488,6 +488,11 @@ $(function() {
 			}
 		});
 		embedItem.render();
+
+		if (!options.media) {
+			$("#toggle-" + data.id).next().toggle();
+			$(this).closest(".chat").scrollBottom();
+		}
 	}
 
 	socket.on("topic", function(data) {
