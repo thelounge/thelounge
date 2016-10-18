@@ -467,7 +467,7 @@ $(function() {
 	function embed(data) {
 		var embedItem = new EmbedJS({
 			input: document.querySelector("#msg-" + data.id + " .text"),
-			link: true,
+			link: false,
 			googleAuthKey: "AIzaSyCGg2USk9GjMwb5lAXRXAekWSRYsafLpr8",
 			locationEmbed: false,
 			codeEmbedHeight: 200,
