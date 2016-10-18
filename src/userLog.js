@@ -6,6 +6,62 @@ var moment = require("moment");
 var Helper = require("./helper");
 const Msg = require("./models/msg");
 
+module.exports.parseLine = function(line) {
+	let result = /^\[(.*)\] <(.*)> (.*)$/.exec(line);
+
+	if (result) {
+		return new Msg({
+			// time: result[1],
+			from: result[2],
+			text: result[3],
+		});
+	}
+
+	result = /^\[(.*)\] \* (\S+)(?: \((\S+)\))? ([a-z_]+)(?: (.*))?$/.exec(line);
+
+	if (!result) {
+		return;
+	}
+
+	const from = result[2];
+	const hostmask = result[3];
+	const type = result[4];
+	const remaining = result[5];
+
+	switch (type) {
+	case "action":
+		return new Msg({
+			// time: time,
+			from: from,
+			text: remaining,
+			type: type,
+		});
+	case "join":
+		return new Msg({
+			// time: time,
+			from: from,
+			hostmask: hostmask,
+			type: type,
+		});
+	case "nick":
+		return new Msg({
+			// time: time,
+			from: from,
+			new_nick: remaining,
+			type: type,
+		});
+	case "part":
+	case "quit":
+		return new Msg({
+			// time: time,
+			from: from,
+			hostmask: hostmask,
+			text: remaining,
+			type: type,
+		});
+	}
+};
+
 module.exports.read = function(user, network, chan) {
 	var data = fs.readFileSync(
 		`${Helper.getUserLogsPath(user, network)}/${chan}.log`,
@@ -18,115 +74,9 @@ module.exports.read = function(user, network, chan) {
 	var messages = [];
 
 	data.forEach(line => {
-		let result = /^\[(.*)\] <(.*)> (.*)$/.exec(line);
-
-		if (result) {
-			messages.push(new Msg({
-				// time: result[1],
-				from: result[2],
-				text: result[3]
-			}));
-			return;
-		}
-
-		result = /^\[(.*)\] \* (.*) action (.*)$/.exec(line);
-
-		if (result) {
-			messages.push(new Msg({
-				// time: result[1],
-				from: result[2],
-				text: result[3],
-				type: "action"
-			}));
-			return;
-		}
-
-		result = /^\[(.*)\] \* (.*) \((.*)\) join$/.exec(line);
-
-		if (result) {
-			messages.push(new Msg({
-				// time: result[1],
-				from: result[2],
-				hostmask: result[3],
-				type: "join"
-			}));
-			return;
-		}
-
-		// Support for older log format missing hostmask
-		result = /^\[(.*)\] \* (.*) join$/.exec(line);
-
-		if (result) {
-			messages.push(new Msg({
-				// time: result[1],
-				from: result[2],
-				type: "join"
-			}));
-			return;
-		}
-
-		result = /^\[(.*)\] \* (.*) \((.*)\) (part|quit) (.*)$/.exec(line);
-
-		if (result) {
-			messages.push(new Msg({
-				// time: result[1],
-				from: result[2],
-				hostmask: result[3],
-				text: result[5],
-				type: result[4],
-			}));
-			return;
-		}
-
-		// Support for older log format missing hostmask
-		result = /^\[(.*)\] \* (.*) (part|quit) (.*)$/.exec(line);
-
-		if (result) {
-			messages.push(new Msg({
-				// time: result[1],
-				from: result[2],
-				text: result[4],
-				type: result[3],
-			}));
-			return;
-		}
-
-		// Parts and quits without a reason
-		result = /^\[(.*)\] \* (.*) \((.*)\) (part|quit)$/.exec(line);
-
-		if (result) {
-			messages.push(new Msg({
-				// time: result[1],
-				from: result[2],
-				hostmask: result[3],
-				type: result[4],
-			}));
-			return;
-		}
-
-		// Parts and quits without a reason
-		// Support for older log format missing hostmask
-		result = /^\[(.*)\] \* (.*) (part|quit)$/.exec(line);
-
-		if (result) {
-			messages.push(new Msg({
-				// time: result[1],
-				from: result[2],
-				type: result[3],
-			}));
-			return;
-		}
-
-		result = /^\[(.*)\] \* (.*) nick (.*)$/.exec(line);
-
-		if (result) {
-			messages.push(new Msg({
-				// time: result[1],
-				from: result[2],
-				new_nick: result[3],
-				type: "nick",
-			}));
-			return;
+		const msg = this.parseLine(line);
+		if (msg) {
+			messages.push(msg);
 		}
 	});
 
