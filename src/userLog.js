@@ -28,44 +28,32 @@ module.exports.parseLine = function(line) {
 	const type = result[4];
 	const remaining = result[5];
 
+	const msg = new Msg({
+		// time: time,
+		from: from,
+		type: type,
+	});
+
 	switch (type) {
 	case "action":
-		return new Msg({
-			// time: time,
-			from: from,
-			text: remaining,
-			type: type,
-		});
+		msg.text = remaining;
+		return msg;
 	case "join":
-		return new Msg({
-			// time: time,
-			from: from,
-			hostmask: hostmask,
-			type: type,
-		});
+		msg.hostmask = hostmask;
+		return msg;
 	case "mode":
-		return new Msg({
-			// time: time,
-			from: from,
-			text: remaining,
-			type: type,
-		});
+		msg.text = remaining;
+		return msg;
 	case "nick":
-		return new Msg({
-			// time: time,
-			from: from,
-			new_nick: remaining,
-			type: type,
-		});
+		msg.new_nick = remaining;
+		return msg;
 	case "part":
 	case "quit":
-		return new Msg({
-			// time: time,
-			from: from,
-			hostmask: hostmask,
-			text: remaining,
-			type: type,
-		});
+		msg.hostmask = hostmask;
+		if (remaining) {
+			msg.text = remaining;
+		}
+		return msg;
 	}
 };
 
