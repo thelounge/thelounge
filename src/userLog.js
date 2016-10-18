@@ -43,6 +43,13 @@ module.exports.parseLine = function(line) {
 			hostmask: hostmask,
 			type: type,
 		});
+	case "mode":
+		return new Msg({
+			// time: time,
+			from: from,
+			text: remaining,
+			type: type,
+		});
 	case "nick":
 		return new Msg({
 			// time: time,

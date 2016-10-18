@@ -50,6 +50,17 @@ describe("userLog", () => {
 			});
 		});
 
+		it("should correctly parse a mode message", () => {
+			const line = "[2014-05-22 12:00:00] * ChanServ mode +v astorije";
+			const msg = userLog.parseLine(line);
+
+			expect(msg).to.include({
+				from: "ChanServ",
+				text: "+v astorije",
+				type: "mode",
+			});
+		});
+
 		it("should correctly parse a nick change message", () => {
 			const line = "[2014-05-22 12:00:00] * astorije nick astorije-lvl-9000";
 			const msg = userLog.parseLine(line);
@@ -132,6 +143,5 @@ describe("userLog", () => {
 				type: "quit",
 			});
 		});
-
 	});
 });
