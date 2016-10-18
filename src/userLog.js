@@ -54,6 +54,9 @@ module.exports.parseLine = function(line) {
 			msg.text = remaining;
 		}
 		return msg;
+	case "topic":
+		msg.text = remaining;
+		return msg;
 	}
 };
 

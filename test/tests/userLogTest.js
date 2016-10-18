@@ -143,5 +143,16 @@ describe("userLog", () => {
 				type: "quit",
 			});
 		});
+
+		it("should correctly parse a topic message", () => {
+			const line = "[2014-05-22 12:00:00] * ChanServ topic Welcome to The Lounge, web IRC client - Latest release: 42.0.0 - https://thelounge.github.io/";
+			const msg = userLog.parseLine(line);
+
+			expect(msg).to.include({
+				from: "ChanServ",
+				text: "Welcome to The Lounge, web IRC client - Latest release: 42.0.0 - https://thelounge.github.io/",
+				type: "topic",
+			});
+		});
 	});
 });
