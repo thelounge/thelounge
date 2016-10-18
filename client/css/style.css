@@ -409,6 +409,7 @@ button {
 	text-align: left;
 	transition: color .2s;
 	width: 180px;
+	left: auto !important; /* Fix for drag'n'drop not recalculating left position */
 }
 
 #sidebar .chan-placeholder {

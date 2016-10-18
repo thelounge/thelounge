@@ -1245,15 +1245,17 @@ $(function() {
 	}
 
 	function sortable() {
-		sidebar.sortable({
+		sidebar.find(".networks").sortable({
 			axis: "y",
 			containment: "parent",
-			cursor: "grabbing",
+			cursor: "move",
 			distance: 12,
 			items: ".network",
 			handle: ".lobby",
 			placeholder: "network-placeholder",
 			forcePlaceholderSize: true,
+			tolerance: "pointer", // Use the pointer to figure out where the network is in the list
+
 			update: function() {
 				var order = [];
 				sidebar.find(".network").each(function() {
@@ -1271,11 +1273,13 @@ $(function() {
 		sidebar.find(".network").sortable({
 			axis: "y",
 			containment: "parent",
-			cursor: "grabbing",
+			cursor: "move",
 			distance: 12,
 			items: ".chan:not(.lobby)",
 			placeholder: "chan-placeholder",
 			forcePlaceholderSize: true,
+			tolerance: "pointer", // Use the pointer to figure out where the channel is in the list
+
 			update: function(e, ui) {
 				var order = [];
 				var network = ui.item.parent();
