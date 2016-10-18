@@ -249,6 +249,20 @@ $(function() {
 			template = "msg_unhandled";
 		}
 
+		var links = data.msg.text
+			.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "")
+			.split(" ")
+			.filter(w => /^https?:\/\//.test(w));
+
+		if (links.length !== 0) {
+			var url = {
+				id: data.msg.id,
+				link: links[0]
+			};
+			data.msg.type = type = "url";
+			data.msg.url = url;
+		}
+
 		var msg = $(render(template, data.msg));
 
 		var text = msg.find(".text");
@@ -300,6 +314,12 @@ $(function() {
 		} else {
 			channel.append(render("unread_marker"));
 		}
+
+		data.messages.forEach(function(e) {
+			if (e.type === "url") {
+				embed(e.url);
+			}
+		});
 	}
 
 	function renderChannelUsers(data) {
@@ -366,6 +386,10 @@ $(function() {
 			container
 				.find(".unread-marker")
 				.appendTo(container);
+		}
+
+		if (data.msg.type === "url") {
+			embed(data.msg.url);
 		}
 	});
 
@@ -440,46 +464,31 @@ $(function() {
 		}
 	});
 
-	socket.on("url", function(data) {
-		var toggle = $("#toggle-" + data.id);
-		var rendered = false;
-
-		toggle.on("click", function() {
-			var $element = $("#msg-" + (data.id - 1)).find(".text").find("a").next();
-			if (rendered) {
-				$element.hide();
-			} else {
-				$element.show();
+	function embed(data) {
+		var embedItem = new EmbedJS({
+			input: document.querySelector("#msg-" + data.id + " .text"),
+			link: true,
+			googleAuthKey: "AIzaSyCGg2USk9GjMwb5lAXRXAekWSRYsafLpr8",
+			locationEmbed: false,
+			codeEmbedHeight: 200,
+			tweetsEmbed: true,
+			tweetOptions: {
+				maxWidth: 400,
+				hideMedia: true,
+				hideThread: true,
+				align: "none",
+				lang: "en"
+			},
+			videoEmbed: true,
+			videoHeight: 300,
+			videoWidth: 400,
+			videoDetails: false,
+			plugins: {
+				twitter: window.twttr
 			}
-			rendered = !rendered;
 		});
-
-		toggle.parent().after(function() {
-			var embed = new EmbedJS({
-				input: document.getElementById("msg-" + (data.id - 1)).getElementsByClassName("text")[0],
-				link: false,
-				locationEmbed: false,
-				codeEmbedHeight: 200,
-				tweetsEmbed: true,
-				tweetOptions: {
-					maxWidth: 400,
-					hideMedia: true,
-					hideThread: true,
-					align: "none",
-					lang: "en"
-				},
-				imageOptions: {
-					maxHeight: 20,
-					maxWidth: 20
-				},
-				plugins: {
-					twitter: window.twttr
-				}
-			});
-			embed.render();
-			rendered = true;
-		});
-	});
+		embedItem.render();
+	}
 
 	socket.on("topic", function(data) {
 		var topic = $("#chan-" + data.chan).find(".header .topic");
@@ -809,6 +818,11 @@ $(function() {
 				text: "/join " + name
 			});
 		}
+	});
+
+	chat.on("click", ".toggle-button", function() {
+		$(this).next().toggle();
+		$(this).closest(".chat").scrollBottom();
 	});
 
 	chat.on("click", ".user", function() {

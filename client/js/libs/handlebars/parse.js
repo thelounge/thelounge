@@ -5,24 +5,9 @@ Handlebars.registerHelper(
 		text = Handlebars.Utils.escapeExpression(text);
 		text = colors(text);
 		text = channels(text);
-		text = uri(text);
 		return text;
 	}
 );
-
-function uri(text) {
-	return window.URI.withinString(text, function(url) {
-		if (url.indexOf("javascript:") === 0) {
-			return url;
-		}
-		var split = url.split("<");
-		url = "<a href='" + split[0].replace(/^www/, "http://www") + "' target='_blank' rel='noopener'>" + split[0] + "</a>";
-		if (split.length > 1) {
-			url += "<" + split.slice(1).join("<");
-		}
-		return url;
-	});
-}
 
 /**
  * Channels names are strings of length up to fifty (50) characters.

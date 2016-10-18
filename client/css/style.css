@@ -1617,10 +1617,15 @@ button {
 	font-style: italic;
 }
 
-/** For embedding **/
+/** Embeds **/
 .ejs-gist iframe {
 	overflow: auto;
 	max-height: 300px;
+}
+
+.ejs-image img {
+	max-width: 400px;
+	max-height: 400px;
 }
 
 @media (max-width: 768px) {

@@ -24,7 +24,6 @@ var events = [
 	"mode",
 	"motd",
 	"message",
-	"link",
 	"names",
 	"nick",
 	"part",
