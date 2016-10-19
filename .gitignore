@@ -9,3 +9,6 @@ client/fonts/
 client/js/libs.min.js.map
 client/js/libs.min.js
 client/js/lounge.templates.js
+
+# Common hidden files that shouldn't be checked in
+.DS_Store
