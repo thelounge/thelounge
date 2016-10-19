@@ -259,7 +259,7 @@ $(function() {
 				id: data.msg.id,
 				link: links[0]
 			};
-			data.msg.type = type = "url";
+			data.msg.type = "url";
 			data.msg.url = url;
 		}
 
@@ -465,8 +465,9 @@ $(function() {
 	});
 
 	function embed(data) {
+		var text = document.querySelector("#msg-" + data.id + " .text");
 		var embedItem = new EmbedJS({
-			input: document.querySelector("#msg-" + data.id + " .text"),
+			input: text,
 			link: false,
 			googleAuthKey: "AIzaSyCGg2USk9GjMwb5lAXRXAekWSRYsafLpr8",
 			locationEmbed: false,
