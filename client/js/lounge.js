@@ -249,6 +249,22 @@ $(function() {
 			template = "msg_unhandled";
 		}
 
+		var links = data.msg.text
+			.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "")
+			.split(" ")
+			.filter(function(w) {
+				/^https?:\/\//.test(w);
+			});
+
+		if (links.length !== 0) {
+			var url = {
+				id: data.msg.id,
+				link: links[0]
+			};
+			data.msg.type = "url";
+			data.msg.url = url;
+		}
+
 		var msg = $(render(template, data.msg));
 
 		var text = msg.find(".text");
@@ -303,7 +319,6 @@ $(function() {
 
 		data.messages.forEach(function(e) {
 			if (e.type === "url") {
-				e.url.id = e.id;
 				embed(e.url);
 			}
 		});
@@ -376,8 +391,6 @@ $(function() {
 		}
 
 		if (data.msg.type === "url") {
-			console.log(data);
-			data.msg.url.id = data.msg.id;
 			embed(data.msg.url);
 		}
 	});
