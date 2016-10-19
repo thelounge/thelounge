@@ -23,7 +23,23 @@ module.exports = function(irc, network) {
 	});
 
 	irc.on("privmsg", function(data) {
-		data.type = Msg.Type.MESSAGE;
+		console.log(data);
+
+		var links = data.message
+			.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "")
+			.split(" ")
+			.filter(w => /^https?:\/\//.test(w));
+		if (links.length !== 0) {
+			var url = {
+				link: links[0],
+				id: null
+			};
+			data.type = Msg.Type.URL;
+			data.url = url;
+		} else {
+			data.type = Msg.Type.MESSAGE;
+		}
+
 		handleMessage(data);
 	});
 
@@ -92,6 +108,11 @@ module.exports = function(irc, network) {
 			self: self,
 			highlight: highlight
 		});
+
+		if (data.url) {
+			msg.url = data.url;
+		}
+
 		chan.pushMessage(client, msg);
 	}
 };
