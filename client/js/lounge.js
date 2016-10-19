@@ -252,7 +252,9 @@ $(function() {
 		var links = data.msg.text
 			.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "")
 			.split(" ")
-			.filter(w => /^https?:\/\//.test(w));
+			.filter(function(w) {
+				/^https?:\/\//.test(w);
+			});
 
 		if (links.length !== 0) {
 			var url = {
@@ -484,14 +486,24 @@ $(function() {
 			videoHeight: $(window).height() / 4,
 			videoWidth: $(window).width() / 3,
 			videoDetails: false,
+			soundCloudOptions: {
+				height: 160,
+				themeColor: 202020, // Hex Code of the player theme color
+				autoPlay: false,
+				hideRelated: true,
+				showComments: false,
+				showUser: true,
+				showReposts: false,
+				visual: false, // Show/hide the big preview image
+				download: false // Show/Hide download buttons
+			},
 			plugins: {
 				twitter: window.twttr
 			}
 		});
 		embedItem.render();
 		if (!options.media) {
-			$("#toggle-" + data.id).next().toggle();
-			$(this).closest(".chat").scrollBottom();
+			$("#toggle-" + data.id).click();
 		}
 	}
 
