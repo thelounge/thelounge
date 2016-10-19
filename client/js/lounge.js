@@ -481,15 +481,14 @@ $(function() {
 				lang: "en"
 			},
 			videoEmbed: true,
-			videoHeight: 300,
-			videoWidth: 400,
+			videoHeight: $(window).height() / 4,
+			videoWidth: $(window).width() / 3,
 			videoDetails: false,
 			plugins: {
 				twitter: window.twttr
 			}
 		});
 		embedItem.render();
-
 		if (!options.media) {
 			$("#toggle-" + data.id).next().toggle();
 			$(this).closest(".chat").scrollBottom();
