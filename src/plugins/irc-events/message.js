@@ -23,8 +23,6 @@ module.exports = function(irc, network) {
 	});
 
 	irc.on("privmsg", function(data) {
-		console.log(data);
-
 		var links = data.message
 			.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "")
 			.split(" ")
