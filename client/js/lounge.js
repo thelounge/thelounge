@@ -505,6 +505,8 @@ $(function() {
 		userStyles: userStyles.text(),
 	}, JSON.parse(window.localStorage.getItem("settings")));
 
+	var windows = $("#windows");
+
 	(function SettingsScope() {
 		var settings = $("#settings");
 
@@ -566,13 +568,43 @@ $(function() {
 			.trigger("change");
 
 		$("#desktopNotifications").on("change", function() {
-			var self = $(this);
-			if (self.prop("checked")) {
-				if (Notification.permission !== "granted") {
-					Notification.requestPermission(updateDesktopNotificationStatus);
-				}
+			if ($(this).prop("checked") && Notification.permission !== "granted") {
+				Notification.requestPermission(updateDesktopNotificationStatus);
 			}
 		});
+
+		// Updates the checkbox and warning in settings when the Settings page is
+		// opened or when the checkbox state is changed.
+		// When notifications are not supported, this is never called (because
+		// checkbox state can not be changed).
+		var updateDesktopNotificationStatus = function() {
+			if (Notification.permission === "denied") {
+				desktopNotificationsCheckbox.attr("disabled", true);
+				desktopNotificationsCheckbox.attr("checked", false);
+				warningBlocked.show();
+			} else {
+				if (Notification.permission === "default" && desktopNotificationsCheckbox.prop("checked")) {
+					desktopNotificationsCheckbox.attr("checked", false);
+				}
+				desktopNotificationsCheckbox.attr("disabled", false);
+				warningBlocked.hide();
+			}
+		};
+
+		// If browser does not support notifications, override existing settings and
+		// display proper message in settings.
+		var desktopNotificationsCheckbox = $("#desktopNotifications");
+		var warningUnsupported = $("#warnUnsupportedDesktopNotifications");
+		var warningBlocked = $("#warnBlockedDesktopNotifications");
+		warningBlocked.hide();
+		if (("Notification" in window)) {
+			warningUnsupported.hide();
+			windows.on("show", "#settings", updateDesktopNotificationStatus);
+		} else {
+			options.desktopNotifications = false;
+			desktopNotificationsCheckbox.attr("disabled", true);
+			desktopNotificationsCheckbox.attr("checked", false);
+		}
 	}());
 
 	var viewport = $("#viewport");
@@ -1052,7 +1084,6 @@ $(function() {
 		}
 	});
 
-	var windows = $("#windows");
 	var forms = $("#sign-in, #connect, #change-password");
 
 	windows.on("show", "#sign-in", function() {
@@ -1089,7 +1120,6 @@ $(function() {
 			}
 		});
 	}
-	windows.on("show", "#settings", updateDesktopNotificationStatus);
 
 	forms.on("submit", "form", function(e) {
 		e.preventDefault();
@@ -1212,23 +1242,6 @@ $(function() {
 	function refresh() {
 		window.onbeforeunload = null;
 		location.reload();
-	}
-
-	function updateDesktopNotificationStatus() {
-		var checkbox = $("#desktopNotifications");
-		var warning = $("#warnDisabledDesktopNotifications");
-
-		if (Notification.permission === "denied") {
-			checkbox.attr("disabled", true);
-			checkbox.attr("checked", false);
-			warning.show();
-		} else {
-			if (Notification.permission === "default" && checkbox.prop("checked")) {
-				checkbox.attr("checked", false);
-			}
-			checkbox.attr("disabled", false);
-			warning.hide();
-		}
 	}
 
 	function sortable() {
