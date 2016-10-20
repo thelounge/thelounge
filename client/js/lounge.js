@@ -248,16 +248,12 @@ $(function() {
 		} else if (type === "unhandled") {
 			template = "msg_unhandled";
 		}
+		var link = getLink(data.msg.text);
 
-		var links = data.msg.text
-			.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "")
-			.split(" ")
-			.filter(w => /^https?:\/\//.test(w));
-
-		if (options.fetch && links.length !== 0) {
+		if (link) {
 			var url = {
 				id: data.msg.id,
-				link: links[0]
+				link: link
 			};
 			data.msg.type = "url";
 			data.msg.url = url;
@@ -314,12 +310,6 @@ $(function() {
 		} else {
 			channel.append(render("unread_marker"));
 		}
-
-		data.messages.forEach(function(e) {
-			if (e.type === "url") {
-				embed(e.url);
-			}
-		});
 	}
 
 	function renderChannelUsers(data) {
@@ -389,7 +379,7 @@ $(function() {
 		}
 
 		if (options.fetch && data.msg.type === "url") { // if we should automatically expand
-			embed(data.msg.url);
+			embed(data.msg.url, data.msg.id);
 		}
 	});
 
@@ -464,8 +454,11 @@ $(function() {
 		}
 	});
 
-	function embed(data) {
-		var text = document.querySelector("#msg-" + data.id + " .text");
+	function embed(url, id) {
+		var text = document.querySelector("#msg-" + id + " .text");
+
+		$("#msg-" + id).addClass("rendered");
+
 		var embedItem = new EmbedJS({
 			input: text,
 			link: false,
@@ -500,6 +493,17 @@ $(function() {
 			}
 		});
 		embedItem.render();
+	}
+
+	function getLink(input) {
+		if (!input) return;
+
+		var links = input
+			.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "")
+			.split(" ")
+			.filter(w => /^https?:\/\//.test(w));
+
+		return links[0];
 	}
 
 	socket.on("topic", function(data) {
@@ -834,8 +838,11 @@ $(function() {
 	});
 
 	chat.on("click", ".toggle-button", function() {
-		if (!options.fetch) {
-			
+		if (!options.fetch || !($(this).parent().parent().hasClass("rendered"))) { // msg.id
+			var link = getLink($(this).closest(".text").text());
+			link = link.replace(/.../g, "");
+			var id = $(this).parent().parent().attr("id").substring(4); // remove msg-
+			embed(link, id);
 		}
 
 		$(this).next().toggle();
