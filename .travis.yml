@@ -5,9 +5,6 @@ node_js:
 
 matrix:
   fast_finish: true
-  include:
-  - os: osx
-    node_js: 4
 
 cache:
   directories:
