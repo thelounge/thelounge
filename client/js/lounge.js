@@ -252,11 +252,9 @@ $(function() {
 		var links = data.msg.text
 			.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "")
 			.split(" ")
-			.filter(function(w) {
-				/^https?:\/\//.test(w);
-			});
+			.filter(w => /^https?:\/\//.test(w));
 
-		if (links.length !== 0) {
+		if (options.fetch && links.length !== 0) {
 			var url = {
 				id: data.msg.id,
 				link: links[0]
@@ -390,7 +388,7 @@ $(function() {
 				.appendTo(container);
 		}
 
-		if (data.msg.type === "url") {
+		if (options.fetch && data.msg.type === "url") { // if we should automatically expand
 			embed(data.msg.url);
 		}
 	});
@@ -502,9 +500,6 @@ $(function() {
 			}
 		});
 		embedItem.render();
-		if (!options.media) {
-			$("#toggle-" + data.id).click();
-		}
 	}
 
 	socket.on("topic", function(data) {
@@ -542,7 +537,8 @@ $(function() {
 		part: true,
 		quit: true,
 		theme: $("#theme").attr("href").replace(/^themes\/(.*).css$/, "$1"), // Extracts default theme name, set on the server configuration
-		media: true,
+		expand: true,
+		fetch: true,
 		userStyles: userStyles.text(),
 	}, JSON.parse(window.localStorage.getItem("settings")));
 
@@ -838,6 +834,10 @@ $(function() {
 	});
 
 	chat.on("click", ".toggle-button", function() {
+		if (!options.fetch) {
+			
+		}
+
 		$(this).next().toggle();
 		$(this).closest(".chat").scrollBottom();
 	});

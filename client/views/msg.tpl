@@ -12,5 +12,6 @@
 			<br>
 			<button id="toggle-{{id}}" class="toggle-button" aria-label="Toggle media">···</button>
 		{{/equal}}</span>
+
 	</span>
 </div>
