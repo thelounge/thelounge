@@ -5,6 +5,7 @@ var _ = require("lodash");
 var path = require("path");
 var os = require("os");
 var fs = require("fs");
+var bcrypt = require("bcrypt-nodejs");
 
 var Helper = {
 	config: null,
@@ -14,6 +15,12 @@ var Helper = {
 	setHome: setHome,
 	getVersion: getVersion,
 	getGitCommit: getGitCommit,
+
+	password: {
+		hash: passwordHash,
+		compare: passwordCompare,
+		requiresUpdate: passwordRequiresUpdate,
+	},
 };
 
 module.exports = Helper;
@@ -82,4 +89,16 @@ function expandHome(shortenedPath) {
 	home = home.replace("$", "$$$$");
 
 	return path.resolve(shortenedPath.replace(/^~($|\/|\\)/, home + "$1"));
+}
+
+function passwordRequiresUpdate(password) {
+	return bcrypt.getRounds(password) !== 11;
+}
+
+function passwordHash(password) {
+	return bcrypt.hashSync(password, bcrypt.genSaltSync(11));
+}
+
+function passwordCompare(password, expected) {
+	return bcrypt.compareSync(password, expected);
 }

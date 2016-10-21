@@ -2,7 +2,6 @@
 
 var _ = require("lodash");
 var pkg = require("../package.json");
-var bcrypt = require("bcrypt-nodejs");
 var Client = require("./client");
 var ClientManager = require("./clientManager");
 var express = require("express");
@@ -192,15 +191,14 @@ function init(socket, client) {
 						});
 						return;
 					}
-					if (!bcrypt.compareSync(old || "", client.config.password)) {
+					if (!Helper.password.compare(old || "", client.config.password)) {
 						socket.emit("change-password", {
 							error: "The current password field does not match your account password"
 						});
 						return;
 					}
 
-					var salt = bcrypt.genSaltSync(8);
-					var hash = bcrypt.hashSync(p1, salt);
+					var hash = Helper.password.hash(p1);
 
 					client.setPassword(hash, function(success) {
 						var obj = {};
@@ -259,17 +257,30 @@ function reverseDnsLookup(socket, client) {
 }
 
 function localAuth(client, user, password, callback) {
-	var result = false;
-	try {
-		result = bcrypt.compareSync(password || "", client.config.password);
-	} catch (error) {
-		if (error === "Not a valid BCrypt hash.") {
-			log.error("User (" + user + ") with no local password set tried to sign in. (Probably a LDAP user)");
-		}
-		result = false;
-	} finally {
-		callback(result);
+	if (!client || !password) {
+		return callback(false);
 	}
+
+	if (!client.config.password) {
+		log.error("User", user, "with no local password set tried to sign in. (Probably a LDAP user)");
+		return callback(false);
+	}
+
+	var result = Helper.password.compare(password, client.config.password);
+
+	if (result && Helper.password.requiresUpdate(client.config.password)) {
+		var hash = Helper.password.hash(password);
+
+		client.setPassword(hash, function(success) {
+			if (!success) {
+				log.error("Failed to update password of", client.name, "to match new security requirements");
+			} else {
+				log.info("User", client.name, "logged in and their hashed password has been updated to match new security requirements");
+			}
+		});
+	}
+
+	return callback(result);
 }
 
 function ldapAuth(client, user, password, callback) {
