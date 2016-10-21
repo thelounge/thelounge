@@ -182,6 +182,7 @@ button {
 #chat .special .title:before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
 
 #footer .sign-in:before { content: "\f023"; /* http://fontawesome.io/icon/lock/ */ }
+#footer .sign-up:before { content: "\f234"; /* http://fontawesome.io/icon/user-plus/ */ }
 #footer .connect:before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
 #footer .settings:before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
 #footer .sign-out:before { content: "\f011"; /* http://fontawesome.io/icon/power-off/ */ }
@@ -555,7 +556,8 @@ button {
 	padding: 0 12px;
 }
 
-.signed-out #footer .sign-in {
+.signed-out #footer .sign-in,
+.signed-out #footer .sign-up {
 	display: inline-block;
 }
 
@@ -565,11 +567,13 @@ button {
 }
 
 .public #footer .sign-in,
+.public #footer .sign-up,
 .public #footer .sign-out {
 	display: none;
 }
 
-#footer .sign-in {
+#footer .sign-in,
+#footer .sign-up {
 	display: none;
 }
 
@@ -1247,15 +1251,19 @@ button {
 	line-height: 1.8;
 }
 
+#sign-up .error,
+#sign-up .success,
 #settings #change-password .error,
 #settings #change-password .success {
 	margin-bottom: 1em;
 }
 
+#sign-up .error,
 #settings #change-password .error {
 	color: #e74c3c;
 }
 
+#sign-up .success,
 #settings #change-password .success {
 	color: #2ecc40;
 }

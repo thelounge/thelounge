@@ -24,10 +24,12 @@ program
 		}
 
 		if (!mode && !users.length && !Helper.config.ldap.enable) {
-			log.warn("No users found!");
 			log.info("Create a new user with 'lounge add <name>'.");
 
-			return;
+			if (!Helper.config.signUp) {
+				log.error("No users found!");
+				return;
+			}
 		}
 
 		Helper.config.host = program.host || Helper.config.host;

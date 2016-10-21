@@ -144,6 +144,35 @@ function init(socket, client) {
 	if (!client) {
 		socket.emit("auth", {success: true});
 		socket.on("auth", auth);
+		socket.on("sign-up", (data) => {
+			const user = data.user;
+			const password = data.password;
+			const salt = bcrypt.genSaltSync(8);
+			const hash = bcrypt.hashSync(password, salt);
+			let addUserResult;
+
+			try {
+				addUserResult = manager.addUser(
+					user,
+					hash
+				);
+			} catch (e) {
+				socket.emit("signed-up", {
+					error: "The username is invalid"
+				});
+			}
+
+			if (!addUserResult) {
+				socket.emit("signed-up", {
+					error: "Username is already in use"
+				});
+				return;
+			}
+
+			socket.emit("signed-up", {
+				success: "OK"
+			});
+		});
 	} else {
 		socket.emit("authorized");
 

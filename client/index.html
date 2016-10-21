@@ -35,6 +35,7 @@
 		</aside>
 		<footer id="footer">
 			<span class="tooltipped tooltipped-n" aria-label="Sign in"><button class="icon sign-in" data-target="#sign-in" aria-label="Sign in"></button></span>
+			<span class="tooltipped tooltipped-n" aria-label="Sign up"><button class="icon sign-up" data-target="#sign-up" aria-label="Sign up"></button></span>
 			<span class="tooltipped tooltipped-n" aria-label="Connect to network"><button class="icon connect" data-target="#connect" aria-label="Connect to network"></button></span>
 			<span class="tooltipped tooltipped-n" aria-label="Client settings"><button class="icon settings" data-target="#settings" aria-label="Client settings"></button></span>
 			<span class="tooltipped tooltipped-n" aria-label="Sign out"><button class="icon sign-out" id="sign-out" aria-label="Sign out"></button></span>
@@ -103,6 +104,47 @@
 								<button type="submit" class="btn">
 									Sign in
 								</button>
+								<% if (signUp) { %>
+								<button type="button" class="btn" data-target="#sign-up">
+									Sign up
+								</button>
+								<% } %>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div id="sign-up" class="window">
+					<form class="container" method="post" action="">
+						<div class="row">
+							<div class="col-xs-12">
+								<h1 class="title">Sign up to The Lounge</h1>
+							</div>
+							<div class="col-xs-12">
+								<label>
+								Username
+								<input class="input" name="user" required="required">
+								</label>
+							</div>
+							<div class="col-xs-12">
+								<label class="port">
+								Password
+								<input class="input" type="password" name="password" required="required">
+								</label>
+							</div>
+							<div class="col-xs-12 error" style="display: none;">
+								Sign up failed. This username is already in use or is invalid.
+								Please retry or contact an administrator.
+							</div>
+							<div class="col-xs-12 success" style="display: none;">
+								Successfully registered. You can now Sign in.
+							</div>
+							<div class="col-xs-12">
+								<button type="submit" class="btn">
+									Sign up
+								</button>
+								<button type="button" class="btn" data-target="#sign-in">
+									Sign in
+								</buttonss>
 							</div>
 						</div>
 					</form>
