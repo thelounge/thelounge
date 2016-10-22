@@ -1036,48 +1036,6 @@ button {
 	padding: 0 6px;
 }
 
-#chat .toggle-content {
-	background: #f5f5f5;
-	border-radius: 2px;
-	display: none;
-	color: #222;
-	font-size: 12px;
-	max-width: 100%;
-	padding: 6px 8px;
-	margin-top: 2px;
-}
-
-#chat .toggle-content a {
-	color: inherit;
-}
-
-#chat .toggle-content img {
-	max-width: 100%;
-	max-height: 250px;
-	display: block;
-	margin: 2px 0;
-}
-
-#chat .toggle-content .thumb {
-	max-height: 110px;
-	max-width: 210px;
-}
-
-#chat .toggle-content .head {
-	font-weight: bold;
-}
-
-#chat .toggle-content .body {
-	color: #999;
-	max-width: 460px;
-	word-break: normal;
-	word-wrap: break-word;
-}
-
-#chat .toggle-content.show {
-	display: inline-block !important;
-}
-
 #chat .count {
 	background: #fafafa;
 	height: 48px;
@@ -1657,6 +1615,17 @@ button {
 
 .irc-italic {
 	font-style: italic;
+}
+
+/** Embeds **/
+.ejs-gist iframe {
+	overflow: auto;
+	max-height: 300px;
+}
+
+.ejs-image img {
+	max-width: 400px;
+	max-height: 400px;
 }
 
 @media (max-width: 768px) {

@@ -69,24 +69,13 @@ module.exports = {
 	//
 	// Prefetch URLs
 	//
-	// If enabled, The Lounge will try to load thumbnails and site descriptions from
-	// URLs posted in channels.
+	// If enabled, The Lounge will try to embed URLs
+	// posted in channels.
 	//
 	// @type     boolean
 	// @default  false
 	//
 	prefetch: false,
-
-	//
-	// Prefetch URLs Image Preview size limit
-	//
-	// If prefetch is enabled, The Lounge will only display content under the maximum size.
-	// Default value is 512 (in kB)
-	//
-	// @type     int
-	// @default  512
-	//
-	prefetchMaxImageSize: 512,
 
 	//
 	// Display network

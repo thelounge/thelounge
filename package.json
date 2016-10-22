@@ -16,7 +16,7 @@
     "start": "node index",
     "build": "npm-run-all build:*",
     "build:font-awesome": "node scripts/build-fontawesome.js",
-    "build:libs": "uglifyjs client/js/libs/*.js client/js/libs/jquery/*.js client/js/libs/handlebars/*.js -o client/js/libs.min.js --source-map client/js/libs.min.js.map --source-map-url libs.min.js.map -p relative",
+    "build:libs": "uglifyjs client/js/libs/*.js client/js/libs/jquery/*.js client/js/libs/embed/*.js client/js/libs/handlebars/*.js -o client/js/libs.min.js --source-map client/js/libs.min.js.map --source-map-url libs.min.js.map -p relative",
     "build:handlebars": "handlebars client/views/ -e tpl -f client/js/lounge.templates.js",
     "test": "npm-run-all -c test:mocha lint",
     "test:mocha": "mocha",

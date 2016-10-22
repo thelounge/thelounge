@@ -15,6 +15,7 @@
 
 	<link rel="stylesheet" href="css/bootstrap.css">
 	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/embed.min.css">
 	<link id="theme" rel="stylesheet" href="<%= theme %>">
 	<style id="user-specified-css"></style>
 
@@ -261,18 +262,12 @@
 							</div>
 							<% if (typeof prefetch === "undefined" || prefetch !== false) { %>
 							<div class="col-sm-12">
-								<h2>Links and URLs</h2>
+								<h2>Media</h2>
 							</div>
 							<div class="col-sm-6">
 								<label class="opt">
-									<input type="checkbox" name="thumbnails">
-									Auto-expand thumbnails
-								</label>
-							</div>
-							<div class="col-sm-6">
-								<label class="opt">
-									<input type="checkbox" name="links">
-									Auto-expand links
+									<input type="checkbox" name="fetch">
+									Prefetch media
 								</label>
 							</div>
 							<% } %>
@@ -377,6 +372,9 @@
 	<script src="js/libs.min.js"></script>
 	<script src="js/lounge.templates.js"></script>
 	<script src="js/lounge.js"></script>
+	<% if (typeof prefetch === "undefined" || prefetch !== false) { %>
+	<script src="http://platform.twitter.com/widgets.js"></script>
+	<% } %>
 
 	</body>
 </html>

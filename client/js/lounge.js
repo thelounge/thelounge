@@ -255,6 +255,16 @@ $(function() {
 		} else if (type === "unhandled") {
 			template = "msg_unhandled";
 		}
+		var link = getLink(data.msg.text);
+
+		if (link) {
+			var url = {
+				id: data.msg.id,
+				link: link
+			};
+			data.msg.type = "url";
+			data.msg.url = url;
+		}
 
 		var msg = $(render(template, data.msg));
 
@@ -374,6 +384,10 @@ $(function() {
 				.find(".unread-marker")
 				.appendTo(container);
 		}
+
+		if (options.fetch && data.msg.type === "url") { // if we should automatically expand
+			embed(data.msg.url, data.msg.id);
+		}
 	});
 
 	socket.on("more", function(data) {
@@ -447,23 +461,57 @@ $(function() {
 		}
 	});
 
-	socket.on("toggle", function(data) {
-		var toggle = $("#toggle-" + data.id);
-		toggle.parent().after(render("toggle", {toggle: data}));
-		switch (data.type) {
-		case "link":
-			if (options.links) {
-				toggle.click();
-			}
-			break;
+	function embed(url, id) {
+		var text = document.querySelector("#msg-" + id + " .text");
 
-		case "image":
-			if (options.thumbnails) {
-				toggle.click();
+		$("#msg-" + id).addClass("rendered");
+
+		var embedItem = new EmbedJS({
+			input: text,
+			link: false,
+			googleAuthKey: "AIzaSyCGg2USk9GjMwb5lAXRXAekWSRYsafLpr8",
+			locationEmbed: false,
+			codeEmbedHeight: 200,
+			tweetsEmbed: true,
+			tweetOptions: {
+				maxWidth: 400,
+				hideMedia: true,
+				hideThread: true,
+				align: "none",
+				lang: "en"
+			},
+			videoEmbed: true,
+			videoHeight: $(window).height() / 4,
+			videoWidth: $(window).width() / 3,
+			videoDetails: false,
+			soundCloudOptions: {
+				height: 160,
+				themeColor: 202020, // Hex Code of the player theme color
+				autoPlay: false,
+				hideRelated: true,
+				showComments: false,
+				showUser: true,
+				showReposts: false,
+				visual: false, // Show/hide the big preview image
+				download: false // Show/Hide download buttons
+			},
+			plugins: {
+				twitter: window.twttr
 			}
-			break;
-		}
-	});
+		});
+		embedItem.render();
+	}
+
+	function getLink(input) {
+		if (!input) return;
+
+		var links = input
+			.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "")
+			.split(" ")
+			.filter(w => /^https?:\/\//.test(w));
+
+		return links[0];
+	}
 
 	socket.on("topic", function(data) {
 		var topic = $("#chan-" + data.chan).find(".header .topic");
@@ -492,7 +540,6 @@ $(function() {
 		coloredNicks: true,
 		desktopNotifications: false,
 		join: true,
-		links: true,
 		mode: true,
 		motd: false,
 		nick: true,
@@ -501,7 +548,8 @@ $(function() {
 		part: true,
 		quit: true,
 		theme: $("#theme").attr("href").replace(/^themes\/(.*).css$/, "$1"), // Extracts default theme name, set on the server configuration
-		thumbnails: true,
+		expand: true,
+		fetch: true,
 		userStyles: userStyles.text(),
 	}, JSON.parse(window.localStorage.getItem("settings")));
 
@@ -796,6 +844,18 @@ $(function() {
 		}
 	});
 
+	chat.on("click", ".toggle-button", function() {
+		if (!options.fetch || !($(this).parent().parent().hasClass("rendered"))) { // msg.id
+			var link = getLink($(this).closest(".text").text());
+			link = link.replace(/.../g, "");
+			var id = $(this).parent().parent().attr("id").substring(4); // remove msg-
+			embed(link, id);
+		}
+
+		$(this).next().toggle();
+		$(this).closest(".chat").scrollBottom();
+	});
+
 	chat.on("click", ".user", function() {
 		var name = $(this).data("name");
 		var chan = findCurrentNetworkChan(name);
@@ -1031,25 +1091,6 @@ $(function() {
 			target: self.data("id"),
 			count: count
 		});
-	});
-
-	chat.on("click", ".toggle-button", function() {
-		var self = $(this);
-		var localChat = self.closest(".chat");
-		var bottom = localChat.isScrollBottom();
-		var content = self.parent().next(".toggle-content");
-		if (bottom && !content.hasClass("show")) {
-			var img = content.find("img");
-			if (img.length !== 0 && !img.width()) {
-				img.on("load", function() {
-					localChat.scrollBottom();
-				});
-			}
-		}
-		content.toggleClass("show");
-		if (bottom) {
-			localChat.scrollBottom();
-		}
 	});
 
 	var windows = $("#windows");
