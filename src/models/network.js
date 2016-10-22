@@ -84,7 +84,8 @@ Network.prototype.export = function() {
 		})
 		.map(function(chan) {
 			return _.pick(chan, [
-				"name"
+				"name",
+				"key"
 			]);
 		});
 
