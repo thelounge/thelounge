@@ -187,6 +187,7 @@ Client.prototype.connect = function(args) {
 		commands: args.commands,
 		ip: args.ip,
 		hostname: args.hostname,
+		encoding: args.encoding,
 		channels: channels,
 	});
 	network.setNick(nick);
@@ -259,6 +260,7 @@ Client.prototype.connect = function(args) {
 		version: pkg.name + " " + Helper.getVersion() + " -- " + pkg.homepage,
 		host: network.host,
 		port: network.port,
+		encoding: network.encoding,
 		nick: nick,
 		username: network.username,
 		gecos: network.realname,

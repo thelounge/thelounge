@@ -30,6 +30,7 @@ describe("Network", function() {
 				username: "",
 				realname: "",
 				commands: [],
+				encoding: "utf8",
 				nick: "chillin`",
 				ip: null,
 				hostname: null,

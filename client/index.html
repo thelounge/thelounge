@@ -148,6 +148,12 @@
 								<div class="col-sm-9">
 									<input class="input" id="connect:password" type="password" name="password" value="<%= defaults.password %>">
 								</div>
+								<div class="col-sm-3">
+									<label for="connect:encoding">Encoding</label>
+								</div>
+								<div class="col-sm-9">
+									<input class="input" id="connect:encoding" name="encoding" value="<%= defaults.encoding %>">
+								</div>
 								<div class="col-sm-9 col-sm-offset-3">
 									<label class="tls">
 										<input type="checkbox" name="tls" <%= defaults.tls ? "checked" : "" %> <%= typeof(lockNetwork) !== "undefined" && lockNetwork ? "disabled" : "" %>>
