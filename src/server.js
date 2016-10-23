@@ -12,7 +12,6 @@ var Helper = require("./helper");
 var ldap = require("ldapjs");
 
 var manager = null;
-var ldapclient = null;
 var authFunction = localAuth;
 
 module.exports = function() {
@@ -60,9 +59,6 @@ module.exports = function() {
 	}
 
 	if (!config.public && (config.ldap || {}).enable) {
-		ldapclient = ldap.createClient({
-			url: config.ldap.url
-		});
 		authFunction = ldapAuth;
 	}
 
@@ -287,12 +283,22 @@ function ldapAuth(client, user, password, callback) {
 	var userDN = user.replace(/([,\\\/#+<>;"= ])/g, "\\$1");
 	var bindDN = Helper.config.ldap.primaryKey + "=" + userDN + "," + Helper.config.ldap.baseDN;
 
+	var ldapclient = ldap.createClient({
+		url: Helper.config.ldap.url
+	});
+
+	ldapclient.on("error", function(err) {
+		log.error("Unable to connect to LDAP server", err);
+		callback(!err);
+	});
+
 	ldapclient.bind(bindDN, password, function(err) {
 		if (!err && !client) {
 			if (!manager.addUser(user, null)) {
 				log.error("Unable to create new user", user);
 			}
 		}
+		ldapclient.unbind();
 		callback(!err);
 	});
 }
