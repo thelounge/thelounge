@@ -15,6 +15,8 @@ describe("Network", function() {
 				channels: [
 					new Chan({name: "#thelounge", key: ""}),
 					new Chan({name: "&foobar", key: ""}),
+					new Chan({name: "#secret", key: "foo"}),
+					new Chan({name: "&secure", key: "bar"}),
 					new Chan({name: "Channel List", type: Chan.Type.SPECIAL}),
 					new Chan({name: "PrivateChat", type: Chan.Type.QUERY}),
 				]
@@ -36,6 +38,8 @@ describe("Network", function() {
 				channels: [
 					{name: "#thelounge", key: ""},
 					{name: "&foobar", key: ""},
+					{name: "#secret", key: "foo"},
+					{name: "&secure", key: "bar"}
 				]
 			});
 		});
