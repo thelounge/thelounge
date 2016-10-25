@@ -186,7 +186,7 @@ $(function() {
 
 	socket.on("open", function(id) {
 		// Another client opened the channel, clear the unread counter
-		sidebar.find("[data-id='" + id + "'] .badge")
+		sidebar.find(".chan[data-id='" + id + "'] .badge")
 			.removeClass("highlight")
 			.empty();
 	});
