@@ -66,6 +66,10 @@ module.exports = function(irc, network) {
 						network: network.id,
 						chan: chan
 					});
+
+					client.userLog
+						.read(network.host, chan.name)
+						.forEach((message) => chan.pushMessage(client, message));
 				}
 			}
 

@@ -21,6 +21,10 @@ module.exports = function(irc, network) {
 
 			// Request channels' modes
 			network.irc.raw("MODE", chan.name);
+
+			client.userLog
+				.read(network.host, chan.name)
+				.forEach((message) => chan.pushMessage(client, message));
 		}
 		chan.users.push(new User({nick: data.nick}));
 		chan.sortUsers(irc);

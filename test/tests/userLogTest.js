@@ -2,13 +2,13 @@
 
 const expect = require("chai").expect;
 
-const userLog = require("../../src/userLog");
+const UserLog = require("../../src/userLog");
 
-describe("userLog", () => {
+describe("UserLog", () => {
 	describe("#parseLine", () => {
 		it("should correctly parse a normal message", () => {
 			const line = "[2014-05-22 12:00:00] <astorije> This is a message.";
-			const msg = userLog.parseLine(line);
+			const msg = UserLog.parseLine(line);
 
 			expect(msg).to.include({
 				from: "astorije",
@@ -19,7 +19,7 @@ describe("userLog", () => {
 
 		it("should correctly parse an action message", () => {
 			const line = "[2014-05-22 12:00:00] * astorije action loves The Lounge.";
-			const msg = userLog.parseLine(line);
+			const msg = UserLog.parseLine(line);
 
 			expect(msg).to.include({
 				from: "astorije",
@@ -30,7 +30,7 @@ describe("userLog", () => {
 
 		it("should correctly parse a join message", () => {
 			const line = "[2014-05-22 12:00:00] * astorije (~astorije@example.com) join";
-			const msg = userLog.parseLine(line);
+			const msg = UserLog.parseLine(line);
 
 			expect(msg).to.include({
 				from: "astorije",
@@ -41,7 +41,7 @@ describe("userLog", () => {
 
 		it("should correctly parse a join message when hostmask is missing", () => {
 			const line = "[2014-05-22 12:00:00] * astorije join";
-			const msg = userLog.parseLine(line);
+			const msg = UserLog.parseLine(line);
 
 			expect(msg).to.include({
 				from: "astorije",
@@ -52,7 +52,7 @@ describe("userLog", () => {
 
 		it("should correctly parse a mode message", () => {
 			const line = "[2014-05-22 12:00:00] * ChanServ mode +v astorije";
-			const msg = userLog.parseLine(line);
+			const msg = UserLog.parseLine(line);
 
 			expect(msg).to.include({
 				from: "ChanServ",
@@ -63,7 +63,7 @@ describe("userLog", () => {
 
 		it("should correctly parse a nick change message", () => {
 			const line = "[2014-05-22 12:00:00] * astorije nick astorije-lvl-9000";
-			const msg = userLog.parseLine(line);
+			const msg = UserLog.parseLine(line);
 
 			expect(msg).to.include({
 				from: "astorije",
@@ -74,7 +74,7 @@ describe("userLog", () => {
 
 		it("should correctly parse a part message", () => {
 			const line = "[2014-05-22 12:00:00] * astorije (~astorije@example.com) part";
-			const msg = userLog.parseLine(line);
+			const msg = UserLog.parseLine(line);
 
 			expect(msg).to.include({
 				from: "astorije",
@@ -86,7 +86,7 @@ describe("userLog", () => {
 
 		it("should correctly parse a part message when reason is given", () => {
 			const line = "[2014-05-22 12:00:00] * astorije (~astorije@example.com) part \"Goodbye\"";
-			const msg = userLog.parseLine(line);
+			const msg = UserLog.parseLine(line);
 
 			expect(msg).to.include({
 				from: "astorije",
@@ -98,7 +98,7 @@ describe("userLog", () => {
 
 		it("should correctly parse a part message when hostmask is missing", () => {
 			const line = "[2014-05-22 12:00:00] * astorije part";
-			const msg = userLog.parseLine(line);
+			const msg = UserLog.parseLine(line);
 
 			expect(msg).to.include({
 				from: "astorije",
@@ -110,7 +110,7 @@ describe("userLog", () => {
 
 		it("should correctly parse a quit message", () => {
 			const line = "[2014-05-22 12:00:00] * astorije (~astorije@example.com) quit";
-			const msg = userLog.parseLine(line);
+			const msg = UserLog.parseLine(line);
 
 			expect(msg).to.include({
 				from: "astorije",
@@ -122,7 +122,7 @@ describe("userLog", () => {
 
 		it("should correctly parse a quit message when reason is given", () => {
 			const line = "[2014-05-22 12:00:00] * astorije (~astorije@example.com) quit Farewell";
-			const msg = userLog.parseLine(line);
+			const msg = UserLog.parseLine(line);
 
 			expect(msg).to.include({
 				from: "astorije",
@@ -134,7 +134,7 @@ describe("userLog", () => {
 
 		it("should correctly parse a quit message when hostmask is missing", () => {
 			const line = "[2014-05-22 12:00:00] * astorije quit";
-			const msg = userLog.parseLine(line);
+			const msg = UserLog.parseLine(line);
 
 			expect(msg).to.include({
 				from: "astorije",
@@ -146,7 +146,7 @@ describe("userLog", () => {
 
 		it("should correctly parse a topic message", () => {
 			const line = "[2014-05-22 12:00:00] * ChanServ topic Welcome to The Lounge, web IRC client - Latest release: 42.0.0 - https://thelounge.github.io/";
-			const msg = userLog.parseLine(line);
+			const msg = UserLog.parseLine(line);
 
 			expect(msg).to.include({
 				from: "ChanServ",
