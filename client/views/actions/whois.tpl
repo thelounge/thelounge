@@ -33,3 +33,9 @@
 	is away <i>({{whois.away}})</i>
 </div>
 {{/if}}
+{{#if whois.idle}}
+<div>
+	<span role="button" class="user {{colorClass whois.nick}}" data-name="{{whois.nick}}">{{whois.nick}}</span>
+	has been idle for {{humanReadableRange whois.idle}}.
+</div>
+{{/if}}
