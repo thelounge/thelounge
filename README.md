@@ -68,6 +68,7 @@ caution: while it is the most recent codebase, this is not production-ready!
 git clone https://github.com/thelounge/lounge.git
 cd lounge
 npm install
+npm run build
 npm start
 ```
 
