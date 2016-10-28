@@ -729,6 +729,7 @@ $(function() {
 
 	$("#form").on("submit", function(e) {
 		e.preventDefault();
+		focus();
 		var text = input.val();
 
 		if (text.length === 0) {
