@@ -1,5 +1,5 @@
 "use strict";
 
 Handlebars.registerHelper("localetime", function(time) {
-	return new Date(time).toLocaleString();
+	return new Date(time).toLocaleString("en-US");
 });
