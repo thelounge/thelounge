@@ -1011,7 +1011,11 @@ $(function() {
 		if (msg.highlight || (options.notifyAllMessages && msg.type === "message")) {
 			if (!document.hasFocus() || !$(target).hasClass("active")) {
 				if (options.notification) {
-					pop.play();
+					try {
+						pop.play();
+					} catch (exception) {
+						// On mobile, sounds can not be played without user interaction.
+					}
 				}
 				toggleNotificationMarkers(true);
 
