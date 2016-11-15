@@ -7,7 +7,7 @@
 
 # The Lounge
 <p align="center">
-	<img src="https://raw.githubusercontent.com/thelounge/thelounge.github.io/master/img/screenshots/example_css.png" width="550" />
+	<img src="https://cloud.githubusercontent.com/assets/5481612/19623041/9bbaec40-9888-11e6-9961-8f3e0493ba30.png" width="550" />
 </p>
 
 __What is it?__
