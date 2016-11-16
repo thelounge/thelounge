@@ -76,9 +76,10 @@ module.exports = function() {
 
 	manager.sockets = sockets;
 
-	let protocol = config.https.enable ? "https" : "http";
-	let host = config.host || "*";
+	const protocol = config.https.enable ? "https" : "http";
+	const host = config.host || "*";
 	log.info("The Lounge", Helper.getVersion(), "is now running");
+	log.info(`Configuration file: ${Helper.CONFIG_PATH}`);
 	log.info(`Available on: ${protocol}://${host}:${config.port}/ in ${config.public ? "public" : "private"} mode`);
 	log.info("Press ctrl-c to stop\n");
 
