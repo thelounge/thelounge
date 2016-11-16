@@ -1011,7 +1011,11 @@ $(function() {
 		if (msg.highlight || (options.notifyAllMessages && msg.type === "message")) {
 			if (!document.hasFocus() || !$(target).hasClass("active")) {
 				if (options.notification) {
-					pop.play();
+					try {
+						pop.play();
+					} catch (exception) {
+						// On mobile, sounds can not be played without user interaction.
+					}
 				}
 				toggleNotificationMarkers(true);
 
@@ -1031,19 +1035,24 @@ $(function() {
 						body = msg.text.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "").trim();
 					}
 
-					var notify = new Notification(title, {
-						body: body,
-						icon: "img/logo-64.png",
-						tag: target
-					});
-					notify.onclick = function() {
-						window.focus();
-						button.click();
-						this.close();
-					};
-					window.setTimeout(function() {
-						notify.close();
-					}, 5 * 1000);
+					try {
+						var notify = new Notification(title, {
+							body: body,
+							icon: "img/logo-64.png",
+							tag: target
+						});
+						notify.onclick = function() {
+							window.focus();
+							button.click();
+							this.close();
+						};
+						window.setTimeout(function() {
+							notify.close();
+						}, 5 * 1000);
+					} catch (exception) {
+						// `new Notification(...)` is not supported and should be silenced.
+					}
+
 				}
 			}
 		}
