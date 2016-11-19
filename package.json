@@ -28,6 +28,7 @@
     "prepublish": "npm run build"
   },
   "keywords": [
+    "lounge",
     "browser",
     "web",
     "chat",
