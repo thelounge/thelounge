@@ -463,7 +463,31 @@ Client.prototype.quit = function() {
 };
 
 Client.prototype.clientAttach = function(socketId) {
-	this.attachedClients[socketId] = this.lastActiveChannel;
+	var client = this;
+	var save = false;
+
+	client.attachedClients[socketId] = client.lastActiveChannel;
+
+	// Update old networks to store ip and hostmask
+	client.networks.forEach(network => {
+		if (!network.ip) {
+			save = true;
+			network.ip = (client.config && client.config.ip) || client.ip;
+		}
+
+		if (!network.hostname) {
+			var hostmask = (client.config && client.config.hostname) || client.hostname;
+
+			if (hostmask) {
+				save = true;
+				network.hostmask = hostmask;
+			}
+		}
+	});
+
+	if (save) {
+		client.save();
+	}
 };
 
 Client.prototype.clientDetach = function(socketId) {
