@@ -292,19 +292,15 @@ Client.prototype.setPassword = function(hash, callback) {
 		client.manager.updateUser(client.name, {
 			token: token,
 			password: hash
-		});
+		}, function(err) {
+			if (err) {
+				log.error("Failed to update password of", client.name, err);
+				return callback(false);
+			}
 
-		// re-read the hash off disk to ensure we use whatever is saved. this will
-		// prevent situations where the password failed to save properly and so
-		// a restart of the server would forget the change and use the old
-		// password again.
-		var user = client.manager.readUserConfig(client.name);
-		if (user.password === hash) {
 			client.config.password = hash;
-			callback(true);
-		} else {
-			callback(false);
-		}
+			return callback(true);
+		});
 	});
 };
 

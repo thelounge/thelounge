@@ -94,8 +94,8 @@ ClientManager.prototype.addUser = function(name, password) {
 	return true;
 };
 
-ClientManager.prototype.updateUser = function(name, opts) {
-	var users = this.getUsers();
+ClientManager.prototype.updateUser = function(name, opts, callback) {
+	const users = this.getUsers();
 	if (users.indexOf(name) === -1) {
 		return false;
 	}
@@ -103,19 +103,25 @@ ClientManager.prototype.updateUser = function(name, opts) {
 		return false;
 	}
 
-	var user = {};
-	try {
-		user = this.readUserConfig(name);
-		_.assign(user, opts);
-		fs.writeFileSync(
-			Helper.getUserConfigPath(name),
-			JSON.stringify(user, null, "\t")
-		);
-	} catch (e) {
-		log.error("Failed to update user", e);
-		return;
+	let user = this.readUserConfig(name);
+	const currentUser = JSON.stringify(user, null, "\t");
+	_.assign(user, opts);
+	const newUser = JSON.stringify(user, null, "\t");
+
+	// Do not touch the disk if object has not changed
+	if (currentUser === newUser) {
+		return callback ? callback() : true;
 	}
-	return true;
+
+	fs.writeFile(Helper.getUserConfigPath(name), newUser, (err) => {
+		if (err) {
+			log.error("Failed to update user", err);
+		}
+
+		if (callback) {
+			callback(err);
+		}
+	});
 };
 
 ClientManager.prototype.readUserConfig = function(name) {

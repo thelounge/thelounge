@@ -273,9 +273,7 @@ function localAuth(client, user, password, callback) {
 		var hash = Helper.password.hash(password);
 
 		client.setPassword(hash, function(success) {
-			if (!success) {
-				log.error("Failed to update password of", client.name, "to match new security requirements");
-			} else {
+			if (success) {
 				log.info("User", client.name, "logged in and their hashed password has been updated to match new security requirements");
 			}
 		});
