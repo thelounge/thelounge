@@ -460,23 +460,13 @@ Client.prototype.clientDetach = function(socketId) {
 	delete this.attachedClients[socketId];
 };
 
-var timer;
-Client.prototype.save = function(force) {
-	var client = this;
-
+Client.prototype.save = _.debounce(function SaveClient() {
 	if (Helper.config.public) {
 		return;
 	}
 
-	if (!force) {
-		clearTimeout(timer);
-		timer = setTimeout(function() {
-			client.save(true);
-		}, 1000);
-		return;
-	}
-
-	var json = {};
+	const client = this;
+	let json = {};
 	json.networks = this.networks.map(n => n.export());
 	client.manager.updateUser(client.name, json);
-};
+}, 1000, {maxWait: 10000});
