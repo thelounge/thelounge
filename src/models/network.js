@@ -44,7 +44,7 @@ Network.prototype.setNick = function(nick) {
 		"(?:^|[^a-z0-9]|\x03[0-9]{1,2})" +
 
 		// Escape nickname, as it may contain regex stuff
-		nick.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&") +
+		_.escapeRegExp(nick) +
 
 		// Do not match characters and numbers
 		"(?:[^a-z0-9]|$)",

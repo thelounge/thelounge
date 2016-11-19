@@ -281,7 +281,7 @@ function localAuth(client, user, password, callback) {
 }
 
 function ldapAuth(client, user, password, callback) {
-	var userDN = user.replace(/([,\\\/#+<>;"= ])/g, "\\$1");
+	var userDN = user.replace(/([,\\/#+<>;"= ])/g, "\\$1");
 	var bindDN = Helper.config.ldap.primaryKey + "=" + userDN + "," + Helper.config.ldap.baseDN;
 
 	var ldapclient = ldap.createClient({
