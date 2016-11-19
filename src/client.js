@@ -260,7 +260,7 @@ Client.prototype.connect = function(args) {
 		host: network.host,
 		port: network.port,
 		nick: nick,
-		username: network.username,
+		username: config.useHexIp ? Helper.ip2hex(client.ip) : network.username,
 		gecos: network.realname,
 		password: network.password,
 		tls: network.tls,

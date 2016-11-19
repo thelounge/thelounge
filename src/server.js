@@ -148,6 +148,10 @@ function init(socket, client) {
 		});
 		client.clientAttach(socket.id);
 
+		if (!client.ip) {
+			client.ip = getClientIp(socket.request);
+		}
+
 		socket.on(
 			"input",
 			function(data) {
