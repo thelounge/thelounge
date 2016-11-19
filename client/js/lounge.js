@@ -6,6 +6,8 @@ $(function() {
 	var path = window.location.pathname + "socket.io/";
 	var socket = io({path: path});
 	var commands = [
+		"/away",
+		"/back",
 		"/close",
 		"/connect",
 		"/deop",
@@ -15,6 +17,7 @@ $(function() {
 		"/join",
 		"/kick",
 		"/leave",
+		"/me",
 		"/mode",
 		"/msg",
 		"/nick",
