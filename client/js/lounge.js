@@ -512,7 +512,7 @@ $(function() {
 
 		for (var i in options) {
 			if (i === "userStyles") {
-				if (!/[\?&]nocss/.test(window.location.search)) {
+				if (!/[?&]nocss/.test(window.location.search)) {
 					$(document.head).find("#user-specified-css").html(options[i]);
 				}
 				settings.find("#user-specified-css-input").val(options[i]);

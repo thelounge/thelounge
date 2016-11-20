@@ -33,6 +33,7 @@ rules:
   no-trailing-spaces: 2
   no-unsafe-negation: 2
   no-useless-escape: 2
+  no-useless-return: 2
   object-curly-spacing: [2, never]
   quote-props: [2, as-needed]
   quotes: [2, double, avoid-escape]

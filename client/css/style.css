@@ -25,8 +25,8 @@
 	font-weight: normal;
 	font-style: normal;
 	src:
-		url("../fonts/fontawesome-webfont.woff2?v=4.6.3") format("woff2"),
-		url("../fonts/fontawesome-webfont.woff?v=4.6.3") format("woff");
+		url("../fonts/fontawesome-webfont.woff2?v=4.7.0") format("woff2"),
+		url("../fonts/fontawesome-webfont.woff?v=4.7.0") format("woff");
 }
 
 html,
