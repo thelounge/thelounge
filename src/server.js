@@ -10,6 +10,7 @@ var io = require("socket.io");
 var dns = require("dns");
 var Helper = require("./helper");
 var ldap = require("ldapjs");
+var colors = require("colors/safe");
 
 var manager = null;
 var authFunction = localAuth;
@@ -78,10 +79,13 @@ module.exports = function() {
 
 	const protocol = config.https.enable ? "https" : "http";
 	const host = config.host || "*";
-	log.info("The Lounge", Helper.getVersion(), "is now running");
-	log.info(`Configuration file: ${Helper.CONFIG_PATH}`);
-	log.info(`Available on: ${protocol}://${host}:${config.port}/ in ${config.public ? "public" : "private"} mode`);
-	log.info("Press ctrl-c to stop\n");
+
+	log.info(`The Lounge ${colors.green(Helper.getVersion())} is now running \
+using node ${colors.green(process.versions.node)} on ${colors.green(process.platform)} (${process.arch})`);
+	log.info(`Configuration file: ${colors.green(Helper.CONFIG_PATH)}`);
+	log.info(`Available on ${colors.green(protocol + "://" + host + ":" + config.port + "/")} \
+in ${config.public ? "public" : "private"} mode`);
+	log.info(`Press Ctrl-C to stop\n`);
 
 	if (!config.public) {
 		manager.loadUsers();
