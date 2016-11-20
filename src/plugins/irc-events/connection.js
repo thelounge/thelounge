@@ -70,14 +70,14 @@ module.exports = function(irc, network) {
 	}
 
 	if (identHandler) {
+		let identSocketId;
+
 		irc.on("socket connected", function() {
-			identHandler.addSocket(irc.connection.socket, client.name || network.username);
-			identHandler.refresh();
+			identSocketId = identHandler.addSocket(irc.connection.socket, client.name || network.username);
 		});
 
 		irc.on("socket close", function() {
-			identHandler.removeSocket(irc.connection.socket);
-			identHandler.refresh();
+			identHandler.removeSocket(identSocketId);
 		});
 	}
 
