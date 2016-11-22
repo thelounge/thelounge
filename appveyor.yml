@@ -12,7 +12,7 @@ environment:
 
 install:
   - ps: Install-Product node $env:nodejs_version
-  - npm install
+  - appveyor-retry npm install
   - npm install mocha-appveyor-reporter
   - echo --reporter mocha-appveyor-reporter >> test/mocha.opts
 
@@ -20,6 +20,10 @@ test_script:
   - node --version
   - npm --version
   - npm test
+
+# cache npm modules
+cache:
+  - '%AppData%\npm-cache -> package.json'
 
 # Don't actually build
 build: off
