@@ -172,6 +172,7 @@ kbd {
 #form #cycle-nicks:before,
 #form #submit:before,
 #chat .invite .from:before,
+#chat .condensed .expander:before,
 #chat .join .from:before,
 #chat .kick .from:before,
 #chat .part .from:before,
@@ -256,6 +257,22 @@ kbd {
 #chat .nick .from:before {
 	content: "\f007"; /* http://fontawesome.io/icon/user/ */
 	color: #2ecc40;
+}
+
+#chat .condensed {
+	cursor: pointer;
+}
+
+#chat .condensed div {
+	cursor: default;
+}
+
+#chat .condensed .expander:before {
+	content: "\f0d7"; /* http://fontawesome.io/icon/caret-down/ */
+}
+
+#chat .condensed.closed .expander:before {
+	content: "\f0da"; /* http://fontawesome.io/icon/caret-right/ */
 }
 
 #chat .join .from:before {
@@ -748,6 +765,10 @@ kbd {
 	display: block;
 }
 
+.condensed.closed .msg {
+	display: none;
+}
+
 #windows .header .topic,
 .messages .msg,
 .sidebar {
@@ -1047,6 +1068,7 @@ kbd {
 	display: none !important;
 }
 
+#chat .condensed .text,
 #chat .join .text,
 #chat .kick .text,
 #chat .mode .text,
