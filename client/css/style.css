@@ -839,6 +839,33 @@ button {
 	display: none;
 }
 
+#chat .date-marker {
+	position: relative;
+	text-align: center;
+	opacity: .5;
+	margin: 0 10px;
+	z-index: 0;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+#chat .date-marker:before {
+	position: absolute;
+	z-index: -1;
+	content: "";
+	left: 0;
+	right: 0;
+	top: 50%;
+	border-top: 1px solid #006b3b;
+}
+
+#chat .date-marker-text:before {
+	content: attr(data-date);
+	background-color: white;
+	color: #006b3b;
+	padding: 0 10px;
+}
+
 .inline-channel {
 	cursor: pointer;
 }

@@ -307,6 +307,27 @@ $(function() {
 		} else {
 			channel.append(render("unread_marker"));
 		}
+
+		if (data.type !== "lobby") {
+			var lastDate;
+			$(chat.find("#chan-" + data.id + " .messages .msg[data-time]")).each(function() {
+				var msg = $(this);
+				var msgDate = new Date(msg.attr("data-time"));
+
+				// Top-most message in a channel
+				if (!lastDate) {
+					lastDate = msgDate;
+					msg.before(render("date-marker", {msgDate: msgDate}));
+				}
+
+				if (lastDate.toDateString() !== msgDate.toDateString()) {
+					msg.before(render("date-marker", {msgDate: msgDate}));
+				}
+
+				lastDate = msgDate;
+			});
+		}
+
 	}
 
 	function renderChannelUsers(data) {
@@ -362,6 +383,21 @@ $(function() {
 		var target = "#chan-" + data.chan;
 		var container = chat.find(target + " .messages");
 
+        // Check if date changed
+		var prevMsg = $(container.find(".msg")).last();
+		var prevMsgTime = new Date(prevMsg.attr("data-time"));
+		var msgTime = new Date(msg.attr("data-time"));
+
+		// It's the first message in a channel/query
+		if (prevMsg.length === 0) {
+			container.append(render("date-marker", {msgDate: msgTime}));
+		}
+
+		if (prevMsgTime.toDateString() !== msgTime.toDateString()) {
+			prevMsg.append(render("date-marker", {msgDate: msgTime}));
+		}
+
+        // Add message to the container
 		container
 			.append(msg)
 			.trigger("msg", [
@@ -382,6 +418,13 @@ $(function() {
 			.find("#chan-" + data.chan)
 			.find(".messages");
 
+		// Remove the date-change marker we put at the top, because it may
+		// not actually be a date change now
+		var firstChild = $(chan).children().eq(0);
+		if (firstChild.attr("class") === "date-marker") {
+			firstChild.remove();
+		}
+
 		// get the scrollable wrapper around messages
 		var scrollable = chan.closest(".chat");
 		var heightOld = chan.height();
@@ -394,6 +437,28 @@ $(function() {
 		if (data.messages.length !== 100) {
 			scrollable.find(".show-more").removeClass("show");
 		}
+
+		// Date change detect
+		// Have to use data instaid of the documentFragment because it's being weird
+		var lastDate;
+		$(data.messages).each(function() {
+			var msgData = this;
+			var msgDate = new Date(msgData.time);
+			var msg = $(chat.find("#chan-" + data.chan + " .messages #msg-" + msgData.id));
+
+			// Top-most message in a channel
+			if (!lastDate) {
+				lastDate = msgDate;
+				msg.before(render("date-marker", {msgDate: msgDate}));
+			}
+
+			if (lastDate.toDateString() !== msgDate.toDateString()) {
+				msg.before(render("date-marker", {msgDate: msgDate}));
+			}
+
+			lastDate = msgDate;
+		});
+
 	});
 
 	socket.on("network", function(data) {
@@ -1210,6 +1275,26 @@ $(function() {
 			var chan = $(this);
 			if (chan.find(".messages .msg:not(.unread-marker)").slice(0, -100).remove().length) {
 				chan.find(".show-more").addClass("show");
+
+				// Remove date-seperators that would otherwise be "stuck" at the top
+				// of the channel
+				var prev;
+				$(chan.find(".messages").children()).each(function() {
+					if (!prev) {
+						// Should always be a date-seperator, because it's always added
+						prev = $(this);
+					} else {
+						var current = $(this);
+
+						if (current.attr("class") === "date-marker") {
+							prev.remove();
+						} else {
+							return false;
+						}
+
+						prev = current;
+					}
+				});
 			}
 		});
 	}, 1000 * 10);
@@ -1217,6 +1302,7 @@ $(function() {
 	function clear() {
 		chat.find(".active .messages .msg:not(.unread-marker)").remove();
 		chat.find(".active .show-more").addClass("show");
+		chat.find(".active .date-marker").remove();
 	}
 
 	function complete(word) {
