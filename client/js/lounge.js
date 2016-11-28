@@ -424,7 +424,7 @@ $(function() {
 		if (children.eq(0).attr("class") === "date-marker") { // Check top most child
 			children.eq(0).remove();
 		} else if (children.eq(0).attr("class") === "unread-marker" && children.eq(1).attr("class") === "date-marker") {
-			// Otherwise the date-marker would get 'stuck' because of the new-massages marker
+			// Otherwise the date-marker would get 'stuck' because of the new-message marker
 			children.eq(1).remove();
 		}
 
