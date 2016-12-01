@@ -421,9 +421,9 @@ $(function() {
 		// Remove the date-change marker we put at the top, because it may
 		// not actually be a date change now
 		var children = $(chan).children();
-		if (children.eq(0).attr("class") === "date-marker") { // Check top most child
+		if (children.eq(0).hasClass("date-marker")) { // Check top most child
 			children.eq(0).remove();
-		} else if (children.eq(0).attr("class") === "unread-marker" && children.eq(1).attr("class") === "date-marker") {
+		} else if (children.eq(0).hasClass("unread-marker") && children.eq(1).hasClass("date-marker")) {
 			// Otherwise the date-marker would get 'stuck' because of the new-message marker
 			children.eq(1).remove();
 		}
