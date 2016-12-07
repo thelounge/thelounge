@@ -140,9 +140,10 @@ ClientManager.prototype.removeUser = function(name) {
 	return true;
 };
 
-ClientManager.prototype.autoload = function(/* sockets */) {
+ClientManager.prototype.autoload = function() {
 	var self = this;
-	setInterval(function() {
+
+	fs.watch(Helper.USERS_PATH, _.debounce(() => {
 		var loaded = self.clients.map(c => c.name);
 		var added = _.difference(self.getUsers(), loaded);
 		added.forEach(name => self.loadUser(name));
@@ -160,5 +161,5 @@ ClientManager.prototype.autoload = function(/* sockets */) {
 				log.info("User '" + name + "' disconnected");
 			}
 		});
-	}, 1000);
+	}, 1000, {maxWait: 10000}));
 };
