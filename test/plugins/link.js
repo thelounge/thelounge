@@ -21,14 +21,14 @@ describe("Link plugin", function() {
 	});
 
 	it("should be able to fetch basic information about URLs", function(done) {
-		link.call(this.irc, this.irc, this.network);
+		let message = this.irc.createMessage({
+			text: "http://localhost:9002/basic"
+		});
+
+		link(this.irc, this.network.channels[0], message);
 
 		this.app.get("/basic", function(req, res) {
 			res.send("<title>test</title>");
-		});
-
-		this.irc.createMessage({
-			message: "http://localhost:9002/basic"
 		});
 
 		this.irc.once("toggle", function(data) {
