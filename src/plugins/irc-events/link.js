@@ -32,6 +32,7 @@ module.exports = function(irc, network) {
 		var msg = new Msg({
 			self: data.nick === irc.user.nick,
 			type: Msg.Type.TOGGLE,
+			time: data.time, // msg handles it if it isn't defined
 		});
 		chan.pushMessage(client, msg);
 
@@ -49,7 +50,8 @@ function parse(msg, url, res, client) {
 		head: "",
 		body: "",
 		thumb: "",
-		link: url
+		link: url,
+		time: msg.time,
 	};
 
 	switch (res.type) {

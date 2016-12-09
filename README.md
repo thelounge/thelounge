@@ -1,4 +1,7 @@
 # The Lounge
+<p align="center">
+	<img src="https://cloud.githubusercontent.com/assets/5481612/19623041/9bbaec40-9888-11e6-9961-8f3e0493ba30.png" width="550" />
+</p>
 
 [![#thelounge IRC channel on freenode](https://img.shields.io/badge/freenode-%23thelounge-BA68C8.svg)](https://avatar.playat.ch:1000/)
 [![npm version](https://img.shields.io/npm/v/thelounge.svg)](https://www.npmjs.org/package/thelounge)
@@ -61,8 +64,7 @@ lounge --help
 
 ### Running from source
 
-The following commands install the development version of The Lounge. A word of
-caution: while it is the most recent codebase, this is not production-ready!
+The following commands install the development version of The Lounge:
 
 ```sh
 git clone https://github.com/thelounge/lounge.git
@@ -70,6 +72,12 @@ cd lounge
 npm install
 npm start
 ```
+
+A word of caution:
+
+- While it is the most recent codebase, this is not production-ready!
+- It is not recommended to run this as root. However, if you decide to do so,
+  you will have to run `npm run build`.
 
 ## Development setup
 

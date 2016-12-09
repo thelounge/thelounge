@@ -25,8 +25,8 @@
 	font-weight: normal;
 	font-style: normal;
 	src:
-		url("../fonts/fontawesome-webfont.woff2?v=4.6.3") format("woff2"),
-		url("../fonts/fontawesome-webfont.woff?v=4.6.3") format("woff");
+		url("../fonts/fontawesome-webfont.woff2?v=4.7.0") format("woff2"),
+		url("../fonts/fontawesome-webfont.woff?v=4.7.0") format("woff");
 }
 
 html,
@@ -837,6 +837,33 @@ button {
 
 #chat .unread-marker:last-child {
 	display: none;
+}
+
+#chat .date-marker {
+	position: relative;
+	text-align: center;
+	opacity: .5;
+	margin: 0 10px;
+	z-index: 0;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+#chat .date-marker:before {
+	position: absolute;
+	z-index: -1;
+	content: "";
+	left: 0;
+	right: 0;
+	top: 50%;
+	border-top: 1px solid #006b3b;
+}
+
+#chat .date-marker-text:before {
+	content: attr(data-date);
+	background-color: white;
+	color: #006b3b;
+	padding: 0 10px;
 }
 
 .inline-channel {
