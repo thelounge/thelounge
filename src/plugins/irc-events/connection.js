@@ -81,9 +81,20 @@ module.exports = function(irc, network) {
 		});
 	}
 
-	if (Helper.config.debug) {
+	if (Helper.config.debug.ircFramework) {
 		irc.on("debug", function(message) {
 			log.debug("[" + client.name + " (#" + client.id + ") on " + network.name + " (#" + network.id + ")]", message);
+		});
+	}
+
+	if (Helper.config.debug.raw) {
+		irc.on("raw", function(message) {
+			network.channels[0].pushMessage(client, new Msg({
+				from: message.from_server ? "«" : "»",
+				self: !message.from_server,
+				type: "raw",
+				text: message.line
+			}), true);
 		});
 	}
 
