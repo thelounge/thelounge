@@ -292,19 +292,15 @@ Client.prototype.setPassword = function(hash, callback) {
 		client.manager.updateUser(client.name, {
 			token: token,
 			password: hash
-		});
+		}, function(err) {
+			if (err) {
+				log.error("Failed to update password of", client.name, err);
+				return callback(false);
+			}
 
-		// re-read the hash off disk to ensure we use whatever is saved. this will
-		// prevent situations where the password failed to save properly and so
-		// a restart of the server would forget the change and use the old
-		// password again.
-		var user = client.manager.readUserConfig(client.name);
-		if (user.password === hash) {
 			client.config.password = hash;
-			callback(true);
-		} else {
-			callback(false);
-		}
+			return callback(true);
+		});
 	});
 };
 
@@ -464,23 +460,13 @@ Client.prototype.clientDetach = function(socketId) {
 	delete this.attachedClients[socketId];
 };
 
-var timer;
-Client.prototype.save = function(force) {
-	var client = this;
-
+Client.prototype.save = _.debounce(function SaveClient() {
 	if (Helper.config.public) {
 		return;
 	}
 
-	if (!force) {
-		clearTimeout(timer);
-		timer = setTimeout(function() {
-			client.save(true);
-		}, 1000);
-		return;
-	}
-
-	var json = {};
+	const client = this;
+	let json = {};
 	json.networks = this.networks.map(n => n.export());
 	client.manager.updateUser(client.name, json);
-};
+}, 1000, {maxWait: 10000});
