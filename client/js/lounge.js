@@ -51,6 +51,8 @@ $(function() {
 	});
 
 	var favicon = $("#favicon");
+	var emoji = new EmojiConvertor();
+	emoji.replace_mode = "unified";
 
 	function render(name, data) {
 		return Handlebars.templates[name](data);
@@ -257,6 +259,13 @@ $(function() {
 		}
 
 		var msg = $(render(template, data.msg));
+		if (options.emojiDisplay) {
+			msg.each(function() {
+				$(this).html(function(i, oldHtml) {
+					return twemoji.parse(emoji.replace_colons(oldHtml));
+				});
+			});
+		}
 
 		var text = msg.find(".text");
 		if (text.find("i").size() === 1) {
@@ -559,6 +568,7 @@ $(function() {
 	var options = $.extend({
 		coloredNicks: true,
 		desktopNotifications: false,
+		emojiDisplay: true,
 		join: true,
 		links: true,
 		mode: true,
