@@ -1,6 +1,7 @@
 "use strict";
 
 var _ = require("lodash");
+var colors = require("colors/safe");
 var pkg = require("../package.json");
 var Chan = require("./models/chan");
 var crypto = require("crypto");
@@ -89,7 +90,7 @@ function Client(manager, name, config) {
 	});
 
 	if (client.name) {
-		log.info("User '" + client.name + "' loaded");
+		log.info(`User ${colors.bold(client.name)} loaded`);
 	}
 }
 

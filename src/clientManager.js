@@ -1,6 +1,7 @@
 "use strict";
 
 var _ = require("lodash");
+var colors = require("colors/safe");
 var fs = require("fs");
 var Client = require("./client");
 var Helper = require("./helper");
@@ -42,7 +43,7 @@ ClientManager.prototype.autoloadUsers = function() {
 			if (client) {
 				client.quit();
 				this.clients = _.without(this.clients, client);
-				log.info("User '" + name + "' disconnected");
+				log.info(`User ${colors.bold(name)} disconnected and removed`);
 			}
 		});
 	}, 1000, {maxWait: 10000}));
