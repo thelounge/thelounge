@@ -56,7 +56,7 @@ import jQuery from "jquery";
 			case 38: // Up
 			case 40: // Down
 				// NOTICE: This is specific to The Lounge.
-				if (e.ctrlKey || e.metaKey) {
+				if (e.ctrlKey || e.metaKey || self.data("autocompleting")) {
 					break;
 				}
 				
