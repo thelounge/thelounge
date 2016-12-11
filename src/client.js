@@ -421,6 +421,10 @@ Client.prototype.sort = function(data) {
 	}
 
 	self.save();
+
+	// Sync order to connected clients
+	const syncOrder = sorted.map(obj => obj.id);
+	self.emit("sync_sort", {order: syncOrder, type: type, target: data.target});
 };
 
 Client.prototype.names = function(data) {
