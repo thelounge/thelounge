@@ -175,6 +175,9 @@ Client.prototype.connect = function(args) {
 			});
 	}
 
+	args.ip = args.ip || (client.config && client.config.ip) || client.ip;
+	args.hostname = args.hostname || (client.config && client.config.hostname) || client.hostname;
+
 	var network = new Network({
 		name: args.name || "",
 		host: args.host || "",
@@ -219,8 +222,9 @@ Client.prototype.connect = function(args) {
 	}
 
 	if (config.webirc && network.host in config.webirc) {
-		args.ip = args.ip || (client.config && client.config.ip) || client.ip;
-		args.hostname = args.hostname || (client.config && client.config.hostname) || client.hostname || args.ip;
+		if (!args.hostname) {
+			args.hostname = args.ip;
+		}
 
 		if (args.ip) {
 			if (config.webirc[network.host] instanceof Function) {
@@ -259,7 +263,7 @@ Client.prototype.connect = function(args) {
 		host: network.host,
 		port: network.port,
 		nick: nick,
-		username: network.username,
+		username: config.useHexIp ? Helper.ip2hex(args.ip) : network.username,
 		gecos: network.realname,
 		password: network.password,
 		tls: network.tls,
@@ -270,6 +274,8 @@ Client.prototype.connect = function(args) {
 		auto_reconnect_max_retries: 360, // At least one hour (plus timeouts) worth of reconnections
 		webirc: webirc,
 	});
+
+	client.save();
 };
 
 Client.prototype.updateToken = function(callback) {
@@ -456,7 +462,31 @@ Client.prototype.quit = function() {
 };
 
 Client.prototype.clientAttach = function(socketId) {
-	this.attachedClients[socketId] = this.lastActiveChannel;
+	var client = this;
+	var save = false;
+
+	client.attachedClients[socketId] = client.lastActiveChannel;
+
+	// Update old networks to store ip and hostmask
+	client.networks.forEach(network => {
+		if (!network.ip) {
+			save = true;
+			network.ip = (client.config && client.config.ip) || client.ip;
+		}
+
+		if (!network.hostname) {
+			var hostmask = (client.config && client.config.hostname) || client.hostname;
+
+			if (hostmask) {
+				save = true;
+				network.hostmask = hostmask;
+			}
+		}
+	});
+
+	if (save) {
+		client.save();
+	}
 };
 
 Client.prototype.clientDetach = function(socketId) {

@@ -147,6 +147,8 @@ function init(socket, client) {
 	} else {
 		socket.emit("authorized");
 
+		client.ip = getClientIp(socket.request);
+
 		socket.on("disconnect", function() {
 			client.clientDetach(socket.id);
 		});
