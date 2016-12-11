@@ -13,6 +13,7 @@ let config = {
 		"js/bundle.vendor.js": [
 			"handlebars/runtime",
 			"jquery",
+			"jquery-textcomplete",
 			"jquery-ui/ui/widgets/sortable",
 			"moment",
 			"mousetrap",
@@ -45,6 +46,10 @@ let config = {
 						]
 					}
 				}
+			},
+			{
+				test: /\.json$/,
+				loader: "json-loader"
 			},
 			{
 				test: /\.tpl$/,

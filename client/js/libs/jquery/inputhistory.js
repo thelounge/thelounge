@@ -34,7 +34,7 @@ import jQuery from "jquery";
 			var key = e.which;
 			switch (key) {
 			case 13: // Enter
-				if (e.shiftKey) {
+				if (e.shiftKey || self.data("autocompleting")) {
 					return; // multiline input
 				}
 				

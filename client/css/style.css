@@ -1486,7 +1486,8 @@ kbd {
 	background: transparent;
 }
 
-#context-menu {
+#context-menu,
+.textcomplete-menu {
 	position: absolute;
 	list-style: none;
 	margin: 0;
@@ -1505,7 +1506,8 @@ kbd {
 	background-color: rgba(0, 0, 0, .1);
 }
 
-.context-menu-item {
+.context-menu-item,
+.textcomplete-item {
 	cursor: pointer;
 	display: block;
 	padding: 4px 8px;
@@ -1514,12 +1516,35 @@ kbd {
 	margin-bottom: 6px;
 }
 
-.context-menu-item:hover {
+.context-menu-item:hover,
+.textcomplete-item:hover,
+.textcomplete-menu .active {
 	background-color: #f6f6f6;
 }
 
-.context-menu-item:before {
+.context-menu-item:before,
+.textcomplete-item:before {
 	width: 20px;
+	display: inline-block;
+}
+
+.textcomplete-item {
+	border-bottom-color: rgba(0, 0, 0, .1);
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	margin-top: 0;
+	margin-bottom: 0;
+	padding: 10px 8px;
+}
+
+.textcomplete-item a {
+	color: #333;
+}
+
+.textcomplete-item .emoji {
+	margin-right: 8px;
+	width: 16px;
+	text-align: center;
 	display: inline-block;
 }
 
