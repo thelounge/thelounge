@@ -1,6 +1,7 @@
 "use strict";
 
 var _ = require("lodash");
+var colors = require("colors/safe");
 var fs = require("fs");
 var Client = require("./client");
 var Helper = require("./helper");
@@ -26,11 +27,26 @@ ClientManager.prototype.findClient = function(name, token) {
 	return false;
 };
 
-ClientManager.prototype.loadUsers = function() {
-	var users = this.getUsers();
-	for (var i in users) {
-		this.loadUser(users[i]);
-	}
+ClientManager.prototype.autoloadUsers = function() {
+	this.getUsers().forEach(name => this.loadUser(name));
+
+	fs.watch(Helper.USERS_PATH, _.debounce(() => {
+		const loaded = this.clients.map(c => c.name);
+		const updatedUsers = this.getUsers();
+
+		// New users created since last time users were loaded
+		_.difference(updatedUsers, loaded).forEach(name => this.loadUser(name));
+
+		// Existing users removed since last time users were loaded
+		_.difference(loaded, updatedUsers).forEach(name => {
+			const client = _.find(this.clients, {name: name});
+			if (client) {
+				client.quit();
+				this.clients = _.without(this.clients, client);
+				log.info(`User ${colors.bold(name)} disconnected and removed`);
+			}
+		});
+	}, 1000, {maxWait: 10000}));
 };
 
 ClientManager.prototype.loadUser = function(name) {
@@ -144,28 +160,4 @@ ClientManager.prototype.removeUser = function(name) {
 		throw e;
 	}
 	return true;
-};
-
-ClientManager.prototype.autoload = function() {
-	var self = this;
-
-	fs.watch(Helper.USERS_PATH, _.debounce(() => {
-		var loaded = self.clients.map(c => c.name);
-		var added = _.difference(self.getUsers(), loaded);
-		added.forEach(name => self.loadUser(name));
-
-		var removed = _.difference(loaded, self.getUsers());
-		removed.forEach(name => {
-			var client = _.find(
-				self.clients, {
-					name: name
-				}
-			);
-			if (client) {
-				client.quit();
-				self.clients = _.without(self.clients, client);
-				log.info("User '" + name + "' disconnected");
-			}
-		});
-	}, 1000, {maxWait: 10000}));
 };

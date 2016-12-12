@@ -88,10 +88,11 @@ in ${config.public ? "public" : "private"} mode`);
 	log.info(`Press Ctrl-C to stop\n`);
 
 	if (!config.public) {
-		manager.loadUsers();
-		if (config.autoload) {
-			manager.autoload();
+		if ("autoload" in config) {
+			log.warn(`Autoloading users is now always enabled. Please remove the ${colors.yellow("autoload")} option from your configuration file.`);
 		}
+
+		manager.autoloadUsers();
 	}
 };
 
