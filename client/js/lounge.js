@@ -89,6 +89,18 @@ $(function() {
 				window.location.reload();
 			});
 
+			// Disables sending a message by pressing Enter. `off` is necessary to
+			// cancel `inputhistory`, which overrides hitting Enter. `on` is then
+			// necessary to avoid creating new lines when hitting Enter without Shift.
+			// This is fairly hacky but this solution is not permanent.
+			$("#input").off("keydown").on("keydown", function(event) {
+				if (event.which === 13 && !event.shiftKey) {
+					event.preventDefault();
+				}
+			});
+			// Hides the "Send Message" button
+			$("#submit").remove();
+
 			console.error(data);
 		});
 	});
