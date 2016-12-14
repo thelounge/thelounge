@@ -5,7 +5,9 @@
 	<span class="from">[{{command}}]</span>
 	<span class="text">
 		{{#each params}}
-			<span>{{this}}</span>
+			<span>
+				{{this}}{{#equal ../command "421"}}{{#if @first}}:{{/if}}{{/equal}}
+			</span>
 		{{/each}}
 	</span>
 </div>
