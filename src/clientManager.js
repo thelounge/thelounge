@@ -60,8 +60,8 @@ class ClientManager {
 				this,
 				name,
 				json
-			));
-		}	
+				));
+		}
 	}
 
 	getUsers() {
@@ -77,7 +77,7 @@ class ClientManager {
 			log.error("Failed to get users", e);
 			return;
 		}
-		return users;		
+		return users;
 	}
 
 	addUser(name, password) {
@@ -100,7 +100,7 @@ class ClientManager {
 			fs.writeFileSync(
 				Helper.getUserConfigPath(name),
 				JSON.stringify(user, null, "\t")
-			);
+				);
 		} catch (e) {
 			log.error("Failed to add user " + name, e);
 			throw e;
@@ -135,7 +135,7 @@ class ClientManager {
 			if (callback) {
 				callback(err);
 			}
-		});	
+		});
 	}
 
 	readUserConfig(name) {
@@ -144,9 +144,9 @@ class ClientManager {
 			return false;
 		}
 		var data = fs.readFileSync(Helper.getUserConfigPath(name), "utf-8");
-		return JSON.parse(data);	
+		return JSON.parse(data);
 	}
-	
+
 	removeUser(name) {
 		var users = this.getUsers();
 		if (users.indexOf(name) === -1) {
@@ -158,8 +158,6 @@ class ClientManager {
 			throw e;
 		}
 		return true;
-	}	
+	}
 }
 module.exports = ClientManager;
-
-
