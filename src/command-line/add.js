@@ -1,21 +1,22 @@
 "use strict";
 
 var ClientManager = new require("../clientManager");
+var colors = require("colors/safe");
 var program = require("commander");
 var Helper = require("../helper");
 
 program
 	.command("add <name>")
 	.description("Add a new user")
-	.action(function(name/* , password */) {
+	.action(function(name) {
 		var manager = new ClientManager();
 		var users = manager.getUsers();
 		if (users.indexOf(name) !== -1) {
-			log.error("User '" + name + "' already exists.");
+			log.error(`User ${colors.bold(name)} already exists.`);
 			return;
 		}
 		require("read")({
-			prompt: "[thelounge] Enter password: ",
+			prompt: log.rawInfo("Enter password: "),
 			silent: true
 		}, function(err, password) {
 			if (!password) {
@@ -34,6 +35,7 @@ function add(manager, name, password) {
 		name,
 		hash
 	);
-	log.info("User '" + name + "' created:");
-	log.info(Helper.getUserConfigPath(name));
+
+	log.info(`User ${colors.bold(name)} created.`);
+	log.info(`User file located at ${colors.green(Helper.getUserConfigPath(name))}.`);
 }

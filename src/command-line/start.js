@@ -2,6 +2,7 @@
 
 var ClientManager = new require("../clientManager");
 var program = require("commander");
+var colors = require("colors/safe");
 var server = require("../server");
 var Helper = require("../helper");
 
@@ -24,8 +25,8 @@ program
 		}
 
 		if (!mode && !users.length && !Helper.config.ldap.enable) {
-			log.warn("No users found!");
-			log.info("Create a new user with 'lounge add <name>'.");
+			log.warn("No users found.");
+			log.info(`Create a new user with ${colors.bold("lounge add <name>")}.`);
 
 			return;
 		}

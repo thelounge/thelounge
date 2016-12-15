@@ -2,6 +2,7 @@
 
 var ClientManager = new require("../clientManager");
 var program = require("commander");
+var colors = require("colors/safe");
 
 program
 	.command("list")
@@ -9,11 +10,11 @@ program
 	.action(function() {
 		var users = new ClientManager().getUsers();
 		if (!users.length) {
-			log.warn("No users found!");
+			log.warn("No users found.");
 		} else {
-			console.log("Users:");
+			log.info("Users:");
 			for (var i = 0; i < users.length; i++) {
-				console.log("  " + (i + 1) + ". " + users[i]);
+				log.info(`${i + 1}. ${colors.bold(users[i])}`);
 			}
 		}
 	});

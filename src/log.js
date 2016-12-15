@@ -30,3 +30,8 @@ exports.info = function() {
 exports.debug = function() {
 	console.log.apply(console, timestamp(colors.green("[DEBUG]"), arguments));
 };
+
+exports.rawInfo = function() {
+	const newArguments = timestamp(colors.blue("[INFO]"), arguments);
+	return Array.prototype.slice.call(newArguments).join(" ");
+};
