@@ -1,6 +1,7 @@
 "use strict";
 
 var _ = require("lodash");
+var colors = require("colors/safe");
 var pkg = require("../package.json");
 var Chan = require("./models/chan");
 var crypto = require("crypto");
@@ -24,7 +25,6 @@ var events = [
 	"mode",
 	"motd",
 	"message",
-	"link",
 	"names",
 	"nick",
 	"part",
@@ -90,7 +90,7 @@ function Client(manager, name, config) {
 	});
 
 	if (client.name) {
-		log.info("User '" + client.name + "' loaded");
+		log.info(`User ${colors.bold(client.name)} loaded`);
 	}
 }
 
@@ -176,6 +176,9 @@ Client.prototype.connect = function(args) {
 			});
 	}
 
+	args.ip = args.ip || (client.config && client.config.ip) || client.ip;
+	args.hostname = args.hostname || (client.config && client.config.hostname) || client.hostname;
+
 	var network = new Network({
 		name: args.name || "",
 		host: args.host || "",
@@ -220,8 +223,9 @@ Client.prototype.connect = function(args) {
 	}
 
 	if (config.webirc && network.host in config.webirc) {
-		args.ip = args.ip || (client.config && client.config.ip) || client.ip;
-		args.hostname = args.hostname || (client.config && client.config.hostname) || client.hostname || args.ip;
+		if (!args.hostname) {
+			args.hostname = args.ip;
+		}
 
 		if (args.ip) {
 			if (config.webirc[network.host] instanceof Function) {
@@ -260,7 +264,7 @@ Client.prototype.connect = function(args) {
 		host: network.host,
 		port: network.port,
 		nick: nick,
-		username: network.username,
+		username: config.useHexIp ? Helper.ip2hex(args.ip) : network.username,
 		gecos: network.realname,
 		password: network.password,
 		tls: network.tls,
@@ -271,6 +275,8 @@ Client.prototype.connect = function(args) {
 		auto_reconnect_max_retries: 360, // At least one hour (plus timeouts) worth of reconnections
 		webirc: webirc,
 	});
+
+	client.save();
 };
 
 Client.prototype.updateToken = function(callback) {
@@ -292,19 +298,15 @@ Client.prototype.setPassword = function(hash, callback) {
 		client.manager.updateUser(client.name, {
 			token: token,
 			password: hash
-		});
+		}, function(err) {
+			if (err) {
+				log.error("Failed to update password of", client.name, err);
+				return callback(false);
+			}
 
-		// re-read the hash off disk to ensure we use whatever is saved. this will
-		// prevent situations where the password failed to save properly and so
-		// a restart of the server would forget the change and use the old
-		// password again.
-		var user = client.manager.readUserConfig(client.name);
-		if (user.password === hash) {
 			client.config.password = hash;
-			callback(true);
-		} else {
-			callback(false);
-		}
+			return callback(true);
+		});
 	});
 };
 
@@ -425,6 +427,10 @@ Client.prototype.sort = function(data) {
 	}
 
 	self.save();
+
+	// Sync order to connected clients
+	const syncOrder = sorted.map(obj => obj.id);
+	self.emit("sync_sort", {order: syncOrder, type: type, target: data.target});
 };
 
 Client.prototype.names = function(data) {
@@ -457,30 +463,44 @@ Client.prototype.quit = function() {
 };
 
 Client.prototype.clientAttach = function(socketId) {
-	this.attachedClients[socketId] = this.lastActiveChannel;
+	var client = this;
+	var save = false;
+
+	client.attachedClients[socketId] = client.lastActiveChannel;
+
+	// Update old networks to store ip and hostmask
+	client.networks.forEach(network => {
+		if (!network.ip) {
+			save = true;
+			network.ip = (client.config && client.config.ip) || client.ip;
+		}
+
+		if (!network.hostname) {
+			var hostmask = (client.config && client.config.hostname) || client.hostname;
+
+			if (hostmask) {
+				save = true;
+				network.hostmask = hostmask;
+			}
+		}
+	});
+
+	if (save) {
+		client.save();
+	}
 };
 
 Client.prototype.clientDetach = function(socketId) {
 	delete this.attachedClients[socketId];
 };
 
-var timer;
-Client.prototype.save = function(force) {
-	var client = this;
-
+Client.prototype.save = _.debounce(function SaveClient() {
 	if (Helper.config.public) {
 		return;
 	}
 
-	if (!force) {
-		clearTimeout(timer);
-		timer = setTimeout(function() {
-			client.save(true);
-		}, 1000);
-		return;
-	}
-
-	var json = {};
+	const client = this;
+	let json = {};
 	json.networks = this.networks.map(n => n.export());
 	client.manager.updateUser(client.name, json);
-};
+}, 1000, {maxWait: 10000});

@@ -1,7 +1,4 @@
 # The Lounge
-<p align="center">
-	<img src="https://cloud.githubusercontent.com/assets/5481612/19623041/9bbaec40-9888-11e6-9961-8f3e0493ba30.png" width="550" />
-</p>
 
 [![#thelounge IRC channel on freenode](https://img.shields.io/badge/freenode-%23thelounge-BA68C8.svg)](https://avatar.playat.ch:1000/)
 [![npm version](https://img.shields.io/npm/v/thelounge.svg)](https://www.npmjs.org/package/thelounge)
@@ -10,32 +7,15 @@
 [![Dependencies Status](https://img.shields.io/david/thelounge/lounge.svg)](https://david-dm.org/thelounge/lounge)
 [![Developer Dependencies Status](https://img.shields.io/david/dev/thelounge/lounge.svg)](https://david-dm.org/thelounge/lounge?type=dev)
 
-__What is it?__
+The Lounge is a modern web IRC client designed for self-hosting.
 
-The Lounge is a web IRC client that you host on your own server.
+To learn more about configuration, usage and features of The Lounge, take a look at [the website](https://thelounge.github.io).
 
-*This is the official, community-managed fork of @erming's great initiative, the [Shout](https://github.com/erming/shout) project.*
+<p align="center">
+	<img src="https://cloud.githubusercontent.com/assets/5481612/19623041/9bbaec40-9888-11e6-9961-8f3e0493ba30.png" width="550">
+</p>
 
-__What features does it have?__
-
-- Multiple user support
-- Stays connected even when you close the browser
-- Connect from multiple devices at once
-- Responsive layout — works well on your smartphone
-- _.. and more!_
-
-__Why the fork?__
-
-We felt that the original [Shout](https://github.com/erming/shout) project
-"stagnated" a little because its original author wanted it to remain his pet
-project (which is a perfectly fine thing!).
-
-A bunch of people, excited about doing things a bit differently than the upstream
-project forked it under a new name: “The Lounge”.
-
-This fork aims to be community managed, meaning that the decisions are taken
-in a collegial fashion, and that a bunch of maintainers should be able to make
-the review process quicker and more streamlined.
+The Lounge is the official and community-managed fork of [Shout](https://github.com/erming/shout), by [Mattias Erming](https://github.com/erming).
 
 ## Installation and usage
 

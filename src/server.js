@@ -88,10 +88,11 @@ in ${config.public ? "public" : "private"} mode`);
 	log.info(`Press Ctrl-C to stop\n`);
 
 	if (!config.public) {
-		manager.loadUsers();
-		if (config.autoload) {
-			manager.autoload();
+		if ("autoload" in config) {
+			log.warn(`Autoloading users is now always enabled. Please remove the ${colors.yellow("autoload")} option from your configuration file.`);
 		}
+
+		manager.autoloadUsers();
 	}
 };
 
@@ -146,6 +147,8 @@ function init(socket, client) {
 		socket.on("auth", auth);
 	} else {
 		socket.emit("authorized");
+
+		client.ip = getClientIp(socket.request);
 
 		socket.on("disconnect", function() {
 			client.clientDetach(socket.id);
@@ -273,9 +276,7 @@ function localAuth(client, user, password, callback) {
 		var hash = Helper.password.hash(password);
 
 		client.setPassword(hash, function(success) {
-			if (!success) {
-				log.error("Failed to update password of", client.name, "to match new security requirements");
-			} else {
+			if (success) {
 				log.info("User", client.name, "logged in and their hashed password has been updated to match new security requirements");
 			}
 		});

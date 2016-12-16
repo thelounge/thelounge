@@ -15,10 +15,12 @@ import slideoutMenu from "./libs/slideout";
 import templates from "../views";
 
 $(function() {
-	$("#loading-page-message").text("Connecting…");
-
 	var path = window.location.pathname + "socket.io/";
-	var socket = io({path: path});
+	var socket = io({
+		path: path,
+		autoConnect: false,
+		reconnection: false
+	});
 	var commands = [
 		"/close",
 		"/connect",
@@ -50,6 +52,8 @@ $(function() {
 	var sidebar = $("#sidebar, #footer");
 	var chat = $("#chat");
 
+	var ignoreSortSync = false;
+
 	var pop;
 	try {
 		pop = new Audio();
@@ -76,14 +80,47 @@ $(function() {
 		}
 	}
 
-	socket.on("error", function(e) {
-		console.log(e);
+	Handlebars.registerHelper(
+		"partial", function(id) {
+			return new Handlebars.SafeString(render(id, this));
+		}
+	);
+
+	[
+		"connect_error",
+		"connect_failed",
+		"disconnect",
+		"error",
+	].forEach(function(e) {
+		socket.on(e, function(data) {
+			$("#loading-page-message").text("Connection failed: " + data);
+			$("#connection-error").addClass("shown").one("click", function() {
+				window.onbeforeunload = null;
+				window.location.reload();
+			});
+
+			// Disables sending a message by pressing Enter. `off` is necessary to
+			// cancel `inputhistory`, which overrides hitting Enter. `on` is then
+			// necessary to avoid creating new lines when hitting Enter without Shift.
+			// This is fairly hacky but this solution is not permanent.
+			$("#input").off("keydown").on("keydown", function(event) {
+				if (event.which === 13 && !event.shiftKey) {
+					event.preventDefault();
+				}
+			});
+			// Hides the "Send Message" button
+			$("#submit").remove();
+
+			console.error(data);
+		});
 	});
 
-	$.each(["connect_error", "disconnect"], function(i, e) {
-		socket.on(e, function() {
-			refresh();
-		});
+	socket.on("connecting", function() {
+		$("#loading-page-message").text("Connecting…");
+	});
+
+	socket.on("connect", function() {
+		$("#loading-page-message").text("Finalizing connection…");
 	});
 
 	socket.on("authorized", function() {
@@ -1348,11 +1385,6 @@ $(function() {
 		}
 	}
 
-	function refresh() {
-		window.onbeforeunload = null;
-		location.reload();
-	}
-
 	function sortable() {
 		sidebar.find(".networks").sortable({
 			axis: "y",
@@ -1377,6 +1409,8 @@ $(function() {
 						order: order
 					}
 				);
+
+				ignoreSortSync = true;
 			}
 		});
 		sidebar.find(".network").sortable({
@@ -1403,9 +1437,56 @@ $(function() {
 						order: order
 					}
 				);
+
+				ignoreSortSync = true;
 			}
 		});
 	}
+
+	socket.on("sync_sort", function(data) {
+		// Syncs the order of channels or networks when they are reordered
+		if (ignoreSortSync) {
+			ignoreSortSync = false;
+			return; // Ignore syncing because we 'caused' it
+		}
+
+		var type = data.type;
+		var order = data.order;
+
+		if (type === "networks") {
+			var container = $(".networks");
+
+			$.each(order, function(index, value) {
+				var position = $(container.children()[index]);
+
+				if (position.data("id") === value) { // Network in correct place
+					return true; // No point in continuing
+				}
+
+				var network = container.find("#network-" + value);
+
+				$(network).insertBefore(position);
+			});
+		} else if (type === "channels") {
+			var network = $("#network-" + data.target);
+
+			$.each(order, function(index, value) {
+				if (index === 0) { // Shouldn't attempt to move lobby
+					return true; // same as `continue` -> skip to next item
+				}
+
+				var position = $(network.children()[index]); // Target channel at position
+
+				if (position.data("id") === value) { // Channel in correct place
+					return true; // No point in continuing
+				}
+
+				var channel = network.find(".chan[data-id=" + value + "]"); // Channel at position
+
+				$(channel).insertBefore(position);
+			});
+		}
+	});
 
 	function setNick(nick) {
 		// Closes the nick editor when canceling, changing channel, or when a nick
@@ -1447,4 +1528,7 @@ $(function() {
 			}
 		}
 	);
+
+	// Only start opening socket.io connection after all events have been registered
+	socket.open();
 });

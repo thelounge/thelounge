@@ -18,6 +18,10 @@ program
 			prompt: "[thelounge] Enter password: ",
 			silent: true
 		}, function(err, password) {
+			if (!password) {
+				log.error("Password cannot be empty.");
+				return;
+			}
 			if (!err) {
 				add(manager, name, password);
 			}

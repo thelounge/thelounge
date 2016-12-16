@@ -58,6 +58,14 @@ a:hover,
 	background: #00ff0e;
 }
 
+.btn-reconnect {
+	background: #f00;
+	color: #fff;
+	border: 0;
+	border-radius: 0;
+	margin: 0;
+}
+
 #settings .opt {
 	line-height: 20px;
 	font-size: 12px;

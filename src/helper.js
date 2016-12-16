@@ -5,6 +5,7 @@ var _ = require("lodash");
 var path = require("path");
 var os = require("os");
 var fs = require("fs");
+var net = require("net");
 var bcrypt = require("bcrypt-nodejs");
 
 var Helper = {
@@ -15,6 +16,7 @@ var Helper = {
 	setHome: setHome,
 	getVersion: getVersion,
 	getGitCommit: getGitCommit,
+	ip2hex: ip2hex,
 
 	password: {
 		hash: passwordHash,
@@ -73,6 +75,23 @@ function getUserConfigPath(name) {
 
 function getUserLogsPath(name, network) {
 	return path.join(this.HOME, "logs", name, network);
+}
+
+function ip2hex(address) {
+	// no ipv6 support
+	if (!net.isIPv4(address)) {
+		return "00000000";
+	}
+
+	return address.split(".").map(function(octet) {
+		var hex = parseInt(octet, 10).toString(16);
+
+		if (hex.length === 1) {
+			hex = "0" + hex;
+		}
+
+		return hex;
+	}).join("");
 }
 
 function expandHome(shortenedPath) {

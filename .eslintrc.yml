@@ -3,12 +3,10 @@
 root: true
 
 env:
+  es6: true
   browser: true
   mocha: true
   node: true
-
-parserOptions:
-  ecmaVersion: 6
 
 rules:
   block-scoped-var: 2

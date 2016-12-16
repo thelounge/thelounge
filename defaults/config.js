@@ -56,17 +56,6 @@ module.exports = {
 	theme: "themes/example.css",
 
 	//
-	// Autoload users
-	//
-	// When this setting is enabled, your 'users/' folder will be monitored. This is useful
-	// if you want to add/remove users while the server is running.
-	//
-	// @type     boolean
-	// @default  true
-	//
-	autoload: true,
-
-	//
 	// Prefetch URLs
 	//
 	// If enabled, The Lounge will try to load thumbnails and site descriptions from
@@ -108,6 +97,17 @@ module.exports = {
 	// @default  false
 	//
 	lockNetwork: false,
+
+	//
+	// Hex IP
+	//
+	// If enabled, clients' username will be set to their IP encoded has hex.
+	// This is done to share the real user IP address with the server for host masking purposes.
+	//
+	// @type     boolean
+	// @default  false
+	//
+	useHexIp: false,
 
 	//
 	// WEBIRC support

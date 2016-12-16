@@ -1,7 +1,8 @@
 "use strict";
 
-var Chan = require("../../models/chan");
-var Msg = require("../../models/msg");
+const Chan = require("../../models/chan");
+const Msg = require("../../models/msg");
+const LinkPrefetch = require("./link");
 
 module.exports = function(irc, network) {
 	var client = this;
@@ -89,5 +90,7 @@ module.exports = function(irc, network) {
 			highlight: highlight
 		});
 		chan.pushMessage(client, msg, !self);
+
+		LinkPrefetch(client, chan, msg);
 	}
 };

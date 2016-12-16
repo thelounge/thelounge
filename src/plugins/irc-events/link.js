@@ -1,45 +1,37 @@
 "use strict";
 
-var cheerio = require("cheerio");
-var Msg = require("../../models/msg");
-var request = require("request");
-var Helper = require("../../helper");
-var es = require("event-stream");
+const cheerio = require("cheerio");
+const Msg = require("../../models/msg");
+const request = require("request");
+const Helper = require("../../helper");
+const es = require("event-stream");
 
 process.setMaxListeners(0);
 
-module.exports = function(irc, network) {
-	var client = this;
-	irc.on("privmsg", function(data) {
-		if (!Helper.config.prefetch) {
-			return;
-		}
+module.exports = function(client, chan, originalMsg) {
+	if (!Helper.config.prefetch) {
+		return;
+	}
 
-		const links = data.message
-			.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "")
-			.split(" ")
-			.filter(w => /^https?:\/\//.test(w));
+	const links = originalMsg.text
+		.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "")
+		.split(" ")
+		.filter(w => /^https?:\/\//.test(w));
 
-		if (links.length === 0) {
-			return;
-		}
+	if (links.length === 0) {
+		return;
+	}
 
-		var chan = network.getChannel(data.target);
-		if (typeof chan === "undefined") {
-			return;
-		}
+	let msg = new Msg({
+		type: Msg.Type.TOGGLE,
+		time: originalMsg.time,
+		self: originalMsg.self,
+	});
+	chan.pushMessage(client, msg);
 
-		var msg = new Msg({
-			self: data.nick === irc.user.nick,
-			type: Msg.Type.TOGGLE,
-			time: data.time, // msg handles it if it isn't defined
-		});
-		chan.pushMessage(client, msg);
-
-		var link = escapeHeader(links[0]);
-		fetch(link, function(res) {
-			parse(msg, link, res, client);
-		});
+	const link = escapeHeader(links[0]);
+	fetch(link, function(res) {
+		parse(msg, link, res, client);
 	});
 };
 
@@ -51,7 +43,6 @@ function parse(msg, url, res, client) {
 		body: "",
 		thumb: "",
 		link: url,
-		time: msg.time,
 	};
 
 	switch (res.type) {
