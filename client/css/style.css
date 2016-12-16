@@ -1317,6 +1317,14 @@ button {
 	align-items: flex-end;
 }
 
+#connection-error {
+	display: none;
+}
+
+#connection-error.shown {
+	display: block;
+}
+
 [contenteditable]:focus {
 	outline: none;
 }

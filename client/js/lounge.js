@@ -1,10 +1,12 @@
 "use strict";
 
 $(function() {
-	$("#loading-page-message").text("Connecting…");
-
 	var path = window.location.pathname + "socket.io/";
-	var socket = io({path: path});
+	var socket = io({
+		path: path,
+		autoConnect: false,
+		reconnection: false
+	});
 	var commands = [
 		"/close",
 		"/connect",
@@ -74,14 +76,41 @@ $(function() {
 		}
 	);
 
-	socket.on("error", function(e) {
-		console.log(e);
+	[
+		"connect_error",
+		"connect_failed",
+		"disconnect",
+		"error",
+	].forEach(function(e) {
+		socket.on(e, function(data) {
+			$("#loading-page-message").text("Connection failed: " + data);
+			$("#connection-error").addClass("shown").one("click", function() {
+				window.onbeforeunload = null;
+				window.location.reload();
+			});
+
+			// Disables sending a message by pressing Enter. `off` is necessary to
+			// cancel `inputhistory`, which overrides hitting Enter. `on` is then
+			// necessary to avoid creating new lines when hitting Enter without Shift.
+			// This is fairly hacky but this solution is not permanent.
+			$("#input").off("keydown").on("keydown", function(event) {
+				if (event.which === 13 && !event.shiftKey) {
+					event.preventDefault();
+				}
+			});
+			// Hides the "Send Message" button
+			$("#submit").remove();
+
+			console.error(data);
+		});
 	});
 
-	$.each(["connect_error", "disconnect"], function(i, e) {
-		socket.on(e, function() {
-			refresh();
-		});
+	socket.on("connecting", function() {
+		$("#loading-page-message").text("Connecting…");
+	});
+
+	socket.on("connect", function() {
+		$("#loading-page-message").text("Finalizing connection…");
 	});
 
 	socket.on("authorized", function() {
@@ -1343,11 +1372,6 @@ $(function() {
 		}
 	}
 
-	function refresh() {
-		window.onbeforeunload = null;
-		location.reload();
-	}
-
 	function sortable() {
 		sidebar.find(".networks").sortable({
 			axis: "y",
@@ -1491,4 +1515,7 @@ $(function() {
 			}
 		}
 	);
+
+	// Only start opening socket.io connection after all events have been registered
+	socket.open();
 });
