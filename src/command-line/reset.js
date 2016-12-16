@@ -17,8 +17,8 @@ program
 		}
 		var file = Helper.getUserConfigPath(name);
 		var user = require(file);
-		require("read")({
-			prompt: log.rawInfo("Enter new password: "),
+		log.prompt({
+			text: "Enter new password:",
 			silent: true
 		}, function(err, password) {
 			if (err) {

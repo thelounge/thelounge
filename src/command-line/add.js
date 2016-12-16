@@ -15,8 +15,8 @@ program
 			log.error(`User ${colors.bold(name)} already exists.`);
 			return;
 		}
-		require("read")({
-			prompt: log.rawInfo("Enter password: "),
+		log.prompt({
+			text: "Enter password:",
 			silent: true
 		}, function(err, password) {
 			if (!password) {
