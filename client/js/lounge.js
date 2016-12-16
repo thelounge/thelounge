@@ -823,15 +823,46 @@ $(function() {
 		})
 		.tab(complete, {hint: false});
 
+	var focus = $.noop;
+	if (!("ontouchstart" in window || navigator.maxTouchPoints > 0)) {
+		focus = function() {
+			if (chat.find(".active").hasClass("chan")) {
+				input.focus();
+			}
+		};
+
+		$(window).on("focus", focus);
+
+		chat.on("click", ".chat", function() {
+			setTimeout(function() {
+				var text = "";
+				if (window.getSelection) {
+					text = window.getSelection().toString();
+				} else if (document.selection && document.selection.type !== "Control") {
+					text = document.selection.createRange().text;
+				}
+				if (!text) {
+					focus();
+				}
+			}, 2);
+		});
+	}
+
+	// Triggering click event opens the virtual keyboard on mobile
+	// This can only be called from another interactive event (e.g. button click)
+	var forceFocus = function() {
+		input.trigger("click").focus();
+	};
+
 	// Cycle through nicks for the current word, just like hitting "Tab"
 	$("#cycle-nicks").on("click", function() {
 		input.triggerHandler($.Event("keydown.tabcomplete", {which: 9}));
-		focus();
+		forceFocus();
 	});
 
 	$("#form").on("submit", function(e) {
 		e.preventDefault();
-		focus();
+		forceFocus();
 		var text = input.val();
 
 		if (text.length === 0) {
@@ -951,29 +982,6 @@ $(function() {
 		});
 	});
 
-	chat.on("click", ".chat", function() {
-		setTimeout(function() {
-			var text = "";
-			if (window.getSelection) {
-				text = window.getSelection().toString();
-			} else if (document.selection && document.selection.type !== "Control") {
-				text = document.selection.createRange().text;
-			}
-			if (!text) {
-				focus();
-			}
-		}, 2);
-	});
-
-	$(window).on("focus", focus);
-
-	function focus() {
-		var chan = chat.find(".active");
-		if (screen.width > 768 && chan.hasClass("chan")) {
-			input.focus();
-		}
-	}
-
 	sidebar.on("click", ".chan, button", function() {
 		var self = $(this);
 		var target = self.data("target");
@@ -1042,9 +1050,7 @@ $(function() {
 			socket.emit("names", {target: self.data("id")});
 		}
 
-		if (screen.width > 768 && chan.hasClass("chan")) {
-			input.focus();
-		}
+		focus();
 	});
 
 	sidebar.on("click", "#sign-out", function() {
