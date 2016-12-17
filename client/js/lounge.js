@@ -1133,7 +1133,9 @@ $(function() {
 						if (!button.hasClass("query")) {
 							title += " (" + button.data("title").trim() + ")";
 						}
-						title += " says:";
+						if (msg.type === "message") {
+							title += " says:";
+						}
 						body = msg.text.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "").trim();
 					}
 
