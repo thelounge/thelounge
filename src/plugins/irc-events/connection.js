@@ -64,16 +64,16 @@ module.exports = function(irc, network) {
 	});
 
 	if (identd.isEnabled()) {
-		irc.on("socket connected", function() {
-			identd.hook(irc.connection.socket, client.name || network.username);
+		irc.on("raw socket connected", function(socket) {
+			identd.hook(socket, client.name || network.username);
 		});
 	}
 
 	if (identHandler) {
 		let identSocketId;
 
-		irc.on("socket connected", function() {
-			identSocketId = identHandler.addSocket(irc.connection.socket, client.name || network.username);
+		irc.on("raw socket connected", function(socket) {
+			identSocketId = identHandler.addSocket(socket, client.name || network.username);
 		});
 
 		irc.on("socket close", function() {
