@@ -91,6 +91,9 @@ module.exports = function(irc, network) {
 		});
 		chan.pushMessage(client, msg, !self);
 
-		LinkPrefetch(client, chan, msg);
+		// No prefetch URLs unless are simple MESSAGE or ACTION types
+		if ([Msg.Type.MESSAGE, Msg.Type.ACTION].indexOf(data.type) !== -1) {
+			LinkPrefetch(client, chan, msg);
+		}
 	}
 };
