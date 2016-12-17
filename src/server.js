@@ -11,12 +11,16 @@ var dns = require("dns");
 var Helper = require("./helper");
 var ldap = require("ldapjs");
 var colors = require("colors/safe");
+const Identification = require("./identification");
 
+let identHandler = null;
 var manager = null;
 var authFunction = localAuth;
 
 module.exports = function() {
-	manager = new ClientManager();
+	log.info(`The Lounge ${colors.green(Helper.getVersion())} \
+(node ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${process.arch})`);
+	log.info(`Configuration file: ${colors.green(Helper.CONFIG_PATH)}`);
 
 	if (!fs.existsSync("client/js/bundle.js")) {
 		log.error(`The client application was not built. Run ${colors.bold("NODE_ENV=production npm run build")} to resolve this.`);
@@ -37,7 +41,7 @@ module.exports = function() {
 
 	if (!config.https.enable) {
 		server = require("http");
-		server = server.createServer(app).listen(config.port, config.host);
+		server = server.createServer(app);
 	} else {
 		server = require("spdy");
 		const keyPath = Helper.expandHome(config.https.key);
@@ -53,16 +57,18 @@ module.exports = function() {
 		server = server.createServer({
 			key: fs.readFileSync(keyPath),
 			cert: fs.readFileSync(certPath)
-		}, app).listen(config.port, config.host);
+		}, app);
 	}
 
-	if (config.identd.enable) {
-		if (manager.identHandler) {
-			log.warn("Using both identd and oidentd at the same time!");
-		}
-
-		require("./identd").start(config.identd.port);
-	}
+	server.listen({
+		port: config.port,
+		host: config.host,
+	}, () => {
+		const protocol = config.https.enable ? "https" : "http";
+		var address = server.address();
+		log.info(`Available on ${colors.green(protocol + "://" + address.address + ":" + address.port + "/")} \
+in ${config.public ? "public" : "private"} mode`);
+	});
 
 	if (!config.public && (config.ldap || {}).enable) {
 		authFunction = ldapAuth;
@@ -81,25 +87,11 @@ module.exports = function() {
 		}
 	});
 
-	manager.sockets = sockets;
+	manager = new ClientManager();
 
-	const protocol = config.https.enable ? "https" : "http";
-	const host = config.host || "*";
-
-	log.info(`The Lounge ${colors.green(Helper.getVersion())} is now running \
-using node ${colors.green(process.versions.node)} on ${colors.green(process.platform)} (${process.arch})`);
-	log.info(`Configuration file: ${colors.green(Helper.CONFIG_PATH)}`);
-	log.info(`Available on ${colors.green(protocol + "://" + host + ":" + config.port + "/")} \
-in ${config.public ? "public" : "private"} mode`);
-	log.info("Press Ctrl-C to stop\n");
-
-	if (!config.public) {
-		if ("autoload" in config) {
-			log.warn(`Autoloading users is now always enabled. Please remove the ${colors.yellow("autoload")} option from your configuration file.`);
-		}
-
-		manager.autoloadUsers();
-	}
+	identHandler = new Identification(() => {
+		manager.init(identHandler, sockets);
+	});
 };
 
 function getClientIp(req) {
