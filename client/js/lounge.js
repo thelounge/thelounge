@@ -8,6 +8,8 @@ $(function() {
 		reconnection: false
 	});
 	var commands = [
+		"/away",
+		"/back",
 		"/close",
 		"/connect",
 		"/deop",
@@ -17,6 +19,7 @@ $(function() {
 		"/join",
 		"/kick",
 		"/leave",
+		"/me",
 		"/mode",
 		"/msg",
 		"/nick",

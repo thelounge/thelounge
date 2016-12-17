@@ -39,6 +39,7 @@ var inputs = [
 	"msg",
 	"part",
 	"action",
+	"away",
 	"connect",
 	"disconnect",
 	"invite",
