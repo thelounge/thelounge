@@ -6,6 +6,8 @@ coverage/
 # Built assets created at npm install/prepublish time
 # See https://docs.npmjs.com/misc/scripts
 client/fonts/
+client/css/build.css
+client/css/build.css.map
 client/js/libs.min.js.map
 client/js/libs.min.js
 client/js/lounge.templates.js

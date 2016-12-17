@@ -18,6 +18,7 @@
     "build:font-awesome": "node scripts/build-fontawesome.js",
     "build:libs": "uglifyjs client/js/libs/*.js client/js/libs/jquery/*.js client/js/libs/handlebars/*.js -o client/js/libs.min.js --source-map client/js/libs.min.js.map --source-map-url libs.min.js.map -p relative",
     "build:handlebars": "handlebars client/views/ -e tpl -f client/js/lounge.templates.js",
+    "build:postcss": "postcss -u postcss-cssnext -m file -o client/css/build.css client/css/style.css",
     "test": "npm-run-all -c test:mocha lint",
     "test:mocha": "mocha",
     "lint": "npm-run-all -c lint:js lint:css",
@@ -66,6 +67,9 @@
     "istanbul": "0.4.5",
     "mocha": "3.1.2",
     "npm-run-all": "3.1.1",
+    "postcss": "5.2.6",
+    "postcss-cli": "2.6.0",
+    "postcss-cssnext": "2.9.0",
     "stylelint": "7.5.0",
     "uglify-js": "2.7.3"
   }
