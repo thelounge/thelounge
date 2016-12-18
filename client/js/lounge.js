@@ -269,9 +269,9 @@ $(function() {
 			data.msg.highlight = true;
 		}
 
-        if (lastSender === data.msg.mode + data.msg.from) {
-            data.msg.sameSender = true;
-        }
+		if (lastSender === data.msg.mode + data.msg.from) {
+			data.msg.sameSender = true;
+		}
 
 		if ([
 			"invite",
@@ -470,6 +470,13 @@ $(function() {
 		var chan = chat
 			.find("#chan-" + data.chan)
 			.find(".messages");
+
+		// set lastSender appropriately
+		var firstSenderOld = chan.children(".message").eq(0).children(".from").eq(0).text().trim();
+		var lastSenderNew = data.messages[data.messages.length - 1].mode + data.messages[data.messages.length - 1].from;
+		if (firstSenderOld === lastSenderNew) {
+			chan.children(".message").eq(0).addClass("equal-from");
+		}
 
 		// Remove the date-change marker we put at the top, because it may
 		// not actually be a date change now
