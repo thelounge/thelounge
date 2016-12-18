@@ -14,6 +14,7 @@ function Network(attr) {
 		port: 6667,
 		tls: false,
 		password: "",
+		awayMessage: "",
 		commands: [],
 		username: "",
 		realname: "",
@@ -56,6 +57,7 @@ Network.prototype.setNick = function(nick) {
 
 Network.prototype.toJSON = function() {
 	return _.omit(this, [
+		"awayMessage",
 		"chanCache",
 		"highlightRegex",
 		"irc",
@@ -65,6 +67,7 @@ Network.prototype.toJSON = function() {
 
 Network.prototype.export = function() {
 	var network = _.pick(this, [
+		"awayMessage",
 		"nick",
 		"name",
 		"host",

@@ -3,17 +3,15 @@
 exports.commands = ["away", "back"];
 
 exports.input = function(network, chan, cmd, args) {
-	if (cmd === "away") {
-		let reason = " ";
+	let reason = "";
 
-		if (args.length > 0) {
-			reason = args.join(" ");
-		}
+	if (cmd === "away") {
+		reason = args.length > 0 ? args.join(" ") : " ";
 
 		network.irc.raw("AWAY", reason);
-
-		return;
+	} else { // back command
+		network.irc.raw("AWAY");
 	}
 
-	network.irc.raw("AWAY");
+	network.awayMessage = reason;
 };
