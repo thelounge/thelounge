@@ -1136,7 +1136,7 @@ $(function() {
 						if (msg.type === "message") {
 							title += " says:";
 						}
-						body = msg.text.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "").trim();
+						body = msg.text.replace(/\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?|[\x00-\x1F]|\x7F/g, "").trim();
 					}
 
 					try {
