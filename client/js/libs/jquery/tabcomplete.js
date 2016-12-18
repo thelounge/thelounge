@@ -1,3 +1,5 @@
+import jQuery from "jquery";
+
 /*!
  * tabcomplete
  * http://github.com/erming/tabcomplete

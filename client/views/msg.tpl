@@ -13,7 +13,7 @@
 				<button id="toggle-{{id}}" class="toggle-button" aria-label="Toggle prefetched media">···</button>
 			</div>
 			{{#if toggle}}
-				{{partial "toggle"}}
+				{{> toggle}}
 			{{/if}}
 		</span>
 	{{else}}

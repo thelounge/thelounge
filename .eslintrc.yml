@@ -44,10 +44,5 @@ rules:
 
 globals:
   log: false
-  $: false
-  Favico: false
-  Handlebars: false
-  io: false
-  Mousetrap: false
 
 extends: eslint:recommended

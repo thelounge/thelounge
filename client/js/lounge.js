@@ -1,4 +1,18 @@
-"use strict";
+// vendor libraries
+import "jquery-ui/ui/widgets/sortable";
+import $ from "jquery";
+import io from "socket.io-client";
+import Mousetrap from "mousetrap";
+import URI from "urijs";
+
+// our libraries
+import "./libs/jquery/inputhistory";
+import "./libs/jquery/stickyscroll";
+import "./libs/jquery/tabcomplete";
+import helpers_parse from "./libs/handlebars/parse";
+import helpers_roundBadgeNumber from "./libs/handlebars/roundBadgeNumber";
+import slideoutMenu from "./libs/slideout";
+import templates from "../views";
 
 $(function() {
 	var path = window.location.pathname + "socket.io/";
@@ -59,10 +73,6 @@ $(function() {
 
 	var favicon = $("#favicon");
 
-	function render(name, data) {
-		return Handlebars.templates[name](data);
-	}
-
 	function setLocalStorageItem(key, value) {
 		try {
 			window.localStorage.setItem(key, value);
@@ -72,12 +82,6 @@ $(function() {
 			// available. See http://stackoverflow.com/q/14555347/1935861.
 		}
 	}
-
-	Handlebars.registerHelper(
-		"partial", function(id) {
-			return new Handlebars.SafeString(render(id, this));
-		}
-	);
 
 	[
 		"connect_error",
@@ -229,12 +233,12 @@ $(function() {
 		var id = data.network;
 		var network = sidebar.find("#network-" + id);
 		network.append(
-			render("chan", {
+			templates.chan({
 				channels: [data.chan]
 			})
 		);
 		chat.append(
-			render("chat", {
+			templates.chat({
 				channels: [data.chan]
 			})
 		);
@@ -284,15 +288,18 @@ $(function() {
 			"ctcp",
 			"channel_list",
 		].indexOf(type) !== -1) {
-			data.msg.template = "actions/" + type;
 			template = "msg_action";
 		} else if (type === "unhandled") {
 			template = "msg_unhandled";
 		}
 
-		var msg = $(render(template, data.msg));
-
+		var msg = $(templates[template](data.msg));
 		var text = msg.find(".text");
+
+		if (template === "msg_action") {
+			text.html(templates.actions[type](data.msg));
+		}
+
 		if (text.find("i").size() === 1) {
 			text = text.find("i");
 		}
@@ -334,12 +341,12 @@ $(function() {
 
 			// TODO: If the message is far off in the history, we still need to append the marker into DOM
 			if (!first.length) {
-				channel.prepend(render("unread_marker"));
+				channel.prepend(templates.unread_marker());
 			} else {
-				first.before(render("unread_marker"));
+				first.before(templates.unread_marker());
 			}
 		} else {
-			channel.append(render("unread_marker"));
+			channel.append(templates.unread_marker());
 		}
 
 		if (data.type !== "lobby") {
@@ -351,11 +358,11 @@ $(function() {
 				// Top-most message in a channel
 				if (!lastDate) {
 					lastDate = msgDate;
-					msg.before(render("date-marker", {msgDate: msgDate}));
+					msg.before(templates.date_marker({msgDate: msgDate}));
 				}
 
 				if (lastDate.toDateString() !== msgDate.toDateString()) {
-					msg.before(render("date-marker", {msgDate: msgDate}));
+					msg.before(templates.date_marker({msgDate: msgDate}));
 				}
 
 				lastDate = msgDate;
@@ -383,13 +390,13 @@ $(function() {
 			return (oldSortOrder[a] || Number.MAX_VALUE) - (oldSortOrder[b] || Number.MAX_VALUE);
 		});
 
-		users.html(render("user", data)).data("nicks", nicks);
+		users.html(templates.user(data)).data("nicks", nicks);
 	}
 
 	function renderNetworks(data) {
 		sidebar.find(".empty").hide();
 		sidebar.find(".networks").append(
-			render("network", {
+			templates.network({
 				networks: data.networks
 			})
 		);
@@ -398,7 +405,7 @@ $(function() {
 			return n.channels;
 		});
 		chat.append(
-			render("chat", {
+			templates.chat({
 				channels: channels
 			})
 		);
@@ -424,11 +431,11 @@ $(function() {
 
 		// It's the first message in a channel/query
 		if (prevMsg.length === 0) {
-			container.append(render("date-marker", {msgDate: msgTime}));
+			container.append(templates.date_marker({msgDate: msgTime}));
 		}
 
 		if (prevMsgTime.toDateString() !== msgTime.toDateString()) {
-			prevMsg.append(render("date-marker", {msgDate: msgTime}));
+			prevMsg.append(templates.date_marker({msgDate: msgTime}));
 		}
 
         // Add message to the container
@@ -486,11 +493,11 @@ $(function() {
 			// Top-most message in a channel
 			if (!lastDate) {
 				lastDate = msgDate;
-				msg.before(render("date-marker", {msgDate: msgDate}));
+				msg.before(templates.date_marker({msgDate: msgDate}));
 			}
 
 			if (lastDate.toDateString() !== msgDate.toDateString()) {
-				msg.before(render("date-marker", {msgDate: msgDate}));
+				msg.before(templates.date_marker({msgDate: msgDate}));
 			}
 
 			lastDate = msgDate;
@@ -551,7 +558,7 @@ $(function() {
 
 	socket.on("toggle", function(data) {
 		var toggle = $("#toggle-" + data.id);
-		toggle.parent().after(render("toggle", {toggle: data}));
+		toggle.parent().after(templates.toggle({toggle: data}));
 		switch (data.type) {
 		case "link":
 			if (options.links) {
@@ -569,7 +576,7 @@ $(function() {
 
 	socket.on("topic", function(data) {
 		var topic = $("#chan-" + data.chan).find(".header .topic");
-		topic.html(Handlebars.helpers.parse(data.topic));
+		topic.html(helpers_parse(data.topic));
 		// .attr() is safe escape-wise but consider the capabilities of the attribute
 		topic.attr("title", data.topic);
 	});
@@ -710,7 +717,7 @@ $(function() {
 	}());
 
 	var viewport = $("#viewport");
-	var sidebarSlide = window.slideoutMenu(viewport[0], sidebar[0]);
+	var sidebarSlide = slideoutMenu(viewport[0], sidebar[0]);
 	var contextMenuContainer = $("#context-menu-container");
 	var contextMenu = $("#context-menu");
 
@@ -758,19 +765,19 @@ $(function() {
 		var output = "";
 
 		if (target.hasClass("user")) {
-			output = render("contextmenu_item", {
+			output = templates.contextmenu_item({
 				class: "user",
 				text: target.text(),
 				data: target.data("name")
 			});
 		} else if (target.hasClass("chan")) {
-			output = render("contextmenu_item", {
+			output = templates.contextmenu_item({
 				class: "chan",
 				text: target.data("title"),
 				data: target.data("target")
 			});
-			output += render("contextmenu_divider");
-			output += render("contextmenu_item", {
+			output += templates.contextmenu_divider();
+			output += templates.contextmenu_item({
 				class: "close",
 				text: target.hasClass("lobby") ? "Disconnect" : target.hasClass("channel") ? "Leave" : "Close",
 				data: target.data("target")
@@ -1178,7 +1185,7 @@ $(function() {
 			return;
 		}
 
-		var badge = button.find(".badge").html(Handlebars.helpers.roundBadgeNumber(unread));
+		var badge = button.find(".badge").html(helpers_roundBadgeNumber(unread));
 
 		if (msg.highlight) {
 			badge.addClass("highlight");
@@ -1226,7 +1233,7 @@ $(function() {
 	});
 	if ($("body").hasClass("public")) {
 		$("#connect").one("show", function() {
-			var params = window.URI(document.location.search);
+			var params = URI(document.location.search);
 			params = params.search(true);
 			// Possible parameters:  name, host, port, password, tls, nick, username, realname, join
 			// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in#Iterating_over_own_properties_only

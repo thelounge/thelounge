@@ -1,5 +1,3 @@
-"use strict";
-
-Handlebars.registerHelper("localedate", function(time) {
+module.exports = function(time) {
 	return new Date(time).toLocaleDateString();
-});
+};

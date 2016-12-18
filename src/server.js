@@ -64,6 +64,7 @@ module.exports = function() {
 	}
 
 	var sockets = io(server, {
+		serveClient: false,
 		transports: config.transports
 	});
 

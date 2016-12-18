@@ -2,6 +2,7 @@
 # npm-debug.log and node_modules/ are ignored by default.
 # See https://docs.npmjs.com/misc/developers#keeping-files-out-of-your-package
 
+client/js/bundle.vendor.js.map
 client/views/
 coverage/
 scripts/
@@ -16,4 +17,3 @@ test/
 .stylelintrc
 .travis.yml
 appveyor.yml
-Gruntfile.js
