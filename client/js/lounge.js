@@ -1318,26 +1318,14 @@ $(function() {
 	setInterval(function() {
 		chat.find(".chan:not(.active)").each(function() {
 			var chan = $(this);
-			if (chan.find(".messages .msg:not(.unread-marker)").slice(0, -100).remove().length) {
+			if (chan.find(".messages .msg").slice(0, -100).remove().length) {
 				chan.find(".show-more").addClass("show");
 
 				// Remove date-seperators that would otherwise be "stuck" at the top
 				// of the channel
-				var prev;
-				$(chan.find(".messages").children()).each(function() {
-					if (!prev) {
-						// Should always be a date-seperator, because it's always added
-						prev = $(this);
-					} else {
-						var current = $(this);
-
-						if (current.attr("class") === "date-marker") {
-							prev.remove();
-						} else {
-							return false;
-						}
-
-						prev = current;
+				chan.find(".date-marker").each(function() {
+					if ($(this).next().hasClass("date-marker")) {
+						$(this).remove();
 					}
 				});
 			}
@@ -1345,9 +1333,9 @@ $(function() {
 	}, 1000 * 10);
 
 	function clear() {
-		chat.find(".active .messages .msg:not(.unread-marker)").remove();
-		chat.find(".active .show-more").addClass("show");
-		chat.find(".active .date-marker").remove();
+		chat.find(".active")
+			.find(".show-more").addClass("show").end()
+			.find(".messages .msg, .date-marker").remove();
 	}
 
 	function complete(word) {
