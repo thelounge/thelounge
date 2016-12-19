@@ -1763,12 +1763,8 @@ kbd {
 	  * - https://www.w3.org/TR/mediaqueries-4/
 	  * - https://developer.mozilla.org/en-US/docs/Web/CSS/@media/hover
 	  */
-	.tooltipped:hover:before,
-	.tooltipped:hover:after,
-	.tooltipped:active:before,
-	.tooltipped:active:after,
-	.tooltipped:focus:before,
-	.tooltipped:focus:after {
+	.tooltipped-no-touch:hover:before,
+	.tooltipped-no-touch:hover:after {
 		visibility: hidden;
 		opacity: 0;
 	}
