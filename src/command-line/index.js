@@ -3,6 +3,7 @@
 global.log = require("../log.js");
 
 var program = require("commander");
+var colors = require("colors/safe");
 var fs = require("fs");
 var fsextra = require("fs-extra");
 var path = require("path");
@@ -26,7 +27,7 @@ if (!fs.existsSync(Helper.CONFIG_PATH)) {
 		"defaults",
 		"config.js"
 	)), Helper.CONFIG_PATH);
-	log.info("Config created:", Helper.CONFIG_PATH);
+	log.info(`Configuration file created at ${colors.green(Helper.CONFIG_PATH)}.`);
 }
 
 fsextra.ensureDirSync(Helper.USERS_PATH);
