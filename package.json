@@ -14,16 +14,15 @@
   "scripts": {
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha",
     "start": "node index",
+    "start-dev": "npm-run-all --parallel watch start",
     "build": "npm-run-all build:*",
     "build:font-awesome": "node scripts/build-fontawesome.js",
-    "build:libs": "uglifyjs client/js/libs/*.js client/js/libs/jquery/*.js client/js/libs/handlebars/*.js -o client/js/libs.min.js --source-map client/js/libs.min.js.map --source-map-url libs.min.js.map -p relative",
-    "build:handlebars": "handlebars client/views/ -e tpl -f client/js/lounge.templates.js",
+    "build:webpack": "webpack",
+    "watch": "webpack -w",
     "test": "npm-run-all -c test:mocha lint",
     "test:mocha": "mocha",
     "lint": "npm-run-all -c lint:js lint:css",
-    "lint:js": "npm-run-all -c lint:js:es5 lint:js:es6",
-    "lint:js:es5": "eslint --parser-options=\"ecmaVersion:5\" client/",
-    "lint:js:es6": "eslint --ignore-pattern client/ .",
+    "lint:js": "eslint .",
     "lint:css": "stylelint \"**/*.css\"",
     "prepublish": "npm run build"
   },
@@ -59,14 +58,22 @@
     "ldapjs": "1.0.1"
   },
   "devDependencies": {
+    "babel-core": "6.17.0",
+    "babel-loader": "6.2.5",
+    "babel-preset-es2015": "6.14.0",
     "chai": "3.5.0",
     "eslint": "3.10.2",
     "font-awesome": "4.7.0",
     "handlebars": "4.0.6",
+    "handlebars-loader": "1.4.0",
     "istanbul": "0.4.5",
+    "jquery": "2.1.1",
+    "jquery-ui": "1.12.1",
     "mocha": "3.1.2",
+    "mousetrap": "1.4.6",
     "npm-run-all": "3.1.1",
     "stylelint": "7.5.0",
-    "uglify-js": "2.7.3"
+    "urijs": "1.16.1",
+    "webpack": "1.13.2"
   }
 }
