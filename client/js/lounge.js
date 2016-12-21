@@ -1035,6 +1035,12 @@ $(function() {
 		}
 		document.title = title;
 
+		var placeholder = "";
+		if (chan.data("type") === "channel" || chan.data("type") === "query") {
+			placeholder = "Write to " + chan.data("title") + "...";
+		}
+		input.attr("placeholder", placeholder);
+
 		if (self.hasClass("chan")) {
 			$("#chat-container").addClass("active");
 			setNick(self.closest(".network").data("nick"));
