@@ -377,8 +377,14 @@ Client.prototype.more = function(data) {
 	});
 };
 
-Client.prototype.open = function(socketId, data) {
-	var target = this.find(data);
+Client.prototype.open = function(socketId, target) {
+	// Opening a window like settings
+	if (target === null) {
+		this.attachedClients[socketId] = -1;
+		return;
+	}
+
+	target = this.find(target);
 	if (!target) {
 		return;
 	}
