@@ -5,7 +5,7 @@ function slideoutMenu(viewport, menu) {
 	var touchStartPos = null;
 	var touchCurPos = null;
 	var touchStartTime = 0;
-	var menuWidth = parseFloat(window.getComputedStyle(menu).width);
+	var menuWidth = 0;
 	var menuIsOpen = false;
 	var menuIsMoving = false;
 
@@ -26,6 +26,8 @@ function slideoutMenu(viewport, menu) {
 
 		var touch = e.touches.item(0);
 		viewport.classList.toggle("menu-dragging", true);
+
+		menuWidth = parseFloat(window.getComputedStyle(menu).width);
 
 		if ((!menuIsOpen && touch.screenX < 50) || (menuIsOpen && touch.screenX > menuWidth)) {
 			touchStartPos = touch;
