@@ -1,9 +1,16 @@
 {
 	"ignoreFiles": [
 		"client/css/bootstrap.css",
+		"client/css/build.css",
 		"coverage/**/*.css"
 	],
 	"rules": {
+		"at-rule-no-vendor-prefix": true,
+		"media-feature-name-no-vendor-prefix": true,
+		"property-no-vendor-prefix": true,
+		"value-no-vendor-prefix": true,
+		"selector-no-vendor-prefix": true,
+		
 		"at-rule-empty-line-before": ["always", {
 			"except": ["blockless-group", "first-nested"],
 			"ignore": ["after-comment"]

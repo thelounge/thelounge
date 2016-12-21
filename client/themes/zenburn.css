@@ -72,7 +72,19 @@ body {
 	padding: 15px 16px;
 }
 
+/* stylelint-disable-next-line selector-no-vendor-prefix */
 #chat .search::-webkit-input-placeholder {
+	color: #d2d39b;
+	opacity: .5;
+}
+
+/* stylelint-disable-next-line selector-no-vendor-prefix */
+#chat .search::-moz-placeholder {
+	color: #d2d39b;
+	opacity: .5;
+}
+
+#chat .search::placeholder {
 	color: #d2d39b;
 	opacity: .5;
 }
