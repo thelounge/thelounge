@@ -85,7 +85,7 @@ using node ${colors.green(process.versions.node)} on ${colors.green(process.plat
 	log.info(`Configuration file: ${colors.green(Helper.CONFIG_PATH)}`);
 	log.info(`Available on ${colors.green(protocol + "://" + host + ":" + config.port + "/")} \
 in ${config.public ? "public" : "private"} mode`);
-	log.info(`Press Ctrl-C to stop\n`);
+	log.info("Press Ctrl-C to stop\n");
 
 	if (!config.public) {
 		if ("autoload" in config) {
