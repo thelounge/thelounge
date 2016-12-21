@@ -169,12 +169,14 @@
 							<div class="col-sm-9">
 								<input class="input nick" id="connect:nick" name="nick" value="<%= defaults.nick %>">
 							</div>
+							<% if (!useHexIp) { %>
 							<div class="col-sm-3">
 								<label for="connect:username">Username</label>
 							</div>
 							<div class="col-sm-9">
 								<input class="input username" id="connect:username" name="username" value="<%= defaults.username %>">
 							</div>
+							<% } %>
 							<div class="col-sm-3">
 								<label for="connect:realname">Real name</label>
 							</div>
