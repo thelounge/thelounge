@@ -72,11 +72,6 @@ body {
 	padding: 15px 16px;
 }
 
-#chat .search::-webkit-input-placeholder {
-	color: #d2d39b;
-	opacity: .5;
-}
-
 /* Borders */
 #chat .from,
 #windows .header,
@@ -261,3 +256,22 @@ body {
 	border-radius: 0;
 	margin: 0;
 }
+
+/* Form elements */
+
+#chat-container ::-moz-placeholder {
+	color: #d2d39b;
+	opacity: .5;
+}
+
+#chat-container ::-webkit-input-placeholder {
+	color: #d2d39b;
+	opacity: .5;
+}
+
+#chat-container :-ms-input-placeholder {
+	color: #d2d39b;
+	opacity: .5;
+}
+
+/* End form elements */
