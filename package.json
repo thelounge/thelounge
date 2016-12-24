@@ -49,7 +49,7 @@
     "express": "4.14.0",
     "fs-extra": "1.0.0",
     "irc-framework": "2.5.2",
-    "lodash": "4.17.2",
+    "lodash": "4.17.3",
     "moment": "2.17.1",
     "read": "1.0.7",
     "request": "2.79.0",
