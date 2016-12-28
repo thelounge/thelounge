@@ -46,7 +46,7 @@ $(function() {
 	var pop;
 	try {
 		pop = new Audio();
-		pop.src = "audio/pop.ogg";
+		pop.src = "audio/pop.mp3";
 	} catch (e) {
 		pop = {
 			play: $.noop
