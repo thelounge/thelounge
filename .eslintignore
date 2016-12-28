@@ -1,9 +1,8 @@
 # built by tools
-client/js/libs.min.js
-client/js/lounge.templates.js
+client/js/bundle.js
+client/js/bundle.vendor.js
 
 # third party
 client/js/libs/jquery/*.js
-client/js/libs/*.js
 
 coverage/

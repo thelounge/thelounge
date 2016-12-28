@@ -1,7 +1,7 @@
 /**
  * Simple slideout menu implementation.
  */
-function slideoutMenu(viewport, menu) {
+export default function slideoutMenu(viewport, menu) {
 	var touchStartPos = null;
 	var touchCurPos = null;
 	var touchStartTime = 0;

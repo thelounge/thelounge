@@ -1,17 +1,16 @@
-"use strict";
+import Handlebars from "handlebars/runtime";
+import URI from "urijs";
 
-Handlebars.registerHelper(
-	"parse", function(text) {
-		text = Handlebars.Utils.escapeExpression(text);
-		text = colors(text);
-		text = channels(text);
-		text = uri(text);
-		return text;
-	}
-);
+module.exports = function(text) {
+	text = Handlebars.Utils.escapeExpression(text);
+	text = colors(text);
+	text = channels(text);
+	text = uri(text);
+	return text;
+};
 
 function uri(text) {
-	return window.URI.withinString(text, function(url) {
+	return URI.withinString(text, function(url) {
 		if (url.indexOf("javascript:") === 0) {
 			return url;
 		}
