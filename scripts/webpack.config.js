@@ -2,10 +2,11 @@
 
 const webpack = require("webpack");
 const path = require("path");
+const basePath = path.resolve(__dirname, "..");
 
 module.exports = {
 	entry: {
-		app: path.resolve(__dirname, "client/js/lounge.js"),
+		app: path.resolve(basePath, "client/js/lounge.js"),
 		vendor: [
 			"handlebars/runtime",
 			"jquery",
@@ -17,7 +18,7 @@ module.exports = {
 	},
 	devtool: "source-map",
 	output: {
-		path: path.resolve(__dirname, "client/js"),
+		path: path.resolve(basePath, "client/js"),
 		filename: "bundle.js",
 		publicPath: "/"
 	},
@@ -26,7 +27,7 @@ module.exports = {
 			{
 				test: /\.js$/,
 				include: [
-					path.resolve(__dirname, "client"),
+					path.resolve(basePath, "client/js"),
 				],
 				loader: "babel",
 				query: {
@@ -38,12 +39,12 @@ module.exports = {
 			{
 				test: /\.tpl$/,
 				include: [
-					path.resolve(__dirname, "client/views"),
+					path.resolve(basePath, "client/views"),
 				],
 				loader: "handlebars-loader",
 				query: {
 					helperDirs: [
-						path.resolve(__dirname, "client/js/libs/handlebars")
+						path.resolve(basePath, "client/js/libs/handlebars")
 					],
 					extensions: [
 						".tpl"
@@ -58,6 +59,7 @@ module.exports = {
 			"bundle.vendor.js" // filename
 		),
 		new webpack.optimize.UglifyJsPlugin({
+			comments: false,
 			compress: {
 				warnings: false
 			}

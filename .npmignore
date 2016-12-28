@@ -3,17 +3,15 @@
 # See https://docs.npmjs.com/misc/developers#keeping-files-out-of-your-package
 
 client/js/bundle.vendor.js.map
+client/js/lounge.js
+client/js/libs/
 client/views/
 coverage/
 scripts/
 test/
 .editorconfig
-.eslintignore
-.eslintrc.yml
 .gitattributes
 .gitignore
-.istanbul.yml
 .npmignore
-.stylelintrc
 .travis.yml
 appveyor.yml
