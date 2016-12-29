@@ -1,0 +1,14 @@
+{
+  "all": true,
+  "exclude": [
+    "client/js/bundle.js",
+    "client/js/bundle.vendor.js",
+    "coverage/",
+    "test/"
+  ],
+  "reporter": [
+    "lcov",
+    "text",
+    "text-summary"
+  ]
+}

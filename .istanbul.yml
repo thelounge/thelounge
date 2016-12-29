@@ -1,6 +1,0 @@
-instrumentation:
-  include-all-sources: true
-  excludes:
-    - client/js/bundle.js
-    - client/js/bundle.vendor.js
-    - client/js/lounge.js

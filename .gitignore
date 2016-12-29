@@ -1,6 +1,7 @@
 node_modules/
 npm-debug.log
 
+.nyc_output/
 coverage/
 
 # Built assets created at npm install/prepublish time
