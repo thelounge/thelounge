@@ -300,10 +300,6 @@ $(function() {
 			text.html(templates.actions[type](data.msg));
 		}
 
-		if (text.find("i").size() === 1) {
-			text = text.find("i");
-		}
-
 		if ((type === "message" || type === "action") && chan.hasClass("channel")) {
 			var nicks = chan.find(".users").data("nicks");
 			if (nicks) {
@@ -1095,13 +1091,13 @@ $(function() {
 	contextMenu.on("click", ".context-menu-item", function() {
 		switch ($(this).data("action")) {
 		case "close":
-			$(".networks .chan[data-target=" + $(this).data("data") + "] .close").click();
+			$(".networks .chan[data-target='" + $(this).data("data") + "'] .close").click();
 			break;
 		case "chan":
-			$(".networks .chan[data-target=" + $(this).data("data") + "]").click();
+			$(".networks .chan[data-target='" + $(this).data("data") + "']").click();
 			break;
 		case "user":
-			$(".channel.active .users .user[data-name=" + $(this).data("data") + "]").click();
+			$(".channel.active .users .user[data-name='" + $(this).data("data") + "']").click();
 			break;
 		}
 	});

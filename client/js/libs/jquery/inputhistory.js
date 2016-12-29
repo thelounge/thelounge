@@ -20,7 +20,7 @@ import jQuery from "jquery";
 		);
 		
 		var self = this;
-		if (self.size() > 1) {
+		if (self.length > 1) {
 			return self.each(function() {
 				$(this).history(options);
 			});
