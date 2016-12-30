@@ -1112,7 +1112,7 @@ $(function() {
 		names.find(".user").each(function() {
 			var btn = $(this);
 			var name = btn.text().toLowerCase().replace(/[+%@~]/, "");
-			if (name.indexOf(value) === 0) {
+			if (name.indexOf(value) > -1) {
 				btn.show();
 			} else {
 				btn.hide();
