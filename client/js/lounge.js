@@ -6,6 +6,7 @@ const $ = require("jquery");
 const moment = require("moment");
 const Mousetrap = require("mousetrap");
 const URI = require("urijs");
+const fuzzy = require("fuzzy");
 
 // our libraries
 require("./libs/jquery/inputhistory");
@@ -1067,16 +1068,26 @@ $(function() {
 	});
 
 	chat.on("input", ".search", function() {
-		var value = $(this).val().toLowerCase();
-		var names = $(this).closest(".users").find(".names");
-		names.find(".user").each(function() {
-			var btn = $(this);
-			var name = btn.text().toLowerCase().replace(/[+%@~]/, "");
-			if (name.indexOf(value) > -1) {
-				btn.show();
-			} else {
-				btn.hide();
-			}
+		const value = $(this).val().toLowerCase();
+		const names = $(this).closest(".users").find(".names");
+
+		names.find(".user").each((i, el) => {
+			$(el).text($(el).text().replace(/<\/?b>;/, "")).hide();
+		});
+
+		const fuzzyOptions = {
+			pre: "<b>",
+			post: "</b>",
+			extract: el => $(el).text().toLowerCase().replace(/[+%@~]/, "")
+		};
+
+		fuzzy.filter(
+			value,
+			names.find(".user").toArray(),
+			fuzzyOptions
+		).forEach(el => {
+			const firstChar = $(el.original).text()[0].replace(/[^+%@~]/, "");
+			$(el.original).html(firstChar + el.string).show();
 		});
 	});
 
