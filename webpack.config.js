@@ -2,11 +2,12 @@
 
 const webpack = require("webpack");
 const path = require("path");
+const isWatch = process.argv.includes("--watch");
 
-module.exports = {
+let config = {
 	entry: {
-		app: path.resolve(__dirname, "client/js/lounge.js"),
-		vendor: [
+		"js/bundle.js": path.resolve(__dirname, "client/js/lounge.js"),
+		"js/bundle.vendor.js": [
 			"handlebars/runtime",
 			"jquery",
 			"jquery-ui/ui/widgets/sortable",
@@ -17,8 +18,8 @@ module.exports = {
 	},
 	devtool: "source-map",
 	output: {
-		path: path.resolve(__dirname, "client/js"),
-		filename: "bundle.js",
+		path: path.resolve(__dirname, "client"),
+		filename: "[name]",
 		publicPath: "/"
 	},
 	module: {
@@ -53,14 +54,18 @@ module.exports = {
 		]
 	},
 	plugins: [
-		new webpack.optimize.CommonsChunkPlugin(
-			"vendor", // chunkName
-			"bundle.vendor.js" // filename
-		),
-		new webpack.optimize.UglifyJsPlugin({
-			compress: {
-				warnings: false
-			}
-		}),
+		new webpack.optimize.DedupePlugin(),
+		new webpack.optimize.CommonsChunkPlugin("js/bundle.vendor.js"),
 	]
 };
+
+if (!isWatch) {
+	config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+		comments: false,
+		compress: {
+			warnings: false
+		}
+	}));
+}
+
+module.exports = config;
