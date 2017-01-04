@@ -135,6 +135,11 @@ body {
 	opacity: 1;
 }
 
+/* Increase contrast of some IRC colors */
+.irc-fg2 { color: #1b94ff; }
+.irc-fg5 { color: #e969a7; }
+.irc-fg12 { color: #6fb7ff; }
+
 /* Message form */
 #form {
 	background: #333;
