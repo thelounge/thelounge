@@ -267,7 +267,7 @@ function localAuth(client, user, password, callback) {
 	}
 
 	if (!client.config.password) {
-		log.error("User", user, "with no local password set tried to sign in. (Probably a LDAP user)");
+		log.error(`User ${colors.bold(user)} with no local password set tried to sign in. (Probably a LDAP user)`);
 		return callback(false);
 	}
 
@@ -278,7 +278,7 @@ function localAuth(client, user, password, callback) {
 
 		client.setPassword(hash, function(success) {
 			if (success) {
-				log.info("User", client.name, "logged in and their hashed password has been updated to match new security requirements");
+				log.info(`User ${colors.bold(client.name)} logged in and their hashed password has been updated to match new security requirements`);
 			}
 		});
 	}
