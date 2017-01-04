@@ -67,6 +67,12 @@ function setHome(homePath) {
 		var userConfig = require(this.CONFIG_PATH);
 		this.config = _.extend(this.config, userConfig);
 	}
+
+	// TODO: Remove in future release
+	if (this.config.debug === true) {
+		log.warn("debug option is now an object, see defaults file for more information.");
+		this.config.debug = {ircFramework: true};
+	}
 }
 
 function getUserConfigPath(name) {

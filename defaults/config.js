@@ -361,11 +361,24 @@ module.exports = {
 		primaryKey: "uid"
 	},
 
-	// Enables extra debugging output. Turn this on if you experience
-	// IRC connection issues and want to file a bug report.
+	// Extra debugging
 	//
-	// @type     boolean
-	// @default  false
+	// @type     object
+	// @default  {}
 	//
-	debug: false,
+	debug: {
+		// Enables extra debugging output provided by irc-framework.
+		//
+		// @type     boolean
+		// @default  false
+		//
+		ircFramework: false,
+
+		// Enables logging raw IRC messages into each server window.
+		//
+		// @type     boolean
+		// @default  false
+		//
+		raw: false,
+	},
 };
