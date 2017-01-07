@@ -24,7 +24,7 @@
     "lint": "npm-run-all -c lint:*",
     "lint:js": "eslint .",
     "lint:css": "stylelint \"**/*.css\"",
-    "prepublish": "NODE_ENV=production npm run build"
+    "prepublishOnly": "NODE_ENV=production npm run build"
   },
   "keywords": [
     "lounge",
