@@ -2,7 +2,10 @@
 
 const webpack = require("webpack");
 const path = require("path");
-const isWatch = process.argv.includes("--watch");
+
+// ********************
+// Common configuration
+// ********************
 
 let config = {
 	entry: {
@@ -54,12 +57,16 @@ let config = {
 		]
 	},
 	plugins: [
-		new webpack.optimize.DedupePlugin(),
-		new webpack.optimize.CommonsChunkPlugin("js/bundle.vendor.js"),
+		new webpack.optimize.CommonsChunkPlugin("js/bundle.vendor.js")
 	]
 };
 
-if (!isWatch) {
+// *********************************
+// Production-specific configuration
+// *********************************
+
+if (process.env.NODE_ENV === "production") {
+	config.plugins.push(new webpack.optimize.DedupePlugin());
 	config.plugins.push(new webpack.optimize.UglifyJsPlugin({
 		comments: false,
 		compress: {

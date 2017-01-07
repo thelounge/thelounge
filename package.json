@@ -17,14 +17,14 @@
     "start-dev": "npm-run-all --parallel watch start",
     "build": "npm-run-all build:*",
     "build:font-awesome": "node scripts/build-fontawesome.js",
-    "build:webpack": "webpack -p",
-    "watch": "webpack -d --watch",
+    "build:webpack": "webpack",
+    "watch": "webpack --watch",
     "test": "npm-run-all -c test:* lint",
     "test:mocha": "mocha",
     "lint": "npm-run-all -c lint:*",
     "lint:js": "eslint .",
     "lint:css": "stylelint \"**/*.css\"",
-    "prepublish": "npm run build"
+    "prepublish": "NODE_ENV=production npm run build"
   },
   "keywords": [
     "lounge",
