@@ -1283,9 +1283,27 @@ $(function() {
 		);
 	});
 
+	forms.on("focusin", ".nick", function() {
+		// Need to set the first "lastvalue", so it can be used in the below function
+		var nick = $(this);
+		nick.data("lastvalue", nick.val());
+	});
+
 	forms.on("input", ".nick", function() {
 		var nick = $(this).val();
-		forms.find(".username").val(nick);
+		var usernameInput = forms.find(".username");
+
+		// Because this gets called /after/ it has already changed, we need use the previous value
+		var lastValue = $(this).data("lastvalue");
+
+		// They were the same before the change, so update the username field
+		if (usernameInput.val() === lastValue) {
+			usernameInput.val(nick);
+		}
+
+		// Store the "previous" value, for next time
+		$(this).data("lastvalue", nick);
+
 	});
 
 	Mousetrap.bind([
