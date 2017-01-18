@@ -71,7 +71,7 @@
     "mocha": "3.2.0",
     "mousetrap": "1.4.6",
     "npm-run-all": "4.0.0",
-    "nyc": "10.0.0",
+    "nyc": "10.1.0",
     "socket.io-client": "1.7.2",
     "stylelint": "7.7.1",
     "urijs": "1.16.1",
