@@ -12,18 +12,18 @@
   },
   "homepage": "https://thelounge.github.io/",
   "scripts": {
-    "coverage": "nyc mocha",
+    "coverage": "nyc --config=scripts/nyc.json mocha",
     "start": "node index",
     "start-dev": "npm-run-all --parallel watch start",
     "build": "npm-run-all build:*",
     "build:font-awesome": "node scripts/build-fontawesome.js",
-    "build:webpack": "webpack",
-    "watch": "webpack -w",
+    "build:webpack": "webpack --config scripts/webpack.config.js ",
+    "watch": "webpack --config scripts/webpack.config.js -w",
     "test": "npm-run-all -c test:* lint",
     "test:mocha": "mocha",
     "lint": "npm-run-all -c lint:*",
-    "lint:js": "eslint .",
-    "lint:css": "stylelint \"**/*.css\"",
+    "lint:js": "eslint --config scripts/eslint.yml --ignore-path scripts/eslintignore.txt .",
+    "lint:css": "stylelint --config scripts/stylelint.json \"**/*.css\"",
     "prepublish": "npm run build"
   },
   "keywords": [
