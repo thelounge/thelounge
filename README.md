@@ -50,6 +50,7 @@ The following commands install the development version of The Lounge:
 git clone https://github.com/thelounge/lounge.git
 cd lounge
 npm install
+npm run build
 npm start
 ```
 
