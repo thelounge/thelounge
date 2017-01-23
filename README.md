@@ -50,14 +50,12 @@ The following commands install the development version of The Lounge:
 git clone https://github.com/thelounge/lounge.git
 cd lounge
 npm install
+NODE_ENV=production npm run build
 npm start
 ```
 
-A word of caution:
-
-- While it is the most recent codebase, this is not production-ready!
-- It is not recommended to run this as root. However, if you decide to do so,
-  you will have to run `npm run build`.
+⚠️ While it is the most recent codebase, this is not production-ready! Run at
+your own risk. It is also not recommended to run this as root.
 
 ## Development setup
 
