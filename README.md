@@ -44,7 +44,7 @@ lounge --help
 
 ### Running from source
 
-The following commands install the development version of The Lounge:
+The following commands install and run the development version of The Lounge:
 
 ```sh
 git clone https://github.com/thelounge/lounge.git
@@ -53,6 +53,8 @@ npm install
 NODE_ENV=production npm run build
 npm start
 ```
+
+When installed like this, npm doesn't create a `lounge` executable. Use `npm start -- <command>` to run subcommands.
 
 ⚠️ While it is the most recent codebase, this is not production-ready! Run at
 your own risk. It is also not recommended to run this as root.
