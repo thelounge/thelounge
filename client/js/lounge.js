@@ -1040,7 +1040,7 @@ $(function() {
 
 		var placeholder = "";
 		if (chan.data("type") === "channel" || chan.data("type") === "query") {
-			placeholder = "Write to " + chan.data("title") + "...";
+			placeholder = `Write to ${chan.data("title")}`;
 		}
 		input.attr("placeholder", placeholder);
 
