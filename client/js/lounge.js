@@ -1105,13 +1105,29 @@ $(function() {
 	chat.on("input", ".search", function() {
 		var value = $(this).val().toLowerCase();
 		var names = $(this).closest(".users").find(".names");
-		names.find(".user").each(function() {
-			var btn = $(this);
-			var name = btn.text().toLowerCase().replace(/[+%@~]/, "");
-			if (name.indexOf(value) > -1) {
-				btn.show();
+		names.find(".user-mode").each(function() {
+			var namesToHide = [];
+			var userModeDiv = $(this);
+			var isDivToHide = true;
+			userModeDiv.find(".user").each(function() {
+				var btn = $(this);
+				var name = btn.text().toLowerCase().replace(/[+%@~]/, "");
+				if (name.indexOf(value) > -1) {
+					btn.show();
+					isDivToHide = false;
+				} else {
+					namesToHide.push(btn[0]);
+				}
+			});
+			if (isDivToHide) {
+				userModeDiv[0].style.display = "none";
 			} else {
-				btn.hide();
+				userModeDiv[0].style.display = "block";
+				var length = namesToHide.length;
+				var i;
+				for (i = 0; i < length; i++) {
+					namesToHide[i].style.display = "none";
+				}
 			}
 		});
 	});
