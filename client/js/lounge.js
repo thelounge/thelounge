@@ -1069,11 +1069,15 @@ $(function() {
 
 	chat.on("input", ".search", function() {
 		const value = $(this).val();
-		const names = $(this).closest(".users").find(".names");
+		const parent = $(this).closest(".users");
+		const names = parent.find(".names-original");
+		const container = parent.find(".names-filtered");
 
-		names.find(".user").each((i, el) => {
-			$(el).text($(el).text().replace(/<\/?b>;/, "")).hide();
-		});
+		if (!value.length) {
+			container.hide();
+			names.show();
+			return;
+		}
 
 		const fuzzyOptions = {
 			pre: "<b>",
@@ -1081,13 +1085,14 @@ $(function() {
 			extract: el => $(el).text()
 		};
 
-		fuzzy.filter(
+		const result = fuzzy.filter(
 			value,
 			names.find(".user").toArray(),
 			fuzzyOptions
-		).forEach(el => {
-			$(el.original).html(el.string).show();
-		});
+		);
+
+		names.hide();
+		container.html(templates.user_filtered({matches: result})).show();
 	});
 
 	chat.on("msg", ".messages", function(e, target, msg) {

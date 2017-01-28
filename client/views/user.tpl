@@ -2,8 +2,9 @@
 <div class="count">
 	<input class="search" placeholder="{{users users.length}}" aria-label="Search among the user list">
 </div>
+<div class="names names-filtered"></div>
 {{/if}}
-<div class="names">
+<div class="names names-original">
 	{{#diff "reset"}}{{/diff}}
 	{{#each users}}
 		{{#diff mode}}
