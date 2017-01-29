@@ -82,7 +82,7 @@ ClientManager.prototype.getUsers = function() {
 	return users;
 };
 
-ClientManager.prototype.addUser = function(name, password) {
+ClientManager.prototype.addUser = function(name, password, enableLog) {
 	var users = this.getUsers();
 	if (users.indexOf(name) !== -1) {
 		return false;
@@ -96,7 +96,7 @@ ClientManager.prototype.addUser = function(name, password) {
 		var user = {
 			user: name,
 			password: password || "",
-			log: false,
+			log: enableLog,
 			networks: []
 		};
 		fs.writeFileSync(
