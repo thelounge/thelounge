@@ -74,7 +74,7 @@
     "nyc": "10.1.0",
     "socket.io-client": "1.7.2",
     "stylelint": "7.8.0",
-    "urijs": "1.16.1",
+    "urijs": "1.18.6",
     "webpack": "1.14.0"
   }
 }
