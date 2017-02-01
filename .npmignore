@@ -12,8 +12,9 @@ test/
 .eslintrc.yml
 .gitattributes
 .gitignore
-.istanbul.yml
+.nycrc
 .npmignore
 .stylelintrc
 .travis.yml
 appveyor.yml
+webpack.config.js
