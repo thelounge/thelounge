@@ -47,7 +47,7 @@
     "event-stream": "3.3.4",
     "express": "4.14.0",
     "fs-extra": "1.0.0",
-    "irc-framework": "2.5.3",
+    "irc-framework": "2.5.5",
     "ldapjs": "1.0.1",
     "lodash": "4.17.4",
     "moment": "2.17.1",
