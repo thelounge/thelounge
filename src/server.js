@@ -35,9 +35,17 @@ module.exports = function() {
 		log.warn("Server is public and set to use LDAP. Set to private mode if trying to use LDAP authentication.");
 	}
 
+	var nodeHost = config.host;
+	var nodePort = config.port;
+
+	if (typeof config.host !== 'undefined' && config.host.includes('unix:')){
+		var nodeHost = null;
+		var nodePort = config.host.replace("unix:", "");
+	}
+
 	if (!config.https.enable) {
 		server = require("http");
-		server = server.createServer(app).listen(config.port, config.host);
+		server = server.createServer(app).listen(nodePort, nodeHost);
 	} else {
 		server = require("spdy");
 		const keyPath = Helper.expandHome(config.https.key);
@@ -53,7 +61,7 @@ module.exports = function() {
 		server = server.createServer({
 			key: fs.readFileSync(keyPath),
 			cert: fs.readFileSync(certPath)
-		}, app).listen(config.port, config.host);
+		}, app).listen(nodePort, nodeHost);
 	}
 
 	if (config.identd.enable) {
@@ -79,14 +87,6 @@ module.exports = function() {
 		} else {
 			init(socket);
 		}
-
-	function shutdown() {
-	    server.close(); // Removes socket file
-	    process.exit();
-	}
-
-	process.on('SIGINT', shutdown);
-
 	});
 
 	manager.sockets = sockets;
@@ -108,6 +108,14 @@ in ${config.public ? "public" : "private"} mode`);
 
 		manager.autoloadUsers();
 	}
+
+	function shutdown() {
+            log.info("Quitting...");
+	    server.close(); // Removes socket file
+	    process.exit();
+	}
+
+	process.on('SIGINT', shutdown);
 };
 
 function getClientIp(req) {
