@@ -35,11 +35,8 @@ module.exports = function() {
 		log.warn("Server is public and set to use LDAP. Set to private mode if trying to use LDAP authentication.");
 	}
 
-//	var host = config.host;
-//	var port = config.port;
-
 	if (typeof config.host !== 'undefined' && config.host.includes('unix:')){
-		const listeningSocket = true;
+		var listeningSocket = true;
 		var host = null;
 		var port = config.host.replace("unix:", "");
 	}
@@ -97,13 +94,19 @@ module.exports = function() {
 	manager.sockets = sockets;
 
 	const protocol = config.https.enable ? "https" : "http";
-//	const host = config.host || "*";
+//	const host = config.host || "*"
 
 	log.info(`The Lounge ${colors.green(Helper.getVersion())} is now running \
 using node ${colors.green(process.versions.node)} on ${colors.green(process.platform)} (${process.arch})`);
 	log.info(`Configuration file: ${colors.green(Helper.CONFIG_PATH)}`);
-	log.info(`Available on ${colors.green(protocol + "://" + config.host || "*" + ":" + config.port + "/")} \
-in ${config.public ? "public" : "private"} mode`);
+	if (listeningSocket) {
+		log.info(`Available on socket ${colors.green(config.host)} \
+		in ${config.public ? "public" : "private"} mode with HTTPS ${config.ssl ? "enabled" : "disabled"}`);
+	}
+	else {
+		log.info(`Available on ${colors.green(protocol + "://" + (config.host || "*") + ":" + config.port + "/")} ` +
+		`in ${config.public ? "public" : "private"} mode`);
+	}
 	log.info("Press Ctrl-C to stop\n");
 
 	if (!config.public) {
