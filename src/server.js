@@ -94,7 +94,6 @@ module.exports = function() {
 	manager.sockets = sockets;
 
 	const protocol = config.https.enable ? "https" : "http";
-//	const host = config.host || "*"
 
 	log.info(`The Lounge ${colors.green(Helper.getVersion())} is now running \
 using node ${colors.green(process.versions.node)} on ${colors.green(process.platform)} (${process.arch})`);
