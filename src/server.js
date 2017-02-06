@@ -35,14 +35,13 @@ module.exports = function() {
 		log.warn("Server is public and set to use LDAP. Set to private mode if trying to use LDAP authentication.");
 	}
 
-	if (typeof config.host !== 'undefined' && config.host.includes('unix:')){
-		var listeningSocket = true;
-		var host = null;
-		var port = config.host.replace("unix:", "");
-	}
-	else {
-		var host = config.host || null;
-		var port = config.port;
+	var host = config.host || null;
+	var port = config.port;
+
+
+	if (typeof config.host !== "undefined" && config.host.includes("unix:")) {
+		host = null;
+		port = config.host.replace("unix:", "");
 	}
 
 	if (!config.https.enable) {
@@ -98,11 +97,10 @@ module.exports = function() {
 	log.info(`The Lounge ${colors.green(Helper.getVersion())} is now running \
 using node ${colors.green(process.versions.node)} on ${colors.green(process.platform)} (${process.arch})`);
 	log.info(`Configuration file: ${colors.green(Helper.CONFIG_PATH)}`);
-	if (listeningSocket) {
+	if (typeof config.host !== "undefined" && config.host.includes("unix:")) {
 		log.info(`Available on socket ${colors.green(config.host)} \
 		in ${config.public ? "public" : "private"} mode with HTTPS ${config.ssl ? "enabled" : "disabled"}`);
-	}
-	else {
+	} else {
 		log.info(`Available on ${colors.green(protocol + "://" + (config.host || "*") + ":" + config.port + "/")} ` +
 		`in ${config.public ? "public" : "private"} mode`);
 	}
@@ -117,12 +115,12 @@ using node ${colors.green(process.versions.node)} on ${colors.green(process.plat
 	}
 
 	function shutdown() {
-            log.info("Quitting...");
-	    server.close(); // Removes socket file
-	    process.exit();
+		log.info("Quitting...");
+		server.close(); // Removes socket file
+		process.exit();
 	}
 
-	process.on('SIGINT', shutdown);
+	process.on("SIGINT", shutdown);
 };
 
 function getClientIp(req) {
