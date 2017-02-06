@@ -79,6 +79,14 @@ module.exports = function() {
 		} else {
 			init(socket);
 		}
+
+	function shutdown() {
+	    server.close(); // Removes socket file
+	    process.exit();
+	}
+
+	process.on('SIGINT', shutdown);
+
 	});
 
 	manager.sockets = sockets;
