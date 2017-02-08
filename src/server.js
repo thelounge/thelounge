@@ -39,9 +39,9 @@ module.exports = function() {
 	var port = config.port;
 
 
-	if (typeof config.host !== "undefined" && config.host.includes("unix:")) {
+	if (typeof config.host !== "undefined" && config.host.startsWith("unix:")) {
 		host = null;
-		port = config.host.replace("unix:", "");
+		port = config.host.replace(/^unix:/, "");
 	}
 
 	if (!config.https.enable) {
@@ -98,8 +98,8 @@ module.exports = function() {
 using node ${colors.green(process.versions.node)} on ${colors.green(process.platform)} (${process.arch})`);
 	log.info(`Configuration file: ${colors.green(Helper.CONFIG_PATH)}`);
 	if (typeof config.host !== "undefined" && config.host.includes("unix:")) {
-		log.info(`Available on socket ${colors.green(config.host)} \
-		in ${config.public ? "public" : "private"} mode with HTTPS ${config.ssl ? "enabled" : "disabled"}`);
+		log.info(`Available on socket ${colors.green(config.host)} ` +
+		`in ${config.public ? "public" : "private"} mode with HTTPS ${config.ssl ? "enabled" : "disabled"}`);
 	} else {
 		log.info(`Available on ${colors.green(protocol + "://" + (config.host || "*") + ":" + config.port + "/")} ` +
 		`in ${config.public ? "public" : "private"} mode`);
