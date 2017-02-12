@@ -33,3 +33,7 @@ deploy:
     condition: "$BUILD_ENV = production"
     tags: true
     repo: thelounge/lounge
+
+after_success:
+    - npm run coverage
+    - bash <(curl -s https://codecov.io/bash)
