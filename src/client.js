@@ -246,22 +246,7 @@ Client.prototype.connect = function(args) {
 		}
 	}
 
-	network.irc = new ircFramework.Client();
-
-	network.irc.requestCap([
-		"echo-message",
-		"znc.in/self-message",
-	]);
-
-	events.forEach(plugin => {
-		var path = "./plugins/irc-events/" + plugin;
-		require(path).apply(client, [
-			network.irc,
-			network
-		]);
-	});
-
-	network.irc.connect({
+	network.irc = new ircFramework.Client({
 		version: pkg.name + " " + Helper.getVersion() + " -- " + pkg.homepage,
 		host: network.host,
 		port: network.port,
@@ -272,11 +257,26 @@ Client.prototype.connect = function(args) {
 		tls: network.tls,
 		localAddress: config.bind,
 		rejectUnauthorized: false,
+		enable_echomessage: true,
 		auto_reconnect: true,
 		auto_reconnect_wait: 10000 + Math.floor(Math.random() * 1000), // If multiple users are connected to the same network, randomize their reconnections a little
 		auto_reconnect_max_retries: 360, // At least one hour (plus timeouts) worth of reconnections
 		webirc: webirc,
 	});
+
+	network.irc.requestCap([
+		"znc.in/self-message", // Legacy echo-message for ZNc
+	]);
+
+	events.forEach(plugin => {
+		var path = "./plugins/irc-events/" + plugin;
+		require(path).apply(client, [
+			network.irc,
+			network
+		]);
+	});
+
+	network.irc.connect();
 
 	client.save();
 };
