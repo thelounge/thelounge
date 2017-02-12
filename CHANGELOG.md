@@ -9,9 +9,9 @@ Use the following template for each new release, built on recommendations from h
 ```md
 ## vX.Y.Z - YYYY-MM-DD
 
-[See the full changelog](https://github.com/thelounge/lounge/compare/vPRE.VIO.US...vX.Y.Z)
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/vPRE.VIO.US...vX.Y.Z) and [milestone](https://github.com/thelounge/lounge/milestone/XXX).
 
-OPTIONAL DESCRIPTION, ANNOUNCEMENT, ...
+DESCRIPTION, ANNOUNCEMENT, ...
 
 ### Added
 ### Changed
@@ -19,6 +19,10 @@ OPTIONAL DESCRIPTION, ANNOUNCEMENT, ...
 ### Removed
 ### Fixed
 ### Security
+### Documentation
+In the main repository:
+On the website:
+### Internals
 ```
 
 All sections are explained on the link above, they are all optional, and each of them should contain a list of PRs formatted as such:
@@ -26,9 +30,44 @@ All sections are explained on the link above, they are all optional, and each of
 ```md
 - Description ([#PR_NUMBER](https://github.com/thelounge/lounge/pull/PR_NUMBER) by [@GITHUB_USERNAME](https://github.com/GITHUB_USERNAME))
 ```
-
-Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
+
+## v2.2.1 - 2017-02-12
+
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.2.0...v2.2.1) and [milestone](https://github.com/thelounge/lounge/milestone/10).
+
+This patch release packs up a change of the default value of `maxHistory`, an interactive prompt when creating a user to enable/disable user logging, a UI bug fix, and a few dependency upgrades.
+
+### Changed
+
+- Change default `maxHistory` to 10000 ([#899](https://github.com/thelounge/lounge/pull/899) by [@xPaw](https://github.com/xPaw))
+- Prompt admin for user log at user creation ([#903](https://github.com/thelounge/lounge/pull/903) by [@astorije](https://github.com/astorije))
+- Update `irc-framework` to the latest version 🚀 ([#902](https://github.com/thelounge/lounge/pull/902) by [Greenkeeper](https://greenkeeper.io/))
+- Update `urijs` to the latest version 🚀 ([#904](https://github.com/thelounge/lounge/pull/904) by [Greenkeeper](https://greenkeeper.io/))
+- Update `express` to the latest version 🚀 ([#898](https://github.com/thelounge/lounge/pull/898) by [Greenkeeper](https://greenkeeper.io/))
+
+### Fixed
+
+- Fix body height, regression from v2.2.0 ([#913](https://github.com/thelounge/lounge/pull/913) by [@YaManicKill](https://github.com/YaManicKill))
+
+### Documentation
+
+In the main repository:
+
+- Explain about `lounge` command in dev installations ([#887](https://github.com/thelounge/lounge/pull/887) by [@drkitty](https://github.com/drkitty))
+
+On the website:
+
+- Port recent changes to `maxHistory` from default config file ([#60](https://github.com/thelounge/thelounge.github.io/pull/60) by [@astorije](https://github.com/astorije))
+
+### Internals
+
+- Sort depedencies in `package.json` ([#896](https://github.com/thelounge/lounge/pull/896) by [@xPaw](https://github.com/xPaw))
+- Update `nyc` to the latest version 🚀 ([#882](https://github.com/thelounge/lounge/pull/882) by [Greenkeeper](https://greenkeeper.io/))
+- Update `npm-run-all` to the latest version 🚀 ([#880](https://github.com/thelounge/lounge/pull/880) by [Greenkeeper](https://greenkeeper.io/))
+- Add nyc and Webpack config files to the files ignored when releasing ([#906](https://github.com/thelounge/lounge/pull/906) by [@astorije](https://github.com/astorije))
+- Update `stylelint` to the latest version 🚀 ([#907](https://github.com/thelounge/lounge/pull/907) by [Greenkeeper](https://greenkeeper.io/))
+- Update `eslint` to the latest version 🚀 ([#910](https://github.com/thelounge/lounge/pull/910) by [Greenkeeper](https://greenkeeper.io/))
 
 ## v2.2.0 - 2017-01-31
 
