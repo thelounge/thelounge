@@ -11,9 +11,9 @@ const commonSchemes = [
 	"smb", "file",
 	"irc", "ircs",
 	"svn", "git",
-	"steam", "mumble", "ts3server", "ssh",
+	"steam", "mumble", "ts3server",
+	"svn+ssh", "ssh",
 ];
-const incorrectDetections = ["www"];
 
 function findLinks(text) {
 
@@ -21,11 +21,6 @@ function findLinks(text) {
 	var lastPosition = 0;
 
 	URI.withinString(text, function(url, start, end) {
-		// v-- fix: some urls are illegaly detected
-		if (incorrectDetections.includes(url)) {
-			return;
-		}
-		// ^-- /fix: some urls are illegaly detected
 
 		// v-- fix: url was modified and does not match input string -> cant be mapped
 		if (text.indexOf(url, lastPosition) < 0) {
@@ -35,7 +30,7 @@ function findLinks(text) {
 
 		// v-- fix: use prefered scheme
 		const parsed = URI(url);
-		const parsedScheme = parsed.scheme();
+		const parsedScheme = parsed.scheme().toLowerCase();
 		const matchedScheme = commonSchemes.find(scheme => parsedScheme.endsWith(scheme));
 
 		if (matchedScheme) {

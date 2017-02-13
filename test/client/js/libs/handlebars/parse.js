@@ -62,6 +62,12 @@ describe("parse Handlebars helper", () => {
 					"www.duckduckgo.com" +
 				"</a>" +
 				" for privacy reasons"
+		}, {
+			input: "svn+ssh://example.org",
+			expected:
+				"<a href='svn+ssh://example.org' target='_blank' rel='noopener'>" +
+					"svn+ssh://example.org" +
+				"</a>"
 		}];
 
 		const actual = testCases.map(testCase => parse(testCase.input));
@@ -127,6 +133,9 @@ describe("parse Handlebars helper", () => {
 		const testCases = [{
 			input: "text www. text",
 			expected: "text www. text"
+		}, {
+			input: "http://.",
+			expected: "http://."
 		}];
 
 		const actual = testCases.map(testCase => parse(testCase.input));
@@ -290,6 +299,13 @@ describe("parse Handlebars helper", () => {
 				"like.." +
 				"<a href='http://example.com' target='_blank' rel='noopener'>" +
 					"http://example.com" +
+				"</a>"
+		}, {
+			input: "like..HTTP://example.com",
+			expected:
+				"like.." +
+				"<a href='HTTP://example.com' target='_blank' rel='noopener'>" +
+					"HTTP://example.com" +
 				"</a>"
 		}];
 
