@@ -31,6 +31,7 @@ let config = {
 				test: /\.js$/,
 				include: [
 					path.resolve(__dirname, "client"),
+					path.resolve(__dirname, "node_modules/ircmessageparser"),
 				],
 				loader: "babel",
 				query: {
