@@ -1,4 +1,9 @@
 "use strict";
+
+if (/^[0-5]\./.test(process.versions.node)) {
+	return;
+}
+
 const expect = require("chai").expect;
 const parse = require("../../../../../client/js/libs/handlebars/parse");
 
