@@ -1,6 +1,7 @@
 # built by tools
 client/js/bundle.js
 client/js/bundle.vendor.js
+client/js/polyfill.min.js
 
 # third party
 client/js/libs/jquery/*.js
