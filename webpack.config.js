@@ -32,12 +32,7 @@ let config = {
 				include: [
 					path.resolve(__dirname, "client"),
 				],
-				loader: "babel",
-				query: {
-					presets: [
-						"es2015"
-					]
-				}
+				loader: "babel"
 			},
 			{
 				test: /\.tpl$/,
