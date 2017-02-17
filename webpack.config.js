@@ -26,17 +26,19 @@ let config = {
 		publicPath: "/"
 	},
 	module: {
-		loaders: [
+		rules: [
 			{
 				test: /\.js$/,
 				include: [
 					path.resolve(__dirname, "client"),
 				],
-				loader: "babel",
-				query: {
-					presets: [
-						"es2015"
-					]
+				use: {
+					loader: "babel-loader",
+					options: {
+						presets: [
+							"es2015"
+						]
+					}
 				}
 			},
 			{
@@ -44,14 +46,16 @@ let config = {
 				include: [
 					path.resolve(__dirname, "client/views"),
 				],
-				loader: "handlebars-loader",
-				query: {
-					helperDirs: [
-						path.resolve(__dirname, "client/js/libs/handlebars")
-					],
-					extensions: [
-						".tpl"
-					],
+				use: {
+					loader: "handlebars-loader",
+					options: {
+						helperDirs: [
+							path.resolve(__dirname, "client/js/libs/handlebars")
+						],
+						extensions: [
+							".tpl"
+						],
+					}
 				}
 			},
 		]
@@ -66,13 +70,11 @@ let config = {
 // *********************************
 
 if (process.env.NODE_ENV === "production") {
-	config.plugins.push(new webpack.optimize.DedupePlugin());
 	config.plugins.push(new webpack.optimize.UglifyJsPlugin({
-		comments: false,
-		compress: {
-			warnings: false
-		}
+		comments: false
 	}));
+} else {
+	console.log("Building in development mode, bundles will not be minified.");
 }
 
 module.exports = config;

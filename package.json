@@ -75,6 +75,6 @@
     "socket.io-client": "1.7.2",
     "stylelint": "7.8.0",
     "urijs": "1.18.7",
-    "webpack": "1.14.0"
+    "webpack": "2.2.1"
   }
 }
