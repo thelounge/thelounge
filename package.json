@@ -13,7 +13,7 @@
   "homepage": "https://thelounge.github.io/",
   "scripts": {
     "coverage": "nyc mocha",
-    "start": "node index",
+    "start": "node index start",
     "start-dev": "npm-run-all --parallel watch start",
     "build": "npm-run-all build:*",
     "build:font-awesome": "node scripts/build-fontawesome.js",
