@@ -73,7 +73,7 @@
     "npm-run-all": "4.0.1",
     "nyc": "10.1.0",
     "socket.io-client": "1.7.3",
-    "stylelint": "7.8.0",
+    "stylelint": "7.9.0",
     "urijs": "1.18.7",
     "webpack": "2.2.1"
   }
