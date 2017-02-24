@@ -261,6 +261,7 @@ Client.prototype.connect = function(args) {
 		auto_reconnect: true,
 		auto_reconnect_wait: 10000 + Math.floor(Math.random() * 1000), // If multiple users are connected to the same network, randomize their reconnections a little
 		auto_reconnect_max_retries: 360, // At least one hour (plus timeouts) worth of reconnections
+		ping_interval: 0, // Disable client ping timeouts due to buggy implementation
 		webirc: webirc,
 	});
 
