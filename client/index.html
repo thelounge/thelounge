@@ -357,24 +357,6 @@
 							<div class="col-sm-12">
 								<textarea class="input" name="userStyles" id="user-specified-css-input" placeholder="You can override any style with CSS here"></textarea>
 							</div>
-							<div class="col-sm-12">
-								<h2>About The Lounge</h2>
-							</div>
-							<div class="col-sm-12">
-								<p class="about">
-									<% if (gitCommit) { %>
-										The Lounge is running from source
-										(<a href="https://github.com/thelounge/lounge/tree/<%= gitCommit %>" target="_blank"><code><%= gitCommit %></code></a>).<br>
-									<% } else { %>
-										The Lounge is in version <strong><%= version %></strong>
-										(<a href="https://github.com/thelounge/lounge/releases/tag/v<%= version %>" target="_blank">See release notes</a>).<br>
-									<% } %>
-
-									<a href="https://thelounge.github.io/" target="_blank">Website</a><br>
-									<a href="https://thelounge.github.io/docs/" target="_blank">Documentation</a><br>
-									<a href="https://github.com/thelounge/lounge/issues/new" target="_blank">Report a bug</a>
-								</p>
-							</div>
 						</div>
 					</div>
 				</div>
@@ -707,6 +689,22 @@
 								</p>
 							</div>
 						</div>
+
+						<h2>About The Lounge</h2>
+
+						<p class="about">
+							<% if (gitCommit) { %>
+								The Lounge is running from source
+								(<a href="https://github.com/thelounge/lounge/tree/<%= gitCommit %>" target="_blank"><code><%= gitCommit %></code></a>).<br>
+							<% } else { %>
+								The Lounge is in version <strong><%= version %></strong>
+								(<a href="https://github.com/thelounge/lounge/releases/tag/v<%= version %>" target="_blank">See release notes</a>).<br>
+							<% } %>
+
+							<a href="https://thelounge.github.io/" target="_blank">Website</a><br>
+							<a href="https://thelounge.github.io/docs/" target="_blank">Documentation</a><br>
+							<a href="https://github.com/thelounge/lounge/issues/new" target="_blank">Report a bug</a>
+						</p>
 					</div>
 				</div>
 			</div>

@@ -1289,13 +1289,8 @@ kbd {
 	margin: 4px 10px 0 0;
 }
 
-#settings .about,
 #settings #play {
 	color: #7f8c8d;
-}
-
-#settings .about small {
-	margin-left: 2px;
 }
 
 #settings #play {
@@ -1305,12 +1300,6 @@ kbd {
 
 #settings #play:hover {
 	opacity: .8;
-}
-
-#settings .about {
-	font-size: 14px;
-	padding-top: 2px;
-	line-height: 1.8;
 }
 
 #settings #change-password .error,
@@ -1350,6 +1339,11 @@ kbd {
 #help .help-item .description p {
 	font-size: 14px;
 	margin-bottom: 0;
+}
+
+#help .about {
+	font-size: 14px;
+	line-height: 1.8;
 }
 
 #form {
