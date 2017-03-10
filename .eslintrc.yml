@@ -21,6 +21,7 @@ rules:
   key-spacing: [2, {beforeColon: false, afterColon: true}]
   keyword-spacing: [2, {before: true, after: true}]
   linebreak-style: [2, unix]
+  no-compare-neg-zero: 2
   no-console: 0
   no-control-regex: 0
   no-else-return: 2
