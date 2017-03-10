@@ -8,11 +8,11 @@ var Helper = require("../helper");
 
 program
 	.command("start")
-	.option("-H, --host <ip>", "host")
-	.option("-P, --port <port>", "port")
-	.option("-B, --bind <ip>", "bind")
-	.option("    --public", "mode")
-	.option("    --private", "mode")
+	.option("-H, --host <ip>", "set the IP address or hostname for the web server to listen on")
+	.option("-P, --port <port>", "set the port to listen on")
+	.option("-B, --bind <ip>", "set the local IP to bind to for outgoing connections")
+	.option("    --public", "start in public mode")
+	.option("    --private", "start in private mode")
 	.description("Start the server")
 	.action(function(options) {
 		var users = new ClientManager().getUsers();
