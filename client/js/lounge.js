@@ -1253,6 +1253,7 @@ $(function() {
 		});
 	}
 
+	var userOverride = false;
 	forms.on("submit", "form", function(e) {
 		e.preventDefault();
 		var event = "auth";
@@ -1277,11 +1278,17 @@ $(function() {
 		socket.emit(
 			event, values
 		);
+		userOverride = false;
 	});
 
 	forms.on("input", ".nick", function() {
 		var nick = $(this).val();
-		forms.find(".username").val(nick);
+		if (!userOverride) {
+			forms.find(".username").val(nick);
+		}
+	});
+	forms.on("input", ".username", function() {
+		userOverride = true;
 	});
 
 	Mousetrap.bind([
