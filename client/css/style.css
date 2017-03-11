@@ -57,7 +57,8 @@ a:hover {
 }
 
 h1,
-h2 {
+h2,
+h3 {
 	font: inherit;
 	line-height: inherit;
 	margin: 0;
@@ -77,6 +78,33 @@ button {
 	margin: 0;
 	outline: none;
 	padding: 0;
+}
+
+code,
+kbd {
+	font-family: Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
+}
+
+code {
+	font-size: 12px;
+	padding: 2px 4px;
+	color: #e74c3c;
+	background-color: #f9f2f4;
+	border-radius: 2px;
+}
+
+kbd {
+	display: inline-block;
+	font-size: 11px;
+	line-height: 10px;
+	padding: 3px 5px;
+	color: #555;
+	vertical-align: middle;
+	background-color: #fcfcfc;
+	border: solid 1px #ccc;
+	border-bottom-color: #bbb;
+	border-radius: 3px;
+	box-shadow: inset 0 -1px 0 #bbb;
 }
 
 .btn {
@@ -185,6 +213,7 @@ button {
 #footer .sign-in:before { content: "\f023"; /* http://fontawesome.io/icon/lock/ */ }
 #footer .connect:before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
 #footer .settings:before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
+#footer .help:before { content: "\f059"; /* http://fontawesome.io/icon/question/ */ }
 #footer .sign-out:before { content: "\f011"; /* http://fontawesome.io/icon/power-off/ */ }
 
 #form #cycle-nicks:before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
@@ -654,6 +683,12 @@ button {
 	font-size: 22px;
 	margin: 30px 0 10px;
 	padding-bottom: 7px;
+}
+
+#windows .window h3 {
+	color: #7f8c8d;
+	font-size: 18px;
+	margin: 20px 0 10px;
 }
 
 #windows .active {
@@ -1254,13 +1289,8 @@ button {
 	margin: 4px 10px 0 0;
 }
 
-#settings .about,
 #settings #play {
 	color: #7f8c8d;
-}
-
-#settings .about small {
-	margin-left: 2px;
 }
 
 #settings #play {
@@ -1270,12 +1300,6 @@ button {
 
 #settings #play:hover {
 	opacity: .8;
-}
-
-#settings .about {
-	font-size: 14px;
-	padding-top: 2px;
-	line-height: 1.8;
 }
 
 #settings #change-password .error,
@@ -1294,6 +1318,32 @@ button {
 #settings .error {
 	color: #e74c3c;
 	margin-top: .2em;
+}
+
+#help .help-item {
+	display: table-row;
+}
+
+#help .help-item .subject,
+#help .help-item .description {
+	display: table-cell;
+	padding-bottom: 15px;
+}
+
+#help .help-item .subject {
+	white-space: nowrap;
+	padding-right: 10px;
+	min-width: 150px;
+}
+
+#help .help-item .description p {
+	font-size: 14px;
+	margin-bottom: 0;
+}
+
+#help .about {
+	font-size: 14px;
+	line-height: 1.8;
 }
 
 #form {
@@ -1812,6 +1862,15 @@ button {
 	#chat .date-marker,
 	#chat .unread-marker {
 		margin: 0;
+	}
+
+	#help .help-item .subject {
+		display: inline-block;
+		padding-bottom: 4px;
+	}
+
+	#help .help-item .description {
+		display: block;
 	}
 }
 

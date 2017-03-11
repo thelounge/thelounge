@@ -37,6 +37,7 @@
 			<span class="tooltipped tooltipped-n" aria-label="Sign in"><button class="icon sign-in" data-target="#sign-in" aria-label="Sign in"></button></span>
 			<span class="tooltipped tooltipped-n" aria-label="Connect to network"><button class="icon connect" data-target="#connect" aria-label="Connect to network"></button></span>
 			<span class="tooltipped tooltipped-n" aria-label="Client settings"><button class="icon settings" data-target="#settings" aria-label="Client settings"></button></span>
+			<span class="tooltipped tooltipped-n" aria-label="Help"><button class="icon help" data-target="#help" aria-label="Help"></button></span>
 			<span class="tooltipped tooltipped-n" aria-label="Sign out"><button class="icon sign-out" id="sign-out" aria-label="Sign out"></button></span>
 		</footer>
 		<div id="main">
@@ -356,25 +357,354 @@
 							<div class="col-sm-12">
 								<textarea class="input" name="userStyles" id="user-specified-css-input" placeholder="You can override any style with CSS here"></textarea>
 							</div>
-							<div class="col-sm-12">
-								<h2>About The Lounge</h2>
-							</div>
-							<div class="col-sm-12">
-								<p class="about">
-									<% if (gitCommit) { %>
-										The Lounge is running from source
-										(<a href="https://github.com/thelounge/lounge/tree/<%= gitCommit %>" target="_blank"><code><%= gitCommit %></code></a>).<br>
-									<% } else { %>
-										The Lounge is in version <strong><%= version %></strong>
-										(<a href="https://github.com/thelounge/lounge/releases/tag/v<%= version %>" target="_blank">See release notes</a>).<br>
-									<% } %>
+						</div>
+					</div>
+				</div>
 
-									<a href="https://thelounge.github.io/" target="_blank">Website</a><br>
-									<a href="https://thelounge.github.io/docs/" target="_blank">Documentation</a><br>
-									<a href="https://github.com/thelounge/lounge/issues/new" target="_blank">Report a bug</a>
+				<div id="help" class="window">
+					<div class="header">
+						<button class="lt" aria-label="Toggle channel list"></button>
+					</div>
+					<div class="container">
+						<h1 class="title">Help</h1>
+
+						<h2>Keyboard Shortcuts</h2>
+
+						<h3>On Windows / Linux</h3>
+
+						<div class="help-item">
+							<div class="subject">
+								<kbd>Ctrl</kbd> + <kbd>↑</kbd> / <kbd>↓</kbd>
+							</div>
+							<div class="description">
+								<p>Switch to the previous/next window in the channel list</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>L</kbd>
+							</div>
+							<div class="description">
+								<p>Clear the current screen</p>
+							</div>
+						</div>
+
+						<h3>On macOS</h3>
+
+						<div class="help-item">
+							<div class="subject">
+								<kbd>⌘</kbd> + <kbd>↑</kbd> / <kbd>↓</kbd>
+							</div>
+							<div class="description">
+								<p>Switch to the previous/next window in the channel list</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<kbd>⌘</kbd> + <kbd>K</kbd>
+							</div>
+							<div class="description">
+								<p>Clear the current screen</p>
+							</div>
+						</div>
+
+						<h2>Commands</h2>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/away [message]</code>
+							</div>
+							<div class="description">
+								<p>Mark yourself as away with an optional message.</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/back</code>
+							</div>
+							<div class="description">
+								<p>Remove your away status (set with <code>/away</code>).</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/clear</code>
+							</div>
+							<div class="description">
+								<p>Clear the current screen.</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/connect host [port]</code>
+							</div>
+							<div class="description">
+								<p>
+									Connect to a new IRC network. If <code>port</code> starts with
+									a <code>+</code> sign, the connection will be made secure
+									using TLS.
+								</p>
+								<p>Alias: <code>/server</code></p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/ctcp target cmd [args]</code>
+							</div>
+							<div class="description">
+								<p>
+									Send a <abbr title="Client-to-client protocol">CTCP</abbr>
+									request. Read more about this on
+									<a href="https://en.wikipedia.org/wiki/Client-to-client_protocol">the dedicated Wikipedia article</a>.
 								</p>
 							</div>
 						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/deop nick [...nick]</code>
+							</div>
+							<div class="description">
+								<p>
+									Remove op (<code>-o</code>) from one or several users in the
+									current channel.
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/devoice nick [...nick]</code>
+							</div>
+							<div class="description">
+								<p>
+									Remove voice (<code>-v</code>) from one or several users in
+									the current channel.
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/disconnect [message]</code>
+							</div>
+							<div class="description">
+								<p>
+									Disconnect from the current network with an
+									optionally-provided message.
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/invite nick [channel]</code>
+							</div>
+							<div class="description">
+								<p>
+									Invite a user to the specified channel. If
+									<code>channel</code> is ommitted, user will be invited to the
+									current channel.
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/join channel</code>
+							</div>
+							<div class="description">
+								<p>Join a channel.</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/kick nick</code>
+							</div>
+							<div class="description">
+								<p>Kick a user from the current channel.</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/list</code>
+							</div>
+							<div class="description">
+								<p>Retrieve a list of available channels on this network.</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/me message</code>
+							</div>
+							<div class="description">
+								<p>
+									Send an action message to the current channel. The Lounge will
+									display it inline, as if the message was posted in the third
+									person.
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/mode flags [args]</code>
+							</div>
+							<div class="description">
+								<p>
+									Set the given flags to the current channel if the active
+									window is a channel, another user if the active window is a
+									private message window, or yourself if the current window is a
+									server window.
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/msg channel message</code>
+							</div>
+							<div class="description">
+								<p>Send a message to the specified channel.</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/nick newnick</code>
+							</div>
+							<div class="description">
+								<p>Change your nickname on the current network.</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/notice channel message</code>
+							</div>
+							<div class="description">
+								<p>Sends a notice message to the specified channel.</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/op nick [...nick]</code>
+							</div>
+							<div class="description">
+								<p>
+									Give op (<code>+o</code>) to one or several users in the
+									current channel.
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/part</code>
+							</div>
+							<div class="description">
+								<p>Close the current channel or private message window.</p>
+								<p>Aliases: <code>/close</code>, <code>/leave</code></p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/query nick</code>
+							</div>
+							<div class="description">
+								<p>Send a private message to the specified user.</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/quit [message]</code>
+							</div>
+							<div class="description">
+								<p>
+									Disconnect from the current network with an optional message.
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/raw message</code>
+							</div>
+							<div class="description">
+								<p>Send a raw message to the current IRC network.</p>
+								<p>Aliases: <code>/quote</code>, <code>/send</code></p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/slap nick</code>
+							</div>
+							<div class="description">
+								<p>Slap someone in the current channel with a trout!</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/topic newtopic</code>
+							</div>
+							<div class="description">
+								<p>Set the topic in the current channel.</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/voice nick [...nick]</code>
+							</div>
+							<div class="description">
+								<p>
+									Give voice (<code>+v</code>) to one or several users in the
+									current channel.
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/whois nick</code>
+							</div>
+							<div class="description">
+								<p>
+									Retrieve information about the given user on the current
+									network.
+								</p>
+							</div>
+						</div>
+
+						<h2>About The Lounge</h2>
+
+						<p class="about">
+							<% if (gitCommit) { %>
+								The Lounge is running from source
+								(<a href="https://github.com/thelounge/lounge/tree/<%= gitCommit %>" target="_blank"><code><%= gitCommit %></code></a>).<br>
+							<% } else { %>
+								The Lounge is in version <strong><%= version %></strong>
+								(<a href="https://github.com/thelounge/lounge/releases/tag/v<%= version %>" target="_blank">See release notes</a>).<br>
+							<% } %>
+
+							<a href="https://thelounge.github.io/" target="_blank">Website</a><br>
+							<a href="https://thelounge.github.io/docs/" target="_blank">Documentation</a><br>
+							<a href="https://github.com/thelounge/lounge/issues/new" target="_blank">Report a bug</a>
+						</p>
 					</div>
 				</div>
 			</div>
