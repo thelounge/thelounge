@@ -10,7 +10,7 @@ var path = require("path");
 var Helper = require("../helper");
 
 program.version(Helper.getVersion(), "-v, --version")
-	.option("-h, --home <path>", "path to configuration folder")
+	.option("--home <path>", "path to configuration folder")
 	.parseOptions(process.argv);
 
 Helper.setHome(program.home || process.env.LOUNGE_HOME);
