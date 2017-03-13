@@ -335,6 +335,14 @@ Client.prototype.inputLine = function(data) {
 
 	// This is either a normal message or a command escaped with a leading '/'
 	if (text.charAt(0) !== "/" || text.charAt(1) === "/") {
+		if (target.chan.type === Chan.Type.LOBBY) {
+			target.chan.pushMessage(this, new Msg({
+				type: Msg.Type.ERROR,
+				text: "Messages can not be sent to lobbies."
+			}));
+			return;
+		}
+
 		text = "say " + text.replace(/^\//, "");
 	} else {
 		text = text.substr(1);
