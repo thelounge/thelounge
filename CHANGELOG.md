@@ -32,6 +32,56 @@ All sections are explained on the link above, they are all optional, and each of
 ```
 -->
 
+## v2.2.2 - 2017-03-13
+
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.2.1...v2.2.2) and [milestone](https://github.com/thelounge/lounge/milestone/11).
+
+This patch release brings a lot of dependency upgrades and a few fixes. Passing options to the `lounge` CLI (`lounge start --port 8080`, etc.) now works as expected without requiring `--`. We have also disabled ping timeouts for now to hopefully fix automatic reconnection. Finally, upgrading `irc-framework` allows us to fix an extra couple of bugs.
+
+You will now notice a new `(?)` icon at the bottom of the sidebar. It is home of a help center that currently details supported shortcuts and commands. It will be improved over time, but we encourage contributors to help us improve it.
+
+Note that as of this release, `lounge` without any arguments wil display the help information (mirroring `lounge --help`). Prior to this release, it used to start a server, which must now be done explicitly using `lounge start`.
+
+### Changed
+
+- Update to `jQuery` 3 ([#931](https://github.com/thelounge/lounge/pull/931) by [@xPaw](https://github.com/xPaw))
+- Update `express` and `nyc` to latest versions ([#954](https://github.com/thelounge/lounge/pull/954) by [@xPaw](https://github.com/xPaw))
+- Update production dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `mousetrap` ([#881](https://github.com/thelounge/lounge/pull/881))
+  - `fs-extra` ([#878](https://github.com/thelounge/lounge/pull/878))
+  - `irc-framework` ([#918](https://github.com/thelounge/lounge/pull/918) and [#952](https://github.com/thelounge/lounge/pull/952))
+  - `urijs` ([#921](https://github.com/thelounge/lounge/pull/921), [#940](https://github.com/thelounge/lounge/pull/940) and [#946](https://github.com/thelounge/lounge/pull/946))
+  - `socket.io` and `socket.io-client` ([#926](https://github.com/thelounge/lounge/pull/926))
+  - `request` ([#944](https://github.com/thelounge/lounge/pull/944))
+
+### Fixed
+
+- Disable (temporarily) client ping timeouts ([#939](https://github.com/thelounge/lounge/pull/939) by [@xPaw](https://github.com/xPaw))
+- Update arg parsing and default `lounge` to `lounge --help` ([#929](https://github.com/thelounge/lounge/pull/929) by [@msaun008](https://github.com/msaun008))
+- Prevent message sending in lobbies ([#957](https://github.com/thelounge/lounge/pull/957) by [@xPaw](https://github.com/xPaw))
+
+### Documentation
+
+In the main repository:
+
+- Help window with supported commands and shortcuts ([#941](https://github.com/thelounge/lounge/pull/941) by [@astorije](https://github.com/astorije))
+
+On the website:
+
+- Add notes about moving client docs to the app itself ([#63](https://github.com/thelounge/thelounge.github.io/pull/63) by [@astorije](https://github.com/astorije))
+- Deprecate (and attempt one last fixing) documentations of Heroku and Passenger ([#61](https://github.com/thelounge/thelounge.github.io/pull/61) by [@astorije](https://github.com/astorije))
+
+### Internals
+
+- Fix `run_pr.sh` script ([#919](https://github.com/thelounge/lounge/pull/919) by [@astorije](https://github.com/astorije))
+- Make sure multiline chains of calls are correctly indented ([#930](https://github.com/thelounge/lounge/pull/930) by [@astorije](https://github.com/astorije))
+- Update development dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `babel-core`, `babel-loader` and `babel-preset-es2015` ([#922](https://github.com/thelounge/lounge/pull/922) and [#947](https://github.com/thelounge/lounge/pull/947))
+  - `webpack` ([#905](https://github.com/thelounge/lounge/pull/905))
+  - `stylelint` ([#934](https://github.com/thelounge/lounge/pull/934))
+  - `npm-run-all` ([#938](https://github.com/thelounge/lounge/pull/938))
+  - `eslint` ([#937](https://github.com/thelounge/lounge/pull/937) and [#943](https://github.com/thelounge/lounge/pull/943))
+
 ## v2.2.1 - 2017-02-12
 
 For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.2.0...v2.2.1) and [milestone](https://github.com/thelounge/lounge/milestone/10).
