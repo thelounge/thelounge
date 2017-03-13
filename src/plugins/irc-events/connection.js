@@ -1,6 +1,5 @@
 "use strict";
 
-var identd = require("../../identd");
 var Msg = require("../../models/msg");
 var Chan = require("../../models/chan");
 var Helper = require("../../helper");
@@ -63,23 +62,18 @@ module.exports = function(irc, network) {
 		}), true);
 	});
 
-	if (identd.isEnabled()) {
-		irc.on("raw socket connected", function(socket) {
-			identd.hook(socket, client.name || network.username);
-		});
-	}
+	let identSocketId;
 
-	if (identHandler) {
-		let identSocketId;
+	irc.on("raw socket connected", function(socket) {
+		identSocketId = identHandler.addSocket(socket, client.name || network.username);
+	});
 
-		irc.on("raw socket connected", function(socket) {
-			identSocketId = identHandler.addSocket(socket, client.name || network.username);
-		});
-
-		irc.on("socket close", function() {
+	irc.on("socket close", function() {
+		if (identSocketId > 0) {
 			identHandler.removeSocket(identSocketId);
-		});
-	}
+			identSocketId = 0;
+		}
+	});
 
 	if (Helper.config.debug.ircFramework) {
 		irc.on("debug", function(message) {
