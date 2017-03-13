@@ -35,9 +35,18 @@ module.exports = function() {
 		log.warn("Server is public and set to use LDAP. Set to private mode if trying to use LDAP authentication.");
 	}
 
+	var host = config.host || null;
+	var port = config.port;
+
+
+	if (typeof config.host !== "undefined" && config.host.startsWith("unix:")) {
+		host = null;
+		port = config.host.replace(/^unix:/, "");
+	}
+
 	if (!config.https.enable) {
 		server = require("http");
-		server = server.createServer(app).listen(config.port, config.host);
+		server = server.createServer(app).listen(port, host);
 	} else {
 		server = require("spdy");
 		const keyPath = Helper.expandHome(config.https.key);
@@ -53,7 +62,7 @@ module.exports = function() {
 		server = server.createServer({
 			key: fs.readFileSync(keyPath),
 			cert: fs.readFileSync(certPath)
-		}, app).listen(config.port, config.host);
+		}, app).listen(port, host);
 	}
 
 	if (config.identd.enable) {
@@ -84,13 +93,17 @@ module.exports = function() {
 	manager.sockets = sockets;
 
 	const protocol = config.https.enable ? "https" : "http";
-	const host = config.host || "*";
 
 	log.info(`The Lounge ${colors.green(Helper.getVersion())} is now running \
 using node ${colors.green(process.versions.node)} on ${colors.green(process.platform)} (${process.arch})`);
 	log.info(`Configuration file: ${colors.green(Helper.CONFIG_PATH)}`);
-	log.info(`Available on ${colors.green(protocol + "://" + host + ":" + config.port + "/")} \
-in ${config.public ? "public" : "private"} mode`);
+	if (typeof config.host !== "undefined" && config.host.includes("unix:")) {
+		log.info(`Available on socket ${colors.green(config.host)} ` +
+		`in ${config.public ? "public" : "private"} mode with HTTPS ${config.ssl ? "enabled" : "disabled"}`);
+	} else {
+		log.info(`Available on ${colors.green(protocol + "://" + (config.host || "*") + ":" + config.port + "/")} ` +
+		`in ${config.public ? "public" : "private"} mode`);
+	}
 	log.info("Press Ctrl-C to stop\n");
 
 	if (!config.public) {
@@ -100,6 +113,14 @@ in ${config.public ? "public" : "private"} mode`);
 
 		manager.autoloadUsers();
 	}
+
+	function shutdown() {
+		log.info("Quitting...");
+		server.close(); // Removes socket file
+		process.exit();
+	}
+
+	process.on("SIGINT", shutdown);
 };
 
 function getClientIp(req) {
