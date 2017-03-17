@@ -6,7 +6,6 @@ var Helper = require("../../helper");
 
 module.exports = function(irc, network) {
 	var client = this;
-	var identHandler = this.manager.identHandler;
 
 	network.channels[0].pushMessage(client, new Msg({
 		text: "Network created, connecting to " + network.host + ":" + network.port + "..."
@@ -65,12 +64,12 @@ module.exports = function(irc, network) {
 	let identSocketId;
 
 	irc.on("raw socket connected", function(socket) {
-		identSocketId = identHandler.addSocket(socket, client.name || network.username);
+		identSocketId = client.manager.identHandler.addSocket(socket, client.name || network.username);
 	});
 
 	irc.on("socket close", function() {
 		if (identSocketId > 0) {
-			identHandler.removeSocket(identSocketId);
+			client.manager.identHandler.removeSocket(identSocketId);
 			identSocketId = 0;
 		}
 	});

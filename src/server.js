@@ -13,7 +13,6 @@ var ldap = require("ldapjs");
 var colors = require("colors/safe");
 const Identification = require("./identification");
 
-let identHandler = null;
 var manager = null;
 var authFunction = localAuth;
 
@@ -89,7 +88,7 @@ in ${config.public ? "public" : "private"} mode`);
 
 	manager = new ClientManager();
 
-	identHandler = new Identification(() => {
+	new Identification((identHandler) => {
 		manager.init(identHandler, sockets);
 	});
 };
