@@ -30,10 +30,10 @@ class Identification {
 				var address = server.address();
 				log.info(`Identd server available on ${colors.green(address.address + ":" + address.port)}`);
 
-				startedCallback();
+				startedCallback(this);
 			});
 		} else {
-			startedCallback();
+			startedCallback(this);
 		}
 	}
 
