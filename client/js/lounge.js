@@ -1,18 +1,20 @@
+"use strict";
+
 // vendor libraries
-import "jquery-ui/ui/widgets/sortable";
-import $ from "jquery";
-import io from "socket.io-client";
-import Mousetrap from "mousetrap";
-import URI from "urijs";
+require("jquery-ui/ui/widgets/sortable");
+const $ = require("jquery");
+const io = require("socket.io-client");
+const Mousetrap = require("mousetrap");
+const URI = require("urijs");
 
 // our libraries
-import "./libs/jquery/inputhistory";
-import "./libs/jquery/stickyscroll";
-import "./libs/jquery/tabcomplete";
-import helpers_parse from "./libs/handlebars/parse";
-import helpers_roundBadgeNumber from "./libs/handlebars/roundBadgeNumber";
-import slideoutMenu from "./libs/slideout";
-import templates from "../views";
+require("./libs/jquery/inputhistory");
+require("./libs/jquery/stickyscroll");
+require("./libs/jquery/tabcomplete");
+const helpers_parse = require("./libs/handlebars/parse");
+const helpers_roundBadgeNumber = require("./libs/handlebars/roundBadgeNumber");
+const slideoutMenu = require("./libs/slideout");
+const templates = require("../views");
 
 $(function() {
 	var path = window.location.pathname + "socket.io/";

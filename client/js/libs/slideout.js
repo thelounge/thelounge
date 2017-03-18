@@ -1,7 +1,9 @@
+"use strict";
+
 /**
  * Simple slideout menu implementation.
  */
-export default function slideoutMenu(viewport, menu) {
+module.exports = function slideoutMenu(viewport, menu) {
 	var touchStartPos = null;
 	var touchCurPos = null;
 	var touchStartTime = 0;
@@ -98,4 +100,4 @@ export default function slideoutMenu(viewport, menu) {
 			return menuIsOpen;
 		}
 	};
-}
+};
