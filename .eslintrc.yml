@@ -27,6 +27,7 @@ rules:
   no-else-return: 2
   no-implicit-globals: 2
   no-multi-spaces: 2
+  no-multiple-empty-lines: [2, { "max": 1 }]
   no-shadow: 2
   no-template-curly-in-string: 2
   no-trailing-spaces: 2
@@ -34,11 +35,13 @@ rules:
   no-useless-escape: 2
   no-useless-return: 2
   object-curly-spacing: [2, never]
+  padded-blocks: [2, never]
   quote-props: [2, as-needed]
   quotes: [2, double, avoid-escape]
   semi: [2, always]
   space-before-blocks: 2
   space-before-function-paren: [2, never]
+  space-in-parens: [2, never]
   space-infix-ops: 2
   spaced-comment: [2, always]
   strict: 2

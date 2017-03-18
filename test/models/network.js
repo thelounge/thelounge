@@ -8,7 +8,6 @@ var Network = require("../../src/models/network");
 
 describe("Network", function() {
 	describe("#export()", function() {
-
 		it("should produce an valid object", function() {
 			var network = new Network({
 				name: "networkName",
