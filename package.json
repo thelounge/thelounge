@@ -17,7 +17,7 @@
     "start-dev": "npm-run-all --parallel watch start",
     "build": "npm-run-all build:*",
     "build:font-awesome": "node scripts/build-fontawesome.js",
-    "build:webpack": "webpack",
+    "build:webpack": "webpack --progress",
     "watch": "webpack --watch",
     "test": "npm-run-all -c test:* lint",
     "test:mocha": "mocha",
