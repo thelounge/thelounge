@@ -286,18 +286,19 @@ function ldapAuth(client, user, password, callback) {
 	if (!user) {
 		return callback(false);
 	}
+	var config = Helper.config;
 	var userDN = user.replace(/([,\\/#+<>;"= ])/g, "\\$1");
 
 	var ldapclient = ldap.createClient({
-		url: Helper.config.ldap.url,
-		tlsOptions: Helper.config.ldap.tlsOptions
+		url: config.ldap.url,
+		tlsOptions: config.ldap.tlsOptions
 	});
 
-	var base = Helper.config.ldap.base;
+	var base = config.ldap.base;
 	var searchOptions = {
-		scope: Helper.config.ldap.scope,
-		filter: '(&(' + Helper.config.ldap.primaryKey + '=' + userDN + ')' + Helper.config.ldap.filter + ')',
-		attributes: ['dn']
+		scope: config.ldap.scope,
+		filter: "(&(" + config.ldap.primaryKey + "=" + userDN + ")" + config.ldap.filter + ")",
+		attributes: ["dn"]
 	};
 
 	ldapclient.on("error", function(err) {
@@ -305,44 +306,43 @@ function ldapAuth(client, user, password, callback) {
 		callback(!err);
 	});
 
-	ldapclient.bind(Helper.config.ldap.rootDN,
-				    Helper.config.ldap.rootPassword,
-				    function(err) {
+	ldapclient.bind(config.ldap.rootDN, config.ldap.rootPassword, function(err) {
 		if (err) {
 			log.error("Invalid LDAP root credentials");
 			ldapclient.unbind();
 			callback(false);
 		} else {
-			ldapclient.search(base, searchOptions, function(err, res) {
-				if (err) {
+			ldapclient.search(base, searchOptions, function(err2, res) {
+				if (err2) {
 					log.warning("User not found: ", userDN);
 					ldapclient.unbind();
 					callback(false);
 				} else {
 					var found = false;
-					res.on('searchEntry', function(entry) {
+					res.on("searchEntry", function(entry) {
 						found = true;
 						var bindDN = entry.objectName;
-						log.info("Auth against LDAP ", Helper.config.ldap.url, " with bindDN ", bindDN);
-						ldapclient.unbind()
+						log.info("Auth against LDAP ", config.ldap.url, " with bindDN ", bindDN);
+						ldapclient.unbind();
 						var ldapclient2 = ldap.createClient({
-							url: Helper.config.ldap.url,
-							tlsOptions: Helper.config.ldap.tlsOptions
+							url: config.ldap.url,
+							tlsOptions: config.ldap.tlsOptions
 						});
-						ldapclient2.bind(bindDN, password, function(err) {
-							if (!err && !client) {
+						ldapclient2.bind(bindDN, password, function(err3) {
+							if (!err3 && !client) {
 								if (!manager.addUser(user, null)) {
 									log.error("Unable to create new user", user);
 								}
 							}
 							ldapclient2.unbind();
-							callback(!err);
+							callback(!err3);
 						});
 					});
-					res.on('error', function(resErr) {
+					res.on("error", function(err3) {
+						log.error("LDAP error: ", err3);
 						callback(false);
 					});
-					res.on('end', function(result) {
+					res.on("end", function() {
 						if (!found) {
 							callback(false);
 						}
