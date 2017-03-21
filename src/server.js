@@ -283,26 +283,73 @@ function localAuth(client, user, password, callback) {
 }
 
 function ldapAuth(client, user, password, callback) {
+	if (!user) {
+		return callback(false);
+	}
 	var userDN = user.replace(/([,\\/#+<>;"= ])/g, "\\$1");
-	var bindDN = Helper.config.ldap.primaryKey + "=" + userDN + "," + Helper.config.ldap.baseDN;
 
 	var ldapclient = ldap.createClient({
-		url: Helper.config.ldap.url
+		url: Helper.config.ldap.url,
+		tlsOptions: Helper.config.ldap.tlsOptions
 	});
+
+	var base = Helper.config.ldap.base;
+	var searchOptions = {
+		scope: Helper.config.ldap.scope,
+		filter: '(&(' + Helper.config.ldap.primaryKey + '=' + userDN + ')' + Helper.config.ldap.filter + ')',
+		attributes: ['dn']
+	};
 
 	ldapclient.on("error", function(err) {
 		log.error("Unable to connect to LDAP server", err);
 		callback(!err);
 	});
 
-	ldapclient.bind(bindDN, password, function(err) {
-		if (!err && !client) {
-			if (!manager.addUser(user, null)) {
-				log.error("Unable to create new user", user);
-			}
+	ldapclient.bind(Helper.config.ldap.rootDN,
+				    Helper.config.ldap.rootPassword,
+				    function(err) {
+		if (err) {
+			log.error("Invalid LDAP root credentials");
+			ldapclient.unbind();
+			callback(false);
+		} else {
+			ldapclient.search(base, searchOptions, function(err, res) {
+				if (err) {
+					log.warning("User not found: ", userDN);
+					ldapclient.unbind();
+					callback(false);
+				} else {
+					var found = false;
+					res.on('searchEntry', function(entry) {
+						found = true;
+						var bindDN = entry.objectName;
+						log.info("Auth against LDAP ", Helper.config.ldap.url, " with bindDN ", bindDN);
+						ldapclient.unbind()
+						var ldapclient2 = ldap.createClient({
+							url: Helper.config.ldap.url,
+							tlsOptions: Helper.config.ldap.tlsOptions
+						});
+						ldapclient2.bind(bindDN, password, function(err) {
+							if (!err && !client) {
+								if (!manager.addUser(user, null)) {
+									log.error("Unable to create new user", user);
+								}
+							}
+							ldapclient2.unbind();
+							callback(!err);
+						});
+					});
+					res.on('error', function(resErr) {
+						callback(false);
+					});
+					res.on('end', function(result) {
+						if (!found) {
+							callback(false);
+						}
+					});
+				}
+			});
 		}
-		ldapclient.unbind();
-		callback(!err);
 	});
 }
 
