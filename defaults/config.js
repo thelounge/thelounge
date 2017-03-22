@@ -291,6 +291,14 @@ module.exports = {
 	},
 
 	//
+	// Amount of rounds to use for bcrypt passwords.
+	//
+	// @type      number
+	// @default   11
+	//
+	bcryptRounds: 11,
+
+	//
 	// Run The Lounge with identd support.
 	//
 	// @type     object
