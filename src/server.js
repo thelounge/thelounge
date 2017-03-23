@@ -192,27 +192,33 @@ function init(socket, client) {
 						});
 						return;
 					}
-					if (!Helper.password.compare(old || "", client.config.password)) {
-						socket.emit("change-password", {
-							error: "The current password field does not match your account password"
+
+					Helper.password
+						.compare(old || "", client.config.password)
+						.then(matching => {
+							if (!matching) {
+								socket.emit("change-password", {
+									error: "The current password field does not match your account password"
+								});
+								return;
+							}
+							const hash = Helper.password.hash(p1);
+
+							client.setPassword(hash, success => {
+								const obj = {};
+
+								if (success) {
+									obj.success = "Successfully updated your password, all your other sessions were logged out";
+									obj.token = client.config.token;
+								} else {
+									obj.error = "Failed to update your password";
+								}
+
+								socket.emit("change-password", obj);
+							});
+						}).catch(error => {
+							log.error(`Error while checking users password. Error: ${error}`);
 						});
-						return;
-					}
-
-					var hash = Helper.password.hash(p1);
-
-					client.setPassword(hash, function(success) {
-						var obj = {};
-
-						if (success) {
-							obj.success = "Successfully updated your password, all your other sessions were logged out";
-							obj.token = client.config.token;
-						} else {
-							obj.error = "Failed to update your password";
-						}
-
-						socket.emit("change-password", obj);
-					});
 				}
 			);
 		}
@@ -267,19 +273,22 @@ function localAuth(client, user, password, callback) {
 		return callback(false);
 	}
 
-	var result = Helper.password.compare(password, client.config.password);
+	Helper.password
+		.compare(password, client.config.password)
+		.then(matching => {
+			if (Helper.password.requiresUpdate(client.config.password)) {
+				const hash = Helper.password.hash(password);
 
-	if (result && Helper.password.requiresUpdate(client.config.password)) {
-		var hash = Helper.password.hash(password);
-
-		client.setPassword(hash, function(success) {
-			if (success) {
-				log.info(`User ${colors.bold(client.name)} logged in and their hashed password has been updated to match new security requirements`);
+				client.setPassword(hash, success => {
+					if (success) {
+						log.info(`User ${colors.bold(client.name)} logged in and their hashed password has been updated to match new security requirements`);
+					}
+				});
 			}
+			callback(matching);
+		}).catch(error => {
+			log.error(`Error while checking users password. Error: ${error}`);
 		});
-	}
-
-	return callback(result);
 }
 
 function ldapAuth(client, user, password, callback) {

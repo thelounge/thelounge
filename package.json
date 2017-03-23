@@ -40,7 +40,7 @@
     "node": ">=4.2.0"
   },
   "dependencies": {
-    "bcrypt-nodejs": "0.0.3",
+    "bcryptjs": "2.4.3",
     "cheerio": "0.22.0",
     "colors": "1.1.2",
     "commander": "2.9.0",

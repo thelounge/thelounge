@@ -6,7 +6,7 @@ var path = require("path");
 var os = require("os");
 var fs = require("fs");
 var net = require("net");
-var bcrypt = require("bcrypt-nodejs");
+var bcrypt = require("bcryptjs");
 
 var Helper = {
 	config: null,
@@ -125,5 +125,5 @@ function passwordHash(password) {
 }
 
 function passwordCompare(password, expected) {
-	return bcrypt.compareSync(password, expected);
+	return bcrypt.compare(password, expected);
 }
