@@ -20,6 +20,7 @@ module.exports = {
 
 	chan: require("./chan.tpl"),
 	chat: require("./chat.tpl"),
+	connection_list: require("./connection_list.tpl"),
 	contextmenu_divider: require("./contextmenu_divider.tpl"),
 	contextmenu_item: require("./contextmenu_item.tpl"),
 	date_marker: require("./date-marker.tpl"),

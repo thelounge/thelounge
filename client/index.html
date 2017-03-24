@@ -213,6 +213,13 @@
 							<div class="col-sm-12">
 								<h1 class="title">Settings</h1>
 							</div>
+							{{#if displayConnection}}
+							<div class="col-sm-12">
+								<h2>Connected clients</h2>
+							</div>
+							<div id="connection_list" class="col-sm-12">
+							</div>
+							{{/if}}
 							<div class="col-sm-12">
 								<h2>Messages</h2>
 							</div>

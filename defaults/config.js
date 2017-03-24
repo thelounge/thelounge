@@ -95,6 +95,16 @@ module.exports = {
 	prefetchMaxImageSize: 512,
 
 	//
+	// Display connections
+	//
+	// If set to false, disables remote connection managment.
+	//
+	// @type     boolean
+	// @default  false
+	//
+	displayConnection: false,
+
+	//
 	// Display network
 	//
 	// If set to false network settings will not be shown in the login form.
