@@ -587,7 +587,9 @@ function sendConnectionInfo(client) {
 				}
 				send_data.connection.push(data);
 			}
-			manager.sockets.of("/").connected[connection_list[j].socket_id].emit("update-clients-list", send_data);
+			manager.sockets.of("/")
+				.connected[connection_list[j].socket_id]
+				.emit("update-clients-list", send_data);
 		}
 	});
 }
