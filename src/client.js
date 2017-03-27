@@ -263,11 +263,55 @@ Client.prototype.connect = function(args) {
 		auto_reconnect_max_retries: 360, // At least one hour (plus timeouts) worth of reconnections
 		ping_interval: 0, // Disable client ping timeouts due to buggy implementation
 		webirc: webirc,
+		encoding: "iso-8859-1"
 	});
 
 	network.irc.requestCap([
 		"znc.in/self-message", // Legacy echo-message for ZNc
 	]);
+
+	network.irc.connection.processReadBuffer = function(continue_processing) {
+    // If we already have the read buffer being iterated through, don't start
+    // another one.
+    if (this.reading_buffer && !continue_processing) {
+        return;
+    }
+    var that = this;
+    var lines_per_js_tick = 40;
+    var processed_lines = 0;
+    var line;
+    var message;
+
+    this.reading_buffer = true;
+
+    while (processed_lines < lines_per_js_tick && this.read_buffer.length > 0) {
+        line = Helper.forceUTF8(this.read_buffer.shift());
+        if (!line) {
+            continue;
+        }
+
+        message = Helper.parseIrcLine(line);
+
+        if (!message) {
+            // A malformed IRC line
+            continue;
+        }
+        this.emit('raw', { line: line, from_server: true });
+        this.emit('message', message, line);
+
+        processed_lines++;
+    }
+
+    // If we still have items left in our buffer then continue reading them in a few ticks
+    if (this.read_buffer.length > 0) {
+        this.setTimeout(function() {
+            that.processReadBuffer(true);
+        }, 1);
+    } else {
+        this.reading_buffer = false;
+    }
+};
+
 
 	events.forEach(plugin => {
 		var path = "./plugins/irc-events/" + plugin;
