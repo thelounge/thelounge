@@ -96,7 +96,6 @@ ClientManager.prototype.addUser = function(name, password, enableLog) {
 		return false;
 	}
 	try {
-
 		if (require("path").basename(name) !== name) {
 			throw new Error(name + " is an invalid username.");
 		}

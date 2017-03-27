@@ -364,7 +364,6 @@ $(function() {
 				lastDate = msgDate;
 			});
 		}
-
 	}
 
 	function renderChannelUsers(data) {
@@ -498,7 +497,6 @@ $(function() {
 
 			lastDate = msgDate;
 		});
-
 	});
 
 	socket.on("network", function(data) {
@@ -1168,7 +1166,6 @@ $(function() {
 					} catch (exception) {
 						// `new Notification(...)` is not supported and should be silenced.
 					}
-
 				}
 			}
 		}
