@@ -522,37 +522,6 @@ function reverseDnsLookup(ip, callback) {
 	});
 }
 
-function IterateOver(list, iterator, callback) {
-	// this is the function that will start all the jobs
-	// list is the collections of item we want to iterate over
-	// iterator is a function representing the job when want done on each item
-	// callback is the function we want to call when all iterations are over
-	var doneCount = list.length; // here we'll keep track of how many reports we've got done
-	function report() {
-		// given to each call of the iterator so it can report its completion
-		doneCount--;
-		// if doneCount equals the number of items in list, then we're done
-		if (doneCount === 0) {
-			callback();
-		}
-	}
-	// here we give each iteration its job
-	for (var i = 0; i < list.length; i++) {
-		// iterator takes 2 arguments, an item to work on and report function
-		iterator(list[i], report);
-	}
-}
-
-function hostnameAsync(data, callback) {
-	dns.reverse(data.ip, function(err, host) {
-		if (!err && host.length) {
-			data.hostname = host[0];
-		} else {
-			data.hostname = data.ip;
-		}
-		callback(data);
-	});
-}
 function sendConnectionInfo(client) {
 	// send messages to connected user clients
 	// get sockets
@@ -566,30 +535,57 @@ function sendConnectionInfo(client) {
 		socket_data.ip = getClientIp(manager.sockets.of("/").connected[socket_list[k]].request);
 		connection_list.push(socket_data);
 	}
-	// get hostnames for each ip async
-	IterateOver(connection_list, hostnameAsync, function sendConnectionEvent() {
-		// send event for every connection
-		for (var j = 0; j < connection_list.length; j++) {
-			// get more info about every connection sync
-			var send_data = {
-				connection: []
-			};
-			for (var i = 0; i < connection_list.length; i++) {
-				var data = {};
-				data.hostname = connection_list[i].hostname;
-				data.ip = connection_list[i].ip;
-				data.socket_id = connection_list[i].socket_id;
-				// active host
-				if (connection_list[j].socket_id === connection_list[i].socket_id) {
-					data.active_host = true;
-				} else {
-					data.active_host = false;
+
+	// get hostnames for every ip
+	hostnamePromise(connection_list)
+		.then(function(list) {
+			// send event for every connection
+			for (var j = 0; j < list.length; j++) {
+				// make data packet for event
+				var send_data = {
+					connection: []
+				};
+				// compile data for every connection
+				for (var i = 0; i < list.length; i++) {
+					var data = {};
+					data.hostname = list[i].hostname;
+					data.ip = list[i].ip;
+					data.socket_id = list[i].socket_id;
+					// active host
+					if (list[j].socket_id === list[i].socket_id) {
+						data.active_host = true;
+					} else {
+						data.active_host = false;
+					}
+					send_data.connection.push(data);
 				}
-				send_data.connection.push(data);
+				// send event with data
+				manager.sockets.of("/")
+					.connected[list[j].socket_id]
+					.emit("update-clients-list", send_data);
 			}
-			manager.sockets.of("/")
-				.connected[connection_list[j].socket_id]
-				.emit("update-clients-list", send_data);
-		}
+		})
+		.catch(function(err) {
+			log.error("Unable to resolve hostname", err);
+		});
+}
+
+function hostnamePromise(data) {
+	if (Array.isArray(data)) {
+		// if its list, get hostname from all
+		return Promise.all(
+			data.map(hostnamePromise)
+		);
+	}
+	// if a promise, get hostname from ip and merge with data
+	return new Promise(function(fulfill, reject) {
+		dns.reverse(data.ip, function(err, host) {
+			if (err && host.length) {
+				reject(err);
+			}				else {
+				data.host = host[0];
+				fulfill(data);
+			}
+		});
 	});
 }
