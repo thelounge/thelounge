@@ -929,12 +929,9 @@ kbd {
 	padding-right: 10px;
 	text-align: right;
 	width: 134px;
-	align-self: stretch;
 }
 
 #chat .text {
-	margin: auto;
-	overflow: hidden;
 	flex: 1 1 auto;
 }
 
@@ -999,14 +996,6 @@ kbd {
 
 #chat .self .text {
 	color: #999;
-}
-
-#chat .msg.motd .text,
-#chat .msg.message .text,
-#chat .msg.action .action-text,
-#chat .msg.notice .text {
-	white-space: pre-wrap;
-	overflow: hidden;
 }
 
 #chat .msg.channel_list_loading .text {
