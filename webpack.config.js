@@ -29,6 +29,12 @@ let config = {
 		rules: [
 			{
 				test: /\.js$/,
+				use: {
+					loader: "webpack-remove-debug"
+				}
+			},
+			{
+				test: /\.js$/,
 				include: [
 					path.resolve(__dirname, "client"),
 				],
