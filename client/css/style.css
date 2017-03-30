@@ -1327,6 +1327,7 @@ kbd {
 #help .help-item .subject,
 #help .help-item .description {
 	display: table-cell;
+	font-size: 14px;
 	padding-bottom: 15px;
 }
 
@@ -1337,7 +1338,6 @@ kbd {
 }
 
 #help .help-item .description p {
-	font-size: 14px;
 	margin-bottom: 0;
 }
 
