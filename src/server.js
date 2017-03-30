@@ -578,12 +578,13 @@ function hostnamePromise(data) {
 		);
 	}
 	// if a promise, get hostname from ip and merge with data
-	return new Promise(function(fulfill, reject) {
+	return new Promise(function(fulfill) {
 		dns.reverse(data.ip, function(err, host) {
-			if (err && host.length) {
-				reject(err);
-			}				else {
-				data.host = host[0];
+			if (!err && host.length) {
+				data.hostname = host[0];
+				fulfill(data);
+			} else {
+				data.hostname = data.ip;
 				fulfill(data);
 			}
 		});
