@@ -272,6 +272,16 @@ module.exports = {
 		enable: false,
 
 		//
+		// Enable HTTP to HTTPS redirect port.
+		// port number to enable
+		// null to disable
+		//
+		// @type     int
+		// @default  null
+		//
+		http_redirect_port: null,
+
+		//
 		// Path to the key.
 		//
 		// @type     string
