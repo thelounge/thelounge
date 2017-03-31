@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function(count) {
 	if (count < 1000) {
 		return count;

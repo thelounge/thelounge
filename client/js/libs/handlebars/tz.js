@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function(time) {
 	time = new Date(time);
 	var h = time.getHours();

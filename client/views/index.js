@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = {
 	actions: {
 		action: require("./actions/action.tpl"),
