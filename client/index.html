@@ -213,6 +213,7 @@
 							<div class="col-sm-12">
 								<h1 class="title">Settings</h1>
 							</div>
+							<% if (!public) { %>
 							<div class="col-sm-12">
 								<h2>Connected clients</h2>
 							</div>
@@ -221,6 +222,7 @@
 							<div class="col-sm-12">
 								<h2>Messages</h2>
 							</div>
+							<% } %>
 							<div class="col-sm-6">
 								<label class="opt">
 									<input type="checkbox" name="motd">
