@@ -1296,7 +1296,6 @@ $(function() {
 
 		// Store the "previous" value, for next time
 		$(this).data("lastvalue", nick);
-
 	});
 
 	Mousetrap.bind([
