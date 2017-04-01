@@ -432,7 +432,7 @@ $(function() {
 		}
 
 		if (prevMsgTime.toDateString() !== msgTime.toDateString()) {
-			prevMsg.append(templates.date_marker({msgDate: msgTime}));
+			prevMsg.after(templates.date_marker({msgDate: msgTime}));
 		}
 
         // Add message to the container
