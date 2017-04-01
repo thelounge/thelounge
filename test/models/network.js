@@ -13,8 +13,10 @@ describe("Network", function() {
 				awayMessage: "I am away",
 				name: "networkName",
 				channels: [
-					new Chan({name: "#thelounge"}),
-					new Chan({name: "&foobar"}),
+					new Chan({name: "#thelounge", key: ""}),
+					new Chan({name: "&foobar", key: ""}),
+					new Chan({name: "#secret", key: "foo"}),
+					new Chan({name: "&secure", key: "bar"}),
 					new Chan({name: "Channel List", type: Chan.Type.SPECIAL}),
 					new Chan({name: "PrivateChat", type: Chan.Type.QUERY}),
 				]
@@ -35,8 +37,10 @@ describe("Network", function() {
 				ip: null,
 				hostname: null,
 				channels: [
-					{name: "#thelounge"},
-					{name: "&foobar"},
+					{name: "#thelounge", key: ""},
+					{name: "&foobar", key: ""},
+					{name: "#secret", key: "foo"},
+					{name: "&secure", key: "bar"}
 				]
 			});
 		});

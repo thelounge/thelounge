@@ -43,6 +43,7 @@ var inputs = [
 	"connect",
 	"disconnect",
 	"invite",
+	"join",
 	"kick",
 	"mode",
 	"nick",
@@ -159,7 +160,8 @@ Client.prototype.connect = function(args) {
 			}
 
 			channels.push(new Chan({
-				name: chan.name
+				name: chan.name,
+				key: chan.key
 			}));
 		});
 
@@ -170,11 +172,15 @@ Client.prototype.connect = function(args) {
 	// also used by the "connect" window
 	} else if (args.join) {
 		channels = args.join
-			.replace(/,/g, " ")
-			.split(/\s+/g)
+			.split(/\s*,\s*/g)
 			.map(function(chan) {
+				var splitchan = chan.split(/\s+/g, 2);
+				if (splitchan.length === 1) {
+					splitchan.push("");
+				}
 				return new Chan({
-					name: chan
+					name: splitchan[0],
+					key: splitchan[1]
 				});
 			});
 	}
