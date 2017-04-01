@@ -10,14 +10,27 @@ describe("Client passwords", function() {
 		// Generated with third party tool to test implementation
 		let comparedPassword = Helper.password.compare(inputPassword, "$2a$11$zrPPcfZ091WNfs6QrRHtQeUitlgrJcecfZhxOFiQs0FWw7TN3Q1oS");
 
-		expect(comparedPassword).to.be.true;
+		return comparedPassword.then(result => {
+			expect(result).to.be.true;
+		});
+	});
+
+	it("wrong hashed password should not match", function() {
+		// Compare against a fake hash
+		let comparedPassword = Helper.password.compare(inputPassword, "$2a$11$zrPPcfZ091WRONGPASSWORDitlgrJcecfZhxOFiQs0FWw7TN3Q1oS");
+
+		return comparedPassword.then(result => {
+			expect(result).to.be.false;
+		});
 	});
 
 	it("freshly hashed password should match", function() {
 		let hashedPassword = Helper.password.hash(inputPassword);
 		let comparedPassword = Helper.password.compare(inputPassword, hashedPassword);
 
-		expect(comparedPassword).to.be.true;
+		return comparedPassword.then((result) => {
+			expect(result).to.be.true;
+		});
 	});
 
 	it("shout passwords should be marked as old", function() {
