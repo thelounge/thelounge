@@ -832,15 +832,15 @@ kbd {
 }
 
 #chat .messages {
-	display: table;
-	table-layout: fixed;
-	width: 100%;
 	padding: 10px 0;
 }
 
 #chat .msg {
 	word-wrap: break-word;
 	word-break: break-word; /* Webkit-specific */
+	display: flex;
+	overflow: hidden;
+	position: relative;
 }
 
 #chat .unread-marker {
@@ -912,16 +912,15 @@ kbd {
 #chat .time,
 #chat .from,
 #chat .text {
-	display: table-cell;
+	display: block;
 	padding: 2px 0;
-	vertical-align: top;
+	flex: 0 0 auto;
 }
 
 #chat .time {
 	color: #ddd;
 	text-align: right;
-	max-width: 46px;
-	min-width: 46px;
+	width: 46px;
 }
 
 #chat .from {
@@ -929,8 +928,11 @@ kbd {
 	color: #b1c3ce;
 	padding-right: 10px;
 	text-align: right;
-	max-width: 134px;
-	min-width: 134px;
+	width: 134px;
+}
+
+#chat .text {
+	flex: 1 1 auto;
 }
 
 #loading a,
@@ -994,14 +996,6 @@ kbd {
 
 #chat .self .text {
 	color: #999;
-}
-
-#chat .msg.motd .text,
-#chat .msg.message .text,
-#chat .msg.action .action-text,
-#chat .msg.notice .text {
-	white-space: pre-wrap;
-	overflow: hidden;
 }
 
 #chat .msg.channel_list_loading .text {
