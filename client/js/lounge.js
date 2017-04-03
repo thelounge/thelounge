@@ -808,7 +808,7 @@ $(function() {
 
 	var input = $("#input")
 		.history()
-		.on("input keyup", function() {
+		.on("input", function() {
 			var style = window.getComputedStyle(this);
 
 			// Start by resetting height before computing as scrollHeight does not
@@ -1312,13 +1312,13 @@ $(function() {
 				container = container.find(".chan.active .chat");
 			}
 
-			const offset = container.get(0).clientHeight * 0.94;
+			const offset = container.get(0).clientHeight * 0.9;
 			let scrollTop = container.scrollTop();
 
 			if (key === "pageup") {
-				scrollTop -= offset;
+				scrollTop = Math.floor(scrollTop - offset);
 			} else {
-				scrollTop += offset;
+				scrollTop = Math.ceil(scrollTop + offset);
 			}
 
 			container.stop().animate({
