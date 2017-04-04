@@ -1,5 +1,6 @@
 "use strict";
 
+// Styling control codes
 const BOLD = "\x02";
 const COLOR = "\x03";
 const RESET = "\x0f";
@@ -7,14 +8,24 @@ const REVERSE = "\x16";
 const ITALIC = "\x1d";
 const UNDERLINE = "\x1f";
 
+// Color code matcher, with format `XX,YY` where both `XX` and `YY` are
+// integers, `XX` is the text color and `YY` is an optional background color.
 const colorRx = /^(\d{1,2})(?:,(\d{1,2}))?/;
+
+// Represents all other control codes that to be ignored/filtered from the text
 const controlCodesRx = /[\u0000-\u001F]/g;
 
+// Converts a given text into an array of objects, each of them representing a
+// similarly styled section of the text. Each object carries the `text`, style
+// information (`bold`, `textColor`, `bgcolor`, `reverse`, `italic`,
+// `underline`), and `start`/`end` cursors.
 function parseStyle(text) {
 	const result = [];
 	let start = 0;
 	let position = 0;
 
+	// At any given time, these carry style information since last time a styling
+	// control code was met.
 	let colorCodes, bold, textColor, bgColor, reverse, italic, underline;
 
 	const resetStyle = () => {
@@ -27,27 +38,42 @@ function parseStyle(text) {
 	};
 	resetStyle();
 
+	// When called, this "closes" the current fragment by adding an entry to the
+	// `result` array using the styling information set last time a control code
+	// was met.
 	const emitFragment = () => {
+		// Uses the text fragment starting from the last control code position up to
+		// the current position
 		const textPart = text.slice(start, position);
-		start = position + 1;
 
+		// Filters out all non-style related control codes present in this text
 		const processedText = textPart.replace(controlCodesRx, "");
 
-		if (!processedText.length) {
-			return;
+		if (processedText.length) {
+			// Current fragment starts where the previous one ends, or at 0 if none
+			const fragmentStart = result.length ? result[result.length - 1].end : 0;
+
+			result.push({
+				bold,
+				textColor,
+				bgColor,
+				reverse,
+				italic,
+				underline,
+				text: processedText,
+				start: fragmentStart,
+				end: fragmentStart + processedText.length
+			});
 		}
 
-		result.push({
-			bold,
-			textColor,
-			bgColor,
-			reverse,
-			italic,
-			underline,
-			text: processedText
-		});
+		// Now that a fragment has been "closed", the next one will start after that
+		start = position + 1;
 	};
 
+	// This loop goes through each character of the given text one by one by
+	// bumping the `position` cursor. Every time a new special "styling" character
+	// is met, an object gets created (with `emitFragment()`)information on text
+	// encountered since the previous styling character.
 	while (position < text.length) {
 		switch (text[position]) {
 
@@ -56,6 +82,10 @@ function parseStyle(text) {
 			resetStyle();
 			break;
 
+		// Meeting a BOLD character means that the ongoing text is either going to
+		// be in bold or that the previous one was in bold and the following one
+		// must be reset.
+		// This same behavior applies to COLOR, REVERSE, ITALIC, and UNDERLINE.
 		case BOLD:
 			emitFragment();
 			bold = !bold;
@@ -64,20 +94,23 @@ function parseStyle(text) {
 		case COLOR:
 			emitFragment();
 
+			// Go one step further to find the corresponding color
 			colorCodes = text.slice(position + 1).match(colorRx);
 
 			if (colorCodes) {
 				textColor = Number(colorCodes[1]);
-				bgColor = Number(colorCodes[2]);
-				if (Number.isNaN(bgColor)) {
-					bgColor = undefined;
+				if (colorCodes[2]) {
+					bgColor = Number(colorCodes[2]);
 				}
+				// Color code length is > 1, so bump the current position cursor by as
+				// much (and reset the start cursor for the current text block as well)
 				position += colorCodes[0].length;
+				start = position + 1;
 			} else {
+				// If no color codes were found, toggles back to no colors (like BOLD).
 				textColor = undefined;
 				bgColor = undefined;
 			}
-			start = position + 1;
 			break;
 
 		case REVERSE:
@@ -95,9 +128,12 @@ function parseStyle(text) {
 			underline = !underline;
 			break;
 		}
+
+		// Evaluate the next character at the next iteration
 		position += 1;
 	}
 
+	// The entire text has been parsed, so we finalize the current text fragment.
 	emitFragment();
 
 	return result;
@@ -107,25 +143,19 @@ const properties = ["bold", "textColor", "bgColor", "italic", "underline", "reve
 
 function prepare(text) {
 	return parseStyle(text)
-		.filter(fragment => fragment.text.length)
-		.reduce((prev, curr, i) => {
-			if (i === 0) {
-				return prev.concat([curr]);
+		// This optimizes fragments by combining them together when all their values
+		// for the properties defined above are equal.
+		.reduce((prev, curr) => {
+			if (prev.length) {
+				const lastEntry = prev[prev.length - 1];
+				if (properties.every(key => curr[key] === lastEntry[key])) {
+					lastEntry.text += curr.text;
+					lastEntry.end += curr.text.length;
+					return prev;
+				}
 			}
-
-			const lastEntry = prev[prev.length - 1];
-			if (properties.some(key => curr[key] !== lastEntry[key])) {
-				return prev.concat([curr]);
-			}
-
-			lastEntry.text += curr.text;
-			return prev;
-		}, [])
-		.map((fragment, i, array) => {
-			fragment.start = i === 0 ? 0 : array[i - 1].end;
-			fragment.end = fragment.start + fragment.text.length;
-			return fragment;
-		});
+			return prev.concat([curr]);
+		}, []);
 }
 
 module.exports = prepare;

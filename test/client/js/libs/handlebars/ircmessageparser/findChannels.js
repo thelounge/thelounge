@@ -1,7 +1,7 @@
 "use strict";
 
 const expect = require("chai").expect;
-const analyseText = require("../../../../../../client/js/libs/handlebars/ircmessageparser/findChannels");
+const findChannels = require("../../../../../../client/js/libs/handlebars/ircmessageparser/findChannels");
 
 describe("findChannels", () => {
 	it("should find single letter channel", () => {
@@ -12,7 +12,7 @@ describe("findChannels", () => {
 			end: 2
 		}];
 
-		const actual = analyseText(input, ["#"], ["@", "+"]);
+		const actual = findChannels(input, ["#"], ["@", "+"]);
 
 		expect(actual).to.deep.equal(expected);
 	});
@@ -25,7 +25,7 @@ describe("findChannels", () => {
 			end: 4
 		}];
 
-		const actual = analyseText(input, ["#"], ["@", "+"]);
+		const actual = findChannels(input, ["#"], ["@", "+"]);
 
 		expect(actual).to.deep.equal(expected);
 	});
@@ -38,7 +38,7 @@ describe("findChannels", () => {
 			end: 15
 		}];
 
-		const actual = analyseText(input, ["#"], ["@", "+"]);
+		const actual = findChannels(input, ["#"], ["@", "+"]);
 
 		expect(actual).to.deep.equal(expected);
 	});
@@ -51,7 +51,7 @@ describe("findChannels", () => {
 			end: 5
 		}];
 
-		const actual = analyseText(input, ["#"], ["@", "+"]);
+		const actual = findChannels(input, ["#"], ["@", "+"]);
 
 		expect(actual).to.deep.equal(expected);
 	});
@@ -64,7 +64,7 @@ describe("findChannels", () => {
 			end: 6
 		}];
 
-		const actual = analyseText(input, ["#"], ["@", "+"]);
+		const actual = findChannels(input, ["#"], ["@", "+"]);
 
 		expect(actual).to.deep.equal(expected);
 	});
@@ -77,7 +77,7 @@ describe("findChannels", () => {
 			end: 3
 		}];
 
-		const actual = analyseText(input, ["#"], ["@", "+"]);
+		const actual = findChannels(input, ["#"], ["@", "+"]);
 
 		expect(actual).to.deep.equal(expected);
 	});
@@ -90,7 +90,7 @@ describe("findChannels", () => {
 			end: 6
 		}];
 
-		const actual = analyseText(input, ["#"], ["!", "@", "%", "+"]);
+		const actual = findChannels(input, ["#"], ["!", "@", "%", "+"]);
 
 		expect(actual).to.deep.equal(expected);
 	});
@@ -103,7 +103,7 @@ describe("findChannels", () => {
 			end: 2
 		}];
 
-		const actual = analyseText(input, ["@"], ["#", "+"]);
+		const actual = findChannels(input, ["@"], ["#", "+"]);
 
 		expect(actual).to.deep.equal(expected);
 	});
@@ -116,7 +116,7 @@ describe("findChannels", () => {
 			end: 6
 		}];
 
-		const actual = analyseText(input, ["#"], ["@", "+"]);
+		const actual = findChannels(input, ["#"], ["@", "+"]);
 
 		expect(actual).to.deep.equal(expected);
 	});
