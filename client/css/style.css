@@ -1519,9 +1519,10 @@ kbd {
 }
 
 /**
-  * Tooltips
+  * Tooltips v0.5.3
   * See http://primercss.io/tooltips/
   */
+
 .tooltipped {
 	position: relative;
 }
@@ -1529,12 +1530,11 @@ kbd {
 .tooltipped:after {
 	position: absolute;
 	z-index: 1000000;
-	display: inline-block;
-	visibility: hidden;
-	opacity: 0;
+	display: none;
 	padding: 5px 8px;
 	font: 12px Lato;
 	line-height: 1.2;
+	-webkit-font-smoothing: subpixel-antialiased;
 	color: #fff;
 	text-align: center;
 	text-decoration: none;
@@ -1547,23 +1547,40 @@ kbd {
 	content: attr(aria-label);
 	background: #222;
 	border-radius: 3px;
-	-webkit-font-smoothing: subpixel-antialiased;
-	transition: .2s;
+	opacity: 0;
 }
 
 .tooltipped:before {
 	position: absolute;
 	z-index: 1000001;
-	display: inline-block;
-	visibility: hidden;
-	opacity: 0;
+	display: none;
 	width: 0;
 	height: 0;
 	color: #fff;
 	pointer-events: none;
 	content: "";
 	border: 5px solid transparent;
-	transition: .2s;
+	opacity: 0;
+}
+
+@-webkit-keyframes tooltip-appear {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes tooltip-appear {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
 }
 
 .tooltipped:hover:before,
@@ -1572,9 +1589,18 @@ kbd {
 .tooltipped:active:after,
 .tooltipped:focus:before,
 .tooltipped:focus:after {
-	visibility: visible;
-	opacity: 1;
+	display: inline-block;
 	text-decoration: none;
+	-webkit-animation-name: tooltip-appear;
+	animation-name: tooltip-appear;
+	-webkit-animation-duration: .1s;
+	animation-duration: .1s;
+	-webkit-animation-fill-mode: forwards;
+	animation-fill-mode: forwards;
+	-webkit-animation-timing-function: ease-in;
+	animation-timing-function: ease-in;
+	-webkit-animation-delay: .4s;
+	animation-delay: .4s;
 }
 
 .tooltipped-s:after,
@@ -1669,6 +1695,17 @@ kbd {
 	bottom: 50%;
 	margin-top: -5px;
 	border-right-color: #222;
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+	only screen and (min--moz-device-pixel-ratio: 2),
+	only screen and (-moz-min-device-pixel-ratio: 2),
+	only screen and (min-device-pixel-ratio: 2),
+	only screen and (min-resolution: 192dpi),
+	only screen and (min-resolution: 2dppx) {
+	.tooltipped-w:after {
+		margin-right: 4.5px;
+	}
 }
 
 /* End tooltips */
