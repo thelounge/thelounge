@@ -765,7 +765,15 @@ kbd {
 	display: block;
 }
 
-.condensed.closed .msg {
+#chat .condensed {
+	flex-wrap: wrap;
+}
+
+#chat .condensed .msg {
+	flex-basis: 100%;
+}
+
+#chat .condensed.closed .msg {
 	display: none;
 }
 
