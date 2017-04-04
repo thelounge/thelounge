@@ -1144,11 +1144,7 @@ kbd {
 }
 
 #chat .toggle-content.show {
-	display: block;
-}
-
-#chat .toggle-content.toggle-type-image.show {
-	display: inline;
+	display: inline-block !important;
 }
 
 #chat .count {
