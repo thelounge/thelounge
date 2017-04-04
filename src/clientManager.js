@@ -58,20 +58,23 @@ ClientManager.prototype.autoloadUsers = function() {
 };
 
 ClientManager.prototype.loadUser = function(name) {
-	let json;
-	try {
-		json = this.readUserConfig(name);
-	} catch (e) {
-		log.error("Failed to read user config", e);
-		return;
-	}
-	if (!this.findClient(name)) {
-		this.clients.push(new Client(
-			this,
-			name,
-			json
-		));
-	}
+	let self = this;
+	self.readUserConfigPromise(name)
+		.then(
+			(json) => {
+				if (!self.findClient(name)) {
+					self.clients.push(new Client(
+						self,
+						name,
+						json
+					));
+				}
+			}
+		).catch(
+			(err) => {
+				log.error("Failed to read user config", err);
+			}
+		);
 };
 
 ClientManager.prototype.getUsers = function() {
@@ -167,4 +170,173 @@ ClientManager.prototype.removeUser = function(name) {
 		throw e;
 	}
 	return true;
+};
+
+ClientManager.prototype.addUserPromise = function(data) {
+	let self = this;
+	return new Promise((resolve, reject) => {
+		self.getUsersPromise()
+			.then(
+				(users) => {
+					if (users.indexOf(data.name) !== -1) {
+						reject(false);
+						throw new Error("User " + data.name + " already exist.");
+					}
+					if (require("path").basename(data.name) !== data.name) {
+						reject(false);
+						throw new Error(data.name + " is an invalid username.");
+					}
+					const user = {
+						user: data.name,
+						password: data.password || "",
+						log: data.enableLog,
+						networks: []
+					};
+					fs.writeFile(Helper.getUserConfigPath(data.name),
+						JSON.stringify(user, null, "\t"),
+						"utf-8",
+						(err) => {
+							if (err) {
+								reject(err);
+							} else {
+								resolve(true);
+							}
+						}
+					);
+				}
+			)
+			.catch(
+				(err) => {
+					log.error(`Error adding user ${colors.bold(data.name)}.`, err.message);
+				}
+			);
+	});
+};
+
+ClientManager.prototype.updateUserPromise = function(data) {
+	let self = this;
+	return new Promise((resolve, reject) => {
+		self.getUsersPromise()
+			.then(
+				(users) => {
+					if (users.indexOf(data.name) === -1) {
+						reject(false);
+						throw new Error(data.name + " does not exist.");
+					}
+					if (typeof data.opts === "undefined") {
+						reject(false);
+						throw new Error("Options are not set");
+					}
+					self.readUserConfigPromise(data.name)
+						.then(
+							(user) => {
+								const currentUser = JSON.stringify(user, null, "\t");
+								_.assign(user, data.opts);
+								const newUser = JSON.stringify(user, null, "\t");
+								// Do not touch the disk if object has not changed
+								if (currentUser === newUser) {
+									resolve(true);
+								} else {
+									fs.writeFile(Helper.getUserConfigPath(data.name),
+										newUser,
+										"utf-8",
+										(err) => {
+											if (err) {
+												reject(err);
+											} else {
+												resolve(true);
+											}
+										}
+									);
+								}
+							}
+						);
+				}
+			)
+			.catch(
+				(err) => {
+					log.error("Failed to Update user.", err.message);
+				}
+			);
+	});
+};
+
+ClientManager.prototype.removeUserPromise = function(name) {
+	let self = this;
+	return new Promise((resolve, reject) => {
+		self.getUsersPromise()
+			.then((users) => {
+				if (users.indexOf(name) === -1) {
+					throw new Error(`User ${colors.bold(name)} does not exist.`);
+				} else {
+					fs.unlink(Helper.getUserConfigPath(name),
+					(err) => {
+						if (err) {
+							reject(err);
+						} else {
+							resolve(true);
+						}
+					});
+				}
+			})
+			.catch(
+				(err) => {
+					log.error("Failed to remove user.", err.message);
+					return err;
+				}
+			);
+	});
+};
+
+ClientManager.prototype.getUsersPromise = function() {
+	return new Promise((resolve, reject) => {
+		fs.readdir(Helper.USERS_PATH,
+				(err, files) => {
+					if (err) {
+						reject(err);
+					}					else {
+						var users = [];
+						files.forEach(file => {
+							if (file.indexOf(".json") !== -1) {
+								users.push(file.replace(".json", ""));
+							}
+						});
+						resolve(users);
+					}
+				}
+			);
+	}
+	);
+};
+
+ClientManager.prototype.readUserConfigPromise = function(name) {
+	let self = this;
+	return new Promise((resolve, reject) => {
+		self.getUsersPromise()
+			.then(
+				(users) => {
+					if (users.indexOf(name) === -1) {
+						reject(false);
+						throw new Error("No config file with that user name: " + name);
+					}
+				}
+			).then(
+				() => {
+					fs.readFile(Helper.getUserConfigPath(name), "utf-8",
+						(err, data) => {
+							if (err) {
+								reject(err);
+							} else {
+								resolve(JSON.parse(data));
+							}
+						}
+					);
+				}
+			).catch(
+				(err) => {
+					log.error("Failed to read user config", err);
+				}
+			);
+	}
+	);
 };
