@@ -12,6 +12,7 @@ var Helper = require("./helper");
 var ldap = require("ldapjs");
 var colors = require("colors/safe");
 const Identification = require("./identification");
+let net = require("net");
 
 var manager = null;
 var authFunction = localAuth;
@@ -32,6 +33,45 @@ module.exports = function() {
 		.use(express.static("client"));
 
 	var config = Helper.config;
+
+	let http = require("http");
+	let https = require("spdy");
+	let httpx = {};
+	httpx.createServer = (opts, handler) => {
+		let server = net.createServer(socket => {
+			socket.once("data", buffer => {
+				// Pause the socket
+				socket.pause();
+
+				// Determine if this is an HTTP(s) request
+				let byte = buffer[0];
+
+				let protocol;
+				if (byte === 22) {
+					protocol = "https";
+				} else if (32 < byte && byte < 127) {
+					protocol = "http";
+				}
+
+				let proxy = server[protocol];
+				if (proxy) {
+					// Push the buffer back onto the front of the data stream
+					socket.unshift(buffer);
+
+					// Emit the socket to the HTTP(s) server
+					proxy.emit("connection", socket);
+				}
+
+				// Resume the socket data stream
+				socket.resume();
+			});
+		});
+
+		server.http = http.createServer(handler);
+		server.https = https.createServer(opts, handler);
+		return server;
+	};
+
 	var server = null;
 
 	if (config.public && (config.ldap || {}).enable) {
@@ -39,10 +79,10 @@ module.exports = function() {
 	}
 
 	if (!config.https.enable) {
-		server = require("http");
+		server = http;
 		server = server.createServer(app);
 	} else {
-		server = require("spdy");
+		server = httpx;
 		const keyPath = Helper.expandHome(config.https.key);
 		const certPath = Helper.expandHome(config.https.certificate);
 		if (!config.https.key.length || !fs.existsSync(keyPath)) {
@@ -73,16 +113,7 @@ in ${config.public ? "public" : "private"} mode`);
 		authFunction = ldapAuth;
 	}
 
-	if (config.https.http_redirect_port) {
-		// Redirect from httpt to https
-		var http = require("http");
-		http.createServer(function(req, res) {
-			res.writeHead(301, {Location: "https://" + req.headers.host + req.url});
-			res.end();
-		}).listen(config.https.http_redirect_port);
-	}
-
-	var sockets = io(server, {
+	var sockets = io(config.https.enable ? server.https : server, {
 		serveClient: false,
 		transports: config.transports
 	});
@@ -115,6 +146,12 @@ function getClientIp(req) {
 }
 
 function allRequests(req, res, next) {
+	if (Helper.config.hostname && Helper.config.hostname !== req.hostname) {
+		return res.redirect(302, `http://${Helper.config.hostname}${req.originalUrl}`);
+	}
+	if (Helper.config.hostname && Helper.config.https.enable && req.protocol === "http") {
+		return res.redirect(302, `https://${Helper.config.hostname}${req.originalUrl}`);
+	}
 	res.setHeader("X-Content-Type-Options", "nosniff");
 	return next();
 }
