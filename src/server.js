@@ -149,8 +149,8 @@ function allRequests(req, res, next) {
 	if (Helper.config.hostname && Helper.config.hostname !== req.hostname) {
 		return res.redirect(302, `http://${Helper.config.hostname}${req.originalUrl}`);
 	}
-	if (Helper.config.hostname && Helper.config.https.enable && req.protocol === "http") {
-		return res.redirect(302, `https://${Helper.config.hostname}${req.originalUrl}`);
+	if (Helper.config.https.enable && req.protocol === "http") {
+		return res.redirect(302, `https://${req.hostname}${req.originalUrl}`);
 	}
 	res.setHeader("X-Content-Type-Options", "nosniff");
 	return next();
