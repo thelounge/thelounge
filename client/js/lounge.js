@@ -808,7 +808,7 @@ $(function() {
 
 	var input = $("#input")
 		.history()
-		.on("input keyup", function() {
+		.on("input", function() {
 			var style = window.getComputedStyle(this);
 
 			// Start by resetting height before computing as scrollHeight does not
@@ -1301,6 +1301,33 @@ $(function() {
 	});
 
 	(function HotkeysScope() {
+		Mousetrap.bind([
+			"pageup",
+			"pagedown"
+		], function(e, key) {
+			let container = windows.find(".window.active");
+
+			// Chat windows scroll message container
+			if (container.attr("id") === "chat-container") {
+				container = container.find(".chan.active .chat");
+			}
+
+			const offset = container.get(0).clientHeight * 0.9;
+			let scrollTop = container.scrollTop();
+
+			if (key === "pageup") {
+				scrollTop = Math.floor(scrollTop - offset);
+			} else {
+				scrollTop = Math.ceil(scrollTop + offset);
+			}
+
+			container.stop().animate({
+				scrollTop: scrollTop
+			}, 200);
+
+			return false;
+		});
+
 		Mousetrap.bind([
 			"command+up",
 			"command+down",
