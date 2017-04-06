@@ -131,7 +131,8 @@ function index(req, res, next) {
 			return css.slice(0, -4);
 		});
 		var template = _.template(file);
-		res.setHeader("Content-Security-Policy", "default-src *; connect-src 'self' ws: wss:; style-src * 'unsafe-inline'; script-src 'self'; child-src 'self'; object-src 'none'; form-action 'none'; referrer no-referrer;");
+		res.setHeader("Content-Security-Policy", "default-src *; connect-src 'self' ws: wss:; style-src * 'unsafe-inline'; script-src 'self'; child-src 'self'; object-src 'none'; form-action 'none';");
+		res.setHeader("Referrer-Policy", "no-referrer");
 		res.setHeader("Content-Type", "text/html");
 		res.writeHead(200);
 		res.end(template(data));
