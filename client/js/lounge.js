@@ -1189,7 +1189,7 @@ $(function() {
 
 	chat.on("click", ".show-more-button", function() {
 		var self = $(this);
-		var count = self.parent().next(".messages").children().length;
+		var count = self.parent().next(".messages").children(".msg").length;
 		socket.emit("more", {
 			target: self.data("id"),
 			count: count
