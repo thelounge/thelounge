@@ -1022,6 +1022,10 @@ kbd {
 	border-bottom: #eee 1px solid;
 }
 
+#chat table.channel-list .channel {
+	width: 80px;
+}
+
 #chat table.channel-list .channel,
 #chat table.channel-list .topic {
 	text-align: left;
@@ -1029,6 +1033,7 @@ kbd {
 
 #chat table.channel-list .users {
 	text-align: center;
+	width: 50px;
 }
 
 #chat table.channel-list td.channel .inline-channel {

@@ -421,6 +421,10 @@ $(function() {
 		var target = "#chan-" + data.chan;
 		var container = chat.find(target + " .messages");
 
+		if (data.msg.type === "channel_list") {
+			$(container).empty();
+		}
+
         // Check if date changed
 		var prevMsg = $(container.find(".msg")).last();
 		var prevMsgTime = new Date(prevMsg.attr("data-time"));
@@ -1050,7 +1054,7 @@ $(function() {
 		}
 
 		var chanChat = chan.find(".chat");
-		if (chanChat.length > 0) {
+		if (chanChat.length > 0 && chan.data("type") !== "special") {
 			chanChat.sticky();
 		}
 
