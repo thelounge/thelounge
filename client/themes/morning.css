@@ -212,6 +212,10 @@ body {
 	color: #84ce88 !important;
 }
 
+#chat table.channel-list td {
+	color: #ccc;
+}
+
 /* Embeds */
 #chat .toggle-content,
 #chat .toggle-button {
