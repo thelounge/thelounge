@@ -206,14 +206,15 @@ function init(socket, client) {
 
 							client.setPasswordPromise(hash)
 								.then(
-									(success) => {
+									() => { // resolved
 										const obj = {};
-										if (success) {
-											obj.success = "Successfully updated your password, all your other sessions were logged out";
-											obj.token = client.config.token;
-										} else {
-											obj.error = "Failed to update your password";
-										}
+										obj.success = "Successfully updated your password, all your other sessions were logged out";
+										obj.token = client.config.token;
+										socket.emit("change-password", obj);
+									},
+									() => { // rejeted
+										const obj = {};
+										obj.error = "Failed to update your password";
 										socket.emit("change-password", obj);
 									}
 								);

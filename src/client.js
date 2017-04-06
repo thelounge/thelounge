@@ -289,40 +289,42 @@ Client.prototype.connect = function(args) {
 	client.save();
 };
 
-Client.prototype.updateToken = function(callback) {
-	var client = this;
-
-	crypto.randomBytes(48, function(err, buf) {
-		if (err) {
-			throw err;
-		}
-
-		callback(client.config.token = buf.toString("hex"));
+Client.prototype.updateTokenPromise = function() {
+	let client = this;
+	return new Promise((resolve) => {
+		crypto.randomBytes(48, (err, buf) => {
+			if (err) {
+				throw err;
+			} else {
+				resolve(client.config.token = buf.toString("hex"));
+			}
+		});
 	});
 };
 
 Client.prototype.setPasswordPromise = function(hash) {
 	let client = this;
-	return new Promise((resolve) => {
-		client.updateToken((token) => {
-			client.manager.updateUserPromise({
-				name: client.name,
-				opts: {
-					token: token,
-					password: hash
-				}
-			}).then(
-				(err) => {
-					if (!err) {
-						log.error("Failed to update password of", client.name, err);
-						resolve(false);
-					} else {
-						client.config.password = hash;
-						resolve(true);
+	return new Promise((resolve, reject) => {
+		client.updateTokenPromise()
+			.then((token) => {
+				client.manager.updateUserPromise({
+					name: client.name,
+					opts: {
+						token: token,
+						password: hash
 					}
-				}
-			);
-		});
+				}).then(
+					(err) => {
+						if (!err) {
+							log.error("Failed to update password of", client.name, err);
+							reject(false);
+						} else {
+							client.config.password = hash;
+							resolve(true);
+						}
+					}
+				);
+			});
 	});
 };
 
