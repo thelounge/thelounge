@@ -443,7 +443,8 @@ $(function() {
 				data
 			]);
 
-		if (data.msg.self) {
+		if (data.msg.self
+			|| container.find("div:visible").last().hasClass("unread-marker")) {
 			container
 				.find(".unread-marker")
 				.appendTo(container);
