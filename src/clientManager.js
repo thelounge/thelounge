@@ -38,29 +38,29 @@ ClientManager.prototype.findClient = function(name, token) {
 ClientManager.prototype.autoloadUsers = function() {
 	let self = this;
 	self.getUsersPromise()
-	.then((users)=>{
-		users.forEach(name => self.loadUser(name));
-	})
-	.then( () => {
-		fs.watch(Helper.USERS_PATH, _.debounce(() => {
-			const loaded = self.clients.map(c => c.name);
-			self.getUsersPromise()
-				.then( (updatedUsers) => {
+		.then((users)=>{
+			users.forEach(name => self.loadUser(name));
+		})
+		.then(() => {
+			fs.watch(Helper.USERS_PATH, _.debounce(() => {
+				const loaded = self.clients.map(c => c.name);
+				self.getUsersPromise()
+					.then((updatedUsers) => {
 					// New users created since last time users were loaded
-					_.difference(updatedUsers, loaded).forEach(name => self.loadUser(name));
-			
+						_.difference(updatedUsers, loaded).forEach(name => self.loadUser(name));
+
 					// Existing users removed since last time users were loaded
-					_.difference(loaded, updatedUsers).forEach(name => {
-						const client = _.find(self.clients, {name: name});
-						if (client) {
-							client.quit();
-							self.clients = _.without(self.clients, client);
-							log.info(`User ${colors.bold(name)} disconnected and removed`);
-						}
+						_.difference(loaded, updatedUsers).forEach(name => {
+							const client = _.find(self.clients, {name: name});
+							if (client) {
+								client.quit();
+								self.clients = _.without(self.clients, client);
+								log.info(`User ${colors.bold(name)} disconnected and removed`);
+							}
+						});
 					});
-				})
-		}, 1000, {maxWait: 10000}));
-	})
+			}, 1000, {maxWait: 10000}));
+		});
 };
 
 ClientManager.prototype.loadUser = function(name) {
@@ -82,7 +82,6 @@ ClientManager.prototype.loadUser = function(name) {
 			}
 		);
 };
-
 
 ClientManager.prototype.addUserPromise = function(data) {
 	let self = this;
