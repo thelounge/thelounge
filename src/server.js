@@ -348,7 +348,7 @@ function auth(data) {
 			if (success) {
 				if (!client) {
 					// LDAP just created a user
-					manager.loadUser(data.user);
+					manager.loadUser({name: data.user});
 					client = manager.findClient(data.user);
 				}
 				if (Helper.config.webirc !== null && !client.config.ip) {

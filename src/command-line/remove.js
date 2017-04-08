@@ -9,9 +9,8 @@ program
 	.description("Remove an existing user")
 	.action(function(name) {
 		var manager = new ClientManager();
-		manager.removeUserPromise(name)
-			.then(
-				()=>{
-					log.info(`User ${colors.bold(name)} removed.`);
-				});
+		manager.removeUserPromise({name: name})
+			.then(()=>{
+				log.info(`User ${colors.bold(name)} removed.`);
+			});
 	});

@@ -7,18 +7,18 @@ var colors = require("colors/safe");
 program
 	.command("list")
 	.description("List all users")
-	.action(function() {
+	.action(() => {
 		var manager = new ClientManager();
 		manager.getUsersPromise()
-			.then(
-				(users)=>{
-					if (!users.length) {
-						log.warn("No users found.");
-					} else {
-						log.info("Users:");
-						for (var i = 0; i < users.length; i++) {
-							log.info(`${i + 1}. ${colors.bold(users[i])}`);
-						}
+			.then((data)=>{
+				let users = data.users;
+				if (!users.length) {
+					log.warn("No users found.");
+				} else {
+					log.info("Users:");
+					for (var i = 0; i < users.length; i++) {
+						log.info(`${i + 1}. ${colors.bold(users[i])}`);
 					}
-				});
+				}
+			});
 	});

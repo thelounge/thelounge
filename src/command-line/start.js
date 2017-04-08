@@ -18,26 +18,26 @@ program
 		let manager = new ClientManager();
 
 		manager.getUsersPromise()
-			.then(
-				(users) => {
-					var mode = Helper.config.public;
-					if (options.public) {
-						mode = true;
-					} else if (options.private) {
-						mode = false;
-					}
+			.then((data) => {
+				let users = data.users;
+				let mode = Helper.config.public;
+				if (options.public) {
+					mode = true;
+				} else if (options.private) {
+					mode = false;
+				}
 
-					if (!mode && !users.length && !Helper.config.ldap.enable) {
-						log.warn("No users found.");
-						log.info(`Create a new user with ${colors.bold("lounge add <name>")}.`);
-						return;
-					}
+				if (!mode && !users.length && !Helper.config.ldap.enable) {
+					log.warn("No users found.");
+					log.info(`Create a new user with ${colors.bold("lounge add <name>")}.`);
+					return;
+				}
 
-					Helper.config.host = options.host || Helper.config.host;
-					Helper.config.port = options.port || Helper.config.port;
-					Helper.config.bind = options.bind || Helper.config.bind;
-					Helper.config.public = mode;
+				Helper.config.host = options.host || Helper.config.host;
+				Helper.config.port = options.port || Helper.config.port;
+				Helper.config.bind = options.bind || Helper.config.bind;
+				Helper.config.public = mode;
 
-					server();
-				});
+				server();
+			});
 	});
