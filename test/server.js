@@ -12,7 +12,7 @@ describe("Server", () => {
 	const webURL = `http://${Helper.config.host}:${Helper.config.port}/`;
 
 	describe("Express", () => {
-		it("should run a web server on " + webURL, done => {
+		it("should run a web server on " + webURL, (done) => {
 			request(webURL, (error, response, body) => {
 				expect(error).to.be.null;
 				expect(body).to.include("<title>The Lounge</title>");
@@ -22,7 +22,7 @@ describe("Server", () => {
 			});
 		});
 
-		it("should serve static content correctly", done => {
+		it("should serve static content correctly", (done) => {
 			request(webURL + "manifest.json", (error, response, body) => {
 				expect(error).to.be.null;
 
@@ -58,11 +58,11 @@ describe("Server", () => {
 			client.close();
 		});
 
-		it("should emit authorized message", done => {
+		it("should emit authorized message", (done) => {
 			client.on("authorized", done);
 		});
 
-		it("should create network", done => {
+		it("should create network", (done) => {
 			client.on("init", () => {
 				client.emit("conn", {
 					username: "test-user",
@@ -75,7 +75,7 @@ describe("Server", () => {
 				});
 			});
 
-			client.on("network", data => {
+			client.on("network", (data) => {
 				expect(data.networks).to.be.an("array");
 				expect(data.networks).to.have.lengthOf(1);
 				expect(data.networks[0].realname).to.equal("The Lounge Test");
@@ -86,8 +86,8 @@ describe("Server", () => {
 			});
 		});
 
-		it("should emit init message", done => {
-			client.on("init", data => {
+		it("should emit init message", (done) => {
+			client.on("init", (data) => {
 				expect(data.active).to.equal(-1);
 				expect(data.networks).to.be.an("array");
 				expect(data.networks).to.be.empty;

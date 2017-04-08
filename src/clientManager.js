@@ -36,17 +36,17 @@ ClientManager.prototype.findClient = function(name, token) {
 };
 
 ClientManager.prototype.autoloadUsers = function() {
-	this.getUsers().forEach(name => this.loadUser(name));
+	this.getUsers().forEach((name) => this.loadUser(name));
 
 	fs.watch(Helper.USERS_PATH, _.debounce(() => {
-		const loaded = this.clients.map(c => c.name);
+		const loaded = this.clients.map((c) => c.name);
 		const updatedUsers = this.getUsers();
 
 		// New users created since last time users were loaded
-		_.difference(updatedUsers, loaded).forEach(name => this.loadUser(name));
+		_.difference(updatedUsers, loaded).forEach((name) => this.loadUser(name));
 
 		// Existing users removed since last time users were loaded
-		_.difference(loaded, updatedUsers).forEach(name => {
+		_.difference(loaded, updatedUsers).forEach((name) => {
 			const client = _.find(this.clients, {name: name});
 			if (client) {
 				client.quit();
@@ -78,7 +78,7 @@ ClientManager.prototype.getUsers = function() {
 	var users = [];
 	try {
 		var files = fs.readdirSync(Helper.USERS_PATH);
-		files.forEach(file => {
+		files.forEach((file) => {
 			if (file.indexOf(".json") !== -1) {
 				users.push(file.replace(".json", ""));
 			}
@@ -127,7 +127,7 @@ ClientManager.prototype.updateUser = function(name, opts, callback) {
 		return false;
 	}
 
-	let user = this.readUserConfig(name);
+	const user = this.readUserConfig(name);
 	const currentUser = JSON.stringify(user, null, "\t");
 	_.assign(user, opts);
 	const newUser = JSON.stringify(user, null, "\t");

@@ -6,7 +6,7 @@ var Msg = require("../../models/msg");
 module.exports = function(irc, network) {
 	var client = this;
 	irc.on("quit", function(data) {
-		network.channels.forEach(chan => {
+		network.channels.forEach((chan) => {
 			var from = data.nick;
 			var user = _.find(chan.users, {nick: from});
 			if (typeof user === "undefined") {

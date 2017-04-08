@@ -24,7 +24,7 @@ module.exports = function(irc, network) {
 			});
 		}
 
-		network.channels.forEach(chan => {
+		network.channels.forEach((chan) => {
 			var user = _.find(chan.users, {nick: data.nick});
 			if (typeof user === "undefined") {
 				return;

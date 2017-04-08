@@ -48,10 +48,10 @@ function merge(textParts, styleFragments) {
 		.sort((a, b) => a.start - b.start);
 
 	// Distribute the style fragments within the text parts
-	return allParts.map(textPart => {
+	return allParts.map((textPart) => {
 		textPart.fragments = styleFragments
-			.filter(fragment => anyIntersection(textPart, fragment))
-			.map(fragment => assign(textPart, fragment));
+			.filter((fragment) => anyIntersection(textPart, fragment))
+			.map((fragment) => assign(textPart, fragment));
 
 		return textPart;
 	});

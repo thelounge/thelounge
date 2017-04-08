@@ -7,7 +7,7 @@ const path = require("path");
 // Common configuration
 // ********************
 
-let config = {
+const config = {
 	entry: {
 		"js/bundle.js": path.resolve(__dirname, "client/js/lounge.js"),
 		"js/bundle.vendor.js": [

@@ -12,7 +12,7 @@ function User(attr, prefixLookup) {
 	});
 
 	// irc-framework sets character mode, but lounge works with symbols
-	this.modes = this.modes.map(mode => prefixLookup[mode]);
+	this.modes = this.modes.map((mode) => prefixLookup[mode]);
 
 	if (this.modes[0]) {
 		this.mode = this.modes[0];

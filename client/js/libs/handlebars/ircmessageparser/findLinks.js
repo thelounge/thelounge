@@ -16,7 +16,7 @@ const commonSchemes = [
 ];
 
 function findLinks(text) {
-	let result = [];
+	const result = [];
 
 	// URI.withinString() identifies URIs within text, e.g. to translate them to
 	// <a>-Tags.
@@ -29,7 +29,7 @@ function findLinks(text) {
 		// Check if the scheme of the detected URL matches a common one above.
 		// In a URL like `foo..http://example.com`, the scheme would be `foo..http`,
 		// so we need to clean up the end of the scheme and filter out the rest.
-		const matchedScheme = commonSchemes.find(scheme => parsedScheme.endsWith(scheme));
+		const matchedScheme = commonSchemes.find((scheme) => parsedScheme.endsWith(scheme));
 
 		// A known scheme was found, extract the unknown part from the URL
 		if (matchedScheme) {

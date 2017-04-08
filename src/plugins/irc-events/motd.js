@@ -8,7 +8,7 @@ module.exports = function(irc, network) {
 		var lobby = network.channels[0];
 
 		if (data.motd) {
-			data.motd.split("\n").forEach(text => {
+			data.motd.split("\n").forEach((text) => {
 				var msg = new Msg({
 					type: Msg.Type.MOTD,
 					text: text

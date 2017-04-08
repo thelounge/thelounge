@@ -84,7 +84,6 @@ function parseStyle(text) {
 	// encountered since the previous styling character.
 	while (position < text.length) {
 		switch (text[position]) {
-
 		case RESET:
 			emitFragment();
 			resetStyle();
@@ -178,7 +177,7 @@ function prepare(text) {
 		.reduce((prev, curr) => {
 			if (prev.length) {
 				const lastEntry = prev[prev.length - 1];
-				if (properties.every(key => curr[key] === lastEntry[key])) {
+				if (properties.every((key) => curr[key] === lastEntry[key])) {
 					lastEntry.text += curr.text;
 					lastEntry.end += curr.text.length;
 					return prev;
