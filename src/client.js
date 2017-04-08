@@ -313,7 +313,8 @@ Client.prototype.setPasswordPromise = function(hash) {
 						token: token,
 						password: hash
 					}
-				}).then(
+				})
+					.then(
 					(err) => {
 						if (!err) {
 							log.error("Failed to update password of", client.name, err);
@@ -322,8 +323,7 @@ Client.prototype.setPasswordPromise = function(hash) {
 							client.config.password = hash;
 							resolve(true);
 						}
-					}
-				);
+					});
 			});
 	});
 };

@@ -136,8 +136,7 @@ ClientManager.prototype.addUserPromise = function(data) {
 						} else {
 							resolve(data);
 						}
-					}
-				);
+					});
 			})
 			.catch((err) => {
 				log.error(`Error adding user ${colors.bold(name)}.`, err.message);
@@ -180,8 +179,7 @@ ClientManager.prototype.updateUserPromise = function(data) {
 									} else {
 										resolve(data);
 									}
-								}
-							);
+								});
 						}
 					});
 			})
@@ -214,32 +212,29 @@ ClientManager.prototype.removeUserPromise = function(data) {
 			.catch((err) => {
 				log.error("Failed to remove user.", err.message);
 				return err;
-			}
-			);
+			});
 	});
 };
 
 ClientManager.prototype.getUsersPromise = function(data) {
 	return new Promise((resolve, reject) => {
 		fs.readdir(Helper.USERS_PATH,
-				(err, files) => {
-					if (err) {
-						reject(err);
-					} else {
-						var users = [];
-						files.forEach(file => {
-							if (file.indexOf(".json") !== -1) {
-								users.push(file.replace(".json", ""));
-							}
-						});
-						data = data || {};
-						data.users = users;
-						resolve(data);
-					}
+			(err, files) => {
+				if (err) {
+					reject(err);
+				} else {
+					var users = [];
+					files.forEach(file => {
+						if (file.indexOf(".json") !== -1) {
+							users.push(file.replace(".json", ""));
+						}
+					});
+					data = data || {};
+					data.users = users;
+					resolve(data);
 				}
-			);
-	}
-	);
+			});
+	});
 };
 
 ClientManager.prototype.readUserConfigPromise = function(data) {
@@ -256,20 +251,18 @@ ClientManager.prototype.readUserConfigPromise = function(data) {
 			})
 			.then(() => {
 				fs.readFile(Helper.getUserConfigPath(name), "utf-8",
-						(err, config) => {
-							if (err) {
-								reject(err);
-							} else {
-								data.config = JSON.parse(config);
-								resolve(data);
-							}
+					(err, config) => {
+						if (err) {
+							reject(err);
+						} else {
+							data.config = JSON.parse(config);
+							resolve(data);
 						}
-					);
-			}
-			).catch(
+					});
+			})
+			.catch(
 				(err) => {
 					log.error("Failed to read user config", err);
-				}
-			);
+				});
 	});
 };
