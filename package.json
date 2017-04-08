@@ -60,7 +60,7 @@
   "devDependencies": {
     "babel-core": "6.24.1",
     "babel-loader": "6.4.1",
-    "babel-preset-es2015": "6.24.0",
+    "babel-preset-es2015": "6.24.1",
     "chai": "3.5.0",
     "eslint": "3.19.0",
     "font-awesome": "4.7.0",
