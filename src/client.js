@@ -79,14 +79,15 @@ function Client(manager, name, config) {
 	var client = this;
 
 	if (client.name && !client.config.token) {
-		client.updateToken(function(token) {
-			client.manager.updateUserPromise({
-				name: client.name,
-				opts: {
-					token: token
-				}
+		client.updateTokenPromise()
+			.then((token) => {
+				client.manager.updateUserPromise({
+					name: client.name,
+					opts: {
+						token: token
+					}
+				});
 			});
-		});
 	}
 
 	var delay = 0;
