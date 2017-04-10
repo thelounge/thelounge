@@ -287,7 +287,16 @@ module.exports = {
 		// @example  "sslcert/key-cert.pem"
 		// @default  ""
 		//
-		certificate: ""
+		certificate: "",
+
+		//
+		// Path to the CA bundle.
+		//
+		// @type     string
+		// @example  "sslcert/bundle.pem"
+		// @default  ""
+		//
+		ca: ""
 	},
 
 	//

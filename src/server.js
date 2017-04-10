@@ -44,6 +44,7 @@ module.exports = function() {
 	} else {
 		const keyPath = Helper.expandHome(config.https.key);
 		const certPath = Helper.expandHome(config.https.certificate);
+		const caPath = Helper.expandHome(config.https.ca);
 
 		if (!keyPath.length || !fs.existsSync(keyPath)) {
 			log.error("Path to SSL key is invalid. Stopping server...");
@@ -55,10 +56,16 @@ module.exports = function() {
 			process.exit();
 		}
 
+		if (caPath.length && !fs.existsSync(caPath)) {
+			log.error("Path to SSL ca bundle is invalid. Stopping server...");
+			process.exit();
+		}
+
 		server = require("spdy");
 		server = server.createServer({
 			key: fs.readFileSync(keyPath),
-			cert: fs.readFileSync(certPath)
+			cert: fs.readFileSync(certPath),
+			ca: caPath ? fs.readFileSync(caPath) : undefined
 		}, app);
 	}
 
