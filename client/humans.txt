@@ -1,0 +1,19 @@
+
+/* Thanks to everyone who contributed to the lounge project! */
+
+https://github.com/thelounge/lounge/graphs/contributors
+
+
+/* Maintainers */
+
+* @astorije: UX, (future) package system, overall overview of the entire project, releases
+* @maxpoulin64 (Max-P on the IRC channel): Performance, bugs
+* @xPaw: IRC core
+* @YaManicKill: (future) package system, overall overview of the entire project
+* @MaxLeiter: In charge of maintaining the repository for the lounge-bot as well as the demo.
+* @williamboman (Impaloo on the IRC channel): Oversees the Docker container
+
+
+/* Shout */
+
+* @erming: Creator of the original Shout project.
