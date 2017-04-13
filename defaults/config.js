@@ -22,6 +22,15 @@ module.exports = {
 	host: undefined,
 
 	//
+	// hostname for the web server to redirect.
+	// Setting this to undefined will disable hostname redirecting.
+	//
+	// @type     string
+	// @default  undefined
+	//
+	hostname: undefined,
+
+	//
 	// Set the port to listen on.
 	//
 	// @type     int
