@@ -310,8 +310,6 @@ kbd {
 	transition: transform 160ms, -webkit-transform 160ms;
 	-webkit-transform: translateZ(0);
 	transform: translateZ(0);
-	-webkit-perspective: 1000;
-	perspective: 1000;
 }
 
 #viewport.menu-open {
@@ -791,8 +789,6 @@ kbd {
 	transition: all .4s;
 	-webkit-transform: translateZ(0);
 	transform: translateZ(0);
-	-webkit-perspective: 1000;
-	perspective: 1000;
 }
 
 #chat .lobby .chat,
