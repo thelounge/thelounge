@@ -1,11 +1,11 @@
 "use strict";
 
 // vendor libraries
-require("jquery-ui/ui/widgets/sortable");
 const $ = require("jquery");
 const io = require("socket.io-client");
 const Mousetrap = require("mousetrap");
 const URI = require("urijs");
+const Sortable = require("sortablejs");
 
 // our libraries
 require("./libs/jquery/inputhistory");
@@ -233,11 +233,9 @@ $(function() {
 
 	socket.on("join", function(data) {
 		var id = data.network;
-		var network = sidebar.find("#network-" + id);
+		var network = sidebar.find("#network-" + id + " .channel-list");
 		network.append(
-			templates.chan({
-				channels: [data.chan]
-			})
+			templates.chan(data.chan)
 		);
 		chat.append(
 			templates.chat({
@@ -391,6 +389,11 @@ $(function() {
 	}
 
 	function renderNetworks(data) {
+		data.networks.forEach(function(network) {
+			network.lobby = network.channels[0];
+			network.chans = network.channels.slice(1);
+		});
+
 		sidebar.find(".empty").hide();
 		sidebar.find(".networks").append(
 			templates.network({
@@ -1460,18 +1463,11 @@ $(function() {
 	}
 
 	function sortable() {
-		sidebar.find(".networks").sortable({
-			axis: "y",
-			containment: "parent",
-			cursor: "move",
-			distance: 12,
-			items: ".network",
+		Sortable.create(document.querySelector(".networks"), {
+			animation: 150,
+			draggable: ".network",
 			handle: ".lobby",
-			placeholder: "network-placeholder",
-			forcePlaceholderSize: true,
-			tolerance: "pointer", // Use the pointer to figure out where the network is in the list
-
-			update: function() {
+			onUpdate: function() {
 				var order = [];
 				sidebar.find(".network").each(function() {
 					var id = $(this).data("id");
@@ -1487,33 +1483,29 @@ $(function() {
 				ignoreSortSync = true;
 			}
 		});
-		sidebar.find(".network").sortable({
-			axis: "y",
-			containment: "parent",
-			cursor: "move",
-			distance: 12,
-			items: ".chan:not(.lobby)",
-			placeholder: "chan-placeholder",
-			forcePlaceholderSize: true,
-			tolerance: "pointer", // Use the pointer to figure out where the channel is in the list
+		$(".network .channel-list").each(function(_, list) {
+			Sortable.create(list, {
+				animation: 150,
+				handle: ".name",
+				draggable: ".chan",
+				onUpdate: function(e) {
+					var order = [];
+					var network = $(e.item).parent().parent();
+					network.find(".chan").each(function() {
+						var id = $(this).data("id");
+						order.push(id);
+					});
+					socket.emit(
+						"sort", {
+							type: "channels",
+							target: network.data("id"),
+							order: order
+						}
+					);
 
-			update: function(e, ui) {
-				var order = [];
-				var network = ui.item.parent();
-				network.find(".chan").each(function() {
-					var id = $(this).data("id");
-					order.push(id);
-				});
-				socket.emit(
-					"sort", {
-						type: "channels",
-						target: network.data("id"),
-						order: order
-					}
-				);
-
-				ignoreSortSync = true;
-			}
+					ignoreSortSync = true;
+				}
+			});
 		});
 	}
 
