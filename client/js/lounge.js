@@ -729,6 +729,7 @@ $(function() {
 		var self = $(this);
 		viewport.toggleClass(self.attr("class"));
 		e.stopPropagation();
+		chat.find(".chan.active .chat").trigger("msg.sticky");
 	});
 
 	function positionContextMenu(that, e) {
@@ -822,7 +823,7 @@ $(function() {
 				+ Math.round(parseFloat(style.borderBottomWidth) || 0)
 			) + "px";
 
-			$("#chat .chan.active .chat").trigger("msg.sticky"); // fix growing
+			chat.find(".chan.active .chat").trigger("msg.sticky"); // fix growing
 		})
 		.tab(complete, {hint: false});
 
