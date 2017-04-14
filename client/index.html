@@ -4,22 +4,25 @@
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-	<meta name="mobile-web-app-capable" content="yes">
-	<meta name="theme-color" content="#455164">
 
-	<title>The Lounge</title>
-
+	<link rel="preload" as="script" href="js/bundle.vendor.js">
+	<link rel="preload" as="script" href="js/bundle.js">
 	<link rel="stylesheet" href="css/bootstrap.css">
 	<link rel="stylesheet" href="css/style.css">
 	<link id="theme" rel="stylesheet" href="<%= theme %>">
 	<style id="user-specified-css"></style>
 
+	<title>The Lounge</title>
+
 	<link rel="shortcut icon" href="img/favicon.png" data-other="img/favicon-notification.png" data-toggled="false" id="favicon">
 	<link rel="apple-touch-icon" sizes="120x120" href="img/apple-touch-icon-120x120.png">
 	<link rel="manifest" href="manifest.json">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="theme-color" content="#455164">
 
 	</head>
 	<body class="signed-out <%= public ? "public" : "" %>">
