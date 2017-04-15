@@ -1595,14 +1595,11 @@ $(function() {
 		$("#viewport .lt").toggleClass("notified", newState);
 	}
 
-	document.addEventListener(
-		"visibilitychange",
-		function() {
-			if (sidebar.find(".highlight").length === 0) {
-				toggleNotificationMarkers(false);
-			}
+	$(document).on("visibilitychange focus", () => {
+		if (sidebar.find(".highlight").length === 0) {
+			toggleNotificationMarkers(false);
 		}
-	);
+	});
 
 	// Only start opening socket.io connection after all events have been registered
 	socket.open();
