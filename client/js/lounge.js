@@ -477,6 +477,8 @@ $(function() {
 
 		if (data.messages.length !== 100) {
 			scrollable.find(".show-more").removeClass("show");
+		} else {
+			scrollable.find(".show-more").addClass("show");
 		}
 
 		// Date change detect
@@ -1060,6 +1062,19 @@ $(function() {
 		}
 
 		focus();
+
+		let oldScrollTop = 0;
+		$("#chat .active .chat").on("scroll", function() {
+			const scrollTop = $(this).scrollTop();
+
+			// Make sure we are scrolling up and nearing the top
+			// FIXME Use a window percentage instead of a height in px
+			if (oldScrollTop > scrollTop && scrollTop < 200) {
+				$(this).find(".show-more.show .show-more-button").click();
+			}
+
+			oldScrollTop = scrollTop;
+		});
 	});
 
 	sidebar.on("click", "#sign-out", function() {
@@ -1190,6 +1205,7 @@ $(function() {
 	chat.on("click", ".show-more-button", function() {
 		var self = $(this);
 		var count = self.parent().next(".messages").children(".msg").length;
+		self.parent().removeClass("show");
 		socket.emit("more", {
 			target: self.data("id"),
 			count: count
