@@ -120,7 +120,7 @@ module.exports = function(irc, network) {
 	});
 
 	irc.on("server options", function(data) {
-		if (network.serverOptions.PREFIX === data.options.PREFIX) {
+		if (network.serverOptions.PREFIX === data.options.PREFIX && network.serverOptions.NETWORK === data.options.NETWORK) {
 			return;
 		}
 
@@ -131,6 +131,7 @@ module.exports = function(irc, network) {
 		});
 
 		network.serverOptions.PREFIX = data.options.PREFIX;
+		network.serverOptions.NETWORK = data.options.NETWORK;
 
 		client.emit("network_changed", {
 			network: network.id,
