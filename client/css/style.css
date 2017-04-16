@@ -446,14 +446,14 @@ kbd {
 	padding-bottom: 10px;
 }
 
-#sidebar .chan:first-child {
+#sidebar .lobby {
 	color: #84ce88;
 	font-size: 15px;
 	font-weight: bold;
 }
 
-#sidebar .chan:first-child:hover,
-#sidebar .chan:first-child.active {
+#sidebar .lobby:hover,
+#sidebar .lobby.active {
 	color: #c0f8c3;
 }
 
