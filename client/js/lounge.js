@@ -155,7 +155,9 @@ $(function() {
 			return;
 		}
 		sidebar.find(".sign-in")
-			.click()
+			.trigger("click", {
+				pushState: false,
+			})
 			.end()
 			.find(".networks")
 			.html("")
@@ -197,7 +199,9 @@ $(function() {
 		$("#loading-page-message").text("Rendering…");
 
 		if (data.networks.length === 0) {
-			$("#footer").find(".connect").trigger("click");
+			$("#footer").find(".connect").trigger("click", {
+				pushState: false,
+			});
 		} else {
 			renderNetworks(data);
 		}
@@ -219,7 +223,9 @@ $(function() {
 				.eq(0)
 				.trigger("click");
 			if (first.length === 0) {
-				$("#footer").find(".connect").trigger("click");
+				$("#footer").find(".connect").trigger("click", {
+					pushState: false,
+				});
 			}
 		}
 	});
@@ -986,6 +992,33 @@ $(function() {
 		});
 	});
 
+	sidebar.on("click", ".chan, button", function(e, data) {
+		// Pushes states to history web API when clicking elements with a data-target attribute.
+		// States are very trivial and only contain a single `clickTarget` property which
+		// contains a CSS selector that targets elements which takes the user to a different view
+		// when clicked. The `popstate` event listener will trigger synthetic click events using that
+		// selector and thus take the user to a different view/state.
+		if (data && data.pushState === false) {
+			return;
+		}
+		const self = $(this);
+		const target = self.data("target");
+		if (!target) {
+			return;
+		}
+		const state = {};
+
+		if (self.hasClass("chan")) {
+			state.clickTarget = `.chan[data-id="${self.data("id")}"]`;
+		} else {
+			state.clickTarget = `#footer button[data-target="${target}"]`;
+		}
+
+		if (history && history.pushState) {
+			history.pushState(state, null, null);
+		}
+	});
+
 	sidebar.on("click", ".chan, button", function() {
 		var self = $(this);
 		var target = self.data("target");
@@ -1603,4 +1636,20 @@ $(function() {
 
 	// Only start opening socket.io connection after all events have been registered
 	socket.open();
+
+	window.addEventListener(
+		"popstate",
+		(e) => {
+			const {state} = e;
+			if (!state) {
+				return;
+			}
+			const {clickTarget} = state;
+			if (clickTarget) {
+				$(clickTarget).trigger("click", {
+					pushState: false
+				});
+			}
+		}
+	);
 });
