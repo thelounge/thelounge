@@ -74,6 +74,8 @@ $(function() {
 		"nick",
 		"part",
 		"quit",
+		"popin",
+		"ripout"
 	];
 
 	var sidebar = $("#sidebar, #footer");
@@ -326,37 +328,146 @@ $(function() {
 		return msg;
 	}
 
+	function moveCondensedNameData(input) {
+		var condensed = input.condensed || undefined;
+		var key = input.key || undefined;
+		var empty = input.empty || [];
+		var fill = input.fill || [];
+		if (input.condensed === undefined || input.key === undefined) {
+			return;
+		}
+
+		empty.forEach((type) => {
+			var nameData = condensed.data(type + "Names") || {};
+			delete nameData[key];
+			condensed.data(type + "Names", nameData);
+		});
+		fill.forEach((type) => {
+			var nameData = condensed.data(type + "Names") || {};
+			nameData[key] = key;
+			condensed.data(type + "Names", nameData);
+		});
+	}
+
 	function updateCondensedText(condensed, addedTypes) {
-		var obj = {};
+		// for in loop loses order!
+		for (var k = addedTypes.length - 1; k >= 0; k--) {
+			var type = addedTypes[k].type;
+			var from = addedTypes[k].from;
 
-		for (var i in condensedTypes) {
-			var msgType = condensedTypes[i];
-			obj[msgType] = condensed.data(msgType) || 0;
+			// Increase list of names for every type added
+			var currentList = condensed.data(type + "Names") || {};
+			var popin = condensed.data("popinNames") || {};
+			var ripout = condensed.data("ripoutNames") || {};
+			currentList[from] = from;
+			condensed.data(type + "Names", currentList);
+			if (type === "quit" || type === "part") {
+				var joinList = condensed.data("joinNames") || {};
+				// join/part->quit => ripout
+				if (from in joinList) {
+					moveCondensedNameData({
+						key: from,
+						condensed: condensed,
+						empty: ["join", "quit", "part"],
+						fill: ["ripout"]
+					});
+				}
+				// popin->quit => ripout
+				if (from in popin) {
+					moveCondensedNameData({
+						key: from,
+						condensed: condensed,
+						empty: ["popin", "quit", "part"],
+						fill: ["ripout"]
+					});
+				}
+			} else if (type === "join") {
+				var quitList = condensed.data("quitNames") || {};
+				var partList = condensed.data("partNames") || {};
+				// quit->join => popin
+				if (from in quitList) {
+					moveCondensedNameData({
+						key: from,
+						condensed: condensed,
+						empty: ["quit", "join"],
+						fill: ["popin"]
+					});
+				}
+
+				// part->join => popin
+				if (from in partList) {
+					moveCondensedNameData({
+						key: from,
+						condensed: condensed,
+						empty: ["part", "join"],
+						fill: ["popin"]
+					});
+				}
+				// ripout->join => popin
+				if (from in ripout) {
+					moveCondensedNameData({
+						key: from,
+						condensed: condensed,
+						empty: ["ripout", "join"],
+						fill: ["popin"]
+					});
+				}
+			}
 		}
 
-		for (var k in addedTypes) {
-			var added = addedTypes[k];
-			obj[added]++;
-			condensed.data(added, obj[added]);
-		}
+		var plurals = {
+			join: {
+				plural: "joined"
+			},
+			mode: {
+				plural: "changed mode"
+			},
+			nick: {
+				plural: "changed name"
+			},
+			part: {
+				plural: "leaved",
+			},
+			quit: {
+				plural: "quit",
+			},
+			popin: {
+				plural: "popped in",
+			},
+			ripout: {
+				plural: "ripped out",
+			}
+		};
 
 		var text = "";
 
 		for (var j in condensedTypes) {
 			var messageType = condensedTypes[j];
-			if (obj[messageType]) {
-				text += text === "" ? "" : ", ";
-				text += obj[messageType] + " " + messageType;
-				if (messageType === "nick" || messageType === "mode") {
-					text += " change";
+			var names = condensed.data(messageType + "Names") || [];
+			var nameList = Object.keys(names);
+			if (nameList.length) {
+				text += text === "" ? "" : " | ";
+				var count = nameList.length;
+				var maxnames = 3;
+				if (count === 1) {
+					text += nameList[0];
+				} else if (count > 1 && count <= maxnames) {
+					var last = nameList.pop();
+					text += nameList.map(function(n) {
+						return names[n];
+					}).join(", ") + " and " + last;
+				} else if (count > maxnames) {
+					text += nameList.map(function(m) {
+						return names[m];
+					}).slice(0,maxnames).join(", ") + " and " + (count - maxnames) + " others";
 				}
-				text += obj[messageType] > 1 ? "s" : "";
+				text += " " + plurals[messageType].plural;
 			}
 		}
 		condensed.children(".condensed-msg").text(text);
 	}
 
-	function appendMessage(container, chan, chanType, messageType, msg) {
+	function appendMessage(container, chan, chanType, messageType, msg, data) {
 		if (condensedTypes.indexOf(messageType) !== -1 && chanType !== "lobby") {
 			var condensedTypesClasses = "." + condensedTypes.join(", .");
 			var lastChild = container.children("div.msg").last();
@@ -364,14 +475,16 @@ $(function() {
 			var msgDate = (new Date(msg.attr("data-time"))).toDateString();
 			if (lastChild && $(lastChild).hasClass("condensed") && !$(msg).hasClass("message") && lastDate === msgDate) {
 				lastChild.append(msg);
-				updateCondensedText(lastChild, [messageType]);
+				updateCondensedText(lastChild, [{type: messageType, from: data.from} ]);
 			} else if (lastChild && $(lastChild).is(condensedTypesClasses)) {
 				var condensed = buildChatMessage({msg: {type: "condensed", time: msg.attr("data-time")}, chan: chan});
 				condensed.append(lastChild);
 				condensed.append(msg);
 				container.append(condensed);
-				updateCondensedText(condensed, [messageType, lastChild.attr("data-type")]);
+				updateCondensedText(condensed, [{type: messageType, from: data.from},
+				{type: lastChild.attr("data-type"), from: lastChild.data("from")}]);
 			} else {
+				msg.data("from", data.from);
 				container.append(msg);
 			}
 		} else {
@@ -384,7 +497,7 @@ $(function() {
 			appendMessage(docFragment, data.id, data.type, message.type, buildChatMessage({
 				chan: data.id,
 				msg: message
-			}));
+			}), message);
 			return docFragment;
 		}, $(document.createDocumentFragment()));
 	}
@@ -507,7 +620,7 @@ $(function() {
 			prevMsg.after(templates.date_marker({msgDate: msgTime}));
 		}
 
-		appendMessage(container, data.chan, $(target).attr("data-type"), data.msg.type, msg);
+		appendMessage(container, data.chan, $(target).attr("data-type"), data.msg.type, msg, data.msg);
 
 		container.trigger("msg", [
 			target,
