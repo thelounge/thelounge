@@ -7,25 +7,25 @@ const findLinks = require("./ircmessageparser/findLinks");
 const merge = require("./ircmessageparser/merge");
 
 function createFragment(fragment) {
-	let className = "";
+	let classes = [];
 	if (fragment.bold) {
-		className += " irc-bold";
+		classes.push("irc-bold");
 	}
 	if (fragment.textColor !== undefined) {
-		className += " irc-fg" + fragment.textColor;
+		classes.push("irc-fg" + fragment.textColor);
 	}
 	if (fragment.bgColor !== undefined) {
-		className += " irc-bg" + fragment.bgColor;
+		classes.push("irc-bg" + fragment.bgColor);
 	}
 	if (fragment.italic) {
-		className += " irc-italic";
+		classes.push("irc-italic");
 	}
 	if (fragment.underline) {
-		className += " irc-underline";
+		classes.push("irc-underline");
 	}
 	const escapedText = Handlebars.Utils.escapeExpression(fragment.text);
-	if (className) {
-		return "<span class='" + className.trim() + "'>" + escapedText + "</span>";
+	if (classes.length) {
+		return `<span class="${classes.join(" ")}">${escapedText}</span>`;
 	}
 	return escapedText;
 }
@@ -49,16 +49,10 @@ module.exports = function parse(text) {
 
 		if (textPart.link) {
 			const escapedLink = Handlebars.Utils.escapeExpression(textPart.link);
-			return (
-				"<a href='" + escapedLink + "' target='_blank' rel='noopener'>" +
-					fragments +
-				"</a>");
+			return `<a href="${escapedLink}" target="_blank" rel="noopener">${fragments}</a>`;
 		} else if (textPart.channel) {
 			const escapedChannel = Handlebars.Utils.escapeExpression(textPart.channel);
-			return (
-				"<span class='inline-channel' role='button' tabindex='0' data-chan='" + escapedChannel + "'>" +
-					fragments +
-				"</span>");
+			return `<span class="inline-channel" role="button" tabindex="0" data-chan="${escapedChannel}">${fragments}</span>`;
 		}
 
 		return fragments;
