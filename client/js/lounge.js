@@ -15,6 +15,7 @@ const utils = require("./utils");
 const storage = require("./localStorage");
 const constants = require("./constants");
 require("./socket-events");
+require("./user-events");
 require("./keyboard");
 require("./sidebar");
 require("./contextMenu");
@@ -102,39 +103,10 @@ $(function() {
 		});
 	}
 
-	// Triggering click event opens the virtual keyboard on mobile
-	// This can only be called from another interactive event (e.g. button click)
-	var forceFocus = function() {
-		input.trigger("click").focus();
-	};
-
 	// Cycle through nicks for the current word, just like hitting "Tab"
 	$("#cycle-nicks").on("click", function() {
 		input.triggerHandler($.Event("keydown.tabcomplete", {which: 9}));
-		forceFocus();
-	});
-
-	$("#form").on("submit", function(e) {
-		e.preventDefault();
-		forceFocus();
-		var text = input.val();
-
-		if (text.length === 0) {
-			return;
-		}
-
-		input.val("");
-		utils.resetInputHeight(input.get(0));
-
-		if (text.indexOf("/clear") === 0) {
-			utils.clear();
-			return;
-		}
-
-		socket.emit("input", {
-			target: chat.data("id"),
-			text: text
-		});
+		utils.forceFocus();
 	});
 
 	function findCurrentNetworkChan(name) {
