@@ -10,7 +10,6 @@ require("./libs/jquery/inputhistory");
 require("./libs/jquery/stickyscroll");
 require("./libs/jquery/tabcomplete");
 const helpers_roundBadgeNumber = require("./libs/handlebars/roundBadgeNumber");
-const slideoutMenu = require("./libs/slideout");
 const templates = require("../views");
 const socket = require("./socket");
 const utils = require("./utils");
@@ -18,6 +17,7 @@ const storage = require("./localStorage");
 const constants = require("./constants");
 require("./socket-events");
 require("./keyboard");
+require("./sidebar");
 
 $(function() {
 	var sidebar = $("#sidebar, #footer");
@@ -49,17 +49,6 @@ $(function() {
 	var windows = $("#windows");
 
 	var viewport = $("#viewport");
-	var sidebarSlide = slideoutMenu(viewport[0], sidebar[0]);
-	var contextMenuContainer = $("#context-menu-container");
-	var contextMenu = $("#context-menu");
-
-	$("#main").on("click", function(e) {
-		if ($(e.target).is(".lt")) {
-			sidebarSlide.toggle(!sidebarSlide.isOpen());
-		} else if (sidebarSlide.isOpen()) {
-			sidebarSlide.toggle(false);
-		}
-	});
 
 	viewport.on("click", ".rt", function(e) {
 		var self = $(this);
@@ -343,83 +332,6 @@ $(function() {
 		if (history && history.pushState) {
 			history.pushState(state, null, null);
 		}
-	});
-
-	sidebar.on("click", ".chan, button", function() {
-		var self = $(this);
-		var target = self.data("target");
-		if (!target) {
-			return;
-		}
-
-		chat.data(
-			"id",
-			self.data("id")
-		);
-		socket.emit(
-			"open",
-			self.data("id")
-		);
-
-		sidebar.find(".active").removeClass("active");
-		self.addClass("active")
-			.find(".badge")
-			.removeClass("highlight")
-			.empty();
-
-		if (sidebar.find(".highlight").length === 0) {
-			utils.toggleNotificationMarkers(false);
-		}
-
-		sidebarSlide.toggle(false);
-
-		var lastActive = $("#windows > .active");
-
-		lastActive
-			.removeClass("active")
-			.find(".chat")
-			.unsticky();
-
-		var lastActiveChan = lastActive
-			.find(".chan.active")
-			.removeClass("active");
-
-		lastActiveChan
-			.find(".unread-marker")
-			.appendTo(lastActiveChan.find(".messages"));
-
-		var chan = $(target)
-			.addClass("active")
-			.trigger("show");
-
-		var title = "The Lounge";
-		if (chan.data("title")) {
-			title = chan.data("title") + " — " + title;
-		}
-		document.title = title;
-
-		var placeholder = "";
-		if (chan.data("type") === "channel" || chan.data("type") === "query") {
-			placeholder = `Write to ${chan.data("title")}`;
-		}
-		input.attr("placeholder", placeholder);
-
-		if (self.hasClass("chan")) {
-			$("#chat-container").addClass("active");
-			utils.setNick(self.closest(".network").data("nick"));
-		}
-
-		var chanChat = chan.find(".chat");
-		if (chanChat.length > 0) {
-			chanChat.sticky();
-		}
-
-		if (chan.data("needsNamesRefresh") === true) {
-			chan.data("needsNamesRefresh", false);
-			socket.emit("names", {target: self.data("id")});
-		}
-
-		focus();
 	});
 
 	sidebar.on("click", "#sign-out", function() {
