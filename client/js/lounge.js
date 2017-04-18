@@ -109,46 +109,6 @@ $(function() {
 		utils.forceFocus();
 	});
 
-	function findCurrentNetworkChan(name) {
-		name = name.toLowerCase();
-
-		return $(".network .chan.active")
-			.parent(".network")
-			.find(".chan")
-			.filter(function() {
-				return $(this).data("title").toLowerCase() === name;
-			})
-			.first();
-	}
-
-	chat.on("click", ".inline-channel", function() {
-		var name = $(this).data("chan");
-		var chan = findCurrentNetworkChan(name);
-
-		if (chan.length) {
-			chan.click();
-		} else {
-			socket.emit("input", {
-				target: chat.data("id"),
-				text: "/join " + name
-			});
-		}
-	});
-
-	chat.on("click", ".user", function() {
-		var name = $(this).data("name");
-		var chan = findCurrentNetworkChan(name);
-
-		if (chan.length) {
-			chan.click();
-		}
-
-		socket.emit("input", {
-			target: chat.data("id"),
-			text: "/whois " + name
-		});
-	});
-
 	sidebar.on("click", ".chan, button", function(e, data) {
 		// Pushes states to history web API when clicking elements with a data-target attribute.
 		// States are very trivial and only contain a single `clickTarget` property which
