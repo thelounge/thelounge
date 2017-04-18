@@ -1,0 +1,17 @@
+"use strict";
+require("./auth");
+require("./change_password");
+require("./init");
+require("./join");
+require("./more");
+require("./msg");
+require("./more");
+require("./names");
+require("./network");
+require("./nick");
+require("./part");
+require("./quit");
+require("./sync_sort");
+require("./toggle");
+require("./topic");
+require("./users");
