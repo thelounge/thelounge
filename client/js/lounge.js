@@ -15,40 +15,9 @@ const helpers_roundBadgeNumber = require("./libs/handlebars/roundBadgeNumber");
 const slideoutMenu = require("./libs/slideout");
 const templates = require("../views");
 const socket = require("./socket");
+const constants = require("./constants");
 
 $(function() {
-	var commands = [
-		"/away",
-		"/back",
-		"/banlist",
-		"/close",
-		"/connect",
-		"/deop",
-		"/devoice",
-		"/disconnect",
-		"/invite",
-		"/join",
-		"/kick",
-		"/leave",
-		"/me",
-		"/mode",
-		"/msg",
-		"/nick",
-		"/notice",
-		"/op",
-		"/part",
-		"/query",
-		"/quit",
-		"/raw",
-		"/say",
-		"/send",
-		"/server",
-		"/slap",
-		"/topic",
-		"/voice",
-		"/whois"
-	];
-
 	var sidebar = $("#sidebar, #footer");
 	var chat = $("#chat");
 
@@ -1422,7 +1391,7 @@ $(function() {
 	}
 
 	function complete(word) {
-		var words = commands.slice();
+		var words = constants.commands.slice();
 		var users = chat.find(".active").find(".users");
 		var nicks = users.data("nicks");
 
