@@ -841,7 +841,6 @@ kbd {
 #chat .unread-marker {
 	position: relative;
 	text-align: center;
-	opacity: .5;
 	margin: 0 10px;
 	z-index: 0;
 	font-weight: bold;
@@ -855,13 +854,13 @@ kbd {
 	left: 0;
 	right: 0;
 	top: 50%;
-	border-top: 1px solid #e74c3c;
+	border-top: 1px solid rgba(231, 76, 60, .5);
 }
 
 #chat .unread-marker-text:before {
 	content: "New messages";
 	background-color: white;
-	color: #e74c3c;
+	color: rgba(231, 76, 60, .5);
 	padding: 0 10px;
 }
 
@@ -872,7 +871,6 @@ kbd {
 #chat .date-marker {
 	position: relative;
 	text-align: center;
-	opacity: .5;
 	margin: 0 10px;
 	z-index: 0;
 	font-weight: bold;
@@ -886,13 +884,13 @@ kbd {
 	left: 0;
 	right: 0;
 	top: 50%;
-	border-top: 1px solid #006b3b;
+	border-top: 1px solid rgba(0, 107, 59, .5);
 }
 
 #chat .date-marker-text:before {
-	content: attr(data-date);
+	content: attr(data-label);
 	background-color: white;
-	color: #006b3b;
+	color: rgba(0, 107, 59, .5);
 	padding: 0 10px;
 }
 
