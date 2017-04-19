@@ -605,7 +605,7 @@ $(function() {
 		join: true,
 		links: true,
 		mode: true,
-		motd: false,
+		motd: true,
 		nick: true,
 		notification: true,
 		notifyAllMessages: false,
