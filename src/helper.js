@@ -101,6 +101,9 @@ function ip2hex(address) {
 }
 
 function expandHome(shortenedPath) {
+	if (!shortenedPath) {
+		return "";
+	}
 	var home;
 
 	if (os.homedir) {
@@ -112,7 +115,6 @@ function expandHome(shortenedPath) {
 	}
 
 	home = home.replace("$", "$$$$");
-
 	return path.resolve(shortenedPath.replace(/^~($|\/|\\)/, home + "$1"));
 }
 
