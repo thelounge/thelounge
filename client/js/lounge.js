@@ -505,6 +505,8 @@ $(function() {
 
 			lastDate = msgDate;
 		});
+
+		scrollable.find(".show-more").prop("disabled", false);
 	});
 
 	socket.on("network", function(data) {
@@ -1224,6 +1226,7 @@ $(function() {
 	chat.on("click", ".show-more-button", function() {
 		var self = $(this);
 		var count = self.parent().next(".messages").children(".msg").length;
+		self.prop("disabled", true);
 		socket.emit("more", {
 			target: self.data("id"),
 			count: count
