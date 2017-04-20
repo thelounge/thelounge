@@ -5,7 +5,7 @@ var Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
 	var client = this;
-	var MAX_CHANS = 1000;
+	var MAX_CHANS = 500;
 
 	irc.on("channel list start", function() {
 		network.chanCache = [];
@@ -23,7 +23,9 @@ module.exports = function(irc, network) {
 	irc.on("channel list end", function() {
 		updateListStatus(new Msg({
 			type: "channel_list",
-			channels: network.chanCache.slice(0, MAX_CHANS)
+			channels: network.chanCache.sort(function(a, b) {
+				return b.num_users - a.num_users;
+			}).slice(0, MAX_CHANS)
 		}));
 
 		if (network.chanCache.length > MAX_CHANS) {
