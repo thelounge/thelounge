@@ -5,7 +5,9 @@ var pkg = require("../package.json");
 var Client = require("./client");
 var ClientManager = require("./clientManager");
 var express = require("express");
+var expressHandlebars = require("express-handlebars");
 var fs = require("fs");
+var path = require("path");
 var io = require("socket.io");
 var dns = require("dns");
 var Helper = require("./helper");
@@ -29,7 +31,10 @@ module.exports = function() {
 	var app = express()
 		.use(allRequests)
 		.use(index)
-		.use(express.static("client"));
+		.use(express.static("client"))
+		.engine("html", expressHandlebars({extname: ".html", helpers: require("../client/js/libs/handlebars")}))
+		.set("view engine", "html")
+		.set("views", path.join(__dirname, "..", "client"));
 
 	var config = Helper.config;
 	var server = null;
@@ -125,28 +130,19 @@ function index(req, res, next) {
 		return next();
 	}
 
-	return fs.readFile("client/index.html", "utf-8", function(err, file) {
-		if (err) {
-			throw err;
-		}
-
-		var data = _.merge(
-			pkg,
-			Helper.config
-		);
-		data.gitCommit = Helper.getGitCommit();
-		data.themes = fs.readdirSync("client/themes/").filter(function(themeFile) {
-			return themeFile.endsWith(".css");
-		}).map(function(css) {
-			return css.slice(0, -4);
-		});
-		var template = _.template(file);
-		res.setHeader("Content-Security-Policy", "default-src *; connect-src 'self' ws: wss:; style-src * 'unsafe-inline'; script-src 'self'; child-src 'self'; object-src 'none'; form-action 'none';");
-		res.setHeader("Referrer-Policy", "no-referrer");
-		res.setHeader("Content-Type", "text/html");
-		res.writeHead(200);
-		res.end(template(data));
+	var data = _.merge(
+		pkg,
+		Helper.config
+	);
+	data.gitCommit = Helper.getGitCommit();
+	data.themes = fs.readdirSync("client/themes/").filter(function(themeFile) {
+		return themeFile.endsWith(".css");
+	}).map(function(css) {
+		return css.slice(0, -4);
 	});
+	res.setHeader("Content-Security-Policy", "default-src *; connect-src 'self' ws: wss:; style-src * 'unsafe-inline'; script-src 'self'; child-src 'self'; object-src 'none'; form-action 'none';");
+	res.setHeader("Referrer-Policy", "no-referrer");
+	res.render("index", data);
 }
 
 function init(socket, client) {
