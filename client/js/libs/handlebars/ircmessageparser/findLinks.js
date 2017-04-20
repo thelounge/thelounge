@@ -17,19 +17,12 @@ const commonSchemes = [
 
 function findLinks(text) {
 	let result = [];
-	let lastPosition = 0;
 
 	// URI.withinString() identifies URIs within text, e.g. to translate them to
 	// <a>-Tags.
 	// See https://medialize.github.io/URI.js/docs.html#static-withinString
 	// In our case, we store each URI encountered in a result array.
 	URI.withinString(text, function(url, start, end) {
-		// v-- fix: url was modified and does not match input string -> cant be mapped
-		if (text.indexOf(url, lastPosition) < 0) {
-			return;
-		}
-		// ^-- /fix: url was modified and does not match input string -> cant be mapped
-
 		// Extract the scheme of the URL detected, if there is one
 		const parsedScheme = URI(url).scheme().toLowerCase();
 
