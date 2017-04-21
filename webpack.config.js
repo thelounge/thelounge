@@ -37,7 +37,11 @@ let config = {
 					loader: "babel-loader",
 					options: {
 						presets: [
-							"es2015"
+							["env", {
+								targets: {
+									browsers: "last 2 versions"
+								}
+							}]
 						]
 					}
 				}
