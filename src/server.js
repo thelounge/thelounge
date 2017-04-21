@@ -32,7 +32,7 @@ module.exports = function() {
 		.use(allRequests)
 		.use(index)
 		.use(express.static("client"))
-		.engine("html", expressHandlebars({extname: ".html", helpers: require("../client/js/libs/handlebars")}))
+		.engine("html", expressHandlebars({extname: ".html"}))
 		.set("view engine", "html")
 		.set("views", path.join(__dirname, "..", "client"));
 
@@ -138,7 +138,11 @@ function index(req, res, next) {
 	data.themes = fs.readdirSync("client/themes/").filter(function(themeFile) {
 		return themeFile.endsWith(".css");
 	}).map(function(css) {
-		return css.slice(0, -4);
+		const filename = css.slice(0, -4);
+		return {
+			name: filename.charAt(0).toUpperCase() + filename.slice(1),
+			filename: filename
+		};
 	});
 	res.setHeader("Content-Security-Policy", "default-src *; connect-src 'self' ws: wss:; style-src * 'unsafe-inline'; script-src 'self'; child-src 'self'; object-src 'none'; form-action 'none';");
 	res.setHeader("Referrer-Policy", "no-referrer");

@@ -25,7 +25,7 @@
 	<meta name="theme-color" content="#455164">
 
 	</head>
-	<body class="signed-out {{ternary public 'public' '' }}">
+	<body class="signed-out {{#if public}}public{{/if}}">
 
 	<div id="wrap">
 	<div id="viewport">
@@ -122,7 +122,7 @@
 						<div class="row">
 							<div class="col-sm-12">
 								<h1 class="title">
-									{{ternary public "The Lounge " " " }}
+									{{#if public}}The Lounge - {{/if}}
 									Connect
 									{{#unless displayNetwork}}
 										{{#if lockNetwork}}
@@ -146,11 +146,11 @@
 									<label for="connect:host">Server</label>
 								</div>
 								<div class="col-sm-6 col-xs-8">
-									<input class="input" id="connect:host" name="host" value="{{defaults.host}}" aria-label="Server address" {{ternary lockNetwork "disabled" ""}}>
+									<input class="input" id="connect:host" name="host" value="{{defaults.host}}" aria-label="Server address" {{#if lockNetwork}}disabled{{/if}}>
 								</div>
 								<div class="col-sm-3 col-xs-4">
 									<div class="port">
-										<input class="input" type="number" min="1" max="65535" name="port" value="{{defaults.port}}" aria-label="Server port" {{ternary lockNetwork "disabled" ""}}>
+										<input class="input" type="number" min="1" max="65535" name="port" value="{{defaults.port}}" aria-label="Server port" {{#if lockNetwork}}disabled{{/if}}>
 									</div>
 								</div>
 								<div class="clearfix"></div>
@@ -162,7 +162,7 @@
 								</div>
 								<div class="col-sm-9 col-sm-offset-3">
 									<label class="tls">
-										<input type="checkbox" name="tls" {{ternary defaults.tls "checked" ""}} {{ternary lockNetwork "disabled" ""}}>
+										<input type="checkbox" name="tls" {{#if defaults.tls}}checked{{/if}} {{#if lockNetwork}}disabled{{/if}}>
 										Enable TLS/SSL
 									</label>
 								</div>
@@ -268,8 +268,8 @@
 								<label for="theme-select" class="sr-only">Theme</label>
 								<select id="theme-select" name="theme" class="input">
 									{{#each themes}}
-										<option value="{{this}}">
-											{{firstLetterUppercase this}}
+										<option value="{{filename}}">
+											{{name}}
 										</option>
 									{{/each}}
 								</select>

@@ -46,7 +46,7 @@
     "commander": "2.9.0",
     "event-stream": "3.3.4",
     "express": "4.15.2",
-    "express-handlebars": "^3.0.0",
+    "express-handlebars": "3.0.0",
     "fs-extra": "2.1.2",
     "irc-framework": "2.6.1",
     "ldapjs": "1.0.1",
