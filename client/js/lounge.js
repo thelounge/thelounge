@@ -258,7 +258,10 @@ $(function() {
 
 	function renderChannel(data) {
 		renderChannelMessages(data);
-		renderChannelUsers(data);
+
+		if (data.type === "channel") {
+			renderChannelUsers(data);
+		}
 	}
 
 	function renderChannelMessages(data) {
@@ -318,7 +321,19 @@ $(function() {
 			return (oldSortOrder[a] || Number.MAX_VALUE) - (oldSortOrder[b] || Number.MAX_VALUE);
 		});
 
-		users.html(templates.user(data)).data("nicks", nicks);
+		const search = users
+			.find(".search")
+			.attr("placeholder", nicks.length + " " + (nicks.length === 1 ? "user" : "users"));
+
+		users
+			.find(".names-original")
+			.html(templates.user(data))
+			.data("nicks", nicks);
+
+		// Refresh user search
+		if (search.val().length) {
+			search.trigger("input");
+		}
 	}
 
 	function renderNetworks(data) {

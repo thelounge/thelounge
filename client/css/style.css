@@ -768,6 +768,9 @@ kbd {
 	overflow: auto;
 	-webkit-overflow-scrolling: touch;
 	position: absolute;
+}
+
+#chat .channel .chat {
 	right: 180px;
 }
 
@@ -789,18 +792,6 @@ kbd {
 	transition: all .4s;
 	-webkit-transform: translateZ(0);
 	transform: translateZ(0);
-}
-
-#chat .lobby .chat,
-#chat .special .chat,
-#chat .query .chat {
-	right: 0;
-}
-
-#chat .lobby .sidebar,
-#chat .special .sidebar,
-#chat .query .sidebar {
-	display: none;
 }
 
 #chat .show-more {
@@ -1178,6 +1169,10 @@ kbd {
 	position: absolute;
 	top: 48px;
 	width: 100%;
+}
+
+#chat .names-filtered {
+	display: none;
 }
 
 #chat .names .user {
