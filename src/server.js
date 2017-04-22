@@ -219,7 +219,15 @@ function initializeClient(socket, client, generateToken, token) {
 			for (var i = 0; i < connection_list.length; i++) {
 				if (data.socket_id === connection_list[i]) {
 					manager.sockets.of("/").connected[connection_list[i]].emit("sign-out", {});
-					client.clientDetach(data.socket_id);
+
+					// give 10 seconds to let the client end the connection
+					setTimeout(() => {
+						client.clientDetach(data.socket_id);
+						var removeSocket = manager.sockets.of("/").connected[data.socket_id];
+						if (removeSocket) {
+							removeSocket.close();
+						}
+					}, 10 * 1000);
 				}
 			}
 		}
