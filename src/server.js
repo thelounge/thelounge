@@ -525,19 +525,19 @@ function reverseDnsLookup(ip, callback) {
 function sendConnectionInfo(client) {
 	// send messages to connected user clients
 	// get sockets
-	var socket_list = Object.keys(client.attachedClients);
+	var socketList = Object.keys(client.attachedClients);
 
 	// get IP addresses for those sockets
 	var connection_list = [];
-	for (var k = socket_list.length - 1 ; k >= 0 ; k--) {
-		var socket_data = {};
-		socket_data.socket_id = socket_list[k];
-		socket_data.ip = getClientIp(manager.sockets.of("/").connected[socket_list[k]].request);
-		connection_list.push(socket_data);
+	for (var k = socketList.length - 1 ; k >= 0 ; k--) {
+		var socketData = {};
+		socketData.socket_id = socketList[k];
+		socketData.ip = getClientIp(manager.sockets.of("/").connected[socketList[k]].request);
+		connection_list.push(socketData);
 	}
 
 	// get hostnames for every ip
-	Promise.all( connection_list.map(hostnamePromise))
+	Promise.all(connection_list.map(hostnamePromise))
 		.then((list) => {
 			// send event for every connection
 			for (var j = 0; j < list.length; j++) {
@@ -551,6 +551,7 @@ function sendConnectionInfo(client) {
 					data.hostname = list[i].hostname;
 					data.ip = list[i].ip;
 					data.socket_id = list[i].socket_id;
+					data.userAgent = manager.sockets.of("/").connected[list[i].socket_id].request.headers["user-agent"];
 					// active host
 					if (list[j].socket_id === list[i].socket_id) {
 						data.active_host = true;
