@@ -3,6 +3,7 @@
 // vendor libraries
 require("jquery-ui/ui/widgets/sortable");
 const $ = require("jquery");
+const moment = require("moment");
 const Mousetrap = require("mousetrap");
 const URI = require("urijs");
 
@@ -1592,6 +1593,25 @@ $(function() {
 			toggleNotificationMarkers(false);
 		}
 	});
+
+	// Compute how many milliseconds are remaining until the next day starts
+	function msUntilNextDay() {
+		return moment().add(1, "day").startOf("day") - moment();
+	}
+
+	// Go through all Today/Yesterday date markers in the DOM and recompute their
+	// labels. When done, restart the timer for the next day.
+	function updateDateMarkers() {
+		$(".date-marker-text[data-label='Today'], .date-marker-text[data-label='Yesterday']")
+			.closest(".date-marker-container")
+			.each(function() {
+				$(this).replaceWith(templates.date_marker({msgDate: $(this).data("timestamp")}));
+			});
+
+		// This should always be 24h later but re-computing exact value just in case
+		setTimeout(updateDateMarkers, msUntilNextDay());
+	}
+	setTimeout(updateDateMarkers, msUntilNextDay());
 
 	// Only start opening socket.io connection after all events have been registered
 	socket.open();
