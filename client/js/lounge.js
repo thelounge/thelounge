@@ -464,7 +464,7 @@ $(function() {
 			lastDate = msgDate;
 		});
 
-		scrollable.find(".show-more").prop("disabled", false);
+		scrollable.find(".show-more-button").prop("disabled", false);
 	});
 
 	socket.on("network", function(data) {
