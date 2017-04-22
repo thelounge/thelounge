@@ -537,8 +537,8 @@ function sendConnectionInfo(client) {
 	}
 
 	// get hostnames for every ip
-	hostnamePromise(connection_list)
-		.then(function(list) {
+	Promise.all( connection_list.map(hostnamePromise))
+		.then((list) => {
 			// send event for every connection
 			for (var j = 0; j < list.length; j++) {
 				// make data packet for event
@@ -571,15 +571,8 @@ function sendConnectionInfo(client) {
 }
 
 function hostnamePromise(data) {
-	if (Array.isArray(data)) {
-		// if its list, get hostname from all
-		return Promise.all(
-			data.map(hostnamePromise)
-		);
-	}
-	// if a promise, get hostname from ip and merge with data
-	return new Promise(function(fulfill) {
-		dns.reverse(data.ip, function(err, host) {
+	return new Promise((fulfill) => {
+		dns.reverse(data.ip, (err, host) => {
 			if (!err && host.length) {
 				data.hostname = host[0];
 				fulfill(data);
