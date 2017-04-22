@@ -412,44 +412,40 @@ Client.prototype.open = function(socketId, target) {
 };
 
 Client.prototype.sort = function(data) {
-	var self = this;
+	const order = data.order;
 
-	var type = data.type;
-	var order = data.order || [];
-	var sorted = [];
+	if (!_.isArray(order)) {
+		return;
+	}
 
-	switch (type) {
+	switch (data.type) {
 	case "networks":
-		order.forEach(i => {
-			var find = _.find(self.networks, {id: i});
-			if (find) {
-				sorted.push(find);
-			}
+		this.networks.sort((a, b) => {
+			return order.indexOf(a.id) > order.indexOf(b.id);
 		});
-		self.networks = sorted;
+
+		// Sync order to connected clients
+		this.emit("sync_sort", {order: this.networks.map(obj => obj.id), type: data.type, target: data.target});
+
 		break;
 
 	case "channels":
-		var target = data.target;
-		var network = _.find(self.networks, {id: target});
+		var network = _.find(this.networks, {id: data.target});
 		if (!network) {
 			return;
 		}
-		order.forEach(i => {
-			var find = _.find(network.channels, {id: i});
-			if (find) {
-				sorted.push(find);
-			}
+
+		network.channels.sort((a, b) => {
+			return order.indexOf(a.id) > order.indexOf(b.id);
 		});
-		network.channels = sorted;
+
+		// Sync order to connected clients
+		this.emit("sync_sort", {order: network.channels.map(obj => obj.id), type: data.type, target: data.target});
+
 		break;
 	}
 
-	self.save();
-
-	// Sync order to connected clients
-	const syncOrder = sorted.map(obj => obj.id);
-	self.emit("sync_sort", {order: syncOrder, type: type, target: data.target});
+	this.save();
 };
 
 Client.prototype.names = function(data) {
