@@ -20,6 +20,7 @@ $(function() {
 	var commands = [
 		"/away",
 		"/back",
+		"/banlist",
 		"/close",
 		"/connect",
 		"/deop",
@@ -247,6 +248,7 @@ $(function() {
 			"whois",
 			"ctcp",
 			"channel_list",
+			"ban_list",
 		].indexOf(type) !== -1) {
 			template = "msg_action";
 		} else if (type === "unhandled") {
@@ -379,7 +381,7 @@ $(function() {
 		var target = "#chan-" + data.chan;
 		var container = chat.find(target + " .messages");
 
-		if (data.msg.type === "channel_list") {
+		if (data.msg.type === "channel_list" || data.msg.type === "ban_list") {
 			$(container).empty();
 		}
 

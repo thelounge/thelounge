@@ -17,6 +17,7 @@ var id = 0;
 var events = [
 	"connection",
 	"unhandled",
+	"banlist",
 	"ctcp",
 	"error",
 	"invite",
