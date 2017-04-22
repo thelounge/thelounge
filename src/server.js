@@ -219,6 +219,7 @@ function initializeClient(socket, client, generateToken, token) {
 			for (var i = 0; i < connection_list.length; i++) {
 				if (data.socket_id === connection_list[i]) {
 					manager.sockets.of("/").connected[connection_list[i]].emit("sign-out", {});
+					client.clientDetach(data.socket_id);
 				}
 			}
 		}
