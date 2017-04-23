@@ -181,11 +181,6 @@ body {
 	border-color: #3f3f3f;
 }
 
-#chat .unread-marker,
-.date-marker {
-	opacity: 1;
-}
-
 #chat .unread-marker-text:before {
 	background-color: #3f3f3f;
 }

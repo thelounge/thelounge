@@ -14,6 +14,7 @@ let config = {
 			"handlebars/runtime",
 			"jquery",
 			"jquery-ui/ui/widgets/sortable",
+			"moment",
 			"mousetrap",
 			"socket.io-client",
 			"urijs",
