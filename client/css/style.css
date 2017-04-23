@@ -787,8 +787,6 @@ kbd {
 	right: 0;
 	width: 180px;
 	transition: all .4s;
-	-webkit-transform: translateZ(0);
-	transform: translateZ(0);
 }
 
 #chat .lobby .chat,
@@ -1852,11 +1850,6 @@ kbd {
 }
 
 @media (min-width: 769px) {
-	#viewport {
-		-webkit-transform: none !important;
-		transform: none !important;
-	}
-
 	#viewport.menu-open {
 		transition: none;
 	}
