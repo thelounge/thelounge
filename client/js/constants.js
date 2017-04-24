@@ -3,6 +3,7 @@
 const commands = [
 	"/away",
 	"/back",
+	"/ban",
 	"/banlist",
 	"/close",
 	"/connect",
@@ -28,6 +29,7 @@ const commands = [
 	"/server",
 	"/slap",
 	"/topic",
+	"/unban",
 	"/voice",
 	"/whois"
 ];
