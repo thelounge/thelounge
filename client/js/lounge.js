@@ -19,7 +19,6 @@ const socket = require("./socket");
 const constants = require("./constants");
 
 $(function() {
-
 	var sidebar = $("#sidebar, #footer");
 	var chat = $("#chat");
 
