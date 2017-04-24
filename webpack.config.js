@@ -14,6 +14,7 @@ let config = {
 			"handlebars/runtime",
 			"jquery",
 			"jquery-ui/ui/widgets/sortable",
+			"moment",
 			"mousetrap",
 			"socket.io-client",
 			"urijs",
@@ -36,7 +37,11 @@ let config = {
 					loader: "babel-loader",
 					options: {
 						presets: [
-							"es2015"
+							["env", {
+								targets: {
+									browsers: "last 2 versions"
+								}
+							}]
 						]
 					}
 				}

@@ -17,6 +17,7 @@ var id = 0;
 var events = [
 	"connection",
 	"unhandled",
+	"banlist",
 	"ctcp",
 	"error",
 	"invite",
@@ -263,7 +264,6 @@ Client.prototype.connect = function(args) {
 		auto_reconnect: true,
 		auto_reconnect_wait: 10000 + Math.floor(Math.random() * 1000), // If multiple users are connected to the same network, randomize their reconnections a little
 		auto_reconnect_max_retries: 360, // At least one hour (plus timeouts) worth of reconnections
-		ping_interval: 0, // Disable client ping timeouts due to buggy implementation
 		webirc: webirc,
 	});
 
@@ -418,44 +418,40 @@ Client.prototype.open = function(socketId, target) {
 };
 
 Client.prototype.sort = function(data) {
-	var self = this;
+	const order = data.order;
 
-	var type = data.type;
-	var order = data.order || [];
-	var sorted = [];
+	if (!_.isArray(order)) {
+		return;
+	}
 
-	switch (type) {
+	switch (data.type) {
 	case "networks":
-		order.forEach(i => {
-			var find = _.find(self.networks, {id: i});
-			if (find) {
-				sorted.push(find);
-			}
+		this.networks.sort((a, b) => {
+			return order.indexOf(a.id) > order.indexOf(b.id);
 		});
-		self.networks = sorted;
+
+		// Sync order to connected clients
+		this.emit("sync_sort", {order: this.networks.map(obj => obj.id), type: data.type, target: data.target});
+
 		break;
 
 	case "channels":
-		var target = data.target;
-		var network = _.find(self.networks, {id: target});
+		var network = _.find(this.networks, {id: data.target});
 		if (!network) {
 			return;
 		}
-		order.forEach(i => {
-			var find = _.find(network.channels, {id: i});
-			if (find) {
-				sorted.push(find);
-			}
+
+		network.channels.sort((a, b) => {
+			return order.indexOf(a.id) > order.indexOf(b.id);
 		});
-		network.channels = sorted;
+
+		// Sync order to connected clients
+		this.emit("sync_sort", {order: network.channels.map(obj => obj.id), type: data.type, target: data.target});
+
 		break;
 	}
 
-	self.save();
-
-	// Sync order to connected clients
-	const syncOrder = sorted.map(obj => obj.id);
-	self.emit("sync_sort", {order: syncOrder, type: type, target: data.target});
+	this.save();
 };
 
 Client.prototype.names = function(data) {

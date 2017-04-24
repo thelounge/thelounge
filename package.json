@@ -46,8 +46,9 @@
     "commander": "2.9.0",
     "event-stream": "3.3.4",
     "express": "4.15.2",
+    "express-handlebars": "3.0.0",
     "fs-extra": "2.1.2",
-    "irc-framework": "2.6.1",
+    "irc-framework": "2.8.0",
     "ldapjs": "1.0.1",
     "lodash": "4.17.4",
     "moment": "2.18.1",
@@ -58,14 +59,14 @@
     "spdy": "3.4.4"
   },
   "devDependencies": {
-    "babel-core": "6.24.0",
-    "babel-loader": "6.4.1",
-    "babel-preset-es2015": "6.24.0",
+    "babel-core": "6.24.1",
+    "babel-loader": "7.0.0",
+    "babel-preset-env": "1.4.0",
     "chai": "3.5.0",
     "eslint": "3.19.0",
     "font-awesome": "4.7.0",
     "handlebars": "4.0.6",
-    "handlebars-loader": "1.4.0",
+    "handlebars-loader": "1.5.0",
     "jquery": "3.2.1",
     "jquery-ui": "1.12.1",
     "mocha": "3.2.0",
@@ -75,6 +76,6 @@
     "socket.io-client": "1.7.3",
     "stylelint": "7.10.1",
     "urijs": "1.18.10",
-    "webpack": "2.3.3"
+    "webpack": "2.4.1"
   }
 }

@@ -1,5 +1,5 @@
 {{#toggle}}
-<div class="toggle-content">
+<div class="toggle-content toggle-type-{{type}}">
 	{{#equal type "image"}}
 		<a href="{{link}}" target="_blank">
 			<img src="{{link}}">

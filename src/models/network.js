@@ -25,6 +25,7 @@ function Network(attr) {
 		irc: null,
 		serverOptions: {
 			PREFIX: [],
+			NETWORK: "",
 		},
 		chanCache: [],
 	});

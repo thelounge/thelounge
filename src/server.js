@@ -5,7 +5,9 @@ var pkg = require("../package.json");
 var Client = require("./client");
 var ClientManager = require("./clientManager");
 var express = require("express");
+var expressHandlebars = require("express-handlebars");
 var fs = require("fs");
+var path = require("path");
 var io = require("socket.io");
 var dns = require("dns");
 var Helper = require("./helper");
@@ -29,7 +31,10 @@ module.exports = function() {
 	var app = express()
 		.use(allRequests)
 		.use(index)
-		.use(express.static("client"));
+		.use(express.static("client"))
+		.engine("html", expressHandlebars({extname: ".html"}))
+		.set("view engine", "html")
+		.set("views", path.join(__dirname, "..", "client"));
 
 	var config = Helper.config;
 	var server = null;
@@ -42,20 +47,30 @@ module.exports = function() {
 		server = require("http");
 		server = server.createServer(app);
 	} else {
-		server = require("spdy");
 		const keyPath = Helper.expandHome(config.https.key);
 		const certPath = Helper.expandHome(config.https.certificate);
-		if (!config.https.key.length || !fs.existsSync(keyPath)) {
+		const caPath = Helper.expandHome(config.https.ca);
+
+		if (!keyPath.length || !fs.existsSync(keyPath)) {
 			log.error("Path to SSL key is invalid. Stopping server...");
 			process.exit();
 		}
-		if (!config.https.certificate.length || !fs.existsSync(certPath)) {
+
+		if (!certPath.length || !fs.existsSync(certPath)) {
 			log.error("Path to SSL certificate is invalid. Stopping server...");
 			process.exit();
 		}
+
+		if (caPath.length && !fs.existsSync(caPath)) {
+			log.error("Path to SSL ca bundle is invalid. Stopping server...");
+			process.exit();
+		}
+
+		server = require("spdy");
 		server = server.createServer({
 			key: fs.readFileSync(keyPath),
-			cert: fs.readFileSync(certPath)
+			cert: fs.readFileSync(certPath),
+			ca: caPath ? fs.readFileSync(caPath) : undefined
 		}, app);
 	}
 
@@ -115,27 +130,23 @@ function index(req, res, next) {
 		return next();
 	}
 
-	return fs.readFile("client/index.html", "utf-8", function(err, file) {
-		if (err) {
-			throw err;
-		}
-
-		var data = _.merge(
-			pkg,
-			Helper.config
-		);
-		data.gitCommit = Helper.getGitCommit();
-		data.themes = fs.readdirSync("client/themes/").filter(function(themeFile) {
-			return themeFile.endsWith(".css");
-		}).map(function(css) {
-			return css.slice(0, -4);
-		});
-		var template = _.template(file);
-		res.setHeader("Content-Security-Policy", "default-src *; connect-src 'self' ws: wss:; style-src * 'unsafe-inline'; script-src 'self'; child-src 'self'; object-src 'none'; form-action 'none'; referrer no-referrer;");
-		res.setHeader("Content-Type", "text/html");
-		res.writeHead(200);
-		res.end(template(data));
+	var data = _.merge(
+		pkg,
+		Helper.config
+	);
+	data.gitCommit = Helper.getGitCommit();
+	data.themes = fs.readdirSync("client/themes/").filter(function(themeFile) {
+		return themeFile.endsWith(".css");
+	}).map(function(css) {
+		const filename = css.slice(0, -4);
+		return {
+			name: filename.charAt(0).toUpperCase() + filename.slice(1),
+			filename: filename
+		};
 	});
+	res.setHeader("Content-Security-Policy", "default-src *; connect-src 'self' ws: wss:; style-src * 'unsafe-inline'; script-src 'self'; child-src 'self'; object-src 'none'; form-action 'none';");
+	res.setHeader("Referrer-Policy", "no-referrer");
+	res.render("index", data);
 }
 
 function init(socket, client) {

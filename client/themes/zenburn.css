@@ -181,11 +181,6 @@ body {
 	border-color: #3f3f3f;
 }
 
-#chat .unread-marker,
-.date-marker {
-	opacity: 1;
-}
-
 #chat .unread-marker-text:before {
 	background-color: #3f3f3f;
 }
@@ -236,6 +231,10 @@ body {
 #chat .msg.join .time,
 #chat .msg.join .from button {
 	color: #8cd0d3 !important;
+}
+
+#chat table.channel-list td {
+	color: #ccc;
 }
 
 /* Embeds */

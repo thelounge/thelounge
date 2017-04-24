@@ -3,6 +3,7 @@
 module.exports = {
 	actions: {
 		action: require("./actions/action.tpl"),
+		ban_list: require("./actions/ban_list.tpl"),
 		channel_list: require("./actions/channel_list.tpl"),
 		ctcp: require("./actions/ctcp.tpl"),
 		invite: require("./actions/invite.tpl"),

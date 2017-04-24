@@ -3,7 +3,7 @@
 // vendor libraries
 require("jquery-ui/ui/widgets/sortable");
 const $ = require("jquery");
-const io = require("socket.io-client");
+const moment = require("moment");
 const Mousetrap = require("mousetrap");
 const URI = require("urijs");
 
@@ -15,68 +15,10 @@ const helpers_parse = require("./libs/handlebars/parse");
 const helpers_roundBadgeNumber = require("./libs/handlebars/roundBadgeNumber");
 const slideoutMenu = require("./libs/slideout");
 const templates = require("../views");
+const socket = require("./socket");
+const constants = require("./constants");
 
 $(function() {
-	var path = window.location.pathname + "socket.io/";
-	var socket = io({
-		path: path,
-		autoConnect: false,
-		reconnection: false
-	});
-	var commands = [
-		"/away",
-		"/back",
-		"/close",
-		"/connect",
-		"/deop",
-		"/devoice",
-		"/disconnect",
-		"/invite",
-		"/join",
-		"/kick",
-		"/leave",
-		"/me",
-		"/mode",
-		"/msg",
-		"/nick",
-		"/notice",
-		"/op",
-		"/part",
-		"/query",
-		"/quit",
-		"/raw",
-		"/say",
-		"/send",
-		"/server",
-		"/slap",
-		"/topic",
-		"/voice",
-		"/whois"
-	];
-	var handledTypes = [
-		"invite",
-		"join",
-		"mode",
-		"kick",
-		"nick",
-		"part",
-		"quit",
-		"topic",
-		"topic_set_by",
-		"action",
-		"whois",
-		"ctcp",
-		"channel_list",
-	];
-	var condensedTypes = [
-		"join",
-		"mode",
-		"nick",
-		"part",
-		"quit",
-		"popin",
-		"ripout"
-	];
 
 	var sidebar = $("#sidebar, #footer");
 	var chat = $("#chat");
@@ -108,48 +50,6 @@ $(function() {
 			// available. See http://stackoverflow.com/q/14555347/1935861.
 		}
 	}
-
-	[
-		"connect_error",
-		"connect_failed",
-		"disconnect",
-		"error",
-	].forEach(function(e) {
-		socket.on(e, function(data) {
-			$("#loading-page-message").text("Connection failed: " + data);
-			$("#connection-error").addClass("shown").one("click", function() {
-				window.onbeforeunload = null;
-				window.location.reload();
-			});
-
-			// Disables sending a message by pressing Enter. `off` is necessary to
-			// cancel `inputhistory`, which overrides hitting Enter. `on` is then
-			// necessary to avoid creating new lines when hitting Enter without Shift.
-			// This is fairly hacky but this solution is not permanent.
-			$("#input").off("keydown").on("keydown", function(event) {
-				if (event.which === 13 && !event.shiftKey) {
-					event.preventDefault();
-				}
-			});
-			// Hides the "Send Message" button
-			$("#submit").remove();
-
-			console.error(data);
-		});
-	});
-
-	socket.on("connecting", function() {
-		$("#loading-page-message").text("Connecting…");
-	});
-
-	socket.on("connect", function() {
-		$("#loading-page-message").text("Finalizing connection…");
-	});
-
-	socket.on("authorized", function() {
-		$("#loading-page-message").text("Authorized, loading messages…");
-	});
-
 	socket.on("auth", function(data) {
 		var login = $("#sign-in");
 		var token;
@@ -179,7 +79,9 @@ $(function() {
 			return;
 		}
 		sidebar.find(".sign-in")
-			.click()
+			.trigger("click", {
+				pushState: false,
+			})
 			.end()
 			.find(".networks")
 			.html("")
@@ -221,7 +123,9 @@ $(function() {
 		$("#loading-page-message").text("Rendering…");
 
 		if (data.networks.length === 0) {
-			$("#footer").find(".connect").trigger("click");
+			$("#footer").find(".connect").trigger("click", {
+				pushState: false,
+			});
 		} else {
 			renderNetworks(data);
 		}
@@ -243,7 +147,9 @@ $(function() {
 				.eq(0)
 				.trigger("click");
 			if (first.length === 0) {
-				$("#footer").find(".connect").trigger("click");
+				$("#footer").find(".connect").trigger("click", {
+					pushState: false,
+				});
 			}
 		}
 	});
@@ -299,7 +205,7 @@ $(function() {
 			data.msg.highlight = true;
 		}
 
-		if (handledTypes.indexOf(type) !== -1) {
+		if (constants.handledTypes.indexOf(type) !== -1) {
 			data.msg.template = "actions/" + type;
 			template = "msg_action";
 		} else if (type === "unhandled") {
@@ -354,8 +260,8 @@ $(function() {
 		var messages = input.messages || [];
 		var output = {};
 		// generate empty array output of every type
-		for (var j in condensedTypes) {
-			output[condensedTypes[j]] = [];
+		for (var j in constants.condensedTypes) {
+			output[constants.condensedTypes[j]] = [];
 		}
 		// message order is imporant!
 		var length = messages.length;
@@ -496,8 +402,8 @@ $(function() {
 		var msg = input.msg || undefined;
 		var messageType = msg.type;
 
-		if (condensedTypes.indexOf(messageType) !== -1 && chanType !== "lobby") {
-			var condensedTypesClasses = "." + condensedTypes.join(", .");
+		if (constants.condensedTypes.indexOf(messageType) !== -1 && chanType !== "lobby") {
+			var condensedTypesClasses = "." + constants.condensedTypes.join(", .");
 			var lastChild = container.children("div.msg").last();
 			var lastDate = (new Date(lastChild.attr("data-time"))).toDateString();
 			var msgDate = (new Date(htmlMessage.attr("data-time"))).toDateString();
@@ -638,6 +544,10 @@ $(function() {
 		var target = "#chan-" + data.chan;
 		var container = chat.find(target + " .messages");
 
+		if (data.msg.type === "channel_list" || data.msg.type === "ban_list") {
+			$(container).empty();
+		}
+
         // Check if date changed
 		var prevMsg = $(container.find(".msg")).last();
 		var prevMsgTime = new Date(prevMsg.attr("data-time"));
@@ -730,6 +640,8 @@ $(function() {
 
 			lastDate = msgDate;
 		});
+
+		scrollable.find(".show-more-button").prop("disabled", false);
 	});
 
 	socket.on("network", function(data) {
@@ -830,7 +742,7 @@ $(function() {
 		join: true,
 		links: true,
 		mode: true,
-		motd: false,
+		motd: true,
 		nick: true,
 		notification: true,
 		notifyAllMessages: false,
@@ -960,6 +872,7 @@ $(function() {
 		var self = $(this);
 		viewport.toggleClass(self.attr("class"));
 		e.stopPropagation();
+		chat.find(".chan.active .chat").trigger("msg.sticky");
 	});
 
 	function positionContextMenu(that, e) {
@@ -1039,7 +952,7 @@ $(function() {
 
 	var input = $("#input")
 		.history()
-		.on("input keyup", function() {
+		.on("input", function() {
 			var style = window.getComputedStyle(this);
 
 			// Start by resetting height before computing as scrollHeight does not
@@ -1053,7 +966,7 @@ $(function() {
 				+ Math.round(parseFloat(style.borderBottomWidth) || 0)
 			) + "px";
 
-			$("#chat .chan.active .chat").trigger("msg.sticky"); // fix growing
+			chat.find(".chan.active .chat").trigger("msg.sticky"); // fix growing
 		})
 		.tab(complete, {hint: false});
 
@@ -1224,6 +1137,33 @@ $(function() {
 		});
 	});
 
+	sidebar.on("click", ".chan, button", function(e, data) {
+		// Pushes states to history web API when clicking elements with a data-target attribute.
+		// States are very trivial and only contain a single `clickTarget` property which
+		// contains a CSS selector that targets elements which takes the user to a different view
+		// when clicked. The `popstate` event listener will trigger synthetic click events using that
+		// selector and thus take the user to a different view/state.
+		if (data && data.pushState === false) {
+			return;
+		}
+		const self = $(this);
+		const target = self.data("target");
+		if (!target) {
+			return;
+		}
+		const state = {};
+
+		if (self.hasClass("chan")) {
+			state.clickTarget = `.chan[data-id="${self.data("id")}"]`;
+		} else {
+			state.clickTarget = `#footer button[data-target="${target}"]`;
+		}
+
+		if (history && history.pushState) {
+			history.pushState(state, null, null);
+		}
+	});
+
 	sidebar.on("click", ".chan, button", function() {
 		var self = $(this);
 		var target = self.data("target");
@@ -1289,7 +1229,7 @@ $(function() {
 		}
 
 		var chanChat = chan.find(".chat");
-		if (chanChat.length > 0) {
+		if (chanChat.length > 0 && chan.data("type") !== "special") {
 			chanChat.sticky();
 		}
 
@@ -1433,6 +1373,7 @@ $(function() {
 			lastMessage = lastMessage.children(".msg").first();
 		}
 		var lastMessageId = lastMessage[0].id;
+		self.prop("disabled", true);
 		socket.emit("more", {
 			target: self.data("id"),
 			lastId: lastMessageId
@@ -1545,6 +1486,33 @@ $(function() {
 
 	(function HotkeysScope() {
 		Mousetrap.bind([
+			"pageup",
+			"pagedown"
+		], function(e, key) {
+			let container = windows.find(".window.active");
+
+			// Chat windows scroll message container
+			if (container.attr("id") === "chat-container") {
+				container = container.find(".chan.active .chat");
+			}
+
+			const offset = container.get(0).clientHeight * 0.9;
+			let scrollTop = container.scrollTop();
+
+			if (key === "pageup") {
+				scrollTop = Math.floor(scrollTop - offset);
+			} else {
+				scrollTop = Math.ceil(scrollTop + offset);
+			}
+
+			container.stop().animate({
+				scrollTop: scrollTop
+			}, 200);
+
+			return false;
+		});
+
+		Mousetrap.bind([
 			"command+up",
 			"command+down",
 			"ctrl+up",
@@ -1643,7 +1611,7 @@ $(function() {
 	}
 
 	function complete(word) {
-		var words = commands.slice();
+		var words = constants.commands.slice();
 		var users = chat.find(".active").find(".users");
 		var nicks = users.data("nicks");
 
@@ -1810,15 +1778,47 @@ $(function() {
 		$("#viewport .lt").toggleClass("notified", newState);
 	}
 
-	document.addEventListener(
-		"visibilitychange",
-		function() {
-			if (sidebar.find(".highlight").length === 0) {
-				toggleNotificationMarkers(false);
-			}
+	$(document).on("visibilitychange focus", () => {
+		if (sidebar.find(".highlight").length === 0) {
+			toggleNotificationMarkers(false);
 		}
-	);
+	});
+
+	// Compute how many milliseconds are remaining until the next day starts
+	function msUntilNextDay() {
+		return moment().add(1, "day").startOf("day") - moment();
+	}
+
+	// Go through all Today/Yesterday date markers in the DOM and recompute their
+	// labels. When done, restart the timer for the next day.
+	function updateDateMarkers() {
+		$(".date-marker-text[data-label='Today'], .date-marker-text[data-label='Yesterday']")
+			.closest(".date-marker-container")
+			.each(function() {
+				$(this).replaceWith(templates.date_marker({msgDate: $(this).data("timestamp")}));
+			});
+
+		// This should always be 24h later but re-computing exact value just in case
+		setTimeout(updateDateMarkers, msUntilNextDay());
+	}
+	setTimeout(updateDateMarkers, msUntilNextDay());
 
 	// Only start opening socket.io connection after all events have been registered
 	socket.open();
+
+	window.addEventListener(
+		"popstate",
+		(e) => {
+			const {state} = e;
+			if (!state) {
+				return;
+			}
+			const {clickTarget} = state;
+			if (clickTarget) {
+				$(clickTarget).trigger("click", {
+					pushState: false
+				});
+			}
+		}
+	);
 });

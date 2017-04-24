@@ -1,11 +1,10 @@
 "use strict";
 
-exports.commands = ["mode", "op", "voice", "deop", "devoice"];
-
 var Chan = require("../../models/chan");
 var Msg = require("../../models/msg");
 
 exports.commands = [
+	"banlist",
 	"mode",
 	"op",
 	"deop",
@@ -13,6 +12,10 @@ exports.commands = [
 	"dehop",
 	"voice",
 	"devoice",
+];
+
+const chanCommands = [
+	"banlist"
 ];
 
 exports.input = function(network, chan, cmd, args) {
@@ -26,7 +29,7 @@ exports.input = function(network, chan, cmd, args) {
 			return;
 		}
 
-		if (args.length === 0) {
+		if (args.length === 0 && chanCommands.indexOf(cmd) === -1) {
 			chan.pushMessage(this, new Msg({
 				type: Msg.Type.ERROR,
 				text: `Usage: /${cmd} <nick> [...nick]`
@@ -36,6 +39,7 @@ exports.input = function(network, chan, cmd, args) {
 		}
 
 		const mode = {
+			banlist: "+b",
 			op: "+o",
 			hop: "+h",
 			voice: "+v",
@@ -44,6 +48,9 @@ exports.input = function(network, chan, cmd, args) {
 			devoice: "-v"
 		}[cmd];
 
+		if (chanCommands.indexOf(cmd) > -1 && args.length === 0) {
+			network.irc.raw("MODE", chan.name, mode);
+		}
 		args.forEach(function(target) {
 			network.irc.raw("MODE", chan.name, mode, target);
 		});
