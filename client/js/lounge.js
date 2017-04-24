@@ -1271,6 +1271,9 @@ $(function() {
 			"pagedown"
 		], function(e, key) {
 			let container = windows.find(".window.active");
+			if (container.is(":animated")) {
+				return;
+			}
 
 			// Chat windows scroll message container
 			if (container.attr("id") === "chat-container") {
