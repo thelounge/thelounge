@@ -54,6 +54,31 @@ const commands = [
 	"/whois"
 ];
 
+const handledTypes = [
+	"ban_list",
+	"invite",
+	"join",
+	"mode",
+	"kick",
+	"nick",
+	"part",
+	"quit",
+	"topic",
+	"topic_set_by",
+	"action",
+	"whois",
+	"ctcp",
+	"channel_list",
+];
+
+const condensedTypes = [
+	"join",
+	"mode",
+	"nick",
+	"part",
+	"quit",
+];
+
 const timeFormats = {
 	msgDefault: "HH:mm",
 	msgWithSeconds: "HH:mm:ss"
@@ -61,6 +86,8 @@ const timeFormats = {
 
 module.exports = {
 	colorCodeMap: colorCodeMap,
+	commands: commands,
+	condensedTypes: condensedTypes,
+	handledTypes: handledTypes
 	timeFormats: timeFormats,
-	commands: commands
 };
