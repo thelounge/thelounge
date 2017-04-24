@@ -45,73 +45,66 @@ $(function() {
 
 	// Autocompletion Strategies
 
-	var emojiStrategy = {
+	const emojiStrategy = {
 		id: "emoji",
 		match: /\B:([-+\w]*)$/,
-		search: function(term, callback) {
-			callback($.map(Object.keys(emojiMap), function(e) {
-				return e.indexOf(term) === 0 ? e : null;
-			}));
+		search(term, callback) {
+			callback(Object.keys(emojiMap).filter(name => name.indexOf(term) === 0));
 		},
-		template: function(value) {
+		template(value) {
 			return `<span class="emoji">${emojiMap[value]}</span> ${value}`;
 		},
-		replace: function(value) {
+		replace(value) {
 			return emojiMap[value];
 		},
 		index: 1
 	};
 
-	var nicksStrategy = {
+	const nicksStrategy = {
 		id: "nicks",
 		match: /\B(@([a-zA-Z_[\]\\^{}|`@][a-zA-Z0-9_[\]\\^{}|`-]*)?)$/,
-		search: function(term, callback) {
+		search(term, callback) {
 			term = term.slice(1);
 			if (term[0] === "@") {
-				callback(completeNicks(term.slice(1)).map(function(val) {
-					return "@" + val;
-				}));
+				callback(completeNicks(term.slice(1)).map(val => "@" + val));
 			} else {
 				callback(completeNicks(term));
 			}
 		},
-		template: function(value) {
-			if (value[0] === "@") {
-				return value;
-			}
-			return "@" + value;
+		template(value) {
+			return value;
 		},
-		replace: function(value) {
+		replace(value) {
 			return value;
 		},
 		index: 1
 	};
 
-	var chanStrategy = {
+	const chanStrategy = {
 		id: "chans",
 		match: /\B((#|\+|&|![A-Z0-9]{5})([^\x00\x0A\x0D\x20\x2C\x3A]+(:[^\x00\x0A\x0D\x20\x2C\x3A]*)?)?)$/,
-		search: function(term, callback, match) {
+		search(term, callback, match) {
 			callback(completeChans(match[0]));
 		},
-		template: function(value) {
+		template(value) {
 			return value;
 		},
-		replace: function(value) {
+		replace(value) {
 			return value;
 		},
 		index: 1
 	};
 
-	var commandStrategy = {
+	const commandStrategy = {
 		id: "commands",
 		match: /^\/(\w*)$/,
-		search: function(term, callback) {
+		search(term, callback) {
 			callback(completeCommands("/" + term));
 		},
-		template: function(value) {
+		template(value) {
 			return value;
 		},
-		replace: function(value) {
+		replace(value) {
 			return value;
 		},
 		index: 1
@@ -1360,34 +1353,30 @@ $(function() {
 	}
 
 	function completeNicks(word) {
-		var users = chat.find(".active").find(".users");
-		var words = users.data("nicks");
+		const users = chat.find(".active").find(".users");
+		const words = users.data("nicks");
 
 		return $.grep(
 			words,
-			function(w) {
-				return !w.toLowerCase().indexOf(word.toLowerCase());
-			}
+			w => !w.toLowerCase().indexOf(word.toLowerCase())
 		);
 	}
 
 	function completeCommands(word) {
-		var words = constants.commands.slice();
+		const words = constants.commands.slice();
 
 		return $.grep(
 			words,
-			function(w) {
-				return !w.toLowerCase().indexOf(word.toLowerCase());
-			}
+			w => !w.toLowerCase().indexOf(word.toLowerCase())
 		);
 	}
 
 	function completeChans(word) {
-		var words = [];
+		const words = [];
 
 		sidebar.find(".chan")
 			.each(function() {
-				var self = $(this);
+				const self = $(this);
 				if (!self.hasClass("lobby")) {
 					words.push(self.data("title"));
 				}
@@ -1395,9 +1384,7 @@ $(function() {
 
 		return $.grep(
 			words,
-			function(w) {
-				return !w.toLowerCase().indexOf(word.toLowerCase());
-			}
+			w => !w.toLowerCase().indexOf(word.toLowerCase())
 		);
 	}
 

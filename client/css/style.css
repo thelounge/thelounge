@@ -1338,8 +1338,7 @@ kbd {
 
 #help .help-item .subject {
 	white-space: nowrap;
-	padding-right: 10px;
-	min-width: 150px;
+	padding-right: 15px;
 }
 
 #help .help-item .description p {
@@ -1528,17 +1527,12 @@ kbd {
 	display: inline-block;
 }
 
-.textcomplete-item {
-	border-bottom-color: rgba(0, 0, 0, .1);
-	border-bottom-style: solid;
-	border-bottom-width: 1px;
-	margin-top: 0;
-	margin-bottom: 0;
-	padding: 10px 8px;
-}
-
 .textcomplete-item a {
 	color: #333;
+}
+
+.textcomplete-item a:hover {
+	opacity: 1;
 }
 
 .textcomplete-item .emoji {
