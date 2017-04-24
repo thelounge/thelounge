@@ -204,25 +204,13 @@ $(function() {
 			data.msg.highlight = true;
 		}
 
-		if ([
-			"invite",
-			"join",
-			"mode",
-			"kick",
-			"nick",
-			"part",
-			"quit",
-			"topic",
-			"topic_set_by",
-			"action",
-			"whois",
-			"ctcp",
-			"channel_list",
-			"ban_list",
-		].indexOf(type) !== -1) {
+		if (constants.handledTypes.indexOf(type) !== -1) {
+			data.msg.template = "actions/" + type;
 			template = "msg_action";
 		} else if (type === "unhandled") {
 			template = "msg_unhandled";
+		} else if (type === "condensed") {
+			template = "msg_condensed";
 		}
 
 		var msg = $(templates[template](data.msg));
@@ -245,10 +233,63 @@ $(function() {
 		return msg;
 	}
 
-	function buildChannelMessages(channel, messages) {
-		return messages.reduce(function(docFragment, message) {
-			docFragment.append(buildChatMessage({
-				chan: channel,
+	function updateCondensedText(condensed, addedTypes) {
+		var obj = {};
+
+		for (var i in constants.condensedTypes) {
+			var msgType = constants.condensedTypes[i];
+			obj[msgType] = condensed.data(msgType) || 0;
+		}
+
+		for (var k in addedTypes) {
+			var added = addedTypes[k];
+			obj[added]++;
+			condensed.data(added, obj[added]);
+		}
+
+		var text = "";
+
+		for (var j in constants.condensedTypes) {
+			var messageType = constants.condensedTypes[j];
+			if (obj[messageType]) {
+				text += text === "" ? "" : ", ";
+				text += obj[messageType] + " " + messageType;
+				if (messageType === "nick" || messageType === "mode") {
+					text += " change";
+				}
+				text += obj[messageType] > 1 ? "s" : "";
+			}
+		}
+		condensed.children(".condensed-msg").text(text);
+	}
+
+	function appendMessage(container, chan, chanType, messageType, msg) {
+		if (constants.condensedTypes.indexOf(messageType) !== -1 && chanType !== "lobby") {
+			var condensedTypesClasses = "." + constants.condensedTypes.join(", .");
+			var lastChild = container.children("div.msg").last();
+			var lastDate = (new Date(lastChild.attr("data-time"))).toDateString();
+			var msgDate = (new Date(msg.attr("data-time"))).toDateString();
+			if (lastChild && $(lastChild).hasClass("condensed") && !$(msg).hasClass("message") && lastDate === msgDate) {
+				lastChild.append(msg);
+				updateCondensedText(lastChild, [messageType]);
+			} else if (lastChild && $(lastChild).is(condensedTypesClasses)) {
+				var condensed = buildChatMessage({msg: {type: "condensed", time: msg.attr("data-time")}, chan: chan});
+				condensed.append(lastChild);
+				condensed.append(msg);
+				container.append(condensed);
+				updateCondensedText(condensed, [messageType, lastChild.attr("data-type")]);
+			} else {
+				container.append(msg);
+			}
+		} else {
+			container.append(msg);
+		}
+	}
+
+	function buildChannelMessages(data) {
+		return data.messages.reduce(function(docFragment, message) {
+			appendMessage(docFragment, data.id, data.type, message.type, buildChatMessage({
+				chan: data.id,
 				msg: message
 			}));
 			return docFragment;
@@ -261,7 +302,7 @@ $(function() {
 	}
 
 	function renderChannelMessages(data) {
-		var documentFragment = buildChannelMessages(data.id, data.messages);
+		var documentFragment = buildChannelMessages(data);
 		var channel = chat.find("#chan-" + data.id + " .messages").append(documentFragment);
 
 		if (data.firstUnread > 0) {
@@ -290,6 +331,10 @@ $(function() {
 				}
 
 				if (lastDate.toDateString() !== msgDate.toDateString()) {
+					var parent = msg.parent();
+					if (parent.hasClass("condensed")) {
+						msg.insertAfter(parent);
+					}
 					msg.before(templates.date_marker({msgDate: msgDate}));
 				}
 
@@ -366,16 +411,19 @@ $(function() {
 		}
 
 		if (prevMsgTime.toDateString() !== msgTime.toDateString()) {
+			var parent = prevMsg.parent();
+			if (parent.hasClass("condensed")) {
+				prevMsg = parent;
+			}
 			prevMsg.after(templates.date_marker({msgDate: msgTime}));
 		}
 
-        // Add message to the container
-		container
-			.append(msg)
-			.trigger("msg", [
-				target,
-				data
-			]);
+		appendMessage(container, data.chan, $(target).attr("data-type"), data.msg.type, msg);
+
+		container.trigger("msg", [
+			target,
+			data
+		]);
 
 		if (data.msg.self) {
 			container
@@ -385,7 +433,7 @@ $(function() {
 	});
 
 	socket.on("more", function(data) {
-		var documentFragment = buildChannelMessages(data.chan, data.messages);
+		var documentFragment = buildChannelMessages(data);
 		var chan = chat
 			.find("#chan-" + data.chan)
 			.find(".messages");
@@ -396,8 +444,9 @@ $(function() {
 		if (children.eq(0).hasClass("date-marker")) { // Check top most child
 			children.eq(0).remove();
 		} else if (children.eq(0).hasClass("unread-marker") && children.eq(1).hasClass("date-marker")) {
-			// Otherwise the date-marker would get 'stuck' because of the new-message marker
 			children.eq(1).remove();
+		} else if (children.eq(0).hasClass("condensed") && children.eq(0).children(".date-marker").eq(0).hasClass("date-marker")) {
+			children.eq(0).children(".date-marker").eq(0).remove();
 		}
 
 		// get the scrollable wrapper around messages
@@ -428,6 +477,10 @@ $(function() {
 			}
 
 			if (lastDate.toDateString() !== msgDate.toDateString()) {
+				var parent = msg.parent();
+				if (parent.hasClass("condensed")) {
+					msg.insertAfter(parent);
+				}
 				msg.before(templates.date_marker({msgDate: msgDate}));
 			}
 
@@ -908,6 +961,14 @@ $(function() {
 		}
 	});
 
+	chat.on("click", ".condensed", function() {
+		$(this).toggleClass("closed");
+	});
+
+	chat.on("click", ".condensed div", function(e) {
+		e.stopPropagation();
+	});
+
 	chat.on("click", ".user", function() {
 		var name = $(this).data("name");
 		var chan = findCurrentNetworkChan(name);
@@ -1153,11 +1214,15 @@ $(function() {
 
 	chat.on("click", ".show-more-button", function() {
 		var self = $(this);
-		var count = self.parent().next(".messages").children(".msg").length;
+		var lastMessage = self.parent().next(".messages").children(".msg").first();
+		if (lastMessage.is(".condensed")) {
+			lastMessage = lastMessage.children(".msg").first();
+		}
+		var lastMessageId = lastMessage[0].id;
 		self.prop("disabled", true);
 		socket.emit("more", {
 			target: self.data("id"),
-			count: count
+			lastId: lastMessageId
 		});
 	});
 
