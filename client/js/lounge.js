@@ -326,6 +326,10 @@ $(function() {
 		condensed.children(".condensed-msg").text(text);
 	}
 
+	function showAll() {
+		return options.join && options.part && options.quit && options.nick && options.mode;
+	}
+
 	function appendMessage(container, chan, chanType, messageType, msg) {
 		if (constants.condensedTypes.indexOf(messageType) !== -1 && chanType !== "lobby") {
 			var condensedTypesClasses = "." + constants.condensedTypes.join(", .");
@@ -335,7 +339,7 @@ $(function() {
 			if (lastChild && $(lastChild).hasClass("condensed") && !$(msg).hasClass("message") && lastDate === msgDate) {
 				lastChild.append(msg);
 				updateCondensedText(lastChild, [messageType]);
-			} else if (lastChild && $(lastChild).is(condensedTypesClasses)) {
+			} else if (lastChild && $(lastChild).is(condensedTypesClasses) && showAll()) {
 				var condensed = buildChatMessage({msg: {type: "condensed", time: msg.attr("data-time")}, chan: chan});
 				condensed.append(lastChild);
 				condensed.append(msg);
