@@ -49,7 +49,6 @@
     "express-handlebars": "3.0.0",
     "fs-extra": "2.1.2",
     "irc-framework": "2.8.0",
-    "json-loader": "0.5.4",
     "ldapjs": "1.0.1",
     "lodash": "4.17.4",
     "moment": "2.18.1",
