@@ -1380,7 +1380,7 @@ $(function() {
 	}
 
 	function completeNicks(word) {
-		const users = chat.find(".active").find(".users");
+		const users = chat.find(".active").find(".names-original");
 		const words = users.data("nicks");
 
 		return $.grep(
