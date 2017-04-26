@@ -2,12 +2,14 @@
 
 // vendor libraries
 require("jquery-ui/ui/widgets/sortable");
+require("jquery-textcomplete");
 const $ = require("jquery");
 const moment = require("moment");
 const Mousetrap = require("mousetrap");
 const URI = require("urijs");
 
 // our libraries
+const emojiMap = require("./libs/simplemap.json");
 require("./libs/jquery/inputhistory");
 require("./libs/jquery/stickyscroll");
 require("./libs/jquery/tabcomplete");
@@ -40,6 +42,73 @@ $(function() {
 	});
 
 	var favicon = $("#favicon");
+
+	// Autocompletion Strategies
+
+	const emojiStrategy = {
+		id: "emoji",
+		match: /\B:([-+\w]*)$/,
+		search(term, callback) {
+			callback(Object.keys(emojiMap).filter(name => name.indexOf(term) === 0));
+		},
+		template(value) {
+			return `<span class="emoji">${emojiMap[value]}</span> ${value}`;
+		},
+		replace(value) {
+			return emojiMap[value];
+		},
+		index: 1
+	};
+
+	const nicksStrategy = {
+		id: "nicks",
+		match: /\B(@([a-zA-Z_[\]\\^{}|`@][a-zA-Z0-9_[\]\\^{}|`-]*)?)$/,
+		search(term, callback) {
+			term = term.slice(1);
+			if (term[0] === "@") {
+				callback(completeNicks(term.slice(1)).map(val => "@" + val));
+			} else {
+				callback(completeNicks(term));
+			}
+		},
+		template(value) {
+			return value;
+		},
+		replace(value) {
+			return value;
+		},
+		index: 1
+	};
+
+	const chanStrategy = {
+		id: "chans",
+		match: /\B((#|\+|&|![A-Z0-9]{5})([^\x00\x0A\x0D\x20\x2C\x3A]+(:[^\x00\x0A\x0D\x20\x2C\x3A]*)?)?)$/,
+		search(term, callback, match) {
+			callback(completeChans(match[0]));
+		},
+		template(value) {
+			return value;
+		},
+		replace(value) {
+			return value;
+		},
+		index: 1
+	};
+
+	const commandStrategy = {
+		id: "commands",
+		match: /^\/(\w*)$/,
+		search(term, callback) {
+			callback(completeCommands("/" + term));
+		},
+		template(value) {
+			return value;
+		},
+		replace(value) {
+			return value;
+		},
+		index: 1
+	};
 
 	socket.on("auth", function(data) {
 		var login = $("#sign-in");
@@ -638,7 +707,18 @@ $(function() {
 
 			chat.find(".chan.active .chat").trigger("msg.sticky"); // fix growing
 		})
-		.tab(complete, {hint: false});
+		.tab(completeNicks, {hint: false})
+		.textcomplete([emojiStrategy, nicksStrategy, chanStrategy, commandStrategy], {
+			dropdownClassName: "textcomplete-menu",
+			placement: "top"
+		}).on({
+			"textComplete:show": function() {
+				$(this).data("autocompleting", true);
+			},
+			"textComplete:hide": function() {
+				$(this).data("autocompleting", false);
+			}
+		});
 
 	var focus = $.noop;
 	if (!("ontouchstart" in window || navigator.maxTouchPoints > 0)) {
@@ -1272,18 +1352,31 @@ $(function() {
 			.find(".messages .msg, .date-marker").remove();
 	}
 
-	function complete(word) {
-		var words = constants.commands.slice();
-		var users = chat.find(".active").find(".users");
-		var nicks = users.data("nicks");
+	function completeNicks(word) {
+		const users = chat.find(".active").find(".users");
+		const words = users.data("nicks");
 
-		for (var i in nicks) {
-			words.push(nicks[i]);
-		}
+		return $.grep(
+			words,
+			w => !w.toLowerCase().indexOf(word.toLowerCase())
+		);
+	}
+
+	function completeCommands(word) {
+		const words = constants.commands.slice();
+
+		return $.grep(
+			words,
+			w => !w.toLowerCase().indexOf(word.toLowerCase())
+		);
+	}
+
+	function completeChans(word) {
+		const words = [];
 
 		sidebar.find(".chan")
 			.each(function() {
-				var self = $(this);
+				const self = $(this);
 				if (!self.hasClass("lobby")) {
 					words.push(self.data("title"));
 				}
@@ -1291,9 +1384,7 @@ $(function() {
 
 		return $.grep(
 			words,
-			function(w) {
-				return !w.toLowerCase().indexOf(word.toLowerCase());
-			}
+			w => !w.toLowerCase().indexOf(word.toLowerCase())
 		);
 	}
 
