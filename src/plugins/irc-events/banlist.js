@@ -9,7 +9,7 @@ module.exports = function(irc, network) {
 	irc.on("banlist", function(banlist) {
 		const channel = banlist.channel;
 		const bans = banlist.bans;
-		if (!bans) {
+		if (!bans || bans.length === 0) {
 			const msg = new Msg({
 				time: Date.now(),
 				type: Msg.Type.ERROR,
