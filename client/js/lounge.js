@@ -7,6 +7,7 @@ const $ = require("jquery");
 const moment = require("moment");
 const Mousetrap = require("mousetrap");
 const URI = require("urijs");
+const fuzzy = require("fuzzy");
 
 // our libraries
 const emojiMap = require("./libs/simplemap.json");
@@ -320,7 +321,10 @@ $(function() {
 
 	function renderChannel(data) {
 		renderChannelMessages(data);
-		renderChannelUsers(data);
+
+		if (data.type === "channel") {
+			renderChannelUsers(data);
+		}
 	}
 
 	function renderChannelMessages(data) {
@@ -380,7 +384,19 @@ $(function() {
 			return (oldSortOrder[a] || Number.MAX_VALUE) - (oldSortOrder[b] || Number.MAX_VALUE);
 		});
 
-		users.html(templates.user(data)).data("nicks", nicks);
+		const search = users
+			.find(".search")
+			.attr("placeholder", nicks.length + " " + (nicks.length === 1 ? "user" : "users"));
+
+		users
+			.find(".names-original")
+			.html(templates.user(data))
+			.data("nicks", nicks);
+
+		// Refresh user search
+		if (search.val().length) {
+			search.trigger("input");
+		}
 	}
 
 	function renderNetworks(data) {
@@ -1022,17 +1038,31 @@ $(function() {
 	});
 
 	chat.on("input", ".search", function() {
-		var value = $(this).val().toLowerCase();
-		var names = $(this).closest(".users").find(".names");
-		names.find(".user").each(function() {
-			var btn = $(this);
-			var name = btn.text().toLowerCase().replace(/[+%@~]/, "");
-			if (name.indexOf(value) > -1) {
-				btn.show();
-			} else {
-				btn.hide();
-			}
-		});
+		const value = $(this).val();
+		const parent = $(this).closest(".users");
+		const names = parent.find(".names-original");
+		const container = parent.find(".names-filtered");
+
+		if (!value.length) {
+			container.hide();
+			names.show();
+			return;
+		}
+
+		const fuzzyOptions = {
+			pre: "<b>",
+			post: "</b>",
+			extract: el => $(el).text()
+		};
+
+		const result = fuzzy.filter(
+			value,
+			names.find(".user").toArray(),
+			fuzzyOptions
+		);
+
+		names.hide();
+		container.html(templates.user_filtered({matches: result})).show();
 	});
 
 	chat.on("msg", ".messages", function(e, target, msg) {

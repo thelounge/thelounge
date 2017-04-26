@@ -765,6 +765,9 @@ kbd {
 	overflow: auto;
 	-webkit-overflow-scrolling: touch;
 	position: absolute;
+}
+
+#chat .channel .chat {
 	right: 180px;
 }
 
@@ -786,18 +789,6 @@ kbd {
 	transition: all .4s;
 	-webkit-transform: translateZ(0);
 	transform: translateZ(0);
-}
-
-#chat .lobby .chat,
-#chat .special .chat,
-#chat .query .chat {
-	right: 0;
-}
-
-#chat .lobby .sidebar,
-#chat .special .sidebar,
-#chat .query .sidebar {
-	display: none;
 }
 
 #chat .show-more {
@@ -1177,6 +1168,10 @@ kbd {
 	width: 100%;
 }
 
+#chat .names-filtered {
+	display: none;
+}
+
 #chat .names .user {
 	display: block;
 	line-height: 1.6;
@@ -1214,6 +1209,10 @@ kbd {
 
 #chat .user-mode.normal:before {
 	content: "Users";
+}
+
+#chat .user-mode-search:before {
+	content: "Search Results";
 }
 
 #loading {
