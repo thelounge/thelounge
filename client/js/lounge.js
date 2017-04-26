@@ -132,7 +132,9 @@ $(function() {
 		$("#sign-in").remove();
 
 		var id = data.active;
-		var target = sidebar.find("[data-id='" + id + "']").trigger("click");
+		var target = sidebar.find("[data-id='" + id + "']").trigger("click", {
+			replaceHistory: true
+		});
 		if (target.length === 0) {
 			var first = sidebar.find(".chan")
 				.eq(0)
@@ -820,7 +822,11 @@ $(function() {
 		}
 
 		if (history && history.pushState) {
-			history.pushState(state, null, null);
+			if (data && data.replaceHistory && history.replaceState) {
+				history.replaceState(state, null, null);
+			} else {
+				history.pushState(state, null, null);
+			}
 		}
 	});
 
