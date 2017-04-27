@@ -300,8 +300,9 @@ $(function() {
 			var nicks = chan.find(".users").data("nicks");
 			if (nicks) {
 				var find = nicks.indexOf(data.msg.from);
-				if (find !== -1 && typeof move === "function") {
-					move(nicks, find, 0);
+				if (find !== -1) {
+					nicks.splice(find, 1);
+					nicks.unshift(data.msg.from);
 				}
 			}
 		}
@@ -389,9 +390,9 @@ $(function() {
 			.attr("placeholder", nicks.length + " " + (nicks.length === 1 ? "user" : "users"));
 
 		users
+			.data("nicks", nicks)
 			.find(".names-original")
-			.html(templates.user(data))
-			.data("nicks", nicks);
+			.html(templates.user(data));
 
 		// Refresh user search
 		if (search.val().length) {
@@ -1380,7 +1381,13 @@ $(function() {
 	}
 
 	function completeNicks(word) {
-		const users = chat.find(".active").find(".names-original");
+		const users = chat.find(".active .users");
+
+		// Lobbies and private chats do not have an user list
+		if (!users.length) {
+			return [];
+		}
+
 		const words = users.data("nicks");
 
 		return $.grep(
@@ -1532,17 +1539,6 @@ $(function() {
 		toggleNickEditor(false);
 
 		$("#nick-value").text(nick);
-	}
-
-	function move(array, old_index, new_index) {
-		if (new_index >= array.length) {
-			var k = new_index - array.length;
-			while ((k--) + 1) {
-				this.push(undefined);
-			}
-		}
-		array.splice(new_index, 0, array.splice(old_index, 1)[0]);
-		return array;
 	}
 
 	function toggleNotificationMarkers(newState) {
