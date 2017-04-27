@@ -17,6 +17,7 @@ const slideoutMenu = require("./libs/slideout");
 const templates = require("../views");
 const socket = require("./socket");
 const constants = require("./constants");
+const condenseObj = require("./condense");
 
 $(function() {
 	var sidebar = $("#sidebar, #footer");
@@ -233,166 +234,6 @@ $(function() {
 		return msg;
 	}
 
-	function moveCondensedNameData(input) {
-		var list = input.list || undefined;
-		var msg = input.msg || undefined;
-		var empty = input.empty || [];
-		var fill = input.fill || [];
-		if (list === undefined || msg === undefined) {
-			return {};
-		}
-
-		empty.forEach((type) => {
-			list[type] = list[type] || [];
-			list[type].splice(list[type].findIndex((m)=>{
-				return m.from === msg.from;
-			}), 1);
-		});
-		fill.forEach((type) => {
-			list[type] = list[type] || [];
-			list[type].push(msg);
-		});
-		return list;
-	}
-
-	function groupCondensedMessages(input) {
-		var messages = input.messages || [];
-		var output = {};
-		// generate empty array output of every type
-		for (var j in constants.condensedTypes) {
-			output[constants.condensedTypes[j]] = [];
-		}
-		// message order is imporant!
-		var length = messages.length;
-		for (var i = 0; i < length ; i++) {
-			var msg = messages[i];
-			var type = msg.type;
-			// push message to type list
-			output[type].push(msg);
-			// modify lists on specific combinations
-			if (type === "quit" || type === "part") {
-				// join/part->quit => ripout
-				if (output.join.find((m)=>{
-					return m.from === msg.from;
-				})) {
-					output = moveCondensedNameData({
-						msg: msg,
-						list: output,
-						empty: ["quit", "part", "popin", "join"],
-						fill: ["ripout"]
-					});
-				}
-
-				// popin->quit => ripout
-				if (output.popin.find((m)=>{
-					return m.from === msg.from;
-				})) {
-					output = moveCondensedNameData({
-						msg: msg,
-						list: output,
-						empty: ["quit", "part", "popin"],
-						fill: ["ripout"]
-					});
-				}
-			} else if (type === "join") {
-				// quit->join => popin
-				if (output.quit.find((m)=>{
-					return m.from === msg.from;
-				})) {
-					output = moveCondensedNameData({
-						msg: msg,
-						list: output,
-						empty: ["join", "ripout", "part", "quit"],
-						fill: ["popin"]
-					});
-				}
-				// part->join => popin
-				if (output.part.find((m)=>{
-					return m.from === msg.from;
-				})) {
-					output = moveCondensedNameData({
-						msg: msg,
-						list: output,
-						empty: ["join", "ripout", "part"],
-						fill: ["popin"]
-					});
-				}
-				// ripout->join => popin
-				if (output.ripout.find((m)=>{
-					return m.from === msg.from;
-				})) {
-					output = moveCondensedNameData({
-						msg: msg,
-						list: output,
-						empty: ["join", "ripout"],
-						fill: ["popin"]
-					});
-				}
-			}
-		}
-		return output;
-	}
-
-	function updateCondensedText(condensed, addedTypes) {
-		var condensedMsg = condensed.data("condensedMsg") || [];
-		// for in loop loses order!
-		for (var k = addedTypes.length - 1; k >= 0; k--) {
-			// store condensed messages
-			condensedMsg.push($.extend({}, addedTypes[k].msg, {type: addedTypes[k].type}));
-			condensed.data("condensedMsg", condensedMsg);
-		}
-		var groupedMessages = groupCondensedMessages({messages: condensedMsg});
-
-		var plurals = {
-			join: {
-				plural: "joined"
-			},
-			mode: {
-				plural: "changed mode"
-			},
-			nick: {
-				plural: "changed name"
-			},
-			part: {
-				plural: "leaved",
-			},
-			quit: {
-				plural: "quit",
-			},
-			popin: {
-				plural: "popped in",
-			},
-			ripout: {
-				plural: "ripped out",
-			}
-		};
-
-		var text = "";
-		var maxnames = 3;
-
-		for (var type in groupedMessages) {
-			var list = groupedMessages[type];
-			var count = list.length;
-			if (count) {
-				text += text === "" ? "" : " | ";
-				if (count === 1) {
-					text += list[0].from;
-				} else if (count > 1 && count <= maxnames) {
-					var last = list.pop();
-					text += list.map(function(n) {
-						return n.from;
-					}).join(", ") + " and " + last.from;
-				} else if (count > maxnames) {
-					text += list.map(function(m) {
-						return m.from;
-					}).slice(0,maxnames).join(", ") + " and " + (count - maxnames) + " others";
-				}
-				text += " " + plurals[type].plural;
-			}
-		}
-		condensed.children(".condensed-msg").text(text);
-	}
-
 	function appendMessage(input) {
 		var container = input.container || undefined;
 		var chan = input.chan || undefined;
@@ -408,16 +249,22 @@ $(function() {
 			var msgDate = (new Date(htmlMessage.attr("data-time"))).toDateString();
 			if (lastChild && $(lastChild).hasClass("condensed") && !$(htmlMessage).hasClass("message") && lastDate === msgDate) {
 				lastChild.append(htmlMessage);
-				updateCondensedText(lastChild, [{type: messageType, msg: msg} ]);
+				let savedMessages = lastChild.data("savedMessages") || [];
+				savedMessages.push(msg);
+				lastChild.data("savedMessages", savedMessages);
+				lastChild.children(".condensed-msg").text(condenseObj.condense(savedMessages));
 			} else if (lastChild && $(lastChild).is(condensedTypesClasses)) {
 				var condensed = buildChatMessage({msg: {type: "condensed", time: htmlMessage.attr("data-time")}, chan: chan});
 				condensed.append(lastChild);
 				condensed.append(htmlMessage);
 				container.append(condensed);
-				updateCondensedText(condensed, [
-					{type: messageType, msg: msg},
-					{type: lastChild.attr("data-type"), msg: lastChild.data("msg")},
-				]);
+				let lastmsg = lastChild.data("msg");
+				let savedMessages = condensed.data("savedMessages") || [];
+				savedMessages.push(msg);
+				savedMessages.push(lastmsg);
+				condensed.data("savedMessages", savedMessages);
+				savedMessages = condensed.data("savedMessages");
+				condensed.children(".condensed-msg").text(condenseObj.condense(savedMessages));
 			} else {
 				htmlMessage.data("msg", msg);
 				container.append(htmlMessage);

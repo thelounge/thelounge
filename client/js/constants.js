@@ -54,8 +54,6 @@ var condensedTypes = [
 	"nick",
 	"part",
 	"quit",
-	"popin",
-	"ripout",
 ];
 
 module.exports = {
