@@ -1,6 +1,6 @@
-<span role="button" class="user {{colorClass from}}" data-name="{{from}}">{{mode}}{{from}}</span>
+{{> ../user_name}}
 has kicked
-<span role="button" class="user {{colorClass target}}" data-name="{{target}}">{{target}}</span>
+{{> ../user_name_target}}
 {{#if text}}
 	<i class="part-reason">({{{parse text}}})</i>
 {{/if}}

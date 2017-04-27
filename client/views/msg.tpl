@@ -4,7 +4,7 @@
 	</span>
 	<span class="from">
 		{{#if from}}
-		<span role="button" class="user {{colorClass from}}" data-name="{{from}}">{{mode}}{{from}}</span>
+			{{> user_name}}
 		{{/if}}
 	</span>
 	{{#equal type "toggle"}}
