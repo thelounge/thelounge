@@ -169,7 +169,6 @@ kbd {
 #footer .icon,
 #chat .count:before,
 #settings #play:before,
-#form #cycle-nicks:before,
 #form #submit:before,
 #chat .invite .from:before,
 #chat .condensed .expander:before,
@@ -216,8 +215,6 @@ kbd {
 #footer .settings:before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
 #footer .help:before { content: "\f059"; /* http://fontawesome.io/icon/question/ */ }
 #footer .sign-out:before { content: "\f011"; /* http://fontawesome.io/icon/power-off/ */ }
-
-#form #cycle-nicks:before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
 
 #form #submit:before { content: "\f1d8"; /* http://fontawesome.io/icon/paper-plane/ */ }
 
@@ -1368,8 +1365,7 @@ kbd {
 
 #help .help-item .subject {
 	white-space: nowrap;
-	padding-right: 10px;
-	min-width: 150px;
+	padding-right: 15px;
 }
 
 #help .help-item .description p {
@@ -1485,22 +1481,16 @@ kbd {
 	align-self: center;
 }
 
-#form #cycle-nicks,
 #form #submit {
 	color: #9ca5b4;
 	font-size: 14px;
 	height: 32px;
 	transition: opacity .2s;
-	width: 24px;
+	width: 32px;
 	-webkit-flex: 0 0 auto;
 	flex: 0 0 auto;
 }
 
-#form #submit {
-	margin-right: 4px;
-}
-
-#form #cycle-nicks:hover,
 #form #submit:hover {
 	opacity: .6;
 }
@@ -1516,7 +1506,8 @@ kbd {
 	background: transparent;
 }
 
-#context-menu {
+#context-menu,
+.textcomplete-menu {
 	position: absolute;
 	list-style: none;
 	margin: 0;
@@ -1535,7 +1526,8 @@ kbd {
 	background-color: rgba(0, 0, 0, .1);
 }
 
-.context-menu-item {
+.context-menu-item,
+.textcomplete-item {
 	cursor: pointer;
 	display: block;
 	padding: 4px 8px;
@@ -1544,12 +1536,30 @@ kbd {
 	margin-bottom: 6px;
 }
 
-.context-menu-item:hover {
+.context-menu-item:hover,
+.textcomplete-item:hover,
+.textcomplete-menu .active {
 	background-color: #f6f6f6;
 }
 
-.context-menu-item:before {
+.context-menu-item:before,
+.textcomplete-item:before {
 	width: 20px;
+	display: inline-block;
+}
+
+.textcomplete-item a {
+	color: #333;
+}
+
+.textcomplete-item a:hover {
+	opacity: 1;
+}
+
+.textcomplete-item .emoji {
+	margin-right: 8px;
+	width: 16px;
+	text-align: center;
 	display: inline-block;
 }
 

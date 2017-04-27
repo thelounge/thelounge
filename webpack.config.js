@@ -13,6 +13,7 @@ let config = {
 		"js/bundle.vendor.js": [
 			"handlebars/runtime",
 			"jquery",
+			"jquery-textcomplete",
 			"jquery-ui/ui/widgets/sortable",
 			"moment",
 			"mousetrap",

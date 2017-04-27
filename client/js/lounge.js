@@ -2,12 +2,14 @@
 
 // vendor libraries
 require("jquery-ui/ui/widgets/sortable");
+require("jquery-textcomplete");
 const $ = require("jquery");
 const moment = require("moment");
 const Mousetrap = require("mousetrap");
 const URI = require("urijs");
 
 // our libraries
+const emojiMap = require("./libs/simplemap.json");
 require("./libs/jquery/inputhistory");
 require("./libs/jquery/stickyscroll");
 require("./libs/jquery/tabcomplete");
@@ -17,6 +19,7 @@ const slideoutMenu = require("./libs/slideout");
 const templates = require("../views");
 const socket = require("./socket");
 const constants = require("./constants");
+const storage = require("./localStorage");
 const condenseObj = require("./condense");
 
 $(function() {
@@ -41,15 +44,73 @@ $(function() {
 
 	var favicon = $("#favicon");
 
-	function setLocalStorageItem(key, value) {
-		try {
-			window.localStorage.setItem(key, value);
-		} catch (e) {
-			// Do nothing. If we end up here, web storage quota exceeded, or user is
-			// in Safari's private browsing where localStorage's setItem is not
-			// available. See http://stackoverflow.com/q/14555347/1935861.
-		}
-	}
+	// Autocompletion Strategies
+
+	const emojiStrategy = {
+		id: "emoji",
+		match: /\B:([-+\w]*)$/,
+		search(term, callback) {
+			callback(Object.keys(emojiMap).filter(name => name.indexOf(term) === 0));
+		},
+		template(value) {
+			return `<span class="emoji">${emojiMap[value]}</span> ${value}`;
+		},
+		replace(value) {
+			return emojiMap[value];
+		},
+		index: 1
+	};
+
+	const nicksStrategy = {
+		id: "nicks",
+		match: /\B(@([a-zA-Z_[\]\\^{}|`@][a-zA-Z0-9_[\]\\^{}|`-]*)?)$/,
+		search(term, callback) {
+			term = term.slice(1);
+			if (term[0] === "@") {
+				callback(completeNicks(term.slice(1)).map(val => "@" + val));
+			} else {
+				callback(completeNicks(term));
+			}
+		},
+		template(value) {
+			return value;
+		},
+		replace(value) {
+			return value;
+		},
+		index: 1
+	};
+
+	const chanStrategy = {
+		id: "chans",
+		match: /\B((#|\+|&|![A-Z0-9]{5})([^\x00\x0A\x0D\x20\x2C\x3A]+(:[^\x00\x0A\x0D\x20\x2C\x3A]*)?)?)$/,
+		search(term, callback, match) {
+			callback(completeChans(match[0]));
+		},
+		template(value) {
+			return value;
+		},
+		replace(value) {
+			return value;
+		},
+		index: 1
+	};
+
+	const commandStrategy = {
+		id: "commands",
+		match: /^\/(\w*)$/,
+		search(term, callback) {
+			callback(completeCommands("/" + term));
+		},
+		template(value) {
+			return value;
+		},
+		replace(value) {
+			return value;
+		},
+		index: 1
+	};
+
 	socket.on("auth", function(data) {
 		var login = $("#sign-in");
 		var token;
@@ -57,14 +118,14 @@ $(function() {
 		login.find(".btn").prop("disabled", false);
 
 		if (!data.success) {
-			window.localStorage.removeItem("token");
+			storage.remove("token");
 
 			var error = login.find(".error");
 			error.show().closest("form").one("submit", function() {
 				error.hide();
 			});
 		} else {
-			token = window.localStorage.getItem("token");
+			token = storage.get("token");
 			if (token) {
 				$("#loading-page-message").text("Authorizing…");
 				socket.emit("auth", {token: token});
@@ -73,7 +134,7 @@ $(function() {
 
 		var input = login.find("input[name='user']");
 		if (input.val() === "") {
-			input.val(window.localStorage.getItem("user") || "");
+			input.val(storage.get("user") || "");
 		}
 		if (token) {
 			return;
@@ -107,8 +168,8 @@ $(function() {
 			});
 		}
 
-		if (data.token && window.localStorage.getItem("token") !== null) {
-			setLocalStorageItem("token", data.token);
+		if (data.token && storage.get("token") !== null) {
+			storage.set("token", data.token);
 		}
 
 		passwordForm
@@ -131,9 +192,9 @@ $(function() {
 		}
 
 		if (data.token && $("#sign-in-remember").is(":checked")) {
-			setLocalStorageItem("token", data.token);
+			storage.set("token", data.token);
 		} else {
-			window.localStorage.removeItem("token");
+			storage.remove("token");
 		}
 
 		$("body").removeClass("signed-out");
@@ -141,7 +202,9 @@ $(function() {
 		$("#sign-in").remove();
 
 		var id = data.active;
-		var target = sidebar.find("[data-id='" + id + "']").trigger("click");
+		var target = sidebar.find("[data-id='" + id + "']").trigger("click", {
+			replaceHistory: true
+		});
 		if (target.length === 0) {
 			var first = sidebar.find(".chan")
 				.eq(0)
@@ -199,7 +262,7 @@ $(function() {
 		var chan = chat.find(target);
 		var template = "msg";
 
-		if (!data.msg.highlight && !data.msg.self && (type === "message" || type === "notice") && highlights.some(function(h) {
+		if (!data.msg.highlight && !data.msg.self && (type === "message" || type === "notice") && options.highlights.some(function(h) {
 			return data.msg.text.toLocaleLowerCase().indexOf(h.toLocaleLowerCase()) > -1;
 		})) {
 			data.msg.highlight = true;
@@ -305,6 +368,8 @@ $(function() {
 			// TODO: If the message is far off in the history, we still need to append the marker into DOM
 			if (!first.length) {
 				channel.prepend(templates.unread_marker());
+			} else if (first.parent().hasClass("condensed")) {
+				first.parent().before(templates.unread_marker());
 			} else {
 				first.before(templates.unread_marker());
 			}
@@ -580,126 +645,9 @@ $(function() {
 
 	socket.on("names", renderChannelUsers);
 
-	var userStyles = $("#user-specified-css");
-	var highlights = [];
-	var options = $.extend({
-		coloredNicks: true,
-		desktopNotifications: false,
-		join: true,
-		links: true,
-		mode: true,
-		motd: true,
-		nick: true,
-		notification: true,
-		notifyAllMessages: false,
-		part: true,
-		quit: true,
-		theme: $("#theme").attr("href").replace(/^themes\/(.*).css$/, "$1"), // Extracts default theme name, set on the server configuration
-		thumbnails: true,
-		userStyles: userStyles.text(),
-	}, JSON.parse(window.localStorage.getItem("settings")));
+	var options = require("./options");
 
 	var windows = $("#windows");
-
-	(function SettingsScope() {
-		var settings = $("#settings");
-
-		for (var i in options) {
-			if (i === "userStyles") {
-				if (!/[?&]nocss/.test(window.location.search)) {
-					$(document.head).find("#user-specified-css").html(options[i]);
-				}
-				settings.find("#user-specified-css-input").val(options[i]);
-			} else if (i === "highlights") {
-				settings.find("input[name=" + i + "]").val(options[i]);
-			} else if (i === "theme") {
-				$("#theme").attr("href", "themes/" + options[i] + ".css");
-				settings.find("select[name=" + i + "]").val(options[i]);
-			} else if (options[i]) {
-				settings.find("input[name=" + i + "]").prop("checked", true);
-			}
-		}
-
-		settings.on("change", "input, select, textarea", function() {
-			var self = $(this);
-			var name = self.attr("name");
-
-			if (self.attr("type") === "checkbox") {
-				options[name] = self.prop("checked");
-			} else {
-				options[name] = self.val();
-			}
-
-			setLocalStorageItem("settings", JSON.stringify(options));
-
-			if ([
-				"join",
-				"mode",
-				"motd",
-				"nick",
-				"part",
-				"quit",
-				"notifyAllMessages",
-			].indexOf(name) !== -1) {
-				chat.toggleClass("hide-" + name, !self.prop("checked"));
-			} else if (name === "coloredNicks") {
-				chat.toggleClass("colored-nicks", self.prop("checked"));
-			} else if (name === "theme") {
-				$("#theme").attr("href", "themes/" + options[name] + ".css");
-			} else if (name === "userStyles") {
-				userStyles.html(options[name]);
-			} else if (name === "highlights") {
-				var highlightString = options[name];
-				highlights = highlightString.split(",").map(function(h) {
-					return h.trim();
-				}).filter(function(h) {
-					// Ensure we don't have empty string in the list of highlights
-					// otherwise, users get notifications for everything
-					return h !== "";
-				});
-			}
-		}).find("input")
-			.trigger("change");
-
-		$("#desktopNotifications").on("change", function() {
-			if ($(this).prop("checked") && Notification.permission !== "granted") {
-				Notification.requestPermission(updateDesktopNotificationStatus);
-			}
-		});
-
-		// Updates the checkbox and warning in settings when the Settings page is
-		// opened or when the checkbox state is changed.
-		// When notifications are not supported, this is never called (because
-		// checkbox state can not be changed).
-		var updateDesktopNotificationStatus = function() {
-			if (Notification.permission === "denied") {
-				desktopNotificationsCheckbox.attr("disabled", true);
-				desktopNotificationsCheckbox.attr("checked", false);
-				warningBlocked.show();
-			} else {
-				if (Notification.permission === "default" && desktopNotificationsCheckbox.prop("checked")) {
-					desktopNotificationsCheckbox.attr("checked", false);
-				}
-				desktopNotificationsCheckbox.attr("disabled", false);
-				warningBlocked.hide();
-			}
-		};
-
-		// If browser does not support notifications, override existing settings and
-		// display proper message in settings.
-		var desktopNotificationsCheckbox = $("#desktopNotifications");
-		var warningUnsupported = $("#warnUnsupportedDesktopNotifications");
-		var warningBlocked = $("#warnBlockedDesktopNotifications");
-		warningBlocked.hide();
-		if (("Notification" in window)) {
-			warningUnsupported.hide();
-			windows.on("show", "#settings", updateDesktopNotificationStatus);
-		} else {
-			options.desktopNotifications = false;
-			desktopNotificationsCheckbox.attr("disabled", true);
-			desktopNotificationsCheckbox.attr("checked", false);
-		}
-	}());
 
 	var viewport = $("#viewport");
 	var sidebarSlide = slideoutMenu(viewport[0], sidebar[0]);
@@ -814,7 +762,18 @@ $(function() {
 
 			chat.find(".chan.active .chat").trigger("msg.sticky"); // fix growing
 		})
-		.tab(complete, {hint: false});
+		.tab(completeNicks, {hint: false})
+		.textcomplete([emojiStrategy, nicksStrategy, chanStrategy, commandStrategy], {
+			dropdownClassName: "textcomplete-menu",
+			placement: "top"
+		}).on({
+			"textComplete:show": function() {
+				$(this).data("autocompleting", true);
+			},
+			"textComplete:hide": function() {
+				$(this).data("autocompleting", false);
+			}
+		});
 
 	var focus = $.noop;
 	if (!("ontouchstart" in window || navigator.maxTouchPoints > 0)) {
@@ -846,12 +805,6 @@ $(function() {
 	var forceFocus = function() {
 		input.trigger("click").focus();
 	};
-
-	// Cycle through nicks for the current word, just like hitting "Tab"
-	$("#cycle-nicks").on("click", function() {
-		input.triggerHandler($.Event("keydown.tabcomplete", {which: 9}));
-		forceFocus();
-	});
 
 	$("#form").on("submit", function(e) {
 		e.preventDefault();
@@ -1006,7 +959,11 @@ $(function() {
 		}
 
 		if (history && history.pushState) {
-			history.pushState(state, null, null);
+			if (data && data.replaceHistory && history.replaceState) {
+				history.replaceState(state, null, null);
+			} else {
+				history.pushState(state, null, null);
+			}
 		}
 	});
 
@@ -1088,7 +1045,7 @@ $(function() {
 	});
 
 	sidebar.on("click", "#sign-out", function() {
-		window.localStorage.removeItem("token");
+		storage.remove("token");
 		location.reload();
 	});
 
@@ -1301,7 +1258,7 @@ $(function() {
 			}
 		});
 		if (values.user) {
-			setLocalStorageItem("user", values.user);
+			storage.set("user", values.user);
 		}
 		socket.emit(
 			event, values
@@ -1456,18 +1413,31 @@ $(function() {
 			.find(".messages .msg, .date-marker").remove();
 	}
 
-	function complete(word) {
-		var words = constants.commands.slice();
-		var users = chat.find(".active").find(".users");
-		var nicks = users.data("nicks");
+	function completeNicks(word) {
+		const users = chat.find(".active").find(".users");
+		const words = users.data("nicks");
 
-		for (var i in nicks) {
-			words.push(nicks[i]);
-		}
+		return $.grep(
+			words,
+			w => !w.toLowerCase().indexOf(word.toLowerCase())
+		);
+	}
+
+	function completeCommands(word) {
+		const words = constants.commands.slice();
+
+		return $.grep(
+			words,
+			w => !w.toLowerCase().indexOf(word.toLowerCase())
+		);
+	}
+
+	function completeChans(word) {
+		const words = [];
 
 		sidebar.find(".chan")
 			.each(function() {
-				var self = $(this);
+				const self = $(this);
 				if (!self.hasClass("lobby")) {
 					words.push(self.data("title"));
 				}
@@ -1475,9 +1445,7 @@ $(function() {
 
 		return $.grep(
 			words,
-			function(w) {
-				return !w.toLowerCase().indexOf(word.toLowerCase());
-			}
+			w => !w.toLowerCase().indexOf(word.toLowerCase())
 		);
 	}
 

@@ -70,9 +70,6 @@
 								--><span id="save-nick-tooltip" class="tooltipped tooltipped-e" aria-label="Save"><button id="submit-nick" type="button" aria-label="Save"></button></span>
 							</span>
 							<textarea id="input" class="mousetrap"></textarea>
-							<span id="cycle-nicks-tooltip" class="tooltipped tooltipped-w tooltipped-no-touch" aria-label="Cycle through nicks">
-								<button id="cycle-nicks" type="button" aria-label="Cycle through nicks"></button>
-							</span>
 							<span id="submit-tooltip" class="tooltipped tooltipped-w tooltipped-no-touch" aria-label="Send message">
 								<button id="submit" type="submit" aria-label="Send message"></button>
 							</span>
@@ -274,7 +271,7 @@
 									{{/each}}
 								</select>
 							</div>
-							{{#unless prefetch}}
+							{{#if prefetch}}
 							<div class="col-sm-12">
 								<h2>Links and URLs</h2>
 							</div>
@@ -290,7 +287,7 @@
 									Auto-expand links
 								</label>
 							</div>
-							{{/unless}}
+							{{/if}}
 							<div class="col-sm-12">
 								<h2>Notifications</h2>
 							</div>
@@ -532,6 +529,49 @@
 							</div>
 						</div>
 
+						<h2>Autocompletion</h2>
+
+						<p>
+							Start typing the following characters followed by any letter to
+							trigger the autocompletion dropdown:
+						</p>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>@</code>
+							</div>
+							<div class="description">
+								<p>Nickname</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>#</code>
+							</div>
+							<div class="description">
+								<p>Channel</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/</code>
+							</div>
+							<div class="description">
+								<p>Commands (see list of commands below)</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>:</code>
+							</div>
+							<div class="description">
+								<p>Emoji</p>
+							</div>
+						</div>
+
 						<h2>Commands</h2>
 
 						<p>All commands can be autocompleted with <kbd>tab</kbd>.</p>
@@ -551,6 +591,16 @@
 							</div>
 							<div class="description">
 								<p>Remove your away status (set with <code>/away</code>).</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/ban nick</code>
+							</div>
+							<div class="description">
+								<p>Ban (<code>+b</code>) a user from the current channel.
+								This can be a nickname or a hostmask.</p>
 							</div>
 						</div>
 
@@ -796,6 +846,16 @@
 							</div>
 							<div class="description">
 								<p>Set the topic in the current channel.</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/unban nick</code>
+							</div>
+							<div class="description">
+								<p>Unban (<code>-b</code>) a user from the current channel.</p>
+									This can be a nickname or a hostmask.</p>
 							</div>
 						</div>
 
