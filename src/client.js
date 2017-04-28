@@ -66,8 +66,9 @@ function Client(manager, name, config) {
 	if (typeof config !== "object") {
 		config = {};
 	}
+
 	_.merge(this, {
-		awayMessage: "",
+		awayMessage: config.awayMessage || "",
 		lastActiveChannel: -1,
 		attachedClients: {},
 		config: config,
@@ -482,8 +483,6 @@ Client.prototype.clientAttach = function(socketId) {
 	var client = this;
 	var save = false;
 
-	client.attachedClients[socketId] = client.lastActiveChannel;
-
 	if (client.awayMessage && _.size(client.attachedClients) === 0) {
 		client.networks.forEach(function(network) {
 			// Only remove away on client attachment if
@@ -493,6 +492,8 @@ Client.prototype.clientAttach = function(socketId) {
 			}
 		});
 	}
+
+	client.attachedClients[socketId] = client.lastActiveChannel;
 
 	// Update old networks to store ip and hostmask
 	client.networks.forEach(network => {
@@ -539,7 +540,6 @@ Client.prototype.save = _.debounce(function SaveClient() {
 
 	const client = this;
 	let json = {};
-	json.awayMessage = client.awayMessage;
 	json.networks = this.networks.map(n => n.export());
 	client.manager.updateUser(client.name, json);
 }, 1000, {maxWait: 10000});
