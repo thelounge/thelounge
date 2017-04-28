@@ -762,6 +762,7 @@ kbd {
 #chat .chat {
 	bottom: 0;
 	left: 0;
+	right: 0;
 	overflow: auto;
 	-webkit-overflow-scrolling: touch;
 	position: absolute;
