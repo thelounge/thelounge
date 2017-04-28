@@ -1856,6 +1856,10 @@ kbd {
 		display: block;
 	}
 
+	#chat .channel .chat {
+		right: 0;
+	}
+
 	#chat .sidebar {
 		right: -180px;
 	}
