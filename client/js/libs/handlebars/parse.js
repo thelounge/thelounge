@@ -24,10 +24,24 @@ function createFragment(fragment) {
 	if (fragment.underline) {
 		classes.push("irc-underline");
 	}
+
+	let attributes = classes.length ? ` class="${classes.join(" ")}"` : "";
 	const escapedText = Handlebars.Utils.escapeExpression(fragment.text);
-	if (classes.length) {
-		return `<span class="${classes.join(" ")}">${escapedText}</span>`;
+
+	if (fragment.hexColor) {
+		attributes += ` style="color:#${fragment.hexColor}`;
+
+		if (fragment.hexBgColor) {
+			attributes += `;background-color:#${fragment.hexBgColor}`;
+		}
+
+		attributes += "\"";
 	}
+
+	if (attributes.length) {
+		return `<span${attributes}>${escapedText}</span>`;
+	}
+
 	return escapedText;
 }
 

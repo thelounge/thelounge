@@ -3,6 +3,7 @@
 // Styling control codes
 const BOLD = "\x02";
 const COLOR = "\x03";
+const HEX_COLOR = "\x04";
 const RESET = "\x0f";
 const REVERSE = "\x16";
 const ITALIC = "\x1d";
@@ -11,6 +12,9 @@ const UNDERLINE = "\x1f";
 // Color code matcher, with format `XX,YY` where both `XX` and `YY` are
 // integers, `XX` is the text color and `YY` is an optional background color.
 const colorRx = /^(\d{1,2})(?:,(\d{1,2}))?/;
+
+// 6-char Hex color code matcher
+const hexColorRx = /^([0-9a-f]{6})(?:,([0-9a-f]{6}))?/i;
 
 // Represents all other control codes that to be ignored/filtered from the text
 const controlCodesRx = /[\u0000-\u001F]/g;
@@ -26,12 +30,14 @@ function parseStyle(text) {
 
 	// At any given time, these carry style information since last time a styling
 	// control code was met.
-	let colorCodes, bold, textColor, bgColor, reverse, italic, underline;
+	let colorCodes, bold, textColor, bgColor, hexColor, hexBgColor, reverse, italic, underline;
 
 	const resetStyle = () => {
 		bold = false;
 		textColor = undefined;
 		bgColor = undefined;
+		hexColor = undefined;
+		hexBgColor = undefined;
 		reverse = false;
 		italic = false;
 		underline = false;
@@ -57,6 +63,8 @@ function parseStyle(text) {
 				bold,
 				textColor,
 				bgColor,
+				hexColor,
+				hexBgColor,
 				reverse,
 				italic,
 				underline,
@@ -113,6 +121,28 @@ function parseStyle(text) {
 			}
 			break;
 
+		case HEX_COLOR:
+			emitFragment();
+
+			colorCodes = text.slice(position + 1).match(hexColorRx);
+
+			if (colorCodes) {
+				hexColor = colorCodes[1].toUpperCase();
+				if (colorCodes[2]) {
+					hexBgColor = colorCodes[2].toUpperCase();
+				}
+				// Color code length is > 1, so bump the current position cursor by as
+				// much (and reset the start cursor for the current text block as well)
+				position += colorCodes[0].length;
+				start = position + 1;
+			} else {
+				// If no color codes were found, toggles back to no colors (like BOLD).
+				hexColor = undefined;
+				hexBgColor = undefined;
+			}
+
+			break;
+
 		case REVERSE:
 			emitFragment();
 			reverse = !reverse;
@@ -139,7 +169,7 @@ function parseStyle(text) {
 	return result;
 }
 
-const properties = ["bold", "textColor", "bgColor", "italic", "underline", "reverse"];
+const properties = ["bold", "textColor", "bgColor", "hexColor", "hexBgColor", "italic", "underline", "reverse"];
 
 function prepare(text) {
 	return parseStyle(text)
