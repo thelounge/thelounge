@@ -7,6 +7,7 @@ const commands = [
 	"/banlist",
 	"/close",
 	"/connect",
+	"/ctcp",
 	"/deop",
 	"/devoice",
 	"/disconnect",
