@@ -5,23 +5,36 @@ var pkg = require("../package.json");
 var Client = require("./client");
 var ClientManager = require("./clientManager");
 var express = require("express");
+var expressHandlebars = require("express-handlebars");
 var fs = require("fs");
+var path = require("path");
 var io = require("socket.io");
 var dns = require("dns");
 var Helper = require("./helper");
 var ldap = require("ldapjs");
 var colors = require("colors/safe");
+const Identification = require("./identification");
 
 var manager = null;
 var authFunction = localAuth;
 
 module.exports = function() {
-	manager = new ClientManager();
+	log.info(`The Lounge ${colors.green(Helper.getVersion())} \
+(node ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${process.arch})`);
+	log.info(`Configuration file: ${colors.green(Helper.CONFIG_PATH)}`);
+
+	if (!fs.existsSync("client/js/bundle.js")) {
+		log.error(`The client application was not built. Run ${colors.bold("NODE_ENV=production npm run build")} to resolve this.`);
+		process.exit();
+	}
 
 	var app = express()
 		.use(allRequests)
 		.use(index)
-		.use(express.static("client"));
+		.use(express.static("client"))
+		.engine("html", expressHandlebars({extname: ".html"}))
+		.set("view engine", "html")
+		.set("views", path.join(__dirname, "..", "client"));
 
 	var config = Helper.config;
 	var server = null;
@@ -32,38 +45,51 @@ module.exports = function() {
 
 	if (!config.https.enable) {
 		server = require("http");
-		server = server.createServer(app).listen(config.port, config.host);
+		server = server.createServer(app);
 	} else {
-		server = require("spdy");
 		const keyPath = Helper.expandHome(config.https.key);
 		const certPath = Helper.expandHome(config.https.certificate);
-		if (!config.https.key.length || !fs.existsSync(keyPath)) {
+		const caPath = Helper.expandHome(config.https.ca);
+
+		if (!keyPath.length || !fs.existsSync(keyPath)) {
 			log.error("Path to SSL key is invalid. Stopping server...");
 			process.exit();
 		}
-		if (!config.https.certificate.length || !fs.existsSync(certPath)) {
+
+		if (!certPath.length || !fs.existsSync(certPath)) {
 			log.error("Path to SSL certificate is invalid. Stopping server...");
 			process.exit();
 		}
-		server = server.createServer({
-			key: fs.readFileSync(keyPath),
-			cert: fs.readFileSync(certPath)
-		}, app).listen(config.port, config.host);
-	}
 
-	if (config.identd.enable) {
-		if (manager.identHandler) {
-			log.warn("Using both identd and oidentd at the same time!");
+		if (caPath.length && !fs.existsSync(caPath)) {
+			log.error("Path to SSL ca bundle is invalid. Stopping server...");
+			process.exit();
 		}
 
-		require("./identd").start(config.identd.port);
+		server = require("spdy");
+		server = server.createServer({
+			key: fs.readFileSync(keyPath),
+			cert: fs.readFileSync(certPath),
+			ca: caPath ? fs.readFileSync(caPath) : undefined
+		}, app);
 	}
+
+	server.listen({
+		port: config.port,
+		host: config.host,
+	}, () => {
+		const protocol = config.https.enable ? "https" : "http";
+		var address = server.address();
+		log.info(`Available on ${colors.green(protocol + "://" + address.address + ":" + address.port + "/")} \
+in ${config.public ? "public" : "private"} mode`);
+	});
 
 	if (!config.public && (config.ldap || {}).enable) {
 		authFunction = ldapAuth;
 	}
 
 	var sockets = io(server, {
+		serveClient: false,
 		transports: config.transports
 	});
 
@@ -75,25 +101,11 @@ module.exports = function() {
 		}
 	});
 
-	manager.sockets = sockets;
+	manager = new ClientManager();
 
-	const protocol = config.https.enable ? "https" : "http";
-	const host = config.host || "*";
-
-	log.info(`The Lounge ${colors.green(Helper.getVersion())} is now running \
-using node ${colors.green(process.versions.node)} on ${colors.green(process.platform)} (${process.arch})`);
-	log.info(`Configuration file: ${colors.green(Helper.CONFIG_PATH)}`);
-	log.info(`Available on ${colors.green(protocol + "://" + host + ":" + config.port + "/")} \
-in ${config.public ? "public" : "private"} mode`);
-	log.info(`Press Ctrl-C to stop\n`);
-
-	if (!config.public) {
-		if ("autoload" in config) {
-			log.warn(`Autoloading users is now always enabled. Please remove the ${colors.yellow("autoload")} option from your configuration file.`);
-		}
-
-		manager.autoloadUsers();
-	}
+	new Identification((identHandler) => {
+		manager.init(identHandler, sockets);
+	});
 };
 
 function getClientIp(req) {
@@ -118,27 +130,23 @@ function index(req, res, next) {
 		return next();
 	}
 
-	return fs.readFile("client/index.html", "utf-8", function(err, file) {
-		if (err) {
-			throw err;
-		}
-
-		var data = _.merge(
-			pkg,
-			Helper.config
-		);
-		data.gitCommit = Helper.getGitCommit();
-		data.themes = fs.readdirSync("client/themes/").filter(function(themeFile) {
-			return themeFile.endsWith(".css");
-		}).map(function(css) {
-			return css.slice(0, -4);
-		});
-		var template = _.template(file);
-		res.setHeader("Content-Security-Policy", "default-src *; connect-src 'self' ws: wss:; style-src * 'unsafe-inline'; script-src 'self'; child-src 'self'; object-src 'none'; form-action 'none'; referrer no-referrer;");
-		res.setHeader("Content-Type", "text/html");
-		res.writeHead(200);
-		res.end(template(data));
+	var data = _.merge(
+		pkg,
+		Helper.config
+	);
+	data.gitCommit = Helper.getGitCommit();
+	data.themes = fs.readdirSync("client/themes/").filter(function(themeFile) {
+		return themeFile.endsWith(".css");
+	}).map(function(css) {
+		const filename = css.slice(0, -4);
+		return {
+			name: filename.charAt(0).toUpperCase() + filename.slice(1),
+			filename: filename
+		};
 	});
+	res.setHeader("Content-Security-Policy", "default-src *; connect-src 'self' ws: wss:; style-src * 'unsafe-inline'; script-src 'self'; child-src 'self'; object-src 'none'; form-action 'none';");
+	res.setHeader("Referrer-Policy", "no-referrer");
+	res.render("index", data);
 }
 
 function init(socket, client) {
@@ -195,27 +203,33 @@ function init(socket, client) {
 						});
 						return;
 					}
-					if (!Helper.password.compare(old || "", client.config.password)) {
-						socket.emit("change-password", {
-							error: "The current password field does not match your account password"
+
+					Helper.password
+						.compare(old || "", client.config.password)
+						.then(matching => {
+							if (!matching) {
+								socket.emit("change-password", {
+									error: "The current password field does not match your account password"
+								});
+								return;
+							}
+							const hash = Helper.password.hash(p1);
+
+							client.setPassword(hash, success => {
+								const obj = {};
+
+								if (success) {
+									obj.success = "Successfully updated your password, all your other sessions were logged out";
+									obj.token = client.config.token;
+								} else {
+									obj.error = "Failed to update your password";
+								}
+
+								socket.emit("change-password", obj);
+							});
+						}).catch(error => {
+							log.error(`Error while checking users password. Error: ${error}`);
 						});
-						return;
-					}
-
-					var hash = Helper.password.hash(p1);
-
-					client.setPassword(hash, function(success) {
-						var obj = {};
-
-						if (success) {
-							obj.success = "Successfully updated your password, all your other sessions were logged out";
-							obj.token = client.config.token;
-						} else {
-							obj.error = "Failed to update your password";
-						}
-
-						socket.emit("change-password", obj);
-					});
 				}
 			);
 		}
@@ -266,23 +280,26 @@ function localAuth(client, user, password, callback) {
 	}
 
 	if (!client.config.password) {
-		log.error("User", user, "with no local password set tried to sign in. (Probably a LDAP user)");
+		log.error(`User ${colors.bold(user)} with no local password set tried to sign in. (Probably a LDAP user)`);
 		return callback(false);
 	}
 
-	var result = Helper.password.compare(password, client.config.password);
+	Helper.password
+		.compare(password, client.config.password)
+		.then(matching => {
+			if (Helper.password.requiresUpdate(client.config.password)) {
+				const hash = Helper.password.hash(password);
 
-	if (result && Helper.password.requiresUpdate(client.config.password)) {
-		var hash = Helper.password.hash(password);
-
-		client.setPassword(hash, function(success) {
-			if (success) {
-				log.info("User", client.name, "logged in and their hashed password has been updated to match new security requirements");
+				client.setPassword(hash, success => {
+					if (success) {
+						log.info(`User ${colors.bold(client.name)} logged in and their hashed password has been updated to match new security requirements`);
+					}
+				});
 			}
+			callback(matching);
+		}).catch(error => {
+			log.error(`Error while checking users password. Error: ${error}`);
 		});
-	}
-
-	return callback(result);
 }
 
 function ldapAuth(client, user, password, callback) {

@@ -1,7 +1,5 @@
 "use strict";
 
-exports.commands = ["mode", "op", "voice", "deop", "devoice"];
-
 var Chan = require("../../models/chan");
 var Msg = require("../../models/msg");
 

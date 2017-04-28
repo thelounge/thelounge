@@ -160,11 +160,11 @@ module.exports = {
 	//
 	// Defines the maximum number of history lines that will be kept in
 	// memory per channel/query, in order to reduce the memory usage of
-	// the server. Negative means unlimited.
+	// the server. Setting this to -1 will keep unlimited amount.
 	//
 	// @type     integer
-	// @default  -1
-	maxHistory: -1,
+	// @default  10000
+	maxHistory: 10000,
 
 	//
 	// Default values for the 'Connect' form.
@@ -287,7 +287,16 @@ module.exports = {
 		// @example  "sslcert/key-cert.pem"
 		// @default  ""
 		//
-		certificate: ""
+		certificate: "",
+
+		//
+		// Path to the CA bundle.
+		//
+		// @type     string
+		// @example  "sslcert/bundle.pem"
+		// @default  ""
+		//
+		ca: ""
 	},
 
 	//
@@ -361,11 +370,24 @@ module.exports = {
 		primaryKey: "uid"
 	},
 
-	// Enables extra debugging output. Turn this on if you experience
-	// IRC connection issues and want to file a bug report.
+	// Extra debugging
 	//
-	// @type     boolean
-	// @default  false
+	// @type     object
+	// @default  {}
 	//
-	debug: false,
+	debug: {
+		// Enables extra debugging output provided by irc-framework.
+		//
+		// @type     boolean
+		// @default  false
+		//
+		ircFramework: false,
+
+		// Enables logging raw IRC messages into each server window.
+		//
+		// @type     boolean
+		// @default  false
+		//
+		raw: false,
+	},
 };

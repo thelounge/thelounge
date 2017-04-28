@@ -1,8 +1,0 @@
-instrumentation:
-  include-all-sources: true
-  excludes:
-    - Gruntfile.js
-    - client/js/libs/*.js
-    - client/js/libs/jquery/*.js
-    - client/js/libs.min.js
-    - client/js/lounge.js

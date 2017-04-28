@@ -1,5 +1,5 @@
-<div class="msg {{type}}{{#if self}} self{{/if}}{{#if highlight}} highlight{{/if}}" data-time="{{time}}">
-	<span class="time" title="{{localetime time}}">
+<div class="msg msg-{{slugify command}} {{type}}{{#if self}} self{{/if}}{{#if highlight}} highlight{{/if}}" data-time="{{time}}">
+	<span class="time tooltipped tooltipped-e" aria-label="{{localetime time}}">
 		{{tz time}}
 	</span>
 	<span class="from">[{{command}}]</span>

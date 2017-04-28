@@ -1,3 +1,5 @@
+import jQuery from "jquery";
+
 /*!
  * inputhistory
  * https://github.com/erming/inputhistory
@@ -18,7 +20,7 @@
 		);
 		
 		var self = this;
-		if (self.size() > 1) {
+		if (self.length > 1) {
 			return self.each(function() {
 				$(this).history(options);
 			});
@@ -32,7 +34,7 @@
 			var key = e.which;
 			switch (key) {
 			case 13: // Enter
-				if (e.shiftKey) {
+				if (e.shiftKey || self.data("autocompleting")) {
 					return; // multiline input
 				}
 				
@@ -54,7 +56,7 @@
 			case 38: // Up
 			case 40: // Down
 				// NOTICE: This is specific to The Lounge.
-				if (e.ctrlKey || e.metaKey) {
+				if (e.ctrlKey || e.metaKey || self.data("autocompleting")) {
 					break;
 				}
 				

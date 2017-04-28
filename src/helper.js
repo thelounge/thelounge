@@ -6,7 +6,7 @@ var path = require("path");
 var os = require("os");
 var fs = require("fs");
 var net = require("net");
-var bcrypt = require("bcrypt-nodejs");
+var bcrypt = require("bcryptjs");
 
 var Helper = {
 	config: null,
@@ -67,6 +67,12 @@ function setHome(homePath) {
 		var userConfig = require(this.CONFIG_PATH);
 		this.config = _.extend(this.config, userConfig);
 	}
+
+	// TODO: Remove in future release
+	if (this.config.debug === true) {
+		log.warn("debug option is now an object, see defaults file for more information.");
+		this.config.debug = {ircFramework: true};
+	}
 }
 
 function getUserConfigPath(name) {
@@ -95,6 +101,9 @@ function ip2hex(address) {
 }
 
 function expandHome(shortenedPath) {
+	if (!shortenedPath) {
+		return "";
+	}
 	var home;
 
 	if (os.homedir) {
@@ -106,7 +115,6 @@ function expandHome(shortenedPath) {
 	}
 
 	home = home.replace("$", "$$$$");
-
 	return path.resolve(shortenedPath.replace(/^~($|\/|\\)/, home + "$1"));
 }
 
@@ -119,5 +127,5 @@ function passwordHash(password) {
 }
 
 function passwordCompare(password, expected) {
-	return bcrypt.compareSync(password, expected);
+	return bcrypt.compare(password, expected);
 }

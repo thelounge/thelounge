@@ -18,6 +18,11 @@ body {
 	font: 16px Inconsolata-g, monospace;
 }
 
+code,
+kbd {
+	font-family: Inconsolata-g, monospace;
+}
+
 a,
 #chat a {
 	color: #00ff0e;
@@ -28,9 +33,12 @@ a:hover,
 	color: #3eff48;
 }
 
-#windows .window h2 {
+#windows .window h2,
+#windows .window h3 {
 	color: #666;
-	font: regular 14px Lato, sans-serif;
+}
+
+#windows .window h2 {
 	border-bottom: none;
 }
 
@@ -39,7 +47,6 @@ a:hover,
 }
 
 #sign-in label {
-	font: 14px Lato, sans-serif;
 	color: #666;
 }
 

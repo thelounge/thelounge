@@ -46,11 +46,6 @@ body {
 	padding: 15px 16px;
 }
 
-#chat .search::-webkit-input-placeholder {
-	color: #99a2b4;
-	opacity: .5;
-}
-
 /* Borders */
 #chat .from,
 #windows .header,
@@ -114,6 +109,11 @@ body {
 	opacity: 1;
 }
 
+/* Increase contrast of some IRC colors */
+.irc-fg2 { color: #0074d9; }
+.irc-fg5 { color: #e969a7; }
+.irc-fg12 { color: #50a8ff; }
+
 /* Message form */
 #form {
 	background: #2a323d;
@@ -153,11 +153,6 @@ body {
 /* Notification dot on the top right corner of the menu icon */
 #viewport .lt:after {
 	border-color: #333c4a;
-}
-
-#chat .unread-marker,
-#chat .date-marker {
-	opacity: 1;
 }
 
 #chat .unread-marker-text:before {
@@ -212,6 +207,10 @@ body {
 	color: #84ce88 !important;
 }
 
+#chat table.channel-list td {
+	color: #ccc;
+}
+
 /* Embeds */
 #chat .toggle-content,
 #chat .toggle-button {
@@ -235,3 +234,22 @@ body {
 	border-radius: 0;
 	margin: 0;
 }
+
+/* Form elements */
+
+#chat-container ::-moz-placeholder {
+	color: #99a2b4;
+	opacity: .5;
+}
+
+#chat-container ::-webkit-input-placeholder {
+	color: #99a2b4;
+	opacity: .5;
+}
+
+#chat-container :-ms-input-placeholder {
+	color: #99a2b4;
+	opacity: .5;
+}
+
+/* End form elements */

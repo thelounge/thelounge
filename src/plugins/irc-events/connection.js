@@ -1,13 +1,12 @@
 "use strict";
 
-var identd = require("../../identd");
+var _ = require("lodash");
 var Msg = require("../../models/msg");
 var Chan = require("../../models/chan");
 var Helper = require("../../helper");
 
 module.exports = function(irc, network) {
 	var client = this;
-	var identHandler = this.manager.identHandler;
 
 	network.channels[0].pushMessage(client, new Msg({
 		text: "Network created, connecting to " + network.host + ":" + network.port + "..."
@@ -18,6 +17,14 @@ module.exports = function(irc, network) {
 			network.channels[0].pushMessage(client, new Msg({
 				text: "Enabled capabilities: " + network.irc.network.cap.enabled.join(", ")
 			}), true);
+		}
+
+		// Always restore away message for this network
+		if (network.awayMessage) {
+			irc.raw("AWAY", network.awayMessage);
+		// Only set generic away message if there are no clients attached
+		} else if (client.awayMessage && _.size(client.attachedClients) === 0) {
+			irc.raw("AWAY", client.awayMessage);
 		}
 
 		var delay = 1000;
@@ -40,7 +47,7 @@ module.exports = function(irc, network) {
 			}
 
 			setTimeout(function() {
-				network.irc.join(chan.name);
+				network.irc.join(chan.name, chan.key);
 			}, delay);
 			delay += 1000;
 		});
@@ -63,27 +70,33 @@ module.exports = function(irc, network) {
 		}), true);
 	});
 
-	if (identd.isEnabled()) {
-		irc.on("raw socket connected", function(socket) {
-			identd.hook(socket, client.name || network.username);
-		});
-	}
+	let identSocketId;
 
-	if (identHandler) {
-		let identSocketId;
+	irc.on("raw socket connected", function(socket) {
+		identSocketId = client.manager.identHandler.addSocket(socket, client.name || network.username);
+	});
 
-		irc.on("raw socket connected", function(socket) {
-			identSocketId = identHandler.addSocket(socket, client.name || network.username);
-		});
+	irc.on("socket close", function() {
+		if (identSocketId > 0) {
+			client.manager.identHandler.removeSocket(identSocketId);
+			identSocketId = 0;
+		}
+	});
 
-		irc.on("socket close", function() {
-			identHandler.removeSocket(identSocketId);
-		});
-	}
-
-	if (Helper.config.debug) {
+	if (Helper.config.debug.ircFramework) {
 		irc.on("debug", function(message) {
 			log.debug("[" + client.name + " (#" + client.id + ") on " + network.name + " (#" + network.id + ")]", message);
+		});
+	}
+
+	if (Helper.config.debug.raw) {
+		irc.on("raw", function(message) {
+			network.channels[0].pushMessage(client, new Msg({
+				from: message.from_server ? "«" : "»",
+				self: !message.from_server,
+				type: "raw",
+				text: message.line
+			}), true);
 		});
 	}
 
@@ -107,7 +120,7 @@ module.exports = function(irc, network) {
 	});
 
 	irc.on("server options", function(data) {
-		if (network.serverOptions.PREFIX === data.options.PREFIX) {
+		if (network.serverOptions.PREFIX === data.options.PREFIX && network.serverOptions.NETWORK === data.options.NETWORK) {
 			return;
 		}
 
@@ -118,6 +131,7 @@ module.exports = function(irc, network) {
 		});
 
 		network.serverOptions.PREFIX = data.options.PREFIX;
+		network.serverOptions.NETWORK = data.options.NETWORK;
 
 		client.emit("network_changed", {
 			network: network.id,

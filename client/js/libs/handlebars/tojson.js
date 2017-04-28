@@ -1,7 +1,5 @@
 "use strict";
 
-Handlebars.registerHelper(
-	"toJSON", function(context) {
-		return JSON.stringify(context);
-	}
-);
+module.exports = function(context) {
+	return window.JSON.stringify(context);
+};

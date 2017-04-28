@@ -9,9 +9,9 @@ Use the following template for each new release, built on recommendations from h
 ```md
 ## vX.Y.Z - YYYY-MM-DD
 
-[See the full changelog](https://github.com/thelounge/lounge/compare/vPRE.VIO.US...vX.Y.Z)
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/vPRE.VIO.US...vX.Y.Z) and [milestone](https://github.com/thelounge/lounge/milestone/XXX).
 
-OPTIONAL DESCRIPTION, ANNOUNCEMENT, ...
+DESCRIPTION, ANNOUNCEMENT, ...
 
 ### Added
 ### Changed
@@ -19,6 +19,10 @@ OPTIONAL DESCRIPTION, ANNOUNCEMENT, ...
 ### Removed
 ### Fixed
 ### Security
+### Documentation
+In the main repository:
+On the website:
+### Internals
 ```
 
 All sections are explained on the link above, they are all optional, and each of them should contain a list of PRs formatted as such:
@@ -26,9 +30,201 @@ All sections are explained on the link above, they are all optional, and each of
 ```md
 - Description ([#PR_NUMBER](https://github.com/thelounge/lounge/pull/PR_NUMBER) by [@GITHUB_USERNAME](https://github.com/GITHUB_USERNAME))
 ```
-
-Don't forget to thank the PR authors in a commit comment, and copy/paste the release content as-is in GitHub releases: https://github.com/thelounge/lounge/releases
 -->
+
+## v2.2.2 - 2017-03-13
+
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.2.1...v2.2.2) and [milestone](https://github.com/thelounge/lounge/milestone/11).
+
+This patch release brings a lot of dependency upgrades and a few fixes. Passing options to the `lounge` CLI (`lounge start --port 8080`, etc.) now works as expected without requiring `--`. We have also disabled ping timeouts for now to hopefully fix automatic reconnection. Finally, upgrading `irc-framework` allows us to fix an extra couple of bugs.
+
+You will now notice a new `(?)` icon at the bottom of the sidebar. It is home of a help center that currently details supported shortcuts and commands. It will be improved over time, but we encourage contributors to help us improve it.
+
+Note that as of this release, `lounge` without any arguments wil display the help information (mirroring `lounge --help`). Prior to this release, it used to start a server, which must now be done explicitly using `lounge start`.
+
+### Changed
+
+- Update to `jQuery` 3 ([#931](https://github.com/thelounge/lounge/pull/931) by [@xPaw](https://github.com/xPaw))
+- Update `express` and `nyc` to latest versions ([#954](https://github.com/thelounge/lounge/pull/954) by [@xPaw](https://github.com/xPaw))
+- Update production dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `mousetrap` ([#881](https://github.com/thelounge/lounge/pull/881))
+  - `fs-extra` ([#878](https://github.com/thelounge/lounge/pull/878))
+  - `irc-framework` ([#918](https://github.com/thelounge/lounge/pull/918) and [#952](https://github.com/thelounge/lounge/pull/952))
+  - `urijs` ([#921](https://github.com/thelounge/lounge/pull/921), [#940](https://github.com/thelounge/lounge/pull/940) and [#946](https://github.com/thelounge/lounge/pull/946))
+  - `socket.io` and `socket.io-client` ([#926](https://github.com/thelounge/lounge/pull/926))
+  - `request` ([#944](https://github.com/thelounge/lounge/pull/944))
+
+### Fixed
+
+- Disable (temporarily) client ping timeouts ([#939](https://github.com/thelounge/lounge/pull/939) by [@xPaw](https://github.com/xPaw))
+- Update arg parsing and default `lounge` to `lounge --help` ([#929](https://github.com/thelounge/lounge/pull/929) by [@msaun008](https://github.com/msaun008))
+- Prevent message sending in lobbies ([#957](https://github.com/thelounge/lounge/pull/957) by [@xPaw](https://github.com/xPaw))
+
+### Documentation
+
+In the main repository:
+
+- Help window with supported commands and shortcuts ([#941](https://github.com/thelounge/lounge/pull/941) by [@astorije](https://github.com/astorije))
+
+On the website:
+
+- Add notes about moving client docs to the app itself ([#63](https://github.com/thelounge/thelounge.github.io/pull/63) by [@astorije](https://github.com/astorije))
+- Deprecate (and attempt one last fixing) documentations of Heroku and Passenger ([#61](https://github.com/thelounge/thelounge.github.io/pull/61) by [@astorije](https://github.com/astorije))
+
+### Internals
+
+- Fix `run_pr.sh` script ([#919](https://github.com/thelounge/lounge/pull/919) by [@astorije](https://github.com/astorije))
+- Make sure multiline chains of calls are correctly indented ([#930](https://github.com/thelounge/lounge/pull/930) by [@astorije](https://github.com/astorije))
+- Update development dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `babel-core`, `babel-loader` and `babel-preset-es2015` ([#922](https://github.com/thelounge/lounge/pull/922) and [#947](https://github.com/thelounge/lounge/pull/947))
+  - `webpack` ([#905](https://github.com/thelounge/lounge/pull/905))
+  - `stylelint` ([#934](https://github.com/thelounge/lounge/pull/934))
+  - `npm-run-all` ([#938](https://github.com/thelounge/lounge/pull/938))
+  - `eslint` ([#937](https://github.com/thelounge/lounge/pull/937) and [#943](https://github.com/thelounge/lounge/pull/943))
+
+## v2.2.1 - 2017-02-12
+
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.2.0...v2.2.1) and [milestone](https://github.com/thelounge/lounge/milestone/10).
+
+This patch release packs up a change of the default value of `maxHistory`, an interactive prompt when creating a user to enable/disable user logging, a UI bug fix, and a few dependency upgrades.
+
+### Changed
+
+- Change default `maxHistory` to 10000 ([#899](https://github.com/thelounge/lounge/pull/899) by [@xPaw](https://github.com/xPaw))
+- Prompt admin for user log at user creation ([#903](https://github.com/thelounge/lounge/pull/903) by [@astorije](https://github.com/astorije))
+- Update `irc-framework` to the latest version 🚀 ([#902](https://github.com/thelounge/lounge/pull/902) by [Greenkeeper](https://greenkeeper.io/))
+- Update `urijs` to the latest version 🚀 ([#904](https://github.com/thelounge/lounge/pull/904) by [Greenkeeper](https://greenkeeper.io/))
+- Update `express` to the latest version 🚀 ([#898](https://github.com/thelounge/lounge/pull/898) by [Greenkeeper](https://greenkeeper.io/))
+
+### Fixed
+
+- Fix body height, regression from v2.2.0 ([#913](https://github.com/thelounge/lounge/pull/913) by [@YaManicKill](https://github.com/YaManicKill))
+
+### Documentation
+
+In the main repository:
+
+- Explain about `lounge` command in dev installations ([#887](https://github.com/thelounge/lounge/pull/887) by [@drkitty](https://github.com/drkitty))
+
+On the website:
+
+- Port recent changes to `maxHistory` from default config file ([#60](https://github.com/thelounge/thelounge.github.io/pull/60) by [@astorije](https://github.com/astorije))
+
+### Internals
+
+- Sort depedencies in `package.json` ([#896](https://github.com/thelounge/lounge/pull/896) by [@xPaw](https://github.com/xPaw))
+- Update `nyc` to the latest version 🚀 ([#882](https://github.com/thelounge/lounge/pull/882) by [Greenkeeper](https://greenkeeper.io/))
+- Update `npm-run-all` to the latest version 🚀 ([#880](https://github.com/thelounge/lounge/pull/880) by [Greenkeeper](https://greenkeeper.io/))
+- Add nyc and Webpack config files to the files ignored when releasing ([#906](https://github.com/thelounge/lounge/pull/906) by [@astorije](https://github.com/astorije))
+- Update `stylelint` to the latest version 🚀 ([#907](https://github.com/thelounge/lounge/pull/907) by [Greenkeeper](https://greenkeeper.io/))
+- Update `eslint` to the latest version 🚀 ([#910](https://github.com/thelounge/lounge/pull/910) by [Greenkeeper](https://greenkeeper.io/))
+
+## v2.2.0 - 2017-01-31
+
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.1.0...v2.2.0) and [milestone](https://github.com/thelounge/lounge/milestone/2).
+
+Another long-overdue release for The Lounge!
+
+On the client, it is now possible to generate URLs that pre-fill connection inputs in public mode, a date separator makes it into the chats, `/away` and `/back` commands are now supported, idle time gets displayed on `/whois`.<br>
+Also, the client does not abruptly refresh when connection is lost anymore, and user search has been slightly improved. Note however that these last 2 items are still not optimal, but improvements are underway!
+
+On the server, more logging! The `debug` option is now an object instead of a boolean, so make sure to update your configuration file accordingly. More details [here](https://github.com/thelounge/lounge/blob/v2.2.0/defaults/config.js#L364-L383).<br>
+There are changes revolving around user configuration autoloading: it has been greatly improved and therefore it is now enabled by default. Make sure to remove the `autoload` option from your configuration files.
+
+And of course, tons of fixes and less noticeable feature additions and changes, so make sure to check the full list below!
+
+### Added
+
+- Override network connection inputs with URL parameters ([#674](https://github.com/thelounge/lounge/pull/674) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Add `id` to submit button ([#717](https://github.com/thelounge/lounge/pull/717) by [@xPaw](https://github.com/xPaw))
+- Add a UI element to cycle through nick completions on mobile ([#708](https://github.com/thelounge/lounge/pull/708) by [@astorije](https://github.com/astorije))
+- Report configuration file path, Node.js version and OS platform on server start-up ([#736](https://github.com/thelounge/lounge/pull/736) by [@williamboman](https://github.com/williamboman) and [#743](https://github.com/thelounge/lounge/pull/743) by [@xPaw](https://github.com/xPaw))
+- Add `lounge` keyword to npm registry ([#747](https://github.com/thelounge/lounge/pull/747) by [@xPaw](https://github.com/xPaw))
+- Add a date separator to channels/PMs ([#671](https://github.com/thelounge/lounge/pull/671) and [#765](https://github.com/thelounge/lounge/pull/765) by [@PolarizedIons](https://github.com/PolarizedIons))
+- Add support for hexip ilines and fix storing client IP address in configuration file ([#749](https://github.com/thelounge/lounge/pull/749) and [#822](https://github.com/thelounge/lounge/pull/822) by [@xPaw](https://github.com/xPaw))
+- Implement `/away` and `/back` commands ([#745](https://github.com/thelounge/lounge/pull/745) by [@xPaw](https://github.com/xPaw))
+- Remind channel name or nick in input placeholder ([#832](https://github.com/thelounge/lounge/pull/832) and [#889](https://github.com/thelounge/lounge/pull/889) by [@astorije](https://github.com/astorije))
+- Add human-readable idle time in whois info ([#721](https://github.com/thelounge/lounge/pull/721) by [@astorije](https://github.com/astorije))
+- Option to log raw IRC traffic ([#783](https://github.com/thelounge/lounge/pull/783) by [@astorije](https://github.com/astorije))
+
+### Changed
+
+- Improve support for opening multiple clients at once ([#636](https://github.com/thelounge/lounge/pull/636) by [@xPaw](https://github.com/xPaw))
+- Match window title border line to text color ([#716](https://github.com/thelounge/lounge/pull/716) by [@xPaw](https://github.com/xPaw))
+- Focus input after chat form submit ([#483](https://github.com/thelounge/lounge/pull/483) by [@williamboman](https://github.com/williamboman))
+- Refactor user autoload to use `fs.watch` and make it more transparent in the app ([#751](https://github.com/thelounge/lounge/pull/751) by [@xPaw](https://github.com/xPaw) and [#779](https://github.com/thelounge/lounge/pull/779) by [@astorije](https://github.com/astorije))
+- Sync reordering of channels/networks to other clients in real-time ([#757](https://github.com/thelounge/lounge/pull/757) by [@PolarizedIons](https://github.com/PolarizedIons))
+- Do not accept empty password when adding new user ([#795](https://github.com/thelounge/lounge/pull/795) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Stop refreshing the page on every socket.io error ([#784](https://github.com/thelounge/lounge/pull/784) by [@xPaw](https://github.com/xPaw))
+- Only append "says" to notifications if it is a message ([#805](https://github.com/thelounge/lounge/pull/805) by [@xPaw](https://github.com/xPaw))
+- Allow user search to find a pattern anywhere in the nicks ([#855](https://github.com/thelounge/lounge/pull/855) by [@MaxLeiter](https://github.com/MaxLeiter))
+
+### Removed
+
+- Remove browser notification polyfill and inform user when unsupported ([#709](https://github.com/thelounge/lounge/pull/709) by [@astorije](https://github.com/astorije))
+- Remove erroneous classname from password field ([#748](https://github.com/thelounge/lounge/pull/748) by [@xPaw](https://github.com/xPaw))
+- Do not dismiss native web notifications programmatically after 5s ([#739](https://github.com/thelounge/lounge/pull/739) by [@williamboman](https://github.com/williamboman))
+
+### Fixed
+
+- Fix `/mode` command to correctly assume target ([#679](https://github.com/thelounge/lounge/pull/679) by [@xPaw](https://github.com/xPaw))
+- Fix crash when LDAP server is unreachable ([#697](https://github.com/thelounge/lounge/pull/697) by [@gramakri](https://github.com/gramakri))
+- Fix channels behaving strangely while dragging ([#697](https://github.com/thelounge/lounge/pull/697) by [@PolarizedIons](https://github.com/PolarizedIons))
+- Fix unread counters resetting when they should not ([#720](https://github.com/thelounge/lounge/pull/720) by [@PolarizedIons](https://github.com/PolarizedIons))
+- Silence failures to trigger notifications when not available ([#732](https://github.com/thelounge/lounge/pull/732) by [@astorije](https://github.com/astorije))
+- Avoid unnecessary disk writes when saving user ([#750](https://github.com/thelounge/lounge/pull/750) by [@xPaw](https://github.com/xPaw))
+- Use correct channel when pushing link prefetch messages ([#782](https://github.com/thelounge/lounge/pull/782) by [@xPaw](https://github.com/xPaw))
+- Correctly remove closed sockets from oident file, remove unused functions ([#753](https://github.com/thelounge/lounge/pull/753) by [@xPaw](https://github.com/xPaw))
+- Do not automatically focus on touch devices ([#801](https://github.com/thelounge/lounge/pull/801) by [@xPaw](https://github.com/xPaw))
+- Strip control characters from notifications ([#818](https://github.com/thelounge/lounge/pull/818) by [@xPaw](https://github.com/xPaw))
+- Improve CLI a bit (output formatting and subcommand/option bug fix) ([#799](https://github.com/thelounge/lounge/pull/799) and [#868](https://github.com/thelounge/lounge/pull/868) by [@astorije](https://github.com/astorije))
+- Make HTML container take the entire screen estate ([#821](https://github.com/thelounge/lounge/pull/821) by [@xPaw](https://github.com/xPaw))
+- Fix unread marker being removed from DOM ([#820](https://github.com/thelounge/lounge/pull/820) by [@xPaw](https://github.com/xPaw))
+- Remove margin on date marker on smallest screen size ([#830](https://github.com/thelounge/lounge/pull/830) by [@xPaw](https://github.com/xPaw))
+- Do not ignore window opens when considering active channels ([#834](https://github.com/thelounge/lounge/pull/834) by [@xPaw](https://github.com/xPaw))
+- Calculate menu width on touch start ([#836](https://github.com/thelounge/lounge/pull/836) by [@xPaw](https://github.com/xPaw))
+- Increase IRC colors contrast ([#829](https://github.com/thelounge/lounge/pull/829) by [@xPaw](https://github.com/xPaw))
+- Do not prefetch URLs unless they are messages or `/me` actions ([#812](https://github.com/thelounge/lounge/pull/812) by [@birkof](https://github.com/birkof))
+- Bump `irc-framework` to bring a couple of fixes ([#790](https://github.com/thelounge/lounge/pull/790) by [@astorije](https://github.com/astorije), [#802](https://github.com/thelounge/lounge/pull/802) by [@xPaw](https://github.com/xPaw) and [#852](https://github.com/thelounge/lounge/pull/852) by [Greenkeeper](https://greenkeeper.io/))
+
+### Security
+
+- Change bcrypt rounds from 8 to 11 ([#711](https://github.com/thelounge/lounge/pull/711) by [@xPaw](https://github.com/xPaw))
+
+### Documentation
+
+In the main repository:
+
+- Warn against running from source as root in README ([#725](https://github.com/thelounge/lounge/pull/725) by [@astorije](https://github.com/astorije))
+- Add screenshot to README ([#694](https://github.com/thelounge/lounge/pull/694) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Simplify introduction on README ([#789](https://github.com/thelounge/lounge/pull/789) by [@astorije](https://github.com/astorije))
+
+On the website:
+
+- Remove distribution-specific install instructions of Node.js ([#49](https://github.com/thelounge/thelounge.github.io/pull/49) by [@astorije](https://github.com/astorije))
+- Remove wrong information about setting up password along with creating a user ([#50](https://github.com/thelounge/thelounge.github.io/pull/50) by [@astorije](https://github.com/astorije))
+- Update documentation of the configuration file ([#43](https://github.com/thelounge/thelounge.github.io/pull/43) by [@daftaupe](https://github.com/daftaupe))
+- Document the `/away` and `/back` commands ([#59](https://github.com/thelounge/thelounge.github.io/pull/59) by [@drkitty](https://github.com/drkitty))
+
+### Internals
+
+- Fix AppVeyor cache never being successfully built and unblock AppVeyor ([#700](https://github.com/thelounge/lounge/pull/700) by [@astorije](https://github.com/astorije) and [#755](https://github.com/thelounge/lounge/pull/755) by [@IlyaFinkelshteyn](https://github.com/IlyaFinkelshteyn))
+- Add a simple (first) test for `localetime` Handlebars helper ([#703](https://github.com/thelounge/lounge/pull/703) by [@astorije](https://github.com/astorije))
+- Get rid of OSX CI builds until they get much faster ([#707](https://github.com/thelounge/lounge/pull/707) by [@astorije](https://github.com/astorije))
+- Update badges in README ([#713](https://github.com/thelounge/lounge/pull/713) by [@xPaw](https://github.com/xPaw) and [#780](https://github.com/thelounge/lounge/pull/780) by [@astorije](https://github.com/astorije))
+- Add Node.js v7, current stable, to Travis CI ([#800](https://github.com/thelounge/lounge/pull/800) by [@astorije](https://github.com/astorije))
+- Use Webpack to build our client code and dependencies ([#640](https://github.com/thelounge/lounge/pull/640) by [@nornagon](https://github.com/nornagon) and [#817](https://github.com/thelounge/lounge/pull/817) by [@xPaw](https://github.com/xPaw))
+- Switch `istanbul` code coverage CLI to more recent `nyc` one ([#850](https://github.com/thelounge/lounge/pull/850) by [@astorije](https://github.com/astorije))
+- Add web server tests ([#838](https://github.com/thelounge/lounge/pull/838) by [@xPaw](https://github.com/xPaw))
+- Fix stuff that breaks in jQuery 3 ([#854](https://github.com/thelounge/lounge/pull/854) by [@xPaw](https://github.com/xPaw))
+- Do not uglify builds when running start-dev ([#858](https://github.com/thelounge/lounge/pull/858) by [@xPaw](https://github.com/xPaw))
+- Update dependencies to latest stable versions ([#746](https://github.com/thelounge/lounge/pull/746) by [@xPaw](https://github.com/xPaw))
+- Update dependencies to enable Greenkeeper 🌴 ([#826](https://github.com/thelounge/lounge/pull/826) by [Greenkeeper](https://greenkeeper.io/))
+- Update `lodash` to the latest version 🚀 ([#840](https://github.com/thelounge/lounge/pull/840) and [#862](https://github.com/thelounge/lounge/pull/862) by [Greenkeeper](https://greenkeeper.io/))
+- Update `stylelint` to the latest version 🚀 ([#861](https://github.com/thelounge/lounge/pull/861) by [Greenkeeper](https://greenkeeper.io/))
+- Update `npm-run-all` to the latest version 🚀 ([#860](https://github.com/thelounge/lounge/pull/860) by [Greenkeeper](https://greenkeeper.io/))
+- Update `eslint` to the latest version 🚀 ([#875](https://github.com/thelounge/lounge/pull/875) by [Greenkeeper](https://greenkeeper.io/))
+- Update `babel-core` to the latest version 🚀 ([#883](https://github.com/thelounge/lounge/pull/883) by [Greenkeeper](https://greenkeeper.io/))
 
 ## v2.1.0 - 2016-10-17
 

@@ -27,6 +27,9 @@ module.exports = function(irc, network) {
 				text: "No such nick: " + data.nick
 			});
 		} else {
+			// Absolute datetime in milliseconds since nick is idle
+			data.idleTime = Date.now() - data.idle * 1000;
+
 			msg = new Msg({
 				type: Msg.Type.WHOIS,
 				whois: data

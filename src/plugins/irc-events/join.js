@@ -18,6 +18,9 @@ module.exports = function(irc, network) {
 				network: network.id,
 				chan: chan
 			});
+
+			// Request channels' modes
+			network.irc.raw("MODE", chan.name);
 		}
 		chan.users.push(new User({nick: data.nick}));
 		chan.sortUsers(irc);

@@ -5,17 +5,25 @@ var colors = require("colors/safe");
 var fs = require("fs");
 var Client = require("./client");
 var Helper = require("./helper");
-var Oidentd = require("./oidentd");
 
 module.exports = ClientManager;
 
 function ClientManager() {
 	this.clients = [];
-
-	if (typeof Helper.config.oidentd === "string") {
-		this.identHandler = new Oidentd(Helper.config.oidentd);
-	}
 }
+
+ClientManager.prototype.init = function(identHandler, sockets) {
+	this.sockets = sockets;
+	this.identHandler = identHandler;
+
+	if (!Helper.config.public) {
+		if ("autoload" in Helper.config) {
+			log.warn(`Autoloading users is now always enabled. Please remove the ${colors.yellow("autoload")} option from your configuration file.`);
+		}
+
+		this.autoloadUsers();
+	}
+};
 
 ClientManager.prototype.findClient = function(name, token) {
 	for (var i in this.clients) {
@@ -82,13 +90,12 @@ ClientManager.prototype.getUsers = function() {
 	return users;
 };
 
-ClientManager.prototype.addUser = function(name, password) {
+ClientManager.prototype.addUser = function(name, password, enableLog) {
 	var users = this.getUsers();
 	if (users.indexOf(name) !== -1) {
 		return false;
 	}
 	try {
-
 		if (require("path").basename(name) !== name) {
 			throw new Error(name + " is an invalid username.");
 		}
@@ -96,7 +103,7 @@ ClientManager.prototype.addUser = function(name, password) {
 		var user = {
 			user: name,
 			password: password || "",
-			log: false,
+			log: enableLog,
 			networks: []
 		};
 		fs.writeFileSync(
