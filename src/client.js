@@ -423,7 +423,7 @@ Client.prototype.sort = function(data) {
 	switch (data.type) {
 	case "networks":
 		this.networks.sort((a, b) => {
-			return order.indexOf(a.id) > order.indexOf(b.id);
+			return order.indexOf(a.id) - order.indexOf(b.id);
 		});
 
 		// Sync order to connected clients
@@ -438,7 +438,7 @@ Client.prototype.sort = function(data) {
 		}
 
 		network.channels.sort((a, b) => {
-			return order.indexOf(a.id) > order.indexOf(b.id);
+			return order.indexOf(a.id) - order.indexOf(b.id);
 		});
 
 		// Sync order to connected clients
