@@ -370,6 +370,16 @@ module.exports = {
 		primaryKey: "uid"
 	},
 
+	// Run command when invalid password was entered.
+	// * {{user}} will be replaced with the login name;
+	// * {{IP}} - client IP;
+	// Use it to track bad login attempts.
+	//
+	// @type     string
+	// @default  ""
+	//
+	authErrorCmd: "",
+
 	// Extra debugging
 	//
 	// @type     object
@@ -388,6 +398,6 @@ module.exports = {
 		// @type     boolean
 		// @default  false
 		//
-		raw: false,
+		raw: false
 	},
 };

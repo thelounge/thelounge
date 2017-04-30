@@ -363,6 +363,11 @@ function auth(data) {
 					init(socket, client, token);
 				}
 			} else {
+				if (data.user !== undefined && Helper.config.authErrorCmd) {
+					var error_cmd = require("child_process");
+					error_cmd.exec(Helper.config.authErrorCmd.replace(/{{user}}/g, data.user.replace(/[\\'"]/g, ""))
+						.replace(/{{IP}}/g, getClientIp(socket.request).replace(/[\\'"]/g, "")));
+				}
 				socket.emit("auth", {success: success});
 			}
 		};
