@@ -140,10 +140,6 @@ kbd {
 .container {
 	margin: 80px auto;
 	max-width: 480px;
-	overflow: hidden;
-	overflow-y: auto;
-	-webkit-overflow-scrolling: touch;
-	padding: 0 30px;
 }
 
 ::-moz-placeholder {
@@ -374,8 +370,7 @@ kbd {
 }
 
 #viewport.rt #chat .sidebar {
-	-webkit-transform: translate3d(180px, 0, 0);
-	transform: translate3d(180px, 0, 0);
+	right: -180px;
 }
 
 #sidebar {
@@ -387,6 +382,10 @@ kbd {
 	position: absolute;
 	top: 0;
 	width: 220px;
+}
+
+#viewport.menu-open #sidebar {
+	will-change: transform;
 }
 
 #sidebar button,
@@ -764,6 +763,7 @@ kbd {
 	left: 0;
 	right: 0;
 	overflow: auto;
+	will-change: transform, scroll-position;
 	-webkit-overflow-scrolling: touch;
 	position: absolute;
 }
@@ -787,9 +787,7 @@ kbd {
 	position: absolute;
 	right: 0;
 	width: 180px;
-	transition: all .4s;
-	-webkit-transform: translateZ(0);
-	transform: translateZ(0);
+	transition: right .4s;
 }
 
 #chat .show-more {
@@ -1162,6 +1160,7 @@ kbd {
 	bottom: 0;
 	overflow: auto;
 	overflow-x: hidden;
+	will-change: transform, scroll-position;
 	-webkit-overflow-scrolling: touch;
 	padding-bottom: 10px;
 	position: absolute;
@@ -1829,11 +1828,6 @@ kbd {
 		margin-top: 60px !important;
 	}
 
-	#viewport.rt #chat .sidebar {
-		-webkit-transform: translate3d(-180px, 0, 0);
-		transform: translate3d(-180px, 0, 0);
-	}
-
 	#sidebar,
 	#footer {
 		left: -220px;
@@ -1868,19 +1862,12 @@ kbd {
 		right: -180px;
 	}
 
+	#viewport.rt #chat .sidebar {
+		right: 0;
+	}
+
 	#chat .title:before {
 		display: none;
-	}
-}
-
-@media (min-width: 769px) {
-	#viewport {
-		-webkit-transform: none !important;
-		transform: none !important;
-	}
-
-	#viewport.menu-open {
-		transition: none;
 	}
 }
 
