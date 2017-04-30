@@ -696,6 +696,7 @@ kbd {
 	width: 100%;
 }
 
+#windows p,
 #windows label,
 #settings .error {
 	font-size: 14px;

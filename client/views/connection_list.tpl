@@ -1,10 +1,11 @@
-<label class="opt">
-	{{#if active_host}}
-	<input type="checkbox" id="connection_{{id}}" value="{{socket_id}}" checked="true">
-		ip: <a href="#{{socket_id}}">{{ip}}</a>, {{hostname}} (current) 
-	{{else}}
-	<input type="checkbox" id="connection_{{id}}" value="{{socket_id}}" checked="true">
-		ip: <a href="#{{socket_id}}">{{ip}}</a>, {{hostname}} 
+<p class="clearfix">
+	{{#if id includeZero=true}}
+		<button class="btn pull-right" id="connection_{{id}}" value="{{socketId}}">Disconnect</button>
 	{{/if}}
-	<p>{{userAgent}}</p>
-</label>
+
+	<strong>{{hostname}}</strong>
+	<br>
+	<a class="" href="https://geoiptool.com/?ip={{ip}}">{{ip}}</a>
+	<br>
+	{{userAgent}}
+</p>

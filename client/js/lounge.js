@@ -46,16 +46,30 @@ $(function() {
 
 	// server signal to update connected client list
 	socket.on("update-clients-list", function(data) {
+		$("#current_connection_info").empty().append(
+			templates.connection_list({
+				hostname: data.currentSession.hostname,
+				ip: data.currentSession.ip,
+				socketId: data.currentSession.socketId,
+				userAgent: data.currentSession.userAgent,
+			})
+		);
+
 		$("#connection_list").empty();
-		for (var i = 0 ; i < data.connection.length ; i++) {
-			data.connection[i].id = i;
+		data.otherSessions.forEach((connection, index) => {
 			$("#connection_list").append(
-				templates.connection_list(data.connection[i])
+				templates.connection_list({
+					id: index,
+					hostname: connection.hostname,
+					ip: connection.ip,
+					socketId: connection.socketId,
+					userAgent: connection.userAgent,
+				})
 			);
-			$("#connection_" + i).on("click" , function(input) {
-				socket.emit("remote-sign-out", {socket_id: input.target.value});
+			$(`#connection_${index}`).on("click", (input) => {
+				socket.emit("remote-sign-out", {socketId: input.target.value});
 			});
-		}
+		});
 	});
 
 	// server signal to remotely sign out

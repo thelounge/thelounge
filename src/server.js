@@ -15,6 +15,7 @@ var ldap = require("ldapjs");
 var colors = require("colors/safe");
 const net = require("net");
 const Identification = require("./identification");
+const UAParser = require("ua-parser-js");
 
 var manager = null;
 
@@ -537,42 +538,52 @@ function sendConnectionInfo(client) {
 	var socketList = Object.keys(client.attachedClients);
 
 	// get IP addresses for those sockets
-	var connection_list = [];
-	for (var k = socketList.length - 1 ; k >= 0 ; k--) {
-		var socketData = {};
-		socketData.socket_id = socketList[k];
-		socketData.ip = getClientIp(manager.sockets.of("/").connected[socketList[k]].request);
-		connection_list.push(socketData);
-	}
+	const connectionList = socketList.map((socket) => ({
+		socketId: socket,
+		ip: getClientIp(manager.sockets.of("/").connected[socket].request)
+	}));
 
 	// get hostnames for every ip
-	Promise.all(connection_list.map(hostnamePromise))
+	Promise.all(connectionList.map(hostnamePromise))
 		.then((list) => {
 			// send event for every connection
-			for (var j = 0; j < list.length; j++) {
+			for (let j = 0; j < list.length; j++) {
 				// make data packet for event
-				var send_data = {
-					connection: []
+				const sendData = {
+					currentSession: null,
+					otherSessions: [],
 				};
+
 				// compile data for every connection
-				for (var i = 0; i < list.length; i++) {
-					var data = {};
+				for (let i = 0; i < list.length; i++) {
+					const data = {};
 					data.hostname = list[i].hostname;
 					data.ip = list[i].ip;
-					data.socket_id = list[i].socket_id;
-					data.userAgent = manager.sockets.of("/").connected[list[i].socket_id].request.headers["user-agent"];
+					data.socketId = list[i].socketId;
+
+					const parsedUA = UAParser(
+						manager.sockets.of("/")
+							.connected[list[i].socketId]
+							.request.headers["user-agent"]
+					);
+
+					// Use joined arrays to be fault-tolerant in case versions are missing
+					data.userAgent =
+						[parsedUA.browser.name, parsedUA.browser.major].join(" ").trim() +
+						" on " +
+						[parsedUA.os.name, parsedUA.os.version].join(" ").trim();
+
 					// active host
-					if (list[j].socket_id === list[i].socket_id) {
-						data.active_host = true;
+					if (list[j].socketId === list[i].socketId) {
+						sendData.currentSession = data;
 					} else {
-						data.active_host = false;
+						sendData.otherSessions.push(data);
 					}
-					send_data.connection.push(data);
 				}
 				// send event with data
 				manager.sockets.of("/")
-					.connected[list[j].socket_id]
-					.emit("update-clients-list", send_data);
+					.connected[list[j].socketId]
+					.emit("update-clients-list", sendData);
 			}
 		})
 		.catch(function(err) {
