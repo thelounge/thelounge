@@ -252,7 +252,7 @@ $(function() {
 			.click();
 	});
 
-	function buildChatMessage(data) {
+	function buildChatMessage(data, lastSender) {
 		var type = data.msg.type;
 		var target = "#chan-" + data.chan;
 		if (type === "error") {
@@ -266,6 +266,10 @@ $(function() {
 			return data.msg.text.toLocaleLowerCase().indexOf(h.toLocaleLowerCase()) > -1;
 		})) {
 			data.msg.highlight = true;
+		}
+
+		if (lastSender === data.msg.mode + data.msg.from) {
+			data.msg.sameSender = true;
 		}
 
 		if ([
@@ -310,11 +314,16 @@ $(function() {
 	}
 
 	function buildChannelMessages(channel, messages) {
+		var lastSender;
+
 		return messages.reduce(function(docFragment, message) {
 			docFragment.append(buildChatMessage({
 				chan: channel,
 				msg: message
-			}));
+			}, lastSender));
+
+			lastSender = message.mode + message.from;
+
 			return docFragment;
 		}, $(document.createDocumentFragment()));
 	}
@@ -328,8 +337,16 @@ $(function() {
 	}
 
 	function renderChannelMessages(data) {
+		var channel = chat.find("#chan-" + data.id + " .messages");
 		var documentFragment = buildChannelMessages(data.id, data.messages);
-		var channel = chat.find("#chan-" + data.id + " .messages").append(documentFragment);
+
+		channel.append(documentFragment);
+
+		if (data.messages.length > 0) {
+			var lastSender = data.messages[data.messages.length - 1];
+			lastSender = lastSender.mode + lastSender.from;
+			channel.data("last-from", lastSender);
+		}
 
 		if (data.firstUnread > 0) {
 			var first = channel.find("#msg-" + data.firstUnread);
@@ -426,9 +443,11 @@ $(function() {
 	}
 
 	socket.on("msg", function(data) {
-		var msg = buildChatMessage(data);
 		var target = "#chan-" + data.chan;
 		var container = chat.find(target + " .messages");
+		var msg = buildChatMessage(data, container.data("last-from"));
+
+		container.data("last-from", data.msg.mode + data.msg.from);
 
 		if (data.msg.type === "channel_list" || data.msg.type === "ban_list") {
 			$(container).empty();
@@ -468,6 +487,13 @@ $(function() {
 		var chan = chat
 			.find("#chan-" + data.chan)
 			.find(".messages");
+
+		// set lastSender appropriately
+		var firstSenderOld = chan.children(".message").eq(0).children(".from").eq(0).text().trim();
+		var lastSenderNew = data.messages[data.messages.length - 1].mode + data.messages[data.messages.length - 1].from;
+		if (firstSenderOld === lastSenderNew) {
+			chan.children(".message").eq(0).addClass("equal-from");
+		}
 
 		// Remove the date-change marker we put at the top, because it may
 		// not actually be a date change now
