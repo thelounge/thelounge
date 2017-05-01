@@ -545,9 +545,16 @@ $(function() {
 	socket.on("part", function(data) {
 		var chanMenuItem = sidebar.find(".chan[data-id='" + data.chan + "']");
 
-		// When parting from the active channel/query, jump to the network's lobby
+		// When parting from the active channel/query, jump to the next window if
+		// there is one, or the last one otherwise
 		if (chanMenuItem.hasClass("active")) {
-			chanMenuItem.parent(".network").find(".lobby").click();
+			var newActive = chanMenuItem.next(".chan");
+
+			if (newActive.length === 0) {
+				newActive = chanMenuItem.prev(".chan");
+			}
+
+			newActive.click();
 		}
 
 		chanMenuItem.remove();
