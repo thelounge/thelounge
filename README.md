@@ -6,6 +6,7 @@
 [![AppVeyor Build Status](https://img.shields.io/appveyor/ci/astorije/lounge/master.svg?label=windows+build)](https://ci.appveyor.com/project/astorije/lounge/branch/master)
 [![Dependencies Status](https://img.shields.io/david/thelounge/lounge.svg)](https://david-dm.org/thelounge/lounge)
 [![Developer Dependencies Status](https://img.shields.io/david/dev/thelounge/lounge.svg)](https://david-dm.org/thelounge/lounge?type=dev)
+[![Known Vulnerabilities](https://snyk.io/test/github/thelounge/lounge/9e249a1d2fb28adc1873e183bee8d734b2928d7f/badge.svg)](https://snyk.io/test/github/thelounge/lounge/9e249a1d2fb28adc1873e183bee8d734b2928d7f)
 
 The Lounge is a modern web IRC client designed for self-hosting.
 
