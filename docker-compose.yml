@@ -1,0 +1,6 @@
+lounge:
+  build: .
+  volumes:
+    - ./lounge_data:/home/lounge/data
+  ports:
+    - "9000:9000"
