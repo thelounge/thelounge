@@ -1,17 +1,17 @@
 {{#toggle}}
-<div class="toggle-content toggle-type-{{type}}">
+<div class="toggle-content toggle-type-{{type}} {{#unless show}}hide{{/unless}}" data-id="{{id}}">
 	{{#equal type "image"}}
-		<a href="{{link}}" target="_blank">
-			<img src="{{link}}">
-		</a>
+		<img src="{{link}}">
 	{{else}}
+		{{#if thumb}}
+			<img src="{{thumb}}" class="thumb">
+		{{/if}}
 		<a href="{{link}}" target="_blank">
-			{{#if thumb}}
-				<img src="{{thumb}}" class="thumb">
-			{{/if}}
-			<div class="head">{{head}}</div>
-			<div class="body">
-				{{body}}
+			<div class="info_wrap">
+				{{#if head}}<div class="head">{{head}}</div>{{/if}}
+				<div class="body">
+					{{body}}
+				</div>
 			</div>
 		</a>
 	{{/equal}}

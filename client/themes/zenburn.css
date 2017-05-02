@@ -253,6 +253,10 @@ body {
 	color: #d2d39b;
 }
 
+#chat .toggle-content.toggle-type-link a:after {
+	background: linear-gradient(to bottom, rgba(147, 179, 163, .3) 0%, rgba(147, 179, 163, 1) 90%);
+}
+
 .btn-reconnect {
 	background: #e74c3c;
 	color: #fff;
