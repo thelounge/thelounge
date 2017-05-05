@@ -48,7 +48,7 @@ $(function() {
 
 	const emojiStrategy = {
 		id: "emoji",
-		match: /\B:([-+\w]*)$/,
+		match: /\B:([-+\w]*):?$/,
 		search(term, callback) {
 			callback(Object.keys(emojiMap).filter(name => name.indexOf(term) === 0));
 		},
