@@ -169,7 +169,6 @@ kbd {
 #footer .icon,
 #chat .count:before,
 #settings #play:before,
-#form #cycle-nicks:before,
 #form #submit:before,
 #chat .invite .from:before,
 #chat .join .from:before,
@@ -215,8 +214,6 @@ kbd {
 #footer .settings:before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
 #footer .help:before { content: "\f059"; /* http://fontawesome.io/icon/question/ */ }
 #footer .sign-out:before { content: "\f011"; /* http://fontawesome.io/icon/power-off/ */ }
-
-#form #cycle-nicks:before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
 
 #form #submit:before { content: "\f1d8"; /* http://fontawesome.io/icon/paper-plane/ */ }
 
@@ -310,8 +307,6 @@ kbd {
 	transition: transform 160ms, -webkit-transform 160ms;
 	-webkit-transform: translateZ(0);
 	transform: translateZ(0);
-	-webkit-perspective: 1000;
-	perspective: 1000;
 }
 
 #viewport.menu-open {
@@ -767,9 +762,13 @@ kbd {
 #chat .chat {
 	bottom: 0;
 	left: 0;
+	right: 0;
 	overflow: auto;
 	-webkit-overflow-scrolling: touch;
 	position: absolute;
+}
+
+#chat .channel .chat {
 	right: 180px;
 }
 
@@ -791,20 +790,6 @@ kbd {
 	transition: all .4s;
 	-webkit-transform: translateZ(0);
 	transform: translateZ(0);
-	-webkit-perspective: 1000;
-	perspective: 1000;
-}
-
-#chat .lobby .chat,
-#chat .special .chat,
-#chat .query .chat {
-	right: 0;
-}
-
-#chat .lobby .sidebar,
-#chat .special .sidebar,
-#chat .query .sidebar {
-	display: none;
 }
 
 #chat .show-more {
@@ -839,14 +824,12 @@ kbd {
 	word-wrap: break-word;
 	word-break: break-word; /* Webkit-specific */
 	display: flex;
-	overflow: hidden;
 	position: relative;
 }
 
 #chat .unread-marker {
 	position: relative;
 	text-align: center;
-	opacity: .5;
 	margin: 0 10px;
 	z-index: 0;
 	font-weight: bold;
@@ -860,13 +843,13 @@ kbd {
 	left: 0;
 	right: 0;
 	top: 50%;
-	border-top: 1px solid #e74c3c;
+	border-top: 1px solid rgba(231, 76, 60, .5);
 }
 
 #chat .unread-marker-text:before {
 	content: "New messages";
 	background-color: white;
-	color: #e74c3c;
+	color: rgba(231, 76, 60, .5);
 	padding: 0 10px;
 }
 
@@ -877,7 +860,6 @@ kbd {
 #chat .date-marker {
 	position: relative;
 	text-align: center;
-	opacity: .5;
 	margin: 0 10px;
 	z-index: 0;
 	font-weight: bold;
@@ -891,13 +873,13 @@ kbd {
 	left: 0;
 	right: 0;
 	top: 50%;
-	border-top: 1px solid #006b3b;
+	border-top: 1px solid rgba(0, 107, 59, .5);
 }
 
 #chat .date-marker-text:before {
-	content: attr(data-date);
+	content: attr(data-label);
 	background-color: white;
-	color: #006b3b;
+	color: rgba(0, 107, 59, .5);
 	padding: 0 10px;
 }
 
@@ -933,6 +915,7 @@ kbd {
 
 #chat .text {
 	flex: 1 1 auto;
+	overflow: hidden;
 }
 
 #loading a,
@@ -1009,25 +992,36 @@ kbd {
 	padding-left: 20px;
 }
 
-#chat table.channel-list {
+#chat table.channel-list,
+#chat table.ban-list {
 	margin: 5px 10px;
 	width: calc(100% - 30px);
 }
 
 #chat table.channel-list th,
-#chat table.channel-list td {
+#chat table.ban-list th,
+#chat table.channel-list td,
+#chat table.ban-list td {
 	padding: 5px;
 	vertical-align: top;
 	border-bottom: #eee 1px solid;
 }
 
+#chat table.channel-list .channel {
+	width: 80px;
+}
+
 #chat table.channel-list .channel,
-#chat table.channel-list .topic {
+#chat table.channel-list .topic,
+#chat table.ban-list .hostmask,
+#chat table.ban-list .banned_by,
+#chat table.ban-list .banned_at {
 	text-align: left;
 }
 
 #chat table.channel-list .users {
 	text-align: center;
+	width: 50px;
 }
 
 #chat table.channel-list td.channel .inline-channel {
@@ -1103,8 +1097,9 @@ kbd {
 	color: #222;
 	font-size: 12px;
 	max-width: 100%;
-	padding: 6px 8px;
+	padding: 6px;
 	margin-top: 2px;
+	overflow: hidden;
 }
 
 #chat .toggle-content a {
@@ -1113,14 +1108,22 @@ kbd {
 
 #chat .toggle-content img {
 	max-width: 100%;
-	max-height: 250px;
+	max-height: 128px;
 	display: block;
-	margin: 2px 0;
 }
 
 #chat .toggle-content .thumb {
-	max-height: 110px;
-	max-width: 210px;
+	float: left;
+	margin-right: 6px;
+	max-width: 48px;
+	max-height: 32px;
+}
+
+#chat .toggle-content .head,
+#chat .toggle-content .body {
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 
 #chat .toggle-content .head {
@@ -1129,9 +1132,6 @@ kbd {
 
 #chat .toggle-content .body {
 	color: #999;
-	max-width: 460px;
-	word-break: normal;
-	word-wrap: break-word;
 }
 
 #chat .toggle-content.show {
@@ -1167,6 +1167,10 @@ kbd {
 	position: absolute;
 	top: 48px;
 	width: 100%;
+}
+
+#chat .names-filtered {
+	display: none;
 }
 
 #chat .names .user {
@@ -1206,6 +1210,10 @@ kbd {
 
 #chat .user-mode.normal:before {
 	content: "Users";
+}
+
+#chat .user-mode-search:before {
+	content: "Search Results";
 }
 
 #loading {
@@ -1327,8 +1335,7 @@ kbd {
 
 #help .help-item .subject {
 	white-space: nowrap;
-	padding-right: 10px;
-	min-width: 150px;
+	padding-right: 15px;
 }
 
 #help .help-item .description p {
@@ -1444,22 +1451,16 @@ kbd {
 	align-self: center;
 }
 
-#form #cycle-nicks,
 #form #submit {
 	color: #9ca5b4;
 	font-size: 14px;
 	height: 32px;
 	transition: opacity .2s;
-	width: 24px;
+	width: 32px;
 	-webkit-flex: 0 0 auto;
 	flex: 0 0 auto;
 }
 
-#form #submit {
-	margin-right: 4px;
-}
-
-#form #cycle-nicks:hover,
 #form #submit:hover {
 	opacity: .6;
 }
@@ -1475,7 +1476,8 @@ kbd {
 	background: transparent;
 }
 
-#context-menu {
+#context-menu,
+.textcomplete-menu {
 	position: absolute;
 	list-style: none;
 	margin: 0;
@@ -1494,7 +1496,8 @@ kbd {
 	background-color: rgba(0, 0, 0, .1);
 }
 
-.context-menu-item {
+.context-menu-item,
+.textcomplete-item {
 	cursor: pointer;
 	display: block;
 	padding: 4px 8px;
@@ -1503,19 +1506,38 @@ kbd {
 	margin-bottom: 6px;
 }
 
-.context-menu-item:hover {
+.context-menu-item:hover,
+.textcomplete-item:hover,
+.textcomplete-menu .active {
 	background-color: #f6f6f6;
 }
 
-.context-menu-item:before {
+.context-menu-item:before,
+.textcomplete-item:before {
 	width: 20px;
 	display: inline-block;
 }
 
+.textcomplete-item a {
+	color: #333;
+}
+
+.textcomplete-item a:hover {
+	opacity: 1;
+}
+
+.textcomplete-item .emoji {
+	margin-right: 8px;
+	width: 16px;
+	text-align: center;
+	display: inline-block;
+}
+
 /**
-  * Tooltips
+  * Tooltips v0.5.3
   * See http://primercss.io/tooltips/
   */
+
 .tooltipped {
 	position: relative;
 }
@@ -1523,12 +1545,11 @@ kbd {
 .tooltipped:after {
 	position: absolute;
 	z-index: 1000000;
-	display: inline-block;
-	visibility: hidden;
-	opacity: 0;
+	display: none;
 	padding: 5px 8px;
 	font: 12px Lato;
 	line-height: 1.2;
+	-webkit-font-smoothing: subpixel-antialiased;
 	color: #fff;
 	text-align: center;
 	text-decoration: none;
@@ -1541,23 +1562,40 @@ kbd {
 	content: attr(aria-label);
 	background: #222;
 	border-radius: 3px;
-	-webkit-font-smoothing: subpixel-antialiased;
-	transition: .2s;
+	opacity: 0;
 }
 
 .tooltipped:before {
 	position: absolute;
 	z-index: 1000001;
-	display: inline-block;
-	visibility: hidden;
-	opacity: 0;
+	display: none;
 	width: 0;
 	height: 0;
 	color: #fff;
 	pointer-events: none;
 	content: "";
 	border: 5px solid transparent;
-	transition: .2s;
+	opacity: 0;
+}
+
+@-webkit-keyframes tooltip-appear {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes tooltip-appear {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
 }
 
 .tooltipped:hover:before,
@@ -1566,9 +1604,18 @@ kbd {
 .tooltipped:active:after,
 .tooltipped:focus:before,
 .tooltipped:focus:after {
-	visibility: visible;
-	opacity: 1;
+	display: inline-block;
 	text-decoration: none;
+	-webkit-animation-name: tooltip-appear;
+	animation-name: tooltip-appear;
+	-webkit-animation-duration: .1s;
+	animation-duration: .1s;
+	-webkit-animation-fill-mode: forwards;
+	animation-fill-mode: forwards;
+	-webkit-animation-timing-function: ease-in;
+	animation-timing-function: ease-in;
+	-webkit-animation-delay: .4s;
+	animation-delay: .4s;
 }
 
 .tooltipped-s:after,
@@ -1665,6 +1712,17 @@ kbd {
 	border-right-color: #222;
 }
 
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+	only screen and (min--moz-device-pixel-ratio: 2),
+	only screen and (-moz-min-device-pixel-ratio: 2),
+	only screen and (min-device-pixel-ratio: 2),
+	only screen and (min-resolution: 192dpi),
+	only screen and (min-resolution: 2dppx) {
+	.tooltipped-w:after {
+		margin-right: 4.5px;
+	}
+}
+
 /* End tooltips */
 
 /**
@@ -1757,12 +1815,8 @@ kbd {
 	  * - https://www.w3.org/TR/mediaqueries-4/
 	  * - https://developer.mozilla.org/en-US/docs/Web/CSS/@media/hover
 	  */
-	.tooltipped:hover:before,
-	.tooltipped:hover:after,
-	.tooltipped:active:before,
-	.tooltipped:active:after,
-	.tooltipped:focus:before,
-	.tooltipped:focus:after {
+	.tooltipped-no-touch:hover:before,
+	.tooltipped-no-touch:hover:after {
 		visibility: hidden;
 		opacity: 0;
 	}
@@ -1800,6 +1854,10 @@ kbd {
 
 	#windows .window .header {
 		display: block;
+	}
+
+	#chat .channel .chat {
+		right: 0;
 	}
 
 	#chat .sidebar {

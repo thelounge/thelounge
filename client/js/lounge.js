@@ -2,12 +2,15 @@
 
 // vendor libraries
 require("jquery-ui/ui/widgets/sortable");
+require("jquery-textcomplete");
 const $ = require("jquery");
-const io = require("socket.io-client");
+const moment = require("moment");
 const Mousetrap = require("mousetrap");
 const URI = require("urijs");
+const fuzzy = require("fuzzy");
 
 // our libraries
+const emojiMap = require("./libs/simplemap.json");
 require("./libs/jquery/inputhistory");
 require("./libs/jquery/stickyscroll");
 require("./libs/jquery/tabcomplete");
@@ -15,45 +18,11 @@ const helpers_parse = require("./libs/handlebars/parse");
 const helpers_roundBadgeNumber = require("./libs/handlebars/roundBadgeNumber");
 const slideoutMenu = require("./libs/slideout");
 const templates = require("../views");
+const socket = require("./socket");
+const constants = require("./constants");
+const storage = require("./localStorage");
 
 $(function() {
-	var path = window.location.pathname + "socket.io/";
-	var socket = io({
-		path: path,
-		autoConnect: false,
-		reconnection: false
-	});
-	var commands = [
-		"/away",
-		"/back",
-		"/close",
-		"/connect",
-		"/deop",
-		"/devoice",
-		"/disconnect",
-		"/invite",
-		"/join",
-		"/kick",
-		"/leave",
-		"/me",
-		"/mode",
-		"/msg",
-		"/nick",
-		"/notice",
-		"/op",
-		"/part",
-		"/query",
-		"/quit",
-		"/raw",
-		"/say",
-		"/send",
-		"/server",
-		"/slap",
-		"/topic",
-		"/voice",
-		"/whois"
-	];
-
 	var sidebar = $("#sidebar, #footer");
 	var chat = $("#chat");
 
@@ -75,56 +44,72 @@ $(function() {
 
 	var favicon = $("#favicon");
 
-	function setLocalStorageItem(key, value) {
-		try {
-			window.localStorage.setItem(key, value);
-		} catch (e) {
-			// Do nothing. If we end up here, web storage quota exceeded, or user is
-			// in Safari's private browsing where localStorage's setItem is not
-			// available. See http://stackoverflow.com/q/14555347/1935861.
-		}
-	}
+	// Autocompletion Strategies
 
-	[
-		"connect_error",
-		"connect_failed",
-		"disconnect",
-		"error",
-	].forEach(function(e) {
-		socket.on(e, function(data) {
-			$("#loading-page-message").text("Connection failed: " + data);
-			$("#connection-error").addClass("shown").one("click", function() {
-				window.onbeforeunload = null;
-				window.location.reload();
-			});
+	const emojiStrategy = {
+		id: "emoji",
+		match: /\B:([-+\w]*):?$/,
+		search(term, callback) {
+			callback(Object.keys(emojiMap).filter(name => name.indexOf(term) === 0));
+		},
+		template(value) {
+			return `<span class="emoji">${emojiMap[value]}</span> ${value}`;
+		},
+		replace(value) {
+			return emojiMap[value];
+		},
+		index: 1
+	};
 
-			// Disables sending a message by pressing Enter. `off` is necessary to
-			// cancel `inputhistory`, which overrides hitting Enter. `on` is then
-			// necessary to avoid creating new lines when hitting Enter without Shift.
-			// This is fairly hacky but this solution is not permanent.
-			$("#input").off("keydown").on("keydown", function(event) {
-				if (event.which === 13 && !event.shiftKey) {
-					event.preventDefault();
-				}
-			});
-			// Hides the "Send Message" button
-			$("#submit").remove();
+	const nicksStrategy = {
+		id: "nicks",
+		match: /\B(@([a-zA-Z_[\]\\^{}|`@][a-zA-Z0-9_[\]\\^{}|`-]*)?)$/,
+		search(term, callback) {
+			term = term.slice(1);
+			if (term[0] === "@") {
+				callback(completeNicks(term.slice(1)).map(val => "@" + val));
+			} else {
+				callback(completeNicks(term));
+			}
+		},
+		template(value) {
+			return value;
+		},
+		replace(value) {
+			return value;
+		},
+		index: 1
+	};
 
-			console.error(data);
-		});
-	});
+	const chanStrategy = {
+		id: "chans",
+		match: /\B((#|\+|&|![A-Z0-9]{5})([^\x00\x0A\x0D\x20\x2C\x3A]+(:[^\x00\x0A\x0D\x20\x2C\x3A]*)?)?)$/,
+		search(term, callback, match) {
+			callback(completeChans(match[0]));
+		},
+		template(value) {
+			return value;
+		},
+		replace(value) {
+			return value;
+		},
+		index: 1
+	};
 
-	socket.on("connecting", function() {
-		$("#loading-page-message").text("Connecting…");
-	});
-
-	socket.on("connect", function() {
-		$("#loading-page-message").text("Finalizing connection…");
-	});
-
-	socket.on("authorized", function() {
-		$("#loading-page-message").text("Authorized, loading messages…");
-	});
+	const commandStrategy = {
+		id: "commands",
+		match: /^\/(\w*)$/,
+		search(term, callback) {
+			callback(completeCommands("/" + term));
+		},
+		template(value) {
+			return value;
+		},
+		replace(value) {
+			return value;
+		},
+		index: 1
+	};
 
 	socket.on("auth", function(data) {
 		var login = $("#sign-in");
@@ -133,14 +118,14 @@ $(function() {
 		login.find(".btn").prop("disabled", false);
 
 		if (!data.success) {
-			window.localStorage.removeItem("token");
+			storage.remove("token");
 
 			var error = login.find(".error");
 			error.show().closest("form").one("submit", function() {
 				error.hide();
 			});
 		} else {
-			token = window.localStorage.getItem("token");
+			token = storage.get("token");
 			if (token) {
 				$("#loading-page-message").text("Authorizing…");
 				socket.emit("auth", {token: token});
@@ -149,13 +134,15 @@ $(function() {
 
 		var input = login.find("input[name='user']");
 		if (input.val() === "") {
-			input.val(window.localStorage.getItem("user") || "");
+			input.val(storage.get("user") || "");
 		}
 		if (token) {
 			return;
 		}
 		sidebar.find(".sign-in")
-			.click()
+			.trigger("click", {
+				pushState: false,
+			})
 			.end()
 			.find(".networks")
 			.html("")
@@ -181,8 +168,8 @@ $(function() {
 			});
 		}
 
-		if (data.token && window.localStorage.getItem("token") !== null) {
-			setLocalStorageItem("token", data.token);
+		if (data.token && storage.get("token") !== null) {
+			storage.set("token", data.token);
 		}
 
 		passwordForm
@@ -197,15 +184,17 @@ $(function() {
 		$("#loading-page-message").text("Rendering…");
 
 		if (data.networks.length === 0) {
-			$("#footer").find(".connect").trigger("click");
+			$("#footer").find(".connect").trigger("click", {
+				pushState: false,
+			});
 		} else {
 			renderNetworks(data);
 		}
 
 		if (data.token && $("#sign-in-remember").is(":checked")) {
-			setLocalStorageItem("token", data.token);
+			storage.set("token", data.token);
 		} else {
-			window.localStorage.removeItem("token");
+			storage.remove("token");
 		}
 
 		$("body").removeClass("signed-out");
@@ -213,13 +202,17 @@ $(function() {
 		$("#sign-in").remove();
 
 		var id = data.active;
-		var target = sidebar.find("[data-id='" + id + "']").trigger("click");
+		var target = sidebar.find("[data-id='" + id + "']").trigger("click", {
+			replaceHistory: true
+		});
 		if (target.length === 0) {
 			var first = sidebar.find(".chan")
 				.eq(0)
 				.trigger("click");
 			if (first.length === 0) {
-				$("#footer").find(".connect").trigger("click");
+				$("#footer").find(".connect").trigger("click", {
+					pushState: false,
+				});
 			}
 		}
 	});
@@ -269,7 +262,7 @@ $(function() {
 		var chan = chat.find(target);
 		var template = "msg";
 
-		if (!data.msg.highlight && !data.msg.self && (type === "message" || type === "notice") && highlights.some(function(h) {
+		if (!data.msg.highlight && !data.msg.self && (type === "message" || type === "notice") && options.highlights.some(function(h) {
 			return data.msg.text.toLocaleLowerCase().indexOf(h.toLocaleLowerCase()) > -1;
 		})) {
 			data.msg.highlight = true;
@@ -289,6 +282,7 @@ $(function() {
 			"whois",
 			"ctcp",
 			"channel_list",
+			"ban_list",
 		].indexOf(type) !== -1) {
 			template = "msg_action";
 		} else if (type === "unhandled") {
@@ -327,7 +321,10 @@ $(function() {
 
 	function renderChannel(data) {
 		renderChannelMessages(data);
-		renderChannelUsers(data);
+
+		if (data.type === "channel") {
+			renderChannelUsers(data);
+		}
 	}
 
 	function renderChannelMessages(data) {
@@ -387,7 +384,19 @@ $(function() {
 			return (oldSortOrder[a] || Number.MAX_VALUE) - (oldSortOrder[b] || Number.MAX_VALUE);
 		});
 
-		users.html(templates.user(data)).data("nicks", nicks);
+		const search = users
+			.find(".search")
+			.attr("placeholder", nicks.length + " " + (nicks.length === 1 ? "user" : "users"));
+
+		users
+			.find(".names-original")
+			.html(templates.user(data))
+			.data("nicks", nicks);
+
+		// Refresh user search
+		if (search.val().length) {
+			search.trigger("input");
+		}
 	}
 
 	function renderNetworks(data) {
@@ -420,6 +429,10 @@ $(function() {
 		var msg = buildChatMessage(data);
 		var target = "#chan-" + data.chan;
 		var container = chat.find(target + " .messages");
+
+		if (data.msg.type === "channel_list" || data.msg.type === "ban_list") {
+			$(container).empty();
+		}
 
         // Check if date changed
 		var prevMsg = $(container.find(".msg")).last();
@@ -456,20 +469,20 @@ $(function() {
 			.find("#chan-" + data.chan)
 			.find(".messages");
 
-		// Remove the date-change marker we put at the top, because it may
-		// not actually be a date change now
-		var children = $(chan).children();
-		if (children.eq(0).hasClass("date-marker")) { // Check top most child
-			children.eq(0).remove();
-		} else if (children.eq(0).hasClass("unread-marker") && children.eq(1).hasClass("date-marker")) {
-			// Otherwise the date-marker would get 'stuck' because of the new-message marker
-			children.eq(1).remove();
-		}
-
 		// get the scrollable wrapper around messages
 		var scrollable = chan.closest(".chat");
 		var heightOld = chan.height();
 		chan.prepend(documentFragment).end();
+
+		// Remove the date-change marker we put at the top, because it may
+		// not actually be a date change now
+		var children = $(chan).children();
+		if (children.eq(0).hasClass("date-marker-container")) { // Check top most child
+			children.eq(0).remove();
+		} else if (children.eq(1).hasClass("date-marker-container")) {
+			// The unread-marker could be at index 0, which will cause the date-marker to become "stuck"
+			children.eq(1).remove();
+		}
 
 		// restore scroll position
 		var position = chan.height() - heightOld;
@@ -499,6 +512,8 @@ $(function() {
 
 			lastDate = msgDate;
 		});
+
+		scrollable.find(".show-more-button").prop("disabled", false);
 	});
 
 	socket.on("network", function(data) {
@@ -591,126 +606,9 @@ $(function() {
 
 	socket.on("names", renderChannelUsers);
 
-	var userStyles = $("#user-specified-css");
-	var highlights = [];
-	var options = $.extend({
-		coloredNicks: true,
-		desktopNotifications: false,
-		join: true,
-		links: true,
-		mode: true,
-		motd: false,
-		nick: true,
-		notification: true,
-		notifyAllMessages: false,
-		part: true,
-		quit: true,
-		theme: $("#theme").attr("href").replace(/^themes\/(.*).css$/, "$1"), // Extracts default theme name, set on the server configuration
-		thumbnails: true,
-		userStyles: userStyles.text(),
-	}, JSON.parse(window.localStorage.getItem("settings")));
+	var options = require("./options");
 
 	var windows = $("#windows");
-
-	(function SettingsScope() {
-		var settings = $("#settings");
-
-		for (var i in options) {
-			if (i === "userStyles") {
-				if (!/[?&]nocss/.test(window.location.search)) {
-					$(document.head).find("#user-specified-css").html(options[i]);
-				}
-				settings.find("#user-specified-css-input").val(options[i]);
-			} else if (i === "highlights") {
-				settings.find("input[name=" + i + "]").val(options[i]);
-			} else if (i === "theme") {
-				$("#theme").attr("href", "themes/" + options[i] + ".css");
-				settings.find("select[name=" + i + "]").val(options[i]);
-			} else if (options[i]) {
-				settings.find("input[name=" + i + "]").prop("checked", true);
-			}
-		}
-
-		settings.on("change", "input, select, textarea", function() {
-			var self = $(this);
-			var name = self.attr("name");
-
-			if (self.attr("type") === "checkbox") {
-				options[name] = self.prop("checked");
-			} else {
-				options[name] = self.val();
-			}
-
-			setLocalStorageItem("settings", JSON.stringify(options));
-
-			if ([
-				"join",
-				"mode",
-				"motd",
-				"nick",
-				"part",
-				"quit",
-				"notifyAllMessages",
-			].indexOf(name) !== -1) {
-				chat.toggleClass("hide-" + name, !self.prop("checked"));
-			} else if (name === "coloredNicks") {
-				chat.toggleClass("colored-nicks", self.prop("checked"));
-			} else if (name === "theme") {
-				$("#theme").attr("href", "themes/" + options[name] + ".css");
-			} else if (name === "userStyles") {
-				userStyles.html(options[name]);
-			} else if (name === "highlights") {
-				var highlightString = options[name];
-				highlights = highlightString.split(",").map(function(h) {
-					return h.trim();
-				}).filter(function(h) {
-					// Ensure we don't have empty string in the list of highlights
-					// otherwise, users get notifications for everything
-					return h !== "";
-				});
-			}
-		}).find("input")
-			.trigger("change");
-
-		$("#desktopNotifications").on("change", function() {
-			if ($(this).prop("checked") && Notification.permission !== "granted") {
-				Notification.requestPermission(updateDesktopNotificationStatus);
-			}
-		});
-
-		// Updates the checkbox and warning in settings when the Settings page is
-		// opened or when the checkbox state is changed.
-		// When notifications are not supported, this is never called (because
-		// checkbox state can not be changed).
-		var updateDesktopNotificationStatus = function() {
-			if (Notification.permission === "denied") {
-				desktopNotificationsCheckbox.attr("disabled", true);
-				desktopNotificationsCheckbox.attr("checked", false);
-				warningBlocked.show();
-			} else {
-				if (Notification.permission === "default" && desktopNotificationsCheckbox.prop("checked")) {
-					desktopNotificationsCheckbox.attr("checked", false);
-				}
-				desktopNotificationsCheckbox.attr("disabled", false);
-				warningBlocked.hide();
-			}
-		};
-
-		// If browser does not support notifications, override existing settings and
-		// display proper message in settings.
-		var desktopNotificationsCheckbox = $("#desktopNotifications");
-		var warningUnsupported = $("#warnUnsupportedDesktopNotifications");
-		var warningBlocked = $("#warnBlockedDesktopNotifications");
-		warningBlocked.hide();
-		if (("Notification" in window)) {
-			warningUnsupported.hide();
-			windows.on("show", "#settings", updateDesktopNotificationStatus);
-		} else {
-			options.desktopNotifications = false;
-			desktopNotificationsCheckbox.attr("disabled", true);
-			desktopNotificationsCheckbox.attr("checked", false);
-		}
-	}());
 
 	var viewport = $("#viewport");
 	var sidebarSlide = slideoutMenu(viewport[0], sidebar[0]);
@@ -729,6 +627,7 @@ $(function() {
 		var self = $(this);
 		viewport.toggleClass(self.attr("class"));
 		e.stopPropagation();
+		chat.find(".chan.active .chat").trigger("msg.sticky");
 	});
 
 	function positionContextMenu(that, e) {
@@ -808,7 +707,7 @@ $(function() {
 
 	var input = $("#input")
 		.history()
-		.on("input keyup", function() {
+		.on("input", function() {
 			var style = window.getComputedStyle(this);
 
 			// Start by resetting height before computing as scrollHeight does not
@@ -822,9 +721,20 @@ $(function() {
 				+ Math.round(parseFloat(style.borderBottomWidth) || 0)
 			) + "px";
 
-			$("#chat .chan.active .chat").trigger("msg.sticky"); // fix growing
+			chat.find(".chan.active .chat").trigger("msg.sticky"); // fix growing
 		})
-		.tab(complete, {hint: false});
+		.tab(completeNicks, {hint: false})
+		.textcomplete([emojiStrategy, nicksStrategy, chanStrategy, commandStrategy], {
+			dropdownClassName: "textcomplete-menu",
+			placement: "top"
+		}).on({
+			"textComplete:show": function() {
+				$(this).data("autocompleting", true);
+			},
+			"textComplete:hide": function() {
+				$(this).data("autocompleting", false);
+			}
+		});
 
 	var focus = $.noop;
 	if (!("ontouchstart" in window || navigator.maxTouchPoints > 0)) {
@@ -856,12 +766,6 @@ $(function() {
 	var forceFocus = function() {
 		input.trigger("click").focus();
 	};
-
-	// Cycle through nicks for the current word, just like hitting "Tab"
-	$("#cycle-nicks").on("click", function() {
-		input.triggerHandler($.Event("keydown.tabcomplete", {which: 9}));
-		forceFocus();
-	});
 
 	$("#form").on("submit", function(e) {
 		e.preventDefault();
@@ -985,6 +889,37 @@ $(function() {
 		});
 	});
 
+	sidebar.on("click", ".chan, button", function(e, data) {
+		// Pushes states to history web API when clicking elements with a data-target attribute.
+		// States are very trivial and only contain a single `clickTarget` property which
+		// contains a CSS selector that targets elements which takes the user to a different view
+		// when clicked. The `popstate` event listener will trigger synthetic click events using that
+		// selector and thus take the user to a different view/state.
+		if (data && data.pushState === false) {
+			return;
+		}
+		const self = $(this);
+		const target = self.data("target");
+		if (!target) {
+			return;
+		}
+		const state = {};
+
+		if (self.hasClass("chan")) {
+			state.clickTarget = `.chan[data-id="${self.data("id")}"]`;
+		} else {
+			state.clickTarget = `#footer button[data-target="${target}"]`;
+		}
+
+		if (history && history.pushState) {
+			if (data && data.replaceHistory && history.replaceState) {
+				history.replaceState(state, null, null);
+			} else {
+				history.pushState(state, null, null);
+			}
+		}
+	});
+
 	sidebar.on("click", ".chan, button", function() {
 		var self = $(this);
 		var target = self.data("target");
@@ -1050,7 +985,7 @@ $(function() {
 		}
 
 		var chanChat = chan.find(".chat");
-		if (chanChat.length > 0) {
+		if (chanChat.length > 0 && chan.data("type") !== "special") {
 			chanChat.sticky();
 		}
 
@@ -1063,7 +998,7 @@ $(function() {
 	});
 
 	sidebar.on("click", "#sign-out", function() {
-		window.localStorage.removeItem("token");
+		storage.remove("token");
 		location.reload();
 	});
 
@@ -1103,17 +1038,31 @@ $(function() {
 	});
 
 	chat.on("input", ".search", function() {
-		var value = $(this).val().toLowerCase();
-		var names = $(this).closest(".users").find(".names");
-		names.find(".user").each(function() {
-			var btn = $(this);
-			var name = btn.text().toLowerCase().replace(/[+%@~]/, "");
-			if (name.indexOf(value) > -1) {
-				btn.show();
-			} else {
-				btn.hide();
-			}
-		});
+		const value = $(this).val();
+		const parent = $(this).closest(".users");
+		const names = parent.find(".names-original");
+		const container = parent.find(".names-filtered");
+
+		if (!value.length) {
+			container.hide();
+			names.show();
+			return;
+		}
+
+		const fuzzyOptions = {
+			pre: "<b>",
+			post: "</b>",
+			extract: el => $(el).text()
+		};
+
+		const result = fuzzy.filter(
+			value,
+			names.find(".user").toArray(),
+			fuzzyOptions
+		);
+
+		names.hide();
+		container.html(templates.user_filtered({matches: result})).show();
 	});
 
 	chat.on("msg", ".messages", function(e, target, msg) {
@@ -1189,7 +1138,8 @@ $(function() {
 
 	chat.on("click", ".show-more-button", function() {
 		var self = $(this);
-		var count = self.parent().next(".messages").children().length;
+		var count = self.parent().next(".messages").children(".msg").length;
+		self.prop("disabled", true);
 		socket.emit("more", {
 			target: self.data("id"),
 			count: count
@@ -1271,7 +1221,7 @@ $(function() {
 			}
 		});
 		if (values.user) {
-			setLocalStorageItem("user", values.user);
+			storage.set("user", values.user);
 		}
 		socket.emit(
 			event, values
@@ -1301,6 +1251,36 @@ $(function() {
 	});
 
 	(function HotkeysScope() {
+		Mousetrap.bind([
+			"pageup",
+			"pagedown"
+		], function(e, key) {
+			let container = windows.find(".window.active");
+			if (container.is(":animated")) {
+				return;
+			}
+
+			// Chat windows scroll message container
+			if (container.attr("id") === "chat-container") {
+				container = container.find(".chan.active .chat");
+			}
+
+			const offset = container.get(0).clientHeight * 0.9;
+			let scrollTop = container.scrollTop();
+
+			if (key === "pageup") {
+				scrollTop = Math.floor(scrollTop - offset);
+			} else {
+				scrollTop = Math.ceil(scrollTop + offset);
+			}
+
+			container.stop().animate({
+				scrollTop: scrollTop
+			}, 200);
+
+			return false;
+		});
+
 		Mousetrap.bind([
 			"command+up",
 			"command+down",
@@ -1384,8 +1364,8 @@ $(function() {
 
 				// Remove date-seperators that would otherwise be "stuck" at the top
 				// of the channel
-				chan.find(".date-marker").each(function() {
-					if ($(this).next().hasClass("date-marker")) {
+				chan.find(".date-marker-container").each(function() {
+					if ($(this).next().hasClass("date-marker-container")) {
 						$(this).remove();
 					}
 				});
@@ -1396,21 +1376,34 @@ $(function() {
 	function clear() {
 		chat.find(".active")
 			.find(".show-more").addClass("show").end()
-			.find(".messages .msg, .date-marker").remove();
+			.find(".messages .msg, .date-marker-container").remove();
 	}
 
-	function complete(word) {
-		var words = commands.slice();
-		var users = chat.find(".active").find(".users");
-		var nicks = users.data("nicks");
+	function completeNicks(word) {
+		const users = chat.find(".active").find(".names-original");
+		const words = users.data("nicks");
 
-		for (var i in nicks) {
-			words.push(nicks[i]);
-		}
+		return $.grep(
+			words,
+			w => !w.toLowerCase().indexOf(word.toLowerCase())
+		);
+	}
+
+	function completeCommands(word) {
+		const words = constants.commands.slice();
+
+		return $.grep(
+			words,
+			w => !w.toLowerCase().indexOf(word.toLowerCase())
+		);
+	}
+
+	function completeChans(word) {
+		const words = [];
 
 		sidebar.find(".chan")
 			.each(function() {
-				var self = $(this);
+				const self = $(this);
 				if (!self.hasClass("lobby")) {
 					words.push(self.data("title"));
 				}
@@ -1418,9 +1411,7 @@ $(function() {
 
 		return $.grep(
 			words,
-			function(w) {
-				return !w.toLowerCase().indexOf(word.toLowerCase());
-			}
+			w => !w.toLowerCase().indexOf(word.toLowerCase())
 		);
 	}
 
@@ -1567,15 +1558,47 @@ $(function() {
 		$("#viewport .lt").toggleClass("notified", newState);
 	}
 
-	document.addEventListener(
-		"visibilitychange",
-		function() {
-			if (sidebar.find(".highlight").length === 0) {
-				toggleNotificationMarkers(false);
-			}
+	$(document).on("visibilitychange focus", () => {
+		if (sidebar.find(".highlight").length === 0) {
+			toggleNotificationMarkers(false);
 		}
-	);
+	});
+
+	// Compute how many milliseconds are remaining until the next day starts
+	function msUntilNextDay() {
+		return moment().add(1, "day").startOf("day") - moment();
+	}
+
+	// Go through all Today/Yesterday date markers in the DOM and recompute their
+	// labels. When done, restart the timer for the next day.
+	function updateDateMarkers() {
+		$(".date-marker-text[data-label='Today'], .date-marker-text[data-label='Yesterday']")
+			.closest(".date-marker-container")
+			.each(function() {
+				$(this).replaceWith(templates.date_marker({msgDate: $(this).data("timestamp")}));
+			});
+
+		// This should always be 24h later but re-computing exact value just in case
+		setTimeout(updateDateMarkers, msUntilNextDay());
+	}
+	setTimeout(updateDateMarkers, msUntilNextDay());
 
 	// Only start opening socket.io connection after all events have been registered
 	socket.open();
+
+	window.addEventListener(
+		"popstate",
+		(e) => {
+			const {state} = e;
+			if (!state) {
+				return;
+			}
+			const {clickTarget} = state;
+			if (clickTarget) {
+				$(clickTarget).trigger("click", {
+					pushState: false
+				});
+			}
+		}
+	);
 });

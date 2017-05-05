@@ -7,6 +7,9 @@ version: "{build}"
 # Do not build on tags (GitHub only)
 skip_tags: true
 
+# Do not build feature branch with open pull requests
+skip_branch_with_pr: true
+
 environment:
   nodejs_version: '4'
 

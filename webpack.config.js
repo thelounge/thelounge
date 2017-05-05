@@ -13,10 +13,13 @@ let config = {
 		"js/bundle.vendor.js": [
 			"handlebars/runtime",
 			"jquery",
+			"jquery-textcomplete",
 			"jquery-ui/ui/widgets/sortable",
+			"moment",
 			"mousetrap",
 			"socket.io-client",
 			"urijs",
+			"fuzzy",
 		],
 	},
 	devtool: "source-map",
@@ -36,7 +39,11 @@ let config = {
 					loader: "babel-loader",
 					options: {
 						presets: [
-							"es2015"
+							["env", {
+								targets: {
+									browsers: "last 2 versions"
+								}
+							}]
 						]
 					}
 				}

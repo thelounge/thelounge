@@ -3,6 +3,7 @@
 module.exports = {
 	actions: {
 		action: require("./actions/action.tpl"),
+		ban_list: require("./actions/ban_list.tpl"),
 		channel_list: require("./actions/channel_list.tpl"),
 		ctcp: require("./actions/ctcp.tpl"),
 		invite: require("./actions/invite.tpl"),
@@ -29,4 +30,5 @@ module.exports = {
 	toggle: require("./toggle.tpl"),
 	unread_marker: require("./unread_marker.tpl"),
 	user: require("./user.tpl"),
+	user_filtered: require("./user_filtered.tpl"),
 };

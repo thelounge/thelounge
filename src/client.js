@@ -17,6 +17,7 @@ var id = 0;
 var events = [
 	"connection",
 	"unhandled",
+	"banlist",
 	"ctcp",
 	"error",
 	"invite",
@@ -35,6 +36,7 @@ var events = [
 	"whois"
 ];
 var inputs = [
+	"ban",
 	"ctcp",
 	"msg",
 	"part",
@@ -64,8 +66,9 @@ function Client(manager, name, config) {
 	if (typeof config !== "object") {
 		config = {};
 	}
+
 	_.merge(this, {
-		awayMessage: "",
+		awayMessage: config.awayMessage || "",
 		lastActiveChannel: -1,
 		attachedClients: {},
 		config: config,
@@ -273,7 +276,6 @@ Client.prototype.connect = function(args) {
 		auto_reconnect: true,
 		auto_reconnect_wait: 10000 + Math.floor(Math.random() * 1000), // If multiple users are connected to the same network, randomize their reconnections a little
 		auto_reconnect_max_retries: 360, // At least one hour (plus timeouts) worth of reconnections
-		ping_interval: 0, // Disable client ping timeouts due to buggy implementation
 		webirc: webirc,
 	});
 
@@ -429,44 +431,40 @@ Client.prototype.open = function(socketId, target) {
 };
 
 Client.prototype.sort = function(data) {
-	var self = this;
+	const order = data.order;
 
-	var type = data.type;
-	var order = data.order || [];
-	var sorted = [];
+	if (!_.isArray(order)) {
+		return;
+	}
 
-	switch (type) {
+	switch (data.type) {
 	case "networks":
-		order.forEach(i => {
-			var find = _.find(self.networks, {id: i});
-			if (find) {
-				sorted.push(find);
-			}
+		this.networks.sort((a, b) => {
+			return order.indexOf(a.id) - order.indexOf(b.id);
 		});
-		self.networks = sorted;
+
+		// Sync order to connected clients
+		this.emit("sync_sort", {order: this.networks.map(obj => obj.id), type: data.type, target: data.target});
+
 		break;
 
 	case "channels":
-		var target = data.target;
-		var network = _.find(self.networks, {id: target});
+		var network = _.find(this.networks, {id: data.target});
 		if (!network) {
 			return;
 		}
-		order.forEach(i => {
-			var find = _.find(network.channels, {id: i});
-			if (find) {
-				sorted.push(find);
-			}
+
+		network.channels.sort((a, b) => {
+			return order.indexOf(a.id) - order.indexOf(b.id);
 		});
-		network.channels = sorted;
+
+		// Sync order to connected clients
+		this.emit("sync_sort", {order: network.channels.map(obj => obj.id), type: data.type, target: data.target});
+
 		break;
 	}
 
-	self.save();
-
-	// Sync order to connected clients
-	const syncOrder = sorted.map(obj => obj.id);
-	self.emit("sync_sort", {order: syncOrder, type: type, target: data.target});
+	this.save();
 };
 
 Client.prototype.names = function(data) {
@@ -502,8 +500,6 @@ Client.prototype.clientAttach = function(socketId) {
 	var client = this;
 	var save = false;
 
-	client.attachedClients[socketId] = client.lastActiveChannel;
-
 	if (client.awayMessage && _.size(client.attachedClients) === 0) {
 		client.networks.forEach(function(network) {
 			// Only remove away on client attachment if
@@ -513,6 +509,8 @@ Client.prototype.clientAttach = function(socketId) {
 			}
 		});
 	}
+
+	client.attachedClients[socketId] = client.lastActiveChannel;
 
 	// Update old networks to store ip and hostmask
 	client.networks.forEach(network => {
@@ -559,7 +557,6 @@ Client.prototype.save = _.debounce(function SaveClient() {
 
 	const client = this;
 	let json = {};
-	json.awayMessage = client.awayMessage;
 	json.networks = this.networks.map(n => n.export());
 	client.manager.updateUser({
 		name: client.name,
