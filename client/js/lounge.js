@@ -469,20 +469,20 @@ $(function() {
 			.find("#chan-" + data.chan)
 			.find(".messages");
 
-		// Remove the date-change marker we put at the top, because it may
-		// not actually be a date change now
-		var children = $(chan).children();
-		if (children.eq(0).hasClass("date-marker")) { // Check top most child
-			children.eq(0).remove();
-		} else if (children.eq(0).hasClass("unread-marker") && children.eq(1).hasClass("date-marker")) {
-			// Otherwise the date-marker would get 'stuck' because of the new-message marker
-			children.eq(1).remove();
-		}
-
 		// get the scrollable wrapper around messages
 		var scrollable = chan.closest(".chat");
 		var heightOld = chan.height();
 		chan.prepend(documentFragment).end();
+
+		// Remove the date-change marker we put at the top, because it may
+		// not actually be a date change now
+		var children = $(chan).children();
+		if (children.eq(0).hasClass("date-marker-container")) { // Check top most child
+			children.eq(0).remove();
+		} else if (children.eq(1).hasClass("date-marker-container")) {
+			// The unread-marker could be at index 0, which will cause the date-marker to become "stuck"
+			children.eq(1).remove();
+		}
 
 		// restore scroll position
 		var position = chan.height() - heightOld;
@@ -1364,8 +1364,8 @@ $(function() {
 
 				// Remove date-seperators that would otherwise be "stuck" at the top
 				// of the channel
-				chan.find(".date-marker").each(function() {
-					if ($(this).next().hasClass("date-marker")) {
+				chan.find(".date-marker-container").each(function() {
+					if ($(this).next().hasClass("date-marker-container")) {
 						$(this).remove();
 					}
 				});
@@ -1376,7 +1376,7 @@ $(function() {
 	function clear() {
 		chat.find(".active")
 			.find(".show-more").addClass("show").end()
-			.find(".messages .msg, .date-marker").remove();
+			.find(".messages .msg, .date-marker-container").remove();
 	}
 
 	function completeNicks(word) {
