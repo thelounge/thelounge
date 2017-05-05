@@ -8,7 +8,7 @@
 	"icons":
 	[
 		{
-			"src": "img/touch-icon-192x192.png",
+			"src": "img/apple-touch-icon-192x192.png",
 			"sizes": "192x192",
 			"type": "image/png"
 		},
