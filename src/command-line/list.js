@@ -9,15 +9,16 @@ program
 	.description("List all users")
 	.action(() => {
 		var manager = new ClientManager();
-		manager.getUsersPromise()
-			.then((data)=>{
-				let users = data.users;
-				if (!users.length) {
+		manager.getUsers()
+			.then((users)=>{
+				if (!Object.keys(users).length) {
 					log.warn("No users found.");
 				} else {
 					log.info("Users:");
-					for (var i = 0; i < users.length; i++) {
-						log.info(`${i + 1}. ${colors.bold(users[i])}`);
+					let i = 0;
+					for (let user in users) {
+						log.info(`${i + 1}. ${colors.bold(user)}`);
+						i++;
 					}
 				}
 			});

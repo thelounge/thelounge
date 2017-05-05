@@ -37,23 +37,27 @@ ClientManager.prototype.findClient = function(name, token) {
 
 ClientManager.prototype.autoloadUsers = function() {
 	let self = this;
-	self.getUsersPromise({this: self})
-		.then(self.loadUsersPromise)
+	self.getUsers({this: self, force: true})// load usernames
+		.then((users) => {
+			// loads all users
+			return Promise.all(Object.keys(users).map(name => self.loadUser({name: name, force: true})));
+		})
 		.then(() => {
 			fs.watch(Helper.USERS_PATH, _.debounce(() => {
-				self.getUsersPromise()
-					.then((data) => {
-						let updatedUsers = data.users;
+				self.getUsers({force: true})
+					.then((users) => {
+						let updatedUsers = Object.keys(users);
 						const loaded = self.clients.map(c => c.name);
-						// New users created since last time users were loaded
-						self.loadUsersPromise({users: _.difference(updatedUsers, loaded)});
+						// load new users created since last time users were checked on watch
+						_.difference(updatedUsers, loaded).map(name => self.loadUser({name: name, force: true}));
 
-						// Existing users removed since last time users were loaded
+						// Existing users removed since last time users were checked on watch
 						_.difference(loaded, updatedUsers).forEach(name => {
 							const client = _.find(self.clients, {name: name});
 							if (client) {
 								client.quit();
 								self.clients = _.without(self.clients, client);
+								delete self.users[name];
 								log.info(`User ${colors.bold(name)} disconnected and removed`);
 							}
 						});
@@ -62,113 +66,68 @@ ClientManager.prototype.autoloadUsers = function() {
 		});
 };
 
-ClientManager.prototype.loadUserPromise = function(data) {
-	let self = data.this || this;
-	let name = data.name || undefined;
-	return new Promise((resolve, reject) => {
-		self.readUserConfigPromise(data)
-			.then((input) => {
-				let json = input.config;
-				if (!self.findClient(name)) {
-					self.clients.push(new Client(
-						self,
-						name,
-						json
-					));
-					resolve(data);
-				}
-			})
-			.catch((err) => {
-				log.error("Failed to read user config.", err);
-				reject(err);
-			});
-	});
-};
-
-ClientManager.prototype.loadUsersPromise = function(data) {
-	let self = data.this || this;
-	let loadusers = data.users || [];
-	return new Promise((resolve, reject) => {
-		// let current = input.users
-		// load users what are missing
-
-		const current = self.clients.map(c => c.name);
-		let loadpromises = _.difference(loadusers, current)
-			.map((user) => self.loadUserPromise({name: user}));
-
-		Promise.all(loadpromises)
-			.then(() => resolve(data))
-			.catch((err)=> {
-				reject(err);
-			});
-	});
-};
-
-ClientManager.prototype.addUserPromise = function(data) {
-	let self = data.this || this;
+// creates user config file, when server is running, autoload will load the user
+ClientManager.prototype.addUser = function(data) {
+	let self = data.self || this;
 	let name = data.name || undefined;
 	let password = data.password || undefined;
 	let enableLog = data.enableLog || undefined;
 	return new Promise((resolve, reject) => {
-		self.getUsersPromise()
-			.then((input) => {
-				let users = input.users;
-				if (users.indexOf(name) !== -1) {
-					reject(false);
-					throw new Error("User " + name + " already exist.");
+		self.getUsers(data)
+			.then((users) => {
+				if (name in users) {
+					return Promise.reject(new Error(`Error creating user, user ${colors.bold(name)} already exist.`));
 				}
 				if (require("path").basename(name) !== name) {
-					reject(false);
-					throw new Error(name + " is an invalid username.");
+					return Promise.reject(new Error(`Error creating user, user ${colors.bold(name)} is an invalid username.`));
 				}
-				const user = {
+				const config = {
 					user: name,
 					password: password || "",
 					log: enableLog,
 					networks: []
 				};
 				fs.writeFile(Helper.getUserConfigPath(name),
-					JSON.stringify(user, null, "\t"),
+					JSON.stringify(config, null, "\t"),
 					"utf-8",
 					(err) => {
 						if (err) {
 							reject(err);
 						} else {
-							resolve(data);
+							self.users[name] = {};
+							resolve(config);
 						}
 					});
 			})
 			.catch((err) => {
-				log.error(`Error adding user ${colors.bold(name)}.`, err.message);
+				if (err) {
+					reject(err);
+				}
 			});
 	});
 };
 
-ClientManager.prototype.updateUserPromise = function(data) {
+ClientManager.prototype.updateUser = function(data) {
 	let self = data.this || this;
 	let name = data.name || undefined;
 	let opts = data.opts || undefined;
 	return new Promise((resolve, reject) => {
-		self.getUsersPromise()
-			.then((input) => {
-				let users = input.users;
-				if (users.indexOf(name) === -1) {
-					reject(data);
-					throw new Error(name + " does not exist.");
+		self.getUsers(data)
+			.then((users) => {
+				if (!(name in users)) {
+					return Promise.reject(new Error(`Error updating user, user ${colors.bold(name)} does not exist.`));
 				}
 				if (typeof opts === "undefined") {
-					reject(data);
-					throw new Error("Options are not set");
+					return Promise.reject(new Error(`Error updating user, options for user ${colors.bold(name)} are not set.`));
 				}
-				self.readUserConfigPromise(data)
-					.then((input2) => {
-						let config = input2.config;
+				self.readUserConfig(data)
+					.then((config) => {
 						const currentUser = JSON.stringify(config, null, "\t");
 						_.assign(config, data.opts);
 						const newUser = JSON.stringify(config, null, "\t");
 						// Do not touch the disk if object has not changed
 						if (currentUser === newUser) {
-							resolve(data);
+							resolve(true);
 						} else {
 							fs.writeFile(Helper.getUserConfigPath(name),
 								newUser,
@@ -177,92 +136,136 @@ ClientManager.prototype.updateUserPromise = function(data) {
 									if (err) {
 										reject(err);
 									} else {
-										resolve(data);
+										resolve(true);
 									}
 								});
 						}
 					});
 			})
 			.catch((err) => {
-				log.error("Failed to Update user.", err.message);
+				if (err) {
+					reject(err);
+				}
 			});
 	});
 };
 
-ClientManager.prototype.removeUserPromise = function(data) {
+// removes user config file, if server is running, autoload will remove user
+ClientManager.prototype.removeUser = function(data) {
 	let self = data.this || this;
 	let name = data.name || undefined;
 	return new Promise((resolve, reject) => {
-		self.getUsersPromise()
-			.then((input) => {
-				let users = input.users;
-				if (users.indexOf(name) === -1) {
-					throw new Error(`User ${colors.bold(name)} does not exist.`);
-				} else {
-					fs.unlink(Helper.getUserConfigPath(name),
+		self.getUsers(data)
+			.then((users) => {
+				if (!(name in users)) {
+					return Promise.reject(new Error(`Error removing user, user ${colors.bold(name)} does not exist.`));
+				}
+				fs.unlink(Helper.getUserConfigPath(name),
 					(err) => {
 						if (err) {
 							reject(err);
 						} else {
+							delete self.users[name];
 							resolve(data);
 						}
 					});
-				}
 			})
 			.catch((err) => {
-				log.error("Failed to remove user.", err.message);
-				return err;
+				if (err) {
+					reject(err);
+				}
 			});
 	});
 };
 
-ClientManager.prototype.getUsersPromise = function(data) {
+// gets users names, but it wont load anything and wont connect them to irc
+ClientManager.prototype.getUsers = function(input) {
+	let self = input.self || this;
 	return new Promise((resolve, reject) => {
-		fs.readdir(Helper.USERS_PATH,
-			(err, files) => {
+		if (!("force" in input) && ("users" in self)) {
+			resolve(self.users);
+		}		else {
+			fs.readdir(Helper.USERS_PATH, (err, files) => {
 				if (err) {
 					reject(err);
 				} else {
-					var users = [];
+					self.users = self.users || {};
 					files.forEach(file => {
 						if (file.indexOf(".json") !== -1) {
-							users.push(file.replace(".json", ""));
+							self.users[file.replace(".json", "")] = {};
 						}
 					});
-					data = data || {};
-					data.users = users;
-					resolve(data);
+					resolve(self.users);
 				}
 			});
+		}
 	});
 };
 
-ClientManager.prototype.readUserConfigPromise = function(data) {
-	let self = data.this || this;
-	let name = data.name || undefined;
+// load and caches user config files
+
+ClientManager.prototype.readUserConfig = function(input) {
+	let self = input.self || this;
+	let name = input.name || undefined;
 	return new Promise((resolve, reject) => {
-		self.getUsersPromise()
-			.then((input) => {
-				let users = input.users;
-				if (users.indexOf(name) === -1) {
-					reject(false);
-					throw new Error("No config file with that user name: " + name);
+		Promise.resolve()
+			.then(() => {
+				// force reloading users
+				if ("force" in input) {
+					return self.getUsers({force: true});
 				}
+				return Promise.resolve(self.users);
+			})
+			.then((users) => {
+				if (!(name in users)) {
+					return Promise.reject(new Error(`User ${colors.bold(name)} config file does not exist.`));
+				}
+				// resolve from cache, if not forced and config is loaded
+				if (!("force" in input) && ("config" in users[name])) {
+					resolve(users[name].config);
+					// stop reloading config from fs
+					return Promise.reject(0);
+				}
+				return Promise.resolve(true);
 			})
 			.then(() => {
 				fs.readFile(Helper.getUserConfigPath(name), "utf-8",
 					(err, config) => {
 						if (err) {
-							reject(err);
-						} else {
-							data.config = JSON.parse(config);
-							resolve(data);
+							return Promise.reject(err);
 						}
+						self.users[name].config = JSON.parse(config);
+						resolve(self.users[name].config);
 					});
 			})
-			.catch(
-				(err) => {
-					log.error("Failed to read user config", err);
-				});
+			.catch((err) => {
+				if (err) {
+					log.error(`Failed to read user ${colors.bold(name)} config.`, err);
+					reject(false);
+				}
+			});
+	});
+};
+
+// load user as a client
+ClientManager.prototype.loadUser = function(input) {
+	let self = input.this || this;
+	let name = input.name || undefined;
+	return new Promise((resolve, reject) => {
+		self.readUserConfig(input)
+			.then((config) => {
+				if (!self.findClient(name)) {
+					self.clients.push(new Client(
+						self,
+						name,
+						config
+					));
+					resolve(true);
+				}
+			})
+			.catch((err) => {
+				log.error(`Failed to load user ${colors.bold(name)}.`, err);
+				reject(err);
+			});
 	});
 };

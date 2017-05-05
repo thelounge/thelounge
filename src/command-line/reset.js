@@ -11,11 +11,10 @@ program
 	.action((name) => {
 		let manager = new ClientManager();
 
-		manager.getUsersPromise()
-			.then((data) => {
-				let users = data.users;
-				if (users.indexOf(name) === -1) {
-					throw new Error(`User ${colors.bold(name)} does not exist.`);
+		manager.getUsers()
+			.then((users) => {
+				if (!(name in users)) {
+					return Promise.reject(new Error(`User ${colors.bold(name)} does not exist.`));
 				}
 				log.prompt({
 					text: "Enter new password:",
@@ -24,18 +23,18 @@ program
 					if (err) {
 						throw new Error("Error typing new password.");
 					}
-					let user = {};
-					user.password = Helper.password.hash(password);
-					user.token = null; // Will be regenerated when the user is loaded
-					manager.updateUserPromise({
+					let opts = {};
+					opts.password = Helper.password.hash(password);
+					opts.token = null; // Will be regenerated when the user is loaded
+					manager.updateUser({
 						name: name,
-						opts: user
+						opts: opts
 					})
 						.then(()=>{
 							log.info(`Successfully reset password for ${colors.bold(name)}.`);
 						})
 						.catch((err2)=>{
-							log.error(`Errors changing user ${colors.bold(name)} password.`, err2.message);
+							log.error(`Error changing user ${colors.bold(name)} password.`, err2.message);
 						});
 				});
 			})

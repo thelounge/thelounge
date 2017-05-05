@@ -11,11 +11,10 @@ program
 	.action(function(name) {
 		let manager = new ClientManager();
 
-		manager.getUsersPromise()
-			.then((data) => {
-				let users = data.users;
-				if (users.indexOf(name) !== -1) {
-					throw new Error(`User ${colors.bold(name)} already exists.`);
+		manager.getUsers()
+			.then((users) => {
+				if (name in users) {
+					return Promise.reject(new Error(`User ${colors.bold(name)} already exists.`));
 				}
 				log.prompt({
 					text: "Enter password:",
@@ -31,12 +30,21 @@ program
 							default: "yes"
 						}, (err2, enableLog) => {
 							if (!err2) {
-								add(
-									manager,
-									name,
-									password,
-									enableLog.charAt(0).toLowerCase() === "y"
-								);
+								manager.addUser({
+									name: name,
+									password: Helper.password.hash(password),
+									enableLog: enableLog
+								})
+									.then(() => {
+										log.info(`User ${colors.bold(name)} created.`);
+										log.info(`User file located at ${colors.green(Helper.getUserConfigPath(name))}.`);
+									})
+									.catch((err3) => {
+										if (err3) {
+											log.warn(`User ${colors.bold(name)} not created.`);
+											log.warn(err3.message);
+										}
+									});
 							}
 						});
 					}
@@ -46,19 +54,3 @@ program
 				log.error(`Error adding user ${colors.bold(name)}.`, err.message);
 			});
 	});
-
-function add(manager, name, password, enableLog) {
-	manager.addUserPromise({
-		name: name,
-		password: Helper.password.hash(password),
-		enableLog: enableLog
-	})
-		.then((success) => {
-			if (success) {
-				log.info(`User ${colors.bold(name)} created.`);
-				log.info(`User file located at ${colors.green(Helper.getUserConfigPath(name))}.`);
-			} else {
-				log.warn(`User ${colors.bold(name)} not created.`);
-			}
-		});
-}

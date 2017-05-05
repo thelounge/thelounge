@@ -17,9 +17,8 @@ program
 	.action(function(options) {
 		let manager = new ClientManager();
 
-		manager.getUsersPromise()
-			.then((data) => {
-				let users = data.users;
+		manager.getUsers()
+			.then((users) => {
 				let mode = Helper.config.public;
 				if (options.public) {
 					mode = true;
@@ -27,7 +26,7 @@ program
 					mode = false;
 				}
 
-				if (!mode && !users.length && !Helper.config.ldap.enable) {
+				if (!mode && !Object.keys(users).length && !Helper.config.ldap.enable) {
 					log.warn("No users found.");
 					log.info(`Create a new user with ${colors.bold("lounge add <name>")}.`);
 					return;

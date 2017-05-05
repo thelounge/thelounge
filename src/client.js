@@ -79,7 +79,7 @@ function Client(manager, name, config) {
 	var client = this;
 
 	if (client.name && !client.config.token) {
-		client.updateTokenPromise()
+		client.updateToken()
 			.then((token) => {
 				client.manager.updateUserPromise({
 					name: client.name,
@@ -87,6 +87,10 @@ function Client(manager, name, config) {
 						token: token
 					}
 				});
+			}).catch((err) => {
+				if (err) {
+					log.error(`Failed to update user ${colors.bold(name)} tokens.`, err);
+				}
 			});
 	}
 
@@ -290,12 +294,12 @@ Client.prototype.connect = function(args) {
 	client.save();
 };
 
-Client.prototype.updateTokenPromise = function() {
+Client.prototype.updateToken = function() {
 	let client = this;
-	return new Promise((resolve) => {
+	return new Promise((resolve, reject) => {
 		crypto.randomBytes(48, (err, buf) => {
 			if (err) {
-				throw err;
+				reject(err);
 			} else {
 				resolve(client.config.token = buf.toString("hex"));
 			}
@@ -303,23 +307,22 @@ Client.prototype.updateTokenPromise = function() {
 	});
 };
 
-Client.prototype.setPasswordPromise = function(hash) {
+Client.prototype.setPassword = function(hash) {
 	let client = this;
 	return new Promise((resolve, reject) => {
-		client.updateTokenPromise()
+		client.updateToken()
 			.then((token) => {
-				client.manager.updateUserPromise({
+				client.manager.updateUser({
 					name: client.name,
 					opts: {
 						token: token,
 						password: hash
 					}
 				})
-					.then(
-					(err) => {
+					.then((err) => {
 						if (!err) {
 							log.error("Failed to update password of", client.name, err);
-							reject(false);
+							reject(err);
 						} else {
 							client.config.password = hash;
 							resolve(true);
@@ -558,7 +561,7 @@ Client.prototype.save = _.debounce(function SaveClient() {
 	let json = {};
 	json.awayMessage = client.awayMessage;
 	json.networks = this.networks.map(n => n.export());
-	client.manager.updateUserPromise({
+	client.manager.updateUser({
 		name: client.name,
 		opts: json
 	}

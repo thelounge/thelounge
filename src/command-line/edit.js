@@ -11,11 +11,10 @@ program
 	.description(`Edit user file located at ${colors.green(Helper.getUserConfigPath("<name>"))}.`)
 	.action(function(name) {
 		let manager = new ClientManager();
-		manager.getUsersPromise()
-			.then((data)=> {
-				let users = data.users;
-				if (users.indexOf(name) === -1) {
-					throw new Error(`User ${colors.bold(name)} does not exist.`);
+		manager.getUsers()
+			.then((users)=> {
+				if (!(name in users)) {
+					return Promise.reject(new Error(`User ${colors.bold(name)} does not exist.`));
 				}
 				var child_spawn = child.spawn(
 					process.env.EDITOR || "vi",

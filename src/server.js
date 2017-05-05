@@ -311,9 +311,10 @@ function ldapAuth(client, user, password, callback) {
 
 	ldapclient.bind(bindDN, password, function(err) {
 		if (!err && !client) {
-			if (!manager.addUser(user, null)) {
-				log.error("Unable to create new user", user);
-			}
+			manager.addUser({name: user})
+				.catch((err2) => {
+					log.error(`Unable to create new user ${colors.bold(user)}.`, err2.message);
+				});
 		}
 		ldapclient.unbind();
 		callback(!err);
