@@ -1533,6 +1533,10 @@ kbd {
 	display: inline-block;
 }
 
+.textcomplete-item .irc-bg {
+	display: block;
+}
+
 /**
   * Tooltips v0.5.3
   * See http://primercss.io/tooltips/

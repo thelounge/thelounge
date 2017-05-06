@@ -111,6 +111,45 @@ $(function() {
 		index: 1
 	};
 
+	const foregroundColorStrategy = {
+		id: "foreground-colors",
+		match: /\x03(\d{0,2}|[A-Za-z ]{0,10})$/,
+		search(term, callback) {
+			term = term.toLowerCase();
+			const matchingColorCodes = constants.colorCodeMap
+				.filter(i => i[0].startsWith(term) || i[1].toLowerCase().startsWith(term));
+
+			callback(matchingColorCodes);
+		},
+		template(value) {
+			return `<span class="irc-fg${parseInt(value[0], 10)}">${value[1]}</span>`;
+		},
+		replace(value) {
+			return "\x03" + value[0];
+		},
+		index: 1
+	};
+
+	const backgroundColorStrategy = {
+		id: "background-colors",
+		match: /\x03(\d{2}),(\d{0,2}|[A-Za-z ]{0,10})$/,
+		search(term, callback, match) {
+			term = term.toLowerCase();
+			const matchingColorCodes = constants.colorCodeMap
+				.filter(i => i[0].startsWith(term) || i[1].toLowerCase().startsWith(term))
+				.map(pair => pair.concat(match[1])); // Needed to pass fg color to `template`...
+
+			callback(matchingColorCodes);
+		},
+		template(value) {
+			return `<span class="irc-fg${parseInt(value[2], 10)} irc-bg irc-bg${parseInt(value[0], 10)}">${value[1]}</span>`;
+		},
+		replace(value) {
+			return "\x03$1," + value[0];
+		},
+		index: 2
+	};
+
 	socket.on("auth", function(data) {
 		var login = $("#sign-in");
 		var token;
@@ -724,7 +763,10 @@ $(function() {
 			chat.find(".chan.active .chat").trigger("msg.sticky"); // fix growing
 		})
 		.tab(completeNicks, {hint: false})
-		.textcomplete([emojiStrategy, nicksStrategy, chanStrategy, commandStrategy], {
+		.textcomplete([
+			emojiStrategy, nicksStrategy, chanStrategy, commandStrategy,
+			foregroundColorStrategy, backgroundColorStrategy
+		], {
 			dropdownClassName: "textcomplete-menu",
 			placement: "top"
 		}).on({
