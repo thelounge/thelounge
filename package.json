@@ -78,7 +78,7 @@
     "mousetrap": "1.6.1",
     "npm-run-all": "4.0.2",
     "nyc": "10.3.2",
-    "socket.io-client": "1.7.3",
+    "socket.io-client": "1.7.4",
     "stylelint": "7.10.1",
     "urijs": "1.18.10",
     "webpack": "2.5.1"
