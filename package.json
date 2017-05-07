@@ -55,7 +55,7 @@
     "read": "1.0.7",
     "request": "2.81.0",
     "semver": "5.3.0",
-    "socket.io": "1.7.3",
+    "socket.io": "2.0.3",
     "spdy": "3.4.7"
   },
   "devDependencies": {
@@ -75,7 +75,7 @@
     "mousetrap": "1.6.1",
     "npm-run-all": "4.0.2",
     "nyc": "11.0.3",
-    "socket.io-client": "1.7.3",
+    "socket.io-client": "2.0.3",
     "stylelint": "7.12.0",
     "stylelint-config-standard": "16.0.0",
     "urijs": "1.18.10",
