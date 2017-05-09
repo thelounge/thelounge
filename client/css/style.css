@@ -757,7 +757,7 @@ kbd {
 }
 
 #windows .header .title {
-	font-size: 14px;
+	font-size: 15px;
 }
 
 #windows .header .topic {
@@ -804,7 +804,7 @@ kbd {
 #windows .header .topic,
 .messages .msg,
 .sidebar {
-	font: 12px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
+	font: 13px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
 	line-height: 1.4;
 }
 
@@ -1434,7 +1434,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #windows #form .input {
-	font: 12px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
+	font: 13px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
 	border: 1px solid #ddd;
 	border-radius: 2px;
 	margin: 0;
@@ -1515,7 +1515,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	min-height: 18px; /* Required when computing input height at char deletion */
 	height: 18px;
 	max-height: 90px;
-	line-height: 1.5;
+	line-height: 1.4;
 	outline: none;
 	margin: 5px;
 	padding: 0;
@@ -1958,6 +1958,14 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 	#chat .title:before {
 		display: none;
+	}
+}
+
+@media (min-width: 1610px) {
+	#windows .header .topic,
+	.messages .msg,
+	.sidebar {
+		font-size: 14px;
 	}
 }
 
