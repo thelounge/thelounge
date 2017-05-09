@@ -348,7 +348,8 @@ $(function() {
 			if (nicks) {
 				nicks.forEach(function(nick) {
 					if (data.msg.text.indexOf(nick) > -1) {
-						text.html(text.html().replace(nick, templates.user_name({nick: nick}).trim()));
+						var re = new RegExp("(^| )" + nick + "([.,: ]{1})", "g");
+						text.html(text.html().replace(re, "$1" + templates.user_name({nick: nick}).trim() + "$2"));
 					}
 				});
 				var find = nicks.indexOf(data.msg.from);

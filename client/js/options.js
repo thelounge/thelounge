@@ -23,8 +23,7 @@ const options = $.extend({
 	thumbnails: true,
 	userStyles: userStyles.text(),
 	highlights: [],
-	userColors: "",
-	userColorsParsed: []
+	userColors: []
 }, JSON.parse(storage.get("settings")));
 
 module.exports = options;
@@ -35,8 +34,6 @@ for (var i in options) {
 			$(document.head).find("#user-specified-css").html(options[i]);
 		}
 		settings.find("#user-specified-css-input").val(options[i]);
-	} else if (i === "userColors") {
-		settings.find("#userColors").val(options[i]);
 	} else if (i === "highlights") {
 		settings.find("input[name=" + i + "]").val(options[i]);
 	} else if (i === "theme") {
@@ -71,14 +68,6 @@ settings.on("change", "input, select, textarea", function() {
 		chat.toggleClass("hide-" + name, !self.prop("checked"));
 	} else if (name === "coloredNicks") {
 		chat.toggleClass("colored-nicks", self.prop("checked"));
-	} else if (name === "userColors") {
-		var userColorsString = options[name];
-		options.userColorsParsed = userColorsString.split(";").map(function(h) {
-			return h.trim().split(":").map(function(item) {
-				return item.trim();
-			});
-		});
-		storage.set("settings", JSON.stringify(options));
 	} else if (name === "theme") {
 		$("#theme").attr("href", "themes/" + options[name] + ".css");
 	} else if (name === "userStyles") {

@@ -59,9 +59,6 @@ let config = {
 						helperDirs: [
 							path.resolve(__dirname, "client/js/libs/handlebars")
 						],
-						knownHelpers: [
-							"colorOverride"
-						],
 						extensions: [
 							".tpl"
 						],
