@@ -512,7 +512,6 @@ $(function() {
 		// get the scrollable wrapper around messages
 		var scrollable = chan.closest(".chat");
 		var heightOld = chan.height();
-		chan.prepend(documentFragment).end();
 
 		// Remove the date-change marker we put at the top, because it may
 		// not actually be a date change now
@@ -523,6 +522,9 @@ $(function() {
 			// The unread-marker could be at index 0, which will cause the date-marker to become "stuck"
 			children.eq(1).remove();
 		}
+
+		// Add the older messages
+		chan.prepend(documentFragment).end();
 
 		// restore scroll position
 		var position = chan.height() - heightOld;
