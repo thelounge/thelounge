@@ -799,21 +799,38 @@ kbd {
 	width: 100%;
 }
 
+#windows .header .button,
 #chat .show-more-button {
 	background: #f4f4f4;
-	background-image: linear-gradient(#f4f4f4, #ececec);
+	transition: all .3s;
+	background-size: auto 200%;
+	background-position: 0 100%;
+	background-image: linear-gradient(#fefefe, #ececec);
 	border: 1px solid #d7d7d7;
 	border-bottom-color: #b7b7b7;
 	border-radius: 2px;
 	color: #555;
 	font-size: 12px;
+}
+
+#windows .header .button {
+	height: 25px;
+	line-height: 0;
+	padding: 0 10px;
+	float: right;
+	margin: 11px -8px 0 12px;
+}
+
+#chat .show-more-button {
 	height: 34px;
 	line-height: 0;
 	width: 100%;
 }
 
+#windows .header .button:hover,
 #chat .show-more-button:hover {
 	opacity: 1;
+	background-position: 0 0;
 }
 
 #chat .messages {
