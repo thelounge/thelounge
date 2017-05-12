@@ -1948,6 +1948,16 @@ kbd {
 		padding: 0;
 	}
 
+	#chat .message .from .user:before {
+		content: "<";
+		color: #b1c3ce;
+	}
+
+	#chat .message .from .user:after {
+		content: ">";
+		color: #b1c3ce;
+	}
+
 	#chat .date-marker,
 	#chat .unread-marker {
 		margin: 0;
