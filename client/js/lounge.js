@@ -344,7 +344,7 @@ $(function() {
 		}
 
 		if ((type === "message" || type === "action") && chan.hasClass("channel")) {
-			var nicks = chan.find(".names-original").data("nicks");
+			var nicks = chan.find(".users").data("nicks");
 			if (nicks) {
 				nicks.forEach(function(nick) {
 					if (data.msg.text.indexOf(nick) > -1) {
