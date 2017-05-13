@@ -820,6 +820,16 @@ kbd {
 	padding: 10px 0;
 }
 
+#chat .line {
+	display: table-row;
+}
+
+#chat .non-content {
+	background-color: #eee;
+	height: 3px;
+	display: table-cell;
+}
+
 #chat .msg {
 	word-wrap: break-word;
 	word-break: break-word; /* Webkit-specific */

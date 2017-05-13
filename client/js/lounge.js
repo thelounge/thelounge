@@ -981,6 +981,8 @@ $(function() {
 			self.data("id")
 		);
 
+		var readMarkerPos=self.find(".badge").data("count");
+
 		sidebar.find(".active").removeClass("active");
 		self.addClass("active")
 			.find(".badge")
@@ -1011,6 +1013,13 @@ $(function() {
 		var chan = $(target)
 			.addClass("active")
 			.trigger("show");
+
+		chan.find(".line").remove();
+
+		if (readMarkerPos!=="" && readMarkerPos!==undefined){
+			var afterPoint=$(target).find(".chat").find(".messages").find(".message:nth-last-child("+readMarkerPos+")");
+			afterPoint.before("<div class='line'><div class='non-content'></div><div class='non-content'></div><div class='non-content'></div></div>");
+		}
 
 		var title = "The Lounge";
 		if (chan.data("title")) {
