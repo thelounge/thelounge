@@ -348,7 +348,7 @@ $(function() {
 			if (nicks) {
 				nicks.forEach(function(nick) {
 					if (data.msg.text.indexOf(nick) > -1) {
-						var re = new RegExp("(^| )" + nick.replace(/\[/, "\\[").replace(/]/, "\\]") + "([.,: ]{1})", "g");
+						var re = new RegExp("(^| |&lt;)" + nick.replace(/\[/, "\\[").replace(/]/, "\\]") + "(.| |,|:|&gt;|$)", "g");
 						text.html(text.html().replace(re, "$1" + templates.user_name({nick: nick}).trim() + "$2"));
 					}
 				});
