@@ -761,7 +761,11 @@ kbd {
 }
 
 #chat .condensed {
-	flex-wrap: wrap;
+	flex-flow: row wrap;
+}
+
+#chat .text.condensed-msg {
+	flex: 1 1 50%;
 }
 
 #chat .condensed .msg {
