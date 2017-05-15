@@ -1,4 +1,4 @@
-{{> ../user_name}}
+{{> ../user_name nick=from}}
 <i class="hostmask">({{hostmask}})</i>
 has left the channel
 {{#if text}}

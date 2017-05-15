@@ -22,8 +22,7 @@ const options = $.extend({
 	theme: $("#theme").attr("href").replace(/^themes\/(.*).css$/, "$1"), // Extracts default theme name, set on the server configuration
 	thumbnails: true,
 	userStyles: userStyles.text(),
-	highlights: [],
-	userColors: []
+	highlights: []
 }, JSON.parse(storage.get("settings")));
 
 module.exports = options;

@@ -1,3 +1,3 @@
-{{> ../user_name}}
+{{> ../user_name nick=from}}
 is now known as
-{{> ../user_name_target}}
+{{> ../user_name nick=new_nick}}

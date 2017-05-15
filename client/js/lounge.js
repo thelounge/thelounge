@@ -332,14 +332,6 @@ $(function() {
 		var text = msg.find(".text");
 
 		if (template === "msg_action") {
-			if (data.msg.invited !== undefined) {
-				data.msg.target = data.msg.invited;
-			} else if (data.msg.new_nick !== undefined) {
-				data.msg.target = data.msg.new_nick;
-			} else if (data.msg.whois !== undefined) {
-				data.msg.target = data.msg.whois.nick;
-			}
-
 			text.html(templates.actions[type](data.msg));
 		}
 

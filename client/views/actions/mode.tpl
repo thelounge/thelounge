@@ -1,3 +1,3 @@
-{{> ../user_name}}
+{{> ../user_name nick=from}}
 sets mode
 {{{parse text}}}

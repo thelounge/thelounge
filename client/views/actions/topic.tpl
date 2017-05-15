@@ -1,5 +1,5 @@
 {{#if from}}
-	{{> ../user_name}}
+	{{> ../user_name nick=from}}
 	has changed the topic to:
 {{else}}
 	The topic is:
