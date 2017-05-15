@@ -1,5 +1,7 @@
 "use strict";
 
+const templates = require("../views");
+
 let quitStrategy = {
 	type: "quit",
 	split: (messages) => {
@@ -24,13 +26,13 @@ let quitStrategy = {
 
 		if (count) {
 			if (count === 1) {
-				text += list[0].from;
+				text += templates.user_name({nick: list[0].from});
 			} else if (count > 1 && count <= maxnames) {
 				list.reverse();
 				let last = list.pop();
-				text += list.map(n => n.from).join(", ") + " and " + last.from;
+				text += list.map(n => templates.user_name({nick: n.from}).trim()).join(", ") + " and " + templates.user_name({nick: last.from});
 			} else if (count > maxnames) {
-				text += list.map(n => n.from).slice(0,maxnames).join(", ") + " and " + (count - maxnames) + " others";
+				text += list.map(n => templates.user_name({nick: n.from}).trim()).slice(0,maxnames).join(", ") + " and " + (count - maxnames) + " others";
 			}
 			text += " quit";
 		}
@@ -62,13 +64,13 @@ let partStrategy = {
 
 		if (count) {
 			if (count === 1) {
-				text += list[0].from;
+				text += templates.user_name({nick: list[0].from});
 			} else if (count > 1 && count <= maxnames) {
 				list.reverse();
 				let last = list.pop();
-				text += list.map(n => n.from).join(", ") + " and " + last.from;
+				text += list.map(n => templates.user_name({nick: n.from}).trim()).join(", ") + " and " + templates.user_name({nick: last.from});
 			} else if (count > maxnames) {
-				text += list.map(n => n.from).slice(0,maxnames).join(", ") + " and " + (count - maxnames) + " others";
+				text += list.map(n => templates.user_name({nick: n.from}).trim()).slice(0,maxnames).join(", ") + " and " + (count - maxnames) + " others";
 			}
 			text += " leaved";
 		}
@@ -100,13 +102,13 @@ let joinedStrategy = {
 
 		if (count) {
 			if (count === 1) {
-				text += list[0].from;
+				text += templates.user_name({nick: list[0].from});
 			} else if (count > 1 && count <= maxnames) {
 				list.reverse();
 				let last = list.pop();
-				text += list.map(n => n.from).join(", ") + " and " + last.from;
+				text += list.map(n => templates.user_name({nick: n.from}).trim()).join(", ") + " and " + templates.user_name({nick: last.from});
 			} else if (count > maxnames) {
-				text += list.map(n => n.from).slice(0,maxnames).join(", ") + " and " + (count - maxnames) + " others";
+				text += list.map(n => templates.user_name({nick: n.from}).trim()).slice(0,maxnames).join(", ") + " and " + (count - maxnames) + " others";
 			}
 			text += " joined";
 		}
@@ -151,13 +153,13 @@ let reconnectStrategy = {
 
 		if (count) {
 			if (count === 1) {
-				text += list[0].from;
+				text += templates.user_name({nick: list[0].from});
 			} else if (count > 1 && count <= maxnames) {
 				list.reverse();
 				let last = list.pop();
-				text += list.map(n => n.from).join(", ") + " and " + last.from;
+				text += list.map(n => templates.user_name({nick: n.from}).trim()).join(", ") + " and " + templates.user_name({nick: last.from});
 			} else if (count > maxnames) {
-				text += list.map(n => n.from).slice(0,maxnames).join(", ") + " and " + (count - maxnames) + " others";
+				text += list.map(n => templates.user_name({nick: n.from}).trim()).slice(0,maxnames).join(", ") + " and " + (count - maxnames) + " others";
 			}
 			text += " reconnected";
 		}
@@ -202,13 +204,13 @@ let peekinStrategy = {
 
 		if (count) {
 			if (count === 1) {
-				text += list[0].from;
+				text += templates.user_name({nick: list[0].from});
 			} else if (count > 1 && count <= maxnames) {
 				list.reverse();
 				let last = list.pop();
-				text += list.map(n => n.from).join(", ") + " and " + last.from;
+				text += list.map(n => templates.user_name({nick: n.from}).trim()).join(", ") + " and " + templates.user_name({nick: last.from});
 			} else if (count > maxnames) {
-				text += list.map(n => n.from).slice(0,maxnames).join(", ") + " and " + (count - maxnames) + " others";
+				text += list.map(n => templates.user_name({nick: n.from}).trim()).slice(0,maxnames).join(", ") + " and " + (count - maxnames) + " others";
 			}
 			text += " peeked in";
 		}
@@ -241,13 +243,13 @@ let modeStrategy = {
 		let text = "";
 		if (count) {
 			if (count === 1) {
-				text += list[0].from;
+				text += templates.user_name({nick: list[0].from});
 			} else if (count > 1 && count <= maxnames) {
 				list.reverse();
 				let last = list.pop();
-				text += list.map(n => n.from).join(", ") + " and " + last.from;
+				text += list.map(n => templates.user_name({nick: n.from}).trim()).join(", ") + " and " + templates.user_name({nick: last.from});
 			} else if (count > maxnames) {
-				text += list.map(n => n.from).slice(0,maxnames).join(", ") + " and " + (count - maxnames) + " others";
+				text += list.map(n => templates.user_name({nick: n.from}).trim()).slice(0,maxnames).join(", ") + " and " + (count - maxnames) + " others";
 			}
 			text += " changed mode";
 		}
@@ -281,7 +283,7 @@ let nickStrategy = {
 			let msg = {};
 			while ((msg = list.pop()) !== undefined) {
 				text += text === "" ? "" : " | ";
-				text += msg.from + " changed name to " + msg.new_nick;
+				text += templates.user_name({nick: msg.from}) + " changed name to " + templates.user_name({nick: msg.new_nick});
 			}
 		}
 		return text;
