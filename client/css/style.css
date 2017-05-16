@@ -1159,7 +1159,7 @@ kbd {
 	width: 100%;
 	top: 9vh;
 	height: 3vh;
-	background: linear-gradient(to bottom, rgba(245, 245, 245, .3) 0%, rgba(245, 245, 245, 1) 90%);
+	background: linear-gradient(to bottom, rgba(245, 245, 245, .3) 0%, rgba(245, 245, 245, 1) 100%);
 	content: " ";
 }
 

@@ -228,7 +228,7 @@ body {
 }
 
 #chat .toggle-content.toggle-type-link a:after {
-	background: linear-gradient(to bottom, rgba(36, 42, 51, .3) 0%, rgba(36, 42, 51, 1) 90%);
+	background: linear-gradient(to bottom, rgba(36, 42, 51, .3) 0%, rgba(36, 42, 51, 1) 100%);
 }
 
 .btn-reconnect {

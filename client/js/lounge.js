@@ -622,6 +622,15 @@ $(function() {
 	var contextMenuContainer = $("#context-menu-container");
 	var contextMenu = $("#context-menu");
 
+	$(window).on("popstate", function(event) {
+		var state = event.originalEvent.state;
+		var preview = $("#expand_preview");
+
+		if ((preview.hasClass("display") && (!state.clickTarget || state.clickTarget.indexOf("toggle-content") === -1))) {
+			preview.removeClass("display");
+		}
+	});
+
 	$("#main").on("click", function(e) {
 		if ($(e.target).is(".lt")) {
 			sidebarSlide.toggle(!sidebarSlide.isOpen());
@@ -630,11 +639,21 @@ $(function() {
 		}
 	});
 
-	viewport.on("click", "#expand_preview, .toggle-content img", function() {
+	viewport.on("click", "#expand_preview, .toggle-content img", function(e, data) {
 		var self = $(this);
 		var container = $("#expand_preview");
+		var state = {};
+
 		if (self.is("img")) {
+			if (!data || data.pushState !== false) {
+				state.scrollTop = $(window).scrollTop();
+				history.pushState(state, null, null); // save current scroll position
+				state.clickTarget = `#chat .chan.active .toggle-content[data-id="${self.parent().data("id")}"] > img`;
+				history.pushState(state, null, null);
+			}
 			container.html(templates.toggle_expand({link: self.attr("src")}));
+		} else {
+			history.back();
 		}
 		container.toggleClass("display");
 	});
