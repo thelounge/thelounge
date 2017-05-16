@@ -2,7 +2,24 @@
 
 let _ = require("lodash");
 const expect = require("chai").expect;
-const condense = require("../../../client/js/condense");
+let handlebars = require("handlebars");
+let fs = require("fs");
+let path = require("path");
+let templates = {};
+
+fs.readdirSync(path.resolve("./client/js/libs/handlebars/"))
+	.filter((pluginFile) => pluginFile.slice(-3) === ".js")
+	.forEach(file => {
+		handlebars.registerHelper(file.slice(0 , -3), require(path.resolve("./client/js/libs/handlebars/" + file)));
+	});
+
+fs.readdirSync(path.resolve("./client/views/"))
+	.filter((viewFile) => viewFile.slice(-4) === ".tpl")
+	.forEach(file => {
+		templates[file.slice(0, -4)] = handlebars.compile(fs.readFileSync(path.resolve("./client/views/" + file), "utf8"));
+	});
+
+const condense = require("../../../client/js/condense")({templates: templates});
 
 let messageCounter = 1;
 let messageMaker = {
@@ -74,20 +91,26 @@ describe("condense client", () => {
 		it("should show result of 1 condensed joins", () => {
 			var messages = [];
 			messages.push(messageMaker.defaults().user("user1").join().make());
-			expect(condense.condense(messages)).to.equal("user1 joined");
+			let user1 = templates.user_name({nick: "user1"});
+			expect(condense.condense(messages)).to.equal("" + user1 + " joined");
 		});
 		it("should show result of 2 condensed joins", () => {
 			var messages = [];
 			messages.push(messageMaker.defaults().user("user1").join().make());
 			messages.push(messageMaker.defaults().user("user2").join().make());
-			expect(condense.condense(messages)).to.equal("user1 and user2 joined");
+			let user1 = templates.user_name({nick: "user1"});
+			let user2 = templates.user_name({nick: "user2"});
+			expect(condense.condense(messages)).to.equal("" + user1 + " and " + user2 + " joined");
 		});
 		it("should show result of 3 condensed joins", () => {
 			var messages = [];
 			messages.push(messageMaker.defaults().user("user1").join().make());
 			messages.push(messageMaker.defaults().user("user2").join().make());
 			messages.push(messageMaker.defaults().user("user3").join().make());
-			expect(condense.condense(messages)).to.equal("user1, user2 and user3 joined");
+			let user1 = templates.user_name({nick: "user1"});
+			let user2 = templates.user_name({nick: "user2"});
+			let user3 = templates.user_name({nick: "user3"});
+			expect(condense.condense(messages)).to.equal("" + user1 + ", " + user2 + " and " + user3 + " joined");
 		});
 		it("should show result of 10 condensed joins", () => {
 			var messages = [];
@@ -101,27 +124,36 @@ describe("condense client", () => {
 			messages.push(messageMaker.defaults().user("user8").join().make());
 			messages.push(messageMaker.defaults().user("user9").join().make());
 			messages.push(messageMaker.defaults().user("user10").join().make());
-			expect(condense.condense(messages)).to.equal("user10, user9, user8 and 7 others joined");
+			let user10 = templates.user_name({nick: "user10"});
+			let user9 = templates.user_name({nick: "user9"});
+			let user8 = templates.user_name({nick: "user8"});
+			expect(condense.condense(messages)).to.equal("" + user10 + ", " + user9 + ", " + user8 + " and 7 others joined");
 		});
 	});
 	describe("part", () => {
 		it("should show result of 1 condensed parts", () => {
 			var messages = [];
 			messages.push(messageMaker.defaults().user("user1").part().make());
-			expect(condense.condense(messages)).to.equal("user1 leaved");
+			let user1 = templates.user_name({nick: "user1"});
+			expect(condense.condense(messages)).to.equal("" + user1 + " leaved");
 		});
 		it("should show result of 2 condensed parts", () => {
 			var messages = [];
 			messages.push(messageMaker.defaults().user("user1").part().make());
 			messages.push(messageMaker.defaults().user("user2").part().make());
-			expect(condense.condense(messages)).to.equal("user1 and user2 leaved");
+			let user1 = templates.user_name({nick: "user1"});
+			let user2 = templates.user_name({nick: "user2"});
+			expect(condense.condense(messages)).to.equal("" + user1 + " and " + user2 + " leaved");
 		});
 		it("should show result of 3 condensed parts", () => {
 			var messages = [];
 			messages.push(messageMaker.defaults().user("user1").part().make());
 			messages.push(messageMaker.defaults().user("user2").part().make());
 			messages.push(messageMaker.defaults().user("user3").part().make());
-			expect(condense.condense(messages)).to.equal("user1, user2 and user3 leaved");
+			let user1 = templates.user_name({nick: "user1"});
+			let user2 = templates.user_name({nick: "user2"});
+			let user3 = templates.user_name({nick: "user3"});
+			expect(condense.condense(messages)).to.equal("" + user1 + ", " + user2 + " and " + user3 + " leaved");
 		});
 		it("should show result of 10 condensed parts", () => {
 			var messages = [];
@@ -135,27 +167,36 @@ describe("condense client", () => {
 			messages.push(messageMaker.defaults().user("user8").part().make());
 			messages.push(messageMaker.defaults().user("user9").part().make());
 			messages.push(messageMaker.defaults().user("user10").part().make());
-			expect(condense.condense(messages)).to.equal("user10, user9, user8 and 7 others leaved");
+			let user10 = templates.user_name({nick: "user10"});
+			let user9 = templates.user_name({nick: "user9"});
+			let user8 = templates.user_name({nick: "user8"});
+			expect(condense.condense(messages)).to.equal("" + user10 + ", " + user9 + ", " + user8 + " and 7 others leaved");
 		});
 	});
 	describe("quit", () => {
 		it("should show result of 1 condensed quits", () => {
 			var messages = [];
 			messages.push(messageMaker.defaults().user("user1").quit().make());
-			expect(condense.condense(messages)).to.equal("user1 quit");
+			let user1 = templates.user_name({nick: "user1"});
+			expect(condense.condense(messages)).to.equal("" + user1 + " quit");
 		});
 		it("should show result of 2 condensed quits", () => {
 			var messages = [];
 			messages.push(messageMaker.defaults().user("user1").quit().make());
 			messages.push(messageMaker.defaults().user("user2").quit().make());
-			expect(condense.condense(messages)).to.equal("user1 and user2 quit");
+			let user1 = templates.user_name({nick: "user1"});
+			let user2 = templates.user_name({nick: "user2"});
+			expect(condense.condense(messages)).to.equal("" + user1 + " and " + user2 + " quit");
 		});
 		it("should show result of 3 condensed quits", () => {
 			var messages = [];
 			messages.push(messageMaker.defaults().user("user1").quit().make());
 			messages.push(messageMaker.defaults().user("user2").quit().make());
 			messages.push(messageMaker.defaults().user("user3").quit().make());
-			expect(condense.condense(messages)).to.equal("user1, user2 and user3 quit");
+			let user1 = templates.user_name({nick: "user1"});
+			let user2 = templates.user_name({nick: "user2"});
+			let user3 = templates.user_name({nick: "user3"});
+			expect(condense.condense(messages)).to.equal("" + user1 + ", " + user2 + " and " + user3 + " quit");
 		});
 		it("should show result of 10 condensed quits", () => {
 			var messages = [];
@@ -169,7 +210,10 @@ describe("condense client", () => {
 			messages.push(messageMaker.defaults().user("user8").quit().make());
 			messages.push(messageMaker.defaults().user("user9").quit().make());
 			messages.push(messageMaker.defaults().user("user10").quit().make());
-			expect(condense.condense(messages)).to.equal("user10, user9, user8 and 7 others quit");
+			let user10 = templates.user_name({nick: "user10"});
+			let user9 = templates.user_name({nick: "user9"});
+			let user8 = templates.user_name({nick: "user8"});
+			expect(condense.condense(messages)).to.equal("" + user10 + ", " + user9 + ", " + user8 + " and 7 others quit");
 		});
 	});
 	describe("reconnect", () => {
@@ -177,7 +221,8 @@ describe("condense client", () => {
 			var messages = [];
 			messages.push(messageMaker.defaults().user("user1").quit().make());
 			messages.push(messageMaker.defaults().user("user1").join().make());
-			expect(condense.condense(messages)).to.equal("user1 reconnected");
+			let user1 = templates.user_name({nick: "user1"});
+			expect(condense.condense(messages)).to.equal("" + user1 + " reconnected");
 		});
 		it("should show result of 2 condensed reconnects", () => {
 			var messages = [];
@@ -185,7 +230,9 @@ describe("condense client", () => {
 			messages.push(messageMaker.defaults().user("user2").quit().make());
 			messages.push(messageMaker.defaults().user("user1").join().make());
 			messages.push(messageMaker.defaults().user("user2").join().make());
-			expect(condense.condense(messages)).to.equal("user1 and user2 reconnected");
+			let user1 = templates.user_name({nick: "user1"});
+			let user2 = templates.user_name({nick: "user2"});
+			expect(condense.condense(messages)).to.equal("" + user1 + " and " + user2 + " reconnected");
 		});
 		it("should show result of 3 condensed reconnects", () => {
 			var messages = [];
@@ -195,7 +242,10 @@ describe("condense client", () => {
 			messages.push(messageMaker.defaults().user("user2").join().make());
 			messages.push(messageMaker.defaults().user("user3").quit().make());
 			messages.push(messageMaker.defaults().user("user3").join().make());
-			expect(condense.condense(messages)).to.equal("user1, user2 and user3 reconnected");
+			let user1 = templates.user_name({nick: "user1"});
+			let user2 = templates.user_name({nick: "user2"});
+			let user3 = templates.user_name({nick: "user3"});
+			expect(condense.condense(messages)).to.equal("" + user1 + ", " + user2 + " and " + user3 + " reconnected");
 		});
 		it("should show result of 10 condensed reconnects", () => {
 			var messages = [];
@@ -219,7 +269,10 @@ describe("condense client", () => {
 			messages.push(messageMaker.defaults().user("user3").join().make());
 			messages.push(messageMaker.defaults().user("user2").join().make());
 			messages.push(messageMaker.defaults().user("user1").join().make());
-			expect(condense.condense(messages)).to.equal("user1, user2, user3 and 7 others reconnected");
+			let user1 = templates.user_name({nick: "user1"});
+			let user2 = templates.user_name({nick: "user2"});
+			let user3 = templates.user_name({nick: "user3"});
+			expect(condense.condense(messages)).to.equal("" + user1 + ", " + user2 + ", " + user3 + " and 7 others reconnected");
 		});
 	});
 	describe("peekin", () => {
@@ -227,7 +280,8 @@ describe("condense client", () => {
 			var messages = [];
 			messages.push(messageMaker.defaults().user("user1").join().make());
 			messages.push(messageMaker.defaults().user("user1").quit().make());
-			expect(condense.condense(messages)).to.equal("user1 peeked in");
+			let user1 = templates.user_name({nick: "user1"});
+			expect(condense.condense(messages)).to.equal("" + user1 + " peeked in");
 		});
 		it("should show result of 2 condensed peek ins", () => {
 			var messages = [];
@@ -235,7 +289,9 @@ describe("condense client", () => {
 			messages.push(messageMaker.defaults().user("user2").join().make());
 			messages.push(messageMaker.defaults().user("user1").quit().make());
 			messages.push(messageMaker.defaults().user("user2").quit().make());
-			expect(condense.condense(messages)).to.equal("user1 and user2 peeked in");
+			let user1 = templates.user_name({nick: "user1"});
+			let user2 = templates.user_name({nick: "user2"});
+			expect(condense.condense(messages)).to.equal("" + user1 + " and " + user2 + " peeked in");
 		});
 		it("should show result of 3 condensed peek ins", () => {
 			var messages = [];
@@ -245,7 +301,10 @@ describe("condense client", () => {
 			messages.push(messageMaker.defaults().user("user2").quit().make());
 			messages.push(messageMaker.defaults().user("user3").join().make());
 			messages.push(messageMaker.defaults().user("user3").quit().make());
-			expect(condense.condense(messages)).to.equal("user1, user2 and user3 peeked in");
+			let user1 = templates.user_name({nick: "user1"});
+			let user2 = templates.user_name({nick: "user2"});
+			let user3 = templates.user_name({nick: "user3"});
+			expect(condense.condense(messages)).to.equal("" + user1 + ", " + user2 + " and " + user3 + " peeked in");
 		});
 		it("should show result of 10 condensed peek ins", () => {
 			var messages = [];
@@ -269,7 +328,10 @@ describe("condense client", () => {
 			messages.push(messageMaker.defaults().user("user8").quit().make());
 			messages.push(messageMaker.defaults().user("user9").quit().make());
 			messages.push(messageMaker.defaults().user("user10").quit().make());
-			expect(condense.condense(messages)).to.equal("user10, user9, user8 and 7 others peeked in");
+			let user10 = templates.user_name({nick: "user10"});
+			let user9 = templates.user_name({nick: "user9"});
+			let user8 = templates.user_name({nick: "user8"});
+			expect(condense.condense(messages)).to.equal("" + user10 + ", " + user9 + ", " + user8 + " and 7 others peeked in");
 		});
 		it("should show result of 1 condensed peek in on multiple join quits", () => {
 			var messages = [];
@@ -279,27 +341,35 @@ describe("condense client", () => {
 			messages.push(messageMaker.defaults().user("user1").quit().make());
 			messages.push(messageMaker.defaults().user("user1").join().make());
 			messages.push(messageMaker.defaults().user("user1").quit().make());
-			expect(condense.condense(messages)).to.equal("user1 peeked in");
+			let user1 = templates.user_name({nick: "user1"});
+			expect(condense.condense(messages)).to.equal("" + user1 + " peeked in");
 		});
 	});
 	describe("modes", () => {
 		it("should show mode change for 1 self", () => {
 			var messages = [];
 			messages.push(messageMaker.defaults().user("user1").mode("+o","user1").make());
-			expect(condense.condense(messages)).to.equal("user1 changed mode");
+			let user1 = templates.user_name({nick: "user1"});
+			expect(condense.condense(messages)).to.equal("" + user1 + " changed mode");
 		});
 	});
 	describe("nick", () => {
 		it("should show nick change", () => {
 			var messages = [];
 			messages.push(messageMaker.defaults().user("user1").nick("user2").make());
-			expect(condense.condense(messages)).to.equal("user1 changed name to user2");
+			let user1 = templates.user_name({nick: "user1"});
+			let user2 = templates.user_name({nick: "user2"});
+			expect(condense.condense(messages)).to.equal("" + user1 + " changed name to " + user2 + "");
 		});
 		it("should show multiple nick change", () => {
 			var messages = [];
 			messages.push(messageMaker.defaults().user("user1").nick("user2").make());
 			messages.push(messageMaker.defaults().user("user3").nick("user4").make());
-			expect(condense.condense(messages)).to.equal("user3 changed name to user4 | user1 changed name to user2");
+			let user1 = templates.user_name({nick: "user1"});
+			let user2 = templates.user_name({nick: "user2"});
+			let user3 = templates.user_name({nick: "user3"});
+			let user4 = templates.user_name({nick: "user4"});
+			expect(condense.condense(messages)).to.equal("" + user3 + " changed name to " + user4 + " | " + user1 + " changed name to " + user2 + "");
 		});
 	});
 });

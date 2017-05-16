@@ -1,6 +1,5 @@
 "use strict";
-
-const templates = require("../views");
+let templates = {};
 
 let quitStrategy = {
 	type: "quit",
@@ -313,4 +312,7 @@ let condense = {
 
 };
 
-module.exports = condense;
+module.exports = (conf) => {
+	templates = conf.templates || {};
+	return condense;
+};

@@ -21,7 +21,7 @@ const templates = require("../views");
 const socket = require("./socket");
 const constants = require("./constants");
 const storage = require("./localStorage");
-const condenseObj = require("./condense");
+const condenseObj = require("./condense")({templates: templates});
 
 $(function() {
 	var sidebar = $("#sidebar, #footer");
@@ -992,7 +992,7 @@ $(function() {
 
 	chat.on("click", ".user", function(e) {
 		e.stopPropagation();
-		
+
 		var name = $(this).data("name");
 		var chan = findCurrentNetworkChan(name);
 
