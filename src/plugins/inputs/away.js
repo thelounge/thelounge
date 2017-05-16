@@ -14,4 +14,6 @@ exports.input = function(network, chan, cmd, args) {
 	}
 
 	network.awayMessage = reason;
+
+	this.save();
 };

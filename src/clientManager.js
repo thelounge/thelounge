@@ -104,6 +104,7 @@ ClientManager.prototype.addUser = function(name, password, enableLog) {
 			user: name,
 			password: password || "",
 			log: enableLog,
+			awayMessage: "",
 			networks: []
 		};
 		fs.writeFileSync(

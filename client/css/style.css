@@ -791,9 +791,13 @@ kbd {
 #chat .chat {
 	bottom: 0;
 	left: 0;
+	right: 0;
 	overflow: auto;
 	-webkit-overflow-scrolling: touch;
 	position: absolute;
+}
+
+#chat .channel .chat {
 	right: 180px;
 }
 
@@ -815,18 +819,6 @@ kbd {
 	transition: all .4s;
 	-webkit-transform: translateZ(0);
 	transform: translateZ(0);
-}
-
-#chat .lobby .chat,
-#chat .special .chat,
-#chat .query .chat {
-	right: 0;
-}
-
-#chat .lobby .sidebar,
-#chat .special .sidebar,
-#chat .query .sidebar {
-	display: none;
 }
 
 #chat .show-more {
@@ -976,38 +968,39 @@ kbd {
 	opacity: .6;
 }
 
-#chat.colored-nicks .user.color-1 { color: #1396cf; }
-#chat.colored-nicks .user.color-2 { color: #ffcf89; }
-#chat.colored-nicks .user.color-3 { color: #00dc5f; }
-#chat.colored-nicks .user.color-4 { color: #ff5bc8; }
-#chat.colored-nicks .user.color-5 { color: #ff0e1b; }
-#chat.colored-nicks .user.color-6 { color: #000094; }
-#chat.colored-nicks .user.color-7 { color: #006441; }
-#chat.colored-nicks .user.color-8 { color: #00566e; }
-#chat.colored-nicks .user.color-9 { color: #ff0078; }
-#chat.colored-nicks .user.color-10 { color: #15d5a3; }
-#chat.colored-nicks .user.color-11 { color: #006b3b; }
-#chat.colored-nicks .user.color-12 { color: #00c5ba; }
-#chat.colored-nicks .user.color-13 { color: #00465b; }
-#chat.colored-nicks .user.color-14 { color: #ffafce; }
-#chat.colored-nicks .user.color-15 { color: #ff3b12; }
-#chat.colored-nicks .user.color-16 { color: #16cc6a; }
-#chat.colored-nicks .user.color-17 { color: #ff0072; }
-#chat.colored-nicks .user.color-18 { color: #ff5877; }
-#chat.colored-nicks .user.color-19 { color: #ff1753; }
-#chat.colored-nicks .user.color-20 { color: #007a56; }
-#chat.colored-nicks .user.color-21 { color: #095092; }
-#chat.colored-nicks .user.color-22 { color: #000bde; }
-#chat.colored-nicks .user.color-23 { color: #00bca9; }
-#chat.colored-nicks .user.color-24 { color: #00367d; }
-#chat.colored-nicks .user.color-25 { color: #009ec4; }
-#chat.colored-nicks .user.color-26 { color: #006119; }
-#chat.colored-nicks .user.color-27 { color: #008bb8; }
-#chat.colored-nicks .user.color-28 { color: #469c00; }
-#chat.colored-nicks .user.color-29 { color: #ff0f95; }
-#chat.colored-nicks .user.color-30 { color: #ff7615; }
-#chat.colored-nicks .user.color-31 { color: #ff4846; }
-#chat.colored-nicks .user.color-32 { color: #ff199b; }
+/* Generate different shades for your theme here: https://colors.bews.me/ */
+#chat.colored-nicks .user.color-1 { color: #e566ff; }
+#chat.colored-nicks .user.color-2 { color: #0af; }
+#chat.colored-nicks .user.color-3 { color: #a0f; }
+#chat.colored-nicks .user.color-4 { color: #f00; }
+#chat.colored-nicks .user.color-5 { color: #006aff; }
+#chat.colored-nicks .user.color-6 { color: #f0f; }
+#chat.colored-nicks .user.color-7 { color: #0cc; }
+#chat.colored-nicks .user.color-8 { color: #a0c; }
+#chat.colored-nicks .user.color-9 { color: #7366ff; }
+#chat.colored-nicks .user.color-10 { color: #d400ff; }
+#chat.colored-nicks .user.color-11 { color: #1500ff; }
+#chat.colored-nicks .user.color-12 { color: #66a6ff; }
+#chat.colored-nicks .user.color-13 { color: #6bc; }
+#chat.colored-nicks .user.color-14 { color: #fa0; }
+#chat.colored-nicks .user.color-15 { color: #0c0; }
+#chat.colored-nicks .user.color-16 { color: #f0c000; }
+#chat.colored-nicks .user.color-17 { color: #6cf; }
+#chat.colored-nicks .user.color-18 { color: #0c9; }
+#chat.colored-nicks .user.color-19 { color: #090; }
+#chat.colored-nicks .user.color-20 { color: #c00; }
+#chat.colored-nicks .user.color-21 { color: #08c; }
+#chat.colored-nicks .user.color-22 { color: #ff66d9; }
+#chat.colored-nicks .user.color-23 { color: #10c; }
+#chat.colored-nicks .user.color-24 { color: #c09; }
+#chat.colored-nicks .user.color-25 { color: #739900; }
+#chat.colored-nicks .user.color-26 { color: #0ac; }
+#chat.colored-nicks .user.color-27 { color: #099; }
+#chat.colored-nicks .user.color-28 { color: #9c0; }
+#chat.colored-nicks .user.color-29 { color: #ff00bf; }
+#chat.colored-nicks .user.color-30 { color: #cc0; }
+#chat.colored-nicks .user.color-31 { color: #c80; }
+#chat.colored-nicks .user.color-32 { color: #ff8000; }
 
 #chat .text {
 	padding-left: 10px;
@@ -1207,6 +1200,10 @@ kbd {
 	width: 100%;
 }
 
+#chat .names-filtered {
+	display: none;
+}
+
 #chat .names .user {
 	display: block;
 	line-height: 1.6;
@@ -1244,6 +1241,10 @@ kbd {
 
 #chat .user-mode.normal:before {
 	content: "Users";
+}
+
+#chat .user-mode-search:before {
+	content: "Search Results";
 }
 
 #loading {
@@ -1561,6 +1562,10 @@ kbd {
 	width: 16px;
 	text-align: center;
 	display: inline-block;
+}
+
+.textcomplete-item .irc-bg {
+	display: block;
 }
 
 /**
@@ -1886,6 +1891,10 @@ kbd {
 		display: block;
 	}
 
+	#chat .channel .chat {
+		right: 0;
+	}
+
 	#chat .sidebar {
 		right: -180px;
 	}
@@ -1935,6 +1944,16 @@ kbd {
 		border: 0;
 		display: inline;
 		padding: 0;
+	}
+
+	#chat .message .from .user:before {
+		content: "<";
+		color: #b1c3ce;
+	}
+
+	#chat .message .from .user:after {
+		content: ">";
+		color: #b1c3ce;
 	}
 
 	#chat .date-marker,

@@ -1,8 +1,11 @@
 {
   "name": "thelounge",
   "description": "The self-hosted Web IRC client",
-  "version": "2.2.2",
+  "version": "2.3.0-rc.1",
   "preferGlobal": true,
+  "publishConfig": {
+    "tag": "next"
+  },
   "bin": {
     "lounge": "index.js"
   },
@@ -47,8 +50,8 @@
     "event-stream": "3.3.4",
     "express": "4.15.2",
     "express-handlebars": "3.0.0",
-    "fs-extra": "2.1.2",
-    "irc-framework": "2.8.0",
+    "fs-extra": "3.0.1",
+    "irc-framework": "2.8.1",
     "ldapjs": "1.0.1",
     "lodash": "4.17.4",
     "moment": "2.18.1",
@@ -65,7 +68,8 @@
     "chai": "3.5.0",
     "eslint": "3.19.0",
     "font-awesome": "4.7.0",
-    "handlebars": "4.0.6",
+    "fuzzy": "0.1.3",
+    "handlebars": "4.0.8",
     "handlebars-loader": "1.5.0",
     "jquery": "3.2.1",
     "jquery-textcomplete": "1.8.0",
@@ -73,10 +77,10 @@
     "mocha": "3.3.0",
     "mousetrap": "1.6.1",
     "npm-run-all": "4.0.2",
-    "nyc": "10.2.0",
+    "nyc": "10.3.2",
     "socket.io-client": "1.7.3",
     "stylelint": "7.10.1",
     "urijs": "1.18.10",
-    "webpack": "2.4.1"
+    "webpack": "2.5.1"
   }
 }

@@ -7,6 +7,7 @@ const $ = require("jquery");
 const moment = require("moment");
 const Mousetrap = require("mousetrap");
 const URI = require("urijs");
+const fuzzy = require("fuzzy");
 
 // our libraries
 const emojiMap = require("./libs/simplemap.json");
@@ -48,7 +49,7 @@ $(function() {
 
 	const emojiStrategy = {
 		id: "emoji",
-		match: /\B:([-+\w]*)$/,
+		match: /\B:([-+\w]*):?$/,
 		search(term, callback) {
 			callback(Object.keys(emojiMap).filter(name => name.indexOf(term) === 0));
 		},
@@ -109,6 +110,45 @@ $(function() {
 			return value;
 		},
 		index: 1
+	};
+
+	const foregroundColorStrategy = {
+		id: "foreground-colors",
+		match: /\x03(\d{0,2}|[A-Za-z ]{0,10})$/,
+		search(term, callback) {
+			term = term.toLowerCase();
+			const matchingColorCodes = constants.colorCodeMap
+				.filter(i => i[0].startsWith(term) || i[1].toLowerCase().startsWith(term));
+
+			callback(matchingColorCodes);
+		},
+		template(value) {
+			return `<span class="irc-fg${parseInt(value[0], 10)}">${value[1]}</span>`;
+		},
+		replace(value) {
+			return "\x03" + value[0];
+		},
+		index: 1
+	};
+
+	const backgroundColorStrategy = {
+		id: "background-colors",
+		match: /\x03(\d{2}),(\d{0,2}|[A-Za-z ]{0,10})$/,
+		search(term, callback, match) {
+			term = term.toLowerCase();
+			const matchingColorCodes = constants.colorCodeMap
+				.filter(i => i[0].startsWith(term) || i[1].toLowerCase().startsWith(term))
+				.map(pair => pair.concat(match[1])); // Needed to pass fg color to `template`...
+
+			callback(matchingColorCodes);
+		},
+		template(value) {
+			return `<span class="irc-fg${parseInt(value[2], 10)} irc-bg irc-bg${parseInt(value[0], 10)}">${value[1]}</span>`;
+		},
+		replace(value) {
+			return "\x03$1," + value[0];
+		},
+		index: 2
 	};
 
 	socket.on("auth", function(data) {
@@ -287,9 +327,16 @@ $(function() {
 		if ((type === "message" || type === "action") && chan.hasClass("channel")) {
 			var nicks = chan.find(".users").data("nicks");
 			if (nicks) {
+				nicks.forEach(function(nick) {
+					if (data.msg.text.indexOf(nick) > -1) {
+						var re = new RegExp("(^| |&lt;)" + nick.replace(/\[/, "\\[").replace(/]/, "\\]") + "(\\.| |,|:|&gt;|$)", "g");
+						text.html(text.html().replace(re, "$1" + templates.user_name({nick: nick}).trim() + "$2"));
+					}
+				});
 				var find = nicks.indexOf(data.msg.from);
-				if (find !== -1 && typeof move === "function") {
-					move(nicks, find, 0);
+				if (find !== -1) {
+					nicks.splice(find, 1);
+					nicks.unshift(data.msg.from);
 				}
 			}
 		}
@@ -354,8 +401,11 @@ $(function() {
 	}
 
 	function renderChannel(data) {
+		if (data.type === "channel") {
+			renderChannelUsers(data);
+		}
+
 		renderChannelMessages(data);
-		renderChannelUsers(data);
 	}
 
 	function renderChannelMessages(data) {
@@ -421,7 +471,19 @@ $(function() {
 			return (oldSortOrder[a] || Number.MAX_VALUE) - (oldSortOrder[b] || Number.MAX_VALUE);
 		});
 
-		users.html(templates.user(data)).data("nicks", nicks);
+		const search = users
+			.find(".search")
+			.attr("placeholder", nicks.length + " " + (nicks.length === 1 ? "user" : "users"));
+
+		users
+			.data("nicks", nicks)
+			.find(".names-original")
+			.html(templates.user(data));
+
+		// Refresh user search
+		if (search.val().length) {
+			search.trigger("input");
+		}
 	}
 
 	function renderNetworks(data) {
@@ -503,20 +565,23 @@ $(function() {
 			.find("#chan-" + data.chan)
 			.find(".messages");
 
+		// get the scrollable wrapper around messages
+		var scrollable = chan.closest(".chat");
+		var heightOld = chan.height();
+
 		// Remove the date-change marker we put at the top, because it may
 		// not actually be a date change now
 		var children = $(chan).children();
-		if (children.eq(0).hasClass("date-marker")) { // Check top most child
+		if (children.eq(0).hasClass("date-marker-container")) { // Check top most child
 			children.eq(0).remove();
-		} else if (children.eq(0).hasClass("unread-marker") && children.eq(1).hasClass("date-marker")) {
+		} else if (children.eq(1).hasClass("date-marker-container")) {
+			// The unread-marker could be at index 0, which will cause the date-marker to become "stuck"
 			children.eq(1).remove();
 		} else if (children.eq(0).hasClass("condensed") && children.eq(0).children(".date-marker").eq(0).hasClass("date-marker")) {
 			children.eq(0).children(".date-marker").eq(0).remove();
 		}
 
-		// get the scrollable wrapper around messages
-		var scrollable = chan.closest(".chat");
-		var heightOld = chan.height();
+		// Add the older messages
 		chan.prepend(documentFragment).end();
 
 		// restore scroll position
@@ -763,7 +828,10 @@ $(function() {
 			chat.find(".chan.active .chat").trigger("msg.sticky"); // fix growing
 		})
 		.tab(completeNicks, {hint: false})
-		.textcomplete([emojiStrategy, nicksStrategy, chanStrategy, commandStrategy], {
+		.textcomplete([
+			emojiStrategy, nicksStrategy, chanStrategy, commandStrategy,
+			foregroundColorStrategy, backgroundColorStrategy
+		], {
 			dropdownClassName: "textcomplete-menu",
 			placement: "top"
 		}).on({
@@ -1085,17 +1153,31 @@ $(function() {
 	});
 
 	chat.on("input", ".search", function() {
-		var value = $(this).val().toLowerCase();
-		var names = $(this).closest(".users").find(".names");
-		names.find(".user").each(function() {
-			var btn = $(this);
-			var name = btn.text().toLowerCase().replace(/[+%@~]/, "");
-			if (name.indexOf(value) > -1) {
-				btn.show();
-			} else {
-				btn.hide();
-			}
-		});
+		const value = $(this).val();
+		const parent = $(this).closest(".users");
+		const names = parent.find(".names-original");
+		const container = parent.find(".names-filtered");
+
+		if (!value.length) {
+			container.hide();
+			names.show();
+			return;
+		}
+
+		const fuzzyOptions = {
+			pre: "<b>",
+			post: "</b>",
+			extract: el => $(el).text()
+		};
+
+		const result = fuzzy.filter(
+			value,
+			names.find(".user").toArray(),
+			fuzzyOptions
+		);
+
+		names.hide();
+		container.html(templates.user_filtered({matches: result})).show();
 	});
 
 	chat.on("msg", ".messages", function(e, target, msg) {
@@ -1293,6 +1375,9 @@ $(function() {
 			"pagedown"
 		], function(e, key) {
 			let container = windows.find(".window.active");
+			if (container.is(":animated")) {
+				return;
+			}
 
 			// Chat windows scroll message container
 			if (container.attr("id") === "chat-container") {
@@ -1398,8 +1483,8 @@ $(function() {
 
 				// Remove date-seperators that would otherwise be "stuck" at the top
 				// of the channel
-				chan.find(".date-marker").each(function() {
-					if ($(this).next().hasClass("date-marker")) {
+				chan.find(".date-marker-container").each(function() {
+					if ($(this).next().hasClass("date-marker-container")) {
 						$(this).remove();
 					}
 				});
@@ -1410,11 +1495,17 @@ $(function() {
 	function clear() {
 		chat.find(".active")
 			.find(".show-more").addClass("show").end()
-			.find(".messages .msg, .date-marker").remove();
+			.find(".messages .msg, .date-marker-container").remove();
 	}
 
 	function completeNicks(word) {
-		const users = chat.find(".active").find(".users");
+		const users = chat.find(".active .users");
+
+		// Lobbies and private chats do not have an user list
+		if (!users.length) {
+			return [];
+		}
+
 		const words = users.data("nicks");
 
 		return $.grep(
@@ -1566,17 +1657,6 @@ $(function() {
 		toggleNickEditor(false);
 
 		$("#nick-value").text(nick);
-	}
-
-	function move(array, old_index, new_index) {
-		if (new_index >= array.length) {
-			var k = new_index - array.length;
-			while ((k--) + 1) {
-				this.push(undefined);
-			}
-		}
-		array.splice(new_index, 0, array.splice(old_index, 1)[0]);
-		return array;
 	}
 
 	function toggleNotificationMarkers(newState) {
