@@ -14,21 +14,20 @@ const emojiMap = require("./libs/simplemap.json");
 require("./libs/jquery/inputhistory");
 require("./libs/jquery/stickyscroll");
 require("./libs/jquery/tabcomplete");
-const helpers_parse = require("./libs/handlebars/parse");
 const helpers_roundBadgeNumber = require("./libs/handlebars/roundBadgeNumber");
 const slideoutMenu = require("./libs/slideout");
 const templates = require("../views");
 const socket = require("./socket");
+require("./socket-events");
 const constants = require("./constants");
 const storage = require("./localStorage");
+const utils = require("./utils");
 
 $(function() {
 	var sidebar = $("#sidebar, #footer");
 	var chat = $("#chat");
 
 	$(document.body).data("app-name", document.title);
-
-	var ignoreSortSync = false;
 
 	var pop;
 	try {
@@ -43,8 +42,6 @@ $(function() {
 	$("#play").on("click", function() {
 		pop.play();
 	});
-
-	var favicon = $("#favicon");
 
 	// Autocompletion Strategies
 
@@ -151,507 +148,6 @@ $(function() {
 		},
 		index: 2
 	};
-
-	socket.on("auth", function(data) {
-		var login = $("#sign-in");
-		var token;
-
-		login.find(".btn").prop("disabled", false);
-
-		if (!data.success) {
-			storage.remove("token");
-
-			var error = login.find(".error");
-			error.show().closest("form").one("submit", function() {
-				error.hide();
-			});
-		} else {
-			token = storage.get("token");
-			if (token) {
-				$("#loading-page-message").text("Authorizing…");
-				socket.emit("auth", {token: token});
-			}
-		}
-
-		var input = login.find("input[name='user']");
-		if (input.val() === "") {
-			input.val(storage.get("user") || "");
-		}
-		if (token) {
-			return;
-		}
-		sidebar.find(".sign-in")
-			.trigger("click", {
-				pushState: false,
-			})
-			.end()
-			.find(".networks")
-			.html("")
-			.next()
-			.show();
-	});
-
-	socket.on("change-password", function(data) {
-		var passwordForm = $("#change-password");
-		if (data.error || data.success) {
-			var message = data.success ? data.success : data.error;
-			var feedback = passwordForm.find(".feedback");
-
-			if (data.success) {
-				feedback.addClass("success").removeClass("error");
-			} else {
-				feedback.addClass("error").removeClass("success");
-			}
-
-			feedback.text(message).show();
-			feedback.closest("form").one("submit", function() {
-				feedback.hide();
-			});
-		}
-
-		if (data.token && storage.get("token") !== null) {
-			storage.set("token", data.token);
-		}
-
-		passwordForm
-			.find("input")
-			.val("")
-			.end()
-			.find(".btn")
-			.prop("disabled", false);
-	});
-
-	socket.on("init", function(data) {
-		$("#loading-page-message").text("Rendering…");
-
-		if (data.networks.length === 0) {
-			$("#footer").find(".connect").trigger("click", {
-				pushState: false,
-			});
-		} else {
-			renderNetworks(data);
-		}
-
-		if (data.token && $("#sign-in-remember").is(":checked")) {
-			storage.set("token", data.token);
-		} else {
-			storage.remove("token");
-		}
-
-		$("body").removeClass("signed-out");
-		$("#loading").remove();
-		$("#sign-in").remove();
-
-		var id = data.active;
-		var target = sidebar.find("[data-id='" + id + "']").trigger("click", {
-			replaceHistory: true
-		});
-		if (target.length === 0) {
-			var first = sidebar.find(".chan")
-				.eq(0)
-				.trigger("click");
-			if (first.length === 0) {
-				$("#footer").find(".connect").trigger("click", {
-					pushState: false,
-				});
-			}
-		}
-	});
-
-	socket.on("open", function(id) {
-		// Another client opened the channel, clear the unread counter
-		sidebar.find(".chan[data-id='" + id + "'] .badge")
-			.removeClass("highlight")
-			.empty();
-	});
-
-	socket.on("join", function(data) {
-		var id = data.network;
-		var network = sidebar.find("#network-" + id);
-		network.append(
-			templates.chan({
-				channels: [data.chan]
-			})
-		);
-		chat.append(
-			templates.chat({
-				channels: [data.chan]
-			})
-		);
-		renderChannel(data.chan);
-
-		// Queries do not automatically focus, unless the user did a whois
-		if (data.chan.type === "query" && !data.shouldOpen) {
-			return;
-		}
-
-		sidebar.find(".chan")
-			.sort(function(a, b) {
-				return $(a).data("id") - $(b).data("id");
-			})
-			.last()
-			.click();
-	});
-
-	function buildChatMessage(data) {
-		var type = data.msg.type;
-		var target = "#chan-" + data.chan;
-		if (type === "error") {
-			target = "#chan-" + chat.find(".active").data("id");
-		}
-
-		var chan = chat.find(target);
-		var template = "msg";
-
-		if (!data.msg.highlight && !data.msg.self && (type === "message" || type === "notice") && options.highlights.some(function(h) {
-			return data.msg.text.toLocaleLowerCase().indexOf(h.toLocaleLowerCase()) > -1;
-		})) {
-			data.msg.highlight = true;
-		}
-
-		if ([
-			"invite",
-			"join",
-			"mode",
-			"kick",
-			"nick",
-			"part",
-			"quit",
-			"topic",
-			"topic_set_by",
-			"action",
-			"whois",
-			"ctcp",
-			"channel_list",
-			"ban_list",
-		].indexOf(type) !== -1) {
-			template = "msg_action";
-		} else if (type === "unhandled") {
-			template = "msg_unhandled";
-		}
-
-		var msg = $(templates[template](data.msg));
-		var text = msg.find(".text");
-
-		if (template === "msg_action") {
-			text.html(templates.actions[type](data.msg));
-		}
-
-		if ((type === "message" || type === "action") && chan.hasClass("channel")) {
-			var nicks = chan.find(".users").data("nicks");
-			if (nicks) {
-				var find = nicks.indexOf(data.msg.from);
-				if (find !== -1) {
-					nicks.splice(find, 1);
-					nicks.unshift(data.msg.from);
-				}
-			}
-		}
-
-		return msg;
-	}
-
-	function buildChannelMessages(channel, messages) {
-		return messages.reduce(function(docFragment, message) {
-			docFragment.append(buildChatMessage({
-				chan: channel,
-				msg: message
-			}));
-			return docFragment;
-		}, $(document.createDocumentFragment()));
-	}
-
-	function renderChannel(data) {
-		renderChannelMessages(data);
-
-		if (data.type === "channel") {
-			renderChannelUsers(data);
-		}
-	}
-
-	function renderChannelMessages(data) {
-		var documentFragment = buildChannelMessages(data.id, data.messages);
-		var channel = chat.find("#chan-" + data.id + " .messages").append(documentFragment);
-
-		if (data.firstUnread > 0) {
-			var first = channel.find("#msg-" + data.firstUnread);
-
-			// TODO: If the message is far off in the history, we still need to append the marker into DOM
-			if (!first.length) {
-				channel.prepend(templates.unread_marker());
-			} else {
-				first.before(templates.unread_marker());
-			}
-		} else {
-			channel.append(templates.unread_marker());
-		}
-
-		if (data.type !== "lobby") {
-			var lastDate;
-			$(chat.find("#chan-" + data.id + " .messages .msg[data-time]")).each(function() {
-				var msg = $(this);
-				var msgDate = new Date(msg.attr("data-time"));
-
-				// Top-most message in a channel
-				if (!lastDate) {
-					lastDate = msgDate;
-					msg.before(templates.date_marker({msgDate: msgDate}));
-				}
-
-				if (lastDate.toDateString() !== msgDate.toDateString()) {
-					msg.before(templates.date_marker({msgDate: msgDate}));
-				}
-
-				lastDate = msgDate;
-			});
-		}
-	}
-
-	function renderChannelUsers(data) {
-		var users = chat.find("#chan-" + data.id).find(".users");
-		var nicks = users.data("nicks") || [];
-		var i, oldSortOrder = {};
-
-		for (i in nicks) {
-			oldSortOrder[nicks[i]] = i;
-		}
-
-		nicks = [];
-
-		for (i in data.users) {
-			nicks.push(data.users[i].nick);
-		}
-
-		nicks = nicks.sort(function(a, b) {
-			return (oldSortOrder[a] || Number.MAX_VALUE) - (oldSortOrder[b] || Number.MAX_VALUE);
-		});
-
-		const search = users
-			.find(".search")
-			.attr("placeholder", nicks.length + " " + (nicks.length === 1 ? "user" : "users"));
-
-		users
-			.data("nicks", nicks)
-			.find(".names-original")
-			.html(templates.user(data));
-
-		// Refresh user search
-		if (search.val().length) {
-			search.trigger("input");
-		}
-	}
-
-	function renderNetworks(data) {
-		sidebar.find(".empty").hide();
-		sidebar.find(".networks").append(
-			templates.network({
-				networks: data.networks
-			})
-		);
-
-		var channels = $.map(data.networks, function(n) {
-			return n.channels;
-		});
-		chat.append(
-			templates.chat({
-				channels: channels
-			})
-		);
-		channels.forEach(renderChannel);
-
-		confirmExit();
-		sortable();
-
-		if (sidebar.find(".highlight").length) {
-			toggleNotificationMarkers(true);
-		}
-	}
-
-	socket.on("msg", function(data) {
-		var msg = buildChatMessage(data);
-		var target = "#chan-" + data.chan;
-		var container = chat.find(target + " .messages");
-
-		if (data.msg.type === "channel_list" || data.msg.type === "ban_list") {
-			$(container).empty();
-		}
-
-		// Check if date changed
-		var prevMsg = $(container.find(".msg")).last();
-		var prevMsgTime = new Date(prevMsg.attr("data-time"));
-		var msgTime = new Date(msg.attr("data-time"));
-
-		// It's the first message in a channel/query
-		if (prevMsg.length === 0) {
-			container.append(templates.date_marker({msgDate: msgTime}));
-		}
-
-		if (prevMsgTime.toDateString() !== msgTime.toDateString()) {
-			prevMsg.after(templates.date_marker({msgDate: msgTime}));
-		}
-
-		// Add message to the container
-		container
-			.append(msg)
-			.trigger("msg", [
-				target,
-				data
-			]);
-		var lastVisible = container.find("div:visible").last();
-		if (data.msg.self
-			|| lastVisible.hasClass("unread-marker")
-			|| (lastVisible.hasClass("date-marker")
-				&& lastVisible.prev().hasClass("unread-marker"))) {
-			container
-				.find(".unread-marker")
-				.appendTo(container);
-		}
-	});
-
-	socket.on("more", function(data) {
-		var documentFragment = buildChannelMessages(data.chan, data.messages);
-		var chan = chat
-			.find("#chan-" + data.chan)
-			.find(".messages");
-
-		// get the scrollable wrapper around messages
-		var scrollable = chan.closest(".chat");
-		var heightOld = chan.height();
-
-		// Remove the date-change marker we put at the top, because it may
-		// not actually be a date change now
-		var children = $(chan).children();
-		if (children.eq(0).hasClass("date-marker-container")) { // Check top most child
-			children.eq(0).remove();
-		} else if (children.eq(1).hasClass("date-marker-container")) {
-			// The unread-marker could be at index 0, which will cause the date-marker to become "stuck"
-			children.eq(1).remove();
-		}
-
-		// Add the older messages
-		chan.prepend(documentFragment).end();
-
-		// restore scroll position
-		var position = chan.height() - heightOld;
-		scrollable.scrollTop(position);
-
-		if (data.messages.length !== 100) {
-			scrollable.find(".show-more").removeClass("show");
-		}
-
-		// Date change detect
-		// Have to use data instaid of the documentFragment because it's being weird
-		var lastDate;
-		$(data.messages).each(function() {
-			var msgData = this;
-			var msgDate = new Date(msgData.time);
-			var msg = $(chat.find("#chan-" + data.chan + " .messages #msg-" + msgData.id));
-
-			// Top-most message in a channel
-			if (!lastDate) {
-				lastDate = msgDate;
-				msg.before(templates.date_marker({msgDate: msgDate}));
-			}
-
-			if (lastDate.toDateString() !== msgDate.toDateString()) {
-				msg.before(templates.date_marker({msgDate: msgDate}));
-			}
-
-			lastDate = msgDate;
-		});
-
-		scrollable.find(".show-more-button").prop("disabled", false);
-	});
-
-	socket.on("network", function(data) {
-		renderNetworks(data);
-
-		sidebar.find(".chan")
-			.last()
-			.trigger("click");
-
-		$("#connect")
-			.find(".btn")
-			.prop("disabled", false)
-			.end();
-	});
-
-	socket.on("network_changed", function(data) {
-		sidebar.find("#network-" + data.network).data("options", data.serverOptions);
-	});
-
-	socket.on("nick", function(data) {
-		var id = data.network;
-		var nick = data.nick;
-		var network = sidebar.find("#network-" + id).data("nick", nick);
-		if (network.find(".active").length) {
-			setNick(nick);
-		}
-	});
-
-	socket.on("part", function(data) {
-		var chanMenuItem = sidebar.find(".chan[data-id='" + data.chan + "']");
-
-		// When parting from the active channel/query, jump to the network's lobby
-		if (chanMenuItem.hasClass("active")) {
-			chanMenuItem.parent(".network").find(".lobby").click();
-		}
-
-		chanMenuItem.remove();
-		$("#chan-" + data.chan).remove();
-	});
-
-	socket.on("quit", function(data) {
-		var id = data.network;
-		sidebar.find("#network-" + id)
-			.remove()
-			.end();
-		var chan = sidebar.find(".chan")
-			.eq(0)
-			.trigger("click");
-		if (chan.length === 0) {
-			sidebar.find(".empty").show();
-		}
-	});
-
-	socket.on("toggle", function(data) {
-		var toggle = $("#toggle-" + data.id);
-		toggle.parent().after(templates.toggle({toggle: data}));
-		switch (data.type) {
-		case "link":
-			if (options.links) {
-				toggle.click();
-			}
-			break;
-
-		case "image":
-			if (options.thumbnails) {
-				toggle.click();
-			}
-			break;
-		}
-	});
-
-	socket.on("topic", function(data) {
-		var topic = $("#chan-" + data.chan).find(".header .topic");
-		topic.html(helpers_parse(data.topic));
-		// .attr() is safe escape-wise but consider the capabilities of the attribute
-		topic.attr("title", data.topic);
-	});
-
-	socket.on("users", function(data) {
-		var chan = chat.find("#chan-" + data.chan);
-
-		if (chan.hasClass("active")) {
-			socket.emit("names", {
-				target: data.chan
-			});
-		} else {
-			chan.data("needsNamesRefresh", true);
-		}
-	});
-
-	socket.on("names", renderChannelUsers);
 
 	var options = require("./options");
 
@@ -811,15 +307,9 @@ $(function() {
 		});
 	}
 
-	// Triggering click event opens the virtual keyboard on mobile
-	// This can only be called from another interactive event (e.g. button click)
-	var forceFocus = function() {
-		input.trigger("click").focus();
-	};
-
 	$("#form").on("submit", function(e) {
 		e.preventDefault();
-		forceFocus();
+		utils.forceFocus();
 		var text = input.val();
 
 		if (text.length === 0) {
@@ -830,7 +320,7 @@ $(function() {
 		resetInputHeight(input.get(0));
 
 		if (text.indexOf("/clear") === 0) {
-			clear();
+			utils.clear();
 			return;
 		}
 
@@ -853,7 +343,7 @@ $(function() {
 	}
 
 	$("button#set-nick").on("click", function() {
-		toggleNickEditor(true);
+		utils.toggleNickEditor(true);
 
 		// Selects existing nick in the editable text field
 		var element = document.querySelector("#nick-value");
@@ -868,11 +358,6 @@ $(function() {
 	$("button#cancel-nick").on("click", cancelNick);
 	$("button#submit-nick").on("click", submitNick);
 
-	function toggleNickEditor(toggle) {
-		$("#nick").toggleClass("editable", toggle);
-		$("#nick-value").attr("contenteditable", toggle);
-	}
-
 	function submitNick() {
 		var newNick = $("#nick-value").text().trim();
 
@@ -881,7 +366,7 @@ $(function() {
 			return;
 		}
 
-		toggleNickEditor(false);
+		utils.toggleNickEditor(false);
 
 		socket.emit("input", {
 			target: chat.data("id"),
@@ -890,7 +375,7 @@ $(function() {
 	}
 
 	function cancelNick() {
-		setNick(sidebar.find(".chan.active").closest(".network").data("nick"));
+		utils.setNick(sidebar.find(".chan.active").closest(".network").data("nick"));
 	}
 
 	$("#nick-value").keypress(function(e) {
@@ -993,7 +478,7 @@ $(function() {
 			.empty();
 
 		if (sidebar.find(".highlight").length === 0) {
-			toggleNotificationMarkers(false);
+			utils.toggleNotificationMarkers(false);
 		}
 
 		sidebarSlide.toggle(false);
@@ -1031,7 +516,7 @@ $(function() {
 
 		if (self.hasClass("chan")) {
 			$("#chat-container").addClass("active");
-			setNick(self.closest(".network").data("nick"));
+			utils.setNick(self.closest(".network").data("nick"));
 		}
 
 		var chanChat = chan.find(".chat");
@@ -1133,7 +618,7 @@ $(function() {
 						// On mobile, sounds can not be played without user interaction.
 					}
 				}
-				toggleNotificationMarkers(true);
+				utils.toggleNotificationMarkers(true);
 
 				if (options.desktopNotifications && Notification.permission === "granted") {
 					var title;
@@ -1360,7 +845,7 @@ $(function() {
 			"ctrl+shift+l"
 		], function(e) {
 			if (e.target === input[0]) {
-				clear();
+				utils.clear();
 				e.preventDefault();
 			}
 		});
@@ -1423,12 +908,6 @@ $(function() {
 		});
 	}, 1000 * 10);
 
-	function clear() {
-		chat.find(".active")
-			.find(".show-more").addClass("show").end()
-			.find(".messages .msg, .date-marker-container").remove();
-	}
-
 	function completeNicks(word) {
 		const users = chat.find(".active .users");
 
@@ -1471,141 +950,9 @@ $(function() {
 		);
 	}
 
-	function confirmExit() {
-		if ($("body").hasClass("public")) {
-			window.onbeforeunload = function() {
-				return "Are you sure you want to navigate away from this page?";
-			};
-		}
-	}
-
-	function sortable() {
-		sidebar.find(".networks").sortable({
-			axis: "y",
-			containment: "parent",
-			cursor: "move",
-			distance: 12,
-			items: ".network",
-			handle: ".lobby",
-			placeholder: "network-placeholder",
-			forcePlaceholderSize: true,
-			tolerance: "pointer", // Use the pointer to figure out where the network is in the list
-
-			update: function() {
-				var order = [];
-				sidebar.find(".network").each(function() {
-					var id = $(this).data("id");
-					order.push(id);
-				});
-				socket.emit(
-					"sort", {
-						type: "networks",
-						order: order
-					}
-				);
-
-				ignoreSortSync = true;
-			}
-		});
-		sidebar.find(".network").sortable({
-			axis: "y",
-			containment: "parent",
-			cursor: "move",
-			distance: 12,
-			items: ".chan:not(.lobby)",
-			placeholder: "chan-placeholder",
-			forcePlaceholderSize: true,
-			tolerance: "pointer", // Use the pointer to figure out where the channel is in the list
-
-			update: function(e, ui) {
-				var order = [];
-				var network = ui.item.parent();
-				network.find(".chan").each(function() {
-					var id = $(this).data("id");
-					order.push(id);
-				});
-				socket.emit(
-					"sort", {
-						type: "channels",
-						target: network.data("id"),
-						order: order
-					}
-				);
-
-				ignoreSortSync = true;
-			}
-		});
-	}
-
-	socket.on("sync_sort", function(data) {
-		// Syncs the order of channels or networks when they are reordered
-		if (ignoreSortSync) {
-			ignoreSortSync = false;
-			return; // Ignore syncing because we 'caused' it
-		}
-
-		var type = data.type;
-		var order = data.order;
-
-		if (type === "networks") {
-			var container = $(".networks");
-
-			$.each(order, function(index, value) {
-				var position = $(container.children()[index]);
-
-				if (position.data("id") === value) { // Network in correct place
-					return true; // No point in continuing
-				}
-
-				var network = container.find("#network-" + value);
-
-				$(network).insertBefore(position);
-			});
-		} else if (type === "channels") {
-			var network = $("#network-" + data.target);
-
-			$.each(order, function(index, value) {
-				if (index === 0) { // Shouldn't attempt to move lobby
-					return true; // same as `continue` -> skip to next item
-				}
-
-				var position = $(network.children()[index]); // Target channel at position
-
-				if (position.data("id") === value) { // Channel in correct place
-					return true; // No point in continuing
-				}
-
-				var channel = network.find(".chan[data-id=" + value + "]"); // Channel at position
-
-				$(channel).insertBefore(position);
-			});
-		}
-	});
-
-	function setNick(nick) {
-		// Closes the nick editor when canceling, changing channel, or when a nick
-		// is set in a different tab / browser / device.
-		toggleNickEditor(false);
-
-		$("#nick-value").text(nick);
-	}
-
-	function toggleNotificationMarkers(newState) {
-		// Toggles the favicon to red when there are unread notifications
-		if (favicon.data("toggled") !== newState) {
-			var old = favicon.attr("href");
-			favicon.attr("href", favicon.data("other"));
-			favicon.data("other", old);
-			favicon.data("toggled", newState);
-		}
-
-		// Toggles a dot on the menu icon when there are unread notifications
-		$("#viewport .lt").toggleClass("notified", newState);
-	}
-
 	$(document).on("visibilitychange focus click", () => {
 		if (sidebar.find(".highlight").length === 0) {
-			toggleNotificationMarkers(false);
+			utils.toggleNotificationMarkers(false);
 		}
 	});
 
