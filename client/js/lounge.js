@@ -558,7 +558,7 @@ $(function() {
 		// Date change detect
 		// Have to use data instaid of the documentFragment because it's being weird
 		var lastDate;
-		var nicks = chat.find("#chan-" + data.chan + " .users").data("nicks");
+		var nicks = chat.find("#chan-" + data.id + " .users").data("nicks");
 		$(data.messages).each(function() {
 			var msgData = this;
 			var msgDate = new Date(msgData.time);
