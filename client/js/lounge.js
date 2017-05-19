@@ -512,7 +512,7 @@ $(function() {
 	socket.on("more", function(data) {
 		var documentFragment = buildChannelMessages(data.chan, data.messages);
 		var chan = chat
-			.find("#chan-" + data.chan)
+			.find("#chan-" + data.id)
 			.find(".messages");
 
 		// get the scrollable wrapper around messages
@@ -546,7 +546,7 @@ $(function() {
 		$(data.messages).each(function() {
 			var msgData = this;
 			var msgDate = new Date(msgData.time);
-			var msg = $(chat.find("#chan-" + data.chan + " .messages #msg-" + msgData.id));
+			var msg = $(chat.find("#chan-" + data.id + " .messages #msg-" + msgData.id));
 
 			// Top-most message in a channel
 			if (!lastDate) {
