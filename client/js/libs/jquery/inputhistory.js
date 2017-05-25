@@ -31,6 +31,9 @@ import jQuery from "jquery";
 		
 		var i = 0;
 		self.on("keydown", function(e) {
+			if (self.data("disabled")) {
+				return;
+			}
 			var key = e.which;
 			switch (key) {
 			case 13: // Enter

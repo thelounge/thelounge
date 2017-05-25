@@ -240,8 +240,9 @@ $(function() {
 				toggleNotificationMarkers(true);
 			}
 
-			$("#connection-error").removeClass("display");
-			$("#input").removeAttr("disabled");
+			$("#connection-error").removeClass("shown");
+			$("#submit").removeAttr("disabled");
+			$("#input").data("disabled", false);
 
 			return;
 		}
@@ -804,6 +805,11 @@ $(function() {
 			},
 			"textComplete:hide": function() {
 				$(this).data("autocompleting", false);
+			},
+			keydown: function() {
+				if (event.which === 13 && !event.shiftKey) {
+					event.preventDefault();
+				}
 			}
 		});
 

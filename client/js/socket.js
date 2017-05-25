@@ -7,7 +7,7 @@ const path = window.location.pathname + "socket.io/";
 const socket = io({
 	path: path,
 	autoConnect: false,
-	timeout: 20000,
+	timeout: 30000,
 	reconnection: true
 });
 
@@ -19,8 +19,9 @@ const socket = io({
 ].forEach(function(e) {
 	socket.on(e, function(data) {
 		$("#loading-page-message").text("Connection failed: " + data);
-		$("#connection-error").addClass("display");
-		$("#input").attr("disabled", "disabled");
+		$("#connection-error").addClass("shown");
+		$("#submit").attr("disabled", "disabled");
+		$("#input").data("disabled", true);
 
 		console.error(data);
 	});
