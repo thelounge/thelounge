@@ -1369,11 +1369,8 @@ kbd {
 }
 
 #connection-error {
-	display: none;
-}
-
-#connection-error.shown {
-	display: block;
+	color: #fff;
+	font-size: 20px;
 }
 
 [contenteditable]:focus {
@@ -1927,6 +1924,10 @@ kbd {
 
 	#help .help-item .description {
 		display: block;
+	}
+
+	#connection-error {
+		font-size: 5vw;
 	}
 }
 
