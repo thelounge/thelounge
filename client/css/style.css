@@ -1993,20 +1993,20 @@ kbd {
 	opacity: 1;
 }
 
-#expand_preview div {
+#expand-preview div {
 	display: flex;
 	justify-content: center;
 	max-height: 100%;
 	overflow: hidden;
 }
 
-#expand_preview img {
+#expand-preview img {
 	max-height: 100%;
 	max-width: 100%;
 	object-fit: contain;
 }
 
-#expand_preview a {
+#expand-preview a {
 	display: inline-block;
 	margin: 0 auto;
 	padding: 10px;

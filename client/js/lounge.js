@@ -624,7 +624,7 @@ $(function() {
 
 	$(window).on("popstate", function(event) {
 		var state = event.originalEvent.state;
-		var preview = $("#expand_preview");
+		var preview = $("#expand-preview");
 
 		if ((preview.hasClass("display") && (!state.clickTarget || state.clickTarget.indexOf("toggle-content") === -1))) {
 			preview.removeClass("display");
@@ -639,9 +639,9 @@ $(function() {
 		}
 	});
 
-	viewport.on("click", "#expand_preview, .toggle-content img", function(e, data) {
+	viewport.on("click", "#expand-preview, .toggle-content img", function(e, data) {
 		var self = $(this);
-		var container = $("#expand_preview");
+		var container = $("#expand-preview");
 		var state = {};
 
 		if (self.is("img")) {
