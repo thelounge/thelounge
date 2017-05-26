@@ -227,12 +227,10 @@ $(function() {
 
 			channels.forEach(function(channel) {
 				renderChannel(channel);
-				if (channel.unread > 0 && channel.type === "channel") {
-					var badge = sidebar.find(".chan[data-title='" + channel.name + "'] .badge");
-					badge.text(channel.unread);
-					if (channel.highlight) {
-						badge.addClass("highlight");
-					}
+				var badge = sidebar.find(".chan[data-title='" + channel.name + "'] .badge");
+				badge.text(channel.unread ? channel.unread : "");
+				if (channel.highlight) {
+					badge.addClass("highlight");
 				}
 			});
 

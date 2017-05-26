@@ -7,7 +7,7 @@ const path = window.location.pathname + "socket.io/";
 const socket = io({
 	path: path,
 	autoConnect: false,
-	timeout: 30000,
+	timeout: 40000,
 	reconnection: true
 });
 
