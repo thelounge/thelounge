@@ -829,6 +829,20 @@ $(function() {
 			return;
 		}
 
+		if (text.substring(0, 5) === "/join") {
+			var cmd = text.trim();
+
+			if (cmd !== "/join") {
+				var name = cmd.split(" ").pop();
+				var chan = findCurrentNetworkChan(name);
+
+				if (chan.length) {
+					chan.click();
+					return;
+				}
+			}
+		}
+
 		socket.emit("input", {
 			target: chat.data("id"),
 			text: text
