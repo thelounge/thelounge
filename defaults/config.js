@@ -78,6 +78,14 @@ module.exports = {
 	prefetchMaxImageSize: 512,
 
 	//
+	// Always rewrite http to https
+	//
+	// @type     boolean
+	// @default  false
+	//
+	prefetchForceSSL: false,
+
+	//
 	// Display network
 	//
 	// If set to false network settings will not be shown in the login form.
