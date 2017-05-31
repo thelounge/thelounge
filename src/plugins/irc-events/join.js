@@ -3,10 +3,17 @@
 var Chan = require("../../models/chan");
 var Msg = require("../../models/msg");
 var User = require("../../models/user");
+var Helper = require("../../helper.js");
 
 module.exports = function(irc, network) {
 	var client = this;
 	irc.on("join", function(data) {
+		if (Helper.config.restrict.enable && data.channel.match(Helper.config.restrict.pattern) === null) {
+			network.channels[0].pushMessage(client, new Msg({
+				text: Helper.config.restrict.restrictMessage
+			}));
+			return;
+		}
 		var chan = network.getChannel(data.channel);
 		if (typeof chan === "undefined") {
 			chan = new Chan({
