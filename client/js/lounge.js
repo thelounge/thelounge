@@ -1226,6 +1226,10 @@ $(function() {
 
 	chat.on("click", ".show-more-button", function() {
 		var self = $(this);
+		if ($("#connection-error").is(".shown")) {
+			self.data("loading", true);
+			return;
+		}
 		var count = self.parent().next(".messages").children(".msg").length;
 		self.prop("disabled", true);
 		socket.emit("more", {
