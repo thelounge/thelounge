@@ -221,8 +221,11 @@ $(function() {
 
 	socket.on("init", function(data) {
 		const loaded = $("#loading").length === 0;
+		let previousActive = 0;
 
-		if (!loaded) {
+		if (loaded) {
+			previousActive = sidebar.find(".active").data("id");
+		} else {
 			$("#loading-page-message").text("Rendering…");
 		}
 
@@ -250,18 +253,24 @@ $(function() {
 			$("#sign-in").remove();
 		}
 
-		var id = data.active;
-		var target = sidebar.find("[data-id='" + id + "']").trigger("click", {
-			replaceHistory: true
-		});
-		if (target.length === 0) {
-			var first = sidebar.find(".chan")
-				.eq(0)
-				.trigger("click");
-			if (first.length === 0) {
-				$("#footer").find(".connect").trigger("click", {
-					pushState: false,
-				});
+		let previousTarget = sidebar.find("[data-id='" + previousActive + "']");
+
+		if (loaded && previousTarget.length > 0) {
+			previousTarget.addClass("active");
+		} else {
+			let id = data.active;
+			let target = sidebar.find("[data-id='" + id + "']").trigger("click", {
+				replaceHistory: true
+			});
+			if (target.length === 0) {
+				let first = sidebar.find(".chan")
+					.eq(0)
+					.trigger("click");
+				if (first.length === 0) {
+					$("#footer").find(".connect").trigger("click", {
+						pushState: false,
+					});
+				}
 			}
 		}
 	});
