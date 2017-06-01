@@ -829,7 +829,7 @@ $(function() {
 			return;
 		}
 
-		if (text.substring(0, 5) === "/join") {
+		if (text.substring(0, 6) === "/join ") {
 			var cmd = text.trim();
 
 			if (cmd !== "/join") {
