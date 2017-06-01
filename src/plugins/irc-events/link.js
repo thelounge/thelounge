@@ -51,13 +51,17 @@ function parse(msg, url, res, client) {
 		toggle.type = "link";
 		toggle.head = $("title").text();
 		toggle.body =
-			$("meta[name=description]").attr("content")
-			|| $("meta[property=\"og:description\"]").attr("content")
-			|| "No description found.";
+				$("meta[name=description]").attr("content")
+				|| $("meta[property=\"og:description\"]").attr("content")
+				|| "No description found.";
 		toggle.thumb =
-			$("meta[property=\"og:image\"]").attr("content")
-			|| $("meta[name=\"twitter:image:src\"]").attr("content")
-			|| "";
+				$("meta[property=\"og:image\"]").attr("content")
+				|| $("meta[name=\"twitter:image:src\"]").attr("content");
+		fetch(toggle.thumb, function(prefetchRes) {
+			if (prefetchRes.error) {
+				toggle.thumb = "";
+			}
+		});
 		break;
 
 	case "image/png":
@@ -90,6 +94,7 @@ function fetch(url, cb) {
 			}
 		});
 	} catch (e) {
+		cb({error: e});
 		return;
 	}
 	var length = 0;
