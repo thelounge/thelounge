@@ -461,7 +461,7 @@ $(function() {
 
 	function renderNetworks(data, append) {
 		const loaded = $("#loading").length === 0;
-		let channels = {};
+		let channelsAppend;
 
 		if (loaded) {
 			let channelsNew = [];
@@ -470,7 +470,7 @@ $(function() {
 			}).get();
 
 			// reconnection, add only new channels
-			channels = $.map(data.networks, function(n) {
+			channelsAppend = $.map(data.networks, function(n) {
 				return $.map(n.channels, function(c) {
 					channelsNew.push(c.id);
 					return channelsCurrent.indexOf(c.id) > -1 ? null : c;
@@ -485,9 +485,6 @@ $(function() {
 				});
 			}
 		} else {
-			channels = $.map(data.networks, function(n) {
-				return n.channels;
-			});
 			sidebar.find(".empty").hide();
 		}
 
@@ -501,9 +498,13 @@ $(function() {
 			sidebar.find(".networks").html(renderedNetworks);
 		}
 
+		let channels = $.map(data.networks, function(n) {
+			return n.channels;
+		});
+
 		chat.append(
 			templates.chat({
-				channels: channels
+				channels: loaded ? channelsAppend : channels
 			})
 		);
 		channels.forEach(renderChannel);
