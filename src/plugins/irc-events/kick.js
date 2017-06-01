@@ -14,7 +14,7 @@ module.exports = function(irc, network) {
 		if (data.kicked === irc.user.nick) {
 			chan.users = [];
 		} else {
-			chan.users = _.without(chan.users, _.find(chan.users, {name: data.kicked}));
+			chan.users = _.without(chan.users, _.find(chan.users, {nick: data.kicked}));
 		}
 
 		client.emit("users", {
