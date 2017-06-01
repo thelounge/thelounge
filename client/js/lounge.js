@@ -239,7 +239,8 @@ $(function() {
 
 		if (loaded) {
 			$("#connection-error").removeClass("shown");
-			$("#submit").removeAttr("disabled");
+			$("#submit").prop("disabled", false);
+			$(".show-more-button").prop("disabled", false);
 			$("#input").data("disabled", false);
 		} else {
 			if (data.token && $("#sign-in-remember").is(":checked")) {
@@ -1241,10 +1242,6 @@ $(function() {
 
 	chat.on("click", ".show-more-button", function() {
 		var self = $(this);
-		if ($("#connection-error").is(".shown")) {
-			self.data("loading", true);
-			return;
-		}
 		var count = self.parent().next(".messages").children(".msg").length;
 		self.prop("disabled", true);
 		socket.emit("more", {
