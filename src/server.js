@@ -88,6 +88,15 @@ in ${config.public ? "public" : "private"} mode`);
 		authFunction = ldapAuth;
 	}
 
+	if (config.https.http_redirect_port) {
+		// Redirect from httpt to https
+		var http = require("http");
+		http.createServer(function(req, res) {
+			res.writeHead(301, {Location: "https://" + req.headers.host + req.url});
+			res.end();
+		}).listen(config.https.http_redirect_port);
+	}
+
 	var sockets = io(server, {
 		serveClient: false,
 		transports: config.transports
