@@ -2,6 +2,7 @@
 
 const $ = require("jquery");
 const io = require("socket.io-client");
+const storage = require("./localStorage");
 const path = window.location.pathname + "socket.io/";
 
 const socket = io({
@@ -50,6 +51,11 @@ socket.on("connect", function() {
 
 socket.on("authorized", function() {
 	$("#loading-page-message").text("Authorized, loading messages…");
+});
+
+socket.on("sign-out", function() {
+	storage.remove("token");
+	location.reload();
 });
 
 module.exports = socket;

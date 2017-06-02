@@ -25,7 +25,7 @@ program
 				return;
 			}
 			user.password = Helper.password.hash(password);
-			user.token = null; // Will be regenerated when the user is loaded
+			user.sessions = {};
 			fs.writeFileSync(
 				file,
 				JSON.stringify(user, null, "\t")

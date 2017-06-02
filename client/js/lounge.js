@@ -155,6 +155,7 @@ $(function() {
 	socket.on("auth", function(data) {
 		var login = $("#sign-in");
 		var token;
+		const user = storage.get("user");
 
 		login.find(".btn").prop("disabled", false);
 
@@ -165,21 +166,22 @@ $(function() {
 			error.show().closest("form").one("submit", function() {
 				error.hide();
 			});
-		} else {
+		} else if (user) {
 			token = storage.get("token");
 			if (token) {
 				$("#loading-page-message").text("Authorizing…");
-				socket.emit("auth", {token: token});
+				socket.emit("auth", {user: user, token: token});
 			}
 		}
 
-		var input = login.find("input[name='user']");
-		if (input.val() === "") {
-			input.val(storage.get("user") || "");
+		if (user) {
+			login.find("input[name='user']").val(user);
 		}
+
 		if (token) {
 			return;
 		}
+
 		sidebar.find(".sign-in")
 			.trigger("click", {
 				pushState: false,
@@ -209,10 +211,6 @@ $(function() {
 			});
 		}
 
-		if (data.token && storage.get("token") !== null) {
-			storage.set("token", data.token);
-		}
-
 		passwordForm
 			.find("input")
 			.val("")
@@ -232,10 +230,8 @@ $(function() {
 			renderNetworks(data);
 		}
 
-		if (data.token && $("#sign-in-remember").is(":checked")) {
+		if (data.token) {
 			storage.set("token", data.token);
-		} else {
-			storage.remove("token");
 		}
 
 		$("body").removeClass("signed-out");
@@ -1045,8 +1041,12 @@ $(function() {
 	});
 
 	sidebar.on("click", "#sign-out", function() {
+		socket.emit("sign-out", storage.get("token"));
 		storage.remove("token");
-		location.reload();
+
+		if (!socket.connected) {
+			location.reload();
+		}
 	});
 
 	sidebar.on("click", ".close", function() {
