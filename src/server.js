@@ -287,7 +287,7 @@ function localAuth(client, user, password, callback) {
 	Helper.password
 		.compare(password, client.config.password)
 		.then(matching => {
-			if (Helper.password.requiresUpdate(client.config.password)) {
+			if (matching && Helper.password.requiresUpdate(client.config.password)) {
 				const hash = Helper.password.hash(password);
 
 				client.setPassword(hash, success => {
