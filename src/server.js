@@ -144,7 +144,8 @@ function index(req, res, next) {
 			filename: filename
 		};
 	});
-	res.setHeader("Content-Security-Policy", "default-src *; connect-src 'self' ws: wss:; style-src * 'unsafe-inline'; script-src 'self'; child-src 'self'; object-src 'none'; form-action 'none';");
+	let blockMixed = Helper.config.prefetchForceSSL ? "block-all-mixed-content; img-src https: data:, " : "";
+	res.setHeader("Content-Security-Policy", blockMixed + "default-src *; connect-src 'self' ws: wss:; style-src * 'unsafe-inline'; script-src 'self'; child-src 'self'; object-src 'none'; form-action 'none';");
 	res.setHeader("Referrer-Policy", "no-referrer");
 	res.render("index", data);
 }
