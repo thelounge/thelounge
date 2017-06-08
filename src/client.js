@@ -187,7 +187,7 @@ Client.prototype.connect = function(args) {
 	args.hostname = args.hostname || (client.config && client.config.hostname) || client.hostname;
 
 	var network = new Network({
-		name: args.name || "",
+		name: (config.displayNetwork ? args.name : config.defaults.name) || "",
 		host: args.host || "",
 		port: parseInt(args.port, 10) || (args.tls ? 6697 : 6667),
 		tls: !!args.tls,
