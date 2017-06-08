@@ -26,6 +26,8 @@ $(function() {
 	var sidebar = $("#sidebar, #footer");
 	var chat = $("#chat");
 
+	$(document.body).data("app-name", document.title);
+
 	var ignoreSortSync = false;
 
 	var pop;
@@ -1012,7 +1014,7 @@ $(function() {
 			.addClass("active")
 			.trigger("show");
 
-		var title = "The Lounge";
+		let title = $(document.body).data("app-name");
 		if (chan.data("title")) {
 			title = chan.data("title") + " — " + title;
 		}
