@@ -30,6 +30,8 @@ $(function() {
 
 	var ignoreSortSync = false;
 
+	var initHistoryLength = history.length;
+
 	var pop;
 	try {
 		pop = new Audio();
@@ -589,8 +591,10 @@ $(function() {
 	socket.on("part", function(data) {
 		var chanMenuItem = sidebar.find(".chan[data-id='" + data.chan + "']");
 
-		// When parting from the active channel/query, jump to the network's lobby
-		if (chanMenuItem.hasClass("active")) {
+		// When parting from the active channel/query, jump to the previous channel or to the network's lobby
+		if (history.length - initHistoryLength > 0) {
+			history.back();
+		} else if (chanMenuItem.hasClass("active")) {
 			chanMenuItem.parent(".network").find(".lobby").click();
 		}
 
@@ -1068,6 +1072,15 @@ $(function() {
 			opacity: 0.4
 		});
 		return false;
+	});
+
+	chat.on("click", "button.close", function() {
+		var id = $(this)
+			.closest(".chan")
+			.data("id");
+		sidebar.find(".chan[data-id='" + id + "']")
+			.find(".close")
+			.click();
 	});
 
 	contextMenu.on("click", ".context-menu-item", function() {

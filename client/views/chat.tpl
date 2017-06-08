@@ -7,6 +7,9 @@
 				<button class="rt" aria-label="Toggle user list"></button>
 			</span>
 		{{/equal}}
+		{{#equal type "query"}}
+			<button class="button close" aria-label="Close current chat">Close</button>
+		{{/equal}}
 		<button class="menu" aria-label="Open the context menu"></button>
 		<span class="title">{{name}}</span>
 		<span title="{{topic}}" class="topic">{{{parse topic}}}</span>
