@@ -119,11 +119,11 @@ function expandHome(shortenedPath) {
 }
 
 function passwordRequiresUpdate(password) {
-	return bcrypt.getRounds(password) !== 11;
+	return bcrypt.getRounds(password) !== Helper.config.bcryptRounds;
 }
 
 function passwordHash(password) {
-	return bcrypt.hashSync(password, bcrypt.genSaltSync(11));
+	return bcrypt.hashSync(password, bcrypt.genSaltSync(Helper.config.bcryptRounds));
 }
 
 function passwordCompare(password, expected) {
