@@ -32,7 +32,12 @@ module.exports = function() {
 		.use(allRequests)
 		.use(index)
 		.use(express.static("client"))
-		.engine("html", expressHandlebars({extname: ".html"}))
+		.engine("html", expressHandlebars({
+			extname: ".html",
+			helpers: {
+				tojson: c => JSON.stringify(c)
+			}
+		}))
 		.set("view engine", "html")
 		.set("views", path.join(__dirname, "..", "client"));
 
