@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "bcryptjs": "2.4.3",
-    "cheerio": "0.22.0",
+    "cheerio": "1.0.0-rc.1",
     "colors": "1.1.2",
     "commander": "2.9.0",
     "event-stream": "3.3.4",
