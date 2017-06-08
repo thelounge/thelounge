@@ -471,6 +471,7 @@ $(function() {
 		var msg = buildChatMessage(data);
 		var target = "#chan-" + data.chan;
 		var container = chat.find(target + " .messages");
+		var stopUnreadMarker = false;
 
 		if (data.msg.type === "channel_list" || data.msg.type === "ban_list") {
 			$(container).empty();
@@ -490,7 +491,11 @@ $(function() {
 			prevMsg.after(templates.date_marker({msgDate: msgTime}));
 		}
 
-        // Add message to the container
+		if (chat.find(target).is(".active") && container.children().last().is(".unread-marker")) {
+			stopUnreadMarker = true;
+		}
+
+		// Add message to the container
 		container
 			.append(msg)
 			.trigger("msg", [
@@ -498,7 +503,7 @@ $(function() {
 				data
 			]);
 
-		if (data.msg.self) {
+		if (data.msg.self || stopUnreadMarker) {
 			container
 				.find(".unread-marker")
 				.appendTo(container);
