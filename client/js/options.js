@@ -44,10 +44,13 @@ for (var i in options) {
 }
 
 settings.on("change", "input, select, textarea", function() {
-	var self = $(this);
-	var name = self.attr("name");
+	const self = $(this);
+	const type = self.attr("type");
+	const name = self.attr("name");
 
-	if (self.attr("type") === "checkbox") {
+	if (type === "password") {
+		return;
+	} else if (type === "checkbox") {
 		options[name] = self.prop("checked");
 	} else {
 		options[name] = self.val();
