@@ -417,7 +417,7 @@ $(function() {
 		nicks = [];
 
 		for (i in data.users) {
-			nicks.push(data.users[i].name);
+			nicks.push(data.users[i].nick);
 		}
 
 		nicks = nicks.sort(function(a, b) {

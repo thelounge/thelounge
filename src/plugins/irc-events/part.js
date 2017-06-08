@@ -18,7 +18,7 @@ module.exports = function(irc, network) {
 				chan: chan.id
 			});
 		} else {
-			var user = _.find(chan.users, {name: from});
+			var user = _.find(chan.users, {nick: from});
 			chan.users = _.without(chan.users, user);
 			client.emit("users", {
 				chan: chan.id

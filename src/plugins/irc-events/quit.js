@@ -8,7 +8,7 @@ module.exports = function(irc, network) {
 	irc.on("quit", function(data) {
 		network.channels.forEach(chan => {
 			var from = data.nick;
-			var user = _.find(chan.users, {name: from});
+			var user = _.find(chan.users, {nick: from});
 			if (typeof user === "undefined") {
 				return;
 			}
