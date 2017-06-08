@@ -32,6 +32,146 @@ All sections are explained on the link above, they are all optional, and each of
 ```
 -->
 
+## v2.3.0 - 2017-06-08
+
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.2.2...v2.3.0) and [milestone](https://github.com/thelounge/lounge/milestone/9?closed=1).
+
+What a release! Our biggest one since the v2.0.0 [release](https://github.com/thelounge/lounge/releases/tag/v2.0.0) / [milestone](https://github.com/thelounge/lounge/milestone/1?closed=1)!
+Expect a lot of new cool stuff, tons of bug fixes and performance improvements.
+Thanks to all 16 contributors (!!) who pitched in for this release, open source at its finest!
+
+On the server side, The Lounge now supports an auto-away mechanism, stores channel keys across restarts and key changes, and supports a new SSL CA bundle option in the configuration file.
+
+Users of the client will notice some changes as well:
+
+- A bunch of new hotkeys to style messages (bold, italic, underline, foreground/background color), all listed in the Help window
+
+- A new autocomplete mechanism for emoji, users, channels, commands, and colors:
+
+  <img alt="The Lounge - Auto-completion" src="https://user-images.githubusercontent.com/113730/26863276-a565fad8-4b1f-11e7-8aa4-21bb812c2568.gif" width=500>
+
+  Note that due to the new nick autocomplete, we removed the now unnecessary nick cycle button that was temporarily added in the meantime. Lots of users have reported it had been broken by a previous release anyway.
+
+- Support of page up/down keys to browse the current chat
+
+- Friendliness-bump of time-related tooltips and date marker:
+
+  ![The Lounge - Timestamp tooltips](https://user-images.githubusercontent.com/113730/26863323-f57cb85e-4b1f-11e7-9b4c-27b62d518af5.gif) &nbsp;&nbsp;&nbsp; ![The Lounge - Friendly date marker](https://user-images.githubusercontent.com/113730/26863322-f577f634-4b1f-11e7-8131-c1b3f3ffe743.gif)
+
+- Support of browsers' Back/Forward actions:
+
+  <img alt="The Lounge - Support of browser Back/Forward" src="https://user-images.githubusercontent.com/113730/26863320-f5761efe-4b1f-11e7-8fb4-de2c5c34cca3.gif" width=300>
+
+- Better and more discreet inline previews for links and images:
+
+  <img alt="The Lounge - Link preview" src="https://user-images.githubusercontent.com/113730/26863418-887b9364-4b20-11e7-8016-1b5367690d7e.png" width=400><br>
+  <img alt="The Lounge - Image preview" src="https://user-images.githubusercontent.com/113730/26863419-887bcc4e-4b20-11e7-9055-1913a9aba0e4.png" width=300>
+
+- Improved channel list with `/list`
+
+- Support for `/ban`, `/unban` and `/banlist`
+
+- Fuzzy-matching of the user list search to find folks more easily:
+
+  ![The Lounge - Fuzzy matching in the user list](https://user-images.githubusercontent.com/113730/26863472-c86b58c4-4b20-11e7-84c1-f66ee8d3e99b.gif)
+
+That's all for this release, and onto the next one now!
+
+### Added
+
+- Add `data-from` attribute to allow styling messages from specific users ([#978](https://github.com/thelounge/lounge/pull/978) by [@williamboman](https://github.com/williamboman))
+- Auto away when no clients are connected ([#775](https://github.com/thelounge/lounge/pull/775), [#1104](https://github.com/thelounge/lounge/pull/1104) by [@xPaw](https://github.com/xPaw))
+- Implement color hotkeys ([#810](https://github.com/thelounge/lounge/pull/810) by [@xPaw](https://github.com/xPaw))
+- Store channel keys ([#1003](https://github.com/thelounge/lounge/pull/1003) by [@xPaw](https://github.com/xPaw), [#715](https://github.com/thelounge/lounge/pull/715) by [@spookhurb](https://github.com/spookhurb))
+- Implement <kbd>pgup</kbd>/<kbd>pgdown</kbd> keys ([#955](https://github.com/thelounge/lounge/pull/955) by [@xPaw](https://github.com/xPaw), [#1078](https://github.com/thelounge/lounge/pull/1078) by [@YaManicKill](https://github.com/YaManicKill))
+- Add CSS tooltips on time elements to give ability to view time on mobile ([#824](https://github.com/thelounge/lounge/pull/824) by [@xPaw](https://github.com/xPaw))
+- Add SSL CA bundle option ([#1024](https://github.com/thelounge/lounge/pull/1024) by [@metsjeesus](https://github.com/metsjeesus))
+- Implement History Web API ([#575](https://github.com/thelounge/lounge/pull/575) by [@williamboman](https://github.com/williamboman), [#1080](https://github.com/thelounge/lounge/pull/1080) by [@YaManicKill](https://github.com/YaManicKill))
+- Add slug with command to unhandled messages ([#816](https://github.com/thelounge/lounge/pull/816) by [@DanielOaks](https://github.com/DanielOaks), [#1044](https://github.com/thelounge/lounge/pull/1044) by [@YaManicKill](https://github.com/YaManicKill))
+- Add support for the `/banlist` command ([#1009](https://github.com/thelounge/lounge/pull/1009) by [@YaManicKill](https://github.com/YaManicKill))
+- Add support for `/ban` and `/unban` commands ([#1077](https://github.com/thelounge/lounge/pull/1077) by [@YaManicKill](https://github.com/YaManicKill))
+- Add autocompletion for emoji, users, channels, and commands ([#787](https://github.com/thelounge/lounge/pull/787) by [@yashsriv](https://github.com/yashsriv), [#1138](https://github.com/thelounge/lounge/pull/1138), [#1095](https://github.com/thelounge/lounge/pull/1095) by [@xPaw](https://github.com/xPaw))
+- Add autocomplete strategy for foreground and background colors ([#1109](https://github.com/thelounge/lounge/pull/1109) by [@astorije](https://github.com/astorije))
+- Add support for `0x04` hex colors ([#1100](https://github.com/thelounge/lounge/pull/1100) by [@xPaw](https://github.com/xPaw))
+
+### Changed
+
+- Remove table layout for chat messages (and fix layout issues yet again) ([#523](https://github.com/thelounge/lounge/pull/523) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Improve inline previews for links and images ([#524](https://github.com/thelounge/lounge/pull/524) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Use local variables to check length ([#1028](https://github.com/thelounge/lounge/pull/1028) by [@xPaw](https://github.com/xPaw))
+- Add `rel="noopener"` to URLs in `index.html` and replace mIRC colors URL to [@DanielOaks](https://github.com/DanielOaks)'s [documentation](https://modern.ircdocs.horse/formatting.html#colors) ([#1034](https://github.com/thelounge/lounge/pull/1034) by [@xPaw](https://github.com/xPaw), [#1051](https://github.com/thelounge/lounge/pull/1051) by [@astorije](https://github.com/astorije))
+- Preload scripts as soon as possible ([#1033](https://github.com/thelounge/lounge/pull/1033) by [@xPaw](https://github.com/xPaw))
+- Improve channels list ([#1018](https://github.com/thelounge/lounge/pull/1018) by [@swordbeta](https://github.com/swordbeta))
+- Show MOTD by default ([#1052](https://github.com/thelounge/lounge/pull/1052) by [@KlipperKyle](https://github.com/KlipperKyle), [#1157](https://github.com/thelounge/lounge/pull/1157) by [@astorije](https://github.com/astorije))
+- Switch to a new IRC message parser ([#972](https://github.com/thelounge/lounge/pull/972) by [@xPaw](https://github.com/xPaw), [#699](https://github.com/thelounge/lounge/pull/699) by [@Bonuspunkt](https://github.com/Bonuspunkt))
+- Use moment on the client to display friendly dates ([#1054](https://github.com/thelounge/lounge/pull/1054) by [@astorije](https://github.com/astorije))
+- Implement fuzzy-matching for the user list ([#856](https://github.com/thelounge/lounge/pull/856), [#1093](https://github.com/thelounge/lounge/pull/1093), [#1167](https://github.com/thelounge/lounge/pull/1167) by [@astorije](https://github.com/astorije), [#1091](https://github.com/thelounge/lounge/pull/1091) by [@PolarizedIons](https://github.com/PolarizedIons), [#1107](https://github.com/thelounge/lounge/pull/1107) by [@xPaw](https://github.com/xPaw))
+- Use moment to render dates everywhere ([#1114](https://github.com/thelounge/lounge/pull/1114) by [@xPaw](https://github.com/xPaw))
+- Update production dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `moment` ([#976](https://github.com/thelounge/lounge/pull/976), [#999](https://github.com/thelounge/lounge/pull/999))
+  - `fs-extra` ([#964](https://github.com/thelounge/lounge/pull/964), [#1098](https://github.com/thelounge/lounge/pull/1098), [#1136](https://github.com/thelounge/lounge/pull/1136))
+  - `jquery` ([#969](https://github.com/thelounge/lounge/pull/969), [#998](https://github.com/thelounge/lounge/pull/998))
+  - `urijs` ([#995](https://github.com/thelounge/lounge/pull/995))
+  - `mousetrap` ([#1006](https://github.com/thelounge/lounge/pull/1006))
+  - `irc-framework` ([#1070](https://github.com/thelounge/lounge/pull/1070), [#1074](https://github.com/thelounge/lounge/pull/1074), [#1123](https://github.com/thelounge/lounge/pull/1123))
+  - `handlebars` ([#1116](https://github.com/thelounge/lounge/pull/1116), [#1129](https://github.com/thelounge/lounge/pull/1129))
+
+### Removed
+
+- Remove invalid CSS perspective properties ([#1027](https://github.com/thelounge/lounge/pull/1027) by [@astorije](https://github.com/astorije))
+- Remove cycle nicks button ([#1062](https://github.com/thelounge/lounge/pull/1062) by [@xPaw](https://github.com/xPaw))
+
+### Fixed
+
+- Rewrite identd server, combine with oidentd ([#804](https://github.com/thelounge/lounge/pull/804), [#970](https://github.com/thelounge/lounge/pull/970) by [@xPaw](https://github.com/xPaw))
+- Fix wrong font size in help center labels ([#994](https://github.com/thelounge/lounge/pull/994) by [@astorije](https://github.com/astorije))
+- Fix filling in the nickname, overriding the username in the New Network window ([#873](https://github.com/thelounge/lounge/pull/873) by [@PolarizedIons](https://github.com/PolarizedIons))
+- Correctly append date marker when receiving a message ([#1002](https://github.com/thelounge/lounge/pull/1002) by [@xPaw](https://github.com/xPaw))
+- Count only message items for when loading more messages ([#1013](https://github.com/thelounge/lounge/pull/1013) by [@awalgarg](https://github.com/awalgarg))
+- Fix Zenburn and Morning channel list font color ([#1017](https://github.com/thelounge/lounge/pull/1017) by [@swordbeta](https://github.com/swordbeta))
+- Stick to bottom when opening user list ([#1032](https://github.com/thelounge/lounge/pull/1032) by [@xPaw](https://github.com/xPaw))
+- Reset notification markers on document focus ([#1040](https://github.com/thelounge/lounge/pull/1040) by [@xPaw](https://github.com/xPaw))
+- Disable show more button when loading messages ([#1045](https://github.com/thelounge/lounge/pull/1045) by [@YaManicKill](https://github.com/YaManicKill))
+- Fix to `helper.expandhome` to correctly resolve `""` and `undefined` ([#1050](https://github.com/thelounge/lounge/pull/1050) by [@metsjeesus](https://github.com/metsjeesus))
+- Fix displayNetwork to work correctly ([#1069](https://github.com/thelounge/lounge/pull/1069) by [@xPaw](https://github.com/xPaw))
+- Enable show more button correctly ([#1068](https://github.com/thelounge/lounge/pull/1068) by [@xPaw](https://github.com/xPaw))
+- Rewrite server code of channel sorting ([#1064](https://github.com/thelounge/lounge/pull/1064) by [@xPaw](https://github.com/xPaw) and ([#1115](https://github.com/thelounge/lounge/pull/1115) by [@PolarizedIons](https://github.com/PolarizedIons)))
+- Fix showing prefetch options ([#1087](https://github.com/thelounge/lounge/pull/1087) by [@YaManicKill](https://github.com/YaManicKill))
+- Add `/ctcp` command to constants and auto-completion ([#1108](https://github.com/thelounge/lounge/pull/1108) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Disable `tabindex` on user list search input ([#1122](https://github.com/thelounge/lounge/pull/1122) by [@xPaw](https://github.com/xPaw))
+- Fix date-marker not being removed on loading new messages ([#1132](https://github.com/thelounge/lounge/pull/1132), [#1156](https://github.com/thelounge/lounge/pull/1156) by [@PolarizedIons](https://github.com/PolarizedIons))
+
+### Security
+
+- Switch to `bcryptjs` and make password comparison asynchronous ([#985](https://github.com/thelounge/lounge/pull/985) by [@rockhouse](https://github.com/rockhouse), [`b46f92c`](https://github.com/thelounge/lounge/commit/b46f92c7d8a07e84f49a550b32204c0a0672e831) by [@xPaw](https://github.com/xPaw))
+- Use Referrer-Policy header instead of CSP referrer ([#1015](https://github.com/thelounge/lounge/pull/1015) by [@astorije](https://github.com/astorije))
+
+### Internals
+
+- Enforce more space and new line rules ([#975](https://github.com/thelounge/lounge/pull/975) by [@xPaw](https://github.com/xPaw))
+- Setup ESLint to make sure an EOF feed is always present ([#991](https://github.com/thelounge/lounge/pull/991) by [@astorije](https://github.com/astorije))
+- Do not build json3 module with Webpack ([#977](https://github.com/thelounge/lounge/pull/977) by [@xPaw](https://github.com/xPaw))
+- Remove extra newline to please ESLint ([#997](https://github.com/thelounge/lounge/pull/997) by [@astorije](https://github.com/astorije))
+- Use `require()` instead of import in client code ([#973](https://github.com/thelounge/lounge/pull/973) by [@xPaw](https://github.com/xPaw))
+- Do not build feature branch with open pull requests on AppVeyor ([`934400f`](https://github.com/thelounge/lounge/commit/934400f5ee094e61c62dd0304cb55ea9f9666078) by [@xPaw](https://github.com/xPaw))
+- Exclude Webpack config from coverage report ([#1053](https://github.com/thelounge/lounge/pull/1053) by [@astorije](https://github.com/astorije))
+- Create socket module ([#1060](https://github.com/thelounge/lounge/pull/1060) by [@YaManicKill](https://github.com/YaManicKill))
+- Change index.html to be rendered using handlebars ([#1057](https://github.com/thelounge/lounge/pull/1057) by [@YaManicKill](https://github.com/YaManicKill))
+- Move commands into constants module ([#1067](https://github.com/thelounge/lounge/pull/1067) by [@YaManicKill](https://github.com/YaManicKill))
+- Use `babel-preset-env` ([#1072](https://github.com/thelounge/lounge/pull/1072) by [@xPaw](https://github.com/xPaw))
+- Use `irc-framework`'s `setTopic()` for topic command ([#1082](https://github.com/thelounge/lounge/pull/1082) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Create options module ([#1066](https://github.com/thelounge/lounge/pull/1066) by [@YaManicKill](https://github.com/YaManicKill))
+- Update development dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `babel-core` ([#958](https://github.com/thelounge/lounge/pull/958), [#1021](https://github.com/thelounge/lounge/pull/1021))
+  - `babel-loader` ([#968](https://github.com/thelounge/lounge/pull/968), [#1020](https://github.com/thelounge/lounge/pull/1020), [#1063](https://github.com/thelounge/lounge/pull/1063))
+  - `babel-preset-es2015` ([#960](https://github.com/thelounge/lounge/pull/960))
+  - `eslint` ([#971](https://github.com/thelounge/lounge/pull/971), [#1000](https://github.com/thelounge/lounge/pull/1000))
+  - `nyc` ([#989](https://github.com/thelounge/lounge/pull/989), [#1113](https://github.com/thelounge/lounge/pull/1113), [#1140](https://github.com/thelounge/lounge/pull/1140))
+  - `webpack` ([#981](https://github.com/thelounge/lounge/pull/981), [#1007](https://github.com/thelounge/lounge/pull/1007), [#1030](https://github.com/thelounge/lounge/pull/1030), [#1133](https://github.com/thelounge/lounge/pull/1133), [#1142](https://github.com/thelounge/lounge/pull/1142))
+  - `stylelint` ([#1004](https://github.com/thelounge/lounge/pull/1004), [#1005](https://github.com/thelounge/lounge/pull/1005))
+  - `handlebars-loader` ([#1058](https://github.com/thelounge/lounge/pull/1058))
+  - `mocha` ([#1079](https://github.com/thelounge/lounge/pull/1079))
+
 ## v2.3.0-rc.2 - 2017-05-16 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v2.3.0-rc.1...v2.3.0-rc.2)
@@ -60,7 +200,7 @@ npm install -g thelounge@next
 
 ## v2.2.2 - 2017-03-13
 
-For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.2.1...v2.2.2) and [milestone](https://github.com/thelounge/lounge/milestone/11).
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.2.1...v2.2.2) and [milestone](https://github.com/thelounge/lounge/milestone/11?closed=1).
 
 This patch release brings a lot of dependency upgrades and a few fixes. Passing options to the `lounge` CLI (`lounge start --port 8080`, etc.) now works as expected without requiring `--`. We have also disabled ping timeouts for now to hopefully fix automatic reconnection. Finally, upgrading `irc-framework` allows us to fix an extra couple of bugs.
 
@@ -110,7 +250,7 @@ On the website:
 
 ## v2.2.1 - 2017-02-12
 
-For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.2.0...v2.2.1) and [milestone](https://github.com/thelounge/lounge/milestone/10).
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.2.0...v2.2.1) and [milestone](https://github.com/thelounge/lounge/milestone/10?closed=1).
 
 This patch release packs up a change of the default value of `maxHistory`, an interactive prompt when creating a user to enable/disable user logging, a UI bug fix, and a few dependency upgrades.
 
@@ -147,7 +287,7 @@ On the website:
 
 ## v2.2.0 - 2017-01-31
 
-For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.1.0...v2.2.0) and [milestone](https://github.com/thelounge/lounge/milestone/2).
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.1.0...v2.2.0) and [milestone](https://github.com/thelounge/lounge/milestone/2?closed=1).
 
 Another long-overdue release for The Lounge!
 
