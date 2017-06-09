@@ -9,7 +9,7 @@ Use the following template for each new release, built on recommendations from h
 ```md
 ## vX.Y.Z - YYYY-MM-DD
 
-For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/vPRE.VIO.US...vX.Y.Z) and [milestone](https://github.com/thelounge/lounge/milestone/XXX).
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/vPRE.VIO.US...vX.Y.Z) and [milestone](https://github.com/thelounge/lounge/milestone/XXX?closed=1).
 
 DESCRIPTION, ANNOUNCEMENT, ...
 
@@ -31,6 +31,37 @@ All sections are explained on the link above, they are all optional, and each of
 - Description ([#PR_NUMBER](https://github.com/thelounge/lounge/pull/PR_NUMBER) by [@GITHUB_USERNAME](https://github.com/GITHUB_USERNAME))
 ```
 -->
+
+## v2.3.1 - 2017-06-09
+
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.3.0...v2.3.1) and [milestone](https://github.com/thelounge/lounge/milestone/23?closed=1).
+
+This release mostly fixes a few bugs, as listed below.
+
+### Changed
+
+- Keep original `<title>` name when changing the title ([#1205](https://github.com/thelounge/lounge/pull/1205) by [@xPaw](https://github.com/xPaw))
+- Update production dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `handlebars` ([#1179](https://github.com/thelounge/lounge/pull/1179))
+
+### Fixed
+
+- Do not store unnecessary information in user objects ([#1195](https://github.com/thelounge/lounge/pull/1195) by [@xPaw](https://github.com/xPaw))
+- Correctly configure client socket transports ([#1197](https://github.com/thelounge/lounge/pull/1197) by [@xPaw](https://github.com/xPaw))
+- Fix network name not being set when `displayNetwork` is `false` ([#1211](https://github.com/thelounge/lounge/pull/1211) by [@xPaw](https://github.com/xPaw))
+
+### Security
+
+- Do not store passwords in settings storage ([#1204](https://github.com/thelounge/lounge/pull/1204) by [@xPaw](https://github.com/xPaw))
+
+### Internals
+
+- Fix `localtime` test to correctly use UTC ([#1201](https://github.com/thelounge/lounge/pull/1201) by [@xPaw](https://github.com/xPaw))
+- Update Node.js versions for Travis CI ([#1191](https://github.com/thelounge/lounge/pull/1191) by [@YaManicKill](https://github.com/YaManicKill))
+- Update development dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `mocha` ([#1170](https://github.com/thelounge/lounge/pull/1170))
+  - `webpack` ([#1183](https://github.com/thelounge/lounge/pull/1183))
+  - `babel-preset-env` ([#1177](https://github.com/thelounge/lounge/pull/1177))
 
 ## v2.3.0 - 2017-06-08
 
