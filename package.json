@@ -62,7 +62,7 @@
     "babel-core": "6.25.0",
     "babel-loader": "7.0.0",
     "babel-preset-env": "1.5.2",
-    "chai": "3.5.0",
+    "chai": "4.0.2",
     "eslint": "3.19.0",
     "font-awesome": "4.7.0",
     "fuzzy": "0.1.3",
