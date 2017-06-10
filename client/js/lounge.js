@@ -512,7 +512,16 @@ $(function() {
 		);
 		channels.forEach(renderChannel);
 
-		if (!loaded) {
+		if (loaded) {
+			let activeChan = chat.find(".chan.active");
+			socket.emit(
+				"open",
+				activeChan.data("id")
+			);
+			activeChan.find(".badge")
+				.removeClass("highlight")
+				.empty();
+		} else {
 			confirmExit();
 		}
 
