@@ -3,6 +3,7 @@ const $ = require("jquery");
 const settings = $("#settings");
 const userStyles = $("#user-specified-css");
 const storage = require("./localStorage");
+const tz = require("./libs/handlebars/tz");
 
 const windows = $("#windows");
 const chat = $("#chat");
@@ -19,6 +20,7 @@ const options = $.extend({
 	notifyAllMessages: false,
 	part: true,
 	quit: true,
+	showSeconds: false,
 	theme: $("#theme").attr("href").replace(/^themes\/(.*).css$/, "$1"), // Extracts default theme name, set on the server configuration
 	thumbnails: true,
 	userStyles: userStyles.text(),
@@ -82,6 +84,10 @@ settings.on("change", "input, select, textarea", function() {
 			// Ensure we don't have empty string in the list of highlights
 			// otherwise, users get notifications for everything
 			return h !== "";
+		});
+	} else if (name === "showSeconds") {
+		chat.find(".msg > .time").each(function() {
+			$(this).text(tz($(this).parent().data("time")));
 		});
 	}
 }).find("input")

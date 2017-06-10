@@ -54,7 +54,13 @@ const commands = [
 	"/whois"
 ];
 
+const timeFormats = {
+	msgDefault: "HH:mm",
+	msgWithSeconds: "HH:mm:ss"
+};
+
 module.exports = {
 	colorCodeMap: colorCodeMap,
+	timeFormats: timeFormats,
 	commands: commands
 };
