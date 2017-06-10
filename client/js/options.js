@@ -5,6 +5,7 @@ const settings = $("#settings");
 const userStyles = $("#user-specified-css");
 const storage = require("./localStorage");
 const tz = require("./libs/handlebars/tz");
+const localetime = require("./libs/handlebars/localetime");
 
 const windows = $("#windows");
 const chat = $("#chat");
@@ -22,6 +23,7 @@ const options = $.extend({
 	part: true,
 	quit: true,
 	showSeconds: false,
+	use12hClock: false,
 	theme: $("#theme").attr("href").replace(/^themes\/(.*).css$/, "$1"), // Extracts default theme name, set on the server configuration
 	thumbnails: true,
 	userStyles: userStyles.text(),
@@ -91,9 +93,15 @@ settings.on("change", "input, select, textarea", function() {
 			// otherwise, users get notifications for everything
 			return h !== "";
 		});
-	} else if (name === "showSeconds") {
+	} else if (name === "showSeconds" || name === "use12hClock") {
 		chat.find(".msg > .time").each(function() {
-			$(this).text(tz($(this).parent().data("time")));
+			const time = $(this).parent().data("time");
+
+			$(this).text(tz(time));
+
+			if (name === "use12hClock") {
+				$(this).attr("aria-label", localetime(time));
+			}
 		});
 	} else if (name === "autocomplete") {
 		if (self.prop("checked")) {
