@@ -1600,7 +1600,7 @@ $(function() {
 		$("#viewport .lt").toggleClass("notified", newState);
 	}
 
-	$(document).on("visibilitychange focus", () => {
+	$(document).on("visibilitychange focus click", () => {
 		if (sidebar.find(".highlight").length === 0) {
 			toggleNotificationMarkers(false);
 		}
