@@ -13,6 +13,7 @@ var dns = require("dns");
 var Helper = require("./helper");
 var ldap = require("ldapjs");
 var colors = require("colors/safe");
+const net = require("net");
 const Identification = require("./identification");
 
 var manager = null;
@@ -113,13 +114,15 @@ in ${config.public ? "public" : "private"} mode`);
 	});
 };
 
-function getClientIp(req) {
-	var ip;
+function getClientIp(request) {
+	let ip = request.connection.remoteAddress;
 
-	if (!Helper.config.reverseProxy) {
-		ip = req.connection.remoteAddress;
-	} else {
-		ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+	if (Helper.config.reverseProxy) {
+		const forwarded = (request.headers["x-forwarded-for"] || "").split(/\s*,\s*/).filter(Boolean);
+
+		if (forwarded.length && net.isIP(forwarded[0])) {
+			ip = forwarded[0];
+		}
 	}
 
 	return ip.replace(/^::ffff:/, "");
