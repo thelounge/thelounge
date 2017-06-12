@@ -26,6 +26,8 @@ $(function() {
 	var sidebar = $("#sidebar, #footer");
 	var chat = $("#chat");
 
+	$(document.body).data("app-name", document.title);
+
 	var ignoreSortSync = false;
 
 	var pop;
@@ -423,7 +425,7 @@ $(function() {
 		nicks = [];
 
 		for (i in data.users) {
-			nicks.push(data.users[i].name);
+			nicks.push(data.users[i].nick);
 		}
 
 		nicks = nicks.sort(function(a, b) {
@@ -1018,7 +1020,7 @@ $(function() {
 			.addClass("active")
 			.trigger("show");
 
-		var title = "The Lounge";
+		let title = $(document.body).data("app-name");
 		if (chan.data("title")) {
 			title = chan.data("title") + " — " + title;
 		}
@@ -1604,7 +1606,7 @@ $(function() {
 		$("#viewport .lt").toggleClass("notified", newState);
 	}
 
-	$(document).on("visibilitychange focus", () => {
+	$(document).on("visibilitychange focus click", () => {
 		if (sidebar.find(".highlight").length === 0) {
 			toggleNotificationMarkers(false);
 		}

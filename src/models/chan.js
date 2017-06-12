@@ -77,7 +77,7 @@ Chan.prototype.sortUsers = function(irc) {
 
 	this.users = this.users.sort(function(a, b) {
 		if (a.mode === b.mode) {
-			return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
+			return a.nick.toLowerCase() < b.nick.toLowerCase() ? -1 : 1;
 		}
 
 		return userModeSortPriority[a.mode] - userModeSortPriority[b.mode];
@@ -85,7 +85,7 @@ Chan.prototype.sortUsers = function(irc) {
 };
 
 Chan.prototype.getMode = function(name) {
-	var user = _.find(this.users, {name: name});
+	var user = _.find(this.users, {nick: name});
 	if (user) {
 		return user.mode;
 	}

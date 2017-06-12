@@ -10,7 +10,12 @@ module.exports = function(irc, network) {
 			return;
 		}
 
-		chan.users = data.users.map(u => new User(u, network.prefixLookup));
+		chan.users = data.users.map(user => {
+			return new User({
+				nick: user.nick,
+				modes: user.modes,
+			}, network.prefixLookup);
+		});
 
 		chan.sortUsers(irc);
 

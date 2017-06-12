@@ -7,6 +7,7 @@ var os = require("os");
 var fs = require("fs");
 var net = require("net");
 var bcrypt = require("bcryptjs");
+const colors = require("colors/safe");
 
 var Helper = {
 	config: null,
@@ -66,6 +67,12 @@ function setHome(homePath) {
 	if (fs.existsSync(this.CONFIG_PATH)) {
 		var userConfig = require(this.CONFIG_PATH);
 		this.config = _.extend(this.config, userConfig);
+	}
+
+	if (!this.config.displayNetwork && !this.config.lockNetwork) {
+		this.config.lockNetwork = true;
+
+		log.warn(`${colors.bold("displayNetwork")} and ${colors.bold("lockNetwork")} are false, setting ${colors.bold("lockNetwork")} to true.`);
 	}
 
 	// TODO: Remove in future release
