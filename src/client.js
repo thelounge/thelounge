@@ -82,9 +82,19 @@ function Client(manager, name, config) {
 	var client = this;
 
 	if (client.name && !client.config.token) {
-		client.updateToken(function(token) {
-			client.manager.updateUser(client.name, {token: token});
-		});
+		client.updateToken()
+			.then((token) => {
+				client.manager.updateUserPromise({
+					name: client.name,
+					opts: {
+						token: token
+					}
+				});
+			}).catch((err) => {
+				if (err) {
+					log.error(`Failed to update user ${colors.bold(name)} tokens.`, err);
+				}
+			});
 	}
 
 	var delay = 0;
@@ -286,34 +296,41 @@ Client.prototype.connect = function(args) {
 	client.save();
 };
 
-Client.prototype.updateToken = function(callback) {
-	var client = this;
-
-	crypto.randomBytes(48, function(err, buf) {
-		if (err) {
-			throw err;
-		}
-
-		callback(client.config.token = buf.toString("hex"));
+Client.prototype.updateToken = function() {
+	let client = this;
+	return new Promise((resolve, reject) => {
+		crypto.randomBytes(48, (err, buf) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(client.config.token = buf.toString("hex"));
+			}
+		});
 	});
 };
 
-Client.prototype.setPassword = function(hash, callback) {
-	var client = this;
-
-	client.updateToken(function(token) {
-		client.manager.updateUser(client.name, {
-			token: token,
-			password: hash
-		}, function(err) {
-			if (err) {
-				log.error("Failed to update password of", client.name, err);
-				return callback(false);
-			}
-
-			client.config.password = hash;
-			return callback(true);
-		});
+Client.prototype.setPassword = function(hash) {
+	let client = this;
+	return new Promise((resolve, reject) => {
+		client.updateToken()
+			.then((token) => {
+				client.manager.updateUser({
+					name: client.name,
+					opts: {
+						token: token,
+						password: hash
+					}
+				})
+					.then((err) => {
+						if (!err) {
+							log.error("Failed to update password of", client.name, err);
+							reject(err);
+						} else {
+							client.config.password = hash;
+							resolve(true);
+						}
+					});
+			});
 	});
 };
 
@@ -541,5 +558,9 @@ Client.prototype.save = _.debounce(function SaveClient() {
 	const client = this;
 	let json = {};
 	json.networks = this.networks.map(n => n.export());
-	client.manager.updateUser(client.name, json);
+	client.manager.updateUser({
+		name: client.name,
+		opts: json
+	}
+	);
 }, 1000, {maxWait: 10000});

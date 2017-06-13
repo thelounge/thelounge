@@ -15,26 +15,28 @@ program
 	.option("    --private", "start in private mode")
 	.description("Start the server")
 	.action(function(options) {
-		var users = new ClientManager().getUsers();
+		let manager = new ClientManager();
 
-		var mode = Helper.config.public;
-		if (options.public) {
-			mode = true;
-		} else if (options.private) {
-			mode = false;
-		}
+		manager.getUsers()
+			.then((users) => {
+				let mode = Helper.config.public;
+				if (options.public) {
+					mode = true;
+				} else if (options.private) {
+					mode = false;
+				}
 
-		if (!mode && !users.length && !Helper.config.ldap.enable) {
-			log.warn("No users found.");
-			log.info(`Create a new user with ${colors.bold("lounge add <name>")}.`);
+				if (!mode && !Object.keys(users).length && !Helper.config.ldap.enable) {
+					log.warn("No users found.");
+					log.info(`Create a new user with ${colors.bold("lounge add <name>")}.`);
+					return;
+				}
 
-			return;
-		}
+				Helper.config.host = options.host || Helper.config.host;
+				Helper.config.port = options.port || Helper.config.port;
+				Helper.config.bind = options.bind || Helper.config.bind;
+				Helper.config.public = mode;
 
-		Helper.config.host = options.host || Helper.config.host;
-		Helper.config.port = options.port || Helper.config.port;
-		Helper.config.bind = options.bind || Helper.config.bind;
-		Helper.config.public = mode;
-
-		server();
+				server();
+			});
 	});
