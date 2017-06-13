@@ -63,7 +63,7 @@
     "babel-loader": "7.0.0",
     "babel-preset-env": "1.5.2",
     "chai": "4.0.2",
-    "chai-as-promised": "6.0.0",
+    "chai-as-promised": "7.0.0",
     "eslint": "3.19.0",
     "font-awesome": "4.7.0",
     "fuzzy": "0.1.3",
