@@ -32,9 +32,7 @@ describe("Chan", function() {
 		};
 
 		var getUserNames = function(chan) {
-			return chan.users.map(function(u) {
-				return u.name;
-			});
+			return chan.users.map(u => u.nick);
 		};
 
 		it("should sort a simple user list", function() {
