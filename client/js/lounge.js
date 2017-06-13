@@ -26,6 +26,8 @@ $(function() {
 	var sidebar = $("#sidebar, #footer");
 	var chat = $("#chat");
 
+	$(document.body).data("app-name", document.title);
+
 	var ignoreSortSync = false;
 
 	var pop;
@@ -109,6 +111,45 @@ $(function() {
 			return value;
 		},
 		index: 1
+	};
+
+	const foregroundColorStrategy = {
+		id: "foreground-colors",
+		match: /\x03(\d{0,2}|[A-Za-z ]{0,10})$/,
+		search(term, callback) {
+			term = term.toLowerCase();
+			const matchingColorCodes = constants.colorCodeMap
+				.filter(i => i[0].startsWith(term) || i[1].toLowerCase().startsWith(term));
+
+			callback(matchingColorCodes);
+		},
+		template(value) {
+			return `<span class="irc-fg${parseInt(value[0], 10)}">${value[1]}</span>`;
+		},
+		replace(value) {
+			return "\x03" + value[0];
+		},
+		index: 1
+	};
+
+	const backgroundColorStrategy = {
+		id: "background-colors",
+		match: /\x03(\d{2}),(\d{0,2}|[A-Za-z ]{0,10})$/,
+		search(term, callback, match) {
+			term = term.toLowerCase();
+			const matchingColorCodes = constants.colorCodeMap
+				.filter(i => i[0].startsWith(term) || i[1].toLowerCase().startsWith(term))
+				.map(pair => pair.concat(match[1])); // Needed to pass fg color to `template`...
+
+			callback(matchingColorCodes);
+		},
+		template(value) {
+			return `<span class="irc-fg${parseInt(value[2], 10)} irc-bg irc-bg${parseInt(value[0], 10)}">${value[1]}</span>`;
+		},
+		replace(value) {
+			return "\x03$1," + value[0];
+		},
+		index: 2
 	};
 
 	socket.on("auth", function(data) {
@@ -300,8 +341,9 @@ $(function() {
 			var nicks = chan.find(".users").data("nicks");
 			if (nicks) {
 				var find = nicks.indexOf(data.msg.from);
-				if (find !== -1 && typeof move === "function") {
-					move(nicks, find, 0);
+				if (find !== -1) {
+					nicks.splice(find, 1);
+					nicks.unshift(data.msg.from);
 				}
 			}
 		}
@@ -377,7 +419,7 @@ $(function() {
 		nicks = [];
 
 		for (i in data.users) {
-			nicks.push(data.users[i].name);
+			nicks.push(data.users[i].nick);
 		}
 
 		nicks = nicks.sort(function(a, b) {
@@ -389,9 +431,9 @@ $(function() {
 			.attr("placeholder", nicks.length + " " + (nicks.length === 1 ? "user" : "users"));
 
 		users
+			.data("nicks", nicks)
 			.find(".names-original")
-			.html(templates.user(data))
-			.data("nicks", nicks);
+			.html(templates.user(data));
 
 		// Refresh user search
 		if (search.val().length) {
@@ -472,7 +514,6 @@ $(function() {
 		// get the scrollable wrapper around messages
 		var scrollable = chan.closest(".chat");
 		var heightOld = chan.height();
-		chan.prepend(documentFragment).end();
 
 		// Remove the date-change marker we put at the top, because it may
 		// not actually be a date change now
@@ -483,6 +524,9 @@ $(function() {
 			// The unread-marker could be at index 0, which will cause the date-marker to become "stuck"
 			children.eq(1).remove();
 		}
+
+		// Add the older messages
+		chan.prepend(documentFragment).end();
 
 		// restore scroll position
 		var position = chan.height() - heightOld;
@@ -724,7 +768,10 @@ $(function() {
 			chat.find(".chan.active .chat").trigger("msg.sticky"); // fix growing
 		})
 		.tab(completeNicks, {hint: false})
-		.textcomplete([emojiStrategy, nicksStrategy, chanStrategy, commandStrategy], {
+		.textcomplete([
+			emojiStrategy, nicksStrategy, chanStrategy, commandStrategy,
+			foregroundColorStrategy, backgroundColorStrategy
+		], {
 			dropdownClassName: "textcomplete-menu",
 			placement: "top"
 		}).on({
@@ -967,7 +1014,7 @@ $(function() {
 			.addClass("active")
 			.trigger("show");
 
-		var title = "The Lounge";
+		let title = $(document.body).data("app-name");
 		if (chan.data("title")) {
 			title = chan.data("title") + " — " + title;
 		}
@@ -1380,7 +1427,13 @@ $(function() {
 	}
 
 	function completeNicks(word) {
-		const users = chat.find(".active").find(".names-original");
+		const users = chat.find(".active .users");
+
+		// Lobbies and private chats do not have an user list
+		if (!users.length) {
+			return [];
+		}
+
 		const words = users.data("nicks");
 
 		return $.grep(
@@ -1534,17 +1587,6 @@ $(function() {
 		$("#nick-value").text(nick);
 	}
 
-	function move(array, old_index, new_index) {
-		if (new_index >= array.length) {
-			var k = new_index - array.length;
-			while ((k--) + 1) {
-				this.push(undefined);
-			}
-		}
-		array.splice(new_index, 0, array.splice(old_index, 1)[0]);
-		return array;
-	}
-
 	function toggleNotificationMarkers(newState) {
 		// Toggles the favicon to red when there are unread notifications
 		if (favicon.data("toggled") !== newState) {
@@ -1558,7 +1600,7 @@ $(function() {
 		$("#viewport .lt").toggleClass("notified", newState);
 	}
 
-	$(document).on("visibilitychange focus", () => {
+	$(document).on("visibilitychange focus click", () => {
 		if (sidebar.find(".highlight").length === 0) {
 			toggleNotificationMarkers(false);
 		}

@@ -1,17 +1,10 @@
 "use strict";
 
+const moment = require("moment");
+const constants = require("../../constants");
+
 module.exports = function(time) {
-	time = new Date(time);
-	var h = time.getHours();
-	var m = time.getMinutes();
-
-	if (h < 10) {
-		h = "0" + h;
-	}
-
-	if (m < 10) {
-		m = "0" + m;
-	}
-
-	return h + ":" + m;
+	const options = require("../../options");
+	const format = options.showSeconds ? constants.timeFormats.msgWithSeconds : constants.timeFormats.msgDefault;
+	return moment(time).format(format);
 };

@@ -1,13 +1,13 @@
 language: node_js
 node_js:
-- 7 # Current stable
+- 8 # Current stable (Active LTS from 2017-10-01)
 - 6 # Active LTS until 2018-04-18
-- 4 # Active LTS until 2017-04-01
+- 4 # Maintenance LTS until 2018-04-01
 
 matrix:
   fast_finish: true
   include:
-    - node_js: 7 # Version used to deploy to npm registry
+    - node_js: 8 # Version used to deploy to npm registry
       env: BUILD_ENV=production
 
 cache:
@@ -29,7 +29,7 @@ deploy:
   api_key:
     secure: I9iN31GWI+Mz0xPw81N7qh1M6uidB+3BmiPUXt8QigX45zwp9EhvfZ0U/AIdUyQwzK2RK1zLRQSt+2/1jyeVi+U+AAsRRmaAUx8iqKaQPAkPnQtElolgRP04WSgo7fvNejfM7zS939bQNKG3RlSm04yPgu+ke2igf799p2bpFe2LtyoEeIiUfrUkBiMSpMguN9XF8a7jqCyIouTKjXHR24RmzJ9r7ZoMV27yQauS7XlD81bontzNRZxTytDKdJpZ+sxGIT9mbbtM4LUFX8MeNe3p/bjWavEhrO0ZIpkbOfS/L/w1375YDoNPXxCs288lnGUH+NbGNAEfn+BTz8cmUp7jI7QWR/kNACPeopdAX4OdZxT8wfQcfQZrfCuSpKciOMC7vGgPpQqjQ61t1RKcKs9VUnwC0SwWjyo8LlzkFKnP1ks0eDGYsSoPLdpC9+76UmePkQdxMhscO8TOgkOCcsTMLiyt6ABGOGKu2iE5SsjUYtPiSiRzSBAQENoO560+xBSVTKwqvvhzUAIt4AuAQSgsFjAylDdyzKoObHX12hBdALrqSOOSVwwIQ5/jTgNAsilURHo7KPD407PhRnLOsvumL0qg4sr9S1hjuUKnNla5dg9GY8FVjJ+b2t0A2vgfG1pR1e3vrJRXrpkfRorhmjvKAk2o5you5pQ1Itty7rM=
   on:
-    node: 7
+    node: 8
     condition: "$BUILD_ENV = production"
     tags: true
     repo: thelounge/lounge

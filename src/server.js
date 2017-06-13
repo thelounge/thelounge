@@ -32,7 +32,12 @@ module.exports = function() {
 		.use(allRequests)
 		.use(index)
 		.use(express.static("client"))
-		.engine("html", expressHandlebars({extname: ".html"}))
+		.engine("html", expressHandlebars({
+			extname: ".html",
+			helpers: {
+				tojson: c => JSON.stringify(c)
+			}
+		}))
 		.set("view engine", "html")
 		.set("views", path.join(__dirname, "..", "client"));
 
@@ -289,7 +294,7 @@ function localAuth(client, user, password, callback) {
 	Helper.password
 		.compare(password, client.config.password)
 		.then(matching => {
-			if (Helper.password.requiresUpdate(client.config.password)) {
+			if (matching && Helper.password.requiresUpdate(client.config.password)) {
 				const hash = Helper.password.hash(password);
 
 				client.setPasswordPromise(hash)

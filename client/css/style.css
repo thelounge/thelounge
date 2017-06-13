@@ -901,8 +901,7 @@ kbd {
 
 #chat .time {
 	color: #ddd;
-	text-align: right;
-	width: 46px;
+	padding-left: 10px;
 }
 
 #chat .from {
@@ -1531,6 +1530,10 @@ kbd {
 	width: 16px;
 	text-align: center;
 	display: inline-block;
+}
+
+.textcomplete-item .irc-bg {
+	display: block;
 }
 
 /**
