@@ -88,6 +88,6 @@ module.exports = {
 	colorCodeMap: colorCodeMap,
 	commands: commands,
 	condensedTypes: condensedTypes,
-	handledTypes: handledTypes
-	timeFormats: timeFormats,
+	handledTypes: handledTypes,
+	timeFormats: timeFormats
 };
