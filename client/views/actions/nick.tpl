@@ -1,3 +1,3 @@
-<span role="button" class="user {{colorClass from}}" data-name="{{from}}">{{mode}}{{from}}</span>
+{{> ../user_name nick=from}}
 is now known as
-<span role="button" class="user {{colorClass new_nick}}" data-name="{{new_nick}}">{{mode}}{{new_nick}}</span>
+{{> ../user_name nick=new_nick}}

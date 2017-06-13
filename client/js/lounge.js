@@ -21,6 +21,7 @@ const templates = require("../views");
 const socket = require("./socket");
 const constants = require("./constants");
 const storage = require("./localStorage");
+const condenseObj = require("./condense")({templates: templates});
 
 $(function() {
 	var sidebar = $("#sidebar, #footer");
@@ -328,6 +329,12 @@ $(function() {
 		if ((type === "message" || type === "action") && chan.hasClass("channel")) {
 			var nicks = chan.find(".users").data("nicks");
 			if (nicks) {
+				nicks.forEach(function(nick) {
+					if (data.msg.text.indexOf(nick) > -1) {
+						var re = new RegExp("(^| |&lt;)" + nick.replace(/\[/, "\\[").replace(/]/, "\\]") + "(\\.| |,|:|&gt;|$)", "g");
+						text.html(text.html().replace(re, "$1" + templates.user_name({nick: nick}).trim() + "$2"));
+					}
+				});
 				var find = nicks.indexOf(data.msg.from);
 				if (find !== -1) {
 					nicks.splice(find, 1);
@@ -339,79 +346,68 @@ $(function() {
 		return msg;
 	}
 
-	function updateCondensedText(condensed, addedTypes) {
-		var obj = {};
+	function appendMessage(input) {
+		var container = input.container || undefined;
+		var chan = input.chan || undefined;
+		var chanType = input.type || undefined;
+		var htmlMessage = input.htmlMessage || "";
+		var msg = input.msg || undefined;
+		var messageType = msg.type;
 
-		for (var i in constants.condensedTypes) {
-			var msgType = constants.condensedTypes[i];
-			obj[msgType] = condensed.data(msgType) || 0;
-		}
-
-		for (var k in addedTypes) {
-			var added = addedTypes[k];
-			obj[added]++;
-			condensed.data(added, obj[added]);
-		}
-
-		var text = "";
-
-		for (var j in constants.condensedTypes) {
-			var messageType = constants.condensedTypes[j];
-			if (obj[messageType]) {
-				text += text === "" ? "" : ", ";
-				text += obj[messageType] + " " + messageType;
-				if (messageType === "nick" || messageType === "mode") {
-					text += " change";
-				}
-				text += obj[messageType] > 1 ? "s" : "";
-			}
-		}
-		condensed.children(".condensed-msg").text(text);
-	}
-
-	function showAll() {
-		return options.join && options.part && options.quit && options.nick && options.mode;
-	}
-
-	function appendMessage(container, chan, chanType, messageType, msg) {
 		if (constants.condensedTypes.indexOf(messageType) !== -1 && chanType !== "lobby") {
 			var condensedTypesClasses = "." + constants.condensedTypes.join(", .");
 			var lastChild = container.children("div.msg").last();
 			var lastDate = (new Date(lastChild.attr("data-time"))).toDateString();
-			var msgDate = (new Date(msg.attr("data-time"))).toDateString();
-			if (lastChild && $(lastChild).hasClass("condensed") && !$(msg).hasClass("message") && lastDate === msgDate) {
-				lastChild.append(msg);
-				updateCondensedText(lastChild, [messageType]);
-			} else if (lastChild && $(lastChild).is(condensedTypesClasses) && showAll()) {
-				var condensed = buildChatMessage({msg: {type: "condensed", time: msg.attr("data-time")}, chan: chan});
+			var msgDate = (new Date(htmlMessage.attr("data-time"))).toDateString();
+			if (lastChild && $(lastChild).hasClass("condensed") && !$(htmlMessage).hasClass("message") && lastDate === msgDate) {
+				lastChild.append(htmlMessage);
+				let savedMessages = lastChild.data("savedMessages") || [];
+				savedMessages.push(msg);
+				lastChild.data("savedMessages", savedMessages);
+				lastChild.children(".condensed-msg").html(condenseObj.condense(savedMessages));
+			} else if (lastChild && $(lastChild).is(condensedTypesClasses)) {
+				var condensed = buildChatMessage({msg: {type: "condensed", time: htmlMessage.attr("data-time")}, chan: chan});
 				condensed.append(lastChild);
-				condensed.append(msg);
+				condensed.append(htmlMessage);
 				container.append(condensed);
-				updateCondensedText(condensed, [messageType, lastChild.attr("data-type")]);
+				let lastmsg = lastChild.data("msg");
+				let savedMessages = condensed.data("savedMessages") || [];
+				savedMessages.push(msg);
+				savedMessages.push(lastmsg);
+				condensed.data("savedMessages", savedMessages);
+				savedMessages = condensed.data("savedMessages");
+				condensed.children(".condensed-msg").html(condenseObj.condense(savedMessages));
 			} else {
-				container.append(msg);
+				htmlMessage.data("msg", msg);
+				container.append(htmlMessage);
 			}
 		} else {
-			container.append(msg);
+			container.append(htmlMessage);
 		}
 	}
 
 	function buildChannelMessages(data) {
-		return data.messages.reduce(function(docFragment, message) {
-			appendMessage(docFragment, data.id, data.type, message.type, buildChatMessage({
+		return data.messages.reduce(function(container, message) {
+			appendMessage({
+				container: container,
 				chan: data.id,
-				msg: message
-			}));
-			return docFragment;
+				msg: message,
+				type: message.type,
+				htmlMessage: buildChatMessage({
+					chan: data.id,
+					msg: message
+				}),
+			});
+			return container;
 		}, $(document.createDocumentFragment()));
 	}
 
 	function renderChannel(data) {
-		renderChannelMessages(data);
-
 		if (data.type === "channel") {
 			renderChannelUsers(data);
 		}
+
+		renderChannelMessages(data);
 	}
 
 	function renderChannelMessages(data) {
@@ -545,7 +541,13 @@ $(function() {
 			prevMsg.after(templates.date_marker({msgDate: msgTime}));
 		}
 
-		appendMessage(container, data.chan, $(target).attr("data-type"), data.msg.type, msg);
+		appendMessage({
+			container: container,
+			chan: data.chan,
+			msg: data.msg,
+			htmlMessage: msg,
+			type: $(target).attr("data-type"),
+		});
 
 		container.trigger("msg", [
 			target,
