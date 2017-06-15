@@ -127,6 +127,11 @@ body {
 #chat.colored-nicks .user.color-31 { color: #f2a4eb; }
 #chat.colored-nicks .user.color-32 { color: #85f27d; }
 
+#chat .user.disconnected,
+#chat.colored-nicks .user.disconnected {
+	color: #999;
+}
+
 #chat a {
 	color: #8c8cbc;
 }
