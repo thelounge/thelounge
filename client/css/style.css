@@ -40,6 +40,12 @@ body {
 	font: 16px Lato, sans-serif;
 	margin: 0;
 
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	cursor: default;
+
 	/**
 	  * Disable pull-to-refresh on mobile that conflicts with scrolling the message list.
 	  * See http://stackoverflow.com/a/29313685/1935861
@@ -157,6 +163,17 @@ kbd {
 
 :-ms-input-placeholder {
 	color: rgba(0, 0, 0, .35) !important;
+}
+
+#help,
+#windows .header .title,
+#windows .header .topic,
+#chat .messages {
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+	user-select: text;
+	cursor: text;
 }
 
 /* Icons */
@@ -550,14 +567,6 @@ kbd {
 #sidebar .tse-scrollbar {
 	top: 2px;
 	right: 3px;
-}
-
-#sidebar,
-#footer {
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
 }
 
 #footer {
@@ -1392,10 +1401,6 @@ kbd {
 	padding-left: 9px;
 	padding-right: 5px;
 	border-radius: 2px;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
 	-webkit-flex: 0 0 auto;
 	flex: 0 0 auto;
 	border: 1px solid transparent;
