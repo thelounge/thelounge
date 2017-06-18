@@ -297,15 +297,20 @@ function init(socket, client, generateToken) {
 
 function reverseDnsLookup(socket, client) {
 	client.ip = getClientIp(socket.request);
-
-	dns.reverse(client.ip, function(err, host) {
-		if (!err && host.length) {
-			client.hostname = host[0];
-		} else {
-			client.hostname = client.ip;
-		}
-
-		init(socket, client);
+	return new Promise((resolve, reject) => {
+		dns.reverse(client.ip, (err, host) => {
+			if (!err) {
+				if (host.length) {
+					client.hostname = host[0];
+					resolve();
+				} else {
+					client.hostname = client.ip;
+					resolve();
+				}
+			} else {
+				reject(err);
+			}
+		});
 	});
 }
 
@@ -373,7 +378,14 @@ function auth(data) {
 		// If webirc is enabled and we do not know this users IP address,
 		// perform reverse dns lookup
 		if (Helper.config.webirc !== null && !client.config.ip) {
-			reverseDnsLookup(socket, client);
+			reverseDnsLookup(socket, client)
+				.then(()=>{
+					init(socket, client);
+				})
+				.catch(e=>{
+					log.error("Error getting DNS lookup.", e);
+					init(socket, client);
+				});
 		} else {
 			init(socket, client, data.remember === "on");
 		}
