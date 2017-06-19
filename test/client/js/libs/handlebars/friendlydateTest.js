@@ -16,7 +16,7 @@ describe("friendlydate Handlebars helper", () => {
 	});
 
 	it("should not render any friendly dates prior to the day before", () => {
-		[2, 7, 30, 365, 1000].forEach(day => {
+		[2, 7, 30, 365, 1000].forEach((day) => {
 			const time = new Date().getTime() - 24 * 3600 * 1000 * day;
 			expect(friendlydate(time)).to.equal(moment(time).format("D MMMM YYYY"));
 		});

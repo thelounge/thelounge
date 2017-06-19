@@ -8,7 +8,7 @@ const merge = require("./ircmessageparser/merge");
 
 // Create an HTML `span` with styling information for a given fragment
 function createFragment(fragment) {
-	let classes = [];
+	const classes = [];
 	if (fragment.bold) {
 		classes.push("irc-bold");
 	}
@@ -50,7 +50,7 @@ function createFragment(fragment) {
 module.exports = function parse(text) {
 	// Extract the styling information and get the plain text version from it
 	const styleFragments = parseStyle(text);
-	const cleanText = styleFragments.map(fragment => fragment.text).join("");
+	const cleanText = styleFragments.map((fragment) => fragment.text).join("");
 
 	// On the plain text, find channels and URLs, returned as "parts". Parts are
 	// arrays of objects containing start and end markers, as well as metadata
@@ -67,7 +67,7 @@ module.exports = function parse(text) {
 
 	// Merge the styling information with the channels / URLs / text objects and
 	// generate HTML strings with the resulting fragments
-	return merge(parts, styleFragments).map(textPart => {
+	return merge(parts, styleFragments).map((textPart) => {
 		// Create HTML strings with styling information
 		const fragments = textPart.fragments.map(createFragment).join("");
 

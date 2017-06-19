@@ -21,7 +21,7 @@ describe("Link plugin", function() {
 	});
 
 	it("should be able to fetch basic information about URLs", function(done) {
-		let message = this.irc.createMessage({
+		const message = this.irc.createMessage({
 			text: "http://localhost:9002/basic"
 		});
 

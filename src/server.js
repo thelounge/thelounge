@@ -35,7 +35,7 @@ module.exports = function() {
 		.engine("html", expressHandlebars({
 			extname: ".html",
 			helpers: {
-				tojson: c => JSON.stringify(c)
+				tojson: (c) => JSON.stringify(c)
 			}
 		}))
 		.set("view engine", "html")
@@ -211,7 +211,7 @@ function init(socket, client) {
 
 					Helper.password
 						.compare(old || "", client.config.password)
-						.then(matching => {
+						.then((matching) => {
 							if (!matching) {
 								socket.emit("change-password", {
 									error: "The current password field does not match your account password"
@@ -220,7 +220,7 @@ function init(socket, client) {
 							}
 							const hash = Helper.password.hash(p1);
 
-							client.setPassword(hash, success => {
+							client.setPassword(hash, (success) => {
 								const obj = {};
 
 								if (success) {
@@ -232,7 +232,7 @@ function init(socket, client) {
 
 								socket.emit("change-password", obj);
 							});
-						}).catch(error => {
+						}).catch((error) => {
 							log.error(`Error while checking users password. Error: ${error}`);
 						});
 				}
@@ -291,18 +291,18 @@ function localAuth(client, user, password, callback) {
 
 	Helper.password
 		.compare(password, client.config.password)
-		.then(matching => {
+		.then((matching) => {
 			if (matching && Helper.password.requiresUpdate(client.config.password)) {
 				const hash = Helper.password.hash(password);
 
-				client.setPassword(hash, success => {
+				client.setPassword(hash, (success) => {
 					if (success) {
 						log.info(`User ${colors.bold(client.name)} logged in and their hashed password has been updated to match new security requirements`);
 					}
 				});
 			}
 			callback(matching);
-		}).catch(error => {
+		}).catch((error) => {
 			log.error(`Error while checking users password. Error: ${error}`);
 		});
 }

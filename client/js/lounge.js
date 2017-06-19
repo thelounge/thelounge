@@ -52,7 +52,7 @@ $(function() {
 		id: "emoji",
 		match: /\B:([-+\w]*):?$/,
 		search(term, callback) {
-			callback(Object.keys(emojiMap).filter(name => name.indexOf(term) === 0));
+			callback(Object.keys(emojiMap).filter((name) => name.indexOf(term) === 0));
 		},
 		template(value) {
 			return `<span class="emoji">${emojiMap[value]}</span> ${value}`;
@@ -69,7 +69,7 @@ $(function() {
 		search(term, callback) {
 			term = term.slice(1);
 			if (term[0] === "@") {
-				callback(completeNicks(term.slice(1)).map(val => "@" + val));
+				callback(completeNicks(term.slice(1)).map((val) => "@" + val));
 			} else {
 				callback(completeNicks(term));
 			}
@@ -119,7 +119,7 @@ $(function() {
 		search(term, callback) {
 			term = term.toLowerCase();
 			const matchingColorCodes = constants.colorCodeMap
-				.filter(i => i[0].startsWith(term) || i[1].toLowerCase().startsWith(term));
+				.filter((i) => i[0].startsWith(term) || i[1].toLowerCase().startsWith(term));
 
 			callback(matchingColorCodes);
 		},
@@ -138,8 +138,8 @@ $(function() {
 		search(term, callback, match) {
 			term = term.toLowerCase();
 			const matchingColorCodes = constants.colorCodeMap
-				.filter(i => i[0].startsWith(term) || i[1].toLowerCase().startsWith(term))
-				.map(pair => pair.concat(match[1])); // Needed to pass fg color to `template`...
+				.filter((i) => i[0].startsWith(term) || i[1].toLowerCase().startsWith(term))
+				.map((pair) => pair.concat(match[1])); // Needed to pass fg color to `template`...
 
 			callback(matchingColorCodes);
 		},
@@ -476,7 +476,7 @@ $(function() {
 			$(container).empty();
 		}
 
-        // Check if date changed
+		// Check if date changed
 		var prevMsg = $(container.find(".msg")).last();
 		var prevMsgTime = new Date(prevMsg.attr("data-time"));
 		var msgTime = new Date(msg.attr("data-time"));
@@ -490,7 +490,7 @@ $(function() {
 			prevMsg.after(templates.date_marker({msgDate: msgTime}));
 		}
 
-        // Add message to the container
+		// Add message to the container
 		container
 			.append(msg)
 			.trigger("msg", [
@@ -1099,7 +1099,7 @@ $(function() {
 		const fuzzyOptions = {
 			pre: "<b>",
 			post: "</b>",
-			extract: el => $(el).text()
+			extract: (el) => $(el).text()
 		};
 
 		const result = fuzzy.filter(
@@ -1438,7 +1438,7 @@ $(function() {
 
 		return $.grep(
 			words,
-			w => !w.toLowerCase().indexOf(word.toLowerCase())
+			(w) => !w.toLowerCase().indexOf(word.toLowerCase())
 		);
 	}
 
@@ -1447,7 +1447,7 @@ $(function() {
 
 		return $.grep(
 			words,
-			w => !w.toLowerCase().indexOf(word.toLowerCase())
+			(w) => !w.toLowerCase().indexOf(word.toLowerCase())
 		);
 	}
 
@@ -1464,7 +1464,7 @@ $(function() {
 
 		return $.grep(
 			words,
-			w => !w.toLowerCase().indexOf(word.toLowerCase())
+			(w) => !w.toLowerCase().indexOf(word.toLowerCase())
 		);
 	}
 
@@ -1628,19 +1628,17 @@ $(function() {
 	// Only start opening socket.io connection after all events have been registered
 	socket.open();
 
-	window.addEventListener(
-		"popstate",
-		(e) => {
-			const {state} = e;
-			if (!state) {
-				return;
-			}
-			const {clickTarget} = state;
-			if (clickTarget) {
-				$(clickTarget).trigger("click", {
-					pushState: false
-				});
-			}
+	window.addEventListener("popstate", (e) => {
+		const {state} = e;
+		if (!state) {
+			return;
 		}
-	);
+
+		const {clickTarget} = state;
+		if (clickTarget) {
+			$(clickTarget).trigger("click", {
+				pushState: false
+			});
+		}
+	});
 });

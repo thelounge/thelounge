@@ -21,7 +21,7 @@ module.exports = function(irc, network) {
 			return;
 		}
 
-		data.modes.forEach(mode => {
+		data.modes.forEach((mode) => {
 			const text = mode.mode;
 			const add = text[0] === "+";
 			const char = text[1];
@@ -46,14 +46,14 @@ module.exports = function(irc, network) {
 		}
 
 		let usersUpdated;
-		let userModeSortPriority = {};
+		const userModeSortPriority = {};
 		const supportsMultiPrefix = network.irc.network.cap.isEnabled("multi-prefix");
 
 		irc.network.options.PREFIX.forEach((prefix, index) => {
 			userModeSortPriority[prefix.symbol] = index;
 		});
 
-		data.modes.forEach(mode => {
+		data.modes.forEach((mode) => {
 			let text = mode.mode;
 			const add = text[0] === "+";
 			const char = text[1];

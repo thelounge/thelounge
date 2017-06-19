@@ -13,8 +13,8 @@ describe("parse Handlebars helper", () => {
 			expected: "<span class=\"inline-channel\" role=\"button\" tabindex=\"0\" data-chan=\"#&amp;&quot;&gt;bug\">#&amp;&quot;&gt;bug</span>"
 		}];
 
-		const actual = testCases.map(testCase => parse(testCase.input));
-		const expected = testCases.map(testCase => testCase.expected);
+		const actual = testCases.map((testCase) => parse(testCase.input));
+		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
@@ -25,8 +25,8 @@ describe("parse Handlebars helper", () => {
 			expected: "textwithcontrolcodes"
 		}];
 
-		const actual = testCases.map(testCase => parse(testCase.input));
-		const expected = testCases.map(testCase => testCase.expected);
+		const actual = testCases.map((testCase) => parse(testCase.input));
+		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
@@ -68,8 +68,8 @@ describe("parse Handlebars helper", () => {
 				"</a>"
 		}];
 
-		const actual = testCases.map(testCase => parse(testCase.input));
-		const expected = testCases.map(testCase => testCase.expected);
+		const actual = testCases.map((testCase) => parse(testCase.input));
+		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
@@ -119,8 +119,8 @@ describe("parse Handlebars helper", () => {
 				"</a>"
 		}];
 
-		const actual = testCases.map(testCase => parse(testCase.input));
-		const expected = testCases.map(testCase => testCase.expected);
+		const actual = testCases.map((testCase) => parse(testCase.input));
+		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
@@ -134,8 +134,8 @@ describe("parse Handlebars helper", () => {
 			expected: "http://."
 		}];
 
-		const actual = testCases.map(testCase => parse(testCase.input));
-		const expected = testCases.map(testCase => testCase.expected);
+		const actual = testCases.map((testCase) => parse(testCase.input));
+		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
@@ -182,8 +182,8 @@ describe("parse Handlebars helper", () => {
 				"</span>"
 		}];
 
-		const actual = testCases.map(testCase => parse(testCase.input));
-		const expected = testCases.map(testCase => testCase.expected);
+		const actual = testCases.map((testCase) => parse(testCase.input));
+		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
@@ -197,8 +197,8 @@ describe("parse Handlebars helper", () => {
 			expected: "#"
 		}];
 
-		const actual = testCases.map(testCase => parse(testCase.input));
-		const expected = testCases.map(testCase => testCase.expected);
+		const actual = testCases.map((testCase) => parse(testCase.input));
+		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
@@ -237,8 +237,8 @@ describe("parse Handlebars helper", () => {
 				"<span class=\"irc-bold\">bold</span>"
 		}];
 
-		const actual = testCases.map(testCase => parse(testCase.input));
-		const expected = testCases.map(testCase => testCase.expected);
+		const actual = testCases.map((testCase) => parse(testCase.input));
+		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
@@ -263,8 +263,8 @@ describe("parse Handlebars helper", () => {
 				"</span>"
 		}];
 
-		const actual = testCases.map(testCase => parse(testCase.input));
-		const expected = testCases.map(testCase => testCase.expected);
+		const actual = testCases.map((testCase) => parse(testCase.input));
+		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
@@ -279,8 +279,8 @@ describe("parse Handlebars helper", () => {
 			"</span>"
 		}];
 
-		const actual = testCases.map(testCase => parse(testCase.input));
-		const expected = testCases.map(testCase => testCase.expected);
+		const actual = testCases.map((testCase) => parse(testCase.input));
+		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
@@ -302,8 +302,8 @@ describe("parse Handlebars helper", () => {
 				"</a>"
 		}];
 
-		const actual = testCases.map(testCase => parse(testCase.input));
-		const expected = testCases.map(testCase => testCase.expected);
+		const actual = testCases.map((testCase) => parse(testCase.input));
+		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
@@ -318,8 +318,8 @@ describe("parse Handlebars helper", () => {
 				"</a>"
 		}];
 
-		const actual = testCases.map(testCase => parse(testCase.input));
-		const expected = testCases.map(testCase => testCase.expected);
+		const actual = testCases.map((testCase) => parse(testCase.input));
+		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});

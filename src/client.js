@@ -58,7 +58,7 @@ var inputs = [
 ].reduce(function(plugins, name) {
 	var path = "./plugins/inputs/" + name;
 	var plugin = require(path);
-	plugin.commands.forEach(command => plugins[command] = plugin);
+	plugin.commands.forEach((command) => plugins[command] = plugin);
 	return plugins;
 }, {});
 
@@ -88,7 +88,7 @@ function Client(manager, name, config) {
 	}
 
 	var delay = 0;
-	(client.config.networks || []).forEach(n => {
+	(client.config.networks || []).forEach((n) => {
 		setTimeout(function() {
 			client.connect(n);
 		}, delay);
@@ -155,7 +155,7 @@ Client.prototype.connect = function(args) {
 	if (args.channels) {
 		var badName = false;
 
-		args.channels.forEach(chan => {
+		args.channels.forEach((chan) => {
 			if (!chan.name) {
 				badName = true;
 				return;
@@ -273,7 +273,7 @@ Client.prototype.connect = function(args) {
 		"znc.in/self-message", // Legacy echo-message for ZNc
 	]);
 
-	events.forEach(plugin => {
+	events.forEach((plugin) => {
 		var path = "./plugins/irc-events/" + plugin;
 		require(path).apply(client, [
 			network.irc,
@@ -319,7 +319,7 @@ Client.prototype.setPassword = function(hash, callback) {
 
 Client.prototype.input = function(data) {
 	var client = this;
-	data.text.split("\n").forEach(line => {
+	data.text.split("\n").forEach((line) => {
 		data.text = line;
 		client.inputLine(data);
 	});
@@ -422,12 +422,10 @@ Client.prototype.sort = function(data) {
 
 	switch (data.type) {
 	case "networks":
-		this.networks.sort((a, b) => {
-			return order.indexOf(a.id) - order.indexOf(b.id);
-		});
+		this.networks.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
 
 		// Sync order to connected clients
-		this.emit("sync_sort", {order: this.networks.map(obj => obj.id), type: data.type, target: data.target});
+		this.emit("sync_sort", {order: this.networks.map((obj) => obj.id), type: data.type, target: data.target});
 
 		break;
 
@@ -437,12 +435,10 @@ Client.prototype.sort = function(data) {
 			return;
 		}
 
-		network.channels.sort((a, b) => {
-			return order.indexOf(a.id) - order.indexOf(b.id);
-		});
+		network.channels.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
 
 		// Sync order to connected clients
-		this.emit("sync_sort", {order: network.channels.map(obj => obj.id), type: data.type, target: data.target});
+		this.emit("sync_sort", {order: network.channels.map((obj) => obj.id), type: data.type, target: data.target});
 
 		break;
 	}
@@ -472,7 +468,7 @@ Client.prototype.quit = function() {
 			socket.disconnect();
 		}
 	}
-	this.networks.forEach(network => {
+	this.networks.forEach((network) => {
 		if (network.irc) {
 			network.irc.quit("Page closed");
 		}
@@ -496,7 +492,7 @@ Client.prototype.clientAttach = function(socketId) {
 	client.attachedClients[socketId] = client.lastActiveChannel;
 
 	// Update old networks to store ip and hostmask
-	client.networks.forEach(network => {
+	client.networks.forEach((network) => {
 		if (!network.ip) {
 			save = true;
 			network.ip = (client.config && client.config.ip) || client.ip;
@@ -539,7 +535,7 @@ Client.prototype.save = _.debounce(function SaveClient() {
 	}
 
 	const client = this;
-	let json = {};
-	json.networks = this.networks.map(n => n.export());
+	const json = {};
+	json.networks = this.networks.map((n) => n.export());
 	client.manager.updateUser(client.name, json);
 }, 1000, {maxWait: 10000});

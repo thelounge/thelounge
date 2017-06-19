@@ -38,7 +38,7 @@ class Identification {
 	}
 
 	serverConnection(socket) {
-		socket.on("data", data => {
+		socket.on("data", (data) => {
 			this.respondToIdent(socket, data);
 			socket.end();
 		});

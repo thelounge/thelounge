@@ -30,7 +30,7 @@ module.exports = function(irc, network) {
 		var delay = 1000;
 		var commands = network.commands;
 		if (Array.isArray(commands)) {
-			commands.forEach(cmd => {
+			commands.forEach((cmd) => {
 				setTimeout(function() {
 					client.input({
 						target: network.channels[0].id,
@@ -41,7 +41,7 @@ module.exports = function(irc, network) {
 			});
 		}
 
-		network.channels.forEach(chan => {
+		network.channels.forEach((chan) => {
 			if (chan.type !== Chan.Type.CHANNEL) {
 				return;
 			}
@@ -126,7 +126,7 @@ module.exports = function(irc, network) {
 
 		network.prefixLookup = {};
 
-		data.options.PREFIX.forEach(mode => {
+		data.options.PREFIX.forEach((mode) => {
 			network.prefixLookup[mode.mode] = mode.symbol;
 		});
 

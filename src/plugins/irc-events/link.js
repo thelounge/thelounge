@@ -16,13 +16,13 @@ module.exports = function(client, chan, originalMsg) {
 	const links = originalMsg.text
 		.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "")
 		.split(" ")
-		.filter(w => /^https?:\/\//.test(w));
+		.filter((w) => /^https?:\/\//.test(w));
 
 	if (links.length === 0) {
 		return;
 	}
 
-	let msg = new Msg({
+	const msg = new Msg({
 		type: Msg.Type.TOGGLE,
 		time: originalMsg.time,
 		self: originalMsg.self,
