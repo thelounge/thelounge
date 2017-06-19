@@ -31,41 +31,57 @@ module.exports = function(client, chan, originalMsg) {
 
 	const link = escapeHeader(links[0]);
 	fetch(link, function(res) {
-		parse(msg, link, res, client);
+		parse(msg, link, res, null, client);
 	});
 };
 
-function parse(msg, url, res, client) {
-	var toggle = msg.toggle = {
+function parse(msg, url, res, res2, client) {
+	let uri = res.uri;
+	let toggle = msg.toggle = {
 		id: msg.id,
 		type: "",
 		head: "",
 		body: "",
 		thumb: "",
-		link: url,
+		link: uri,
 	};
 
 	switch (res.type) {
 	case "text/html":
 		var $ = cheerio.load(res.text);
+		if (res2 === null) {
+			var image =
+				$("meta[property=\"og:image\"]").attr("content")
+				|| $("meta[name=\"twitter:image:src\"]").attr("content")
+				|| "";
+			if (image) {
+				fetch(image, function(response) {
+					parse(msg, url, res, response, client);
+				});
+				return;
+			}
+		}
 		toggle.type = "link";
 		toggle.head = $("title").text();
 		toggle.body =
 			$("meta[name=description]").attr("content")
 			|| $("meta[property=\"og:description\"]").attr("content")
 			|| "No description found.";
-		toggle.thumb =
-			$("meta[property=\"og:image\"]").attr("content")
-			|| $("meta[name=\"twitter:image:src\"]").attr("content")
-			|| "";
+
+		var thumbnail = checkImage(res2);
+		if (thumbnail) {
+			toggle.thumb = thumbnail;
+		}
 		break;
 
 	case "image/png":
 	case "image/gif":
 	case "image/jpg":
 	case "image/jpeg":
-		if (res.size < (Helper.config.prefetchMaxImageSize * 1024)) {
+		uri = checkImage(res);
+		if (uri) {
 			toggle.type = "image";
+			toggle.link = uri;
 		} else {
 			return;
 		}
@@ -76,6 +92,29 @@ function parse(msg, url, res, client) {
 	}
 
 	client.emit("toggle", toggle);
+}
+
+function checkImage(res) {
+	let uri = false;
+
+	if (res) {
+		switch (res.type) {
+		case "image/png":
+		case "image/gif":
+		case "image/jpg":
+		case "image/jpeg":
+			if (res.size < (Helper.config.prefetchMaxImageSize * 1024)) {
+				if (Helper.config.prefetchForceSSL) {
+					uri = res.uri.replace(/^http:\/\//, "https://");
+				} else {
+					uri = res.uri;
+				}
+			}
+			break;
+		}
+	}
+
+	return uri;
 }
 
 function fetch(url, cb) {
@@ -90,6 +129,7 @@ function fetch(url, cb) {
 			}
 		});
 	} catch (e) {
+		cb(false);
 		return;
 	}
 	var length = 0;
@@ -116,6 +156,7 @@ function fetch(url, cb) {
 			var body;
 			var type;
 			var size = req.response.headers["content-length"];
+			var uri = req.response.request.uri;
 			try {
 				body = JSON.parse(data);
 			} catch (e) {
@@ -127,6 +168,7 @@ function fetch(url, cb) {
 				type = {};
 			}
 			data = {
+				uri: uri.href,
 				text: data,
 				body: body,
 				type: type,
