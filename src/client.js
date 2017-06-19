@@ -386,7 +386,7 @@ Client.prototype.more = function(data) {
 	var count = chan.messages.length - (data.count || 0);
 	var messages = chan.messages.slice(Math.max(0, count - 100), count);
 	client.emit("more", {
-		chan: chan.id,
+		id: chan.id,
 		messages: messages
 	});
 };

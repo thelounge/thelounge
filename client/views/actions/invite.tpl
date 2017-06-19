@@ -1,9 +1,9 @@
-<span role="button" class="user {{colorClass from}}" data-name="{{from}}">{{from}}</span>
+{{> ../user_name nick=from}}
 invited
 {{#if invitedYou}}
 	you
 {{else}}
-	<span role="button" class="user {{colorClass invited}}" data-name="{{invited}}">{{invited}}</span>
+	{{> ../user_name nick=invited}}
 {{/if}}
 to
 {{{parse channel}}}

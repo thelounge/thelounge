@@ -15,7 +15,7 @@ module.exports = {
 		quit: require("./actions/quit.tpl"),
 		topic: require("./actions/topic.tpl"),
 		topic_set_by: require("./actions/topic_set_by.tpl"),
-		whois: require("./actions/whois.tpl"),
+		whois: require("./actions/whois.tpl")
 	},
 
 	chan: require("./chan.tpl"),
@@ -31,4 +31,5 @@ module.exports = {
 	unread_marker: require("./unread_marker.tpl"),
 	user: require("./user.tpl"),
 	user_filtered: require("./user_filtered.tpl"),
+	user_name: require("./user_name.tpl")
 };

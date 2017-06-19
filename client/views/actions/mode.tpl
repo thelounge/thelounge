@@ -1,3 +1,3 @@
-<span role="button" class="user {{colorClass from}}" data-name="{{from}}">{{mode}}{{from}}</span>
+{{> ../user_name nick=from}}
 sets mode
 {{{parse text}}}
