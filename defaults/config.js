@@ -78,6 +78,14 @@ module.exports = {
 	prefetchMaxImageSize: 512,
 
 	//
+	// Display images with unknown size in prefetch.
+	//
+	// @type     boolean
+	// @default  false
+	//
+	prefetchUndefinedImageSize: false,
+
+	//
 	// Display network
 	//
 	// If set to false network settings will not be shown in the login form.
