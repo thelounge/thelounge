@@ -23,7 +23,7 @@ module.exports = function slideoutMenu(viewport, menu) {
 	function onTouchStart(e) {
 		if (e.touches.length !== 1) {
 			onTouchEnd();
-			return false;
+			return;
 		}
 
 		var touch = e.touches.item(0);
@@ -37,7 +37,7 @@ module.exports = function slideoutMenu(viewport, menu) {
 			touchStartTime = Date.now();
 
 			viewport.addEventListener("touchmove", onTouchMove);
-			viewport.addEventListener("touchend", onTouchEnd);
+			viewport.addEventListener("touchend", onTouchEnd, {passive: true});
 		}
 	}
 
@@ -91,7 +91,7 @@ module.exports = function slideoutMenu(viewport, menu) {
 		menuIsMoving = false;
 	}
 
-	viewport.addEventListener("touchstart", onTouchStart);
+	viewport.addEventListener("touchstart", onTouchStart, {passive: true});
 
 	return {
 		disable: disableSlideout,
