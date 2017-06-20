@@ -34,7 +34,7 @@ module.exports = function() {
 		.engine("html", expressHandlebars({
 			extname: ".html",
 			helpers: {
-				tojson: c => JSON.stringify(c)
+				tojson: (c) => JSON.stringify(c)
 			}
 		}))
 		.set("view engine", "html")
@@ -206,7 +206,7 @@ function init(socket, client, generateToken) {
 
 					Helper.password
 						.compare(old || "", client.config.password)
-						.then(matching => {
+						.then((matching) => {
 							if (!matching) {
 								socket.emit("change-password", {
 									error: "The current password field does not match your account password"
@@ -215,7 +215,7 @@ function init(socket, client, generateToken) {
 							}
 							const hash = Helper.password.hash(p1);
 
-							client.setPassword(hash, success => {
+							client.setPassword(hash, (success) => {
 								const obj = {};
 
 								if (success) {
@@ -226,7 +226,7 @@ function init(socket, client, generateToken) {
 
 								socket.emit("change-password", obj);
 							});
-						}).catch(error => {
+						}).catch((error) => {
 							log.error(`Error while checking users password. Error: ${error}`);
 						});
 				}
@@ -309,59 +309,76 @@ function reverseDnsLookup(socket, client) {
 	});
 }
 
-function localAuth(client, user, password, callback) {
-	// If no user is found, or if the client has not provided a password,
-	// fail the authentication straight away
-	if (!client || !password) {
-		return callback(false);
-	}
+function localAuth(client, user, password) {
+	return new Promise((resolve, reject) => {
+		// If no user is found, or if the client has not provided a password,
+		// fail the authentication straight away
+		if (!client || !password) {
+			reject();
+		}
 
-	// If this user has no password set, fail the authentication
-	if (!client.config.password) {
-		log.error(`User ${colors.bold(user)} with no local password set tried to sign in. (Probably a LDAP user)`);
-		return callback(false);
-	}
+		// If this user has no password set, fail the authentication
+		if (!client.config.password) {
+			log.error(`User ${colors.bold(user)} with no local password set tried to sign in. (Probably a LDAP user)`);
+			reject();
+		}
 
-	Helper.password
-		.compare(password, client.config.password)
-		.then(matching => {
-			if (matching && Helper.password.requiresUpdate(client.config.password)) {
-				const hash = Helper.password.hash(password);
+		Helper.password
+			.compare(password, client.config.password)
+			.then(matching => {
+				if (matching) {
+					// passwords match
+					if (Helper.password.requiresUpdate(client.config.password)) {
+						const hash = Helper.password.hash(password);
 
-				client.setPassword(hash, success => {
-					if (success) {
-						log.info(`User ${colors.bold(client.name)} logged in and their hashed password has been updated to match new security requirements`);
+						client.setPassword(hash, success => {
+							if (success) {
+								log.info(`User ${colors.bold(client.name)} logged in and their hashed password has been updated to match new security requirements`);
+							}
+						});
 					}
-				});
-			}
-
-			callback(matching);
-		}).catch(error => {
-			log.error(`Error while checking users password. Error: ${error}`);
-		});
+					resolve();
+				} else {
+					// passwords mismatch
+					reject();
+				}
+			}).catch(error => {
+				log.error(`Error while checking users password. Error: ${error}`);
+				reject();
+			});
+	});
 }
 
-function ldapAuth(client, user, password, callback) {
-	var userDN = user.replace(/([,\\/#+<>;"= ])/g, "\\$1");
-	var bindDN = Helper.config.ldap.primaryKey + "=" + userDN + "," + Helper.config.ldap.baseDN;
+function ldapAuth(client, user, password) {
+	return new Promise((resolve, reject) => {
+		var userDN = user.replace(/([,\\/#+<>;"= ])/g, "\\$1");
+		var bindDN = Helper.config.ldap.primaryKey + "=" + userDN + "," + Helper.config.ldap.baseDN;
 
-	var ldapclient = ldap.createClient({
-		url: Helper.config.ldap.url
-	});
+		var ldapclient = ldap.createClient({
+			url: Helper.config.ldap.url
+		});
 
-	ldapclient.on("error", function(err) {
-		log.error("Unable to connect to LDAP server", err);
-		callback(!err);
-	});
-
-	ldapclient.bind(bindDN, password, function(err) {
-		if (!err && !client) {
-			if (!manager.addUser(user, null)) {
-				log.error("Unable to create new user", user);
+		ldapclient.on("error", function(err) {
+			log.error("Unable to connect to LDAP server", err);
+			if (err) {
+				reject();
+			} else {
+				resolve();
 			}
-		}
-		ldapclient.unbind();
-		callback(!err);
+		});
+		ldapclient.bind(bindDN, password, function(err) {
+			if (!err && !client) {
+				if (!manager.addUser(user, null)) {
+					log.error("Unable to create new user", user);
+				}
+			}
+			ldapclient.unbind();
+			if (err) {
+				reject();
+			} else {
+				resolve();
+			}
+		});
 	});
 }
 
@@ -393,37 +410,32 @@ function auth(data) {
 		return;
 	}
 
-	const authCallback = success => {
-		// Authorization failed
-		if (!success) {
-			socket.emit("auth", {success: false});
-			return;
-		}
-
-		// If authorization succeeded but there is no loaded user,
-		// load it and find the user again (this happens with LDAP)
-		if (!client) {
-			manager.loadUser(data.user);
-			client = manager.findClient(data.user);
-		}
-
-		initClient();
-	};
-
 	client = manager.findClient(data.user);
 
 	// We have found an existing user and client has provided a token
 	if (client && data.token && typeof client.config.sessions[data.token] !== "undefined") {
 		client.updateSession(data.token, getClientIp(socket.request), socket.request);
 
-		authCallback(true);
+		initClient();
 		return;
 	}
 
 	// Perform password checking
+	let authPromise = "";
 	if (!Helper.config.public && Helper.config.ldap.enable) {
-		ldapAuth(client, data.user, data.password, authCallback);
+		authPromise = ldapAuth(client, data.user, data.password);
 	} else {
-		localAuth(client, data.user, data.password, authCallback);
+		authPromise = localAuth(client, data.user, data.password);
 	}
+	authPromise.then(()=>{
+		// If authorization succeeded but there is no loaded user,
+		// load it and find the user again (this happens with LDAP)
+		if (!client) {
+			manager.loadUser(data.user);
+			client = manager.findClient(data.user);
+		}
+		initClient();
+	}).catch(()=>{
+		socket.emit("auth", {success: false});
+	});
 }
