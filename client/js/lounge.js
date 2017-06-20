@@ -497,8 +497,11 @@ $(function() {
 				target,
 				data
 			]);
-
-		if (data.msg.self) {
+		var lastVisible = container.find("div:visible").last();
+		if (data.msg.self
+			|| lastVisible.hasClass("unread-marker")
+			|| (lastVisible.hasClass("date-marker")
+				&& lastVisible.prev().hasClass("unread-marker"))) {
 			container
 				.find(".unread-marker")
 				.appendTo(container);
