@@ -1306,14 +1306,13 @@ $(function() {
 			"pagedown"
 		], function(e, key) {
 			let container = windows.find(".window.active");
-			if (container.is(":animated")) {
-				return;
-			}
 
 			// Chat windows scroll message container
 			if (container.attr("id") === "chat-container") {
 				container = container.find(".chan.active .chat");
 			}
+
+			container.finish();
 
 			const offset = container.get(0).clientHeight * 0.9;
 			let scrollTop = container.scrollTop();
@@ -1324,7 +1323,7 @@ $(function() {
 				scrollTop = Math.ceil(scrollTop + offset);
 			}
 
-			container.stop().animate({
+			container.animate({
 				scrollTop: scrollTop
 			}, 200);
 
