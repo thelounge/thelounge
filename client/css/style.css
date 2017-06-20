@@ -910,6 +910,9 @@ kbd {
 	padding-right: 10px;
 	text-align: right;
 	width: 134px;
+	overflow: hidden;
+	white-space: nowrap;
+	position: relative;
 }
 
 #chat .text {
@@ -1807,6 +1810,25 @@ kbd {
 
 .irc-italic {
 	font-style: italic;
+}
+
+@media (min-width: 480px) {
+	/* Fade out for long usernames */
+
+	#chat .from {
+		padding-left: 10px;
+	}
+
+	#chat .from:after {
+		position: absolute;
+		right: 0;
+		width: 10px;
+		height: 100%;
+		background: linear-gradient(to right, rgba(255, 255, 255, .5) 0%, rgba(255, 255, 255, 1) 100%);
+		content: " ";
+	}
+
+	/* End fade out for long usernames */
 }
 
 @media (max-width: 768px) {

@@ -279,3 +279,9 @@ body {
 }
 
 /* End form elements */
+
+@media (min-width: 480px) {
+	#chat .from:after {
+		background: linear-gradient(to right, rgba(63, 63, 63, .5) 0%, rgba(63, 63, 63, 1) 100%);
+	}
+}
