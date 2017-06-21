@@ -388,9 +388,10 @@ $(function() {
 
 		if (data.type !== "lobby") {
 			var lastDate;
-			$(chat.find("#chan-" + data.id + " .messages .msg[data-time]")).each(function() {
-				var msg = $(this);
-				var msgDate = new Date(msg.attr("data-time"));
+			$(data.messages).each(function() {
+				var msgData = this;
+				var msgDate = new Date(msgData.time);
+				var msg = $(chat.find("#chan-" + data.id + " .messages #msg-" + msgData.id));
 
 				// Top-most message in a channel
 				if (!lastDate) {
@@ -403,6 +404,8 @@ $(function() {
 				}
 
 				lastDate = msgDate;
+
+				updateDisconnectedUsers(channel, msgData);
 			});
 		}
 	}
@@ -467,6 +470,23 @@ $(function() {
 		}
 	}
 
+	function updateDisconnectedUsers(channel, message) {
+		switch (message.type) {
+		case "nick":
+			channel.find(".msg .user[data-name='" + message.from + "']").addClass("disconnected");
+			channel.find(".msg .user[data-name='" + message.new_nick + "']").removeClass("disconnected");
+			break;
+		case "join":
+			channel.find(".msg .user[data-name='" + message.from + "']").removeClass("disconnected");
+			break;
+		case "part":
+			// Deliberate fall through
+		case "quit":
+			channel.find(".msg .user[data-name='" + message.from + "']").addClass("disconnected");
+			break;
+		}
+	}
+
 	socket.on("msg", function(data) {
 		var msg = buildChatMessage(data);
 		var target = "#chan-" + data.chan;
@@ -506,6 +526,8 @@ $(function() {
 				.find(".unread-marker")
 				.appendTo(container);
 		}
+
+		updateDisconnectedUsers(container, data.msg);
 	});
 
 	socket.on("more", function(data) {
@@ -542,6 +564,7 @@ $(function() {
 		// Date change detect
 		// Have to use data instaid of the documentFragment because it's being weird
 		var lastDate;
+		var nicks = chat.find("#chan-" + data.id + " .users").data("nicks");
 		$(data.messages).each(function() {
 			var msgData = this;
 			var msgDate = new Date(msgData.time);
@@ -558,6 +581,10 @@ $(function() {
 			}
 
 			lastDate = msgDate;
+
+			if (nicks.indexOf(msgData.from) === -1) {
+				chan.find(".msg .user[data-name='" + msgData.from + "']").addClass("disconnected");
+			}
 		});
 
 		scrollable.find(".show-more-button").prop("disabled", false);
@@ -651,7 +678,17 @@ $(function() {
 		}
 	});
 
-	socket.on("names", renderChannelUsers);
+	socket.on("names", function(data) {
+		renderChannelUsers(data);
+
+		// Condensed actions support
+		setTimeout(function() {
+			let messages = chat.find("#chan-" + data.id).find(".messages");
+			data.users.forEach(function(user) {
+				messages.find(".user[data-name='" + user.name + "']").removeClass("disconnected");
+			});
+		}, 500);
+	});
 
 	var options = require("./options");
 
