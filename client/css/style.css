@@ -1380,6 +1380,15 @@ kbd {
 
 #connection-error {
 	display: none;
+	text-align: center;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 45px;
+	line-height: 45px;
+	background: rgba(255, 0, 0, .5);
+	color: #fff;
+	cursor: default;
 }
 
 #connection-error.shown {

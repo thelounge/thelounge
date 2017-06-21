@@ -8,7 +8,8 @@ const socket = io({
 	transports: $(document.body).data("transports"),
 	path: path,
 	autoConnect: false,
-	reconnection: false
+	timeout: 40000,
+	reconnection: true
 });
 
 [
@@ -19,22 +20,10 @@ const socket = io({
 ].forEach(function(e) {
 	socket.on(e, function(data) {
 		$("#loading-page-message").text("Connection failed: " + data);
-		$("#connection-error").addClass("shown").one("click", function() {
-			window.onbeforeunload = null;
-			window.location.reload();
-		});
-
-		// Disables sending a message by pressing Enter. `off` is necessary to
-		// cancel `inputhistory`, which overrides hitting Enter. `on` is then
-		// necessary to avoid creating new lines when hitting Enter without Shift.
-		// This is fairly hacky but this solution is not permanent.
-		$("#input").off("keydown").on("keydown", function(event) {
-			if (event.which === 13 && !event.shiftKey) {
-				event.preventDefault();
-			}
-		});
-		// Hides the "Send Message" button
-		$("#submit").remove();
+		$("#connection-error").addClass("shown");
+		$("#submit").prop("disabled", true);
+		$(".show-more-button").prop("disabled", true);
+		$("#input").data("disabled", true);
 
 		console.error(data);
 	});

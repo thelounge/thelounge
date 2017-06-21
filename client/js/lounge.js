@@ -222,38 +222,58 @@ $(function() {
 	});
 
 	socket.on("init", function(data) {
-		$("#loading-page-message").text("Rendering…");
+		const loaded = $("#loading").length === 0;
+		let previousActive = 0;
+
+		if (loaded) {
+			previousActive = sidebar.find(".active").data("id");
+		} else {
+			$("#loading-page-message").text("Rendering…");
+		}
 
 		if (data.networks.length === 0) {
 			$("#footer").find(".connect").trigger("click", {
 				pushState: false,
 			});
 		} else {
-			renderNetworks(data);
+			renderNetworks(data, false);
 		}
 
-		if (data.token && $("#sign-in-remember").is(":checked")) {
-			storage.set("token", data.token);
+		if (loaded) {
+			$("#connection-error").removeClass("shown");
+			$("#submit").prop("disabled", false);
+			$(".show-more-button").prop("disabled", false);
+			$("#input").data("disabled", false);
 		} else {
-			storage.remove("token");
+			if (data.token && $("#sign-in-remember").is(":checked")) {
+				storage.set("token", data.token);
+			} else {
+				storage.remove("token");
+			}
+
+			$("body").removeClass("signed-out");
+			$("#loading").remove();
+			$("#sign-in").remove();
 		}
 
-		$("body").removeClass("signed-out");
-		$("#loading").remove();
-		$("#sign-in").remove();
+		let previousTarget = sidebar.find("[data-id='" + previousActive + "']");
 
-		var id = data.active;
-		var target = sidebar.find("[data-id='" + id + "']").trigger("click", {
-			replaceHistory: true
-		});
-		if (target.length === 0) {
-			var first = sidebar.find(".chan")
-				.eq(0)
-				.trigger("click");
-			if (first.length === 0) {
-				$("#footer").find(".connect").trigger("click", {
-					pushState: false,
-				});
+		if (loaded && previousTarget.length > 0) {
+			previousTarget.addClass("active");
+		} else {
+			let id = data.active;
+			let target = sidebar.find("[data-id='" + id + "']").trigger("click", {
+				replaceHistory: true
+			});
+			if (target.length === 0) {
+				let first = sidebar.find(".chan")
+					.eq(0)
+					.trigger("click");
+				if (first.length === 0) {
+					$("#footer").find(".connect").trigger("click", {
+						pushState: false,
+					});
+				}
 			}
 		}
 	});
@@ -370,11 +390,14 @@ $(function() {
 	}
 
 	function renderChannelMessages(data) {
-		var documentFragment = buildChannelMessages(data.id, data.messages);
-		var channel = chat.find("#chan-" + data.id + " .messages").append(documentFragment);
+		let documentFragment = buildChannelMessages(data.id, data.messages);
+		let channel = chat.find("#chan-" + data.id + " .messages").html(documentFragment);
+		let more = chat.find("#chan-" + data.id + " .show-more");
+
+		more.toggleClass("show", (data.messages.length === 100));
 
 		if (data.firstUnread > 0) {
-			var first = channel.find("#msg-" + data.firstUnread);
+			let first = channel.find("#msg-" + data.firstUnread);
 
 			// TODO: If the message is far off in the history, we still need to append the marker into DOM
 			if (!first.length) {
@@ -441,25 +464,69 @@ $(function() {
 		}
 	}
 
-	function renderNetworks(data) {
-		sidebar.find(".empty").hide();
-		sidebar.find(".networks").append(
-			templates.network({
-				networks: data.networks
-			})
-		);
+	function renderNetworks(data, append) {
+		const loaded = $("#loading").length === 0;
+		let channelsAppend;
 
-		var channels = $.map(data.networks, function(n) {
+		if (loaded) {
+			let channelsNew = [];
+			let channelsCurrent = sidebar.find(".chan").map(function() {
+				return $(this).data("id");
+			}).get();
+
+			// reconnection, add only new channels
+			channelsAppend = $.map(data.networks, function(n) {
+				return $.map(n.channels, function(c) {
+					channelsNew.push(c.id);
+					return channelsCurrent.indexOf(c.id) > -1 ? null : c;
+				});
+			});
+
+			// remove old
+			if (!append) {
+				let diff = channelsCurrent.filter(x => channelsNew.indexOf(x) < 0);
+				diff.forEach(function(id) {
+					chat.find(".chan[data-id='" + id + "']").remove();
+				});
+			}
+		} else {
+			sidebar.find(".empty").hide();
+		}
+
+		let renderedNetworks = templates.network({
+			networks: data.networks
+		});
+
+		if (append) {
+			sidebar.find(".networks").append(renderedNetworks);
+		} else {
+			sidebar.find(".networks").html(renderedNetworks);
+		}
+
+		let channels = $.map(data.networks, function(n) {
 			return n.channels;
 		});
+
 		chat.append(
 			templates.chat({
-				channels: channels
+				channels: loaded ? channelsAppend : channels
 			})
 		);
 		channels.forEach(renderChannel);
 
-		confirmExit();
+		if (loaded) {
+			let activeChan = chat.find(".chan.active");
+			socket.emit(
+				"open",
+				activeChan.data("id")
+			);
+			activeChan.find(".badge")
+				.removeClass("highlight")
+				.empty();
+		} else {
+			confirmExit();
+		}
+
 		sortable();
 
 		if (sidebar.find(".highlight").length) {
@@ -564,7 +631,7 @@ $(function() {
 	});
 
 	socket.on("network", function(data) {
-		renderNetworks(data);
+		renderNetworks(data, true);
 
 		sidebar.find(".chan")
 			.last()
@@ -783,6 +850,11 @@ $(function() {
 			},
 			"textComplete:hide": function() {
 				$(this).data("autocompleting", false);
+			},
+			keydown: function() {
+				if (event.which === 13 && !event.shiftKey) {
+					event.preventDefault();
+				}
 			}
 		});
 
