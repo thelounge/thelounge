@@ -28,6 +28,7 @@ module.exports = {
 	msg_unhandled: require("./msg_unhandled.tpl"),
 	network: require("./network.tpl"),
 	toggle: require("./toggle.tpl"),
+	toggle_expand: require("./toggle_expand.tpl"),
 	unread_marker: require("./unread_marker.tpl"),
 	user: require("./user.tpl"),
 	user_filtered: require("./user_filtered.tpl"),

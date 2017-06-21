@@ -208,7 +208,9 @@ kbd {
 
 .context-menu-user:before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
 .context-menu-chan:before { content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */ }
-.context-menu-close:before { content: "\f00d"; /* http://fontawesome.io/icon/times/ */ }
+
+.context-menu-close:before,
+.context-menu-hide-pref:before { content: "\f00d"; /* http://fontawesome.io/icon/times/ */ }
 
 #sidebar .chan.lobby:before,
 #chat .lobby .title:before { content: "\f0a0"; /* http://fontawesome.io/icon/hdd-o/ */ }
@@ -1102,7 +1104,7 @@ kbd {
 #chat .toggle-content {
 	background: #f5f5f5;
 	border-radius: 2px;
-	display: none;
+	display: inline-block;
 	color: #222;
 	font-size: 12px;
 	max-width: 100%;
@@ -1113,30 +1115,66 @@ kbd {
 
 #chat .toggle-content a {
 	color: inherit;
+	position: relative;
+	display: flex;
+	width: 100%;
+}
+
+#chat .toggle-content a:hover {
+	opacity: .7;
+}
+
+#chat .toggle-content.toggle-type-link {
+	display: -webkit-inline-flex;
+	display: inline-flex;
+	-webkit-align-items: stretch;
+	align-items: stretch;
+	overflow: hidden;
+	position: relative;
+	margin-bottom: 5px;
 }
 
 #chat .toggle-content img {
+	-webkit-transform: translateZ(0);
+	transform: translateZ(0);
 	max-width: 100%;
-	max-height: 128px;
+	max-height: 27vh;
 	display: block;
+	cursor: pointer;
+	transition: opacity .2s;
+}
+
+#chat .toggle-content img:hover {
+	opacity: .85;
 }
 
 #chat .toggle-content .thumb {
-	float: left;
-	margin-right: 6px;
-	max-width: 48px;
-	max-height: 32px;
+	max-height: 12vh;
+	max-width: 35%;
+	height: auto;
+	padding-right: 10px;
+	object-fit: contain;
+	align-self: center;
 }
 
-#chat .toggle-content .head,
-#chat .toggle-content .body {
-	white-space: nowrap;
-	text-overflow: ellipsis;
+#chat .toggle-content .info_wrap {
+	margin: auto 0;
+	max-height: 12vh;
 	overflow: hidden;
+}
+
+#chat .toggle-content.toggle-type-link a:after {
+	position: absolute;
+	width: 100%;
+	top: 9vh;
+	height: 3vh;
+	background: linear-gradient(to bottom, rgba(245, 245, 245, .3) 0%, rgba(245, 245, 245, 1) 100%);
+	content: " ";
 }
 
 #chat .toggle-content .head {
 	font-weight: bold;
+	margin-bottom: 1vh;
 }
 
 #chat .toggle-content .body {
@@ -1941,6 +1979,55 @@ kbd {
 	#help .help-item .description {
 		display: block;
 	}
+
+	#chat .msg.toggle .time {
+		display: none;
+	}
+}
+
+.fullscreen {
+	-webkit-transform: translateZ(0);
+	transform: translateZ(0);
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, .85);
+	visibility: hidden;
+	opacity: 0;
+	transition: opacity .3s, visibility .3s linear;
+	z-index: 999;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-direction: column;
+	flex-direction: column;
+	-webkit-justify-content: center;
+	justify-content: center;
+	text-align: center;
+}
+
+.fullscreen.display {
+	visibility: visible;
+	opacity: 1;
+}
+
+#expand-preview div {
+	display: flex;
+	justify-content: center;
+	max-height: 100%;
+	overflow: hidden;
+}
+
+#expand-preview img {
+	max-height: 100%;
+	max-width: 100%;
+	object-fit: contain;
+}
+
+#expand-preview a {
+	display: inline-block;
+	margin: 0 auto;
+	padding: 10px;
+	color: #ccc;
 }
 
 ::-webkit-scrollbar {

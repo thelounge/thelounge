@@ -296,8 +296,15 @@ $(function() {
 	function buildChatMessage(data) {
 		var type = data.msg.type;
 		var target = "#chan-" + data.chan;
-		if (type === "error") {
+		switch (type) {
+		case "error":
 			target = "#chan-" + chat.find(".active").data("id");
+			break;
+		case "toggle":
+			if (data.msg.toggle && ((data.msg.toggle.type === "link" && options.links) || (data.msg.toggle.type === "image" && options.thumbnails))) {
+				data.msg.toggle.show = true;
+			}
+			break;
 		}
 
 		var chan = chat.find(target);
@@ -615,7 +622,7 @@ $(function() {
 	});
 
 	socket.on("toggle", function(data) {
-		var toggle = $("#toggle-" + data.id);
+		var toggle = $(".channel .toggle .toggle-button[data-openid='" + data.id + "']");
 		toggle.parent().after(templates.toggle({toggle: data}));
 		switch (data.type) {
 		case "link":
@@ -662,12 +669,40 @@ $(function() {
 	var contextMenuContainer = $("#context-menu-container");
 	var contextMenu = $("#context-menu");
 
+	$(window).on("popstate", function(event) {
+		var state = event.originalEvent.state;
+		var preview = $("#expand-preview");
+
+		if ((preview.hasClass("display") && (!state.clickTarget || state.clickTarget.indexOf("toggle-content") === -1))) {
+			preview.removeClass("display");
+		}
+	});
+
 	$("#main").on("click", function(e) {
 		if ($(e.target).is(".lt")) {
 			sidebarSlide.toggle(!sidebarSlide.isOpen());
 		} else if (sidebarSlide.isOpen()) {
 			sidebarSlide.toggle(false);
 		}
+	});
+
+	viewport.on("click", "#expand-preview, .toggle-content img", function(e, data) {
+		var self = $(this);
+		var container = $("#expand-preview");
+		var state = {};
+
+		if (self.is("img")) {
+			if (!data || data.pushState !== false) {
+				state.scrollTop = $(window).scrollTop();
+				history.pushState(state, null, null); // save current scroll position
+				state.clickTarget = `#chat .chan.active .toggle-content[data-id="${self.parent().data("id")}"] > img`;
+				history.pushState(state, null, null);
+			}
+			container.html(templates.toggle_expand({link: self.attr("src")}));
+		} else {
+			history.back();
+		}
+		container.toggleClass("display");
 	});
 
 	viewport.on("click", ".rt", function(e) {
@@ -724,6 +759,12 @@ $(function() {
 				text: target.hasClass("lobby") ? "Disconnect" : target.hasClass("channel") ? "Leave" : "Close",
 				data: target.data("target")
 			});
+		} else if (target.hasClass("toggle-content")) {
+			output = templates.contextmenu_item({
+				class: "hide-pref",
+				text: "Hide",
+				data: target.data("id")
+			});
 		}
 
 		contextMenuContainer.show();
@@ -734,7 +775,7 @@ $(function() {
 		return false;
 	}
 
-	viewport.on("contextmenu", ".user, .network .chan", function(e) {
+	viewport.on("contextmenu", ".user, .network .chan, .toggle-content", function(e) {
 		return showContextMenu(this, e);
 	});
 
@@ -1084,6 +1125,9 @@ $(function() {
 		case "user":
 			$(".channel.active .users .user[data-name='" + $(this).data("data") + "']").click();
 			break;
+		case "hide-pref":
+			$(".channel.active .toggle .toggle-button[data-openid='" + $(this).data("data") + "']").click();
+			break;
 		}
 	});
 
@@ -1201,7 +1245,7 @@ $(function() {
 		var localChat = self.closest(".chat");
 		var bottom = localChat.isScrollBottom();
 		var content = self.parent().next(".toggle-content");
-		if (bottom && !content.hasClass("show")) {
+		if (bottom && content.hasClass("hide")) {
 			var img = content.find("img");
 			if (img.length !== 0 && !img.width()) {
 				img.on("load", function() {
@@ -1209,7 +1253,10 @@ $(function() {
 				});
 			}
 		}
-		content.toggleClass("show");
+		if (content.length !== 0 && ((content.hasClass("toggle-type-link") && options.links) || (!content.hasClass("toggle-type-link") && options.thumbnails))) {
+			self.toggleClass("hide");
+		}
+		content.toggleClass("hide");
 		if (bottom) {
 			localChat.scrollBottom();
 		}
