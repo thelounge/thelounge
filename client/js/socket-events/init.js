@@ -17,10 +17,8 @@ socket.on("init", function(data) {
 		render.renderNetworks(data);
 	}
 
-	if (data.token && $("#sign-in-remember").is(":checked")) {
+	if (data.token) {
 		storage.set("token", data.token);
-	} else {
-		storage.remove("token");
 	}
 
 	$("body").removeClass("signed-out");

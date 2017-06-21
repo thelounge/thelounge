@@ -57,6 +57,7 @@
     "semver": "5.4.1",
     "socket.io": "1.7.4",
     "spdy": "3.4.7",
+    "ua-parser-js": "0.7.12",
     "urijs": "1.18.10"
   },
   "devDependencies": {

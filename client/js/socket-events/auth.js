@@ -7,6 +7,7 @@ const storage = require("../localStorage");
 socket.on("auth", function(data) {
 	const login = $("#sign-in");
 	let token;
+	const user = storage.get("user");
 
 	login.find(".btn").prop("disabled", false);
 
@@ -17,22 +18,23 @@ socket.on("auth", function(data) {
 		error.show().closest("form").one("submit", function() {
 			error.hide();
 		});
-	} else {
+	} else if (user) {
 		token = storage.get("token");
 		if (token) {
 			$("#loading-page-message").text("Authorizing…");
-			socket.emit("auth", {token: token});
+			socket.emit("auth", {user: user, token: token});
 		}
 	}
 
-	const input = login.find("input[name='user']");
-	if (input.val() === "") {
-		input.val(storage.get("user") || "");
+	if (user) {
+		login.find("input[name='user']").val(user);
 	}
+
 	if (token) {
 		return;
 	}
-	$("#sidebar, #footer").find(".sign-in")
+
+	$("#footer").find(".sign-in")
 		.trigger("click", {
 			pushState: false,
 		})

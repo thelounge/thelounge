@@ -562,8 +562,12 @@ $(function() {
 	});
 
 	sidebar.on("click", "#sign-out", function() {
+		socket.emit("sign-out", storage.get("token"));
 		storage.remove("token");
-		location.reload();
+
+		if (!socket.connected) {
+			location.reload();
+		}
 	});
 
 	sidebar.on("click", ".close", function() {

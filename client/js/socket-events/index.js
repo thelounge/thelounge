@@ -16,3 +16,4 @@ require("./quit");
 require("./sync_sort");
 require("./topic");
 require("./users");
+require("./sign_out");
