@@ -802,6 +802,7 @@ kbd {
 #chat .show-more {
 	display: none;
 	padding: 10px;
+	height: 44px;
 	padding-bottom: 0;
 	width: 100%;
 }
@@ -814,7 +815,7 @@ kbd {
 	border-radius: 2px;
 	color: #555;
 	font-size: 12px;
-	height: 34px;
+	height: 100%;
 	line-height: 0;
 	width: 100%;
 }

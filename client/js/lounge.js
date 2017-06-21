@@ -560,7 +560,7 @@ $(function() {
 			lastDate = msgDate;
 		});
 
-		scrollable.find(".show-more-button").prop("disabled", false);
+		scrollable.find(".show-more-button").prop("disabled", false).data("scroll", position).removeClass("hide");
 	});
 
 	socket.on("network", function(data) {
@@ -1034,7 +1034,7 @@ $(function() {
 			setNick(self.closest(".network").data("nick"));
 		}
 
-		var chanChat = chan.find(".chat");
+		var chanChat = chan.find(".chat").off("scroll");
 		if (chanChat.length > 0 && chan.data("type") !== "special") {
 			chanChat.sticky();
 		}
@@ -1045,6 +1045,19 @@ $(function() {
 		}
 
 		focus();
+
+		chanChat.on("scroll", function() {
+			var button = $(this).find(".show-more.show .show-more-button");
+			if ($(this).scrollTop() < 50 && $(this).find(".msg").length >= 100) {
+				if (!button.data("loading")) {
+					button.data("scroll", false).data("loading", true).click();
+				} else if (button.data("scroll")) {
+					$(this).scrollTop(button.data("scroll"));
+				}
+			} else if (button.data("loading")) {
+				button.data("loading", false);
+			}
+		});
 	});
 
 	sidebar.on("click", "#sign-out", function() {
@@ -1189,7 +1202,7 @@ $(function() {
 	chat.on("click", ".show-more-button", function() {
 		var self = $(this);
 		var count = self.parent().next(".messages").children(".msg").length;
-		self.prop("disabled", true);
+		self.prop("disabled", true).addClass("hide");
 		socket.emit("more", {
 			target: self.data("id"),
 			count: count
