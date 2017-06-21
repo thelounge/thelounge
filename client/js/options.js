@@ -1,4 +1,5 @@
 "use strict";
+
 const $ = require("jquery");
 const settings = $("#settings");
 const userStyles = $("#user-specified-css");
