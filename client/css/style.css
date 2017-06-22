@@ -1960,3 +1960,7 @@ kbd {
 ::-webkit-scrollbar-thumb:vertical:active {
 	background: rgba(0, 0, 0, .6);
 }
+
+.clipboard-only {
+	display: none;
+}

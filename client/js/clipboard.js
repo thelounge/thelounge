@@ -5,37 +5,26 @@ const $ = require("jquery");
 function copyMessages(event) {
 	// Get the selected text
 	const selection = window.getSelection();
-	var copyLines = [];
+	var copyParts = [];
 	var copyText = "";
 
 	if (selection.anchorNode === selection.focusNode) {
-		// Selection does not span messages
-		copyText = selection.toString();
+		// Selection does not span nodes
+		if (selection.focusNode.parentElement.classList.contains("clipboard")) {
+			// Selection is inside an element that has the clipboard class
+			copyText = selection.toString();
+		}
 	} else {
-		// Get the first range
+		// Selection does span nodes
 		const range = selection.getRangeAt(0);
 		const documentFragment = range.cloneContents();
-		const messages = documentFragment.querySelectorAll(".msg");
+		const parts = documentFragment.querySelectorAll(".clipboard");
 
-		messages.forEach(function(message) {
-			const el = $("#" + message.id);
-			if (el) {
-				const time = el.find(".time").get(0).innerText;
-				let from = "";
-				const fromEl = el.find(".from .user").get(0);
-				if (fromEl) {
-					from = fromEl.innerText;
-				}
-				const text = el.find(".text").get(0).innerText;
-				if (from !== "") {
-					copyLines.push(time + " <" + from + "> " + text);
-				} else {
-					copyLines.push(time + " " + text);
-				}
-			}
+		parts.forEach(function(part) {
+			copyParts.push(part.innerText);
 		});
 
-		copyText = copyLines.join("\n");
+		copyText = copyParts.join("");
 	}
 
 	(event.originalEvent.clipboardData || window.clipboardData).setData("Text", copyText);
