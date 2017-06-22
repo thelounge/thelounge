@@ -93,11 +93,12 @@ function fetch(url, cb) {
 		return;
 	}
 	var length = 0;
-	var limit = 1024 * 10;
+	var limit = Helper.config.prefetchMaxImageSize * 1024;
 	req
 		.on("response", function(res) {
-			if (!(/(text\/html|application\/json)/.test(res.headers["content-type"]))) {
-				res.req.abort();
+			if (!(/(image\/.+)/.test(res.headers["content-type"]))) {
+				// if not image, limit download to 10kb, since we need only meta tags
+				limit = 1024 * 10;
 			}
 		})
 		.on("error", function() {})
@@ -113,14 +114,13 @@ function fetch(url, cb) {
 				return;
 			}
 
-			var body;
-			var type;
-			var size = req.response.headers["content-length"];
-			try {
-				body = JSON.parse(data);
-			} catch (e) {
-				body = {};
+			let type;
+			let size = parseInt(req.response.headers["content-length"], 10) || length;
+
+			if (size < length) {
+				size = length;
 			}
+
 			try {
 				type = req.response.headers["content-type"].split(/ *; */).shift();
 			} catch (e) {
@@ -128,7 +128,6 @@ function fetch(url, cb) {
 			}
 			data = {
 				text: data,
-				body: body,
 				type: type,
 				size: size
 			};
