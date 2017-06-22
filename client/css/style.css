@@ -197,6 +197,7 @@ kbd {
 #settings #play:before,
 #form #submit:before,
 #chat .invite .from:before,
+#chat .condensed .expander:before,
 #chat .join .from:before,
 #chat .kick .from:before,
 #chat .part .from:before,
@@ -282,6 +283,22 @@ kbd {
 #chat .nick .from:before {
 	content: "\f007"; /* http://fontawesome.io/icon/user/ */
 	color: #2ecc40;
+}
+
+#chat .condensed {
+	cursor: pointer;
+}
+
+#chat .condensed div {
+	cursor: default;
+}
+
+#chat .condensed .expander:before {
+	content: "\f0d7"; /* http://fontawesome.io/icon/caret-down/ */
+}
+
+#chat .condensed.closed .expander:before {
+	content: "\f0da"; /* http://fontawesome.io/icon/caret-right/ */
 }
 
 #chat .join .from:before {
@@ -801,6 +818,18 @@ kbd {
 	display: block;
 }
 
+#chat .condensed {
+	flex-wrap: wrap;
+}
+
+#chat .condensed .msg {
+	flex-basis: 100%;
+}
+
+#chat .condensed.closed .msg {
+	display: none;
+}
+
 #windows .header .topic,
 .messages .msg,
 .sidebar {
@@ -1092,15 +1121,17 @@ kbd {
 	color: #555;
 }
 
-#chat.hide-join .join,
-#chat.hide-mode .mode,
-#chat.hide-motd .motd,
-#chat.hide-nick .nick,
-#chat.hide-part .part,
-#chat.hide-quit .quit {
+#chat.hide-optional .join,
+#chat.hide-optional .mode,
+#chat.hide-optional .nick,
+#chat.hide-optional .part,
+#chat.hide-optional .quit,
+#chat.hide-optional .condensed,
+#chat.hide-motd .motd {
 	display: none !important;
 }
 
+#chat .condensed .content,
 #chat .join .content,
 #chat .kick .content,
 #chat .mode .content,
@@ -2129,4 +2160,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #chat .action .text,
 #chat table.channel-list .topic {
 	white-space: pre-wrap;
+}
+
+.hide-text {
+	color: transparent !important;
 }

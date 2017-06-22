@@ -11,16 +11,13 @@ const chat = $("#chat");
 
 const options = $.extend({
 	coloredNicks: true,
+	condense: true,
 	desktopNotifications: false,
-	join: true,
 	links: true,
-	mode: true,
 	motd: true,
-	nick: true,
 	notification: true,
 	notifyAllMessages: false,
-	part: true,
-	quit: true,
+	optional: true,
 	showSeconds: false,
 	theme: $("#theme").attr("href").replace(/^themes\/(.*).css$/, "$1"), // Extracts default theme name, set on the server configuration
 	thumbnails: true,
@@ -66,15 +63,7 @@ settings.on("change", "input, select, textarea", function() {
 
 	storage.set("settings", JSON.stringify(options));
 
-	if ([
-		"join",
-		"mode",
-		"motd",
-		"nick",
-		"part",
-		"quit",
-		"notifyAllMessages",
-	].indexOf(name) !== -1) {
+	if (name === "optional" || name === "motd") {
 		chat.toggleClass("hide-" + name, !self.prop("checked"));
 	} else if (name === "coloredNicks") {
 		chat.toggleClass("colored-nicks", self.prop("checked"));

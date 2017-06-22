@@ -8,8 +8,9 @@ const templates = require("../../views");
 
 socket.on("msg", function(data) {
 	const msg = render.buildChatMessage(data);
-	const target = data.chan;
-	const channel = chat.find("#chan-" + target);
+	const targetId = data.chan;
+	const target = "#chan-" + targetId;
+	const channel = chat.find(target);
 	const container = channel.find(".messages");
 
 	const activeChannelId = chat.find(".chan.active").data("id");
@@ -19,7 +20,7 @@ socket.on("msg", function(data) {
 	}
 
 	// Check if date changed
-	const prevMsg = $(container.find(".msg")).last();
+	let prevMsg = $(container.find(".msg")).last();
 	const prevMsgTime = new Date(prevMsg.attr("data-time"));
 	const msgTime = new Date(msg.attr("data-time"));
 
@@ -29,17 +30,26 @@ socket.on("msg", function(data) {
 	}
 
 	if (prevMsgTime.toDateString() !== msgTime.toDateString()) {
+		var parent = prevMsg.parent();
+		if (parent.hasClass("condensed")) {
+			prevMsg = parent;
+		}
 		prevMsg.after(templates.date_marker({msgDate: msgTime}));
 	}
 
 	// Add message to the container
-	container
-		.append(msg)
-		.trigger("msg", [
-			"#chan-" + target,
-			data
-		])
-		.trigger("keepToBottom");
+	render.appendMessage(
+		container,
+		data.chan,
+		$(target).attr("data-type"),
+		data.msg.type,
+		msg
+	);
+
+	container.trigger("msg", [
+		target,
+		data
+	]).trigger("keepToBottom");
 
 	var lastVisible = container.find("div:visible").last();
 	if (data.msg.self
@@ -52,7 +62,7 @@ socket.on("msg", function(data) {
 	}
 
 	// Message arrived in a non active channel, trim it to 100 messages
-	if (activeChannelId !== target && container.find(".msg").slice(0, -100).remove().length) {
+	if (activeChannelId !== targetId && container.find(".msg").slice(0, -100).remove().length) {
 		channel.find(".show-more").addClass("show");
 
 		// Remove date-seperators that would otherwise
