@@ -152,6 +152,11 @@ import jQuery from "jquery";
 
 					// Update element with the completed text.
 					var text = value.substr(0, self[0].selectionStart - last.length) + word;
+
+					if (text === word) {
+						text += ":";
+					}
+
 					self.val(text);
 
 					// Put the cursor at the end after completion.
