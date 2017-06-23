@@ -1925,6 +1925,10 @@ kbd {
 		padding: 0;
 	}
 
+	#chat .msg.toggle .time {
+		display: none;
+	}
+
 	#chat .date-marker,
 	#chat .unread-marker {
 		margin: 0;
