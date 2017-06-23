@@ -39,7 +39,6 @@ body {
 	color: #222;
 	font: 16px Lato, sans-serif;
 	margin: 0;
-
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
@@ -1722,10 +1721,7 @@ kbd {
 	border-right-color: #222;
 }
 
-@media only screen and (-webkit-min-device-pixel-ratio: 2),
-	only screen and (min--moz-device-pixel-ratio: 2),
-	only screen and (-moz-min-device-pixel-ratio: 2),
-	only screen and (min-device-pixel-ratio: 2),
+@media
 	only screen and (min-resolution: 192dpi),
 	only screen and (min-resolution: 2dppx) {
 	.tooltipped-w:after {
