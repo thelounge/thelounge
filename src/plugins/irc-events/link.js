@@ -31,6 +31,10 @@ module.exports = function(client, chan, originalMsg) {
 
 	const link = escapeHeader(links[0]);
 	fetch(link, function(res) {
+		if (res === null) {
+			return;
+		}
+
 		parse(msg, link, res, client);
 	});
 };
@@ -90,7 +94,7 @@ function fetch(url, cb) {
 			}
 		});
 	} catch (e) {
-		return;
+		return cb(null);
 	}
 	var length = 0;
 	var limit = Helper.config.prefetchMaxImageSize * 1024;
@@ -111,7 +115,11 @@ function fetch(url, cb) {
 		}))
 		.pipe(es.wait(function(err, data) {
 			if (err) {
-				return;
+				return cb(null);
+			}
+
+			if (req.response.statusCode < 200 || req.response.statusCode > 299) {
+				return cb(null);
 			}
 
 			let type;
