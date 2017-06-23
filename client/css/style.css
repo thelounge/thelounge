@@ -1822,6 +1822,7 @@ kbd {
 	#chat .from:after {
 		position: absolute;
 		right: 0;
+		bottom: 0;
 		width: 10px;
 		height: 100%;
 		background: linear-gradient(to right, rgba(255, 255, 255, .5) 0%, rgba(255, 255, 255, 1) 100%);
