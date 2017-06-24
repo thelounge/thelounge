@@ -10,6 +10,7 @@ const constants = require("./constants");
 const condensed = require("./condensed");
 const JoinChannel = require("./join-channel");
 const helpers_parse = require("./libs/handlebars/parse");
+const t = require("./translate")
 
 const chat = $("#chat");
 const sidebar = $("#sidebar");
@@ -109,6 +110,10 @@ function buildChatMessage(msg) {
 	msg.previews.forEach((preview) => {
 		renderPreview(preview, renderedMessage);
 	});
+
+	if (template === "msg") { // translates -every- message... is that okay? TODO: remove this comment (or this block)
+		content.html(t.translate(msg.text, msg));
+	}
 
 	return renderedMessage;
 }

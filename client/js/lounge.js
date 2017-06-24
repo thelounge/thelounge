@@ -6,12 +6,14 @@ const $ = require("jquery");
 const moment = require("moment");
 const URI = require("urijs");
 const fuzzy = require("fuzzy");
+const i18n = require("i18next");
 
 // our libraries
 require("./libs/jquery/inputhistory");
 require("./libs/jquery/stickyscroll");
 const slideoutMenu = require("./libs/slideout");
 const templates = require("../views");
+const translate = require("./translate");
 const socket = require("./socket");
 const render = require("./render");
 require("./socket-events");
@@ -26,6 +28,10 @@ const JoinChannel = require("./join-channel");
 $(function() {
 	const sidebar = $("#sidebar, #footer");
 	const chat = $("#chat");
+
+	var options = require("./options");
+	// TODO: have debug be from the server settings
+	translate.init({lang: options.lang, debug: true}, i18n);
 
 	$(document.body).data("app-name", document.title);
 
@@ -498,8 +504,7 @@ $(function() {
 		if (chan.hasClass("lobby")) {
 			cmd = "/quit";
 			const server = chan.find(".name").html();
-
-			if (!confirm("Disconnect from " + server + "?")) { // eslint-disable-line no-alert
+			if (!confirm(i18n.t("disconnect_from", {server: server}))) { // eslint-disable-line no-alert
 				return false;
 			}
 		}

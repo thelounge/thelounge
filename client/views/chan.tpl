@@ -16,7 +16,7 @@
 	<span class="badge{{#if highlight}} highlight{{/if}}">{{#if unread}}{{roundBadgeNumber unread}}{{/if}}</span>
 	{{#notEqual type "lobby"}}
 		<span class="close-tooltip tooltipped tooltipped-w" aria-label="Close">
-			<button class="close" aria-label="Close"></button>
+				<button class="close" aria-label="{{translate "close_channel"}}"></button>
 		</span>
 	{{/notEqual}}
 	<span class="name" title="{{name}}">{{name}}</span>

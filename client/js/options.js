@@ -5,7 +5,7 @@ const escapeRegExp = require("lodash/escapeRegExp");
 const userStyles = $("#user-specified-css");
 const storage = require("./localStorage");
 const tz = require("./libs/handlebars/tz");
-
+const t = require("./translate");
 const windows = $("#windows");
 const chat = $("#chat");
 
@@ -16,6 +16,7 @@ const options = {
 	coloredNicks: true,
 	desktopNotifications: false,
 	highlights: [],
+	lng: 'en',
 	links: true,
 	motd: true,
 	notification: true,
@@ -24,6 +25,8 @@ const options = {
 	statusMessages: "condensed",
 	theme: $("#theme").data("server-theme"),
 	media: true,
+	lang: "en",
+	thumbnails: true,
 	userStyles: userStyles.text(),
 };
 let userOptions = JSON.parse(storage.get("settings")) || {};
@@ -67,6 +70,8 @@ module.exports.initialize = () => {
 				.prop("checked", true);
 		} else if (i === "theme") {
 			$("#theme").prop("href", "themes/" + options[i] + ".css");
+			settings.find("select[name=" + i + "]").val(options[i]);
+		} else if (i === "lang") {
 			settings.find("select[name=" + i + "]").val(options[i]);
 		} else if (options[i]) {
 			settings.find("input[name=" + i + "]").prop("checked", true);

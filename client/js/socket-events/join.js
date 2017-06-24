@@ -5,11 +5,17 @@ const socket = require("../socket");
 const render = require("../render");
 const chat = $("#chat");
 const templates = require("../../views");
+const t = require("../translate");
 const sidebar = $("#sidebar");
 
 socket.on("join", function(data) {
 	const id = data.network;
 	const network = sidebar.find("#network-" + id);
+
+	if (data.chan.type === "special") {
+		data.chan.name = t.translate(data.chan.chan, data.chan);
+	}
+
 	network.append(
 		templates.chan({
 			channels: [data.chan],

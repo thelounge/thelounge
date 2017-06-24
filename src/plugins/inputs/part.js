@@ -22,7 +22,7 @@ exports.input = function(network, chan, cmd, args) {
 	if (target.type === Chan.Type.LOBBY) {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
-			text: "You can not part from networks, use /quit instead.",
+			text: "server.error.cannot_part_network",
 		}));
 		return;
 	}

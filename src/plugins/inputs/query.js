@@ -28,7 +28,7 @@ exports.input = function(network, chan, cmd, args) {
 	if (network.irc.network.options.CHANTYPES && network.irc.network.options.CHANTYPES.includes(char)) {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
-			text: "You can not open query windows for channels, use /join instead.",
+			text: "server.error.cannot_query_channel",
 		}));
 		return;
 	}
@@ -38,6 +38,7 @@ exports.input = function(network, chan, cmd, args) {
 			chan.pushMessage(this, new Msg({
 				type: Msg.Type.ERROR,
 				text: "You can not open query windows for names starting with a user prefix.",
+				text: "server.error.cannot_query_prefix",
 			}));
 			return;
 		}
