@@ -43,7 +43,7 @@
     "bcryptjs": "2.4.3",
     "cheerio": "0.22.0",
     "colors": "1.1.2",
-    "commander": "2.9.0",
+    "commander": "2.10.0",
     "event-stream": "3.3.4",
     "express": "4.15.2",
     "express-handlebars": "3.0.0",
