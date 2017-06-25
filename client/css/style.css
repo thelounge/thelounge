@@ -1089,11 +1089,19 @@ kbd {
 }
 
 #chat .error,
-#chat .error .from,
-#chat .channel .highlight .from,
-#chat .channel .highlight .text,
-#chat .channel .highlight .user {
+#chat .error .from {
 	color: #f00;
+}
+
+#chat .channel .highlight .time,
+#chat .channel .highlight .from {
+	color: #fff;
+	background-color: #ff8a80;
+	border-color: #ff8a80;
+}
+
+#chat .channel .highlight .from .user {
+	color: #fff;
 }
 
 #chat .msg.toggle .time {
