@@ -10,6 +10,9 @@
 	<link rel="stylesheet" href="css/bootstrap.css">
 	<link rel="stylesheet" href="css/style.css">
 	<link id="theme" rel="stylesheet" href="{{ theme }}">
+	{{#each stylesheets}}
+		<link rel="stylesheet" href="{{this}}">
+	{{/each}}
 	<style id="user-specified-css"></style>
 
 	<title>The Lounge</title>
@@ -875,6 +878,10 @@
 
 	<script src="js/bundle.vendor.js"></script>
 	<script src="js/bundle.js"></script>
+
+	{{#each scripts}}
+		<script src="{{this}}"></script>
+	{{/each}}
 
 	</body>
 </html>

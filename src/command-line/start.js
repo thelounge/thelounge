@@ -36,5 +36,8 @@ program
 		Helper.config.bind = options.bind || Helper.config.bind;
 		Helper.config.public = mode;
 
+		var packages = require("../packages");
+		packages.emit("cmd:start");
+
 		server();
 	});
