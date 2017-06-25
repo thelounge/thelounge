@@ -9,7 +9,7 @@ Use the following template for each new release, built on recommendations from h
 ```md
 ## vX.Y.Z - YYYY-MM-DD
 
-For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/vPRE.VIO.US...vX.Y.Z) and [milestone](https://github.com/thelounge/lounge/milestone/XXX?closed=1).
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/vPRE.VIO.US...vX.Y.Z) and [milestone](https://github.com/thelounge/lounge/milestone/XX?closed=1).
 
 DESCRIPTION, ANNOUNCEMENT, ...
 
@@ -31,6 +31,56 @@ All sections are explained on the link above, they are all optional, and each of
 - Description ([#PR_NUMBER](https://github.com/thelounge/lounge/pull/PR_NUMBER) by [@GITHUB_USERNAME](https://github.com/GITHUB_USERNAME))
 ```
 -->
+
+## v2.3.2 - 2017-06-25
+
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.3.1...v2.3.2) and [milestone](https://github.com/thelounge/lounge/milestone/24?closed=1).
+
+This patch releases brings a lot of fixes and small improvements here and there, as well as the ability to display seconds in timestamps, a long-awaited feature!
+
+### Added
+
+- Add a client option to display seconds in timestamps ([#1141](https://github.com/thelounge/lounge/pull/1141) by [@bews](https://github.com/bews))
+- Add "Reload page" button when the client fails to load ([#1150](https://github.com/thelounge/lounge/pull/1150) by [@bews](https://github.com/bews))
+
+### Changed
+
+- Treat `click` as a read activity ([#1214](https://github.com/thelounge/lounge/pull/1214) by [@xPaw](https://github.com/xPaw))
+- Fade out for long nicks ([#1158](https://github.com/thelounge/lounge/pull/1158) by [@bews](https://github.com/bews), [#1253](https://github.com/thelounge/lounge/pull/1253) by [@xPaw](https://github.com/xPaw))
+- Include trickery to reduce paints and improve performance ([#1120](https://github.com/thelounge/lounge/pull/1120) by [@xPaw](https://github.com/xPaw), [#1083](https://github.com/thelounge/lounge/pull/1083) by [@bews](https://github.com/bews))
+- Make everything un-selectable by default ([#1233](https://github.com/thelounge/lounge/pull/1233) by [@xPaw](https://github.com/xPaw))
+- Handle images with unknown size in prefetch ([#1246](https://github.com/thelounge/lounge/pull/1246) by [@bews](https://github.com/bews))
+- Update production dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `spdy` ([#1184](https://github.com/thelounge/lounge/pull/1184))
+
+### Fixed
+
+- Stop showing the unread messages marker when `joins`/`parts`/`quits`/etc. are hidden ([#1016](https://github.com/thelounge/lounge/pull/1016) by [@swordbeta](https://github.com/swordbeta))
+- Correctly finish scroll animation when using page keys ([#1244](https://github.com/thelounge/lounge/pull/1244) by [@xPaw](https://github.com/xPaw))
+- Hide link time element on small devices ([#1261](https://github.com/thelounge/lounge/pull/1261) by [@xPaw](https://github.com/xPaw))
+- Fix MOTD underline in Safari ([#1217](https://github.com/thelounge/lounge/pull/1217) by [@MaxLeiter](https://github.com/MaxLeiter))
+
+### Documentation
+
+In the main repository:
+
+- Clarify kilobyte ambiguity ([#1248](https://github.com/thelounge/lounge/pull/1248) by [@xPaw](https://github.com/xPaw))
+- Fix stray end tag ([#1251](https://github.com/thelounge/lounge/pull/1251) by [@xPaw](https://github.com/xPaw))
+
+### Internals
+
+- Update to ESLint 4 and enforce extra rules ([#1231](https://github.com/thelounge/lounge/pull/1231) by [@xPaw](https://github.com/xPaw))
+- Improve the PR tester script a bit ([#1240](https://github.com/thelounge/lounge/pull/1240) by [@astorije](https://github.com/astorije))
+- Add modules for socket events ([#1175](https://github.com/thelounge/lounge/pull/1175) by [@YaManicKill](https://github.com/YaManicKill))
+- Ignore `package-lock.json` ([#1247](https://github.com/thelounge/lounge/pull/1247) by [@xPaw](https://github.com/xPaw))
+- Use `stylelint-config-standard` ([#1249](https://github.com/thelounge/lounge/pull/1249) by [@xPaw](https://github.com/xPaw))
+- Update development dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `babel-core` ([#1212](https://github.com/thelounge/lounge/pull/1212))
+  - `babel-loader` ([#1245](https://github.com/thelounge/lounge/pull/1245))
+  - `nyc` ([#1198](https://github.com/thelounge/lounge/pull/1198))
+  - `stylelint` ([#1215](https://github.com/thelounge/lounge/pull/1215), [#1230](https://github.com/thelounge/lounge/pull/1230))
+  - `chai` ([#1206](https://github.com/thelounge/lounge/pull/1206))
+  - `webpack` ([#1238](https://github.com/thelounge/lounge/pull/1238))
 
 ## v2.3.1 - 2017-06-09
 
