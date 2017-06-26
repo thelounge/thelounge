@@ -30,6 +30,10 @@ const options = $.extend({
 
 module.exports = options;
 
+module.exports.shouldOpenMessagePreview = function(type) {
+	return (options.links && type === "link") || (options.thumbnails && type === "image");
+};
+
 for (var i in options) {
 	if (i === "userStyles") {
 		if (!/[?&]nocss/.test(window.location.search)) {

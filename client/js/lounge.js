@@ -681,25 +681,6 @@ $(function() {
 		});
 	});
 
-	chat.on("click", ".toggle-button", function() {
-		var self = $(this);
-		var localChat = self.closest(".chat");
-		var bottom = localChat.isScrollBottom();
-		var content = self.parent().next(".toggle-content");
-		if (bottom && !content.hasClass("show")) {
-			var img = content.find("img");
-			if (img.length !== 0 && !img.width()) {
-				img.on("load", function() {
-					localChat.scrollBottom();
-				});
-			}
-		}
-		content.toggleClass("show");
-		if (bottom) {
-			localChat.scrollBottom();
-		}
-	});
-
 	var forms = $("#sign-in, #connect, #change-password");
 
 	windows.on("show", "#sign-in", function() {
