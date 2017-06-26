@@ -24,6 +24,7 @@ exports.input = function({irc}, chan, cmd, args) {
 		if (args.length === 0) {
 			chan.pushMessage(this, new Msg({
 				type: Msg.Type.ERROR,
+				translate: true,
 				text: "server.error.ban_usage",
 				cmd: cmd,
 			}));

@@ -10,6 +10,7 @@ module.exports = function(irc, network) {
 
 	network.channels[0].pushMessage(client, new Msg({
 		text: "server.network_created",
+		translate: true,
 		host: network.host,
 		port: network.port,
 	}), true);
@@ -18,6 +19,7 @@ module.exports = function(irc, network) {
 		if (network.irc.network.cap.enabled.length > 0) {
 			network.channels[0].pushMessage(client, new Msg({
 				text: "server.enabled_capabilities",
+				translate: true,
 				caps: network.irc.network.cap.enabled.join(", "),
 			}), true);
 		}
@@ -64,6 +66,10 @@ module.exports = function(irc, network) {
 
 		network.channels[0].pushMessage(client, new Msg({
 			text: "server.connected_network",
+<<<<<<< HEAD
+=======
+			translate: true
+>>>>>>> Template translations
 		}), true);
 
 		sendStatus();
@@ -72,6 +78,10 @@ module.exports = function(irc, network) {
 	irc.on("close", function() {
 		network.channels[0].pushMessage(client, new Msg({
 			text: "server.disconnected_network_will_not_reconnect",
+<<<<<<< HEAD
+=======
+			translate: true
+>>>>>>> Template translations
 		}), true);
 	});
 
@@ -115,13 +125,19 @@ module.exports = function(irc, network) {
 		network.channels[0].pushMessage(client, new Msg({
 			type: Msg.Type.ERROR,
 			text: "server.error.socket_error",
+<<<<<<< HEAD
 			err: err,
+=======
+			translate: true,
+			err: err
+>>>>>>> Template translations
 		}), true);
 	});
 
 	irc.on("reconnecting", function(data) {
 		network.channels[0].pushMessage(client, new Msg({
 			text: "server.disconnected_retry",
+			translate: true,
 			seconds: Math.round(data.wait / 1000),
 			attempt: data.attempt,
 			max_retries: data.max_retries,
@@ -131,6 +147,10 @@ module.exports = function(irc, network) {
 	irc.on("ping timeout", function() {
 		network.channels[0].pushMessage(client, new Msg({
 			text: "server.ping_timeout",
+<<<<<<< HEAD
+=======
+			translate: true
+>>>>>>> Template translations
 		}), true);
 	});
 

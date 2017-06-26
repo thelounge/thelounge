@@ -4,7 +4,7 @@ const $ = require("jquery");
 const io = require("socket.io-client");
 const utils = require("./utils");
 const path = window.location.pathname + "socket.io/";
-
+const t = require("./translate");
 const socket = io({
 	transports: $(document.body).data("transports"),
 	path: path,
@@ -21,7 +21,7 @@ socket.on("reconnecting", function(attempt) {
 });
 
 socket.on("connecting", function() {
-	$("#loading-page-message, #connection-error").text("Connecting…");
+	$("#loading-page-message, #connection-error").text(t.translate("client.connecting"));
 });
 
 socket.on("connect", function() {
@@ -30,11 +30,11 @@ socket.on("connect", function() {
 	// nothing is sent to the server that might have happened.
 	socket.sendBuffer = [];
 
-	$("#loading-page-message, #connection-error").text("Finalizing connection…");
+	$("#loading-page-message, #connection-error").text(t.translate("client.finalizing_connection"));
 });
 
 socket.on("authorized", function() {
-	$("#loading-page-message, #connection-error").text("Loading messages…");
+	$("#loading-page-message, #connection-error").text(t.translate("client.authorized"));
 });
 
 function handleDisconnect(data) {

@@ -11,7 +11,8 @@ module.exports = function(irc, network) {
 		network.chanCache = [];
 
 		updateListStatus(new Msg({
-			text: "Loading channel list, this can take a moment...",
+			translate: true,
+			text: "server.loading_channel_list",
 			type: "channel_list_loading",
 		}));
 	});

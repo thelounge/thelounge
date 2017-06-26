@@ -34,10 +34,39 @@ const serverHash = Math.floor(Date.now() * Math.random());
 
 let manager = null;
 
+const i18n = require("i18next");
+const i18nBackend = require("i18next-node-fs-backend");
+let lang = "en-US";
+
 module.exports = function() {
 	log.info(`The Lounge ${colors.green(Helper.getVersion())} \
 (Node.js ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${process.arch})`);
 	log.info(`Configuration file: ${colors.green(Helper.getConfigPath())}`);
+
+	if (fs.existsSync(`client/locales/${Helper.config.lang}.json`)) {
+		lang = Helper.config.lang;
+	} else {
+		log.warn(`Language file for ${Helper.config.lang} not found. Defaulting to en-US.`);
+	}
+
+	const opts =
+	{
+		loadPath: "client/locales/{{lng}}.json",
+	};
+
+	i18n
+		.use(i18nBackend)
+		.init({
+			backend: opts,
+			lng: lang, load: "all",
+			fallbackLng: [lang, "fr"]
+		}, (err) => {
+			err.forEach(function(e) {
+				if (e.errno === -2) { // ENOENT
+					log.warn(`Language file ${e.path} not found.`);
+				}
+			});
+		});
 
 	const app = express()
 		.disable("x-powered-by")
@@ -515,10 +544,10 @@ function getClientConfiguration() {
 		"prefetch",
 	]);
 
-	config.languages = fs.readdirSync("client/translations/").filter(function(langFile) {
+	config.languages = fs.readdirSync("client/locales/").filter(function(langFile) {
 		return langFile.endsWith(".json");
-	}).map(function(lang) {
-		const filename = lang.slice(0, -5);
+	}).map(function(language) {
+		const filename = language.slice(0, -5);
 		return {
 			name: filename
 		};

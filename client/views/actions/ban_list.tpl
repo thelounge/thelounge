@@ -1,9 +1,9 @@
 <table class="ban-list">
 	<thead>
 		<tr>
-			<th class="hostmask">Banned</th>
-			<th class="banned_by">Banned By</th>
-			<th class="banned_at">Banned At</th>
+			<th class="hostmask">{{translate 'client.ban_list.banned'}}</th>
+			<th class="banned_by">{{translate 'client.ban_list.banned_by'}}</th>
+			<th class="banned_at">{{translate 'client.ban_list.banned_at'}}</th>
 		</tr>
 	</thead>
 	<tbody>

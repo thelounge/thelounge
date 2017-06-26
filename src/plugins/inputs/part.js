@@ -22,6 +22,7 @@ exports.input = function(network, chan, cmd, args) {
 	if (target.type === Chan.Type.LOBBY) {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
+			translate: true,
 			text: "server.error.cannot_part_network",
 		}));
 		return;

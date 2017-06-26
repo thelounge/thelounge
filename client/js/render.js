@@ -12,6 +12,7 @@ const JoinChannel = require("./join-channel");
 const helpers_parse = require("./libs/handlebars/parse");
 const t = require("./translate")
 
+
 const chat = $("#chat");
 const sidebar = $("#sidebar");
 
@@ -111,7 +112,7 @@ function buildChatMessage(msg) {
 		renderPreview(preview, renderedMessage);
 	});
 
-	if (template === "msg") { // translates -every- message... is that okay? TODO: remove this comment (or this block)
+	if (msg.translate) {
 		content.html(t.translate(msg.text, msg));
 	}
 
@@ -167,7 +168,7 @@ function renderChannelUsers(data) {
 
 	const search = users
 		.find(".search")
-		.prop("placeholder", nicks.length + " " + (nicks.length === 1 ? "user" : "users"));
+		.prop("placeholder", t.translate("client.users", {count: nicks.length}));
 
 	users
 		.data("nicks", nicks)

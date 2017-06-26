@@ -10,7 +10,8 @@ module.exports = function(irc, network) {
 
 		const lobby = network.channels[0];
 		const msg = new Msg({
-			text: "now_known_as",
+			translate: true,
+			text: "server.now_known_as",
 			new_nick: data.nick,
 		});
 		lobby.pushMessage(client, msg);

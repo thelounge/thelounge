@@ -16,7 +16,7 @@ const options = {
 	coloredNicks: true,
 	desktopNotifications: false,
 	highlights: [],
-	lng: 'en',
+	lng: "en",
 	links: true,
 	motd: true,
 	notification: true,
@@ -25,7 +25,7 @@ const options = {
 	statusMessages: "condensed",
 	theme: $("#theme").data("server-theme"),
 	media: true,
-	lang: "en",
+	lang: $("html")[0].lang, // server default language
 	thumbnails: true,
 	userStyles: userStyles.text(),
 };

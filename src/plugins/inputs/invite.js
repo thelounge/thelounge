@@ -13,6 +13,7 @@ exports.input = function({irc}, chan, cmd, args) {
 	} else {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
+			translate: true,
 			text: "server.error.command_in_channels_or_spec_target",
 			cmd: cmd,
 		}));

@@ -2,6 +2,7 @@
 
 const $ = require("jquery");
 const escape = require("css.escape");
+const t = require("./translate");
 const input = $("#input");
 
 var serverHash = -1; // eslint-disable-line no-var
@@ -111,7 +112,7 @@ function toggleNotificationMarkers(newState) {
 function confirmExit() {
 	if ($("body").hasClass("public")) {
 		window.onbeforeunload = function() {
-			return "Are you sure you want to navigate away from this page?";
+			return t.translate("client.exit_warning");
 		};
 	}
 }

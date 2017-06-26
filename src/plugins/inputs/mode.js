@@ -18,6 +18,7 @@ exports.input = function({irc, nick}, chan, cmd, args) {
 		if (chan.type !== Chan.Type.CHANNEL) {
 			chan.pushMessage(this, new Msg({
 				type: Msg.Type.ERROR,
+				translate: true,
 				text: "server.error.command_in_channels",
 				cmd: cmd,
 			}));
@@ -28,6 +29,7 @@ exports.input = function({irc, nick}, chan, cmd, args) {
 		if (args.length === 0) {
 			chan.pushMessage(this, new Msg({
 				type: Msg.Type.ERROR,
+				translate: true,
 				text: "server.error.mode_usage",
 				cmd: cmd,
 			}));
