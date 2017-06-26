@@ -6,8 +6,9 @@ const templates = require("../../views");
 const options = require("../options");
 
 socket.on("toggle", function(data) {
-	const toggle = $("#toggle-" + data.id);
-	toggle.parent().after(templates.toggle({toggle: data}));
+	$(`#msg-${data.id}.toggle .text`).append(templates.toggle({toggle: data}));
+	const toggle = $(`#toggle-${data.id}`);
+
 	switch (data.type) {
 	case "link":
 		if (options.links) {

@@ -9,9 +9,6 @@
 	</span>
 	{{#equal type "toggle"}}
 		<span class="text">
-			<div class="force-newline">
-				<button id="toggle-{{id}}" class="toggle-button" aria-label="Toggle prefetched media">···</button>
-			</div>
 			{{#if toggle}}
 				{{> toggle}}
 			{{/if}}
