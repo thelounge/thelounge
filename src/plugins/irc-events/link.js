@@ -55,8 +55,8 @@ function parse(msg, url, res, client) {
 		toggle.type = "link";
 		toggle.head = $("title").text();
 		toggle.body =
-			$("meta[name=description]").attr("content")
-			|| $("meta[property=\"og:description\"]").attr("content")
+			$("meta[property=\"og:description\"]").attr("content")
+			|| $("meta[name=\"description\"]").attr("content")
 			|| "No description found.";
 		toggle.thumb =
 			$("meta[property=\"og:image\"]").attr("content")
