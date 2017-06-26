@@ -56,11 +56,11 @@ function parse(msg, url, res, client) {
 		toggle.head =
 			$("meta[property=\"og:title\"]").attr("content")
 			|| $("title").text()
-			|| "No title found.";
+			|| "";
 		toggle.body =
 			$("meta[property=\"og:description\"]").attr("content")
 			|| $("meta[name=\"description\"]").attr("content")
-			|| "No description found.";
+			|| "";
 		toggle.thumb =
 			$("meta[property=\"og:image\"]").attr("content")
 			|| $("meta[name=\"twitter:image:src\"]").attr("content")
@@ -74,11 +74,13 @@ function parse(msg, url, res, client) {
 		// Verify that thumbnail pic exists and is under allowed size
 		if (toggle.thumb.length) {
 			fetch(escapeHeader(toggle.thumb), (resThumb) => {
-				if (!(/^image\/.+/.test(resThumb.type)) || resThumb.size > (Helper.config.prefetchMaxImageSize * 1024)) {
+				if (resThumb === null
+				|| !(/^image\/.+/.test(resThumb.type))
+				|| resThumb.size > (Helper.config.prefetchMaxImageSize * 1024)) {
 					toggle.thumb = "";
 				}
 
-				client.emit("toggle", toggle);
+				emitToggle(client, toggle);
 			});
 
 			return;
@@ -99,6 +101,20 @@ function parse(msg, url, res, client) {
 
 	default:
 		return;
+	}
+
+	emitToggle(client, toggle);
+}
+
+function emitToggle(client, toggle) {
+	// If there is no title but there is preview or description, set title
+	// otherwise bail out and show no preview
+	if (!toggle.head.length) {
+		if (toggle.thumb.length || toggle.body.length) {
+			toggle.head = "Untitled page";
+		} else {
+			return;
+		}
 	}
 
 	client.emit("toggle", toggle);
