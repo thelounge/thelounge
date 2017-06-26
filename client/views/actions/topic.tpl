@@ -1,5 +1,5 @@
 {{#if from}}
-	<span role="button" class="user {{colorClass from}}" data-name="{{from}}">{{mode}}{{from}}</span>
+	{{> ../user_name nick=from}}
 	has changed the topic to:
 {{else}}
 	The topic is:

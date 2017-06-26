@@ -31,4 +31,5 @@ module.exports = {
 	unread_marker: require("./unread_marker.tpl"),
 	user: require("./user.tpl"),
 	user_filtered: require("./user_filtered.tpl"),
+	user_name: require("./user_name.tpl"),
 };
