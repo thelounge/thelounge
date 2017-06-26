@@ -139,8 +139,9 @@ function fetch(url, cb) {
 	req
 		.on("response", function(res) {
 			if (!(/^image\/.+/.test(res.headers["content-type"]))) {
-				// if not image, limit download to 10kb, since we need only meta tags
-				limit = 1024 * 10;
+				// if not image, limit download to 50kb, since we need only meta tags
+				// twitter.com sends opengraph meta tags within ~20kb of data for individual tweets
+				limit = 1024 * 50;
 			}
 		})
 		.on("error", function() {})
