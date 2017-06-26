@@ -62,6 +62,25 @@ function parse(msg, url, res, client) {
 			$("meta[property=\"og:image\"]").attr("content")
 			|| $("meta[name=\"twitter:image:src\"]").attr("content")
 			|| "";
+
+		// Make sure thumbnail is a valid url
+		if (!/^https?:\/\//.test(toggle.thumb)) {
+			toggle.thumb = "";
+		}
+
+		// Verify that thumbnail pic exists and is under allowed size
+		if (toggle.thumb.length) {
+			fetch(escapeHeader(toggle.thumb), (resThumb) => {
+				if (!(/^image\/.+/.test(resThumb.type)) || resThumb.size > (Helper.config.prefetchMaxImageSize * 1024)) {
+					toggle.thumb = "";
+				}
+
+				client.emit("toggle", toggle);
+			});
+
+			return;
+		}
+
 		break;
 
 	case "image/png":
@@ -100,7 +119,7 @@ function fetch(url, cb) {
 	var limit = Helper.config.prefetchMaxImageSize * 1024;
 	req
 		.on("response", function(res) {
-			if (!(/(image\/.+)/.test(res.headers["content-type"]))) {
+			if (!(/^image\/.+/.test(res.headers["content-type"]))) {
 				// if not image, limit download to 10kb, since we need only meta tags
 				limit = 1024 * 10;
 			}
