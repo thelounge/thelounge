@@ -53,7 +53,10 @@ function parse(msg, url, res, client) {
 	case "text/html":
 		var $ = cheerio.load(res.text);
 		toggle.type = "link";
-		toggle.head = $("title").text();
+		toggle.head =
+			$("meta[property=\"og:title\"]").attr("content")
+			|| $("title").text()
+			|| "No title found.";
 		toggle.body =
 			$("meta[property=\"og:description\"]").attr("content")
 			|| $("meta[name=\"description\"]").attr("content")
