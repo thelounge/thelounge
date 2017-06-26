@@ -482,6 +482,9 @@ $(function() {
 		case "quit":
 			channel.find(".msg .user[data-name='" + message.from + "']").addClass("disconnected");
 			break;
+		case "kick":
+			channel.find(".msg .user[data-name='" + message.target + "']").addClass("disconnected");
+			break;
 		}
 	}
 
