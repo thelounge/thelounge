@@ -711,6 +711,7 @@ $(function() {
 			}
 		});
 	});
+
 	if ($("body").hasClass("public")) {
 		$("#connect").one("show", function() {
 			var params = URI(document.location.search);
@@ -733,6 +734,9 @@ $(function() {
 						}
 					}
 				}
+			}
+			if (params.connect) {
+				$(this).find(".btn").click();
 			}
 		});
 	}
