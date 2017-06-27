@@ -75,6 +75,9 @@ $(function() {
 			return value;
 		},
 		replace(value) {
+			if ($("#input").val().split(" ").length === 1) { // first word
+				return value + ":";
+			}
 			return value;
 		},
 		index: 1
