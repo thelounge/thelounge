@@ -69,7 +69,7 @@
     "handlebars": "4.0.10",
     "handlebars-loader": "1.5.0",
     "jquery": "3.2.1",
-    "jquery-textcomplete": "1.8.0",
+    "jquery-textcomplete": "1.8.1",
     "jquery-ui": "1.12.1",
     "mocha": "3.4.2",
     "mousetrap": "1.6.1",
