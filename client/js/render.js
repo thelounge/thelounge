@@ -12,6 +12,11 @@ const condensed = require("./condensed");
 const chat = $("#chat");
 const sidebar = $("#sidebar");
 
+const historyObserver = window.IntersectionObserver ?
+	new window.IntersectionObserver(loadMoreHistory, {
+		root: chat.get(0)
+	}) : null;
+
 module.exports = {
 	appendMessage,
 	buildChannelMessages,
@@ -145,6 +150,10 @@ function renderChannel(data) {
 	if (data.type === "channel") {
 		renderChannelUsers(data);
 	}
+
+	if (historyObserver) {
+		historyObserver.observe(chat.find("#chan-" + data.id + " .show-more").get(0));
+	}
 }
 
 function renderChannelMessages(data) {
@@ -219,4 +228,20 @@ function renderNetworks(data) {
 	if (sidebar.find(".highlight").length) {
 		utils.toggleNotificationMarkers(true);
 	}
+}
+
+function loadMoreHistory(entries) {
+	entries.forEach((entry) => {
+		if (!entry.isIntersecting) {
+			return;
+		}
+
+		var target = $(entry.target).find(".show-more-button");
+
+		if (target.attr("disabled")) {
+			return;
+		}
+
+		target.click();
+	});
 }
