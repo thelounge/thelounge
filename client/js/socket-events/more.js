@@ -12,7 +12,7 @@ socket.on("more", function(data) {
 
 	// get the scrollable wrapper around messages
 	const scrollable = chan.closest(".chat");
-	const heightOld = chan.height();
+	const heightOld = chan.height() - scrollable.scrollTop();
 
 	// If there are no more messages to show, just hide the button and do nothing else
 	if (!data.messages.length) {
