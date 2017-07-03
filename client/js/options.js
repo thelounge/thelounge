@@ -25,7 +25,8 @@ const options = $.extend({
 	theme: $("#theme").attr("href").replace(/^themes\/(.*).css$/, "$1"), // Extracts default theme name, set on the server configuration
 	thumbnails: true,
 	userStyles: userStyles.text(),
-	highlights: []
+	highlights: [],
+	autocomplete: true
 }, JSON.parse(storage.get("settings")));
 
 module.exports = options;
@@ -94,6 +95,12 @@ settings.on("change", "input, select, textarea", function() {
 		chat.find(".msg > .time").each(function() {
 			$(this).text(tz($(this).parent().data("time")));
 		});
+	} else if (name === "autocomplete") {
+		if (self.prop("checked")) {
+			$("#input").trigger("autocomplete:on");
+		} else {
+			$("#input").textcomplete("destroy");
+		}
 	}
 }).find("input")
 	.trigger("change");
