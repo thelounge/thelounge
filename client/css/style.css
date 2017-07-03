@@ -1096,10 +1096,6 @@ kbd {
 	color: #f00;
 }
 
-#chat .msg.toggle .time {
-	visibility: hidden;
-}
-
 #chat .toggle-button {
 	background: #f5f5f5;
 	border-radius: 2px;
@@ -1108,6 +1104,10 @@ kbd {
 	height: 1em;
 	line-height: 0;
 	padding: 0 6px;
+}
+
+#chat .toggle-button:after {
+	content: "···";
 }
 
 #chat .toggle-content {
@@ -1120,10 +1120,6 @@ kbd {
 	padding: 6px;
 	margin-top: 2px;
 	overflow: hidden;
-}
-
-#chat .toggle-content a {
-	color: inherit;
 }
 
 #chat .toggle-content img {
@@ -1935,10 +1931,6 @@ kbd {
 		border: 0;
 		display: inline;
 		padding: 0;
-	}
-
-	#chat .msg.toggle .time {
-		display: none;
 	}
 
 	#chat .date-marker,

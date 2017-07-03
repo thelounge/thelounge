@@ -35,7 +35,8 @@ socket.on("msg", function(data) {
 		.trigger("msg", [
 			target,
 			data
-		]);
+		])
+		.trigger("keepToBottom");
 
 	var lastVisible = container.find("div:visible").last();
 	if (data.msg.self

@@ -16,7 +16,6 @@ Msg.Type = {
 	NOTICE: "notice",
 	PART: "part",
 	QUIT: "quit",
-	TOGGLE: "toggle",
 	CTCP: "ctcp",
 	TOPIC: "topic",
 	TOPIC_SET_BY: "topic_set_by",
