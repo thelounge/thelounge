@@ -10,10 +10,8 @@
 			<img src="{{thumb}}" class="thumb">
 		{{/if}}
 		<div class="toggle-text">
-			<div class="head">{{head}}</div>
-			<div class="body">
-				{{body}}
-			</div>
+			<div class="head" title="{{head}}">{{head}}</div>
+			<div class="body" title="{{body}}">{{body}}</div>
 		</div>
 	{{/equal}}
 </a>
