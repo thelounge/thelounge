@@ -1129,15 +1129,20 @@ kbd {
 }
 
 #chat .toggle-content .thumb {
-	float: left;
 	margin-right: 6px;
 	max-width: 48px;
 	max-height: 32px;
 }
 
+#chat .toggle-text {
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	white-space: nowrap;
+}
+
 #chat .toggle-content .head,
 #chat .toggle-content .body {
-	white-space: nowrap;
 	text-overflow: ellipsis;
 	overflow: hidden;
 }
@@ -1151,7 +1156,7 @@ kbd {
 }
 
 #chat .toggle-content.show {
-	display: inline-block !important;
+	display: inline-flex !important;
 }
 
 #chat .count {
