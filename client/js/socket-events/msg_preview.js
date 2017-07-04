@@ -9,7 +9,7 @@ socket.on("msg:preview", function(data) {
 	data.preview.shown = options.shouldOpenMessagePreview(data.preview.type);
 
 	const msg = $("#msg-" + data.id);
-	const container = msg.parent(".messages");
+	const container = msg.closest(".chat");
 	const bottom = container.isScrollBottom();
 
 	msg.find(".text").append(templates.msg_preview({preview: data.preview}));
@@ -23,7 +23,7 @@ socket.on("msg:preview", function(data) {
 
 $("#chat").on("click", ".toggle-button", function() {
 	const self = $(this);
-	const container = self.closest(".messages");
+	const container = self.closest(".chat");
 	const content = self.parent().next(".toggle-content");
 	const bottom = container.isScrollBottom();
 
