@@ -790,6 +790,7 @@ kbd {
 
 #chat .channel .chat {
 	right: 180px;
+	transition: right .4s;
 }
 
 #chat .special {
