@@ -9,9 +9,11 @@
 		{{#if thumb}}
 			<img src="{{thumb}}" class="thumb">
 		{{/if}}
-		<div class="head">{{head}}</div>
-		<div class="body">
-			{{body}}
+		<div class="toggle-text">
+			<div class="head">{{head}}</div>
+			<div class="body">
+				{{body}}
+			</div>
 		</div>
 	{{/equal}}
 </a>
