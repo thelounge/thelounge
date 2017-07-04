@@ -136,3 +136,9 @@ a:hover,
 .tooltipped:after {
 	font-family: Inconsolata-g, monospace;
 }
+
+/* Previews */
+
+#chat .toggle-text {
+	line-height: initial;
+}
