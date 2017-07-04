@@ -10,17 +10,6 @@ const path = require("path");
 const config = {
 	entry: {
 		"js/bundle.js": path.resolve(__dirname, "client/js/lounge.js"),
-		"js/bundle.vendor.js": [
-			"handlebars/runtime",
-			"jquery",
-			"jquery-textcomplete",
-			"jquery-ui/ui/widgets/sortable",
-			"moment",
-			"mousetrap",
-			"socket.io-client",
-			"urijs",
-			"fuzzy",
-		],
 	},
 	devtool: "source-map",
 	output: {
@@ -71,7 +60,13 @@ const config = {
 		json3: "JSON", // socket.io uses json3.js, but we do not target any browsers that need it
 	},
 	plugins: [
-		new webpack.optimize.CommonsChunkPlugin("js/bundle.vendor.js")
+		// socket.io uses debug, we don't need it
+		new webpack.NormalModuleReplacementPlugin(/debug/, path.resolve(__dirname, "scripts/noop.js")),
+		// automatically split all vendor dependancies into a separate bundle
+		new webpack.optimize.CommonsChunkPlugin({
+			name: "js/bundle.vendor.js",
+			minChunks: (module) => module.context && module.context.indexOf("node_modules") !== -1
+		})
 	]
 };
 
