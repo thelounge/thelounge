@@ -59,7 +59,7 @@ body {
 }
 
 #footer {
-	background: #33332f;
+	background: #333;
 	border-top: 1px solid #000;
 }
 
@@ -237,10 +237,11 @@ body {
 	color: #ccc;
 }
 
-/* Embeds */
+/* Previews */
+
 #chat .toggle-content,
 #chat .toggle-button {
-	background: #93b3a3;
+	background: #333;
 	color: #dcdccc;
 }
 
