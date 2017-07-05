@@ -205,6 +205,7 @@ kbd {
 #chat .whois .from:before,
 #chat .nick .from:before,
 #chat .action .from:before,
+#chat .toggle-button:after,
 .context-menu-item:before,
 #nick button:before {
 	font: normal normal normal 14px/1 FontAwesome;
@@ -1096,18 +1097,29 @@ kbd {
 	color: #f00;
 }
 
+#chat .toggle-content-wrap {
+	margin-top: 2px;
+	display: flex;
+}
+
 #chat .toggle-button {
 	background: #f5f5f5;
 	border-radius: 2px;
-	display: inline-block;
 	color: #666;
-	height: 1em;
-	line-height: 0;
-	padding: 0 6px;
+	height: 100%;
+	width: 18px;
+}
+
+#chat .toggle-button:hover {
+	opacity: .8;
 }
 
 #chat .toggle-button:after {
-	content: "···";
+	content: "\f0d7"; /* http://fontawesome.io/icon/caret-down/ */
+}
+
+#chat .toggle-content-show .toggle-button:after {
+	content: "\f0d8"; /* http://fontawesome.io/icon/caret-up/ */
 }
 
 #chat .toggle-content {
@@ -1118,7 +1130,6 @@ kbd {
 	font-size: 12px;
 	max-width: 100%;
 	padding: 6px;
-	margin-top: 2px;
 	overflow: hidden;
 }
 
@@ -1155,8 +1166,16 @@ kbd {
 	color: #999;
 }
 
-#chat .toggle-content.show {
-	display: inline-flex !important;
+#chat .toggle-content-show .toggle-content {
+	display: flex;
+}
+
+#chat .toggle-content-show .toggle-button {
+	border-radius: 2px 0 0 2px;
+}
+
+#chat .toggle-content-show .toggle-content {
+	border-radius: 0 2px 2px;
 }
 
 #chat .count {

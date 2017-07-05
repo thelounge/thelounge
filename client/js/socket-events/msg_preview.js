@@ -15,7 +15,7 @@ socket.on("msg:preview", function(data) {
 	msg.find(".text").append(templates.msg_preview({preview: data.preview}));
 
 	if (data.preview.shown && bottom) {
-		handleImageInPreview(msg.find(".toggle-content"), container);
+		handleImageInPreview(msg.find(".toggle-content-wrap"), container);
 	}
 
 	container.trigger("keepToBottom");
@@ -24,14 +24,14 @@ socket.on("msg:preview", function(data) {
 $("#chat").on("click", ".toggle-button", function() {
 	const self = $(this);
 	const container = self.closest(".chat");
-	const content = self.parent().next(".toggle-content");
+	const content = self.closest(".toggle-content-wrap");
 	const bottom = container.isScrollBottom();
 
-	if (bottom && !content.hasClass("show")) {
+	if (bottom && !content.hasClass("toggle-content-show")) {
 		handleImageInPreview(content, container);
 	}
 
-	content.toggleClass("show");
+	content.toggleClass("toggle-content-show");
 
 	// If scrollbar was at the bottom before toggling the preview, keep it at the bottom
 	if (bottom) {
