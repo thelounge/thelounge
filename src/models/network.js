@@ -30,7 +30,10 @@ function Network(attr) {
 		chanCache: [],
 	});
 
-	this.name = attr.name || prettify(attr.host);
+	if (!this.name) {
+		this.name = this.host;
+	}
+
 	this.channels.unshift(
 		new Chan({
 			name: this.name,
@@ -103,17 +106,3 @@ Network.prototype.getChannel = function(name) {
 		return that.name.toLowerCase() === name;
 	});
 };
-
-function prettify(host) {
-	var name = capitalize(host.split(".")[1]);
-	if (!name) {
-		name = host;
-	}
-	return name;
-}
-
-function capitalize(str) {
-	if (typeof str === "string") {
-		return str.charAt(0).toUpperCase() + str.slice(1);
-	}
-}
