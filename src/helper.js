@@ -12,6 +12,7 @@ const colors = require("colors/safe");
 var Helper = {
 	config: null,
 	expandHome: expandHome,
+	getStoragePath: getStoragePath,
 	getUserConfigPath: getUserConfigPath,
 	getUserLogsPath: getUserLogsPath,
 	setHome: setHome,
@@ -88,6 +89,10 @@ function getUserConfigPath(name) {
 
 function getUserLogsPath(name, network) {
 	return path.join(this.HOME, "logs", name, network);
+}
+
+function getStoragePath() {
+	return path.join(this.HOME, "storage");
 }
 
 function ip2hex(address) {

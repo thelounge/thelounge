@@ -5,6 +5,7 @@ const request = require("request");
 const Helper = require("../../helper");
 const findLinks = require("../../../client/js/libs/handlebars/ircmessageparser/findLinks");
 const es = require("event-stream");
+const storage = require("../storage");
 
 process.setMaxListeners(0);
 
@@ -49,7 +50,7 @@ function parse(msg, url, res, client) {
 
 	switch (res.type) {
 	case "text/html":
-		var $ = cheerio.load(res.text);
+		var $ = cheerio.load(res.data);
 		preview.type = "link";
 		preview.head =
 			$("meta[property=\"og:title\"]").attr("content")
@@ -78,7 +79,7 @@ function parse(msg, url, res, client) {
 					preview.thumb = "";
 				}
 
-				emitPreview(client, msg, preview);
+				handlePreview(client, msg, preview, resThumb);
 			});
 
 			return;
@@ -90,18 +91,32 @@ function parse(msg, url, res, client) {
 	case "image/gif":
 	case "image/jpg":
 	case "image/jpeg":
-		if (res.size < (Helper.config.prefetchMaxImageSize * 1024)) {
-			preview.type = "image";
-		} else {
+		if (res.size > (Helper.config.prefetchMaxImageSize * 1024)) {
 			return;
 		}
+
+		preview.type = "image";
+		preview.thumb = preview.link;
+
 		break;
 
 	default:
 		return;
 	}
 
-	emitPreview(client, msg, preview);
+	handlePreview(client, msg, preview, res);
+}
+
+function handlePreview(client, msg, preview, res) {
+	if (!preview.thumb.length || !Helper.config.prefetchStorage) {
+		return emitPreview(client, msg, preview);
+	}
+
+	storage.store(res.data, res.type.replace("image/", ""), (url) => {
+		preview.thumb = url;
+
+		emitPreview(client, msg, preview);
+	});
 }
 
 function emitPreview(client, msg, preview) {
@@ -164,23 +179,23 @@ function fetch(url, cb) {
 				return cb(null);
 			}
 
-			let type;
+			let type = "";
 			let size = parseInt(req.response.headers["content-length"], 10) || length;
 
 			if (size < length) {
 				size = length;
 			}
 
-			try {
+			if (req.response.headers["content-type"]) {
 				type = req.response.headers["content-type"].split(/ *; */).shift();
-			} catch (e) {
-				type = {};
 			}
+
 			data = {
-				text: data,
+				data: data,
 				type: type,
 				size: size
 			};
+
 			cb(data);
 		}));
 }

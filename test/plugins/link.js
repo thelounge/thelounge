@@ -1,10 +1,10 @@
 "use strict";
 
-const expect = require("chai").expect;
-
-var util = require("../util");
-var link = require("../../src/plugins/irc-events/link.js");
 const path = require("path");
+const expect = require("chai").expect;
+const util = require("../util");
+const Helper = require("../../src/helper");
+const link = require("../../src/plugins/irc-events/link.js");
 
 describe("Link plugin", function() {
 	before(function(done) {
@@ -22,6 +22,8 @@ describe("Link plugin", function() {
 	beforeEach(function() {
 		this.irc = util.createClient();
 		this.network = util.createNetwork();
+
+		Helper.config.prefetchStorage = false;
 	});
 
 	it("should be able to fetch basic information about URLs", function(done) {
@@ -39,6 +41,7 @@ describe("Link plugin", function() {
 			expect(data.preview.type).to.equal("link");
 			expect(data.preview.head).to.equal("test title");
 			expect(data.preview.body).to.equal("simple description");
+			expect(data.preview.link).to.equal("http://localhost:9002/basic");
 			expect(message.previews.length).to.equal(1);
 			done();
 		});
@@ -104,11 +107,13 @@ describe("Link plugin", function() {
 		link(this.irc, this.network.channels[0], message);
 
 		this.app.get("/invalid-thumb", function(req, res) {
-			res.send("<title>test</title><meta property='og:image' content='/real-test-image.png'>");
+			res.send("<title>test invalid image</title><meta property='og:image' content='/real-test-image.png'>");
 		});
 
 		this.irc.once("msg:preview", function(data) {
 			expect(data.preview.thumb).to.be.empty;
+			expect(data.preview.head).to.equal("test invalid image");
+			expect(data.preview.link).to.equal("http://localhost:9002/invalid-thumb");
 			done();
 		});
 	});
@@ -127,6 +132,7 @@ describe("Link plugin", function() {
 		this.irc.once("msg:preview", function(data) {
 			expect(data.preview.head).to.equal("Untitled page");
 			expect(data.preview.thumb).to.equal("http://localhost:9002/real-test-image.png");
+			expect(data.preview.link).to.equal("http://localhost:9002/thumb-no-title");
 			done();
 		});
 	});
@@ -144,6 +150,7 @@ describe("Link plugin", function() {
 
 		this.irc.once("msg:preview", function(data) {
 			expect(data.preview.head).to.equal("404 image");
+			expect(data.preview.link).to.equal("http://localhost:9002/thumb-404");
 			expect(data.preview.thumb).to.be.empty;
 			done();
 		});
@@ -159,6 +166,7 @@ describe("Link plugin", function() {
 		this.irc.once("msg:preview", function(data) {
 			expect(data.preview.type).to.equal("image");
 			expect(data.preview.link).to.equal("http://localhost:9002/real-test-image.png");
+			expect(data.preview.thumb).to.equal("http://localhost:9002/real-test-image.png");
 			done();
 		});
 	});
