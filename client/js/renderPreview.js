@@ -16,7 +16,11 @@ function renderPreview(preview, msg) {
 		bottom = container.isScrollBottom();
 	}
 
-	msg.find(`[data-url="${preview.link}"]`)
+	msg.find(`.text a[href="${preview.link}"]`)
+		.first()
+		.after(templates.msg_preview_toggle({preview: preview}));
+
+	msg.find(`.preview[data-url="${preview.link}"]`)
 		.first()
 		.append(templates.msg_preview({preview: preview}));
 
@@ -30,13 +34,15 @@ function renderPreview(preview, msg) {
 $("#chat").on("click", ".toggle-button", function() {
 	const self = $(this);
 	const container = self.closest(".chat");
-	const content = self.parent().next(".toggle-content");
+	const content = self.closest(".text")
+		.find(`.preview[data-url="${self.data("url")}"] .toggle-content`);
 	const bottom = container.isScrollBottom();
 
 	if (bottom && !content.hasClass("show")) {
 		handleImageInPreview(content, container);
 	}
 
+	self.toggleClass("opened");
 	content.toggleClass("show");
 
 	// If scrollbar was at the bottom before toggling the preview, keep it at the bottom

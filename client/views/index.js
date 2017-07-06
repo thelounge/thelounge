@@ -26,6 +26,7 @@ module.exports = {
 	msg: require("./msg.tpl"),
 	msg_action: require("./msg_action.tpl"),
 	msg_preview: require("./msg_preview.tpl"),
+	msg_preview_toggle: require("./msg_preview_toggle.tpl"),
 	msg_unhandled: require("./msg_unhandled.tpl"),
 	network: require("./network.tpl"),
 	unread_marker: require("./unread_marker.tpl"),
