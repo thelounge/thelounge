@@ -1,6 +1,6 @@
 "use strict";
 
-var assert = require("assert");
+const expect = require("chai").expect;
 
 var util = require("../util");
 var link = require("../../src/plugins/irc-events/link.js");
@@ -36,9 +36,10 @@ describe("Link plugin", function() {
 		});
 
 		this.irc.once("msg:preview", function(data) {
-			assert.equal(data.preview.type, "link");
-			assert.equal(data.preview.head, "test title");
-			assert.equal(data.preview.body, "simple description");
+			expect(data.preview.type).to.equal("link");
+			expect(data.preview.head).to.equal("test title");
+			expect(data.preview.body).to.equal("simple description");
+			expect(message.previews.length).to.equal(1);
 			done();
 		});
 	});
@@ -55,7 +56,7 @@ describe("Link plugin", function() {
 		});
 
 		this.irc.once("msg:preview", function(data) {
-			assert.equal(data.preview.head, "opengraph test");
+			expect(data.preview.head, "opengraph test");
 			done();
 		});
 	});
@@ -72,7 +73,7 @@ describe("Link plugin", function() {
 		});
 
 		this.irc.once("msg:preview", function(data) {
-			assert.equal(data.preview.body, "opengraph description");
+			expect(data.preview.body).to.equal("opengraph description");
 			done();
 		});
 	});
@@ -89,8 +90,8 @@ describe("Link plugin", function() {
 		});
 
 		this.irc.once("msg:preview", function(data) {
-			assert.equal(data.preview.head, "Google");
-			assert.equal(data.preview.thumb, "http://localhost:9002/real-test-image.png");
+			expect(data.preview.head).to.equal("Google");
+			expect(data.preview.thumb).to.equal("http://localhost:9002/real-test-image.png");
 			done();
 		});
 	});
@@ -107,7 +108,7 @@ describe("Link plugin", function() {
 		});
 
 		this.irc.once("msg:preview", function(data) {
-			assert.equal(data.preview.thumb, "");
+			expect(data.preview.thumb).to.be.empty;
 			done();
 		});
 	});
@@ -124,8 +125,8 @@ describe("Link plugin", function() {
 		});
 
 		this.irc.once("msg:preview", function(data) {
-			assert.equal(data.preview.head, "Untitled page");
-			assert.equal(data.preview.thumb, "http://localhost:9002/real-test-image.png");
+			expect(data.preview.head).to.equal("Untitled page");
+			expect(data.preview.thumb).to.equal("http://localhost:9002/real-test-image.png");
 			done();
 		});
 	});
@@ -142,8 +143,8 @@ describe("Link plugin", function() {
 		});
 
 		this.irc.once("msg:preview", function(data) {
-			assert.equal(data.preview.head, "404 image");
-			assert.equal(data.preview.thumb, "");
+			expect(data.preview.head).to.equal("404 image");
+			expect(data.preview.thumb).to.be.empty;
 			done();
 		});
 	});
@@ -156,9 +157,45 @@ describe("Link plugin", function() {
 		link(this.irc, this.network.channels[0], message);
 
 		this.irc.once("msg:preview", function(data) {
-			assert.equal(data.preview.type, "image");
-			assert.equal(data.preview.link, "http://localhost:9002/real-test-image.png");
+			expect(data.preview.type).to.equal("image");
+			expect(data.preview.link).to.equal("http://localhost:9002/real-test-image.png");
 			done();
+		});
+	});
+
+	it("should load multiple URLs found in messages", function(done) {
+		const message = this.irc.createMessage({
+			text: "http://localhost:9002/one http://localhost:9002/two"
+		});
+
+		link(this.irc, this.network.channels[0], message);
+
+		this.app.get("/one", function(req, res) {
+			res.send("<title>first title</title>");
+		});
+
+		this.app.get("/two", function(req, res) {
+			res.send("<title>second title</title>");
+		});
+
+		const loaded = {
+			one: false,
+			two: false
+		};
+
+		this.irc.on("msg:preview", function(data) {
+			if (data.preview.link === "http://localhost:9002/one") {
+				expect(data.preview.head).to.equal("first title");
+				loaded.one = true;
+			} else if (data.preview.link === "http://localhost:9002/two") {
+				expect(data.preview.head).to.equal("second title");
+				loaded.two = true;
+			}
+
+			if (loaded.one && loaded.two) {
+				expect(message.previews.length).to.equal(2);
+				done();
+			}
 		});
 	});
 });

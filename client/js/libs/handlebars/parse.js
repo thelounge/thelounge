@@ -81,5 +81,8 @@ module.exports = function parse(text) {
 		}
 
 		return fragments;
+	}).join("") + linkParts.map((part) => {
+		const escapedLink = Handlebars.Utils.escapeExpression(part.link);
+		return `<div data-url="${escapedLink}"></div>`;
 	}).join("");
 };

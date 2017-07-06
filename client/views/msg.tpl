@@ -7,10 +7,5 @@
 			{{> user_name nick=from}}
 		{{/if}}
 	</span>
-	<span class="text">
-		{{~{parse text}~}}
-		{{#if preview}}
-			{{> msg_preview}}
-		{{/if}}
-	</span>
+	<span class="text">{{{parse text}}}</span>
 </div>
