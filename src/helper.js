@@ -66,7 +66,7 @@ function setHome(homePath) {
 	// Reload config from new home location
 	if (fs.existsSync(this.CONFIG_PATH)) {
 		var userConfig = require(this.CONFIG_PATH);
-		this.config = _.extend(this.config, userConfig);
+		this.config = _.merge(this.config, userConfig);
 	}
 
 	if (!this.config.displayNetwork && !this.config.lockNetwork) {
