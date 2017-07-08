@@ -600,6 +600,11 @@ kbd {
 	display: inline-block;
 	line-height: 34px;
 	padding: 0 12px;
+	transition: color .2s;
+}
+
+#footer .icon:hover {
+	color: #fff;
 }
 
 .signed-out #footer .sign-in {
@@ -946,6 +951,17 @@ kbd {
 
 #chat a {
 	color: #50a656;
+}
+
+#chat button,
+#form button,
+#chat .user {
+	transition: opacity .2s;
+}
+
+#chat button:hover,
+#form button:hover {
+	opacity: .6;
 }
 
 /* Nicknames */
@@ -1479,10 +1495,6 @@ kbd {
 	flex: 0 0 auto;
 }
 
-#form #submit:hover {
-	opacity: .6;
-}
-
 #context-menu-container {
 	display: none;
 	position: absolute;
@@ -1510,7 +1522,6 @@ kbd {
 
 .context-menu-divider {
 	height: 1px;
-	margin: 6px 0;
 	background-color: rgba(0, 0, 0, .1);
 }
 
@@ -1518,10 +1529,9 @@ kbd {
 .textcomplete-item {
 	cursor: pointer;
 	display: block;
-	padding: 4px 8px;
+	padding: 10px 8px;
 	color: #333;
-	margin-top: 6px;
-	margin-bottom: 6px;
+	transition: background-color .2s;
 }
 
 .context-menu-item:hover,
@@ -1636,8 +1646,8 @@ kbd {
 	animation-fill-mode: forwards;
 	-webkit-animation-timing-function: ease-in;
 	animation-timing-function: ease-in;
-	-webkit-animation-delay: .4s;
-	animation-delay: .4s;
+	-webkit-animation-delay: .1s;
+	animation-delay: .1s;
 }
 
 .tooltipped-s:after,
