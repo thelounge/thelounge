@@ -267,7 +267,16 @@ $(function() {
 			chat.find(".chan.active .chat").trigger("msg.sticky"); // fix growing
 		})
 		.tab(completeNicks, {hint: false})
-		.textcomplete([
+		.on("autocomplete:on", function() {
+			enableAutocomplete();
+		});
+
+	if (options.autocomplete) {
+		enableAutocomplete();
+	}
+
+	function enableAutocomplete() {
+		input.textcomplete([
 			emojiStrategy, nicksStrategy, chanStrategy, commandStrategy,
 			foregroundColorStrategy, backgroundColorStrategy
 		], {
@@ -281,6 +290,7 @@ $(function() {
 				$(this).data("autocompleting", false);
 			}
 		});
+	}
 
 	var focus = $.noop;
 	if (!("ontouchstart" in window || navigator.maxTouchPoints > 0)) {
