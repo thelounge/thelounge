@@ -20,7 +20,8 @@ MockClient.prototype.createMessage = function(opts) {
 	var message = _.extend({
 		text: "dummy message",
 		nick: "test-user",
-		target: "#test-channel"
+		target: "#test-channel",
+		previews: [],
 	}, opts);
 
 	return message;

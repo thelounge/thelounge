@@ -205,6 +205,7 @@ kbd {
 #chat .whois .from:before,
 #chat .nick .from:before,
 #chat .action .from:before,
+#chat .toggle-button:after,
 .context-menu-item:before,
 #nick button:before {
 	font: normal normal normal 14px/1 FontAwesome;
@@ -291,6 +292,16 @@ kbd {
 
 #chat .action .from:before {
 	content: "\f005"; /* http://fontawesome.io/icon/star/ */
+}
+
+#chat .toggle-button {
+	/* These 2 directives are loosely taken from .fa-fw */
+	width: 1.35em;
+	text-align: center;
+}
+
+#chat .toggle-button:after {
+	content: "\f0da"; /* http://fontawesome.io/icon/caret-right/ */
 }
 
 #chat .count:before {
@@ -1113,17 +1124,18 @@ kbd {
 }
 
 #chat .toggle-button {
-	background: #f5f5f5;
-	border-radius: 2px;
 	display: inline-block;
 	color: #666;
-	height: 1em;
-	line-height: 0;
-	padding: 0 6px;
+	transition: color .2s, transform .2s;
 }
 
-#chat .toggle-button:after {
-	content: "···";
+#chat .toggle-button.opened {
+	transform: rotate(90deg);
+}
+
+#chat .toggle-button:hover {
+	/* transform and opacity together glitch, so need to use RGBA transition */
+	color: rgba(102, 102, 102, .8); /* #666 x .8 opacity */
 }
 
 #chat .toggle-content {
@@ -1134,7 +1146,7 @@ kbd {
 	font-size: 12px;
 	max-width: 100%;
 	padding: 6px;
-	margin-top: 2px;
+	margin: 2px 0;
 	overflow: hidden;
 }
 

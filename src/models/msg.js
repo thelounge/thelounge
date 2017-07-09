@@ -31,6 +31,7 @@ function Msg(attr) {
 	_.defaults(this, attr, {
 		from: "",
 		id: id++,
+		previews: [],
 		text: "",
 		type: Msg.Type.MESSAGE,
 		self: false
