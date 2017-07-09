@@ -346,6 +346,17 @@ kbd {
 	pointer-events: none;
 }
 
+#chat button,
+#form button,
+#chat .user {
+	transition: opacity .2s;
+}
+
+#chat button:hover,
+#form button:hover {
+	opacity: .6;
+}
+
 #viewport .lt,
 #viewport .rt,
 #chat button.menu {
@@ -600,6 +611,11 @@ kbd {
 	display: inline-block;
 	line-height: 34px;
 	padding: 0 12px;
+	transition: color .2s;
+}
+
+#footer .icon:hover {
+	color: #fff;
 }
 
 .signed-out #footer .sign-in {
@@ -1479,10 +1495,6 @@ kbd {
 	flex: 0 0 auto;
 }
 
-#form #submit:hover {
-	opacity: .6;
-}
-
 #context-menu-container {
 	display: none;
 	position: absolute;
@@ -1522,6 +1534,7 @@ kbd {
 	color: #333;
 	margin-top: 6px;
 	margin-bottom: 6px;
+	transition: background-color .2s;
 }
 
 .context-menu-item:hover,
