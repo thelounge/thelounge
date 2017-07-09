@@ -334,6 +334,16 @@ $(function() {
 			return;
 		}
 
+		if (text.indexOf("/collapse") === 0) {
+			$(".chan.active .toggle-button.opened").click();
+			return;
+		}
+
+		if (text.indexOf("/expand") === 0) {
+			$(".chan.active .toggle-button:not(.opened)").click();
+			return;
+		}
+
 		socket.emit("input", {
 			target: chat.data("id"),
 			text: text
