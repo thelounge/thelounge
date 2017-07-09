@@ -370,6 +370,35 @@ module.exports = {
 		primaryKey: "uid"
 	},
 
+	// Restrict to only certain channels
+	//
+	// @type     object
+	// @default  {}
+	//
+	restrict: {
+		//
+		// Enable channel restrictions.
+		//
+		// @type     boolean
+		// @default  false
+		//
+		enable: false,
+
+		// Pattern for channels to match
+		//
+		// @type 	string
+		// @default ""
+		//
+		pattern: "",
+
+		// Message to return to the user when trying to join a channel not matching the pattern, supports regular expressions
+		//
+		// @type  string
+		// @default "This client is restricted to certain channels."
+		//
+		restrictMessage: "This client is restricted to certain channels."
+	},
+
 	// Extra debugging
 	//
 	// @type     object
