@@ -67,4 +67,4 @@ Before submitting any change, make sure to:
 
 - Read the [Contributing instructions](https://github.com/thelounge/lounge/blob/master/CONTRIBUTING.md#contributing)
 - Run `npm test` to execute linters and test suite
-- Run `npm run build` if you change or add anything in `client/js/libs` or `client/views`
+- Run `npm run build` if you change or add anything in `client/js` or `client/views`
