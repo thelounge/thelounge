@@ -38,7 +38,13 @@ socket.on("more", function(data) {
 
 	// restore scroll position
 	const position = chan.height() - heightOld;
-	scrollable.scrollTop(position);
+	scrollable.finish().scrollTop(position);
+
+	// We have to do this hack due to smooth scrolling in browsers,
+	// as scrollTop does not apply correctly
+	if (window.requestAnimationFrame) {
+		window.requestAnimationFrame(() => scrollable.scrollTop(position));
+	}
 
 	if (data.messages.length !== 100) {
 		scrollable.find(".show-more").removeClass("show");
