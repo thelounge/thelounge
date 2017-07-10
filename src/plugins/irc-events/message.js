@@ -71,6 +71,12 @@ module.exports = function(irc, network) {
 			// Query messages (unless self) always highlight
 			if (chan.type === Chan.Type.QUERY) {
 				highlight = !self;
+			} else if (chan.type === Chan.Type.CHANNEL) {
+				const user = chan.findUser(data.nick);
+
+				if (user) {
+					user.lastMessage = data.time || Date.now();
+				}
 			}
 		}
 

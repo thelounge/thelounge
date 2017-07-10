@@ -8,7 +8,8 @@ function User(attr, prefixLookup) {
 	_.defaults(this, attr, {
 		modes: [],
 		mode: "",
-		nick: ""
+		nick: "",
+		lastMessage: 0,
 	});
 
 	// irc-framework sets character mode, but lounge works with symbols
@@ -23,5 +24,6 @@ User.prototype.toJSON = function() {
 	return {
 		nick: this.nick,
 		mode: this.mode,
+		lastMessage: this.lastMessage,
 	};
 };

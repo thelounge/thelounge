@@ -81,7 +81,7 @@ function buildChatMessage(data) {
 		renderPreview(preview, msg);
 	});
 
-	if ((type === "message" || type === "action") && chan.hasClass("channel")) {
+	if ((type === "message" || type === "action" || type === "notice") && chan.hasClass("channel")) {
 		const nicks = chan.find(".users").data("nicks");
 		if (nicks) {
 			const find = nicks.indexOf(data.msg.from);
@@ -143,22 +143,10 @@ function renderChannelMessages(data) {
 
 function renderChannelUsers(data) {
 	const users = chat.find("#chan-" + data.id).find(".users");
-	let nicks = users.data("nicks") || [];
-	const oldSortOrder = {};
-
-	for (const i in nicks) {
-		oldSortOrder[nicks[i]] = i;
-	}
-
-	nicks = [];
-
-	for (const i in data.users) {
-		nicks.push(data.users[i].nick);
-	}
-
-	nicks = nicks.sort(function(a, b) {
-		return (oldSortOrder[a] || Number.MAX_VALUE) - (oldSortOrder[b] || Number.MAX_VALUE);
-	});
+	const nicks = data.users
+		.concat()
+		.sort((a, b) => b.lastMessage - a.lastMessage)
+		.map((a) => a.nick);
 
 	const search = users
 		.find(".search")
