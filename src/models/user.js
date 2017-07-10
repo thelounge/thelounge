@@ -7,6 +7,7 @@ module.exports = User;
 function User(attr, prefixLookup) {
 	_.defaults(this, attr, {
 		modes: [],
+		away: "",
 		mode: "",
 		nick: "",
 		lastMessage: 0,

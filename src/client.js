@@ -16,6 +16,7 @@ module.exports = Client;
 
 var id = 0;
 var events = [
+	"away",
 	"connection",
 	"unhandled",
 	"banlist",

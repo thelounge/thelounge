@@ -60,6 +60,8 @@ const commands = [
 ];
 
 const actionTypes = [
+	"away",
+	"back",
 	"ban_list",
 	"invite",
 	"join",
@@ -77,6 +79,8 @@ const actionTypes = [
 ];
 
 const condensedTypes = [
+	"away",
+	"back",
 	"join",
 	"part",
 	"quit",
