@@ -41,7 +41,7 @@ Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 	};
 
 	// If this channel is open in any of the clients, do not increase unread counter
-	var isOpen = _.includes(client.attachedClients, this.id);
+	const isOpen = _.find(client.attachedClients, {openChannel: this.id}) !== undefined;
 
 	if ((increasesUnread || msg.highlight) && !isOpen) {
 		obj.unread = ++this.unread;

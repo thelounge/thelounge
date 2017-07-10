@@ -3,6 +3,7 @@
 const Chan = require("../../models/chan");
 const Msg = require("../../models/msg");
 const LinkPrefetch = require("./link");
+const Helper = require("../../helper");
 
 module.exports = function(irc, network) {
 	var client = this;
@@ -102,5 +103,24 @@ module.exports = function(irc, network) {
 		}
 
 		chan.pushMessage(client, msg, !self);
+
+		// Do not send notifications for messages older than 15 minutes (znc buffer for example)
+		if (highlight && (!data.time || data.time > Date.now() - 900000)) {
+			let title = data.nick;
+
+			if (chan.type !== Chan.Type.QUERY) {
+				title += ` (${chan.name}) mentioned you`;
+			} else {
+				title += " sent you a message";
+			}
+
+			client.manager.webPush.push(client, {
+				type: "notification",
+				chanId: chan.id,
+				timestamp: data.time || Date.now(),
+				title: `The Lounge: ${title}`,
+				body: Helper.cleanIrcMessage(data.message)
+			}, true);
+		}
 	}
 };

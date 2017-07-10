@@ -5,6 +5,7 @@ var colors = require("colors/safe");
 var fs = require("fs");
 var Client = require("./client");
 var Helper = require("./helper");
+const WebPush = require("./plugins/webpush");
 
 module.exports = ClientManager;
 
@@ -15,6 +16,7 @@ function ClientManager() {
 ClientManager.prototype.init = function(identHandler, sockets) {
 	this.sockets = sockets;
 	this.identHandler = identHandler;
+	this.webPush = new WebPush();
 
 	if (!Helper.config.public) {
 		if ("autoload" in Helper.config) {

@@ -19,6 +19,7 @@ var Helper = {
 	getVersion: getVersion,
 	getGitCommit: getGitCommit,
 	ip2hex: ip2hex,
+	cleanIrcMessage: cleanIrcMessage,
 
 	password: {
 		hash: passwordHash,
@@ -119,6 +120,11 @@ function expandHome(shortenedPath) {
 
 	const home = os.homedir().replace("$", "$$$$");
 	return path.resolve(shortenedPath.replace(/^~($|\/|\\)/, home + "$1"));
+}
+
+function cleanIrcMessage(message) {
+	// TODO: This does not strip hex based colours
+	return message.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "");
 }
 
 function passwordRequiresUpdate(password) {

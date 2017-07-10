@@ -22,6 +22,7 @@ require("./socket-events");
 const constants = require("./constants");
 const storage = require("./localStorage");
 const utils = require("./utils");
+require("./webpush");
 
 $(function() {
 	var sidebar = $("#sidebar, #footer");

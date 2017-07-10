@@ -180,7 +180,7 @@ function initializeClient(socket, client, generateToken, token) {
 	socket.on("disconnect", function() {
 		client.clientDetach(socket.id);
 	});
-	client.clientAttach(socket.id);
+	client.clientAttach(socket.id, token);
 
 	socket.on(
 		"input",
@@ -296,6 +296,31 @@ function initializeClient(socket, client, generateToken, token) {
 		}
 	});
 
+	socket.on("push:register", (subscription) => {
+		if (!client.isRegistered() || !client.config.sessions[token]) {
+			return;
+		}
+
+		const registration = client.registerPushSubscription(client.config.sessions[token], subscription);
+
+		if (registration) {
+			client.manager.webPush.pushSingle(client, registration, {
+				type: "notification",
+				timestamp: Date.now(),
+				title: "The Lounge",
+				body: "🚀 Push notifications have been enabled"
+			});
+		}
+	});
+
+	socket.on("push:unregister", () => {
+		if (!client.isRegistered()) {
+			return;
+		}
+
+		client.unregisterPushSubscription(token);
+	});
+
 	socket.on("sign-out", () => {
 		delete client.config.sessions[token];
 
@@ -314,6 +339,8 @@ function initializeClient(socket, client, generateToken, token) {
 
 	const sendInitEvent = (tokenToSend) => {
 		socket.emit("init", {
+			applicationServerKey: manager.webPush.vapidKeys.publicKey,
+			pushSubscription: client.config.sessions[token],
 			active: client.lastActiveChannel,
 			networks: client.networks,
 			token: tokenToSend
