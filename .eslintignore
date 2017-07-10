@@ -1,6 +1,9 @@
 # built by tools
 client/js/bundle.js
 client/js/bundle.vendor.js
+client/js/libs/sw.js
+client/js/libs/workbox-sw.prod.v1.0.1.js
+workbox-cli-config.js
 
 # third party
 client/js/libs/jquery/*.js

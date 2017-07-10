@@ -22,6 +22,7 @@ require("./socket-events");
 const constants = require("./constants");
 const storage = require("./localStorage");
 const utils = require("./utils");
+const sw = require(("./sw"));
 
 $(function() {
 	var sidebar = $("#sidebar, #footer");
@@ -42,6 +43,8 @@ $(function() {
 	$("#play").on("click", function() {
 		pop.play();
 	});
+
+	sw.registerServiceWorker();
 
 	// Autocompletion Strategies
 
