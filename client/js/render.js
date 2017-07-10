@@ -144,7 +144,7 @@ function renderChannelMessages(data) {
 function renderChannelUsers(data) {
 	const users = chat.find("#chan-" + data.id).find(".users");
 	const nicks = data.users
-		.concat()
+		.concat() // Make a copy of the user list, sort is applied in-place
 		.sort((a, b) => b.lastMessage - a.lastMessage)
 		.map((a) => a.nick);
 
@@ -179,7 +179,13 @@ function renderNetworks(data) {
 			channels: channels
 		})
 	);
-	channels.forEach(renderChannel);
+	channels.forEach((channel) => {
+		renderChannel(channel);
+
+		if (channel.type === "channel") {
+			chat.find("#chan-" + channel.id).data("needsNamesRefresh", true);
+		}
+	});
 
 	utils.confirmExit();
 	sorting();
