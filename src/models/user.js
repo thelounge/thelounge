@@ -12,13 +12,15 @@ function User(attr, prefixLookup) {
 		lastMessage: 0,
 	});
 
-	// irc-framework sets character mode, but lounge works with symbols
-	this.modes = this.modes.map((mode) => prefixLookup[mode]);
-
-	if (this.modes[0]) {
-		this.mode = this.modes[0];
-	}
+	this.setModes(this.modes, prefixLookup);
 }
+
+User.prototype.setModes = function(modes, prefixLookup) {
+	// irc-framework sets character mode, but lounge works with symbols
+	this.modes = modes.map((mode) => prefixLookup[mode]);
+
+	this.mode = this.modes[0] || "";
+};
 
 User.prototype.toJSON = function() {
 	return {
