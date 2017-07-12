@@ -18,6 +18,7 @@
     "build": "npm-run-all build:*",
     "build:font-awesome": "node scripts/build-fontawesome.js",
     "build:webpack": "webpack --progress",
+    "build:sw": "workbox-cli generate:sw",
     "watch": "webpack --watch",
     "test": "npm-run-all -c test:* lint",
     "test:mocha": "mocha",
@@ -79,6 +80,7 @@
     "stylelint": "7.13.0",
     "stylelint-config-standard": "16.0.0",
     "urijs": "1.18.10",
-    "webpack": "3.1.0"
+    "webpack": "3.1.0",
+    "workbox-cli": "1.0.1"
   }
 }
