@@ -1,15 +1,19 @@
 {{#preview}}
-<a href="{{link}}" target="_blank" rel="noopener" class="toggle-content toggle-type-{{type}}{{#if shown}} show{{/if}}">
+<div class="toggle-content toggle-type-{{type}}{{#if shown}} show{{/if}}">
 	{{#equal type "image"}}
-		<img src="{{link}}">
+		<a class="toggle-thumbnail" href="{{link}}" target="_blank" rel="noopener">
+			<img src="{{link}}">
+		</a>
 	{{else}}
 		{{#if thumb}}
-			<img src="{{thumb}}" class="thumb">
+			<a class="toggle-thumbnail" href="{{link}}" target="_blank" rel="noopener">
+				<img src="{{thumb}}" class="thumb">
+			</a>
 		{{/if}}
-		<div class="toggle-text">
+		<a class="toggle-text" href="{{link}}" target="_blank" rel="noopener">
 			<div class="head" title="{{head}}">{{head}}</div>
 			<div class="body" title="{{body}}">{{body}}</div>
-		</div>
+		</a>
 	{{/equal}}
-</a>
+</div>
 {{/preview}}

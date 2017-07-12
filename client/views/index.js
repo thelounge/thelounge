@@ -29,6 +29,7 @@ module.exports = {
 	msg_preview_toggle: require("./msg_preview_toggle.tpl"),
 	msg_unhandled: require("./msg_unhandled.tpl"),
 	network: require("./network.tpl"),
+	image_viewer: require("./image_viewer.tpl"),
 	unread_marker: require("./unread_marker.tpl"),
 	user: require("./user.tpl"),
 	user_filtered: require("./user_filtered.tpl"),

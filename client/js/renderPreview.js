@@ -61,3 +61,47 @@ function handleImageInPreview(content, container) {
 		});
 	}
 }
+
+/* Image viewer */
+
+// FIXME Remove #input focus when this is open
+// See https://github.com/thelounge/lounge/issues/1342
+$("#viewport").on("click", ".toggle-thumbnail", function() {
+	const link = $(this);
+
+	openImageViewer(link);
+
+	// Prevent the link to open a new page since we're opening the image viewer,
+	// but keep it a link to allow for Ctrl/Cmd+click
+	return false;
+});
+
+$("#image-viewer").on("click", function() {
+	closeImageViewer();
+});
+
+$(document).keydown(function(e) {
+	switch (e.keyCode ? e.keyCode : e.which) {
+	case 27: // Escape
+		closeImageViewer();
+		break;
+	}
+});
+
+function openImageViewer(link) {
+	$("#image-viewer").html(templates.image_viewer({
+		image: link.find("img").attr("src"),
+		link: link.attr("href"),
+		type: link.parent().hasClass("toggle-type-image") ? "image" : "link"
+	}));
+
+	$(document.body).addClass("image-viewer-opened");
+}
+
+function closeImageViewer() {
+	$(document.body)
+		.removeClass("image-viewer-opened")
+		.one("transitionend", function() {
+			$("#image-viewer").empty();
+		});
+}

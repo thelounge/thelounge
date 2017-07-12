@@ -337,6 +337,9 @@ kbd {
 #wrap {
 	height: 100%;
 	overflow: hidden;
+
+	/* Needed to transition blurred background when image viewer is open */
+	transition: filter .2s;
 }
 
 #viewport {
@@ -1147,7 +1150,6 @@ kbd {
 	color: #222;
 	font-size: 12px;
 	max-width: 100%;
-	padding: 6px;
 	margin: 2px 0;
 	overflow: hidden;
 }
@@ -1159,22 +1161,32 @@ kbd {
 }
 
 #chat .toggle-content .thumb {
-	margin-right: 6px;
 	max-width: 48px;
 	max-height: 32px;
 }
 
+#chat .toggle-thumbnail {
+	padding: 6px;
+}
+
 #chat .toggle-text {
+	padding: 6px;
 	min-width: 0;
 	display: flex;
 	flex-direction: column;
 	white-space: nowrap;
+	color: inherit;
+}
+
+#chat .toggle-text:not(:first-child) {
+	padding-left: 0;
 }
 
 #chat .toggle-content .head,
 #chat .toggle-content .body {
 	text-overflow: ellipsis;
 	overflow: hidden;
+	color: inherit;
 }
 
 #chat .toggle-content .head {
@@ -1997,4 +2009,73 @@ kbd {
 
 ::-webkit-scrollbar-thumb:vertical:active {
 	background: rgba(0, 0, 0, .6);
+}
+
+/* Image viewer */
+
+#image-viewer,
+#image-viewer .close-btn {
+	/* Vertically and horizontally center stuff */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+#image-viewer {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(0, 0, 0, .8);
+	visibility: hidden;
+	opacity: 0;
+	transition: opacity .2s, visibility .2s;
+	z-index: 999;
+}
+
+.image-viewer-opened #wrap {
+	filter: blur(4px);
+}
+
+.image-viewer-opened #image-viewer {
+	visibility: visible;
+	opacity: 1;
+}
+
+#image-viewer .close-btn {
+	position: fixed;
+	top: 0;
+	right: 0;
+	width: 2em;
+	height: 2em;
+	font-size: 36px;
+	color: white;
+	z-index: 1001;
+	opacity: .6;
+	transition: .2s opacity;
+}
+
+#image-viewer .close-btn:hover {
+	opacity: 1;
+}
+
+#image-viewer .image-link {
+	margin: 10px;
+}
+
+#image-viewer .image-link:hover {
+	opacity: 1;
+}
+
+#image-viewer .image-link img {
+	max-width: 100%;
+
+	/* Top/Bottom margins + button height + image/button margin */
+	max-height: calc(100vh - 2 * 10px - 37px - 10px);
+}
+
+#image-viewer .open-btn {
+	margin: 0 auto 10px;
 }
