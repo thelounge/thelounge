@@ -137,12 +137,14 @@ kbd {
 	text-transform: uppercase;
 	transition: background .2s, border-color .2s, color .2s;
 	word-spacing: 3px;
+	cursor: pointer; /* This is useful for `<button>` elements */
 }
 
 .btn:disabled,
 .btn:hover {
 	background: #84ce88;
 	color: #fff;
+	opacity: 1;
 }
 
 .btn:active {
