@@ -241,13 +241,15 @@ body {
 
 #chat .toggle-content,
 #chat .toggle-button {
-	background: #333;
 	color: #dcdccc;
 }
 
-#chat .toggle-content img {
-	float: left;
-	margin-right: .5em;
+#chat .toggle-button:hover {
+	color: rgba(220, 220, 204, .8);
+}
+
+#chat .toggle-content {
+	background: #333;
 }
 
 #chat .toggle-content .body {
