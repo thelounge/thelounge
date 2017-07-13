@@ -26,6 +26,7 @@ module.exports = {
 		settings: require("./windows/settings.tpl"),
 		connect: require("./windows/connect.tpl"),
 		help: require("./windows/help.tpl"),
+		changelog: require("./windows/changelog.tpl"),
 	},
 
 	chan: require("./chan.tpl"),

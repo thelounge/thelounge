@@ -140,10 +140,22 @@ kbd {
 	opacity: 0.6;
 }
 
+.btn-sm {
+	padding: 4px 8px;
+	border-width: 1px;
+	letter-spacing: 0;
+	word-spacing: 0;
+	text-transform: none;
+}
+
 .container {
 	margin: 80px auto;
 	max-width: 480px;
 	touch-action: pan-y;
+}
+
+#help .container {
+	max-width: 600px;
 }
 
 ::-moz-placeholder {
@@ -162,6 +174,7 @@ kbd {
 #js-copy-hack,
 #loading pre,
 #help,
+#changelog,
 #windows .header .title,
 #windows .header .topic,
 #chat .messages {
@@ -208,6 +221,7 @@ kbd {
 #chat .nick .from::before,
 #chat .action .from::before,
 #chat .toggle-button::after,
+.changelog-version::before,
 .context-menu-item::before,
 #nick button::before,
 #image-viewer .previous-image-btn::before,
@@ -1520,8 +1534,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	display: table-row;
 }
 
-#help .help-item,
-#help .about {
+#help .help-item {
 	font-size: 14px;
 }
 
@@ -1538,10 +1551,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #help .help-item .description p {
 	margin-bottom: 0;
-}
-
-#help .about {
-	line-height: 1.8;
 }
 
 .is-apple #help .key-all,
@@ -1570,6 +1579,58 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 .whois dd {
 	-ms-grid-column-start: 2;
 	grid-column-start: 2;
+}
+
+#help .help-links {
+	margin-right: 20px;
+}
+
+#changelog .container {
+	max-width: 740px;
+}
+
+.changelog-text {
+	font-size: 16px;
+	line-height: 1.5;
+}
+
+.changelog-text p {
+	margin-bottom: 16px;
+}
+
+.window#changelog h3 {
+	font-size: 20px;
+	border-bottom: 1px solid #7f8c8d;
+	color: #7f8c8d;
+	margin: 30px 0 10px;
+	padding-bottom: 7px;
+}
+
+.changelog-version {
+	display: block;
+	padding: 16px;
+	margin-bottom: 16px;
+	border-radius: 2px;
+	background-color: #d9edf7;
+	color: #31708f;
+}
+
+.changelog-version::before {
+	margin-right: 6px;
+	content: "\f00c"; /* http://fontawesome.io/icon/check/ */
+}
+
+.changelog-version-new {
+	background-color: #dff0d8;
+	color: #3c763d;
+}
+
+.changelog-version-new:hover {
+	color: #2b542c;
+}
+
+.changelog-version-new::before {
+	content: "\f0ed"; /* http://fontawesome.io/icon/cloud-download/ */
 }
 
 #form {
@@ -2055,7 +2116,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	#windows .header .topic,
 	#settings .error,
 	#help .help-item,
-	#help .about,
 	#loading,
 	#context-menu,
 	#form #input,

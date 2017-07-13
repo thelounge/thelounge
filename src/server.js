@@ -14,6 +14,7 @@ var colors = require("colors/safe");
 const net = require("net");
 const Identification = require("./identification");
 const themes = require("./plugins/themes");
+const changelog = require("./plugins/changelog");
 
 // The order defined the priority: the first available plugin is used
 // ALways keep local auth in the end, which should always be enabled.
@@ -339,6 +340,14 @@ function initializeClient(socket, client, token, lastMessage) {
 			client.names(data);
 		}
 	);
+
+	if (!Helper.config.public) {
+		socket.on("changelog", function() {
+			changelog.sendChangelog((data) => {
+				socket.emit("changelog", data);
+			});
+		});
+	}
 
 	socket.on("msg:preview:toggle", function(data) {
 		const networkAndChan = client.find(data.target);
