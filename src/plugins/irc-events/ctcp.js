@@ -1,17 +1,17 @@
 "use strict";
 
-var Msg = require("../../models/msg");
+const Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
-	var client = this;
+	const client = this;
 
 	irc.on("ctcp response", function(data) {
-		var chan = network.getChannel(data.nick);
+		let chan = network.getChannel(data.nick);
 		if (typeof chan === "undefined") {
 			chan = network.channels[0];
 		}
 
-		var msg = new Msg({
+		const msg = new Msg({
 			type: Msg.Type.CTCP,
 			time: data.time,
 			from: data.nick,
@@ -21,14 +21,20 @@ module.exports = function(irc, network) {
 		chan.pushMessage(client, msg);
 	});
 
-	irc.on("ctcp request", function(data) {
+	irc.on("ctcp request", (data) => {
 		switch (data.type) {
-		case "PING":
-			var split = data.message.split(" ");
+		case "PING": {
+			const split = data.message.split(" ");
 			if (split.length === 2) {
 				irc.ctcpResponse(data.nick, "PING", split[1]);
 			}
 			break;
+		}
+		case "SOURCE": {
+			const packageJson = require("../../../package.json");
+			irc.ctcpResponse(data.nick, "SOURCE", packageJson.repository.url);
+			break;
+		}
 		}
 	});
 };
