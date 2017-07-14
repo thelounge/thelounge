@@ -45,17 +45,26 @@ $(function() {
 
 	// Autocompletion Strategies
 
+	const emojiSearchTerms = Object.keys(emojiMap);
 	const emojiStrategy = {
 		id: "emoji",
 		match: /\B:([-+\w]*):?$/,
 		search(term, callback) {
-			callback(Object.keys(emojiMap).filter((name) => name.indexOf(term) === 0));
+			const results = fuzzy.filter(
+				term,
+				emojiSearchTerms,
+				{
+					pre: "<b>",
+					post: "</b>"
+				}
+			);
+			callback(results.map((el) => [el.string, el.original]));
 		},
-		template(value) {
-			return `<span class="emoji">${emojiMap[value]}</span> ${value}`;
+		template([string, original]) {
+			return `<span class="emoji">${emojiMap[original]}</span> ${string}`;
 		},
-		replace(value) {
-			return emojiMap[value];
+		replace([, original]) {
+			return emojiMap[original];
 		},
 		index: 1
 	};
