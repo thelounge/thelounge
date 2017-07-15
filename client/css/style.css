@@ -1553,6 +1553,7 @@ kbd {
 .textcomplete-item:hover,
 .textcomplete-menu .active {
 	background-color: #f6f6f6;
+	transition: none;
 }
 
 .context-menu-item:before,
