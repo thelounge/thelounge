@@ -11,7 +11,7 @@ The Lounge is a modern web IRC client designed for self-hosting.
 To learn more about configuration, usage and features of The Lounge, take a look at [the website](https://thelounge.github.io).
 
 <p align="center">
-	<img src="https://cloud.githubusercontent.com/assets/5481612/19623041/9bbaec40-9888-11e6-9961-8f3e0493ba30.png" width="550">
+	<img src="https://user-images.githubusercontent.com/8675906/28143204-53116e8c-6719-11e7-992b-d1ba442c6c37.png" width="550">
 </p>
 
 The Lounge is the official and community-managed fork of [Shout](https://github.com/erming/shout), by [Mattias Erming](https://github.com/erming).
