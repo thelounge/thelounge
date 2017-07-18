@@ -17,7 +17,11 @@ Helper.setHome(program.home || process.env.LOUNGE_HOME);
 
 if (!fs.existsSync(Helper.CONFIG_PATH)) {
 	fsextra.ensureDirSync(Helper.HOME);
-	fs.chmodSync(Helper.HOME, "0700");
+	try {
+		fs.chmodSync(Helper.HOME, "0700");
+	} catch (e) {
+		log.warn(`Error when changing permissions on ${Helper.HOME} to 0700: ${e}`);
+	}
 	fsextra.copySync(path.resolve(path.join(
 		__dirname,
 		"..",
