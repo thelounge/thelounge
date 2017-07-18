@@ -1201,6 +1201,12 @@ kbd {
 	display: inline-flex !important;
 }
 
+/* Do not display an empty div when there are no previews. Useful for example in
+part/quit messages where we don't load previews (adds a blank line otherwise) */
+#chat .preview:empty {
+	display: none;
+}
+
 #chat .count {
 	background: #fafafa;
 	height: 48px;
