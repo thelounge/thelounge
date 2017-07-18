@@ -2,7 +2,7 @@
 <div class="toggle-content toggle-type-{{type}}{{#if shown}} show{{/if}}">
 	{{#equal type "image"}}
 		<a class="toggle-thumbnail" href="{{link}}" target="_blank" rel="noopener">
-			<img src="{{link}}">
+			<img src="{{thumb}}">
 		</a>
 	{{else}}
 		{{#if thumb}}

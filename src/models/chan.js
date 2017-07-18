@@ -2,6 +2,7 @@
 
 var _ = require("lodash");
 var Helper = require("../helper");
+const storage = require("../plugins/storage");
 
 module.exports = Chan;
 
@@ -53,7 +54,15 @@ Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 	this.messages.push(msg);
 
 	if (Helper.config.maxHistory >= 0 && this.messages.length > Helper.config.maxHistory) {
-		this.messages.splice(0, this.messages.length - Helper.config.maxHistory);
+		const deleted = this.messages.splice(0, this.messages.length - Helper.config.maxHistory);
+
+		if (Helper.config.prefetch && Helper.config.prefetchStorage) {
+			deleted.forEach((deletedMessage) => {
+				if (deletedMessage.preview && deletedMessage.preview.thumb) {
+					storage.dereference(deletedMessage.preview.thumb);
+				}
+			});
+		}
 	}
 
 	if (!msg.self && !isOpen) {

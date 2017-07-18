@@ -33,6 +33,10 @@ module.exports = function() {
 		.use(allRequests)
 		.use(index)
 		.use(express.static("client"))
+		.use("/storage/", express.static(Helper.getStoragePath(), {
+			redirect: false,
+			maxAge: 86400 * 1000,
+		}))
 		.engine("html", expressHandlebars({
 			extname: ".html",
 			helpers: {
@@ -152,7 +156,24 @@ function index(req, res, next) {
 			filename: filename
 		};
 	});
-	res.setHeader("Content-Security-Policy", "default-src *; connect-src 'self' ws: wss:; style-src * 'unsafe-inline'; script-src 'self'; child-src 'self'; object-src 'none'; form-action 'none';");
+
+	const policies = [
+		"default-src *",
+		"connect-src 'self' ws: wss:",
+		"style-src * 'unsafe-inline'",
+		"script-src 'self'",
+		"child-src 'self'",
+		"object-src 'none'",
+		"form-action 'none'",
+	];
+
+	// If prefetch is enabled, but storage is not, we have to allow mixed content
+	if (Helper.config.prefetchStorage || !Helper.config.prefetch) {
+		policies.push("img-src 'self'");
+		policies.unshift("block-all-mixed-content");
+	}
+
+	res.setHeader("Content-Security-Policy", policies.join("; "));
 	res.setHeader("Referrer-Policy", "no-referrer");
 	res.render("index", data);
 }

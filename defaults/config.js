@@ -67,6 +67,23 @@ module.exports = {
 	prefetch: false,
 
 	//
+	// Store and proxy prefetched images and thumbnails.
+	// This improves security and privacy by not exposing client IP address,
+	// and always loading images from The Lounge instance and making all assets secure,
+	// which in result fixes mixed content warnings.
+	//
+	// If storage is enabled, The Lounge will fetch and store images and thumbnails
+	// in ~/.lounge/storage folder, or %HOME%/storage if --home is used.
+	//
+	// Images are deleted when they are no longer referenced by any message (controlled by maxHistory),
+	// and the folder is cleaned up on every The Lounge restart.
+	//
+	// @type     boolean
+	// @default  false
+	//
+	prefetchStorage: false,
+
+	//
 	// Prefetch URLs Image Preview size limit
 	//
 	// If prefetch is enabled, The Lounge will only display content under the maximum size.
