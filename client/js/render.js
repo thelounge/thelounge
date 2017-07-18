@@ -73,15 +73,13 @@ function buildChatMessage(data) {
 	const msg = $(templates[template](data.msg));
 	const text = msg.find(".text");
 
-	if (data.msg.previews.length) {
-		data.msg.previews.forEach((preview) => {
-			renderPreview(preview, msg);
-		});
-	}
-
 	if (template === "msg_action") {
 		text.html(templates.actions[type](data.msg));
 	}
+
+	data.msg.previews.forEach((preview) => {
+		renderPreview(preview, msg);
+	});
 
 	if ((type === "message" || type === "action") && chan.hasClass("channel")) {
 		const nicks = chan.find(".users").data("nicks");
