@@ -15,6 +15,19 @@ program.version(Helper.getVersion(), "-v, --version")
 
 Helper.setHome(program.home || process.env.LOUNGE_HOME);
 
+require("./start");
+require("./config");
+require("./list");
+require("./add");
+require("./remove");
+require("./reset");
+require("./edit");
+
+if (!process.argv.slice(2).length || process.argv.includes("--help")) {
+	program.help();
+	process.exit();
+}
+
 if (!fs.existsSync(Helper.CONFIG_PATH)) {
 	fsextra.ensureDirSync(Helper.HOME);
 	fs.chmodSync(Helper.HOME, "0700");
@@ -30,16 +43,4 @@ if (!fs.existsSync(Helper.CONFIG_PATH)) {
 
 fsextra.ensureDirSync(Helper.USERS_PATH);
 
-require("./start");
-require("./config");
-require("./list");
-require("./add");
-require("./remove");
-require("./reset");
-require("./edit");
-
 program.parse(process.argv);
-
-if (!program.args.length) {
-	program.help();
-}
