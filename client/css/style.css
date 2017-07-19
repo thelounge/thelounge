@@ -2085,3 +2085,19 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #image-viewer .open-btn {
 	margin: 0 auto 10px;
 }
+
+/* Correctly handle multiple successive whitespace characters.
+   For example: user has quit ( ===> L   O   L <=== )  */
+
+#windows .header .topic,
+#chat .message .text,
+#chat .motd .text,
+#chat .notice .text,
+#chat .ctcp-message,
+#chat .part-reason,
+#chat .quit-reason,
+#chat .new-topic,
+#chat .action-text,
+#chat table.channel-list .topic {
+	white-space: pre-wrap;
+}
