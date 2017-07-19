@@ -27,8 +27,9 @@ describe("Link plugin", function() {
 	});
 
 	it("should be able to fetch basic information about URLs", function(done) {
+		const url = "http://localhost:9002/basic";
 		const message = this.irc.createMessage({
-			text: "http://localhost:9002/basic"
+			text: url
 		});
 
 		link(this.irc, this.network.channels[0], message);
@@ -41,8 +42,10 @@ describe("Link plugin", function() {
 			expect(data.preview.type).to.equal("link");
 			expect(data.preview.head).to.equal("test title");
 			expect(data.preview.body).to.equal("simple description");
-			expect(data.preview.link).to.equal("http://localhost:9002/basic");
-			expect(message.previews.length).to.equal(1);
+			expect(data.preview.link).to.equal(url);
+
+			expect(message.links).to.deep.equal([url]);
+			expect(message.previews).to.deep.equal([data.preview]);
 			done();
 		});
 	});
@@ -178,6 +181,11 @@ describe("Link plugin", function() {
 
 		link(this.irc, this.network.channels[0], message);
 
+		expect(message.links).to.deep.equal([
+			"http://localhost:9002/one",
+			"http://localhost:9002/two"
+		]);
+
 		this.app.get("/one", function(req, res) {
 			res.send("<title>first title</title>");
 		});
@@ -186,22 +194,18 @@ describe("Link plugin", function() {
 			res.send("<title>second title</title>");
 		});
 
-		const loaded = {
-			one: false,
-			two: false
-		};
+		const previews = [];
 
 		this.irc.on("msg:preview", function(data) {
 			if (data.preview.link === "http://localhost:9002/one") {
 				expect(data.preview.head).to.equal("first title");
-				loaded.one = true;
 			} else if (data.preview.link === "http://localhost:9002/two") {
 				expect(data.preview.head).to.equal("second title");
-				loaded.two = true;
 			}
+			previews.push(data.preview);
 
-			if (loaded.one && loaded.two) {
-				expect(message.previews.length).to.equal(2);
+			if (previews.length === 2) {
+				expect(message.previews).to.deep.equal(previews);
 				done();
 			}
 		});

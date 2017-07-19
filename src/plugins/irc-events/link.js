@@ -24,19 +24,19 @@ module.exports = function(client, chan, msg) {
 		return;
 	}
 
-	Array.from(new Set( // Remove duplicate links
+	msg.links = Array.from(new Set( // Remove duplicate links
 		links.map((link) => escapeHeader(link.link))
-	))
-		.slice(0, 5) // Only preview the first 5 URLs in message to avoid abuse
-		.forEach((link) => {
-			fetch(link, function(res) {
-				if (res === null) {
-					return;
-				}
+	)).slice(0, 5); // Only preview the first 5 URLs in message to avoid abuse
 
-				parse(msg, link, res, client);
-			});
+	msg.links.forEach((link) => {
+		fetch(link, function(res) {
+			if (res === null) {
+				return;
+			}
+
+			parse(msg, link, res, client);
 		});
+	});
 };
 
 function parse(msg, url, res, client) {

@@ -7,5 +7,11 @@
 			{{> user_name nick=from}}
 		{{/if}}
 	</span>
-	<span class="text">{{{parse text}}}</span>
+	<span class="text">
+		{{{parse text}}}
+
+		{{#each links}}
+			<div class="preview" data-url="{{this}}"></div>
+		{{/each}}
+	</span>
 </div>
