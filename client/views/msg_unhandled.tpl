@@ -3,7 +3,7 @@
 		{{tz time}}
 	</span>
 	<span class="from">[{{command}}]</span>
-	<span class="text">
+	<span class="content">
 		{{#each params}}
 			<span>{{this}}</span>
 		{{/each}}

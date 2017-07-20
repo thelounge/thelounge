@@ -34,7 +34,7 @@ function renderPreview(preview, msg) {
 $("#chat").on("click", ".toggle-button", function() {
 	const self = $(this);
 	const container = self.closest(".chat");
-	const content = self.closest(".text")
+	const content = self.closest(".content")
 		.find(`.preview[data-url="${self.data("url")}"] .toggle-content`);
 	const bottom = container.isScrollBottom();
 

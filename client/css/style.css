@@ -943,7 +943,7 @@ kbd {
 
 #chat .time,
 #chat .from,
-#chat .text {
+#chat .content {
 	display: block;
 	padding: 2px 0;
 	flex: 0 0 auto;
@@ -965,7 +965,7 @@ kbd {
 	position: relative;
 }
 
-#chat .text {
+#chat .content {
 	flex: 1 1 auto;
 	overflow: hidden;
 }
@@ -1024,7 +1024,7 @@ kbd {
 #chat.colored-nicks .user.color-31 { color: #ff4846; }
 #chat.colored-nicks .user.color-32 { color: #ff199b; }
 
-#chat .text {
+#chat .content {
 	padding-left: 10px;
 	padding-right: 6px;
 }
@@ -1093,14 +1093,14 @@ kbd {
 	display: none !important;
 }
 
-#chat .join .text,
-#chat .kick .text,
-#chat .mode .text,
-#chat .nick .text,
-#chat .part .text,
-#chat .quit .text,
-#chat .topic .text,
-#chat .topic_set_by .text {
+#chat .join .content,
+#chat .kick .content,
+#chat .mode .content,
+#chat .nick .content,
+#chat .part .content,
+#chat .quit .content,
+#chat .topic .content,
+#chat .topic_set_by .content {
 	color: #999;
 }
 
@@ -1978,7 +1978,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 	#chat .time,
 	#chat .from,
-	#chat .text {
+	#chat .content {
 		border: 0;
 		display: inline;
 		padding: 0;
@@ -2097,7 +2097,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #chat .part-reason,
 #chat .quit-reason,
 #chat .new-topic,
-#chat .action-text,
+#chat .action .text,
 #chat table.channel-list .topic {
 	white-space: pre-wrap;
 }
