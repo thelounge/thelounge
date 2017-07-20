@@ -693,11 +693,12 @@ $(function() {
 
 	chat.on("click", ".show-more-button", function() {
 		var self = $(this);
-		var count = self.parent().next(".messages").children(".msg").length;
+		var lastMessage = self.parent().next(".messages").children(".msg").first();
+		var lastMessageId = parseInt(lastMessage[0].id.replace("msg-", ""), 10);
 		self.prop("disabled", true);
 		socket.emit("more", {
 			target: self.data("id"),
-			count: count
+			lastId: lastMessageId
 		});
 	});
 
