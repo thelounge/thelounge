@@ -71,10 +71,10 @@ function buildChatMessage(data) {
 	}
 
 	const msg = $(templates[template](data.msg));
-	const text = msg.find(".text");
+	const content = msg.find(".content");
 
 	if (template === "msg_action") {
-		text.html(templates.actions[type](data.msg));
+		content.html(templates.actions[type](data.msg));
 	}
 
 	data.msg.previews.forEach((preview) => {

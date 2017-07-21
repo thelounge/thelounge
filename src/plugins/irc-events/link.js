@@ -24,30 +24,28 @@ module.exports = function(client, chan, msg) {
 		return;
 	}
 
-	Array.from(new Set( // Remove duplicate links
+	msg.previews = Array.from(new Set( // Remove duplicate links
 		links.map((link) => escapeHeader(link.link))
-	))
-		.slice(0, 5) // Only preview the first 5 URLs in message to avoid abuse
-		.forEach((link) => {
-			fetch(link, function(res) {
-				if (res === null) {
-					return;
-				}
-
-				parse(msg, link, res, client);
-			});
-		});
-};
-
-function parse(msg, url, res, client) {
-	const preview = {
-		type: "",
+	)).map((link) => ({
+		type: "loading",
 		head: "",
 		body: "",
 		thumb: "",
-		link: url,
-	};
+		link: link,
+	})).slice(0, 5); // Only preview the first 5 URLs in message to avoid abuse
 
+	msg.previews.forEach((preview) => {
+		fetch(preview.link, function(res) {
+			if (res === null) {
+				return;
+			}
+
+			parse(msg, preview, res, client);
+		});
+	});
+};
+
+function parse(msg, preview, res, client) {
 	switch (res.type) {
 	case "text/html":
 		var $ = cheerio.load(res.data);
@@ -129,8 +127,6 @@ function emitPreview(client, msg, preview) {
 			return;
 		}
 	}
-
-	msg.previews.push(preview);
 
 	client.emit("msg:preview", {
 		id: msg.id,

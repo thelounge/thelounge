@@ -3,5 +3,5 @@
 		{{tz time}}
 	</span>
 	<span class="from"></span>
-	<span class="text"></span>
+	<span class="content"></span>
 </div>
