@@ -1,6 +1,7 @@
 "use strict";
 
 const $ = require("jquery");
+const escapeRegExp = require("lodash/escapeRegExp");
 const settings = $("#settings");
 const userStyles = $("#user-specified-css");
 const storage = require("./localStorage");
@@ -98,6 +99,15 @@ settings.on("change", "input, select, textarea", function() {
 			// otherwise, users get notifications for everything
 			return h !== "";
 		});
+		// Construct regex with wordboundary for every highlight item
+		const highlightsTokens = options.highlights.map(function(h) {
+			return escapeRegExp(h);
+		});
+		if (highlightsTokens && highlightsTokens.length) {
+			module.exports.highlightsRE = new RegExp("\\b(?:" + highlightsTokens.join("|") + ")\\b", "i");
+		} else {
+			module.exports.highlightsRE = null;
+		}
 	} else if (name === "showSeconds") {
 		chat.find(".msg > .time").each(function() {
 			$(this).text(tz($(this).parent().data("time")));
