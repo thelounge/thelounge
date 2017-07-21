@@ -81,7 +81,7 @@ module.exports = function(irc, network) {
 				return;
 			}
 
-			const user = _.find(targetChan.users, {nick: mode.param});
+			const user = targetChan.findUser(mode.param);
 			if (!user) {
 				return;
 			}
