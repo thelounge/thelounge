@@ -8,6 +8,10 @@ const templates = require("../views");
 module.exports = renderPreview;
 
 function renderPreview(preview, msg) {
+	if (preview.type === "loading") {
+		return;
+	}
+
 	preview.shown = options.shouldOpenMessagePreview(preview.type);
 
 	const container = msg.closest(".chat");

@@ -34,6 +34,14 @@ describe("Link plugin", function() {
 
 		link(this.irc, this.network.channels[0], message);
 
+		expect(message.previews).to.deep.equal([{
+			body: "",
+			head: "",
+			link: url,
+			thumb: "",
+			type: "loading"
+		}]);
+
 		this.app.get("/basic", function(req, res) {
 			res.send("<title>test title</title><meta name='description' content='simple description'>");
 		});
@@ -44,7 +52,6 @@ describe("Link plugin", function() {
 			expect(data.preview.body).to.equal("simple description");
 			expect(data.preview.link).to.equal(url);
 
-			expect(message.links).to.deep.equal([url]);
 			expect(message.previews).to.deep.equal([data.preview]);
 			done();
 		});
@@ -181,10 +188,19 @@ describe("Link plugin", function() {
 
 		link(this.irc, this.network.channels[0], message);
 
-		expect(message.links).to.deep.equal([
-			"http://localhost:9002/one",
-			"http://localhost:9002/two"
-		]);
+		expect(message.previews).to.eql([{
+			body: "",
+			head: "",
+			link: "http://localhost:9002/one",
+			thumb: "",
+			type: "loading"
+		}, {
+			body: "",
+			head: "",
+			link: "http://localhost:9002/two",
+			thumb: "",
+			type: "loading"
+		}]);
 
 		this.app.get("/one", function(req, res) {
 			res.send("<title>first title</title>");
@@ -199,13 +215,14 @@ describe("Link plugin", function() {
 		this.irc.on("msg:preview", function(data) {
 			if (data.preview.link === "http://localhost:9002/one") {
 				expect(data.preview.head).to.equal("first title");
+				previews[0] = data.preview;
 			} else if (data.preview.link === "http://localhost:9002/two") {
 				expect(data.preview.head).to.equal("second title");
+				previews[1] = data.preview;
 			}
-			previews.push(data.preview);
 
-			if (previews.length === 2) {
-				expect(message.previews).to.deep.equal(previews);
+			if (previews[0] && previews[1]) {
+				expect(message.previews).to.eql(previews);
 				done();
 			}
 		});

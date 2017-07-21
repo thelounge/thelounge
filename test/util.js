@@ -21,7 +21,6 @@ MockClient.prototype.createMessage = function(opts) {
 		text: "dummy message",
 		nick: "test-user",
 		target: "#test-channel",
-		links: [],
 		previews: [],
 	}, opts);
 
