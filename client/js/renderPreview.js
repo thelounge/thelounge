@@ -12,6 +12,18 @@ function renderPreview(preview, msg) {
 		return;
 	}
 
+	const escapedLink = preview.link.replace(/["\\]/g, "\\$&");
+	const previewContainer = msg.find(`.preview[data-url="${escapedLink}"]`);
+
+	// This is to fix a very rare case of rendering a preview twice
+	// This happens when a very large amount of messages is being sent to the client
+	// and they get queued, so the `preview` object on the server has time to load before
+	// it actually gets sent to the server, which makes the loaded preview sent twice,
+	// once in `msg` and another in `msg:preview`
+	if (!previewContainer.is(":empty")) {
+		return;
+	}
+
 	preview.shown = options.shouldOpenMessagePreview(preview.type);
 
 	const container = msg.closest(".chat");
@@ -20,12 +32,11 @@ function renderPreview(preview, msg) {
 		bottom = container.isScrollBottom();
 	}
 
-	msg.find(`.text a[href="${preview.link}"]`)
+	msg.find(`.text a[href="${escapedLink}"]`)
 		.first()
-		.after(templates.msg_preview_toggle({preview: preview}));
+		.after(templates.msg_preview_toggle({preview: preview}).trim());
 
-	msg.find(`.preview[data-url="${preview.link}"]`)
-		.first()
+	previewContainer
 		.append(templates.msg_preview({preview: preview}));
 
 	if (preview.shown && bottom) {
