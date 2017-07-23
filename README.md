@@ -5,11 +5,13 @@ Do everything as in the lounge documentation except:
 
 1. Add your .scss files to the client/css/scss-folder.
 2. @import your scss files in main.scss
-3. npm run build (or preferably keep npm run watch on!)
+3. 'npm run build' (or preferably keep 'npm run watch' on!)
 
 See that scss code change your site!
 
 Ps. The hardworking awesome people at The Lounge are working fast so this will be built on the specific codebase that was present the day I needed it... It is not beeing maintained. DS.
+
+----------------------------------
 
 [![#thelounge IRC channel on freenode](https://img.shields.io/badge/freenode-%23thelounge-BA68C8.svg)](https://demo.thelounge.chat/)
 [![npm version](https://img.shields.io/npm/v/thelounge.svg)](https://www.npmjs.org/package/thelounge)
