@@ -100,18 +100,67 @@ $(document).keydown(function(e) {
 	case 27: // Escape
 		closeImageViewer();
 		break;
+	case 37: // Left arrow
+		if ($(document.body).hasClass("image-viewer-opened")) {
+			$("#image-viewer .previous-image-btn").click();
+		}
+		break;
+	case 39: // Right arrow
+		if ($(document.body).hasClass("image-viewer-opened")) {
+			$("#image-viewer .next-image-btn").click();
+		}
+		break;
 	}
 });
 
 function openImageViewer(link) {
+	$(".previous-image").removeClass("previous-image");
+	$(".next-image").removeClass("next-image");
+
+	// The next two blocks figure out what are the previous/next images. We first
+	// look within the same message, as there can be multiple thumbnails per
+	// message, and if not, we look at previous/next messages and take the
+	// last/first thumbnail available.
+	// Only expanded thumbnails are being cycled through.
+
+	// Previous image
+	let previousCandidates = link.closest(".preview").prev(".preview");
+	if (!previousCandidates.length) {
+		previousCandidates = link.closest(".msg").prevAll();
+	}
+	const previousImage = previousCandidates
+		.find(".toggle-content.show .toggle-thumbnail").last();
+	previousImage.addClass("previous-image");
+
+	// Next image
+	let nextCandidates = link.closest(".preview").next(".preview");
+	if (!nextCandidates.length) {
+		nextCandidates = link.closest(".msg").nextAll();
+	}
+	const nextImage = nextCandidates
+		.find(".toggle-content.show .toggle-thumbnail").first();
+	nextImage.addClass("next-image");
+
 	$("#image-viewer").html(templates.image_viewer({
 		image: link.find("img").attr("src"),
 		link: link.attr("href"),
-		type: link.parent().hasClass("toggle-type-image") ? "image" : "link"
+		type: link.parent().hasClass("toggle-type-image") ? "image" : "link",
+		hasPreviousImage: previousImage.length > 0,
+		hasNextImage: nextImage.length > 0,
 	}));
 
 	$(document.body).addClass("image-viewer-opened");
 }
+
+$("#image-viewer").on("click", ".previous-image-btn", function() {
+	$(".previous-image").click();
+	return false;
+});
+
+$("#image-viewer").on("click", ".next-image-btn", function() {
+	$(".next-image").click();
+	return false;
+});
 
 function closeImageViewer() {
 	$(document.body)
