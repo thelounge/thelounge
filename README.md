@@ -1,11 +1,11 @@
 # The Lounge
 
-## FORK NOTE
-Do everything as in the lounge documentation except:
+## FORK NOTES
+Do everything as in the lounge documentation and then do the following:
 
-1. Add your .scss files to the client/css/scss-folder.
-2. @import your scss files in main.scss
-3. 'npm run build' (or preferably keep 'npm run watch' on!)
+1. Add your .scss files to the **client/css/scss-folder**.
+2. *@import* your scss files in **main.scss**
+3. *npm run build* (or preferably keep *npm run watch* on!)
 
 See that scss code change your site!
 
