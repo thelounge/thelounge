@@ -903,6 +903,26 @@
 
 	<div id="image-viewer"></div>
 
+	<div id="message-search">
+		<button class="close-btn" aria-label="Close">×</button>
+		<form action="" method="post" class="message-search-modal">
+			<input type="search" class="message-search-input" placeholder="Message to find">
+			<label for="message-search-case-sensitive">
+				<input id="message-search-case-sensitive" type="checkbox">
+				Case sensitive
+			</label>
+			<label for="message-search-limit-channel">
+				<input id="message-search-limit-channel" type="checkbox">
+				Only search <span>#todo</span>
+			</label>
+			<label for="message-search-limit-network">
+				<input id="message-search-limit-network" type="checkbox">
+				Only search <span>freenode</span>
+			</label>
+			<button type="submit" class="btn">Search</button>
+		</form>
+	</div>
+
 	<script src="js/bundle.vendor.js"></script>
 	<script src="js/bundle.js"></script>
 

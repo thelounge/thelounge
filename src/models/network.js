@@ -59,6 +59,16 @@ Network.prototype.setNick = function(nick) {
 	);
 };
 
+Network.prototype.search = function(options) {
+	var messages = [];
+
+	this.channels.forEach(function(channel) {
+		messages = messages.concat(channel.search(options));
+	});
+
+	return messages;
+};
+
 Network.prototype.toJSON = function() {
 	return _.omit(this, [
 		"awayMessage",

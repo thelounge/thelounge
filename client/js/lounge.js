@@ -899,7 +899,28 @@ $(function() {
 					.get(0).setSelectionRange(cursorPosStart + 1, cursorPosEnd + 1);
 			});
 		}
+
+		Mousetrap.bind([
+			"command+shift+f",
+			"ctrl+shift+f"
+		], function() {
+			$(document.body).addClass("message-search-opened");
+			$("#message-search-input").focus();
+		});
 	}());
+
+	$("#message-search form").on("submit", function() {
+		$(document.body).removeClass("message-search-opened");
+
+		socket.emit("search", {
+			query: $(".message-search-input").val(),
+			caseSensitive: $("#message-search-case-sensitive").is(":checked")
+		});
+	});
+
+	$("#message-search .close-btn").on("click", function() {
+		$(document.body).removeClass("message-search-opened");
+	});
 
 	setInterval(function() {
 		chat.find(".chan:not(.active)").each(function() {

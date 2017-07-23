@@ -529,6 +529,45 @@ Client.prototype.clientDetach = function(socketId) {
 	}
 };
 
+Client.prototype.searchMessages = function(userOptions) {
+	const client = this;
+
+	const options = {
+		query: userOptions.query,
+		caseSensitive: !!userOptions.caseSensitive
+	};
+
+	options.searchRegex = new RegExp(_.escapeRegExp(options.query), options.caseSensitive ? "" : "i");
+
+	let messages = [];
+	this.networks.forEach(function(network) {
+		messages = messages.concat(network.search(options));
+	});
+
+	messages.sort((a, b) => a.time - b.time);
+
+	const network = this.networks[0];
+	let chan = network.getChannel("Search Results for " + options.query);
+	if (typeof chan === "undefined") {
+		chan = new Chan({
+			type: Chan.Type.QUERY,
+			name: "Search Results for " + options.query,
+			messages: messages,
+		});
+		network.channels.push(chan);
+	} else {
+		chan.messages = messages;
+		client.emit("part", {
+			chan: chan.id
+		});
+	}
+
+	client.emit("join", {
+		network: network.id,
+		chan: chan
+	});
+};
+
 Client.prototype.save = _.debounce(function SaveClient() {
 	if (Helper.config.public) {
 		return;
