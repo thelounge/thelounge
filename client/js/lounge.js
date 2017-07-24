@@ -23,6 +23,8 @@ const constants = require("./constants");
 const storage = require("./localStorage");
 const utils = require("./utils");
 
+require("../css/scss/main.scss");
+
 $(function() {
 	var sidebar = $("#sidebar, #footer");
 	var chat = $("#chat");
