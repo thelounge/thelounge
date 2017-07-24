@@ -209,7 +209,9 @@ kbd {
 #chat .action .from:before,
 #chat .toggle-button:after,
 .context-menu-item:before,
-#nick button:before {
+#nick button:before,
+#image-viewer .previous-image-btn:before,
+#image-viewer .next-image-btn:before {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-size: inherit; /* Can't have font-size inherit on line above, so need to override */
 	-webkit-font-smoothing: antialiased;
@@ -330,6 +332,14 @@ kbd {
 
 #cancel-nick:before {
 	content: "\f00d"; /* http://fontawesome.io/icon/times/ */
+}
+
+#image-viewer .previous-image-btn:before {
+	content: "\f104"; /* http://fontawesome.io/icon/angle-left/ */
+}
+
+#image-viewer .next-image-btn:before {
+	content: "\f105"; /* http://fontawesome.io/icon/angle-right/ */
 }
 
 /* End icons */
@@ -2051,20 +2061,45 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	opacity: 1;
 }
 
-#image-viewer .close-btn {
+#image-viewer .close-btn,
+#image-viewer .previous-image-btn,
+#image-viewer .next-image-btn {
 	position: fixed;
 	top: 0;
-	right: 0;
 	width: 2em;
-	height: 2em;
 	font-size: 36px;
 	color: white;
-	z-index: 1001;
 	opacity: .6;
 	transition: .2s opacity;
 }
 
-#image-viewer .close-btn:hover {
+#image-viewer .close-btn {
+	right: 0;
+	height: 2em;
+	z-index: 1002;
+}
+
+#image-viewer .close-btn:before {
+	content: "×";
+}
+
+#image-viewer .previous-image-btn,
+#image-viewer .next-image-btn {
+	bottom: 0;
+	z-index: 1001;
+}
+
+#image-viewer .previous-image-btn {
+	left: 0;
+}
+
+#image-viewer .next-image-btn {
+	right: 0;
+}
+
+#image-viewer .close-btn:hover,
+#image-viewer .previous-image-btn:hover,
+#image-viewer .next-image-btn:hover {
 	opacity: 1;
 }
 
