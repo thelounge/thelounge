@@ -126,21 +126,21 @@ function openImageViewer(link) {
 	// Only expanded thumbnails are being cycled through.
 
 	// Previous image
-	let previousCandidates = link.closest(".preview").prev(".preview");
-	if (!previousCandidates.length) {
-		previousCandidates = link.closest(".msg").prevAll();
-	}
-	const previousImage = previousCandidates
+	let previousImage = link.closest(".preview").prev(".preview")
 		.find(".toggle-content.show .toggle-thumbnail").last();
+	if (!previousImage.length) {
+		previousImage = link.closest(".msg").prevAll()
+			.find(".toggle-content.show .toggle-thumbnail").last();
+	}
 	previousImage.addClass("previous-image");
 
 	// Next image
-	let nextCandidates = link.closest(".preview").next(".preview");
-	if (!nextCandidates.length) {
-		nextCandidates = link.closest(".msg").nextAll();
-	}
-	const nextImage = nextCandidates
+	let nextImage = link.closest(".preview").next(".preview")
 		.find(".toggle-content.show .toggle-thumbnail").first();
+	if (!nextImage.length) {
+		nextImage = link.closest(".msg").nextAll()
+			.find(".toggle-content.show .toggle-thumbnail").first();
+	}
 	nextImage.addClass("next-image");
 
 	imageViewer.html(templates.image_viewer({
