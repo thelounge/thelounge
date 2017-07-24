@@ -39,7 +39,8 @@ describe("Link plugin", function() {
 			head: "",
 			link: url,
 			thumb: "",
-			type: "loading"
+			type: "loading",
+			shown: true,
 		}]);
 
 		this.app.get("/basic", function(req, res) {
@@ -193,13 +194,15 @@ describe("Link plugin", function() {
 			head: "",
 			link: "http://localhost:9002/one",
 			thumb: "",
-			type: "loading"
+			type: "loading",
+			shown: true,
 		}, {
 			body: "",
 			head: "",
 			link: "http://localhost:9002/two",
 			thumb: "",
-			type: "loading"
+			type: "loading",
+			shown: true,
 		}]);
 
 		this.app.get("/one", function(req, res) {

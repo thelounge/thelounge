@@ -2,6 +2,7 @@
 
 const $ = require("jquery");
 const options = require("./options");
+const socket = require("./socket");
 const templates = require("../views");
 const input = $("#input");
 
@@ -24,7 +25,7 @@ function renderPreview(preview, msg) {
 		return;
 	}
 
-	preview.shown = options.shouldOpenMessagePreview(preview.type);
+	preview.shown = preview.shown && options.shouldOpenMessagePreview(preview.type);
 
 	const container = msg.closest(".chat");
 	let bottom = false;
@@ -59,6 +60,16 @@ $("#chat").on("click", ".toggle-button", function() {
 
 	self.toggleClass("opened");
 	content.toggleClass("show");
+
+	// Tell the server we're toggling so it remembers at page reload
+	// TODO Avoid sending many single events when using `/collapse` or `/expand`
+	// See https://github.com/thelounge/lounge/issues/1377
+	socket.emit("msg:preview:toggle", {
+		target: parseInt(self.closest(".chan").data("id"), 10),
+		msgId: parseInt(self.closest(".msg").attr("id").replace("msg-", ""), 10),
+		link: self.data("url"),
+		shown: content.hasClass("show"),
+	});
 
 	// If scrollbar was at the bottom before toggling the preview, keep it at the bottom
 	if (bottom) {

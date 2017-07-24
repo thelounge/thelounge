@@ -93,6 +93,10 @@ Chan.prototype.sortUsers = function(irc) {
 	});
 };
 
+Chan.prototype.findMessage = function(msgId) {
+	return this.messages.find((message) => message.id === msgId);
+};
+
 Chan.prototype.findUser = function(nick) {
 	return _.find(this.users, {nick: nick});
 };

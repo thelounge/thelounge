@@ -2,6 +2,31 @@
 
 var _ = require("lodash");
 
+var id = 0;
+
+class Msg {
+	constructor(attr) {
+		_.defaults(this, attr, {
+			from: "",
+			id: id++,
+			previews: [],
+			text: "",
+			type: Msg.Type.MESSAGE,
+			self: false
+		});
+
+		if (this.time > 0) {
+			this.time = new Date(this.time);
+		} else {
+			this.time = new Date();
+		}
+	}
+
+	findPreview(link) {
+		return this.previews.find((preview) => preview.link === link);
+	}
+}
+
 Msg.Type = {
 	UNHANDLED: "unhandled",
 	ACTION: "action",
@@ -24,22 +49,3 @@ Msg.Type = {
 };
 
 module.exports = Msg;
-
-var id = 0;
-
-function Msg(attr) {
-	_.defaults(this, attr, {
-		from: "",
-		id: id++,
-		previews: [],
-		text: "",
-		type: Msg.Type.MESSAGE,
-		self: false
-	});
-
-	if (this.time > 0) {
-		this.time = new Date(this.time);
-	} else {
-		this.time = new Date();
-	}
-}
