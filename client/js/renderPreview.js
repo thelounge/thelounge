@@ -79,6 +79,8 @@ function handleImageInPreview(content, container) {
 
 /* Image viewer */
 
+const imageViewer = $("#image-viewer");
+
 // FIXME Remove #input focus when this is open
 // See https://github.com/thelounge/lounge/issues/1342
 $("#viewport").on("click", ".toggle-thumbnail", function() {
@@ -91,7 +93,7 @@ $("#viewport").on("click", ".toggle-thumbnail", function() {
 	return false;
 });
 
-$("#image-viewer").on("click", function() {
+imageViewer.on("click", function() {
 	closeImageViewer();
 });
 
@@ -101,13 +103,13 @@ $(document).keydown(function(e) {
 		closeImageViewer();
 		break;
 	case 37: // Left arrow
-		if ($(document.body).hasClass("image-viewer-opened")) {
-			$("#image-viewer .previous-image-btn").click();
+		if (imageViewer.hasClass("opened")) {
+			imageViewer.find(".previous-image-btn").click();
 		}
 		break;
 	case 39: // Right arrow
-		if ($(document.body).hasClass("image-viewer-opened")) {
-			$("#image-viewer .next-image-btn").click();
+		if (imageViewer.hasClass("opened")) {
+			imageViewer.find(".next-image-btn").click();
 		}
 		break;
 	}
@@ -141,7 +143,7 @@ function openImageViewer(link) {
 		.find(".toggle-content.show .toggle-thumbnail").first();
 	nextImage.addClass("next-image");
 
-	$("#image-viewer").html(templates.image_viewer({
+	imageViewer.html(templates.image_viewer({
 		image: link.find("img").attr("src"),
 		link: link.attr("href"),
 		type: link.parent().hasClass("toggle-type-image") ? "image" : "link",
@@ -149,23 +151,23 @@ function openImageViewer(link) {
 		hasNextImage: nextImage.length > 0,
 	}));
 
-	$(document.body).addClass("image-viewer-opened");
+	imageViewer.addClass("opened");
 }
 
-$("#image-viewer").on("click", ".previous-image-btn", function() {
+imageViewer.on("click", ".previous-image-btn", function() {
 	$(".previous-image").click();
 	return false;
 });
 
-$("#image-viewer").on("click", ".next-image-btn", function() {
+imageViewer.on("click", ".next-image-btn", function() {
 	$(".next-image").click();
 	return false;
 });
 
 function closeImageViewer() {
-	$(document.body)
-		.removeClass("image-viewer-opened")
+	imageViewer
+		.removeClass("opened")
 		.one("transitionend", function() {
-			$("#image-viewer").empty();
+			imageViewer.empty();
 		});
 }

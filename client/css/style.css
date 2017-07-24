@@ -347,9 +347,6 @@ kbd {
 #wrap {
 	height: 100%;
 	overflow: hidden;
-
-	/* Needed to transition blurred background when image viewer is open */
-	transition: filter .2s;
 }
 
 #viewport {
@@ -2045,18 +2042,14 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	bottom: 0;
 	left: 0;
 	right: 0;
-	background: rgba(0, 0, 0, .8);
+	background: black;
 	visibility: hidden;
 	opacity: 0;
 	transition: opacity .2s, visibility .2s;
 	z-index: 999;
 }
 
-.image-viewer-opened #wrap {
-	filter: blur(4px);
-}
-
-.image-viewer-opened #image-viewer {
+#image-viewer.opened {
 	visibility: visible;
 	opacity: 1;
 }
