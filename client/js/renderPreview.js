@@ -1,9 +1,9 @@
 "use strict";
 
 const $ = require("jquery");
-
 const options = require("./options");
 const templates = require("../views");
+const input = $("#input");
 
 module.exports = renderPreview;
 
@@ -81,15 +81,14 @@ function handleImageInPreview(content, container) {
 
 const imageViewer = $("#image-viewer");
 
-// FIXME Remove #input focus when this is open
-// See https://github.com/thelounge/lounge/issues/1342
-$("#viewport").on("click", ".toggle-thumbnail", function() {
+$("#chat").on("click", ".toggle-thumbnail", function() {
 	const link = $(this);
 
 	openImageViewer(link);
 
 	// Prevent the link to open a new page since we're opening the image viewer,
-	// but keep it a link to allow for Ctrl/Cmd+click
+	// but keep it a link to allow for Ctrl/Cmd+click.
+	// By binding this event on #chat we prevent input gaining focus after clicking.
 	return false;
 });
 
@@ -170,4 +169,6 @@ function closeImageViewer() {
 		.one("transitionend", function() {
 			imageViewer.empty();
 		});
+
+	input.focus();
 }
