@@ -90,10 +90,6 @@ body {
 	color: #bc8cbc;
 }
 
-#chat .user:hover {
-	color: #dcdccc;
-}
-
 #chat.colored-nicks .user.color-1 { color: #f7adf7; }
 #chat.colored-nicks .user.color-2 { color: #abf99f; }
 #chat.colored-nicks .user.color-3 { color: #86efdc; }
