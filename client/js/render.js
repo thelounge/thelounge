@@ -36,10 +36,6 @@ function buildChatMessage(data) {
 		target = "#chan-" + chat.find(".active").data("id");
 	}
 
-	data.msg.previews.forEach((preview) => {
-		preview.shown = options.shouldOpenMessagePreview(preview.type);
-	});
-
 	const chan = chat.find(target);
 	let template = "msg";
 

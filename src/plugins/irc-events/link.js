@@ -32,6 +32,7 @@ module.exports = function(client, chan, msg) {
 		body: "",
 		thumb: "",
 		link: link,
+		shown: true,
 	})).slice(0, 5); // Only preview the first 5 URLs in message to avoid abuse
 
 	msg.previews.forEach((preview) => {
