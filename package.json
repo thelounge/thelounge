@@ -59,7 +59,8 @@
     "request": "2.81.0",
     "semver": "5.4.1",
     "socket.io": "1.7.4",
-    "spdy": "3.4.7"
+    "spdy": "3.4.7",
+    "urijs": "1.18.10"
   },
   "devDependencies": {
     "babel-core": "6.25.0",
@@ -81,7 +82,6 @@
     "socket.io-client": "1.7.4",
     "stylelint": "8.0.0",
     "stylelint-config-standard": "17.0.0",
-    "urijs": "1.18.10",
     "webpack": "3.4.1"
   }
 }
