@@ -3,6 +3,9 @@
   "description": "The self-hosted Web IRC client",
   "version": "2.3.2",
   "preferGlobal": true,
+  "publishConfig": {
+    "tag": "next"
+  },
   "bin": {
     "lounge": "index.js"
   },
