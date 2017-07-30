@@ -958,7 +958,7 @@ kbd {
 }
 
 #chat .time {
-	color: #ddd;
+	color: #777;
 	padding-left: 10px;
 }
 
@@ -1038,11 +1038,11 @@ kbd {
 }
 
 #chat .self .text {
-	color: #999;
+	color: #444;
 }
 
 #chat .msg.channel_list_loading .text {
-	color: #999;
+	color: #444;
 	font-style: italic;
 	padding-left: 20px;
 }
@@ -1109,7 +1109,7 @@ kbd {
 #chat .quit .content,
 #chat .topic .content,
 #chat .topic_set_by .content {
-	color: #999;
+	color: #444;
 }
 
 #chat .action .from,
@@ -1202,7 +1202,7 @@ kbd {
 }
 
 #chat .toggle-content .body {
-	color: #999;
+	color: #444;
 }
 
 #chat .toggle-content.show {
