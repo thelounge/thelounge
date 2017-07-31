@@ -51,17 +51,10 @@ $(function() {
 		id: "emoji",
 		match: /\B:([-+\w:?]{2,}):?$/,
 		search(term, callback) {
-			const results = fuzzy.filter(
-				// Trim colon from the matched term,
-				// as we are unable to get a clean string from match regex
-				term.replace(/:$/, ""),
-				emojiSearchTerms,
-				{
-					pre: "<b>",
-					post: "</b>"
-				}
-			);
-			callback(results.map((el) => [el.string, el.original]));
+			// Trim colon from the matched term,
+			// as we are unable to get a clean string from match regex
+			term = term.replace(/:$/, ""),
+			callback(fuzzyGrep(term, emojiSearchTerms));
 		},
 		template([string, original]) {
 			return `<span class="emoji">${emojiMap[original]}</span> ${string}`;
@@ -83,11 +76,11 @@ $(function() {
 				callback(completeNicks(term));
 			}
 		},
-		template(value) {
-			return value;
+		template([string, ]) {
+			return string;
 		},
-		replace(value) {
-			return value;
+		replace([, original]) {
+			return original;
 		},
 		index: 1
 	};
@@ -98,11 +91,11 @@ $(function() {
 		search(term, callback, match) {
 			callback(completeChans(match[0]));
 		},
-		template(value) {
-			return value;
+		template([string,]) {
+			return string;
 		},
-		replace(value) {
-			return value;
+		replace([, original]) {
+			return original;
 		},
 		index: 1
 	};
@@ -113,11 +106,11 @@ $(function() {
 		search(term, callback) {
 			callback(completeCommands("/" + term));
 		},
-		template(value) {
-			return value;
+		template([string, ]) {
+			return string;
 		},
-		replace(value) {
-			return value;
+		replace([, original]) {
+			return original;
 		},
 		index: 1
 	};
@@ -278,7 +271,7 @@ $(function() {
 
 			chat.find(".chan.active .chat").trigger("msg.sticky"); // fix growing
 		})
-		.tab(completeNicks, {hint: false})
+		.tab(tabCompleteNicks, {hint: false})
 		.on("autocomplete:on", function() {
 			enableAutocomplete();
 		});
@@ -919,7 +912,19 @@ $(function() {
 		}
 	}());
 
-	function completeNicks(word) {
+	function fuzzyGrep(term, array) {
+		const results = fuzzy.filter(
+			term,
+			array,
+			{
+				pre: "<b>",
+				post: "</b>"
+			}
+		);
+		return results.map((el) => [el.string, el.original]);
+	}
+
+	function tabCompleteNicks(word) {
 		const users = chat.find(".active .users");
 
 		// Lobbies and private chats do not have an user list
@@ -935,13 +940,23 @@ $(function() {
 		);
 	}
 
+	function completeNicks(word) {
+		const users = chat.find(".active .users");
+
+		// Lobbies and private chats do not have an user list
+		if (!users.length) {
+			return [];
+		}
+
+		const words = users.data("nicks");
+
+		return fuzzyGrep(word, words);
+	}
+
 	function completeCommands(word) {
 		const words = constants.commands.slice();
 
-		return $.grep(
-			words,
-			(w) => !w.toLowerCase().indexOf(word.toLowerCase())
-		);
+		return fuzzyGrep(word, words);
 	}
 
 	function completeChans(word) {
@@ -955,10 +970,7 @@ $(function() {
 				}
 			});
 
-		return $.grep(
-			words,
-			(w) => !w.toLowerCase().indexOf(word.toLowerCase())
-		);
+		return fuzzyGrep(word, words);
 	}
 
 	$(document).on("visibilitychange focus click", () => {
