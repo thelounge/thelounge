@@ -233,6 +233,17 @@ body {
 	color: #ccc;
 }
 
+#chat .join .content,
+#chat .kick .content,
+#chat .mode .content,
+#chat .nick .content,
+#chat .part .content,
+#chat .quit .content,
+#chat .topic .content,
+#chat .topic_set_by .content {
+	color: #999;
+}
+
 /* Previews */
 
 #chat .toggle-content,
