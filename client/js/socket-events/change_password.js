@@ -2,7 +2,6 @@
 
 const $ = require("jquery");
 const socket = require("../socket");
-const storage = require("../localStorage");
 
 socket.on("change-password", function(data) {
 	const passwordForm = $("#change-password");
@@ -20,10 +19,6 @@ socket.on("change-password", function(data) {
 		feedback.closest("form").one("submit", function() {
 			feedback.hide();
 		});
-	}
-
-	if (data.token && storage.get("token") !== null) {
-		storage.set("token", data.token);
 	}
 
 	passwordForm

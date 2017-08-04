@@ -25,14 +25,8 @@ ClientManager.prototype.init = function(identHandler, sockets) {
 	}
 };
 
-ClientManager.prototype.findClient = function(name, token) {
-	for (var i in this.clients) {
-		var client = this.clients[i];
-		if (client.name === name || (token && token === client.config.token)) {
-			return client;
-		}
-	}
-	return false;
+ClientManager.prototype.findClient = function(name) {
+	return this.clients.find((u) => u.name === name);
 };
 
 ClientManager.prototype.autoloadUsers = function() {
@@ -105,7 +99,8 @@ ClientManager.prototype.addUser = function(name, password, enableLog) {
 			password: password || "",
 			log: enableLog,
 			awayMessage: "",
-			networks: []
+			networks: [],
+			sessions: {},
 		};
 		fs.writeFileSync(
 			Helper.getUserConfigPath(name),
