@@ -194,6 +194,7 @@ kbd {
 #chat .title:before,
 #footer .icon,
 #chat .count:before,
+#settings .extra-help,
 #settings #play:before,
 #form #submit:before,
 #chat .invite .from:before,
@@ -332,6 +333,10 @@ kbd {
 	right: 18px;
 	font-size: 14px;
 	line-height: 50px;
+}
+
+#settings .extra-help:before {
+	content: "\f059"; /* http://fontawesome.io/icon/question-circle/ */
 }
 
 #settings #play:before {
@@ -1400,8 +1405,13 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin: 4px 10px 0 0;
 }
 
+#settings .extra-help,
 #settings #play {
 	color: #7f8c8d;
+}
+
+#settings .extra-help {
+	cursor: help;
 }
 
 #settings #play {
@@ -1723,6 +1733,16 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	animation-timing-function: ease-in;
 	-webkit-animation-delay: .4s;
 	animation-delay: .4s;
+}
+
+.tooltipped-no-delay:hover:before,
+.tooltipped-no-delay:hover:after,
+.tooltipped-no-delay:active:before,
+.tooltipped-no-delay:active:after,
+.tooltipped-no-delay:focus:before,
+.tooltipped-no-delay:focus:after {
+	-webkit-animation-delay: 0s;
+	animation-delay: 0s;
 }
 
 .tooltipped-s:after,
