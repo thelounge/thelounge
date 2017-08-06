@@ -198,7 +198,6 @@ kbd {
 #settings #play:before,
 #form #submit:before,
 #chat .invite .from:before,
-#chat .condensed .expander:before,
 #chat .join .from:before,
 #chat .kick .from:before,
 #chat .part .from:before,
@@ -284,22 +283,6 @@ kbd {
 #chat .nick .from:before {
 	content: "\f007"; /* http://fontawesome.io/icon/user/ */
 	color: #2ecc40;
-}
-
-#chat .condensed {
-	cursor: pointer;
-}
-
-#chat .condensed div {
-	cursor: default;
-}
-
-#chat .condensed .expander:before {
-	content: "\f0d7"; /* http://fontawesome.io/icon/caret-down/ */
-}
-
-#chat .condensed.closed .expander:before {
-	content: "\f0da"; /* http://fontawesome.io/icon/caret-right/ */
 }
 
 #chat .join .from:before {
@@ -827,8 +810,21 @@ kbd {
 	flex-wrap: wrap;
 }
 
-#chat .condensed .msg {
-	flex-basis: 100%;
+#chat .condensed .content {
+	flex: 1;
+}
+
+#chat .condensed-text {
+	cursor: pointer;
+	transition: opacity .2s;
+}
+
+#chat .condensed-text:hover {
+	opacity: .6;
+}
+
+#chat .condensed-text .toggle-button:hover {
+	opacity: 1;
 }
 
 #chat .condensed.closed .msg {
@@ -1174,17 +1170,12 @@ kbd {
 
 #chat .toggle-button {
 	display: inline-block;
-	color: #666;
-	transition: color .2s, transform .2s;
+	transition: opacity .2s, transform .2s;
 }
 
-#chat .toggle-button.opened {
+#chat .toggle-button.opened, /* Thumbnail toggle */
+#chat .msg.condensed:not(.closed) .toggle-button { /* Expanded status message toggle */
 	transform: rotate(90deg);
-}
-
-#chat .toggle-button:hover {
-	/* transform and opacity together glitch, so need to use RGBA transition */
-	color: rgba(102, 102, 102, .8); /* #666 x .8 opacity */
 }
 
 #chat .toggle-content {

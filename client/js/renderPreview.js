@@ -47,7 +47,7 @@ function renderPreview(preview, msg) {
 	container.trigger("keepToBottom");
 }
 
-$("#chat").on("click", ".toggle-button", function() {
+$("#chat").on("click", ".text .toggle-button", function() {
 	const self = $(this);
 	const container = self.closest(".chat");
 	const content = self.closest(".content")

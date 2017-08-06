@@ -439,12 +439,8 @@ $(function() {
 		}
 	});
 
-	chat.on("click", ".condensed", function() {
-		$(this).toggleClass("closed");
-	});
-
-	chat.on("click", ".condensed div", function(e) {
-		e.stopPropagation();
+	chat.on("click", ".condensed-text", function() {
+		$(this).closest(".msg.condensed").toggleClass("closed");
 	});
 
 	chat.on("click", ".user", function() {

@@ -25,6 +25,7 @@ module.exports = {
 	date_marker: require("./date-marker.tpl"),
 	msg: require("./msg.tpl"),
 	msg_action: require("./msg_action.tpl"),
+	msg_condensed_toggle: require("./msg_condensed_toggle.tpl"),
 	msg_condensed: require("./msg_condensed.tpl"),
 	msg_preview: require("./msg_preview.tpl"),
 	msg_preview_toggle: require("./msg_preview_toggle.tpl"),

@@ -1,6 +1,7 @@
 "use strict";
 
 const constants = require("./constants");
+const templates = require("../views");
 
 module.exports = {
 	updateText
@@ -33,5 +34,6 @@ function updateText(condensed, addedTypes) {
 			text += obj[messageType] > 1 ? "s" : "";
 		}
 	}
-	condensed.find(".condensed-msg").text(text);
+	condensed.find(".condensed-text")
+		.html(text + templates.msg_condensed_toggle());
 }
