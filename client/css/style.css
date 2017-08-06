@@ -1126,12 +1126,12 @@ kbd {
 	color: #555;
 }
 
-#chat.hide-optional .join,
-#chat.hide-optional .mode,
-#chat.hide-optional .nick,
-#chat.hide-optional .part,
-#chat.hide-optional .quit,
-#chat.hide-optional .condensed,
+#chat.hide-status-messages .join,
+#chat.hide-status-messages .mode,
+#chat.hide-status-messages .nick,
+#chat.hide-status-messages .part,
+#chat.hide-status-messages .quit,
+#chat.hide-status-messages .condensed,
 #chat.hide-motd .motd {
 	display: none !important;
 }
@@ -1397,12 +1397,11 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #settings .opt {
 	display: block;
-	padding: 5px 0 10px 1px;
+	padding: 5px 0 5px 1px;
 }
 
 #settings .opt input {
-	float: left;
-	margin: 4px 10px 0 0;
+	margin-right: 6px;
 }
 
 #settings .extra-help,
@@ -1412,6 +1411,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #settings .extra-help {
 	cursor: help;
+}
+
+#settings h2 .extra-help {
+	font-size: .8em;
 }
 
 #settings #play {

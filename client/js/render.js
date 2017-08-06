@@ -41,7 +41,7 @@ function appendMessage(container, chan, chanType, messageType, msg) {
 		if (lastChild && $(lastChild).hasClass("condensed") && !$(msg).hasClass("message") && lastDate === msgDate) {
 			lastChild.append(msg);
 			condense.updateText(lastChild, [messageType]);
-		} else if (lastChild && $(lastChild).is(condensedTypesClasses) && options.condense) {
+		} else if (lastChild && $(lastChild).is(condensedTypesClasses) && options.statusMessages === "condensed") {
 			var condensed = buildChatMessage({msg: {type: "condensed", time: msg.attr("data-time"), previews: []}, chan: chan});
 			condensed.append(lastChild);
 			condensed.append(msg);
