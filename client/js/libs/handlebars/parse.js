@@ -4,6 +4,7 @@ const Handlebars = require("handlebars/runtime");
 const parseStyle = require("./ircmessageparser/parseStyle");
 const findChannels = require("./ircmessageparser/findChannels");
 const findLinks = require("./ircmessageparser/findLinks");
+const findEmoji = require("./ircmessageparser/findEmoji");
 const merge = require("./ircmessageparser/merge");
 
 // Create an HTML `span` with styling information for a given fragment
@@ -59,10 +60,12 @@ module.exports = function parse(text) {
 	const userModes = ["!", "@", "%", "+"]; // TODO User modes should be RPL_ISUPPORT.PREFIX
 	const channelParts = findChannels(cleanText, channelPrefixes, userModes);
 	const linkParts = findLinks(cleanText);
+	const emojiParts = findEmoji(cleanText);
 
 	// Sort all parts identified based on their position in the original text
 	const parts = channelParts
 		.concat(linkParts)
+		.concat(emojiParts)
 		.sort((a, b) => a.start - b.start);
 
 	// Merge the styling information with the channels / URLs / text objects and
@@ -78,6 +81,8 @@ module.exports = function parse(text) {
 		} else if (textPart.channel) {
 			const escapedChannel = Handlebars.Utils.escapeExpression(textPart.channel);
 			return `<span class="inline-channel" role="button" tabindex="0" data-chan="${escapedChannel}">${fragments}</span>`;
+		} else if (textPart.emoji) {
+			return `<span class="inline-emoji">${fragments}</span>`;
 		}
 
 		return fragments;

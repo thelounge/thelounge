@@ -941,6 +941,14 @@ kbd {
 	padding: 0 10px;
 }
 
+.inline-emoji {
+	display: inline-block;
+	font-size: 1.4em;
+	position: relative;
+	top: .15em;
+	margin-top: -.4em;
+}
+
 .inline-channel {
 	cursor: pointer;
 }
