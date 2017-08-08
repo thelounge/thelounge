@@ -58,7 +58,7 @@
     "socket.io": "1.7.4",
     "spdy": "3.4.7",
     "ua-parser-js": "0.7.12",
-    "urijs": "1.18.10"
+    "urijs": "1.18.11"
   },
   "devDependencies": {
     "babel-core": "6.25.0",
