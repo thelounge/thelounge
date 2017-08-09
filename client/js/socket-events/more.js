@@ -58,5 +58,7 @@ socket.on("more", function(data) {
 		lastDate = msgDate;
 	});
 
-	scrollable.find(".show-more-button").prop("disabled", false);
+	scrollable.find(".show-more-button")
+		.text("Show older messages")
+		.prop("disabled", false);
 });

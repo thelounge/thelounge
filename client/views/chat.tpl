@@ -13,9 +13,7 @@
 	</div>
 	<div class="chat">
 		<div class="show-more {{#equal messages.length 100}}show{{/equal}}">
-			<button class="show-more-button" data-id="{{id}}">
-				Show older messages
-			</button>
+			<button class="show-more-button" data-id="{{id}}">Show older messages</button>
 		</div>
 		<div class="messages"></div>
 	</div>
