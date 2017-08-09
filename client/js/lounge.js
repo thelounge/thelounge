@@ -708,7 +708,11 @@ $(function() {
 		var self = $(this);
 		var lastMessage = self.parent().next(".messages").children(".msg").first();
 		var lastMessageId = parseInt(lastMessage[0].id.replace("msg-", ""), 10);
-		self.prop("disabled", true);
+
+		self
+			.text("Loading older messages…")
+			.prop("disabled", true);
+
 		socket.emit("more", {
 			target: self.data("id"),
 			lastId: lastMessageId
