@@ -120,8 +120,18 @@ $(function() {
 		match: /\x03(\d{0,2}|[A-Za-z ]{0,10})$/,
 		search(term, callback) {
 			term = term.toLowerCase();
+
 			const matchingColorCodes = constants.colorCodeMap
-				.filter((i) => i[0].startsWith(term) || i[1].toLowerCase().startsWith(term));
+				.filter((i) => fuzzy.test(term, i[0]) || fuzzy.test(term, i[1]))
+				.map((i) => {
+					if (fuzzy.test(term, i[1])) {
+						return [i[0], fuzzy.match(term, i[1], {
+							pre: "<b>",
+							post: "</b>"
+						}).rendered];
+					}
+					return i;
+				});
 
 			callback(matchingColorCodes);
 		},
@@ -140,7 +150,16 @@ $(function() {
 		search(term, callback, match) {
 			term = term.toLowerCase();
 			const matchingColorCodes = constants.colorCodeMap
-				.filter((i) => i[0].startsWith(term) || i[1].toLowerCase().startsWith(term))
+				.filter((i) => fuzzy.test(term, i[0]) || fuzzy.test(term, i[1]))
+				.map((pair) => {
+					if (fuzzy.test(term, pair[1])) {
+						return [pair[0], fuzzy.match(term, pair[1], {
+							pre: "<b>",
+							post: "</b>"
+						}).rendered];
+					}
+					return pair;
+				})
 				.map((pair) => pair.concat(match[1])); // Needed to pass fg color to `template`...
 
 			callback(matchingColorCodes);
