@@ -42,6 +42,10 @@ function Network(attr) {
 	);
 }
 
+Network.prototype.destroy = function() {
+	this.channels.forEach((channel) => channel.destroy());
+};
+
 Network.prototype.setNick = function(nick) {
 	this.nick = nick;
 	this.highlightRegex = new RegExp(

@@ -13,6 +13,7 @@ module.exports = function(irc, network) {
 		var from = data.nick;
 		if (from === irc.user.nick) {
 			network.channels = _.without(network.channels, chan);
+			chan.destroy();
 			client.save();
 			client.emit("part", {
 				chan: chan.id

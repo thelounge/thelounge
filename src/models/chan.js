@@ -30,6 +30,10 @@ function Chan(attr) {
 	});
 }
 
+Chan.prototype.destroy = function() {
+	this.dereferencePreviews(this.messages);
+};
+
 Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 	var obj = {
 		chan: this.id,
@@ -56,12 +60,10 @@ Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 	if (Helper.config.maxHistory >= 0 && this.messages.length > Helper.config.maxHistory) {
 		const deleted = this.messages.splice(0, this.messages.length - Helper.config.maxHistory);
 
-		if (Helper.config.prefetch && Helper.config.prefetchStorage) {
-			deleted.forEach((deletedMessage) => {
-				if (deletedMessage.preview && deletedMessage.preview.thumb) {
-					storage.dereference(deletedMessage.preview.thumb);
-				}
-			});
+		// If maxHistory is 0, image would be dereferenced before client had a chance to retrieve it,
+		// so for now, just don't implement dereferencing for this edge case.
+		if (Helper.config.prefetch && Helper.config.prefetchStorage && Helper.config.maxHistory > 0) {
+			this.dereferencePreviews(deleted);
 		}
 	}
 
@@ -74,6 +76,15 @@ Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 			this.highlight = true;
 		}
 	}
+};
+
+Chan.prototype.dereferencePreviews = function(messages) {
+	messages.forEach((message) => {
+		if (message.preview && message.preview.thumb) {
+			storage.dereference(message.preview.thumb);
+			message.preview.thumb = null;
+		}
+	});
 };
 
 Chan.prototype.sortUsers = function(irc) {

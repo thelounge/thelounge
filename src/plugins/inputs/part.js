@@ -17,6 +17,7 @@ exports.input = function(network, chan, cmd, args) {
 	}
 
 	network.channels = _.without(network.channels, chan);
+	chan.destroy();
 	this.emit("part", {
 		chan: chan.id
 	});
