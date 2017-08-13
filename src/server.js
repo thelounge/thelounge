@@ -100,9 +100,10 @@ in ${config.public ? "public" : "private"} mode`);
 
 	sockets.on("connect", function(socket) {
 		if (config.public) {
-			auth.call(socket, {});
+			performAuthentication.call(socket, {});
 		} else {
-			init(socket);
+			socket.emit("auth", {success: true});
+			socket.on("auth", performAuthentication);
 		}
 	});
 
@@ -173,129 +174,157 @@ function index(req, res, next) {
 	res.render("index", data);
 }
 
-function init(socket, client, generateToken) {
-	if (!client) {
-		socket.emit("auth", {success: true});
-		socket.on("auth", auth);
-	} else {
-		socket.emit("authorized");
+function initializeClient(socket, client, generateToken, token) {
+	socket.emit("authorized");
 
-		client.ip = getClientIp(socket.request);
+	socket.on("disconnect", function() {
+		client.clientDetach(socket.id);
+	});
+	client.clientAttach(socket.id);
 
-		socket.on("disconnect", function() {
-			client.clientDetach(socket.id);
-		});
-		client.clientAttach(socket.id);
-
-		socket.on(
-			"input",
-			function(data) {
-				client.input(data);
-			}
-		);
-		socket.on(
-			"more",
-			function(data) {
-				client.more(data);
-			}
-		);
-		socket.on(
-			"conn",
-			function(data) {
-				// prevent people from overriding webirc settings
-				data.ip = null;
-				data.hostname = null;
-				client.connect(data);
-			}
-		);
-		if (!Helper.config.public && !Helper.config.ldap.enable) {
-			socket.on(
-				"change-password",
-				function(data) {
-					var old = data.old_password;
-					var p1 = data.new_password;
-					var p2 = data.verify_password;
-					if (typeof p1 === "undefined" || p1 === "") {
-						socket.emit("change-password", {
-							error: "Please enter a new password"
-						});
-						return;
-					}
-					if (p1 !== p2) {
-						socket.emit("change-password", {
-							error: "Both new password fields must match"
-						});
-						return;
-					}
-
-					Helper.password
-						.compare(old || "", client.config.password)
-						.then((matching) => {
-							if (!matching) {
-								socket.emit("change-password", {
-									error: "The current password field does not match your account password"
-								});
-								return;
-							}
-							const hash = Helper.password.hash(p1);
-
-							client.setPassword(hash, (success) => {
-								const obj = {};
-
-								if (success) {
-									obj.success = "Successfully updated your password";
-								} else {
-									obj.error = "Failed to update your password";
-								}
-
-								socket.emit("change-password", obj);
-							});
-						}).catch((error) => {
-							log.error(`Error while checking users password. Error: ${error}`);
-						});
-				}
-			);
+	socket.on(
+		"input",
+		function(data) {
+			client.input(data);
 		}
+	);
+
+	socket.on(
+		"more",
+		function(data) {
+			client.more(data);
+		}
+	);
+
+	socket.on(
+		"conn",
+		function(data) {
+			// prevent people from overriding webirc settings
+			data.ip = null;
+			data.hostname = null;
+
+			client.connect(data);
+		}
+	);
+
+	if (!Helper.config.public && !Helper.config.ldap.enable) {
 		socket.on(
-			"open",
+			"change-password",
 			function(data) {
-				client.open(socket.id, data);
+				var old = data.old_password;
+				var p1 = data.new_password;
+				var p2 = data.verify_password;
+				if (typeof p1 === "undefined" || p1 === "") {
+					socket.emit("change-password", {
+						error: "Please enter a new password"
+					});
+					return;
+				}
+				if (p1 !== p2) {
+					socket.emit("change-password", {
+						error: "Both new password fields must match"
+					});
+					return;
+				}
+
+				Helper.password
+					.compare(old || "", client.config.password)
+					.then((matching) => {
+						if (!matching) {
+							socket.emit("change-password", {
+								error: "The current password field does not match your account password"
+							});
+							return;
+						}
+						const hash = Helper.password.hash(p1);
+
+						client.setPassword(hash, (success) => {
+							const obj = {};
+
+							if (success) {
+								obj.success = "Successfully updated your password";
+							} else {
+								obj.error = "Failed to update your password";
+							}
+
+							socket.emit("change-password", obj);
+						});
+					}).catch((error) => {
+						log.error(`Error while checking users password. Error: ${error}`);
+					});
 			}
 		);
-		socket.on(
-			"sort",
-			function(data) {
-				client.sort(data);
-			}
-		);
-		socket.on(
-			"names",
-			function(data) {
-				client.names(data);
-			}
-		);
+	}
 
-		socket.on("msg:preview:toggle", function(data) {
-			const networkAndChan = client.find(data.target);
-			if (!networkAndChan) {
-				return;
-			}
+	socket.on(
+		"open",
+		function(data) {
+			client.open(socket.id, data);
+		}
+	);
 
-			const message = networkAndChan.chan.findMessage(data.msgId);
+	socket.on(
+		"sort",
+		function(data) {
+			client.sort(data);
+		}
+	);
 
-			if (!message) {
-				return;
-			}
+	socket.on(
+		"names",
+		function(data) {
+			client.names(data);
+		}
+	);
 
-			const preview = message.findPreview(data.link);
+	socket.on("msg:preview:toggle", function(data) {
+		const networkAndChan = client.find(data.target);
+		if (!networkAndChan) {
+			return;
+		}
 
-			if (preview) {
-				preview.shown = data.shown;
+		const message = networkAndChan.chan.findMessage(data.msgId);
+
+		if (!message) {
+			return;
+		}
+
+		const preview = message.findPreview(data.link);
+
+		if (preview) {
+			preview.shown = data.shown;
+		}
+	});
+
+	socket.on("sign-out", () => {
+		delete client.config.sessions[token];
+
+		client.manager.updateUser(client.name, {
+			sessions: client.config.sessions
+		}, (err) => {
+			if (err) {
+				log.error("Failed to update sessions for", client.name, err);
 			}
 		});
 
-		socket.on("sign-out", (token) => {
-			delete client.config.sessions[token];
+		socket.emit("sign-out");
+	});
+
+	socket.join(client.id);
+
+	const sendInitEvent = (tokenToSend) => {
+		socket.emit("init", {
+			active: client.lastActiveChannel,
+			networks: client.networks,
+			token: tokenToSend
+		});
+	};
+
+	if (generateToken) {
+		client.generateToken((newToken) => {
+			token = newToken;
+
+			client.updateSession(token, getClientIp(socket.request), socket.request);
 
 			client.manager.updateUser(client.name, {
 				sessions: client.config.sessions
@@ -305,51 +334,11 @@ function init(socket, client, generateToken) {
 				}
 			});
 
-			socket.emit("sign-out");
+			sendInitEvent(token);
 		});
-
-		socket.join(client.id);
-
-		const sendInitEvent = (token) => {
-			socket.emit("init", {
-				active: client.lastActiveChannel,
-				networks: client.networks,
-				token: token
-			});
-		};
-
-		if (generateToken) {
-			client.generateToken((token) => {
-				client.updateSession(token, getClientIp(socket.request), socket.request);
-
-				client.manager.updateUser(client.name, {
-					sessions: client.config.sessions
-				}, (err) => {
-					if (err) {
-						log.error("Failed to update sessions for", client.name, err);
-					}
-				});
-
-				sendInitEvent(token);
-			});
-		} else {
-			sendInitEvent(null);
-		}
+	} else {
+		sendInitEvent(null);
 	}
-}
-
-function reverseDnsLookup(socket, client) {
-	client.ip = getClientIp(socket.request);
-
-	dns.reverse(client.ip, function(err, host) {
-		if (!err && host.length) {
-			client.hostname = host[0];
-		} else {
-			client.hostname = client.ip;
-		}
-
-		init(socket, client);
-	});
 }
 
 function localAuth(client, user, password, callback) {
@@ -408,18 +397,25 @@ function ldapAuth(client, user, password, callback) {
 	});
 }
 
-function auth(data) {
+function performAuthentication(data) {
 	const socket = this;
 	let client;
 
+	const finalInit = () => initializeClient(socket, client, !!data.remember, data.token || null);
+
 	const initClient = () => {
-		// If webirc is enabled and we do not know this users IP address,
-		// perform reverse dns lookup
-		if (Helper.config.webirc !== null && !client.config.ip) {
-			reverseDnsLookup(socket, client);
-		} else {
-			init(socket, client, data.remember === "on");
+		client.ip = getClientIp(socket.request);
+
+		// If webirc is enabled perform reverse dns lookup
+		if (Helper.config.webirc === null) {
+			return finalInit();
 		}
+
+		reverseDnsLookup(client.ip, (hostname) => {
+			client.hostname = hostname;
+
+			finalInit();
+		});
 	};
 
 	if (Helper.config.public) {
@@ -469,4 +465,14 @@ function auth(data) {
 	} else {
 		localAuth(client, data.user, data.password, authCallback);
 	}
+}
+
+function reverseDnsLookup(ip, callback) {
+	dns.reverse(ip, (err, hostnames) => {
+		if (!err && hostnames.length) {
+			return callback(hostnames[0]);
+		}
+
+		callback(ip);
+	});
 }

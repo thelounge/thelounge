@@ -300,13 +300,13 @@ Client.prototype.updateSession = function(token, ip, request) {
 	const agent = UAParser(request.headers["user-agent"] || "");
 	let friendlyAgent = "";
 
-	if (agent.browser.name.length) {
+	if (agent.browser.name) {
 		friendlyAgent = `${agent.browser.name} ${agent.browser.major}`;
 	} else {
 		friendlyAgent = "Unknown browser";
 	}
 
-	if (agent.os.name.length) {
+	if (agent.os.name) {
 		friendlyAgent += ` on ${agent.os.name} ${agent.os.version}`;
 	}
 
