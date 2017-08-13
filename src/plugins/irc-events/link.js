@@ -2,6 +2,7 @@
 
 const cheerio = require("cheerio");
 const request = require("request");
+const url = require("url");
 const Helper = require("../../helper");
 const findLinks = require("../../../client/js/libs/handlebars/ircmessageparser/findLinks");
 const es = require("event-stream");
@@ -62,7 +63,12 @@ function parse(msg, preview, res, client) {
 		preview.thumb =
 			$("meta[property=\"og:image\"]").attr("content")
 			|| $("meta[name=\"twitter:image:src\"]").attr("content")
+			|| $("link[rel=\"image_src\"]").attr("href")
 			|| "";
+
+		if (preview.thumb.length) {
+			preview.thumb = url.resolve(preview.link, preview.thumb);
+		}
 
 		// Make sure thumbnail is a valid url
 		if (!/^https?:\/\//.test(preview.thumb)) {
@@ -111,8 +117,8 @@ function handlePreview(client, msg, preview, res) {
 		return emitPreview(client, msg, preview);
 	}
 
-	storage.store(res.data, res.type.replace("image/", ""), (url) => {
-		preview.thumb = url;
+	storage.store(res.data, res.type.replace("image/", ""), (uri) => {
+		preview.thumb = uri;
 
 		emitPreview(client, msg, preview);
 	});
@@ -135,11 +141,11 @@ function emitPreview(client, msg, preview) {
 	});
 }
 
-function fetch(url, cb) {
+function fetch(uri, cb) {
 	let req;
 	try {
 		req = request.get({
-			url: url,
+			url: uri,
 			maxRedirects: 5,
 			timeout: 5000,
 			headers: {

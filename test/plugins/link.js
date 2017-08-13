@@ -110,21 +110,55 @@ describe("Link plugin", function() {
 		});
 	});
 
-	it("should not use thumbnail with invalid url", function(done) {
+	it("should find image_src", function(done) {
 		const message = this.irc.createMessage({
-			text: "http://localhost:9002/invalid-thumb"
+			text: "http://localhost:9002/thumb-image-src"
 		});
 
 		link(this.irc, this.network.channels[0], message);
 
-		this.app.get("/invalid-thumb", function(req, res) {
-			res.send("<title>test invalid image</title><meta property='og:image' content='/real-test-image.png'>");
+		this.app.get("/thumb-image-src", function(req, res) {
+			res.send("<link rel='image_src' href='http://localhost:9002/real-test-image.png'>");
 		});
 
 		this.irc.once("msg:preview", function(data) {
-			expect(data.preview.thumb).to.be.empty;
-			expect(data.preview.head).to.equal("test invalid image");
-			expect(data.preview.link).to.equal("http://localhost:9002/invalid-thumb");
+			expect(data.preview.thumb).to.equal("http://localhost:9002/real-test-image.png");
+			done();
+		});
+	});
+
+	it("should correctly resolve relative protocol", function(done) {
+		const message = this.irc.createMessage({
+			text: "http://localhost:9002/thumb-image-src"
+		});
+
+		link(this.irc, this.network.channels[0], message);
+
+		this.app.get("/thumb-image-src", function(req, res) {
+			res.send("<link rel='image_src' href='//localhost:9002/real-test-image.png'>");
+		});
+
+		this.irc.once("msg:preview", function(data) {
+			expect(data.preview.thumb).to.equal("http://localhost:9002/real-test-image.png");
+			done();
+		});
+	});
+
+	it("should resolve url correctly for relative url", function(done) {
+		const message = this.irc.createMessage({
+			text: "http://localhost:9002/relative-thumb"
+		});
+
+		link(this.irc, this.network.channels[0], message);
+
+		this.app.get("/relative-thumb", function(req, res) {
+			res.send("<title>test relative image</title><meta property='og:image' content='/real-test-image.png'>");
+		});
+
+		this.irc.once("msg:preview", function(data) {
+			expect(data.preview.thumb).to.equal("http://localhost:9002/real-test-image.png");
+			expect(data.preview.head).to.equal("test relative image");
+			expect(data.preview.link).to.equal("http://localhost:9002/relative-thumb");
 			done();
 		});
 	});
