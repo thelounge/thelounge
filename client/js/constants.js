@@ -75,11 +75,11 @@ const actionTypes = [
 
 const condensedTypes = [
 	"join",
-	"kick",
-	"mode",
-	"nick",
 	"part",
 	"quit",
+	"nick",
+	"kick",
+	"mode",
 ];
 
 const timeFormats = {
