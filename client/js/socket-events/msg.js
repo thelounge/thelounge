@@ -8,8 +8,11 @@ const templates = require("../../views");
 
 socket.on("msg", function(data) {
 	const msg = render.buildChatMessage(data);
-	const target = "#chan-" + data.chan;
-	const container = chat.find(target + " .messages");
+	const target = data.chan;
+	const channel = chat.find("#chan-" + target);
+	const container = channel.find(".messages");
+
+	const activeChannelId = chat.find(".chan.active").data("id");
 
 	if (data.msg.type === "channel_list" || data.msg.type === "ban_list") {
 		$(container).empty();
@@ -33,7 +36,7 @@ socket.on("msg", function(data) {
 	container
 		.append(msg)
 		.trigger("msg", [
-			target,
+			"#chan-" + target,
 			data
 		])
 		.trigger("keepToBottom");
@@ -46,5 +49,18 @@ socket.on("msg", function(data) {
 		container
 			.find(".unread-marker")
 			.appendTo(container);
+	}
+
+	// Message arrived in a non active channel, trim it to 100 messages
+	if (activeChannelId !== target && container.find(".msg").slice(0, -100).remove().length) {
+		channel.find(".show-more").addClass("show");
+
+		// Remove date-seperators that would otherwise
+		// be "stuck" at the top of the channel
+		channel.find(".date-marker-container").each(function() {
+			if ($(this).next().hasClass("date-marker-container")) {
+				$(this).remove();
+			}
+		});
 	}
 });

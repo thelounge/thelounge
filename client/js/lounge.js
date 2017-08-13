@@ -909,23 +909,6 @@ $(function() {
 		}
 	}());
 
-	setInterval(function() {
-		chat.find(".chan:not(.active)").each(function() {
-			var chan = $(this);
-			if (chan.find(".messages .msg").slice(0, -100).remove().length) {
-				chan.find(".show-more").addClass("show");
-
-				// Remove date-seperators that would otherwise be "stuck" at the top
-				// of the channel
-				chan.find(".date-marker-container").each(function() {
-					if ($(this).next().hasClass("date-marker-container")) {
-						$(this).remove();
-					}
-				});
-			}
-		});
-	}, 1000 * 10);
-
 	function completeNicks(word) {
 		const users = chat.find(".active .users");
 
