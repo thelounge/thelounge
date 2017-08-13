@@ -562,7 +562,7 @@ $(function() {
 	});
 
 	sidebar.on("click", "#sign-out", function() {
-		socket.emit("sign-out", storage.get("token"));
+		socket.emit("sign-out");
 		storage.remove("token");
 
 		if (!socket.connected) {
