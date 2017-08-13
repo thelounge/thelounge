@@ -488,6 +488,8 @@ Client.prototype.quit = function() {
 		if (network.irc) {
 			network.irc.quit("Page closed");
 		}
+
+		network.destroy();
 	});
 };
 

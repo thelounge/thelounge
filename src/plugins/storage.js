@@ -17,12 +17,6 @@ class Storage {
 	}
 
 	dereference(url) {
-		// If maxHistory is 0, image would be dereferenced before client had a chance to retrieve it,
-		// so for now, just don't implement dereferencing for this edge case.
-		if (helper.maxHistory === 0) {
-			return;
-		}
-
 		const references = (this.references.get(url) || 0) - 1;
 
 		if (references < 0) {
