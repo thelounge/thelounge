@@ -194,6 +194,7 @@ kbd {
 #chat .title:before,
 #footer .icon,
 #chat .count:before,
+#settings .extra-help,
 #settings #play:before,
 #form #submit:before,
 #chat .invite .from:before,
@@ -315,6 +316,10 @@ kbd {
 	right: 18px;
 	font-size: 14px;
 	line-height: 50px;
+}
+
+#settings .extra-help:before {
+	content: "\f059"; /* http://fontawesome.io/icon/question-circle/ */
 }
 
 #settings #play:before {
@@ -801,6 +806,31 @@ kbd {
 	display: block;
 }
 
+#chat .condensed {
+	flex-wrap: wrap;
+}
+
+#chat .condensed .content {
+	flex: 1;
+}
+
+#chat .condensed-text {
+	cursor: pointer;
+	transition: opacity .2s;
+}
+
+#chat .condensed-text:hover {
+	opacity: .6;
+}
+
+#chat .condensed-text .toggle-button:hover {
+	opacity: 1;
+}
+
+#chat .condensed.closed .msg {
+	display: none;
+}
+
 #windows .header .topic,
 .messages .msg,
 .sidebar {
@@ -1092,15 +1122,17 @@ kbd {
 	color: #555;
 }
 
-#chat.hide-join .join,
-#chat.hide-mode .mode,
-#chat.hide-motd .motd,
-#chat.hide-nick .nick,
-#chat.hide-part .part,
-#chat.hide-quit .quit {
+#chat.hide-status-messages .join,
+#chat.hide-status-messages .mode,
+#chat.hide-status-messages .nick,
+#chat.hide-status-messages .part,
+#chat.hide-status-messages .quit,
+#chat.hide-status-messages .condensed,
+#chat.hide-motd .motd {
 	display: none !important;
 }
 
+#chat .condensed .content,
 #chat .join .content,
 #chat .kick .content,
 #chat .mode .content,
@@ -1138,17 +1170,12 @@ kbd {
 
 #chat .toggle-button {
 	display: inline-block;
-	color: #666;
-	transition: color .2s, transform .2s;
+	transition: opacity .2s, transform .2s;
 }
 
-#chat .toggle-button.opened {
+#chat .toggle-button.opened, /* Thumbnail toggle */
+#chat .msg.condensed:not(.closed) .toggle-button { /* Expanded status message toggle */
 	transform: rotate(90deg);
-}
-
-#chat .toggle-button:hover {
-	/* transform and opacity together glitch, so need to use RGBA transition */
-	color: rgba(102, 102, 102, .8); /* #666 x .8 opacity */
 }
 
 #chat .toggle-content {
@@ -1361,16 +1388,24 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #settings .opt {
 	display: block;
-	padding: 5px 0 10px 1px;
+	padding: 5px 0 5px 1px;
 }
 
 #settings .opt input {
-	float: left;
-	margin: 4px 10px 0 0;
+	margin-right: 6px;
 }
 
+#settings .extra-help,
 #settings #play {
 	color: #7f8c8d;
+}
+
+#settings .extra-help {
+	cursor: help;
+}
+
+#settings h2 .extra-help {
+	font-size: .8em;
 }
 
 #settings #play {
@@ -1692,6 +1727,16 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	animation-timing-function: ease-in;
 	-webkit-animation-delay: .4s;
 	animation-delay: .4s;
+}
+
+.tooltipped-no-delay:hover:before,
+.tooltipped-no-delay:hover:after,
+.tooltipped-no-delay:active:before,
+.tooltipped-no-delay:active:after,
+.tooltipped-no-delay:focus:before,
+.tooltipped-no-delay:focus:after {
+	-webkit-animation-delay: 0s;
+	animation-delay: 0s;
 }
 
 .tooltipped-s:after,
@@ -2129,4 +2174,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #chat .action .text,
 #chat table.channel-list .topic {
 	white-space: pre-wrap;
+}
+
+.hide-text {
+	color: transparent !important;
 }

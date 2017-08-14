@@ -7,7 +7,7 @@ const chat = $("#chat");
 const templates = require("../../views");
 
 socket.on("more", function(data) {
-	const documentFragment = render.buildChannelMessages(data.chan, data.messages);
+	const documentFragment = render.buildChannelMessages(data);
 	const chan = chat
 		.find("#chan-" + data.chan)
 		.find(".messages");
@@ -24,6 +24,8 @@ socket.on("more", function(data) {
 	} else if (children.eq(1).hasClass("date-marker-container")) {
 		// The unread-marker could be at index 0, which will cause the date-marker to become "stuck"
 		children.eq(1).remove();
+	} else if (children.eq(0).hasClass("condensed") && children.eq(0).children(".date-marker-container").eq(0).hasClass("date-marker-container")) {
+		children.eq(0).children(".date-marker-container").eq(0).remove();
 	}
 
 	// Add the older messages
@@ -52,6 +54,10 @@ socket.on("more", function(data) {
 		}
 
 		if (lastDate.toDateString() !== msgDate.toDateString()) {
+			var parent = msg.parent();
+			if (parent.hasClass("condensed")) {
+				msg.insertAfter(parent);
+			}
 			msg.before(templates.date_marker({msgDate: msgDate}));
 		}
 

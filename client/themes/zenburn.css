@@ -127,10 +127,6 @@ body {
 	color: #8c8cbc;
 }
 
-#chat button:hover {
-	opacity: 1;
-}
-
 /* Increase contrast of some IRC colors */
 .irc-fg2 { color: #1b94ff; }
 .irc-fg5 { color: #e969a7; }
@@ -235,17 +231,9 @@ body {
 
 /* Previews */
 
-#chat .toggle-content,
-#chat .toggle-button {
-	color: #dcdccc;
-}
-
-#chat .toggle-button:hover {
-	color: rgba(220, 220, 204, .8);
-}
-
 #chat .toggle-content {
 	background: #333;
+	color: #dcdccc;
 }
 
 #chat .toggle-content .body {

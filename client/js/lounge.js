@@ -439,6 +439,10 @@ $(function() {
 		}
 	});
 
+	chat.on("click", ".condensed-text", function() {
+		$(this).closest(".msg.condensed").toggleClass("closed");
+	});
+
 	chat.on("click", ".user", function() {
 		var name = $(this).data("name");
 		var chan = findCurrentNetworkChan(name);
@@ -707,6 +711,9 @@ $(function() {
 	chat.on("click", ".show-more-button", function() {
 		var self = $(this);
 		var lastMessage = self.parent().next(".messages").children(".msg").first();
+		if (lastMessage.is(".condensed")) {
+			lastMessage = lastMessage.children(".msg").first();
+		}
 		var lastMessageId = parseInt(lastMessage[0].id.replace("msg-", ""), 10);
 
 		self

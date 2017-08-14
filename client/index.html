@@ -218,44 +218,36 @@
 							</div>
 							<div class="col-sm-6">
 								<label class="opt">
-									<input type="checkbox" name="join">
-									Show joins
-								</label>
-							</div>
-							<div class="col-sm-6">
-								<label class="opt">
 									<input type="checkbox" name="motd">
 									Show <abbr title="Message Of The Day">MOTD</abbr>
 								</label>
 							</div>
 							<div class="col-sm-6">
 								<label class="opt">
-									<input type="checkbox" name="part">
-									Show parts
-								</label>
-							</div>
-							<div class="col-sm-6">
-								<label class="opt">
-									<input type="checkbox" name="nick">
-									Show nick changes
-								</label>
-							</div>
-							<div class="col-sm-6">
-								<label class="opt">
-									<input type="checkbox" name="mode">
-									Show mode
-								</label>
-							</div>
-							<div class="col-sm-6">
-								<label class="opt">
-									<input type="checkbox" name="quit">
-									Show quits
-								</label>
-							</div>
-							<div class="col-sm-6">
-								<label class="opt">
 									<input type="checkbox" name="showSeconds">
 									Show seconds in timestamp
+								</label>
+							</div>
+							<div class="col-sm-12">
+								<h2>
+									Status messages
+									<span class="tooltipped tooltipped-n tooltipped-no-delay" aria-label="Joins, parts, kicks, nick changes, and mode changes">
+										<button class="extra-help" aria-label="Joins, parts, kicks, nick changes, and mode changes"></button>
+									</span>
+								</h2>
+							</div>
+							<div class="col-sm-12">
+								<label class="opt">
+									<input type="radio" name="statusMessages" value="shown">
+									Show all status messages individually
+								</label>
+								<label class="opt">
+									<input type="radio" name="statusMessages" value="condensed">
+									Condense status messages together
+								</label>
+								<label class="opt">
+									<input type="radio" name="statusMessages" value="hidden">
+									Hide all status messages
 								</label>
 							</div>
 							<div class="col-sm-12">
