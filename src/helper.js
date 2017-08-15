@@ -60,7 +60,7 @@ function getGitCommit() {
 }
 
 function setHome(homePath) {
-	this.HOME = expandHome(homePath || "~/.lounge");
+	this.HOME = expandHome(homePath);
 	this.CONFIG_PATH = path.join(this.HOME, "config.js");
 	this.USERS_PATH = path.join(this.HOME, "users");
 
