@@ -23,8 +23,16 @@ function findLinks(text) {
 	// See https://medialize.github.io/URI.js/docs.html#static-withinString
 	// In our case, we store each URI encountered in a result array.
 	URI.withinString(text, function(url, start, end) {
-		// Extract the scheme of the URL detected, if there is one
-		const parsedScheme = URI(url).scheme().toLowerCase();
+		let parsedScheme;
+
+		try {
+			// Extract the scheme of the URL detected, if there is one
+			parsedScheme = URI(url).scheme().toLowerCase();
+		} catch (e) {
+			// URI may throw an exception for malfored urls,
+			// as to why withinString finds these in the first place is a mystery
+			return;
+		}
 
 		// Check if the scheme of the detected URL matches a common one above.
 		// In a URL like `foo..http://example.com`, the scheme would be `foo..http`,
