@@ -7,7 +7,7 @@ var Helper = require("../helper");
 
 program
 	.command("config")
-	.description(`Edit configuration file located at ${colors.green(Helper.CONFIG_PATH)}.`)
+	.description(`Edit configuration file located at ${colors.green(Helper.CONFIG_PATH)}. Set the ${colors.green("LOUNGE_HOME")} environment variable to change.`)
 	.action(function() {
 		var child_spawn = child.spawn(
 			process.env.EDITOR || "vi",

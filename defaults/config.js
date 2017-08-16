@@ -73,7 +73,7 @@ module.exports = {
 	// which in result fixes mixed content warnings.
 	//
 	// If storage is enabled, The Lounge will fetch and store images and thumbnails
-	// in ~/.lounge/storage folder, or %HOME%/storage if --home is used.
+	// in the `${LOUNGE_HOME}/storage` folder.
 	//
 	// Images are deleted when they are no longer referenced by any message (controlled by maxHistory),
 	// and the folder is cleaned up on every The Lounge restart.

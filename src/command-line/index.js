@@ -10,12 +10,12 @@ var path = require("path");
 var Helper = require("../helper");
 
 program.version(Helper.getVersion(), "-v, --version")
-	.option("--home <path>", "path to configuration folder")
+	.option("--home <path>", `${colors.bold("[DEPRECATED]")} Use the ${colors.green("LOUNGE_HOME")} environment variable instead.`)
 	.parseOptions(process.argv);
 
 if (program.home) {
-	log.warn(`${colors.green("--home")} is deprecated and will be removed in a future version.`);
-	log.warn(`Use ${colors.green("LOUNGE_HOME")} environment variable instead.`);
+	log.warn(`${colors.green("--home")} is ${colors.bold("deprecated")} and will be removed in a future version.`);
+	log.warn(`Use the ${colors.green("LOUNGE_HOME")} environment variable instead.`);
 }
 
 let home = program.home || process.env.LOUNGE_HOME;
