@@ -25,13 +25,15 @@ const options = {
 	thumbnails: true,
 	userStyles: userStyles.text(),
 };
-const userOptions = JSON.parse(storage.get("settings")) || {};
+let userOptions = JSON.parse(storage.get("settings")) || {};
 
 for (const key in options) {
-	if (userOptions[key]) {
+	if (userOptions[key] !== undefined) {
 		options[key] = userOptions[key];
 	}
 }
+
+userOptions = null;
 
 module.exports = options;
 
