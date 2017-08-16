@@ -116,17 +116,8 @@ function expandHome(shortenedPath) {
 	if (!shortenedPath) {
 		return "";
 	}
-	var home;
 
-	if (os.homedir) {
-		home = os.homedir();
-	}
-
-	if (!home) {
-		home = process.env.HOME || "";
-	}
-
-	home = home.replace("$", "$$$$");
+	const home = os.homedir().replace("$", "$$$$");
 	return path.resolve(shortenedPath.replace(/^~($|\/|\\)/, home + "$1"));
 }
 
