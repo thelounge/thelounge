@@ -25,7 +25,7 @@ if (!home) {
 		__dirname,
 		"..",
 		"..",
-		".lounge_config"
+		".lounge_home"
 	));
 
 	home = fs.readFileSync(distConfig, "utf-8").trim();
