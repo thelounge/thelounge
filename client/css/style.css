@@ -814,6 +814,11 @@ kbd {
 	flex: 1;
 }
 
+/* Ensures expanded status messages always take up the full width */
+#chat .condensed .msg {
+	flex-basis: 100%;
+}
+
 #chat .condensed-text {
 	cursor: pointer;
 	transition: opacity .2s;
