@@ -91,6 +91,7 @@ module.exports = {
 	colorCodeMap: colorCodeMap,
 	commands: commands,
 	condensedTypes: condensedTypes,
+	condensedTypesQuery: "." + condensedTypes.join(", ."),
 	actionTypes: actionTypes,
 	timeFormats: timeFormats
 };

@@ -7,7 +7,7 @@ const renderPreview = require("./renderPreview");
 const utils = require("./utils");
 const sorting = require("./sorting");
 const constants = require("./constants");
-const condense = require("./condensed");
+const condensed = require("./condensed");
 
 const chat = $("#chat");
 const sidebar = $("#sidebar");
@@ -33,23 +33,31 @@ function buildChannelMessages(data) {
 }
 
 function appendMessage(container, chan, chanType, messageType, msg) {
-	if (constants.condensedTypes.indexOf(messageType) !== -1 && chanType !== "lobby") {
-		var condensedTypesClasses = "." + constants.condensedTypes.join(", .");
-		var lastChild = container.children("div.msg").last();
-		var lastDate = (new Date(lastChild.attr("data-time"))).toDateString();
-		var msgDate = (new Date(msg.attr("data-time"))).toDateString();
-		if (lastChild && $(lastChild).hasClass("condensed") && !$(msg).hasClass("message") && lastDate === msgDate) {
-			lastChild.append(msg);
-			condense.updateText(lastChild, [messageType]);
-		} else if (lastChild && $(lastChild).is(condensedTypesClasses) && options.statusMessages === "condensed") {
-			var condensed = buildChatMessage({msg: {type: "condensed", time: msg.attr("data-time"), previews: []}, chan: chan});
-			condensed.append(lastChild);
-			condensed.append(msg);
-			container.append(condensed);
-			condense.updateText(condensed, [messageType, lastChild.attr("data-type")]);
-		} else {
-			container.append(msg);
-		}
+	// TODO: To fix #1432, statusMessage option should entirely be implemented in CSS
+	if (constants.condensedTypes.indexOf(messageType) === -1 || chanType !== "channel" || options.statusMessages !== "condensed") {
+		container.append(msg);
+		return;
+	}
+
+	const lastChild = container.children("div.msg").last();
+
+	if (lastChild && $(lastChild).hasClass("condensed")) {
+		lastChild.append(msg);
+		condensed.updateText(lastChild, [messageType]);
+	} else if (lastChild && $(lastChild).is(constants.condensedTypesQuery)) {
+		const newCondensed = buildChatMessage({
+			chan: chan,
+			msg: {
+				type: "condensed",
+				time: msg.attr("data-time"),
+				previews: []
+			}
+		});
+
+		condensed.updateText(newCondensed, [messageType, lastChild.attr("data-type")]);
+		container.append(newCondensed);
+		newCondensed.append(lastChild);
+		newCondensed.append(msg);
 	} else {
 		container.append(msg);
 	}
