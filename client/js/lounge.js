@@ -71,9 +71,10 @@ $(function() {
 		search(term, callback) {
 			term = term.slice(1);
 			if (term[0] === "@") {
-				callback(completeNicks(term.slice(1)).map((val) => "@" + val));
+				callback(completeNicks(term.slice(1), true)
+					.map((val) => ["@" + val[0], "@" + val[1]]));
 			} else {
-				callback(completeNicks(term));
+				callback(completeNicks(term, true));
 			}
 		},
 		template([string, ]) {
@@ -290,7 +291,7 @@ $(function() {
 
 			chat.find(".chan.active .chat").trigger("msg.sticky"); // fix growing
 		})
-		.tab(tabCompleteNicks, {hint: false})
+		.tab((word) => completeNicks(word, false), {hint: false})
 		.on("autocomplete:on", function() {
 			enableAutocomplete();
 		});
@@ -943,8 +944,9 @@ $(function() {
 		return results.map((el) => [el.string, el.original]);
 	}
 
-	function tabCompleteNicks(word) {
+	function completeNicks(word, isFuzzy) {
 		const users = chat.find(".active .users");
+		word = word.toLowerCase();
 
 		// Lobbies and private chats do not have an user list
 		if (!users.length) {
@@ -952,24 +954,13 @@ $(function() {
 		}
 
 		const words = users.data("nicks");
-
+		if (isFuzzy) {
+			return fuzzyGrep(word, words);
+		}
 		return $.grep(
 			words,
-			(w) => !w.toLowerCase().indexOf(word.toLowerCase())
+			(w) => !w.toLowerCase().indexOf(word)
 		);
-	}
-
-	function completeNicks(word) {
-		const users = chat.find(".active .users");
-
-		// Lobbies and private chats do not have an user list
-		if (!users.length) {
-			return [];
-		}
-
-		const words = users.data("nicks");
-
-		return fuzzyGrep(word, words);
 	}
 
 	function completeCommands(word) {
