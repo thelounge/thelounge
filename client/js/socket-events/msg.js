@@ -63,6 +63,7 @@ function processReceivedMessages() {
 	});
 
 	while (messageQueue[0] !== undefined) {
+		// Only process a single channel per "tick"
 		if (target !== null && target !== messageQueue[0].chan) {
 			processOnIdle(processReceivedMessages);
 			break;
@@ -86,26 +87,25 @@ function processReceivedMessages() {
 
 		// Check if date changed
 		const prevMsgTime = new Date(previousMessage.attr("data-time"));
-		const msgTime = new Date(msg.attr("data-time"));
+		const msgTime = new Date(data.msg.time);
 
 		if (previousMessage.length === 0 || prevMsgTime.toDateString() !== msgTime.toDateString()) {
-			// TODO: Condensed stuff
-			var parent = previousMessage.parent();
-			if (parent.hasClass("condensed")) {
-				previousMessage = parent;
-			}
-
 			documentFragment.append(templates.date_marker({msgDate: msgTime}));
 		}
 
 		// Add message to the container
-		previousMessage = msg;
-		render.appendMessage( // TODO: condensed stuff
+		const parent = previousMessage.parent();
+		
+		// TODO: Fix condensed messages
+		previousMessage = parent.hasClass("condensed") ? parent : msg;
+
+		render.appendMessage(
 			documentFragment,
 			data.chan,
 			$(target).attr("data-type"),
 			data.msg.type,
-			msg
+			msg,
+			previousMessage
 		);
 
 		const lastVisible = container.find("div:visible").last();
