@@ -53,12 +53,12 @@ body {
 }
 
 a {
-	transition: opacity .2s;
+	transition: opacity 0.2s;
 }
 
 a:hover {
 	text-decoration: none;
-	opacity: .8;
+	opacity: 0.8;
 }
 
 /**
@@ -135,7 +135,7 @@ kbd {
 	margin-bottom: 10px;
 	padding: 9px 17px;
 	text-transform: uppercase;
-	transition: background .2s, border-color .2s, color .2s;
+	transition: background 0.2s, border-color 0.2s, color 0.2s;
 	word-spacing: 3px;
 	cursor: pointer; /* This is useful for `<button>` elements */
 }
@@ -149,11 +149,11 @@ kbd {
 
 .btn:active {
 	box-shadow: none;
-	opacity: .8;
+	opacity: 0.8;
 }
 
 .btn:disabled {
-	opacity: .6;
+	opacity: 0.6;
 }
 
 .container {
@@ -162,16 +162,16 @@ kbd {
 }
 
 ::-moz-placeholder {
-	color: rgba(0, 0, 0, .35);
+	color: rgba(0, 0, 0, 0.35);
 	opacity: 1;
 }
 
 ::-webkit-input-placeholder {
-	color: rgba(0, 0, 0, .35);
+	color: rgba(0, 0, 0, 0.35);
 }
 
 :-ms-input-placeholder {
-	color: rgba(0, 0, 0, .35) !important;
+	color: rgba(0, 0, 0, 0.35) !important;
 }
 
 #help,
@@ -377,12 +377,12 @@ kbd {
 #chat button,
 #form button,
 #chat .user {
-	transition: opacity .2s;
+	transition: opacity 0.2s;
 }
 
 #chat button:hover,
 #form button:hover {
-	opacity: .6;
+	opacity: 0.6;
 }
 
 #viewport .lt,
@@ -414,7 +414,7 @@ kbd {
 	border-radius: 50%;
 	border: 2px solid white;
 	opacity: 0;
-	transition: opacity .2s;
+	transition: opacity 0.2s;
 }
 
 #viewport .lt.notified::after {
@@ -500,7 +500,7 @@ kbd {
 	padding: 6px 10px 8px 36px;
 	position: relative;
 	text-align: left;
-	transition: color .2s;
+	transition: color 0.2s;
 	width: 180px;
 	left: auto !important; /* Fix for drag'n'drop not recalculating left position */
 }
@@ -558,7 +558,7 @@ kbd {
 }
 
 #sidebar .badge {
-	background: rgba(255, 255, 255, .06);
+	background: rgba(255, 255, 255, 0.06);
 	border-radius: 3px;
 	color: #afb6c0;
 	font-size: 10px;
@@ -567,7 +567,7 @@ kbd {
 	margin-left: 5px;
 	padding: 3px 6px;
 	float: right;
-	transition: opacity .2s, background-color .2s, color .2s;
+	transition: opacity 0.2s, background-color 0.2s, color 0.2s;
 }
 
 #sidebar .badge.highlight {
@@ -588,7 +588,7 @@ kbd {
 	position: absolute;
 	z-index: 2;
 	right: 0;
-	transition: opacity .2s, background-color .2s;
+	transition: opacity 0.2s, background-color 0.2s;
 }
 
 #sidebar .close::before {
@@ -605,11 +605,11 @@ kbd {
 
 #sidebar .chan.active .close {
 	visibility: visible;
-	opacity: .4;
+	opacity: 0.4;
 }
 
 #sidebar .chan.active .close:hover {
-	background-color: rgba(0, 0, 0, .1);
+	background-color: rgba(0, 0, 0, 0.1);
 	opacity: 1;
 }
 
@@ -619,7 +619,7 @@ kbd {
 }
 
 #footer {
-	background: rgba(0, 0, 0, .06);
+	background: rgba(0, 0, 0, 0.06);
 	bottom: 0;
 	height: 45px;
 	left: 0;
@@ -639,7 +639,7 @@ kbd {
 	display: inline-block;
 	line-height: 34px;
 	padding: 0 12px;
-	transition: color .2s;
+	transition: color 0.2s;
 }
 
 #footer .icon:hover {
@@ -702,7 +702,7 @@ kbd {
 	margin-bottom: 10px;
 	outline: 0;
 	padding: 8px 10px;
-	transition: border-color .2s;
+	transition: border-color 0.2s;
 	width: 100%;
 }
 
@@ -821,11 +821,11 @@ kbd {
 
 #chat .condensed-text {
 	cursor: pointer;
-	transition: opacity .2s;
+	transition: opacity 0.2s;
 }
 
 #chat .condensed-text:hover {
-	opacity: .6;
+	opacity: 0.6;
 }
 
 #chat .condensed-text .toggle-button:hover {
@@ -881,7 +881,7 @@ kbd {
 	position: absolute;
 	right: 0;
 	width: 180px;
-	transition: right .4s;
+	transition: right 0.4s;
 }
 
 #chat .show-more {
@@ -936,13 +936,13 @@ kbd {
 	left: 0;
 	right: 0;
 	top: 50%;
-	border-top: 1px solid rgba(231, 76, 60, .5);
+	border-top: 1px solid rgba(231, 76, 60, 0.5);
 }
 
 #chat .unread-marker-text::before {
 	content: "New messages";
 	background-color: white;
-	color: rgba(231, 76, 60, .5);
+	color: rgba(231, 76, 60, 0.5);
 	padding: 0 10px;
 }
 
@@ -966,13 +966,13 @@ kbd {
 	left: 0;
 	right: 0;
 	top: 50%;
-	border-top: 1px solid rgba(0, 107, 59, .5);
+	border-top: 1px solid rgba(0, 107, 59, 0.5);
 }
 
 #chat .date-marker-text::before {
 	content: attr(data-label);
 	background-color: white;
-	color: rgba(0, 107, 59, .5);
+	color: rgba(0, 107, 59, 0.5);
 	padding: 0 10px;
 }
 
@@ -981,7 +981,7 @@ kbd {
 }
 
 .inline-channel:hover {
-	opacity: .6;
+	opacity: 0.6;
 }
 
 #chat .time,
@@ -1031,7 +1031,7 @@ kbd {
 }
 
 #chat .user:hover {
-	opacity: .6;
+	opacity: 0.6;
 }
 
 #chat.colored-nicks .user.color-1 { color: #1396cf; }
@@ -1175,7 +1175,7 @@ kbd {
 
 #chat .toggle-button {
 	display: inline-block;
-	transition: opacity .2s, transform .2s;
+	transition: opacity 0.2s, transform 0.2s;
 }
 
 #chat .toggle-button.opened, /* Thumbnail toggle */
@@ -1410,16 +1410,16 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #settings h2 .extra-help {
-	font-size: .8em;
+	font-size: 0.8em;
 }
 
 #settings #play {
 	font-size: 14px;
-	transition: opacity .2s;
+	transition: opacity 0.2s;
 }
 
 #settings #play:hover {
-	opacity: .8;
+	opacity: 0.8;
 }
 
 #settings #change-password .error,
@@ -1437,7 +1437,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #settings .error {
 	color: #e74c3c;
-	margin-top: .2em;
+	margin-top: 0.2em;
 }
 
 #help .help-item {
@@ -1514,7 +1514,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	-webkit-flex: 0 0 auto;
 	flex: 0 0 auto;
 	border: 1px solid transparent;
-	transition: border-color .2s;
+	transition: border-color 0.2s;
 }
 
 #form #nick-value {
@@ -1569,7 +1569,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	color: #9ca5b4;
 	font-size: 14px;
 	height: 32px;
-	transition: opacity .2s;
+	transition: opacity 0.2s;
 	width: 32px;
 	-webkit-flex: 0 0 auto;
 	flex: 0 0 auto;
@@ -1595,15 +1595,15 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	min-width: 160px;
 	font-size: 14px;
 	background-color: #fff;
-	box-shadow: 0 3px 12px rgba(0, 0, 0, .15);
-	border: 1px solid rgba(0, 0, 0, .15);
+	box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+	border: 1px solid rgba(0, 0, 0, 0.15);
 	border-radius: 2px;
 }
 
 .context-menu-divider {
 	height: 1px;
 	margin: 6px 0;
-	background-color: rgba(0, 0, 0, .1);
+	background-color: rgba(0, 0, 0, 0.1);
 }
 
 .context-menu-item,
@@ -1614,7 +1614,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	color: #333;
 	margin-top: 6px;
 	margin-bottom: 6px;
-	transition: background-color .2s;
+	transition: background-color 0.2s;
 }
 
 .context-menu-item:hover,
@@ -1724,14 +1724,14 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	text-decoration: none;
 	-webkit-animation-name: tooltip-appear;
 	animation-name: tooltip-appear;
-	-webkit-animation-duration: .1s;
-	animation-duration: .1s;
+	-webkit-animation-duration: 0.1s;
+	animation-duration: 0.1s;
 	-webkit-animation-fill-mode: forwards;
 	animation-fill-mode: forwards;
 	-webkit-animation-timing-function: ease-in;
 	animation-timing-function: ease-in;
-	-webkit-animation-delay: .4s;
-	animation-delay: .4s;
+	-webkit-animation-delay: 0.4s;
+	animation-delay: 0.4s;
 }
 
 .tooltipped-no-delay:hover::before,
@@ -1942,7 +1942,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		bottom: 0;
 		width: 10px;
 		height: 100%;
-		background: linear-gradient(to right, rgba(255, 255, 255, .5) 0%, rgba(255, 255, 255, 1) 100%);
+		background: linear-gradient(to right, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 1) 100%);
 		content: " ";
 	}
 
@@ -2063,16 +2063,16 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 ::-webkit-scrollbar:hover {
-	background-color: rgba(0, 0, 0, .09);
+	background-color: rgba(0, 0, 0, 0.09);
 }
 
 ::-webkit-scrollbar-thumb:vertical {
-	background: rgba(0, 0, 0, .5);
+	background: rgba(0, 0, 0, 0.5);
 	border-radius: 100px;
 }
 
 ::-webkit-scrollbar-thumb:vertical:active {
-	background: rgba(0, 0, 0, .6);
+	background: rgba(0, 0, 0, 0.6);
 }
 
 /* Image viewer */
@@ -2095,7 +2095,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	background: black;
 	visibility: hidden;
 	opacity: 0;
-	transition: opacity .2s, visibility .2s;
+	transition: opacity 0.2s, visibility 0.2s;
 	z-index: 999;
 }
 
@@ -2112,8 +2112,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	width: 2em;
 	font-size: 36px;
 	color: white;
-	opacity: .6;
-	transition: .2s opacity;
+	opacity: 0.6;
+	transition: 0.2s opacity;
 }
 
 #image-viewer .close-btn {
