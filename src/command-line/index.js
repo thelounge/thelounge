@@ -8,9 +8,11 @@ var fs = require("fs");
 var fsextra = require("fs-extra");
 var path = require("path");
 var Helper = require("../helper");
+const Utils = require("./utils");
 
 program.version(Helper.getVersion(), "-v, --version")
 	.option("--home <path>", `${colors.bold("[DEPRECATED]")} Use the ${colors.green("LOUNGE_HOME")} environment variable instead.`)
+	.on("--help", Utils.extraHelp)
 	.parseOptions(process.argv);
 
 if (program.home) {
