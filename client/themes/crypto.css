@@ -87,7 +87,7 @@ a:hover,
 	color: #00ff0e;
 }
 
-#sidebar .chan .name:after {
+#sidebar .chan .name::after {
 	background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
 }
 
@@ -95,7 +95,7 @@ a:hover,
 #sidebar .chan,
 #sidebar .sign-out,
 #chat .time,
-#chat .count:before,
+#chat .count::before,
 #sidebar .empty {
 	color: #666;
 }
@@ -133,7 +133,7 @@ a:hover,
 	color: #666;
 }
 
-.tooltipped:after {
+.tooltipped::after {
 	font-family: Inconsolata-g, monospace;
 }
 

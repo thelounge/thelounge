@@ -53,12 +53,12 @@ body {
 }
 
 a {
-	transition: opacity .2s;
+	transition: opacity 0.2s;
 }
 
 a:hover {
 	text-decoration: none;
-	opacity: .8;
+	opacity: 0.8;
 }
 
 /**
@@ -135,7 +135,7 @@ kbd {
 	margin-bottom: 10px;
 	padding: 9px 17px;
 	text-transform: uppercase;
-	transition: background .2s, border-color .2s, color .2s;
+	transition: background 0.2s, border-color 0.2s, color 0.2s;
 	word-spacing: 3px;
 	cursor: pointer; /* This is useful for `<button>` elements */
 }
@@ -149,11 +149,11 @@ kbd {
 
 .btn:active {
 	box-shadow: none;
-	opacity: .8;
+	opacity: 0.8;
 }
 
 .btn:disabled {
-	opacity: .6;
+	opacity: 0.6;
 }
 
 .container {
@@ -162,16 +162,16 @@ kbd {
 }
 
 ::-moz-placeholder {
-	color: rgba(0, 0, 0, .35);
+	color: rgba(0, 0, 0, 0.35);
 	opacity: 1;
 }
 
 ::-webkit-input-placeholder {
-	color: rgba(0, 0, 0, .35);
+	color: rgba(0, 0, 0, 0.35);
 }
 
 :-ms-input-placeholder {
-	color: rgba(0, 0, 0, .35) !important;
+	color: rgba(0, 0, 0, 0.35) !important;
 }
 
 #help,
@@ -187,73 +187,73 @@ kbd {
 
 /* Icons */
 
-#viewport .lt:before,
-#viewport .rt:before,
-#chat button.menu:before,
-#sidebar .chan:before,
-#chat .title:before,
+#viewport .lt::before,
+#viewport .rt::before,
+#chat button.menu::before,
+#sidebar .chan::before,
+#chat .title::before,
 #footer .icon,
-#chat .count:before,
+#chat .count::before,
 #settings .extra-help,
-#settings #play:before,
-#form #submit:before,
-#chat .invite .from:before,
-#chat .join .from:before,
-#chat .kick .from:before,
-#chat .part .from:before,
-#chat .quit .from:before,
-#chat .topic .from:before,
-#chat .mode .from:before,
-#chat .ctcp .from:before,
-#chat .whois .from:before,
-#chat .nick .from:before,
-#chat .action .from:before,
-#chat .toggle-button:after,
-.context-menu-item:before,
-#nick button:before,
-#image-viewer .previous-image-btn:before,
-#image-viewer .next-image-btn:before {
+#settings #play::before,
+#form #submit::before,
+#chat .invite .from::before,
+#chat .join .from::before,
+#chat .kick .from::before,
+#chat .part .from::before,
+#chat .quit .from::before,
+#chat .topic .from::before,
+#chat .mode .from::before,
+#chat .ctcp .from::before,
+#chat .whois .from::before,
+#chat .nick .from::before,
+#chat .action .from::before,
+#chat .toggle-button::after,
+.context-menu-item::before,
+#nick button::before,
+#image-viewer .previous-image-btn::before,
+#image-viewer .next-image-btn::before {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-size: inherit; /* Can't have font-size inherit on line above, so need to override */
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
 
-#viewport .lt:before { content: "\f0c9"; /* http://fontawesome.io/icon/bars/ */ }
-#viewport .rt:before { content: "\f0c0"; /* http://fontawesome.io/icon/users/ */ }
-#chat button.menu:before { content: "\f142"; /* http://fontawesome.io/icon/ellipsis-v/ */ }
+#viewport .lt::before { content: "\f0c9"; /* http://fontawesome.io/icon/bars/ */ }
+#viewport .rt::before { content: "\f0c0"; /* http://fontawesome.io/icon/users/ */ }
+#chat button.menu::before { content: "\f142"; /* http://fontawesome.io/icon/ellipsis-v/ */ }
 
-.context-menu-user:before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
-.context-menu-chan:before { content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */ }
-.context-menu-close:before { content: "\f00d"; /* http://fontawesome.io/icon/times/ */ }
+.context-menu-user::before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
+.context-menu-chan::before { content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */ }
+.context-menu-close::before { content: "\f00d"; /* http://fontawesome.io/icon/times/ */ }
 
-#sidebar .chan.lobby:before,
-#chat .lobby .title:before { content: "\f0a0"; /* http://fontawesome.io/icon/hdd-o/ */ }
+#sidebar .chan.lobby::before,
+#chat .lobby .title::before { content: "\f0a0"; /* http://fontawesome.io/icon/hdd-o/ */ }
 
-#sidebar .chan.query:before,
-#chat .query .title:before { content: "\f0e6"; /* http://fontawesome.io/icon/comments-o/ */ }
+#sidebar .chan.query::before,
+#chat .query .title::before { content: "\f0e6"; /* http://fontawesome.io/icon/comments-o/ */ }
 
-#sidebar .chan.channel:before,
-#chat .channel .title:before { content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */ }
+#sidebar .chan.channel::before,
+#chat .channel .title::before { content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */ }
 
-#sidebar .chan.special:before,
-#chat .special .title:before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
+#sidebar .chan.special::before,
+#chat .special .title::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
 
-#footer .sign-in:before { content: "\f023"; /* http://fontawesome.io/icon/lock/ */ }
-#footer .connect:before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
-#footer .settings:before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
-#footer .help:before { content: "\f059"; /* http://fontawesome.io/icon/question/ */ }
-#footer .sign-out:before { content: "\f011"; /* http://fontawesome.io/icon/power-off/ */ }
+#footer .sign-in::before { content: "\f023"; /* http://fontawesome.io/icon/lock/ */ }
+#footer .connect::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
+#footer .settings::before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
+#footer .help::before { content: "\f059"; /* http://fontawesome.io/icon/question/ */ }
+#footer .sign-out::before { content: "\f011"; /* http://fontawesome.io/icon/power-off/ */ }
 
-#form #submit:before { content: "\f1d8"; /* http://fontawesome.io/icon/paper-plane/ */ }
+#form #submit::before { content: "\f1d8"; /* http://fontawesome.io/icon/paper-plane/ */ }
 
-#chat .invite .from:before {
+#chat .invite .from::before {
 	content: "\f003"; /* http://fontawesome.io/icon/envelope-o/ */
 	color: #2ecc40;
 }
 
-#chat .part .from:before,
-#chat .quit .from:before {
+#chat .part .from::before,
+#chat .quit .from::before {
 	content: "\f08b"; /* http://fontawesome.io/icon/sign-out/ */
 	color: #ff4136;
 	display: inline-block;
@@ -261,41 +261,41 @@ kbd {
 	transform: rotate(180deg);
 }
 
-#chat .topic .from:before {
+#chat .topic .from::before {
 	content: "\f0a1"; /* http://fontawesome.io/icon/bullhorn/ */
 	color: #2ecc40;
 }
 
-#chat .mode .from:before {
+#chat .mode .from::before {
 	content: "\f05a"; /* http://fontawesome.io/icon/info-circle/ */
 	color: #2ecc40;
 }
 
-#chat .ctcp .from:before {
+#chat .ctcp .from::before {
 	content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */
 }
 
-#chat .whois .from:before {
+#chat .whois .from::before {
 	content: "\f007"; /* http://fontawesome.io/icon/user/ */
 	color: #2ecc40;
 }
 
-#chat .nick .from:before {
+#chat .nick .from::before {
 	content: "\f007"; /* http://fontawesome.io/icon/user/ */
 	color: #2ecc40;
 }
 
-#chat .join .from:before {
+#chat .join .from::before {
 	content: "\f090"; /* http://fontawesome.io/icon/sign-in/ */
 	color: #2ecc40;
 }
 
-#chat .kick .from:before {
+#chat .kick .from::before {
 	content: "\f05e"; /* http://fontawesome.io/icon/ban/ */
 	color: #ff4136;
 }
 
-#chat .action .from:before {
+#chat .action .from::before {
 	content: "\f005"; /* http://fontawesome.io/icon/star/ */
 }
 
@@ -305,11 +305,11 @@ kbd {
 	text-align: center;
 }
 
-#chat .toggle-button:after {
+#chat .toggle-button::after {
 	content: "\f0da"; /* http://fontawesome.io/icon/caret-right/ */
 }
 
-#chat .count:before {
+#chat .count::before {
 	color: #cfcfcf;
 	content: "\f002"; /* http://fontawesome.io/icon/search/ */
 	position: absolute;
@@ -318,32 +318,32 @@ kbd {
 	line-height: 50px;
 }
 
-#settings .extra-help:before {
+#settings .extra-help::before {
 	content: "\f059"; /* http://fontawesome.io/icon/question-circle/ */
 }
 
-#settings #play:before {
+#settings #play::before {
 	content: "\f028"; /* http://fontawesome.io/icon/volume-up/ */
 	margin-right: 9px;
 }
 
-#set-nick:before {
+#set-nick::before {
 	content: "\f040"; /* http://fontawesome.io/icon/pencil/ */
 }
 
-#submit-nick:before {
+#submit-nick::before {
 	content: "\f00c"; /* http://fontawesome.io/icon/check/ */
 }
 
-#cancel-nick:before {
+#cancel-nick::before {
 	content: "\f00d"; /* http://fontawesome.io/icon/times/ */
 }
 
-#image-viewer .previous-image-btn:before {
+#image-viewer .previous-image-btn::before {
 	content: "\f104"; /* http://fontawesome.io/icon/angle-left/ */
 }
 
-#image-viewer .next-image-btn:before {
+#image-viewer .next-image-btn::before {
 	content: "\f105"; /* http://fontawesome.io/icon/angle-right/ */
 }
 
@@ -377,12 +377,12 @@ kbd {
 #chat button,
 #form button,
 #chat .user {
-	transition: opacity .2s;
+	transition: opacity 0.2s;
 }
 
 #chat button:hover,
 #form button:hover {
-	opacity: .6;
+	opacity: 0.6;
 }
 
 #viewport .lt,
@@ -403,7 +403,7 @@ kbd {
 }
 
 /* Notification dot on the top right corner of the menu icon */
-#viewport .lt:after {
+#viewport .lt::after {
 	content: "";
 	position: absolute;
 	top: 9px;
@@ -414,10 +414,10 @@ kbd {
 	border-radius: 50%;
 	border: 2px solid white;
 	opacity: 0;
-	transition: opacity .2s;
+	transition: opacity 0.2s;
 }
 
-#viewport .lt.notified:after {
+#viewport .lt.notified::after {
 	opacity: 1;
 }
 
@@ -500,7 +500,7 @@ kbd {
 	padding: 6px 10px 8px 36px;
 	position: relative;
 	text-align: left;
-	transition: color .2s;
+	transition: color 0.2s;
 	width: 180px;
 	left: auto !important; /* Fix for drag'n'drop not recalculating left position */
 }
@@ -520,21 +520,21 @@ kbd {
 	color: #c0f8c3;
 }
 
-#sidebar .chan:before,
-#chat .title:before {
+#sidebar .chan::before,
+#chat .title::before {
 	float: left;
 	margin-top: 3px;
 	margin-right: 12px;
 	text-align: center;
 }
 
-#sidebar .chan:before {
+#sidebar .chan::before {
 	position: absolute;
 	top: 4px;
 	left: 10px;
 }
 
-#chat .title:before {
+#chat .title::before {
 	margin-top: 17px;
 }
 
@@ -547,7 +547,7 @@ kbd {
 	margin-right: 5px;
 }
 
-#sidebar .chan .name:after {
+#sidebar .chan .name::after {
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -558,7 +558,7 @@ kbd {
 }
 
 #sidebar .badge {
-	background: rgba(255, 255, 255, .06);
+	background: rgba(255, 255, 255, 0.06);
 	border-radius: 3px;
 	color: #afb6c0;
 	font-size: 10px;
@@ -567,7 +567,7 @@ kbd {
 	margin-left: 5px;
 	padding: 3px 6px;
 	float: right;
-	transition: opacity .2s, background-color .2s, color .2s;
+	transition: opacity 0.2s, background-color 0.2s, color 0.2s;
 }
 
 #sidebar .badge.highlight {
@@ -588,10 +588,10 @@ kbd {
 	position: absolute;
 	z-index: 2;
 	right: 0;
-	transition: opacity .2s, background-color .2s;
+	transition: opacity 0.2s, background-color 0.2s;
 }
 
-#sidebar .close:before {
+#sidebar .close::before {
 	font-size: 18px;
 	font-weight: normal;
 	display: inline-block;
@@ -605,11 +605,11 @@ kbd {
 
 #sidebar .chan.active .close {
 	visibility: visible;
-	opacity: .4;
+	opacity: 0.4;
 }
 
 #sidebar .chan.active .close:hover {
-	background-color: rgba(0, 0, 0, .1);
+	background-color: rgba(0, 0, 0, 0.1);
 	opacity: 1;
 }
 
@@ -619,7 +619,7 @@ kbd {
 }
 
 #footer {
-	background: rgba(0, 0, 0, .06);
+	background: rgba(0, 0, 0, 0.06);
 	bottom: 0;
 	height: 45px;
 	left: 0;
@@ -639,7 +639,7 @@ kbd {
 	display: inline-block;
 	line-height: 34px;
 	padding: 0 12px;
-	transition: color .2s;
+	transition: color 0.2s;
 }
 
 #footer .icon:hover {
@@ -702,7 +702,7 @@ kbd {
 	margin-bottom: 10px;
 	outline: 0;
 	padding: 8px 10px;
-	transition: border-color .2s;
+	transition: border-color 0.2s;
 	width: 100%;
 }
 
@@ -821,11 +821,11 @@ kbd {
 
 #chat .condensed-text {
 	cursor: pointer;
-	transition: opacity .2s;
+	transition: opacity 0.2s;
 }
 
 #chat .condensed-text:hover {
-	opacity: .6;
+	opacity: 0.6;
 }
 
 #chat .condensed-text .toggle-button:hover {
@@ -881,7 +881,7 @@ kbd {
 	position: absolute;
 	right: 0;
 	width: 180px;
-	transition: right .4s;
+	transition: right 0.4s;
 }
 
 #chat .show-more {
@@ -929,20 +929,20 @@ kbd {
 	font-size: 12px;
 }
 
-#chat .unread-marker:before {
+#chat .unread-marker::before {
 	position: absolute;
 	z-index: -1;
 	content: "";
 	left: 0;
 	right: 0;
 	top: 50%;
-	border-top: 1px solid rgba(231, 76, 60, .5);
+	border-top: 1px solid rgba(231, 76, 60, 0.5);
 }
 
-#chat .unread-marker-text:before {
+#chat .unread-marker-text::before {
 	content: "New messages";
 	background-color: white;
-	color: rgba(231, 76, 60, .5);
+	color: rgba(231, 76, 60, 0.5);
 	padding: 0 10px;
 }
 
@@ -959,20 +959,20 @@ kbd {
 	font-size: 12px;
 }
 
-#chat .date-marker:before {
+#chat .date-marker::before {
 	position: absolute;
 	z-index: -1;
 	content: "";
 	left: 0;
 	right: 0;
 	top: 50%;
-	border-top: 1px solid rgba(0, 107, 59, .5);
+	border-top: 1px solid rgba(0, 107, 59, 0.5);
 }
 
-#chat .date-marker-text:before {
+#chat .date-marker-text::before {
 	content: attr(data-label);
 	background-color: white;
-	color: rgba(0, 107, 59, .5);
+	color: rgba(0, 107, 59, 0.5);
 	padding: 0 10px;
 }
 
@@ -981,7 +981,7 @@ kbd {
 }
 
 .inline-channel:hover {
-	opacity: .6;
+	opacity: 0.6;
 }
 
 #chat .time,
@@ -1031,7 +1031,7 @@ kbd {
 }
 
 #chat .user:hover {
-	opacity: .6;
+	opacity: 0.6;
 }
 
 #chat.colored-nicks .user.color-1 { color: #1396cf; }
@@ -1161,7 +1161,7 @@ kbd {
 	color: #0074d9 !important;
 }
 
-#chat .notice .user:before {
+#chat .notice .user::before {
 	content: "Notice: ";
 }
 
@@ -1175,7 +1175,7 @@ kbd {
 
 #chat .toggle-button {
 	display: inline-block;
-	transition: opacity .2s, transform .2s;
+	transition: opacity 0.2s, transform 0.2s;
 }
 
 #chat .toggle-button.opened, /* Thumbnail toggle */
@@ -1289,7 +1289,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	padding: 0 16px;
 }
 
-#chat .user-mode:before {
+#chat .user-mode::before {
 	content: "";
 	border-bottom: 1px solid #eee;
 	display: block;
@@ -1298,31 +1298,31 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-bottom: 10px;
 }
 
-#chat .user-mode.owner:before {
+#chat .user-mode.owner::before {
 	content: "Owners";
 }
 
-#chat .user-mode.admin:before {
+#chat .user-mode.admin::before {
 	content: "Administrators";
 }
 
-#chat .user-mode.op:before {
+#chat .user-mode.op::before {
 	content: "Operators";
 }
 
-#chat .user-mode.half-op:before {
+#chat .user-mode.half-op::before {
 	content: "Half-Operators";
 }
 
-#chat .user-mode.voice:before {
+#chat .user-mode.voice::before {
 	content: "Voiced";
 }
 
-#chat .user-mode.normal:before {
+#chat .user-mode.normal::before {
 	content: "Users";
 }
 
-#chat .user-mode-search:before {
+#chat .user-mode-search::before {
 	content: "Search Results";
 }
 
@@ -1369,7 +1369,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-top: 11px;
 }
 
-#connect .port:before {
+#connect .port::before {
 	content: ":";
 	margin: 9px 0 0 -17px;
 	position: absolute;
@@ -1410,16 +1410,16 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #settings h2 .extra-help {
-	font-size: .8em;
+	font-size: 0.8em;
 }
 
 #settings #play {
 	font-size: 14px;
-	transition: opacity .2s;
+	transition: opacity 0.2s;
 }
 
 #settings #play:hover {
-	opacity: .8;
+	opacity: 0.8;
 }
 
 #settings #change-password .error,
@@ -1437,7 +1437,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #settings .error {
 	color: #e74c3c;
-	margin-top: .2em;
+	margin-top: 0.2em;
 }
 
 #help .help-item {
@@ -1514,7 +1514,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	-webkit-flex: 0 0 auto;
 	flex: 0 0 auto;
 	border: 1px solid transparent;
-	transition: border-color .2s;
+	transition: border-color 0.2s;
 }
 
 #form #nick-value {
@@ -1569,7 +1569,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	color: #9ca5b4;
 	font-size: 14px;
 	height: 32px;
-	transition: opacity .2s;
+	transition: opacity 0.2s;
 	width: 32px;
 	-webkit-flex: 0 0 auto;
 	flex: 0 0 auto;
@@ -1595,15 +1595,15 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	min-width: 160px;
 	font-size: 14px;
 	background-color: #fff;
-	box-shadow: 0 3px 12px rgba(0, 0, 0, .15);
-	border: 1px solid rgba(0, 0, 0, .15);
+	box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+	border: 1px solid rgba(0, 0, 0, 0.15);
 	border-radius: 2px;
 }
 
 .context-menu-divider {
 	height: 1px;
 	margin: 6px 0;
-	background-color: rgba(0, 0, 0, .1);
+	background-color: rgba(0, 0, 0, 0.1);
 }
 
 .context-menu-item,
@@ -1614,7 +1614,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	color: #333;
 	margin-top: 6px;
 	margin-bottom: 6px;
-	transition: background-color .2s;
+	transition: background-color 0.2s;
 }
 
 .context-menu-item:hover,
@@ -1624,8 +1624,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	transition: none;
 }
 
-.context-menu-item:before,
-.textcomplete-item:before {
+.context-menu-item::before,
+.textcomplete-item::before {
 	width: 20px;
 	display: inline-block;
 }
@@ -1658,7 +1658,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	position: relative;
 }
 
-.tooltipped:after {
+.tooltipped::after {
 	position: absolute;
 	z-index: 1000000;
 	display: none;
@@ -1681,7 +1681,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	opacity: 0;
 }
 
-.tooltipped:before {
+.tooltipped::before {
 	position: absolute;
 	z-index: 1000001;
 	display: none;
@@ -1714,47 +1714,47 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	}
 }
 
-.tooltipped:hover:before,
-.tooltipped:hover:after,
-.tooltipped:active:before,
-.tooltipped:active:after,
-.tooltipped:focus:before,
-.tooltipped:focus:after {
+.tooltipped:hover::before,
+.tooltipped:hover::after,
+.tooltipped:active::before,
+.tooltipped:active::after,
+.tooltipped:focus::before,
+.tooltipped:focus::after {
 	display: inline-block;
 	text-decoration: none;
 	-webkit-animation-name: tooltip-appear;
 	animation-name: tooltip-appear;
-	-webkit-animation-duration: .1s;
-	animation-duration: .1s;
+	-webkit-animation-duration: 0.1s;
+	animation-duration: 0.1s;
 	-webkit-animation-fill-mode: forwards;
 	animation-fill-mode: forwards;
 	-webkit-animation-timing-function: ease-in;
 	animation-timing-function: ease-in;
-	-webkit-animation-delay: .4s;
-	animation-delay: .4s;
+	-webkit-animation-delay: 0.4s;
+	animation-delay: 0.4s;
 }
 
-.tooltipped-no-delay:hover:before,
-.tooltipped-no-delay:hover:after,
-.tooltipped-no-delay:active:before,
-.tooltipped-no-delay:active:after,
-.tooltipped-no-delay:focus:before,
-.tooltipped-no-delay:focus:after {
+.tooltipped-no-delay:hover::before,
+.tooltipped-no-delay:hover::after,
+.tooltipped-no-delay:active::before,
+.tooltipped-no-delay:active::after,
+.tooltipped-no-delay:focus::before,
+.tooltipped-no-delay:focus::after {
 	-webkit-animation-delay: 0s;
 	animation-delay: 0s;
 }
 
-.tooltipped-s:after,
-.tooltipped-se:after,
-.tooltipped-sw:after {
+.tooltipped-s::after,
+.tooltipped-se::after,
+.tooltipped-sw::after {
 	top: 100%;
 	right: 50%;
 	margin-top: 5px;
 }
 
-.tooltipped-s:before,
-.tooltipped-se:before,
-.tooltipped-sw:before {
+.tooltipped-s::before,
+.tooltipped-se::before,
+.tooltipped-sw::before {
 	top: auto;
 	right: 50%;
 	bottom: -5px;
@@ -1762,27 +1762,27 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	border-bottom-color: #222;
 }
 
-.tooltipped-se:after {
+.tooltipped-se::after {
 	right: auto;
 	left: 50%;
 	margin-left: -15px;
 }
 
-.tooltipped-sw:after {
+.tooltipped-sw::after {
 	margin-right: -15px;
 }
 
-.tooltipped-n:after,
-.tooltipped-ne:after,
-.tooltipped-nw:after {
+.tooltipped-n::after,
+.tooltipped-ne::after,
+.tooltipped-nw::after {
 	right: 50%;
 	bottom: 100%;
 	margin-bottom: 5px;
 }
 
-.tooltipped-n:before,
-.tooltipped-ne:before,
-.tooltipped-nw:before {
+.tooltipped-n::before,
+.tooltipped-ne::before,
+.tooltipped-nw::before {
 	top: -5px;
 	right: 50%;
 	bottom: auto;
@@ -1790,23 +1790,23 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	border-top-color: #222;
 }
 
-.tooltipped-ne:after {
+.tooltipped-ne::after {
 	right: auto;
 	left: 50%;
 	margin-left: -15px;
 }
 
-.tooltipped-nw:after {
+.tooltipped-nw::after {
 	margin-right: -15px;
 }
 
-.tooltipped-s:after,
-.tooltipped-n:after {
+.tooltipped-s::after,
+.tooltipped-n::after {
 	-webkit-transform: translateX(50%);
 	transform: translateX(50%);
 }
 
-.tooltipped-w:after {
+.tooltipped-w::after {
 	right: 100%;
 	bottom: 50%;
 	margin-right: 5px;
@@ -1814,7 +1814,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	transform: translateY(50%);
 }
 
-.tooltipped-w:before {
+.tooltipped-w::before {
 	top: 50%;
 	bottom: 50%;
 	left: -5px;
@@ -1822,7 +1822,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	border-left-color: #222;
 }
 
-.tooltipped-e:after {
+.tooltipped-e::after {
 	bottom: 50%;
 	left: 100%;
 	margin-left: 5px;
@@ -1830,7 +1830,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	transform: translateY(50%);
 }
 
-.tooltipped-e:before {
+.tooltipped-e::before {
 	top: 50%;
 	right: -5px;
 	bottom: 50%;
@@ -1841,7 +1841,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 @media
 	only screen and (min-resolution: 192dpi),
 	only screen and (min-resolution: 2dppx) {
-	.tooltipped-w:after {
+	.tooltipped-w::after {
 		margin-right: 4.5px;
 	}
 }
@@ -1936,13 +1936,13 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		padding-left: 10px;
 	}
 
-	#chat .from:after {
+	#chat .from::after {
 		position: absolute;
 		right: 0;
 		bottom: 0;
 		width: 10px;
 		height: 100%;
-		background: linear-gradient(to right, rgba(255, 255, 255, .5) 0%, rgba(255, 255, 255, 1) 100%);
+		background: linear-gradient(to right, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 1) 100%);
 		content: " ";
 	}
 
@@ -1958,8 +1958,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	  * - https://www.w3.org/TR/mediaqueries-4/
 	  * - https://developer.mozilla.org/en-US/docs/Web/CSS/@media/hover
 	  */
-	.tooltipped-no-touch:hover:before,
-	.tooltipped-no-touch:hover:after {
+	.tooltipped-no-touch:hover::before,
+	.tooltipped-no-touch:hover::after {
 		visibility: hidden;
 		opacity: 0;
 	}
@@ -1973,7 +1973,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		left: -220px;
 	}
 
-	#sidebar .empty:before {
+	#sidebar .empty::before {
 		margin-top: 0;
 	}
 
@@ -2006,7 +2006,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		right: 0;
 	}
 
-	#chat .title:before {
+	#chat .title::before {
 		display: none;
 	}
 }
@@ -2063,16 +2063,16 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 ::-webkit-scrollbar:hover {
-	background-color: rgba(0, 0, 0, .09);
+	background-color: rgba(0, 0, 0, 0.09);
 }
 
 ::-webkit-scrollbar-thumb:vertical {
-	background: rgba(0, 0, 0, .5);
+	background: rgba(0, 0, 0, 0.5);
 	border-radius: 100px;
 }
 
 ::-webkit-scrollbar-thumb:vertical:active {
-	background: rgba(0, 0, 0, .6);
+	background: rgba(0, 0, 0, 0.6);
 }
 
 /* Image viewer */
@@ -2095,7 +2095,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	background: black;
 	visibility: hidden;
 	opacity: 0;
-	transition: opacity .2s, visibility .2s;
+	transition: opacity 0.2s, visibility 0.2s;
 	z-index: 999;
 }
 
@@ -2112,8 +2112,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	width: 2em;
 	font-size: 36px;
 	color: white;
-	opacity: .6;
-	transition: .2s opacity;
+	opacity: 0.6;
+	transition: 0.2s opacity;
 }
 
 #image-viewer .close-btn {
@@ -2122,7 +2122,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	z-index: 1002;
 }
 
-#image-viewer .close-btn:before {
+#image-viewer .close-btn::before {
 	content: "×";
 }
 
