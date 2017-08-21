@@ -187,73 +187,73 @@ kbd {
 
 /* Icons */
 
-#viewport .lt:before,
-#viewport .rt:before,
-#chat button.menu:before,
-#sidebar .chan:before,
-#chat .title:before,
+#viewport .lt::before,
+#viewport .rt::before,
+#chat button.menu::before,
+#sidebar .chan::before,
+#chat .title::before,
 #footer .icon,
-#chat .count:before,
+#chat .count::before,
 #settings .extra-help,
-#settings #play:before,
-#form #submit:before,
-#chat .invite .from:before,
-#chat .join .from:before,
-#chat .kick .from:before,
-#chat .part .from:before,
-#chat .quit .from:before,
-#chat .topic .from:before,
-#chat .mode .from:before,
-#chat .ctcp .from:before,
-#chat .whois .from:before,
-#chat .nick .from:before,
-#chat .action .from:before,
-#chat .toggle-button:after,
-.context-menu-item:before,
-#nick button:before,
-#image-viewer .previous-image-btn:before,
-#image-viewer .next-image-btn:before {
+#settings #play::before,
+#form #submit::before,
+#chat .invite .from::before,
+#chat .join .from::before,
+#chat .kick .from::before,
+#chat .part .from::before,
+#chat .quit .from::before,
+#chat .topic .from::before,
+#chat .mode .from::before,
+#chat .ctcp .from::before,
+#chat .whois .from::before,
+#chat .nick .from::before,
+#chat .action .from::before,
+#chat .toggle-button::after,
+.context-menu-item::before,
+#nick button::before,
+#image-viewer .previous-image-btn::before,
+#image-viewer .next-image-btn::before {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-size: inherit; /* Can't have font-size inherit on line above, so need to override */
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
 
-#viewport .lt:before { content: "\f0c9"; /* http://fontawesome.io/icon/bars/ */ }
-#viewport .rt:before { content: "\f0c0"; /* http://fontawesome.io/icon/users/ */ }
-#chat button.menu:before { content: "\f142"; /* http://fontawesome.io/icon/ellipsis-v/ */ }
+#viewport .lt::before { content: "\f0c9"; /* http://fontawesome.io/icon/bars/ */ }
+#viewport .rt::before { content: "\f0c0"; /* http://fontawesome.io/icon/users/ */ }
+#chat button.menu::before { content: "\f142"; /* http://fontawesome.io/icon/ellipsis-v/ */ }
 
-.context-menu-user:before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
-.context-menu-chan:before { content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */ }
-.context-menu-close:before { content: "\f00d"; /* http://fontawesome.io/icon/times/ */ }
+.context-menu-user::before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
+.context-menu-chan::before { content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */ }
+.context-menu-close::before { content: "\f00d"; /* http://fontawesome.io/icon/times/ */ }
 
-#sidebar .chan.lobby:before,
-#chat .lobby .title:before { content: "\f0a0"; /* http://fontawesome.io/icon/hdd-o/ */ }
+#sidebar .chan.lobby::before,
+#chat .lobby .title::before { content: "\f0a0"; /* http://fontawesome.io/icon/hdd-o/ */ }
 
-#sidebar .chan.query:before,
-#chat .query .title:before { content: "\f0e6"; /* http://fontawesome.io/icon/comments-o/ */ }
+#sidebar .chan.query::before,
+#chat .query .title::before { content: "\f0e6"; /* http://fontawesome.io/icon/comments-o/ */ }
 
-#sidebar .chan.channel:before,
-#chat .channel .title:before { content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */ }
+#sidebar .chan.channel::before,
+#chat .channel .title::before { content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */ }
 
-#sidebar .chan.special:before,
-#chat .special .title:before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
+#sidebar .chan.special::before,
+#chat .special .title::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
 
-#footer .sign-in:before { content: "\f023"; /* http://fontawesome.io/icon/lock/ */ }
-#footer .connect:before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
-#footer .settings:before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
-#footer .help:before { content: "\f059"; /* http://fontawesome.io/icon/question/ */ }
-#footer .sign-out:before { content: "\f011"; /* http://fontawesome.io/icon/power-off/ */ }
+#footer .sign-in::before { content: "\f023"; /* http://fontawesome.io/icon/lock/ */ }
+#footer .connect::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
+#footer .settings::before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
+#footer .help::before { content: "\f059"; /* http://fontawesome.io/icon/question/ */ }
+#footer .sign-out::before { content: "\f011"; /* http://fontawesome.io/icon/power-off/ */ }
 
-#form #submit:before { content: "\f1d8"; /* http://fontawesome.io/icon/paper-plane/ */ }
+#form #submit::before { content: "\f1d8"; /* http://fontawesome.io/icon/paper-plane/ */ }
 
-#chat .invite .from:before {
+#chat .invite .from::before {
 	content: "\f003"; /* http://fontawesome.io/icon/envelope-o/ */
 	color: #2ecc40;
 }
 
-#chat .part .from:before,
-#chat .quit .from:before {
+#chat .part .from::before,
+#chat .quit .from::before {
 	content: "\f08b"; /* http://fontawesome.io/icon/sign-out/ */
 	color: #ff4136;
 	display: inline-block;
@@ -261,41 +261,41 @@ kbd {
 	transform: rotate(180deg);
 }
 
-#chat .topic .from:before {
+#chat .topic .from::before {
 	content: "\f0a1"; /* http://fontawesome.io/icon/bullhorn/ */
 	color: #2ecc40;
 }
 
-#chat .mode .from:before {
+#chat .mode .from::before {
 	content: "\f05a"; /* http://fontawesome.io/icon/info-circle/ */
 	color: #2ecc40;
 }
 
-#chat .ctcp .from:before {
+#chat .ctcp .from::before {
 	content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */
 }
 
-#chat .whois .from:before {
+#chat .whois .from::before {
 	content: "\f007"; /* http://fontawesome.io/icon/user/ */
 	color: #2ecc40;
 }
 
-#chat .nick .from:before {
+#chat .nick .from::before {
 	content: "\f007"; /* http://fontawesome.io/icon/user/ */
 	color: #2ecc40;
 }
 
-#chat .join .from:before {
+#chat .join .from::before {
 	content: "\f090"; /* http://fontawesome.io/icon/sign-in/ */
 	color: #2ecc40;
 }
 
-#chat .kick .from:before {
+#chat .kick .from::before {
 	content: "\f05e"; /* http://fontawesome.io/icon/ban/ */
 	color: #ff4136;
 }
 
-#chat .action .from:before {
+#chat .action .from::before {
 	content: "\f005"; /* http://fontawesome.io/icon/star/ */
 }
 
@@ -305,11 +305,11 @@ kbd {
 	text-align: center;
 }
 
-#chat .toggle-button:after {
+#chat .toggle-button::after {
 	content: "\f0da"; /* http://fontawesome.io/icon/caret-right/ */
 }
 
-#chat .count:before {
+#chat .count::before {
 	color: #cfcfcf;
 	content: "\f002"; /* http://fontawesome.io/icon/search/ */
 	position: absolute;
@@ -318,32 +318,32 @@ kbd {
 	line-height: 50px;
 }
 
-#settings .extra-help:before {
+#settings .extra-help::before {
 	content: "\f059"; /* http://fontawesome.io/icon/question-circle/ */
 }
 
-#settings #play:before {
+#settings #play::before {
 	content: "\f028"; /* http://fontawesome.io/icon/volume-up/ */
 	margin-right: 9px;
 }
 
-#set-nick:before {
+#set-nick::before {
 	content: "\f040"; /* http://fontawesome.io/icon/pencil/ */
 }
 
-#submit-nick:before {
+#submit-nick::before {
 	content: "\f00c"; /* http://fontawesome.io/icon/check/ */
 }
 
-#cancel-nick:before {
+#cancel-nick::before {
 	content: "\f00d"; /* http://fontawesome.io/icon/times/ */
 }
 
-#image-viewer .previous-image-btn:before {
+#image-viewer .previous-image-btn::before {
 	content: "\f104"; /* http://fontawesome.io/icon/angle-left/ */
 }
 
-#image-viewer .next-image-btn:before {
+#image-viewer .next-image-btn::before {
 	content: "\f105"; /* http://fontawesome.io/icon/angle-right/ */
 }
 
@@ -403,7 +403,7 @@ kbd {
 }
 
 /* Notification dot on the top right corner of the menu icon */
-#viewport .lt:after {
+#viewport .lt::after {
 	content: "";
 	position: absolute;
 	top: 9px;
@@ -417,7 +417,7 @@ kbd {
 	transition: opacity .2s;
 }
 
-#viewport .lt.notified:after {
+#viewport .lt.notified::after {
 	opacity: 1;
 }
 
@@ -520,21 +520,21 @@ kbd {
 	color: #c0f8c3;
 }
 
-#sidebar .chan:before,
-#chat .title:before {
+#sidebar .chan::before,
+#chat .title::before {
 	float: left;
 	margin-top: 3px;
 	margin-right: 12px;
 	text-align: center;
 }
 
-#sidebar .chan:before {
+#sidebar .chan::before {
 	position: absolute;
 	top: 4px;
 	left: 10px;
 }
 
-#chat .title:before {
+#chat .title::before {
 	margin-top: 17px;
 }
 
@@ -547,7 +547,7 @@ kbd {
 	margin-right: 5px;
 }
 
-#sidebar .chan .name:after {
+#sidebar .chan .name::after {
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -591,7 +591,7 @@ kbd {
 	transition: opacity .2s, background-color .2s;
 }
 
-#sidebar .close:before {
+#sidebar .close::before {
 	font-size: 18px;
 	font-weight: normal;
 	display: inline-block;
@@ -929,7 +929,7 @@ kbd {
 	font-size: 12px;
 }
 
-#chat .unread-marker:before {
+#chat .unread-marker::before {
 	position: absolute;
 	z-index: -1;
 	content: "";
@@ -939,7 +939,7 @@ kbd {
 	border-top: 1px solid rgba(231, 76, 60, .5);
 }
 
-#chat .unread-marker-text:before {
+#chat .unread-marker-text::before {
 	content: "New messages";
 	background-color: white;
 	color: rgba(231, 76, 60, .5);
@@ -959,7 +959,7 @@ kbd {
 	font-size: 12px;
 }
 
-#chat .date-marker:before {
+#chat .date-marker::before {
 	position: absolute;
 	z-index: -1;
 	content: "";
@@ -969,7 +969,7 @@ kbd {
 	border-top: 1px solid rgba(0, 107, 59, .5);
 }
 
-#chat .date-marker-text:before {
+#chat .date-marker-text::before {
 	content: attr(data-label);
 	background-color: white;
 	color: rgba(0, 107, 59, .5);
@@ -1161,7 +1161,7 @@ kbd {
 	color: #0074d9 !important;
 }
 
-#chat .notice .user:before {
+#chat .notice .user::before {
 	content: "Notice: ";
 }
 
@@ -1289,7 +1289,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	padding: 0 16px;
 }
 
-#chat .user-mode:before {
+#chat .user-mode::before {
 	content: "";
 	border-bottom: 1px solid #eee;
 	display: block;
@@ -1298,31 +1298,31 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-bottom: 10px;
 }
 
-#chat .user-mode.owner:before {
+#chat .user-mode.owner::before {
 	content: "Owners";
 }
 
-#chat .user-mode.admin:before {
+#chat .user-mode.admin::before {
 	content: "Administrators";
 }
 
-#chat .user-mode.op:before {
+#chat .user-mode.op::before {
 	content: "Operators";
 }
 
-#chat .user-mode.half-op:before {
+#chat .user-mode.half-op::before {
 	content: "Half-Operators";
 }
 
-#chat .user-mode.voice:before {
+#chat .user-mode.voice::before {
 	content: "Voiced";
 }
 
-#chat .user-mode.normal:before {
+#chat .user-mode.normal::before {
 	content: "Users";
 }
 
-#chat .user-mode-search:before {
+#chat .user-mode-search::before {
 	content: "Search Results";
 }
 
@@ -1369,7 +1369,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-top: 11px;
 }
 
-#connect .port:before {
+#connect .port::before {
 	content: ":";
 	margin: 9px 0 0 -17px;
 	position: absolute;
@@ -1624,8 +1624,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	transition: none;
 }
 
-.context-menu-item:before,
-.textcomplete-item:before {
+.context-menu-item::before,
+.textcomplete-item::before {
 	width: 20px;
 	display: inline-block;
 }
@@ -1658,7 +1658,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	position: relative;
 }
 
-.tooltipped:after {
+.tooltipped::after {
 	position: absolute;
 	z-index: 1000000;
 	display: none;
@@ -1681,7 +1681,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	opacity: 0;
 }
 
-.tooltipped:before {
+.tooltipped::before {
 	position: absolute;
 	z-index: 1000001;
 	display: none;
@@ -1714,12 +1714,12 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	}
 }
 
-.tooltipped:hover:before,
-.tooltipped:hover:after,
-.tooltipped:active:before,
-.tooltipped:active:after,
-.tooltipped:focus:before,
-.tooltipped:focus:after {
+.tooltipped:hover::before,
+.tooltipped:hover::after,
+.tooltipped:active::before,
+.tooltipped:active::after,
+.tooltipped:focus::before,
+.tooltipped:focus::after {
 	display: inline-block;
 	text-decoration: none;
 	-webkit-animation-name: tooltip-appear;
@@ -1734,27 +1734,27 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	animation-delay: .4s;
 }
 
-.tooltipped-no-delay:hover:before,
-.tooltipped-no-delay:hover:after,
-.tooltipped-no-delay:active:before,
-.tooltipped-no-delay:active:after,
-.tooltipped-no-delay:focus:before,
-.tooltipped-no-delay:focus:after {
+.tooltipped-no-delay:hover::before,
+.tooltipped-no-delay:hover::after,
+.tooltipped-no-delay:active::before,
+.tooltipped-no-delay:active::after,
+.tooltipped-no-delay:focus::before,
+.tooltipped-no-delay:focus::after {
 	-webkit-animation-delay: 0s;
 	animation-delay: 0s;
 }
 
-.tooltipped-s:after,
-.tooltipped-se:after,
-.tooltipped-sw:after {
+.tooltipped-s::after,
+.tooltipped-se::after,
+.tooltipped-sw::after {
 	top: 100%;
 	right: 50%;
 	margin-top: 5px;
 }
 
-.tooltipped-s:before,
-.tooltipped-se:before,
-.tooltipped-sw:before {
+.tooltipped-s::before,
+.tooltipped-se::before,
+.tooltipped-sw::before {
 	top: auto;
 	right: 50%;
 	bottom: -5px;
@@ -1762,27 +1762,27 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	border-bottom-color: #222;
 }
 
-.tooltipped-se:after {
+.tooltipped-se::after {
 	right: auto;
 	left: 50%;
 	margin-left: -15px;
 }
 
-.tooltipped-sw:after {
+.tooltipped-sw::after {
 	margin-right: -15px;
 }
 
-.tooltipped-n:after,
-.tooltipped-ne:after,
-.tooltipped-nw:after {
+.tooltipped-n::after,
+.tooltipped-ne::after,
+.tooltipped-nw::after {
 	right: 50%;
 	bottom: 100%;
 	margin-bottom: 5px;
 }
 
-.tooltipped-n:before,
-.tooltipped-ne:before,
-.tooltipped-nw:before {
+.tooltipped-n::before,
+.tooltipped-ne::before,
+.tooltipped-nw::before {
 	top: -5px;
 	right: 50%;
 	bottom: auto;
@@ -1790,23 +1790,23 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	border-top-color: #222;
 }
 
-.tooltipped-ne:after {
+.tooltipped-ne::after {
 	right: auto;
 	left: 50%;
 	margin-left: -15px;
 }
 
-.tooltipped-nw:after {
+.tooltipped-nw::after {
 	margin-right: -15px;
 }
 
-.tooltipped-s:after,
-.tooltipped-n:after {
+.tooltipped-s::after,
+.tooltipped-n::after {
 	-webkit-transform: translateX(50%);
 	transform: translateX(50%);
 }
 
-.tooltipped-w:after {
+.tooltipped-w::after {
 	right: 100%;
 	bottom: 50%;
 	margin-right: 5px;
@@ -1814,7 +1814,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	transform: translateY(50%);
 }
 
-.tooltipped-w:before {
+.tooltipped-w::before {
 	top: 50%;
 	bottom: 50%;
 	left: -5px;
@@ -1822,7 +1822,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	border-left-color: #222;
 }
 
-.tooltipped-e:after {
+.tooltipped-e::after {
 	bottom: 50%;
 	left: 100%;
 	margin-left: 5px;
@@ -1830,7 +1830,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	transform: translateY(50%);
 }
 
-.tooltipped-e:before {
+.tooltipped-e::before {
 	top: 50%;
 	right: -5px;
 	bottom: 50%;
@@ -1841,7 +1841,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 @media
 	only screen and (min-resolution: 192dpi),
 	only screen and (min-resolution: 2dppx) {
-	.tooltipped-w:after {
+	.tooltipped-w::after {
 		margin-right: 4.5px;
 	}
 }
@@ -1936,7 +1936,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		padding-left: 10px;
 	}
 
-	#chat .from:after {
+	#chat .from::after {
 		position: absolute;
 		right: 0;
 		bottom: 0;
@@ -1958,8 +1958,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	  * - https://www.w3.org/TR/mediaqueries-4/
 	  * - https://developer.mozilla.org/en-US/docs/Web/CSS/@media/hover
 	  */
-	.tooltipped-no-touch:hover:before,
-	.tooltipped-no-touch:hover:after {
+	.tooltipped-no-touch:hover::before,
+	.tooltipped-no-touch:hover::after {
 		visibility: hidden;
 		opacity: 0;
 	}
@@ -1973,7 +1973,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		left: -220px;
 	}
 
-	#sidebar .empty:before {
+	#sidebar .empty::before {
 		margin-top: 0;
 	}
 
@@ -2006,7 +2006,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		right: 0;
 	}
 
-	#chat .title:before {
+	#chat .title::before {
 		display: none;
 	}
 }
@@ -2122,7 +2122,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	z-index: 1002;
 }
 
-#image-viewer .close-btn:before {
+#image-viewer .close-btn::before {
 	content: "×";
 }
 

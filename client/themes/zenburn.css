@@ -54,7 +54,7 @@ body {
 	background: #2b2b2b;
 }
 
-#sidebar .chan .name:after {
+#sidebar .chan .name::after {
 	background: linear-gradient(to right, rgba(43, 43, 43, 0) 0%, rgba(43, 43, 43, 1) 100%);
 }
 
@@ -75,7 +75,7 @@ body {
 /* Borders */
 #chat .from,
 #windows .header,
-#chat .user-mode:before,
+#chat .user-mode::before,
 #chat .sidebar {
 	border-color: #333;
 }
@@ -169,19 +169,19 @@ body {
 }
 
 /* Notification dot on the top right corner of the menu icon */
-#viewport .lt:after {
+#viewport .lt::after {
 	border-color: #3f3f3f;
 }
 
-#chat .unread-marker-text:before {
+#chat .unread-marker-text::before {
 	background-color: #3f3f3f;
 }
 
-#chat .date-marker:before {
+#chat .date-marker::before {
 	border-color: #97ea70;
 }
 
-#chat .date-marker-text:before {
+#chat .date-marker-text::before {
 	background-color: #3f3f3f;
 	color: #97ea70;
 }
@@ -268,7 +268,7 @@ body {
 /* End form elements */
 
 @media (min-width: 480px) {
-	#chat .from:after {
+	#chat .from::after {
 		background: linear-gradient(to right, rgba(63, 63, 63, .5) 0%, rgba(63, 63, 63, 1) 100%);
 	}
 }
