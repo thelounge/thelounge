@@ -23,14 +23,7 @@ if (program.home) {
 let home = program.home || process.env.LOUNGE_HOME;
 
 if (!home) {
-	const distConfig = path.resolve(path.join(
-		__dirname,
-		"..",
-		"..",
-		".lounge_home"
-	));
-
-	home = fs.readFileSync(distConfig, "utf-8").trim();
+	home = Utils.defaultLoungeHome();
 }
 
 Helper.setHome(home);
