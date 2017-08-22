@@ -12,6 +12,8 @@ const condensed = require("./condensed");
 const chat = $("#chat");
 const sidebar = $("#sidebar");
 
+require("intersection-observer");
+
 const historyObserver = window.IntersectionObserver ?
 	new window.IntersectionObserver(loadMoreHistory, {
 		root: chat.get(0)
