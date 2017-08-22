@@ -10,7 +10,7 @@ Modern web IRC client designed for self-hosting.
 
 ## Overview
 
-* **Modern features brought to IRC.** Link previews, new message markers, ~~push notifications~~ [*(soon!)*](https://github.com/thelounge/lounge/pull/1124), and more bring IRC to the 21st century.
+* **Modern features brought to IRC.** Push notifications, link previews, new message markers, and more bring IRC to the 21st century.
 * **Always connected.** Remains connected to IRC servers while you are offline.
 * **Cross platform.** It doesn't matter what OS you use, it just works wherever Node.js runs.
 * **Responsive interface.** The client works smoothly on every desktop, smartphone and tablet.

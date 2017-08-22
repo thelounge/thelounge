@@ -688,7 +688,8 @@ kbd {
 	width: 100%;
 }
 
-#windows label {
+#windows label,
+#settings .error {
 	font-size: 14px;
 }
 

@@ -16,7 +16,7 @@ module.exports = function(client, chan, msg) {
 	}
 
 	// Remove all IRC formatting characters before searching for links
-	const cleanText = msg.text.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "");
+	const cleanText = Helper.cleanIrcMessage(msg.text);
 
 	// We will only try to prefetch http(s) links
 	const links = findLinks(cleanText).filter((w) => /^https?:\/\//.test(w.link));

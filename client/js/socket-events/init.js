@@ -3,6 +3,7 @@
 const $ = require("jquery");
 const socket = require("../socket");
 const render = require("../render");
+const webpush = require("../webpush");
 const sidebar = $("#sidebar");
 const storage = require("../localStorage");
 
@@ -20,6 +21,8 @@ socket.on("init", function(data) {
 	if (data.token) {
 		storage.set("token", data.token);
 	}
+
+	webpush.configurePushNotifications(data.pushSubscription, data.applicationServerKey);
 
 	$("body").removeClass("signed-out");
 	$("#loading").remove();
