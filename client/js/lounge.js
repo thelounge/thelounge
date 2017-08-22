@@ -48,10 +48,12 @@ $(function() {
 	const emojiSearchTerms = Object.keys(emojiMap);
 	const emojiStrategy = {
 		id: "emoji",
-		match: /\B:([-+\w]*):?$/,
+		match: /\B:([-+\w:?]{2,}):?$/,
 		search(term, callback) {
 			const results = fuzzy.filter(
-				term,
+				// Trim colon from the matched term,
+				// as we are unable to get a clean string from match regex
+				term.replace(/:$/, ""),
 				emojiSearchTerms,
 				{
 					pre: "<b>",
