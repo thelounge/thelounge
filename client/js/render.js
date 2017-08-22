@@ -73,9 +73,11 @@ function buildChatMessage(data) {
 	const chan = chat.find(target);
 	let template = "msg";
 
-	if (!data.msg.highlight && !data.msg.self && (type === "message" || type === "notice") && options.highlights.some(function(h) {
-		return data.msg.text.toLocaleLowerCase().indexOf(h.toLocaleLowerCase()) > -1;
-	})) {
+	// See if any of the custom highlight regexes match
+	if (!data.msg.highlight && !data.msg.self
+		&& options.highlightsRE
+		&& (type === "message" || type === "notice")
+		&& options.highlightsRE.exec(data.msg.text)) {
 		data.msg.highlight = true;
 	}
 
