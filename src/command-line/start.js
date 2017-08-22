@@ -5,6 +5,7 @@ var program = require("commander");
 var colors = require("colors/safe");
 var server = require("../server");
 var Helper = require("../helper");
+const Utils = require("./utils");
 
 program
 	.command("start")
@@ -14,6 +15,7 @@ program
 	.option("    --public", "start in public mode")
 	.option("    --private", "start in private mode")
 	.description("Start the server")
+	.on("--help", Utils.extraHelp)
 	.action(function(options) {
 		var users = new ClientManager().getUsers();
 

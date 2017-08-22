@@ -5,10 +5,12 @@ var fs = require("fs");
 var program = require("commander");
 var colors = require("colors/safe");
 var Helper = require("../helper");
+const Utils = require("./utils");
 
 program
 	.command("reset <name>")
 	.description("Reset user password")
+	.on("--help", Utils.extraHelp)
 	.action(function(name) {
 		var users = new ClientManager().getUsers();
 		if (users.indexOf(name) === -1) {

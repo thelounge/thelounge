@@ -4,10 +4,12 @@ var ClientManager = new require("../clientManager");
 var colors = require("colors/safe");
 var program = require("commander");
 var Helper = require("../helper");
+const Utils = require("./utils");
 
 program
 	.command("add <name>")
 	.description("Add a new user")
+	.on("--help", Utils.extraHelp)
 	.action(function(name) {
 		var manager = new ClientManager();
 		var users = manager.getUsers();

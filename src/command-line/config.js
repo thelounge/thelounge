@@ -4,10 +4,12 @@ var program = require("commander");
 var child = require("child_process");
 var colors = require("colors/safe");
 var Helper = require("../helper");
+const Utils = require("./utils");
 
 program
 	.command("config")
-	.description(`Edit configuration file located at ${colors.green(Helper.CONFIG_PATH)}. Set the ${colors.green("LOUNGE_HOME")} environment variable to change.`)
+	.description(`Edit configuration file located at ${colors.green(Helper.CONFIG_PATH)}.`)
+	.on("--help", Utils.extraHelp)
 	.action(function() {
 		var child_spawn = child.spawn(
 			process.env.EDITOR || "vi",

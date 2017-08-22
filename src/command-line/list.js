@@ -3,10 +3,12 @@
 var ClientManager = new require("../clientManager");
 var program = require("commander");
 var colors = require("colors/safe");
+const Utils = require("./utils");
 
 program
 	.command("list")
 	.description("List all users")
+	.on("--help", Utils.extraHelp)
 	.action(function() {
 		var users = new ClientManager().getUsers();
 		if (!users.length) {

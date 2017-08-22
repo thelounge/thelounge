@@ -8,9 +8,11 @@ var fs = require("fs");
 var fsextra = require("fs-extra");
 var path = require("path");
 var Helper = require("../helper");
+const Utils = require("./utils");
 
 program.version(Helper.getVersion(), "-v, --version")
 	.option("--home <path>", `${colors.bold("[DEPRECATED]")} Use the ${colors.green("LOUNGE_HOME")} environment variable instead.`)
+	.on("--help", Utils.extraHelp)
 	.parseOptions(process.argv);
 
 if (program.home) {
@@ -21,14 +23,7 @@ if (program.home) {
 let home = program.home || process.env.LOUNGE_HOME;
 
 if (!home) {
-	const distConfig = path.resolve(path.join(
-		__dirname,
-		"..",
-		"..",
-		".lounge_home"
-	));
-
-	home = fs.readFileSync(distConfig, "utf-8").trim();
+	home = Utils.defaultLoungeHome();
 }
 
 Helper.setHome(home);
