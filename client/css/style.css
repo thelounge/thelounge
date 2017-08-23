@@ -837,6 +837,10 @@ kbd {
 	display: none;
 }
 
+#chat .condensed .time {
+	visibility: hidden;
+}
+
 #windows .header .topic,
 .messages .msg,
 .sidebar {
@@ -2043,6 +2047,11 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		padding: 0;
 	}
 
+	#chat .condensed .time,
+	#chat .condensed .from {
+		display: none;
+	}
+
 	#chat .date-marker,
 	#chat .unread-marker {
 		margin: 0;
@@ -2180,8 +2189,4 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #chat .action .text,
 #chat table.channel-list .topic {
 	white-space: pre-wrap;
-}
-
-.hide-text {
-	color: transparent !important;
 }
