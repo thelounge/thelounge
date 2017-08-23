@@ -12,7 +12,7 @@ program
 	.action(function() {
 		var users = new ClientManager().getUsers();
 		if (!users.length) {
-			log.warn("No users found.");
+			log.info(`There are currently no users. Create one with ${colors.bold("lounge add <name>")}.`);
 		} else {
 			log.info("Users:");
 			for (var i = 0; i < users.length; i++) {
