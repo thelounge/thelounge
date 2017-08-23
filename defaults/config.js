@@ -8,9 +8,9 @@ module.exports = {
 	// Set to 'false' to enable users.
 	//
 	// @type     boolean
-	// @default  true
+	// @default  false
 	//
-	public: true,
+	public: false,
 
 	//
 	// IP address or hostname for the web server to listen on.

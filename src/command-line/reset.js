@@ -13,6 +13,11 @@ program
 	.on("--help", Utils.extraHelp)
 	.action(function(name) {
 		var users = new ClientManager().getUsers();
+
+		if (users === undefined) { // There was an error, already logged
+			return;
+		}
+
 		if (users.indexOf(name) === -1) {
 			log.error(`User ${colors.bold(name)} does not exist.`);
 			return;

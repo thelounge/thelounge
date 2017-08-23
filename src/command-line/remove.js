@@ -10,10 +10,15 @@ program
 	.description("Remove an existing user")
 	.on("--help", Utils.extraHelp)
 	.action(function(name) {
-		var manager = new ClientManager();
-		if (manager.removeUser(name)) {
-			log.info(`User ${colors.bold(name)} removed.`);
-		} else {
-			log.error(`User ${colors.bold(name)} does not exist.`);
+		const manager = new ClientManager();
+
+		try {
+			if (manager.removeUser(name)) {
+				log.info(`User ${colors.bold(name)} removed.`);
+			} else {
+				log.error(`User ${colors.bold(name)} does not exist.`);
+			}
+		} catch (e) {
+			// There was an error, already logged
 		}
 	});

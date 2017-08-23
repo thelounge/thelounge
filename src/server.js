@@ -89,28 +89,32 @@ module.exports = function() {
 	}, () => {
 		const protocol = config.https.enable ? "https" : "http";
 		var address = server.address();
-		log.info(`Available on ${colors.green(protocol + "://" + address.address + ":" + address.port + "/")} \
-in ${config.public ? "public" : "private"} mode`);
-	});
 
-	var sockets = io(server, {
-		serveClient: false,
-		transports: config.transports
-	});
+		log.info(
+			"Available at " +
+			colors.green(`${protocol}://${address.address}:${address.port}/`) +
+			` in ${colors.bold(config.public ? "public" : "private")} mode`
+		);
 
-	sockets.on("connect", function(socket) {
-		if (config.public) {
-			performAuthentication.call(socket, {});
-		} else {
-			socket.emit("auth", {success: true});
-			socket.on("auth", performAuthentication);
-		}
-	});
+		const sockets = io(server, {
+			serveClient: false,
+			transports: config.transports
+		});
 
-	manager = new ClientManager();
+		sockets.on("connect", (socket) => {
+			if (config.public) {
+				performAuthentication.call(socket, {});
+			} else {
+				socket.emit("auth", {success: true});
+				socket.on("auth", performAuthentication);
+			}
+		});
 
-	new Identification((identHandler) => {
-		manager.init(identHandler, sockets);
+		manager = new ClientManager();
+
+		new Identification((identHandler) => {
+			manager.init(identHandler, sockets);
+		});
 	});
 };
 

@@ -18,7 +18,7 @@ ClientManager.prototype.init = function(identHandler, sockets) {
 	this.identHandler = identHandler;
 	this.webPush = new WebPush();
 
-	if (!Helper.config.public) {
+	if (!Helper.config.public && !Helper.config.ldap.enable) {
 		if ("autoload" in Helper.config) {
 			log.warn(`Autoloading users is now always enabled. Please remove the ${colors.yellow("autoload")} option from your configuration file.`);
 		}
@@ -32,11 +32,28 @@ ClientManager.prototype.findClient = function(name) {
 };
 
 ClientManager.prototype.autoloadUsers = function() {
-	this.getUsers().forEach((name) => this.loadUser(name));
+	const users = this.getUsers();
+	const noUsersWarning = `There are currently no users. Create one with ${colors.bold("lounge add <name>")}.`;
+
+	// There was an error, already logged, but we have to crash the server as
+	// user directory could not be accessed
+	if (users === undefined) {
+		process.exit(1);
+	}
+
+	if (!users.length) {
+		log.info(noUsersWarning);
+	}
+
+	users.forEach((name) => this.loadUser(name));
 
 	fs.watch(Helper.USERS_PATH, _.debounce(() => {
 		const loaded = this.clients.map((c) => c.name);
 		const updatedUsers = this.getUsers();
+
+		if (!updatedUsers.length) {
+			log.info(noUsersWarning);
+		}
 
 		// New users created since last time users were loaded
 		_.difference(updatedUsers, loaded).forEach((name) => this.loadUser(name));
@@ -80,7 +97,7 @@ ClientManager.prototype.getUsers = function() {
 			}
 		});
 	} catch (e) {
-		log.error("Failed to get users", e);
+		log.error(`Failed to get users (${e})`);
 		return;
 	}
 	return users;

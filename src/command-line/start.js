@@ -1,8 +1,6 @@
 "use strict";
 
-var ClientManager = new require("../clientManager");
 var program = require("commander");
-var colors = require("colors/safe");
 var server = require("../server");
 var Helper = require("../helper");
 const Utils = require("./utils");
@@ -17,20 +15,11 @@ program
 	.description("Start the server")
 	.on("--help", Utils.extraHelp)
 	.action(function(options) {
-		var users = new ClientManager().getUsers();
-
 		var mode = Helper.config.public;
 		if (options.public) {
 			mode = true;
 		} else if (options.private) {
 			mode = false;
-		}
-
-		if (!mode && !users.length && !Helper.config.ldap.enable) {
-			log.warn("No users found.");
-			log.info(`Create a new user with ${colors.bold("lounge add <name>")}.`);
-
-			return;
 		}
 
 		Helper.config.host = options.host || Helper.config.host;
