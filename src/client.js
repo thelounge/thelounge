@@ -403,14 +403,19 @@ Client.prototype.inputLine = function(data) {
 };
 
 Client.prototype.more = function(data) {
-	var client = this;
-	var target = client.find(data.target);
+	const client = this;
+	const target = client.find(data.target);
+
 	if (!target) {
 		return;
 	}
-	var chan = target.chan;
-	var index = chan.messages.findIndex((val) => val.id === data.lastId);
-	var messages = chan.messages.slice(Math.max(0, index - 100), index);
+
+	const chan = target.chan;
+	const index = chan.messages.findIndex((val) => val.id === data.lastId);
+
+	// If we don't find the requested message, send an empty array
+	const messages = index > 0 ? chan.messages.slice(Math.max(0, index - 100), index) : [];
+
 	client.emit("more", {
 		chan: chan.id,
 		messages: messages
