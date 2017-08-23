@@ -18,6 +18,10 @@ program
 		const manager = new ClientManager();
 		const users = manager.getUsers();
 
+		if (users === undefined) { // There was an error, already logged
+			return;
+		}
+
 		if (users.indexOf(name) !== -1) {
 			log.error(`User ${colors.bold(name)} already exists.`);
 			return;

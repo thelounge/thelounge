@@ -16,6 +16,11 @@ program
 		}
 
 		var users = new ClientManager().getUsers();
+
+		if (users === undefined) { // There was an error, already logged
+			return;
+		}
+
 		if (!users.length) {
 			log.info(`There are currently no users. Create one with ${colors.bold("lounge add <name>")}.`);
 		} else {

@@ -35,6 +35,12 @@ ClientManager.prototype.autoloadUsers = function() {
 	const users = this.getUsers();
 	const noUsersWarning = `There are currently no users. Create one with ${colors.bold("lounge add <name>")}.`;
 
+	// There was an error, already logged, but we have to crash the server as
+	// user directory could not be accessed
+	if (users === undefined) {
+		process.exit(1);
+	}
+
 	if (!users.length) {
 		log.info(noUsersWarning);
 	}
@@ -91,7 +97,7 @@ ClientManager.prototype.getUsers = function() {
 			}
 		});
 	} catch (e) {
-		log.error("Failed to get users", e);
+		log.error(`Failed to get users (${e})`);
 		return;
 	}
 	return users;
