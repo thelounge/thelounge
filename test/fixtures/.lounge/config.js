@@ -2,6 +2,7 @@
 
 var config = require("../../../defaults/config.js");
 
+config.public = true;
 config.prefetch = true;
 config.host = config.bind = "127.0.0.1";
 config.port = 61337;
