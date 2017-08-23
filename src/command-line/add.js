@@ -11,12 +11,18 @@ program
 	.description("Add a new user")
 	.on("--help", Utils.extraHelp)
 	.action(function(name) {
-		var manager = new ClientManager();
-		var users = manager.getUsers();
+		if (Helper.config.public) {
+			log.warn(`Users have no effect in ${colors.bold("public")} mode.`);
+		}
+
+		const manager = new ClientManager();
+		const users = manager.getUsers();
+
 		if (users.indexOf(name) !== -1) {
 			log.error(`User ${colors.bold(name)} already exists.`);
 			return;
 		}
+
 		log.prompt({
 			text: "Enter password:",
 			silent: true
