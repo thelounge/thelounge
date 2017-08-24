@@ -4,7 +4,6 @@ const $ = require("jquery");
 const socket = require("../socket");
 const render = require("../render");
 const chat = $("#chat");
-const templates = require("../../views");
 
 socket.on("msg", function(data) {
 	if (window.requestIdleCallback) {
@@ -18,7 +17,6 @@ socket.on("msg", function(data) {
 });
 
 function processReceivedMessage(data) {
-	const msg = render.buildChatMessage(data);
 	const targetId = data.chan;
 	const target = "#chan-" + targetId;
 	const channel = chat.find(target);
@@ -30,31 +28,12 @@ function processReceivedMessage(data) {
 		$(container).empty();
 	}
 
-	// Check if date changed
-	let prevMsg = $(container.find(".msg")).last();
-	const prevMsgTime = new Date(prevMsg.attr("data-time"));
-	const msgTime = new Date(msg.attr("data-time"));
-
-	// It's the first message in a channel/query
-	if (prevMsg.length === 0) {
-		container.append(templates.date_marker({msgDate: msgTime}));
-	}
-
-	if (prevMsgTime.toDateString() !== msgTime.toDateString()) {
-		var parent = prevMsg.parent();
-		if (parent.hasClass("condensed")) {
-			prevMsg = parent;
-		}
-		prevMsg.after(templates.date_marker({msgDate: msgTime}));
-	}
-
 	// Add message to the container
 	render.appendMessage(
 		container,
-		data.chan,
+		targetId,
 		$(target).attr("data-type"),
-		data.msg.type,
-		msg
+		data.msg
 	);
 
 	container.trigger("msg", [
