@@ -51,17 +51,10 @@ $(function() {
 		id: "emoji",
 		match: /\B:([-+\w:?]{2,}):?$/,
 		search(term, callback) {
-			const results = fuzzy.filter(
-				// Trim colon from the matched term,
-				// as we are unable to get a clean string from match regex
-				term.replace(/:$/, ""),
-				emojiSearchTerms,
-				{
-					pre: "<b>",
-					post: "</b>"
-				}
-			);
-			callback(results.map((el) => [el.string, el.original]));
+			// Trim colon from the matched term,
+			// as we are unable to get a clean string from match regex
+			term = term.replace(/:$/, ""),
+			callback(fuzzyGrep(term, emojiSearchTerms));
 		},
 		template([string, original]) {
 			return `<span class="emoji">${emojiMap[original]}</span> ${string}`;
@@ -78,16 +71,17 @@ $(function() {
 		search(term, callback) {
 			term = term.slice(1);
 			if (term[0] === "@") {
-				callback(completeNicks(term.slice(1)).map((val) => "@" + val));
+				callback(completeNicks(term.slice(1), true)
+					.map((val) => ["@" + val[0], "@" + val[1]]));
 			} else {
-				callback(completeNicks(term));
+				callback(completeNicks(term, true));
 			}
 		},
-		template(value) {
-			return value;
+		template([string, ]) {
+			return string;
 		},
-		replace(value) {
-			return value;
+		replace([, original]) {
+			return original;
 		},
 		index: 1
 	};
@@ -98,11 +92,11 @@ $(function() {
 		search(term, callback, match) {
 			callback(completeChans(match[0]));
 		},
-		template(value) {
-			return value;
+		template([string,]) {
+			return string;
 		},
-		replace(value) {
-			return value;
+		replace([, original]) {
+			return original;
 		},
 		index: 1
 	};
@@ -113,11 +107,11 @@ $(function() {
 		search(term, callback) {
 			callback(completeCommands("/" + term));
 		},
-		template(value) {
-			return value;
+		template([string, ]) {
+			return string;
 		},
-		replace(value) {
-			return value;
+		replace([, original]) {
+			return original;
 		},
 		index: 1
 	};
@@ -127,8 +121,18 @@ $(function() {
 		match: /\x03(\d{0,2}|[A-Za-z ]{0,10})$/,
 		search(term, callback) {
 			term = term.toLowerCase();
+
 			const matchingColorCodes = constants.colorCodeMap
-				.filter((i) => i[0].startsWith(term) || i[1].toLowerCase().startsWith(term));
+				.filter((i) => fuzzy.test(term, i[0]) || fuzzy.test(term, i[1]))
+				.map((i) => {
+					if (fuzzy.test(term, i[1])) {
+						return [i[0], fuzzy.match(term, i[1], {
+							pre: "<b>",
+							post: "</b>"
+						}).rendered];
+					}
+					return i;
+				});
 
 			callback(matchingColorCodes);
 		},
@@ -147,7 +151,16 @@ $(function() {
 		search(term, callback, match) {
 			term = term.toLowerCase();
 			const matchingColorCodes = constants.colorCodeMap
-				.filter((i) => i[0].startsWith(term) || i[1].toLowerCase().startsWith(term))
+				.filter((i) => fuzzy.test(term, i[0]) || fuzzy.test(term, i[1]))
+				.map((pair) => {
+					if (fuzzy.test(term, pair[1])) {
+						return [pair[0], fuzzy.match(term, pair[1], {
+							pre: "<b>",
+							post: "</b>"
+						}).rendered];
+					}
+					return pair;
+				})
 				.map((pair) => pair.concat(match[1])); // Needed to pass fg color to `template`...
 
 			callback(matchingColorCodes);
@@ -278,7 +291,7 @@ $(function() {
 
 			chat.find(".chan.active .chat").trigger("msg.sticky"); // fix growing
 		})
-		.tab(completeNicks, {hint: false})
+		.tab((word) => completeNicks(word, false), {hint: false})
 		.on("autocomplete:on", function() {
 			enableAutocomplete();
 		});
@@ -919,8 +932,21 @@ $(function() {
 		}
 	}());
 
-	function completeNicks(word) {
+	function fuzzyGrep(term, array) {
+		const results = fuzzy.filter(
+			term,
+			array,
+			{
+				pre: "<b>",
+				post: "</b>"
+			}
+		);
+		return results.map((el) => [el.string, el.original]);
+	}
+
+	function completeNicks(word, isFuzzy) {
 		const users = chat.find(".active .users");
+		word = word.toLowerCase();
 
 		// Lobbies and private chats do not have an user list
 		if (!users.length) {
@@ -928,20 +954,19 @@ $(function() {
 		}
 
 		const words = users.data("nicks");
-
+		if (isFuzzy) {
+			return fuzzyGrep(word, words);
+		}
 		return $.grep(
 			words,
-			(w) => !w.toLowerCase().indexOf(word.toLowerCase())
+			(w) => !w.toLowerCase().indexOf(word)
 		);
 	}
 
 	function completeCommands(word) {
 		const words = constants.commands.slice();
 
-		return $.grep(
-			words,
-			(w) => !w.toLowerCase().indexOf(word.toLowerCase())
-		);
+		return fuzzyGrep(word, words);
 	}
 
 	function completeChans(word) {
@@ -955,10 +980,7 @@ $(function() {
 				}
 			});
 
-		return $.grep(
-			words,
-			(w) => !w.toLowerCase().indexOf(word.toLowerCase())
-		);
+		return fuzzyGrep(word, words);
 	}
 
 	$(document).on("visibilitychange focus click", () => {
