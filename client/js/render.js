@@ -24,22 +24,27 @@ module.exports = {
 
 function buildChannelMessages(data) {
 	return data.messages.reduce(function(docFragment, message) {
-		appendMessage(docFragment, data.id, data.type, message.type, buildChatMessage({
-			chan: data.id,
-			msg: message
-		}));
+		appendMessage(
+			docFragment,
+			data.id,
+			data.type,
+			message.type,
+			buildChatMessage({
+				chan: data.id,
+				msg: message
+			}),
+			docFragment.children("div.msg").last()
+		);
 		return docFragment;
 	}, $(document.createDocumentFragment()));
 }
 
-function appendMessage(container, chan, chanType, messageType, msg) {
+function appendMessage(container, chan, chanType, messageType, msg, lastChild) {
 	// TODO: To fix #1432, statusMessage option should entirely be implemented in CSS
 	if (constants.condensedTypes.indexOf(messageType) === -1 || chanType !== "channel" || options.statusMessages !== "condensed") {
 		container.append(msg);
 		return;
 	}
-
-	const lastChild = container.children("div.msg").last();
 
 	if (lastChild && $(lastChild).hasClass("condensed")) {
 		lastChild.append(msg);

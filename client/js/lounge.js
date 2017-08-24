@@ -14,7 +14,6 @@ const emojiMap = require("./libs/simplemap.json");
 require("./libs/jquery/inputhistory");
 require("./libs/jquery/stickyscroll");
 require("./libs/jquery/tabcomplete");
-const helpers_roundBadgeNumber = require("./libs/handlebars/roundBadgeNumber");
 const slideoutMenu = require("./libs/slideout");
 const templates = require("../views");
 const socket = require("./socket");
@@ -29,20 +28,6 @@ $(function() {
 	var chat = $("#chat");
 
 	$(document.body).data("app-name", document.title);
-
-	var pop;
-	try {
-		pop = new Audio();
-		pop.src = "audio/pop.ogg";
-	} catch (e) {
-		pop = {
-			play: $.noop
-		};
-	}
-
-	$("#play").on("click", function() {
-		pop.play();
-	});
 
 	// Autocompletion Strategies
 
@@ -651,77 +636,6 @@ $(function() {
 
 		names.hide();
 		container.html(templates.user_filtered({matches: result})).show();
-	});
-
-	chat.on("msg", ".messages", function(e, target, msg) {
-		var unread = msg.unread;
-		msg = msg.msg;
-
-		if (msg.self) {
-			return;
-		}
-
-		var button = sidebar.find(".chan[data-target='" + target + "']");
-		if (msg.highlight || (options.notifyAllMessages && msg.type === "message")) {
-			if (!document.hasFocus() || !$(target).hasClass("active")) {
-				if (options.notification) {
-					try {
-						pop.play();
-					} catch (exception) {
-						// On mobile, sounds can not be played without user interaction.
-					}
-				}
-				utils.toggleNotificationMarkers(true);
-
-				if (options.desktopNotifications && Notification.permission === "granted") {
-					var title;
-					var body;
-
-					if (msg.type === "invite") {
-						title = "New channel invite:";
-						body = msg.from + " invited you to " + msg.channel;
-					} else {
-						title = msg.from;
-						if (!button.hasClass("query")) {
-							title += " (" + button.data("title").trim() + ")";
-						}
-						if (msg.type === "message") {
-							title += " says:";
-						}
-						body = msg.text.replace(/\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?|[\x00-\x1F]|\x7F/g, "").trim();
-					}
-
-					try {
-						var notify = new Notification(title, {
-							body: body,
-							icon: "img/logo-64.png",
-							tag: target
-						});
-						notify.addEventListener("click", function() {
-							window.focus();
-							button.click();
-							this.close();
-						});
-					} catch (exception) {
-						// `new Notification(...)` is not supported and should be silenced.
-					}
-				}
-			}
-		}
-
-		if (button.hasClass("active")) {
-			return;
-		}
-
-		if (!unread) {
-			return;
-		}
-
-		var badge = button.find(".badge").html(helpers_roundBadgeNumber(unread));
-
-		if (msg.highlight) {
-			badge.addClass("highlight");
-		}
 	});
 
 	chat.on("click", ".show-more-button", function() {
