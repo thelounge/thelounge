@@ -837,7 +837,7 @@ kbd {
 	display: none;
 }
 
-#chat .condensed .time {
+#chat .condensed > .time {
 	visibility: hidden;
 }
 
