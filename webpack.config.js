@@ -62,7 +62,7 @@ const config = {
 	plugins: [
 		// socket.io uses debug, we don't need it
 		new webpack.NormalModuleReplacementPlugin(/debug/, path.resolve(__dirname, "scripts/noop.js")),
-		// automatically split all vendor dependancies into a separate bundle
+		// automatically split all vendor dependencies into a separate bundle
 		new webpack.optimize.CommonsChunkPlugin({
 			name: "js/bundle.vendor.js",
 			minChunks: (module) => module.context && module.context.indexOf("node_modules") !== -1

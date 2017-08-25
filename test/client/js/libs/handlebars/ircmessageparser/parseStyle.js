@@ -201,7 +201,7 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should carry state corretly forward", () => {
+	it("should carry state correctly forward", () => {
 		const input = "\x02bold\x038yellow\x02nonBold\x03default";
 		const expected = [{
 			bold: true,

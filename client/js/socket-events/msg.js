@@ -65,7 +65,7 @@ socket.on("msg", function(data) {
 	if (activeChannelId !== targetId && container.find(".msg").slice(0, -100).remove().length) {
 		channel.find(".show-more").addClass("show");
 
-		// Remove date-seperators that would otherwise
+		// Remove date-separators that would otherwise
 		// be "stuck" at the top of the channel
 		channel.find(".date-marker-container").each(function() {
 			if ($(this).next().hasClass("date-marker-container")) {
