@@ -69,7 +69,7 @@ describe("findChannels", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should work with whois reponses", () => {
+	it("should work with whois responses", () => {
 		const input = "@#a";
 		const expected = [{
 			channel: "#a",

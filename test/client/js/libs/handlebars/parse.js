@@ -285,7 +285,7 @@ describe("parse Handlebars helper", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should trim commom protocols", () => {
+	it("should trim common protocols", () => {
 		const testCases = [{
 			input: "like..http://example.com",
 			expected:

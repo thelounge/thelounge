@@ -29,7 +29,7 @@ function findLinks(text) {
 			// Extract the scheme of the URL detected, if there is one
 			parsedScheme = URI(url).scheme().toLowerCase();
 		} catch (e) {
-			// URI may throw an exception for malfored urls,
+			// URI may throw an exception for malformed urls,
 			// as to why withinString finds these in the first place is a mystery
 			return;
 		}

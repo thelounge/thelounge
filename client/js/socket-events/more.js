@@ -46,7 +46,7 @@ socket.on("more", function(data) {
 	}
 
 	// Date change detect
-	// Have to use data instaid of the documentFragment because it's being weird
+	// Have to use data instead of the documentFragment because it's being weird
 	let lastDate;
 	$(data.messages).each(function() {
 		const msgData = this;
