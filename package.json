@@ -76,7 +76,7 @@
     "jquery-ui": "1.12.1",
     "mocha": "3.5.0",
     "mousetrap": "1.6.1",
-    "npm-run-all": "4.0.2",
+    "npm-run-all": "4.1.0",
     "nyc": "11.1.0",
     "socket.io-client": "1.7.4",
     "stylelint": "8.0.0",
