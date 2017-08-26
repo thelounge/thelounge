@@ -317,6 +317,14 @@ module.exports = {
 	},
 
 	//
+	// Default quit and part message if none is provided.
+	//
+	// @type     string
+	// @default  "The Lounge - https://thelounge.github.io"
+	//
+	leaveMessage: "The Lounge - https://thelounge.github.io",
+
+	//
 	// Run The Lounge with identd support.
 	//
 	// @type     object

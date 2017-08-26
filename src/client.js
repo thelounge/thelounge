@@ -501,7 +501,7 @@ Client.prototype.quit = function() {
 	}
 	this.networks.forEach((network) => {
 		if (network.irc) {
-			network.irc.quit("Page closed");
+			network.irc.quit(Helper.config.leaveMessage);
 		}
 
 		network.destroy();
