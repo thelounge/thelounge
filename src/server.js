@@ -203,7 +203,7 @@ function index(req, res, next) {
 	res.render("index", data);
 }
 
-function initializeClient(socket, client, generateToken, token) {
+function initializeClient(socket, client, token) {
 	socket.emit("authorized");
 
 	socket.on("disconnect", function() {
@@ -376,7 +376,7 @@ function initializeClient(socket, client, generateToken, token) {
 		});
 	};
 
-	if (generateToken) {
+	if (!Helper.config.public && token === null) {
 		client.generateToken((newToken) => {
 			token = newToken;
 
@@ -457,7 +457,7 @@ function performAuthentication(data) {
 	const socket = this;
 	let client;
 
-	const finalInit = () => initializeClient(socket, client, !!data.remember, data.token || null);
+	const finalInit = () => initializeClient(socket, client, data.token || null);
 
 	const initClient = () => {
 		client.ip = getClientIp(socket.request);
