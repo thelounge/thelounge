@@ -174,6 +174,7 @@ kbd {
 	color: rgba(0, 0, 0, 0.35) !important;
 }
 
+#js-copy-hack,
 #help,
 #windows .header .title,
 #windows .header .topic,
@@ -183,6 +184,16 @@ kbd {
 	-ms-user-select: text;
 	user-select: text;
 	cursor: text;
+}
+
+#js-copy-hack {
+	position: absolute;
+	left: -999999px;
+}
+
+#chat #js-copy-hack .condensed:not(.closed) .msg,
+#chat #js-copy-hack > .msg {
+	display: block;
 }
 
 /* Icons */
@@ -1001,7 +1012,6 @@ kbd {
 #chat .time,
 #chat .from,
 #chat .content {
-	display: block;
 	padding: 2px 0;
 	flex: 0 0 auto;
 }
