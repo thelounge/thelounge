@@ -65,7 +65,7 @@ class WebPush {
 					return;
 				}
 
-				log.error("WebPush Error", error);
+				log.error(`WebPush Error (${error})`);
 			});
 	}
 }
