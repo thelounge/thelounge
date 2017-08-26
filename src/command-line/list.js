@@ -28,12 +28,12 @@ program
 			return;
 		}
 
-		if (!users.length) {
-			log.info(`There are currently no users. Create one with ${colors.bold("lounge add <name>")}.`);
-		} else {
+		if (users.length > 0) {
 			log.info("Users:");
-			for (var i = 0; i < users.length; i++) {
-				log.info(`${i + 1}. ${colors.bold(users[i])}`);
-			}
+			users.forEach((user, i) => {
+				log.info(`${i + 1}. ${colors.bold(user)}`);
+			});
+		} else {
+			log.info(`There are currently no users. Create one with ${colors.bold("lounge add <name>")}.`);
 		}
 	});

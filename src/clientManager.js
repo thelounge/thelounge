@@ -41,7 +41,7 @@ ClientManager.prototype.autoloadUsers = function() {
 		process.exit(1);
 	}
 
-	if (!users.length) {
+	if (users.length === 0) {
 		log.info(noUsersWarning);
 	}
 
@@ -51,7 +51,7 @@ ClientManager.prototype.autoloadUsers = function() {
 		const loaded = this.clients.map((c) => c.name);
 		const updatedUsers = this.getUsers();
 
-		if (!updatedUsers.length) {
+		if (updatedUsers.length === 0) {
 			log.info(noUsersWarning);
 		}
 
