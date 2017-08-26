@@ -1,8 +1,11 @@
 "use strict";
 
-var program = require("commander");
-var server = require("../server");
-var Helper = require("../helper");
+const colors = require("colors/safe");
+const fs = require("fs");
+const fsextra = require("fs-extra");
+const path = require("path");
+const program = require("commander");
+const Helper = require("../helper");
 const Utils = require("./utils");
 
 program
@@ -15,6 +18,10 @@ program
 	.description("Start the server")
 	.on("--help", Utils.extraHelp)
 	.action(function(options) {
+		initalizeConfig();
+
+		const server = require("../server");
+
 		var mode = Helper.config.public;
 		if (options.public) {
 			mode = true;
@@ -29,3 +36,20 @@ program
 
 		server();
 	});
+
+function initalizeConfig() {
+	if (!fs.existsSync(Helper.CONFIG_PATH)) {
+		fsextra.ensureDirSync(Helper.HOME);
+		fs.chmodSync(Helper.HOME, "0700");
+		fsextra.copySync(path.resolve(path.join(
+			__dirname,
+			"..",
+			"..",
+			"defaults",
+			"config.js"
+		)), Helper.CONFIG_PATH);
+		log.info(`Configuration file created at ${colors.green(Helper.CONFIG_PATH)}.`);
+	}
+
+	fsextra.ensureDirSync(Helper.USERS_PATH);
+}

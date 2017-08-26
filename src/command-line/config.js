@@ -1,9 +1,10 @@
 "use strict";
 
-var program = require("commander");
-var child = require("child_process");
-var colors = require("colors/safe");
-var Helper = require("../helper");
+const program = require("commander");
+const child = require("child_process");
+const colors = require("colors/safe");
+const fs = require("fs");
+const Helper = require("../helper");
 const Utils = require("./utils");
 
 program
@@ -11,6 +12,11 @@ program
 	.description(`Edit configuration file located at ${colors.green(Helper.CONFIG_PATH)}.`)
 	.on("--help", Utils.extraHelp)
 	.action(function() {
+		if (!fs.existsSync(Helper.CONFIG_PATH)) {
+			log.error(`${Helper.CONFIG_PATH} does not exist.`);
+			return;
+		}
+
 		var child_spawn = child.spawn(
 			process.env.EDITOR || "vi",
 			[Helper.CONFIG_PATH],
