@@ -1619,6 +1619,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	color: #333;
 	margin-top: 6px;
 	margin-bottom: 6px;
+	line-height: 1.4;
 	transition: background-color 0.2s;
 }
 
@@ -1643,11 +1644,16 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	opacity: 1;
 }
 
-.textcomplete-item .emoji {
-	margin-right: 8px;
-	width: 16px;
-	text-align: center;
+.emoji {
 	display: inline-block;
+	font-size: 1.4em;
+	vertical-align: bottom;
+	line-height: 1;
+}
+
+.textcomplete-item .emoji {
+	width: 32px;
+	text-align: center;
 }
 
 .textcomplete-item .irc-bg {
