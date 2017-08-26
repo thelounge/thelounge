@@ -209,10 +209,9 @@
 						<button class="lt" aria-label="Toggle channel list"></button>
 					</div>
 					<div class="container">
+						<h1 class="title">Settings</h1>
+
 						<div class="row">
-							<div class="col-sm-12">
-								<h1 class="title">Settings</h1>
-							</div>
 							<div class="col-sm-12">
 								<h2>Messages</h2>
 							</div>
@@ -386,6 +385,18 @@
 								<textarea class="input" name="userStyles" id="user-specified-css-input" placeholder="You can override any style with CSS here"></textarea>
 							</div>
 						</div>
+
+						{{#unless public}}
+							<h2>Active sessions</h2>
+
+							<h3>Current session</h3>
+
+							<p id="current_connection_info"></p>
+
+							<h3>Other sessions</h3>
+
+							<div id="connection_list"></div>
+						{{/unless}}
 					</div>
 				</div>
 

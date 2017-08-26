@@ -44,6 +44,40 @@ $(function() {
 		pop.play();
 	});
 
+	// server signal to update connected client list
+	socket.on("update-clients-list", function(data) {
+		$("#current_connection_info").empty().append(
+			templates.connection_list({
+				hostname: data.currentSession.hostname,
+				ip: data.currentSession.ip,
+				socketId: data.currentSession.socketId,
+				userAgent: data.currentSession.userAgent,
+			})
+		);
+
+		$("#connection_list").empty();
+		data.otherSessions.forEach((connection, index) => {
+			$("#connection_list").append(
+				templates.connection_list({
+					id: index,
+					hostname: connection.hostname,
+					ip: connection.ip,
+					socketId: connection.socketId,
+					userAgent: connection.userAgent,
+				})
+			);
+			$(`#connection_${index}`).on("click", (input) => {
+				socket.emit("remote-sign-out", {socketId: input.target.value});
+			});
+		});
+	});
+
+	// server signal to remotely sign out
+	socket.on("sign-out", function() {
+		window.localStorage.removeItem("token");
+		location.reload();
+	});
+
 	// Autocompletion Strategies
 
 	const emojiSearchTerms = Object.keys(emojiMap);

@@ -244,7 +244,15 @@ kbd {
 #footer .settings::before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
 #footer .help::before { content: "\f059"; /* http://fontawesome.io/icon/question/ */ }
 #footer .sign-out::before { content: "\f011"; /* http://fontawesome.io/icon/power-off/ */ }
+#connection_list .connection-sign-out::before { content: "\f08b"; /* http://fontawesome.io/icon/sign-out/ */ }
 
+#connection_list .connection-sign-out {
+	border: 1px solid transparent;
+	border-radius: 2px;
+	color: #99a2b4;
+	cursor: pointer;
+	font-size: 14px;
+}
 #form #submit::before { content: "\f1d8"; /* http://fontawesome.io/icon/paper-plane/ */ }
 
 #chat .invite .from::before {
@@ -688,6 +696,7 @@ kbd {
 	width: 100%;
 }
 
+#windows p,
 #windows label,
 #settings .error {
 	font-size: 14px;

@@ -15,6 +15,7 @@ var ldap = require("ldapjs");
 var colors = require("colors/safe");
 const net = require("net");
 const Identification = require("./identification");
+const UAParser = require("ua-parser-js");
 
 var manager = null;
 
@@ -183,6 +184,7 @@ function initializeClient(socket, client, generateToken, token) {
 
 	socket.on("disconnect", function() {
 		client.clientDetach(socket.id);
+		sendConnectionInfo(client);
 	});
 	client.clientAttach(socket.id, token);
 
@@ -208,6 +210,27 @@ function initializeClient(socket, client, generateToken, token) {
 			data.hostname = null;
 
 			client.connect(data);
+		}
+	);
+
+	socket.on(
+		"remote-sign-out",
+		function(data) {
+			var connection_list = Object.keys(client.attachedClients);
+			for (var i = 0; i < connection_list.length; i++) {
+				if (data.socket_id === connection_list[i]) {
+					manager.sockets.of("/").connected[connection_list[i]].emit("sign-out", {});
+
+					// give 10 seconds to let the client end the connection
+					setTimeout(() => {
+						client.clientDetach(data.socket_id);
+						var removeSocket = manager.sockets.of("/").connected[data.socket_id];
+						if (removeSocket) {
+							removeSocket.close();
+						}
+					}, 10 * 1000);
+				}
+			}
 		}
 	);
 
@@ -478,6 +501,7 @@ function performAuthentication(data) {
 		}
 
 		initClient();
+		sendConnectionInfo(client);
 	};
 
 	client = manager.findClient(data.user);
@@ -505,5 +529,78 @@ function reverseDnsLookup(ip, callback) {
 		}
 
 		callback(ip);
+	});
+}
+
+function sendConnectionInfo(client) {
+	// send messages to connected user clients
+	// get sockets
+	var socketList = Object.keys(client.attachedClients);
+
+	// get IP addresses for those sockets
+	const connectionList = socketList.map((socket) => ({
+		socketId: socket,
+		ip: getClientIp(manager.sockets.of("/").connected[socket].request)
+	}));
+
+	// get hostnames for every ip
+	Promise.all(connectionList.map(hostnamePromise))
+		.then((list) => {
+			// send event for every connection
+			for (let j = 0; j < list.length; j++) {
+				// make data packet for event
+				const sendData = {
+					currentSession: null,
+					otherSessions: [],
+				};
+
+				// compile data for every connection
+				for (let i = 0; i < list.length; i++) {
+					const data = {};
+					data.hostname = list[i].hostname;
+					data.ip = list[i].ip;
+					data.socketId = list[i].socketId;
+
+					const parsedUA = UAParser(
+						manager.sockets.of("/")
+							.connected[list[i].socketId]
+							.request.headers["user-agent"]
+					);
+
+					// Use joined arrays to be fault-tolerant in case versions are missing
+					data.userAgent =
+						[parsedUA.browser.name, parsedUA.browser.major].join(" ").trim() +
+						" on " +
+						[parsedUA.os.name, parsedUA.os.version].join(" ").trim();
+
+					// active host
+					if (list[j].socketId === list[i].socketId) {
+						sendData.currentSession = data;
+					} else {
+						sendData.otherSessions.push(data);
+					}
+				}
+				// send event with data
+				manager.sockets.of("/")
+					.connected[list[j].socketId]
+					.emit("update-clients-list", sendData);
+			}
+		})
+		.catch(function(err) {
+			log.error("Unable to resolve hostname", err);
+		});
+}
+
+function hostnamePromise(data) {
+	return new Promise((fulfill) => {
+		dns.reverse(data.ip, (err, host) => {
+			if (!err && host.length) {
+				data.hostname = host[0];
+				fulfill(data);
+			} else {
+				data.hostname = data.ip;
+				fulfill(data);
+			}
+		});
 	});
 }
