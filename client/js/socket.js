@@ -8,8 +8,10 @@ const socket = io({
 	transports: $(document.body).data("transports"),
 	path: path,
 	autoConnect: false,
-	reconnection: false
+	reconnection: !$(document.body).hasClass("public")
 });
+
+window.lounge_socket = socket; // TODO: Remove later, this is for debugging
 
 [
 	"connect_error",
@@ -34,7 +36,7 @@ const socket = io({
 			}
 		});
 		// Hides the "Send Message" button
-		$("#submit").remove();
+		$("#submit").hide();
 	});
 });
 
@@ -43,11 +45,16 @@ socket.on("connecting", function() {
 });
 
 socket.on("connect", function() {
-	$("#loading-page-message").text("Finalizing connection…");
+	// Clear send buffer when reconnecting, socket.io would emit these
+	// immediately upon connection and it will have no effect, so we ensure
+	// nothing is sent to the server that might have happened.
+	socket.sendBuffer = [];
+
+	status.text("Finalizing connection…");
 });
 
 socket.on("authorized", function() {
-	$("#loading-page-message").text("Authorized, loading messages…");
+	$("#loading-page-message").text("Loading messages…");
 });
 
 module.exports = socket;

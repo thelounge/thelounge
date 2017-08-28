@@ -3,7 +3,12 @@
 const $ = require("jquery");
 const input = $("#input");
 
+var serverHash = -1;
+var lastMessageId = -1;
+
 module.exports = {
+	serverHash,
+	lastMessageId,
 	confirmExit,
 	forceFocus,
 	move,
