@@ -13,6 +13,7 @@ require("./nick");
 require("./open");
 require("./part");
 require("./quit");
+require("./search");
 require("./sync_sort");
 require("./topic");
 require("./users");

@@ -37,6 +37,7 @@
 		</aside>
 		<footer id="footer">
 			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Sign in"><button class="icon sign-in" data-target="#sign-in" aria-label="Sign in"></button></span>
+			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Search"><button class="icon search" data-target="#search-query" aria-label="Search"></button></span>
 			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Connect to network"><button class="icon connect" data-target="#connect" aria-label="Connect to network"></button></span>
 			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Client settings"><button class="icon settings" data-target="#settings" aria-label="Client settings"></button></span>
 			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Help"><button class="icon help" data-target="#help" aria-label="Help"></button></span>
@@ -197,6 +198,49 @@
 							</div>
 						</div>
 					</form>
+				</div>
+				<div id="search-query" class="window">
+					<div class="header">
+						<button class="lt" aria-label="Toggle channel list"></button>
+					</div>
+					<form class="container" method="post" action="">
+						<div class="row">
+							<div class="col-sm-12">
+								<h1 class="title">Search</h1>
+							</div>
+							<div class="col-sm-12">
+								<h2>Query</h2>
+							</div>
+							<div class="col-sm-4">
+								<label for="text" class="sr-only">User</label>
+								<input type="text" id="nick" name="nick" class="input" placeholder="Everyone">
+							</div>
+							<div class="col-sm-8">
+								<label for="text" class="sr-only">Enter text to match</label>
+								<input type="text" id="text" name="text" class="input" placeholder="Enter text to match">
+							</div>
+							<div class="col-sm-12">
+								<label for="network-channel-select" class="sr-only">Network and Channel</label>
+								<select id="network-channel-select" name="network-channel" class="input">
+									<option disabled selected value="">Loading...</option>
+								</select>
+							</div>
+							<div class="col-sm-4">
+								<label for="date-from" class="sr-only">From</label>
+								<input type="text" id="date-from" name="from" class="input" placeholder="From: 7 days">
+							</div>
+							<div class="col-sm-4">
+								<label for="date-to" class="sr-only">To</label>
+								<input type="text" id="date-to" name="to" class="input" placeholder="To: now">
+							</div>
+							<div class="col-sm-4">
+								<button type="submit" class="btn pull-right">Search</button>
+							</div>
+						</div>
+					</form>
+					<div class="results" id="chat">
+						<div class="channel messages"></div>
+					</div>
 				</div>
 				<div id="settings" class="window" data-type="settings">
 					<div class="header">

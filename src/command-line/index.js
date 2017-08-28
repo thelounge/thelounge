@@ -33,6 +33,7 @@ require("./remove");
 require("./reset");
 require("./edit");
 require("./install");
+require("./search");
 
 program.parse(process.argv);
 

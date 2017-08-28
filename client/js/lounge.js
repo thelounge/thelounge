@@ -25,6 +25,7 @@ require("./clipboard");
 $(function() {
 	var sidebar = $("#sidebar, #footer");
 	var chat = $("#chat");
+	var searchQuery = $("#search-query");
 
 	$(document.body).data("app-name", document.title);
 
@@ -329,6 +330,10 @@ $(function() {
 		}
 	});
 
+	sidebar.on("click", "button.search", function() {
+		socket.emit("search-networks-channels");
+	});
+
 	sidebar.on("click", ".chan, button", function() {
 		var self = $(this);
 		var target = self.data("target");
@@ -485,7 +490,14 @@ $(function() {
 		container.html(templates.user_filtered({matches: result})).show();
 	});
 
-	var forms = $("#sign-in, #connect, #change-password");
+	searchQuery.on("click", ".show-more-button", function() {
+		$(this).text("Loading older messages…").prop("disabled", true);
+		var query = searchQuery.find("form").data("lastQuery");
+		query.offset = searchQuery.find(".highlight").length;
+		socket.emit("search-query", query);
+	});
+
+	var forms = $("#sign-in, #connect, #change-password, #search-query");
 
 	windows.on("show", "#sign-in", function() {
 		$(this).find("input").each(function() {
@@ -533,6 +545,8 @@ $(function() {
 			event = "conn";
 		} else if (form.closest("div").attr("id") === "change-password") {
 			event = "change-password";
+		} else if (form.closest("div").attr("id") === "search-query") {
+			event = "search-query";
 		}
 
 		var values = {};
