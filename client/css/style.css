@@ -1483,6 +1483,15 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #connection-error {
+	font-size: 12px;
+	line-height: 36px;
+	font-weight: bold;
+	letter-spacing: 1px;
+	word-spacing: 3px;
+	text-transform: uppercase;
+	background: #e74c3c;
+	color: #fff;
+	text-align: center;
 	display: none;
 }
 

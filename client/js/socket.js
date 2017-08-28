@@ -3,6 +3,7 @@
 const $ = require("jquery");
 const io = require("socket.io-client");
 const path = window.location.pathname + "socket.io/";
+const status = $("#loading-page-message, #connection-error");
 
 const socket = io({
 	transports: $(document.body).data("transports"),
@@ -11,37 +12,16 @@ const socket = io({
 	reconnection: !$(document.body).hasClass("public")
 });
 
-window.lounge_socket = socket; // TODO: Remove later, this is for debugging
+socket.on("disconnect", handleDisconnect);
+socket.on("connect_error", handleDisconnect);
+socket.on("error", handleDisconnect);
 
-[
-	"connect_error",
-	"connect_failed",
-	"disconnect",
-	"error",
-].forEach(function(e) {
-	socket.on(e, function(data) {
-		$("#loading-page-message").text("Connection failed: " + data);
-		$("#connection-error").addClass("shown").one("click", function() {
-			window.onbeforeunload = null;
-			window.location.reload();
-		});
-
-		// Disables sending a message by pressing Enter. `off` is necessary to
-		// cancel `inputhistory`, which overrides hitting Enter. `on` is then
-		// necessary to avoid creating new lines when hitting Enter without Shift.
-		// This is fairly hacky but this solution is not permanent.
-		$("#input").off("keydown").on("keydown", function(event) {
-			if (event.which === 13 && !event.shiftKey) {
-				event.preventDefault();
-			}
-		});
-		// Hides the "Send Message" button
-		$("#submit").hide();
-	});
+socket.on("reconnecting", function(attempt) {
+	status.text(`Reconnecting… (attempt ${attempt})`);
 });
 
 socket.on("connecting", function() {
-	$("#loading-page-message").text("Connecting…");
+	status.text("Connecting…");
 });
 
 socket.on("connect", function() {
@@ -54,7 +34,15 @@ socket.on("connect", function() {
 });
 
 socket.on("authorized", function() {
-	$("#loading-page-message").text("Loading messages…");
+	status.text("Loading messages…");
 });
+
+function handleDisconnect(data) {
+	const message = data.message || data;
+
+	status.text(`Waiting to reconnect… (${message})`).addClass("shown");
+	$(".show-more-button, #input").prop("disabled", true);
+	$("#submit").hide();
+}
 
 module.exports = socket;

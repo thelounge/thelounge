@@ -10,6 +10,7 @@ socket.on("auth", function(data) {
 	// And we will reload the page to grab the latest version
 	if (utils.serverHash > -1 && data.serverHash > -1 && data.serverHash !== utils.serverHash) {
 		socket.disconnect();
+		$("#connection-error").text("Server restarted, reloading…");
 		location.reload(true);
 		return;
 	}
@@ -40,7 +41,7 @@ socket.on("auth", function(data) {
 		token = storage.get("token");
 
 		if (token) {
-			$("#loading-page-message").text("Authorizing…");
+			$("#loading-page-message, #connection-error").text("Authorizing…");
 
 			socket.emit("auth", {
 				user: user,

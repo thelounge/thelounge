@@ -232,14 +232,6 @@ body {
 	color: #d2d39b;
 }
 
-.btn-reconnect {
-	background: #e74c3c;
-	color: #fff;
-	border: 0;
-	border-radius: 0;
-	margin: 0;
-}
-
 /* Form elements */
 
 #chat-container ::-moz-placeholder {

@@ -35,6 +35,10 @@ function buildChannelMessages(chanId, chanType, messages) {
 }
 
 function appendMessage(container, chanId, chanType, msg) {
+	if (utils.lastMessageId < msg.id) {
+		utils.lastMessageId = msg.id;
+	}
+
 	let lastChild = container.children(".msg, .date-marker-container").last();
 	const renderedMessage = buildChatMessage(msg);
 
