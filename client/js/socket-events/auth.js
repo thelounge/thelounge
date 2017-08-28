@@ -6,7 +6,7 @@ const storage = require("../localStorage");
 const utils = require("../utils");
 
 socket.on("auth", function(data) {
-	// If we reconnected and serverHash differents, that means the server restarted
+	// If we reconnected and serverHash differs, that means the server restarted
 	// And we will reload the page to grab the latest version
 	if (utils.serverHash > -1 && data.serverHash > -1 && data.serverHash !== utils.serverHash) {
 		socket.disconnect();

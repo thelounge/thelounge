@@ -1,6 +1,7 @@
 "use strict";
 
 const $ = require("jquery");
+const escape = require("css.escape");
 const socket = require("../socket");
 const render = require("../render");
 const webpush = require("../webpush");
@@ -12,11 +13,11 @@ socket.on("init", function(data) {
 	$("#loading-page-message, #connection-error").text("Rendering…");
 
 	const lastMessageId = utils.lastMessageId;
+	let previousActive = 0;
 
-	// TODO: this is hacky
 	if (lastMessageId > -1) {
+		previousActive = sidebar.find(".active").data("id");
 		sidebar.find(".networks").empty();
-		$("#chat").empty();
 	}
 
 	if (data.networks.length === 0) {
@@ -45,21 +46,38 @@ socket.on("init", function(data) {
 		$("#sign-in").remove();
 	}
 
-	const id = data.active;
-	const target = sidebar.find("[data-id='" + id + "']").trigger("click", {
-		replaceHistory: true
-	});
-	const dataTarget = document.querySelector("[data-target='" + window.location.hash + "']");
-	if (window.location.hash && dataTarget) {
-		dataTarget.click();
-	} else if (target.length === 0) {
-		const first = sidebar.find(".chan")
-			.eq(0)
-			.trigger("click");
-		if (first.length === 0) {
-			$("#footer").find(".connect").trigger("click", {
-				pushState: false,
-			});
-		}
-	}
+	openCorrectChannel(previousActive, data.active);
 });
+
+function openCorrectChannel(clientActive, serverActive) {
+	let target;
+
+	// Open last active channel
+	if (clientActive > 0) {
+		target = sidebar.find("[data-id='" + clientActive + "']");
+	}
+
+	// Open window provided in location.hash
+	if (!target && window.location.hash) {
+		target = $("#footer, #sidebar").find("[data-target='" + escape(window.location.hash) + "']");
+	}
+
+	// Open last active channel according to the server
+	if (!target) {
+		target = sidebar.find("[data-id='" + serverActive + "']");
+	}
+
+	// If target channel is found, open it
+	if (target) {
+		target.trigger("click", {
+			replaceHistory: true
+		});
+
+		return;
+	}
+
+	// Open the connect window
+	$("#footer .connect").trigger("click", {
+		pushState: false
+	});
+}

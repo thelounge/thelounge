@@ -33,7 +33,7 @@ socket.on("more", function(data) {
 	}
 
 	// Add the older messages
-	const documentFragment = render.buildChannelMessages(data.chan, type, data.messages);
+	const documentFragment = render.buildChannelMessages($(document.createDocumentFragment()), data.chan, type, data.messages);
 	chan.prepend(documentFragment);
 
 	// Move unread marker to correct spot if needed
