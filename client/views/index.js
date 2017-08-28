@@ -20,6 +20,11 @@ module.exports = {
 		whois: require("./actions/whois.tpl"),
 	},
 
+	windows: {
+		loading: require("./windows/loading.tpl"),
+		sign_in: require("./windows/sign_in.tpl"),
+	},
+
 	chan: require("./chan.tpl"),
 	chat: require("./chat.tpl"),
 	contextmenu_divider: require("./contextmenu_divider.tpl"),
