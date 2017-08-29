@@ -437,10 +437,10 @@ function performAuthentication(data) {
 	}
 
 	// Perform password checking
-	let auth = function(){};
+	let auth = function() {};
 	if (!Helper.config.public && Helper.config.ldap.enable) {
 		if ("baseDN" in Helper.config.ldap) {
-			auth = ldapAuth
+			auth = ldapAuth;
 		} else {
 			auth = advancedLdapAuth;
 		}

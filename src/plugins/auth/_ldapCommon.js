@@ -1,3 +1,5 @@
+"use strict";
+
 var Helper = require("../../helper");
 var ldap = require("ldapjs");
 
@@ -16,13 +18,12 @@ function ldapAuthCommon(manager, client, user, bindDN, password, callback) {
 
 	ldapclient.bind(bindDN, password, function(err) {
 		if (!err && !client) {
-			manager.addUser(user, null)
+			manager.addUser(user, null);
 		}
 		ldapclient.unbind();
 		callback(!err);
 	});
 }
-
 
 module.exports = ldapAuthCommon;
 

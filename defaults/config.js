@@ -422,7 +422,7 @@ module.exports = {
 		//
 		// @type     string
 		//
-		//baseDN: "ou=accounts,dc=example,dc=com",
+		// baseDN: "ou=accounts,dc=example,dc=com",
 
 		//
 		// LDAP primary key
@@ -480,7 +480,7 @@ module.exports = {
 			// @default  "sub"
 			//
 			scope: "sub"
-			
+
 		}
 	},
 

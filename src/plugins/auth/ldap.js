@@ -1,6 +1,6 @@
-var Helper = require("../../helper");
-var ldap = require("ldapjs");
+"use strict";
 
+var Helper = require("../../helper");
 var _ldapAuthCommon = require("./_ldapCommon");
 
 function ldapAuth(manager, client, user, password, callback) {
