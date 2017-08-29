@@ -1,7 +1,7 @@
 "use strict";
 
 const Helper = require("../../helper");
-const ldap = require("ladpjs");
+const ldap = require("ldapjs");
 
 function ldapAuthCommon(manager, client, user, bindDN, password, callback) {
 	const config = Helper.config;
