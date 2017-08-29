@@ -11,7 +11,9 @@ var path = require("path");
 var io = require("socket.io");
 var dns = require("dns");
 var Helper = require("./helper");
-var ldap = require("ldapjs");
+var ldapAuth = require("./plugins/auth/ldap");
+var advancedLdapAuth = require("./plugins/auth/advancedLdap");
+var localAuth = require("./plugins/auth/local");
 var colors = require("colors/safe");
 const net = require("net");
 const Identification = require("./identification");
@@ -372,109 +374,6 @@ function initializeClient(socket, client, generateToken, token) {
 	}
 }
 
-function localAuth(client, user, password, callback) {
-	// If no user is found, or if the client has not provided a password,
-	// fail the authentication straight away
-	if (!client || !password) {
-		return callback(false);
-	}
-
-	// If this user has no password set, fail the authentication
-	if (!client.config.password) {
-		log.error(`User ${colors.bold(user)} with no local password set tried to sign in. (Probably a LDAP user)`);
-		return callback(false);
-	}
-
-	Helper.password
-		.compare(password, client.config.password)
-		.then((matching) => {
-			if (matching && Helper.password.requiresUpdate(client.config.password)) {
-				const hash = Helper.password.hash(password);
-
-				client.setPassword(hash, (success) => {
-					if (success) {
-						log.info(`User ${colors.bold(client.name)} logged in and their hashed password has been updated to match new security requirements`);
-					}
-				});
-			}
-
-			callback(matching);
-		}).catch((error) => {
-			log.error(`Error while checking users password. Error: ${error}`);
-		});
-}
-
-function ldapAuth(client, user, password, callback) {
-	if (!user) {
-		return callback(false);
-	}
-	var config = Helper.config;
-	var userDN = user.replace(/([,\\/#+<>;"= ])/g, "\\$1");
-
-	var ldapclient = ldap.createClient({
-		url: config.ldap.url,
-		tlsOptions: config.ldap.tlsOptions
-	});
-
-	var base = config.ldap.base;
-	var searchOptions = {
-		scope: config.ldap.scope,
-		filter: "(&(" + config.ldap.primaryKey + "=" + userDN + ")" + config.ldap.filter + ")",
-		attributes: ["dn"]
-	};
-
-	ldapclient.on("error", function(err) {
-		log.error("Unable to connect to LDAP server", err);
-		callback(!err);
-	});
-
-	ldapclient.bind(config.ldap.rootDN, config.ldap.rootPassword, function(err) {
-		if (err) {
-			log.error("Invalid LDAP root credentials");
-			ldapclient.unbind();
-			callback(false);
-		} else {
-			ldapclient.search(base, searchOptions, function(err2, res) {
-				if (err2) {
-					log.warning("User not found: ", userDN);
-					ldapclient.unbind();
-					callback(false);
-				} else {
-					var found = false;
-					res.on("searchEntry", function(entry) {
-						found = true;
-						var bindDN = entry.objectName;
-						log.info("Auth against LDAP ", config.ldap.url, " with bindDN ", bindDN);
-						ldapclient.unbind();
-						var ldapclient2 = ldap.createClient({
-							url: config.ldap.url,
-							tlsOptions: config.ldap.tlsOptions
-						});
-						ldapclient2.bind(bindDN, password, function(err3) {
-							if (!err3 && !client) {
-								if (!manager.addUser(user, null)) {
-									log.error("Unable to create new user", user);
-								}
-							}
-							ldapclient2.unbind();
-							callback(!err3);
-						});
-					});
-					res.on("error", function(err3) {
-						log.error("LDAP error: ", err3);
-						callback(false);
-					});
-					res.on("end", function() {
-						if (!found) {
-							callback(false);
-						}
-					});
-				}
-			});
-		}
-	});
-}
-
 function performAuthentication(data) {
 	const socket = this;
 	let client;
@@ -538,11 +437,17 @@ function performAuthentication(data) {
 	}
 
 	// Perform password checking
+	let auth = function() {};
 	if (!Helper.config.public && Helper.config.ldap.enable) {
-		ldapAuth(client, data.user, data.password, authCallback);
+		if ("baseDN" in Helper.config.ldap) {
+			auth = ldapAuth;
+		} else {
+			auth = advancedLdapAuth;
+		}
 	} else {
-		localAuth(client, data.user, data.password, authCallback);
+		auth = localAuth;
 	}
+	auth(manager, client, data.user, data.password, authCallback);
 }
 
 function reverseDnsLookup(ip, callback) {

@@ -371,14 +371,21 @@ module.exports = {
 	//   3. Lounge tries to connect a second time, but this time using the user's
 	//      DN and password. Auth is validated iff this connection is successful.
 	//
-	// The search query takes a couple of parameters:
-	//   - A base DN. Only children nodes of this DN will be likely to be returned
-	//   - A search scope (see LDAP documentation)
-	//   - The query itself, build as (&(<primaryKey>=<username>) <filter>)
+	// The search query takes a couple of parameters in `searchDN`:
+	//   - a base DN `searchDN/base`. Only children nodes of this DN will be likely
+	//     to be returned;
+	//   - a search scope `searchDN/scope` (see LDAP documentation);
+	//   - the query itself, build as (&(<primaryKey>=<username>) <filter>)
 	//     where <username> is the user name provided in the log in request,
 	//     <primaryKey> is provided by the config and <fitler> is a filtering complement
 	//     also given in the config, to filter for instance only for nodes of type
 	//     inetOrgPerson, or whatever LDAP search allows.
+	//
+	// Alternatively, you can specify the `bindDN` parameter. This will make the lounge
+	// ignore searchDN options and assume that the user DN is always:
+	//     <bindDN>,<primaryKey>=<username>
+	// where <username> is the user name provided in the log in request, and <bindDN>
+	// and <primaryKey> are provided by the config.
 	//
 	ldap: {
 		//
@@ -399,33 +406,23 @@ module.exports = {
 		//
 		// LDAP connection tls options (only used if scheme is ldaps://)
 		//
-		// @type	object (see nodejs' tls.connect() options)
+		// @type     object (see nodejs' tls.connect() options)
 		// @default {}
 		//
 		// Example:
 		//   You can use this option in order to force the use of IPv6:
 		//   {
-		//     host: 'my::ip::v6'
-		//     servername: 'ldaps://example.com'
+		//     host: 'my::ip::v6',
+		//     servername: 'example.com'
 		//   }
 		tlsOptions: {},
 
 		//
-		// LDAP searching bind DN
-		// This bind DN is used to query the server for the DN of the user.
-		// This is supposed to be a system user that has access in read only to
-		// the DNs of the people that are allowed to log in.
+		// LDAP base dn, alternative to searchDN
 		//
 		// @type     string
 		//
-		rootDN: "cn=thelounge,ou=system-users,dc=example,dc=com",
-
-		//
-		// Password of the lounge LDAP system user
-		//
-		// @type     string
-		//
-		rootPassword: "1234",
+		// baseDN: "ou=accounts,dc=example,dc=com",
 
 		//
 		// LDAP primary key
@@ -436,27 +433,55 @@ module.exports = {
 		primaryKey: "uid",
 
 		//
-		// LDAP filter
+		// LDAP search dn settings. This defines the procedure by which the
+		// lounge first look for user DN before authenticating her.
+		// Ignored if baseDN is specified
 		//
-		// @type     string
-		// @default  "uid"
+		// @type     object
 		//
-		filter: "(objectClass=inetOrgPerson)(memberOf=ou=accounts,dc=example,dc=com)",
+		searchDN: {
 
-		//
-		// LDAP search base (search only within this node)
-		//
-		// @type     string
-		//
-		base: "dc=example,dc=com",
+			//
+			// LDAP searching bind DN
+			// This bind DN is used to query the server for the DN of the user.
+			// This is supposed to be a system user that has access in read only to
+			// the DNs of the people that are allowed to log in.
+			//
+			// @type     string
+			//
+			rootDN: "cn=thelounge,ou=system-users,dc=example,dc=com",
 
-		//
-		// LDAP search scope
-		//
-		// @type     string
-		// @default  "sub"
-		//
-		scope: "sub"
+			//
+			// Password of the lounge LDAP system user
+			//
+			// @type     string
+			//
+			rootPassword: "1234",
+
+			//
+			// LDAP filter
+			//
+			// @type     string
+			// @default  "uid"
+			//
+			filter: "(objectClass=inetOrgPerson)(memberOf=ou=accounts,dc=example,dc=com)",
+
+			//
+			// LDAP search base (search only within this node)
+			//
+			// @type     string
+			//
+			base: "dc=example,dc=com",
+
+			//
+			// LDAP search scope
+			//
+			// @type     string
+			// @default  "sub"
+			//
+			scope: "sub"
+
+		}
 	},
 
 	// Extra debugging
