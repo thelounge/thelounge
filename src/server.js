@@ -12,7 +12,6 @@ var io = require("socket.io");
 var dns = require("dns");
 var Helper = require("./helper");
 var ldapAuth = require("./plugins/auth/ldap");
-var advancedLdapAuth = require("./plugins/auth/advancedLdap");
 var localAuth = require("./plugins/auth/local");
 var colors = require("colors/safe");
 const net = require("net");
@@ -438,14 +437,10 @@ function performAuthentication(data) {
 
 	// Perform password checking
 	let auth = function() {};
-	if (!Helper.config.public && Helper.config.ldap.enable) {
-		if ("baseDN" in Helper.config.ldap) {
-			auth = ldapAuth;
-		} else {
-			auth = advancedLdapAuth;
-		}
-	} else {
-		auth = localAuth;
+	if (ldapAuth.isEnabled()) {
+		auth = ldapAuth.auth;
+	} else if (localAuth.isEnabled()) {
+		auth = localAuth.auth;
 	}
 	auth(manager, client, data.user, data.password, authCallback);
 }

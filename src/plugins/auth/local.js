@@ -35,4 +35,10 @@ function localAuth(manager, client, user, password, callback) {
 		});
 }
 
-module.exports = localAuth;
+module.exports = {
+	auth: localAuth,
+	isEnabled: function() {
+		return true;
+	}
+};
+
