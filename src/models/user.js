@@ -7,13 +7,25 @@ module.exports = User;
 function User(attr, prefixLookup) {
 	_.defaults(this, attr, {
 		modes: [],
-		nick: ""
+		mode: "",
+		nick: "",
+		lastMessage: 0,
 	});
 
-	// irc-framework sets character mode, but lounge works with symbols
-	this.modes = this.modes.map(mode => prefixLookup[mode]);
-
-	// TODO: Remove this
-	this.name = this.nick;
-	this.mode = (this.modes && this.modes[0]) || "";
+	this.setModes(this.modes, prefixLookup);
 }
+
+User.prototype.setModes = function(modes, prefixLookup) {
+	// irc-framework sets character mode, but lounge works with symbols
+	this.modes = modes.map((mode) => prefixLookup[mode]);
+
+	this.mode = this.modes[0] || "";
+};
+
+User.prototype.toJSON = function() {
+	return {
+		nick: this.nick,
+		mode: this.mode,
+		lastMessage: this.lastMessage,
+	};
+};

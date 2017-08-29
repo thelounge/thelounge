@@ -3,12 +3,6 @@
 Welcome to The Lounge, it's great to have you here! We thank you in advance for
 your contributions.
 
-### I have a question
-
-- Find us on the Freenode channel `#thelounge`. You might not get an answer
-  right away, but this channel is full of nice people who will be happy to
-  help you.
-
 ### I want to report a bug
 
 - Look at the [open and closed

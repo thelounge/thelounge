@@ -6,9 +6,8 @@ var Msg = require("../../models/msg");
 module.exports = function(irc, network) {
 	var client = this;
 	irc.on("quit", function(data) {
-		network.channels.forEach(chan => {
-			var from = data.nick;
-			var user = _.find(chan.users, {name: from});
+		network.channels.forEach((chan) => {
+			const user = chan.findUser(data.nick);
 			if (typeof user === "undefined") {
 				return;
 			}
@@ -22,7 +21,7 @@ module.exports = function(irc, network) {
 				mode: user.mode || "",
 				text: data.message || "",
 				hostmask: data.ident + "@" + data.hostname,
-				from: from
+				from: data.nick
 			});
 			chan.pushMessage(client, msg);
 		});

@@ -11,7 +11,7 @@ module.exports.write = function(user, network, chan, msg) {
 	try {
 		fsextra.ensureDirSync(path);
 	} catch (e) {
-		log.error("Unabled to create logs directory", e);
+		log.error("Unable to create logs directory", e);
 		return;
 	}
 

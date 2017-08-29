@@ -1,7 +1,6 @@
 # Change Log
 
 All notable changes to this project will be documented in this file.
-This project adheres to [Semantic Versioning](http://semver.org/).
 
 <!--
 Use the following template for each new release, built on recommendations from http://keepachangelog.com/.
@@ -9,7 +8,7 @@ Use the following template for each new release, built on recommendations from h
 ```md
 ## vX.Y.Z - YYYY-MM-DD
 
-For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/vPRE.VIO.US...vX.Y.Z) and [milestone](https://github.com/thelounge/lounge/milestone/XXX).
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/vPRE.VIO.US...vX.Y.Z) and [milestone](https://github.com/thelounge/lounge/milestone/XX?closed=1).
 
 DESCRIPTION, ANNOUNCEMENT, ...
 
@@ -32,9 +31,378 @@ All sections are explained on the link above, they are all optional, and each of
 ```
 -->
 
+## v2.4.0 - 2017-07-30
+
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.3.2...v2.4.0) and [milestone](https://github.com/thelounge/lounge/milestone/25?closed=1).
+
+This release improves link and image previews a great deal! On the menu:
+
+- Up to 5 previews are now displayed instead of 1
+- All previews on the current channel can now be hidden or displayed using the `/collapse` and `/expand` commands
+- Thumbnails can be opened in a fullscreen viewer without leaving the app by clicking on them, and cycled using the previous/next buttons or by hitting <kbd>←</kbd> and <kbd>→</kbd>
+- Say bye to mixed content warnings: The Lounge can now proxy all images (opt-in option in the server settings) for better privacy
+- Title and description are improved overall
+
+Also in this release, auto-complete feature now has an opt-out option in the client settings, and emoji can be searched using fuzzy-matching:
+
+<img width="241" alt="The Lounge - Emoji fuzzy-matching" src="https://user-images.githubusercontent.com/113730/28757682-54276b5a-7556-11e7-9e4b-ce1d19d7b678.png">
+
+### Added
+
+- Add `title` attributes to previews ([#1291](https://github.com/thelounge/lounge/pull/1291) by [@astorije](https://github.com/astorije))
+- Allow opting out of autocomplete ([#1294](https://github.com/thelounge/lounge/pull/1294) by [@awalgarg](https://github.com/awalgarg))
+- Add collapse/expand commands to toggle all previews ([#1309](https://github.com/thelounge/lounge/pull/1309) by [@astorije](https://github.com/astorije))
+- An image viewer popup for thumbnails and image previews, with buttons to previous/next images ([#1325](https://github.com/thelounge/lounge/pull/1325), [#1365](https://github.com/thelounge/lounge/pull/1365), [#1368](https://github.com/thelounge/lounge/pull/1368), [#1367](https://github.com/thelounge/lounge/pull/1367) by [@astorije](https://github.com/astorije), [#1370](https://github.com/thelounge/lounge/pull/1370) by [@xPaw](https://github.com/xPaw))
+- Store preview images on disk for privacy, security and caching ([#1307](https://github.com/thelounge/lounge/pull/1307) by [@xPaw](https://github.com/xPaw))
+- Emoji fuzzy-matching ([#1334](https://github.com/thelounge/lounge/pull/1334) by [@MaxLeiter](https://github.com/MaxLeiter))
+
+### Changed
+
+- Check status code in link prefetcher ([#1260](https://github.com/thelounge/lounge/pull/1260) by [@xPaw](https://github.com/xPaw))
+- Check `og:description` before `description` tag in previews ([#1255](https://github.com/thelounge/lounge/pull/1255) by [@xPaw](https://github.com/xPaw))
+- Check `og:title` before `title` tag in previews ([#1256](https://github.com/thelounge/lounge/pull/1256) by [@xPaw](https://github.com/xPaw))
+- Do not display preview if there is nothing to preview ([#1273](https://github.com/thelounge/lounge/pull/1273) by [@xPaw](https://github.com/xPaw))
+- Increase max downloaded bytes for link preview ([#1274](https://github.com/thelounge/lounge/pull/1274) by [@xPaw](https://github.com/xPaw))
+- Refactor link previews ([#1276](https://github.com/thelounge/lounge/pull/1276) by [@xPaw](https://github.com/xPaw), [#1378](https://github.com/thelounge/lounge/pull/1378) by [@astorije](https://github.com/astorije))
+- Support multiple previews per message ([#1303](https://github.com/thelounge/lounge/pull/1303), [#1324](https://github.com/thelounge/lounge/pull/1324), [#1335](https://github.com/thelounge/lounge/pull/1335), [#1348](https://github.com/thelounge/lounge/pull/1348), [#1347](https://github.com/thelounge/lounge/pull/1347), [#1353](https://github.com/thelounge/lounge/pull/1353) by [@astorije](https://github.com/astorije))
+- Add `mask-icon` for pinned safari tab ([#1329](https://github.com/thelounge/lounge/pull/1329) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Lazily load user list in channels on init, keep autocompletion sort on server ([#1194](https://github.com/thelounge/lounge/pull/1194) by [@xPaw](https://github.com/xPaw))
+- Keep track of preview visibility on the server so it persists at page reload ([#1366](https://github.com/thelounge/lounge/pull/1366) by [@astorije](https://github.com/astorije))
+- Bump express and socket.io to their latest patch versions ([#1312](https://github.com/thelounge/lounge/pull/1312) by [@astorije](https://github.com/astorije))
+- Update production dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `commander` ([#1257](https://github.com/thelounge/lounge/pull/1257), [#1292](https://github.com/thelounge/lounge/pull/1292))
+  - `jquery-textcomplete` ([#1279](https://github.com/thelounge/lounge/pull/1279), [#1321](https://github.com/thelounge/lounge/pull/1321))
+  - `fs-extra` ([#1332](https://github.com/thelounge/lounge/pull/1332))
+  - `semver` ([#1369](https://github.com/thelounge/lounge/pull/1369))
+
+### Removed
+
+- Remove hostname prettifier ([#1306](https://github.com/thelounge/lounge/pull/1306) by [@xPaw](https://github.com/xPaw))
+- Remove `X-UA-Compatible` ([#1328](https://github.com/thelounge/lounge/pull/1328) by [@xPaw](https://github.com/xPaw))
+
+### Fixed
+
+- Make sure thumbnail is a valid image in previews ([#1254](https://github.com/thelounge/lounge/pull/1254) by [@xPaw](https://github.com/xPaw))
+- Parse `X-Forwarded-For` header correctly ([#1202](https://github.com/thelounge/lounge/pull/1202) by [@xPaw](https://github.com/xPaw))
+- Do not truncate link previews if viewport can fit more text ([#1293](https://github.com/thelounge/lounge/pull/1293) by [@xPaw](https://github.com/xPaw))
+- Fix too big line height previews text on Crypto ([#1296](https://github.com/thelounge/lounge/pull/1296) by [@astorije](https://github.com/astorije))
+- Fix background color contrast on Zenburn previews ([#1297](https://github.com/thelounge/lounge/pull/1297) by [@astorije](https://github.com/astorije))
+- Fix jumps when toggling link preview ([#1298](https://github.com/thelounge/lounge/pull/1298) by [@xPaw](https://github.com/xPaw))
+- Fix losing network settings ([#1305](https://github.com/thelounge/lounge/pull/1305) by [@xPaw](https://github.com/xPaw))
+- Fix missing transitions ([#1314](https://github.com/thelounge/lounge/pull/1314), [#1336](https://github.com/thelounge/lounge/pull/1336), [#1374](https://github.com/thelounge/lounge/pull/1374) by [@astorije](https://github.com/astorije), [#1117](https://github.com/thelounge/lounge/pull/1117) by [@bews](https://github.com/bews))
+- Fix incorrect mode on kick target ([#1352](https://github.com/thelounge/lounge/pull/1352) by [@xPaw](https://github.com/xPaw))
+- Correctly show whitespace and newlines in messages ([#1242](https://github.com/thelounge/lounge/pull/1242) by [@starquake](https://github.com/starquake), [#1359](https://github.com/thelounge/lounge/pull/1359) by [@xPaw](https://github.com/xPaw))
+- Hide overflow on entire message row ([#1361](https://github.com/thelounge/lounge/pull/1361) by [@starquake](https://github.com/starquake))
+- Fix link previews not truncating correctly ([#1363](https://github.com/thelounge/lounge/pull/1363) by [@xPaw](https://github.com/xPaw))
+
+### Documentation
+
+In the main repository:
+
+- Remove mention in CHANGELOG that The Lounge uses Semantic Versioning ([#1269](https://github.com/thelounge/lounge/pull/1269) by [@astorije](https://github.com/astorije))
+- Remove `devDependencies` badge on README ([#1267](https://github.com/thelounge/lounge/pull/1267) by [@astorije](https://github.com/astorije))
+- Reword link preview settings to better match reality ([#1310](https://github.com/thelounge/lounge/pull/1310) by [@astorije](https://github.com/astorije))
+- Update screenshot in README ([#1326](https://github.com/thelounge/lounge/pull/1326) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Update README badge to new demo URL ([#1345](https://github.com/thelounge/lounge/pull/1345) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Update README for when to run `npm run build` ([#1319](https://github.com/thelounge/lounge/pull/1319) by [@MaxLeiter](https://github.com/MaxLeiter))
+
+On the website:
+
+- Update demo URL to new demo ([#70](https://github.com/thelounge/thelounge.github.io/pull/70) by [@MaxLeiter](https://github.com/MaxLeiter))
+
+### Internals
+
+- Move nickname rendering to a single template ([#1252](https://github.com/thelounge/lounge/pull/1252) by [@xPaw](https://github.com/xPaw))
+- Ignore all dotfiles in `.npmignore` ([#1287](https://github.com/thelounge/lounge/pull/1287) by [@xPaw](https://github.com/xPaw))
+- Add `.npmrc` file with `save-exact` set to `true` so packages are saved already pinned ([#1284](https://github.com/thelounge/lounge/pull/1284) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Do not hardcode vendor bundles in webpack configuration ([#1280](https://github.com/thelounge/lounge/pull/1280) by [@xPaw](https://github.com/xPaw))
+- Prepare for `SOURCE` CTCP command, when `irc-framework` supports it ([#1284](https://github.com/thelounge/lounge/pull/1284) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Change "Show older messages" to use `id` rather than count ([#1354](https://github.com/thelounge/lounge/pull/1354) by [@YaManicKill](https://github.com/YaManicKill))
+- Update development dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `eslint` ([#1264](https://github.com/thelounge/lounge/pull/1264), [#1272](https://github.com/thelounge/lounge/pull/1272), [#1315](https://github.com/thelounge/lounge/pull/1315), [#1362](https://github.com/thelounge/lounge/pull/1362))
+  - `nyc` ([#1277](https://github.com/thelounge/lounge/pull/1277))
+  - `stylelint` ([#1278](https://github.com/thelounge/lounge/pull/1278), [#1320](https://github.com/thelounge/lounge/pull/1320), [#1340](https://github.com/thelounge/lounge/pull/1340))
+  - `babel-loader` ([#1282](https://github.com/thelounge/lounge/pull/1282))
+  - `babel-preset-env` ([#1295](https://github.com/thelounge/lounge/pull/1295))
+  - `webpack` ([#1308](https://github.com/thelounge/lounge/pull/1308), [#1322](https://github.com/thelounge/lounge/pull/1322), [#1338](https://github.com/thelounge/lounge/pull/1338), [#1371](https://github.com/thelounge/lounge/pull/1371), [#1376](https://github.com/thelounge/lounge/pull/1376))
+  - `chai` ([#1323](https://github.com/thelounge/lounge/pull/1323))
+
+## v2.4.0-rc.2 - 2017-07-27 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.4.0-rc.1...v2.4.0-rc.2)
+
+This is a release candidate for v2.4.0 to ensure maximum stability for public release.
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+npm install -g thelounge@next
+```
+
+## v2.4.0-rc.1 - 2017-07-27 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.3.2...v2.4.0-rc.1)
+
+This is a release candidate for v2.4.0 to ensure maximum stability for public release.
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+npm install -g thelounge@next
+```
+
+## v2.3.2 - 2017-06-25
+
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.3.1...v2.3.2) and [milestone](https://github.com/thelounge/lounge/milestone/24?closed=1).
+
+This patch releases brings a lot of fixes and small improvements here and there, as well as the ability to display seconds in timestamps, a long-awaited feature!
+
+### Added
+
+- Add a client option to display seconds in timestamps ([#1141](https://github.com/thelounge/lounge/pull/1141) by [@bews](https://github.com/bews))
+- Add "Reload page" button when the client fails to load ([#1150](https://github.com/thelounge/lounge/pull/1150) by [@bews](https://github.com/bews))
+
+### Changed
+
+- Treat `click` as a read activity ([#1214](https://github.com/thelounge/lounge/pull/1214) by [@xPaw](https://github.com/xPaw))
+- Fade out for long nicks ([#1158](https://github.com/thelounge/lounge/pull/1158) by [@bews](https://github.com/bews), [#1253](https://github.com/thelounge/lounge/pull/1253) by [@xPaw](https://github.com/xPaw))
+- Include trickery to reduce paints and improve performance ([#1120](https://github.com/thelounge/lounge/pull/1120) by [@xPaw](https://github.com/xPaw), [#1083](https://github.com/thelounge/lounge/pull/1083) by [@bews](https://github.com/bews))
+- Make everything un-selectable by default ([#1233](https://github.com/thelounge/lounge/pull/1233) by [@xPaw](https://github.com/xPaw))
+- Handle images with unknown size in prefetch ([#1246](https://github.com/thelounge/lounge/pull/1246) by [@bews](https://github.com/bews))
+- Update production dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `spdy` ([#1184](https://github.com/thelounge/lounge/pull/1184))
+
+### Fixed
+
+- Stop showing the unread messages marker when `joins`/`parts`/`quits`/etc. are hidden ([#1016](https://github.com/thelounge/lounge/pull/1016) by [@swordbeta](https://github.com/swordbeta))
+- Correctly finish scroll animation when using page keys ([#1244](https://github.com/thelounge/lounge/pull/1244) by [@xPaw](https://github.com/xPaw))
+- Hide link time element on small devices ([#1261](https://github.com/thelounge/lounge/pull/1261) by [@xPaw](https://github.com/xPaw))
+- Fix MOTD underline in Safari ([#1217](https://github.com/thelounge/lounge/pull/1217) by [@MaxLeiter](https://github.com/MaxLeiter))
+
+### Documentation
+
+In the main repository:
+
+- Clarify kilobyte ambiguity ([#1248](https://github.com/thelounge/lounge/pull/1248) by [@xPaw](https://github.com/xPaw))
+- Fix stray end tag ([#1251](https://github.com/thelounge/lounge/pull/1251) by [@xPaw](https://github.com/xPaw))
+
+### Internals
+
+- Update to ESLint 4 and enforce extra rules ([#1231](https://github.com/thelounge/lounge/pull/1231) by [@xPaw](https://github.com/xPaw))
+- Improve the PR tester script a bit ([#1240](https://github.com/thelounge/lounge/pull/1240) by [@astorije](https://github.com/astorije))
+- Add modules for socket events ([#1175](https://github.com/thelounge/lounge/pull/1175) by [@YaManicKill](https://github.com/YaManicKill))
+- Ignore `package-lock.json` ([#1247](https://github.com/thelounge/lounge/pull/1247) by [@xPaw](https://github.com/xPaw))
+- Use `stylelint-config-standard` ([#1249](https://github.com/thelounge/lounge/pull/1249) by [@xPaw](https://github.com/xPaw))
+- Update development dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `babel-core` ([#1212](https://github.com/thelounge/lounge/pull/1212))
+  - `babel-loader` ([#1245](https://github.com/thelounge/lounge/pull/1245))
+  - `nyc` ([#1198](https://github.com/thelounge/lounge/pull/1198))
+  - `stylelint` ([#1215](https://github.com/thelounge/lounge/pull/1215), [#1230](https://github.com/thelounge/lounge/pull/1230))
+  - `chai` ([#1206](https://github.com/thelounge/lounge/pull/1206))
+  - `webpack` ([#1238](https://github.com/thelounge/lounge/pull/1238))
+
+## v2.3.1 - 2017-06-09
+
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.3.0...v2.3.1) and [milestone](https://github.com/thelounge/lounge/milestone/23?closed=1).
+
+This release mostly fixes a few bugs, as listed below.
+
+### Changed
+
+- Keep original `<title>` name when changing the title ([#1205](https://github.com/thelounge/lounge/pull/1205) by [@xPaw](https://github.com/xPaw))
+- Update production dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `handlebars` ([#1179](https://github.com/thelounge/lounge/pull/1179))
+
+### Fixed
+
+- Do not store unnecessary information in user objects ([#1195](https://github.com/thelounge/lounge/pull/1195) by [@xPaw](https://github.com/xPaw))
+- Correctly configure client socket transports ([#1197](https://github.com/thelounge/lounge/pull/1197) by [@xPaw](https://github.com/xPaw))
+- Fix network name not being set when `displayNetwork` is `false` ([#1211](https://github.com/thelounge/lounge/pull/1211) by [@xPaw](https://github.com/xPaw))
+
+### Security
+
+- Do not store passwords in settings storage ([#1204](https://github.com/thelounge/lounge/pull/1204) by [@xPaw](https://github.com/xPaw))
+
+### Internals
+
+- Fix `localtime` test to correctly use UTC ([#1201](https://github.com/thelounge/lounge/pull/1201) by [@xPaw](https://github.com/xPaw))
+- Update Node.js versions for Travis CI ([#1191](https://github.com/thelounge/lounge/pull/1191) by [@YaManicKill](https://github.com/YaManicKill))
+- Update development dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `mocha` ([#1170](https://github.com/thelounge/lounge/pull/1170))
+  - `webpack` ([#1183](https://github.com/thelounge/lounge/pull/1183))
+  - `babel-preset-env` ([#1177](https://github.com/thelounge/lounge/pull/1177))
+
+## v2.3.0 - 2017-06-08
+
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.2.2...v2.3.0) and [milestone](https://github.com/thelounge/lounge/milestone/9?closed=1).
+
+What a release! Our biggest one since the v2.0.0 [release](https://github.com/thelounge/lounge/releases/tag/v2.0.0) / [milestone](https://github.com/thelounge/lounge/milestone/1?closed=1)!
+Expect a lot of new cool stuff, tons of bug fixes and performance improvements.
+Thanks to all 16 contributors (!!) who pitched in for this release, open source at its finest!
+
+On the server side, The Lounge now supports an auto-away mechanism, stores channel keys across restarts and key changes, and supports a new SSL CA bundle option in the configuration file.
+
+Users of the client will notice some changes as well:
+
+- A bunch of new hotkeys to style messages (bold, italic, underline, foreground/background color), all listed in the Help window
+
+- A new autocomplete mechanism for emoji, users, channels, commands, and colors:
+
+  <img alt="The Lounge - Auto-completion" src="https://user-images.githubusercontent.com/113730/26863276-a565fad8-4b1f-11e7-8aa4-21bb812c2568.gif" width=500>
+
+  Note that due to the new nick autocomplete, we removed the now unnecessary nick cycle button that was temporarily added in the meantime. Lots of users have reported it had been broken by a previous release anyway.
+
+- Support of page up/down keys to browse the current chat
+
+- Friendliness-bump of time-related tooltips and date marker:
+
+  ![The Lounge - Timestamp tooltips](https://user-images.githubusercontent.com/113730/26863323-f57cb85e-4b1f-11e7-9b4c-27b62d518af5.gif) &nbsp;&nbsp;&nbsp; ![The Lounge - Friendly date marker](https://user-images.githubusercontent.com/113730/26863322-f577f634-4b1f-11e7-8131-c1b3f3ffe743.gif)
+
+- Support of browsers' Back/Forward actions:
+
+  <img alt="The Lounge - Support of browser Back/Forward" src="https://user-images.githubusercontent.com/113730/26863320-f5761efe-4b1f-11e7-8fb4-de2c5c34cca3.gif" width=300>
+
+- Better and more discreet inline previews for links and images:
+
+  <img alt="The Lounge - Link preview" src="https://user-images.githubusercontent.com/113730/26863418-887b9364-4b20-11e7-8016-1b5367690d7e.png" width=400><br>
+  <img alt="The Lounge - Image preview" src="https://user-images.githubusercontent.com/113730/26863419-887bcc4e-4b20-11e7-9055-1913a9aba0e4.png" width=300>
+
+- Improved channel list with `/list`
+
+- Support for `/ban`, `/unban` and `/banlist`
+
+- Fuzzy-matching of the user list search to find folks more easily:
+
+  ![The Lounge - Fuzzy matching in the user list](https://user-images.githubusercontent.com/113730/26863472-c86b58c4-4b20-11e7-84c1-f66ee8d3e99b.gif)
+
+That's all for this release, and onto the next one now!
+
+### Added
+
+- Add `data-from` attribute to allow styling messages from specific users ([#978](https://github.com/thelounge/lounge/pull/978) by [@williamboman](https://github.com/williamboman))
+- Auto away when no clients are connected ([#775](https://github.com/thelounge/lounge/pull/775), [#1104](https://github.com/thelounge/lounge/pull/1104) by [@xPaw](https://github.com/xPaw))
+- Implement color hotkeys ([#810](https://github.com/thelounge/lounge/pull/810) by [@xPaw](https://github.com/xPaw))
+- Store channel keys ([#1003](https://github.com/thelounge/lounge/pull/1003) by [@xPaw](https://github.com/xPaw), [#715](https://github.com/thelounge/lounge/pull/715) by [@spookhurb](https://github.com/spookhurb))
+- Implement <kbd>pgup</kbd>/<kbd>pgdown</kbd> keys ([#955](https://github.com/thelounge/lounge/pull/955) by [@xPaw](https://github.com/xPaw), [#1078](https://github.com/thelounge/lounge/pull/1078) by [@YaManicKill](https://github.com/YaManicKill))
+- Add CSS tooltips on time elements to give ability to view time on mobile ([#824](https://github.com/thelounge/lounge/pull/824) by [@xPaw](https://github.com/xPaw))
+- Add SSL CA bundle option ([#1024](https://github.com/thelounge/lounge/pull/1024) by [@metsjeesus](https://github.com/metsjeesus))
+- Implement History Web API ([#575](https://github.com/thelounge/lounge/pull/575) by [@williamboman](https://github.com/williamboman), [#1080](https://github.com/thelounge/lounge/pull/1080) by [@YaManicKill](https://github.com/YaManicKill))
+- Add slug with command to unhandled messages ([#816](https://github.com/thelounge/lounge/pull/816) by [@DanielOaks](https://github.com/DanielOaks), [#1044](https://github.com/thelounge/lounge/pull/1044) by [@YaManicKill](https://github.com/YaManicKill))
+- Add support for the `/banlist` command ([#1009](https://github.com/thelounge/lounge/pull/1009) by [@YaManicKill](https://github.com/YaManicKill))
+- Add support for `/ban` and `/unban` commands ([#1077](https://github.com/thelounge/lounge/pull/1077) by [@YaManicKill](https://github.com/YaManicKill))
+- Add autocompletion for emoji, users, channels, and commands ([#787](https://github.com/thelounge/lounge/pull/787) by [@yashsriv](https://github.com/yashsriv), [#1138](https://github.com/thelounge/lounge/pull/1138), [#1095](https://github.com/thelounge/lounge/pull/1095) by [@xPaw](https://github.com/xPaw))
+- Add autocomplete strategy for foreground and background colors ([#1109](https://github.com/thelounge/lounge/pull/1109) by [@astorije](https://github.com/astorije))
+- Add support for `0x04` hex colors ([#1100](https://github.com/thelounge/lounge/pull/1100) by [@xPaw](https://github.com/xPaw))
+
+### Changed
+
+- Remove table layout for chat messages (and fix layout issues yet again) ([#523](https://github.com/thelounge/lounge/pull/523) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Improve inline previews for links and images ([#524](https://github.com/thelounge/lounge/pull/524) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Use local variables to check length ([#1028](https://github.com/thelounge/lounge/pull/1028) by [@xPaw](https://github.com/xPaw))
+- Add `rel="noopener"` to URLs in `index.html` and replace mIRC colors URL to [@DanielOaks](https://github.com/DanielOaks)'s [documentation](https://modern.ircdocs.horse/formatting.html#colors) ([#1034](https://github.com/thelounge/lounge/pull/1034) by [@xPaw](https://github.com/xPaw), [#1051](https://github.com/thelounge/lounge/pull/1051) by [@astorije](https://github.com/astorije))
+- Preload scripts as soon as possible ([#1033](https://github.com/thelounge/lounge/pull/1033) by [@xPaw](https://github.com/xPaw))
+- Improve channels list ([#1018](https://github.com/thelounge/lounge/pull/1018) by [@swordbeta](https://github.com/swordbeta))
+- Show MOTD by default ([#1052](https://github.com/thelounge/lounge/pull/1052) by [@KlipperKyle](https://github.com/KlipperKyle), [#1157](https://github.com/thelounge/lounge/pull/1157) by [@astorije](https://github.com/astorije))
+- Switch to a new IRC message parser ([#972](https://github.com/thelounge/lounge/pull/972) by [@xPaw](https://github.com/xPaw), [#699](https://github.com/thelounge/lounge/pull/699) by [@Bonuspunkt](https://github.com/Bonuspunkt))
+- Use moment on the client to display friendly dates ([#1054](https://github.com/thelounge/lounge/pull/1054) by [@astorije](https://github.com/astorije))
+- Implement fuzzy-matching for the user list ([#856](https://github.com/thelounge/lounge/pull/856), [#1093](https://github.com/thelounge/lounge/pull/1093), [#1167](https://github.com/thelounge/lounge/pull/1167) by [@astorije](https://github.com/astorije), [#1091](https://github.com/thelounge/lounge/pull/1091) by [@PolarizedIons](https://github.com/PolarizedIons), [#1107](https://github.com/thelounge/lounge/pull/1107) by [@xPaw](https://github.com/xPaw))
+- Use moment to render dates everywhere ([#1114](https://github.com/thelounge/lounge/pull/1114) by [@xPaw](https://github.com/xPaw))
+- Update production dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `moment` ([#976](https://github.com/thelounge/lounge/pull/976), [#999](https://github.com/thelounge/lounge/pull/999))
+  - `fs-extra` ([#964](https://github.com/thelounge/lounge/pull/964), [#1098](https://github.com/thelounge/lounge/pull/1098), [#1136](https://github.com/thelounge/lounge/pull/1136))
+  - `jquery` ([#969](https://github.com/thelounge/lounge/pull/969), [#998](https://github.com/thelounge/lounge/pull/998))
+  - `urijs` ([#995](https://github.com/thelounge/lounge/pull/995))
+  - `mousetrap` ([#1006](https://github.com/thelounge/lounge/pull/1006))
+  - `irc-framework` ([#1070](https://github.com/thelounge/lounge/pull/1070), [#1074](https://github.com/thelounge/lounge/pull/1074), [#1123](https://github.com/thelounge/lounge/pull/1123))
+  - `handlebars` ([#1116](https://github.com/thelounge/lounge/pull/1116), [#1129](https://github.com/thelounge/lounge/pull/1129))
+
+### Removed
+
+- Remove invalid CSS perspective properties ([#1027](https://github.com/thelounge/lounge/pull/1027) by [@astorije](https://github.com/astorije))
+- Remove cycle nicks button ([#1062](https://github.com/thelounge/lounge/pull/1062) by [@xPaw](https://github.com/xPaw))
+
+### Fixed
+
+- Rewrite identd server, combine with oidentd ([#804](https://github.com/thelounge/lounge/pull/804), [#970](https://github.com/thelounge/lounge/pull/970) by [@xPaw](https://github.com/xPaw))
+- Fix wrong font size in help center labels ([#994](https://github.com/thelounge/lounge/pull/994) by [@astorije](https://github.com/astorije))
+- Fix filling in the nickname, overriding the username in the New Network window ([#873](https://github.com/thelounge/lounge/pull/873) by [@PolarizedIons](https://github.com/PolarizedIons))
+- Correctly append date marker when receiving a message ([#1002](https://github.com/thelounge/lounge/pull/1002) by [@xPaw](https://github.com/xPaw))
+- Count only message items for when loading more messages ([#1013](https://github.com/thelounge/lounge/pull/1013) by [@awalgarg](https://github.com/awalgarg))
+- Fix Zenburn and Morning channel list font color ([#1017](https://github.com/thelounge/lounge/pull/1017) by [@swordbeta](https://github.com/swordbeta))
+- Stick to bottom when opening user list ([#1032](https://github.com/thelounge/lounge/pull/1032) by [@xPaw](https://github.com/xPaw))
+- Reset notification markers on document focus ([#1040](https://github.com/thelounge/lounge/pull/1040) by [@xPaw](https://github.com/xPaw))
+- Disable show more button when loading messages ([#1045](https://github.com/thelounge/lounge/pull/1045) by [@YaManicKill](https://github.com/YaManicKill))
+- Fix to `helper.expandhome` to correctly resolve `""` and `undefined` ([#1050](https://github.com/thelounge/lounge/pull/1050) by [@metsjeesus](https://github.com/metsjeesus))
+- Fix displayNetwork to work correctly ([#1069](https://github.com/thelounge/lounge/pull/1069) by [@xPaw](https://github.com/xPaw))
+- Enable show more button correctly ([#1068](https://github.com/thelounge/lounge/pull/1068) by [@xPaw](https://github.com/xPaw))
+- Rewrite server code of channel sorting ([#1064](https://github.com/thelounge/lounge/pull/1064) by [@xPaw](https://github.com/xPaw) and ([#1115](https://github.com/thelounge/lounge/pull/1115) by [@PolarizedIons](https://github.com/PolarizedIons)))
+- Fix showing prefetch options ([#1087](https://github.com/thelounge/lounge/pull/1087) by [@YaManicKill](https://github.com/YaManicKill))
+- Add `/ctcp` command to constants and auto-completion ([#1108](https://github.com/thelounge/lounge/pull/1108) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Disable `tabindex` on user list search input ([#1122](https://github.com/thelounge/lounge/pull/1122) by [@xPaw](https://github.com/xPaw))
+- Fix date-marker not being removed on loading new messages ([#1132](https://github.com/thelounge/lounge/pull/1132), [#1156](https://github.com/thelounge/lounge/pull/1156) by [@PolarizedIons](https://github.com/PolarizedIons))
+
+### Security
+
+- Switch to `bcryptjs` and make password comparison asynchronous ([#985](https://github.com/thelounge/lounge/pull/985) by [@rockhouse](https://github.com/rockhouse), [`b46f92c`](https://github.com/thelounge/lounge/commit/b46f92c7d8a07e84f49a550b32204c0a0672e831) by [@xPaw](https://github.com/xPaw))
+- Use Referrer-Policy header instead of CSP referrer ([#1015](https://github.com/thelounge/lounge/pull/1015) by [@astorije](https://github.com/astorije))
+
+### Internals
+
+- Enforce more space and new line rules ([#975](https://github.com/thelounge/lounge/pull/975) by [@xPaw](https://github.com/xPaw))
+- Setup ESLint to make sure an EOF feed is always present ([#991](https://github.com/thelounge/lounge/pull/991) by [@astorije](https://github.com/astorije))
+- Do not build json3 module with Webpack ([#977](https://github.com/thelounge/lounge/pull/977) by [@xPaw](https://github.com/xPaw))
+- Remove extra newline to please ESLint ([#997](https://github.com/thelounge/lounge/pull/997) by [@astorije](https://github.com/astorije))
+- Use `require()` instead of import in client code ([#973](https://github.com/thelounge/lounge/pull/973) by [@xPaw](https://github.com/xPaw))
+- Do not build feature branch with open pull requests on AppVeyor ([`934400f`](https://github.com/thelounge/lounge/commit/934400f5ee094e61c62dd0304cb55ea9f9666078) by [@xPaw](https://github.com/xPaw))
+- Exclude Webpack config from coverage report ([#1053](https://github.com/thelounge/lounge/pull/1053) by [@astorije](https://github.com/astorije))
+- Create socket module ([#1060](https://github.com/thelounge/lounge/pull/1060) by [@YaManicKill](https://github.com/YaManicKill))
+- Change index.html to be rendered using handlebars ([#1057](https://github.com/thelounge/lounge/pull/1057) by [@YaManicKill](https://github.com/YaManicKill))
+- Move commands into constants module ([#1067](https://github.com/thelounge/lounge/pull/1067) by [@YaManicKill](https://github.com/YaManicKill))
+- Use `babel-preset-env` ([#1072](https://github.com/thelounge/lounge/pull/1072) by [@xPaw](https://github.com/xPaw))
+- Use `irc-framework`'s `setTopic()` for topic command ([#1082](https://github.com/thelounge/lounge/pull/1082) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Create options module ([#1066](https://github.com/thelounge/lounge/pull/1066) by [@YaManicKill](https://github.com/YaManicKill))
+- Update development dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `babel-core` ([#958](https://github.com/thelounge/lounge/pull/958), [#1021](https://github.com/thelounge/lounge/pull/1021))
+  - `babel-loader` ([#968](https://github.com/thelounge/lounge/pull/968), [#1020](https://github.com/thelounge/lounge/pull/1020), [#1063](https://github.com/thelounge/lounge/pull/1063))
+  - `babel-preset-es2015` ([#960](https://github.com/thelounge/lounge/pull/960))
+  - `eslint` ([#971](https://github.com/thelounge/lounge/pull/971), [#1000](https://github.com/thelounge/lounge/pull/1000))
+  - `nyc` ([#989](https://github.com/thelounge/lounge/pull/989), [#1113](https://github.com/thelounge/lounge/pull/1113), [#1140](https://github.com/thelounge/lounge/pull/1140))
+  - `webpack` ([#981](https://github.com/thelounge/lounge/pull/981), [#1007](https://github.com/thelounge/lounge/pull/1007), [#1030](https://github.com/thelounge/lounge/pull/1030), [#1133](https://github.com/thelounge/lounge/pull/1133), [#1142](https://github.com/thelounge/lounge/pull/1142))
+  - `stylelint` ([#1004](https://github.com/thelounge/lounge/pull/1004), [#1005](https://github.com/thelounge/lounge/pull/1005))
+  - `handlebars-loader` ([#1058](https://github.com/thelounge/lounge/pull/1058))
+  - `mocha` ([#1079](https://github.com/thelounge/lounge/pull/1079))
+
+## v2.3.0-rc.2 - 2017-05-16 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.3.0-rc.1...v2.3.0-rc.2)
+
+This is a release candidate for v2.3.0 to ensure maximum stability for public release.
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+npm install -g thelounge@next
+```
+
+## v2.3.0-rc.1 - 2017-05-07 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.2.2...v2.3.0-rc.1)
+
+This is a release candidate for v2.3.0 to ensure maximum stability for public release.
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+npm install -g thelounge@next
+```
+
 ## v2.2.2 - 2017-03-13
 
-For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.2.1...v2.2.2) and [milestone](https://github.com/thelounge/lounge/milestone/11).
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.2.1...v2.2.2) and [milestone](https://github.com/thelounge/lounge/milestone/11?closed=1).
 
 This patch release brings a lot of dependency upgrades and a few fixes. Passing options to the `lounge` CLI (`lounge start --port 8080`, etc.) now works as expected without requiring `--`. We have also disabled ping timeouts for now to hopefully fix automatic reconnection. Finally, upgrading `irc-framework` allows us to fix an extra couple of bugs.
 
@@ -84,7 +452,7 @@ On the website:
 
 ## v2.2.1 - 2017-02-12
 
-For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.2.0...v2.2.1) and [milestone](https://github.com/thelounge/lounge/milestone/10).
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.2.0...v2.2.1) and [milestone](https://github.com/thelounge/lounge/milestone/10?closed=1).
 
 This patch release packs up a change of the default value of `maxHistory`, an interactive prompt when creating a user to enable/disable user logging, a UI bug fix, and a few dependency upgrades.
 
@@ -121,7 +489,7 @@ On the website:
 
 ## v2.2.0 - 2017-01-31
 
-For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.1.0...v2.2.0) and [milestone](https://github.com/thelounge/lounge/milestone/2).
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.1.0...v2.2.0) and [milestone](https://github.com/thelounge/lounge/milestone/2?closed=1).
 
 Another long-overdue release for The Lounge!
 

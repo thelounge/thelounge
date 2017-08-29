@@ -1,16 +1,29 @@
 "use strict";
 
-var ClientManager = new require("../clientManager");
-var fs = require("fs");
-var program = require("commander");
-var colors = require("colors/safe");
-var Helper = require("../helper");
+const colors = require("colors/safe");
+const program = require("commander");
+const fs = require("fs");
+const Helper = require("../helper");
+const Utils = require("./utils");
 
 program
 	.command("reset <name>")
 	.description("Reset user password")
+	.on("--help", Utils.extraHelp)
 	.action(function(name) {
+		if (!fs.existsSync(Helper.USERS_PATH)) {
+			log.error(`${Helper.USERS_PATH} does not exist.`);
+			return;
+		}
+
+		const ClientManager = require("../clientManager");
+
 		var users = new ClientManager().getUsers();
+
+		if (users === undefined) { // There was an error, already logged
+			return;
+		}
+
 		if (users.indexOf(name) === -1) {
 			log.error(`User ${colors.bold(name)} does not exist.`);
 			return;
@@ -25,7 +38,7 @@ program
 				return;
 			}
 			user.password = Helper.password.hash(password);
-			user.token = null; // Will be regenerated when the user is loaded
+			user.sessions = {};
 			fs.writeFileSync(
 				file,
 				JSON.stringify(user, null, "\t")

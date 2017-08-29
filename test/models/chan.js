@@ -3,9 +3,30 @@
 var expect = require("chai").expect;
 
 var Chan = require("../../src/models/chan");
+var Msg = require("../../src/models/msg");
 var User = require("../../src/models/user");
 
 describe("Chan", function() {
+	describe("#findMessage(id)", function() {
+		const chan = new Chan({
+			messages: [
+				new Msg(),
+				new Msg({
+					text: "Message to be found"
+				}),
+				new Msg()
+			]
+		});
+
+		it("should find a message in the list of messages", function() {
+			expect(chan.findMessage(1).text).to.equal("Message to be found");
+		});
+
+		it("should not find a message that does not exist", function() {
+			expect(chan.findMessage(42)).to.be.undefined;
+		});
+	});
+
 	describe("#sortUsers(irc)", function() {
 		var network = {
 			network: {
@@ -23,7 +44,7 @@ describe("Chan", function() {
 
 		var prefixLookup = {};
 
-		network.network.options.PREFIX.forEach(mode => {
+		network.network.options.PREFIX.forEach((mode) => {
 			prefixLookup[mode.mode] = mode.symbol;
 		});
 
@@ -32,9 +53,7 @@ describe("Chan", function() {
 		};
 
 		var getUserNames = function(chan) {
-			return chan.users.map(function(u) {
-				return u.name;
-			});
+			return chan.users.map((u) => u.nick);
 		};
 
 		it("should sort a simple user list", function() {

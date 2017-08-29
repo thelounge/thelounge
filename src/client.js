@@ -10,6 +10,7 @@ var Msg = require("./models/msg");
 var Network = require("./models/network");
 var ircFramework = require("irc-framework");
 var Helper = require("./helper");
+const UAParser = require("ua-parser-js");
 
 module.exports = Client;
 
@@ -17,6 +18,7 @@ var id = 0;
 var events = [
 	"connection",
 	"unhandled",
+	"banlist",
 	"ctcp",
 	"error",
 	"invite",
@@ -35,6 +37,7 @@ var events = [
 	"whois"
 ];
 var inputs = [
+	"ban",
 	"ctcp",
 	"msg",
 	"part",
@@ -56,7 +59,7 @@ var inputs = [
 ].reduce(function(plugins, name) {
 	var path = "./plugins/inputs/" + name;
 	var plugin = require(path);
-	plugin.commands.forEach(command => plugins[command] = plugin);
+	plugin.commands.forEach((command) => plugins[command] = plugin);
 	return plugins;
 }, {});
 
@@ -64,7 +67,9 @@ function Client(manager, name, config) {
 	if (typeof config !== "object") {
 		config = {};
 	}
+
 	_.merge(this, {
+		awayMessage: config.awayMessage || "",
 		lastActiveChannel: -1,
 		attachedClients: {},
 		config: config,
@@ -77,24 +82,32 @@ function Client(manager, name, config) {
 
 	var client = this;
 
-	if (client.name && !client.config.token) {
-		client.updateToken(function(token) {
-			client.manager.updateUser(client.name, {token: token});
-		});
-	}
-
 	var delay = 0;
-	(client.config.networks || []).forEach(n => {
+	(client.config.networks || []).forEach((n) => {
 		setTimeout(function() {
 			client.connect(n);
 		}, delay);
 		delay += 1000;
 	});
 
+	if (typeof client.config.sessions !== "object") {
+		client.config.sessions = {};
+	}
+
+	_.forOwn(client.config.sessions, (session) => {
+		if (session.pushSubscription) {
+			this.registerPushSubscription(session, session.pushSubscription, true);
+		}
+	});
+
 	if (client.name) {
 		log.info(`User ${colors.bold(client.name)} loaded`);
 	}
 }
+
+Client.prototype.isRegistered = function() {
+	return this.name.length > 0;
+};
 
 Client.prototype.emit = function(event, data) {
 	if (this.sockets !== null) {
@@ -151,14 +164,15 @@ Client.prototype.connect = function(args) {
 	if (args.channels) {
 		var badName = false;
 
-		args.channels.forEach(chan => {
+		args.channels.forEach((chan) => {
 			if (!chan.name) {
 				badName = true;
 				return;
 			}
 
 			channels.push(new Chan({
-				name: chan.name
+				name: chan.name,
+				key: chan.key || "",
 			}));
 		});
 
@@ -182,7 +196,7 @@ Client.prototype.connect = function(args) {
 	args.hostname = args.hostname || (client.config && client.config.hostname) || client.hostname;
 
 	var network = new Network({
-		name: args.name || "",
+		name: args.name || (config.displayNetwork ? "" : config.defaults.name) || "",
 		host: args.host || "",
 		port: parseInt(args.port, 10) || (args.tls ? 6697 : 6667),
 		tls: !!args.tls,
@@ -261,7 +275,6 @@ Client.prototype.connect = function(args) {
 		auto_reconnect: true,
 		auto_reconnect_wait: 10000 + Math.floor(Math.random() * 1000), // If multiple users are connected to the same network, randomize their reconnections a little
 		auto_reconnect_max_retries: 360, // At least one hour (plus timeouts) worth of reconnections
-		ping_interval: 0, // Disable client ping timeouts due to buggy implementation
 		webirc: webirc,
 	});
 
@@ -269,7 +282,7 @@ Client.prototype.connect = function(args) {
 		"znc.in/self-message", // Legacy echo-message for ZNc
 	]);
 
-	events.forEach(plugin => {
+	events.forEach((plugin) => {
 		var path = "./plugins/irc-events/" + plugin;
 		require(path).apply(client, [
 			network.irc,
@@ -282,40 +295,57 @@ Client.prototype.connect = function(args) {
 	client.save();
 };
 
-Client.prototype.updateToken = function(callback) {
-	var client = this;
-
-	crypto.randomBytes(48, function(err, buf) {
+Client.prototype.generateToken = function(callback) {
+	crypto.randomBytes(48, (err, buf) => {
 		if (err) {
 			throw err;
 		}
 
-		callback(client.config.token = buf.toString("hex"));
+		callback(buf.toString("hex"));
 	});
+};
+
+Client.prototype.updateSession = function(token, ip, request) {
+	const client = this;
+	const agent = UAParser(request.headers["user-agent"] || "");
+	let friendlyAgent = "";
+
+	if (agent.browser.name) {
+		friendlyAgent = `${agent.browser.name} ${agent.browser.major}`;
+	} else {
+		friendlyAgent = "Unknown browser";
+	}
+
+	if (agent.os.name) {
+		friendlyAgent += ` on ${agent.os.name} ${agent.os.version}`;
+	}
+
+	client.config.sessions[token] = _.assign({
+		lastUse: Date.now(),
+		ip: ip,
+		agent: friendlyAgent,
+	}, client.config.sessions[token]);
 };
 
 Client.prototype.setPassword = function(hash, callback) {
 	var client = this;
 
-	client.updateToken(function(token) {
-		client.manager.updateUser(client.name, {
-			token: token,
-			password: hash
-		}, function(err) {
-			if (err) {
-				log.error("Failed to update password of", client.name, err);
-				return callback(false);
-			}
+	client.manager.updateUser(client.name, {
+		password: hash
+	}, function(err) {
+		if (err) {
+			log.error("Failed to update password of", client.name, err);
+			return callback(false);
+		}
 
-			client.config.password = hash;
-			return callback(true);
-		});
+		client.config.password = hash;
+		return callback(true);
 	});
 };
 
 Client.prototype.input = function(data) {
 	var client = this;
-	data.text.split("\n").forEach(line => {
+	data.text.split("\n").forEach((line) => {
 		data.text = line;
 		client.inputLine(data);
 	});
@@ -373,14 +403,19 @@ Client.prototype.inputLine = function(data) {
 };
 
 Client.prototype.more = function(data) {
-	var client = this;
-	var target = client.find(data.target);
+	const client = this;
+	const target = client.find(data.target);
+
 	if (!target) {
 		return;
 	}
-	var chan = target.chan;
-	var count = chan.messages.length - (data.count || 0);
-	var messages = chan.messages.slice(Math.max(0, count - 100), count);
+
+	const chan = target.chan;
+	const index = chan.messages.findIndex((val) => val.id === data.lastId);
+
+	// If we don't find the requested message, send an empty array
+	const messages = index > 0 ? chan.messages.slice(Math.max(0, index - 100), index) : [];
+
 	client.emit("more", {
 		chan: chan.id,
 		messages: messages
@@ -390,7 +425,7 @@ Client.prototype.more = function(data) {
 Client.prototype.open = function(socketId, target) {
 	// Opening a window like settings
 	if (target === null) {
-		this.attachedClients[socketId] = -1;
+		this.attachedClients[socketId].openChannel = -1;
 		return;
 	}
 
@@ -403,51 +438,43 @@ Client.prototype.open = function(socketId, target) {
 	target.chan.unread = 0;
 	target.chan.highlight = false;
 
-	this.attachedClients[socketId] = target.chan.id;
+	this.attachedClients[socketId].openChannel = target.chan.id;
 	this.lastActiveChannel = target.chan.id;
 
 	this.emit("open", target.chan.id);
 };
 
 Client.prototype.sort = function(data) {
-	var self = this;
+	const order = data.order;
 
-	var type = data.type;
-	var order = data.order || [];
-	var sorted = [];
+	if (!_.isArray(order)) {
+		return;
+	}
 
-	switch (type) {
+	switch (data.type) {
 	case "networks":
-		order.forEach(i => {
-			var find = _.find(self.networks, {id: i});
-			if (find) {
-				sorted.push(find);
-			}
-		});
-		self.networks = sorted;
+		this.networks.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+
+		// Sync order to connected clients
+		this.emit("sync_sort", {order: this.networks.map((obj) => obj.id), type: data.type, target: data.target});
+
 		break;
 
 	case "channels":
-		var target = data.target;
-		var network = _.find(self.networks, {id: target});
+		var network = _.find(this.networks, {id: data.target});
 		if (!network) {
 			return;
 		}
-		order.forEach(i => {
-			var find = _.find(network.channels, {id: i});
-			if (find) {
-				sorted.push(find);
-			}
-		});
-		network.channels = sorted;
+
+		network.channels.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+
+		// Sync order to connected clients
+		this.emit("sync_sort", {order: network.channels.map((obj) => obj.id), type: data.type, target: data.target});
+
 		break;
 	}
 
-	self.save();
-
-	// Sync order to connected clients
-	const syncOrder = sorted.map(obj => obj.id);
-	self.emit("sync_sort", {order: syncOrder, type: type, target: data.target});
+	this.save();
 };
 
 Client.prototype.names = function(data) {
@@ -472,21 +499,36 @@ Client.prototype.quit = function() {
 			socket.disconnect();
 		}
 	}
-	this.networks.forEach(network => {
+	this.networks.forEach((network) => {
 		if (network.irc) {
-			network.irc.quit("Page closed");
+			network.irc.quit(Helper.config.leaveMessage);
 		}
+
+		network.destroy();
 	});
 };
 
-Client.prototype.clientAttach = function(socketId) {
+Client.prototype.clientAttach = function(socketId, token) {
 	var client = this;
 	var save = false;
 
-	client.attachedClients[socketId] = client.lastActiveChannel;
+	if (client.awayMessage && _.size(client.attachedClients) === 0) {
+		client.networks.forEach(function(network) {
+			// Only remove away on client attachment if
+			// there is no away message on this network
+			if (!network.awayMessage) {
+				network.irc.raw("AWAY");
+			}
+		});
+	}
+
+	client.attachedClients[socketId] = {
+		token: token,
+		openChannel: client.lastActiveChannel
+	};
 
 	// Update old networks to store ip and hostmask
-	client.networks.forEach(network => {
+	client.networks.forEach((network) => {
 		if (!network.ip) {
 			save = true;
 			network.ip = (client.config && client.config.ip) || client.ip;
@@ -508,7 +550,53 @@ Client.prototype.clientAttach = function(socketId) {
 };
 
 Client.prototype.clientDetach = function(socketId) {
+	const client = this;
+
 	delete this.attachedClients[socketId];
+
+	if (client.awayMessage && _.size(client.attachedClients) === 0) {
+		client.networks.forEach(function(network) {
+			// Only set away on client deattachment if
+			// there is no away message on this network
+			if (!network.awayMessage) {
+				network.irc.raw("AWAY", client.awayMessage);
+			}
+		});
+	}
+};
+
+Client.prototype.registerPushSubscription = function(session, subscription, noSave) {
+	if (!_.isPlainObject(subscription) || !_.isPlainObject(subscription.keys)
+	|| typeof subscription.endpoint !== "string" || !/^https?:\/\//.test(subscription.endpoint)
+	|| typeof subscription.keys.p256dh !== "string" || typeof subscription.keys.auth !== "string") {
+		session.pushSubscription = null;
+		return;
+	}
+
+	const data = {
+		endpoint: subscription.endpoint,
+		keys: {
+			p256dh: subscription.keys.p256dh,
+			auth: subscription.keys.auth
+		}
+	};
+
+	session.pushSubscription = data;
+
+	if (!noSave) {
+		this.manager.updateUser(this.name, {
+			sessions: this.config.sessions
+		});
+	}
+
+	return data;
+};
+
+Client.prototype.unregisterPushSubscription = function(token) {
+	this.config.sessions[token].pushSubscription = null;
+	this.manager.updateUser(this.name, {
+		sessions: this.config.sessions
+	});
 };
 
 Client.prototype.save = _.debounce(function SaveClient() {
@@ -517,7 +605,7 @@ Client.prototype.save = _.debounce(function SaveClient() {
 	}
 
 	const client = this;
-	let json = {};
-	json.networks = this.networks.map(n => n.export());
+	const json = {};
+	json.networks = this.networks.map((n) => n.export());
 	client.manager.updateUser(client.name, json);
 }, 1000, {maxWait: 10000});

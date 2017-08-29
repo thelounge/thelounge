@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function(mode) {
 	var modes = {
 		"~": "owner",

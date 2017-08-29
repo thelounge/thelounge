@@ -37,7 +37,7 @@ import jQuery from "jquery";
 				lastStick = Date.now();
 				this.scrollTop = this.scrollHeight;
 			})
-			.on("msg.sticky", keepToBottom)
+			.on("keepToBottom.sticky", keepToBottom)
 			.scrollBottom();
 
 		return self;

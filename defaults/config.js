@@ -8,9 +8,9 @@ module.exports = {
 	// Set to 'false' to enable users.
 	//
 	// @type     boolean
-	// @default  true
+	// @default  false
 	//
-	public: true,
+	public: false,
 
 	//
 	// IP address or hostname for the web server to listen on.
@@ -67,10 +67,27 @@ module.exports = {
 	prefetch: false,
 
 	//
+	// Store and proxy prefetched images and thumbnails.
+	// This improves security and privacy by not exposing client IP address,
+	// and always loading images from The Lounge instance and making all assets secure,
+	// which in result fixes mixed content warnings.
+	//
+	// If storage is enabled, The Lounge will fetch and store images and thumbnails
+	// in the `${LOUNGE_HOME}/storage` folder.
+	//
+	// Images are deleted when they are no longer referenced by any message (controlled by maxHistory),
+	// and the folder is cleaned up on every The Lounge restart.
+	//
+	// @type     boolean
+	// @default  false
+	//
+	prefetchStorage: false,
+
+	//
 	// Prefetch URLs Image Preview size limit
 	//
 	// If prefetch is enabled, The Lounge will only display content under the maximum size.
-	// Default value is 512 (in kB)
+	// Specified value is in kilobytes. Default value is 512 kilobytes.
 	//
 	// @type     int
 	// @default  512
@@ -287,8 +304,25 @@ module.exports = {
 		// @example  "sslcert/key-cert.pem"
 		// @default  ""
 		//
-		certificate: ""
+		certificate: "",
+
+		//
+		// Path to the CA bundle.
+		//
+		// @type     string
+		// @example  "sslcert/bundle.pem"
+		// @default  ""
+		//
+		ca: ""
 	},
+
+	//
+	// Default quit and part message if none is provided.
+	//
+	// @type     string
+	// @default  "The Lounge - https://thelounge.github.io"
+	//
+	leaveMessage: "The Lounge - https://thelounge.github.io",
 
 	//
 	// Run The Lounge with identd support.

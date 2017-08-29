@@ -1,3 +1,5 @@
+"use strict";
+
 module.exports = function(a, b, opt) {
 	a = a.toString();
 	b = b.toString();

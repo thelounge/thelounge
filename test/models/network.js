@@ -8,13 +8,15 @@ var Network = require("../../src/models/network");
 
 describe("Network", function() {
 	describe("#export()", function() {
-
 		it("should produce an valid object", function() {
 			var network = new Network({
+				awayMessage: "I am away",
 				name: "networkName",
 				channels: [
-					new Chan({name: "#thelounge"}),
-					new Chan({name: "&foobar"}),
+					new Chan({name: "#thelounge", key: ""}),
+					new Chan({name: "&foobar", key: ""}),
+					new Chan({name: "#secret", key: "foo"}),
+					new Chan({name: "&secure", key: "bar"}),
 					new Chan({name: "Channel List", type: Chan.Type.SPECIAL}),
 					new Chan({name: "PrivateChat", type: Chan.Type.QUERY}),
 				]
@@ -22,6 +24,7 @@ describe("Network", function() {
 			network.setNick("chillin`");
 
 			expect(network.export()).to.deep.equal({
+				awayMessage: "I am away",
 				name: "networkName",
 				host: "",
 				port: 6667,
@@ -34,8 +37,10 @@ describe("Network", function() {
 				ip: null,
 				hostname: null,
 				channels: [
-					{name: "#thelounge"},
-					{name: "&foobar"},
+					{name: "#thelounge", key: ""},
+					{name: "&foobar", key: ""},
+					{name: "#secret", key: "foo"},
+					{name: "&secure", key: "bar"},
 				]
 			});
 		});

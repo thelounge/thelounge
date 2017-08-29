@@ -1,88 +1,151 @@
 "use strict";
 
 const cheerio = require("cheerio");
-const Msg = require("../../models/msg");
 const request = require("request");
+const url = require("url");
 const Helper = require("../../helper");
+const findLinks = require("../../../client/js/libs/handlebars/ircmessageparser/findLinks");
 const es = require("event-stream");
+const storage = require("../storage");
 
 process.setMaxListeners(0);
 
-module.exports = function(client, chan, originalMsg) {
+module.exports = function(client, chan, msg) {
 	if (!Helper.config.prefetch) {
 		return;
 	}
 
-	const links = originalMsg.text
-		.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "")
-		.split(" ")
-		.filter(w => /^https?:\/\//.test(w));
+	// Remove all IRC formatting characters before searching for links
+	const cleanText = Helper.cleanIrcMessage(msg.text);
+
+	// We will only try to prefetch http(s) links
+	const links = findLinks(cleanText).filter((w) => /^https?:\/\//.test(w.link));
 
 	if (links.length === 0) {
 		return;
 	}
 
-	let msg = new Msg({
-		type: Msg.Type.TOGGLE,
-		time: originalMsg.time,
-		self: originalMsg.self,
-	});
-	chan.pushMessage(client, msg);
-
-	const link = escapeHeader(links[0]);
-	fetch(link, function(res) {
-		parse(msg, link, res, client);
-	});
-};
-
-function parse(msg, url, res, client) {
-	var toggle = msg.toggle = {
-		id: msg.id,
-		type: "",
+	msg.previews = Array.from(new Set( // Remove duplicate links
+		links.map((link) => escapeHeader(link.link))
+	)).map((link) => ({
+		type: "loading",
 		head: "",
 		body: "",
 		thumb: "",
-		link: url,
-	};
+		link: link,
+		shown: true,
+	})).slice(0, 5); // Only preview the first 5 URLs in message to avoid abuse
 
+	msg.previews.forEach((preview) => {
+		fetch(preview.link, function(res) {
+			if (res === null) {
+				return;
+			}
+
+			parse(msg, preview, res, client);
+		});
+	});
+};
+
+function parse(msg, preview, res, client) {
 	switch (res.type) {
 	case "text/html":
-		var $ = cheerio.load(res.text);
-		toggle.type = "link";
-		toggle.head = $("title").text();
-		toggle.body =
-			$("meta[name=description]").attr("content")
-			|| $("meta[property=\"og:description\"]").attr("content")
-			|| "No description found.";
-		toggle.thumb =
+		var $ = cheerio.load(res.data);
+		preview.type = "link";
+		preview.head =
+			$("meta[property=\"og:title\"]").attr("content")
+			|| $("title").text()
+			|| "";
+		preview.body =
+			$("meta[property=\"og:description\"]").attr("content")
+			|| $("meta[name=\"description\"]").attr("content")
+			|| "";
+		preview.thumb =
 			$("meta[property=\"og:image\"]").attr("content")
 			|| $("meta[name=\"twitter:image:src\"]").attr("content")
+			|| $("link[rel=\"image_src\"]").attr("href")
 			|| "";
+
+		if (preview.thumb.length) {
+			preview.thumb = url.resolve(preview.link, preview.thumb);
+		}
+
+		// Make sure thumbnail is a valid url
+		if (!/^https?:\/\//.test(preview.thumb)) {
+			preview.thumb = "";
+		}
+
+		// Verify that thumbnail pic exists and is under allowed size
+		if (preview.thumb.length) {
+			fetch(escapeHeader(preview.thumb), (resThumb) => {
+				if (resThumb === null
+				|| !(/^image\/.+/.test(resThumb.type))
+				|| resThumb.size > (Helper.config.prefetchMaxImageSize * 1024)) {
+					preview.thumb = "";
+				}
+
+				handlePreview(client, msg, preview, resThumb);
+			});
+
+			return;
+		}
+
 		break;
 
 	case "image/png":
 	case "image/gif":
 	case "image/jpg":
 	case "image/jpeg":
-		if (res.size < (Helper.config.prefetchMaxImageSize * 1024)) {
-			toggle.type = "image";
-		} else {
+		if (res.size > (Helper.config.prefetchMaxImageSize * 1024)) {
 			return;
 		}
+
+		preview.type = "image";
+		preview.thumb = preview.link;
+
 		break;
 
 	default:
 		return;
 	}
 
-	client.emit("toggle", toggle);
+	handlePreview(client, msg, preview, res);
 }
 
-function fetch(url, cb) {
+function handlePreview(client, msg, preview, res) {
+	if (!preview.thumb.length || !Helper.config.prefetchStorage) {
+		return emitPreview(client, msg, preview);
+	}
+
+	storage.store(res.data, res.type.replace("image/", ""), (uri) => {
+		preview.thumb = uri;
+
+		emitPreview(client, msg, preview);
+	});
+}
+
+function emitPreview(client, msg, preview) {
+	// If there is no title but there is preview or description, set title
+	// otherwise bail out and show no preview
+	if (!preview.head.length && preview.type === "link") {
+		if (preview.thumb.length || preview.body.length) {
+			preview.head = "Untitled page";
+		} else {
+			return;
+		}
+	}
+
+	client.emit("msg:preview", {
+		id: msg.id,
+		preview: preview
+	});
+}
+
+function fetch(uri, cb) {
 	let req;
 	try {
 		req = request.get({
-			url: url,
+			url: uri,
 			maxRedirects: 5,
 			timeout: 5000,
 			headers: {
@@ -90,14 +153,16 @@ function fetch(url, cb) {
 			}
 		});
 	} catch (e) {
-		return;
+		return cb(null);
 	}
 	var length = 0;
-	var limit = 1024 * 10;
+	var limit = Helper.config.prefetchMaxImageSize * 1024;
 	req
 		.on("response", function(res) {
-			if (!(/(text\/html|application\/json)/.test(res.headers["content-type"]))) {
-				res.req.abort();
+			if (!(/^image\/.+/.test(res.headers["content-type"]))) {
+				// if not image, limit download to 50kb, since we need only meta tags
+				// twitter.com sends opengraph meta tags within ~20kb of data for individual tweets
+				limit = 1024 * 50;
 			}
 		})
 		.on("error", function() {})
@@ -110,28 +175,30 @@ function fetch(url, cb) {
 		}))
 		.pipe(es.wait(function(err, data) {
 			if (err) {
-				return;
+				return cb(null);
 			}
 
-			var body;
-			var type;
-			var size = req.response.headers["content-length"];
-			try {
-				body = JSON.parse(data);
-			} catch (e) {
-				body = {};
+			if (req.response.statusCode < 200 || req.response.statusCode > 299) {
+				return cb(null);
 			}
-			try {
+
+			let type = "";
+			let size = parseInt(req.response.headers["content-length"], 10) || length;
+
+			if (size < length) {
+				size = length;
+			}
+
+			if (req.response.headers["content-type"]) {
 				type = req.response.headers["content-type"].split(/ *; */).shift();
-			} catch (e) {
-				type = {};
 			}
+
 			data = {
-				text: data,
-				body: body,
+				data: data,
 				type: type,
 				size: size
 			};
+
 			cb(data);
 		}));
 }

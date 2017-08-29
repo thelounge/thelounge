@@ -1,20 +1,39 @@
 "use strict";
 
-var ClientManager = new require("../clientManager");
-var colors = require("colors/safe");
-var program = require("commander");
-var Helper = require("../helper");
+const colors = require("colors/safe");
+const program = require("commander");
+const fs = require("fs");
+const Helper = require("../helper");
+const Utils = require("./utils");
 
 program
 	.command("add <name>")
 	.description("Add a new user")
+	.on("--help", Utils.extraHelp)
 	.action(function(name) {
-		var manager = new ClientManager();
-		var users = manager.getUsers();
+		if (!fs.existsSync(Helper.USERS_PATH)) {
+			log.error(`${Helper.USERS_PATH} does not exist.`);
+			return;
+		}
+
+		const ClientManager = require("../clientManager");
+
+		if (Helper.config.public) {
+			log.warn(`Users have no effect in ${colors.bold("public")} mode.`);
+		}
+
+		const manager = new ClientManager();
+		const users = manager.getUsers();
+
+		if (users === undefined) { // There was an error, already logged
+			return;
+		}
+
 		if (users.indexOf(name) !== -1) {
 			log.error(`User ${colors.bold(name)} already exists.`);
 			return;
 		}
+
 		log.prompt({
 			text: "Enter password:",
 			silent: true

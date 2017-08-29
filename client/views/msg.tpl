@@ -1,23 +1,17 @@
-<div class="msg {{type}}{{#if self}} self{{/if}}{{#if highlight}} highlight{{/if}}" id="msg-{{id}}" data-time="{{time}}">
-	<span class="time" title="{{localetime time}}">
+<div class="msg {{type}}{{#if self}} self{{/if}}{{#if highlight}} highlight{{/if}}" id="msg-{{id}}" data-time="{{time}}" data-from="{{from}}">
+	<span class="time tooltipped tooltipped-e" aria-label="{{localetime time}}">
 		{{tz time}}
 	</span>
 	<span class="from">
 		{{#if from}}
-		<span role="button" class="user {{colorClass from}}" data-name="{{from}}">{{mode}}{{from}}</span>
+			{{> user_name nick=from}}
 		{{/if}}
 	</span>
-	{{#equal type "toggle"}}
-		<span class="text">
-			<div class="force-newline">
-				<button id="toggle-{{id}}" class="toggle-button" aria-label="Toggle prefetched media">···</button>
-			</div>
-			{{#if toggle}}
-				{{> toggle}}
-			{{/if}}
-		</span>
-	{{else}}
+	<span class="content">
 		<span class="text">{{{parse text}}}</span>
-	{{/equal}}
+
+		{{#each previews}}
+			<div class="preview" data-url="{{link}}"></div>
+		{{/each}}
 	</span>
 </div>

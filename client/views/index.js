@@ -1,6 +1,9 @@
+"use strict";
+
 module.exports = {
 	actions: {
 		action: require("./actions/action.tpl"),
+		ban_list: require("./actions/ban_list.tpl"),
 		channel_list: require("./actions/channel_list.tpl"),
 		ctcp: require("./actions/ctcp.tpl"),
 		invite: require("./actions/invite.tpl"),
@@ -22,9 +25,15 @@ module.exports = {
 	date_marker: require("./date-marker.tpl"),
 	msg: require("./msg.tpl"),
 	msg_action: require("./msg_action.tpl"),
+	msg_condensed_toggle: require("./msg_condensed_toggle.tpl"),
+	msg_condensed: require("./msg_condensed.tpl"),
+	msg_preview: require("./msg_preview.tpl"),
+	msg_preview_toggle: require("./msg_preview_toggle.tpl"),
 	msg_unhandled: require("./msg_unhandled.tpl"),
 	network: require("./network.tpl"),
-	toggle: require("./toggle.tpl"),
+	image_viewer: require("./image_viewer.tpl"),
 	unread_marker: require("./unread_marker.tpl"),
 	user: require("./user.tpl"),
+	user_filtered: require("./user_filtered.tpl"),
+	user_name: require("./user_name.tpl"),
 };

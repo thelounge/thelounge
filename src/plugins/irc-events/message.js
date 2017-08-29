@@ -3,6 +3,7 @@
 const Chan = require("../../models/chan");
 const Msg = require("../../models/msg");
 const LinkPrefetch = require("./link");
+const Helper = require("../../helper");
 
 module.exports = function(irc, network) {
 	var client = this;
@@ -71,6 +72,12 @@ module.exports = function(irc, network) {
 			// Query messages (unless self) always highlight
 			if (chan.type === Chan.Type.QUERY) {
 				highlight = !self;
+			} else if (chan.type === Chan.Type.CHANNEL) {
+				const user = chan.findUser(data.nick);
+
+				if (user) {
+					user.lastMessage = data.time || Date.now();
+				}
 			}
 		}
 
@@ -89,11 +96,31 @@ module.exports = function(irc, network) {
 			self: self,
 			highlight: highlight
 		});
-		chan.pushMessage(client, msg, !self);
 
 		// No prefetch URLs unless are simple MESSAGE or ACTION types
 		if ([Msg.Type.MESSAGE, Msg.Type.ACTION].indexOf(data.type) !== -1) {
 			LinkPrefetch(client, chan, msg);
+		}
+
+		chan.pushMessage(client, msg, !self);
+
+		// Do not send notifications for messages older than 15 minutes (znc buffer for example)
+		if (highlight && (!data.time || data.time > Date.now() - 900000)) {
+			let title = data.nick;
+
+			if (chan.type !== Chan.Type.QUERY) {
+				title += ` (${chan.name}) mentioned you`;
+			} else {
+				title += " sent you a message";
+			}
+
+			client.manager.webPush.push(client, {
+				type: "notification",
+				chanId: chan.id,
+				timestamp: data.time || Date.now(),
+				title: `The Lounge: ${title}`,
+				body: Helper.cleanIrcMessage(data.message)
+			}, true);
 		}
 	}
 };

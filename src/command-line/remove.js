@@ -1,17 +1,31 @@
 "use strict";
 
-var ClientManager = new require("../clientManager");
-var program = require("commander");
-var colors = require("colors/safe");
+const colors = require("colors/safe");
+const program = require("commander");
+const fs = require("fs");
+const Helper = require("../helper");
+const Utils = require("./utils");
 
 program
 	.command("remove <name>")
 	.description("Remove an existing user")
+	.on("--help", Utils.extraHelp)
 	.action(function(name) {
-		var manager = new ClientManager();
-		if (manager.removeUser(name)) {
-			log.info(`User ${colors.bold(name)} removed.`);
-		} else {
-			log.error(`User ${colors.bold(name)} does not exist.`);
+		if (!fs.existsSync(Helper.USERS_PATH)) {
+			log.error(`${Helper.USERS_PATH} does not exist.`);
+			return;
+		}
+
+		const ClientManager = require("../clientManager");
+		const manager = new ClientManager();
+
+		try {
+			if (manager.removeUser(name)) {
+				log.info(`User ${colors.bold(name)} removed.`);
+			} else {
+				log.error(`User ${colors.bold(name)} does not exist.`);
+			}
+		} catch (e) {
+			// There was an error, already logged
 		}
 	});

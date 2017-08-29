@@ -7,17 +7,9 @@ const path = require("path");
 // Common configuration
 // ********************
 
-let config = {
+const config = {
 	entry: {
 		"js/bundle.js": path.resolve(__dirname, "client/js/lounge.js"),
-		"js/bundle.vendor.js": [
-			"handlebars/runtime",
-			"jquery",
-			"jquery-ui/ui/widgets/sortable",
-			"mousetrap",
-			"socket.io-client",
-			"urijs",
-		],
 	},
 	devtool: "source-map",
 	output: {
@@ -36,7 +28,11 @@ let config = {
 					loader: "babel-loader",
 					options: {
 						presets: [
-							"es2015"
+							["env", {
+								targets: {
+									browsers: "last 2 versions"
+								}
+							}]
 						]
 					}
 				}
@@ -60,8 +56,17 @@ let config = {
 			},
 		]
 	},
+	externals: {
+		json3: "JSON", // socket.io uses json3.js, but we do not target any browsers that need it
+	},
 	plugins: [
-		new webpack.optimize.CommonsChunkPlugin("js/bundle.vendor.js")
+		// socket.io uses debug, we don't need it
+		new webpack.NormalModuleReplacementPlugin(/debug/, path.resolve(__dirname, "scripts/noop.js")),
+		// automatically split all vendor dependencies into a separate bundle
+		new webpack.optimize.CommonsChunkPlugin({
+			name: "js/bundle.vendor.js",
+			minChunks: (module) => module.context && module.context.indexOf("node_modules") !== -1
+		})
 	]
 };
 
@@ -71,6 +76,7 @@ let config = {
 
 if (process.env.NODE_ENV === "production") {
 	config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+		sourceMap: true,
 		comments: false
 	}));
 } else {

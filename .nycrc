@@ -3,8 +3,8 @@
   "exclude": [
     "client/js/bundle.js",
     "client/js/bundle.vendor.js",
-    "coverage/",
-    "test/"
+    "test/",
+    "webpack.config.js"
   ],
   "reporter": [
     "lcov",

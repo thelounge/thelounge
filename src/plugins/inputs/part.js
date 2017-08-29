@@ -3,6 +3,7 @@
 var _ = require("lodash");
 var Msg = require("../../models/msg");
 var Chan = require("../../models/chan");
+const Helper = require("../../helper");
 
 exports.commands = ["close", "leave", "part"];
 exports.allowDisconnected = true;
@@ -17,6 +18,7 @@ exports.input = function(network, chan, cmd, args) {
 	}
 
 	network.channels = _.without(network.channels, chan);
+	chan.destroy();
 	this.emit("part", {
 		chan: chan.id
 	});
@@ -25,7 +27,8 @@ exports.input = function(network, chan, cmd, args) {
 		this.save();
 
 		if (network.irc) {
-			network.irc.part(chan.name, args.join(" "));
+			const partMessage = args[0] ? args.join(" ") : Helper.config.leaveMessage;
+			network.irc.part(chan.name, partMessage);
 		}
 	}
 

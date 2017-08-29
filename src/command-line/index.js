@@ -2,33 +2,28 @@
 
 global.log = require("../log.js");
 
-var program = require("commander");
-var colors = require("colors/safe");
-var fs = require("fs");
-var fsextra = require("fs-extra");
-var path = require("path");
-var Helper = require("../helper");
+const program = require("commander");
+const colors = require("colors/safe");
+const Helper = require("../helper");
+const Utils = require("./utils");
 
 program.version(Helper.getVersion(), "-v, --version")
-	.option("--home <path>", "path to configuration folder")
+	.option("--home <path>", `${colors.bold("[DEPRECATED]")} Use the ${colors.green("LOUNGE_HOME")} environment variable instead.`)
+	.on("--help", Utils.extraHelp)
 	.parseOptions(process.argv);
 
-Helper.setHome(program.home || process.env.LOUNGE_HOME);
-
-if (!fs.existsSync(Helper.CONFIG_PATH)) {
-	fsextra.ensureDirSync(Helper.HOME);
-	fs.chmodSync(Helper.HOME, "0700");
-	fsextra.copySync(path.resolve(path.join(
-		__dirname,
-		"..",
-		"..",
-		"defaults",
-		"config.js"
-	)), Helper.CONFIG_PATH);
-	log.info(`Configuration file created at ${colors.green(Helper.CONFIG_PATH)}.`);
+if (program.home) {
+	log.warn(`${colors.green("--home")} is ${colors.bold("deprecated")} and will be removed in a future version.`);
+	log.warn(`Use the ${colors.green("LOUNGE_HOME")} environment variable instead.`);
 }
 
-fsextra.ensureDirSync(Helper.USERS_PATH);
+let home = program.home || process.env.LOUNGE_HOME;
+
+if (!home) {
+	home = Utils.defaultLoungeHome();
+}
+
+Helper.setHome(home);
 
 require("./start");
 require("./config");

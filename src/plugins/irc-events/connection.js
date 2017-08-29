@@ -1,5 +1,6 @@
 "use strict";
 
+var _ = require("lodash");
 var Msg = require("../../models/msg");
 var Chan = require("../../models/chan");
 var Helper = require("../../helper");
@@ -18,10 +19,18 @@ module.exports = function(irc, network) {
 			}), true);
 		}
 
+		// Always restore away message for this network
+		if (network.awayMessage) {
+			irc.raw("AWAY", network.awayMessage);
+		// Only set generic away message if there are no clients attached
+		} else if (client.awayMessage && _.size(client.attachedClients) === 0) {
+			irc.raw("AWAY", client.awayMessage);
+		}
+
 		var delay = 1000;
 		var commands = network.commands;
 		if (Array.isArray(commands)) {
-			commands.forEach(cmd => {
+			commands.forEach((cmd) => {
 				setTimeout(function() {
 					client.input({
 						target: network.channels[0].id,
@@ -32,13 +41,13 @@ module.exports = function(irc, network) {
 			});
 		}
 
-		network.channels.forEach(chan => {
+		network.channels.forEach((chan) => {
 			if (chan.type !== Chan.Type.CHANNEL) {
 				return;
 			}
 
 			setTimeout(function() {
-				network.irc.join(chan.name);
+				network.irc.join(chan.name, chan.key);
 			}, delay);
 			delay += 1000;
 		});
@@ -111,17 +120,18 @@ module.exports = function(irc, network) {
 	});
 
 	irc.on("server options", function(data) {
-		if (network.serverOptions.PREFIX === data.options.PREFIX) {
+		if (network.serverOptions.PREFIX === data.options.PREFIX && network.serverOptions.NETWORK === data.options.NETWORK) {
 			return;
 		}
 
 		network.prefixLookup = {};
 
-		data.options.PREFIX.forEach(mode => {
+		data.options.PREFIX.forEach((mode) => {
 			network.prefixLookup[mode.mode] = mode.symbol;
 		});
 
 		network.serverOptions.PREFIX = data.options.PREFIX;
+		network.serverOptions.NETWORK = data.options.NETWORK;
 
 		client.emit("network_changed", {
 			network: network.id,

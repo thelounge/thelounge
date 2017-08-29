@@ -11,10 +11,12 @@ module.exports = function(irc, network) {
 			return;
 		}
 
+		const user = chan.findUser(data.kicked);
+
 		if (data.kicked === irc.user.nick) {
 			chan.users = [];
 		} else {
-			chan.users = _.without(chan.users, _.find(chan.users, {name: data.kicked}));
+			chan.users = _.without(chan.users, user);
 		}
 
 		client.emit("users", {
@@ -24,7 +26,7 @@ module.exports = function(irc, network) {
 		var msg = new Msg({
 			type: Msg.Type.KICK,
 			time: data.time,
-			mode: chan.getMode(data.nick),
+			mode: user.mode,
 			from: data.nick,
 			target: data.kicked,
 			text: data.message || "",

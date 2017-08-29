@@ -14,6 +14,7 @@ function Network(attr) {
 		port: 6667,
 		tls: false,
 		password: "",
+		awayMessage: "",
 		commands: [],
 		username: "",
 		realname: "",
@@ -24,11 +25,15 @@ function Network(attr) {
 		irc: null,
 		serverOptions: {
 			PREFIX: [],
+			NETWORK: "",
 		},
 		chanCache: [],
 	});
 
-	this.name = attr.name || prettify(attr.host);
+	if (!this.name) {
+		this.name = this.host;
+	}
+
 	this.channels.unshift(
 		new Chan({
 			name: this.name,
@@ -36,6 +41,10 @@ function Network(attr) {
 		})
 	);
 }
+
+Network.prototype.destroy = function() {
+	this.channels.forEach((channel) => channel.destroy());
+};
 
 Network.prototype.setNick = function(nick) {
 	this.nick = nick;
@@ -56,6 +65,7 @@ Network.prototype.setNick = function(nick) {
 
 Network.prototype.toJSON = function() {
 	return _.omit(this, [
+		"awayMessage",
 		"chanCache",
 		"highlightRegex",
 		"irc",
@@ -65,6 +75,7 @@ Network.prototype.toJSON = function() {
 
 Network.prototype.export = function() {
 	var network = _.pick(this, [
+		"awayMessage",
 		"nick",
 		"name",
 		"host",
@@ -84,7 +95,8 @@ Network.prototype.export = function() {
 		})
 		.map(function(chan) {
 			return _.pick(chan, [
-				"name"
+				"name",
+				"key",
 			]);
 		});
 
@@ -98,17 +110,3 @@ Network.prototype.getChannel = function(name) {
 		return that.name.toLowerCase() === name;
 	});
 };
-
-function prettify(host) {
-	var name = capitalize(host.split(".")[1]);
-	if (!name) {
-		name = host;
-	}
-	return name;
-}
-
-function capitalize(str) {
-	if (typeof str === "string") {
-		return str.charAt(0).toUpperCase() + str.slice(1);
-	}
-}

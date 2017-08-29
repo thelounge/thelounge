@@ -1,2 +1,2 @@
-<span role="button" class="user {{colorClass from}}" data-name="{{from}}">{{from}}</span>
-<b>{{ctcpType}}</b> {{{parse ctcpMessage}}}
+{{> ../user_name nick=from}}
+<b>{{ctcpType}}</b> <span class="ctcp-message">{{{parse ctcpMessage}}}</span>

@@ -1,13 +1,40 @@
 "use strict";
 
-var _ = require("lodash");
-var Chan = require("../../models/chan");
-var Msg = require("../../models/msg");
+const _ = require("lodash");
+const Chan = require("../../models/chan");
+const Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
-	var client = this;
+	const client = this;
+
+	// The following saves the channel key based on channel mode instead of
+	// extracting it from `/join #channel key`. This lets us not have to
+	// temporarily store the key until successful join, but also saves the key
+	// if a key is set or changed while being on the channel.
+	irc.on("channel info", function(data) {
+		if (!data.modes) {
+			return;
+		}
+
+		const targetChan = network.getChannel(data.channel);
+		if (typeof targetChan === "undefined") {
+			return;
+		}
+
+		data.modes.forEach((mode) => {
+			const text = mode.mode;
+			const add = text[0] === "+";
+			const char = text[1];
+
+			if (char === "k") {
+				targetChan.key = add ? mode.param : "";
+				client.save();
+			}
+		});
+	});
+
 	irc.on("mode", function(data) {
-		var targetChan;
+		let targetChan;
 
 		if (data.target === irc.user.nick) {
 			targetChan = network.channels[0];
@@ -18,23 +45,29 @@ module.exports = function(irc, network) {
 			}
 		}
 
-		var usersUpdated;
-		var supportsMultiPrefix = network.irc.network.cap.isEnabled("multi-prefix");
-		var userModeSortPriority = {};
+		let usersUpdated;
+		const userModeSortPriority = {};
+		const supportsMultiPrefix = network.irc.network.cap.isEnabled("multi-prefix");
 
 		irc.network.options.PREFIX.forEach((prefix, index) => {
 			userModeSortPriority[prefix.symbol] = index;
 		});
 
-		for (var i = 0; i < data.modes.length; i++) {
-			var mode = data.modes[i];
-			var text = mode.mode;
+		data.modes.forEach((mode) => {
+			let text = mode.mode;
+			const add = text[0] === "+";
+			const char = text[1];
+
+			if (char === "k") {
+				targetChan.key = add ? mode.param : "";
+				client.save();
+			}
 
 			if (mode.param) {
 				text += " " + mode.param;
 			}
 
-			var msg = new Msg({
+			const msg = new Msg({
 				time: data.time,
 				type: Msg.Type.MODE,
 				mode: (targetChan.type !== Chan.Type.LOBBY && targetChan.getMode(data.nick)) || "",
@@ -45,22 +78,21 @@ module.exports = function(irc, network) {
 			targetChan.pushMessage(client, msg);
 
 			if (!mode.param) {
-				continue;
+				return;
 			}
 
-			var user = _.find(targetChan.users, {name: mode.param});
+			const user = targetChan.findUser(mode.param);
 			if (!user) {
-				continue;
+				return;
 			}
 
 			usersUpdated = true;
 
 			if (!supportsMultiPrefix) {
-				continue;
+				return;
 			}
 
-			var add = mode.mode[0] === "+";
-			var changedMode = network.prefixLookup[mode.mode[1]];
+			const changedMode = network.prefixLookup[char];
 
 			if (!add) {
 				_.pull(user.modes, changedMode);
@@ -73,7 +105,7 @@ module.exports = function(irc, network) {
 
 			// TODO: remove in future
 			user.mode = (user.modes && user.modes[0]) || "";
-		}
+		});
 
 		if (!usersUpdated) {
 			return;

@@ -31,7 +31,7 @@ body {
 	color: #ddd;
 }
 
-#windows .window:before {
+#windows .window::before {
 	background: #f4f4f4;
 	background-image: linear-gradient(#f4f4f4, #ececec);
 	border-bottom: 1px solid #d7d7d7;

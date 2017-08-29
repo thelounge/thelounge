@@ -5,6 +5,7 @@ var colors = require("colors/safe");
 var fs = require("fs");
 var Client = require("./client");
 var Helper = require("./helper");
+const WebPush = require("./plugins/webpush");
 
 module.exports = ClientManager;
 
@@ -15,8 +16,9 @@ function ClientManager() {
 ClientManager.prototype.init = function(identHandler, sockets) {
 	this.sockets = sockets;
 	this.identHandler = identHandler;
+	this.webPush = new WebPush();
 
-	if (!Helper.config.public) {
+	if (!Helper.config.public && !Helper.config.ldap.enable) {
 		if ("autoload" in Helper.config) {
 			log.warn(`Autoloading users is now always enabled. Please remove the ${colors.yellow("autoload")} option from your configuration file.`);
 		}
@@ -25,28 +27,39 @@ ClientManager.prototype.init = function(identHandler, sockets) {
 	}
 };
 
-ClientManager.prototype.findClient = function(name, token) {
-	for (var i in this.clients) {
-		var client = this.clients[i];
-		if (client.name === name || (token && token === client.config.token)) {
-			return client;
-		}
-	}
-	return false;
+ClientManager.prototype.findClient = function(name) {
+	return this.clients.find((u) => u.name === name);
 };
 
 ClientManager.prototype.autoloadUsers = function() {
-	this.getUsers().forEach(name => this.loadUser(name));
+	const users = this.getUsers();
+	const noUsersWarning = `There are currently no users. Create one with ${colors.bold("lounge add <name>")}.`;
+
+	// There was an error, already logged, but we have to crash the server as
+	// user directory could not be accessed
+	if (users === undefined) {
+		process.exit(1);
+	}
+
+	if (users.length === 0) {
+		log.info(noUsersWarning);
+	}
+
+	users.forEach((name) => this.loadUser(name));
 
 	fs.watch(Helper.USERS_PATH, _.debounce(() => {
-		const loaded = this.clients.map(c => c.name);
+		const loaded = this.clients.map((c) => c.name);
 		const updatedUsers = this.getUsers();
 
+		if (updatedUsers.length === 0) {
+			log.info(noUsersWarning);
+		}
+
 		// New users created since last time users were loaded
-		_.difference(updatedUsers, loaded).forEach(name => this.loadUser(name));
+		_.difference(updatedUsers, loaded).forEach((name) => this.loadUser(name));
 
 		// Existing users removed since last time users were loaded
-		_.difference(loaded, updatedUsers).forEach(name => {
+		_.difference(loaded, updatedUsers).forEach((name) => {
 			const client = _.find(this.clients, {name: name});
 			if (client) {
 				client.quit();
@@ -78,13 +91,13 @@ ClientManager.prototype.getUsers = function() {
 	var users = [];
 	try {
 		var files = fs.readdirSync(Helper.USERS_PATH);
-		files.forEach(file => {
+		files.forEach((file) => {
 			if (file.indexOf(".json") !== -1) {
 				users.push(file.replace(".json", ""));
 			}
 		});
 	} catch (e) {
-		log.error("Failed to get users", e);
+		log.error(`Failed to get users (${e})`);
 		return;
 	}
 	return users;
@@ -96,7 +109,6 @@ ClientManager.prototype.addUser = function(name, password, enableLog) {
 		return false;
 	}
 	try {
-
 		if (require("path").basename(name) !== name) {
 			throw new Error(name + " is an invalid username.");
 		}
@@ -105,7 +117,9 @@ ClientManager.prototype.addUser = function(name, password, enableLog) {
 			user: name,
 			password: password || "",
 			log: enableLog,
-			networks: []
+			awayMessage: "",
+			networks: [],
+			sessions: {},
 		};
 		fs.writeFileSync(
 			Helper.getUserConfigPath(name),
@@ -127,7 +141,7 @@ ClientManager.prototype.updateUser = function(name, opts, callback) {
 		return false;
 	}
 
-	let user = this.readUserConfig(name);
+	const user = this.readUserConfig(name);
 	const currentUser = JSON.stringify(user, null, "\t");
 	_.assign(user, opts);
 	const newUser = JSON.stringify(user, null, "\t");

@@ -1,7 +1,9 @@
+"use strict";
+
 /**
  * Simple slideout menu implementation.
  */
-export default function slideoutMenu(viewport, menu) {
+module.exports = function slideoutMenu(viewport, menu) {
 	var touchStartPos = null;
 	var touchCurPos = null;
 	var touchStartTime = 0;
@@ -21,7 +23,7 @@ export default function slideoutMenu(viewport, menu) {
 	function onTouchStart(e) {
 		if (e.touches.length !== 1) {
 			onTouchEnd();
-			return false;
+			return;
 		}
 
 		var touch = e.touches.item(0);
@@ -35,7 +37,7 @@ export default function slideoutMenu(viewport, menu) {
 			touchStartTime = Date.now();
 
 			viewport.addEventListener("touchmove", onTouchMove);
-			viewport.addEventListener("touchend", onTouchEnd);
+			viewport.addEventListener("touchend", onTouchEnd, {passive: true});
 		}
 	}
 
@@ -89,7 +91,7 @@ export default function slideoutMenu(viewport, menu) {
 		menuIsMoving = false;
 	}
 
-	viewport.addEventListener("touchstart", onTouchStart);
+	viewport.addEventListener("touchstart", onTouchStart, {passive: true});
 
 	return {
 		disable: disableSlideout,
@@ -98,4 +100,4 @@ export default function slideoutMenu(viewport, menu) {
 			return menuIsOpen;
 		}
 	};
-}
+};
