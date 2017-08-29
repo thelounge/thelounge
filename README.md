@@ -10,11 +10,11 @@ Modern web IRC client designed for self-hosting.
 
 ## Overview
 
-* **Modern features brought to IRC.** Push notifications, link previews, new message markers, and more bring IRC to the 21st century.
-* **Always connected.** Remains connected to IRC servers while you are offline.
-* **Cross platform.** It doesn't matter what OS you use, it just works wherever Node.js runs.
+* **Brings modern features to IRC.** The Lounge ships with push notifications, link previews, new message markers, a modern UI, and more. What else could you ask for?
+* **Keeps you connected, always.** Remains connected to IRC servers while you are offline.
+* **Anytime, anywhere.** It doesn't matter what OS you use, it just works wherever Node.js runs.
 * **Responsive interface.** The client works smoothly on every desktop, smartphone and tablet.
-* **Synchronized experience.** Always resume where you left off no matter what device.
+* **As if you never left.** Always resume where you left off no matter what device.
 
 To learn more about configuration, usage and features of The Lounge, take a look at [the website](https://thelounge.github.io).
 
