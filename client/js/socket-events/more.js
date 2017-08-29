@@ -4,12 +4,11 @@ const $ = require("jquery");
 const socket = require("../socket");
 const render = require("../render");
 const chat = $("#chat");
-const templates = require("../../views");
 
 socket.on("more", function(data) {
-	const chan = chat
-		.find("#chan-" + data.chan)
-		.find(".messages");
+	let chan = chat.find("#chan-" + data.chan);
+	const type = chan.data("type");
+	chan = chan.find(".messages");
 
 	// get the scrollable wrapper around messages
 	const scrollable = chan.closest(".chat");
@@ -34,7 +33,7 @@ socket.on("more", function(data) {
 	}
 
 	// Add the older messages
-	const documentFragment = render.buildChannelMessages(data);
+	const documentFragment = render.buildChannelMessages(data.chan, type, data.messages);
 	chan.prepend(documentFragment).end();
 
 	// restore scroll position
@@ -44,31 +43,6 @@ socket.on("more", function(data) {
 	if (data.messages.length !== 100) {
 		scrollable.find(".show-more").removeClass("show");
 	}
-
-	// Date change detect
-	// Have to use data instead of the documentFragment because it's being weird
-	let lastDate;
-	$(data.messages).each(function() {
-		const msgData = this;
-		const msgDate = new Date(msgData.time);
-		const msg = $(chat.find("#chan-" + data.chan + " .messages #msg-" + msgData.id));
-
-		// Top-most message in a channel
-		if (!lastDate) {
-			lastDate = msgDate;
-			msg.before(templates.date_marker({msgDate: msgDate}));
-		}
-
-		if (lastDate.toDateString() !== msgDate.toDateString()) {
-			var parent = msg.parent();
-			if (parent.hasClass("condensed")) {
-				msg.insertAfter(parent);
-			}
-			msg.before(templates.date_marker({msgDate: msgDate}));
-		}
-
-		lastDate = msgDate;
-	});
 
 	scrollable.find(".show-more-button")
 		.text("Show older messages")
