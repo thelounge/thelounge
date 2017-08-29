@@ -314,7 +314,7 @@ function initializeClient(socket, client, generateToken, token) {
 				type: "notification",
 				timestamp: Date.now(),
 				title: "The Lounge",
-				body: " Push notifications have been enabled"
+				body: "🚀 Push notifications have been enabled"
 			});
 		}
 	});

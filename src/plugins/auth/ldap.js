@@ -1,17 +1,17 @@
 "use strict";
 
-var Helper = require("../../helper");
-var _ldapAuthCommon = require("./_ldapCommon");
+const Helper = require("../../helper");
+const _ldapAuthCommon = require("./_ldapCommon");
 
 function ldapAuth(manager, client, user, password, callback) {
 	if (!user) {
 		return callback(false);
 	}
 
-	var config = Helper.config;
+	const config = Helper.config;
 
-	var userDN = user.replace(/([,\\/#+<>;"= ])/g, "\\$1");
-	var bindDN = config.ldap.primaryKey + "=" + userDN + "," + config.ldap.baseDN;
+	const userDN = user.replace(/([,\\/#+<>;"= ])/g, "\\$1");
+	const bindDN = config.ldap.primaryKey + "=" + userDN + "," + config.ldap.baseDN;
 
 	log.info("Auth against LDAP ", config.ldap.url, " with provided bindDN ", bindDN);
 

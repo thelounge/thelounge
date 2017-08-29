@@ -1,9 +1,9 @@
 "use strict";
 
-var Helper = require("../../helper");
-var ldap = require("ldapjs");
+const Helper = require("../../helper");
+const ldap = require("ldapjs");
 
-var _ldapAuthCommon = require("./_ldapCommon");
+const _ldapAuthCommon = require("./_ldapCommon");
 
 /**
  * LDAP auth using initial DN search (see config comment for ldap.searchDN)
@@ -13,16 +13,16 @@ function advancedLdapAuth(manager, client, user, password, callback) {
 		return callback(false);
 	}
 
-	var config = Helper.config;
-	var userDN = user.replace(/([,\\/#+<>;"= ])/g, "\\$1");
+	const config = Helper.config;
+	const userDN = user.replace(/([,\\/#+<>;"= ])/g, "\\$1");
 
-	var ldapclient = ldap.createClient({
+	let ldapclient = ldap.createClient({
 		url: config.ldap.url,
 		tlsOptions: config.ldap.tlsOptions
 	});
 
-	var base = config.ldap.searchDN.base;
-	var searchOptions = {
+	const base = config.ldap.searchDN.base;
+	const searchOptions = {
 		scope: config.ldap.searchDN.scope,
 		filter: "(&(" + config.ldap.primaryKey + "=" + userDN + ")" + config.ldap.searchDN.filter + ")",
 		attributes: ["dn"]
@@ -45,10 +45,10 @@ function advancedLdapAuth(manager, client, user, password, callback) {
 					ldapclient.unbind();
 					callback(false);
 				} else {
-					var found = false;
+					let found = false;
 					res.on("searchEntry", function(entry) {
 						found = true;
-						var bindDN = entry.objectName;
+						const bindDN = entry.objectName;
 						log.info("Auth against LDAP ", config.ldap.url, " with found bindDN ", bindDN);
 						ldapclient.unbind();
 

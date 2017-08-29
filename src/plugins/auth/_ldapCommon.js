@@ -1,12 +1,12 @@
 "use strict";
 
-var Helper = require("../../helper");
-var ldap = require("ldapjs");
+const Helper = require("../../helper");
+const ldap = require("ldapjs");
 
 function ldapAuthCommon(manager, client, user, bindDN, password, callback) {
-	var config = Helper.config;
+	const config = Helper.config;
 
-	var ldapclient = ldap.createClient({
+	let ldapclient = ldap.createClient({
 		url: config.ldap.url,
 		tlsOptions: config.ldap.tlsOptions
 	});
