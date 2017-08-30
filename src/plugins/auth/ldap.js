@@ -3,7 +3,7 @@
 const Helper = require("../../helper");
 const ldap = require("ldapjs");
 
-function ldapAuthCommon(manager, client, user, bindDN, password, callback) {
+function ldapAuthCommon(user, bindDN, password, callback) {
 	const config = Helper.config;
 
 	const ldapclient = ldap.createClient({
@@ -17,15 +17,12 @@ function ldapAuthCommon(manager, client, user, bindDN, password, callback) {
 	});
 
 	ldapclient.bind(bindDN, password, function(err) {
-		if (!err && !client) {
-			manager.addUser(user, null);
-		}
 		ldapclient.unbind();
 		callback(!err);
 	});
 }
 
-function simpleLdapAuth(manager, client, user, password, callback) {
+function simpleLdapAuth(user, password, callback) {
 	if (!user) {
 		return callback(false);
 	}
@@ -37,13 +34,13 @@ function simpleLdapAuth(manager, client, user, password, callback) {
 
 	log.info("Auth against LDAP ", config.ldap.url, " with provided bindDN ", bindDN);
 
-	ldapAuthCommon(manager, client, user, bindDN, password, callback);
+	ldapAuthCommon(user, bindDN, password, callback);
 }
 
 /**
  * LDAP auth using initial DN search (see config comment for ldap.searchDN)
  */
-function advancedLdapAuth(manager, client, user, password, callback) {
+function advancedLdapAuth(user, password, callback) {
 	if (!user) {
 		return callback(false);
 	}
@@ -87,7 +84,7 @@ function advancedLdapAuth(manager, client, user, password, callback) {
 						log.info("Auth against LDAP ", config.ldap.url, " with found bindDN ", bindDN);
 						ldapclient.unbind();
 
-						ldapAuthCommon(manager, client, user, bindDN, password, callback);
+						ldapAuthCommon(user, bindDN, password, callback);
 					});
 					res.on("error", function(err3) {
 						log.error("LDAP error: ", err3);
@@ -105,13 +102,24 @@ function advancedLdapAuth(manager, client, user, password, callback) {
 }
 
 function ldapAuth(manager, client, user, password, callback) {
-	let auth = function() {};
+	// TODO: Enable the use of starttls() as an alternative to ldaps
+
+	// TODO: move this out of here and get rid of `manager` and `client` in
+	// auth plugin API
+	function callbackWrapper(valid) {
+		if (valid && !client) {
+			manager.addUser(user, null);
+		}
+		callback(valid);
+	}
+
+	let auth;
 	if ("baseDN" in Helper.config.ldap) {
 		auth = simpleLdapAuth;
 	} else {
 		auth = advancedLdapAuth;
 	}
-	return auth(manager, client, user, password, callback);
+	return auth(user, password, callbackWrapper);
 }
 
 function isLdapEnabled() {

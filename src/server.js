@@ -436,7 +436,7 @@ function performAuthentication(data) {
 	}
 
 	// Perform password checking
-	let auth = function() {};
+	let auth;
 	if (ldapAuth.isEnabled()) {
 		auth = ldapAuth.auth;
 	} else if (localAuth.isEnabled()) {

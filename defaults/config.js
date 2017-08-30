@@ -464,7 +464,7 @@ module.exports = {
 			// @type     string
 			// @default  "uid"
 			//
-			filter: "(objectClass=inetOrgPerson)(memberOf=ou=accounts,dc=example,dc=com)",
+			filter: "(objectClass=person)(memberOf=ou=accounts,dc=example,dc=com)",
 
 			//
 			// LDAP search base (search only within this node)

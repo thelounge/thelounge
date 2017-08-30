@@ -37,8 +37,6 @@ function localAuth(manager, client, user, password, callback) {
 
 module.exports = {
 	auth: localAuth,
-	isEnabled: function() {
-		return true;
-	}
+	isEnabled: () => true
 };
 
