@@ -1,5 +1,7 @@
 "use strict";
 
+const escape = require("css.escape");
+
 module.exports = function(orig) {
-	return orig.toLowerCase().replace(/[^a-z0-9]/, "-");
+	return escape(orig.toLowerCase());
 };

@@ -66,6 +66,7 @@
     "babel-loader": "7.1.2",
     "babel-preset-env": "1.6.0",
     "chai": "4.1.1",
+    "css.escape": "1.5.1",
     "emoji-regex": "6.5.1",
     "eslint": "4.5.0",
     "font-awesome": "4.7.0",
