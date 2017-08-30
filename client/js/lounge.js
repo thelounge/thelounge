@@ -295,7 +295,7 @@ $(function() {
 		}
 	});
 
-	chat.on("click", ".condensed-text", function() {
+	chat.on("click", ".condensed-summary .content", function() {
 		$(this).closest(".msg.condensed").toggleClass("closed");
 	});
 

@@ -84,6 +84,7 @@ settings.on("change", "input, select, textarea", function() {
 		chat.toggleClass("hide-" + name, !self.prop("checked"));
 	} else if (name === "statusMessages") {
 		chat.toggleClass("hide-status-messages", options[name] === "hidden");
+		chat.toggleClass("condensed-status-messages", options[name] === "condensed");
 	} else if (name === "coloredNicks") {
 		chat.toggleClass("colored-nicks", self.prop("checked"));
 	} else if (name === "theme") {

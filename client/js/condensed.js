@@ -50,6 +50,6 @@ function updateText(condensed, addedTypes) {
 		text = strings.join(", ") + ", and " + text;
 	}
 
-	condensed.find(".condensed-text")
+	condensed.find(".condensed-summary .content")
 		.html(text + templates.msg_condensed_toggle());
 }
