@@ -10,6 +10,11 @@ const correctPassword = "loremipsum";
 const wrongPassword = "dolorsitamet";
 const baseDN = "ou=accounts,dc=example,dc=com";
 const primaryKey = "uid";
+const serverPort = 1389;
+
+function normalizeDN(dn) {
+	return ldap.parseDN(dn).toString();
+}
 
 function startLdapServer(callback) {
 	const server = ldap.createServer();
@@ -21,23 +26,31 @@ function startLdapServer(callback) {
 	// advanced auth (the user that does the search for john's actual
 	// bindDN)
 	const authorizedUsers = {};
-	authorizedUsers[searchConf.rootDN] = searchConf.rootPassword;
-	authorizedUsers[userDN] = correctPassword;
+	authorizedUsers[normalizeDN(searchConf.rootDN)] = searchConf.rootPassword;
+	authorizedUsers[normalizeDN(userDN)] = correctPassword;
 
 	function authorize(req, res, next) {
 		const bindDN = req.connection.ldap.bindDN;
-		const password = req.credentials;
 
-		if (bindDN in authorizedUsers && authorizedUsers[bindDN] === password) {
+		if (bindDN in authorizedUsers) {
 			return next();
 		}
 
 		return next(new ldap.InsufficientAccessRightsError());
 	}
 
-	authorizedUsers.keys().forEach(function(dn) {
-		server.bind(dn, authorize, function(req, res) {
-			res.end();
+	Object.keys(authorizedUsers).forEach(function(dn) {
+		server.bind(dn, function(req, res, next) {
+			const bindDN = req.dn.toString();
+			const password = req.credentials;
+
+			if (bindDN in authorizedUsers && authorizedUsers[bindDN] === password) {
+				req.connection.ldap.bindDN = req.dn;
+				res.end();
+				return next();
+			}
+
+			return next(new ldap.InsufficientAccessRightsError());
 		});
 	});
 
@@ -46,7 +59,10 @@ function startLdapServer(callback) {
 			dn: userDN,
 			attributes: {
 				objectclass: ["person", "top"],
-				o: "example"
+				cn: ["john doe"],
+				sn: ["johnny"],
+				uid: ["johndoe"],
+				memberof: [baseDN]
 			}
 		};
 
@@ -58,7 +74,7 @@ function startLdapServer(callback) {
 		res.end();
 	});
 
-	server.listen(1389, function() {
+	server.listen(serverPort, function() {
 		console.log("LDAP server listening at %s", server.url);
 		callback();
 	});
@@ -77,22 +93,24 @@ function testLdapAuth(done) {
 
 	const p1 = new Promise((resolve) => {
 		ldapAuth.auth(manager, client, user, correctPassword, function(valid) {
-			expect(valid).to.be.ok();
+			expect(valid).to.equal(true);
 			resolve();
 		});
 	});
 
 	const p2 = new Promise((resolve) => {
 		ldapAuth.auth(manager, client, user, wrongPassword, function(valid) {
-			expect(valid).not.to.be.ok();
+			expect(valid).to.equal(false);
 			resolve();
 		});
 	});
 
-	Promise.all([p1, p2]).then(done);
+	Promise.all([p1, p2]).then(function() {
+		done();
+	});
 }
 
-describe("LDAP authentication", function() {
+describe("LDAP authentication plugin", function() {
 	before(function(done) {
 		this.server = startLdapServer(done);
 	});
@@ -100,17 +118,17 @@ describe("LDAP authentication", function() {
 	beforeEach(function(done) {
 		Helper.config.public = false;
 		Helper.config.ldap.enable = true;
-		Helper.config.ldap.url = "ldap://" + this.server.url;
+		Helper.config.ldap.url = "ldap://localhost:" + String(serverPort);
 		Helper.config.ldap.primaryKey = primaryKey;
 		done();
 	});
 
 	describe("LDAP authentication availability", function() {
-		it("check that the configuration is correctly tied to isEnabled()", function(done) {
+		it("checks that the configuration is correctly tied to isEnabled()", function(done) {
 			Helper.config.ldap.enable = true;
-			expect(ldapAuth.isEnabled()).to.be.ok();
+			expect(ldapAuth.isEnabled()).to.equal(true);
 			Helper.config.ldap.enable = false;
-			expect(ldapAuth.isEnabled()).not.to.be.ok();
+			expect(ldapAuth.isEnabled()).to.equal(false);
 			done();
 		});
 	});
