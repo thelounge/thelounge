@@ -1,9 +1,11 @@
 "use strict";
 
-var fs = require("fs");
-var fsextra = require("fs-extra");
-var moment = require("moment");
-var Helper = require("./helper");
+const fs = require("fs");
+const fsextra = require("fs-extra");
+const moment = require("moment");
+const path = require("path");
+const sanitizeFilename = require("sanitize-filename");
+const Helper = require("./helper");
 const Msg = require("./models/msg");
 
 module.exports = class UserLog {
@@ -70,7 +72,7 @@ module.exports = class UserLog {
 
 		try {
 			data = fs.readFileSync(
-				`${Helper.getUserLogsPath(this.name, network)}/${chan}.log`,
+				this.getLogFilePath(network, chan),
 				"utf-8"
 			).toString().split("\n");
 		} catch (e) {
@@ -93,10 +95,10 @@ module.exports = class UserLog {
 	}
 
 	write(network, chan, msg) {
-		const path = Helper.getUserLogsPath(this.name, network);
+		const logPath = Helper.getUserLogsPath(this.name, sanitizeFilename(network));
 
 		try {
-			fsextra.ensureDirSync(path);
+			fsextra.ensureDirSync(logPath);
 		} catch (e) {
 			log.error("Unabled to create logs directory", e);
 			return;
@@ -132,15 +134,20 @@ module.exports = class UserLog {
 		}
 
 		fs.appendFile(
-			// Quick fix to escape pre-escape channel names that contain % using %%,
-			// and / using %. **This does not escape all reserved words**
-			path + "/" + chan.replace(/%/g, "%%").replace(/\//g, "%") + ".log",
+			this.getLogFilePath(network, chan),
 			line + "\n",
 			function(e) {
 				if (e) {
 					log.error("Failed to write user log", e);
 				}
 			}
+		);
+	}
+
+	getLogFilePath(network, channel) {
+		return path.join(
+			Helper.getUserLogsPath(this.name, sanitizeFilename(network)),
+			sanitizeFilename(channel) + ".log"
 		);
 	}
 };
