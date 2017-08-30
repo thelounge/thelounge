@@ -490,7 +490,7 @@ Client.prototype.names = function(data) {
 	});
 };
 
-Client.prototype.quit = function() {
+Client.prototype.quit = function(signOut) {
 	const sockets = this.sockets.sockets;
 	const room = sockets.adapter.rooms[this.id];
 
@@ -499,7 +499,10 @@ Client.prototype.quit = function() {
 			const socket = sockets.connected[user];
 
 			if (socket) {
-				socket.emit("sign-out");
+				if (signOut) {
+					socket.emit("sign-out");
+				}
+
 				socket.disconnect();
 			}
 		}

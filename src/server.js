@@ -115,6 +115,31 @@ module.exports = function() {
 		new Identification((identHandler) => {
 			manager.init(identHandler, sockets);
 		});
+
+		// Handle ctrl+c and kill gracefully
+		let suicideTimeout = null;
+		const exitGracefully = function() {
+			if (suicideTimeout !== null) {
+				return;
+			}
+
+			// Forcefully exit after 3 seconds
+			suicideTimeout = setTimeout(() => process.exit(1), 3000);
+
+			log.info("Exiting...");
+
+			// Close all client and IRC connections
+			manager.clients.forEach((client) => client.quit());
+
+			// Close http server
+			server.close(() => {
+				clearTimeout(suicideTimeout);
+				process.exit(0);
+			});
+		};
+
+		process.on("SIGINT", exitGracefully);
+		process.on("SIGTERM", exitGracefully);
 	});
 };
 
