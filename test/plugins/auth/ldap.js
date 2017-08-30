@@ -114,6 +114,10 @@ describe("LDAP authentication plugin", function() {
 	before(function(done) {
 		this.server = startLdapServer(done);
 	});
+	after(function(done) {
+		this.server.close();
+		done();
+	});
 
 	beforeEach(function(done) {
 		Helper.config.public = false;
