@@ -61,15 +61,12 @@ module.exports = function(irc, network) {
 						type: Chan.Type.QUERY,
 						name: target
 					});
+					chan.loadLogs(client, network.host);
 					network.channels.push(chan);
 					client.emit("join", {
 						network: network.id,
 						chan: chan
 					});
-
-					client.userLog
-						.read(network.host, chan.name)
-						.forEach((message) => chan.pushMessage(client, message));
 				}
 			}
 

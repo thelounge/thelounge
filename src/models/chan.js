@@ -87,6 +87,20 @@ Chan.prototype.dereferencePreviews = function(messages) {
 	});
 };
 
+Chan.prototype.loadLogs = function(client, network) {
+	client.userLog.read(network, this.name, (messages) => {
+		// TODO: Prepend messages
+		// TODO: Fix unread marker
+		Array.prototype.push.apply(this.messages, messages);
+
+		// TODO: We don't know if clients received loaded messages object or not?
+		client.emit("more", {
+			chan: this.id,
+			messages: messages
+		});
+	});
+};
+
 Chan.prototype.sortUsers = function(irc) {
 	var userModeSortPriority = {};
 	irc.network.options.PREFIX.forEach((prefix, index) => {

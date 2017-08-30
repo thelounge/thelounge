@@ -91,9 +91,7 @@ function Client(manager, name, config) {
 		delay += 1000;
 	});
 
-	if (this.config.log === true) {
-		this.userLog = new UserLog(client.name);
-	}
+	this.userLog = new UserLog(client.name);
 
 	if (typeof client.config.sessions !== "object") {
 		client.config.sessions = {};
@@ -179,11 +177,8 @@ Client.prototype.connect = function(args) {
 				key: chan.key || "",
 			});
 
+			channel.loadLogs(client, args.host);
 			channels.push(channel);
-
-			this.userLog
-				.read(args.host, channel.name)
-				.forEach((message) => channel.pushMessage(client, message));
 		});
 
 		if (badName && client.name) {

@@ -53,6 +53,7 @@
     "lodash": "4.17.4",
     "moment": "2.18.1",
     "read": "1.0.7",
+    "read-last-lines": "1.2.0",
     "request": "2.81.0",
     "sanitize-filename": "1.6.1",
     "semver": "5.4.1",

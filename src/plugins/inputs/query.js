@@ -42,13 +42,10 @@ exports.input = function(network, chan, cmd, args) {
 		type: Chan.Type.QUERY,
 		name: target
 	});
+	newChan.loadLogs(client, network.host);
 	network.channels.push(newChan);
 	client.emit("join", {
 		network: network.id,
 		chan: newChan
 	});
-
-	client.userLog
-		.read(network.host, newChan.name)
-		.forEach((message) => newChan.pushMessage(client, message));
 };

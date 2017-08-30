@@ -5,6 +5,7 @@ const fsextra = require("fs-extra");
 const moment = require("moment");
 const path = require("path");
 const sanitizeFilename = require("sanitize-filename");
+const readLastLines = require("read-last-lines");
 const Helper = require("./helper");
 const Msg = require("./models/msg");
 
@@ -67,31 +68,24 @@ module.exports = class UserLog {
 		}
 	}
 
-	read(network, chan) {
-		let data;
+	read(network, chan, callback) {
+		readLastLines
+			.read(this.getLogFilePath(network, chan), 100)
+			.then((lines) => {
+				const messages = [];
 
-		try {
-			data = fs.readFileSync(
-				this.getLogFilePath(network, chan),
-				"utf-8"
-			).toString().split("\n");
-		} catch (e) {
-			return [];
-		}
+				lines.split("\n").forEach((line) => {
+					const msg = UserLog.parseLine(line);
+					if (msg) {
+						messages.push(msg);
+					}
+				});
 
-		// var format = Helper.config.logs.format || "YYYY-MM-DD HH:mm:ss";
-		// var tz = Helper.config.logs.timezone || "UTC+00:00";
-
-		var messages = [];
-
-		data.forEach((line) => {
-			const msg = UserLog.parseLine(line);
-			if (msg) {
-				messages.push(msg);
-			}
-		});
-
-		return messages;
+				callback(messages);
+			})
+			.catch((err) => {
+				log.error(`Failed to read user logs: ${err}`);
+			});
 	}
 
 	write(network, chan, msg) {

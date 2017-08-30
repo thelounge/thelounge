@@ -12,16 +12,13 @@ module.exports = function(irc, network) {
 				type: Chan.Type.QUERY,
 				name: data.nick
 			});
+			chan.loadLogs(client, network.host);
 			network.channels.push(chan);
 			client.emit("join", {
 				shouldOpen: true,
 				network: network.id,
 				chan: chan
 			});
-
-			client.userLog
-				.read(network.host, chan.name)
-				.forEach((message) => chan.pushMessage(client, message));
 		}
 
 		var msg;
