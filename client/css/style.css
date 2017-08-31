@@ -820,24 +820,33 @@ kbd {
 	flex-basis: 100%;
 }
 
-#chat .condensed-text {
+#chat .condensed-summary .content {
+	display: block;
 	cursor: pointer;
 	transition: opacity 0.2s;
 }
 
-#chat .condensed-text:hover {
-	opacity: 0.6;
-}
-
-#chat .condensed-text .toggle-button:hover {
-	opacity: 1;
-}
-
-#chat .condensed.closed .msg {
+#chat .condensed-summary {
 	display: none;
 }
 
-#chat .condensed > .time {
+#chat.condensed-status-messages .condensed-summary {
+	display: flex;
+}
+
+#chat .condensed-summary:hover {
+	opacity: 0.6;
+}
+
+#chat .condensed-summary .toggle-button:hover {
+	opacity: 1;
+}
+
+#chat.condensed-status-messages .condensed.closed .msg {
+	display: none;
+}
+
+#chat .condensed-summary .time {
 	visibility: hidden;
 }
 
@@ -1132,11 +1141,6 @@ kbd {
 	color: #555;
 }
 
-#chat.hide-status-messages .join,
-#chat.hide-status-messages .mode,
-#chat.hide-status-messages .nick,
-#chat.hide-status-messages .part,
-#chat.hide-status-messages .quit,
 #chat.hide-status-messages .condensed,
 #chat.hide-motd .motd {
 	display: none !important;

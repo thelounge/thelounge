@@ -61,10 +61,9 @@ function appendMessage(container, chanId, chanType, msg) {
 		return;
 	}
 
-	// TODO: To fix #1432, statusMessage option should entirely be implemented in CSS
 	// If current window is not a channel or this message is not condensable,
 	// then just append the message to container and be done with it
-	if (constants.condensedTypes.indexOf(msg.type) === -1 || chanType !== "channel" || options.statusMessages !== "condensed") {
+	if (constants.condensedTypes.indexOf(msg.type) === -1 || chanType !== "channel") {
 		container.append(renderedMessage);
 		return;
 	}
@@ -74,21 +73,18 @@ function appendMessage(container, chanId, chanType, msg) {
 	if (lastChild.hasClass("condensed")) {
 		lastChild.append(renderedMessage);
 		condensed.updateText(lastChild, [msg.type]);
-	// If the previous message can be condensed, we create a new condensed wrapper
-	} else if (lastChild.is(constants.condensedTypesQuery)) {
-		const newCondensed = buildChatMessage(chanId, {
-			type: "condensed",
-			time: msg.time,
-			previews: []
-		});
-
-		condensed.updateText(newCondensed, [msg.type, lastChild.attr("data-type")]);
-		container.append(newCondensed);
-		newCondensed.append(lastChild);
-		newCondensed.append(renderedMessage);
-	} else {
-		container.append(renderedMessage);
+		return;
 	}
+
+	const newCondensed = buildChatMessage(chanId, {
+		type: "condensed",
+		time: msg.time,
+		previews: []
+	});
+
+	condensed.updateText(newCondensed, [msg.type]);
+	newCondensed.append(renderedMessage);
+	container.append(newCondensed);
 }
 
 function buildChatMessage(chanId, msg) {
