@@ -83,14 +83,11 @@ function startLdapServer(callback) {
 	return server;
 }
 
-function testLdapAuth(done) {
+function testLdapAuth() {
 	// Create mock manager and client. When client is true, manager should not
 	// be used. But ideally the auth plugin should not use any of those.
 	const manager = {};
 	const client = true;
-
-	// Wrap calls into promises to execute them in parallel and wait
-	// for both before calling done()
 
 	it("should successfully authenticate with correct password", function(done) {
 		ldapAuth.auth(manager, client, user, correctPassword, function(valid) {
