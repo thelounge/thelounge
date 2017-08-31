@@ -11,7 +11,8 @@ var path = require("path");
 var io = require("socket.io");
 var dns = require("dns");
 var Helper = require("./helper");
-var ldap = require("ldapjs");
+var ldapAuth = require("./plugins/auth/ldap");
+var localAuth = require("./plugins/auth/local");
 var colors = require("colors/safe");
 const net = require("net");
 const Identification = require("./identification");
@@ -372,62 +373,6 @@ function initializeClient(socket, client, generateToken, token) {
 	}
 }
 
-function localAuth(client, user, password, callback) {
-	// If no user is found, or if the client has not provided a password,
-	// fail the authentication straight away
-	if (!client || !password) {
-		return callback(false);
-	}
-
-	// If this user has no password set, fail the authentication
-	if (!client.config.password) {
-		log.error(`User ${colors.bold(user)} with no local password set tried to sign in. (Probably a LDAP user)`);
-		return callback(false);
-	}
-
-	Helper.password
-		.compare(password, client.config.password)
-		.then((matching) => {
-			if (matching && Helper.password.requiresUpdate(client.config.password)) {
-				const hash = Helper.password.hash(password);
-
-				client.setPassword(hash, (success) => {
-					if (success) {
-						log.info(`User ${colors.bold(client.name)} logged in and their hashed password has been updated to match new security requirements`);
-					}
-				});
-			}
-
-			callback(matching);
-		}).catch((error) => {
-			log.error(`Error while checking users password. Error: ${error}`);
-		});
-}
-
-function ldapAuth(client, user, password, callback) {
-	var userDN = user.replace(/([,\\/#+<>;"= ])/g, "\\$1");
-	var bindDN = Helper.config.ldap.primaryKey + "=" + userDN + "," + Helper.config.ldap.baseDN;
-
-	var ldapclient = ldap.createClient({
-		url: Helper.config.ldap.url
-	});
-
-	ldapclient.on("error", function(err) {
-		log.error("Unable to connect to LDAP server", err);
-		callback(!err);
-	});
-
-	ldapclient.bind(bindDN, password, function(err) {
-		if (!err && !client) {
-			if (!manager.addUser(user, null)) {
-				log.error("Unable to create new user", user);
-			}
-		}
-		ldapclient.unbind();
-		callback(!err);
-	});
-}
-
 function performAuthentication(data) {
 	const socket = this;
 	let client;
@@ -491,11 +436,13 @@ function performAuthentication(data) {
 	}
 
 	// Perform password checking
-	if (!Helper.config.public && Helper.config.ldap.enable) {
-		ldapAuth(client, data.user, data.password, authCallback);
-	} else {
-		localAuth(client, data.user, data.password, authCallback);
+	let auth;
+	if (ldapAuth.isEnabled()) {
+		auth = ldapAuth.auth;
+	} else if (localAuth.isEnabled()) {
+		auth = localAuth.auth;
 	}
+	auth(manager, client, data.user, data.password, authCallback);
 }
 
 function reverseDnsLookup(ip, callback) {
