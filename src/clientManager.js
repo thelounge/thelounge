@@ -62,7 +62,7 @@ ClientManager.prototype.autoloadUsers = function() {
 		_.difference(loaded, updatedUsers).forEach((name) => {
 			const client = _.find(this.clients, {name: name});
 			if (client) {
-				client.quit();
+				client.quit(true);
 				this.clients = _.without(this.clients, client);
 				log.info(`User ${colors.bold(name)} disconnected and removed`);
 			}
