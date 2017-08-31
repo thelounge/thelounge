@@ -6,6 +6,7 @@ const ldap = require("ldapjs");
 const expect = require("chai").expect;
 
 const user = "johndoe";
+const wrongUser = "eve";
 const correctPassword = "loremipsum";
 const wrongPassword = "dolorsitamet";
 const baseDN = "ou=accounts,dc=example,dc=com";
@@ -91,22 +92,25 @@ function testLdapAuth(done) {
 	// Wrap calls into promises to execute them in parallel and wait
 	// for both before calling done()
 
-	const p1 = new Promise((resolve) => {
+	it("should successfully authenticate with correct password", function(done) {
 		ldapAuth.auth(manager, client, user, correctPassword, function(valid) {
 			expect(valid).to.equal(true);
-			resolve();
+			done();
 		});
 	});
 
-	const p2 = new Promise((resolve) => {
+	it("should fail to authenticate with incorrect password", function(done) {
 		ldapAuth.auth(manager, client, user, wrongPassword, function(valid) {
 			expect(valid).to.equal(false);
-			resolve();
+			done();
 		});
 	});
 
-	Promise.all([p1, p2]).then(function() {
-		done();
+	it("should fail to authenticate with incorrect username", function(done) {
+		ldapAuth.auth(manager, client, wrongUser, correctPassword, function(valid) {
+			expect(valid).to.equal(false);
+			done();
+		});
 	});
 }
 
@@ -137,20 +141,14 @@ describe("LDAP authentication plugin", function() {
 		});
 	});
 
-	describe("Simple LDAP authentication", function() {
-		it("authenticates against LDAP with predefined dn", function(done) {
-			Helper.config.ldap.baseDN = baseDN;
-
-			testLdapAuth(done);
-		});
+	describe("Simple LDAP authentication (predefined DN pattern)", function() {
+		Helper.config.ldap.baseDN = baseDN;
+		testLdapAuth();
 	});
 
-	describe("Advanced LDAP authentication", function() {
-		it("authenticates against LDAP with dn found by a search query", function(done) {
-			delete Helper.config.ldap.baseDN;
-
-			testLdapAuth(done);
-		});
+	describe("Advanced LDAP authentication (DN found by a prior search query)", function() {
+		delete Helper.config.ldap.baseDN;
+		testLdapAuth();
 	});
 });
 

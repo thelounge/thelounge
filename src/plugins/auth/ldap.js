@@ -113,7 +113,7 @@ function ldapAuth(manager, client, user, password, callback) {
 		callback(valid);
 	}
 
-	let auth = function() {};
+	let auth;
 	if ("baseDN" in Helper.config.ldap) {
 		auth = simpleLdapAuth;
 	} else {
