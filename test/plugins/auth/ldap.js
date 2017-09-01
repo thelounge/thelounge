@@ -75,11 +75,8 @@ function startLdapServer(callback) {
 		res.end();
 	});
 
-	server.listen(serverPort, function() {
-		console.log("LDAP server listening at %s", server.url);
-		callback();
-	});
-
+	server.listen(serverPort, callback);
+	
 	return server;
 }
 

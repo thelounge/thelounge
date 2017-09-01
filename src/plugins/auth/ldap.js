@@ -12,7 +12,7 @@ function ldapAuthCommon(user, bindDN, password, callback) {
 	});
 
 	ldapclient.on("error", function(err) {
-		log.error("Unable to connect to LDAP server", err);
+		log.error(`Unable to connect to LDAP server: ${err}`);
 		callback(!err);
 	});
 
@@ -30,9 +30,9 @@ function simpleLdapAuth(user, password, callback) {
 	const config = Helper.config;
 
 	const userDN = user.replace(/([,\\/#+<>;"= ])/g, "\\$1");
-	const bindDN = config.ldap.primaryKey + "=" + userDN + "," + config.ldap.baseDN;
+	const bindDN = `${config.ldap.primaryKey}=${userDN},${config.ldap.baseDN}`;
 
-	log.info("Auth against LDAP ", config.ldap.url, " with provided bindDN ", bindDN);
+	log.info(`Auth against LDAP ${config.ldap.url} with provided bindDN ${bindDN}`);
 
 	ldapAuthCommon(user, bindDN, password, callback);
 }
@@ -56,12 +56,12 @@ function advancedLdapAuth(user, password, callback) {
 	const base = config.ldap.searchDN.base;
 	const searchOptions = {
 		scope: config.ldap.searchDN.scope,
-		filter: "(&(" + config.ldap.primaryKey + "=" + userDN + ")" + config.ldap.searchDN.filter + ")",
+		filter: `(&(${config.ldap.primaryKey}=${userDN})${config.ldap.searchDN.filter})`,
 		attributes: ["dn"]
 	};
 
 	ldapclient.on("error", function(err) {
-		log.error("Unable to connect to LDAP server", err);
+		log.error(`Unable to connect to LDAP server: ${err}`);
 		callback(!err);
 	});
 
@@ -73,7 +73,7 @@ function advancedLdapAuth(user, password, callback) {
 		} else {
 			ldapclient.search(base, searchOptions, function(err2, res) {
 				if (err2) {
-					log.warning("User not found: ", userDN);
+					log.warning(`User not found: ${userDN}`);
 					ldapclient.unbind();
 					callback(false);
 				} else {
@@ -81,13 +81,13 @@ function advancedLdapAuth(user, password, callback) {
 					res.on("searchEntry", function(entry) {
 						found = true;
 						const bindDN = entry.objectName;
-						log.info("Auth against LDAP ", config.ldap.url, " with found bindDN ", bindDN);
+						log.info(`Auth against LDAP ${config.ldap.url} with found bindDN ${bindDN}`);
 						ldapclient.unbind();
 
 						ldapAuthCommon(user, bindDN, password, callback);
 					});
 					res.on("error", function(err3) {
-						log.error("LDAP error: ", err3);
+						log.error(`LDAP error: ${err3}`);
 						callback(false);
 					});
 					res.on("end", function() {
