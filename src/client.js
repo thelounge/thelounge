@@ -41,6 +41,7 @@ var inputs = [
 	"ctcp",
 	"msg",
 	"part",
+	"rejoin",
 	"action",
 	"away",
 	"connect",
