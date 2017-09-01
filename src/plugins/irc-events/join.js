@@ -25,7 +25,7 @@ module.exports = function(irc, network) {
 		chan.users.push(new User({
 			nick: data.nick,
 			host: data.hostname,
-			account: data.account,
+			account: data.account ? data.account : '',
 			ident: data.ident,
 			gecos: data.gecos
 		}));
