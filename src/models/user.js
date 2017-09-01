@@ -10,6 +10,10 @@ function User(attr, prefixLookup) {
 		away: "",
 		mode: "",
 		nick: "",
+		host: "",
+		account: "",
+		ident: "",
+		gecos: "",
 		lastMessage: 0,
 	});
 
