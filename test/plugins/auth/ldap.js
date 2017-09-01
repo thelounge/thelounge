@@ -76,7 +76,7 @@ function startLdapServer(callback) {
 	});
 
 	server.listen(serverPort, callback);
-	
+
 	return server;
 }
 

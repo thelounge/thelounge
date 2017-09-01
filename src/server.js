@@ -11,11 +11,16 @@ var path = require("path");
 var io = require("socket.io");
 var dns = require("dns");
 var Helper = require("./helper");
-var ldapAuth = require("./plugins/auth/ldap");
-var localAuth = require("./plugins/auth/local");
 var colors = require("colors/safe");
 const net = require("net");
 const Identification = require("./identification");
+
+// The order defined the priority: the first available plugin is used
+// ALways keep local auth in the end, which should always be enabled.
+const authPlugins = [
+	require("./plugins/auth/ldap"),
+	require("./plugins/auth/local"),
+];
 
 var manager = null;
 
@@ -436,11 +441,14 @@ function performAuthentication(data) {
 	}
 
 	// Perform password checking
-	let auth;
-	if (ldapAuth.isEnabled()) {
-		auth = ldapAuth.auth;
-	} else if (localAuth.isEnabled()) {
-		auth = localAuth.auth;
+	let auth = () => {
+		log.error("None of the auth plugins is enabled");
+	};
+	for (let i = 0; i < authPlugins.length; ++i) {
+		if (authPlugins[i].isEnabled()) {
+			auth = authPlugins[i].auth;
+			break;
+		}
 	}
 	auth(manager, client, data.user, data.password, authCallback);
 }
