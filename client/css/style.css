@@ -1353,17 +1353,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-top: 10px;
 }
 
-#sign-in .remember {
-	float: left;
-	font-size: 14px;
-	margin-top: 12px;
-}
-
-#sign-in .remember input {
-	float: left;
-	margin: 3px 10px 0 0;
-}
-
 #sign-in .btn {
 	margin-top: 25px;
 }
