@@ -1644,6 +1644,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	line-height: 1;
 }
 
+.topic .emoji {
+	vertical-align: middle;
+}
+
 .textcomplete-item .emoji {
 	width: 32px;
 	text-align: center;
