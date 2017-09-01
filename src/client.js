@@ -296,13 +296,15 @@ Client.prototype.connect = function(args) {
 	client.save();
 };
 
-Client.prototype.generateToken = function(callback) {
-	crypto.randomBytes(48, (err, buf) => {
-		if (err) {
-			throw err;
-		}
-
-		callback(buf.toString("hex"));
+Client.prototype.generateToken = function() {
+	return new Promise((resolve, reject) => {
+		crypto.randomBytes(48, (err, buf) => {
+			if (err) {
+				reject(err);
+			} else {
+				resolve(buf.toString("hex"));
+			}
+		});
 	});
 };
 

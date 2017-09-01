@@ -366,18 +366,10 @@ function initializeClient(socket, client, token) {
 
 	socket.join(client.id);
 
-	const sendInitEvent = (tokenToSend) => {
-		socket.emit("init", {
-			applicationServerKey: manager.webPush.vapidKeys.publicKey,
-			pushSubscription: client.config.sessions[token],
-			active: client.lastActiveChannel,
-			networks: client.networks,
-			token: tokenToSend
-		});
-	};
+	let tokenPromise = null;
 
 	if (!Helper.config.public && token === null) {
-		client.generateToken((newToken) => {
+		tokenPromise = client.generateToken().then((newToken) => {
 			token = newToken;
 
 			client.updateSession(token, getClientIp(socket.request), socket.request);
@@ -390,11 +382,19 @@ function initializeClient(socket, client, token) {
 				}
 			});
 
-			sendInitEvent(token);
-		});
-	} else {
-		sendInitEvent(null);
+			return newToken;
+		}).catch((error) => log.error(error));
 	}
+
+	Promise.resolve(tokenPromise).then((tokenToSend) => {
+		socket.emit("init", {
+			applicationServerKey: manager.webPush.vapidKeys.publicKey,
+			pushSubscription: client.config.sessions[token],
+			active: client.lastActiveChannel,
+			networks: client.networks,
+			token: tokenToSend,
+		});
+	});
 }
 
 function localAuth(client, user, password, callback) {
