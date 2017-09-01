@@ -83,18 +83,30 @@ module.exports = function() {
 		}, app);
 	}
 
-	server.listen({
-		port: config.port,
-		host: config.host,
-	}, () => {
-		const protocol = config.https.enable ? "https" : "http";
-		var address = server.address();
+	let listenParams;
 
-		log.info(
-			"Available at " +
-			colors.green(`${protocol}://${address.address}:${address.port}/`) +
-			` in ${colors.bold(config.public ? "public" : "private")} mode`
-		);
+	if (typeof config.host === "string" && config.host.startsWith("unix:")) {
+		listenParams = config.host.replace(/^unix:/, "");
+	} else {
+		listenParams = {
+			port: config.port,
+			host: config.host,
+		};
+	}
+
+	server.listen(listenParams, () => {
+		if (typeof listenParams === "string") {
+			log.info("Available on socket " + colors.green(listenParams));
+		} else {
+			const protocol = config.https.enable ? "https" : "http";
+			const address = server.address();
+
+			log.info(
+				"Available at " +
+				colors.green(`${protocol}://${address.address}:${address.port}/`) +
+				` in ${colors.bold(config.public ? "public" : "private")} mode`
+			);
+		}
 
 		const sockets = io(server, {
 			serveClient: false,

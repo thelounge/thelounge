@@ -16,6 +16,8 @@ module.exports = {
 	// IP address or hostname for the web server to listen on.
 	// Setting this to undefined will listen on all interfaces.
 	//
+	// For UNIX domain sockets, use unix:/absolute/path/to/file.sock.
+	//
 	// @type     string
 	// @default  undefined
 	//
