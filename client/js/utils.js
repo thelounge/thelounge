@@ -5,6 +5,7 @@ const chat = $("#chat");
 const input = $("#input");
 
 module.exports = {
+	findCurrentNetworkChan,
 	clear,
 	confirmExit,
 	forceFocus,
@@ -14,6 +15,18 @@ module.exports = {
 	toggleNickEditor,
 	toggleNotificationMarkers
 };
+
+function findCurrentNetworkChan(name) {
+	name = name.toLowerCase();
+
+	return $(".network .chan.active")
+		.parent(".network")
+		.find(".chan")
+		.filter(function() {
+			return $(this).data("title").toLowerCase() === name;
+		})
+		.first();
+}
 
 function resetHeight(element) {
 	element.style.height = element.style.minHeight;

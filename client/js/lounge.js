@@ -19,6 +19,7 @@ require("./socket-events");
 const storage = require("./localStorage");
 const options = require("./options");
 const utils = require("./utils");
+const modules = require("./modules");
 require("./autocompletion");
 require("./webpush");
 
@@ -194,19 +195,27 @@ $(function() {
 		input.val("");
 		resetInputHeight(input.get(0));
 
-		if (text.indexOf("/clear") === 0) {
-			utils.clear();
-			return;
-		}
-
-		if (text.indexOf("/collapse") === 0) {
-			$(".chan.active .toggle-button.opened").click();
-			return;
-		}
-
-		if (text.indexOf("/expand") === 0) {
-			$(".chan.active .toggle-button:not(.opened)").click();
-			return;
+		if (text.indexOf("/") === 0) {
+			const separatorPos = text.indexOf(" ");
+			const cmd = text.substring(1, separatorPos > 1 ? separatorPos : text.length);
+			const parameters = separatorPos > text.indexOf(cmd) ? text.substring(text.indexOf(cmd) + cmd.length + 1, text.length) : "";
+			switch (cmd) {
+				case "clear":
+					if (modules.clear()) return;
+					break;
+				case "collapse":
+					if (modules.collapse()) return;
+					break;
+				case "expand":
+					if (modules.expand()) return;
+					break;
+				case "join":
+					const channel = parameters.split(" ")[0];
+					if (channel != "") {
+						if (modules.join(channel)) return;
+					}
+					break;
+			}
 		}
 
 		socket.emit("input", {
@@ -214,18 +223,6 @@ $(function() {
 			text: text
 		});
 	});
-
-	function findCurrentNetworkChan(name) {
-		name = name.toLowerCase();
-
-		return $(".network .chan.active")
-			.parent(".network")
-			.find(".chan")
-			.filter(function() {
-				return $(this).data("title").toLowerCase() === name;
-			})
-			.first();
-	}
 
 	$("button#set-nick").on("click", function() {
 		utils.toggleNickEditor(true);
@@ -283,7 +280,7 @@ $(function() {
 
 	chat.on("click", ".inline-channel", function() {
 		var name = $(this).data("chan");
-		var chan = findCurrentNetworkChan(name);
+		var chan = utils.findCurrentNetworkChan(name);
 
 		if (chan.length) {
 			chan.click();
@@ -301,7 +298,7 @@ $(function() {
 
 	chat.on("click", ".user", function() {
 		var name = $(this).data("name");
-		var chan = findCurrentNetworkChan(name);
+		var chan = utils.findCurrentNetworkChan(name);
 
 		if (chan.length) {
 			chan.click();
