@@ -94,6 +94,8 @@ module.exports = function() {
 		};
 	}
 
+	server.on("error", (err) => log.error(`${err}`));
+
 	server.listen(listenParams, () => {
 		if (typeof listenParams === "string") {
 			log.info("Available on socket " + colors.green(listenParams));
