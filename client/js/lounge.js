@@ -789,7 +789,7 @@ $(function() {
 		$(".date-marker-text[data-label='Today'], .date-marker-text[data-label='Yesterday']")
 			.closest(".date-marker-container")
 			.each(function() {
-				$(this).replaceWith(templates.date_marker({msgDate: $(this).data("timestamp")}));
+				$(this).replaceWith(templates.date_marker({time: $(this).data("time")}));
 			});
 
 		// This should always be 24h later but re-computing exact value just in case

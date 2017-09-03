@@ -35,37 +35,17 @@ function buildChannelMessages(chanId, chanType, messages) {
 }
 
 function appendMessage(container, chanId, chanType, msg) {
+	let lastChild = container.children(".msg, .date-marker-container").last();
 	const renderedMessage = buildChatMessage(chanId, msg);
 
 	// Check if date changed
-	let lastChild = container.find(".msg").last();
 	const msgTime = new Date(msg.time);
-
-	// It's the first message in a window,
-	// then just append the message and do nothing else
-	if (lastChild.length === 0) {
-		container
-			.append(templates.date_marker({msgDate: msgTime}))
-			.append(renderedMessage);
-
-		return;
-	}
-
-	const prevMsgTime = new Date(lastChild.attr("data-time"));
-	const parent = lastChild.parent();
-
-	// If this message is condensed, we have to work on the wrapper
-	if (parent.hasClass("condensed")) {
-		lastChild = parent;
-	}
+	const prevMsgTime = new Date(lastChild.data("time"));
 
 	// Insert date marker if date changed compared to previous message
 	if (prevMsgTime.toDateString() !== msgTime.toDateString()) {
-		lastChild.after(templates.date_marker({msgDate: msgTime}));
-
-		// If date changed, we don't need to do condensed logic
-		container.append(renderedMessage);
-		return;
+		lastChild = $(templates.date_marker({msgDate: msg.time}));
+		container.append(lastChild);
 	}
 
 	// If current window is not a channel or this message is not condensable,
@@ -83,6 +63,7 @@ function appendMessage(container, chanId, chanType, msg) {
 		return;
 	}
 
+	// Always create a condensed container
 	const newCondensed = buildChatMessage(chanId, {
 		type: "condensed",
 		time: msg.time,
