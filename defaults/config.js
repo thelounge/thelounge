@@ -89,12 +89,12 @@ module.exports = {
 	// Prefetch URLs Image Preview size limit
 	//
 	// If prefetch is enabled, The Lounge will only display content under the maximum size.
-	// Specified value is in kilobytes. Default value is 512 kilobytes.
+	// Specified value is in kilobytes. Default value is 2048 kilobytes.
 	//
 	// @type     int
-	// @default  512
+	// @default  2048
 	//
-	prefetchMaxImageSize: 512,
+	prefetchMaxImageSize: 2048,
 
 	//
 	// Display network
