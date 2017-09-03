@@ -21,6 +21,7 @@ const options = require("./options");
 const utils = require("./utils");
 require("./autocompletion");
 require("./webpush");
+require("./clipboard");
 
 $(function() {
 	var sidebar = $("#sidebar, #footer");
