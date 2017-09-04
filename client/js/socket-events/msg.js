@@ -63,4 +63,15 @@ function processReceivedMessage(data) {
 			}
 		});
 	}
+
+	if ((data.msg.type === "message" || data.msg.type === "action" || data.msg.type === "notice") && channel.hasClass("channel")) {
+		const nicks = channel.find(".users").data("nicks");
+		if (nicks) {
+			const find = nicks.indexOf(data.msg.from);
+			if (find !== -1) {
+				nicks.splice(find, 1);
+				nicks.unshift(data.msg.from);
+			}
+		}
+	}
 }

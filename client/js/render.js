@@ -36,7 +36,7 @@ function buildChannelMessages(chanId, chanType, messages) {
 
 function appendMessage(container, chanId, chanType, msg) {
 	let lastChild = container.children(".msg, .date-marker-container").last();
-	const renderedMessage = buildChatMessage(chanId, msg);
+	const renderedMessage = buildChatMessage(msg);
 
 	// Check if date changed
 	const msgTime = new Date(msg.time);
@@ -44,7 +44,7 @@ function appendMessage(container, chanId, chanType, msg) {
 
 	// Insert date marker if date changed compared to previous message
 	if (prevMsgTime.toDateString() !== msgTime.toDateString()) {
-		lastChild = $(templates.date_marker({msgDate: msg.time}));
+		lastChild = $(templates.date_marker({time: msg.time}));
 		container.append(lastChild);
 	}
 
@@ -64,25 +64,15 @@ function appendMessage(container, chanId, chanType, msg) {
 	}
 
 	// Always create a condensed container
-	const newCondensed = buildChatMessage(chanId, {
-		type: "condensed",
-		time: msg.time,
-		previews: []
-	});
+	const newCondensed = $(templates.msg_condensed({time: msg.time}));
 
 	condensed.updateText(newCondensed, [msg.type]);
 	newCondensed.append(renderedMessage);
 	container.append(newCondensed);
 }
 
-function buildChatMessage(chanId, msg) {
+function buildChatMessage(msg) {
 	const type = msg.type;
-	let target = "#chan-" + chanId;
-	if (type === "error") {
-		target = "#chan-" + chat.find(".active").data("id");
-	}
-
-	const chan = chat.find(target);
 	let template = "msg";
 
 	// See if any of the custom highlight regexes match
@@ -98,8 +88,6 @@ function buildChatMessage(chanId, msg) {
 		template = "msg_action";
 	} else if (type === "unhandled") {
 		template = "msg_unhandled";
-	} else if (type === "condensed") {
-		template = "msg_condensed";
 	}
 
 	const renderedMessage = $(templates[template](msg));
@@ -112,17 +100,6 @@ function buildChatMessage(chanId, msg) {
 	msg.previews.forEach((preview) => {
 		renderPreview(preview, renderedMessage);
 	});
-
-	if ((type === "message" || type === "action" || type === "notice") && chan.hasClass("channel")) {
-		const nicks = chan.find(".users").data("nicks");
-		if (nicks) {
-			const find = nicks.indexOf(msg.from);
-			if (find !== -1) {
-				nicks.splice(find, 1);
-				nicks.unshift(msg.from);
-			}
-		}
-	}
 
 	return renderedMessage;
 }
