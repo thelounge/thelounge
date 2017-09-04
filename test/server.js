@@ -37,6 +37,11 @@ describe("Server", () => {
 	describe("WebSockets", () => {
 		let client;
 
+		before((done) => {
+			Helper.config.public = true;
+			done();
+		});
+
 		beforeEach(() => {
 			client = io(webURL, {
 				path: "/socket.io/",
