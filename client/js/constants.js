@@ -37,6 +37,7 @@ const commands = [
 	"/join",
 	"/kick",
 	"/leave",
+	"/list",
 	"/me",
 	"/mode",
 	"/msg",
