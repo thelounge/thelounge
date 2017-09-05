@@ -479,24 +479,6 @@ $(function() {
 		container.html(templates.user_filtered({matches: result})).show();
 	});
 
-	chat.on("click", ".show-more-button", function() {
-		var self = $(this);
-		var lastMessage = self.parent().next(".messages").children(".msg").first();
-		if (lastMessage.is(".condensed")) {
-			lastMessage = lastMessage.children(".msg").first();
-		}
-		var lastMessageId = parseInt(lastMessage[0].id.replace("msg-", ""), 10);
-
-		self
-			.text("Loading older messages…")
-			.prop("disabled", true);
-
-		socket.emit("more", {
-			target: self.data("id"),
-			lastId: lastMessageId
-		});
-	});
-
 	var forms = $("#sign-in, #connect, #change-password");
 
 	windows.on("show", "#sign-in", function() {
