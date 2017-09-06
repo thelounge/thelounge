@@ -3,17 +3,12 @@
 const $ = require("jquery");
 const socket = require("../socket");
 const render = require("../render");
+const utils = require("../utils");
 const chat = $("#chat");
 
 socket.on("msg", function(data) {
-	if (window.requestIdleCallback) {
-		// During an idle period the user agent will run idle callbacks in FIFO order
-		// until either the idle period ends or there are no more idle callbacks eligible to be run.
-		// We set a maximum timeout of 2 seconds so that messages don't take too long to appear.
-		window.requestIdleCallback(() => processReceivedMessage(data), {timeout: 2000});
-	} else {
-		processReceivedMessage(data);
-	}
+	// We set a maximum timeout of 2 seconds so that messages don't take too long to appear.
+	utils.requestIdleCallback(() => processReceivedMessage(data), 2000);
 });
 
 function processReceivedMessage(data) {
