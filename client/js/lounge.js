@@ -336,6 +336,8 @@ $(function() {
 			state.clickTarget = `#footer button[data-target="${target}"]`;
 		}
 
+		state.clickTarget += ", #image-viewer";
+
 		if (history && history.pushState) {
 			if (data && data.replaceHistory && history.replaceState) {
 				history.replaceState(state, null, null);
