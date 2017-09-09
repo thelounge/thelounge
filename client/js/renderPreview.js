@@ -161,7 +161,11 @@ function openImageViewer(link) {
 		hasNextImage: nextImage.length > 0,
 	}));
 
-	imageViewer.addClass("opened");
+	// Turn off transitionend listener before opening the viewer,
+	// which caused image viewer to become empty in rare cases
+	imageViewer
+		.off("transitionend")
+		.addClass("opened");
 }
 
 imageViewer.on("click", ".previous-image-btn", function() {
