@@ -201,12 +201,12 @@ $(function() {
 		}
 
 		if (text.indexOf("/collapse") === 0) {
-			$(".chan.active .toggle-button.opened").click();
+			$(".chan.active .toggle-preview.opened").click();
 			return;
 		}
 
 		if (text.indexOf("/expand") === 0) {
-			$(".chan.active .toggle-button:not(.opened)").click();
+			$(".chan.active .toggle-preview:not(.opened)").click();
 			return;
 		}
 
