@@ -92,10 +92,12 @@ function handleImageInPreview(content, container) {
 
 const imageViewer = $("#image-viewer");
 
-$("#chat").on("click", ".toggle-thumbnail", function(event, data) {
+$("#chat").on("click", ".toggle-thumbnail", function(event, data = {}) {
 	const link = $(this);
 
-	openImageViewer(link, {pushState: !data || data.pushState !== false});
+	// Passing `data`, specifically `data.pushState`, to not add the action to the
+	// history state if back or forward buttons were pressed.
+	openImageViewer(link, data);
 
 	// Prevent the link to open a new page since we're opening the image viewer,
 	// but keep it a link to allow for Ctrl/Cmd+click.
@@ -103,8 +105,10 @@ $("#chat").on("click", ".toggle-thumbnail", function(event, data) {
 	return false;
 });
 
-imageViewer.on("click", function(event, data) {
-	closeImageViewer({pushState: !data || data.pushState !== false});
+imageViewer.on("click", function(event, data = {}) {
+	// Passing `data`, specifically `data.pushState`, to not add the action to the
+	// history state if back or forward buttons were pressed.
+	closeImageViewer(data);
 });
 
 $(document).keydown(function(e) {
@@ -125,7 +129,7 @@ $(document).keydown(function(e) {
 	}
 });
 
-function openImageViewer(link, {pushState = true}) {
+function openImageViewer(link, {pushState = true} = {}) {
 	$(".previous-image").removeClass("previous-image");
 	$(".next-image").removeClass("next-image");
 
@@ -171,9 +175,9 @@ function openImageViewer(link, {pushState = true}) {
 	if (pushState) {
 		const clickTarget =
 			`#${link.closest(".msg").attr("id")} ` +
-			`a[href="${link.attr("href")}"] ` +
+			`a.toggle-thumbnail[href="${link.attr("href")}"] ` +
 			"img";
-		history.pushState({clickTarget: clickTarget}, null, null);
+		history.pushState({clickTarget}, null, null);
 	}
 }
 
@@ -187,7 +191,7 @@ imageViewer.on("click", ".next-image-btn", function() {
 	return false;
 });
 
-function closeImageViewer({pushState = true}) {
+function closeImageViewer({pushState = true} = {}) {
 	imageViewer
 		.removeClass("opened")
 		.one("transitionend", function() {
