@@ -2190,6 +2190,13 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 	/* Top/Bottom margins + button height + image/button margin */
 	max-height: calc(100vh - 2 * 10px - 37px - 10px);
+
+	/* Checkered background for transparent images */
+	background-position: 0 0, 10px 10px;
+	background-size: 20px 20px;
+	background-image:
+		linear-gradient(45deg, #eee 25%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 75%, #eee 75%, #eee 100%),
+		linear-gradient(45deg, #eee 25%, #fff 25%, #fff 75%, #eee 75%, #eee 100%);
 }
 
 #image-viewer .open-btn {
