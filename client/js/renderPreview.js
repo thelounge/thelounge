@@ -202,6 +202,9 @@ function closeImageViewer({pushState = true} = {}) {
 
 	// History management
 	if (pushState) {
-		history.pushState({clickTarget: "#image-viewer"}, null, null);
+		const clickTarget =
+			"#sidebar " +
+			`.chan[data-id="${$("#sidebar .chan.active").data("id")}"]`;
+		history.pushState({clickTarget}, null, null);
 	}
 }
