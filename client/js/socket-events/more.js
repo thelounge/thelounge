@@ -54,3 +54,21 @@ socket.on("more", function(data) {
 		.text("Show older messages")
 		.prop("disabled", false);
 });
+
+chat.on("click", ".show-more-button", function() {
+	var self = $(this);
+	var lastMessage = self.parent().next(".messages").children(".msg").first();
+	if (lastMessage.is(".condensed")) {
+		lastMessage = lastMessage.children(".msg").first();
+	}
+	var lastMessageId = parseInt(lastMessage[0].id.replace("msg-", ""), 10);
+
+	self
+		.text("Loading older messages…")
+		.prop("disabled", true);
+
+	socket.emit("more", {
+		target: self.data("id"),
+		lastId: lastMessageId
+	});
+});

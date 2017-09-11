@@ -4,23 +4,22 @@
 require("jquery-ui/ui/widgets/sortable");
 const $ = require("jquery");
 const moment = require("moment");
-const Mousetrap = require("mousetrap");
 const URI = require("urijs");
 const fuzzy = require("fuzzy");
 
 // our libraries
 require("./libs/jquery/inputhistory");
 require("./libs/jquery/stickyscroll");
-const helpers_roundBadgeNumber = require("./libs/handlebars/roundBadgeNumber");
 const slideoutMenu = require("./libs/slideout");
 const templates = require("../views");
 const socket = require("./socket");
 require("./socket-events");
 const storage = require("./localStorage");
-const options = require("./options");
+require("./options");
 const utils = require("./utils");
 require("./autocompletion");
 require("./webpush");
+require("./keybinds");
 require("./clipboard");
 
 $(function() {
@@ -28,20 +27,6 @@ $(function() {
 	var chat = $("#chat");
 
 	$(document.body).data("app-name", document.title);
-
-	var pop;
-	try {
-		pop = new Audio();
-		pop.src = "audio/pop.ogg";
-	} catch (e) {
-		pop = {
-			play: $.noop
-		};
-	}
-
-	$("#play").on("click", function() {
-		pop.play();
-	});
 
 	var windows = $("#windows");
 	var viewport = $("#viewport");
@@ -494,95 +479,6 @@ $(function() {
 		container.html(templates.user_filtered({matches: result})).show();
 	});
 
-	chat.on("msg", ".messages", function(e, target, msg) {
-		var unread = msg.unread;
-		msg = msg.msg;
-
-		if (msg.self) {
-			return;
-		}
-
-		var button = sidebar.find(".chan[data-target='" + target + "']");
-		if (msg.highlight || (options.notifyAllMessages && msg.type === "message")) {
-			if (!document.hasFocus() || !$(target).hasClass("active")) {
-				if (options.notification) {
-					try {
-						pop.play();
-					} catch (exception) {
-						// On mobile, sounds can not be played without user interaction.
-					}
-				}
-				utils.toggleNotificationMarkers(true);
-
-				if (options.desktopNotifications && Notification.permission === "granted") {
-					var title;
-					var body;
-
-					if (msg.type === "invite") {
-						title = "New channel invite:";
-						body = msg.from + " invited you to " + msg.channel;
-					} else {
-						title = msg.from;
-						if (!button.hasClass("query")) {
-							title += " (" + button.data("title").trim() + ")";
-						}
-						if (msg.type === "message") {
-							title += " says:";
-						}
-						body = msg.text.replace(/\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?|[\x00-\x1F]|\x7F/g, "").trim();
-					}
-
-					try {
-						var notify = new Notification(title, {
-							body: body,
-							icon: "img/logo-64.png",
-							tag: target
-						});
-						notify.addEventListener("click", function() {
-							window.focus();
-							button.click();
-							this.close();
-						});
-					} catch (exception) {
-						// `new Notification(...)` is not supported and should be silenced.
-					}
-				}
-			}
-		}
-
-		if (button.hasClass("active")) {
-			return;
-		}
-
-		if (!unread) {
-			return;
-		}
-
-		var badge = button.find(".badge").html(helpers_roundBadgeNumber(unread));
-
-		if (msg.highlight) {
-			badge.addClass("highlight");
-		}
-	});
-
-	chat.on("click", ".show-more-button", function() {
-		var self = $(this);
-		var lastMessage = self.parent().next(".messages").children(".msg").first();
-		if (lastMessage.is(".condensed")) {
-			lastMessage = lastMessage.children(".msg").first();
-		}
-		var lastMessageId = parseInt(lastMessage[0].id.replace("msg-", ""), 10);
-
-		self
-			.text("Loading older messages…")
-			.prop("disabled", true);
-
-		socket.emit("more", {
-			target: self.data("id"),
-			lastId: lastMessageId
-		});
-	});
-
 	var forms = $("#sign-in, #connect, #change-password");
 
 	windows.on("show", "#sign-in", function() {
@@ -667,111 +563,6 @@ $(function() {
 		// Store the "previous" value, for next time
 		$(this).data("lastvalue", nick);
 	});
-
-	(function HotkeysScope() {
-		Mousetrap.bind([
-			"pageup",
-			"pagedown"
-		], function(e, key) {
-			let container = windows.find(".window.active");
-
-			// Chat windows scroll message container
-			if (container.attr("id") === "chat-container") {
-				container = container.find(".chan.active .chat");
-			}
-
-			container.finish();
-
-			const offset = container.get(0).clientHeight * 0.9;
-			let scrollTop = container.scrollTop();
-
-			if (key === "pageup") {
-				scrollTop = Math.floor(scrollTop - offset);
-			} else {
-				scrollTop = Math.ceil(scrollTop + offset);
-			}
-
-			container.animate({
-				scrollTop: scrollTop
-			}, 200);
-
-			return false;
-		});
-
-		Mousetrap.bind([
-			"command+up",
-			"command+down",
-			"ctrl+up",
-			"ctrl+down"
-		], function(e, keys) {
-			var channels = sidebar.find(".chan");
-			var index = channels.index(channels.filter(".active"));
-			var direction = keys.split("+").pop();
-			switch (direction) {
-			case "up":
-				// Loop
-				var upTarget = (channels.length + (index - 1 + channels.length)) % channels.length;
-				channels.eq(upTarget).click();
-				break;
-
-			case "down":
-				// Loop
-				var downTarget = (channels.length + (index + 1 + channels.length)) % channels.length;
-				channels.eq(downTarget).click();
-				break;
-			}
-		});
-
-		Mousetrap.bind([
-			"command+shift+l",
-			"ctrl+shift+l"
-		], function(e) {
-			if (e.target === input[0]) {
-				utils.clear();
-				e.preventDefault();
-			}
-		});
-
-		Mousetrap.bind([
-			"escape"
-		], function() {
-			contextMenuContainer.hide();
-		});
-
-		var colorsHotkeys = {
-			k: "\x03",
-			b: "\x02",
-			u: "\x1F",
-			i: "\x1D",
-			o: "\x0F",
-		};
-
-		for (var hotkey in colorsHotkeys) {
-			Mousetrap.bind([
-				"command+" + hotkey,
-				"ctrl+" + hotkey
-			], function(e) {
-				e.preventDefault();
-
-				const cursorPosStart = input.prop("selectionStart");
-				const cursorPosEnd = input.prop("selectionEnd");
-				const value = input.val();
-				let newValue = value.substring(0, cursorPosStart) + colorsHotkeys[e.key];
-
-				if (cursorPosStart === cursorPosEnd) {
-					// If no text is selected, insert at cursor
-					newValue += value.substring(cursorPosEnd, value.length);
-				} else {
-					// If text is selected, insert formatting character at start and the end
-					newValue += value.substring(cursorPosStart, cursorPosEnd) + colorsHotkeys[e.key] + value.substring(cursorPosEnd, value.length);
-				}
-
-				input
-					.val(newValue)
-					.get(0).setSelectionRange(cursorPosStart + 1, cursorPosEnd + 1);
-			});
-		}
-	}());
 
 	$(document).on("visibilitychange focus click", () => {
 		if (sidebar.find(".highlight").length === 0) {
