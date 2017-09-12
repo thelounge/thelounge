@@ -34,7 +34,29 @@ socket.on("more", function(data) {
 
 	// Add the older messages
 	const documentFragment = render.buildChannelMessages(data.chan, type, data.messages);
-	chan.prepend(documentFragment).end();
+	chan.prepend(documentFragment);
+
+	// Move unread marker to correct spot if needed
+	const unreadMarker = chan.find(".unread-marker");
+	const firstUnread = unreadMarker.data("unread-id");
+
+	if (firstUnread > 0) {
+		let first = chan.find("#msg-" + firstUnread);
+
+		if (!first.length) {
+			chan.prepend(unreadMarker);
+		} else {
+			const parent = first.parent();
+
+			if (parent.hasClass("condensed")) {
+				first = parent;
+			}
+
+			unreadMarker.data("unread-id", 0);
+
+			first.before(unreadMarker);
+		}
+	}
 
 	// restore scroll position
 	const position = chan.height() - heightOld;

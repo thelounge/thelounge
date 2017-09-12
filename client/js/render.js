@@ -120,19 +120,25 @@ function renderChannelMessages(data) {
 	const documentFragment = buildChannelMessages(data.id, data.type, data.messages);
 	const channel = chat.find("#chan-" + data.id + " .messages").append(documentFragment);
 
-	if (data.firstUnread > 0) {
-		const first = channel.find("#msg-" + data.firstUnread);
+	const template = $(templates.unread_marker());
 
-		// TODO: If the message is far off in the history, we still need to append the marker into DOM
+	if (data.firstUnread > 0) {
+		let first = channel.find("#msg-" + data.firstUnread);
+
 		if (!first.length) {
-			channel.prepend(templates.unread_marker());
-		} else if (first.parent().hasClass("condensed")) {
-			first.parent().before(templates.unread_marker());
+			template.data("unread-id", data.firstUnread);
+			channel.prepend(template);
 		} else {
-			first.before(templates.unread_marker());
+			const parent = first.parent();
+
+			if (parent.hasClass("condensed")) {
+				first = parent;
+			}
+
+			first.before(template);
 		}
 	} else {
-		channel.append(templates.unread_marker());
+		channel.append(template);
 	}
 }
 

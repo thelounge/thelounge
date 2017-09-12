@@ -371,6 +371,7 @@ $(function() {
 
 		lastActiveChan
 			.find(".unread-marker")
+			.data("unread-id", 0)
 			.appendTo(lastActiveChan.find(".messages"));
 
 		var chan = $(target)

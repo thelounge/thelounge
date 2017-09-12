@@ -57,6 +57,7 @@ function processReceivedMessage(data) {
 		&& lastVisible.prev().hasClass("unread-marker"))) {
 		container
 			.find(".unread-marker")
+			.data("unread-id", 0)
 			.appendTo(container);
 	}
 
