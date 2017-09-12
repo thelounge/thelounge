@@ -493,6 +493,7 @@ kbd {
 #sidebar .network,
 #sidebar .network-placeholder {
 	margin-bottom: 30px;
+	touch-action: pan-y;
 }
 
 #sidebar .empty {
@@ -935,6 +936,7 @@ kbd {
 
 #chat .messages {
 	padding: 10px 0;
+	touch-action: pan-y;
 }
 
 #chat .msg {
@@ -1296,6 +1298,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	position: absolute;
 	top: 48px;
 	width: 100%;
+	touch-action: pan-y;
 }
 
 #chat .names-filtered {
