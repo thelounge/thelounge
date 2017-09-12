@@ -412,10 +412,20 @@ Client.prototype.more = function(data) {
 	}
 
 	const chan = target.chan;
-	const index = chan.messages.findIndex((val) => val.id === data.lastId);
+	let messages = [];
+	let index = 0;
 
-	// If we don't find the requested message, send an empty array
-	const messages = index > 0 ? chan.messages.slice(Math.max(0, index - 100), index) : [];
+	// If client requests -1, send last 100 messages
+	if (data.lastId < 0) {
+		index = chan.messages.length;
+	} else {
+		index = chan.messages.findIndex((val) => val.id === data.lastId);
+	}
+
+	// If requested id is not found, an empty array will be sent
+	if (index > 0) {
+		messages = chan.messages.slice(Math.max(0, index - 100), index);
+	}
 
 	client.emit("more", {
 		chan: chan.id,
