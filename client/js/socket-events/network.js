@@ -14,8 +14,7 @@ socket.on("network", function(data) {
 
 	$("#connect")
 		.find(".btn")
-		.prop("disabled", false)
-		.end();
+		.prop("disabled", false);
 });
 
 socket.on("network_changed", function(data) {
