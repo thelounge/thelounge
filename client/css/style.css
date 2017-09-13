@@ -845,7 +845,7 @@ kbd {
 	display: flex;
 }
 
-#chat .condensed-summary:hover {
+#chat .condensed-summary .content:hover {
 	opacity: 0.6;
 }
 
