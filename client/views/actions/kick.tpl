@@ -1,4 +1,4 @@
-{{> ../user_name nick=from}}
+{{> ../user_name nick=from mode=""}}
 has kicked
 {{> ../user_name nick=target mode=""}}
 {{#if text}}
