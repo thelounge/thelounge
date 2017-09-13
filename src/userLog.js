@@ -15,11 +15,11 @@ module.exports = class UserLog {
 	}
 
 	static parseLine(line) {
-		let result = /^\[(.*)\] <(.*)> (.*)$/.exec(line);
+		let result = /^\[(.*?)\] <(.*?)> (.*)$/.exec(line);
 
 		if (result) {
 			return new Msg({
-				// time: result[1],
+				time: moment(result[1]),
 				from: result[2],
 				text: result[3],
 			});
@@ -31,13 +31,14 @@ module.exports = class UserLog {
 			return;
 		}
 
+		const time = moment(result[1]);
 		const from = result[2];
 		const hostmask = result[3];
 		const type = result[4];
 		const remaining = result[5];
 
 		const msg = new Msg({
-			// time: time,
+			time: time,
 			from: from,
 			type: type,
 		});
@@ -70,7 +71,7 @@ module.exports = class UserLog {
 
 	read(network, chan, callback) {
 		readLastLines
-			.read(this.getLogFilePath(network, chan), 100)
+			.read(this.getLogFilePath(network, chan), Helper.config.maxHistory) // TODO: Fails to read UTF-8
 			.then((lines) => {
 				const messages = [];
 
@@ -101,7 +102,7 @@ module.exports = class UserLog {
 		var format = Helper.config.logs.format || "YYYY-MM-DD HH:mm:ss";
 		var tz = Helper.config.logs.timezone || "UTC+00:00";
 
-		var time = moment().utcOffset(tz).format(format);
+		var time = moment(msg.time).utcOffset(tz).format(format);
 		var line = `[${time}] `;
 
 		var type = msg.type.trim();

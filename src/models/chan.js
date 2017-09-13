@@ -89,14 +89,16 @@ Chan.prototype.dereferencePreviews = function(messages) {
 
 Chan.prototype.loadLogs = function(client, network) {
 	client.userLog.read(network, this.name, (messages) => {
-		// TODO: Prepend messages
-		// TODO: Fix unread marker
-		Array.prototype.push.apply(this.messages, messages);
+		// TODO: This still gets out of sync with znc buffer
+		this.messages = messages.concat(this.messages);
 
-		// TODO: We don't know if clients received loaded messages object or not?
+		if (!this.firstUnread) {
+			this.firstUnread = messages[messages.length - 1].id;
+		}
+
 		client.emit("more", {
 			chan: this.id,
-			messages: messages
+			messages: messages.slice(-100)
 		});
 	});
 };
