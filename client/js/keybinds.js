@@ -2,7 +2,6 @@
 
 const $ = require("jquery");
 const Mousetrap = require("mousetrap");
-const utils = require("./utils");
 const input = $("#input");
 const sidebar = $("#sidebar");
 const windows = $("#windows");
@@ -59,16 +58,6 @@ Mousetrap.bind([
 	}
 
 	channels.eq(target).click();
-});
-
-Mousetrap.bind([
-	"command+shift+l",
-	"ctrl+shift+l"
-], function(e) {
-	if (e.target === input[0]) {
-		utils.clear();
-		e.preventDefault();
-	}
 });
 
 Mousetrap.bind([

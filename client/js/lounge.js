@@ -180,11 +180,6 @@ $(function() {
 		input.val("");
 		resetInputHeight(input.get(0));
 
-		if (text.indexOf("/clear") === 0) {
-			utils.clear();
-			return;
-		}
-
 		if (text.indexOf("/collapse") === 0) {
 			$(".chan.active .toggle-preview.opened").click();
 			return;
