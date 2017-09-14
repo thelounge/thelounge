@@ -1,11 +1,9 @@
 "use strict";
 
 const $ = require("jquery");
-const chat = $("#chat");
 const input = $("#input");
 
 module.exports = {
-	clear,
 	confirmExit,
 	forceFocus,
 	move,
@@ -24,12 +22,6 @@ function resetHeight(element) {
 // This can only be called from another interactive event (e.g. button click)
 function forceFocus() {
 	input.trigger("click").focus();
-}
-
-function clear() {
-	chat.find(".active")
-		.find(".show-more").addClass("show").end()
-		.find(".messages .msg, .date-marker-container").remove();
 }
 
 function toggleNickEditor(toggle) {
