@@ -9,7 +9,17 @@ exports.commands = ["close", "leave", "part"];
 exports.allowDisconnected = true;
 
 exports.input = function(network, chan, cmd, args) {
-	if (chan.type === Chan.Type.LOBBY) {
+	let target = args.length === 0 ? chan : _.find(network.channels, {name: args[0]});
+	let partMessage = args.length <= 1 ? Helper.config.leaveMessage : args.slice(1).join(" ");
+
+	if (typeof target === "undefined") {
+		// In this case, we assume that the word args[0] is part of the leave
+		// message and we part the current chan.
+		target = chan;
+		partMessage = args.join(" ");
+	}
+
+	if (target.type === Chan.Type.LOBBY) {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
 			text: "You can not part from networks, use /quit instead."
@@ -17,18 +27,17 @@ exports.input = function(network, chan, cmd, args) {
 		return;
 	}
 
-	network.channels = _.without(network.channels, chan);
-	chan.destroy();
+	network.channels = _.without(network.channels, target);
+	target.destroy();
 	this.emit("part", {
-		chan: chan.id
+		chan: target.id
 	});
 
-	if (chan.type === Chan.Type.CHANNEL) {
+	if (target.type === Chan.Type.CHANNEL) {
 		this.save();
 
 		if (network.irc) {
-			const partMessage = args[0] ? args.join(" ") : Helper.config.leaveMessage;
-			network.irc.part(chan.name, partMessage);
+			network.irc.part(target.name, partMessage);
 		}
 	}
 
