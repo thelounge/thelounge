@@ -2,6 +2,7 @@
 
 var _ = require("lodash");
 var Helper = require("../helper");
+const userLog = require("../userLog");
 const storage = require("../plugins/storage");
 
 module.exports = Chan;
@@ -56,6 +57,10 @@ Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 	}
 
 	this.messages.push(msg);
+
+	if (client.config.log === true) {
+		writeUserLog(client, msg);
+	}
 
 	if (Helper.config.maxHistory >= 0 && this.messages.length > Helper.config.maxHistory) {
 		const deleted = this.messages.splice(0, this.messages.length - Helper.config.maxHistory);
@@ -127,3 +132,14 @@ Chan.prototype.toJSON = function() {
 	clone.messages = clone.messages.slice(-100);
 	return clone;
 };
+
+function writeUserLog(client, msg) {
+	const target = client.find(this.id);
+
+	userLog.write(
+		client.name,
+		target.network.host, // TODO: Fix #1392, multiple connections to same server results in duplicate logs
+		this.type === Chan.Type.LOBBY ? target.network.host : this.name,
+		msg
+	);
+}
