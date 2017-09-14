@@ -56,12 +56,13 @@ socket.on("more", function(data) {
 });
 
 chat.on("click", ".show-more-button", function() {
-	var self = $(this);
-	var lastMessage = self.parent().next(".messages").children(".msg").first();
-	if (lastMessage.is(".condensed")) {
-		lastMessage = lastMessage.children(".msg").first();
+	const self = $(this);
+	const lastMessage = self.closest(".chat").find(".msg").first();
+	let lastMessageId = -1;
+
+	if (lastMessage.length > 0) {
+		lastMessageId = parseInt(lastMessage[0].id.replace("msg-", ""), 10);
 	}
-	var lastMessageId = parseInt(lastMessage[0].id.replace("msg-", ""), 10);
 
 	self
 		.text("Loading older messages…")
