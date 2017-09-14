@@ -515,23 +515,25 @@ $(function() {
 		e.preventDefault();
 		var event = "auth";
 		var form = $(this);
-		form.find(".btn")
-			.attr("disabled", true)
-			.end();
+		form.find(".btn").attr("disabled", true);
+
 		if (form.closest(".window").attr("id") === "connect") {
 			event = "conn";
 		} else if (form.closest("div").attr("id") === "change-password") {
 			event = "change-password";
 		}
+
 		var values = {};
 		$.each(form.serializeArray(), function(i, obj) {
 			if (obj.value !== "") {
 				values[obj.name] = obj.value;
 			}
 		});
+
 		if (values.user) {
 			storage.set("user", values.user);
 		}
+
 		socket.emit(
 			event, values
 		);

@@ -34,13 +34,9 @@ socket.on("auth", function(data) {
 		return;
 	}
 
-	$("#footer").find(".sign-in")
+	$("#footer")
+		.find(".sign-in")
 		.trigger("click", {
 			pushState: false,
-		})
-		.end()
-		.find(".networks")
-		.html("")
-		.next()
-		.show();
+		});
 });
