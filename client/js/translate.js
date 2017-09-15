@@ -29,20 +29,20 @@ module.exports = {
 				socket.open();
 
 				// Translate text in index.html
-				[].forEach.call(document.querySelectorAll("[aria-label]"), (e) => {
-					e.setAttribute("aria-label", i18n.t(e.getAttribute("aria-label")));
+				$("[aria-label]").attr("aria-label", function(i, val) {
+					return i18n.t(val);
 				});
 
-				[].forEach.call(document.querySelectorAll("[placeholder]"), (e) => {
-					e.setAttribute("placeholder", i18n.t(e.getAttribute("placeholder")));
+				$("[placeholder]").attr("placeholder", function(i, val) {
+					return i18n.t(val);
 				});
 
-				[].forEach.call(document.querySelectorAll("[data-text-alternate]"), (e) => {
-					e.setAttribute("data-text-alternate", i18n.t(e.getAttribute("data-text-alternate")));
+				$("[data-text-alternate]").attr("data-text-alternate", function(i, val) {
+					return i18n.t(val);
 				});
 
-				[].forEach.call(document.querySelectorAll("[data-translate]"), (e) => {
-					e.innerHTML = i18n.t(e.textContent.trim(), {interpolation: {escapeValue: false}});
+				$("[data-translate]").attr("data-translate", function() {
+					$(this).html(i18n.t($(this).text().trim(), {interpolation: {escapeValue: false}}));
 				});
 			});
 	},
