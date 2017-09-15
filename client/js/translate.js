@@ -23,8 +23,7 @@ module.exports = {
 			.use(i18nXHR)
 			.init({
 				backend: opts,
-				lng: data.lang, debug: true, load: "all",
-				fallbackLng: ["en-US", "fr"]
+				lng: data.lang, debug: true, load: "currentOnly"
 			}, function() {
 				// Only start opening socket.io connection after all events have been registered
 				socket.open();
@@ -42,32 +41,8 @@ module.exports = {
 					e.setAttribute("data-text-alternate", i18n.t(e.getAttribute("data-text-alternate")));
 				});
 
-				// this is less than ideal.
-				const variables = {
-					away: "<code>/away</code>",
-					channel: "<code>channel</code>",
-					ctcp: "<abbr title=\"Client-to-client protocol\">CTCP</abbr>",
-					colorRange: "<code>0-15</code>",
-					colorDocsBegin: "<a href=\"https://modern.ircdocs.horse/formatting.html#colors\" target=\"_blank\" rel=\"noopener\">",
-					colorDocsEnd: "</a>",
-					banMode: "<code>+b</code>",
-					unbanMode: "<code>-b</code>",
-					port: "<code>port</code>",
-					plus: "<code>+</code>",
-					opMode: "<code>+o</code>",
-					deopMode: "<code>-o</code>",
-					voiceMode: "<code>+v</code>",
-					devoiceMode: "<code>-v</code>"
-				};
-
-				let translateOptions = { // eslint-disable-line prefer-const
-					interpolation: {escapeValue: false}
-				};
-
-				$.extend(translateOptions, variables);
-				console.log(translateOptions);
 				[].forEach.call(document.querySelectorAll("[data-translate]"), (e) => {
-					e.innerHTML = i18n.t(e.textContent.trim(), translateOptions);
+					e.innerHTML = i18n.t(e.textContent.trim(), {interpolation: {escapeValue: false}});
 				});
 			});
 	},
