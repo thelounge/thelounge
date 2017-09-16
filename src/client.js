@@ -5,7 +5,6 @@ var colors = require("colors/safe");
 var pkg = require("../package.json");
 var Chan = require("./models/chan");
 var crypto = require("crypto");
-var userLog = require("./userLog");
 var Msg = require("./models/msg");
 var Network = require("./models/network");
 var ircFramework = require("irc-framework");
@@ -113,23 +112,6 @@ Client.prototype.isRegistered = function() {
 Client.prototype.emit = function(event, data) {
 	if (this.sockets !== null) {
 		this.sockets.in(this.id).emit(event, data);
-	}
-	if (this.config.log === true) {
-		if (event === "msg") {
-			var target = this.find(data.chan);
-			if (target) {
-				var chan = target.chan.name;
-				if (target.chan.type === Chan.Type.LOBBY) {
-					chan = target.network.host;
-				}
-				userLog.write(
-					this.name,
-					target.network.host,
-					chan,
-					data.msg
-				);
-			}
-		}
 	}
 };
 
