@@ -84,6 +84,6 @@
     "socket.io-client": "1.7.4",
     "stylelint": "8.1.1",
     "stylelint-config-standard": "17.0.0",
-    "webpack": "3.5.6"
+    "webpack": "3.6.0"
   }
 }
