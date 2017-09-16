@@ -87,6 +87,22 @@ Chan.prototype.dereferencePreviews = function(messages) {
 	});
 };
 
+Chan.prototype.loadLogs = function(client, network) {
+	client.userLog.read(network, this.name, (messages) => {
+		// TODO: This still gets out of sync with znc buffer
+		this.messages = messages.concat(this.messages);
+
+		if (!this.firstUnread) {
+			this.firstUnread = messages[messages.length - 1].id;
+		}
+
+		client.emit("more", {
+			chan: this.id,
+			messages: messages.slice(-100)
+		});
+	});
+};
+
 Chan.prototype.sortUsers = function(irc) {
 	var userModeSortPriority = {};
 	irc.network.options.PREFIX.forEach((prefix, index) => {

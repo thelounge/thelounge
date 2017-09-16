@@ -12,6 +12,7 @@ module.exports = function(irc, network) {
 				type: Chan.Type.QUERY,
 				name: data.nick
 			});
+			chan.loadLogs(client, network.host);
 			network.channels.push(chan);
 			client.emit("join", {
 				shouldOpen: true,

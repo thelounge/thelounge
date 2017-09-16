@@ -5,7 +5,7 @@ var colors = require("colors/safe");
 var pkg = require("../package.json");
 var Chan = require("./models/chan");
 var crypto = require("crypto");
-var userLog = require("./userLog");
+const UserLog = require("./userLog");
 var Msg = require("./models/msg");
 var Network = require("./models/network");
 var ircFramework = require("irc-framework");
@@ -91,6 +91,8 @@ function Client(manager, name, config) {
 		delay += 1000;
 	});
 
+	this.userLog = new UserLog(client.name);
+
 	if (typeof client.config.sessions !== "object") {
 		client.config.sessions = {};
 	}
@@ -122,8 +124,7 @@ Client.prototype.emit = function(event, data) {
 				if (target.chan.type === Chan.Type.LOBBY) {
 					chan = target.network.host;
 				}
-				userLog.write(
-					this.name,
+				this.userLog.write(
 					target.network.host,
 					chan,
 					data.msg
@@ -171,10 +172,13 @@ Client.prototype.connect = function(args) {
 				return;
 			}
 
-			channels.push(new Chan({
+			const channel = new Chan({
 				name: chan.name,
 				key: chan.key || "",
-			}));
+			});
+
+			channel.loadLogs(client, args.host);
+			channels.push(channel);
 		});
 
 		if (badName && client.name) {

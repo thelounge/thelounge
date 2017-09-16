@@ -12,6 +12,7 @@ module.exports = function(irc, network) {
 			chan = new Chan({
 				name: data.channel
 			});
+			chan.loadLogs(client, network.host);
 			network.channels.push(chan);
 			client.save();
 			client.emit("join", {
