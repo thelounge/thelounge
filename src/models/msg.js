@@ -29,7 +29,9 @@ class Msg {
 
 Msg.Type = {
 	UNHANDLED: "unhandled",
+	AWAY: "away",
 	ACTION: "action",
+	BACK: "back",
 	ERROR: "error",
 	INVITE: "invite",
 	JOIN: "join",

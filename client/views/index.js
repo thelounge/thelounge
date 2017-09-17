@@ -3,6 +3,8 @@
 module.exports = {
 	actions: {
 		action: require("./actions/action.tpl"),
+		away: require("./actions/away.tpl"),
+		back: require("./actions/back.tpl"),
 		ban_list: require("./actions/ban_list.tpl"),
 		channel_list: require("./actions/channel_list.tpl"),
 		ctcp: require("./actions/ctcp.tpl"),
