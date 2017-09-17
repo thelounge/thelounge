@@ -59,7 +59,7 @@ Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 	this.messages.push(msg);
 
 	if (client.config.log === true) {
-		writeUserLog(client, msg);
+		writeUserLog.call(this, client, msg);
 	}
 
 	if (Helper.config.maxHistory >= 0 && this.messages.length > Helper.config.maxHistory) {
