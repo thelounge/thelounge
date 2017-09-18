@@ -32,7 +32,10 @@ socket.on("init", function(data) {
 	const target = sidebar.find("[data-id='" + id + "']").trigger("click", {
 		replaceHistory: true
 	});
-	if (target.length === 0) {
+	const dataTarget = document.querySelector("[data-target='" + window.location.hash + "']");
+	if (window.location.hash && dataTarget) {
+		dataTarget.click();
+	} else if (target.length === 0) {
 		const first = sidebar.find(".chan")
 			.eq(0)
 			.trigger("click");

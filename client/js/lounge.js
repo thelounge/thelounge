@@ -318,9 +318,9 @@ $(function() {
 
 		if (history && history.pushState) {
 			if (data && data.replaceHistory && history.replaceState) {
-				history.replaceState(state, null, null);
+				history.replaceState(state, null, target);
 			} else {
-				history.pushState(state, null, null);
+				history.pushState(state, null, target);
 			}
 		}
 	});
@@ -486,7 +486,8 @@ $(function() {
 			}
 		});
 	});
-	if ($("body").hasClass("public")) {
+
+	if ($("body").hasClass("public") && window.location.hash === "#connect") {
 		$("#connect").one("show", function() {
 			var params = URI(document.location.search);
 			params = params.search(true);
