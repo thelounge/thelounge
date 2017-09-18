@@ -51,11 +51,12 @@ module.exports = {
 
 	//
 	// Set the default theme.
+	// Find out how to add new themes at https://thelounge.github.io/docs/packages/themes
 	//
 	// @type     string
-	// @default  "themes/example.css"
+	// @default  "example"
 	//
-	theme: "themes/example.css",
+	theme: "example",
 
 	//
 	// Prefetch URLs

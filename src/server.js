@@ -14,6 +14,7 @@ var Helper = require("./helper");
 var colors = require("colors/safe");
 const net = require("net");
 const Identification = require("./identification");
+const themes = require("./plugins/themes");
 
 // The order defined the priority: the first available plugin is used
 // ALways keep local auth in the end, which should always be enabled.
@@ -50,6 +51,15 @@ module.exports = function() {
 		}))
 		.set("view engine", "html")
 		.set("views", path.join(__dirname, "..", "client"));
+
+	app.get("/themes/:theme.css", (req, res) => {
+		const themeName = req.params.theme;
+		const theme = themes.getFilename(themeName);
+		if (theme === undefined) {
+			return res.status(404).send("Not found");
+		}
+		return res.sendFile(theme);
+	});
 
 	var config = Helper.config;
 	var server = null;
@@ -191,16 +201,13 @@ function index(req, res, next) {
 		pkg,
 		Helper.config
 	);
+	if (!data.theme.includes(".css")) { // Backwards compatibility for old way of specifying themes in settings
+		data.theme = `themes/${data.theme}.css`;
+	} else {
+		log.warn(`Referring to CSS files in the ${colors.green("theme")} setting of ${colors.green(Helper.CONFIG_PATH)} is ${colors.bold("deprecated")} and will be removed in a future version.`);
+	}
 	data.gitCommit = Helper.getGitCommit();
-	data.themes = fs.readdirSync("client/themes/").filter(function(themeFile) {
-		return themeFile.endsWith(".css");
-	}).map(function(css) {
-		const filename = css.slice(0, -4);
-		return {
-			name: filename.charAt(0).toUpperCase() + filename.slice(1),
-			filename: filename
-		};
-	});
+	data.themes = themes.getAll();
 
 	const policies = [
 		"default-src *",
