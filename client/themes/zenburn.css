@@ -30,14 +30,6 @@ body {
 	background: #3f3f3f;
 }
 
-#windows .header .topic,
-#windows #form .input,
-.messages .msg,
-.sidebar {
-	font-family: inherit;
-	font-size: 13px;
-}
-
 #settings,
 #sign-in,
 #connect .title {

@@ -1,26 +1,4 @@
 @font-face {
-	font-family: "Lato";
-	font-weight: 400;
-	font-style: normal;
-	src:
-		local("Lato Regular"),
-		local("Lato-regular"),
-		url("fonts/Lato-regular/Lato-regular.woff2") format("woff2"),
-		url("fonts/Lato-regular/Lato-regular.woff") format("woff");
-}
-
-@font-face {
-	font-family: "Lato";
-	font-weight: 700;
-	font-style: normal;
-	src:
-		local("Lato Bold"),
-		local("Lato-700"),
-		url("fonts/Lato-700/Lato-700.woff2") format("woff2"),
-		url("fonts/Lato-700/Lato-700.woff") format("woff");
-}
-
-@font-face {
 	font-family: "FontAwesome";
 	font-weight: normal;
 	font-style: normal;
@@ -37,7 +15,7 @@ body {
 body {
 	background: #455164;
 	color: #222;
-	font: 16px Lato, sans-serif;
+	font: 16px -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 	margin: 0;
 	-webkit-user-select: none;
 	-moz-user-select: none;
@@ -869,10 +847,11 @@ kbd {
 	visibility: hidden;
 }
 
+#windows #form .input,
 #windows .header .topic,
 .messages .msg,
 .sidebar {
-	font: 13px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
+	font-size: 13px;
 	line-height: 1.4;
 }
 
@@ -1492,7 +1471,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #windows #form .input {
-	font: 13px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
 	border: 1px solid #ddd;
 	border-radius: 2px;
 	margin: 0;
@@ -1691,7 +1669,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	z-index: 1000000;
 	display: none;
 	padding: 5px 8px;
-	font: 12px Lato;
+	font-size: 12px;
 	line-height: 1.2;
 	-webkit-font-smoothing: subpixel-antialiased;
 	color: #fff;
