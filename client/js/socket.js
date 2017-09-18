@@ -35,8 +35,6 @@ const socket = io({
 		});
 		// Hides the "Send Message" button
 		$("#submit").remove();
-
-		console.error(data);
 	});
 });
 

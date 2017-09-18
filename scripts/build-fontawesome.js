@@ -1,25 +1,27 @@
 "use strict";
 
-var fs = require("fs-extra");
+const colors = require("colors/safe");
+const fs = require("fs-extra");
+const log = require("../src/log");
 
-var srcDir = "./node_modules/font-awesome/fonts/";
-var destDir = "./client/fonts/";
-var fonts = [
+const srcDir = "./node_modules/font-awesome/fonts/";
+const destDir = "./client/fonts/";
+const fonts = [
 	"fontawesome-webfont.woff",
 	"fontawesome-webfont.woff2"
 ];
 
-fs.ensureDir(destDir, function(dirErr) {
+fs.ensureDir(destDir, (dirErr) => {
 	if (dirErr) {
-		console.error(dirErr);
+		log.error(dirErr);
 	}
 
-	fonts.forEach(function(font) {
-		fs.copy(srcDir + font, destDir + font, function(err) {
+	fonts.forEach((font) => {
+		fs.copy(srcDir + font, destDir + font, (err) => {
 			if (err) {
-				console.error(err);
+				log.error(err);
 			} else {
-				console.log(font + " successfully installed.");
+				log.info(colors.bold(font) + " successfully installed.");
 			}
 		});
 	});

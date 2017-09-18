@@ -15,7 +15,7 @@ class Utils {
 			"",
 			`    LOUNGE_HOME   Path for all configuration files and folders. Defaults to ${colors.green(Utils.defaultLoungeHome())}.`,
 			"",
-		].forEach((e) => console.log(e));
+		].forEach((e) => console.log(e)); // eslint-disable-line no-console
 	}
 
 	static defaultLoungeHome() {

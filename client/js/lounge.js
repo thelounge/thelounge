@@ -418,7 +418,7 @@ $(function() {
 		if (chan.hasClass("lobby")) {
 			cmd = "/quit";
 			var server = chan.find(".name").html();
-			if (!confirm("Disconnect from " + server + "?")) {
+			if (!confirm("Disconnect from " + server + "?")) { // eslint-disable-line no-alert
 				return false;
 			}
 		}
