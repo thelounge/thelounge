@@ -16,6 +16,7 @@ function timestamp(type, messageArgs) {
 	return messageArgs;
 }
 
+/* eslint-disable no-console */
 exports.error = function() {
 	console.error.apply(console, timestamp(colors.red("[ERROR]"), arguments));
 };
@@ -31,6 +32,7 @@ exports.info = function() {
 exports.debug = function() {
 	console.log.apply(console, timestamp(colors.green("[DEBUG]"), arguments));
 };
+/* eslint-enable no-console */
 
 exports.prompt = (options, callback) => {
 	options.prompt = timestamp(colors.cyan("[PROMPT]"), [options.text]).join(" ");

@@ -28,7 +28,6 @@ rules:
   linebreak-style: [2, unix]
   no-catch-shadow: 2
   no-confusing-arrow: 2
-  no-console: 0
   no-control-regex: 0
   no-duplicate-imports: 2
   no-else-return: 2
