@@ -9,54 +9,54 @@ env:
   node: true
 
 rules:
-  arrow-body-style: 2
-  arrow-parens: [2, always]
-  arrow-spacing: 2
-  block-scoped-var: 2
-  block-spacing: [2, always]
-  brace-style: [2, 1tbs]
-  comma-dangle: 0
-  curly: [2, all]
-  dot-location: [2, property]
-  dot-notation: 2
-  eol-last: 2
-  eqeqeq: 2
-  handle-callback-err: 2
-  indent: [2, tab]
-  key-spacing: [2, {beforeColon: false, afterColon: true}]
-  keyword-spacing: [2, {before: true, after: true}]
-  linebreak-style: [2, unix]
-  no-alert: 2
-  no-catch-shadow: 2
-  no-confusing-arrow: 2
-  no-control-regex: 0
-  no-duplicate-imports: 2
-  no-else-return: 2
-  no-implicit-globals: 2
-  no-multi-spaces: 2
-  no-multiple-empty-lines: [2, { "max": 1 }]
-  no-shadow: 2
-  no-template-curly-in-string: 2
-  no-trailing-spaces: 2
-  no-unsafe-negation: 2
-  no-useless-computed-key: 2
-  no-useless-return: 2
-  object-curly-spacing: [2, never]
-  padded-blocks: [2, never]
-  prefer-const: 2
-  quote-props: [2, as-needed]
-  quotes: [2, double, avoid-escape]
-  semi-spacing: 2
-  semi-style: [2, last]
-  semi: [2, always]
-  space-before-blocks: 2
-  space-before-function-paren: [2, never]
-  space-in-parens: [2, never]
-  space-infix-ops: 2
-  spaced-comment: [2, always]
-  strict: 2
-  template-curly-spacing: 2
-  yoda: 2
+  arrow-body-style: error
+  arrow-parens: [error, always]
+  arrow-spacing: error
+  block-scoped-var: error
+  block-spacing: [error, always]
+  brace-style: [error, 1tbs]
+  comma-dangle: off
+  curly: [error, all]
+  dot-location: [error, property]
+  dot-notation: error
+  eol-last: error
+  eqeqeq: error
+  handle-callback-err: error
+  indent: [error, tab]
+  key-spacing: [error, {beforeColon: false, afterColon: true}]
+  keyword-spacing: [error, {before: true, after: true}]
+  linebreak-style: [error, unix]
+  no-alert: error
+  no-catch-shadow: error
+  no-confusing-arrow: error
+  no-control-regex: off
+  no-duplicate-imports: error
+  no-else-return: error
+  no-implicit-globals: error
+  no-multi-spaces: error
+  no-multiple-empty-lines: [error, { "max": 1 }]
+  no-shadow: error
+  no-template-curly-in-string: error
+  no-trailing-spaces: error
+  no-unsafe-negation: error
+  no-useless-computed-key: error
+  no-useless-return: error
+  object-curly-spacing: [error, never]
+  padded-blocks: [error, never]
+  prefer-const: error
+  quote-props: [error, as-needed]
+  quotes: [error, double, avoid-escape]
+  semi-spacing: error
+  semi-style: [error, last]
+  semi: [error, always]
+  space-before-blocks: error
+  space-before-function-paren: [error, never]
+  space-in-parens: [error, never]
+  space-infix-ops: error
+  spaced-comment: [error, always]
+  strict: error
+  template-curly-spacing: error
+  yoda: error
 
 globals:
   log: false
