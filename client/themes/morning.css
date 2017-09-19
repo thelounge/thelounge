@@ -29,14 +29,6 @@ body {
 	background: #333c4a;
 }
 
-#windows .header .topic,
-#windows #form .input,
-.messages .msg,
-.sidebar {
-	font-family: inherit;
-	font-size: 13px;
-}
-
 #chat .count {
 	background-color: #2e3642;
 }
