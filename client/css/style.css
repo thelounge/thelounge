@@ -1469,6 +1469,15 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	line-height: 1.8;
 }
 
+.is-apple #help .key-all,
+#help .key-apple {
+	display: none;
+}
+
+.is-apple #help .key-apple {
+	display: inline-block;
+}
+
 #form {
 	background: #eee;
 	border-top: 1px solid #ddd;
