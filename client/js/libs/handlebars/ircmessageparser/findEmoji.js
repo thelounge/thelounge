@@ -1,6 +1,6 @@
 "use strict";
 
-const emojiRegExp = require("emoji-regex")();
+const emojiRegExp = require("emoji-regex/text.js")();
 
 function findEmoji(text) {
 	const result = [];
