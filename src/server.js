@@ -201,11 +201,6 @@ function index(req, res, next) {
 		pkg,
 		Helper.config
 	);
-	if (!data.theme.includes(".css")) { // Backwards compatibility for old way of specifying themes in settings
-		data.theme = `themes/${data.theme}.css`;
-	} else {
-		log.warn(`Referring to CSS files in the ${colors.green("theme")} setting of ${colors.green(Helper.CONFIG_PATH)} is ${colors.bold("deprecated")} and will be removed in a future version.`);
-	}
 	data.gitCommit = Helper.getGitCommit();
 	data.themes = themes.getAll();
 
