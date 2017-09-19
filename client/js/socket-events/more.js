@@ -79,11 +79,11 @@ socket.on("more", function(data) {
 
 chat.on("click", ".show-more-button", function() {
 	const self = $(this);
-	const lastMessage = self.closest(".chat").find(".msg").first();
+	const lastMessage = self.closest(".chat").find(".msg:not(.condensed)").first();
 	let lastMessageId = -1;
 
 	if (lastMessage.length > 0) {
-		lastMessageId = parseInt(lastMessage[0].id.replace("msg-", ""), 10);
+		lastMessageId = parseInt(lastMessage.attr("id").replace("msg-", ""), 10);
 	}
 
 	self
