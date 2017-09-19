@@ -29,6 +29,9 @@ function updateText(condensed, addedTypes) {
 			case "back":
 				strings.push(obj[type] + (obj[type] > 1 ? " users have come back" : " user has come back"));
 				break;
+			case "chghost":
+				strings.push(obj[type] + (obj[type] > 1 ? " users have changed hostname" : " user has changed hostname"));
+				break;
 			case "join":
 				strings.push(obj[type] + (obj[type] > 1 ? " users have joined the channel" : " user has joined the channel"));
 				break;

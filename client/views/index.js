@@ -7,6 +7,7 @@ module.exports = {
 		back: require("./actions/back.tpl"),
 		ban_list: require("./actions/ban_list.tpl"),
 		channel_list: require("./actions/channel_list.tpl"),
+		chghost: require("./actions/chghost.tpl"),
 		ctcp: require("./actions/ctcp.tpl"),
 		invite: require("./actions/invite.tpl"),
 		join: require("./actions/join.tpl"),
