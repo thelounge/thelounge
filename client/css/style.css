@@ -22,6 +22,7 @@ body {
 	-ms-user-select: none;
 	user-select: none;
 	cursor: default;
+	touch-action: none;
 
 	/**
 	  * Disable pull-to-refresh on mobile that conflicts with scrolling the message list.
@@ -137,6 +138,7 @@ kbd {
 .container {
 	margin: 80px auto;
 	max-width: 480px;
+	touch-action: pan-y;
 }
 
 ::-moz-placeholder {
@@ -470,6 +472,7 @@ kbd {
 
 #sidebar .networks {
 	padding: 20px 30px 0;
+	touch-action: pan-y;
 }
 
 #sidebar .networks:empty {
@@ -479,6 +482,7 @@ kbd {
 #sidebar .network,
 #sidebar .network-placeholder {
 	margin-bottom: 30px;
+	touch-action: pan-y;
 }
 
 #sidebar .empty {
@@ -894,6 +898,7 @@ kbd {
 	right: 0;
 	width: 180px;
 	transition: right 0.4s;
+	touch-action: pan-y;
 }
 
 #chat .show-more {
@@ -922,6 +927,7 @@ kbd {
 
 #chat .messages {
 	padding: 10px 0;
+	touch-action: pan-y;
 }
 
 #chat .msg {
@@ -1285,6 +1291,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	position: absolute;
 	top: 48px;
 	width: 100%;
+	touch-action: pan-y;
 }
 
 #chat .names-filtered {
@@ -1559,6 +1566,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	-webkit-flex: 1 0 auto;
 	flex: 1 0 auto;
 	align-self: center;
+	touch-action: pan-y;
 }
 
 #form #submit {
