@@ -168,6 +168,10 @@ $(function() {
 		});
 	}
 
+	if (navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i)) {
+		$(document.body).addClass("is-apple");
+	}
+
 	$("#form").on("submit", function(e) {
 		e.preventDefault();
 		utils.forceFocus();
