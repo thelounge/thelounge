@@ -46,14 +46,6 @@ body {
 	border-radius: 2px;
 }
 
-.btn-reconnect {
-	background: #e74c3c;
-	color: #fff;
-	border: 0;
-	border-radius: 0;
-	margin: 0;
-}
-
 @media (max-width: 768px) {
 	#sidebar {
 		left: -220px;

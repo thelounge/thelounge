@@ -23,6 +23,9 @@ const authPlugins = [
 	require("./plugins/auth/local"),
 ];
 
+// A random number that will force clients to reload the page if it differs
+const serverHash = Math.floor(Date.now() * Math.random());
+
 var manager = null;
 
 module.exports = function() {
@@ -135,7 +138,10 @@ module.exports = function() {
 			if (config.public) {
 				performAuthentication.call(socket, {});
 			} else {
-				socket.emit("auth", {success: true});
+				socket.emit("auth", {
+					serverHash: serverHash,
+					success: true,
+				});
 				socket.on("auth", performAuthentication);
 			}
 		});
@@ -225,7 +231,7 @@ function index(req, res, next) {
 	res.render("index", data);
 }
 
-function initializeClient(socket, client, token) {
+function initializeClient(socket, client, token, lastMessage) {
 	socket.emit("authorized");
 
 	socket.on("disconnect", function() {
@@ -389,11 +395,24 @@ function initializeClient(socket, client, token) {
 	socket.join(client.id);
 
 	const sendInitEvent = (tokenToSend) => {
+		let networks = client.networks;
+
+		if (lastMessage > -1) {
+			// We need a deep cloned object because we are going to remove unneeded messages
+			networks = _.cloneDeep(networks);
+
+			networks.forEach((network) => {
+				network.channels.forEach((channel) => {
+					channel.messages = channel.messages.filter((m) => m.id > lastMessage);
+				});
+			});
+		}
+
 		socket.emit("init", {
 			applicationServerKey: manager.webPush.vapidKeys.publicKey,
 			pushSubscription: client.config.sessions[token],
 			active: client.lastActiveChannel,
-			networks: client.networks,
+			networks: networks,
 			token: tokenToSend
 		});
 	};
@@ -423,7 +442,7 @@ function performAuthentication(data) {
 	const socket = this;
 	let client;
 
-	const finalInit = () => initializeClient(socket, client, data.token || null);
+	const finalInit = () => initializeClient(socket, client, data.token || null, data.lastMessage || -1);
 
 	const initClient = () => {
 		client.ip = getClientIp(socket.request);

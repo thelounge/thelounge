@@ -8,6 +8,7 @@ const utils = require("./utils");
 const sorting = require("./sorting");
 const constants = require("./constants");
 const condensed = require("./condensed");
+const helpers_parse = require("./libs/handlebars/parse");
 
 const chat = $("#chat");
 const sidebar = $("#sidebar");
@@ -27,14 +28,18 @@ module.exports = {
 	renderNetworks,
 };
 
-function buildChannelMessages(chanId, chanType, messages) {
+function buildChannelMessages(container, chanId, chanType, messages) {
 	return messages.reduce((docFragment, message) => {
 		appendMessage(docFragment, chanId, chanType, message);
 		return docFragment;
-	}, $(document.createDocumentFragment()));
+	}, container);
 }
 
 function appendMessage(container, chanId, chanType, msg) {
+	if (utils.lastMessageId < msg.id) {
+		utils.lastMessageId = msg.id;
+	}
+
 	let lastChild = container.children(".msg, .date-marker-container").last();
 	const renderedMessage = buildChatMessage(msg);
 
@@ -117,7 +122,7 @@ function renderChannel(data) {
 }
 
 function renderChannelMessages(data) {
-	const documentFragment = buildChannelMessages(data.id, data.type, data.messages);
+	const documentFragment = buildChannelMessages($(document.createDocumentFragment()), data.id, data.type, data.messages);
 	const channel = chat.find("#chan-" + data.id + " .messages").append(documentFragment);
 
 	const template = $(templates.unread_marker());
@@ -164,7 +169,7 @@ function renderChannelUsers(data) {
 	}
 }
 
-function renderNetworks(data) {
+function renderNetworks(data, singleNetwork) {
 	sidebar.find(".empty").hide();
 	sidebar.find(".networks").append(
 		templates.network({
@@ -172,15 +177,51 @@ function renderNetworks(data) {
 		})
 	);
 
+	let newChannels;
 	const channels = $.map(data.networks, function(n) {
 		return n.channels;
 	});
+
+	if (!singleNetwork && utils.lastMessageId > -1) {
+		newChannels = [];
+
+		channels.forEach((channel) => {
+			const chan = $("#chan-" + channel.id);
+
+			if (chan.length > 0) {
+				if (chan.data("type") === "channel") {
+					chan
+						.data("needsNamesRefresh", true)
+						.find(".header .topic")
+						.html(helpers_parse(channel.topic))
+						.attr("title", channel.topic);
+				}
+
+				if (channel.messages.length > 0) {
+					const container = chan.find(".messages");
+					buildChannelMessages(container, channel.id, channel.type, channel.messages);
+
+					if (container.find(".msg").length >= 100) {
+						container.find(".show-more").addClass("show");
+					}
+
+					container.trigger("keepToBottom");
+				}
+			} else {
+				newChannels.push(channel);
+			}
+		});
+	} else {
+		newChannels = channels;
+	}
+
 	chat.append(
 		templates.chat({
 			channels: channels
 		})
 	);
-	channels.forEach((channel) => {
+
+	newChannels.forEach((channel) => {
 		renderChannel(channel);
 
 		if (channel.type === "channel") {
