@@ -52,6 +52,7 @@
     "ldapjs": "1.0.1",
     "lodash": "4.17.4",
     "moment": "2.18.1",
+    "package-json": "4.0.1",
     "read": "1.0.7",
     "request": "2.82.0",
     "semver": "5.4.1",
