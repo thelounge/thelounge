@@ -83,7 +83,8 @@ button {
 }
 
 code,
-kbd {
+kbd,
+textarea#user-specified-css-input {
 	font-family: Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
 }
 
