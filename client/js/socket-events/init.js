@@ -50,7 +50,7 @@ socket.on("init", function(data) {
 });
 
 function openCorrectChannel(clientActive, serverActive) {
-	let target;
+	let target = $();
 
 	// Open last active channel
 	if (clientActive > 0) {
@@ -58,17 +58,22 @@ function openCorrectChannel(clientActive, serverActive) {
 	}
 
 	// Open window provided in location.hash
-	if (!target && window.location.hash) {
+	if (target.length === 0 && window.location.hash) {
 		target = $("#footer, #sidebar").find("[data-target='" + escape(window.location.hash) + "']");
 	}
 
 	// Open last active channel according to the server
-	if (!target) {
+	if (serverActive > 0 && target.length === 0) {
 		target = sidebar.find("[data-id='" + serverActive + "']");
 	}
 
+	// Open first available channel
+	if (target.length === 0) {
+		target = sidebar.find(".chan").first();
+	}
+
 	// If target channel is found, open it
-	if (target) {
+	if (target.length > 0) {
 		target.trigger("click", {
 			replaceHistory: true
 		});

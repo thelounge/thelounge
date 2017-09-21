@@ -14,7 +14,7 @@ Chan.Type = {
 	SPECIAL: "special",
 };
 
-var id = 0;
+let id = 1;
 
 function Chan(attr) {
 	_.defaults(this, attr, {

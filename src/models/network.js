@@ -5,7 +5,7 @@ var Chan = require("./chan");
 
 module.exports = Network;
 
-var id = 0;
+let id = 1;
 
 function Network(attr) {
 	_.defaults(this, attr, {
