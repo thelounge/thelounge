@@ -5,7 +5,6 @@ const request = require("request");
 const url = require("url");
 const Helper = require("../../helper");
 const findLinks = require("../../../client/js/libs/handlebars/ircmessageparser/findLinks");
-const es = require("event-stream");
 const storage = require("../storage");
 
 process.setMaxListeners(0);
@@ -155,6 +154,7 @@ function fetch(uri, cb) {
 	} catch (e) {
 		return cb(null);
 	}
+	const buffers = [];
 	var length = 0;
 	var limit = Helper.config.prefetchMaxImageSize * 1024;
 	req
@@ -166,18 +166,15 @@ function fetch(uri, cb) {
 			}
 		})
 		.on("error", function() {})
-		.pipe(es.map(function(data, next) {
+		.on("data", (data) => {
 			length += data.length;
-			if (length > limit) {
-				req.response.req.abort();
-			}
-			next(null, data);
-		}))
-		.pipe(es.wait(function(err, data) {
-			if (err) {
-				return cb(null);
-			}
+			buffers.push(data);
 
+			if (length > limit) {
+				req.abort();
+			}
+		})
+		.on("end", () => {
 			if (req.response.statusCode < 200 || req.response.statusCode > 299) {
 				return cb(null);
 			}
@@ -193,14 +190,12 @@ function fetch(uri, cb) {
 				type = req.response.headers["content-type"].split(/ *; */).shift();
 			}
 
-			data = {
-				data: data,
+			cb({
+				data: Buffer.concat(buffers, length),
 				type: type,
 				size: size
-			};
-
-			cb(data);
-		}));
+			});
+		});
 }
 
 // https://github.com/request/request/issues/2120
