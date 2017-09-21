@@ -855,8 +855,12 @@ kbd {
 #windows .header .topic,
 .messages .msg,
 .sidebar {
-	font-size: 13px;
+	font-size: 14px;
 	line-height: 1.4;
+}
+
+#windows #form .input {
+	font-size: 13px;
 }
 
 #windows #chat .header {
@@ -1525,7 +1529,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	background: #f6f6f6;
 	color: #666;
 	font: inherit;
-	font-size: 11px;
+	font-size: 13px;
 	margin: 4px;
 	line-height: 22px;
 	height: 24px;
@@ -2000,6 +2004,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		margin-top: 60px !important;
 	}
 
+	.messages .msg {
+		font-size: 16px;
+	}
+
 	#sidebar,
 	#footer {
 		left: -220px;
@@ -2040,14 +2048,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 	#chat .title::before {
 		display: none;
-	}
-}
-
-@media (min-width: 1610px) {
-	#windows .header .topic,
-	.messages .msg,
-	.sidebar {
-		font-size: 14px;
 	}
 }
 
