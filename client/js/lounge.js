@@ -315,7 +315,7 @@ $(function() {
 		const state = {};
 
 		if (self.hasClass("chan")) {
-			state.clickTarget = `.chan[data-id="${self.data("id")}"]`;
+			state.clickTarget = `#sidebar .chan[data-id="${self.data("id")}"]`;
 		} else {
 			state.clickTarget = `#footer button[data-target="${target}"]`;
 		}
@@ -598,8 +598,21 @@ $(function() {
 			return;
 		}
 
-		const {clickTarget} = state;
+		let {clickTarget} = state;
+
 		if (clickTarget) {
+			// This will be true when click target corresponds to opening a thumbnail,
+			// browsing to the previous/next thumbnail, or closing the image viewer.
+			const imageViewerRelated = clickTarget.includes(".toggle-thumbnail");
+
+			// If the click target is not related to the image viewer but the viewer
+			// is currently opened, we need to close it.
+			if (!imageViewerRelated && $("#image-viewer").hasClass("opened")) {
+				clickTarget += ", #image-viewer";
+			}
+
+			// Emit the click to the target, while making sure it is not going to be
+			// added to the state again.
 			$(clickTarget).trigger("click", {
 				pushState: false
 			});
