@@ -430,7 +430,7 @@ Client.prototype.open = function(socketId, target) {
 
 	target.chan.firstUnread = 0;
 	target.chan.unread = 0;
-	target.chan.highlight = false;
+	target.chan.highlight = 0;
 
 	this.attachedClients[socketId].openChannel = target.chan.id;
 	this.lastActiveChannel = target.chan.id;

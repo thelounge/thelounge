@@ -106,20 +106,29 @@ module.exports = function(irc, network) {
 
 		// Do not send notifications for messages older than 15 minutes (znc buffer for example)
 		if (highlight && (!data.time || data.time > Date.now() - 900000)) {
-			let title = data.nick;
+			let title = chan.name;
+			let body = Helper.cleanIrcMessage(data.message);
 
+			// In channels, prepend sender nickname to the message
 			if (chan.type !== Chan.Type.QUERY) {
-				title += ` (${chan.name}) mentioned you`;
-			} else {
-				title += " sent you a message";
+				body = `${data.nick}: ${body}`;
+			}
+
+			// If a channel is active on any client, highlight won't increment and notification will say (0 mention)
+			if (chan.highlight > 0) {
+				title += ` (${chan.highlight} ${chan.type === Chan.Type.QUERY ? "new message" : "mention"}${chan.highlight > 1 ? "s" : ""})`;
+			}
+
+			if (chan.highlight > 1) {
+				body += `\n\n… and ${chan.highlight - 1} other message${chan.highlight > 2 ? "s" : ""}`;
 			}
 
 			client.manager.webPush.push(client, {
 				type: "notification",
 				chanId: chan.id,
 				timestamp: data.time || Date.now(),
-				title: `The Lounge: ${title}`,
-				body: Helper.cleanIrcMessage(data.message)
+				title: title,
+				body: body
 			}, true);
 		}
 	}
