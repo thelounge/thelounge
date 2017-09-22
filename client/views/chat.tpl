@@ -3,7 +3,7 @@
 	<div class="header">
 		<button class="lt" aria-label="Toggle channel list"></button>
 		{{#equal type "channel"}}
-			<span class="rt-tooltip tooltipped tooltipped-w" aria-label="Toggle user list">
+			<span class="rt-tooltip tooltipped tooltipped-w tooltipped-no-touch" aria-label="Toggle user list">
 				<button class="rt" aria-label="Toggle user list"></button>
 			</span>
 		{{/equal}}
