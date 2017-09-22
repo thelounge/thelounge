@@ -5,7 +5,6 @@ var colors = require("colors/safe");
 var pkg = require("../package.json");
 var Chan = require("./models/chan");
 var crypto = require("crypto");
-var userLog = require("./userLog");
 var Msg = require("./models/msg");
 var Network = require("./models/network");
 var ircFramework = require("irc-framework");
@@ -16,6 +15,7 @@ module.exports = Client;
 
 var id = 0;
 var events = [
+	"away",
 	"connection",
 	"unhandled",
 	"banlist",
@@ -113,23 +113,6 @@ Client.prototype.isRegistered = function() {
 Client.prototype.emit = function(event, data) {
 	if (this.sockets !== null) {
 		this.sockets.in(this.id).emit(event, data);
-	}
-	if (this.config.log === true) {
-		if (event === "msg") {
-			var target = this.find(data.chan);
-			if (target) {
-				var chan = target.chan.name;
-				if (target.chan.type === Chan.Type.LOBBY) {
-					chan = target.network.host;
-				}
-				userLog.write(
-					this.name,
-					target.network.host,
-					chan,
-					data.msg
-				);
-			}
-		}
 	}
 };
 
@@ -412,10 +395,20 @@ Client.prototype.more = function(data) {
 	}
 
 	const chan = target.chan;
-	const index = chan.messages.findIndex((val) => val.id === data.lastId);
+	let messages = [];
+	let index = 0;
 
-	// If we don't find the requested message, send an empty array
-	const messages = index > 0 ? chan.messages.slice(Math.max(0, index - 100), index) : [];
+	// If client requests -1, send last 100 messages
+	if (data.lastId < 0) {
+		index = chan.messages.length;
+	} else {
+		index = chan.messages.findIndex((val) => val.id === data.lastId);
+	}
+
+	// If requested id is not found, an empty array will be sent
+	if (index > 0) {
+		messages = chan.messages.slice(Math.max(0, index - 100), index);
+	}
 
 	client.emit("more", {
 		chan: chan.id,
@@ -437,7 +430,7 @@ Client.prototype.open = function(socketId, target) {
 
 	target.chan.firstUnread = 0;
 	target.chan.unread = 0;
-	target.chan.highlight = false;
+	target.chan.highlight = 0;
 
 	this.attachedClients[socketId].openChannel = target.chan.id;
 	this.lastActiveChannel = target.chan.id;

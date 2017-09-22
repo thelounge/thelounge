@@ -37,6 +37,7 @@ const commands = [
 	"/join",
 	"/kick",
 	"/leave",
+	"/list",
 	"/me",
 	"/mode",
 	"/msg",
@@ -59,6 +60,8 @@ const commands = [
 ];
 
 const actionTypes = [
+	"away",
+	"back",
 	"ban_list",
 	"invite",
 	"join",
@@ -76,6 +79,8 @@ const actionTypes = [
 ];
 
 const condensedTypes = [
+	"away",
+	"back",
 	"join",
 	"part",
 	"quit",

@@ -32,6 +32,7 @@ require("./add");
 require("./remove");
 require("./reset");
 require("./edit");
+require("./install");
 
 program.parse(process.argv);
 

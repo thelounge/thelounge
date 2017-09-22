@@ -4,16 +4,25 @@ const $ = require("jquery");
 const chat = $("#chat");
 const input = $("#input");
 
+var serverHash = -1;
+var lastMessageId = -1;
+
 module.exports = {
 	findCurrentNetworkChan,
 	clear,
+	collapse,
+	expand,
+	join,
+	serverHash,
+	lastMessageId,
 	confirmExit,
 	forceFocus,
 	move,
 	resetHeight,
 	setNick,
 	toggleNickEditor,
-	toggleNotificationMarkers
+	toggleNotificationMarkers,
+	requestIdleCallback,
 };
 
 function findCurrentNetworkChan(name) {
@@ -42,6 +51,26 @@ function clear() {
 	chat.find(".active")
 		.find(".show-more").addClass("show").end()
 		.find(".messages .msg, .date-marker-container").remove();
+	return true;
+}
+
+function collapse() {
+	$(".chan.active .toggle-button.opened").click();
+	return true;
+}
+
+function expand() {
+	$(".chan.active .toggle-button:not(.opened)").click();
+	return true;
+}
+
+function join(channel) {
+	var chan = findCurrentNetworkChan(channel);
+
+	if (chan.length) {
+		chan.click();
+		return true;
+	}
 }
 
 function toggleNickEditor(toggle) {
@@ -89,4 +118,14 @@ function move(array, old_index, new_index) {
 	}
 	array.splice(new_index, 0, array.splice(old_index, 1)[0]);
 	return array;
+}
+
+function requestIdleCallback(callback, timeout) {
+	if (window.requestIdleCallback) {
+		// During an idle period the user agent will run idle callbacks in FIFO order
+		// until either the idle period ends or there are no more idle callbacks eligible to be run.
+		window.requestIdleCallback(callback, {timeout: timeout});
+	} else {
+		callback();
+	}
 }

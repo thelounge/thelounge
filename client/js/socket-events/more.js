@@ -33,8 +33,30 @@ socket.on("more", function(data) {
 	}
 
 	// Add the older messages
-	const documentFragment = render.buildChannelMessages(data.chan, type, data.messages);
-	chan.prepend(documentFragment).end();
+	const documentFragment = render.buildChannelMessages($(document.createDocumentFragment()), data.chan, type, data.messages);
+	chan.prepend(documentFragment);
+
+	// Move unread marker to correct spot if needed
+	const unreadMarker = chan.find(".unread-marker");
+	const firstUnread = unreadMarker.data("unread-id");
+
+	if (firstUnread > 0) {
+		let first = chan.find("#msg-" + firstUnread);
+
+		if (!first.length) {
+			chan.prepend(unreadMarker);
+		} else {
+			const parent = first.parent();
+
+			if (parent.hasClass("condensed")) {
+				first = parent;
+			}
+
+			unreadMarker.data("unread-id", 0);
+
+			first.before(unreadMarker);
+		}
+	}
 
 	// restore scroll position
 	const position = chan.height() - heightOld;
@@ -53,4 +75,23 @@ socket.on("more", function(data) {
 	scrollable.find(".show-more-button")
 		.text("Show older messages")
 		.prop("disabled", false);
+});
+
+chat.on("click", ".show-more-button", function() {
+	const self = $(this);
+	const lastMessage = self.closest(".chat").find(".msg:not(.condensed)").first();
+	let lastMessageId = -1;
+
+	if (lastMessage.length > 0) {
+		lastMessageId = parseInt(lastMessage.attr("id").replace("msg-", ""), 10);
+	}
+
+	self
+		.text("Loading older messages…")
+		.prop("disabled", true);
+
+	socket.emit("more", {
+		target: self.data("id"),
+		lastId: lastMessageId
+	});
 });

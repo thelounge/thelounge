@@ -29,14 +29,6 @@ body {
 	background: #333c4a;
 }
 
-#windows .header .topic,
-#windows #form .input,
-.messages .msg,
-.sidebar {
-	font-family: inherit;
-	font-size: 13px;
-}
-
 #chat .count {
 	background-color: #2e3642;
 }
@@ -211,14 +203,6 @@ body {
 
 #chat .toggle-content .body {
 	color: #99a2b4;
-}
-
-.btn-reconnect {
-	background: #e74c3c;
-	color: #fff;
-	border: 0;
-	border-radius: 0;
-	margin: 0;
 }
 
 /* Form elements */

@@ -1,26 +1,4 @@
 @font-face {
-	font-family: "Lato";
-	font-weight: 400;
-	font-style: normal;
-	src:
-		local("Lato Regular"),
-		local("Lato-regular"),
-		url("fonts/Lato-regular/Lato-regular.woff2") format("woff2"),
-		url("fonts/Lato-regular/Lato-regular.woff") format("woff");
-}
-
-@font-face {
-	font-family: "Lato";
-	font-weight: 700;
-	font-style: normal;
-	src:
-		local("Lato Bold"),
-		local("Lato-700"),
-		url("fonts/Lato-700/Lato-700.woff2") format("woff2"),
-		url("fonts/Lato-700/Lato-700.woff") format("woff");
-}
-
-@font-face {
 	font-family: "FontAwesome";
 	font-weight: normal;
 	font-style: normal;
@@ -37,13 +15,14 @@ body {
 body {
 	background: #455164;
 	color: #222;
-	font: 16px Lato, sans-serif;
+	font: 16px -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 	margin: 0;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
 	cursor: default;
+	touch-action: none;
 
 	/**
 	  * Disable pull-to-refresh on mobile that conflicts with scrolling the message list.
@@ -159,6 +138,7 @@ kbd {
 .container {
 	margin: 80px auto;
 	max-width: 480px;
+	touch-action: pan-y;
 }
 
 ::-moz-placeholder {
@@ -174,6 +154,7 @@ kbd {
 	color: rgba(0, 0, 0, 0.35) !important;
 }
 
+#js-copy-hack,
 #help,
 #windows .header .title,
 #windows .header .topic,
@@ -183,6 +164,16 @@ kbd {
 	-ms-user-select: text;
 	user-select: text;
 	cursor: text;
+}
+
+#js-copy-hack {
+	position: absolute;
+	left: -999999px;
+}
+
+#chat #js-copy-hack .condensed:not(.closed) .msg,
+#chat #js-copy-hack > .msg {
+	display: block;
 }
 
 /* Icons */
@@ -197,6 +188,8 @@ kbd {
 #settings .extra-help,
 #settings #play::before,
 #form #submit::before,
+#chat .away .from::before,
+#chat .back .from::before,
 #chat .invite .from::before,
 #chat .join .from::before,
 #chat .kick .from::before,
@@ -246,6 +239,12 @@ kbd {
 #footer .sign-out::before { content: "\f011"; /* http://fontawesome.io/icon/power-off/ */ }
 
 #form #submit::before { content: "\f1d8"; /* http://fontawesome.io/icon/paper-plane/ */ }
+
+#chat .away .from::before,
+#chat .back .from::before {
+	content: "\f017"; /* http://fontawesome.io/icon/clock-o/ */
+	color: #7f8c8d;
+}
 
 #chat .invite .from::before {
 	content: "\f003"; /* http://fontawesome.io/icon/envelope-o/ */
@@ -473,6 +472,7 @@ kbd {
 
 #sidebar .networks {
 	padding: 20px 30px 0;
+	touch-action: pan-y;
 }
 
 #sidebar .networks:empty {
@@ -482,6 +482,7 @@ kbd {
 #sidebar .network,
 #sidebar .network-placeholder {
 	margin-bottom: 30px;
+	touch-action: pan-y;
 }
 
 #sidebar .empty {
@@ -834,7 +835,7 @@ kbd {
 	display: flex;
 }
 
-#chat .condensed-summary:hover {
+#chat .condensed-summary .content:hover {
 	opacity: 0.6;
 }
 
@@ -850,11 +851,16 @@ kbd {
 	visibility: hidden;
 }
 
+#windows #form .input,
 #windows .header .topic,
 .messages .msg,
 .sidebar {
-	font: 13px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
+	font-size: 14px;
 	line-height: 1.4;
+}
+
+#windows #form .input {
+	font-size: 13px;
 }
 
 #windows #chat .header {
@@ -896,6 +902,7 @@ kbd {
 	right: 0;
 	width: 180px;
 	transition: right 0.4s;
+	touch-action: pan-y;
 }
 
 #chat .show-more {
@@ -924,6 +931,7 @@ kbd {
 
 #chat .messages {
 	padding: 10px 0;
+	touch-action: pan-y;
 }
 
 #chat .msg {
@@ -1001,7 +1009,6 @@ kbd {
 #chat .time,
 #chat .from,
 #chat .content {
-	display: block;
 	padding: 2px 0;
 	flex: 0 0 auto;
 }
@@ -1147,6 +1154,8 @@ kbd {
 }
 
 #chat .condensed .content,
+#chat .away .content,
+#chat .back .content,
 #chat .join .content,
 #chat .kick .content,
 #chat .mode .content,
@@ -1286,6 +1295,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	position: absolute;
 	top: 48px;
 	width: 100%;
+	touch-action: pan-y;
 }
 
 #chat .names-filtered {
@@ -1463,6 +1473,15 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	line-height: 1.8;
 }
 
+.is-apple #help .key-all,
+#help .key-apple {
+	display: none;
+}
+
+.is-apple #help .key-apple {
+	display: inline-block;
+}
+
 #form {
 	background: #eee;
 	border-top: 1px solid #ddd;
@@ -1472,7 +1491,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #windows #form .input {
-	font: 13px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
 	border: 1px solid #ddd;
 	border-radius: 2px;
 	margin: 0;
@@ -1485,6 +1503,15 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #connection-error {
+	font-size: 12px;
+	line-height: 36px;
+	font-weight: bold;
+	letter-spacing: 1px;
+	word-spacing: 3px;
+	text-transform: uppercase;
+	background: #e74c3c;
+	color: #fff;
+	text-align: center;
 	display: none;
 }
 
@@ -1502,7 +1529,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	background: #f6f6f6;
 	color: #666;
 	font: inherit;
-	font-size: 11px;
+	font-size: 13px;
 	margin: 4px;
 	line-height: 22px;
 	height: 24px;
@@ -1561,6 +1588,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	-webkit-flex: 1 0 auto;
 	flex: 1 0 auto;
 	align-self: center;
+	touch-action: pan-y;
 }
 
 #form #submit {
@@ -1671,7 +1699,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	z-index: 1000000;
 	display: none;
 	padding: 5px 8px;
-	font: 12px Lato;
+	font-size: 12px;
 	line-height: 1.2;
 	-webkit-font-smoothing: subpixel-antialiased;
 	color: #fff;
@@ -1976,6 +2004,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		margin-top: 60px !important;
 	}
 
+	.messages .msg {
+		font-size: 16px;
+	}
+
 	#sidebar,
 	#footer {
 		left: -220px;
@@ -2016,14 +2048,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 	#chat .title::before {
 		display: none;
-	}
-}
-
-@media (min-width: 1610px) {
-	#windows .header .topic,
-	.messages .msg,
-	.sidebar {
-		font-size: 14px;
 	}
 }
 
@@ -2180,6 +2204,13 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 	/* Top/Bottom margins + button height + image/button margin */
 	max-height: calc(100vh - 2 * 10px - 37px - 10px);
+
+	/* Checkered background for transparent images */
+	background-position: 0 0, 10px 10px;
+	background-size: 20px 20px;
+	background-image:
+		linear-gradient(45deg, #eee 25%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 75%, #eee 75%, #eee 100%),
+		linear-gradient(45deg, #eee 25%, #fff 25%, #fff 75%, #eee 75%, #eee 100%);
 }
 
 #image-viewer .open-btn {

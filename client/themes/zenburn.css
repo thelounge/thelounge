@@ -30,14 +30,6 @@ body {
 	background: #3f3f3f;
 }
 
-#windows .header .topic,
-#windows #form .input,
-.messages .msg,
-.sidebar {
-	font-family: inherit;
-	font-size: 13px;
-}
-
 #settings,
 #sign-in,
 #connect .title {
@@ -238,14 +230,6 @@ body {
 
 #chat .toggle-content .body {
 	color: #d2d39b;
-}
-
-.btn-reconnect {
-	background: #e74c3c;
-	color: #fff;
-	border: 0;
-	border-radius: 0;
-	margin: 0;
 }
 
 /* Form elements */

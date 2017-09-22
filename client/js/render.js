@@ -8,6 +8,7 @@ const utils = require("./utils");
 const sorting = require("./sorting");
 const constants = require("./constants");
 const condensed = require("./condensed");
+const helpers_parse = require("./libs/handlebars/parse");
 
 const chat = $("#chat");
 const sidebar = $("#sidebar");
@@ -27,45 +28,29 @@ module.exports = {
 	renderNetworks,
 };
 
-function buildChannelMessages(chanId, chanType, messages) {
+function buildChannelMessages(container, chanId, chanType, messages) {
 	return messages.reduce((docFragment, message) => {
 		appendMessage(docFragment, chanId, chanType, message);
 		return docFragment;
-	}, $(document.createDocumentFragment()));
+	}, container);
 }
 
 function appendMessage(container, chanId, chanType, msg) {
-	const renderedMessage = buildChatMessage(chanId, msg);
+	if (utils.lastMessageId < msg.id) {
+		utils.lastMessageId = msg.id;
+	}
+
+	let lastChild = container.children(".msg, .date-marker-container").last();
+	const renderedMessage = buildChatMessage(msg);
 
 	// Check if date changed
-	let lastChild = container.find(".msg").last();
 	const msgTime = new Date(msg.time);
-
-	// It's the first message in a window,
-	// then just append the message and do nothing else
-	if (lastChild.length === 0) {
-		container
-			.append(templates.date_marker({msgDate: msgTime}))
-			.append(renderedMessage);
-
-		return;
-	}
-
-	const prevMsgTime = new Date(lastChild.attr("data-time"));
-	const parent = lastChild.parent();
-
-	// If this message is condensed, we have to work on the wrapper
-	if (parent.hasClass("condensed")) {
-		lastChild = parent;
-	}
+	const prevMsgTime = new Date(lastChild.data("time"));
 
 	// Insert date marker if date changed compared to previous message
 	if (prevMsgTime.toDateString() !== msgTime.toDateString()) {
-		lastChild.after(templates.date_marker({msgDate: msgTime}));
-
-		// If date changed, we don't need to do condensed logic
-		container.append(renderedMessage);
-		return;
+		lastChild = $(templates.date_marker({time: msg.time}));
+		container.append(lastChild);
 	}
 
 	// If current window is not a channel or this message is not condensable,
@@ -83,25 +68,16 @@ function appendMessage(container, chanId, chanType, msg) {
 		return;
 	}
 
-	const newCondensed = buildChatMessage(chanId, {
-		type: "condensed",
-		time: msg.time,
-		previews: []
-	});
+	// Always create a condensed container
+	const newCondensed = $(templates.msg_condensed({time: msg.time}));
 
 	condensed.updateText(newCondensed, [msg.type]);
 	newCondensed.append(renderedMessage);
 	container.append(newCondensed);
 }
 
-function buildChatMessage(chanId, msg) {
+function buildChatMessage(msg) {
 	const type = msg.type;
-	let target = "#chan-" + chanId;
-	if (type === "error") {
-		target = "#chan-" + chat.find(".active").data("id");
-	}
-
-	const chan = chat.find(target);
 	let template = "msg";
 
 	// See if any of the custom highlight regexes match
@@ -117,8 +93,6 @@ function buildChatMessage(chanId, msg) {
 		template = "msg_action";
 	} else if (type === "unhandled") {
 		template = "msg_unhandled";
-	} else if (type === "condensed") {
-		template = "msg_condensed";
 	}
 
 	const renderedMessage = $(templates[template](msg));
@@ -131,17 +105,6 @@ function buildChatMessage(chanId, msg) {
 	msg.previews.forEach((preview) => {
 		renderPreview(preview, renderedMessage);
 	});
-
-	if ((type === "message" || type === "action" || type === "notice") && chan.hasClass("channel")) {
-		const nicks = chan.find(".users").data("nicks");
-		if (nicks) {
-			const find = nicks.indexOf(msg.from);
-			if (find !== -1) {
-				nicks.splice(find, 1);
-				nicks.unshift(msg.from);
-			}
-		}
-	}
 
 	return renderedMessage;
 }
@@ -159,22 +122,28 @@ function renderChannel(data) {
 }
 
 function renderChannelMessages(data) {
-	const documentFragment = buildChannelMessages(data.id, data.type, data.messages);
+	const documentFragment = buildChannelMessages($(document.createDocumentFragment()), data.id, data.type, data.messages);
 	const channel = chat.find("#chan-" + data.id + " .messages").append(documentFragment);
 
-	if (data.firstUnread > 0) {
-		const first = channel.find("#msg-" + data.firstUnread);
+	const template = $(templates.unread_marker());
 
-		// TODO: If the message is far off in the history, we still need to append the marker into DOM
+	if (data.firstUnread > 0) {
+		let first = channel.find("#msg-" + data.firstUnread);
+
 		if (!first.length) {
-			channel.prepend(templates.unread_marker());
-		} else if (first.parent().hasClass("condensed")) {
-			first.parent().before(templates.unread_marker());
+			template.data("unread-id", data.firstUnread);
+			channel.prepend(template);
 		} else {
-			first.before(templates.unread_marker());
+			const parent = first.parent();
+
+			if (parent.hasClass("condensed")) {
+				first = parent;
+			}
+
+			first.before(template);
 		}
 	} else {
-		channel.append(templates.unread_marker());
+		channel.append(template);
 	}
 }
 
@@ -200,7 +169,7 @@ function renderChannelUsers(data) {
 	}
 }
 
-function renderNetworks(data) {
+function renderNetworks(data, singleNetwork) {
 	sidebar.find(".empty").hide();
 	sidebar.find(".networks").append(
 		templates.network({
@@ -208,15 +177,51 @@ function renderNetworks(data) {
 		})
 	);
 
+	let newChannels;
 	const channels = $.map(data.networks, function(n) {
 		return n.channels;
 	});
+
+	if (!singleNetwork && utils.lastMessageId > -1) {
+		newChannels = [];
+
+		channels.forEach((channel) => {
+			const chan = $("#chan-" + channel.id);
+
+			if (chan.length > 0) {
+				if (chan.data("type") === "channel") {
+					chan
+						.data("needsNamesRefresh", true)
+						.find(".header .topic")
+						.html(helpers_parse(channel.topic))
+						.attr("title", channel.topic);
+				}
+
+				if (channel.messages.length > 0) {
+					const container = chan.find(".messages");
+					buildChannelMessages(container, channel.id, channel.type, channel.messages);
+
+					if (container.find(".msg").length >= 100) {
+						container.find(".show-more").addClass("show");
+					}
+
+					container.trigger("keepToBottom");
+				}
+			} else {
+				newChannels.push(channel);
+			}
+		});
+	} else {
+		newChannels = channels;
+	}
+
 	chat.append(
 		templates.chat({
 			channels: channels
 		})
 	);
-	channels.forEach((channel) => {
+
+	newChannels.forEach((channel) => {
 		renderChannel(channel);
 
 		if (channel.type === "channel") {

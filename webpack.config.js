@@ -79,8 +79,6 @@ if (process.env.NODE_ENV === "production") {
 		sourceMap: true,
 		comments: false
 	}));
-} else {
-	console.log("Building in development mode, bundles will not be minified.");
 }
 
 module.exports = config;

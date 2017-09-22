@@ -63,7 +63,7 @@
 				</div>
 				<div id="chat-container" class="window">
 					<div id="chat"></div>
-					<button id="connection-error" class="btn btn-reconnect">Client connection lost &mdash; Click here to reconnect</button>
+					<div id="connection-error"></div>
 					<form id="form" method="post" action="">
 						<div class="input">
 							<span id="nick">
@@ -225,8 +225,8 @@
 							<div class="col-sm-12">
 								<h2>
 									Status messages
-									<span class="tooltipped tooltipped-n tooltipped-no-delay" aria-label="Joins, parts, kicks, nick changes, and mode changes">
-										<button class="extra-help" aria-label="Joins, parts, kicks, nick changes, and mode changes"></button>
+									<span class="tooltipped tooltipped-n tooltipped-no-delay" aria-label="Joins, parts, kicks, nick changes, away changes, and mode changes">
+										<button class="extra-help" aria-label="Joins, parts, kicks, nick changes, away changes, and mode changes"></button>
 									</span>
 								</h2>
 							</div>
@@ -264,8 +264,8 @@
 								<label for="theme-select" class="sr-only">Theme</label>
 								<select id="theme-select" name="theme" class="input">
 									{{#each themes}}
-										<option value="{{filename}}">
-											{{name}}
+										<option value="{{name}}">
+											{{displayName}}
 										</option>
 									{{/each}}
 								</select>
@@ -392,11 +392,9 @@
 
 						<h2>Keyboard Shortcuts</h2>
 
-						<h3>On Windows / Linux</h3>
-
 						<div class="help-item">
 							<div class="subject">
-								<kbd>Ctrl</kbd> + <kbd>↑</kbd> / <kbd>↓</kbd>
+								<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>↑</kbd> / <kbd>↓</kbd>
 							</div>
 							<div class="description">
 								<p>Switch to the previous/next window in the channel list</p>
@@ -405,16 +403,7 @@
 
 						<div class="help-item">
 							<div class="subject">
-								<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>L</kbd>
-							</div>
-							<div class="description">
-								<p>Clear the current screen</p>
-							</div>
-						</div>
-
-						<div class="help-item">
-							<div class="subject">
-								<kbd>Ctrl</kbd> + <kbd>K</kbd>
+								<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>K</kbd>
 							</div>
 							<div class="description">
 								<p>
@@ -431,7 +420,7 @@
 
 						<div class="help-item">
 							<div class="subject">
-								<kbd>Ctrl</kbd> + <kbd>B</kbd>
+								<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>B</kbd>
 							</div>
 							<div class="description">
 								<p>Mark all text typed after this shortcut as bold.</p>
@@ -440,7 +429,7 @@
 
 						<div class="help-item">
 							<div class="subject">
-								<kbd>Ctrl</kbd> + <kbd>U</kbd>
+								<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>U</kbd>
 							</div>
 							<div class="description">
 								<p>Mark all text typed after this shortcut as underlined.</p>
@@ -449,7 +438,7 @@
 
 						<div class="help-item">
 							<div class="subject">
-								<kbd>Ctrl</kbd> + <kbd>I</kbd>
+								<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>I</kbd>
 							</div>
 							<div class="description">
 								<p>Mark all text typed after this shortcut as italics.</p>
@@ -458,83 +447,7 @@
 
 						<div class="help-item">
 							<div class="subject">
-								<kbd>Ctrl</kbd> + <kbd>O</kbd>
-							</div>
-							<div class="description">
-								<p>
-									Mark all text typed after this shortcut to be reset to its
-									original formatting.
-								</p>
-							</div>
-						</div>
-
-						<h3>On macOS</h3>
-
-						<div class="help-item">
-							<div class="subject">
-								<kbd>⌘</kbd> + <kbd>↑</kbd> / <kbd>↓</kbd>
-							</div>
-							<div class="description">
-								<p>Switch to the previous/next window in the channel list</p>
-							</div>
-						</div>
-
-						<div class="help-item">
-							<div class="subject">
-								<kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>L</kbd>
-							</div>
-							<div class="description">
-								<p>Clear the current screen</p>
-							</div>
-						</div>
-
-						<div class="help-item">
-							<div class="subject">
-								<kbd>⌘</kbd> + <kbd>K</kbd>
-							</div>
-							<div class="description">
-								<p>
-									Mark any text typed after this shortcut to be colored. After
-									hitting this shortcut, enter an integer in the
-									<code>0—15</code> range to select the desired color.
-								</p>
-								<p>
-									A color reference can be found
-									<a href="https://modern.ircdocs.horse/formatting.html#colors" target="_blank" rel="noopener">here</a>.
-								</p>
-							</div>
-						</div>
-
-						<div class="help-item">
-							<div class="subject">
-								<kbd>⌘</kbd> + <kbd>B</kbd>
-							</div>
-							<div class="description">
-								<p>Mark all text typed after this shortcut as bold.</p>
-							</div>
-						</div>
-
-						<div class="help-item">
-							<div class="subject">
-								<kbd>⌘</kbd> + <kbd>U</kbd>
-							</div>
-							<div class="description">
-								<p>Mark all text typed after this shortcut as underlined.</p>
-							</div>
-						</div>
-
-						<div class="help-item">
-							<div class="subject">
-								<kbd>⌘</kbd> + <kbd>I</kbd>
-							</div>
-							<div class="description">
-								<p>Mark all text typed after this shortcut as italics.</p>
-							</div>
-						</div>
-
-						<div class="help-item">
-							<div class="subject">
-								<kbd>⌘</kbd> + <kbd>O</kbd>
+								<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>O</kbd>
 							</div>
 							<div class="description">
 								<p>
@@ -580,15 +493,6 @@
 							</div>
 							<div class="description">
 								<p>Load the banlist for the current channel.</p>
-							</div>
-						</div>
-
-						<div class="help-item">
-							<div class="subject">
-								<code>/clear</code>
-							</div>
-							<div class="description">
-								<p>Clear the current screen.</p>
 							</div>
 						</div>
 
@@ -787,10 +691,13 @@
 
 						<div class="help-item">
 							<div class="subject">
-								<code>/part</code>
+								<code>/part [channel]</code>
 							</div>
 							<div class="description">
-								<p>Close the current channel or private message window.</p>
+								<p>
+									Close the specified channel or private message window, or the
+									current channel if <code>channel</code> is ommitted.
+								</p>
 								<p>Aliases: <code>/close</code>, <code>/leave</code></p>
 							</div>
 						</div>

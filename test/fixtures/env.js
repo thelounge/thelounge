@@ -1,7 +1,7 @@
 "use strict";
 
 global.log = {
-	error: () => console.error.apply(console, arguments),
+	error: () => console.error.apply(console, arguments), // eslint-disable-line no-console
 	warn: () => {},
 	info: () => {},
 	debug: () => {},

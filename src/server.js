@@ -11,10 +11,20 @@ var path = require("path");
 var io = require("socket.io");
 var dns = require("dns");
 var Helper = require("./helper");
-var ldap = require("ldapjs");
 var colors = require("colors/safe");
 const net = require("net");
 const Identification = require("./identification");
+const themes = require("./plugins/themes");
+
+// The order defined the priority: the first available plugin is used
+// ALways keep local auth in the end, which should always be enabled.
+const authPlugins = [
+	require("./plugins/auth/ldap"),
+	require("./plugins/auth/local"),
+];
+
+// A random number that will force clients to reload the page if it differs
+const serverHash = Math.floor(Date.now() * Math.random());
 
 var manager = null;
 
@@ -44,6 +54,15 @@ module.exports = function() {
 		}))
 		.set("view engine", "html")
 		.set("views", path.join(__dirname, "..", "client"));
+
+	app.get("/themes/:theme.css", (req, res) => {
+		const themeName = req.params.theme;
+		const theme = themes.getFilename(themeName);
+		if (theme === undefined) {
+			return res.status(404).send("Not found");
+		}
+		return res.sendFile(theme);
+	});
 
 	var config = Helper.config;
 	var server = null;
@@ -94,6 +113,8 @@ module.exports = function() {
 		};
 	}
 
+	server.on("error", (err) => log.error(`${err}`));
+
 	server.listen(listenParams, () => {
 		if (typeof listenParams === "string") {
 			log.info("Available on socket " + colors.green(listenParams));
@@ -117,7 +138,10 @@ module.exports = function() {
 			if (config.public) {
 				performAuthentication.call(socket, {});
 			} else {
-				socket.emit("auth", {success: true});
+				socket.emit("auth", {
+					serverHash: serverHash,
+					success: true,
+				});
 				socket.on("auth", performAuthentication);
 			}
 		});
@@ -184,15 +208,7 @@ function index(req, res, next) {
 		Helper.config
 	);
 	data.gitCommit = Helper.getGitCommit();
-	data.themes = fs.readdirSync("client/themes/").filter(function(themeFile) {
-		return themeFile.endsWith(".css");
-	}).map(function(css) {
-		const filename = css.slice(0, -4);
-		return {
-			name: filename.charAt(0).toUpperCase() + filename.slice(1),
-			filename: filename
-		};
-	});
+	data.themes = themes.getAll();
 
 	const policies = [
 		"default-src *",
@@ -215,7 +231,7 @@ function index(req, res, next) {
 	res.render("index", data);
 }
 
-function initializeClient(socket, client, token) {
+function initializeClient(socket, client, token, lastMessage) {
 	socket.emit("authorized");
 
 	socket.on("disconnect", function() {
@@ -379,11 +395,24 @@ function initializeClient(socket, client, token) {
 	socket.join(client.id);
 
 	const sendInitEvent = (tokenToSend) => {
+		let networks = client.networks;
+
+		if (lastMessage > -1) {
+			// We need a deep cloned object because we are going to remove unneeded messages
+			networks = _.cloneDeep(networks);
+
+			networks.forEach((network) => {
+				network.channels.forEach((channel) => {
+					channel.messages = channel.messages.filter((m) => m.id > lastMessage);
+				});
+			});
+		}
+
 		socket.emit("init", {
 			applicationServerKey: manager.webPush.vapidKeys.publicKey,
 			pushSubscription: client.config.sessions[token],
 			active: client.lastActiveChannel,
-			networks: client.networks,
+			networks: networks,
 			token: tokenToSend
 		});
 	};
@@ -409,67 +438,11 @@ function initializeClient(socket, client, token) {
 	}
 }
 
-function localAuth(client, user, password, callback) {
-	// If no user is found, or if the client has not provided a password,
-	// fail the authentication straight away
-	if (!client || !password) {
-		return callback(false);
-	}
-
-	// If this user has no password set, fail the authentication
-	if (!client.config.password) {
-		log.error(`User ${colors.bold(user)} with no local password set tried to sign in. (Probably a LDAP user)`);
-		return callback(false);
-	}
-
-	Helper.password
-		.compare(password, client.config.password)
-		.then((matching) => {
-			if (matching && Helper.password.requiresUpdate(client.config.password)) {
-				const hash = Helper.password.hash(password);
-
-				client.setPassword(hash, (success) => {
-					if (success) {
-						log.info(`User ${colors.bold(client.name)} logged in and their hashed password has been updated to match new security requirements`);
-					}
-				});
-			}
-
-			callback(matching);
-		}).catch((error) => {
-			log.error(`Error while checking users password. Error: ${error}`);
-		});
-}
-
-function ldapAuth(client, user, password, callback) {
-	var userDN = user.replace(/([,\\/#+<>;"= ])/g, "\\$1");
-	var bindDN = Helper.config.ldap.primaryKey + "=" + userDN + "," + Helper.config.ldap.baseDN;
-
-	var ldapclient = ldap.createClient({
-		url: Helper.config.ldap.url
-	});
-
-	ldapclient.on("error", function(err) {
-		log.error("Unable to connect to LDAP server", err);
-		callback(!err);
-	});
-
-	ldapclient.bind(bindDN, password, function(err) {
-		if (!err && !client) {
-			if (!manager.addUser(user, null)) {
-				log.error("Unable to create new user", user);
-			}
-		}
-		ldapclient.unbind();
-		callback(!err);
-	});
-}
-
 function performAuthentication(data) {
 	const socket = this;
 	let client;
 
-	const finalInit = () => initializeClient(socket, client, data.token || null);
+	const finalInit = () => initializeClient(socket, client, data.token || null, data.lastMessage || -1);
 
 	const initClient = () => {
 		client.ip = getClientIp(socket.request);
@@ -528,11 +501,16 @@ function performAuthentication(data) {
 	}
 
 	// Perform password checking
-	if (!Helper.config.public && Helper.config.ldap.enable) {
-		ldapAuth(client, data.user, data.password, authCallback);
-	} else {
-		localAuth(client, data.user, data.password, authCallback);
+	let auth = () => {
+		log.error("None of the auth plugins is enabled");
+	};
+	for (let i = 0; i < authPlugins.length; ++i) {
+		if (authPlugins[i].isEnabled()) {
+			auth = authPlugins[i].auth;
+			break;
+		}
 	}
+	auth(manager, client, data.user, data.password, authCallback);
 }
 
 function reverseDnsLookup(ip, callback) {
