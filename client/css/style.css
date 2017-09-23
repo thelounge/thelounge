@@ -353,26 +353,6 @@ kbd {
 	overflow: hidden;
 }
 
-#viewport {
-	height: 100%;
-	transition: transform 160ms, -webkit-transform 160ms;
-	-webkit-transform: translateZ(0);
-	transform: translateZ(0);
-}
-
-#viewport.menu-open {
-	-webkit-transform: translate3d(220px, 0, 0);
-	transform: translate3d(220px, 0, 0);
-}
-
-#viewport.menu-dragging {
-	transition: none !important;
-}
-
-#viewport.menu-open .messages {
-	pointer-events: none;
-}
-
 #chat button,
 #form button,
 #chat .user {
@@ -2013,6 +1993,26 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	.textcomplete-menu,
 	.messages .msg {
 		font-size: 15px;
+	}
+
+	#viewport {
+		height: 100%;
+		transition: transform 160ms, -webkit-transform 160ms;
+		-webkit-transform: translateZ(0);
+		transform: translateZ(0);
+	}
+
+	#viewport.menu-open {
+		-webkit-transform: translate3d(220px, 0, 0);
+		transform: translate3d(220px, 0, 0);
+	}
+
+	#viewport.menu-dragging {
+		transition: none !important;
+	}
+
+	#viewport.menu-open .messages {
+		pointer-events: none;
 	}
 
 	#sidebar,
