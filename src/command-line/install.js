@@ -14,16 +14,44 @@ program
 		const fsextra = require("fs-extra");
 		const path = require("path");
 		const child = require("child_process");
-		const packageJson = require("package-json");
+		const registryUrl = require("registry-url");
+		const registryAuthToken = require("registry-auth-token");
+		const url = require("url");
+		const request = require("request");
 
 		if (!fs.existsSync(Helper.CONFIG_PATH)) {
 			log.error(`${Helper.CONFIG_PATH} does not exist.`);
 			return;
 		}
 
-		packageJson(packageName, {
-			fullMetadata: true
-		}).then((json) => {
+		const scope = packageName.split("/")[0];
+		const regUrl = registryUrl(scope);
+		const pkgUrl = url.resolve(regUrl, encodeURIComponent(packageName).replace(/^%40/, "@") + "/latest");
+		const authInfo = registryAuthToken(regUrl, {recursive: true});
+
+		const headers = {};
+		if (authInfo) {
+			headers.Authorization = `${authInfo.type} ${authInfo.token}`;
+		}
+
+		request.get({url: pkgUrl, headers: headers}, (error, res, body) => {
+			if (error) {
+				log.error(`${error}`);
+				process.exit(1);
+			}
+
+			if (res.statusCode === 404) {
+				log.error(`Package ${colors.green(packageName)} does not exist`);
+				process.exit(1);
+			}
+
+			if (res.statusCode !== 200) {
+				log.error(`Failed to download ${colors.green(packageName)}. Error code: ${res.statusCode}`);
+				process.exit(1);
+			}
+
+			const json = JSON.parse(body);
+
 			if (!("lounge" in json)) {
 				log.error(`${colors.red(packageName)} does not have The Lounge metadata.`);
 
@@ -75,8 +103,5 @@ program
 
 				log.info(`${colors.green(packageName)} has been successfully installed.`);
 			});
-		}).catch((e) => {
-			log.error(`${e}`);
-			process.exit(1);
 		});
 	});
