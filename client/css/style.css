@@ -7,6 +7,11 @@
 		url("../fonts/fontawesome-webfont.woff?v=4.7.0") format("woff");
 }
 
+:root {
+	--regular-font: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	--monospace-font: Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
+}
+
 html,
 body {
 	height: 100%;
@@ -15,7 +20,7 @@ body {
 body {
 	background: #455164;
 	color: #222;
-	font: 16px -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	font-family: var(--regular-font);
 	margin: 0;
 	-webkit-user-select: none;
 	-moz-user-select: none;
@@ -85,8 +90,12 @@ button {
 code,
 kbd,
 textarea#user-specified-css-input {
-	font-family: Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
+	font-family: var(--monospace-font);
 }
+
+textarea#user-specified-css-input::-moz-placeholder { font-family: var(--regular-font); }
+textarea#user-specified-css-input::-webkit-input-placeholder { font-family: var(--regular-font); }
+textarea#user-specified-css-input:-ms-input-placeholder { font-family: var(--regular-font); }
 
 code {
 	font-size: 12px;
