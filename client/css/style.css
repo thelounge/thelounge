@@ -456,12 +456,16 @@ kbd {
 
 #sidebar button,
 #sidebar .chan,
-#sidebar .sign-out {
-	border: 1px solid transparent;
-	border-radius: 2px;
+#sidebar .sign-out,
+#sidebar .empty {
 	color: #99a2b4;
-	cursor: pointer;
 	font-size: 14px;
+}
+
+#sidebar button,
+#sidebar .chan,
+#sidebar .sign-out {
+	cursor: pointer;
 }
 
 #sidebar button:hover,
@@ -486,11 +490,8 @@ kbd {
 }
 
 #sidebar .empty {
-	color: #9ca5b4;
 	line-height: 1.6;
-	font-size: 12px;
-	margin-top: 20px;
-	padding: 20px 40px;
+	padding: 40px 20px;
 	text-align: center;
 }
 
@@ -1385,7 +1386,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #connect .tls {
 	float: left;
-	font-size: 14px;
 	margin-top: 6px;
 }
 
@@ -1452,10 +1452,14 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	display: table-row;
 }
 
+#help .help-item,
+#help .about {
+	font-size: 14px;
+}
+
 #help .help-item .subject,
 #help .help-item .description {
 	display: table-cell;
-	font-size: 14px;
 	padding-bottom: 15px;
 }
 
@@ -1469,7 +1473,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #help .about {
-	font-size: 14px;
 	line-height: 1.8;
 }
 
@@ -2004,8 +2007,20 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		margin-top: 60px !important;
 	}
 
+	#sidebar button,
+	#sidebar .chan,
+	#sidebar .sign-out,
+	#sidebar .empty,
+	#windows label,
+	#windows .header .topic,
+	#settings .error,
+	#help .help-item,
+	#help .about,
+	#loading,
+	#context-menu,
+	.textcomplete-menu,
 	.messages .msg {
-		font-size: 16px;
+		font-size: 15px;
 	}
 
 	#sidebar,
