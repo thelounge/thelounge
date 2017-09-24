@@ -5,6 +5,7 @@ const options = require("./options");
 const socket = require("./socket");
 const templates = require("../views");
 const input = $("#input");
+const Mousetrap = require("mousetrap");
 
 module.exports = renderPreview;
 
@@ -111,21 +112,12 @@ imageViewer.on("click", function(event, data = {}) {
 	closeImageViewer(data);
 });
 
-$(document).keydown(function(e) {
-	switch (e.keyCode ? e.keyCode : e.which) {
-	case 27: // Escape
-		closeImageViewer();
-		break;
-	case 37: // Left arrow
-		if (imageViewer.hasClass("opened")) {
-			imageViewer.find(".previous-image-btn").click();
-		}
-		break;
-	case 39: // Right arrow
-		if (imageViewer.hasClass("opened")) {
-			imageViewer.find(".next-image-btn").click();
-		}
-		break;
+Mousetrap.bind("esc", () => closeImageViewer());
+
+Mousetrap.bind(["left", "right"], (e, key) => {
+	if (imageViewer.hasClass("opened")) {
+		const direction = key === "left" ? "previous" : "next";
+		imageViewer.find(`.${direction}-image-btn`).click();
 	}
 });
 
