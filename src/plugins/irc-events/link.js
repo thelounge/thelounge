@@ -159,7 +159,14 @@ function fetch(uri, cb) {
 	var limit = Helper.config.prefetchMaxImageSize * 1024;
 	req
 		.on("response", function(res) {
-			if (!(/^image\/.+/.test(res.headers["content-type"]))) {
+			if (/^image\/.+/.test(res.headers["content-type"])) {
+				// response is an image
+				// if Content-Length header reports a size exceeding the prefetch limit, abort fetch
+				const contentLength = parseInt(res.headers["content-length"], 10) || 0;
+				if (contentLength > limit) {
+					req.abort();
+				}
+			} else {
 				// if not image, limit download to 50kb, since we need only meta tags
 				// twitter.com sends opengraph meta tags within ~20kb of data for individual tweets
 				limit = 1024 * 50;
