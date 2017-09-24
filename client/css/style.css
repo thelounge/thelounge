@@ -1498,6 +1498,14 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	outline: none;
 }
 
+[contenteditable="true"] {
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+	user-select: text;
+	cursor: text;
+}
+
 /* Nick editor */
 
 #form #nick {
