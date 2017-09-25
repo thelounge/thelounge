@@ -97,6 +97,10 @@ describe("Server", () => {
 				expect(data.networks).to.be.an("array");
 				expect(data.networks).to.be.empty;
 				expect(data.token).to.be.null;
+				expect(data.pushSubscription).to.be.undefined;
+
+				// Private key defined in vapid.json is "01020304050607080910111213141516" for this public key.
+				expect(data.applicationServerKey).to.equal("BM0eTDpvDnH7ewlHuXWcPTE1NjlJ06XWIS1cQeBTZmsg4EDx5sOpY7kdX1pniTo8RakL3UdfFuIbC8_zog_BWIM");
 
 				done();
 			});
