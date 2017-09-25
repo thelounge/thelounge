@@ -31,6 +31,12 @@ body {
 	overflow-y: hidden;
 }
 
+a,
+a:hover,
+a:focus {
+	color: #50a656;
+}
+
 a {
 	transition: opacity 0.2s;
 }
@@ -1011,10 +1017,6 @@ kbd {
 #chat .special .time,
 #chat .special .from {
 	display: none;
-}
-
-#chat a {
-	color: #50a656;
 }
 
 /* Nicknames */
