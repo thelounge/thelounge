@@ -31,6 +31,19 @@ All sections are explained on the link above, they are all optional, and each of
 ```
 -->
 
+## v2.5.0-rc.1 - 2017-09-26 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.4.0...v2.5.0-rc.1)
+
+This is a release candidate for v2.5.0 to ensure maximum stability for public release.
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+npm install -g thelounge@next
+```
+
 ## v2.4.0 - 2017-07-30
 
 For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.3.2...v2.4.0) and [milestone](https://github.com/thelounge/lounge/milestone/25?closed=1).
