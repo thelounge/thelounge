@@ -153,7 +153,7 @@ ClientManager.prototype.updateUser = function(name, opts, callback) {
 
 	fs.writeFile(Helper.getUserConfigPath(name), newUser, (err) => {
 		if (err) {
-			log.error("Failed to update user", err);
+			log.error(`Failed to update user ${colors.green(name)} (${err})`);
 		}
 
 		if (callback) {

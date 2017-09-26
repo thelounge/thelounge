@@ -304,11 +304,15 @@ Client.prototype.updateSession = function(token, ip, request) {
 		friendlyAgent += ` on ${agent.os.name} ${agent.os.version}`;
 	}
 
-	client.config.sessions[token] = _.assign({
+	client.config.sessions[token] = _.assign(client.config.sessions[token], {
 		lastUse: Date.now(),
 		ip: ip,
 		agent: friendlyAgent,
-	}, client.config.sessions[token]);
+	});
+
+	client.manager.updateUser(client.name, {
+		sessions: client.config.sessions
+	});
 };
 
 Client.prototype.setPassword = function(hash, callback) {
@@ -318,7 +322,6 @@ Client.prototype.setPassword = function(hash, callback) {
 		password: hash
 	}, function(err) {
 		if (err) {
-			log.error("Failed to update password of", client.name, err);
 			return callback(false);
 		}
 

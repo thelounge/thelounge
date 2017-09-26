@@ -252,6 +252,14 @@ kbd {
 	color: #7f8c8d;
 }
 
+.session-list strong {
+	display: block;
+}
+
+.session-list p {
+	margin-bottom: 10px;
+}
+
 #chat .invite .from::before {
 	content: "\f003"; /* http://fontawesome.io/icon/envelope-o/ */
 	color: #2ecc40;
@@ -668,6 +676,7 @@ kbd {
 	width: 100%;
 }
 
+#windows p,
 #windows label,
 #settings .error {
 	font-size: 14px;

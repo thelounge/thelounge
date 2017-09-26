@@ -237,7 +237,6 @@ function initializeClient(socket, client, token, lastMessage) {
 	socket.on("disconnect", function() {
 		client.clientDetach(socket.id);
 	});
-	client.clientAttach(socket.id, token);
 
 	socket.on(
 		"input",
@@ -378,23 +377,59 @@ function initializeClient(socket, client, token, lastMessage) {
 		client.unregisterPushSubscription(token);
 	});
 
-	socket.on("sign-out", () => {
-		delete client.config.sessions[token];
+	const sendSessionList = () => {
+		const sessions = _.map(client.config.sessions, (session, sessionToken) => ({
+			current: sessionToken === token,
+			active: _.find(client.attachedClients, (u) => u.token === sessionToken) !== undefined,
+			lastUse: session.lastUse,
+			ip: session.ip,
+			agent: session.agent,
+			token: sessionToken, // TODO: Ideally don't expose actual tokens to the client
+		}));
+
+		socket.emit("sessions:list", sessions);
+	};
+
+	socket.on("sessions:get", sendSessionList);
+
+	socket.on("sign-out", (tokenToSignOut) => {
+		// If no token provided, sign same client out
+		if (!tokenToSignOut) {
+			tokenToSignOut = token;
+		}
+
+		if (!(tokenToSignOut in client.config.sessions)) {
+			return;
+		}
+
+		delete client.config.sessions[tokenToSignOut];
 
 		client.manager.updateUser(client.name, {
 			sessions: client.config.sessions
-		}, (err) => {
-			if (err) {
-				log.error("Failed to update sessions for", client.name, err);
-			}
 		});
 
-		socket.emit("sign-out");
+		_.map(client.attachedClients, (attachedClient, socketId) => {
+			if (attachedClient.token !== tokenToSignOut) {
+				return;
+			}
+
+			const socketToRemove = manager.sockets.of("/").connected[socketId];
+
+			socketToRemove.emit("sign-out");
+			socketToRemove.disconnect();
+		});
+
+		// Do not send updated session list if user simply logs out
+		if (tokenToSignOut !== token) {
+			sendSessionList();
+		}
 	});
 
 	socket.join(client.id);
 
 	const sendInitEvent = (tokenToSend) => {
+		client.clientAttach(socket.id, token);
+
 		let networks = client.networks;
 
 		if (lastMessage > -1) {
@@ -422,14 +457,6 @@ function initializeClient(socket, client, token, lastMessage) {
 			token = newToken;
 
 			client.updateSession(token, getClientIp(socket.request), socket.request);
-
-			client.manager.updateUser(client.name, {
-				sessions: client.config.sessions
-			}, (err) => {
-				if (err) {
-					log.error("Failed to update sessions for", client.name, err);
-				}
-			});
 
 			sendInitEvent(token);
 		});
