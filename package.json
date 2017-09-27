@@ -26,8 +26,7 @@
     "test:mocha": "mocha",
     "lint": "npm-run-all -c lint:*",
     "lint:js": "eslint .",
-    "lint:css": "stylelint \"**/*.css\"",
-    "prepublishOnly": "NODE_ENV=production npm run build"
+    "lint:css": "stylelint \"**/*.css\""
   },
   "keywords": [
     "lounge",
