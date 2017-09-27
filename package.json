@@ -56,7 +56,7 @@
     "moment": "2.18.1",
     "package-json": "4.0.1",
     "read": "1.0.7",
-    "request": "2.82.0",
+    "request": "2.83.0",
     "semver": "5.4.1",
     "socket.io": "1.7.4",
     "spdy": "3.4.7",
