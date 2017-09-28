@@ -6,6 +6,7 @@ const render = require("../render");
 const utils = require("../utils");
 const options = require("../options");
 const helpers_roundBadgeNumber = require("../libs/handlebars/roundBadgeNumber");
+const webpush = require("../webpush");
 const chat = $("#chat");
 const sidebar = $("#sidebar");
 
@@ -131,16 +132,30 @@ function notifyMessage(targetId, channel, msg) {
 				}
 
 				try {
-					const notify = new Notification(title, {
-						body: body,
-						icon: "img/logo-64.png",
-						tag: `lounge-${targetId}`,
-					});
-					notify.addEventListener("click", function() {
-						window.focus();
-						button.click();
-						this.close();
-					});
+					if (webpush.hasServiceWorker) {
+						navigator.serviceWorker.ready.then((registration) => {
+							registration.active.postMessage({
+								type: "notification",
+								chanId: targetId,
+								timestamp: msg.time,
+								title: title,
+								body: body,
+							});
+						});
+					} else {
+						const notify = new Notification(title, {
+							tag: `chan-${targetId}`,
+							badge: "img/logo-64.png",
+							icon: "img/touch-icon-192x192.png",
+							body: body,
+							timestamp: msg.time,
+						});
+						notify.addEventListener("click", function() {
+							window.focus();
+							button.click();
+							this.close();
+						});
+					}
 				} catch (exception) {
 					// `new Notification(...)` is not supported and should be silenced.
 				}
