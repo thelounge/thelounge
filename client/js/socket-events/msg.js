@@ -6,6 +6,7 @@ const render = require("../render");
 const utils = require("../utils");
 const options = require("../options");
 const helpers_roundBadgeNumber = require("../libs/handlebars/roundBadgeNumber");
+const cleanIrcMessage = require("../libs/handlebars/ircmessageparser/cleanIrcMessage");
 const webpush = require("../webpush");
 const chat = $("#chat");
 const sidebar = $("#sidebar");
@@ -128,7 +129,7 @@ function notifyMessage(targetId, channel, msg) {
 					if (msg.type === "message") {
 						title += " says:";
 					}
-					body = msg.text.replace(/\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?|[\x00-\x1F]|\x7F/g, "").trim();
+					body = cleanIrcMessage(msg.text);
 				}
 
 				try {

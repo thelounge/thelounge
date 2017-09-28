@@ -3,7 +3,7 @@
 const Chan = require("../../models/chan");
 const Msg = require("../../models/msg");
 const LinkPrefetch = require("./link");
-const Helper = require("../../helper");
+const cleanIrcMessage = require("../../../client/js/libs/handlebars/ircmessageparser/cleanIrcMessage");
 
 module.exports = function(irc, network) {
 	const client = this;
@@ -107,7 +107,7 @@ module.exports = function(irc, network) {
 		// Do not send notifications for messages older than 15 minutes (znc buffer for example)
 		if (highlight && (!data.time || data.time > Date.now() - 900000)) {
 			let title = chan.name;
-			let body = Helper.cleanIrcMessage(data.message);
+			let body = cleanIrcMessage(data.message);
 
 			// In channels, prepend sender nickname to the message
 			if (chan.type !== Chan.Type.QUERY) {
