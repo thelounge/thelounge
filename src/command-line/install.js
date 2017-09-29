@@ -21,6 +21,8 @@ program
 			return;
 		}
 
+		log.info("Retrieving information about the package...");
+
 		packageJson(packageName, {
 			fullMetadata: true
 		}).then((json) => {
