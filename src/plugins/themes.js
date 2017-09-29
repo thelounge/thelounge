@@ -62,11 +62,11 @@ function getModuleInfo(packageName) {
 		log.warn(`Specified theme ${colors.yellow(packageName)} is not installed in packages directory`);
 		return;
 	}
-	if (!module.lounge) {
+	if (!module.thelounge) {
 		log.warn(`Specified theme ${colors.yellow(packageName)} doesn't have required information.`);
 		return;
 	}
-	return module.lounge;
+	return module.thelounge;
 }
 
 function makePackageThemeObject(moduleName) {

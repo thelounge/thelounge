@@ -24,7 +24,7 @@ program
 		packageJson(packageName, {
 			fullMetadata: true
 		}).then((json) => {
-			if (!("lounge" in json)) {
+			if (!("thelounge" in json)) {
 				log.error(`${colors.red(packageName)} does not have The Lounge metadata.`);
 
 				process.exit(1);
