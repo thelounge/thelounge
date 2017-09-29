@@ -136,6 +136,10 @@ Chan.prototype.toJSON = function() {
 function writeUserLog(client, msg) {
 	const target = client.find(this.id);
 
+	if (!target) {
+		return false;
+	}
+
 	userLog.write(
 		client.name,
 		target.network.host, // TODO: Fix #1392, multiple connections to same server results in duplicate logs
