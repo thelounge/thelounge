@@ -46,7 +46,7 @@
     "cheerio": "0.22.0",
     "colors": "1.1.2",
     "commander": "2.11.0",
-    "express": "4.15.4",
+    "express": "4.16.0",
     "express-handlebars": "3.0.0",
     "fs-extra": "4.0.2",
     "irc-framework": "2.9.1",
