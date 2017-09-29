@@ -2,7 +2,10 @@
 # npm-debug.log and node_modules/ are ignored by default.
 # See https://docs.npmjs.com/misc/developers#keeping-files-out-of-your-package
 
+# Ignore all dot files except for .lounge_home
 .*
+!.lounge_home
+
 client/js/bundle.vendor.js.map
 client/views/
 coverage/
