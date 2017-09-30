@@ -25,7 +25,7 @@
     "test": "npm-run-all -c test:* lint",
     "test:mocha": "mocha",
     "lint": "npm-run-all -c lint:*",
-    "lint:js": "eslint .",
+    "lint:js": "eslint . --report-unused-disable-directives",
     "lint:css": "stylelint \"**/*.css\""
   },
   "keywords": [
@@ -70,7 +70,7 @@
     "chai": "4.1.2",
     "css.escape": "1.5.1",
     "emoji-regex": "6.5.1",
-    "eslint": "4.7.2",
+    "eslint": "4.8.0",
     "font-awesome": "4.7.0",
     "fuzzy": "0.1.3",
     "handlebars": "4.0.10",
