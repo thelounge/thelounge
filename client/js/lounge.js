@@ -44,6 +44,12 @@ $(function() {
 
 	viewport.on("click", ".rt", function(e) {
 		var self = $(this);
+
+		// We wait since this can be called during its close animation, and set the wrong value, since it is still visible then
+		$(".chan.active .sidebar").on("transitionend", function() {
+			storage.set("userlist-expanded", utils.isUserlistVisible());
+		});
+
 		viewport.toggleClass(self.attr("class"));
 		e.stopPropagation();
 		chat.find(".chan.active .chat").trigger("msg.sticky");
@@ -411,6 +417,12 @@ $(function() {
 		}
 
 		focus();
+
+		// Toggle userlist if its "openness" isn't what it should be (what is stored in localstorage)
+		const shouldBeExpanded = storage.get("userlist-expanded") === "true"; // stored string -> boolean
+		if (shouldBeExpanded !== utils.isUserlistVisible()) {
+			viewport.find(".chan.active .rt").click();
+		}
 	});
 
 	sidebar.on("click", "#sign-out", function() {

@@ -17,6 +17,7 @@ module.exports = {
 	toggleNickEditor,
 	toggleNotificationMarkers,
 	requestIdleCallback,
+	isUserlistVisible,
 };
 
 function resetHeight(element) {
@@ -84,4 +85,8 @@ function requestIdleCallback(callback, timeout) {
 	} else {
 		callback();
 	}
+}
+
+function isUserlistVisible() {
+	return $(".chan.active .sidebar").first().css("right") === "0px";
 }
