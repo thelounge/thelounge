@@ -1,9 +1,11 @@
 "use strict";
 
+const storage = require("../localStorage");
+
 /**
  * Simple slideout menu implementation.
  */
-module.exports = function slideoutMenu(viewport, menu) {
+module.exports = function slideoutMenu(viewport, menu, storageName) {
 	var touchStartPos = null;
 	var touchCurPos = null;
 	var touchStartTime = 0;
@@ -14,6 +16,10 @@ module.exports = function slideoutMenu(viewport, menu) {
 	function toggleMenu(state) {
 		menuIsOpen = state;
 		viewport.classList.toggle("menu-open", state);
+
+		if (storageName) {
+			storage.set(storageName, state);
+		}
 	}
 
 	function disableSlideout() {

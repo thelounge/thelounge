@@ -30,7 +30,7 @@ $(function() {
 
 	var windows = $("#windows");
 	var viewport = $("#viewport");
-	var sidebarSlide = slideoutMenu(viewport[0], sidebar[0]);
+	var sidebarSlide = slideoutMenu(viewport[0], sidebar[0], "networklist-expanded");
 	var contextMenuContainer = $("#context-menu-container");
 	var contextMenu = $("#context-menu");
 
@@ -41,6 +41,12 @@ $(function() {
 			sidebarSlide.toggle(false);
 		}
 	});
+
+	// Toggle networklist if its "openness" isn't what it should be (what is stored in localstorage)
+	const networklistShouldBeExpanded = storage.get("networklist-expanded") === "true"; // stored string -> boolean
+	if (networklistShouldBeExpanded !== sidebarSlide.isOpen()) {
+		sidebarSlide.toggle(!sidebarSlide.isOpen());
+	}
 
 	viewport.on("click", ".rt", function(e) {
 		var self = $(this);
