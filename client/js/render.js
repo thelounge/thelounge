@@ -125,13 +125,15 @@ function renderChannelMessages(data) {
 	const documentFragment = buildChannelMessages($(document.createDocumentFragment()), data.id, data.type, data.messages);
 	const channel = chat.find("#chan-" + data.id + " .messages").append(documentFragment);
 
-	const template = $(templates.unread_marker());
+	renderUnreadMarker($(templates.unread_marker()), data.firstUnread, channel);
+}
 
-	if (data.firstUnread > 0) {
-		let first = channel.find("#msg-" + data.firstUnread);
+function renderUnreadMarker(template, firstUnread, channel) {
+	if (firstUnread > 0) {
+		let first = channel.find("#msg-" + firstUnread);
 
 		if (!first.length) {
-			template.data("unread-id", data.firstUnread);
+			template.data("unread-id", firstUnread);
 			channel.prepend(template);
 		} else {
 			const parent = first.parent();
@@ -200,6 +202,9 @@ function renderNetworks(data, singleNetwork) {
 				if (channel.messages.length > 0) {
 					const container = chan.find(".messages");
 					buildChannelMessages(container, channel.id, channel.type, channel.messages);
+
+					const unreadMarker = container.find(".unread-marker").data("unread-id", 0);
+					renderUnreadMarker(unreadMarker, channel.firstUnread, container);
 
 					if (container.find(".msg").length >= 100) {
 						container.find(".show-more").addClass("show");
