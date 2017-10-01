@@ -1005,6 +1005,11 @@ kbd {
 #chat .time {
 	color: #ddd;
 	padding-left: 10px;
+	width: 55px;
+}
+
+#chat.show-seconds .time {
+	width: 75px;
 }
 
 #chat .from {

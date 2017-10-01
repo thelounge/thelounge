@@ -113,6 +113,7 @@ settings.on("change", "input, select, textarea", function() {
 		chat.find(".msg > .time").each(function() {
 			$(this).text(tz($(this).parent().data("time")));
 		});
+		chat.toggleClass("show-seconds", self.prop("checked"));
 	} else if (name === "autocomplete") {
 		if (self.prop("checked")) {
 			$("#input").trigger("autocomplete:on");
