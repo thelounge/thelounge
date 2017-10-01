@@ -57,6 +57,17 @@ body {
 	}
 
 	#main {
-		left: 5px;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		top: 0;
+	}
+
+	#windows .window::before {
+		display: none;
+	}
+
+	#windows .window {
+		border-radius: 0;
 	}
 }
