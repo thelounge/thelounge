@@ -8,19 +8,9 @@ Author: Aynik
 GitHub: https://github.com/aynik
 */
 
-@font-face {
-	font-family: Inconsolata-g;
-	src: url("../css/fonts/inconsolatag.woff") format("woff");
-}
-
 body {
 	background: #000;
-	font: 16px Inconsolata-g, monospace;
-}
-
-code,
-kbd {
-	font-family: Inconsolata-g, monospace;
+	font: 16px Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
 }
 
 a,
@@ -102,7 +92,6 @@ a:hover,
 #windows .header .topic,
 .messages .msg,
 .sidebar {
-	font: 12px Inconsolata-g, monospace;
 	line-height: 1.8;
 }
 
@@ -122,10 +111,6 @@ a:hover,
 
 #footer .icon {
 	color: #666;
-}
-
-.tooltipped::after {
-	font-family: Inconsolata-g, monospace;
 }
 
 /* Previews */
