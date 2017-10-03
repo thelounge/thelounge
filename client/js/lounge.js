@@ -185,19 +185,18 @@ $(function() {
 		resetInputHeight(input.get(0));
 
 		if (text.indexOf("/") === 0) {
-			const separatorPos = text.indexOf(" ");
-			const cmd = text.substring(1, separatorPos > 1 ? separatorPos : text.length);
-			const parameters = separatorPos > text.indexOf(cmd) ? text.substring(text.indexOf(cmd) + cmd.length + 1, text.length) : "";
-			if (typeof utils[cmd] === "function") {
+			const args = text.substr(1).split(" ");
+			const cmd = args.shift().toLowerCase();
+			if (typeof utils.inputCommands[cmd] === "function") {
 				if (cmd === "join") {
-					const channel = parameters.split(" ")[0];
+					const channel = args.shift();
 					if (channel !== "") {
-						if (utils[cmd](channel)) {
+						if (utils.inputCommands[cmd](channel)) {
 							return;
 						}
 					}
 				} else {
-					if (utils[cmd]()) {
+					if (utils.inputCommands[cmd]()) {
 						return;
 					}
 				}

@@ -8,11 +8,8 @@ var serverHash = -1;
 var lastMessageId = -1;
 
 module.exports = {
+	inputCommands: { collapse, expand, join },
 	findCurrentNetworkChan,
-	clear,
-	collapse,
-	expand,
-	join,
 	serverHash,
 	lastMessageId,
 	confirmExit,
@@ -45,13 +42,6 @@ function resetHeight(element) {
 // This can only be called from another interactive event (e.g. button click)
 function forceFocus() {
 	input.trigger("click").focus();
-}
-
-function clear() {
-	chat.find(".active")
-		.find(".show-more").addClass("show").end()
-		.find(".messages .msg, .date-marker-container").remove();
-	return true;
 }
 
 function collapse() {
