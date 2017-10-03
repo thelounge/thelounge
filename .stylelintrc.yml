@@ -1,7 +1,6 @@
 extends: stylelint-config-standard
 
 ignoreFiles:
-  - coverage/**/*.css
   - client/css/bootstrap.css
 
 rules:

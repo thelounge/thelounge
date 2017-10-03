@@ -1,8 +1,7 @@
 {
   "all": true,
   "exclude": [
-    "client/js/bundle.js",
-    "client/js/bundle.vendor.js",
+    "public/",
     "test/",
     "webpack.config.js"
   ],
