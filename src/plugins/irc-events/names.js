@@ -31,6 +31,10 @@ module.exports = function(irc, network) {
 
 			return new User({
 				nick: user.nick,
+				host: data.hostname,
+				account: data.account ? data.account : "",
+				ident: data.ident,
+				gecos: data.gecos,
 				modes: user.modes,
 			}, network.prefixLookup);
 		});

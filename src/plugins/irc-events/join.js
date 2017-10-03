@@ -22,7 +22,13 @@ module.exports = function(irc, network) {
 			// Request channels' modes
 			network.irc.raw("MODE", chan.name);
 		}
-		chan.users.push(new User({nick: data.nick}));
+		chan.users.push(new User({
+			nick: data.nick,
+			host: data.hostname,
+			account: data.account ? data.account : "",
+			ident: data.ident,
+			gecos: data.gecos
+		}));
 		chan.sortUsers(irc);
 		client.emit("users", {
 			chan: chan.id
