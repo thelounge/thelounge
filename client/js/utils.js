@@ -1,14 +1,13 @@
 "use strict";
 
 const $ = require("jquery");
-const chat = $("#chat");
 const input = $("#input");
 
 var serverHash = -1;
 var lastMessageId = -1;
 
 module.exports = {
-	inputCommands: { collapse, expand, join },
+	inputCommands: {collapse, expand, join},
 	findCurrentNetworkChan,
 	serverHash,
 	lastMessageId,
@@ -54,12 +53,14 @@ function expand() {
 	return true;
 }
 
-function join(channel) {
-	var chan = findCurrentNetworkChan(channel);
-
-	if (chan.length) {
-		chan.click();
-		return true;
+function join(args) {
+	const channel = args[0];
+	if (channel) {
+		const chan = findCurrentNetworkChan(channel);
+		if (chan.length) {
+			chan.click();
+			return true;
+		}
 	}
 }
 

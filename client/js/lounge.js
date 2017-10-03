@@ -188,17 +188,8 @@ $(function() {
 			const args = text.substr(1).split(" ");
 			const cmd = args.shift().toLowerCase();
 			if (typeof utils.inputCommands[cmd] === "function") {
-				if (cmd === "join") {
-					const channel = args.shift();
-					if (channel !== "") {
-						if (utils.inputCommands[cmd](channel)) {
-							return;
-						}
-					}
-				} else {
-					if (utils.inputCommands[cmd]()) {
-						return;
-					}
+				if (utils.inputCommands[cmd](args)) {
+					return;
 				}
 			}
 		}
