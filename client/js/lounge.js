@@ -184,7 +184,7 @@ $(function() {
 		input.val("");
 		resetInputHeight(input.get(0));
 
-		if (text.indexOf("/") === 0) {
+		if (text.charAt(0) === "/") {
 			const args = text.substr(1).split(" ");
 			const cmd = args.shift().toLowerCase();
 			if (typeof utils.inputCommands[cmd] === "function" && utils.inputCommands[cmd](args)) {
