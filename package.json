@@ -79,7 +79,7 @@
     "jquery": "3.2.1",
     "jquery-textcomplete": "1.8.4",
     "jquery-ui": "1.12.1",
-    "mocha": "3.5.3",
+    "mocha": "4.0.1",
     "mousetrap": "1.6.1",
     "npm-run-all": "4.1.1",
     "nyc": "11.2.1",
