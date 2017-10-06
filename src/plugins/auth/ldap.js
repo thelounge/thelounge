@@ -91,6 +91,7 @@ function advancedLdapAuth(user, password, callback) {
 						callback(false);
 					});
 					res.on("end", function() {
+						ldapclient.unbind();
 						if (!found) {
 							callback(false);
 						}

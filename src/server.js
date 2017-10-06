@@ -177,6 +177,8 @@ module.exports = function() {
 		process.on("SIGINT", exitGracefully);
 		process.on("SIGTERM", exitGracefully);
 	});
+
+	return server;
 };
 
 function getClientIp(request) {

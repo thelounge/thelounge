@@ -6,8 +6,15 @@ const request = require("request");
 const io = require("socket.io-client");
 
 describe("Server", () => {
-	const server = require("../src/server");
-	server();
+	let server;
+
+	before(() => {
+		server = require("../src/server")();
+	});
+
+	after((done) => {
+		server.close(done);
+	});
 
 	const webURL = `http://${Helper.config.host}:${Helper.config.port}/`;
 
