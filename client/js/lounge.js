@@ -37,7 +37,8 @@ $(function() {
 	$("#main").on("click", function(e) {
 		if ($(e.target).is(".lt")) {
 			sidebarSlide.toggle(!sidebarSlide.isOpen());
-		} else if (sidebarSlide.isOpen()) {
+		} else if (sidebarSlide.isOpen() && viewport.outerWidth() < 768) {
+			// If mobile, sidebar is open, and we click on something else - close the sidebar
 			sidebarSlide.toggle(false);
 		}
 	});
@@ -366,8 +367,6 @@ $(function() {
 		if (sidebar.find(".highlight").length === 0) {
 			utils.toggleNotificationMarkers(false);
 		}
-
-		sidebarSlide.toggle(false);
 
 		var lastActive = $("#windows > .active");
 

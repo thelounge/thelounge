@@ -383,7 +383,6 @@ kbd {
 #viewport .rt,
 #chat button.menu {
 	color: #ccc;
-	display: none;
 	float: left;
 	font-size: 14px;
 	line-height: 1;
@@ -760,10 +759,6 @@ kbd {
 	color: #777;
 	margin-left: 8px;
 	word-break: break-all;
-}
-
-#windows .window .header {
-	display: none;
 }
 
 #chat-container,
@@ -1980,6 +1975,29 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 	/* End fade out for long usernames */
 }
+
+/* Desktop */
+@media (min-width: 769px) {
+	#main {
+		transition: left 160ms;
+		left: 0;
+	}
+
+	#sidebar {
+		transition: left 160ms;
+		left: -220px;
+	}
+
+	#viewport.menu-open #main {
+		left: 220px;
+	}
+
+	#viewport.menu-open #sidebar {
+		left: 0;
+	}
+}
+
+/* Mobile */
 
 @media (max-width: 768px) {
 	/**
