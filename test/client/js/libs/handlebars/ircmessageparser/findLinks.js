@@ -103,4 +103,49 @@ describe("findLinks", () => {
 
 		expect(actual).to.deep.equal(expected);
 	});
+
+	it("does not find invalid urls", () => {
+		const input = "www.example.com ssh://-oProxyCommand=whois"; // Issue #1412
+		const expected = [{
+			start: 0,
+			end: 15,
+			link: "http://www.example.com"
+		}, {
+			end: 42,
+			start: 16,
+			link: "ssh://-oProxyCommand=whois"
+		}];
+
+		const actual = findLinks(input);
+
+		expect(actual).to.deep.equal(expected);
+
+		const input2 = "www.example.com http://root:'some%pass'@hostname/database"; // Issue #1618
+		const expected2 = [{
+			start: 0,
+			end: 15,
+			link: "http://www.example.com"
+		}];
+
+		const actual2 = findLinks(input2);
+
+		expect(actual2).to.deep.equal(expected2);
+	});
+
+	it("keeps parsing after finding an invalid url", () => {
+		const input = "www.example.com http://a:%p@c http://thelounge.chat";
+		const expected = [{
+			start: 0,
+			end: 15,
+			link: "http://www.example.com"
+		}, {
+			start: 30,
+			end: 51,
+			link: "http://thelounge.chat"
+		}];
+
+		const actual = findLinks(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
 });
