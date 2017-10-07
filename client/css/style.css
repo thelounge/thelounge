@@ -430,7 +430,7 @@ kbd {
 }
 
 #viewport.rt #chat .sidebar {
-	right: -180px;
+	right: 0;
 }
 
 #sidebar {
@@ -863,7 +863,7 @@ kbd {
 }
 
 #chat .channel .chat {
-	right: 180px;
+	right: 0;
 }
 
 #chat .special {
@@ -871,7 +871,7 @@ kbd {
 }
 
 #viewport.rt .chat {
-	right: 0;
+	right: 180px;
 }
 
 #chat .sidebar {
@@ -879,7 +879,7 @@ kbd {
 	border-left: 1px solid #e7e7e7;
 	bottom: 0;
 	position: absolute;
-	right: 0;
+	right: -180px;
 	width: 180px;
 	transition: right 0.4s;
 	touch-action: pan-y;
@@ -2082,14 +2082,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	}
 
 	#chat .channel .chat {
-		right: 0;
-	}
-
-	#chat .sidebar {
-		right: -180px;
-	}
-
-	#viewport.rt #chat .sidebar {
 		right: 0;
 	}
 
