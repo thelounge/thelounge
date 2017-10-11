@@ -114,7 +114,6 @@ ClientManager.prototype.addUser = function(name, password, enableLog) {
 		}
 
 		var user = {
-			user: name,
 			password: password || "",
 			log: enableLog,
 			awayMessage: "",
