@@ -54,7 +54,7 @@
     "read": "1.0.7",
     "request": "2.83.0",
     "semver": "5.4.1",
-    "socket.io": "1.7.4",
+    "socket.io": "2.0.3",
     "spdy": "3.4.7",
     "ua-parser-js": "0.7.14",
     "urijs": "1.19.0",
@@ -80,7 +80,7 @@
     "mousetrap": "1.6.1",
     "npm-run-all": "4.1.1",
     "nyc": "11.2.1",
-    "socket.io-client": "1.7.4",
+    "socket.io-client": "2.0.3",
     "stylelint": "8.2.0",
     "stylelint-config-standard": "17.0.0",
     "webpack": "3.7.0"
