@@ -556,7 +556,7 @@ kbd {
 	font-size: 10px;
 	margin-top: 1px;
 	padding: 3px 6px;
-	transition: opacity 0.2s, background-color 0.2s, color 0.2s;
+	transition: background-color 0.2s, color 0.2s;
 }
 
 #sidebar .badge:empty {
@@ -568,17 +568,11 @@ kbd {
 	color: #49505a;
 }
 
-#sidebar .chan.active .badge,
-#sidebar .badge:empty {
-	opacity: 0;
-}
-
 #sidebar .close {
 	border-radius: 3px;
 	width: 18px;
 	height: 18px;
-	visibility: hidden;
-	opacity: 0;
+	display: none;
 	transition: opacity 0.2s, background-color 0.2s;
 }
 
@@ -593,8 +587,8 @@ kbd {
 }
 
 #sidebar .chan.active .close {
-	visibility: visible;
 	opacity: 0.4;
+	display: unset;
 }
 
 #sidebar .chan.active .close:hover {
