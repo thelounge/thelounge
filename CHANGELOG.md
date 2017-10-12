@@ -33,6 +33,166 @@ All sections are explained on the link above, they are all optional, and each of
 
 <!-- New entries go after this line -->
 
+## v2.5.0 - 2017-10-17
+
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.4.0...v2.5.0) and [milestone](https://github.com/thelounge/lounge/milestone/22?closed=1).
+
+If you thought the [v2.3.0 release](https://github.com/thelounge/lounge/releases/tag/v2.3.0) was big, well, v2.5.0 is even bigger! 🎉
+
+If you are a client user, you will notice that The Lounge is now using your operating system's font, and that status messages (joins, parts, nick changes, etc.) are now condensed with each other.
+
+<p align="center">
+  <img width="555" alt="Condensed status messages displaying 3 users have joined the channel, 4 users have quit, and 1 user has changed nick" src="https://user-images.githubusercontent.com/113730/31530599-a6d719f2-afaf-11e7-9b82-db0365c41c4e.png">
+  <br>
+  <em>Condensed status messages</em>
+</p>
+
+After a while, you'll realize that the client now automatically reconnects when losing network connection (farewell, `Client connection lost — Click here to reconnect`!), and that the channel backlog now automatically loads when you scroll up. Unfortunately, that last bit forced us to phase out the `/clear` command for technical reasons.
+
+If you go to the _Settings_ page, you'll notice that The Lounge now supports push notifications (yes, even on mobile, except iOS), and that you can remotely log out open sessions.
+
+<p align="center">
+  <img width="477" alt="Session list with the ability to disconnect remote sessions" src="https://user-images.githubusercontent.com/113730/31530598-a6c86b46-afaf-11e7-9272-eb742d328686.png">
+  <br>
+  <em>Current and remote sessions</em>
+</p>
+
+As a server administrator, you might be interested in a few new additions:
+
+- Themes can now be [retrieved from npm](https://www.npmjs.com/search?q=keywords%3Athelounge-theme) and installed using a new CLI command `lounge install <theme-name>`
+- Integration with LDAP has been completely refactored
+- The Lounge can now be bound to Unix sockets
+
+⚠️ Note that `--home` is now deprecated in favor of the `$LOUNGE_HOME` environment variable (or the `.lounge_home` file in the installation directory). Also, if you are running The Lounge behind a proxy (like nginx or Apache), you will need to make sure that `reverseProxy` is set to `true` and the `X-Forwarded-For` header correctly set for session listing to work correctly on the client.
+
+Enjoy! 💬
+
+### Added
+
+- Status message condensing ([#759](https://github.com/thelounge/lounge/pull/759), [#1421](https://github.com/thelounge/lounge/pull/1421) by [@YaManicKill](https://github.com/YaManicKill), [#1437](https://github.com/thelounge/lounge/pull/1437), [#1451](https://github.com/thelounge/lounge/pull/1451), [#1475](https://github.com/thelounge/lounge/pull/1475), [#1485](https://github.com/thelounge/lounge/pull/1485) by [@xPaw](https://github.com/xPaw), [#1417](https://github.com/thelounge/lounge/pull/1417), [#1442](https://github.com/thelounge/lounge/pull/1442), [#1509](https://github.com/thelounge/lounge/pull/1509), [#1524](https://github.com/thelounge/lounge/pull/1524) by [@astorije](https://github.com/astorije))
+- Use `.lounge_home` to help distribution packages handle config paths right ([#1416](https://github.com/thelounge/lounge/pull/1416), [#1587](https://github.com/thelounge/lounge/pull/1587) by [@xPaw](https://github.com/xPaw), [#1418](https://github.com/thelounge/lounge/pull/1418) by [@astorije](https://github.com/astorije))
+- Implement push notifications ([#1124](https://github.com/thelounge/lounge/pull/1124), [#1445](https://github.com/thelounge/lounge/pull/1445), [#1572](https://github.com/thelounge/lounge/pull/1572), [#1468](https://github.com/thelounge/lounge/pull/1468) by [@xPaw](https://github.com/xPaw), [#1463](https://github.com/thelounge/lounge/pull/1463) by [@astorije](https://github.com/astorije))
+- Set default `/quit` message ([#1448](https://github.com/thelounge/lounge/pull/1448) by [@xPaw](https://github.com/xPaw))
+- Gracefully quit on <kbd>Ctrl</kbd>+<kbd>C</kbd> ([#1477](https://github.com/thelounge/lounge/pull/1477) by [@xPaw](https://github.com/xPaw))
+- Add `/rejoin` command (a.k.a. `/cycle`) ([#1449](https://github.com/thelounge/lounge/pull/1449) by [@dgw](https://github.com/dgw))
+- Add support for binding to Unix sockets ([#1479](https://github.com/thelounge/lounge/pull/1479) by [@xPaw](https://github.com/xPaw))
+- Automatically load history when scrolling upwards ([#1318](https://github.com/thelounge/lounge/pull/1318) by [@xPaw](https://github.com/xPaw))
+- Use `away-notify` to show updates on users away state ([#845](https://github.com/thelounge/lounge/pull/845) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Allow themes from npm ([#1266](https://github.com/thelounge/lounge/pull/1266) by [@YaManicKill](https://github.com/YaManicKill), [#1542](https://github.com/thelounge/lounge/pull/1542) by [@xPaw](https://github.com/xPaw))
+- Add anchor tag to URL to signify open page for reloading ([#1283](https://github.com/thelounge/lounge/pull/1283) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Automatic client reconnection ([#1471](https://github.com/thelounge/lounge/pull/1471), [#1549](https://github.com/thelounge/lounge/pull/1549) by [@xPaw](https://github.com/xPaw))
+- Create `lounge install` command ([#1539](https://github.com/thelounge/lounge/pull/1539), [#1579](https://github.com/thelounge/lounge/pull/1579) by [@xPaw](https://github.com/xPaw), [#1583](https://github.com/thelounge/lounge/pull/1583) by [@astorije](https://github.com/astorije))
+
+### Changed
+
+- Change history button text while loading ([#1403](https://github.com/thelounge/lounge/pull/1403) by [@xPaw](https://github.com/xPaw))
+- Resolve relative URIs in link previewer ([#1410](https://github.com/thelounge/lounge/pull/1410) by [@xPaw](https://github.com/xPaw))
+- Remove 10-second interval to trim buffer ([#1409](https://github.com/thelounge/lounge/pull/1409) by [@xPaw](https://github.com/xPaw))
+- Refactor authentication flow ([#1411](https://github.com/thelounge/lounge/pull/1411) by [@xPaw](https://github.com/xPaw))
+- Only match emoji autocomplete after two characters ([#1356](https://github.com/thelounge/lounge/pull/1356) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Improve CLI user management ([#1443](https://github.com/thelounge/lounge/pull/1443) by [@astorije](https://github.com/astorije))
+- Bigger font size ([#1153](https://github.com/thelounge/lounge/pull/1153) by [@bews](https://github.com/bews), [#1553](https://github.com/thelounge/lounge/pull/1553), [#1561](https://github.com/thelounge/lounge/pull/1561), [#1610](https://github.com/thelounge/lounge/pull/1610) by [@astorije](https://github.com/astorije))
+- Extend fuzzy search in autocomplete to all strategies ([#1387](https://github.com/thelounge/lounge/pull/1387) by [@yashsriv](https://github.com/yashsriv))
+- Only create config folder in `start` command ([#1350](https://github.com/thelounge/lounge/pull/1350) by [@xPaw](https://github.com/xPaw))
+- Parse emoji to make them bigger ([#1446](https://github.com/thelounge/lounge/pull/1446) by [@xPaw](https://github.com/xPaw), [#1481](https://github.com/thelounge/lounge/pull/1481) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Process chat messages in `requestIdleCallback` if available ([#1457](https://github.com/thelounge/lounge/pull/1457) by [@xPaw](https://github.com/xPaw))
+- Completely refactor how date markers are inserted ([#1452](https://github.com/thelounge/lounge/pull/1452) by [@xPaw](https://github.com/xPaw))
+- Bump default image prefetch limit ([#1490](https://github.com/thelounge/lounge/pull/1490) by [@astorije](https://github.com/astorije))
+- Take an optional argument in `/part` ([#1476](https://github.com/thelounge/lounge/pull/1476) by [@eliemichel](https://github.com/eliemichel))
+- Checkered background for transparent images in image viewer ([#1511](https://github.com/thelounge/lounge/pull/1511) by [@xPaw](https://github.com/xPaw))
+- Use native font stack ([#1540](https://github.com/thelounge/lounge/pull/1540) by [@xPaw](https://github.com/xPaw), [#1597](https://github.com/thelounge/lounge/pull/1597) by [@astorije](https://github.com/astorije))
+- Add `touch-action` to messages, sidebar, and user list ([#1520](https://github.com/thelounge/lounge/pull/1520) by [@iamstratos](https://github.com/iamstratos))
+- Handle browser history when opening/closing image preview ([#1503](https://github.com/thelounge/lounge/pull/1503) by [@astorije](https://github.com/astorije))
+- Abort image prefetch if `Content-Length` exceeds limit ([#1567](https://github.com/thelounge/lounge/pull/1567) by [@dgw](https://github.com/dgw))
+- Use monospace font in custom CSS textarea ([#1552](https://github.com/thelounge/lounge/pull/1552) by [@astorije](https://github.com/astorije))
+- Update production dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `irc-framework` ([#1379](https://github.com/thelounge/lounge/pull/1379), [#1385](https://github.com/thelounge/lounge/pull/1385))
+  - `fs-extra` ([#1386](https://github.com/thelounge/lounge/pull/1386), [#1521](https://github.com/thelounge/lounge/pull/1521))
+  - `urijs` ([#1401](https://github.com/thelounge/lounge/pull/1401), [#1405](https://github.com/thelounge/lounge/pull/1405), [#1604](https://github.com/thelounge/lounge/pull/1604))
+  - `express` ([#1426](https://github.com/thelounge/lounge/pull/1426), [#1589](https://github.com/thelounge/lounge/pull/1589))
+  - `ua-parser-js` ([#1426](https://github.com/thelounge/lounge/pull/1426))
+  - `web-push` ([#1516](https://github.com/thelounge/lounge/pull/1516))
+  - `request` ([#1546](https://github.com/thelounge/lounge/pull/1546), [#1577](https://github.com/thelounge/lounge/pull/1577))
+
+### Removed
+
+- Remove `os.homedir()` polyfill ([#1419](https://github.com/thelounge/lounge/pull/1419) by [@xPaw](https://github.com/xPaw))
+- Get rid of `/clear` command and keybind ([#1526](https://github.com/thelounge/lounge/pull/1526) by [@astorije](https://github.com/astorije))
+
+### Fixed
+
+- Correctly append OS name ([#1399](https://github.com/thelounge/lounge/pull/1399) by [@xPaw](https://github.com/xPaw))
+- Correctly dereference stored images when leaving channels ([#1406](https://github.com/thelounge/lounge/pull/1406) by [@xPaw](https://github.com/xPaw))
+- Do not throw an exception when URI parsing fails ([#1412](https://github.com/thelounge/lounge/pull/1412) by [@xPaw](https://github.com/xPaw))
+- Take into account word boundaries for custom highlighting ([#1358](https://github.com/thelounge/lounge/pull/1358) by [@starquake](https://github.com/starquake))
+- Do not unintentionally send incorrect messages from history ([#1444](https://github.com/thelounge/lounge/pull/1444) by [@xPaw](https://github.com/xPaw))
+- Escape channel names in slugify helper correctly ([#1472](https://github.com/thelounge/lounge/pull/1472) by [@xPaw](https://github.com/xPaw))
+- Format messages on copy ([#1464](https://github.com/thelounge/lounge/pull/1464) by [@xPaw](https://github.com/xPaw))
+- Add `/list` to autocomplete ([#1496](https://github.com/thelounge/lounge/pull/1496) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Only change nick autocompletion when receiving a message ([#1495](https://github.com/thelounge/lounge/pull/1495) by [@xPaw](https://github.com/xPaw))
+- Render link previews in browser idle event ([#1508](https://github.com/thelounge/lounge/pull/1508) by [@xPaw](https://github.com/xPaw))
+- Fix image viewer turning black sometimes ([#1512](https://github.com/thelounge/lounge/pull/1512) by [@xPaw](https://github.com/xPaw))
+- Fix requesting last messages when no message `id` is known ([#1519](https://github.com/thelounge/lounge/pull/1519), [#1544](https://github.com/thelounge/lounge/pull/1544) by [@xPaw](https://github.com/xPaw))
+- Display correct kick modes ([#1527](https://github.com/thelounge/lounge/pull/1527) by [@dgw](https://github.com/dgw))
+- Move unread marker when loading more history ([#1517](https://github.com/thelounge/lounge/pull/1517) by [@xPaw](https://github.com/xPaw))
+- Fix wrongly positioned menu when opening it and switching to landscape ([#1565](https://github.com/thelounge/lounge/pull/1565) by [@astorije](https://github.com/astorije))
+- Fix flickering on link hovering, and inconsistencies between chat links and UI links ([#1573](https://github.com/thelounge/lounge/pull/1573) by [@astorije](https://github.com/astorije))
+- Fix nick change on Safari for Mac and iOS ([#1568](https://github.com/thelounge/lounge/pull/1568) by [@Gilles123](https://github.com/Gilles123))
+- Make sure channel list close button is really absent when channel is not selected ([#1623](https://github.com/thelounge/lounge/pull/1623) by [@astorije](https://github.com/astorije))
+
+### Security
+
+- Implement a proper LDAP authentication process ([#1478](https://github.com/thelounge/lounge/pull/1478) by [@eliemichel](https://github.com/eliemichel))
+- Implement multiple sessions for users ([#1199](https://github.com/thelounge/lounge/pull/1199) by [@xPaw](https://github.com/xPaw))
+- Deleting a user should log them out ([#1474](https://github.com/thelounge/lounge/pull/1474) by [@xPaw](https://github.com/xPaw))
+- Remove the "Stay signed in" checkbox at login ([#1465](https://github.com/thelounge/lounge/pull/1465) by [@astorije](https://github.com/astorije))
+- Implement session list and allow signing out other clients ([#1536](https://github.com/thelounge/lounge/pull/1536) by [@xPaw](https://github.com/xPaw))
+
+### Documentation
+
+In the main repository:
+
+- Add Stack Overflow link in CONTRIBUTING file ([#1373](https://github.com/thelounge/lounge/pull/1373) by [@astorije](https://github.com/astorije))
+- Add feature overview in README ([#1427](https://github.com/thelounge/lounge/pull/1427) by [@xPaw](https://github.com/xPaw))
+- Add documentation for `LOUNGE_HOME` environment variable in the CLI helper ([#1438](https://github.com/thelounge/lounge/pull/1438) by [@astorije](https://github.com/astorije))
+- Fix general spelling errors ([#1458](https://github.com/thelounge/lounge/pull/1458) by [@PolarizedIons](https://github.com/PolarizedIons))
+- Remove duplicate keybindings help ([#1543](https://github.com/thelounge/lounge/pull/1543) by [@xPaw](https://github.com/xPaw))
+
+On the [website repository](https://github.com/thelounge/thelounge.github.io):
+
+- Remove wrong and inexistent home option from configuration documentation ([#72](https://github.com/thelounge/thelounge.github.io/pull/72) by [@astorije](https://github.com/astorije))
+- Deprecate `--home` in favor of `LOUNGE_HOME` environment variable ([#73](https://github.com/thelounge/thelounge.github.io/pull/73) by [@astorije](https://github.com/astorije))
+- Add themes docs ([#69](https://github.com/thelounge/thelounge.github.io/pull/69) by [@YaManicKill](https://github.com/YaManicKill))
+- Add missing `prefetchStorage` configuration option to docs ([#74](https://github.com/thelounge/thelounge.github.io/pull/74) by [@MiniDigger](https://github.com/MiniDigger))
+
+### Internals
+
+- Get closer to stylelint's standard config ([#1439](https://github.com/thelounge/lounge/pull/1439) by [@astorije](https://github.com/astorije))
+- Move all auto completion code to a separate file ([#1453](https://github.com/thelounge/lounge/pull/1453) by [@xPaw](https://github.com/xPaw))
+- Enforce semicolon spacing ([#1488](https://github.com/thelounge/lounge/pull/1488) by [@xPaw](https://github.com/xPaw))
+- One line server startup errors ([#1492](https://github.com/thelounge/lounge/pull/1492) by [@xPaw](https://github.com/xPaw))
+- Move even more code out of `lounge.js` ([#1500](https://github.com/thelounge/lounge/pull/1500) by [@xPaw](https://github.com/xPaw))
+- Remove unnecessary `end()` calls ([#1518](https://github.com/thelounge/lounge/pull/1518) by [@xPaw](https://github.com/xPaw))
+- Move user log function where it belongs ([#1528](https://github.com/thelounge/lounge/pull/1528), [#1585](https://github.com/thelounge/lounge/pull/1585) by [@xPaw](https://github.com/xPaw), [#1535](https://github.com/thelounge/lounge/pull/1535) by [@astorije](https://github.com/astorije))
+- Enable `no-console` and `no-alert` ESLint rules  ([#1538](https://github.com/thelounge/lounge/pull/1538) by [@astorije](https://github.com/astorije))
+- Use `Mousetrap` for image viewer shortcuts ([#1566](https://github.com/thelounge/lounge/pull/1566) by [@astorije](https://github.com/astorije))
+- Remove `event-stream` dependency in favor of plain `Buffers` ([#1554](https://github.com/thelounge/lounge/pull/1554) by [@astorije](https://github.com/astorije))
+- Skip cleanup on Travis ([`da31317`](https://github.com/thelounge/lounge/commit/da31317156047000819fa0363c435005104aa572) by [@xPaw](https://github.com/xPaw))
+- Remove `--progress` from webpack ([#1608](https://github.com/thelounge/lounge/pull/1608) by [@xPaw](https://github.com/xPaw))
+- Add tests for invalid URLs ([#1620](https://github.com/thelounge/lounge/pull/1620) by [@xPaw](https://github.com/xPaw))
+- Update development dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `nyc` ([#1382](https://github.com/thelounge/lounge/pull/1382), [#1498](https://github.com/thelounge/lounge/pull/1498), [#1505](https://github.com/thelounge/lounge/pull/1505))
+  - `mocha` ([#1388](https://github.com/thelounge/lounge/pull/1388), [#1513](https://github.com/thelounge/lounge/pull/1513), [#1514](https://github.com/thelounge/lounge/pull/1514), [#1515](https://github.com/thelounge/lounge/pull/1515))
+  - `chai` ([#1394](https://github.com/thelounge/lounge/pull/1394), [#1482](https://github.com/thelounge/lounge/pull/1482))
+  - `eslint` ([#1395](https://github.com/thelounge/lounge/pull/1395), [#1435](https://github.com/thelounge/lounge/pull/1435), [#1493](https://github.com/thelounge/lounge/pull/1493), [#1532](https://github.com/thelounge/lounge/pull/1532), [#1541](https://github.com/thelounge/lounge/pull/1541), [#1555](https://github.com/thelounge/lounge/pull/1555), [#1591](https://github.com/thelounge/lounge/pull/1591))
+  - `webpack` ([#1397](https://github.com/thelounge/lounge/pull/1397), [#1407](https://github.com/thelounge/lounge/pull/1407), [#1424](https://github.com/thelounge/lounge/pull/1424), [#1507](https://github.com/thelounge/lounge/pull/1507), [#1531](https://github.com/thelounge/lounge/pull/1531))
+  - `babel-core` ([#1425](https://github.com/thelounge/lounge/pull/1425))
+  - `babel-loader` ([#1434](https://github.com/thelounge/lounge/pull/1434))
+  - `npm-run-all` ([#1462](https://github.com/thelounge/lounge/pull/1462), [#1466](https://github.com/thelounge/lounge/pull/1466))
+  - `jquery-textcomplete` ([#1473](https://github.com/thelounge/lounge/pull/1473))
+  - `handlebars-loader` ([#1487](https://github.com/thelounge/lounge/pull/1487))
+  - `stylelint` ([#1499](https://github.com/thelounge/lounge/pull/1499))
+
 ## v2.5.0-rc.5 - 2017-10-11 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v2.5.0-rc.4...v2.5.0-rc.5)
