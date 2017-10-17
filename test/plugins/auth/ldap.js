@@ -109,29 +109,28 @@ function testLdapAuth() {
 }
 
 describe("LDAP authentication plugin", function() {
-	before(function(done) {
+	before((done) => {
 		this.server = startLdapServer(done);
 	});
-	after(function(done) {
+
+	after(() => {
 		this.server.close();
-		done();
 	});
 
-	beforeEach(function(done) {
+	beforeEach(() => {
 		Helper.config.public = false;
 		Helper.config.ldap.enable = true;
 		Helper.config.ldap.url = "ldap://localhost:" + String(serverPort);
 		Helper.config.ldap.primaryKey = primaryKey;
-		done();
 	});
 
 	describe("LDAP authentication availability", function() {
-		it("checks that the configuration is correctly tied to isEnabled()", function(done) {
+		it("checks that the configuration is correctly tied to isEnabled()", function() {
 			Helper.config.ldap.enable = true;
 			expect(ldapAuth.isEnabled()).to.equal(true);
+
 			Helper.config.ldap.enable = false;
 			expect(ldapAuth.isEnabled()).to.equal(false);
-			done();
 		});
 	});
 
@@ -145,4 +144,3 @@ describe("LDAP authentication plugin", function() {
 		testLdapAuth();
 	});
 });
-
