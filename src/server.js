@@ -236,6 +236,8 @@ function index(req, res, next) {
 function initializeClient(socket, client, token, lastMessage) {
 	socket.emit("authorized");
 
+	client.clientAttach(socket.id, token);
+
 	socket.on("disconnect", function() {
 		client.clientDetach(socket.id);
 	});
@@ -430,8 +432,6 @@ function initializeClient(socket, client, token, lastMessage) {
 	socket.join(client.id);
 
 	const sendInitEvent = (tokenToSend) => {
-		client.clientAttach(socket.id, token);
-
 		let networks = client.networks;
 
 		if (lastMessage > -1) {
@@ -456,7 +456,7 @@ function initializeClient(socket, client, token, lastMessage) {
 
 	if (!Helper.config.public && token === null) {
 		client.generateToken((newToken) => {
-			token = newToken;
+			client.attachedClients[socket.id].token = token = newToken;
 
 			client.updateSession(token, getClientIp(socket), socket.request);
 
