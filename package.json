@@ -43,20 +43,20 @@
     "cheerio": "0.22.0",
     "colors": "1.1.2",
     "commander": "2.11.0",
-    "express": "4.16.0",
+    "express": "4.16.2",
     "express-handlebars": "3.0.0",
     "fs-extra": "4.0.2",
     "irc-framework": "2.9.1",
     "ldapjs": "1.0.1",
     "lodash": "4.17.4",
-    "moment": "2.19.0",
+    "moment": "2.19.1",
     "package-json": "4.0.1",
     "read": "1.0.7",
     "request": "2.83.0",
     "semver": "5.4.1",
     "socket.io": "2.0.3",
     "spdy": "3.4.7",
-    "ua-parser-js": "0.7.14",
+    "ua-parser-js": "0.7.17",
     "urijs": "1.19.0",
     "web-push": "3.2.3"
   },
@@ -83,6 +83,6 @@
     "socket.io-client": "2.0.3",
     "stylelint": "8.2.0",
     "stylelint-config-standard": "17.0.0",
-    "webpack": "3.7.0"
+    "webpack": "3.8.0"
   }
 }
