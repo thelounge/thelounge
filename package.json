@@ -49,7 +49,7 @@
     "irc-framework": "2.9.1",
     "ldapjs": "1.0.1",
     "lodash": "4.17.4",
-    "moment": "2.18.1",
+    "moment": "2.19.0",
     "package-json": "4.0.1",
     "read": "1.0.7",
     "request": "2.83.0",
