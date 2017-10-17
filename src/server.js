@@ -181,11 +181,11 @@ module.exports = function() {
 	return server;
 };
 
-function getClientIp(request) {
-	let ip = request.connection.remoteAddress;
+function getClientIp(socket) {
+	let ip = socket.handshake.address;
 
 	if (Helper.config.reverseProxy) {
-		const forwarded = (request.headers["x-forwarded-for"] || "").split(/\s*,\s*/).filter(Boolean);
+		const forwarded = (socket.request.headers["x-forwarded-for"] || "").split(/\s*,\s*/).filter(Boolean);
 
 		if (forwarded.length && net.isIP(forwarded[0])) {
 			ip = forwarded[0];
@@ -458,7 +458,7 @@ function initializeClient(socket, client, token, lastMessage) {
 		client.generateToken((newToken) => {
 			token = newToken;
 
-			client.updateSession(token, getClientIp(socket.request), socket.request);
+			client.updateSession(token, getClientIp(socket), socket.request);
 
 			sendInitEvent(token);
 		});
@@ -474,7 +474,7 @@ function performAuthentication(data) {
 	const finalInit = () => initializeClient(socket, client, data.token || null, data.lastMessage || -1);
 
 	const initClient = () => {
-		client.ip = getClientIp(socket.request);
+		client.ip = getClientIp(socket);
 
 		// If webirc is enabled perform reverse dns lookup
 		if (Helper.config.webirc === null) {
@@ -523,7 +523,7 @@ function performAuthentication(data) {
 
 	// We have found an existing user and client has provided a token
 	if (client && data.token && typeof client.config.sessions[data.token] !== "undefined") {
-		client.updateSession(data.token, getClientIp(socket.request), socket.request);
+		client.updateSession(data.token, getClientIp(socket), socket.request);
 
 		authCallback(true);
 		return;
