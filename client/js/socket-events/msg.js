@@ -61,6 +61,11 @@ function processReceivedMessage(data) {
 			.appendTo(container);
 	}
 
+	// Clear unread/highlight counter if self-message
+	if (data.msg.self) {
+		sidebar.find("[data-target='" + target + "'] .badge").removeClass("highlight").empty();
+	}
+
 	// Message arrived in a non active channel, trim it to 100 messages
 	if (activeChannelId !== targetId && container.find(".msg").slice(0, -100).remove().length) {
 		channel.find(".show-more").addClass("show");
