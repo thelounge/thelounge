@@ -6,8 +6,8 @@
 .*
 !.lounge_home
 
-client/js/bundle.vendor.js.map
-client/views/
+client/
+public/js/bundle.vendor.js.map
 coverage/
 scripts/
 test/

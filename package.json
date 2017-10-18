@@ -16,14 +16,13 @@
     "start": "node index start",
     "start-dev": "npm-run-all --parallel watch start",
     "build": "npm-run-all build:*",
-    "build:font-awesome": "node scripts/build-fontawesome.js",
     "build:webpack": "webpack",
     "watch": "webpack --watch",
     "test": "npm-run-all -c test:* lint",
     "test:mocha": "mocha",
     "lint": "npm-run-all -c lint:*",
     "lint:js": "eslint . --report-unused-disable-directives",
-    "lint:css": "stylelint \"**/*.css\""
+    "lint:css": "stylelint \"client/**/*.css\""
   },
   "keywords": [
     "lounge",
@@ -65,6 +64,7 @@
     "babel-loader": "7.1.2",
     "babel-preset-env": "1.6.1",
     "chai": "4.1.2",
+    "copy-webpack-plugin": "4.1.1",
     "css.escape": "1.5.1",
     "emoji-regex": "6.5.1",
     "eslint": "4.9.0",
@@ -83,6 +83,7 @@
     "socket.io-client": "2.0.3",
     "stylelint": "8.2.0",
     "stylelint-config-standard": "17.0.0",
-    "webpack": "3.8.1"
+    "webpack": "3.8.1",
+    "webpack-cleanup-plugin": "0.5.1"
   }
 }

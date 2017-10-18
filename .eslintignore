@@ -1,8 +1,5 @@
-# built by tools
-client/js/bundle.js
-client/js/bundle.vendor.js
-
 # third party
 client/js/libs/jquery/*.js
 
+public/
 coverage/

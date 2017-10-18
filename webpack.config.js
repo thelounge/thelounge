@@ -2,6 +2,8 @@
 
 const webpack = require("webpack");
 const path = require("path");
+const CopyPlugin = require("copy-webpack-plugin");
+const CleanupPlugin = require("webpack-cleanup-plugin");
 
 // ********************
 // Common configuration
@@ -13,7 +15,7 @@ const config = {
 	},
 	devtool: "source-map",
 	output: {
-		path: path.resolve(__dirname, "client"),
+		path: path.resolve(__dirname, "public"),
 		filename: "[name]",
 		publicPath: "/"
 	},
@@ -60,6 +62,37 @@ const config = {
 		json3: "JSON", // socket.io uses json3.js, but we do not target any browsers that need it
 	},
 	plugins: [
+		new CleanupPlugin(),
+		new CopyPlugin([
+			{
+				from: "./node_modules/font-awesome/fonts/fontawesome-webfont.woff*",
+				to: "fonts/[name].[ext]"
+			},
+			{
+				from: "./client/js/loading-slow-alert.js",
+				to: "js/[name].[ext]"
+			},
+			{ // TODO: Build index.html with handlebars
+				from: "./client/*",
+				to: "[name].[ext]"
+			},
+			{
+				from: "./client/audio/*",
+				to: "audio/[name].[ext]"
+			},
+			{
+				from: "./client/img/*",
+				to: "img/[name].[ext]"
+			},
+			{
+				from: "./client/themes/*",
+				to: "themes/[name].[ext]"
+			},
+			{ // TODO: Build css with postcss
+				from: "./client/css/*",
+				to: "css/[name].[ext]"
+			},
+		]),
 		// socket.io uses debug, we don't need it
 		new webpack.NormalModuleReplacementPlugin(/debug/, path.resolve(__dirname, "scripts/noop.js")),
 		// automatically split all vendor dependencies into a separate bundle

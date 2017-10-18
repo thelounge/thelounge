@@ -33,7 +33,7 @@ module.exports = function() {
 (node ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${process.arch})`);
 	log.info(`Configuration file: ${colors.green(Helper.CONFIG_PATH)}`);
 
-	if (!fs.existsSync("client/js/bundle.js")) {
+	if (!fs.existsSync("public/js/bundle.js")) {
 		log.error(`The client application was not built. Run ${colors.bold("NODE_ENV=production npm run build")} to resolve this.`);
 		process.exit();
 	}
@@ -41,7 +41,7 @@ module.exports = function() {
 	var app = express()
 		.use(allRequests)
 		.use(index)
-		.use(express.static("client"))
+		.use(express.static("public"))
 		.use("/storage/", express.static(Helper.getStoragePath(), {
 			redirect: false,
 			maxAge: 86400 * 1000,
@@ -53,7 +53,7 @@ module.exports = function() {
 			}
 		}))
 		.set("view engine", "html")
-		.set("views", path.join(__dirname, "..", "client"));
+		.set("views", path.join(__dirname, "..", "public"));
 
 	app.get("/themes/:theme.css", (req, res) => {
 		const themeName = req.params.theme;
