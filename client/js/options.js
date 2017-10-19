@@ -1,6 +1,7 @@
 "use strict";
 
 const $ = require("jquery");
+require("jquery-textcomplete");
 const escapeRegExp = require("lodash/escapeRegExp");
 const settings = $("#settings");
 const userStyles = $("#user-specified-css");
