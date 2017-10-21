@@ -7,6 +7,7 @@ const settings = $("#settings");
 const userStyles = $("#user-specified-css");
 const storage = require("./localStorage");
 const tz = require("./libs/handlebars/tz");
+const colorClass = require("./libs/handlebars/colorClass")
 
 const windows = $("#windows");
 const chat = $("#chat");
@@ -26,6 +27,8 @@ const options = {
 	theme: $("#theme").attr("href").replace(/^themes\/(.*).css$/, "$1"), // Extracts default theme name, set on the server configuration
 	thumbnails: true,
 	userStyles: userStyles.text(),
+	userLightness: 85,
+	userSaturation: 70
 };
 let userOptions = JSON.parse(storage.get("settings")) || {};
 
@@ -43,6 +46,24 @@ module.exports.shouldOpenMessagePreview = function(type) {
 	return (options.links && type === "link") || (options.thumbnails && type === "image");
 };
 
+var updateUserHSL = function() {
+	var sat = $("#sat-select").val();
+	var l   = $("#light-select").val();
+	console.log([sat, l] + "");
+
+	options["userSaturation"] = sat;
+	options["userLightness"] = l;
+
+	$(".user").each((i,x) => {
+		$(x).css('color', colorClass(x.innerText));
+	});
+
+	$("#example-user-1").css('color', 'hsl(0,   ' + sat + '%, ' + l + '%)');
+	$("#example-user-2").css('color', 'hsl(120, ' + sat + '%, ' + l + '%)');
+	$("#example-user-3").css('color', 'hsl(240, ' + sat + '%, ' + l + '%)');
+	storage.set("settings", JSON.stringify(options));
+}
+
 for (var i in options) {
 	if (i === "userStyles") {
 		if (!/[?&]nocss/.test(window.location.search)) {
@@ -57,6 +78,10 @@ for (var i in options) {
 	} else if (i === "theme") {
 		$("#theme").attr("href", "themes/" + options[i] + ".css");
 		settings.find("select[name=" + i + "]").val(options[i]);
+	} else if (i === "userLightness") {
+		settings.find("#sat-select").val(options[i]);
+	} else if (i === "userSaturation") {
+		settings.find("#light-select").val(options[i]);
 	} else if (options[i]) {
 		settings.find("input[name=" + i + "]").prop("checked", true);
 	}
@@ -121,6 +146,10 @@ settings.on("change", "input, select, textarea", function() {
 		} else {
 			$("#input").textcomplete("destroy");
 		}
+	} else if (name === "saturation") {
+		updateUserHSL();
+	} else if (name === "lightness") {
+		updateUserHSL();
 	}
 }).find("input")
 	.trigger("change");
