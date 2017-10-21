@@ -88,6 +88,13 @@ function buildChatMessage(msg) {
 		msg.highlight = true;
 	}
 
+	// See if any of the custom highlight ignore regexes match
+	if (msg.highlight
+		&& options.highlightsIgnoreRE
+		&& options.highlightsIgnoreRE.exec(msg.text)) {
+		msg.highlight = false;
+	}
+
 	if (constants.actionTypes.indexOf(type) !== -1) {
 		msg.template = "actions/" + type;
 		template = "msg_action";

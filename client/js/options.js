@@ -17,6 +17,7 @@ const options = {
 	coloredNicks: true,
 	desktopNotifications: false,
 	highlights: [],
+	highlightsIgnore: [],
 	links: true,
 	motd: true,
 	notification: true,
@@ -50,6 +51,8 @@ for (var i in options) {
 		}
 		settings.find("#user-specified-css-input").val(options[i]);
 	} else if (i === "highlights") {
+		settings.find("input[name=" + i + "]").val(options[i]);
+	} else if (i === "highlightsIgnore") {
 		settings.find("input[name=" + i + "]").val(options[i]);
 	} else if (i === "statusMessages") {
 		settings.find(`input[name=${i}][value=${options[i]}]`)
