@@ -7,7 +7,7 @@ const settings = $("#settings");
 const userStyles = $("#user-specified-css");
 const storage = require("./localStorage");
 const tz = require("./libs/handlebars/tz");
-const colorClass = require("./libs/handlebars/colorClass")
+const colorClass = require("./libs/handlebars/colorClass");
 
 const windows = $("#windows");
 const chat = $("#chat");
@@ -48,21 +48,20 @@ module.exports.shouldOpenMessagePreview = function(type) {
 
 var updateUserHSL = function() {
 	var sat = $("#sat-select").val();
-	var l   = $("#light-select").val();
-	console.log([sat, l] + "");
+	var l = $("#light-select").val();
 
-	options["userSaturation"] = sat;
-	options["userLightness"] = l;
+	options.userSaturation = sat;
+	options.userLightness = l;
 
-	$(".user").each((i,x) => {
-		$(x).css('color', colorClass(x.innerText));
+	$(".user").each((i, x) => {
+		$(x).css("color", colorClass(x.innerText));
 	});
 
-	$("#example-user-1").css('color', 'hsl(0,   ' + sat + '%, ' + l + '%)');
-	$("#example-user-2").css('color', 'hsl(120, ' + sat + '%, ' + l + '%)');
-	$("#example-user-3").css('color', 'hsl(240, ' + sat + '%, ' + l + '%)');
+	$("#example-user-1").css("color", "hsl(0,   " + sat + "%, " + l + "%)");
+	$("#example-user-2").css("color", "hsl(120, " + sat + "%, " + l + "%)");
+	$("#example-user-3").css("color", "hsl(240, " + sat + "%, " + l + "%)");
 	storage.set("settings", JSON.stringify(options));
-}
+};
 
 for (var i in options) {
 	if (i === "userStyles") {
