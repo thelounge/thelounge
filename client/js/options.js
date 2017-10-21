@@ -27,8 +27,8 @@ const options = {
 	theme: $("#theme").attr("href").replace(/^themes\/(.*).css$/, "$1"), // Extracts default theme name, set on the server configuration
 	thumbnails: true,
 	userStyles: userStyles.text(),
-	userLightness: 85,
-	userSaturation: 70
+	userLightness: 70,
+	userSaturation: 35
 };
 let userOptions = JSON.parse(storage.get("settings")) || {};
 
