@@ -80,7 +80,7 @@
     "mousetrap": "1.6.1",
     "npm-run-all": "4.1.1",
     "nyc": "11.2.1",
-    "socket.io-client": "2.0.3",
+    "socket.io-client": "2.0.4",
     "stylelint": "8.2.0",
     "stylelint-config-standard": "17.0.0",
     "webpack": "3.8.1",
