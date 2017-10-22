@@ -53,7 +53,7 @@
     "read": "1.0.7",
     "request": "2.83.0",
     "semver": "5.4.1",
-    "socket.io": "2.0.3",
+    "socket.io": "2.0.4",
     "spdy": "3.4.7",
     "ua-parser-js": "0.7.17",
     "urijs": "1.19.0",
