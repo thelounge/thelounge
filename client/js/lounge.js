@@ -497,7 +497,7 @@ $(function() {
 		});
 	});
 
-	if ($("body").hasClass("public") && window.location.hash === "#connect") {
+	if ($("body").hasClass("public") && (window.location.hash === "#connect" || window.location.hash === "")) {
 		$("#connect").one("show", function() {
 			var params = URI(document.location.search);
 			params = params.search(true);
