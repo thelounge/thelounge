@@ -66,10 +66,6 @@ h3 {
 	margin: 0;
 }
 
-h1.title {
-	margin-bottom: 10px;
-}
-
 input {
 	outline: 0;
 }
@@ -2076,7 +2072,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 @media (max-width: 479px) {
 	.container {
-		margin: 40px 0 !important;
+		margin: 10px 0 !important;
 	}
 
 	#connect .tls {
