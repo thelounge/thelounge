@@ -13,4 +13,5 @@ git rebase master
 npm install
 NODE_ENV=production npm run build
 npm test || true
-npm start
+shift
+npm start -- "$@"
