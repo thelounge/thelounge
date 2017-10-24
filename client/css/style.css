@@ -742,6 +742,24 @@ kbd {
 	overflow: hidden;
 }
 
+#windows .header.expanded {
+	height: auto;
+	overflow-y: scroll;
+	min-height: 48px; /* Don't shrink if topic is short */
+	max-height: 96px; /* Double original height */
+	line-height: 24px; /* 48px line height looks weird when there are multiple lines */
+	padding-top: 12px; /* this is so the top text doesn't shift down when changing the line-height */
+}
+
+#windows .header.expanded button {
+	/* Fix buttons shifting down because of padding above */
+	margin-top: -6px; /* From the button's styling: margin: 6px -12px 0 0 */
+}
+
+#windows .header.expanded .rt-tooltip {
+	margin-right: -8px; /* Stop buttons from shifting left when header is expanded */
+}
+
 #windows .header .title {
 	font-size: 15px;
 }
@@ -750,6 +768,7 @@ kbd {
 	color: #777;
 	margin-left: 8px;
 	word-break: break-all;
+	cursor: pointer;
 }
 
 #windows .window .header {

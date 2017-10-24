@@ -298,6 +298,15 @@ $(function() {
 		});
 	});
 
+	chat.on("click", ".chan .topic", function() {
+		// Toggles 'expanded' class on .chat .header, and then adjusts the chat (.chat) and the userlist (.sidebar)'s
+		// 'top' css properties, to lower them to make place for the expanded topic
+		const $parent = $(this).parent();
+		$parent.toggleClass("expanded");
+
+		$parent.siblings().css("top", $parent.outerHeight());
+	});
+
 	sidebar.on("click", ".chan, button", function(e, data) {
 		// Pushes states to history web API when clicking elements with a data-target attribute.
 		// States are very trivial and only contain a single `clickTarget` property which
