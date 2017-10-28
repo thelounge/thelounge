@@ -49,22 +49,16 @@
 		<div id="main">
 			<div id="windows">
 				<div id="loading" class="window active">
-					<div class="container">
-						<div class="row">
-							<div class="col-xs-12">
-								<h1 class="title" id="loading-title">The Lounge is loading…</h1>
-							</div>
-							<div class="col-xs-12">
-								<p id="loading-page-message">Loading the app… <a href="http://enable-javascript.com/" target="_blank" rel="noopener">Make sure to have JavaScript enabled.</a></p>
-								<p id="loading-slow">
-									This is taking longer than it should, there might be
-									connectivity issues.
-								</p>
-								<button id="loading-reload" class="btn">Reload page</button>
-								<script async src="js/loading-error-handlers.js"></script>
-							</div>
-						</div>
+					<div id="loading-status-container">
+						<img src="img/logo-vertical-transparent-bg.svg" class="loading-logo-bright" alt="The Lounge" width="256" height="170">
+						<img src="img/logo-vertical-transparent-dark.svg" class="loading-logo-dark" alt="The Lounge" width="256" height="170">
+						<p id="loading-page-message"><a href="https://enable-javascript.com/" target="_blank" rel="noopener">Your JavaScript must be enabled.</a></p>
 					</div>
+					<div id="loading-reload-container">
+						<p id="loading-slow">This is taking longer than it should, there might be connectivity issues.</p>
+						<button id="loading-reload" class="btn">Reload page</button>
+					</div>
+					<script async src="js/loading-error-handlers.js"></script>
 				</div>
 				<div id="chat-container" class="window">
 					<div id="chat"></div>

@@ -9,11 +9,13 @@
  */
 
 (function() {
+	document.getElementById("loading-page-message").textContent = "Loading the app…";
+
 	var displayReload = function displayReload() {
 		var loadingReload = document.getElementById("loading-reload");
 
 		if (loadingReload) {
-			loadingReload.style.display = "block";
+			loadingReload.style.visibility = "visible";
 		}
 	};
 
@@ -25,7 +27,7 @@
 		// 5s. Wrap everything in this block to make sure nothing happens if the
 		// element does not exist (i.e. page has loaded).
 		if (loadingSlow) {
-			loadingSlow.style.display = "block";
+			loadingSlow.style.visibility = "visible";
 			displayReload();
 		}
 	}, 5000);
@@ -35,9 +37,6 @@
 	});
 
 	window.g_LoungeErrorHandler = function LoungeErrorHandler(e) {
-		var title = document.getElementById("loading-title");
-		title.textContent = "An error has occured";
-
 		var message = document.getElementById("loading-page-message");
 		message.textContent = "An error has occured that prevented the client from loading correctly.";
 

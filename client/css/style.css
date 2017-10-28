@@ -1186,7 +1186,6 @@ kbd {
 	overflow: hidden; /* Prevents Zalgo text to expand beyond messages */
 }
 
-#loading a,
 #chat .special .time,
 #chat .special .from {
 	display: none;
@@ -1506,9 +1505,11 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	content: "Search Results";
 }
 
-#loading {
+#loading.active {
 	font-size: 14px;
 	z-index: 1;
+	display: flex;
+	flex-direction: column;
 }
 
 #loading p {
@@ -1517,11 +1518,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #loading-slow,
 #loading-reload {
-	display: none;
-}
-
-#loading-reload {
-	margin-top: 15px;
+	visibility: hidden;
 }
 
 #loading summary {
@@ -1530,7 +1527,25 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #loading pre {
+	text-align: left;
 	white-space: normal;
+}
+
+#loading-reload-container,
+#loading-status-container {
+	flex: 1 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+#loading-reload-container {
+	flex-grow: 0;
+}
+
+.loading-logo-dark {
+	display: none;
 }
 
 #sign-in label {
