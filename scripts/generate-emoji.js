@@ -20,7 +20,7 @@ request.get({
 				continue;
 			}
 
-			const unicode = stringToUnicode(key);
+			const unicode = stringToUnicode(emojiStrategy[key].unicode_output);
 
 			emojiMap[shortname] = unicode;
 
