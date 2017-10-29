@@ -512,8 +512,7 @@ function performAuthentication(data) {
 		// If authorization succeeded but there is no loaded user,
 		// load it and find the user again (this happens with LDAP)
 		if (!client) {
-			manager.loadUser(data.user);
-			client = manager.findClient(data.user);
+			client = manager.loadUser(data.user);
 		}
 
 		initClient();
