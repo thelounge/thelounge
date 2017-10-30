@@ -14,7 +14,7 @@ your contributions.
 
 - Make sure to discuss your ideas with the community in an
   [issue](https://github.com/thelounge/lounge/issues) or on the IRC channel.
-- Take a look at the open issues labeled as [`help wanted`](https://github.com/thelounge/lounge/issues?q=is%3Aopen+is%3Aissue+label%3Abug+label%3A%22help+wanted%22)
+- Take a look at the open issues labeled as [`up for grabs`](https://github.com/thelounge/lounge/issues?q=is%3Aopen%20is%3Aissue%20label%3A%22up%20for%20grabs%22)
   if you want to help without having a specific idea in mind.
 - Make sure that your PRs do not contain unnecessary commits or merge commits.
   [Squash commits](https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History)
