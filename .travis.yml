@@ -1,8 +1,9 @@
 language: node_js
 node_js:
-- 8 # Current stable (Active LTS from 2017-10-01)
-- 6 # Active LTS until 2018-04-18
-- 4 # Maintenance LTS until 2018-04-01
+- 9 # Current stable 
+- 8 # Active LTS until April 2019
+- 6 # Active LTS until April 2018
+- 4 # Maintenance LTS until 2018-04-01, will be dropped in The Lounge v3
 
 matrix:
   fast_finish: true
