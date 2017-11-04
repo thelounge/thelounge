@@ -21,7 +21,6 @@ module.exports = {
 	},
 
 	windows: {
-		loading: require("./windows/loading.tpl"),
 		sign_in: require("./windows/sign_in.tpl"),
 	},
 

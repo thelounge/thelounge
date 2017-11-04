@@ -4,6 +4,7 @@ const $ = require("jquery");
 const socket = require("../socket");
 const storage = require("../localStorage");
 const utils = require("../utils");
+const templates = require("../../views");
 
 socket.on("auth", function(data) {
 	// If we reconnected and serverHash differs, that means the server restarted
@@ -17,11 +18,13 @@ socket.on("auth", function(data) {
 
 	utils.serverHash = data.serverHash;
 
-	const login = $("#sign-in");
 	let token;
 	const user = storage.get("user");
 
-	login.find(".btn").prop("disabled", false);
+	const login = $("#sign-in")
+		.html(templates.windows.sign_in())
+		.find(".btn")
+		.prop("disabled", false);
 
 	if (!data.success) {
 		if (login.length === 0) {
