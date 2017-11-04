@@ -46,7 +46,19 @@
 			<div id="windows">
 				<div id="loading" class="window active">
 					<div class="container">
-						{{> ./views/windows/loading}}
+						<div class="row">
+							<div class="col-xs-12">
+								<h1 class="title">The Lounge is loading…</h1>
+							</div>
+							<div class="col-xs-12">
+								<p id="loading-page-message">Loading the app… <a href="http://enable-javascript.com/" target="_blank" rel="noopener">Make sure to have JavaScript enabled.</a></p>
+								<div id="loading-slow">
+									<p>This is taking longer than it should, there might be connectivity issues.</p>
+									<button id="loading-slow-reload" class="btn">Reload page</button>
+								</div>
+								<script async src="js/loading-slow-alert.js"></script>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div id="chat-container" class="window">
@@ -67,11 +79,7 @@
 						</div>
 					</form>
 				</div>
-				<div id="sign-in" class="window">
-					<form class="container" method="post" action="">
-						{{> views/windows/sign_in}}
-					</form>
-				</div>
+				<div id="sign-in" class="window"></div>
 				<div id="connect" class="window">
 					<div class="header">
 						<button class="lt" aria-label="Toggle channel list"></button>
