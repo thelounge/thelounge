@@ -467,6 +467,22 @@ function initializeClient(socket, client, token, lastMessage) {
 	}
 }
 
+function getClientConfiguration() {
+	const config = _.pick(Helper.config, [
+		"public",
+		"lockNetwork",
+		"displayNetwork",
+		"useHexIp",
+		"defaults",
+		"themes",
+		"prefetch",
+	]);
+
+	config.ldapEnabled = Helper.config.ldap.enable;
+
+	return config;
+}
+
 function performAuthentication(data) {
 	const socket = this;
 	let client;
@@ -474,6 +490,8 @@ function performAuthentication(data) {
 	const finalInit = () => initializeClient(socket, client, data.token || null, data.lastMessage || -1);
 
 	const initClient = () => {
+		socket.emit("configuration", getClientConfiguration());
+
 		client.ip = getClientIp(socket);
 
 		// If webirc is enabled perform reverse dns lookup

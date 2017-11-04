@@ -145,7 +145,7 @@
 		</div>
 
 		{{#unless public}}
-			{{#unless ldap.enable}}
+			{{#unless ldapEnabled}}
 		<div id="change-password">
 			<form action="" method="post">
 				<div class="col-sm-12">

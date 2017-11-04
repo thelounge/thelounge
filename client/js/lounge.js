@@ -15,7 +15,6 @@ const templates = require("../views");
 const socket = require("./socket");
 require("./socket-events");
 const storage = require("./localStorage");
-require("./options");
 const utils = require("./utils");
 require("./autocompletion");
 require("./webpush");
