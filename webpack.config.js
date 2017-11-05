@@ -3,7 +3,6 @@
 const webpack = require("webpack");
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
-const CleanupPlugin = require("webpack-cleanup-plugin");
 
 // ********************
 // Common configuration
@@ -62,7 +61,6 @@ const config = {
 		json3: "JSON", // socket.io uses json3.js, but we do not target any browsers that need it
 	},
 	plugins: [
-		new CleanupPlugin(),
 		new CopyPlugin([
 			{
 				from: "./node_modules/font-awesome/fonts/fontawesome-webfont.woff*",
