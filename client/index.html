@@ -419,8 +419,14 @@
 							<div class="description">
 								<p>
 									Mark any text typed after this shortcut to be colored. After
-									hitting this shortcut, enter an integer in the
-									<code>0—15</code> range to select the desired color.
+									hitting this shortcut, enter an integer in the range
+									<code>0—15</code> to select the desired color, or use the
+									autocompletion menu to choose a color name (see below).
+								</p>
+								<p>
+									Background color can be specified by putting a comma and
+									another integer in the range <code>0—15</code> after the
+									foreground color number (autocompletion works too).
 								</p>
 								<p>
 									A color reference can be found
@@ -465,6 +471,53 @@
 									Mark all text typed after this shortcut to be reset to its
 									original formatting.
 								</p>
+							</div>
+						</div>
+
+						<h2>Autocompletion</h2>
+
+						<p>
+							To auto-complete nicknames, channels, commands, and emoji, type one of the characters below to open
+							a suggestion list. Use the <kbd>↑</kbd> and <kbd>↓</kbd> keys to highlight an item, and insert it by
+							pressing <kbd>Tab</kbd> or <kbd>Enter</kbd> (or by clicking the desired item).
+						</p>
+						<p>
+							Autocompletion can be disabled in settings.
+						</p>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>@</code>
+							</div>
+							<div class="description">
+								<p>Nickname</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>#</code>
+							</div>
+							<div class="description">
+								<p>Channel</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/</code>
+							</div>
+							<div class="description">
+								<p>Commands (see list of commands below)</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>:</code>
+							</div>
+							<div class="description">
+								<p>Emoji (note: requires two search characters, to avoid conflicting with common emoticons like <code>:)</code>)</p>
 							</div>
 						</div>
 
