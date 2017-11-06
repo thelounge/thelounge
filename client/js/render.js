@@ -7,7 +7,7 @@ const renderPreview = require("./renderPreview");
 const utils = require("./utils");
 const sorting = require("./sorting");
 const constants = require("./constants");
-const condensed = require("./condensed");
+const condensed = require("./condensed")({templates: templates});
 const helpers_parse = require("./libs/handlebars/parse");
 
 const chat = $("#chat");
@@ -64,14 +64,14 @@ function appendMessage(container, chanId, chanType, msg) {
 	// we just append to it and update text
 	if (lastChild.hasClass("condensed")) {
 		lastChild.append(renderedMessage);
-		condensed.updateText(lastChild, [msg.type]);
+		condensed.updateText(lastChild, msg);
 		return;
 	}
 
 	// Always create a condensed container
 	const newCondensed = $(templates.msg_condensed({time: msg.time}));
 
-	condensed.updateText(newCondensed, [msg.type]);
+	condensed.updateText(newCondensed, msg);
 	newCondensed.append(renderedMessage);
 	container.append(newCondensed);
 }
