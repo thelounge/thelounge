@@ -147,7 +147,7 @@
 		{{#unless public}}
 			{{#unless ldapEnabled}}
 		<div id="change-password">
-			<form action="" method="post">
+			<form action="" method="post" data-event="change-password">
 				<div class="col-sm-12">
 					<h2>Change password</h2>
 				</div>

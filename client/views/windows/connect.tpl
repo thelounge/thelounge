@@ -1,7 +1,7 @@
 <div class="header">
 	<button class="lt" aria-label="Toggle channel list"></button>
 </div>
-<form class="container" method="post" action="">
+<form class="container" method="post" action="" data-event="conn">
 	<div class="row">
 		<div class="col-sm-12">
 			<h1 class="title">

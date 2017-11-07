@@ -1,4 +1,4 @@
-<form class="container" method="post" action="">
+<form class="container" method="post" action="" data-event="auth">
 	<div class="row">
 		<div class="col-xs-12">
 			<h1 class="title">Sign in to The Lounge</h1>
@@ -6,19 +6,13 @@
 		<div class="col-xs-12">
 			<label>
 				Username
-				<input class="input" name="user">
+				<input class="input" name="user" autofocus>
 			</label>
 		</div>
 		<div class="col-xs-12">
 			<label>
 				Password
 				<input class="input" type="password" name="password">
-			</label>
-		</div>
-		<div class="col-xs-12">
-			<label class="remember">
-				<input type="checkbox" name="remember" value="on" id="sign-in-remember" checked>
-				Stay signed in
 			</label>
 		</div>
 		<div class="col-xs-12 error" style="display: none;">Authentication failed.</div>

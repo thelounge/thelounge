@@ -210,7 +210,6 @@ function index(req, res, next) {
 		Helper.config
 	);
 	data.gitCommit = Helper.getGitCommit();
-	data.themes = themes.getAll();
 
 	const policies = [
 		"default-src *",
@@ -479,6 +478,8 @@ function getClientConfiguration() {
 	]);
 
 	config.ldapEnabled = Helper.config.ldap.enable;
+	config.gitCommit = Helper.getGitCommit();
+	config.themes = themes.getAll();
 
 	return config;
 }
