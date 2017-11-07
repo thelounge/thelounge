@@ -100,19 +100,20 @@ ClientManager.prototype.addUser = function(name, password, enableLog) {
 
 	const userPath = Helper.getUserConfigPath(name);
 
+	var user = {
+		password: password || "",
+		log: enableLog || false,
+		awayMessage: "",
+		networks: [],
+		sessions: {},
+	};
+
 	if (fs.existsSync(userPath)) {
+		// If user already exists, update their config
 		log.info(`User ${colors.green(name)} already exists, updating...`);
-		var user = readUserConfig(name);
+		user = readUserConfig(name);
 		user.password = password || "";
 		user.log = enableLog || false;
-	} else {
-		const user = {
-			password: password || "",
-			log: enableLog || false,
-			awayMessage: "",
-			networks: [],
-			sessions: {},
-		};
 	}
 
 	try {

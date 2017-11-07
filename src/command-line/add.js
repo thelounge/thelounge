@@ -30,7 +30,6 @@ program
 		}
 
 		if (options.setPassword === undefined) {
-
 			log.prompt({
 				text: "Enter password:",
 				silent: true
