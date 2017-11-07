@@ -8,9 +8,9 @@ const Utils = require("./utils");
 
 program
 	.command("add <name>")
-	.description("Add a new user")
+	.description("Add/Update user")
 	.on("--help", Utils.extraHelp)
-	.action(function(name) {
+	.action(function(name, options) {
 		if (!fs.existsSync(Helper.USERS_PATH)) {
 			log.error(`${Helper.USERS_PATH} does not exist.`);
 			return;
@@ -29,35 +29,41 @@ program
 			return;
 		}
 
-		if (users.indexOf(name) !== -1) {
-			log.error(`User ${colors.bold(name)} already exists.`);
-			return;
-		}
+		if (options.setPassword === undefined) {
 
-		log.prompt({
-			text: "Enter password:",
-			silent: true
-		}, function(err, password) {
-			if (!password) {
-				log.error("Password cannot be empty.");
-				return;
-			}
-			if (!err) {
-				log.prompt({
-					text: "Save logs to disk?",
-					default: "yes"
-				}, function(err2, enableLog) {
-					if (!err2) {
-						add(
-							manager,
-							name,
-							password,
-							enableLog.charAt(0).toLowerCase() === "y"
-						);
-					}
-				});
-			}
-		});
+			log.prompt({
+				text: "Enter password:",
+				silent: true
+			}, function(err, password) {
+				if (!password) {
+					log.error("Password cannot be empty.");
+					return;
+				}
+				if (!err) {
+					log.prompt({
+						text: "Save logs to disk?",
+						default: "yes"
+					}, function(err2, enableLog) {
+						if (!err2) {
+							add(
+								manager,
+								name,
+								password,
+								enableLog.charAt(0).toLowerCase() === "y"
+							);
+						}
+					});
+				}
+			});
+		} else {
+			var password = options.setPassword;
+			add(
+				manager,
+				name,
+				password,
+				false
+			);
+		}
 	});
 
 function add(manager, name, password, enableLog) {
