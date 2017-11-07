@@ -1,7 +1,7 @@
 <div>
 	{{> ../user_name nick=whois.nick}}
 	<i class="hostmask">({{whois.user}}@{{whois.host}})</i>:
-	<b>{{whois.real_name}}</b>
+	<b>{{{parse whois.real_name}}}</b>
 </div>
 {{#if whois.account}}
 <div>
