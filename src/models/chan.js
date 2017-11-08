@@ -2,6 +2,7 @@
 
 var _ = require("lodash");
 var Helper = require("../helper");
+const User = require("./user");
 const userLog = require("../userLog");
 const storage = require("../plugins/storage");
 
@@ -119,6 +120,10 @@ Chan.prototype.findMessage = function(msgId) {
 
 Chan.prototype.findUser = function(nick) {
 	return _.find(this.users, {nick: nick});
+};
+
+Chan.prototype.getUser = function(nick) {
+	return this.findUser(nick) || new User({nick: nick});
 };
 
 Chan.prototype.getMode = function(name) {
