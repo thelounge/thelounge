@@ -11,8 +11,8 @@ module.exports = function(irc, network) {
 			return;
 		}
 
-		const kicker = chan.findUser(data.nick);
-		const target = chan.findUser(data.kicked);
+		const kicker = chan.getUser(data.nick);
+		const target = chan.getUser(data.kicked);
 
 		if (data.kicked === irc.user.nick) {
 			chan.users = [];
