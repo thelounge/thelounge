@@ -154,9 +154,11 @@ function fetch(uri, cb) {
 	} catch (e) {
 		return cb(null);
 	}
+
 	const buffers = [];
-	var length = 0;
-	var limit = Helper.config.prefetchMaxImageSize * 1024;
+	let length = 0;
+	let limit = Helper.config.prefetchMaxImageSize * 1024;
+
 	req
 		.on("response", function(res) {
 			if (/^image\/.+/.test(res.headers["content-type"])) {

@@ -126,15 +126,6 @@ Chan.prototype.getUser = function(nick) {
 	return this.findUser(nick) || new User({nick: nick});
 };
 
-Chan.prototype.getMode = function(name) {
-	var user = this.findUser(name);
-	if (user) {
-		return user.mode;
-	}
-
-	return "";
-};
-
 Chan.prototype.toJSON = function() {
 	var clone = _.clone(this);
 	clone.users = []; // Do not send user list, the client will explicitly request it when needed
