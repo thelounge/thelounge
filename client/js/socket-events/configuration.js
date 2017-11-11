@@ -24,10 +24,9 @@ socket.on("configuration", function(data) {
 	options.initialize();
 	webpush.initialize();
 
-	// TODO: #sign-in needs to be handled in auth.js otherwise its broken
-	const forms = $("#sign-in, #connect, #change-password");
+	const forms = $("#connect form, #change-password form");
 
-	forms.on("submit", "form", function() {
+	forms.on("submit", function() {
 		const form = $(this);
 		const event = form.data("event");
 
@@ -40,34 +39,30 @@ socket.on("configuration", function(data) {
 			}
 		});
 
-		if (values.user) {
-			storage.set("user", values.user);
-		}
-
 		socket.emit(event, values);
 
 		return false;
 	});
 
-	forms.on("focusin", ".nick", function() {
-		// Need to set the first "lastvalue", so it can be used in the below function
-		const nick = $(this);
-		nick.data("lastvalue", nick.val());
-	});
+	$(".nick")
+		.on("focusin", function() {
+			// Need to set the first "lastvalue", so it can be used in the below function
+			const nick = $(this);
+			nick.data("lastvalue", nick.val());
+		})
+		.on("input", function() {
+			const nick = $(this).val();
+			const usernameInput = forms.find(".username");
 
-	forms.on("input", ".nick", function() {
-		const nick = $(this).val();
-		const usernameInput = forms.find(".username");
+			// Because this gets called /after/ it has already changed, we need use the previous value
+			const lastValue = $(this).data("lastvalue");
 
-		// Because this gets called /after/ it has already changed, we need use the previous value
-		const lastValue = $(this).data("lastvalue");
+			// They were the same before the change, so update the username field
+			if (usernameInput.val() === lastValue) {
+				usernameInput.val(nick);
+			}
 
-		// They were the same before the change, so update the username field
-		if (usernameInput.val() === lastValue) {
-			usernameInput.val(nick);
-		}
-
-		// Store the "previous" value, for next time
-		$(this).data("lastvalue", nick);
-	});
+			// Store the "previous" value, for next time
+			$(this).data("lastvalue", nick);
+		});
 });

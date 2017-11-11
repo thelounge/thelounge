@@ -1,4 +1,4 @@
-<form class="container" method="post" action="" data-event="auth">
+<form class="container" method="post" action="">
 	<div class="row">
 		<div class="col-xs-12">
 			<h1 class="title">Sign in to The Lounge</h1>
