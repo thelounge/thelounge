@@ -5,7 +5,6 @@ const socket = require("../socket");
 const templates = require("../../views");
 const options = require("../options");
 const webpush = require("../webpush");
-const storage = require("../localStorage");
 
 socket.on("configuration", function(data) {
 	if (!options.initialize) {
