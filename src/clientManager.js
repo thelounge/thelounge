@@ -35,7 +35,7 @@ ClientManager.prototype.findClient = function(name) {
 
 ClientManager.prototype.autoloadUsers = function() {
 	const users = this.getUsers();
-	const noUsersWarning = `There are currently no users. Create one with ${colors.bold("lounge add <name>")}.`;
+	const noUsersWarning = `There are currently no users. Create one with ${colors.bold("thelounge add <name>")}.`;
 
 	if (users.length === 0) {
 		log.info(noUsersWarning);
