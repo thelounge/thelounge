@@ -23,7 +23,7 @@ describe("Server", () => {
 			request(webURL, (error, response, body) => {
 				expect(error).to.be.null;
 				expect(body).to.include("<title>The Lounge</title>");
-				expect(body).to.include("https://thelounge.github.io/");
+				expect(body).to.include("js/bundle.js");
 
 				done();
 			});

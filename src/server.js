@@ -32,11 +32,6 @@ module.exports = function() {
 (Node.js ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${process.arch})`);
 	log.info(`Configuration file: ${colors.green(Helper.CONFIG_PATH)}`);
 
-	if (!fs.existsSync("public/js/bundle.js")) {
-		log.error(`The client application was not built. Run ${colors.bold("NODE_ENV=production npm run build")} to resolve this.`);
-		process.exit();
-	}
-
 	var app = express()
 		.disable("x-powered-by")
 		.use(allRequests)
