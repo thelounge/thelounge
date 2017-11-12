@@ -8,7 +8,7 @@
 
 # Ignore client folder as it's being built into public/ folder
 # except for the findLinks.js file which is used by the server
-client/
+client/**
 !client/js/libs/handlebars/ircmessageparser/findLinks.js
 
 public/js/bundle.vendor.js.map
