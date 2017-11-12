@@ -5,7 +5,6 @@ var pkg = require("../package.json");
 var Client = require("./client");
 var ClientManager = require("./clientManager");
 var express = require("express");
-var expressHandlebars = require("express-handlebars");
 var fs = require("fs");
 var path = require("path");
 var io = require("socket.io");
@@ -39,21 +38,14 @@ module.exports = function() {
 	}
 
 	var app = express()
+		.disable("x-powered-by")
 		.use(allRequests)
 		.use(index)
 		.use(express.static("public"))
 		.use("/storage/", express.static(Helper.getStoragePath(), {
 			redirect: false,
 			maxAge: 86400 * 1000,
-		}))
-		.engine("html", expressHandlebars({
-			extname: ".html",
-			helpers: {
-				tojson: (c) => JSON.stringify(c),
-			},
-		}))
-		.set("view engine", "html")
-		.set("views", path.join(__dirname, "..", "public"));
+		}));
 
 	app.get("/themes/:theme.css", (req, res) => {
 		const themeName = req.params.theme;
@@ -221,9 +213,17 @@ function index(req, res, next) {
 		policies.unshift("block-all-mixed-content");
 	}
 
+	res.setHeader("Content-Type", "text/html");
 	res.setHeader("Content-Security-Policy", policies.join("; "));
 	res.setHeader("Referrer-Policy", "no-referrer");
-	res.render("index", Helper.config);
+
+	return fs.readFile(path.join(__dirname, "..", "public", "index.html"), "utf-8", (err, file) => {
+		if (err) {
+			throw err;
+		}
+
+		res.send(_.template(file)(Helper.config));
+	});
 }
 
 function initializeClient(socket, client, token, lastMessage) {
