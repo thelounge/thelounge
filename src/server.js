@@ -205,12 +205,6 @@ function index(req, res, next) {
 		return next();
 	}
 
-	var data = _.merge(
-		pkg,
-		Helper.config
-	);
-	data.gitCommit = Helper.getGitCommit();
-
 	const policies = [
 		"default-src *",
 		"connect-src 'self' ws: wss:",
@@ -229,7 +223,7 @@ function index(req, res, next) {
 
 	res.setHeader("Content-Security-Policy", policies.join("; "));
 	res.setHeader("Referrer-Policy", "no-referrer");
-	res.render("index", data);
+	res.render("index", Helper.config);
 }
 
 function initializeClient(socket, client, token, lastMessage) {
@@ -478,6 +472,7 @@ function getClientConfiguration() {
 	]);
 
 	config.ldapEnabled = Helper.config.ldap.enable;
+	config.version = pkg.version;
 	config.gitCommit = Helper.getGitCommit();
 	config.themes = themes.getAll();
 

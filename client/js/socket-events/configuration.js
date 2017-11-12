@@ -13,6 +13,7 @@ socket.on("configuration", function(data) {
 
 	$("#settings").html(templates.windows.settings(data));
 	$("#connect").html(templates.windows.connect(data));
+	$("#help").html(templates.windows.help(data));
 
 	$("#play").on("click", () => {
 		const pop = new Audio();
