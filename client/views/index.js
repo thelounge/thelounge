@@ -35,6 +35,7 @@ module.exports = {
 	network: require("./network.tpl"),
 	image_viewer: require("./image_viewer.tpl"),
 	session: require("./session.tpl"),
+	search_results: require("./search_results.tpl"),
 	unread_marker: require("./unread_marker.tpl"),
 	user: require("./user.tpl"),
 	user_filtered: require("./user_filtered.tpl"),

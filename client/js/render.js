@@ -11,17 +11,19 @@ const condensed = require("./condensed");
 const helpers_parse = require("./libs/handlebars/parse");
 
 const chat = $("#chat");
+const searchQuery = $("#search-query");
 const sidebar = $("#sidebar");
 
 require("intersection-observer");
 
 const historyObserver = window.IntersectionObserver ?
 	new window.IntersectionObserver(loadMoreHistory, {
-		root: chat.get(0)
+		root: $("#main").get(0)
 	}) : null;
 
 module.exports = {
 	appendMessage,
+	appendSearchResults,
 	buildChannelMessages,
 	renderChannel,
 	renderChannelUsers,
@@ -74,6 +76,14 @@ function appendMessage(container, chanId, chanType, msg) {
 	condensed.updateText(newCondensed, [msg.type]);
 	newCondensed.append(renderedMessage);
 	container.append(newCondensed);
+}
+
+function appendSearchResults(container, results) {
+	container.append(templates.search_results({results: results}));
+
+	if (historyObserver) {
+		historyObserver.observe(searchQuery.find(".show-more").get(0));
+	}
 }
 
 function buildChatMessage(msg) {

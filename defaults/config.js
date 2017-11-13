@@ -506,5 +506,5 @@ module.exports = {
 		// @default  false
 		//
 		raw: false,
-	},
+	}
 };

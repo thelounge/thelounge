@@ -5,6 +5,7 @@ var Helper = require("../helper");
 const User = require("./user");
 const userLog = require("../userLog");
 const storage = require("../plugins/storage");
+const Search = require("../search");
 
 module.exports = Chan;
 
@@ -144,6 +145,7 @@ Chan.prototype.toJSON = function() {
 
 function writeUserLog(client, msg) {
 	const target = client.find(this.id);
+	const chan = this.type === Chan.Type.LOBBY ? target.network.host : this.name;
 
 	if (!target) {
 		return false;
@@ -152,7 +154,9 @@ function writeUserLog(client, msg) {
 	userLog.write(
 		client.name,
 		target.network.host, // TODO: Fix #1392, multiple connections to same server results in duplicate logs
-		this.type === Chan.Type.LOBBY ? target.network.host : this.name,
+		chan,
 		msg
 	);
+
+	Search.index(client.name, target.network.host, chan, Math.floor(msg.time.getTime() / 1000), msg.from, msg.text);
 }

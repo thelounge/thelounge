@@ -16,6 +16,7 @@ var Helper = {
 	getPackageModulePath: getPackageModulePath,
 	getStoragePath: getStoragePath,
 	getUserConfigPath: getUserConfigPath,
+	getLogsPath: getLogsPath,
 	getUserLogsPath: getUserLogsPath,
 	setHome: setHome,
 	getVersion: getVersion,
@@ -96,6 +97,10 @@ function setHome(homePath) {
 
 function getUserConfigPath(name) {
 	return path.join(this.USERS_PATH, name + ".json");
+}
+
+function getLogsPath() {
+	return path.join(this.HOME, "logs");
 }
 
 function getUserLogsPath(name, network) {

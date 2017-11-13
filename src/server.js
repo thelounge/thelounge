@@ -15,6 +15,7 @@ var colors = require("colors/safe");
 const net = require("net");
 const Identification = require("./identification");
 const themes = require("./plugins/themes");
+const Search = require("./search");
 
 // The order defined the priority: the first available plugin is used
 // ALways keep local auth in the end, which should always be enabled.
@@ -264,6 +265,31 @@ function initializeClient(socket, client, token, lastMessage) {
 			data.hostname = null;
 
 			client.connect(data);
+		}
+	);
+
+	socket.on(
+		"search-networks-channels",
+		function() {
+			Search.getNetworksChannels(client.name)
+				.then((data) => socket.emit("search-networks-channels", data));
+		}
+	);
+
+	socket.on(
+		"search-query",
+		function(query) {
+			if (!query.network || !query.chan) {
+				const split = query["network-channel"].split("/");
+				query.network = split[0];
+				query.chan = split[1];
+				delete(query["network-channel"]);
+			}
+			query.user = client.name;
+			Search.query(query)
+				.then((results) => {
+					socket.emit("search-results", query, results);
+				});
 		}
 	);
 
