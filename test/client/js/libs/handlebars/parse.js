@@ -243,6 +243,49 @@ describe("parse Handlebars helper", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	it("should find nicks", () => {
+		const testCases = [{
+			users: ["MaxLeiter"],
+			input: "test, MaxLeiter",
+			expected:
+				"test, " +
+				"<span role=\"button\" class=\"user color-12\" data-name=\"MaxLeiter\">" +
+					"MaxLeiter" +
+				"</span>",
+		}];
+
+		const actual = testCases.map((testCase) => parse(testCase.input, testCase.users));
+		const expected = testCases.map((testCase) => testCase.expected);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should not find nicks", () => {
+		const testCases = [{
+			users: ["MaxLeiter, test"],
+			input: "#test-channelMaxLeiter",
+			expected:
+				"<span class=\"inline-channel\" role=\"button\" tabindex=\"0\" data-chan=\"#test-channelMaxLeiter\">" +
+					"#test-channelMaxLeiter" +
+				"</span>",
+		},
+		{
+			users: ["MaxLeiter, test"],
+			input: "https://www.MaxLeiter.com/test",
+			expected:
+				"<a href=\"https://www.MaxLeiter.com/test\" target=\"_blank\" rel=\"noopener\">" +
+					"https://www.MaxLeiter.com/test" +
+				"</a>",
+		},
+
+		];
+
+		const actual = testCases.map((testCase) => parse(testCase.input));
+		const expected = testCases.map((testCase) => testCase.expected);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
 	it("should go bonkers like mirc", () => {
 		const testCases = [{
 			input: "\x02irc\x0f://\x1dfreenode.net\x0f/\x034,8thelounge",
