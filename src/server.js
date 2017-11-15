@@ -461,7 +461,6 @@ function getClientConfiguration() {
 		"lockNetwork",
 		"displayNetwork",
 		"useHexIp",
-		"defaults",
 		"themes",
 		"prefetch",
 	]);
@@ -470,6 +469,10 @@ function getClientConfiguration() {
 	config.version = pkg.version;
 	config.gitCommit = Helper.getGitCommit();
 	config.themes = themes.getAll();
+
+	if (config.displayNetwork) {
+		config.defaults = Helper.config.defaults;
+	}
 
 	return config;
 }
