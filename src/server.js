@@ -49,8 +49,8 @@ module.exports = function() {
 		.engine("html", expressHandlebars({
 			extname: ".html",
 			helpers: {
-				tojson: (c) => JSON.stringify(c)
-			}
+				tojson: (c) => JSON.stringify(c),
+			},
 		}))
 		.set("view engine", "html")
 		.set("views", path.join(__dirname, "..", "public"));
@@ -98,7 +98,7 @@ module.exports = function() {
 		server = server.createServer({
 			key: fs.readFileSync(keyPath),
 			cert: fs.readFileSync(certPath),
-			ca: caPath ? fs.readFileSync(caPath) : undefined
+			ca: caPath ? fs.readFileSync(caPath) : undefined,
 		}, app);
 	}
 
@@ -131,7 +131,7 @@ module.exports = function() {
 
 		const sockets = io(server, {
 			serveClient: false,
-			transports: config.transports
+			transports: config.transports,
 		});
 
 		sockets.on("connect", (socket) => {
@@ -276,13 +276,13 @@ function initializeClient(socket, client, token, lastMessage) {
 				var p2 = data.verify_password;
 				if (typeof p1 === "undefined" || p1 === "") {
 					socket.emit("change-password", {
-						error: "Please enter a new password"
+						error: "Please enter a new password",
 					});
 					return;
 				}
 				if (p1 !== p2) {
 					socket.emit("change-password", {
-						error: "Both new password fields must match"
+						error: "Both new password fields must match",
 					});
 					return;
 				}
@@ -292,7 +292,7 @@ function initializeClient(socket, client, token, lastMessage) {
 					.then((matching) => {
 						if (!matching) {
 							socket.emit("change-password", {
-								error: "The current password field does not match your account password"
+								error: "The current password field does not match your account password",
 							});
 							return;
 						}
@@ -368,7 +368,7 @@ function initializeClient(socket, client, token, lastMessage) {
 				type: "notification",
 				timestamp: Date.now(),
 				title: "The Lounge",
-				body: "🚀 Push notifications have been enabled"
+				body: "🚀 Push notifications have been enabled",
 			});
 		}
 	});
@@ -409,7 +409,7 @@ function initializeClient(socket, client, token, lastMessage) {
 		delete client.config.sessions[tokenToSignOut];
 
 		client.manager.updateUser(client.name, {
-			sessions: client.config.sessions
+			sessions: client.config.sessions,
 		});
 
 		_.map(client.attachedClients, (attachedClient, socketId) => {
@@ -450,7 +450,7 @@ function initializeClient(socket, client, token, lastMessage) {
 			pushSubscription: client.config.sessions[token],
 			active: client.lastActiveChannel,
 			networks: networks,
-			token: tokenToSend
+			token: tokenToSend,
 		});
 	};
 

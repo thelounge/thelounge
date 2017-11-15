@@ -55,7 +55,7 @@ function findLinks(text) {
 			result.push({
 				start: start,
 				end: end,
-				link: url
+				link: url,
 			});
 		});
 	} catch (e) {

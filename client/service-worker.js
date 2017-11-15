@@ -17,7 +17,7 @@ self.addEventListener("push", function(event) {
 	event.waitUntil(
 		self.registration
 			.getNotifications({
-				tag: `chan-${payload.chanId}`
+				tag: `chan-${payload.chanId}`,
 			})
 			.then((notifications) => {
 				for (const notification of notifications) {
@@ -39,7 +39,7 @@ self.addEventListener("notificationclick", function(event) {
 	event.notification.close();
 
 	event.waitUntil(clients.matchAll({
-		type: "window"
+		type: "window",
 	}).then(function(clientList) {
 		for (var i = 0; i < clientList.length; i++) {
 			var client = clientList[i];

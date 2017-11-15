@@ -13,7 +13,7 @@ module.exports = function(irc, network) {
 			const msg = new Msg({
 				time: Date.now(),
 				type: Msg.Type.ERROR,
-				text: "Banlist empty"
+				text: "Banlist empty",
 			});
 			network.getChannel(channel).pushMessage(client, msg, true);
 			return;
@@ -24,12 +24,12 @@ module.exports = function(irc, network) {
 		if (typeof chan === "undefined") {
 			chan = new Chan({
 				type: Chan.Type.SPECIAL,
-				name: chanName
+				name: chanName,
 			});
 			network.channels.push(chan);
 			client.emit("join", {
 				network: network.id,
-				chan: chan
+				chan: chan,
 			});
 		}
 
@@ -39,8 +39,8 @@ module.exports = function(irc, network) {
 				bans: bans.map((data) => ({
 					hostmask: data.banned,
 					banned_by: data.banned_by,
-					banned_at: data.banned_at * 1000
-				}))
+					banned_at: data.banned_at * 1000,
+				})),
 			}),
 			true
 		);

@@ -70,7 +70,7 @@ function parseStyle(text) {
 				underline,
 				text: processedText,
 				start: fragmentStart,
-				end: fragmentStart + processedText.length
+				end: fragmentStart + processedText.length,
 			});
 		}
 

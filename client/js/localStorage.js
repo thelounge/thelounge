@@ -15,5 +15,5 @@ module.exports = {
 	},
 	remove: function(key, value) {
 		window.localStorage.removeItem(key, value);
-	}
+	},
 };

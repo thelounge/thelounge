@@ -12,10 +12,10 @@ describe("Chan", function() {
 			messages: [
 				new Msg(),
 				new Msg({
-					text: "Message to be found"
+					text: "Message to be found",
 				}),
-				new Msg()
-			]
+				new Msg(),
+			],
 		});
 
 		it("should find a message in the list of messages", function() {
@@ -36,10 +36,10 @@ describe("Chan", function() {
 						{symbol: "&", mode: "a"},
 						{symbol: "@", mode: "o"},
 						{symbol: "%", mode: "h"},
-						{symbol: "+", mode: "v"}
-					]
-				}
-			}
+						{symbol: "+", mode: "v"},
+					],
+				},
+			},
 		};
 
 		var prefixLookup = {};
@@ -58,12 +58,12 @@ describe("Chan", function() {
 
 		it("should sort a simple user list", function() {
 			var chan = new Chan({users: [
-				"JocelynD", "YaManicKill", "astorije", "xPaw", "Max-P"
+				"JocelynD", "YaManicKill", "astorije", "xPaw", "Max-P",
 			].map(makeUser)});
 			chan.sortUsers(network);
 
 			expect(getUserNames(chan)).to.deep.equal([
-				"astorije", "JocelynD", "Max-P", "xPaw", "YaManicKill"
+				"astorije", "JocelynD", "Max-P", "xPaw", "YaManicKill",
 			]);
 		});
 
@@ -78,7 +78,7 @@ describe("Chan", function() {
 			chan.sortUsers(network);
 
 			expect(getUserNames(chan)).to.deep.equal([
-				"xPaw", "JocelynD", "Max-P", "astorije", "YaManicKill"
+				"xPaw", "JocelynD", "Max-P", "astorije", "YaManicKill",
 			]);
 		});
 
@@ -107,13 +107,13 @@ describe("Chan", function() {
 		it("should parse special characters successfully", function() {
 			var chan = new Chan({users: [
 				"[foo", "]foo", "(foo)", "{foo}", "<foo>", "_foo", "@foo", "^foo",
-				"&foo", "!foo", "+foo", "Foo"
+				"&foo", "!foo", "+foo", "Foo",
 			].map(makeUser)});
 			chan.sortUsers(network);
 
 			expect(getUserNames(chan)).to.deep.equal([
 				"!foo", "&foo", "(foo)", "+foo", "<foo>", "@foo", "[foo", "]foo",
-				"^foo", "_foo", "Foo", "{foo}"
+				"^foo", "_foo", "Foo", "{foo}",
 			]);
 		});
 	});

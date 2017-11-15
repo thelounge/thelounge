@@ -34,7 +34,7 @@ describe("Image storage", function() {
 
 	it("should store the thumbnail", function(done) {
 		const message = this.irc.createMessage({
-			text: "http://localhost:9003/thumb"
+			text: "http://localhost:9003/thumb",
 		});
 
 		link(this.irc, this.network.channels[0], message);
@@ -53,7 +53,7 @@ describe("Image storage", function() {
 
 	it("should store the image", function(done) {
 		const message = this.irc.createMessage({
-			text: "http://localhost:9003/real-test-image.png"
+			text: "http://localhost:9003/real-test-image.png",
 		});
 
 		link(this.irc, this.network.channels[0], message);

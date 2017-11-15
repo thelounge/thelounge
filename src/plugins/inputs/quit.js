@@ -13,7 +13,7 @@ exports.input = function(network, chan, cmd, args) {
 	network.destroy();
 	client.save();
 	client.emit("quit", {
-		network: network.id
+		network: network.id,
 	});
 
 	if (network.irc) {

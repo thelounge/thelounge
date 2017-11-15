@@ -16,13 +16,13 @@ module.exports = function(irc, network) {
 			chan.destroy();
 			client.save();
 			client.emit("part", {
-				chan: chan.id
+				chan: chan.id,
 			});
 		} else {
 			const user = chan.findUser(from);
 			chan.users = _.without(chan.users, user);
 			client.emit("users", {
-				chan: chan.id
+				chan: chan.id,
 			});
 			var msg = new Msg({
 				type: Msg.Type.PART,
@@ -30,7 +30,7 @@ module.exports = function(irc, network) {
 				mode: (user && user.mode) || "",
 				text: data.message || "",
 				hostmask: data.ident + "@" + data.hostname,
-				from: from
+				from: from,
 			});
 			chan.pushMessage(client, msg);
 		}

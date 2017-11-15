@@ -82,19 +82,19 @@ $(function() {
 			output = templates.contextmenu_item({
 				class: "user",
 				text: target.text(),
-				data: target.data("name")
+				data: target.data("name"),
 			});
 		} else if (target.hasClass("chan")) {
 			output = templates.contextmenu_item({
 				class: "chan",
 				text: target.data("title"),
-				data: target.data("target")
+				data: target.data("target"),
 			});
 			output += templates.contextmenu_divider();
 			output += templates.contextmenu_item({
 				class: "close",
 				text: target.hasClass("lobby") ? "Disconnect" : target.hasClass("channel") ? "Leave" : "Close",
-				data: target.data("target")
+				data: target.data("target"),
 			});
 		}
 
@@ -196,7 +196,7 @@ $(function() {
 
 		socket.emit("input", {
 			target: chat.data("id"),
-			text: text
+			text: text,
 		});
 	});
 
@@ -240,7 +240,7 @@ $(function() {
 
 		socket.emit("input", {
 			target: chat.data("id"),
-			text: "/nick " + newNick
+			text: "/nick " + newNick,
 		});
 	}
 
@@ -275,7 +275,7 @@ $(function() {
 		} else {
 			socket.emit("input", {
 				target: chat.data("id"),
-				text: "/join " + name
+				text: "/join " + name,
 			});
 		}
 	});
@@ -294,7 +294,7 @@ $(function() {
 
 		socket.emit("input", {
 			target: chat.data("id"),
-			text: "/whois " + name
+			text: "/whois " + name,
 		});
 	});
 
@@ -434,11 +434,11 @@ $(function() {
 		}
 		socket.emit("input", {
 			target: chan.data("id"),
-			text: cmd
+			text: cmd,
 		});
 		chan.css({
 			transition: "none",
-			opacity: 0.4
+			opacity: 0.4,
 		});
 		return false;
 	});
@@ -472,7 +472,7 @@ $(function() {
 		const fuzzyOptions = {
 			pre: "<b>",
 			post: "</b>",
-			extract: (el) => $(el).text()
+			extract: (el) => $(el).text(),
 		};
 
 		const result = fuzzy.filter(
@@ -620,7 +620,7 @@ $(function() {
 			// Emit the click to the target, while making sure it is not going to be
 			// added to the state again.
 			$(clickTarget).trigger("click", {
-				pushState: false
+				pushState: false,
 			});
 		}
 	});

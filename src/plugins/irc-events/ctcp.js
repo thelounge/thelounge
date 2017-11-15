@@ -16,7 +16,7 @@ module.exports = function(irc, network) {
 			time: data.time,
 			from: data.nick,
 			ctcpType: data.type,
-			ctcpMessage: data.message
+			ctcpMessage: data.message,
 		});
 		chan.pushMessage(client, msg);
 	});

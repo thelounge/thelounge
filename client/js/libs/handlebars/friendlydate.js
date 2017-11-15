@@ -8,6 +8,6 @@ module.exports = function(time) {
 		sameDay: "[Today]",
 		lastDay: "[Yesterday]",
 		lastWeek: "D MMMM YYYY",
-		sameElse: "D MMMM YYYY"
+		sameElse: "D MMMM YYYY",
 	});
 };

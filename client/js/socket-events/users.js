@@ -9,7 +9,7 @@ socket.on("users", function(data) {
 
 	if (chan.hasClass("active")) {
 		socket.emit("names", {
-			target: data.chan
+			target: data.chan,
 		});
 	} else {
 		chan.data("needsNamesRefresh", true);

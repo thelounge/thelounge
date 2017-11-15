@@ -16,14 +16,14 @@ module.exports = function(irc, network) {
 			mode: (data.nick && chan.getMode(data.nick)) || "",
 			from: data.nick,
 			text: data.topic,
-			self: data.nick === irc.user.nick
+			self: data.nick === irc.user.nick,
 		});
 		chan.pushMessage(client, msg);
 
 		chan.topic = data.topic;
 		client.emit("topic", {
 			chan: chan.id,
-			topic: chan.topic
+			topic: chan.topic,
 		});
 	});
 
@@ -38,7 +38,7 @@ module.exports = function(irc, network) {
 			mode: chan.getMode(data.nick),
 			nick: data.nick,
 			when: new Date(data.when * 1000),
-			self: data.nick === irc.user.nick
+			self: data.nick === irc.user.nick,
 		});
 		chan.pushMessage(client, msg);
 	});

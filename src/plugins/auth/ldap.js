@@ -8,7 +8,7 @@ function ldapAuthCommon(user, bindDN, password, callback) {
 
 	const ldapclient = ldap.createClient({
 		url: config.ldap.url,
-		tlsOptions: config.ldap.tlsOptions
+		tlsOptions: config.ldap.tlsOptions,
 	});
 
 	ldapclient.on("error", function(err) {
@@ -50,14 +50,14 @@ function advancedLdapAuth(user, password, callback) {
 
 	const ldapclient = ldap.createClient({
 		url: config.ldap.url,
-		tlsOptions: config.ldap.tlsOptions
+		tlsOptions: config.ldap.tlsOptions,
 	});
 
 	const base = config.ldap.searchDN.base;
 	const searchOptions = {
 		scope: config.ldap.searchDN.scope,
 		filter: `(&(${config.ldap.primaryKey}=${userDN})${config.ldap.searchDN.filter})`,
-		attributes: ["dn"]
+		attributes: ["dn"],
 	};
 
 	ldapclient.on("error", function(err) {
@@ -129,5 +129,5 @@ function isLdapEnabled() {
 
 module.exports = {
 	auth: ldapAuth,
-	isEnabled: isLdapEnabled
+	isEnabled: isLdapEnabled,
 };

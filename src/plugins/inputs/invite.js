@@ -15,7 +15,7 @@ exports.input = function(network, chan, cmd, args) {
 	} else {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
-			text: `${cmd} command can only be used in channels or by specifying a target.`
+			text: `${cmd} command can only be used in channels or by specifying a target.`,
 		}));
 	}
 };

@@ -37,7 +37,7 @@ function Network(attr) {
 	this.channels.unshift(
 		new Chan({
 			name: this.name,
-			type: Chan.Type.LOBBY
+			type: Chan.Type.LOBBY,
 		})
 	);
 }
@@ -86,7 +86,7 @@ Network.prototype.export = function() {
 		"realname",
 		"commands",
 		"ip",
-		"hostname"
+		"hostname",
 	]);
 
 	network.channels = this.channels

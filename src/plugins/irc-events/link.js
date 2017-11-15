@@ -136,7 +136,7 @@ function emitPreview(client, msg, preview) {
 
 	client.emit("msg:preview", {
 		id: msg.id,
-		preview: preview
+		preview: preview,
 	});
 }
 
@@ -148,8 +148,8 @@ function fetch(uri, cb) {
 			maxRedirects: 5,
 			timeout: 5000,
 			headers: {
-				"User-Agent": "Mozilla/5.0 (compatible; The Lounge IRC Client; +https://github.com/thelounge/lounge)"
-			}
+				"User-Agent": "Mozilla/5.0 (compatible; The Lounge IRC Client; +https://github.com/thelounge/lounge)",
+			},
 		});
 	} catch (e) {
 		return cb(null);
@@ -200,7 +200,7 @@ function fetch(uri, cb) {
 			cb({
 				data: Buffer.concat(buffers, length),
 				type: type,
-				size: size
+				size: size,
 			});
 		});
 }

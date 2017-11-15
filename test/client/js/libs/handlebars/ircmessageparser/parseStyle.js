@@ -18,7 +18,7 @@ describe("parseStyle", () => {
 			text: "textwithcontrolcodes",
 
 			start: 0,
-			end: 20
+			end: 20,
 		}];
 
 		const actual = parseStyle(input);
@@ -40,7 +40,7 @@ describe("parseStyle", () => {
 			text: "bold",
 
 			start: 0,
-			end: 4
+			end: 4,
 		}];
 
 		const actual = parseStyle(input);
@@ -62,7 +62,7 @@ describe("parseStyle", () => {
 			text: "yellowText",
 
 			start: 0,
-			end: 10
+			end: 10,
 		}];
 
 		const actual = parseStyle(input);
@@ -84,7 +84,7 @@ describe("parseStyle", () => {
 			text: "yellowBG redText",
 
 			start: 0,
-			end: 16
+			end: 16,
 		}];
 
 		const actual = parseStyle(input);
@@ -106,7 +106,7 @@ describe("parseStyle", () => {
 			text: "italic",
 
 			start: 0,
-			end: 6
+			end: 6,
 		}];
 
 		const actual = parseStyle(input);
@@ -128,7 +128,7 @@ describe("parseStyle", () => {
 			text: "test ",
 
 			start: 0,
-			end: 5
+			end: 5,
 		}, {
 			bold: false,
 			textColor: undefined,
@@ -141,7 +141,7 @@ describe("parseStyle", () => {
 			text: "nice ",
 
 			start: 5,
-			end: 10
+			end: 10,
 		}, {
 			bold: true,
 			textColor: undefined,
@@ -154,7 +154,7 @@ describe("parseStyle", () => {
 			text: "RES006 ",
 
 			start: 10,
-			end: 17
+			end: 17,
 		}, {
 			bold: true,
 			textColor: 3,
@@ -167,7 +167,7 @@ describe("parseStyle", () => {
 			text: "colored",
 
 			start: 17,
-			end: 24
+			end: 24,
 		}, {
 			bold: true,
 			textColor: 3,
@@ -180,7 +180,7 @@ describe("parseStyle", () => {
 			text: " background",
 
 			start: 24,
-			end: 35
+			end: 35,
 		}, {
 			bold: false,
 			textColor: undefined,
@@ -193,7 +193,7 @@ describe("parseStyle", () => {
 			text: "?",
 
 			start: 35,
-			end: 36
+			end: 36,
 		}];
 
 		const actual = parseStyle(input);
@@ -215,7 +215,7 @@ describe("parseStyle", () => {
 			text: "bold",
 
 			start: 0,
-			end: 4
+			end: 4,
 		}, {
 			bold: true,
 			textColor: 8,
@@ -228,7 +228,7 @@ describe("parseStyle", () => {
 			text: "yellow",
 
 			start: 4,
-			end: 10
+			end: 10,
 		}, {
 			bold: false,
 			textColor: 8,
@@ -241,7 +241,7 @@ describe("parseStyle", () => {
 			text: "nonBold",
 
 			start: 10,
-			end: 17
+			end: 17,
 		}, {
 			bold: false,
 			textColor: undefined,
@@ -254,7 +254,7 @@ describe("parseStyle", () => {
 			text: "default",
 
 			start: 17,
-			end: 24
+			end: 24,
 		}];
 
 		const actual = parseStyle(input);
@@ -276,7 +276,7 @@ describe("parseStyle", () => {
 			text: "bold",
 
 			start: 0,
-			end: 4
+			end: 4,
 		}, {
 			bold: false,
 			textColor: undefined,
@@ -289,7 +289,7 @@ describe("parseStyle", () => {
 			text: " ",
 
 			start: 4,
-			end: 5
+			end: 5,
 		}, {
 			bold: true,
 			textColor: undefined,
@@ -302,7 +302,7 @@ describe("parseStyle", () => {
 			text: "bold",
 
 			start: 5,
-			end: 9
+			end: 9,
 		}];
 
 		const actual = parseStyle(input);
@@ -324,7 +324,7 @@ describe("parseStyle", () => {
 			text: "full",
 
 			start: 0,
-			end: 4
+			end: 4,
 		}, {
 			bold: false,
 			textColor: undefined,
@@ -337,7 +337,7 @@ describe("parseStyle", () => {
 			text: "none",
 
 			start: 4,
-			end: 8
+			end: 8,
 		}];
 
 		const actual = parseStyle(input);
@@ -359,7 +359,7 @@ describe("parseStyle", () => {
 			text: "a",
 
 			start: 0,
-			end: 1
+			end: 1,
 		}];
 
 		const actual = parseStyle(input);
@@ -383,7 +383,7 @@ describe("parseStyle", () => {
 			text: rawString,
 
 			start: 0,
-			end: rawString.length
+			end: rawString.length,
 		}];
 
 		const actual = parseStyle(input);

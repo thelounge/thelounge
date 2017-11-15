@@ -8,7 +8,7 @@ module.exports = function(mode) {
 		"@": "op",
 		"%": "half-op",
 		"+": "voice",
-		"": "normal"
+		"": "normal",
 	};
 	return modes[mode];
 };

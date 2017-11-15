@@ -9,7 +9,7 @@ const themes = new Map();
 
 module.exports = {
 	getAll: getAll,
-	getFilename: getFilename
+	getFilename: getFilename,
 };
 
 fs.readdir(path.join(__dirname, "..", "..", "public", "themes"), (err, builtInThemes) => {
@@ -50,7 +50,7 @@ function makeLocalThemeObject(css) {
 	return {
 		displayName: themeName.charAt(0).toUpperCase() + themeName.slice(1),
 		filename: path.join(__dirname, "..", "..", "public", "themes", `${themeName}.css`),
-		name: themeName
+		name: themeName,
 	};
 }
 
@@ -80,6 +80,6 @@ function makePackageThemeObject(moduleName) {
 	return {
 		displayName: displayName,
 		filename: filename,
-		name: moduleName
+		name: moduleName,
 	};
 }

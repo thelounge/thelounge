@@ -12,7 +12,7 @@ module.exports = function(irc, network) {
 
 		updateListStatus(new Msg({
 			text: "Loading channel list, this can take a moment...",
-			type: "channel_list_loading"
+			type: "channel_list_loading",
 		}));
 	});
 
@@ -25,13 +25,13 @@ module.exports = function(irc, network) {
 			type: "channel_list",
 			channels: network.chanCache.sort(function(a, b) {
 				return b.num_users - a.num_users;
-			}).slice(0, MAX_CHANS)
+			}).slice(0, MAX_CHANS),
 		}));
 
 		if (network.chanCache.length > MAX_CHANS) {
 			updateListStatus(new Msg({
 				type: "channel_list_truncated",
-				text: "Channel list is too large: truncated to " + MAX_CHANS + " channels."
+				text: "Channel list is too large: truncated to " + MAX_CHANS + " channels.",
 			}));
 		}
 
@@ -43,18 +43,18 @@ module.exports = function(irc, network) {
 		if (typeof chan === "undefined") {
 			chan = new Chan({
 				type: Chan.Type.SPECIAL,
-				name: "Channel List"
+				name: "Channel List",
 			});
 			network.channels.push(chan);
 			client.emit("join", {
 				network: network.id,
-				chan: chan
+				chan: chan,
 			});
 		}
 
 		client.emit("msg", {
 			chan: chan.id,
-			msg: msg
+			msg: msg,
 		});
 	}
 };

@@ -22,7 +22,7 @@ describe("findLinks", () => {
 		const expected = [{
 			start: 0,
 			end: 24,
-			link: "http://www.nooooooooooooooo.com"
+			link: "http://www.nooooooooooooooo.com",
 		}];
 
 		const actual = findLinks(input);
@@ -35,7 +35,7 @@ describe("findLinks", () => {
 		const expected = [{
 			link: "https://thelounge.github.io/",
 			start: 8,
-			end: 36
+			end: 36,
 		}];
 
 		const actual = findLinks(input);
@@ -48,7 +48,7 @@ describe("findLinks", () => {
 		const expected = [{
 			link: "http://www.duckduckgo.com",
 			start: 4,
-			end: 22
+			end: 22,
 		}];
 
 		const actual = findLinks(input);
@@ -61,7 +61,7 @@ describe("findLinks", () => {
 		const expected = [{
 			link: "https://theos.kyriasis.com/~kyrias/stats/archlinux.html",
 			start: 1,
-			end: 56
+			end: 56,
 		}];
 
 		const actual = findLinks(input);
@@ -74,7 +74,7 @@ describe("findLinks", () => {
 		const expected = [{
 			link: "http://www.github.com",
 			start: 2,
-			end: 16
+			end: 16,
 		}];
 
 		const actual = findLinks(input);
@@ -96,7 +96,7 @@ describe("findLinks", () => {
 		const expected = [{
 			link: "http://www.www.test.com",
 			start: 0,
-			end: 16
+			end: 16,
 		}];
 
 		const actual = findLinks(input);
@@ -109,11 +109,11 @@ describe("findLinks", () => {
 		const expected = [{
 			start: 0,
 			end: 15,
-			link: "http://www.example.com"
+			link: "http://www.example.com",
 		}, {
 			end: 42,
 			start: 16,
-			link: "ssh://-oProxyCommand=whois"
+			link: "ssh://-oProxyCommand=whois",
 		}];
 
 		const actual = findLinks(input);
@@ -124,7 +124,7 @@ describe("findLinks", () => {
 		const expected2 = [{
 			start: 0,
 			end: 15,
-			link: "http://www.example.com"
+			link: "http://www.example.com",
 		}];
 
 		const actual2 = findLinks(input2);
@@ -137,11 +137,11 @@ describe("findLinks", () => {
 		const expected = [{
 			start: 0,
 			end: 15,
-			link: "http://www.example.com"
+			link: "http://www.example.com",
 		}, {
 			start: 30,
 			end: 51,
-			link: "http://thelounge.chat"
+			link: "http://thelounge.chat",
 		}];
 
 		const actual = findLinks(input);

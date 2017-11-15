@@ -21,7 +21,7 @@ module.exports = function(irc, network) {
 		}
 
 		client.emit("users", {
-			chan: chan.id
+			chan: chan.id,
 		});
 
 		var msg = new Msg({
@@ -31,7 +31,7 @@ module.exports = function(irc, network) {
 			target: target,
 			text: data.message || "",
 			highlight: data.kicked === irc.user.nick,
-			self: data.nick === irc.user.nick
+			self: data.nick === irc.user.nick,
 		});
 		chan.pushMessage(client, msg);
 	});

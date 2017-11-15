@@ -7,10 +7,10 @@ describe("parse Handlebars helper", () => {
 	it("should not introduce xss", () => {
 		const testCases = [{
 			input: "<img onerror='location.href=\"//youtube.com\"'>",
-			expected: "&lt;img onerror&#x3D;&#x27;location.href&#x3D;&quot;//youtube.com&quot;&#x27;&gt;"
+			expected: "&lt;img onerror&#x3D;&#x27;location.href&#x3D;&quot;//youtube.com&quot;&#x27;&gt;",
 		}, {
 			input: "#&\">bug",
-			expected: "<span class=\"inline-channel\" role=\"button\" tabindex=\"0\" data-chan=\"#&amp;&quot;&gt;bug\">#&amp;&quot;&gt;bug</span>"
+			expected: "<span class=\"inline-channel\" role=\"button\" tabindex=\"0\" data-chan=\"#&amp;&quot;&gt;bug\">#&amp;&quot;&gt;bug</span>",
 		}];
 
 		const actual = testCases.map((testCase) => parse(testCase.input));
@@ -22,7 +22,7 @@ describe("parse Handlebars helper", () => {
 	it("should skip control codes", () => {
 		const testCases = [{
 			input: "text\x01with\x04control\x05codes",
-			expected: "textwithcontrolcodes"
+			expected: "textwithcontrolcodes",
 		}];
 
 		const actual = testCases.map((testCase) => parse(testCase.input));
@@ -37,13 +37,13 @@ describe("parse Handlebars helper", () => {
 			expected:
 				"<a href=\"irc://freenode.net/thelounge\" target=\"_blank\" rel=\"noopener\">" +
 					"irc://freenode.net/thelounge" +
-				"</a>"
+				"</a>",
 		}, {
 			input: "www.nooooooooooooooo.com",
 			expected:
 				"<a href=\"http://www.nooooooooooooooo.com\" target=\"_blank\" rel=\"noopener\">" +
 					"www.nooooooooooooooo.com" +
-				"</a>"
+				"</a>",
 		}, {
 			input: "look at https://thelounge.github.io/ for more information",
 			expected:
@@ -51,7 +51,7 @@ describe("parse Handlebars helper", () => {
 				"<a href=\"https://thelounge.github.io/\" target=\"_blank\" rel=\"noopener\">" +
 					"https://thelounge.github.io/" +
 				"</a>" +
-				" for more information"
+				" for more information",
 		}, {
 			input: "use www.duckduckgo.com for privacy reasons",
 			expected:
@@ -59,13 +59,13 @@ describe("parse Handlebars helper", () => {
 				"<a href=\"http://www.duckduckgo.com\" target=\"_blank\" rel=\"noopener\">" +
 					"www.duckduckgo.com" +
 				"</a>" +
-				" for privacy reasons"
+				" for privacy reasons",
 		}, {
 			input: "svn+ssh://example.org",
 			expected:
 				"<a href=\"svn+ssh://example.org\" target=\"_blank\" rel=\"noopener\">" +
 					"svn+ssh://example.org" +
-				"</a>"
+				"</a>",
 		}];
 
 		const actual = testCases.map((testCase) => parse(testCase.input));
@@ -96,7 +96,7 @@ describe("parse Handlebars helper", () => {
 				"<a href=\"https://theos.kyriasis.com/~kyrias/stats/archlinux.html\" target=\"_blank\" rel=\"noopener\">" +
 					"https://theos.kyriasis.com/~kyrias/stats/archlinux.html" +
 				"</a>" +
-				"&gt;"
+				"&gt;",
 		}, {
 			input: "abc (www.example.com)",
 			expected:
@@ -104,19 +104,19 @@ describe("parse Handlebars helper", () => {
 				"<a href=\"http://www.example.com\" target=\"_blank\" rel=\"noopener\">" +
 					"www.example.com" +
 				"</a>" +
-				")"
+				")",
 		}, {
 			input: "http://example.com/Test_(Page)",
 			expected:
 				"<a href=\"http://example.com/Test_(Page)\" target=\"_blank\" rel=\"noopener\">" +
 					"http://example.com/Test_(Page)" +
-				"</a>"
+				"</a>",
 		}, {
 			input: "www.example.com/Test_(Page)",
 			expected:
 				"<a href=\"http://www.example.com/Test_(Page)\" target=\"_blank\" rel=\"noopener\">" +
 					"www.example.com/Test_(Page)" +
-				"</a>"
+				"</a>",
 		}];
 
 		const actual = testCases.map((testCase) => parse(testCase.input));
@@ -128,10 +128,10 @@ describe("parse Handlebars helper", () => {
 	it("should not find urls", () => {
 		const testCases = [{
 			input: "text www. text",
-			expected: "text www. text"
+			expected: "text www. text",
 		}, {
 			input: "http://.",
-			expected: "http://."
+			expected: "http://.",
 		}];
 
 		const actual = testCases.map((testCase) => parse(testCase.input));
@@ -146,19 +146,19 @@ describe("parse Handlebars helper", () => {
 			expected:
 				"<span class=\"inline-channel\" role=\"button\" tabindex=\"0\" data-chan=\"#a\">" +
 					"#a" +
-				"</span>"
+				"</span>",
 		}, {
 			input: "#test",
 			expected:
 				"<span class=\"inline-channel\" role=\"button\" tabindex=\"0\" data-chan=\"#test\">" +
 					"#test" +
-				"</span>"
+				"</span>",
 		}, {
 			input: "#äöü",
 			expected:
 				"<span class=\"inline-channel\" role=\"button\" tabindex=\"0\" data-chan=\"#äöü\">" +
 					"#äöü" +
-				"</span>"
+				"</span>",
 		}, {
 			input: "inline #channel text",
 			expected:
@@ -166,20 +166,20 @@ describe("parse Handlebars helper", () => {
 				"<span class=\"inline-channel\" role=\"button\" tabindex=\"0\" data-chan=\"#channel\">" +
 					"#channel" +
 				"</span>" +
-				" text"
+				" text",
 		}, {
 			input: "#1,000",
 			expected:
 				"<span class=\"inline-channel\" role=\"button\" tabindex=\"0\" data-chan=\"#1,000\">" +
 					"#1,000" +
-				"</span>"
+				"</span>",
 		}, {
 			input: "@#a",
 			expected:
 				"@" +
 				"<span class=\"inline-channel\" role=\"button\" tabindex=\"0\" data-chan=\"#a\">" +
 					"#a" +
-				"</span>"
+				"</span>",
 		}];
 
 		const actual = testCases.map((testCase) => parse(testCase.input));
@@ -191,10 +191,10 @@ describe("parse Handlebars helper", () => {
 	it("should not find channels", () => {
 		const testCases = [{
 			input: "hi#test",
-			expected: "hi#test"
+			expected: "hi#test",
 		}, {
 			input: "#",
-			expected: "#"
+			expected: "#",
 		}];
 
 		const actual = testCases.map((testCase) => parse(testCase.input));
@@ -206,35 +206,35 @@ describe("parse Handlebars helper", () => {
 	it("should style like mirc", () => {
 		const testCases = [{
 			input: "\x02bold",
-			expected: "<span class=\"irc-bold\">bold</span>"
+			expected: "<span class=\"irc-bold\">bold</span>",
 		}, {
 			input: "\x038yellowText",
-			expected: "<span class=\"irc-fg8\">yellowText</span>"
+			expected: "<span class=\"irc-fg8\">yellowText</span>",
 		}, {
 			input: "\x030,0white,white",
-			expected: "<span class=\"irc-fg0 irc-bg0\">white,white</span>"
+			expected: "<span class=\"irc-fg0 irc-bg0\">white,white</span>",
 		}, {
 			input: "\x034,8yellowBGredText",
-			expected: "<span class=\"irc-fg4 irc-bg8\">yellowBGredText</span>"
+			expected: "<span class=\"irc-fg4 irc-bg8\">yellowBGredText</span>",
 		}, {
 			input: "\x1ditalic",
-			expected: "<span class=\"irc-italic\">italic</span>"
+			expected: "<span class=\"irc-italic\">italic</span>",
 		}, {
 			input: "\x1funderline",
-			expected: "<span class=\"irc-underline\">underline</span>"
+			expected: "<span class=\"irc-underline\">underline</span>",
 		}, {
 			input: "\x02bold\x038yellow\x02nonBold\x03default",
 			expected:
 				"<span class=\"irc-bold\">bold</span>" +
 				"<span class=\"irc-bold irc-fg8\">yellow</span>" +
 				"<span class=\"irc-fg8\">nonBold</span>" +
-				"default"
+				"default",
 		}, {
 			input: "\x02bold\x02 \x02bold\x02",
 			expected:
 				"<span class=\"irc-bold\">bold</span>" +
 				" " +
-				"<span class=\"irc-bold\">bold</span>"
+				"<span class=\"irc-bold\">bold</span>",
 		}];
 
 		const actual = testCases.map((testCase) => parse(testCase.input));
@@ -253,14 +253,14 @@ describe("parse Handlebars helper", () => {
 					"<span class=\"irc-italic\">freenode.net</span>" +
 					"/" +
 					"<span class=\"irc-fg4 irc-bg8\">thelounge</span>" +
-				"</a>"
+				"</a>",
 		}, {
 			input: "\x02#\x038,9thelounge",
 			expected:
 				"<span class=\"inline-channel\" role=\"button\" tabindex=\"0\" data-chan=\"#thelounge\">" +
 					"<span class=\"irc-bold\">#</span>" +
 					"<span class=\"irc-bold irc-fg8 irc-bg9\">thelounge</span>" +
-				"</span>"
+				"</span>",
 		}];
 
 		const actual = testCases.map((testCase) => parse(testCase.input));
@@ -276,7 +276,7 @@ describe("parse Handlebars helper", () => {
 			"test " +
 				"<span class=\"inline-channel\" role=\"button\" tabindex=\"0\" data-chan=\"#&quot;testa\">" +
 				"<span class=\"irc-fg12\">#&quot;testa</span>" +
-			"</span>"
+			"</span>",
 		}];
 
 		const actual = testCases.map((testCase) => parse(testCase.input));
@@ -292,14 +292,14 @@ describe("parse Handlebars helper", () => {
 				"like.." +
 				"<a href=\"http://example.com\" target=\"_blank\" rel=\"noopener\">" +
 					"http://example.com" +
-				"</a>"
+				"</a>",
 		}, {
 			input: "like..HTTP://example.com",
 			expected:
 				"like.." +
 				"<a href=\"HTTP://example.com\" target=\"_blank\" rel=\"noopener\">" +
 					"HTTP://example.com" +
-				"</a>"
+				"</a>",
 		}];
 
 		const actual = testCases.map((testCase) => parse(testCase.input));
@@ -315,7 +315,7 @@ describe("parse Handlebars helper", () => {
 				"" +
 				"<a href=\"http://example.com/#hash\" target=\"_blank\" rel=\"noopener\">" +
 					"http://example.com/#hash" +
-				"</a>"
+				"</a>",
 		}];
 
 		const actual = testCases.map((testCase) => parse(testCase.input));

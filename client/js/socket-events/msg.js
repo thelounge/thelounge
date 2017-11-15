@@ -15,7 +15,7 @@ try {
 	pop.src = "audio/pop.ogg";
 } catch (e) {
 	pop = {
-		play: $.noop
+		play: $.noop,
 	};
 }
 
@@ -134,7 +134,7 @@ function notifyMessage(targetId, channel, msg) {
 					const notify = new Notification(title, {
 						body: body,
 						icon: "img/logo-64.png",
-						tag: `lounge-${targetId}`
+						tag: `lounge-${targetId}`,
 					});
 					notify.addEventListener("click", function() {
 						window.focus();
