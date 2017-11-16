@@ -483,7 +483,7 @@ Client.prototype.names = function(data) {
 
 	client.emit("names", {
 		id: target.chan.id,
-		users: target.chan.users,
+		users: target.chan.getSortedUsers(target.network.irc),
 	});
 };
 

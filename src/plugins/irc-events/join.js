@@ -35,8 +35,7 @@ module.exports = function(irc, network) {
 		});
 		chan.pushMessage(client, msg);
 
-		chan.users.push(user);
-		chan.sortUsers(irc);
+		chan.setUser(new User({nick: data.nick}));
 		client.emit("users", {
 			chan: chan.id,
 		});
