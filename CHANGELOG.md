@@ -2,35 +2,6 @@
 
 All notable changes to this project will be documented in this file.
 
-<!--
-Use the following template for each new release, built on recommendations from http://keepachangelog.com/.
-
-```md
-## vX.Y.Z - YYYY-MM-DD
-
-For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/vPRE.VIO.US...vX.Y.Z) and [milestone](https://github.com/thelounge/lounge/milestone/XX?closed=1).
-
-DESCRIPTION, ANNOUNCEMENT, ...
-
-### Added
-### Changed
-### Deprecated
-### Removed
-### Fixed
-### Security
-### Documentation
-In the main repository:
-On the website:
-### Internals
-```
-
-All sections are explained on the link above, they are all optional, and each of them should contain a list of PRs formatted as such:
-
-```md
-- Description ([#PR_NUMBER](https://github.com/thelounge/lounge/pull/PR_NUMBER) by [@GITHUB_USERNAME](https://github.com/GITHUB_USERNAME))
-```
--->
-
 <!-- New entries go after this line -->
 
 ## v2.6.0-rc.4 - 2017-11-12 [Pre-release]
