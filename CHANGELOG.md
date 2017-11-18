@@ -57,11 +57,9 @@ In the main repository:
 ### Internals
 
 - Remove channel containers from DOM after quitting network ([#1607](https://github.com/thelounge/lounge/pull/1607) by [@PolarizedIons](https://github.com/PolarizedIons))
-- Create public folder with Webpack ([#1611](https://github.com/thelounge/lounge/pull/1611) by [@xPaw](https://github.com/xPaw))
+- Create public folder with Webpack ([#1611](https://github.com/thelounge/lounge/pull/1611), [#1682](https://github.com/thelounge/lounge/pull/1682), [#1704](https://github.com/thelounge/lounge/pull/1704) by [@xPaw](https://github.com/xPaw), [#1705](https://github.com/thelounge/lounge/pull/1705) by [@astorije](https://github.com/astorije))
 - Cleanup client manager functions ([#1636](https://github.com/thelounge/lounge/pull/1636) by [@xPaw](https://github.com/xPaw))
 - Add Node.js v9 testing to Travis builds ([#1678](https://github.com/thelounge/lounge/pull/1678) by [@astorije](https://github.com/astorije))
-- Remove `webpack-cleanup-plugin` ([#1682](https://github.com/thelounge/lounge/pull/1682) by [@xPaw](https://github.com/xPaw))
-- Keep `findLinks.js` file in npm builds ([#1704](https://github.com/thelounge/lounge/pull/1704) by [@xPaw](https://github.com/xPaw), [#1705](https://github.com/thelounge/lounge/pull/1705) by [@astorije](https://github.com/astorije))
 - Allow `run-pr` script to pass arguments to `npm start` ([#1662](https://github.com/thelounge/lounge/pull/1662) by [@MaxLeiter](https://github.com/MaxLeiter))
 - Update development dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
   - `webpack` ([#1626](https://github.com/thelounge/lounge/pull/1626), [#1638](https://github.com/thelounge/lounge/pull/1638), [#1643](https://github.com/thelounge/lounge/pull/1643))
@@ -115,7 +113,7 @@ As with all pre-releases, this version requires explicit use of the `next` tag t
 npm install -g thelounge@next
 ```
 
-## v2.6.0-rc.1 - 2017-11-11 [Pre-release]
+## v2.6.0-rc.1 - 2017-11-11 [Pre-release - DEPRECATED]
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v2.5.0...v2.6.0-rc.1)
 

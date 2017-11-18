@@ -2,9 +2,6 @@
   "name": "thelounge",
   "description": "The self-hosted Web IRC client",
   "version": "2.6.0-rc.4",
-  "publishConfig": {
-    "tag": "next"
-  },
   "preferGlobal": true,
   "bin": {
     "lounge": "index.js"
