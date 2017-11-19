@@ -1,11 +1,28 @@
 "use strict";
 
-// Generates a string from "color-1" to "color-32" based on an input string
-module.exports = function(str) {
-	var hash = 0;
-	for (var i = 0; i < str.length; i++) {
-		hash += str.charCodeAt(i);
-	}
+const $ = require("jquery");
 
-	return "color-" + (1 + hash % 32);
-};
+// Generates a string from hsl(h, s%, l%) based on user prefs and user hash
+module.exports = (function() {
+	var strHash = function(str) {
+		str = str || "";
+		if (str.length === 0) {
+			return 0;
+		}
+		var hash = 0, i, chr;
+		for (i = 0; i < str.length; i++) {
+			chr = str.charCodeAt(i);
+			hash = ((hash << 5) - hash) + chr;
+			hash |= 0; // Convert to 32bit integer
+		}
+		return 1 + hash % 359;
+	};
+
+	return function(str) {
+		var hash = strHash(str);
+		var sat = $("#sat-select").val() || 70;
+		var l = $("#light-select").val() || 85;
+
+		return "hsl(" + hash + ", " + sat + "%, " + l + "%)";
+	};
+})();

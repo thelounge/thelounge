@@ -268,6 +268,18 @@
 										</option>
 									{{/each}}
 								</select>
+								<div class="col-sm-12">
+									<h3>Username Coloring</h3>
+								</div>
+								<label for="saturation">Saturation</label>
+								<input id="sat-select" name="saturation" type="range" min="0" max="100" value="70" class="input">
+								<label for="lightness">Lightness</label>
+								<input id="light-select" name="lightness" type="range" min="0" max="100" value="35" class="input">
+								<div id="user-example-coloring">
+									<span id="example-user-1" class="user" style="color: hsl(0, 50%, 50%)">DankMio</span><br>
+									<span id="example-user-2" class="user" style="color: hsl(120, 50%, 50%)">xPaw</span><br>
+									<span id="example-user-3" class="user" style="color: hsl(240, 50%, 50%)">Alram</span>
+								</div>
 							</div>
 							{{#if prefetch}}
 							<div class="col-sm-12">
