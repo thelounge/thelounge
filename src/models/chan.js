@@ -28,7 +28,7 @@ function Chan(attr) {
 		firstUnread: 0,
 		unread: 0,
 		highlight: 0,
-		users: [],
+		users: new Map(),
 	});
 }
 
@@ -97,7 +97,7 @@ Chan.prototype.dereferencePreviews = function(messages) {
 	});
 };
 
-Chan.prototype.sortUsers = function(irc) {
+Chan.prototype.getSortedUsers = function(irc) {
 	var userModeSortPriority = {};
 	irc.network.options.PREFIX.forEach((prefix, index) => {
 		userModeSortPriority[prefix.symbol] = index;
@@ -105,7 +105,9 @@ Chan.prototype.sortUsers = function(irc) {
 
 	userModeSortPriority[""] = 99; // No mode is lowest
 
-	this.users = this.users.sort(function(a, b) {
+	const users = Array.from(this.users.values());
+
+	return users.sort(function(a, b) {
 		if (a.mode === b.mode) {
 			return a.nick.toLowerCase() < b.nick.toLowerCase() ? -1 : 1;
 		}
@@ -119,11 +121,19 @@ Chan.prototype.findMessage = function(msgId) {
 };
 
 Chan.prototype.findUser = function(nick) {
-	return _.find(this.users, {nick: nick});
+	return this.users.get(nick.toLowerCase());
 };
 
 Chan.prototype.getUser = function(nick) {
 	return this.findUser(nick) || new User({nick: nick});
+};
+
+Chan.prototype.setUser = function(user) {
+	this.users.set(user.nick.toLowerCase(), user);
+};
+
+Chan.prototype.removeUser = function(user) {
+	this.users.delete(user.nick.toLowerCase());
 };
 
 Chan.prototype.toJSON = function() {

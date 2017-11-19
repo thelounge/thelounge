@@ -113,8 +113,6 @@ module.exports = function(irc, network) {
 			// TODO: This is horrible
 			irc.raw("NAMES", data.target);
 		} else {
-			targetChan.sortUsers(irc);
-
 			client.emit("users", {
 				chan: targetChan.id,
 			});
