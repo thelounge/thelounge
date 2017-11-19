@@ -30,7 +30,7 @@ var manager = null;
 
 module.exports = function() {
 	log.info(`The Lounge ${colors.green(Helper.getVersion())} \
-(node ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${process.arch})`);
+(Node.js ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${process.arch})`);
 	log.info(`Configuration file: ${colors.green(Helper.CONFIG_PATH)}`);
 
 	if (!fs.existsSync("public/js/bundle.js")) {
