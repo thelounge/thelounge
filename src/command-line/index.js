@@ -15,13 +15,13 @@ if (require("semver").lt(process.version, "6.0.0")) {
 }
 
 program.version(Helper.getVersion(), "-v, --version")
-	.option("--home <path>", `${colors.bold("[DEPRECATED]")} Use the ${colors.green("LOUNGE_HOME")} environment variable instead.`)
+	.option("--home <path>", `${colors.bold("[DEPRECATED]")} Use the ${colors.green("THELOUNGE_HOME")} environment variable instead.`)
 	.on("--help", Utils.extraHelp)
 	.parseOptions(process.argv);
 
 if (program.home) {
 	log.warn(`${colors.green("--home")} is ${colors.bold("deprecated")} and will be removed in The Lounge v3.`);
-	log.warn(`Use the ${colors.green("LOUNGE_HOME")} environment variable instead.`);
+	log.warn(`Use the ${colors.green("THELOUNGE_HOME")} environment variable instead.`);
 }
 
 // Check if the app was built before calling setHome as it wants to load manifest.json from the public folder
@@ -36,10 +36,15 @@ if (!fs.existsSync(path.join(
 	process.exit(1);
 }
 
-let home = program.home || process.env.LOUNGE_HOME;
+if (process.env.LOUNGE_HOME) {
+	log.warn(`${colors.green("LOUNGE_HOME")} is ${colors.bold("deprecated")} and will be removed in The Lounge v3.`);
+	log.warn(`Use ${colors.green("THELOUNGE_HOME")} instead.`);
+}
+
+let home = process.env.THELOUNGE_HOME || program.home || process.env.LOUNGE_HOME;
 
 if (!home) {
-	home = Utils.defaultLoungeHome();
+	home = Utils.defaultHome();
 }
 
 Helper.setHome(home);
