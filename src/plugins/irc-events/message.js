@@ -59,12 +59,12 @@ module.exports = function(irc, network) {
 				} else {
 					chan = new Chan({
 						type: Chan.Type.QUERY,
-						name: target
+						name: target,
 					});
 					network.channels.push(chan);
 					client.emit("join", {
 						network: network.id,
-						chan: chan
+						chan: chan,
 					});
 				}
 			}
@@ -94,7 +94,7 @@ module.exports = function(irc, network) {
 			from: data.nick,
 			text: data.message,
 			self: self,
-			highlight: highlight
+			highlight: highlight,
 		});
 
 		// No prefetch URLs unless are simple MESSAGE or ACTION types
@@ -128,7 +128,7 @@ module.exports = function(irc, network) {
 				chanId: chan.id,
 				timestamp: data.time || Date.now(),
 				title: title,
-				body: body
+				body: body,
 			}, true);
 		}
 	}

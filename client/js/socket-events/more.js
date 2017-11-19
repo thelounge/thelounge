@@ -92,6 +92,6 @@ chat.on("click", ".show-more-button", function() {
 
 	socket.emit("more", {
 		target: self.data("id"),
-		lastId: lastMessageId
+		lastId: lastMessageId,
 	});
 });

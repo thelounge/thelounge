@@ -56,8 +56,8 @@ describe("Server", () => {
 				reconnection: false,
 				timeout: 1000,
 				transports: [
-					"websocket"
-				]
+					"websocket",
+				],
 			});
 
 			// Server emits events faster than the test can bind them

@@ -4,7 +4,7 @@ const constants = require("./constants");
 const templates = require("../views");
 
 module.exports = {
-	updateText
+	updateText,
 };
 
 function updateText(condensed, addedTypes) {

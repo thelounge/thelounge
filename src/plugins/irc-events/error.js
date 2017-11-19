@@ -33,7 +33,7 @@ module.exports = function(irc, network) {
 
 		client.emit("nick", {
 			network: network.id,
-			nick: irc.user.nick
+			nick: irc.user.nick,
 		});
 	});
 
@@ -52,7 +52,7 @@ module.exports = function(irc, network) {
 
 		client.emit("nick", {
 			network: network.id,
-			nick: irc.user.nick
+			nick: irc.user.nick,
 		});
 	});
 };

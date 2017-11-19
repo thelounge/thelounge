@@ -21,7 +21,7 @@ exports.input = function(network, chan, cmd, args) {
 	if (network.irc.network.options.CHANTYPES && network.irc.network.options.CHANTYPES.indexOf(char) !== -1) {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
-			text: "You can not open query windows for channels, use /join instead."
+			text: "You can not open query windows for channels, use /join instead.",
 		}));
 		return;
 	}
@@ -30,7 +30,7 @@ exports.input = function(network, chan, cmd, args) {
 		if (network.irc.network.options.PREFIX[i].symbol === char) {
 			chan.pushMessage(this, new Msg({
 				type: Msg.Type.ERROR,
-				text: "You can not open query windows for names starting with a user prefix."
+				text: "You can not open query windows for names starting with a user prefix.",
 			}));
 			return;
 		}
@@ -38,11 +38,11 @@ exports.input = function(network, chan, cmd, args) {
 
 	var newChan = new Chan({
 		type: Chan.Type.QUERY,
-		name: target
+		name: target,
 	});
 	network.channels.push(newChan);
 	this.emit("join", {
 		network: network.id,
-		chan: newChan
+		chan: newChan,
 	});
 };

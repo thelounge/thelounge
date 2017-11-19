@@ -19,7 +19,7 @@ module.exports = function(irc, network) {
 			client.save();
 			client.emit("nick", {
 				network: network.id,
-				nick: data.new_nick
+				nick: data.new_nick,
 			});
 		}
 
@@ -31,7 +31,7 @@ module.exports = function(irc, network) {
 			user.nick = data.new_nick;
 			chan.sortUsers(irc);
 			client.emit("users", {
-				chan: chan.id
+				chan: chan.id,
 			});
 			msg = new Msg({
 				time: data.time,
@@ -39,7 +39,7 @@ module.exports = function(irc, network) {
 				type: Msg.Type.NICK,
 				mode: chan.getMode(data.new_nick),
 				new_nick: data.new_nick,
-				self: self
+				self: self,
 			});
 			chan.pushMessage(client, msg);
 		});

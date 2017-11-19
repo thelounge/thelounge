@@ -26,7 +26,7 @@ const emojiStrategy = {
 	replace([, original]) {
 		return emojiMap[original];
 	},
-	index: 1
+	index: 1,
 };
 
 const nicksStrategy = {
@@ -41,13 +41,13 @@ const nicksStrategy = {
 			callback(completeNicks(term, true));
 		}
 	},
-	template([string, ]) {
+	template([string]) {
 		return string;
 	},
 	replace([, original]) {
 		return original;
 	},
-	index: 1
+	index: 1,
 };
 
 const chanStrategy = {
@@ -56,13 +56,13 @@ const chanStrategy = {
 	search(term, callback, match) {
 		callback(completeChans(match[0]));
 	},
-	template([string,]) {
+	template([string]) {
 		return string;
 	},
 	replace([, original]) {
 		return original;
 	},
-	index: 1
+	index: 1,
 };
 
 const commandStrategy = {
@@ -71,13 +71,13 @@ const commandStrategy = {
 	search(term, callback) {
 		callback(completeCommands("/" + term));
 	},
-	template([string, ]) {
+	template([string]) {
 		return string;
 	},
 	replace([, original]) {
 		return original;
 	},
-	index: 1
+	index: 1,
 };
 
 const foregroundColorStrategy = {
@@ -92,7 +92,7 @@ const foregroundColorStrategy = {
 				if (fuzzy.test(term, i[1])) {
 					return [i[0], fuzzy.match(term, i[1], {
 						pre: "<b>",
-						post: "</b>"
+						post: "</b>",
 					}).rendered];
 				}
 				return i;
@@ -106,7 +106,7 @@ const foregroundColorStrategy = {
 	replace(value) {
 		return "\x03" + value[0];
 	},
-	index: 1
+	index: 1,
 };
 
 const backgroundColorStrategy = {
@@ -120,7 +120,7 @@ const backgroundColorStrategy = {
 				if (fuzzy.test(term, pair[1])) {
 					return [pair[0], fuzzy.match(term, pair[1], {
 						pre: "<b>",
-						post: "</b>"
+						post: "</b>",
 					}).rendered];
 				}
 				return pair;
@@ -135,7 +135,7 @@ const backgroundColorStrategy = {
 	replace(value) {
 		return "\x03$1," + value[0];
 	},
-	index: 2
+	index: 2,
 };
 
 const input = $("#input")
@@ -151,17 +151,17 @@ if (options.autocomplete) {
 function enableAutocomplete() {
 	input.textcomplete([
 		emojiStrategy, nicksStrategy, chanStrategy, commandStrategy,
-		foregroundColorStrategy, backgroundColorStrategy
+		foregroundColorStrategy, backgroundColorStrategy,
 	], {
 		dropdownClassName: "textcomplete-menu",
-		placement: "top"
+		placement: "top",
 	}).on({
 		"textComplete:show": function() {
 			$(this).data("autocompleting", true);
 		},
 		"textComplete:hide": function() {
 			$(this).data("autocompleting", false);
-		}
+		},
 	});
 }
 
@@ -171,7 +171,7 @@ function fuzzyGrep(term, array) {
 		array,
 		{
 			pre: "<b>",
-			post: "</b>"
+			post: "</b>",
 		}
 	);
 	return results.map((el) => [el.string, el.original]);

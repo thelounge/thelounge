@@ -17,7 +17,7 @@ module.exports = function(irc, network) {
 			invited: data.invited,
 			channel: data.channel,
 			highlight: true,
-			invitedYou: data.invited === irc.user.nick
+			invitedYou: data.invited === irc.user.nick,
 		});
 		chan.pushMessage(client, msg);
 	});

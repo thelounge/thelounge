@@ -35,11 +35,11 @@ module.exports = {
 		return new Network({
 			host: "example.com",
 			channels: [new Chan({
-				name: "#test-channel"
-			})]
+				name: "#test-channel",
+			})],
 		});
 	},
 	createWebserver: function() {
 		return express();
-	}
+	},
 };

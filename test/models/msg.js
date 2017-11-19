@@ -21,7 +21,7 @@ describe("Msg", function() {
 				thumb: "",
 				type: "link",
 				shown: true,
-			}]
+			}],
 		});
 
 		it("should find a preview given an existing link", function() {

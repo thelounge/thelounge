@@ -10,7 +10,7 @@ const socket = io({
 	transports: $(document.body).data("transports"),
 	path: path,
 	autoConnect: false,
-	reconnection: !$(document.body).hasClass("public")
+	reconnection: !$(document.body).hasClass("public"),
 });
 
 socket.on("disconnect", handleDisconnect);

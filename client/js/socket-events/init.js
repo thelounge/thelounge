@@ -75,7 +75,7 @@ function openCorrectChannel(clientActive, serverActive) {
 	// If target channel is found, open it
 	if (target.length > 0) {
 		target.trigger("click", {
-			replaceHistory: true
+			replaceHistory: true,
 		});
 
 		return;
@@ -83,6 +83,6 @@ function openCorrectChannel(clientActive, serverActive) {
 
 	// Open the connect window
 	$("#footer .connect").trigger("click", {
-		pushState: false
+		pushState: false,
 	});
 }

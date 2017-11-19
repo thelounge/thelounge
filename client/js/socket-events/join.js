@@ -12,12 +12,12 @@ socket.on("join", function(data) {
 	const network = sidebar.find("#network-" + id);
 	network.append(
 		templates.chan({
-			channels: [data.chan]
+			channels: [data.chan],
 		})
 	);
 	chat.append(
 		templates.chat({
-			channels: [data.chan]
+			channels: [data.chan],
 		})
 	);
 	render.renderChannel(data.chan);

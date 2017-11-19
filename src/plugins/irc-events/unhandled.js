@@ -14,7 +14,7 @@ module.exports = function(irc, network) {
 		network.channels[0].pushMessage(client, new Msg({
 			type: Msg.Type.UNHANDLED,
 			command: command.command,
-			params: command.params
+			params: command.params,
 		}), true);
 	});
 };

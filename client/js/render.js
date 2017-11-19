@@ -17,7 +17,7 @@ require("intersection-observer");
 
 const historyObserver = window.IntersectionObserver ?
 	new window.IntersectionObserver(loadMoreHistory, {
-		root: chat.get(0)
+		root: chat.get(0),
 	}) : null;
 
 module.exports = {
@@ -175,7 +175,7 @@ function renderNetworks(data, singleNetwork) {
 	sidebar.find(".empty").hide();
 	sidebar.find(".networks").append(
 		templates.network({
-			networks: data.networks
+			networks: data.networks,
 		})
 	);
 
@@ -222,7 +222,7 @@ function renderNetworks(data, singleNetwork) {
 
 	chat.append(
 		templates.chat({
-			channels: channels
+			channels: channels,
 		})
 	);
 

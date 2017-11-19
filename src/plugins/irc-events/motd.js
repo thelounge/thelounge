@@ -11,7 +11,7 @@ module.exports = function(irc, network) {
 			data.motd.split("\n").forEach((text) => {
 				var msg = new Msg({
 					type: Msg.Type.MOTD,
-					text: text
+					text: text,
 				});
 				lobby.pushMessage(client, msg);
 			});
@@ -20,7 +20,7 @@ module.exports = function(irc, network) {
 		if (data.error) {
 			var msg = new Msg({
 				type: Msg.Type.MOTD,
-				text: data.error
+				text: data.error,
 			});
 			lobby.pushMessage(client, msg);
 		}

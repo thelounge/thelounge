@@ -63,8 +63,8 @@ function startLdapServer(callback) {
 				cn: ["john doe"],
 				sn: ["johnny"],
 				uid: ["johndoe"],
-				memberof: [baseDN]
-			}
+				memberof: [baseDN],
+			},
 		};
 
 		if (req.filter.matches(obj.attributes)) {

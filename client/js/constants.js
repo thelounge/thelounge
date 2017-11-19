@@ -65,7 +65,7 @@ const commands = [
 	"/topic",
 	"/unban",
 	"/voice",
-	"/whois"
+	"/whois",
 ];
 
 const actionTypes = [
@@ -100,7 +100,7 @@ const condensedTypes = [
 
 const timeFormats = {
 	msgDefault: "HH:mm",
-	msgWithSeconds: "HH:mm:ss"
+	msgWithSeconds: "HH:mm:ss",
 };
 
 module.exports = {
@@ -109,5 +109,5 @@ module.exports = {
 	condensedTypes: condensedTypes,
 	condensedTypesQuery: "." + condensedTypes.join(", ."),
 	actionTypes: actionTypes,
-	timeFormats: timeFormats
+	timeFormats: timeFormats,
 };

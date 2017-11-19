@@ -68,7 +68,7 @@ function onPushButton() {
 
 			return registration.pushManager.subscribe({
 				applicationServerKey: urlBase64ToUint8Array(applicationServerKey),
-				userVisibleOnly: true
+				userVisibleOnly: true,
 			}).then((subscription) => {
 				const rawKey = subscription.getKey ? subscription.getKey("p256dh") : "";
 				const key = rawKey ? window.btoa(String.fromCharCode.apply(null, new Uint8Array(rawKey))) : "";
@@ -80,8 +80,8 @@ function onPushButton() {
 					endpoint: subscription.endpoint,
 					keys: {
 						p256dh: key,
-						auth: authSecret
-					}
+						auth: authSecret,
+					},
 				});
 
 				return true;

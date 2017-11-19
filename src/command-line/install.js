@@ -24,7 +24,7 @@ program
 		log.info("Retrieving information about the package...");
 
 		packageJson(packageName, {
-			fullMetadata: true
+			fullMetadata: true,
 		}).then((json) => {
 			if (!("thelounge" in json)) {
 				log.error(`${colors.red(packageName)} does not have The Lounge metadata.`);
@@ -57,10 +57,10 @@ program
 					"--no-package-lock",
 					"--prefix",
 					packagesParent,
-					packageName
+					packageName,
 				],
 				{
-					stdio: "inherit"
+					stdio: "inherit",
 				}
 			);
 

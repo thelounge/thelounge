@@ -7,37 +7,37 @@ describe("Clean IRC messages", function() {
 	it("should remove all formatting", function() {
 		const testCases = [{
 			input: "\x0303",
-			expected: ""
+			expected: "",
 		}, {
 			input: "\x02bold",
-			expected: "bold"
+			expected: "bold",
 		}, {
 			input: "\x038yellowText",
-			expected: "yellowText"
+			expected: "yellowText",
 		}, {
 			input: "\x030,0white,white",
-			expected: "white,white"
+			expected: "white,white",
 		}, {
 			input: "\x034,8yellowBGredText",
-			expected: "yellowBGredText"
+			expected: "yellowBGredText",
 		}, {
 			input: "\x1ditalic",
-			expected: "italic"
+			expected: "italic",
 		}, {
 			input: "\x1funderline",
-			expected: "underline"
+			expected: "underline",
 		}, {
 			input: "\x02bold\x038yellow\x02nonBold\x03default",
-			expected: "boldyellownonBolddefault"
+			expected: "boldyellownonBolddefault",
 		}, {
 			input: "\x02bold\x02 \x02bold\x02",
-			expected: "bold bold"
+			expected: "bold bold",
 		}, {
 			input: "\x02irc\x0f://\x1dfreenode.net\x0f/\x034,8thelounge",
-			expected: "irc://freenode.net/thelounge"
+			expected: "irc://freenode.net/thelounge",
 		}, {
 			input: "\x02#\x038,9thelounge",
-			expected: "#thelounge"
+			expected: "#thelounge",
 		}];
 
 		const actual = testCases.map((testCase) => Helper.cleanIrcMessage(testCase.input));

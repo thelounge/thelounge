@@ -15,7 +15,9 @@ rules:
   block-scoped-var: error
   block-spacing: [error, always]
   brace-style: [error, 1tbs]
-  comma-dangle: off
+  comma-dangle:
+    - error
+    - always-multiline
   curly: [error, all]
   dot-location: [error, property]
   dot-notation: error

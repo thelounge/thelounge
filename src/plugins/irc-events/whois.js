@@ -10,13 +10,13 @@ module.exports = function(irc, network) {
 		if (typeof chan === "undefined") {
 			chan = new Chan({
 				type: Chan.Type.QUERY,
-				name: data.nick
+				name: data.nick,
 			});
 			network.channels.push(chan);
 			client.emit("join", {
 				shouldOpen: true,
 				network: network.id,
-				chan: chan
+				chan: chan,
 			});
 		}
 
@@ -24,7 +24,7 @@ module.exports = function(irc, network) {
 		if (data.error) {
 			msg = new Msg({
 				type: Msg.Type.ERROR,
-				text: "No such nick: " + data.nick
+				text: "No such nick: " + data.nick,
 			});
 		} else {
 			// Absolute datetime in milliseconds since nick is idle
@@ -32,7 +32,7 @@ module.exports = function(irc, network) {
 
 			msg = new Msg({
 				type: Msg.Type.WHOIS,
-				whois: data
+				whois: data,
 			});
 		}
 

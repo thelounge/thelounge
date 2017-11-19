@@ -20,7 +20,7 @@ module.exports = function(irc, network) {
 				text: away || "",
 				time: data.time,
 				from: data.nick,
-				mode: user.mode
+				mode: user.mode,
 			});
 
 			chan.pushMessage(client, msg);

@@ -8,24 +8,24 @@ describe("merge", () => {
 		const textParts = [{
 			start: 0,
 			end: 10,
-			flag1: true
+			flag1: true,
 		}, {
 			start: 10,
 			end: 20,
-			flag2: true
+			flag2: true,
 		}];
 		const styleFragments = [{
 			start: 0,
 			end: 5,
-			text: "01234"
+			text: "01234",
 		}, {
 			start: 5,
 			end: 15,
-			text: "5678901234"
+			text: "5678901234",
 		}, {
 			start: 15,
 			end: 20,
-			text: "56789"
+			text: "56789",
 		}];
 
 		const expected = [{
@@ -35,12 +35,12 @@ describe("merge", () => {
 			fragments: [{
 				start: 0,
 				end: 5,
-				text: "01234"
+				text: "01234",
 			}, {
 				start: 5,
 				end: 10,
-				text: "56789"
-			}]
+				text: "56789",
+			}],
 		}, {
 			start: 10,
 			end: 20,
@@ -48,12 +48,12 @@ describe("merge", () => {
 			fragments: [{
 				start: 10,
 				end: 15,
-				text: "01234"
+				text: "01234",
 			}, {
 				start: 15,
 				end: 20,
-				text: "56789"
-			}]
+				text: "56789",
+			}],
 		}];
 
 		const actual = merge(textParts, styleFragments);

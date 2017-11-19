@@ -29,7 +29,7 @@ describe("Link plugin", function() {
 	it("should be able to fetch basic information about URLs", function(done) {
 		const url = "http://localhost:9002/basic";
 		const message = this.irc.createMessage({
-			text: url
+			text: url,
 		});
 
 		link(this.irc, this.network.channels[0], message);
@@ -60,7 +60,7 @@ describe("Link plugin", function() {
 
 	it("should prefer og:title over title", function(done) {
 		const message = this.irc.createMessage({
-			text: "http://localhost:9002/basic-og"
+			text: "http://localhost:9002/basic-og",
 		});
 
 		link(this.irc, this.network.channels[0], message);
@@ -77,7 +77,7 @@ describe("Link plugin", function() {
 
 	it("should prefer og:description over description", function(done) {
 		const message = this.irc.createMessage({
-			text: "http://localhost:9002/description-og"
+			text: "http://localhost:9002/description-og",
 		});
 
 		link(this.irc, this.network.channels[0], message);
@@ -94,7 +94,7 @@ describe("Link plugin", function() {
 
 	it("should find og:image with full url", function(done) {
 		const message = this.irc.createMessage({
-			text: "http://localhost:9002/thumb"
+			text: "http://localhost:9002/thumb",
 		});
 
 		link(this.irc, this.network.channels[0], message);
@@ -112,7 +112,7 @@ describe("Link plugin", function() {
 
 	it("should find image_src", function(done) {
 		const message = this.irc.createMessage({
-			text: "http://localhost:9002/thumb-image-src"
+			text: "http://localhost:9002/thumb-image-src",
 		});
 
 		link(this.irc, this.network.channels[0], message);
@@ -129,7 +129,7 @@ describe("Link plugin", function() {
 
 	it("should correctly resolve relative protocol", function(done) {
 		const message = this.irc.createMessage({
-			text: "http://localhost:9002/thumb-image-src"
+			text: "http://localhost:9002/thumb-image-src",
 		});
 
 		link(this.irc, this.network.channels[0], message);
@@ -146,7 +146,7 @@ describe("Link plugin", function() {
 
 	it("should resolve url correctly for relative url", function(done) {
 		const message = this.irc.createMessage({
-			text: "http://localhost:9002/relative-thumb"
+			text: "http://localhost:9002/relative-thumb",
 		});
 
 		link(this.irc, this.network.channels[0], message);
@@ -165,7 +165,7 @@ describe("Link plugin", function() {
 
 	it("should send untitled page if there is a thumbnail", function(done) {
 		const message = this.irc.createMessage({
-			text: "http://localhost:9002/thumb-no-title"
+			text: "http://localhost:9002/thumb-no-title",
 		});
 
 		link(this.irc, this.network.channels[0], message);
@@ -184,7 +184,7 @@ describe("Link plugin", function() {
 
 	it("should not send thumbnail if image is 404", function(done) {
 		const message = this.irc.createMessage({
-			text: "http://localhost:9002/thumb-404"
+			text: "http://localhost:9002/thumb-404",
 		});
 
 		link(this.irc, this.network.channels[0], message);
@@ -203,7 +203,7 @@ describe("Link plugin", function() {
 
 	it("should send image preview", function(done) {
 		const message = this.irc.createMessage({
-			text: "http://localhost:9002/real-test-image.png"
+			text: "http://localhost:9002/real-test-image.png",
 		});
 
 		link(this.irc, this.network.channels[0], message);
@@ -218,7 +218,7 @@ describe("Link plugin", function() {
 
 	it("should load multiple URLs found in messages", function(done) {
 		const message = this.irc.createMessage({
-			text: "http://localhost:9002/one http://localhost:9002/two"
+			text: "http://localhost:9002/one http://localhost:9002/two",
 		});
 
 		link(this.irc, this.network.channels[0], message);

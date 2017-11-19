@@ -9,7 +9,7 @@ exports.input = function(network, chan, cmd, args) {
 	if (chan.type !== Chan.Type.CHANNEL && chan.type !== Chan.Type.QUERY) {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
-			text: `${cmd} command can only be used in channels and queries.`
+			text: `${cmd} command can only be used in channels and queries.`,
 		}));
 
 		return;
@@ -35,7 +35,7 @@ exports.input = function(network, chan, cmd, args) {
 			irc.emit("action", {
 				nick: irc.user.nick,
 				target: chan.name,
-				message: text
+				message: text,
 			});
 		}
 

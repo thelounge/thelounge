@@ -36,7 +36,7 @@ program
 
 		log.prompt({
 			text: "Enter password:",
-			silent: true
+			silent: true,
 		}, function(err, password) {
 			if (!password) {
 				log.error("Password cannot be empty.");
@@ -45,7 +45,7 @@ program
 			if (!err) {
 				log.prompt({
 					text: "Save logs to disk?",
-					default: "yes"
+					default: "yes",
 				}, function(err2, enableLog) {
 					if (!err2) {
 						add(

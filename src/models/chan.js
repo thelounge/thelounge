@@ -28,7 +28,7 @@ function Chan(attr) {
 		firstUnread: 0,
 		unread: 0,
 		highlight: 0,
-		users: []
+		users: [],
 	});
 }
 
@@ -39,7 +39,7 @@ Chan.prototype.destroy = function() {
 Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 	var obj = {
 		chan: this.id,
-		msg: msg
+		msg: msg,
 	};
 
 	// If this channel is open in any of the clients, do not increase unread counter

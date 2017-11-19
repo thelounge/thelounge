@@ -38,7 +38,7 @@ module.exports = function(irc, network) {
 		chan.sortUsers(irc);
 
 		client.emit("users", {
-			chan: chan.id
+			chan: chan.id,
 		});
 	});
 };

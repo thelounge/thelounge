@@ -73,7 +73,7 @@ module.exports = function(irc, network) {
 				mode: (targetChan.type !== Chan.Type.LOBBY && targetChan.getMode(data.nick)) || "",
 				from: data.nick,
 				text: text,
-				self: data.nick === irc.user.nick
+				self: data.nick === irc.user.nick,
 			});
 			targetChan.pushMessage(client, msg);
 
@@ -118,7 +118,7 @@ module.exports = function(irc, network) {
 			targetChan.sortUsers(irc);
 
 			client.emit("users", {
-				chan: targetChan.id
+				chan: targetChan.id,
 			});
 		}
 	});

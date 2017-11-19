@@ -13,7 +13,7 @@ module.exports = function(irc, network) {
 			}
 			chan.users = _.without(chan.users, user);
 			client.emit("users", {
-				chan: chan.id
+				chan: chan.id,
 			});
 			var msg = new Msg({
 				time: data.time,
@@ -21,7 +21,7 @@ module.exports = function(irc, network) {
 				mode: user.mode || "",
 				text: data.message || "",
 				hostmask: data.ident + "@" + data.hostname,
-				from: data.nick
+				from: data.nick,
 			});
 			chan.pushMessage(client, msg);
 		});

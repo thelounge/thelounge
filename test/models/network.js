@@ -19,7 +19,7 @@ describe("Network", function() {
 					new Chan({name: "&secure", key: "bar"}),
 					new Chan({name: "Channel List", type: Chan.Type.SPECIAL}),
 					new Chan({name: "PrivateChat", type: Chan.Type.QUERY}),
-				]
+				],
 			});
 			network.setNick("chillin`");
 
@@ -41,7 +41,7 @@ describe("Network", function() {
 					{name: "&foobar", key: ""},
 					{name: "#secret", key: "foo"},
 					{name: "&secure", key: "bar"},
-				]
+				],
 			});
 		});
 
@@ -52,7 +52,7 @@ describe("Network", function() {
 					new Chan({name: "AAAA!", type: Chan.Type.QUERY}),
 					new Chan({name: "#thelounge"}),
 					new Chan({name: "&foobar"}),
-				]
+				],
 			});
 			network.channels.push(new Chan({name: "#swag"}));
 
@@ -65,24 +65,24 @@ describe("Network", function() {
 				name: "#506-bug-fix",
 				messages: [
 					new Msg({
-						text: "message in constructor"
-					})
-				]
+						text: "message in constructor",
+					}),
+				],
 			});
 
 			var network = new Network({
 				name: "networkName",
 				channels: [
-					chan
-				]
+					chan,
+				],
 			});
 
 			chan.messages.push(new Msg({
-				text: "message in original instance"
+				text: "message in original instance",
 			}));
 
 			network.channels[1].messages.push(new Msg({
-				text: "message after network creation"
+				text: "message after network creation",
 			}));
 
 			expect(network.channels[1].messages).to.have.lengthOf(3);
