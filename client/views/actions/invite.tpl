@@ -1,9 +1,9 @@
-{{> ../user_name nick=from}}
+{{> ../user_name from}}
 invited
 {{#if invitedYou}}
 	you
 {{else}}
-	{{> ../user_name nick=invited}}
+	{{> ../user_name invited}}
 {{/if}}
 to
 {{{parse channel}}}

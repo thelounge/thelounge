@@ -1,11 +1,11 @@
 "use strict";
 
-var Chan = require("../../models/chan");
-var Msg = require("../../models/msg");
+const Chan = require("../../models/chan");
+const Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
-	var client = this;
-	var MAX_CHANS = 500;
+	const client = this;
+	const MAX_CHANS = 500;
 
 	irc.on("channel list start", function() {
 		network.chanCache = [];
@@ -39,7 +39,8 @@ module.exports = function(irc, network) {
 	});
 
 	function updateListStatus(msg) {
-		var chan = network.getChannel("Channel List");
+		let chan = network.getChannel("Channel List");
+
 		if (typeof chan === "undefined") {
 			chan = new Chan({
 				type: Chan.Type.SPECIAL,

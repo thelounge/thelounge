@@ -1,7 +1,6 @@
 "use strict";
 
 const _ = require("lodash");
-const Chan = require("../../models/chan");
 const Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
@@ -70,8 +69,7 @@ module.exports = function(irc, network) {
 			const msg = new Msg({
 				time: data.time,
 				type: Msg.Type.MODE,
-				mode: (targetChan.type !== Chan.Type.LOBBY && targetChan.getMode(data.nick)) || "",
-				from: data.nick,
+				from: targetChan.getUser(data.nick),
 				text: text,
 				self: data.nick === irc.user.nick,
 			});

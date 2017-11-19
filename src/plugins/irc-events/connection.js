@@ -1,12 +1,12 @@
 "use strict";
 
-var _ = require("lodash");
-var Msg = require("../../models/msg");
-var Chan = require("../../models/chan");
-var Helper = require("../../helper");
+const _ = require("lodash");
+const Msg = require("../../models/msg");
+const Chan = require("../../models/chan");
+const Helper = require("../../helper");
 
 module.exports = function(irc, network) {
-	var client = this;
+	const client = this;
 
 	network.channels[0].pushMessage(client, new Msg({
 		text: "Network created, connecting to " + network.host + ":" + network.port + "...",
@@ -27,10 +27,10 @@ module.exports = function(irc, network) {
 			irc.raw("AWAY", client.awayMessage);
 		}
 
-		var delay = 1000;
-		var commands = network.commands;
-		if (Array.isArray(commands)) {
-			commands.forEach((cmd) => {
+		let delay = 1000;
+
+		if (Array.isArray(network.commands)) {
+			network.commands.forEach((cmd) => {
 				setTimeout(function() {
 					client.input({
 						target: network.channels[0].id,

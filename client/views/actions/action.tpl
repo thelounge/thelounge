@@ -1,4 +1,4 @@
-{{> ../user_name nick=from}}
+{{> ../user_name from}}
 <span class="text">{{{parse text}}}</span>
 
 {{#each previews}}

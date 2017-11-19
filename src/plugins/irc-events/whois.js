@@ -1,12 +1,13 @@
 "use strict";
 
-var Chan = require("../../models/chan");
-var Msg = require("../../models/msg");
+const Chan = require("../../models/chan");
+const Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
-	var client = this;
+	const client = this;
 	irc.on("whois", function(data) {
-		var chan = network.getChannel(data.nick);
+		let chan = network.getChannel(data.nick);
+
 		if (typeof chan === "undefined") {
 			chan = new Chan({
 				type: Chan.Type.QUERY,
@@ -20,7 +21,7 @@ module.exports = function(irc, network) {
 			});
 		}
 
-		var msg;
+		let msg;
 		if (data.error) {
 			msg = new Msg({
 				type: Msg.Type.ERROR,

@@ -1,17 +1,19 @@
 "use strict";
 
-var _ = require("lodash");
-var Msg = require("../../models/msg");
+const _ = require("lodash");
+const Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
-	var client = this;
+	const client = this;
+
 	irc.on("part", function(data) {
-		var chan = network.getChannel(data.channel);
+		const chan = network.getChannel(data.channel);
+
 		if (typeof chan === "undefined") {
 			return;
 		}
-		var from = data.nick;
-		if (from === irc.user.nick) {
+
+		if (data.nick === irc.user.nick) {
 			network.channels = _.without(network.channels, chan);
 			chan.destroy();
 			client.save();
@@ -19,20 +21,21 @@ module.exports = function(irc, network) {
 				chan: chan.id,
 			});
 		} else {
-			const user = chan.findUser(from);
+			const user = chan.getUser(data.nick);
+
+			const msg = new Msg({
+				type: Msg.Type.PART,
+				time: data.time,
+				text: data.message || "",
+				hostmask: data.ident + "@" + data.hostname,
+				from: user,
+			});
+			chan.pushMessage(client, msg);
+
 			chan.users = _.without(chan.users, user);
 			client.emit("users", {
 				chan: chan.id,
 			});
-			var msg = new Msg({
-				type: Msg.Type.PART,
-				time: data.time,
-				mode: (user && user.mode) || "",
-				text: data.message || "",
-				hostmask: data.ident + "@" + data.hostname,
-				from: from,
-			});
-			chan.pushMessage(client, msg);
 		}
 	});
 };

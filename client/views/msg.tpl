@@ -4,7 +4,7 @@
 	</span>
 	<span class="from">
 		{{#if from}}
-			{{> user_name nick=from}}
+			{{> user_name from}}
 		{{/if}}
 	</span>
 	<span class="content">
