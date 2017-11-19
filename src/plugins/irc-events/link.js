@@ -4,6 +4,7 @@ const cheerio = require("cheerio");
 const request = require("request");
 const url = require("url");
 const Helper = require("../../helper");
+const cleanIrcMessage = require("../../../client/js/libs/handlebars/ircmessageparser/cleanIrcMessage");
 const findLinks = require("../../../client/js/libs/handlebars/ircmessageparser/findLinks");
 const storage = require("../storage");
 
@@ -15,7 +16,7 @@ module.exports = function(client, chan, msg) {
 	}
 
 	// Remove all IRC formatting characters before searching for links
-	const cleanText = Helper.cleanIrcMessage(msg.text);
+	const cleanText = cleanIrcMessage(msg.text);
 
 	// We will only try to prefetch http(s) links
 	const links = findLinks(cleanText).filter((w) => /^https?:\/\//.test(w.link));

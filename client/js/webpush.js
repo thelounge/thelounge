@@ -8,6 +8,8 @@ const pushNotificationsButton = $("#pushNotifications");
 let clientSubscribed = null;
 let applicationServerKey;
 
+module.exports.hasServiceWorker = false;
+
 module.exports.configurePushNotifications = (subscribedOnServer, key) => {
 	applicationServerKey = key;
 
@@ -16,7 +18,7 @@ module.exports.configurePushNotifications = (subscribedOnServer, key) => {
 	if (clientSubscribed === true && subscribedOnServer === false) {
 		pushNotificationsButton.attr("disabled", true);
 
-		navigator.serviceWorker.register("service-worker.js")
+		navigator.serviceWorker.ready
 			.then((registration) => registration.pushManager.getSubscription())
 			.then((subscription) => subscription && subscription.unsubscribe())
 			.then((successful) => {
@@ -32,6 +34,8 @@ if (isAllowedServiceWorkersHost()) {
 
 	if ("serviceWorker" in navigator) {
 		navigator.serviceWorker.register("service-worker.js").then((registration) => {
+			module.exports.hasServiceWorker = true;
+
 			if (!registration.pushManager) {
 				return;
 			}
@@ -58,7 +62,7 @@ if (isAllowedServiceWorkersHost()) {
 function onPushButton() {
 	pushNotificationsButton.attr("disabled", true);
 
-	navigator.serviceWorker.register("service-worker.js").then((registration) => {
+	navigator.serviceWorker.ready.then((registration) => {
 		registration.pushManager.getSubscription().then((existingSubscription) => {
 			if (existingSubscription) {
 				socket.emit("push:unregister");

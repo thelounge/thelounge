@@ -2,13 +2,19 @@
 /* global clients */
 "use strict";
 
+self.addEventListener("message", function(event) {
+	showNotification(event, event.data);
+});
+
 self.addEventListener("push", function(event) {
 	if (!event.data) {
 		return;
 	}
 
-	const payload = event.data.json();
+	showNotification(event, event.data.json());
+});
 
+function showNotification(event, payload) {
 	if (payload.type !== "notification") {
 		return;
 	}
@@ -33,7 +39,7 @@ self.addEventListener("push", function(event) {
 				});
 			})
 	);
-});
+}
 
 self.addEventListener("notificationclick", function(event) {
 	event.notification.close();
