@@ -15,7 +15,6 @@ const templates = require("../views");
 const socket = require("./socket");
 require("./socket-events");
 const storage = require("./localStorage");
-require("./options");
 const utils = require("./utils");
 require("./autocompletion");
 require("./webpush");
@@ -28,7 +27,6 @@ $(function() {
 
 	$(document.body).data("app-name", document.title);
 
-	var windows = $("#windows");
 	var viewport = $("#viewport");
 	var sidebarSlide = slideoutMenu(viewport[0], sidebar[0]);
 	var contextMenuContainer = $("#context-menu-container");
@@ -485,18 +483,6 @@ $(function() {
 		container.html(templates.user_filtered({matches: result})).show();
 	});
 
-	var forms = $("#sign-in, #connect, #change-password");
-
-	windows.on("show", "#sign-in", function() {
-		$(this).find("input").each(function() {
-			var self = $(this);
-			if (self.val() === "") {
-				self.focus();
-				return false;
-			}
-		});
-	});
-
 	if ($("body").hasClass("public") && (window.location.hash === "#connect" || window.location.hash === "")) {
 		$("#connect").one("show", function() {
 			var params = URI(document.location.search);
@@ -522,56 +508,6 @@ $(function() {
 			}
 		});
 	}
-
-	forms.on("submit", "form", function(e) {
-		e.preventDefault();
-		var event = "auth";
-		var form = $(this);
-		form.find(".btn").attr("disabled", true);
-
-		if (form.closest(".window").attr("id") === "connect") {
-			event = "conn";
-		} else if (form.closest("div").attr("id") === "change-password") {
-			event = "change-password";
-		}
-
-		var values = {};
-		$.each(form.serializeArray(), function(i, obj) {
-			if (obj.value !== "") {
-				values[obj.name] = obj.value;
-			}
-		});
-
-		if (values.user) {
-			storage.set("user", values.user);
-		}
-
-		socket.emit(
-			event, values
-		);
-	});
-
-	forms.on("focusin", ".nick", function() {
-		// Need to set the first "lastvalue", so it can be used in the below function
-		var nick = $(this);
-		nick.data("lastvalue", nick.val());
-	});
-
-	forms.on("input", ".nick", function() {
-		var nick = $(this).val();
-		var usernameInput = forms.find(".username");
-
-		// Because this gets called /after/ it has already changed, we need use the previous value
-		var lastValue = $(this).data("lastvalue");
-
-		// They were the same before the change, so update the username field
-		if (usernameInput.val() === lastValue) {
-			usernameInput.val(nick);
-		}
-
-		// Store the "previous" value, for next time
-		$(this).data("lastvalue", nick);
-	});
 
 	$(document).on("visibilitychange focus click", () => {
 		if (sidebar.find(".highlight").length === 0) {

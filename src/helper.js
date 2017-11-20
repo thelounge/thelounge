@@ -78,6 +78,10 @@ function setHome(homePath) {
 		log.warn(`${colors.bold("displayNetwork")} and ${colors.bold("lockNetwork")} are false, setting ${colors.bold("lockNetwork")} to true.`);
 	}
 
+	// Load theme color from manifest.json
+	const manifest = require("../public/manifest.json");
+	this.config.themeColor = manifest.theme_color;
+
 	// TODO: Remove in future release
 	if (this.config.debug === true) {
 		log.warn("debug option is now an object, see defaults file for more information.");

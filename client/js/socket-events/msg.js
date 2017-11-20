@@ -21,8 +21,6 @@ try {
 	};
 }
 
-$("#play").on("click", () => pop.play());
-
 socket.on("msg", function(data) {
 	// We set a maximum timeout of 2 seconds so that messages don't take too long to appear.
 	utils.requestIdleCallback(() => processReceivedMessage(data), 2000);

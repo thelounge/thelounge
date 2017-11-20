@@ -5,7 +5,6 @@ var pkg = require("../package.json");
 var Client = require("./client");
 var ClientManager = require("./clientManager");
 var express = require("express");
-var expressHandlebars = require("express-handlebars");
 var fs = require("fs");
 var path = require("path");
 var io = require("socket.io");
@@ -33,27 +32,15 @@ module.exports = function() {
 (Node.js ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${process.arch})`);
 	log.info(`Configuration file: ${colors.green(Helper.CONFIG_PATH)}`);
 
-	if (!fs.existsSync("public/js/bundle.js")) {
-		log.error(`The client application was not built. Run ${colors.bold("NODE_ENV=production npm run build")} to resolve this.`);
-		process.exit();
-	}
-
 	var app = express()
+		.disable("x-powered-by")
 		.use(allRequests)
 		.use(index)
 		.use(express.static("public"))
 		.use("/storage/", express.static(Helper.getStoragePath(), {
 			redirect: false,
 			maxAge: 86400 * 1000,
-		}))
-		.engine("html", expressHandlebars({
-			extname: ".html",
-			helpers: {
-				tojson: (c) => JSON.stringify(c),
-			},
-		}))
-		.set("view engine", "html")
-		.set("views", path.join(__dirname, "..", "public"));
+		}));
 
 	app.get("/themes/:theme.css", (req, res) => {
 		const themeName = req.params.theme;
@@ -205,13 +192,6 @@ function index(req, res, next) {
 		return next();
 	}
 
-	var data = _.merge(
-		pkg,
-		Helper.config
-	);
-	data.gitCommit = Helper.getGitCommit();
-	data.themes = themes.getAll();
-
 	const policies = [
 		"default-src *",
 		"connect-src 'self' ws: wss:",
@@ -228,9 +208,17 @@ function index(req, res, next) {
 		policies.unshift("block-all-mixed-content");
 	}
 
+	res.setHeader("Content-Type", "text/html");
 	res.setHeader("Content-Security-Policy", policies.join("; "));
 	res.setHeader("Referrer-Policy", "no-referrer");
-	res.render("index", data);
+
+	return fs.readFile(path.join(__dirname, "..", "public", "index.html"), "utf-8", (err, file) => {
+		if (err) {
+			throw err;
+		}
+
+		res.send(_.template(file)(Helper.config));
+	});
 }
 
 function initializeClient(socket, client, token, lastMessage) {
@@ -467,6 +455,28 @@ function initializeClient(socket, client, token, lastMessage) {
 	}
 }
 
+function getClientConfiguration() {
+	const config = _.pick(Helper.config, [
+		"public",
+		"lockNetwork",
+		"displayNetwork",
+		"useHexIp",
+		"themes",
+		"prefetch",
+	]);
+
+	config.ldapEnabled = Helper.config.ldap.enable;
+	config.version = pkg.version;
+	config.gitCommit = Helper.getGitCommit();
+	config.themes = themes.getAll();
+
+	if (config.displayNetwork) {
+		config.defaults = Helper.config.defaults;
+	}
+
+	return config;
+}
+
 function performAuthentication(data) {
 	const socket = this;
 	let client;
@@ -474,6 +484,8 @@ function performAuthentication(data) {
 	const finalInit = () => initializeClient(socket, client, data.token || null, data.lastMessage || -1);
 
 	const initClient = () => {
+		socket.emit("configuration", getClientConfiguration());
+
 		client.ip = getClientIp(socket);
 
 		// If webirc is enabled perform reverse dns lookup
