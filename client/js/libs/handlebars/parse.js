@@ -66,7 +66,13 @@ module.exports = function parse(text) {
 	const parts = channelParts
 		.concat(linkParts)
 		.concat(emojiParts)
-		.sort((a, b) => a.start - b.start);
+		.sort((a, b) => a.start - b.start || b.end - a.end)
+		.reduce((prev, curr) => {
+			const intersection = prev.some(p => anyIntersection(p, curr));
+
+			if (intersection) return prev;
+			return prev.concat([curr]);
+		}, []);
 
 	// Merge the styling information with the channels / URLs / text objects and
 	// generate HTML strings with the resulting fragments
