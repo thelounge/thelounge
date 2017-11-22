@@ -7,7 +7,7 @@ process.chdir(__dirname);
 // Perform node version check before loading any other files or modules
 // Doing this check as soon as possible allows us to avoid ES6 parser errors or
 // other issues
-// Try to display warnings nicely, but gracefully degrade if anything goes wrong
+// Try to display messages nicely, but gracefully degrade if anything goes wrong
 var pkg = require("./package.json");
 if (!require("semver").satisfies(process.version, pkg.engines.node)) {
 	let colors;
@@ -24,12 +24,14 @@ if (!require("semver").satisfies(process.version, pkg.engines.node)) {
 		log = require("./src/log");
 	} catch (e) {
 		log = {};
-		log.warn = (msg) => console.error(`[WARN] ${msg}`); // eslint-disable-line no-console
+		log.error = (msg) => console.error(`[ERROR] ${msg}`); // eslint-disable-line no-console
 	}
 
-	log.warn(`The Lounge requires Node.js ${colors.green(pkg.engines.node)} (current version: ${colors.red(process.version)})`);
-	log.warn(colors.bold("We strongly encourage you to upgrade Node.js"));
-	log.warn("See https://nodejs.org/en/download/package-manager/ for more details");
+	log.error(`The Lounge requires Node.js ${colors.green(pkg.engines.node)} (current version: ${colors.red(process.version)})`);
+	log.error(colors.bold("Please upgrade Node.js in order to use The Lounge"));
+	log.error("See https://nodejs.org/en/download/package-manager/ for more details");
+
+	process.exit(1);
 }
 
 require("./src/command-line");
