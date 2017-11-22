@@ -101,12 +101,6 @@ function setHome(newPath) {
 	this.config.themeColor = manifest.theme_color;
 
 	// TODO: Remove in future release
-	if (this.config.debug === true) {
-		log.warn("debug option is now an object, see defaults file for more information.");
-		this.config.debug = {ircFramework: true};
-	}
-
-	// TODO: Remove in future release
 	// Backwards compatibility for old way of specifying themes in settings
 	if (this.config.theme.includes(".css")) {
 		log.warn(`Referring to CSS files in the ${colors.green("theme")} setting of ${colors.green(configPath)} is ${colors.bold.red("deprecated")} and will be removed in a future version.`);
