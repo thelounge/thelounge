@@ -38,6 +38,15 @@ describe("cleanIrcMessage", function() {
 		}, {
 			input: "\x02#\x038,9thelounge",
 			expected: "#thelounge",
+		}, {
+			input: "\x04DDEEAA,BBEEFF#\x038,9thelou\x04FFAACC\x0311\x04nge",
+			expected: "#thelounge",
+		}, {
+			input: "\x04ddEEffhex\x04 color\x04EEffCC,AAaaCC clean",
+			expected: "hex color clean",
+		}, {
+			input: "\x04 AAaaAA\x03 11 \x04Invalid,Hex ",
+			expected: "AAaaAA 11 Invalid,Hex",
 		}];
 
 		const actual = testCases.map((testCase) => cleanIrcMessage(testCase.input));
