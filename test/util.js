@@ -24,14 +24,12 @@ MockClient.prototype.createMessage = function(opts) {
 };
 
 function mockLogger(callback) {
-	return function() {
-		// TODO: Use ...args with The Lounge v3: add `...args` as function argument
-		//       and replaced the next line with `args.join(", ")`
-		const stdout = Array.prototype.slice.call(arguments).join(" ")
-			.replace( // Removes ANSI colors. See https://stackoverflow.com/a/29497680
-				/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
-				""
-			);
+	return function(...args) {
+		// Concats and removes ANSI colors. See https://stackoverflow.com/a/29497680
+		const stdout = args.join(" ").replace(
+			/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
+			""
+		);
 
 		callback(stdout + "\n");
 	};

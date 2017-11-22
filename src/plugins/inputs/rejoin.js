@@ -5,7 +5,7 @@ var Chan = require("../../models/chan");
 
 exports.commands = ["cycle", "rejoin"];
 
-exports.input = function(network, chan) {
+exports.input = function({irc}, chan) {
 	if (chan.type !== Chan.Type.CHANNEL) {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
@@ -14,8 +14,8 @@ exports.input = function(network, chan) {
 		return;
 	}
 
-	network.irc.part(chan.name, "Rejoining");
-	network.irc.join(chan.name);
+	irc.part(chan.name, "Rejoining");
+	irc.join(chan.name);
 
 	return true;
 };

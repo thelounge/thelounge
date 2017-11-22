@@ -9,7 +9,7 @@ exports.commands = [
 	"banlist",
 ];
 
-exports.input = function(network, chan, cmd, args) {
+exports.input = function({irc}, chan, cmd, args) {
 	if (chan.type !== Chan.Type.CHANNEL) {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
@@ -32,13 +32,13 @@ exports.input = function(network, chan, cmd, args) {
 
 	switch (cmd) {
 	case "ban":
-		network.irc.ban(chan.name, args[0]);
+		irc.ban(chan.name, args[0]);
 		break;
 	case "unban":
-		network.irc.unban(chan.name, args[0]);
+		irc.unban(chan.name, args[0]);
 		break;
 	case "banlist":
-		network.irc.banlist(chan.name);
+		irc.banlist(chan.name);
 		break;
 	}
 };

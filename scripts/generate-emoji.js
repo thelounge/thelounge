@@ -16,7 +16,7 @@ request.get({
 			const shortname = prepareShortName(emojiStrategy[key].shortname);
 
 			// Skip tones, at least for now
-			if (shortname.indexOf("tone") > -1) {
+			if (shortname.includes("tone")) {
 				continue;
 			}
 

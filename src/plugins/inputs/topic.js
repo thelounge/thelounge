@@ -5,7 +5,7 @@ var Msg = require("../../models/msg");
 
 exports.commands = ["topic"];
 
-exports.input = function(network, chan, cmd, args) {
+exports.input = function({irc}, chan, cmd, args) {
 	if (chan.type !== Chan.Type.CHANNEL) {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
@@ -14,6 +14,6 @@ exports.input = function(network, chan, cmd, args) {
 
 		return;
 	}
-	network.irc.setTopic(chan.name, args.join(" "));
+	irc.setTopic(chan.name, args.join(" "));
 	return true;
 };

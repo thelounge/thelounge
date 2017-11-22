@@ -13,7 +13,7 @@ exports.commands = [
 	"devoice",
 ];
 
-exports.input = function(network, chan, cmd, args) {
+exports.input = function({irc, nick}, chan, cmd, args) {
 	if (cmd !== "mode") {
 		if (chan.type !== Chan.Type.CHANNEL) {
 			chan.pushMessage(this, new Msg({
@@ -43,17 +43,15 @@ exports.input = function(network, chan, cmd, args) {
 		}[cmd];
 
 		args.forEach(function(target) {
-			network.irc.raw("MODE", chan.name, mode, target);
+			irc.raw("MODE", chan.name, mode, target);
 		});
 
 		return;
 	}
 
 	if (args.length === 0 || args[0][0] === "+" || args[0][0] === "-") {
-		args.unshift(chan.type === Chan.Type.CHANNEL || chan.type === Chan.Type.QUERY ? chan.name : network.nick);
+		args.unshift(chan.type === Chan.Type.CHANNEL || chan.type === Chan.Type.QUERY ? chan.name : nick);
 	}
 
-	args.unshift("MODE");
-
-	network.irc.raw.apply(network.irc, args);
+	irc.raw("MODE", ...args);
 };

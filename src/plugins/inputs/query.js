@@ -22,7 +22,7 @@ exports.input = function(network, chan, cmd, args) {
 	}
 
 	var char = target[0];
-	if (network.irc.network.options.CHANTYPES && network.irc.network.options.CHANTYPES.indexOf(char) !== -1) {
+	if (network.irc.network.options.CHANTYPES && network.irc.network.options.CHANTYPES.includes(char)) {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
 			text: "You can not open query windows for channels, use /join instead.",
