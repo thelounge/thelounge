@@ -4,7 +4,7 @@ const colors = require("colors/safe");
 const fs = require("fs");
 const path = require("path");
 
-let loungeHome;
+let home;
 
 class Utils {
 	static extraHelp() {
@@ -13,25 +13,40 @@ class Utils {
 			"",
 			"  Environment variable:",
 			"",
-			`    LOUNGE_HOME   Path for all configuration files and folders. Defaults to ${colors.green(Utils.defaultLoungeHome())}.`,
+			`    THELOUNGE_HOME   Path for all configuration files and folders. Defaults to ${colors.green(Utils.defaultHome())}.`,
 			"",
 		].forEach((e) => console.log(e)); // eslint-disable-line no-console
 	}
 
-	static defaultLoungeHome() {
-		if (loungeHome) {
-			return loungeHome;
+	static defaultHome() {
+		if (home) {
+			return home;
 		}
+
 		const distConfig = path.resolve(path.join(
+			__dirname,
+			"..",
+			"..",
+			".thelounge_home"
+		));
+
+		// TODO: Remove this section when releasing The Lounge v3
+		const deprecatedDistConfig = path.resolve(path.join(
 			__dirname,
 			"..",
 			"..",
 			".lounge_home"
 		));
+		if (fs.existsSync(deprecatedDistConfig)) {
+			log.warn(`${colors.green(".lounge_home")} is ${colors.bold("deprecated")} and will be ignored as of The Lounge v3.`);
+			log.warn(`Renaming to ${colors.green(".thelounge_home")} instead.`);
 
-		loungeHome = fs.readFileSync(distConfig, "utf-8").trim();
+			fs.renameSync(deprecatedDistConfig, distConfig);
+		}
 
-		return loungeHome;
+		home = fs.readFileSync(distConfig, "utf-8").trim();
+
+		return home;
 	}
 }
 
