@@ -18,7 +18,8 @@ install:
   - yarn --frozen-lockfile
   - yarn build
   - yarn add mocha-appveyor-reporter
-  - echo --reporter mocha-appveyor-reporter >> test/mocha.opts
+  - ps: (gc test/mocha.opts) -replace 'dot', 'mocha-appveyor-reporter' | sc test/mocha.opts
+  - ps: (gc test/mocha-webpack.opts) -replace 'dot', 'mocha-appveyor-reporter' | sc test/mocha-webpack.opts
 
 test_script:
   - node --version
