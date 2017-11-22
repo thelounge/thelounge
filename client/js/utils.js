@@ -7,6 +7,8 @@ var serverHash = -1;
 var lastMessageId = -1;
 
 module.exports = {
+	inputCommands: {collapse, expand, join},
+	findCurrentNetworkChan,
 	serverHash,
 	lastMessageId,
 	confirmExit,
@@ -19,6 +21,18 @@ module.exports = {
 	requestIdleCallback,
 };
 
+function findCurrentNetworkChan(name) {
+	name = name.toLowerCase();
+
+	return $(".network .chan.active")
+		.parent(".network")
+		.find(".chan")
+		.filter(function() {
+			return $(this).data("title").toLowerCase() === name;
+		})
+		.first();
+}
+
 function resetHeight(element) {
 	element.style.height = element.style.minHeight;
 }
@@ -27,6 +41,27 @@ function resetHeight(element) {
 // This can only be called from another interactive event (e.g. button click)
 function forceFocus() {
 	input.trigger("click").focus();
+}
+
+function collapse() {
+	$(".chan.active .toggle-button.opened").click();
+	return true;
+}
+
+function expand() {
+	$(".chan.active .toggle-button:not(.opened)").click();
+	return true;
+}
+
+function join(args) {
+	const channel = args[0];
+	if (channel) {
+		const chan = findCurrentNetworkChan(channel);
+		if (chan.length) {
+			chan.click();
+			return true;
+		}
+	}
 }
 
 function toggleNickEditor(toggle) {

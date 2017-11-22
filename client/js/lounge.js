@@ -182,14 +182,12 @@ $(function() {
 		input.val("");
 		resetInputHeight(input.get(0));
 
-		if (text.indexOf("/collapse") === 0) {
-			$(".chan.active .toggle-preview.opened").click();
-			return;
-		}
-
-		if (text.indexOf("/expand") === 0) {
-			$(".chan.active .toggle-preview:not(.opened)").click();
-			return;
+		if (text.charAt(0) === "/") {
+			const args = text.substr(1).split(" ");
+			const cmd = args.shift().toLowerCase();
+			if (typeof utils.inputCommands[cmd] === "function" && utils.inputCommands[cmd](args)) {
+				return;
+			}
 		}
 
 		socket.emit("input", {
@@ -197,18 +195,6 @@ $(function() {
 			text: text,
 		});
 	});
-
-	function findCurrentNetworkChan(name) {
-		name = name.toLowerCase();
-
-		return $(".network .chan.active")
-			.parent(".network")
-			.find(".chan")
-			.filter(function() {
-				return $(this).data("title").toLowerCase() === name;
-			})
-			.first();
-	}
 
 	$("button#set-nick").on("click", function() {
 		utils.toggleNickEditor(true);
@@ -266,7 +252,7 @@ $(function() {
 
 	chat.on("click", ".inline-channel", function() {
 		var name = $(this).data("chan");
-		var chan = findCurrentNetworkChan(name);
+		var chan = utils.findCurrentNetworkChan(name);
 
 		if (chan.length) {
 			chan.click();
@@ -284,7 +270,7 @@ $(function() {
 
 	chat.on("click", ".user", function() {
 		var name = $(this).data("name");
-		var chan = findCurrentNetworkChan(name);
+		var chan = utils.findCurrentNetworkChan(name);
 
 		if (chan.length) {
 			chan.click();
