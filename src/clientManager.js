@@ -20,11 +20,6 @@ ClientManager.prototype.init = function(identHandler, sockets) {
 	this.webPush = new WebPush();
 
 	if (!Helper.config.public && !Helper.config.ldap.enable) {
-		// TODO: Remove deprecated warning in v3.0.0
-		if ("autoload" in Helper.config) {
-			log.warn(`Autoloading users is now always enabled. Please remove the ${colors.yellow("autoload")} option from your configuration file.`);
-		}
-
 		this.autoloadUsers();
 	}
 };
