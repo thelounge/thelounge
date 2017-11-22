@@ -2,6 +2,7 @@
 
 const Handlebars = require("handlebars/runtime");
 const parseStyle = require("./ircmessageparser/parseStyle");
+const anyIntersection = require("./ircmessageparser/anyIntersection");
 const findChannels = require("./ircmessageparser/findChannels");
 const findLinks = require("./ircmessageparser/findLinks");
 const findEmoji = require("./ircmessageparser/findEmoji");
@@ -68,9 +69,11 @@ module.exports = function parse(text) {
 		.concat(emojiParts)
 		.sort((a, b) => a.start - b.start || b.end - a.end)
 		.reduce((prev, curr) => {
-			const intersection = prev.some(p => anyIntersection(p, curr));
+			const intersection = prev.some((p) => anyIntersection(p, curr));
 
-			if (intersection) return prev;
+			if (intersection) {
+				return prev;
+			}
 			return prev.concat([curr]);
 		}, []);
 
