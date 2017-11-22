@@ -10,11 +10,6 @@ const colors = require("colors/safe");
 const Helper = require("../helper");
 const Utils = require("./utils");
 
-if (require("semver").lt(process.version, "6.0.0")) {
-	log.warn(`Support of Node.js v4 is ${colors.bold.red("deprecated")} and will be removed in The Lounge v3.`);
-	log.warn("Please upgrade to Node.js v6 or more recent.");
-}
-
 program.version(Helper.getVersion(), "-v, --version")
 	.option("--home <path>", `${colors.bold.red("[DEPRECATED]")} Use the ${colors.green("THELOUNGE_HOME")} environment variable instead.`)
 	.option(

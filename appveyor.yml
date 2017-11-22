@@ -11,7 +11,7 @@ skip_tags: true
 skip_branch_with_pr: true
 
 environment:
-  nodejs_version: '4'
+  nodejs_version: '6'
 
 install:
   - ps: Install-Product node $env:nodejs_version
