@@ -82,10 +82,10 @@ function processReceivedMessage(data) {
 	if ((data.msg.type === "message" || data.msg.type === "action" || data.msg.type === "notice") && channel.hasClass("channel")) {
 		const nicks = channel.find(".users").data("nicks");
 		if (nicks) {
-			const find = nicks.indexOf(data.msg.from);
+			const find = nicks.indexOf(data.msg.from.nick);
 			if (find !== -1) {
 				nicks.splice(find, 1);
-				nicks.unshift(data.msg.from);
+				nicks.unshift(data.msg.from.nick);
 			}
 		}
 	}
@@ -118,9 +118,9 @@ function notifyMessage(targetId, channel, msg) {
 
 				if (msg.type === "invite") {
 					title = "New channel invite:";
-					body = msg.from + " invited you to " + msg.channel;
+					body = msg.from.nick + " invited you to " + msg.channel;
 				} else {
-					title = msg.from;
+					title = msg.from.nick;
 					if (!button.hasClass("query")) {
 						title += " (" + button.data("title").trim() + ")";
 					}
