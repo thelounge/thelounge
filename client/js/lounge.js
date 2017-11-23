@@ -13,6 +13,7 @@ require("./libs/jquery/stickyscroll");
 const slideoutMenu = require("./libs/slideout");
 const templates = require("../views");
 const socket = require("./socket");
+const render = require("./render");
 require("./socket-events");
 const storage = require("./localStorage");
 const utils = require("./utils");
@@ -348,14 +349,17 @@ $(function() {
 			.find(".chat")
 			.unsticky();
 
-		var lastActiveChan = lastActive
-			.find(".chan.active")
-			.removeClass("active");
+		const lastActiveChan = lastActive.find(".chan.active");
 
-		lastActiveChan
-			.find(".unread-marker")
-			.data("unread-id", 0)
-			.appendTo(lastActiveChan.find(".messages"));
+		if (lastActiveChan.length > 0) {
+			lastActiveChan
+				.removeClass("active")
+				.find(".unread-marker")
+				.data("unread-id", 0)
+				.appendTo(lastActiveChan.find(".messages"));
+
+			render.trimMessageInChannel(lastActiveChan, 100);
+		}
 
 		var chan = $(target)
 			.addClass("active")
