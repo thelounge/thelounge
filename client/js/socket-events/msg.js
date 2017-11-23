@@ -46,7 +46,9 @@ function processReceivedMessage(data) {
 		data.msg
 	);
 
-	container.trigger("keepToBottom");
+	if (activeChannelId === targetId) {
+		container.trigger("keepToBottom");
+	}
 
 	notifyMessage(targetId, channel, data);
 
