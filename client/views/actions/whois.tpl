@@ -12,7 +12,7 @@
 {{#if whois.real_name}}
 <div>
 	{{> ../user_name nick=whois.nick}}'s real name is:
-	<b>{{parse whois.real_name}}</b>
+	<b>{{{parse whois.real_name}}}</b>
 </div>
 {{/if}}
 {{#if whois.account}}
