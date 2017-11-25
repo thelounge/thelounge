@@ -175,7 +175,7 @@ function fetch(uri, cb) {
 				limit = 1024 * 50;
 			}
 		})
-		.on("error", function() {})
+		.on("error", () => cb(null))
 		.on("data", (data) => {
 			length += data.length;
 			buffers.push(data);
