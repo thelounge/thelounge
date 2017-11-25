@@ -41,7 +41,7 @@
     "bcryptjs": "2.4.3",
     "cheerio": "0.22.0",
     "colors": "1.1.2",
-    "commander": "2.11.0",
+    "commander": "2.12.1",
     "express": "4.16.2",
     "fs-extra": "4.0.2",
     "irc-framework": "2.9.1",
