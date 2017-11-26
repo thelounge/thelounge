@@ -82,7 +82,7 @@
     "nyc": "11.3.0",
     "socket.io-client": "2.0.4",
     "stylelint": "8.3.0",
-    "stylelint-config-standard": "17.0.0",
+    "stylelint-config-standard": "18.0.0",
     "webpack": "3.8.1"
   }
 }
