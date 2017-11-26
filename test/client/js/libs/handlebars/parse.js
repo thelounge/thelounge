@@ -312,7 +312,6 @@ describe("parse Handlebars helper", () => {
 		const testCases = [{
 			input: "http://example.com/#hash",
 			expected:
-				"" +
 				"<a href=\"http://example.com/#hash\" target=\"_blank\" rel=\"noopener\">" +
 					"http://example.com/#hash" +
 				"</a>",
@@ -331,6 +330,17 @@ describe("parse Handlebars helper", () => {
 		expect(actual).to.equal(
 			"Url: <a href=\"http://example.com/path\" target=\"_blank\" rel=\"noopener\">http://example.com/path</a> " +
 			"Channel: <span class=\"inline-channel\" role=\"button\" tabindex=\"0\" data-chan=\"##channel\">##channel</span>"
+		);
+	});
+
+	it("should handle overlapping parts by using first starting", () => {
+		const input = "#test-https://example.com";
+		const actual = parse(input);
+
+		expect(actual).to.equal(
+			"<span class=\"inline-channel\" role=\"button\" tabindex=\"0\" data-chan=\"#test-https://example.com\">" +
+				"#test-https://example.com" +
+			"</span>"
 		);
 	});
 });
