@@ -310,6 +310,9 @@ kbd {
 }
 
 #chat .toggle-button {
+	display: inline-block;
+	transition: opacity 0.2s, transform 0.2s;
+
 	/* These 2 directives are loosely taken from .fa-fw */
 	width: 1.35em;
 	text-align: center;
@@ -1012,6 +1015,8 @@ kbd {
 #chat .content {
 	flex: 1 1 auto;
 	min-width: 0;
+	padding-left: 10px;
+	padding-right: 6px;
 }
 
 #loading a,
@@ -1063,11 +1068,6 @@ kbd {
 #chat.colored-nicks .user.color-30 { color: #ff7615; }
 #chat.colored-nicks .user.color-31 { color: #ff4846; }
 #chat.colored-nicks .user.color-32 { color: #ff199b; }
-
-#chat .content {
-	padding-left: 10px;
-	padding-right: 6px;
-}
 
 #chat .self .text {
 	color: #999;
@@ -1165,11 +1165,6 @@ kbd {
 #chat .channel .highlight .text,
 #chat .channel .highlight .user {
 	color: #f00;
-}
-
-#chat .toggle-button {
-	display: inline-block;
-	transition: opacity 0.2s, transform 0.2s;
 }
 
 #chat .toggle-button.opened, /* Thumbnail toggle */

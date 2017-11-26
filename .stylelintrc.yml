@@ -5,3 +5,7 @@ ignoreFiles:
 
 rules:
   indentation: tab
+  # complains about FontAwesome
+  font-family-no-missing-generic-family-keyword:
+  # needs a lot of refactoring to be enabled
+  no-descending-specificity:
