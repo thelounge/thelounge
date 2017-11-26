@@ -37,7 +37,7 @@ function createFragment(fragment) {
 			attributes += `;background-color:#${fragment.hexBgColor}`;
 		}
 
-		attributes += "\"";
+		attributes += '"';
 	}
 
 	if (attributes.length) {
