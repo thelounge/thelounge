@@ -29,12 +29,12 @@ function renderPreview(preview, msg) {
 
 	preview.shown = preview.shown && options.shouldOpenMessagePreview(preview.type);
 
-	const container = msg.closest(".chat");
-	const channelId = container.data("id");
-	const activeChannelId = chat.find(".chan.active").data("id");
+	const container = msg.closest(".messages");
+	const channelId = container.closest(".chan").data("id") || -1;
+	const activeChannelId = chat.find(".chan.active").data("id") || -2;
 
 	let bottom = false;
-	if (container.length && activeChannelId === channelId) {
+	if (activeChannelId === channelId) {
 		bottom = container.isScrollBottom();
 	}
 
