@@ -21,7 +21,7 @@
     "test": "npm-run-all --aggregate-output --parallel --continue-on-error test:* lint:*",
     "test:mocha": "mocha --colors",
     "lint:js": "eslint . --report-unused-disable-directives --color",
-    "lint:css": "stylelint --color \"client/**/*.css\""
+    "lint:css": "stylelint --color --report-needless-disables=error \"client/**/*.css\""
   },
   "keywords": [
     "lounge",
