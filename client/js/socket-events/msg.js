@@ -66,17 +66,18 @@ function processReceivedMessage(data) {
 		sidebar.find("[data-target='" + target + "'] .badge").removeClass("highlight").empty();
 	}
 
-	// Message arrived in a non active channel, trim it to 100 messages
-	if (activeChannelId !== targetId && container.find(".msg").slice(0, -100).remove().length) {
-		channel.find(".show-more").addClass("show");
+	let messageLimit = 0;
 
-		// Remove date-separators that would otherwise
-		// be "stuck" at the top of the channel
-		channel.find(".date-marker-container").each(function() {
-			if ($(this).next().hasClass("date-marker-container")) {
-				$(this).remove();
-			}
-		});
+	if (activeChannelId !== targetId) {
+		// If message arrives in non active channel, keep only 100 messages
+		messageLimit = 100;
+	} else if (container.isScrollBottom()) {
+		// If message arrives in active channel, keep 500 messages if scroll is currently at the bottom
+		messageLimit = 500;
+	}
+
+	if (messageLimit > 0) {
+		render.trimMessageInChannel(channel, messageLimit);
 	}
 
 	if ((data.msg.type === "message" || data.msg.type === "action" || data.msg.type === "notice") && channel.hasClass("channel")) {
