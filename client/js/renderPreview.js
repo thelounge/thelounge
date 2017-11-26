@@ -4,6 +4,7 @@ const $ = require("jquery");
 const options = require("./options");
 const socket = require("./socket");
 const templates = require("../views");
+const chat = $("#chat");
 const input = $("#input");
 const Mousetrap = require("mousetrap");
 
@@ -29,8 +30,11 @@ function renderPreview(preview, msg) {
 	preview.shown = preview.shown && options.shouldOpenMessagePreview(preview.type);
 
 	const container = msg.closest(".chat");
+	const channelId = container.data("id");
+	const activeChannelId = chat.find(".chan.active").data("id");
+
 	let bottom = false;
-	if (container.length) {
+	if (container.length && activeChannelId === channelId) {
 		bottom = container.isScrollBottom();
 	}
 
@@ -41,11 +45,13 @@ function renderPreview(preview, msg) {
 	previewContainer
 		.append(templates.msg_preview({preview: preview}));
 
-	if (preview.shown && bottom) {
-		handleImageInPreview(msg.find(".toggle-content"), container);
-	}
+	if (activeChannelId === channelId) {
+		if (preview.shown && bottom) {
+			handleImageInPreview(msg.find(".toggle-content"), container);
+		}
 
-	container.trigger("keepToBottom");
+		container.trigger("keepToBottom");
+	}
 }
 
 $("#chat").on("click", ".text .toggle-button", function() {
