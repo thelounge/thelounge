@@ -18,11 +18,10 @@
     "build": "npm-run-all build:*",
     "build:webpack": "webpack",
     "watch": "webpack --watch",
-    "test": "npm-run-all -c test:* lint",
-    "test:mocha": "mocha",
-    "lint": "npm-run-all -c lint:*",
-    "lint:js": "eslint . --report-unused-disable-directives",
-    "lint:css": "stylelint \"client/**/*.css\""
+    "test": "npm-run-all --aggregate-output --parallel --continue-on-error test:* lint:*",
+    "test:mocha": "mocha --colors",
+    "lint:js": "eslint . --report-unused-disable-directives --color",
+    "lint:css": "stylelint --color \"client/**/*.css\""
   },
   "keywords": [
     "lounge",
