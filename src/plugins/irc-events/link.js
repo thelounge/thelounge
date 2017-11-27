@@ -53,17 +53,17 @@ function parse(msg, preview, res, client) {
 		var $ = cheerio.load(res.data);
 		preview.type = "link";
 		preview.head =
-			$("meta[property=\"og:title\"]").attr("content")
+			$('meta[property="og:title"]').attr("content")
 			|| $("title").text()
 			|| "";
 		preview.body =
-			$("meta[property=\"og:description\"]").attr("content")
-			|| $("meta[name=\"description\"]").attr("content")
+			$('meta[property="og:description"]').attr("content")
+			|| $('meta[name="description"]').attr("content")
 			|| "";
 		preview.thumb =
-			$("meta[property=\"og:image\"]").attr("content")
-			|| $("meta[name=\"twitter:image:src\"]").attr("content")
-			|| $("link[rel=\"image_src\"]").attr("href")
+			$('meta[property="og:image"]').attr("content")
+			|| $('meta[name="twitter:image:src"]').attr("content")
+			|| $('link[rel="image_src"]').attr("href")
 			|| "";
 
 		if (preview.thumb.length) {
