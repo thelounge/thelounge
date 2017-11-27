@@ -4,7 +4,7 @@ const Chan = require("../../models/chan");
 const Msg = require("../../models/msg");
 const LinkPrefetch = require("./link");
 const cleanIrcMessage = require("../../../client/js/libs/handlebars/ircmessageparser/cleanIrcMessage");
-const nickRegExp = /[\w[\]\\`^{|}-]{4,}/gi;
+const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\w[\]\\`^{|}-]{4,})/g;
 
 module.exports = function(irc, network) {
 	const client = this;
@@ -92,8 +92,8 @@ module.exports = function(irc, network) {
 		const users = [];
 		let match;
 		while ((match = nickRegExp.exec(data.message))) {
-			if (chan.findUser(match[0])) {
-				users.push(match[0]);
+			if (chan.findUser(match[1])) {
+				users.push(match[1]);
 			}
 		}
 
