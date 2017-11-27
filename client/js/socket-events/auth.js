@@ -6,8 +6,6 @@ const storage = require("../localStorage");
 const utils = require("../utils");
 const templates = require("../../views");
 
-const login = $("#sign-in").html(templates.windows.sign_in());
-
 socket.on("auth", function(data) {
 	// If we reconnected and serverHash differs, that means the server restarted
 	// And we will reload the page to grab the latest version
@@ -18,29 +16,35 @@ socket.on("auth", function(data) {
 		return;
 	}
 
-	utils.serverHash = data.serverHash;
+	const login = $("#sign-in");
+
+	if (data.serverHash > -1) {
+		utils.serverHash = data.serverHash;
+
+		login.html(templates.windows.sign_in());
+
+		login.find("form").on("submit", function() {
+			const form = $(this);
+
+			form.find(".btn").attr("disabled", true);
+
+			const values = {};
+			$.each(form.serializeArray(), function(i, obj) {
+				values[obj.name] = obj.value;
+			});
+
+			storage.set("user", values.user);
+
+			socket.emit("auth", values);
+
+			return false;
+		});
+	} else {
+		login.find(".btn").prop("disabled", false);
+	}
 
 	let token;
 	const user = storage.get("user");
-
-	login.find(".btn").prop("disabled", false);
-
-	login.find("form").on("submit", function() {
-		const form = $(this);
-
-		form.find(".btn").attr("disabled", true);
-
-		const values = {};
-		$.each(form.serializeArray(), function(i, obj) {
-			values[obj.name] = obj.value;
-		});
-
-		storage.set("user", values.user);
-
-		socket.emit("auth", values);
-
-		return false;
-	});
 
 	if (!data.success) {
 		if (login.length === 0) {
