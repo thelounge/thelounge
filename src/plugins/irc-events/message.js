@@ -4,6 +4,7 @@ const Chan = require("../../models/chan");
 const Msg = require("../../models/msg");
 const LinkPrefetch = require("./link");
 const cleanIrcMessage = require("../../../client/js/libs/handlebars/ircmessageparser/cleanIrcMessage");
+const nickRegExp = /[\w[\]\\`^{|}-]{4,}/gi;
 
 module.exports = function(irc, network) {
 	const client = this;
@@ -88,6 +89,14 @@ module.exports = function(irc, network) {
 			highlight = network.highlightRegex.test(data.message);
 		}
 
+		const users = [];
+		let match;
+		while ((match = nickRegExp.exec(data.message))) {
+			if (chan.findUser(match[0])) {
+				users.push(match[0]);
+			}
+		}
+
 		const msg = new Msg({
 			type: data.type,
 			time: data.time,
@@ -95,6 +104,7 @@ module.exports = function(irc, network) {
 			text: data.message,
 			self: self,
 			highlight: highlight,
+			users: users,
 		});
 
 		// No prefetch URLs unless are simple MESSAGE or ACTION types
