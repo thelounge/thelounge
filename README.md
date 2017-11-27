@@ -40,13 +40,13 @@ Run this in a terminal to install (or upgrade) the latest stable release from
 When installation is complete, run:
 
 ```sh
-lounge start
+thelounge start
 ```
 
 For more information, read the [documentation](https://thelounge.github.io/docs/), [wiki](https://github.com/thelounge/lounge/wiki), or run:
 
 ```sh
-lounge --help
+thelounge --help
 ```
 
 ### Running from source
@@ -61,7 +61,7 @@ NODE_ENV=production npm run build
 npm start
 ```
 
-When installed like this, npm doesn't create a `lounge` executable. Use `npm start -- <command>` to run subcommands.
+When installed like this, npm doesn't create a `thelounge` executable. Use `npm start -- <command>` to run subcommands.
 
 ⚠️ While it is the most recent codebase, this is not production-ready! Run at
 your own risk. It is also not recommended to run this as root.

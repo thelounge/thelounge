@@ -58,6 +58,13 @@ require("./reset");
 require("./edit");
 require("./install");
 
+// TODO: Remove this when releasing The Lounge v3
+if (process.argv[1].endsWith(`${require("path").sep}lounge`)) {
+	log.warn(`The ${colors.red("lounge")} CLI is ${colors.bold("deprecated")} and will be removed in v3.`);
+	log.warn(`Use ${colors.green("thelounge")} instead.`);
+	process.argv[1] = "thelounge";
+}
+
 program.parse(process.argv);
 
 if (!program.args.length) {
