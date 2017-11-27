@@ -96,6 +96,7 @@ function parse(msg, preview, res, client) {
 	case "image/gif":
 	case "image/jpg":
 	case "image/jpeg":
+	case "image/webp":
 		if (res.size > (Helper.config.prefetchMaxImageSize * 1024)) {
 			return;
 		}
