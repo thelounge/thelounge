@@ -5,7 +5,8 @@ const expect = require("chai").expect;
 const request = require("request");
 const io = require("socket.io-client");
 
-describe("Server", () => {
+describe("Server", function() {
+	this.timeout(5000);
 	let server;
 
 	before(() => {
