@@ -70,8 +70,8 @@ ajv@^5.0.0, ajv@^5.1.0, ajv@^5.2.3, ajv@^5.3.0:
     json-schema-traverse "^0.3.0"
 
 ajv@^6.0.1, ajv@^6.1.0:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.2.1.tgz#28a6abc493a2abe0fb4c8507acaedb43fa550671"
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.2.0.tgz#afac295bbaa0152449e522742e4547c1ae9328d2"
   dependencies:
     fast-deep-equal "^1.0.0"
     fast-json-stable-stringify "^2.0.0"
@@ -1199,12 +1199,12 @@ caniuse-api@^1.5.2:
     lodash.uniq "^4.5.0"
 
 caniuse-db@^1.0.30000529, caniuse-db@^1.0.30000634, caniuse-db@^1.0.30000639:
-  version "1.0.30000813"
-  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000813.tgz#e0a1c603f8880ad787b2a35652b2733f32a5e29a"
+  version "1.0.30000811"
+  resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000811.tgz#19efb9238393d40078332c34485c818d641c4305"
 
 caniuse-lite@^1.0.30000792, caniuse-lite@^1.0.30000809, caniuse-lite@^1.0.30000810:
-  version "1.0.30000813"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000813.tgz#7b25e27fdfb8d133f3c932b01f77452140fcc6c9"
+  version "1.0.30000811"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000811.tgz#0b6e40f2efccc27bd3cb52f91ee7ca4673d77d10"
 
 capture-stack-trace@^1.0.0:
   version "1.0.0"
@@ -2087,8 +2087,8 @@ ee-first@1.1.1:
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
 
 electron-to-chromium@^1.2.7, electron-to-chromium@^1.3.30, electron-to-chromium@^1.3.33:
-  version "1.3.36"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.36.tgz#0eabf71a9ebea9013fb1cc35a390e068624f27e8"
+  version "1.3.34"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.34.tgz#d93498f40391bb0c16a603d8241b9951404157ed"
 
 elliptic@^6.0.0:
   version "6.4.0"
@@ -4421,6 +4421,10 @@ nan@^2.3.0:
   version "2.9.2"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.9.2.tgz#f564d75f5f8f36a6d9456cca7a6c4fe488ab7866"
 
+nan@~2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.7.0.tgz#d95bf721ec877e08db276ed3fc6eb78f9083ad46"
+
 nanomatch@^1.2.9:
   version "1.2.9"
   resolved "https://registry.yarnpkg.com/nanomatch/-/nanomatch-1.2.9.tgz#879f7150cb2dab7a471259066c104eee6e0fa7c2"
@@ -4486,7 +4490,7 @@ node-libs-browser@^2.0.0:
     util "^0.10.3"
     vm-browserify "0.0.4"
 
-node-pre-gyp@^0.6.39:
+node-pre-gyp@^0.6.39, node-pre-gyp@~0.6.38:
   version "0.6.39"
   resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.6.39.tgz#c00e96860b23c0e1420ac7befc5044e1d78d8649"
   dependencies:
@@ -6272,6 +6276,13 @@ sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
 
+sqlite3@3.1.13:
+  version "3.1.13"
+  resolved "https://registry.yarnpkg.com/sqlite3/-/sqlite3-3.1.13.tgz#d990a05627392768de6278bafd1a31fdfe907dd9"
+  dependencies:
+    nan "~2.7.0"
+    node-pre-gyp "~0.6.38"
+
 sshpk@^1.7.0:
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/sshpk/-/sshpk-1.13.1.tgz#512df6da6287144316dc4c18fe1cf1d940739be3"
@@ -6979,7 +6990,7 @@ utils-merge@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
 
-uuid@^3.0.0, uuid@^3.0.1, uuid@^3.1.0:
+uuid@3.2.1, uuid@^3.0.0, uuid@^3.0.1, uuid@^3.1.0:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.2.1.tgz#12c528bb9d58d0b9265d9a2f6f0fe8be17ff1f14"
 

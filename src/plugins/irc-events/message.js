@@ -72,6 +72,7 @@ module.exports = function(irc, network) {
 						network: network.id,
 						chan: chan.getFilteredClone(true),
 					});
+					chan.loadMessages(client, network);
 				}
 			}
 
