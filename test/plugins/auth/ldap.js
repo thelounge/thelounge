@@ -109,6 +109,8 @@ function testLdapAuth() {
 }
 
 describe("LDAP authentication plugin", function() {
+	this.slow(200);
+
 	before((done) => {
 		this.server = startLdapServer(done);
 	});

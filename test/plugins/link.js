@@ -7,6 +7,8 @@ const Helper = require("../../src/helper");
 const link = require("../../src/plugins/irc-events/link.js");
 
 describe("Link plugin", function() {
+	this.slow(200);
+
 	before(function(done) {
 		this.app = util.createWebserver();
 		this.app.get("/real-test-image.png", function(req, res) {

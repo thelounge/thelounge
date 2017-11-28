@@ -41,7 +41,9 @@ describe("Server", () => {
 		});
 	});
 
-	describe("WebSockets", () => {
+	describe("WebSockets", function() {
+		this.slow(300);
+
 		let client;
 
 		before((done) => {
