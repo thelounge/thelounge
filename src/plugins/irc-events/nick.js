@@ -38,7 +38,7 @@ module.exports = function(irc, network) {
 
 			msg = new Msg({
 				time: data.time,
-				from: user,
+				from: user.value(),
 				type: Msg.Type.NICK,
 				new_nick: data.new_nick,
 				self: self,

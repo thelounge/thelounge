@@ -69,7 +69,7 @@ module.exports = function(irc, network) {
 			const msg = new Msg({
 				time: data.time,
 				type: Msg.Type.MODE,
-				from: targetChan.getUser(data.nick),
+				from: targetChan.getUser(data.nick).value(),
 				text: text,
 				self: data.nick === irc.user.nick,
 			});

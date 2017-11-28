@@ -15,8 +15,8 @@ module.exports = function(irc, network) {
 		const msg = new Msg({
 			type: Msg.Type.INVITE,
 			time: data.time,
-			from: chan.getUser(data.nick),
-			invited: chan.getUser(data.invited),
+			from: chan.getUser(data.nick).value(),
+			invited: chan.getUser(data.invited).value(),
 			channel: data.channel,
 			highlight: true,
 			invitedYou: data.invited === irc.user.nick,

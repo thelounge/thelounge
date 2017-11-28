@@ -15,7 +15,7 @@ module.exports = function(irc, network) {
 		const msg = new Msg({
 			time: data.time,
 			type: Msg.Type.TOPIC,
-			from: data.nick && chan.getUser(data.nick),
+			from: data.nick && chan.getUser(data.nick).value(),
 			text: data.topic,
 			self: data.nick === irc.user.nick,
 		});
@@ -37,7 +37,7 @@ module.exports = function(irc, network) {
 
 		const msg = new Msg({
 			type: Msg.Type.TOPIC_SET_BY,
-			from: chan.getUser(data.nick),
+			from: chan.getUser(data.nick).value(),
 			when: new Date(data.when * 1000),
 			self: data.nick === irc.user.nick,
 		});

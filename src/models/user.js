@@ -30,3 +30,10 @@ User.prototype.toJSON = function() {
 		lastMessage: this.lastMessage,
 	};
 };
+
+User.prototype.value = function() {
+	return {
+		nick: this.nick,
+		mode: this.mode,
+	};
+};
