@@ -249,7 +249,7 @@ describe("parse Handlebars helper", () => {
 			input: "test, MaxLeiter",
 			expected:
 				"test, " +
-				"<span role=\"button\" class=\"user color-12\" data-name=\"MaxLeiter\">" +
+				'<span role="button" class="user color-12" data-name="MaxLeiter">' +
 					"MaxLeiter" +
 				"</span>",
 		}];
@@ -265,7 +265,7 @@ describe("parse Handlebars helper", () => {
 			users: ["MaxLeiter, test"],
 			input: "#test-channelMaxLeiter",
 			expected:
-				"<span class=\"inline-channel\" role=\"button\" tabindex=\"0\" data-chan=\"#test-channelMaxLeiter\">" +
+				'<span class="inline-channel" role="button" tabindex="0" data-chan="#test-channelMaxLeiter">' +
 					"#test-channelMaxLeiter" +
 				"</span>",
 		},
@@ -273,7 +273,7 @@ describe("parse Handlebars helper", () => {
 			users: ["MaxLeiter, test"],
 			input: "https://www.MaxLeiter.com/test",
 			expected:
-				"<a href=\"https://www.MaxLeiter.com/test\" target=\"_blank\" rel=\"noopener\">" +
+				'<a href="https://www.MaxLeiter.com/test" target="_blank" rel="noopener">' +
 					"https://www.MaxLeiter.com/test" +
 				"</a>",
 		},
