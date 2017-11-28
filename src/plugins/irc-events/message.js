@@ -100,7 +100,7 @@ module.exports = function(irc, network) {
 		const msg = new Msg({
 			type: data.type,
 			time: data.time,
-			from: user,
+			from: user.value(),
 			text: data.message,
 			self: self,
 			highlight: highlight,

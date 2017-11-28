@@ -18,7 +18,7 @@ module.exports = function(irc, network) {
 				type: away ? Msg.Type.AWAY : Msg.Type.BACK,
 				text: away || "",
 				time: data.time,
-				from: user,
+				from: user.value(),
 			});
 
 			chan.pushMessage(client, msg);

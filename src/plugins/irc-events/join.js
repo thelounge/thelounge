@@ -28,7 +28,7 @@ module.exports = function(irc, network) {
 		const user = new User({nick: data.nick});
 		const msg = new Msg({
 			time: data.time,
-			from: user,
+			from: user.value(),
 			hostmask: data.ident + "@" + data.hostname,
 			type: Msg.Type.JOIN,
 			self: data.nick === irc.user.nick,

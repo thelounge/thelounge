@@ -15,7 +15,7 @@ module.exports = function(irc, network) {
 		const msg = new Msg({
 			type: Msg.Type.CTCP,
 			time: data.time,
-			from: chan.getUser(data.nick),
+			from: chan.getUser(data.nick).value(),
 			ctcpType: data.type,
 			ctcpMessage: data.message,
 		});

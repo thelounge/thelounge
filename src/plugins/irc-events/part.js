@@ -28,7 +28,7 @@ module.exports = function(irc, network) {
 				time: data.time,
 				text: data.message || "",
 				hostmask: data.ident + "@" + data.hostname,
-				from: user,
+				from: user.value(),
 			});
 			chan.pushMessage(client, msg);
 
