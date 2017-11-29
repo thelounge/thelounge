@@ -1,6 +1,7 @@
 {
   "all": true,
   "exclude": [
+    "coverage",
     "public/",
     "test/",
     "webpack.config.js"
