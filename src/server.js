@@ -420,24 +420,11 @@ function initializeClient(socket, client, token, lastMessage) {
 	socket.join(client.id);
 
 	const sendInitEvent = (tokenToSend) => {
-		let networks = client.networks;
-
-		if (lastMessage > -1) {
-			// We need a deep cloned object because we are going to remove unneeded messages
-			networks = _.cloneDeep(networks);
-
-			networks.forEach((network) => {
-				network.channels.forEach((channel) => {
-					channel.messages = channel.messages.filter((m) => m.id > lastMessage);
-				});
-			});
-		}
-
 		socket.emit("init", {
 			applicationServerKey: manager.webPush.vapidKeys.publicKey,
 			pushSubscription: client.config.sessions[token],
 			active: client.lastActiveChannel,
-			networks: networks,
+			networks: client.networks.map((network) => network.getFilteredClone(client.lastActiveChannel, lastMessage)),
 			token: tokenToSend,
 		});
 	};
