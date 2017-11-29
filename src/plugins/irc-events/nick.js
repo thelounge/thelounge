@@ -32,10 +32,6 @@ module.exports = function(irc, network) {
 				return;
 			}
 
-			chan.removeUser(user);
-			user.nick = data.new_nick;
-			chan.setUser(user);
-
 			msg = new Msg({
 				time: data.time,
 				from: user,
@@ -45,7 +41,9 @@ module.exports = function(irc, network) {
 			});
 			chan.pushMessage(client, msg);
 
+			chan.removeUser(user);
 			user.nick = data.new_nick;
+			chan.setUser(user);
 
 			client.emit("users", {
 				chan: chan.id,
