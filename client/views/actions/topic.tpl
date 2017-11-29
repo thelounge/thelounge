@@ -1,4 +1,4 @@
-{{#if from}}
+{{#if from.nick}}
 	{{> ../user_name from}}
 	has changed the topic to:
 {{else}}

@@ -7,7 +7,7 @@ var id = 0;
 class Msg {
 	constructor(attr) {
 		_.defaults(this, attr, {
-			from: "",
+			from: {},
 			id: id++,
 			previews: [],
 			text: "",
