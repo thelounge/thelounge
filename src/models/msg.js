@@ -6,6 +6,18 @@ var id = 0;
 
 class Msg {
 	constructor(attr) {
+		// Some properties need to be copied in the Msg object instead of referenced
+		if (attr) {
+			["from", "target"].forEach((prop) => {
+				if (attr[prop]) {
+					this[prop] = {
+						mode: attr[prop].mode,
+						nick: attr[prop].nick,
+					};
+				}
+			});
+		}
+
 		_.defaults(this, attr, {
 			from: {},
 			id: id++,

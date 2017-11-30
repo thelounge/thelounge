@@ -3,7 +3,7 @@ invited
 {{#if invitedYou}}
 	you
 {{else}}
-	{{> ../user_name invited}}
+	{{> ../user_name target}}
 {{/if}}
 to
 {{{parse channel}}}

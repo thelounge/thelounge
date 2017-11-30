@@ -3,8 +3,27 @@
 const expect = require("chai").expect;
 
 const Msg = require("../../src/models/msg");
+const User = require("../../src/models/user");
 
 describe("Msg", function() {
+	["from", "target"].forEach((prop) => {
+		it(`should keep a copy of the original user in the \`${prop}\` property`, function() {
+			const prefixLookup = {a: "&", o: "@"};
+			const user = new User({
+				modes: ["o"],
+				nick: "foo",
+			}, prefixLookup);
+			const msg = new Msg({[prop]: user});
+
+			// Mutating the user
+			user.setModes(["a"], prefixLookup);
+			user.nick = "bar";
+
+			// Message's `.from`/etc. should still refer to the original user
+			expect(msg[prop]).to.deep.equal({mode: "@", nick: "foo"});
+		});
+	});
+
 	describe("#findPreview(link)", function() {
 		const msg = new Msg({
 			previews: [{
