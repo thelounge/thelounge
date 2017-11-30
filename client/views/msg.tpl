@@ -3,7 +3,7 @@
 		{{tz time}}
 	</span>
 	<span class="from">
-		{{#if from}}
+		{{#if from.nick}}
 			{{> user_name from}}
 		{{/if}}
 	</span>
