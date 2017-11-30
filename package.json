@@ -55,7 +55,7 @@
     "spdy": "3.4.7",
     "ua-parser-js": "0.7.17",
     "urijs": "1.19.0",
-    "web-push": "3.2.4"
+    "web-push": "3.2.5"
   },
   "devDependencies": {
     "babel-core": "6.26.0",
