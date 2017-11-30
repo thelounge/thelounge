@@ -145,4 +145,91 @@ describe("Chan", function() {
 			]);
 		});
 	});
+
+	describe("#getFilteredClone(lastActiveChannel, lastMessage)", function() {
+		it("should send empty user list", function() {
+			const chan = new Chan();
+			chan.setUser(new User({nick: "test"}));
+
+			expect(chan.getFilteredClone().users).to.be.empty;
+		});
+
+		it("should keep necessary properties", function() {
+			const chan = new Chan();
+
+			expect(chan.getFilteredClone()).to.be.an("object").that.has.all.keys(
+				"firstUnread",
+				"highlight",
+				"id",
+				"key",
+				"messages",
+				"name",
+				"topic",
+				"type",
+				"unread",
+				"users"
+			);
+		});
+
+		it("should send only last message for non active channel", function() {
+			const chan = new Chan({
+				id: 1337,
+				messages: [
+					new Msg({id: 10}),
+					new Msg({id: 11}),
+					new Msg({id: 12}),
+					new Msg({id: 13}),
+				],
+			});
+
+			expect(chan.id).to.equal(1337);
+
+			const messages = chan.getFilteredClone(999).messages;
+
+			expect(messages).to.have.lengthOf(1);
+			expect(messages[0].id).to.equal(13);
+		});
+
+		it("should send more messages for active channel", function() {
+			const chan = new Chan({
+				id: 1337,
+				messages: [
+					new Msg({id: 10}),
+					new Msg({id: 11}),
+					new Msg({id: 12}),
+					new Msg({id: 13}),
+				],
+			});
+
+			expect(chan.id).to.equal(1337);
+
+			const messages = chan.getFilteredClone(1337).messages;
+
+			expect(messages).to.have.lengthOf(4);
+			expect(messages[0].id).to.equal(10);
+			expect(messages[3].id).to.equal(13);
+		});
+
+		it("should only send new messages", function() {
+			const chan = new Chan({
+				id: 1337,
+				messages: [
+					new Msg({id: 10}),
+					new Msg({id: 11}),
+					new Msg({id: 12}),
+					new Msg({id: 13}),
+					new Msg({id: 14}),
+					new Msg({id: 15}),
+				],
+			});
+
+			expect(chan.id).to.equal(1337);
+
+			const messages = chan.getFilteredClone(1337, 12).messages;
+
+			expect(messages).to.have.lengthOf(3);
+			expect(messages[0].id).to.equal(13);
+			expect(messages[2].id).to.equal(15);
+		});
+	});
 });
