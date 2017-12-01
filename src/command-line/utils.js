@@ -23,12 +23,7 @@ class Utils {
 			return home;
 		}
 
-		const distConfig = path.resolve(path.join(
-			__dirname,
-			"..",
-			"..",
-			".thelounge_home"
-		));
+		let distConfig;
 
 		// TODO: Remove this section when releasing The Lounge v3
 		const deprecatedDistConfig = path.resolve(path.join(
@@ -39,9 +34,16 @@ class Utils {
 		));
 		if (fs.existsSync(deprecatedDistConfig)) {
 			log.warn(`${colors.green(".lounge_home")} is ${colors.bold("deprecated")} and will be ignored as of The Lounge v3.`);
-			log.warn(`Renaming to ${colors.green(".thelounge_home")} instead.`);
+			log.warn(`Use ${colors.green(".thelounge_home")} instead.`);
 
-			fs.renameSync(deprecatedDistConfig, distConfig);
+			distConfig = deprecatedDistConfig;
+		} else {
+			distConfig = path.resolve(path.join(
+				__dirname,
+				"..",
+				"..",
+				".thelounge_home"
+			));
 		}
 
 		home = fs.readFileSync(distConfig, "utf-8").trim();
