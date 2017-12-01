@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v2.7.0-pre.1 - 2017-11-30 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.6.0...v2.7.0-pre.1)
+
+This is a release candidate for v2.7.0 to ensure maximum stability for public release.
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+npm install -g thelounge@next
+```
+
 ## v2.6.0 - 2017-11-18
 
 For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.5.0...v2.6.0) and [milestone](https://github.com/thelounge/lounge/milestone/26?closed=1).
