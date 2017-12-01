@@ -132,10 +132,20 @@ module.exports.initialize = () => {
 		.trigger("change");
 
 	$("#desktopNotifications").on("change", function() {
-		if ($(this).prop("checked") && Notification.permission !== "granted") {
-			Notification.requestPermission(updateDesktopNotificationStatus);
+		if ($(this).prop("checked")) {
+			requestPermissionIfNeeded();
 		}
 	});
+
+	var requestPermissionIfNeeded = function() {
+		if (Notification.permission !== "granted") {
+			Notification.requestPermission(updateDesktopNotificationStatus);
+		}
+	};
+
+	if (options.desktopNotifications) {
+		requestPermissionIfNeeded();
+	}
 
 	// Updates the checkbox and warning in settings when the Settings page is
 	// opened or when the checkbox state is changed.
