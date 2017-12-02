@@ -74,7 +74,7 @@
     "graphql-request": "1.4.0",
     "handlebars": "4.0.11",
     "handlebars-loader": "1.6.0",
-    "intersection-observer": "0.4.3",
+    "intersection-observer": "0.5.0",
     "jquery": "3.2.1",
     "jquery-textcomplete": "1.8.4",
     "jquery-ui": "1.12.1",
