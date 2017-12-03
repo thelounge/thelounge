@@ -76,6 +76,15 @@
 
 	<div class="help-item">
 		<div class="subject">
+			<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>M</kbd>
+		</div>
+		<div class="description">
+			<p>Mark all text typed after this shortcut as monospaced.</p>
+		</div>
+	</div>
+
+	<div class="help-item">
+		<div class="subject">
 			<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>O</kbd>
 		</div>
 		<div class="description">

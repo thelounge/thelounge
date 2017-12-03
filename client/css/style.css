@@ -80,6 +80,7 @@ button {
 
 code,
 kbd,
+.irc-monospace,
 textarea#user-specified-css-input {
 	font-family: Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
 }
