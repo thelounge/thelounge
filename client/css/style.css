@@ -80,6 +80,7 @@ button {
 
 code,
 kbd,
+.irc-monospace,
 textarea#user-specified-css-input {
 	font-family: Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
 }
@@ -1945,6 +1946,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 .irc-underline {
 	text-decoration: underline;
+}
+
+.irc-strikethrough {
+	text-decoration: line-through;
 }
 
 .irc-italic {

@@ -236,6 +236,14 @@ describe("parse Handlebars helper", () => {
 		input: "\x1funderline",
 		expected: '<span class="irc-underline">underline</span>',
 	}, {
+		name: "strikethrough",
+		input: "\x1estrikethrough",
+		expected: '<span class="irc-strikethrough">strikethrough</span>',
+	}, {
+		name: "monospace",
+		input: "\x11monospace",
+		expected: '<span class="irc-monospace">monospace</span>',
+	}, {
 		name: "resets",
 		input: "\x02bold\x038yellow\x02nonBold\x03default",
 		expected:
