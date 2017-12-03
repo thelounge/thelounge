@@ -208,6 +208,8 @@ describe("Chan", function() {
 			expect(messages).to.have.lengthOf(4);
 			expect(messages[0].id).to.equal(10);
 			expect(messages[3].id).to.equal(13);
+
+			expect(chan.getFilteredClone(true).messages).to.have.lengthOf(4);
 		});
 
 		it("should only send new messages", function() {

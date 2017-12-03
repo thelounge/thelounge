@@ -18,7 +18,7 @@ module.exports = function(irc, network) {
 			client.save();
 			client.emit("join", {
 				network: network.id,
-				chan: chan,
+				chan: chan.getFilteredClone(true),
 			});
 
 			// Request channels' modes
