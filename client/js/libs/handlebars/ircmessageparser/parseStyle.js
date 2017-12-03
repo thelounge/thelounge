@@ -8,6 +8,7 @@ const RESET = "\x0f";
 const REVERSE = "\x16";
 const ITALIC = "\x1d";
 const UNDERLINE = "\x1f";
+const STRIKETHROUGH = "\x1e";
 
 // Color code matcher, with format `XX,YY` where both `XX` and `YY` are
 // integers, `XX` is the text color and `YY` is an optional background color.
@@ -22,7 +23,7 @@ const controlCodesRx = /[\u0000-\u001F]/g;
 // Converts a given text into an array of objects, each of them representing a
 // similarly styled section of the text. Each object carries the `text`, style
 // information (`bold`, `textColor`, `bgcolor`, `reverse`, `italic`,
-// `underline`), and `start`/`end` cursors.
+// `underline`, `strikethrough`), and `start`/`end` cursors.
 function parseStyle(text) {
 	const result = [];
 	let start = 0;
@@ -30,7 +31,7 @@ function parseStyle(text) {
 
 	// At any given time, these carry style information since last time a styling
 	// control code was met.
-	let colorCodes, bold, textColor, bgColor, hexColor, hexBgColor, reverse, italic, underline;
+	let colorCodes, bold, textColor, bgColor, hexColor, hexBgColor, reverse, italic, underline, strikethrough;
 
 	const resetStyle = () => {
 		bold = false;
@@ -41,6 +42,7 @@ function parseStyle(text) {
 		reverse = false;
 		italic = false;
 		underline = false;
+		strikethrough = false;
 	};
 	resetStyle();
 
@@ -68,6 +70,7 @@ function parseStyle(text) {
 				reverse,
 				italic,
 				underline,
+				strikethrough,
 				text: processedText,
 				start: fragmentStart,
 				end: fragmentStart + processedText.length,
@@ -156,6 +159,11 @@ function parseStyle(text) {
 			emitFragment();
 			underline = !underline;
 			break;
+
+		case STRIKETHROUGH:
+			emitFragment();
+			strikethrough = !strikethrough;
+			break;
 		}
 
 		// Evaluate the next character at the next iteration
@@ -168,7 +176,7 @@ function parseStyle(text) {
 	return result;
 }
 
-const properties = ["bold", "textColor", "bgColor", "hexColor", "hexBgColor", "italic", "underline", "reverse"];
+const properties = ["bold", "textColor", "bgColor", "hexColor", "hexBgColor", "italic", "underline", "reverse", "strikethrough"];
 
 function prepare(text) {
 	return parseStyle(text)

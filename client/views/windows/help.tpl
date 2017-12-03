@@ -67,6 +67,15 @@
 
 	<div class="help-item">
 		<div class="subject">
+			<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>S</kbd>
+		</div>
+		<div class="description">
+			<p>Mark all text typed after this shortcut as struck through.</p>
+		</div>
+	</div>
+
+	<div class="help-item">
+		<div class="subject">
 			<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>O</kbd>
 		</div>
 		<div class="description">

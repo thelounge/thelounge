@@ -72,6 +72,7 @@ const colorsHotkeys = {
 	u: "\x1F",
 	i: "\x1D",
 	o: "\x0F",
+	s: "\x1e",
 };
 
 for (const hotkey in colorsHotkeys) {

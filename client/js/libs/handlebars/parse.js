@@ -28,6 +28,9 @@ function createFragment(fragment) {
 	if (fragment.underline) {
 		classes.push("irc-underline");
 	}
+	if (fragment.strikethrough) {
+		classes.push("irc-strikethrough");
+	}
 
 	let attributes = classes.length ? ` class="${classes.join(" ")}"` : "";
 	const escapedText = Handlebars.Utils.escapeExpression(fragment.text);
