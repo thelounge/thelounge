@@ -34,6 +34,6 @@ program
 				log.info(`${i + 1}. ${colors.bold(user)}`);
 			});
 		} else {
-			log.info(`There are currently no users. Create one with ${colors.bold("lounge add <name>")}.`);
+			log.info(`There are currently no users. Create one with ${colors.bold("thelounge add <name>")}.`);
 		}
 	});

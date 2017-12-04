@@ -10,7 +10,7 @@ function findEmoji(text) {
 		result.push({
 			start: match.index,
 			end: match.index + match[0].length,
-			emoji: match[0]
+			emoji: match[0],
 		});
 	}
 

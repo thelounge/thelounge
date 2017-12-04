@@ -1,10 +1,14 @@
 {
   "name": "thelounge",
   "description": "The self-hosted Web IRC client",
-  "version": "2.5.0",
+  "version": "2.7.0-pre.2",
+  "publishConfig": {
+    "tag": "next"
+  },
   "preferGlobal": true,
   "bin": {
-    "lounge": "index.js"
+    "lounge": "index.js",
+    "thelounge": "index.js"
   },
   "repository": {
     "type": "git",
@@ -15,14 +19,12 @@
     "coverage": "nyc mocha",
     "start": "node index start",
     "start-dev": "npm-run-all --parallel watch start",
-    "build": "npm-run-all build:*",
-    "build:webpack": "webpack",
+    "build": "webpack",
     "watch": "webpack --watch",
-    "test": "npm-run-all -c test:* lint",
-    "test:mocha": "mocha",
-    "lint": "npm-run-all -c lint:*",
-    "lint:js": "eslint . --report-unused-disable-directives",
-    "lint:css": "stylelint \"client/**/*.css\""
+    "test": "npm-run-all --aggregate-output --parallel --continue-on-error test:* lint:*",
+    "test:mocha": "mocha --colors",
+    "lint:js": "eslint . --report-unused-disable-directives --color",
+    "lint:css": "stylelint --color --report-needless-disables=error \"client/**/*.css\""
   },
   "keywords": [
     "lounge",
@@ -41,14 +43,13 @@
     "bcryptjs": "2.4.3",
     "cheerio": "0.22.0",
     "colors": "1.1.2",
-    "commander": "2.11.0",
+    "commander": "2.12.2",
     "express": "4.16.2",
-    "express-handlebars": "3.0.0",
     "fs-extra": "4.0.2",
     "irc-framework": "2.9.1",
     "ldapjs": "1.0.1",
     "lodash": "4.17.4",
-    "moment": "2.19.1",
+    "moment": "2.19.3",
     "package-json": "4.0.1",
     "read": "1.0.7",
     "request": "2.83.0",
@@ -57,32 +58,33 @@
     "spdy": "3.4.7",
     "ua-parser-js": "0.7.17",
     "urijs": "1.19.0",
-    "web-push": "3.2.4"
+    "web-push": "3.2.5"
   },
   "devDependencies": {
     "babel-core": "6.26.0",
     "babel-loader": "7.1.2",
     "babel-preset-env": "1.6.1",
     "chai": "4.1.2",
-    "copy-webpack-plugin": "4.2.0",
+    "copy-webpack-plugin": "4.2.3",
     "css.escape": "1.5.1",
     "emoji-regex": "6.5.1",
-    "eslint": "4.10.0",
+    "eslint": "4.12.1",
     "font-awesome": "4.7.0",
     "fuzzy": "0.1.3",
+    "graphql-request": "1.4.0",
     "handlebars": "4.0.11",
     "handlebars-loader": "1.6.0",
-    "intersection-observer": "0.4.2",
+    "intersection-observer": "0.5.0",
     "jquery": "3.2.1",
     "jquery-textcomplete": "1.8.4",
     "jquery-ui": "1.12.1",
     "mocha": "4.0.1",
     "mousetrap": "1.6.1",
-    "npm-run-all": "4.1.1",
+    "npm-run-all": "4.1.2",
     "nyc": "11.3.0",
     "socket.io-client": "2.0.4",
-    "stylelint": "8.2.0",
-    "stylelint-config-standard": "17.0.0",
-    "webpack": "3.8.1"
+    "stylelint": "8.3.1",
+    "stylelint-config-standard": "18.0.0",
+    "webpack": "3.9.1"
   }
 }

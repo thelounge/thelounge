@@ -13,9 +13,9 @@ require("./libs/jquery/stickyscroll");
 const slideoutMenu = require("./libs/slideout");
 const templates = require("../views");
 const socket = require("./socket");
+const render = require("./render");
 require("./socket-events");
 const storage = require("./localStorage");
-require("./options");
 const utils = require("./utils");
 require("./autocompletion");
 require("./webpush");
@@ -28,7 +28,6 @@ $(function() {
 
 	$(document.body).data("app-name", document.title);
 
-	var windows = $("#windows");
 	var viewport = $("#viewport");
 	var sidebarSlide = slideoutMenu(viewport[0], sidebar[0]);
 	var contextMenuContainer = $("#context-menu-container");
@@ -82,19 +81,19 @@ $(function() {
 			output = templates.contextmenu_item({
 				class: "user",
 				text: target.text(),
-				data: target.data("name")
+				data: target.data("name"),
 			});
 		} else if (target.hasClass("chan")) {
 			output = templates.contextmenu_item({
 				class: "chan",
 				text: target.data("title"),
-				data: target.data("target")
+				data: target.data("target"),
 			});
 			output += templates.contextmenu_divider();
 			output += templates.contextmenu_item({
 				class: "close",
 				text: target.hasClass("lobby") ? "Disconnect" : target.hasClass("channel") ? "Leave" : "Close",
-				data: target.data("target")
+				data: target.data("target"),
 			});
 		}
 
@@ -184,33 +183,19 @@ $(function() {
 		input.val("");
 		resetInputHeight(input.get(0));
 
-		if (text.indexOf("/collapse") === 0) {
-			$(".chan.active .toggle-preview.opened").click();
-			return;
-		}
-
-		if (text.indexOf("/expand") === 0) {
-			$(".chan.active .toggle-preview:not(.opened)").click();
-			return;
+		if (text.charAt(0) === "/") {
+			const args = text.substr(1).split(" ");
+			const cmd = args.shift().toLowerCase();
+			if (typeof utils.inputCommands[cmd] === "function" && utils.inputCommands[cmd](args)) {
+				return;
+			}
 		}
 
 		socket.emit("input", {
 			target: chat.data("id"),
-			text: text
+			text: text,
 		});
 	});
-
-	function findCurrentNetworkChan(name) {
-		name = name.toLowerCase();
-
-		return $(".network .chan.active")
-			.parent(".network")
-			.find(".chan")
-			.filter(function() {
-				return $(this).data("title").toLowerCase() === name;
-			})
-			.first();
-	}
 
 	$("button#set-nick").on("click", function() {
 		utils.toggleNickEditor(true);
@@ -240,7 +225,7 @@ $(function() {
 
 		socket.emit("input", {
 			target: chat.data("id"),
-			text: "/nick " + newNick
+			text: "/nick " + newNick,
 		});
 	}
 
@@ -268,14 +253,14 @@ $(function() {
 
 	chat.on("click", ".inline-channel", function() {
 		var name = $(this).data("chan");
-		var chan = findCurrentNetworkChan(name);
+		var chan = utils.findCurrentNetworkChan(name);
 
 		if (chan.length) {
 			chan.click();
 		} else {
 			socket.emit("input", {
 				target: chat.data("id"),
-				text: "/join " + name
+				text: "/join " + name,
 			});
 		}
 	});
@@ -286,7 +271,7 @@ $(function() {
 
 	chat.on("click", ".user", function() {
 		var name = $(this).data("name");
-		var chan = findCurrentNetworkChan(name);
+		var chan = utils.findCurrentNetworkChan(name);
 
 		if (chan.length) {
 			chan.click();
@@ -294,7 +279,7 @@ $(function() {
 
 		socket.emit("input", {
 			target: chat.data("id"),
-			text: "/whois " + name
+			text: "/whois " + name,
 		});
 	});
 
@@ -364,14 +349,17 @@ $(function() {
 			.find(".chat")
 			.unsticky();
 
-		var lastActiveChan = lastActive
-			.find(".chan.active")
-			.removeClass("active");
+		const lastActiveChan = lastActive.find(".chan.active");
 
-		lastActiveChan
-			.find(".unread-marker")
-			.data("unread-id", 0)
-			.appendTo(lastActiveChan.find(".messages"));
+		if (lastActiveChan.length > 0) {
+			lastActiveChan
+				.removeClass("active")
+				.find(".unread-marker")
+				.data("unread-id", 0)
+				.appendTo(lastActiveChan.find(".messages"));
+
+			render.trimMessageInChannel(lastActiveChan, 100);
+		}
 
 		var chan = $(target)
 			.addClass("active")
@@ -434,11 +422,11 @@ $(function() {
 		}
 		socket.emit("input", {
 			target: chan.data("id"),
-			text: cmd
+			text: cmd,
 		});
 		chan.css({
 			transition: "none",
-			opacity: 0.4
+			opacity: 0.4,
 		});
 		return false;
 	});
@@ -472,7 +460,7 @@ $(function() {
 		const fuzzyOptions = {
 			pre: "<b>",
 			post: "</b>",
-			extract: (el) => $(el).text()
+			extract: (el) => $(el).text(),
 		};
 
 		const result = fuzzy.filter(
@@ -483,18 +471,6 @@ $(function() {
 
 		names.hide();
 		container.html(templates.user_filtered({matches: result})).show();
-	});
-
-	var forms = $("#sign-in, #connect, #change-password");
-
-	windows.on("show", "#sign-in", function() {
-		$(this).find("input").each(function() {
-			var self = $(this);
-			if (self.val() === "") {
-				self.focus();
-				return false;
-			}
-		});
 	});
 
 	if ($("body").hasClass("public") && (window.location.hash === "#connect" || window.location.hash === "")) {
@@ -522,56 +498,6 @@ $(function() {
 			}
 		});
 	}
-
-	forms.on("submit", "form", function(e) {
-		e.preventDefault();
-		var event = "auth";
-		var form = $(this);
-		form.find(".btn").attr("disabled", true);
-
-		if (form.closest(".window").attr("id") === "connect") {
-			event = "conn";
-		} else if (form.closest("div").attr("id") === "change-password") {
-			event = "change-password";
-		}
-
-		var values = {};
-		$.each(form.serializeArray(), function(i, obj) {
-			if (obj.value !== "") {
-				values[obj.name] = obj.value;
-			}
-		});
-
-		if (values.user) {
-			storage.set("user", values.user);
-		}
-
-		socket.emit(
-			event, values
-		);
-	});
-
-	forms.on("focusin", ".nick", function() {
-		// Need to set the first "lastvalue", so it can be used in the below function
-		var nick = $(this);
-		nick.data("lastvalue", nick.val());
-	});
-
-	forms.on("input", ".nick", function() {
-		var nick = $(this).val();
-		var usernameInput = forms.find(".username");
-
-		// Because this gets called /after/ it has already changed, we need use the previous value
-		var lastValue = $(this).data("lastvalue");
-
-		// They were the same before the change, so update the username field
-		if (usernameInput.val() === lastValue) {
-			usernameInput.val(nick);
-		}
-
-		// Store the "previous" value, for next time
-		$(this).data("lastvalue", nick);
-	});
 
 	$(document).on("visibilitychange focus click", () => {
 		if (sidebar.find(".highlight").length === 0) {
@@ -620,7 +546,7 @@ $(function() {
 			// Emit the click to the target, while making sure it is not going to be
 			// added to the state again.
 			$(clickTarget).trigger("click", {
-				pushState: false
+				pushState: false,
 			});
 		}
 	});

@@ -9,10 +9,10 @@ const themes = new Map();
 
 module.exports = {
 	getAll: getAll,
-	getFilename: getFilename
+	getFilename: getFilename,
 };
 
-fs.readdir("client/themes/", (err, builtInThemes) => {
+fs.readdir(path.join(__dirname, "..", "..", "public", "themes"), (err, builtInThemes) => {
 	if (err) {
 		return;
 	}
@@ -49,8 +49,8 @@ function makeLocalThemeObject(css) {
 	const themeName = css.slice(0, -4);
 	return {
 		displayName: themeName.charAt(0).toUpperCase() + themeName.slice(1),
-		filename: path.join(__dirname, "..", "client", "themes", `${themeName}.css`),
-		name: themeName
+		filename: path.join(__dirname, "..", "..", "public", "themes", `${themeName}.css`),
+		name: themeName,
 	};
 }
 
@@ -80,6 +80,6 @@ function makePackageThemeObject(moduleName) {
 	return {
 		displayName: displayName,
 		filename: filename,
-		name: moduleName
+		name: moduleName,
 	};
 }

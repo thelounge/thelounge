@@ -2,10 +2,13 @@
 
 const Handlebars = require("handlebars/runtime");
 const parseStyle = require("./ircmessageparser/parseStyle");
+const anyIntersection = require("./ircmessageparser/anyIntersection");
 const findChannels = require("./ircmessageparser/findChannels");
 const findLinks = require("./ircmessageparser/findLinks");
 const findEmoji = require("./ircmessageparser/findEmoji");
+const findNames = require("./ircmessageparser/findNames");
 const merge = require("./ircmessageparser/merge");
+const colorClass = require("./colorClass");
 
 // Create an HTML `span` with styling information for a given fragment
 function createFragment(fragment) {
@@ -25,6 +28,12 @@ function createFragment(fragment) {
 	if (fragment.underline) {
 		classes.push("irc-underline");
 	}
+	if (fragment.strikethrough) {
+		classes.push("irc-strikethrough");
+	}
+	if (fragment.monospace) {
+		classes.push("irc-monospace");
+	}
 
 	let attributes = classes.length ? ` class="${classes.join(" ")}"` : "";
 	const escapedText = Handlebars.Utils.escapeExpression(fragment.text);
@@ -36,7 +45,7 @@ function createFragment(fragment) {
 			attributes += `;background-color:#${fragment.hexBgColor}`;
 		}
 
-		attributes += "\"";
+		attributes += '"';
 	}
 
 	if (attributes.length) {
@@ -46,9 +55,14 @@ function createFragment(fragment) {
 	return escapedText;
 }
 
-// Transform an IRC message potentially filled with styling control codes, URLs
-// and channels into a string of HTML elements to display on the client.
-module.exports = function parse(text) {
+// Transform an IRC message potentially filled with styling control codes, URLs,
+// nicknames, and channels into a string of HTML elements to display on the client.
+module.exports = function parse(text, users) {
+	// if it's not the users we're expecting, but rather is passed from Handlebars (occurs when users passed to template is null or undefined)
+	if (users && users.hash) {
+		users = [];
+	}
+
 	// Extract the styling information and get the plain text version from it
 	const styleFragments = parseStyle(text);
 	const cleanText = styleFragments.map((fragment) => fragment.text).join("");
@@ -61,14 +75,24 @@ module.exports = function parse(text) {
 	const channelParts = findChannels(cleanText, channelPrefixes, userModes);
 	const linkParts = findLinks(cleanText);
 	const emojiParts = findEmoji(cleanText);
+	const nameParts = findNames(cleanText, (users || []));
 
 	// Sort all parts identified based on their position in the original text
 	const parts = channelParts
 		.concat(linkParts)
 		.concat(emojiParts)
-		.sort((a, b) => a.start - b.start);
+		.concat(nameParts)
+		.sort((a, b) => a.start - b.start || b.end - a.end)
+		.reduce((prev, curr) => {
+			const intersection = prev.some((p) => anyIntersection(p, curr));
 
-	// Merge the styling information with the channels / URLs / text objects and
+			if (intersection) {
+				return prev;
+			}
+			return prev.concat([curr]);
+		}, []);
+
+	// Merge the styling information with the channels / URLs / nicks / text objects and
 	// generate HTML strings with the resulting fragments
 	return merge(parts, styleFragments).map((textPart) => {
 		// Create HTML strings with styling information
@@ -83,6 +107,9 @@ module.exports = function parse(text) {
 			return `<span class="inline-channel" role="button" tabindex="0" data-chan="${escapedChannel}">${fragments}</span>`;
 		} else if (textPart.emoji) {
 			return `<span class="emoji">${fragments}</span>`;
+		} else if (textPart.nick) {
+			const nick = Handlebars.Utils.escapeExpression(textPart.nick);
+			return `<span role="button" class="user ${colorClass(nick)}" data-name="${nick}">${fragments}</span>`;
 		}
 
 		return fragments;

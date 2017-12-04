@@ -76,7 +76,7 @@ module.exports = {
 	// which in result fixes mixed content warnings.
 	//
 	// If storage is enabled, The Lounge will fetch and store images and thumbnails
-	// in the `${LOUNGE_HOME}/storage` folder.
+	// in the `${THELOUNGE_HOME}/storage` folder.
 	//
 	// Images are deleted when they are no longer referenced by any message (controlled by maxHistory),
 	// and the folder is cleaned up on every The Lounge restart.
@@ -172,7 +172,7 @@ module.exports = {
 		// @type     string
 		// @default  "UTC+00:00"
 		//
-		timezone: "UTC+00:00"
+		timezone: "UTC+00:00",
 	},
 
 	//
@@ -264,7 +264,7 @@ module.exports = {
 		// @type     string
 		// @default  "#thelounge"
 		//
-		join: "#thelounge"
+		join: "#thelounge",
 	},
 
 	//
@@ -316,7 +316,7 @@ module.exports = {
 		// @example  "sslcert/bundle.pem"
 		// @default  ""
 		//
-		ca: ""
+		ca: "",
 	},
 
 	//
@@ -348,7 +348,7 @@ module.exports = {
 		// @type     int
 		// @default  113
 		//
-		port: 113
+		port: 113,
 	},
 
 	//
@@ -482,9 +482,9 @@ module.exports = {
 			// @type     string
 			// @default  "sub"
 			//
-			scope: "sub"
+			scope: "sub",
 
-		}
+		},
 	},
 
 	// Extra debugging

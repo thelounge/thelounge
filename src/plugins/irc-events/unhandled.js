@@ -1,9 +1,9 @@
 "use strict";
 
-var Msg = require("../../models/msg");
+const Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
-	var client = this;
+	const client = this;
 
 	irc.on("unknown command", function(command) {
 		// Do not display users own name
@@ -14,7 +14,7 @@ module.exports = function(irc, network) {
 		network.channels[0].pushMessage(client, new Msg({
 			type: Msg.Type.UNHANDLED,
 			command: command.command,
-			params: command.params
+			params: command.params,
 		}), true);
 	});
 };

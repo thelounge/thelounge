@@ -4,6 +4,7 @@ const cheerio = require("cheerio");
 const request = require("request");
 const url = require("url");
 const Helper = require("../../helper");
+const cleanIrcMessage = require("../../../client/js/libs/handlebars/ircmessageparser/cleanIrcMessage");
 const findLinks = require("../../../client/js/libs/handlebars/ircmessageparser/findLinks");
 const storage = require("../storage");
 
@@ -15,7 +16,7 @@ module.exports = function(client, chan, msg) {
 	}
 
 	// Remove all IRC formatting characters before searching for links
-	const cleanText = Helper.cleanIrcMessage(msg.text);
+	const cleanText = cleanIrcMessage(msg.text);
 
 	// We will only try to prefetch http(s) links
 	const links = findLinks(cleanText).filter((w) => /^https?:\/\//.test(w.link));
@@ -52,17 +53,17 @@ function parse(msg, preview, res, client) {
 		var $ = cheerio.load(res.data);
 		preview.type = "link";
 		preview.head =
-			$("meta[property=\"og:title\"]").attr("content")
+			$('meta[property="og:title"]').attr("content")
 			|| $("title").text()
 			|| "";
 		preview.body =
-			$("meta[property=\"og:description\"]").attr("content")
-			|| $("meta[name=\"description\"]").attr("content")
+			$('meta[property="og:description"]').attr("content")
+			|| $('meta[name="description"]').attr("content")
 			|| "";
 		preview.thumb =
-			$("meta[property=\"og:image\"]").attr("content")
-			|| $("meta[name=\"twitter:image:src\"]").attr("content")
-			|| $("link[rel=\"image_src\"]").attr("href")
+			$('meta[property="og:image"]').attr("content")
+			|| $('meta[name="twitter:image:src"]').attr("content")
+			|| $('link[rel="image_src"]').attr("href")
 			|| "";
 
 		if (preview.thumb.length) {
@@ -95,6 +96,7 @@ function parse(msg, preview, res, client) {
 	case "image/gif":
 	case "image/jpg":
 	case "image/jpeg":
+	case "image/webp":
 		if (res.size > (Helper.config.prefetchMaxImageSize * 1024)) {
 			return;
 		}
@@ -136,7 +138,7 @@ function emitPreview(client, msg, preview) {
 
 	client.emit("msg:preview", {
 		id: msg.id,
-		preview: preview
+		preview: preview,
 	});
 }
 
@@ -148,15 +150,17 @@ function fetch(uri, cb) {
 			maxRedirects: 5,
 			timeout: 5000,
 			headers: {
-				"User-Agent": "Mozilla/5.0 (compatible; The Lounge IRC Client; +https://github.com/thelounge/lounge)"
-			}
+				"User-Agent": "Mozilla/5.0 (compatible; The Lounge IRC Client; +https://github.com/thelounge/lounge)",
+			},
 		});
 	} catch (e) {
 		return cb(null);
 	}
+
 	const buffers = [];
-	var length = 0;
-	var limit = Helper.config.prefetchMaxImageSize * 1024;
+	let length = 0;
+	let limit = Helper.config.prefetchMaxImageSize * 1024;
+
 	req
 		.on("response", function(res) {
 			if (/^image\/.+/.test(res.headers["content-type"])) {
@@ -172,7 +176,7 @@ function fetch(uri, cb) {
 				limit = 1024 * 50;
 			}
 		})
-		.on("error", function() {})
+		.on("error", () => cb(null))
 		.on("data", (data) => {
 			length += data.length;
 			buffers.push(data);
@@ -200,7 +204,7 @@ function fetch(uri, cb) {
 			cb({
 				data: Buffer.concat(buffers, length),
 				type: type,
-				size: size
+				size: size,
 			});
 		});
 }

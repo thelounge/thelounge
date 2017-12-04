@@ -17,7 +17,7 @@ require("intersection-observer");
 
 const historyObserver = window.IntersectionObserver ?
 	new window.IntersectionObserver(loadMoreHistory, {
-		root: chat.get(0)
+		root: chat.get(0),
 	}) : null;
 
 module.exports = {
@@ -26,6 +26,7 @@ module.exports = {
 	renderChannel,
 	renderChannelUsers,
 	renderNetworks,
+	trimMessageInChannel,
 };
 
 function buildChannelMessages(container, chanId, chanType, messages) {
@@ -175,7 +176,7 @@ function renderNetworks(data, singleNetwork) {
 	sidebar.find(".empty").hide();
 	sidebar.find(".networks").append(
 		templates.network({
-			networks: data.networks
+			networks: data.networks,
 		})
 	);
 
@@ -222,7 +223,7 @@ function renderNetworks(data, singleNetwork) {
 
 	chat.append(
 		templates.chat({
-			channels: channels
+			channels: channels,
 		})
 	);
 
@@ -240,6 +241,25 @@ function renderNetworks(data, singleNetwork) {
 	if (sidebar.find(".highlight").length) {
 		utils.toggleNotificationMarkers(true);
 	}
+}
+
+function trimMessageInChannel(channel, messageLimit) {
+	const messages = channel.find(".messages .msg").slice(0, -messageLimit);
+
+	if (messages.length === 0) {
+		return;
+	}
+
+	messages.remove();
+
+	channel.find(".show-more").addClass("show");
+
+	// Remove date-separators that would otherwise be "stuck" at the top of the channel
+	channel.find(".date-marker-container").each(function() {
+		if ($(this).next().hasClass("date-marker-container")) {
+			$(this).remove();
+		}
+	});
 }
 
 function loadMoreHistory(entries) {

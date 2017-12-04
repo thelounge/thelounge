@@ -9,7 +9,7 @@ describe("findChannels", () => {
 		const expected = [{
 			channel: "#a",
 			start: 0,
-			end: 2
+			end: 2,
 		}];
 
 		const actual = findChannels(input, ["#"], ["@", "+"]);
@@ -22,7 +22,7 @@ describe("findChannels", () => {
 		const expected = [{
 			channel: "#äöü",
 			start: 0,
-			end: 4
+			end: 4,
 		}];
 
 		const actual = findChannels(input, ["#"], ["@", "+"]);
@@ -35,7 +35,7 @@ describe("findChannels", () => {
 		const expected = [{
 			channel: "#channel",
 			start: 7,
-			end: 15
+			end: 15,
 		}];
 
 		const actual = findChannels(input, ["#"], ["@", "+"]);
@@ -48,7 +48,7 @@ describe("findChannels", () => {
 		const expected = [{
 			channel: "#chan",
 			start: 0,
-			end: 5
+			end: 5,
 		}];
 
 		const actual = findChannels(input, ["#"], ["@", "+"]);
@@ -61,7 +61,7 @@ describe("findChannels", () => {
 		const expected = [{
 			channel: "#1,000",
 			start: 0,
-			end: 6
+			end: 6,
 		}];
 
 		const actual = findChannels(input, ["#"], ["@", "+"]);
@@ -74,7 +74,7 @@ describe("findChannels", () => {
 		const expected = [{
 			channel: "#a",
 			start: 1,
-			end: 3
+			end: 3,
 		}];
 
 		const actual = findChannels(input, ["#"], ["@", "+"]);
@@ -87,7 +87,7 @@ describe("findChannels", () => {
 		const expected = [{
 			channel: "#a",
 			start: 4,
-			end: 6
+			end: 6,
 		}];
 
 		const actual = findChannels(input, ["#"], ["!", "@", "%", "+"]);
@@ -100,7 +100,7 @@ describe("findChannels", () => {
 		const expected = [{
 			channel: "@a",
 			start: 0,
-			end: 2
+			end: 2,
 		}];
 
 		const actual = findChannels(input, ["@"], ["#", "+"]);
@@ -113,7 +113,7 @@ describe("findChannels", () => {
 		const expected = [{
 			channel: "##test",
 			start: 0,
-			end: 6
+			end: 6,
 		}];
 
 		const actual = findChannels(input, ["#"], ["@", "+"]);

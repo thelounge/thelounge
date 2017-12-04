@@ -1,6 +1,6 @@
-{{> ../user_name nick=from.nick mode=from.mode}}
+{{> ../user_name from}}
 has kicked
-{{> ../user_name nick=target.nick mode=target.mode}}
+{{> ../user_name target}}
 {{#if text}}
 	<i class="part-reason">({{{parse text}}})</i>
 {{/if}}

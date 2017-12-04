@@ -5,7 +5,8 @@ const expect = require("chai").expect;
 const request = require("request");
 const io = require("socket.io-client");
 
-describe("Server", () => {
+describe("Server", function() {
+	this.timeout(5000);
 	let server;
 
 	before(() => {
@@ -23,7 +24,7 @@ describe("Server", () => {
 			request(webURL, (error, response, body) => {
 				expect(error).to.be.null;
 				expect(body).to.include("<title>The Lounge</title>");
-				expect(body).to.include("https://thelounge.github.io/");
+				expect(body).to.include("js/bundle.js");
 
 				done();
 			});
@@ -41,7 +42,9 @@ describe("Server", () => {
 		});
 	});
 
-	describe("WebSockets", () => {
+	describe("WebSockets", function() {
+		this.slow(300);
+
 		let client;
 
 		before((done) => {
@@ -56,8 +59,8 @@ describe("Server", () => {
 				reconnection: false,
 				timeout: 1000,
 				transports: [
-					"websocket"
-				]
+					"websocket",
+				],
 			});
 
 			// Server emits events faster than the test can bind them

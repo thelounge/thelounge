@@ -1,6 +1,5 @@
 "use strict";
 
-const _ = require("lodash");
 const Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
@@ -9,7 +8,7 @@ module.exports = function(irc, network) {
 		const away = data.message;
 
 		network.channels.forEach((chan) => {
-			const user = _.find(chan.users, {nick: data.nick});
+			const user = chan.findUser(data.nick);
 
 			if (!user || user.away === away) {
 				return;
@@ -19,8 +18,7 @@ module.exports = function(irc, network) {
 				type: away ? Msg.Type.AWAY : Msg.Type.BACK,
 				text: away || "",
 				time: data.time,
-				from: data.nick,
-				mode: user.mode
+				from: user,
 			});
 
 			chan.pushMessage(client, msg);

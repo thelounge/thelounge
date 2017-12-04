@@ -32,7 +32,7 @@ program
 		var user = require(file);
 		log.prompt({
 			text: "Enter new password:",
-			silent: true
+			silent: true,
 		}, function(err, password) {
 			if (err) {
 				return;

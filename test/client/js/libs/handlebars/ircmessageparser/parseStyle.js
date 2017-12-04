@@ -15,10 +15,12 @@ describe("parseStyle", () => {
 			reverse: false,
 			italic: false,
 			underline: false,
+			strikethrough: false,
+			monospace: false,
 			text: "textwithcontrolcodes",
 
 			start: 0,
-			end: 20
+			end: 20,
 		}];
 
 		const actual = parseStyle(input);
@@ -37,10 +39,423 @@ describe("parseStyle", () => {
 			reverse: false,
 			italic: false,
 			underline: false,
+			strikethrough: false,
+			monospace: false,
 			text: "bold",
 
 			start: 0,
-			end: 4
+			end: 4,
+		}];
+
+		const actual = parseStyle(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should parse strikethrough", () => {
+		const input = "\x1estrikethrough text\x1e";
+		const expected = [{
+			bold: false,
+			textColor: undefined,
+			bgColor: undefined,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: false,
+			underline: false,
+			strikethrough: true,
+			monospace: false,
+			text: "strikethrough text",
+
+			start: 0,
+			end: 18,
+		}];
+
+		const actual = parseStyle(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should parse monospace", () => {
+		const input = "\x11monospace text\x1e";
+		const expected = [{
+			bold: false,
+			textColor: undefined,
+			bgColor: undefined,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: true,
+			text: "monospace text",
+
+			start: 0,
+			end: 14,
+		}];
+
+		const actual = parseStyle(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should toggle monospace correctly", () => {
+		const input = "toggling \x11on and \x11off and \x11on again\x11";
+		const expected = [{
+			bold: false,
+			textColor: undefined,
+			bgColor: undefined,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: "toggling ",
+
+			start: 0,
+			end: 9,
+		}, {
+			bold: false,
+			textColor: undefined,
+			bgColor: undefined,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: true,
+			text: "on and ",
+
+			start: 9,
+			end: 16,
+		}, {
+			bold: false,
+			textColor: undefined,
+			bgColor: undefined,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: "off and ",
+
+			start: 16,
+			end: 24,
+		}, {
+			bold: false,
+			textColor: undefined,
+			bgColor: undefined,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: true,
+			text: "on again",
+
+			start: 24,
+			end: 32,
+		}];
+
+		const actual = parseStyle(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should parse monospace and underline", () => {
+		const input = "\x1funderline formatting \x11with monospace\x1f no underline \x11 and vanilla";
+		const expected = [{
+			bold: false,
+			textColor: undefined,
+			bgColor: undefined,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: false,
+			underline: true,
+			strikethrough: false,
+			monospace: false,
+			text: "underline formatting ",
+
+			start: 0,
+			end: 21,
+		}, {
+			bold: false,
+			textColor: undefined,
+			bgColor: undefined,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: false,
+			underline: true,
+			strikethrough: false,
+			monospace: true,
+			text: "with monospace",
+
+			start: 21,
+			end: 35,
+		}, {
+			bold: false,
+			textColor: undefined,
+			bgColor: undefined,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: true,
+			text: " no underline ",
+
+			start: 35,
+			end: 49,
+		}, {
+			bold: false,
+			textColor: undefined,
+			bgColor: undefined,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: " and vanilla",
+
+			start: 49,
+			end: 61,
+		}];
+
+		const actual = parseStyle(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should parse monospace and text colors", () => {
+		const input = "\x037,9\x11text with color and monospace\x11\x03";
+		const expected = [{
+			bold: false,
+			textColor: 7,
+			bgColor: 9,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: true,
+			text: "text with color and monospace",
+
+			start: 0,
+			end: 29,
+		}];
+
+		const actual = parseStyle(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should parse strikethrough and italics", () => {
+		const input = "\x1ditalic formatting \x1ewith strikethrough\x1d no italic \x1e and vanilla";
+		const expected = [{
+			bold: false,
+			textColor: undefined,
+			bgColor: undefined,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: true,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: "italic formatting ",
+
+			start: 0,
+			end: 18,
+		}, {
+			bold: false,
+			textColor: undefined,
+			bgColor: undefined,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: true,
+			underline: false,
+			strikethrough: true,
+			monospace: false,
+			text: "with strikethrough",
+
+			start: 18,
+			end: 36,
+		}, {
+			bold: false,
+			textColor: undefined,
+			bgColor: undefined,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: false,
+			underline: false,
+			strikethrough: true,
+			monospace: false,
+			text: " no italic ",
+
+			start: 36,
+			end: 47,
+		}, {
+			bold: false,
+			textColor: undefined,
+			bgColor: undefined,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: " and vanilla",
+
+			start: 47,
+			end: 59,
+		}];
+
+		const actual = parseStyle(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should parse strikethrough and text colors", () => {
+		const input = "\x031,2text with color \x1eand strikethrough\x1e\x03";
+		const expected = [{
+			bold: false,
+			textColor: 1,
+			bgColor: 2,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: "text with color ",
+
+			start: 0,
+			end: 16,
+		}, {
+			bold: false,
+			textColor: 1,
+			bgColor: 2,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: false,
+			underline: false,
+			strikethrough: true,
+			monospace: false,
+			text: "and strikethrough",
+
+			start: 16,
+			end: 33,
+		}];
+
+		const actual = parseStyle(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should correctly parse multiple unclosed format tokens", () => {
+		const input = "\x1e\x02\x1d\x033,4string with multiple unclosed formats";
+		const expected = [{
+			bold: true,
+			textColor: 3,
+			bgColor: 4,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: true,
+			underline: false,
+			strikethrough: true,
+			monospace: false,
+			text: "string with multiple unclosed formats",
+
+			start: 0,
+			end: 37,
+		}];
+
+		const actual = parseStyle(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should toggle strikethrough correctly", () => {
+		const input = "toggling \x1eon and \x1eoff and \x1eon again\x1e";
+		const expected = [{
+			bold: false,
+			textColor: undefined,
+			bgColor: undefined,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: "toggling ",
+
+			start: 0,
+			end: 9,
+		}, {
+			bold: false,
+			textColor: undefined,
+			bgColor: undefined,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: false,
+			underline: false,
+			strikethrough: true,
+			monospace: false,
+			text: "on and ",
+
+			start: 9,
+			end: 16,
+		}, {
+			bold: false,
+			textColor: undefined,
+			bgColor: undefined,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: "off and ",
+
+			start: 16,
+			end: 24,
+		}, {
+			bold: false,
+			textColor: undefined,
+			bgColor: undefined,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			reverse: false,
+			italic: false,
+			underline: false,
+			strikethrough: true,
+			monospace: false,
+			text: "on again",
+
+			start: 24,
+			end: 32,
 		}];
 
 		const actual = parseStyle(input);
@@ -59,10 +474,12 @@ describe("parseStyle", () => {
 			reverse: false,
 			italic: false,
 			underline: false,
+			strikethrough: false,
+			monospace: false,
 			text: "yellowText",
 
 			start: 0,
-			end: 10
+			end: 10,
 		}];
 
 		const actual = parseStyle(input);
@@ -81,10 +498,12 @@ describe("parseStyle", () => {
 			reverse: false,
 			italic: false,
 			underline: false,
+			strikethrough: false,
+			monospace: false,
 			text: "yellowBG redText",
 
 			start: 0,
-			end: 16
+			end: 16,
 		}];
 
 		const actual = parseStyle(input);
@@ -103,10 +522,12 @@ describe("parseStyle", () => {
 			reverse: false,
 			italic: true,
 			underline: false,
+			strikethrough: false,
+			monospace: false,
 			text: "italic",
 
 			start: 0,
-			end: 6
+			end: 6,
 		}];
 
 		const actual = parseStyle(input);
@@ -125,10 +546,12 @@ describe("parseStyle", () => {
 			reverse: false,
 			italic: false,
 			underline: false,
+			strikethrough: false,
+			monospace: false,
 			text: "test ",
 
 			start: 0,
-			end: 5
+			end: 5,
 		}, {
 			bold: false,
 			textColor: undefined,
@@ -138,10 +561,12 @@ describe("parseStyle", () => {
 			reverse: false,
 			italic: false,
 			underline: false,
+			strikethrough: false,
+			monospace: false,
 			text: "nice ",
 
 			start: 5,
-			end: 10
+			end: 10,
 		}, {
 			bold: true,
 			textColor: undefined,
@@ -151,10 +576,12 @@ describe("parseStyle", () => {
 			reverse: false,
 			italic: false,
 			underline: false,
+			strikethrough: false,
+			monospace: false,
 			text: "RES006 ",
 
 			start: 10,
-			end: 17
+			end: 17,
 		}, {
 			bold: true,
 			textColor: 3,
@@ -164,10 +591,12 @@ describe("parseStyle", () => {
 			reverse: false,
 			italic: false,
 			underline: false,
+			strikethrough: false,
+			monospace: false,
 			text: "colored",
 
 			start: 17,
-			end: 24
+			end: 24,
 		}, {
 			bold: true,
 			textColor: 3,
@@ -177,10 +606,12 @@ describe("parseStyle", () => {
 			reverse: false,
 			italic: false,
 			underline: false,
+			strikethrough: false,
+			monospace: false,
 			text: " background",
 
 			start: 24,
-			end: 35
+			end: 35,
 		}, {
 			bold: false,
 			textColor: undefined,
@@ -190,10 +621,12 @@ describe("parseStyle", () => {
 			reverse: false,
 			italic: false,
 			underline: false,
+			strikethrough: false,
+			monospace: false,
 			text: "?",
 
 			start: 35,
-			end: 36
+			end: 36,
 		}];
 
 		const actual = parseStyle(input);
@@ -212,10 +645,12 @@ describe("parseStyle", () => {
 			reverse: false,
 			italic: false,
 			underline: false,
+			strikethrough: false,
+			monospace: false,
 			text: "bold",
 
 			start: 0,
-			end: 4
+			end: 4,
 		}, {
 			bold: true,
 			textColor: 8,
@@ -225,10 +660,12 @@ describe("parseStyle", () => {
 			reverse: false,
 			italic: false,
 			underline: false,
+			strikethrough: false,
+			monospace: false,
 			text: "yellow",
 
 			start: 4,
-			end: 10
+			end: 10,
 		}, {
 			bold: false,
 			textColor: 8,
@@ -238,10 +675,12 @@ describe("parseStyle", () => {
 			reverse: false,
 			italic: false,
 			underline: false,
+			strikethrough: false,
+			monospace: false,
 			text: "nonBold",
 
 			start: 10,
-			end: 17
+			end: 17,
 		}, {
 			bold: false,
 			textColor: undefined,
@@ -251,10 +690,12 @@ describe("parseStyle", () => {
 			reverse: false,
 			italic: false,
 			underline: false,
+			strikethrough: false,
+			monospace: false,
 			text: "default",
 
 			start: 17,
-			end: 24
+			end: 24,
 		}];
 
 		const actual = parseStyle(input);
@@ -273,10 +714,12 @@ describe("parseStyle", () => {
 			reverse: false,
 			italic: false,
 			underline: false,
+			strikethrough: false,
+			monospace: false,
 			text: "bold",
 
 			start: 0,
-			end: 4
+			end: 4,
 		}, {
 			bold: false,
 			textColor: undefined,
@@ -286,10 +729,12 @@ describe("parseStyle", () => {
 			reverse: false,
 			italic: false,
 			underline: false,
+			strikethrough: false,
+			monospace: false,
 			text: " ",
 
 			start: 4,
-			end: 5
+			end: 5,
 		}, {
 			bold: true,
 			textColor: undefined,
@@ -299,10 +744,12 @@ describe("parseStyle", () => {
 			reverse: false,
 			italic: false,
 			underline: false,
+			strikethrough: false,
+			monospace: false,
 			text: "bold",
 
 			start: 5,
-			end: 9
+			end: 9,
 		}];
 
 		const actual = parseStyle(input);
@@ -311,7 +758,7 @@ describe("parseStyle", () => {
 	});
 
 	it("should reset all styles", () => {
-		const input = "\x02\x034\x16\x1d\x1ffull\x0fnone";
+		const input = "\x11\x1e\x02\x034\x16\x1d\x1ffull\x0fnone";
 		const expected = [{
 			bold: true,
 			textColor: 4,
@@ -321,10 +768,12 @@ describe("parseStyle", () => {
 			reverse: true,
 			italic: true,
 			underline: true,
+			strikethrough: true,
+			monospace: true,
 			text: "full",
 
 			start: 0,
-			end: 4
+			end: 4,
 		}, {
 			bold: false,
 			textColor: undefined,
@@ -334,10 +783,12 @@ describe("parseStyle", () => {
 			reverse: false,
 			italic: false,
 			underline: false,
+			strikethrough: false,
+			monospace: false,
 			text: "none",
 
 			start: 4,
-			end: 8
+			end: 8,
 		}];
 
 		const actual = parseStyle(input);
@@ -356,10 +807,12 @@ describe("parseStyle", () => {
 			reverse: false,
 			italic: false,
 			underline: false,
+			strikethrough: false,
+			monospace: false,
 			text: "a",
 
 			start: 0,
-			end: 1
+			end: 1,
 		}];
 
 		const actual = parseStyle(input);
@@ -380,10 +833,12 @@ describe("parseStyle", () => {
 			reverse: false,
 			italic: false,
 			underline: false,
+			strikethrough: false,
+			monospace: false,
 			text: rawString,
 
 			start: 0,
-			end: rawString.length
+			end: rawString.length,
 		}];
 
 		const actual = parseStyle(input);

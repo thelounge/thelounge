@@ -8,12 +8,12 @@ var ModeCommand = require("../../src/plugins/inputs/mode");
 describe("Commands", function() {
 	describe("/mode", function() {
 		const channel = new Chan({
-			name: "#thelounge"
+			name: "#thelounge",
 		});
 
 		const lobby = new Chan({
 			name: "Network Lobby",
-			type: Chan.Type.LOBBY
+			type: Chan.Type.LOBBY,
 		});
 
 		const testableNetwork = {
@@ -22,8 +22,8 @@ describe("Commands", function() {
 			irc: {
 				raw: function() {
 					testableNetwork.lastCommand = Array.prototype.join.call(arguments, " ");
-				}
-			}
+				},
+			},
 		};
 
 		it("should not mess with the given target", function() {

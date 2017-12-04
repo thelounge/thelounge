@@ -4,13 +4,12 @@ const $ = require("jquery");
 const io = require("socket.io-client");
 const utils = require("./utils");
 const path = window.location.pathname + "socket.io/";
-const status = $("#loading-page-message, #connection-error");
 
 const socket = io({
 	transports: $(document.body).data("transports"),
 	path: path,
 	autoConnect: false,
-	reconnection: !$(document.body).hasClass("public")
+	reconnection: !$(document.body).hasClass("public"),
 });
 
 socket.on("disconnect", handleDisconnect);
@@ -18,11 +17,11 @@ socket.on("connect_error", handleDisconnect);
 socket.on("error", handleDisconnect);
 
 socket.on("reconnecting", function(attempt) {
-	status.text(`Reconnecting… (attempt ${attempt})`);
+	$("#loading-page-message, #connection-error").text(`Reconnecting… (attempt ${attempt})`);
 });
 
 socket.on("connecting", function() {
-	status.text("Connecting…");
+	$("#loading-page-message, #connection-error").text("Connecting…");
 });
 
 socket.on("connect", function() {
@@ -31,17 +30,17 @@ socket.on("connect", function() {
 	// nothing is sent to the server that might have happened.
 	socket.sendBuffer = [];
 
-	status.text("Finalizing connection…");
+	$("#loading-page-message, #connection-error").text("Finalizing connection…");
 });
 
 socket.on("authorized", function() {
-	status.text("Loading messages…");
+	$("#loading-page-message, #connection-error").text("Loading messages…");
 });
 
 function handleDisconnect(data) {
 	const message = data.message || data;
 
-	status.text(`Waiting to reconnect… (${message})`).addClass("shown");
+	$("#loading-page-message, #connection-error").text(`Waiting to reconnect… (${message})`).addClass("shown");
 	$(".show-more-button, #input").prop("disabled", true);
 	$("#submit").hide();
 

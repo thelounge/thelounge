@@ -4,6 +4,8 @@ const expect = require("chai").expect;
 const Helper = require("../../src/helper");
 
 describe("Client passwords", function() {
+	this.slow(1500);
+
 	const inputPassword = "my$Super@Cool Password";
 
 	it("hashed password should match", function() {

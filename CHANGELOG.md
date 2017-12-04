@@ -2,36 +2,155 @@
 
 All notable changes to this project will be documented in this file.
 
-<!--
-Use the following template for each new release, built on recommendations from http://keepachangelog.com/.
+<!-- New entries go after this line -->
 
-```md
-## vX.Y.Z - YYYY-MM-DD
+## v2.7.0-pre.2 - 2017-12-01 [Pre-release]
 
-For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/vPRE.VIO.US...vX.Y.Z) and [milestone](https://github.com/thelounge/lounge/milestone/XX?closed=1).
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.7.0-pre.1...v2.7.0-pre.2)
 
-DESCRIPTION, ANNOUNCEMENT, ...
+This is a release candidate for v2.7.0 to ensure maximum stability for public release.
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+npm install -g thelounge@next
+```
+
+## v2.7.0-pre.1 - 2017-11-30 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.6.0...v2.7.0-pre.1)
+
+This is a release candidate for v2.7.0 to ensure maximum stability for public release.
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+npm install -g thelounge@next
+```
+
+## v2.6.0 - 2017-11-18
+
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.5.0...v2.6.0) and [milestone](https://github.com/thelounge/lounge/milestone/26?closed=1).
+
+This release is very small, as we focused it on bug fixes. You may notice slight improvements to the auto-completion menu (new commands, more accurate emoji list, documentation in the help window), as well as small UI improvements.
+
+Additionally, this release is the first one with official support of Node.js v9.
 
 ### Added
+
+- Add service aliases to command list for completion ([#1627](https://github.com/thelounge/lounge/pull/1627) by [@dgw](https://github.com/dgw))
+
 ### Changed
-### Deprecated
+
+- Mark channels as read when receiving self-messages ([#1615](https://github.com/thelounge/lounge/pull/1615) by [@dgw](https://github.com/dgw))
+- Remove content borders on mobile to maximize use of space ([#1599](https://github.com/thelounge/lounge/pull/1599) by [@RJacksonm1](https://github.com/RJacksonm1))
+- Reduced padding around page titles ([#1637](https://github.com/thelounge/lounge/pull/1637) by [@Swapnull](https://github.com/Swapnull))
+- Generate emoji map from EmojiOne data ([#1651](https://github.com/thelounge/lounge/pull/1651), [#1670](https://github.com/thelounge/lounge/pull/1670) by [@xPaw](https://github.com/xPaw))
+- Update production dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `moment` ([#1624](https://github.com/thelounge/lounge/pull/1624), [#1638](https://github.com/thelounge/lounge/pull/1638), [#1702](https://github.com/thelounge/lounge/pull/1702))
+  - `socket.io` ([#1625](https://github.com/thelounge/lounge/pull/1625), [#1660](https://github.com/thelounge/lounge/pull/1660))
+  - `express` ([#1638](https://github.com/thelounge/lounge/pull/1638))
+  - `ua-parser-js` ([#1638](https://github.com/thelounge/lounge/pull/1638))
+  - `web-push` ([#1654](https://github.com/thelounge/lounge/pull/1654))
+
 ### Removed
+
+- Remove Inconsolata ([#1602](https://github.com/thelounge/lounge/pull/1602) by [@xPaw](https://github.com/xPaw))
+
 ### Fixed
-### Security
+
+- Fix possible race condition when attaching clients ([#1639](https://github.com/thelounge/lounge/pull/1639) by [@xPaw](https://github.com/xPaw))
+- Synchronize unread marker when client reconnects ([#1600](https://github.com/thelounge/lounge/pull/1600) by [@xPaw](https://github.com/xPaw))
+- Synchronize unread marker when other client opens a channel ([#1598](https://github.com/thelounge/lounge/pull/1598) by [@xPaw](https://github.com/xPaw))
+- Fix loading app with autocomplete disabled ([#1650](https://github.com/thelounge/lounge/pull/1650) by [@dgw](https://github.com/dgw))
+- Fix URL query parameters in public mode ([#1661](https://github.com/thelounge/lounge/pull/1661) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Fix hyphenated names overflowing (#1667) ([#1671](https://github.com/thelounge/lounge/pull/1671) by [@LFlare](https://github.com/LFlare))
+- Fix missing attributes on unhandled messages ([#1695](https://github.com/thelounge/lounge/pull/1695) by [@xPaw](https://github.com/xPaw))
+- Correctly display kicks when kicker is server ([#1693](https://github.com/thelounge/lounge/pull/1693) by [@xPaw](https://github.com/xPaw))
+- Go back to writing user files synchronously ([#1701](https://github.com/thelounge/lounge/pull/1701) by [@xPaw](https://github.com/xPaw))
+- Fix local theme folder ([#1706](https://github.com/thelounge/lounge/pull/1706) by [@xPaw](https://github.com/xPaw))
+
 ### Documentation
+
 In the main repository:
-On the website:
+
+- Fix "help wanted" link in CONTRIBUTING file ([#1673](https://github.com/thelounge/lounge/pull/1673) by [@timmw](https://github.com/timmw))
+- Document autocompletion in the help page ([#1609](https://github.com/thelounge/lounge/pull/1609) by [@dgw](https://github.com/dgw))
+- Add a script to pre-generate changelog entries ([#1707](https://github.com/thelounge/lounge/pull/1707) by [@astorije](https://github.com/astorije))
+
 ### Internals
+
+- Remove channel containers from DOM after quitting network ([#1607](https://github.com/thelounge/lounge/pull/1607) by [@PolarizedIons](https://github.com/PolarizedIons))
+- Create public folder with Webpack ([#1611](https://github.com/thelounge/lounge/pull/1611), [#1682](https://github.com/thelounge/lounge/pull/1682), [#1704](https://github.com/thelounge/lounge/pull/1704) by [@xPaw](https://github.com/xPaw), [#1705](https://github.com/thelounge/lounge/pull/1705) by [@astorije](https://github.com/astorije))
+- Cleanup client manager functions ([#1636](https://github.com/thelounge/lounge/pull/1636) by [@xPaw](https://github.com/xPaw))
+- Add Node.js v9 testing to Travis builds ([#1678](https://github.com/thelounge/lounge/pull/1678) by [@astorije](https://github.com/astorije))
+- Allow `run-pr` script to pass arguments to `npm start` ([#1662](https://github.com/thelounge/lounge/pull/1662) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Update development dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `webpack` ([#1626](https://github.com/thelounge/lounge/pull/1626), [#1638](https://github.com/thelounge/lounge/pull/1638), [#1643](https://github.com/thelounge/lounge/pull/1643))
+  - `mocha` ([#1617](https://github.com/thelounge/lounge/pull/1617))
+  - `stylelint` ([#1616](https://github.com/thelounge/lounge/pull/1616))
+  - `eslint` ([#1632](https://github.com/thelounge/lounge/pull/1632), [#1666](https://github.com/thelounge/lounge/pull/1666), [#1699](https://github.com/thelounge/lounge/pull/1699))
+  - `babel-preset-env` ([#1641](https://github.com/thelounge/lounge/pull/1641))
+  - `handlebars` ([#1645](https://github.com/thelounge/lounge/pull/1645))
+  - `socket.io-client` ([#1659](https://github.com/thelounge/lounge/pull/1659))
+  - `copy-webpack-plugin` ([#1653](https://github.com/thelounge/lounge/pull/1653))
+  - `nyc` ([#1680](https://github.com/thelounge/lounge/pull/1680))
+  - `npm-run-all` ([#1688](https://github.com/thelounge/lounge/pull/1688))
+  - `intersection-observer` ([#1697](https://github.com/thelounge/lounge/pull/1697))
+
+## v2.6.0-rc.4 - 2017-11-12 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.6.0-rc.3...v2.6.0-rc.4)
+
+This is a release candidate for v2.6.0 to ensure maximum stability for public release.
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+npm install -g thelounge@next
 ```
 
-All sections are explained on the link above, they are all optional, and each of them should contain a list of PRs formatted as such:
+## v2.6.0-rc.3 - 2017-11-12 [Pre-release]
 
-```md
-- Description ([#PR_NUMBER](https://github.com/thelounge/lounge/pull/PR_NUMBER) by [@GITHUB_USERNAME](https://github.com/GITHUB_USERNAME))
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.6.0-rc.2...v2.6.0-rc.3)
+
+This is a release candidate for v2.6.0 to ensure maximum stability for public release.
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+npm install -g thelounge@next
 ```
--->
 
-<!-- New entries go after this line -->
+## v2.6.0-rc.2 - 2017-11-12 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.6.0-rc.1...v2.6.0-rc.2)
+
+This is a release candidate for v2.6.0 to ensure maximum stability for public release.
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+npm install -g thelounge@next
+```
+
+## v2.6.0-rc.1 - 2017-11-11 [Pre-release - DEPRECATED]
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.5.0...v2.6.0-rc.1)
+
+This is a release candidate for v2.6.0 to ensure maximum stability for public release.
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+npm install -g thelounge@next
+```
 
 ## v2.5.0 - 2017-10-17
 

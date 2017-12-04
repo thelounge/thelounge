@@ -1,5 +1,5 @@
 "use strict";
 
-module.exports = function(context) {
-	return window.JSON.stringify(context);
+module.exports = function tojson(context) {
+	return JSON.stringify(context);
 };

@@ -2,6 +2,7 @@
 
 var _ = require("lodash");
 var Helper = require("../helper");
+const User = require("./user");
 const userLog = require("../userLog");
 const storage = require("../plugins/storage");
 
@@ -27,7 +28,7 @@ function Chan(attr) {
 		firstUnread: 0,
 		unread: 0,
 		highlight: 0,
-		users: []
+		users: new Map(),
 	});
 }
 
@@ -38,7 +39,7 @@ Chan.prototype.destroy = function() {
 Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 	var obj = {
 		chan: this.id,
-		msg: msg
+		msg: msg,
 	};
 
 	// If this channel is open in any of the clients, do not increase unread counter
@@ -96,7 +97,7 @@ Chan.prototype.dereferencePreviews = function(messages) {
 	});
 };
 
-Chan.prototype.sortUsers = function(irc) {
+Chan.prototype.getSortedUsers = function(irc) {
 	var userModeSortPriority = {};
 	irc.network.options.PREFIX.forEach((prefix, index) => {
 		userModeSortPriority[prefix.symbol] = index;
@@ -104,7 +105,9 @@ Chan.prototype.sortUsers = function(irc) {
 
 	userModeSortPriority[""] = 99; // No mode is lowest
 
-	this.users = this.users.sort(function(a, b) {
+	const users = Array.from(this.users.values());
+
+	return users.sort(function(a, b) {
 		if (a.mode === b.mode) {
 			return a.nick.toLowerCase() < b.nick.toLowerCase() ? -1 : 1;
 		}
@@ -118,16 +121,19 @@ Chan.prototype.findMessage = function(msgId) {
 };
 
 Chan.prototype.findUser = function(nick) {
-	return _.find(this.users, {nick: nick});
+	return this.users.get(nick.toLowerCase());
 };
 
-Chan.prototype.getMode = function(name) {
-	var user = this.findUser(name);
-	if (user) {
-		return user.mode;
-	}
+Chan.prototype.getUser = function(nick) {
+	return this.findUser(nick) || new User({nick: nick});
+};
 
-	return "";
+Chan.prototype.setUser = function(user) {
+	this.users.set(user.nick.toLowerCase(), user);
+};
+
+Chan.prototype.removeUser = function(user) {
+	this.users.delete(user.nick.toLowerCase());
 };
 
 Chan.prototype.toJSON = function() {

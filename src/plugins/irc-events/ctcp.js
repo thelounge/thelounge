@@ -7,6 +7,7 @@ module.exports = function(irc, network) {
 
 	irc.on("ctcp response", function(data) {
 		let chan = network.getChannel(data.nick);
+
 		if (typeof chan === "undefined") {
 			chan = network.channels[0];
 		}
@@ -14,9 +15,9 @@ module.exports = function(irc, network) {
 		const msg = new Msg({
 			type: Msg.Type.CTCP,
 			time: data.time,
-			from: data.nick,
+			from: chan.getUser(data.nick),
 			ctcpType: data.type,
-			ctcpMessage: data.message
+			ctcpMessage: data.message,
 		});
 		chan.pushMessage(client, msg);
 	});

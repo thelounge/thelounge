@@ -24,7 +24,7 @@ exports.input = function(network, chan, cmd, args) {
 			irc.emit("privmsg", {
 				nick: irc.user.nick,
 				target: channel.name,
-				message: msg
+				message: msg,
 			});
 		}
 	}

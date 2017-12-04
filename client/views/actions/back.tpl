@@ -1,2 +1,2 @@
-{{> ../user_name nick=from}}
+{{> ../user_name from}}
 is back

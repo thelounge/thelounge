@@ -26,12 +26,12 @@ module.exports = function() {
 			socket.emit(
 				"sort", {
 					type: "networks",
-					order: order
+					order: order,
 				}
 			);
 
 			options.ignoreSortSync = true;
-		}
+		},
 	});
 	sidebar.find(".network").sortable({
 		axis: "y",
@@ -54,11 +54,11 @@ module.exports = function() {
 				"sort", {
 					type: "channels",
 					target: network.data("id"),
-					order: order
+					order: order,
 				}
 			);
 
 			options.ignoreSortSync = true;
-		}
+		},
 	});
 };

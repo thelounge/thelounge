@@ -6,6 +6,8 @@ const render = require("../render");
 const utils = require("../utils");
 const options = require("../options");
 const helpers_roundBadgeNumber = require("../libs/handlebars/roundBadgeNumber");
+const cleanIrcMessage = require("../libs/handlebars/ircmessageparser/cleanIrcMessage");
+const webpush = require("../webpush");
 const chat = $("#chat");
 const sidebar = $("#sidebar");
 
@@ -15,11 +17,9 @@ try {
 	pop.src = "audio/pop.ogg";
 } catch (e) {
 	pop = {
-		play: $.noop
+		play: $.noop,
 	};
 }
-
-$("#play").on("click", () => pop.play());
 
 socket.on("msg", function(data) {
 	// We set a maximum timeout of 2 seconds so that messages don't take too long to appear.
@@ -46,7 +46,9 @@ function processReceivedMessage(data) {
 		data.msg
 	);
 
-	container.trigger("keepToBottom");
+	if (activeChannelId === targetId) {
+		container.trigger("keepToBottom");
+	}
 
 	notifyMessage(targetId, channel, data);
 
@@ -66,26 +68,27 @@ function processReceivedMessage(data) {
 		sidebar.find("[data-target='" + target + "'] .badge").removeClass("highlight").empty();
 	}
 
-	// Message arrived in a non active channel, trim it to 100 messages
-	if (activeChannelId !== targetId && container.find(".msg").slice(0, -100).remove().length) {
-		channel.find(".show-more").addClass("show");
+	let messageLimit = 0;
 
-		// Remove date-separators that would otherwise
-		// be "stuck" at the top of the channel
-		channel.find(".date-marker-container").each(function() {
-			if ($(this).next().hasClass("date-marker-container")) {
-				$(this).remove();
-			}
-		});
+	if (activeChannelId !== targetId) {
+		// If message arrives in non active channel, keep only 100 messages
+		messageLimit = 100;
+	} else if (container.isScrollBottom()) {
+		// If message arrives in active channel, keep 500 messages if scroll is currently at the bottom
+		messageLimit = 500;
+	}
+
+	if (messageLimit > 0) {
+		render.trimMessageInChannel(channel, messageLimit);
 	}
 
 	if ((data.msg.type === "message" || data.msg.type === "action" || data.msg.type === "notice") && channel.hasClass("channel")) {
 		const nicks = channel.find(".users").data("nicks");
 		if (nicks) {
-			const find = nicks.indexOf(data.msg.from);
+			const find = nicks.indexOf(data.msg.from.nick);
 			if (find !== -1) {
 				nicks.splice(find, 1);
-				nicks.unshift(data.msg.from);
+				nicks.unshift(data.msg.from.nick);
 			}
 		}
 	}
@@ -118,29 +121,43 @@ function notifyMessage(targetId, channel, msg) {
 
 				if (msg.type === "invite") {
 					title = "New channel invite:";
-					body = msg.from + " invited you to " + msg.channel;
+					body = msg.from.nick + " invited you to " + msg.channel;
 				} else {
-					title = msg.from;
+					title = msg.from.nick;
 					if (!button.hasClass("query")) {
 						title += " (" + button.data("title").trim() + ")";
 					}
 					if (msg.type === "message") {
 						title += " says:";
 					}
-					body = msg.text.replace(/\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?|[\x00-\x1F]|\x7F/g, "").trim();
+					body = cleanIrcMessage(msg.text);
 				}
 
 				try {
-					const notify = new Notification(title, {
-						body: body,
-						icon: "img/logo-64.png",
-						tag: `lounge-${targetId}`
-					});
-					notify.addEventListener("click", function() {
-						window.focus();
-						button.click();
-						this.close();
-					});
+					if (webpush.hasServiceWorker) {
+						navigator.serviceWorker.ready.then((registration) => {
+							registration.active.postMessage({
+								type: "notification",
+								chanId: targetId,
+								timestamp: msg.time,
+								title: title,
+								body: body,
+							});
+						});
+					} else {
+						const notify = new Notification(title, {
+							tag: `chan-${targetId}`,
+							badge: "img/logo-64.png",
+							icon: "img/touch-icon-192x192.png",
+							body: body,
+							timestamp: msg.time,
+						});
+						notify.addEventListener("click", function() {
+							window.focus();
+							button.click();
+							this.close();
+						});
+					}
 				} catch (exception) {
 					// `new Notification(...)` is not supported and should be silenced.
 				}

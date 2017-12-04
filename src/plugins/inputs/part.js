@@ -22,7 +22,7 @@ exports.input = function(network, chan, cmd, args) {
 	if (target.type === Chan.Type.LOBBY) {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
-			text: "You can not part from networks, use /quit instead."
+			text: "You can not part from networks, use /quit instead.",
 		}));
 		return;
 	}
@@ -30,7 +30,7 @@ exports.input = function(network, chan, cmd, args) {
 	network.channels = _.without(network.channels, target);
 	target.destroy();
 	this.emit("part", {
-		chan: target.id
+		chan: target.id,
 	});
 
 	if (target.type === Chan.Type.CHANNEL) {

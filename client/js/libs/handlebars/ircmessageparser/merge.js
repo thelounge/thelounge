@@ -25,7 +25,7 @@ function assign(textPart, fragment) {
 	return Object_assign({}, fragment, {
 		start: start,
 		end: end,
-		text: fragment.text.slice(start - fragStart, end - fragStart)
+		text: fragment.text.slice(start - fragStart, end - fragStart),
 	});
 }
 

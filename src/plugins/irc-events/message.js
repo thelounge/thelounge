@@ -3,10 +3,11 @@
 const Chan = require("../../models/chan");
 const Msg = require("../../models/msg");
 const LinkPrefetch = require("./link");
-const Helper = require("../../helper");
+const cleanIrcMessage = require("../../../client/js/libs/handlebars/ircmessageparser/cleanIrcMessage");
+const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\w[\]\\`^{|}-]{4,})/g;
 
 module.exports = function(irc, network) {
-	var client = this;
+	const client = this;
 
 	irc.on("notice", function(data) {
 		// Some servers send notices without any nickname
@@ -37,14 +38,16 @@ module.exports = function(irc, network) {
 
 	function handleMessage(data) {
 		let chan;
+		let user;
 		let highlight = false;
 		const self = data.nick === irc.user.nick;
 
 		// Server messages go to server window, no questions asked
 		if (data.from_server) {
 			chan = network.channels[0];
+			user = chan.getUser(data.nick);
 		} else {
-			var target = data.target;
+			let target = data.target;
 
 			// If the message is targeted at us, use sender as target instead
 			if (target.toLowerCase() === irc.user.nick.toLowerCase()) {
@@ -52,6 +55,7 @@ module.exports = function(irc, network) {
 			}
 
 			chan = network.getChannel(target);
+
 			if (typeof chan === "undefined") {
 				// Send notices that are not targeted at us into the server window
 				if (data.type === Msg.Type.NOTICE) {
@@ -59,25 +63,23 @@ module.exports = function(irc, network) {
 				} else {
 					chan = new Chan({
 						type: Chan.Type.QUERY,
-						name: target
+						name: target,
 					});
 					network.channels.push(chan);
 					client.emit("join", {
 						network: network.id,
-						chan: chan
+						chan: chan,
 					});
 				}
 			}
+
+			user = chan.getUser(data.nick);
 
 			// Query messages (unless self) always highlight
 			if (chan.type === Chan.Type.QUERY) {
 				highlight = !self;
 			} else if (chan.type === Chan.Type.CHANNEL) {
-				const user = chan.findUser(data.nick);
-
-				if (user) {
-					user.lastMessage = data.time || Date.now();
-				}
+				user.lastMessage = data.time || Date.now();
 			}
 		}
 
@@ -87,14 +89,22 @@ module.exports = function(irc, network) {
 			highlight = network.highlightRegex.test(data.message);
 		}
 
-		var msg = new Msg({
+		const users = [];
+		let match;
+		while ((match = nickRegExp.exec(data.message))) {
+			if (chan.findUser(match[1])) {
+				users.push(match[1]);
+			}
+		}
+
+		const msg = new Msg({
 			type: data.type,
 			time: data.time,
-			mode: chan.getMode(data.nick),
-			from: data.nick,
+			from: user,
 			text: data.message,
 			self: self,
-			highlight: highlight
+			highlight: highlight,
+			users: users,
 		});
 
 		// No prefetch URLs unless are simple MESSAGE or ACTION types
@@ -107,7 +117,7 @@ module.exports = function(irc, network) {
 		// Do not send notifications for messages older than 15 minutes (znc buffer for example)
 		if (highlight && (!data.time || data.time > Date.now() - 900000)) {
 			let title = chan.name;
-			let body = Helper.cleanIrcMessage(data.message);
+			let body = cleanIrcMessage(data.message);
 
 			// In channels, prepend sender nickname to the message
 			if (chan.type !== Chan.Type.QUERY) {
@@ -128,7 +138,7 @@ module.exports = function(irc, network) {
 				chanId: chan.id,
 				timestamp: data.time || Date.now(),
 				title: title,
-				body: body
+				body: body,
 			}, true);
 		}
 	}

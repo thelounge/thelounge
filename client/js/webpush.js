@@ -4,9 +4,11 @@ const $ = require("jquery");
 const storage = require("./localStorage");
 const socket = require("./socket");
 
-const pushNotificationsButton = $("#pushNotifications");
+let pushNotificationsButton;
 let clientSubscribed = null;
 let applicationServerKey;
+
+module.exports.hasServiceWorker = false;
 
 module.exports.configurePushNotifications = (subscribedOnServer, key) => {
 	applicationServerKey = key;
@@ -16,7 +18,7 @@ module.exports.configurePushNotifications = (subscribedOnServer, key) => {
 	if (clientSubscribed === true && subscribedOnServer === false) {
 		pushNotificationsButton.attr("disabled", true);
 
-		navigator.serviceWorker.register("service-worker.js")
+		navigator.serviceWorker.ready
 			.then((registration) => registration.pushManager.getSubscription())
 			.then((subscription) => subscription && subscription.unsubscribe())
 			.then((successful) => {
@@ -27,11 +29,19 @@ module.exports.configurePushNotifications = (subscribedOnServer, key) => {
 	}
 };
 
-if (isAllowedServiceWorkersHost()) {
+module.exports.initialize = () => {
+	pushNotificationsButton = $("#pushNotifications");
+
+	if (!isAllowedServiceWorkersHost()) {
+		return;
+	}
+
 	$("#pushNotificationsHttps").hide();
 
 	if ("serviceWorker" in navigator) {
 		navigator.serviceWorker.register("service-worker.js").then((registration) => {
+			module.exports.hasServiceWorker = true;
+
 			if (!registration.pushManager) {
 				return;
 			}
@@ -53,12 +63,12 @@ if (isAllowedServiceWorkersHost()) {
 			$("#pushNotificationsUnsupported span").text(err);
 		});
 	}
-}
+};
 
 function onPushButton() {
 	pushNotificationsButton.attr("disabled", true);
 
-	navigator.serviceWorker.register("service-worker.js").then((registration) => {
+	navigator.serviceWorker.ready.then((registration) => {
 		registration.pushManager.getSubscription().then((existingSubscription) => {
 			if (existingSubscription) {
 				socket.emit("push:unregister");
@@ -68,7 +78,7 @@ function onPushButton() {
 
 			return registration.pushManager.subscribe({
 				applicationServerKey: urlBase64ToUint8Array(applicationServerKey),
-				userVisibleOnly: true
+				userVisibleOnly: true,
 			}).then((subscription) => {
 				const rawKey = subscription.getKey ? subscription.getKey("p256dh") : "";
 				const key = rawKey ? window.btoa(String.fromCharCode.apply(null, new Uint8Array(rawKey))) : "";
@@ -80,8 +90,8 @@ function onPushButton() {
 					endpoint: subscription.endpoint,
 					keys: {
 						p256dh: key,
-						auth: authSecret
-					}
+						auth: authSecret,
+					},
 				});
 
 				return true;

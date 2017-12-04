@@ -1,4 +1,4 @@
-{{> ../user_name nick=from}}
+{{> ../user_name from}}
 <i class="hostmask">({{hostmask}})</i>
 has quit
 {{#if text}}

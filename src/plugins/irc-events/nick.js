@@ -1,47 +1,53 @@
 "use strict";
 
-var Msg = require("../../models/msg");
+const Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
-	var client = this;
+	const client = this;
+
 	irc.on("nick", function(data) {
 		let msg;
-		var self = false;
-		if (data.nick === irc.user.nick) {
+		const self = data.nick === irc.user.nick;
+
+		if (self) {
 			network.setNick(data.new_nick);
 
-			var lobby = network.channels[0];
+			const lobby = network.channels[0];
 			msg = new Msg({
-				text: "You're now known as " + data.new_nick,
+				text: `You're now known as ${data.new_nick}`,
 			});
 			lobby.pushMessage(client, msg, true);
-			self = true;
+
 			client.save();
 			client.emit("nick", {
 				network: network.id,
-				nick: data.new_nick
+				nick: data.new_nick,
 			});
 		}
 
 		network.channels.forEach((chan) => {
 			const user = chan.findUser(data.nick);
+
 			if (typeof user === "undefined") {
 				return;
 			}
-			user.nick = data.new_nick;
-			chan.sortUsers(irc);
-			client.emit("users", {
-				chan: chan.id
-			});
+
 			msg = new Msg({
 				time: data.time,
-				from: data.nick,
+				from: user,
 				type: Msg.Type.NICK,
-				mode: chan.getMode(data.new_nick),
 				new_nick: data.new_nick,
-				self: self
+				self: self,
 			});
 			chan.pushMessage(client, msg);
+
+			chan.removeUser(user);
+			user.nick = data.new_nick;
+			chan.setUser(user);
+
+			client.emit("users", {
+				chan: chan.id,
+			});
 		});
 	});
 };

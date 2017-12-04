@@ -1,23 +1,25 @@
 "use strict";
 
-var Msg = require("../../models/msg");
+const Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
-	var client = this;
+	const client = this;
+
 	irc.on("invite", function(data) {
-		var chan = network.getChannel(data.channel);
+		let chan = network.getChannel(data.channel);
+
 		if (typeof chan === "undefined") {
 			chan = network.channels[0];
 		}
 
-		var msg = new Msg({
+		const msg = new Msg({
 			type: Msg.Type.INVITE,
 			time: data.time,
-			from: data.nick,
-			invited: data.invited,
+			from: chan.getUser(data.nick),
+			target: chan.getUser(data.invited),
 			channel: data.channel,
 			highlight: true,
-			invitedYou: data.invited === irc.user.nick
+			invitedYou: data.invited === irc.user.nick,
 		});
 		chan.pushMessage(client, msg);
 	});

@@ -9,6 +9,8 @@ const Helper = require("../../src/helper");
 const link = require("../../src/plugins/irc-events/link.js");
 
 describe("Image storage", function() {
+	this.slow(200);
+
 	const testImagePath = path.resolve(__dirname, "../../client/img/apple-touch-icon-120x120.png");
 	const correctImageHash = crypto.createHash("sha256").update(fs.readFileSync(testImagePath)).digest("hex");
 	const correctImageURL = `storage/${correctImageHash.substring(0, 2)}/${correctImageHash.substring(2, 4)}/${correctImageHash.substring(4)}.png`;
@@ -34,7 +36,7 @@ describe("Image storage", function() {
 
 	it("should store the thumbnail", function(done) {
 		const message = this.irc.createMessage({
-			text: "http://localhost:9003/thumb"
+			text: "http://localhost:9003/thumb",
 		});
 
 		link(this.irc, this.network.channels[0], message);
@@ -53,7 +55,7 @@ describe("Image storage", function() {
 
 	it("should store the image", function(done) {
 		const message = this.irc.createMessage({
-			text: "http://localhost:9003/real-test-image.png"
+			text: "http://localhost:9003/real-test-image.png",
 		});
 
 		link(this.irc, this.network.channels[0], message);

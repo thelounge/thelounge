@@ -2,11 +2,16 @@
 # npm-debug.log and node_modules/ are ignored by default.
 # See https://docs.npmjs.com/misc/developers#keeping-files-out-of-your-package
 
-# Ignore all dot files except for .lounge_home
+# Ignore all dot files except for .thelounge_home
 .*
-!.lounge_home
+!.thelounge_home
 
-client/
+# Ignore client folder as it's being built into public/ folder
+# except for the specified files which are used by the server
+client/**
+!client/js/libs/handlebars/ircmessageparser/findLinks.js
+!client/js/libs/handlebars/ircmessageparser/cleanIrcMessage.js
+
 public/js/bundle.vendor.js.map
 coverage/
 scripts/

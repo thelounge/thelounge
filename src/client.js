@@ -34,7 +34,7 @@ var events = [
 	"topic",
 	"welcome",
 	"list",
-	"whois"
+	"whois",
 ];
 var inputs = [
 	"ban",
@@ -56,7 +56,7 @@ var inputs = [
 	"raw",
 	"topic",
 	"list",
-	"whois"
+	"whois",
 ].reduce(function(plugins, name) {
 	var path = "./plugins/inputs/" + name;
 	var plugin = require(path);
@@ -78,7 +78,7 @@ function Client(manager, name, config) {
 		name: name,
 		networks: [],
 		sockets: manager.sockets,
-		manager: manager
+		manager: manager,
 	});
 
 	var client = this;
@@ -130,7 +130,7 @@ Client.prototype.find = function(channelId) {
 	if (network && chan) {
 		return {
 			network: network,
-			chan: chan
+			chan: chan,
 		};
 	}
 
@@ -171,7 +171,7 @@ Client.prototype.connect = function(args) {
 			.split(/\s+/g)
 			.map(function(chan) {
 				return new Chan({
-					name: chan
+					name: chan,
 				});
 			});
 	}
@@ -196,7 +196,7 @@ Client.prototype.connect = function(args) {
 
 	client.networks.push(network);
 	client.emit("network", {
-		networks: [network]
+		networks: [network],
 	});
 
 	if (config.lockNetwork) {
@@ -204,7 +204,7 @@ Client.prototype.connect = function(args) {
 		if (args.host && args.host.length > 0 && args.host !== config.defaults.host) {
 			network.channels[0].pushMessage(client, new Msg({
 				type: Msg.Type.ERROR,
-				text: "Hostname you specified is not allowed."
+				text: "Hostname you specified is not allowed.",
 			}), true);
 			return;
 		}
@@ -217,7 +217,7 @@ Client.prototype.connect = function(args) {
 	if (network.host.length === 0) {
 		network.channels[0].pushMessage(client, new Msg({
 			type: Msg.Type.ERROR,
-			text: "You must specify a hostname to connect."
+			text: "You must specify a hostname to connect.",
 		}), true);
 		return;
 	}
@@ -235,7 +235,7 @@ Client.prototype.connect = function(args) {
 					password: config.webirc[network.host],
 					username: pkg.name,
 					address: args.ip,
-					hostname: args.hostname
+					hostname: args.hostname,
 				};
 			}
 		} else {
@@ -270,7 +270,7 @@ Client.prototype.connect = function(args) {
 		var path = "./plugins/irc-events/" + plugin;
 		require(path).apply(client, [
 			network.irc,
-			network
+			network,
 		]);
 	});
 
@@ -311,7 +311,7 @@ Client.prototype.updateSession = function(token, ip, request) {
 	});
 
 	client.manager.updateUser(client.name, {
-		sessions: client.config.sessions
+		sessions: client.config.sessions,
 	});
 };
 
@@ -319,7 +319,7 @@ Client.prototype.setPassword = function(hash, callback) {
 	var client = this;
 
 	client.manager.updateUser(client.name, {
-		password: hash
+		password: hash,
 	}, function(err) {
 		if (err) {
 			return callback(false);
@@ -355,7 +355,7 @@ Client.prototype.inputLine = function(data) {
 		if (target.chan.type === Chan.Type.LOBBY) {
 			target.chan.pushMessage(this, new Msg({
 				type: Msg.Type.ERROR,
-				text: "Messages can not be sent to lobbies."
+				text: "Messages can not be sent to lobbies.",
 			}));
 			return;
 		}
@@ -384,7 +384,7 @@ Client.prototype.inputLine = function(data) {
 	if (!connected) {
 		target.chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
-			text: "You are not connected to the IRC network, unable to send your command."
+			text: "You are not connected to the IRC network, unable to send your command.",
 		}));
 	}
 };
@@ -415,7 +415,7 @@ Client.prototype.more = function(data) {
 
 	client.emit("more", {
 		chan: chan.id,
-		messages: messages
+		messages: messages,
 	});
 };
 
@@ -483,7 +483,7 @@ Client.prototype.names = function(data) {
 
 	client.emit("names", {
 		id: target.chan.id,
-		users: target.chan.users
+		users: target.chan.getSortedUsers(target.network.irc),
 	});
 };
 
@@ -530,7 +530,7 @@ Client.prototype.clientAttach = function(socketId, token) {
 
 	client.attachedClients[socketId] = {
 		token: token,
-		openChannel: client.lastActiveChannel
+		openChannel: client.lastActiveChannel,
 	};
 
 	// Update old networks to store ip and hostmask
@@ -583,15 +583,15 @@ Client.prototype.registerPushSubscription = function(session, subscription, noSa
 		endpoint: subscription.endpoint,
 		keys: {
 			p256dh: subscription.keys.p256dh,
-			auth: subscription.keys.auth
-		}
+			auth: subscription.keys.auth,
+		},
 	};
 
 	session.pushSubscription = data;
 
 	if (!noSave) {
 		this.manager.updateUser(this.name, {
-			sessions: this.config.sessions
+			sessions: this.config.sessions,
 		});
 	}
 
@@ -601,7 +601,7 @@ Client.prototype.registerPushSubscription = function(session, subscription, noSa
 Client.prototype.unregisterPushSubscription = function(token) {
 	this.config.sessions[token].pushSubscription = null;
 	this.manager.updateUser(this.name, {
-		sessions: this.config.sessions
+		sessions: this.config.sessions,
 	});
 };
 

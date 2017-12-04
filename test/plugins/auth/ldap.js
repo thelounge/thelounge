@@ -63,8 +63,8 @@ function startLdapServer(callback) {
 				cn: ["john doe"],
 				sn: ["johnny"],
 				uid: ["johndoe"],
-				memberof: [baseDN]
-			}
+				memberof: [baseDN],
+			},
 		};
 
 		if (req.filter.matches(obj.attributes)) {
@@ -109,6 +109,8 @@ function testLdapAuth() {
 }
 
 describe("LDAP authentication plugin", function() {
+	this.slow(200);
+
 	before((done) => {
 		this.server = startLdapServer(done);
 	});

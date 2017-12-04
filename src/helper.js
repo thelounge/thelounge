@@ -21,7 +21,6 @@ var Helper = {
 	getVersion: getVersion,
 	getGitCommit: getGitCommit,
 	ip2hex: ip2hex,
-	cleanIrcMessage: cleanIrcMessage,
 
 	password: {
 		hash: passwordHash,
@@ -78,6 +77,10 @@ function setHome(homePath) {
 
 		log.warn(`${colors.bold("displayNetwork")} and ${colors.bold("lockNetwork")} are false, setting ${colors.bold("lockNetwork")} to true.`);
 	}
+
+	// Load theme color from manifest.json
+	const manifest = require("../public/manifest.json");
+	this.config.themeColor = manifest.theme_color;
 
 	// TODO: Remove in future release
 	if (this.config.debug === true) {
@@ -138,11 +141,6 @@ function expandHome(shortenedPath) {
 
 	const home = os.homedir().replace("$", "$$$$");
 	return path.resolve(shortenedPath.replace(/^~($|\/|\\)/, home + "$1"));
-}
-
-function cleanIrcMessage(message) {
-	// TODO: This does not strip hex based colours
-	return message.replace(/\x02|\x1D|\x1F|\x16|\x0F|\x03(?:[0-9]{1,2}(?:,[0-9]{1,2})?)?/g, "");
 }
 
 function passwordRequiresUpdate(password) {

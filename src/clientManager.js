@@ -35,7 +35,7 @@ ClientManager.prototype.findClient = function(name) {
 
 ClientManager.prototype.autoloadUsers = function() {
 	const users = this.getUsers();
-	const noUsersWarning = `There are currently no users. Create one with ${colors.bold("lounge add <name>")}.`;
+	const noUsersWarning = `There are currently no users. Create one with ${colors.bold("thelounge add <name>")}.`;
 
 	if (users.length === 0) {
 		log.info(noUsersWarning);
@@ -140,15 +140,12 @@ ClientManager.prototype.updateUser = function(name, opts, callback) {
 		return callback ? callback() : true;
 	}
 
-	fs.writeFile(Helper.getUserConfigPath(name), newUser, (err) => {
-		if (err) {
-			log.error(`Failed to update user ${colors.green(name)}. (${err})`);
-		}
-
-		if (callback) {
-			callback(err);
-		}
-	});
+	try {
+		fs.writeFileSync(Helper.getUserConfigPath(name), newUser);
+	} catch (e) {
+		log.error(`Failed to update user ${colors.green(name)} (${e})`);
+		throw e;
+	}
 };
 
 ClientManager.prototype.removeUser = function(name) {

@@ -32,7 +32,7 @@ function findChannels(text, channelPrefixes, userModes) {
 			result.push({
 				start: match.index + match[0].length - match[1].length,
 				end: match.index + match[0].length,
-				channel: match[1]
+				channel: match[1],
 			});
 		}
 	} while (match);

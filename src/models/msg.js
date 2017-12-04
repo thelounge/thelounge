@@ -6,13 +6,25 @@ var id = 0;
 
 class Msg {
 	constructor(attr) {
+		// Some properties need to be copied in the Msg object instead of referenced
+		if (attr) {
+			["from", "target"].forEach((prop) => {
+				if (attr[prop]) {
+					this[prop] = {
+						mode: attr[prop].mode,
+						nick: attr[prop].nick,
+					};
+				}
+			});
+		}
+
 		_.defaults(this, attr, {
-			from: "",
+			from: {},
 			id: id++,
 			previews: [],
 			text: "",
 			type: Msg.Type.MESSAGE,
-			self: false
+			self: false,
 		});
 
 		if (this.time > 0) {
@@ -47,7 +59,7 @@ Msg.Type = {
 	TOPIC: "topic",
 	TOPIC_SET_BY: "topic_set_by",
 	WHOIS: "whois",
-	BANLIST: "ban_list"
+	BANLIST: "ban_list",
 };
 
 module.exports = Msg;

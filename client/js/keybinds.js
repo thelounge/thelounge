@@ -9,7 +9,7 @@ const contextMenuContainer = $("#context-menu-container");
 
 Mousetrap.bind([
 	"pageup",
-	"pagedown"
+	"pagedown",
 ], function(e, key) {
 	let container = windows.find(".window.active");
 
@@ -30,7 +30,7 @@ Mousetrap.bind([
 	}
 
 	container.animate({
-		scrollTop: scrollTop
+		scrollTop: scrollTop,
 	}, 200);
 
 	return false;
@@ -40,7 +40,7 @@ Mousetrap.bind([
 	"command+up",
 	"command+down",
 	"ctrl+up",
-	"ctrl+down"
+	"ctrl+down",
 ], function(e, keys) {
 	const channels = sidebar.find(".chan");
 	const index = channels.index(channels.filter(".active"));
@@ -61,7 +61,7 @@ Mousetrap.bind([
 });
 
 Mousetrap.bind([
-	"escape"
+	"escape",
 ], function() {
 	contextMenuContainer.hide();
 });
@@ -72,12 +72,14 @@ const colorsHotkeys = {
 	u: "\x1F",
 	i: "\x1D",
 	o: "\x0F",
+	s: "\x1e",
+	m: "\x11",
 };
 
 for (const hotkey in colorsHotkeys) {
 	Mousetrap.bind([
 		"command+" + hotkey,
-		"ctrl+" + hotkey
+		"ctrl+" + hotkey,
 	], function(e) {
 		e.preventDefault();
 

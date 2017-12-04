@@ -98,6 +98,6 @@ module.exports = function slideoutMenu(viewport, menu) {
 		toggle: toggleMenu,
 		isOpen: function() {
 			return menuIsOpen;
-		}
+		},
 	};
 };
