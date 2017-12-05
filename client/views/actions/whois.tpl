@@ -2,11 +2,9 @@
 	{{> ../user_name nick=whois.nick}}
 	<i class="hostmask">({{whois.user}}@{{whois.host}})</i>
 </div>
-{{#if whois.actuallhost}}
+{{#if whois.actualhost}}
 <div>
-	Actual host
-	{{> ../user_name nick=whois.nick}}
-	<i class="hostmask">({{whois.user}}@{{whois.actuallhost}})</i>
+	{{> ../user_name nick=whois.nick}}'s actual host is: <i>{{whois.actualhost}}</i> (<i>{{whois.actualip}}</i>)
 </div>
 {{/if}}
 {{#if whois.real_name}}
