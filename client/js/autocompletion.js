@@ -3,10 +3,19 @@
 const $ = require("jquery");
 const fuzzy = require("fuzzy");
 const emojiMap = require("./libs/simplemap.json");
-const options = require("./options");
 const constants = require("./constants");
-require("jquery-textcomplete");
 require("./libs/jquery/tabcomplete");
+
+const input = $("#input");
+const Textcomplete = require("textcomplete/lib/textcomplete").default;
+const Textarea = require("textcomplete/lib/textarea").default;
+const editor = new Textarea(input.get(0));
+let textcomplete;
+
+module.exports = {
+	enable: enableAutocomplete,
+	disable: () => textcomplete.destroy(false),
+};
 
 const chat = $("#chat");
 const sidebar = $("#sidebar");
@@ -138,30 +147,43 @@ const backgroundColorStrategy = {
 	index: 2,
 };
 
-const input = $("#input")
+input
 	.tab((word) => completeNicks(word, false), {hint: false})
 	.on("autocomplete:on", function() {
 		enableAutocomplete();
 	});
 
-if (options.autocomplete) {
-	enableAutocomplete();
-}
-
 function enableAutocomplete() {
-	input.textcomplete([
-		emojiStrategy, nicksStrategy, chanStrategy, commandStrategy,
-		foregroundColorStrategy, backgroundColorStrategy,
-	], {
-		dropdownClassName: "textcomplete-menu",
-		placement: "top",
-	}).on({
-		"textComplete:show": function() {
-			$(this).data("autocompleting", true);
+	textcomplete = new Textcomplete(editor, {
+		dropdown: {
+			className: "textcomplete-menu",
+			placement: "top",
 		},
-		"textComplete:hide": function() {
-			$(this).data("autocompleting", false);
-		},
+	});
+
+	textcomplete.register([
+		emojiStrategy,
+		nicksStrategy,
+		chanStrategy,
+		commandStrategy,
+		foregroundColorStrategy,
+		backgroundColorStrategy,
+	]);
+
+	// Activate the first item by default
+	// https://github.com/yuku-t/textcomplete/issues/93
+	textcomplete.on("rendered", () => {
+		if (textcomplete.dropdown.items.length > 0) {
+			textcomplete.dropdown.items[0].activate();
+		}
+	});
+
+	textcomplete.on("show", () => {
+		input.data("autocompleting", true);
+	});
+
+	textcomplete.on("hidden", () => {
+		input.data("autocompleting", false);
 	});
 }
 

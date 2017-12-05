@@ -1,11 +1,11 @@
 "use strict";
 
 const $ = require("jquery");
-require("jquery-textcomplete");
 const escapeRegExp = require("lodash/escapeRegExp");
 const userStyles = $("#user-specified-css");
 const storage = require("./localStorage");
 const tz = require("./libs/handlebars/tz");
+const autocompletion = require("./autocompletion");
 
 const windows = $("#windows");
 const chat = $("#chat");
@@ -123,9 +123,9 @@ module.exports.initialize = () => {
 			chat.toggleClass("show-seconds", self.prop("checked"));
 		} else if (name === "autocomplete") {
 			if (self.prop("checked")) {
-				$("#input").trigger("autocomplete:on");
+				autocompletion.enable();
 			} else {
-				$("#input").textcomplete("destroy");
+				autocompletion.disable();
 			}
 		}
 	}).find("input")
