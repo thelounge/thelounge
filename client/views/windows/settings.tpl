@@ -56,6 +56,13 @@
 			</label>
 		</div>
 		<div class="col-sm-12">
+			<label class="opt">
+				<label for="nickPostfix" class="sr-only">Nick autocomplete postfix (e.g. <code>, </code>)</label>
+				<input type="text" id="nickPostfix" name="nickPostfix" class="input" placeholder="Nick autocomplete postfix (e.g. ', ')">
+			</label>
+		</div>
+
+		<div class="col-sm-12">
 			<h2>Theme</h2>
 		</div>
 		<div class="col-sm-12">
