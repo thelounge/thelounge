@@ -1,10 +1,10 @@
 "use strict";
 
-var expect = require("chai").expect;
-
-var Chan = require("../../src/models/chan");
-var Msg = require("../../src/models/msg");
-var Network = require("../../src/models/network");
+const expect = require("chai").expect;
+const Chan = require("../../src/models/chan");
+const Msg = require("../../src/models/msg");
+const User = require("../../src/models/user");
+const Network = require("../../src/models/network");
 
 describe("Network", function() {
 	describe("#export()", function() {
@@ -89,6 +89,40 @@ describe("Network", function() {
 			expect(network.channels[1].messages[0].text).to.equal("message in constructor");
 			expect(network.channels[1].messages[1].text).to.equal("message in original instance");
 			expect(network.channels[1].messages[2].text).to.equal("message after network creation");
+		});
+	});
+
+	describe("#getFilteredClone(lastActiveChannel, lastMessage)", function() {
+		it("should filter channels", function() {
+			const chan = new Chan();
+			chan.setUser(new User({nick: "test"}));
+
+			const network = new Network({
+				channels: [
+					chan,
+				],
+			});
+
+			expect(network.channels[0].users).to.be.empty;
+		});
+
+		it("should keep necessary properties", function() {
+			const network = new Network();
+
+			expect(network.getFilteredClone()).to.be.an("object").that.has.all.keys(
+				"channels",
+				"commands",
+				"host",
+				"hostname",
+				"id",
+				"ip",
+				"name",
+				"port",
+				"realname",
+				"serverOptions",
+				"tls",
+				"username"
+			);
 		});
 	});
 });

@@ -7,6 +7,17 @@ module.exports = Network;
 
 let id = 1;
 
+/**
+ * @type {Object} List of keys which should not be sent to the client.
+ */
+const filteredFromClient = {
+	awayMessage: true,
+	chanCache: true,
+	highlightRegex: true,
+	irc: true,
+	password: true,
+};
+
 function Network(attr) {
 	_.defaults(this, attr, {
 		name: "",
@@ -63,14 +74,27 @@ Network.prototype.setNick = function(nick) {
 	);
 };
 
-Network.prototype.toJSON = function() {
-	return _.omit(this, [
-		"awayMessage",
-		"chanCache",
-		"highlightRegex",
-		"irc",
-		"password",
-	]);
+/**
+ * Get a clean clone of this network that will be sent to the client.
+ * This function performs manual cloning of network object for
+ * better control of performance and memory usage.
+ *
+ * Both of the parameters that are accepted by this function are passed into channels' getFilteredClone call.
+ *
+ * @see {@link Chan#getFilteredClone}
+ */
+Network.prototype.getFilteredClone = function(lastActiveChannel, lastMessage) {
+	return Object.keys(this).reduce((newNetwork, prop) => {
+		if (prop === "channels") {
+			// Channels objects perform their own cloning
+			newNetwork[prop] = this[prop].map((channel) => channel.getFilteredClone(lastActiveChannel, lastMessage));
+		} else if (!filteredFromClient[prop]) {
+			// Some properties that are not useful for the client are skipped
+			newNetwork[prop] = this[prop];
+		}
+
+		return newNetwork;
+	}, {});
 };
 
 Network.prototype.export = function() {

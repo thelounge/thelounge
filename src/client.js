@@ -197,7 +197,7 @@ Client.prototype.connect = function(args) {
 
 	client.networks.push(network);
 	client.emit("network", {
-		networks: [network],
+		networks: [network.getFilteredClone(this.lastActiveChannel, -1)],
 	});
 
 	if (config.lockNetwork) {
