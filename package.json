@@ -45,7 +45,7 @@
     "colors": "1.1.2",
     "commander": "2.12.2",
     "express": "4.16.2",
-    "fs-extra": "4.0.2",
+    "fs-extra": "4.0.3",
     "irc-framework": "2.10.2",
     "ldapjs": "1.0.1",
     "lodash": "4.17.4",
