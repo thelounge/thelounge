@@ -90,6 +90,13 @@ $(function() {
 				data: target.data("target"),
 			});
 			output += templates.contextmenu_divider();
+			if (target.hasClass("lobby")) {
+				output += templates.contextmenu_item({
+					class: "list",
+					text: "List all channels",
+					data: target.data("target"),
+				});
+			}
 			output += templates.contextmenu_item({
 				class: "close",
 				text: target.hasClass("lobby") ? "Disconnect" : target.hasClass("channel") ? "Leave" : "Close",
@@ -441,6 +448,12 @@ $(function() {
 			break;
 		case "user":
 			$(".channel.active .users .user[data-name='" + $(this).data("data") + "']").click();
+			break;
+		case "list":
+			socket.emit("input", {
+				target: chat.data("id"),
+				text: "/list",
+			});
 			break;
 		}
 	});
