@@ -2,11 +2,23 @@
 
 const $ = require("jquery");
 const fuzzy = require("fuzzy");
+const Mousetrap = require("mousetrap");
 const emojiMap = require("./libs/simplemap.json");
-const options = require("./options");
 const constants = require("./constants");
-require("jquery-textcomplete");
-require("./libs/jquery/tabcomplete");
+
+const input = $("#input");
+const Textcomplete = require("textcomplete/lib/textcomplete").default;
+const Textarea = require("textcomplete/lib/textarea").default;
+let textcomplete;
+
+module.exports = {
+	enable: enableAutocomplete,
+	disable: () => {
+		input.unbind("input.tabcomplete");
+		Mousetrap(input.get(0)).unbind("tab", "keydown");
+		textcomplete.destroy();
+	},
+};
 
 const chat = $("#chat");
 const sidebar = $("#sidebar");
@@ -138,30 +150,83 @@ const backgroundColorStrategy = {
 	index: 2,
 };
 
-const input = $("#input")
-	.tab((word) => completeNicks(word, false), {hint: false})
-	.on("autocomplete:on", function() {
-		enableAutocomplete();
+function enableAutocomplete() {
+	let tabCount = 0;
+	let currentMatches = [];
+
+	input.on("input.tabcomplete", () => {
+		tabCount = 0;
+		currentMatches = [];
 	});
 
-if (options.autocomplete) {
-	enableAutocomplete();
-}
+	Mousetrap(input.get(0)).bind("tab", (e) => {
+		if (input.data("autocompleting")) {
+			return;
+		}
 
-function enableAutocomplete() {
-	input.textcomplete([
-		emojiStrategy, nicksStrategy, chanStrategy, commandStrategy,
-		foregroundColorStrategy, backgroundColorStrategy,
-	], {
-		dropdownClassName: "textcomplete-menu",
-		placement: "top",
-	}).on({
-		"textComplete:show": function() {
-			$(this).data("autocompleting", true);
+		e.preventDefault();
+
+		const text = input.val();
+
+		if (input.get(0).selectionStart !== text.length) {
+			return;
+		}
+
+		let lastWord;
+
+		if (tabCount === 0) {
+			lastWord = text.split(/\s/).pop();
+
+			if (lastWord.length === 0) {
+				return;
+			}
+
+			currentMatches = completeNicks(lastWord, false);
+
+			if (currentMatches.length === 0) {
+				return;
+			}
+		} else {
+			lastWord = nicksStrategy.replace([0, currentMatches[(tabCount - 1) % currentMatches.length]]);
+		}
+
+		const matchedNick = currentMatches[tabCount % currentMatches.length];
+		input.val(text.substr(0, input.get(0).selectionStart - lastWord.length) + nicksStrategy.replace([0, matchedNick]));
+
+		tabCount++;
+	}, "keydown");
+
+	const editor = new Textarea(input.get(0));
+	textcomplete = new Textcomplete(editor, {
+		dropdown: {
+			className: "textcomplete-menu",
+			placement: "top",
 		},
-		"textComplete:hide": function() {
-			$(this).data("autocompleting", false);
-		},
+	});
+
+	textcomplete.register([
+		emojiStrategy,
+		nicksStrategy,
+		chanStrategy,
+		commandStrategy,
+		foregroundColorStrategy,
+		backgroundColorStrategy,
+	]);
+
+	// Activate the first item by default
+	// https://github.com/yuku-t/textcomplete/issues/93
+	textcomplete.on("rendered", () => {
+		if (textcomplete.dropdown.items.length > 0) {
+			textcomplete.dropdown.items[0].activate();
+		}
+	});
+
+	textcomplete.on("show", () => {
+		input.data("autocompleting", true);
+	});
+
+	textcomplete.on("hidden", () => {
+		input.data("autocompleting", false);
 	});
 }
 

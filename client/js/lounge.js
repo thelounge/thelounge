@@ -17,7 +17,6 @@ const render = require("./render");
 require("./socket-events");
 const storage = require("./localStorage");
 const utils = require("./utils");
-require("./autocompletion");
 require("./webpush");
 require("./keybinds");
 require("./clipboard");
