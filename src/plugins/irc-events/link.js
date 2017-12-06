@@ -106,6 +106,22 @@ function parse(msg, preview, res, client) {
 
 		break;
 
+	case "audio/midi":
+	case "audio/mpeg":
+	case "audio/mpeg3":
+	case "audio/ogg":
+	case "audio/wav":
+	case "audio/x-mid":
+	case "audio/x-midi":
+	case "audio/x-mpeg":
+	case "audio/x-mpeg-3":
+		if (!preview.link.startsWith("https://")) {
+			break;
+		}
+		preview.type = "audio";
+		preview.res = res.type;
+		break;
+
 	default:
 		return;
 	}
@@ -170,6 +186,8 @@ function fetch(uri, cb) {
 				if (contentLength > limit) {
 					req.abort();
 				}
+			} else if (/^audio\/.+/.test(res.headers["content-type"])) {
+				req.abort(); // ensure server doesn't download the audio file
 			} else {
 				// if not image, limit download to 50kb, since we need only meta tags
 				// twitter.com sends opengraph meta tags within ~20kb of data for individual tweets

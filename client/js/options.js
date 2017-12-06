@@ -23,7 +23,7 @@ const options = {
 	showSeconds: false,
 	statusMessages: "condensed",
 	theme: $("#theme").attr("href").replace(/^themes\/(.*).css$/, "$1"), // Extracts default theme name, set on the server configuration
-	thumbnails: true,
+	media: true,
 	userStyles: userStyles.text(),
 };
 let userOptions = JSON.parse(storage.get("settings")) || {};
@@ -44,7 +44,7 @@ userOptions = null;
 module.exports = options;
 
 module.exports.shouldOpenMessagePreview = function(type) {
-	return (options.links && type === "link") || (options.thumbnails && type === "image");
+	return (options.links && type === "link") || (options.media && (type === "image" || type === "audio"));
 };
 
 module.exports.initialize = () => {

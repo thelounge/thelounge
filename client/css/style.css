@@ -1235,6 +1235,11 @@ kbd {
 	display: inline-flex !important;
 }
 
+#chat audio {
+	width: 600px;
+	max-width: 100%;
+}
+
 /* Do not display an empty div when there are no previews. Useful for example in
 part/quit messages where we don't load previews (adds a blank line otherwise) */
 #chat .preview:empty {
