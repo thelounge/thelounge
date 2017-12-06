@@ -43,6 +43,7 @@ rules:
   no-unsafe-negation: error
   no-useless-computed-key: error
   no-useless-return: error
+  no-use-before-define: [error, {functions: false}]
   object-curly-spacing: [error, never]
   padded-blocks: [error, never]
   prefer-const: error

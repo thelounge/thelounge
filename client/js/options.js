@@ -68,6 +68,39 @@ module.exports.initialize = () => {
 		}
 	}
 
+	const desktopNotificationsCheckbox = $("#desktopNotifications");
+	const warningUnsupported = $("#warnUnsupportedDesktopNotifications");
+	const warningBlocked = $("#warnBlockedDesktopNotifications").hide();
+
+	// Updates the checkbox and warning in settings when the Settings page is
+	// opened or when the checkbox state is changed.
+	// When notifications are not supported, this is never called (because
+	// checkbox state can not be changed).
+	const updateDesktopNotificationStatus = function() {
+		if (Notification.permission === "denied") {
+			desktopNotificationsCheckbox.attr("disabled", true);
+			desktopNotificationsCheckbox.attr("checked", false);
+			warningBlocked.show();
+		} else {
+			if (Notification.permission === "default" && desktopNotificationsCheckbox.prop("checked")) {
+				desktopNotificationsCheckbox.attr("checked", false);
+			}
+			desktopNotificationsCheckbox.attr("disabled", false);
+			warningBlocked.hide();
+		}
+	};
+
+	// If browser does not support notifications, override existing settings and
+	// display proper message in settings.
+	if (("Notification" in window)) {
+		warningUnsupported.hide();
+		windows.on("show", "#settings", updateDesktopNotificationStatus);
+	} else {
+		options.desktopNotifications = false;
+		desktopNotificationsCheckbox.attr("disabled", true);
+		desktopNotificationsCheckbox.attr("checked", false);
+	}
+
 	settings.on("change", "input, select, textarea", function() {
 		const self = $(this);
 		const type = self.attr("type");
@@ -127,56 +160,11 @@ module.exports.initialize = () => {
 			} else {
 				$("#input").textcomplete("destroy");
 			}
+		} else if (name === "desktopNotifications") {
+			if ($(this).prop("checked") && Notification.permission !== "granted") {
+				Notification.requestPermission(updateDesktopNotificationStatus);
+			}
 		}
 	}).find("input")
 		.trigger("change");
-
-	$("#desktopNotifications").on("change", function() {
-		if ($(this).prop("checked")) {
-			requestPermissionIfNeeded();
-		}
-	});
-
-	var requestPermissionIfNeeded = function() {
-		if (Notification.permission !== "granted") {
-			Notification.requestPermission(updateDesktopNotificationStatus);
-		}
-	};
-
-	if (options.desktopNotifications) {
-		requestPermissionIfNeeded();
-	}
-
-	// Updates the checkbox and warning in settings when the Settings page is
-	// opened or when the checkbox state is changed.
-	// When notifications are not supported, this is never called (because
-	// checkbox state can not be changed).
-	var updateDesktopNotificationStatus = function() {
-		if (Notification.permission === "denied") {
-			desktopNotificationsCheckbox.attr("disabled", true);
-			desktopNotificationsCheckbox.attr("checked", false);
-			warningBlocked.show();
-		} else {
-			if (Notification.permission === "default" && desktopNotificationsCheckbox.prop("checked")) {
-				desktopNotificationsCheckbox.attr("checked", false);
-			}
-			desktopNotificationsCheckbox.attr("disabled", false);
-			warningBlocked.hide();
-		}
-	};
-
-	// If browser does not support notifications, override existing settings and
-	// display proper message in settings.
-	var desktopNotificationsCheckbox = $("#desktopNotifications");
-	var warningUnsupported = $("#warnUnsupportedDesktopNotifications");
-	var warningBlocked = $("#warnBlockedDesktopNotifications");
-	warningBlocked.hide();
-	if (("Notification" in window)) {
-		warningUnsupported.hide();
-		windows.on("show", "#settings", updateDesktopNotificationStatus);
-	} else {
-		options.desktopNotifications = false;
-		desktopNotificationsCheckbox.attr("disabled", true);
-		desktopNotificationsCheckbox.attr("checked", false);
-	}
 };
