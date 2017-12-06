@@ -61,18 +61,21 @@ function appendMessage(container, chanId, chanType, msg) {
 		return;
 	}
 
+	const obj = {};
+	obj[msg.type] = 1;
+
 	// If the previous message is already condensed,
 	// we just append to it and update text
 	if (lastChild.hasClass("condensed")) {
 		lastChild.append(renderedMessage);
-		condensed.updateText(lastChild, [msg.type]);
+		condensed.updateText(lastChild, obj);
 		return;
 	}
 
 	// Always create a condensed container
 	const newCondensed = $(templates.msg_condensed({time: msg.time}));
 
-	condensed.updateText(newCondensed, [msg.type]);
+	condensed.updateText(newCondensed, obj);
 	newCondensed.append(renderedMessage);
 	container.append(newCondensed);
 }
