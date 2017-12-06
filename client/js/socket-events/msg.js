@@ -27,11 +27,27 @@ socket.on("msg", function(data) {
 });
 
 function processReceivedMessage(data) {
-	const targetId = data.chan;
-	const target = "#chan-" + targetId;
-	const channel = chat.find(target);
-	const container = channel.find(".messages");
+	let targetId = data.chan;
+	let target = "#chan-" + targetId;
+	let channel = chat.find(target);
+	let sidebarTarget = sidebar.find("[data-target='" + target + "']");
 
+	// Display received notices and errors in currently active channel.
+	// Reloading the page will put them back into the lobby window.
+	if (data.msg.showInActive) {
+		const activeOnNetwork = sidebarTarget.parent().find(".active");
+
+		// We only want to put errors/notices in active channel if they arrive on the same network
+		if (activeOnNetwork.length > 0) {
+			targetId = data.chan = activeOnNetwork.data("id");
+
+			target = "#chan-" + targetId;
+			channel = chat.find(target);
+			sidebarTarget = sidebar.find("[data-target='" + target + "']");
+		}
+	}
+
+	const container = channel.find(".messages");
 	const activeChannelId = chat.find(".chan.active").data("id");
 
 	if (data.msg.type === "channel_list" || data.msg.type === "ban_list") {
@@ -65,7 +81,7 @@ function processReceivedMessage(data) {
 
 	// Clear unread/highlight counter if self-message
 	if (data.msg.self) {
-		sidebar.find("[data-target='" + target + "'] .badge").removeClass("highlight").empty();
+		sidebarTarget.find(".badge").removeClass("highlight").empty();
 	}
 
 	let messageLimit = 0;
@@ -82,7 +98,7 @@ function processReceivedMessage(data) {
 		render.trimMessageInChannel(channel, messageLimit);
 	}
 
-	if ((data.msg.type === "message" || data.msg.type === "action" || data.msg.type === "notice") && channel.hasClass("channel")) {
+	if ((data.msg.type === "message" || data.msg.type === "action") && channel.hasClass("channel")) {
 		const nicks = channel.find(".users").data("nicks");
 		if (nicks) {
 			const find = nicks.indexOf(data.msg.from.nick);

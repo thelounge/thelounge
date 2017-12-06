@@ -38,14 +38,19 @@ module.exports = function(irc, network) {
 
 	function handleMessage(data) {
 		let chan;
-		let user;
-		let highlight = false;
-		const self = data.nick === irc.user.nick;
+		const msg = new Msg({
+			type: data.type,
+			time: data.time,
+			text: data.message,
+			self: data.nick === irc.user.nick,
+			highlight: false,
+			users: [],
+		});
 
 		// Server messages go to server window, no questions asked
 		if (data.from_server) {
 			chan = network.channels[0];
-			user = chan.getUser(data.nick);
+			msg.from = chan.getUser(data.nick);
 		} else {
 			let target = data.target;
 
@@ -59,6 +64,7 @@ module.exports = function(irc, network) {
 			if (typeof chan === "undefined") {
 				// Send notices that are not targeted at us into the server window
 				if (data.type === Msg.Type.NOTICE) {
+					msg.showInActive = true;
 					chan = network.channels[0];
 				} else {
 					chan = new Chan({
@@ -73,49 +79,38 @@ module.exports = function(irc, network) {
 				}
 			}
 
-			user = chan.getUser(data.nick);
+			msg.from = chan.getUser(data.nick);
 
 			// Query messages (unless self) always highlight
 			if (chan.type === Chan.Type.QUERY) {
-				highlight = !self;
+				msg.highlight = !msg.self;
 			} else if (chan.type === Chan.Type.CHANNEL) {
-				user.lastMessage = data.time || Date.now();
+				msg.from.lastMessage = data.time || Date.now();
 			}
 		}
 
 		// Self messages in channels are never highlighted
 		// Non-self messages are highlighted as soon as the nick is detected
-		if (!highlight && !self) {
-			highlight = network.highlightRegex.test(data.message);
+		if (!msg.highlight && !msg.self) {
+			msg.highlight = network.highlightRegex.test(data.message);
 		}
 
-		const users = [];
 		let match;
 		while ((match = nickRegExp.exec(data.message))) {
 			if (chan.findUser(match[1])) {
-				users.push(match[1]);
+				msg.users.push(match[1]);
 			}
 		}
-
-		const msg = new Msg({
-			type: data.type,
-			time: data.time,
-			from: user,
-			text: data.message,
-			self: self,
-			highlight: highlight,
-			users: users,
-		});
 
 		// No prefetch URLs unless are simple MESSAGE or ACTION types
 		if ([Msg.Type.MESSAGE, Msg.Type.ACTION].indexOf(data.type) !== -1) {
 			LinkPrefetch(client, chan, msg);
 		}
 
-		chan.pushMessage(client, msg, !self);
+		chan.pushMessage(client, msg, !msg.self);
 
 		// Do not send notifications for messages older than 15 minutes (znc buffer for example)
-		if (highlight && (!data.time || data.time > Date.now() - 900000)) {
+		if (msg.highlight && (!data.time || data.time > Date.now() - 900000)) {
 			let title = chan.name;
 			let body = cleanIrcMessage(data.message);
 
