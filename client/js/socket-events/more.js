@@ -3,6 +3,7 @@
 const $ = require("jquery");
 const socket = require("../socket");
 const render = require("../render");
+const condensed = require("../condensed");
 const chat = $("#chat");
 
 socket.on("more", function(data) {
@@ -56,6 +57,21 @@ socket.on("more", function(data) {
 
 			first.before(unreadMarker);
 		}
+	}
+
+	// Join duplicate condensed messages together
+	const condensedDuplicate = chan.find(".msg.condensed + .msg.condensed");
+
+	if (condensedDuplicate) {
+		const condensedCorrect = condensedDuplicate.prev();
+
+		condensed.updateText(condensedCorrect, condensed.getStoredTypes(condensedDuplicate));
+
+		condensedCorrect
+			.append(condensedDuplicate.find(".msg"))
+			.toggleClass("closed", condensedDuplicate.hasClass("closed"));
+
+		condensedDuplicate.remove();
 	}
 
 	// restore scroll position
