@@ -51,8 +51,8 @@ ClientManager.prototype.autoloadUsers = function() {
 			log.info(noUsersWarning);
 		}
 
-		// New users created since last time users were loaded
-		_.difference(updatedUsers, loaded).forEach((name) => this.loadUser(name));
+		// Reload all users. Existing users will only have their passwords reloaded.
+		updatedUsers.forEach((name) => this.loadUser(name));
 
 		// Existing users removed since last time users were loaded
 		_.difference(loaded, updatedUsers).forEach((name) => {
@@ -67,22 +67,30 @@ ClientManager.prototype.autoloadUsers = function() {
 };
 
 ClientManager.prototype.loadUser = function(name) {
-	const user = readUserConfig(name);
+	const userConfig = readUserConfig(name);
 
-	if (!user) {
+	if (!userConfig) {
 		return;
 	}
 
 	let client = this.findClient(name);
 
 	if (client) {
-		log.warn(`Tried to load user ${colors.bold(name)}, which is already loaded.`);
-		return client;
+		if (userConfig.password !== client.config.password) {
+			/**
+			 * If we happen to reload an existing client, make super duper sure we
+			 * have their latest password. We're not replacing the entire config
+			 * object, because that could have undesired consequences.
+			 *
+			 * @see https://github.com/thelounge/lounge/issues/598
+			 */
+			client.config.password = userConfig.password;
+			log.info(`Password for user ${colors.bold(name)} was reset.`);
+		}
+	} else {
+		client = new Client(this, name, userConfig);
+		this.clients.push(client);
 	}
-
-	client = new Client(this, name, user);
-	this.clients.push(client);
-
 	return client;
 };
 
