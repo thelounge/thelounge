@@ -17,12 +17,7 @@ program
 		}
 
 		const ClientManager = require("../../clientManager");
-
-		if (Helper.config.public) {
-			log.warn(`Users have no effect in ${colors.bold("public")} mode.`);
-		}
-
-		var users = new ClientManager().getUsers();
+		const users = new ClientManager().getUsers();
 
 		if (users === undefined) { // There was an error, already logged
 			return;

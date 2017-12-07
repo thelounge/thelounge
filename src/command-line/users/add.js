@@ -17,11 +17,6 @@ program
 		}
 
 		const ClientManager = require("../../clientManager");
-
-		if (Helper.config.public) {
-			log.warn(`Users have no effect in ${colors.bold("public")} mode.`);
-		}
-
 		const manager = new ClientManager();
 		const users = manager.getUsers();
 

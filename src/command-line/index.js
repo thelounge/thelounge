@@ -51,7 +51,9 @@ Helper.setHome(home);
 
 require("./start");
 require("./config");
-require("./users");
+if (!Helper.config.public && !Helper.config.ldap.enable) {
+	require("./users");
+}
 require("./install");
 
 // TODO: Remove this when releasing The Lounge v3

@@ -17,8 +17,7 @@ program
 		}
 
 		const ClientManager = require("../../clientManager");
-
-		var users = new ClientManager().getUsers();
+		const users = new ClientManager().getUsers();
 
 		if (users === undefined) { // There was an error, already logged
 			return;
