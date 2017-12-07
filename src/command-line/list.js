@@ -11,8 +11,8 @@ program
 	.description("List all users")
 	.on("--help", Utils.extraHelp)
 	.action(function() {
-		if (!fs.existsSync(Helper.USERS_PATH)) {
-			log.error(`${Helper.USERS_PATH} does not exist.`);
+		if (!fs.existsSync(Helper.getUsersPath())) {
+			log.error(`${Helper.getUsersPath({expanded: false})} does not exist.`);
 			return;
 		}
 

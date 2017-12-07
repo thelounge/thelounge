@@ -9,20 +9,20 @@ const Utils = require("./utils");
 
 program
 	.command("config")
-	.description(`Edit configuration file located at ${colors.green(Helper.CONFIG_PATH)}.`)
+	.description(`Edit configuration file located at ${colors.green(Helper.getConfigPath({expanded: false}))}.`)
 	.on("--help", Utils.extraHelp)
 	.action(function() {
-		if (!fs.existsSync(Helper.CONFIG_PATH)) {
-			log.error(`${Helper.CONFIG_PATH} does not exist.`);
+		if (!fs.existsSync(Helper.getConfigPath())) {
+			log.error(`${Helper.getConfigPath({expanded: false})} does not exist.`);
 			return;
 		}
 
 		var child_spawn = child.spawn(
 			process.env.EDITOR || "vi",
-			[Helper.CONFIG_PATH],
+			[Helper.getConfigPath()],
 			{stdio: "inherit"}
 		);
 		child_spawn.on("error", function() {
-			log.error(`Unable to open ${colors.green(Helper.CONFIG_PATH)}. ${colors.bold("$EDITOR")} is not set, and ${colors.bold("vi")} was not found.`);
+			log.error(`Unable to open ${colors.green(Helper.getConfigPath({expanded: false}))}. ${colors.bold("$EDITOR")} is not set, and ${colors.bold("vi")} was not found.`);
 		});
 	});

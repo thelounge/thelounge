@@ -43,7 +43,7 @@ ClientManager.prototype.autoloadUsers = function() {
 
 	users.forEach((name) => this.loadUser(name));
 
-	fs.watch(Helper.USERS_PATH, _.debounce(() => {
+	fs.watch(Helper.getUsersPath(), _.debounce(() => {
 		const loaded = this.clients.map((c) => c.name);
 		const updatedUsers = this.getUsers();
 
@@ -88,7 +88,7 @@ ClientManager.prototype.loadUser = function(name) {
 
 ClientManager.prototype.getUsers = function() {
 	return fs
-		.readdirSync(Helper.USERS_PATH)
+		.readdirSync(Helper.getUsersPath())
 		.filter((file) => file.endsWith(".json"))
 		.map((file) => file.slice(0, -5));
 };

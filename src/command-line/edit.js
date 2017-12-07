@@ -9,11 +9,11 @@ const Utils = require("./utils");
 
 program
 	.command("edit <name>")
-	.description(`Edit user file located at ${colors.green(Helper.getUserConfigPath("<name>"))}.`)
+	.description(`Edit user file located at ${colors.green(Helper.getUserConfigPath("<name>", {expanded: false}))}.`)
 	.on("--help", Utils.extraHelp)
 	.action(function(name) {
-		if (!fs.existsSync(Helper.USERS_PATH)) {
-			log.error(`${Helper.USERS_PATH} does not exist.`);
+		if (!fs.existsSync(Helper.getUsersPath())) {
+			log.error(`${Helper.getUsersPath({expanded: false})} does not exist.`);
 			return;
 		}
 
@@ -35,6 +35,6 @@ program
 			{stdio: "inherit"}
 		);
 		child_spawn.on("error", function() {
-			log.error(`Unable to open ${colors.green(Helper.getUserConfigPath(name))}. ${colors.bold("$EDITOR")} is not set, and ${colors.bold("vi")} was not found.`);
+			log.error(`Unable to open ${colors.green(Helper.getUserConfigPath(name, {expanded: false}))}. ${colors.bold("$EDITOR")} is not set, and ${colors.bold("vi")} was not found.`);
 		});
 	});
