@@ -193,19 +193,23 @@ function index(req, res, next) {
 	}
 
 	const policies = [
-		"default-src *",
-		"connect-src 'self' ws: wss:",
-		"style-src * 'unsafe-inline'",
-		"script-src 'self'",
-		"child-src 'self'",
-		"object-src 'none'",
-		"form-action 'none'",
+		"default-src 'none'", // default to nothing
+		"form-action 'none'", // no default-src fallback
+		"connect-src 'self' ws: wss:", // allow self for polling; websockets
+		"style-src 'self' 'unsafe-inline'", // allow inline due to use in irc hex colors
+		"script-src 'self'", // javascript
+		"worker-src 'self'", // service worker
+		"manifest-src 'self'", // manifest.json
+		"font-src 'self' https:", // allow loading fonts from secure sites (e.g. google fonts)
+		"media-src 'self' https:", // self for notification sound; allow https media (audio previews)
 	];
 
 	// If prefetch is enabled, but storage is not, we have to allow mixed content
 	if (Helper.config.prefetchStorage || !Helper.config.prefetch) {
 		policies.push("img-src 'self'");
 		policies.unshift("block-all-mixed-content");
+	} else {
+		policies.push("img-src http: https:");
 	}
 
 	res.setHeader("Content-Type", "text/html");
