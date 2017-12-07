@@ -51,11 +51,7 @@ Helper.setHome(home);
 
 require("./start");
 require("./config");
-require("./list");
-require("./add");
-require("./remove");
-require("./reset");
-require("./edit");
+require("./users");
 require("./install");
 
 // TODO: Remove this when releasing The Lounge v3

@@ -4,8 +4,8 @@ const program = require("commander");
 const child = require("child_process");
 const colors = require("colors/safe");
 const fs = require("fs");
-const Helper = require("../helper");
-const Utils = require("./utils");
+const Helper = require("../../helper");
+const Utils = require("../utils");
 
 program
 	.command("edit <name>")
@@ -17,7 +17,7 @@ program
 			return;
 		}
 
-		const ClientManager = require("../clientManager");
+		const ClientManager = require("../../clientManager");
 
 		var users = new ClientManager().getUsers();
 
