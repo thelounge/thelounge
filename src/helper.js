@@ -9,18 +9,21 @@ var net = require("net");
 var bcrypt = require("bcryptjs");
 const colors = require("colors/safe");
 
-var Helper = {
+const Helper = {
 	config: null,
-	expandHome: expandHome,
-	getPackagesPath: getPackagesPath,
-	getPackageModulePath: getPackageModulePath,
-	getStoragePath: getStoragePath,
-	getUserConfigPath: getUserConfigPath,
-	getUserLogsPath: getUserLogsPath,
-	setHome: setHome,
-	getVersion: getVersion,
-	getGitCommit: getGitCommit,
-	ip2hex: ip2hex,
+	expandHome,
+	getHomePath,
+	getPackagesPath,
+	getPackageModulePath,
+	getStoragePath,
+	getConfigPath,
+	getUsersPath,
+	getUserConfigPath,
+	getUserLogsPath,
+	setHome,
+	getVersion,
+	getGitCommit,
+	ip2hex,
 
 	password: {
 		hash: passwordHash,
@@ -28,6 +31,10 @@ var Helper = {
 		requiresUpdate: passwordRequiresUpdate,
 	},
 };
+
+let homePath;
+let configPath;
+let usersPath;
 
 module.exports = Helper;
 
@@ -61,14 +68,14 @@ function getGitCommit() {
 	}
 }
 
-function setHome(homePath) {
-	this.HOME = expandHome(homePath);
-	this.CONFIG_PATH = path.join(this.HOME, "config.js");
-	this.USERS_PATH = path.join(this.HOME, "users");
+function setHome(newPath) {
+	homePath = newPath;
+	configPath = path.join(getHomePath({expanded: false}), "config.js");
+	usersPath = path.join(getHomePath({expanded: false}), "users");
 
 	// Reload config from new home location
-	if (fs.existsSync(this.CONFIG_PATH)) {
-		var userConfig = require(this.CONFIG_PATH);
+	if (fs.existsSync(getConfigPath())) {
+		var userConfig = require(getConfigPath());
 		this.config = _.merge(this.config, userConfig);
 	}
 
@@ -91,26 +98,47 @@ function setHome(homePath) {
 	// TODO: Remove in future release
 	// Backwards compatibility for old way of specifying themes in settings
 	if (this.config.theme.includes(".css")) {
-		log.warn(`Referring to CSS files in the ${colors.green("theme")} setting of ${colors.green(Helper.CONFIG_PATH)} is ${colors.bold("deprecated")} and will be removed in a future version.`);
+		log.warn(`Referring to CSS files in the ${colors.green("theme")} setting of ${colors.green(getConfigPath({expanded: false}))} is ${colors.bold("deprecated")} and will be removed in a future version.`);
 	} else {
 		this.config.theme = `themes/${this.config.theme}.css`;
 	}
 }
 
-function getUserConfigPath(name) {
-	return path.join(this.USERS_PATH, name + ".json");
+function getHomePath(options) {
+	if (options && options.expanded === false) { // TODO: Use destructuring assignment in v3
+		return homePath;
+	}
+	return expandHome(homePath);
+}
+
+function getConfigPath(options) {
+	if (options && options.expanded === false) { // TODO: Use destructuring assignment in v3
+		return configPath;
+	}
+	return expandHome(configPath);
+}
+
+function getUsersPath(options) {
+	if (options && options.expanded === false) { // TODO: Use destructuring assignment in v3
+		return usersPath;
+	}
+	return expandHome(usersPath);
+}
+
+function getUserConfigPath(name, options) {
+	return path.join(getUsersPath(options), name + ".json");
 }
 
 function getUserLogsPath(name, network) {
-	return path.join(this.HOME, "logs", name, network);
+	return path.join(getHomePath(), "logs", name, network);
 }
 
 function getStoragePath() {
-	return path.join(this.HOME, "storage");
+	return path.join(getHomePath(), "storage");
 }
 
 function getPackagesPath() {
-	return path.join(this.HOME, "packages", "node_modules");
+	return path.join(getHomePath(), "packages", "node_modules");
 }
 
 function getPackageModulePath(packageName) {
