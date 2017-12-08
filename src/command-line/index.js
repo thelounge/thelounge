@@ -14,7 +14,7 @@ if (require("semver").lt(process.version, "6.0.0")) {
 	log.warn("Please upgrade to Node.js v6 or more recent.");
 }
 
-program.version(Helper.getVersion(), "-v, --version")
+program
 	.option("--home <path>", `${colors.bold("[DEPRECATED]")} Use the ${colors.green("THELOUNGE_HOME")} environment variable instead.`)
 	.on("--help", Utils.extraHelp)
 	.parseOptions(process.argv);
@@ -57,6 +57,7 @@ require("./remove");
 require("./reset");
 require("./edit");
 require("./install");
+require("./version");
 
 // TODO: Remove this when releasing The Lounge v3
 if (process.argv[1].endsWith(`${require("path").sep}lounge`)) {
