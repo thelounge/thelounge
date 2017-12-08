@@ -2,6 +2,7 @@
 
 const colors = require("colors/safe");
 const fs = require("fs");
+const Helper = require("../helper");
 const path = require("path");
 
 let home;
@@ -13,7 +14,7 @@ class Utils {
 			"",
 			"  Environment variable:",
 			"",
-			`    THELOUNGE_HOME   Path for all configuration files and folders. Defaults to ${colors.green(Utils.defaultHome())}.`,
+			`    THELOUNGE_HOME   Path for all configuration files and folders. Defaults to ${colors.green(Helper.expandHome(Utils.defaultHome()))}.`,
 			"",
 		].forEach((e) => console.log(e)); // eslint-disable-line no-console
 	}
