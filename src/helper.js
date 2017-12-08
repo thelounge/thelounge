@@ -157,6 +157,8 @@ function ip2hex(address) {
 	}).join("");
 }
 
+// Expand ~ into the current user home dir.
+// This does *not* support `~other_user/tmp` => `/home/other_user/tmp`.
 function expandHome(shortenedPath) {
 	if (!shortenedPath) {
 		return "";
