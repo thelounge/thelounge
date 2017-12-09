@@ -84,7 +84,7 @@ $(function() {
 			});
 		} else if (target.hasClass("chan")) {
 			output = templates.contextmenu_item({
-				class: "chan",
+				class: target.hasClass("lobby") ? "network" : "chan",
 				text: target.data("title"),
 				data: target.data("target"),
 			});

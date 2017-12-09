@@ -224,6 +224,7 @@ kbd {
 .context-menu-chan::before { content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */ }
 .context-menu-close::before { content: "\f00d"; /* http://fontawesome.io/icon/times/ */ }
 
+.context-menu-network::before,
 #sidebar .chan.lobby::before,
 #chat .lobby .title::before { content: "\f0a0"; /* http://fontawesome.io/icon/hdd-o/ */ }
 
