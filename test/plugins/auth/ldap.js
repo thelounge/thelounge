@@ -111,15 +111,23 @@ function testLdapAuth() {
 describe("LDAP authentication plugin", function() {
 	this.slow(200);
 
-	before((done) => {
-		this.server = startLdapServer(done);
+	let server;
+	let originalLogInfo;
+
+	before(function(done) {
+		originalLogInfo = log.info;
+		log.info = () => {};
+
+		server = startLdapServer(done);
 	});
 
-	after(() => {
-		this.server.close();
+	after(function() {
+		server.close();
+
+		log.info = originalLogInfo;
 	});
 
-	beforeEach(() => {
+	beforeEach(function() {
 		Helper.config.public = false;
 		Helper.config.ldap.enable = true;
 		Helper.config.ldap.url = "ldap://localhost:" + String(serverPort);

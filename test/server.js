@@ -8,13 +8,19 @@ const io = require("socket.io-client");
 describe("Server", function() {
 	this.timeout(5000);
 	let server;
+	let originalLogInfo;
 
-	before(() => {
+	before(function() {
+		originalLogInfo = log.info;
+		log.info = () => {};
+
 		server = require("../src/server")();
 	});
 
-	after((done) => {
+	after(function(done) {
 		server.close(done);
+
+		log.info = originalLogInfo;
 	});
 
 	const webURL = `http://${Helper.config.host}:${Helper.config.port}/`;
