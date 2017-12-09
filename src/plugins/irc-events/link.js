@@ -120,6 +120,18 @@ function parse(msg, preview, res, client) {
 		}
 		preview.type = "audio";
 		preview.res = res.type;
+
+		break;
+
+	case "video/webm":
+	case "video/ogg":
+	case "video/mp4":
+		if (!preview.link.startsWith("https://")) {
+			break;
+		}
+		preview.res = res.type;
+		preview.type = "video";
+
 		break;
 
 	default:
@@ -186,7 +198,7 @@ function fetch(uri, cb) {
 				if (contentLength > limit) {
 					req.abort();
 				}
-			} else if (/^audio\/.+/.test(res.headers["content-type"])) {
+			} else if (/^(audio|video)\/.+/.test(res.headers["content-type"])) {
 				req.abort(); // ensure server doesn't download the audio file
 			} else {
 				// if not image, limit download to 50kb, since we need only meta tags
