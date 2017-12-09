@@ -30,7 +30,7 @@ var manager = null;
 module.exports = function() {
 	log.info(`The Lounge ${colors.green(Helper.getVersion())} \
 (Node.js ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${process.arch})`);
-	log.info(`Configuration file: ${colors.green(Helper.CONFIG_PATH)}`);
+	log.info(`Configuration file: ${colors.green(Helper.getConfigPath())}`);
 
 	var app = express()
 		.disable("x-powered-by")

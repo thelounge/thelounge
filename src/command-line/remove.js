@@ -11,8 +11,8 @@ program
 	.description("Remove an existing user")
 	.on("--help", Utils.extraHelp)
 	.action(function(name) {
-		if (!fs.existsSync(Helper.USERS_PATH)) {
-			log.error(`${Helper.USERS_PATH} does not exist.`);
+		if (!fs.existsSync(Helper.getUsersPath())) {
+			log.error(`${Helper.getUsersPath()} does not exist.`);
 			return;
 		}
 

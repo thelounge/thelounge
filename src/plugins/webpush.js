@@ -8,7 +8,7 @@ const Helper = require("../helper");
 
 class WebPush {
 	constructor() {
-		const vapidPath = path.join(Helper.HOME, "vapid.json");
+		const vapidPath = path.join(Helper.getHomePath(), "vapid.json");
 
 		if (fs.existsSync(vapidPath)) {
 			const data = fs.readFileSync(vapidPath, "utf-8");
