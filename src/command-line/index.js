@@ -2,6 +2,7 @@
 
 global.log = require("../log.js");
 
+const _ = require("lodash");
 const fs = require("fs");
 const path = require("path");
 const program = require("commander");
@@ -16,6 +17,11 @@ if (require("semver").lt(process.version, "6.0.0")) {
 
 program.version(Helper.getVersion(), "-v, --version")
 	.option("--home <path>", `${colors.bold("[DEPRECATED]")} Use the ${colors.green("THELOUNGE_HOME")} environment variable instead.`)
+	.option(
+		"-c, --config <key=value>",
+		"override entries of the configuration file, must be specified for each entry that needs to be overriden",
+		Utils.parseConfigOptions
+	)
 	.on("--help", Utils.extraHelp)
 	.parseOptions(process.argv);
 
@@ -48,6 +54,9 @@ if (!home) {
 }
 
 Helper.setHome(home);
+
+// Merge config key-values passed as CLI options into the main config
+_.merge(Helper.config, program.config);
 
 require("./start");
 require("./config");

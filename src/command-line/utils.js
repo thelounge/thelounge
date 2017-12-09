@@ -1,5 +1,6 @@
 "use strict";
 
+const _ = require("lodash");
 const colors = require("colors/safe");
 const fs = require("fs");
 const Helper = require("../helper");
@@ -50,6 +51,55 @@ class Utils {
 		home = fs.readFileSync(distConfig, "utf-8").trim();
 
 		return home;
+	}
+
+	// Parses CLI options such as `-c public=true`, `-c debug.raw=true`, etc.
+	static parseConfigOptions(val, memo) {
+		// Invalid option that is not of format `key=value`, do nothing
+		if (!val.includes("=")) {
+			return memo;
+		}
+
+		const parseValue = (value) => {
+			if (value === "true") {
+				return true;
+			} else if (value === "false") {
+				return false;
+			} else if (value === "undefined") {
+				return undefined;
+			} else if (value === "null") {
+				return null;
+			} else if (/^\[.*\]$/.test(value)) { // Arrays
+				// Supporting arrays `[a,b]` and `[a, b]`
+				const array = value.slice(1, -1).split(/,\s*/);
+				// If [] is given, it will be parsed as `[ "" ]`, so treat this as empty
+				if (array.length === 1 && array[0] === "") {
+					return [];
+				}
+				return array.map(parseValue); // Re-parses all values of the array
+			}
+			return value;
+		};
+
+		// First time the option is parsed, memo is not set
+		if (memo === undefined) {
+			memo = {};
+		}
+
+		// Note: If passed `-c foo="bar=42"` (with single or double quotes), `val`
+		//       will always be passed as `foo=bar=42`, never with quotes.
+		const position = val.indexOf("="); // Only split on the first = found
+		const key = val.slice(0, position);
+		const value = val.slice(position + 1);
+		const parsedValue = parseValue(value);
+
+		if (_.has(memo, key)) {
+			log.warn(`Configuration key ${colors.bold(key)} was already specified, ignoring...`);
+		} else {
+			memo = _.set(memo, key, parsedValue);
+		}
+
+		return memo;
 	}
 }
 
