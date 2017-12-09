@@ -16,7 +16,7 @@ class Utils {
 			"",
 			`    THELOUNGE_HOME   Path for all configuration files and folders. Defaults to ${colors.green(Helper.expandHome(Utils.defaultHome()))}.`,
 			"",
-		].forEach((e) => console.log(e)); // eslint-disable-line no-console
+		].forEach((e) => log.raw(e));
 	}
 
 	static defaultHome() {
