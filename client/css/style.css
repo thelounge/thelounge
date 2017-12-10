@@ -385,7 +385,6 @@ kbd {
 #viewport .rt,
 #chat button.menu {
 	color: #ccc;
-	display: none;
 	float: left;
 	font-size: 14px;
 	line-height: 1;
@@ -433,7 +432,7 @@ kbd {
 }
 
 #viewport.rt #chat .sidebar {
-	right: -180px;
+	right: 0;
 }
 
 #sidebar {
@@ -758,10 +757,6 @@ kbd {
 	word-break: break-all;
 }
 
-#windows .window .header {
-	display: none;
-}
-
 #chat-container,
 #chat .chan {
 	position: absolute;
@@ -868,7 +863,7 @@ kbd {
 }
 
 #chat .channel .chat {
-	right: 180px;
+	right: 0;
 }
 
 #chat .special {
@@ -876,7 +871,7 @@ kbd {
 }
 
 #viewport.rt .chat {
-	right: 0;
+	right: 180px;
 }
 
 #chat .sidebar {
@@ -884,7 +879,7 @@ kbd {
 	border-left: 1px solid #e7e7e7;
 	bottom: 0;
 	position: absolute;
-	right: 0;
+	right: -180px;
 	width: 180px;
 	transition: right 0.4s;
 	touch-action: pan-y;
@@ -1978,6 +1973,29 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	/* End fade out for long usernames */
 }
 
+/* Desktop */
+@media (min-width: 769px) {
+	#main {
+		transition: left 160ms;
+		left: 0;
+	}
+
+	#sidebar {
+		transition: left 160ms;
+		left: -220px;
+	}
+
+	#viewport.menu-open #main {
+		left: 220px;
+	}
+
+	#viewport.menu-open #sidebar {
+		left: 0;
+	}
+}
+
+/* Mobile */
+
 @media (max-width: 768px) {
 	/**
 	  * TODO Replace this with `@media (hover: hover)` when Firefox supports it
@@ -2061,14 +2079,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	}
 
 	#chat .channel .chat {
-		right: 0;
-	}
-
-	#chat .sidebar {
-		right: -180px;
-	}
-
-	#viewport.rt #chat .sidebar {
 		right: 0;
 	}
 

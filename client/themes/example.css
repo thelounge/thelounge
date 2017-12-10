@@ -46,6 +46,12 @@ body {
 	border-radius: 2px;
 }
 
+@media (min-width: 769px) {
+	#main {
+		left: 5px;
+	}
+}
+
 @media (max-width: 768px) {
 	#sidebar {
 		left: -220px;

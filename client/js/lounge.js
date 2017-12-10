@@ -28,20 +28,33 @@ $(function() {
 	$(document.body).data("app-name", document.title);
 
 	var viewport = $("#viewport");
-	var sidebarSlide = slideoutMenu(viewport[0], sidebar[0]);
+	var sidebarSlide = slideoutMenu(viewport[0], sidebar[0], "networklist-expanded");
 	var contextMenuContainer = $("#context-menu-container");
 	var contextMenu = $("#context-menu");
 
 	$("#main").on("click", function(e) {
 		if ($(e.target).is(".lt")) {
 			sidebarSlide.toggle(!sidebarSlide.isOpen());
-		} else if (sidebarSlide.isOpen()) {
+		} else if (sidebarSlide.isOpen() && viewport.outerWidth() < 768) {
+			// If mobile, sidebar is open, and we click on something else - close the sidebar
 			sidebarSlide.toggle(false);
 		}
 	});
 
+	// Toggle networklist if its "openness" isn't what it should be (what is stored in localstorage)
+	const networklistShouldBeExpanded = storage.get("networklist-expanded") === "true"; // stored string -> boolean
+	if (networklistShouldBeExpanded !== sidebarSlide.isOpen()) {
+		sidebarSlide.toggle(!sidebarSlide.isOpen());
+	}
+
 	viewport.on("click", ".rt", function(e) {
 		var self = $(this);
+
+		// We wait since this can be called during its close animation, and set the wrong value, since it is still visible then
+		$(".chan.active .sidebar").on("transitionend", function() {
+			storage.set("userlist-expanded", utils.isUserlistVisible());
+		});
+
 		viewport.toggleClass(self.attr("class"));
 		e.stopPropagation();
 		chat.find(".chan.active .chat").trigger("msg.sticky");
@@ -346,8 +359,6 @@ $(function() {
 			utils.toggleNotificationMarkers(false);
 		}
 
-		sidebarSlide.toggle(false);
-
 		var lastActive = $("#windows > .active");
 
 		lastActive
@@ -405,6 +416,12 @@ $(function() {
 		}
 
 		focus();
+
+		// Toggle userlist if its "openness" isn't what it should be (what is stored in localstorage)
+		const shouldBeExpanded = storage.get("userlist-expanded") === "true"; // stored string -> boolean
+		if (shouldBeExpanded !== utils.isUserlistVisible()) {
+			viewport.find(".chan.active .rt").click();
+		}
 	});
 
 	sidebar.on("click", "#sign-out", function() {
