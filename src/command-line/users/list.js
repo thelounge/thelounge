@@ -3,8 +3,8 @@
 const colors = require("colors/safe");
 const program = require("commander");
 const fs = require("fs");
-const Helper = require("../helper");
-const Utils = require("./utils");
+const Helper = require("../../helper");
+const Utils = require("../utils");
 
 program
 	.command("list")
@@ -16,13 +16,8 @@ program
 			return;
 		}
 
-		const ClientManager = require("../clientManager");
-
-		if (Helper.config.public) {
-			log.warn(`Users have no effect in ${colors.bold("public")} mode.`);
-		}
-
-		var users = new ClientManager().getUsers();
+		const ClientManager = require("../../clientManager");
+		const users = new ClientManager().getUsers();
 
 		if (users === undefined) { // There was an error, already logged
 			return;

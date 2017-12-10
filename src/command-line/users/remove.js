@@ -3,8 +3,8 @@
 const colors = require("colors/safe");
 const program = require("commander");
 const fs = require("fs");
-const Helper = require("../helper");
-const Utils = require("./utils");
+const Helper = require("../../helper");
+const Utils = require("../utils");
 
 program
 	.command("remove <name>")
@@ -16,7 +16,7 @@ program
 			return;
 		}
 
-		const ClientManager = require("../clientManager");
+		const ClientManager = require("../../clientManager");
 		const manager = new ClientManager();
 
 		try {

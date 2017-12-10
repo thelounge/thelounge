@@ -3,8 +3,8 @@
 const colors = require("colors/safe");
 const program = require("commander");
 const fs = require("fs");
-const Helper = require("../helper");
-const Utils = require("./utils");
+const Helper = require("../../helper");
+const Utils = require("../utils");
 
 program
 	.command("add <name>")
@@ -16,12 +16,7 @@ program
 			return;
 		}
 
-		const ClientManager = require("../clientManager");
-
-		if (Helper.config.public) {
-			log.warn(`Users have no effect in ${colors.bold("public")} mode.`);
-		}
-
+		const ClientManager = require("../../clientManager");
 		const manager = new ClientManager();
 		const users = manager.getUsers();
 
