@@ -79,7 +79,14 @@ function setHome(newPath) {
 
 	// Reload config from new home location
 	if (fs.existsSync(configPath)) {
-		var userConfig = require(configPath);
+		const userConfig = require(configPath);
+
+		if (_.isEmpty(userConfig)) {
+			log.warn(`The file located at ${colors.green(configPath)} does not appear to expose anything.`);
+			log.warn(`Make sure it is non-empty and the configuration is exported using ${colors.bold("module.exports = { ... }")}.`);
+			log.warn("Using default configuration...");
+		}
+
 		this.config = _.merge(this.config, userConfig);
 	}
 
