@@ -35,7 +35,7 @@ class Utils {
 			".lounge_home"
 		));
 		if (fs.existsSync(deprecatedDistConfig)) {
-			log.warn(`${colors.green(".lounge_home")} is ${colors.bold("deprecated")} and will be ignored as of The Lounge v3.`);
+			log.warn(`${colors.green(".lounge_home")} is ${colors.bold.red("deprecated")} and will be ignored as of The Lounge v3.`);
 			log.warn(`Use ${colors.green(".thelounge_home")} instead.`);
 
 			distConfig = deprecatedDistConfig;

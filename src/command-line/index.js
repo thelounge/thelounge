@@ -11,12 +11,12 @@ const Helper = require("../helper");
 const Utils = require("./utils");
 
 if (require("semver").lt(process.version, "6.0.0")) {
-	log.warn(`Support of Node.js v4 is ${colors.bold("deprecated")} and will be removed in The Lounge v3.`);
+	log.warn(`Support of Node.js v4 is ${colors.bold.red("deprecated")} and will be removed in The Lounge v3.`);
 	log.warn("Please upgrade to Node.js v6 or more recent.");
 }
 
 program.version(Helper.getVersion(), "-v, --version")
-	.option("--home <path>", `${colors.bold("[DEPRECATED]")} Use the ${colors.green("THELOUNGE_HOME")} environment variable instead.`)
+	.option("--home <path>", `${colors.bold.red("[DEPRECATED]")} Use the ${colors.green("THELOUNGE_HOME")} environment variable instead.`)
 	.option(
 		"-c, --config <key=value>",
 		"override entries of the configuration file, must be specified for each entry that needs to be overriden",
@@ -26,7 +26,7 @@ program.version(Helper.getVersion(), "-v, --version")
 	.parseOptions(process.argv);
 
 if (program.home) {
-	log.warn(`${colors.green("--home")} is ${colors.bold("deprecated")} and will be removed in The Lounge v3.`);
+	log.warn(`${colors.green("--home")} is ${colors.bold.red("deprecated")} and will be removed in The Lounge v3.`);
 	log.warn(`Use the ${colors.green("THELOUNGE_HOME")} environment variable instead.`);
 }
 
@@ -43,7 +43,7 @@ if (!fs.existsSync(path.join(
 }
 
 if (process.env.LOUNGE_HOME) {
-	log.warn(`${colors.green("LOUNGE_HOME")} is ${colors.bold("deprecated")} and will be removed in The Lounge v3.`);
+	log.warn(`${colors.green("LOUNGE_HOME")} is ${colors.bold.red("deprecated")} and will be removed in The Lounge v3.`);
 	log.warn(`Use ${colors.green("THELOUNGE_HOME")} instead.`);
 }
 
@@ -67,7 +67,7 @@ require("./install");
 
 // TODO: Remove this when releasing The Lounge v3
 if (process.argv[1].endsWith(`${require("path").sep}lounge`)) {
-	log.warn(`The ${colors.red("lounge")} CLI is ${colors.bold("deprecated")} and will be removed in v3.`);
+	log.warn(`The ${colors.red("lounge")} CLI is ${colors.bold.red("deprecated")} and will be removed in v3.`);
 	log.warn(`Use ${colors.green("thelounge")} instead.`);
 	process.argv[1] = "thelounge";
 }

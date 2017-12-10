@@ -109,7 +109,7 @@ function setHome(newPath) {
 	// TODO: Remove in future release
 	// Backwards compatibility for old way of specifying themes in settings
 	if (this.config.theme.includes(".css")) {
-		log.warn(`Referring to CSS files in the ${colors.green("theme")} setting of ${colors.green(configPath)} is ${colors.bold("deprecated")} and will be removed in a future version.`);
+		log.warn(`Referring to CSS files in the ${colors.green("theme")} setting of ${colors.green(configPath)} is ${colors.bold.red("deprecated")} and will be removed in a future version.`);
 	} else {
 		this.config.theme = `themes/${this.config.theme}.css`;
 	}
