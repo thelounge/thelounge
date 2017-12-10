@@ -12,7 +12,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -36,7 +35,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -60,7 +58,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: true,
@@ -84,7 +81,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -108,7 +104,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -123,7 +118,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -138,7 +132,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -153,7 +146,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -177,7 +169,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: true,
 			strikethrough: false,
@@ -192,7 +183,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: true,
 			strikethrough: false,
@@ -207,7 +197,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -222,7 +211,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -246,7 +234,6 @@ describe("parseStyle", () => {
 			bgColor: 9,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -270,7 +257,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: true,
 			underline: false,
 			strikethrough: false,
@@ -285,7 +271,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: true,
 			underline: false,
 			strikethrough: true,
@@ -300,7 +285,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: true,
@@ -315,7 +299,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -339,7 +322,6 @@ describe("parseStyle", () => {
 			bgColor: 2,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -354,7 +336,6 @@ describe("parseStyle", () => {
 			bgColor: 2,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: true,
@@ -378,7 +359,6 @@ describe("parseStyle", () => {
 			bgColor: 4,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: true,
 			underline: false,
 			strikethrough: true,
@@ -402,7 +382,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -417,7 +396,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: true,
@@ -432,7 +410,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -447,7 +424,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: true,
@@ -471,7 +447,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -495,7 +470,6 @@ describe("parseStyle", () => {
 			hexColor: undefined,
 			hexBgColor: undefined,
 			bold: false,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -519,7 +493,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: true,
 			underline: false,
 			strikethrough: false,
@@ -543,7 +516,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -558,7 +530,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: "FFFFFF",
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -573,7 +544,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -588,7 +558,6 @@ describe("parseStyle", () => {
 			bgColor: 4,
 			hexColor: "FF00FF",
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -603,7 +572,6 @@ describe("parseStyle", () => {
 			bgColor: 4,
 			hexColor: "EEEAFF",
 			hexBgColor: "001122",
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -618,7 +586,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -634,6 +601,219 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	it("should reverse and format color", () => {
+		const input = "\x032,9text with fg and bg \x16with text reversed";
+		const expected = [{
+			bold: false,
+			textColor: 2,
+			bgColor: 9,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: "text with fg and bg ",
+
+			start: 0,
+			end: 20,
+		}, {
+			bold: false,
+			textColor: 9,
+			bgColor: 2,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: "with text reversed",
+
+			start: 20,
+			end: 38,
+		}];
+
+		const actual = parseStyle(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should toggle reverse correctly", () => {
+		const input = "\x0305,11text \x16reversed and \x16back again and \x16reversed";
+		const expected = [{
+			bold: false,
+			textColor: 5,
+			bgColor: 11,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: "text ",
+
+			start: 0,
+			end: 5,
+		}, {
+			bold: false,
+			textColor: 11,
+			bgColor: 5,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: "reversed and ",
+
+			start: 5,
+			end: 18,
+		}, {
+			bold: false,
+			textColor: 5,
+			bgColor: 11,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: "back again and ",
+
+			start: 18,
+			end: 33,
+		}, {
+			bold: false,
+			textColor: 11,
+			bgColor: 5,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: "reversed",
+
+			start: 33,
+			end: 41,
+		}];
+
+		const actual = parseStyle(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should escape reverse when a new style is applied", () => {
+		const input = "\x0311,02text \x16 reversed \x0304,05 and new style";
+		const expected = [{
+			bold: false,
+			textColor: 11,
+			bgColor: 2,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: "text ",
+
+			start: 0,
+			end: 5,
+		}, {
+			bold: false,
+			textColor: 2,
+			bgColor: 11,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: " reversed ",
+
+			start: 5,
+			end: 15,
+		}, {
+			bold: false,
+			textColor: 4,
+			bgColor: 5,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: " and new style",
+
+			start: 15,
+			end: 29,
+		}];
+
+		const actual = parseStyle(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should not reverse if color is specified after reverse tag", () => {
+		const input = "\x16\x032,9text with fg and bg";
+		const expected = [{
+			bold: false,
+			textColor: 2,
+			bgColor: 9,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: "text with fg and bg",
+
+			start: 0,
+			end: 19,
+		}];
+
+		const actual = parseStyle(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should reverse, bold, and italics", () => {
+		const input = "\x034,13\x16\x02some text with \x1ditalics";
+		const expected = [{
+			bold: true,
+			textColor: 13,
+			bgColor: 4,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: "some text with ",
+
+			start: 0,
+			end: 15,
+		}, {
+			bold: true,
+			textColor: 13,
+			bgColor: 4,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			italic: true,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: "italics",
+
+			start: 15,
+			end: 22,
+		}];
+
+		const actual = parseStyle(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
 	it("should carry state correctly forward", () => {
 		const input = "\x02bold\x038yellow\x02nonBold\x03default";
 		const expected = [{
@@ -642,7 +822,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -657,7 +836,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -672,7 +850,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -687,7 +864,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -711,7 +887,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -726,7 +901,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -741,7 +915,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -761,11 +934,10 @@ describe("parseStyle", () => {
 		const input = "\x11\x1e\x02\x034\x16\x1d\x1ffull\x0fnone";
 		const expected = [{
 			bold: true,
-			textColor: 4,
-			bgColor: undefined,
+			textColor: undefined,
+			bgColor: 4, // \x16: fg- and bg- are reversed
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: true,
 			italic: true,
 			underline: true,
 			strikethrough: true,
@@ -780,7 +952,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -804,7 +975,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
@@ -830,7 +1000,6 @@ describe("parseStyle", () => {
 			bgColor: undefined,
 			hexColor: undefined,
 			hexBgColor: undefined,
-			reverse: false,
 			italic: false,
 			underline: false,
 			strikethrough: false,
