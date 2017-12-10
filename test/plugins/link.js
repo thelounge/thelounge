@@ -9,23 +9,23 @@ const link = require("../../src/plugins/irc-events/link.js");
 describe("Link plugin", function() {
 	this.slow(200);
 
-	before(function(done) {
-		this.app = util.createWebserver();
-		this.app.get("/real-test-image.png", function(req, res) {
+	let app;
+
+	beforeEach(function(done) {
+		app = util.createWebserver();
+		app.get("/real-test-image.png", function(req, res) {
 			res.sendFile(path.resolve(__dirname, "../../client/img/apple-touch-icon-120x120.png"));
 		});
-		this.connection = this.app.listen(9002, done);
-	});
+		this.connection = app.listen(9002, done);
 
-	after(function(done) {
-		this.connection.close(done);
-	});
-
-	beforeEach(function() {
 		this.irc = util.createClient();
 		this.network = util.createNetwork();
 
 		Helper.config.prefetchStorage = false;
+	});
+
+	afterEach(function(done) {
+		this.connection.close(done);
 	});
 
 	it("should be able to fetch basic information about URLs", function(done) {
@@ -45,7 +45,7 @@ describe("Link plugin", function() {
 			shown: true,
 		}]);
 
-		this.app.get("/basic", function(req, res) {
+		app.get("/basic", function(req, res) {
 			res.send("<title>test title</title><meta name='description' content='simple description'>");
 		});
 
@@ -67,7 +67,7 @@ describe("Link plugin", function() {
 
 		link(this.irc, this.network.channels[0], message);
 
-		this.app.get("/basic-og", function(req, res) {
+		app.get("/basic-og", function(req, res) {
 			res.send("<title>test</title><meta property='og:title' content='opengraph test'>");
 		});
 
@@ -84,7 +84,7 @@ describe("Link plugin", function() {
 
 		link(this.irc, this.network.channels[0], message);
 
-		this.app.get("/description-og", function(req, res) {
+		app.get("/description-og", function(req, res) {
 			res.send("<meta name='description' content='simple description'><meta property='og:description' content='opengraph description'>");
 		});
 
@@ -101,7 +101,7 @@ describe("Link plugin", function() {
 
 		link(this.irc, this.network.channels[0], message);
 
-		this.app.get("/thumb", function(req, res) {
+		app.get("/thumb", function(req, res) {
 			res.send("<title>Google</title><meta property='og:image' content='http://localhost:9002/real-test-image.png'>");
 		});
 
@@ -119,7 +119,7 @@ describe("Link plugin", function() {
 
 		link(this.irc, this.network.channels[0], message);
 
-		this.app.get("/thumb-image-src", function(req, res) {
+		app.get("/thumb-image-src", function(req, res) {
 			res.send("<link rel='image_src' href='http://localhost:9002/real-test-image.png'>");
 		});
 
@@ -136,7 +136,7 @@ describe("Link plugin", function() {
 
 		link(this.irc, this.network.channels[0], message);
 
-		this.app.get("/thumb-image-src", function(req, res) {
+		app.get("/thumb-image-src", function(req, res) {
 			res.send("<link rel='image_src' href='//localhost:9002/real-test-image.png'>");
 		});
 
@@ -153,7 +153,7 @@ describe("Link plugin", function() {
 
 		link(this.irc, this.network.channels[0], message);
 
-		this.app.get("/relative-thumb", function(req, res) {
+		app.get("/relative-thumb", function(req, res) {
 			res.send("<title>test relative image</title><meta property='og:image' content='/real-test-image.png'>");
 		});
 
@@ -172,7 +172,7 @@ describe("Link plugin", function() {
 
 		link(this.irc, this.network.channels[0], message);
 
-		this.app.get("/thumb-no-title", function(req, res) {
+		app.get("/thumb-no-title", function(req, res) {
 			res.send("<meta property='og:image' content='http://localhost:9002/real-test-image.png'>");
 		});
 
@@ -191,7 +191,7 @@ describe("Link plugin", function() {
 
 		link(this.irc, this.network.channels[0], message);
 
-		this.app.get("/thumb-404", function(req, res) {
+		app.get("/thumb-404", function(req, res) {
 			res.send("<title>404 image</title><meta property='og:image' content='http://localhost:9002/this-image-does-not-exist.png'>");
 		});
 
@@ -241,11 +241,11 @@ describe("Link plugin", function() {
 			shown: true,
 		}]);
 
-		this.app.get("/one", function(req, res) {
+		app.get("/one", function(req, res) {
 			res.send("<title>first title</title>");
 		});
 
-		this.app.get("/two", function(req, res) {
+		app.get("/two", function(req, res) {
 			res.send("<title>second title</title>");
 		});
 

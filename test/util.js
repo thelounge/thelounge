@@ -7,12 +7,8 @@ var express = require("express");
 var Network = require("../src/models/network");
 var Chan = require("../src/models/chan");
 
-function MockClient(opts) {
+function MockClient() {
 	this.user = {nick: "test-user"};
-
-	for (var k in opts) {
-		this[k] = opts[k];
-	}
 }
 util.inherits(MockClient, EventEmitter);
 
