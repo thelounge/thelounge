@@ -83,8 +83,18 @@ $(function() {
 				data: target.data("name"),
 			});
 		} else if (target.hasClass("chan")) {
+			let itemClass;
+
+			if (target.hasClass("lobby")) {
+				itemClass = "network";
+			} else if (target.hasClass("query")) {
+				itemClass = "user";
+			} else {
+				itemClass = "chan";
+			}
+
 			output = templates.contextmenu_item({
-				class: target.hasClass("lobby") ? "network" : "chan",
+				class: itemClass,
 				text: target.data("title"),
 				data: target.data("target"),
 			});

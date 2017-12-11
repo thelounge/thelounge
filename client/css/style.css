@@ -221,7 +221,7 @@ kbd {
 #chat button.menu::before { content: "\f142"; /* http://fontawesome.io/icon/ellipsis-v/ */ }
 
 .context-menu-user::before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
-.context-menu-chan::before { content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */ }
+.context-menu-chan::before { content: "\f292"; /* http://fontawesome.io/icon/hashtag/ */ }
 .context-menu-close::before { content: "\f00d"; /* http://fontawesome.io/icon/times/ */ }
 .context-menu-list::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
 
@@ -230,10 +230,10 @@ kbd {
 #chat .lobby .title::before { content: "\f0a0"; /* http://fontawesome.io/icon/hdd-o/ */ }
 
 #sidebar .chan.query::before,
-#chat .query .title::before { content: "\f0e6"; /* http://fontawesome.io/icon/comments-o/ */ }
+#chat .query .title::before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
 
 #sidebar .chan.channel::before,
-#chat .channel .title::before { content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */ }
+#chat .channel .title::before { content: "\f292"; /* http://fontawesome.io/icon/hashtag/ */ }
 
 #sidebar .chan.special::before,
 #chat .special .title::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
