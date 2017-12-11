@@ -2,15 +2,28 @@
 
 const $ = require("jquery");
 const escapeRegExp = require("lodash/escapeRegExp");
-const userStyles = $("#user-specified-css");
 const storage = require("./localStorage");
 const tz = require("./libs/handlebars/tz");
+const socket = require("./socket");
 
-const windows = $("#windows");
-const chat = $("#chat");
+const $windows = $("#windows");
+const $chat = $("#chat");
+const $settings = $("#settings");
+const $theme = $("#theme");
+const $userStyles = $("#user-specified-css");
 
-// Default options
-const options = {
+const noCSSparamReg = /[?&]nocss/;
+
+// Not yet available at this point but used in various functionaly.
+// Will be assigned when `initialize` is called.
+let $syncWarningOverride;
+let $syncWarningBase;
+let $warningUnsupported;
+let $warningBlocked;
+
+// Default settings
+const settings = {
+	syncSettings: false,
 	autocomplete: true,
 	nickPostfix: "",
 	coloredNicks: true,
@@ -24,155 +37,267 @@ const options = {
 	statusMessages: "condensed",
 	theme: $("#theme").data("server-theme"),
 	media: true,
-	userStyles: userStyles.text(),
+	userStyles: "",
 };
-let userOptions = JSON.parse(storage.get("settings")) || {};
 
-for (const key in options) {
-	if (userOptions[key] !== undefined) {
-		options[key] = userOptions[key];
+const noSync = ["syncSettings"];
+
+// alwaysSync is reserved for things like "highlights".
+// TODO: figure out how to deal with legacy clients that have different settings.
+const alwaysSync = [];
+
+// Process usersettings from localstorage.
+let userSettings = JSON.parse(storage.get("settings")) || {};
+
+for (const key in settings) {
+	if (userSettings[key] !== undefined) {
+		settings[key] = userSettings[key];
 	}
 }
 
-// Apply custom CSS on page load
-if (typeof userOptions.userStyles === "string" && !/[?&]nocss/.test(window.location.search)) {
-	userStyles.html(userOptions.userStyles);
+// Apply custom CSS and themes on page load
+// Done here and not on init because on slower devices and connections
+// it can take up to several seconds before init is called.
+if (typeof userSettings.userStyles === "string" && !noCSSparamReg.test(window.location.search)) {
+	$userStyles.html(userSettings.userStyles);
 }
 
-userOptions = null;
+if (typeof userSettings.theme === "string") {
+	$theme.prop("href", `themes/${userSettings.theme}.css`);
+}
 
-module.exports = options;
+userSettings = null;
+
+module.exports = {
+	alwaysSync: alwaysSync,
+	noSync: noSync,
+	initialized: false,
+	highlightsRE: null,
+	settings: settings,
+	shouldOpenMessagePreview,
+	noServerSettings,
+	processSetting,
+	initialize,
+};
 
 // Due to cyclical dependency, have to require it after exports
 const autocompletion = require("./autocompletion");
 
-module.exports.shouldOpenMessagePreview = function(type) {
-	return type === "link" ? options.links : options.media;
-};
+function shouldOpenMessagePreview(type) {
+	return type === "link" ? settings.links : settings.media;
+}
 
-module.exports.initialize = () => {
-	module.exports.initialize = null;
+// Updates the checkbox and warning in settings.
+// When notifications are not supported, this is never called (because
+// checkbox state can not be changed).
+function updateDesktopNotificationStatus() {
+	if (Notification.permission === "denied") {
+		$warningBlocked.show();
+	} else {
+		$warningBlocked.hide();
+	}
+}
 
-	const settings = $("#settings");
+function applySetting(name, value) {
+	if (name === "syncSettings" && value) {
+		$syncWarningOverride.hide();
+	} else if (name === "motd") {
+		$chat.toggleClass("hide-" + name, !value);
+	} else if (name === "statusMessages") {
+		$chat.toggleClass("hide-status-messages", value === "hidden");
+		$chat.toggleClass("condensed-status-messages", value === "condensed");
+	} else if (name === "coloredNicks") {
+		$chat.toggleClass("colored-nicks", value);
+	} else if (name === "theme") {
+		$theme.prop("href", `themes/${value}.css`);
+	} else if (name === "userStyles" && !noCSSparamReg.test(window.location.search)) {
+		$userStyles.html(value);
+	} else if (name === "highlights") {
+		let highlights;
 
-	for (const i in options) {
-		if (i === "userStyles") {
-			settings.find("#user-specified-css-input").val(options[i]);
-		} else if (i === "highlights") {
-			settings.find("input[name=" + i + "]").val(options[i]);
-		} else if (i === "nickPostfix") {
-			settings.find("input[name=" + i + "]").val(options[i]);
-		} else if (i === "statusMessages") {
-			settings.find(`input[name=${i}][value=${options[i]}]`)
-				.prop("checked", true);
-		} else if (i === "theme") {
-			$("#theme").prop("href", "themes/" + options[i] + ".css");
-			settings.find("select[name=" + i + "]").val(options[i]);
-		} else if (options[i]) {
-			settings.find("input[name=" + i + "]").prop("checked", true);
+		if (typeof value === "string") {
+			highlights = value.split(",").map(function(h) {
+				return h.trim();
+			});
+		} else {
+			highlights = value;
+		}
+
+		highlights = highlights.filter(function(h) {
+			// Ensure we don't have empty string in the list of highlights
+			// otherwise, users get notifications for everything
+			return h !== "";
+		});
+		// Construct regex with wordboundary for every highlight item
+		const highlightsTokens = highlights.map(function(h) {
+			return escapeRegExp(h);
+		});
+
+		if (highlightsTokens && highlightsTokens.length) {
+			module.exports.highlightsRE = new RegExp("\\b(?:" + highlightsTokens.join("|") + ")\\b", "i");
+		} else {
+			module.exports.highlightsRE = null;
+		}
+	} else if (name === "showSeconds") {
+		$chat.find(".msg > .time").each(function() {
+			$(this).text(tz($(this).parent().data("time")));
+		});
+		$chat.toggleClass("show-seconds", value);
+	} else if (name === "autocomplete") {
+		if (value) {
+			autocompletion.enable();
+		} else {
+			autocompletion.disable();
+		}
+	} else if (name === "desktopNotifications") {
+		if (value && Notification.permission !== "granted") {
+			Notification.requestPermission(updateDesktopNotificationStatus);
+		} else if (!value) {
+			$warningBlocked.hide();
 		}
 	}
+}
 
-	const desktopNotificationsCheckbox = $("#desktopNotifications");
-	const warningUnsupported = $("#warnUnsupportedDesktopNotifications");
-	const warningBlocked = $("#warnBlockedDesktopNotifications").hide();
+function settingSetEmit(name, value) {
+	socket.emit("setting:set", {
+		name: name,
+		value: value,
+	});
+}
 
-	// Updates the checkbox and warning in settings when the Settings page is
-	// opened or when the checkbox state is changed.
-	// When notifications are not supported, this is never called (because
-	// checkbox state can not be changed).
-	const updateDesktopNotificationStatus = function() {
-		if (Notification.permission === "denied") {
-			desktopNotificationsCheckbox.prop("disabled", true);
-			desktopNotificationsCheckbox.prop("checked", false);
-			warningBlocked.show();
-		} else {
-			if (Notification.permission === "default" && desktopNotificationsCheckbox.prop("checked")) {
-				desktopNotificationsCheckbox.prop("checked", false);
-			}
+// When sync is `true` the setting will also be send to the backend for syncing.
+function updateSetting(name, value, sync) {
+	let storeValue = value;
 
-			desktopNotificationsCheckbox.prop("disabled", false);
-			warningBlocked.hide();
+	// First convert highlights if input is a string.
+	// Otherwise we are comparing the wrong types.
+	if (name === "highlights" && typeof value === "string") {
+		storeValue = value.split(",").map(function(h) {
+			return h.trim();
+		}).filter(function(h) {
+			// Ensure we don't have empty string in the list of highlights
+			// otherwise, users get notifications for everything
+			return h !== "";
+		});
+	}
+
+	const currentOption = settings[name];
+
+	// Only update and process when the setting is actually changed.
+	if (currentOption !== storeValue) {
+		settings[name] = storeValue;
+		storage.set("settings", JSON.stringify(settings));
+		applySetting(name, value);
+
+		// Sync is checked, request settings from server.
+		if (name === "syncSettings" && value) {
+			socket.emit("setting:get");
+			$syncWarningOverride.hide();
+			$syncWarningBase.hide();
+		} else if (name === "syncSettings") {
+			$syncWarningOverride.show();
 		}
-	};
 
-	// If browser does not support notifications, override existing settings and
+		if (settings.syncSettings && !noSync.includes(name) && sync) {
+			settingSetEmit(name, value);
+		} else if (alwaysSync.includes(name) && sync) {
+			settingSetEmit(name, value);
+		}
+	}
+}
+
+function noServerSettings() {
+	// Sync is enabled but the server has no settings so we sync all settings from this client.
+	if (settings.syncSettings) {
+		for (const name in settings) {
+			if (!noSync.includes(name)) {
+				settingSetEmit(name, settings[name]);
+			} else if (alwaysSync.includes(name)) {
+				settingSetEmit(name, settings[name]);
+			}
+		}
+
+		$syncWarningOverride.hide();
+		$syncWarningBase.hide();
+	} else {
+		$syncWarningOverride.hide();
+		$syncWarningBase.show();
+	}
+}
+
+// If `save` is set to true it will pass the setting to `updateSetting()`  processSetting
+function processSetting(name, value, save) {
+	if (name === "userStyles") {
+		$settings.find("#user-specified-css-input").val(value);
+	} else if (name === "highlights") {
+		$settings.find(`input[name=${name}]`).val(value);
+	} else if (name === "nickPostfix") {
+		$settings.find(`input[name=${name}]`).val(value);
+	} else if (name === "statusMessages") {
+		$settings.find(`input[name=${name}][value=${value}]`)
+			.prop("checked", true);
+	} else if (name === "theme") {
+		$settings.find("#theme-select").val(value);
+	} else if (typeof value === "boolean") {
+		$settings.find(`input[name=${name}]`).prop("checked", value);
+	}
+
+	// No need to also call processSetting when `save` is true.
+	// updateSetting does take care of that.
+	if (save) {
+		// Sync is false as applySetting is never called as the result of a user changing the setting.
+		updateSetting(name, value, false);
+	} else {
+		applySetting(name, value);
+	}
+}
+
+function initialize() {
+	$warningBlocked = $settings.find("#warnBlockedDesktopNotifications");
+	$warningUnsupported = $settings.find("#warnUnsupportedDesktopNotifications");
+
+	$syncWarningOverride = $settings.find(".sync-warning-override");
+	$syncWarningBase = $settings.find(".sync-warning-base");
+
+	$warningBlocked.hide();
+	module.exports.initialized = true;
+
+	// Settings have now entirely updated, apply settings to the client.
+	for (const name in settings) {
+		processSetting(name, settings[name], false);
+	}
+
+	// If browser does not support notifications
 	// display proper message in settings.
 	if (("Notification" in window)) {
-		warningUnsupported.hide();
-		windows.on("show", "#settings", updateDesktopNotificationStatus);
+		$warningUnsupported.hide();
+		$windows.on("show", "#settings", updateDesktopNotificationStatus);
 	} else {
-		options.desktopNotifications = false;
-		desktopNotificationsCheckbox.prop("disabled", true);
-		desktopNotificationsCheckbox.prop("checked", false);
+		$warningUnsupported.show();
 	}
 
-	settings.on("change", "input, select, textarea", function() {
-		const self = $(this);
-		const type = self.prop("type");
-		const name = self.prop("name");
+	$settings.on("change", "input, select, textarea", function(e) {
+		// We only want to trigger on human triggerd changes.
+		if (e.originalEvent) {
+			const $self = $(this);
+			const type = $self.prop("type");
+			const name = $self.prop("name");
 
-		if (type === "password") {
-			return;
-		} else if (type === "radio") {
-			if (self.prop("checked")) {
-				options[name] = self.val();
-			}
-		} else if (type === "checkbox") {
-			options[name] = self.prop("checked");
-		} else {
-			options[name] = self.val();
-		}
-
-		storage.set("settings", JSON.stringify(options));
-
-		if (name === "motd") {
-			chat.toggleClass("hide-" + name, !self.prop("checked"));
-		} else if (name === "statusMessages") {
-			chat.toggleClass("hide-status-messages", options[name] === "hidden");
-			chat.toggleClass("condensed-status-messages", options[name] === "condensed");
-		} else if (name === "coloredNicks") {
-			chat.toggleClass("colored-nicks", self.prop("checked"));
-		} else if (name === "theme") {
-			$("#theme").prop("href", "themes/" + options[name] + ".css");
-		} else if (name === "userStyles") {
-			userStyles.html(options[name]);
-		} else if (name === "highlights") {
-			options.highlights = options[name].split(",").map(function(h) {
-				return h.trim();
-			}).filter(function(h) {
-				// Ensure we don't have empty string in the list of highlights
-				// otherwise, users get notifications for everything
-				return h !== "";
-			});
-			// Construct regex with wordboundary for every highlight item
-			const highlightsTokens = options.highlights.map(function(h) {
-				return escapeRegExp(h);
-			});
-
-			if (highlightsTokens && highlightsTokens.length) {
-				module.exports.highlightsRE = new RegExp("\\b(?:" + highlightsTokens.join("|") + ")\\b", "i");
-			} else {
-				module.exports.highlightsRE = null;
-			}
-		} else if (name === "nickPostfix") {
-			options.nickPostfix = options[name];
-		} else if (name === "showSeconds") {
-			chat.find(".msg > .time").each(function() {
-				$(this).text(tz($(this).parent().data("time")));
-			});
-			chat.toggleClass("show-seconds", self.prop("checked"));
-		} else if (name === "autocomplete") {
-			if (self.prop("checked")) {
-				autocompletion.enable();
-			} else {
-				autocompletion.disable();
-			}
-		} else if (name === "desktopNotifications") {
-			if ($(this).prop("checked") && Notification.permission !== "granted") {
-				Notification.requestPermission(updateDesktopNotificationStatus);
+			if (type === "radio") {
+				if ($self.prop("checked")) {
+					updateSetting(name, $self.val(), true);
+				}
+			} else if (type === "checkbox") {
+				updateSetting(name, $self.prop("checked"), true);
+				settings[name] = $self.prop("checked");
+			} else if (type !== "password") {
+				updateSetting(name, $self.val(), true);
 			}
 		}
-	}).find("input")
-		.trigger("change");
-};
+	});
+
+	// Local init is done, let's sync
+	// We always ask for synced settings even if it is disabled.
+	// Settings can be mandatory to sync and it is used to determine sync base state.
+	socket.emit("settings:get");
+}

@@ -10,16 +10,16 @@ const constants = require("./constants");
 
 const input = $("#input");
 let textcomplete;
+let enabled = false;
 
 module.exports = {
 	enable: enableAutocomplete,
 	disable: () => {
-		input.off("input.tabcomplete");
-		Mousetrap(input.get(0)).off("tab", "keydown");
-
-		if (textcomplete) {
+		if (enabled) {
+			input.off("input.tabcomplete");
+			Mousetrap(input.get(0)).off("tab", "keydown");
 			textcomplete.destroy();
-			textcomplete = null;
+			enabled = false;
 		}
 	},
 };
@@ -63,7 +63,7 @@ const nicksStrategy = {
 	},
 	replace([, original], position = 1) {
 		// If no postfix specified, return autocompleted nick as-is
-		if (!options.nickPostfix) {
+		if (!options.settings.nickPostfix) {
 			return original;
 		}
 
@@ -73,7 +73,7 @@ const nicksStrategy = {
 		}
 
 		// If nick is first in the input, append specified postfix
-		return original + options.nickPostfix;
+		return original + options.settings.nickPostfix;
 	},
 	index: 1,
 };
@@ -169,6 +169,7 @@ const backgroundColorStrategy = {
 };
 
 function enableAutocomplete() {
+	enabled = true;
 	let tabCount = 0;
 	let lastMatch = "";
 	let currentMatches = [];

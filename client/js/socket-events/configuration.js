@@ -7,7 +7,7 @@ const options = require("../options");
 const webpush = require("../webpush");
 
 socket.on("configuration", function(data) {
-	if (!options.initialize) {
+	if (options.initialized) {
 		return;
 	}
 

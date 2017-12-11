@@ -116,6 +116,7 @@ ClientManager.prototype.addUser = function(name, password, enableLog) {
 		awayMessage: "",
 		networks: [],
 		sessions: {},
+		clientSettings: {},
 	};
 
 	try {

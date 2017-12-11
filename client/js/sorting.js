@@ -30,7 +30,7 @@ module.exports = function() {
 				}
 			);
 
-			options.ignoreSortSync = true;
+			options.settings.ignoreSortSync = true;
 		},
 	});
 	sidebar.find(".network").sortable({
@@ -58,7 +58,7 @@ module.exports = function() {
 				}
 			);
 
-			options.ignoreSortSync = true;
+			options.settings.ignoreSortSync = true;
 		},
 	});
 };

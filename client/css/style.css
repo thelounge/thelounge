@@ -223,6 +223,7 @@ kbd {
 #chat .title::before,
 #footer .icon,
 #chat .count::before,
+#settings .extra-experimental,
 #settings .extra-help,
 #settings #play::before,
 #form #submit::before,
@@ -399,6 +400,10 @@ kbd {
 	right: 18px;
 	font-size: 14px;
 	line-height: 50px;
+}
+
+#settings .extra-experimental::before {
+	content: "\f0c3"; /* https://fontawesome.com/icons/flask?style=solid */
 }
 
 #settings .extra-help::before {
@@ -1565,6 +1570,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-top: 30px;
 }
 
+#settings .sync-warning-base {
+	display: none;
+}
+
 #settings .opt {
 	display: block;
 	padding: 5px 0 5px 1px;
@@ -1574,15 +1583,21 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-right: 6px;
 }
 
+#settings .extra-experimental {
+	color: #84ce88;
+}
+
 #settings .extra-help,
 #settings #play {
 	color: #7f8c8d;
 }
 
+#settings .extra-experimental,
 #settings .extra-help {
 	cursor: help;
 }
 
+#settings .extra-experimental,
 #settings h2 .extra-help {
 	font-size: 0.8em;
 }

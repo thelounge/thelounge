@@ -5,6 +5,22 @@
 	<h1 class="title">Settings</h1>
 
 	<div class="row">
+		{{#unless public}}
+		<div class="col-sm-12">
+			<h2>
+				Settings synchronisation
+				<span class="tooltipped tooltipped-n tooltipped-no-delay" aria-label="Note: This is an experimental feature and may change in future releases.">
+					<button class="extra-experimental" aria-label="Note: This is an experimental feature and may change in future releases."></button>
+				</span>
+			</h2>
+			<label class="opt">
+				<input type="checkbox" name="syncSettings">
+				Synchronize settings with other clients.
+			</label>
+			<p class="sync-warning-override"><strong>Warning</strong> Checking this box will override the settings of this client with those stored on the server.</p>
+			<p class="sync-warning-base"><strong>Warning</strong> No settings have been synced before. Enabling this will sync all settings of this client as the base for other clients.</p>
+		</div>
+		{{/unless}}
 		<div class="col-sm-12">
 			<h2>Messages</h2>
 		</div>
