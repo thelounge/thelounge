@@ -113,7 +113,7 @@ $(function() {
 			if (target.hasClass("lobby")) {
 				itemClass = "network";
 			} else if (target.hasClass("query")) {
-				itemClass = "user";
+				itemClass = "query";
 			} else {
 				itemClass = "chan";
 			}
