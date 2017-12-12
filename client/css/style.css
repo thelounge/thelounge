@@ -224,6 +224,9 @@ kbd {
 .context-menu-chan::before { content: "\f292"; /* http://fontawesome.io/icon/hashtag/ */ }
 .context-menu-close::before { content: "\f00d"; /* http://fontawesome.io/icon/times/ */ }
 .context-menu-list::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
+.context-menu-action-whois::before { content: "\f05a"; /* http://fontawesome.io/icon/info-circle/  */ }
+.context-menu-action-query::before { content: "\f0e6"; /* http://fontawesome.io/icon/comments-o/ */ }
+.context-menu-action-kick::before { content: "\f05e"; /* http://fontawesome.io/icon/ban/ */ }
 
 .context-menu-network::before,
 #sidebar .chan.lobby::before,

@@ -1,6 +1,7 @@
 "use strict";
 
 const $ = require("jquery");
+const escape = require("css.escape");
 const input = $("#input");
 
 var serverHash = -1;
@@ -19,6 +20,7 @@ module.exports = {
 	toggleNickEditor,
 	toggleNotificationMarkers,
 	requestIdleCallback,
+	isOpInChannel,
 };
 
 function findCurrentNetworkChan(name) {
@@ -35,6 +37,15 @@ function findCurrentNetworkChan(name) {
 
 function resetHeight(element) {
 	element.style.height = element.style.minHeight;
+}
+
+// Given a channel element will determine if the lounge user is Op in that channel
+function isOpInChannel(channel) {
+	const channelID = channel.data("id");
+	const network = $("#sidebar .network").has(`.chan[data-id="${channelID}"]`);
+	const ownNick = network.data("nick");
+	const isOP = channel.find(`.users .user-mode.op .user[data-name="${escape(ownNick)}"]`).length;
+	return isOP;
 }
 
 // Triggering click event opens the virtual keyboard on mobile
