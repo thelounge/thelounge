@@ -32,6 +32,11 @@ exports.info = function() {
 exports.debug = function() {
 	console.log.apply(console, timestamp(colors.green("[DEBUG]"), arguments));
 };
+
+exports.raw = function() {
+	console.log.apply(console, arguments);
+};
+
 /* eslint-enable no-console */
 
 exports.prompt = (options, callback) => {
