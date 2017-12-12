@@ -44,7 +44,7 @@ userOptions = null;
 module.exports = options;
 
 module.exports.shouldOpenMessagePreview = function(type) {
-	return (options.links && type === "link") || (options.media && (type === "image" || type === "audio"));
+	return type === "link" ? options.links : options.media;
 };
 
 module.exports.initialize = () => {
