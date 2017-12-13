@@ -485,6 +485,29 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	it("should parse extended colors", () => {
+		const input = "\x0370,99some text";
+		const expected = [{
+			textColor: 70,
+			bgColor: 99,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			bold: false,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: "some text",
+
+			start: 0,
+			end: 9,
+		}];
+
+		const actual = parseStyle(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
 	it("should parse italic", () => {
 		const input = "\x1ditalic";
 		const expected = [{
