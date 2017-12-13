@@ -132,6 +132,12 @@ $(function() {
 					text: "List all channels",
 					data: target.data("id"),
 				});
+				output += templates.contextmenu_item({
+					class: "join",
+					action: "join",
+					text: "Join a channel\u2026",
+					data: target.data("id"),
+				});
 			}
 			if (target.hasClass("channel")) {
 				output += templates.contextmenu_item({
@@ -477,7 +483,39 @@ $(function() {
 		closeChan($(this).closest(".chan"));
 	});
 
+	sidebar.on("click", ".add-channel", (e) => {
+		const id = $(e.target).data("id");
+		const joinForm = $(`#join-channel-${id}`);
+		joinForm.toggle();
+		joinForm.find(".input[name='channel']").focus();
+		return false;
+	});
+
+	sidebar.on("submit", ".join-form", function() {
+		const form = $(this);
+		const channel = form.find("input[name='channel']");
+		const channelString = channel.val();
+		const key = form.find("input[name='key']");
+		const keyString = key.val();
+		const chan = utils.findCurrentNetworkChan(channelString);
+		if (chan.length) {
+			chan.click();
+		} else {
+			socket.emit("input", {
+				text: `/join ${channelString} ${keyString}`,
+				target: form.prev().data("id"),
+			});
+		}
+		channel.val("");
+		key.val("");
+		form.hide();
+		return false;
+	});
+
 	const contextMenuActions = {
+		join: function(itemData) {
+			$(`#join-channel-${itemData}`).show();
+		},
 		close: function(itemData) {
 			closeChan($(`.networks .chan[data-target="${itemData}"]`));
 		},

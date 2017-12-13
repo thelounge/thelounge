@@ -222,6 +222,7 @@ kbd {
 #viewport .rt::before { content: "\f0c0"; /* http://fontawesome.io/icon/users/ */ }
 #chat button.menu::before { content: "\f142"; /* http://fontawesome.io/icon/ellipsis-v/ */ }
 
+.context-menu-join::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
 .context-menu-user::before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
 .context-menu-close::before { content: "\f00d"; /* http://fontawesome.io/icon/times/ */ }
 .context-menu-list::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
@@ -457,7 +458,6 @@ kbd {
 	will-change: transform;
 }
 
-#sidebar button,
 #sidebar .chan,
 #sidebar .sign-out,
 #sidebar .empty {
@@ -551,6 +551,7 @@ kbd {
 }
 
 #sidebar .badge,
+#sidebar .add-channel,
 #sidebar .close {
 	float: right;
 	margin-left: 5px;
@@ -592,6 +593,32 @@ kbd {
 	text-align: center;
 	content: "×";
 	color: #fff;
+}
+
+#sidebar .lobby .add-channel {
+	border-radius: 3px;
+	width: 18px;
+	height: 18px;
+	transition: opacity 0.2s, background-color 0.2s;
+}
+
+#sidebar .lobby .add-channel::before {
+	font-size: 20px;
+	font-weight: normal;
+	display: inline-block;
+	line-height: 16px;
+	text-align: center;
+	content: "+";
+	color: #fff;
+}
+
+#sidebar .lobby .add-channel {
+	opacity: 0.4;
+}
+
+#sidebar .lobby .add-channel:hover {
+	background-color: rgba(0, 0, 0, 0.1);
+	opacity: 1;
 }
 
 #sidebar .chan.active .close {
@@ -685,7 +712,7 @@ kbd {
 	font-size: 14px;
 }
 
-#windows .input {
+.input {
 	background-color: white;
 	border: 1px solid #cdd3da;
 	border-radius: 2px;
@@ -892,6 +919,35 @@ kbd {
 	width: 180px;
 	transition: right 0.4s;
 	touch-action: pan-y;
+}
+
+
+/**
+  * Toggled via JavaScript
+  */
+#sidebar .join-form {
+	display: none;
+}
+
+#sidebar .join-form .input {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	width: 80%;
+}
+
+#sidebar .join-form .btn {
+	display: block;
+	width: 80%;
+	padding: 1px;
+	margin: auto;
+	height: 29px;
+}
+
+#sidebar .add-channel-tooltip {
+	float: right;
 }
 
 #chat .show-more {
