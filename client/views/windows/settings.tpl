@@ -74,8 +74,8 @@
 		</div>
 		<div class="col-sm-6">
 			<label class="opt">
-				<input type="checkbox" name="thumbnails">
-				Auto-expand images
+				<input type="checkbox" name="media">
+				Auto-expand media
 			</label>
 		</div>
 		<div class="col-sm-6">
