@@ -23,7 +23,7 @@ function ldapAuthCommon(user, bindDN, password, callback) {
 }
 
 function simpleLdapAuth(user, password, callback) {
-	if (!user) {
+	if (!user || !password) {
 		return callback(false);
 	}
 
@@ -41,7 +41,7 @@ function simpleLdapAuth(user, password, callback) {
  * LDAP auth using initial DN search (see config comment for ldap.searchDN)
  */
 function advancedLdapAuth(user, password, callback) {
-	if (!user) {
+	if (!user || !password) {
 		return callback(false);
 	}
 

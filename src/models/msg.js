@@ -56,6 +56,7 @@ Msg.Type = {
 	PART: "part",
 	QUIT: "quit",
 	CTCP: "ctcp",
+	CHGHOST: "chghost",
 	TOPIC: "topic",
 	TOPIC_SET_BY: "topic_set_by",
 	WHOIS: "whois",

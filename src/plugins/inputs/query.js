@@ -47,6 +47,7 @@ exports.input = function(network, chan, cmd, args) {
 	network.channels.push(newChan);
 	this.emit("join", {
 		network: network.id,
-		chan: newChan,
+		chan: newChan.getFilteredClone(true),
+		shouldOpen: true,
 	});
 };

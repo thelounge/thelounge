@@ -3,22 +3,21 @@
 const colors = require("colors/safe");
 const program = require("commander");
 const fs = require("fs");
-const Helper = require("../helper");
-const Utils = require("./utils");
+const Helper = require("../../helper");
+const Utils = require("../utils");
 
 program
 	.command("reset <name>")
 	.description("Reset user password")
 	.on("--help", Utils.extraHelp)
 	.action(function(name) {
-		if (!fs.existsSync(Helper.USERS_PATH)) {
-			log.error(`${Helper.USERS_PATH} does not exist.`);
+		if (!fs.existsSync(Helper.getUsersPath())) {
+			log.error(`${Helper.getUsersPath()} does not exist.`);
 			return;
 		}
 
-		const ClientManager = require("../clientManager");
-
-		var users = new ClientManager().getUsers();
+		const ClientManager = require("../../clientManager");
+		const users = new ClientManager().getUsers();
 
 		if (users === undefined) { // There was an error, already logged
 			return;

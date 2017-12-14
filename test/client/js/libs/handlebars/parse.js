@@ -244,6 +244,27 @@ describe("parse Handlebars helper", () => {
 		input: "\x11monospace",
 		expected: '<span class="irc-monospace">monospace</span>',
 	}, {
+		name: "reverse with foreground and background colors",
+		input: "\x0313,1fg and bg \x16and reversed",
+		expected:
+			'<span class="irc-fg13 irc-bg1">fg and bg </span>' +
+			'<span class="irc-fg1 irc-bg13">and reversed</span>',
+	}, {
+		name: "toggle reverse with foreground and background colors",
+		input: "\x0305,11text \x16reversed and \x16back again and \x16reversed",
+		expected:
+			'<span class="irc-fg5 irc-bg11">text </span>' +
+			'<span class="irc-fg11 irc-bg5">reversed and </span>' +
+			'<span class="irc-fg5 irc-bg11">back again and </span>' +
+			'<span class="irc-fg11 irc-bg5">reversed</span>',
+	}, {
+		name: "escape reverse when new colors are applied",
+		input: "\x0311,02text \x16 reversed \x0304,05 and new style",
+		expected:
+			'<span class="irc-fg11 irc-bg2">text </span>' +
+			'<span class="irc-fg2 irc-bg11"> reversed </span>' +
+			'<span class="irc-fg4 irc-bg5"> and new style</span>',
+	}, {
 		name: "resets",
 		input: "\x02bold\x038yellow\x02nonBold\x03default",
 		expected:

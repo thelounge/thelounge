@@ -17,7 +17,6 @@ const render = require("./render");
 require("./socket-events");
 const storage = require("./localStorage");
 const utils = require("./utils");
-require("./autocompletion");
 require("./webpush");
 require("./keybinds");
 require("./clipboard");
@@ -80,18 +79,63 @@ $(function() {
 		if (target.hasClass("user")) {
 			output = templates.contextmenu_item({
 				class: "user",
+				action: "whois",
 				text: target.text(),
 				data: target.data("name"),
 			});
+			output += templates.contextmenu_divider();
+			output += templates.contextmenu_item({
+				class: "action-whois",
+				action: "whois",
+				text: "User information",
+				data: target.data("name"),
+			});
+			output += templates.contextmenu_item({
+				class: "action-query",
+				action: "query",
+				text: "Direct messages",
+				data: target.data("name"),
+			});
+
+			const channel = target.closest(".chan");
+			if (utils.isOpInChannel(channel) && channel.data("type") === "channel") {
+				output += templates.contextmenu_divider();
+				output += templates.contextmenu_item({
+					class: "action-kick",
+					action: "kick",
+					text: "Kick",
+					data: target.data("name"),
+				});
+			}
 		} else if (target.hasClass("chan")) {
+			let itemClass;
+
+			if (target.hasClass("lobby")) {
+				itemClass = "network";
+			} else if (target.hasClass("query")) {
+				itemClass = "user";
+			} else {
+				itemClass = "chan";
+			}
+
 			output = templates.contextmenu_item({
-				class: "chan",
+				class: itemClass,
+				action: "focusChan",
 				text: target.data("title"),
 				data: target.data("target"),
 			});
 			output += templates.contextmenu_divider();
+			if (target.hasClass("lobby")) {
+				output += templates.contextmenu_item({
+					class: "list",
+					action: "list",
+					text: "List all channels",
+					data: target.data("id"),
+				});
+			}
 			output += templates.contextmenu_item({
 				class: "close",
+				action: "close",
 				text: target.hasClass("lobby") ? "Disconnect" : target.hasClass("channel") ? "Leave" : "Close",
 				data: target.data("target"),
 			});
@@ -105,7 +149,11 @@ $(function() {
 		return false;
 	}
 
-	viewport.on("contextmenu", ".user, .network .chan", function(e) {
+	viewport.on("contextmenu", ".network .chan", function(e) {
+		return showContextMenu(this, e);
+	});
+
+	viewport.on("click contextmenu", ".user", function(e) {
 		return showContextMenu(this, e);
 	});
 
@@ -269,20 +317,6 @@ $(function() {
 		$(this).closest(".msg.condensed").toggleClass("closed");
 	});
 
-	chat.on("click", ".user", function() {
-		var name = $(this).data("name");
-		var chan = utils.findCurrentNetworkChan(name);
-
-		if (chan.length) {
-			chan.click();
-		}
-
-		socket.emit("input", {
-			target: chat.data("id"),
-			text: "/whois " + name,
-		});
-	});
-
 	sidebar.on("click", ".chan, button", function(e, data) {
 		// Pushes states to history web API when clicking elements with a data-target attribute.
 		// States are very trivial and only contain a single `clickTarget` property which
@@ -431,18 +465,60 @@ $(function() {
 		return false;
 	});
 
+	const contextMenuActions = {
+		close: function(itemData) {
+			$(`.networks .chan[data-target="${itemData}"] .close`).click();
+		},
+		focusChan: function(itemData) {
+			$(`.networks .chan[data-target="${itemData}"]`).click();
+		},
+		list: function(itemData) {
+			socket.emit("input", {
+				target: itemData,
+				text: "/list",
+			});
+		},
+		whois: function(itemData) {
+			const chan = utils.findCurrentNetworkChan(itemData);
+
+			if (chan.length) {
+				chan.click();
+			}
+
+			socket.emit("input", {
+				target: $("#chat").data("id"),
+				text: "/whois " + itemData,
+			});
+
+			$(`.channel.active .users .user[data-name="${itemData}"]`).click();
+		},
+		query: function(itemData) {
+			const chan = utils.findCurrentNetworkChan(itemData);
+
+			if (chan.length) {
+				chan.click();
+			}
+
+			socket.emit("input", {
+				target: $("#chat").data("id"),
+				text: "/query " + itemData,
+			});
+		},
+		kick: function(itemData) {
+			socket.emit("input", {
+				target: $("#chat").data("id"),
+				text: "/kick " + itemData,
+			});
+		},
+	};
+
+	contextMenuActions.execute = (name, ...args) => contextMenuActions[name] && contextMenuActions[name](...args);
+
 	contextMenu.on("click", ".context-menu-item", function() {
-		switch ($(this).data("action")) {
-		case "close":
-			$(".networks .chan[data-target='" + $(this).data("data") + "'] .close").click();
-			break;
-		case "chan":
-			$(".networks .chan[data-target='" + $(this).data("data") + "']").click();
-			break;
-		case "user":
-			$(".channel.active .users .user[data-name='" + $(this).data("data") + "']").click();
-			break;
-		}
+		const $this = $(this);
+		const itemData = $this.data("data");
+		const contextAction = $this.data("action");
+		contextMenuActions.execute(contextAction, itemData);
 	});
 
 	chat.on("input", ".search", function() {

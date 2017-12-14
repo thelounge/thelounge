@@ -30,7 +30,7 @@ var manager = null;
 module.exports = function() {
 	log.info(`The Lounge ${colors.green(Helper.getVersion())} \
 (Node.js ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${process.arch})`);
-	log.info(`Configuration file: ${colors.green(Helper.CONFIG_PATH)}`);
+	log.info(`Configuration file: ${colors.green(Helper.getConfigPath())}`);
 
 	var app = express()
 		.disable("x-powered-by")
@@ -193,19 +193,23 @@ function index(req, res, next) {
 	}
 
 	const policies = [
-		"default-src *",
-		"connect-src 'self' ws: wss:",
-		"style-src * 'unsafe-inline'",
-		"script-src 'self'",
-		"child-src 'self'",
-		"object-src 'none'",
-		"form-action 'none'",
+		"default-src 'none'", // default to nothing
+		"form-action 'none'", // no default-src fallback
+		"connect-src 'self' ws: wss:", // allow self for polling; websockets
+		"style-src 'self' 'unsafe-inline'", // allow inline due to use in irc hex colors
+		"script-src 'self'", // javascript
+		"worker-src 'self'", // service worker
+		"manifest-src 'self'", // manifest.json
+		"font-src 'self' https:", // allow loading fonts from secure sites (e.g. google fonts)
+		"media-src 'self' https:", // self for notification sound; allow https media (audio previews)
 	];
 
 	// If prefetch is enabled, but storage is not, we have to allow mixed content
 	if (Helper.config.prefetchStorage || !Helper.config.prefetch) {
 		policies.push("img-src 'self'");
 		policies.unshift("block-all-mixed-content");
+	} else {
+		policies.push("img-src http: https:");
 	}
 
 	res.setHeader("Content-Type", "text/html");
@@ -420,24 +424,11 @@ function initializeClient(socket, client, token, lastMessage) {
 	socket.join(client.id);
 
 	const sendInitEvent = (tokenToSend) => {
-		let networks = client.networks;
-
-		if (lastMessage > -1) {
-			// We need a deep cloned object because we are going to remove unneeded messages
-			networks = _.cloneDeep(networks);
-
-			networks.forEach((network) => {
-				network.channels.forEach((channel) => {
-					channel.messages = channel.messages.filter((m) => m.id > lastMessage);
-				});
-			});
-		}
-
 		socket.emit("init", {
 			applicationServerKey: manager.webPush.vapidKeys.publicKey,
 			pushSubscription: client.config.sessions[token],
 			active: client.lastActiveChannel,
-			networks: networks,
+			networks: client.networks.map((network) => network.getFilteredClone(client.lastActiveChannel, lastMessage)),
 			token: tokenToSend,
 		});
 	};

@@ -24,6 +24,15 @@ describe("cleanIrcMessage", function() {
 			input: "\x1ditalic",
 			expected: "italic",
 		}, {
+			input: "\x1estrikethrough",
+			expected: "strikethrough",
+		}, {
+			input: "\x11monospace",
+			expected: "monospace",
+		}, {
+			input: "\x16reset color",
+			expected: "reset color",
+		}, {
 			input: "\x1funderline",
 			expected: "underline",
 		}, {

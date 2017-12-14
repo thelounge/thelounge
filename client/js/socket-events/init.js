@@ -44,6 +44,11 @@ socket.on("init", function(data) {
 		$("body").removeClass("signed-out");
 		$("#loading").remove();
 		$("#sign-in").remove();
+
+		if (window.g_LoungeErrorHandler) {
+			window.removeEventListener("error", window.g_LoungeErrorHandler);
+			window.g_LoungeErrorHandler = null;
+		}
 	}
 
 	openCorrectChannel(previousActive, data.active);

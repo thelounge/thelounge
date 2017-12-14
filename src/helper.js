@@ -9,18 +9,27 @@ var net = require("net");
 var bcrypt = require("bcryptjs");
 const colors = require("colors/safe");
 
-var Helper = {
+let homePath;
+let configPath;
+let usersPath;
+let storagePath;
+let packagesPath;
+
+const Helper = {
 	config: null,
-	expandHome: expandHome,
-	getPackagesPath: getPackagesPath,
-	getPackageModulePath: getPackageModulePath,
-	getStoragePath: getStoragePath,
-	getUserConfigPath: getUserConfigPath,
-	getUserLogsPath: getUserLogsPath,
-	setHome: setHome,
-	getVersion: getVersion,
-	getGitCommit: getGitCommit,
-	ip2hex: ip2hex,
+	expandHome,
+	getHomePath,
+	getPackagesPath,
+	getPackageModulePath,
+	getStoragePath,
+	getConfigPath,
+	getUsersPath,
+	getUserConfigPath,
+	getUserLogsPath,
+	setHome,
+	getVersion,
+	getGitCommit,
+	ip2hex,
 
 	password: {
 		hash: passwordHash,
@@ -61,14 +70,23 @@ function getGitCommit() {
 	}
 }
 
-function setHome(homePath) {
-	this.HOME = expandHome(homePath);
-	this.CONFIG_PATH = path.join(this.HOME, "config.js");
-	this.USERS_PATH = path.join(this.HOME, "users");
+function setHome(newPath) {
+	homePath = expandHome(newPath);
+	configPath = path.join(homePath, "config.js");
+	usersPath = path.join(homePath, "users");
+	storagePath = path.join(homePath, "storage");
+	packagesPath = path.join(homePath, "packages", "node_modules");
 
 	// Reload config from new home location
-	if (fs.existsSync(this.CONFIG_PATH)) {
-		var userConfig = require(this.CONFIG_PATH);
+	if (fs.existsSync(configPath)) {
+		const userConfig = require(configPath);
+
+		if (_.isEmpty(userConfig)) {
+			log.warn(`The file located at ${colors.green(configPath)} does not appear to expose anything.`);
+			log.warn(`Make sure it is non-empty and the configuration is exported using ${colors.bold("module.exports = { ... }")}.`);
+			log.warn("Using default configuration...");
+		}
+
 		this.config = _.merge(this.config, userConfig);
 	}
 
@@ -91,26 +109,38 @@ function setHome(homePath) {
 	// TODO: Remove in future release
 	// Backwards compatibility for old way of specifying themes in settings
 	if (this.config.theme.includes(".css")) {
-		log.warn(`Referring to CSS files in the ${colors.green("theme")} setting of ${colors.green(Helper.CONFIG_PATH)} is ${colors.bold("deprecated")} and will be removed in a future version.`);
+		log.warn(`Referring to CSS files in the ${colors.green("theme")} setting of ${colors.green(configPath)} is ${colors.bold.red("deprecated")} and will be removed in a future version.`);
 	} else {
 		this.config.theme = `themes/${this.config.theme}.css`;
 	}
 }
 
+function getHomePath() {
+	return homePath;
+}
+
+function getConfigPath() {
+	return configPath;
+}
+
+function getUsersPath() {
+	return usersPath;
+}
+
 function getUserConfigPath(name) {
-	return path.join(this.USERS_PATH, name + ".json");
+	return path.join(usersPath, name + ".json");
 }
 
 function getUserLogsPath(name, network) {
-	return path.join(this.HOME, "logs", name, network);
+	return path.join(homePath, "logs", name, network);
 }
 
 function getStoragePath() {
-	return path.join(this.HOME, "storage");
+	return storagePath;
 }
 
 function getPackagesPath() {
-	return path.join(this.HOME, "packages", "node_modules");
+	return packagesPath;
 }
 
 function getPackageModulePath(packageName) {
@@ -134,6 +164,8 @@ function ip2hex(address) {
 	}).join("");
 }
 
+// Expand ~ into the current user home dir.
+// This does *not* support `~other_user/tmp` => `/home/other_user/tmp`.
 function expandHome(shortenedPath) {
 	if (!shortenedPath) {
 		return "";

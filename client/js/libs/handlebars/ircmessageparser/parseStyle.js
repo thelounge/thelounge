@@ -23,7 +23,7 @@ const controlCodesRx = /[\u0000-\u001F]/g;
 
 // Converts a given text into an array of objects, each of them representing a
 // similarly styled section of the text. Each object carries the `text`, style
-// information (`bold`, `textColor`, `bgcolor`, `reverse`, `italic`,
+// information (`bold`, `textColor`, `bgcolor`, `italic`,
 // `underline`, `strikethrough`, `monospace`), and `start`/`end` cursors.
 function parseStyle(text) {
 	const result = [];
@@ -32,7 +32,7 @@ function parseStyle(text) {
 
 	// At any given time, these carry style information since last time a styling
 	// control code was met.
-	let colorCodes, bold, textColor, bgColor, hexColor, hexBgColor, reverse, italic, underline, strikethrough, monospace;
+	let colorCodes, bold, textColor, bgColor, hexColor, hexBgColor, italic, underline, strikethrough, monospace;
 
 	const resetStyle = () => {
 		bold = false;
@@ -40,7 +40,6 @@ function parseStyle(text) {
 		bgColor = undefined;
 		hexColor = undefined;
 		hexBgColor = undefined;
-		reverse = false;
 		italic = false;
 		underline = false;
 		strikethrough = false;
@@ -69,7 +68,6 @@ function parseStyle(text) {
 				bgColor,
 				hexColor,
 				hexBgColor,
-				reverse,
 				italic,
 				underline,
 				strikethrough,
@@ -148,11 +146,13 @@ function parseStyle(text) {
 
 			break;
 
-		case REVERSE:
+		case REVERSE: {
 			emitFragment();
-			reverse = !reverse;
+			const tmp = bgColor;
+			bgColor = textColor;
+			textColor = tmp;
 			break;
-
+		}
 		case ITALIC:
 			emitFragment();
 			italic = !italic;
@@ -184,7 +184,7 @@ function parseStyle(text) {
 	return result;
 }
 
-const properties = ["bold", "textColor", "bgColor", "hexColor", "hexBgColor", "italic", "underline", "reverse", "strikethrough", "monospace"];
+const properties = ["bold", "textColor", "bgColor", "hexColor", "hexBgColor", "italic", "underline", "strikethrough", "monospace"];
 
 function prepare(text) {
 	return parseStyle(text)

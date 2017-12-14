@@ -16,8 +16,8 @@ program
 		const child = require("child_process");
 		const packageJson = require("package-json");
 
-		if (!fs.existsSync(Helper.CONFIG_PATH)) {
-			log.error(`${Helper.CONFIG_PATH} does not exist.`);
+		if (!fs.existsSync(Helper.getConfigPath())) {
+			log.error(`${Helper.getConfigPath()} does not exist.`);
 			return;
 		}
 

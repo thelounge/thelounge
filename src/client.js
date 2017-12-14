@@ -20,6 +20,7 @@ var events = [
 	"unhandled",
 	"banlist",
 	"ctcp",
+	"chghost",
 	"error",
 	"invite",
 	"join",
@@ -196,7 +197,7 @@ Client.prototype.connect = function(args) {
 
 	client.networks.push(network);
 	client.emit("network", {
-		networks: [network],
+		networks: [network.getFilteredClone(this.lastActiveChannel, -1)],
 	});
 
 	if (config.lockNetwork) {
@@ -255,6 +256,7 @@ Client.prototype.connect = function(args) {
 		tls: network.tls,
 		localAddress: config.bind,
 		rejectUnauthorized: false,
+		enable_chghost: true,
 		enable_echomessage: true,
 		auto_reconnect: true,
 		auto_reconnect_wait: 10000 + Math.floor(Math.random() * 1000), // If multiple users are connected to the same network, randomize their reconnections a little
