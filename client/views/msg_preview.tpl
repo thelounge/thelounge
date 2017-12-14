@@ -12,7 +12,7 @@
 		</audio>
 	{{/equal}}
 	{{#equal type "video"}}
-		<video width="320" height="240" preload="metadata" controls>
+		<video preload="metadata" controls>
 			<source src="{{link}}" type="{{res}}">
 			Your browser does not support the video element.
 		</video>
