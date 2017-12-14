@@ -29,7 +29,7 @@ const messageMaker = {
 	},
 	defaults: function() {
 		this.message = _.assign({},{
-			from: "test",
+			from: {nick: "test", mode: ""},
 			hostmask: "test@hostmask.com",
 			id: messageCounter++,
 			self: false,
@@ -42,8 +42,8 @@ const messageMaker = {
 	},
 	user: function(username) {
 		this.message = _.assign(this.message, {
-			from: username,
-			hostmask: username + "@hostmask.com"
+			from: {nick: username, mode: ""},
+			hostmask: username + "@hostmask.com",
 		});
 		return this;
 	},
@@ -72,7 +72,7 @@ const messageMaker = {
 		this.message = _.assign(this.message, {
 			type: "mode",
 			template: "actions/mode",
-			text: `${mode} ${names}`
+			text: `${mode} ${names}`,
 		});
 		return this;
 	},
