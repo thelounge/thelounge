@@ -7,13 +7,13 @@
 	{{/equal}}
 	{{#equal type "audio"}}
 		<audio controls preload="metadata">
-			<source src="{{link}}" type="{{res}}">
+			<source src="{{media}}" type="{{mediaType}}">
 			Your browser does not support the audio element.
 		</audio>
 	{{/equal}}
 	{{#equal type "video"}}
 		<video preload="metadata" controls>
-			<source src="{{link}}" type="{{res}}">
+			<source src="{{media}}" type="{{mediaType}}">
 			Your browser does not support the video element.
 		</video>
 	{{/equal}}
