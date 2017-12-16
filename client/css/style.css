@@ -1026,6 +1026,22 @@ kbd {
 	position: relative;
 }
 
+#chat .channel .message.highlight::before {
+	display: inline-block;
+	content: " ";
+	background: #e74c3c;
+	height: 16px;
+	min-width: 16px;
+	border-radius: 8px;
+	margin-top: 5px;
+	margin-left: 10px;
+	margin-right: -5px;
+}
+
+#chat .channel .message.highlight .from {
+	width: 113px; /* 134px original - 5px margin - 16px highlight dot width */
+}
+
 #chat .content {
 	flex: 1 1 auto;
 	min-width: 0;
@@ -1174,11 +1190,8 @@ kbd {
 }
 
 #chat .error,
-#chat .error .from,
-#chat .channel .highlight .from,
-#chat .channel .highlight .text,
-#chat .channel .highlight .user {
-	color: #f00;
+#chat .error .from {
+	color: #e74c3c;
 }
 
 #chat .toggle-button.opened, /* Thumbnail toggle */
@@ -2241,6 +2254,12 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	#chat .messages {
 		display: block;
 		padding: 5px 10px;
+	}
+
+	#chat .channel .message.highlight::before {
+		margin: 0;
+		height: 12px;
+		min-width: 12px;
 	}
 
 	#chat .msg {
