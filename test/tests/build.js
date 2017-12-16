@@ -25,7 +25,7 @@ describe("public folder", function() {
 		expect(fs.existsSync(path.join(publicFolder, "js", "bundle.js.map"))).to.be.true;
 	});
 
-	it("loading-slow-alert.js is copied", function() {
-		expect(fs.existsSync(path.join(publicFolder, "js", "loading-slow-alert.js"))).to.be.true;
+	it("loading-error-handlers.js is copied", function() {
+		expect(fs.existsSync(path.join(publicFolder, "js", "loading-error-handlers.js"))).to.be.true;
 	});
 });

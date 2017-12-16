@@ -67,7 +67,7 @@ const config = {
 				to: "fonts/[name].[ext]",
 			},
 			{
-				from: "./client/js/loading-slow-alert.js",
+				from: "./client/js/loading-error-handlers.js",
 				to: "js/[name].[ext]",
 			},
 			{ // TODO: Build index.html with handlebars
