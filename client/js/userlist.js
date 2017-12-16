@@ -103,7 +103,11 @@ exports.handleKeybinds = function(input) {
 		const user = input.closest(".users").find(".user.active");
 
 		if (user.length) {
-			user.click();
+			const clickEvent = new $.Event("click");
+			const userOffset = user.offset();
+			clickEvent.pageX = userOffset.left;
+			clickEvent.pageY = userOffset.top + user.height();
+			user.trigger(clickEvent);
 		}
 	});
 };
