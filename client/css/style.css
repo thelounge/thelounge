@@ -1921,7 +1921,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 .context-menu-item:hover,
 .textcomplete-item:hover,
-.textcomplete-menu .active {
+.textcomplete-menu .active,
+#chat .users .user.active {
 	background-color: #f6f6f6;
 	transition: none;
 }

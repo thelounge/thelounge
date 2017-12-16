@@ -10,6 +10,7 @@ const constants = require("./constants");
 const condensed = require("./condensed");
 const JoinChannel = require("./join-channel");
 const helpers_parse = require("./libs/handlebars/parse");
+const Userlist = require("./userlist");
 
 const chat = $("#chat");
 const sidebar = $("#sidebar");
@@ -117,7 +118,9 @@ function renderChannel(data) {
 	renderChannelMessages(data);
 
 	if (data.type === "channel") {
-		renderChannelUsers(data);
+		const users = renderChannelUsers(data);
+
+		Userlist.handleKeybinds(users.find(".search"));
 	}
 
 	if (historyObserver) {
@@ -173,6 +176,8 @@ function renderChannelUsers(data) {
 	if (search.val().length) {
 		search.trigger("input");
 	}
+
+	return users;
 }
 
 function renderNetworks(data, singleNetwork) {
