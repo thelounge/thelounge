@@ -160,6 +160,7 @@ kbd {
 }
 
 #js-copy-hack,
+#loading pre,
 #help,
 #windows .header .title,
 #windows .header .topic,
@@ -1354,8 +1355,22 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-top: 10px;
 }
 
-#loading-slow {
+#loading-slow,
+#loading-reload {
 	display: none;
+}
+
+#loading-reload {
+	margin-top: 15px;
+}
+
+#loading summary {
+	outline: none;
+	cursor: pointer;
+}
+
+#loading pre {
+	white-space: normal;
 }
 
 #sign-in label {
