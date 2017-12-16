@@ -1174,11 +1174,20 @@ kbd {
 }
 
 #chat .error,
-#chat .error .from,
-#chat .channel .highlight .from,
-#chat .channel .highlight .text,
-#chat .channel .highlight .user {
-	color: #f00;
+#chat .error .from {
+	color: #e74c3c;
+}
+
+#chat .channel .message.highlight {
+	background-color: rgba(231, 76, 60, 0.5);
+}
+
+#chat .channel .message.highlight .from {
+	border-right: 1px solid rgba(231, 76, 60, 0.5);
+}
+
+#chat .channel .message.highlight .from::after {
+	background: transparent;
 }
 
 #chat .toggle-button.opened, /* Thumbnail toggle */
@@ -2243,6 +2252,13 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		padding: 5px 10px;
 	}
 
+	#chat .channel .message.highlight {
+		margin-left: -10px;
+		margin-right: -10px;
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+
 	#chat .msg {
 		display: block;
 		padding: 2px 0;
@@ -2250,6 +2266,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 	#chat .time,
 	#chat .from,
+	#chat .channel .message.highlight .from,
 	#chat .content {
 		border: 0;
 		display: inline;
