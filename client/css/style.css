@@ -1204,7 +1204,7 @@ kbd {
 	color: #50a656;
 }
 
-#chat .user:hover {
+.chat .user:hover {
 	opacity: 0.6;
 }
 
