@@ -55,14 +55,16 @@ chat.on("mouseleave", ".users .user", function() {
 exports.handleKeybinds = function(input) {
 	Mousetrap(input.get(0)).bind(["up", "down"], (_e, key) => {
 		const userlists = input.closest(".users");
-		let users;
+		let userlist;
 
 		// If input field has content, use the filtered list instead
 		if (input.val().length) {
-			users = userlists.find(".names-filtered .user");
+			userlist = userlists.find(".names-filtered");
 		} else {
-			users = userlists.find(".names-original .user");
+			userlist = userlists.find(".names-original");
 		}
+
+		const users = userlist.find(".user");
 
 		// Find which item in the array of users is currently selected, if any.
 		// Returns -1 if none.
@@ -79,6 +81,19 @@ exports.handleKeybinds = function(input) {
 		} else {
 			// If no users or first user was marked as active, mark the last one.
 			users.eq(Math.max(activeIndex, 0) - 1).addClass("active");
+		}
+
+		// Adjust scroll when active item is outside of the visible area
+		const userlistHeight = userlist.height();
+		const userlistScroll = userlist.scrollTop();
+		const active = $(".user.active");
+		const activeTop = active.position().top;
+		const activeHeight = active.height();
+
+		if (activeTop > userlistHeight - activeHeight) {
+			userlist.scrollTop(userlistScroll + activeTop - userlistHeight + activeHeight);
+		} else if (activeTop < 0) {
+			userlist.scrollTop(userlistScroll + activeTop - activeHeight);
 		}
 	});
 
