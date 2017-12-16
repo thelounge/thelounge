@@ -2256,8 +2256,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		padding: 0;
 	}
 
-	#chat .condensed .time,
-	#chat .condensed .from {
+	#chat .condensed-summary .time,
+	#chat .condensed-summary .from {
 		display: none;
 	}
 
