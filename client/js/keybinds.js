@@ -37,10 +37,8 @@ Mousetrap.bind([
 });
 
 Mousetrap.bind([
-	"command+up",
-	"command+down",
-	"ctrl+up",
-	"ctrl+down",
+	"mod+up",
+	"mod+down",
 ], function(e, keys) {
 	const channels = sidebar.find(".chan");
 	const index = channels.index(channels.filter(".active"));
@@ -77,10 +75,7 @@ const colorsHotkeys = {
 };
 
 for (const hotkey in colorsHotkeys) {
-	Mousetrap.bind([
-		"command+" + hotkey,
-		"ctrl+" + hotkey,
-	], function(e) {
+	Mousetrap.bind("mod+" + hotkey, function(e) {
 		e.preventDefault();
 
 		const cursorPosStart = input.prop("selectionStart");
