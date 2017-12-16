@@ -869,6 +869,8 @@ kbd {
 	will-change: transform, scroll-position;
 	-webkit-overflow-scrolling: touch;
 	position: absolute;
+	display: flex;
+	flex-direction: column;
 }
 
 #chat .channel .chat {
@@ -921,6 +923,7 @@ kbd {
 #chat .messages {
 	padding: 10px 0;
 	touch-action: pan-y;
+	margin-top: auto;
 }
 
 #chat .msg {
