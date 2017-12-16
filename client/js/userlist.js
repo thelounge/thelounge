@@ -37,6 +37,9 @@ chat.on("input", ".users .search", function() {
 
 	names.hide();
 	container.html(templates.user_filtered({matches: result})).show();
+
+	// Mark the first result as active for convenience
+	container.find(".user").first().addClass("active");
 });
 
 chat.on("mouseenter", ".users .user", function() {
