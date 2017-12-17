@@ -877,10 +877,6 @@ kbd {
 	right: 180px;
 }
 
-#chat .special {
-	bottom: -47px;
-}
-
 #viewport.rt .chat {
 	right: 0;
 }
@@ -923,6 +919,9 @@ kbd {
 #chat .messages {
 	padding: 10px 0;
 	touch-action: pan-y;
+}
+
+#chat .chan:not(.special) .messages {
 	margin-top: auto;
 }
 
@@ -1037,6 +1036,15 @@ kbd {
 #chat .special .time,
 #chat .special .from {
 	display: none;
+}
+
+#chat .special .date-marker-container,
+#chat .special .unread-marker {
+	display: none;
+}
+
+#chat .special table th {
+	word-break: normal;
 }
 
 /* Nicknames */
