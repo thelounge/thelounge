@@ -163,6 +163,11 @@ function renderChannelUsers(data) {
 		.sort((a, b) => b.lastMessage - a.lastMessage)
 		.map((a) => a.nick);
 
+	// Before re-rendering the list of names, there might have been an entry
+	// marked as active (i.e. that was highlighted by keyboard navigation).
+	// It is `undefined` if there was none.
+	const previouslyActive = users.find(".active").data("name");
+
 	const search = users
 		.find(".search")
 		.prop("placeholder", nicks.length + " " + (nicks.length === 1 ? "user" : "users"));
@@ -175,6 +180,15 @@ function renderChannelUsers(data) {
 	// Refresh user search
 	if (search.val().length) {
 		search.trigger("input");
+	}
+
+	// If a nick was highlighted before re-rendering the lists, re-highlight it in
+	// the newly-rendered list.
+	if (previouslyActive) {
+		// We need to un-highlight everything first because triggering `input` with
+		// a value highlights the first entry.
+		users.find(".user").removeClass("active");
+		users.find(`.user[data-name="${previouslyActive}"]`).addClass("active");
 	}
 
 	return users;
