@@ -441,7 +441,7 @@ kbd {
 }
 
 #sidebar {
-	bottom: 48px;
+	bottom: 45px;
 	left: 0;
 	overflow: auto;
 	overflow-x: hidden;
