@@ -384,6 +384,22 @@ function initializeClient(socket, client, token, lastMessage) {
 		client.unregisterPushSubscription(token);
 	});
 
+	socket.on("logs:download", (channelId) => {
+		const result = client.find(channelId);
+		// FIXME: result can be false. Is that possible here? If so, fix
+		const host = result.network.host;
+		const channel = result.chan.name;
+		const logFolder = Helper.getUserLogsPath(client.name, host);
+		// TODO: When supporting entire networks, retrieve entire folder
+		const filename = path.resolve(logFolder, `${channel}.log`);
+		const logContent = fs.readFileSync(filename, "utf8");
+
+		socket.emit("logs:download", {
+			filename: `${channel}.txt`, // TODO: Extension will vary with entire networks
+			content: logContent,
+		});
+	});
+
 	const sendSessionList = () => {
 		const sessions = _.map(client.config.sessions, (session, sessionToken) => ({
 			current: sessionToken === token,

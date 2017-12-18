@@ -133,6 +133,16 @@ $(function() {
 					data: target.data("id"),
 				});
 			}
+
+			if (!target.hasClass("lobby")) { // TODO: Download all logs for a network
+				output += templates.contextmenu_item({
+					class: "download-logs",
+					action: "download_logs",
+					text: "Download logs",
+					data: target.data("id"),
+				});
+			}
+
 			output += templates.contextmenu_item({
 				class: "close",
 				action: "close",
@@ -510,15 +520,16 @@ $(function() {
 				text: "/kick " + itemData,
 			});
 		},
+		download_logs: function(channelId) {
+			socket.emit("logs:download", channelId);
+		},
 	};
-
-	contextMenuActions.execute = (name, ...args) => contextMenuActions[name] && contextMenuActions[name](...args);
 
 	contextMenu.on("click", ".context-menu-item", function() {
 		const $this = $(this);
 		const itemData = $this.data("data");
 		const contextAction = $this.data("action");
-		contextMenuActions.execute(contextAction, itemData);
+		contextMenuActions[contextAction](itemData);
 	});
 
 	chat.on("input", ".search", function() {

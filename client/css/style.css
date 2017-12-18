@@ -223,6 +223,7 @@ kbd {
 .context-menu-user::before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
 .context-menu-close::before { content: "\f00d"; /* http://fontawesome.io/icon/times/ */ }
 .context-menu-list::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
+.context-menu-download-logs::before { content: "\f0ed"; /* http://fontawesome.io/icon/cloud-download/ */ }
 .context-menu-action-whois::before { content: "\f05a"; /* http://fontawesome.io/icon/info-circle/  */ }
 .context-menu-action-kick::before { content: "\f05e"; /* http://fontawesome.io/icon/ban/ */ }
 
