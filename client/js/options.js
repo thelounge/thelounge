@@ -5,7 +5,6 @@ const escapeRegExp = require("lodash/escapeRegExp");
 const userStyles = $("#user-specified-css");
 const storage = require("./localStorage");
 const tz = require("./libs/handlebars/tz");
-const autocompletion = require("./autocompletion");
 
 const windows = $("#windows");
 const chat = $("#chat");
@@ -13,6 +12,7 @@ const chat = $("#chat");
 // Default options
 const options = {
 	autocomplete: true,
+	nickPostfix: "",
 	coloredNicks: true,
 	desktopNotifications: false,
 	highlights: [],
@@ -43,6 +43,9 @@ userOptions = null;
 
 module.exports = options;
 
+// Due to cyclical dependency, have to require it after exports
+const autocompletion = require("./autocompletion");
+
 module.exports.shouldOpenMessagePreview = function(type) {
 	return type === "link" ? options.links : options.media;
 };
@@ -56,6 +59,8 @@ module.exports.initialize = () => {
 		if (i === "userStyles") {
 			settings.find("#user-specified-css-input").val(options[i]);
 		} else if (i === "highlights") {
+			settings.find("input[name=" + i + "]").val(options[i]);
+		} else if (i === "nickPostfix") {
 			settings.find("input[name=" + i + "]").val(options[i]);
 		} else if (i === "statusMessages") {
 			settings.find(`input[name=${i}][value=${options[i]}]`)
@@ -149,6 +154,8 @@ module.exports.initialize = () => {
 			} else {
 				module.exports.highlightsRE = null;
 			}
+		} else if (name === "nickPostfix") {
+			options.nickPostfix = options[name];
 		} else if (name === "showSeconds") {
 			chat.find(".msg > .time").each(function() {
 				$(this).text(tz($(this).parent().data("time")));

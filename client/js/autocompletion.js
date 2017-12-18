@@ -4,6 +4,7 @@ const $ = require("jquery");
 const fuzzy = require("fuzzy");
 const Mousetrap = require("mousetrap");
 const emojiMap = require("./libs/simplemap.json");
+const options = require("./options");
 const constants = require("./constants");
 
 const input = $("#input");
@@ -56,8 +57,19 @@ const nicksStrategy = {
 	template([string]) {
 		return string;
 	},
-	replace([, original]) {
-		return original;
+	replace([, original], position = 1) {
+		// If no postfix specified, return autocompleted nick as-is
+		if (!options.nickPostfix) {
+			return original;
+		}
+
+		// If there is whitespace in the input already, append space to nick
+		if (position > 0 && /\s/.test(input.val())) {
+			return original + " ";
+		}
+
+		// If nick is first in the input, append specified postfix
+		return original + options.nickPostfix;
 	},
 	index: 1,
 };
@@ -152,11 +164,13 @@ const backgroundColorStrategy = {
 
 function enableAutocomplete() {
 	let tabCount = 0;
+	let lastMatch = "";
 	let currentMatches = [];
 
 	input.on("input.tabcomplete", () => {
 		tabCount = 0;
 		currentMatches = [];
+		lastMatch = "";
 	});
 
 	Mousetrap(input.get(0)).bind("tab", (e) => {
@@ -172,27 +186,26 @@ function enableAutocomplete() {
 			return;
 		}
 
-		let lastWord;
-
 		if (tabCount === 0) {
-			lastWord = text.split(/\s/).pop();
+			lastMatch = text.split(/\s/).pop();
 
-			if (lastWord.length === 0) {
+			if (lastMatch.length === 0) {
 				return;
 			}
 
-			currentMatches = completeNicks(lastWord, false);
+			currentMatches = completeNicks(lastMatch, false);
 
 			if (currentMatches.length === 0) {
 				return;
 			}
-		} else {
-			lastWord = nicksStrategy.replace([0, currentMatches[(tabCount - 1) % currentMatches.length]]);
 		}
 
-		const matchedNick = currentMatches[tabCount % currentMatches.length];
-		input.val(text.substr(0, input.get(0).selectionStart - lastWord.length) + nicksStrategy.replace([0, matchedNick]));
+		const position = input.get(0).selectionStart - lastMatch.length;
+		const newMatch = nicksStrategy.replace([0, currentMatches[tabCount % currentMatches.length]], position);
 
+		input.val(text.substr(0, position) + newMatch);
+
+		lastMatch = newMatch;
 		tabCount++;
 	}, "keydown");
 
