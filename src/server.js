@@ -146,6 +146,12 @@ module.exports = function() {
 				return;
 			}
 
+			if (Helper.config.prefetchStorage) {
+				log.info("Clearing prefetch storage folder, this might take a while...");
+
+				require("./plugins/storage").emptyDir();
+			}
+
 			// Forcefully exit after 3 seconds
 			suicideTimeout = setTimeout(() => process.exit(1), 3000);
 
@@ -163,6 +169,11 @@ module.exports = function() {
 
 		process.on("SIGINT", exitGracefully);
 		process.on("SIGTERM", exitGracefully);
+
+		// Clear storage folder after server starts successfully
+		if (Helper.config.prefetchStorage) {
+			require("./plugins/storage").emptyDir();
+		}
 	});
 
 	return server;
