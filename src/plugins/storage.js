@@ -9,7 +9,9 @@ const helper = require("../helper");
 class Storage {
 	constructor() {
 		this.references = new Map();
+	}
 
+	emptyDir() {
 		// Ensures that a directory is empty.
 		// Deletes directory contents if the directory is not empty.
 		// If the directory does not exist, it is created.
