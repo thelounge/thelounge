@@ -38,11 +38,13 @@ module.exports = function(irc, network) {
 
 	function handleMessage(data) {
 		let chan;
+		const from = chan.getUser(data.nick);
 		const msg = new Msg({
 			type: data.type,
 			time: data.time,
 			text: data.message,
 			self: data.nick === irc.user.nick,
+			from: from,
 			highlight: false,
 			users: [],
 		});
@@ -50,7 +52,6 @@ module.exports = function(irc, network) {
 		// Server messages go to server window, no questions asked
 		if (data.from_server) {
 			chan = network.channels[0];
-			msg.from = chan.getUser(data.nick);
 		} else {
 			let target = data.target;
 
@@ -79,13 +80,11 @@ module.exports = function(irc, network) {
 				}
 			}
 
-			msg.from = chan.getUser(data.nick);
-
 			// Query messages (unless self) always highlight
 			if (chan.type === Chan.Type.QUERY) {
 				msg.highlight = !msg.self;
 			} else if (chan.type === Chan.Type.CHANNEL) {
-				msg.from.lastMessage = data.time || Date.now();
+				from.lastMessage = data.time || Date.now();
 			}
 		}
 
