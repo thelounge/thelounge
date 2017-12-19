@@ -628,6 +628,11 @@ kbd {
 	color: #49505a;
 }
 
+#sidebar .close-tooltip {
+	float: right;
+}
+
+#sidebar .leave,
 #sidebar .close {
 	width: 18px;
 	height: 18px;
@@ -635,6 +640,7 @@ kbd {
 	transition: opacity 0.2s, background-color 0.2s;
 }
 
+#sidebar .leave::before,
 #sidebar .close::before {
 	font-size: 20px;
 	font-weight: normal;
@@ -677,6 +683,7 @@ kbd {
 	display: unset;
 }
 
+#sidebar .chan.active .leave:hover,
 #sidebar .chan.active .close:hover {
 	opacity: 1;
 }
