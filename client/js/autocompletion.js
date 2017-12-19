@@ -3,13 +3,12 @@
 const $ = require("jquery");
 const fuzzy = require("fuzzy");
 const Mousetrap = require("mousetrap");
+const {Textcomplete, Textarea} = require("textcomplete");
 const emojiMap = require("./libs/simplemap.json");
 const options = require("./options");
 const constants = require("./constants");
 
 const input = $("#input");
-const Textcomplete = require("textcomplete/lib/textcomplete").default;
-const Textarea = require("textcomplete/lib/textarea").default;
 let textcomplete;
 
 module.exports = {
