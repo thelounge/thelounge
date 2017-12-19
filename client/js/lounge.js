@@ -133,6 +133,14 @@ $(function() {
 					data: target.data("id"),
 				});
 			}
+			if (target.hasClass("channel")) {
+				output += templates.contextmenu_item({
+					class: "list",
+					action: "banlist",
+					text: "List banned users",
+					data: target.data("id"),
+				});
+			}
 			output += templates.contextmenu_item({
 				class: "close",
 				action: "close",
@@ -476,6 +484,12 @@ $(function() {
 			socket.emit("input", {
 				target: itemData,
 				text: "/list",
+			});
+		},
+		banlist: function(itemData) {
+			socket.emit("input", {
+				target: itemData,
+				text: "/banlist",
 			});
 		},
 		whois: function(itemData) {
