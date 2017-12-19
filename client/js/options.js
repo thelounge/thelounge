@@ -24,6 +24,7 @@ let $warningBlocked;
 // Default settings
 const settings = {
 	syncSettings: false,
+	advanced: false,
 	autocomplete: true,
 	nickPostfix: "",
 	coloredNicks: true,
@@ -155,6 +156,8 @@ function applySetting(name, value) {
 		} else if (!value) {
 			$warningBlocked.hide();
 		}
+	} else if (name === "advanced") {
+		$("#settings [data-advanced]").toggle(settings[name]);
 	}
 }
 
