@@ -38,20 +38,15 @@ module.exports = function(irc, network) {
 
 	function handleMessage(data) {
 		let chan;
-		const from = chan.getUser(data.nick);
-		const msg = new Msg({
-			type: data.type,
-			time: data.time,
-			text: data.message,
-			self: data.nick === irc.user.nick,
-			from: from,
-			highlight: false,
-			users: [],
-		});
+		let from;
+		let highlight = false;
+		let showInActive = false;
+		const self = data.nick === irc.user.nick;
 
 		// Server messages go to server window, no questions asked
 		if (data.from_server) {
 			chan = network.channels[0];
+			from = chan.getUser(data.nick);
 		} else {
 			let target = data.target;
 
@@ -65,7 +60,7 @@ module.exports = function(irc, network) {
 			if (typeof chan === "undefined") {
 				// Send notices that are not targeted at us into the server window
 				if (data.type === Msg.Type.NOTICE) {
-					msg.showInActive = true;
+					showInActive = true;
 					chan = network.channels[0];
 				} else {
 					chan = new Chan({
@@ -80,12 +75,29 @@ module.exports = function(irc, network) {
 				}
 			}
 
+			from = chan.getUser(data.nick);
+
 			// Query messages (unless self) always highlight
 			if (chan.type === Chan.Type.QUERY) {
-				msg.highlight = !msg.self;
+				highlight = !self;
 			} else if (chan.type === Chan.Type.CHANNEL) {
 				from.lastMessage = data.time || Date.now();
 			}
+		}
+
+		// msg is constructed down here because `from` is being copied in the constructor
+		const msg = new Msg({
+			type: data.type,
+			time: data.time,
+			text: data.message,
+			self: self,
+			from: from,
+			highlight: highlight,
+			users: [],
+		});
+
+		if (showInActive) {
+			msg.showInActive = true;
 		}
 
 		// Self messages in channels are never highlighted
