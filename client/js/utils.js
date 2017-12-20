@@ -14,13 +14,13 @@ module.exports = {
 	lastMessageId,
 	confirmExit,
 	forceFocus,
+	hasRoleInChannel,
 	move,
 	resetHeight,
 	setNick,
 	toggleNickEditor,
 	toggleNotificationMarkers,
 	requestIdleCallback,
-	isOpInChannel,
 };
 
 function findCurrentNetworkChan(name) {
@@ -39,13 +39,17 @@ function resetHeight(element) {
 	element.style.height = element.style.minHeight;
 }
 
-// Given a channel element will determine if the lounge user is Op in that channel
-function isOpInChannel(channel) {
+// Given a channel element will determine if the lounge user is one of the supplied roles.
+function hasRoleInChannel(channel, roles) {
+	if (!channel || !roles) {
+		return false;
+	}
+
 	const channelID = channel.data("id");
 	const network = $("#sidebar .network").has(`.chan[data-id="${channelID}"]`);
 	const ownNick = network.data("nick");
-	const isOP = channel.find(`.users .user-mode.op .user[data-name="${escape(ownNick)}"]`).length;
-	return isOP;
+	const user = channel.find(`.users .user[data-name="${escape(ownNick)}"]`).first();
+	return user.parent().is("." + roles.join(", ."));
 }
 
 // Triggering click event opens the virtual keyboard on mobile
