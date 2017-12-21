@@ -135,7 +135,7 @@ $(function() {
 				output += templates.contextmenu_item({
 					class: "join",
 					action: "join",
-					text: "Join a channel\u2026",
+					text: "Join a channel…",
 					data: target.data("id"),
 				});
 			}
