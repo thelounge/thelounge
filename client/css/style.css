@@ -598,7 +598,8 @@ kbd {
 	border-radius: 3px;
 	width: 18px;
 	height: 18px;
-	transition: opacity 0.2s, background-color 0.2s;
+	opacity: 0.4;
+	transition: opacity 0.2s, background-color 0.2s, transform 0.2s;
 }
 
 #sidebar .lobby .add-channel::before {
@@ -611,12 +612,12 @@ kbd {
 	color: #fff;
 }
 
-#sidebar .lobby .add-channel {
-	opacity: 0.4;
-}
-
 #sidebar .lobby .add-channel:hover {
 	opacity: 1;
+}
+
+#sidebar .lobby .add-channel.opened {
+	transform: rotate(45deg);
 }
 
 #sidebar .chan.active .close {

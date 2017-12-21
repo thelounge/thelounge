@@ -485,7 +485,7 @@ $(function() {
 
 	const contextMenuActions = {
 		join: function(itemData) {
-			$(`#join-channel-${itemData}`).show();
+			$(`#join-channel-${itemData}`).closest(".network").find("button.add-channel").click();
 		},
 		close: function(itemData) {
 			closeChan($(`.networks .chan[data-target="${itemData}"]`));

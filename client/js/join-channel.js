@@ -8,18 +8,39 @@ const utils = require("./utils");
 
 const sidebar = $("#sidebar");
 
+function toggleButton(network) {
+	// Transform the + button to a ×
+	network.find("button.add-channel").toggleClass("opened");
+
+	// Toggle content of tooltip
+	const tooltip = network.find(".add-channel-tooltip");
+	const altLabel = tooltip.data("alt-label");
+	tooltip.data("alt-label", tooltip.attr("aria-label"));
+	tooltip.attr("aria-label", altLabel);
+}
+
 function closeForm(network) {
 	const form = network.find(".join-form");
 	form.find("input[name='channel']").val("");
 	form.find("input[name='key']").val("");
 	form.hide();
+
+	toggleButton(network);
 }
 
-sidebar.on("click", ".add-channel", (e) => {
+sidebar.on("click", ".add-channel", function(e) {
 	const id = $(e.target).data("id");
 	const joinForm = $(`#join-channel-${id}`);
-	joinForm.toggle();
-	joinForm.find(".input[name='channel']").focus();
+	const network = joinForm.closest(".network");
+
+	if (joinForm.is(":visible")) {
+		closeForm(network);
+	} else {
+		joinForm.show();
+		joinForm.find(".input[name='channel']").focus();
+		toggleButton(network);
+	}
+
 	return false;
 });
 
