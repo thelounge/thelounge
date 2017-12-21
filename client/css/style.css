@@ -124,7 +124,8 @@ kbd {
 }
 
 .btn:disabled,
-.btn:hover {
+.btn:hover,
+.btn:focus {
 	background: #84ce88;
 	color: #fff;
 	opacity: 1;
