@@ -8,6 +8,7 @@ const utils = require("./utils");
 const sorting = require("./sorting");
 const constants = require("./constants");
 const condensed = require("./condensed");
+const JoinChannel = require("./join-channel");
 const helpers_parse = require("./libs/handlebars/parse");
 
 const chat = $("#chat");
@@ -182,6 +183,9 @@ function renderNetworks(data, singleNetwork) {
 			networks: data.networks,
 		})
 	);
+
+	// Add keyboard handlers to the "Join a channel…" form inputs/button
+	JoinChannel.handleKeybinds();
 
 	let newChannels;
 	const channels = $.map(data.networks, function(n) {

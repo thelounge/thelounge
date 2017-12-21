@@ -1,11 +1,19 @@
 "use strict";
 
 const $ = require("jquery");
+const Mousetrap = require("mousetrap");
 
 const socket = require("./socket");
 const utils = require("./utils");
 
 const sidebar = $("#sidebar");
+
+function closeForm(network) {
+	const form = network.find(".join-form");
+	form.find("input[name='channel']").val("");
+	form.find("input[name='key']").val("");
+	form.hide();
+}
 
 sidebar.on("click", ".add-channel", (e) => {
 	const id = $(e.target).data("id");
@@ -30,8 +38,13 @@ sidebar.on("submit", ".join-form", function() {
 			target: form.prev().data("id"),
 		});
 	}
-	channel.val("");
-	key.val("");
-	form.hide();
+	closeForm(form.closest(".network"));
 	return false;
 });
+
+exports.handleKeybinds = function() {
+	sidebar.find(".join-form input, .join-form button").each(function() {
+		const network = $(this).closest(".network");
+		Mousetrap(this).bind("esc", () => closeForm(network));
+	});
+};
