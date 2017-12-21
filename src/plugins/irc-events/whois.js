@@ -1,25 +1,11 @@
 "use strict";
 
-const Chan = require("../../models/chan");
 const Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
 	const client = this;
 	irc.on("whois", function(data) {
-		let chan = network.getChannel(data.nick);
-
-		if (typeof chan === "undefined") {
-			chan = new Chan({
-				type: Chan.Type.QUERY,
-				name: data.nick,
-			});
-			network.channels.push(chan);
-			client.emit("join", {
-				shouldOpen: true,
-				network: network.id,
-				chan: chan.getFilteredClone(true),
-			});
-		}
+		const lobby = network.channels[0];
 
 		let msg;
 		if (data.error) {
@@ -38,6 +24,7 @@ module.exports = function(irc, network) {
 			});
 		}
 
-		chan.pushMessage(client, msg);
+		msg.showInActive = true;
+		lobby.pushMessage(client, msg);
 	});
 };
