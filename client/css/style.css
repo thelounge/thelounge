@@ -578,7 +578,6 @@ kbd {
 }
 
 #sidebar .close {
-	border-radius: 3px;
 	width: 18px;
 	height: 18px;
 	display: none;
@@ -617,7 +616,6 @@ kbd {
 }
 
 #sidebar .lobby .add-channel:hover {
-	background-color: rgba(0, 0, 0, 0.1);
 	opacity: 1;
 }
 
@@ -627,7 +625,6 @@ kbd {
 }
 
 #sidebar .chan.active .close:hover {
-	background-color: rgba(0, 0, 0, 0.1);
 	opacity: 1;
 }
 
