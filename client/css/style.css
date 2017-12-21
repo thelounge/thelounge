@@ -1484,6 +1484,25 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	display: inline-block;
 }
 
+.whois {
+	display: -ms-grid; /* Edge 15- */
+	display: grid;
+	-ms-grid-template-columns: max-content auto;
+	grid-template-columns: max-content auto;
+	margin: 0;
+}
+
+.whois dt {
+	-ms-grid-column-start: 1;
+	grid-column-start: 1;
+	margin-right: 20px;
+}
+
+.whois dd {
+	-ms-grid-column-start: 2;
+	grid-column-start: 2;
+}
+
 #form {
 	background: #eee;
 	border-top: 1px solid #ddd;
