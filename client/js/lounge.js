@@ -452,9 +452,9 @@ $(function() {
 		}
 	});
 
-	sidebar.on("click", ".close", function() {
+	function closeChan(chan) {
 		var cmd = "/close";
-		var chan = $(this).closest(".chan");
+
 		if (chan.hasClass("lobby")) {
 			cmd = "/quit";
 			var server = chan.find(".name").html();
@@ -471,11 +471,15 @@ $(function() {
 			opacity: 0.4,
 		});
 		return false;
+	}
+
+	sidebar.on("click", ".close", function() {
+		closeChan($(this).closest(".chan"));
 	});
 
 	const contextMenuActions = {
 		close: function(itemData) {
-			$(`.networks .chan[data-target="${itemData}"] .close`).click();
+			closeChan($(`.networks .chan[data-target="${itemData}"]`));
 		},
 		focusChan: function(itemData) {
 			$(`.networks .chan[data-target="${itemData}"]`).click();
