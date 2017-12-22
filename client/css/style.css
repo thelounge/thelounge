@@ -100,10 +100,6 @@ h3 {
 	margin: 0;
 }
 
-input {
-	outline: 0;
-}
-
 button {
 	border: none;
 	background: none;
@@ -172,7 +168,7 @@ kbd {
 	margin-bottom: 10px;
 	padding: 9px 17px;
 	text-transform: uppercase;
-	transition: background 0.2s, border-color 0.2s, color 0.2s;
+	transition: background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
 	word-spacing: 3px;
 	cursor: pointer; /* This is useful for `<button>` elements */
 }
@@ -189,8 +185,14 @@ kbd {
 	opacity: 1;
 }
 
+.input:focus,
+.btn:active,
+.btn:focus {
+	outline: 0;
+	box-shadow: 0 0 0 3px rgba(132, 206, 136, 0.5);
+}
+
 .btn:active {
-	box-shadow: none;
 	opacity: 0.8;
 }
 
@@ -877,9 +879,8 @@ background on hover (unless active) */
 	font-size: 14px;
 	margin: 2px 0;
 	margin-bottom: 10px;
-	outline: 0;
 	padding: 0 10px;
-	transition: border-color 0.2s;
+	transition: border-color 0.2s, box-shadow 0.2s;
 	width: 100%;
 	height: 35px;
 	line-height: 35px;
@@ -891,7 +892,7 @@ background on hover (unless active) */
 
 .input:not(:disabled):hover,
 .input:not(:disabled):focus {
-	border-color: #79838c;
+	border-color: #84ce88;
 }
 
 #user-specified-css-input {
@@ -2103,7 +2104,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #chat .userlist .user.active {
 	background-color: #f6f6f6;
 	transition: none;
-	outline: 0; /* TODO: Handle focus outlines in PR #1873 */
+	outline: 0;
 }
 
 .context-menu-item::before,
