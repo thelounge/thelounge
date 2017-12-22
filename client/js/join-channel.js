@@ -8,6 +8,11 @@ const utils = require("./utils");
 
 const sidebar = $("#sidebar");
 
+module.exports = {
+	handleKeybinds,
+	openForm,
+};
+
 function toggleButton(network) {
 	// Transform the + button to a ×
 	network.find("button.add-channel").toggleClass("opened");
@@ -21,11 +26,25 @@ function toggleButton(network) {
 
 function closeForm(network) {
 	const form = network.find(".join-form");
-	form.find("input[name='channel']").val("");
-	form.find("input[name='key']").val("");
-	form.hide();
 
-	toggleButton(network);
+	if (form.is(":visible")) {
+		form.find("input[name='channel']").val("");
+		form.find("input[name='key']").val("");
+		form.hide();
+		toggleButton(network);
+	}
+}
+
+function openForm(network) {
+	const form = network.find(".join-form");
+
+	if (form.is(":hidden")) {
+		form.show();
+		toggleButton(network);
+	}
+
+	// Focus the "Channel" field even if the form was already open
+	form.find(".input[name='channel']").focus();
 }
 
 sidebar.on("click", ".add-channel", function(e) {
@@ -36,9 +55,7 @@ sidebar.on("click", ".add-channel", function(e) {
 	if (joinForm.is(":visible")) {
 		closeForm(network);
 	} else {
-		joinForm.show();
-		joinForm.find(".input[name='channel']").focus();
-		toggleButton(network);
+		openForm(network);
 	}
 
 	return false;
@@ -63,9 +80,9 @@ sidebar.on("submit", ".join-form", function() {
 	return false;
 });
 
-exports.handleKeybinds = function() {
+function handleKeybinds() {
 	sidebar.find(".join-form input, .join-form button").each(function() {
 		const network = $(this).closest(".network");
 		Mousetrap(this).bind("esc", () => closeForm(network));
 	});
-};
+}

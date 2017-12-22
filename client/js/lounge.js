@@ -20,6 +20,7 @@ const utils = require("./utils");
 require("./webpush");
 require("./keybinds");
 require("./clipboard");
+const JoinChannel = require("./join-channel");
 
 $(function() {
 	var sidebar = $("#sidebar, #footer");
@@ -485,7 +486,8 @@ $(function() {
 
 	const contextMenuActions = {
 		join: function(itemData) {
-			$(`#join-channel-${itemData}`).closest(".network").find("button.add-channel").click();
+			const network = $(`#join-channel-${itemData}`).closest(".network");
+			JoinChannel.openForm(network);
 		},
 		close: function(itemData) {
 			closeChan($(`.networks .chan[data-target="${itemData}"]`));
