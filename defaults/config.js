@@ -51,7 +51,7 @@ module.exports = {
 
 	//
 	// Set the default theme.
-	// Find out how to add new themes at https://thelounge.github.io/docs/packages/themes
+	// Find out how to add new themes at https://thelounge.github.io/docs/plugins/themes.html
 	//
 	// @type     string
 	// @default  "example"
