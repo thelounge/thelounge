@@ -10,7 +10,7 @@
 
 {{#if whois.actualhost}}
 	<dt>Actual host:</dt>
-	<dd class="hostmask"><a href="https://ipinfo.io/{{whois.actualip}}" target="_blank" rel="noopener">{{whois.actualip}}</a>{{#equal whois.actualhost whois.actualip}}{{else}} ({{whois.actualhost}}){{/equal}}</dd>
+	<dd class="hostmask"><a href="https://ipinfo.io/{{whois.actualip}}" target="_blank" rel="noopener">{{whois.actualip}}</a>{{#notEqual whois.actualhost whois.actualip}} ({{whois.actualhost}}){{/notEqual}}</dd>
 {{/if}}
 
 {{#if whois.real_name}}
