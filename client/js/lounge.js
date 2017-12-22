@@ -20,6 +20,7 @@ const utils = require("./utils");
 require("./webpush");
 require("./keybinds");
 require("./clipboard");
+const JoinChannel = require("./join-channel");
 
 $(function() {
 	var sidebar = $("#sidebar, #footer");
@@ -130,6 +131,12 @@ $(function() {
 					class: "list",
 					action: "list",
 					text: "List all channels",
+					data: target.data("id"),
+				});
+				output += templates.contextmenu_item({
+					class: "join",
+					action: "join",
+					text: "Join a channel…",
 					data: target.data("id"),
 				});
 			}
@@ -478,6 +485,10 @@ $(function() {
 	});
 
 	const contextMenuActions = {
+		join: function(itemData) {
+			const network = $(`#join-channel-${itemData}`).closest(".network");
+			JoinChannel.openForm(network);
+		},
 		close: function(itemData) {
 			closeChan($(`.networks .chan[data-target="${itemData}"]`));
 		},

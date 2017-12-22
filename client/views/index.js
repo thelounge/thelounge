@@ -42,6 +42,7 @@ module.exports = {
 	msg_unhandled: require("./msg_unhandled.tpl"),
 	network: require("./network.tpl"),
 	image_viewer: require("./image_viewer.tpl"),
+	join_channel: require("./join_channel.tpl"),
 	session: require("./session.tpl"),
 	unread_marker: require("./unread_marker.tpl"),
 	user: require("./user.tpl"),
