@@ -7,12 +7,18 @@ module.exports = {
 	fetch,
 };
 
+const versions = {
+	current: {
+		version: `v${pkg.version}`,
+	},
+};
+
 function fetch(callback) {
-	const changelog = {
-		current: {
-			version: `v${pkg.version}`,
-		},
-	};
+	// Serving information from cache
+	if (versions.current.changelog) {
+		callback(versions);
+		return;
+	}
 
 	request.get({
 		uri: "https://api.github.com/repos/thelounge/lounge/releases",
@@ -22,8 +28,7 @@ function fetch(callback) {
 		},
 	}, (error, response, body) => {
 		if (error || response.statusCode !== 200) {
-			callback(changelog);
-
+			callback(versions);
 			return;
 		}
 
@@ -36,8 +41,8 @@ function fetch(callback) {
 		// Find the current release among releases on GitHub
 		for (i = 0; i < body.length; i++) {
 			release = body[i];
-			if (release.tag_name === changelog.current.version) {
-				changelog.current.changelog = release.body_html;
+			if (release.tag_name === versions.current.version) {
+				versions.current.changelog = release.body_html;
 				prerelease = release.prerelease;
 
 				break;
@@ -51,7 +56,7 @@ function fetch(callback) {
 
 				// Find latest release or pre-release if current version is also a pre-release
 				if (!release.prerelease || release.prerelease === prerelease) {
-					changelog.latest = {
+					versions.latest = {
 						prerelease: release.prerelease,
 						version: release.tag_name,
 						url: release.html_url,
@@ -62,6 +67,13 @@ function fetch(callback) {
 			}
 		}
 
-		callback(changelog);
+		// Emptying cached information after 15 minutes
+		setTimeout(() => {
+			delete versions.current.changelog;
+			delete versions.latest;
+		}, 15 * 60 * 1000
+		);
+
+		callback(versions);
 	});
 }
