@@ -4,6 +4,51 @@
 <div class="container">
 	<h1 class="title">Help</h1>
 
+	<h2>
+		<small class="pull-right">
+			v{{version}}
+			(<a href="#" id="view-changelog" data-target="#changelog">release notes</a>)
+		</small>
+		About The Lounge
+	</h2>
+
+	<div class="about">
+		{{#unless public}}
+			<p id="changelog-version-container" class="changelog-version">
+				Checking for updates...
+			</p>
+		{{/unless}}
+
+		{{#if gitCommit}}
+			<p>
+				The Lounge is running from source
+				(<a href="https://github.com/thelounge/lounge/tree/{{gitCommit}}" target="_blank" rel="noopener">commit <code>{{gitCommit}}</code></a>).
+			</p>
+
+			<ul>
+				<li>
+					Compare
+					<a href="https://github.com/thelounge/lounge/compare/{{gitCommit}}...master" target="_blank" rel="noopener">between <code>{{gitCommit}}</code> and <code>master</code></a>
+					to see what you are missing
+				</li>
+				<li>
+					Compare
+					<a href="https://github.com/thelounge/lounge/compare/{{version}}...{{gitCommit}}" target="_blank" rel="noopener">between <code>{{version}}</code> and <code>{{gitCommit}}</code></a>
+					to see your local changes</li>
+			</ul>
+		{{/if}}
+
+		<p>
+			<a href="https://thelounge.github.io/" target="_blank" rel="noopener" class="website-link">Website</a>
+		</p>
+		<p>
+			<a href="https://thelounge.github.io/docs/" target="_blank" rel="noopener" class="documentation-link">Documentation</a>
+		</p>
+		<p>
+			<a href="https://github.com/thelounge/lounge/issues/new" target="_blank" rel="noopener" class="report-issue-link">Report an issue…</a>
+		</p>
+	</div>
+
 	<h2>Keyboard Shortcuts</h2>
 
 	<div class="help-item">
@@ -11,7 +56,7 @@
 			<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>↑</kbd> / <kbd>↓</kbd>
 		</div>
 		<div class="description">
-			<p>Switch to the previous/next window in the channel list</p>
+			<p>Switch to the previous/next window in the channel list.</p>
 		</div>
 	</div>
 
@@ -481,20 +526,4 @@
 			</p>
 		</div>
 	</div>
-
-	<h2>About The Lounge</h2>
-
-	<p class="about">
-		{{#if gitCommit}}
-			The Lounge is running from source
-			(<a href="https://github.com/thelounge/lounge/tree/{{ gitCommit }}" target="_blank" rel="noopener"><code>{{ gitCommit }}</code></a>).<br>
-		{{else}}
-			The Lounge is in version <strong>{{version}}</strong>
-			(<a href="https://github.com/thelounge/lounge/releases/tag/v{{ version }}" target="_blank" rel="noopener">See release notes</a>).<br>
-		{{/if}}
-
-		<a href="https://thelounge.github.io/" target="_blank" rel="noopener">Website</a><br>
-		<a href="https://thelounge.github.io/docs/" target="_blank" rel="noopener">Documentation</a><br>
-		<a href="https://github.com/thelounge/lounge/issues/new" target="_blank" rel="noopener">Report a bug</a>
-	</p>
 </div>
