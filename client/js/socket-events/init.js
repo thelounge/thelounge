@@ -59,17 +59,17 @@ function openCorrectChannel(clientActive, serverActive) {
 
 	// Open last active channel
 	if (clientActive > 0) {
-		target = sidebar.find("[data-id='" + clientActive + "']");
+		target = sidebar.find(`.chan[data-id="${clientActive}"]`);
 	}
 
 	// Open window provided in location.hash
 	if (target.length === 0 && window.location.hash) {
-		target = $("#footer, #sidebar").find("[data-target='" + escape(window.location.hash) + "']");
+		target = $("#footer, #sidebar").find(`.chan[data-target="${escape(window.location.hash)}"]`);
 	}
 
 	// Open last active channel according to the server
 	if (serverActive > 0 && target.length === 0) {
-		target = sidebar.find("[data-id='" + serverActive + "']");
+		target = sidebar.find(`.chan[data-id="${serverActive}"]`);
 	}
 
 	// Open first available channel
