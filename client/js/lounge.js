@@ -332,64 +332,42 @@ $(function() {
 		$(this).closest(".msg.condensed").toggleClass("closed");
 	});
 
-	sidebar.on("click", ".chan, button", function(e, data) {
-		// Pushes states to history web API when clicking elements with a data-target attribute.
-		// States are very trivial and only contain a single `clickTarget` property which
-		// contains a CSS selector that targets elements which takes the user to a different view
-		// when clicked. The `popstate` event listener will trigger synthetic click events using that
-		// selector and thus take the user to a different view/state.
-		if (data && data.pushState === false) {
-			return;
-		}
-		const self = $(this);
-		const target = self.data("target");
-		if (!target) {
-			return;
-		}
-		const state = {};
+	let changelogRequestedAt = 0;
 
-		if (self.hasClass("chan")) {
-			state.clickTarget = `#sidebar .chan[data-id="${self.data("id")}"]`;
-		} else {
-			state.clickTarget = `#footer button[data-target="${target}"]`;
-		}
-
-		if (history && history.pushState) {
-			if (data && data.replaceHistory && history.replaceState) {
-				history.replaceState(state, null, target);
-			} else {
-				history.pushState(state, null, target);
-			}
-		}
-	});
-
-	sidebar.on("click", ".chan, button", function() {
+	const openWindow = function openWindow(e, data) {
 		var self = $(this);
 		var target = self.data("target");
 		if (!target) {
 			return;
 		}
 
-		chat.data(
-			"id",
-			self.data("id")
-		);
-		socket.emit(
-			"open",
-			self.data("id")
-		);
+		// This is a rather gross hack to account for sources that are in the
+		// sidebar specifically. Needs to be done better when window management gets
+		// refactored.
+		const inSidebar = self.parents("#sidebar").length > 0;
 
-		sidebar.find(".active").removeClass("active");
-		self.addClass("active")
-			.find(".badge")
-			.removeClass("highlight")
-			.empty();
+		if (inSidebar) {
+			chat.data(
+				"id",
+				self.data("id")
+			);
+			socket.emit(
+				"open",
+				self.data("id")
+			);
 
-		if (sidebar.find(".highlight").length === 0) {
-			utils.toggleNotificationMarkers(false);
+			sidebar.find(".active").removeClass("active");
+			self.addClass("active")
+				.find(".badge")
+				.removeClass("highlight")
+				.empty();
+
+			if (sidebar.find(".highlight").length === 0) {
+				utils.toggleNotificationMarkers(false);
+			}
+
+			sidebarSlide.toggle(false);
 		}
-
-		sidebarSlide.toggle(false);
 
 		var lastActive = $("#windows > .active");
 
@@ -447,8 +425,49 @@ $(function() {
 			socket.emit("sessions:get");
 		}
 
+		if (target === "#help" || target === "#changelog") {
+			const now = Date.now();
+			// Don't check more than once a day
+			if (now - changelogRequestedAt > 86400 * 1000) {
+				changelogRequestedAt = now;
+				socket.emit("changelog");
+			}
+		}
+
 		focus();
-	});
+
+		// Pushes states to history web API when clicking elements with a data-target attribute.
+		// States are very trivial and only contain a single `clickTarget` property which
+		// contains a CSS selector that targets elements which takes the user to a different view
+		// when clicked. The `popstate` event listener will trigger synthetic click events using that
+		// selector and thus take the user to a different view/state.
+		if (data && data.pushState === false) {
+			return;
+		}
+		const state = {};
+
+		if (self.attr("id")) {
+			state.clickTarget = `#${self.attr("id")}`;
+		} else if (self.hasClass("chan")) {
+			state.clickTarget = `#sidebar .chan[data-id="${self.data("id")}"]`;
+		} else {
+			state.clickTarget = `#footer button[data-target="${target}"]`;
+		}
+
+		if (history && history.pushState) {
+			if (data && data.replaceHistory && history.replaceState) {
+				history.replaceState(state, null, target);
+			} else {
+				history.pushState(state, null, target);
+			}
+		}
+
+		return false;
+	};
+
+	sidebar.on("click", ".chan, button", openWindow);
+	$("#help").on("click", "#view-changelog, #back-to-help", openWindow);
+	$("#changelog").on("click", "#back-to-help", openWindow);
 
 	sidebar.on("click", "#sign-out", function() {
 		socket.emit("sign-out");

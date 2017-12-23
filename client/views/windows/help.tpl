@@ -4,25 +4,48 @@
 <div class="container">
 	<h1 class="title">Help</h1>
 
-	<h2>About The Lounge</h2>
+	<h2>
+		<small class="pull-right">
+			v{{version}}
+			(<a href="#" id="view-changelog" data-target="#changelog">release notes</a>)
+		</small>
+		About The Lounge
+	</h2>
 
 	<div class="about">
+		{{#unless public}}
+			<p id="changelog-version-container" class="changelog-version">
+				Checking for updates...
+			</p>
+		{{/unless}}
+
 		{{#if gitCommit}}
-			<p>The Lounge is running from source (commit <a href="https://github.com/thelounge/lounge/tree/{{gitCommit}}" target="_blank" rel="noopener"><code>{{gitCommit}}</code></a>) based on <strong>{{version}}</strong></p>
-			<p><a href="https://github.com/thelounge/lounge/compare/{{gitCommit}}...master" target="_blank" rel="noopener">Compare changes between <code>{{gitCommit}}</code> and <code>master</code> to see what you are missing</a></p>
-			<p><a href="https://github.com/thelounge/lounge/compare/{{version}}...{{gitCommit}}" target="_blank" rel="noopener">Compare changes between <code>{{version}}</code> and <code>{{gitCommit}}</code> to see the changes made</a></p>
-		{{else}}
-			<p>The Lounge is running <a href="https://github.com/thelounge/lounge/releases/tag/{{version}}" target="_blank" rel="noopener"><strong>{{version}}</strong></a>.</p>
+			<p>
+				The Lounge is running from source
+				(<a href="https://github.com/thelounge/lounge/tree/{{gitCommit}}" target="_blank" rel="noopener">commit <code>{{gitCommit}}</code></a>).
+			</p>
+
+			<ul>
+				<li>
+					Compare
+					<a href="https://github.com/thelounge/lounge/compare/{{gitCommit}}...master" target="_blank" rel="noopener">between <code>{{gitCommit}}</code> and <code>master</code></a>
+					to see what you are missing
+				</li>
+				<li>
+					Compare
+					<a href="https://github.com/thelounge/lounge/compare/{{version}}...{{gitCommit}}" target="_blank" rel="noopener">between <code>{{version}}</code> and <code>{{gitCommit}}</code></a>
+					to see your local changes</li>
+			</ul>
 		{{/if}}
 
-	{{#unless public}}
-		<button class="btn btn-sm" id="view-changelog">View release notes &amp; check for updates</button>
-	{{/unless}}
-
 		<p>
-			<a href="https://thelounge.github.io/" target="_blank" rel="noopener">View website</a><br>
-			<a href="https://thelounge.github.io/docs/" target="_blank" rel="noopener">View documentation</a><br>
-			<a href="https://github.com/thelounge/lounge/issues/new" target="_blank" rel="noopener">Report a bug on GitHub</a>
+			<a href="https://thelounge.github.io/" target="_blank" rel="noopener" class="website-link">Website</a>
+		</p>
+		<p>
+			<a href="https://thelounge.github.io/docs/" target="_blank" rel="noopener" class="documentation-link">Documentation</a>
+		</p>
+		<p>
+			<a href="https://github.com/thelounge/lounge/issues/new" target="_blank" rel="noopener" class="report-issue-link">Report an issue…</a>
 		</p>
 	</div>
 

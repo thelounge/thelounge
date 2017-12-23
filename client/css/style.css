@@ -168,7 +168,8 @@ kbd {
 	touch-action: pan-y;
 }
 
-#help .container {
+#help .container,
+#changelog .container {
 	max-width: 600px;
 }
 
@@ -188,7 +189,6 @@ kbd {
 #js-copy-hack,
 #loading pre,
 #help,
-#changelog,
 #windows .header .title,
 #windows .header .topic,
 #chat .messages {
@@ -237,6 +237,9 @@ kbd {
 #chat .toggle-button::after,
 .changelog-version::before,
 .context-menu-item::before,
+#help .website-link::before,
+#help .documentation-link::before,
+#help .report-issue-link::before,
 #nick button::before,
 #image-viewer .previous-image-btn::before,
 #image-viewer .next-image-btn::before {
@@ -286,6 +289,21 @@ kbd {
 	content: "\f017"; /* http://fontawesome.io/icon/clock-o/ */
 	color: #7f8c8d;
 }
+
+#help .website-link::before,
+#help .documentation-link::before,
+#help .report-issue-link::before,
+#chat .toggle-button {
+	display: inline-block;
+	margin-right: 5px;
+	/* These 2 directives are loosely taken from .fa-fw */
+	width: 1.35em;
+	text-align: center;
+}
+
+#help .website-link::before { content: "\f0ac"; /* http://fontawesome.io/icon/globe/ */ }
+#help .documentation-link::before { content: "\f19d"; /* http://fontawesome.io/icon/graduation-cap/ */ }
+#help .report-issue-link::before { content: "\f188"; /* http://fontawesome.io/icon/bug/ */ }
 
 .session-list strong {
 	display: block;
@@ -732,6 +750,7 @@ kbd {
 	width: 100%;
 }
 
+#windows li,
 #windows p,
 #windows label,
 #settings .error {
@@ -787,6 +806,11 @@ kbd {
 	font-size: 22px;
 	margin: 30px 0 10px;
 	padding-bottom: 7px;
+}
+
+#windows .window h2 small {
+	color: inherit;
+	line-height: 30px;
 }
 
 #windows .window h3 {
@@ -1595,16 +1619,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	grid-column-start: 2;
 }
 
-#help .help-links {
-	margin-right: 20px;
-}
-
-#changelog .container {
-	max-width: 740px;
-}
-
 .changelog-text {
-	font-size: 16px;
 	line-height: 1.5;
 }
 
@@ -1627,24 +1642,41 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	border-radius: 2px;
 	background-color: #d9edf7;
 	color: #31708f;
+	transition: color 0.2s, background-color 0.2s;
 }
 
 .changelog-version::before {
 	margin-right: 6px;
-	content: "\f00c"; /* http://fontawesome.io/icon/check/ */
+	content: "\f250"; /* http://fontawesome.io/icon/hourglass-o/ */
 }
 
-.changelog-version-new {
+.changelog-version.new-version {
+	color: #8a6d3b;
+	background-color: #fcf8e3;
+}
+
+.changelog-version.new-version::before {
+	content: "\f087"; /* http://fontawesome.io/icon/thumbs-o-up/ */
+}
+
+.changelog-version.error {
+	color: #a94442;
+	background-color: #f2dede;
+}
+
+.changelog-version.error::before {
+	margin-right: 6px;
+	content: "\f06a"; /* http://fontawesome.io/icon/exclamation-circle/ */
+}
+
+.changelog-version.up-to-date {
 	background-color: #dff0d8;
 	color: #3c763d;
 }
 
-.changelog-version-new:hover {
-	color: #2b542c;
-}
-
-.changelog-version-new::before {
-	content: "\f0ed"; /* http://fontawesome.io/icon/cloud-download/ */
+.changelog-version.up-to-date::before {
+	margin-right: 6px;
+	content: "\f00c"; /* http://fontawesome.io/icon/check/ */
 }
 
 #form {

@@ -218,7 +218,7 @@ function index(req, res, next) {
 
 	// If prefetch is enabled, but storage is not, we have to allow mixed content
 	if (Helper.config.prefetchStorage || !Helper.config.prefetch) {
-		policies.push("img-src 'self'");
+		policies.push("img-src 'self' https://user-images.githubusercontent.com");
 		policies.unshift("block-all-mixed-content");
 	} else {
 		policies.push("img-src http: https:");
@@ -341,13 +341,11 @@ function initializeClient(socket, client, token, lastMessage) {
 		}
 	);
 
-	if (!Helper.config.public) {
-		socket.on("changelog", function() {
-			changelog.sendChangelog((data) => {
-				socket.emit("changelog", data);
-			});
+	socket.on("changelog", function() {
+		changelog.fetch((data) => {
+			socket.emit("changelog", data);
 		});
-	}
+	});
 
 	socket.on("msg:preview:toggle", function(data) {
 		const networkAndChan = client.find(data.target);

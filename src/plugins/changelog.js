@@ -4,10 +4,10 @@ const pkg = require("../../package.json");
 const request = require("request");
 
 module.exports = {
-	sendChangelog: handleChangelog,
+	fetch,
 };
 
-function handleChangelog(callback) {
+function fetch(callback) {
 	const changelog = {
 		current: {
 			version: `v${pkg.version}`,
@@ -27,12 +27,13 @@ function handleChangelog(callback) {
 			return;
 		}
 
-		let i = 0;
+		let i;
 		let release;
 		let prerelease = false;
 
 		body = JSON.parse(body);
 
+		// Find the current release among releases on GitHub
 		for (i = 0; i < body.length; i++) {
 			release = body[i];
 			if (release.tag_name === changelog.current.version) {
@@ -43,9 +44,10 @@ function handleChangelog(callback) {
 			}
 		}
 
-		if (i > 0 && changelog.current) {
-			for (i = 0; i < body.length; i++) {
-				release = body[i];
+		// Find the latest release made after the current one if there is one
+		if (i > 0) {
+			for (let j = 0; j < i; j++) {
+				release = body[j];
 
 				// Find latest release or pre-release if current version is also a pre-release
 				if (!release.prerelease || release.prerelease === prerelease) {
