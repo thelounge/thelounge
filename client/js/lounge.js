@@ -433,7 +433,7 @@ $(function() {
 		}
 
 		var chanChat = chan.find(".chat");
-		if (chanChat.length > 0 && chan.data("type") !== "special") {
+		if (chanChat.length > 0 && type !== "special") {
 			chanChat.sticky();
 		}
 
@@ -442,7 +442,7 @@ $(function() {
 			socket.emit("names", {target: self.data("id")});
 		}
 
-		if (type === "settings") {
+		if (target === "#settings") {
 			$("#session-list").html("<p>Loading…</p>");
 			socket.emit("sessions:get");
 		}
