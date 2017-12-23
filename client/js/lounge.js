@@ -427,8 +427,8 @@ $(function() {
 
 		if (target === "#help" || target === "#changelog") {
 			const now = Date.now();
-			// Don't check more than once a day
-			if (now - changelogRequestedAt > 86400 * 1000) {
+			// Don't check more than once an hour
+			if (now - changelogRequestedAt > 3600 * 1000) {
 				changelogRequestedAt = now;
 				socket.emit("changelog");
 			}
