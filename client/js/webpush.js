@@ -8,6 +8,14 @@ let pushNotificationsButton;
 let clientSubscribed = null;
 let applicationServerKey;
 
+if ("serviceWorker" in navigator) {
+	navigator.serviceWorker.addEventListener("message", (event) => {
+		if (event.data && event.data.type === "open") {
+			$("#sidebar").find(`.chan[data-target="#${event.data.channel}"]`).click();
+		}
+	});
+}
+
 module.exports.hasServiceWorker = false;
 
 module.exports.configurePushNotifications = (subscribedOnServer, key) => {

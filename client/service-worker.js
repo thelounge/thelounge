@@ -45,17 +45,38 @@ self.addEventListener("notificationclick", function(event) {
 	event.notification.close();
 
 	event.waitUntil(clients.matchAll({
+		includeUncontrolled: true,
 		type: "window",
-	}).then(function(clientList) {
-		for (var i = 0; i < clientList.length; i++) {
-			var client = clientList[i];
-			if ("focus" in client) {
-				return client.focus();
+	}).then((clientList) => {
+		if (clientList.length === 0) {
+			if (clients.openWindow) {
+				return clients.openWindow(`.#${event.notification.tag}`);
 			}
+
+			return;
 		}
 
-		if (clients.openWindow) {
-			return clients.openWindow(".");
+		const client = findSuitableClient(clientList);
+
+		client.postMessage({
+			type: "open",
+			channel: event.notification.tag,
+		});
+
+		if ("focus" in client) {
+			client.focus();
 		}
 	}));
 });
+
+function findSuitableClient(clientList) {
+	for (let i = 0; i < clientList.length; i++) {
+		const client = clientList[i];
+
+		if (client.focused || client.visibilityState === "visible") {
+			return client;
+		}
+	}
+
+	return clientList[0];
+}
