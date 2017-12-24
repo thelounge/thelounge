@@ -31,7 +31,6 @@ module.exports = {
 
 	chan: require("./chan.tpl"),
 	chat: require("./chat.tpl"),
-	new_version: require("./new_version.tpl"),
 	contextmenu_divider: require("./contextmenu_divider.tpl"),
 	contextmenu_item: require("./contextmenu_item.tpl"),
 	date_marker: require("./date-marker.tpl"),
@@ -50,4 +49,5 @@ module.exports = {
 	user: require("./user.tpl"),
 	user_filtered: require("./user_filtered.tpl"),
 	user_name: require("./user_name.tpl"),
+	version_checker: require("./version_checker.tpl"),
 };

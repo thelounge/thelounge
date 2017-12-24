@@ -13,11 +13,7 @@
 	</h2>
 
 	<div class="about">
-		{{#unless public}}
-			<p id="changelog-version-container" class="changelog-version">
-				Checking for updates...
-			</p>
-		{{/unless}}
+		<div id="version-checker"></div>
 
 		{{#if gitCommit}}
 			<p>
