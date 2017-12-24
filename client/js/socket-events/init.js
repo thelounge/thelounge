@@ -64,7 +64,8 @@ function openCorrectChannel(clientActive, serverActive) {
 
 	// Open window provided in location.hash
 	if (target.length === 0 && window.location.hash) {
-		target = $("#footer, #sidebar").find(`.chan[data-target="${escape(window.location.hash)}"]`);
+		target = $("#footer, #sidebar, #help")
+			.find(`[data-target="${escape(window.location.hash)}"]`);
 	}
 
 	// Open last active channel according to the server
