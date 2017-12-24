@@ -68,7 +68,7 @@ module.exports.initialize = () => {
 function onPushButton() {
 	pushNotificationsButton.attr("disabled", true);
 
-	navigator.serviceWorker.ready.then((registration) => {
+	navigator.serviceWorker.ready.then((registration) =>
 		registration.pushManager.getSubscription().then((existingSubscription) => {
 			if (existingSubscription) {
 				socket.emit("push:unregister");
@@ -100,9 +100,11 @@ function onPushButton() {
 			if (successful) {
 				alternatePushButton().removeAttr("disabled");
 			}
-		});
-	}).catch((err) => {
-		$("#pushNotificationsUnsupported span").text(err).show();
+		})
+	).catch((err) => {
+		$("#pushNotificationsUnsupported")
+			.find("span").text(`An error has occured: ${err}`).end()
+			.show();
 	});
 
 	return false;
