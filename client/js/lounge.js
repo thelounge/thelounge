@@ -344,7 +344,7 @@ $(function() {
 		// This is a rather gross hack to account for sources that are in the
 		// sidebar specifically. Needs to be done better when window management gets
 		// refactored.
-		const inSidebar = self.parents("#sidebar").length > 0;
+		const inSidebar = self.parents("#sidebar, #footer").length > 0;
 
 		if (inSidebar) {
 			chat.data(
