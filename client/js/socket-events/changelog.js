@@ -21,6 +21,8 @@ function requestIfNeeded() {
 socket.on("changelog", function(data) {
 	// 1. Release notes window for the current version
 	$("#changelog").html(templates.windows.changelog(data.current));
+	// Make sure all links will open a new tab instead of exiting the application
+	$("#changelog .changelog-text a").attr("target", "_blank");
 
 	// 2. Version checker visible in Help window
 	let status;
