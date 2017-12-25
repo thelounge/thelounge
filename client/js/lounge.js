@@ -20,6 +20,7 @@ const utils = require("./utils");
 require("./webpush");
 require("./keybinds");
 require("./clipboard");
+const Changelog = require("./socket-events/changelog");
 const JoinChannel = require("./join-channel");
 
 $(function() {
@@ -332,8 +333,6 @@ $(function() {
 		$(this).closest(".msg.condensed").toggleClass("closed");
 	});
 
-	let changelogRequestedAt = 0;
-
 	const openWindow = function openWindow(e, data) {
 		var self = $(this);
 		var target = self.data("target");
@@ -426,12 +425,7 @@ $(function() {
 		}
 
 		if (target === "#help" || target === "#changelog") {
-			const now = Date.now();
-			// Don't check more than once an hour
-			if (now - changelogRequestedAt > 3600 * 1000) {
-				changelogRequestedAt = now;
-				socket.emit("changelog");
-			}
+			Changelog.requestIfNeeded();
 		}
 
 		focus();

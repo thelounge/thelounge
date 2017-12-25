@@ -3,6 +3,8 @@
 const pkg = require("../../package.json");
 const request = require("request");
 
+const TIME_TO_LIVE = 15 * 60 * 1000; // 15 minutes, in milliseconds
+
 module.exports = {
 	fetch,
 };
@@ -67,12 +69,14 @@ function fetch(callback) {
 			}
 		}
 
-		// Emptying cached information after 15 minutes
+		// Add expiration date to the data to send to the client for later refresh
+		versions.expiresAt = Date.now() + TIME_TO_LIVE;
+
+		// Emptying cached information after reaching said expiration date
 		setTimeout(() => {
 			delete versions.current.changelog;
 			delete versions.latest;
-		}, 15 * 60 * 1000
-		);
+		}, TIME_TO_LIVE);
 
 		callback(versions);
 	});

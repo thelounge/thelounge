@@ -99,7 +99,7 @@ function handleImageInPreview(content, container) {
 
 const imageViewer = $("#image-viewer");
 
-$("#chat").on("click", ".toggle-thumbnail", function(event, data = {}) {
+$("#windows").on("click", ".toggle-thumbnail", function(event, data = {}) {
 	const link = $(this);
 
 	// Passing `data`, specifically `data.pushState`, to not add the action to the
@@ -158,7 +158,7 @@ function openImageViewer(link, {pushState = true} = {}) {
 	imageViewer.html(templates.image_viewer({
 		image: link.find("img").attr("src"),
 		link: link.attr("href"),
-		type: link.parent().hasClass("toggle-type-image") ? "image" : "link",
+		type: link.parent().hasClass("toggle-type-link") ? "link" : "image",
 		hasPreviousImage: previousImage.length > 0,
 		hasNextImage: nextImage.length > 0,
 	}));
@@ -171,10 +171,14 @@ function openImageViewer(link, {pushState = true} = {}) {
 
 	// History management
 	if (pushState) {
-		const clickTarget =
-			`#${link.closest(".msg").attr("id")} ` +
-			`a.toggle-thumbnail[href="${link.attr("href")}"] ` +
-			"img";
+		let clickTarget = "";
+		// Images can be in a message (channel URL previews) or not (window URL
+		// preview, e.g. changelog). This is sub-optimal and needs improvement to
+		// make image preview more generic and not specific for channel previews.
+		if (link.closest(".msg").length > 0) {
+			clickTarget = `#${link.closest(".msg").attr("id")} `;
+		}
+		clickTarget += `a.toggle-thumbnail[href="${link.attr("href")}"] img`;
 		history.pushState({clickTarget}, null, null);
 	}
 }
