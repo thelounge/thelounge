@@ -1,5 +1,11 @@
 {{#each channels}}
-<div id="chan-{{id}}" data-title="{{name}}" data-id="{{id}}" data-type="{{type}}" data-target="#chan-{{id}}" class="chan {{type}}">
+<div
+	id="chan-{{id}}"
+	class="chan {{type}}"
+	data-id="{{id}}"
+	data-title="{{name}}"
+	data-type="{{type}}"
+>
 	<div class="header">
 		<button class="lt" aria-label="Toggle channel list"></button>
 		{{#equal type "channel"}}
