@@ -174,7 +174,7 @@ $(function() {
 	});
 
 	viewport.on("click", "#chat .menu", function(e) {
-		e.currentTarget = $(e.currentTarget).closest(".chan")[0];
+		e.currentTarget = $(`#sidebar .chan[data-id="${$(this).closest(".chan").data("id")}"]`)[0];
 		return showContextMenu(this, e);
 	});
 
