@@ -38,7 +38,7 @@ module.exports = function(client, chan, msg) {
 	})).slice(0, 5); // Only preview the first 5 URLs in message to avoid abuse
 
 	msg.previews.forEach((preview) => {
-		fetch(preview.link, function(res, err) {
+		fetch(preview.link, {language: client.language}, function(res, err) {
 			if (err) {
 				preview.type = "error";
 				preview.error = "message";
@@ -85,7 +85,7 @@ function parse(msg, preview, res, client) {
 
 		// Verify that thumbnail pic exists and is under allowed size
 		if (preview.thumb.length) {
-			fetch(escapeHeader(preview.thumb), (resThumb) => {
+			fetch(escapeHeader(preview.thumb), {language: client.language}, (resThumb) => {
 				if (resThumb === null
 				|| !(/^image\/.+/.test(resThumb.type))
 				|| resThumb.size > (Helper.config.prefetchMaxImageSize * 1024)) {
@@ -198,7 +198,19 @@ function emitPreview(client, msg, preview) {
 	});
 }
 
-function fetch(uri, cb) {
+function getRequestHeaders(language) {
+	const headers = {
+		"User-Agent": "Mozilla/5.0 (compatible; The Lounge IRC Client; +https://github.com/thelounge/lounge)",
+	};
+
+	if (language !== null) {
+		headers["Accept-Language"] = language;
+	}
+
+	return headers;
+}
+
+function fetch(uri, {language}, cb) {
 	let req;
 
 	try {
@@ -206,9 +218,7 @@ function fetch(uri, cb) {
 			url: uri,
 			maxRedirects: 5,
 			timeout: 5000,
-			headers: {
-				"User-Agent": "Mozilla/5.0 (compatible; The Lounge IRC Client; +https://github.com/thelounge/lounge)",
-			},
+			headers: getRequestHeaders(language),
 		});
 	} catch (e) {
 		return cb(null, e);

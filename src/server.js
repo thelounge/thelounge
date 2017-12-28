@@ -204,6 +204,17 @@ module.exports = function() {
 	return server;
 };
 
+function getClientLanguage(socket) {
+	const acceptLanguage = socket.handshake.headers["accept-language"];
+
+	if (typeof acceptLanguage === "string" && /^[\x00-\x7F]{1,50}$/.test(acceptLanguage)) {
+		// only allow ASCII strings between 1-50 characters in length
+		return acceptLanguage;
+	}
+
+	return null;
+}
+
 function getClientIp(socket) {
 	let ip = socket.handshake.address;
 
@@ -549,6 +560,7 @@ function performAuthentication(data) {
 		socket.emit("configuration", getClientConfiguration());
 
 		client.ip = getClientIp(socket);
+		client.language = getClientLanguage(socket);
 
 		// If webirc is enabled perform reverse dns lookup
 		if (Helper.config.webirc === null) {
