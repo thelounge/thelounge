@@ -402,7 +402,7 @@ $(function() {
 		if (type === "channel" || type === "query") {
 			placeholder = `Write to ${chan.data("title")}`;
 		}
-		input.attr("placeholder", placeholder);
+		input.attr("placeholder", placeholder).attr("aria-label", placeholder);
 
 		if (self.hasClass("chan")) {
 			$("#chat-container").addClass("active");
