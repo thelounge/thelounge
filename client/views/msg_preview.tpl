@@ -28,5 +28,11 @@
 			<div class="body" title="{{body}}">{{body}}</div>
 		</a>
 	{{/equal}}
+	{{#equal type "error"}}
+		<a class="toggle-text" href="{{link}}" target="_blank" rel="noopener">
+			<div class="head" title="{{head}}">{{head}}</div>
+			<div class="body" title="{{body}}">{{body}}</div>
+		</a>
+	{{/equal}}
 </div>
 {{/preview}}
