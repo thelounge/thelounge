@@ -775,17 +775,21 @@ kbd {
 	width: 100%;
 }
 
+.input:disabled {
+	background-color: #ddd;
+}
+
+.input:not(:disabled):hover,
+.input:not(:disabled):focus {
+	border-color: #79838c;
+}
+
 #windows select.input {
 	height: 35px;
 }
 
 #user-specified-css-input {
 	resize: vertical;
-}
-
-#windows .input:hover,
-#windows .input:focus {
-	border-color: #79838c;
 }
 
 #windows .window {
