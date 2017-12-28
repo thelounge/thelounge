@@ -668,7 +668,8 @@ kbd {
 }
 
 #sidebar .lobby .add-channel.opened {
-	transform: rotate(45deg);
+	/* translateZ(0) enables hardware acceleration, this is to avoid jittering when animating */
+	transform: rotate(45deg) translateZ(0);
 }
 
 #sidebar .chan.active .close {
