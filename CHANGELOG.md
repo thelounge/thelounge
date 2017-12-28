@@ -4,11 +4,24 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v2.7.0-pre.4 - 2017-12-27 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/lounge/compare/v2.7.0-pre.3...v2.7.0-pre.4)
+
+This is a pre-release for v2.7.0 to ensure maximum stability for public release.
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+npm install -g thelounge@next
+```
+
 ## v2.7.0-pre.3 - 2017-12-15 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v2.7.0-pre.2...v2.7.0-pre.3)
 
-This is a release candidate for v2.7.0 to ensure maximum stability for public release.
+This is a pre-release for v2.7.0 to ensure maximum stability for public release.
 Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
 
 As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
@@ -21,7 +34,7 @@ npm install -g thelounge@next
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v2.7.0-pre.1...v2.7.0-pre.2)
 
-This is a release candidate for v2.7.0 to ensure maximum stability for public release.
+This is a pre-release for v2.7.0 to ensure maximum stability for public release.
 Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
 
 As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
@@ -34,7 +47,7 @@ npm install -g thelounge@next
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v2.6.0...v2.7.0-pre.1)
 
-This is a release candidate for v2.7.0 to ensure maximum stability for public release.
+This is a pre-release for v2.7.0 to ensure maximum stability for public release.
 Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
 
 As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
