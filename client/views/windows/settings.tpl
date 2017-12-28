@@ -182,6 +182,7 @@
 			<h2>Custom Stylesheet</h2>
 		</div>
 		<div class="col-sm-12">
+			<label for="user-specified-css-input" class="sr-only">Custom stylesheet. You can override any style with CSS here.</label>
 			<textarea class="input" name="userStyles" id="user-specified-css-input" placeholder="/* You can override any style with CSS here */"></textarea>
 		</div>
 	</div>
