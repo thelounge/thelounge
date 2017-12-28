@@ -20,8 +20,8 @@ function toggleButton(network) {
 	// Toggle content of tooltip
 	const tooltip = network.find(".add-channel-tooltip");
 	const altLabel = tooltip.data("alt-label");
-	tooltip.data("alt-label", tooltip.prop("aria-label"));
-	tooltip.prop("aria-label", altLabel);
+	tooltip.data("alt-label", tooltip.attr("aria-label"));
+	tooltip.attr("aria-label", altLabel);
 }
 
 function closeForm(network) {

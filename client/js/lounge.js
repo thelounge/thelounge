@@ -123,7 +123,7 @@ $(function() {
 			output = templates.contextmenu_item({
 				class: itemClass,
 				action: "focusChan",
-				text: target.data("title"),
+				text: target.attr("aria-label"),
 				data: target.data("target"),
 			});
 			output += templates.contextmenu_divider();
@@ -355,8 +355,12 @@ $(function() {
 				self.data("id")
 			);
 
-			sidebar.find(".active").removeClass("active");
+			sidebar.find(".active")
+				.removeClass("active")
+				.attr("aria-selected", false);
+
 			self.addClass("active")
+				.attr("aria-selected", true)
 				.find(".badge")
 				.removeClass("highlight")
 				.empty();
@@ -392,17 +396,21 @@ $(function() {
 			.trigger("show");
 
 		let title = $(document.body).data("app-name");
-		if (chan.data("title")) {
-			title = chan.data("title") + " — " + title;
+		const chanTitle = chan.attr("aria-label");
+		if (chanTitle.length > 0) {
+			title = `${chanTitle} — ${title}`;
 		}
 		document.title = title;
 
 		const type = chan.data("type");
 		var placeholder = "";
 		if (type === "channel" || type === "query") {
-			placeholder = `Write to ${chan.data("title")}`;
+			placeholder = `Write to ${chanTitle}`;
 		}
-		input.prop("placeholder", placeholder).prop("aria-label", placeholder);
+
+		input
+			.prop("placeholder", placeholder)
+			.attr("aria-label", placeholder);
 
 		if (self.hasClass("chan")) {
 			$("#chat-container").addClass("active");
