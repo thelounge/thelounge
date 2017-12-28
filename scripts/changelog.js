@@ -28,10 +28,12 @@ it is very likely you will have to run all those each time:
 node scripts/changelog <version>
 ```
 
-`<version>` must *not* be prefixed with `v`. It is formatted either:
+`<version>` must be either:
 
-- `MAJOR.MINOR.PATCH` for a stable release, for example `2.5.0`
-- `MAJOR.MINOR.PATCH-(pre|rc).N` for a pre-release, for example `2.5.0-rc.1`
+- A keyword among: major, minor, patch, prerelease, pre
+- An explicit version of either format:
+  - `MAJOR.MINOR.PATCH` for a stable release, for example `2.5.0`
+  - `MAJOR.MINOR.PATCH-(pre|rc).N` for a pre-release, for example `2.5.0-rc.1`
 
 ## TODOs:
 
@@ -48,6 +50,7 @@ const colors = require("colors/safe");
 const fs = require("fs");
 const GraphQLClient = require("graphql-request").GraphQLClient;
 const moment = require("moment");
+const semver = require("semver");
 const util = require("util");
 const log = require("../src/log");
 const packageJson = require("../package.json");
@@ -68,11 +71,17 @@ if (process.argv[2] === undefined) {
 	process.exit(1);
 }
 
-const version = process.argv[2];
+// If version is not a valid X.Y.Z, it may be something like "pre".
+let version = semver.valid(process.argv[2]);
+
+if (!version) {
+	version = semver.inc(packageJson.version, process.argv[2]);
+}
 
 if (!/^[0-9]+\.[0-9]+\.[0-9]+(-(pre|rc)+\.[0-9]+)?$/.test(version)) {
-	log.error(`Argument ${colors.bold("version")} is incorrect.`);
-	log.error(`It must match format ${colors.green("x.y.z")} (stable) or ${colors.green("x.y.z-(pre|rc).n")} (pre-release).`);
+	log.error(`Argument ${colors.bold("version")} is incorrect It must be either:`);
+	log.error(`- A keyword among: ${colors.green("major")}, ${colors.green("minor")}, ${colors.green("patch")}, ${colors.green("prerelease")}, ${colors.green("pre")}`);
+	log.error(`- An explicit version of format ${colors.green("x.y.z")} (stable) or ${colors.green("x.y.z-(pre|rc).n")} (pre-release).`);
 	process.exit(1);
 }
 
