@@ -15,10 +15,17 @@ describe("Image storage", function() {
 	const correctImageHash = crypto.createHash("sha256").update(fs.readFileSync(testImagePath)).digest("hex");
 	const correctImageURL = `storage/${correctImageHash.substring(0, 2)}/${correctImageHash.substring(2, 4)}/${correctImageHash.substring(4)}.png`;
 
+	const testSvgPath = path.resolve(__dirname, "../../client/img/logo.svg");
+	const correctSvgHash = crypto.createHash("sha256").update(fs.readFileSync(testSvgPath)).digest("hex");
+	const correctSvgURL = `storage/${correctSvgHash.substring(0, 2)}/${correctSvgHash.substring(2, 4)}/${correctSvgHash.substring(4)}.svg`;
+
 	before(function(done) {
 		this.app = util.createWebserver();
 		this.app.get("/real-test-image.png", function(req, res) {
 			res.sendFile(testImagePath);
+		});
+		this.app.get("/logo.svg", function(req, res) {
+			res.sendFile(testSvgPath);
 		});
 		this.connection = this.app.listen(9003, done);
 	});
@@ -64,6 +71,25 @@ describe("Image storage", function() {
 			expect(data.preview.type).to.equal("image");
 			expect(data.preview.link).to.equal("http://localhost:9003/real-test-image.png");
 			expect(data.preview.thumb).to.equal(correctImageURL);
+			done();
+		});
+	});
+
+	it("should lookup correct extension type", function(done) {
+		const message = this.irc.createMessage({
+			text: "http://localhost:9003/svg-preview",
+		});
+
+		this.app.get("/svg-preview", function(req, res) {
+			res.send("<title>test title</title><meta property='og:image' content='http://localhost:9003/logo.svg'>");
+		});
+
+		link(this.irc, this.network.channels[0], message);
+
+		this.irc.once("msg:preview", function(data) {
+			expect(data.preview.type).to.equal("link");
+			expect(data.preview.link).to.equal("http://localhost:9003/svg-preview");
+			expect(data.preview.thumb).to.equal(correctSvgURL);
 			done();
 		});
 	});

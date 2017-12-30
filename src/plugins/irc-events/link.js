@@ -3,6 +3,7 @@
 const cheerio = require("cheerio");
 const request = require("request");
 const url = require("url");
+const mime = require("mime-types");
 const Helper = require("../../helper");
 const cleanIrcMessage = require("../../../client/js/libs/handlebars/ircmessageparser/cleanIrcMessage");
 const findLinks = require("../../../client/js/libs/handlebars/ircmessageparser/findLinks");
@@ -146,7 +147,22 @@ function handlePreview(client, msg, preview, res) {
 		return emitPreview(client, msg, preview);
 	}
 
-	storage.store(res.data, res.type.replace("image/", ""), (uri) => {
+	// Get the correct file extension for the provided content-type
+	// This is done to prevent user-input being stored in the file name (extension)
+	const extension = mime.extension(res.type);
+
+	if (!extension) {
+		// For link previews, drop the thumbnail
+		// For other types, do not display preview at all
+		if (preview.type !== "link") {
+			return;
+		}
+
+		preview.thumb = "";
+		return emitPreview(client, msg, preview);
+	}
+
+	storage.store(res.data, extension, (uri) => {
 		preview.thumb = uri;
 
 		emitPreview(client, msg, preview);
