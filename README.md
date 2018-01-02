@@ -40,13 +40,13 @@ Run this in a terminal to install (or upgrade) the latest stable release from
 When installation is complete, run:
 
 ```sh
-thelounge start
+lounge start
 ```
 
 For more information, read the [documentation](https://thelounge.github.io/docs/), [wiki](https://github.com/thelounge/lounge/wiki), or run:
 
 ```sh
-thelounge --help
+lounge --help
 ```
 
 ### Running from source
