@@ -93,7 +93,14 @@ function prereleaseTemplate(items) {
 
 [See the full changelog](${items.fullChangelogUrl})
 
-This is a release candidate for v${stableVersion(items.version)} to ensure maximum stability for public release.
+${prereleaseType(items.version) === "rc" ?
+		`This is a release candidate (RC) for v${stableVersion(items.version)} to ensure maximum stability for public release.
+Bugs may be fixed, but no further features will be added until the next stable version.` :
+
+		`This is a pre-release for v${stableVersion(items.version)} to offer latest changes without having to wait for a stable release.
+ At this stage, features may still be added or modified until the first release candidate for this version gets released.`
+}
+
 Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
 
 As with all pre-releases, this version requires explicit use of the \`next\` tag to be installed:
@@ -168,6 +175,11 @@ ${printList(items.uncategorized)}
 // 2.5.0-rc.1, etc.), or false otherwise
 function isPrerelease(v) {
 	return v.includes("-");
+}
+
+// Given a version of `x.y.z-abc.n`, returns `abc`, i.e. the type of pre-release
+function prereleaseType(v) {
+	return semver.prerelease(v)[0];
 }
 
 // Returns the stable version that this pre-release version is targeting. For
