@@ -2,6 +2,7 @@
 
 const Helper = require("../../helper");
 const Msg = require("../../models/msg");
+const User = require("../../models/user");
 const pkg = require("../../../package.json");
 
 const ctcpResponses = {
@@ -16,19 +17,19 @@ const ctcpResponses = {
 
 module.exports = function(irc, network) {
 	const client = this;
+	const lobby = network.channels[0];
 
 	irc.on("ctcp response", function(data) {
 		let chan = network.getChannel(data.nick);
 
 		if (typeof chan === "undefined") {
-			chan = network.channels[0];
+			chan = lobby;
 		}
 
 		const msg = new Msg({
 			type: Msg.Type.CTCP,
 			time: data.time,
 			from: chan.getUser(data.nick),
-			ctcpType: data.type,
 			ctcpMessage: data.message,
 		});
 		chan.pushMessage(client, msg);
@@ -40,5 +41,15 @@ module.exports = function(irc, network) {
 		if (response) {
 			irc.ctcpResponse(data.nick, data.type, response(data));
 		}
+
+		// Let user know someone is making a CTCP request against their nick
+		const msg = new Msg({
+			type: Msg.Type.CTCP_REQUEST,
+			time: data.time,
+			from: new User({nick: data.nick}),
+			hostmask: data.ident + "@" + data.hostname,
+			ctcpMessage: data.message,
+		});
+		lobby.pushMessage(client, msg);
 	});
 };
