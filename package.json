@@ -49,6 +49,7 @@
     "irc-framework": "2.10.2",
     "ldapjs": "1.0.1",
     "lodash": "4.17.4",
+    "mime-types": "2.1.17",
     "moment": "2.20.1",
     "package-json": "4.0.1",
     "primer-tooltips": "1.5.1",
