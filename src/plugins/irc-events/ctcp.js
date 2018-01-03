@@ -1,5 +1,6 @@
 "use strict";
 
+const _ = require("lodash");
 const Helper = require("../../helper");
 const Msg = require("../../models/msg");
 const User = require("../../models/user");
@@ -35,7 +36,8 @@ module.exports = function(irc, network) {
 		chan.pushMessage(client, msg);
 	});
 
-	irc.on("ctcp request", (data) => {
+	// Limit requests to a rate of one per second max
+	irc.on("ctcp request", _.throttle((data) => {
 		const response = ctcpResponses[data.type];
 
 		if (response) {
@@ -51,5 +53,5 @@ module.exports = function(irc, network) {
 			ctcpMessage: data.message,
 		});
 		lobby.pushMessage(client, msg);
-	});
+	}, 1000, {trailing: false}));
 };
