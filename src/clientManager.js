@@ -101,7 +101,7 @@ ClientManager.prototype.getUsers = function() {
 		.map((file) => file.slice(0, -5));
 };
 
-ClientManager.prototype.addUser = function(name, password, enableLog) {
+ClientManager.prototype.addUser = function(name, password, role, enableLog) {
 	if (path.basename(name) !== name) {
 		throw new Error(`${name} is an invalid username.`);
 	}
@@ -115,6 +115,7 @@ ClientManager.prototype.addUser = function(name, password, enableLog) {
 
 	const user = {
 		password: password || "",
+		role: role || "",
 		log: enableLog || false,
 		awayMessage: "",
 		networks: [],
