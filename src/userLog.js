@@ -25,11 +25,11 @@ module.exports.write = function(user, network, chan, msg) {
 	if (type === "message" || type === "highlight") {
 		// Format:
 		// [2014-01-01 00:00:00] <Arnold> Put that cookie down.. Now!!
-		line += `<${msg.from}> ${msg.text}`;
+		line += `<${msg.from.nick}> ${msg.text}`;
 	} else {
 		// Format:
 		// [2014-01-01 00:00:00] * Arnold quit
-		line += `* ${msg.from} `;
+		line += `* ${msg.from.nick} `;
 
 		if (msg.hostmask) {
 			line += `(${msg.hostmask}) `;
