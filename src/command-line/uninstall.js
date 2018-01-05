@@ -28,14 +28,22 @@ program
 			process.platform === "win32" ? "npm.cmd" : "npm",
 			[
 				"uninstall",
+				"--no-progress",
 				"--prefix",
 				packagesParent,
 				packageName,
 			],
 			{
-				stdio: "inherit",
+				// This is the same as `"inherit"` except `process.stdout` is piped
+				stdio: [process.stdin, "pipe", process.stderr],
 			}
 		);
+
+		let hasUninstalled = false;
+
+		npm.stdout.on("data", () => {
+			hasUninstalled = true;
+		});
 
 		npm.on("error", (e) => {
 			log.error(`${e}`);
@@ -48,6 +56,10 @@ program
 				return;
 			}
 
-			log.info(`${colors.green(packageName)} has been successfully uninstalled.`);
+			if (hasUninstalled) {
+				log.info(`${colors.green(packageName)} has been successfully uninstalled.`);
+			} else {
+				log.warn(`${colors.green(packageName)} was not installed.`);
+			}
 		});
 	});
