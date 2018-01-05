@@ -18,7 +18,7 @@
   "scripts": {
     "coverage": "nyc mocha",
     "start": "node index start",
-    "start-dev": "npm-run-all --parallel watch start",
+    "start-dev": "concurrently \"npm run start\" \"npm run watch\" --names \"server,webpack\" --prefix-colors \"yellow,blue\"",
     "build": "webpack",
     "watch": "webpack --watch",
     "test": "npm-run-all --aggregate-output --parallel --continue-on-error test:* lint:*",
@@ -67,6 +67,7 @@
     "babel-loader": "7.1.2",
     "babel-preset-env": "1.6.1",
     "chai": "4.1.2",
+    "concurrently": "3.5.1",
     "copy-webpack-plugin": "4.3.1",
     "css.escape": "1.5.1",
     "emoji-regex": "6.5.1",
