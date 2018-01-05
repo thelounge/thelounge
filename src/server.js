@@ -14,7 +14,7 @@ var colors = require("colors/safe");
 const net = require("net");
 const Identification = require("./identification");
 const themes = require("./plugins/themes");
-const changelog = require("./plugins/changelog");
+const Changelog = require("./plugins/changelog");
 const LocalUser = require("./models/local-user");
 
 // The order defined the priority: the first available plugin is used
@@ -246,6 +246,7 @@ function initializeClient(socket, client, token, lastMessage) {
 	client.clientAttach(socket.id, token);
 
 	const currentUser = new LocalUser(client.name, client.config.role);
+	const changelog = new Changelog(currentUser);
 
 	socket.on("disconnect", function() {
 		client.clientDetach(socket.id);
