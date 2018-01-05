@@ -65,6 +65,7 @@ if (!Helper.config.public && !Helper.config.ldap.enable) {
 	require("./users");
 }
 require("./install");
+require("./uninstall");
 
 // TODO: Remove this when releasing The Lounge v3
 if (process.argv[1].endsWith(`${require("path").sep}lounge`)) {
