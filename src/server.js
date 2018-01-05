@@ -373,7 +373,7 @@ function initializeClient(socket, client, token, lastMessage) {
 	});
 
 	socket.on("push:register", (subscription) => {
-		if (!client.isRegistered() || !client.config.sessions[token]) {
+		if (!client.isRegistered() || !client.config.sessions.hasOwnProperty(token)) {
 			return;
 		}
 
@@ -418,7 +418,7 @@ function initializeClient(socket, client, token, lastMessage) {
 			tokenToSignOut = token;
 		}
 
-		if (!(tokenToSignOut in client.config.sessions)) {
+		if (!client.config.sessions.hasOwnProperty(tokenToSignOut)) {
 			return;
 		}
 
@@ -459,11 +459,11 @@ function initializeClient(socket, client, token, lastMessage) {
 
 	if (!Helper.config.public && token === null) {
 		client.generateToken((newToken) => {
-			client.attachedClients[socket.id].token = token = newToken;
+			client.attachedClients[socket.id].token = token = client.calculateTokenHash(newToken);
 
 			client.updateSession(token, getClientIp(socket), socket.request);
 
-			sendInitEvent(token);
+			sendInitEvent(newToken);
 		});
 	} else {
 		sendInitEvent(null);
@@ -495,8 +495,9 @@ function getClientConfiguration() {
 function performAuthentication(data) {
 	const socket = this;
 	let client;
+	let token = null;
 
-	const finalInit = () => initializeClient(socket, client, data.token || null, data.lastMessage || -1);
+	const finalInit = () => initializeClient(socket, client, token, data.lastMessage || -1);
 
 	const initClient = () => {
 		socket.emit("configuration", getClientConfiguration());
@@ -548,11 +549,16 @@ function performAuthentication(data) {
 	client = manager.findClient(data.user);
 
 	// We have found an existing user and client has provided a token
-	if (client && data.token && typeof client.config.sessions[data.token] !== "undefined") {
-		client.updateSession(data.token, getClientIp(socket), socket.request);
+	if (client && data.token) {
+		const providedToken = client.calculateTokenHash(data.token);
 
-		authCallback(true);
-		return;
+		if (client.config.sessions.hasOwnProperty(providedToken)) {
+			token = providedToken;
+
+			client.updateSession(providedToken, getClientIp(socket), socket.request);
+
+			return authCallback(true);
+		}
 	}
 
 	// Perform password checking
