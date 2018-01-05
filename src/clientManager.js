@@ -58,9 +58,10 @@ ClientManager.prototype.autoloadUsers = function() {
 		_.difference(loaded, updatedUsers).forEach((name) => {
 			const client = _.find(this.clients, {name: name});
 			if (client) {
+				const role = client.config.role;
 				client.quit(true);
 				this.clients = _.without(this.clients, client);
-				log.info(`User ${colors.bold(name)} disconnected and removed.`);
+				log.info(`${role === "admin" ? "Admin" : "User"} ${colors.bold(name)} disconnected and removed.`);
 			}
 		});
 	}, 1000, {maxWait: 10000}));
