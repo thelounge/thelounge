@@ -12,6 +12,10 @@ const utils = require("../utils");
 socket.on("init", function(data) {
 	$("#loading-page-message, #connection-error").text("Rendering…");
 
+	// Store information about logged user in state, such as its role (admin or
+	// regular user)
+	$("body").data("current-user", data.currentUser);
+
 	const lastMessageId = utils.lastMessageId;
 	let previousActive = 0;
 

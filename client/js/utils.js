@@ -21,6 +21,7 @@ module.exports = {
 	toggleNotificationMarkers,
 	requestIdleCallback,
 	isOpInChannel,
+	isAdmin,
 };
 
 function findCurrentNetworkChan(name) {
@@ -130,4 +131,8 @@ function requestIdleCallback(callback, timeout) {
 	} else {
 		callback();
 	}
+}
+
+function isAdmin() {
+	return $("body").data("current-user").role === "admin";
 }

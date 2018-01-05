@@ -15,6 +15,7 @@ const net = require("net");
 const Identification = require("./identification");
 const themes = require("./plugins/themes");
 const changelog = require("./plugins/changelog");
+const LocalUser = require("./models/local-user");
 
 // The order defined the priority: the first available plugin is used
 // ALways keep local auth in the end, which should always be enabled.
@@ -244,6 +245,8 @@ function initializeClient(socket, client, token, lastMessage) {
 
 	client.clientAttach(socket.id, token);
 
+	const currentUser = new LocalUser(client.name, client.config.role);
+
 	socket.on("disconnect", function() {
 		client.clientDetach(socket.id);
 	});
@@ -454,6 +457,7 @@ function initializeClient(socket, client, token, lastMessage) {
 			active: client.lastActiveChannel,
 			networks: client.networks.map((network) => network.getFilteredClone(client.lastActiveChannel, lastMessage)),
 			token: tokenToSend,
+			currentUser: currentUser,
 		});
 	};
 
