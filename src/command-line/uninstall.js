@@ -23,6 +23,13 @@ program
 
 		const packagesPath = Helper.getPackagesPath();
 		const packagesParent = path.dirname(packagesPath);
+		const packagesConfig = path.join(packagesParent, "package.json");
+		const packageWasNotInstalled = `${colors.green(packageName)} was not installed.`;
+
+		if (!fs.existsSync(packagesConfig)) {
+			log.warn(packageWasNotInstalled);
+			return;
+		}
 
 		const npm = child.spawn(
 			process.platform === "win32" ? "npm.cmd" : "npm",
@@ -59,7 +66,7 @@ program
 			if (hasUninstalled) {
 				log.info(`${colors.green(packageName)} has been successfully uninstalled.`);
 			} else {
-				log.warn(`${colors.green(packageName)} was not installed.`);
+				log.warn(packageWasNotInstalled);
 			}
 		});
 	});
