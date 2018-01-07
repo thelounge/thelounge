@@ -396,7 +396,7 @@ Client.prototype.more = function(data) {
 	const target = client.find(data.target);
 
 	if (!target) {
-		return;
+		return null;
 	}
 
 	const chan = target.chan;
@@ -415,10 +415,10 @@ Client.prototype.more = function(data) {
 		messages = chan.messages.slice(Math.max(0, index - 100), index);
 	}
 
-	client.emit("more", {
+	return {
 		chan: chan.id,
 		messages: messages,
-	});
+	};
 };
 
 Client.prototype.open = function(socketId, target) {

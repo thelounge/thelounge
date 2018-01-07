@@ -258,7 +258,11 @@ function initializeClient(socket, client, token, lastMessage) {
 	socket.on(
 		"more",
 		function(data) {
-			client.more(data);
+			const history = client.more(data);
+
+			if (history !== null) {
+				socket.emit("more", history);
+			}
 		}
 	);
 
