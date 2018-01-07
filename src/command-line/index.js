@@ -11,15 +11,21 @@ const Helper = require("../helper");
 const Utils = require("./utils");
 
 program.version(Helper.getVersion(), "-v, --version")
+	.option("--colors", "force enabling of colors in command outputs")
 	.option(
 		"-c, --config <key=value>",
-		"override entries of the configuration file, must be specified for each entry that needs to be overriden",
+		"override entries of the configuration file, must be specified for each " +
+		"entry that needs to be overriden",
 		Utils.parseConfigOptions
 	)
 	.on("--help", Utils.extraHelp);
 
 // Parse options from `argv` returning `argv` void of these options.
 const argvWithoutOptions = program.parseOptions(process.argv);
+
+if (program.colors) {
+	colors.enabled = true;
+}
 
 // Check if the app was built before calling setHome as it wants to load manifest.json from the public folder
 if (!fs.existsSync(path.join(
@@ -46,9 +52,9 @@ if (!Helper.config.public && !Helper.config.ldap.enable) {
 require("./install");
 require("./uninstall");
 
-// `parse` expects to be passed `process.argv`, but we need to remove to give it
-// a version of `argv` that does not contain options already parsed by
-// `parseOptions` above.
+// `parse` expects to be passed `process.argv`, but we need to give it a version
+// of `argv` that does not contain options already parsed by `parseOptions`
+// above.
 // This is done by giving it the updated `argv` that `parseOptions` returned,
 // except it returns an object with `args`/`unknown`, so we need to concat them.
 // See https://github.com/tj/commander.js/blob/fefda77f463292/index.js#L686-L763
