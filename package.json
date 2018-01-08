@@ -18,7 +18,7 @@
   "scripts": {
     "coverage": "nyc mocha",
     "start": "node index start",
-    "start-dev": "npm-run-all --parallel watch start",
+    "start-dev": "export NODE_ENV=\"dev\" && webpack-dashboard -- npm-run-all --parallel watch start",
     "build": "webpack",
     "watch": "webpack --watch",
     "test": "npm-run-all --aggregate-output --parallel --continue-on-error test:* lint:*",
@@ -87,6 +87,7 @@
     "stylelint": "8.4.0",
     "stylelint-config-standard": "18.0.0",
     "textcomplete": "0.16.0",
-    "webpack": "3.10.0"
+    "webpack": "3.10.0",
+    "webpack-dashboard": "1.0.2"
   }
 }

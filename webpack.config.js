@@ -3,6 +3,7 @@
 const webpack = require("webpack");
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
+const DashboardPlugin = require("webpack-dashboard/plugin");
 
 // ********************
 // Common configuration
@@ -103,6 +104,7 @@ const config = {
 			minChunks: (module) => module.context && module.context.indexOf("node_modules") !== -1,
 		}),
 	],
+	stats: "minimal",
 };
 
 // *********************************
@@ -114,6 +116,10 @@ if (process.env.NODE_ENV === "production") {
 		sourceMap: true,
 		comments: false,
 	}));
+}
+
+if (process.env.NODE_ENV === "dev") {
+	config.plugins.push(new DashboardPlugin());
 }
 
 module.exports = config;
