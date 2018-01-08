@@ -240,6 +240,7 @@ kbd {
 #chat .action .from::before,
 #chat .toggle-button::after,
 #version-checker::before,
+#version-checker .admin-only::after,
 .context-menu-item::before,
 #help .website-link::before,
 #help .documentation-link::before,
@@ -1659,9 +1660,18 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	padding-bottom: 6px;
 }
 
+#version-checker .admin-only-container {
+	margin-left: 10px;
+}
+
+#version-checker .admin-only::after {
+	font-size: 1.2em;
+	content: "\f132"; /* http://fontawesome.io/icon/shield/ */
+}
+
 #version-checker::before {
-	margin-left: 6px;
-	margin-right: 12px;
+	margin-left: 5px;
+	margin-right: 10px;
 	font-size: 1.2em;
 }
 

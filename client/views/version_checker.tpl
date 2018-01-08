@@ -25,3 +25,7 @@
 
 	<button id="check-now" class="btn btn-small">Try again</button>
 {{/equal}}
+
+<span class="admin-only-container tooltipped tooltipped-w tooltipped-no-delay" aria-label="This information is admin-only">
+	<button class="admin-only" aria-label="This information is admin-only"></button>
+</span>
