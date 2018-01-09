@@ -55,12 +55,14 @@ program
 					"--no-save",
 					"--no-bin-links",
 					"--no-package-lock",
+					"--no-progress",
 					"--prefix",
 					packagesParent,
 					packageName,
 				],
 				{
-					stdio: "inherit",
+					// This is the same as `"inherit"` except `process.stdout` is ignored
+					stdio: [process.stdin, "ignore", process.stderr],
 				}
 			);
 
@@ -75,7 +77,7 @@ program
 					return;
 				}
 
-				log.info(`${colors.green(packageName)} has been successfully installed.`);
+				log.info(`${colors.green(packageName + " v" + json.version)} has been successfully installed.`);
 			});
 		}).catch((e) => {
 			log.error(`${e}`);
