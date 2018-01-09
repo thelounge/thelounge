@@ -52,6 +52,7 @@ program
 				[
 					"install",
 					"--production",
+					"--ignore-scripts",
 					"--no-save",
 					"--no-bin-links",
 					"--no-package-lock",
