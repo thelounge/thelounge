@@ -2,53 +2,45 @@
 const Helper = require("../helper");
 const colors = require("colors/safe");
 const log = require("../log.js");
+const fs = require("fs-extra");
+const path = require("path");
+const child = require("child_process");
+const packageJson = require("package-json");
+const packagesPath = Helper.getPackagesPath();
+const packagesParent = path.dirname(packagesPath);
+const packagesConfig = path.join(packagesParent, "package.json");
 
 module.exports = {
 	install,
+	uninstall,
 };
 
-function install(packageName) {
-	const fs = require("fs");
-	const fsextra = require("fs-extra");
-	const path = require("path");
-	const child = require("child_process");
-	const packageJson = require("package-json");
+function checkConfig() {
+	return fs.access(Helper.getConfigPath(), fs.constants.R_OK | fs.constants.W_OK)
+		.catch(() => Promise.reject(`${Helper.getConfigPath()} does not exist or is not readable.`));
+}
 
-	if (!fs.existsSync(Helper.getConfigPath())) {
-		log.error(`${Helper.getConfigPath()} does not exist.`);
-		return;
-	}
-
+function getPackageJson(packageName) {
 	log.info("Retrieving information about the package...");
-
-	packageJson(packageName, {
+	return packageJson(packageName, {
 		fullMetadata: true,
-	}).then((json) => {
-		if (!("thelounge" in json)) {
-			log.error(`${colors.red(packageName)} does not have The Lounge metadata.`);
+	});
+}
 
-			process.exit(1);
-		}
+function getMetadata(json) {
+	if (!("thelounge" in json)) {
+		return Promise.reject(`${colors.red(json.name)} does not have The Lounge metadata.`);
+	}
+	const metadata = json.thelounge;
+	metadata.version = json.version;
+}
 
-		log.info(`Installing ${colors.green(packageName)}...`);
-
-		const packagesPath = Helper.getPackagesPath();
-		const packagesParent = path.dirname(packagesPath);
-		const packagesConfig = path.join(packagesParent, "package.json");
-
-		// Create node_modules folder, otherwise npm will start walking upwards to find one
-		fsextra.ensureDirSync(packagesPath);
-
-		// Create package.json with private set to true to avoid npm warnings
-		fs.writeFileSync(packagesConfig, JSON.stringify({
-			private: true,
-			description: "Packages for The Lounge. All packages in node_modules directory will be automatically loaded.",
-		}, null, "\t"));
-
+function execNpm(command, packageName, metadata) {
+	return new Promise((res, rej) => {
 		const npm = child.spawn(
 			process.platform === "win32" ? "npm.cmd" : "npm",
 			[
-				"install",
+				command,
 				"--production",
 				"--no-save",
 				"--no-bin-links",
@@ -64,21 +56,46 @@ function install(packageName) {
 			}
 		);
 
-		npm.on("error", (e) => {
-			log.error(`${e}`);
-			process.exit(1);
-		});
+		npm.on("error", rej);
 
 		npm.on("close", (code) => {
 			if (code !== 0) {
-				log.error(`Failed to install ${colors.green(packageName + " v" + json.version)}. Exit code: ${code}`);
-				return;
+				return rej(`Failed to ${command} ${colors.green(`${packageName} " v" + ${metadata.version}`)}. Exit code: ${code}`);
 			}
-
-			log.info(`${colors.green(packageName)} has been successfully installed.`);
+			res();
 		});
-	}).catch((e) => {
-		log.error(`${e}`);
-		process.exit(1);
 	});
+}
+
+function runNpmCommand(command, packageName, metadata) {
+	log.info(`${command}ing ${colors.green(packageName)}...`);
+
+	return fs.ensureDir(packagesPath) // Create node_modules folder, otherwise npm will start walking upwards to find one
+		.then(() => fs.writeJson(packagesConfig, { // Create package.json with private set to true to avoid npm warnings
+			private: true,
+			description: "Packages for The Lounge. All packages in node_modules directory will be automatically loaded.",
+		}, {spaces: "\t"}))
+		.then(execNpm.bind(this, command, packageName, metadata));
+}
+
+function install(packageName) {
+	checkConfig()
+		.then(getPackageJson.bind(this, packageName))
+		.then(getMetadata)
+		.then(runNpmCommand.bind(this, "install", packageName))
+		.then(() => log.info(`${colors.green(packageName)} has been successfully installed.`))
+		.catch((e) => {
+			log.error(`${e}`);
+			process.exit(1);
+		});
+}
+
+function uninstall(packageName) {
+	checkConfig()
+		.then(runNpmCommand.bind(this, "uninstall", packageName))
+		.then(() => log.info(`${colors.green(packageName)} has been successfully uninstalled.`))
+		.catch((e) => {
+			log.error(`${e}`);
+			process.exit(1);
+		});
 }
