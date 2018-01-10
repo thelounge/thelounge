@@ -103,7 +103,7 @@ function Client(manager, name, config) {
 	});
 
 	if (client.name) {
-		log.info(`User ${colors.bold(client.name)} loaded`);
+		log.info(`${client.config.role === "admin" ? "Admin" : "User"} ${colors.bold(client.name)} loaded`);
 	}
 }
 
@@ -162,7 +162,7 @@ Client.prototype.connect = function(args) {
 		});
 
 		if (badName && client.name) {
-			log.warn("User '" + client.name + "' on network '" + args.name + "' has an invalid channel which has been ignored");
+			log.warn(`${client.config.role === "admin" ? "Admin" : "User"} ${colors.bold(client.name)} on network ${colors.bold(args.name)} has an invalid channel which has been ignored`);
 		}
 	// `join` is kept for backwards compatibility when updating from versions <2.0
 	// also used by the "connect" window

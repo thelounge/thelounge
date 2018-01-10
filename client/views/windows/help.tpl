@@ -13,7 +13,7 @@
 	</h2>
 
 	<div class="about">
-		<div id="version-checker"></div>
+		<div id="version-checker" class="hidden"></div>
 
 		{{#if gitCommit}}
 			<p>

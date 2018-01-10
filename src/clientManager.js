@@ -58,9 +58,10 @@ ClientManager.prototype.autoloadUsers = function() {
 		_.difference(loaded, updatedUsers).forEach((name) => {
 			const client = _.find(this.clients, {name: name});
 			if (client) {
+				const role = client.config.role;
 				client.quit(true);
 				this.clients = _.without(this.clients, client);
-				log.info(`User ${colors.bold(name)} disconnected and removed.`);
+				log.info(`${role === "admin" ? "Admin" : "User"} ${colors.bold(name)} disconnected and removed.`);
 			}
 		});
 	}, 1000, {maxWait: 10000}));
@@ -101,7 +102,7 @@ ClientManager.prototype.getUsers = function() {
 		.map((file) => file.slice(0, -5));
 };
 
-ClientManager.prototype.addUser = function(name, password, enableLog) {
+ClientManager.prototype.addUser = function(name, password, role, enableLog) {
 	if (path.basename(name) !== name) {
 		throw new Error(`${name} is an invalid username.`);
 	}
@@ -115,6 +116,7 @@ ClientManager.prototype.addUser = function(name, password, enableLog) {
 
 	const user = {
 		password: password || "",
+		role: role || "",
 		log: enableLog || false,
 		awayMessage: "",
 		networks: [],

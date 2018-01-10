@@ -424,7 +424,9 @@ $(function() {
 			socket.emit("sessions:get");
 		}
 
-		if (target === "#help" || target === "#changelog") {
+		// Admins need loading the version checker (in help page) on top of the
+		// changelog page
+		if (utils.isAdmin() && target === "#help" || target === "#changelog") {
 			Changelog.requestIfNeeded();
 		}
 
