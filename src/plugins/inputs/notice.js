@@ -7,19 +7,19 @@ exports.input = function(network, chan, cmd, args) {
 		return;
 	}
 
-	var message = args.slice(1).join(" ");
-	var irc = network.irc;
-	irc.notice(args[0], message);
+	let targetChan = network.getChannel(args[0]);
+	let message = args.slice(1).join(" ");
 
-	var targetChan = network.getChannel(args[0]);
+	network.irc.notice(args[0], message);
+
 	if (typeof targetChan === "undefined") {
 		message = "{to " + args[0] + "} " + message;
 		targetChan = chan;
 	}
 
 	if (!network.irc.network.cap.isEnabled("echo-message")) {
-		irc.emit("notice", {
-			nick: irc.user.nick,
+		network.irc.emit("notice", {
+			nick: network.irc.user.nick,
 			target: targetChan.name,
 			message: message,
 		});

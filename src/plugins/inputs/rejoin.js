@@ -1,7 +1,7 @@
 "use strict";
 
-var Msg = require("../../models/msg");
-var Chan = require("../../models/chan");
+const Msg = require("../../models/msg");
+const Chan = require("../../models/chan");
 
 exports.commands = ["cycle", "rejoin"];
 

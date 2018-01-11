@@ -1,8 +1,8 @@
 "use strict";
 
-var _ = require("lodash");
+const _ = require("lodash");
 
-var id = 0;
+let id = 0;
 
 class Msg {
 	constructor(attr) {

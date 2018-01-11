@@ -17,7 +17,7 @@ program
 			return;
 		}
 
-		var child_spawn = child.spawn(
+		const child_spawn = child.spawn(
 			process.env.EDITOR || "vi",
 			[Helper.getConfigPath()],
 			{stdio: "inherit"}

@@ -82,7 +82,7 @@ describe("Chan", function() {
 	});
 
 	describe("#getSortedUsers(irc)", function() {
-		var getUserNames = function(chan) {
+		const getUserNames = function(chan) {
 			return chan.getSortedUsers(network).map((u) => u.nick);
 		};
 

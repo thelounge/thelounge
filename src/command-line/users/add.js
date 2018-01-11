@@ -56,7 +56,7 @@ program
 	});
 
 function add(manager, name, password, enableLog) {
-	var hash = Helper.password.hash(password);
+	const hash = Helper.password.hash(password);
 	manager.addUser(name, hash, enableLog);
 
 	log.info(`User ${colors.bold(name)} created.`);

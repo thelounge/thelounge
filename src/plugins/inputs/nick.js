@@ -1,6 +1,6 @@
 "use strict";
 
-var Msg = require("../../models/msg");
+const Msg = require("../../models/msg");
 
 exports.commands = ["nick"];
 exports.allowDisconnected = true;
@@ -22,7 +22,7 @@ exports.input = function(network, chan, cmd, args) {
 		return;
 	}
 
-	var newNick = args[0];
+	const newNick = args[0];
 
 	// If connected to IRC, send to server and wait for ACK
 	// otherwise update the nick and UI straight away

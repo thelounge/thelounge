@@ -8,7 +8,7 @@ process.chdir(__dirname);
 // Doing this check as soon as possible allows us to avoid ES6 parser errors or
 // other issues
 // Try to display messages nicely, but gracefully degrade if anything goes wrong
-var pkg = require("./package.json");
+const pkg = require("./package.json");
 if (!require("semver").satisfies(process.version, pkg.engines.node)) {
 	let colors;
 	let log;

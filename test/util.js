@@ -1,11 +1,11 @@
 "use strict";
 
-var EventEmitter = require("events").EventEmitter;
-var util = require("util");
-var _ = require("lodash");
-var express = require("express");
-var Network = require("../src/models/network");
-var Chan = require("../src/models/chan");
+const EventEmitter = require("events").EventEmitter;
+const util = require("util");
+const _ = require("lodash");
+const express = require("express");
+const Network = require("../src/models/network");
+const Chan = require("../src/models/chan");
 
 function MockClient() {
 	this.user = {nick: "test-user"};
@@ -13,7 +13,7 @@ function MockClient() {
 util.inherits(MockClient, EventEmitter);
 
 MockClient.prototype.createMessage = function(opts) {
-	var message = _.extend({
+	const message = _.extend({
 		text: "dummy message",
 		nick: "test-user",
 		target: "#test-channel",

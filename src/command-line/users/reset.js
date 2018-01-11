@@ -27,8 +27,8 @@ program
 			log.error(`User ${colors.bold(name)} does not exist.`);
 			return;
 		}
-		var file = Helper.getUserConfigPath(name);
-		var user = require(file);
+		const file = Helper.getUserConfigPath(name);
+		const user = require(file);
 		log.prompt({
 			text: "Enter new password:",
 			silent: true,

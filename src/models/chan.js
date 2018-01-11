@@ -1,7 +1,7 @@
 "use strict";
 
-var _ = require("lodash");
-var Helper = require("../helper");
+const _ = require("lodash");
+const Helper = require("../helper");
 const User = require("./user");
 const userLog = require("../userLog");
 const storage = require("../plugins/storage");
@@ -43,7 +43,7 @@ Chan.prototype.destroy = function() {
 };
 
 Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
-	var obj = {
+	const obj = {
 		chan: this.id,
 		msg: msg,
 	};
@@ -110,7 +110,7 @@ Chan.prototype.getSortedUsers = function(irc) {
 		return users;
 	}
 
-	var userModeSortPriority = {};
+	const userModeSortPriority = {};
 	irc.network.options.PREFIX.forEach((prefix, index) => {
 		userModeSortPriority[prefix.symbol] = index;
 	});

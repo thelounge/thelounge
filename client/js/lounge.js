@@ -24,15 +24,15 @@ const Changelog = require("./socket-events/changelog");
 const JoinChannel = require("./join-channel");
 
 $(function() {
-	var sidebar = $("#sidebar, #footer");
-	var chat = $("#chat");
+	const sidebar = $("#sidebar, #footer");
+	const chat = $("#chat");
 
 	$(document.body).data("app-name", document.title);
 
-	var viewport = $("#viewport");
-	var sidebarSlide = slideoutMenu(viewport[0], sidebar[0]);
-	var contextMenuContainer = $("#context-menu-container");
-	var contextMenu = $("#context-menu");
+	const viewport = $("#viewport");
+	const sidebarSlide = slideoutMenu(viewport[0], sidebar[0]);
+	const contextMenuContainer = $("#context-menu-container");
+	const contextMenu = $("#context-menu");
 
 	$("#main").on("click", function(e) {
 		if ($(e.target).is(".lt")) {
@@ -43,16 +43,16 @@ $(function() {
 	});
 
 	viewport.on("click", ".rt", function(e) {
-		var self = $(this);
+		const self = $(this);
 		viewport.toggleClass(self.prop("class"));
 		e.stopPropagation();
 		chat.find(".chan.active .chat").trigger("msg.sticky");
 	});
 
 	function positionContextMenu(that, e) {
-		var offset;
-		var menuWidth = contextMenu.outerWidth();
-		var menuHeight = contextMenu.outerHeight();
+		let offset;
+		const menuWidth = contextMenu.outerWidth();
+		const menuHeight = contextMenu.outerHeight();
 
 		if (that.hasClass("menu")) {
 			offset = that.offset();
@@ -75,8 +75,8 @@ $(function() {
 	}
 
 	function showContextMenu(that, e) {
-		var target = $(e.currentTarget);
-		var output = "";
+		const target = $(e.currentTarget);
+		let output = "";
 
 		if (target.hasClass("user")) {
 			output = templates.contextmenu_item({
@@ -193,10 +193,10 @@ $(function() {
 		input.style.height = input.style.minHeight;
 	}
 
-	var input = $("#input")
+	const input = $("#input")
 		.history()
 		.on("input", function() {
-			var style = window.getComputedStyle(this);
+			const style = window.getComputedStyle(this);
 
 			// Start by resetting height before computing as scrollHeight does not
 			// decrease when deleting characters
@@ -212,7 +212,7 @@ $(function() {
 			chat.find(".chan.active .chat").trigger("msg.sticky"); // fix growing
 		});
 
-	var focus = $.noop;
+	let focus = $.noop;
 	if (!("ontouchstart" in window || navigator.maxTouchPoints > 0)) {
 		focus = function() {
 			if (chat.find(".active").hasClass("chan")) {
@@ -238,7 +238,7 @@ $(function() {
 	$("#form").on("submit", function(e) {
 		e.preventDefault();
 		utils.forceFocus();
-		var text = input.val();
+		const text = input.val();
 
 		if (text.length === 0) {
 			return;
@@ -265,11 +265,11 @@ $(function() {
 		utils.toggleNickEditor(true);
 
 		// Selects existing nick in the editable text field
-		var element = document.querySelector("#nick-value");
+		const element = document.querySelector("#nick-value");
 		element.focus();
-		var range = document.createRange();
+		const range = document.createRange();
 		range.selectNodeContents(element);
-		var selection = window.getSelection();
+		const selection = window.getSelection();
 		selection.removeAllRanges();
 		selection.addRange(range);
 	});
@@ -278,7 +278,7 @@ $(function() {
 	$("button#submit-nick").on("click", submitNick);
 
 	function submitNick() {
-		var newNick = $("#nick-value").text().trim();
+		const newNick = $("#nick-value").text().trim();
 
 		if (newNick.length === 0) {
 			cancelNick();
@@ -316,8 +316,8 @@ $(function() {
 	});
 
 	chat.on("click", ".inline-channel", function() {
-		var name = $(this).data("chan");
-		var chan = utils.findCurrentNetworkChan(name);
+		const name = $(this).data("chan");
+		const chan = utils.findCurrentNetworkChan(name);
 
 		if (chan.length) {
 			chan.trigger("click");
@@ -334,8 +334,8 @@ $(function() {
 	});
 
 	const openWindow = function openWindow(e, data) {
-		var self = $(this);
-		var target = self.data("target");
+		const self = $(this);
+		const target = self.data("target");
 		if (!target) {
 			return;
 		}
@@ -372,9 +372,7 @@ $(function() {
 			sidebarSlide.toggle(false);
 		}
 
-		var lastActive = $("#windows > .active");
-
-		lastActive
+		const lastActive = $("#windows > .active")
 			.removeClass("active")
 			.find(".chat")
 			.unsticky();
@@ -391,7 +389,7 @@ $(function() {
 			render.trimMessageInChannel(lastActiveChan, 100);
 		}
 
-		var chan = $(target)
+		const chan = $(target)
 			.addClass("active")
 			.trigger("show");
 
@@ -403,7 +401,7 @@ $(function() {
 		document.title = title;
 
 		const type = chan.data("type");
-		var placeholder = "";
+		let placeholder = "";
 		if (type === "channel" || type === "query") {
 			placeholder = `Write to ${chanTitle}`;
 		}
@@ -417,7 +415,7 @@ $(function() {
 			utils.setNick(self.closest(".network").data("nick"));
 		}
 
-		var chanChat = chan.find(".chat");
+		const chanChat = chan.find(".chat");
 		if (chanChat.length > 0 && type !== "special") {
 			chanChat.sticky();
 		}
@@ -481,11 +479,11 @@ $(function() {
 	});
 
 	function closeChan(chan) {
-		var cmd = "/close";
+		let cmd = "/close";
 
 		if (chan.hasClass("lobby")) {
 			cmd = "/quit";
-			var server = chan.find(".name").html();
+			const server = chan.find(".name").html();
 			if (!confirm("Disconnect from " + server + "?")) { // eslint-disable-line no-alert
 				return false;
 			}
@@ -601,17 +599,16 @@ $(function() {
 
 	if ($("body").hasClass("public") && (window.location.hash === "#connect" || window.location.hash === "")) {
 		$("#connect").one("show", function() {
-			var params = URI(document.location.search);
-			params = params.search(true);
+			const params = URI(document.location.search).search(true);
 			// Possible parameters:  name, host, port, password, tls, nick, username, realname, join
 			// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in#Iterating_over_own_properties_only
-			for (var key in params) {
+			for (let key in params) {
 				if (params.hasOwnProperty(key)) {
-					var value = params[key];
+					const value = params[key];
 					// \W searches for non-word characters
 					key = key.replace(/\W/g, "");
 
-					var element = $("#connect input[name='" + key + "']");
+					const element = $("#connect input[name='" + key + "']");
 					// if the element exists, it isn't disabled, and it isn't hidden
 					if (element.length > 0 && !element.is(":disabled") && !element.is(":hidden")) {
 						if (element.is(":checkbox")) {

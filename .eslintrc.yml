@@ -45,6 +45,7 @@ rules:
   no-useless-constructor: error
   no-useless-return: error
   no-use-before-define: [error, {functions: false}]
+  no-var: error
   object-curly-spacing: [error, never]
   padded-blocks: [error, never]
   prefer-const: error

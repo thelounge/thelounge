@@ -1,8 +1,8 @@
 "use strict";
 
-var _ = require("lodash");
-var Msg = require("../../models/msg");
-var Chan = require("../../models/chan");
+const _ = require("lodash");
+const Msg = require("../../models/msg");
+const Chan = require("../../models/chan");
 const Helper = require("../../helper");
 
 exports.commands = ["close", "leave", "part"];

@@ -1,13 +1,13 @@
 "use strict";
 
-var _ = require("lodash");
+const _ = require("lodash");
 const Helper = require("../../helper");
 
 exports.commands = ["quit"];
 exports.allowDisconnected = true;
 
 exports.input = function(network, chan, cmd, args) {
-	var client = this;
+	const client = this;
 
 	client.networks = _.without(client.networks, network);
 	network.destroy();
