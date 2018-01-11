@@ -46,6 +46,7 @@ function getMetadata(json) {
 	}
 	const metadata = json.thelounge;
 	metadata.version = json.version;
+	return metadata;
 }
 
 function execNpm(command, packageName, metadata) {
@@ -92,9 +93,9 @@ function runNpmCommand(command, packageName, metadata) {
 
 function install(packageName) {
 	checkConfig()
-		.then(getPackageJson.bind(this, packageName))
-		.then(getMetadata)
-		.then(runNpmCommand.bind(this, "install", packageName))
+		.then(() => getPackageJson(packageName))
+		.then((json) => getMetadata(json))
+		.then((metadata) => runNpmCommand("install", packageName, metadata))
 		.then(() => log.info(`${colors.green(packageName)} has been successfully installed.`))
 		.catch((e) => {
 			log.error(`${e}`);
@@ -104,7 +105,7 @@ function install(packageName) {
 
 function uninstall(packageName) {
 	checkConfig()
-		.then(runNpmCommand.bind(this, "uninstall", packageName))
+		.then((metadata) => runNpmCommand("uninstall", packageName, metadata))
 		.then(() => log.info(`${colors.green(packageName)} has been successfully uninstalled.`))
 		.catch((e) => {
 			log.error(`${e}`);
