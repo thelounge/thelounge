@@ -42,8 +42,10 @@ function getMetadata(json) {
 	return metadata;
 }
 
-function execNpm(command, packageName, metadata) {
+function runNpmCommand(command, {packageName = "", returnStdOut = false, metadata = {}}) {
+	log.info(`${command}ing ${colors.green(packageName)}...`);
 	return new Promise((res, rej) => {
+		let output = "";
 		const npm = child.spawn(
 			process.platform === "win32" ? "npm.cmd" : "npm",
 			[
@@ -56,9 +58,15 @@ function execNpm(command, packageName, metadata) {
 			],
 			{
 				// This is the same as `"inherit"` except `process.stdout` is ignored
-				stdio: [process.stdin, "ignore", process.stderr],
+				stdio: [process.stdin, returnStdOut ? "pipe" : "ignore", process.stderr],
 			}
 		);
+
+		if (returnStdOut) {
+			npm.stdout.on("data", (data) => {
+				output += data;
+			});
+		}
 
 		npm.on("error", rej);
 
@@ -66,24 +74,25 @@ function execNpm(command, packageName, metadata) {
 			if (code !== 0) {
 				return rej(`Failed to ${command} ${colors.green(`${packageName} " v" + ${metadata.version}`)}. Exit code: ${code}`);
 			}
-			res();
+			res(output);
 		});
 	});
 }
 
-function runNpmCommand(command, packageName, metadata) {
-	log.info(`${command}ing ${colors.green(packageName)}...`);
-
+function ensurePackageJsonExists() {
 	return fs.ensureDir(packagesPath) // Create node_modules folder, otherwise npm will start walking upwards to find one
-		.then(() => fs.writeJson(packagesConfig, packageDirJson, {spaces: "\t"})) // Create package.json with private set to true to avoid npm warnings
-		.then(execNpm.bind(this, command, packageName, metadata));
+		.then(() => fs.writeJson(packagesConfig, packageDirJson, {spaces: "\t"})); // Create package.json to avoid npm warnings
 }
 
 function install(packageName) {
 	checkConfig()
 		.then(() => getPackageJson(packageName))
 		.then((json) => getMetadata(json))
-		.then((metadata) => runNpmCommand("install", packageName, metadata))
+		.then((metadata) => {
+			ensurePackageJsonExists();
+			return metadata;
+		})
+		.then((metadata) => runNpmCommand("install", {packageName, metadata}))
 		.then(() => log.info(`${colors.green(packageName)} has been successfully installed.`))
 		.catch((e) => {
 			log.error(`${e}`);
@@ -93,8 +102,15 @@ function install(packageName) {
 
 function uninstall(packageName) {
 	checkConfig()
-		.then((metadata) => runNpmCommand("uninstall", packageName, metadata))
-		.then(() => log.info(`${colors.green(packageName)} has been successfully uninstalled.`))
+		.then(() => runNpmCommand("uninstall", {packageName, returnStdOut: true}))
+		.then((data) => {
+			if (data.includes("removed")) {
+				log.info(`${colors.green(packageName)} has been successfully uninstalled.`);
+			} else {
+				log.error(`Can't uninstall ${colors.green(packageName)} as it wasn't installed.`);
+				process.exit(1);
+			}
+		})
 		.catch((e) => {
 			log.error(`${e}`);
 			process.exit(1);
