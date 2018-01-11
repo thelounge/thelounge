@@ -1,0 +1,5 @@
+save = false
+bin-links = false
+progress = false
+package-lock = false
+production = true

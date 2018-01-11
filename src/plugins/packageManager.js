@@ -9,18 +9,11 @@ const packageJson = require("package-json");
 const packagesPath = Helper.getPackagesPath();
 const packagesParent = path.dirname(packagesPath);
 const packagesConfig = path.join(packagesParent, "package.json");
-const packagesNpmrc = path.join(packagesParent, ".npmrc");
+const packagesNpmrc = path.join(__dirname, "..", "..", "defaults", "npmrc");
 
 const packageDirJson = {
 	private: true,
 	description: "Packages for The Lounge. All packages in node_modules directory will be automatically loaded.",
-};
-const npmrc = {
-	save: false,
-	"bin-links": false,
-	progress: false,
-	"package-lock": false,
-	production: true,
 };
 
 module.exports = {
@@ -55,6 +48,8 @@ function execNpm(command, packageName, metadata) {
 			process.platform === "win32" ? "npm.cmd" : "npm",
 			[
 				command,
+				"--userconfig",
+				packagesNpmrc,
 				"--prefix",
 				packagesParent,
 				packageName,
@@ -76,18 +71,11 @@ function execNpm(command, packageName, metadata) {
 	});
 }
 
-function buildNpmrcString() {
-	let string = "";
-	Object.keys(npmrc).forEach((key) => string += `${key} = ${npmrc[key]}\n`);
-	return string;
-}
-
 function runNpmCommand(command, packageName, metadata) {
 	log.info(`${command}ing ${colors.green(packageName)}...`);
 
 	return fs.ensureDir(packagesPath) // Create node_modules folder, otherwise npm will start walking upwards to find one
 		.then(() => fs.writeJson(packagesConfig, packageDirJson, {spaces: "\t"})) // Create package.json with private set to true to avoid npm warnings
-		.then(() => fs.writeFile(packagesNpmrc, buildNpmrcString()))
 		.then(execNpm.bind(this, command, packageName, metadata));
 }
 
