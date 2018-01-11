@@ -94,6 +94,27 @@ function Client(manager, name, config) {
 
 	if (typeof client.config.sessions !== "object") {
 		client.config.sessions = {};
+	} else {
+		// TODO: This is just for backwards compatibility. Remove in v3.0.0
+		const newSessions = {};
+		let changed = false;
+
+		_.forOwn(client.config.sessions, (session, key) => {
+			if (key.length !== 128) {
+				key = client.calculateTokenHash(key);
+				changed = true;
+			}
+
+			newSessions[key] = session;
+		});
+
+		if (changed) {
+			log.info(`User ${colors.bold(client.name)} has been updated with new security requirements for tokens.`);
+
+			delete client.config.token;
+			client.config.sessions = newSessions;
+			client.save();
+		}
 	}
 
 	_.forOwn(client.config.sessions, (session) => {
@@ -282,13 +303,17 @@ Client.prototype.connect = function(args) {
 };
 
 Client.prototype.generateToken = function(callback) {
-	crypto.randomBytes(48, (err, buf) => {
+	crypto.randomBytes(64, (err, buf) => {
 		if (err) {
 			throw err;
 		}
 
 		callback(buf.toString("hex"));
 	});
+};
+
+Client.prototype.calculateTokenHash = function(token) {
+	return crypto.createHash("sha512").update(token).digest("hex");
 };
 
 Client.prototype.updateSession = function(token, ip, request) {
