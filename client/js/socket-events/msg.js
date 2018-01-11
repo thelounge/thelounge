@@ -149,13 +149,15 @@ function notifyMessage(targetId, channel, msg) {
 					body = cleanIrcMessage(msg.text);
 				}
 
+				const timestamp = Date.parse(msg.time);
+
 				try {
 					if (webpush.hasServiceWorker) {
 						navigator.serviceWorker.ready.then((registration) => {
 							registration.active.postMessage({
 								type: "notification",
 								chanId: targetId,
-								timestamp: msg.time,
+								timestamp: timestamp,
 								title: title,
 								body: body,
 							});
@@ -166,7 +168,7 @@ function notifyMessage(targetId, channel, msg) {
 							badge: "img/logo-64.png",
 							icon: "img/touch-icon-192x192.png",
 							body: body,
-							timestamp: msg.time,
+							timestamp: timestamp,
 						});
 						notify.addEventListener("click", function() {
 							window.focus();
