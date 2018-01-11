@@ -94,27 +94,6 @@ function Client(manager, name, config) {
 
 	if (typeof client.config.sessions !== "object") {
 		client.config.sessions = {};
-	} else {
-		// TODO: This is just for backwards compatibility. Remove in v3.0.0
-		const newSessions = {};
-		let changed = false;
-
-		_.forOwn(client.config.sessions, (session, key) => {
-			if (key.length !== 128) {
-				key = client.calculateTokenHash(key);
-				changed = true;
-			}
-
-			newSessions[key] = session;
-		});
-
-		if (changed) {
-			log.info(`User ${colors.bold(client.name)} has been updated with new security requirements for tokens.`);
-
-			delete client.config.token;
-			client.config.sessions = newSessions;
-			client.save();
-		}
 	}
 
 	_.forOwn(client.config.sessions, (session) => {
