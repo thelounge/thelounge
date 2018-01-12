@@ -22,6 +22,7 @@ require("./keybinds");
 require("./clipboard");
 const Changelog = require("./socket-events/changelog");
 const contextMenu = require("./contextMenu");
+require("./packages/packageApi");
 
 $(function() {
 	var sidebar = $("#sidebar, #footer");

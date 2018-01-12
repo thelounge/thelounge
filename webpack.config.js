@@ -90,6 +90,10 @@ const config = {
 				from: "./node_modules/primer-tooltips/build/build.css",
 				to: "css/primer-tooltips.[ext]",
 			},
+			{ // This is not included in the webpack install because we need it to stay separate for plugins to import
+				from: "./client/js/packages/packageManager.js",
+				to: "js/packageManager.js",
+			},
 		]),
 		// socket.io uses debug, we don't need it
 		new webpack.NormalModuleReplacementPlugin(/debug/, path.resolve(__dirname, "scripts/noop.js")),
