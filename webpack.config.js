@@ -82,10 +82,6 @@ const config = {
 				from: "./client/img/*",
 				to: "img/[name].[ext]",
 			},
-			{
-				from: "./client/themes/*",
-				to: "themes/[name].[ext]",
-			},
 			{ // TODO: Build css with postcss
 				from: "./client/css/*",
 				to: "css/[name].[ext]",
