@@ -39,6 +39,11 @@ socket.on("auth", function(data) {
 
 			return false;
 		});
+
+		login.find(".btn").on("click", function(){
+			console.log('sign-up click');
+		});
+
 	} else {
 		login.find(".btn").prop("disabled", false);
 	}

@@ -43,6 +43,7 @@ $(function() {
 	});
 
 	viewport.on("click", ".rt", function(e) {
+		console.log('click');
 		var self = $(this);
 		viewport.toggleClass(self.attr("class"));
 		e.stopPropagation();

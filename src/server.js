@@ -244,6 +244,10 @@ function initializeClient(socket, client, token, lastMessage) {
 
 	client.clientAttach(socket.id, token);
 
+	socket.on("sign-up", function() {
+		console.log('DT - sign-up');
+	});
+
 	socket.on("disconnect", function() {
 		client.clientDetach(socket.id);
 	});
