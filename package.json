@@ -47,7 +47,7 @@
     "express": "4.16.2",
     "fs-extra": "5.0.0",
     "irc-framework": "2.10.3",
-    "ldapjs": "1.0.1",
+    "ldapjs": "1.0.2",
     "lodash": "4.17.4",
     "mime-types": "2.1.17",
     "moment": "2.20.1",
