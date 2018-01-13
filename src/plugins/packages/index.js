@@ -7,10 +7,13 @@ const themes = require("./themes");
 const packageMap = new Map();
 
 const stylesheets = [];
+const clientPlugins = [];
 
 module.exports = {
+	getClientPlugins,
 	getStylesheets,
 	getPackage,
+	isWebAccessible,
 	loadPackages,
 };
 
@@ -19,8 +22,23 @@ const packageApis = function(packageName) {
 		Stylesheets: {
 			addFile: addStylesheet.bind(this, packageName),
 		},
+		Client: {
+			addPlugin: addClientPlugin.bind(this, packageName),
+		},
 	};
 };
+
+function isWebAccessible(packageName, fileName) {
+	return getStylesheets().includes(`${packageName}/${fileName}`) || getClientPlugins().includes(`${packageName}/${fileName}`);
+}
+
+function addClientPlugin(packageName, filename) {
+	clientPlugins.push(packageName + "/" + filename);
+}
+
+function getClientPlugins() {
+	return clientPlugins;
+}
 
 function addStylesheet(packageName, filename) {
 	stylesheets.push(packageName + "/" + filename);

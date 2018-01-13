@@ -14,7 +14,7 @@ module.exports = {
 };
 
 function loadLocalThemes() {
-	fs.readdir(path.join(__dirname, "..", "..", "public", "themes"), (err, builtInThemes) => {
+	fs.readdir(path.join(__dirname, "themes"), (err, builtInThemes) => {
 		if (err) {
 			return;
 		}
@@ -46,7 +46,7 @@ function makeLocalThemeObject(css) {
 	const themeName = css.slice(0, -4);
 	return {
 		displayName: themeName.charAt(0).toUpperCase() + themeName.slice(1),
-		filename: path.join(__dirname, "..", "..", "public", "themes", `${themeName}.css`),
+		filename: path.join(__dirname, "themes", `${themeName}.css`),
 		name: themeName,
 	};
 }

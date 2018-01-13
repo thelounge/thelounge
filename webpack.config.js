@@ -82,10 +82,6 @@ const config = {
 				from: "./client/img/*",
 				to: "img/[name].[ext]",
 			},
-			{
-				from: "./client/themes/*",
-				to: "themes/[name].[ext]",
-			},
 			{ // TODO: Build css with postcss
 				from: "./client/css/*",
 				to: "css/[name].[ext]",
@@ -93,6 +89,10 @@ const config = {
 			{
 				from: "./node_modules/primer-tooltips/build/build.css",
 				to: "css/primer-tooltips.[ext]",
+			},
+			{ // This is not included in the webpack install because we need it to stay separate for plugins to import
+				from: "./client/js/packages/packageManager.js",
+				to: "js/packageManager.js",
 			},
 		]),
 		// socket.io uses debug, we don't need it

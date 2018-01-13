@@ -61,7 +61,7 @@ module.exports = function() {
 		const packageName = req.params.package;
 		const fileName = req.params.filename;
 		const packageFile = packages.getPackage(packageName);
-		if (!packageFile || !packages.getStylesheets().includes(`${packageName}/${fileName}`)) {
+		if (!packageFile || !packages.isWebAccessible(packageName, fileName)) {
 			return res.status(404).send("Not found");
 		}
 		const packagePath = Helper.getPackageModulePath(packageName);
@@ -513,6 +513,7 @@ function getServerConfiguration() {
 	const config = _.clone(Helper.config);
 
 	config.stylesheets = packages.getStylesheets();
+	config.clientPlugins = packages.getClientPlugins();
 
 	return config;
 }
