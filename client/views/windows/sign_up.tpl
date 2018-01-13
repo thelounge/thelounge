@@ -19,7 +19,7 @@
 		<div class="col-xs-12 success" style="display: none;">Successfully registered. You can now Sign in.</div>
 		<div class="col-xs-12">
 			<button type="submit" class="btn">Sign up</button>
-			<button type="button" class="btn" data-target="#sign-in">Sign in</button>
+			<button id="signup-signin" type="button" class="btn">Sign in</button>
 		</div>
 	</div>
 </form>

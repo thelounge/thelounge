@@ -43,7 +43,6 @@ $(function() {
 	});
 
 	viewport.on("click", ".rt", function(e) {
-		console.log('click');
 		var self = $(this);
 		viewport.toggleClass(self.attr("class"));
 		e.stopPropagation();
@@ -335,6 +334,7 @@ $(function() {
 	});
 
 	const openWindow = function openWindow(e, data) {
+
 		var self = $(this);
 		var target = self.data("target");
 		if (!target) {
@@ -420,6 +420,10 @@ $(function() {
 			socket.emit("names", {target: self.data("id")});
 		}
 
+		if (target === "#sign-up") {
+			socket.emit("sign-up:request");
+		}
+
 		if (target === "#settings") {
 			$("#session-list").html("<p>Loading…</p>");
 			socket.emit("sessions:get");
@@ -466,6 +470,15 @@ $(function() {
 
 	sidebar.on("click", "#sign-out", function() {
 		socket.emit("sign-out");
+		storage.remove("token");
+
+		if (!socket.connected) {
+			location.reload();
+		}
+	});
+
+	sidebar.on("click", "#sign-up", function() {
+		socket.emit("sign-up-request");
 		storage.remove("token");
 
 		if (!socket.connected) {

@@ -40,8 +40,13 @@ socket.on("auth", function(data) {
 			return false;
 		});
 
-		login.find(".btn").on("click", function(){
-			console.log('sign-up click');
+		login.find("#signin-signup").on("click", function(){
+			$("#footer")
+				.find(".sign-up")
+				.trigger("click", {
+					pushState: false,
+				});
+			return;
 		});
 
 	} else {

@@ -131,6 +131,10 @@ module.exports = function() {
 					success: true,
 				});
 				socket.on("auth", performAuthentication);
+				socket.on("sign-up:request", function(data){
+					socket.emit("sign-up");
+				});
+				socket.on("sign-up", performSignup);
 			}
 		});
 
@@ -243,10 +247,6 @@ function initializeClient(socket, client, token, lastMessage) {
 	socket.emit("authorized");
 
 	client.clientAttach(socket.id, token);
-
-	socket.on("sign-up", function() {
-		console.log('DT - sign-up');
-	});
 
 	socket.on("disconnect", function() {
 		client.clientDetach(socket.id);
@@ -570,6 +570,37 @@ function performAuthentication(data) {
 		}
 	}
 	auth(manager, client, data.user, data.password, authCallback);
+}
+
+function performSignup(data){
+	const socket = this;
+	const user = data.user;
+ 	const password = data.password;
+	const hash = Helper.password.hash(password);
+	let addUserResult;
+
+	try {
+		addUserResult = manager.addUser(
+			user,
+			hash
+		);
+	} catch (e) {
+		socket.emit("sign-up", {
+			success: false,
+			error: "The username is invalid",
+		});
+	}
+	if (!addUserResult) {
+		socket.emit("sign-up", {
+			success: false,
+			error: "Username is already in use"
+		});
+		return;
+	}
+
+	socket.emit("sign-up", {
+		success: true,
+	});
 }
 
 function reverseDnsLookup(ip, callback) {

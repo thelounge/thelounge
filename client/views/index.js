@@ -22,8 +22,8 @@ module.exports = {
 	},
 
 	windows: {
-		sign_up: require("./windows/sign_up.tpl"),
 		sign_in: require("./windows/sign_in.tpl"),
+		sign_up: require("./windows/sign_up.tpl"),
 		settings: require("./windows/settings.tpl"),
 		connect: require("./windows/connect.tpl"),
 		help: require("./windows/help.tpl"),
