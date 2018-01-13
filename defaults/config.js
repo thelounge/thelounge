@@ -12,6 +12,13 @@ module.exports = {
 	//
 	public: false,
 
+	// Allow to signup when a server is private (cf. public)
+	// It has no effect when server is public
+	//
+	// @type 	 boolean
+	// @default  false
+ 	signup: false,
+
 	//
 	// IP address or hostname for the web server to listen on.
 	// Setting this to undefined will listen on all interfaces.
