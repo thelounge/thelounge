@@ -3,11 +3,9 @@
 const $ = require("jquery");
 const socket = require("../socket");
 const storage = require("../localStorage");
-const utils = require("../utils");
 const templates = require("../../views");
 
 socket.on("sign-up", function(data) {
-
 	const signup = $("#sign-up");
 
 	signup.html(templates.windows.sign_up());
@@ -29,15 +27,13 @@ socket.on("sign-up", function(data) {
 		return false;
 	});
 
-	signup.find("#signup-signin").on("click", function(){
+	signup.find("#signup-signin").on("click", function() {
 		$("#footer")
 			.find(".sign-in")
 			.trigger("click", {
 				pushState: false,
 			});
-		return;
 	});
-		
 	if (!data.success) {
 		const error = signup.find(".error");
 		error.show().closest("form").one("submit", function() {
@@ -46,5 +42,4 @@ socket.on("sign-up", function(data) {
 	} else {
 		signup.find(".success").show();
 	}
-
 });

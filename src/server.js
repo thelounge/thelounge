@@ -132,7 +132,7 @@ module.exports = function() {
 					signup: config.signup,
 				});
 				socket.on("auth", performAuthentication);
-				socket.on("sign-up:request", function(data){
+				socket.on("sign-up:request", function() {
 					socket.emit("sign-up");
 				});
 				socket.on("sign-up", performSignup);
@@ -573,10 +573,10 @@ function performAuthentication(data) {
 	auth(manager, client, data.user, data.password, authCallback);
 }
 
-function performSignup(data){
+function performSignup(data) {
 	const socket = this;
 	const user = data.user;
- 	const password = data.password;
+	const password = data.password;
 	const hash = Helper.password.hash(password);
 	let addUserResult;
 
@@ -594,7 +594,7 @@ function performSignup(data){
 	if (!addUserResult) {
 		socket.emit("sign-up", {
 			success: false,
-			error: "Username is already in use"
+			error: "Username is already in use",
 		});
 		return;
 	}

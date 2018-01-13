@@ -40,15 +40,13 @@ socket.on("auth", function(data) {
 			return false;
 		});
 
-		login.find("#signin-signup").on("click", function(){
+		login.find("#signin-signup").on("click", function() {
 			$("#footer")
 				.find(".sign-up")
 				.trigger("click", {
 					pushState: false,
 				});
-			return;
 		});
-
 	} else {
 		login.find(".btn").prop("disabled", false);
 	}

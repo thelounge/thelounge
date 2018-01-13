@@ -17,7 +17,7 @@ module.exports = {
 	//
 	// @type 	 boolean
 	// @default  false
- 	signup: false,
+	signup: false,
 
 	//
 	// IP address or hostname for the web server to listen on.
