@@ -334,7 +334,6 @@ $(function() {
 	});
 
 	const openWindow = function openWindow(e, data) {
-
 		var self = $(this);
 		var target = self.data("target");
 		if (!target) {
@@ -470,15 +469,6 @@ $(function() {
 
 	sidebar.on("click", "#sign-out", function() {
 		socket.emit("sign-out");
-		storage.remove("token");
-
-		if (!socket.connected) {
-			location.reload();
-		}
-	});
-
-	sidebar.on("click", "#sign-up", function() {
-		socket.emit("sign-up-request");
 		storage.remove("token");
 
 		if (!socket.connected) {
