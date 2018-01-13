@@ -48,6 +48,10 @@ module.exports = function() {
 			maxAge: 86400 * 1000,
 		}));
 
+	// This route serves *installed themes only*. Local themes are served directly
+	// from the `public/themes/` folder as static assets, without entering this
+	// handler. Remember this is you make changes to this function, serving of
+	// local themes will not get those changes.
 	app.get("/themes/:theme.css", (req, res) => {
 		const themeName = req.params.theme;
 		const theme = themes.getFilename(themeName);
