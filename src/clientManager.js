@@ -136,6 +136,9 @@ ClientManager.prototype.updateUser = function(name, opts, callback) {
 
 	if (!user) {
 		log.error(`Tried to update invalid user ${colors.green(name)}. This is most likely a bug.`);
+		if (callback) {
+			callback(true);
+		}
 		return false;
 	}
 
@@ -150,8 +153,12 @@ ClientManager.prototype.updateUser = function(name, opts, callback) {
 
 	try {
 		fs.writeFileSync(Helper.getUserConfigPath(name), newUser);
+		return callback ? callback() : true;
 	} catch (e) {
 		log.error(`Failed to update user ${colors.green(name)} (${e})`);
+		if (callback) {
+			callback(e);
+		}
 		throw e;
 	}
 };
