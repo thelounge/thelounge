@@ -129,6 +129,7 @@ module.exports = function() {
 				socket.emit("auth", {
 					serverHash: serverHash,
 					success: true,
+					signup: config.signup,
 				});
 				socket.on("auth", performAuthentication);
 				socket.on("sign-up:request", function(data){

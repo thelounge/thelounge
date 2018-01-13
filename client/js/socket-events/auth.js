@@ -21,7 +21,7 @@ socket.on("auth", function(data) {
 	if (data.serverHash > -1) {
 		utils.serverHash = data.serverHash;
 
-		login.html(templates.windows.sign_in());
+		login.html(templates.windows.sign_in(data));
 
 		login.find("form").on("submit", function() {
 			const form = $(this);
