@@ -18,7 +18,7 @@
 		<div class="col-xs-12 error" style="display: none;">Authentication failed.</div>
 		<div class="col-xs-12">
 			<button type="submit" class="btn">Sign in</button>
-			{{#if prefetch}}
+			{{#if signup}}
 			<button id="signin-signup" type="button" class="btn">Sign up</button>
 			{{/if}}
 		</div>
