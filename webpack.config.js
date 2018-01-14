@@ -70,9 +70,10 @@ const config = {
 				from: "./client/js/loading-error-handlers.js",
 				to: "js/[name].[ext]",
 			},
-			{ // TODO: Build index.html with handlebars
+			{
 				from: "./client/*",
 				to: "[name].[ext]",
+				ignore: "index.html.tpl",
 			},
 			{
 				from: "./client/audio/*",
