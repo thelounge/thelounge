@@ -16,7 +16,7 @@ Modern web IRC client designed for self-hosting.
 * **Responsive interface.** The client works smoothly on every desktop, smartphone and tablet.
 * **Synchronized experience.** Always resume where you left off no matter what device.
 
-To learn more about configuration, usage and features of The Lounge, take a look at [the website](https://thelounge.github.io).
+To learn more about configuration, usage and features of The Lounge, take a look at [the website](https://thelounge.chat).
 
 <p align="center">
 	<img src="https://user-images.githubusercontent.com/8675906/28143204-53116e8c-6719-11e7-992b-d1ba442c6c37.png" width="550">
@@ -43,7 +43,7 @@ When installation is complete, run:
 thelounge start
 ```
 
-For more information, read the [documentation](https://thelounge.github.io/docs/), [wiki](https://github.com/thelounge/lounge/wiki), or run:
+For more information, read the [documentation](https://thelounge.chat/docs/), [wiki](https://github.com/thelounge/lounge/wiki), or run:
 
 ```sh
 thelounge --help

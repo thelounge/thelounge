@@ -323,9 +323,9 @@ module.exports = {
 	// Default quit and part message if none is provided.
 	//
 	// @type     string
-	// @default  "The Lounge - https://thelounge.github.io"
+	// @default  "The Lounge - https://thelounge.chat"
 	//
-	leaveMessage: "The Lounge - https://thelounge.github.io",
+	leaveMessage: "The Lounge - https://thelounge.chat",
 
 	//
 	// Run The Lounge with identd support.

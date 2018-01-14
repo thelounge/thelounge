@@ -45,11 +45,11 @@ describe("parse Handlebars helper", () => {
 					"www.nooooooooooooooo.com" +
 				"</a>",
 		}, {
-			input: "look at https://thelounge.github.io/ for more information",
+			input: "look at https://thelounge.chat/ for more information",
 			expected:
 				"look at " +
-				'<a href="https://thelounge.github.io/" target="_blank" rel="noopener">' +
-					"https://thelounge.github.io/" +
+				'<a href="https://thelounge.chat/" target="_blank" rel="noopener">' +
+					"https://thelounge.chat/" +
 				"</a>" +
 				" for more information",
 		}, {
