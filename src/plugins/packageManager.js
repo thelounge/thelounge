@@ -56,15 +56,14 @@ function install(packageName) {
 
 function uninstall(packageName) {
 	checkConfig()
-		.then(() => npm.runNpmCommand("uninstall", {packageName, returnStdOut: true}))
+		.then(() => npm.runNpmCommand("list", {packageName, returnStdOut: true, resolveOnError: true}))
 		.then((data) => {
-			if (data.includes("removed")) {
-				log.info(`${colors.green(packageName)} has been successfully uninstalled.`);
-			} else {
-				log.error(`Can't uninstall ${colors.green(packageName)} as it wasn't installed.`);
-				process.exit(1);
+			if (!data.toString().includes(packageName)) {
+				return Promise.reject(`Can't uninstall ${colors.green(packageName)} as it wasn't installed.`);
 			}
 		})
+		.then(() => npm.runNpmCommand("uninstall", {packageName}))
+		.then(() => log.info(`${colors.green(packageName)} has been successfully uninstalled.`))
 		.catch((e) => {
 			log.error(`${e}`);
 			process.exit(1);

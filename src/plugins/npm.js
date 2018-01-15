@@ -19,7 +19,7 @@ module.exports = {
 	runNpmCommand,
 };
 
-function runNpmCommand(command, {packageName = "", returnStdOut = false, metadata = {}, args = []}) {
+function runNpmCommand(command, {packageName = "", returnStdOut = false, resolveOnError = false, metadata = {}, args = []}) {
 	log.debug(`${command}ing ${colors.green(packageName)}...`);
 	return new Promise((res, rej) => {
 		let output = "";
@@ -35,8 +35,8 @@ function runNpmCommand(command, {packageName = "", returnStdOut = false, metadat
 				packageName,
 			],
 			{
-				// This is the same as `"inherit"` except `process.stdout` is ignored
-				stdio: [process.stdin, returnStdOut ? "pipe" : "ignore", process.stderr],
+				// Always accept stdin, and ignore stderr, either receive stdout (if we want to return it) or ignore
+				stdio: [process.stdin, returnStdOut ? "pipe" : "ignore", "ignore"],
 			}
 		);
 
@@ -49,7 +49,7 @@ function runNpmCommand(command, {packageName = "", returnStdOut = false, metadat
 		npm.on("error", rej);
 
 		npm.on("close", (code) => {
-			if (code !== 0) {
+			if (code !== 0 && !resolveOnError) {
 				return rej(`Failed to ${command} ${colors.green(`${packageName} " v" + ${metadata.version}`)}. Exit code: ${code}`);
 			}
 			res(output);
