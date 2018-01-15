@@ -8,7 +8,6 @@ const child = require("child_process");
 const packagesPath = Helper.getPackagesPath();
 const packagesParent = path.dirname(packagesPath);
 const packagesConfig = path.join(packagesParent, "package.json");
-const packagesNpmrc = path.join(__dirname, "..", "..", "defaults", "npmrc");
 
 const packageDirJson = {
 	private: true,
@@ -20,7 +19,7 @@ module.exports = {
 	runNpmCommand,
 };
 
-function runNpmCommand(command, {packageName = "", returnStdOut = false, metadata = {}}) {
+function runNpmCommand(command, {packageName = "", returnStdOut = false, metadata = {}, args = []}) {
 	log.debug(`${command}ing ${colors.green(packageName)}...`);
 	return new Promise((res, rej) => {
 		let output = "";
@@ -28,8 +27,9 @@ function runNpmCommand(command, {packageName = "", returnStdOut = false, metadat
 			process.platform === "win32" ? "npm.cmd" : "npm",
 			[
 				command,
-				"--userconfig",
-				packagesNpmrc,
+				...args,
+				"--no-package-lock",
+				"--no-progress",
 				"--prefix",
 				packagesParent,
 				packageName,

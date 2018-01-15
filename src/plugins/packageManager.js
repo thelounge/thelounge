@@ -5,6 +5,11 @@ const log = require("../log.js");
 const fs = require("fs-extra");
 const packageJson = require("package-json");
 const npm = require("./npm");
+const installFlags = [
+	"--production",
+	"--no-save",
+	"--no-bin-links",
+];
 
 module.exports = {
 	install,
@@ -41,7 +46,7 @@ function install(packageName) {
 		.then(() => getPackageJson(packageName))
 		.then((json) => getMetadata(json))
 		.then((metadata) => passThrough(npm.ensurePackageJsonExists(), metadata))
-		.then((metadata) => npm.runNpmCommand("install", {packageName, metadata}))
+		.then((metadata) => npm.runNpmCommand("install", {packageName, metadata, args: installFlags}))
 		.then(() => log.info(`${colors.green(packageName)} has been successfully installed.`))
 		.catch((e) => {
 			log.error(`${e}`);
