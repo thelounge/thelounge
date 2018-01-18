@@ -41,18 +41,22 @@ program
 			// Create node_modules folder, otherwise npm will start walking upwards to find one
 			fsextra.ensureDirSync(packagesPath);
 
-			// Create package.json with private set to true to avoid npm warnings
-			fs.writeFileSync(packagesConfig, JSON.stringify({
-				private: true,
-				description: "Packages for The Lounge. All packages in node_modules directory will be automatically loaded.",
-			}, null, "\t"));
+			// Create package.json with private set to true to avoid npm warnings, if
+			// it doesn't exist already
+			if (!fs.existsSync(packagesConfig)) {
+				fs.writeFileSync(packagesConfig, JSON.stringify({
+					private: true,
+					description: "Packages for The Lounge. All packages in node_modules directory will be automatically loaded.",
+				}, null, "\t"));
+			}
 
 			const npm = child.spawn(
 				process.platform === "win32" ? "npm.cmd" : "npm",
 				[
 					"install",
 					"--production",
-					"--no-save",
+					"--save",
+					"--save-exact",
 					"--no-bin-links",
 					"--no-package-lock",
 					"--no-progress",
