@@ -71,14 +71,21 @@ The Lounge is the official and community-managed fork of [Shout](https://github.
 ## Installation and usage
 
 The Lounge requires [Node.js](https://nodejs.org/) v4 or more recent.
+[Yarn package manager](https://yarnpkg.com/) is also recommended *(npm will also work)*.
 
-### Running stable releases from npm (recommended)
+### Running stable releases using Yarn (recommended)
 
 Run this in a terminal to install (or upgrade) the latest stable release from
-[npm](https://www.npmjs.com/):
+[npm registry](https://www.npmjs.com/):
 
 ```sh
-[sudo] npm install -g thelounge
+[sudo] yarn global add thelounge
+```
+
+If you already have The Lounge installed globally, use the following command to update it:
+
+```sh
+[sudo] yarn global upgrade thelounge
 ```
 
 When installation is complete, run:
@@ -100,12 +107,12 @@ The following commands install and run the development version of The Lounge:
 ```sh
 git clone https://github.com/thelounge/lounge.git
 cd lounge
-npm install
-NODE_ENV=production npm run build
-npm start
+yarn install
+NODE_ENV=production yarn build
+yarn start
 ```
 
-When installed like this, npm doesn't create a `thelounge` executable. Use `npm start -- <command>` to run subcommands.
+When installed like this, `thelounge` executable is not created. Use `node index <command>` to run commands.
 
 ⚠️ While it is the most recent codebase, this is not production-ready! Run at
 your own risk. It is also not recommended to run this as root.
