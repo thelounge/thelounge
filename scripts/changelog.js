@@ -278,7 +278,7 @@ class RepositoryFetcher {
 			if (commits.map(({oid}) => oid).includes(stopCommit.oid)) {
 				return _.takeWhile(commits, ({oid}) => oid !== stopCommit.oid);
 			} else if (pageInfo.hasNextPage) {
-				return commits.concat(await fetchPaginatedCommits(stopCommit, pageInfo.endCursor));
+				return commits.concat(await fetchPaginatedCommits(pageInfo.endCursor));
 			}
 
 			return commits;
