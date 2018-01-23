@@ -166,9 +166,7 @@ ${printDependencyList(items.devDependencies)}`}
 @@@@@@@@@@@@@@@@@@@
 @@ UNCATEGORIZED @@
 @@@@@@@@@@@@@@@@@@@
-
-${printList(items.uncategorized)}
-`;
+${printUncategorizedList(items.uncategorized)}`;
 }
 
 // Returns true if the given version is a pre-release (i.e. 2.0.0-pre.3,
@@ -467,6 +465,22 @@ function printDependencyList(dependencies) {
 	).join("\n");
 }
 
+function printUncategorizedList(uncategorized) {
+	return Object.entries(uncategorized).reduce((memo, [label, items]) => {
+		if (items.length === 0) {
+			return memo;
+		}
+
+		memo += `
+@@@@@ ${label.toUpperCase()}
+
+${printList(items)}
+`;
+
+		return memo;
+	}, "");
+}
+
 const dependencies = Object.keys(packageJson.dependencies);
 const devDependencies = Object.keys(packageJson.devDependencies);
 
@@ -522,6 +536,14 @@ function isInternal(entry) {
 	return hasLabelOrAnnotatedComment(entry, "Meta: Internal");
 }
 
+function isBug({labels}) {
+	return hasLabel(labels, "Type: Bug");
+}
+
+function isFeature({labels}) {
+	return hasLabel(labels, "Type: Feature");
+}
+
 // Examples:
 //   Update webpack to the latest version
 //   Update `stylelint` to v1.2.3
@@ -561,7 +583,13 @@ function parse(entries) {
 		} else if (isInternal(entry)) {
 			result.internals.push(entry);
 		} else {
-			result.uncategorized.push(entry);
+			if (isFeature(entry)) {
+				result.uncategorized.feature.push(entry);
+			} else if (isBug(entry)) {
+				result.uncategorized.bug.push(entry);
+			} else {
+				result.uncategorized.other.push(entry);
+			}
 		}
 		return result;
 	}, {
@@ -572,7 +600,11 @@ function parse(entries) {
 		documentation: [],
 		internals: [],
 		security: [],
-		uncategorized: [],
+		uncategorized: {
+			feature: [],
+			bug: [],
+			other: [],
+		},
 		unknownDependencies: new Set(),
 	});
 }
@@ -684,7 +716,7 @@ async function addToChangelog(newEntry) {
 	// Step 3 (optional): Print a list of skipped entries if there are any
 	if (skipped.length > 0) {
 		const pad = Math.max(...skipped.map((entry) => (entry.title || entry.messageHeadline).length));
-		log.warn(`${skipped.length} entries were skipped:`);
+		log.warn(`${skipped.length} ${skipped.length > 1 ? "entries were" : "entry was"} skipped:`);
 		skipped.forEach((entry) => {
 			log.warn(`- ${(entry.title || entry.messageHeadline).padEnd(pad)}  ${colors.gray(entry.url)}`);
 		});
