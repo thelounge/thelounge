@@ -9,6 +9,7 @@ const CopyPlugin = require("copy-webpack-plugin");
 // ********************
 
 const config = {
+	mode: process.env.NODE_ENV === "production" ? "production" : "development",
 	entry: {
 		"js/bundle.js": path.resolve(__dirname, "client/js/lounge.js"),
 	},
@@ -57,6 +58,17 @@ const config = {
 			},
 		],
 	},
+	optimization: {
+		splitChunks: {
+			cacheGroups: {
+				commons: {
+					test: /[\\/]node_modules[\\/]/,
+					name: "js/bundle.vendor.js",
+					chunks: "all",
+				},
+			},
+		},
+	},
 	externals: {
 		json3: "JSON", // socket.io uses json3.js, but we do not target any browsers that need it
 	},
@@ -98,23 +110,7 @@ const config = {
 		]),
 		// socket.io uses debug, we don't need it
 		new webpack.NormalModuleReplacementPlugin(/debug/, path.resolve(__dirname, "scripts/noop.js")),
-		// automatically split all vendor dependencies into a separate bundle
-		new webpack.optimize.CommonsChunkPlugin({
-			name: "js/bundle.vendor.js",
-			minChunks: (module) => module.context && module.context.includes("node_modules"),
-		}),
 	],
 };
-
-// *********************************
-// Production-specific configuration
-// *********************************
-
-if (process.env.NODE_ENV === "production") {
-	config.plugins.push(new webpack.optimize.UglifyJsPlugin({
-		sourceMap: true,
-		comments: false,
-	}));
-}
 
 module.exports = config;

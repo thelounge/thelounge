@@ -1,7 +1,6 @@
 "use strict";
 
 const path = require("path");
-const webpack = require("webpack");
 const config = require("./webpack.config.js");
 
 config.target = "node";
@@ -17,10 +16,9 @@ config.module.rules.push({
 	enforce: "post",
 });
 
-// `CommonsChunkPlugin` is incompatible with a `target` of `node`.
-// See https://github.com/zinserjan/mocha-webpack/issues/84
-config.plugins = config.plugins.filter((a) =>
-	!(a instanceof webpack.optimize.CommonsChunkPlugin)
-);
+// `optimization.splitChunks` is incompatible with a `target` of `node`. See:
+// - https://github.com/zinserjan/mocha-webpack/issues/84
+// - https://github.com/webpack/webpack/issues/6727#issuecomment-372589122
+config.optimization.splitChunks = false;
 
 module.exports = config;
