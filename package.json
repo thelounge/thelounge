@@ -30,7 +30,8 @@
     "chat",
     "client",
     "irc",
-    "server"
+    "server",
+    "thelounge"
   ],
   "license": "MIT",
   "engines": {
