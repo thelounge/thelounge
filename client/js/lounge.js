@@ -7,6 +7,7 @@ const moment = require("moment");
 
 // our libraries
 require("./libs/jquery/stickyscroll");
+const commands = require("./commands");
 const slideoutMenu = require("./slideout");
 const templates = require("../views");
 const socket = require("./socket");
@@ -126,8 +127,12 @@ $(function() {
 			const args = text.substr(1).split(" ");
 			const cmd = args.shift().toLowerCase();
 
-			if (typeof utils.inputCommands[cmd] === "function" && utils.inputCommands[cmd](args)) {
-				return false;
+			if (commands[cmd]) {
+				const output = commands[cmd].input(args);
+
+				if (output === true) {
+					return false;
+				}
 			}
 		}
 
