@@ -55,12 +55,12 @@ function forceFocus() {
 }
 
 function collapse() {
-	$(".chan.active .toggle-button.opened").click();
+	$(".chan.active .toggle-button.toggle-preview.opened").click();
 	return true;
 }
 
 function expand() {
-	$(".chan.active .toggle-button:not(.opened)").click();
+	$(".chan.active .toggle-button.toggle-preview:not(.opened)").click();
 	return true;
 }
 
