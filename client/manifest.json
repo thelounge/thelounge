@@ -4,24 +4,33 @@
 	"description": "Self-hosted web IRC client",
 	"start_url": ".",
 	"display": "standalone",
-	"theme_color": "#455164",
-	"background_color": "#455164",
+	"theme_color": "#415363",
+	"background_color": "#415363",
 	"icons":
 	[
 		{
-			"src": "img/touch-icon-192x192.png",
-			"sizes": "192x192",
-			"type": "image/png"
+			"src": "img/logo-grey-bg-120x120px.png",
+			"sizes": "120x120"
 		},
 		{
-			"src": "img/apple-touch-icon-120x120.png",
-			"sizes": "120x120",
-			"type": "image/png"
+			"src": "img/logo-grey-bg-152x152px.png",
+			"sizes": "152x152"
 		},
 		{
-			"src": "img/favicon.png",
-			"sizes": "64x64",
-			"type": "image/png"
+			"src": "img/logo-grey-bg-167x167px.png",
+			"sizes": "167x167"
+		},
+		{
+			"src": "img/logo-grey-bg-180x180px.png",
+			"sizes": "180x180"
+		},
+		{
+			"src": "img/logo-grey-bg-192x192px.png",
+			"sizes": "192x192"
+		},
+		{
+			"src": "img/logo-grey-bg.svg",
+			"sizes": "193x193"
 		}
 	]
 }

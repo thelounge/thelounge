@@ -14,7 +14,7 @@ describe("Link plugin", function() {
 	beforeEach(function(done) {
 		app = util.createWebserver();
 		app.get("/real-test-image.png", function(req, res) {
-			res.sendFile(path.resolve(__dirname, "../../client/img/apple-touch-icon-120x120.png"));
+			res.sendFile(path.resolve(__dirname, "../../client/img/logo-grey-bg-120x120px.png"));
 		});
 		this.connection = app.listen(9002, done);
 
