@@ -2,6 +2,7 @@
 	"name": "The Lounge",
 	"short_name": "The Lounge",
 	"description": "Self-hosted web IRC client",
+	"start_url": ".",
 	"display": "standalone",
 	"theme_color": "#455164",
 	"background_color": "#455164",
