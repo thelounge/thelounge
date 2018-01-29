@@ -1,53 +1,26 @@
 "use strict";
 
-module.exports = {
-	actions: {
-		action: require("./actions/action.tpl"),
-		away: require("./actions/away.tpl"),
-		back: require("./actions/back.tpl"),
-		ban_list: require("./actions/ban_list.tpl"),
-		channel_list: require("./actions/channel_list.tpl"),
-		chghost: require("./actions/chghost.tpl"),
-		ctcp: require("./actions/ctcp.tpl"),
-		invite: require("./actions/invite.tpl"),
-		join: require("./actions/join.tpl"),
-		kick: require("./actions/kick.tpl"),
-		mode: require("./actions/mode.tpl"),
-		nick: require("./actions/nick.tpl"),
-		part: require("./actions/part.tpl"),
-		quit: require("./actions/quit.tpl"),
-		topic: require("./actions/topic.tpl"),
-		topic_set_by: require("./actions/topic_set_by.tpl"),
-		whois: require("./actions/whois.tpl"),
-	},
+// This creates a version of `require()` in the context of the current
+// directory, so we iterate over its content, which is a map statically built by
+// Webpack.
+// Second argument says it's recursive, third makes sure we only load templates.
+const requireViews = require.context(".", true, /\.tpl$/);
 
-	windows: {
-		sign_in: require("./windows/sign_in.tpl"),
-		settings: require("./windows/settings.tpl"),
-		connect: require("./windows/connect.tpl"),
-		help: require("./windows/help.tpl"),
-		changelog: require("./windows/changelog.tpl"),
-	},
+module.exports = requireViews.keys().reduce((acc, path) => {
+	// We are going to create nested properties on the accumulator object.
+	let tmp = acc;
 
-	chan: require("./chan.tpl"),
-	chat: require("./chat.tpl"),
-	contextmenu_divider: require("./contextmenu_divider.tpl"),
-	contextmenu_item: require("./contextmenu_item.tpl"),
-	date_marker: require("./date-marker.tpl"),
-	msg: require("./msg.tpl"),
-	msg_action: require("./msg_action.tpl"),
-	msg_condensed_toggle: require("./msg_condensed_toggle.tpl"),
-	msg_condensed: require("./msg_condensed.tpl"),
-	msg_preview: require("./msg_preview.tpl"),
-	msg_preview_toggle: require("./msg_preview_toggle.tpl"),
-	msg_unhandled: require("./msg_unhandled.tpl"),
-	network: require("./network.tpl"),
-	image_viewer: require("./image_viewer.tpl"),
-	join_channel: require("./join_channel.tpl"),
-	session: require("./session.tpl"),
-	unread_marker: require("./unread_marker.tpl"),
-	user: require("./user.tpl"),
-	user_filtered: require("./user_filtered.tpl"),
-	user_name: require("./user_name.tpl"),
-	version_checker: require("./version_checker.tpl"),
-};
+	// Split path by folders, and create a new property if necessary/
+	// First 2 characters are "./"/
+	// Last element in the array ends with `.tpl` and needs to be `require`d.
+	path.substr(2).split("/").forEach((key) => {
+		if (key.endsWith(".tpl")) { //
+			tmp[key.substr(0, key.length - 4)] = requireViews(path);
+		} else {
+			tmp[key] = tmp[key] || {};
+		}
+		tmp = tmp[key];
+	});
+
+	return acc;
+}, {});
