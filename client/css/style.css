@@ -1044,7 +1044,7 @@ kbd {
 	word-wrap: break-word;
 	word-break: break-word; /* Webkit-specific */
 	display: flex;
-	overflow: hidden;
+	align-items: flex-start;
 	position: relative;
 }
 
@@ -1145,6 +1145,7 @@ kbd {
 	min-width: 0;
 	padding-left: 10px;
 	padding-right: 6px;
+	overflow: hidden; /* Prevents Zalgo text to expand beyond messages */
 }
 
 #loading a,
