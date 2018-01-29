@@ -170,6 +170,12 @@ $(function() {
 	});
 
 	viewport.on("click contextmenu", ".user", function(e) {
+		// If user is selecting text, do not open context menu
+		// This primarily only targets mobile devices where selection is performed with touch
+		if (!window.getSelection().isCollapsed) {
+			return true;
+		}
+
 		return showContextMenu(this, e);
 	});
 
@@ -218,13 +224,7 @@ $(function() {
 
 		chat.on("click", ".chat", function() {
 			setTimeout(function() {
-				var text = "";
-				if (window.getSelection) {
-					text = window.getSelection().toString();
-				} else if (document.selection && document.selection.type !== "Control") {
-					text = document.selection.createRange().text;
-				}
-				if (!text) {
+				if (window.getSelection().isCollapsed) {
 					focus();
 				}
 			}, 2);
