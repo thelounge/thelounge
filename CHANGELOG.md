@@ -4,6 +4,253 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v2.7.0 - 2018-01-28
+
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.6.0...v2.7.0) and [milestone](https://github.com/thelounge/lounge/milestone/27?closed=1).
+
+The Lounge v2.7.0 is out, and it's a big one! Here is a shortlist of the most notable additions and changes, but as usual, a comprehensive list is available below.
+
+It is now possible to join a channel directly from the UI:
+
+<p align="center">
+  <img width="187" alt="A tooltip saying Join a channel shows up when hovering the + next to a network name in the channel list" src="https://user-images.githubusercontent.com/113730/35205922-f5662fc6-ff06-11e7-8b33-2f76354eff51.png"> <img width="192" alt="A form lets the user type a channel name, an optional password, which can then be joined by clicking the submit button" src="https://user-images.githubusercontent.com/113730/35205923-f57147e4-ff06-11e7-942b-5bce2c2d3e78.png">
+  <br>
+  <em>The <kbd>+</kbd> button next to any network opens a form to join a channel.</em>
+</p>
+
+Nicks mentioned in messages are now clickable:
+
+<p align="center">
+  <img width="385" alt="A user mentions someone else's nick in a message, which is now clickable and takes the user's color" src="https://user-images.githubusercontent.com/113730/35206011-8cbc48ec-ff07-11e7-8969-8305a0501d24.png">
+</p>
+
+Context menu actions have been improved, and new actions have been added:
+
+<p align="center">
+  <img width="186" alt="Available actions in user context menu: User information, Direct messages, Kick" src="https://user-images.githubusercontent.com/113730/35206072-f29768e0-ff07-11e7-993f-10668751053e.png"> <img width="184" alt="Available actions in channel context menu: List banned users, Leave" src="https://user-images.githubusercontent.com/113730/35206073-f2a45424-ff07-11e7-897e-a94b64339bf9.png"> <img width="186" alt="Available actions in network context menu: List all channels, Join a channel, Disconnect" src="https://user-images.githubusercontent.com/113730/35206074-f2af90a0-ff07-11e7-8e19-d818c2c5579c.png">
+  <br>
+  <em>Available actions on nicks in the chat window, and on channels and networks in the channel list</em>
+</p>
+
+A long-awaited feature, it is now possible to add customizable strings when auto-completing nicks at the beginning of a message:
+
+<p align="center">
+  <img width="512" alt="When comma+whitespace is set in the Settings, auto-completing nicks will add a comma and a space at the beginning of the message, and a space otherwise" src="https://user-images.githubusercontent.com/113730/35206213-12a904d0-ff09-11e7-9d32-ea68693677f7.gif">
+  <br>
+  <em>To achieve this, set <code>, </code> in your client settings.</em>
+</p>
+
+The user information available when sending the `/whois` command (or clicking the corresponding action in a user context menu) has been enhanced:
+
+<p align="center">
+  <img width="620" alt="User information is now displayed as a definition list" src="https://user-images.githubusercontent.com/113730/35206346-09e23230-ff0a-11e7-95b7-c4826aa2f82c.png">
+</p>
+
+Message styling now supports strikethrough text, monospace font, and additional colors:
+
+<p align="center">
+  <img width="183" alt="'Hello world' in a message, where 'Hello' is striked through, and 'world' is monospace" src="https://user-images.githubusercontent.com/113730/35206448-b5c51d2e-ff0a-11e7-83d6-62375bf7a302.png">
+  <br>
+  <em>Strikethrough is achieved with <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>S</kbd>. Monospace is achieved with <kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>M</kbd>.</em>
+</p>
+
+The Help window gains a version checker, to inform you if a new version was released:
+
+<p align="center">
+  <img width="595" alt="A version checker says: 'The Lounge v2.7.0 is now available. Read more on GitHub'. There is also a link to release notes of the current version displayed in the UI." src="https://user-images.githubusercontent.com/113730/35206466-db97c1b4-ff0a-11e7-9a39-4aef6c89e628.png">
+</p>
+
+By clicking on the "release notes" link that can be seen above, all the details about the current version appear directly in the client:
+
+<p align="center">
+  <img width="589" alt="A Release notes page displays the changelog for the current version." src="https://user-images.githubusercontent.com/113730/35206467-dba2ef26-ff0a-11e7-9cd0-f1c813e024e2.png">
+</p>
+
+The link previewer now supports WebP images, as well as audio and video links:
+
+<p align="center">
+	<img width="537" alt="Big Buck Bunny video on an embedded video player" src="https://user-images.githubusercontent.com/113730/35251930-cd33ca7c-ffab-11e7-8ad2-f274c6b2a11b.png">
+</p>
+
+Another noticeable change is the new message alignment in the main chat window, in order to improve visual experience and reduce flickering when loading a page:
+
+<p align="center">
+  <img width="553" alt="screen shot 2018-01-21 at 23 53 26" src="https://user-images.githubusercontent.com/113730/35252040-7a65d6fe-ffac-11e7-91f9-bbcdc0e54d50.png">
+</p>
+
+There were other changes on the client: accessibility of the application has been improved, notices and errors are now displayed in the current channel (then sent to the corresponding network window when reloading), and many bug fixes.
+
+The Lounge v2.7.0 finally comes with its first package API, letting packages register stylesheets in the client. It is in its very early stage at the moment and is subject to change in future releases, so use it at your own risk. There will not be an official documentation before the API stabilizes in v3, but for more information, [refer to the corresponding PR](https://github.com/thelounge/lounge/pull/1619).
+
+The CLI has also been improved:
+
+- When a password gets changed using the `reset` command, the new password takes effect immediately, it is not necessary to restart the server anymore.
+- A new `uninstall` command has been added to remove themes and packages.
+- A new `--config`/`-c` option is available to override entries of the configuration file.
+
+⚠️ This version also comes with a few **deprecations**. All deprecated features are still supported in The Lounge v2.7.0 but be removed from The Lounge v3 (the next version). We recommend upgrading to v2.7.0 **before** upgrading to the future v3, as v2.7.0 will warn you about deprecated configurations in the server output. Those deprecations are:
+
+- Support for Node.js v4 is being removed, making Node.js v6 the oldest version we will support.
+- The `LOUNGE_HOME` environment variable is getting replaced with `THELOUNGE_HOME`. Use this in lieu of the deprecated `--home` option as well.
+- In the unlikely situation that you are relying on the `.lounge_home` file (mainly useful for package maintainers), it is being renamed to `.thelounge_home`.
+- The CLI command is being changed from `lounge` to `thelounge`.
+- All options for the `start` command are being removed, replaced with the `--config`/`-c` option mentioned above. For example, `--public` becomes `-c public=true`, `--port 9001` becomes `-c port=9001`, etc.
+- Referring to themes in the `theme` option of the configuration file is now done through their name, not their CSS file name.
+
+
+And finally... **The Lounge has its own logo!** 🎉
+
+<p align="center">
+  <img width="1239" alt="The Lounge logos on dark and white backgrounds" src="https://user-images.githubusercontent.com/113730/35253668-ae9604aa-ffb4-11e7-8328-3933b6474c42.png">
+</p>
+
+A huge thank you to **Francesca Segantini**, the artist who designed it!
+We will start rolling out our new logo in all the relevant places as of The Lounge v3. In the meantime, you can find details about the logo (and stickers!) on [the corresponding issue](https://github.com/thelounge/lounge/issues/282#issuecomment-360368920).
+
+### Added
+
+- Link and color nicks mentioned in messages  ([#1709](https://github.com/thelounge/lounge/pull/1709), [#1758](https://github.com/thelounge/lounge/pull/1758) by [@MaxLeiter](https://github.com/MaxLeiter), [#1779](https://github.com/thelounge/lounge/pull/1779), [#1901](https://github.com/thelounge/lounge/pull/1901) by [@xPaw](https://github.com/xPaw))
+- Detect `image/webp` as an image ([#1753](https://github.com/thelounge/lounge/pull/1753) by [@xPaw](https://github.com/xPaw))
+- Implement strikethrough and monospace formatting ([#1792](https://github.com/thelounge/lounge/pull/1792) by [@grissly-man](https://github.com/grissly-man), [#1814](https://github.com/thelounge/lounge/pull/1814) by [@xPaw](https://github.com/xPaw))
+- Add the user's actual IP in the result of `/whois` ([#1788](https://github.com/thelounge/lounge/pull/1788) by [@PolarizedIons](https://github.com/PolarizedIons))
+- Handle `CHGHOST` cap ([#1578](https://github.com/thelounge/lounge/pull/1578) by [@xPaw](https://github.com/xPaw))
+- Handle JavaScript errors while loading ([#1794](https://github.com/thelounge/lounge/pull/1794) by [@xPaw](https://github.com/xPaw), [#1845](https://github.com/thelounge/lounge/pull/1845) by [@astorije](https://github.com/astorije))
+- Add actions to user context menu ([#1722](https://github.com/thelounge/lounge/pull/1722) by [@creesch](https://github.com/creesch))
+- Add styling for 16-98 colors ([#1831](https://github.com/thelounge/lounge/pull/1831) by [@xPaw](https://github.com/xPaw))
+- Add "Channel list" to network context menu ([#1802](https://github.com/thelounge/lounge/pull/1802) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Support audio file previews ([#1806](https://github.com/thelounge/lounge/pull/1806) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Support video file previews ([#1817](https://github.com/thelounge/lounge/pull/1817) by [@MaxLeiter](https://github.com/MaxLeiter), [#1904](https://github.com/thelounge/lounge/pull/1904) by [@astorije](https://github.com/astorije))
+- Insert user-configurable string when autocompleting nicks ([#1799](https://github.com/thelounge/lounge/pull/1799) by [@xPaw](https://github.com/xPaw))
+- Add banlist action to channel context menus ([#1858](https://github.com/thelounge/lounge/pull/1858) by [@YaManicKill](https://github.com/YaManicKill))
+- Join a channel from the UI ([#1836](https://github.com/thelounge/lounge/pull/1836) by [@MaxLeiter](https://github.com/MaxLeiter), [#1881](https://github.com/thelounge/lounge/pull/1881), [#1882](https://github.com/thelounge/lounge/pull/1882) by [@astorije](https://github.com/astorije), [#1916](https://github.com/thelounge/lounge/pull/1916), [#1917](https://github.com/thelounge/lounge/pull/1917) by [@williamboman](https://github.com/williamboman))
+- Changelog viewer and updater checker in the client ([#1327](https://github.com/thelounge/lounge/pull/1327) by [@xPaw](https://github.com/xPaw), [#1897](https://github.com/thelounge/lounge/pull/1897) by [@astorije](https://github.com/astorije))
+- Add a `thelounge uninstall` command to remove themes and packages ([#1938](https://github.com/thelounge/lounge/pull/1938), [#1974](https://github.com/thelounge/lounge/pull/1974) by [@astorije](https://github.com/astorije))
+- Add a package API for custom CSS ([#1619](https://github.com/thelounge/lounge/pull/1619) by [@YaManicKill](https://github.com/YaManicKill), [#1970](https://github.com/thelounge/lounge/pull/1970) by [@astorije](https://github.com/astorije))
+
+### Changed
+
+- Parse formatting in real name ([#1689](https://github.com/thelounge/lounge/pull/1689) by [@xPaw](https://github.com/xPaw))
+- Use service worker to display notifications if available ([#1580](https://github.com/thelounge/lounge/pull/1580) by [@xPaw](https://github.com/xPaw))
+- Include all available whois info ([#1681](https://github.com/thelounge/lounge/pull/1681) by [@creesch](https://github.com/creesch), [#1743](https://github.com/thelounge/lounge/pull/1743) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Focus a channel by joining it, refactor user commands #1189 ([#1491](https://github.com/thelounge/lounge/pull/1491) by [@realies](https://github.com/realies))
+- Handle hex colors when cleaning string ([#1731](https://github.com/thelounge/lounge/pull/1731) by [@xPaw](https://github.com/xPaw))
+- Trim channel messages in active channel and when switching channels ([#1738](https://github.com/thelounge/lounge/pull/1738) by [@xPaw](https://github.com/xPaw))
+- Do not keep scroll to bottom in inactive channels ([#1739](https://github.com/thelounge/lounge/pull/1739) by [@xPaw](https://github.com/xPaw))
+- Show notices and errors inline ([#1380](https://github.com/thelounge/lounge/pull/1380) by [@xPaw](https://github.com/xPaw))
+- Ensure passwords are reloaded when updated via CLI ([#1593](https://github.com/thelounge/lounge/pull/1593) by [@RJacksonm1](https://github.com/RJacksonm1))
+- Warn if user configuration being loaded is empty ([#1821](https://github.com/thelounge/lounge/pull/1821) by [@astorije](https://github.com/astorije))
+- Align message container to the bottom ([#1787](https://github.com/thelounge/lounge/pull/1787) by [@xPaw](https://github.com/xPaw))
+- Clear storage folder after successful start and graceful exit ([#1853](https://github.com/thelounge/lounge/pull/1853) by [@xPaw](https://github.com/xPaw))
+- Format whois as a definition list ([#1850](https://github.com/thelounge/lounge/pull/1850) by [@xPaw](https://github.com/xPaw))
+- Rename "Client Settings" into "Settings" in tooltip + cleanup ([#1880](https://github.com/thelounge/lounge/pull/1880) by [@astorije](https://github.com/astorije))
+- Open and focus correct channel when clicking on push notifications ([#1895](https://github.com/thelounge/lounge/pull/1895) by [@xPaw](https://github.com/xPaw))
+- Add screen reader label for custom css textarea ([#1908](https://github.com/thelounge/lounge/pull/1908) by [@xPaw](https://github.com/xPaw))
+- Set `aria-label` on main input ([#1906](https://github.com/thelounge/lounge/pull/1906) by [@xPaw](https://github.com/xPaw))
+- Mute disabled inputs ([#1905](https://github.com/thelounge/lounge/pull/1905) by [@xPaw](https://github.com/xPaw))
+- Update production dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `commander` ([#1736](https://github.com/thelounge/lounge/pull/1736), [#1763](https://github.com/thelounge/lounge/pull/1763), [#1963](https://github.com/thelounge/lounge/pull/1963))
+  - `moment` ([#1775](https://github.com/thelounge/lounge/pull/1775), [#1822](https://github.com/thelounge/lounge/pull/1822), [#1848](https://github.com/thelounge/lounge/pull/1848), [#1857](https://github.com/thelounge/lounge/pull/1857))
+  - `web-push` ([#1781](https://github.com/thelounge/lounge/pull/1781))
+  - `irc-framework` ([#1782](https://github.com/thelounge/lounge/pull/1782), [#1937](https://github.com/thelounge/lounge/pull/1937))
+  - `fs-extra` ([#1798](https://github.com/thelounge/lounge/pull/1798), [#1826](https://github.com/thelounge/lounge/pull/1826))
+  - `ldapjs` ([#1965](https://github.com/thelounge/lounge/pull/1965))
+  - `primer-tooltips` ([#1923](https://github.com/thelounge/lounge/pull/1923))
+
+### Deprecated
+
+- Deprecate support of Node.js v4 in preparation of The Lounge v3 ([#1715](https://github.com/thelounge/lounge/pull/1715) by [@astorije](https://github.com/astorije))
+- Deprecate `LOUNGE_HOME` environment variable in favor of `THELOUNGE_HOME`, `.lounge_home` file in favor of `.thelounge_home` ([#1717](https://github.com/thelounge/lounge/pull/1717), [#1785](https://github.com/thelounge/lounge/pull/1785) by [@astorije](https://github.com/astorije))
+- Switch CLI tool from `lounge` to `thelounge`, deprecate `lounge` ([#1708](https://github.com/thelounge/lounge/pull/1708) by [@astorije](https://github.com/astorije))
+- Deprecate existing options of `thelounge start` and add a generic `--config` override ([#1820](https://github.com/thelounge/lounge/pull/1820) by [@astorije](https://github.com/astorije))
+- Rename thumbnail/image option to more general `media` ([#1832](https://github.com/thelounge/lounge/pull/1832) by [@MaxLeiter](https://github.com/MaxLeiter))
+
+### Removed
+
+- Remove lobby close button ([#1833](https://github.com/thelounge/lounge/pull/1833) by [@Cldfire](https://github.com/Cldfire))
+
+### Fixed
+
+- Handle empty client queries ([#1676](https://github.com/thelounge/lounge/pull/1676) by [@realies](https://github.com/realies))
+- Call callback on fetch error ([#1742](https://github.com/thelounge/lounge/pull/1742) by [@xPaw](https://github.com/xPaw))
+- Trigger keep to bottom for previews correctly ([#1746](https://github.com/thelounge/lounge/pull/1746) by [@xPaw](https://github.com/xPaw))
+- Fix duplicate text generated when sending channel and link together ([#1747](https://github.com/thelounge/lounge/pull/1747) by [@astorije](https://github.com/astorije))
+- Fix text highlighting when clicking on condensed message toggles ([#1748](https://github.com/thelounge/lounge/pull/1748) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Do not keep sign-in and loader references in memory ([#1757](https://github.com/thelounge/lounge/pull/1757) by [@xPaw](https://github.com/xPaw))
+- Fix nick changes wrongly reported ([#1772](https://github.com/thelounge/lounge/pull/1772) by [@astorije](https://github.com/astorije))
+- Clone instances of `User` in `Msg` to avoid unintentional mutations ([#1771](https://github.com/thelounge/lounge/pull/1771) by [@astorije](https://github.com/astorije), [#1859](https://github.com/thelounge/lounge/pull/1859), [#1865](https://github.com/thelounge/lounge/pull/1865) by [@xPaw](https://github.com/xPaw))
+- Ask for notification permission on page load if setting is enabled ([#1789](https://github.com/thelounge/lounge/pull/1789) by [@xPaw](https://github.com/xPaw))
+- Merge condensed messages when loading more history ([#1803](https://github.com/thelounge/lounge/pull/1803) by [@xPaw](https://github.com/xPaw))
+- Proper network icon in context menu ([#1816](https://github.com/thelounge/lounge/pull/1816) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Implement reverse style ([#1797](https://github.com/thelounge/lounge/pull/1797) by [@grissly-man](https://github.com/grissly-man))
+- Do not load user commands or display them on `--help` if public mode or using LDAP ([#1807](https://github.com/thelounge/lounge/pull/1807) by [@astorije](https://github.com/astorije))
+- Improve user and channel icons in channel list and context menu ([#1824](https://github.com/thelounge/lounge/pull/1824) by [@astorije](https://github.com/astorije))
+- Use better icons for channel/query list and context menu actions ([#1829](https://github.com/thelounge/lounge/pull/1829) by [@astorije](https://github.com/astorije))
+- Fix UI issues with special channels ([#1849](https://github.com/thelounge/lounge/pull/1849) by [@astorije](https://github.com/astorije))
+- Fix gap between `#sidebar` and `#footer` ([#1691](https://github.com/thelounge/lounge/pull/1691) by [@realies](https://github.com/realies))
+- Add missing time (and icon) of status messages on mobile ([#1843](https://github.com/thelounge/lounge/pull/1843) by [@astorije](https://github.com/astorije))
+- Add visual feedback on focused buttons, for example when tabbing to it ([#1871](https://github.com/thelounge/lounge/pull/1871) by [@astorije](https://github.com/astorije))
+- Fix missing messages when reconnecting ([#1884](https://github.com/thelounge/lounge/pull/1884) by [@xPaw](https://github.com/xPaw))
+- Fix slideout not closing on mobile when hitting a footer icon ([#1892](https://github.com/thelounge/lounge/pull/1892) by [@astorije](https://github.com/astorije))
+- Display the correct window on page reload ([#1889](https://github.com/thelounge/lounge/pull/1889) by [@astorije](https://github.com/astorije))
+- Fix error not showing up in failed push subscription ([#1896](https://github.com/thelounge/lounge/pull/1896) by [@xPaw](https://github.com/xPaw))
+- Only emit "more" history to the client that requested it ([#1949](https://github.com/thelounge/lounge/pull/1949) by [@xPaw](https://github.com/xPaw))
+- Provide correct timestamp to browser notifications ([#1956](https://github.com/thelounge/lounge/pull/1956) by [@xPaw](https://github.com/xPaw))
+- Fix enabling push notifications on Firefox ([#1975](https://github.com/thelounge/lounge/pull/1975) by [@xPaw](https://github.com/xPaw))
+- Add missing execution of callback in `ClientManager.updateUser` ([#1978](https://github.com/thelounge/lounge/pull/1978) by [@merlinthp](https://github.com/merlinthp))
+- Make sure existing packages (and themes) are not deleted when installing a new one on Node.js v8 ([#1986](https://github.com/thelounge/lounge/pull/1986) by [@astorije](https://github.com/astorije))
+- Stop expanding condensed messages on `/expand` ([#2006](https://github.com/thelounge/lounge/pull/2006) by [@YaManicKill](https://github.com/YaManicKill))
+
+### Security
+
+- Harden content security policy even further ([#1810](https://github.com/thelounge/lounge/pull/1810) by [@xPaw](https://github.com/xPaw))
+- Stop LDAP authentication from succeeding without password ([#1725](https://github.com/thelounge/lounge/pull/1725) by [@keegan](https://github.com/keegan))
+- Store images with correct file extension ([#1926](https://github.com/thelounge/lounge/pull/1926) by [@xPaw](https://github.com/xPaw))
+- Hash user tokens, increase token entropy ([#1940](https://github.com/thelounge/lounge/pull/1940) by [@xPaw](https://github.com/xPaw))
+
+### Documentation
+
+In the main repository:
+
+- Fix incorrect documentation URL in default config ([#1875](https://github.com/thelounge/lounge/pull/1875) by [@MiniDigger](https://github.com/MiniDigger))
+- Allow keywords as changelog script version argument, e.g. `node scripts/changelog pre` ([#1913](https://github.com/thelounge/lounge/pull/1913) by [@astorije](https://github.com/astorije))
+- Separate and improve wording for `pre` and `rc` pre-release versions ([#1914](https://github.com/thelounge/lounge/pull/1914) by [@astorije](https://github.com/astorije))
+- Add SECURITY guidelines about security vulnerability disclosures, and link them from the CONTRIBUTING guidelines ([#1984](https://github.com/thelounge/lounge/pull/1984) by [@astorije](https://github.com/astorije))
+
+### Internals
+
+- Enforce dangling commas with ESLint ([#1711](https://github.com/thelounge/lounge/pull/1711) by [@astorije](https://github.com/astorije))
+- Refactor how user object is sent to the client ([#1698](https://github.com/thelounge/lounge/pull/1698), [#1716](https://github.com/thelounge/lounge/pull/1716), [#1720](https://github.com/thelounge/lounge/pull/1720), [#1764](https://github.com/thelounge/lounge/pull/1764), [#1941](https://github.com/thelounge/lounge/pull/1941) by [@xPaw](https://github.com/xPaw), [#1773](https://github.com/thelounge/lounge/pull/1773) by [@astorije](https://github.com/astorije))
+- Convert users list to map ([#1712](https://github.com/thelounge/lounge/pull/1712) by [@xPaw](https://github.com/xPaw))
+- Split `index.html` into components ([#1683](https://github.com/thelounge/lounge/pull/1683) by [@xPaw](https://github.com/xPaw))
+- Parallelize `npm test` ([#1750](https://github.com/thelounge/lounge/pull/1750) by [@astorije](https://github.com/astorije))
+- Avoid using `npm-run-all` for build ([#1752](https://github.com/thelounge/lounge/pull/1752) by [@xPaw](https://github.com/xPaw))
+- Avoid escaping quotes whenever possible ([#1749](https://github.com/thelounge/lounge/pull/1749), [#1759](https://github.com/thelounge/lounge/pull/1759) by [@astorije](https://github.com/astorije))
+- Mark slow tests as such to reduce noise on test report ([#1761](https://github.com/thelounge/lounge/pull/1761) by [@astorije](https://github.com/astorije))
+- Increase timeout of server tests ([#1769](https://github.com/thelounge/lounge/pull/1769) by [@astorije](https://github.com/astorije))
+- Add a bunch of client tests ([#1770](https://github.com/thelounge/lounge/pull/1770) by [@astorije](https://github.com/astorije))
+- Heavily improve performance of "init" event ([#1778](https://github.com/thelounge/lounge/pull/1778) by [@xPaw](https://github.com/xPaw))
+- Enable `no-use-before-define` rule ([#1804](https://github.com/thelounge/lounge/pull/1804) by [@xPaw](https://github.com/xPaw))
+- Update textcomplete library and rewrite tabcomplete ([#1800](https://github.com/thelounge/lounge/pull/1800) by [@xPaw](https://github.com/xPaw))
+- Clean up path helpers, expand defaults location in `thelounge --help`, add tests for `expandHome` ([#1811](https://github.com/thelounge/lounge/pull/1811) by [@astorije](https://github.com/astorije))
+- Remove dead code in tests, and fix a link test ([#1818](https://github.com/thelounge/lounge/pull/1818) by [@astorije](https://github.com/astorije))
+- Use cross-platform modifier shortcut for Mousetrap when possible ([#1844](https://github.com/thelounge/lounge/pull/1844) by [@astorije](https://github.com/astorije))
+- Update to primer on npm ([#1855](https://github.com/thelounge/lounge/pull/1855) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Add a `notEqual` block helper for Handlebars and tests for `equal` ([#1874](https://github.com/thelounge/lounge/pull/1874) by [@astorije](https://github.com/astorije))
+- Use `notEqual` helper for close button ([#1876](https://github.com/thelounge/lounge/pull/1876) by [@xPaw](https://github.com/xPaw))
+- Improve a bit window loading on init ([#1899](https://github.com/thelounge/lounge/pull/1899) by [@astorije](https://github.com/astorije))
+- Fix stylelint ([#1921](https://github.com/thelounge/lounge/pull/1921) by [@astorije](https://github.com/astorije))
+- Set `sign-git-tag` to true in `.npmrc` ([#1964](https://github.com/thelounge/lounge/pull/1964) by [@xPaw](https://github.com/xPaw))
+- Update development dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `copy-webpack-plugin` ([#1713](https://github.com/thelounge/lounge/pull/1713), [#1737](https://github.com/thelounge/lounge/pull/1737), [#1837](https://github.com/thelounge/lounge/pull/1837), [#1877](https://github.com/thelounge/lounge/pull/1877))
+  - `eslint` ([#1744](https://github.com/thelounge/lounge/pull/1744), [#1777](https://github.com/thelounge/lounge/pull/1777), [#1815](https://github.com/thelounge/lounge/pull/1815), [#1828](https://github.com/thelounge/lounge/pull/1828), [#1887](https://github.com/thelounge/lounge/pull/1887), [#1947](https://github.com/thelounge/lounge/pull/1947))
+  - `stylelint` ([#1745](https://github.com/thelounge/lounge/pull/1745), [#1751](https://github.com/thelounge/lounge/pull/1751), [#1841](https://github.com/thelounge/lounge/pull/1841))
+  - `webpack` ([#1780](https://github.com/thelounge/lounge/pull/1780), [#1796](https://github.com/thelounge/lounge/pull/1796))
+  - `intersection-observer` ([#1790](https://github.com/thelounge/lounge/pull/1790))
+  - `textcomplete` ([#1835](https://github.com/thelounge/lounge/pull/1835), [#1854](https://github.com/thelounge/lounge/pull/1854))
+  - `nyc` ([#1863](https://github.com/thelounge/lounge/pull/1863))
+  - `graphql-request` ([#1903](https://github.com/thelounge/lounge/pull/1903))
+  - `mocha` ([#1922](https://github.com/thelounge/lounge/pull/1922))
+
 ## v2.7.0-rc.3 - 2018-01-27 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/lounge/compare/v2.7.0-rc.2...v2.7.0-rc.3)

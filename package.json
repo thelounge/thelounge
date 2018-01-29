@@ -2,9 +2,6 @@
   "name": "thelounge",
   "description": "The self-hosted Web IRC client",
   "version": "2.7.0-rc.3",
-  "publishConfig": {
-    "tag": "next"
-  },
   "preferGlobal": true,
   "bin": {
     "lounge": "index.js",
@@ -33,7 +30,8 @@
     "chat",
     "client",
     "irc",
-    "server"
+    "server",
+    "thelounge"
   ],
   "license": "MIT",
   "engines": {
