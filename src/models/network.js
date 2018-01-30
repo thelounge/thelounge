@@ -115,13 +115,16 @@ Network.prototype.export = function() {
 
 	network.channels = this.channels
 		.filter(function(channel) {
-			return channel.type === Chan.Type.CHANNEL;
+			return channel.type === Chan.Type.CHANNEL || channel.type === Chan.Type.QUERY;
 		})
 		.map(function(chan) {
-			return _.pick(chan, [
-				"name",
-				"key",
-			]);
+			const keys = ["name"];
+			if (chan.type === Chan.Type.CHANNEL) {
+				keys.push("key");
+			} else if (chan.type === Chan.Type.QUERY) {
+				keys.push("type");
+			}
+			return _.pick(chan, keys);
 		});
 
 	return network;

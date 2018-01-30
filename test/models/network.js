@@ -41,6 +41,7 @@ describe("Network", function() {
 					{name: "&foobar", key: ""},
 					{name: "#secret", key: "foo"},
 					{name: "&secure", key: "bar"},
+					{name: "PrivateChat", type: "query"},
 				],
 			});
 		});

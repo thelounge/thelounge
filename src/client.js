@@ -179,6 +179,7 @@ Client.prototype.connect = function(args) {
 			channels.push(new Chan({
 				name: chan.name,
 				key: chan.key || "",
+				type: chan.type,
 			}));
 		});
 

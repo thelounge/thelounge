@@ -50,4 +50,5 @@ exports.input = function(network, chan, cmd, args) {
 		chan: newChan.getFilteredClone(true),
 		shouldOpen: true,
 	});
+	this.save();
 };

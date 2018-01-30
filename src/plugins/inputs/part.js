@@ -32,10 +32,9 @@ exports.input = function(network, chan, cmd, args) {
 	this.emit("part", {
 		chan: target.id,
 	});
+	this.save();
 
 	if (target.type === Chan.Type.CHANNEL) {
-		this.save();
-
 		if (network.irc) {
 			network.irc.part(target.name, partMessage);
 		}
