@@ -6,7 +6,11 @@
 		</span>
 	{{/equal}}
 	<span class="badge{{#if highlight}} highlight{{/if}}">{{#if unread}}{{roundBadgeNumber unread}}{{/if}}</span>
-	{{#notEqual type "lobby"}}<button class="close" aria-label="Close"></button>{{/notEqual}}
+	{{#notEqual type "lobby"}}
+		<span class="close-tooltip tooltipped tooltipped-w" aria-label="Close">
+			<button class="close" aria-label="Close"></button>
+		</span>
+	{{/notEqual}}
 	<span class="name" title="{{name}}">{{name}}</span>
 </div>
 {{#equal type "lobby"}}
