@@ -1,7 +1,11 @@
 "use strict";
 
 const Helper = require("../../helper");
-const ldap = require("ldapjs");
+
+// Forked ldapjs for 2 reasons:
+// 1. Removed bunyan https://github.com/joyent/node-ldapjs/pull/399
+// 2. Remove dtrace-provider dependency
+const ldap = require("thelounge-ldapjs-non-maintained-fork");
 
 function ldapAuthCommon(user, bindDN, password, callback) {
 	const config = Helper.config;
