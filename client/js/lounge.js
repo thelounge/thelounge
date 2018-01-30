@@ -44,7 +44,7 @@ $(function() {
 
 	viewport.on("click", ".rt", function(e) {
 		var self = $(this);
-		viewport.toggleClass(self.attr("class"));
+		viewport.toggleClass(self.prop("class"));
 		e.stopPropagation();
 		chat.find(".chan.active .chat").trigger("msg.sticky");
 	});
@@ -216,7 +216,7 @@ $(function() {
 	if (!("ontouchstart" in window || navigator.maxTouchPoints > 0)) {
 		focus = function() {
 			if (chat.find(".active").hasClass("chan")) {
-				input.focus();
+				input.trigger("focus");
 			}
 		};
 
@@ -297,14 +297,14 @@ $(function() {
 		utils.setNick(sidebar.find(".chan.active").closest(".network").data("nick"));
 	}
 
-	$("#nick-value").keypress(function(e) {
+	$("#nick-value").on("keypress", function(e) {
 		switch (e.keyCode ? e.keyCode : e.which) {
 		case 13: // Enter
 			// Ensures a new line is not added when pressing Enter
 			e.preventDefault();
 			break;
 		}
-	}).keyup(function(e) {
+	}).on("keyup", function(e) {
 		switch (e.keyCode ? e.keyCode : e.which) {
 		case 13: // Enter
 			submitNick();
@@ -320,7 +320,7 @@ $(function() {
 		var chan = utils.findCurrentNetworkChan(name);
 
 		if (chan.length) {
-			chan.click();
+			chan.trigger("click");
 		} else {
 			socket.emit("input", {
 				target: chat.data("id"),
@@ -402,7 +402,7 @@ $(function() {
 		if (type === "channel" || type === "query") {
 			placeholder = `Write to ${chan.data("title")}`;
 		}
-		input.attr("placeholder", placeholder).attr("aria-label", placeholder);
+		input.prop("placeholder", placeholder).prop("aria-label", placeholder);
 
 		if (self.hasClass("chan")) {
 			$("#chat-container").addClass("active");
@@ -440,8 +440,8 @@ $(function() {
 		}
 		const state = {};
 
-		if (self.attr("id")) {
-			state.clickTarget = `#${self.attr("id")}`;
+		if (self.prop("id")) {
+			state.clickTarget = `#${self.prop("id")}`;
 		} else if (self.hasClass("chan")) {
 			state.clickTarget = `#sidebar .chan[data-id="${self.data("id")}"]`;
 		} else {
@@ -506,7 +506,7 @@ $(function() {
 			closeChan($(`.networks .chan[data-target="${itemData}"]`));
 		},
 		focusChan: function(itemData) {
-			$(`.networks .chan[data-target="${itemData}"]`).click();
+			$(`.networks .chan[data-target="${itemData}"]`).trigger("click");
 		},
 		list: function(itemData) {
 			socket.emit("input", {
@@ -524,7 +524,7 @@ $(function() {
 			const chan = utils.findCurrentNetworkChan(itemData);
 
 			if (chan.length) {
-				chan.click();
+				chan.trigger("click");
 			}
 
 			socket.emit("input", {
@@ -532,13 +532,13 @@ $(function() {
 				text: "/whois " + itemData,
 			});
 
-			$(`.channel.active .users .user[data-name="${itemData}"]`).click();
+			$(`.channel.active .users .user[data-name="${itemData}"]`).trigger("click");
 		},
 		query: function(itemData) {
 			const chan = utils.findCurrentNetworkChan(itemData);
 
 			if (chan.length) {
-				chan.click();
+				chan.trigger("click");
 			}
 
 			socket.emit("input", {

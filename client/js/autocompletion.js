@@ -14,8 +14,8 @@ let textcomplete;
 module.exports = {
 	enable: enableAutocomplete,
 	disable: () => {
-		input.unbind("input.tabcomplete");
-		Mousetrap(input.get(0)).unbind("tab", "keydown");
+		input.off("input.tabcomplete");
+		Mousetrap(input.get(0)).off("tab", "keydown");
 
 		if (textcomplete) {
 			textcomplete.destroy();

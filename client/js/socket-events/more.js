@@ -99,7 +99,7 @@ chat.on("click", ".show-more-button", function() {
 	let lastMessageId = -1;
 
 	if (lastMessage.length > 0) {
-		lastMessageId = parseInt(lastMessage.attr("id").replace("msg-", ""), 10);
+		lastMessageId = parseInt(lastMessage.prop("id").replace("msg-", ""), 10);
 	}
 
 	self

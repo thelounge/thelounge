@@ -24,7 +24,7 @@ socket.on("changelog", function(data) {
 
 	const links = $("#changelog .changelog-text a");
 	// Make sure all links will open a new tab instead of exiting the application
-	links.attr("target", "_blank");
+	links.prop("target", "_blank");
 	// Add required metadata to image links, to support built-in image viewer
 	links.has("img").addClass("toggle-thumbnail");
 
@@ -64,6 +64,6 @@ $("#help").on("click", "#check-now", () => {
 // Given a status and latest release information, update the version checker
 // (CSS class and content)
 function renderVersionChecker({status, latest}) {
-	$("#version-checker").attr("class", status)
+	$("#version-checker").prop("class", status)
 		.html(templates.version_checker({latest, status}));
 }

@@ -26,7 +26,7 @@ socket.on("auth", function(data) {
 		login.find("form").on("submit", function() {
 			const form = $(this);
 
-			form.find(".btn").attr("disabled", true);
+			form.find(".btn").prop("disabled", true);
 
 			const values = {};
 			$.each(form.serializeArray(), function(i, obj) {

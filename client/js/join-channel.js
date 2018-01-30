@@ -20,8 +20,8 @@ function toggleButton(network) {
 	// Toggle content of tooltip
 	const tooltip = network.find(".add-channel-tooltip");
 	const altLabel = tooltip.data("alt-label");
-	tooltip.data("alt-label", tooltip.attr("aria-label"));
-	tooltip.attr("aria-label", altLabel);
+	tooltip.data("alt-label", tooltip.prop("aria-label"));
+	tooltip.prop("aria-label", altLabel);
 }
 
 function closeForm(network) {
@@ -44,7 +44,7 @@ function openForm(network) {
 	}
 
 	// Focus the "Channel" field even if the form was already open
-	form.find(".input[name='channel']").focus();
+	form.find(".input[name='channel']").trigger("focus");
 }
 
 sidebar.on("click", ".add-channel", function(e) {
@@ -69,7 +69,7 @@ sidebar.on("submit", ".join-form", function() {
 	const keyString = key.val();
 	const chan = utils.findCurrentNetworkChan(channelString);
 	if (chan.length) {
-		chan.click();
+		chan.trigger("click");
 	} else {
 		socket.emit("input", {
 			text: `/join ${channelString} ${keyString}`,

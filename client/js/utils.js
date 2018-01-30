@@ -51,7 +51,7 @@ function isOpInChannel(channel) {
 // Triggering click event opens the virtual keyboard on mobile
 // This can only be called from another interactive event (e.g. button click)
 function forceFocus() {
-	input.trigger("click").focus();
+	input.trigger("click").trigger("focus");
 }
 
 function collapse() {
@@ -69,14 +69,14 @@ function join(args) {
 	if (channel) {
 		const chan = findCurrentNetworkChan(channel);
 		if (chan.length) {
-			chan.click();
+			chan.trigger("click");
 		}
 	}
 }
 
 function toggleNickEditor(toggle) {
 	$("#nick").toggleClass("editable", toggle);
-	$("#nick-value").attr("contenteditable", toggle);
+	$("#nick-value").prop("contenteditable", toggle);
 }
 
 function setNick(nick) {
@@ -92,8 +92,8 @@ const favicon = $("#favicon");
 function toggleNotificationMarkers(newState) {
 	// Toggles the favicon to red when there are unread notifications
 	if (favicon.data("toggled") !== newState) {
-		var old = favicon.attr("href");
-		favicon.attr("href", favicon.data("other"));
+		var old = favicon.prop("href");
+		favicon.prop("href", favicon.data("other"));
 		favicon.data("other", old);
 		favicon.data("toggled", newState);
 	}
