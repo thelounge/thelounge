@@ -9,7 +9,7 @@
 {{/if}}
 
 <a class="image-link" href="{{link}}" target="_blank">
-  <img src="{{image}}" alt="Preview of {{link}}">
+  <img src="{{image}}" decoding="async" alt="">
 </a>
 
 <a class="btn open-btn" href="{{link}}" target="_blank">
