@@ -282,7 +282,9 @@ function completeCommands(word) {
 function completeChans(word) {
 	const words = [];
 
-	sidebar.find(".chan")
+	sidebar.find(".chan.active")
+		.parent()
+		.find(".chan")
 		.each(function() {
 			const self = $(this);
 			if (!self.hasClass("lobby")) {
