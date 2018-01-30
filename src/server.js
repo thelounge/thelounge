@@ -228,7 +228,7 @@ function index(req, res, next) {
 		"default-src 'none'", // default to nothing
 		"form-action 'none'", // no default-src fallback
 		"connect-src 'self' ws: wss:", // allow self for polling; websockets
-		"style-src 'self' 'unsafe-inline'", // allow inline due to use in irc hex colors
+		"style-src 'self' https: 'unsafe-inline'", // allow inline due to use in irc hex colors
 		"script-src 'self'", // javascript
 		"worker-src 'self'", // service worker
 		"child-src 'self'", // deprecated fall back for workers, Firefox <58, see #1902
