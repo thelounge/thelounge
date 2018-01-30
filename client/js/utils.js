@@ -70,7 +70,6 @@ function join(args) {
 		const chan = findCurrentNetworkChan(channel);
 		if (chan.length) {
 			chan.click();
-			return true;
 		}
 	}
 }
