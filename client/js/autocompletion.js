@@ -16,7 +16,11 @@ module.exports = {
 	disable: () => {
 		input.unbind("input.tabcomplete");
 		Mousetrap(input.get(0)).unbind("tab", "keydown");
-		textcomplete.destroy();
+
+		if (textcomplete) {
+			textcomplete.destroy();
+			textcomplete = null;
+		}
 	},
 };
 
