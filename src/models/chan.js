@@ -174,6 +174,10 @@ Chan.prototype.getFilteredClone = function(lastActiveChannel, lastMessage) {
 };
 
 function writeUserLog(client, msg) {
+	if (!msg.isLoggable()) {
+		return false;
+	}
+
 	const target = client.find(this.id);
 
 	if (!target) {
