@@ -15,6 +15,19 @@ function renderPreview(preview, msg) {
 		return;
 	}
 
+	const template = $(templates.msg_preview({preview: preview}));
+	const image = template.find("img:first");
+
+	if (image.length === 0) {
+		return appendPreview(preview, msg, template);
+	}
+
+	// If there is an image in preview, wait for it to load before appending it to DOM
+	// This is done to prevent problems keeping scroll to the bottom while images load
+	image.on("load", () => appendPreview(preview, msg, template));
+}
+
+function appendPreview(preview, msg, template) {
 	const escapedLink = preview.link.replace(/["\\]/g, "\\$&");
 	const previewContainer = msg.find(`.preview[data-url="${escapedLink}"]`);
 
@@ -33,23 +46,13 @@ function renderPreview(preview, msg) {
 	const channelId = container.closest(".chan").data("id") || -1;
 	const activeChannelId = chat.find(".chan.active").data("id") || -2;
 
-	let bottom = false;
-	if (activeChannelId === channelId) {
-		bottom = container.isScrollBottom();
-	}
-
 	msg.find(`.text a[href="${escapedLink}"]`)
 		.first()
 		.after(templates.msg_preview_toggle({preview: preview}).trim());
 
-	previewContainer
-		.append(templates.msg_preview({preview: preview}));
+	previewContainer.append(template);
 
 	if (activeChannelId === channelId) {
-		if (preview.shown && bottom) {
-			handleImageInPreview(msg.find(".toggle-content"), container);
-		}
-
 		container.trigger("keepToBottom");
 	}
 }
@@ -60,10 +63,6 @@ $("#chat").on("click", ".text .toggle-button", function() {
 	const content = self.closest(".content")
 		.find(`.preview[data-url="${self.data("url")}"] .toggle-content`);
 	const bottom = container.isScrollBottom();
-
-	if (bottom && !content.hasClass("show")) {
-		handleImageInPreview(content, container);
-	}
 
 	self.toggleClass("opened");
 	content.toggleClass("show");
@@ -83,17 +82,6 @@ $("#chat").on("click", ".text .toggle-button", function() {
 		container.scrollBottom();
 	}
 });
-
-function handleImageInPreview(content, container) {
-	const img = content.find("img");
-
-	// Trigger scroll logic after the image loads
-	if (img.length && !img.width()) {
-		img.on("load", function() {
-			container.trigger("keepToBottom");
-		});
-	}
-}
 
 /* Image viewer */
 
