@@ -251,7 +251,7 @@ function index(req, res, next) {
 	res.setHeader("Content-Security-Policy", policies.join("; "));
 	res.setHeader("Referrer-Policy", "no-referrer");
 
-	return fs.readFile(path.join(__dirname, "..", "public", "index.html"), "utf-8", (err, file) => {
+	return fs.readFile(path.join(__dirname, "..", "client", "index.html.tpl"), "utf-8", (err, file) => {
 		if (err) {
 			throw err;
 		}

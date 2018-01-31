@@ -12,8 +12,9 @@ describe("public folder", function() {
 		expect(fs.existsSync(path.join(publicFolder, "fonts", "fontawesome-webfont.woff2"))).to.be.true;
 	});
 
-	it("index.html is copied", function() {
-		expect(fs.existsSync(path.join(publicFolder, "index.html"))).to.be.true;
+	it("index HTML file is not copied", function() {
+		expect(fs.existsSync(path.join(publicFolder, "index.html"))).to.be.false;
+		expect(fs.existsSync(path.join(publicFolder, "index.html.tpl"))).to.be.false;
 	});
 
 	it("javascript files are built", function() {
