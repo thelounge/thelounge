@@ -34,7 +34,7 @@ function processReceivedMessage(data) {
 
 	// Display received notices and errors in currently active channel.
 	// Reloading the page will put them back into the lobby window.
-	if (data.msg.showInActive) {
+	if (data.msg.showInActive && document.hasFocus()) {
 		const activeOnNetwork = sidebarTarget.parent().find(".active");
 
 		// We only want to put errors/notices in active channel if they arrive on the same network
