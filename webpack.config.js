@@ -104,6 +104,7 @@ const config = {
 			minChunks: (module) => module.context && module.context.indexOf("node_modules") !== -1,
 		}),
 	],
+	stats: "minimal",
 };
 
 // *********************************
