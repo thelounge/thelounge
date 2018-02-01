@@ -508,6 +508,14 @@ function getClientConfiguration() {
 
 	if (config.displayNetwork) {
 		config.defaults = Helper.config.defaults;
+	} else {
+		// Only send defaults that are visible on the client
+		config.defaults = _.pick(Helper.config.defaults, [
+			"nick",
+			"username",
+			"realname",
+			"join",
+		]);
 	}
 
 	return config;
