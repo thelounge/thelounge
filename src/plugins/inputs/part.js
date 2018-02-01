@@ -27,17 +27,17 @@ exports.input = function(network, chan, cmd, args) {
 		return;
 	}
 
-	network.channels = _.without(network.channels, target);
-	target.destroy();
-	this.emit("part", {
-		chan: target.id,
-	});
-	this.save();
-
-	if (target.type === Chan.Type.CHANNEL) {
-		if (network.irc) {
-			network.irc.part(target.name, partMessage);
-		}
+	// If target is not a channel or we are not connected, instantly remove the channel
+	// Otherwise send part to the server and wait for response
+	if (target.type !== Chan.Type.CHANNEL || !network.irc || !network.irc.connection || !network.irc.connection.connected) {
+		network.channels = _.without(network.channels, target);
+		target.destroy();
+		this.emit("part", {
+			chan: target.id,
+		});
+		this.save();
+	} else {
+		network.irc.part(target.name, partMessage);
 	}
 
 	return true;
