@@ -15,6 +15,8 @@ function renderPreview(preview, msg) {
 		return;
 	}
 
+	preview.shown = preview.shown && options.shouldOpenMessagePreview(preview.type);
+
 	const template = $(templates.msg_preview({preview: preview}));
 	const image = template.find("img:first");
 
@@ -39,8 +41,6 @@ function appendPreview(preview, msg, template) {
 	if (!previewContainer.is(":empty")) {
 		return;
 	}
-
-	preview.shown = preview.shown && options.shouldOpenMessagePreview(preview.type);
 
 	const container = msg.closest(".messages");
 	const channelId = container.closest(".chan").data("id") || -1;
