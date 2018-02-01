@@ -2,7 +2,7 @@ import jQuery from "jquery";
 
 (function($) {
 	$.fn.unsticky = function() {
-		return this.trigger("unstick.sticky").unbind(".sticky");
+		return this.trigger("unstick.sticky").off(".sticky");
 	};
 
 	$.fn.sticky = function() {

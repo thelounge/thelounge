@@ -14,7 +14,7 @@ Mousetrap.bind([
 	let container = windows.find(".window.active");
 
 	// Chat windows scroll message container
-	if (container.attr("id") === "chat-container") {
+	if (container.prop("id") === "chat-container") {
 		container = container.find(".chan.active .chat");
 	}
 

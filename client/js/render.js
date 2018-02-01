@@ -163,7 +163,7 @@ function renderChannelUsers(data) {
 
 	const search = users
 		.find(".search")
-		.attr("placeholder", nicks.length + " " + (nicks.length === 1 ? "user" : "users"));
+		.prop("placeholder", nicks.length + " " + (nicks.length === 1 ? "user" : "users"));
 
 	users
 		.data("nicks", nicks)
@@ -204,7 +204,7 @@ function renderNetworks(data, singleNetwork) {
 						.data("needsNamesRefresh", true)
 						.find(".header .topic")
 						.html(helpers_parse(channel.topic))
-						.attr("title", channel.topic);
+						.prop("title", channel.topic);
 				}
 
 				if (channel.messages.length > 0) {
@@ -277,10 +277,10 @@ function loadMoreHistory(entries) {
 
 		var target = $(entry.target).find(".show-more-button");
 
-		if (target.attr("disabled")) {
+		if (target.prop("disabled")) {
 			return;
 		}
 
-		target.click();
+		target.trigger("click");
 	});
 }

@@ -72,7 +72,7 @@ $("#chat").on("click", ".text .toggle-button", function() {
 	// See https://github.com/thelounge/lounge/issues/1377
 	socket.emit("msg:preview:toggle", {
 		target: parseInt(self.closest(".chan").data("id"), 10),
-		msgId: parseInt(self.closest(".msg").attr("id").replace("msg-", ""), 10),
+		msgId: parseInt(self.closest(".msg").prop("id").replace("msg-", ""), 10),
 		link: self.data("url"),
 		shown: content.hasClass("show"),
 	});
@@ -111,7 +111,7 @@ Mousetrap.bind("esc", () => closeImageViewer());
 Mousetrap.bind(["left", "right"], (e, key) => {
 	if (imageViewer.hasClass("opened")) {
 		const direction = key === "left" ? "previous" : "next";
-		imageViewer.find(`.${direction}-image-btn`).click();
+		imageViewer.find(`.${direction}-image-btn`).trigger("click");
 	}
 });
 
@@ -144,8 +144,8 @@ function openImageViewer(link, {pushState = true} = {}) {
 	nextImage.addClass("next-image");
 
 	imageViewer.html(templates.image_viewer({
-		image: link.find("img").attr("src"),
-		link: link.attr("href"),
+		image: link.find("img").prop("src"),
+		link: link.prop("href"),
 		type: link.parent().hasClass("toggle-type-link") ? "link" : "image",
 		hasPreviousImage: previousImage.length > 0,
 		hasNextImage: nextImage.length > 0,
@@ -164,20 +164,20 @@ function openImageViewer(link, {pushState = true} = {}) {
 		// preview, e.g. changelog). This is sub-optimal and needs improvement to
 		// make image preview more generic and not specific for channel previews.
 		if (link.closest(".msg").length > 0) {
-			clickTarget = `#${link.closest(".msg").attr("id")} `;
+			clickTarget = `#${link.closest(".msg").prop("id")} `;
 		}
-		clickTarget += `a.toggle-thumbnail[href="${link.attr("href")}"] img`;
+		clickTarget += `a.toggle-thumbnail[href="${link.prop("href")}"] img`;
 		history.pushState({clickTarget}, null, null);
 	}
 }
 
 imageViewer.on("click", ".previous-image-btn", function() {
-	$(".previous-image").click();
+	$(".previous-image").trigger("click");
 	return false;
 });
 
 imageViewer.on("click", ".next-image-btn", function() {
-	$(".next-image").click();
+	$(".next-image").trigger("click");
 	return false;
 });
 
@@ -188,7 +188,7 @@ function closeImageViewer({pushState = true} = {}) {
 			imageViewer.empty();
 		});
 
-	input.focus();
+	input.trigger("focus");
 
 	// History management
 	if (pushState) {

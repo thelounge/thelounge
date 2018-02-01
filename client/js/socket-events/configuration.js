@@ -31,7 +31,7 @@ socket.on("configuration", function(data) {
 		const form = $(this);
 		const event = form.data("event");
 
-		form.find(".btn").attr("disabled", true);
+		form.find(".btn").prop("disabled", true);
 
 		const values = {};
 		$.each(form.serializeArray(), function(i, obj) {

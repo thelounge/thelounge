@@ -32,5 +32,5 @@ socket.on("join", function(data) {
 			return $(a).data("id") - $(b).data("id");
 		})
 		.last()
-		.click();
+		.trigger("click");
 });

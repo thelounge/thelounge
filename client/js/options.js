@@ -22,7 +22,7 @@ const options = {
 	notifyAllMessages: false,
 	showSeconds: false,
 	statusMessages: "condensed",
-	theme: $("#theme").attr("href").replace(/^themes\/(.*).css$/, "$1"), // Extracts default theme name, set on the server configuration
+	theme: $("#theme").prop("href").replace(/^themes\/(.*).css$/, "$1"), // Extracts default theme name, set on the server configuration
 	media: true,
 	userStyles: userStyles.text(),
 };
@@ -66,7 +66,7 @@ module.exports.initialize = () => {
 			settings.find(`input[name=${i}][value=${options[i]}]`)
 				.prop("checked", true);
 		} else if (i === "theme") {
-			$("#theme").attr("href", "themes/" + options[i] + ".css");
+			$("#theme").prop("href", "themes/" + options[i] + ".css");
 			settings.find("select[name=" + i + "]").val(options[i]);
 		} else if (options[i]) {
 			settings.find("input[name=" + i + "]").prop("checked", true);
@@ -83,14 +83,14 @@ module.exports.initialize = () => {
 	// checkbox state can not be changed).
 	const updateDesktopNotificationStatus = function() {
 		if (Notification.permission === "denied") {
-			desktopNotificationsCheckbox.attr("disabled", true);
-			desktopNotificationsCheckbox.attr("checked", false);
+			desktopNotificationsCheckbox.prop("disabled", true);
+			desktopNotificationsCheckbox.prop("checked", false);
 			warningBlocked.show();
 		} else {
 			if (Notification.permission === "default" && desktopNotificationsCheckbox.prop("checked")) {
-				desktopNotificationsCheckbox.attr("checked", false);
+				desktopNotificationsCheckbox.prop("checked", false);
 			}
-			desktopNotificationsCheckbox.attr("disabled", false);
+			desktopNotificationsCheckbox.prop("disabled", false);
 			warningBlocked.hide();
 		}
 	};
@@ -102,14 +102,14 @@ module.exports.initialize = () => {
 		windows.on("show", "#settings", updateDesktopNotificationStatus);
 	} else {
 		options.desktopNotifications = false;
-		desktopNotificationsCheckbox.attr("disabled", true);
-		desktopNotificationsCheckbox.attr("checked", false);
+		desktopNotificationsCheckbox.prop("disabled", true);
+		desktopNotificationsCheckbox.prop("checked", false);
 	}
 
 	settings.on("change", "input, select, textarea", function() {
 		const self = $(this);
-		const type = self.attr("type");
-		const name = self.attr("name");
+		const type = self.prop("type");
+		const name = self.prop("name");
 
 		if (type === "password") {
 			return;
@@ -133,7 +133,7 @@ module.exports.initialize = () => {
 		} else if (name === "coloredNicks") {
 			chat.toggleClass("colored-nicks", self.prop("checked"));
 		} else if (name === "theme") {
-			$("#theme").attr("href", "themes/" + options[name] + ".css");
+			$("#theme").prop("href", "themes/" + options[name] + ".css");
 		} else if (name === "userStyles") {
 			userStyles.html(options[name]);
 		} else if (name === "highlights") {

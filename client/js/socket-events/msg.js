@@ -58,7 +58,7 @@ function processReceivedMessage(data) {
 	render.appendMessage(
 		container,
 		targetId,
-		channel.attr("data-type"),
+		channel.prop("data-type"),
 		data.msg
 	);
 
@@ -172,7 +172,7 @@ function notifyMessage(targetId, channel, msg) {
 						});
 						notify.addEventListener("click", function() {
 							window.focus();
-							button.click();
+							button.trigger("click");
 							this.close();
 						});
 					}

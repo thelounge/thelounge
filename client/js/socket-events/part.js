@@ -9,7 +9,10 @@ socket.on("part", function(data) {
 
 	// When parting from the active channel/query, jump to the network's lobby
 	if (chanMenuItem.hasClass("active")) {
-		chanMenuItem.parent(".network").find(".lobby").click();
+		chanMenuItem
+			.parent(".network")
+			.find(".lobby")
+			.trigger("click");
 	}
 
 	chanMenuItem.remove();
