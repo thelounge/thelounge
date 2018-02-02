@@ -228,6 +228,10 @@ Chan.prototype.loadMessages = function(client, network) {
 		.getMessages(network, this)
 		.then((messages) => {
 			if (messages.length === 0) {
+				if (network.irc.network.cap.isEnabled("znc.in/playback")) {
+					requestZncPlayback(this, network, 0);
+				}
+
 				return;
 			}
 
@@ -241,6 +245,12 @@ Chan.prototype.loadMessages = function(client, network) {
 				chan: this.id,
 				messages: messages.slice(-100),
 			});
+
+			if (network.irc.network.cap.isEnabled("znc.in/playback")) {
+				const from = Math.floor(messages[messages.length - 1].time.getTime() / 1000);
+
+				requestZncPlayback(this, network, from);
+			}
 		})
 		.catch((err) => log.error(`Failed to load messages: ${err}`));
 };
@@ -248,3 +258,7 @@ Chan.prototype.loadMessages = function(client, network) {
 Chan.prototype.isLoggable = function() {
 	return this.type === Chan.Type.CHANNEL || this.type === Chan.Type.QUERY;
 };
+
+function requestZncPlayback(channel, network, from) {
+	network.irc.raw("ZNC", "*playback", "PLAY", channel.name, from.toString());
+}

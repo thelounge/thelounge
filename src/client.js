@@ -271,6 +271,7 @@ Client.prototype.connect = function(args) {
 
 	network.irc.requestCap([
 		"znc.in/self-message", // Legacy echo-message for ZNc
+		"znc.in/playback", // http://wiki.znc.in/Playback
 	]);
 
 	events.forEach((plugin) => {
