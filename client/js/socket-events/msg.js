@@ -58,7 +58,7 @@ function processReceivedMessage(data) {
 	render.appendMessage(
 		container,
 		targetId,
-		channel.prop("data-type"),
+		channel.data("type"),
 		data.msg
 	);
 
