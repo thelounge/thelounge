@@ -1365,6 +1365,10 @@ kbd {
 	display: block;
 }
 
+#chat .prefetch-error {
+	display: none;
+}
+
 #chat .toggle-content .thumb {
 	max-width: 48px;
 	max-height: 38px;

@@ -37,6 +37,9 @@
 				to open it in a new window.
 			</em>
 		{{/equal}}
+		{{#equal error "message"}}
+			<em>There was an error when loading this image. <small class="prefetch-error">({{message}})</small></em>
+		{{/equal}}
 	{{/equal}}
 </div>
 {{/preview}}

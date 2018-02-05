@@ -38,7 +38,14 @@ module.exports = function(client, chan, msg) {
 	})).slice(0, 5); // Only preview the first 5 URLs in message to avoid abuse
 
 	msg.previews.forEach((preview) => {
-		fetch(preview.link, function(res) {
+		fetch(preview.link, function(res, err) {
+			if (err) {
+				preview.type = "error";
+				preview.error = "message";
+				preview.message = err.message;
+				handlePreview(client, msg, preview, res);
+			}
+
 			if (res === null) {
 				return;
 			}
@@ -204,7 +211,7 @@ function fetch(uri, cb) {
 			},
 		});
 	} catch (e) {
-		return cb(null);
+		return cb(null, e);
 	}
 
 	const buffers = [];
@@ -229,7 +236,7 @@ function fetch(uri, cb) {
 				limit = 1024 * 50;
 			}
 		})
-		.on("error", () => cb(null))
+		.on("error", (e) => cb(null, e))
 		.on("data", (data) => {
 			length += data.length;
 			buffers.push(data);
@@ -240,7 +247,7 @@ function fetch(uri, cb) {
 		})
 		.on("end", () => {
 			if (req.response.statusCode < 200 || req.response.statusCode > 299) {
-				return cb(null);
+				return cb(null, new Error(`HTTP ${req.response.statusCode}`));
 			}
 
 			let type = "";
