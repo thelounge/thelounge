@@ -39,34 +39,40 @@ function loadPackages() {
 		if (err) {
 			return;
 		}
-		packages.forEach((packageName) => {
-			const packageFile = getModuleInfo(packageName);
-			if (!packageFile) {
-				return;
-			}
-			packageMap.set(packageName, packageFile);
-			if (packageFile.type === "theme") {
-				themes.addTheme(packageName, packageFile);
-			}
 
-			if (packageFile.onServerStart) {
-				packageFile.onServerStart(packageApis(packageName));
-			}
+		packages.forEach((packageName) => {
+			fs.stat(Helper.getPackageModulePath(packageName), function(err2, stat) {
+				if (err2 || !stat.isDirectory()) {
+					return;
+				}
+
+				const packageFile = getModuleInfo(packageName);
+
+				if (!packageFile) {
+					return;
+				}
+
+				packageMap.set(packageName, packageFile);
+
+				if (packageFile.type === "theme") {
+					themes.addTheme(packageName, packageFile);
+				}
+
+				if (packageFile.onServerStart) {
+					packageFile.onServerStart(packageApis(packageName));
+				}
+			});
 		});
 	});
 }
 
 function getModuleInfo(packageName) {
-	let module;
-	try {
-		module = require(Helper.getPackageModulePath(packageName));
-	} catch (e) {
-		log.warn(`Specified package ${colors.yellow(packageName)} is not installed in packages directory`);
-		return;
-	}
+	const module = require(Helper.getPackageModulePath(packageName));
+
 	if (!module.thelounge) {
 		log.warn(`Specified package ${colors.yellow(packageName)} doesn't have required information.`);
 		return;
 	}
+
 	return module.thelounge;
 }
