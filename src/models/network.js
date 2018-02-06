@@ -133,7 +133,8 @@ Network.prototype.export = function() {
 Network.prototype.getChannel = function(name) {
 	name = name.toLowerCase();
 
-	return _.find(this.channels, function(that) {
-		return that.name.toLowerCase() === name;
+	return _.find(this.channels, function(that, i) {
+		// Skip network lobby (it's always unshifted into first position)
+		return i > 0 && that.name.toLowerCase() === name;
 	});
 };
