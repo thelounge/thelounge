@@ -228,19 +228,21 @@ function renderNetworks(data, singleNetwork) {
 		newChannels = channels;
 	}
 
-	chat.append(
-		templates.chat({
-			channels: channels,
-		})
-	);
+	if (newChannels.length > 0) {
+		chat.append(
+			templates.chat({
+				channels: newChannels,
+			})
+		);
 
-	newChannels.forEach((channel) => {
-		renderChannel(channel);
+		newChannels.forEach((channel) => {
+			renderChannel(channel);
 
-		if (channel.type === "channel") {
-			chat.find("#chan-" + channel.id).data("needsNamesRefresh", true);
-		}
-	});
+			if (channel.type === "channel") {
+				chat.find("#chan-" + channel.id).data("needsNamesRefresh", true);
+			}
+		});
+	}
 
 	utils.confirmExit();
 	sorting();
