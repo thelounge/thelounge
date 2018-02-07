@@ -86,6 +86,17 @@ describe("Chan", function() {
 			return chan.getSortedUsers(network).map((u) => u.nick);
 		};
 
+		it("returns unsorted list on null irc object", function() {
+			const chan = new Chan();
+			[
+				"JocelynD", "YaManicKill", "astorije", "xPaw", "Max-P",
+			].forEach((nick) => chan.setUser(new User({nick: nick})));
+
+			expect(chan.getSortedUsers().map((u) => u.nick)).to.deep.equal([
+				"JocelynD", "YaManicKill", "astorije", "xPaw", "Max-P",
+			]);
+		});
+
 		it("should sort a simple user list", function() {
 			const chan = new Chan();
 			[
