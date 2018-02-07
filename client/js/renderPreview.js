@@ -27,6 +27,15 @@ function renderPreview(preview, msg) {
 	// If there is an image in preview, wait for it to load before appending it to DOM
 	// This is done to prevent problems keeping scroll to the bottom while images load
 	image.on("load", () => appendPreview(preview, msg, template));
+
+	// If the image fails to load, remove it from DOM and still render the preview
+	if (preview.type === "link") {
+		image.on("abort error", () => {
+			image.parent().remove();
+
+			appendPreview(preview, msg, template);
+		});
+	}
 }
 
 function appendPreview(preview, msg, template) {
