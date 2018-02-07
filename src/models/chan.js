@@ -98,14 +98,18 @@ Chan.prototype.dereferencePreviews = function(messages) {
 };
 
 Chan.prototype.getSortedUsers = function(irc) {
+	const users = Array.from(this.users.values());
+
+	if (!irc || !irc.network || !irc.network.options || !irc.network.options.PREFIX) {
+		return users;
+	}
+
 	var userModeSortPriority = {};
 	irc.network.options.PREFIX.forEach((prefix, index) => {
 		userModeSortPriority[prefix.symbol] = index;
 	});
 
 	userModeSortPriority[""] = 99; // No mode is lowest
-
-	const users = Array.from(this.users.values());
 
 	return users.sort(function(a, b) {
 		if (a.mode === b.mode) {

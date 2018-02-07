@@ -224,7 +224,7 @@ Client.prototype.connect = function(args) {
 
 	if (config.lockNetwork) {
 		// This check is needed to prevent invalid user configurations
-		if (args.host && args.host.length > 0 && args.host !== config.defaults.host) {
+		if (!Helper.config.public && args.host && args.host.length > 0 && args.host !== config.defaults.host) {
 			network.channels[0].pushMessage(client, new Msg({
 				type: Msg.Type.ERROR,
 				text: "Hostname you specified is not allowed.",
