@@ -12,7 +12,7 @@
 	<link rel="stylesheet" href="css/style.css">
 	<link id="theme" rel="stylesheet" href="<%- theme %>">
 	<% _.forEach(stylesheets, function(css) { %>
-		<link rel="stylesheet" href="/packages/<%- css %>">
+		<link rel="stylesheet" href="packages/<%- css %>">
 	<% }); %>
 	<style id="user-specified-css"></style>
 
