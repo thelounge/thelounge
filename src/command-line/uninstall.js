@@ -22,8 +22,7 @@ program
 		log.info(`Uninstalling ${colors.green(packageName)}...`);
 
 		const packagesPath = Helper.getPackagesPath();
-		const packagesParent = path.dirname(packagesPath);
-		const packagesConfig = path.join(packagesParent, "package.json");
+		const packagesConfig = path.join(packagesPath, "package.json");
 		const packageWasNotInstalled = `${colors.green(packageName)} was not installed.`;
 
 		if (!fs.existsSync(packagesConfig)) {
@@ -48,7 +47,7 @@ program
 				"--depth",
 				"0",
 				"--prefix",
-				packagesParent,
+				packagesPath,
 				packageName,
 			],
 			{
@@ -80,7 +79,7 @@ program
 					"uninstall",
 					"--no-progress",
 					"--prefix",
-					packagesParent,
+					packagesPath,
 					packageName,
 				],
 				{

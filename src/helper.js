@@ -75,7 +75,7 @@ function setHome(newPath) {
 	configPath = path.join(homePath, "config.js");
 	usersPath = path.join(homePath, "users");
 	storagePath = path.join(homePath, "storage");
-	packagesPath = path.join(homePath, "packages", "node_modules");
+	packagesPath = path.join(homePath, "packages");
 
 	// Reload config from new home location
 	if (fs.existsSync(configPath)) {
@@ -144,7 +144,7 @@ function getPackagesPath() {
 }
 
 function getPackageModulePath(packageName) {
-	return path.join(Helper.getPackagesPath(), packageName);
+	return path.join(Helper.getPackagesPath(), "node_modules", packageName);
 }
 
 function ip2hex(address) {

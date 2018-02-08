@@ -35,11 +35,10 @@ program
 			log.info(`Installing ${colors.green(packageName)}...`);
 
 			const packagesPath = Helper.getPackagesPath();
-			const packagesParent = path.dirname(packagesPath);
-			const packagesConfig = path.join(packagesParent, "package.json");
+			const packagesConfig = path.join(packagesPath, "package.json");
 
 			// Create node_modules folder, otherwise npm will start walking upwards to find one
-			fsextra.ensureDirSync(packagesPath);
+			fsextra.ensureDirSync(path.join(packagesPath, "node_modules"));
 
 			// Create package.json with private set to true to avoid npm warnings, if
 			// it doesn't exist already
@@ -61,7 +60,7 @@ program
 					"--no-package-lock",
 					"--no-progress",
 					"--prefix",
-					packagesParent,
+					packagesPath,
 					packageName,
 				],
 				{
