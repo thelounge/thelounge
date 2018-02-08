@@ -77,6 +77,7 @@ program
 				npm,
 				[
 					"uninstall",
+					"--save",
 					"--no-progress",
 					"--prefix",
 					packagesPath,
