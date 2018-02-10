@@ -57,7 +57,7 @@
     "socket.io": "2.0.4",
     "spdy": "3.4.7",
     "ua-parser-js": "0.7.17",
-    "urijs": "1.19.0",
+    "urijs": "1.19.1",
     "web-push": "3.2.5"
   },
   "devDependencies": {
