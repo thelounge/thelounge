@@ -39,7 +39,7 @@ body {
 }
 
 /* Borders */
-#chat .from,
+#chat .content,
 #windows .header,
 #chat .user-mode::before,
 #chat .sidebar {

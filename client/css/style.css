@@ -1137,7 +1137,6 @@ kbd {
 }
 
 #chat .from {
-	border-right: 1px solid #f6f6f6;
 	color: #b1c3ce;
 	padding-right: 10px;
 	text-align: right;
@@ -1152,6 +1151,7 @@ kbd {
 	min-width: 0;
 	padding-left: 10px;
 	padding-right: 6px;
+	border-left: 1px solid #f6f6f6;
 	overflow: hidden; /* Prevents Zalgo text to expand beyond messages */
 }
 
