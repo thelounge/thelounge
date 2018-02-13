@@ -30,25 +30,15 @@ describe("client-side constants", function() {
 		});
 	});
 
-	describe(".actionTypes", function() {
-		it("should be a non-empty array", function() {
-			expect(constants.actionTypes).to.be.an("array").that.is.not.empty;
-		});
-
-		it("should only contain strings with no whitespaces", function() {
-			constants.actionTypes.forEach((type) => {
-				expect(type).to.be.a("string").that.does.not.match(/\s/);
-			});
-		});
-	});
-
 	describe(".condensedTypes", function() {
 		it("should be a non-empty array", function() {
 			expect(constants.condensedTypes).to.be.an("array").that.is.not.empty;
 		});
 
-		it("should be a subset of `actionTypes`", function() {
-			expect(constants.actionTypes).to.include.members(constants.condensedTypes);
+		it("should only contain ASCII strings", function() {
+			constants.condensedTypes.forEach((type) => {
+				expect(type).to.be.a("string").that.does.match(/^\w+$/);
+			});
 		});
 	});
 
