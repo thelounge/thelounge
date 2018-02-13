@@ -6,10 +6,18 @@ module.exports = function(irc, network) {
 	const client = this;
 
 	irc.on("irc error", function(data) {
-		let text = data.error;
+		let text = "";
 
-		if (data.reason) {
-			text = data.reason + " (" + text + ")";
+		if (data.channel) {
+			text = `${data.channel}: `;
+		}
+
+		if (data.error === "user_on_channel") {
+			text += `User (${data.nick}) is already on channel`;
+		} else if (data.reason) {
+			text += `${data.reason} (${data.error})`;
+		} else {
+			text += data.error;
 		}
 
 		const lobby = network.channels[0];
