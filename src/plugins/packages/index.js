@@ -1,7 +1,7 @@
 "use strict";
 
-const fs = require("fs");
 const colors = require("colors/safe");
+const path = require("path");
 const Helper = require("../../helper");
 const themes = require("./themes");
 const packageMap = new Map();
@@ -35,38 +35,43 @@ function getPackage(name) {
 }
 
 function loadPackages() {
-	fs.readdir(Helper.getPackagesPath(), (err, packages) => {
-		if (err) {
+	const packageJson = path.join(Helper.getPackagesPath(), "package.json");
+	let packages;
+
+	try {
+		packages = Object.keys(require(packageJson).dependencies);
+	} catch (e) {
+		packages = [];
+	}
+
+	packages.forEach((packageName) => {
+		const errorMsg = `Package ${colors.bold(packageName)} could not be loaded`;
+		let packageInfo;
+		let packageFile;
+
+		try {
+			packageInfo = require(path.join(Helper.getPackageModulePath(packageName), "package.json"));
+			packageFile = require(Helper.getPackageModulePath(packageName));
+		} catch (e) {
+			log.warn(errorMsg);
 			return;
 		}
-		packages.forEach((packageName) => {
-			const packageFile = getModuleInfo(packageName);
-			if (!packageFile) {
-				return;
-			}
-			packageMap.set(packageName, packageFile);
-			if (packageFile.type === "theme") {
-				themes.addTheme(packageName, packageFile);
-			}
 
-			if (packageFile.onServerStart) {
-				packageFile.onServerStart(packageApis(packageName));
-			}
-		});
+		if (!packageInfo.thelounge) {
+			log.warn(errorMsg);
+			return;
+		}
+
+		packageMap.set(packageName, packageFile);
+
+		if (packageInfo.type === "theme") {
+			themes.addTheme(packageName, packageInfo);
+		}
+
+		if (packageFile.onServerStart) {
+			packageFile.onServerStart(packageApis(packageName));
+		}
+
+		log.info(`Package ${colors.bold(packageName)} loaded`);
 	});
-}
-
-function getModuleInfo(packageName) {
-	let module;
-	try {
-		module = require(Helper.getPackageModulePath(packageName));
-	} catch (e) {
-		log.warn(`Specified package ${colors.yellow(packageName)} is not installed in packages directory`);
-		return;
-	}
-	if (!module.thelounge) {
-		log.warn(`Specified package ${colors.yellow(packageName)} doesn't have required information.`);
-		return;
-	}
-	return module.thelounge;
 }
