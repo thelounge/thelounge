@@ -62,6 +62,8 @@ function loadPackages() {
 			return;
 		}
 
+		packageInfo = packageInfo.thelounge;
+
 		packageMap.set(packageName, packageFile);
 
 		if (packageInfo.type === "theme") {
