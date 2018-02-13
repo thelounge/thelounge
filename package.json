@@ -45,7 +45,6 @@
     "express": "4.16.2",
     "fs-extra": "5.0.0",
     "irc-framework": "2.10.3",
-    "ldapjs": "1.0.2",
     "lodash": "4.17.5",
     "mime-types": "2.1.17",
     "moment": "2.20.1",
@@ -56,6 +55,7 @@
     "semver": "5.5.0",
     "socket.io": "2.0.4",
     "spdy": "3.4.7",
+    "thelounge-ldapjs-non-maintained-fork": "1.0.2",
     "ua-parser-js": "0.7.17",
     "urijs": "1.19.1",
     "web-push": "3.2.5"
