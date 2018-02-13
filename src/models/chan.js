@@ -15,6 +15,11 @@ Chan.Type = {
 	SPECIAL: "special",
 };
 
+Chan.State = {
+	PARTED: 0,
+	JOINED: 1,
+};
+
 let id = 1;
 
 function Chan(attr) {
@@ -25,6 +30,7 @@ function Chan(attr) {
 		key: "",
 		topic: "",
 		type: Chan.Type.CHANNEL,
+		state: Chan.State.PARTED,
 		firstUnread: 0,
 		unread: 0,
 		highlight: 0,

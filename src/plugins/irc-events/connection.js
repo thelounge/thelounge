@@ -81,6 +81,10 @@ module.exports = function(irc, network) {
 			client.manager.identHandler.removeSocket(identSocketId);
 			identSocketId = 0;
 		}
+
+		network.channels.forEach((chan) => {
+			chan.state = Chan.State.PARTED;
+		});
 	});
 
 	if (Helper.config.debug.ircFramework) {
