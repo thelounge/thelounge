@@ -19,7 +19,8 @@ const colorRx = /^(\d{1,2})(?:,(\d{1,2}))?/;
 const hexColorRx = /^([0-9a-f]{6})(?:,([0-9a-f]{6}))?/i;
 
 // Represents all other control codes that to be ignored/filtered from the text
-const controlCodesRx = /[\u0000-\u001F]/g;
+// This regex allows line feed character
+const controlCodesRx = /[\u0000-\u0009\u000B-\u001F]/g;
 
 // Converts a given text into an array of objects, each of them representing a
 // similarly styled section of the text. Each object carries the `text`, style

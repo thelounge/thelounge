@@ -19,10 +19,10 @@ describe("parse Handlebars helper", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should skip control codes", () => {
+	it("should skip all <32 ASCII codes except linefeed", () => {
 		const testCases = [{
-			input: "text\x01with\x04control\x05codes",
-			expected: "textwithcontrolcodes",
+			input: "\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0B\x0C\x0D\x0E\x0F\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1B\x1D\x1D\x1E\x1Ftext\x0Awithcontrolcodestest",
+			expected: '<span class="irc-underline irc-strikethrough irc-monospace">text\nwithcontrolcodestest</span>',
 		}];
 
 		const actual = testCases.map((testCase) => parse(testCase.input));
