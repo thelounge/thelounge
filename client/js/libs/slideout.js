@@ -31,7 +31,7 @@ module.exports = function slideoutMenu(viewport, menu) {
 
 		menuWidth = parseFloat(window.getComputedStyle(menu).width);
 
-		if ((!menuIsOpen && touch.screenX < 50) || (menuIsOpen && touch.screenX > menuWidth)) {
+		if (!menuIsOpen || (menuIsOpen && touch.screenX > menuWidth)) {
 			touchStartPos = touch;
 			touchCurPos = touch;
 			touchStartTime = Date.now();
