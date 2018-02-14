@@ -61,7 +61,7 @@ program
 					"--no-progress",
 					"--prefix",
 					packagesPath,
-					packageName,
+					`${packageName}@${json.version}`,
 				],
 				{
 					// This is the same as `"inherit"` except `process.stdout` is ignored
