@@ -40,7 +40,13 @@
 			<div class="col-sm-9 col-sm-offset-3">
 				<label class="tls">
 					<input type="checkbox" name="tls" {{#if defaults.tls}}checked{{/if}} {{#if lockNetwork}}disabled{{/if}}>
-					Enable TLS/SSL
+					Use secure connection (TLS)
+				</label>
+			</div>
+			<div class="col-sm-9 col-sm-offset-3">
+				<label class="tls">
+					<input type="checkbox" name="allowUnauthorized" {{#unless defaults.rejectUnauthorized}}checked{{/unless}} {{#if lockNetwork}}disabled{{/if}}>
+					Allow untrusted certificates
 				</label>
 			</div>
 			<div class="clearfix"></div>

@@ -178,6 +178,7 @@ Client.prototype.connect = function(args) {
 		host: args.host || "",
 		port: parseInt(args.port, 10) || (args.tls ? 6697 : 6667),
 		tls: !!args.tls,
+		rejectUnauthorized: !args.allowUnauthorized,
 		password: args.password,
 		username: args.username || nick.replace(/[^a-zA-Z0-9]/g, ""),
 		realname: args.realname || "The Lounge User",
@@ -206,6 +207,7 @@ Client.prototype.connect = function(args) {
 		network.host = Helper.config.defaults.host;
 		network.port = Helper.config.defaults.port;
 		network.tls = Helper.config.defaults.tls;
+		network.rejectUnauthorized = Helper.config.defaults.rejectUnauthorized;
 	}
 
 	if (network.host.length === 0) {
@@ -248,7 +250,7 @@ Client.prototype.connect = function(args) {
 		password: network.password,
 		tls: network.tls,
 		outgoing_addr: Helper.config.bind,
-		rejectUnauthorized: false,
+		rejectUnauthorized: network.rejectUnauthorized,
 		enable_chghost: true,
 		enable_echomessage: true,
 		auto_reconnect: true,
