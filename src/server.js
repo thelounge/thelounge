@@ -513,6 +513,7 @@ function getClientConfiguration() {
 		config.defaults = _.pick(Helper.config.defaults, [
 			"nick",
 			"username",
+			"password",
 			"realname",
 			"join",
 		]);

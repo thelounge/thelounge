@@ -37,12 +37,6 @@
 				</div>
 			</div>
 			<div class="clearfix"></div>
-			<div class="col-sm-3">
-				<label for="connect:password">Password</label>
-			</div>
-			<div class="col-sm-9">
-				<input class="input" id="connect:password" type="password" name="password" value="{{defaults.password}}">
-			</div>
 			<div class="col-sm-9 col-sm-offset-3">
 				<label class="tls">
 					<input type="checkbox" name="tls" {{#if defaults.tls}}checked{{/if}} {{#if lockNetwork}}disabled{{/if}}>
@@ -69,6 +63,12 @@
 			<input class="input username" id="connect:username" name="username" value="{{defaults.username}}">
 		</div>
 		{{/unless}}
+		<div class="col-sm-3">
+			<label for="connect:password">Password</label>
+		</div>
+		<div class="col-sm-9">
+			<input class="input" id="connect:password" type="password" name="password" value="{{defaults.password}}">
+		</div>
 		<div class="col-sm-3">
 			<label for="connect:realname">Real name</label>
 		</div>
