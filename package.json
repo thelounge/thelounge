@@ -46,7 +46,7 @@
     "fs-extra": "5.0.0",
     "irc-framework": "2.10.3",
     "lodash": "4.17.5",
-    "mime-types": "2.1.17",
+    "mime-types": "2.1.18",
     "moment": "2.20.1",
     "package-json": "4.0.1",
     "primer-tooltips": "1.5.2",
