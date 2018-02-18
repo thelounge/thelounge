@@ -29,7 +29,9 @@ exports.input = function(network, chan, cmd, args) {
 
 	// If target is not a channel or we are not connected, instantly remove the channel
 	// Otherwise send part to the server and wait for response
-	if (target.type !== Chan.Type.CHANNEL || !network.irc || !network.irc.connection || !network.irc.connection.connected) {
+	if (target.type !== Chan.Type.CHANNEL
+	|| target.state === Chan.State.PARTED
+	|| !network.irc || !network.irc.connection || !network.irc.connection.connected) {
 		network.channels = _.without(network.channels, target);
 		target.destroy();
 		this.emit("part", {
