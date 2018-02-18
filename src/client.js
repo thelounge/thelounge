@@ -276,7 +276,7 @@ Client.prototype.connect = function(args) {
 		gecos: network.realname,
 		password: network.password,
 		tls: network.tls,
-		localAddress: config.bind,
+		outgoing_addr: config.bind,
 		rejectUnauthorized: false,
 		enable_chghost: true,
 		enable_echomessage: true,
