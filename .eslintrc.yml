@@ -42,13 +42,17 @@ rules:
   no-trailing-spaces: error
   no-unsafe-negation: error
   no-useless-computed-key: error
+  no-useless-constructor: error
   no-useless-return: error
   no-use-before-define: [error, {functions: false}]
   object-curly-spacing: [error, never]
   padded-blocks: [error, never]
   prefer-const: error
+  prefer-rest-params: error
+  prefer-spread: error
   quote-props: [error, as-needed]
   quotes: [error, double, avoid-escape]
+  rest-spread-spacing: error
   semi-spacing: error
   semi-style: [error, last]
   semi: [error, always]
