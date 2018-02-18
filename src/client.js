@@ -160,7 +160,7 @@ Client.prototype.find = function(channelId) {
 };
 
 Client.prototype.connect = function(args) {
-	var config = Helper.config;
+	var {config} = Helper;
 	var client = this;
 
 	var nick = args.nick || "lounge-user";
@@ -368,7 +368,7 @@ Client.prototype.input = function(data) {
 
 Client.prototype.inputLine = function(data) {
 	var client = this;
-	var text = data.text;
+	var {text} = data;
 	var target = client.find(data.target);
 	if (!target) {
 		return;
@@ -396,7 +396,7 @@ Client.prototype.inputLine = function(data) {
 	var args = text.split(" ");
 	var cmd = args.shift().toLowerCase();
 
-	var irc = target.network.irc;
+	var {irc} = target.network;
 	var connected = irc && irc.connection && irc.connection.connected;
 
 	if (cmd in inputs) {
@@ -425,7 +425,7 @@ Client.prototype.more = function(data) {
 		return null;
 	}
 
-	const chan = target.chan;
+	const {chan} = target;
 	let messages = [];
 	let index = 0;
 
@@ -470,7 +470,7 @@ Client.prototype.open = function(socketId, target) {
 };
 
 Client.prototype.sort = function(data) {
-	const order = data.order;
+	const {order} = data;
 
 	if (!_.isArray(order)) {
 		return;
@@ -516,7 +516,7 @@ Client.prototype.names = function(data) {
 };
 
 Client.prototype.quit = function(signOut) {
-	const sockets = this.sockets.sockets;
+	const {sockets} = this.sockets;
 	const room = sockets.adapter.rooms[this.id];
 
 	if (room && room.sockets) {

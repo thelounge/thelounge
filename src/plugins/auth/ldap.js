@@ -8,7 +8,7 @@ const Helper = require("../../helper");
 const ldap = require("thelounge-ldapjs-non-maintained-fork");
 
 function ldapAuthCommon(user, bindDN, password, callback) {
-	const config = Helper.config;
+	const {config} = Helper;
 
 	const ldapclient = ldap.createClient({
 		url: config.ldap.url,
@@ -31,7 +31,7 @@ function simpleLdapAuth(user, password, callback) {
 		return callback(false);
 	}
 
-	const config = Helper.config;
+	const {config} = Helper;
 
 	const userDN = user.replace(/([,\\/#+<>;"= ])/g, "\\$1");
 	const bindDN = `${config.ldap.primaryKey}=${userDN},${config.ldap.baseDN}`;
@@ -49,7 +49,7 @@ function advancedLdapAuth(user, password, callback) {
 		return callback(false);
 	}
 
-	const config = Helper.config;
+	const {config} = Helper;
 	const userDN = user.replace(/([,\\/#+<>;"= ])/g, "\\$1");
 
 	const ldapclient = ldap.createClient({
@@ -57,7 +57,7 @@ function advancedLdapAuth(user, password, callback) {
 		tlsOptions: config.ldap.tlsOptions,
 	});
 
-	const base = config.ldap.searchDN.base;
+	const {base} = config.ldap.searchDN;
 	const searchOptions = {
 		scope: config.ldap.searchDN.scope,
 		filter: `(&(${config.ldap.primaryKey}=${userDN})${config.ldap.searchDN.filter})`,

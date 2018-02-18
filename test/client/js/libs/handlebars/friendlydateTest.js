@@ -1,6 +1,6 @@
 "use strict";
 
-const expect = require("chai").expect;
+const {expect} = require("chai");
 const moment = require("moment");
 const friendlydate = require("../../../../../client/js/libs/handlebars/friendlydate");
 

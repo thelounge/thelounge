@@ -3,7 +3,7 @@
 const ldapAuth = require("../../../src/plugins/auth/ldap");
 const Helper = require("../../../src/helper");
 const ldap = require("thelounge-ldapjs-non-maintained-fork");
-const expect = require("chai").expect;
+const {expect} = require("chai");
 
 const user = "johndoe";
 const wrongUser = "eve";
@@ -31,7 +31,7 @@ function startLdapServer(callback) {
 	authorizedUsers[normalizeDN(userDN)] = correctPassword;
 
 	function authorize(req, res, next) {
-		const bindDN = req.connection.ldap.bindDN;
+		const {bindDN} = req.connection.ldap;
 
 		if (bindDN in authorizedUsers) {
 			return next();

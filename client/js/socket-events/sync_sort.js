@@ -4,15 +4,12 @@ const $ = require("jquery");
 const socket = require("../socket");
 const options = require("../options");
 
-socket.on("sync_sort", function(data) {
+socket.on("sync_sort", function({order, target, type}) {
 	// Syncs the order of channels or networks when they are reordered
 	if (options.ignoreSortSync) {
 		options.ignoreSortSync = false;
 		return; // Ignore syncing because we 'caused' it
 	}
-
-	const type = data.type;
-	const order = data.order;
 
 	if (type === "networks") {
 		const container = $(".networks");
@@ -29,7 +26,7 @@ socket.on("sync_sort", function(data) {
 			$(network).insertBefore(position);
 		});
 	} else if (type === "channels") {
-		const network = $("#network-" + data.target);
+		const network = $("#network-" + target);
 
 		$.each(order, function(index, value) {
 			if (index === 0) { // Shouldn't attempt to move lobby

@@ -36,7 +36,7 @@ function fetch(callback) {
 
 		let i;
 		let release;
-		let prerelease = false;
+		let isPrerelease = false;
 
 		body = JSON.parse(body);
 
@@ -45,7 +45,7 @@ function fetch(callback) {
 			release = body[i];
 			if (release.tag_name === versions.current.version) {
 				versions.current.changelog = release.body_html;
-				prerelease = release.prerelease;
+				isPrerelease = release.prerelease;
 
 				break;
 			}
@@ -57,7 +57,7 @@ function fetch(callback) {
 				release = body[j];
 
 				// Find latest release or pre-release if current version is also a pre-release
-				if (!release.prerelease || release.prerelease === prerelease) {
+				if (!release.prerelease || release.prerelease === isPrerelease) {
 					versions.latest = {
 						prerelease: release.prerelease,
 						version: release.tag_name,

@@ -1,7 +1,7 @@
 "use strict";
 
 const Helper = require("../src/helper");
-const expect = require("chai").expect;
+const {expect} = require("chai");
 const request = require("request");
 const io = require("socket.io-client");
 

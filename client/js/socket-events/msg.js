@@ -110,10 +110,7 @@ function processReceivedMessage(data) {
 	}
 }
 
-function notifyMessage(targetId, channel, msg) {
-	const unread = msg.unread;
-	msg = msg.msg;
-
+function notifyMessage(targetId, channel, {msg, unread}) {
 	if (msg.self) {
 		return;
 	}

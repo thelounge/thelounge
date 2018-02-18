@@ -72,7 +72,7 @@ module.exports = function() {
 		return res.sendFile(path.join(packagePath, fileName));
 	});
 
-	var config = Helper.config;
+	var {config} = Helper;
 	var server = null;
 
 	if (config.public && (config.ldap || {}).enable) {
@@ -207,7 +207,7 @@ function getClientIp(socket) {
 		const forwarded = (socket.request.headers["x-forwarded-for"] || "").split(/\s*,\s*/).filter(Boolean);
 
 		if (forwarded.length && net.isIP(forwarded[0])) {
-			ip = forwarded[0];
+			[ip] = forwarded;
 		}
 	}
 

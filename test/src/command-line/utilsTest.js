@@ -1,6 +1,6 @@
 "use strict";
 
-const expect = require("chai").expect;
+const {expect} = require("chai");
 const TestUtil = require("../../util");
 const Utils = require("../../../src/command-line/utils");
 

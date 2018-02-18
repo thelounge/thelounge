@@ -1,6 +1,6 @@
 "use strict";
 
-const expect = require("chai").expect;
+const {expect} = require("chai");
 const modes = require("../../../../../client/js/libs/handlebars/modes");
 
 describe("modes Handlebars helper", function() {

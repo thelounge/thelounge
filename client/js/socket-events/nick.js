@@ -7,7 +7,7 @@ const sidebar = $("#sidebar");
 
 socket.on("nick", function(data) {
 	const id = data.network;
-	const nick = data.nick;
+	const {nick} = data;
 	const network = sidebar.find("#network-" + id).data("nick", nick);
 	if (network.find(".active").length) {
 		utils.setNick(nick);

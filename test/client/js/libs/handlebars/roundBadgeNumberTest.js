@@ -1,6 +1,6 @@
 "use strict";
 
-const expect = require("chai").expect;
+const {expect} = require("chai");
 const roundBadgeNumber = require("../../../../../client/js/libs/handlebars/roundBadgeNumber");
 
 describe("roundBadgeNumber Handlebars helper", function() {

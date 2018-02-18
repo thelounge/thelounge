@@ -1,6 +1,6 @@
 "use strict";
 
-var expect = require("chai").expect;
+const {expect} = require("chai");
 
 var Network = require("../../src/models/network");
 

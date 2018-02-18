@@ -1,6 +1,6 @@
 "use strict";
 
-const expect = require("chai").expect;
+const {expect} = require("chai");
 const localetime = require("../../../../../client/js/libs/handlebars/localetime");
 
 describe("localetime Handlebars helper", () => {

@@ -1,6 +1,6 @@
 "use strict";
 
-const expect = require("chai").expect;
+const {expect} = require("chai");
 const Chan = require("../../src/models/chan");
 const Msg = require("../../src/models/msg");
 const User = require("../../src/models/user");

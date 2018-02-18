@@ -48,7 +48,7 @@ node scripts/changelog <version>
 const _ = require("lodash");
 const colors = require("colors/safe");
 const fs = require("fs");
-const GraphQLClient = require("graphql-request").GraphQLClient;
+const {GraphQLClient} = require("graphql-request");
 const moment = require("moment");
 const semver = require("semver");
 const util = require("util");
@@ -311,11 +311,11 @@ class RepositoryFetcher {
 			}
 		}`;
 		const data = await this.fetch(lastTagsQuery);
-		const tags = data.repository.refs.tags;
+		const {tags} = data.repository.refs;
 		let tag;
 
 		if (isPrerelease(newVersion)) {
-			tag = tags[0];
+			[tag] = tags;
 		} else {
 			tag = tags.find(({name}) => !isPrerelease(name));
 		}

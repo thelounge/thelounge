@@ -7,7 +7,7 @@ var Msg = require("../../models/msg");
 exports.commands = ["query"];
 
 exports.input = function(network, chan, cmd, args) {
-	var target = args[0];
+	var [target] = args;
 	if (args.length === 0 || target.length === 0) {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
@@ -21,7 +21,7 @@ exports.input = function(network, chan, cmd, args) {
 		return;
 	}
 
-	var char = target[0];
+	var [char] = target;
 	if (network.irc.network.options.CHANTYPES && network.irc.network.options.CHANTYPES.indexOf(char) !== -1) {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,

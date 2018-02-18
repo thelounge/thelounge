@@ -1,6 +1,6 @@
 "use strict";
 
-var EventEmitter = require("events").EventEmitter;
+const {EventEmitter} = require("events");
 var util = require("util");
 var _ = require("lodash");
 var express = require("express");

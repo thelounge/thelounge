@@ -1,6 +1,6 @@
 "use strict";
 
-const expect = require("chai").expect;
+const {expect} = require("chai");
 const constants = require("../../../client/js/constants");
 
 describe("client-side constants", function() {
