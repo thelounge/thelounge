@@ -25,7 +25,7 @@
 			src="https://img.shields.io/badge/freenode-%23thelounge-415364.svg?colorA=ff9e18&style=flat-square">
 	</a>
 	<br>
-	<a href="https://www.npmjs.org/package/thelounge">
+	<a href="https://yarn.pm/thelounge">
 		<img
 			alt="npm version"
 			src="https://img.shields.io/npm/v/thelounge.svg?style=flat-square">
