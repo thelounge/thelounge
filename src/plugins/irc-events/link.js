@@ -50,8 +50,8 @@ module.exports = function(client, chan, msg) {
 
 function parse(msg, preview, res, client) {
 	switch (res.type) {
-	case "text/html":
-		var $ = cheerio.load(res.data);
+	case "text/html": {
+		const $ = cheerio.load(res.data);
 		preview.type = "link";
 		preview.head =
 			$('meta[property="og:title"]').attr("content")
@@ -92,6 +92,7 @@ function parse(msg, preview, res, client) {
 		}
 
 		break;
+	}
 
 	case "image/png":
 	case "image/gif":

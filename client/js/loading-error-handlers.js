@@ -1,4 +1,4 @@
-/* eslint strict: 0 */
+/* eslint strict: 0, no-var: 0 */
 "use strict";
 
 /*

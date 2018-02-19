@@ -22,12 +22,12 @@ class Identification {
 				log.warn("Using both identd and oidentd at the same time, this is most likely not intended.");
 			}
 
-			var server = net.createServer(this.serverConnection.bind(this));
+			const server = net.createServer(this.serverConnection.bind(this));
 			server.listen({
 				port: Helper.config.identd.port || 113,
 				host: Helper.config.bind || Helper.config.host,
 			}, () => {
-				var address = server.address();
+				const address = server.address();
 				log.info(`Identd server available on ${colors.green(address.address + ":" + address.port)}`);
 
 				startedCallback(this);
@@ -54,7 +54,7 @@ class Identification {
 			return;
 		}
 
-		for (var connection of this.connections.values()) {
+		for (const connection of this.connections.values()) {
 			if (connection.socket.remoteAddress === socket.remoteAddress
 			&& connection.socket.remotePort === fport
 			&& connection.socket.localPort === lport

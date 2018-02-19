@@ -4,12 +4,12 @@
  * Simple slideout menu implementation.
  */
 module.exports = function slideoutMenu(viewport, menu) {
-	var touchStartPos = null;
-	var touchCurPos = null;
-	var touchStartTime = 0;
-	var menuWidth = 0;
-	var menuIsOpen = false;
-	var menuIsMoving = false;
+	let touchStartPos = null;
+	let touchCurPos = null;
+	let touchStartTime = 0;
+	let menuWidth = 0;
+	let menuIsOpen = false;
+	let menuIsMoving = false;
 
 	function toggleMenu(state) {
 		menuIsOpen = state;
@@ -26,7 +26,7 @@ module.exports = function slideoutMenu(viewport, menu) {
 			return;
 		}
 
-		var touch = e.touches.item(0);
+		const touch = e.touches.item(0);
 		viewport.classList.toggle("menu-dragging", true);
 
 		menuWidth = parseFloat(window.getComputedStyle(menu).width);
@@ -42,8 +42,8 @@ module.exports = function slideoutMenu(viewport, menu) {
 	}
 
 	function onTouchMove(e) {
-		var touch = touchCurPos = e.touches.item(0);
-		var setX = touch.screenX - touchStartPos.screenX;
+		const touch = touchCurPos = e.touches.item(0);
+		let setX = touch.screenX - touchStartPos.screenX;
 
 		if (Math.abs(setX > 30)) {
 			menuIsMoving = true;
@@ -73,8 +73,8 @@ module.exports = function slideoutMenu(viewport, menu) {
 	}
 
 	function onTouchEnd() {
-		var diff = touchCurPos.screenX - touchStartPos.screenX;
-		var absDiff = Math.abs(diff);
+		const diff = touchCurPos.screenX - touchStartPos.screenX;
+		const absDiff = Math.abs(diff);
 
 		if (absDiff > menuWidth / 2 || Date.now() - touchStartTime < 180 && absDiff > 50) {
 			toggleMenu(diff > 0);

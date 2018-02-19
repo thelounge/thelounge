@@ -1,9 +1,9 @@
 "use strict";
 
-var expect = require("chai").expect;
+const expect = require("chai").expect;
 
-var Chan = require("../../src/models/chan");
-var ModeCommand = require("../../src/plugins/inputs/mode");
+const Chan = require("../../src/models/chan");
+const ModeCommand = require("../../src/plugins/inputs/mode");
 
 describe("Commands", function() {
 	describe("/mode", function() {

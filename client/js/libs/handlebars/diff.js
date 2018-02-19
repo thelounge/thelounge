@@ -1,6 +1,6 @@
 "use strict";
 
-var diff;
+let diff;
 
 module.exports = function(a, opt) {
 	if (a !== diff) {

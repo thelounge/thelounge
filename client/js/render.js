@@ -276,7 +276,7 @@ function loadMoreHistory(entries) {
 			return;
 		}
 
-		var target = $(entry.target).find(".show-more-button");
+		const target = $(entry.target).find(".show-more-button");
 
 		if (target.prop("disabled")) {
 			return;

@@ -68,7 +68,7 @@ function processReceivedMessage(data) {
 
 	notifyMessage(targetId, channel, data);
 
-	var lastVisible = container.find("div:visible").last();
+	const lastVisible = container.find("div:visible").last();
 	if (data.msg.self
 		|| lastVisible.hasClass("unread-marker")
 		|| (lastVisible.hasClass("date-marker")

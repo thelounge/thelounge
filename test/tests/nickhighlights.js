@@ -1,10 +1,10 @@
 "use strict";
 
-var expect = require("chai").expect;
+const expect = require("chai").expect;
 
-var Network = require("../../src/models/network");
+const Network = require("../../src/models/network");
 
-var network = new Network({name: "networkName"});
+const network = new Network({name: "networkName"});
 
 describe("Nickname highlights", function() {
 	it("should NOT highlight nickname", function() {

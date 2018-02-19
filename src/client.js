@@ -1,20 +1,20 @@
 "use strict";
 
-var _ = require("lodash");
-var colors = require("colors/safe");
-var pkg = require("../package.json");
-var Chan = require("./models/chan");
-var crypto = require("crypto");
-var Msg = require("./models/msg");
-var Network = require("./models/network");
-var ircFramework = require("irc-framework");
-var Helper = require("./helper");
+const _ = require("lodash");
+const colors = require("colors/safe");
+const pkg = require("../package.json");
+const Chan = require("./models/chan");
+const crypto = require("crypto");
+const Msg = require("./models/msg");
+const Network = require("./models/network");
+const ircFramework = require("irc-framework");
+const Helper = require("./helper");
 const UAParser = require("ua-parser-js");
 
 module.exports = Client;
 
-var id = 0;
-var events = [
+let id = 0;
+const events = [
 	"away",
 	"connection",
 	"unhandled",
@@ -37,7 +37,7 @@ var events = [
 	"list",
 	"whois",
 ];
-var inputs = [
+const inputs = [
 	"ban",
 	"ctcp",
 	"msg",
@@ -59,8 +59,7 @@ var inputs = [
 	"list",
 	"whois",
 ].reduce(function(plugins, name) {
-	var path = "./plugins/inputs/" + name;
-	var plugin = require(path);
+	const plugin = require(`./plugins/inputs/${name}`);
 	plugin.commands.forEach((command) => plugins[command] = plugin);
 	return plugins;
 }, {});
@@ -78,9 +77,9 @@ function Client(manager, name, config = {}) {
 		manager: manager,
 	});
 
-	var client = this;
+	const client = this;
 
-	var delay = 0;
+	let delay = 0;
 	(client.config.networks || []).forEach((n) => {
 		setTimeout(function() {
 			client.connect(n);
@@ -114,10 +113,10 @@ Client.prototype.emit = function(event, data) {
 };
 
 Client.prototype.find = function(channelId) {
-	var network = null;
-	var chan = null;
-	for (var i in this.networks) {
-		var n = this.networks[i];
+	let network = null;
+	let chan = null;
+	for (const i in this.networks) {
+		const n = this.networks[i];
 		chan = _.find(n.channels, {id: channelId});
 		if (chan) {
 			network = n;
@@ -135,15 +134,13 @@ Client.prototype.find = function(channelId) {
 };
 
 Client.prototype.connect = function(args) {
-	var config = Helper.config;
-	var client = this;
-
-	var nick = args.nick || "lounge-user";
-	var webirc = null;
-	var channels = [];
+	const client = this;
+	const nick = args.nick || "lounge-user";
+	let webirc = null;
+	let channels = [];
 
 	if (args.channels) {
-		var badName = false;
+		let badName = false;
 
 		args.channels.forEach((chan) => {
 			if (!chan.name) {
@@ -177,8 +174,8 @@ Client.prototype.connect = function(args) {
 	args.ip = args.ip || (client.config && client.config.ip) || client.ip;
 	args.hostname = args.hostname || (client.config && client.config.hostname) || client.hostname;
 
-	var network = new Network({
-		name: args.name || (config.displayNetwork ? "" : config.defaults.name) || "",
+	const network = new Network({
+		name: args.name || (Helper.config.displayNetwork ? "" : Helper.config.defaults.name) || "",
 		host: args.host || "",
 		port: parseInt(args.port, 10) || (args.tls ? 6697 : 6667),
 		tls: !!args.tls,
@@ -197,9 +194,9 @@ Client.prototype.connect = function(args) {
 		networks: [network.getFilteredClone(this.lastActiveChannel, -1)],
 	});
 
-	if (config.lockNetwork) {
+	if (Helper.config.lockNetwork) {
 		// This check is needed to prevent invalid user configurations
-		if (!Helper.config.public && args.host && args.host.length > 0 && args.host !== config.defaults.host) {
+		if (!Helper.config.public && args.host && args.host.length > 0 && args.host !== Helper.config.defaults.host) {
 			network.channels[0].pushMessage(client, new Msg({
 				type: Msg.Type.ERROR,
 				text: "Hostname you specified is not allowed.",
@@ -207,9 +204,9 @@ Client.prototype.connect = function(args) {
 			return;
 		}
 
-		network.host = config.defaults.host;
-		network.port = config.defaults.port;
-		network.tls = config.defaults.tls;
+		network.host = Helper.config.defaults.host;
+		network.port = Helper.config.defaults.port;
+		network.tls = Helper.config.defaults.tls;
 	}
 
 	if (network.host.length === 0) {
@@ -220,17 +217,17 @@ Client.prototype.connect = function(args) {
 		return;
 	}
 
-	if (config.webirc && network.host in config.webirc) {
+	if (Helper.config.webirc && network.host in Helper.config.webirc) {
 		if (!args.hostname) {
 			args.hostname = args.ip;
 		}
 
 		if (args.ip) {
-			if (config.webirc[network.host] instanceof Function) {
-				webirc = config.webirc[network.host](client, args);
+			if (Helper.config.webirc[network.host] instanceof Function) {
+				webirc = Helper.config.webirc[network.host](client, args);
 			} else {
 				webirc = {
-					password: config.webirc[network.host],
+					password: Helper.config.webirc[network.host],
 					username: pkg.name,
 					address: args.ip,
 					hostname: args.hostname,
@@ -247,11 +244,11 @@ Client.prototype.connect = function(args) {
 		host: network.host,
 		port: network.port,
 		nick: nick,
-		username: config.useHexIp ? Helper.ip2hex(args.ip) : network.username,
+		username: Helper.config.useHexIp ? Helper.ip2hex(args.ip) : network.username,
 		gecos: network.realname,
 		password: network.password,
 		tls: network.tls,
-		outgoing_addr: config.bind,
+		outgoing_addr: Helper.config.bind,
 		rejectUnauthorized: false,
 		enable_chghost: true,
 		enable_echomessage: true,
@@ -266,8 +263,7 @@ Client.prototype.connect = function(args) {
 	]);
 
 	events.forEach((plugin) => {
-		var path = "./plugins/irc-events/" + plugin;
-		require(path).apply(client, [
+		require(`./plugins/irc-events/${plugin}`).apply(client, [
 			network.irc,
 			network,
 		]);
@@ -319,7 +315,7 @@ Client.prototype.updateSession = function(token, ip, request) {
 };
 
 Client.prototype.setPassword = function(hash, callback) {
-	var client = this;
+	const client = this;
 
 	client.manager.updateUser(client.name, {
 		password: hash,
@@ -334,7 +330,7 @@ Client.prototype.setPassword = function(hash, callback) {
 };
 
 Client.prototype.input = function(data) {
-	var client = this;
+	const client = this;
 	data.text.split("\n").forEach((line) => {
 		data.text = line;
 		client.inputLine(data);
@@ -342,9 +338,8 @@ Client.prototype.input = function(data) {
 };
 
 Client.prototype.inputLine = function(data) {
-	var client = this;
-	var text = data.text;
-	var target = client.find(data.target);
+	const client = this;
+	const target = client.find(data.target);
 	if (!target) {
 		return;
 	}
@@ -352,6 +347,8 @@ Client.prototype.inputLine = function(data) {
 	// Sending a message to a channel is higher priority than merely opening one
 	// so that reloading the page will open this channel
 	this.lastActiveChannel = target.chan.id;
+
+	let text = data.text;
 
 	// This is either a normal message or a command escaped with a leading '/'
 	if (text.charAt(0) !== "/" || text.charAt(1) === "/") {
@@ -368,14 +365,14 @@ Client.prototype.inputLine = function(data) {
 		text = text.substr(1);
 	}
 
-	var args = text.split(" ");
-	var cmd = args.shift().toLowerCase();
+	const args = text.split(" ");
+	const cmd = args.shift().toLowerCase();
 
-	var irc = target.network.irc;
-	var connected = irc && irc.connection && irc.connection.connected;
+	const irc = target.network.irc;
+	let connected = irc && irc.connection && irc.connection.connected;
 
 	if (cmd in inputs) {
-		var plugin = inputs[cmd];
+		const plugin = inputs[cmd];
 		if (connected || plugin.allowDisconnected) {
 			connected = true;
 			plugin.input.apply(client, [target.network, target.chan, cmd, args]);
@@ -460,8 +457,8 @@ Client.prototype.sort = function(data) {
 
 		break;
 
-	case "channels":
-		var network = _.find(this.networks, {id: data.target});
+	case "channels": {
+		const network = _.find(this.networks, {id: data.target});
 		if (!network) {
 			return;
 		}
@@ -473,13 +470,14 @@ Client.prototype.sort = function(data) {
 
 		break;
 	}
+	}
 
 	this.save();
 };
 
 Client.prototype.names = function(data) {
-	var client = this;
-	var target = client.find(data.target);
+	const client = this;
+	const target = client.find(data.target);
 	if (!target) {
 		return;
 	}
@@ -518,8 +516,8 @@ Client.prototype.quit = function(signOut) {
 };
 
 Client.prototype.clientAttach = function(socketId, token) {
-	var client = this;
-	var save = false;
+	const client = this;
+	let save = false;
 
 	if (client.awayMessage && _.size(client.attachedClients) === 0) {
 		client.networks.forEach(function(network) {
@@ -544,7 +542,7 @@ Client.prototype.clientAttach = function(socketId, token) {
 		}
 
 		if (!network.hostname) {
-			var hostmask = (client.config && client.config.hostname) || client.hostname;
+			const hostmask = (client.config && client.config.hostname) || client.hostname;
 
 			if (hostmask) {
 				save = true;

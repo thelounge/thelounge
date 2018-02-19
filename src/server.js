@@ -1,16 +1,16 @@
 "use strict";
 
-var _ = require("lodash");
-var pkg = require("../package.json");
-var Client = require("./client");
-var ClientManager = require("./clientManager");
-var express = require("express");
-var fs = require("fs");
-var path = require("path");
-var io = require("socket.io");
-var dns = require("dns");
-var Helper = require("./helper");
-var colors = require("colors/safe");
+const _ = require("lodash");
+const pkg = require("../package.json");
+const Client = require("./client");
+const ClientManager = require("./clientManager");
+const express = require("express");
+const fs = require("fs");
+const path = require("path");
+const io = require("socket.io");
+const dns = require("dns");
+const Helper = require("./helper");
+const colors = require("colors/safe");
 const net = require("net");
 const Identification = require("./identification");
 const changelog = require("./plugins/changelog");
@@ -31,14 +31,14 @@ const authPlugins = [
 // A random number that will force clients to reload the page if it differs
 const serverHash = Math.floor(Date.now() * Math.random());
 
-var manager = null;
+let manager = null;
 
 module.exports = function() {
 	log.info(`The Lounge ${colors.green(Helper.getVersion())} \
 (Node.js ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${process.arch})`);
 	log.info(`Configuration file: ${colors.green(Helper.getConfigPath())}`);
 
-	var app = express()
+	const app = express()
 		.disable("x-powered-by")
 		.use(allRequests)
 		.use(index)
@@ -72,20 +72,19 @@ module.exports = function() {
 		return res.sendFile(path.join(packagePath, fileName));
 	});
 
-	var config = Helper.config;
-	var server = null;
+	let server = null;
 
-	if (config.public && (config.ldap || {}).enable) {
+	if (Helper.config.public && (Helper.config.ldap || {}).enable) {
 		log.warn("Server is public and set to use LDAP. Set to private mode if trying to use LDAP authentication.");
 	}
 
-	if (!config.https.enable) {
+	if (!Helper.config.https.enable) {
 		server = require("http");
 		server = server.createServer(app);
 	} else {
-		const keyPath = Helper.expandHome(config.https.key);
-		const certPath = Helper.expandHome(config.https.certificate);
-		const caPath = Helper.expandHome(config.https.ca);
+		const keyPath = Helper.expandHome(Helper.config.https.key);
+		const certPath = Helper.expandHome(Helper.config.https.certificate);
+		const caPath = Helper.expandHome(Helper.config.https.ca);
 
 		if (!keyPath.length || !fs.existsSync(keyPath)) {
 			log.error("Path to SSL key is invalid. Stopping server...");
@@ -112,12 +111,12 @@ module.exports = function() {
 
 	let listenParams;
 
-	if (typeof config.host === "string" && config.host.startsWith("unix:")) {
-		listenParams = config.host.replace(/^unix:/, "");
+	if (typeof Helper.config.host === "string" && Helper.config.host.startsWith("unix:")) {
+		listenParams = Helper.config.host.replace(/^unix:/, "");
 	} else {
 		listenParams = {
-			port: config.port,
-			host: config.host,
+			port: Helper.config.port,
+			host: Helper.config.host,
 		};
 	}
 
@@ -127,23 +126,23 @@ module.exports = function() {
 		if (typeof listenParams === "string") {
 			log.info("Available on socket " + colors.green(listenParams));
 		} else {
-			const protocol = config.https.enable ? "https" : "http";
+			const protocol = Helper.config.https.enable ? "https" : "http";
 			const address = server.address();
 
 			log.info(
 				"Available at " +
 				colors.green(`${protocol}://${address.address}:${address.port}/`) +
-				` in ${colors.bold(config.public ? "public" : "private")} mode`
+				` in ${colors.bold(Helper.config.public ? "public" : "private")} mode`
 			);
 		}
 
 		const sockets = io(server, {
 			serveClient: false,
-			transports: config.transports,
+			transports: Helper.config.transports,
 		});
 
 		sockets.on("connect", (socket) => {
-			if (config.public) {
+			if (Helper.config.public) {
 				performAuthentication.call(socket, {});
 			} else {
 				socket.emit("auth", {
@@ -302,9 +301,9 @@ function initializeClient(socket, client, token, lastMessage) {
 		socket.on(
 			"change-password",
 			function(data) {
-				var old = data.old_password;
-				var p1 = data.new_password;
-				var p2 = data.verify_password;
+				const old = data.old_password;
+				const p1 = data.new_password;
+				const p2 = data.verify_password;
 				if (typeof p1 === "undefined" || p1 === "") {
 					socket.emit("change-password", {
 						error: "Please enter a new password",

@@ -1,7 +1,7 @@
 "use strict";
 
-var _ = require("lodash");
-var Chan = require("./chan");
+const _ = require("lodash");
+const Chan = require("./chan");
 
 module.exports = Network;
 
@@ -120,7 +120,7 @@ Network.prototype.getNetworkStatus = function() {
 };
 
 Network.prototype.export = function() {
-	var network = _.pick(this, [
+	const network = _.pick(this, [
 		"awayMessage",
 		"nick",
 		"name",

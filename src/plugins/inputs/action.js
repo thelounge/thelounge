@@ -1,7 +1,7 @@
 "use strict";
 
-var Chan = require("../../models/chan");
-var Msg = require("../../models/msg");
+const Chan = require("../../models/chan");
+const Msg = require("../../models/msg");
 
 exports.commands = ["slap", "me"];
 
@@ -15,7 +15,7 @@ exports.input = function({irc}, chan, cmd, args) {
 		return;
 	}
 
-	var text;
+	let text;
 
 	switch (cmd) {
 	case "slap":

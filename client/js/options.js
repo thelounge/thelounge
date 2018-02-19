@@ -55,7 +55,7 @@ module.exports.initialize = () => {
 
 	const settings = $("#settings");
 
-	for (var i in options) {
+	for (const i in options) {
 		if (i === "userStyles") {
 			settings.find("#user-specified-css-input").val(options[i]);
 		} else if (i === "highlights") {
@@ -137,8 +137,7 @@ module.exports.initialize = () => {
 		} else if (name === "userStyles") {
 			userStyles.html(options[name]);
 		} else if (name === "highlights") {
-			var highlightString = options[name];
-			options.highlights = highlightString.split(",").map(function(h) {
+			options.highlights = options[name].split(",").map(function(h) {
 				return h.trim();
 			}).filter(function(h) {
 				// Ensure we don't have empty string in the list of highlights

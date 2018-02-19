@@ -4,8 +4,8 @@ const $ = require("jquery");
 const escape = require("css.escape");
 const input = $("#input");
 
-var serverHash = -1;
-var lastMessageId = -1;
+var serverHash = -1; // eslint-disable-line no-var
+var lastMessageId = -1; // eslint-disable-line no-var
 
 module.exports = {
 	inputCommands: {collapse, expand, join},
@@ -92,7 +92,7 @@ const favicon = $("#favicon");
 function toggleNotificationMarkers(newState) {
 	// Toggles the favicon to red when there are unread notifications
 	if (favicon.data("toggled") !== newState) {
-		var old = favicon.prop("href");
+		const old = favicon.prop("href");
 		favicon.prop("href", favicon.data("other"));
 		favicon.data("other", old);
 		favicon.data("toggled", newState);

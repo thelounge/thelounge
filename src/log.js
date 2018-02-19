@@ -1,9 +1,9 @@
 "use strict";
 
-var colors = require("colors/safe");
-var moment = require("moment");
+const colors = require("colors/safe");
+const moment = require("moment");
 const read = require("read");
-var Helper = require("./helper");
+const Helper = require("./helper");
 
 function timestamp() {
 	const format = Helper.config.logs.format || "YYYY-MM-DD HH:mm:ss";

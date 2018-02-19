@@ -1,12 +1,12 @@
 "use strict";
 
 const pkg = require("../package.json");
-var _ = require("lodash");
-var path = require("path");
-var os = require("os");
-var fs = require("fs");
-var net = require("net");
-var bcrypt = require("bcryptjs");
+const _ = require("lodash");
+const path = require("path");
+const os = require("os");
+const fs = require("fs");
+const net = require("net");
+const bcrypt = require("bcryptjs");
 const colors = require("colors/safe");
 
 let homePath;
@@ -140,7 +140,7 @@ function ip2hex(address) {
 	}
 
 	return address.split(".").map(function(octet) {
-		var hex = parseInt(octet, 10).toString(16);
+		let hex = parseInt(octet, 10).toString(16);
 
 		if (hex.length === 1) {
 			hex = "0" + hex;

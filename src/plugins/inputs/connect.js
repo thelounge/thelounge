@@ -1,6 +1,6 @@
 "use strict";
 
-var Msg = require("../../models/msg");
+const Msg = require("../../models/msg");
 
 exports.commands = ["connect", "server"];
 exports.allowDisconnected = true;
@@ -24,8 +24,8 @@ exports.input = function({irc}, chan, cmd, args) {
 		return;
 	}
 
-	var port = args[1] || "";
-	var tls = port[0] === "+";
+	let port = args[1] || "";
+	const tls = port[0] === "+";
 
 	if (tls) {
 		port = port.substring(1);
