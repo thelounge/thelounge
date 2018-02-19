@@ -3,8 +3,9 @@
 	id="chan-{{id}}"
 	class="chan {{type}}"
 	data-id="{{id}}"
-	data-title="{{name}}"
 	data-type="{{type}}"
+	role="tabpanel"
+	aria-label="{{name}}"
 >
 	<div class="header">
 		<button class="lt" aria-label="Toggle channel list"></button>

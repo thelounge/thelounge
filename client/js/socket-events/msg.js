@@ -141,7 +141,7 @@ function notifyMessage(targetId, channel, msg) {
 				} else {
 					title = msg.from.nick;
 					if (!button.hasClass("query")) {
-						title += " (" + button.data("title").trim() + ")";
+						title += " (" + button.attr("aria-label").trim() + ")";
 					}
 					if (msg.type === "message") {
 						title += " says:";
