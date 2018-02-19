@@ -5,13 +5,13 @@ var Msg = require("../../models/msg");
 exports.commands = ["connect", "server"];
 exports.allowDisconnected = true;
 
-exports.input = function(network, chan, cmd, args) {
+exports.input = function({irc}, chan, cmd, args) {
 	if (args.length === 0) {
-		if (!network.irc || !network.irc.connection) {
+		if (!irc || !irc.connection) {
 			return;
 		}
 
-		if (network.irc.connection.connected) {
+		if (irc.connection.connected) {
 			chan.pushMessage(this, new Msg({
 				type: Msg.Type.ERROR,
 				text: "You are already connected.",
@@ -19,7 +19,7 @@ exports.input = function(network, chan, cmd, args) {
 			return;
 		}
 
-		network.irc.connection.connect();
+		irc.connection.connect();
 
 		return;
 	}

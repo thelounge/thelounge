@@ -101,7 +101,7 @@ const config = {
 		// automatically split all vendor dependencies into a separate bundle
 		new webpack.optimize.CommonsChunkPlugin({
 			name: "js/bundle.vendor.js",
-			minChunks: (module) => module.context && module.context.indexOf("node_modules") !== -1,
+			minChunks: (module) => module.context && module.context.includes("node_modules"),
 		}),
 	],
 };

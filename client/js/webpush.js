@@ -89,9 +89,9 @@ function onPushButton() {
 				userVisibleOnly: true,
 			}).then((subscription) => {
 				const rawKey = subscription.getKey ? subscription.getKey("p256dh") : "";
-				const key = rawKey ? window.btoa(String.fromCharCode.apply(null, new Uint8Array(rawKey))) : "";
+				const key = rawKey ? window.btoa(String.fromCharCode(...new Uint8Array(rawKey))) : "";
 				const rawAuthSecret = subscription.getKey ? subscription.getKey("auth") : "";
-				const authSecret = rawAuthSecret ? window.btoa(String.fromCharCode.apply(null, new Uint8Array(rawAuthSecret))) : "";
+				const authSecret = rawAuthSecret ? window.btoa(String.fromCharCode(...new Uint8Array(rawAuthSecret))) : "";
 
 				socket.emit("push:register", {
 					token: storage.get("token"),

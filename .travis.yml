@@ -3,7 +3,6 @@ node_js:
 - 9 # Current stable 
 - 8 # Active LTS until April 2019
 - 6 # Active LTS until April 2018
-- 4 # Maintenance LTS until 2018-04-01, will be dropped in The Lounge v3
 
 matrix:
   fast_finish: true

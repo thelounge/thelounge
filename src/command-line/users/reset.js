@@ -23,7 +23,7 @@ program
 			return;
 		}
 
-		if (users.indexOf(name) === -1) {
+		if (!users.includes(name)) {
 			log.error(`User ${colors.bold(name)} does not exist.`);
 			return;
 		}
