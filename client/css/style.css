@@ -268,6 +268,14 @@ kbd {
 #sidebar .chan.lobby::before,
 #chat .lobby .title::before { content: "\f0a0"; /* http://fontawesome.io/icon/hdd-o/ */ }
 
+#sidebar .not-secure .chan.lobby::before {
+	content: "\f09c"; /* https://fontawesome.com/v4.7.0/icon/unlock/ */
+}
+
+#sidebar .not-connected .chan.lobby::before {
+	content: "\f127"; /* https://fontawesome.com/v4.7.0/icon/chain-broken/ TODO v5: unlink */
+}
+
 .context-menu-query::before,
 .context-menu-action-query::before,
 #sidebar .chan.query::before,
@@ -557,15 +565,33 @@ kbd {
 	width: 100%;
 }
 
-#sidebar .chan:first-child {
+#sidebar .chan.lobby {
 	color: #84ce88;
 	font-size: 15px;
 	font-weight: bold;
 }
 
-#sidebar .chan:first-child:hover,
-#sidebar .chan:first-child.active {
+#sidebar .chan.lobby:hover,
+#sidebar .chan.lobby.active {
 	color: #c0f8c3;
+}
+
+#sidebar .not-secure .chan.lobby {
+	color: #f39c12;
+}
+
+#sidebar .not-secure .chan.lobby:hover,
+#sidebar .not-secure .chan.lobby.active {
+	color: #f8c572;
+}
+
+#sidebar .not-connected .chan.lobby {
+	color: #e74c3c;
+}
+
+#sidebar .not-connected .chan.lobby:hover,
+#sidebar .not-connected .chan.lobby.active {
+	color: #f1978e;
 }
 
 #sidebar .chan::before,

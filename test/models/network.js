@@ -109,8 +109,9 @@ describe("Network", function() {
 
 		it("should keep necessary properties", function() {
 			const network = new Network();
+			const clone = network.getFilteredClone();
 
-			expect(network.getFilteredClone()).to.be.an("object").that.has.all.keys(
+			expect(clone).to.be.an("object").that.has.all.keys(
 				"channels",
 				"commands",
 				"host",
@@ -121,8 +122,14 @@ describe("Network", function() {
 				"port",
 				"realname",
 				"serverOptions",
+				"status",
 				"tls",
 				"username"
+			);
+
+			expect(clone.status).to.be.an("object").that.has.all.keys(
+				"connected",
+				"secure"
 			);
 		});
 	});

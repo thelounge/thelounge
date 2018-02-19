@@ -84,7 +84,7 @@ Network.prototype.setNick = function(nick) {
  * @see {@link Chan#getFilteredClone}
  */
 Network.prototype.getFilteredClone = function(lastActiveChannel, lastMessage) {
-	return Object.keys(this).reduce((newNetwork, prop) => {
+	const filteredNetwork = Object.keys(this).reduce((newNetwork, prop) => {
 		if (prop === "channels") {
 			// Channels objects perform their own cloning
 			newNetwork[prop] = this[prop].map((channel) => channel.getFilteredClone(lastActiveChannel, lastMessage));
@@ -95,6 +95,28 @@ Network.prototype.getFilteredClone = function(lastActiveChannel, lastMessage) {
 
 		return newNetwork;
 	}, {});
+
+	filteredNetwork.status = this.getNetworkStatus();
+
+	return filteredNetwork;
+};
+
+Network.prototype.getNetworkStatus = function() {
+	const status = {
+		connected: false,
+		secure: false,
+	};
+
+	if (this.irc && this.irc.connection && this.irc.connection.transport) {
+		const transport = this.irc.connection.transport;
+
+		if (transport.socket) {
+			status.connected = transport.isConnected();
+			status.secure = (transport.socket.encrypted && transport.socket.authorized) || false;
+		}
+	}
+
+	return status;
 };
 
 Network.prototype.export = function() {

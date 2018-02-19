@@ -20,3 +20,10 @@ socket.on("network", function(data) {
 socket.on("network_changed", function(data) {
 	sidebar.find("#network-" + data.network).data("options", data.serverOptions);
 });
+
+socket.on("network:status", function(data) {
+	sidebar
+		.find("#network-" + data.network)
+		.toggleClass("not-connected", !data.connected)
+		.toggleClass("not-secure", !data.secure);
+});
