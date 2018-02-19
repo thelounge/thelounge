@@ -4,7 +4,6 @@
   "version": "2.7.1",
   "preferGlobal": true,
   "bin": {
-    "lounge": "index.js",
     "thelounge": "index.js"
   },
   "repository": {
