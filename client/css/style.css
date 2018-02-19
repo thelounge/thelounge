@@ -86,7 +86,8 @@ textarea#user-specified-css-input {
 	font-family: Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
 }
 
-code {
+code,
+.irc-monospace {
 	font-size: 12px;
 	padding: 2px 4px;
 	color: #e74c3c;
