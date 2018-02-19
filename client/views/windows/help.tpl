@@ -35,10 +35,10 @@
 		{{/if}}
 
 		<p>
-			<a href="https://thelounge.github.io/" target="_blank" rel="noopener" class="website-link">Website</a>
+			<a href="https://thelounge.chat/" target="_blank" rel="noopener" class="website-link">Website</a>
 		</p>
 		<p>
-			<a href="https://thelounge.github.io/docs/" target="_blank" rel="noopener" class="documentation-link">Documentation</a>
+			<a href="https://thelounge.chat/docs/" target="_blank" rel="noopener" class="documentation-link">Documentation</a>
 		</p>
 		<p>
 			<a href="https://github.com/thelounge/lounge/issues/new" target="_blank" rel="noopener" class="report-issue-link">Report an issue…</a>

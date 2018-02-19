@@ -31,11 +31,11 @@ describe("findLinks", () => {
 	});
 
 	it("should find urls in strings", () => {
-		const input = "look at https://thelounge.github.io/ for more information";
+		const input = "look at https://thelounge.chat/ for more information";
 		const expected = [{
-			link: "https://thelounge.github.io/",
+			link: "https://thelounge.chat/",
 			start: 8,
-			end: 36,
+			end: 31,
 		}];
 
 		const actual = findLinks(input);

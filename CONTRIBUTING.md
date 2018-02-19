@@ -30,4 +30,4 @@ your contributions.
   can read more about this in the [maintainers'
 corner](https://github.com/thelounge/lounge/wiki/Maintainers'-corner).
 - Please document any relevant changes in the documentation that can be found
-  [in its own repository](https://github.com/thelounge/thelounge.github.io).
+  [in its own repository](https://github.com/thelounge/thelounge.chat).

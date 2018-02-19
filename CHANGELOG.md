@@ -664,12 +664,12 @@ In the main repository:
 - Fix general spelling errors ([#1458](https://github.com/thelounge/lounge/pull/1458) by [@PolarizedIons](https://github.com/PolarizedIons))
 - Remove duplicate keybindings help ([#1543](https://github.com/thelounge/lounge/pull/1543) by [@xPaw](https://github.com/xPaw))
 
-On the [website repository](https://github.com/thelounge/thelounge.github.io):
+On the [website repository](https://github.com/thelounge/thelounge.chat):
 
-- Remove wrong and inexistent home option from configuration documentation ([#72](https://github.com/thelounge/thelounge.github.io/pull/72) by [@astorije](https://github.com/astorije))
-- Deprecate `--home` in favor of `LOUNGE_HOME` environment variable ([#73](https://github.com/thelounge/thelounge.github.io/pull/73) by [@astorije](https://github.com/astorije))
-- Add themes docs ([#69](https://github.com/thelounge/thelounge.github.io/pull/69) by [@YaManicKill](https://github.com/YaManicKill))
-- Add missing `prefetchStorage` configuration option to docs ([#74](https://github.com/thelounge/thelounge.github.io/pull/74) by [@MiniDigger](https://github.com/MiniDigger))
+- Remove wrong and inexistent home option from configuration documentation ([#72](https://github.com/thelounge/thelounge.chat/pull/72) by [@astorije](https://github.com/astorije))
+- Deprecate `--home` in favor of `LOUNGE_HOME` environment variable ([#73](https://github.com/thelounge/thelounge.chat/pull/73) by [@astorije](https://github.com/astorije))
+- Add themes docs ([#69](https://github.com/thelounge/thelounge.chat/pull/69) by [@YaManicKill](https://github.com/YaManicKill))
+- Add missing `prefetchStorage` configuration option to docs ([#74](https://github.com/thelounge/thelounge.chat/pull/74) by [@MiniDigger](https://github.com/MiniDigger))
 
 ### Internals
 
@@ -841,7 +841,7 @@ In the main repository:
 
 On the website:
 
-- Update demo URL to new demo ([#70](https://github.com/thelounge/thelounge.github.io/pull/70) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Update demo URL to new demo ([#70](https://github.com/thelounge/thelounge.chat/pull/70) by [@MaxLeiter](https://github.com/MaxLeiter))
 
 ### Internals
 
@@ -1169,8 +1169,8 @@ In the main repository:
 
 On the website:
 
-- Add notes about moving client docs to the app itself ([#63](https://github.com/thelounge/thelounge.github.io/pull/63) by [@astorije](https://github.com/astorije))
-- Deprecate (and attempt one last fixing) documentations of Heroku and Passenger ([#61](https://github.com/thelounge/thelounge.github.io/pull/61) by [@astorije](https://github.com/astorije))
+- Add notes about moving client docs to the app itself ([#63](https://github.com/thelounge/thelounge.chat/pull/63) by [@astorije](https://github.com/astorije))
+- Deprecate (and attempt one last fixing) documentations of Heroku and Passenger ([#61](https://github.com/thelounge/thelounge.chat/pull/61) by [@astorije](https://github.com/astorije))
 
 ### Internals
 
@@ -1209,7 +1209,7 @@ In the main repository:
 
 On the website:
 
-- Port recent changes to `maxHistory` from default config file ([#60](https://github.com/thelounge/thelounge.github.io/pull/60) by [@astorije](https://github.com/astorije))
+- Port recent changes to `maxHistory` from default config file ([#60](https://github.com/thelounge/thelounge.chat/pull/60) by [@astorije](https://github.com/astorije))
 
 ### Internals
 
@@ -1302,10 +1302,10 @@ In the main repository:
 
 On the website:
 
-- Remove distribution-specific install instructions of Node.js ([#49](https://github.com/thelounge/thelounge.github.io/pull/49) by [@astorije](https://github.com/astorije))
-- Remove wrong information about setting up password along with creating a user ([#50](https://github.com/thelounge/thelounge.github.io/pull/50) by [@astorije](https://github.com/astorije))
-- Update documentation of the configuration file ([#43](https://github.com/thelounge/thelounge.github.io/pull/43) by [@daftaupe](https://github.com/daftaupe))
-- Document the `/away` and `/back` commands ([#59](https://github.com/thelounge/thelounge.github.io/pull/59) by [@drkitty](https://github.com/drkitty))
+- Remove distribution-specific install instructions of Node.js ([#49](https://github.com/thelounge/thelounge.chat/pull/49) by [@astorije](https://github.com/astorije))
+- Remove wrong information about setting up password along with creating a user ([#50](https://github.com/thelounge/thelounge.chat/pull/50) by [@astorije](https://github.com/astorije))
+- Update documentation of the configuration file ([#43](https://github.com/thelounge/thelounge.chat/pull/43) by [@daftaupe](https://github.com/daftaupe))
+- Document the `/away` and `/back` commands ([#59](https://github.com/thelounge/thelounge.chat/pull/59) by [@drkitty](https://github.com/drkitty))
 
 ### Internals
 

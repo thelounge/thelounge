@@ -36,7 +36,7 @@ describe("Msg", function() {
 			}, {
 				body: "",
 				head: "The Lounge",
-				link: "https://thelounge.github.io/",
+				link: "https://thelounge.chat/",
 				thumb: "",
 				type: "link",
 				shown: true,
@@ -44,7 +44,7 @@ describe("Msg", function() {
 		});
 
 		it("should find a preview given an existing link", function() {
-			expect(msg.findPreview("https://thelounge.github.io/").head)
+			expect(msg.findPreview("https://thelounge.chat/").head)
 				.to.equal("The Lounge");
 		});
 
