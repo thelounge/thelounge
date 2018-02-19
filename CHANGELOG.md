@@ -4,6 +4,75 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v2.7.1 - 2018-02-18
+
+For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.7.0...v2.7.1) and [milestone](https://github.com/thelounge/lounge/milestone/29?closed=1).
+
+This releases mainly fixes bugs that were introduced by previous versions, and comes with very minor improvements to the UI. Among other things, we fixed the unread markers showing multiple times, which in turn fixes memory leaks when keeping The Lounge open for long periods of time (e.g. overnight).
+
+This simply ensures we did not leave any unattended bugs before going for The Lounge v3.
+
+### Changed
+
+- Autocomplete channels on the current network ([#1993](https://github.com/thelounge/lounge/pull/1993) by [@milindl](https://github.com/milindl))
+- Set `decoding="async"` on image previews ([#1924](https://github.com/thelounge/lounge/pull/1924) by [@xPaw](https://github.com/xPaw))
+- Add tooltip to channel close button ([#1856](https://github.com/thelounge/lounge/pull/1856) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Show channel name on channel-related errors ([#1933](https://github.com/thelounge/lounge/pull/1933) by [@RockyTV](https://github.com/RockyTV))
+- Display password field when `displayNetwork` is false ([#2066](https://github.com/thelounge/lounge/pull/2066) by [@xPaw](https://github.com/xPaw))
+- Update production dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `semver` ([#1985](https://github.com/thelounge/lounge/pull/1985))
+  - `primer-tooltips` ([#1988](https://github.com/thelounge/lounge/pull/1988))
+  - `lodash` ([#2032](https://github.com/thelounge/lounge/pull/2032))
+  - `commander` ([#2038](https://github.com/thelounge/lounge/pull/2038), [#2041](https://github.com/thelounge/lounge/pull/2041))
+  - `urijs` ([#2053](https://github.com/thelounge/lounge/pull/2053))
+  - `mime-types` ([#2067](https://github.com/thelounge/lounge/pull/2067))
+
+### Fixed
+
+- Prevent user context menu from opening while selecting text ([#1955](https://github.com/thelounge/lounge/pull/1955) by [@xPaw](https://github.com/xPaw))
+- Fix timestamp tooltips not aligning correctly with timestamps ([#1999](https://github.com/thelounge/lounge/pull/1999) by [@astorije](https://github.com/astorije))
+- Set `start_url` in `manifest.json` so that The Lounge always opens the correct window ([#2010](https://github.com/thelounge/lounge/pull/2010) by [@xPaw](https://github.com/xPaw))
+- Do not statically serve the index template prior to rendering it ([#1979](https://github.com/thelounge/lounge/pull/1979) by [@astorije](https://github.com/astorije))
+- Persist query windows between server restarts ([#2019](https://github.com/thelounge/lounge/pull/2019) by [@McInkay](https://github.com/McInkay))
+- Preload preview images before appending them to DOM ([#1925](https://github.com/thelounge/lounge/pull/1925) by [@xPaw](https://github.com/xPaw))
+- Fix `textcomplete` reference in `autocompletion.disable` ([#2023](https://github.com/thelounge/lounge/pull/2023) by [@xPaw](https://github.com/xPaw))
+- Send visible defaults when `displayNetwork` is `false` ([#2025](https://github.com/thelounge/lounge/pull/2025) by [@xPaw](https://github.com/xPaw))
+- Wait for server response when parting channels ([#2020](https://github.com/thelounge/lounge/pull/2020) by [@xPaw](https://github.com/xPaw))
+- Fix auto-open media option not working ([#2027](https://github.com/thelounge/lounge/pull/2027) by [@xPaw](https://github.com/xPaw))
+- Do not block `/join` command from being sent ([#2013](https://github.com/thelounge/lounge/pull/2013) by [@xPaw](https://github.com/xPaw))
+- Define which message types should not be logged ([#2022](https://github.com/thelounge/lounge/pull/2022) by [@xPaw](https://github.com/xPaw))
+- Fix messages not being condensed correctly ([#2030](https://github.com/thelounge/lounge/pull/2030) by [@xPaw](https://github.com/xPaw))
+- Fix queries going to lobby if the network name matches user name ([#2037](https://github.com/thelounge/lounge/pull/2037) by [@xPaw](https://github.com/xPaw))
+- Fix default theme not being correct ([#2033](https://github.com/thelounge/lounge/pull/2033) by [@xPaw](https://github.com/xPaw))
+- Fix duplicate chat containers and unread markers when reconnecting ([#2039](https://github.com/thelounge/lounge/pull/2039) by [@xPaw](https://github.com/xPaw))
+- Fix crash when hostname is changed in lockNetwork mode ([#2042](https://github.com/thelounge/lounge/pull/2042) by [@xPaw](https://github.com/xPaw))
+- Still render link previews if image fails to load ([#2043](https://github.com/thelounge/lounge/pull/2043) by [@xPaw](https://github.com/xPaw))
+- Make sure packages can be referenced in subfolders ([#2045](https://github.com/thelounge/lounge/pull/2045) by [@xPaw](https://github.com/xPaw))
+- Ensure packages loaded are directories ([#2035](https://github.com/thelounge/lounge/pull/2035) by [@astorije](https://github.com/astorije), [#2060](https://github.com/thelounge/lounge/pull/2060) by [@xPaw](https://github.com/xPaw))
+- Fix border after nickname not taking full height ([#2055](https://github.com/thelounge/lounge/pull/2055) by [@xPaw](https://github.com/xPaw))
+- Provide exact version into `npm install` command ([#2063](https://github.com/thelounge/lounge/pull/2063) by [@xPaw](https://github.com/xPaw))
+- Track channel state to allow removing channels user is not in ([#2058](https://github.com/thelounge/lounge/pull/2058) by [@xPaw](https://github.com/xPaw))
+- Allow scaling the page ([#1910](https://github.com/thelounge/lounge/pull/1910) by [@xPaw](https://github.com/xPaw))
+- Fix `bind` not being passed to `irc-framework` ([#2071](https://github.com/thelounge/lounge/pull/2071) by [@xPaw](https://github.com/xPaw))
+
+### Security
+
+- Allow stylesheets to be served behind HTTPS in CSP rules ([#2014](https://github.com/thelounge/lounge/pull/2014) by [@McInkay](https://github.com/McInkay))
+
+### Internals
+
+- Build template list at Webpack time instead of manually keeping this in sync with the views folders ([#1931](https://github.com/thelounge/lounge/pull/1931) by [@astorije](https://github.com/astorije))
+- Remove deprecated jQuery calls ([#2015](https://github.com/thelounge/lounge/pull/2015) by [@xPaw](https://github.com/xPaw))
+- Unbind image events after the image is loaded ([#2047](https://github.com/thelounge/lounge/pull/2047) by [@xPaw](https://github.com/xPaw))
+- Use forked ldapjs to remove dtrace ([#2021](https://github.com/thelounge/lounge/pull/2021) by [@xPaw](https://github.com/xPaw))
+- Update development dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+  - `eslint` ([#1992](https://github.com/thelounge/lounge/pull/1992), [#2029](https://github.com/thelounge/lounge/pull/2029), [#2068](https://github.com/thelounge/lounge/pull/2068))
+  - `mocha` ([#1989](https://github.com/thelounge/lounge/pull/1989), [#2061](https://github.com/thelounge/lounge/pull/2061))
+  - `jquery` ([#1994](https://github.com/thelounge/lounge/pull/1994))
+  - `copy-webpack-plugin` ([#2046](https://github.com/thelounge/lounge/pull/2046), [#2048](https://github.com/thelounge/lounge/pull/2048))
+  - `webpack` ([#2052](https://github.com/thelounge/lounge/pull/2052))
+  - `stylelint-config-standard` ([#2070](https://github.com/thelounge/lounge/pull/2070))
+
 ## v2.7.0 - 2018-01-28
 
 For more details, [see the full changelog](https://github.com/thelounge/lounge/compare/v2.6.0...v2.7.0) and [milestone](https://github.com/thelounge/lounge/milestone/27?closed=1).
