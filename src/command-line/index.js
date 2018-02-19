@@ -46,13 +46,6 @@ if (!Helper.config.public && !Helper.config.ldap.enable) {
 require("./install");
 require("./uninstall");
 
-// TODO: Remove this when releasing The Lounge v3
-if (process.argv[1].endsWith(`${require("path").sep}lounge`)) {
-	log.warn(`The ${colors.red("lounge")} CLI is ${colors.bold.red("deprecated")} and will be removed in v3.`);
-	log.warn(`Use ${colors.green("thelounge")} instead.`);
-	process.argv[1] = "thelounge";
-}
-
 // `parse` expects to be passed `process.argv`, but we need to remove to give it
 // a version of `argv` that does not contain options already parsed by
 // `parseOptions` above.
