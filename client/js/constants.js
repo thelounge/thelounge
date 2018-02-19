@@ -68,26 +68,6 @@ const commands = [
 	"/whois",
 ];
 
-const actionTypes = [
-	"away",
-	"back",
-	"ban_list",
-	"invite",
-	"join",
-	"mode",
-	"kick",
-	"nick",
-	"part",
-	"quit",
-	"topic",
-	"topic_set_by",
-	"action",
-	"whois",
-	"ctcp",
-	"chghost",
-	"channel_list",
-];
-
 const condensedTypes = [
 	"away",
 	"back",
@@ -110,6 +90,5 @@ module.exports = {
 	commands: commands,
 	condensedTypes: condensedTypes,
 	condensedTypesQuery: "." + condensedTypes.join(", ."),
-	actionTypes: actionTypes,
 	timeFormats: timeFormats,
 };

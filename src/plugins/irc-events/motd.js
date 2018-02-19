@@ -9,13 +9,11 @@ module.exports = function(irc, network) {
 		const lobby = network.channels[0];
 
 		if (data.motd) {
-			data.motd.trim().split("\n").forEach((text) => {
-				const msg = new Msg({
-					type: Msg.Type.MOTD,
-					text: text,
-				});
-				lobby.pushMessage(client, msg);
+			const msg = new Msg({
+				type: Msg.Type.MOTD,
+				text: data.motd,
 			});
+			lobby.pushMessage(client, msg);
 		}
 
 		if (data.error) {

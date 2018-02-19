@@ -93,8 +93,7 @@ function buildChatMessage(msg) {
 		msg.highlight = true;
 	}
 
-	if (constants.actionTypes.indexOf(type) !== -1) {
-		msg.template = "actions/" + type;
+	if (typeof templates.actions[type] !== "undefined") {
 		template = "msg_action";
 	} else if (type === "unhandled") {
 		template = "msg_unhandled";
