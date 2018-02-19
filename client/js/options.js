@@ -22,13 +22,11 @@ const options = {
 	notifyAllMessages: false,
 	showSeconds: false,
 	statusMessages: "condensed",
-	theme: $("#theme").prop("href").match(/themes\/(.*?)\.css$/), // TODO: Make this a data attribute in v3
+	theme: $("#theme").data("server-theme"),
 	media: true,
 	userStyles: userStyles.text(),
 };
 let userOptions = JSON.parse(storage.get("settings")) || {};
-
-options.theme = options.theme ? options.theme[1] : "example"; // TODO: Remove in v3
 
 for (const key in options) {
 	if (userOptions[key] !== undefined) {
