@@ -372,7 +372,9 @@ $(function() {
 			sidebarSlide.toggle(false);
 		}
 
-		const lastActive = $("#windows > .active")
+		const lastActive = $("#windows > .active");
+
+		lastActive
 			.removeClass("active")
 			.find(".chat")
 			.unsticky();
