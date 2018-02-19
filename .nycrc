@@ -3,6 +3,7 @@
   "exclude": [
     "coverage",
     "public/",
+    "scripts/",
     "test/",
     "webpack.config.js"
   ],
