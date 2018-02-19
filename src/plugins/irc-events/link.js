@@ -99,11 +99,13 @@ function parse(msg, preview, res, client) {
 	case "image/jpeg":
 	case "image/webp":
 		if (res.size > (Helper.config.prefetchMaxImageSize * 1024)) {
-			return;
+			preview.type = "error";
+			preview.error = "image-too-big";
+			preview.maxSize = Helper.config.prefetchMaxImageSize * 1024;
+		} else {
+			preview.type = "image";
+			preview.thumb = preview.link;
 		}
-
-		preview.type = "image";
-		preview.thumb = preview.link;
 
 		break;
 

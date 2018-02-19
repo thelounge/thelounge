@@ -1328,6 +1328,10 @@ kbd {
 	overflow: hidden;
 }
 
+#chat .toggle-type-error {
+	background: transparent;
+}
+
 #chat .toggle-content img {
 	max-width: 100%;
 	max-height: 128px;
