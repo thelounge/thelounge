@@ -8,7 +8,7 @@ module.exports = function(irc, network) {
 	irc.on("registered", function(data) {
 		network.setNick(data.nick);
 
-		const lobby = network.channels[0];
+		const [lobby] = network.channels;
 		const msg = new Msg({
 			text: "You're now known as " + data.nick,
 		});

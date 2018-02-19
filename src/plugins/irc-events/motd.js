@@ -6,7 +6,7 @@ module.exports = function(irc, network) {
 	const client = this;
 
 	irc.on("motd", function(data) {
-		const lobby = network.channels[0];
+		const [lobby] = network.channels;
 
 		if (data.motd) {
 			data.motd.trim().split("\n").forEach((text) => {

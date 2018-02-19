@@ -8,7 +8,7 @@ exports.input = function(network, chan, cmd, args) {
 	}
 
 	var message = args.slice(1).join(" ");
-	var irc = network.irc;
+	var {irc} = network;
 	irc.notice(args[0], message);
 
 	var targetChan = network.getChannel(args[0]);

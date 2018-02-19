@@ -1,6 +1,6 @@
 "use strict";
 
-const expect = require("chai").expect;
+const {expect} = require("chai");
 const fill = require("../../../../../../client/js/libs/handlebars/ircmessageparser/fill");
 
 describe("fill", () => {

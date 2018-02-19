@@ -1,6 +1,6 @@
 "use strict";
 
-const expect = require("chai").expect;
+const {expect} = require("chai");
 const Chan = require("../../src/models/chan");
 const Msg = require("../../src/models/msg");
 const User = require("../../src/models/user");
@@ -196,7 +196,7 @@ describe("Chan", function() {
 
 			expect(chan.id).to.equal(1337);
 
-			const messages = chan.getFilteredClone(999).messages;
+			const {messages} = chan.getFilteredClone(999);
 
 			expect(messages).to.have.lengthOf(1);
 			expect(messages[0].id).to.equal(13);
@@ -215,7 +215,7 @@ describe("Chan", function() {
 
 			expect(chan.id).to.equal(1337);
 
-			const messages = chan.getFilteredClone(1337).messages;
+			const {messages} = chan.getFilteredClone(1337);
 
 			expect(messages).to.have.lengthOf(4);
 			expect(messages[0].id).to.equal(10);
@@ -239,7 +239,7 @@ describe("Chan", function() {
 
 			expect(chan.id).to.equal(1337);
 
-			const messages = chan.getFilteredClone(1337, 12).messages;
+			const {messages} = chan.getFilteredClone(1337, 12);
 
 			expect(messages).to.have.lengthOf(3);
 			expect(messages[0].id).to.equal(13);

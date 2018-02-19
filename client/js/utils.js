@@ -64,8 +64,7 @@ function expand() {
 	return true;
 }
 
-function join(args) {
-	const channel = args[0];
+function join([channel]) {
 	if (channel) {
 		const chan = findCurrentNetworkChan(channel);
 		if (chan.length) {

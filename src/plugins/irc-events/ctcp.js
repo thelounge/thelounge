@@ -9,7 +9,7 @@ module.exports = function(irc, network) {
 		let chan = network.getChannel(data.nick);
 
 		if (typeof chan === "undefined") {
-			chan = network.channels[0];
+			[chan] = network.channels;
 		}
 
 		const msg = new Msg({

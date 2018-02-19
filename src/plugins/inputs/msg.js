@@ -3,7 +3,7 @@
 exports.commands = ["msg", "say"];
 
 exports.input = function(network, chan, cmd, args) {
-	var irc = network.irc;
+	var {irc} = network;
 	var target = cmd === "msg" ? args.shift() : chan.name;
 
 	if (args.length === 0 || !target) {

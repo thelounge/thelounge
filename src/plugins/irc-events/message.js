@@ -45,10 +45,10 @@ module.exports = function(irc, network) {
 
 		// Server messages go to server window, no questions asked
 		if (data.from_server) {
-			chan = network.channels[0];
+			[chan] = network.channels;
 			from = chan.getUser(data.nick);
 		} else {
-			let target = data.target;
+			let {target} = data;
 
 			// If the message is targeted at us, use sender as target instead
 			if (target.toLowerCase() === irc.user.nick.toLowerCase()) {
@@ -61,7 +61,7 @@ module.exports = function(irc, network) {
 				// Send notices that are not targeted at us into the server window
 				if (data.type === Msg.Type.NOTICE) {
 					showInActive = true;
-					chan = network.channels[0];
+					[chan] = network.channels;
 				} else {
 					chan = new Chan({
 						type: Chan.Type.QUERY,

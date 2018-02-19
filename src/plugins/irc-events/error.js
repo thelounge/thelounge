@@ -20,7 +20,7 @@ module.exports = function(irc, network) {
 			text += data.error;
 		}
 
-		const lobby = network.channels[0];
+		const [lobby] = network.channels;
 		const msg = new Msg({
 			type: Msg.Type.ERROR,
 			text: text,
@@ -30,7 +30,7 @@ module.exports = function(irc, network) {
 	});
 
 	irc.on("nick in use", function(data) {
-		const lobby = network.channels[0];
+		const [lobby] = network.channels;
 		const msg = new Msg({
 			type: Msg.Type.ERROR,
 			text: data.nick + ": " + (data.reason || "Nickname is already in use."),
@@ -50,7 +50,7 @@ module.exports = function(irc, network) {
 	});
 
 	irc.on("nick invalid", function(data) {
-		const lobby = network.channels[0];
+		const [lobby] = network.channels;
 		const msg = new Msg({
 			type: Msg.Type.ERROR,
 			text: data.nick + ": " + (data.reason || "Nickname is invalid."),

@@ -47,6 +47,7 @@ rules:
   object-curly-spacing: [error, never]
   padded-blocks: [error, never]
   prefer-const: error
+  prefer-destructuring: error
   quote-props: [error, as-needed]
   quotes: [error, double, avoid-escape]
   semi-spacing: error

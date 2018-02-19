@@ -7,8 +7,7 @@ module.exports = function(irc, network) {
 	const client = this;
 
 	irc.on("banlist", function(banlist) {
-		const channel = banlist.channel;
-		const bans = banlist.bans;
+		const {bans, channel} = banlist;
 		if (!bans || bans.length === 0) {
 			const msg = new Msg({
 				time: Date.now(),

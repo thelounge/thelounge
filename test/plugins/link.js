@@ -1,7 +1,7 @@
 "use strict";
 
 const path = require("path");
-const expect = require("chai").expect;
+const {expect} = require("chai");
 const util = require("../util");
 const Helper = require("../../src/helper");
 const link = require("../../src/plugins/irc-events/link.js");

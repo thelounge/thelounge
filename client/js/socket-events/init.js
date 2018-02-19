@@ -12,7 +12,7 @@ const utils = require("../utils");
 socket.on("init", function(data) {
 	$("#loading-page-message, #connection-error").text("Rendering…");
 
-	const lastMessageId = utils.lastMessageId;
+	const {lastMessageId} = utils;
 	let previousActive = 0;
 
 	if (lastMessageId > -1) {

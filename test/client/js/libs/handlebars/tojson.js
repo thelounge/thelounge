@@ -1,6 +1,6 @@
 "use strict";
 
-const expect = require("chai").expect;
+const {expect} = require("chai");
 const tojson = require("../../../../../client/js/libs/handlebars/tojson");
 
 describe("tojson Handlebars helper", function() {

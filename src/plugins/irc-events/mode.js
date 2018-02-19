@@ -23,7 +23,7 @@ module.exports = function(irc, network) {
 		data.modes.forEach((mode) => {
 			const text = mode.mode;
 			const add = text[0] === "+";
-			const char = text[1];
+			const [, char] = text;
 
 			if (char === "k") {
 				targetChan.key = add ? mode.param : "";
@@ -36,7 +36,7 @@ module.exports = function(irc, network) {
 		let targetChan;
 
 		if (data.target === irc.user.nick) {
-			targetChan = network.channels[0];
+			[targetChan] = network.channels;
 		} else {
 			targetChan = network.getChannel(data.target);
 			if (typeof targetChan === "undefined") {
@@ -55,7 +55,7 @@ module.exports = function(irc, network) {
 		data.modes.forEach((mode) => {
 			let text = mode.mode;
 			const add = text[0] === "+";
-			const char = text[1];
+			const [, char] = text;
 
 			if (char === "k") {
 				targetChan.key = add ? mode.param : "";

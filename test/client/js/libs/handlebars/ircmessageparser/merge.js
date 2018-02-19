@@ -1,6 +1,6 @@
 "use strict";
 
-const expect = require("chai").expect;
+const {expect} = require("chai");
 const merge = require("../../../../../../client/js/libs/handlebars/ircmessageparser/merge");
 
 describe("merge", () => {

@@ -22,7 +22,7 @@ exports.input = function(network, chan, cmd, args) {
 		return;
 	}
 
-	var newNick = args[0];
+	var [newNick] = args;
 
 	// If connected to IRC, send to server and wait for ACK
 	// otherwise update the nick and UI straight away

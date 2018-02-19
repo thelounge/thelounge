@@ -82,7 +82,7 @@ function appendMessage(container, chanId, chanType, msg) {
 }
 
 function buildChatMessage(msg) {
-	const type = msg.type;
+	const {type} = msg;
 	let template = "msg";
 
 	// See if any of the custom highlight regexes match
