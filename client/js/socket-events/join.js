@@ -9,7 +9,7 @@ const sidebar = $("#sidebar");
 
 socket.on("join", function(data) {
 	const id = data.network;
-	const network = sidebar.find("#network-" + id);
+	const network = sidebar.find(`#network-${id}-chanlist`);
 	network.append(
 		templates.chan({
 			channels: [data.chan],

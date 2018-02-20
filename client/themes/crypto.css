@@ -64,7 +64,7 @@ a:hover,
 	font-size: 12px;
 }
 
-#sidebar .chan:first-child {
+#sidebar .chan.lobby {
 	color: #00ff0e;
 }
 
