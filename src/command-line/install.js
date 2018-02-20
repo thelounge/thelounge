@@ -37,11 +37,10 @@ program
 			const packagesPath = Helper.getPackagesPath();
 			const packagesConfig = path.join(packagesPath, "package.json");
 
-			// Create node_modules folder, otherwise npm will start walking upwards to find one
+			// Create node_modules folder, otherwise yarn will start walking upwards to find one
 			fsextra.ensureDirSync(path.join(packagesPath, "node_modules"));
 
-			// Create package.json with private set to true to avoid npm warnings, if
-			// it doesn't exist already
+			// Create package.json with private set to true, if it doesn't exist already
 			if (!fs.existsSync(packagesConfig)) {
 				fs.writeFileSync(packagesConfig, JSON.stringify({
 					private: true,
@@ -49,33 +48,50 @@ program
 				}, null, "\t"));
 			}
 
-			const npm = child.spawn(
-				process.platform === "win32" ? "npm.cmd" : "npm",
-				[
-					"install",
-					"--production",
-					"--save",
-					"--save-exact",
-					"--no-bin-links",
-					"--no-package-lock",
-					"--no-progress",
-					"--prefix",
-					packagesPath,
-					`${packageName}@${json.version}`,
-				],
-				{
-					// This is the same as `"inherit"` except `process.stdout` is ignored
-					stdio: [process.stdin, "ignore", process.stderr],
-				}
+			const yarn = path.join(
+				__dirname,
+				"..",
+				"..",
+				"node_modules",
+				"yarn",
+				"bin",
+				"yarn.js"
 			);
 
-			npm.on("error", (e) => {
+			let success = false;
+			const add = child.spawn(
+				process.execPath,
+				[
+					yarn,
+					"add",
+					"--json",
+					"--exact",
+					"--production",
+					"--ignore-scripts",
+					"--non-interactive",
+					"--cwd",
+					packagesPath,
+					`${packageName}@${json.version}`,
+				]
+			);
+
+			add.stdout.on("data", (data) => {
+				data.toString().trim().split("\n").forEach((line) => {
+					line = JSON.parse(line);
+
+					if (line.type === "success") {
+						success = true;
+					}
+				});
+			});
+
+			add.on("error", (e) => {
 				log.error(`${e}`);
 				process.exit(1);
 			});
 
-			npm.on("close", (code) => {
-				if (code !== 0) {
+			add.on("close", (code) => {
+				if (!success || code !== 0) {
 					log.error(`Failed to install ${colors.green(packageName)}. Exit code: ${code}`);
 					return;
 				}

@@ -30,7 +30,12 @@ program
 			process.exit(1);
 		}
 
-		const npm = process.platform === "win32" ? "npm.cmd" : "npm";
+		const packages = JSON.parse(fs.readFileSync(packagesConfig, "utf-8"));
+
+		if (!packages.dependencies || !packages.dependencies.hasOwnProperty(packageName)) {
+			log.warn(packageWasNotInstalled);
+			process.exit(1);
+		}
 
 		const errorHandler = (error) => {
 			log.error(
@@ -40,64 +45,48 @@ program
 			process.exit(1);
 		};
 
-		// First, we check if the package is installed with `npm list`
-		const list = child.spawn(
-			npm,
-			[
-				"list",
-				"--depth",
-				"0",
-				"--prefix",
-				packagesPath,
-				packageName,
-			],
-			{
-				// This is the same as `"inherit"` except:
-				// - `process.stdout` is piped so we can test if the output mentions the
-				//   package was found
-				// - `process.stderr` is ignored to silence `npm ERR! extraneous` errors
-				stdio: [process.stdin, "pipe", "ignore"],
-			}
+		const yarn = path.join(
+			__dirname,
+			"..",
+			"..",
+			"node_modules",
+			"yarn",
+			"bin",
+			"yarn.js"
 		);
 
-		list.stdout.on("data", (data) => {
-			// If the package name does not appear in stdout, it means it was not
-			// installed. We cannot rely on exit code because `npm ERR! extraneous`
-			// causes a status of 1 even if package exists.
-			if (!data.toString().includes(packageName)) {
-				log.warn(packageWasNotInstalled);
-				process.exit(1);
-			}
+		let success = false;
+		const remove = child.spawn(
+			process.execPath,
+			[
+				yarn,
+				"remove",
+				"--json",
+				"--ignore-scripts",
+				"--non-interactive",
+				"--cwd",
+				packagesPath,
+				packageName,
+			]
+		);
+
+		remove.stdout.on("data", (data) => {
+			data.toString().trim().split("\n").forEach((line) => {
+				line = JSON.parse(line);
+
+				if (line.type === "success") {
+					success = true;
+				}
+			});
 		});
 
-		list.on("error", errorHandler);
+		remove.on("error", errorHandler);
 
-		list.on("close", () => {
-			// If we get there, it means the package exists, so uninstall
-			const uninstall = child.spawn(
-				npm,
-				[
-					"uninstall",
-					"--save",
-					"--no-progress",
-					"--prefix",
-					packagesPath,
-					packageName,
-				],
-				{
-					// This is the same as `"inherit"` except `process.stdout` is silenced
-					stdio: [process.stdin, "ignore", process.stderr],
-				}
-			);
+		remove.on("close", (code) => {
+			if (!success || code !== 0) {
+				return errorHandler(code);
+			}
 
-			uninstall.on("error", errorHandler);
-
-			uninstall.on("close", (code) => {
-				if (code !== 0) {
-					errorHandler(code);
-				}
-
-				log.info(`${colors.green(packageName)} has been successfully uninstalled.`);
-			});
+			log.info(`${colors.green(packageName)} has been successfully uninstalled.`);
 		});
 	});
