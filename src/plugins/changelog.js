@@ -43,6 +43,7 @@ function fetch(callback) {
 		// Find the current release among releases on GitHub
 		for (i = 0; i < body.length; i++) {
 			release = body[i];
+
 			if (release.tag_name === versions.current.version) {
 				versions.current.changelog = release.body_html;
 				prerelease = release.prerelease;

@@ -10,6 +10,7 @@ const Chan = require("../src/models/chan");
 function MockClient() {
 	this.user = {nick: "test-user"};
 }
+
 util.inherits(MockClient, EventEmitter);
 
 MockClient.prototype.createMessage = function(opts) {

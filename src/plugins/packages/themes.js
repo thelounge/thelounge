@@ -18,6 +18,7 @@ function loadLocalThemes() {
 		if (err) {
 			return;
 		}
+
 		builtInThemes
 			.filter((theme) => theme.endsWith(".css"))
 			.map(makeLocalThemeObject)
@@ -27,6 +28,7 @@ function loadLocalThemes() {
 
 function addTheme(packageName, packageObject) {
 	const theme = makePackageThemeObject(packageName, packageObject);
+
 	if (theme) {
 		themes.set(theme.name, theme);
 	}
@@ -54,6 +56,7 @@ function makePackageThemeObject(moduleName, module) {
 	if (!module || module.type !== "theme") {
 		return;
 	}
+
 	const modulePath = Helper.getPackageModulePath(moduleName);
 	const displayName = module.name || moduleName;
 	const filename = path.join(modulePath, module.css);

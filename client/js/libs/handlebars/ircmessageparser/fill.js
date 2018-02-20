@@ -16,6 +16,7 @@ function fill(existingEntries, text) {
 				end: textSegment.start,
 			});
 		}
+
 		position = textSegment.end;
 		return acc;
 	}, []);

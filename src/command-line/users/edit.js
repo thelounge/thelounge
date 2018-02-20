@@ -28,6 +28,7 @@ program
 			log.error(`User ${colors.bold(name)} does not exist.`);
 			return;
 		}
+
 		const child_spawn = child.spawn(
 			process.env.EDITOR || "vi",
 			[Helper.getUserConfigPath(name)],

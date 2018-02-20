@@ -12,6 +12,7 @@ const chat = $("#chat");
 const sidebar = $("#sidebar");
 
 let pop;
+
 try {
 	pop = new Audio();
 	pop.src = "audio/pop.ogg";
@@ -69,6 +70,7 @@ function processReceivedMessage(data) {
 	notifyMessage(targetId, channel, data);
 
 	const lastVisible = container.find("div:visible").last();
+
 	if (data.msg.self
 		|| lastVisible.hasClass("unread-marker")
 		|| (lastVisible.hasClass("date-marker")
@@ -100,8 +102,10 @@ function processReceivedMessage(data) {
 
 	if ((data.msg.type === "message" || data.msg.type === "action") && channel.hasClass("channel")) {
 		const nicks = channel.find(".users").data("nicks");
+
 		if (nicks) {
 			const find = nicks.indexOf(data.msg.from.nick);
+
 			if (find !== -1) {
 				nicks.splice(find, 1);
 				nicks.unshift(data.msg.from.nick);
@@ -119,6 +123,7 @@ function notifyMessage(targetId, channel, msg) {
 	}
 
 	const button = sidebar.find(".chan[data-id='" + targetId + "']");
+
 	if (msg.highlight || (options.notifyAllMessages && msg.type === "message")) {
 		if (!document.hasFocus() || !channel.hasClass("active")) {
 			if (options.notification) {
@@ -140,12 +145,15 @@ function notifyMessage(targetId, channel, msg) {
 					body = msg.from.nick + " invited you to " + msg.channel;
 				} else {
 					title = msg.from.nick;
+
 					if (!button.hasClass("query")) {
 						title += " (" + button.attr("aria-label").trim() + ")";
 					}
+
 					if (msg.type === "message") {
 						title += " says:";
 					}
+
 					body = cleanIrcMessage(msg.text);
 				}
 

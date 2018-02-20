@@ -115,14 +115,17 @@ Client.prototype.emit = function(event, data) {
 Client.prototype.find = function(channelId) {
 	let network = null;
 	let chan = null;
+
 	for (const i in this.networks) {
 		const n = this.networks[i];
 		chan = _.find(n.channels, {id: channelId});
+
 		if (chan) {
 			network = n;
 			break;
 		}
 	}
+
 	if (network && chan) {
 		return {
 			network: network,
@@ -340,6 +343,7 @@ Client.prototype.input = function(data) {
 Client.prototype.inputLine = function(data) {
 	const client = this;
 	const target = client.find(data.target);
+
 	if (!target) {
 		return;
 	}
@@ -373,6 +377,7 @@ Client.prototype.inputLine = function(data) {
 
 	if (cmd in inputs) {
 		const plugin = inputs[cmd];
+
 		if (connected || plugin.allowDisconnected) {
 			connected = true;
 			plugin.input.apply(client, [target.network, target.chan, cmd, args]);
@@ -427,6 +432,7 @@ Client.prototype.open = function(socketId, target) {
 	}
 
 	target = this.find(target);
+
 	if (!target) {
 		return;
 	}
@@ -459,6 +465,7 @@ Client.prototype.sort = function(data) {
 
 	case "channels": {
 		const network = _.find(this.networks, {id: data.target});
+
 		if (!network) {
 			return;
 		}
@@ -478,6 +485,7 @@ Client.prototype.sort = function(data) {
 Client.prototype.names = function(data) {
 	const client = this;
 	const target = client.find(data.target);
+
 	if (!target) {
 		return;
 	}

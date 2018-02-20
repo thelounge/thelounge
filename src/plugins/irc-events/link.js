@@ -122,6 +122,7 @@ function parse(msg, preview, res, client) {
 		if (!preview.link.startsWith("https://")) {
 			break;
 		}
+
 		preview.type = "audio";
 		preview.res = res.type;
 
@@ -133,6 +134,7 @@ function parse(msg, preview, res, client) {
 		if (!preview.link.startsWith("https://")) {
 			break;
 		}
+
 		preview.res = res.type;
 		preview.type = "video";
 
@@ -191,6 +193,7 @@ function emitPreview(client, msg, preview) {
 
 function fetch(uri, cb) {
 	let req;
+
 	try {
 		req = request.get({
 			url: uri,
@@ -214,6 +217,7 @@ function fetch(uri, cb) {
 				// response is an image
 				// if Content-Length header reports a size exceeding the prefetch limit, abort fetch
 				const contentLength = parseInt(res.headers["content-length"], 10) || 0;
+
 				if (contentLength > limit) {
 					req.abort();
 				}

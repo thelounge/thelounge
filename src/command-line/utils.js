@@ -56,12 +56,15 @@ class Utils {
 			} else if (/^\[.*\]$/.test(value)) { // Arrays
 				// Supporting arrays `[a,b]` and `[a, b]`
 				const array = value.slice(1, -1).split(/,\s*/);
+
 				// If [] is given, it will be parsed as `[ "" ]`, so treat this as empty
 				if (array.length === 1 && array[0] === "") {
 					return [];
 				}
+
 				return array.map(parseValue); // Re-parses all values of the array
 			}
+
 			return value;
 		};
 

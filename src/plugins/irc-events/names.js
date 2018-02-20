@@ -5,6 +5,7 @@ module.exports = function(irc, network) {
 
 	irc.on("userlist", function(data) {
 		const chan = network.getChannel(data.channel);
+
 		if (typeof chan === "undefined") {
 			return;
 		}

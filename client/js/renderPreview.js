@@ -141,19 +141,23 @@ function openImageViewer(link, {pushState = true} = {}) {
 	// Previous image
 	let previousImage = link.closest(".preview").prev(".preview")
 		.find(".toggle-content.show .toggle-thumbnail").last();
+
 	if (!previousImage.length) {
 		previousImage = link.closest(".msg").prevAll()
 			.find(".toggle-content.show .toggle-thumbnail").last();
 	}
+
 	previousImage.addClass("previous-image");
 
 	// Next image
 	let nextImage = link.closest(".preview").next(".preview")
 		.find(".toggle-content.show .toggle-thumbnail").first();
+
 	if (!nextImage.length) {
 		nextImage = link.closest(".msg").nextAll()
 			.find(".toggle-content.show .toggle-thumbnail").first();
 	}
+
 	nextImage.addClass("next-image");
 
 	imageViewer.html(templates.image_viewer({
@@ -173,12 +177,14 @@ function openImageViewer(link, {pushState = true} = {}) {
 	// History management
 	if (pushState) {
 		let clickTarget = "";
+
 		// Images can be in a message (channel URL previews) or not (window URL
 		// preview, e.g. changelog). This is sub-optimal and needs improvement to
 		// make image preview more generic and not specific for channel previews.
 		if (link.closest(".msg").length > 0) {
 			clickTarget = `#${link.closest(".msg").prop("id")} `;
 		}
+
 		clickTarget += `a.toggle-thumbnail[href="${link.prop("href")}"] img`;
 		history.pushState({clickTarget}, null, null);
 	}

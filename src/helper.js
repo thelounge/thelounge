@@ -53,10 +53,12 @@ function getVersion() {
 }
 
 let _gitCommit;
+
 function getGitCommit() {
 	if (_gitCommit !== undefined) {
 		return _gitCommit;
 	}
+
 	try {
 		_gitCommit = require("child_process")
 			.execSync("git rev-parse --short HEAD 2> /dev/null") // Returns hash of current commit

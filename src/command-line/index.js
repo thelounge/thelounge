@@ -40,9 +40,11 @@ _.merge(Helper.config, program.config);
 
 require("./start");
 require("./config");
+
 if (!Helper.config.public && !Helper.config.ldap.enable) {
 	require("./users");
 }
+
 require("./install");
 require("./uninstall");
 

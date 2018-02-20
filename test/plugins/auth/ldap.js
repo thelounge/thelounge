@@ -116,6 +116,7 @@ describe("LDAP authentication plugin", function() {
 
 	before(function(done) {
 		originalLogInfo = log.info;
+
 		log.info = () => {};
 
 		server = startLdapServer(done);

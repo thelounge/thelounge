@@ -37,6 +37,7 @@ program
 				log.error("Password cannot be empty.");
 				return;
 			}
+
 			if (!err) {
 				log.prompt({
 					text: "Save logs to disk?",

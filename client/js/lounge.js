@@ -100,6 +100,7 @@ $(function() {
 			});
 
 			const channel = target.closest(".chan");
+
 			if (utils.isOpInChannel(channel) && channel.data("type") === "channel") {
 				output += templates.contextmenu_divider();
 				output += templates.contextmenu_item({
@@ -127,6 +128,7 @@ $(function() {
 				data: target.data("target"),
 			});
 			output += templates.contextmenu_divider();
+
 			if (target.hasClass("lobby")) {
 				output += templates.contextmenu_item({
 					class: "list",
@@ -141,6 +143,7 @@ $(function() {
 					data: target.data("id"),
 				});
 			}
+
 			if (target.hasClass("channel")) {
 				output += templates.contextmenu_item({
 					class: "list",
@@ -149,6 +152,7 @@ $(function() {
 					data: target.data("id"),
 				});
 			}
+
 			output += templates.contextmenu_item({
 				class: "close",
 				action: "close",
@@ -213,6 +217,7 @@ $(function() {
 		});
 
 	let focus = $.noop;
+
 	if (!("ontouchstart" in window || navigator.maxTouchPoints > 0)) {
 		focus = function() {
 			if (chat.find(".active").hasClass("chan")) {
@@ -250,6 +255,7 @@ $(function() {
 		if (text.charAt(0) === "/") {
 			const args = text.substr(1).split(" ");
 			const cmd = args.shift().toLowerCase();
+
 			if (typeof utils.inputCommands[cmd] === "function" && utils.inputCommands[cmd](args)) {
 				return;
 			}
@@ -336,6 +342,7 @@ $(function() {
 	const openWindow = function openWindow(e, data) {
 		const self = $(this);
 		const target = self.data("target");
+
 		if (!target) {
 			return;
 		}
@@ -397,13 +404,16 @@ $(function() {
 
 		let title = $(document.body).data("app-name");
 		const chanTitle = chan.attr("aria-label");
+
 		if (chanTitle.length > 0) {
 			title = `${chanTitle} — ${title}`;
 		}
+
 		document.title = title;
 
 		const type = chan.data("type");
 		let placeholder = "";
+
 		if (type === "channel" || type === "query") {
 			placeholder = `Write to ${chanTitle}`;
 		}
@@ -418,6 +428,7 @@ $(function() {
 		}
 
 		const chanChat = chan.find(".chat");
+
 		if (chanChat.length > 0 && type !== "special") {
 			chanChat.sticky();
 		}
@@ -446,6 +457,7 @@ $(function() {
 		if (data && data.pushState === false) {
 			return;
 		}
+
 		const state = {};
 
 		if (self.prop("id")) {
@@ -486,10 +498,12 @@ $(function() {
 		if (chan.hasClass("lobby")) {
 			cmd = "/quit";
 			const server = chan.find(".name").html();
+
 			if (!confirm("Disconnect from " + server + "?")) { // eslint-disable-line no-alert
 				return false;
 			}
 		}
+
 		socket.emit("input", {
 			target: chan.data("id"),
 			text: cmd,
@@ -602,6 +616,7 @@ $(function() {
 	if ($("body").hasClass("public") && (window.location.hash === "#connect" || window.location.hash === "")) {
 		$("#connect").one("show", function() {
 			const params = URI(document.location.search).search(true);
+
 			// Possible parameters:  name, host, port, password, tls, nick, username, realname, join
 			// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in#Iterating_over_own_properties_only
 			for (let key in params) {
@@ -611,6 +626,7 @@ $(function() {
 					key = key.replace(/\W/g, "");
 
 					const element = $("#connect input[name='" + key + "']");
+
 					// if the element exists, it isn't disabled, and it isn't hidden
 					if (element.length > 0 && !element.is(":disabled") && !element.is(":hidden")) {
 						if (element.is(":checkbox")) {
@@ -647,10 +663,12 @@ $(function() {
 		// This should always be 24h later but re-computing exact value just in case
 		setTimeout(updateDateMarkers, msUntilNextDay());
 	}
+
 	setTimeout(updateDateMarkers, msUntilNextDay());
 
 	window.addEventListener("popstate", (e) => {
 		const {state} = e;
+
 		if (!state) {
 			return;
 		}

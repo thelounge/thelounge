@@ -55,9 +55,11 @@ module.exports = function() {
 	app.get("/themes/:theme.css", (req, res) => {
 		const themeName = req.params.theme;
 		const theme = themes.getFilename(themeName);
+
 		if (theme === undefined) {
 			return res.status(404).send("Not found");
 		}
+
 		return res.sendFile(theme);
 	});
 
@@ -65,9 +67,11 @@ module.exports = function() {
 		const packageName = req.params.package;
 		const fileName = req.params.filename;
 		const packageFile = packages.getPackage(packageName);
+
 		if (!packageFile || !packages.getStylesheets().includes(`${packageName}/${fileName}`)) {
 			return res.status(404).send("Not found");
 		}
+
 		const packagePath = Helper.getPackageModulePath(packageName);
 		return res.sendFile(path.join(packagePath, fileName));
 	});
@@ -161,6 +165,7 @@ module.exports = function() {
 
 		// Handle ctrl+c and kill gracefully
 		let suicideTimeout = null;
+
 		const exitGracefully = function() {
 			if (suicideTimeout !== null) {
 				return;
@@ -304,12 +309,14 @@ function initializeClient(socket, client, token, lastMessage) {
 				const old = data.old_password;
 				const p1 = data.new_password;
 				const p2 = data.verify_password;
+
 				if (typeof p1 === "undefined" || p1 === "") {
 					socket.emit("change-password", {
 						error: "Please enter a new password",
 					});
 					return;
 				}
+
 				if (p1 !== p2) {
 					socket.emit("change-password", {
 						error: "Both new password fields must match",
@@ -326,6 +333,7 @@ function initializeClient(socket, client, token, lastMessage) {
 							});
 							return;
 						}
+
 						const hash = Helper.password.hash(p1);
 
 						client.setPassword(hash, (success) => {
@@ -375,6 +383,7 @@ function initializeClient(socket, client, token, lastMessage) {
 
 	socket.on("msg:preview:toggle", function(data) {
 		const networkAndChan = client.find(data.target);
+
 		if (!networkAndChan) {
 			return;
 		}
@@ -602,12 +611,14 @@ function performAuthentication(data) {
 	let auth = () => {
 		log.error("None of the auth plugins is enabled");
 	};
+
 	for (let i = 0; i < authPlugins.length; ++i) {
 		if (authPlugins[i].isEnabled()) {
 			auth = authPlugins[i].auth;
 			break;
 		}
 	}
+
 	auth(manager, client, data.user, data.password, authCallback);
 }
 

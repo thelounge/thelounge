@@ -24,6 +24,7 @@ socket.on("more", function(data) {
 	// Remove the date-change marker we put at the top, because it may
 	// not actually be a date change now
 	const children = $(chan).children();
+
 	if (children.eq(0).hasClass("date-marker-container")) { // Check top most child
 		children.eq(0).remove();
 	} else if (children.eq(1).hasClass("date-marker-container")) {

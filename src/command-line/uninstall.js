@@ -31,6 +31,7 @@ program
 		}
 
 		const npm = process.platform === "win32" ? "npm.cmd" : "npm";
+
 		const errorHandler = (error) => {
 			log.error(
 				`Failed to uninstall ${colors.green(packageName)}. ` +

@@ -27,6 +27,7 @@ program
 			log.error(`User ${colors.bold(name)} does not exist.`);
 			return;
 		}
+
 		const file = Helper.getUserConfigPath(name);
 		const user = require(file);
 		log.prompt({
@@ -36,6 +37,7 @@ program
 			if (err) {
 				return;
 			}
+
 			user.password = Helper.password.hash(password);
 			user.sessions = {};
 			fs.writeFileSync(

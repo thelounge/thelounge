@@ -22,6 +22,7 @@ module.exports = function(irc, network) {
 		}
 
 		let msg;
+
 		if (data.error) {
 			msg = new Msg({
 				type: Msg.Type.ERROR,

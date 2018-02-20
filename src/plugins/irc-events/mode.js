@@ -16,6 +16,7 @@ module.exports = function(irc, network) {
 		}
 
 		const targetChan = network.getChannel(data.channel);
+
 		if (typeof targetChan === "undefined") {
 			return;
 		}
@@ -39,6 +40,7 @@ module.exports = function(irc, network) {
 			targetChan = network.channels[0];
 		} else {
 			targetChan = network.getChannel(data.target);
+
 			if (typeof targetChan === "undefined") {
 				return;
 			}
@@ -80,6 +82,7 @@ module.exports = function(irc, network) {
 			}
 
 			const user = targetChan.findUser(mode.param);
+
 			if (!user) {
 				return;
 			}

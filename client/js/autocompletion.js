@@ -50,6 +50,7 @@ const nicksStrategy = {
 	match: /\B(@([a-zA-Z_[\]\\^{}|`@][a-zA-Z0-9_[\]\\^{}|`-]*)?)$/,
 	search(term, callback) {
 		term = term.slice(1);
+
 		if (term[0] === "@") {
 			callback(completeNicks(term.slice(1), true)
 				.map((val) => ["@" + val[0], "@" + val[1]]));
@@ -122,6 +123,7 @@ const foregroundColorStrategy = {
 						post: "</b>",
 					}).rendered];
 				}
+
 				return i;
 			});
 
@@ -150,6 +152,7 @@ const backgroundColorStrategy = {
 						post: "</b>",
 					}).rendered];
 				}
+
 				return pair;
 			})
 			.map((pair) => pair.concat(match[1])); // Needed to pass fg color to `template`...
@@ -268,9 +271,11 @@ function completeNicks(word, isFuzzy) {
 	}
 
 	const words = users.data("nicks");
+
 	if (isFuzzy) {
 		return fuzzyGrep(word, words);
 	}
+
 	return $.grep(
 		words,
 		(w) => !w.toLowerCase().indexOf(word)
@@ -291,6 +296,7 @@ function completeChans(word) {
 		.find(".chan")
 		.each(function() {
 			const self = $(this);
+
 			if (!self.hasClass("lobby")) {
 				words.push(self.attr("aria-label"));
 			}

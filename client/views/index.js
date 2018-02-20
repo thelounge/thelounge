@@ -19,6 +19,7 @@ module.exports = requireViews.keys().reduce((acc, path) => {
 		} else {
 			tmp[key] = tmp[key] || {};
 		}
+
 		tmp = tmp[key];
 	});
 
