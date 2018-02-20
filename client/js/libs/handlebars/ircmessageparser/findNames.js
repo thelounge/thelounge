@@ -11,6 +11,7 @@ function findNames(text, users) {
 	}
 
 	let match;
+
 	while ((match = nickRegExp.exec(text))) {
 		if (users.indexOf(match[1]) > -1) {
 			result.push({

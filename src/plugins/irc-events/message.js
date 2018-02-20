@@ -107,6 +107,7 @@ module.exports = function(irc, network) {
 		}
 
 		let match;
+
 		while ((match = nickRegExp.exec(data.message))) {
 			if (chan.findUser(match[1])) {
 				msg.users.push(match[1]);

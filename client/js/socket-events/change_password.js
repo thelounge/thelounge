@@ -5,6 +5,7 @@ const socket = require("../socket");
 
 socket.on("change-password", function(data) {
 	const passwordForm = $("#change-password");
+
 	if (data.error || data.success) {
 		const message = data.success ? data.success : data.error;
 		const feedback = passwordForm.find(".feedback");

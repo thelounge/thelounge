@@ -13,24 +13,31 @@ const colorClass = require("./colorClass");
 // Create an HTML `span` with styling information for a given fragment
 function createFragment(fragment) {
 	const classes = [];
+
 	if (fragment.bold) {
 		classes.push("irc-bold");
 	}
+
 	if (fragment.textColor !== undefined) {
 		classes.push("irc-fg" + fragment.textColor);
 	}
+
 	if (fragment.bgColor !== undefined) {
 		classes.push("irc-bg" + fragment.bgColor);
 	}
+
 	if (fragment.italic) {
 		classes.push("irc-italic");
 	}
+
 	if (fragment.underline) {
 		classes.push("irc-underline");
 	}
+
 	if (fragment.strikethrough) {
 		classes.push("irc-strikethrough");
 	}
+
 	if (fragment.monospace) {
 		classes.push("irc-monospace");
 	}
@@ -89,6 +96,7 @@ module.exports = function parse(text, users) {
 			if (intersection) {
 				return prev;
 			}
+
 			return prev.concat([curr]);
 		}, []);
 

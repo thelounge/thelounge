@@ -11,6 +11,7 @@
 (function() {
 	var displayReload = function displayReload() {
 		var loadingReload = document.getElementById("loading-reload");
+
 		if (loadingReload) {
 			loadingReload.style.display = "block";
 		}

@@ -10,6 +10,7 @@ describe("packages", function() {
 
 	beforeEach(function() {
 		originalLogInfo = log.info;
+
 		log.info = () => {};
 
 		delete require.cache[require.resolve("../../../src/plugins/packages")];

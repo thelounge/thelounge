@@ -141,11 +141,13 @@ Network.prototype.export = function() {
 		})
 		.map(function(chan) {
 			const keys = ["name"];
+
 			if (chan.type === Chan.Type.CHANNEL) {
 				keys.push("key");
 			} else if (chan.type === Chan.Type.QUERY) {
 				keys.push("type");
 			}
+
 			return _.pick(chan, keys);
 		});
 

@@ -63,6 +63,7 @@ function updateText(condensed, addedTypes) {
 	});
 
 	let text = strings.pop();
+
 	if (strings.length) {
 		text = strings.join(", ") + ", and " + text;
 	}

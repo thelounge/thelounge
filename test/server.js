@@ -12,6 +12,7 @@ describe("Server", function() {
 
 	before(function() {
 		originalLogInfo = log.info;
+
 		log.info = () => {};
 
 		server = require("../src/server")();

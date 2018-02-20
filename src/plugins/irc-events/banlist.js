@@ -9,6 +9,7 @@ module.exports = function(irc, network) {
 	irc.on("banlist", function(banlist) {
 		const channel = banlist.channel;
 		const bans = banlist.bans;
+
 		if (!bans || bans.length === 0) {
 			const msg = new Msg({
 				time: Date.now(),
@@ -21,6 +22,7 @@ module.exports = function(irc, network) {
 
 		const chanName = `Banlist for ${channel}`;
 		let chan = network.getChannel(chanName);
+
 		if (typeof chan === "undefined") {
 			chan = new Chan({
 				type: Chan.Type.SPECIAL,

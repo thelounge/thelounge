@@ -68,6 +68,7 @@ sidebar.on("submit", ".join-form", function() {
 	const key = form.find("input[name='key']");
 	const keyString = key.val();
 	const chan = utils.findCurrentNetworkChan(channelString);
+
 	if (chan.length) {
 		chan.trigger("click");
 	} else {
@@ -76,6 +77,7 @@ sidebar.on("submit", ".join-form", function() {
 			target: form.prev().data("id"),
 		});
 	}
+
 	closeForm(form.closest(".network"));
 	return false;
 });

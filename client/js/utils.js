@@ -66,8 +66,10 @@ function expand() {
 
 function join(args) {
 	const channel = args[0];
+
 	if (channel) {
 		const chan = findCurrentNetworkChan(channel);
+
 		if (chan.length) {
 			chan.trigger("click");
 		}
@@ -113,10 +115,12 @@ function confirmExit() {
 function move(array, old_index, new_index) {
 	if (new_index >= array.length) {
 		let k = new_index - array.length;
+
 		while ((k--) + 1) {
 			this.push(undefined);
 		}
 	}
+
 	array.splice(new_index, 0, array.splice(old_index, 1)[0]);
 	return array;
 }
