@@ -1,6 +1,18 @@
 "use strict";
 
+const Helper = require("../../helper");
 const Msg = require("../../models/msg");
+const pkg = require("../../../package.json");
+
+const ctcpResponses = {
+	CLIENTINFO: () => Object // TODO: This is currently handled by irc-framework
+		.getOwnPropertyNames(ctcpResponses)
+		.filter((key) => key !== "CLIENTINFO" && typeof ctcpResponses[key] === "function")
+		.join(" "),
+	PING: ({message}) => message.substring(5),
+	SOURCE: () => pkg.repository.url,
+	VERSION: () => pkg.name + " " + Helper.getVersion() + " -- " + pkg.homepage,
+};
 
 module.exports = function(irc, network) {
 	const client = this;
@@ -23,19 +35,10 @@ module.exports = function(irc, network) {
 	});
 
 	irc.on("ctcp request", (data) => {
-		switch (data.type) {
-		case "PING": {
-			const split = data.message.split(" ");
-			if (split.length === 2) {
-				irc.ctcpResponse(data.nick, "PING", split[1]);
-			}
-			break;
-		}
-		case "SOURCE": {
-			const packageJson = require("../../../package.json");
-			irc.ctcpResponse(data.nick, "SOURCE", packageJson.repository.url);
-			break;
-		}
+		const response = ctcpResponses[data.type];
+
+		if (response) {
+			irc.ctcpResponse(data.nick, data.type, response(data));
 		}
 	});
 };
