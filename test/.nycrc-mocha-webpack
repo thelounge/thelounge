@@ -1,0 +1,11 @@
+{
+  "all": true,
+  "include": [
+    "client/"
+  ],
+  "reporter": [
+    "json",
+    "text-summary"
+  ],
+  "clean": false
+}

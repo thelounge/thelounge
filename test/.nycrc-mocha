@@ -1,0 +1,16 @@
+{
+  "all": true,
+  "exclude": [
+    "webpack.config*.js"
+  ],
+  "include": [
+    "defaults",
+    "src",
+    "*.js"
+  ],
+  "reporter": [
+    "json",
+    "text-summary"
+  ],
+  "clean": false
+}
