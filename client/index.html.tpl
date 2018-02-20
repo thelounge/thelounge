@@ -84,11 +84,11 @@
 						</div>
 					</form>
 				</div>
-				<div id="sign-in" class="window" role="tabpanel"></div>
-				<div id="connect" class="window" role="tabpanel"></div>
-				<div id="settings" class="window" role="tabpanel"></div>
-				<div id="help" class="window" role="tabpanel"></div>
-				<div id="changelog" class="window"></div>
+				<div id="sign-in" class="window" role="tabpanel" aria-label="Sign-in"></div>
+				<div id="connect" class="window" role="tabpanel" aria-label="Connect"></div>
+				<div id="settings" class="window" role="tabpanel" aria-label="Settings"></div>
+				<div id="help" class="window" role="tabpanel" aria-label="Help"></div>
+				<div id="changelog" class="window" aria-label="Changelog"></div>
 			</div>
 		</div>
 	</div>
