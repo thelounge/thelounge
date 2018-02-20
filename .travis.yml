@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- 9 # Current stable 
+- 9 # Current stable
 - 8 # Active LTS until April 2019
 - 6 # Active LTS until April 2018
 
@@ -22,9 +22,20 @@ notifications:
     on_success: never
     on_failure: always
 
+# Identifies `a.b.c-xxx.n` tags as pre-releases, and `a.b.c` as stable releases
+before_deploy: |
+  function npm_dist_tag() {
+    if [[ "$TRAVIS_TAG" = *"-"* ]]; then
+      echo "next"
+    else
+      echo "latest"
+    fi
+  }
+
 deploy:
   skip_cleanup: true # prevent git stash --all which nukes node_modules folder
   provider: npm
+  tag: $(npm_dist_tag)
   email:
     secure: Eb/dO3VEnuG5CFSJbiTBDZ4X29o1bTITqfzc4SZJqkSKHLZ5/l0VHyd1In7T2U9yBtysnmm+dsOWYFwnH5NMt5kvGkkX754HBDz0QXO//IqADA/1cH1MMXuzJjRvHNrtbq3c6Iv0vO827kXfvqwkfGTmXfreT5w+xF7Y+0SjF8pfu2d/Z5omrmoy9J9SF/kfmahKYZwakc3h8p29JPmnFMUAR0JiZS/2gLSHQnGA3mCcnlO+U3bQuTVW3Z9RhiG51f/EMFfNZ8pBttM6CgE2Zth3AT50jbKjRgYdYN2ee/Z3qUJIoA6dfPALC7B+Z2UekqTiKx4SCk+9vZJJXqT8J+Fe67Dki/FgNWnEZaTn8eFs+Gfh2nnokNZUMd/2mMT0y0KbRaOYQarn6lFw+/Cn9hD6e8uRCqY0+YspMvGtV3LuHFy+br6YphlG6YKxJzExtGDvrwlDD70xJtqcgnlET3XOdzvfCpRSskh7FmVJMoL39f/j9r4FzWVDmfnRnDT6Cac2dSdbQM0Ldw3+65l/57K/Km7NeHbLA3LsnjSJqXuysYwosd6iUOQen59Dy+TvwKafEfAGXWcZNguFURIMf2LRZ4rwTZl6pp30nj23U6rmkWm3JTRZC95i/O4yP2rVoljNUEuMlHVts63r3lwXtuGQVo3+lQCYErK4Ceo7cQc=
   api_key:
@@ -34,3 +45,9 @@ deploy:
     condition: "$BUILD_ENV = production"
     tags: true
     repo: thelounge/lounge
+
+# If the current release is a stable release, remove potential pre-release tag
+after_deploy: |
+  if [ "$(npm_dist_tag)" == "latest" ]; then
+    npm dist-tag rm thelounge next || true
+  fi
