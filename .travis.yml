@@ -45,3 +45,9 @@ deploy:
     condition: "$BUILD_ENV = production"
     tags: true
     repo: thelounge/lounge
+
+# If the current release is a stable release, remove potential pre-release tag
+after_deploy: |
+  if [ "$(npm_dist_tag)" == "latest" ]; then
+    npm dist-tag rm thelounge next || true
+  fi
