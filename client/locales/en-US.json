@@ -86,7 +86,7 @@
          "autocomplete":{
             "title": "Autocompletion",
             "doc":"To auto-complete nicknames, channels, commands, and emoji, type one of the characters below to open a suggestion list. Use the <kbd>↑</kbd> and <kbd>↓</kbd> keys to highlight an item, and insert it by pressing <kbd>Tab</kbd> or <kbd>Enter</kbd> (or by clicking the desired item).",
-            "disable":"Autocompletion can be disabled in settings.",
+            "disable":"Autocompletion can be disabled in settings."
          },
          "back_to_help":"« Help",
          "keyboard_shortcuts":"Keyboard Shortcuts",
@@ -109,7 +109,7 @@
             "github_failure": "Unable to retrieve releases from GitHub.",
             "view_on_github": "View release notes for this version on GitHub",
             "loading": "Loading changelog…"
-         },
+         }
       },
       "commands":{
          "away":"Mark yourself as away with an optional message",

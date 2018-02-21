@@ -10,8 +10,7 @@ const constants = require("./constants");
 const condensed = require("./condensed");
 const JoinChannel = require("./join-channel");
 const helpers_parse = require("./libs/handlebars/parse");
-const t = require("./translate")
-
+const t = require("./translate");
 
 const chat = $("#chat");
 const sidebar = $("#sidebar");

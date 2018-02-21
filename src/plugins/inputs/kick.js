@@ -11,7 +11,7 @@ exports.input = function({irc}, chan, cmd, args) {
 			type: Msg.Type.ERROR,
 			translate: true,
 			text: "server.error.command_in_channels",
-			cmd: cmd
+			cmd: cmd,
 		}));
 
 		return;

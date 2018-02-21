@@ -695,7 +695,4 @@ $(function() {
 			});
 		}
 	});
-
-	// Only start opening socket.io connection after all events have been registered
-	socket.open();
 });

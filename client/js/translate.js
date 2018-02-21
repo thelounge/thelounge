@@ -2,7 +2,6 @@
 
 const i18n = require("i18next");
 const i18nXHR = require("i18next-xhr-backend");
-const $ = require("jquery");
 
 module.exports = {
 	init: function(data, socket) {
@@ -23,6 +22,8 @@ module.exports = {
 			.init({
 				backend: opts,
 				lng: data.lang, debug: true, load: "currentOnly",
+			}, function() {
+				socket.open();
 			});
 	},
 	translate: function(key, options) {
@@ -33,5 +34,5 @@ module.exports = {
 			i18n.changeLanguage(lang); // doesn't actually do anything when changing from Settings
 			location.reload();
 		}
-	}
+	},
 };

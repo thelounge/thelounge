@@ -58,7 +58,7 @@ module.exports = function() {
 		.init({
 			backend: opts,
 			lng: lang, load: "all",
-			fallbackLng: [lang, "fr"]
+			fallbackLng: [lang, "fr"],
 		}, (err) => {
 			err.forEach(function(e) {
 				if (e.errno === -2) { // ENOENT
@@ -348,14 +348,14 @@ function initializeClient(socket, client, token, lastMessage) {
 
 				if (typeof p1 === "undefined" || p1 === "") {
 					socket.emit("change-password", {
-						error: "server.password.change_enter_new"
+						error: "server.password.change_enter_new",
 					});
 					return;
 				}
 
 				if (p1 !== p2) {
 					socket.emit("change-password", {
-						error: "server.password.change_fail_entered_not_match"
+						error: "server.password.change_fail_entered_not_match",
 					});
 					return;
 				}
@@ -365,7 +365,7 @@ function initializeClient(socket, client, token, lastMessage) {
 					.then((matching) => {
 						if (!matching) {
 							socket.emit("change-password", {
-								error: "server.password.change_fail_entered_not_match_account"
+								error: "server.password.change_fail_entered_not_match_account",
 							});
 							return;
 						}
@@ -548,7 +548,7 @@ function getClientConfiguration() {
 	}).map(function(language) {
 		const filename = language.slice(0, -5);
 		return {
-			name: filename
+			name: filename,
 		};
 	});
 
