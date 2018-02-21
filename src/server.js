@@ -273,39 +273,35 @@ function initializeClient(socket, client, token, lastMessage) {
 		client.clientDetach(socket.id);
 	});
 
-	socket.on(
-		"input",
-		function(data) {
+	socket.on("input", (data) => {
+		if (typeof data === "object") {
 			client.input(data);
 		}
-	);
+	});
 
-	socket.on(
-		"more",
-		function(data) {
+	socket.on("more", (data) => {
+		if (typeof data === "object") {
 			const history = client.more(data);
 
 			if (history !== null) {
 				socket.emit("more", history);
 			}
 		}
-	);
+	});
 
-	socket.on(
-		"conn",
-		function(data) {
+	socket.on("conn", (data) => {
+		if (typeof data === "object") {
 			// prevent people from overriding webirc settings
 			data.ip = null;
 			data.hostname = null;
 
 			client.connect(data);
 		}
-	);
+	});
 
 	if (!Helper.config.public && !Helper.config.ldap.enable) {
-		socket.on(
-			"change-password",
-			function(data) {
+		socket.on("change-password", (data) => {
+			if (typeof data === "object") {
 				const old = data.old_password;
 				const p1 = data.new_password;
 				const p2 = data.verify_password;
@@ -351,37 +347,36 @@ function initializeClient(socket, client, token, lastMessage) {
 						log.error(`Error while checking users password. Error: ${error}`);
 					});
 			}
-		);
+		});
 	}
 
-	socket.on(
-		"open",
-		function(data) {
-			client.open(socket.id, data);
-		}
-	);
+	socket.on("open", (data) => {
+		client.open(socket.id, data);
+	});
 
-	socket.on(
-		"sort",
-		function(data) {
+	socket.on("sort", (data) => {
+		if (typeof data === "object") {
 			client.sort(data);
 		}
-	);
+	});
 
-	socket.on(
-		"names",
-		function(data) {
+	socket.on("names", (data) => {
+		if (typeof data === "object") {
 			client.names(data);
 		}
-	);
+	});
 
-	socket.on("changelog", function() {
+	socket.on("changelog", () => {
 		changelog.fetch((data) => {
 			socket.emit("changelog", data);
 		});
 	});
 
-	socket.on("msg:preview:toggle", function(data) {
+	socket.on("msg:preview:toggle", (data) => {
+		if (typeof data !== "object") {
+			return;
+		}
+
 		const networkAndChan = client.find(data.target);
 
 		if (!networkAndChan) {
