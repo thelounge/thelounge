@@ -35,24 +35,18 @@
 	<div id="viewport" role="tablist">
 		<aside id="sidebar">
 			<div class="networks"></div>
-			<div class="empty" data-translate="true">
-				index.not_connected
+			<div class="empty">
+				{{translate index.not_connected}}
 			</div>
 		</aside>
 		<footer id="footer">
 <<<<<<< HEAD
-			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Sign in"><button class="icon sign-in" data-target="#sign-in" aria-label="Sign in" role="tab" aria-controls="sign-in" aria-selected="false"></button></span>
-			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Connect to network"><button class="icon connect" data-target="#connect" aria-label="Connect to network" role="tab" aria-controls="connect" aria-selected="false"></button></span>
-			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Settings"><button class="icon settings" data-target="#settings" aria-label="Settings" role="tab" aria-controls="settings" aria-selected="false"></button></span>
-			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Help"><button class="icon help" data-target="#help" aria-label="Help" role="tab" aria-controls="help" aria-selected="false"></button></span>
-			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Sign out"><button class="icon sign-out" id="sign-out" aria-label="Sign out"></button></span>
-=======
-			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="index.sign_in"><button class="icon sign-in" data-target="#sign-in" aria-label="index.sign_in"></button></span>
-			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="index.connect_to_network"><button class="icon connect" data-target="#connect" aria-label="index.connect_to_network"></button></span>
-			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="index.settings_label"><button class="icon settings" data-target="#settings" aria-label="index.settings_label"></button></span>
-			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="index.help_label"><button class="icon help" data-target="#help" aria-label="index.help_label"></button></span>
+<<<<<<< HEAD
+			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="index.sign_in"><button class="icon sign-in" data-target="#sign-in" aria-label="index.sign_in" role="tab" aria-controls="sign-in" aria-selected="false"></button></span>
+			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="index.connect_to_network"><button class="icon connect" data-target="#connect" aria-label="index.connect_to_network" role="tab" aria-controls="connect" aria-selected="false"></button></span>
+			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="index.settings_label"><button class="icon settings" data-target="#settings" aria-label="index.settings_label" role="tab" aria-controls="settings" aria-selected="false"></button></span>
+			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="index.help_label"><button class="icon help" data-target="#help" aria-label="index.help_label" role="tab" aria-controls="help" aria-selected="false"></button></span>
 			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="index.sign_out"><button class="icon sign-out" id="sign-out" aria-label="index.sign_out"></button></span>
->>>>>>> Template translations
 		</footer>
 		<div id="main">
 			<div id="windows">
@@ -60,7 +54,7 @@
 					<div class="container">
 						<div class="row">
 							<div class="col-xs-12">
-								<h1 class="title" id="loading-title" data-translate="true">index.loading</h1>
+								<h1 class="title" id="loading-title">{{translate index.loading}}</h1>
 							</div>
 							<div class="col-xs-12">
 								<p id="loading-page-message">Loading the app… <a href="http://enable-javascript.com/" target="_blank" rel="noopener">Make sure to have JavaScript enabled.</a></p>
@@ -81,13 +75,13 @@
 						<div class="input">
 							<span id="nick">
 								<span id="nick-value" spellcheck="false"></span><!-- Comments here remove spaces between elements
-								--><span id="set-nick-tooltip" class="tooltipped tooltipped-e" aria-label="index.change_nick"><button id="set-nick" type="button" aria-label="index.change_nick"></button></span><!--
-								--><span id="cancel-nick-tooltip" class="tooltipped tooltipped-e" aria-label="index.cancel"><button id="cancel-nick" type="button" aria-label="index.cancel"></button></span><!--
-								--><span id="save-nick-tooltip" class="tooltipped tooltipped-e" aria-label="index.save"><button id="submit-nick" type="button" aria-label="index.save"></button></span>
+								--><span id="set-nick-tooltip" class="tooltipped tooltipped-e" aria-label="{{translate index.change_nick}}""><button id="set-nick" type="button" aria-label="{{translate index.change_nick}}"></button></span><!--
+								--><span id="cancel-nick-tooltip" class="tooltipped tooltipped-e" aria-label="{{translate index.cancel}}"><button id="cancel-nick" type="button" aria-label="{{translate index.cancel}}"></button></span><!--
+								--><span id="save-nick-tooltip" class="tooltipped tooltipped-e" aria-label="{{translate index.save}}"><button id="submit-nick" type="button" aria-label="{{translate index.save}}"></button></span>
 							</span>
 							<textarea id="input" class="mousetrap"></textarea>
-							<span id="submit-tooltip" class="tooltipped tooltipped-w tooltipped-no-touch" aria-label="index.send_message">
-								<button id="submit" type="submit" aria-label="index.send_message"></button>
+							<span id="submit-tooltip" class="tooltipped tooltipped-w tooltipped-no-touch" aria-label="{{translate index.send_message}}">
+								<button id="submit" type="submit" aria-label="{{translate index.send_message}}"></button>
 							</span>
 						</div>
 					</form>

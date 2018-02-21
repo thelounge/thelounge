@@ -1,12 +1,12 @@
 <div class="header">
-	<button class="lt" aria-label="Toggle channel list"></button>
+	<button class="lt" aria-label="{{translate index.toggle_chan_list}}"></button></div>
 </div>
 <div class="container">
-	<h1 class="title">Help</h1>
+	<h1 class="title">{{translate index.help.title}}</h1>
 
 	<h2>
 		<small class="pull-right">
-			v{{version}}
+			{{version}}
 			(<a href="#" id="view-changelog" data-target="#changelog">release notes</a>)
 		</small>
 		About The Lounge
@@ -45,14 +45,14 @@
 		</p>
 	</div>
 
-	<h2>Keyboard Shortcuts</h2>
+	<h2>{{translate index.help.keyboard_shortcuts}}</h2>
 
 	<div class="help-item">
 		<div class="subject">
 			<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>↑</kbd> / <kbd>↓</kbd>
 		</div>
 		<div class="description">
-			<p>Switch to the previous/next window in the channel list.</p>
+			<p>{{translate index.help.switch_channels}}</p>
 		</div>
 	</div>
 
@@ -62,19 +62,13 @@
 		</div>
 		<div class="description">
 			<p>
-				Mark any text typed after this shortcut to be colored. After
-				hitting this shortcut, enter an integer in the range
-				<code>0—15</code> to select the desired color, or use the
-				autocompletion menu to choose a color name (see below).
+				{{translate index.help.colored_text}}
 			</p>
 			<p>
-				Background color can be specified by putting a comma and
-				another integer in the range <code>0—15</code> after the
-				foreground color number (autocompletion works too).
+				{{translate index.help.colored_background}}
 			</p>
 			<p>
-				A color reference can be found
-				<a href="https://modern.ircdocs.horse/formatting.html#colors" target="_blank" rel="noopener">here</a>.
+				{{translate index.help.colored_docs}}
 			</p>
 		</div>
 	</div>
@@ -84,7 +78,7 @@
 			<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>B</kbd>
 		</div>
 		<div class="description">
-			<p>Mark all text typed after this shortcut as bold.</p>
+			<p>{{translate index.help.bold_text}}</p>
 		</div>
 	</div>
 
@@ -93,7 +87,7 @@
 			<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>U</kbd>
 		</div>
 		<div class="description">
-			<p>Mark all text typed after this shortcut as underlined.</p>
+			<p>{{translate index.help.underlined_text}}</p>
 		</div>
 	</div>
 
@@ -102,7 +96,7 @@
 			<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>I</kbd>
 		</div>
 		<div class="description">
-			<p>Mark all text typed after this shortcut as italics.</p>
+			<p>{{translate index.help.italic_text}}</p>
 		</div>
 	</div>
 
@@ -111,7 +105,7 @@
 			<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>S</kbd>
 		</div>
 		<div class="description">
-			<p>Mark all text typed after this shortcut as struck through.</p>
+			<p>{{translate index.help.strikethrough_text}}</p>
 		</div>
 	</div>
 
@@ -120,7 +114,7 @@
 			<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>M</kbd>
 		</div>
 		<div class="description">
-			<p>Mark all text typed after this shortcut as monospaced.</p>
+			<p>{{translate index.help.monospace_text}}</p>
 		</div>
 	</div>
 
@@ -130,21 +124,18 @@
 		</div>
 		<div class="description">
 			<p>
-				Mark all text typed after this shortcut to be reset to its
-				original formatting.
+			{{translate index.help.reset_formatting}}
 			</p>
 		</div>
 	</div>
 
-	<h2>Autocompletion</h2>
+	<h2>{{translate index.help.autocompletion}}</h2>
 
 	<p>
-		To auto-complete nicknames, channels, commands, and emoji, type one of the characters below to open
-		a suggestion list. Use the <kbd>↑</kbd> and <kbd>↓</kbd> keys to highlight an item, and insert it by
-		pressing <kbd>Tab</kbd> or <kbd>Enter</kbd> (or by clicking the desired item).
+		{{translate index.help.autocompletion_doc}}
 	</p>
 	<p>
-		Autocompletion can be disabled in settings.
+		{{translate index.help.auto}}
 	</p>
 
 	<div class="help-item">
@@ -152,7 +143,7 @@
 			<code>@</code>
 		</div>
 		<div class="description">
-			<p>Nickname</p>
+			<p>{{translate index.help.autocompletion_doc}}</p>
 		</div>
 	</div>
 

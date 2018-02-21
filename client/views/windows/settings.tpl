@@ -1,5 +1,5 @@
 <div class="header">
-	<button class="lt" aria-label="Toggle channel list"></button>
+	<button class="lt" aria-label="{{translate index.toggle_chan_list}}"></button></div>
 </div>
 <div class="container">
 	<h1 class="title">Settings</h1>
