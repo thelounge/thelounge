@@ -5113,9 +5113,9 @@ stylelint-config-standard@18.1.0:
   dependencies:
     stylelint-config-recommended "^2.0.0"
 
-stylelint@9.1.0:
-  version "9.1.0"
-  resolved "https://registry.yarnpkg.com/stylelint/-/stylelint-9.1.0.tgz#ff24e8be30b9c2718cc53e8b75318988970c426f"
+stylelint@9.1.1:
+  version "9.1.1"
+  resolved "https://registry.yarnpkg.com/stylelint/-/stylelint-9.1.1.tgz#bfabb7eb8ea6251a4732f4b2a0468963a30d3da9"
   dependencies:
     autoprefixer "^8.0.0"
     balanced-match "^1.0.0"
@@ -5150,6 +5150,7 @@ stylelint@9.1.0:
     postcss-selector-parser "^3.1.0"
     postcss-value-parser "^3.3.0"
     resolve-from "^4.0.0"
+    signal-exit "^3.0.2"
     specificity "^0.3.1"
     string-width "^2.1.0"
     style-search "^0.1.0"
