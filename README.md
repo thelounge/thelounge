@@ -70,7 +70,7 @@ The Lounge is the official and community-managed fork of [Shout](https://github.
 
 ## Installation and usage
 
-The Lounge requires [Node.js](https://nodejs.org/) v4 or more recent.
+The Lounge requires [Node.js](https://nodejs.org/) v6 or more recent.
 [Yarn package manager](https://yarnpkg.com/) is also recommended *(npm will also work)*.
 
 ### Running stable releases using Yarn (recommended)
