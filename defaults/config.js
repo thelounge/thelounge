@@ -240,17 +240,17 @@ module.exports = {
 		// For example, Guest%%% will become Guest123 on page load.
 		//
 		// @type     string
-		// @default  "lounge-user"
+		// @default  "thelounge%%"
 		//
-		nick: "lounge-user",
+		nick: "thelounge%%",
 
 		//
 		// Username
 		//
 		// @type     string
-		// @default  "lounge-user"
+		// @default  "thelounge"
 		//
-		username: "lounge-user",
+		username: "thelounge",
 
 		//
 		// Real Name
