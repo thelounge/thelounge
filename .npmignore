@@ -18,4 +18,4 @@ coverage/
 scripts/
 test/
 appveyor.yml
-webpack.config.js
+webpack.config*.js
