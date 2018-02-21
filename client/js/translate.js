@@ -15,35 +15,14 @@ module.exports = {
 				loadPath: "locales/{{lng}}.json",
 				// allow cross domain requests
 				crossDomain: false,
-
 				// allow credentials on cross domain requests
-				withCredentials: false
+				withCredentials: false,
 			};
 		i18n
 			.use(i18nXHR)
 			.init({
 				backend: opts,
-				lng: data.lang, debug: true, load: "currentOnly"
-			}, function() {
-				// Only start opening socket.io connection after all events have been registered
-				socket.open();
-
-				// Translate text in index.html
-				$("[aria-label]").attr("aria-label", function(i, val) {
-					return i18n.t(val);
-				});
-
-				$("[placeholder]").attr("placeholder", function(i, val) {
-					return i18n.t(val);
-				});
-
-				$("[data-text-alternate]").attr("data-text-alternate", function(i, val) {
-					return i18n.t(val);
-				});
-
-				$("[data-translate]").attr("data-translate", function() {
-					$(this).html(i18n.t($(this).text().trim(), {interpolation: {escapeValue: false}}));
-				});
+				lng: data.lang, debug: true, load: "currentOnly",
 			});
 	},
 	translate: function(key, options) {

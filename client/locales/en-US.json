@@ -39,9 +39,8 @@
          "channels":"Channels"
       },
       "settings":{
-         "title":"Settings",
+         "title":"sdfsdfs",
          "messages":"Messages",
-         "show_motd":"Show",
          "show_sec_in_ts":"Show seconds in timestamp",
          "status_messages":"Status messages",
          "condense_list": "Joins, parts, kicks, nick changes, and mode changes",
@@ -53,7 +52,7 @@
          "enable_auto_complete":"Enable autocomplete",
          "theme":"Theme",
          "link_previews":"Links previews",
-         "auto_expand_images":"Auto-expand images",
+         "auto_expand_media":"Auto-expand media",
          "auto_expand_websites":"Auto-expand websites",
          "browser_notifications":"Browser notifications",
          "push_notifications":{
@@ -71,6 +70,7 @@
          "enable_notif_sound":"Enable notification sounds",
          "play_sound":"Play sound",
          "enable_notif_all_msgs":"Enable notifications for all messages",
+         "custom_highlights":"Custom highlights",
          "custom_highlight_placeholder":"Custom highlights (comma-separated keywords)",
          "language":"Language",
          "change_password":"Change password",
@@ -83,7 +83,7 @@
       "help":{
          "alias":"Alias:",
          "aliases":"Aliases:",
-         "autocomplete:"{
+         "autocomplete":{
             "title": "Autocompletion",
             "doc":"To auto-complete nicknames, channels, commands, and emoji, type one of the characters below to open a suggestion list. Use the <kbd>↑</kbd> and <kbd>↓</kbd> keys to highlight an item, and insert it by pressing <kbd>Tab</kbd> or <kbd>Enter</kbd> (or by clicking the desired item).",
             "disable":"Autocompletion can be disabled in settings.",

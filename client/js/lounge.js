@@ -25,7 +25,7 @@ const Changelog = require("./socket-events/changelog");
 const JoinChannel = require("./join-channel");
 
 $(function() {
-	t.init({lang: options.lang, debug: true}, socket);
+	t.init({lang: $("html")[0].lang, debug: true}, socket);
 
 	const sidebar = $("#sidebar, #footer");
 	const chat = $("#chat");

@@ -14,7 +14,10 @@ const colors = require("colors/safe");
 const net = require("net");
 const Identification = require("./identification");
 const changelog = require("./plugins/changelog");
+
 const i18n = require("i18next");
+const i18nBackend = require("i18next-node-fs-backend");
+let lang = "en-US";
 
 const themes = require("./plugins/packages/themes");
 themes.loadLocalThemes();
@@ -33,10 +36,6 @@ const authPlugins = [
 const serverHash = Math.floor(Date.now() * Math.random());
 
 let manager = null;
-
-const i18n = require("i18next");
-const i18nBackend = require("i18next-node-fs-backend");
-let lang = "en-US";
 
 module.exports = function() {
 	log.info(`The Lounge ${colors.green(Helper.getVersion())} \

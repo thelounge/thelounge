@@ -143,7 +143,7 @@
 			<code>@</code>
 		</div>
 		<div class="description">
-			<p>{{translate index.help.autocompletion_doc}}</p>
+			<p>Nickname</p>
 		</div>
 	</div>
 
@@ -174,14 +174,14 @@
 		</div>
 	</div>
 
-	<h2>Commands</h2>
+	<h2>{{translate index.help.commands}}</h2>
 
 	<div class="help-item">
 		<div class="subject">
 			<code>/away [message]</code>
 		</div>
 		<div class="description">
-			<p>Mark yourself as away with an optional message.</p>
+			<p>{{translate index.help.away}}</p>
 		</div>
 	</div>
 
@@ -190,7 +190,7 @@
 			<code>/back</code>
 		</div>
 		<div class="description">
-			<p>Remove your away status (set with <code>/away</code>).</p>
+			<p>{{translate index.help.back}}</p>
 		</div>
 	</div>
 
@@ -199,8 +199,7 @@
 			<code>/ban nick</code>
 		</div>
 		<div class="description">
-			<p>Ban (<code>+b</code>) a user from the current channel.
-			This can be a nickname or a hostmask.</p>
+			<p>{{translate index.help.ban}}</p>
 		</div>
 	</div>
 
@@ -209,7 +208,7 @@
 			<code>/banlist</code>
 		</div>
 		<div class="description">
-			<p>Load the banlist for the current channel.</p>
+			<p>{{translate index.help.banlist}}</p>
 		</div>
 	</div>
 
@@ -230,11 +229,7 @@
 			<code>/connect host [port]</code>
 		</div>
 		<div class="description">
-			<p>
-				Connect to a new IRC network. If <code>port</code> starts with
-				a <code>+</code> sign, the connection will be made secure
-				using TLS.
-			</p>
+			<p>{{translate index.help.connect}}</p>
 			<p>Alias: <code>/server</code></p>
 		</div>
 	</div>
@@ -244,11 +239,7 @@
 			<code>/ctcp target cmd [args]</code>
 		</div>
 		<div class="description">
-			<p>
-				Send a <abbr title="Client-to-client protocol">CTCP</abbr>
-				request. Read more about this on
-				<a href="https://en.wikipedia.org/wiki/Client-to-client_protocol" target="_blank" rel="noopener">the dedicated Wikipedia article</a>.
-			</p>
+			<p>{{translate index.help.ctcp}}</p>
 		</div>
 	</div>
 
@@ -257,10 +248,7 @@
 			<code>/deop nick [...nick]</code>
 		</div>
 		<div class="description">
-			<p>
-				Remove op (<code>-o</code>) from one or several users in the
-				current channel.
-			</p>
+			<p>{{translate index.help.deop}}</p>
 		</div>
 	</div>
 
@@ -269,10 +257,7 @@
 			<code>/devoice nick [...nick]</code>
 		</div>
 		<div class="description">
-			<p>
-				Remove voice (<code>-v</code>) from one or several users in
-				the current channel.
-			</p>
+			<p>{{translate index.help.devoice}}</p>
 		</div>
 	</div>
 
@@ -281,10 +266,7 @@
 			<code>/disconnect [message]</code>
 		</div>
 		<div class="description">
-			<p>
-				Disconnect from the current network with an
-				optionally-provided message.
-			</p>
+			<p>{{translate index.help.disconnect}}</p>
 		</div>
 	</div>
 
@@ -305,11 +287,7 @@
 			<code>/invite nick [channel]</code>
 		</div>
 		<div class="description">
-			<p>
-				Invite a user to the specified channel. If
-				<code>channel</code> is ommitted, user will be invited to the
-				current channel.
-			</p>
+			<p>{{translate index.help.invite}}</p>
 		</div>
 	</div>
 
@@ -318,7 +296,7 @@
 			<code>/join channel</code>
 		</div>
 		<div class="description">
-			<p>Join a channel.</p>
+			<p>{{translate index.help.join}}</p>
 		</div>
 	</div>
 
@@ -327,7 +305,7 @@
 			<code>/kick nick</code>
 		</div>
 		<div class="description">
-			<p>Kick a user from the current channel.</p>
+			<p>{{translate index.help.kick}}</p>
 		</div>
 	</div>
 
@@ -336,7 +314,7 @@
 			<code>/list</code>
 		</div>
 		<div class="description">
-			<p>Retrieve a list of available channels on this network.</p>
+			<p>{{translate index.help.list}}</p>
 		</div>
 	</div>
 
@@ -345,11 +323,7 @@
 			<code>/me message</code>
 		</div>
 		<div class="description">
-			<p>
-				Send an action message to the current channel. The Lounge will
-				display it inline, as if the message was posted in the third
-				person.
-			</p>
+			<p>{{translate index.help.me}}</p>
 		</div>
 	</div>
 
@@ -358,12 +332,7 @@
 			<code>/mode flags [args]</code>
 		</div>
 		<div class="description">
-			<p>
-				Set the given flags to the current channel if the active
-				window is a channel, another user if the active window is a
-				private message window, or yourself if the current window is a
-				server window.
-			</p>
+			<p>{{translate index.help.mode}}</p>
 		</div>
 	</div>
 
@@ -372,7 +341,7 @@
 			<code>/msg channel message</code>
 		</div>
 		<div class="description">
-			<p>Send a message to the specified channel.</p>
+			<p>{{translate index.help.msg}}</p>
 		</div>
 	</div>
 
@@ -381,7 +350,7 @@
 			<code>/nick newnick</code>
 		</div>
 		<div class="description">
-			<p>Change your nickname on the current network.</p>
+			<p>{{translate index.help.nick}}</p>
 		</div>
 	</div>
 
@@ -390,7 +359,7 @@
 			<code>/notice channel message</code>
 		</div>
 		<div class="description">
-			<p>Sends a notice message to the specified channel.</p>
+			<p>{{translate index.help.notice}}</p>
 		</div>
 	</div>
 
@@ -399,10 +368,7 @@
 			<code>/op nick [...nick]</code>
 		</div>
 		<div class="description">
-			<p>
-				Give op (<code>+o</code>) to one or several users in the
-				current channel.
-			</p>
+			<p>{{translate index.help.op}}</p>
 		</div>
 	</div>
 
@@ -411,10 +377,7 @@
 			<code>/part [channel]</code>
 		</div>
 		<div class="description">
-			<p>
-				Close the specified channel or private message window, or the
-				current channel if <code>channel</code> is ommitted.
-			</p>
+			<p>{{translate index.help.part}}</p>
 			<p>Aliases: <code>/close</code>, <code>/leave</code></p>
 		</div>
 	</div>
@@ -424,10 +387,7 @@
 			<code>/rejoin</code>
 		</div>
 		<div class="description">
-			<p>
-				Leave and immediately rejoin the current channel. Useful to
-				quickly get op from ChanServ in an empty channel, for example.
-			</p>
+			<p>{{translate index.help.rejoin}}</p>
 			<p>Alias: <code>/cycle</code></p>
 		</div>
 	</div>
@@ -437,7 +397,7 @@
 			<code>/query nick</code>
 		</div>
 		<div class="description">
-			<p>Send a private message to the specified user.</p>
+			<p>{{translate index.help.query}}</p>
 		</div>
 	</div>
 
@@ -446,9 +406,7 @@
 			<code>/quit [message]</code>
 		</div>
 		<div class="description">
-			<p>
-				Disconnect from the current network with an optional message.
-			</p>
+			<p>{{translate index.help.quit}}</p>
 		</div>
 	</div>
 
@@ -457,7 +415,7 @@
 			<code>/raw message</code>
 		</div>
 		<div class="description">
-			<p>Send a raw message to the current IRC network.</p>
+			<p>{{translate index.help.raw}}</p>
 			<p>Aliases: <code>/quote</code>, <code>/send</code></p>
 		</div>
 	</div>
@@ -467,7 +425,7 @@
 			<code>/slap nick</code>
 		</div>
 		<div class="description">
-			<p>Slap someone in the current channel with a trout!</p>
+			<p>{{translate index.help.slap}}</p>
 		</div>
 	</div>
 
@@ -476,7 +434,7 @@
 			<code>/topic newtopic</code>
 		</div>
 		<div class="description">
-			<p>Set the topic in the current channel.</p>
+			<p>{{translate index.help.topic}}</p>
 		</div>
 	</div>
 
@@ -485,8 +443,7 @@
 			<code>/unban nick</code>
 		</div>
 		<div class="description">
-			<p>Unban (<code>-b</code>) a user from the current channel.
-				This can be a nickname or a hostmask.</p>
+			<p>{{translate index.help.unban}}</p>
 		</div>
 	</div>
 
@@ -495,10 +452,7 @@
 			<code>/voice nick [...nick]</code>
 		</div>
 		<div class="description">
-			<p>
-				Give voice (<code>+v</code>) to one or several users in the
-				current channel.
-			</p>
+			<p>{{translate index.help.voice}}</p>
 		</div>
 	</div>
 
@@ -507,10 +461,7 @@
 			<code>/whois nick</code>
 		</div>
 		<div class="description">
-			<p>
-				Retrieve information about the given user on the current
-				network.
-			</p>
+			<p>{{translate index.help.voice}}</p>
 		</div>
 	</div>
 </div>

@@ -68,6 +68,8 @@ module.exports.initialize = () => {
 		} else if (i === "statusMessages") {
 			settings.find(`input[name=${i}][value=${options[i]}]`)
 				.prop("checked", true);
+		} else if (i === "lang") {
+			settings.find("select[name=" + i + "]").val(options[i]);
 		} else if (i === "theme") {
 			$("#theme").prop("href", "themes/" + options[i] + ".css");
 			settings.find("select[name=" + i + "]").val(options[i]);
@@ -140,6 +142,8 @@ module.exports.initialize = () => {
 			chat.toggleClass("colored-nicks", self.prop("checked"));
 		} else if (name === "theme") {
 			$("#theme").prop("href", "themes/" + options[name] + ".css");
+		} else if (name === "lang-select") {
+			t.changeLanguage($("#lang-select option:selected").text().trim());
 		} else if (name === "userStyles") {
 			userStyles.html(options[name]);
 		} else if (name === "highlights") {

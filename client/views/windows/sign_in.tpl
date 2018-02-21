@@ -1,23 +1,23 @@
 <form class="container" method="post" action="">
 	<div class="row">
 		<div class="col-xs-12">
-			<h1 class="title">Sign in to The Lounge</h1>
+			<h1 class="title">{{translate index.signin.title}}</h1>
 		</div>
 		<div class="col-xs-12">
 			<label>
-				Username
+				{{translate index.signin.username}}
 				<input class="input" name="user" autofocus>
 			</label>
 		</div>
 		<div class="col-xs-12">
 			<label>
-				Password
+				{{translate index.signin.password}}
 				<input class="input" type="password" name="password">
 			</label>
 		</div>
-		<div class="col-xs-12 error" style="display: none;">Authentication failed.</div>
+		<div class="col-xs-12 error" style="display: none;">{{translate index.signin.auth_failed}}.</div>
 		<div class="col-xs-12">
-			<button type="submit" class="btn">Sign in</button>
+			<button type="submit" class="btn">{{translate index.signin.signin}}</button>
 		</div>
 	</div>
 </form>

@@ -15,7 +15,7 @@ module.exports = function(irc, network) {
 				time: Date.now(),
 				type: Msg.Type.ERROR,
 				translate: true,
-				text: "server.error.banlist_empty",``
+				text: "server.error.banlist_empty",
 			});
 			network.getChannel(channel).pushMessage(client, msg, true);
 			return;

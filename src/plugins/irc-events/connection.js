@@ -66,10 +66,7 @@ module.exports = function(irc, network) {
 
 		network.channels[0].pushMessage(client, new Msg({
 			text: "server.connected_network",
-<<<<<<< HEAD
-=======
-			translate: true
->>>>>>> Template translations
+			translate: true,
 		}), true);
 
 		sendStatus();
@@ -78,10 +75,7 @@ module.exports = function(irc, network) {
 	irc.on("close", function() {
 		network.channels[0].pushMessage(client, new Msg({
 			text: "server.disconnected_network_will_not_reconnect",
-<<<<<<< HEAD
-=======
-			translate: true
->>>>>>> Template translations
+			translate: true,
 		}), true);
 	});
 
@@ -125,12 +119,8 @@ module.exports = function(irc, network) {
 		network.channels[0].pushMessage(client, new Msg({
 			type: Msg.Type.ERROR,
 			text: "server.error.socket_error",
-<<<<<<< HEAD
 			err: err,
-=======
 			translate: true,
-			err: err
->>>>>>> Template translations
 		}), true);
 	});
 
@@ -147,10 +137,7 @@ module.exports = function(irc, network) {
 	irc.on("ping timeout", function() {
 		network.channels[0].pushMessage(client, new Msg({
 			text: "server.ping_timeout",
-<<<<<<< HEAD
-=======
-			translate: true
->>>>>>> Template translations
+			translate: true,
 		}), true);
 	});
 

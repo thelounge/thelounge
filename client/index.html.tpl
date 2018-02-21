@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{lang}}">
+<html lang="en-US">
 	<head>
 
 	<meta charset="utf-8">
@@ -40,8 +40,6 @@
 			</div>
 		</aside>
 		<footer id="footer">
-<<<<<<< HEAD
-<<<<<<< HEAD
 			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="index.sign_in"><button class="icon sign-in" data-target="#sign-in" aria-label="index.sign_in" role="tab" aria-controls="sign-in" aria-selected="false"></button></span>
 			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="index.connect_to_network"><button class="icon connect" data-target="#connect" aria-label="index.connect_to_network" role="tab" aria-controls="connect" aria-selected="false"></button></span>
 			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="index.settings_label"><button class="icon settings" data-target="#settings" aria-label="index.settings_label" role="tab" aria-controls="settings" aria-selected="false"></button></span>

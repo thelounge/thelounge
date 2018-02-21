@@ -2,11 +2,11 @@
 	<button class="lt" aria-label="{{translate index.toggle_chan_list}}"></button></div>
 </div>
 <div class="container">
-	<h1 class="title">Settings</h1>
+	<h1 class="title">{{translate index.settings.title}}</h1>
 
 	<div class="row">
 		<div class="col-sm-12">
-			<h2>Messages</h2>
+			<h2>{{translate index.settings.messages}}</h2>
 		</div>
 		<div class="col-sm-6">
 			<label class="opt">
@@ -17,42 +17,42 @@
 		<div class="col-sm-6">
 			<label class="opt">
 				<input type="checkbox" name="showSeconds">
-				Show seconds in timestamp
+				{{translate index.settings.show_sec_in_ts}}
 			</label>
 		</div>
 		<div class="col-sm-12">
 			<h2>
-				Status messages
-				<span class="tooltipped tooltipped-n tooltipped-no-delay" aria-label="Joins, parts, kicks, nick changes, away changes, and mode changes">
-					<button class="extra-help" aria-label="Joins, parts, kicks, nick changes, away changes, and mode changes"></button>
+				{{translate index.settings.status_messages}}
+				<span class="tooltipped tooltipped-n tooltipped-no-delay" aria-label="{{translate index.settings.condense_list}}">
+					<button class="extra-help" aria-label="{{translate index.settings.condense_list}}"></button>
 				</span>
 			</h2>
 		</div>
 		<div class="col-sm-12">
 			<label class="opt">
 				<input type="radio" name="statusMessages" value="shown">
-				Show all status messages individually
+				{{translate index.settings.show_status_messages_individullay}}
 			</label>
 			<label class="opt">
 				<input type="radio" name="statusMessages" value="condensed">
-				Condense status messages together
+				{{translate index.settings.condense_status_together}}
 			</label>
 			<label class="opt">
 				<input type="radio" name="statusMessages" value="hidden">
-				Hide all status messages
+				{{translate index.settings.hide_all_status_messages}}
 			</label>
 		</div>
 		<div class="col-sm-12">
-			<h2>Visual Aids</h2>
+			<h2>{{translate index.settings.visual_aids}}</h2>
 		</div>
 		<div class="col-sm-12">
 			<label class="opt">
 				<input type="checkbox" name="coloredNicks">
-				Enable colored nicknames
+				{{translate index.settings.enable_color_nicks}}
 			</label>
 			<label class="opt">
 				<input type="checkbox" name="autocomplete">
-				Enable autocomplete
+				{{translate index.settings.enable_auto_complete}}
 			</label>
 		</div>
 		<div class="col-sm-12">
@@ -63,10 +63,10 @@
 		</div>
 
 		<div class="col-sm-12">
-			<h2>Theme</h2>
+			<h2>{{translate index.settings.theme}}</h2>
 		</div>
 		<div class="col-sm-12">
-			<label for="theme-select" class="sr-only">Theme</label>
+			<label for="theme-select" class="sr-only">{{translate index.settings.theme}}</label>
 			<select id="theme-select" name="theme" class="input">
 				{{#each themes}}
 					<option value="{{name}}">
@@ -77,77 +77,77 @@
 		</div>
 		{{#if prefetch}}
 		<div class="col-sm-12">
-			<h2>Link previews</h2>
+			<h2>{{translate index.settings.link_previews}}</h2>
 		</div>
 		<div class="col-sm-6">
 			<label class="opt">
 				<input type="checkbox" name="media">
-				Auto-expand media
+				{{translate index.settings.auto_expand_media}}
 			</label>
 		</div>
 		<div class="col-sm-6">
 			<label class="opt">
 				<input type="checkbox" name="links">
-				Auto-expand websites
+				{{translate index.settings.auto_expand_websites}}
 			</label>
 		</div>
 		{{/if}}
 		{{#unless public}}
 		<div class="col-sm-12">
-			<h2>Push Notifications</h2>
+			<h2>{{translate index.settings.push_notifications.title}}</h2>
 		</div>
 		<div class="col-sm-12">
-			<button type="button" class="btn" id="pushNotifications" disabled data-text-alternate="Unsubscribe from push notifications">Subscribe to push notifications</button>
+			<button type="button" class="btn" id="pushNotifications" disabled data-text-alternate="Unsubscribe from push notifications">{{translate index.settings.push_notifications.subscribe}}</button>
 			<div class="error" id="pushNotificationsHttps">
-				<strong>Warning</strong>:
-				Push notifications are only supported over HTTPS connections.
+				<strong>{{translate index.settings.push_notifications.warning}}</strong>:
+				{{translate index.settings.push_notifications.https}}
 			</div>
 			<div class="error" id="pushNotificationsUnsupported">
-				<strong>Warning</strong>:
-				<span>Push notifications are not supported by your browser.</span>
+				<strong>{{translate index.settings.push_notifications.warning}}</strong>:
+				<span>{{translate index.settings.push_notifications.not_supported}}</span>
 			</div>
 		</div>
 		{{/unless}}
 		<div class="col-sm-12">
-			<h2>Browser Notifications</h2>
+			<h2>{{translate index.settings.browser_notifications}}</h2>
 		</div>
 		<div class="col-sm-12">
 			<label class="opt">
 			<input id="desktopNotifications" type="checkbox" name="desktopNotifications">
-			Enable browser notifications<br>
+			{{translate index.settings.enable_browser_notif}}<br>
 			<div class="error" id="warnUnsupportedDesktopNotifications">
-				<strong>Warning</strong>:
-				Notifications are not supported by your browser.
+				<strong>{{translate index.settings.warning}}</strong>:
+				{{translate index.settings.notif_not_supported}}
 			</div>
 			<div class="error" id="warnBlockedDesktopNotifications">
-				<strong>Warning</strong>:
-				Notifications are blocked by your browser.
+				<strong>{{translate index.settings.warning}}</strong>:
+				{{translate index.settings.notif_blocked}}
 			</div>
 			</label>
 		</div>
 		<div class="col-sm-12">
 			<label class="opt">
 			<input type="checkbox" name="notification">
-			Enable notification sound
+			{{translate index.settings.enable_notif_sound}}
 			</label>
 		</div>
 		<div class="col-sm-12">
 			<div class="opt">
-				<button id="play">Play sound</button>
+				<button id="play">{{translate index.settings.play_sound}}</button>
 			</div>
 		</div>
 
 		<div class="col-sm-12">
 			<label class="opt">
 				<input type="checkbox" name="notifyAllMessages">
-				Enable notification for all messages
+				{{translate index.settings.enable_notif_all_msgs}}
 			</label>
 		</div>
 
 		<div class="col-sm-12">
 			<label class="opt">
-				<label for="highlights" class="sr-only">Custom highlights (comma-separated keywords)</label>
-				<input type="text" id="highlights" name="highlights" class="input" placeholder="Custom highlights (comma-separated keywords)">
+				<label for="highlights" class="sr-only">{{translate index.settings.custom_highlights}}</label>
+				<input type="text" id="highlights" name="highlights" class="input" placeholder="{{translate index.settings.custom_highlights_placeholder}}">
 			</label>
 		</div>
 
@@ -156,34 +156,34 @@
 		<div id="change-password">
 			<form action="" method="post" data-event="change-password">
 				<div class="col-sm-12">
-					<h2>Change password</h2>
+					<h2>{{translate index.settings.change_password}}</h2>
 				</div>
 				<div class="col-sm-12">
-					<label for="old_password_input" class="sr-only">Enter current password</label>
-					<input type="password" id="old_password_input" name="old_password" class="input" placeholder="Enter current password">
+					<label for="old_password_input" class="sr-only">{{translate index.settings.enter_current_password}}</label>
+					<input type="password" id="old_password_input" name="old_password" class="input" placeholder="{{translate index.settings.enter_current_password}}">
 				</div>
 				<div class="col-sm-12">
-					<label for="new_password_input" class="sr-only">Enter desired new password</label>
-					<input type="password" id="new_password_input" name="new_password" class="input" placeholder="Enter desired new password">
+					<label for="new_password_input" class="sr-only">{{translate index.settings.enter_new_password}}</label>
+					<input type="password" id="new_password_input" name="new_password" class="input" placeholder="{{translate index.settings.enter_new_password}}">
 				</div>
 				<div class="col-sm-12">
-					<label for="verify_password_input" class="sr-only">Repeat new password</label>
-					<input type="password" id="verify_password_input" name="verify_password" class="input" placeholder="Repeat new password">
+					<label for="verify_password_input" class="sr-only">{{translate index.settings.repeat_new_password}}</label>
+					<input type="password" id="verify_password_input" name="verify_password" class="input" placeholder="{{translate index.settings.repeat_new_password}}">
 				</div>
 				<div class="col-sm-12 feedback"></div>
 				<div class="col-sm-12">
-					<button type="submit" class="btn">Change password</button>
+					<button type="submit" class="btn">{{translate index.settings.change_password}}</button>
 				</div>
 			</form>
 		</div>
 			{{/unless}}
 		{{/unless}}
 		<div class="col-sm-12">
-			<h2>Custom Stylesheet</h2>
+			<h2>{{translate index.settings.custom_stylesheet}}</h2>
 		</div>
 		<div class="col-sm-12">
-			<label for="user-specified-css-input" class="sr-only">Custom stylesheet. You can override any style with CSS here.</label>
-			<textarea class="input" name="userStyles" id="user-specified-css-input" placeholder="/* You can override any style with CSS here */"></textarea>
+			<label for="user-specified-css-input" class="sr-only">{{translate index.settings.custom_stylesheet_placeholder}}</label>
+			<textarea class="input" name="userStyles" id="user-specified-css-input" placeholder="/* {{translate index.settings.custom_stylesheet_placeholder}} */"></textarea>
 		</div>
 	</div>
 
