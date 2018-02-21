@@ -13,7 +13,9 @@ exports.input = function({irc}, chan, cmd, args) {
 	} else {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
-			text: `${cmd} command can only be used in channels or by specifying a target.`,
+			translate: true,
+			text: "server.error.command_in_channels_or_spec_target",
+			cmd: cmd,
 		}));
 	}
 };

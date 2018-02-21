@@ -13,7 +13,8 @@ exports.input = function({irc}, chan, cmd, args) {
 	if (chan.type !== Chan.Type.CHANNEL) {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
-			text: `${cmd} command can only be used in channels.`,
+			text: "server.error.command_in_channels",
+			cmd: cmd,
 		}));
 
 		return;
@@ -23,7 +24,9 @@ exports.input = function({irc}, chan, cmd, args) {
 		if (args.length === 0) {
 			chan.pushMessage(this, new Msg({
 				type: Msg.Type.ERROR,
-				text: `Usage: /${cmd} <nick>`,
+				translate: true,
+				text: "server.error.ban_usage",
+				cmd: cmd,
 			}));
 
 			return;

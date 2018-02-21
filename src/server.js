@@ -15,6 +15,10 @@ const net = require("net");
 const Identification = require("./identification");
 const changelog = require("./plugins/changelog");
 
+const i18n = require("i18next");
+const i18nBackend = require("i18next-node-fs-backend");
+let lang = "en-US";
+
 const themes = require("./plugins/packages/themes");
 themes.loadLocalThemes();
 
@@ -22,7 +26,7 @@ const packages = require("./plugins/packages/index");
 packages.loadPackages();
 
 // The order defined the priority: the first available plugin is used
-// ALways keep local auth in the end, which should always be enabled.
+// Always keep local auth in the end, which should always be enabled.
 const authPlugins = [
 	require("./plugins/auth/ldap"),
 	require("./plugins/auth/local"),
@@ -37,6 +41,31 @@ module.exports = function() {
 	log.info(`The Lounge ${colors.green(Helper.getVersion())} \
 (Node.js ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${process.arch})`);
 	log.info(`Configuration file: ${colors.green(Helper.getConfigPath())}`);
+
+	if (fs.existsSync(`client/locales/${Helper.config.lang}.json`)) {
+		lang = Helper.config.lang;
+	} else {
+		log.warn(`Language file for ${Helper.config.lang} not found. Defaulting to en-US.`);
+	}
+
+	const opts =
+	{
+		loadPath: "client/locales/{{lng}}.json",
+	};
+
+	i18n
+		.use(i18nBackend)
+		.init({
+			backend: opts,
+			lng: lang, load: "all",
+			fallbackLng: [lang, "fr"],
+		}, (err) => {
+			err.forEach(function(e) {
+				if (e.errno === -2) { // ENOENT
+					log.warn(`Language file ${e.path} not found.`);
+				}
+			});
+		});
 
 	const app = express()
 		.disable("x-powered-by")
@@ -319,14 +348,14 @@ function initializeClient(socket, client, token, lastMessage) {
 
 				if (typeof p1 === "undefined" || p1 === "") {
 					socket.emit("change-password", {
-						error: "Please enter a new password",
+						error: "server.password.change_enter_new",
 					});
 					return;
 				}
 
 				if (p1 !== p2) {
 					socket.emit("change-password", {
-						error: "Both new password fields must match",
+						error: "server.password.change_fail_entered_not_match",
 					});
 					return;
 				}
@@ -336,7 +365,7 @@ function initializeClient(socket, client, token, lastMessage) {
 					.then((matching) => {
 						if (!matching) {
 							socket.emit("change-password", {
-								error: "The current password field does not match your account password",
+								error: "server.password.change_fail_entered_not_match_account",
 							});
 							return;
 						}
@@ -345,11 +374,10 @@ function initializeClient(socket, client, token, lastMessage) {
 
 						client.setPassword(hash, (success) => {
 							const obj = {};
-
 							if (success) {
-								obj.success = "Successfully updated your password";
+								obj.success = "server.password.change_success";
 							} else {
-								obj.error = "Failed to update your password";
+								obj.error = "server.password.change_fail";
 							}
 
 							socket.emit("change-password", obj);
@@ -514,6 +542,15 @@ function getClientConfiguration() {
 		"themes",
 		"prefetch",
 	]);
+
+	config.languages = fs.readdirSync("client/locales/").filter(function(langFile) {
+		return langFile.endsWith(".json");
+	}).map(function(language) {
+		const filename = language.slice(0, -5);
+		return {
+			name: filename,
+		};
+	});
 
 	config.ldapEnabled = Helper.config.ldap.enable;
 	config.version = pkg.version;

@@ -1,9 +1,9 @@
 <table class="channel-list">
 	<thead>
 		<tr>
-			<th class="channel">Channel</th>
-			<th class="users">Users</th>
-			<th class="topic">Topic</th>
+			<th class="channel">{{translate 'client.channel_list.channel'}}</th>
+			<th class="users">{{translate 'client.channel_list.users'}}</th>
+			<th class="topic">{{translate 'client.channel_list.topic'}}</th>
 		</tr>
 	</thead>
 	<tbody>

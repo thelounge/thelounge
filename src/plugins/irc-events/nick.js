@@ -14,7 +14,8 @@ module.exports = function(irc, network) {
 
 			const lobby = network.channels[0];
 			msg = new Msg({
-				text: `You're now known as ${data.new_nick}`,
+				text: "server.now_known_as",
+				new_nick: data.new_nick,
 			});
 			lobby.pushMessage(client, msg, true);
 

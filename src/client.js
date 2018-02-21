@@ -202,7 +202,8 @@ Client.prototype.connect = function(args) {
 		if (!Helper.config.public && args.host && args.host.length > 0 && args.host !== Helper.config.defaults.host) {
 			network.channels[0].pushMessage(client, new Msg({
 				type: Msg.Type.ERROR,
-				text: "Hostname you specified is not allowed.",
+				translate: true,
+				text: "server.error.hostname_not_allowed",
 			}), true);
 			return;
 		}
@@ -215,7 +216,8 @@ Client.prototype.connect = function(args) {
 	if (network.host.length === 0) {
 		network.channels[0].pushMessage(client, new Msg({
 			type: Msg.Type.ERROR,
-			text: "You must specify a hostname to connect.",
+			translate: true,
+			text: "server.error.specify_hostname",
 		}), true);
 		return;
 	}
@@ -359,7 +361,8 @@ Client.prototype.inputLine = function(data) {
 		if (target.chan.type === Chan.Type.LOBBY) {
 			target.chan.pushMessage(this, new Msg({
 				type: Msg.Type.ERROR,
-				text: "Messages can not be sent to lobbies.",
+				translate: true,
+				text: "server.error.msg_not_sent_lobby",
 			}));
 			return;
 		}
@@ -389,7 +392,8 @@ Client.prototype.inputLine = function(data) {
 	if (!connected) {
 		target.chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
-			text: "You are not connected to the IRC network, unable to send your command.",
+			translate: true,
+			text: "server.error.not_connected",
 		}));
 	}
 };

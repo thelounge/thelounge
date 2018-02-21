@@ -9,7 +9,9 @@ exports.input = function({irc}, chan, cmd, args) {
 	if (chan.type !== Chan.Type.CHANNEL) {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
-			text: `${cmd} command can only be used in channels.`,
+			translate: true,
+			text: "server.error.command_in_channels",
+			cmd: cmd,
 		}));
 
 		return;

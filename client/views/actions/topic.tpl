@@ -1,8 +1,8 @@
 {{#if from.nick}}
 	{{> ../user_name from}}
-	has changed the topic to:
+	{{translate 'client.topic.has_changed'}}
 {{else}}
-	The topic is:
+	{{translate 'client.topic.topic_is'}}
 {{/if}}
 
 <span class="new-topic">{{{parse text}}}</span>

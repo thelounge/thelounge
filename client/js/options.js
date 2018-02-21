@@ -5,7 +5,7 @@ const escapeRegExp = require("lodash/escapeRegExp");
 const userStyles = $("#user-specified-css");
 const storage = require("./localStorage");
 const tz = require("./libs/handlebars/tz");
-
+const t = require("./translate");
 const windows = $("#windows");
 const chat = $("#chat");
 
@@ -16,6 +16,7 @@ const options = {
 	coloredNicks: true,
 	desktopNotifications: false,
 	highlights: [],
+	lng: "en",
 	links: true,
 	motd: true,
 	notification: true,
@@ -24,6 +25,8 @@ const options = {
 	statusMessages: "condensed",
 	theme: $("#theme").data("server-theme"),
 	media: true,
+	lang: $("html")[0].lang, // server default language
+	thumbnails: true,
 	userStyles: userStyles.text(),
 };
 let userOptions = JSON.parse(storage.get("settings")) || {};
@@ -65,8 +68,12 @@ module.exports.initialize = () => {
 		} else if (i === "statusMessages") {
 			settings.find(`input[name=${i}][value=${options[i]}]`)
 				.prop("checked", true);
+		} else if (i === "lang") {
+			settings.find("select[name=" + i + "]").val(options[i]);
 		} else if (i === "theme") {
 			$("#theme").prop("href", "themes/" + options[i] + ".css");
+			settings.find("select[name=" + i + "]").val(options[i]);
+		} else if (i === "lang") {
 			settings.find("select[name=" + i + "]").val(options[i]);
 		} else if (options[i]) {
 			settings.find("input[name=" + i + "]").prop("checked", true);
@@ -135,6 +142,8 @@ module.exports.initialize = () => {
 			chat.toggleClass("colored-nicks", self.prop("checked"));
 		} else if (name === "theme") {
 			$("#theme").prop("href", "themes/" + options[name] + ".css");
+		} else if (name === "lang-select") {
+			t.changeLanguage($("#lang-select option:selected").text().trim());
 		} else if (name === "userStyles") {
 			userStyles.html(options[name]);
 		} else if (name === "highlights") {

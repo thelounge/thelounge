@@ -32,6 +32,13 @@ module.exports = {
 	port: 9000,
 
 	//
+	// Set the default language.
+	// @type     string
+	// @default  "en-US"
+	//
+	lang: "en-US",
+
+	//
 	// Set the local IP to bind to for outgoing connections. Leave to undefined
 	// to let the operating system pick its preferred one.
 	//

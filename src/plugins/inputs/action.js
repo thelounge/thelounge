@@ -9,7 +9,8 @@ exports.input = function({irc}, chan, cmd, args) {
 	if (chan.type !== Chan.Type.CHANNEL && chan.type !== Chan.Type.QUERY) {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
-			text: `${cmd} command can only be used in channels and queries.`,
+			text: "server.error.command_in_channels_and_queries",
+			cmd: cmd,
 		}));
 
 		return;

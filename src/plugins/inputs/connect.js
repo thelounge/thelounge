@@ -14,7 +14,8 @@ exports.input = function({irc}, chan, cmd, args) {
 		if (irc.connection.connected) {
 			chan.pushMessage(this, new Msg({
 				type: Msg.Type.ERROR,
-				text: "You are already connected.",
+				translate: true,
+				text: "server.error.already_connected",
 			}));
 			return;
 		}

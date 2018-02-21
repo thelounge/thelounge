@@ -3,6 +3,7 @@
 const _ = require("lodash");
 const constants = require("./constants");
 const templates = require("../views");
+const t = require("./translate");
 
 module.exports = {
 	updateText,
@@ -30,35 +31,8 @@ function updateText(condensed, addedTypes) {
 	const strings = [];
 	constants.condensedTypes.forEach((type) => {
 		if (obj[type]) {
-			switch (type) {
-			case "away":
-				strings.push(obj[type] + (obj[type] > 1 ? " users have gone away" : " user has gone away"));
-				break;
-			case "back":
-				strings.push(obj[type] + (obj[type] > 1 ? " users have come back" : " user has come back"));
-				break;
-			case "chghost":
-				strings.push(obj[type] + (obj[type] > 1 ? " users have changed hostname" : " user has changed hostname"));
-				break;
-			case "join":
-				strings.push(obj[type] + (obj[type] > 1 ? " users have joined the channel" : " user has joined the channel"));
-				break;
-			case "part":
-				strings.push(obj[type] + (obj[type] > 1 ? " users have left the channel" : " user has left the channel"));
-				break;
-			case "quit":
-				strings.push(obj[type] + (obj[type] > 1 ? " users have quit" : " user has quit"));
-				break;
-			case "nick":
-				strings.push(obj[type] + (obj[type] > 1 ? " users have changed nick" : " user has changed nick"));
-				break;
-			case "kick":
-				strings.push(obj[type] + (obj[type] > 1 ? " users were kicked" : " user was kicked"));
-				break;
-			case "mode":
-				strings.push(obj[type] + (obj[type] > 1 ? " modes were set" : " mode was set"));
-				break;
-			}
+			const key = `client.condensed.${type}`; // TODO after rebase: add new types to translations
+			strings.push(t.translate(key, {count: obj[type]}));
 		}
 	});
 

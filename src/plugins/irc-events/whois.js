@@ -26,7 +26,9 @@ module.exports = function(irc, network) {
 		if (data.error) {
 			msg = new Msg({
 				type: Msg.Type.ERROR,
-				text: "No such nick: " + data.nick,
+				translate: true,
+				text: "client.no_such_nick",
+				nick: data.nick,
 			});
 		} else {
 			// Absolute datetime in milliseconds since nick is idle

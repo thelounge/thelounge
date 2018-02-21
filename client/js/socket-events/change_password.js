@@ -2,6 +2,7 @@
 
 const $ = require("jquery");
 const socket = require("../socket");
+const t = require("../translate");
 
 socket.on("change-password", function(data) {
 	const passwordForm = $("#change-password");
@@ -16,7 +17,7 @@ socket.on("change-password", function(data) {
 			feedback.addClass("error").removeClass("success");
 		}
 
-		feedback.text(message).show();
+		feedback.text(t.translate(message)).show();
 		feedback.closest("form").one("submit", function() {
 			feedback.hide();
 		});

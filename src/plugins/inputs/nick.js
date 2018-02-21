@@ -9,7 +9,8 @@ exports.input = function(network, chan, cmd, args) {
 	if (args.length === 0) {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
-			text: "Usage: /nick <your new nick>",
+			translate: true,
+			text: "server.error.nick_proper_usage",
 		}));
 		return;
 	}
@@ -17,7 +18,8 @@ exports.input = function(network, chan, cmd, args) {
 	if (args.length !== 1) {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
-			text: "Nicknames may not contain spaces.",
+			translate: true,
+			text: "server.error.nick_no_spaces",
 		}));
 		return;
 	}

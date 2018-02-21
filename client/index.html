@@ -1,0 +1,894 @@
+<!doctype html>
+<html lang="{{lang}}">
+	<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no">
+
+	<link rel="preload" as="script" href="js/bundle.vendor.js">
+	<link rel="preload" as="script" href="js/bundle.js">
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/style.css">
+	<link id="theme" rel="stylesheet" href="{{ theme }}">
+	<style id="user-specified-css"></style>
+
+	<title>The Lounge</title>
+
+	<link rel="shortcut icon" href="img/favicon.png" data-other="img/favicon-notification.png" data-toggled="false" id="favicon">
+	<link rel="apple-touch-icon" sizes="120x120" href="img/apple-touch-icon-120x120.png">
+	<link rel="mask-icon" href="img/logo.svg" color="#455164">
+	<link rel="manifest" href="manifest.json">
+
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="theme-color" content="#455164">
+
+	</head>
+	<body class="signed-out {{#if public}}public{{/if}}" data-transports="{{tojson transports}}">
+
+	<div id="wrap">
+	<div id="viewport">
+		<aside id="sidebar">
+			<div class="networks"></div>
+			<div class="empty" data-translate="true">
+				index.not_connected
+			</div>
+		</aside>
+		<footer id="footer">
+			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="index.sign_in"><button class="icon sign-in" data-target="#sign-in" aria-label="index.sign_in"></button></span>
+			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="index.connect_to_network"><button class="icon connect" data-target="#connect" aria-label="index.connect_to_network"></button></span>
+			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="index.settings_label"><button class="icon settings" data-target="#settings" aria-label="index.settings_label"></button></span>
+			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="index.help_label"><button class="icon help" data-target="#help" aria-label="index.help_label"></button></span>
+			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="index.sign_out"><button class="icon sign-out" id="sign-out" aria-label="index.sign_out"></button></span>
+		</footer>
+		<div id="main">
+			<div id="windows">
+				<div id="loading" class="window active">
+					<div class="container">
+						<div class="row">
+							<div class="col-xs-12">
+								<h1 class="title">{{translate "index.loading"}}</h1>
+							</div>
+							<div class="col-xs-12">
+								<p id="loading-page-message">{{translate "index.loading_app"}}<a href="http://enable-javascript.com/" target="_blank" rel="noopener">{{translate "index.js_enabled"}}</a></p>
+								<div id="loading-slow">
+									<p>{{translate "index.taking_long"}}</p>
+									<button id="loading-slow-reload" class="btn">{{translate "index.reload_page"}}</button>
+								</div>
+								<script async src="js/loading-slow-alert.js"></script>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="chat-container" class="window">
+					<div id="chat"></div>
+					<button id="connection-error" class="btn btn-reconnect" data-translate="true">index.connection_lost</button>
+					<form id="form" method="post" action="">
+						<div class="input">
+							<span id="nick">
+								<span id="nick-value" spellcheck="false"></span><!-- Comments here remove spaces between elements
+								--><span id="set-nick-tooltip" class="tooltipped tooltipped-e" aria-label="index.change_nick"><button id="set-nick" type="button" aria-label="index.change_nick"></button></span><!--
+								--><span id="cancel-nick-tooltip" class="tooltipped tooltipped-e" aria-label="index.cancel"><button id="cancel-nick" type="button" aria-label="index.cancel"></button></span><!--
+								--><span id="save-nick-tooltip" class="tooltipped tooltipped-e" aria-label="index.save"><button id="submit-nick" type="button" aria-label="index.save"></button></span>
+							</span>
+							<textarea id="input" class="mousetrap"></textarea>
+							<span id="submit-tooltip" class="tooltipped tooltipped-w tooltipped-no-touch" aria-label="index.send_message">
+								<button id="submit" type="submit" aria-label="index.send_message"></button>
+							</span>
+						</div>
+					</form>
+				</div>
+				<div id="sign-in" class="window">
+					<form class="container" method="post" action="">
+						<div class="row">
+							<div class="col-xs-12">
+								<h1 class="title" data-translate="true">index.signin.title</h1>
+							</div>
+							<div class="col-xs-12">
+								<label>
+								<span data-translate="true">index.signin.username</span>
+								<input class="input" name="user">
+								</label>
+							</div>
+							<div class="col-xs-12">
+								<label>
+								<span data-translate="true">index.signin.password</span>
+								<input class="input" type="password" name="password">
+								</label>
+							</div>
+							<div class="col-xs-12 error" style="display: none;">
+								<span data-translate="true">index.signin.auth_failed</span>
+							</div>
+							<div class="col-xs-12">
+								<button type="submit" class="btn" data-translate="true">
+									index.sign_in
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div id="connect" class="window">
+					<div class="header">
+						<button class="lt" aria-label="index.toggle_chan_list"></button>
+					</div>
+					<form class="container" method="post" action="">
+						<div class="row">
+							<div class="col-sm-12">
+								<h1 class="title">
+									{{#if public}}The Lounge - {{/if}}
+									<span data-translate="true">index.connect.connect</span>
+									{{#unless displayNetwork}}
+										{{#if lockNetwork}}
+										<span data-translate="true">index.connect.to</span> {{defaults.name}}
+										{{/if}}
+									{{/unless}}
+								</h1>
+							</div>
+							{{#if displayNetwork}}
+							<div>
+								<div class="col-sm-12">
+									<h2 data-translate="true">index.connect.network_settings</h2>
+								</div>
+								<div class="col-sm-3">
+									<label data-translate="true" for="connect:name">index.connect.name</label>
+								</div>
+								<div class="col-sm-9">
+									<input class="input" id="connect:name" name="name" value="{{defaults.name}}">
+								</div>
+								<div class="col-sm-3">
+									<label data-translate="true" for="connect:host">index.connect.server</label>
+								</div>
+								<div class="col-sm-6 col-xs-8">
+									<input class="input" id="connect:host" name="host" value="{{defaults.host}}" data-translate="true" aria-label="index.connect.server_address" {{#if lockNetwork}}index.connect.disabled{{/if}}>
+								</div>
+								<div class="col-sm-3 col-xs-4">
+									<div class="port">
+										<input class="input" type="number" min="1" max="65535" name="port" value="{{defaults.port}}" aria-label="index.connect.server_port" {{#if lockNetwork}}index.connect.disabled{{/if}}>
+									</div>
+								</div>
+								<div class="clearfix"></div>
+								<div class="col-sm-3">
+									<label data-translate="true" for="connect:password">index.connect.password</label>
+								</div>
+								<div class="col-sm-9">
+									<input class="input" id="connect:password" type="password" name="password" value="{{defaults.password}}">
+								</div>
+								<div class="col-sm-9 col-sm-offset-3">
+									<label class="tls">
+										<input type="checkbox" name="tls" {{#if defaults.tls}}checked{{/if}} {{#if lockNetwork}}disabled{{/if}}>
+										<span data-translate="true">index.connect.enable_tls_ssl</span>
+									</label>
+								</div>
+								<div class="clearfix"></div>
+							</div>
+							{{/if}}
+							<div class="col-sm-12">
+								<h2 data-translate="true">index.connect.user_preferences</h2>
+							</div>
+							<div class="col-sm-3">
+								<label data-translate="true" for="connect:nick">index.connect.nick</label>
+							</div>
+							<div class="col-sm-9">
+								<input class="input nick" id="connect:nick" name="nick" value="{{defaults.nick}}">
+							</div>
+							{{#unless useHexIp}}
+							<div class="col-sm-3">
+								<label data-translate="true" for="connect:username">index.connect.username</label>
+							</div>
+							<div class="col-sm-9">
+								<input class="input username" id="connect:username" name="username" value="{{defaults.username}}">
+							</div>
+							{{/unless}}
+							<div class="col-sm-3">
+								<label data-translate="true" for="connect:realname">index.connect.real_name</label>
+							</div>
+							<div class="col-sm-9">
+								<input class="input" id="connect:realname" name="realname" value="{{defaults.realname}}">
+							</div>
+							<div class="col-sm-3">
+								<label data-translate="true" for="connect:channels">index.connect.channels</label>
+							</div>
+							<div class="col-sm-9">
+								<input class="input" id="connect:channels" name="join" value="{{defaults.join}}">
+							</div>
+							<div class="col-sm-9 col-sm-offset-3">
+								<button data-translate="true" type="submit" class="btn">index.connect.connect</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div id="settings" class="window">
+					<div class="header">
+						<button class="lt" aria-label="index.toggle_chan_list"></button>
+					</div>
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-12">
+								<h1 class="title" data-translate="true">index.settings.title</h1>
+							</div>
+							<div class="col-sm-12">
+								<h2 data-translate="true">index.settings.messages</h2>
+							</div>
+							<div class="col-sm-6">
+								<label class="opt">
+									<input type="checkbox" name="motd">
+									<span data-translate="true">index.settings.show_motd</span> <abbr title="Message Of The Day">MOTD</abbr>
+								</label>
+							</div>
+							<div class="col-sm-6">
+								<label class="opt">
+									<input type="checkbox" name="showSeconds">
+									<span data-translate="true">index.settings.show_sec_in_ts</span>
+								</label>
+							</div>
+							<div class="col-sm-12">
+								<h2>
+									<span data-translate="true">index.settings.status_messages</span>
+									<span class="tooltipped tooltipped-n tooltipped-no-delay" aria-label="index.settings.condense_list">
+										<button class="extra-help" aria-label="index.settings.condense_list"></button>
+									</span>
+								</h2>
+							</div>
+							<div class="col-sm-12">
+								<label class="opt">
+									<input type="radio" name="statusMessages" value="shown">
+									<span data-translate="true">index.settings.show_status_messages_individually</span>
+								</label>
+								<label class="opt">
+									<input type="radio" name="statusMessages" value="condensed">
+									<span data-translate="true">index.settings.condense_status_together</span>
+								</label>
+								<label class="opt">
+									<input type="radio" name="statusMessages" value="hidden">
+									<span data-translate="true">index.settings.hide_all_status_messages</span>
+								</label>
+							</div>
+							<div class="col-sm-12">
+								<h2 data-translate="true">index.settings.visual_aids</h2>
+							</div>
+							<div class="col-sm-12">
+								<label class="opt">
+									<input type="checkbox" name="coloredNicks">
+									<span data-translate="true">index.settings.enable_color_nicks</span>
+								</label>
+								<label class="opt">
+									<input type="checkbox" name="autocomplete">
+									<span data-translate="true">index.settings.enable_auto_complete</span>
+								</label>
+							</div>
+							<div class="col-sm-12">
+								<h2 data-translate="true">index.settings.theme</h2>
+							</div>
+							<div class="col-sm-12">
+								<label for="theme-select" class="sr-only" data-translate="true">index.settings.theme</label>
+								<select id="theme-select" name="theme" class="input">
+									{{#each themes}}
+										<option value="{{filename}}">
+											{{name}}
+										</option>
+									{{/each}}
+								</select>
+							</div>
+							{{#if prefetch}}
+							<div class="col-sm-12">
+								<h2 data-translate="true">index.settings.link_previews</h2>
+							</div>
+							<div class="col-sm-6">
+								<label class="opt">
+									<input type="checkbox" name="thumbnails">
+									<span data-translate="true">index.settings.auto_expand_images</span>
+								</label>
+							</div>
+							<div class="col-sm-6">
+								<label class="opt">
+									<input type="checkbox" name="links">
+									<span data-translate="true">index.settings.auto_expand_websites</span>
+								</label>
+							</div>
+							{{/if}}
+							{{#unless public}}
+							<div class="col-sm-12">
+								<h2 data-translate="true">index.settings.push_notifications.title</h2>
+							</div>
+							<div class="col-sm-12">
+								<button type="button" class="btn" id="pushNotifications" data-translate="true" disabled data-text-alternate="index.settings.push_notifications.unsubscribe">index.settings.push_notifications.subscribe</button>
+								<div class="error" id="pushNotificationsHttps">
+									<strong data-translate="true">index.settings.warning</strong>:
+									<span data-translate="true">index.settings.push_notifications.https</span>
+								</div>
+								<div class="error" id="pushNotificationsUnsupported">
+									<strong data-translate="true">index.settings.warning</strong>:
+									<span data-translate="true">index.settings.push_notifications.not_supported</span>
+								</div>
+							</div>
+							{{/unless}}
+							<div class="col-sm-12">
+								<h2 data-translate="true">index.settings.browser_notifications</h2>
+							</div>
+							<div class="col-sm-12">
+								<label class="opt">
+								<input id="desktopNotifications" type="checkbox" name="desktopNotifications">
+								<span data-translate="true">index.settings.enable_browser_notif</span><br>
+								<div class="error" id="warnUnsupportedDesktopNotifications">
+									<strong><span data-translate="true">index.settings.warning</span></strong>:
+									<span data-translate="true">index.settings.notif_not_supported</span>
+								</div>
+								<div class="error" id="warnBlockedDesktopNotifications">
+									<strong><span data-translate="true">index.settings.warning</span></strong>:
+									<span data-translate="true">index.settings.notif_blocked</span>
+								</div>
+								</label>
+							</div>
+							<div class="col-sm-12">
+								<label class="opt">
+								<input type="checkbox" name="notification">
+								<span data-translate="true">index.settings.enable_notif_sound</span>
+								</label>
+							</div>
+							<div class="col-sm-12">
+								<div class="opt">
+									<button id="play" data-translate="true">index.settings.play_sound</button>
+								</div>
+							</div>
+
+							<div class="col-sm-12">
+								<label class="opt">
+									<input type="checkbox" name="notifyAllMessages">
+									<span data-translate="true">index.settings.enable_notif_all_msgs</span>
+								</label>
+							</div>
+
+							<div class="col-sm-12">
+								<label class="opt">
+									<label data-translate="true" for="highlights" class="sr-only">index.settings.custom_highlight_placeholder</label>
+									<input type="text" id="highlights" name="highlights" class="input" placeholder="index.settings.custom_highlight_placeholder">
+								</label>
+							</div>
+
+							<div class="col-sm-12">
+								<h2 data-translate="true">index.settings.language</h2>
+							</div>
+
+							<div class="col-sm-12">
+								<label data-select="true" for="lang-select" class="sr-only">index.settings.language</label>
+								<select id="lang-select" name="lang" class="input">
+									{{#each languages}}
+										<option value="{{name}}">
+											{{name}}
+										</option>
+									{{/each}}
+								</select>
+							</div>
+
+							{{#unless public}}
+								{{#unless ldap.enable}}
+							<div id="change-password">
+								<form action="" method="post">
+									<div class="col-sm-12">
+										<h2 data-translate="true">index.settings.change_password</h2>
+									</div>
+									<div class="col-sm-12">
+										<label data-translate="true" for="old_password_input" class="sr-only">index.settings.enter_current_password</label>
+										<input type="password" id="old_password_input" name="old_password" class="input" placeholder="index.settings.enter_current_password">
+									</div>
+									<div class="col-sm-12">
+										<label data-translate="true" for="new_password_input" class="sr-only">index.settings.enter_new_password</label>
+										<input type="password" id="new_password_input" name="new_password" class="input" placeholder="index.settings.enter_new_password">
+									</div>
+									<div class="col-sm-12">
+										<label data-translate="true" for="verify_password_input" class="sr-only">index.settings.repeat_new_password</label>
+										<input type="password" id="verify_password_input" name="verify_password" class="input" placeholder="index.settings.repeat_new_password">
+									</div>
+									<div class="col-sm-12 feedback"></div>
+									<div class="col-sm-12">
+										<button type="submit" class="btn" data-translate="true">index.settings.change_password</button>
+									</div>
+								</form>
+							</div>
+								{{/unless}}
+							{{/unless}}
+							<div class="col-sm-12">
+								<h2 data-translate="true">index.settings.custom_stylesheet</h2>
+							</div>
+							<div class="col-sm-12">
+								<textarea class="input" name="userStyles" id="user-specified-css-input" placeholder="index.settings.custom_stylesheet_placeholder"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div id="help" class="window">
+					<div class="header">
+						<button class="lt" aria-label="index.toggle_chan_list"></button>
+					</div>
+					<div class="container">
+						<h1 data-translate="true" class="title">index.help.title</h1>
+
+						<h2 data-translate="true">index.help.keyboard_shortcuts</h2>
+
+						<h3 data-translate="true">index.help.on_windows_linux</h3>
+
+						<div class="help-item">
+							<div class="subject">
+								<kbd>Ctrl</kbd> + <kbd>↑</kbd> / <kbd>↓</kbd>
+							</div>
+							<div class="description">
+								<p data-translate="true">index.help.switch_channels</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<kbd>Ctrl</kbd> + <kbd>K</kbd>
+							</div>
+							<div class="description">
+								<p data-translate="true">
+									index.help.colored_text
+								</p>
+								<p data-translate="true">
+									index.help.colored_docs
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<kbd>Ctrl</kbd> + <kbd>B</kbd>
+							</div>
+							<div class="description">
+								<p data-translate="true">index.help.bold_text</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<kbd>Ctrl</kbd> + <kbd>U</kbd>
+							</div>
+							<div class="description">
+								<p data-translate="true">index.help.underlined_text</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<kbd>Ctrl</kbd> + <kbd>I</kbd>
+							</div>
+							<div class="description">
+								<p data-translate="true">index.help.italic_text</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<kbd>Ctrl</kbd> + <kbd>O</kbd>
+							</div>
+							<div class="description">
+								<p data-translate="true">
+									index.help.reset_formatting
+								</p>
+							</div>
+						</div>
+
+						<h3>On macOS</h3>
+
+						<div class="help-item">
+							<div class="subject">
+								<kbd>⌘</kbd> + <kbd>↑</kbd> / <kbd>↓</kbd>
+							</div>
+							<div class="description">
+								<p data-translate="true">index.help.switch_next_prev_window</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<kbd>⌘</kbd> + <kbd>K</kbd>
+							</div>
+							<div class="description">
+								<p data-translate="true">
+									index.help.colored_text
+								</p>
+								<p data-translate="true">
+									index.help.colored_docs
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<kbd>⌘</kbd> + <kbd>B</kbd>
+							</div>
+							<div class="description">
+								<p data-translate="true">index.help.bold_text</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<kbd>⌘</kbd> + <kbd>U</kbd>
+							</div>
+							<div class="description">
+								<p data-translate="true">index.help.underlined_text</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<kbd>⌘</kbd> + <kbd>I</kbd>
+							</div>
+							<div class="description">
+								<p data-translate="true">index.help.italic_text</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<kbd>⌘</kbd> + <kbd>O</kbd>
+							</div>
+							<div class="description">
+								<p data-translate="true">index.help.reset_formatting</p>
+							</div>
+						</div>
+
+						<h2>Commands</h2>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/away [message]</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">index.commands.away</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/back</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">index.commands.back</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/ban nick</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">index.commands.ban</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/banlist</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">index.commands.banlist</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/collapse</code>
+							</div>
+							<div class="description">
+								<p>
+									Collapse all previews in the current channel (opposite of
+									<code>/expand</code>)
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/connect host [port]</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">
+									index.commands.connect
+								</p>
+								<p><span data-translate="true">index.help.alias</span> <code>/server</code></p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/ctcp target cmd [args]</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">
+									index.commands.ctcp
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/deop nick [...nick]</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">
+									index.commands.deop
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/devoice nick [...nick]</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">
+									index.commands.devoice
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/disconnect [message]</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">
+									index.commands.disconnect
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/expand</code>
+							</div>
+							<div class="description">
+								<p>
+									Expand all previews in the current channel (opposite of
+									<code>/collapse</code>)
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/invite nick [channel]</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">
+									index.commands.invite
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/join channel</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">index.commands.join</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/kick nick</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">index.commands.kick</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/list</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">index.commands.list</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/me message</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">
+									index.commands.me
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/mode flags [args]</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">
+									index.commands.mode
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/msg channel message</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">index.commands.msg</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/nick newnick</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">index.commands.nick</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/notice channel message</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">index.commands.notice</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/op nick [...nick]</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">
+									index.commands.op
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/part [channel]</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">index.commands.part</p>
+								<p><span data-translate="true">index.help.aliases</span> <code>/close</code>, <code>/leave</code></p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/rejoin</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">
+									index.commands.rejoin
+								</p>
+								<p><span data-translate="true">index.help.alias</span> <code>/cycle</code></p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/query nick</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">
+									index.commands.query
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/quit [message]</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">
+									index.commands.quit
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/raw message</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">
+									index.commands.raw
+								</p>
+								<p>
+									<span data-translate="true">index.help.aliases</span> <code>/quote</code>, <code>/send</code>
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/slap nick</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">
+									index.commands.slap
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/topic newtopic</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">
+									index.commands.topic
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/unban nick</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">
+									index.commands.unban
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/voice nick [...nick]</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">
+									index.commands.voice
+								</p>
+							</div>
+						</div>
+
+						<div class="help-item">
+							<div class="subject">
+								<code>/whois nick</code>
+							</div>
+							<div class="description">
+								<p data-translate="true">
+									index.commands.whois
+								</p>
+							</div>
+						</div>
+
+						<h2 data-translate="true">index.about.title</h2>
+
+						<p class="about">
+							{{#if gitCommit}}
+								<span data-translate="true">index.about.running_from_source</span>
+								(<a href="https://github.com/thelounge/lounge/tree/{{ gitCommit }}" target="_blank" rel="noopener"><code>{{ gitCommit }}</code></a>).<br>
+							{{else}}
+								<span data-translate="true">index.about.version</span> <strong>{{version}}</strong>
+								(<a href="https://github.com/thelounge/lounge/releases/tag/v{{ version }}" target="_blank" rel="noopener" data-translate="true">index.about.release_notes</a>).<br>
+							{{/if}}
+
+							<a href="https://thelounge.github.io/" target="_blank" rel="noopener" data-translate="true">index.about.website</a><br>
+							<a href="https://thelounge.github.io/docs/" target="_blank" rel="noopener" data-translate="true">index.about.documentation</a><br>
+							<a href="https://github.com/thelounge/lounge/issues/new" target="_blank" rel="noopener" data-translate="true">index.about.report_bug</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="context-menu-container">
+		<ul id="context-menu"></ul>
+	</div>
+
+	<div id="image-viewer"></div>
+
+	<script src="js/bundle.vendor.js"></script>
+	<script src="js/bundle.js"></script>
+
+	</body>
+</html>

@@ -9,7 +9,8 @@ exports.input = function({irc}, chan) {
 	if (chan.type !== Chan.Type.CHANNEL) {
 		chan.pushMessage(this, new Msg({
 			type: Msg.Type.ERROR,
-			text: "You can only rejoin channels.",
+			translate: true,
+			text: "server.error.can_only_rejoin_channels",
 		}));
 		return;
 	}

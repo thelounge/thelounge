@@ -1,0 +1,11 @@
+{
+  "client": {
+	  "close_channel": "Fermer le canal",
+	  "toggle_chan_list": "Baguette",
+	  "toggle_user_list": "Du fromage",
+	  "open_context_menu": "Oh la la",
+	  "show_older_messages": "Je m'appelle Max",
+	  "search_among_user_list": "J'adore The Lounge",
+	  "disconnect_from": "hopefully this works : {{server}}?"
+	}
+}

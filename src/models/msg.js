@@ -24,6 +24,7 @@ class Msg {
 			previews: [],
 			text: "",
 			type: Msg.Type.MESSAGE,
+			translate: false,
 			self: false,
 		});
 

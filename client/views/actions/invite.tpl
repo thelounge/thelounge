@@ -1,9 +1,9 @@
 {{> ../user_name from}}
-invited
+{{translate 'client.invited.invited'}}
 {{#if invitedYou}}
-	you
+	{{translate 'client.invited.you'}}
 {{else}}
 	{{> ../user_name target}}
 {{/if}}
-to
+{{translate 'client.invited.to'}}
 {{{parse channel}}}

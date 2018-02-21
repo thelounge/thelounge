@@ -16,6 +16,7 @@ const socket = require("./socket");
 const render = require("./render");
 require("./socket-events");
 const storage = require("./localStorage");
+const t = require("./translate");
 const utils = require("./utils");
 require("./webpush");
 require("./keybinds");
@@ -24,6 +25,8 @@ const Changelog = require("./socket-events/changelog");
 const JoinChannel = require("./join-channel");
 
 $(function() {
+	t.init({lang: $("html")[0].lang, debug: true}, socket);
+
 	const sidebar = $("#sidebar, #footer");
 	const chat = $("#chat");
 
@@ -415,7 +418,7 @@ $(function() {
 		let placeholder = "";
 
 		if (type === "channel" || type === "query") {
-			placeholder = `Write to ${chanTitle}`;
+			placeholder = t.translate("client.write_to", {channel: chan.data("title")});
 		}
 
 		input
@@ -498,8 +501,7 @@ $(function() {
 		if (chan.hasClass("lobby")) {
 			cmd = "/quit";
 			const server = chan.find(".name").html();
-
-			if (!confirm("Disconnect from " + server + "?")) { // eslint-disable-line no-alert
+			if (!confirm(t.translate("client.disconnect_from", {server: server}))) { // eslint-disable-line no-alert
 				return false;
 			}
 		}
@@ -693,7 +695,4 @@ $(function() {
 			});
 		}
 	});
-
-	// Only start opening socket.io connection after all events have been registered
-	socket.open();
 });
