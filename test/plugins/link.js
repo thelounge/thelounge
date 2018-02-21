@@ -266,4 +266,21 @@ describe("Link plugin", function() {
 			}
 		});
 	});
+
+	it("should use client's preferred language as Accept-Language header", function(done) {
+		const language = "sv,en-GB;q=0.9,en;q=0.8";
+		this.irc.language = language;
+
+		app.get("/language-check", function(req, res) {
+			expect(req.headers["accept-language"]).to.equal(language);
+			res.send();
+			done();
+		});
+
+		const message = this.irc.createMessage({
+			text: "http://localhost:9002/language-check",
+		});
+
+		link(this.irc, this.network.channels[0], message);
+	});
 });
