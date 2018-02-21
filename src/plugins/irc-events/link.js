@@ -200,7 +200,7 @@ function emitPreview(client, msg, preview) {
 
 function getRequestHeaders(language) {
 	const headers = {
-		"User-Agent": "Mozilla/5.0 (compatible; The Lounge IRC Client; +https://github.com/thelounge/lounge)",
+		"User-Agent": "Mozilla/5.0 (compatible; The Lounge IRC Client; +https://github.com/thelounge/thelounge)",
 	};
 
 	if (language !== null) {

@@ -23,7 +23,7 @@ function fetch(callback) {
 	}
 
 	request.get({
-		uri: "https://api.github.com/repos/thelounge/lounge/releases",
+		uri: "https://api.github.com/repos/thelounge/thelounge/releases",
 		headers: {
 			Accept: "application/vnd.github.v3.html", // Request rendered markdown
 			"User-Agent": pkg.name + "; +" + pkg.repository.git, // Identify the client

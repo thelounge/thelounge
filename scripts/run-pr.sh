@@ -7,7 +7,7 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-git fetch https://github.com/thelounge/lounge.git refs/pull/${1}/head
+git fetch https://github.com/thelounge/thelounge.git refs/pull/${1}/head
 git checkout FETCH_HEAD
 git rebase master
 npm install

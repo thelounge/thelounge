@@ -6,17 +6,17 @@ your contributions.
 ### I want to report a bug
 
 - Look at the [open and closed
-  issues](https://github.com/thelounge/lounge/issues?q=is%3Aissue) to see if
+  issues](https://github.com/thelounge/thelounge/issues?q=is%3Aissue) to see if
   this was not already discussed before. If you can't see any, feel free to
-  [open a new issue](https://github.com/thelounge/lounge/issues/new).
+  [open a new issue](https://github.com/thelounge/thelounge/issues/new).
 - If you think you discovered a security vulnerability, **do not open a public
   issue on GitHub.** Refer to our [security guidelines](SECURITY.md) instead.
 
 ### I want to contribute to the code
 
 - Make sure to discuss your ideas with the community in an
-  [issue](https://github.com/thelounge/lounge/issues) or on the IRC channel.
-- Take a look at the open issues labeled as [`up for grabs`](https://github.com/thelounge/lounge/issues?q=is%3Aopen%20is%3Aissue%20label%3A%22up%20for%20grabs%22)
+  [issue](https://github.com/thelounge/thelounge/issues) or on the IRC channel.
+- Take a look at the open issues labeled as [`up for grabs`](https://github.com/thelounge/thelounge/issues?q=is%3Aopen%20is%3Aissue%20label%3A%22up%20for%20grabs%22)
   if you want to help without having a specific idea in mind.
 - Make sure that your PRs do not contain unnecessary commits or merge commits.
   [Squash commits](https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History)
@@ -28,6 +28,6 @@ your contributions.
   Pope's guidelines](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
 - Each PR will be reviewed by at least two different project maintainers. You
   can read more about this in the [maintainers'
-corner](https://github.com/thelounge/lounge/wiki/Maintainers'-corner).
+corner](https://github.com/thelounge/thelounge/wiki/Maintainers'-corner).
 - Please document any relevant changes in the documentation that can be found
   [in its own repository](https://github.com/thelounge/thelounge.chat).

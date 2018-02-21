@@ -364,19 +364,19 @@ describe("parse Handlebars helper", () => {
 		input: "🤷‍♀️",
 		expected: '<span class="emoji">🤷‍♀️</span>',
 	}, {
-		// FIXME: These multiple `span`s should be optimized into a single one. See https://github.com/thelounge/lounge/issues/1783
+		// FIXME: These multiple `span`s should be optimized into a single one. See https://github.com/thelounge/thelounge/issues/1783
 		name: "wrapped in style",
 		input: "Super \x034💚 green!",
 		expected: 'Super <span class="emoji"><span class="irc-fg4">💚</span></span><span class="irc-fg4"> green!</span>',
 	}, {
 		name: "wrapped in URLs",
 		input: "https://i.❤️.thelounge.chat",
-		// FIXME: Emoji in text should be `<span class="emoji">❤️</span>`. See https://github.com/thelounge/lounge/issues/1784
+		// FIXME: Emoji in text should be `<span class="emoji">❤️</span>`. See https://github.com/thelounge/thelounge/issues/1784
 		expected: '<a href="https://i.❤️.thelounge.chat" target="_blank" rel="noopener">https://i.❤️.thelounge.chat</a>',
 	}, {
 		name: "wrapped in channels",
 		input: "#i❤️thelounge",
-		// FIXME: Emoji in text should be `<span class="emoji">❤️</span>`. See https://github.com/thelounge/lounge/issues/1784
+		// FIXME: Emoji in text should be `<span class="emoji">❤️</span>`. See https://github.com/thelounge/thelounge/issues/1784
 		expected: '<span class="inline-channel" role="button" tabindex="0" data-chan="#i❤️thelounge">#i❤️thelounge</span>',
 	}].forEach((item) => { // TODO: In Node v6+, use `{name, input, expected}`
 		it(`should find emoji: ${item.name}`, function() {

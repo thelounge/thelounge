@@ -78,7 +78,7 @@ ClientManager.prototype.loadUser = function(name) {
 			 * have their latest password. We're not replacing the entire config
 			 * object, because that could have undesired consequences.
 			 *
-			 * @see https://github.com/thelounge/lounge/issues/598
+			 * @see https://github.com/thelounge/thelounge/issues/598
 			 */
 			client.config.password = userConfig.password;
 			log.info(`Password for user ${colors.bold(name)} was reset.`);

@@ -188,7 +188,7 @@ function stableVersion(prereleaseVersion) {
 
 // Generates a compare-view URL between 2 versions of The Lounge
 function fullChangelogUrl(v1, v2) {
-	return `https://github.com/thelounge/lounge/compare/v${v1}...v${v2}`;
+	return `https://github.com/thelounge/thelounge/compare/v${v1}...v${v2}`;
 }
 
 // This class is a facade to fetching details about commits / PRs / tags / etc.
@@ -642,7 +642,7 @@ async function generateChangelogEntry(targetVersion) {
 	let template;
 	let contributors = [];
 
-	const codeRepo = new RepositoryFetcher(client, "lounge");
+	const codeRepo = new RepositoryFetcher(client, "thelounge");
 	const previousVersion = await codeRepo.fetchPreviousVersion(targetVersion);
 
 	if (isPrerelease(targetVersion)) {
