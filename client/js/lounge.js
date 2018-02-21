@@ -101,7 +101,7 @@ $(function() {
 
 			const channel = target.closest(".chan");
 
-			if (utils.isOpInChannel(channel) && channel.data("type") === "channel") {
+			if (utils.hasRoleInChannel(channel, ["op"]) && channel.data("type") === "channel") {
 				output += templates.contextmenu_divider();
 				output += templates.contextmenu_item({
 					class: "action-kick",
