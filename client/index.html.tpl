@@ -35,8 +35,8 @@
 	<div id="viewport" role="tablist">
 		<aside id="sidebar">
 			<div class="networks"></div>
-			<div class="empty">
-				{{translate index.not_connected}}
+			<div class="empty" data-translate="true">
+				index.not_connected
 			</div>
 		</aside>
 		<footer id="footer">
@@ -52,7 +52,7 @@
 					<div class="container">
 						<div class="row">
 							<div class="col-xs-12">
-								<h1 class="title" id="loading-title">{{translate index.loading}}</h1>
+								<h1 class="title" id="loading-title" data-translate="true">index.loading</h1>
 							</div>
 							<div class="col-xs-12">
 								<p id="loading-page-message">Loading the app… <a href="http://enable-javascript.com/" target="_blank" rel="noopener">Make sure to have JavaScript enabled.</a></p>
@@ -73,13 +73,13 @@
 						<div class="input">
 							<span id="nick">
 								<span id="nick-value" spellcheck="false"></span><!-- Comments here remove spaces between elements
-								--><span id="set-nick-tooltip" class="tooltipped tooltipped-e" aria-label="{{translate index.change_nick}}""><button id="set-nick" type="button" aria-label="{{translate index.change_nick}}"></button></span><!--
-								--><span id="cancel-nick-tooltip" class="tooltipped tooltipped-e" aria-label="{{translate index.cancel}}"><button id="cancel-nick" type="button" aria-label="{{translate index.cancel}}"></button></span><!--
-								--><span id="save-nick-tooltip" class="tooltipped tooltipped-e" aria-label="{{translate index.save}}"><button id="submit-nick" type="button" aria-label="{{translate index.save}}"></button></span>
+								--><span id="set-nick-tooltip" class="tooltipped tooltipped-e" aria-label="index.change_nick""><button id="set-nick" type="button" aria-label="index.change_nick"></button></span><!--
+								--><span id="cancel-nick-tooltip" class="tooltipped tooltipped-e" aria-label="index.cancel"><button id="cancel-nick" type="button" aria-label="index.cancel"></button></span><!--
+								--><span id="save-nick-tooltip" class="tooltipped tooltipped-e" aria-label="index.save"><button id="submit-nick" type="button" aria-label="index.save"></button></span>
 							</span>
 							<textarea id="input" class="mousetrap"></textarea>
-							<span id="submit-tooltip" class="tooltipped tooltipped-w tooltipped-no-touch" aria-label="{{translate index.send_message}}">
-								<button id="submit" type="submit" aria-label="{{translate index.send_message}}"></button>
+							<span id="submit-tooltip" class="tooltipped tooltipped-w tooltipped-no-touch" aria-label="index.send_message">
+								<button id="submit" type="submit" aria-label="index.send_message"></button>
 							</span>
 						</div>
 					</form>

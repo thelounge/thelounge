@@ -2,6 +2,7 @@
 
 const i18n = require("i18next");
 const i18nXHR = require("i18next-xhr-backend");
+const $ = require("jquery");
 
 module.exports = {
 	init: function(data, socket) {
@@ -23,6 +24,21 @@ module.exports = {
 				backend: opts,
 				lng: data.lang, debug: true, load: "currentOnly",
 			}, function() {
+				$("[aria-label]").attr("aria-label", function(i, val) {
+					return i18n.t(val);
+				});
+
+				$("[placeholder]").attr("placeholder", function(i, val) {
+					return i18n.t(val);
+				});
+
+				$("[data-text-alternate]").attr("data-text-alternate", function(i, val) {
+					return i18n.t(val);
+				});
+
+				$("[data-translate]").attr("data-translate", function() {
+					$(this).html(i18n.t($(this).text().trim(), {interpolation: {escapeValue: false}}));
+				});
 				socket.open();
 			});
 	},
