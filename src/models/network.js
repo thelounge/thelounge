@@ -111,8 +111,11 @@ Network.prototype.getNetworkStatus = function() {
 		const transport = this.irc.connection.transport;
 
 		if (transport.socket) {
+			const isLocalhost = transport.socket.remoteAddress === "127.0.0.1";
+			const isAuthorized = transport.socket.encrypted && transport.socket.authorized;
+
 			status.connected = transport.isConnected();
-			status.secure = (transport.socket.encrypted && transport.socket.authorized) || false;
+			status.secure = isAuthorized || isLocalhost;
 		}
 	}
 
