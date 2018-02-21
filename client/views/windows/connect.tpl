@@ -57,7 +57,7 @@
 		</div>
 		{{#unless useHexIp}}
 		<div class="col-sm-3">
-			<label for="connect:username">{{translate index.connect.username}}</label>
+			<label for="connect:username">{{translate "index.connect.username"}}</label>
 		</div>
 		<div class="col-sm-9">
 			<input class="input username" id="connect:username" name="username" value="{{defaults.username}}">

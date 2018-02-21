@@ -52,7 +52,7 @@
 					<div class="container">
 						<div class="row">
 							<div class="col-xs-12">
-								<h1 class="title" id="loading-title" data-translate="true">index.loading</h1>
+								<h1 class="title" id="loading-title">The Lounge is loading…</h1>
 							</div>
 							<div class="col-xs-12">
 								<p id="loading-page-message">Loading the app… <a href="http://enable-javascript.com/" target="_blank" rel="noopener">Make sure to have JavaScript enabled.</a></p>
@@ -84,11 +84,11 @@
 						</div>
 					</form>
 				</div>
-				<div id="sign-in" class="window" role="tabpanel" aria-label="Sign-in"></div>
-				<div id="connect" class="window" role="tabpanel" aria-label="Connect"></div>
-				<div id="settings" class="window" role="tabpanel" aria-label="Settings"></div>
-				<div id="help" class="window" role="tabpanel" aria-label="Help"></div>
-				<div id="changelog" class="window" aria-label="Changelog"></div>
+				<div id="sign-in" class="window" role="tabpanel" aria-label="index.sign_in"></div>
+				<div id="connect" class="window" role="tabpanel" aria-label="index.connect"></div>
+				<div id="settings" class="window" role="tabpanel" aria-label="index.settings_label"></div>
+				<div id="help" class="window" role="tabpanel" aria-label="index.help_label"></div>
+				<div id="changelog" class="window" aria-label="index.changelog"></div>
 			</div>
 		</div>
 	</div>
