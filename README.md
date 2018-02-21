@@ -19,37 +19,25 @@
 	</strong>
 </p>
 <p align="center">
-	<a href="https://demo.thelounge.chat/">
-		<img
-			alt="#thelounge IRC channel on freenode"
-			src="https://img.shields.io/badge/freenode-%23thelounge-415364.svg?colorA=ff9e18&style=flat-square">
-	</a>
+	<a href="https://demo.thelounge.chat/"><img
+		alt="#thelounge IRC channel on freenode"
+		src="https://img.shields.io/badge/freenode-%23thelounge-415364.svg?colorA=ff9e18&style=flat-square"></a>
 	<br>
-	<a href="https://yarn.pm/thelounge">
-		<img
-			alt="npm version"
-			src="https://img.shields.io/npm/v/thelounge.svg?style=flat-square">
-	</a>
-	<a href="https://travis-ci.org/thelounge/lounge">
-		<img
+	<a href="https://yarn.pm/thelounge"><img
+		alt="npm version"
+		src="https://img.shields.io/npm/v/thelounge.svg?style=flat-square"></a>
+	<a href="https://travis-ci.org/thelounge/lounge"><img
 		alt="Travis CI Build Status"
-		src="https://img.shields.io/travis/thelounge/lounge/master.svg?label=linux&style=flat-square">
-	</a>
-	<a href="https://ci.appveyor.com/project/astorije/lounge/branch/master">
-		<img
+		src="https://img.shields.io/travis/thelounge/lounge/master.svg?label=linux&style=flat-square"></a>
+	<a href="https://ci.appveyor.com/project/astorije/lounge/branch/master"><img
 		alt="AppVeyor Build Status"
-		src="https://img.shields.io/appveyor/ci/astorije/lounge/master.svg?label=windows&style=flat-square">
-	</a>
-	<a href="https://david-dm.org/thelounge/lounge">
-		<img
+		src="https://img.shields.io/appveyor/ci/astorije/lounge/master.svg?label=windows&style=flat-square"></a>
+	<a href="https://david-dm.org/thelounge/lounge"><img
 		alt="Dependencies Status"
-		src="https://img.shields.io/david/thelounge/lounge.svg?style=flat-square">
-	</a>
-	<a href="https://www.npmjs.org/package/thelounge">
-		<img
+		src="https://img.shields.io/david/thelounge/lounge.svg?style=flat-square"></a>
+	<a href="https://www.npmjs.org/package/thelounge"><img
 		alt="Total downloads on npm"
-		src="https://img.shields.io/npm/dt/thelounge.svg?colorB=007dc7&style=flat-square">
-	</a>
+		src="https://img.shields.io/npm/dt/thelounge.svg?colorB=007dc7&style=flat-square"></a>
 </p>
 
 <p align="center">
