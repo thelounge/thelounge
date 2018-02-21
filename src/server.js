@@ -521,7 +521,7 @@ function getClientConfiguration() {
 	config.themes = themes.getAll();
 
 	if (config.displayNetwork) {
-		config.defaults = Helper.config.defaults;
+		config.defaults = _.clone(Helper.config.defaults);
 	} else {
 		// Only send defaults that are visible on the client
 		config.defaults = _.pick(Helper.config.defaults, [
@@ -532,6 +532,8 @@ function getClientConfiguration() {
 			"join",
 		]);
 	}
+
+	config.defaults.nick = config.defaults.nick.replace(/%/g, () => Math.floor(Math.random() * 10));
 
 	return config;
 }
