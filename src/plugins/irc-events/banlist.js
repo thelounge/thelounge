@@ -16,7 +16,16 @@ module.exports = function(irc, network) {
 				type: Msg.Type.ERROR,
 				text: "Banlist empty",
 			});
-			network.getChannel(channel).pushMessage(client, msg, true);
+			let chan = network.getChannel(channel);
+
+			// Send error to lobby if we receive banlist for a channel we're not in
+			if (typeof chan === "undefined") {
+				msg.showInActive = true;
+				chan = network.channels[0];
+			}
+
+			chan.pushMessage(client, msg, true);
+
 			return;
 		}
 
