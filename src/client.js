@@ -102,10 +102,6 @@ function Client(manager, name, config = {}) {
 	}
 }
 
-Client.prototype.isRegistered = function() {
-	return this.name.length > 0;
-};
-
 Client.prototype.emit = function(event, data) {
 	if (this.sockets !== null) {
 		this.sockets.in(this.id).emit(event, data);

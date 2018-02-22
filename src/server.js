@@ -407,30 +407,26 @@ function initializeClient(socket, client, token, lastMessage) {
 		}
 	});
 
-	socket.on("push:register", (subscription) => {
-		if (!client.isRegistered() || !client.config.sessions.hasOwnProperty(token)) {
-			return;
-		}
+	if (!Helper.config.public) {
+		socket.on("push:register", (subscription) => {
+			if (!client.config.sessions.hasOwnProperty(token)) {
+				return;
+			}
 
-		const registration = client.registerPushSubscription(client.config.sessions[token], subscription);
+			const registration = client.registerPushSubscription(client.config.sessions[token], subscription);
 
-		if (registration) {
-			client.manager.webPush.pushSingle(client, registration, {
-				type: "notification",
-				timestamp: Date.now(),
-				title: "The Lounge",
-				body: "🚀 Push notifications have been enabled",
-			});
-		}
-	});
+			if (registration) {
+				client.manager.webPush.pushSingle(client, registration, {
+					type: "notification",
+					timestamp: Date.now(),
+					title: "The Lounge",
+					body: "🚀 Push notifications have been enabled",
+				});
+			}
+		});
 
-	socket.on("push:unregister", () => {
-		if (!client.isRegistered()) {
-			return;
-		}
-
-		client.unregisterPushSubscription(token);
-	});
+		socket.on("push:unregister", () => client.unregisterPushSubscription(token));
+	}
 
 	const sendSessionList = () => {
 		const sessions = _.map(client.config.sessions, (session, sessionToken) => ({
