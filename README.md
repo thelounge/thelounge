@@ -26,15 +26,15 @@
 	<a href="https://yarn.pm/thelounge"><img
 		alt="npm version"
 		src="https://img.shields.io/npm/v/thelounge.svg?style=flat-square"></a>
-	<a href="https://travis-ci.org/thelounge/lounge"><img
+	<a href="https://travis-ci.org/thelounge/thelounge"><img
 		alt="Travis CI Build Status"
-		src="https://img.shields.io/travis/thelounge/lounge/master.svg?label=linux&style=flat-square"></a>
+		src="https://img.shields.io/travis/thelounge/thelounge/master.svg?label=linux&style=flat-square"></a>
 	<a href="https://ci.appveyor.com/project/astorije/lounge/branch/master"><img
 		alt="AppVeyor Build Status"
 		src="https://img.shields.io/appveyor/ci/astorije/lounge/master.svg?label=windows&style=flat-square"></a>
-	<a href="https://david-dm.org/thelounge/lounge"><img
+	<a href="https://david-dm.org/thelounge/thelounge"><img
 		alt="Dependencies Status"
-		src="https://img.shields.io/david/thelounge/lounge.svg?style=flat-square"></a>
+		src="https://img.shields.io/david/thelounge/thelounge.svg?style=flat-square"></a>
 	<a href="https://www.npmjs.org/package/thelounge"><img
 		alt="Total downloads on npm"
 		src="https://img.shields.io/npm/dt/thelounge.svg?colorB=007dc7&style=flat-square"></a>
@@ -82,7 +82,7 @@ When installation is complete, run:
 thelounge start
 ```
 
-For more information, read the [documentation](https://thelounge.chat/docs/), [wiki](https://github.com/thelounge/lounge/wiki), or run:
+For more information, read the [documentation](https://thelounge.chat/docs/), [wiki](https://github.com/thelounge/thelounge/wiki), or run:
 
 ```sh
 thelounge --help
@@ -93,8 +93,8 @@ thelounge --help
 The following commands install and run the development version of The Lounge:
 
 ```sh
-git clone https://github.com/thelounge/lounge.git
-cd lounge
+git clone https://github.com/thelounge/thelounge.git
+cd thelounge
 yarn install
 NODE_ENV=production yarn build
 yarn start
@@ -112,6 +112,6 @@ fork.
 
 Before submitting any change, make sure to:
 
-- Read the [Contributing instructions](https://github.com/thelounge/lounge/blob/master/CONTRIBUTING.md#contributing)
+- Read the [Contributing instructions](https://github.com/thelounge/thelounge/blob/master/CONTRIBUTING.md#contributing)
 - Run `npm test` to execute linters and test suite
 - Run `npm run build` if you change or add anything in `client/js` or `client/views`

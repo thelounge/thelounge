@@ -82,7 +82,7 @@ $("#chat").on("click", ".text .toggle-button", function() {
 
 	// Tell the server we're toggling so it remembers at page reload
 	// TODO Avoid sending many single events when using `/collapse` or `/expand`
-	// See https://github.com/thelounge/lounge/issues/1377
+	// See https://github.com/thelounge/thelounge/issues/1377
 	socket.emit("msg:preview:toggle", {
 		target: parseInt(self.closest(".chan").data("id"), 10),
 		msgId: parseInt(self.closest(".msg").prop("id").replace("msg-", ""), 10),

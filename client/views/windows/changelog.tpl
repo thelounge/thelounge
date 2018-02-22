@@ -12,7 +12,7 @@
 			<div class="changelog-text">{{{changelog}}}</div>
 		{{else}}
 			<p>Unable to retrieve releases from GitHub.</p>
-			<p><a href="https://github.com/thelounge/lounge/releases/tag/v{{version}}" target="_blank" rel="noopener">View release notes for this version on GitHub</a></p>
+			<p><a href="https://github.com/thelounge/thelounge/releases/tag/v{{version}}" target="_blank" rel="noopener">View release notes for this version on GitHub</a></p>
 		{{/if}}
 	{{else}}
 		<p>Loading changelog…</p>

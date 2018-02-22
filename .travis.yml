@@ -49,7 +49,7 @@ deploy:
     node: 8
     condition: "$BUILD_ENV = production"
     tags: true
-    repo: thelounge/lounge
+    repo: thelounge/thelounge
 
 # If the current release is a stable release, remove potential pre-release tag
 after_deploy: |

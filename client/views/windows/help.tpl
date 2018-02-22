@@ -18,18 +18,18 @@
 		{{#if gitCommit}}
 			<p>
 				The Lounge is running from source
-				(<a href="https://github.com/thelounge/lounge/tree/{{gitCommit}}" target="_blank" rel="noopener">commit <code>{{gitCommit}}</code></a>).
+				(<a href="https://github.com/thelounge/thelounge/tree/{{gitCommit}}" target="_blank" rel="noopener">commit <code>{{gitCommit}}</code></a>).
 			</p>
 
 			<ul>
 				<li>
 					Compare
-					<a href="https://github.com/thelounge/lounge/compare/{{gitCommit}}...master" target="_blank" rel="noopener">between <code>{{gitCommit}}</code> and <code>master</code></a>
+					<a href="https://github.com/thelounge/thelounge/compare/{{gitCommit}}...master" target="_blank" rel="noopener">between <code>{{gitCommit}}</code> and <code>master</code></a>
 					to see what you are missing
 				</li>
 				<li>
 					Compare
-					<a href="https://github.com/thelounge/lounge/compare/{{version}}...{{gitCommit}}" target="_blank" rel="noopener">between <code>{{version}}</code> and <code>{{gitCommit}}</code></a>
+					<a href="https://github.com/thelounge/thelounge/compare/{{version}}...{{gitCommit}}" target="_blank" rel="noopener">between <code>{{version}}</code> and <code>{{gitCommit}}</code></a>
 					to see your local changes</li>
 			</ul>
 		{{/if}}
@@ -41,7 +41,7 @@
 			<a href="https://thelounge.chat/docs/" target="_blank" rel="noopener" class="documentation-link">Documentation</a>
 		</p>
 		<p>
-			<a href="https://github.com/thelounge/lounge/issues/new" target="_blank" rel="noopener" class="report-issue-link">Report an issue…</a>
+			<a href="https://github.com/thelounge/thelounge/issues/new" target="_blank" rel="noopener" class="report-issue-link">Report an issue…</a>
 		</p>
 	</div>
 

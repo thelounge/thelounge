@@ -49,7 +49,7 @@ describe("Msg", function() {
 		});
 
 		it("should not find a preview that does not exist", function() {
-			expect(msg.findPreview("https://github.com/thelounge/lounge"))
+			expect(msg.findPreview("https://github.com/thelounge/thelounge"))
 				.to.be.undefined;
 		});
 	});
