@@ -236,18 +236,21 @@ module.exports = {
 		//
 		// Nick
 		//
-		// @type     string
-		// @default  "lounge-user"
+		// Percent sign (%) will be replaced into a random number from 0 to 9.
+		// For example, Guest%%% will become Guest123 on page load.
 		//
-		nick: "lounge-user",
+		// @type     string
+		// @default  "thelounge%%"
+		//
+		nick: "thelounge%%",
 
 		//
 		// Username
 		//
 		// @type     string
-		// @default  "lounge-user"
+		// @default  "thelounge"
 		//
-		username: "lounge-user",
+		username: "thelounge",
 
 		//
 		// Real Name
