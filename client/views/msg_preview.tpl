@@ -38,7 +38,12 @@
 			</em>
 		{{/equal}}
 		{{#equal error "message"}}
-			<em>There was an error when loading this image. <small class="prefetch-error">({{message}})</small></em>
+			<em>
+				There was an error loading preview for this link.
+				<a href="{{link}}" target="_blank" rel="noopener">Click here</a>
+				to open it in a new window.
+				<small class="prefetch-error">({{message}})</small>
+			</em>
 		{{/equal}}
 	{{/equal}}
 </div>
