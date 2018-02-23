@@ -12,17 +12,17 @@
   },
   "homepage": "https://thelounge.chat/",
   "scripts": {
-    "coverage": "rm -rf .nyc_output/ && npm-run-all test:* && nyc --nycrc-path=test/.nycrc-report report",
-    "start": "node index start",
-    "start-dev": "npm-run-all --parallel watch start",
     "build": "webpack",
-    "watch": "webpack --watch",
-    "test": "npm-run-all --aggregate-output --parallel --continue-on-error test:* lint:*",
-    "test:mocha": "nyc --nycrc-path=test/.nycrc-mocha mocha --colors",
-    "test:mocha-webpack": "nyc --nycrc-path=test/.nycrc-mocha-webpack mocha-webpack --colors --opts=test/mocha-webpack.opts",
-    "lint:js": "eslint . --report-unused-disable-directives --color",
+    "coverage": "rm -rf .nyc_output/ && run-s test:{client,server} && nyc --nycrc-path=test/.nycrc-report report",
+    "dev": "run-p watch start",
     "lint:css": "stylelint --color \"client/**/*.css\"",
-    "start:mocha": "webpack-dev-server --config=webpack.config-browser.js"
+    "lint:js": "eslint . --report-unused-disable-directives --color",
+    "start": "node index start",
+    "test": "run-p --aggregate-output --continue-on-error lint:* test:{client,server}",
+    "test:browser": "webpack-dev-server --config=webpack.config-browser.js",
+    "test:client": "nyc --nycrc-path=test/.nycrc-mocha-webpack mocha-webpack --colors --opts=test/mocha-webpack.opts",
+    "test:server": "nyc --nycrc-path=test/.nycrc-mocha mocha --colors",
+    "watch": "webpack --watch"
   },
   "keywords": [
     "lounge",
