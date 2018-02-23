@@ -78,7 +78,7 @@ module.exports = function(irc, network) {
 		identSocketId = client.manager.identHandler.addSocket(socket, client.name || network.username);
 	});
 
-	irc.on("socket close", function() {
+	irc.on("socket close", function(error) {
 		if (identSocketId > 0) {
 			client.manager.identHandler.removeSocket(identSocketId);
 			identSocketId = 0;
@@ -87,6 +87,13 @@ module.exports = function(irc, network) {
 		network.channels.forEach((chan) => {
 			chan.state = Chan.State.PARTED;
 		});
+
+		if (error) {
+			network.channels[0].pushMessage(client, new Msg({
+				type: Msg.Type.ERROR,
+				text: `Connection closed unexpectedly: ${error}`,
+			}), true);
+		}
 
 		sendStatus();
 	});
