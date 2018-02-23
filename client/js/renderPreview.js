@@ -55,7 +55,7 @@ function appendPreview(preview, msg, template) {
 		return;
 	}
 
-	const container = msg.closest(".messages");
+	const container = msg.closest(".chat");
 	const channelId = container.closest(".chan").data("id") || -1;
 	const activeChannelId = chat.find(".chan.active").data("id") || -2;
 

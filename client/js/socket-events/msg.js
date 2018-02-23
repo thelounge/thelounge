@@ -48,6 +48,7 @@ function processReceivedMessage(data) {
 		}
 	}
 
+	const scrollContainer = channel.find(".chat");
 	const container = channel.find(".messages");
 	const activeChannelId = chat.find(".chan.active").data("id");
 
@@ -64,7 +65,7 @@ function processReceivedMessage(data) {
 	);
 
 	if (activeChannelId === targetId) {
-		container.trigger("keepToBottom");
+		scrollContainer.trigger("keepToBottom");
 	}
 
 	notifyMessage(targetId, channel, data);
@@ -91,7 +92,7 @@ function processReceivedMessage(data) {
 	if (activeChannelId !== targetId) {
 		// If message arrives in non active channel, keep only 100 messages
 		messageLimit = 100;
-	} else if (container.isScrollBottom()) {
+	} else if (scrollContainer.isScrollBottom()) {
 		// If message arrives in active channel, keep 500 messages if scroll is currently at the bottom
 		messageLimit = 500;
 	}
