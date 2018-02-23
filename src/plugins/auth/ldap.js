@@ -77,7 +77,7 @@ function advancedLdapAuth(user, password, callback) {
 		} else {
 			ldapclient.search(base, searchOptions, function(err2, res) {
 				if (err2) {
-					log.warning(`User not found: ${userDN}`);
+					log.warn(`User not found: ${userDN}`);
 					ldapclient.unbind();
 					callback(false);
 				} else {
