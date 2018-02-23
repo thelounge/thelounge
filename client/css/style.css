@@ -452,16 +452,23 @@ kbd {
 #viewport .rt,
 #chat button.menu {
 	color: #ccc;
-	display: none;
-	float: left;
+	display: flex;
 	font-size: 14px;
 	line-height: 1;
 	height: 36px;
-	margin: 6px 12px 0 -12px;
+	width: 36px;
+	margin-top: 6px;
+	flex-shrink: 0;
+}
+
+#viewport .lt::before,
+#viewport .rt::before,
+#chat button.menu::before {
 	width: 36px;
 }
 
 #viewport .lt {
+	display: none;
 	position: relative;
 }
 
@@ -486,17 +493,6 @@ kbd {
 
 #viewport .rt-tooltip {
 	float: right;
-}
-
-#viewport .rt {
-	display: block;
-	margin: 6px -12px 0 0;
-}
-
-#chat button.menu {
-	display: block;
-	float: right;
-	margin: 6px -8px 0 12px;
 }
 
 #viewport.rt #chat .sidebar {
@@ -871,18 +867,24 @@ kbd {
 	border-bottom: 1px solid #e7e7e7;
 	line-height: 48px;
 	height: 48px;
-	padding: 0 20px;
+	padding: 0 6px;
 	overflow: hidden;
 }
 
 #windows .header .title {
 	font-size: 15px;
+	padding-left: 14px;
+	flex-shrink: 0;
 }
 
 #windows .header .topic {
 	color: #777;
 	margin-left: 8px;
 	word-break: break-all;
+	flex-grow: 1;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 #windows .window .header {
@@ -972,11 +974,10 @@ kbd {
 .messages .msg,
 .sidebar {
 	font-size: 14px;
-	line-height: 1.4;
 }
 
 #windows #chat .header {
-	display: block;
+	display: flex;
 }
 
 #chat .chat,
@@ -1941,14 +1942,9 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 .emoji {
-	display: inline-block;
 	font-size: 1.4em;
-	vertical-align: bottom;
+	vertical-align: text-top;
 	line-height: 1;
-}
-
-.topic .emoji {
-	vertical-align: middle;
 }
 
 .textcomplete-item .emoji {
@@ -2279,7 +2275,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 	#viewport .lt,
 	#viewport .channel .rt {
-		display: block;
+		display: flex;
 	}
 
 	#windows .window .header {
@@ -2296,6 +2292,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 	#viewport.rt #chat .sidebar {
 		right: 0;
+	}
+
+	#chat .header .title {
+		padding-left: 6px;
 	}
 
 	#chat .title::before {
@@ -2472,7 +2472,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 /* Correctly handle multiple successive whitespace characters.
    For example: user has quit ( ===> L   O   L <=== )  */
 
-#windows .header .topic,
 #chat .message .text,
 #chat .motd .text,
 #chat .notice .text,
