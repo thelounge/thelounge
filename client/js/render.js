@@ -217,7 +217,7 @@ function renderNetworks(data, singleNetwork) {
 						container.find(".show-more").addClass("show");
 					}
 
-					container.trigger("keepToBottom");
+					container.parent().trigger("keepToBottom");
 				}
 			} else {
 				newChannels.push(channel);
