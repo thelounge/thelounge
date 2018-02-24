@@ -114,7 +114,7 @@ function ldapAuth(manager, client, user, password, callback) {
 	// auth plugin API
 	function callbackWrapper(valid) {
 		if (valid && !client) {
-			manager.addUser(user, null);
+			manager.addUser(user, null, true);
 		}
 
 		callback(valid);
