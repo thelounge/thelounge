@@ -41,7 +41,7 @@ socket.on("init", function(data) {
 
 		webpush.configurePushNotifications(data.pushSubscription, data.applicationServerKey);
 
-		$("body").removeClass("signed-out");
+		$(document.body).removeClass("signed-out");
 		$("#loading").remove();
 		$("#sign-in").remove();
 

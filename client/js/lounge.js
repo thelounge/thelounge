@@ -613,7 +613,7 @@ $(function() {
 		container.html(templates.user_filtered({matches: result})).show();
 	});
 
-	if ($("body").hasClass("public") && (window.location.hash === "#connect" || window.location.hash === "")) {
+	if ($(document.body).hasClass("public") && (window.location.hash === "#connect" || window.location.hash === "")) {
 		$("#connect").one("show", function() {
 			const params = URI(document.location.search).search(true);
 

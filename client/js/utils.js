@@ -109,7 +109,7 @@ function toggleNotificationMarkers(newState) {
 }
 
 function confirmExit() {
-	if ($("body").hasClass("public")) {
+	if ($(document.body).hasClass("public")) {
 		window.onbeforeunload = function() {
 			return "Are you sure you want to navigate away from this page?";
 		};
