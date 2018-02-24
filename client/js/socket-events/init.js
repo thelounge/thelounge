@@ -30,11 +30,11 @@ socket.on("init", function(data) {
 		render.renderNetworks(data);
 	}
 
-	if (lastMessageId > -1) {
-		$("#connection-error").removeClass("shown");
-		$(".show-more-button, #input").prop("disabled", false);
-		$("#submit").show();
-	} else {
+	$("#connection-error").removeClass("shown");
+	$(".show-more-button, #input").prop("disabled", false);
+	$("#submit").show();
+
+	if (lastMessageId < 0) {
 		if (data.token) {
 			storage.set("token", data.token);
 		}
