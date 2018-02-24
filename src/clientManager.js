@@ -112,7 +112,7 @@ ClientManager.prototype.addUser = function(name, password, enableLog) {
 
 	const user = {
 		password: password || "",
-		log: enableLog || false,
+		log: enableLog,
 		awayMessage: "",
 		networks: [],
 		sessions: {},
