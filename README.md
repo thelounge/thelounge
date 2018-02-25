@@ -35,7 +35,7 @@
 	<a href="https://david-dm.org/thelounge/thelounge"><img
 		alt="Dependencies Status"
 		src="https://img.shields.io/david/thelounge/thelounge.svg?style=flat-square"></a>
-	<a href="https://www.npmjs.org/package/thelounge"><img
+	<a href="https://npm-stat.com/charts.html?package=thelounge&from=2016-02-12"><img
 		alt="Total downloads on npm"
 		src="https://img.shields.io/npm/dt/thelounge.svg?colorB=007dc7&style=flat-square"></a>
 </p>
