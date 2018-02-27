@@ -236,6 +236,7 @@ kbd {
 #chat .topic .from::before,
 #chat .mode .from::before,
 #chat .ctcp .from::before,
+#chat .ctcp_request .from::before,
 #chat .whois .from::before,
 #chat .nick .from::before,
 #chat .action .from::before,
@@ -351,7 +352,8 @@ kbd {
 	color: #2ecc40;
 }
 
-#chat .ctcp .from::before {
+#chat .ctcp .from::before,
+#chat .ctcp_request .from::before {
 	content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */
 }
 
