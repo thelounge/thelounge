@@ -7389,9 +7389,9 @@ yargs@~3.10.0:
     decamelize "^1.0.0"
     window-size "0.1.0"
 
-yarn@1.3.2:
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.3.2.tgz#5939762581b5b4ddcd3418c0f6be42df3aee195f"
+yarn@1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/yarn/-/yarn-1.5.0.tgz#7d57df19832984f246f98ce9d0f254dd74f5a9cb"
 
 yeast@0.1.2:
   version "0.1.2"
