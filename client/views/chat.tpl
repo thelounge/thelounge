@@ -22,7 +22,7 @@
 		<div class="show-more{{#if messages.length}} show{{/if}}">
 			<button class="show-more-button" data-id="{{id}}">Show older messages</button>
 		</div>
-		<div class="messages"></div>
+		<div class="messages" role="log" aria-live="polite" aria-relevant="additions"></div>
 	</div>
 	{{#equal type "channel"}}
 	<aside class="sidebar">
