@@ -60,7 +60,7 @@
     "ua-parser-js": "0.7.17",
     "urijs": "1.19.1",
     "web-push": "3.3.0",
-    "yarn": "1.5.0"
+    "yarn": "1.5.1"
   },
   "devDependencies": {
     "babel-core": "6.26.0",
