@@ -6624,9 +6624,9 @@ textarea-caret@^3.0.1:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/textarea-caret/-/textarea-caret-3.1.0.tgz#5d5a35bb035fd06b2ff0e25d5359e97f2655087f"
 
-textcomplete@0.16.0:
-  version "0.16.0"
-  resolved "https://registry.yarnpkg.com/textcomplete/-/textcomplete-0.16.0.tgz#7b49208080953eea58f7c835749bcc59dc61aecb"
+textcomplete@0.16.1:
+  version "0.16.1"
+  resolved "https://registry.yarnpkg.com/textcomplete/-/textcomplete-0.16.1.tgz#d2bc18fff8131da8e045c914c61851398dd22040"
   dependencies:
     eventemitter3 "^2.0.3"
     textarea-caret "^3.0.1"
