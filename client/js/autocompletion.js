@@ -261,23 +261,37 @@ function fuzzyGrep(term, array) {
 	return results.map((el) => [el.string, el.original]);
 }
 
-function completeNicks(word, isFuzzy) {
-	const users = chat.find(".active .users");
-	word = word.toLowerCase();
+function rawNicks() {
+	const chan = chat.find(".active");
+	const users = chan.find(".users");
 
-	// Lobbies and private chats do not have an user list
-	if (!users.length) {
-		return [];
+	// If this channel has a list of nicks, just return it
+	if (users.length > 0) {
+		return users.data("nicks");
 	}
 
-	const words = users.data("nicks");
+	const me = $("#nick-value").text();
+	const otherUser = chan.attr("aria-label");
+
+	// If this is a query, add their name to autocomplete
+	if (me !== otherUser && chan.data("type") === "query") {
+		return [otherUser, me];
+	}
+
+	// Return our own name by default for anything that isn't a channel or query
+	return [me];
+}
+
+function completeNicks(word, isFuzzy) {
+	const users = rawNicks();
+	word = word.toLowerCase();
 
 	if (isFuzzy) {
-		return fuzzyGrep(word, words);
+		return fuzzyGrep(word, users);
 	}
 
 	return $.grep(
-		words,
+		users,
 		(w) => !w.toLowerCase().indexOf(word)
 	);
 }
