@@ -195,6 +195,12 @@ body {
 	color: #ccc;
 }
 
+code,
+.irc-monospace {
+	background: #242a33;
+	color: #f3f3f3;
+}
+
 /* Embeds */
 #chat .toggle-content {
 	background: #242a33;

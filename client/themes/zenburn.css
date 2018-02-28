@@ -221,6 +221,12 @@ body {
 	color: #ccc;
 }
 
+code,
+.irc-monospace {
+	background: #333;
+	color: #dcdccc;
+}
+
 /* Previews */
 
 #chat .toggle-content {
