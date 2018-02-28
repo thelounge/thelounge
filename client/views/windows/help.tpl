@@ -49,7 +49,7 @@
 
 	<div class="help-item">
 		<div class="subject">
-			<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>↑</kbd> / <kbd>↓</kbd>
+			<kbd class="key-all">Alt</kbd><kbd class="key-apple">⌥</kbd> + <kbd>↑</kbd> / <kbd>↓</kbd>
 		</div>
 		<div class="description">
 			<p>Switch to the previous/next window in the channel list.</p>

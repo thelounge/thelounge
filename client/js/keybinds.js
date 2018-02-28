@@ -37,8 +37,8 @@ Mousetrap.bind([
 });
 
 Mousetrap.bind([
-	"mod+up",
-	"mod+down",
+	"alt+up",
+	"alt+down",
 ], function(e, keys) {
 	const channels = sidebar.find(".chan");
 	const index = channels.index(channels.filter(".active"));
