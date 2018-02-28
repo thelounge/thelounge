@@ -1,6 +1,5 @@
 "use strict";
 
-const _ = require("lodash");
 const constants = require("./constants");
 const templates = require("../views");
 
@@ -22,8 +21,8 @@ function getStoredTypes(condensed) {
 function updateText(condensed, addedTypes) {
 	const obj = getStoredTypes(condensed);
 
-	_.forOwn(addedTypes, (count, type) => {
-		obj[type] += count;
+	Object.keys(addedTypes).map((type) => {
+		obj[type] += addedTypes[type];
 		condensed.data(type, obj[type]);
 	});
 
