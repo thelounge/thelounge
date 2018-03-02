@@ -7,7 +7,7 @@ const os = require("os");
 const fs = require("fs");
 const net = require("net");
 const bcrypt = require("bcryptjs");
-const colors = require("colors/safe");
+const colors = require("chalk");
 
 let homePath;
 let configPath;

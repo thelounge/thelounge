@@ -1,6 +1,6 @@
 "use strict";
 
-const colors = require("colors/safe");
+const colors = require("chalk");
 const path = require("path");
 const program = require("commander");
 const Helper = require("../helper");
