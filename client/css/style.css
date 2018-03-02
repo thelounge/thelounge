@@ -887,6 +887,7 @@ kbd {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	font-size: 14px;
 }
 
 #windows .window .header {
@@ -972,10 +973,10 @@ kbd {
 }
 
 #windows #form .input,
-#windows .header .topic,
 .messages .msg,
 .sidebar {
 	font-size: 14px;
+	line-height: 1.4;
 }
 
 #windows #chat .header {
