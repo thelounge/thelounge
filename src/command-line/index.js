@@ -35,6 +35,8 @@ if (!fs.existsSync(path.join(
 
 Helper.setHome(process.env.THELOUNGE_HOME || Utils.defaultHome());
 
+Utils.checkOldHome();
+
 // Merge config key-values passed as CLI options into the main config
 _.merge(Helper.config, program.config);
 

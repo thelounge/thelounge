@@ -20,6 +20,23 @@ class Utils {
 		].forEach((e) => log.raw(e));
 	}
 
+	// TODO: Remove in a couple of releases
+	static checkOldHome() {
+		const currentHome = Helper.getHomePath();
+		const oldHome = currentHome.replace(/\.thelounge$/, ".lounge");
+
+		if (currentHome === oldHome || !fs.existsSync(oldHome)) {
+			return;
+		}
+
+		console.log(); // eslint-disable-line no-console
+		log.warn(`Folder ${colors.bold.red(oldHome)} still exists.`);
+		log.warn(`In v3, we renamed the default configuration folder to ${colors.bold.green(".thelounge")} for consistency.`);
+		log.warn(`You might want to rename the folder from ${colors.bold.red(".lounge")} to ${colors.bold.green(".thelounge")} to keep existing configuration.`);
+		log.warn("Make sure to look at the release notes to see other breaking changes.");
+		console.log(); // eslint-disable-line no-console
+	}
+
 	static defaultHome() {
 		if (home) {
 			return home;
