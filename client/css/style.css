@@ -564,7 +564,7 @@ kbd {
 #sidebar .chan,
 #sidebar .chan-placeholder {
 	display: block;
-	padding: 8px 25px;
+	padding: 8px 16px 8px 32px;
 	transition: color 0.2s;
 	width: 100%;
 }
@@ -710,24 +710,20 @@ kbd {
 
 #sidebar .network .collapse-network {
 	border-radius: 3px;
-	width: 25px;
+	width: 32px;
 	height: 34px;
 	float: left;
 	opacity: 0.4;
 	transition: opacity 0.2s, background-color 0.2s, transform 0.2s;
 }
 
-#sidebar .network .collapse-network::before {
-	font-weight: normal;
-	display: inline-block;
-	line-height: 16px;
-	text-align: center;
-	content: "\f0d7"; /* http://fontawesome.io/icon/caret-down/ */
-	color: #fff;
+#sidebar .network.collapsed .collapse-network {
+	transform: rotate(-90deg);
 }
 
-#sidebar .network.collapsed .collapse-network::before {
-	content: "\f0da"; /* http://fontawesome.io/icon/caret-right/ */
+#sidebar .network .collapse-network::before {
+	content: "\f0d7"; /* http://fontawesome.io/icon/caret-down/ */
+	color: #fff;
 }
 
 #sidebar .collapse-network:hover {
