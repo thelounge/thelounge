@@ -6,7 +6,7 @@ const sqlite3 = require("sqlite3");
 const Helper = require("../helper");
 const Msg = require("../models/msg");
 
-const currentSchemaVersion = 1;
+const currentSchemaVersion = 1520239200;
 
 const schema = [
 	// Schema version #1
