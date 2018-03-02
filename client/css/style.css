@@ -717,6 +717,11 @@ kbd {
 	transition: opacity 0.2s, background-color 0.2s, transform 0.2s;
 }
 
+button.collapse-network:first-child:nth-last-child(3) {
+	/* Hide collapse button if there are no channels/queries */
+	display: none;
+}
+
 #sidebar .network.collapsed .collapse-network {
 	transform: rotate(-90deg);
 }
