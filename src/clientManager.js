@@ -132,13 +132,7 @@ ClientManager.prototype.updateUser = function(name, opts, callback) {
 	const user = readUserConfig(name);
 
 	if (!user) {
-		log.error(`Tried to update invalid user ${colors.green(name)}. This is most likely a bug.`);
-
-		if (callback) {
-			callback(true);
-		}
-
-		return false;
+		return callback ? callback(true) : false;
 	}
 
 	const currentUser = JSON.stringify(user, null, "\t");
@@ -185,6 +179,12 @@ function readUserConfig(name) {
 		return false;
 	}
 
-	const data = fs.readFileSync(userPath, "utf-8");
-	return JSON.parse(data);
+	try {
+		const data = fs.readFileSync(userPath, "utf-8");
+		return JSON.parse(data);
+	} catch (e) {
+		log.error(`Failed to read user ${colors.bold(name)}: ${e}`);
+	}
+
+	return false;
 }
