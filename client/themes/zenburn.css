@@ -23,6 +23,14 @@ body {
 	color: #dcdccc;
 }
 
+.loading-logo-bright {
+	display: none;
+}
+
+.loading-logo-dark {
+	display: inline-block;
+}
+
 #main,
 #chat .sidebar,
 #windows .chan,
