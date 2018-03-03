@@ -153,8 +153,6 @@ ClientManager.prototype.updateUser = function(name, opts, callback) {
 		if (callback) {
 			callback(e);
 		}
-
-		throw e;
 	}
 };
 
