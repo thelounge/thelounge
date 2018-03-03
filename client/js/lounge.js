@@ -5,7 +5,6 @@ require("jquery-ui/ui/widgets/sortable");
 const $ = require("jquery");
 const moment = require("moment");
 const URI = require("urijs");
-const fuzzy = require("fuzzy");
 
 // our libraries
 require("./libs/jquery/inputhistory");
@@ -583,34 +582,6 @@ $(function() {
 		const itemData = $this.data("data");
 		const contextAction = $this.data("action");
 		contextMenuActions.execute(contextAction, itemData);
-	});
-
-	chat.on("input", ".search", function() {
-		const value = $(this).val();
-		const parent = $(this).closest(".users");
-		const names = parent.find(".names-original");
-		const container = parent.find(".names-filtered");
-
-		if (!value.length) {
-			container.hide();
-			names.show();
-			return;
-		}
-
-		const fuzzyOptions = {
-			pre: "<b>",
-			post: "</b>",
-			extract: (el) => $(el).text(),
-		};
-
-		const result = fuzzy.filter(
-			value,
-			names.find(".user").toArray(),
-			fuzzyOptions
-		);
-
-		names.hide();
-		container.html(templates.user_filtered({matches: result})).show();
 	});
 
 	if ($(document.body).hasClass("public") && (window.location.hash === "#connect" || window.location.hash === "")) {
