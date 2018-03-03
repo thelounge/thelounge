@@ -6,6 +6,11 @@
 	data-nick="{{nick}}"
 	data-options="{{tojson serverOptions}}"
 >
-	{{> chan}}
+	<div id="network-{{id}}-chanlist" role="region" class="chanlist">
+		<button class="collapse-network" aria-label="Collapse" data-id="{{id}}"
+			aria-controls="network-{{id}}-chanlist" aria-expanded="true">
+		</button>
+		{{> chan}}
+	</div>
 </section>
 {{/each}}

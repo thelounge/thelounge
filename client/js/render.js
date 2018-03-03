@@ -25,6 +25,7 @@ const historyObserver = window.IntersectionObserver ?
 module.exports = {
 	appendMessage,
 	buildChannelMessages,
+	collapseNetwork,
 	renderChannel,
 	renderChannelUsers,
 	renderNetworks,
@@ -303,4 +304,18 @@ function loadMoreHistory(entries) {
 
 		target.trigger("click");
 	});
+}
+
+sidebar.on("click", ".collapse-network", (event) => collapseNetwork($(event.target)));
+
+function collapseNetwork(collapseButton) {
+	$("#sidebar").find(`.network[data-id='${collapseButton.attr("data-id")}']`).toggleClass("collapsed");
+
+	if (collapseButton.attr("aria-expanded") === "true") {
+		collapseButton.attr("aria-expanded", false);
+		collapseButton.attr("aria-label", "Expand");
+	} else {
+		collapseButton.attr("aria-expanded", true);
+		collapseButton.attr("aria-label", "Collapse");
+	}
 }
