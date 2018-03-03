@@ -6,7 +6,7 @@ const _ = require("lodash");
 const fs = require("fs");
 const path = require("path");
 const program = require("commander");
-const colors = require("colors/safe");
+const colors = require("chalk");
 const Helper = require("../helper");
 const Utils = require("./utils");
 

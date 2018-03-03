@@ -2,7 +2,7 @@
 
 const fs = require("fs");
 const net = require("net");
-const colors = require("colors/safe");
+const colors = require("chalk");
 const Helper = require("./helper");
 
 class Identification {

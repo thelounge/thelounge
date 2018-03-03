@@ -1,7 +1,7 @@
 "use strict";
 
 const _ = require("lodash");
-const colors = require("colors/safe");
+const colors = require("chalk");
 const pkg = require("../package.json");
 const Chan = require("./models/chan");
 const crypto = require("crypto");

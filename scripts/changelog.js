@@ -46,7 +46,7 @@ node scripts/changelog <version>
 "use strict";
 
 const _ = require("lodash");
-const colors = require("colors/safe");
+const colors = require("chalk");
 const fs = require("fs");
 const GraphQLClient = require("graphql-request").GraphQLClient;
 const moment = require("moment");

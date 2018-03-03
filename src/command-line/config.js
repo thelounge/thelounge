@@ -2,7 +2,7 @@
 
 const program = require("commander");
 const child = require("child_process");
-const colors = require("colors/safe");
+const colors = require("chalk");
 const fs = require("fs");
 const Helper = require("../helper");
 const Utils = require("./utils");

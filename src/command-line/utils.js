@@ -1,7 +1,7 @@
 "use strict";
 
 const _ = require("lodash");
-const colors = require("colors/safe");
+const colors = require("chalk");
 const fs = require("fs");
 const Helper = require("../helper");
 const path = require("path");
