@@ -24,6 +24,8 @@ module.exports = function(irc, network) {
 
 			// Request channels' modes
 			network.irc.raw("MODE", chan.name);
+		} else if (data.nick === irc.user.nick) {
+			chan.state = Chan.State.JOINED;
 		}
 
 		const user = new User({nick: data.nick});
