@@ -7,9 +7,6 @@
 	data-options="{{tojson serverOptions}}"
 	role="region"
 >
-	<button class="collapse-network" aria-label="Collapse" data-id="{{id}}"
-		aria-controls="network-{{id}}" aria-expanded="true">
-	</button>
 	{{> chan}}
 </section>
 {{/each}}

@@ -249,7 +249,9 @@ kbd {
 #nick button::before,
 #image-viewer .previous-image-btn::before,
 #image-viewer .next-image-btn::before,
-#sidebar .collapse-network::before {
+#sidebar .not-secure-icon::before,
+#sidebar .not-connected-icon::before,
+#sidebar .collapse-network-icon::before {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-size: inherit; /* Can't have font-size inherit on line above, so need to override */
 	-webkit-font-smoothing: antialiased;
@@ -276,14 +278,13 @@ kbd {
 .context-menu-action-kick::before { content: "\f05e"; /* http://fontawesome.io/icon/ban/ */ }
 
 .context-menu-network::before,
-#sidebar .chan.lobby::before,
 #chat .lobby .title::before { content: "\f0a0"; /* http://fontawesome.io/icon/hdd-o/ */ }
 
-#sidebar .not-secure .chan.lobby::before {
+#sidebar .not-secure-icon::before {
 	content: "\f09c"; /* https://fontawesome.com/v4.7.0/icon/unlock/ */
 }
 
-#sidebar .not-connected .chan.lobby::before {
+#sidebar .not-connected-icon::before {
 	content: "\f127"; /* https://fontawesome.com/v4.7.0/icon/chain-broken/ TODO v5: unlink */
 }
 
@@ -555,6 +556,7 @@ kbd {
 
 #sidebar .network,
 #sidebar .network-placeholder {
+	position: relative;
 	margin-bottom: 30px;
 	touch-action: pan-y;
 }
@@ -567,8 +569,8 @@ kbd {
 
 #sidebar .chan,
 #sidebar .chan-placeholder {
-	display: block;
-	padding: 8px 16px 8px 32px;
+	display: flex;
+	padding: 8px 14px;
 	transition: color 0.2s;
 	width: 100%;
 }
@@ -577,18 +579,40 @@ kbd {
 	color: #84ce88;
 	font-size: 15px;
 	font-weight: bold;
+	padding-left: 0;
 }
 
-#sidebar .chan.lobby:hover,
+#sidebar .lobby-wrap {
+	display: flex;
+	flex-grow: 1;
+}
+
+#sidebar .chan.lobby .lobby-wrap:hover,
 #sidebar .chan.lobby.active {
 	color: #c0f8c3;
+}
+
+#sidebar .not-connected-tooltip,
+#sidebar .not-secure-tooltip {
+	display: none;
+	margin: 0 8px;
+}
+
+#sidebar .not-connected .not-connected-tooltip,
+#sidebar .not-secure .not-secure-tooltip {
+	display: inline-block;
+}
+
+#sidebar .not-connected .not-secure-tooltip {
+	/* Do not display insecure icon if disconnected */
+	display: none;
 }
 
 #sidebar .not-secure .chan.lobby {
 	color: #f39c12;
 }
 
-#sidebar .not-secure .chan.lobby:hover,
+#sidebar .not-secure .chan.lobby .lobby-wrap:hover,
 #sidebar .not-secure .chan.lobby.active {
 	color: #f8c572;
 }
@@ -597,29 +621,24 @@ kbd {
 	color: #e74c3c;
 }
 
-#sidebar .not-connected .chan.lobby:hover,
+#sidebar .not-connected .chan.lobby .lobby-wrap:hover,
 #sidebar .not-connected .chan.lobby.active {
 	color: #f1978e;
 }
 
 #sidebar .chan::before,
 #chat .title::before {
+	width: 14px;
 	margin-right: 12px;
 }
 
 #sidebar .chan::before {
-	float: left;
 	line-height: 18px;
-}
-
-#chat .title::before {
-	margin-top: 17px;
 }
 
 #sidebar .chan .name {
 	position: relative;
-	z-index: 0;
-	display: block;
+	flex-grow: 1;
 	overflow: hidden;
 	white-space: nowrap;
 	margin-right: 5px;
@@ -636,11 +655,10 @@ kbd {
 }
 
 #sidebar .badge,
-#sidebar .add-channel,
-#sidebar .close {
-	float: right;
-	margin-left: 5px;
-	margin-right: -5px;
+#sidebar .add-channel-tooltip,
+#sidebar .close-tooltip {
+	flex-shrink: 0;
+	line-height: 1;
 }
 
 #sidebar .badge {
@@ -648,8 +666,7 @@ kbd {
 	border-radius: 3px;
 	color: #afb6c0;
 	font-size: 10px;
-	margin-top: 1px;
-	padding: 3px 6px;
+	padding: 4px 6px;
 	transition: background-color 0.2s, color 0.2s;
 }
 
@@ -662,11 +679,6 @@ kbd {
 	color: #49505a;
 }
 
-#sidebar .close-tooltip {
-	float: right;
-}
-
-#sidebar .leave,
 #sidebar .close {
 	width: 18px;
 	height: 18px;
@@ -674,7 +686,6 @@ kbd {
 	transition: opacity 0.2s, background-color 0.2s;
 }
 
-#sidebar .leave::before,
 #sidebar .close::before {
 	font-size: 20px;
 	font-weight: normal;
@@ -712,25 +723,31 @@ kbd {
 	transform: rotate(45deg) translateZ(0);
 }
 
-#sidebar .network .collapse-network {
-	border-radius: 3px;
-	width: 32px;
-	height: 34px;
-	float: left;
-	opacity: 0.4;
-	transition: opacity 0.2s, background-color 0.2s, transform 0.2s;
-}
-
-button.collapse-network:first-child:nth-last-child(3) {
+#sidebar .network .lobby:nth-last-child(2) .collapse-network {
 	/* Hide collapse button if there are no channels/queries */
-	display: none;
+	width: 0;
+	overflow: hidden;
 }
 
-#sidebar .network.collapsed .collapse-network {
+#sidebar .network .collapse-network {
+	width: 40px;
+	opacity: 0.4;
+	padding-left: 11px;
+	transition: opacity 0.2s;
+}
+
+#sidebar .network .collapse-network-icon {
+	display: block;
+	width: 20px;
+	height: 20px;
+	transition: transform 0.2s;
+}
+
+#sidebar .network.collapsed .collapse-network-icon {
 	transform: rotate(-90deg);
 }
 
-#sidebar .network .collapse-network::before {
+#sidebar .network .collapse-network-icon::before {
 	content: "\f0d7"; /* http://fontawesome.io/icon/caret-down/ */
 	color: #fff;
 }
@@ -744,14 +761,8 @@ button.collapse-network:first-child:nth-last-child(3) {
 	display: unset;
 }
 
-#sidebar .chan.active .leave:hover,
 #sidebar .chan.active .close:hover {
 	opacity: 1;
-}
-
-#sidebar .tse-scrollbar {
-	top: 2px;
-	right: 3px;
 }
 
 #footer {
@@ -1055,6 +1066,7 @@ button.collapse-network:first-child:nth-last-child(3) {
   */
 #sidebar .join-form {
 	display: none;
+	padding: 0 18px 8px;
 }
 
 #sidebar .join-form .input {
@@ -1063,17 +1075,12 @@ button.collapse-network:first-child:nth-last-child(3) {
 	margin-right: auto;
 	margin-top: 5px;
 	margin-bottom: 5px;
-	width: 80%;
 }
 
 #sidebar .join-form .btn {
 	display: block;
-	width: 80%;
+	width: 100%;
 	margin: auto;
-}
-
-#sidebar .add-channel-tooltip {
-	float: right;
 }
 
 #chat .show-more {
