@@ -29,6 +29,7 @@ describe("Network", function() {
 				host: "",
 				port: 6667,
 				tls: false,
+				rejectUnauthorized: false,
 				password: "",
 				username: "",
 				realname: "",
@@ -124,6 +125,7 @@ describe("Network", function() {
 				"serverOptions",
 				"status",
 				"tls",
+				"rejectUnauthorized",
 				"username"
 			);
 
