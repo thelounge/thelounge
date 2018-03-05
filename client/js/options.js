@@ -70,11 +70,11 @@ if (typeof userSettings.theme === "string" && $theme.attr("href") !== `themes/${
 userSettings = null;
 
 module.exports = {
-	alwaysSync: alwaysSync,
-	noSync: noSync,
+	alwaysSync,
+	noSync,
 	initialized: false,
 	highlightsRE: null,
-	settings: settings,
+	settings,
 	shouldOpenMessagePreview,
 	noServerSettings,
 	processSetting,
@@ -166,10 +166,7 @@ function applySetting(name, value) {
 }
 
 function settingSetEmit(name, value) {
-	socket.emit("setting:set", {
-		name: name,
-		value: value,
-	});
+	socket.emit("setting:set", {name, value});
 }
 
 // When sync is `true` the setting will also be send to the backend for syncing.

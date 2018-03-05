@@ -142,7 +142,7 @@ function requestIdleCallback(callback, timeout) {
 	if (window.requestIdleCallback) {
 		// During an idle period the user agent will run idle callbacks in FIFO order
 		// until either the idle period ends or there are no more idle callbacks eligible to be run.
-		window.requestIdleCallback(callback, {timeout: timeout});
+		window.requestIdleCallback(callback, {timeout});
 	} else {
 		callback();
 	}

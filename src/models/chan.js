@@ -43,13 +43,11 @@ Chan.prototype.destroy = function() {
 };
 
 Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
-	const obj = {
-		chan: this.id,
-		msg: msg,
-	};
+	const chan = this.id;
+	const obj = {chan, msg};
 
 	// If this channel is open in any of the clients, do not increase unread counter
-	const isOpen = _.find(client.attachedClients, {openChannel: this.id}) !== undefined;
+	const isOpen = _.find(client.attachedClients, {openChannel: chan}) !== undefined;
 
 	if ((increasesUnread || msg.highlight) && !isOpen) {
 		obj.unread = ++this.unread;
@@ -131,7 +129,7 @@ Chan.prototype.findUser = function(nick) {
 };
 
 Chan.prototype.getUser = function(nick) {
-	return this.findUser(nick) || new User({nick: nick});
+	return this.findUser(nick) || new User({nick});
 };
 
 Chan.prototype.setUser = function(user) {

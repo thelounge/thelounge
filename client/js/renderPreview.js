@@ -17,7 +17,7 @@ function renderPreview(preview, msg) {
 
 	preview.shown = preview.shown && options.shouldOpenMessagePreview(preview.type);
 
-	const template = $(templates.msg_preview({preview: preview}));
+	const template = $(templates.msg_preview({preview}));
 	const image = template.find("img:first");
 
 	if (image.length === 0) {
@@ -61,7 +61,7 @@ function appendPreview(preview, msg, template) {
 
 	msg.find(`.text a[href="${escapedLink}"]`)
 		.first()
-		.after(templates.msg_preview_toggle({preview: preview}).trim());
+		.after(templates.msg_preview_toggle({preview}).trim());
 
 	previewContainer.append(template);
 

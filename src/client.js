@@ -132,10 +132,7 @@ Client.prototype.find = function(channelId) {
 	}
 
 	if (network && chan) {
-		return {
-			network: network,
-			chan: chan,
-		};
+		return {network, chan};
 	}
 
 	return false;
@@ -557,10 +554,8 @@ Client.prototype.clientAttach = function(socketId, token) {
 		});
 	}
 
-	client.attachedClients[socketId] = {
-		token: token,
-		openChannel: client.lastActiveChannel,
-	};
+	const openChannel = client.lastActiveChannel;
+	client.attachedClients[socketId] = {token, openChannel};
 
 	// Update old networks to store ip and hostmask
 	client.networks.forEach((network) => {

@@ -58,11 +58,9 @@ function makePackageThemeObject(moduleName, module) {
 	}
 
 	const modulePath = Helper.getPackageModulePath(moduleName);
-	const displayName = module.name || moduleName;
-	const filename = path.join(modulePath, module.css);
 	return {
-		displayName: displayName,
-		filename: filename,
+		displayName: module.name || moduleName,
+		filename: path.join(modulePath, module.css),
 		name: moduleName,
 	};
 }
