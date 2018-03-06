@@ -32,7 +32,7 @@ body {
 }
 
 #main,
-#chat .sidebar,
+#chat .userlist,
 #windows .chan,
 #windows .window {
 	background: #3f3f3f;
@@ -76,7 +76,7 @@ body {
 #chat .content,
 #windows .header,
 #chat .user-mode::before,
-#chat .sidebar {
+#chat .userlist {
 	border-color: #333;
 }
 

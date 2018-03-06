@@ -263,7 +263,7 @@ function fuzzyGrep(term, array) {
 
 function rawNicks() {
 	const chan = chat.find(".active");
-	const users = chan.find(".users");
+	const users = chan.find(".userlist");
 
 	// If this channel has a list of nicks, just return it
 	if (users.length > 0) {

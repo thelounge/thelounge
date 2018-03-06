@@ -498,8 +498,8 @@ kbd {
 	float: right;
 }
 
-#viewport.rt #chat .sidebar {
-	right: -180px;
+#viewport.rt #chat .userlist {
+	display: none;
 }
 
 #sidebar {
@@ -954,7 +954,8 @@ button.collapse-network:first-child:nth-last-child(3) {
 }
 
 #chat .chan.active {
-	display: block;
+	display: flex;
+	flex-direction: column;
 }
 
 #chat .condensed {
@@ -1006,48 +1007,40 @@ button.collapse-network:first-child:nth-last-child(3) {
 
 #windows #form .input,
 .messages .msg,
-.sidebar {
+.userlist {
 	font-size: 14px;
 	line-height: 1.4;
 }
 
 #windows #chat .header {
 	display: flex;
+	flex-shrink: 0;
 }
 
-#chat .chat,
-#chat .sidebar {
-	top: 48px;
+#chat .chat-content {
+	display: flex;
+	flex-grow: 1;
 }
 
 #chat .chat {
-	bottom: 0;
-	left: 0;
-	right: 0;
 	overflow: auto;
-	will-change: transform, scroll-position;
-	-webkit-overflow-scrolling: touch;
-	position: absolute;
 	display: flex;
+	flex-grow: 1;
 	flex-direction: column;
-}
-
-#chat .channel .chat {
-	right: 180px;
+	-webkit-overflow-scrolling: touch;
 }
 
 #viewport.rt .chat {
 	right: 0;
 }
 
-#chat .sidebar {
+#chat .userlist {
 	background: #fff;
 	border-left: 1px solid #e7e7e7;
-	bottom: 0;
-	position: absolute;
-	right: 0;
 	width: 180px;
-	transition: right 0.4s;
+	display: flex;
+	flex-direction: column;
+	flex-shrink: 0;
 	touch-action: pan-y;
 }
 
@@ -1456,16 +1449,13 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	display: none;
 }
 
-#chat .count {
+#chat .userlist .count {
 	background: #fafafa;
 	height: 48px;
-	left: 0;
-	position: absolute;
-	right: 0;
-	top: 0;
+	flex-shrink: 0;
 }
 
-#chat .search {
+#chat .userlist .search {
 	color: #222;
 	border: 0;
 	background: none;
@@ -1476,17 +1466,14 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	width: 100%;
 }
 
-#chat .names {
-	bottom: 0;
+#chat .userlist .names {
+	flex-grow: 1;
 	overflow: auto;
 	overflow-x: hidden;
-	will-change: transform, scroll-position;
-	-webkit-overflow-scrolling: touch;
 	padding-bottom: 10px;
-	position: absolute;
-	top: 48px;
 	width: 100%;
 	touch-action: pan-y;
+	-webkit-overflow-scrolling: touch;
 }
 
 #chat .names-filtered {
@@ -1973,7 +1960,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 .context-menu-item:hover,
 .textcomplete-item:hover,
 .textcomplete-menu .active,
-#chat .users .user.active {
+#chat .userlist .user.active {
 	background-color: #f6f6f6;
 	transition: none;
 }
@@ -2320,10 +2307,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		left: 0;
 	}
 
-	#chat .chat {
-		right: 0;
-	}
-
 	#viewport .lt,
 	#viewport .channel .rt {
 		display: flex;
@@ -2333,16 +2316,17 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		display: block;
 	}
 
-	#chat .channel .chat {
+	#chat .userlist {
+		height: 100%;
+		position: absolute;
 		right: 0;
+		transform: translateX(180px);
+		transition: transform 0.2s;
 	}
 
-	#chat .sidebar {
-		right: -180px;
-	}
-
-	#viewport.rt #chat .sidebar {
-		right: 0;
+	#viewport.rt #chat .userlist {
+		display: flex;
+		transform: translateX(0);
 	}
 
 	#chat .header .title {

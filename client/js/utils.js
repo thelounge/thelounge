@@ -48,7 +48,7 @@ function hasRoleInChannel(channel, roles) {
 	const channelID = channel.data("id");
 	const network = $("#sidebar .network").has(`.chan[data-id="${channelID}"]`);
 	const ownNick = network.data("nick");
-	const user = channel.find(`.users .user[data-name="${escape(ownNick)}"]`).first();
+	const user = channel.find(`.names-original .user[data-name="${escape(ownNick)}"]`).first();
 	return user.parent().is("." + roles.join(", ."));
 }
 

@@ -158,7 +158,7 @@ function renderUnreadMarker(template, firstUnread, channel) {
 }
 
 function renderChannelUsers(data) {
-	const users = chat.find("#chan-" + data.id).find(".users");
+	const users = chat.find("#chan-" + data.id).find(".userlist");
 	const nicks = data.users
 		.concat() // Make a copy of the user list, sort is applied in-place
 		.sort((a, b) => b.lastMessage - a.lastMessage)
@@ -167,7 +167,7 @@ function renderChannelUsers(data) {
 	// Before re-rendering the list of names, there might have been an entry
 	// marked as active (i.e. that was highlighted by keyboard navigation).
 	// It is `undefined` if there was none.
-	const previouslyActive = users.find(".active").data("name");
+	const previouslyActive = users.find(".active");
 
 	const search = users
 		.find(".search")
@@ -185,11 +185,11 @@ function renderChannelUsers(data) {
 
 	// If a nick was highlighted before re-rendering the lists, re-highlight it in
 	// the newly-rendered list.
-	if (previouslyActive) {
+	if (previouslyActive.length > 0) {
 		// We need to un-highlight everything first because triggering `input` with
 		// a value highlights the first entry.
 		users.find(".user").removeClass("active");
-		users.find(`.user[data-name="${previouslyActive}"]`).addClass("active");
+		users.find(`.user[data-name="${previouslyActive.data("name")}"]`).addClass("active");
 	}
 
 	return users;

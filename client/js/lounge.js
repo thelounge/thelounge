@@ -41,11 +41,12 @@ $(function() {
 		}
 	});
 
-	viewport.on("click", ".rt", function(e) {
+	viewport.on("click", ".rt", function() {
 		const self = $(this);
 		viewport.toggleClass(self.prop("class"));
-		e.stopPropagation();
-		chat.find(".chan.active .chat").trigger("msg.sticky");
+		chat.find(".chan.active .chat").trigger("keepToBottom");
+
+		return false;
 	});
 
 	function positionContextMenu(that, e) {
@@ -212,7 +213,7 @@ $(function() {
 				+ Math.round(parseFloat(style.borderBottomWidth) || 0)
 			) + "px";
 
-			chat.find(".chan.active .chat").trigger("msg.sticky"); // fix growing
+			chat.find(".chan.active .chat").trigger("keepToBottom"); // fix growing
 		});
 
 	let focus = $.noop;
@@ -553,7 +554,7 @@ $(function() {
 				text: "/whois " + itemData,
 			});
 
-			$(`.channel.active .users .user[data-name="${itemData}"]`).trigger("click");
+			$(`.channel.active .userlist .user[data-name="${itemData}"]`).trigger("click");
 		},
 		query: function(itemData) {
 			const chan = utils.findCurrentNetworkChan(itemData);

@@ -102,7 +102,7 @@ function processReceivedMessage(data) {
 	}
 
 	if ((data.msg.type === "message" || data.msg.type === "action") && channel.hasClass("channel")) {
-		const nicks = channel.find(".users").data("nicks");
+		const nicks = channel.find(".userlist").data("nicks");
 
 		if (nicks) {
 			const find = nicks.indexOf(data.msg.from.nick);
