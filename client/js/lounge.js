@@ -9,7 +9,7 @@ const URI = require("urijs");
 // our libraries
 require("./libs/jquery/inputhistory");
 require("./libs/jquery/stickyscroll");
-const slideoutMenu = require("./libs/slideout");
+const slideoutMenu = require("./slideout");
 const templates = require("../views");
 const socket = require("./socket");
 const render = require("./render");
@@ -29,15 +29,14 @@ $(function() {
 	$(document.body).data("app-name", document.title);
 
 	const viewport = $("#viewport");
-	const sidebarSlide = slideoutMenu(viewport[0], sidebar[0]);
 	const contextMenuContainer = $("#context-menu-container");
 	const contextMenu = $("#context-menu");
 
 	$("#main").on("click", function(e) {
-		if ($(e.target).is(".lt")) {
-			sidebarSlide.toggle(!sidebarSlide.isOpen());
-		} else if (sidebarSlide.isOpen()) {
-			sidebarSlide.toggle(false);
+		const isOpen = slideoutMenu.isOpen();
+
+		if (isOpen || $(e.target).is(".lt")) {
+			slideoutMenu.toggle(!isOpen);
 		}
 	});
 
@@ -376,7 +375,7 @@ $(function() {
 				utils.toggleNotificationMarkers(false);
 			}
 
-			sidebarSlide.toggle(false);
+			slideoutMenu.toggle(false);
 		}
 
 		const lastActive = $("#windows > .active");

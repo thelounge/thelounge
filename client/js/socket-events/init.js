@@ -5,6 +5,7 @@ const escape = require("css.escape");
 const socket = require("../socket");
 const render = require("../render");
 const webpush = require("../webpush");
+const slideoutMenu = require("../slideout");
 const sidebar = $("#sidebar");
 const storage = require("../localStorage");
 const utils = require("../utils");
@@ -44,6 +45,8 @@ socket.on("init", function(data) {
 		$(document.body).removeClass("signed-out");
 		$("#loading").remove();
 		$("#sign-in").remove();
+
+		slideoutMenu.enable();
 
 		if (window.g_LoungeErrorHandler) {
 			window.removeEventListener("error", window.g_LoungeErrorHandler);
