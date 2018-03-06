@@ -178,7 +178,7 @@ Client.prototype.connect = function(args) {
 		host: args.host || "",
 		port: parseInt(args.port, 10) || (args.tls ? 6697 : 6667),
 		tls: !!args.tls,
-		rejectUnauthorized: !args.allowUnauthorized,
+		rejectUnauthorized: !!args.rejectUnauthorized,
 		password: args.password,
 		username: args.username || nick.replace(/[^a-zA-Z0-9]/g, ""),
 		realname: args.realname || "The Lounge User",

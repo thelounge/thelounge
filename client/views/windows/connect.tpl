@@ -45,8 +45,8 @@
 			</div>
 			<div class="col-sm-9 col-sm-offset-3">
 				<label class="tls">
-					<input type="checkbox" name="allowUnauthorized" {{#unless defaults.rejectUnauthorized}}checked{{/unless}} {{#if lockNetwork}}disabled{{/if}}>
-					Allow untrusted certificates
+					<input type="checkbox" name="rejectUnauthorized" {{#if defaults.rejectUnauthorized}}checked{{/if}} {{#if lockNetwork}}disabled{{/if}}>
+					Only allow trusted certificates
 				</label>
 			</div>
 			<div class="clearfix"></div>
