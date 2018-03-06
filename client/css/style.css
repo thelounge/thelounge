@@ -257,8 +257,16 @@ kbd {
 }
 
 #viewport .lt::before { content: "\f0c9"; /* http://fontawesome.io/icon/bars/ */ }
-#viewport .rt::before { content: "\f0c0"; /* http://fontawesome.io/icon/users/ */ }
-#chat button.menu::before { content: "\f142"; /* http://fontawesome.io/icon/ellipsis-v/ */ }
+
+#viewport .rt::before {
+	content: "\f0c0"; /* http://fontawesome.io/icon/users/ */
+	line-height: 36px; /* fix alignment in Microsoft Edge */
+}
+
+#chat button.menu::before {
+	content: "\f142"; /* http://fontawesome.io/icon/ellipsis-v/ */
+	line-height: 36px; /* fix alignment in Microsoft Edge */
+}
 
 .context-menu-join::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
 .context-menu-user::before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
@@ -492,10 +500,6 @@ kbd {
 
 #viewport .lt.notified::after {
 	opacity: 1;
-}
-
-#viewport .rt-tooltip {
-	float: right;
 }
 
 #viewport.rt #chat .userlist {
@@ -1020,6 +1024,8 @@ button.collapse-network:first-child:nth-last-child(3) {
 #chat .chat-content {
 	display: flex;
 	flex-grow: 1;
+	overflow: hidden;
+	contain: strict;
 }
 
 #chat .chat {
