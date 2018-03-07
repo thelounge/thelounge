@@ -9,8 +9,6 @@ const cleanIrcMessage = require("../../../client/js/libs/handlebars/ircmessagepa
 const findLinks = require("../../../client/js/libs/handlebars/ircmessageparser/findLinks");
 const storage = require("../storage");
 
-process.setMaxListeners(0);
-
 // Fix ECDH curve client compatibility in Node v8/v9
 // This is fixed in Node 10, but The Lounge supports LTS versions
 // https://github.com/nodejs/node/issues/16196
