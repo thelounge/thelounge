@@ -15,9 +15,11 @@ process.setMaxListeners(0);
 // This is fixed in Node 10, but The Lounge supports LTS versions
 // https://github.com/nodejs/node/issues/16196
 // https://github.com/nodejs/node/pull/16853
+// https://github.com/nodejs/node/pull/15206
 const tls = require("tls");
+const semver = require("semver");
 
-if (tls.DEFAULT_ECDH_CURVE === "prime256v1") {
+if (semver.gte(process.version, "8.6.0") && tls.DEFAULT_ECDH_CURVE === "prime256v1") {
 	tls.DEFAULT_ECDH_CURVE = "auto";
 }
 
