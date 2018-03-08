@@ -24,12 +24,12 @@ socket.on("sync_sort", function(data) {
 				return true; // No point in continuing
 			}
 
-			const network = container.find(`#network-${data.target}-chanlist`);
+			const network = container.find(`#network-${data.target}`);
 
 			$(network).insertBefore(position);
 		});
 	} else if (type === "channels") {
-		const network = $(`#network-${data.target}-chanlist`);
+		const network = $(`#network-${data.target}`);
 
 		$.each(order, function(index, value) {
 			if (index === 0) { // Shouldn't attempt to move lobby
