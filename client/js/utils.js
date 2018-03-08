@@ -14,6 +14,7 @@ module.exports = {
 	lastMessageId,
 	confirmExit,
 	forceFocus,
+	scrollIntoViewNicely,
 	hasRoleInChannel,
 	move,
 	resetHeight,
@@ -56,6 +57,13 @@ function hasRoleInChannel(channel, roles) {
 // This can only be called from another interactive event (e.g. button click)
 function forceFocus() {
 	input.trigger("click").trigger("focus");
+}
+
+// Reusable scrollIntoView parameters for channel list / user list
+function scrollIntoViewNicely(el) {
+	// Ideally this would use behavior: "smooth", but that does not consistently work in e.g. Chrome
+	// https://github.com/iamdustan/smoothscroll/issues/28#issuecomment-364061459
+	el.scrollIntoView({block: "nearest", inline: "nearest"});
 }
 
 function collapse() {

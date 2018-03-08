@@ -375,6 +375,7 @@ $(function() {
 				utils.toggleNotificationMarkers(false);
 			}
 
+			utils.scrollIntoViewNicely(self[0]);
 			slideoutMenu.toggle(false);
 		}
 
