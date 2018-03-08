@@ -499,7 +499,7 @@ kbd {
 	transition: opacity 0.2s;
 }
 
-#viewport .lt.notified::after {
+#viewport.notified .lt::after {
 	opacity: 1;
 }
 

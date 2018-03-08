@@ -3,6 +3,7 @@
 const $ = require("jquery");
 const escape = require("css.escape");
 const input = $("#input");
+const viewport = $("#viewport");
 
 var serverHash = -1; // eslint-disable-line no-var
 var lastMessageId = -1; // eslint-disable-line no-var
@@ -105,7 +106,7 @@ function toggleNotificationMarkers(newState) {
 	}
 
 	// Toggles a dot on the menu icon when there are unread notifications
-	$("#viewport .lt").toggleClass("notified", newState);
+	viewport.toggleClass("notified", newState);
 }
 
 function confirmExit() {
