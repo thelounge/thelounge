@@ -23,16 +23,21 @@ program
 
 		log.info("Retrieving information about the package...");
 
+		const split = packageName.split("@");
+		packageName = split[0];
+		const packageVersion = split[1] || "latest";
+
 		packageJson(packageName, {
 			fullMetadata: true,
+			version: packageVersion,
 		}).then((json) => {
 			if (!("thelounge" in json)) {
-				log.error(`${colors.red(packageName)} does not have The Lounge metadata.`);
+				log.error(`${colors.red(json.name + " v" + json.version)} does not have The Lounge metadata.`);
 
 				process.exit(1);
 			}
 
-			log.info(`Installing ${colors.green(packageName)}...`);
+			log.info(`Installing ${colors.green(json.name + " v" + json.version)}...`);
 
 			const packagesPath = Helper.getPackagesPath();
 			const packagesConfig = path.join(packagesPath, "package.json");
@@ -71,7 +76,7 @@ program
 					"--non-interactive",
 					"--cwd",
 					packagesPath,
-					`${packageName}@${json.version}`,
+					`${json.name}@${json.version}`,
 				]
 			);
 
@@ -92,11 +97,11 @@ program
 
 			add.on("close", (code) => {
 				if (!success || code !== 0) {
-					log.error(`Failed to install ${colors.green(packageName)}. Exit code: ${code}`);
+					log.error(`Failed to install ${colors.green(json.name + " v" + json.version)}. Exit code: ${code}`);
 					return;
 				}
 
-				log.info(`${colors.green(packageName + " v" + json.version)} has been successfully installed.`);
+				log.info(`${colors.green(json.name + " v" + json.version)} has been successfully installed.`);
 			});
 		}).catch((e) => {
 			log.error(`${e}`);
