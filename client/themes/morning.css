@@ -59,6 +59,10 @@ body {
 	color: #fefefe;
 }
 
+#chat .userlist .user.active {
+	background-color: #242a33;
+}
+
 /* Nicknames */
 #chat .user {
 	color: #b0bacf;
