@@ -9,6 +9,9 @@ const cleanIrcMessage = require("../../../client/js/libs/handlebars/ircmessagepa
 const findLinks = require("../../../client/js/libs/handlebars/ircmessageparser/findLinks");
 const storage = require("../storage");
 
+const mediaTypeRegex = /^(audio|video)\/.+/;
+const linkRegex = /^https?:\/\//;
+
 // Fix ECDH curve client compatibility in Node v8/v9
 // This is fixed in Node 10, but The Lounge supports LTS versions
 // https://github.com/nodejs/node/issues/16196
@@ -30,7 +33,7 @@ module.exports = function(client, chan, msg) {
 	const cleanText = cleanIrcMessage(msg.text);
 
 	// We will only try to prefetch http(s) links
-	const links = findLinks(cleanText).filter((w) => /^https?:\/\//.test(w.link));
+	const links = findLinks(cleanText).filter((w) => linkRegex.test(w.link));
 
 	if (links.length === 0) {
 		return;
@@ -65,51 +68,108 @@ module.exports = function(client, chan, msg) {
 	});
 };
 
-function parse(msg, preview, res, client) {
-	switch (res.type) {
-	case "text/html": {
+function parseHtml(preview, res, client) {
+	return new Promise((resolve) => {
 		const $ = cheerio.load(res.data);
-		preview.type = "link";
-		preview.head =
-			$('meta[property="og:title"]').attr("content")
-			|| $("title").text()
-			|| "";
-		preview.body =
-			$('meta[property="og:description"]').attr("content")
-			|| $('meta[name="description"]').attr("content")
-			|| "";
-		preview.thumb =
-			$('meta[property="og:image"]').attr("content")
-			|| $('meta[name="twitter:image:src"]').attr("content")
-			|| $('link[rel="image_src"]').attr("href")
-			|| "";
 
-		if (preview.thumb.length) {
-			preview.thumb = url.resolve(preview.link, preview.thumb);
-		}
+		return parseHtmlMedia($, preview, res, client)
+			.then((newRes) => resolve(newRes))
+			.catch(() => {
+				preview.type = "link";
+				preview.head =
+					$('meta[property="og:title"]').attr("content")
+					|| $("title").text()
+					|| "";
+				preview.body =
+					$('meta[property="og:description"]').attr("content")
+					|| $('meta[name="description"]').attr("content")
+					|| "";
+				preview.thumb =
+					$('meta[property="og:image"]').attr("content")
+					|| $('meta[name="twitter:image:src"]').attr("content")
+					|| $('link[rel="image_src"]').attr("href")
+					|| "";
 
-		// Make sure thumbnail is a valid url
-		if (!/^https?:\/\//.test(preview.thumb)) {
-			preview.thumb = "";
-		}
+				if (preview.thumb.length) {
+					preview.thumb = url.resolve(preview.link, preview.thumb);
+				}
 
-		// Verify that thumbnail pic exists and is under allowed size
-		if (preview.thumb.length) {
-			fetch(escapeHeader(preview.thumb), {language: client.language}, (resThumb) => {
-				if (resThumb === null
-				|| !(/^image\/.+/.test(resThumb.type))
-				|| resThumb.size > (Helper.config.prefetchMaxImageSize * 1024)) {
+				// Make sure thumbnail is a valid url
+				if (!linkRegex.test(preview.thumb)) {
 					preview.thumb = "";
 				}
 
-				handlePreview(client, msg, preview, resThumb);
+				// Verify that thumbnail pic exists and is under allowed size
+				if (preview.thumb.length) {
+					fetch(escapeHeader(preview.thumb), {language: client.language}, (resThumb) => {
+						if (resThumb === null
+						|| !(/^image\/.+/.test(resThumb.type))
+						|| resThumb.size > (Helper.config.prefetchMaxImageSize * 1024)) {
+							preview.thumb = "";
+						}
+
+						resolve(resThumb);
+					});
+				} else {
+					resolve(res);
+				}
 			});
+	});
+}
 
-			return;
+function parseHtmlMedia($, preview, res, client) {
+	return new Promise((resolve, reject) => {
+		let foundMedia = false;
+
+		["video", "audio"].forEach((type) => {
+			if (foundMedia) {
+				return;
+			}
+
+			$(`meta[property="og:${type}:type"]`).each(function(i) {
+				const mimeType = $(this).attr("content");
+
+				if (mediaTypeRegex.test(mimeType)) {
+					// If we match a clean video or audio tag, parse that as a preview instead
+					const mediaUrl = $($(`meta[property="og:${type}"]`).get(i)).attr("content");
+
+					// Make sure media is a valid url
+					if (!mediaUrl.startsWith("https://")) {
+						return;
+					}
+
+					foundMedia = true;
+
+					fetch(escapeHeader(mediaUrl), {language: client.language}, (resMedia) => {
+						if (resMedia === null || !mediaTypeRegex.test(resMedia.type)) {
+							return reject();
+						}
+
+						preview.type = type;
+						preview.media = mediaUrl;
+						preview.mediaType = resMedia.type;
+
+						resolve(resMedia);
+					});
+
+					return false;
+				}
+			});
+		});
+
+		if (!foundMedia) {
+			reject();
 		}
+	});
+}
 
+function parse(msg, preview, res, client) {
+	let promise;
+
+	switch (res.type) {
+	case "text/html":
+		promise = parseHtml(preview, res, client);
 		break;
-	}
 
 	case "image/png":
 	case "image/gif":
@@ -141,7 +201,8 @@ function parse(msg, preview, res, client) {
 		}
 
 		preview.type = "audio";
-		preview.res = res.type;
+		preview.media = preview.link;
+		preview.mediaType = res.type;
 
 		break;
 
@@ -152,8 +213,9 @@ function parse(msg, preview, res, client) {
 			break;
 		}
 
-		preview.res = res.type;
 		preview.type = "video";
+		preview.media = preview.link;
+		preview.mediaType = res.type;
 
 		break;
 
@@ -161,7 +223,11 @@ function parse(msg, preview, res, client) {
 		return;
 	}
 
-	handlePreview(client, msg, preview, res);
+	if (!promise) {
+		return handlePreview(client, msg, preview, res);
+	}
+
+	promise.then((newRes) => handlePreview(client, msg, preview, newRes));
 }
 
 function handlePreview(client, msg, preview, res) {
@@ -248,8 +314,9 @@ function fetch(uri, {language}, cb) {
 				if (contentLength > limit) {
 					req.abort();
 				}
-			} else if (/^(audio|video)\/.+/.test(res.headers["content-type"])) {
-				req.abort(); // ensure server doesn't download the audio file
+			} else if (mediaTypeRegex.test(res.headers["content-type"])) {
+				// We don't need to download the file any further after we received content-type header
+				req.abort();
 			} else {
 				// if not image, limit download to 50kb, since we need only meta tags
 				// twitter.com sends opengraph meta tags within ~20kb of data for individual tweets

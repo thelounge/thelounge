@@ -1449,6 +1449,11 @@ button.collapse-network:first-child:nth-last-child(3) {
 	max-width: 100%;
 }
 
+#chat video {
+	max-width: 640px;
+	max-height: 240px;
+}
+
 /* Do not display an empty div when there are no previews. Useful for example in
 part/quit messages where we don't load previews (adds a blank line otherwise) */
 #chat .preview:empty {
