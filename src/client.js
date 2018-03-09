@@ -542,7 +542,7 @@ Client.prototype.clientAttach = function(socketId, token) {
 		client.networks.forEach(function(network) {
 			// Only remove away on client attachment if
 			// there is no away message on this network
-			if (!network.awayMessage) {
+			if (network.irc && !network.awayMessage) {
 				network.irc.raw("AWAY");
 			}
 		});
@@ -584,7 +584,7 @@ Client.prototype.clientDetach = function(socketId) {
 		client.networks.forEach(function(network) {
 			// Only set away on client deattachment if
 			// there is no away message on this network
-			if (!network.awayMessage) {
+			if (network.irc && !network.awayMessage) {
 				network.irc.raw("AWAY", client.awayMessage);
 			}
 		});
