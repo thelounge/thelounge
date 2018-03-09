@@ -306,6 +306,7 @@ function initializeClient(socket, client, token, lastMessage) {
 			// prevent people from overriding webirc settings
 			data.ip = null;
 			data.hostname = null;
+			data.uuid = null;
 
 			client.connect(data);
 		}

@@ -40,6 +40,7 @@ class Msg {
 
 	isLoggable() {
 		return this.type !== Msg.Type.MOTD &&
+			this.type !== Msg.Type.ERROR &&
 			this.type !== Msg.Type.BANLIST &&
 			this.type !== Msg.Type.WHOIS;
 	}

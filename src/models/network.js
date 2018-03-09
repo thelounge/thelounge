@@ -1,6 +1,7 @@
 "use strict";
 
 const _ = require("lodash");
+const uuidv4 = require("uuid/v4");
 const Chan = require("./chan");
 
 module.exports = Network;
@@ -41,6 +42,10 @@ function Network(attr) {
 		},
 		chanCache: [],
 	});
+
+	if (!this.uuid) {
+		this.uuid = uuidv4();
+	}
 
 	if (!this.name) {
 		this.name = this.host;
@@ -125,6 +130,7 @@ Network.prototype.getNetworkStatus = function() {
 
 Network.prototype.export = function() {
 	const network = _.pick(this, [
+		"uuid",
 		"awayMessage",
 		"nick",
 		"name",

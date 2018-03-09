@@ -63,11 +63,7 @@ Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 		return;
 	}
 
-	this.messages.push(msg);
-
-	if (client.config.log === true) {
-		writeUserLog.call(this, client, msg);
-	}
+	this.writeUserLog(client, msg);
 
 	if (Helper.config.maxHistory >= 0 && this.messages.length > Helper.config.maxHistory) {
 		const deleted = this.messages.splice(0, this.messages.length - Helper.config.maxHistory);
@@ -183,21 +179,86 @@ Chan.prototype.getFilteredClone = function(lastActiveChannel, lastMessage) {
 	}, {});
 };
 
-function writeUserLog(client, msg) {
-	if (!msg.isLoggable()) {
-		return false;
+Chan.prototype.writeUserLog = function(client, msg) {
+	this.messages.push(msg);
+
+	// Does this user have logs disabled
+	if (!client.config.log) {
+		return;
 	}
 
+	// Are logs disabled server-wide
+	if (Helper.config.messageStorage.length === 0) {
+		return;
+	}
+
+	// Is this particular message or channel loggable
+	if (!msg.isLoggable() || !this.isLoggable()) {
+		return;
+	}
+
+	// Find the parent network where this channel is in
 	const target = client.find(this.id);
 
 	if (!target) {
-		return false;
+		return;
 	}
 
-	userLog.write(
-		client.name,
-		target.network.host, // TODO: Fix #1392, multiple connections to same server results in duplicate logs
-		this.type === Chan.Type.LOBBY ? target.network.host : this.name,
-		msg
-	);
+	// TODO: Something more pluggable
+	if (Helper.config.messageStorage.includes("sqlite")) {
+		client.messageStorage.index(target.network.uuid, this.name, msg);
+	}
+
+	if (Helper.config.messageStorage.includes("text")) {
+		userLog.write(
+			client.name,
+			target.network.host, // TODO: Fix #1392, multiple connections to same server results in duplicate logs
+			this.type === Chan.Type.LOBBY ? target.network.host : this.name,
+			msg
+		);
+	}
+};
+
+Chan.prototype.loadMessages = function(client, network) {
+	if (!client.messageStorage || !this.isLoggable()) {
+		return;
+	}
+
+	client.messageStorage
+		.getMessages(network, this)
+		.then((messages) => {
+			if (messages.length === 0) {
+				if (network.irc.network.cap.isEnabled("znc.in/playback")) {
+					requestZncPlayback(this, network, 0);
+				}
+
+				return;
+			}
+
+			this.messages.unshift(...messages);
+
+			if (!this.firstUnread) {
+				this.firstUnread = messages[messages.length - 1].id;
+			}
+
+			client.emit("more", {
+				chan: this.id,
+				messages: messages.slice(-100),
+			});
+
+			if (network.irc.network.cap.isEnabled("znc.in/playback")) {
+				const from = Math.floor(messages[messages.length - 1].time.getTime() / 1000);
+
+				requestZncPlayback(this, network, from);
+			}
+		})
+		.catch((err) => log.error(`Failed to load messages: ${err}`));
+};
+
+Chan.prototype.isLoggable = function() {
+	return this.type === Chan.Type.CHANNEL || this.type === Chan.Type.QUERY;
+};
+
+function requestZncPlayback(channel, network, from) {
+	network.irc.raw("ZNC", "*playback", "PLAY", channel.name, from.toString());
 }

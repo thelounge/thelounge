@@ -10,6 +10,7 @@ const Network = require("./models/network");
 const ircFramework = require("irc-framework");
 const Helper = require("./helper");
 const UAParser = require("ua-parser-js");
+const MessageStorage = require("./plugins/sqlite");
 
 module.exports = Client;
 
@@ -78,8 +79,16 @@ function Client(manager, name, config = {}) {
 	});
 
 	const client = this;
-
 	let delay = 0;
+
+	if (!Helper.config.public) {
+		client.messageStorage = new MessageStorage();
+
+		if (client.config.log && Helper.config.messageStorage.includes("sqlite")) {
+			client.messageStorage.enable(client.name);
+		}
+	}
+
 	(client.config.networks || []).forEach((n) => {
 		setTimeout(function() {
 			client.connect(n);
@@ -174,6 +183,7 @@ Client.prototype.connect = function(args) {
 	args.hostname = args.hostname || (client.config && client.config.hostname) || client.hostname;
 
 	const network = new Network({
+		uuid: args.uuid,
 		name: args.name || (Helper.config.displayNetwork ? "" : Helper.config.defaults.name) || "",
 		host: args.host || "",
 		port: parseInt(args.port, 10) || (args.tls ? 6697 : 6667),
@@ -261,6 +271,7 @@ Client.prototype.connect = function(args) {
 
 	network.irc.requestCap([
 		"znc.in/self-message", // Legacy echo-message for ZNc
+		"znc.in/playback", // http://wiki.znc.in/Playback
 	]);
 
 	events.forEach((plugin) => {
@@ -273,6 +284,8 @@ Client.prototype.connect = function(args) {
 	network.irc.connect();
 
 	client.save();
+
+	channels.forEach((channel) => channel.loadMessages(client, network));
 };
 
 Client.prototype.generateToken = function(callback) {
