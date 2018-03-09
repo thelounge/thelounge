@@ -29,14 +29,18 @@ describe("SQLite Message Storage", function() {
 		});
 	});
 
-	it("should create database file", function() {
+	it("should create database file", function(done) {
 		expect(store.isEnabled).to.be.false;
 		expect(fs.existsSync(expectedPath)).to.be.false;
 
 		store.enable("testUser");
 
 		expect(store.isEnabled).to.be.true;
-		expect(fs.existsSync(expectedPath)).to.be.true;
+
+		store.database.serialize(() => {
+			expect(fs.existsSync(expectedPath)).to.be.true;
+			done();
+		});
 	});
 
 	it("should create tables", function(done) {
