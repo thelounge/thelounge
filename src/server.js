@@ -445,6 +445,44 @@ function initializeClient(socket, client, token, lastMessage) {
 
 	socket.on("sessions:get", sendSessionList);
 
+	if (!Helper.config.public) {
+		socket.on("setting:set", (newSetting) => {
+			if (!newSetting || typeof newSetting !== "object") {
+				return;
+			}
+
+			// Older user configs will not have the clientSettings property.
+			if (!client.config.hasOwnProperty("clientSettings")) {
+				client.config.clientSettings = {};
+			}
+
+			// We do not need to do write operations and emit events if nothing changed.
+			if (client.config.clientSettings[newSetting.name] !== newSetting.value) {
+				client.config.clientSettings[newSetting.name] = newSetting.value;
+
+				// Pass the setting to all clients.
+				client.emit("setting:new", {
+					name: newSetting.name,
+					value: newSetting.value,
+				});
+
+				client.manager.updateUser(client.name, {
+					clientSettings: client.config.clientSettings,
+				});
+			}
+		});
+
+		socket.on("setting:get", () => {
+			if (!client.config.hasOwnProperty("clientSettings")) {
+				socket.emit("setting:all", {});
+				return;
+			}
+
+			const clientSettings = client.config.clientSettings;
+			socket.emit("setting:all", clientSettings);
+		});
+	}
+
 	socket.on("sign-out", (tokenToSignOut) => {
 		// If no token provided, sign same client out
 		if (!tokenToSignOut) {

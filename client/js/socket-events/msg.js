@@ -125,9 +125,9 @@ function notifyMessage(targetId, channel, msg) {
 
 	const button = sidebar.find(".chan[data-id='" + targetId + "']");
 
-	if (msg.highlight || (options.notifyAllMessages && msg.type === "message")) {
+	if (msg.highlight || (options.settings.notifyAllMessages && msg.type === "message")) {
 		if (!document.hasFocus() || !channel.hasClass("active")) {
-			if (options.notification) {
+			if (options.settings.notification) {
 				try {
 					pop.play();
 				} catch (exception) {
@@ -137,7 +137,7 @@ function notifyMessage(targetId, channel, msg) {
 
 			utils.toggleNotificationMarkers(true);
 
-			if (options.desktopNotifications && Notification.permission === "granted") {
+			if (options.settings.desktopNotifications && ("Notification" in window) && Notification.permission === "granted") {
 				let title;
 				let body;
 
