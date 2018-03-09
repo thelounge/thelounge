@@ -3,6 +3,7 @@
 const cheerio = require("cheerio");
 const request = require("request");
 const url = require("url");
+const URI = require("urijs");
 const mime = require("mime-types");
 const Helper = require("../../helper");
 const cleanIrcMessage = require("../../../client/js/libs/handlebars/ircmessageparser/cleanIrcMessage");
@@ -40,7 +41,7 @@ module.exports = function(client, chan, msg) {
 	}
 
 	msg.previews = Array.from(new Set( // Remove duplicate links
-		links.map((link) => escapeHeader(link.link))
+		links.map((link) => normalizeURL(link.link))
 	)).map((link) => ({
 		type: "loading",
 		head: "",
@@ -101,7 +102,7 @@ function parseHtml(preview, res, client) {
 
 				// Verify that thumbnail pic exists and is under allowed size
 				if (preview.thumb.length) {
-					fetch(escapeHeader(preview.thumb), {language: client.language}, (resThumb) => {
+					fetch(normalizeURL(preview.thumb), {language: client.language}, (resThumb) => {
 						if (resThumb === null
 						|| !(/^image\/.+/.test(resThumb.type))
 						|| resThumb.size > (Helper.config.prefetchMaxImageSize * 1024)) {
@@ -140,7 +141,7 @@ function parseHtmlMedia($, preview, res, client) {
 
 					foundMedia = true;
 
-					fetch(escapeHeader(mediaUrl), {language: client.language}, (resMedia) => {
+					fetch(normalizeURL(mediaUrl), {language: client.language}, (resMedia) => {
 						if (resMedia === null || !mediaTypeRegex.test(resMedia.type)) {
 							return reject();
 						}
@@ -356,12 +357,6 @@ function fetch(uri, {language}, cb) {
 		});
 }
 
-// https://github.com/request/request/issues/2120
-// https://github.com/nodejs/node/issues/1693
-// https://github.com/alexeyten/descript/commit/50ee540b30188324198176e445330294922665fc
-function escapeHeader(header) {
-	return header
-		.replace(/([\uD800-\uDBFF][\uDC00-\uDFFF])+/g, encodeURI)
-		.replace(/[\uD800-\uDFFF]/g, "")
-		.replace(/[\u0000-\u001F\u007F-\uFFFF]+/g, encodeURI);
+function normalizeURL(header) {
+	return URI(header).normalize().toString();
 }

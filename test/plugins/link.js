@@ -283,4 +283,47 @@ describe("Link plugin", function() {
 
 		link(this.irc, this.network.channels[0], message);
 	});
+
+	it("should work on non-ASCII urls", function(done) {
+		const message = this.irc.createMessage({
+			text:
+			"http://localhost:9002/unicode/ıoı-test " +
+			"http://localhost:9002/unicode/русский-текст-test " +
+			"http://localhost:9002/unicode/🙈-emoji-test " +
+			"http://localhost:9002/unicodeq/?q=ıoı-test " +
+			"http://localhost:9002/unicodeq/?q=русский-текст-test " +
+			"http://localhost:9002/unicodeq/?q=🙈-emoji-test",
+		});
+
+		link(this.irc, this.network.channels[0], message);
+
+		app.get("/unicode/:q", function(req, res) {
+			res.send(`<title>${req.params.q}</title>`);
+		});
+
+		app.get("/unicodeq/", function(req, res) {
+			res.send(`<title>${req.query.q}</title>`);
+		});
+
+		const previews = [];
+
+		this.irc.on("msg:preview", function(data) {
+			previews.push(data.preview.link);
+
+			if (data.preview.link.indexOf("%C4%B1o%C4%B1-test") > 0) {
+				expect(data.preview.head).to.equal("ıoı-test");
+			} else if (data.preview.link.indexOf("%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9-%D1%82%D0%B5%D0%BA%D1%81%D1%82-test") > 0) {
+				expect(data.preview.head).to.equal("русский-текст-test");
+			} else if (data.preview.link.indexOf("%F0%9F%99%88-emoji-test") > 0) {
+				expect(data.preview.head).to.equal("🙈-emoji-test");
+			} else {
+				expect("This should never happen").to.equal(data.preview.link);
+			}
+
+			if (previews.length === 5) {
+				expect(message.previews.map((preview) => preview.link)).to.deep.equal(previews);
+				done();
+			}
+		});
+	});
 });
