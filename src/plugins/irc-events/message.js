@@ -127,8 +127,11 @@ module.exports = function(irc, network) {
 			let title = chan.name;
 			let body = cleanIrcMessage(data.message);
 
-			// In channels, prepend sender nickname to the message
-			if (chan.type !== Chan.Type.QUERY) {
+			if (msg.type === Msg.Type.ACTION) {
+				// For actions, do not include colon in the message
+				body = `${data.nick} ${body}`;
+			} else if (chan.type !== Chan.Type.QUERY) {
+				// In channels, prepend sender nickname to the message
 				body = `${data.nick}: ${body}`;
 			}
 
