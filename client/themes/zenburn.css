@@ -63,11 +63,11 @@ body {
 	border-top: 1px solid #000;
 }
 
-#chat .count {
+#chat .userlist .count {
 	background-color: #434443;
 }
 
-#chat .search {
+#chat .userlist .search {
 	color: #88b090;
 	padding: 15px 16px;
 }
@@ -83,6 +83,10 @@ body {
 /* User list */
 #chat .user-mode {
 	color: #dcdccc;
+}
+
+#chat .userlist .user.active {
+	background-color: #333;
 }
 
 /* Nicknames */

@@ -37,11 +37,11 @@ body {
 	background: #333c4a;
 }
 
-#chat .count {
+#chat .userlist .count {
 	background-color: #2e3642;
 }
 
-#chat .search {
+#chat .userlist .search {
 	color: #ccc;
 	padding: 15px 16px;
 }
@@ -57,6 +57,10 @@ body {
 /* User list */
 #chat .user-mode {
 	color: #fefefe;
+}
+
+#chat .userlist .user.active {
+	background-color: #242a33;
 }
 
 /* Nicknames */
