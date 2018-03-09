@@ -310,18 +310,18 @@ describe("Link plugin", function() {
 		this.irc.on("msg:preview", function(data) {
 			previews.push(data.preview.link);
 
-			if (data.preview.link.indexOf("%C4%B1o%C4%B1-test") > 0) {
+			if (data.preview.link.includes("%C4%B1o%C4%B1-test")) {
 				expect(data.preview.head).to.equal("ıoı-test");
-			} else if (data.preview.link.indexOf("%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9-%D1%82%D0%B5%D0%BA%D1%81%D1%82-test") > 0) {
+			} else if (data.preview.link.includes("%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9-%D1%82%D0%B5%D0%BA%D1%81%D1%82-test")) {
 				expect(data.preview.head).to.equal("русский-текст-test");
-			} else if (data.preview.link.indexOf("%F0%9F%99%88-emoji-test") > 0) {
+			} else if (data.preview.link.includes("%F0%9F%99%88-emoji-test")) {
 				expect(data.preview.head).to.equal("🙈-emoji-test");
 			} else {
 				expect("This should never happen").to.equal(data.preview.link);
 			}
 
 			if (previews.length === 5) {
-				expect(message.previews.map((preview) => preview.link)).to.deep.equal(previews);
+				expect(message.previews.map((preview) => preview.link)).to.have.members(previews);
 				done();
 			}
 		});
