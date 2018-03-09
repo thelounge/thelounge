@@ -358,16 +358,20 @@ describe("parse Handlebars helper", () => {
 	[{
 		name: "in text",
 		input: "Hello💬",
-		expected: 'Hello<span class="emoji">💬</span>',
+		expected: 'Hello<span class="emoji" role="img" aria-label="Emoji: speech balloon" title="speech balloon">💬</span>',
+	}, {
+		name: "complicated zero-join-width emoji",
+		input: "🤦🏿‍♀️",
+		expected: '<span class="emoji" role="img" aria-label="Emoji: woman facepalming: dark skin tone" title="woman facepalming: dark skin tone">🤦🏿‍♀️</span>',
 	}, {
 		name: "with modifiers",
 		input: "🤷‍♀️",
-		expected: '<span class="emoji">🤷‍♀️</span>',
+		expected: '<span class="emoji" role="img" aria-label="Emoji: woman shrugging" title="woman shrugging">🤷‍♀️</span>',
 	}, {
 		// FIXME: These multiple `span`s should be optimized into a single one. See https://github.com/thelounge/thelounge/issues/1783
 		name: "wrapped in style",
 		input: "Super \x034💚 green!",
-		expected: 'Super <span class="emoji"><span class="irc-fg4">💚</span></span><span class="irc-fg4"> green!</span>',
+		expected: 'Super <span class="emoji" role="img" aria-label="Emoji: green heart" title="green heart"><span class="irc-fg4">💚</span></span><span class="irc-fg4"> green!</span>',
 	}, {
 		name: "wrapped in URLs",
 		input: "https://i.❤️.thelounge.chat",

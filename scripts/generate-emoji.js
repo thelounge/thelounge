@@ -10,17 +10,18 @@ request.get({
 	json: true,
 }, (error, response, emojiStrategy) => {
 	const emojiMap = {};
+	const fullNameEmojiMap = {};
 
 	for (const key in emojiStrategy) {
 		if (emojiStrategy.hasOwnProperty(key)) {
 			const shortname = prepareShortName(emojiStrategy[key].shortname);
+			const unicode = stringToUnicode(emojiStrategy[key].unicode_output);
+			fullNameEmojiMap[unicode] = emojiStrategy[key].name;
 
 			// Skip tones, at least for now
 			if (shortname.includes("tone")) {
 				continue;
 			}
-
-			const unicode = stringToUnicode(emojiStrategy[key].unicode_output);
 
 			emojiMap[shortname] = unicode;
 
@@ -36,7 +37,8 @@ request.get({
 		}
 	}
 
-	const output = JSON.stringify(emojiMap, null, 2) + "\n";
+	const emojiMapOutput = JSON.stringify(emojiMap, null, 2) + "\n";
+	const fullNameEmojiMapOutput = JSON.stringify(fullNameEmojiMap, null, 2) + "\n";
 
 	fs.writeFileSync(path.resolve(path.join(
 		__dirname,
@@ -45,7 +47,16 @@ request.get({
 		"js",
 		"libs",
 		"simplemap.json"
-	)), output);
+	)), emojiMapOutput);
+
+	fs.writeFileSync(path.resolve(path.join(
+		__dirname,
+		"..",
+		"client",
+		"js",
+		"libs",
+		"fullnamemap.json"
+	)), fullNameEmojiMapOutput);
 });
 
 function stringToUnicode(key) {
