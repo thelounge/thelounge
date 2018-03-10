@@ -30,6 +30,7 @@ const Helper = {
 	getVersion,
 	getGitCommit,
 	ip2hex,
+	mergeConfig,
 
 	password: {
 		hash: passwordHash,
@@ -89,7 +90,7 @@ function setHome(newPath) {
 			log.warn("Using default configuration...");
 		}
 
-		this.config = _.merge(this.config, userConfig);
+		mergeConfig(this.config, userConfig);
 	}
 
 	if (!this.config.displayNetwork && !this.config.lockNetwork) {
@@ -173,4 +174,20 @@ function passwordHash(password) {
 
 function passwordCompare(password, expected) {
 	return bcrypt.compare(password, expected);
+}
+
+function mergeConfig(oldConfig, newConfig) {
+	return _.mergeWith(oldConfig, newConfig, (objValue, srcValue, key) => {
+		// Do not override config variables if the type is incorrect (e.g. object changed into a string)
+		if (typeof objValue !== "undefined" && objValue !== null && typeof objValue !== typeof srcValue) {
+			log.warn(`Incorrect type for "${colors.bold(key)}", please verify your config.`);
+
+			return objValue;
+		}
+
+		// For arrays, simply override the value with user provided one.
+		if (_.isArray(objValue)) {
+			return srcValue;
+		}
+	});
 }
