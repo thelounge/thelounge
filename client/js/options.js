@@ -150,7 +150,7 @@ function applySetting(name, value) {
 			autocompletion.disable();
 		}
 	} else if (name === "desktopNotifications") {
-		if (value && Notification.permission !== "granted") {
+		if (("Notification" in window) && value && Notification.permission !== "granted") {
 			Notification.requestPermission(updateDesktopNotificationStatus);
 		} else if (!value) {
 			$warningBlocked.hide();
