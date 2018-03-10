@@ -30,24 +30,21 @@
 
 	</head>
 	<body class="signed-out<%- public ? " public" : "" %>" data-transports="<%- JSON.stringify(transports) %>">
-
-	<div id="wrap">
-	<div id="viewport" role="tablist">
-		<aside id="sidebar">
-			<div class="networks"></div>
-			<div class="empty">
-				You're not connected to any networks yet.
-			</div>
-		</aside>
-		<footer id="footer">
-			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Sign in"><button class="icon sign-in" data-target="#sign-in" aria-label="Sign in" role="tab" aria-controls="sign-in" aria-selected="false"></button></span>
-			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Connect to network"><button class="icon connect" data-target="#connect" aria-label="Connect to network" role="tab" aria-controls="connect" aria-selected="false"></button></span>
-			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Settings"><button class="icon settings" data-target="#settings" aria-label="Settings" role="tab" aria-controls="settings" aria-selected="false"></button></span>
-			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Help"><button class="icon help" data-target="#help" aria-label="Help" role="tab" aria-controls="help" aria-selected="false"></button></span>
-			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Sign out"><button class="icon sign-out" id="sign-out" aria-label="Sign out"></button></span>
-		</footer>
-		<div id="main">
-			<div id="windows">
+		<div id="viewport" role="tablist">
+			<aside id="sidebar">
+				<div class="networks"></div>
+				<div class="empty">
+					You're not connected to any networks yet.
+				</div>
+				<footer id="footer">
+					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Sign in"><button class="icon sign-in" data-target="#sign-in" aria-label="Sign in" role="tab" aria-controls="sign-in" aria-selected="false"></button></span>
+					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Connect to network"><button class="icon connect" data-target="#connect" aria-label="Connect to network" role="tab" aria-controls="connect" aria-selected="false"></button></span>
+					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Settings"><button class="icon settings" data-target="#settings" aria-label="Settings" role="tab" aria-controls="settings" aria-selected="false"></button></span>
+					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Help"><button class="icon help" data-target="#help" aria-label="Help" role="tab" aria-controls="help" aria-selected="false"></button></span>
+					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Sign out"><button class="icon sign-out" id="sign-out" aria-label="Sign out"></button></span>
+				</footer>
+			</aside>
+			<article id="windows">
 				<div id="loading" class="window active">
 					<div id="loading-status-container">
 						<img src="img/logo-vertical-transparent-bg.svg" class="loading-logo-bright" alt="The Lounge" width="256" height="170">
@@ -83,19 +80,16 @@
 				<div id="settings" class="window" role="tabpanel" aria-label="Settings"></div>
 				<div id="help" class="window" role="tabpanel" aria-label="Help"></div>
 				<div id="changelog" class="window" aria-label="Changelog"></div>
-			</div>
+			</article>
 		</div>
-	</div>
-	</div>
 
-	<div id="context-menu-container">
-		<ul id="context-menu"></ul>
-	</div>
+		<div id="context-menu-container">
+			<ul id="context-menu"></ul>
+		</div>
 
-	<div id="image-viewer"></div>
+		<div id="image-viewer"></div>
 
-	<script src="js/bundle.vendor.js"></script>
-	<script src="js/bundle.js"></script>
-
+		<script src="js/bundle.vendor.js"></script>
+		<script src="js/bundle.js"></script>
 	</body>
 </html>

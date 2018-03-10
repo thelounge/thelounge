@@ -32,7 +32,7 @@ $(function() {
 	const contextMenuContainer = $("#context-menu-container");
 	const contextMenu = $("#context-menu");
 
-	$("#main").on("click", function(e) {
+	$("#windows").on("click", function(e) {
 		const isOpen = slideoutMenu.isOpen();
 
 		if (isOpen || $(e.target).is(".lt")) {

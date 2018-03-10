@@ -3,32 +3,12 @@
  */
 
 body {
-	margin: 0;
-}
-
-.signed-out #main {
-	left: 5px;
-}
-
-#sidebar {
-	bottom: 52px;
+	padding: 4px;
 }
 
 #footer {
 	border-radius: 2px;
-	bottom: 4px;
-	left: 5px;
-	width: 210px;
-}
-
-#main {
-	bottom: 4px;
-	right: 5px;
-	top: 4px;
-}
-
-#chat .unhandled .from {
-	color: #ddd;
+	width: 216px;
 }
 
 #windows .window::before {
@@ -40,6 +20,7 @@ body {
 	height: 10px;
 	position: relative;
 	z-index: 10;
+	flex-shrink: 0;
 }
 
 #windows .window {
@@ -47,20 +28,13 @@ body {
 }
 
 @media (max-width: 768px) {
-	#sidebar {
-		left: -220px;
+	body {
+		padding: 0;
 	}
 
 	#footer {
-		left: -215px;
-		width: 215px;
-	}
-
-	#main {
-		left: 0;
-		bottom: 0;
-		right: 0;
-		top: 0;
+		border-radius: 0;
+		width: inherit;
 	}
 
 	#windows .window::before {
