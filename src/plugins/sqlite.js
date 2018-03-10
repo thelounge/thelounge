@@ -35,7 +35,7 @@ class MessageStorage {
 
 		this.isEnabled = true;
 
-		this.database = new sqlite3.cached.Database(sqlitePath);
+		this.database = new sqlite3.Database(sqlitePath);
 		this.database.serialize(() => {
 			schema.forEach((line) => this.database.run(line));
 
@@ -65,6 +65,22 @@ class MessageStorage {
 
 				this.database.serialize(() => this.database.run("UPDATE options SET value = ? WHERE name = 'schema_version'", currentSchemaVersion));
 			});
+		});
+	}
+
+	close(callback) {
+		if (!this.isEnabled) {
+			return;
+		}
+
+		this.database.close((err) => {
+			if (err) {
+				log.error(`Failed to close sqlite database: ${err}`);
+			}
+
+			if (callback) {
+				callback(err);
+			}
 		});
 	}
 
