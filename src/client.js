@@ -537,6 +537,10 @@ Client.prototype.quit = function(signOut) {
 
 		network.destroy();
 	});
+
+	if (this.messageStorage) {
+		this.messageStorage.close();
+	}
 };
 
 Client.prototype.clientAttach = function(socketId, token) {
