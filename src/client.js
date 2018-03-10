@@ -270,9 +270,14 @@ Client.prototype.connect = function(args) {
 	});
 
 	network.irc.requestCap([
-		"znc.in/self-message", // Legacy echo-message for ZNc
-		"znc.in/playback", // http://wiki.znc.in/Playback
+		"znc.in/self-message", // Legacy echo-message for ZNC
 	]);
+
+	// Request only new messages from ZNC if we have sqlite logging enabled
+	// See http://wiki.znc.in/Playback
+	if (client.config.log && Helper.config.messageStorage.includes("sqlite")) {
+		network.irc.requestCap("znc.in/playback");
+	}
 
 	events.forEach((plugin) => {
 		require(`./plugins/irc-events/${plugin}`).apply(client, [
