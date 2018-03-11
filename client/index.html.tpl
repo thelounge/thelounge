@@ -47,8 +47,8 @@
 			<article id="windows">
 				<div id="loading" class="window active">
 					<div id="loading-status-container">
-						<img src="img/logo-vertical-transparent-bg.svg" class="loading-logo-bright" alt="The Lounge" width="256" height="170">
-						<img src="img/logo-vertical-transparent-dark.svg" class="loading-logo-dark" alt="The Lounge" width="256" height="170">
+						<img src="img/logo-vertical-transparent-bg.svg" class="logo" alt="The Lounge" width="256" height="170">
+						<img src="img/logo-vertical-transparent-bg-inverted.svg" class="logo-inverted" alt="The Lounge" width="256" height="170">
 						<p id="loading-page-message"><a href="https://enable-javascript.com/" target="_blank" rel="noopener">Your JavaScript must be enabled.</a></p>
 					</div>
 					<div id="loading-reload-container">

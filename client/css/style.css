@@ -1553,19 +1553,21 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
+	width: 100%;
 }
 
 #loading-reload-container {
 	flex-grow: 0;
 }
 
-.loading-logo-dark {
-	display: none;
+.logo-inverted {
+	display: none; /* In dark themes, inverted logo must be used instead */
 }
 
 #sign-in label {
 	display: block;
 	margin-top: 10px;
+	width: 100%;
 }
 
 #sign-in .btn {
@@ -1574,7 +1576,9 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #sign-in .error {
 	color: #e74c3c;
+	display: none; /* This message gets displayed on error only */
 	margin-top: 1em;
+	width: 100%;
 }
 
 #connect label {
@@ -2330,6 +2334,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 @media (max-width: 479px) {
 	.container {
 		margin: 10px 0 !important;
+	}
+
+	#sign-in .btn {
+		width: 100%;
 	}
 
 	#connect .tls {
