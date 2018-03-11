@@ -283,7 +283,7 @@ kbd {
 #chat .lobby .title::before { content: "\f233"; /* https://fontawesome.com/icons/server?style=solid */ }
 
 #sidebar .not-secure-icon::before {
-	content: "\f09c"; /* https://fontawesome.com/v4.7.0/icon/unlock/ */
+	content: "\f071"; /* https://fontawesome.com/icons/exclamation-triangle?style=solid */
 }
 
 #sidebar .not-connected-icon::before {
