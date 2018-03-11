@@ -172,6 +172,7 @@ function renderChannelUsers(data) {
 		.find(".search")
 		.prop("placeholder", nicks.length + " " + (nicks.length === 1 ? "user" : "users"));
 
+	data.users.forEach((user) => user.dontRenderMode = true);
 	users
 		.data("nicks", nicks)
 		.find(".names-original")
