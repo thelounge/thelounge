@@ -4,6 +4,7 @@ const Chan = require("../../models/chan");
 const Msg = require("../../models/msg");
 const LinkPrefetch = require("./link");
 const cleanIrcMessage = require("../../../client/js/libs/handlebars/ircmessageparser/cleanIrcMessage");
+const Helper = require("../../helper");
 const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\w[\]\\`^{|}-]+)/g;
 
 module.exports = function(irc, network) {
@@ -43,11 +44,20 @@ module.exports = function(irc, network) {
 		let showInActive = false;
 		const self = data.nick === irc.user.nick;
 
+		// Check if the sender is in our ignore list
+		const shouldIgnore = network.ignoreList.some(function(entry) {
+			return Helper.compareHostmask(entry, data);
+		});
+
 		// Server messages go to server window, no questions asked
 		if (data.from_server) {
 			chan = network.channels[0];
 			from = chan.getUser(data.nick);
 		} else {
+			if (shouldIgnore) {
+				return;
+			}
+
 			let target = data.target;
 
 			// If the message is targeted at us, use sender as target instead

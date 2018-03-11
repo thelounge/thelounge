@@ -38,6 +38,8 @@ const commands = [
 	"/expand",
 	"/ho",
 	"/hs",
+	"/ignore",
+	"/ignorelist",
 	"/invite",
 	"/join",
 	"/kick",
@@ -64,6 +66,7 @@ const commands = [
 	"/slap",
 	"/topic",
 	"/unban",
+	"/unignore",
 	"/voice",
 	"/whois",
 ];

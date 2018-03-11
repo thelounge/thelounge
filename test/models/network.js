@@ -47,6 +47,7 @@ describe("Network", function() {
 					{name: "&secure", key: "bar"},
 					{name: "PrivateChat", type: "query"},
 				],
+				ignoreList: [],
 			});
 		});
 
