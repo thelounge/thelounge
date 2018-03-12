@@ -1,10 +1,11 @@
 @font-face {
+	/* We use free solid icons - https://fontawesome.com/icons?s=solid&m=free */
 	font-family: "FontAwesome";
 	font-weight: normal;
 	font-style: normal;
 	src:
-		url("../fonts/fontawesome-webfont.woff2?v=4.7.0") format("woff2"),
-		url("../fonts/fontawesome-webfont.woff?v=4.7.0") format("woff");
+		url("../fonts/fa-solid-900.woff2") format("woff2"),
+		url("../fonts/fa-solid-900.woff") format("woff");
 }
 
 html,
@@ -262,7 +263,7 @@ kbd {
 #viewport .lt::before { content: "\f0c9"; /* http://fontawesome.io/icon/bars/ */ }
 
 #viewport .rt::before {
-	content: "\f0c0"; /* http://fontawesome.io/icon/users/ */
+	content: "\f0c0"; /* https://fontawesome.com/icons/users?style=solid */
 	line-height: 36px; /* fix alignment in Microsoft Edge */
 }
 
@@ -279,20 +280,20 @@ kbd {
 .context-menu-action-kick::before { content: "\f05e"; /* http://fontawesome.io/icon/ban/ */ }
 
 .context-menu-network::before,
-#chat .lobby .title::before { content: "\f0a0"; /* http://fontawesome.io/icon/hdd-o/ */ }
+#chat .lobby .title::before { content: "\f233"; /* https://fontawesome.com/icons/server?style=solid */ }
 
 #sidebar .not-secure-icon::before {
-	content: "\f09c"; /* https://fontawesome.com/v4.7.0/icon/unlock/ */
+	content: "\f071"; /* https://fontawesome.com/icons/exclamation-triangle?style=solid */
 }
 
 #sidebar .not-connected-icon::before {
-	content: "\f127"; /* https://fontawesome.com/v4.7.0/icon/chain-broken/ TODO v5: unlink */
+	content: "\f127"; /* https://fontawesome.com/icons/unlink?style=solid */
 }
 
 .context-menu-query::before,
 .context-menu-action-query::before,
 #sidebar .chan.query::before,
-#chat .query .title::before { content: "\f0e5"; /* http://fontawesome.io/icon/comment-o/ */ }
+#chat .query .title::before { content: "\f075"; /* https://fontawesome.com/icons/comment?style=solid */ }
 
 .context-menu-chan::before,
 #sidebar .chan.channel::before,
@@ -311,7 +312,7 @@ kbd {
 
 #chat .away .from::before,
 #chat .back .from::before {
-	content: "\f017"; /* http://fontawesome.io/icon/clock-o/ */
+	content: "\f017"; /* https://fontawesome.com/icons/clock?style=solid */
 	color: #7f8c8d;
 }
 
@@ -340,7 +341,7 @@ kbd {
 }
 
 #chat .invite .from::before {
-	content: "\f003"; /* http://fontawesome.io/icon/envelope-o/ */
+	content: "\f0e0"; /* https://fontawesome.com/icons/envelope?style=solid */
 	color: #2ecc40;
 }
 
@@ -365,7 +366,7 @@ kbd {
 
 #chat .ctcp .from::before,
 #chat .ctcp_request .from::before {
-	content: "\f0f6"; /* http://fontawesome.io/icon/file-text-o/ */
+	content: "\f15c"; /* https://fontawesome.com/icons/file-alt?style=solid */
 }
 
 #chat .whois .from::before {
@@ -428,7 +429,7 @@ kbd {
 }
 
 #set-nick::before {
-	content: "\f040"; /* http://fontawesome.io/icon/pencil/ */
+	content: "\f303"; /* https://fontawesome.com/icons/pencil-alt?style=solid */
 }
 
 #submit-nick::before {
@@ -1785,7 +1786,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #version-checker.loading::before {
-	content: "\f250"; /* http://fontawesome.io/icon/hourglass-o/ */
+	content: "\f253"; /* https://fontawesome.com/icons/hourglass-end?style=solid */
 }
 
 #version-checker.new-version {
@@ -1794,7 +1795,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #version-checker.new-version::before {
-	content: "\f087"; /* http://fontawesome.io/icon/thumbs-o-up/ */
+	content: "\f164"; /* https://fontawesome.com/icons/thumbs-up?style=solid */
 }
 
 #version-checker.error {
