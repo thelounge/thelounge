@@ -52,7 +52,7 @@
     "package-json": "4.0.1",
     "primer-tooltips": "1.5.2",
     "read": "1.0.7",
-    "request": "2.83.0",
+    "request": "2.85.0",
     "semver": "5.5.0",
     "socket.io": "2.0.4",
     "spdy": "3.4.7",
