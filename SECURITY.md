@@ -6,4 +6,4 @@
   manner.
 - On IRC, send a private message to any voiced user on our Freenode channel,
   `#thelounge`.
-- By email, send us your report at <mailto:security@thelounge.chat>.
+- By email, send us your report at <security@thelounge.chat>.
