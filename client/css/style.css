@@ -347,7 +347,7 @@ kbd {
 
 #chat .part .from::before,
 #chat .quit .from::before {
-	content: "\f08b"; /* http://fontawesome.io/icon/sign-out/ */
+	content: "\f2f5"; /* https://fontawesome.com/icons/sign-out-alt?style=solid */
 	color: #ff4136;
 	display: inline-block;
 	-webkit-transform: rotate(180deg);
@@ -380,7 +380,7 @@ kbd {
 }
 
 #chat .join .from::before {
-	content: "\f090"; /* http://fontawesome.io/icon/sign-in/ */
+	content: "\f2f6"; /* https://fontawesome.com/icons/sign-in-alt?style=solid */
 	color: #2ecc40;
 }
 
