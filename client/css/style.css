@@ -350,7 +350,6 @@ kbd {
 	content: "\f2f5"; /* https://fontawesome.com/icons/sign-out-alt?style=solid */
 	color: #ff4136;
 	display: inline-block;
-	-webkit-transform: rotate(180deg);
 	transform: rotate(180deg);
 }
 
@@ -450,9 +449,15 @@ kbd {
 
 /* End icons */
 
-#wrap {
+#viewport {
+	display: flex;
 	height: 100%;
 	overflow: hidden;
+}
+
+#windows {
+	flex: 1 0 auto;
+	position: relative;
 }
 
 #chat button,
@@ -514,13 +519,9 @@ kbd {
 }
 
 #sidebar {
-	bottom: 45px;
-	left: 0;
-	overflow: auto;
-	overflow-x: hidden;
+	display: flex;
+	flex-direction: column;
 	-webkit-overflow-scrolling: touch;
-	position: absolute;
-	top: 0;
 	width: 220px;
 }
 
@@ -554,10 +555,13 @@ kbd {
 #sidebar .networks {
 	padding-top: 20px;
 	touch-action: pan-y;
+	flex-grow: 1;
+	overflow: auto;
+	overflow-x: hidden;
 }
 
 #sidebar .networks:empty {
-	padding: 0;
+	display: none;
 }
 
 #sidebar .network,
@@ -568,6 +572,7 @@ kbd {
 }
 
 #sidebar .empty {
+	flex-grow: 1;
 	line-height: 1.6;
 	padding: 40px 20px;
 	text-align: center;
@@ -773,14 +778,12 @@ kbd {
 
 #footer {
 	background: rgba(0, 0, 0, 0.06);
-	bottom: 0;
 	height: 45px;
-	left: 0;
 	font-size: 14px;
 	line-height: 45px;
-	position: absolute;
 	text-align: center;
 	width: 220px;
+	flex-shrink: 0;
 }
 
 #footer button.active {
@@ -817,28 +820,8 @@ kbd {
 	display: none;
 }
 
-#main {
-	bottom: 0;
-	left: 220px;
-	position: absolute;
-	right: 0;
-	top: 0;
-	display: -webkit-flex;
-	display: flex;
-	-webkit-flex-direction: column;
-	flex-direction: column;
-}
-
-.signed-out #main {
-	left: 0; /* Hide the sidebar when user is signed out */
-}
-
-#header {
-	display: none;
-	height: 40px;
-	position: absolute;
-	top: 0;
-	width: 100%;
+.signed-out #sidebar {
+	display: none; /* Hide the sidebar when user is signed out */
 }
 
 #windows li,
@@ -881,14 +864,20 @@ kbd {
 
 #windows .window {
 	background: #fff;
-	bottom: 0;
 	display: none;
-	left: 0;
+	overflow-y: auto;
+	height: 100%;
+	-webkit-overflow-scrolling: touch;
+}
+
+#chat .chan,
+#windows .window {
+	/* flexbox does not seem to scroll without doing this */
 	position: absolute;
+	bottom: 0;
+	left: 0;
 	right: 0;
 	top: 0;
-	overflow-y: auto;
-	-webkit-overflow-scrolling: touch;
 }
 
 #windows .window h1 {
@@ -915,7 +904,8 @@ kbd {
 }
 
 #windows .active {
-	display: block;
+	display: flex;
+	flex-direction: column;
 }
 
 #windows .header {
@@ -923,6 +913,8 @@ kbd {
 	line-height: 48px;
 	height: 48px;
 	padding: 0 6px;
+	display: flex;
+	flex-shrink: 0;
 	overflow: hidden;
 }
 
@@ -943,40 +935,24 @@ kbd {
 	font-size: 14px;
 }
 
-#windows .window .header {
-	display: none;
-}
-
-#chat-container,
-#chat .chan {
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-}
-
 #windows #chat-container.active {
-	display: -webkit-flex;
 	display: flex;
-	-webkit-flex-direction: column;
 	flex-direction: column;
 }
 
 #chat {
-	position: relative;
 	overflow: hidden;
-	-webkit-flex: 1;
-	flex: 1;
+	flex: 1 0 auto;
+	position: relative;
 }
 
 #chat .chan {
 	display: none;
+	flex-direction: column;
 }
 
 #chat .chan.active {
 	display: flex;
-	flex-direction: column;
 }
 
 #chat .condensed {
@@ -1031,11 +1007,6 @@ kbd {
 .userlist {
 	font-size: 14px;
 	line-height: 1.4;
-}
-
-#windows #chat .header {
-	display: flex;
-	flex-shrink: 0;
 }
 
 #chat .chat-content {
@@ -1477,6 +1448,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	background: #fafafa;
 	height: 48px;
 	flex-shrink: 0;
+	position: relative;
 }
 
 #chat .userlist .search {
@@ -1486,7 +1458,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	font: inherit;
 	outline: 0;
 	padding: 18px 16px;
-	position: relative;
 	width: 100%;
 }
 
@@ -1574,6 +1545,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	white-space: normal;
 }
 
+#sign-in .container,
 #loading-reload-container,
 #loading-status-container {
 	flex: 1 0 auto;
@@ -1824,7 +1796,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #form {
 	background: #eee;
 	border-top: 1px solid #ddd;
-	-webkit-flex: 0 0 auto;
 	flex: 0 0 auto;
 	padding: 5px;
 }
@@ -1835,9 +1806,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin: 0;
 	padding: 0;
 	background: white;
-	display: -webkit-flex;
 	display: flex;
-	-webkit-align-items: flex-end;
 	align-items: flex-end;
 }
 
@@ -1883,7 +1852,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	padding-left: 9px;
 	padding-right: 5px;
 	border-radius: 2px;
-	-webkit-flex: 0 0 auto;
 	flex: 0 0 auto;
 	border: 1px solid transparent;
 	transition: border-color 0.2s;
@@ -1932,7 +1900,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin: 5px;
 	padding: 0;
 	resize: none;
-	-webkit-flex: 1 0 auto;
 	flex: 1 0 auto;
 	align-self: center;
 	touch-action: pan-y;
@@ -1944,7 +1911,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	height: 32px;
 	transition: opacity 0.2s;
 	width: 32px;
-	-webkit-flex: 0 0 auto;
 	flex: 0 0 auto;
 }
 
@@ -2308,46 +2274,35 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		font-size: 15px;
 	}
 
-	#viewport {
+	#sidebar {
+		background: #455164;
 		height: 100%;
-		transition: transform 160ms, -webkit-transform 160ms;
-		-webkit-transform: translateZ(0);
+		position: absolute;
+		left: -220px;
+		z-index: 1;
+		transition: transform 160ms;
 		transform: translateZ(0);
 	}
 
-	#viewport.menu-open {
-		-webkit-transform: translate3d(220px, 0, 0);
+	#sidebar.menu-open {
 		transform: translate3d(220px, 0, 0);
 	}
 
-	#viewport.menu-dragging {
+	#sidebar.menu-dragging {
 		transition: none !important;
 	}
 
-	#viewport.menu-open .messages {
+	#sidebar.menu-open .messages {
 		pointer-events: none;
-	}
-
-	#sidebar,
-	#footer {
-		left: -220px;
 	}
 
 	#sidebar .empty::before {
 		margin-top: 0;
 	}
 
-	#main {
-		left: 0;
-	}
-
 	#viewport .lt,
 	#viewport .channel .rt {
 		display: flex;
-	}
-
-	#windows .window .header {
-		display: block;
 	}
 
 	#chat .userlist {

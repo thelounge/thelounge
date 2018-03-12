@@ -1,6 +1,5 @@
 "use strict";
 
-const viewport = document.getElementById("viewport");
 const menu = document.getElementById("sidebar");
 
 let touchStartPos = null;
@@ -12,12 +11,12 @@ let menuIsMoving = false;
 
 class SlideoutMenu {
 	static enable() {
-		viewport.addEventListener("touchstart", onTouchStart, {passive: true});
+		document.body.addEventListener("touchstart", onTouchStart, {passive: true});
 	}
 
 	static toggle(state) {
 		menuIsOpen = state;
-		viewport.classList.toggle("menu-open", state);
+		menu.classList.toggle("menu-open", state);
 	}
 
 	static isOpen() {
@@ -40,9 +39,9 @@ function onTouchStart(e) {
 		touchCurPos = touch;
 		touchStartTime = Date.now();
 
-		viewport.classList.toggle("menu-dragging", true);
-		viewport.addEventListener("touchmove", onTouchMove);
-		viewport.addEventListener("touchend", onTouchEnd, {passive: true});
+		menu.classList.toggle("menu-dragging", true);
+		document.body.addEventListener("touchmove", onTouchMove);
+		document.body.addEventListener("touchend", onTouchEnd, {passive: true});
 	}
 }
 
@@ -69,7 +68,7 @@ function onTouchMove(e) {
 		setX = 0;
 	}
 
-	viewport.style.transform = "translate3d(" + setX + "px, 0, 0)";
+	menu.style.transform = "translate3d(" + setX + "px, 0, 0)";
 
 	if (menuIsMoving) {
 		e.preventDefault();
@@ -85,10 +84,10 @@ function onTouchEnd() {
 		SlideoutMenu.toggle(diff > 0);
 	}
 
-	viewport.removeEventListener("touchmove", onTouchMove);
-	viewport.removeEventListener("touchend", onTouchEnd);
-	viewport.classList.toggle("menu-dragging", false);
-	viewport.style.transform = null;
+	document.body.removeEventListener("touchmove", onTouchMove);
+	document.body.removeEventListener("touchend", onTouchEnd);
+	menu.classList.toggle("menu-dragging", false);
+	menu.style.transform = null;
 
 	touchStartPos = null;
 	touchCurPos = null;
