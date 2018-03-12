@@ -67,11 +67,13 @@ module.exports = function(irc, network) {
 						type: Chan.Type.QUERY,
 						name: target,
 					});
-					network.channels.push(chan);
+
 					client.emit("join", {
 						network: network.id,
 						chan: chan.getFilteredClone(true),
+						index: network.addChannel(chan),
 					});
+					client.save();
 					chan.loadMessages(client, network);
 				}
 			}

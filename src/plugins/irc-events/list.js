@@ -46,10 +46,11 @@ module.exports = function(irc, network) {
 				type: Chan.Type.SPECIAL,
 				name: "Channel List",
 			});
-			network.channels.push(chan);
+
 			client.emit("join", {
 				network: network.id,
 				chan: chan.getFilteredClone(true),
+				index: network.addChannel(chan),
 			});
 		}
 

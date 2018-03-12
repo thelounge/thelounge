@@ -128,6 +128,28 @@ Network.prototype.getNetworkStatus = function() {
 	return status;
 };
 
+Network.prototype.addChannel = function(newChan) {
+	let index = this.channels.length; // Default to putting as the last item in the array
+
+	// Don't sort special channels in amongst channels/users.
+	if (newChan.type === Chan.Type.CHANNEL || newChan.type === Chan.Type.QUERY) {
+		// We start at 1 so we don't test against the lobby
+		for (let i = 1; i < this.channels.length; i++) {
+			const compareChan = this.channels[i];
+
+			// Negative if the new chan is alphabetically before the next chan in the list, positive if after
+			if (newChan.name.localeCompare(compareChan.name, {sensitivity: "base"}) <= 0
+				|| (compareChan.type !== Chan.Type.CHANNEL && compareChan.type !== Chan.Type.QUERY)) {
+				index = i;
+				break;
+			}
+		}
+	}
+
+	this.channels.splice(index, 0, newChan);
+	return index;
+};
+
 Network.prototype.export = function() {
 	const network = _.pick(this, [
 		"uuid",

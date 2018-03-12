@@ -10,11 +10,12 @@ const sidebar = $("#sidebar");
 socket.on("join", function(data) {
 	const id = data.network;
 	const network = sidebar.find(`#network-${id}`);
-	network.append(
-		templates.chan({
-			channels: [data.chan],
-		})
-	);
+	const channels = network.children();
+	const position = $(channels[data.index || channels.length - 1]); // Put channel in correct position, or the end if we don't have one
+	const sidebarEntry = templates.chan({
+		channels: [data.chan],
+	});
+	$(sidebarEntry).insertAfter(position);
 	chat.append(
 		templates.chat({
 			channels: [data.chan],
