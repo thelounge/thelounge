@@ -107,6 +107,11 @@ const colorsHotkeys = {
 
 for (const hotkey in colorsHotkeys) {
 	Mousetrap.bind("mod+" + hotkey, function(e) {
+		// Do not handle modifier hotkeys if input is not focused
+		if (document.activeElement !== input[0]) {
+			return;
+		}
+
 		e.preventDefault();
 
 		const modifier = colorsHotkeys[e.key];
