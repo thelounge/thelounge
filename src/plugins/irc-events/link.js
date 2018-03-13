@@ -41,7 +41,7 @@ module.exports = function(client, chan, msg) {
 	}
 
 	msg.previews = Array.from(new Set( // Remove duplicate links
-		links.map((link) => normalizeURL(link.link))
+		links.map((link) => link.link)
 	)).map((link) => ({
 		type: "loading",
 		head: "",
@@ -52,7 +52,7 @@ module.exports = function(client, chan, msg) {
 	})).slice(0, 5); // Only preview the first 5 URLs in message to avoid abuse
 
 	msg.previews.forEach((preview) => {
-		fetch(preview.link, {language: client.language}, function(res, err) {
+		fetch(normalizeURL(preview.link), {language: client.language}, function(res, err) {
 			if (err) {
 				preview.type = "error";
 				preview.error = "message";
