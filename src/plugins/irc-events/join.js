@@ -15,12 +15,13 @@ module.exports = function(irc, network) {
 				name: data.channel,
 				state: Chan.State.JOINED,
 			});
-			network.channels.push(chan);
-			client.save();
+
 			client.emit("join", {
 				network: network.id,
 				chan: chan.getFilteredClone(true),
+				index: network.addChannel(chan),
 			});
+			client.save();
 
 			chan.loadMessages(client, network);
 

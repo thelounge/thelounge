@@ -13,13 +13,15 @@ module.exports = function(irc, network) {
 				type: Chan.Type.QUERY,
 				name: data.nick,
 			});
-			network.channels.push(chan);
+
 			client.emit("join", {
 				shouldOpen: true,
 				network: network.id,
 				chan: chan.getFilteredClone(true),
+				index: network.addChannel(chan),
 			});
 			chan.loadMessages(client, network);
+			client.save();
 		}
 
 		let msg;
