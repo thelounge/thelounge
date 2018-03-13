@@ -63,8 +63,8 @@ if (typeof userSettings.userStyles === "string" && !noCSSparamReg.test(window.lo
 	$userStyles.html(userSettings.userStyles);
 }
 
-if (typeof userSettings.theme === "string") {
-	$theme.prop("href", `themes/${userSettings.theme}.css`);
+if (typeof userSettings.theme === "string" && $theme.attr("href") !== `themes/${userSettings.theme}.css`) {
+	$theme.attr("href", `themes/${userSettings.theme}.css`);
 }
 
 userSettings = null;
@@ -110,7 +110,11 @@ function applySetting(name, value) {
 	} else if (name === "coloredNicks") {
 		$chat.toggleClass("colored-nicks", value);
 	} else if (name === "theme") {
-		$theme.prop("href", `themes/${value}.css`);
+		value = `themes/${value}.css`;
+
+		if ($theme.attr("href") !== value) {
+			$theme.attr("href", value);
+		}
 	} else if (name === "userStyles" && !noCSSparamReg.test(window.location.search)) {
 		$userStyles.html(value);
 	} else if (name === "highlights") {
