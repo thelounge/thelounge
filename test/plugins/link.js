@@ -284,6 +284,19 @@ describe("Link plugin", function() {
 		link(this.irc, this.network.channels[0], message);
 	});
 
+	it("should not add slash to url", function(done) {
+		const message = this.irc.createMessage({
+			text: "http://localhost:9002",
+		});
+
+		link(this.irc, this.network.channels[0], message);
+
+		this.irc.once("msg:preview", function(data) {
+			expect(data.preview.link).to.equal("http://localhost:9002");
+			done();
+		});
+	});
+
 	it("should work on non-ASCII urls", function(done) {
 		const message = this.irc.createMessage({
 			text:
@@ -310,11 +323,11 @@ describe("Link plugin", function() {
 		this.irc.on("msg:preview", function(data) {
 			previews.push(data.preview.link);
 
-			if (data.preview.link.includes("%C4%B1o%C4%B1-test")) {
+			if (data.preview.link.includes("ıoı-test")) {
 				expect(data.preview.head).to.equal("ıoı-test");
-			} else if (data.preview.link.includes("%D1%80%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9-%D1%82%D0%B5%D0%BA%D1%81%D1%82-test")) {
+			} else if (data.preview.link.includes("русский-текст-test")) {
 				expect(data.preview.head).to.equal("русский-текст-test");
-			} else if (data.preview.link.includes("%F0%9F%99%88-emoji-test")) {
+			} else if (data.preview.link.includes("🙈-emoji-test")) {
 				expect(data.preview.head).to.equal("🙈-emoji-test");
 			} else {
 				expect("This should never happen").to.equal(data.preview.link);
