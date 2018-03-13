@@ -21,6 +21,7 @@ require("./keybinds");
 require("./clipboard");
 const Changelog = require("./socket-events/changelog");
 const JoinChannel = require("./join-channel");
+require("../css/style.css");
 
 $(function() {
 	const sidebar = $("#sidebar, #footer");
