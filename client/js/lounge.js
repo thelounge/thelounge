@@ -223,16 +223,6 @@ $(function() {
 				input.trigger("focus");
 			}
 		};
-
-		$(window).on("focus", focus);
-
-		chat.on("click", ".chat", function() {
-			setTimeout(function() {
-				if (window.getSelection().isCollapsed) {
-					focus();
-				}
-			}, 2);
-		});
 	}
 
 	if (navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i)) {
@@ -241,7 +231,7 @@ $(function() {
 
 	$("#form").on("submit", function(e) {
 		e.preventDefault();
-		utils.forceFocus();
+		focus();
 		const target = chat.data("id");
 		const text = input.val();
 
