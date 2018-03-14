@@ -221,7 +221,6 @@ kbd {
 #viewport .rt::before,
 #chat button.menu::before,
 #sidebar .chan::before,
-#chat .title::before,
 #footer .icon,
 #chat .count::before,
 #settings .extra-experimental,
@@ -278,9 +277,7 @@ kbd {
 .context-menu-list::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
 .context-menu-action-whois::before { content: "\f05a"; /* http://fontawesome.io/icon/info-circle/  */ }
 .context-menu-action-kick::before { content: "\f05e"; /* http://fontawesome.io/icon/ban/ */ }
-
-.context-menu-network::before,
-#chat .lobby .title::before { content: "\f233"; /* https://fontawesome.com/icons/server?style=solid */ }
+.context-menu-network::before { content: "\f233"; /* https://fontawesome.com/icons/server?style=solid */ }
 
 #sidebar .not-secure-icon::before {
 	content: "\f071"; /* https://fontawesome.com/icons/exclamation-triangle?style=solid */
@@ -292,15 +289,12 @@ kbd {
 
 .context-menu-query::before,
 .context-menu-action-query::before,
-#sidebar .chan.query::before,
-#chat .query .title::before { content: "\f075"; /* https://fontawesome.com/icons/comment?style=solid */ }
+#sidebar .chan.query::before { content: "\f075"; /* https://fontawesome.com/icons/comment?style=solid */ }
 
 .context-menu-chan::before,
-#sidebar .chan.channel::before,
-#chat .channel .title::before { content: "\f086"; /* http://fontawesome.io/icon/comments/ */ }
+#sidebar .chan.channel::before { content: "\f086"; /* http://fontawesome.io/icon/comments/ */ }
 
-#sidebar .chan.special::before,
-#chat .special .title::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
+#sidebar .chan.special::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
 
 #footer .sign-in::before { content: "\f023"; /* http://fontawesome.io/icon/lock/ */ }
 #footer .connect::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
@@ -491,7 +485,6 @@ kbd {
 }
 
 #viewport .lt {
-	display: none;
 	position: relative;
 }
 
@@ -525,7 +518,8 @@ kbd {
 	width: 220px;
 }
 
-#viewport.menu-open #sidebar {
+#sidebar.menu-open {
+	display: none;
 	will-change: transform;
 }
 
@@ -637,13 +631,9 @@ kbd {
 	color: #f1978e;
 }
 
-#sidebar .chan::before,
-#chat .title::before {
+#sidebar .chan::before {
 	width: 14px;
 	margin-right: 12px;
-}
-
-#sidebar .chan::before {
 	line-height: 18px;
 }
 
@@ -920,7 +910,7 @@ kbd {
 
 #windows .header .title {
 	font-size: 15px;
-	padding-left: 14px;
+	padding-left: 6px;
 	flex-shrink: 0;
 }
 
@@ -2285,6 +2275,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	}
 
 	#sidebar.menu-open {
+		display: flex;
 		transform: translate3d(220px, 0, 0);
 	}
 
@@ -2320,10 +2311,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 	#chat .header .title {
 		padding-left: 6px;
-	}
-
-	#chat .title::before {
-		display: none;
 	}
 }
 
