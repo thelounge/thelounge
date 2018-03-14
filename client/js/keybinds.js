@@ -2,7 +2,8 @@
 
 const $ = require("jquery");
 const Mousetrap = require("mousetrap");
-const input = $("#input");
+const wrapCursor = require("undate").wrapCursor;
+const input = $("#input").get(0);
 const sidebar = $("#sidebar");
 const windows = $("#windows");
 const contextMenuContainer = $("#context-menu-container");
@@ -78,21 +79,8 @@ for (const hotkey in colorsHotkeys) {
 	Mousetrap.bind("mod+" + hotkey, function(e) {
 		e.preventDefault();
 
-		const cursorPosStart = input.prop("selectionStart");
-		const cursorPosEnd = input.prop("selectionEnd");
-		const value = input.val();
-		let newValue = value.substring(0, cursorPosStart) + colorsHotkeys[e.key];
+		const modifier = colorsHotkeys[e.key];
 
-		if (cursorPosStart === cursorPosEnd) {
-			// If no text is selected, insert at cursor
-			newValue += value.substring(cursorPosEnd, value.length);
-		} else {
-			// If text is selected, insert formatting character at start and the end
-			newValue += value.substring(cursorPosStart, cursorPosEnd) + colorsHotkeys[e.key] + value.substring(cursorPosEnd, value.length);
-		}
-
-		input
-			.val(newValue)
-			.get(0).setSelectionRange(cursorPosStart + 1, cursorPosEnd + 1);
+		wrapCursor(input, modifier, input.selectionStart === input.selectionEnd ? "" : modifier);
 	});
 }
