@@ -49,25 +49,48 @@
 
 	<div class="help-item">
 		<div class="subject">
-			<kbd class="key-all">Alt</kbd><kbd class="key-apple">⌥</kbd> + <kbd>Shift</kbd> + <kbd>↑</kbd> / <kbd>↓</kbd>
+			<span class="key-all"><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>↓</kbd></span>
+			<span class="key-apple"><kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>↓</kbd></span>
 		</div>
 		<div class="description">
-			<p>Switch to the previous/next lobby in the channel list.</p>
+			<p>Switch to the next lobby in the channel list.</p>
 		</div>
 	</div>
 
 	<div class="help-item">
 		<div class="subject">
-			<kbd class="key-all">Alt</kbd><kbd class="key-apple">⌥</kbd> + <kbd>↑</kbd> / <kbd>↓</kbd>
+			<span class="key-all"><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>↑</kbd></span>
+			<span class="key-apple"><kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>↑</kbd></span>
 		</div>
 		<div class="description">
-			<p>Switch to the previous/next window in the channel list.</p>
+			<p>Switch to the previous lobby in the channel list.</p>
 		</div>
 	</div>
 
 	<div class="help-item">
 		<div class="subject">
-			<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>K</kbd>
+			<span class="key-all"><kbd>Alt</kbd> <kbd>↓</kbd></span>
+			<span class="key-apple"><kbd>⌥</kbd> <kbd>↓</kbd></span>
+		</div>
+		<div class="description">
+			<p>Switch to the next window in the channel list.</p>
+		</div>
+	</div>
+
+	<div class="help-item">
+		<div class="subject">
+			<span class="key-all"><kbd>Alt</kbd> <kbd>↑</kbd></span>
+			<span class="key-apple"><kbd>⌥</kbd> <kbd>↑</kbd></span>
+		</div>
+		<div class="description">
+			<p>Switch to the previous window in the channel list.</p>
+		</div>
+	</div>
+
+	<div class="help-item">
+		<div class="subject">
+			<span class="key-all"><kbd>Ctrl</kbd> <kbd>K</kbd></span>
+			<span class="key-apple"><kbd>⌘</kbd> <kbd>K</kbd></span>
 		</div>
 		<div class="description">
 			<p>
@@ -90,52 +113,58 @@
 
 	<div class="help-item">
 		<div class="subject">
-			<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>B</kbd>
+			<span class="key-all"><kbd>Ctrl</kbd> <kbd>B</kbd></span>
+			<span class="key-apple"><kbd>⌘</kbd> <kbd>B</kbd></span>
 		</div>
 		<div class="description">
-			<p>Mark all text typed after this shortcut as bold.</p>
+			<p>Mark all text typed after this shortcut as <span class="irc-bold">bold</span>.</p>
 		</div>
 	</div>
 
 	<div class="help-item">
 		<div class="subject">
-			<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>U</kbd>
+			<span class="key-all"><kbd>Ctrl</kbd> <kbd>U</kbd></span>
+			<span class="key-apple"><kbd>⌘</kbd> <kbd>U</kbd></span>
 		</div>
 		<div class="description">
-			<p>Mark all text typed after this shortcut as underlined.</p>
+			<p>Mark all text typed after this shortcut as <span class="irc-underline">underlined</span>.</p>
 		</div>
 	</div>
 
 	<div class="help-item">
 		<div class="subject">
-			<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>I</kbd>
+			<span class="key-all"><kbd>Ctrl</kbd> <kbd>I</kbd></span>
+			<span class="key-apple"><kbd>⌘</kbd> <kbd>I</kbd></span>
 		</div>
 		<div class="description">
-			<p>Mark all text typed after this shortcut as italics.</p>
+			<p>Mark all text typed after this shortcut as <span class="irc-italic">italics</span>.</p>
 		</div>
 	</div>
 
 	<div class="help-item">
 		<div class="subject">
-			<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>S</kbd>
+			<span class="key-all"><kbd>Ctrl</kbd> <kbd>S</kbd></span>
+			<span class="key-apple"><kbd>⌘</kbd> <kbd>S</kbd></span>
 		</div>
 		<div class="description">
-			<p>Mark all text typed after this shortcut as struck through.</p>
+			<p>Mark all text typed after this shortcut as <span class="irc-strikethrough">struck through</span>.</p>
 		</div>
 	</div>
 
 	<div class="help-item">
 		<div class="subject">
-			<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>M</kbd>
+			<span class="key-all"><kbd>Ctrl</kbd> <kbd>M</kbd></span>
+			<span class="key-apple"><kbd>⌘</kbd> <kbd>M</kbd></span>
 		</div>
 		<div class="description">
-			<p>Mark all text typed after this shortcut as monospaced.</p>
+			<p>Mark all text typed after this shortcut as <span class="irc-monospace">monospaced</span>.</p>
 		</div>
 	</div>
 
 	<div class="help-item">
 		<div class="subject">
-			<kbd class="key-all">Ctrl</kbd><kbd class="key-apple">⌘</kbd> + <kbd>O</kbd>
+			<span class="key-all"><kbd>Ctrl</kbd> <kbd>O</kbd></span>
+			<span class="key-apple"><kbd>⌘</kbd> <kbd>O</kbd></span>
 		</div>
 		<div class="description">
 			<p>
