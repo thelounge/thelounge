@@ -22,11 +22,11 @@ body {
 	color: #ccc;
 }
 
-.loading-logo-bright {
+.logo {
 	display: none;
 }
 
-.loading-logo-dark {
+.logo-inverted {
 	display: inline-block;
 }
 
