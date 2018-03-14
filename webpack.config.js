@@ -32,7 +32,7 @@ const config = {
 						options: {
 							allChunks: true,
 							importLoaders: 1,
-							minimize: true,
+							minimize: process.env.NODE_ENV === "production" ? true : false,
 							url: false,
 						},
 					},
