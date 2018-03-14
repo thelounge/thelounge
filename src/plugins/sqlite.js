@@ -73,6 +73,8 @@ class MessageStorage {
 			return;
 		}
 
+		this.isEnabled = false;
+
 		this.database.close((err) => {
 			if (err) {
 				log.error(`Failed to close sqlite database: ${err}`);
