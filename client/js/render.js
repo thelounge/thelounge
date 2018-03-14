@@ -308,6 +308,10 @@ function loadMoreHistory(entries) {
 sidebar.on("click", ".collapse-network", (e) => {
 	const collapseButton = $(e.target);
 
+	if (collapseButton.closest(".network").find(".active").length > 0) {
+		collapseButton.closest(".lobby").click();
+	}
+
 	collapseButton.closest(".network").toggleClass("collapsed");
 
 	if (collapseButton.attr("aria-expanded") === "true") {
