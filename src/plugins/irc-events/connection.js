@@ -75,7 +75,13 @@ module.exports = function(irc, network) {
 	let identSocketId;
 
 	irc.on("raw socket connected", function(socket) {
-		identSocketId = client.manager.identHandler.addSocket(socket, client.name || network.username);
+		let ident = client.name || network.username;
+
+		if (Helper.config.useHexIp) {
+			ident = Helper.ip2hex(network.ip);
+		}
+
+		identSocketId = client.manager.identHandler.addSocket(socket, ident);
 	});
 
 	irc.on("socket close", function(error) {
