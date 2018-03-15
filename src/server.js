@@ -307,9 +307,38 @@ function initializeClient(socket, client, token, lastMessage) {
 			data.ip = null;
 			data.hostname = null;
 			data.uuid = null;
+			data.commands = null;
 
 			client.connect(data);
 		}
+	});
+
+	socket.on("network:get", (data) => {
+		if (typeof data !== "string") {
+			return;
+		}
+
+		const network = _.find(client.networks, {uuid: data});
+
+		if (!network) {
+			return;
+		}
+
+		socket.emit("network:info", getClientConfiguration(network.export()));
+	});
+
+	socket.on("network:edit", (data) => {
+		if (typeof data !== "object") {
+			return;
+		}
+
+		const network = _.find(client.networks, {uuid: data.uuid});
+
+		if (!network) {
+			return;
+		}
+
+		network.edit(client, data);
 	});
 
 	if (!Helper.config.public && !Helper.config.ldap.enable) {
@@ -541,27 +570,22 @@ function initializeClient(socket, client, token, lastMessage) {
 	}
 }
 
-function getClientConfiguration() {
+function getClientConfiguration(network) {
 	const config = _.pick(Helper.config, [
 		"public",
 		"lockNetwork",
 		"displayNetwork",
 		"useHexIp",
-		"themes",
 		"prefetch",
 	]);
 
 	config.ldapEnabled = Helper.config.ldap.enable;
-	config.version = pkg.version;
-	config.gitCommit = Helper.getGitCommit();
-	config.themes = themes.getAll();
-	config.defaultTheme = Helper.config.theme;
 
 	if (config.displayNetwork) {
-		config.defaults = _.clone(Helper.config.defaults);
+		config.defaults = _.clone(network || Helper.config.defaults);
 	} else {
 		// Only send defaults that are visible on the client
-		config.defaults = _.pick(Helper.config.defaults, [
+		config.defaults = _.pick(network || Helper.config.defaults, [
 			"nick",
 			"username",
 			"password",
@@ -570,7 +594,13 @@ function getClientConfiguration() {
 		]);
 	}
 
-	config.defaults.nick = config.defaults.nick.replace(/%/g, () => Math.floor(Math.random() * 10));
+	if (!network) {
+		config.version = pkg.version;
+		config.gitCommit = Helper.getGitCommit();
+		config.themes = themes.getAll();
+		config.defaultTheme = Helper.config.theme;
+		config.defaults.nick = config.defaults.nick.replace(/%/g, () => Math.floor(Math.random() * 10));
+	}
 
 	return config;
 }
