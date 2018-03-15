@@ -164,6 +164,63 @@ Network.prototype.createWebIrc = function(client) {
 	};
 };
 
+Network.prototype.edit = function(client, args) {
+	const oldNick = this.nick;
+
+	this.nick = args.nick;
+	this.host = String(args.host || "");
+	this.name = String(args.name || "") || this.host;
+	this.port = parseInt(args.port, 10);
+	this.tls = !!args.tls;
+	this.rejectUnauthorized = !!args.rejectUnauthorized;
+	this.password = String(args.password || "");
+	this.username = String(args.username || "");
+	this.realname = String(args.realname || "");
+
+	// Split commands into an array
+	this.commands = String(args.commands || "")
+		.replace(/\r\n|\r|\n/g, "\n")
+		.split("\n")
+		.filter((command) => command.length > 0);
+
+	// Sync lobby channel name
+	this.channels[0].name = this.name;
+
+	if (!this.validate(client)) {
+		return;
+	}
+
+	if (this.irc) {
+		if (this.nick !== oldNick) {
+			if (this.irc.connection && this.irc.connection.connected) {
+				// Send new nick straight away
+				this.irc.raw("NICK", this.nick);
+			} else {
+				this.irc.options.nick = this.irc.user.nick = this.nick;
+
+				// Update UI nick straight away if IRC is not connected
+				client.emit("nick", {
+					network: this.id,
+					nick: this.nick,
+				});
+			}
+		}
+
+		this.irc.options.host = this.host;
+		this.irc.options.port = this.port;
+		this.irc.options.password = this.password;
+		this.irc.options.gecos = this.irc.user.gecos = this.realname;
+		this.irc.options.tls = this.tls;
+		this.irc.options.rejectUnauthorized = this.rejectUnauthorized;
+
+		if (!Helper.config.useHexIp) {
+			this.irc.options.username = this.irc.user.username = this.username;
+		}
+	}
+
+	client.save();
+};
+
 Network.prototype.destroy = function() {
 	this.channels.forEach((channel) => channel.destroy());
 };

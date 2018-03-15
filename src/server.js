@@ -301,7 +301,7 @@ function initializeClient(socket, client, token, lastMessage) {
 		}
 	});
 
-	socket.on("conn", (data) => {
+	socket.on("network:new", (data) => {
 		if (typeof data === "object") {
 			// prevent people from overriding webirc settings
 			data.ip = null;

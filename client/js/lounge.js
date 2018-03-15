@@ -18,7 +18,6 @@ const utils = require("./utils");
 require("./webpush");
 require("./keybinds");
 require("./clipboard");
-const Changelog = require("./socket-events/changelog");
 const contextMenuFactory = require("./contextMenuFactory");
 const contextMenuContainer = $("#context-menu-container");
 
@@ -320,15 +319,6 @@ $(function() {
 		if (chan.data("needsNamesRefresh") === true) {
 			chan.data("needsNamesRefresh", false);
 			socket.emit("names", {target: self.data("id")});
-		}
-
-		if (target === "#settings") {
-			$("#session-list").html("<p>Loading…</p>");
-			socket.emit("sessions:get");
-		}
-
-		if (target === "#help" || target === "#changelog") {
-			Changelog.requestIfNeeded();
 		}
 
 		// Pushes states to history web API when clicking elements with a data-target attribute.

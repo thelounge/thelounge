@@ -88,7 +88,7 @@ describe("Server", function() {
 
 		it("should create network", (done) => {
 			client.on("init", () => {
-				client.emit("conn", {
+				client.emit("network:new", {
 					username: "test-user",
 					realname: "The Lounge Test",
 					nick: "test-user",

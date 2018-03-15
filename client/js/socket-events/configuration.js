@@ -5,6 +5,7 @@ const socket = require("../socket");
 const templates = require("../../views");
 const options = require("../options");
 const webpush = require("../webpush");
+const connect = $("#connect");
 
 socket.on("configuration", function(data) {
 	if (options.initialized) {
@@ -14,9 +15,13 @@ socket.on("configuration", function(data) {
 	}
 
 	$("#settings").html(templates.windows.settings(data));
-	$("#connect").html(templates.windows.connect(data));
 	$("#help").html(templates.windows.help(data));
 	$("#changelog").html(templates.windows.changelog());
+
+	$("#settings").on("show", () => {
+		$("#session-list").html("<p>Loading…</p>");
+		socket.emit("sessions:get");
+	});
 
 	$("#play").on("click", () => {
 		const pop = new Audio();
@@ -33,9 +38,7 @@ socket.on("configuration", function(data) {
 		options.processSetting("theme", data.defaultTheme, true);
 	}
 
-	const forms = $("#connect form, #change-password form");
-
-	forms.on("submit", function() {
+	function handleFormSubmit() {
 		const form = $(this);
 		const event = form.data("event");
 
@@ -51,27 +54,34 @@ socket.on("configuration", function(data) {
 		socket.emit(event, values);
 
 		return false;
+	}
+
+	$("#change-password form").on("submit", handleFormSubmit);
+	connect.on("submit", "form", handleFormSubmit);
+
+	connect.on("show", function() {
+		connect
+			.html(templates.windows.connect(data))
+			.find("#connect\\:nick")
+			.on("focusin", function() {
+				// Need to set the first "lastvalue", so it can be used in the below function
+				const nick = $(this);
+				nick.data("lastvalue", nick.val());
+			})
+			.on("input", function() {
+				const nick = $(this).val();
+				const usernameInput = connect.find(".username");
+
+				// Because this gets called /after/ it has already changed, we need use the previous value
+				const lastValue = $(this).data("lastvalue");
+
+				// They were the same before the change, so update the username field
+				if (usernameInput.val() === lastValue) {
+					usernameInput.val(nick);
+				}
+
+				// Store the "previous" value, for next time
+				$(this).data("lastvalue", nick);
+			});
 	});
-
-	$(".nick")
-		.on("focusin", function() {
-			// Need to set the first "lastvalue", so it can be used in the below function
-			const nick = $(this);
-			nick.data("lastvalue", nick.val());
-		})
-		.on("input", function() {
-			const nick = $(this).val();
-			const usernameInput = forms.find(".username");
-
-			// Because this gets called /after/ it has already changed, we need use the previous value
-			const lastValue = $(this).data("lastvalue");
-
-			// They were the same before the change, so update the username field
-			if (usernameInput.val() === lastValue) {
-				usernameInput.val(nick);
-			}
-
-			// Store the "previous" value, for next time
-			$(this).data("lastvalue", nick);
-		});
 });
