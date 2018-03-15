@@ -32,18 +32,29 @@ $(function() {
 	const contextMenuContainer = $("#context-menu-container");
 	const contextMenu = $("#context-menu");
 
+	function storeSidebarVisibility(name, state) {
+		if ($(window).outerWidth() < utils.mobileViewportPixels) {
+			return;
+		}
+
+		storage.set(name, state);
+	}
+
 	$("#windows").on("click", function(e) {
 		const isOpen = slideoutMenu.isOpen();
 
-		if (isOpen || $(e.target).is(".lt")) {
+		if ((isOpen && $(window).outerWidth() < utils.mobileViewportPixels) || $(e.target).is(".lt")) {
 			slideoutMenu.toggle(!isOpen);
+			storeSidebarVisibility("thelounge.state.sidebar", !isOpen);
 		}
 	});
 
 	viewport.on("click", ".rt", function() {
-		const self = $(this);
-		viewport.toggleClass(self.prop("class"));
+		const isOpen = !viewport.hasClass("rt");
+
+		viewport.toggleClass("rt", isOpen);
 		chat.find(".chan.active .chat").trigger("keepToBottom");
+		storeSidebarVisibility("thelounge.state.userlist", isOpen);
 
 		return false;
 	});
@@ -374,7 +385,10 @@ $(function() {
 			}
 
 			utils.scrollIntoViewNicely(self[0]);
-			slideoutMenu.toggle(false);
+
+			if ($(window).outerWidth() < utils.mobileViewportPixels) {
+				slideoutMenu.toggle(false);
+			}
 		}
 
 		const lastActive = $("#windows > .active");
