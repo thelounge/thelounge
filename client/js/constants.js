@@ -79,6 +79,7 @@ const condensedTypes = [
 	"kick",
 	"mode",
 ];
+const condensedTypesQuery = "." + condensedTypes.join(", .");
 
 const timeFormats = {
 	msgDefault: "HH:mm",
@@ -86,9 +87,9 @@ const timeFormats = {
 };
 
 module.exports = {
-	colorCodeMap: colorCodeMap,
-	commands: commands,
-	condensedTypes: condensedTypes,
-	condensedTypesQuery: "." + condensedTypes.join(", ."),
-	timeFormats: timeFormats,
+	colorCodeMap,
+	commands,
+	condensedTypes,
+	condensedTypesQuery,
+	timeFormats,
 };

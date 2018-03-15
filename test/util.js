@@ -37,10 +37,10 @@ function mockLogger(callback) {
 }
 
 module.exports = {
-	createClient: function() {
+	createClient() {
 		return new MockClient();
 	},
-	createNetwork: function() {
+	createNetwork() {
 		return new Network({
 			host: "example.com",
 			channels: [new Chan({
@@ -48,7 +48,7 @@ module.exports = {
 			})],
 		});
 	},
-	createWebserver: function() {
+	createWebserver() {
 		return express();
 	},
 	mockLogger,

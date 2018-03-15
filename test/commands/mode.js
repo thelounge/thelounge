@@ -20,7 +20,7 @@ describe("Commands", function() {
 			lastCommand: null,
 			nick: "xPaw",
 			irc: {
-				raw: function(...args) {
+				raw(...args) {
 					testableNetwork.lastCommand = args.join(" ");
 				},
 			},

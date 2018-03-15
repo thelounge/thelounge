@@ -69,7 +69,7 @@ class Identification {
 	addSocket(socket, user) {
 		const id = ++this.connectionId;
 
-		this.connections.set(id, {socket: socket, user: user});
+		this.connections.set(id, {socket, user});
 
 		if (this.oidentdFile) {
 			this.refresh();

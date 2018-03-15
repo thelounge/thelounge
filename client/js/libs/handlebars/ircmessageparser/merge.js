@@ -8,12 +8,9 @@ function assign(textPart, fragment) {
 	const fragStart = fragment.start;
 	const start = Math.max(fragment.start, textPart.start);
 	const end = Math.min(fragment.end, textPart.end);
+	const text = fragment.text.slice(start - fragStart, end - fragStart);
 
-	return Object.assign({}, fragment, {
-		start: start,
-		end: end,
-		text: fragment.text.slice(start - fragStart, end - fragStart),
-	});
+	return Object.assign({}, fragment, {start, end, text});
 }
 
 // Merge the style fragments withing the text parts, taking into account

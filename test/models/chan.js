@@ -90,7 +90,7 @@ describe("Chan", function() {
 			const chan = new Chan();
 			[
 				"JocelynD", "YaManicKill", "astorije", "xPaw", "Max-P",
-			].forEach((nick) => chan.setUser(new User({nick: nick})));
+			].forEach((nick) => chan.setUser(new User({nick})));
 
 			expect(chan.getSortedUsers().map((u) => u.nick)).to.deep.equal([
 				"JocelynD", "YaManicKill", "astorije", "xPaw", "Max-P",
@@ -101,7 +101,7 @@ describe("Chan", function() {
 			const chan = new Chan();
 			[
 				"JocelynD", "YaManicKill", "astorije", "xPaw", "Max-P",
-			].forEach((nick) => chan.setUser(new User({nick: nick}, prefixLookup)));
+			].forEach((nick) => chan.setUser(new User({nick}, prefixLookup)));
 
 			expect(getUserNames(chan)).to.deep.equal([
 				"astorije", "JocelynD", "Max-P", "xPaw", "YaManicKill",
@@ -138,7 +138,7 @@ describe("Chan", function() {
 			const chan = new Chan();
 			[
 				"aB", "Ad", "AA", "ac",
-			].forEach((nick) => chan.setUser(new User({nick: nick}, prefixLookup)));
+			].forEach((nick) => chan.setUser(new User({nick}, prefixLookup)));
 
 			expect(getUserNames(chan)).to.deep.equal(["AA", "aB", "ac", "Ad"]);
 		});
@@ -148,7 +148,7 @@ describe("Chan", function() {
 			[
 				"[foo", "]foo", "(foo)", "{foo}", "<foo>", "_foo", "@foo", "^foo",
 				"&foo", "!foo", "+foo", "Foo",
-			].forEach((nick) => chan.setUser(new User({nick: nick}, prefixLookup)));
+			].forEach((nick) => chan.setUser(new User({nick}, prefixLookup)));
 
 			expect(getUserNames(chan)).to.deep.equal([
 				"!foo", "&foo", "(foo)", "+foo", "<foo>", "@foo", "[foo", "]foo",

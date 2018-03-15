@@ -47,6 +47,10 @@ rules:
   no-use-before-define: [error, {functions: false}]
   no-var: error
   object-curly-spacing: [error, never]
+  object-shorthand:
+    - error
+    - methods
+    - avoidExplicitReturnArrows: true
   padded-blocks: [error, never]
   padding-line-between-statements:
     - error
