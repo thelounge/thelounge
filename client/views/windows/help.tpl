@@ -49,6 +49,15 @@
 
 	<div class="help-item">
 		<div class="subject">
+			<kbd class="key-all">Alt</kbd><kbd class="key-apple">⌥</kbd> + <kbd>Shift</kbd> + <kbd>↑</kbd> / <kbd>↓</kbd>
+		</div>
+		<div class="description">
+			<p>Switch to the previous/next lobby in the channel list.</p>
+		</div>
+	</div>
+
+	<div class="help-item">
+		<div class="subject">
 			<kbd class="key-all">Alt</kbd><kbd class="key-apple">⌥</kbd> + <kbd>↑</kbd> / <kbd>↓</kbd>
 		</div>
 		<div class="description">
