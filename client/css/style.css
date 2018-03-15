@@ -585,6 +585,13 @@ kbd {
 	font-size: 15px;
 	font-weight: bold;
 	padding-left: 0;
+	flex-direction: column;
+}
+
+#sidebar .lobby-row {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
 }
 
 #sidebar .lobby-wrap {
@@ -724,7 +731,7 @@ kbd {
 	transform: rotate(45deg) translateZ(0);
 }
 
-#sidebar .network .lobby:nth-last-child(2) .collapse-network {
+#sidebar .network .lobby:last-child .collapse-network {
 	/* Hide collapse button if there are no channels/queries */
 	width: 0;
 	overflow: hidden;
@@ -1033,7 +1040,7 @@ kbd {
   */
 #sidebar .join-form {
 	display: none;
-	padding: 0 18px 8px;
+	padding: 8px 0 0 14px;
 }
 
 #sidebar .join-form .input {
@@ -1042,6 +1049,7 @@ kbd {
 	margin-right: auto;
 	margin-top: 5px;
 	margin-bottom: 5px;
+	font-weight: normal;
 }
 
 #sidebar .join-form .btn {
