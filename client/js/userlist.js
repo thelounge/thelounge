@@ -5,7 +5,6 @@ const fuzzy = require("fuzzy");
 const Mousetrap = require("mousetrap");
 
 const templates = require("../views");
-const utils = require("./utils");
 
 const chat = $("#chat");
 
@@ -94,7 +93,7 @@ exports.handleKeybinds = function(input) {
 		}
 
 		// Adjust scroll when active item is outside of the visible area
-		utils.scrollIntoViewNicely(userlist.find(".user.active")[0]);
+		userlist.find(".user.active")[0].scrollIntoView(false);
 	});
 
 	// When pressing Enter, open the context menu (emit a click) on the active
