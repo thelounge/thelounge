@@ -3,6 +3,7 @@
 const webpack = require("webpack");
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 // ********************
 // Common configuration
@@ -20,6 +21,23 @@ const config = {
 	},
 	module: {
 		rules: [
+			{
+				test: /style.css$/,
+				include: [
+					path.resolve(__dirname, "client"),
+				],
+				use: ExtractTextPlugin.extract([
+					{
+						loader: "css-loader",
+						options: {
+							allChunks: true,
+							importLoaders: 1,
+							minimize: process.env.NODE_ENV === "production",
+							url: false,
+						},
+					},
+				]),
+			},
 			{
 				test: /\.js$/,
 				include: [
@@ -87,8 +105,8 @@ const config = {
 				from: "./client/themes/*",
 				to: "themes/[name].[ext]",
 			},
-			{ // TODO: Build css with postcss
-				from: "./client/css/*",
+			{
+				from: "./client/css/bootstrap.css",
 				to: "css/[name].[ext]",
 			},
 			{
@@ -103,6 +121,7 @@ const config = {
 			name: "js/bundle.vendor.js",
 			minChunks: (module) => module.context && module.context.includes("node_modules"),
 		}),
+		new ExtractTextPlugin("css/style.css"),
 	],
 };
 
