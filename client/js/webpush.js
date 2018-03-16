@@ -111,7 +111,7 @@ function onPushButton() {
 		})
 	).catch((err) => {
 		$("#pushNotificationsUnsupported")
-			.find("span").text(`An error has occured: ${err}`).end()
+			.find("span").text(`An error has occurred: ${err}`).end()
 			.show();
 	});
 
