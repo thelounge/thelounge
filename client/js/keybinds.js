@@ -58,6 +58,38 @@ Mousetrap.bind([
 });
 
 Mousetrap.bind([
+	"alt+shift+up",
+	"alt+shift+down",
+], function(e, keys) {
+	const lobbies = sidebar.find(".lobby");
+	const direction = keys.split("+").pop();
+	let index = lobbies.index(lobbies.filter(".active"));
+	let target;
+
+	switch (direction) {
+	case "up":
+		if (index < 0) {
+			target = lobbies.index(sidebar.find(".channel").filter(".active").siblings(".lobby")[0]);
+		} else {
+			target = (lobbies.length + (index - 1 + lobbies.length)) % lobbies.length;
+		}
+
+		break;
+
+	case "down":
+		if (index < 0) {
+			index = lobbies.index(sidebar.find(".channel").filter(".active").siblings(".lobby")[0]);
+		}
+
+		target = (lobbies.length + (index + 1 + lobbies.length)) % lobbies.length;
+
+		break;
+	}
+
+	lobbies.eq(target).click();
+});
+
+Mousetrap.bind([
 	"escape",
 ], function() {
 	contextMenuContainer.hide();
