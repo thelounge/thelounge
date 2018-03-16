@@ -2,7 +2,6 @@
 
 const $ = require("jquery");
 const escape = require("css.escape");
-const input = $("#input");
 const viewport = $("#viewport");
 
 var serverHash = -1; // eslint-disable-line no-var
@@ -14,7 +13,6 @@ module.exports = {
 	serverHash,
 	lastMessageId,
 	confirmExit,
-	forceFocus,
 	scrollIntoViewNicely,
 	hasRoleInChannel,
 	move,
@@ -52,12 +50,6 @@ function hasRoleInChannel(channel, roles) {
 	const ownNick = network.data("nick");
 	const user = channel.find(`.names-original .user[data-name="${escape(ownNick)}"]`).first();
 	return user.parent().is("." + roles.join(", ."));
-}
-
-// Triggering click event opens the virtual keyboard on mobile
-// This can only be called from another interactive event (e.g. button click)
-function forceFocus() {
-	input.trigger("click").trigger("focus");
 }
 
 // Reusable scrollIntoView parameters for channel list / user list

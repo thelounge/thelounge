@@ -5,7 +5,6 @@ const options = require("./options");
 const socket = require("./socket");
 const templates = require("../views");
 const chat = $("#chat");
-const input = $("#input");
 const Mousetrap = require("mousetrap");
 
 module.exports = renderPreview;
@@ -206,8 +205,6 @@ function closeImageViewer({pushState = true} = {}) {
 		.one("transitionend", function() {
 			imageViewer.empty();
 		});
-
-	input.trigger("focus");
 
 	// History management
 	if (pushState) {
