@@ -19,8 +19,6 @@ module.exports = {
 	hasRoleInChannel,
 	move,
 	resetHeight,
-	setNick,
-	toggleNickEditor,
 	toggleNotificationMarkers,
 	requestIdleCallback,
 	togglePreviewMoreButtonsIfNeeded,
@@ -82,19 +80,6 @@ function join(args) {
 			chan.trigger("click");
 		}
 	}
-}
-
-function toggleNickEditor(toggle) {
-	$("#nick").toggleClass("editable", toggle);
-	$("#nick-value").prop("contenteditable", toggle);
-}
-
-function setNick(nick) {
-	// Closes the nick editor when canceling, changing channel, or when a nick
-	// is set in a different tab / browser / device.
-	toggleNickEditor(false);
-
-	$("#nick-value").text(nick);
 }
 
 const favicon = $("#favicon");

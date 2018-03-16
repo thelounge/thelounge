@@ -60,12 +60,7 @@
 					<div id="connection-error"></div>
 					<form id="form" method="post" action="">
 						<div class="input">
-							<span id="nick">
-								<span id="nick-value" spellcheck="false"></span><!-- Comments here remove spaces between elements
-								--><span id="set-nick-tooltip" class="tooltipped tooltipped-e" aria-label="Change nick…"><button id="set-nick" type="button" aria-label="Change nick…"></button></span><!--
-								--><span id="cancel-nick-tooltip" class="tooltipped tooltipped-e" aria-label="Cancel"><button id="cancel-nick" type="button" aria-label="Cancel"></button></span><!--
-								--><span id="save-nick-tooltip" class="tooltipped tooltipped-e" aria-label="Save"><button id="submit-nick" type="button" aria-label="Save"></button></span>
-							</span>
+							<span id="nick"></span>
 							<textarea id="input" class="mousetrap"></textarea>
 							<span id="submit-tooltip" class="tooltipped tooltipped-w tooltipped-no-touch" aria-label="Send message">
 								<button id="submit" type="submit" aria-label="Send message"></button>
