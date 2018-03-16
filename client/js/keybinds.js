@@ -3,7 +3,7 @@
 const $ = require("jquery");
 const Mousetrap = require("mousetrap");
 const wrapCursor = require("undate").wrapCursor;
-const input = $("#input").get(0);
+const input = $("#input");
 const sidebar = $("#sidebar");
 const windows = $("#windows");
 const contextMenuContainer = $("#context-menu-container");
@@ -107,8 +107,10 @@ const colorsHotkeys = {
 
 for (const hotkey in colorsHotkeys) {
 	Mousetrap.bind("mod+" + hotkey, function(e) {
+		const inputElement = input.get(0);
+
 		// Do not handle modifier hotkeys if input is not focused
-		if (document.activeElement !== input) {
+		if (document.activeElement !== inputElement) {
 			return;
 		}
 
@@ -116,7 +118,11 @@ for (const hotkey in colorsHotkeys) {
 
 		const modifier = colorsHotkeys[e.key];
 
-		wrapCursor(input, modifier, input.selectionStart === input.selectionEnd ? "" : modifier);
+		wrapCursor(
+			inputElement,
+			modifier,
+			inputElement.selectionStart === inputElement.selectionEnd ? "" : modifier
+		);
 	});
 }
 
