@@ -36,13 +36,12 @@ function onTouchStart(e) {
 
 	menuWidth = parseFloat(window.getComputedStyle(menu).width);
 
-	if ((!menuIsOpen && touch.screenX < 50) || (menuIsOpen && touch.screenX > menuWidth)) {
+	if (!menuIsOpen || touch.screenX > menuWidth) {
 		touchStartPos = touch;
 		touchCurPos = touch;
 		touchStartTime = Date.now();
 
-		viewport.classList.toggle("menu-dragging", true);
-		document.body.addEventListener("touchmove", onTouchMove);
+		document.body.addEventListener("touchmove", onTouchMove, {passive: true});
 		document.body.addEventListener("touchend", onTouchEnd, {passive: true});
 	}
 }
@@ -51,13 +50,18 @@ function onTouchMove(e) {
 	const touch = touchCurPos = e.touches.item(0);
 	let setX = touch.screenX - touchStartPos.screenX;
 
-	if (Math.abs(setX > 30)) {
-		menuIsMoving = true;
-	}
+	if (!menuIsMoving) {
+		const devicePixelRatio = window.devicePixelRatio || 2;
 
-	if (!menuIsMoving && Math.abs(touch.screenY - touchStartPos.screenY) > 30) {
-		onTouchEnd();
-		return;
+		if (Math.abs(touch.screenY - touchStartPos.screenY) > devicePixelRatio) {
+			onTouchEnd();
+			return;
+		}
+
+		if (Math.abs(setX) > devicePixelRatio) {
+			viewport.classList.toggle("menu-dragging", true);
+			menuIsMoving = true;
+		}
 	}
 
 	if (menuIsOpen) {
@@ -72,11 +76,6 @@ function onTouchMove(e) {
 
 	menu.style.transform = "translate3d(" + setX + "px, 0, 0)";
 	sidebarOverlay.style.opacity = setX / menuWidth;
-
-	if (menuIsMoving) {
-		e.preventDefault();
-		e.stopPropagation();
-	}
 }
 
 function onTouchEnd() {
