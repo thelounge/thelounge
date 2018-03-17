@@ -2,6 +2,7 @@
 
 const viewport = document.getElementById("viewport");
 const menu = document.getElementById("sidebar");
+const sidebarOverlay = document.getElementById("sidebar-overlay");
 
 let touchStartPos = null;
 let touchCurPos = null;
@@ -70,6 +71,7 @@ function onTouchMove(e) {
 	}
 
 	menu.style.transform = "translate3d(" + setX + "px, 0, 0)";
+	sidebarOverlay.style.opacity = setX / menuWidth;
 
 	if (menuIsMoving) {
 		e.preventDefault();
@@ -89,6 +91,7 @@ function onTouchEnd() {
 	document.body.removeEventListener("touchend", onTouchEnd);
 	viewport.classList.toggle("menu-dragging", false);
 	menu.style.transform = null;
+	sidebarOverlay.style.opacity = null;
 
 	touchStartPos = null;
 	touchCurPos = null;

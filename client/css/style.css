@@ -2273,9 +2273,26 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		height: 100%;
 		position: absolute;
 		left: -220px;
-		z-index: 1;
-		transition: transform 160ms;
+		z-index: 2;
+		transition: transform 160ms, box-shadow 0.2s;
 		transform: translateZ(0);
+	}
+
+	#sidebar-overlay {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background: rgba(0, 0, 0, 0.5);
+		pointer-events: none;
+		opacity: 0;
+		transition: opacity 160ms;
+		z-index: 1;
+	}
+
+	#viewport.menu-open #sidebar-overlay {
+		opacity: 1;
 	}
 
 	#viewport.menu-open #sidebar {
@@ -2283,8 +2300,14 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		transform: translate3d(220px, 0, 0);
 	}
 
+	#viewport.menu-dragging #sidebar-overlay,
 	#viewport.menu-dragging #sidebar {
 		transition: none !important;
+	}
+
+	#viewport.menu-open #sidebar,
+	#viewport.menu-dragging #sidebar {
+		box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.5);
 	}
 
 	#viewport.menu-open .messages {
