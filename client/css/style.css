@@ -2285,8 +2285,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		left: 0;
 		right: 0;
 		background: rgba(0, 0, 0, 0.5);
-		pointer-events: none;
 		opacity: 0;
+		display: none;
 		transition: opacity 160ms;
 		z-index: 1;
 	}
@@ -2308,6 +2308,11 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	#viewport.menu-open #sidebar,
 	#viewport.menu-dragging #sidebar {
 		box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.5);
+	}
+
+	#viewport.menu-open #sidebar-overlay,
+	#viewport.menu-dragging #sidebar-overlay {
+		display: block;
 	}
 
 	#viewport.menu-open .messages {
