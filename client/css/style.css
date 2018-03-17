@@ -518,7 +518,7 @@ kbd {
 	width: 220px;
 }
 
-#sidebar.menu-open {
+#viewport.menu-open #sidebar {
 	display: none;
 	will-change: transform;
 }
@@ -2278,16 +2278,16 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		transform: translateZ(0);
 	}
 
-	#sidebar.menu-open {
+	#viewport.menu-open #sidebar {
 		display: flex;
 		transform: translate3d(220px, 0, 0);
 	}
 
-	#sidebar.menu-dragging {
+	#viewport.menu-dragging #sidebar {
 		transition: none !important;
 	}
 
-	#sidebar.menu-open .messages {
+	#viewport.menu-open .messages {
 		pointer-events: none;
 	}
 

@@ -1,5 +1,6 @@
 "use strict";
 
+const viewport = document.getElementById("viewport");
 const menu = document.getElementById("sidebar");
 
 let touchStartPos = null;
@@ -16,7 +17,7 @@ class SlideoutMenu {
 
 	static toggle(state) {
 		menuIsOpen = state;
-		menu.classList.toggle("menu-open", state);
+		viewport.classList.toggle("menu-open", state);
 	}
 
 	static isOpen() {
@@ -39,7 +40,7 @@ function onTouchStart(e) {
 		touchCurPos = touch;
 		touchStartTime = Date.now();
 
-		menu.classList.toggle("menu-dragging", true);
+		viewport.classList.toggle("menu-dragging", true);
 		document.body.addEventListener("touchmove", onTouchMove);
 		document.body.addEventListener("touchend", onTouchEnd, {passive: true});
 	}
@@ -86,7 +87,7 @@ function onTouchEnd() {
 
 	document.body.removeEventListener("touchmove", onTouchMove);
 	document.body.removeEventListener("touchend", onTouchEnd);
-	menu.classList.toggle("menu-dragging", false);
+	viewport.classList.toggle("menu-dragging", false);
 	menu.style.transform = null;
 
 	touchStartPos = null;
