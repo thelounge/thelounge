@@ -42,11 +42,18 @@ socket.on("init", function(data) {
 
 		webpush.configurePushNotifications(data.pushSubscription, data.applicationServerKey);
 
+		slideoutMenu.enable();
+
+		const viewport = $("#viewport");
+
+		if ($(window).outerWidth() >= utils.mobileViewportPixels) {
+			slideoutMenu.toggle(storage.get("thelounge.state.sidebar") === "true");
+			viewport.toggleClass("rt", storage.get("thelounge.state.userlist") === "true");
+		}
+
 		$(document.body).removeClass("signed-out");
 		$("#loading").remove();
 		$("#sign-in").remove();
-
-		slideoutMenu.enable();
 
 		if (window.g_LoungeErrorHandler) {
 			window.removeEventListener("error", window.g_LoungeErrorHandler);
