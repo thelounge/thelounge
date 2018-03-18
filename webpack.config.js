@@ -4,10 +4,6 @@ const webpack = require("webpack");
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 
-// ********************
-// Common configuration
-// ********************
-
 const config = {
 	mode: process.env.NODE_ENV === "production" ? "production" : "development",
 	entry: {
