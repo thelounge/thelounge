@@ -44,6 +44,7 @@
 					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Sign out"><button class="icon sign-out" id="sign-out" aria-label="Sign out"></button></span>
 				</footer>
 			</aside>
+			<div id="sidebar-overlay"></div>
 			<article id="windows">
 				<div id="loading" class="window active">
 					<div id="loading-status-container">

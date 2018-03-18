@@ -1,6 +1,8 @@
 "use strict";
 
+const viewport = document.getElementById("viewport");
 const menu = document.getElementById("sidebar");
+const sidebarOverlay = document.getElementById("sidebar-overlay");
 
 let touchStartPos = null;
 let touchCurPos = null;
@@ -16,7 +18,7 @@ class SlideoutMenu {
 
 	static toggle(state) {
 		menuIsOpen = state;
-		menu.classList.toggle("menu-open", state);
+		viewport.classList.toggle("menu-open", state);
 	}
 
 	static isOpen() {
@@ -34,46 +36,50 @@ function onTouchStart(e) {
 
 	menuWidth = parseFloat(window.getComputedStyle(menu).width);
 
-	if ((!menuIsOpen && touch.screenX < 50) || (menuIsOpen && touch.screenX > menuWidth)) {
+	if (!menuIsOpen || touch.screenX > menuWidth) {
 		touchStartPos = touch;
 		touchCurPos = touch;
 		touchStartTime = Date.now();
 
-		menu.classList.toggle("menu-dragging", true);
-		document.body.addEventListener("touchmove", onTouchMove);
+		document.body.addEventListener("touchmove", onTouchMove, {passive: true});
 		document.body.addEventListener("touchend", onTouchEnd, {passive: true});
 	}
 }
 
 function onTouchMove(e) {
 	const touch = touchCurPos = e.touches.item(0);
-	let setX = touch.screenX - touchStartPos.screenX;
+	let distX = touch.screenX - touchStartPos.screenX;
+	const distY = touch.screenY - touchStartPos.screenY;
 
-	if (Math.abs(setX > 30)) {
-		menuIsMoving = true;
-	}
+	if (!menuIsMoving) {
+		// tan(45°) is 1. Gestures in 0°-45° (< 1) are considered horizontal, so
+		// menu must be open; gestures in 45°-90° (>1) are considered vertical, so
+		// chat windows must be scrolled.
+		if (Math.abs(distY / distX) >= 1) {
+			onTouchEnd();
+			return;
+		}
 
-	if (!menuIsMoving && Math.abs(touch.screenY - touchStartPos.screenY) > 30) {
-		onTouchEnd();
-		return;
+		const devicePixelRatio = window.devicePixelRatio || 2;
+
+		if (Math.abs(distX) > devicePixelRatio) {
+			viewport.classList.toggle("menu-dragging", true);
+			menuIsMoving = true;
+		}
 	}
 
 	if (menuIsOpen) {
-		setX += menuWidth;
+		distX += menuWidth;
 	}
 
-	if (setX > menuWidth) {
-		setX = menuWidth;
-	} else if (setX < 0) {
-		setX = 0;
+	if (distX > menuWidth) {
+		distX = menuWidth;
+	} else if (distX < 0) {
+		distX = 0;
 	}
 
-	menu.style.transform = "translate3d(" + setX + "px, 0, 0)";
-
-	if (menuIsMoving) {
-		e.preventDefault();
-		e.stopPropagation();
-	}
+	menu.style.transform = "translate3d(" + distX + "px, 0, 0)";
+	sidebarOverlay.style.opacity = distX / menuWidth;
 }
 
 function onTouchEnd() {
@@ -86,8 +92,9 @@ function onTouchEnd() {
 
 	document.body.removeEventListener("touchmove", onTouchMove);
 	document.body.removeEventListener("touchend", onTouchEnd);
-	menu.classList.toggle("menu-dragging", false);
+	viewport.classList.toggle("menu-dragging", false);
 	menu.style.transform = null;
+	sidebarOverlay.style.opacity = null;
 
 	touchStartPos = null;
 	touchCurPos = null;

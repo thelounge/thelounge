@@ -40,13 +40,17 @@ $(function() {
 		storage.set(name, state);
 	}
 
-	$("#windows").on("click", function(e) {
-		const isOpen = slideoutMenu.isOpen();
+	// If sidebar overlay is visible and it is clicked, close the sidebar
+	$("#sidebar-overlay").on("click", () => {
+		slideoutMenu.toggle(false);
+		storeSidebarVisibility("thelounge.state.sidebar", false);
+	});
 
-		if ((isOpen && $(window).outerWidth() < utils.mobileViewportPixels) || $(e.target).is(".lt")) {
-			slideoutMenu.toggle(!isOpen);
-			storeSidebarVisibility("thelounge.state.sidebar", !isOpen);
-		}
+	$("#windows").on("click", "button.lt", () => {
+		const isOpen = !slideoutMenu.isOpen();
+
+		slideoutMenu.toggle(isOpen);
+		storeSidebarVisibility("thelounge.state.sidebar", isOpen);
 	});
 
 	viewport.on("click", ".rt", function() {

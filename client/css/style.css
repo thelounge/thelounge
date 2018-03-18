@@ -518,7 +518,7 @@ kbd {
 	width: 220px;
 }
 
-#sidebar.menu-open {
+#viewport.menu-open #sidebar {
 	display: none;
 	will-change: transform;
 }
@@ -2273,22 +2273,46 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		height: 100%;
 		position: absolute;
 		left: -220px;
-		z-index: 1;
+		z-index: 2;
 		transition: transform 160ms;
 		transform: translateZ(0);
 	}
 
-	#sidebar.menu-open {
+	#sidebar-overlay {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background: rgba(0, 0, 0, 0.5);
+		opacity: 0;
+		visibility: hidden;
+		transition: opacity 160ms, visibility 160ms;
+		z-index: 1;
+	}
+
+	#viewport.menu-open #sidebar-overlay {
+		opacity: 1;
+	}
+
+	#viewport.menu-open #sidebar {
 		display: flex;
 		transform: translate3d(220px, 0, 0);
 	}
 
-	#sidebar.menu-dragging {
-		transition: none !important;
+	#viewport.menu-dragging #sidebar-overlay,
+	#viewport.menu-dragging #sidebar {
+		transition: none;
 	}
 
-	#sidebar.menu-open .messages {
-		pointer-events: none;
+	#viewport.menu-open #sidebar,
+	#viewport.menu-dragging #sidebar {
+		box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.5);
+	}
+
+	#viewport.menu-open #sidebar-overlay,
+	#viewport.menu-dragging #sidebar-overlay {
+		visibility: visible;
 	}
 
 	#sidebar .empty::before {
