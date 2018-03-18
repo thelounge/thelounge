@@ -624,6 +624,12 @@ function performAuthentication(data) {
 	const authCallback = (success) => {
 		// Authorization failed
 		if (!success) {
+			if (!client) {
+				log.warn(`Authentication for non existing user attempted from ${colors.bold(getClientIp(socket))}`);
+			} else {
+				log.warn(`Authentication failed for user ${colors.bold(data.user)} from ${colors.bold(getClientIp(socket))}`);
+			}
+
 			socket.emit("auth", {success: false});
 			return;
 		}
