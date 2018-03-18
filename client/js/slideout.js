@@ -48,34 +48,38 @@ function onTouchStart(e) {
 
 function onTouchMove(e) {
 	const touch = touchCurPos = e.touches.item(0);
-	let setX = touch.screenX - touchStartPos.screenX;
+	let distX = touch.screenX - touchStartPos.screenX;
+	const distY = touch.screenY - touchStartPos.screenY;
 
 	if (!menuIsMoving) {
-		const devicePixelRatio = window.devicePixelRatio || 2;
-
-		if (Math.abs(touch.screenY - touchStartPos.screenY) > devicePixelRatio) {
+		// tan(45°) is 1. Gestures in 0°-45° (< 1) are considered horizontal, so
+		// menu must be open; gestures in 45°-90° (>1) are considered vertical, so
+		// chat windows must be scrolled.
+		if (Math.abs(distY / distX) >= 1) {
 			onTouchEnd();
 			return;
 		}
 
-		if (Math.abs(setX) > devicePixelRatio) {
+		const devicePixelRatio = window.devicePixelRatio || 2;
+
+		if (Math.abs(distX) > devicePixelRatio) {
 			viewport.classList.toggle("menu-dragging", true);
 			menuIsMoving = true;
 		}
 	}
 
 	if (menuIsOpen) {
-		setX += menuWidth;
+		distX += menuWidth;
 	}
 
-	if (setX > menuWidth) {
-		setX = menuWidth;
-	} else if (setX < 0) {
-		setX = 0;
+	if (distX > menuWidth) {
+		distX = menuWidth;
+	} else if (distX < 0) {
+		distX = 0;
 	}
 
-	menu.style.transform = "translate3d(" + setX + "px, 0, 0)";
-	sidebarOverlay.style.opacity = setX / menuWidth;
+	menu.style.transform = "translate3d(" + distX + "px, 0, 0)";
+	sidebarOverlay.style.opacity = distX / menuWidth;
 }
 
 function onTouchEnd() {
