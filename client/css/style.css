@@ -2274,7 +2274,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		position: absolute;
 		left: -220px;
 		z-index: 2;
-		transition: transform 160ms, box-shadow 160ms;
+		transition: transform 160ms;
 		transform: translateZ(0);
 	}
 
@@ -2302,7 +2302,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 	#viewport.menu-dragging #sidebar-overlay,
 	#viewport.menu-dragging #sidebar {
-		transition: box-shadow 160ms;
+		transition: none;
 	}
 
 	#viewport.menu-open #sidebar,
