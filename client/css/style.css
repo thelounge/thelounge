@@ -2205,6 +2205,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	text-decoration: line-through;
 }
 
+.irc-underline.irc-strikethrough {
+	text-decoration: underline line-through;
+}
+
 .irc-italic {
 	font-style: italic;
 }
