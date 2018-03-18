@@ -9,6 +9,7 @@ const findEmoji = require("./ircmessageparser/findEmoji");
 const findNames = require("./ircmessageparser/findNames");
 const merge = require("./ircmessageparser/merge");
 const colorClass = require("./colorClass");
+const emojiMap = require("../fullnamemap.json");
 
 // Create an HTML `span` with styling information for a given fragment
 function createFragment(fragment) {
@@ -114,7 +115,11 @@ module.exports = function parse(text, users) {
 			const escapedChannel = Handlebars.Utils.escapeExpression(textPart.channel);
 			return `<span class="inline-channel" role="button" tabindex="0" data-chan="${escapedChannel}">${fragments}</span>`;
 		} else if (textPart.emoji) {
-			return `<span class="emoji">${fragments}</span>`;
+			if (!emojiMap[textPart.emoji]) {
+				return `<span class="emoji" role="img">${fragments}</span>`;
+			}
+
+			return `<span class="emoji" role="img" aria-label="Emoji: ${emojiMap[textPart.emoji]}" title="${emojiMap[textPart.emoji]}">${fragments}</span>`;
 		} else if (textPart.nick) {
 			const nick = Handlebars.Utils.escapeExpression(textPart.nick);
 			return `<span role="button" class="user ${colorClass(nick)}" data-name="${nick}">${fragments}</span>`;
