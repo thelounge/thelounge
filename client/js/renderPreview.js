@@ -17,15 +17,17 @@ function renderPreview(preview, msg) {
 	preview.shown = preview.shown && options.shouldOpenMessagePreview(preview.type);
 
 	const template = $(templates.msg_preview({preview}));
-	const image = template.find("img:first");
+	const image = template.find("img, video, audio").first();
 
 	if (image.length === 0) {
 		return appendPreview(preview, msg, template);
 	}
 
+	const loadEvent = image.prop("tagName") === "IMG" ? "load" : "canplay";
+
 	// If there is an image in preview, wait for it to load before appending it to DOM
 	// This is done to prevent problems keeping scroll to the bottom while images load
-	image.on("load.preview", () => {
+	image.on(`${loadEvent}.preview`, () => {
 		image.off(".preview");
 
 		appendPreview(preview, msg, template);
