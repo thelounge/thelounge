@@ -80,7 +80,6 @@ button {
 }
 
 code,
-kbd,
 pre,
 .irc-monospace,
 textarea#user-specified-css-input {
@@ -89,7 +88,7 @@ textarea#user-specified-css-input {
 
 code,
 .irc-monospace {
-	font-size: 12px;
+	font-size: 13px;
 	padding: 2px 4px;
 	color: #e74c3c;
 	background-color: #f9f2f4;
@@ -111,16 +110,19 @@ pre {
 
 kbd {
 	display: inline-block;
-	font-size: 11px;
-	line-height: 10px;
-	padding: 3px 5px;
-	color: #555;
-	vertical-align: middle;
-	background-color: #fcfcfc;
-	border: solid 1px #ccc;
-	border-bottom-color: #bbb;
-	border-radius: 3px;
-	box-shadow: inset 0 -1px 0 #bbb;
+	font-family: inherit;
+	line-height: 1em;
+	min-width: 28px; /* Ensure 1-char keys have the same width */
+	margin: 0 1px;
+	padding: 4px 6px;
+	color: #444;
+	text-align: center;
+	text-shadow: 0 1px 0 #fff;
+	background-color: white;
+	background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.05), transparent);
+	border: 1px solid #bbb;
+	border-radius: 4px;
+	box-shadow: 0 2px 0 #bbb, inset 0 1px 1px #fff, inset 0 -1px 3px #ccc;
 }
 
 .btn {
