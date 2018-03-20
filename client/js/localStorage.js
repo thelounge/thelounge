@@ -13,7 +13,10 @@ module.exports = {
 	get(key) {
 		return window.localStorage.getItem(key);
 	},
-	remove(key, value) {
-		window.localStorage.removeItem(key, value);
+	remove(key) {
+		window.localStorage.removeItem(key);
+	},
+	clear() {
+		window.localStorage.clear();
 	},
 };

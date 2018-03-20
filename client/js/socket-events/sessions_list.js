@@ -1,6 +1,7 @@
 "use strict";
 
 const $ = require("jquery");
+const Auth = require("../auth");
 const socket = require("../socket");
 const templates = require("../../views");
 
@@ -25,7 +26,12 @@ socket.on("sessions:list", function(data) {
 });
 
 $("#settings").on("click", ".remove-session", function() {
-	socket.emit("sign-out", $(this).data("token"));
+	const token = $(this).data("token");
 
-	return false;
+	if (token) {
+		socket.emit("sign-out", token);
+	} else {
+		socket.emit("sign-out");
+		Auth.signout();
+	}
 });

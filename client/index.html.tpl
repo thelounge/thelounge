@@ -41,7 +41,6 @@
 					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Connect to network"><button class="icon connect" data-target="#connect" aria-label="Connect to network" role="tab" aria-controls="connect" aria-selected="false"></button></span>
 					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Settings"><button class="icon settings" data-target="#settings" aria-label="Settings" role="tab" aria-controls="settings" aria-selected="false"></button></span>
 					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Help"><button class="icon help" data-target="#help" aria-label="Help" role="tab" aria-controls="help" aria-selected="false"></button></span>
-					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Sign out"><button class="icon sign-out" id="sign-out" aria-label="Sign out"></button></span>
 				</footer>
 			</aside>
 			<div id="sidebar-overlay"></div>

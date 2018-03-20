@@ -302,7 +302,6 @@ kbd {
 #footer .connect::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
 #footer .settings::before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
 #footer .help::before { content: "\f059"; /* http://fontawesome.io/icon/question/ */ }
-#footer .sign-out::before { content: "\f011"; /* http://fontawesome.io/icon/power-off/ */ }
 
 #form #submit::before { content: "\f1d8"; /* http://fontawesome.io/icon/paper-plane/ */ }
 
@@ -526,7 +525,6 @@ kbd {
 }
 
 #sidebar .chan,
-#sidebar .sign-out,
 #sidebar .empty {
 	color: #99a2b4;
 	font-size: 14px;
@@ -537,8 +535,7 @@ kbd {
 }
 
 #sidebar button,
-#sidebar .chan,
-#sidebar .sign-out {
+#sidebar .chan {
 	cursor: pointer;
 }
 
@@ -798,13 +795,11 @@ kbd {
 	display: inline-block;
 }
 
-.signed-out #footer .connect,
-.signed-out #footer .sign-out {
+.signed-out #footer .connect {
 	display: none;
 }
 
-.public #footer .sign-in,
-.public #footer .sign-out {
+.public #footer .sign-in {
 	display: none;
 }
 
@@ -2260,7 +2255,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 	#sidebar button,
 	#sidebar .chan,
-	#sidebar .sign-out,
 	#sidebar .empty,
 	#windows label,
 	#windows .header .topic,
