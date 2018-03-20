@@ -378,8 +378,6 @@ $(function() {
 				utils.toggleNotificationMarkers(false);
 			}
 
-			utils.scrollIntoViewNicely(self[0]);
-
 			if ($(window).outerWidth() < utils.mobileViewportPixels) {
 				slideoutMenu.toggle(false);
 			}
