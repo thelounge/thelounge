@@ -24,7 +24,7 @@ MockClient.prototype.createMessage = function(opts) {
 	return message;
 };
 
-function mockLogger(callback) {
+function sanitizeLog(callback) {
 	return function(...args) {
 		// Concats and removes ANSI colors. See https://stackoverflow.com/a/29497680
 		const stdout = args.join(" ").replace(
@@ -51,5 +51,5 @@ module.exports = {
 	createWebserver() {
 		return express();
 	},
-	mockLogger,
+	sanitizeLog,
 };

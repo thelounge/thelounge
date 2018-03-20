@@ -1,25 +1,20 @@
 "use strict";
 
 const expect = require("chai").expect;
+const stub = require("sinon").stub;
 const TestUtil = require("../../util");
 const Utils = require("../../../src/command-line/utils");
 
 describe("Utils", function() {
 	describe(".extraHelp", function() {
-		let originalRaw;
-
-		beforeEach(function() {
-			originalRaw = log.raw;
-		});
-
 		afterEach(function() {
-			log.raw = originalRaw;
+			log.raw.restore();
 		});
 
 		it("should start and end with empty lines to display correctly with --help", function() {
 			// Mock `log.raw` to extract its effect into an array
 			const stdout = [];
-			log.raw = TestUtil.mockLogger((str) => stdout.push(str));
+			stub(log, "raw").callsFake(TestUtil.sanitizeLog((str) => stdout.push(str)));
 
 			Utils.extraHelp();
 
@@ -36,7 +31,7 @@ describe("Utils", function() {
 		it("should contain information about THELOUNGE_HOME env var", function() {
 			// Mock `log.raw` to extract its effect into a concatenated string
 			let stdout = "";
-			log.raw = TestUtil.mockLogger((str) => stdout += str);
+			stub(log, "raw").callsFake(TestUtil.sanitizeLog((str) => stdout += str));
 
 			Utils.extraHelp();
 
@@ -119,18 +114,12 @@ describe("Utils", function() {
 			});
 
 			describe("when given the same key multiple times", function() {
-				let originalWarn;
-
-				beforeEach(function() {
-					originalWarn = log.warn;
-				});
-
 				afterEach(function() {
-					log.warn = originalWarn;
+					log.warn.restore();
 				});
 
 				it("should not override options", function() {
-					log.warn = () => {};
+					stub(log, "warn");
 
 					expect(Utils.parseConfigOptions("foo=baz", {foo: "bar"}))
 						.to.deep.equal({foo: "bar"});
@@ -138,7 +127,7 @@ describe("Utils", function() {
 
 				it("should display a warning", function() {
 					let warning = "";
-					log.warn = TestUtil.mockLogger((str) => warning += str);
+					stub(log, "warn").callsFake(TestUtil.sanitizeLog((str) => warning += str));
 
 					Utils.parseConfigOptions("foo=bar", {foo: "baz"});
 

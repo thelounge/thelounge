@@ -1,24 +1,21 @@
 "use strict";
 
 const expect = require("chai").expect;
+const stub = require("sinon").stub;
 const TestUtil = require("../../util");
 
 let packages;
 
 describe("packages", function() {
-	let originalLogInfo;
-
 	beforeEach(function() {
-		originalLogInfo = log.info;
-
-		log.info = () => {};
+		stub(log, "info");
 
 		delete require.cache[require.resolve("../../../src/plugins/packages")];
 		packages = require("../../../src/plugins/packages");
 	});
 
 	afterEach(function() {
-		log.info = originalLogInfo;
+		log.info.restore();
 	});
 
 	describe(".getStylesheets", function() {
@@ -51,8 +48,9 @@ describe("packages", function() {
 	describe(".loadPackages", function() {
 		it("should display report about loading packages", function() {
 			// Mock `log.info` to extract its effect into a string
+			log.info.restore();
 			let stdout = "";
-			log.info = TestUtil.mockLogger((str) => stdout += str);
+			stub(log, "info").callsFake(TestUtil.sanitizeLog((str) => stdout += str));
 
 			packages.loadPackages();
 
