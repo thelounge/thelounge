@@ -95,6 +95,7 @@ Mousetrap.bind([
 	contextMenuContainer.hide();
 });
 
+const inputTrap = Mousetrap(input.get(0));
 const colorsHotkeys = {
 	k: "\x03",
 	b: "\x02",
@@ -106,23 +107,16 @@ const colorsHotkeys = {
 };
 
 for (const hotkey in colorsHotkeys) {
-	Mousetrap.bind("mod+" + hotkey, function(e) {
-		const inputElement = input.get(0);
-
-		// Do not handle modifier hotkeys if input is not focused
-		if (document.activeElement !== inputElement) {
-			return;
-		}
-
-		e.preventDefault();
-
+	inputTrap.bind("mod+" + hotkey, function(e) {
 		const modifier = colorsHotkeys[e.key];
 
 		wrapCursor(
-			inputElement,
+			e.target,
 			modifier,
-			inputElement.selectionStart === inputElement.selectionEnd ? "" : modifier
+			e.target.selectionStart === e.target.selectionEnd ? "" : modifier
 		);
+
+		return false;
 	});
 }
 
