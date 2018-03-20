@@ -2958,9 +2958,9 @@ handle-thing@^1.2.5:
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/handle-thing/-/handle-thing-1.2.5.tgz#fd7aad726bf1a5fd16dfc29b2f7a6601d27139c4"
 
-handlebars-loader@1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/handlebars-loader/-/handlebars-loader-1.6.0.tgz#767a5843de30ffe795730f7d8a1ba3ce07af5b62"
+handlebars-loader@1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/handlebars-loader/-/handlebars-loader-1.7.0.tgz#4f750bc62c350fb922e52d8564d667887e909723"
   dependencies:
     async "~0.2.10"
     fastparse "^1.0.0"
