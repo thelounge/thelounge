@@ -42,7 +42,7 @@
     "bcryptjs": "2.4.3",
     "chalk": "2.3.2",
     "cheerio": "0.22.0",
-    "commander": "2.15.0",
+    "commander": "2.15.1",
     "express": "4.16.3",
     "fs-extra": "5.0.0",
     "irc-framework": "2.11.0",
