@@ -5378,9 +5378,9 @@ primer-support@4.5.2:
   version "4.5.2"
   resolved "https://registry.yarnpkg.com/primer-support/-/primer-support-4.5.2.tgz#daab9a48881b6953e8e6ca01865a2f415bf777c5"
 
-primer-tooltips@1.5.2:
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/primer-tooltips/-/primer-tooltips-1.5.2.tgz#3799ce757c1e29953c924aefb849265f617554e7"
+primer-tooltips@1.5.3:
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/primer-tooltips/-/primer-tooltips-1.5.3.tgz#0e666e31136bec634a84e9ecb9d76169d091e249"
   dependencies:
     primer-support "4.5.2"
 
