@@ -3,6 +3,7 @@
 const $ = require("jquery");
 const Mousetrap = require("mousetrap");
 const wrapCursor = require("undate").wrapCursor;
+const utils = require("./utils");
 const input = $("#input");
 const sidebar = $("#sidebar");
 const windows = $("#windows");
@@ -54,7 +55,8 @@ Mousetrap.bind([
 		break;
 	}
 
-	channels.eq(target).click();
+	target = channels.eq(target).click();
+	utils.scrollIntoViewNicely(target[0]);
 
 	return false;
 });
@@ -88,7 +90,8 @@ Mousetrap.bind([
 		break;
 	}
 
-	lobbies.eq(target).click();
+	target = lobbies.eq(target).click();
+	utils.scrollIntoViewNicely(target[0]);
 
 	return false;
 });
