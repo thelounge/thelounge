@@ -55,6 +55,8 @@ Mousetrap.bind([
 	}
 
 	channels.eq(target).click();
+
+	return false;
 });
 
 Mousetrap.bind([
@@ -87,6 +89,8 @@ Mousetrap.bind([
 	}
 
 	lobbies.eq(target).click();
+
+	return false;
 });
 
 Mousetrap.bind([
