@@ -13,7 +13,7 @@
   "homepage": "https://thelounge.chat/",
   "scripts": {
     "build": "webpack",
-    "coverage": "rm -rf .nyc_output/ && run-s test:{client,server} && nyc --nycrc-path=test/.nycrc-report report",
+    "coverage": "run-s test:{client,server} && nyc --nycrc-path=test/.nycrc-report report",
     "dev": "run-p watch start",
     "lint:css": "stylelint --color \"client/**/*.css\"",
     "lint:js": "eslint . --report-unused-disable-directives --color",
