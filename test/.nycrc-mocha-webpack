@@ -6,6 +6,5 @@
   "reporter": [
     "json",
     "text-summary"
-  ],
-  "clean": false
+  ]
 }
