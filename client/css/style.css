@@ -642,6 +642,10 @@ kbd {
 	overflow: hidden;
 	white-space: nowrap;
 	margin-right: 5px;
+}
+
+#windows .header .topic,
+#sidebar .chan .name {
 	-webkit-mask-image: linear-gradient(to left, transparent, black 20px);
 	mask-image: linear-gradient(to left, transparent, black 20px);
 }
@@ -910,7 +914,6 @@ kbd {
 	flex-grow: 1;
 	white-space: nowrap;
 	overflow: hidden;
-	text-overflow: ellipsis;
 	font-size: 14px;
 }
 
