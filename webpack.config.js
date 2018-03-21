@@ -3,11 +3,13 @@
 const webpack = require("webpack");
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const config = {
 	mode: process.env.NODE_ENV === "production" ? "production" : "development",
 	entry: {
 		"js/bundle.js": path.resolve(__dirname, "client/js/lounge.js"),
+		"css/style": path.resolve(__dirname, "client/css/style.css"),
 	},
 	devtool: "source-map",
 	output: {
@@ -17,6 +19,22 @@ const config = {
 	},
 	module: {
 		rules: [
+			{
+				test: /\.css$/,
+				include: [
+					path.resolve(__dirname, "client"),
+				],
+				use: [
+					MiniCssExtractPlugin.loader,
+					{
+						loader: "css-loader",
+						options: {
+							url: false,
+							minimize: process.env.NODE_ENV === "production",
+						},
+					},
+				],
+			},
 			{
 				test: /\.js$/,
 				include: [
@@ -69,6 +87,7 @@ const config = {
 		json3: "JSON", // socket.io uses json3.js, but we do not target any browsers that need it
 	},
 	plugins: [
+		new MiniCssExtractPlugin(),
 		new CopyPlugin([
 			{
 				from: "./node_modules/@fortawesome/fontawesome-free-webfonts/webfonts/fa-solid-900.woff*",
@@ -94,14 +113,6 @@ const config = {
 			{
 				from: "./client/themes/*",
 				to: "themes/[name].[ext]",
-			},
-			{ // TODO: Build css with postcss
-				from: "./client/css/*",
-				to: "css/[name].[ext]",
-			},
-			{
-				from: "./node_modules/primer-tooltips/build/build.css",
-				to: "css/primer-tooltips.[ext]",
 			},
 		]),
 		// socket.io uses debug, we don't need it

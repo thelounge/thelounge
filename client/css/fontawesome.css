@@ -1,0 +1,9 @@
+@font-face {
+	/* We use free solid icons - https://fontawesome.com/icons?s=solid&m=free */
+	font-family: "FontAwesome";
+	font-weight: normal;
+	font-style: normal;
+	src:
+		url("../fonts/fa-solid-900.woff2") format("woff2"),
+		url("../fonts/fa-solid-900.woff") format("woff");
+}
