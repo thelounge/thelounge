@@ -250,9 +250,3 @@ kbd {
 }
 
 /* End form elements */
-
-@media (min-width: 480px) {
-	#chat .from::after {
-		background: linear-gradient(to right, rgba(51, 60, 74, 0.5) 0%, rgba(51, 60, 74, 1) 100%);
-	}
-}

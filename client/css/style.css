@@ -642,16 +642,8 @@ kbd {
 	overflow: hidden;
 	white-space: nowrap;
 	margin-right: 5px;
-}
-
-#sidebar .chan .name::after {
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	width: 20px;
-	background: linear-gradient(to right, rgba(69, 81, 100, 0) 0%, rgba(69, 81, 100, 1) 100%);
-	content: " ";
+	-webkit-mask-image: linear-gradient(to left, transparent, black 20px);
+	mask-image: linear-gradient(to left, transparent, black 20px);
 }
 
 #sidebar .badge,
@@ -2216,22 +2208,11 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 @media (min-width: 480px) {
 	/* Fade out for long usernames */
-
 	#chat .from {
 		padding-left: 10px;
+		-webkit-mask-image: linear-gradient(to left, transparent, black 10px);
+		mask-image: linear-gradient(to left, transparent, black 10px);
 	}
-
-	#chat .from::after {
-		position: absolute;
-		right: 0;
-		bottom: 0;
-		width: 10px;
-		height: 100%;
-		background: linear-gradient(to right, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 1) 100%);
-		content: " ";
-	}
-
-	/* End fade out for long usernames */
 }
 
 @media (max-width: 768px) {
