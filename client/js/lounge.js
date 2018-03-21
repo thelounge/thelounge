@@ -487,15 +487,6 @@ $(function() {
 	$("#help").on("click", "#view-changelog, #back-to-help", openWindow);
 	$("#changelog").on("click", "#back-to-help", openWindow);
 
-	sidebar.on("click", "#sign-out", function() {
-		socket.emit("sign-out");
-		storage.remove("token");
-
-		if (!socket.connected) {
-			location.reload();
-		}
-	});
-
 	function closeChan(chan) {
 		let cmd = "/close";
 

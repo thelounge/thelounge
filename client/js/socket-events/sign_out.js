@@ -1,9 +1,8 @@
 "use strict";
 
 const socket = require("../socket");
-const storage = require("../localStorage");
+const Auth = require("../auth");
 
 socket.on("sign-out", function() {
-	storage.remove("token");
-	location.reload();
+	Auth.signout();
 });

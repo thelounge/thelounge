@@ -13,30 +13,27 @@ function timestamp() {
 	return colors.dim(time);
 }
 
-/* eslint-disable no-console */
-exports.error = function(...args) {
-	console.error(timestamp(), colors.red("[ERROR]"), ...args);
-};
+module.exports = {
+	/* eslint-disable no-console */
+	error(...args) {
+		console.error(timestamp(), colors.red("[ERROR]"), ...args);
+	},
+	warn(...args) {
+		console.error(timestamp(), colors.yellow("[WARN]"), ...args);
+	},
+	info(...args) {
+		console.log(timestamp(), colors.blue("[INFO]"), ...args);
+	},
+	debug(...args) {
+		console.log(timestamp(), colors.green("[DEBUG]"), ...args);
+	},
+	raw(...args) {
+		console.log(...args);
+	},
+	/* eslint-enable no-console */
 
-exports.warn = function(...args) {
-	console.error(timestamp(), colors.yellow("[WARN]"), ...args);
-};
-
-exports.info = function(...args) {
-	console.log(timestamp(), colors.blue("[INFO]"), ...args);
-};
-
-exports.debug = function(...args) {
-	console.log(timestamp(), colors.green("[DEBUG]"), ...args);
-};
-
-exports.raw = function(...args) {
-	console.log(...args);
-};
-
-/* eslint-enable no-console */
-
-exports.prompt = (options, callback) => {
-	options.prompt = [timestamp(), colors.cyan("[PROMPT]"), options.text].join(" ");
-	read(options, callback);
+	prompt(options, callback) {
+		options.prompt = [timestamp(), colors.cyan("[PROMPT]"), options.text].join(" ");
+		read(options, callback);
+	},
 };
