@@ -912,7 +912,6 @@ kbd {
 	margin-left: 8px;
 	word-break: break-all;
 	flex-grow: 1;
-	white-space: nowrap;
 	overflow: hidden;
 	font-size: 14px;
 }
@@ -2499,6 +2498,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 /* Correctly handle multiple successive whitespace characters.
    For example: user has quit ( ===> L   O   L <=== )  */
 
+#windows .header .topic,
 #chat .message .text,
 #chat .motd .text,
 #chat .notice .text,
