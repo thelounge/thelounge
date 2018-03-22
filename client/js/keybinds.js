@@ -127,6 +127,29 @@ for (const hotkey in colorsHotkeys) {
 	});
 }
 
+// Autocomplete bracket and quote characters like in a modern IDE
+// For example, select `text`, press `[` key, and it becomes `[text]`
+const bracketWraps = {
+	'"': '"',
+	"'": "'",
+	"(": ")",
+	"<": ">",
+	"[": "]",
+	"{": "}",
+	"*": "*",
+	"`": "`",
+	"~": "~",
+	_: "_",
+};
+
+inputTrap.bind(Object.keys(bracketWraps), function(e) {
+	if (e.target.selectionStart !== e.target.selectionEnd) {
+		wrapCursor(e.target, e.key, bracketWraps[e.key]);
+
+		return false;
+	}
+});
+
 // Ignored keys which should not automatically focus the input bar
 const ignoredKeys = {
 	8: true, // Backspace
