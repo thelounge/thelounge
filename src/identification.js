@@ -91,9 +91,9 @@ class Identification {
 
 		this.connections.forEach((connection) => {
 			file += `to ${connection.socket.remoteAddress}`
-				+ ` lport ${connection.socket.localPort}`
-				+ ` from ${connection.socket.localAddress}`
 				+ ` fport ${connection.socket.remotePort}`
+				+ ` from ${connection.socket.localAddress}`
+				+ ` lport ${connection.socket.localPort}`
 				+ ` { reply "${connection.user}" }\n`;
 		});
 
