@@ -59,7 +59,7 @@ function appendMessage(container, chanId, chanType, msg) {
 
 	// If current window is not a channel or this message is not condensable,
 	// then just append the message to container and be done with it
-	if (constants.condensedTypes.indexOf(msg.type) === -1 || chanType !== "channel") {
+	if (msg.self || msg.highlight || constants.condensedTypes.indexOf(msg.type) === -1 || chanType !== "channel") {
 		container.append(renderedMessage);
 		return;
 	}
