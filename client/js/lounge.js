@@ -49,6 +49,7 @@ $(function() {
 
 		slideoutMenu.toggle(isOpen);
 		storeSidebarVisibility("thelounge.state.sidebar", isOpen);
+		utils.togglePreviewMoreButtonsIfNeeded();
 	});
 
 	viewport.on("click", ".rt", function() {
@@ -57,6 +58,7 @@ $(function() {
 		viewport.toggleClass("rt", isOpen);
 		chat.find(".chan.active .chat").trigger("keepToBottom");
 		storeSidebarVisibility("thelounge.state.userlist", isOpen);
+		utils.togglePreviewMoreButtonsIfNeeded();
 
 		return false;
 	});
@@ -252,6 +254,8 @@ $(function() {
 			if (!keepSidebarOpen && $(window).outerWidth() < utils.mobileViewportPixels) {
 				slideoutMenu.toggle(false);
 			}
+
+			utils.togglePreviewMoreButtonsIfNeeded();
 		}
 
 		const lastActive = $("#windows > .active");

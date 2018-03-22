@@ -66,6 +66,26 @@ function appendPreview(preview, msg, template) {
 
 	previewContainer.append(template);
 
+	const moreBtn = previewContainer.find(".more");
+	const previewContent = previewContainer.find(".toggle-content")[0];
+
+	const showMoreIfNeeded = () => {
+		if (preview.type === "link") {
+			const isVisible = moreBtn.is(":visible");
+			const shouldShow = previewContent.offsetWidth >= previewContainer[0].offsetWidth;
+
+			if (!isVisible && shouldShow) {
+				moreBtn.show();
+			} else if (isVisible && !shouldShow) {
+				togglePreviewMore(moreBtn, false);
+				moreBtn.hide();
+			}
+		}
+	};
+
+	$(window).on("resize", showMoreIfNeeded);
+	window.requestAnimationFrame(showMoreIfNeeded);
+
 	if (activeChannelId === channelId) {
 		container.trigger("keepToBottom");
 	}
@@ -96,6 +116,24 @@ $("#chat").on("click", ".text .toggle-button", function() {
 		container.scrollBottom();
 	}
 });
+
+$("#chat").on("click", ".toggle-content .more", function() {
+	togglePreviewMore($(this));
+	return false;
+});
+
+function togglePreviewMore(moreBtn, state = undefined) {
+	moreBtn.closest(".toggle-content").toggleClass("opened", state);
+	const isExpanded = moreBtn.closest(".toggle-content").hasClass("opened");
+
+	moreBtn.attr("aria-expanded", isExpanded);
+
+	if (isExpanded) {
+		moreBtn.attr("aria-label", moreBtn.data("opened-text"));
+	} else {
+		moreBtn.attr("aria-label", moreBtn.data("closed-text"));
+	}
+}
 
 /* Image viewer */
 

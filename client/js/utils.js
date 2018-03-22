@@ -23,6 +23,7 @@ module.exports = {
 	toggleNickEditor,
 	toggleNotificationMarkers,
 	requestIdleCallback,
+	togglePreviewMoreButtonsIfNeeded,
 };
 
 function findCurrentNetworkChan(name) {
@@ -140,4 +141,9 @@ function requestIdleCallback(callback, timeout) {
 	} else {
 		callback();
 	}
+}
+
+// Force handling preview display
+function togglePreviewMoreButtonsIfNeeded() {
+	window.requestAnimationFrame(() => $(window).trigger("resize"));
 }
