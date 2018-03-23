@@ -230,28 +230,20 @@ $(function() {
 			chat.find(".chan.active .chat").trigger("keepToBottom"); // fix growing
 		});
 
-	let focus = $.noop;
-
-	if (!("ontouchstart" in window || navigator.maxTouchPoints > 0)) {
-		focus = function() {
-			if (chat.find(".active").hasClass("chan")) {
-				input.trigger("focus");
-			}
-		};
-	}
-
 	if (navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i)) {
 		$(document.body).addClass("is-apple");
 	}
 
-	$("#form").on("submit", function(e) {
-		e.preventDefault();
-		focus();
+	$("#form").on("submit", function() {
+		// Triggering click event opens the virtual keyboard on mobile
+		// This can only be called from another interactive event (e.g. button click)
+		input.trigger("click").trigger("focus");
+
 		const target = chat.data("id");
 		const text = input.val();
 
 		if (text.length === 0) {
-			return;
+			return false;
 		}
 
 		input.val("");
@@ -262,11 +254,13 @@ $(function() {
 			const cmd = args.shift().toLowerCase();
 
 			if (typeof utils.inputCommands[cmd] === "function" && utils.inputCommands[cmd](args)) {
-				return;
+				return false;
 			}
 		}
 
 		socket.emit("input", {target, text});
+
+		return false;
 	});
 
 	$("button#set-nick").on("click", function() {
@@ -346,7 +340,7 @@ $(function() {
 		const target = self.data("target");
 
 		if (!target) {
-			return;
+			return false;
 		}
 
 		// This is a rather gross hack to account for sources that are in the
@@ -435,6 +429,11 @@ $(function() {
 
 		if (chanChat.length > 0 && type !== "special") {
 			chanChat.sticky();
+
+			// On touch devices unfocus (blur) the input to correctly close the virtual keyboard
+			// An explicit blur is required, as the keyboard may open back up if the focus remains
+			// See https://github.com/thelounge/thelounge/issues/2257
+			input.trigger("ontouchstart" in window ? "blur" : "focus");
 		}
 
 		if (chan.data("needsNamesRefresh") === true) {
@@ -451,15 +450,13 @@ $(function() {
 			Changelog.requestIfNeeded();
 		}
 
-		focus();
-
 		// Pushes states to history web API when clicking elements with a data-target attribute.
 		// States are very trivial and only contain a single `clickTarget` property which
 		// contains a CSS selector that targets elements which takes the user to a different view
 		// when clicked. The `popstate` event listener will trigger synthetic click events using that
 		// selector and thus take the user to a different view/state.
 		if (data && data.pushState === false) {
-			return;
+			return false;
 		}
 
 		const state = {};
