@@ -139,7 +139,7 @@ const bracketWraps = {
 	"*": "*",
 	"`": "`",
 	"~": "~",
-	_: "_",
+	"_": "_",
 };
 
 inputTrap.bind(Object.keys(bracketWraps), function(e) {

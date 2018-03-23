@@ -67,7 +67,7 @@ rules:
   prefer-const: error
   prefer-rest-params: error
   prefer-spread: error
-  quote-props: [error, as-needed]
+  quote-props: [error, consistent-as-needed]
   quotes: [error, double, avoid-escape]
   rest-spread-spacing: error
   semi-spacing: error
