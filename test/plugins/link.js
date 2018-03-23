@@ -284,6 +284,38 @@ describe("Link plugin", function() {
 		link(this.irc, this.network.channels[0], message);
 	});
 
+	it("should send accept text/html for initial request", function(done) {
+		app.get("/accept-header-html", function(req, res) {
+			expect(req.headers.accept).to.equal("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+			res.send();
+			done();
+		});
+
+		const message = this.irc.createMessage({
+			text: "http://localhost:9002/accept-header-html",
+		});
+
+		link(this.irc, this.network.channels[0], message);
+	});
+
+	it("should send accept */* for meta image", function(done) {
+		app.get("/accept-header-thumb", function(req, res) {
+			res.send("<title>404 image</title><meta property='og:image' content='http://localhost:9002/accept-header-thumb.png'>");
+		});
+
+		app.get("/accept-header-thumb.png", function(req, res) {
+			expect(req.headers.accept).to.equal("*/*");
+			res.send();
+			done();
+		});
+
+		const message = this.irc.createMessage({
+			text: "http://localhost:9002/accept-header-thumb",
+		});
+
+		link(this.irc, this.network.channels[0], message);
+	});
+
 	it("should not add slash to url", function(done) {
 		const message = this.irc.createMessage({
 			text: "http://localhost:9002",
