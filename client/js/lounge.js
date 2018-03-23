@@ -240,7 +240,7 @@ $(function() {
 		input.trigger("click").trigger("focus");
 
 		const target = chat.data("id");
-		const text = input.val();
+		let text = input.val();
 
 		if (text.length === 0) {
 			return false;
@@ -253,8 +253,16 @@ $(function() {
 			const args = text.substr(1).split(" ");
 			const cmd = args.shift().toLowerCase();
 
-			if (typeof utils.inputCommands[cmd] === "function" && utils.inputCommands[cmd](args)) {
-				return false;
+			if (typeof utils.inputCommands[cmd] === "function") {
+				const output = utils.inputCommands[cmd](args);
+
+				if (typeof output === "string") {
+					if (output.length === 0) {
+						return false;
+					}
+
+					text = output;
+				}
 			}
 		}
 
