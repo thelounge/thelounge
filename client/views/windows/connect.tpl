@@ -66,7 +66,11 @@
 			<label for="connect:username">Username</label>
 		</div>
 		<div class="col-sm-9">
-			<input class="input username" id="connect:username" name="username" value="{{defaults.username}}">
+			{{#if lockUsername}}
+				<input class="input username" name="username" disabled value="{{lockUsername}}">
+        	{{else}}
+        		<input class="input username" id="connect:username" name="username" value="{{defaults.username}}">
+        	{{/if}}
 		</div>
 		{{/unless}}
 		<div class="col-sm-3">

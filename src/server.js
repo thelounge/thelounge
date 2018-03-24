@@ -545,6 +545,7 @@ function getClientConfiguration() {
 	const config = _.pick(Helper.config, [
 		"public",
 		"lockNetwork",
+		"lockUsername",
 		"displayNetwork",
 		"useHexIp",
 		"themes",
