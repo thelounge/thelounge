@@ -52,7 +52,10 @@ module.exports = function(client, chan, msg) {
 	})).slice(0, 5); // Only preview the first 5 URLs in message to avoid abuse
 
 	msg.previews.forEach((preview) => {
-		fetch(normalizeURL(preview.link), {language: client.language}, function(res, err) {
+		fetch(normalizeURL(preview.link), {
+			accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+			language: client.language,
+		}, function(res, err) {
 			if (err) {
 				preview.type = "error";
 				preview.error = "message";
@@ -141,7 +144,12 @@ function parseHtmlMedia($, preview, res, client) {
 
 					foundMedia = true;
 
-					fetch(normalizeURL(mediaUrl), {language: client.language}, (resMedia) => {
+					fetch(normalizeURL(mediaUrl), {
+						accept: type === "video" ?
+							"video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5" :
+							"audio/webm, audio/ogg, audio/wav, audio/*;q=0.9, application/ogg;q=0.7, video/*;q=0.6; */*;q=0.5",
+						language: client.language,
+					}, (resMedia) => {
 						if (resMedia === null || !mediaTypeRegex.test(resMedia.type)) {
 							return reject();
 						}
@@ -273,19 +281,20 @@ function emitPreview(client, msg, preview) {
 	client.emit("msg:preview", {id, preview});
 }
 
-function getRequestHeaders(language) {
-	const headers = {
+function getRequestHeaders(headers) {
+	const formattedHeaders = {
 		"User-Agent": "Mozilla/5.0 (compatible; The Lounge IRC Client; +https://github.com/thelounge/thelounge)",
+		Accept: headers.accept || "*/*",
 	};
 
-	if (language !== null) {
-		headers["Accept-Language"] = language;
+	if (headers.language) {
+		formattedHeaders["Accept-Language"] = headers.language;
 	}
 
-	return headers;
+	return formattedHeaders;
 }
 
-function fetch(uri, {language}, cb) {
+function fetch(uri, headers, cb) {
 	let req;
 
 	try {
@@ -293,7 +302,7 @@ function fetch(uri, {language}, cb) {
 			url: uri,
 			maxRedirects: 5,
 			timeout: 5000,
-			headers: getRequestHeaders(language),
+			headers: getRequestHeaders(headers),
 		});
 	} catch (e) {
 		return cb(null, e);
