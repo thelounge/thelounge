@@ -73,16 +73,18 @@ describe("SQLite Message Storage", function() {
 	});
 
 	it("should store a message", function(done) {
-		store.index("this-is-a-network-guid", "#ThisIsAChannel", new Msg({
-			time: 123456789,
-			text: "Hello from sqlite world!",
-		}));
+		store.database.serialize(() => {
+			store.index("this-is-a-network-guid", "#ThisIsAChannel", new Msg({
+				time: 123456789,
+				text: "Hello from sqlite world!",
+			}));
 
-		store.database.serialize(done);
+			done();
+		});
 	});
 
 	it("should retrieve previously stored message", function(done) {
-		store.getMessages({
+		store.database.serialize(() => store.getMessages({
 			uuid: "this-is-a-network-guid",
 		}, {
 			name: "#thisisaCHANNEL",
@@ -96,7 +98,7 @@ describe("SQLite Message Storage", function() {
 			expect(msg.time.getTime()).to.equal(123456789);
 
 			done();
-		});
+		}));
 	});
 
 	it("should close database", function(done) {
