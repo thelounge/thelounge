@@ -300,6 +300,9 @@ function initialize() {
 		}
 	});
 
+	// Add `Advanced` span to each advanced option
+	$("#settings [data-advanced] h2").append("<span class='advanced'>Advanced</span>");
+
 	// Local init is done, let's sync
 	// We always ask for synced settings even if it is disabled.
 	// Settings can be mandatory to sync and it is used to determine sync base state.

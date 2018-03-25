@@ -1592,6 +1592,11 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	display: none;
 }
 
+#settings .advanced {
+	opacity: 0.6;
+	float: right;
+}
+
 #settings .opt {
 	display: block;
 	padding: 5px 0 5px 1px;
