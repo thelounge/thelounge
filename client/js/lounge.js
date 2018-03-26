@@ -20,7 +20,8 @@ require("./webpush");
 require("./keybinds");
 require("./clipboard");
 const Changelog = require("./socket-events/changelog");
-const JoinChannel = require("./join-channel");
+const contextMenuFactory = require("./contextMenuFactory");
+const contextMenuContainer = $("#context-menu-container");
 
 $(function() {
 	const sidebar = $("#sidebar, #footer");
@@ -29,8 +30,6 @@ $(function() {
 	$(document.body).data("app-name", document.title);
 
 	const viewport = $("#viewport");
-	const contextMenuContainer = $("#context-menu-container");
-	const contextMenu = $("#context-menu");
 
 	function storeSidebarVisibility(name, state) {
 		if ($(window).outerWidth() < utils.mobileViewportPixels) {
@@ -63,128 +62,8 @@ $(function() {
 		return false;
 	});
 
-	function positionContextMenu(that, e) {
-		let offset;
-		const menuWidth = contextMenu.outerWidth();
-		const menuHeight = contextMenu.outerHeight();
-
-		if (that.hasClass("menu")) {
-			offset = that.offset();
-			offset.left -= menuWidth - that.outerWidth();
-			offset.top += that.outerHeight();
-			return offset;
-		}
-
-		offset = {left: e.pageX, top: e.pageY};
-
-		if ((window.innerWidth - offset.left) < menuWidth) {
-			offset.left = window.innerWidth - menuWidth;
-		}
-
-		if ((window.innerHeight - offset.top) < menuHeight) {
-			offset.top = window.innerHeight - menuHeight;
-		}
-
-		return offset;
-	}
-
-	function showContextMenu(that, e) {
-		const target = $(e.currentTarget);
-		let output = "";
-
-		if (target.hasClass("user")) {
-			output = templates.contextmenu_item({
-				class: "user",
-				action: "whois",
-				text: target.text(),
-				data: target.data("name"),
-			});
-			output += templates.contextmenu_divider();
-			output += templates.contextmenu_item({
-				class: "action-whois",
-				action: "whois",
-				text: "User information",
-				data: target.data("name"),
-			});
-			output += templates.contextmenu_item({
-				class: "action-query",
-				action: "query",
-				text: "Direct messages",
-				data: target.data("name"),
-			});
-
-			const channel = target.closest(".chan");
-
-			if (utils.hasRoleInChannel(channel, ["op"]) && channel.data("type") === "channel") {
-				output += templates.contextmenu_divider();
-				output += templates.contextmenu_item({
-					class: "action-kick",
-					action: "kick",
-					text: "Kick",
-					data: target.data("name"),
-				});
-			}
-		} else if (target.hasClass("chan")) {
-			let itemClass;
-
-			if (target.hasClass("lobby")) {
-				itemClass = "network";
-			} else if (target.hasClass("query")) {
-				itemClass = "query";
-			} else {
-				itemClass = "chan";
-			}
-
-			output = templates.contextmenu_item({
-				class: itemClass,
-				action: "focusChan",
-				text: target.attr("aria-label"),
-				data: target.data("target"),
-			});
-			output += templates.contextmenu_divider();
-
-			if (target.hasClass("lobby")) {
-				output += templates.contextmenu_item({
-					class: "list",
-					action: "list",
-					text: "List all channels",
-					data: target.data("id"),
-				});
-				output += templates.contextmenu_item({
-					class: "join",
-					action: "join",
-					text: "Join a channel…",
-					data: target.data("id"),
-				});
-			}
-
-			if (target.hasClass("channel")) {
-				output += templates.contextmenu_item({
-					class: "list",
-					action: "banlist",
-					text: "List banned users",
-					data: target.data("id"),
-				});
-			}
-
-			output += templates.contextmenu_item({
-				class: "close",
-				action: "close",
-				text: target.hasClass("lobby") ? "Disconnect" : target.hasClass("channel") ? "Leave" : "Close",
-				data: target.data("target"),
-			});
-		}
-
-		contextMenuContainer.show();
-		contextMenu
-			.html(output)
-			.css(positionContextMenu($(that), e));
-
-		return false;
-	}
-
 	viewport.on("contextmenu", ".network .chan", function(e) {
-		return showContextMenu(this, e);
+		return contextMenuFactory.createContextMenu($(this), e).show();
 	});
 
 	viewport.on("click contextmenu", ".user", function(e) {
@@ -194,12 +73,12 @@ $(function() {
 			return true;
 		}
 
-		return showContextMenu(this, e);
+		return contextMenuFactory.createContextMenu($(this), e).show();
 	});
 
 	viewport.on("click", "#chat .menu", function(e) {
 		e.currentTarget = $(`#sidebar .chan[data-id="${$(this).closest(".chan").data("id")}"]`)[0];
-		return showContextMenu(this, e);
+		return contextMenuFactory.createContextMenu($(this), e).show();
 	});
 
 	contextMenuContainer.on("click contextmenu", function() {
@@ -511,70 +390,22 @@ $(function() {
 		closeChan($(this).closest(".chan"));
 	});
 
-	const contextMenuActions = {
-		join(itemData) {
-			const network = $(`#join-channel-${itemData}`).closest(".network");
-			JoinChannel.openForm(network);
-		},
-		close(itemData) {
-			closeChan($(`.networks .chan[data-target="${itemData}"]`));
-		},
-		focusChan(itemData) {
-			$(`.networks .chan[data-target="${itemData}"]`).trigger("click");
-		},
-		list(itemData) {
-			socket.emit("input", {
-				target: itemData,
-				text: "/list",
-			});
-		},
-		banlist(itemData) {
-			socket.emit("input", {
-				target: itemData,
-				text: "/banlist",
-			});
-		},
-		whois(itemData) {
-			const chan = utils.findCurrentNetworkChan(itemData);
+	const getCloseDisplay = (target) => {
+		if (target.hasClass("lobby")) {
+			return "Disconnect";
+		} else if (target.hasClass("channel")) {
+			return "Leave";
+		}
 
-			if (chan.length) {
-				chan.trigger("click");
-			}
-
-			socket.emit("input", {
-				target: $("#chat").data("id"),
-				text: "/whois " + itemData,
-			});
-
-			$(`.channel.active .userlist .user[data-name="${itemData}"]`).trigger("click");
-		},
-		query(itemData) {
-			const chan = utils.findCurrentNetworkChan(itemData);
-
-			if (chan.length) {
-				chan.trigger("click");
-			}
-
-			socket.emit("input", {
-				target: $("#chat").data("id"),
-				text: "/query " + itemData,
-			});
-		},
-		kick(itemData) {
-			socket.emit("input", {
-				target: $("#chat").data("id"),
-				text: "/kick " + itemData,
-			});
-		},
+		return "Close";
 	};
 
-	contextMenuActions.execute = (name, ...args) => contextMenuActions[name] && contextMenuActions[name](...args);
-
-	contextMenu.on("click", ".context-menu-item", function() {
-		const $this = $(this);
-		const itemData = $this.data("data");
-		const contextAction = $this.data("action");
-		contextMenuActions.execute(contextAction, itemData);
+	contextMenuFactory.addContextMenuItem({
+		check: (target) => target.hasClass("chan"),
+		className: "close",
+		displayName: getCloseDisplay,
+		data: (target) => target.data("target"),
+		callback: (itemData) => closeChan($(`.networks .chan[data-target="${itemData}"]`)),
 	});
 
 	if ($(document.body).hasClass("public") && (window.location.hash === "#connect" || window.location.hash === "")) {
