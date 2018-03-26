@@ -119,6 +119,17 @@ module.exports = {
 	lockNetwork: false,
 
 	//
+	// Lock username
+	//
+	// If enabled, users will be forced to connect with
+	// the specified username.
+	//
+	// @type     string
+	// @default  null
+	//
+	lockUsername: null,
+
+	//
 	// Hex IP
 	//
 	// If enabled, clients' username will be set to their IP encoded has hex.

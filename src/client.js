@@ -247,12 +247,18 @@ Client.prototype.connect = function(args) {
 		}
 	}
 
+	let resolvedUsername = Helper.config.useHexIp ? Helper.ip2hex(args.ip) : network.username;
+
+	if (Helper.config.lockUsername !== null) {
+		resolvedUsername = Helper.config.lockUsername;
+	}
+
 	network.irc = new ircFramework.Client({
 		version: false, // We handle it ourselves
 		host: network.host,
 		port: network.port,
 		nick: nick,
-		username: Helper.config.useHexIp ? Helper.ip2hex(args.ip) : network.username,
+		username: resolvedUsername,
 		gecos: network.realname,
 		password: network.password,
 		tls: network.tls,
