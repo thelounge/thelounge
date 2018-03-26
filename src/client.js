@@ -140,7 +140,7 @@ Client.prototype.find = function(channelId) {
 
 Client.prototype.connect = function(args) {
 	const client = this;
-	const nick = args.nick || "lounge-user";
+	const nick = args.nick || "thelounge";
 	let webirc = null;
 	let channels = [];
 

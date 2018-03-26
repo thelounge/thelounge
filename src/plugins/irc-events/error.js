@@ -39,7 +39,7 @@ module.exports = function(irc, network) {
 		lobby.pushMessage(client, msg, true);
 
 		if (irc.connection.registered === false) {
-			const random = (data.nick || irc.user.nick) + Math.floor(10 + (Math.random() * 89));
+			const random = (data.nick || irc.user.nick) + Math.floor(Math.random() * 10);
 			irc.changeNick(random);
 		}
 
@@ -59,8 +59,7 @@ module.exports = function(irc, network) {
 		lobby.pushMessage(client, msg, true);
 
 		if (irc.connection.registered === false) {
-			const random = "i" + Math.random().toString(36).substr(2, 10); // 'i' so it never begins with a number
-			irc.changeNick(random);
+			irc.changeNick("thelounge" + Math.floor(Math.random() * 100));
 		}
 
 		client.emit("nick", {
