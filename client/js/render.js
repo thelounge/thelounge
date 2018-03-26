@@ -320,7 +320,9 @@ function collapseNetwork(target) {
 	const networkuuid = collapseButton.closest(".network").data("uuid");
 
 	if (collapseButton.closest(".network").find(".active").length > 0) {
-		collapseButton.closest(".lobby").click();
+		collapseButton.closest(".lobby").trigger("click", {
+			keepSidebarOpen: true,
+		});
 	}
 
 	collapseButton.closest(".network").toggleClass("collapsed");
