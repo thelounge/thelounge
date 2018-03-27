@@ -333,7 +333,7 @@ $(function() {
 		$(this).closest(".msg.condensed").toggleClass("closed");
 	});
 
-	const openWindow = function openWindow(e, {keepSidebarOpen, pushState, replaceHistory}) {
+	const openWindow = function openWindow(e, {keepSidebarOpen, pushState, replaceHistory} = {}) {
 		const self = $(this);
 		const target = self.data("target");
 
