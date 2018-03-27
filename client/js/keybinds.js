@@ -4,6 +4,7 @@ const $ = require("jquery");
 const Mousetrap = require("mousetrap");
 const wrapCursor = require("undate").wrapCursor;
 const utils = require("./utils");
+const form = $("#form");
 const input = $("#input");
 const sidebar = $("#sidebar");
 const windows = $("#windows");
@@ -103,6 +104,60 @@ Mousetrap.bind([
 });
 
 const inputTrap = Mousetrap(input.get(0));
+
+function enableHistory() {
+	const history = [""];
+	let position = 0;
+
+	input.on("input", () => {
+		position = 0;
+	});
+
+	inputTrap.bind("enter", function() {
+		position = 0;
+
+		const text = input.val();
+
+		if (text.length === 0) {
+			return false;
+		}
+
+		// Submit the form when pressing enter instead of inserting a new line
+		form.trigger("submit");
+
+		// Store new message in history if last message isn't already equal
+		if (history[1] !== text) {
+			history.splice(1, 0, text);
+		}
+
+		return false;
+	});
+
+	inputTrap.bind(["up", "down"], function(e, key) {
+		if (e.target.selectionStart !== e.target.selectionEnd || input.data("autocompleting")) {
+			return;
+		}
+
+		if (position === 0) {
+			history[position] = input.val();
+		}
+
+		if (key === "up") {
+			if (position < history.length - 1) {
+				position++;
+			}
+		} else if (position > 0) {
+			position--;
+		}
+
+		input.val(history[position]);
+
+		return false;
+	});
+}
+
+enableHistory();
+
 const colorsHotkeys = {
 	k: "\x03",
 	b: "\x02",

@@ -7,7 +7,6 @@ const moment = require("moment");
 const URI = require("urijs");
 
 // our libraries
-require("./libs/jquery/inputhistory");
 require("./libs/jquery/stickyscroll");
 const slideoutMenu = require("./slideout");
 const templates = require("../views");
@@ -212,7 +211,6 @@ $(function() {
 	}
 
 	const input = $("#input")
-		.history()
 		.on("input", function() {
 			const style = window.getComputedStyle(this);
 
