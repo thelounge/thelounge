@@ -90,6 +90,10 @@ program
 				});
 			});
 
+			add.stderr.on("data", (data) => {
+				log.error(data.toString());
+			});
+
 			add.on("error", (e) => {
 				log.error(`${e}`);
 				process.exit(1);

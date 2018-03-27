@@ -80,6 +80,10 @@ program
 			});
 		});
 
+		remove.stderr.on("data", (data) => {
+			log.error(data.toString());
+		});
+
 		remove.on("error", errorHandler);
 
 		remove.on("close", (code) => {
