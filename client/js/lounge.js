@@ -335,7 +335,7 @@ $(function() {
 		$(this).closest(".msg.condensed").toggleClass("closed");
 	});
 
-	const openWindow = function openWindow(e, data) {
+	const openWindow = function openWindow(e, {keepSidebarOpen, pushState, replaceHistory}) {
 		const self = $(this);
 		const target = self.data("target");
 
@@ -372,7 +372,7 @@ $(function() {
 				utils.toggleNotificationMarkers(false);
 			}
 
-			if ($(window).outerWidth() < utils.mobileViewportPixels) {
+			if (!keepSidebarOpen && $(window).outerWidth() < utils.mobileViewportPixels) {
 				slideoutMenu.toggle(false);
 			}
 		}
@@ -455,7 +455,7 @@ $(function() {
 		// contains a CSS selector that targets elements which takes the user to a different view
 		// when clicked. The `popstate` event listener will trigger synthetic click events using that
 		// selector and thus take the user to a different view/state.
-		if (data && data.pushState === false) {
+		if (pushState === false) {
 			return false;
 		}
 
@@ -470,7 +470,7 @@ $(function() {
 		}
 
 		if (history && history.pushState) {
-			if (data && data.replaceHistory && history.replaceState) {
+			if (replaceHistory && history.replaceState) {
 				history.replaceState(state, null, target);
 			} else {
 				history.pushState(state, null, target);
