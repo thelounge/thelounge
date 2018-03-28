@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v3.0.0-pre.5 - 2018-03-28 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/thelounge/compare/v3.0.0-pre.4...v3.0.0-pre.5)
+
+This is a pre-release for v3.0.0 to offer latest changes without having to wait for a stable release.
+ At this stage, features may still be added or modified until the first release candidate for this version gets released.
+
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+npm install -g thelounge@next
+```
+
 ## v3.0.0-pre.4 - 2018-03-27 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v3.0.0-pre.3...v3.0.0-pre.4)
