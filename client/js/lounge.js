@@ -414,7 +414,19 @@ $(function() {
 			// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in#Iterating_over_own_properties_only
 			for (let key in params) {
 				if (params.hasOwnProperty(key)) {
-					const value = params[key];
+					let value = params[key];
+
+					if (key === "join") {
+						const channels = value.split(",");
+						value = channels.map((c) => {
+							if (c.match(/^\w/)) {
+								return "#" + c;
+							}
+
+							return c;
+						}).join(",");
+					}
+
 					// \W searches for non-word characters
 					key = key.replace(/\W/g, "");
 
