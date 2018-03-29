@@ -54,7 +54,7 @@
     "read": "1.0.7",
     "request": "2.85.0",
     "semver": "5.5.0",
-    "socket.io": "2.0.4",
+    "socket.io": "2.1.0",
     "spdy": "3.4.7",
     "sqlite3": "4.0.0",
     "thelounge-ldapjs-non-maintained-fork": "1.0.2",
