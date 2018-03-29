@@ -7,6 +7,11 @@
 
 	<link rel="preload" as="script" href="js/bundle.vendor.js">
 	<link rel="preload" as="script" href="js/bundle.js">
+	<!--we import the package manager first, so that it's cached for plugins and plugins can't override the object -->
+	<script type="module" src="js/packageManager.js"></script>
+	<% _.forEach(clientPlugins, function(plugin) { %>
+		<script type="module" src="/packages/<%- plugin %>"></script>
+	<% }); %>
 	<link rel="stylesheet" href="css/bootstrap.css">
 	<link rel="stylesheet" href="css/primer-tooltips.css">
 	<link rel="stylesheet" href="css/style.css">
