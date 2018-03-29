@@ -54,10 +54,6 @@ body {
 	background: #2b2b2b;
 }
 
-#sidebar .chan .name::after {
-	background: linear-gradient(to right, rgba(43, 43, 43, 0) 0%, rgba(43, 43, 43, 1) 100%);
-}
-
 #footer {
 	background: #333;
 	border-top: 1px solid #000;
@@ -277,9 +273,3 @@ kbd {
 }
 
 /* End form elements */
-
-@media (min-width: 480px) {
-	#chat .from::after {
-		background: linear-gradient(to right, rgba(63, 63, 63, 0.5) 0%, rgba(63, 63, 63, 1) 100%);
-	}
-}
