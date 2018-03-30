@@ -23,7 +23,7 @@ body {
 }
 
 body {
-	background: #455164;
+	background: #415364;
 	color: #222;
 	font: 16px -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 	margin: 0;
@@ -183,11 +183,6 @@ kbd {
 	margin-bottom: 20px;
 	max-width: 480px;
 	touch-action: pan-y;
-}
-
-#help .container,
-#changelog .container {
-	max-width: 600px;
 }
 
 #js-copy-hack,
@@ -397,9 +392,8 @@ kbd {
 	color: #cfcfcf;
 	content: "\f002"; /* http://fontawesome.io/icon/search/ */
 	position: absolute;
-	right: 18px;
-	font-size: 14px;
-	line-height: 50px;
+	right: 13px;
+	line-height: 45px;
 }
 
 #settings .extra-experimental::before {
@@ -428,7 +422,6 @@ kbd {
 #viewport {
 	display: flex;
 	height: 100%;
-	overflow: hidden;
 }
 
 #windows {
@@ -437,19 +430,21 @@ kbd {
 }
 
 #form button,
-#chat .header button {
+.header button,
+.reveal-password span {
 	transition: opacity 0.2s;
 }
 
 #form button:hover,
-#chat .header button:hover {
+.header button:hover,
+.reveal-password span:hover {
 	opacity: 0.6;
 }
 
 #viewport .lt,
 #viewport .rt,
 #chat button.menu {
-	color: #ccc;
+	color: #607992;
 	display: flex;
 	font-size: 14px;
 	line-height: 1;
@@ -513,7 +508,7 @@ kbd {
 
 #sidebar .chan,
 #sidebar .empty {
-	color: #99a2b4;
+	color: #b7c5d1;
 	font-size: 14px;
 }
 
@@ -521,19 +516,40 @@ kbd {
 	display: none;
 }
 
-#sidebar button,
 #sidebar .chan {
 	cursor: pointer;
 }
 
+/* All sidebar buttons and channels/queries must be white on hover and active */
 #sidebar button:hover,
 #sidebar .chan:hover,
 #sidebar .active {
 	color: #fff;
 }
 
+/* All lobbies/channels/queries and footer buttons must have a half-transparent
+background on hover (unless active) */
+#sidebar .chan:hover,
+#footer button:hover {
+	background-color: rgba(48, 62, 74, 0.5); /* #303e4a x 50% alpha */
+}
+
+/* All active elements, hovered or not, must have a background */
+#sidebar .active,
+#sidebar .active:hover {
+	background-color: #303e4a;
+}
+
+/* Remove background on hovered/active channel when sorting/drag-and-dropping */
+#sidebar .ui-sortable-helper .chan.active, /* Networks */
+#sidebar .ui-sortable-helper .chan:hover,
+#sidebar .chan.ui-sortable-helper.active, /* Channels */
+#sidebar .chan.ui-sortable-helper:hover {
+	background-color: transparent;
+}
+
 #sidebar .networks {
-	padding-top: 20px;
+	padding-top: 5px;
 	touch-action: pan-y;
 	overscroll-behavior: contain;
 	-webkit-overflow-scrolling: touch;
@@ -549,7 +565,7 @@ kbd {
 #sidebar .network,
 #sidebar .network-placeholder {
 	position: relative;
-	margin-bottom: 30px;
+	margin-bottom: 20px;
 	touch-action: pan-y;
 }
 
@@ -564,7 +580,6 @@ kbd {
 #sidebar .chan-placeholder {
 	display: flex;
 	padding: 8px 14px;
-	transition: color 0.2s;
 }
 
 #sidebar .network-placeholder,
@@ -762,29 +777,19 @@ kbd {
 }
 
 #footer {
-	background: rgba(0, 0, 0, 0.06);
 	height: 45px;
 	font-size: 14px;
-	line-height: 45px;
-	text-align: center;
-	width: 220px;
 	flex-shrink: 0;
+	display: flex;
+	justify-content: center;
 }
 
-#footer button.active {
-	color: #fff;
-}
-
-#footer .icon {
-	color: #9ca5b4;
+#footer button {
+	color: #b7c5d1;
 	display: inline-block;
-	line-height: 34px;
-	padding: 0 12px;
-	transition: color 0.2s;
-}
-
-#footer .icon:hover {
-	color: #fff;
+	width: 45px;
+	height: 100%;
+	border-radius: 5px;
 }
 
 .signed-out #footer .sign-in {
@@ -893,8 +898,8 @@ kbd {
 }
 
 #windows .header {
-	line-height: 48px;
-	height: 48px;
+	line-height: 45px;
+	height: 45px;
 	padding: 0 6px;
 	display: flex;
 	flex-shrink: 0;
@@ -1463,7 +1468,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #chat .userlist .count {
 	background: #fafafa;
-	height: 48px;
+	height: 45px;
 	flex-shrink: 0;
 	position: relative;
 }
@@ -1474,7 +1479,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	background: none;
 	font: inherit;
 	outline: 0;
-	padding: 18px 16px;
+	padding: 13px;
 	width: 100%;
 }
 
@@ -1710,21 +1715,17 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 .password-container .reveal-password span {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-size: 16px;
-	color: #cdd3da;
+	color: #607992;
 	width: 37px;
 	height: 37px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-}
-
-.password-container .reveal-password span:hover {
-	color: #79838c;
+	cursor: pointer;
 }
 
 .password-container .reveal-password span::before {
 	content: "\f06e"; /* https://fontawesome.com/icons/eye?style=solid */
-	transition: color 0.2s;
 }
 
 .password-container .reveal-password.visible span::before {
@@ -1864,17 +1865,15 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #form {
-	background: #eee;
-	border-top: 1px solid #ddd;
 	flex: 0 0 auto;
-	padding: 5px;
 }
 
 #windows #form .input {
-	border: 1px solid #ddd;
-	border-radius: 2px;
+	border: 0;
+	border-top: 1px solid #e7e7e7;
+	border-radius: 0;
 	margin: 0;
-	padding: 0;
+	padding: 6px;
 	background: white;
 	display: flex;
 	align-items: flex-end;
@@ -1930,10 +1929,9 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #form #submit {
-	color: #9ca5b4;
+	color: #607992;
 	font-size: 14px;
 	height: 32px;
-	transition: opacity 0.2s;
 	width: 32px;
 	flex: 0 0 auto;
 }
@@ -2292,7 +2290,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	}
 
 	#sidebar {
-		background: #455164;
+		background: #415364;
 		height: 100%;
 		position: absolute;
 		left: -220px;
