@@ -1,8 +1,6 @@
 language: node_js
 node_js:
-# TODO: Node 9.9.0 has a bug with path normalization. Switch back to `9`
-#       https://github.com/nodejs/node/commit/a0adf56 is released.
-- 9.8 # Current stable
+- 9 # Current stable
 - 8 # Active LTS until April 2019
 - 6 # Active LTS until April 2018
 
