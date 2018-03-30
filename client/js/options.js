@@ -49,11 +49,16 @@ const noSync = ["syncSettings"];
 const alwaysSync = [];
 
 // Process usersettings from localstorage.
-let userSettings = JSON.parse(storage.get("settings")) || {};
+let userSettings = JSON.parse(storage.get("settings")) || false;
 
-for (const key in settings) {
-	if (userSettings[key] !== undefined) {
-		settings[key] = userSettings[key];
+if (!userSettings) {
+	// Enable sync by default if there are no user defined settings.
+	settings.syncSettings = true;
+} else {
+	for (const key in settings) {
+		if (userSettings[key] !== undefined) {
+			settings[key] = userSettings[key];
+		}
 	}
 }
 
