@@ -116,6 +116,10 @@ function enableHistory() {
 	inputTrap.bind("enter", function() {
 		position = 0;
 
+		if (input.data("autocompleting")) {
+			return false;
+		}
+
 		const text = input.val();
 
 		if (text.length === 0) {
