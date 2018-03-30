@@ -303,5 +303,5 @@ function initialize() {
 	// Local init is done, let's sync
 	// We always ask for synced settings even if it is disabled.
 	// Settings can be mandatory to sync and it is used to determine sync base state.
-	socket.emit("settings:get");
+	socket.emit("setting:get");
 }
