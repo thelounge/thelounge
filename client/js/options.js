@@ -18,6 +18,7 @@ const noCSSparamReg = /[?&]nocss/;
 // Will be assigned when `initialize` is called.
 let $syncWarningOverride;
 let $syncWarningBase;
+let $forceSyncButton;
 let $warningUnsupported;
 let $warningBlocked;
 
@@ -76,7 +77,7 @@ module.exports = {
 	highlightsRE: null,
 	settings,
 	shouldOpenMessagePreview,
-	noServerSettings,
+	syncAllSettings,
 	processSetting,
 	initialize,
 };
@@ -102,6 +103,7 @@ function updateDesktopNotificationStatus() {
 function applySetting(name, value) {
 	if (name === "syncSettings" && value) {
 		$syncWarningOverride.hide();
+		$forceSyncButton.hide();
 	} else if (name === "motd") {
 		$chat.toggleClass("hide-" + name, !value);
 	} else if (name === "statusMessages") {
@@ -198,8 +200,10 @@ function updateSetting(name, value, sync) {
 			socket.emit("setting:get");
 			$syncWarningOverride.hide();
 			$syncWarningBase.hide();
+			$forceSyncButton.hide();
 		} else if (name === "syncSettings") {
 			$syncWarningOverride.show();
+			$forceSyncButton.show();
 		}
 
 		if (settings.syncSettings && !noSync.includes(name) && sync) {
@@ -210,9 +214,9 @@ function updateSetting(name, value, sync) {
 	}
 }
 
-function noServerSettings() {
-	// Sync is enabled but the server has no settings so we sync all settings from this client.
-	if (settings.syncSettings) {
+function syncAllSettings(force = false) {
+	// Sync all settings if sync is enabled or force is true.
+	if (settings.syncSettings || force) {
 		for (const name in settings) {
 			if (!noSync.includes(name)) {
 				settingSetEmit(name, settings[name]);
@@ -223,8 +227,10 @@ function noServerSettings() {
 
 		$syncWarningOverride.hide();
 		$syncWarningBase.hide();
+		$forceSyncButton.hide();
 	} else {
 		$syncWarningOverride.hide();
+		$forceSyncButton.hide();
 		$syncWarningBase.show();
 	}
 }
@@ -262,6 +268,7 @@ function initialize() {
 
 	$syncWarningOverride = $settings.find(".sync-warning-override");
 	$syncWarningBase = $settings.find(".sync-warning-base");
+	$forceSyncButton = $settings.find(".force-sync-button");
 
 	$warningBlocked.hide();
 	module.exports.initialized = true;
@@ -298,6 +305,10 @@ function initialize() {
 				updateSetting(name, $self.val(), true);
 			}
 		}
+	});
+
+	$settings.on("click", "#forceSync", () => {
+		syncAllSettings(true);
 	});
 
 	// Local init is done, let's sync

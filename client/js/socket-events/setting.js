@@ -19,7 +19,7 @@ socket.on("setting:new", function(data) {
 
 socket.on("setting:all", function(settings) {
 	if (Object.keys(settings).length === 0) {
-		options.noServerSettings();
+		options.syncAllSettings();
 	} else {
 		for (const name in settings) {
 			evaluateSetting(name, settings[name]);

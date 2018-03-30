@@ -28,6 +28,10 @@
 			</label>
 			<p class="sync-warning-override"><strong>Warning</strong> Checking this box will override the settings of this client with those stored on the server.</p>
 			<p class="sync-warning-base"><strong>Warning</strong> No settings have been synced before. Enabling this will sync all settings of this client as the base for other clients.</p>
+			<label class="opt force-sync-button">
+				<button type="button" class="btn" id="forceSync">Force sync settings</button><br>
+				This will override any settings already synced to the server.
+			</label>
 		</div>
 		{{/unless}}
 		<div class="col-sm-12">
