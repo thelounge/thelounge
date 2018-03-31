@@ -39,6 +39,7 @@
 					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Connect to network"><button class="icon connect" data-target="#connect" aria-label="Connect to network" role="tab" aria-controls="connect" aria-selected="false"></button></span>
 					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Settings"><button class="icon settings" data-target="#settings" aria-label="Settings" role="tab" aria-controls="settings" aria-selected="false"></button></span>
 					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Help"><button class="icon help" data-target="#help" aria-label="Help" role="tab" aria-controls="help" aria-selected="false"></button></span>
+					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Search"><button class="icon search" data-target="#search" aria-label="Search"></button></span>
 				</footer>
 			</aside>
 			<div id="sidebar-overlay"></div>
@@ -78,6 +79,28 @@
 				<div id="settings" class="window" role="tabpanel" aria-label="Settings"></div>
 				<div id="help" class="window" role="tabpanel" aria-label="Help"></div>
 				<div id="changelog" class="window" aria-label="Changelog"></div>
+				<div id="search" class="window" aria-label="Search">
+					<div class="header">
+						<button class="lt" aria-label="Toggle channel list"></button>
+					</div>
+					<form class="container" method="post" action="" data-event="search">
+						<div class="row">
+							<div class="col-sm-12">
+								<h1 class="title">Search</h1>
+							</div>
+							<div class="col-sm-8">
+								<label for="text" class="sr-only">Enter text to match</label>
+								<input type="text" id="text" name="text" class="input" placeholder="Enter text to match">
+							</div>
+							<div class="col-sm-4">
+								<button type="submit" class="btn pull-right">Search</button>
+							</div>
+						</div>
+					</form>
+					<div class="results" id="chat">
+						<div class="channel messages"></div>
+					</div>
+				</div>
 			</article>
 		</div>
 

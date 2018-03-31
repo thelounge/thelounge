@@ -139,6 +139,21 @@ class MessageStorage {
 			));
 		});
 	}
+
+	search(query) {
+		return new Promise((resolve, reject) => {
+			this.database.all(
+				'SELECT * FROM messages WHERE type = "message" AND json_extract(msg, "$.text") LIKE ? ORDER BY time DESC LIMIT 100 OFFSET ?',
+				[`%${query.text}%`, 0],
+				(err, rows) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(rows);
+				}
+			});
+		});
+	}
 }
 
 module.exports = MessageStorage;

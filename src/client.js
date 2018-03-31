@@ -437,6 +437,12 @@ Client.prototype.more = function(data) {
 	};
 };
 
+Client.prototype.search = function(query) {
+	if (this.messageStorage) {
+		return this.messageStorage.search(query);
+	}
+};
+
 Client.prototype.open = function(socketId, target) {
 	// Opening a window like settings
 	if (target === null) {

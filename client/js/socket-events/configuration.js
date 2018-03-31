@@ -25,7 +25,7 @@ socket.on("configuration", function(data) {
 	options.initialize();
 	webpush.initialize();
 
-	const forms = $("#connect form, #change-password form");
+	const forms = $("#connect form, #change-password form, #search form");
 
 	forms.on("submit", function() {
 		const form = $(this);

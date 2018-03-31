@@ -481,6 +481,12 @@ function initializeClient(socket, client, token, lastMessage) {
 			const clientSettings = client.config.clientSettings;
 			socket.emit("setting:all", clientSettings);
 		});
+
+		socket.on("search", (query) => {
+			client.search(query).then((results) => {
+				socket.emit("search:results", results);
+			});
+		});
 	}
 
 	socket.on("sign-out", (tokenToSignOut) => {
