@@ -312,7 +312,7 @@ function initialize() {
 		}
 	});
 
-	$settings.on("click", "#forceSync", () => {
+	$settings.find("#forceSync").on("click", () => {
 		syncAllSettings(true);
 	});
 
