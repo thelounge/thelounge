@@ -410,6 +410,10 @@ $(function() {
 		$("#connect").one("show", function() {
 			const params = URI(document.location.search).search(true);
 
+			if ("channels" in params) {
+				params.join = params.channels;
+			}
+
 			// Possible parameters:  name, host, port, password, tls, nick, username, realname, join
 			// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in#Iterating_over_own_properties_only
 			for (let key in params) {
