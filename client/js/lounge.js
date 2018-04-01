@@ -414,6 +414,10 @@ $(function() {
 				params.join = params.channels;
 			}
 
+			if ("nick" in params) {
+				params.nick = params.nick.replace(/\./g, () => "" + Math.floor(Math.random() * Math.floor(10)));
+			}
+
 			// Possible parameters:  name, host, port, password, tls, nick, username, realname, join
 			// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in#Iterating_over_own_properties_only
 			for (let key in params) {
