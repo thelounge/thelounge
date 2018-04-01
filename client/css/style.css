@@ -171,7 +171,7 @@ kbd {
 }
 
 .container {
-	margin: 80px auto;
+	margin: 20px auto;
 	max-width: 480px;
 	touch-action: pan-y;
 }
