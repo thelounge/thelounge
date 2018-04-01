@@ -501,6 +501,15 @@ kbd {
 	width: 220px;
 }
 
+#sidebar .logo,
+#sidebar .logo-inverted {
+	height: 45px;
+}
+
+#sidebar .logo {
+	display: none;
+}
+
 #viewport.menu-open #sidebar {
 	display: none;
 	will-change: transform;
@@ -1583,7 +1592,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	flex-grow: 0;
 }
 
-.logo-inverted {
+#windows .logo-inverted {
 	display: none; /* In dark themes, inverted logo must be used instead */
 }
 
