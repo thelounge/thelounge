@@ -102,6 +102,21 @@ function setHome(newPath) {
 	// Load theme color from manifest.json
 	const manifest = require("../public/manifest.json");
 	this.config.themeColor = manifest.theme_color;
+
+	// TODO: Remove in future release
+	if (["example", "crypto", "zenburn"].includes(this.config.theme)) {
+		if (this.config.theme === "example") {
+			log.warn(`The default theme ${colors.red("example")} was renamed to ${colors.green("default")} as of The Lounge v3.`);
+		} else {
+			log.warn(`The theme ${colors.red(this.config.theme)} was moved to a separate theme as of The Lounge v3.`);
+			log.warn(`Install it with ${colors.bold("thelounge install thelounge-theme-" + this.config.theme)}.`);
+		}
+
+		log.warn(`Falling back to theme ${colors.green("default")} will be removed in a future release.`);
+		log.warn("Please update your configuration file accordingly.");
+
+		this.config.theme = "default";
+	}
 }
 
 function getHomePath() {
