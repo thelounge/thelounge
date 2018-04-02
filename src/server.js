@@ -555,6 +555,7 @@ function getClientConfiguration() {
 	config.version = pkg.version;
 	config.gitCommit = Helper.getGitCommit();
 	config.themes = themes.getAll();
+	config.defaultTheme = Helper.config.theme;
 
 	if (config.displayNetwork) {
 		config.defaults = _.clone(Helper.config.defaults);

@@ -281,7 +281,7 @@ function initialize() {
 	}
 
 	$settings.on("change", "input, select, textarea", function(e) {
-		// We only want to trigger on human triggerd changes.
+		// We only want to trigger on human triggered changes.
 		if (e.originalEvent) {
 			const $self = $(this);
 			const type = $self.prop("type");
