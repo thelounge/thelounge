@@ -63,7 +63,7 @@ function Network(attr) {
 }
 
 Network.prototype.validate = function(client) {
-	this.setNick(String(this.nick || "thelounge").replace(" ", "_"));
+	this.setNick(String(this.nick || Helper.getDefaultNick()).replace(" ", "_"));
 
 	if (!this.username) {
 		this.username = this.nick.replace(/[^a-zA-Z0-9]/g, "");

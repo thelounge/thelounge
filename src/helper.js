@@ -31,6 +31,7 @@ const Helper = {
 	getGitCommit,
 	ip2hex,
 	mergeConfig,
+	getDefaultNick,
 
 	password: {
 		hash: passwordHash,
@@ -189,6 +190,14 @@ function passwordHash(password) {
 
 function passwordCompare(password, expected) {
 	return bcrypt.compare(password, expected);
+}
+
+function getDefaultNick() {
+	if (!this.config.defaults.nick) {
+		return "thelounge";
+	}
+
+	return this.config.defaults.nick.replace(/%/g, () => Math.floor(Math.random() * 10));
 }
 
 function mergeConfig(oldConfig, newConfig) {

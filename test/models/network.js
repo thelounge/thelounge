@@ -51,6 +51,8 @@ describe("Network", function() {
 		});
 
 		it("validate should set correct defaults", function() {
+			Helper.config.defaults.nick = "";
+
 			const network = new Network({
 				host: "localhost",
 			});

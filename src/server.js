@@ -599,7 +599,7 @@ function getClientConfiguration(network) {
 		config.gitCommit = Helper.getGitCommit();
 		config.themes = themes.getAll();
 		config.defaultTheme = Helper.config.theme;
-		config.defaults.nick = config.defaults.nick.replace(/%/g, () => Math.floor(Math.random() * 10));
+		config.defaults.nick = Helper.getDefaultNick();
 	}
 
 	return config;
