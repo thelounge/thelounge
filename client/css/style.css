@@ -2251,6 +2251,11 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		font-size: 15px;
 	}
 
+	#form #input {
+		/* change line-height due to increased font-size above */
+		line-height: 1.3;
+	}
+
 	#sidebar {
 		background: #455164;
 		height: 100%;
