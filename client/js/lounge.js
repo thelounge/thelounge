@@ -21,6 +21,7 @@ require("./clipboard");
 const Changelog = require("./socket-events/changelog");
 const contextMenuFactory = require("./contextMenuFactory");
 const contextMenuContainer = $("#context-menu-container");
+require("./packages/packageApi");
 
 $(function() {
 	const sidebar = $("#sidebar, #footer");
