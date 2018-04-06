@@ -10,7 +10,7 @@ config.entry = {
 // Instrumentation for testing with mocha
 config.module.rules.push({
 	test: /\.js$/,
-	include: path.join(__dirname, "test/client"),
+	include: path.join(__dirname, "test/client/js/*"),
 	use: "mocha-loader",
 });
 
