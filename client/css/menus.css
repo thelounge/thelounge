@@ -1,0 +1,79 @@
+#context-menu-container {
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1000;
+	background: transparent;
+}
+
+#context-menu,
+.textcomplete-menu {
+	position: absolute;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	min-width: 180px;
+	font-size: 14px;
+	background-color: #fff;
+	box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	border-radius: 2px;
+}
+
+.context-menu-divider {
+	height: 1px;
+	margin: 6px 0;
+	background-color: rgba(0, 0, 0, 0.1);
+}
+
+.context-menu-item,
+.textcomplete-item {
+	cursor: pointer;
+	display: block;
+	padding: 4px 8px;
+	color: #333;
+	margin-top: 6px;
+	margin-bottom: 6px;
+	line-height: 1.4;
+	transition: background-color 0.2s;
+}
+
+.context-menu-item:hover,
+.textcomplete-item:hover,
+.textcomplete-menu .active,
+#chat .userlist .user.active {
+	background-color: #f6f6f6;
+	transition: none;
+}
+
+.context-menu-item::before,
+.textcomplete-item::before {
+	width: 20px;
+	display: inline-block;
+}
+
+.textcomplete-item a {
+	color: #333;
+}
+
+.textcomplete-item a:hover {
+	opacity: 1;
+}
+
+.emoji {
+	font-size: 1.4em;
+	vertical-align: text-top;
+	line-height: 1;
+}
+
+.textcomplete-item .emoji {
+	width: 32px;
+	text-align: center;
+}
+
+.textcomplete-item .irc-bg {
+	display: block;
+}
