@@ -1,11 +1,13 @@
 "use strict";
 
 const $ = require("jquery");
+const debounce = require("lodash/debounce");
+const Mousetrap = require("mousetrap");
+
 const options = require("./options");
 const socket = require("./socket");
 const templates = require("../views");
 const chat = $("#chat");
-const Mousetrap = require("mousetrap");
 
 module.exports = renderPreview;
 
@@ -83,7 +85,7 @@ function appendPreview(preview, msg, template) {
 		}
 	};
 
-	$(window).on("resize", showMoreIfNeeded);
+	$(window).on("resize", debounce(showMoreIfNeeded, 150));
 	window.requestAnimationFrame(showMoreIfNeeded);
 
 	if (activeChannelId === channelId) {
