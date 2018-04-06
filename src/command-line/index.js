@@ -29,7 +29,7 @@ if (!fs.existsSync(path.join(
 	"public",
 	"manifest.json"
 ))) {
-	log.error(`The client application was not built. Run ${colors.bold("NODE_ENV=production npm run build")} to resolve this.`);
+	log.error(`The client application was not built. Run ${colors.bold("NODE_ENV=production yarn build")} to resolve this.`);
 	process.exit(1);
 }
 
