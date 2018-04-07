@@ -128,28 +128,26 @@ class MessageStorage {
 						return reject(err);
 					}
 
-					resolve(rows.map((row) => {
-						const msg = JSON.parse(row.msg);
-						msg.time = row.time;
-						msg.type = row.type;
-
-						return new Msg(msg);
-					}).reverse());
+					resolve(rows.map(parseRowToMessage).reverse());
 				}
 			));
 		});
 	}
 
 	search(query) {
+		if (!this.isEnabled) {
+			return Promise.resolve([]);
+		}
+
 		return new Promise((resolve, reject) => {
 			this.database.all(
-				'SELECT * FROM messages WHERE type = "message" AND json_extract(msg, "$.text") LIKE ? ORDER BY time DESC LIMIT 100 OFFSET ?',
+				'SELECT msg, type, time FROM messages WHERE type = "message" AND json_extract(msg, "$.text") LIKE ? ORDER BY time DESC LIMIT 100 OFFSET ?',
 				[`%${query.text}%`, 0],
 				(err, rows) => {
 				if (err) {
 					reject(err);
 				} else {
-					resolve(rows);
+					resolve(rows.map(parseRowToMessage));
 				}
 			});
 		});
@@ -157,3 +155,11 @@ class MessageStorage {
 }
 
 module.exports = MessageStorage;
+
+function parseRowToMessage(row) {
+	const msg = JSON.parse(row.msg);
+	msg.time = row.time;
+	msg.type = row.type;
+
+	return new Msg(msg);
+}

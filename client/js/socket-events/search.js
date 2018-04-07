@@ -9,9 +9,5 @@ const form = $("#search form");
 socket.on("search:results", (results) => {
 	form.find(".btn").prop("disabled", false);
 
-	messages.html(render.buildChannelMessages($(document.createDocumentFragment()), 0, "search", results.map((msg) => {
-		msg = JSON.parse(msg.msg);
-		msg.previews = [];
-		return msg;
-	})));
+	messages.html(render.buildChannelMessages($(document.createDocumentFragment()), 0, "search", results));
 });
