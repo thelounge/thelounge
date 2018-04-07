@@ -98,6 +98,6 @@
     "undate": "0.2.4",
     "webpack": "4.5.0",
     "webpack-cli": "2.0.14",
-    "webpack-dev-server": "3.1.1"
+    "webpack-dev-server": "3.1.2"
   }
 }
