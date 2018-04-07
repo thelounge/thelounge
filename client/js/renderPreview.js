@@ -59,7 +59,8 @@ function appendPreview(preview, msg, template) {
 	}
 
 	const container = msg.closest(".chat");
-	const channelId = container.closest(".chan").data("id") || -1;
+	const channel = container.closest(".chan");
+	const channelId = channel.data("id") || -1;
 	const activeChannelId = chat.find(".chan.active").data("id") || -2;
 
 	msg.find(`.text a[href="${escapedLink}"]`)
@@ -72,7 +73,7 @@ function appendPreview(preview, msg, template) {
 	const previewContent = previewContainer.find(".toggle-content")[0];
 
 	const showMoreIfNeeded = () => {
-		if (preview.type === "link") {
+		if (preview.type === "link" && channel.hasClass("active")) {
 			const isVisible = moreBtn.is(":visible");
 			const shouldShow = previewContent.offsetWidth >= previewContainer[0].offsetWidth;
 
