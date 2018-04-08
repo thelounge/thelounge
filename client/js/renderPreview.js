@@ -70,12 +70,16 @@ function appendPreview(preview, msg, template) {
 	previewContainer.append(template);
 
 	const moreBtn = previewContainer.find(".more");
-	const previewContent = previewContainer.find(".toggle-content")[0];
+	const previewContent = previewContainer.find(".toggle-content");
 
 	const showMoreIfNeeded = () => {
-		if (preview.type === "link" && channel.hasClass("active")) {
+		// Only applies on:
+		if (preview.type === "link" && // link previews
+				channel.hasClass("active") && // in the current channels
+				previewContent.hasClass("show") // that are expanded
+		) {
 			const isVisible = moreBtn.is(":visible");
-			const shouldShow = previewContent.offsetWidth >= previewContainer[0].offsetWidth;
+			const shouldShow = previewContent[0].offsetWidth >= previewContainer[0].offsetWidth;
 
 			if (!isVisible && shouldShow) {
 				moreBtn.show();
@@ -88,6 +92,7 @@ function appendPreview(preview, msg, template) {
 
 	$(window).on("resize", debounce(showMoreIfNeeded, 150));
 	window.requestAnimationFrame(showMoreIfNeeded);
+	previewContent.on("showMoreIfNeeded", showMoreIfNeeded);
 
 	if (activeChannelId === channelId) {
 		container.trigger("keepToBottom");
@@ -104,6 +109,12 @@ $("#chat").on("click", ".text .toggle-button", function() {
 	self.toggleClass("opened");
 	content.toggleClass("show");
 
+	const isExpanded = content.hasClass("show");
+
+	if (isExpanded) {
+		content.trigger("showMoreIfNeeded");
+	}
+
 	// Tell the server we're toggling so it remembers at page reload
 	// TODO Avoid sending many single events when using `/collapse` or `/expand`
 	// See https://github.com/thelounge/thelounge/issues/1377
@@ -111,7 +122,7 @@ $("#chat").on("click", ".text .toggle-button", function() {
 		target: parseInt(self.closest(".chan").data("id"), 10),
 		msgId: parseInt(self.closest(".msg").prop("id").replace("msg-", ""), 10),
 		link: self.data("url"),
-		shown: content.hasClass("show"),
+		shown: isExpanded,
 	});
 
 	// If scrollbar was at the bottom before toggling the preview, keep it at the bottom
