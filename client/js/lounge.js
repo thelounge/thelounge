@@ -36,6 +36,8 @@ $(function() {
 		}
 
 		storage.set(name, state);
+
+		utils.togglePreviewMoreButtonsIfNeeded();
 	}
 
 	// If sidebar overlay is visible and it is clicked, close the sidebar
@@ -49,7 +51,6 @@ $(function() {
 
 		slideoutMenu.toggle(isOpen);
 		storeSidebarVisibility("thelounge.state.sidebar", isOpen);
-		utils.togglePreviewMoreButtonsIfNeeded();
 	});
 
 	viewport.on("click", ".rt", function() {
@@ -58,7 +59,6 @@ $(function() {
 		viewport.toggleClass("rt", isOpen);
 		chat.find(".chan.active .chat").trigger("keepToBottom");
 		storeSidebarVisibility("thelounge.state.userlist", isOpen);
-		utils.togglePreviewMoreButtonsIfNeeded();
 
 		return false;
 	});
