@@ -73,9 +73,8 @@ function appendPreview(preview, msg, template) {
 	const previewContent = previewContainer.find(".toggle-content");
 
 	const showMoreIfNeeded = () => {
-		// Only applies on:
-		if (preview.type === "link" && // link previews
-				channel.hasClass("active") && // in the current channels
+		// Only applies on previews:
+		if (channel.hasClass("active") && // in the current channel
 				previewContent.hasClass("show") // that are expanded
 		) {
 			const isVisible = moreBtn.is(":visible");
@@ -90,12 +89,13 @@ function appendPreview(preview, msg, template) {
 		}
 	};
 
-	$(window).on("resize", debounce(showMoreIfNeeded, 150));
-	window.requestAnimationFrame(showMoreIfNeeded);
-	previewContent.on(
-		"showMoreIfNeeded",
-		() => window.requestAnimationFrame(showMoreIfNeeded)
-	);
+	if (preview.type === "link") {
+		$(window).on("resize", debounce(showMoreIfNeeded, 150));
+		window.requestAnimationFrame(showMoreIfNeeded);
+		previewContent.on("showMoreIfNeeded",
+			() => window.requestAnimationFrame(showMoreIfNeeded)
+		);
+	}
 
 	if (activeChannelId === channelId) {
 		container.trigger("keepToBottom");
