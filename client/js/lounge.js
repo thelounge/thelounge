@@ -254,8 +254,6 @@ $(function() {
 			if (!keepSidebarOpen && $(window).outerWidth() < utils.mobileViewportPixels) {
 				slideoutMenu.toggle(false);
 			}
-
-			utils.togglePreviewMoreButtonsIfNeeded();
 		}
 
 		const lastActive = $("#windows > .active");
@@ -280,6 +278,8 @@ $(function() {
 		const chan = $(target)
 			.addClass("active")
 			.trigger("show");
+
+		utils.togglePreviewMoreButtonsIfNeeded();
 
 		let title = $(document.body).data("app-name");
 		const chanTitle = chan.attr("aria-label");

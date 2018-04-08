@@ -72,32 +72,44 @@ function appendPreview(preview, msg, template) {
 	const moreBtn = previewContainer.find(".more");
 	const previewContent = previewContainer.find(".toggle-content");
 
+	// Depending on the size of the preview and the text within it, show or hide a
+	// "More" button that allows users to expand without having to open the link.
+	// Warning: Make sure to call this only on active channel, link previews only,
+	// expanded only.
 	const showMoreIfNeeded = () => {
-		// Only applies on previews:
-		if (channel.hasClass("active") && // in the current channel
-				previewContent.hasClass("show") // that are expanded
-		) {
-			const isVisible = moreBtn.is(":visible");
-			const shouldShow = previewContent[0].offsetWidth >= previewContainer[0].offsetWidth;
+		const isVisible = moreBtn.is(":visible");
+		const shouldShow = previewContent[0].offsetWidth >= previewContainer[0].offsetWidth;
 
-			if (!isVisible && shouldShow) {
-				moreBtn.show();
-			} else if (isVisible && !shouldShow) {
-				togglePreviewMore(moreBtn, false);
-				moreBtn.hide();
-			}
+		if (!isVisible && shouldShow) {
+			moreBtn.show();
+		} else if (isVisible && !shouldShow) {
+			togglePreviewMore(moreBtn, false);
+			moreBtn.hide();
 		}
 	};
 
+	// "More" button only applies on text previews
 	if (preview.type === "link") {
-		$(window).on("resize", debounce(showMoreIfNeeded, 150));
-		window.requestAnimationFrame(showMoreIfNeeded);
+		// On resize, only touch previews in the current channel that are expanded
+		$(window).on("resize", debounce(() => {
+			if (channel.hasClass("active") && previewContent.hasClass("show")) {
+				showMoreIfNeeded();
+			}
+		}, 150));
+
+		// This event is triggered when a side menu is opened/closed, or when the
+		// preview gets expanded/collapsed.
 		previewContent.on("showMoreIfNeeded",
 			() => window.requestAnimationFrame(showMoreIfNeeded)
 		);
 	}
 
 	if (activeChannelId === channelId) {
+		// If this preview is in active channel, hide "More" button if necessary
+		if (preview.type === "link") {
+			window.requestAnimationFrame(showMoreIfNeeded);
+		}
+
 		container.trigger("keepToBottom");
 	}
 }
