@@ -145,5 +145,6 @@ function requestIdleCallback(callback, timeout) {
 
 // Force handling preview display
 function togglePreviewMoreButtonsIfNeeded() {
-	window.requestAnimationFrame(() => $(window).trigger("resize"));
+	$("#chat .chan.active .toggle-content.toggle-type-link.show")
+		.trigger("showMoreIfNeeded");
 }

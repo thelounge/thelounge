@@ -92,7 +92,10 @@ function appendPreview(preview, msg, template) {
 
 	$(window).on("resize", debounce(showMoreIfNeeded, 150));
 	window.requestAnimationFrame(showMoreIfNeeded);
-	previewContent.on("showMoreIfNeeded", showMoreIfNeeded);
+	previewContent.on(
+		"showMoreIfNeeded",
+		() => window.requestAnimationFrame(showMoreIfNeeded)
+	);
 
 	if (activeChannelId === channelId) {
 		container.trigger("keepToBottom");
