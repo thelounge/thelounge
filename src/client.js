@@ -316,7 +316,11 @@ Client.prototype.updateSession = function(token, ip, request) {
 	}
 
 	if (agent.os.name) {
-		friendlyAgent += ` on ${agent.os.name} ${agent.os.version}`;
+		friendlyAgent += ` on ${agent.os.name}`;
+
+		if (agent.os.version) {
+			friendlyAgent += ` ${agent.os.version}`;
+		}
 	}
 
 	client.config.sessions[token] = _.assign(client.config.sessions[token], {
