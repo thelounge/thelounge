@@ -9,6 +9,8 @@ const socket = require("./socket");
 const templates = require("../views");
 const chat = $("#chat");
 
+const {togglePreviewMoreButtonsIfNeeded} = require("./utils");
+
 module.exports = renderPreview;
 
 function renderPreview(preview, msg) {
@@ -90,13 +92,6 @@ function appendPreview(preview, msg, template) {
 
 	// "More" button only applies on text previews
 	if (preview.type === "link") {
-		// On resize, only touch previews in the current channel that are expanded
-		$(window).on("resize", debounce(() => {
-			if (channel.hasClass("active") && previewContent.hasClass("show")) {
-				showMoreIfNeeded();
-			}
-		}, 150));
-
 		// This event is triggered when a side menu is opened/closed, or when the
 		// preview gets expanded/collapsed.
 		previewContent.on("showMoreIfNeeded",
@@ -113,6 +108,10 @@ function appendPreview(preview, msg, template) {
 		container.trigger("keepToBottom");
 	}
 }
+
+// On resize, previews in the current channel that are expanded need to compute
+// their "More" button. Debounced handler to avoid performance cost.
+$(window).on("resize", debounce(togglePreviewMoreButtonsIfNeeded, 150));
 
 $("#chat").on("click", ".text .toggle-button", function() {
 	const self = $(this);
