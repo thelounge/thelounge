@@ -11,10 +11,10 @@ const ircFramework = require("irc-framework");
 const Helper = require("./helper");
 const UAParser = require("ua-parser-js");
 const MessageStorage = require("./plugins/sqlite");
+const uuidv4 = require("uuid/v4");
 
 module.exports = Client;
 
-let id = 0;
 const events = [
 	"away",
 	"connection",
@@ -71,7 +71,7 @@ function Client(manager, name, config = {}) {
 		lastActiveChannel: -1,
 		attachedClients: {},
 		config: config,
-		id: id++,
+		id: uuidv4(),
 		name: name,
 		networks: [],
 		sockets: manager.sockets,

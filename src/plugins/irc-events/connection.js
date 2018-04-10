@@ -106,7 +106,7 @@ module.exports = function(irc, network) {
 
 	if (Helper.config.debug.ircFramework) {
 		irc.on("debug", function(message) {
-			log.debug("[" + client.name + " (#" + client.id + ") on " + network.name + " (#" + network.id + ")]", message);
+			log.debug("[" + client.name + " (" + client.id + ") on " + network.name + " (#" + network.id + ")]", message);
 		});
 	}
 
