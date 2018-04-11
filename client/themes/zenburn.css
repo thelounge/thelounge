@@ -200,11 +200,16 @@ body {
 }
 
 #chat .error,
-#chat .error .from,
-#chat .channel .highlight,
-#chat .channel .highlight .from,
-#chat .channel .highlight .text {
+#chat .error .from {
 	color: #bc6c4c;
+}
+
+#chat .channel .message.highlight {
+	background-color: #bc6c4c80;
+}
+
+#chat .channel .message.highlight .from {
+	border-right: 1px solid  #bc6c4c80;
 }
 
 #chat .unhandled .from {
