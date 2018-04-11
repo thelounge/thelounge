@@ -8,6 +8,8 @@ const webpush = require("../webpush");
 
 socket.on("configuration", function(data) {
 	if (options.initialized) {
+		// Likely a reconnect, request sync for possibly missed settings.
+		socket.emit("setting:get");
 		return;
 	}
 

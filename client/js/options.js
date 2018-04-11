@@ -18,6 +18,7 @@ const noCSSparamReg = /[?&]nocss/;
 // Will be assigned when `initialize` is called.
 let $syncWarningOverride;
 let $syncWarningBase;
+let $forceSyncButton;
 let $warningUnsupported;
 let $warningBlocked;
 
@@ -48,11 +49,16 @@ const noSync = ["syncSettings"];
 const alwaysSync = [];
 
 // Process usersettings from localstorage.
-let userSettings = JSON.parse(storage.get("settings")) || {};
+let userSettings = JSON.parse(storage.get("settings")) || false;
 
-for (const key in settings) {
-	if (userSettings[key] !== undefined) {
-		settings[key] = userSettings[key];
+if (!userSettings) {
+	// Enable sync by default if there are no user defined settings.
+	settings.syncSettings = true;
+} else {
+	for (const key in settings) {
+		if (userSettings[key] !== undefined) {
+			settings[key] = userSettings[key];
+		}
 	}
 }
 
@@ -76,7 +82,7 @@ module.exports = {
 	highlightsRE: null,
 	settings,
 	shouldOpenMessagePreview,
-	noServerSettings,
+	syncAllSettings,
 	processSetting,
 	initialize,
 };
@@ -102,6 +108,7 @@ function updateDesktopNotificationStatus() {
 function applySetting(name, value) {
 	if (name === "syncSettings" && value) {
 		$syncWarningOverride.hide();
+		$forceSyncButton.hide();
 	} else if (name === "motd") {
 		$chat.toggleClass("hide-" + name, !value);
 	} else if (name === "statusMessages") {
@@ -198,8 +205,10 @@ function updateSetting(name, value, sync) {
 			socket.emit("setting:get");
 			$syncWarningOverride.hide();
 			$syncWarningBase.hide();
+			$forceSyncButton.hide();
 		} else if (name === "syncSettings") {
 			$syncWarningOverride.show();
+			$forceSyncButton.show();
 		}
 
 		if (settings.syncSettings && !noSync.includes(name) && sync) {
@@ -210,9 +219,9 @@ function updateSetting(name, value, sync) {
 	}
 }
 
-function noServerSettings() {
-	// Sync is enabled but the server has no settings so we sync all settings from this client.
-	if (settings.syncSettings) {
+function syncAllSettings(force = false) {
+	// Sync all settings if sync is enabled or force is true.
+	if (settings.syncSettings || force) {
 		for (const name in settings) {
 			if (!noSync.includes(name)) {
 				settingSetEmit(name, settings[name]);
@@ -223,8 +232,10 @@ function noServerSettings() {
 
 		$syncWarningOverride.hide();
 		$syncWarningBase.hide();
+		$forceSyncButton.hide();
 	} else {
 		$syncWarningOverride.hide();
+		$forceSyncButton.hide();
 		$syncWarningBase.show();
 	}
 }
@@ -262,6 +273,7 @@ function initialize() {
 
 	$syncWarningOverride = $settings.find(".sync-warning-override");
 	$syncWarningBase = $settings.find(".sync-warning-base");
+	$forceSyncButton = $settings.find(".force-sync-button");
 
 	$warningBlocked.hide();
 	module.exports.initialized = true;
@@ -300,8 +312,12 @@ function initialize() {
 		}
 	});
 
+	$settings.find("#forceSync").on("click", () => {
+		syncAllSettings(true);
+	});
+
 	// Local init is done, let's sync
 	// We always ask for synced settings even if it is disabled.
 	// Settings can be mandatory to sync and it is used to determine sync base state.
-	socket.emit("settings:get");
+	socket.emit("setting:get");
 }
