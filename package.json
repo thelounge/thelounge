@@ -65,7 +65,7 @@
     "yarn": "1.5.1"
   },
   "devDependencies": {
-    "@fortawesome/fontawesome-free-webfonts": "1.0.5",
+    "@fortawesome/fontawesome-free-webfonts": "1.0.6",
     "babel-core": "6.26.0",
     "babel-loader": "7.1.4",
     "babel-preset-env": "1.6.1",
