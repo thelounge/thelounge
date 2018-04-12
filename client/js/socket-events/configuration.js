@@ -27,6 +27,12 @@ socket.on("configuration", function(data) {
 	options.initialize();
 	webpush.initialize();
 
+	// If localStorage contains a theme that does not exist on this server, switch
+	// back to its default theme.
+	if (!data.themes.map((t) => t.name).includes(options.settings.theme)) {
+		options.processSetting("theme", data.defaultTheme, true);
+	}
+
 	const forms = $("#connect form, #change-password form");
 
 	forms.on("submit", function() {

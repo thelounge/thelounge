@@ -54,9 +54,9 @@ module.exports = {
 	// Find out how to add new themes at https://thelounge.github.io/docs/plugins/themes.html
 	//
 	// @type     string
-	// @default  "example"
+	// @default  "default"
 	//
-	theme: "example",
+	theme: "default",
 
 	//
 	// Prefetch URLs
