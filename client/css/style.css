@@ -2,6 +2,11 @@
 @import "bootstrap.css";
 @import "../../node_modules/primer-tooltips/build/build.css";
 
+:root {
+	/* Links and link-looking buttons */
+	--link-color: #50a656;
+}
+
 html,
 body {
 	height: 100%;
@@ -29,7 +34,7 @@ body {
 a,
 a:hover,
 a:focus {
-	color: #50a656;
+	color: var(--link-color);
 }
 
 a {
@@ -1416,7 +1421,7 @@ kbd {
 }
 
 #chat .toggle-content .more {
-	color: #50a656;
+	color: var(--link-color);
 	font-weight: normal;
 	margin-left: 10px;
 	flex-shrink: 0;

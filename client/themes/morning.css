@@ -1,3 +1,7 @@
+:root {
+	--link-color: #428bca;
+}
+
 body {
 	color: #ccc;
 }
@@ -80,10 +84,6 @@ body {
 #chat.colored-nicks .user.color-30 { color: #9676e2; }
 #chat.colored-nicks .user.color-31 { color: #f2a4eb; }
 #chat.colored-nicks .user.color-32 { color: #85f27d; }
-
-#chat a {
-	color: #428bca;
-}
 
 /* Increase contrast of some IRC colors */
 .irc-fg2 { color: #0074d9; }
