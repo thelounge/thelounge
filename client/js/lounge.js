@@ -36,6 +36,8 @@ $(function() {
 		}
 
 		storage.set(name, state);
+
+		utils.togglePreviewMoreButtonsIfNeeded();
 	}
 
 	// If sidebar overlay is visible and it is clicked, close the sidebar
@@ -276,6 +278,8 @@ $(function() {
 		const chan = $(target)
 			.addClass("active")
 			.trigger("show");
+
+		utils.togglePreviewMoreButtonsIfNeeded();
 
 		let title = $(document.body).data("app-name");
 		const chanTitle = chan.attr("aria-label");
