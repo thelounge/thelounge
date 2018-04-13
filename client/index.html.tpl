@@ -50,8 +50,8 @@
 	<body class="signed-out<%- public ? " public" : "" %>" data-transports="<%- JSON.stringify(transports) %>">
 		<div id="viewport" role="tablist">
 			<aside id="sidebar">
-				<img src="img/logo-horizontal-transparent-bg.svg" class="logo" alt="The Lounge">
-				<img src="img/logo-horizontal-transparent-bg-inverted.svg" class="logo-inverted" alt="The Lounge">
+				<img src="img/logo-<%- public ? 'horizontal-' : '' %>transparent-bg.svg" class="logo" alt="The Lounge">
+				<img src="img/logo-<%- public ? 'horizontal-' : '' %>transparent-bg-inverted.svg" class="logo-inverted" alt="The Lounge">
 				<div class="networks"></div>
 				<div class="empty">
 					You're not connected to any networks yet.
