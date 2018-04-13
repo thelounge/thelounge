@@ -125,6 +125,82 @@ function addKickItem() {
 	});
 }
 
+function addOpItem() {
+	function op(itemData) {
+		socket.emit("input", {
+			target: $("#chat").data("id"),
+			text: "/op " + itemData,
+		});
+	}
+
+	addContextMenuItem({
+		check: (target) =>
+			utils.hasRoleInChannel(target.closest(".chan"), ["op"]) &&
+			!utils.hasRoleInChannel(target.closest(".chan"), ["op"], target.data("name")),
+		className: "action-op",
+		displayName: "Give operator (+o)",
+		data: (target) => target.data("name"),
+		callback: op,
+	});
+}
+
+function addDeopItem() {
+	function deop(itemData) {
+		socket.emit("input", {
+			target: $("#chat").data("id"),
+			text: "/deop " + itemData,
+		});
+	}
+
+	addContextMenuItem({
+		check: (target) =>
+			utils.hasRoleInChannel(target.closest(".chan"), ["op"]) &&
+			utils.hasRoleInChannel(target.closest(".chan"), ["op"], target.data("name")),
+		className: "action-op",
+		displayName: "Revoke operator (-o)",
+		data: (target) => target.data("name"),
+		callback: deop,
+	});
+}
+
+function addVoiceItem() {
+	function voice(itemData) {
+		socket.emit("input", {
+			target: $("#chat").data("id"),
+			text: "/voice " + itemData,
+		});
+	}
+
+	addContextMenuItem({
+		check: (target) =>
+			utils.hasRoleInChannel(target.closest(".chan"), ["op"]) &&
+			!utils.hasRoleInChannel(target.closest(".chan"), ["voice"], target.data("name")),
+		className: "action-voice",
+		displayName: "Give voice (+v)",
+		data: (target) => target.data("name"),
+		callback: voice,
+	});
+}
+
+function addDevoiceItem() {
+	function devoice(itemData) {
+		socket.emit("input", {
+			target: $("#chat").data("id"),
+			text: "/devoice " + itemData,
+		});
+	}
+
+	addContextMenuItem({
+		check: (target) =>
+			utils.hasRoleInChannel(target.closest(".chan"), ["op"]) &&
+			utils.hasRoleInChannel(target.closest(".chan"), ["voice"], target.data("name")),
+		className: "action-voice",
+		displayName: "Revoke voice (-v)",
+		data: (target) => target.data("name"),
+		callback: devoice,
+	});
+}
+
 function addFocusItem() {
 	function focusChan(itemData) {
 		$(`.networks .chan[data-target="${itemData}"]`).click();
@@ -206,6 +282,10 @@ function addDefaultItems() {
 	addWhoisItem();
 	addQueryItem();
 	addKickItem();
+	addOpItem();
+	addDeopItem();
+	addVoiceItem();
+	addDevoiceItem();
 	addFocusItem();
 	addChannelListItem();
 	addBanListItem();

@@ -42,16 +42,16 @@ function resetHeight(element) {
 	element.style.height = element.style.minHeight;
 }
 
-// Given a channel element will determine if the lounge user is one of the supplied roles.
-function hasRoleInChannel(channel, roles) {
+// Given a channel element will determine if the lounge user or a given nick is one of the supplied roles.
+function hasRoleInChannel(channel, roles, nick) {
 	if (!channel || !roles) {
 		return false;
 	}
 
 	const channelID = channel.data("id");
 	const network = $("#sidebar .network").has(`.chan[data-id="${channelID}"]`);
-	const ownNick = network.data("nick");
-	const user = channel.find(`.names-original .user[data-name="${escape(ownNick)}"]`).first();
+	const target = nick || network.data("nick");
+	const user = channel.find(`.names-original .user[data-name="${escape(target)}"]`).first();
 	return user.parent().is("." + roles.join(", ."));
 }
 
