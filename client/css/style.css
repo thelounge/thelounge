@@ -7,6 +7,16 @@
 	--link-color: #50a656;
 }
 
+/* Samsung Internet <7.0 and Microsoft Edge support (yes, both of them use webkit prefix) */
+::-webkit-input-placeholder {
+	color: rgba(0, 0, 0, 0.35);
+}
+
+::placeholder {
+	color: rgba(0, 0, 0, 0.35);
+	opacity: 1; /* fix opacity in Firefox */
+}
+
 html,
 body {
 	height: 100%;
@@ -178,19 +188,6 @@ kbd {
 #help .container,
 #changelog .container {
 	max-width: 600px;
-}
-
-::-moz-placeholder {
-	color: rgba(0, 0, 0, 0.35);
-	opacity: 1;
-}
-
-::-webkit-input-placeholder {
-	color: rgba(0, 0, 0, 0.35);
-}
-
-:-ms-input-placeholder {
-	color: rgba(0, 0, 0, 0.35) !important;
 }
 
 #js-copy-hack,
