@@ -501,6 +501,18 @@ kbd {
 	width: 220px;
 }
 
+#sidebar .scrollable-area {
+	overflow-x: auto;
+	flex-grow: 1;
+	touch-action: pan-y;
+	overscroll-behavior: contain;
+	-webkit-overflow-scrolling: touch;
+}
+
+#sidebar .logo-container {
+	text-align: center;
+}
+
 #sidebar .logo,
 #sidebar .logo-inverted {
 	height: 45px;
@@ -559,12 +571,6 @@ background on hover (unless active) */
 
 #sidebar .networks {
 	padding-top: 5px;
-	touch-action: pan-y;
-	overscroll-behavior: contain;
-	-webkit-overflow-scrolling: touch;
-	flex-grow: 1;
-	overflow: auto;
-	overflow-x: hidden;
 }
 
 #sidebar .networks:empty {
@@ -2276,6 +2282,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	.tooltipped-no-touch:hover::after {
 		visibility: hidden;
 		opacity: 0;
+	}
+
+	#sidebar .logo-container {
+		margin-top: 5px;
 	}
 
 	#sidebar button,
