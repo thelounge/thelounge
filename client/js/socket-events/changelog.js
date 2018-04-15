@@ -4,10 +4,6 @@ const $ = require("jquery");
 const socket = require("../socket");
 const templates = require("../../views");
 
-module.exports = {
-	requestIfNeeded,
-};
-
 // Requests version information if it hasn't been retrieved before (or if it has
 // been removed from the page, i.e. when clicking on "Check now". Displays a
 // loading state until received.
@@ -53,6 +49,8 @@ socket.on("changelog", function(data) {
 		);
 	}
 });
+
+$("#help, #changelog").on("show", requestIfNeeded);
 
 // When clicking the "Check now" button, remove current checker information and
 // request a new one. Loading will be displayed in the meantime.

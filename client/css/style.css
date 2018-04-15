@@ -419,6 +419,7 @@ kbd {
 	margin-right: 9px;
 }
 
+.context-menu-edit::before,
 #set-nick::before {
 	content: "\f303"; /* https://fontawesome.com/icons/pencil-alt?style=solid */
 }
