@@ -111,17 +111,6 @@ body {
 	opacity: 1;
 }
 
-/* Buttons */
-#chat .show-more-button {
-	background: #2e3642;
-	border-color: #242a33;
-	color: #ccc;
-}
-
-#chat .show-more-button:hover {
-	color: #fff;
-}
-
 #chat .header {
 	color: #99a2b4;
 }

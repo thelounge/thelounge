@@ -89,12 +89,13 @@ socket.on("more", function(data) {
 		scrollable.find(".show-more").removeClass("show");
 	}
 
-	scrollable.find(".show-more-button")
-		.text("Show older messages")
-		.prop("disabled", false);
+	// Swap button text back from its alternative label
+	const showMoreBtn = scrollable.find(".show-more button");
+	swapText(showMoreBtn);
+	showMoreBtn.prop("disabled", false);
 });
 
-chat.on("click", ".show-more-button", function() {
+chat.on("click", ".show-more button", function() {
 	const self = $(this);
 	const lastMessage = self.closest(".chat").find(".msg:not(.condensed)").first();
 	let lastMessageId = -1;
@@ -103,12 +104,18 @@ chat.on("click", ".show-more-button", function() {
 		lastMessageId = parseInt(lastMessage.prop("id").replace("msg-", ""), 10);
 	}
 
-	self
-		.text("Loading older messages…")
-		.prop("disabled", true);
+	// Swap button text with its alternative label
+	swapText(self);
+	self.prop("disabled", true);
 
 	socket.emit("more", {
 		target: self.data("id"),
 		lastId: lastMessageId,
 	});
 });
+
+// Given a button, swap its text with the content of `data-alt-text`
+function swapText(btn) {
+	const altText = btn.data("alt-text");
+	btn.data("alt-text", btn.text()).text(altText);
+}

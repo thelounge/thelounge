@@ -440,14 +440,13 @@ kbd {
 	position: relative;
 }
 
-#chat button,
 #form button,
-#chat .user {
+#chat .header button {
 	transition: opacity 0.2s;
 }
 
-#chat button:hover,
-#form button:hover {
+#form button:hover,
+#chat .header button:hover {
 	opacity: 0.6;
 }
 
@@ -1029,25 +1028,14 @@ kbd {
 #chat .show-more {
 	display: none;
 	padding: 10px;
+	padding-top: 15px;
 	padding-bottom: 0;
 	width: 100%;
 }
 
-#chat .show-more-button {
-	background: #f4f4f4;
-	background-image: linear-gradient(#f4f4f4, #ececec);
-	border: 1px solid #d7d7d7;
-	border-bottom-color: #b7b7b7;
-	border-radius: 2px;
-	color: #555;
-	font-size: 12px;
-	height: 34px;
-	line-height: 0;
+#chat .show-more .btn {
 	width: 100%;
-}
-
-#chat .show-more-button:hover {
-	opacity: 1;
+	margin: 0;
 }
 
 #chat .messages {
@@ -1123,14 +1111,6 @@ kbd {
 	padding: 0 10px;
 }
 
-.inline-channel {
-	cursor: pointer;
-}
-
-.inline-channel:hover {
-	opacity: 0.6;
-}
-
 #chat .time,
 #chat .from,
 #chat .content {
@@ -1181,15 +1161,23 @@ kbd {
 	word-break: normal;
 }
 
+/* Parsed nicks and channels */
+
+.chat .user,
+.inline-channel {
+	cursor: pointer;
+	transition: opacity 0.2s;
+}
+
+.chat .user:hover,
+.inline-channel:hover {
+	opacity: 0.6;
+}
+
 /* Nicknames */
 
 #chat .user {
-	cursor: pointer;
 	color: #50a656;
-}
-
-.chat .user:hover {
-	opacity: 0.6;
 }
 
 #chat.colored-nicks .user.color-1 { color: #107ead; }

@@ -32,7 +32,7 @@ socket.on("init", function(data) {
 	}
 
 	$("#connection-error").removeClass("shown");
-	$(".show-more-button, #input").prop("disabled", false);
+	$(".show-more button, #input").prop("disabled", false);
 	$("#submit").show();
 
 	if (lastMessageId < 0) {
