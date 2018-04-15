@@ -51,7 +51,8 @@ Helper.config = require(path.resolve(path.join(
 
 function getVersion() {
 	const gitCommit = getGitCommit();
-	return gitCommit ? `source (${gitCommit})` : `v${pkg.version}`;
+	const version = `v${pkg.version}`;
+	return gitCommit ? `source (${gitCommit} / ${version})` : version;
 }
 
 let _gitCommit;
