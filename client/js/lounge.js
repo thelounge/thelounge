@@ -141,60 +141,6 @@ $(function() {
 		return false;
 	});
 
-	$("button#set-nick").on("click", function() {
-		utils.toggleNickEditor(true);
-
-		// Selects existing nick in the editable text field
-		const element = document.querySelector("#nick-value");
-		element.focus();
-		const range = document.createRange();
-		range.selectNodeContents(element);
-		const selection = window.getSelection();
-		selection.removeAllRanges();
-		selection.addRange(range);
-	});
-
-	$("button#cancel-nick").on("click", cancelNick);
-	$("button#submit-nick").on("click", submitNick);
-
-	function submitNick() {
-		const newNick = $("#nick-value").text().trim();
-
-		if (newNick.length === 0) {
-			cancelNick();
-			return;
-		}
-
-		utils.toggleNickEditor(false);
-
-		socket.emit("input", {
-			target: chat.data("id"),
-			text: "/nick " + newNick,
-		});
-	}
-
-	function cancelNick() {
-		utils.setNick(sidebar.find(".chan.active").closest(".network").data("nick"));
-	}
-
-	$("#nick-value").on("keypress", function(e) {
-		switch (e.keyCode ? e.keyCode : e.which) {
-		case 13: // Enter
-			// Ensures a new line is not added when pressing Enter
-			e.preventDefault();
-			break;
-		}
-	}).on("keyup", function(e) {
-		switch (e.keyCode ? e.keyCode : e.which) {
-		case 13: // Enter
-			submitNick();
-			break;
-		case 27: // Escape
-			cancelNick();
-			break;
-		}
-	});
-
 	chat.on("click", ".inline-channel", function() {
 		const name = $(this).data("chan");
 		const chan = utils.findCurrentNetworkChan(name);
@@ -302,7 +248,7 @@ $(function() {
 
 		if (self.hasClass("chan")) {
 			$("#chat-container").addClass("active");
-			utils.setNick(self.closest(".network").data("nick"));
+			$("#nick").text(self.closest(".network").data("nick"));
 		}
 
 		const chanChat = chan.find(".chat");
