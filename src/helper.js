@@ -51,7 +51,8 @@ Helper.config = require(path.resolve(path.join(
 
 function getVersion() {
 	const gitCommit = getGitCommit();
-	return gitCommit ? `source (${gitCommit})` : `v${pkg.version}`;
+	const version = `v${pkg.version}`;
+	return gitCommit ? `source (${gitCommit} / ${version})` : version;
 }
 
 let _gitCommit;
@@ -61,9 +62,17 @@ function getGitCommit() {
 		return _gitCommit;
 	}
 
+	if (!fs.existsSync(path.resolve(__dirname, "..", ".git", "HEAD"))) {
+		_gitCommit = null;
+		return null;
+	}
+
 	try {
 		_gitCommit = require("child_process")
-			.execSync("git rev-parse --short HEAD 2> /dev/null") // Returns hash of current commit
+			.execSync(
+				"git rev-parse --short HEAD", // Returns hash of current commit
+				{stdio: ["ignore", "pipe", "ignore"]}
+			)
 			.toString()
 			.trim();
 		return _gitCommit;
