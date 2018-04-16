@@ -62,6 +62,11 @@ function getGitCommit() {
 		return _gitCommit;
 	}
 
+	if (!fs.existsSync(path.resolve(__dirname, "..", ".git", "HEAD"))) {
+		_gitCommit = null;
+		return null;
+	}
+
 	try {
 		_gitCommit = require("child_process")
 			.execSync(
