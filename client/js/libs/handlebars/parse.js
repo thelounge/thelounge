@@ -122,7 +122,7 @@ module.exports = function parse(text, users) {
 			return `<span class="emoji" role="img" aria-label="Emoji: ${emojiMap[textPart.emoji]}" title="${emojiMap[textPart.emoji]}">${fragments}</span>`;
 		} else if (textPart.nick) {
 			const nick = Handlebars.Utils.escapeExpression(textPart.nick);
-			return `<span role="button" class="user ${colorClass(nick)}" data-name="${nick}">${fragments}</span>`;
+			return `<span role="button" class="user ${colorClass(textPart.nick)}" data-name="${nick}">${fragments}</span>`;
 		}
 
 		return fragments;
