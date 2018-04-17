@@ -3,7 +3,6 @@
 const _ = require("lodash");
 const Helper = require("../helper");
 const User = require("./user");
-const userLog = require("../userLog");
 const storage = require("../plugins/storage");
 
 module.exports = Chan;
@@ -180,13 +179,8 @@ Chan.prototype.getFilteredClone = function(lastActiveChannel, lastMessage) {
 Chan.prototype.writeUserLog = function(client, msg) {
 	this.messages.push(msg);
 
-	// Does this user have logs disabled
-	if (!client.config.log) {
-		return;
-	}
-
-	// Are logs disabled server-wide
-	if (Helper.config.messageStorage.length === 0) {
+	// Are there any logs enabled
+	if (client.messageStorage.length === 0) {
 		return;
 	}
 
@@ -202,27 +196,23 @@ Chan.prototype.writeUserLog = function(client, msg) {
 		return;
 	}
 
-	// TODO: Something more pluggable
-	if (Helper.config.messageStorage.includes("sqlite")) {
-		client.messageStorage.index(target.network.uuid, this.name, msg);
-	}
-
-	if (Helper.config.messageStorage.includes("text")) {
-		userLog.write(
-			client.name,
-			target.network.host, // TODO: Fix #1392, multiple connections to same server results in duplicate logs
-			this.type === Chan.Type.LOBBY ? target.network.host : this.name,
-			msg
-		);
+	for (const messageStorage of client.messageStorage) {
+		messageStorage.index(target.network, this, msg);
 	}
 };
 
 Chan.prototype.loadMessages = function(client, network) {
-	if (!client.messageStorage || !this.isLoggable()) {
+	if (!this.isLoggable()) {
 		return;
 	}
 
-	client.messageStorage
+	const messageStorage = client.messageStorage.find((s) => s.canProvideMessages());
+
+	if (!messageStorage) {
+		return;
+	}
+
+	messageStorage
 		.getMessages(network, this)
 		.then((messages) => {
 			if (messages.length === 0) {

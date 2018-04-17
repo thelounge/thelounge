@@ -14,6 +14,7 @@ let configPath;
 let usersPath;
 let storagePath;
 let packagesPath;
+let userLogsPath;
 
 const Helper = {
 	config: null,
@@ -89,6 +90,7 @@ function setHome(newPath) {
 	usersPath = path.join(homePath, "users");
 	storagePath = path.join(homePath, "storage");
 	packagesPath = path.join(homePath, "packages");
+	userLogsPath = path.join(homePath, "logs");
 
 	// Reload config from new home location
 	if (fs.existsSync(configPath)) {
@@ -145,8 +147,8 @@ function getUserConfigPath(name) {
 	return path.join(usersPath, name + ".json");
 }
 
-function getUserLogsPath(name, network) {
-	return path.join(homePath, "logs", name, network);
+function getUserLogsPath() {
+	return userLogsPath;
 }
 
 function getStoragePath() {

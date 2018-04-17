@@ -8,8 +8,10 @@ const Msg = require("./models/msg");
 const Network = require("./models/network");
 const Helper = require("./helper");
 const UAParser = require("ua-parser-js");
-const MessageStorage = require("./plugins/sqlite");
 const uuidv4 = require("uuid/v4");
+
+const MessageStorage = require("./plugins/messageStorage/sqlite");
+const TextFileMessageStorage = require("./plugins/messageStorage/text");
 
 module.exports = Client;
 
@@ -76,16 +78,23 @@ function Client(manager, name, config = {}) {
 		networks: [],
 		sockets: manager.sockets,
 		manager: manager,
+		messageStorage: [],
 	});
 
 	const client = this;
 	let delay = 0;
 
-	if (!Helper.config.public) {
-		client.messageStorage = new MessageStorage(client);
+	if (!Helper.config.public && client.config.log) {
+		if (Helper.config.messageStorage.includes("sqlite")) {
+			client.messageStorage.push(new MessageStorage(client));
+		}
 
-		if (client.config.log && Helper.config.messageStorage.includes("sqlite")) {
-			client.messageStorage.enable(client.name);
+		if (Helper.config.messageStorage.includes("text")) {
+			client.messageStorage.push(new TextFileMessageStorage(client));
+		}
+
+		for (const messageStorage of client.messageStorage) {
+			messageStorage.enable();
 		}
 	}
 
@@ -489,8 +498,8 @@ Client.prototype.quit = function(signOut) {
 		network.destroy();
 	});
 
-	if (this.messageStorage) {
-		this.messageStorage.close();
+	for (const messageStorage of this.messageStorage) {
+		messageStorage.close();
 	}
 };
 
