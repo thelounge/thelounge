@@ -114,6 +114,10 @@ const config = {
 				from: "./client/themes/*",
 				to: "themes/[name].[ext]",
 			},
+			{
+				from: "./node_modules/primer-tooltips/build/build.css",
+				to: "css/primer-tooltips.[ext]",
+			},
 		]),
 		// socket.io uses debug, we don't need it
 		new webpack.NormalModuleReplacementPlugin(/debug/, path.resolve(__dirname, "scripts/noop.js")),
