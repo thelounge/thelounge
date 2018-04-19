@@ -89,7 +89,7 @@
     "mocha-webpack": "2.0.0-beta.0",
     "mousetrap": "1.6.1",
     "npm-run-all": "4.1.2",
-    "nyc": "11.6.0",
+    "nyc": "11.7.1",
     "sinon": "4.5.0",
     "socket.io-client": "2.1.0",
     "stylelint": "9.2.0",
