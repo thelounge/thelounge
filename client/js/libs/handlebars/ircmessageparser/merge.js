@@ -24,10 +24,7 @@ function sortParts(a, b) {
 // different styles, the first resulting part will contain fragments "fo" and
 // "o", and the second resulting part will contain "b" and "ar". "o" and "b"
 // fragments will contain duplicate styling attributes.
-function merge(textParts, styleFragments) {
-	// Re-build the overall text (without control codes) from the style fragments
-	const cleanText = styleFragments.reduce((acc, frag) => acc + frag.text, "");
-
+function merge(textParts, styleFragments, cleanText) {
 	// Every section of the original text that has not been captured in a "part"
 	// is filled with "text" parts, dummy objects with start/end but no extra
 	// metadata.
