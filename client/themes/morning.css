@@ -32,7 +32,7 @@ body {
 
 /* Borders */
 #chat .content,
-#windows .header,
+#windows #chat .header,
 #chat .user-mode::before,
 #chat .userlist {
 	border-color: #2a323d;
