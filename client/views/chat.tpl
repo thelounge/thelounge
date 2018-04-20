@@ -21,7 +21,7 @@
 	<div class="chat-content">
 		<div class="chat">
 			<div class="show-more{{#if messages.length}} show{{/if}}">
-				<button class="show-more-button" data-id="{{id}}">Show older messages</button>
+				<button class="btn" data-id="{{id}}" data-alt-text="Loading…">Show older messages</button>
 			</div>
 			<div class="messages" role="log" aria-live="polite" aria-relevant="additions"></div>
 		</div>
