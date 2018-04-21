@@ -274,6 +274,8 @@ kbd {
 .context-menu-list::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
 .context-menu-action-whois::before { content: "\f05a"; /* http://fontawesome.io/icon/info-circle/  */ }
 .context-menu-action-kick::before { content: "\f05e"; /* http://fontawesome.io/icon/ban/ */ }
+.context-menu-action-op::before { content: "\f1fa"; /* http://fontawesome.io/icon/at/ */ }
+.context-menu-action-voice::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
 .context-menu-network::before { content: "\f233"; /* https://fontawesome.com/icons/server?style=solid */ }
 .context-menu-edit::before { content: "\f303"; /* https://fontawesome.com/icons/pencil-alt?style=solid */ }
 
@@ -1888,7 +1890,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	list-style: none;
 	margin: 0;
 	padding: 0;
-	min-width: 160px;
+	min-width: 180px;
 	font-size: 14px;
 	background-color: #fff;
 	box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
