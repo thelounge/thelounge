@@ -4,7 +4,6 @@
 require("jquery-ui/ui/widgets/sortable");
 const $ = require("jquery");
 const moment = require("moment");
-const URI = require("urijs");
 
 // our libraries
 require("./libs/jquery/stickyscroll");
@@ -345,48 +344,6 @@ $(function() {
 		data: (target) => target.attr("data-target"),
 		callback: (itemData) => closeChan($(`.networks .chan[data-target="${itemData}"]`)),
 	});
-
-	if ($(document.body).hasClass("public") && (window.location.hash === "#connect" || window.location.hash === "")) {
-		$("#connect").one("show", function() {
-			const params = URI(document.location.search).search(true);
-
-			if ("channels" in params) {
-				params.join = params.channels;
-			}
-
-			// Possible parameters:  name, host, port, password, tls, nick, username, realname, join
-			// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in#Iterating_over_own_properties_only
-			for (let key in params) {
-				if (params.hasOwnProperty(key)) {
-					let value = params[key];
-
-					if (key === "join") {
-						value = value.split(",").map((chan) => {
-							if (!chan.match(/^[#&!+]/)) {
-								return `#${chan}`;
-							}
-
-							return chan;
-						}).join(", ");
-					}
-
-					// \W searches for non-word characters
-					key = key.replace(/\W/g, "");
-
-					const element = $("#connect input[name='" + key + "']");
-
-					// if the element exists, it isn't disabled, and it isn't hidden
-					if (element.length > 0 && !element.is(":disabled") && !element.is(":hidden")) {
-						if (element.is(":checkbox")) {
-							element.prop("checked", (value === "1" || value === "true") ? true : false);
-						} else {
-							element.val(value);
-						}
-					}
-				}
-			}
-		});
-	}
 
 	$(document).on("visibilitychange focus click", () => {
 		if (sidebar.find(".highlight").length === 0) {
