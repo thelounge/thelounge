@@ -23,10 +23,6 @@ socket.on("init", function(data) {
 
 	if (data.networks.length === 0) {
 		sidebar.find(".empty").show();
-
-		$("#footer").find(".connect").trigger("click", {
-			pushState: false,
-		});
 	} else {
 		render.renderNetworks(data);
 	}
