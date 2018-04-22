@@ -1981,12 +1981,15 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	transition: background-color 0.2s;
 }
 
+.context-menu-item:focus,
+.textcomplete-item:focus,
 .context-menu-item:hover,
 .textcomplete-item:hover,
 .textcomplete-menu .active,
 #chat .userlist .user.active {
 	background-color: #f6f6f6;
 	transition: none;
+	outline: 0; /* TODO: Handle focus outlines in PR #1873 */
 }
 
 .context-menu-item::before,

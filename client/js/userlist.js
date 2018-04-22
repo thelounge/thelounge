@@ -57,9 +57,9 @@ chat.on("mouseleave", ".userlist .user", function() {
 });
 
 exports.handleKeybinds = function(input) {
-	Mousetrap(input.get(0)).bind(["up", "down"], (e, key) => {
-		e.preventDefault();
+	const trap = Mousetrap(input.get(0));
 
+	trap.bind(["up", "down"], (e, key) => {
 		const userlists = input.closest(".userlist");
 		let userlist;
 
@@ -73,7 +73,7 @@ exports.handleKeybinds = function(input) {
 		const users = userlist.find(".user");
 
 		if (users.length === 0) {
-			return;
+			return false;
 		}
 
 		// Find which item in the array of users is currently selected, if any.
@@ -95,11 +95,13 @@ exports.handleKeybinds = function(input) {
 
 		// Adjust scroll when active item is outside of the visible area
 		utils.scrollIntoViewNicely(userlist.find(".user.active")[0]);
+
+		return false;
 	});
 
 	// When pressing Enter, open the context menu (emit a click) on the active
 	// user
-	Mousetrap(input.get(0)).bind("enter", () => {
+	trap.bind("enter", () => {
 		const user = input.closest(".userlist").find(".user.active");
 
 		if (user.length) {
@@ -109,5 +111,7 @@ exports.handleKeybinds = function(input) {
 			clickEvent.pageY = userOffset.top + user.height();
 			user.trigger(clickEvent);
 		}
+
+		return false;
 	});
 };

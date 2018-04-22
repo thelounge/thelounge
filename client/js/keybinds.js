@@ -8,7 +8,6 @@ const form = $("#form");
 const input = $("#input");
 const sidebar = $("#sidebar");
 const windows = $("#windows");
-const contextMenuContainer = $("#context-menu-container");
 
 Mousetrap.bind([
 	"pageup",
@@ -95,12 +94,6 @@ Mousetrap.bind([
 	utils.scrollIntoViewNicely(target[0]);
 
 	return false;
-});
-
-Mousetrap.bind([
-	"escape",
-], function() {
-	contextMenuContainer.hide();
 });
 
 const inputTrap = Mousetrap(input.get(0));
