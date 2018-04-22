@@ -361,14 +361,13 @@ $(function() {
 					let value = params[key];
 
 					if (key === "join") {
-						const channels = value.split(",");
-						value = channels.map((c) => {
-							if (c.match(/^\w/)) {
-								return "#" + c;
+						value = value.split(",").map((chan) => {
+							if (!chan.match(/^[#&!+]/)) {
+								return `#${chan}`;
 							}
 
-							return c;
-						}).join(",");
+							return chan;
+						}).join(", ");
 					}
 
 					// \W searches for non-word characters
