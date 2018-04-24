@@ -13,7 +13,6 @@ program
 		const fs = require("fs");
 		const fsextra = require("fs-extra");
 		const path = require("path");
-		const child = require("child_process");
 		const packageJson = require("package-json");
 
 		if (!fs.existsSync(Helper.getConfigPath())) {
@@ -53,59 +52,20 @@ program
 				}, null, "\t"));
 			}
 
-			const yarn = path.join(
-				__dirname,
-				"..",
-				"..",
-				"node_modules",
-				"yarn",
-				"bin",
-				"yarn.js"
-			);
-
-			let success = false;
-			const add = child.spawn(
-				process.execPath,
-				[
-					yarn,
-					"add",
-					"--json",
-					"--exact",
-					"--production",
-					"--ignore-scripts",
-					"--non-interactive",
-					"--cwd",
-					packagesPath,
-					`${json.name}@${json.version}`,
-				]
-			);
-
-			add.stdout.on("data", (data) => {
-				data.toString().trim().split("\n").forEach((line) => {
-					line = JSON.parse(line);
-
-					if (line.type === "success") {
-						success = true;
-					}
-				});
-			});
-
-			add.stderr.on("data", (data) => {
-				log.error(data.toString());
-			});
-
-			add.on("error", (e) => {
-				log.error(`${e}`);
-				process.exit(1);
-			});
-
-			add.on("close", (code) => {
-				if (!success || code !== 0) {
-					log.error(`Failed to install ${colors.green(json.name + " v" + json.version)}. Exit code: ${code}`);
-					return;
-				}
-
+			return Utils.executeYarnCommand(
+				"add",
+				"--json",
+				"--exact",
+				"--production",
+				"--ignore-scripts",
+				"--non-interactive",
+				"--cwd",
+				packagesPath,
+				`${json.name}@${json.version}`
+			).then(() => {
 				log.info(`${colors.green(json.name + " v" + json.version)} has been successfully installed.`);
+			}).catch((code) => {
+				throw `Failed to install ${colors.green(json.name + " v" + json.version)}. Exit code: ${code}`;
 			});
 		}).catch((e) => {
 			log.error(`${e}`);
