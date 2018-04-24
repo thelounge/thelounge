@@ -277,7 +277,7 @@ function rawNicks() {
 		return users.data("nicks");
 	}
 
-	const me = $("#nick-value").text();
+	const me = $("#nick").text();
 	const otherUser = chan.attr("aria-label");
 
 	// If this is a query, add their name to autocomplete
