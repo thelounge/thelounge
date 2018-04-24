@@ -99,7 +99,10 @@ module.exports = class ContextMenu {
 
 function showContextMenu(contextMenuItems, selectedElement, event) {
 	const target = $(event.currentTarget);
-	const contextMenu = $("<ul>", {id: "context-menu"});
+	const contextMenu = $("<ul>", {
+		id: "context-menu",
+		role: "menu",
+	});
 
 	for (const item of contextMenuItems) {
 		if (item.check(target)) {
