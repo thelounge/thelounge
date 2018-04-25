@@ -22,6 +22,11 @@ function updateText(condensed, addedTypes) {
 	const obj = getStoredTypes(condensed);
 
 	Object.keys(addedTypes).map((type) => {
+		// Count quits as parts in condensed messages to reduce information density
+		if (type === "quit") {
+			type = "part";
+		}
+
 		obj[type] += addedTypes[type];
 		condensed.data(type, obj[type]);
 	});
@@ -44,9 +49,6 @@ function updateText(condensed, addedTypes) {
 				break;
 			case "part":
 				strings.push(obj[type] + (obj[type] > 1 ? " users have left the channel" : " user has left the channel"));
-				break;
-			case "quit":
-				strings.push(obj[type] + (obj[type] > 1 ? " users have quit" : " user has quit"));
 				break;
 			case "nick":
 				strings.push(obj[type] + (obj[type] > 1 ? " users have changed nick" : " user has changed nick"));
