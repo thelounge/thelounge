@@ -105,6 +105,65 @@ class Utils {
 
 		return memo;
 	}
+
+	static executeYarnCommand(...parameters) {
+		// First off, try to find yarn inside of The Lounge
+		let yarn = path.join(
+			__dirname, "..", "..", "node_modules",
+			"yarn", "bin", "yarn.js"
+		);
+
+		if (!fs.existsSync(yarn)) {
+			// Now try to find yarn in the same parent folder as The Lounge (flat install)
+			yarn = path.join(
+				__dirname, "..", "..", "..",
+				"yarn", "bin", "yarn.js"
+			);
+
+			if (!fs.existsSync(yarn)) {
+				// Fallback to global installation
+				yarn = "yarn";
+			}
+		}
+
+		return new Promise((resolve, reject) => {
+			let success = false;
+			const add = require("child_process").spawn(process.execPath, [yarn, ...parameters]);
+
+			add.stdout.on("data", (data) => {
+				data.toString().trim().split("\n").forEach((line) => {
+					line = JSON.parse(line);
+
+					if (line.type === "success") {
+						success = true;
+					}
+				});
+			});
+
+			add.stderr.on("data", (data) => {
+				data.toString().trim().split("\n").forEach((line) => {
+					const json = JSON.parse(line);
+
+					if (json.type === "error") {
+						log.error(json.data);
+					}
+				});
+			});
+
+			add.on("error", (e) => {
+				log.error(`${e}`);
+				process.exit(1);
+			});
+
+			add.on("close", (code) => {
+				if (!success || code !== 0) {
+					return reject(code);
+				}
+
+				resolve();
+			});
+		});
+	}
 }
 
 module.exports = Utils;
