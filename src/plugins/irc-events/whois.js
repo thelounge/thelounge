@@ -16,7 +16,7 @@ module.exports = function(irc, network) {
 
 			client.emit("join", {
 				shouldOpen: true,
-				network: network.id,
+				network: network.uuid,
 				chan: chan.getFilteredClone(true),
 				index: network.addChannel(chan),
 			});

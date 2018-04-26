@@ -397,15 +397,18 @@ Client.prototype.sort = function(data) {
 
 	switch (data.type) {
 	case "networks":
-		this.networks.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+		this.networks.sort((a, b) => order.indexOf(a.uuid) - order.indexOf(b.uuid));
 
 		// Sync order to connected clients
-		this.emit("sync_sort", {order: this.networks.map((obj) => obj.id), type: data.type, target: data.target});
+		this.emit("sync_sort", {
+			order: this.networks.map((obj) => obj.uuid),
+			type: data.type,
+		});
 
 		break;
 
 	case "channels": {
-		const network = _.find(this.networks, {id: data.target});
+		const network = _.find(this.networks, {uuid: data.target});
 
 		if (!network) {
 			return;
@@ -414,7 +417,11 @@ Client.prototype.sort = function(data) {
 		network.channels.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
 
 		// Sync order to connected clients
-		this.emit("sync_sort", {order: network.channels.map((obj) => obj.id), type: data.type, target: data.target});
+		this.emit("sync_sort", {
+			order: network.channels.map((obj) => obj.id),
+			type: data.type,
+			target: network.uuid,
+		});
 
 		break;
 	}

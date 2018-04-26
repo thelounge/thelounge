@@ -120,12 +120,10 @@ describe("Network", function() {
 				commands: "/command 1 2 3\r\n/ping HELLO\r\r\r\r/whois test\r\n\r\n",
 				ip: "newIp",
 				hostname: "newHostname",
-				id: 1000000,
 				guid: "newGuid",
 			});
 
 			expect(saveCalled).to.be.true;
-			expect(network.id).to.not.equal(1000000);
 			expect(network.guid).to.not.equal("newGuid");
 			expect(network.ip).to.be.null;
 			expect(network.hostname).to.be.null;
@@ -227,7 +225,6 @@ describe("Network", function() {
 				"commands",
 				"host",
 				"hostname",
-				"id",
 				"ip",
 				"name",
 				"port",

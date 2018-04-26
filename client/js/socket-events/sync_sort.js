@@ -13,10 +13,10 @@ socket.on("sync_sort", function(data) {
 
 	const type = data.type;
 	const order = data.order;
+	const container = $(".networks");
+	const network = container.find(`.network[data-uuid="${data.target}"]`);
 
 	if (type === "networks") {
-		const container = $(".networks");
-
 		$.each(order, function(index, value) {
 			const position = $(container.children()[index]);
 
@@ -24,13 +24,9 @@ socket.on("sync_sort", function(data) {
 				return true; // No point in continuing
 			}
 
-			const network = container.find(`#network-${data.target}`);
-
-			$(network).insertBefore(position);
+			network.insertBefore(position);
 		});
 	} else if (type === "channels") {
-		const network = $(`#network-${data.target}`);
-
 		$.each(order, function(index, value) {
 			if (index === 0) { // Shouldn't attempt to move lobby
 				return true; // same as `continue` -> skip to next item
@@ -44,7 +40,7 @@ socket.on("sync_sort", function(data) {
 
 			const channel = network.find(".chan[data-id=" + value + "]"); // Channel at position
 
-			$(channel).insertBefore(position);
+			channel.insertBefore(position);
 		});
 	}
 });

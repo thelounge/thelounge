@@ -32,7 +32,7 @@ exports.input = function(network, chan, cmd, args) {
 		network.setNick(newNick);
 
 		this.emit("nick", {
-			network: network.id,
+			network: network.uuid,
 			nick: newNick,
 		});
 	}

@@ -9,8 +9,6 @@ const Helper = require("../helper");
 
 module.exports = Network;
 
-let id = 1;
-
 /**
  * @type {Object} List of keys which should not be sent to the client.
  */
@@ -37,7 +35,6 @@ function Network(attr) {
 		channels: [],
 		ip: null,
 		hostname: null,
-		id: id++,
 		irc: null,
 		serverOptions: {
 			PREFIX: [],
@@ -200,7 +197,7 @@ Network.prototype.edit = function(client, args) {
 
 				// Update UI nick straight away if IRC is not connected
 				client.emit("nick", {
-					network: this.id,
+					network: this.uuid,
 					nick: this.nick,
 				});
 			}

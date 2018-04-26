@@ -38,7 +38,7 @@ module.exports = function(irc, network) {
 				name: chanName,
 			});
 			client.emit("join", {
-				network: network.id,
+				network: network.uuid,
 				chan: chan.getFilteredClone(true),
 				index: network.addChannel(chan),
 			});
