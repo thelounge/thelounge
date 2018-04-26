@@ -41,7 +41,7 @@ Mousetrap.bind([
 	"alt+up",
 	"alt+down",
 ], function(e, keys) {
-	const channels = sidebar.find(".chan");
+	const channels = sidebar.find(".chan").not(".network.collapsed :not(.lobby)");
 	const index = channels.index(channels.filter(".active"));
 	const direction = keys.split("+").pop();
 	let target;
