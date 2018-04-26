@@ -40,10 +40,10 @@ function updateText(condensed, addedTypes) {
 				strings.push(obj[type] + (obj[type] > 1 ? " users have changed hostname" : " user has changed hostname"));
 				break;
 			case "join":
-				strings.push(obj[type] + (obj[type] > 1 ? " users have joined the channel" : " user has joined the channel"));
+				strings.push(obj[type] + (obj[type] > 1 ? " users have joined" : " user has joined"));
 				break;
 			case "part":
-				strings.push(obj[type] + (obj[type] > 1 ? " users have left the channel" : " user has left the channel"));
+				strings.push(obj[type] + (obj[type] > 1 ? " users have left" : " user has left"));
 				break;
 			case "quit":
 				strings.push(obj[type] + (obj[type] > 1 ? " users have quit" : " user has quit"));
