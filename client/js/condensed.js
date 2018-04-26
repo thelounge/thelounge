@@ -22,14 +22,12 @@ function updateText(condensed, addedTypes) {
 	const obj = getStoredTypes(condensed);
 
 	Object.keys(addedTypes).map((type) => {
-		// Count quits as parts in condensed messages to reduce information density
-		if (type === "quit") {
-			type = "part";
-		}
-
 		obj[type] += addedTypes[type];
 		condensed.data(type, obj[type]);
 	});
+
+	// Count quits as parts in condensed messages to reduce information density
+	obj.part += obj.quit;
 
 	const strings = [];
 	constants.condensedTypes.forEach((type) => {
