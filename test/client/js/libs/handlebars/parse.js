@@ -7,7 +7,7 @@ describe("parse Handlebars helper", () => {
 	it("should not introduce xss", () => {
 		const testCases = [{
 			input: "<img onerror='location.href=\"//youtube.com\"'>",
-			expected: "&lt;img onerror&#x3D;&#x27;location.href&#x3D;&quot;//youtube.com&quot;&#x27;&gt;",
+			expected: "&lt;img onerror&#x3D;&#x27;location.href&#x3D;&quot;<a href=\"//youtube.com\" target=\"_blank\" rel=\"noopener\">//youtube.com</a>&quot;&#x27;&gt;",
 		}, {
 			input: '#&">bug',
 			expected: '<span class="inline-channel" role="button" tabindex="0" data-chan="#&amp;&quot;&gt;bug">#&amp;&quot;&gt;bug</span>',
