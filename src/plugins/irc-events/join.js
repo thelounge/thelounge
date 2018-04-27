@@ -11,7 +11,7 @@ module.exports = function(irc, network) {
 		let chan = network.getChannel(data.channel);
 
 		if (typeof chan === "undefined") {
-			chan = new Chan({
+			chan = client.createChannel({
 				name: data.channel,
 				state: Chan.State.JOINED,
 			});

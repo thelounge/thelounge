@@ -42,7 +42,7 @@ module.exports = function(irc, network) {
 		let chan = network.getChannel("Channel List");
 
 		if (typeof chan === "undefined") {
-			chan = new Chan({
+			chan = client.createChannel({
 				type: Chan.Type.SPECIAL,
 				name: "Channel List",
 			});

@@ -70,6 +70,8 @@ function Client(manager, name, config = {}) {
 		attachedClients: {},
 		config: config,
 		id: uuidv4(),
+		idChan: 1,
+		idMsg: 1,
 		name: name,
 		networks: [],
 		sockets: manager.sockets,
@@ -80,7 +82,7 @@ function Client(manager, name, config = {}) {
 	let delay = 0;
 
 	if (!Helper.config.public) {
-		client.messageStorage = new MessageStorage();
+		client.messageStorage = new MessageStorage(client);
 
 		if (client.config.log && Helper.config.messageStorage.includes("sqlite")) {
 			client.messageStorage.enable(client.name);
@@ -108,6 +110,13 @@ function Client(manager, name, config = {}) {
 		log.info(`User ${colors.bold(client.name)} loaded`);
 	}
 }
+
+Client.prototype.createChannel = function(attr) {
+	const chan = new Chan(attr);
+	chan.id = this.idChan++;
+
+	return chan;
+};
 
 Client.prototype.emit = function(event, data) {
 	if (this.sockets !== null) {
@@ -140,6 +149,9 @@ Client.prototype.connect = function(args) {
 	const client = this;
 	let channels = [];
 
+	// Get channel id for lobby before creating other channels for nicer ids
+	const lobbyChannelId = client.idChan++;
+
 	if (args.channels) {
 		let badName = false;
 
@@ -149,7 +161,7 @@ Client.prototype.connect = function(args) {
 				return;
 			}
 
-			channels.push(new Chan({
+			channels.push(client.createChannel({
 				name: chan.name,
 				key: chan.key || "",
 				type: chan.type,
@@ -166,7 +178,7 @@ Client.prototype.connect = function(args) {
 			.replace(/,/g, " ")
 			.split(/\s+/g)
 			.map(function(chan) {
-				return new Chan({
+				return client.createChannel({
 					name: chan,
 				});
 			});
@@ -188,6 +200,9 @@ Client.prototype.connect = function(args) {
 		hostname: args.hostname || (client.config && client.config.hostname) || client.hostname,
 		channels: channels,
 	});
+
+	// Set network lobby channel id
+	network.channels[0].id = lobbyChannelId;
 
 	client.networks.push(network);
 	client.emit("network", {

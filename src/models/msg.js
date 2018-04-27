@@ -2,8 +2,6 @@
 
 const _ = require("lodash");
 
-let id = 0;
-
 class Msg {
 	constructor(attr) {
 		// Some properties need to be copied in the Msg object instead of referenced
@@ -20,7 +18,7 @@ class Msg {
 
 		_.defaults(this, attr, {
 			from: {},
-			id: id++,
+			id: 0,
 			previews: [],
 			text: "",
 			type: Msg.Type.MESSAGE,
