@@ -385,6 +385,28 @@ describe("Link plugin", function() {
 		});
 	});
 
+	it("should de-duplicate links", function(done) {
+		const message = this.irc.createMessage({
+			text: "//localhost:9002 http://localhost:9002 http://localhost:9002",
+		});
+
+		link(this.irc, this.network.channels[0], message);
+
+		expect(message.previews).to.deep.equal([{
+			type: "loading",
+			head: "",
+			body: "",
+			thumb: "",
+			link: "http://localhost:9002",
+			shown: true,
+		}]);
+
+		this.irc.once("msg:preview", function(data) {
+			expect(data.preview.link).to.equal("http://localhost:9002");
+			done();
+		});
+	});
+
 	it("should not try to fetch links with wrong protocol", function() {
 		const message = this.irc.createMessage({
 			text: "ssh://example.com ftp://example.com irc://example.com http:////////example.com",
