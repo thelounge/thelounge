@@ -69,12 +69,12 @@ describe("findLinks", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should find urls with starting with www. and odd surroundings", () => {
-		const input = ".:www.github.com:.";
+	it("should find urls with starting with http:// and odd surroundings", () => {
+		const input = ".:http://www.github.com:. .:www.github.com:.";
 		const expected = [{
 			link: "http://www.github.com",
 			start: 2,
-			end: 16,
+			end: 23,
 		}];
 
 		const actual = findLinks(input);
@@ -248,10 +248,6 @@ describe("findLinks", () => {
 			start: 0,
 			end: 15,
 			link: "http://www.example.com",
-		}, {
-			end: 42,
-			start: 16,
-			link: "ssh://-oProxyCommand=whois",
 		}];
 
 		const actual = findLinks(input);
@@ -263,6 +259,10 @@ describe("findLinks", () => {
 			start: 0,
 			end: 15,
 			link: "http://www.example.com",
+		}, {
+			start: 16,
+			end: 57,
+			link: "http://root:'some%pass'@hostname/database",
 		}];
 
 		const actual2 = findLinks(input2);
@@ -276,6 +276,10 @@ describe("findLinks", () => {
 			start: 0,
 			end: 15,
 			link: "http://www.example.com",
+		}, {
+			start: 16,
+			end: 29,
+			link: "http://a:%p@c",
 		}, {
 			start: 30,
 			end: 51,
