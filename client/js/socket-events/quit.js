@@ -7,7 +7,7 @@ const sidebar = $("#sidebar");
 
 socket.on("quit", function(data) {
 	const id = data.network;
-	const network = sidebar.find(`#network-${id}`);
+	const network = sidebar.find(`.network[data-uuid="${id}"]`);
 
 	network.children(".chan").each(function() {
 		// this = child

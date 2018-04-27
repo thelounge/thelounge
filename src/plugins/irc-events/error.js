@@ -45,7 +45,7 @@ module.exports = function(irc, network) {
 		}
 
 		client.emit("nick", {
-			network: network.id,
+			network: network.uuid,
 			nick: irc.user.nick,
 		});
 	});
@@ -64,7 +64,7 @@ module.exports = function(irc, network) {
 		}
 
 		client.emit("nick", {
-			network: network.id,
+			network: network.uuid,
 			nick: irc.user.nick,
 		});
 	});
