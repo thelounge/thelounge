@@ -25,11 +25,18 @@ function findLinks(text) {
 		return [];
 	}
 
-	return matches.map((url) => ({
-		start: url.index,
-		end: url.lastIndex,
-		link: url.url,
-	}));
+	return matches.map((url) => {
+		// Prefix protocol to protocol-aware urls
+		if (url.schema === "//") {
+			url.url = `http:${url.url}`;
+		}
+
+		return {
+			start: url.index,
+			end: url.lastIndex,
+			link: url.url,
+		};
+	});
 }
 
 module.exports = findLinks;

@@ -11,7 +11,6 @@ const findLinks = require("../../../client/js/libs/handlebars/ircmessageparser/f
 const storage = require("../storage");
 
 const mediaTypeRegex = /^(audio|video)\/.+/;
-const linkRegex = /^https?:\/\//;
 
 // Fix ECDH curve client compatibility in Node v8/v9
 // This is fixed in Node 10, but The Lounge supports LTS versions
@@ -34,7 +33,7 @@ module.exports = function(client, chan, msg) {
 	const cleanText = cleanIrcMessage(msg.text);
 
 	// We will only try to prefetch http(s) links
-	const links = findLinks(cleanText).filter((w) => linkRegex.test(w.link));
+	const links = findLinks(cleanText).filter((w) => isValidLink(w.link));
 
 	if (links.length === 0) {
 		return;
@@ -99,7 +98,7 @@ function parseHtml(preview, res, client) {
 				}
 
 				// Make sure thumbnail is a valid url
-				if (!linkRegex.test(preview.thumb)) {
+				if (!isValidLink(preview.thumb)) {
 					preview.thumb = "";
 				}
 
@@ -363,4 +362,25 @@ function fetch(uri, headers, cb) {
 
 function normalizeURL(header) {
 	return URI(header).normalize().toString();
+}
+
+function isValidLink(link) {
+	try {
+		const uri = URI(link);
+		const protocol = uri.protocol();
+
+		// Only fetch http and https links
+		if (protocol !== "http" && protocol !== "https") {
+			return false;
+		}
+
+		// Do not fetch links without hostname or ones that contain authorization
+		if (!uri.hostname() || uri.username() || uri.password()) {
+			return false;
+		}
+	} catch (e) {
+		return false;
+	}
+
+	return true;
 }

@@ -290,4 +290,17 @@ describe("findLinks", () => {
 
 		expect(actual).to.deep.equal(expected);
 	});
+
+	it("should add protocol to protocol-aware urls", () => {
+		const input = "//example.com";
+		const expected = [{
+			link: "http://example.com",
+			start: 0,
+			end: 13,
+		}];
+
+		const actual = findLinks(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
 });
