@@ -27,8 +27,8 @@ module.exports = class ContextMenu {
 
 		contextMenu.find(".context-menu-item").on("click", function() {
 			const $this = $(this);
-			const itemData = $this.data("data");
-			const contextAction = $this.data("action");
+			const itemData = $this.attr("data-data");
+			const contextAction = $this.attr("data-action");
 			contextMenuActions.execute(contextAction, itemData);
 		});
 	}

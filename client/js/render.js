@@ -189,7 +189,7 @@ function renderChannelUsers(data) {
 		// We need to un-highlight everything first because triggering `input` with
 		// a value highlights the first entry.
 		users.find(".user").removeClass("active");
-		users.find(`.user[data-name="${previouslyActive.data("name")}"]`).addClass("active");
+		users.find(`.user[data-name="${previouslyActive.attr("data-name")}"]`).addClass("active");
 	}
 
 	return users;
