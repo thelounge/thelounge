@@ -1,8 +1,11 @@
 language: node_js
+
+# https://github.com/nodejs/Release
 node_js:
-- 9 # Current stable
-- 8 # Active LTS until April 2019
-- 6 # Active LTS until April 2018
+- 10 # EOL: April 2021
+- 9 # EOL: June 2018
+- 8 # EOL: December 2019
+- 6 # EOL: April 2019
 
 matrix:
   fast_finish: true
