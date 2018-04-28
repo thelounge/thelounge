@@ -32,8 +32,8 @@ function showNotification(event, payload) {
 
 				return self.registration.showNotification(payload.title, {
 					tag: `chan-${payload.chanId}`,
-					badge: "img/logo-64.png",
-					icon: "img/touch-icon-192x192.png",
+					badge: "img/icon-alerted-black-transparent-bg-72x72px.png",
+					icon: "img/icon-alerted-grey-bg-192x192px.png",
 					body: payload.body,
 					timestamp: payload.timestamp,
 				});
