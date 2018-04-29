@@ -9,7 +9,7 @@
 	aria-selected="false"
 >
 	{{#equal type "lobby"}}
-		<button class="collapse-network" aria-label="Collapse" aria-controls="network-{{id}}" aria-expanded="true">
+		<button class="collapse-network" aria-label="Collapse" aria-controls="network-{{../uuid}}" aria-expanded="true">
 			<span class="collapse-network-icon"></span>
 		</button>
 		<div class="lobby-wrap">
