@@ -11,7 +11,7 @@ socket.on("quit", function(data) {
 
 	network.children(".chan").each(function() {
 		// this = child
-		chat.find($(this).data("target")).remove();
+		chat.find($(this).attr("data-target")).remove();
 	});
 
 	network.remove();

@@ -142,7 +142,7 @@ $(function() {
 	});
 
 	chat.on("click", ".inline-channel", function() {
-		const name = $(this).data("chan");
+		const name = $(this).attr("data-chan");
 		const chan = utils.findCurrentNetworkChan(name);
 
 		if (chan.length) {
@@ -161,7 +161,7 @@ $(function() {
 
 	const openWindow = function openWindow(e, {keepSidebarOpen, pushState, replaceHistory} = {}) {
 		const self = $(this);
-		const target = self.data("target");
+		const target = self.attr("data-target");
 
 		if (!target) {
 			return false;
@@ -248,7 +248,7 @@ $(function() {
 
 		if (self.hasClass("chan")) {
 			$("#chat-container").addClass("active");
-			$("#nick").text(self.closest(".network").data("nick"));
+			$("#nick").text(self.closest(".network").attr("data-nick"));
 		}
 
 		const chanChat = chan.find(".chat");
@@ -342,7 +342,7 @@ $(function() {
 		check: (target) => target.hasClass("chan"),
 		className: "close",
 		displayName: getCloseDisplay,
-		data: (target) => target.data("target"),
+		data: (target) => target.attr("data-target"),
 		callback: (itemData) => closeChan($(`.networks .chan[data-target="${itemData}"]`)),
 	});
 
