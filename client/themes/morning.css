@@ -1,11 +1,11 @@
 @import 'default.css';
 
 :root {
+	--body-color: #f3f3f3;
 	--link-color: #77abd9;
-}
-
-body {
-	color: #f3f3f3;
+	--window-bg-color: #303e4a;
+	--date-marker-color: #97ea70;
+	--unread-marker-color: #f92772;
 }
 
 #windows .logo {
@@ -16,23 +16,12 @@ body {
 	display: inline-block;
 }
 
-#main,
-#chat .userlist,
-#windows .chan,
-#windows .window {
-	background: #303e4a;
-}
-
 #chat .userlist .count {
 	background-color: #28333d;
 }
 
 #chat .count::before {
 	color: #b7c5d1;
-}
-
-#chat .userlist .search {
-	color: #f3f3f3;
 }
 
 /* Borders */
@@ -44,10 +33,6 @@ body {
 }
 
 /* User list */
-#chat .user-mode {
-	color: #f3f3f3;
-}
-
 #chat .userlist .user.active {
 	background-color: #28333d;
 }
@@ -99,7 +84,7 @@ body {
 #windows #form .input {
 	background-color: #28333d;
 	border-color: #28333d;
-	color: #f3f3f3;
+	color: var(--body-color);
 }
 
 #form #nick {
@@ -115,10 +100,6 @@ body {
 	color: #b7c5d1;
 }
 
-#windows .header {
-	color: #fff;
-}
-
 #windows .header .topic {
 	color: #b7c5d1;
 }
@@ -128,29 +109,6 @@ body {
 #chat button.menu,
 #form #submit {
 	color: #b7c5d1;
-}
-
-/* Notification dot on the top right corner of the menu icon */
-#viewport .lt::after {
-	border-color: #303e4a;
-}
-
-#chat .unread-marker-text::before {
-	background-color: #303e4a;
-	border-color: #f92772;
-}
-
-#chat .unread-marker::before {
-	border-color: #f92772;
-}
-
-#chat .date-marker::before {
-	border-color: #97ea70;
-}
-
-#chat .date-marker-text::before {
-	background-color: #303e4a;
-	color: #97ea70;
 }
 
 /* Setup text colors */

@@ -2,8 +2,23 @@
 @import "bootstrap.css";
 
 :root {
+	/* Main text color */
+	--body-color: #222;
+
+	/* Background color of the whole page */
+	--body-bg-color: #415364;
+
 	/* Links and link-looking buttons */
 	--link-color: #50a656;
+
+	/* Background color of the main window */
+	--window-bg-color: #fff;
+
+	/* Color of the date marker, text and separator */
+	--date-marker-color: rgba(0, 107, 59, 0.5);
+
+	/* Color of the unread message marker, text and separator */
+	--unread-marker-color: rgba(231, 76, 60, 0.5);
 }
 
 /* Samsung Internet <7.0 and Microsoft Edge support (yes, both of them use webkit prefix) */
@@ -23,8 +38,8 @@ body {
 }
 
 body {
-	background: #415364;
-	color: #222;
+	background: var(--body-bg-color);
+	color: var(--body-color);
 	font: 16px -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 	margin: 0;
 	-webkit-user-select: none;
@@ -481,7 +496,7 @@ kbd {
 	width: 10px;
 	height: 10px;
 	border-radius: 50%;
-	border: 2px solid white;
+	border: 2px solid var(--window-bg-color);
 	opacity: 0;
 	transition: opacity 0.2s;
 	background-clip: padding-box; /* Fix border-radius bleeding color */
@@ -866,7 +881,7 @@ background on hover (unless active) */
 }
 
 #windows .window {
-	background: #fff;
+	background: var(--window-bg-color);
 	display: none;
 	overflow-y: auto;
 	height: 100%;
@@ -1036,7 +1051,6 @@ background on hover (unless active) */
 }
 
 #chat .userlist {
-	background: #fff;
 	border-left: 1px solid #e7e7e7;
 	width: 180px;
 	display: flex;
@@ -1113,13 +1127,13 @@ background on hover (unless active) */
 	left: 0;
 	right: 0;
 	top: 50%;
-	border-top: 1px solid rgba(231, 76, 60, 0.5);
+	border-top: 1px solid var(--unread-marker-color);
 }
 
 #chat .unread-marker-text::before {
 	content: "New messages";
-	background-color: white;
-	color: rgba(231, 76, 60, 0.5);
+	background-color: var(--window-bg-color);
+	color: var(--unread-marker-color);
 	padding: 0 10px;
 }
 
@@ -1143,13 +1157,13 @@ background on hover (unless active) */
 	left: 0;
 	right: 0;
 	top: 50%;
-	border-top: 1px solid rgba(0, 107, 59, 0.5);
+	border-top: 1px solid var(--date-marker-color);
 }
 
 #chat .date-marker-text::before {
 	content: attr(data-label);
-	background-color: white;
-	color: rgba(0, 107, 59, 0.5);
+	background-color: var(--window-bg-color);
+	color: var(--date-marker-color);
 	padding: 0 10px;
 }
 
@@ -1489,7 +1503,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #chat .userlist .search {
-	color: #222;
+	color: var(--body-color);
 	border: 0;
 	background: none;
 	font: inherit;
@@ -2309,7 +2323,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	}
 
 	#sidebar {
-		background: #415364;
+		background: var(--body-bg-color);
 		height: 100%;
 		position: absolute;
 		left: -220px;
@@ -2370,6 +2384,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	}
 
 	#chat .userlist {
+		background-color: var(--window-bg-color);
 		height: 100%;
 		position: absolute;
 		right: 0;
