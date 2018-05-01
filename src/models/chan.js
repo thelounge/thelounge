@@ -20,11 +20,9 @@ Chan.State = {
 	JOINED: 1,
 };
 
-let id = 1;
-
 function Chan(attr) {
 	_.defaults(this, attr, {
-		id: id++,
+		id: 0,
 		messages: [],
 		name: "",
 		key: "",
@@ -45,6 +43,8 @@ Chan.prototype.destroy = function() {
 Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 	const chan = this.id;
 	const obj = {chan, msg};
+
+	msg.id = client.idMsg++;
 
 	// If this channel is open in any of the clients, do not increase unread counter
 	const isOpen = _.find(client.attachedClients, {openChannel: chan}) !== undefined;

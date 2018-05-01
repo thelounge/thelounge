@@ -13,7 +13,9 @@ describe("SQLite Message Storage", function() {
 
 	// Delete database file from previous test run
 	before(function(done) {
-		store = new MessageStorage();
+		store = new MessageStorage({
+			idMsg: 1,
+		});
 
 		if (fs.existsSync(expectedPath)) {
 			fs.unlink(expectedPath, done);

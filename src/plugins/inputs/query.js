@@ -43,7 +43,7 @@ exports.input = function(network, chan, cmd, args) {
 		}
 	}
 
-	const newChan = new Chan({
+	const newChan = this.createChannel({
 		type: Chan.Type.QUERY,
 		name: target,
 	});

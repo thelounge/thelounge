@@ -17,7 +17,8 @@ const schema = [
 ];
 
 class MessageStorage {
-	constructor() {
+	constructor(client) {
+		this.client = client;
 		this.isEnabled = false;
 	}
 
@@ -133,7 +134,10 @@ class MessageStorage {
 						msg.time = row.time;
 						msg.type = row.type;
 
-						return new Msg(msg);
+						const newMsg = new Msg(msg);
+						newMsg.id = this.client.idMsg++;
+
+						return newMsg;
 					}).reverse());
 				}
 			));
