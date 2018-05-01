@@ -257,16 +257,8 @@ kbd {
 }
 
 #viewport .lt::before { content: "\f0c9"; /* http://fontawesome.io/icon/bars/ */ }
-
-#viewport .rt::before {
-	content: "\f0c0"; /* https://fontawesome.com/icons/users?style=solid */
-	line-height: 36px; /* fix alignment in Microsoft Edge */
-}
-
-#chat button.menu::before {
-	content: "\f142"; /* http://fontawesome.io/icon/ellipsis-v/ */
-	line-height: 36px; /* fix alignment in Microsoft Edge */
-}
+#viewport .rt::before { content: "\f0c0"; /* https://fontawesome.com/icons/users?style=solid */ }
+#chat button.menu::before { content: "\f142"; /* http://fontawesome.io/icon/ellipsis-v/ */ }
 
 .context-menu-join::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
 .context-menu-user::before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
@@ -468,6 +460,7 @@ kbd {
 #viewport .rt::before,
 #chat button.menu::before {
 	width: 36px;
+	line-height: 36px; /* Fix alignment in Microsoft Edge */
 }
 
 /* Channel list button stays fixed when scrolling... */
@@ -493,6 +486,7 @@ kbd {
 	border: 2px solid white;
 	opacity: 0;
 	transition: opacity 0.2s;
+	background-clip: padding-box; /* Fix border-radius bleeding color */
 }
 
 #viewport.notified .lt::after {
