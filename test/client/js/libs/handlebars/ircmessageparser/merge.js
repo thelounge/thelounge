@@ -56,7 +56,7 @@ describe("merge", () => {
 			}],
 		}];
 
-		const actual = merge(textParts, styleFragments);
+		const actual = merge(textParts, styleFragments, styleFragments.map((fragment) => fragment.text).join(""));
 
 		expect(actual).to.deep.equal(expected);
 	});
