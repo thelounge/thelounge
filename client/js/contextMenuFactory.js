@@ -247,7 +247,7 @@ function addEditNetworkItem() {
 function addChannelListItem() {
 	function list(itemData) {
 		socket.emit("input", {
-			target: itemData,
+			target: parseInt(itemData, 10),
 			text: "/list",
 		});
 	}
@@ -264,7 +264,7 @@ function addChannelListItem() {
 function addBanListItem() {
 	function banlist(itemData) {
 		socket.emit("input", {
-			target: itemData,
+			target: parseInt(itemData, 10),
 			text: "/banlist",
 		});
 	}
