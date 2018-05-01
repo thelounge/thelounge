@@ -4,6 +4,7 @@ require("./auth");
 require("./change_password");
 require("./init");
 require("./join");
+require("./modes");
 require("./more");
 require("./msg");
 require("./msg_preview");

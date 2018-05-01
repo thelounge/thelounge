@@ -24,6 +24,7 @@ function Chan(attr) {
 	_.defaults(this, attr, {
 		id: 0,
 		messages: [],
+		modes: [],
 		name: "",
 		key: "",
 		topic: "",

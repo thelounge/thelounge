@@ -7,6 +7,7 @@
 	aria-label="{{name}}"
 	aria-controls="chan-{{id}}"
 	aria-selected="false"
+	data-modes="{{tojson modes}}"
 >
 	{{#equal type "lobby"}}
 		<button class="collapse-network" aria-label="Collapse" aria-controls="network-{{../uuid}}" aria-expanded="true">

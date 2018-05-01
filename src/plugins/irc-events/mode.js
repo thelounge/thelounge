@@ -29,7 +29,17 @@ module.exports = function(irc, network) {
 			if (char === "k") {
 				targetChan.key = add ? mode.param : "";
 				client.save();
+			} else {
+				// CHANMODES[3] == channel modes that have no parameters
+				if (irc.network.options.CHANMODES[3].indexOf(char) > -1) {
+					targetChan.modes.push(char);
+				}
 			}
+		});
+
+		client.emit("channel:modes", {
+			id: targetChan.id,
+			modes: targetChan.modes,
 		});
 	});
 
