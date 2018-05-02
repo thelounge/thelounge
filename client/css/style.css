@@ -561,7 +561,17 @@ kbd {
 	display: flex;
 	padding: 8px 14px;
 	transition: color 0.2s;
-	width: 100%;
+}
+
+#sidebar .network-placeholder,
+#sidebar .chan-placeholder {
+	border: 1px dashed #99a2b4;
+	border-radius: 6px;
+	margin: -1px 10px;
+}
+
+#sidebar .network-placeholder {
+	margin-bottom: 29px;
 }
 
 #sidebar .chan.lobby {
