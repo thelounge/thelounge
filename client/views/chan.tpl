@@ -23,7 +23,7 @@
 			<span class="badge{{#if highlight}} highlight{{/if}}">{{#if unread}}{{roundBadgeNumber unread}}{{/if}}</span>
 		</div>
 		<span class="add-channel-tooltip tooltipped tooltipped-w tooltipped-no-touch" aria-label="Join a channel…" data-alt-label="Cancel">
-			<button class="add-channel" aria-label="Join a channel…" data-id="{{id}}"></button>
+			<button class="add-channel" aria-label="Join a channel…" aria-controls="join-channel-{{id}}"></button>
 		</span>
 	{{/equal}}
 	{{#notEqual type "lobby"}}

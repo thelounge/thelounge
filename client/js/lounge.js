@@ -164,7 +164,7 @@ $(function() {
 		const target = self.attr("data-target");
 
 		if (!target) {
-			return false;
+			return;
 		}
 
 		// This is a rather gross hack to account for sources that are in the
