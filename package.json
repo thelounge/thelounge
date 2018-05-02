@@ -90,7 +90,7 @@
     "mousetrap": "1.6.1",
     "npm-run-all": "4.1.2",
     "nyc": "11.7.1",
-    "sinon": "5.0.2",
+    "sinon": "5.0.3",
     "socket.io-client": "2.1.0",
     "stylelint": "9.2.0",
     "stylelint-config-standard": "18.2.0",
