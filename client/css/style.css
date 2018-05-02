@@ -19,6 +19,7 @@
 html,
 body {
 	height: 100%;
+	overscroll-behavior: none; /* prevent overscroll navigation actions */
 }
 
 body {
@@ -500,7 +501,6 @@ kbd {
 #sidebar {
 	display: flex;
 	flex-direction: column;
-	-webkit-overflow-scrolling: touch;
 	width: 220px;
 }
 
@@ -533,6 +533,8 @@ kbd {
 #sidebar .networks {
 	padding-top: 20px;
 	touch-action: pan-y;
+	overscroll-behavior: contain;
+	-webkit-overflow-scrolling: touch;
 	flex-grow: 1;
 	overflow: auto;
 	overflow-x: hidden;
@@ -835,6 +837,7 @@ kbd {
 	display: none;
 	overflow-y: auto;
 	height: 100%;
+	overscroll-behavior: contain;
 	-webkit-overflow-scrolling: touch;
 }
 
@@ -991,6 +994,7 @@ kbd {
 	display: flex;
 	flex-grow: 1;
 	flex-direction: column;
+	overscroll-behavior: contain;
 	-webkit-overflow-scrolling: touch;
 }
 
@@ -1463,6 +1467,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	padding-bottom: 10px;
 	width: 100%;
 	touch-action: pan-y;
+	overscroll-behavior: contain;
 	-webkit-overflow-scrolling: touch;
 }
 
