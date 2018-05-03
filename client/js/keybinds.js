@@ -247,27 +247,25 @@ const ignoredKeys = {
 	224: true, // Meta
 };
 
-if (!("ontouchstart" in window || navigator.maxTouchPoints > 0)) {
-	$(document.body).on("keydown", (e) => {
-		// Ignore if target isn't body (e.g. focused into input)
-		// Ignore any key that uses alt modifier
-		// Ignore keys defined above
-		if (e.target !== document.body || e.altKey || ignoredKeys[e.which]) {
-			return;
-		}
+$(document.body).on("keydown", (e) => {
+	// Ignore if target isn't body (e.g. focused into input)
+	// Ignore any key that uses alt modifier
+	// Ignore keys defined above
+	if (e.target !== document.body || e.altKey || ignoredKeys[e.which]) {
+		return;
+	}
 
-		// Ignore all ctrl keys except for ctrl+v to allow pasting
-		if ((e.ctrlKey || e.metaKey) && e.which !== 86) {
-			return;
-		}
+	// Ignore all ctrl keys except for ctrl+v to allow pasting
+	if ((e.ctrlKey || e.metaKey) && e.which !== 86) {
+		return;
+	}
 
-		// On enter, focus the input but do not propagate the event
-		// This way, a new line is not inserted
-		if (e.which === 13) {
-			input.trigger("focus");
-			return false;
-		}
-
+	// On enter, focus the input but do not propagate the event
+	// This way, a new line is not inserted
+	if (e.which === 13) {
 		input.trigger("focus");
-	});
-}
+		return false;
+	}
+
+	input.trigger("focus");
+});
