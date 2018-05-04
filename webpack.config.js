@@ -90,7 +90,7 @@ const config = {
 		new MiniCssExtractPlugin(),
 		new CopyPlugin([
 			{
-				from: "./node_modules/@fortawesome/fontawesome-free-webfonts/webfonts/fa-solid-900.woff*",
+				from: "./node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff*",
 				to: "fonts/[name].[ext]",
 			},
 			{
