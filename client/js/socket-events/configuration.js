@@ -29,6 +29,19 @@ socket.on("configuration", function(data) {
 		pop.play();
 	});
 
+	$(".see-pw").on("click", function() {
+		const $this = $(this);
+		const input = $this.closest("div").find("input");
+
+		if (input.attr("type") === "password") {
+			input.attr("type", "text");
+		} else {
+			input.attr("type", "password");
+		}
+
+		$this.toggleClass("visible");
+	});
+
 	options.initialize();
 	webpush.initialize();
 

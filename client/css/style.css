@@ -1666,6 +1666,23 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	color: #2ecc40;
 }
 
+#settings #change-password .see-pw {
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: 16px;
+	color: #cdd3da;
+	position: absolute;
+	top: 13px;
+	right: 25px;
+}
+
+#settings #change-password .see-pw::before {
+	content: "\f06e";
+}
+
+#settings #change-password .see-pw.visible::before {
+	content: "\f070";
+}
+
 #settings .error {
 	color: #e74c3c;
 	margin-top: 0.2em;
