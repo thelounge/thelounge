@@ -6,6 +6,7 @@ const templates = require("../../views");
 const options = require("../options");
 const webpush = require("../webpush");
 const connect = $("#connect");
+const utils = require("../utils");
 
 socket.on("configuration", function(data) {
 	if (options.initialized) {
@@ -30,16 +31,7 @@ socket.on("configuration", function(data) {
 	});
 
 	$(".see-pw").on("click", function() {
-		const $this = $(this);
-		const input = $this.closest("div").find("input");
-
-		if (input.attr("type") === "password") {
-			input.attr("type", "text");
-		} else {
-			input.attr("type", "password");
-		}
-
-		$this.toggleClass("visible");
+		utils.togglePasswordField(this);
 	});
 
 	options.initialize();
@@ -96,5 +88,9 @@ socket.on("configuration", function(data) {
 				// Store the "previous" value, for next time
 				$(this).data("lastvalue", nick);
 			});
+
+		$(".see-pw").on("click", function() {
+			utils.togglePasswordField(this);
+		});
 	});
 });

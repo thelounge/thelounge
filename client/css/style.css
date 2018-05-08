@@ -1666,7 +1666,20 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	color: #2ecc40;
 }
 
-#settings #change-password .see-pw {
+#settings .error {
+	color: #e74c3c;
+	margin-top: 0.2em;
+}
+
+.password-container {
+	position: relative;
+}
+
+#sign-in .password-container {
+	width: 100%;
+}
+
+.password-container .see-pw {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-size: 16px;
 	color: #cdd3da;
@@ -1675,17 +1688,17 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	right: 25px;
 }
 
-#settings #change-password .see-pw::before {
-	content: "\f06e";
+#sign-in .password-container .see-pw {
+	top: 42px;
+	right: 10px;
 }
 
-#settings #change-password .see-pw.visible::before {
-	content: "\f070";
+.password-container .see-pw::before {
+	content: "\f06e"; /* https://fontawesome.com/icons/eye?style=solid */
 }
 
-#settings .error {
-	color: #e74c3c;
-	margin-top: 0.2em;
+.password-container .see-pw.visible::before {
+	content: "\f070"; /* https://fontawesome.com/icons/eye-slash?style=solid */
 }
 
 #help .help-item {

@@ -20,6 +20,7 @@ module.exports = {
 	move,
 	resetHeight,
 	toggleNotificationMarkers,
+	togglePasswordField,
 	requestIdleCallback,
 	togglePreviewMoreButtonsIfNeeded,
 };
@@ -95,6 +96,21 @@ function toggleNotificationMarkers(newState) {
 
 	// Toggles a dot on the menu icon when there are unread notifications
 	viewport.toggleClass("notified", newState);
+}
+
+function togglePasswordField(that) {
+	const $this = $(that);
+	const input = $this.closest("div").find("input");
+
+	if (input.attr("type") === "password") {
+		input.attr("type", "text");
+		$this.attr("title", "Hide Password");
+	} else {
+		input.attr("type", "password");
+		$this.attr("title", "Show Password");
+	}
+
+	$this.toggleClass("visible");
 }
 
 function confirmExit() {

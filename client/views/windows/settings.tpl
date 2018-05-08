@@ -187,20 +187,20 @@
 				<div class="col-sm-12">
 					<h2>Change password</h2>
 				</div>
-				<div class="col-sm-12">
+				<div class="col-sm-12 password-container">
 					<label for="old_password_input" class="sr-only">Enter current password</label>
 					<input type="password" id="old_password_input" name="old_password" class="input" placeholder="Enter current password">
-					<i class="see-pw"></i>
+					<i class="see-pw" title="Show Password"></i>
 				</div>
-				<div class="col-sm-12">
+				<div class="col-sm-12 password-container">
 					<label for="new_password_input" class="sr-only">Enter desired new password</label>
 					<input type="password" id="new_password_input" name="new_password" class="input" placeholder="Enter desired new password">
-					<i class="see-pw"></i>
+					<i class="see-pw" title="Show Password"></i>
 				</div>
-				<div class="col-sm-12">
+				<div class="col-sm-12 password-container">
 					<label for="verify_password_input" class="sr-only">Repeat new password</label>
 					<input type="password" id="verify_password_input" name="verify_password" class="input" placeholder="Repeat new password">
-					<i class="see-pw"></i>
+					<i class="see-pw" title="Show Password"></i>
 				</div>
 				<div class="col-sm-12 feedback"></div>
 				<div class="col-sm-12">
