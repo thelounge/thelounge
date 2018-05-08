@@ -60,4 +60,67 @@ describe("merge", () => {
 
 		expect(actual).to.deep.equal(expected);
 	});
+
+	it("should not drop clean text", () => {
+		const textParts = [{
+			start: 0,
+			end: 52,
+			link: "https://github.com/xPaw/PHP-Source-Query/runs/175079",
+		}];
+		const styleFragments = [{
+			bold: false,
+			textColor: undefined,
+			bgColor: undefined,
+			hexColor: undefined,
+			hexBgColor: undefined,
+			italic: false,
+			underline: false,
+			strikethrough: false,
+			monospace: false,
+			text: "https://github.com/xPaw/PHP-Source-Query/runs/175079 here's some text",
+			start: 0,
+			end: 69,
+		}];
+
+		const expected = [{
+			link: "https://github.com/xPaw/PHP-Source-Query/runs/175079",
+			start: 0,
+			end: 52,
+			fragments: [{
+				bold: false,
+				textColor: undefined,
+				bgColor: undefined,
+				hexColor: undefined,
+				hexBgColor: undefined,
+				italic: false,
+				underline: false,
+				strikethrough: false,
+				monospace: false,
+				text: "https://github.com/xPaw/PHP-Source-Query/runs/175079",
+				start: 0,
+				end: 52,
+			}],
+		}, {
+			start: 52,
+			end: 69,
+			fragments: [{
+				bold: false,
+				textColor: undefined,
+				bgColor: undefined,
+				hexColor: undefined,
+				hexBgColor: undefined,
+				italic: false,
+				underline: false,
+				strikethrough: false,
+				monospace: false,
+				text: " here's some text",
+				start: 52,
+				end: 69,
+			}],
+		}];
+
+		const actual = merge(textParts, styleFragments, styleFragments.map((fragment) => fragment.text).join(""));
+
+		expect(actual).to.deep.equal(expected);
+	});
 });

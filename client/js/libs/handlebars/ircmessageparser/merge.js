@@ -25,13 +25,9 @@ function sortParts(a, b) {
 // "o", and the second resulting part will contain "b" and "ar". "o" and "b"
 // fragments will contain duplicate styling attributes.
 function merge(textParts, styleFragments, cleanText) {
-	// Every section of the original text that has not been captured in a "part"
-	// is filled with "text" parts, dummy objects with start/end but no extra
-	// metadata.
-	const allParts = textParts
-		.sort(sortParts) // Sort all parts identified based on their position in the original text
-		.concat(fill(textParts, cleanText))
-		.sort(sortParts) // Sort them again after filling in unstyled text
+	// Remove overlapping parts
+	textParts = textParts
+		.sort(sortParts)
 		.reduce((prev, curr) => {
 			const intersection = prev.some((p) => anyIntersection(p, curr));
 
@@ -41,6 +37,13 @@ function merge(textParts, styleFragments, cleanText) {
 
 			return prev.concat([curr]);
 		}, []);
+
+	// Every section of the original text that has not been captured in a "part"
+	// is filled with "text" parts, dummy objects with start/end but no extra
+	// metadata.
+	const allParts = textParts
+		.concat(fill(textParts, cleanText))
+		.sort(sortParts); // Sort all parts identified based on their position in the original text
 
 	// Distribute the style fragments within the text parts
 	return allParts.map((textPart) => {
