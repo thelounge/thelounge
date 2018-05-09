@@ -98,19 +98,22 @@ function toggleNotificationMarkers(newState) {
 	viewport.toggleClass("notified", newState);
 }
 
-function togglePasswordField(that) {
-	const $this = $(that);
-	const input = $this.closest("div").find("input");
+function togglePasswordField(elem) {
+	$(elem).on("click", function() {
+		const $this = $(this);
+		const input = $this.closest("div").find("input");
 
-	if (input.attr("type") === "password") {
-		input.attr("type", "text");
-		$this.attr("title", "Hide Password");
-	} else {
-		input.attr("type", "password");
-		$this.attr("title", "Show Password");
-	}
+		input.attr("type") === "password" ? input.attr("type", "text") : input.attr("type", "password");
 
-	$this.toggleClass("visible");
+		swapLabel($this);
+		$this.toggleClass("visible");
+	});
+}
+
+// Given a span, swap its aria-label with the content of `data-alt-label`
+function swapLabel(span) {
+	const altText = span.data("alt-label");
+	span.data("alt-label", span.attr("aria-label")).attr("aria-label", altText);
 }
 
 function confirmExit() {

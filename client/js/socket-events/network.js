@@ -43,7 +43,5 @@ socket.on("network:info", function(data) {
 				.click();
 		});
 
-	$(".see-pw").on("click", function() {
-		utils.togglePasswordField(this);
-	});
+	utils.togglePasswordField(".reveal-password");
 });

@@ -8,7 +8,9 @@
 	<div class="password-container">
 		<label>Password</label>
 		<input class="input" type="password" name="password">
-		<i class="see-pw" title="Show Password"></i>
+		<span class="reveal-password tooltipped tooltipped-n tooltipped-no-delay" aria-label="Show Password" data-alt-label="Hide Password">
+			<i></i>
+		</span>
 	</div>
 
 	<div class="error">Authentication failed.</div>

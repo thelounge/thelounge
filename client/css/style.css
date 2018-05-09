@@ -1675,30 +1675,49 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	position: relative;
 }
 
+.password-container input {
+	padding-right: 37px;
+}
+
 #sign-in .password-container {
 	width: 100%;
 }
 
-.password-container .see-pw {
+#sign-in .password-container .reveal-password {
+	top: 31px;
+	right: 0;
+}
+
+.password-container .reveal-password {
+	height: 37px;
+	width: 37px;
+	position: absolute;
+	top: 2px;
+	right: 15px;
+	cursor: pointer;
+}
+
+.password-container .reveal-password i {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-size: 16px;
 	color: #cdd3da;
-	position: absolute;
-	top: 13px;
-	right: 25px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
 }
 
-#sign-in .password-container .see-pw {
-	top: 42px;
-	right: 10px;
+.password-container .reveal-password i:hover {
+	color: #79838c;
 }
 
-.password-container .see-pw::before {
+.password-container .reveal-password i::before {
 	content: "\f06e"; /* https://fontawesome.com/icons/eye?style=solid */
 }
 
-.password-container .see-pw.visible::before {
+.password-container .reveal-password.visible i::before {
 	content: "\f070"; /* https://fontawesome.com/icons/eye-slash?style=solid */
+	color: #ff4136;
 }
 
 #help .help-item {

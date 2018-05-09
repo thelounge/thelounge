@@ -23,9 +23,7 @@ socket.on("auth", function(data) {
 
 		login.html(templates.windows.sign_in());
 
-		$(".see-pw").on("click", function() {
-			utils.togglePasswordField(this);
-		});
+		utils.togglePasswordField(".reveal-password");
 
 		login.find("form").on("submit", function() {
 			const form = $(this);
