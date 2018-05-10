@@ -43,5 +43,5 @@ socket.on("network:info", function(data) {
 				.click();
 		});
 
-	utils.togglePasswordField(".reveal-password");
+	utils.togglePasswordField("#connect .reveal-password");
 });

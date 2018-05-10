@@ -1713,6 +1713,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 .password-container .reveal-password i::before {
 	content: "\f06e"; /* https://fontawesome.com/icons/eye?style=solid */
+	transition: color 0.2s;
 }
 
 .password-container .reveal-password.visible i::before {

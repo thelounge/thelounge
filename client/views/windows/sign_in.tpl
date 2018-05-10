@@ -8,7 +8,7 @@
 	<div class="password-container">
 		<label>Password</label>
 		<input class="input" type="password" name="password">
-		<span class="reveal-password tooltipped tooltipped-n tooltipped-no-delay" aria-label="Show Password" data-alt-label="Hide Password">
+		<span class="reveal-password tooltipped tooltipped-n tooltipped-no-delay" aria-label="Show password" data-alt-label="Hide password">
 			<i></i>
 		</span>
 	</div>

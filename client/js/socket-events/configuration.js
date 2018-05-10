@@ -30,7 +30,7 @@ socket.on("configuration", function(data) {
 		pop.play();
 	});
 
-	utils.togglePasswordField(".reveal-password");
+	utils.togglePasswordField("#change-password .reveal-password");
 
 	options.initialize();
 	webpush.initialize();
@@ -87,6 +87,6 @@ socket.on("configuration", function(data) {
 				$(this).data("lastvalue", nick);
 			});
 
-		utils.togglePasswordField(".reveal-password");
+		utils.togglePasswordField("#connect .reveal-password");
 	});
 });
