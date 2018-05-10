@@ -80,9 +80,7 @@
 		</div>
 		<div class="col-sm-9 password-container">
 			<input class="input" id="connect:password" type="password" name="password" value="{{defaults.password}}">
-			<span class="reveal-password tooltipped tooltipped-n tooltipped-no-delay" aria-label="Show password" data-alt-label="Hide password">
-				<i></i>
-			</span>
+			{{> ../reveal-password}}
 		</div>
 		<div class="col-sm-3">
 			<label for="connect:realname">Real name</label>
