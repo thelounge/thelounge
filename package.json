@@ -61,7 +61,7 @@
     "ua-parser-js": "0.7.18",
     "urijs": "1.19.1",
     "uuid": "3.2.1",
-    "web-push": "3.3.0",
+    "web-push": "3.3.1",
     "yarn": "1.6.0"
   },
   "devDependencies": {
