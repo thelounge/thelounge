@@ -2,9 +2,18 @@
 
 const path = require("path");
 const fsextra = require("fs-extra");
-const sqlite3 = require("sqlite3");
 const Helper = require("../helper");
 const Msg = require("../models/msg");
+
+let sqlite3;
+
+try {
+	sqlite3 = require("sqlite3");
+} catch (e) {
+	Helper.config.messageStorage = Helper.config.messageStorage.filter((item) => item !== "sqlite");
+
+	log.error("Unable to load sqlite3 module. You might need to install it manually.");
+}
 
 const currentSchemaVersion = 1520239200;
 
