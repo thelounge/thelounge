@@ -210,7 +210,7 @@ function renderNetworks(data, singleNetwork) {
 	});
 
 	// Add keyboard handlers to the "Join a channel…" form inputs/button
-	JoinChannel.handleKeybinds();
+	JoinChannel.handleKeybinds(data.networks);
 
 	let newChannels;
 	const channels = $.map(data.networks, function(n) {
