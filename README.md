@@ -46,6 +46,8 @@
 
 ## Overview
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/thelounge/thelounge.svg)](https://greenkeeper.io/)
+
 * **Modern features brought to IRC.** Push notifications, link previews, new message markers, and more bring IRC to the 21st century.
 * **Always connected.** Remains connected to IRC servers while you are offline.
 * **Cross platform.** It doesn't matter what OS you use, it just works wherever Node.js runs.
