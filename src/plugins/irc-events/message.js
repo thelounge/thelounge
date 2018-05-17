@@ -110,8 +110,9 @@ module.exports = function(irc, network) {
 		}
 
 		let match;
+		const boundaryRegExp = /\b(.*)\b/g;
 
-		while ((match = nickRegExp.exec(data.message))) {
+		while ((match = boundaryRegExp.exec(data.message))) {
 			if (chan.findUser(match[1])) {
 				msg.users.push(match[1]);
 			}
