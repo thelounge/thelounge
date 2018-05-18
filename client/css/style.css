@@ -1490,6 +1490,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	line-height: 1.6;
 	padding: 0 16px;
 	white-space: nowrap;
+	cursor: pointer;
 }
 
 #chat .user-mode::before {
