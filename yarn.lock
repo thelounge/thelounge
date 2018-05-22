@@ -5377,9 +5377,9 @@ number-is-nan@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
 
-nyc@11.7.3:
-  version "11.7.3"
-  resolved "https://registry.yarnpkg.com/nyc/-/nyc-11.7.3.tgz#164f4cfad84dee6d8f353824231d9dd683aa14ea"
+nyc@11.8.0:
+  version "11.8.0"
+  resolved "https://registry.yarnpkg.com/nyc/-/nyc-11.8.0.tgz#1e8453b0644f8fea4d829b1a6636663157cd3b00"
   dependencies:
     archy "^1.0.0"
     arrify "^1.0.1"
