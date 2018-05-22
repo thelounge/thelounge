@@ -1,0 +1,12 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "ignorePaths": [
+    "test/"
+  ],
+  "labels": [
+    "Type: Dependencies"
+  ],
+  "statusCheckVerify": true
+}
