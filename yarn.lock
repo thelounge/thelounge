@@ -6170,15 +6170,15 @@ pretty-bytes@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/pretty-bytes/-/pretty-bytes-4.0.2.tgz#b2bf82e7350d65c6c33aa95aaa5a4f6327f61cd9"
 
-primer-support@4.5.2:
-  version "4.5.2"
-  resolved "https://registry.yarnpkg.com/primer-support/-/primer-support-4.5.2.tgz#daab9a48881b6953e8e6ca01865a2f415bf777c5"
+primer-support@4.5.3:
+  version "4.5.3"
+  resolved "https://registry.yarnpkg.com/primer-support/-/primer-support-4.5.3.tgz#da51d88d165b46e609591d3a3025e537592afcdb"
 
-primer-tooltips@1.5.3:
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/primer-tooltips/-/primer-tooltips-1.5.3.tgz#0e666e31136bec634a84e9ecb9d76169d091e249"
+primer-tooltips@1.5.4:
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/primer-tooltips/-/primer-tooltips-1.5.4.tgz#cec388e65635e75dd55fbe9dec6b5bf5d051e25b"
   dependencies:
-    primer-support "4.5.2"
+    primer-support "4.5.3"
 
 private@^0.1.6, private@^0.1.8, private@~0.1.5:
   version "0.1.8"
