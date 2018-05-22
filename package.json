@@ -44,7 +44,7 @@
     "cheerio": "0.22.0",
     "commander": "2.15.1",
     "express": "4.16.3",
-    "fs-extra": "6.0.0",
+    "fs-extra": "6.0.1",
     "irc-framework": "2.11.0",
     "lodash": "4.17.10",
     "mime-types": "2.1.18",
