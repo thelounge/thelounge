@@ -1,6 +1,24 @@
 "use strict";
 
-const linkify = require("linkify-it")()
+const LinkifyIt = require("linkify-it");
+
+LinkifyIt.prototype.normalize = function normalize(match) {
+	if (!match.schema) {
+		match.schema = "https:";
+		match.url = "https://" + match.url;
+	}
+
+	if (match.schema === "//") {
+		match.schema = "https:";
+		match.url = "https:" + match.url;
+	}
+
+	if (match.schema === "mailto:" && !/^mailto:/i.test(match.url)) {
+		match.url = "mailto:" + match.url;
+	}
+};
+
+const linkify = LinkifyIt()
 	.tlds(require("tlds"))
 	.tlds("onion", true);
 
@@ -25,18 +43,11 @@ function findLinks(text) {
 		return [];
 	}
 
-	return matches.map((url) => {
-		// Prefix protocol to protocol-aware urls
-		if (url.schema === "//") {
-			url.url = `http:${url.url}`;
-		}
-
-		return {
-			start: url.index,
-			end: url.lastIndex,
-			link: url.url,
-		};
-	});
+	return matches.map((url) => ({
+		start: url.index,
+		end: url.lastIndex,
+		link: url.url,
+	}));
 }
 
 module.exports = findLinks;

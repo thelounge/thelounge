@@ -7,7 +7,7 @@ describe("parse Handlebars helper", () => {
 	it("should not introduce xss", () => {
 		const testCases = [{
 			input: "<img onerror='location.href=\"//youtube.com\"'>",
-			expected: "&lt;img onerror&#x3D;&#x27;location.href&#x3D;&quot;<a href=\"http://youtube.com\" target=\"_blank\" rel=\"noopener\">//youtube.com</a>&quot;&#x27;&gt;",
+			expected: "&lt;img onerror&#x3D;&#x27;location.href&#x3D;&quot;<a href=\"https://youtube.com\" target=\"_blank\" rel=\"noopener\">//youtube.com</a>&quot;&#x27;&gt;",
 		}, {
 			input: '#&">bug',
 			expected: '<span class="inline-channel" role="button" tabindex="0" data-chan="#&amp;&quot;&gt;bug">#&amp;&quot;&gt;bug</span>',
@@ -41,7 +41,7 @@ describe("parse Handlebars helper", () => {
 		}, {
 			input: "www.nooooooooooooooo.com",
 			expected:
-				'<a href="http://www.nooooooooooooooo.com" target="_blank" rel="noopener">' +
+				'<a href="https://www.nooooooooooooooo.com" target="_blank" rel="noopener">' +
 					"www.nooooooooooooooo.com" +
 				"</a>",
 		}, {
@@ -56,7 +56,7 @@ describe("parse Handlebars helper", () => {
 			input: "use www.duckduckgo.com for privacy reasons",
 			expected:
 				"use " +
-				'<a href="http://www.duckduckgo.com" target="_blank" rel="noopener">' +
+				'<a href="https://www.duckduckgo.com" target="_blank" rel="noopener">' +
 					"www.duckduckgo.com" +
 				"</a>" +
 				" for privacy reasons",
@@ -101,7 +101,7 @@ describe("parse Handlebars helper", () => {
 			input: "abc (www.example.com)",
 			expected:
 				"abc (" +
-				'<a href="http://www.example.com" target="_blank" rel="noopener">' +
+				'<a href="https://www.example.com" target="_blank" rel="noopener">' +
 					"www.example.com" +
 				"</a>" +
 				")",
@@ -114,7 +114,7 @@ describe("parse Handlebars helper", () => {
 		}, {
 			input: "www.example.com/Test_(Page)",
 			expected:
-				'<a href="http://www.example.com/Test_(Page)" target="_blank" rel="noopener">' +
+				'<a href="https://www.example.com/Test_(Page)" target="_blank" rel="noopener">' +
 					"www.example.com/Test_(Page)" +
 				"</a>",
 		}];

@@ -22,7 +22,7 @@ describe("findLinks", () => {
 		const expected = [{
 			start: 0,
 			end: 24,
-			link: "http://www.nooooooooooooooo.com",
+			link: "https://www.nooooooooooooooo.com",
 		}];
 
 		const actual = findLinks(input);
@@ -46,7 +46,7 @@ describe("findLinks", () => {
 	it("should find urls in strings starting with www", () => {
 		const input = "use www.duckduckgo.com for privacy reasons";
 		const expected = [{
-			link: "http://www.duckduckgo.com",
+			link: "https://www.duckduckgo.com",
 			start: 4,
 			end: 22,
 		}];
@@ -94,7 +94,7 @@ describe("findLinks", () => {
 	it("should handle multiple www. correctly", () => {
 		const input = "www.www.test.com";
 		const expected = [{
-			link: "http://www.www.test.com",
+			link: "https://www.www.test.com",
 			start: 0,
 			end: 16,
 		}];
@@ -107,15 +107,15 @@ describe("findLinks", () => {
 	it("should find domains without www. but valid tld", () => {
 		const input = "google.com google.lv google.museum";
 		const expected = [{
-			link: "http://google.com",
+			link: "https://google.com",
 			start: 0,
 			end: 10,
 		}, {
-			link: "http://google.lv",
+			link: "https://google.lv",
 			start: 11,
 			end: 20,
 		}, {
-			link: "http://google.museum",
+			link: "https://google.museum",
 			start: 21,
 			end: 34,
 		}];
@@ -128,7 +128,7 @@ describe("findLinks", () => {
 	it("should find .onion domains", () => {
 		const input = "facebookcorewwwi.onion/test?url";
 		const expected = [{
-			link: "http://facebookcorewwwi.onion/test?url",
+			link: "https://facebookcorewwwi.onion/test?url",
 			start: 0,
 			end: 31,
 		}];
@@ -228,11 +228,11 @@ describe("findLinks", () => {
 			start: 0,
 			end: 22,
 		}, {
-			link: "http://www.google.com",
+			link: "https://www.google.com",
 			start: 25,
 			end: 39,
 		}, {
-			link: "http://google.com",
+			link: "https://google.com",
 			start: 42,
 			end: 52,
 		}];
@@ -247,7 +247,7 @@ describe("findLinks", () => {
 		const expected = [{
 			start: 0,
 			end: 15,
-			link: "http://www.example.com",
+			link: "https://www.example.com",
 		}];
 
 		const actual = findLinks(input);
@@ -258,7 +258,7 @@ describe("findLinks", () => {
 		const expected2 = [{
 			start: 0,
 			end: 15,
-			link: "http://www.example.com",
+			link: "https://www.example.com",
 		}, {
 			start: 16,
 			end: 57,
@@ -275,7 +275,7 @@ describe("findLinks", () => {
 		const expected = [{
 			start: 0,
 			end: 15,
-			link: "http://www.example.com",
+			link: "https://www.example.com",
 		}, {
 			start: 16,
 			end: 29,
@@ -294,7 +294,7 @@ describe("findLinks", () => {
 	it("should add protocol to protocol-aware urls", () => {
 		const input = "//example.com";
 		const expected = [{
-			link: "http://example.com",
+			link: "https://example.com",
 			start: 0,
 			end: 13,
 		}];
