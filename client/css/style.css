@@ -1689,34 +1689,28 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 .password-container .reveal-password {
-	height: 37px;
-	width: 37px;
 	position: absolute;
 	top: 2px;
 	right: 15px;
-	cursor: pointer;
 }
 
-.password-container .reveal-password i {
+.password-container .reveal-password button {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-size: 16px;
 	color: #cdd3da;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100%;
+	padding: 10px;
 }
 
-.password-container .reveal-password i:hover {
+.password-container .reveal-password button:hover {
 	color: #79838c;
 }
 
-.password-container .reveal-password i::before {
+.password-container .reveal-password button::before {
 	content: "\f06e"; /* https://fontawesome.com/icons/eye?style=solid */
 	transition: color 0.2s;
 }
 
-.password-container .reveal-password.visible i::before {
+.password-container .reveal-password.visible button::before {
 	content: "\f070"; /* https://fontawesome.com/icons/eye-slash?style=solid */
 	color: #ff4136;
 }

@@ -103,17 +103,18 @@ function togglePasswordField(elem) {
 		const $this = $(this);
 		const input = $this.closest("div").find("input");
 
-		input.attr("type") === "password" ? input.attr("type", "text") : input.attr("type", "password");
+		input.attr("type", input.attr("type") === "password" ? "text" : "password");
 
 		swapLabel($this);
+		swapLabel($this.find("button"));
 		$this.toggleClass("visible");
 	});
 }
 
-// Given a span, swap its aria-label with the content of `data-alt-label`
-function swapLabel(span) {
-	const altText = span.data("alt-label");
-	span.data("alt-label", span.attr("aria-label")).attr("aria-label", altText);
+// Given a element, swap its aria-label with the content of `data-alt-label`
+function swapLabel(element) {
+	const altText = element.data("alt-label");
+	element.data("alt-label", element.attr("aria-label")).attr("aria-label", altText);
 }
 
 function confirmExit() {
