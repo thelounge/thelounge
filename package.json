@@ -62,7 +62,7 @@
     "urijs": "1.19.1",
     "uuid": "3.2.1",
     "web-push": "3.3.0",
-    "yarn": "1.6.0"
+    "yarn": "1.7.0"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "5.1.0-4",
