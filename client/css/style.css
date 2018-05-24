@@ -1694,23 +1694,27 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	right: 15px;
 }
 
-.password-container .reveal-password button {
+.password-container .reveal-password span {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-size: 16px;
 	color: #cdd3da;
-	padding: 10px;
+	width: 37px;
+	height: 37px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
-.password-container .reveal-password button:hover {
+.password-container .reveal-password span:hover {
 	color: #79838c;
 }
 
-.password-container .reveal-password button::before {
+.password-container .reveal-password span::before {
 	content: "\f06e"; /* https://fontawesome.com/icons/eye?style=solid */
 	transition: color 0.2s;
 }
 
-.password-container .reveal-password.visible button::before {
+.password-container .reveal-password.visible span::before {
 	content: "\f070"; /* https://fontawesome.com/icons/eye-slash?style=solid */
 	color: #ff4136;
 }

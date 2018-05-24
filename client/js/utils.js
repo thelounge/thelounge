@@ -106,7 +106,7 @@ function togglePasswordField(elem) {
 		input.attr("type", input.attr("type") === "password" ? "text" : "password");
 
 		swapLabel($this);
-		swapLabel($this.find("button"));
+		swapLabel($this.find("span"));
 		$this.toggleClass("visible");
 	});
 }
