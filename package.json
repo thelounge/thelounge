@@ -96,7 +96,7 @@
     "stylelint-config-standard": "18.2.0",
     "textcomplete": "0.17.1",
     "undate": "0.3.0",
-    "webpack": "4.8.3",
+    "webpack": "4.9.1",
     "webpack-cli": "2.1.4",
     "webpack-dev-server": "3.1.4"
   }
