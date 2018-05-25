@@ -8,5 +8,6 @@
   "labels": [
     "Type: Dependencies"
   ],
+  "rebaseStalePrs": true,
   "statusCheckVerify": true
 }

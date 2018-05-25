@@ -18,6 +18,9 @@ cache: yarn
 before_script:
   - NODE_ENV=$BUILD_ENV yarn build
 
+install:
+  - yarn --frozen-lockfile
+
 notifications:
   email:
     on_success: never
