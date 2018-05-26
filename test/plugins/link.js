@@ -371,4 +371,55 @@ describe("Link plugin", function() {
 			}
 		});
 	});
+
+	it("should fetch protocol-aware links", function(done) {
+		const message = this.irc.createMessage({
+			text: "//localhost:9002",
+		});
+
+		link(this.irc, this.network.channels[0], message);
+
+		this.irc.once("msg:preview", function(data) {
+			expect(data.preview.link).to.equal("https://localhost:9002");
+			done();
+		});
+	});
+
+	it("should de-duplicate links", function(done) {
+		const message = this.irc.createMessage({
+			text: "//localhost:9002 https://localhost:9002 https://localhost:9002",
+		});
+
+		link(this.irc, this.network.channels[0], message);
+
+		expect(message.previews).to.deep.equal([{
+			type: "loading",
+			head: "",
+			body: "",
+			thumb: "",
+			link: "https://localhost:9002",
+			shown: true,
+		}]);
+
+		this.irc.once("msg:preview", function(data) {
+			expect(data.preview.link).to.equal("https://localhost:9002");
+			done();
+		});
+	});
+
+	it("should not try to fetch links with wrong protocol", function() {
+		const message = this.irc.createMessage({
+			text: "ssh://example.com ftp://example.com irc://example.com http:////////example.com",
+		});
+
+		expect(message.previews).to.be.empty;
+	});
+
+	it("should not try to fetch links with username or password", function() {
+		const message = this.irc.createMessage({
+			text: "http://root:'some%pass'@hostname/database http://a:%p@c http://a:%p@example.com http://test@example.com",
+		});
+
+		expect(message.previews).to.be.empty;
+	});
 });
