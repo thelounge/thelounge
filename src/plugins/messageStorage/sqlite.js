@@ -2,8 +2,8 @@
 
 const path = require("path");
 const fsextra = require("fs-extra");
-const Helper = require("../helper");
-const Msg = require("../models/msg");
+const Helper = require("../../helper");
+const Msg = require("../../models/msg");
 
 let sqlite3;
 
@@ -31,9 +31,9 @@ class MessageStorage {
 		this.isEnabled = false;
 	}
 
-	enable(name) {
-		const logsPath = path.join(Helper.getHomePath(), "logs");
-		const sqlitePath = path.join(logsPath, `${name}.sqlite3`);
+	enable() {
+		const logsPath = Helper.getUserLogsPath();
+		const sqlitePath = path.join(logsPath, `${this.client.name}.sqlite3`);
 
 		try {
 			fsextra.ensureDirSync(logsPath);
@@ -114,7 +114,7 @@ class MessageStorage {
 
 		this.database.serialize(() => this.database.run(
 			"INSERT INTO messages(network, channel, time, type, msg) VALUES(?, ?, ?, ?, ?)",
-			network, channel.toLowerCase(), msg.time.getTime(), msg.type, JSON.stringify(clonedMsg)
+			network.uuid, channel.name.toLowerCase(), msg.time.getTime(), msg.type, JSON.stringify(clonedMsg)
 		));
 	}
 
@@ -151,6 +151,10 @@ class MessageStorage {
 				}
 			));
 		});
+	}
+
+	canProvideMessages() {
+		return this.isEnabled;
 	}
 }
 
