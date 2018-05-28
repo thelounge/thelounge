@@ -5,6 +5,7 @@ const socket = require("../socket");
 const render = require("../render");
 const templates = require("../../views");
 const sidebar = $("#sidebar");
+const utils = require("../utils");
 
 socket.on("network", function(data) {
 	render.renderNetworks(data, true);
@@ -41,4 +42,6 @@ socket.on("network:info", function(data) {
 				.text(newName)
 				.click();
 		});
+
+	utils.togglePasswordField("#connect .reveal-password");
 });

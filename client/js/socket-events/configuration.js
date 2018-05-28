@@ -6,6 +6,7 @@ const templates = require("../../views");
 const options = require("../options");
 const webpush = require("../webpush");
 const connect = $("#connect");
+const utils = require("../utils");
 
 socket.on("configuration", function(data) {
 	if (options.initialized) {
@@ -28,6 +29,8 @@ socket.on("configuration", function(data) {
 		pop.src = "audio/pop.ogg";
 		pop.play();
 	});
+
+	utils.togglePasswordField("#change-password .reveal-password");
 
 	options.initialize();
 	webpush.initialize();
@@ -83,6 +86,8 @@ socket.on("configuration", function(data) {
 				// Store the "previous" value, for next time
 				$(this).data("lastvalue", nick);
 			});
+
+		utils.togglePasswordField("#connect .reveal-password");
 	});
 
 	if ($(document.body).hasClass("public") && "URLSearchParams" in window) {
