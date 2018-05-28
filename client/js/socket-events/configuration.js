@@ -1,7 +1,6 @@
 "use strict";
 
 const $ = require("jquery");
-const URI = require("urijs");
 const socket = require("../socket");
 const templates = require("../../views");
 const options = require("../options");
@@ -86,10 +85,10 @@ socket.on("configuration", function(data) {
 			});
 	});
 
-	if ($(document.body).hasClass("public")) {
-		const params = URI(document.location.search).search(true);
+	if ($(document.body).hasClass("public") && "URLSearchParams" in window) {
+		const params = new URLSearchParams(document.location.search);
 
-		for (let key in params) {
+		for (let [key, value] of params) {
 			// Support `channels` as a compatibility alias with other clients
 			if (key === "channels") {
 				key = "join";
@@ -98,8 +97,6 @@ socket.on("configuration", function(data) {
 			if (!data.defaults.hasOwnProperty(key)) {
 				continue;
 			}
-
-			let value = params[key];
 
 			if (key === "join") {
 				value = value.split(",").map((chan) => {
