@@ -5,7 +5,7 @@ const path = require("path");
 const expect = require("chai").expect;
 const Msg = require("../../src/models/msg");
 const Helper = require("../../src/helper");
-const MessageStorage = require("../../src/plugins/sqlite.js");
+const MessageStorage = require("../../src/plugins/messageStorage/sqlite.js");
 
 describe("SQLite Message Storage", function() {
 	const expectedPath = path.join(Helper.getHomePath(), "logs", "testUser.sqlite3");
@@ -13,7 +13,10 @@ describe("SQLite Message Storage", function() {
 
 	// Delete database file from previous test run
 	before(function(done) {
-		store = new MessageStorage();
+		store = new MessageStorage({
+			name: "testUser",
+			idMsg: 1,
+		});
 
 		if (fs.existsSync(expectedPath)) {
 			fs.unlink(expectedPath, done);
@@ -33,7 +36,7 @@ describe("SQLite Message Storage", function() {
 		expect(store.isEnabled).to.be.false;
 		expect(fs.existsSync(expectedPath)).to.be.false;
 
-		store.enable("testUser");
+		store.enable();
 
 		expect(store.isEnabled).to.be.true;
 	});
@@ -74,7 +77,11 @@ describe("SQLite Message Storage", function() {
 
 	it("should store a message", function(done) {
 		store.database.serialize(() => {
-			store.index("this-is-a-network-guid", "#ThisIsAChannel", new Msg({
+			store.index({
+				uuid: "this-is-a-network-guid",
+			}, {
+				name: "#thisISaCHANNEL",
+			}, new Msg({
 				time: 123456789,
 				text: "Hello from sqlite world!",
 			}));

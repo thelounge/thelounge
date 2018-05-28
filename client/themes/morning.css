@@ -32,7 +32,7 @@ body {
 
 /* Borders */
 #chat .content,
-#windows .header,
+#windows #chat .header,
 #chat .user-mode::before,
 #chat .userlist {
 	border-color: #2a323d;
@@ -109,17 +109,6 @@ body {
 
 #form #submit:hover {
 	opacity: 1;
-}
-
-/* Buttons */
-#chat .show-more-button {
-	background: #2e3642;
-	border-color: #242a33;
-	color: #ccc;
-}
-
-#chat .show-more-button:hover {
-	color: #fff;
 }
 
 #chat .header {

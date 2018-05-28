@@ -19,8 +19,6 @@ module.exports = {
 	hasRoleInChannel,
 	move,
 	resetHeight,
-	setNick,
-	toggleNickEditor,
 	toggleNotificationMarkers,
 	requestIdleCallback,
 	togglePreviewMoreButtonsIfNeeded,
@@ -42,16 +40,16 @@ function resetHeight(element) {
 	element.style.height = element.style.minHeight;
 }
 
-// Given a channel element will determine if the lounge user is one of the supplied roles.
-function hasRoleInChannel(channel, roles) {
+// Given a channel element will determine if the lounge user or a given nick is one of the supplied roles.
+function hasRoleInChannel(channel, roles, nick) {
 	if (!channel || !roles) {
 		return false;
 	}
 
 	const channelID = channel.data("id");
 	const network = $("#sidebar .network").has(`.chan[data-id="${channelID}"]`);
-	const ownNick = network.data("nick");
-	const user = channel.find(`.names-original .user[data-name="${escape(ownNick)}"]`).first();
+	const target = nick || network.attr("data-nick");
+	const user = channel.find(`.names-original .user[data-name="${escape(target)}"]`).first();
 	return user.parent().is("." + roles.join(", ."));
 }
 
@@ -82,19 +80,6 @@ function join(args) {
 			chan.trigger("click");
 		}
 	}
-}
-
-function toggleNickEditor(toggle) {
-	$("#nick").toggleClass("editable", toggle);
-	$("#nick-value").prop("contenteditable", toggle);
-}
-
-function setNick(nick) {
-	// Closes the nick editor when canceling, changing channel, or when a nick
-	// is set in a different tab / browser / device.
-	toggleNickEditor(false);
-
-	$("#nick-value").text(nick);
 }
 
 const favicon = $("#favicon");

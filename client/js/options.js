@@ -37,7 +37,7 @@ const settings = {
 	notifyAllMessages: false,
 	showSeconds: false,
 	statusMessages: "condensed",
-	theme: $("#theme").data("server-theme"),
+	theme: $("#theme").attr("data-server-theme"),
 	media: true,
 	userStyles: "",
 };

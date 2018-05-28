@@ -1,10 +1,12 @@
 "use strict";
 
 const $ = require("jquery");
+const URI = require("urijs");
 const socket = require("../socket");
 const templates = require("../../views");
 const options = require("../options");
 const webpush = require("../webpush");
+const connect = $("#connect");
 
 socket.on("configuration", function(data) {
 	if (options.initialized) {
@@ -14,9 +16,13 @@ socket.on("configuration", function(data) {
 	}
 
 	$("#settings").html(templates.windows.settings(data));
-	$("#connect").html(templates.windows.connect(data));
 	$("#help").html(templates.windows.help(data));
 	$("#changelog").html(templates.windows.changelog());
+
+	$("#settings").on("show", () => {
+		$("#session-list").html("<p>Loading…</p>");
+		socket.emit("sessions:get");
+	});
 
 	$("#play").on("click", () => {
 		const pop = new Audio();
@@ -33,9 +39,7 @@ socket.on("configuration", function(data) {
 		options.processSetting("theme", data.defaultTheme, true);
 	}
 
-	const forms = $("#connect form, #change-password form");
-
-	forms.on("submit", function() {
+	function handleFormSubmit() {
 		const form = $(this);
 		const event = form.data("event");
 
@@ -51,27 +55,68 @@ socket.on("configuration", function(data) {
 		socket.emit(event, values);
 
 		return false;
+	}
+
+	$("#change-password form").on("submit", handleFormSubmit);
+	connect.on("submit", "form", handleFormSubmit);
+
+	connect.on("show", function() {
+		connect
+			.html(templates.windows.connect(data))
+			.find("#connect\\:nick")
+			.on("focusin", function() {
+				// Need to set the first "lastvalue", so it can be used in the below function
+				const nick = $(this);
+				nick.data("lastvalue", nick.val());
+			})
+			.on("input", function() {
+				const nick = $(this).val();
+				const usernameInput = connect.find(".username");
+
+				// Because this gets called /after/ it has already changed, we need use the previous value
+				const lastValue = $(this).data("lastvalue");
+
+				// They were the same before the change, so update the username field
+				if (usernameInput.val() === lastValue) {
+					usernameInput.val(nick);
+				}
+
+				// Store the "previous" value, for next time
+				$(this).data("lastvalue", nick);
+			});
 	});
 
-	$(".nick")
-		.on("focusin", function() {
-			// Need to set the first "lastvalue", so it can be used in the below function
-			const nick = $(this);
-			nick.data("lastvalue", nick.val());
-		})
-		.on("input", function() {
-			const nick = $(this).val();
-			const usernameInput = forms.find(".username");
+	if ($(document.body).hasClass("public")) {
+		const params = URI(document.location.search).search(true);
 
-			// Because this gets called /after/ it has already changed, we need use the previous value
-			const lastValue = $(this).data("lastvalue");
-
-			// They were the same before the change, so update the username field
-			if (usernameInput.val() === lastValue) {
-				usernameInput.val(nick);
+		for (let key in params) {
+			// Support `channels` as a compatibility alias with other clients
+			if (key === "channels") {
+				key = "join";
 			}
 
-			// Store the "previous" value, for next time
-			$(this).data("lastvalue", nick);
-		});
+			if (!data.defaults.hasOwnProperty(key)) {
+				continue;
+			}
+
+			let value = params[key];
+
+			if (key === "join") {
+				value = value.split(",").map((chan) => {
+					if (!chan.match(/^[#&!+]/)) {
+						return `#${chan}`;
+					}
+
+					return chan;
+				}).join(", ");
+			}
+
+			// Override server provided defaults with parameters passed in the URL if they match the data type
+			switch (typeof data.defaults[key]) {
+			case "boolean": data.defaults[key] = value === "1" || value === "true"; break;
+			case "number": data.defaults[key] = Number(value); break;
+			case "string": data.defaults[key] = String(value); break;
+			}
+		}
+	}
 });

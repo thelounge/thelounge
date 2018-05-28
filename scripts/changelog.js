@@ -126,7 +126,7 @@ For more details, [see the full changelog](${items.fullChangelogUrl}) and [miles
 ### Changed
 
 ${_.isEmpty(items.dependencies) ? "" :
-		`- Update production dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+		`- Update production dependencies to their latest versions:
 ${printDependencyList(items.dependencies)}`
 }
 
@@ -160,7 +160,7 @@ ${printList(items.websiteDocumentation)}`
 
 ${printList(items.internals)}${
 	_.isEmpty(items.devDependencies) ? "" : `
-- Update development dependencies to their latest versions, by [Greenkeeper](https://greenkeeper.io/) 🚀:
+- Update development dependencies to their latest versions:
 ${printDependencyList(items.devDependencies)}`}
 
 @@@@@@@@@@@@@@@@@@@
@@ -516,10 +516,9 @@ function isSkipped(entry) {
 	return hasLabelOrAnnotatedComment(entry, "Meta: Skip Changelog");
 }
 
-// Greenkeeper PRs are listed in a special, more concise way in the changelog.
-// Returns true if the PR was open by Greenkeeper, false otherwise.
-function isDependency({author, labels}) {
-	return hasLabel(labels, "greenkeeper") || author.login === "greenkeeper";
+// Dependency update PRs are listed in a special, more concise way in the changelog.
+function isDependency({labels}) {
+	return hasLabel(labels, "Type: Dependencies");
 }
 
 function isDocumentation({labels}) {
@@ -617,7 +616,7 @@ function parse(entries) {
 // (with format `@username`) of everyone who contributed to this version.
 function extractContributors(entries) {
 	const set = Object.values(entries).reduce((memo, pullRequest) => {
-		if (pullRequest.author.login !== "greenkeeper") {
+		if (pullRequest.author.login !== "greenkeeper" && pullRequest.author.login !== "renovate-bot") {
 			memo.add("@" + pullRequest.author.login);
 		}
 

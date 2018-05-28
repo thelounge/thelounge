@@ -36,4 +36,20 @@ describe("Helper", function() {
 			expect(Helper.expandHome(undefined)).to.equal("");
 		});
 	});
+
+	describe("#getVersion()", function() {
+		const version = Helper.getVersion();
+
+		it("should mention it is served from source code", function() {
+			expect(version).to.include("source");
+		});
+
+		it("should include a short Git SHA", function() {
+			expect(version).to.match(/\([0-9a-f]{7,11} /);
+		});
+
+		it("should include a valid semver version", function() {
+			expect(version).to.match(/v[0-9]+\.[0-9]+\.[0-9]+/);
+		});
+	});
 });

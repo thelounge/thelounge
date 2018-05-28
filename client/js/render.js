@@ -189,7 +189,7 @@ function renderChannelUsers(data) {
 		// We need to un-highlight everything first because triggering `input` with
 		// a value highlights the first entry.
 		users.find(".user").removeClass("active");
-		users.find(`.user[data-name="${previouslyActive.data("name")}"]`).addClass("active");
+		users.find(`.user[data-name="${previouslyActive.attr("data-name")}"]`).addClass("active");
 	}
 
 	return users;
@@ -210,7 +210,7 @@ function renderNetworks(data, singleNetwork) {
 	});
 
 	// Add keyboard handlers to the "Join a channel…" form inputs/button
-	JoinChannel.handleKeybinds();
+	JoinChannel.handleKeybinds(data.networks);
 
 	let newChannels;
 	const channels = $.map(data.networks, function(n) {
@@ -302,7 +302,7 @@ function loadMoreHistory(entries) {
 			return;
 		}
 
-		const target = $(entry.target).find(".show-more-button");
+		const target = $(entry.target).find("button");
 
 		if (target.prop("disabled")) {
 			return;

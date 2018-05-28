@@ -42,13 +42,13 @@ module.exports = function(irc, network) {
 		let chan = network.getChannel("Channel List");
 
 		if (typeof chan === "undefined") {
-			chan = new Chan({
+			chan = client.createChannel({
 				type: Chan.Type.SPECIAL,
 				name: "Channel List",
 			});
 
 			client.emit("join", {
-				network: network.id,
+				network: network.uuid,
 				chan: chan.getFilteredClone(true),
 				index: network.addChannel(chan),
 			});

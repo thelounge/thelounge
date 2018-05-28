@@ -14,6 +14,7 @@ let configPath;
 let usersPath;
 let storagePath;
 let packagesPath;
+let userLogsPath;
 
 const Helper = {
 	config: null,
@@ -31,6 +32,7 @@ const Helper = {
 	getGitCommit,
 	ip2hex,
 	mergeConfig,
+	getDefaultNick,
 
 	password: {
 		hash: passwordHash,
@@ -50,7 +52,8 @@ Helper.config = require(path.resolve(path.join(
 
 function getVersion() {
 	const gitCommit = getGitCommit();
-	return gitCommit ? `source (${gitCommit})` : `v${pkg.version}`;
+	const version = `v${pkg.version}`;
+	return gitCommit ? `source (${gitCommit} / ${version})` : version;
 }
 
 let _gitCommit;
@@ -60,9 +63,17 @@ function getGitCommit() {
 		return _gitCommit;
 	}
 
+	if (!fs.existsSync(path.resolve(__dirname, "..", ".git", "HEAD"))) {
+		_gitCommit = null;
+		return null;
+	}
+
 	try {
 		_gitCommit = require("child_process")
-			.execSync("git rev-parse --short HEAD 2> /dev/null") // Returns hash of current commit
+			.execSync(
+				"git rev-parse --short HEAD", // Returns hash of current commit
+				{stdio: ["ignore", "pipe", "ignore"]}
+			)
 			.toString()
 			.trim();
 		return _gitCommit;
@@ -79,6 +90,7 @@ function setHome(newPath) {
 	usersPath = path.join(homePath, "users");
 	storagePath = path.join(homePath, "storage");
 	packagesPath = path.join(homePath, "packages");
+	userLogsPath = path.join(homePath, "logs");
 
 	// Reload config from new home location
 	if (fs.existsSync(configPath)) {
@@ -135,8 +147,8 @@ function getUserConfigPath(name) {
 	return path.join(usersPath, name + ".json");
 }
 
-function getUserLogsPath(name, network) {
-	return path.join(homePath, "logs", name, network);
+function getUserLogsPath() {
+	return userLogsPath;
 }
 
 function getStoragePath() {
@@ -189,6 +201,14 @@ function passwordHash(password) {
 
 function passwordCompare(password, expected) {
 	return bcrypt.compare(password, expected);
+}
+
+function getDefaultNick() {
+	if (!this.config.defaults.nick) {
+		return "thelounge";
+	}
+
+	return this.config.defaults.nick.replace(/%/g, () => Math.floor(Math.random() * 10));
 }
 
 function mergeConfig(oldConfig, newConfig) {

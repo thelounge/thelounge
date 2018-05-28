@@ -63,13 +63,13 @@ module.exports = function(irc, network) {
 					showInActive = true;
 					chan = network.channels[0];
 				} else {
-					chan = new Chan({
+					chan = client.createChannel({
 						type: Chan.Type.QUERY,
 						name: target,
 					});
 
 					client.emit("join", {
-						network: network.id,
+						network: network.uuid,
 						chan: chan.getFilteredClone(true),
 						index: network.addChannel(chan),
 					});

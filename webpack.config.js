@@ -90,7 +90,7 @@ const config = {
 		new MiniCssExtractPlugin(),
 		new CopyPlugin([
 			{
-				from: "./node_modules/@fortawesome/fontawesome-free-webfonts/webfonts/fa-solid-900.woff*",
+				from: "./node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff*",
 				to: "fonts/[name].[ext]",
 			},
 			{
@@ -113,6 +113,10 @@ const config = {
 			{
 				from: "./client/themes/*",
 				to: "themes/[name].[ext]",
+			},
+			{
+				from: "./node_modules/primer-tooltips/build/build.css",
+				to: "css/primer-tooltips.[ext]",
 			},
 		]),
 		// socket.io uses debug, we don't need it

@@ -2,8 +2,7 @@
 
 const cheerio = require("cheerio");
 const request = require("request");
-const url = require("url");
-const URI = require("urijs");
+const URL = require("url").URL;
 const mime = require("mime-types");
 const Helper = require("../../helper");
 const cleanIrcMessage = require("../../../client/js/libs/handlebars/ircmessageparser/cleanIrcMessage");
@@ -11,7 +10,6 @@ const findLinks = require("../../../client/js/libs/handlebars/ircmessageparser/f
 const storage = require("../storage");
 
 const mediaTypeRegex = /^(audio|video)\/.+/;
-const linkRegex = /^https?:\/\//;
 
 // Fix ECDH curve client compatibility in Node v8/v9
 // This is fixed in Node 10, but The Lounge supports LTS versions
@@ -33,26 +31,36 @@ module.exports = function(client, chan, msg) {
 	// Remove all IRC formatting characters before searching for links
 	const cleanText = cleanIrcMessage(msg.text);
 
-	// We will only try to prefetch http(s) links
-	const links = findLinks(cleanText).filter((w) => linkRegex.test(w.link));
+	msg.previews = findLinks(cleanText).reduce((cleanLinks, link) => {
+		const url = normalizeURL(link.link);
 
-	if (links.length === 0) {
-		return;
-	}
+		// If the URL is invalid and cannot be normalized, don't fetch it
+		if (url === null) {
+			return cleanLinks;
+		}
 
-	msg.previews = Array.from(new Set( // Remove duplicate links
-		links.map((link) => link.link)
-	)).map((link) => ({
-		type: "loading",
-		head: "",
-		body: "",
-		thumb: "",
-		link: link,
-		shown: true,
-	})).slice(0, 5); // Only preview the first 5 URLs in message to avoid abuse
+		// If there are too many urls in this message, only fetch first X valid links
+		if (cleanLinks.length > 4) {
+			return cleanLinks;
+		}
 
-	msg.previews.forEach((preview) => {
-		fetch(normalizeURL(preview.link), {
+		// Do not fetch duplicate links twice
+		if (cleanLinks.some((l) => l.link === link.link)) {
+			return cleanLinks;
+		}
+
+		const preview = {
+			type: "loading",
+			head: "",
+			body: "",
+			thumb: "",
+			link: link.link, // Send original matched link to the client
+			shown: true,
+		};
+
+		cleanLinks.push(preview);
+
+		fetch(url, {
 			accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
 			language: client.language,
 		}, function(res, err) {
@@ -69,7 +77,9 @@ module.exports = function(client, chan, msg) {
 
 			parse(msg, preview, res, client);
 		});
-	});
+
+		return cleanLinks;
+	}, []);
 };
 
 function parseHtml(preview, res, client) {
@@ -94,18 +104,14 @@ function parseHtml(preview, res, client) {
 					|| $('link[rel="image_src"]').attr("href")
 					|| "";
 
+				// Make sure thumbnail is a valid and absolute url
 				if (preview.thumb.length) {
-					preview.thumb = url.resolve(preview.link, preview.thumb);
-				}
-
-				// Make sure thumbnail is a valid url
-				if (!linkRegex.test(preview.thumb)) {
-					preview.thumb = "";
+					preview.thumb = normalizeURL(preview.thumb, preview.link) || "";
 				}
 
 				// Verify that thumbnail pic exists and is under allowed size
 				if (preview.thumb.length) {
-					fetch(normalizeURL(preview.thumb), {language: client.language}, (resThumb) => {
+					fetch(preview.thumb, {language: client.language}, (resThumb) => {
 						if (resThumb === null
 						|| !(/^image\/.+/.test(resThumb.type))
 						|| resThumb.size > (Helper.config.prefetchMaxImageSize * 1024)) {
@@ -135,16 +141,19 @@ function parseHtmlMedia($, preview, res, client) {
 
 				if (mediaTypeRegex.test(mimeType)) {
 					// If we match a clean video or audio tag, parse that as a preview instead
-					const mediaUrl = $($(`meta[property="og:${type}"]`).get(i)).attr("content");
+					let mediaUrl = $($(`meta[property="og:${type}"]`).get(i)).attr("content");
 
 					// Make sure media is a valid url
-					if (!mediaUrl.startsWith("https://")) {
+					mediaUrl = normalizeURL(mediaUrl, preview.link, true);
+
+					// Make sure media is a valid url
+					if (!mediaUrl) {
 						return;
 					}
 
 					foundMedia = true;
 
-					fetch(normalizeURL(mediaUrl), {
+					fetch(mediaUrl, {
 						accept: type === "video" ?
 							"video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5" :
 							"audio/webm, audio/ogg, audio/wav, audio/*;q=0.9, application/ogg;q=0.7, video/*;q=0.6; */*;q=0.5",
@@ -361,6 +370,31 @@ function fetch(uri, headers, cb) {
 		});
 }
 
-function normalizeURL(header) {
-	return URI(header).normalize().toString();
+function normalizeURL(link, baseLink, disallowHttp = false) {
+	try {
+		const url = new URL(link, baseLink);
+
+		// Only fetch http and https links
+		if (url.protocol !== "http:" && url.protocol !== "https:") {
+			return null;
+		}
+
+		if (disallowHttp && url.protocol === "http:") {
+			return null;
+		}
+
+		// Do not fetch links without hostname or ones that contain authorization
+		if (!url.hostname || url.username || url.password) {
+			return null;
+		}
+
+		// Drop hash from the url, if any
+		url.hash = "";
+
+		return url.toString();
+	} catch (e) {
+		// if an exception was thrown, the url is not valid
+	}
+
+	return null;
 }

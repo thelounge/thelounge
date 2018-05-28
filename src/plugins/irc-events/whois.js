@@ -9,14 +9,14 @@ module.exports = function(irc, network) {
 		let chan = network.getChannel(data.nick);
 
 		if (typeof chan === "undefined") {
-			chan = new Chan({
+			chan = client.createChannel({
 				type: Chan.Type.QUERY,
 				name: data.nick,
 			});
 
 			client.emit("join", {
 				shouldOpen: true,
-				network: network.id,
+				network: network.uuid,
 				chan: chan.getFilteredClone(true),
 				index: network.addChannel(chan),
 			});

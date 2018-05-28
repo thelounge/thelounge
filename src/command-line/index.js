@@ -48,6 +48,7 @@ if (!Helper.config.public && !Helper.config.ldap.enable) {
 
 require("./install");
 require("./uninstall");
+require("./upgrade");
 
 // `parse` expects to be passed `process.argv`, but we need to remove to give it
 // a version of `argv` that does not contain options already parsed by

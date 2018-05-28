@@ -2,16 +2,16 @@
 
 const _ = require("lodash");
 const colors = require("chalk");
-const pkg = require("../package.json");
 const Chan = require("./models/chan");
 const crypto = require("crypto");
 const Msg = require("./models/msg");
 const Network = require("./models/network");
-const ircFramework = require("irc-framework");
 const Helper = require("./helper");
 const UAParser = require("ua-parser-js");
-const MessageStorage = require("./plugins/sqlite");
 const uuidv4 = require("uuid/v4");
+
+const MessageStorage = require("./plugins/messageStorage/sqlite");
+const TextFileMessageStorage = require("./plugins/messageStorage/text");
 
 module.exports = Client;
 
@@ -72,20 +72,29 @@ function Client(manager, name, config = {}) {
 		attachedClients: {},
 		config: config,
 		id: uuidv4(),
+		idChan: 1,
+		idMsg: 1,
 		name: name,
 		networks: [],
 		sockets: manager.sockets,
 		manager: manager,
+		messageStorage: [],
 	});
 
 	const client = this;
 	let delay = 0;
 
-	if (!Helper.config.public) {
-		client.messageStorage = new MessageStorage();
+	if (!Helper.config.public && client.config.log) {
+		if (Helper.config.messageStorage.includes("sqlite")) {
+			client.messageStorage.push(new MessageStorage(client));
+		}
 
-		if (client.config.log && Helper.config.messageStorage.includes("sqlite")) {
-			client.messageStorage.enable(client.name);
+		if (Helper.config.messageStorage.includes("text")) {
+			client.messageStorage.push(new TextFileMessageStorage(client));
+		}
+
+		for (const messageStorage of client.messageStorage) {
+			messageStorage.enable();
 		}
 	}
 
@@ -110,6 +119,13 @@ function Client(manager, name, config = {}) {
 		log.info(`User ${colors.bold(client.name)} loaded`);
 	}
 }
+
+Client.prototype.createChannel = function(attr) {
+	const chan = new Chan(attr);
+	chan.id = this.idChan++;
+
+	return chan;
+};
 
 Client.prototype.emit = function(event, data) {
 	if (this.sockets !== null) {
@@ -140,9 +156,10 @@ Client.prototype.find = function(channelId) {
 
 Client.prototype.connect = function(args) {
 	const client = this;
-	const nick = args.nick || "thelounge";
-	let webirc = null;
 	let channels = [];
+
+	// Get channel id for lobby before creating other channels for nicer ids
+	const lobbyChannelId = client.idChan++;
 
 	if (args.channels) {
 		let badName = false;
@@ -153,7 +170,7 @@ Client.prototype.connect = function(args) {
 				return;
 			}
 
-			channels.push(new Chan({
+			channels.push(client.createChannel({
 				name: chan.name,
 				key: chan.key || "",
 				type: chan.type,
@@ -169,112 +186,47 @@ Client.prototype.connect = function(args) {
 		channels = args.join
 			.replace(/,/g, " ")
 			.split(/\s+/g)
-			.map(function(chan) {
-				return new Chan({
+			.map((chan) => {
+				if (!chan.match(/^[#&!+]/)) {
+					chan = `#${chan}`;
+				}
+
+				return client.createChannel({
 					name: chan,
 				});
 			});
 	}
 
-	args.ip = args.ip || (client.config && client.config.ip) || client.ip;
-	args.hostname = args.hostname || (client.config && client.config.hostname) || client.hostname;
-
 	const network = new Network({
 		uuid: args.uuid,
-		name: args.name || (Helper.config.displayNetwork ? "" : Helper.config.defaults.name) || "",
-		host: args.host || "",
-		port: parseInt(args.port, 10) || (args.tls ? 6697 : 6667),
+		name: String(args.name || (Helper.config.displayNetwork ? "" : Helper.config.defaults.name) || ""),
+		host: String(args.host || ""),
+		port: parseInt(args.port, 10),
 		tls: !!args.tls,
 		rejectUnauthorized: !!args.rejectUnauthorized,
-		password: args.password,
-		username: args.username || nick.replace(/[^a-zA-Z0-9]/g, ""),
-		realname: args.realname || "The Lounge User",
-		commands: args.commands,
-		ip: args.ip,
-		hostname: args.hostname,
+		password: String(args.password || ""),
+		nick: String(args.nick || ""),
+		username: String(args.username || ""),
+		realname: String(args.realname || ""),
+		commands: args.commands || [],
+		ip: args.ip || (client.config && client.config.ip) || client.ip,
+		hostname: args.hostname || (client.config && client.config.hostname) || client.hostname,
 		channels: channels,
 	});
-	network.setNick(nick);
+
+	// Set network lobby channel id
+	network.channels[0].id = lobbyChannelId;
 
 	client.networks.push(network);
 	client.emit("network", {
 		networks: [network.getFilteredClone(this.lastActiveChannel, -1)],
 	});
 
-	if (Helper.config.lockNetwork) {
-		// This check is needed to prevent invalid user configurations
-		if (!Helper.config.public && args.host && args.host.length > 0 && args.host !== Helper.config.defaults.host) {
-			network.channels[0].pushMessage(client, new Msg({
-				type: Msg.Type.ERROR,
-				text: "Hostname you specified is not allowed.",
-			}), true);
-			return;
-		}
-
-		network.host = Helper.config.defaults.host;
-		network.port = Helper.config.defaults.port;
-		network.tls = Helper.config.defaults.tls;
-		network.rejectUnauthorized = Helper.config.defaults.rejectUnauthorized;
-	}
-
-	if (network.host.length === 0) {
-		network.channels[0].pushMessage(client, new Msg({
-			type: Msg.Type.ERROR,
-			text: "You must specify a hostname to connect.",
-		}), true);
+	if (!network.validate(client)) {
 		return;
 	}
 
-	if (Helper.config.webirc && network.host in Helper.config.webirc) {
-		if (!args.hostname) {
-			args.hostname = args.ip;
-		}
-
-		if (args.ip) {
-			if (Helper.config.webirc[network.host] instanceof Function) {
-				webirc = Helper.config.webirc[network.host](client, args);
-			} else {
-				webirc = {
-					password: Helper.config.webirc[network.host],
-					username: pkg.name,
-					address: args.ip,
-					hostname: args.hostname,
-				};
-			}
-		} else {
-			log.warn("Cannot find a valid WEBIRC configuration for " + nick
-				+ "!" + network.username + "@" + network.host);
-		}
-	}
-
-	network.irc = new ircFramework.Client({
-		version: false, // We handle it ourselves
-		host: network.host,
-		port: network.port,
-		nick: nick,
-		username: Helper.config.useHexIp ? Helper.ip2hex(args.ip) : network.username,
-		gecos: network.realname,
-		password: network.password,
-		tls: network.tls,
-		outgoing_addr: Helper.config.bind,
-		rejectUnauthorized: network.rejectUnauthorized,
-		enable_chghost: true,
-		enable_echomessage: true,
-		auto_reconnect: true,
-		auto_reconnect_wait: 10000 + Math.floor(Math.random() * 1000), // If multiple users are connected to the same network, randomize their reconnections a little
-		auto_reconnect_max_retries: 360, // At least one hour (plus timeouts) worth of reconnections
-		webirc: webirc,
-	});
-
-	network.irc.requestCap([
-		"znc.in/self-message", // Legacy echo-message for ZNC
-	]);
-
-	// Request only new messages from ZNC if we have sqlite logging enabled
-	// See http://wiki.znc.in/Playback
-	if (client.config.log && Helper.config.messageStorage.includes("sqlite")) {
-		network.irc.requestCap("znc.in/playback");
-	}
+	network.createIrcFramework(client);
 
 	events.forEach((plugin) => {
 		require(`./plugins/irc-events/${plugin}`).apply(client, [
@@ -473,15 +425,18 @@ Client.prototype.sort = function(data) {
 
 	switch (data.type) {
 	case "networks":
-		this.networks.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+		this.networks.sort((a, b) => order.indexOf(a.uuid) - order.indexOf(b.uuid));
 
 		// Sync order to connected clients
-		this.emit("sync_sort", {order: this.networks.map((obj) => obj.id), type: data.type, target: data.target});
+		this.emit("sync_sort", {
+			order: this.networks.map((obj) => obj.uuid),
+			type: data.type,
+		});
 
 		break;
 
 	case "channels": {
-		const network = _.find(this.networks, {id: data.target});
+		const network = _.find(this.networks, {uuid: data.target});
 
 		if (!network) {
 			return;
@@ -490,7 +445,11 @@ Client.prototype.sort = function(data) {
 		network.channels.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
 
 		// Sync order to connected clients
-		this.emit("sync_sort", {order: network.channels.map((obj) => obj.id), type: data.type, target: data.target});
+		this.emit("sync_sort", {
+			order: network.channels.map((obj) => obj.id),
+			type: data.type,
+			target: network.uuid,
+		});
 
 		break;
 	}
@@ -539,8 +498,8 @@ Client.prototype.quit = function(signOut) {
 		network.destroy();
 	});
 
-	if (this.messageStorage) {
-		this.messageStorage.close();
+	for (const messageStorage of this.messageStorage) {
+		messageStorage.close();
 	}
 };
 
