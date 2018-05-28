@@ -33,6 +33,8 @@ const Helper = {
 	ip2hex,
 	mergeConfig,
 	getDefaultNick,
+	parseHostmask,
+	compareHostmask,
 
 	password: {
 		hash: passwordHash,
@@ -225,4 +227,44 @@ function mergeConfig(oldConfig, newConfig) {
 			return srcValue;
 		}
 	});
+}
+
+function parseHostmask(hostmask) {
+	let nick = "";
+	let ident = "*";
+	let hostname = "*";
+	let parts = [];
+
+	// Parse hostname first, then parse the rest
+	parts = hostmask.split("@");
+
+	if (parts.length >= 2) {
+		hostname = parts[1] || "*";
+		hostmask = parts[0];
+	}
+
+	hostname = hostname.toLowerCase();
+
+	parts = hostmask.split("!");
+
+	if (parts.length >= 2) {
+		ident = parts[1] || "*";
+		hostmask = parts[0];
+	}
+
+	ident = ident.toLowerCase();
+
+	nick = hostmask.toLowerCase() || "*";
+
+	const result = {
+		nick: nick,
+		ident: ident,
+		hostname: hostname,
+	};
+
+	return result;
+}
+
+function compareHostmask(a, b) {
+	return (a.nick.toLowerCase() === b.nick.toLowerCase() || a.nick === "*") && (a.ident.toLowerCase() === b.ident.toLowerCase() || a.ident === "*") && (a.hostname.toLowerCase() === b.hostname.toLowerCase() || a.hostname === "*");
 }

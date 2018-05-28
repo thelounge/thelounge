@@ -1248,15 +1248,18 @@ kbd {
 }
 
 #chat table.channel-list,
-#chat table.ban-list {
+#chat table.ban-list,
+#chat table.ignore-list {
 	margin: 5px 10px;
 	width: calc(100% - 30px);
 }
 
 #chat table.channel-list th,
 #chat table.ban-list th,
+#chat table.ignore-list th,
 #chat table.channel-list td,
-#chat table.ban-list td {
+#chat table.ban-list td,
+#chat.table.ignore-list td {
 	padding: 5px;
 	vertical-align: top;
 	border-bottom: #eee 1px solid;
@@ -1270,7 +1273,9 @@ kbd {
 #chat table.channel-list .topic,
 #chat table.ban-list .hostmask,
 #chat table.ban-list .banned_by,
-#chat table.ban-list .banned_at {
+#chat table.ban-list .banned_at,
+#chat table.ignore-list .hostmask,
+#chat table.ignore-list .when {
 	text-align: left;
 }
 

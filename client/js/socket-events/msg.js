@@ -52,7 +52,7 @@ function processReceivedMessage(data) {
 	const container = channel.find(".messages");
 	const activeChannelId = chat.find(".chan.active").data("id");
 
-	if (data.msg.type === "channel_list" || data.msg.type === "ban_list") {
+	if (data.msg.type === "channel_list" || data.msg.type === "ban_list" || data.msg.type === "ignore_list") {
 		$(container).empty();
 	}
 

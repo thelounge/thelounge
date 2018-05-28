@@ -293,6 +293,23 @@ function addJoinItem() {
 	});
 }
 
+function addIgnoreListItem() {
+	function ignorelist(itemData) {
+		socket.emit("input", {
+			target: parseInt(itemData, 10),
+			text: "/ignorelist",
+		});
+	}
+
+	addContextMenuItem({
+		check: (target) => target.hasClass("lobby"),
+		className: "list",
+		displayName: "List ignored users",
+		data: (target) => target.data("id"),
+		callback: ignorelist,
+	});
+}
+
 function addDefaultItems() {
 	addWhoisItem();
 	addQueryItem();
@@ -306,4 +323,5 @@ function addDefaultItems() {
 	addChannelListItem();
 	addBanListItem();
 	addJoinItem();
+	addIgnoreListItem();
 }

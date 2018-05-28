@@ -67,6 +67,7 @@ Msg.Type = {
 	TOPIC_SET_BY: "topic_set_by",
 	WHOIS: "whois",
 	BANLIST: "ban_list",
+	IGNORELIST: "ignore_list",
 };
 
 module.exports = Msg;
