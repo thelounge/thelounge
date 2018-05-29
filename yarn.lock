@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@fortawesome/fontawesome-free@5.1.0-4":
-  version "5.1.0-4"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.1.0-4.tgz#791e5133ab70dd6b9652ec8793b900a7d1e37cee"
+"@fortawesome/fontawesome-free@5.1.0-11":
+  version "5.1.0-11"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.1.0-11.tgz#690ea6ecc169142fdb63622d44c841f88fadc936"
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
