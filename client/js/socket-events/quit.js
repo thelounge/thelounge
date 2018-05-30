@@ -16,11 +16,16 @@ socket.on("quit", function(data) {
 
 	network.remove();
 
-	const chan = sidebar.find(".chan")
-		.eq(0)
-		.trigger("click");
+	const chan = sidebar.find(".chan");
 
 	if (chan.length === 0) {
 		sidebar.find(".empty").show();
+
+		// Open the connect window
+		$("#footer .connect").trigger("click", {
+			pushState: false,
+		});
+	} else {
+		chan.eq(0).trigger("click");
 	}
 });

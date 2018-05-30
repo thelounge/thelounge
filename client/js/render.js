@@ -202,7 +202,7 @@ function renderNetworks(data, singleNetwork) {
 	sidebar.find(".networks").append(
 		templates.network({
 			networks: data.networks,
-		})
+		}).trim()
 	);
 
 	collapsed.forEach((key) => {
