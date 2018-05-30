@@ -8225,9 +8225,9 @@ webpack-sources@^1.0.1, webpack-sources@^1.1.0:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
 
-webpack@4.10.0:
-  version "4.10.0"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.10.0.tgz#bc7a274afdb5556f9cbe836778abbca283c52938"
+webpack@4.10.1:
+  version "4.10.1"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.10.1.tgz#74909fb9c32941b5c34d22c1f8782c9a033a52e7"
   dependencies:
     "@webassemblyjs/ast" "1.5.8"
     "@webassemblyjs/wasm-edit" "1.5.8"
