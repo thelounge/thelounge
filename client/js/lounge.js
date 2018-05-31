@@ -146,12 +146,12 @@ $(function() {
 
 		if (chan.length) {
 			chan.trigger("click");
-		} else {
-			socket.emit("input", {
-				target: chat.data("id"),
-				text: "/join " + name,
-			});
 		}
+
+		socket.emit("input", {
+			target: chat.data("id"),
+			text: "/join " + name,
+		});
 	});
 
 	chat.on("click", ".condensed-summary .content", function() {
