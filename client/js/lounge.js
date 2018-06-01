@@ -225,21 +225,13 @@ $(function() {
 			.trigger("show");
 
 		utils.togglePreviewMoreButtonsIfNeeded();
-
-		let title = $(document.body).data("app-name");
-		const chanTitle = chan.attr("aria-label");
-
-		if (chanTitle.length > 0) {
-			title = `${chanTitle} — ${title}`;
-		}
-
-		document.title = title;
+		utils.updateTitle();
 
 		const type = chan.data("type");
 		let placeholder = "";
 
 		if (type === "channel" || type === "query") {
-			placeholder = `Write to ${chanTitle}`;
+			placeholder = `Write to ${chan.attr("aria-label")}`;
 		}
 
 		input

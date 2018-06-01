@@ -217,5 +217,7 @@ function notifyMessage(targetId, channel, msg) {
 		badge
 			.attr("data-highlight", serverHighlight)
 			.addClass("highlight");
+
+		utils.updateTitle();
 	}
 }
