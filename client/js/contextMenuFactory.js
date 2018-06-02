@@ -320,8 +320,8 @@ function addDefaultItems() {
 	addDevoiceItem();
 	addFocusItem();
 	addEditNetworkItem();
+	addJoinItem();
 	addChannelListItem();
 	addBanListItem();
-	addJoinItem();
 	addIgnoreListItem();
 }
