@@ -74,8 +74,6 @@ const config = {
 						ignoreCustomFragments: [
 							/{{[\s\S]*?}}/,
 						],
-						sortAttributes: true,
-						sortClassName: true,
 					},
 				}],
 			},
