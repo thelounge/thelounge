@@ -5,6 +5,7 @@ const fsextra = require("fs-extra");
 const path = require("path");
 const filenamify = require("filenamify");
 const Helper = require("../../helper");
+const Msg = require("../../models/msg");
 
 class TextFileMessageStorage {
 	constructor(client) {
@@ -41,26 +42,57 @@ class TextFileMessageStorage {
 
 		let line = `[${Helper.getHumanDate()}] `;
 
-		if (msg.type === "message") {
-			// Format:
-			// [2014-01-01 00:00:00] <Arnold> Put that cookie down.. Now!!
-			line += `<${msg.from.nick}> ${msg.text}`;
-		} else {
-			// Format:
-			// [2014-01-01 00:00:00] * Arnold quit
-			line += `* ${msg.from.nick} `;
+		// message types from src/models/msg.js
+		switch (msg.type) {
+		case Msg.Type.ACTION:
+			// [2014-01-01 00:00:00] * @Arnold is eating cookies
+			line += `* ${msg.from.mode}${msg.from.nick} ${msg.text}`;
+			break;
+		// case Msg.Type.INVITE: // neither incoming nor outgoing invites are logged
+		case Msg.Type.JOIN:
+			// [2014-01-01 00:00:00] *** Arnold (~arnold@foo.bar) joined
+			line += `*** ${msg.from.nick} (${msg.hostmask}) joined`;
+			break;
+		case Msg.Type.KICK:
+			// [2014-01-01 00:00:00] *** Arnold was kicked by Bernie (Don't steal my cookies!)
+			line += `*** ${msg.target.nick} was kicked by ${msg.from.nick} (${msg.text})`;
+			break;
+		case Msg.Type.MESSAGE:
+			// [2014-01-01 00:00:00] <@Arnold> Put that cookie down.. Now!!
+			line += `<${msg.from.mode}${msg.from.nick}> ${msg.text}`;
+			break;
+		case Msg.Type.MODE:
+			// [2014-01-01 00:00:00] *** Arnold set mode +o Bernie
+			line += `*** ${msg.from.nick} set mode ${msg.text}`;
+			break;
+		case Msg.Type.NICK:
+			// [2014-01-01 00:00:00] *** Arnold changed nick to Bernie
+			line += `*** ${msg.from.nick} changed nick to ${msg.new_nick}`;
+			break;
+		case Msg.Type.NOTICE:
+			// [2014-01-01 00:00:00] -Arnold- pssst, I have cookies!
+			line += `-${msg.from.nick}- ${msg.text}`;
+			break;
+		case Msg.Type.PART:
+			// [2014-01-01 00:00:00] *** Arnold (~arnold@foo.bar) left (Bye all!)
+			line += `*** ${msg.from.nick} (${msg.hostmask}) left (${msg.text})`;
+			break;
+		case Msg.Type.QUIT:
+			// [2014-01-01 00:00:00] *** Arnold (~arnold@foo.bar) quit (Connection reset by peer)
+			line += `*** ${msg.from.nick} (${msg.hostmask}) quit (${msg.text})`;
+			break;
+		case Msg.Type.CHGHOST:
+			// [2014-01-01 00:00:00] *** Arnold changed host to: new@fancy.host
+			line += `*** ${msg.from.nick} changed host to '${msg.new_ident}@${msg.new_host}'`;
+			break;
+		case Msg.Type.TOPIC:
+			// [2014-01-01 00:00:00] *** Arnold changed topic to: welcome everyone!
+			line += `*** ${msg.from.nick} changed topic to '${msg.text}'`;
+			break;
 
-			if (msg.hostmask) {
-				line += `(${msg.hostmask}) `;
-			}
-
-			line += msg.type;
-
-			if (msg.new_nick) { // `/nick <new_nick>`
-				line += ` ${msg.new_nick}`;
-			} else if (msg.text) {
-				line += ` ${msg.text}`;
-			}
+		default:
+			// unhandled events will not be logged
+			return;
 		}
 
 		line += "\n";
