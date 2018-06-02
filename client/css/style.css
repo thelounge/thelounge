@@ -586,6 +586,7 @@ kbd {
 #sidebar .lobby-wrap {
 	display: flex;
 	flex-grow: 1;
+	overflow: hidden;
 }
 
 #sidebar .chan.lobby .lobby-wrap:hover,
