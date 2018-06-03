@@ -37,9 +37,15 @@ class Msg {
 	}
 
 	isLoggable() {
+		if (this.type === Msg.Type.TOPIC) {
+			// Do not log topic that is sent on channel join
+			return !!this.from.nick;
+		}
+
 		return this.type !== Msg.Type.MOTD &&
 			this.type !== Msg.Type.ERROR &&
 			this.type !== Msg.Type.BANLIST &&
+			this.type !== Msg.Type.TOPIC_SET_BY &&
 			this.type !== Msg.Type.WHOIS;
 	}
 }
