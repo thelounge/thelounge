@@ -2,6 +2,7 @@
 
 const expect = require("chai").expect;
 const os = require("os");
+const moment = require("moment");
 const Helper = require("../../src/helper");
 
 describe("Helper", function() {
@@ -51,5 +52,9 @@ describe("Helper", function() {
 		it("should include a valid semver version", function() {
 			expect(version).to.match(/v[0-9]+\.[0-9]+\.[0-9]+/);
 		});
+	});
+
+	describe("#getHumanDate()", function() {
+		expect(Helper.getHumanDate()).to.equal(moment().format("YYYY-MM-DD HH:mm:ss"));
 	});
 });

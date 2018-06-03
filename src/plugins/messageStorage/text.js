@@ -3,7 +3,6 @@
 const fs = require("fs");
 const fsextra = require("fs-extra");
 const path = require("path");
-const moment = require("moment");
 const filenamify = require("filenamify");
 const Helper = require("../../helper");
 
@@ -40,11 +39,7 @@ class TextFileMessageStorage {
 			return;
 		}
 
-		const format = Helper.config.logs.format || "YYYY-MM-DD HH:mm:ss";
-		const tz = Helper.config.logs.timezone || "UTC+00:00";
-
-		const time = moment(msg.time).utcOffset(tz).format(format);
-		let line = `[${time}] `;
+		let line = `[${Helper.getHumanDate()}] `;
 
 		if (msg.type === "message") {
 			// Format:

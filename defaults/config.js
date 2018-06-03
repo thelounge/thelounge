@@ -162,33 +162,6 @@ module.exports = {
 	messageStorage: ["sqlite", "text"],
 
 	//
-	// Log settings
-	//
-	// Logging has to be enabled per user. If enabled, logs will be stored in
-	// the 'logs/<user>/<network>/' folder.
-	//
-	// @type     object
-	// @default  {}
-	//
-	logs: {
-		//
-		// Timestamp format
-		//
-		// @type     string
-		// @default  "YYYY-MM-DD HH:mm:ss"
-		//
-		format: "YYYY-MM-DD HH:mm:ss",
-
-		//
-		// Timezone
-		//
-		// @type     string
-		// @default  "UTC+00:00"
-		//
-		timezone: "UTC+00:00",
-	},
-
-	//
 	// Maximum number of history lines per channel
 	//
 	// Defines the maximum number of history lines that will be kept in
