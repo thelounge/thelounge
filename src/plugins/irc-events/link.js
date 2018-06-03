@@ -238,7 +238,7 @@ function parse(msg, preview, res, client) {
 		break;
 
 	default:
-		return;
+		return removePreview(msg, preview);
 	}
 
 	if (!promise) {
@@ -261,7 +261,7 @@ function handlePreview(client, msg, preview, res) {
 		// For link previews, drop the thumbnail
 		// For other types, do not display preview at all
 		if (preview.type !== "link") {
-			return;
+			return removePreview(msg, preview);
 		}
 
 		preview.thumb = "";
@@ -282,12 +282,22 @@ function emitPreview(client, msg, preview) {
 		if (preview.thumb.length || preview.body.length) {
 			preview.head = "Untitled page";
 		} else {
-			return;
+			return removePreview(msg, preview);
 		}
 	}
 
 	const id = msg.id;
 	client.emit("msg:preview", {id, preview});
+}
+
+function removePreview(msg, preview) {
+	// If a preview fails to load, remove the link from msg object
+	// So that client doesn't attempt to display an preview on page reload
+	const index = msg.previews.indexOf(preview);
+
+	if (index > -1) {
+		msg.previews.splice(index, 1);
+	}
 }
 
 function getRequestHeaders(headers) {
