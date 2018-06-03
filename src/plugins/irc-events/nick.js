@@ -36,7 +36,6 @@ module.exports = function(irc, network) {
 				from: user,
 				type: Msg.Type.NICK,
 				new_nick: data.new_nick,
-				self: self,
 			});
 			chan.pushMessage(client, msg);
 
