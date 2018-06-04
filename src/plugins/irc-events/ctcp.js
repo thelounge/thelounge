@@ -33,7 +33,7 @@ module.exports = function(irc, network) {
 			from: chan.getUser(data.nick),
 			ctcpMessage: data.message,
 		});
-		chan.pushMessage(client, msg);
+		chan.pushMessage(client, msg, true);
 	});
 
 	// Limit requests to a rate of one per second max
@@ -52,6 +52,6 @@ module.exports = function(irc, network) {
 			hostmask: data.ident + "@" + data.hostname,
 			ctcpMessage: data.message,
 		});
-		lobby.pushMessage(client, msg);
+		lobby.pushMessage(client, msg, true);
 	}, 1000, {trailing: false}));
 };
