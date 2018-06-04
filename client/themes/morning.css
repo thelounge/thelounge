@@ -6,6 +6,12 @@
 	--window-bg-color: #303e4a;
 	--date-marker-color: #97ea70;
 	--unread-marker-color: #f92772;
+	--highlight-bg-color: #4d4332;
+	--highlight-border-color: #b08c4f;
+}
+
+#chat .channel .message.highlight .time {
+	color: white;
 }
 
 #windows .logo {
@@ -121,10 +127,7 @@
 }
 
 #chat .error,
-#chat .error .from,
-#chat .channel .highlight,
-#chat .channel .highlight .from,
-#chat .channel .highlight .text {
+#chat .error .from {
 	color: #f92772;
 }
 
@@ -136,6 +139,7 @@
 	color: #b7c5d1;
 }
 
+#chat .time,
 #chat .condensed .content,
 #chat .away .content,
 #chat .back .content,
