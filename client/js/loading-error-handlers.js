@@ -60,4 +60,9 @@
 	};
 
 	window.addEventListener("error", window.g_LoungeErrorHandler);
+
+	// Trigger early service worker registration
+	if ("serviceWorker" in navigator) {
+		navigator.serviceWorker.register("service-worker.js");
+	}
 })();
