@@ -8,6 +8,7 @@ const fs = require("fs");
 const net = require("net");
 const bcrypt = require("bcryptjs");
 const colors = require("chalk");
+const moment = require("moment");
 
 let homePath;
 let configPath;
@@ -30,6 +31,7 @@ const Helper = {
 	setHome,
 	getVersion,
 	getGitCommit,
+	getHumanDate,
 	ip2hex,
 	mergeConfig,
 	getDefaultNick,
@@ -203,6 +205,10 @@ function passwordHash(password) {
 
 function passwordCompare(password, expected) {
 	return bcrypt.compare(password, expected);
+}
+
+function getHumanDate() {
+	return moment().format("YYYY-MM-DD HH:mm:ss");
 }
 
 function getDefaultNick() {
