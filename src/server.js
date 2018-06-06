@@ -39,15 +39,17 @@ module.exports = function() {
 (Node.js ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${process.arch})`);
 	log.info(`Configuration file: ${colors.green(Helper.getConfigPath())}`);
 
+	const staticOptions = {
+		redirect: false,
+		maxAge: 86400 * 1000,
+	};
+
 	const app = express()
 		.disable("x-powered-by")
 		.use(allRequests)
 		.use(index)
-		.use(express.static("public"))
-		.use("/storage/", express.static(Helper.getStoragePath(), {
-			redirect: false,
-			maxAge: 86400 * 1000,
-		}));
+		.use(express.static(path.join(__dirname, "..", "public"), staticOptions))
+		.use("/storage/", express.static(Helper.getStoragePath(), staticOptions));
 
 	// This route serves *installed themes only*. Local themes are served directly
 	// from the `public/themes/` folder as static assets, without entering this

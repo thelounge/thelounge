@@ -41,7 +41,8 @@ self.addEventListener("fetch", function(event) {
 
 function networkOrCache(uri) {
 	return caches.open("thelounge").then(function(cache) {
-		return fetch(uri)
+		// Despite the "no-cache" name, it is a conditional request if proper headers are set
+		return fetch(uri, {cache: "no-cache"})
 			.then(function(response) {
 				if (response.ok) {
 					return cache.put(uri, response.clone()).then(function() {
