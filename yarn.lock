@@ -2301,9 +2301,9 @@ elliptic@^6.0.0:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
 
-emoji-regex@6.5.1:
-  version "6.5.1"
-  resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-6.5.1.tgz#9baea929b155565c11ea41c6626eaa65cef992c2"
+emoji-regex@7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-7.0.0.tgz#7c25d9bb46480f9a5a80ab6a2a12935bdde6cb6c"
 
 emojis-list@^2.0.0:
   version "2.1.0"
