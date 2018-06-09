@@ -205,15 +205,15 @@ function renderNetworks(data, singleNetwork) {
 		}).trim()
 	);
 
-	collapsed.forEach((key) => {
-		collapseNetwork($(`.network[data-uuid="${key}"] button.collapse-network`));
-	});
-
 	// Add keyboard handlers to the "Join a channel…" form inputs/button
 	JoinChannel.handleKeybinds(data.networks);
 
 	let newChannels;
 	const channels = $.map(data.networks, function(n) {
+		if (collapsed.has(n.uuid)) {
+			collapseNetwork($(`.network[data-uuid="${n.uuid}"] button.collapse-network`));
+		}
+
 		return n.channels;
 	});
 
