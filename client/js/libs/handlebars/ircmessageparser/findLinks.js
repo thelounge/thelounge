@@ -4,13 +4,13 @@ const LinkifyIt = require("linkify-it");
 
 LinkifyIt.prototype.normalize = function normalize(match) {
 	if (!match.schema) {
-		match.schema = "https:";
-		match.url = "https://" + match.url;
+		match.schema = "http:";
+		match.url = "http://" + match.url;
 	}
 
 	if (match.schema === "//") {
-		match.schema = "https:";
-		match.url = "https:" + match.url;
+		match.schema = "http:";
+		match.url = "http:" + match.url;
 	}
 
 	if (match.schema === "mailto:" && !/^mailto:/i.test(match.url)) {

@@ -380,14 +380,14 @@ describe("Link plugin", function() {
 		link(this.irc, this.network.channels[0], message);
 
 		this.irc.once("msg:preview", function(data) {
-			expect(data.preview.link).to.equal("https://localhost:9002");
+			expect(data.preview.link).to.equal("http://localhost:9002");
 			done();
 		});
 	});
 
 	it("should de-duplicate links", function(done) {
 		const message = this.irc.createMessage({
-			text: "//localhost:9002 https://localhost:9002 https://localhost:9002",
+			text: "//localhost:9002 http://localhost:9002 http://localhost:9002",
 		});
 
 		link(this.irc, this.network.channels[0], message);
@@ -397,12 +397,12 @@ describe("Link plugin", function() {
 			head: "",
 			body: "",
 			thumb: "",
-			link: "https://localhost:9002",
+			link: "http://localhost:9002",
 			shown: true,
 		}]);
 
 		this.irc.once("msg:preview", function(data) {
-			expect(data.preview.link).to.equal("https://localhost:9002");
+			expect(data.preview.link).to.equal("http://localhost:9002");
 			done();
 		});
 	});
