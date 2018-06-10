@@ -146,7 +146,7 @@ function applySetting(name, value) {
 		});
 
 		if (highlightsTokens && highlightsTokens.length) {
-			module.exports.highlightsRE = new RegExp("\\b(?:" + highlightsTokens.join("|") + ")\\b", "i");
+			module.exports.highlightsRE = new RegExp(`(?:^| |\t)(?:${highlightsTokens.join("|")})(?:\t| |$)`, "i");
 		} else {
 			module.exports.highlightsRE = null;
 		}
