@@ -1428,7 +1428,7 @@ kbd {
 }
 
 #chat .toggle-content .more::after {
-	content: attr(aria-label);
+	content: " " attr(aria-label);
 }
 
 #chat .toggle-content .more-caret {
