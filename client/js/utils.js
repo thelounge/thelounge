@@ -18,6 +18,7 @@ module.exports = {
 	scrollIntoViewNicely,
 	hasRoleInChannel,
 	move,
+	closeChan,
 	resetHeight,
 	toggleNotificationMarkers,
 	togglePasswordField,
@@ -136,6 +137,30 @@ function move(array, old_index, new_index) {
 
 	array.splice(new_index, 0, array.splice(old_index, 1)[0]);
 	return array;
+}
+
+function closeChan(chan) {
+	const socket = require("./socket");
+	let cmd = "/close";
+
+	if (chan.hasClass("lobby")) {
+		cmd = "/quit";
+		const server = chan.find(".name").html();
+
+		if (!confirm("Disconnect from " + server + "?")) { // eslint-disable-line no-alert
+			return false;
+		}
+	}
+
+	socket.emit("input", {
+		target: chan.data("id"),
+		text: cmd,
+	});
+	chan.css({
+		transition: "none",
+		opacity: 0.4,
+	});
+	return false;
 }
 
 function requestIdleCallback(callback, timeout) {

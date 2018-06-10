@@ -265,6 +265,8 @@ kbd {
 .context-menu-user::before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
 .context-menu-close::before { content: "\f00d"; /* http://fontawesome.io/icon/times/ */ }
 .context-menu-list::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
+.context-menu-disconnect::before { content: "\f0c1"; /* https://fontawesome.com/icons/unlink?style=solid */ }
+.context-menu-connect::before { content: "\f127"; /* https://fontawesome.com/icons/link?style=solid */ }
 .context-menu-action-whois::before { content: "\f05a"; /* http://fontawesome.io/icon/info-circle/  */ }
 .context-menu-action-kick::before { content: "\f05e"; /* http://fontawesome.io/icon/ban/ */ }
 .context-menu-action-op::before { content: "\f1fa"; /* http://fontawesome.io/icon/at/ */ }

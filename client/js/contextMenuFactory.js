@@ -108,6 +108,82 @@ function addQueryItem() {
 	});
 }
 
+function addCloseItem() {
+	function getCloseDisplay(target) {
+		if (target.hasClass("lobby")) {
+			return "Remove";
+		} else if (target.hasClass("channel")) {
+			return "Leave";
+		}
+
+		return "Close";
+	}
+
+	addContextMenuItem({
+		check: (target) => target.hasClass("chan"),
+		className: "close",
+		displayName: getCloseDisplay,
+		data: (target) => target.attr("data-target"),
+		callback: (itemData) => utils.closeChan($(`.networks .chan[data-target="${itemData}"]`)),
+	});
+}
+
+function addConnectItem() {
+	let clickedNetwork;
+
+	function isDisconnected(target) {
+		return target.parent().hasClass("not-connected");
+	}
+
+	function connect() {
+		socket.emit("input", {
+			target: $("#chat").data("id"),
+			text: "/connect",
+		});
+	}
+
+	function check(target) {
+		clickedNetwork = target;
+		return target.hasClass("lobby") && isDisconnected(target);
+	}
+
+	addContextMenuItem({
+		check: check,
+		className: "connect",
+		displayName: "Connect",
+		data: () => clickedNetwork.data("id"),
+		callback: connect,
+	});
+}
+
+function addDisconnectItem() {
+	let clickedNetwork;
+
+	function isConnected(target) {
+		return !target.parent().hasClass("not-connected");
+	}
+
+	function disconnect() {
+		socket.emit("input", {
+			target: $("#chat").data("id"),
+			text: "/disconnect",
+		});
+	}
+
+	function check(target) {
+		clickedNetwork = target;
+		return target.hasClass("lobby") && isConnected(target);
+	}
+
+	addContextMenuItem({
+		check: check,
+		className: "disconnect",
+		displayName: "Disconnect",
+		data: () => clickedNetwork.data("id"),
+		callback: disconnect,
+	});
+}
+
 function addKickItem() {
 	function kick(itemData) {
 		socket.emit("input", {
@@ -324,4 +400,7 @@ function addDefaultItems() {
 	addChannelListItem();
 	addBanListItem();
 	addIgnoreListItem();
+	addConnectItem();
+	addDisconnectItem();
+	addCloseItem();
 }
