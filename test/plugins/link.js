@@ -422,4 +422,85 @@ describe("Link plugin", function() {
 
 		expect(message.previews).to.be.empty;
 	});
+
+	it("should fetch same link only once at the same time", function(done) {
+		const message = this.irc.createMessage({
+			text: "http://localhost:9002/basic-og-once",
+		});
+
+		let requests = 0;
+		let responses = 0;
+
+		this.irc.language = "very nice language";
+
+		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message);
+		process.nextTick(() => link(this.irc, this.network.channels[0], message));
+
+		app.get("/basic-og-once", function(req, res) {
+			requests++;
+
+			expect(req.header("accept-language")).to.equal("very nice language");
+
+			// delay the request so it doesn't resolve immediately
+			setTimeout(() => {
+				res.send("<title>test prefetch</title>");
+			}, 100);
+		});
+
+		const cb = (data) => {
+			responses++;
+
+			expect(data.preview.head, "test prefetch");
+
+			if (responses === 3) {
+				this.irc.removeListener("msg:preview", cb);
+				expect(requests).to.equal(1);
+				done();
+			}
+		};
+
+		this.irc.on("msg:preview", cb);
+	});
+
+	it("should fetch same link with different languages multiple times", function(done) {
+		const message = this.irc.createMessage({
+			text: "http://localhost:9002/basic-og-once-lang",
+		});
+
+		const requests = [];
+		let responses = 0;
+
+		this.irc.language = "first language";
+		link(this.irc, this.network.channels[0], message);
+
+		this.irc.language = "second language";
+		link(this.irc, this.network.channels[0], message);
+
+		app.get("/basic-og-once-lang", function(req, res) {
+			requests.push(req.header("accept-language"));
+
+			// delay the request so it doesn't resolve immediately
+			setTimeout(() => {
+				res.send("<title>test prefetch</title>");
+			}, 100);
+		});
+
+		const cb = (data) => {
+			responses++;
+
+			expect(data.preview.head, "test prefetch");
+
+			if (responses === 2) {
+				this.irc.removeListener("msg:preview", cb);
+				expect(requests).to.deep.equal([
+					"first language",
+					"second language",
+				]);
+				done();
+			}
+		};
+
+		this.irc.on("msg:preview", cb);
+	});
 });
