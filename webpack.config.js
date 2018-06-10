@@ -71,6 +71,7 @@ const config = {
 				}, {
 					loader: "html-minifier-loader",
 					options: {
+						conservativeCollapse: true,
 						ignoreCustomFragments: [
 							/{{[\s\S]*?}}/,
 						],
