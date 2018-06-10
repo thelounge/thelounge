@@ -60,8 +60,6 @@ function addWhoisItem() {
 			target: $("#chat").data("id"),
 			text: "/whois " + itemData,
 		});
-
-		$(`.channel.active .userlist .user[data-name="${itemData}"]`).trigger("click");
 	}
 
 	addContextMenuItem({
