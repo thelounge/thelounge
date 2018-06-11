@@ -125,14 +125,17 @@ class MessageStorage {
 	 * @param Chan channel - Channel object for which to load messages for
 	 */
 	getMessages(network, channel) {
-		if (!this.isEnabled || Helper.config.maxHistory < 1) {
+		if (!this.isEnabled || Helper.config.maxHistory === 0) {
 			return Promise.resolve([]);
 		}
+
+		// If unlimited history is specified, load 100k messages
+		const limit = Helper.config.maxHistory < 0 ? 100000 : Helper.config.maxHistory;
 
 		return new Promise((resolve, reject) => {
 			this.database.parallelize(() => this.database.all(
 				"SELECT msg, type, time FROM messages WHERE network = ? AND channel = ? ORDER BY time DESC LIMIT ?",
-				[network.uuid, channel.name.toLowerCase(), Helper.config.maxHistory],
+				[network.uuid, channel.name.toLowerCase(), limit],
 				(err, rows) => {
 					if (err) {
 						return reject(err);
