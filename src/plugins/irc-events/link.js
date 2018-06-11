@@ -86,7 +86,7 @@ function parseHtml(preview, res, client) {
 				preview.type = "link";
 				preview.head =
 					$('meta[property="og:title"]').attr("content")
-					|| $("title").text()
+					|| $("head > title, title").first().text()
 					|| "";
 				preview.body =
 					$('meta[property="og:description"]').attr("content")
