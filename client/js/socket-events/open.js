@@ -18,6 +18,7 @@ socket.on("open", function(id) {
 
 	// Clear the unread badge
 	$("#sidebar").find(".chan[data-id='" + id + "'] .badge")
+		.attr("data-highlight", 0)
 		.removeClass("highlight")
 		.empty();
 
