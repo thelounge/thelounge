@@ -8,7 +8,7 @@ const Helper = require("../../helper");
 const cleanIrcMessage = require("../../../client/js/libs/handlebars/ircmessageparser/cleanIrcMessage");
 const findLinks = require("../../../client/js/libs/handlebars/ircmessageparser/findLinks");
 const storage = require("../storage");
-
+const currentFetchPromises = new Map();
 const mediaTypeRegex = /^(audio|video)\/.+/;
 
 // Fix ECDH curve client compatibility in Node v8/v9
@@ -63,19 +63,13 @@ module.exports = function(client, chan, msg) {
 		fetch(url, {
 			accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
 			language: client.language,
-		}, function(res, err) {
-			if (err) {
-				preview.type = "error";
-				preview.error = "message";
-				preview.message = err.message;
-				handlePreview(client, msg, preview, res);
-			}
-
-			if (res === null) {
-				return;
-			}
-
+		}).then((res) => {
 			parse(msg, preview, res, client);
+		}).catch((err) => {
+			preview.type = "error";
+			preview.error = "message";
+			preview.message = err.message;
+			handlePreview(client, msg, preview, null);
 		});
 
 		return cleanLinks;
@@ -111,7 +105,7 @@ function parseHtml(preview, res, client) {
 
 				// Verify that thumbnail pic exists and is under allowed size
 				if (preview.thumb.length) {
-					fetch(preview.thumb, {language: client.language}, (resThumb) => {
+					fetch(preview.thumb, {language: client.language}).then((resThumb) => {
 						if (resThumb === null
 						|| !(/^image\/.+/.test(resThumb.type))
 						|| resThumb.size > (Helper.config.prefetchMaxImageSize * 1024)) {
@@ -119,6 +113,9 @@ function parseHtml(preview, res, client) {
 						}
 
 						resolve(resThumb);
+					}).catch(() => {
+						preview.thumb = "";
+						resolve(null);
 					});
 				} else {
 					resolve(res);
@@ -158,7 +155,7 @@ function parseHtmlMedia($, preview, res, client) {
 							"video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5" :
 							"audio/webm, audio/ogg, audio/wav, audio/*;q=0.9, application/ogg;q=0.7, video/*;q=0.6; */*;q=0.5",
 						language: client.language,
-					}, (resMedia) => {
+					}).then((resMedia) => {
 						if (resMedia === null || !mediaTypeRegex.test(resMedia.type)) {
 							return reject();
 						}
@@ -168,7 +165,7 @@ function parseHtmlMedia($, preview, res, client) {
 						preview.mediaType = resMedia.type;
 
 						resolve(resMedia);
-					});
+					}).catch(reject);
 
 					return false;
 				}
@@ -313,71 +310,89 @@ function getRequestHeaders(headers) {
 	return formattedHeaders;
 }
 
-function fetch(uri, headers, cb) {
-	let req;
+function fetch(uri, headers) {
+	// Stringify the object otherwise the objects won't compute to the same value
+	const cacheKey = JSON.stringify([uri, headers]);
+	let promise = currentFetchPromises.get(cacheKey);
 
-	try {
-		req = request.get({
-			url: uri,
-			maxRedirects: 5,
-			timeout: 5000,
-			headers: getRequestHeaders(headers),
-		});
-	} catch (e) {
-		return cb(null, e);
+	if (promise) {
+		return promise;
 	}
 
-	const buffers = [];
-	let length = 0;
-	let limit = Helper.config.prefetchMaxImageSize * 1024;
+	promise = new Promise((resolve, reject) => {
+		let req;
 
-	req
-		.on("response", function(res) {
-			if (/^image\/.+/.test(res.headers["content-type"])) {
-				// response is an image
-				// if Content-Length header reports a size exceeding the prefetch limit, abort fetch
-				const contentLength = parseInt(res.headers["content-length"], 10) || 0;
+		try {
+			req = request.get({
+				url: uri,
+				maxRedirects: 5,
+				timeout: 5000,
+				headers: getRequestHeaders(headers),
+			});
+		} catch (e) {
+			return reject(e);
+		}
 
-				if (contentLength > limit) {
+		const buffers = [];
+		let length = 0;
+		let limit = Helper.config.prefetchMaxImageSize * 1024;
+
+		req
+			.on("response", function(res) {
+				if (/^image\/.+/.test(res.headers["content-type"])) {
+					// response is an image
+					// if Content-Length header reports a size exceeding the prefetch limit, abort fetch
+					const contentLength = parseInt(res.headers["content-length"], 10) || 0;
+
+					if (contentLength > limit) {
+						req.abort();
+					}
+				} else if (mediaTypeRegex.test(res.headers["content-type"])) {
+					// We don't need to download the file any further after we received content-type header
+					req.abort();
+				} else {
+					// if not image, limit download to 50kb, since we need only meta tags
+					// twitter.com sends opengraph meta tags within ~20kb of data for individual tweets
+					limit = 1024 * 50;
+				}
+			})
+			.on("error", (e) => reject(e))
+			.on("data", (data) => {
+				length += data.length;
+				buffers.push(data);
+
+				if (length > limit) {
 					req.abort();
 				}
-			} else if (mediaTypeRegex.test(res.headers["content-type"])) {
-				// We don't need to download the file any further after we received content-type header
-				req.abort();
-			} else {
-				// if not image, limit download to 50kb, since we need only meta tags
-				// twitter.com sends opengraph meta tags within ~20kb of data for individual tweets
-				limit = 1024 * 50;
-			}
-		})
-		.on("error", (e) => cb(null, e))
-		.on("data", (data) => {
-			length += data.length;
-			buffers.push(data);
+			})
+			.on("end", () => {
+				if (req.response.statusCode < 200 || req.response.statusCode > 299) {
+					return reject(new Error(`HTTP ${req.response.statusCode}`));
+				}
 
-			if (length > limit) {
-				req.abort();
-			}
-		})
-		.on("end", () => {
-			if (req.response.statusCode < 200 || req.response.statusCode > 299) {
-				return cb(null, new Error(`HTTP ${req.response.statusCode}`));
-			}
+				let type = "";
+				let size = parseInt(req.response.headers["content-length"], 10) || length;
 
-			let type = "";
-			let size = parseInt(req.response.headers["content-length"], 10) || length;
+				if (size < length) {
+					size = length;
+				}
 
-			if (size < length) {
-				size = length;
-			}
+				if (req.response.headers["content-type"]) {
+					type = req.response.headers["content-type"].split(/ *; */).shift();
+				}
 
-			if (req.response.headers["content-type"]) {
-				type = req.response.headers["content-type"].split(/ *; */).shift();
-			}
+				const data = Buffer.concat(buffers, length);
+				resolve({data, type, size});
+			});
+	});
 
-			const data = Buffer.concat(buffers, length);
-			cb({data, type, size});
-		});
+	const removeCache = () => currentFetchPromises.delete(cacheKey);
+
+	promise.then(removeCache).catch(removeCache);
+
+	currentFetchPromises.set(cacheKey, promise);
+
+	return promise;
 }
 
 function normalizeURL(link, baseLink, disallowHttp = false) {
