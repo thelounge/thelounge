@@ -72,7 +72,25 @@ describe("Link plugin", function() {
 		});
 
 		this.irc.once("msg:preview", function(data) {
-			expect(data.preview.head, "opengraph test");
+			expect(data.preview.head).to.equal("opengraph test");
+			done();
+		});
+	});
+
+	it("should find only the first matching tag", function(done) {
+		const message = this.irc.createMessage({
+			text: "http://localhost:9002/duplicate-tags",
+		});
+
+		link(this.irc, this.network.channels[0], message);
+
+		app.get("/duplicate-tags", function(req, res) {
+			res.send("<title>test</title><title>magnifying glass icon</title><meta name='description' content='desc1'><meta name='description' content='desc2'>");
+		});
+
+		this.irc.once("msg:preview", function(data) {
+			expect(data.preview.head).to.equal("test");
+			expect(data.preview.body).to.equal("desc1");
 			done();
 		});
 	});
