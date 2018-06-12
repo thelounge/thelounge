@@ -188,6 +188,7 @@ $(function() {
 			self.addClass("active")
 				.attr("aria-selected", true)
 				.find(".badge")
+				.attr("data-highlight", 0)
 				.removeClass("highlight")
 				.empty();
 

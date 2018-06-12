@@ -48,8 +48,23 @@ Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 	// If this channel is open in any of the clients, do not increase unread counter
 	const isOpen = _.find(client.attachedClients, {openChannel: chan}) !== undefined;
 
-	if ((increasesUnread || msg.highlight) && !isOpen) {
-		obj.unread = ++this.unread;
+	if (msg.self) {
+		// reset counters/markers when receiving self-/echo-message
+		this.unread = 0;
+		this.firstUnread = 0;
+		this.highlight = 0;
+	} else if (!isOpen) {
+		if (!this.firstUnread) {
+			this.firstUnread = msg.id;
+		}
+
+		if (increasesUnread || msg.highlight) {
+			obj.unread = ++this.unread;
+		}
+
+		if (msg.highlight) {
+			obj.highlight = ++this.highlight;
+		}
 	}
 
 	client.emit("msg", obj);
@@ -69,20 +84,6 @@ Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 		// so for now, just don't implement dereferencing for this edge case.
 		if (Helper.config.prefetch && Helper.config.prefetchStorage && Helper.config.maxHistory > 0) {
 			this.dereferencePreviews(deleted);
-		}
-	}
-
-	if (msg.self) {
-		// reset counters/markers when receiving self-/echo-message
-		this.firstUnread = 0;
-		this.highlight = 0;
-	} else if (!isOpen) {
-		if (!this.firstUnread) {
-			this.firstUnread = msg.id;
-		}
-
-		if (msg.highlight) {
-			this.highlight++;
 		}
 	}
 };
