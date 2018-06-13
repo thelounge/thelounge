@@ -21,6 +21,7 @@ module.exports = {
 	closeChan,
 	resetHeight,
 	toggleNotificationMarkers,
+	updateTitle,
 	togglePasswordField,
 	requestIdleCallback,
 	togglePreviewMoreButtonsIfNeeded,
@@ -97,6 +98,27 @@ function toggleNotificationMarkers(newState) {
 
 	// Toggles a dot on the menu icon when there are unread notifications
 	viewport.toggleClass("notified", newState);
+}
+
+function updateTitle() {
+	let title = $(document.body).data("app-name");
+	const chanTitle = $("#sidebar").find(".chan.active").attr("aria-label");
+
+	if (chanTitle.length > 0) {
+		title = `${chanTitle} — ${title}`;
+	}
+
+	// add highlight count to title
+	let alertEventCount = 0;
+	$(".badge.highlight").each(function() {
+		alertEventCount += parseInt($(this).attr("data-highlight"));
+	});
+
+	if (alertEventCount > 0) {
+		title = `(${alertEventCount}) ${title}`;
+	}
+
+	document.title = title;
 }
 
 function togglePasswordField(elem) {
