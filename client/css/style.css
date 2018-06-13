@@ -1195,6 +1195,10 @@ background on hover (unless active) */
 	position: relative;
 }
 
+#chat .same-sender .from {
+	visibility: hidden;
+}
+
 #chat .content {
 	flex: 1 1 auto;
 	min-width: 0;
@@ -2464,6 +2468,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 	#chat .channel .message.highlight .time {
 		padding-left: 0;
+	}
+
+	#chat .same-sender .from {
+		display: none;
 	}
 
 	#chat .condensed-summary .time,

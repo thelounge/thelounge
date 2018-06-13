@@ -47,6 +47,12 @@ function appendMessage(container, chanId, chanType, msg) {
 	let lastChild = container.children(".msg, .date-marker-container").last();
 	const renderedMessage = buildChatMessage(msg);
 
+	if ((lastChild.hasClass("message") && msg.type === "message" ||
+			lastChild.hasClass("notice") && msg.type === "notice") &&
+			lastChild.data("from") === msg.from.nick) {
+		renderedMessage.addClass("same-sender");
+	}
+
 	// Check if date changed
 	const msgTime = new Date(msg.time);
 	const prevMsgTime = new Date(lastChild.data("time"));
