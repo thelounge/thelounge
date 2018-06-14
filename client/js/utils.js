@@ -104,7 +104,7 @@ function updateTitle() {
 	let title = $(document.body).data("app-name");
 	const chanTitle = $("#sidebar").find(".chan.active").attr("aria-label");
 
-	if (chanTitle.length > 0) {
+	if (chanTitle && chanTitle.length > 0) {
 		title = `${chanTitle} — ${title}`;
 	}
 
