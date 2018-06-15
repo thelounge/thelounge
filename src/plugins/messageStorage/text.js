@@ -48,7 +48,6 @@ class TextFileMessageStorage {
 			// [2014-01-01 00:00:00] * @Arnold is eating cookies
 			line += `* ${msg.from.mode}${msg.from.nick} ${msg.text}`;
 			break;
-		// case Msg.Type.INVITE: // neither incoming nor outgoing invites are logged
 		case Msg.Type.JOIN:
 			// [2014-01-01 00:00:00] *** Arnold (~arnold@foo.bar) joined
 			line += `*** ${msg.from.nick} (${msg.hostmask}) joined`;
