@@ -1,6 +1,7 @@
 "use strict";
 
 const _ = require("lodash");
+const log = require("../log");
 const fs = require("fs");
 const path = require("path");
 const WebPushAPI = require("web-push");

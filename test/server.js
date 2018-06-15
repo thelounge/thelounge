@@ -1,5 +1,6 @@
 "use strict";
 
+const log = require("../src/log");
 const Helper = require("../src/helper");
 const expect = require("chai").expect;
 const request = require("request");

@@ -1,6 +1,7 @@
 "use strict";
 
 const _ = require("lodash");
+const log = require("../../log");
 const Msg = require("../../models/msg");
 const Chan = require("../../models/chan");
 const Helper = require("../../helper");

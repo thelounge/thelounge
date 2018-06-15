@@ -1,5 +1,6 @@
 "use strict";
 
+const log = require("../../../src/log");
 const expect = require("chai").expect;
 const stub = require("sinon").stub;
 const TestUtil = require("../../util");

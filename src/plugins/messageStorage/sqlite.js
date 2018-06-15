@@ -1,5 +1,6 @@
 "use strict";
 
+const log = require("../../log");
 const path = require("path");
 const fsextra = require("fs-extra");
 const Helper = require("../../helper");

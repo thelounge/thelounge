@@ -1,6 +1,7 @@
 "use strict";
 
 const _ = require("lodash");
+const log = require("../log");
 const colors = require("chalk");
 const fs = require("fs");
 const Helper = require("../helper");
