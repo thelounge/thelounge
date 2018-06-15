@@ -2,6 +2,7 @@
 
 const pkg = require("../package.json");
 const _ = require("lodash");
+const log = require("./log");
 const path = require("path");
 const os = require("os");
 const fs = require("fs");

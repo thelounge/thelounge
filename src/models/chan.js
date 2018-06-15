@@ -1,6 +1,7 @@
 "use strict";
 
 const _ = require("lodash");
+const log = require("../log");
 const Helper = require("../helper");
 const User = require("./user");
 const Msg = require("./msg");

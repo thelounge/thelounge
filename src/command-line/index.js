@@ -1,8 +1,7 @@
 "use strict";
 
-global.log = require("../log.js");
-
 const _ = require("lodash");
+const log = require("../log");
 const fs = require("fs");
 const path = require("path");
 const program = require("commander");

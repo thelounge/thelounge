@@ -86,7 +86,4 @@ rules:
   template-curly-spacing: error
   yoda: error
 
-globals:
-  log: false
-
 extends: eslint:recommended
