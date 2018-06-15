@@ -250,7 +250,6 @@ kbd {
 #chat .mode .from::before,
 #chat .ctcp .from::before,
 #chat .ctcp_request .from::before,
-#chat .whois .from::before,
 #chat .nick .from::before,
 #chat .action .from::before,
 #chat .toggle-button::after,
@@ -368,11 +367,6 @@ kbd {
 #chat .ctcp .from::before,
 #chat .ctcp_request .from::before {
 	content: "\f15c"; /* https://fontawesome.com/icons/file-alt?style=solid */
-}
-
-#chat .whois .from::before {
-	content: "\f007"; /* http://fontawesome.io/icon/user/ */
-	color: #2ecc40;
 }
 
 #chat .nick .from::before {
@@ -1008,7 +1002,7 @@ background on hover (unless active) */
 }
 
 #chat.condensed-status-messages .condensed-summary {
-	display: flex;
+	display: inline-flex;
 }
 
 #chat .condensed-summary .content:hover {
@@ -1021,10 +1015,6 @@ background on hover (unless active) */
 
 #chat.condensed-status-messages .condensed.closed .msg {
 	display: none;
-}
-
-#chat .condensed-summary .time {
-	visibility: hidden;
 }
 
 #windows #form,
@@ -1107,9 +1097,13 @@ background on hover (unless active) */
 #chat .msg {
 	word-wrap: break-word;
 	word-break: break-word; /* Webkit-specific */
-	display: flex;
-	align-items: flex-start;
 	position: relative;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
+#chat .same-sender {
+	margin-top: -8px;
 }
 
 #chat .unread-marker {
@@ -1168,44 +1162,43 @@ background on hover (unless active) */
 	padding: 0 10px;
 }
 
-#chat .time,
-#chat .from,
-#chat .content {
-	padding: 3px 0;
-	flex: 0 0 auto;
-}
-
 #chat .time {
 	color: #999;
-	padding-left: 10px;
-	width: 55px;
-}
-
-#chat.show-seconds .time {
-	width: 75px;
+	font-size: 0.75em;
 }
 
 #chat .from {
 	color: #b1c3ce;
-	padding-right: 10px;
-	text-align: right;
-	width: 134px;
-	overflow: hidden;
-	white-space: nowrap;
 	position: relative;
+	font-size: 0.85em;
 }
 
-#chat .same-sender .from {
-	visibility: hidden;
+#chat .message .from,
+#chat .notice .from {
+	padding-left: 10px;
+	padding-right: 5px;
+}
+
+#chat .same-sender .from,
+#chat .same-sender .time {
+	display: none;
 }
 
 #chat .content {
 	flex: 1 1 auto;
 	min-width: 0;
-	padding-left: 10px;
-	padding-right: 6px;
-	border-left: 1px solid #f6f6f6;
+	padding: 0 10px;
 	overflow: hidden; /* Prevents Zalgo text to expand beyond messages */
+}
+
+#chat .messages > .msg:not(.message):not(.notice):not(.motd) {
+	padding-left: 10px;
+	padding-right: 10px;
+	text-align: center;
+}
+
+#chat .msg:not(.message):not(.notice):not(.motd) .content {
+	padding-left: 0;
 }
 
 #chat .special .time,
@@ -1339,6 +1332,12 @@ background on hover (unless active) */
 	display: none !important;
 }
 
+#chat .message:not([data-from]) .from,
+#chat .message:not([data-from]) .time,
+#chat .motd .time {
+	display: none;
+}
+
 #chat .condensed .content,
 #chat .away .content,
 #chat .back .content,
@@ -1379,8 +1378,12 @@ background on hover (unless active) */
 	border-left: 5px solid var(--highlight-border-color);
 }
 
-#chat .channel .message.highlight .time {
+#chat .channel .message.highlight .from,
+#chat .channel .message.highlight .content {
 	padding-left: 5px;
+}
+
+#chat .channel .message.highlight .time {
 	width: 50px;
 	color: #696969;
 }
@@ -1409,6 +1412,10 @@ background on hover (unless active) */
 	overflow: hidden;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 	contain: content; /* This fixes a display bug where border-radius stopped working on image link hover */
+}
+
+#chat .toggle-content:last-child {
+	margin-bottom: 3px;
 }
 
 /* This applies to images of preview-type-image and thumbnails of preview-type-link */
@@ -1812,21 +1819,31 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	display: inline-block;
 }
 
-.whois {
+#chat .whois .from,
+#chat .whois .time {
+	display: none;
+}
+
+#chat .whois .content {
+	padding: 0;
+}
+
+#chat .whois-details {
 	display: -ms-grid; /* Edge 15- */
 	display: grid;
 	-ms-grid-template-columns: max-content auto;
 	grid-template-columns: max-content auto;
 	margin: 0;
+	text-align: left;
 }
 
-.whois dt {
+#chat .whois-details dt {
 	-ms-grid-column-start: 1;
 	grid-column-start: 1;
-	margin-right: 20px;
+	margin-right: 10px;
 }
 
-.whois dd {
+#chat .whois-details dd {
 	-ms-grid-column-start: 2;
 	grid-column-start: 2;
 }
@@ -2295,15 +2312,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	font-size: 12px;
 }
 
-@media (min-width: 480px) {
-	/* Fade out for long usernames */
-	#chat .from {
-		padding-left: 10px;
-		-webkit-mask-image: linear-gradient(to left, transparent, black 10px);
-		mask-image: linear-gradient(to left, transparent, black 10px);
-	}
-}
-
 @media (max-width: 768px) {
 	/**
 	  * TODO Replace this with `@media (hover: hover)` when Firefox supports it
@@ -2470,13 +2478,34 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		padding-left: 0;
 	}
 
-	#chat .same-sender .from {
-		display: none;
-	}
-
 	#chat .condensed-summary .time,
 	#chat .condensed-summary .from {
 		display: none;
+	}
+
+	/* The following makes keys and values of the whois definition list appear on
+	the same line for small screens */
+
+	#chat .whois-details {
+		display: block;
+	}
+
+	#chat .whois-details dt,
+	#chat .whois-details dd {
+		display: inline;
+	}
+
+	#chat .whois-details dt {
+		margin-right: 0;
+	}
+
+	#chat .whois-details dt::after {
+		content: ' ';
+	}
+
+	#chat .whois-details dd::after {
+		content: '';
+		display: block;
 	}
 
 	#help .help-item .subject {
