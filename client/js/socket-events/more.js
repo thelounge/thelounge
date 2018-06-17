@@ -21,17 +21,24 @@ socket.on("more", function(data) {
 		return;
 	}
 
-	// Remove the date-change marker we put at the top, because it may
-	// not actually be a date change now
+	// Remove the date marker at the top if date does not change
 	const children = $(chan).children();
 
-	if (children.eq(0).hasClass("date-marker-container")) { // Check top most child
-		children.eq(0).remove();
-	} else if (children.eq(1).hasClass("date-marker-container")) {
-		// The unread-marker could be at index 0, which will cause the date-marker to become "stuck"
-		children.eq(1).remove();
-	} else if (children.eq(0).hasClass("condensed") && children.eq(0).children(".date-marker-container").eq(0).hasClass("date-marker-container")) {
-		children.eq(0).children(".date-marker-container").eq(0).remove();
+	// Check the top-most element and the one after because
+	// unread and date markers may switch positions
+	for (let i = 0; i <= 1; i++) {
+		const marker = children.eq(i);
+
+		if (marker.hasClass("date-marker-container")) {
+			const msgTime = new Date(data.messages[data.messages.length - 1].time);
+			const prevMsgTime = new Date(marker.data("time"));
+
+			if (prevMsgTime.toDateString() === msgTime.toDateString()) {
+				marker.remove();
+			}
+
+			break;
+		}
 	}
 
 	// Add the older messages
