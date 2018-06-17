@@ -46,7 +46,10 @@ const config = {
 						presets: [
 							["env", {
 								targets: {
-									browsers: "last 2 versions",
+									browsers: [
+										"last 1 year",
+										"firefox esr",
+									],
 								},
 							}],
 						],
