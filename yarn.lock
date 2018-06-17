@@ -7528,9 +7528,9 @@ web-push@3.3.1:
     minimist "^1.2.0"
     urlsafe-base64 "^1.0.0"
 
-webpack-cli@3.0.6:
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-3.0.6.tgz#5d414e66c6576d4050c1e6b7ab3ecf9969106525"
+webpack-cli@3.0.8:
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-3.0.8.tgz#90eddcf04a4bfc31aa8c0edc4c76785bc4f1ccd9"
   dependencies:
     chalk "^2.4.1"
     cross-spawn "^6.0.5"
