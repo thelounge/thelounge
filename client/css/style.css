@@ -1173,6 +1173,20 @@ background on hover (unless active) */
 	font-size: 0.85em;
 }
 
+#chat .from .mode {
+	display: none;
+}
+
+#chat .mode-badge {
+	display: inline-block;
+	color: #999;
+	border: 1px solid #999;
+	border-radius: 5px;
+	font-size: 0.75em;
+	padding: 0 6px;
+	margin-left: 5px;
+}
+
 #chat .message .from,
 #chat .notice .from {
 	padding-left: 10px;
@@ -1180,7 +1194,8 @@ background on hover (unless active) */
 }
 
 #chat .same-sender .from,
-#chat .same-sender .time {
+#chat .same-sender .time,
+#chat .same-sender .mode-badge {
 	display: none;
 }
 
@@ -1394,6 +1409,11 @@ background on hover (unless active) */
 
 #chat .channel .message.highlight .content {
 	border-left: 1px solid var(--highlight-bg-color);
+}
+
+#chat .channel .message.highlight .mode-badge {
+	color: #696969;
+	border-color: #696969;
 }
 
 #chat .toggle-content.opened .more-caret, /* Expand/Collapse link previews */

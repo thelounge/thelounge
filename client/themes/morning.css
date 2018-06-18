@@ -10,8 +10,22 @@
 	--highlight-border-color: #b08c4f;
 }
 
-#chat .channel .message.highlight .time {
+#chat .channel .message.highlight {
+	background-color: #4d4332;
+	border-left: 5px solid #b08c4f;
+}
+
+#chat .channel .message.highlight .time,
+#chat .channel .message.highlight .mode-badge {
 	color: white;
+}
+
+#chat .channel .message.highlight .mode-badge {
+	border-color: white;
+}
+
+#chat .channel .message.highlight .content {
+	border-left: 1px solid #4d4332;
 }
 
 #windows .logo {
@@ -140,6 +154,7 @@
 }
 
 #chat .time,
+#chat .mode-badge,
 #chat .condensed .content,
 #chat .away .content,
 #chat .back .content,
@@ -152,6 +167,10 @@
 #chat .topic .content,
 #chat .topic_set_by .content {
 	color: #b7c5d1;
+}
+
+#chat .mode-badge {
+	border-color: #b7c5d1;
 }
 
 #chat table.channel-list td {

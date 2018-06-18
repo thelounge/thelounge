@@ -11,6 +11,28 @@
 	<span class="time tooltipped tooltipped-e" aria-label="{{localetime time}}">
 		{{tz time}}
 	</span>
+	{{#if from.mode}}
+		<span class="mode-badge">
+			{{#equal from.mode "~"}}
+				Owner
+			{{/equal}}
+			{{#equal from.mode "&"}}
+				Administrator
+			{{/equal}}
+			{{#equal from.mode "!"}}
+				Administrator
+			{{/equal}}
+			{{#equal from.mode "@"}}
+				Operator
+			{{/equal}}
+			{{#equal from.mode "%"}}
+				Half-Operator
+			{{/equal}}
+			{{#equal from.mode "+"}}
+				Voiced
+			{{/equal}}
+		</span>
+	{{/if}}
 	<div class="content">
 		<span class="text">{{{parse text users}}}</span>
 
