@@ -18,7 +18,6 @@ require("./webpush");
 require("./keybinds");
 require("./clipboard");
 const contextMenuFactory = require("./contextMenuFactory");
-const contextMenuContainer = $("#context-menu-container");
 
 $(function() {
 	const sidebar = $("#sidebar, #footer");
@@ -78,11 +77,6 @@ $(function() {
 	viewport.on("click", "#chat .menu", function(e) {
 		e.currentTarget = $(`#sidebar .chan[data-id="${$(this).closest(".chan").data("id")}"]`)[0];
 		return contextMenuFactory.createContextMenu($(this), e).show();
-	});
-
-	contextMenuContainer.on("click contextmenu", function() {
-		contextMenuContainer.hide();
-		return false;
 	});
 
 	function resetInputHeight(input) {

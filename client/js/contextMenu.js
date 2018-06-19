@@ -1,65 +1,137 @@
 "use strict";
+
 const $ = require("jquery");
+const Mousetrap = require("mousetrap");
 const templates = require("../views");
-let contextMenu, contextMenuContainer;
+
+const contextMenuContainer = $("#context-menu-container");
 
 module.exports = class ContextMenu {
 	constructor(contextMenuItems, contextMenuActions, selectedElement, event) {
+		this.previousActiveElement = document.activeElement;
 		this.contextMenuItems = contextMenuItems;
 		this.contextMenuActions = contextMenuActions;
 		this.selectedElement = selectedElement;
 		this.event = event;
-
-		contextMenuContainer = $("#context-menu-container");
-		contextMenu = $("#context-menu");
 	}
 
 	show() {
-		showContextMenu(this.contextMenuItems, this.selectedElement, this.event);
-		this.bindEvents();
+		const contextMenu = showContextMenu(this.contextMenuItems, this.selectedElement, this.event);
+		this.bindEvents(contextMenu);
 		return false;
 	}
 
-	bindEvents() {
+	hide() {
+		contextMenuContainer
+			.hide()
+			.empty()
+			.off(".contextMenu");
+
+		Mousetrap.unbind("escape");
+	}
+
+	bindEvents(contextMenu) {
 		const contextMenuActions = this.contextMenuActions;
 
 		contextMenuActions.execute = (id, ...args) => contextMenuActions[id] && contextMenuActions[id](...args);
 
-		contextMenu.find(".context-menu-item").on("click", function() {
-			const $this = $(this);
-			const itemData = $this.attr("data-data");
-			const contextAction = $this.attr("data-action");
+		const clickItem = (item) => {
+			const itemData = item.attr("data-data");
+			const contextAction = item.attr("data-action");
+
+			this.hide();
+
 			contextMenuActions.execute(contextAction, itemData);
+		};
+
+		contextMenu.on("click", ".context-menu-item", function() {
+			clickItem($(this));
+		});
+
+		const trap = Mousetrap(contextMenu.get(0));
+
+		trap.bind(["up", "down"], (e, key) => {
+			const items = contextMenu.find(".context-menu-item");
+
+			let index = items.toArray().findIndex((item) => $(item).is(":focus"));
+
+			if (key === "down") {
+				index = (index + 1) % items.length;
+			} else {
+				index = Math.max(index, 0) - 1;
+			}
+
+			items.eq(index).trigger("focus");
+		});
+
+		trap.bind("enter", () => {
+			const item = contextMenu.find(".context-menu-item:focus");
+
+			if (item.length) {
+				clickItem(item);
+			}
+
+			return false;
+		});
+
+		// Hide context menu when clicking or right clicking outside of it
+		contextMenuContainer.on("click.contextMenu contextmenu.contextMenu", (e) => {
+			// Do not close the menu when clicking inside of the context menu (e.g. on a divider)
+			if ($(e.target).prop("id") === "context-menu") {
+				return;
+			}
+
+			this.hide();
+			return false;
+		});
+
+		// Hide the context menu when pressing escape within the context menu container
+		Mousetrap.bind("escape", () => {
+			this.hide();
+
+			// Return focus to the previously focused element
+			$(this.previousActiveElement).trigger("focus");
+
+			return false;
 		});
 	}
 };
 
 function showContextMenu(contextMenuItems, selectedElement, event) {
 	const target = $(event.currentTarget);
-	let output = "";
+	const contextMenu = $("<ul>", {
+		id: "context-menu",
+		role: "menu",
+	});
 
 	for (const item of contextMenuItems) {
 		if (item.check(target)) {
 			if (item.divider) {
-				output += templates.contextmenu_divider();
+				contextMenu.append(templates.contextmenu_divider());
 			} else {
-				output += templates.contextmenu_item({
+				contextMenu.append(templates.contextmenu_item({
 					class: typeof item.className === "function" ? item.className(target) : item.className,
 					action: item.actionId,
 					text: typeof item.displayName === "function" ? item.displayName(target) : item.displayName,
 					data: typeof item.data === "function" ? item.data(target) : item.data,
-				});
+				}));
 			}
 		}
 	}
 
-	contextMenuContainer.show();
+	contextMenuContainer
+		.html(contextMenu)
+		.show();
+
 	contextMenu
-		.html(output)
-		.css(positionContextMenu(selectedElement, event));
+		.css(positionContextMenu(contextMenu, selectedElement, event))
+		.find(".context-menu-item:first-child")
+		.trigger("focus");
+
+	return contextMenu;
 }
 
-function positionContextMenu(selectedElement, e) {
+function positionContextMenu(contextMenu, selectedElement, e) {
 	let offset;
 	const menuWidth = contextMenu.outerWidth();
 	const menuHeight = contextMenu.outerHeight();
