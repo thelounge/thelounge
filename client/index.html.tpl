@@ -50,9 +50,15 @@
 	<body class="signed-out<%- public ? " public" : "" %>" data-transports="<%- JSON.stringify(transports) %>">
 		<div id="viewport" role="tablist">
 			<aside id="sidebar">
-				<div class="networks"></div>
-				<div class="empty">
-					You're not connected to any networks yet.
+				<div class="scrollable-area">
+					<div class="logo-container">
+						<img src="img/logo-<%- public ? 'horizontal-' : '' %>transparent-bg.svg" class="logo" alt="The Lounge">
+						<img src="img/logo-<%- public ? 'horizontal-' : '' %>transparent-bg-inverted.svg" class="logo-inverted" alt="The Lounge">
+					</div>
+					<div class="networks"></div>
+					<div class="empty">
+						You are not connected to any networks yet.
+					</div>
 				</div>
 				<footer id="footer">
 					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Sign in"><button class="icon sign-in" data-target="#sign-in" aria-label="Sign in" role="tab" aria-controls="sign-in" aria-selected="false"></button></span>

@@ -1,33 +1,27 @@
+@import 'default.css';
+
 :root {
-	--link-color: #428bca;
+	--body-color: #f3f3f3;
+	--link-color: #77abd9;
+	--window-bg-color: #303e4a;
+	--date-marker-color: #97ea70;
+	--unread-marker-color: #f92772;
 }
 
-body {
-	color: #ccc;
-}
-
-.logo {
+#windows .logo {
 	display: none;
 }
 
-.logo-inverted {
+#windows .logo-inverted {
 	display: inline-block;
 }
 
-#main,
-#chat .userlist,
-#windows .chan,
-#windows .window {
-	background: #333c4a;
-}
-
 #chat .userlist .count {
-	background-color: #2e3642;
+	background-color: #28333d;
 }
 
-#chat .userlist .search {
-	color: #ccc;
-	padding: 15px 16px;
+#chat .count::before {
+	color: #b7c5d1;
 }
 
 /* Borders */
@@ -35,16 +29,12 @@ body {
 #windows #chat .header,
 #chat .user-mode::before,
 #chat .userlist {
-	border-color: #2a323d;
+	border-color: #28333d;
 }
 
 /* User list */
-#chat .user-mode {
-	color: #fefefe;
-}
-
 #chat .userlist .user.active {
-	background-color: #242a33;
+	background-color: #28333d;
 }
 
 /* Nicknames */
@@ -55,16 +45,16 @@ body {
 #chat.colored-nicks .user.color-1 { color: #f7adf7; }
 #chat.colored-nicks .user.color-2 { color: #abf99f; }
 #chat.colored-nicks .user.color-3 { color: #86efdc; }
-#chat.colored-nicks .user.color-4 { color: #b76ee5; }
+#chat.colored-nicks .user.color-4 { color: #c890eb; }
 #chat.colored-nicks .user.color-5 { color: #f9a4b3; }
 #chat.colored-nicks .user.color-6 { color: #f7999a; }
 #chat.colored-nicks .user.color-7 { color: #f497b9; }
 #chat.colored-nicks .user.color-8 { color: #f9a9d7; }
-#chat.colored-nicks .user.color-9 { color: #7fa2e2; }
+#chat.colored-nicks .user.color-9 { color: #85a7e3; }
 #chat.colored-nicks .user.color-10 { color: #a8b8ff; }
-#chat.colored-nicks .user.color-11 { color: #ad88fc; }
+#chat.colored-nicks .user.color-11 { color: #b695fc; }
 #chat.colored-nicks .user.color-12 { color: #f4aead; }
-#chat.colored-nicks .user.color-13 { color: #fc71ab; }
+#chat.colored-nicks .user.color-13 { color: #fc7cb1; }
 #chat.colored-nicks .user.color-14 { color: #ff72e0; }
 #chat.colored-nicks .user.color-15 { color: #8cb6ea; }
 #chat.colored-nicks .user.color-16 { color: #f9857c; }
@@ -72,7 +62,7 @@ body {
 #chat.colored-nicks .user.color-18 { color: #8df484; }
 #chat.colored-nicks .user.color-19 { color: #ffcce3; }
 #chat.colored-nicks .user.color-20 { color: #efcc81; }
-#chat.colored-nicks .user.color-21 { color: #90a1ed; }
+#chat.colored-nicks .user.color-21 { color: #92a2ed; }
 #chat.colored-nicks .user.color-22 { color: #f4d484; }
 #chat.colored-nicks .user.color-23 { color: #97ea70; }
 #chat.colored-nicks .user.color-24 { color: #fcbbba; }
@@ -80,8 +70,8 @@ body {
 #chat.colored-nicks .user.color-26 { color: #c7ff93; }
 #chat.colored-nicks .user.color-27 { color: #ffade1; }
 #chat.colored-nicks .user.color-28 { color: #98ecf2; }
-#chat.colored-nicks .user.color-29 { color: #7187f2; }
-#chat.colored-nicks .user.color-30 { color: #9676e2; }
+#chat.colored-nicks .user.color-29 { color: #91a2f5; }
+#chat.colored-nicks .user.color-30 { color: #b19aea; }
 #chat.colored-nicks .user.color-31 { color: #f2a4eb; }
 #chat.colored-nicks .user.color-32 { color: #85f27d; }
 
@@ -91,59 +81,43 @@ body {
 .irc-fg12 { color: #50a8ff; }
 
 /* Message form */
-#form {
-	background: #2a323d;
-	border-color: #242a33;
-}
-
 #windows #form .input {
-	background-color: #2e3642 !important;
-	border-color: #242a33 !important;
-	color: #ccc;
+	background-color: #28333d;
+	border-color: #28333d;
+	color: var(--body-color);
 }
 
 #form #nick {
 	background: #242a33;
-	color: #ccc;
-}
-
-#form #submit:hover {
-	opacity: 1;
-}
-
-#chat .header {
-	color: #99a2b4;
-}
-
-/* Notification dot on the top right corner of the menu icon */
-#viewport .lt::after {
-	border-color: #333c4a;
-}
-
-#chat .unread-marker-text::before {
-	background-color: #333c4a;
-}
-
-#chat .date-marker::before {
-	border-color: #97ea70;
-}
-
-#chat .date-marker-text::before {
-	background-color: #333c4a;
-	color: #97ea70;
-}
-
-/* Setup text colors */
-#chat .msg {
 	color: #f3f3f3;
 }
 
+#windows .window {
+	box-shadow: 0 0 25px rgba(0, 0, 0, 0.75);
+}
+
+#windows .window h2 {
+	color: #b7c5d1;
+}
+
+#windows .header .topic {
+	color: #b7c5d1;
+}
+
+#viewport .lt,
+#viewport .rt,
+#chat button.menu,
+#form #submit {
+	color: #b7c5d1;
+}
+
+/* Setup text colors */
 #chat .message {
-	color: #fefefe;
+	color: #f3f3f3;
 }
 
 #chat .self .text {
-	color: #99a2b4;
+	color: #b7c5d1;
 }
 
 #chat .error,
@@ -155,30 +129,34 @@ body {
 }
 
 #chat .unhandled .from {
-	color: #99a2b4;
-}
-
-#chat .msg.quit .time,
-#chat .msg.quit .from button {
-	color: #d0907d !important;
+	color: #b7c5d1;
 }
 
 #chat .msg.topic {
-	color: #fefefe;
+	color: #b7c5d1;
 }
 
-#chat .msg.join .time,
-#chat .msg.join .from button {
-	color: #84ce88 !important;
+#chat .condensed .content,
+#chat .away .content,
+#chat .back .content,
+#chat .join .content,
+#chat .kick .content,
+#chat .mode .content,
+#chat .nick .content,
+#chat .part .content,
+#chat .quit .content,
+#chat .topic .content,
+#chat .topic_set_by .content {
+	color: #b7c5d1;
 }
 
 #chat table.channel-list td {
-	color: #ccc;
+	color: #b7c5d1;
 }
 
 code,
 .irc-monospace {
-	background: #242a33;
+	background: #28333d;
 	color: #f3f3f3;
 }
 
@@ -193,7 +171,7 @@ kbd {
 
 /* Embeds */
 #chat .toggle-content {
-	background: #242a33;
+	background: #28333d;
 	color: #f3f3f3;
 }
 
@@ -204,18 +182,18 @@ kbd {
 /* Form elements */
 
 #chat-container ::-moz-placeholder {
-	color: #99a2b4;
-	opacity: 0.5;
+	color: #b7c5d1;
+	opacity: 0.75;
 }
 
 #chat-container ::-webkit-input-placeholder {
-	color: #99a2b4;
-	opacity: 0.5;
+	color: #b7c5d1;
+	opacity: 0.75;
 }
 
 #chat-container :-ms-input-placeholder {
-	color: #99a2b4;
-	opacity: 0.5;
+	color: #b7c5d1;
+	opacity: 0.75;
 }
 
 /* End form elements */

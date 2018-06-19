@@ -1,43 +1,35 @@
-body {
-	padding: 4px;
+#viewport {
+	padding: 5px;
 	padding-left: 0;
 }
 
-#footer {
-	margin-left: 4px;
-	border-radius: 2px;
-	width: 216px;
+#viewport.menu-open { /* On desktop view, .menu-open means menu is closed... */
+	padding-left: 5px;
 }
 
-#windows .window::before {
-	background: #f4f4f4;
-	background-image: linear-gradient(#f4f4f4, #ececec);
-	border-bottom: 1px solid #d7d7d7;
-	content: " ";
-	display: block;
-	height: 10px;
-	position: relative;
-	z-index: 10;
-	flex-shrink: 0;
+#viewport #loading, /* ... except on pages without a menu */
+#viewport #sign-in {
+	margin-left: 5px;
 }
 
 #windows .window {
-	border-radius: 2px;
+	border-radius: 5px;
+	box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
 }
 
 @media (max-width: 768px) {
-	body {
+	#viewport,
+	#viewport.menu-open {
 		padding: 0;
 	}
 
-	#footer {
+	#viewport #loading,
+	#viewport #sign-in {
 		margin-left: 0;
-		border-radius: 0;
-		width: inherit;
 	}
 
-	#windows .window::before {
-		display: none;
+	#footer .icon {
+		border-radius: 0;
 	}
 
 	#windows .window {
