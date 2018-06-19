@@ -81,7 +81,7 @@
 .irc-fg12 { color: #50a8ff; }
 
 /* Message form */
-#windows #form .input {
+#form {
 	background-color: #28333d;
 	border-color: #28333d;
 	color: var(--body-color);
