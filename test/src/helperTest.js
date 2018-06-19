@@ -4,6 +4,7 @@ const expect = require("chai").expect;
 const os = require("os");
 const moment = require("moment");
 const Helper = require("../../src/helper");
+const log = require("../../src/log");
 
 describe("Helper", function() {
 	describe("#expandHome", function() {
@@ -55,6 +56,6 @@ describe("Helper", function() {
 	});
 
 	describe("#getHumanDate()", function() {
-		expect(Helper.getHumanDate()).to.equal(moment().format("YYYY-MM-DD HH:mm:ss"));
+		expect(log.getHumanDate()).to.equal(moment().format("YYYY-MM-DD HH:mm:ss"));
 	});
 });
