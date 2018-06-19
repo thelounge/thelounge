@@ -2,10 +2,10 @@
 
 const colors = require("chalk");
 const read = require("read");
-const Helper = require("./helper");
+const moment = require("moment");
 
 function timestamp() {
-	return colors.dim(Helper.getHumanDate());
+	return colors.dim(module.exports.getHumanDate());
 }
 
 module.exports = {
@@ -30,5 +30,9 @@ module.exports = {
 	prompt(options, callback) {
 		options.prompt = [timestamp(), colors.cyan("[PROMPT]"), options.text].join(" ");
 		read(options, callback);
+	},
+
+	getHumanDate() {
+		return moment().format("YYYY-MM-DD HH:mm:ss");
 	},
 };
