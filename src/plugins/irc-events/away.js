@@ -1,5 +1,6 @@
 "use strict";
 
+const Chan = require("../../models/chan");
 const Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
@@ -25,9 +26,28 @@ module.exports = function(irc, network) {
 		}
 
 		network.channels.forEach((chan) => {
-			const user = chan.findUser(data.nick);
+			let user;
 
-			if (!user || user.away === away) {
+			switch (chan.type) {
+			case Chan.Type.QUERY:
+				if (data.nick.toLowerCase() !== chan.name.toLowerCase()) {
+					return;
+				}
+
+				user = chan.getUser(data.nick);
+
+				break;
+
+			case Chan.Type.CHANNEL:
+				user = chan.findUser(data.nick);
+
+				if (!user || user.away === away) {
+					return;
+				}
+
+				break;
+
+			default:
 				return;
 			}
 
