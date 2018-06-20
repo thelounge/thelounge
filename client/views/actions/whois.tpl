@@ -1,4 +1,8 @@
-<p>{{> ../user_name nick=whois.nick}}</p>
+<p>
+	{{> ../user_name nick=whois.nick}}
+	{{#if whois.whowas}} is offline, last information:{{/if}}
+</p>
+
 <dl class="whois">
 {{#if whois.account}}
 	<dt>Logged in as:</dt>

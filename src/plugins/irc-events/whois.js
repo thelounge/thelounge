@@ -5,23 +5,37 @@ const Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
 	const client = this;
-	irc.on("whois", function(data) {
+
+	irc.on("whois", handleWhois);
+
+	irc.on("whowas", (data) => {
+		data.whowas = true;
+
+		handleWhois(data);
+	});
+
+	function handleWhois(data) {
 		let chan = network.getChannel(data.nick);
 
 		if (typeof chan === "undefined") {
-			chan = client.createChannel({
-				type: Chan.Type.QUERY,
-				name: data.nick,
-			});
+			// Do not create new windows for errors as they may contain illegal characters
+			if (data.error) {
+				chan = network.channels[0];
+			} else {
+				chan = client.createChannel({
+					type: Chan.Type.QUERY,
+					name: data.nick,
+				});
 
-			client.emit("join", {
-				shouldOpen: true,
-				network: network.uuid,
-				chan: chan.getFilteredClone(true),
-				index: network.addChannel(chan),
-			});
-			chan.loadMessages(client, network);
-			client.save();
+				client.emit("join", {
+					shouldOpen: true,
+					network: network.uuid,
+					chan: chan.getFilteredClone(true),
+					index: network.addChannel(chan),
+				});
+				chan.loadMessages(client, network);
+				client.save();
+			}
 		}
 
 		let msg;
@@ -43,5 +57,5 @@ module.exports = function(irc, network) {
 		}
 
 		chan.pushMessage(client, msg);
-	});
+	}
 };
