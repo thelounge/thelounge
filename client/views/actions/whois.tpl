@@ -6,11 +6,11 @@
 {{/if}}
 
 	<dt>Host mask:</dt>
-	<dd class="hostmask">{{whois.user}}@{{whois.host}}</dd>
+	<dd class="hostmask">{{whois.ident}}@{{whois.hostname}}</dd>
 
-{{#if whois.actualhost}}
+{{#if whois.actual_hostname}}
 	<dt>Actual host:</dt>
-	<dd class="hostmask"><a href="https://ipinfo.io/{{whois.actualip}}" target="_blank" rel="noopener">{{whois.actualip}}</a>{{#notEqual whois.actualhost whois.actualip}} ({{whois.actualhost}}){{/notEqual}}</dd>
+	<dd class="hostmask"><a href="https://ipinfo.io/{{whois.actual_ip}}" target="_blank" rel="noopener">{{whois.actual_ip}}</a>{{#notEqual whois.actual_hostname whois.actual_ip}} ({{whois.actual_hostname}}){{/notEqual}}</dd>
 {{/if}}
 
 {{#if whois.real_name}}

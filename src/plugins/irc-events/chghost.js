@@ -19,7 +19,7 @@ module.exports = function(irc, network) {
 				time: data.time,
 				type: Msg.Type.CHGHOST,
 				new_ident: data.ident !== data.new_ident ? data.new_ident : "",
-				new_host: data.hostname !== data.new_host ? data.new_host : "",
+				new_host: data.hostname !== data.new_hostname ? data.new_hostname : "",
 				self: data.nick === irc.user.nick,
 				from: user,
 			});

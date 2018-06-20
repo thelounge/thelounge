@@ -3590,14 +3590,15 @@ ipaddr.js@1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.6.0.tgz#e3fa357b773da619f26e95f049d055c72796f86b"
 
-irc-framework@2.11.0:
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/irc-framework/-/irc-framework-2.11.0.tgz#3d2cc98c5244f04a3046ebac4a65485b744d4b14"
+irc-framework@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/irc-framework/-/irc-framework-3.0.0.tgz#01eada23bc73e4a93274ac1a14f5a65081f2b30c"
   dependencies:
     eventemitter3 "^2.0.2"
     iconv-lite "^0.4.11"
     lodash "^4.17.4"
     middleware-handler "^0.2.0"
+    runes "^0.4.3"
     socksjs "^0.5.0"
 
 is-absolute-url@^2.0.0:
@@ -6263,6 +6264,10 @@ run-queue@^1.0.0, run-queue@^1.0.3:
   resolved "https://registry.yarnpkg.com/run-queue/-/run-queue-1.0.3.tgz#e848396f057d223f24386924618e25694161ec47"
   dependencies:
     aproba "^1.1.1"
+
+runes@^0.4.3:
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/runes/-/runes-0.4.3.tgz#32f7738844bc767b65cc68171528e3373c7bb355"
 
 rx-lite-aggregates@^4.0.8:
   version "4.0.8"
