@@ -928,12 +928,20 @@ background on hover (unless active) */
 }
 
 #windows .header {
+	position: absolute;
+	width: 100%;
+	background: var(--window-bg-color);
 	line-height: 45px;
 	height: 45px;
 	padding: 0 6px;
 	display: flex;
 	flex-shrink: 0;
 	overflow: hidden;
+}
+
+#windows .chat-content,
+#windows .container {
+	margin-top: 45px;
 }
 
 #windows #chat .header {
@@ -953,6 +961,27 @@ background on hover (unless active) */
 	flex-grow: 1;
 	overflow: hidden;
 	font-size: 14px;
+}
+
+#windows .header:hover {
+	height: auto;
+	z-index: 1;
+}
+
+#windows .header:hover .topic {
+	-webkit-mask-image: none;
+	mask-image: none;
+	line-height: 25px;
+	padding: 10px 0;
+	word-break: normal;
+	text-overflow: ellipsis;
+}
+
+@media (max-width: 768px) {
+	#windows .header:hover .topic {
+		padding: 12px 0;
+		line-height: 21px;
+	}
 }
 
 #windows #chat-container.active {
