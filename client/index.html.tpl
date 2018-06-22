@@ -85,13 +85,11 @@
 					<div id="chat"></div>
 					<div id="connection-error"></div>
 					<form id="form" method="post" action="">
-						<div class="input">
-							<span id="nick"></span>
-							<textarea id="input" class="mousetrap"></textarea>
-							<span id="submit-tooltip" class="tooltipped tooltipped-w tooltipped-no-touch" aria-label="Send message">
-								<button id="submit" type="submit" aria-label="Send message"></button>
-							</span>
-						</div>
+						<span id="nick"></span>
+						<textarea id="input" class="mousetrap"></textarea>
+						<span id="submit-tooltip" class="tooltipped tooltipped-w tooltipped-no-touch" aria-label="Send message">
+							<button id="submit" type="submit" aria-label="Send message"></button>
+						</span>
 					</form>
 				</div>
 				<div id="sign-in" class="window" role="tabpanel" aria-label="Sign-in"></div>
