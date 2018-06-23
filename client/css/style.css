@@ -1385,6 +1385,10 @@ background on hover (unless active) */
 	color: #696969;
 }
 
+#chat.show-seconds .channel .message.highlight .time {
+	width: 70px;
+}
+
 #chat .channel .message.highlight .content {
 	border-left: 1px solid var(--highlight-bg-color);
 }
