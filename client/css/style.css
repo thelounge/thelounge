@@ -19,6 +19,10 @@
 
 	/* Color of the unread message marker, text and separator */
 	--unread-marker-color: rgba(231, 76, 60, 0.5);
+
+	/* Background and left-border color of highlight messages */
+	--highlight-bg-color: #efe8dc;
+	--highlight-border-color: #b08c4f;
 }
 
 /* Samsung Internet <7.0 and Microsoft Edge support (yes, both of them use webkit prefix) */
@@ -1176,7 +1180,7 @@ background on hover (unless active) */
 }
 
 #chat .time {
-	color: #ddd;
+	color: #999;
 	padding-left: 10px;
 	width: 55px;
 }
@@ -1366,11 +1370,23 @@ background on hover (unless active) */
 }
 
 #chat .error,
-#chat .error .from,
-#chat .channel .highlight .from,
-#chat .channel .highlight .text,
-#chat .channel .highlight .user {
-	color: #f00;
+#chat .error .from {
+	color: #e74c3c;
+}
+
+#chat .channel .message.highlight {
+	background-color: var(--highlight-bg-color);
+	border-left: 5px solid var(--highlight-border-color);
+}
+
+#chat .channel .message.highlight .time {
+	padding-left: 5px;
+	width: 50px;
+	color: #696969;
+}
+
+#chat .channel .message.highlight .content {
+	border-left: 1px solid var(--highlight-bg-color);
 }
 
 #chat .toggle-content.opened .more-caret, /* Expand/Collapse link previews */
@@ -2427,12 +2443,12 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 	#chat .messages {
 		display: block;
-		padding: 5px 10px;
+		padding: 5px 0;
 	}
 
 	#chat .msg {
 		display: block;
-		padding: 2px 0;
+		padding: 2px 10px;
 	}
 
 	#chat .time,
@@ -2443,14 +2459,13 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		padding: 0;
 	}
 
+	#chat .channel .message.highlight .time {
+		padding-left: 0;
+	}
+
 	#chat .condensed-summary .time,
 	#chat .condensed-summary .from {
 		display: none;
-	}
-
-	#chat .date-marker,
-	#chat .unread-marker {
-		margin: 0;
 	}
 
 	#help .help-item .subject {
