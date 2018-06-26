@@ -540,10 +540,14 @@
 
 	<div class="help-item">
 		<div class="subject">
-			<code>/topic newtopic</code>
+			<code>/topic [newtopic]</code>
 		</div>
 		<div class="description">
-			<p>Set the topic in the current channel.</p>
+			<p>
+				Get the topic in the current channel. 
+				If <code>newtopic</code> is specified the command sets the 
+				topic in the current channel.
+			</p>
 		</div>
 	</div>
 
