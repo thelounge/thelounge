@@ -75,10 +75,10 @@ function addWhoisItem() {
 	});
 
 	addContextMenuItem({
-		check: (target) => target.hasClass("user"),
+		check: (target) => target.hasClass("user") || target.hasClass("query"),
 		className: "action-whois",
 		displayName: "User information",
-		data: (target) => target.attr("data-name"),
+		data: (target) => target.attr("data-name") || target.attr("aria-label"),
 		callback: whois,
 	});
 }
@@ -385,6 +385,7 @@ function addIgnoreListItem() {
 }
 
 function addDefaultItems() {
+	addFocusItem();
 	addWhoisItem();
 	addQueryItem();
 	addKickItem();
@@ -392,7 +393,6 @@ function addDefaultItems() {
 	addDeopItem();
 	addVoiceItem();
 	addDevoiceItem();
-	addFocusItem();
 	addEditNetworkItem();
 	addJoinItem();
 	addChannelListItem();
