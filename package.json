@@ -74,7 +74,7 @@
     "babel-loader": "7.1.4",
     "babel-preset-env": "1.7.0",
     "chai": "4.1.2",
-    "copy-webpack-plugin": "4.5.1",
+    "copy-webpack-plugin": "4.5.2",
     "css-loader": "0.28.11",
     "css.escape": "1.5.1",
     "emoji-regex": "7.0.0",
