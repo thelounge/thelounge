@@ -545,7 +545,7 @@
 		<div class="description">
 			<p>
 				Get the topic in the current channel. 
-				If <code>newtopic</code> is specified the command sets the 
+				If <code>newtopic</code> is specified, sets the 
 				topic in the current channel.
 			</p>
 		</div>
