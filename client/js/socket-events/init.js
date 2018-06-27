@@ -41,11 +41,20 @@ socket.on("init", function(data) {
 		slideoutMenu.enable();
 
 		const viewport = $("#viewport");
+		const viewportWidth = $(window).outerWidth();
+		let isUserlistOpen = storage.get("thelounge.state.userlist");
 
-		if ($(window).outerWidth() >= utils.mobileViewportPixels) {
+		if (viewportWidth >= utils.mobileViewportPixels) {
 			slideoutMenu.toggle(storage.get("thelounge.state.sidebar") === "true");
-			viewport.toggleClass("rt", storage.get("thelounge.state.userlist") === "true");
 		}
+
+		// If The Lounge is opened on a small screen (less than 1024px), and we don't have stored
+		// user list state, close it by default
+		if (viewportWidth >= 1024 && isUserlistOpen !== "true" && isUserlistOpen !== "false") {
+			isUserlistOpen = "true";
+		}
+
+		viewport.toggleClass("userlist-open", isUserlistOpen === "true");
 
 		$(document.body).removeClass("signed-out");
 		$("#loading").remove();
