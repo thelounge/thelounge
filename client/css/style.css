@@ -515,9 +515,14 @@ kbd {
 }
 
 #sidebar {
-	display: flex;
+	display: none;
 	flex-direction: column;
 	width: 220px;
+	will-change: transform;
+}
+
+#viewport.menu-open #sidebar {
+	display: flex;
 }
 
 #sidebar .scrollable-area {
@@ -539,11 +544,6 @@ kbd {
 
 #sidebar .logo {
 	display: none;
-}
-
-#viewport.menu-open #sidebar {
-	display: none;
-	will-change: transform;
 }
 
 #sidebar .chan,
@@ -2340,6 +2340,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	}
 
 	#sidebar {
+		display: flex;
 		background: var(--body-bg-color);
 		height: 100%;
 		position: absolute;
@@ -2367,7 +2368,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	}
 
 	#viewport.menu-open #sidebar {
-		display: flex;
 		transform: translate3d(220px, 0, 0);
 	}
 

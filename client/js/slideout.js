@@ -10,6 +10,7 @@ let touchStartTime = 0;
 let menuWidth = 0;
 let menuIsOpen = false;
 let menuIsMoving = false;
+let menuIsAbsolute = false;
 
 class SlideoutMenu {
 	static enable() {
@@ -33,8 +34,10 @@ function onTouchStart(e) {
 	}
 
 	const touch = e.touches.item(0);
+	const styles = window.getComputedStyle(menu);
 
-	menuWidth = parseFloat(window.getComputedStyle(menu).width);
+	menuWidth = parseFloat(styles.width);
+	menuIsAbsolute = styles.position === "absolute";
 
 	if (!menuIsOpen || touch.screenX > menuWidth) {
 		touchStartPos = touch;
@@ -66,6 +69,11 @@ function onTouchMove(e) {
 			viewport.classList.toggle("menu-dragging", true);
 			menuIsMoving = true;
 		}
+	}
+
+	// Do not animate the menu on desktop view
+	if (!menuIsAbsolute) {
+		return;
 	}
 
 	if (menuIsOpen) {

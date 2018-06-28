@@ -1,15 +1,9 @@
 #viewport {
 	padding: 5px;
+}
+
+#viewport.menu-open {
 	padding-left: 0;
-}
-
-#viewport.menu-open { /* On desktop view, .menu-open means menu is closed... */
-	padding-left: 5px;
-}
-
-#viewport #loading, /* ... except on pages without a menu */
-#viewport #sign-in {
-	margin-left: 5px;
 }
 
 #windows .window {
