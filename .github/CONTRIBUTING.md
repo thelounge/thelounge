@@ -10,7 +10,7 @@ your contributions.
   this was not already discussed before. If you can't see any, feel free to
   [open a new issue](https://github.com/thelounge/thelounge/issues/new).
 - If you think you discovered a security vulnerability, **do not open a public
-  issue on GitHub.** Refer to our [security guidelines](SECURITY.md) instead.
+  issue on GitHub.** Refer to our [security guidelines](/SECURITY.md) instead.
 
 ### I want to contribute to the code
 
