@@ -8,5 +8,10 @@ module.exports = function(str) {
 		hash += str.charCodeAt(i);
 	}
 
+	/*
+		Modulo 32 lets us be case insensitive for ascii
+		due to A being ascii 65 (100 0001)
+		 while a being ascii 97 (110 0001)
+	*/
 	return "color-" + (1 + hash % 32);
 };
