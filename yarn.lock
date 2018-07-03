@@ -5799,15 +5799,15 @@ preserve@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
 
-primer-support@4.5.4:
-  version "4.5.4"
-  resolved "https://registry.yarnpkg.com/primer-support/-/primer-support-4.5.4.tgz#05f35afaee2773264c489fab6330b931573b6047"
+primer-support@4.5.5:
+  version "4.5.5"
+  resolved "https://registry.yarnpkg.com/primer-support/-/primer-support-4.5.5.tgz#60d292e10937d44de7f3f1582256fb6ce60ae780"
 
-primer-tooltips@1.5.5:
-  version "1.5.5"
-  resolved "https://registry.yarnpkg.com/primer-tooltips/-/primer-tooltips-1.5.5.tgz#ea7929c4989fb7a75a1dd4471aeec62d0930d8da"
+primer-tooltips@1.5.6:
+  version "1.5.6"
+  resolved "https://registry.yarnpkg.com/primer-tooltips/-/primer-tooltips-1.5.6.tgz#8dcf823490278872b717e418734305e699b00d40"
   dependencies:
-    primer-support "4.5.4"
+    primer-support "4.5.5"
 
 private@^0.1.6, private@^0.1.8:
   version "0.1.8"
