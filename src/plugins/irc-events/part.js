@@ -29,6 +29,7 @@ module.exports = function(irc, network) {
 			chan.destroy();
 			client.save();
 			client.emit("part", {
+				network: network.uuid,
 				chan: chan.id,
 			});
 		} else {

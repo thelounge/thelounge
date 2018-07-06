@@ -104,6 +104,7 @@
 				<div id="changelog" class="window" aria-label="Changelog"></div>
 			</article>
 		</div>
+		<div id="viewport"></div>
 
 		<div id="context-menu-container"></div>
 		<div id="image-viewer"></div>
