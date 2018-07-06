@@ -12,18 +12,15 @@
 		<span class="title">{{name}}</span>
 		<span title="{{topic}}" class="topic">{{{parse topic}}}</span>
 
-
-
-
 		<div class="search">
 			<form class="" method="post" action="" data-event="search">
+				<input type="submit" class="hidden">
 				<button class="search" aria-label="Search messages"></button>
-				<input type="text" name="text" class="input" placeholder="Search messages">
+				<div class="input-container">
+					<input type="text" name="text" class="input" placeholder="Search messages">
+				</div>
 			</form>
 		</div>
-
-
-
 
 		<button class="menu" aria-label="Open the context menu"></button>
 		{{#equal type "channel"}}

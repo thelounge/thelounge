@@ -65,7 +65,7 @@
 					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Connect to network"><button class="icon connect" data-target="#connect" aria-label="Connect to network" role="tab" aria-controls="connect" aria-selected="false"></button></span>
 					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Settings"><button class="icon settings" data-target="#settings" aria-label="Settings" role="tab" aria-controls="settings" aria-selected="false"></button></span>
 					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Help"><button class="icon help" data-target="#help" aria-label="Help" role="tab" aria-controls="help" aria-selected="false"></button></span>
-					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Search"><button class="icon search" data-target="#search" aria-label="Search"></button></span>
+					<span class="tooltipped tooltipped-n tooltipped-no-touch hidden" aria-label="Search"><button class="icon search" data-target="#search" aria-label="Search"></button></span>
 				</footer>
 			</aside>
 			<div id="sidebar-overlay"></div>
@@ -108,13 +108,16 @@
 
 						<div class="search">
 							<form class="" method="post" action="" data-event="search">
-								<button class="search" aria-label="Search messages"></button>
-								<input type="text" name="text" class="input" placeholder="Search messages">
+								<input type="submit" class="hidden">
+								<div class="input-container">
+									<input type="text" name="text" class="input" placeholder="Search messages">
+								</div>
 								<input type="hidden" name="target" class="input" placeholder="Target">
 								<input type="hidden" name="network" class="input" placeholder="Network">
 							</form>
 						</div>
 
+						<div class="search-result-count"></div>
 					</div>
 					<div class="results" id="chat">
 						<div class="channel messages"></div>

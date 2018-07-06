@@ -276,14 +276,78 @@ kbd {
 #viewport .rt::before { content: "\f0c0"; /* https://fontawesome.com/icons/users?style=solid */ }
 #chat button.menu::before { content: "\f142"; /* http://fontawesome.io/icon/ellipsis-v/ */ }
 
-.window .header button.search::before {
-	content: "\f002"; /* http://fontawesome.io/icon/ellipsis-v/ */
-	line-height: 36px; /* fix alignment in Microsoft Edge */
+#windows .window .header {
+	overflow: visible;
+	position: relative;
+}
+
+.window .header .search {
+	flex-grow: 0;
+}
+
+.window .header .search form {
+	display: flex;
+	align-items: center;
+}
+
+.window .header .search .input-container {
+	position: absolute;
+	z-index: 1;
+	left: 0;
+	right: 0;
+	top: 45px;
+	width: 100%;
+	height: 50px;
+	line-height: 1;
+	padding: 6px;
+	display: flex;
+	align-items: stretch;
+	justify-content: stretch;
+	background-color: var(--window-bg-color);
+	border-bottom: 1px solid #e7e7e7;
+	transform-origin: top right;
+	transform: scaleY(0);
+	transition: ease-in-out 0.3s transform;
+}
+
+.window .header .search .input-container.open {
+	transform: scaleY(1);
+	transition: ease-in-out 0.3s transform;
 }
 
 .window .header .search .input {
-	width: auto;
-	line-height: 1;
+	margin: 0 !important;
+	height: auto;
+}
+
+.window .header button.search::before {
+	content: "\f002"; /* http://fontawesome.io/icon/ellipsis-v/ */
+	line-height: 36px; /* fix alignment in Microsoft Edge */
+	color: #607992;
+}
+
+#search .header .lt {
+	position: relative;
+}
+
+#search .header .input-container {
+	transform: scaleY(1) !important;
+}
+
+#search .results {
+	padding-top: 50px;
+}
+
+@media (min-width: 769px) {
+	.window .header .search .input-container {
+		left: auto;
+		width: 300px;
+		border-left: 1px solid #e7e7e7;
+	}
+
+	#search .results {
+		padding-top: 0;
+	}
 }
 
 .context-menu-join::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
@@ -953,6 +1017,7 @@ background on hover (unless active) */
 	overflow: hidden;
 }
 
+#windows #search .header,
 #windows #chat .header {
 	border-bottom: 1px solid #e7e7e7;
 }
@@ -2360,7 +2425,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		height: 100%;
 		position: absolute;
 		left: -220px;
-		z-index: 2;
+		z-index: 3;
 		transition: transform 160ms;
 		transform: translateZ(0);
 	}
@@ -2375,7 +2440,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		opacity: 0;
 		visibility: hidden;
 		transition: opacity 160ms, visibility 160ms;
-		z-index: 1;
+		z-index: 2;
 	}
 
 	#viewport.menu-open #sidebar-overlay {

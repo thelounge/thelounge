@@ -397,7 +397,11 @@ Client.prototype.more = function(data) {
 
 Client.prototype.search = function(query) {
 	if (this.messageStorage) {
-		return this.messageStorage.search(query);
+		for (const storage of this.messageStorage) {
+			if (storage.database) {
+				return storage.search(query);
+			}
+		}
 	}
 };
 

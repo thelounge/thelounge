@@ -27,6 +27,9 @@ socket.on("search:results", (response) => {
 		$("#search input[name=text]").focus();
 	}
 
+	const resultCount = response.results.length + (response.results.length === 1 ? " result" : " results");
+	$("#search .search-result-count").text(resultCount);
+
 	if (response.results.length) {
 		messages.html(render.buildChannelMessages($(document.createDocumentFragment()), 0, "search", response.results));
 	} else {
