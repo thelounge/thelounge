@@ -4,9 +4,7 @@ about: Request a new feature
 
 ---
 
-<!-- Have a question? Join #thelounge on freenode -->
+<!-- Have a question? Join #thelounge on freenode. -->
+<!-- Make sure to check the existing issues prior to submitting your suggestion. -->
 
-* *The Lounge version:* 
-
----
-
+### Feature Description
