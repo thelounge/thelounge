@@ -603,10 +603,6 @@ background on hover (unless active) */
 	padding-top: 5px;
 }
 
-#sidebar .networks:empty {
-	display: none;
-}
-
 #sidebar .network,
 #sidebar .network-placeholder {
 	position: relative;
@@ -631,7 +627,7 @@ background on hover (unless active) */
 #sidebar .chan-placeholder {
 	border: 1px dashed #99a2b4;
 	border-radius: 6px;
-	margin: -1px 10px;
+	margin: -1px;
 }
 
 #sidebar .network-placeholder {
@@ -779,12 +775,6 @@ background on hover (unless active) */
 	transform: rotate(45deg) translateZ(0);
 }
 
-#sidebar .network .lobby:nth-last-child(2) .collapse-network {
-	/* Hide collapse button if there are no channels/queries */
-	width: 0;
-	overflow: hidden;
-}
-
 #sidebar .network .collapse-network {
 	width: 40px;
 	opacity: 0.4;
@@ -896,6 +886,7 @@ background on hover (unless active) */
 	line-height: 1.5;
 }
 
+#loading,
 #windows .window {
 	background: var(--window-bg-color);
 	display: none;
@@ -1608,7 +1599,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	content: "Search Results";
 }
 
-#loading.active {
+#loading {
 	font-size: 14px;
 	z-index: 1;
 	display: flex;
@@ -1649,7 +1640,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	flex-grow: 0;
 }
 
-#windows .logo-inverted {
+#loading .logo-inverted {
 	display: none; /* In dark themes, inverted logo must be used instead */
 }
 
@@ -2404,10 +2395,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	#viewport.menu-open #sidebar-overlay,
 	#viewport.menu-dragging #sidebar-overlay {
 		visibility: visible;
-	}
-
-	#sidebar .empty::before {
-		margin-top: 0;
 	}
 
 	#viewport .lt,

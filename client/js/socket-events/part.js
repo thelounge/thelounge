@@ -2,19 +2,19 @@
 
 const $ = require("jquery");
 const socket = require("../socket");
-const sidebar = $("#sidebar");
+const {vueApp} = require("../vue");
 
 socket.on("part", function(data) {
-	const chanMenuItem = sidebar.find(".chan[data-id='" + data.chan + "']");
-
 	// When parting from the active channel/query, jump to the network's lobby
-	if (chanMenuItem.hasClass("active")) {
-		chanMenuItem
-			.parent(".network")
+	if (vueApp.activeChannel && vueApp.activeChannel.channel.id === data.chan) {
+		$("#sidebar .chan[data-id='" + data.chan + "']")
+			.closest(".network")
 			.find(".lobby")
 			.trigger("click");
 	}
 
-	chanMenuItem.remove();
 	$("#chan-" + data.chan).remove();
+
+	const network = vueApp.networks.find((n) => n.uuid === data.network);
+	network.channels.splice(network.channels.findIndex((c) => c.id === data.chan), 1);
 });

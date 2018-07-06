@@ -4,6 +4,7 @@ const webpack = require("webpack");
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const VueLoaderPlugin = require("vue-loader/lib/plugin");
 
 const config = {
 	mode: process.env.NODE_ENV === "production" ? "production" : "development",
@@ -19,6 +20,12 @@ const config = {
 	},
 	module: {
 		rules: [
+			{
+				test: /\.vue$/,
+				use: {
+					loader: "vue-loader",
+				},
+			},
 			{
 				test: /\.css$/,
 				include: [
@@ -98,6 +105,7 @@ const config = {
 	},
 	plugins: [
 		new MiniCssExtractPlugin(),
+		new VueLoaderPlugin(),
 		new CopyPlugin([
 			{
 				from: "./node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff*",

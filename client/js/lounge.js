@@ -1,7 +1,6 @@
 "use strict";
 
 // vendor libraries
-require("jquery-ui/ui/widgets/sortable");
 const $ = require("jquery");
 const moment = require("moment");
 
@@ -19,11 +18,11 @@ require("./keybinds");
 require("./clipboard");
 const contextMenuFactory = require("./contextMenuFactory");
 
+const {vueApp, findChannel} = require("./vue");
+
 $(function() {
 	const sidebar = $("#sidebar, #footer");
 	const chat = $("#chat");
-
-	$(document.body).data("app-name", document.title);
 
 	const viewport = $("#viewport");
 
@@ -177,16 +176,14 @@ $(function() {
 				self.data("id")
 			);
 
-			sidebar.find(".active")
-				.removeClass("active")
-				.attr("aria-selected", false);
+			const channel = findChannel(self.data("id"));
 
-			self.addClass("active")
-				.attr("aria-selected", true)
-				.find(".badge")
-				.attr("data-highlight", 0)
-				.removeClass("highlight")
-				.empty();
+			vueApp.activeChannel = channel;
+
+			if (channel) {
+				channel.channel.highlight = 0;
+				channel.channel.unread = 0;
+			}
 
 			if (sidebar.find(".highlight").length === 0) {
 				utils.toggleNotificationMarkers(false);

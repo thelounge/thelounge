@@ -82,8 +82,15 @@ rules:
   space-in-parens: [error, never]
   space-infix-ops: error
   spaced-comment: [error, always]
-  strict: error
+  strict: off
   template-curly-spacing: error
   yoda: error
+  vue/html-indent: [error, tab]
+  vue/require-default-prop: off
 
-extends: eslint:recommended
+plugins:
+  - vue
+
+extends:
+  - eslint:recommended
+  - plugin:vue/recommended

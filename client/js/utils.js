@@ -3,6 +3,7 @@
 const $ = require("jquery");
 const escape = require("css.escape");
 const viewport = $("#viewport");
+const {vueApp} = require("./vue");
 
 var serverHash = -1; // eslint-disable-line no-var
 var lastMessageId = -1; // eslint-disable-line no-var
@@ -101,18 +102,20 @@ function toggleNotificationMarkers(newState) {
 }
 
 function updateTitle() {
-	let title = $(document.body).data("app-name");
-	const chanTitle = $("#sidebar").find(".chan.active").attr("aria-label");
+	let title = vueApp.appName;
 
-	if (chanTitle && chanTitle.length > 0) {
-		title = `${chanTitle} — ${title}`;
+	if (vueApp.activeChannel) {
+		title = `${vueApp.activeChannel.channel.name} — ${vueApp.activeChannel.network.name} — ${title}`;
 	}
 
 	// add highlight count to title
 	let alertEventCount = 0;
-	$(".badge.highlight").each(function() {
-		alertEventCount += parseInt($(this).attr("data-highlight"));
-	});
+
+	for (const network of vueApp.networks) {
+		for (const channel of network.channels) {
+			alertEventCount += channel.highlight;
+		}
+	}
 
 	if (alertEventCount > 0) {
 		title = `(${alertEventCount}) ${title}`;

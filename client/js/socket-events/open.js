@@ -3,6 +3,7 @@
 const $ = require("jquery");
 const socket = require("../socket");
 const utils = require("../utils");
+const {vueApp, findChannel} = require("../vue");
 
 // Sync unread badge and marker when other clients open a channel
 socket.on("open", function(id) {
@@ -10,24 +11,25 @@ socket.on("open", function(id) {
 		return;
 	}
 
-	const channel = $("#chat #chan-" + id);
-
 	// Don't do anything if the channel is active on this client
-	if (channel.length === 0 || channel.hasClass("active")) {
+	if (vueApp.activeChannel && vueApp.activeChannel.channel.id === id) {
 		return;
 	}
 
 	// Clear the unread badge
-	$("#sidebar").find(".chan[data-id='" + id + "'] .badge")
-		.attr("data-highlight", 0)
-		.removeClass("highlight")
-		.empty();
+	const channel = findChannel(id);
+
+	if (channel) {
+		channel.channel.highlight = 0;
+		channel.channel.unread = 0;
+	}
 
 	utils.updateTitle();
 
 	// Move unread marker to the bottom
-	channel
+	const channelContainer = $("#chat #chan-" + id);
+	channelContainer
 		.find(".unread-marker")
 		.data("unread-id", 0)
-		.appendTo(channel.find(".messages"));
+		.appendTo(channelContainer.find(".messages"));
 });

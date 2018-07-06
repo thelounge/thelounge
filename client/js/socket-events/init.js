@@ -9,6 +9,7 @@ const slideoutMenu = require("../slideout");
 const sidebar = $("#sidebar");
 const storage = require("../localStorage");
 const utils = require("../utils");
+const {Vue, vueApp} = require("../vue");
 
 socket.on("init", function(data) {
 	$("#loading-page-message, #connection-error").text("Rendering…");
@@ -18,13 +19,12 @@ socket.on("init", function(data) {
 
 	if (lastMessageId > -1) {
 		previousActive = sidebar.find(".active").data("id");
-		sidebar.find(".networks").empty();
 	}
 
-	if (data.networks.length === 0) {
-		sidebar.find(".empty").show();
-	} else {
-		render.renderNetworks(data);
+	vueApp.networks = data.networks;
+
+	if (data.networks.length > 0) {
+		Vue.nextTick(() => render.renderNetworks(data));
 	}
 
 	$("#connection-error").removeClass("shown");
@@ -66,7 +66,7 @@ socket.on("init", function(data) {
 		}
 	}
 
-	openCorrectChannel(previousActive, data.active);
+	Vue.nextTick(() => openCorrectChannel(previousActive, data.active));
 });
 
 function openCorrectChannel(clientActive, serverActive) {
