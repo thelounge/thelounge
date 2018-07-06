@@ -6,13 +6,18 @@ const render = require("../render");
 const templates = require("../../views");
 const sidebar = $("#sidebar");
 const utils = require("../utils");
+const {Vue, vueApp} = require("../vue");
 
 socket.on("network", function(data) {
-	render.renderNetworks(data, true);
+	vueApp.networks.push(data.networks[0]);
 
-	sidebar.find(".chan")
-		.last()
-		.trigger("click");
+	Vue.nextTick(() => {
+		render.renderNetworks(data, true);
+
+		sidebar.find(".chan")
+			.last()
+			.trigger("click");
+	});
 
 	$("#connect")
 		.find(".btn")
@@ -20,14 +25,13 @@ socket.on("network", function(data) {
 });
 
 socket.on("network_changed", function(data) {
-	sidebar.find(`.network[data-uuid="${data.network}"]`).data("options", data.serverOptions);
+	vueApp.networks.find((n) => n.uuid === data.network).serverOptions = data.serverOptions;
 });
 
 socket.on("network:status", function(data) {
-	sidebar
-		.find(`.network[data-uuid="${data.network}"]`)
-		.toggleClass("not-connected", !data.connected)
-		.toggleClass("not-secure", !data.secure);
+	const network = vueApp.networks.find((n) => n.uuid === data.network);
+	network.status.connected = data.connected;
+	network.status.secure = data.secure;
 });
 
 socket.on("network:info", function(data) {

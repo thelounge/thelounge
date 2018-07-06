@@ -10,6 +10,7 @@ const cleanIrcMessage = require("../libs/handlebars/ircmessageparser/cleanIrcMes
 const webpush = require("../webpush");
 const chat = $("#chat");
 const sidebar = $("#sidebar");
+const {vueApp, findChannel} = require("../vue");
 
 let pop;
 
@@ -30,26 +31,31 @@ socket.on("msg", function(data) {
 function processReceivedMessage(data) {
 	let targetId = data.chan;
 	let target = "#chan-" + targetId;
-	let channel = chat.find(target);
-	let sidebarTarget = sidebar.find("[data-target='" + target + "']");
+	let channelContainer = chat.find(target);
+	let channel = findChannel(data.chan);
+
+	// Clear unread/highlight counter if self-message
+	if (data.msg.self) {
+		channel.channel.highlight = 0;
+		channel.channel.unread = 0;
+
+		utils.updateTitle();
+	}
 
 	// Display received notices and errors in currently active channel.
 	// Reloading the page will put them back into the lobby window.
-	if (data.msg.showInActive) {
-		const activeOnNetwork = sidebarTarget.parent().find(".active");
+	// We only want to put errors/notices in active channel if they arrive on the same network
+	if (data.msg.showInActive && vueApp.activeChannel && vueApp.activeChannel.network === channel.network) {
+		channel = vueApp.activeChannel;
 
-		// We only want to put errors/notices in active channel if they arrive on the same network
-		if (activeOnNetwork.length > 0) {
-			targetId = data.chan = activeOnNetwork.data("id");
+		targetId = data.chan = vueApp.activeChannel.channel.id;
 
-			target = "#chan-" + targetId;
-			channel = chat.find(target);
-			sidebarTarget = sidebar.find("[data-target='" + target + "']");
-		}
+		target = "#chan-" + targetId;
+		channelContainer = chat.find(target);
 	}
 
-	const scrollContainer = channel.find(".chat");
-	const container = channel.find(".messages");
+	const scrollContainer = channelContainer.find(".chat");
+	const container = channelContainer.find(".messages");
 	const activeChannelId = chat.find(".chan.active").data("id");
 
 	if (data.msg.type === "channel_list" || data.msg.type === "ban_list" || data.msg.type === "ignore_list") {
@@ -60,7 +66,7 @@ function processReceivedMessage(data) {
 	render.appendMessage(
 		container,
 		targetId,
-		channel.data("type"),
+		channelContainer.data("type"),
 		data.msg
 	);
 
@@ -68,7 +74,7 @@ function processReceivedMessage(data) {
 		scrollContainer.trigger("keepToBottom");
 	}
 
-	notifyMessage(targetId, channel, data);
+	notifyMessage(targetId, channelContainer, data);
 
 	let shouldMoveMarker = data.msg.self;
 
@@ -95,16 +101,6 @@ function processReceivedMessage(data) {
 			.appendTo(container);
 	}
 
-	// Clear unread/highlight counter if self-message
-	if (data.msg.self) {
-		sidebarTarget.find(".badge")
-			.attr("data-highlight", 0)
-			.removeClass("highlight")
-			.empty();
-
-		utils.updateTitle();
-	}
-
 	let messageLimit = 0;
 
 	if (activeChannelId !== targetId) {
@@ -116,11 +112,11 @@ function processReceivedMessage(data) {
 	}
 
 	if (messageLimit > 0) {
-		render.trimMessageInChannel(channel, messageLimit);
+		render.trimMessageInChannel(channelContainer, messageLimit);
 	}
 
-	if ((data.msg.type === "message" || data.msg.type === "action") && channel.hasClass("channel")) {
-		const nicks = channel.find(".userlist").data("nicks");
+	if ((data.msg.type === "message" || data.msg.type === "action") && channelContainer.hasClass("channel")) {
+		const nicks = channelContainer.find(".userlist").data("nicks");
 
 		if (nicks) {
 			const find = nicks.indexOf(data.msg.from.nick);

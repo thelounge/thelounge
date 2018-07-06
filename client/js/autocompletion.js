@@ -8,7 +8,6 @@ const emojiMap = require("./libs/simplemap.json");
 const options = require("./options");
 const constants = require("./constants");
 
-const input = $("#input");
 let textcomplete;
 let enabled = false;
 
@@ -16,6 +15,7 @@ module.exports = {
 	enable: enableAutocomplete,
 	disable() {
 		if (enabled) {
+			const input = $("#input");
 			input.off("input.tabcomplete");
 			Mousetrap(input.get(0)).unbind("tab", "keydown");
 			textcomplete.destroy();
@@ -74,7 +74,7 @@ const nicksStrategy = {
 		}
 
 		// If there is whitespace in the input already, append space to nick
-		if (position > 0 && /\s/.test(input.val())) {
+		if (position > 0 && /\s/.test($("#input").val())) {
 			return original + " ";
 		}
 
@@ -179,6 +179,7 @@ function enableAutocomplete() {
 	let tabCount = 0;
 	let lastMatch = "";
 	let currentMatches = [];
+	const input = $("#input");
 
 	input.on("input.tabcomplete", () => {
 		tabCount = 0;
