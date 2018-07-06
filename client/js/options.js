@@ -320,4 +320,20 @@ function initialize() {
 	// We always ask for synced settings even if it is disabled.
 	// Settings can be mandatory to sync and it is used to determine sync base state.
 	socket.emit("setting:get");
+
+	// Protocol handler
+	const defaultClientButton = $("#make-default-client");
+
+	if (window.navigator.registerProtocolHandler) {
+		defaultClientButton.on("click", function() {
+			const uri = document.location.origin + document.location.pathname + "?uri=%s";
+
+			window.navigator.registerProtocolHandler("irc", uri, "The Lounge");
+			window.navigator.registerProtocolHandler("ircs", uri, "The Lounge");
+
+			return false;
+		});
+	} else {
+		defaultClientButton.hide();
+	}
 }

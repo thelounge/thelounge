@@ -14,6 +14,10 @@
 	</div>
 
 	<div class="row">
+		<div class="col-sm-12">
+			<button type="button" class="btn" id="make-default-client">Open irc:// URLs with The Lounge</button>
+		</div>
+
 		{{#unless public}}
 		<div class="col-sm-12" data-advanced>
 			<h2>
