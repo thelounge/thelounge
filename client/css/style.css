@@ -2463,6 +2463,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		padding: 0;
 	}
 
+	#chat .channel .message.highlight {
+		padding-left: 5px;
+	}
+
 	#chat .channel .message.highlight .time {
 		padding-left: 0;
 	}
