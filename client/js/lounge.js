@@ -28,10 +28,6 @@ $(function() {
 	const viewport = $("#viewport");
 
 	function storeSidebarVisibility(name, state) {
-		if ($(window).outerWidth() < utils.mobileViewportPixels) {
-			return;
-		}
-
 		storage.set(name, state);
 
 		utils.togglePreviewMoreButtonsIfNeeded();
@@ -40,20 +36,26 @@ $(function() {
 	// If sidebar overlay is visible and it is clicked, close the sidebar
 	$("#sidebar-overlay").on("click", () => {
 		slideoutMenu.toggle(false);
-		storeSidebarVisibility("thelounge.state.sidebar", false);
+
+		if ($(window).outerWidth() >= utils.mobileViewportPixels) {
+			storeSidebarVisibility("thelounge.state.sidebar", false);
+		}
 	});
 
 	$("#windows").on("click", "button.lt", () => {
 		const isOpen = !slideoutMenu.isOpen();
 
 		slideoutMenu.toggle(isOpen);
-		storeSidebarVisibility("thelounge.state.sidebar", isOpen);
+
+		if ($(window).outerWidth() >= utils.mobileViewportPixels) {
+			storeSidebarVisibility("thelounge.state.sidebar", isOpen);
+		}
 	});
 
 	viewport.on("click", ".rt", function() {
-		const isOpen = !viewport.hasClass("rt");
+		const isOpen = !viewport.hasClass("userlist-open");
 
-		viewport.toggleClass("rt", isOpen);
+		viewport.toggleClass("userlist-open", isOpen);
 		chat.find(".chan.active .chat").trigger("keepToBottom");
 		storeSidebarVisibility("thelounge.state.userlist", isOpen);
 
