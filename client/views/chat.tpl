@@ -11,6 +11,20 @@
 		<button class="lt" aria-label="Toggle channel list"></button>
 		<span class="title">{{name}}</span>
 		<span title="{{topic}}" class="topic">{{{parse topic}}}</span>
+
+
+
+
+		<div class="search">
+			<form class="" method="post" action="" data-event="search">
+				<button class="search" aria-label="Search messages"></button>
+				<input type="text" name="text" class="input" placeholder="Search messages">
+			</form>
+		</div>
+
+
+
+
 		<button class="menu" aria-label="Open the context menu"></button>
 		{{#equal type "channel"}}
 			<span class="rt-tooltip tooltipped tooltipped-w" aria-label="Toggle user list">

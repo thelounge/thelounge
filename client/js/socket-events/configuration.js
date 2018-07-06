@@ -25,7 +25,7 @@ socket.on("configuration", function(data) {
 	options.initialize();
 	webpush.initialize();
 
-	const forms = $("#connect form, #change-password form, #search form");
+	const forms = $("#connect form, #change-password form");
 
 	forms.on("submit", function() {
 		const form = $(this);
@@ -42,6 +42,36 @@ socket.on("configuration", function(data) {
 
 		socket.emit(event, values);
 
+		return false;
+	});
+
+	$("#windows").on("submit", ".window .header div.search form", function() {
+		const form = $(this);
+		const values = {};
+
+		$.each(form.serializeArray(), function(i, obj) {
+			if (obj.value !== "") {
+				values[obj.name] = obj.value;
+			}
+		});
+
+		const target = $("#sidebar .chan.active");
+
+		// Get the channel or query target from DOM if not already defined
+		if (!values.target) {
+			if (target.hasClass("channel") || target.hasClass("query")) {
+				values.target = target.attr("aria-label");
+			}
+		}
+
+		// Get network uuid from DOM if not already defined
+		if (!values.network) {
+			values.network = target.closest(".network").data("uuid");
+		}
+
+		console.log(values);
+
+		socket.emit("search", values);
 		return false;
 	});
 

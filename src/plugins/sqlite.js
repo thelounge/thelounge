@@ -139,17 +139,38 @@ class MessageStorage {
 			return Promise.resolve([]);
 		}
 
+		let select = 'SELECT msg, type, time FROM messages WHERE type = "message" AND network = ? AND json_extract(msg, "$.text") LIKE ?';
+		const params = [
+			query.network,
+			`%${query.text}%`,
+		];
+
+		if (query.target) {
+			select += " AND channel = ? ";
+			params.push(query.target);
+		}
+
+		select += " ORDER BY time DESC LIMIT 100 OFFSET ? ";
+		params.push(0); // Offset
+
 		return new Promise((resolve, reject) => {
 			this.database.all(
-				'SELECT msg, type, time FROM messages WHERE type = "message" AND json_extract(msg, "$.text") LIKE ? ORDER BY time DESC LIMIT 100 OFFSET ?',
-				[`%${query.text}%`, 0],
+				select,
+				params,
 				(err, rows) => {
-				if (err) {
-					reject(err);
-				} else {
-					resolve(rows.map(parseRowToMessage));
+					if (err) {
+						reject(err);
+					} else {
+						const response = {
+							text: query.text,
+							target: query.target,
+							network: query.network,
+							results: rows.map(parseRowToMessage),
+						};
+						resolve(response);
+					}
 				}
-			});
+			);
 		});
 	}
 }

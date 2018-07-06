@@ -216,6 +216,7 @@ kbd {
 #viewport .lt::before,
 #viewport .rt::before,
 #chat button.menu::before,
+#windows .header button.search::before,
 #sidebar .chan::before,
 #footer .icon,
 #chat .count::before,
@@ -265,6 +266,16 @@ kbd {
 #chat button.menu::before {
 	content: "\f142"; /* http://fontawesome.io/icon/ellipsis-v/ */
 	line-height: 36px; /* fix alignment in Microsoft Edge */
+}
+
+.window .header button.search::before {
+	content: "\f002"; /* http://fontawesome.io/icon/ellipsis-v/ */
+	line-height: 36px; /* fix alignment in Microsoft Edge */
+}
+
+.window .header .search .input {
+	width: auto;
+	line-height: 1;
 }
 
 .context-menu-join::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }

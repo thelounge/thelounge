@@ -79,28 +79,29 @@
 				<div id="settings" class="window" role="tabpanel" aria-label="Settings"></div>
 				<div id="help" class="window" role="tabpanel" aria-label="Help"></div>
 				<div id="changelog" class="window" aria-label="Changelog"></div>
+
 				<div id="search" class="window" aria-label="Search">
 					<div class="header">
 						<button class="lt" aria-label="Toggle channel list"></button>
-					</div>
-					<form class="container" method="post" action="" data-event="search">
-						<div class="row">
-							<div class="col-sm-12">
-								<h1 class="title">Search</h1>
-							</div>
-							<div class="col-sm-8">
-								<label for="text" class="sr-only">Enter text to match</label>
-								<input type="text" id="text" name="text" class="input" placeholder="Enter text to match">
-							</div>
-							<div class="col-sm-4">
-								<button type="submit" class="btn pull-right">Search</button>
-							</div>
+
+						<span class="title">Search</span>
+						<span class="topic"></span>
+
+						<div class="search">
+							<form class="" method="post" action="" data-event="search">
+								<button class="search" aria-label="Search messages"></button>
+								<input type="text" name="text" class="input" placeholder="Search messages">
+								<input type="hidden" name="target" class="input" placeholder="Target">
+								<input type="hidden" name="network" class="input" placeholder="Network">
+							</form>
 						</div>
-					</form>
+
+					</div>
 					<div class="results" id="chat">
 						<div class="channel messages"></div>
 					</div>
 				</div>
+
 			</article>
 		</div>
 
