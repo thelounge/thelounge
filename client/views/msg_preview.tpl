@@ -23,10 +23,31 @@
 				<img src="{{thumb}}" decoding="async" alt="" class="thumb">
 			</a>
 		{{/if}}
-		<a class="toggle-text" href="{{link}}" target="_blank" rel="noopener">
-			<div class="head" title="{{head}}">{{head}}</div>
-			<div class="body" title="{{body}}">{{body}}</div>
-		</a>
+		<div class="toggle-text">
+			<div class="head">
+				<div class="overflowable">
+					<a href="{{link}}" target="_blank" rel="noopener" title="{{head}}">
+						{{head}}
+					</a>
+				</div>
+
+				<button class="more"
+					aria-expanded="false"
+					aria-label="More"
+					data-closed-text="More"
+					data-opened-text="Less"
+				>
+					<span class="more-caret"></span>
+				</button>
+			</div>
+
+			<div class="body overflowable">
+				<a href="{{link}}" target="_blank" rel="noopener" title="{{body}}">
+					{{body}}
+				</a>
+			</div>
+			</a>
+		</div>
 	{{/equal}}
 	{{#equal type "error"}}
 		{{#equal error "image-too-big"}}
@@ -38,12 +59,24 @@
 			</em>
 		{{/equal}}
 		{{#equal error "message"}}
-			<em>
-				There was an error loading preview for this link.
-				<a href="{{link}}" target="_blank" rel="noopener">Click here</a>
-				to open it in a new window.
-				<small class="prefetch-error">({{message}})</small>
-			</em>
+			<div>
+				<em>
+					A preview could not be loaded.
+					<a href="{{link}}" target="_blank" rel="noopener">Click here</a>
+					to open it in a new window.
+				</em>
+				<br>
+				<pre class="prefetch-error">{{message}}</pre>
+			</div>
+
+			<button class="more"
+				aria-expanded="false"
+				aria-label="More"
+				data-closed-text="More"
+				data-opened-text="Less"
+			>
+				<span class="more-caret"></span>
+			</button>
 		{{/equal}}
 	{{/equal}}
 </div>

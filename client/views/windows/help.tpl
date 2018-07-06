@@ -362,6 +362,26 @@
 
 	<div class="help-item">
 		<div class="subject">
+			<code>/ignore nick</code>
+		</div>
+		<div class="description">
+			<p>
+				Block any messages from the specified user on the current network.
+				This can be a nickname or a hostmask.</p>
+		</div>
+	</div>
+
+	<div class="help-item">
+		<div class="subject">
+			<code>/ignorelist</code>
+		</div>
+		<div class="description">
+			<p>Load the list of ignored users for the current network.</p>
+		</div>
+	</div>
+
+	<div class="help-item">
+		<div class="subject">
 			<code>/join channel</code>
 		</div>
 		<div class="description">
@@ -533,6 +553,17 @@
 		</div>
 		<div class="description">
 			<p>Unban (<code>-b</code>) a user from the current channel.
+				This can be a nickname or a hostmask.</p>
+		</div>
+	</div>
+
+	<div class="help-item">
+		<div class="subject">
+			<code>/unignore nick</code>
+		</div>
+		<div class="description">
+			<p>
+				Unblock messages from the specified user on the current network.
 				This can be a nickname or a hostmask.</p>
 		</div>
 	</div>

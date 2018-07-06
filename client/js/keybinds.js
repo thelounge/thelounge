@@ -8,7 +8,6 @@ const form = $("#form");
 const input = $("#input");
 const sidebar = $("#sidebar");
 const windows = $("#windows");
-const contextMenuContainer = $("#context-menu-container");
 
 Mousetrap.bind([
 	"pageup",
@@ -41,7 +40,7 @@ Mousetrap.bind([
 	"alt+up",
 	"alt+down",
 ], function(e, keys) {
-	const channels = sidebar.find(".chan");
+	const channels = sidebar.find(".chan").not(".network.collapsed :not(.lobby)");
 	const index = channels.index(channels.filter(".active"));
 	const direction = keys.split("+").pop();
 	let target;
@@ -95,12 +94,6 @@ Mousetrap.bind([
 	utils.scrollIntoViewNicely(target[0]);
 
 	return false;
-});
-
-Mousetrap.bind([
-	"escape",
-], function() {
-	contextMenuContainer.hide();
 });
 
 const inputTrap = Mousetrap(input.get(0));
@@ -247,27 +240,31 @@ const ignoredKeys = {
 	224: true, // Meta
 };
 
-if (!("ontouchstart" in window || navigator.maxTouchPoints > 0)) {
-	$(document.body).on("keydown", (e) => {
-		// Ignore if target isn't body (e.g. focused into input)
-		// Ignore any key that uses alt modifier
-		// Ignore keys defined above
-		if (e.target !== document.body || e.altKey || ignoredKeys[e.which]) {
-			return;
-		}
+$(document).on("keydown", (e) => {
+	// Ignore any key that uses alt modifier
+	// Ignore keys defined above
+	if (e.altKey || ignoredKeys[e.which]) {
+		return;
+	}
 
-		// Ignore all ctrl keys except for ctrl+v to allow pasting
-		if ((e.ctrlKey || e.metaKey) && e.which !== 86) {
-			return;
-		}
+	// Ignore all ctrl keys except for ctrl+v to allow pasting
+	if ((e.ctrlKey || e.metaKey) && e.which !== 86) {
+		return;
+	}
 
-		// On enter, focus the input but do not propagate the event
-		// This way, a new line is not inserted
-		if (e.which === 13) {
-			input.trigger("focus");
-			return false;
-		}
+	const tagName = e.target.tagName;
 
+	// Ignore if we're already typing into <input> or <textarea>
+	if (tagName === "INPUT" || tagName === "TEXTAREA") {
+		return;
+	}
+
+	// On enter, focus the input but do not propagate the event
+	// This way, a new line is not inserted
+	if (e.which === 13) {
 		input.trigger("focus");
-	});
-}
+		return false;
+	}
+
+	input.trigger("focus");
+});

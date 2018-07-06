@@ -2,6 +2,7 @@
 
 const $ = require("jquery");
 const socket = require("../socket");
+const utils = require("../utils");
 
 // Sync unread badge and marker when other clients open a channel
 socket.on("open", function(id) {
@@ -18,8 +19,11 @@ socket.on("open", function(id) {
 
 	// Clear the unread badge
 	$("#sidebar").find(".chan[data-id='" + id + "'] .badge")
+		.attr("data-highlight", 0)
 		.removeClass("highlight")
 		.empty();
+
+	utils.updateTitle();
 
 	// Move unread marker to the bottom
 	channel

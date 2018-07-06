@@ -21,17 +21,24 @@ socket.on("more", function(data) {
 		return;
 	}
 
-	// Remove the date-change marker we put at the top, because it may
-	// not actually be a date change now
+	// Remove the date marker at the top if date does not change
 	const children = $(chan).children();
 
-	if (children.eq(0).hasClass("date-marker-container")) { // Check top most child
-		children.eq(0).remove();
-	} else if (children.eq(1).hasClass("date-marker-container")) {
-		// The unread-marker could be at index 0, which will cause the date-marker to become "stuck"
-		children.eq(1).remove();
-	} else if (children.eq(0).hasClass("condensed") && children.eq(0).children(".date-marker-container").eq(0).hasClass("date-marker-container")) {
-		children.eq(0).children(".date-marker-container").eq(0).remove();
+	// Check the top-most element and the one after because
+	// unread and date markers may switch positions
+	for (let i = 0; i <= 1; i++) {
+		const marker = children.eq(i);
+
+		if (marker.hasClass("date-marker-container")) {
+			const msgTime = new Date(data.messages[data.messages.length - 1].time);
+			const prevMsgTime = new Date(marker.data("time"));
+
+			if (prevMsgTime.toDateString() === msgTime.toDateString()) {
+				marker.remove();
+			}
+
+			break;
+		}
 	}
 
 	// Add the older messages
@@ -89,12 +96,13 @@ socket.on("more", function(data) {
 		scrollable.find(".show-more").removeClass("show");
 	}
 
-	scrollable.find(".show-more-button")
-		.text("Show older messages")
-		.prop("disabled", false);
+	// Swap button text back from its alternative label
+	const showMoreBtn = scrollable.find(".show-more button");
+	swapText(showMoreBtn);
+	showMoreBtn.prop("disabled", false);
 });
 
-chat.on("click", ".show-more-button", function() {
+chat.on("click", ".show-more button", function() {
 	const self = $(this);
 	const lastMessage = self.closest(".chat").find(".msg:not(.condensed)").first();
 	let lastMessageId = -1;
@@ -103,12 +111,18 @@ chat.on("click", ".show-more-button", function() {
 		lastMessageId = parseInt(lastMessage.prop("id").replace("msg-", ""), 10);
 	}
 
-	self
-		.text("Loading older messages…")
-		.prop("disabled", true);
+	// Swap button text with its alternative label
+	swapText(self);
+	self.prop("disabled", true);
 
 	socket.emit("more", {
 		target: self.data("id"),
 		lastId: lastMessageId,
 	});
 });
+
+// Given a button, swap its text with the content of `data-alt-text`
+function swapText(btn) {
+	const altText = btn.data("alt-text");
+	btn.data("alt-text", btn.text()).text(altText);
+}

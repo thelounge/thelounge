@@ -20,7 +20,7 @@ addDefaultItems();
  * addContextMenuItem({
  * 		check: (target) => target.hasClass("user"),
  * 		className: "customItemName",
- * 	 	data: (target) => target.data("name"),
+ * 	 	data: (target) => target.attr("data-name"),
  * 	 	displayName: "Do something",
  * 	 	callback: (name) => console.log(name), // print the name of the user to console
  * });
@@ -60,15 +60,13 @@ function addWhoisItem() {
 			target: $("#chat").data("id"),
 			text: "/whois " + itemData,
 		});
-
-		$(`.channel.active .userlist .user[data-name="${itemData}"]`).trigger("click");
 	}
 
 	addContextMenuItem({
 		check: (target) => target.hasClass("user"),
 		className: "user",
-		displayName: (target) => target.data("name"),
-		data: (target) => target.data("name"),
+		displayName: (target) => target.attr("data-name"),
+		data: (target) => target.attr("data-name"),
 		callback: whois,
 	});
 
@@ -77,10 +75,10 @@ function addWhoisItem() {
 	});
 
 	addContextMenuItem({
-		check: (target) => target.hasClass("user"),
+		check: (target) => target.hasClass("user") || target.hasClass("query"),
 		className: "action-whois",
 		displayName: "User information",
-		data: (target) => target.data("name"),
+		data: (target) => target.attr("data-name") || target.attr("aria-label"),
 		callback: whois,
 	});
 }
@@ -103,8 +101,84 @@ function addQueryItem() {
 		check: (target) => target.hasClass("user"),
 		className: "action-query",
 		displayName: "Direct messages",
-		data: (target) => target.data("name"),
+		data: (target) => target.attr("data-name"),
 		callback: query,
+	});
+}
+
+function addCloseItem() {
+	function getCloseDisplay(target) {
+		if (target.hasClass("lobby")) {
+			return "Remove";
+		} else if (target.hasClass("channel")) {
+			return "Leave";
+		}
+
+		return "Close";
+	}
+
+	addContextMenuItem({
+		check: (target) => target.hasClass("chan"),
+		className: "close",
+		displayName: getCloseDisplay,
+		data: (target) => target.attr("data-target"),
+		callback: (itemData) => utils.closeChan($(`.networks .chan[data-target="${itemData}"]`)),
+	});
+}
+
+function addConnectItem() {
+	let clickedNetwork;
+
+	function isDisconnected(target) {
+		return target.parent().hasClass("not-connected");
+	}
+
+	function connect() {
+		socket.emit("input", {
+			target: $("#chat").data("id"),
+			text: "/connect",
+		});
+	}
+
+	function check(target) {
+		clickedNetwork = target;
+		return target.hasClass("lobby") && isDisconnected(target);
+	}
+
+	addContextMenuItem({
+		check: check,
+		className: "connect",
+		displayName: "Connect",
+		data: () => clickedNetwork.data("id"),
+		callback: connect,
+	});
+}
+
+function addDisconnectItem() {
+	let clickedNetwork;
+
+	function isConnected(target) {
+		return !target.parent().hasClass("not-connected");
+	}
+
+	function disconnect() {
+		socket.emit("input", {
+			target: $("#chat").data("id"),
+			text: "/disconnect",
+		});
+	}
+
+	function check(target) {
+		clickedNetwork = target;
+		return target.hasClass("lobby") && isConnected(target);
+	}
+
+	addContextMenuItem({
+		check: check,
+		className: "disconnect",
+		displayName: "Disconnect",
+		data: () => clickedNetwork.data("id"),
+		callback: disconnect,
 	});
 }
 
@@ -120,8 +194,84 @@ function addKickItem() {
 		check: (target) => utils.hasRoleInChannel(target.closest(".chan"), ["op"]) && target.closest(".chan").data("type") === "channel",
 		className: "action-kick",
 		displayName: "Kick",
-		data: (target) => target.data("name"),
+		data: (target) => target.attr("data-name"),
 		callback: kick,
+	});
+}
+
+function addOpItem() {
+	function op(itemData) {
+		socket.emit("input", {
+			target: $("#chat").data("id"),
+			text: "/op " + itemData,
+		});
+	}
+
+	addContextMenuItem({
+		check: (target) =>
+			utils.hasRoleInChannel(target.closest(".chan"), ["op"]) &&
+			!utils.hasRoleInChannel(target.closest(".chan"), ["op"], target.attr("data-name")),
+		className: "action-op",
+		displayName: "Give operator (+o)",
+		data: (target) => target.attr("data-name"),
+		callback: op,
+	});
+}
+
+function addDeopItem() {
+	function deop(itemData) {
+		socket.emit("input", {
+			target: $("#chat").data("id"),
+			text: "/deop " + itemData,
+		});
+	}
+
+	addContextMenuItem({
+		check: (target) =>
+			utils.hasRoleInChannel(target.closest(".chan"), ["op"]) &&
+			utils.hasRoleInChannel(target.closest(".chan"), ["op"], target.attr("data-name")),
+		className: "action-op",
+		displayName: "Revoke operator (-o)",
+		data: (target) => target.attr("data-name"),
+		callback: deop,
+	});
+}
+
+function addVoiceItem() {
+	function voice(itemData) {
+		socket.emit("input", {
+			target: $("#chat").data("id"),
+			text: "/voice " + itemData,
+		});
+	}
+
+	addContextMenuItem({
+		check: (target) =>
+			utils.hasRoleInChannel(target.closest(".chan"), ["op"]) &&
+			!utils.hasRoleInChannel(target.closest(".chan"), ["voice"], target.attr("data-name")),
+		className: "action-voice",
+		displayName: "Give voice (+v)",
+		data: (target) => target.attr("data-name"),
+		callback: voice,
+	});
+}
+
+function addDevoiceItem() {
+	function devoice(itemData) {
+		socket.emit("input", {
+			target: $("#chat").data("id"),
+			text: "/devoice " + itemData,
+		});
+	}
+
+	addContextMenuItem({
+		check: (target) =>
+			utils.hasRoleInChannel(target.closest(".chan"), ["op"]) &&
+			utils.hasRoleInChannel(target.closest(".chan"), ["voice"], target.attr("data-name")),
+		className: "action-voice",
+		displayName: "Revoke voice (-v)",
+		data: (target) => target.attr("data-name"),
+		callback: devoice,
 	});
 }
 
@@ -144,7 +294,7 @@ function addFocusItem() {
 		check: (target) => target.hasClass("chan"),
 		className: getClass,
 		displayName: (target) => target.attr("aria-label"),
-		data: (target) => target.data("target"),
+		data: (target) => target.attr("data-target"),
 		callback: focusChan,
 	});
 
@@ -153,10 +303,25 @@ function addFocusItem() {
 	});
 }
 
+function addEditNetworkItem() {
+	function edit(itemData) {
+		socket.emit("network:get", itemData);
+		$('button[data-target="#connect"]').trigger("click");
+	}
+
+	addContextMenuItem({
+		check: (target) => target.hasClass("lobby"),
+		className: "edit",
+		displayName: "Edit this network…",
+		data: (target) => target.closest(".network").data("uuid"),
+		callback: edit,
+	});
+}
+
 function addChannelListItem() {
 	function list(itemData) {
 		socket.emit("input", {
-			target: itemData,
+			target: parseInt(itemData, 10),
 			text: "/list",
 		});
 	}
@@ -173,7 +338,7 @@ function addChannelListItem() {
 function addBanListItem() {
 	function banlist(itemData) {
 		socket.emit("input", {
-			target: itemData,
+			target: parseInt(itemData, 10),
 			text: "/banlist",
 		});
 	}
@@ -202,12 +367,38 @@ function addJoinItem() {
 	});
 }
 
+function addIgnoreListItem() {
+	function ignorelist(itemData) {
+		socket.emit("input", {
+			target: parseInt(itemData, 10),
+			text: "/ignorelist",
+		});
+	}
+
+	addContextMenuItem({
+		check: (target) => target.hasClass("lobby"),
+		className: "list",
+		displayName: "List ignored users",
+		data: (target) => target.data("id"),
+		callback: ignorelist,
+	});
+}
+
 function addDefaultItems() {
+	addFocusItem();
 	addWhoisItem();
 	addQueryItem();
 	addKickItem();
-	addFocusItem();
+	addOpItem();
+	addDeopItem();
+	addVoiceItem();
+	addDevoiceItem();
+	addEditNetworkItem();
+	addJoinItem();
 	addChannelListItem();
 	addBanListItem();
-	addJoinItem();
+	addIgnoreListItem();
+	addConnectItem();
+	addDisconnectItem();
+	addCloseItem();
 }

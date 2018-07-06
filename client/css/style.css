@@ -1,15 +1,49 @@
 @import "fontawesome.css";
 @import "bootstrap.css";
-@import "../../node_modules/primer-tooltips/build/build.css";
+
+:root {
+	/* Main text color */
+	--body-color: #222;
+
+	/* Background color of the whole page */
+	--body-bg-color: #415364;
+
+	/* Links and link-looking buttons */
+	--link-color: #50a656;
+
+	/* Background color of the main window */
+	--window-bg-color: #fff;
+
+	/* Color of the date marker, text and separator */
+	--date-marker-color: rgba(0, 107, 59, 0.5);
+
+	/* Color of the unread message marker, text and separator */
+	--unread-marker-color: rgba(231, 76, 60, 0.5);
+
+	/* Background and left-border color of highlight messages */
+	--highlight-bg-color: #efe8dc;
+	--highlight-border-color: #b08c4f;
+}
+
+/* Samsung Internet <7.0 and Microsoft Edge support (yes, both of them use webkit prefix) */
+::-webkit-input-placeholder {
+	color: rgba(0, 0, 0, 0.35);
+}
+
+::placeholder {
+	color: rgba(0, 0, 0, 0.35);
+	opacity: 1; /* fix opacity in Firefox */
+}
 
 html,
 body {
 	height: 100%;
+	overscroll-behavior: none; /* prevent overscroll navigation actions */
 }
 
 body {
-	background: #455164;
-	color: #222;
+	background: var(--body-bg-color);
+	color: var(--body-color);
 	font: 16px -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 	margin: 0;
 	-webkit-user-select: none;
@@ -29,7 +63,7 @@ body {
 a,
 a:hover,
 a:focus {
-	color: #50a656;
+	color: var(--link-color);
 }
 
 a {
@@ -165,27 +199,9 @@ kbd {
 }
 
 .container {
-	margin: 20px auto;
+	margin-bottom: 20px;
 	max-width: 480px;
 	touch-action: pan-y;
-}
-
-#help .container,
-#changelog .container {
-	max-width: 600px;
-}
-
-::-moz-placeholder {
-	color: rgba(0, 0, 0, 0.35);
-	opacity: 1;
-}
-
-::-webkit-input-placeholder {
-	color: rgba(0, 0, 0, 0.35);
-}
-
-:-ms-input-placeholder {
-	color: rgba(0, 0, 0, 0.35) !important;
 }
 
 #js-copy-hack,
@@ -239,12 +255,12 @@ kbd {
 #chat .nick .from::before,
 #chat .action .from::before,
 #chat .toggle-button::after,
+#chat .toggle-content .more-caret::before,
 #version-checker::before,
 .context-menu-item::before,
 #help .website-link::before,
 #help .documentation-link::before,
 #help .report-issue-link::before,
-#nick button::before,
 #image-viewer .previous-image-btn::before,
 #image-viewer .next-image-btn::before,
 #sidebar .not-secure-icon::before,
@@ -257,16 +273,8 @@ kbd {
 }
 
 #viewport .lt::before { content: "\f0c9"; /* http://fontawesome.io/icon/bars/ */ }
-
-#viewport .rt::before {
-	content: "\f0c0"; /* https://fontawesome.com/icons/users?style=solid */
-	line-height: 36px; /* fix alignment in Microsoft Edge */
-}
-
-#chat button.menu::before {
-	content: "\f142"; /* http://fontawesome.io/icon/ellipsis-v/ */
-	line-height: 36px; /* fix alignment in Microsoft Edge */
-}
+#viewport .rt::before { content: "\f0c0"; /* https://fontawesome.com/icons/users?style=solid */ }
+#chat button.menu::before { content: "\f142"; /* http://fontawesome.io/icon/ellipsis-v/ */ }
 
 .window .header button.search::before {
 	content: "\f002"; /* http://fontawesome.io/icon/ellipsis-v/ */
@@ -282,9 +290,14 @@ kbd {
 .context-menu-user::before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
 .context-menu-close::before { content: "\f00d"; /* http://fontawesome.io/icon/times/ */ }
 .context-menu-list::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
+.context-menu-disconnect::before { content: "\f0c1"; /* https://fontawesome.com/icons/unlink?style=solid */ }
+.context-menu-connect::before { content: "\f127"; /* https://fontawesome.com/icons/link?style=solid */ }
 .context-menu-action-whois::before { content: "\f05a"; /* http://fontawesome.io/icon/info-circle/  */ }
 .context-menu-action-kick::before { content: "\f05e"; /* http://fontawesome.io/icon/ban/ */ }
+.context-menu-action-op::before { content: "\f1fa"; /* http://fontawesome.io/icon/at/ */ }
+.context-menu-action-voice::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
 .context-menu-network::before { content: "\f233"; /* https://fontawesome.com/icons/server?style=solid */ }
+.context-menu-edit::before { content: "\f303"; /* https://fontawesome.com/icons/pencil-alt?style=solid */ }
 
 #sidebar .not-secure-icon::before {
 	content: "\f071"; /* https://fontawesome.com/icons/exclamation-triangle?style=solid */
@@ -410,9 +423,8 @@ kbd {
 	color: #cfcfcf;
 	content: "\f002"; /* http://fontawesome.io/icon/search/ */
 	position: absolute;
-	right: 18px;
-	font-size: 14px;
-	line-height: 50px;
+	right: 13px;
+	line-height: 45px;
 }
 
 #settings .extra-experimental::before {
@@ -428,18 +440,6 @@ kbd {
 	margin-right: 9px;
 }
 
-#set-nick::before {
-	content: "\f303"; /* https://fontawesome.com/icons/pencil-alt?style=solid */
-}
-
-#submit-nick::before {
-	content: "\f00c"; /* http://fontawesome.io/icon/check/ */
-}
-
-#cancel-nick::before {
-	content: "\f00d"; /* http://fontawesome.io/icon/times/ */
-}
-
 #image-viewer .previous-image-btn::before {
 	content: "\f104"; /* http://fontawesome.io/icon/angle-left/ */
 }
@@ -453,7 +453,6 @@ kbd {
 #viewport {
 	display: flex;
 	height: 100%;
-	overflow: hidden;
 }
 
 #windows {
@@ -461,21 +460,22 @@ kbd {
 	position: relative;
 }
 
-#chat button,
 #form button,
-#chat .user {
+.header button,
+.reveal-password span {
 	transition: opacity 0.2s;
 }
 
-#chat button:hover,
-#form button:hover {
+#form button:hover,
+.header button:hover,
+.reveal-password span:hover {
 	opacity: 0.6;
 }
 
 #viewport .lt,
 #viewport .rt,
 #chat button.menu {
-	color: #ccc;
+	color: #607992;
 	display: flex;
 	font-size: 14px;
 	line-height: 1;
@@ -489,9 +489,16 @@ kbd {
 #viewport .rt::before,
 #chat button.menu::before {
 	width: 36px;
+	line-height: 36px; /* Fix alignment in Microsoft Edge */
 }
 
+/* Channel list button stays fixed when scrolling... */
 #viewport .lt {
+	position: fixed;
+}
+
+/* ... Except on chat windows, relative to include the notification dot */
+#viewport #chat .lt {
 	position: relative;
 }
 
@@ -505,9 +512,10 @@ kbd {
 	width: 10px;
 	height: 10px;
 	border-radius: 50%;
-	border: 2px solid white;
+	border: 2px solid var(--window-bg-color);
 	opacity: 0;
 	transition: opacity 0.2s;
+	background-clip: padding-box; /* Fix border-radius bleeding color */
 }
 
 #viewport.notified .lt::after {
@@ -521,8 +529,28 @@ kbd {
 #sidebar {
 	display: flex;
 	flex-direction: column;
-	-webkit-overflow-scrolling: touch;
 	width: 220px;
+}
+
+#sidebar .scrollable-area {
+	overflow-x: auto;
+	flex-grow: 1;
+	touch-action: pan-y;
+	overscroll-behavior: contain;
+	-webkit-overflow-scrolling: touch;
+}
+
+#sidebar .logo-container {
+	text-align: center;
+}
+
+#sidebar .logo,
+#sidebar .logo-inverted {
+	height: 45px;
+}
+
+#sidebar .logo {
+	display: none;
 }
 
 #viewport.menu-open #sidebar {
@@ -532,7 +560,7 @@ kbd {
 
 #sidebar .chan,
 #sidebar .empty {
-	color: #99a2b4;
+	color: #b7c5d1;
 	font-size: 14px;
 }
 
@@ -540,23 +568,40 @@ kbd {
 	display: none;
 }
 
-#sidebar button,
 #sidebar .chan {
 	cursor: pointer;
 }
 
+/* All sidebar buttons and channels/queries must be white on hover and active */
 #sidebar button:hover,
 #sidebar .chan:hover,
 #sidebar .active {
 	color: #fff;
 }
 
+/* All lobbies/channels/queries and footer buttons must have a half-transparent
+background on hover (unless active) */
+#sidebar .chan:hover,
+#footer button:hover {
+	background-color: rgba(48, 62, 74, 0.5); /* #303e4a x 50% alpha */
+}
+
+/* All active elements, hovered or not, must have a background */
+#sidebar .active,
+#sidebar .active:hover {
+	background-color: #303e4a;
+}
+
+/* Remove background on hovered/active channel when sorting/drag-and-dropping */
+#sidebar .ui-sortable-helper .chan.active, /* Networks */
+#sidebar .ui-sortable-helper .chan:hover,
+#sidebar .chan.ui-sortable-helper.active, /* Channels */
+#sidebar .chan.ui-sortable-helper:hover {
+	background-color: transparent;
+}
+
 #sidebar .networks {
-	padding-top: 20px;
-	touch-action: pan-y;
-	flex-grow: 1;
-	overflow: auto;
-	overflow-x: hidden;
+	padding-top: 5px;
 }
 
 #sidebar .networks:empty {
@@ -566,7 +611,7 @@ kbd {
 #sidebar .network,
 #sidebar .network-placeholder {
 	position: relative;
-	margin-bottom: 30px;
+	margin-bottom: 20px;
 	touch-action: pan-y;
 }
 
@@ -581,8 +626,17 @@ kbd {
 #sidebar .chan-placeholder {
 	display: flex;
 	padding: 8px 14px;
-	transition: color 0.2s;
-	width: 100%;
+}
+
+#sidebar .network-placeholder,
+#sidebar .chan-placeholder {
+	border: 1px dashed #99a2b4;
+	border-radius: 6px;
+	margin: -1px 10px;
+}
+
+#sidebar .network-placeholder {
+	margin-bottom: 29px;
 }
 
 #sidebar .chan.lobby {
@@ -595,6 +649,7 @@ kbd {
 #sidebar .lobby-wrap {
 	display: flex;
 	flex-grow: 1;
+	overflow: hidden;
 }
 
 #sidebar .chan.lobby .lobby-wrap:hover,
@@ -768,29 +823,19 @@ kbd {
 }
 
 #footer {
-	background: rgba(0, 0, 0, 0.06);
 	height: 45px;
 	font-size: 14px;
-	line-height: 45px;
-	text-align: center;
-	width: 220px;
 	flex-shrink: 0;
+	display: flex;
+	justify-content: center;
 }
 
-#footer button.active {
-	color: #fff;
-}
-
-#footer .icon {
-	color: #9ca5b4;
+#footer button {
+	color: #b7c5d1;
 	display: inline-block;
-	line-height: 34px;
-	padding: 0 12px;
-	transition: color 0.2s;
-}
-
-#footer .icon:hover {
-	color: #fff;
+	width: 45px;
+	height: 100%;
+	border-radius: 5px;
 }
 
 .signed-out #footer .sign-in {
@@ -829,9 +874,11 @@ kbd {
 	margin: 2px 0;
 	margin-bottom: 10px;
 	outline: 0;
-	padding: 8px 10px;
+	padding: 0 10px;
 	transition: border-color 0.2s;
 	width: 100%;
+	height: 35px;
+	line-height: 35px;
 }
 
 .input:disabled {
@@ -843,19 +890,19 @@ kbd {
 	border-color: #79838c;
 }
 
-#windows select.input {
-	height: 35px;
-}
-
 #user-specified-css-input {
 	resize: vertical;
+	height: 10em;
+	padding: 6px 10px;
+	line-height: 1.5;
 }
 
 #windows .window {
-	background: #fff;
+	background: var(--window-bg-color);
 	display: none;
 	overflow-y: auto;
 	height: 100%;
+	overscroll-behavior: contain;
 	-webkit-overflow-scrolling: touch;
 }
 
@@ -898,13 +945,16 @@ kbd {
 }
 
 #windows .header {
-	border-bottom: 1px solid #e7e7e7;
-	line-height: 48px;
-	height: 48px;
+	line-height: 45px;
+	height: 45px;
 	padding: 0 6px;
 	display: flex;
 	flex-shrink: 0;
 	overflow: hidden;
+}
+
+#windows #chat .header {
+	border-bottom: 1px solid #e7e7e7;
 }
 
 #windows .header .title {
@@ -989,7 +1039,7 @@ kbd {
 	visibility: hidden;
 }
 
-#windows #form .input,
+#windows #form,
 .messages .msg,
 .userlist {
 	font-size: 14px;
@@ -1000,6 +1050,7 @@ kbd {
 	display: flex;
 	flex-grow: 1;
 	overflow: hidden;
+	position: relative;
 }
 
 #chat .chat {
@@ -1008,6 +1059,7 @@ kbd {
 	display: flex;
 	flex-grow: 1;
 	flex-direction: column;
+	overscroll-behavior: contain;
 	-webkit-overflow-scrolling: touch;
 }
 
@@ -1016,7 +1068,6 @@ kbd {
 }
 
 #chat .userlist {
-	background: #fff;
 	border-left: 1px solid #e7e7e7;
 	width: 180px;
 	display: flex;
@@ -1050,25 +1101,14 @@ kbd {
 #chat .show-more {
 	display: none;
 	padding: 10px;
+	padding-top: 15px;
 	padding-bottom: 0;
 	width: 100%;
 }
 
-#chat .show-more-button {
-	background: #f4f4f4;
-	background-image: linear-gradient(#f4f4f4, #ececec);
-	border: 1px solid #d7d7d7;
-	border-bottom-color: #b7b7b7;
-	border-radius: 2px;
-	color: #555;
-	font-size: 12px;
-	height: 34px;
-	line-height: 0;
+#chat .show-more .btn {
 	width: 100%;
-}
-
-#chat .show-more-button:hover {
-	opacity: 1;
+	margin: 0;
 }
 
 #chat .messages {
@@ -1104,13 +1144,13 @@ kbd {
 	left: 0;
 	right: 0;
 	top: 50%;
-	border-top: 1px solid rgba(231, 76, 60, 0.5);
+	border-top: 1px solid var(--unread-marker-color);
 }
 
 #chat .unread-marker-text::before {
 	content: "New messages";
-	background-color: white;
-	color: rgba(231, 76, 60, 0.5);
+	background-color: var(--window-bg-color);
+	color: var(--unread-marker-color);
 	padding: 0 10px;
 }
 
@@ -1134,22 +1174,14 @@ kbd {
 	left: 0;
 	right: 0;
 	top: 50%;
-	border-top: 1px solid rgba(0, 107, 59, 0.5);
+	border-top: 1px solid var(--date-marker-color);
 }
 
 #chat .date-marker-text::before {
 	content: attr(data-label);
-	background-color: white;
-	color: rgba(0, 107, 59, 0.5);
+	background-color: var(--window-bg-color);
+	color: var(--date-marker-color);
 	padding: 0 10px;
-}
-
-.inline-channel {
-	cursor: pointer;
-}
-
-.inline-channel:hover {
-	opacity: 0.6;
 }
 
 #chat .time,
@@ -1160,7 +1192,7 @@ kbd {
 }
 
 #chat .time {
-	color: #ddd;
+	color: #999;
 	padding-left: 10px;
 	width: 55px;
 }
@@ -1202,15 +1234,23 @@ kbd {
 	word-break: normal;
 }
 
+/* Parsed nicks and channels */
+
+#chat .user,
+.inline-channel {
+	cursor: pointer;
+	transition: opacity 0.2s;
+}
+
+.chat .user:hover,
+.inline-channel:hover {
+	opacity: 0.6;
+}
+
 /* Nicknames */
 
 #chat .user {
-	cursor: pointer;
 	color: #50a656;
-}
-
-.chat .user:hover {
-	opacity: 0.6;
 }
 
 #chat.colored-nicks .user.color-1 { color: #107ead; }
@@ -1262,15 +1302,18 @@ kbd {
 }
 
 #chat table.channel-list,
-#chat table.ban-list {
+#chat table.ban-list,
+#chat table.ignore-list {
 	margin: 5px 10px;
 	width: calc(100% - 30px);
 }
 
 #chat table.channel-list th,
 #chat table.ban-list th,
+#chat table.ignore-list th,
 #chat table.channel-list td,
-#chat table.ban-list td {
+#chat table.ban-list td,
+#chat.table.ignore-list td {
 	padding: 5px;
 	vertical-align: top;
 	border-bottom: #eee 1px solid;
@@ -1284,7 +1327,9 @@ kbd {
 #chat table.channel-list .topic,
 #chat table.ban-list .hostmask,
 #chat table.ban-list .banned_by,
-#chat table.ban-list .banned_at {
+#chat table.ban-list .banned_at,
+#chat table.ignore-list .hostmask,
+#chat table.ignore-list .when {
 	text-align: left;
 }
 
@@ -1337,82 +1382,134 @@ kbd {
 }
 
 #chat .error,
-#chat .error .from,
-#chat .channel .highlight .from,
-#chat .channel .highlight .text,
-#chat .channel .highlight .user {
-	color: #f00;
+#chat .error .from {
+	color: #e74c3c;
 }
 
+#chat .channel .message.highlight {
+	background-color: var(--highlight-bg-color);
+	border-left: 5px solid var(--highlight-border-color);
+}
+
+#chat .channel .message.highlight .time {
+	padding-left: 5px;
+	width: 50px;
+	color: #696969;
+}
+
+#chat.show-seconds .channel .message.highlight .time {
+	width: 70px;
+}
+
+#chat .channel .message.highlight .content {
+	border-left: 1px solid var(--highlight-bg-color);
+}
+
+#chat .toggle-content.opened .more-caret, /* Expand/Collapse link previews */
 #chat .toggle-button.opened, /* Thumbnail toggle */
 #chat .msg.condensed:not(.closed) .toggle-button { /* Expanded status message toggle */
 	transform: rotate(90deg);
 }
 
 #chat .toggle-content {
-	background: #f5f5f5;
-	border-radius: 2px;
+	background: #f6f6f6;
+	border-radius: 5px;
 	display: none;
-	color: #222;
 	max-width: 100%;
 	margin: 0;
 	margin-top: 6px;
 	overflow: hidden;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	contain: content; /* This fixes a display bug where border-radius stopped working on image link hover */
 }
 
-#chat .toggle-type-error {
-	background: transparent;
-}
-
+/* This applies to images of preview-type-image and thumbnails of preview-type-link */
 #chat .toggle-content img {
 	max-width: 100%;
 	max-height: 128px;
 	display: block;
+	cursor: zoom-in;
 }
 
-#chat .prefetch-error {
+#chat .toggle-content pre.prefetch-error {
+	padding: 0;
+	margin: 0;
+	color: inherit;
+	background-color: transparent;
+}
+
+#chat .toggle-content .prefetch-error {
 	display: none;
 }
 
+#chat .toggle-content.opened .prefetch-error {
+	display: inline;
+}
+
+/* This applies to thumbnails of preview-type-link only */
 #chat .toggle-content .thumb {
-	max-width: 48px;
-	max-height: 38px;
+	max-height: 54px;
+	max-width: 96px;
 }
 
-#chat .toggle-thumbnail {
-	padding: 6px;
+#chat .toggle-type-error,
+#chat .toggle-content .toggle-text {
+	padding: 8px 10px;
 }
 
-#chat .toggle-text {
-	padding: 6px;
-	min-width: 0;
-	display: flex;
-	flex-direction: column;
+#chat .toggle-content .toggle-text {
 	white-space: nowrap;
-	color: inherit;
-}
-
-#chat .toggle-text:not(:first-child) {
-	padding-left: 0;
-}
-
-#chat .toggle-content .head,
-#chat .toggle-content .body {
-	text-overflow: ellipsis;
 	overflow: hidden;
-	color: inherit;
+}
+
+#chat .toggle-content.opened .toggle-text {
+	white-space: normal;
 }
 
 #chat .toggle-content .head {
+	display: flex;
+	align-items: flex-start;
 	font-weight: bold;
 }
 
-#chat .toggle-content .body {
-	color: #999;
+#chat .toggle-type-error,
+#chat .toggle-text .body {
+	color: #717171;
+}
+
+#chat .toggle-text a {
+	color: inherit;
+}
+
+#chat .toggle-text .overflowable {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	flex-grow: 1;
+}
+
+#chat .toggle-content .more {
+	color: var(--link-color);
+	font-weight: normal;
+	margin-left: 10px;
+	flex-shrink: 0;
+}
+
+#chat .toggle-content .more::after {
+	content: " " attr(aria-label);
+}
+
+#chat .toggle-content .more-caret {
+	display: inline-block;
+	transition: transform 0.2s;
+}
+
+#chat .toggle-content .more-caret::before {
+	content: "\f0da"; /* https://fontawesome.com/icons/caret-right?style=solid */
 }
 
 #chat .toggle-content.show {
 	display: inline-flex !important;
+	align-items: flex-start;
 }
 
 #chat audio {
@@ -1433,18 +1530,18 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #chat .userlist .count {
 	background: #fafafa;
-	height: 48px;
+	height: 45px;
 	flex-shrink: 0;
 	position: relative;
 }
 
 #chat .userlist .search {
-	color: #222;
+	color: var(--body-color);
 	border: 0;
 	background: none;
 	font: inherit;
 	outline: 0;
-	padding: 18px 16px;
+	padding: 13px;
 	width: 100%;
 }
 
@@ -1455,6 +1552,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	padding-bottom: 10px;
 	width: 100%;
 	touch-action: pan-y;
+	overscroll-behavior: contain;
 	-webkit-overflow-scrolling: touch;
 }
 
@@ -1547,7 +1645,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	flex-grow: 0;
 }
 
-.logo-inverted {
+#windows .logo-inverted {
 	display: none; /* In dark themes, inverted logo must be used instead */
 }
 
@@ -1651,6 +1749,50 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #settings .error {
 	color: #e74c3c;
 	margin-top: 0.2em;
+}
+
+.password-container {
+	position: relative;
+}
+
+.password-container input {
+	padding-right: 37px;
+}
+
+#sign-in .password-container {
+	width: 100%;
+}
+
+#sign-in .password-container .reveal-password {
+	top: 31px;
+	right: 0;
+}
+
+.password-container .reveal-password {
+	position: absolute;
+	top: 2px;
+	right: 15px;
+}
+
+.password-container .reveal-password span {
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: 16px;
+	color: #607992;
+	width: 35px;
+	height: 35px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+}
+
+.password-container .reveal-password span::before {
+	content: "\f06e"; /* https://fontawesome.com/icons/eye?style=solid */
+}
+
+.password-container .reveal-password.visible span::before {
+	content: "\f070"; /* https://fontawesome.com/icons/eye-slash?style=solid */
+	color: #ff4136;
 }
 
 #help .help-item {
@@ -1785,17 +1927,12 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #form {
-	background: #eee;
-	border-top: 1px solid #ddd;
 	flex: 0 0 auto;
-	padding: 5px;
-}
-
-#windows #form .input {
-	border: 1px solid #ddd;
-	border-radius: 2px;
+	border: 0;
+	border-top: 1px solid #e7e7e7;
+	border-radius: 0;
 	margin: 0;
-	padding: 0;
+	padding: 6px;
 	background: white;
 	display: flex;
 	align-items: flex-end;
@@ -1818,66 +1955,20 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	display: block;
 }
 
-[contenteditable]:focus {
-	outline: none;
-}
-
-[contenteditable="true"] {
-	-webkit-user-select: text;
-	-moz-user-select: text;
-	-ms-user-select: text;
-	user-select: text;
-	cursor: text;
-}
-
-/* Nick editor */
-
 #form #nick {
 	background: #f6f6f6;
 	color: #666;
-	font: inherit;
 	font-size: 13px;
 	margin: 4px;
-	line-height: 22px;
-	height: 24px;
-	padding-left: 9px;
-	padding-right: 5px;
+	line-height: 24px;
+	padding: 0 8px;
 	border-radius: 2px;
-	flex: 0 0 auto;
-	border: 1px solid transparent;
-	transition: border-color 0.2s;
-}
-
-#form #nick-value {
-	padding-right: 5px;
-}
-
-#form #nick.editable {
-	border-color: black;
-}
-
-#nick button#set-nick,
-#nick button#submit-nick,
-#nick button#cancel-nick {
-	color: #aaa;
-	width: 18px;
-}
-
-#nick.editable button#set-nick,
-#nick.editable #set-nick-tooltip,
-#nick button#submit-nick,
-#nick:not(.editable) #save-nick-tooltip,
-#nick button#cancel-nick,
-#nick:not(.editable) #cancel-nick-tooltip {
 	display: none;
 }
 
-#nick.editable button#submit-nick,
-#nick.editable button#cancel-nick {
-	display: inline-block;
+.public #form #nick {
+	display: block;
 }
-
-/* End nick editor */
 
 #form #input {
 	background: transparent;
@@ -1897,10 +1988,9 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #form #submit {
-	color: #9ca5b4;
+	color: #607992;
 	font-size: 14px;
 	height: 32px;
-	transition: opacity 0.2s;
 	width: 32px;
 	flex: 0 0 auto;
 }
@@ -1922,7 +2012,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	list-style: none;
 	margin: 0;
 	padding: 0;
-	min-width: 160px;
+	min-width: 180px;
 	font-size: 14px;
 	background-color: #fff;
 	box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
@@ -1948,12 +2038,15 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	transition: background-color 0.2s;
 }
 
+.context-menu-item:focus,
+.textcomplete-item:focus,
 .context-menu-item:hover,
 .textcomplete-item:hover,
 .textcomplete-menu .active,
 #chat .userlist .user.active {
 	background-color: #f6f6f6;
 	transition: none;
+	outline: 0; /* TODO: Handle focus outlines in PR #1873 */
 }
 
 .context-menu-item::before,
@@ -2238,8 +2331,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		opacity: 0;
 	}
 
-	.container {
-		margin-top: 60px !important;
+	#sidebar .logo-container {
+		margin-top: 5px;
 	}
 
 	#sidebar button,
@@ -2263,7 +2356,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	}
 
 	#sidebar {
-		background: #455164;
+		background: var(--body-bg-color);
 		height: 100%;
 		position: absolute;
 		left: -220px;
@@ -2318,7 +2411,13 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		display: flex;
 	}
 
+	/* On mobile display, channel list button stays at the top */
+	#viewport .lt {
+		position: relative;
+	}
+
 	#chat .userlist {
+		background-color: var(--window-bg-color);
 		height: 100%;
 		position: absolute;
 		right: 0;
@@ -2334,11 +2433,16 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	#chat .header .title {
 		padding-left: 6px;
 	}
+
+	#chat .toggle-content .thumb {
+		max-height: 58px;
+		max-width: 104px;
+	}
 }
 
 @media (max-width: 479px) {
 	.container {
-		margin: 10px 0 !important;
+		margin: 0;
 	}
 
 	#sign-in .btn {
@@ -2355,12 +2459,12 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 	#chat .messages {
 		display: block;
-		padding: 5px 10px;
+		padding: 5px 0;
 	}
 
 	#chat .msg {
 		display: block;
-		padding: 2px 0;
+		padding: 2px 10px;
 	}
 
 	#chat .time,
@@ -2371,14 +2475,13 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		padding: 0;
 	}
 
+	#chat .channel .message.highlight .time {
+		padding-left: 0;
+	}
+
 	#chat .condensed-summary .time,
 	#chat .condensed-summary .from {
 		display: none;
-	}
-
-	#chat .date-marker,
-	#chat .unread-marker {
-		margin: 0;
 	}
 
 	#help .help-item .subject {

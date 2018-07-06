@@ -2,7 +2,6 @@
 
 const Handlebars = require("handlebars/runtime");
 const parseStyle = require("./ircmessageparser/parseStyle");
-const anyIntersection = require("./ircmessageparser/anyIntersection");
 const findChannels = require("./ircmessageparser/findChannels");
 const findLinks = require("./ircmessageparser/findLinks");
 const findEmoji = require("./ircmessageparser/findEmoji");
@@ -85,25 +84,14 @@ module.exports = function parse(text, users) {
 	const emojiParts = findEmoji(cleanText);
 	const nameParts = findNames(cleanText, (users || []));
 
-	// Sort all parts identified based on their position in the original text
 	const parts = channelParts
 		.concat(linkParts)
 		.concat(emojiParts)
-		.concat(nameParts)
-		.sort((a, b) => a.start - b.start || b.end - a.end)
-		.reduce((prev, curr) => {
-			const intersection = prev.some((p) => anyIntersection(p, curr));
-
-			if (intersection) {
-				return prev;
-			}
-
-			return prev.concat([curr]);
-		}, []);
+		.concat(nameParts);
 
 	// Merge the styling information with the channels / URLs / nicks / text objects and
 	// generate HTML strings with the resulting fragments
-	return merge(parts, styleFragments).map((textPart) => {
+	return merge(parts, styleFragments, cleanText).map((textPart) => {
 		// Create HTML strings with styling information
 		const fragments = textPart.fragments.map(createFragment).join("");
 
@@ -122,7 +110,7 @@ module.exports = function parse(text, users) {
 			return `<span class="emoji" role="img" aria-label="Emoji: ${emojiMap[textPart.emoji]}" title="${emojiMap[textPart.emoji]}">${fragments}</span>`;
 		} else if (textPart.nick) {
 			const nick = Handlebars.Utils.escapeExpression(textPart.nick);
-			return `<span role="button" class="user ${colorClass(nick)}" data-name="${nick}">${fragments}</span>`;
+			return `<span role="button" class="user ${colorClass(textPart.nick)}" data-name="${nick}">${fragments}</span>`;
 		}
 
 		return fragments;

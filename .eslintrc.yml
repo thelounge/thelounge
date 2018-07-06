@@ -30,7 +30,7 @@ rules:
   linebreak-style: [error, unix]
   no-alert: error
   no-catch-shadow: error
-  no-confusing-arrow: error
+  no-confusing-arrow: [error, {allowParens: true}]
   no-control-regex: off
   no-duplicate-imports: error
   no-else-return: error
@@ -85,8 +85,5 @@ rules:
   strict: error
   template-curly-spacing: error
   yoda: error
-
-globals:
-  log: false
 
 extends: eslint:recommended

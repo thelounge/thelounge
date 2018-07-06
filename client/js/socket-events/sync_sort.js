@@ -13,30 +13,26 @@ socket.on("sync_sort", function(data) {
 
 	const type = data.type;
 	const order = data.order;
+	const container = $(".networks");
+	const network = container.find(`.network[data-uuid="${data.target}"]`);
 
 	if (type === "networks") {
-		const container = $(".networks");
-
 		$.each(order, function(index, value) {
-			const position = $(container.children()[index]);
+			const position = $(container.children(".network")[index]);
 
 			if (position.data("id") === value) { // Network in correct place
 				return true; // No point in continuing
 			}
 
-			const network = container.find(`#network-${data.target}`);
-
-			$(network).insertBefore(position);
+			network.insertBefore(position);
 		});
 	} else if (type === "channels") {
-		const network = $(`#network-${data.target}`);
-
 		$.each(order, function(index, value) {
 			if (index === 0) { // Shouldn't attempt to move lobby
 				return true; // same as `continue` -> skip to next item
 			}
 
-			const position = $(network.children()[index]); // Target channel at position
+			const position = $(network.children(".chan")[index]); // Target channel at position
 
 			if (position.data("id") === value) { // Channel in correct place
 				return true; // No point in continuing
@@ -44,7 +40,7 @@ socket.on("sync_sort", function(data) {
 
 			const channel = network.find(".chan[data-id=" + value + "]"); // Channel at position
 
-			$(channel).insertBefore(position);
+			channel.insertBefore(position);
 		});
 	}
 });

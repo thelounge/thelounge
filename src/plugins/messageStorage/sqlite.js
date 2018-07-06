@@ -1,10 +1,20 @@
 "use strict";
 
+const log = require("../../log");
 const path = require("path");
 const fsextra = require("fs-extra");
-const sqlite3 = require("sqlite3");
-const Helper = require("../helper");
-const Msg = require("../models/msg");
+const Helper = require("../../helper");
+const Msg = require("../../models/msg");
+
+let sqlite3;
+
+try {
+	sqlite3 = require("sqlite3");
+} catch (e) {
+	Helper.config.messageStorage = Helper.config.messageStorage.filter((item) => item !== "sqlite");
+
+	log.error("Unable to load sqlite3 module. You might need to install it manually.");
+}
 
 const currentSchemaVersion = 1520239200;
 
@@ -17,13 +27,14 @@ const schema = [
 ];
 
 class MessageStorage {
-	constructor() {
+	constructor(client) {
+		this.client = client;
 		this.isEnabled = false;
 	}
 
-	enable(name) {
-		const logsPath = path.join(Helper.getHomePath(), "logs");
-		const sqlitePath = path.join(logsPath, `${name}.sqlite3`);
+	enable() {
+		const logsPath = Helper.getUserLogsPath();
+		const sqlitePath = path.join(logsPath, `${this.client.name}.sqlite3`);
 
 		try {
 			fsextra.ensureDirSync(logsPath);
@@ -104,7 +115,7 @@ class MessageStorage {
 
 		this.database.serialize(() => this.database.run(
 			"INSERT INTO messages(network, channel, time, type, msg) VALUES(?, ?, ?, ?, ?)",
-			network, channel.toLowerCase(), msg.time.getTime(), msg.type, JSON.stringify(clonedMsg)
+			network.uuid, channel.name.toLowerCase(), msg.time.getTime(), msg.type, JSON.stringify(clonedMsg)
 		));
 	}
 
@@ -115,20 +126,32 @@ class MessageStorage {
 	 * @param Chan channel - Channel object for which to load messages for
 	 */
 	getMessages(network, channel) {
-		if (!this.isEnabled || Helper.config.maxHistory < 1) {
+		if (!this.isEnabled || Helper.config.maxHistory === 0) {
 			return Promise.resolve([]);
 		}
+
+		// If unlimited history is specified, load 100k messages
+		const limit = Helper.config.maxHistory < 0 ? 100000 : Helper.config.maxHistory;
 
 		return new Promise((resolve, reject) => {
 			this.database.parallelize(() => this.database.all(
 				"SELECT msg, type, time FROM messages WHERE network = ? AND channel = ? ORDER BY time DESC LIMIT ?",
-				[network.uuid, channel.name.toLowerCase(), Helper.config.maxHistory],
+				[network.uuid, channel.name.toLowerCase(), limit],
 				(err, rows) => {
 					if (err) {
 						return reject(err);
 					}
 
-					resolve(rows.map(parseRowToMessage).reverse());
+					resolve(rows.map((row) => {
+						const msg = JSON.parse(row.msg);
+						msg.time = row.time;
+						msg.type = row.type;
+
+						const newMsg = new Msg(msg);
+						newMsg.id = this.client.idMsg++;
+
+						return newMsg;
+					}).reverse());
 				}
 			));
 		});
@@ -172,6 +195,10 @@ class MessageStorage {
 				}
 			);
 		});
+	}
+
+	canProvideMessages() {
+		return this.isEnabled;
 	}
 }
 

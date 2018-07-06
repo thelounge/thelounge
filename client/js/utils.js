@@ -18,11 +18,13 @@ module.exports = {
 	scrollIntoViewNicely,
 	hasRoleInChannel,
 	move,
+	closeChan,
 	resetHeight,
-	setNick,
-	toggleNickEditor,
 	toggleNotificationMarkers,
+	updateTitle,
+	togglePasswordField,
 	requestIdleCallback,
+	togglePreviewMoreButtonsIfNeeded,
 };
 
 function findCurrentNetworkChan(name) {
@@ -41,16 +43,16 @@ function resetHeight(element) {
 	element.style.height = element.style.minHeight;
 }
 
-// Given a channel element will determine if the lounge user is one of the supplied roles.
-function hasRoleInChannel(channel, roles) {
+// Given a channel element will determine if the lounge user or a given nick is one of the supplied roles.
+function hasRoleInChannel(channel, roles, nick) {
 	if (!channel || !roles) {
 		return false;
 	}
 
 	const channelID = channel.data("id");
 	const network = $("#sidebar .network").has(`.chan[data-id="${channelID}"]`);
-	const ownNick = network.data("nick");
-	const user = channel.find(`.names-original .user[data-name="${escape(ownNick)}"]`).first();
+	const target = nick || network.attr("data-nick");
+	const user = channel.find(`.names-original .user[data-name="${escape(target)}"]`).first();
 	return user.parent().is("." + roles.join(", ."));
 }
 
@@ -83,19 +85,6 @@ function join(args) {
 	}
 }
 
-function toggleNickEditor(toggle) {
-	$("#nick").toggleClass("editable", toggle);
-	$("#nick-value").prop("contenteditable", toggle);
-}
-
-function setNick(nick) {
-	// Closes the nick editor when canceling, changing channel, or when a nick
-	// is set in a different tab / browser / device.
-	toggleNickEditor(false);
-
-	$("#nick-value").text(nick);
-}
-
 const favicon = $("#favicon");
 
 function toggleNotificationMarkers(newState) {
@@ -109,6 +98,46 @@ function toggleNotificationMarkers(newState) {
 
 	// Toggles a dot on the menu icon when there are unread notifications
 	viewport.toggleClass("notified", newState);
+}
+
+function updateTitle() {
+	let title = $(document.body).data("app-name");
+	const chanTitle = $("#sidebar").find(".chan.active").attr("aria-label");
+
+	if (chanTitle && chanTitle.length > 0) {
+		title = `${chanTitle} — ${title}`;
+	}
+
+	// add highlight count to title
+	let alertEventCount = 0;
+	$(".badge.highlight").each(function() {
+		alertEventCount += parseInt($(this).attr("data-highlight"));
+	});
+
+	if (alertEventCount > 0) {
+		title = `(${alertEventCount}) ${title}`;
+	}
+
+	document.title = title;
+}
+
+function togglePasswordField(elem) {
+	$(elem).on("click", function() {
+		const $this = $(this);
+		const input = $this.closest("div").find("input");
+
+		input.attr("type", input.attr("type") === "password" ? "text" : "password");
+
+		swapLabel($this);
+		swapLabel($this.find("span"));
+		$this.toggleClass("visible");
+	});
+}
+
+// Given a element, swap its aria-label with the content of `data-alt-label`
+function swapLabel(element) {
+	const altText = element.data("alt-label");
+	element.data("alt-label", element.attr("aria-label")).attr("aria-label", altText);
 }
 
 function confirmExit() {
@@ -132,6 +161,30 @@ function move(array, old_index, new_index) {
 	return array;
 }
 
+function closeChan(chan) {
+	const socket = require("./socket");
+	let cmd = "/close";
+
+	if (chan.hasClass("lobby")) {
+		cmd = "/quit";
+		const server = chan.find(".name").html();
+
+		if (!confirm("Disconnect from " + server + "?")) { // eslint-disable-line no-alert
+			return false;
+		}
+	}
+
+	socket.emit("input", {
+		target: chan.data("id"),
+		text: cmd,
+	});
+	chan.css({
+		transition: "none",
+		opacity: 0.4,
+	});
+	return false;
+}
+
 function requestIdleCallback(callback, timeout) {
 	if (window.requestIdleCallback) {
 		// During an idle period the user agent will run idle callbacks in FIFO order
@@ -140,4 +193,10 @@ function requestIdleCallback(callback, timeout) {
 	} else {
 		callback();
 	}
+}
+
+// Force handling preview display
+function togglePreviewMoreButtonsIfNeeded() {
+	$("#chat .chan.active .toggle-content.toggle-type-link.show")
+		.trigger("showMoreIfNeeded");
 }

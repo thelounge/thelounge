@@ -48,7 +48,7 @@ function openForm(network) {
 }
 
 sidebar.on("click", ".add-channel", function(e) {
-	const id = $(e.target).data("id");
+	const id = $(e.target).closest(".lobby").data("id");
 	const joinForm = $(`#join-channel-${id}`);
 	const network = joinForm.closest(".network");
 
@@ -61,30 +61,36 @@ sidebar.on("click", ".add-channel", function(e) {
 	return false;
 });
 
-sidebar.on("submit", ".join-form", function() {
-	const form = $(this);
-	const channel = form.find("input[name='channel']");
-	const channelString = channel.val();
-	const key = form.find("input[name='key']");
-	const keyString = key.val();
-	const chan = utils.findCurrentNetworkChan(channelString);
+function handleKeybinds(networks) {
+	for (const network of networks) {
+		const form = $(`.network[data-uuid="${network.uuid}"] .join-form`);
 
-	if (chan.length) {
-		chan.trigger("click");
-	} else {
-		socket.emit("input", {
-			text: `/join ${channelString} ${keyString}`,
-			target: form.prev().data("id"),
+		form.find("input,  button").each(function() {
+			Mousetrap(this).bind("esc", () => {
+				closeForm(form.closest(".network"));
+
+				return false;
+			});
+		});
+
+		form.on("submit", () => {
+			const networkElement = form.closest(".network");
+			const channel = form.find("input[name='channel']").val();
+			const key = form.find("input[name='key']").val();
+			const existingChannel = utils.findCurrentNetworkChan(channel);
+
+			if (existingChannel.length) {
+				existingChannel.trigger("click");
+			} else {
+				socket.emit("input", {
+					text: `/join ${channel} ${key}`,
+					target: networkElement.find(".lobby").data("id"),
+				});
+			}
+
+			closeForm(networkElement);
+
+			return false;
 		});
 	}
-
-	closeForm(form.closest(".network"));
-	return false;
-});
-
-function handleKeybinds() {
-	sidebar.find(".join-form input, .join-form button").each(function() {
-		const network = $(this).closest(".network");
-		Mousetrap(this).bind("esc", () => closeForm(network));
-	});
 }

@@ -1,0 +1,38 @@
+#viewport {
+	padding: 5px;
+	padding-left: 0;
+}
+
+#viewport.menu-open { /* On desktop view, .menu-open means menu is closed... */
+	padding-left: 5px;
+}
+
+#viewport #loading, /* ... except on pages without a menu */
+#viewport #sign-in {
+	margin-left: 5px;
+}
+
+#windows .window {
+	border-radius: 5px;
+	box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 768px) {
+	#viewport,
+	#viewport.menu-open {
+		padding: 0;
+	}
+
+	#viewport #loading,
+	#viewport #sign-in {
+		margin-left: 0;
+	}
+
+	#footer .icon {
+		border-radius: 0;
+	}
+
+	#windows .window {
+		border-radius: 0;
+	}
+}

@@ -1,6 +1,7 @@
 "use strict";
 
 const _ = require("lodash");
+const log = require("../../log");
 const Msg = require("../../models/msg");
 const Chan = require("../../models/chan");
 const Helper = require("../../helper");
@@ -106,7 +107,7 @@ module.exports = function(irc, network) {
 
 	if (Helper.config.debug.ircFramework) {
 		irc.on("debug", function(message) {
-			log.debug("[" + client.name + " (#" + client.id + ") on " + network.name + " (#" + network.id + ")]", message);
+			log.debug(`[${client.name} (${client.id}) on ${network.name} (${network.uuid}]`, message);
 		});
 	}
 
@@ -155,14 +156,14 @@ module.exports = function(irc, network) {
 		network.serverOptions.NETWORK = data.options.NETWORK;
 
 		client.emit("network_changed", {
-			network: network.id,
+			network: network.uuid,
 			serverOptions: network.serverOptions,
 		});
 	});
 
 	function sendStatus() {
 		const status = network.getNetworkStatus();
-		status.network = network.id;
+		status.network = network.uuid;
 
 		client.emit("network:status", status);
 	}

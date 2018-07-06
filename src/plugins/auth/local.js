@@ -1,5 +1,6 @@
 "use strict";
 
+const log = require("../../log");
 const Helper = require("../../helper");
 const colors = require("chalk");
 

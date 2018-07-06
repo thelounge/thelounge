@@ -2,6 +2,7 @@
 
 const pkg = require("../package.json");
 const _ = require("lodash");
+const log = require("./log");
 const path = require("path");
 const os = require("os");
 const fs = require("fs");
@@ -14,6 +15,7 @@ let configPath;
 let usersPath;
 let storagePath;
 let packagesPath;
+let userLogsPath;
 
 const Helper = {
 	config: null,
@@ -31,6 +33,9 @@ const Helper = {
 	getGitCommit,
 	ip2hex,
 	mergeConfig,
+	getDefaultNick,
+	parseHostmask,
+	compareHostmask,
 
 	password: {
 		hash: passwordHash,
@@ -50,7 +55,8 @@ Helper.config = require(path.resolve(path.join(
 
 function getVersion() {
 	const gitCommit = getGitCommit();
-	return gitCommit ? `source (${gitCommit})` : `v${pkg.version}`;
+	const version = `v${pkg.version}`;
+	return gitCommit ? `source (${gitCommit} / ${version})` : version;
 }
 
 let _gitCommit;
@@ -60,9 +66,17 @@ function getGitCommit() {
 		return _gitCommit;
 	}
 
+	if (!fs.existsSync(path.resolve(__dirname, "..", ".git", "HEAD"))) {
+		_gitCommit = null;
+		return null;
+	}
+
 	try {
 		_gitCommit = require("child_process")
-			.execSync("git rev-parse --short HEAD 2> /dev/null") // Returns hash of current commit
+			.execSync(
+				"git rev-parse --short HEAD", // Returns hash of current commit
+				{stdio: ["ignore", "pipe", "ignore"]}
+			)
 			.toString()
 			.trim();
 		return _gitCommit;
@@ -79,6 +93,7 @@ function setHome(newPath) {
 	usersPath = path.join(homePath, "users");
 	storagePath = path.join(homePath, "storage");
 	packagesPath = path.join(homePath, "packages");
+	userLogsPath = path.join(homePath, "logs");
 
 	// Reload config from new home location
 	if (fs.existsSync(configPath)) {
@@ -102,6 +117,21 @@ function setHome(newPath) {
 	// Load theme color from manifest.json
 	const manifest = require("../public/manifest.json");
 	this.config.themeColor = manifest.theme_color;
+
+	// TODO: Remove in future release
+	if (["example", "crypto", "zenburn"].includes(this.config.theme)) {
+		if (this.config.theme === "example") {
+			log.warn(`The default theme ${colors.red("example")} was renamed to ${colors.green("default")} as of The Lounge v3.`);
+		} else {
+			log.warn(`The theme ${colors.red(this.config.theme)} was moved to a separate theme as of The Lounge v3.`);
+			log.warn(`Install it with ${colors.bold("thelounge install thelounge-theme-" + this.config.theme)}.`);
+		}
+
+		log.warn(`Falling back to theme ${colors.green("default")} will be removed in a future release.`);
+		log.warn("Please update your configuration file accordingly.");
+
+		this.config.theme = "default";
+	}
 }
 
 function getHomePath() {
@@ -120,8 +150,8 @@ function getUserConfigPath(name) {
 	return path.join(usersPath, name + ".json");
 }
 
-function getUserLogsPath(name, network) {
-	return path.join(homePath, "logs", name, network);
+function getUserLogsPath() {
+	return userLogsPath;
 }
 
 function getStoragePath() {
@@ -176,6 +206,14 @@ function passwordCompare(password, expected) {
 	return bcrypt.compare(password, expected);
 }
 
+function getDefaultNick() {
+	if (!this.config.defaults.nick) {
+		return "thelounge";
+	}
+
+	return this.config.defaults.nick.replace(/%/g, () => Math.floor(Math.random() * 10));
+}
+
 function mergeConfig(oldConfig, newConfig) {
 	return _.mergeWith(oldConfig, newConfig, (objValue, srcValue, key) => {
 		// Do not override config variables if the type is incorrect (e.g. object changed into a string)
@@ -190,4 +228,44 @@ function mergeConfig(oldConfig, newConfig) {
 			return srcValue;
 		}
 	});
+}
+
+function parseHostmask(hostmask) {
+	let nick = "";
+	let ident = "*";
+	let hostname = "*";
+	let parts = [];
+
+	// Parse hostname first, then parse the rest
+	parts = hostmask.split("@");
+
+	if (parts.length >= 2) {
+		hostname = parts[1] || "*";
+		hostmask = parts[0];
+	}
+
+	hostname = hostname.toLowerCase();
+
+	parts = hostmask.split("!");
+
+	if (parts.length >= 2) {
+		ident = parts[1] || "*";
+		hostmask = parts[0];
+	}
+
+	ident = ident.toLowerCase();
+
+	nick = hostmask.toLowerCase() || "*";
+
+	const result = {
+		nick: nick,
+		ident: ident,
+		hostname: hostname,
+	};
+
+	return result;
+}
+
+function compareHostmask(a, b) {
+	return (a.nick.toLowerCase() === b.nick.toLowerCase() || a.nick === "*") && (a.ident.toLowerCase() === b.ident.toLowerCase() || a.ident === "*") && (a.hostname.toLowerCase() === b.hostname.toLowerCase() || a.hostname === "*");
 }

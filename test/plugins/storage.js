@@ -11,11 +11,11 @@ const link = require("../../src/plugins/irc-events/link.js");
 describe("Image storage", function() {
 	this.slow(200);
 
-	const testImagePath = path.resolve(__dirname, "../../client/img/apple-touch-icon-120x120.png");
+	const testImagePath = path.resolve(__dirname, "../../client/img/logo-grey-bg-120x120px.png");
 	const correctImageHash = crypto.createHash("sha256").update(fs.readFileSync(testImagePath)).digest("hex");
 	const correctImageURL = `storage/${correctImageHash.substring(0, 2)}/${correctImageHash.substring(2, 4)}/${correctImageHash.substring(4)}.png`;
 
-	const testSvgPath = path.resolve(__dirname, "../../client/img/logo.svg");
+	const testSvgPath = path.resolve(__dirname, "../../client/img/logo-grey-bg.svg");
 	const correctSvgHash = crypto.createHash("sha256").update(fs.readFileSync(testSvgPath)).digest("hex");
 	const correctSvgURL = `storage/${correctSvgHash.substring(0, 2)}/${correctSvgHash.substring(2, 4)}/${correctSvgHash.substring(4)}.svg`;
 

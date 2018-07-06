@@ -2,16 +2,14 @@
 
 const cheerio = require("cheerio");
 const request = require("request");
-const url = require("url");
-const URI = require("urijs");
+const URL = require("url").URL;
 const mime = require("mime-types");
 const Helper = require("../../helper");
 const cleanIrcMessage = require("../../../client/js/libs/handlebars/ircmessageparser/cleanIrcMessage");
 const findLinks = require("../../../client/js/libs/handlebars/ircmessageparser/findLinks");
 const storage = require("../storage");
-
+const currentFetchPromises = new Map();
 const mediaTypeRegex = /^(audio|video)\/.+/;
-const linkRegex = /^https?:\/\//;
 
 // Fix ECDH curve client compatibility in Node v8/v9
 // This is fixed in Node 10, but The Lounge supports LTS versions
@@ -33,43 +31,49 @@ module.exports = function(client, chan, msg) {
 	// Remove all IRC formatting characters before searching for links
 	const cleanText = cleanIrcMessage(msg.text);
 
-	// We will only try to prefetch http(s) links
-	const links = findLinks(cleanText).filter((w) => linkRegex.test(w.link));
+	msg.previews = findLinks(cleanText).reduce((cleanLinks, link) => {
+		const url = normalizeURL(link.link);
 
-	if (links.length === 0) {
-		return;
-	}
+		// If the URL is invalid and cannot be normalized, don't fetch it
+		if (url === null) {
+			return cleanLinks;
+		}
 
-	msg.previews = Array.from(new Set( // Remove duplicate links
-		links.map((link) => link.link)
-	)).map((link) => ({
-		type: "loading",
-		head: "",
-		body: "",
-		thumb: "",
-		link: link,
-		shown: true,
-	})).slice(0, 5); // Only preview the first 5 URLs in message to avoid abuse
+		// If there are too many urls in this message, only fetch first X valid links
+		if (cleanLinks.length > 4) {
+			return cleanLinks;
+		}
 
-	msg.previews.forEach((preview) => {
-		fetch(normalizeURL(preview.link), {
+		// Do not fetch duplicate links twice
+		if (cleanLinks.some((l) => l.link === link.link)) {
+			return cleanLinks;
+		}
+
+		const preview = {
+			type: "loading",
+			head: "",
+			body: "",
+			thumb: "",
+			link: link.link, // Send original matched link to the client
+			shown: true,
+		};
+
+		cleanLinks.push(preview);
+
+		fetch(url, {
 			accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
 			language: client.language,
-		}, function(res, err) {
-			if (err) {
-				preview.type = "error";
-				preview.error = "message";
-				preview.message = err.message;
-				handlePreview(client, msg, preview, res);
-			}
-
-			if (res === null) {
-				return;
-			}
-
+		}).then((res) => {
 			parse(msg, preview, res, client);
+		}).catch((err) => {
+			preview.type = "error";
+			preview.error = "message";
+			preview.message = err.message;
+			handlePreview(client, msg, preview, null);
 		});
-	});
+
+		return cleanLinks;
+	}, []);
 };
 
 function parseHtml(preview, res, client) {
@@ -82,7 +86,7 @@ function parseHtml(preview, res, client) {
 				preview.type = "link";
 				preview.head =
 					$('meta[property="og:title"]').attr("content")
-					|| $("title").text()
+					|| $("head > title, title").first().text()
 					|| "";
 				preview.body =
 					$('meta[property="og:description"]').attr("content")
@@ -94,18 +98,14 @@ function parseHtml(preview, res, client) {
 					|| $('link[rel="image_src"]').attr("href")
 					|| "";
 
+				// Make sure thumbnail is a valid and absolute url
 				if (preview.thumb.length) {
-					preview.thumb = url.resolve(preview.link, preview.thumb);
-				}
-
-				// Make sure thumbnail is a valid url
-				if (!linkRegex.test(preview.thumb)) {
-					preview.thumb = "";
+					preview.thumb = normalizeURL(preview.thumb, preview.link) || "";
 				}
 
 				// Verify that thumbnail pic exists and is under allowed size
 				if (preview.thumb.length) {
-					fetch(normalizeURL(preview.thumb), {language: client.language}, (resThumb) => {
+					fetch(preview.thumb, {language: client.language}).then((resThumb) => {
 						if (resThumb === null
 						|| !(/^image\/.+/.test(resThumb.type))
 						|| resThumb.size > (Helper.config.prefetchMaxImageSize * 1024)) {
@@ -113,6 +113,9 @@ function parseHtml(preview, res, client) {
 						}
 
 						resolve(resThumb);
+					}).catch(() => {
+						preview.thumb = "";
+						resolve(null);
 					});
 				} else {
 					resolve(res);
@@ -135,21 +138,24 @@ function parseHtmlMedia($, preview, res, client) {
 
 				if (mediaTypeRegex.test(mimeType)) {
 					// If we match a clean video or audio tag, parse that as a preview instead
-					const mediaUrl = $($(`meta[property="og:${type}"]`).get(i)).attr("content");
+					let mediaUrl = $($(`meta[property="og:${type}"]`).get(i)).attr("content");
 
 					// Make sure media is a valid url
-					if (!mediaUrl.startsWith("https://")) {
+					mediaUrl = normalizeURL(mediaUrl, preview.link, true);
+
+					// Make sure media is a valid url
+					if (!mediaUrl) {
 						return;
 					}
 
 					foundMedia = true;
 
-					fetch(normalizeURL(mediaUrl), {
+					fetch(mediaUrl, {
 						accept: type === "video" ?
 							"video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5" :
 							"audio/webm, audio/ogg, audio/wav, audio/*;q=0.9, application/ogg;q=0.7, video/*;q=0.6; */*;q=0.5",
 						language: client.language,
-					}, (resMedia) => {
+					}).then((resMedia) => {
 						if (resMedia === null || !mediaTypeRegex.test(resMedia.type)) {
 							return reject();
 						}
@@ -159,7 +165,7 @@ function parseHtmlMedia($, preview, res, client) {
 						preview.mediaType = resMedia.type;
 
 						resolve(resMedia);
-					});
+					}).catch(reject);
 
 					return false;
 				}
@@ -229,7 +235,7 @@ function parse(msg, preview, res, client) {
 		break;
 
 	default:
-		return;
+		return removePreview(msg, preview);
 	}
 
 	if (!promise) {
@@ -252,7 +258,7 @@ function handlePreview(client, msg, preview, res) {
 		// For link previews, drop the thumbnail
 		// For other types, do not display preview at all
 		if (preview.type !== "link") {
-			return;
+			return removePreview(msg, preview);
 		}
 
 		preview.thumb = "";
@@ -273,12 +279,22 @@ function emitPreview(client, msg, preview) {
 		if (preview.thumb.length || preview.body.length) {
 			preview.head = "Untitled page";
 		} else {
-			return;
+			return removePreview(msg, preview);
 		}
 	}
 
 	const id = msg.id;
 	client.emit("msg:preview", {id, preview});
+}
+
+function removePreview(msg, preview) {
+	// If a preview fails to load, remove the link from msg object
+	// So that client doesn't attempt to display an preview on page reload
+	const index = msg.previews.indexOf(preview);
+
+	if (index > -1) {
+		msg.previews.splice(index, 1);
+	}
 }
 
 function getRequestHeaders(headers) {
@@ -294,73 +310,116 @@ function getRequestHeaders(headers) {
 	return formattedHeaders;
 }
 
-function fetch(uri, headers, cb) {
-	let req;
+function fetch(uri, headers) {
+	// Stringify the object otherwise the objects won't compute to the same value
+	const cacheKey = JSON.stringify([uri, headers]);
+	let promise = currentFetchPromises.get(cacheKey);
 
-	try {
-		req = request.get({
-			url: uri,
-			maxRedirects: 5,
-			timeout: 5000,
-			headers: getRequestHeaders(headers),
-		});
-	} catch (e) {
-		return cb(null, e);
+	if (promise) {
+		return promise;
 	}
 
-	const buffers = [];
-	let length = 0;
-	let limit = Helper.config.prefetchMaxImageSize * 1024;
+	promise = new Promise((resolve, reject) => {
+		let req;
 
-	req
-		.on("response", function(res) {
-			if (/^image\/.+/.test(res.headers["content-type"])) {
-				// response is an image
-				// if Content-Length header reports a size exceeding the prefetch limit, abort fetch
-				const contentLength = parseInt(res.headers["content-length"], 10) || 0;
+		try {
+			req = request.get({
+				url: uri,
+				maxRedirects: 5,
+				timeout: 5000,
+				headers: getRequestHeaders(headers),
+			});
+		} catch (e) {
+			return reject(e);
+		}
 
-				if (contentLength > limit) {
+		const buffers = [];
+		let length = 0;
+		let limit = Helper.config.prefetchMaxImageSize * 1024;
+
+		req
+			.on("response", function(res) {
+				if (/^image\/.+/.test(res.headers["content-type"])) {
+					// response is an image
+					// if Content-Length header reports a size exceeding the prefetch limit, abort fetch
+					const contentLength = parseInt(res.headers["content-length"], 10) || 0;
+
+					if (contentLength > limit) {
+						req.abort();
+					}
+				} else if (mediaTypeRegex.test(res.headers["content-type"])) {
+					// We don't need to download the file any further after we received content-type header
+					req.abort();
+				} else {
+					// if not image, limit download to 50kb, since we need only meta tags
+					// twitter.com sends opengraph meta tags within ~20kb of data for individual tweets
+					limit = 1024 * 50;
+				}
+			})
+			.on("error", (e) => reject(e))
+			.on("data", (data) => {
+				length += data.length;
+				buffers.push(data);
+
+				if (length > limit) {
 					req.abort();
 				}
-			} else if (mediaTypeRegex.test(res.headers["content-type"])) {
-				// We don't need to download the file any further after we received content-type header
-				req.abort();
-			} else {
-				// if not image, limit download to 50kb, since we need only meta tags
-				// twitter.com sends opengraph meta tags within ~20kb of data for individual tweets
-				limit = 1024 * 50;
-			}
-		})
-		.on("error", (e) => cb(null, e))
-		.on("data", (data) => {
-			length += data.length;
-			buffers.push(data);
+			})
+			.on("end", () => {
+				if (req.response.statusCode < 200 || req.response.statusCode > 299) {
+					return reject(new Error(`HTTP ${req.response.statusCode}`));
+				}
 
-			if (length > limit) {
-				req.abort();
-			}
-		})
-		.on("end", () => {
-			if (req.response.statusCode < 200 || req.response.statusCode > 299) {
-				return cb(null, new Error(`HTTP ${req.response.statusCode}`));
-			}
+				let type = "";
+				let size = parseInt(req.response.headers["content-length"], 10) || length;
 
-			let type = "";
-			let size = parseInt(req.response.headers["content-length"], 10) || length;
+				if (size < length) {
+					size = length;
+				}
 
-			if (size < length) {
-				size = length;
-			}
+				if (req.response.headers["content-type"]) {
+					type = req.response.headers["content-type"].split(/ *; */).shift();
+				}
 
-			if (req.response.headers["content-type"]) {
-				type = req.response.headers["content-type"].split(/ *; */).shift();
-			}
+				const data = Buffer.concat(buffers, length);
+				resolve({data, type, size});
+			});
+	});
 
-			const data = Buffer.concat(buffers, length);
-			cb({data, type, size});
-		});
+	const removeCache = () => currentFetchPromises.delete(cacheKey);
+
+	promise.then(removeCache).catch(removeCache);
+
+	currentFetchPromises.set(cacheKey, promise);
+
+	return promise;
 }
 
-function normalizeURL(header) {
-	return URI(header).normalize().toString();
+function normalizeURL(link, baseLink, disallowHttp = false) {
+	try {
+		const url = new URL(link, baseLink);
+
+		// Only fetch http and https links
+		if (url.protocol !== "http:" && url.protocol !== "https:") {
+			return null;
+		}
+
+		if (disallowHttp && url.protocol === "http:") {
+			return null;
+		}
+
+		// Do not fetch links without hostname or ones that contain authorization
+		if (!url.hostname || url.username || url.password) {
+			return null;
+		}
+
+		// Drop hash from the url, if any
+		url.hash = "";
+
+		return url.toString();
+	} catch (e) {
+		// if an exception was thrown, the url is not valid
+	}
+
+	return null;
 }

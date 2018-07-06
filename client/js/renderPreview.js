@@ -1,11 +1,15 @@
 "use strict";
 
 const $ = require("jquery");
+const debounce = require("lodash/debounce");
+const Mousetrap = require("mousetrap");
+
 const options = require("./options");
 const socket = require("./socket");
 const templates = require("../views");
 const chat = $("#chat");
-const Mousetrap = require("mousetrap");
+
+const {togglePreviewMoreButtonsIfNeeded} = require("./utils");
 
 module.exports = renderPreview;
 
@@ -57,7 +61,8 @@ function appendPreview(preview, msg, template) {
 	}
 
 	const container = msg.closest(".chat");
-	const channelId = container.closest(".chan").data("id") || -1;
+	const channel = container.closest(".chan");
+	const channelId = channel.data("id") || -1;
 	const activeChannelId = chat.find(".chan.active").data("id") || -2;
 
 	msg.find(`.text a[href="${escapedLink}"]`)
@@ -66,10 +71,45 @@ function appendPreview(preview, msg, template) {
 
 	previewContainer.append(template);
 
+	const moreBtn = previewContainer.find(".more");
+	const previewContent = previewContainer.find(".toggle-content");
+
+	// Depending on the size of the preview and the text within it, show or hide a
+	// "More" button that allows users to expand without having to open the link.
+	// Warning: Make sure to call this only on active channel, link previews only,
+	// expanded only.
+	const showMoreIfNeeded = () => {
+		const isVisible = moreBtn.is(":visible");
+		const shouldShow = previewContent[0].offsetWidth >= previewContainer[0].offsetWidth;
+
+		if (!isVisible && shouldShow) {
+			moreBtn.show();
+		} else if (isVisible && !shouldShow) {
+			togglePreviewMore(moreBtn, false);
+			moreBtn.hide();
+		}
+	};
+
+	// "More" button only applies on text previews
+	if (preview.type === "link") {
+		// This event is triggered when a side menu is opened/closed, or when the
+		// preview gets expanded/collapsed.
+		previewContent.on("showMoreIfNeeded",
+			() => window.requestAnimationFrame(showMoreIfNeeded)
+		);
+	}
+
 	if (activeChannelId === channelId) {
+		// If this preview is in active channel, hide "More" button if necessary
+		previewContent.trigger("showMoreIfNeeded");
+
 		container.trigger("keepToBottom");
 	}
 }
+
+// On resize, previews in the current channel that are expanded need to compute
+// their "More" button. Debounced handler to avoid performance cost.
+$(window).on("resize", debounce(togglePreviewMoreButtonsIfNeeded, 150));
 
 $("#chat").on("click", ".text .toggle-button", function() {
 	const self = $(this);
@@ -81,6 +121,12 @@ $("#chat").on("click", ".text .toggle-button", function() {
 	self.toggleClass("opened");
 	content.toggleClass("show");
 
+	const isExpanded = content.hasClass("show");
+
+	if (isExpanded) {
+		content.trigger("showMoreIfNeeded");
+	}
+
 	// Tell the server we're toggling so it remembers at page reload
 	// TODO Avoid sending many single events when using `/collapse` or `/expand`
 	// See https://github.com/thelounge/thelounge/issues/1377
@@ -88,7 +134,7 @@ $("#chat").on("click", ".text .toggle-button", function() {
 		target: parseInt(self.closest(".chan").data("id"), 10),
 		msgId: parseInt(self.closest(".msg").prop("id").replace("msg-", ""), 10),
 		link: self.data("url"),
-		shown: content.hasClass("show"),
+		shown: isExpanded,
 	});
 
 	// If scrollbar was at the bottom before toggling the preview, keep it at the bottom
@@ -96,6 +142,24 @@ $("#chat").on("click", ".text .toggle-button", function() {
 		container.scrollBottom();
 	}
 });
+
+$("#chat").on("click", ".toggle-content .more", function() {
+	togglePreviewMore($(this));
+	return false;
+});
+
+function togglePreviewMore(moreBtn, state = undefined) {
+	moreBtn.closest(".toggle-content").toggleClass("opened", state);
+	const isExpanded = moreBtn.closest(".toggle-content").hasClass("opened");
+
+	moreBtn.attr("aria-expanded", isExpanded);
+
+	if (isExpanded) {
+		moreBtn.attr("aria-label", moreBtn.data("opened-text"));
+	} else {
+		moreBtn.attr("aria-label", moreBtn.data("closed-text"));
+	}
+}
 
 /* Image viewer */
 

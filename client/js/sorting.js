@@ -21,7 +21,7 @@ module.exports = function() {
 			const order = [];
 
 			sidebar.find(".network").each(function() {
-				const id = $(this).data("id");
+				const id = $(this).data("uuid");
 				order.push(id);
 			});
 
@@ -54,7 +54,7 @@ module.exports = function() {
 
 			socket.emit("sort", {
 				type: "channels",
-				target: network.data("id"),
+				target: network.data("uuid"),
 				order: order,
 			});
 

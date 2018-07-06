@@ -43,13 +43,13 @@ exports.input = function(network, chan, cmd, args) {
 		}
 	}
 
-	const newChan = new Chan({
+	const newChan = this.createChannel({
 		type: Chan.Type.QUERY,
 		name: target,
 	});
 
 	this.emit("join", {
-		network: network.id,
+		network: network.uuid,
 		chan: newChan.getFilteredClone(true),
 		shouldOpen: true,
 		index: network.addChannel(newChan),

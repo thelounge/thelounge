@@ -6,21 +6,20 @@ module.exports = function(irc, network) {
 	const client = this;
 
 	irc.on("nick", function(data) {
-		let msg;
 		const self = data.nick === irc.user.nick;
 
 		if (self) {
 			network.setNick(data.new_nick);
 
 			const lobby = network.channels[0];
-			msg = new Msg({
+			const msg = new Msg({
 				text: `You're now known as ${data.new_nick}`,
 			});
 			lobby.pushMessage(client, msg, true);
 
 			client.save();
 			client.emit("nick", {
-				network: network.id,
+				network: network.uuid,
 				nick: data.new_nick,
 			});
 		}
@@ -32,12 +31,11 @@ module.exports = function(irc, network) {
 				return;
 			}
 
-			msg = new Msg({
+			const msg = new Msg({
 				time: data.time,
 				from: user,
 				type: Msg.Type.NICK,
 				new_nick: data.new_nick,
-				self: self,
 			});
 			chan.pushMessage(client, msg);
 

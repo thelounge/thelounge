@@ -1,5 +1,6 @@
 "use strict";
 
+const log = require("../../../src/log");
 const ldapAuth = require("../../../src/plugins/auth/ldap");
 const Helper = require("../../../src/helper");
 const ldap = require("thelounge-ldapjs-non-maintained-fork");

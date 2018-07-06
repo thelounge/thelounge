@@ -52,7 +52,7 @@ function processReceivedMessage(data) {
 	const container = channel.find(".messages");
 	const activeChannelId = chat.find(".chan.active").data("id");
 
-	if (data.msg.type === "channel_list" || data.msg.type === "ban_list") {
+	if (data.msg.type === "channel_list" || data.msg.type === "ban_list" || data.msg.type === "ignore_list") {
 		$(container).empty();
 	}
 
@@ -97,7 +97,12 @@ function processReceivedMessage(data) {
 
 	// Clear unread/highlight counter if self-message
 	if (data.msg.self) {
-		sidebarTarget.find(".badge").removeClass("highlight").empty();
+		sidebarTarget.find(".badge")
+			.attr("data-highlight", 0)
+			.removeClass("highlight")
+			.empty();
+
+		utils.updateTitle();
 	}
 
 	let messageLimit = 0;
@@ -129,7 +134,9 @@ function processReceivedMessage(data) {
 }
 
 function notifyMessage(targetId, channel, msg) {
-	const unread = msg.unread;
+	const serverUnread = msg.unread;
+	const serverHighlight = msg.highlight;
+
 	msg = msg.msg;
 
 	if (msg.self) {
@@ -187,8 +194,8 @@ function notifyMessage(targetId, channel, msg) {
 					} else {
 						const notify = new Notification(title, {
 							tag: `chan-${targetId}`,
-							badge: "img/logo-64.png",
-							icon: "img/touch-icon-192x192.png",
+							badge: "img/icon-alerted-black-transparent-bg-72x72px.png",
+							icon: "img/icon-alerted-grey-bg-192x192px.png",
 							body: body,
 							timestamp: timestamp,
 						});
@@ -205,13 +212,17 @@ function notifyMessage(targetId, channel, msg) {
 		}
 	}
 
-	if (!unread || button.hasClass("active")) {
+	if (!serverUnread || button.hasClass("active")) {
 		return;
 	}
 
-	const badge = button.find(".badge").html(helpers_roundBadgeNumber(unread));
+	const badge = button.find(".badge")
+		.attr("data-highlight", serverHighlight)
+		.html(helpers_roundBadgeNumber(serverUnread));
 
 	if (msg.highlight) {
 		badge.addClass("highlight");
+
+		utils.updateTitle();
 	}
 }

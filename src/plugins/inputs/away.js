@@ -6,7 +6,7 @@ exports.input = function(network, chan, cmd, args) {
 	let reason = "";
 
 	if (cmd === "away") {
-		reason = args.length > 0 ? args.join(" ") : " ";
+		reason = args.join(" ") || " ";
 
 		network.irc.raw("AWAY", reason);
 	} else { // back command

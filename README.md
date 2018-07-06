@@ -25,19 +25,19 @@
 	<br>
 	<a href="https://yarn.pm/thelounge"><img
 		alt="npm version"
-		src="https://img.shields.io/npm/v/thelounge.svg?style=flat-square"></a>
+		src="https://img.shields.io/npm/v/thelounge.svg?style=flat-square&maxAge=3600"></a>
 	<a href="https://travis-ci.org/thelounge/thelounge"><img
 		alt="Travis CI Build Status"
-		src="https://img.shields.io/travis/thelounge/thelounge/master.svg?label=linux&style=flat-square"></a>
+		src="https://img.shields.io/travis/thelounge/thelounge/master.svg?label=linux&style=flat-square&maxAge=60"></a>
 	<a href="https://ci.appveyor.com/project/astorije/lounge/branch/master"><img
 		alt="AppVeyor Build Status"
-		src="https://img.shields.io/appveyor/ci/astorije/lounge/master.svg?label=windows&style=flat-square"></a>
+		src="https://img.shields.io/appveyor/ci/astorije/lounge/master.svg?label=windows&style=flat-square&maxAge=60"></a>
 	<a href="https://david-dm.org/thelounge/thelounge"><img
 		alt="Dependencies Status"
-		src="https://img.shields.io/david/thelounge/thelounge.svg?style=flat-square"></a>
+		src="https://img.shields.io/david/thelounge/thelounge.svg?style=flat-square&maxAge=3600"></a>
 	<a href="https://npm-stat.com/charts.html?package=thelounge&from=2016-02-12"><img
 		alt="Total downloads on npm"
-		src="https://img.shields.io/npm/dt/thelounge.svg?colorB=007dc7&style=flat-square"></a>
+		src="https://img.shields.io/npm/dt/thelounge.svg?colorB=007dc7&style=flat-square&maxAge=3600"></a>
 </p>
 
 <p align="center">
@@ -59,7 +59,8 @@ The Lounge is the official and community-managed fork of [Shout](https://github.
 ## Installation and usage
 
 The Lounge requires [Node.js](https://nodejs.org/) v6 or more recent.
-[Yarn package manager](https://yarnpkg.com/) is also recommended *(npm will also work)*.
+[Yarn package manager](https://yarnpkg.com/) is also recommended.  
+If you want to install with npm, `--unsafe-perm` is required for a correct install.
 
 ### Running stable releases using Yarn (recommended)
 
@@ -112,6 +113,6 @@ fork.
 
 Before submitting any change, make sure to:
 
-- Read the [Contributing instructions](https://github.com/thelounge/thelounge/blob/master/CONTRIBUTING.md#contributing)
+- Read the [Contributing instructions](https://github.com/thelounge/thelounge/blob/master/.github/CONTRIBUTING.md#contributing)
 - Run `npm test` to execute linters and test suite
 - Run `npm run build` if you change or add anything in `client/js` or `client/views`

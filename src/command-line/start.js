@@ -1,5 +1,6 @@
 "use strict";
 
+const log = require("../log");
 const colors = require("chalk");
 const fs = require("fs");
 const fsextra = require("fs-extra");

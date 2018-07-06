@@ -22,6 +22,10 @@ function copyMessages() {
 			el.text(`<${el.text()}>`);
 		});
 
+	$(documentFragment)
+		.find(".content > .user")
+		.prepend("* ");
+
 	div.id = "js-copy-hack";
 	div.appendChild(documentFragment);
 	chat.appendChild(div);

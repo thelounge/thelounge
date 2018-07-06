@@ -40,7 +40,7 @@ function handleDisconnect(data) {
 	const message = data.message || data;
 
 	$("#loading-page-message, #connection-error").text(`Waiting to reconnect… (${message})`).addClass("shown");
-	$(".show-more-button, #input").prop("disabled", true);
+	$(".show-more button, #input").prop("disabled", true);
 	$("#submit").hide();
 
 	// If the server shuts down, socket.io skips reconnection

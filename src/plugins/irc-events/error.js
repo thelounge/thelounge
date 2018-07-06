@@ -1,6 +1,7 @@
 "use strict";
 
 const Msg = require("../../models/msg");
+const Helper = require("../../helper");
 
 module.exports = function(irc, network) {
 	const client = this;
@@ -44,7 +45,7 @@ module.exports = function(irc, network) {
 		}
 
 		client.emit("nick", {
-			network: network.id,
+			network: network.uuid,
 			nick: irc.user.nick,
 		});
 	});
@@ -59,11 +60,11 @@ module.exports = function(irc, network) {
 		lobby.pushMessage(client, msg, true);
 
 		if (irc.connection.registered === false) {
-			irc.changeNick("thelounge" + Math.floor(Math.random() * 100));
+			irc.changeNick(Helper.getDefaultNick());
 		}
 
 		client.emit("nick", {
-			network: network.id,
+			network: network.uuid,
 			nick: irc.user.nick,
 		});
 	});

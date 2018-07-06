@@ -7,6 +7,8 @@
 
 	<link rel="preload" as="script" href="js/bundle.vendor.js">
 	<link rel="preload" as="script" href="js/bundle.js">
+
+	<link rel="stylesheet" href="css/primer-tooltips.css">
 	<link rel="stylesheet" href="css/style.css">
 	<link id="theme" rel="stylesheet" href="themes/<%- theme %>.css" data-server-theme="<%- theme %>">
 	<% _.forEach(stylesheets, function(css) { %>
@@ -16,10 +18,28 @@
 
 	<title>The Lounge</title>
 
-	<link rel="shortcut icon" href="img/favicon.png" data-other="img/favicon-notification.png" data-toggled="false" id="favicon">
-	<link rel="apple-touch-icon" sizes="120x120" href="img/apple-touch-icon-120x120.png">
-	<link rel="mask-icon" href="img/logo.svg" color="<%- themeColor %>">
+	<!-- Browser tab icon -->
+	<link id="favicon" rel="icon" sizes="16x16 32x32 64x64" href="img/favicon-normal.ico" data-other="img/favicon-alerted.ico" data-toggled="false" type="image/x-icon">
+
+	<!-- Safari pinned tab icon -->
+	<link rel="mask-icon" href="img/icon-black-transparent-bg.svg" color="#415363">
+
 	<link rel="manifest" href="manifest.json">
+
+	<!-- iPhone 4, iPhone 4s, iPhone 5, iPhone 5c, iPhone 5s, iPhone 6, iPhone 6s, iPhone 7, iPhone 7s, iPhone8 -->
+	<link rel="apple-touch-icon" sizes="120x120" href="img/logo-grey-bg-120x120px.png">
+	<!-- iPad and iPad mini @2x -->
+	<link rel="apple-touch-icon" sizes="152x152" href="img/logo-grey-bg-152x152px.png">
+	<!-- iPad Pro -->
+	<link rel="apple-touch-icon" sizes="167x167" href="img/logo-grey-bg-167x167px.png">
+	<!-- iPhone X, iPhone 8 Plus, iPhone 7 Plus, iPhone 6s Plus, iPhone 6 Plus -->
+	<link rel="apple-touch-icon" sizes="180x180" href="img/logo-grey-bg-180x180px.png">
+
+	<!-- Windows 8/10 - Edge tiles -->
+	<meta name="application-name" content="The Lounge">
+	<meta name="msapplication-TileColor" content="<%- themeColor %>">
+	<meta name="msapplication-square70x70logo" content="img/logo-grey-bg-120x120px.png">
+	<meta name="msapplication-square150x150logo" content="img/logo-grey-bg-152x152px.png">
 
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -30,9 +50,15 @@
 	<body class="signed-out<%- public ? " public" : "" %>" data-transports="<%- JSON.stringify(transports) %>">
 		<div id="viewport" role="tablist">
 			<aside id="sidebar">
-				<div class="networks"></div>
-				<div class="empty">
-					You're not connected to any networks yet.
+				<div class="scrollable-area">
+					<div class="logo-container">
+						<img src="img/logo-<%- public ? 'horizontal-' : '' %>transparent-bg.svg" class="logo" alt="The Lounge">
+						<img src="img/logo-<%- public ? 'horizontal-' : '' %>transparent-bg-inverted.svg" class="logo-inverted" alt="The Lounge">
+					</div>
+					<div class="networks"></div>
+					<div class="empty">
+						You are not connected to any networks yet.
+					</div>
 				</div>
 				<footer id="footer">
 					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Sign in"><button class="icon sign-in" data-target="#sign-in" aria-label="Sign in" role="tab" aria-controls="sign-in" aria-selected="false"></button></span>
@@ -60,18 +86,11 @@
 					<div id="chat"></div>
 					<div id="connection-error"></div>
 					<form id="form" method="post" action="">
-						<div class="input">
-							<span id="nick">
-								<span id="nick-value" spellcheck="false"></span><!-- Comments here remove spaces between elements
-								--><span id="set-nick-tooltip" class="tooltipped tooltipped-e" aria-label="Change nick…"><button id="set-nick" type="button" aria-label="Change nick…"></button></span><!--
-								--><span id="cancel-nick-tooltip" class="tooltipped tooltipped-e" aria-label="Cancel"><button id="cancel-nick" type="button" aria-label="Cancel"></button></span><!--
-								--><span id="save-nick-tooltip" class="tooltipped tooltipped-e" aria-label="Save"><button id="submit-nick" type="button" aria-label="Save"></button></span>
-							</span>
-							<textarea id="input" class="mousetrap"></textarea>
-							<span id="submit-tooltip" class="tooltipped tooltipped-w tooltipped-no-touch" aria-label="Send message">
-								<button id="submit" type="submit" aria-label="Send message"></button>
-							</span>
-						</div>
+						<span id="nick"></span>
+						<textarea id="input" class="mousetrap"></textarea>
+						<span id="submit-tooltip" class="tooltipped tooltipped-w tooltipped-no-touch" aria-label="Send message">
+							<button id="submit" type="submit" aria-label="Send message"></button>
+						</span>
 					</form>
 				</div>
 				<div id="sign-in" class="window" role="tabpanel" aria-label="Sign-in"></div>
@@ -105,10 +124,7 @@
 			</article>
 		</div>
 
-		<div id="context-menu-container">
-			<ul id="context-menu"></ul>
-		</div>
-
+		<div id="context-menu-container"></div>
 		<div id="image-viewer"></div>
 
 		<script src="js/bundle.vendor.js"></script>

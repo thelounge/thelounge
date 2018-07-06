@@ -1,5 +1,6 @@
 "use strict";
 
+const log = require("../../log");
 const Helper = require("../../helper");
 
 // Forked ldapjs for 2 reasons:

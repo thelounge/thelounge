@@ -54,9 +54,9 @@ module.exports = {
 	// Find out how to add new themes at https://thelounge.github.io/docs/plugins/themes.html
 	//
 	// @type     string
-	// @default  "example"
+	// @default  "default"
 	//
-	theme: "example",
+	theme: "default",
 
 	//
 	// Prefetch URLs
@@ -160,33 +160,6 @@ module.exports = {
 	// @default  ["sqlite", "text"]
 	//
 	messageStorage: ["sqlite", "text"],
-
-	//
-	// Log settings
-	//
-	// Logging has to be enabled per user. If enabled, logs will be stored in
-	// the 'logs/<user>/<network>/' folder.
-	//
-	// @type     object
-	// @default  {}
-	//
-	logs: {
-		//
-		// Timestamp format
-		//
-		// @type     string
-		// @default  "YYYY-MM-DD HH:mm:ss"
-		//
-		format: "YYYY-MM-DD HH:mm:ss",
-
-		//
-		// Timezone
-		//
-		// @type     string
-		// @default  "UTC+00:00"
-		//
-		timezone: "UTC+00:00",
-	},
 
 	//
 	// Maximum number of history lines per channel

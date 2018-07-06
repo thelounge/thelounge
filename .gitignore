@@ -4,6 +4,5 @@ yarn-debug.log*
 yarn-error.log*
 package-lock.json
 
-.nyc_output/
 coverage/
 public/

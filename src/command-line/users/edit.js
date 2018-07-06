@@ -1,5 +1,6 @@
 "use strict";
 
+const log = require("../../log");
 const program = require("commander");
 const child = require("child_process");
 const colors = require("chalk");

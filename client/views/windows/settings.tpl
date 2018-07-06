@@ -28,6 +28,10 @@
 			</label>
 			<p class="sync-warning-override"><strong>Warning</strong> Checking this box will override the settings of this client with those stored on the server.</p>
 			<p class="sync-warning-base"><strong>Warning</strong> No settings have been synced before. Enabling this will sync all settings of this client as the base for other clients.</p>
+			<div class="opt force-sync-button">
+				<button type="button" class="btn" id="forceSync">Force sync settings</button>
+				<p>This will override any settings already synced to the server.</p>
+			</div>
 		</div>
 		{{/unless}}
 		<div class="col-sm-12">
@@ -183,17 +187,20 @@
 				<div class="col-sm-12">
 					<h2>Change password</h2>
 				</div>
-				<div class="col-sm-12">
+				<div class="col-sm-12 password-container">
 					<label for="old_password_input" class="sr-only">Enter current password</label>
 					<input type="password" id="old_password_input" name="old_password" class="input" placeholder="Enter current password">
+					{{> ../reveal-password}}
 				</div>
-				<div class="col-sm-12">
+				<div class="col-sm-12 password-container">
 					<label for="new_password_input" class="sr-only">Enter desired new password</label>
 					<input type="password" id="new_password_input" name="new_password" class="input" placeholder="Enter desired new password">
+					{{> ../reveal-password}}
 				</div>
-				<div class="col-sm-12">
+				<div class="col-sm-12 password-container">
 					<label for="verify_password_input" class="sr-only">Repeat new password</label>
 					<input type="password" id="verify_password_input" name="verify_password" class="input" placeholder="Repeat new password">
+					{{> ../reveal-password}}
 				</div>
 				<div class="col-sm-12 feedback"></div>
 				<div class="col-sm-12">

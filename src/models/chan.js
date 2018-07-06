@@ -1,9 +1,10 @@
 "use strict";
 
 const _ = require("lodash");
+const log = require("../log");
 const Helper = require("../helper");
 const User = require("./user");
-const userLog = require("../userLog");
+const Msg = require("./msg");
 const storage = require("../plugins/storage");
 
 module.exports = Chan;
@@ -20,11 +21,9 @@ Chan.State = {
 	JOINED: 1,
 };
 
-let id = 1;
-
 function Chan(attr) {
 	_.defaults(this, attr, {
-		id: id++,
+		id: 0,
 		messages: [],
 		name: "",
 		key: "",
@@ -46,11 +45,28 @@ Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 	const chan = this.id;
 	const obj = {chan, msg};
 
+	msg.id = client.idMsg++;
+
 	// If this channel is open in any of the clients, do not increase unread counter
 	const isOpen = _.find(client.attachedClients, {openChannel: chan}) !== undefined;
 
-	if ((increasesUnread || msg.highlight) && !isOpen) {
-		obj.unread = ++this.unread;
+	if (msg.self) {
+		// reset counters/markers when receiving self-/echo-message
+		this.unread = 0;
+		this.firstUnread = 0;
+		this.highlight = 0;
+	} else if (!isOpen) {
+		if (!this.firstUnread) {
+			this.firstUnread = msg.id;
+		}
+
+		if (increasesUnread || msg.highlight) {
+			obj.unread = ++this.unread;
+		}
+
+		if (msg.highlight) {
+			obj.highlight = ++this.highlight;
+		}
 	}
 
 	client.emit("msg", obj);
@@ -70,20 +86,6 @@ Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 		// so for now, just don't implement dereferencing for this edge case.
 		if (Helper.config.prefetch && Helper.config.prefetchStorage && Helper.config.maxHistory > 0) {
 			this.dereferencePreviews(deleted);
-		}
-	}
-
-	if (msg.self) {
-		// reset counters/markers when receiving self-/echo-message
-		this.firstUnread = 0;
-		this.highlight = 0;
-	} else if (!isOpen) {
-		if (!this.firstUnread) {
-			this.firstUnread = msg.id;
-		}
-
-		if (msg.highlight) {
-			this.highlight++;
 		}
 	}
 };
@@ -180,19 +182,24 @@ Chan.prototype.getFilteredClone = function(lastActiveChannel, lastMessage) {
 Chan.prototype.writeUserLog = function(client, msg) {
 	this.messages.push(msg);
 
-	// Does this user have logs disabled
-	if (!client.config.log) {
+	// Are there any logs enabled
+	if (client.messageStorage.length === 0) {
 		return;
 	}
 
-	// Are logs disabled server-wide
-	if (Helper.config.messageStorage.length === 0) {
-		return;
-	}
+	let targetChannel = this;
 
 	// Is this particular message or channel loggable
 	if (!msg.isLoggable() || !this.isLoggable()) {
-		return;
+		// Because notices are nasty and can be shown in active channel on the client
+		// if there is no open query, we want to always log notices in the sender's name
+		if (msg.type === Msg.Type.NOTICE && msg.showInActive) {
+			targetChannel = {
+				name: msg.from.nick,
+			};
+		} else {
+			return;
+		}
 	}
 
 	// Find the parent network where this channel is in
@@ -202,27 +209,23 @@ Chan.prototype.writeUserLog = function(client, msg) {
 		return;
 	}
 
-	// TODO: Something more pluggable
-	if (Helper.config.messageStorage.includes("sqlite")) {
-		client.messageStorage.index(target.network.uuid, this.name, msg);
-	}
-
-	if (Helper.config.messageStorage.includes("text")) {
-		userLog.write(
-			client.name,
-			target.network.host, // TODO: Fix #1392, multiple connections to same server results in duplicate logs
-			this.type === Chan.Type.LOBBY ? target.network.host : this.name,
-			msg
-		);
+	for (const messageStorage of client.messageStorage) {
+		messageStorage.index(target.network, targetChannel, msg);
 	}
 };
 
 Chan.prototype.loadMessages = function(client, network) {
-	if (!client.messageStorage || !this.isLoggable()) {
+	if (!this.isLoggable()) {
 		return;
 	}
 
-	client.messageStorage
+	const messageStorage = client.messageStorage.find((s) => s.canProvideMessages());
+
+	if (!messageStorage) {
+		return;
+	}
+
+	messageStorage
 		.getMessages(network, this)
 		.then((messages) => {
 			if (messages.length === 0) {

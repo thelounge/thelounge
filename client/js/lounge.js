@@ -4,7 +4,6 @@
 require("jquery-ui/ui/widgets/sortable");
 const $ = require("jquery");
 const moment = require("moment");
-const URI = require("urijs");
 
 // our libraries
 require("./libs/jquery/stickyscroll");
@@ -18,9 +17,7 @@ const utils = require("./utils");
 require("./webpush");
 require("./keybinds");
 require("./clipboard");
-const Changelog = require("./socket-events/changelog");
 const contextMenuFactory = require("./contextMenuFactory");
-const contextMenuContainer = $("#context-menu-container");
 
 $(function() {
 	const sidebar = $("#sidebar, #footer");
@@ -36,6 +33,8 @@ $(function() {
 		}
 
 		storage.set(name, state);
+
+		utils.togglePreviewMoreButtonsIfNeeded();
 	}
 
 	// If sidebar overlay is visible and it is clicked, close the sidebar
@@ -78,11 +77,6 @@ $(function() {
 	viewport.on("click", "#chat .menu", function(e) {
 		e.currentTarget = $(`#sidebar .chan[data-id="${$(this).closest(".chan").data("id")}"]`)[0];
 		return contextMenuFactory.createContextMenu($(this), e).show();
-	});
-
-	contextMenuContainer.on("click contextmenu", function() {
-		contextMenuContainer.hide();
-		return false;
 	});
 
 	function resetInputHeight(input) {
@@ -140,72 +134,18 @@ $(function() {
 		return false;
 	});
 
-	$("button#set-nick").on("click", function() {
-		utils.toggleNickEditor(true);
-
-		// Selects existing nick in the editable text field
-		const element = document.querySelector("#nick-value");
-		element.focus();
-		const range = document.createRange();
-		range.selectNodeContents(element);
-		const selection = window.getSelection();
-		selection.removeAllRanges();
-		selection.addRange(range);
-	});
-
-	$("button#cancel-nick").on("click", cancelNick);
-	$("button#submit-nick").on("click", submitNick);
-
-	function submitNick() {
-		const newNick = $("#nick-value").text().trim();
-
-		if (newNick.length === 0) {
-			cancelNick();
-			return;
-		}
-
-		utils.toggleNickEditor(false);
-
-		socket.emit("input", {
-			target: chat.data("id"),
-			text: "/nick " + newNick,
-		});
-	}
-
-	function cancelNick() {
-		utils.setNick(sidebar.find(".chan.active").closest(".network").data("nick"));
-	}
-
-	$("#nick-value").on("keypress", function(e) {
-		switch (e.keyCode ? e.keyCode : e.which) {
-		case 13: // Enter
-			// Ensures a new line is not added when pressing Enter
-			e.preventDefault();
-			break;
-		}
-	}).on("keyup", function(e) {
-		switch (e.keyCode ? e.keyCode : e.which) {
-		case 13: // Enter
-			submitNick();
-			break;
-		case 27: // Escape
-			cancelNick();
-			break;
-		}
-	});
-
 	chat.on("click", ".inline-channel", function() {
-		const name = $(this).data("chan");
+		const name = $(this).attr("data-chan");
 		const chan = utils.findCurrentNetworkChan(name);
 
 		if (chan.length) {
 			chan.trigger("click");
-		} else {
-			socket.emit("input", {
-				target: chat.data("id"),
-				text: "/join " + name,
-			});
 		}
+
+		socket.emit("input", {
+			target: chat.data("id"),
+			text: "/join " + name,
+		});
 	});
 
 	chat.on("click", ".condensed-summary .content", function() {
@@ -214,10 +154,10 @@ $(function() {
 
 	const openWindow = function openWindow(e, {keepSidebarOpen, pushState, replaceHistory} = {}) {
 		const self = $(this);
-		const target = self.data("target");
+		const target = self.attr("data-target");
 
 		if (!target) {
-			return false;
+			return;
 		}
 
 		// This is a rather gross hack to account for sources that are in the
@@ -242,6 +182,7 @@ $(function() {
 			self.addClass("active")
 				.attr("aria-selected", true)
 				.find(".badge")
+				.attr("data-highlight", 0)
 				.removeClass("highlight")
 				.empty();
 
@@ -277,20 +218,14 @@ $(function() {
 			.addClass("active")
 			.trigger("show");
 
-		let title = $(document.body).data("app-name");
-		const chanTitle = chan.attr("aria-label");
-
-		if (chanTitle.length > 0) {
-			title = `${chanTitle} — ${title}`;
-		}
-
-		document.title = title;
+		utils.togglePreviewMoreButtonsIfNeeded();
+		utils.updateTitle();
 
 		const type = chan.data("type");
 		let placeholder = "";
 
 		if (type === "channel" || type === "query") {
-			placeholder = `Write to ${chanTitle}`;
+			placeholder = `Write to ${chan.attr("aria-label")}`;
 		}
 
 		input
@@ -299,7 +234,7 @@ $(function() {
 
 		if (self.hasClass("chan")) {
 			$("#chat-container").addClass("active");
-			utils.setNick(self.closest(".network").data("nick"));
+			$("#nick").text(self.closest(".network").attr("data-nick"));
 		}
 
 		const chanChat = chan.find(".chat");
@@ -316,15 +251,6 @@ $(function() {
 		if (chan.data("needsNamesRefresh") === true) {
 			chan.data("needsNamesRefresh", false);
 			socket.emit("names", {target: self.data("id")});
-		}
-
-		if (target === "#settings") {
-			$("#session-list").html("<p>Loading…</p>");
-			socket.emit("sessions:get");
-		}
-
-		if (target === "#help" || target === "#changelog") {
-			Changelog.requestIfNeeded();
 		}
 
 		// Pushes states to history web API when clicking elements with a data-target attribute.
@@ -361,93 +287,9 @@ $(function() {
 	$("#help").on("click", "#view-changelog, #back-to-help", openWindow);
 	$("#changelog").on("click", "#back-to-help", openWindow);
 
-	function closeChan(chan) {
-		let cmd = "/close";
-
-		if (chan.hasClass("lobby")) {
-			cmd = "/quit";
-			const server = chan.find(".name").html();
-
-			if (!confirm("Disconnect from " + server + "?")) { // eslint-disable-line no-alert
-				return false;
-			}
-		}
-
-		socket.emit("input", {
-			target: chan.data("id"),
-			text: cmd,
-		});
-		chan.css({
-			transition: "none",
-			opacity: 0.4,
-		});
-		return false;
-	}
-
 	sidebar.on("click", ".close", function() {
-		closeChan($(this).closest(".chan"));
+		utils.closeChan($(this).closest(".chan"));
 	});
-
-	const getCloseDisplay = (target) => {
-		if (target.hasClass("lobby")) {
-			return "Disconnect";
-		} else if (target.hasClass("channel")) {
-			return "Leave";
-		}
-
-		return "Close";
-	};
-
-	contextMenuFactory.addContextMenuItem({
-		check: (target) => target.hasClass("chan"),
-		className: "close",
-		displayName: getCloseDisplay,
-		data: (target) => target.data("target"),
-		callback: (itemData) => closeChan($(`.networks .chan[data-target="${itemData}"]`)),
-	});
-
-	if ($(document.body).hasClass("public") && (window.location.hash === "#connect" || window.location.hash === "")) {
-		$("#connect").one("show", function() {
-			const params = URI(document.location.search).search(true);
-
-			if ("channels" in params) {
-				params.join = params.channels;
-			}
-
-			// Possible parameters:  name, host, port, password, tls, nick, username, realname, join
-			// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in#Iterating_over_own_properties_only
-			for (let key in params) {
-				if (params.hasOwnProperty(key)) {
-					let value = params[key];
-
-					if (key === "join") {
-						const channels = value.split(",");
-						value = channels.map((c) => {
-							if (c.match(/^\w/)) {
-								return "#" + c;
-							}
-
-							return c;
-						}).join(",");
-					}
-
-					// \W searches for non-word characters
-					key = key.replace(/\W/g, "");
-
-					const element = $("#connect input[name='" + key + "']");
-
-					// if the element exists, it isn't disabled, and it isn't hidden
-					if (element.length > 0 && !element.is(":disabled") && !element.is(":hidden")) {
-						if (element.is(":checkbox")) {
-							element.prop("checked", (value === "1" || value === "true") ? true : false);
-						} else {
-							element.val(value);
-						}
-					}
-				}
-			}
-		});
-	}
 
 	$(document).on("visibilitychange focus click", () => {
 		if (sidebar.find(".highlight").length === 0) {

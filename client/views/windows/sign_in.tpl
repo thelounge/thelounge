@@ -2,15 +2,14 @@
 	<img src="img/logo-vertical-transparent-bg.svg" class="logo" alt="The Lounge" width="256" height="170">
 	<img src="img/logo-vertical-transparent-bg-inverted.svg" class="logo-inverted" alt="The Lounge" width="256" height="170">
 
-	<label>
-		Username
-		<input class="input" name="user" autofocus>
-	</label>
+	<label>Username</label>
+	<input class="input" name="user" autofocus>
 
-	<label>
-		Password
+	<div class="password-container">
+		<label>Password</label>
 		<input class="input" type="password" name="password">
-	</label>
+		{{> ../reveal-password}}
+	</div>
 
 	<div class="error">Authentication failed.</div>
 

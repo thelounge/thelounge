@@ -2,7 +2,9 @@
 
 const expect = require("chai").expect;
 const os = require("os");
+const moment = require("moment");
 const Helper = require("../../src/helper");
+const log = require("../../src/log");
 
 describe("Helper", function() {
 	describe("#expandHome", function() {
@@ -35,5 +37,25 @@ describe("Helper", function() {
 		it("should return an empty string when given undefined", function() {
 			expect(Helper.expandHome(undefined)).to.equal("");
 		});
+	});
+
+	describe("#getVersion()", function() {
+		const version = Helper.getVersion();
+
+		it("should mention it is served from source code", function() {
+			expect(version).to.include("source");
+		});
+
+		it("should include a short Git SHA", function() {
+			expect(version).to.match(/\([0-9a-f]{7,11} /);
+		});
+
+		it("should include a valid semver version", function() {
+			expect(version).to.match(/v[0-9]+\.[0-9]+\.[0-9]+/);
+		});
+	});
+
+	describe("#getHumanDate()", function() {
+		expect(log.getHumanDate()).to.equal(moment().format("YYYY-MM-DD HH:mm:ss"));
 	});
 });

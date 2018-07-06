@@ -1,5 +1,6 @@
 "use strict";
 
+const log = require("./log");
 const fs = require("fs");
 const net = require("net");
 const colors = require("chalk");
@@ -47,8 +48,8 @@ class Identification {
 	respondToIdent(socket, data) {
 		data = data.toString().split(",");
 
-		const lport = parseInt(data[0]);
-		const fport = parseInt(data[1]);
+		const lport = parseInt(data[0], 10) || 0;
+		const fport = parseInt(data[1], 10) || 0;
 
 		if (lport < 1 || fport < 1 || lport > 65535 || fport > 65535) {
 			return;
