@@ -510,8 +510,8 @@ kbd {
 	opacity: 1;
 }
 
-#viewport.rt #chat .userlist {
-	display: none;
+#viewport.userlist-open #chat .userlist {
+	display: flex;
 }
 
 #sidebar {
@@ -1051,14 +1051,10 @@ background on hover (unless active) */
 	-webkit-overflow-scrolling: touch;
 }
 
-#viewport.rt .chat {
-	right: 0;
-}
-
 #chat .userlist {
 	border-left: 1px solid #e7e7e7;
 	width: 180px;
-	display: flex;
+	display: none;
 	flex-direction: column;
 	flex-shrink: 0;
 	touch-action: pan-y;
@@ -2413,8 +2409,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		transition: transform 0.2s;
 	}
 
-	#viewport.rt #chat .userlist {
-		display: flex;
+	#viewport.userlist-open #chat .userlist {
 		transform: translateX(0);
 	}
 
