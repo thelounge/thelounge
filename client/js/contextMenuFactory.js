@@ -127,57 +127,35 @@ function addCloseItem() {
 }
 
 function addConnectItem() {
-	let clickedNetwork;
-
-	function isDisconnected(target) {
-		return target.parent().hasClass("not-connected");
-	}
-
-	function connect() {
+	function connect(itemData) {
 		socket.emit("input", {
-			target: $("#chat").data("id"),
+			target: Number(itemData),
 			text: "/connect",
 		});
 	}
 
-	function check(target) {
-		clickedNetwork = target;
-		return target.hasClass("lobby") && isDisconnected(target);
-	}
-
 	addContextMenuItem({
-		check: check,
+		check: (target) => target.hasClass("lobby") && target.parent().hasClass("not-connected"),
 		className: "connect",
 		displayName: "Connect",
-		data: () => clickedNetwork.data("id"),
+		data: (target) => target.data("id"),
 		callback: connect,
 	});
 }
 
 function addDisconnectItem() {
-	let clickedNetwork;
-
-	function isConnected(target) {
-		return !target.parent().hasClass("not-connected");
-	}
-
-	function disconnect() {
+	function disconnect(itemData) {
 		socket.emit("input", {
-			target: $("#chat").data("id"),
+			target: Number(itemData),
 			text: "/disconnect",
 		});
 	}
 
-	function check(target) {
-		clickedNetwork = target;
-		return target.hasClass("lobby") && isConnected(target);
-	}
-
 	addContextMenuItem({
-		check: check,
+		check: (target) => target.hasClass("lobby") && !target.parent().hasClass("not-connected"),
 		className: "disconnect",
 		displayName: "Disconnect",
-		data: () => clickedNetwork.data("id"),
+		data: (target) => target.data("id"),
 		callback: disconnect,
 	});
 }
