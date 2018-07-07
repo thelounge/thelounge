@@ -305,13 +305,14 @@ kbd {
 	height: auto;
 	width: 200px;
 	transition: ease-in-out 0.3s width;
+	background: transparent;
+	color: var(--body-color);
 }
 
 .window .header button.search::before {
 	content: "\f002"; /* http://fontawesome.io/icon/search/ */
 	line-height: 36px; /* fix alignment in Microsoft Edge */
 	width: 36px;
-	color: #607992;
 }
 
 #search .header .lt {
@@ -361,7 +362,7 @@ kbd {
 
 @media (min-width: 769px) {
 	.window .header button.search {
-		display: none;
+		display: none !important;
 	}
 
 	#search .results {
@@ -566,7 +567,8 @@ body:not(.search-enabled) .window .header .search {
 
 #viewport .lt,
 #viewport .rt,
-#chat button.menu {
+#chat button.menu,
+#chat button.search {
 	color: #607992;
 	display: flex;
 	font-size: 14px;
