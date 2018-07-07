@@ -297,15 +297,11 @@ $(function() {
 		}
 	});
 
-	// Handle search box
+	// Handle search toggling on mobile
 	$("#windows").on("click", ".header button.search", (e) => {
 		e.preventDefault();
 		$(".window .active .header div.search .input-container").toggleClass("open");
-		// Only focus the field after the CSS animation has completed.
-		// This prevents the chrome autocomplete appearing on top of the input on Android.
-		setTimeout(function() {
-			$(".window .active .header div.search .input-container input").focus();
-		}, 300);
+		$(".window .active .header div.search .input-container input").focus();
 	});
 
 	// Compute how many milliseconds are remaining until the next day starts

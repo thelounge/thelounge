@@ -104,7 +104,10 @@
 						<button class="lt" aria-label="Toggle channel list"></button>
 
 						<span class="title">Search</span>
-						<span class="topic"></span>
+						<span class="topic">
+							<span class="search-target"></span>
+							<span class="search-result-count"></span>
+						</span>
 
 						<div class="search">
 							<form class="" method="post" action="" data-event="search">
@@ -117,7 +120,6 @@
 							</form>
 						</div>
 
-						<div class="search-result-count"></div>
 					</div>
 					<div class="results" id="chat">
 						<div class="channel messages"></div>
