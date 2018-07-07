@@ -628,7 +628,19 @@ function performAuthentication(data) {
 	const finalInit = () => initializeClient(socket, client, token, data.lastMessage || -1);
 
 	const initClient = () => {
-		socket.emit("configuration", getClientConfiguration());
+		const config = getClientConfiguration();
+
+		// Add flag for search capability
+		config.searchEnabled = false;
+
+		for (const storage of client.messageStorage) {
+			if (storage.canProvideMessages()) {
+				config.searchEnabled = true;
+				break;
+			}
+		}
+
+		socket.emit("configuration", config);
 
 		client.ip = getClientIp(socket);
 		client.language = getClientLanguage(socket);

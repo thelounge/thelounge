@@ -127,6 +127,11 @@ socket.on("configuration", function(data) {
 			parseOverrideParams(params, data);
 		}
 	}
+
+	// Show the search form if searching is enabled
+	if (data.searchEnabled) {
+		$(document.body).addClass("search-enabled");
+	}
 });
 
 function parseIrcUri(stringUri, defaults) {

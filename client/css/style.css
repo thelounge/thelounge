@@ -374,6 +374,10 @@ kbd {
 	}
 }
 
+body:not(.search-enabled) .window .header .search {
+	display: none !important;
+}
+
 .context-menu-join::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
 .context-menu-user::before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
 .context-menu-close::before { content: "\f00d"; /* http://fontawesome.io/icon/times/ */ }
