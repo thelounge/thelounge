@@ -21,6 +21,14 @@ module.exports = function(irc, network) {
 	const lobby = network.channels[0];
 
 	irc.on("ctcp response", function(data) {
+		const shouldIgnore = network.ignoreList.some(function(entry) {
+			return Helper.compareHostmask(entry, data);
+		});
+
+		if (shouldIgnore) {
+			return;
+		}
+
 		let chan = network.getChannel(data.nick);
 
 		if (typeof chan === "undefined") {
@@ -38,6 +46,14 @@ module.exports = function(irc, network) {
 
 	// Limit requests to a rate of one per second max
 	irc.on("ctcp request", _.throttle((data) => {
+		const shouldIgnore = network.ignoreList.some(function(entry) {
+			return Helper.compareHostmask(entry, data);
+		});
+
+		if (shouldIgnore) {
+			return;
+		}
+
 		const response = ctcpResponses[data.type];
 
 		if (response) {
