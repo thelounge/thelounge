@@ -3,7 +3,7 @@
 	<img src="img/logo-vertical-transparent-bg-inverted.svg" class="logo-inverted" alt="The Lounge" width="256" height="170">
 
 	<label>Username</label>
-	<input class="input" name="user" autofocus>
+	<input class="input" name="user" autocapitalize="none" autofocus>
 
 	<div class="password-container">
 		<label>Password</label>
