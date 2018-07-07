@@ -492,8 +492,10 @@ describe("Link plugin", function() {
 		this.irc.language = "first language";
 		link(this.irc, this.network.channels[0], message);
 
-		this.irc.language = "second language";
-		link(this.irc, this.network.channels[0], message);
+		setTimeout(() => {
+			this.irc.language = "second language";
+			link(this.irc, this.network.channels[0], message);
+		}, 100);
 
 		app.get("/basic-og-once-lang", function(req, res) {
 			requests.push(req.header("accept-language"));
