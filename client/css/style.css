@@ -297,7 +297,6 @@ kbd {
 	align-items: stretch;
 	justify-content: stretch;
 	background-color: var(--window-bg-color);
-	border-bottom: 1px solid #e7e7e7;
 }
 
 .window .header .search .input {
@@ -348,6 +347,7 @@ kbd {
 		padding: 6px;
 		transform-origin: top right;
 		display: none;
+		border-bottom: 1px solid #e7e7e7;
 	}
 
 	#search .header .search .input-container,
