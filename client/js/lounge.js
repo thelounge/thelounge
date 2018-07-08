@@ -185,7 +185,18 @@ $(function() {
 				channel.channel.unread = 0;
 			}
 
-			if (sidebar.find(".highlight").length === 0) {
+			let hasAnyHighlights = false;
+
+			for (const network of vueApp.networks) {
+				for (const channel of network.channels) {
+					if (channel.highlight > 0) {
+						hasAnyHighlights = true;
+						break;
+					}
+				}
+			}
+
+			if (!hasAnyHighlights) {
 				utils.toggleNotificationMarkers(false);
 			}
 
@@ -291,9 +302,15 @@ $(function() {
 	});
 
 	$(document).on("visibilitychange focus click", () => {
-		if (sidebar.find(".highlight").length === 0) {
-			utils.toggleNotificationMarkers(false);
+		for (const network of vueApp.networks) {
+			for (const channel of network.channels) {
+				if (channel.highlight > 0) {
+					return;
+				}
+			}
 		}
+
+		utils.toggleNotificationMarkers(false);
 	});
 
 	// Compute how many milliseconds are remaining until the next day starts
