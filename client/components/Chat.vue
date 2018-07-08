@@ -45,19 +45,16 @@
 				</div>
 				<div class="chat-content">
 					<div class="chat">
-						<div
-							v-if="channel.messages.length > 0"
-							ref="loadMoreButton"
-							:disabled="channel.historyLoading"
-							class="show-more show"
-							@click="onShowMoreClick"
-						>
+						<div class="show-more">
 							<button
-								v-if="channel.historyLoading"
-								class="btn">Loading…</button>
-							<button
-								v-else
-								class="btn">Show older messages</button>
+								ref="loadMoreButton"
+								:disabled="channel.historyLoading || !$root.connected"
+								class="btn"
+								@click="onShowMoreClick"
+							>
+								<span v-if="channel.historyLoading">Loading…</span>
+								<span v-else>Show older messages</span>
+							</button>
 						</div>
 						<MessageList :channel="channel"/>
 					</div>

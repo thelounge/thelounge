@@ -7,18 +7,11 @@ const {vueApp, findChannel} = require("../vue");
 
 socket.on("more", function(data) {
 	let chan = $("#chat #chan-" + data.chan);
-	const type = chan.data("type");
 	chan = chan.find(".messages");
 
 	// get the scrollable wrapper around messages
 	const scrollable = chan.closest(".chat");
 	const heightOld = chan.height() - scrollable.scrollTop();
-
-	// If there are no more messages to show, just hide the button and do nothing else
-	if (!data.messages.length) {
-		scrollable.find(".show-more").removeClass("show");
-		return;
-	}
 
 	const channel = findChannel(data.chan);
 
