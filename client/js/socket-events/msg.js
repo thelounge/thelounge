@@ -107,16 +107,11 @@ function processReceivedMessage(data) {
 		render.trimMessageInChannel(channelContainer, messageLimit);
 	}
 
-	if ((data.msg.type === "message" || data.msg.type === "action") && channelContainer.hasClass("channel")) {
-		const nicks = channelContainer.find(".userlist").data("nicks");
+	if ((data.msg.type === "message" || data.msg.type === "action") && channel.channel.type === "channel") {
+		const user = channel.channel.users.find((u) => u.nick === data.msg.from.nick);
 
-		if (nicks) {
-			const find = nicks.indexOf(data.msg.from.nick);
-
-			if (find !== -1) {
-				nicks.splice(find, 1);
-				nicks.unshift(data.msg.from.nick);
-			}
+		if (user) {
+			user.lastMessage = (new Date(data.msg.time)).getTime() || Date.now();
 		}
 	}
 }

@@ -5,21 +5,22 @@ const $ = require("jquery");
 const moment = require("moment");
 
 // our libraries
-require("./libs/jquery/stickyscroll");
-const slideoutMenu = require("./slideout");
-const templates = require("../views");
 const socket = require("./socket");
-require("./socket-events");
-const storage = require("./localStorage");
-const utils = require("./utils");
-require("./webpush");
-require("./keybinds");
-require("./clipboard");
-const contextMenuFactory = require("./contextMenuFactory");
 
 const {vueApp, findChannel} = require("./vue");
 
-$(function() {
+window.vueMounted = () => {
+	require("./socket-events");
+	require("./libs/jquery/stickyscroll");
+	const slideoutMenu = require("./slideout");
+	const templates = require("../views");
+	const contextMenuFactory = require("./contextMenuFactory");
+	const storage = require("./localStorage");
+	const utils = require("./utils");
+	require("./webpush");
+	require("./keybinds");
+	require("./clipboard");
+
 	const sidebar = $("#sidebar, #footer");
 	const chat = $("#chat");
 
@@ -354,4 +355,4 @@ $(function() {
 
 	// Only start opening socket.io connection after all events have been registered
 	socket.open();
-});
+};
