@@ -35,7 +35,6 @@ exports.input = function(network, chan, cmd, args) {
 		network.channels = _.without(network.channels, target);
 		target.destroy();
 		this.emit("part", {
-			network: network.uuid,
 			chan: target.id,
 		});
 		this.save();

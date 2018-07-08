@@ -2,7 +2,7 @@
 
 const $ = require("jquery");
 const socket = require("../socket");
-const {vueApp} = require("../vue");
+const {vueApp, findChannel} = require("../vue");
 
 socket.on("part", function(data) {
 	// When parting from the active channel/query, jump to the network's lobby
@@ -13,6 +13,9 @@ socket.on("part", function(data) {
 			.trigger("click");
 	}
 
-	const network = vueApp.networks.find((n) => n.uuid === data.network);
-	network.channels.splice(network.channels.findIndex((c) => c.id === data.chan), 1);
+	const channel = findChannel(data.chan);
+
+	if (channel) {
+		channel.network.channels.splice(channel.network.channels.findIndex((c) => c.id === data.chan), 1);
+	}
 });
