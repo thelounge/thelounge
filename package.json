@@ -22,7 +22,7 @@
     "test:browser": "webpack-dev-server --config=webpack.config-browser.js",
     "test:client": "nyc --nycrc-path=test/.nycrc-mocha-webpack mocha-webpack --colors --opts=test/mocha-webpack.opts",
     "test:server": "nyc --nycrc-path=test/.nycrc-mocha mocha --colors",
-    "watch": "webpack --watch"
+    "watch": "webpack-dev-server --hot --inline"
   },
   "keywords": [
     "lounge",
