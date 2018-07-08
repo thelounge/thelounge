@@ -3,12 +3,12 @@
 const $ = require("jquery");
 const socket = require("../socket");
 const sidebar = $("#sidebar");
-const {Vue, vueApp} = require("../vue");
+const {vueApp} = require("../vue");
 
 socket.on("quit", function(data) {
 	vueApp.networks.splice(vueApp.networks.findIndex((n) => n.uuid === data.network), 1);
 
-	Vue.nextTick(() => {
+	vueApp.$nextTick(() => {
 		const chan = sidebar.find(".chan");
 
 		if (chan.length === 0) {

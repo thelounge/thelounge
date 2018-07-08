@@ -2,7 +2,6 @@
 
 const $ = require("jquery");
 const io = require("socket.io-client");
-const utils = require("./utils");
 
 const socket = io({
 	transports: $(document.body).data("transports"),
@@ -51,6 +50,7 @@ function handleDisconnect(data) {
 	// If the server shuts down, socket.io skips reconnection
 	// and we have to manually call connect to start the process
 	if (socket.io.skipReconnect) {
+		const utils = require("./utils");
 		utils.requestIdleCallback(() => socket.connect(), 2000);
 	}
 }
