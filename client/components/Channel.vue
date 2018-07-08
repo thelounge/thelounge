@@ -1,13 +1,14 @@
 <template>
 	<div
+		v-if="!network.isCollapsed || channel.highlight || channel.type === 'lobby'"
 		:key="channel.id"
-		:class="[ channel.type, { active: activeChannel && channel.id === activeChannel.channel.id } ]"
+		:class="[ channel.type, { active: activeChannel && channel === activeChannel.channel } ]"
 		:aria-label="channel.name"
 		:title="channel.name"
 		:data-id="channel.id"
 		:data-target="'#chan-' + channel.id"
 		:aria-controls="'#chan-' + channel.id"
-		:aria-selected="activeChannel && channel.id === activeChannel.channel.id"
+		:aria-selected="activeChannel && channel === activeChannel.channel"
 		class="chan"
 		role="tab"
 	>
@@ -15,9 +16,10 @@
 			<button
 				v-if="network.channels.length > 1"
 				:aria-controls="'network-' + network.uuid"
+				:aria-label="getExpandLabel(network)"
+				:aria-expanded="!network.isCollapsed"
 				class="collapse-network"
-				aria-label="Collapse"
-				aria-expanded="true"
+				@click.prevent="onCollapseClick"
 			>
 				<span class="collapse-network-icon"/>
 			</button>
@@ -84,12 +86,31 @@
 </template>
 
 <script>
+const storage = require("../js/localStorage");
+
 export default {
 	name: "Channel",
 	props: {
 		activeChannel: Object,
 		network: Object,
 		channel: Object,
+	},
+	methods: {
+		onCollapseClick() {
+			const networks = new Set(JSON.parse(storage.get("thelounge.networks.collapsed")));
+			this.network.isCollapsed = !this.network.isCollapsed;
+
+			if (this.network.isCollapsed) {
+				networks.add(this.network.uuid);
+			} else {
+				networks.delete(this.network.uuid);
+			}
+
+			storage.set("thelounge.networks.collapsed", JSON.stringify([...networks]));
+		},
+		getExpandLabel(network) {
+			return network.isCollapsed ? "Expand" : "Collapse";
+		},
 	},
 };
 </script>

@@ -16,7 +16,11 @@
 		<div
 			v-for="network in networks"
 			:key="network.uuid"
-			:class="{ 'not-connected': !network.status.connected, 'not-secure': !network.status.secure }"
+			:class="{
+				collapsed: network.isCollapsed,
+				'not-connected': !network.status.connected,
+				'not-secure': !network.status.secure,
+			}"
 			:id="'network-' + network.uuid"
 			:data-uuid="network.uuid"
 			:data-nick="network.nick"
