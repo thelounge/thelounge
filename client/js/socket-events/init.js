@@ -21,6 +21,12 @@ socket.on("init", function(data) {
 		previousActive = sidebar.find(".active").data("id");
 	}
 
+	const networks = new Set(JSON.parse(storage.get("thelounge.networks.collapsed")));
+
+	for (const network of data.networks) {
+		network.isCollapsed = networks.has(network.uuid);
+	}
+
 	vueApp.networks = data.networks;
 
 	if (data.networks.length > 0) {

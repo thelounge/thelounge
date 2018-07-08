@@ -3,11 +3,11 @@
 		<div class="count">
 			<input
 				:placeholder="channel.users.length + ' user' + (channel.users.length === 1 ? '' : 's')"
+				v-model="userSearchInput"
 				type="search"
 				class="search"
 				aria-label="Search among the user list"
 				tabindex="-1"
-				v-model="userSearchInput"
 			>
 		</div>
 		<div class="names">
@@ -57,7 +57,7 @@ export default {
 	props: {
 		channel: Object,
 	},
-	data: function() {
+	data() {
 		return {
 			userSearchInput: "",
 		};
@@ -100,9 +100,6 @@ export default {
 	methods: {
 		getModeClass(mode) {
 			return modes[mode];
-		},
-		onInput(e) {
-			console.log(this.channel.userSearchInput);
 		},
 	},
 };
