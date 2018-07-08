@@ -5,7 +5,6 @@ const socket = require("../socket");
 const render = require("../render");
 const utils = require("../utils");
 const options = require("../options");
-const helpers_roundBadgeNumber = require("../libs/handlebars/roundBadgeNumber");
 const cleanIrcMessage = require("../libs/handlebars/ircmessageparser/cleanIrcMessage");
 const webpush = require("../webpush");
 const chat = $("#chat");
@@ -34,11 +33,10 @@ function processReceivedMessage(data) {
 	let channelContainer = chat.find(target);
 	let channel = findChannel(data.chan);
 
-	// Clear unread/highlight counter if self-message
-	if (data.msg.self) {
-		channel.channel.highlight = 0;
-		channel.channel.unread = 0;
+	channel.channel.highlight = data.highlight;
+	channel.channel.unread = data.unread;
 
+	if (data.msg.self || data.msg.highlight) {
 		utils.updateTitle();
 	}
 
@@ -206,19 +204,5 @@ function notifyMessage(targetId, channel, msg) {
 				}
 			}
 		}
-	}
-
-	if (!serverUnread || button.hasClass("active")) {
-		return;
-	}
-
-	const badge = button.find(".badge")
-		.attr("data-highlight", serverHighlight)
-		.html(helpers_roundBadgeNumber(serverUnread));
-
-	if (msg.highlight) {
-		badge.addClass("highlight");
-
-		utils.updateTitle();
 	}
 }
