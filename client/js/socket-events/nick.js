@@ -1,14 +1,12 @@
 "use strict";
 
-const $ = require("jquery");
 const socket = require("../socket");
+const {vueApp} = require("../vue");
 
 socket.on("nick", function(data) {
-	const id = data.network;
-	const nick = data.nick;
-	const network = $(`#sidebar .network[data-uuid="${id}"]`).attr("data-nick", nick);
+	const network = vueApp.networks.find((n) => n.uuid === data.network);
 
-	if (network.find(".active").length) {
-		$("#nick").text(nick);
+	if (network) {
+		network.nick = data.nick;
 	}
 });

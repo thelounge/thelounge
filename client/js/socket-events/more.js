@@ -5,6 +5,7 @@ const socket = require("../socket");
 const render = require("../render");
 const condensed = require("../condensed");
 const chat = $("#chat");
+const {Vue, vueApp, findChannel} = require("../vue");
 
 socket.on("more", function(data) {
 	let chan = chat.find("#chan-" + data.chan);
@@ -21,51 +22,30 @@ socket.on("more", function(data) {
 		return;
 	}
 
-	// Remove the date marker at the top if date does not change
-	const children = $(chan).children();
+	const channel = findChannel(data.chan);
 
-	// Check the top-most element and the one after because
-	// unread and date markers may switch positions
-	for (let i = 0; i <= 1; i++) {
-		const marker = children.eq(i);
-
-		if (marker.hasClass("date-marker-container")) {
-			const msgTime = new Date(data.messages[data.messages.length - 1].time);
-			const prevMsgTime = new Date(marker.data("time"));
-
-			if (prevMsgTime.toDateString() === msgTime.toDateString()) {
-				marker.remove();
-			}
-
-			break;
-		}
+	if (!channel) {
+		return;
 	}
 
-	// Add the older messages
-	const documentFragment = render.buildChannelMessages($(document.createDocumentFragment()), data.chan, type, data.messages);
-	chan.prepend(documentFragment);
+	channel.channel.messages.unshift(...data.messages);
 
-	// Move unread marker to correct spot if needed
-	const unreadMarker = chan.find(".unread-marker");
-	const firstUnread = unreadMarker.data("unread-id");
+	Vue.nextTick(() => {
+		// restore scroll position
+		const position = chan.height() - heightOld;
+		scrollable.finish().scrollTop(position);
+	});
 
-	if (firstUnread > 0) {
-		let first = chan.find("#msg-" + firstUnread);
-
-		if (!first.length) {
-			chan.prepend(unreadMarker);
-		} else {
-			const parent = first.parent();
-
-			if (parent.hasClass("condensed")) {
-				first = parent;
-			}
-
-			unreadMarker.data("unread-id", 0);
-
-			first.before(unreadMarker);
-		}
+	if (data.messages.length !== 100) {
+		scrollable.find(".show-more").removeClass("show");
 	}
+
+	// Swap button text back from its alternative label
+	const showMoreBtn = scrollable.find(".show-more button");
+	swapText(showMoreBtn);
+	showMoreBtn.prop("disabled", false);
+
+	return;
 
 	// Join duplicate condensed messages together
 	const condensedDuplicate = chan.find(".msg.condensed + .msg.condensed");
@@ -81,25 +61,6 @@ socket.on("more", function(data) {
 
 		condensedDuplicate.remove();
 	}
-
-	// restore scroll position
-	const position = chan.height() - heightOld;
-	scrollable.finish().scrollTop(position);
-
-	// We have to do this hack due to smooth scrolling in browsers,
-	// as scrollTop does not apply correctly
-	if (window.requestAnimationFrame) {
-		window.requestAnimationFrame(() => scrollable.scrollTop(position));
-	}
-
-	if (data.messages.length !== 100) {
-		scrollable.find(".show-more").removeClass("show");
-	}
-
-	// Swap button text back from its alternative label
-	const showMoreBtn = scrollable.find(".show-more button");
-	swapText(showMoreBtn);
-	showMoreBtn.prop("disabled", false);
 });
 
 chat.on("click", ".show-more button", function() {
