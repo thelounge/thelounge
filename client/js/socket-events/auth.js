@@ -21,7 +21,6 @@ socket.on("auth", function(data) {
 	if (data.serverHash > -1) {
 		utils.serverHash = data.serverHash;
 
-		$("#loading").remove();
 		login.html(templates.windows.sign_in());
 
 		utils.togglePasswordField("#sign-in .reveal-password");
@@ -81,6 +80,7 @@ socket.on("auth", function(data) {
 		return;
 	}
 
+	$("#loading").remove();
 	$("#footer")
 		.find(".sign-in")
 		.trigger("click", {

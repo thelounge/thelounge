@@ -1635,7 +1635,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	flex-grow: 0;
 }
 
-#loading .logo-inverted {
+#loading .logo-inverted,
+#windows .logo-inverted {
 	display: none; /* In dark themes, inverted logo must be used instead */
 }
 
