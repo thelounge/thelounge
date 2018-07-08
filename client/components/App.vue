@@ -59,38 +59,7 @@
 		</aside>
 		<div id="sidebar-overlay"/>
 		<article id="windows">
-			<div
-				id="chat-container"
-				class="window">
-				<div id="chat">
-					<!--Chat v-if="activeChannel" :channel="activeChannel.channel"/-->
-					<template v-for="network in networks">
-						<Chat
-							v-for="channel in network.channels"
-							:key="channel.id"
-							:channel="channel"/>
-					</template>
-				</div>
-				<div id="connection-error"/>
-				<form
-					id="form"
-					method="post"
-					action="">
-					<span id="nick"/>
-					<textarea
-						id="input"
-						class="mousetrap"/>
-					<span
-						id="submit-tooltip"
-						class="tooltipped tooltipped-w tooltipped-no-touch"
-						aria-label="Send message">
-						<button
-							id="submit"
-							type="submit"
-							aria-label="Send message"/>
-					</span>
-				</form>
-			</div>
+			<Chat v-if="activeChannel" :network="activeChannel.network" :channel="activeChannel.channel"/>
 			<div
 				id="sign-in"
 				class="window"

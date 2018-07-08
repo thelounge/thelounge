@@ -60,13 +60,7 @@ function processReceivedMessage(data) {
 		$(container).empty();
 	}
 
-	// Add message to the container
-	render.appendMessage(
-		container,
-		targetId,
-		channelContainer.data("type"),
-		data.msg
-	);
+	channel.channel.messages.push(data.msg);
 
 	if (activeChannelId === targetId) {
 		scrollContainer.trigger("keepToBottom");
