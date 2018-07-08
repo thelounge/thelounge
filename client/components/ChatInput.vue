@@ -60,13 +60,13 @@ export default {
 			$(this.$refs.input).trigger("click").trigger("focus");
 
 			const target = this.channel.id;
-			const text = input.value;
+			const text = this.channel.pendingMessage;
 
 			if (text.length === 0) {
 				return false;
 			}
 
-			input.value = "";
+			this.channel.pendingMessage = "";
 			// resetInputHeight(input.get(0));
 
 			if (text.charAt(0) === "/") {
