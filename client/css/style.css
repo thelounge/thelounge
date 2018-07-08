@@ -561,10 +561,6 @@ kbd {
 	font-size: 14px;
 }
 
-#sidebar .network.collapsed .chan:not(.lobby) {
-	display: none;
-}
-
 #sidebar .chan {
 	cursor: pointer;
 }

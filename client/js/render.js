@@ -8,9 +8,7 @@ const utils = require("./utils");
 const constants = require("./constants");
 const condensed = require("./condensed");
 const JoinChannel = require("./join-channel");
-const storage = require("./localStorage");
 const {vueApp} = require("./vue");
-const sidebar = $("#sidebar");
 
 module.exports = {
 	renderNetworks,
@@ -113,17 +111,11 @@ function buildChatMessage(msg) {
 }
 
 function renderNetworks(data, singleNetwork) {
-	const collapsed = new Set(JSON.parse(storage.get("thelounge.networks.collapsed")));
-
 	// Add keyboard handlers to the "Join a channel…" form inputs/button
 	JoinChannel.handleKeybinds(data.networks);
 
 	let newChannels;
 	const channels = $.map(data.networks, function(n) {
-		if (collapsed.has(n.uuid)) {
-			collapseNetwork($(`.network[data-uuid="${n.uuid}"] button.collapse-network`));
-		}
-
 		return n.channels;
 	});
 
@@ -193,33 +185,4 @@ function trimMessageInChannel(channel, messageLimit) {
 			$(this).remove();
 		}
 	});
-}
-
-sidebar.on("click", "button.collapse-network", (e) => collapseNetwork($(e.target)));
-
-function collapseNetwork(target) {
-	const collapseButton = target.closest(".collapse-network");
-	const networks = new Set(JSON.parse(storage.get("thelounge.networks.collapsed")));
-	const networkuuid = collapseButton.closest(".network").data("uuid");
-
-	if (collapseButton.closest(".network").find(".active").length > 0) {
-		collapseButton.closest(".lobby").trigger("click", {
-			keepSidebarOpen: true,
-		});
-	}
-
-	collapseButton.closest(".network").toggleClass("collapsed");
-
-	if (collapseButton.attr("aria-expanded") === "true") {
-		collapseButton.attr("aria-expanded", false);
-		collapseButton.attr("aria-label", "Expand");
-		networks.add(networkuuid);
-	} else {
-		collapseButton.attr("aria-expanded", true);
-		collapseButton.attr("aria-label", "Collapse");
-		networks.delete(networkuuid);
-	}
-
-	storage.set("thelounge.networks.collapsed", JSON.stringify([...networks]));
-	return false;
 }
