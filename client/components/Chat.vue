@@ -174,7 +174,7 @@ export default {
 	},
 	destroyed() {
 		if (this.historyObserver) {
-			this.historyObserver.unobserve(this.$refs.loadMoreButton);
+			this.historyObserver.disconnect();
 		}
 	},
 	methods: {

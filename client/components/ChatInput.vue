@@ -30,6 +30,14 @@ export default {
 		network: Object,
 		channel: Object,
 	},
+	mounted() {
+		if (this.$root.settings.autocomplete) {
+			require("../js/autocompletion").enable();
+		}
+	},
+	destroyed() {
+		require("../js/autocompletion").disable();
+	},
 	methods: {
 		getInputPlaceholder(channel) {
 			if (channel.type === "channel" || channel.type === "query") {

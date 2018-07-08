@@ -5,6 +5,8 @@ const escapeRegExp = require("lodash/escapeRegExp");
 const storage = require("./localStorage");
 const tz = require("./libs/handlebars/tz");
 const socket = require("./socket");
+const {vueApp} = require("./vue");
+require("../js/autocompletion");
 
 const $windows = $("#windows");
 const $chat = $("#chat");
@@ -23,24 +25,7 @@ let $warningUnsupported;
 let $warningBlocked;
 
 // Default settings
-const settings = {
-	syncSettings: false,
-	advanced: false,
-	autocomplete: true,
-	nickPostfix: "",
-	coloredNicks: true,
-	desktopNotifications: false,
-	highlights: [],
-	links: true,
-	motd: true,
-	notification: true,
-	notifyAllMessages: false,
-	showSeconds: false,
-	statusMessages: "condensed",
-	theme: $("#theme").attr("data-server-theme"),
-	media: true,
-	userStyles: "",
-};
+const settings = vueApp.settings;
 
 const noSync = ["syncSettings"];
 
@@ -86,9 +71,6 @@ module.exports = {
 	processSetting,
 	initialize,
 };
-
-// Due to cyclical dependency, have to require it after exports
-const autocompletion = require("./autocompletion");
 
 function shouldOpenMessagePreview(type) {
 	return type === "link" ? settings.links : settings.media;
@@ -155,12 +137,6 @@ function applySetting(name, value) {
 			$(this).text(tz($(this).parent().data("time")));
 		});
 		$chat.toggleClass("show-seconds", value);
-	} else if (name === "autocomplete") {
-		if (value) {
-			autocompletion.enable();
-		} else {
-			autocompletion.disable();
-		}
 	} else if (name === "desktopNotifications") {
 		if (("Notification" in window) && value && Notification.permission !== "granted") {
 			Notification.requestPermission(updateDesktopNotificationStatus);
