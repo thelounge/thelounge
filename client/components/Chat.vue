@@ -10,6 +10,7 @@
 				'hide-status-messages': settings.statusMessages === 'hidden',
 				'condensed-status-messages': settings.statusMessages === 'condensed',
 				'colored-nicks': settings.coloredNicks,
+				'show-seconds': settings.showSeconds,
 			}"
 		>
 			<div
