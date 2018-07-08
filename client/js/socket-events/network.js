@@ -6,12 +6,12 @@ const render = require("../render");
 const templates = require("../../views");
 const sidebar = $("#sidebar");
 const utils = require("../utils");
-const {Vue, vueApp} = require("../vue");
+const {vueApp} = require("../vue");
 
 socket.on("network", function(data) {
 	vueApp.networks.push(data.networks[0]);
 
-	Vue.nextTick(() => {
+	vueApp.$nextTick(() => {
 		render.renderNetworks(data, true);
 
 		sidebar.find(".chan")

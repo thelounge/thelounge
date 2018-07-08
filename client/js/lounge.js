@@ -9,7 +9,6 @@ require("./libs/jquery/stickyscroll");
 const slideoutMenu = require("./slideout");
 const templates = require("../views");
 const socket = require("./socket");
-const render = require("./render");
 require("./socket-events");
 const storage = require("./localStorage");
 const utils = require("./utils");
@@ -233,7 +232,7 @@ $(function() {
 		const type = chan.data("type");
 
 		if (self.hasClass("chan")) {
-			$("#chat-container").addClass("active");
+			vueApp.$nextTick(() => $("#chat-container").addClass("active"));
 		}
 
 		const chanChat = chan.find(".chat");

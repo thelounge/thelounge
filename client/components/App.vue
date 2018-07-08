@@ -59,7 +59,10 @@
 		</aside>
 		<div id="sidebar-overlay"/>
 		<article id="windows">
-			<Chat v-if="activeChannel" :network="activeChannel.network" :channel="activeChannel.channel"/>
+			<Chat
+				v-if="activeChannel"
+				:network="activeChannel.network"
+				:channel="activeChannel.channel"/>
 			<div
 				id="sign-in"
 				class="window"

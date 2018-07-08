@@ -8,23 +8,11 @@ const utils = require("./utils");
 const constants = require("./constants");
 const condensed = require("./condensed");
 const JoinChannel = require("./join-channel");
-const helpers_parse = require("./libs/handlebars/parse");
-const Userlist = require("./userlist");
 const storage = require("./localStorage");
 const {vueApp} = require("./vue");
-
-const chat = $("#chat");
 const sidebar = $("#sidebar");
 
-require("intersection-observer");
-
-const historyObserver = window.IntersectionObserver ?
-	new window.IntersectionObserver(loadMoreHistory, {
-		root: chat.get(0),
-	}) : null;
-
 module.exports = {
-	renderChannel,
 	renderNetworks,
 	trimMessageInChannel,
 };
@@ -124,24 +112,6 @@ function buildChatMessage(msg) {
 	return renderedMessage;
 }
 
-function renderChannel(data) {
-	renderChannelMessages(data);
-
-	if (data.type === "channel") {
-		//const users = renderChannelUsers(data);
-
-		//Userlist.handleKeybinds(users.find(".search"));
-	}
-
-	if (historyObserver) {
-		//historyObserver.observe(chat.find("#chan-" + data.id + " .show-more").get(0));
-	}
-}
-
-function renderChannelMessages(data) {
-	const channel = chat.find("#chan-" + data.id + " .messages");
-}
-
 function renderNetworks(data, singleNetwork) {
 	const collapsed = new Set(JSON.parse(storage.get("thelounge.networks.collapsed")));
 
@@ -187,8 +157,6 @@ function renderNetworks(data, singleNetwork) {
 
 	if (newChannels.length > 0) {
 		newChannels.forEach((channel) => {
-			renderChannel(channel);
-
 			if (channel.type === "channel") {
 				channel.usersOutdated = true;
 			}
@@ -224,22 +192,6 @@ function trimMessageInChannel(channel, messageLimit) {
 		if ($(this).next().hasClass("date-marker-container")) {
 			$(this).remove();
 		}
-	});
-}
-
-function loadMoreHistory(entries) {
-	entries.forEach((entry) => {
-		if (!entry.isIntersecting) {
-			return;
-		}
-
-		const target = $(entry.target).find("button");
-
-		if (target.prop("disabled")) {
-			return;
-		}
-
-		target.trigger("click");
 	});
 }
 

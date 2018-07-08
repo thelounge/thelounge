@@ -2,13 +2,11 @@
 
 const $ = require("jquery");
 const socket = require("../socket");
-const render = require("../render");
 const condensed = require("../condensed");
-const chat = $("#chat");
-const {Vue, vueApp, findChannel} = require("../vue");
+const {vueApp, findChannel} = require("../vue");
 
 socket.on("more", function(data) {
-	let chan = chat.find("#chan-" + data.chan);
+	let chan = $("#chat #chan-" + data.chan);
 	const type = chan.data("type");
 	chan = chan.find(".messages");
 
@@ -29,8 +27,9 @@ socket.on("more", function(data) {
 	}
 
 	channel.channel.messages.unshift(...data.messages);
+	channel.channel.historyLoading = false;
 
-	Vue.nextTick(() => {
+	vueApp.$nextTick(() => {
 		// restore scroll position
 		const position = chan.height() - heightOld;
 		scrollable.finish().scrollTop(position);
@@ -39,11 +38,6 @@ socket.on("more", function(data) {
 	if (data.messages.length !== 100) {
 		scrollable.find(".show-more").removeClass("show");
 	}
-
-	// Swap button text back from its alternative label
-	const showMoreBtn = scrollable.find(".show-more button");
-	swapText(showMoreBtn);
-	showMoreBtn.prop("disabled", false);
 
 	return;
 
@@ -62,28 +56,3 @@ socket.on("more", function(data) {
 		condensedDuplicate.remove();
 	}
 });
-
-chat.on("click", ".show-more button", function() {
-	const self = $(this);
-	const lastMessage = self.closest(".chat").find(".msg:not(.condensed)").first();
-	let lastMessageId = -1;
-
-	if (lastMessage.length > 0) {
-		lastMessageId = parseInt(lastMessage.prop("id").replace("msg-", ""), 10);
-	}
-
-	// Swap button text with its alternative label
-	swapText(self);
-	self.prop("disabled", true);
-
-	socket.emit("more", {
-		target: self.data("id"),
-		lastId: lastMessageId,
-	});
-});
-
-// Given a button, swap its text with the content of `data-alt-text`
-function swapText(btn) {
-	const altText = btn.data("alt-text");
-	btn.data("alt-text", btn.text()).text(altText);
-}
