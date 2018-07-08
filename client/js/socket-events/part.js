@@ -13,8 +13,6 @@ socket.on("part", function(data) {
 			.trigger("click");
 	}
 
-	$("#chan-" + data.chan).remove();
-
 	const network = vueApp.networks.find((n) => n.uuid === data.network);
 	network.channels.splice(network.channels.findIndex((c) => c.id === data.chan), 1);
 });
