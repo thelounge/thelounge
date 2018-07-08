@@ -62,7 +62,15 @@
 			<div
 				id="chat-container"
 				class="window">
-				<div id="chat"/>
+				<div id="chat">
+					<!--Chat v-if="activeChannel" :channel="activeChannel.channel"/-->
+					<template v-for="network in networks">
+						<Chat
+							v-for="channel in network.channels"
+							:key="channel.id"
+							:channel="channel"/>
+					</template>
+				</div>
 				<div id="connection-error"/>
 				<form
 					id="form"
@@ -113,11 +121,13 @@
 
 <script>
 import Network from "./Network.vue";
+import Chat from "./Chat.vue";
 
 export default {
 	name: "App",
 	components: {
 		Network,
+		Chat,
 	},
 	props: {
 		activeChannel: Object,

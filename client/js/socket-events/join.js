@@ -3,7 +3,6 @@
 const $ = require("jquery");
 const socket = require("../socket");
 const render = require("../render");
-const chat = $("#chat");
 const templates = require("../../views");
 const sidebar = $("#sidebar");
 const {Vue, vueApp} = require("../vue");
@@ -11,12 +10,6 @@ const {Vue, vueApp} = require("../vue");
 socket.on("join", function(data) {
 	vueApp.networks.find((n) => n.uuid === data.network)
 		.channels.splice(data.index || -1, 0, data.chan);
-
-	chat.append(
-		templates.chat({
-			channels: [data.chan],
-		})
-	);
 
 	Vue.nextTick(() => render.renderChannel(data.chan));
 
