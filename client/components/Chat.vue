@@ -4,7 +4,14 @@
 		class="window">
 		<div
 			id="chat"
-			ref="chat">
+			ref="chat"
+			:class="{
+				'hide-motd': !settings.motd,
+				'hide-status-messages': settings.statusMessages === 'hidden',
+				'condensed-status-messages': settings.statusMessages === 'condensed',
+				'colored-nicks': settings.coloredNicks,
+			}"
+		>
 			<div
 				:id="'chan-' + channel.id"
 				:class="[channel.type, 'chan', 'active']"
@@ -81,6 +88,7 @@ export default {
 		ChatUserList,
 	},
 	props: {
+		settings: Object,
 		network: Object,
 		channel: Object,
 	},
