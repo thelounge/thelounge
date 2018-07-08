@@ -129,7 +129,6 @@ function applySetting(name, value) {
 		$chat.find(".msg > .time").each(function() {
 			$(this).text(tz($(this).parent().data("time")));
 		});
-		$chat.toggleClass("show-seconds", value);
 	} else if (name === "desktopNotifications") {
 		if (("Notification" in window) && value && Notification.permission !== "granted") {
 			Notification.requestPermission(updateDesktopNotificationStatus);
