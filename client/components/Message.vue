@@ -1,0 +1,53 @@
+<template>
+	<div
+		:id="'msg-' + message.id"
+		:class="['msg', message.type, {self: message.self, highlight: message.highlight}]"
+		:data-time="message.time"
+		:data-from="message.from && message.from.nick"
+	>
+		<span
+			:aria-label="message.time | localetime"
+			class="time tooltipped tooltipped-e">{{ message.time | tz }}</span>
+
+		<template v-if="message.type === 'unhandled'">
+			<span class="from">[{{ message.command }}]</span>
+			<span class="content">
+				<span
+					v-for="(param, id) in message.params"
+					:key="id">{{ param }}</span>
+			</span>
+		</template>
+		<template v-elseif="message.type === 'message'">
+			<span class="from">
+				<template v-if="message.from && message.from.nick">
+					<Username :user="message.from"/>
+				</template>
+			</span>
+			<span class="content">
+				<span
+					class="text"
+					v-html="$options.filters.parse(message.text, message.users)"/>
+
+				<div
+					v-for="preview in message.previews"
+					:key="preview.link"
+					:data-url="preview.link"
+					class="preview"/>
+			</span>
+		</template>
+	</div>
+</template>
+
+<script>
+import Username from "./Username.vue";
+
+export default {
+	name: "Message",
+	components: {
+		Username,
+	},
+	props: {
+		message: Object,
+	},
+};
+</script>

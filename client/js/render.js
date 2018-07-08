@@ -148,7 +148,7 @@ function renderChannel(data) {
 
 function renderChannelMessages(data) {
 	const documentFragment = buildChannelMessages($(document.createDocumentFragment()), data.id, data.type, data.messages);
-	const channel = chat.find("#chan-" + data.id + " .messages").append(documentFragment);
+	const channel = chat.find("#chan-" + data.id + " .messages");
 
 	renderUnreadMarker($(templates.unread_marker()), data.firstUnread, channel);
 }
@@ -264,12 +264,6 @@ function renderNetworks(data, singleNetwork) {
 	}
 
 	if (newChannels.length > 0) {
-		chat.append(
-			templates.chat({
-				channels: newChannels,
-			})
-		);
-
 		newChannels.forEach((channel) => {
 			renderChannel(channel);
 
