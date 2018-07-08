@@ -1078,7 +1078,6 @@ background on hover (unless active) */
 }
 
 #chat .show-more {
-	display: none;
 	padding: 10px;
 	padding-top: 15px;
 	padding-bottom: 0;

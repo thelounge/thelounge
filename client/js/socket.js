@@ -10,9 +10,10 @@ const socket = io({
 	reconnection: !$(document.body).hasClass("public"),
 });
 
-$("#connection-error").on("click", function() {
-	$(this).removeClass("shown");
-});
+module.exports = socket;
+
+const {vueApp} = require("./vue");
+const {requestIdleCallback} = require("./utils");
 
 socket.on("disconnect", handleDisconnect);
 socket.on("connect_error", handleDisconnect);
@@ -42,17 +43,13 @@ socket.on("authorized", function() {
 function handleDisconnect(data) {
 	const message = data.message || data;
 
+	vueApp.connected = false;
+
 	$("#loading-page-message, #connection-error").text(`Waiting to reconnect… (${message})`).addClass("shown");
-	$(".show-more button, #input").prop("disabled", true);
-	$("#submit").hide();
-	$("#upload").hide();
 
 	// If the server shuts down, socket.io skips reconnection
 	// and we have to manually call connect to start the process
 	if (socket.io.skipReconnect) {
-		const utils = require("./utils");
-		utils.requestIdleCallback(() => socket.connect(), 2000);
+		requestIdleCallback(() => socket.connect(), 2000);
 	}
 }
-
-module.exports = socket;

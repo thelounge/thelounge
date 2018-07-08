@@ -11,10 +11,12 @@
 			v-model="channel.pendingMessage"
 			:placeholder="getInputPlaceholder(channel)"
 			:aria-label="getInputPlaceholder(channel)"
+			:disabled="!$root.connected"
 			class="mousetrap"
 			@keyup.enter="onSubmit"
 		/>
 		<span
+			v-if="$root.connected"
 			id="submit-tooltip"
 			class="tooltipped tooltipped-w tooltipped-no-touch"
 			aria-label="Send message">
