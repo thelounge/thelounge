@@ -1184,9 +1184,14 @@ background on hover (unless active) */
 	padding-left: 10px;
 	width: 55px;
 }
-
+#chat .time .seconds {
+	display: none;
+}
 #chat.show-seconds .time {
 	width: 75px;
+}
+#chat.show-seconds .time .seconds {
+	display: inline;
 }
 
 #chat .from {

@@ -3,7 +3,6 @@
 const $ = require("jquery");
 const escapeRegExp = require("lodash/escapeRegExp");
 const storage = require("./localStorage");
-const tz = require("./libs/handlebars/tz");
 const socket = require("./socket");
 
 const $windows = $("#windows");
@@ -151,9 +150,6 @@ function applySetting(name, value) {
 			module.exports.highlightsRE = null;
 		}
 	} else if (name === "showSeconds") {
-		$chat.find(".msg > .time").each(function() {
-			$(this).text(tz($(this).parent().data("time")));
-		});
 		$chat.toggleClass("show-seconds", value);
 	} else if (name === "autocomplete") {
 		if (value) {
