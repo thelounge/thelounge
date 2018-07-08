@@ -106,35 +106,6 @@ window.vueMounted = () => {
 		$(document.body).addClass("is-apple");
 	}
 
-	$("#form").on("submit", function() {
-		// Triggering click event opens the virtual keyboard on mobile
-		// This can only be called from another interactive event (e.g. button click)
-		input.trigger("click").trigger("focus");
-
-		const target = chat.data("id");
-		const text = input.val();
-
-		if (text.length === 0) {
-			return false;
-		}
-
-		input.val("");
-		resetInputHeight(input.get(0));
-
-		if (text.charAt(0) === "/") {
-			const args = text.substr(1).split(" ");
-			const cmd = args.shift().toLowerCase();
-
-			if (typeof utils.inputCommands[cmd] === "function" && utils.inputCommands[cmd](args)) {
-				return false;
-			}
-		}
-
-		socket.emit("input", {target, text});
-
-		return false;
-	});
-
 	chat.on("click", ".inline-channel", function() {
 		const name = $(this).attr("data-chan");
 		const chan = utils.findCurrentNetworkChan(name);
