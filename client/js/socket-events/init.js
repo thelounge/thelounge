@@ -9,7 +9,7 @@ const slideoutMenu = require("../slideout");
 const sidebar = $("#sidebar");
 const storage = require("../localStorage");
 const utils = require("../utils");
-const {Vue, vueApp} = require("../vue");
+const {vueApp} = require("../vue");
 
 socket.on("init", function(data) {
 	$("#loading-page-message, #connection-error").text("Rendering…");
@@ -24,7 +24,7 @@ socket.on("init", function(data) {
 	vueApp.networks = data.networks;
 
 	if (data.networks.length > 0) {
-		Vue.nextTick(() => render.renderNetworks(data));
+		vueApp.$nextTick(() => render.renderNetworks(data));
 	}
 
 	$("#connection-error").removeClass("shown");
@@ -66,7 +66,7 @@ socket.on("init", function(data) {
 		}
 	}
 
-	Vue.nextTick(() => openCorrectChannel(previousActive, data.active));
+	vueApp.$nextTick(() => openCorrectChannel(previousActive, data.active));
 });
 
 function openCorrectChannel(clientActive, serverActive) {

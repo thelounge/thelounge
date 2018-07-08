@@ -1,6 +1,10 @@
 <template>
-	<div id="chat-container" class="window">
-		<div id="chat">
+	<div
+		id="chat-container"
+		class="window">
+		<div
+			id="chat"
+			ref="chat">
 			<div
 				:id="'chan-' + channel.id"
 				:class="[channel.type, 'chan', 'active']"
@@ -35,11 +39,17 @@
 					<div class="chat">
 						<div
 							v-if="channel.messages.length > 0"
-							class="show-more show">
+							ref="loadMoreButton"
+							:disabled="channel.historyLoading"
+							class="show-more show"
+							@click="onShowMoreClick"
+						>
 							<button
-								:data-id="channel.id"
-								class="btn"
-								data-alt-text="Loading…">Show older messages</button>
+								v-if="channel.historyLoading"
+								class="btn">Loading…</button>
+							<button
+								v-else
+								class="btn">Show older messages</button>
 						</div>
 						<div
 							class="messages"
@@ -86,8 +96,14 @@
 								tabindex="-1">
 						</div>
 						<div class="names">
-							<div v-for="(users, mode) in groupedUsers" :key="mode" :class="['user-mode', getModeClass(mode)]">
-								<Username v-for="user in users" :key="user.nick" :user="user"/>
+							<div
+								v-for="(users, mode) in groupedUsers"
+								:key="mode"
+								:class="['user-mode', getModeClass(mode)]">
+								<Username
+									v-for="user in users"
+									:key="user.nick"
+									:user="user"/>
 							</div>
 						</div>
 					</aside>
@@ -95,34 +111,18 @@
 			</div>
 		</div>
 		<div id="connection-error"/>
-		<form
-			id="form"
-			method="post"
-			action="">
-			<span id="nick">{{network.nick}}</span>
-			<textarea
-				id="input"
-				class="mousetrap"
-				v-model="channel.pendingMessage"
-				:placeholder="getInputPlaceholder(channel)"
-				:aria-label="getInputPlaceholder(channel)"
-			/>
-			<span
-				id="submit-tooltip"
-				class="tooltipped tooltipped-w tooltipped-no-touch"
-				aria-label="Send message">
-				<button
-					id="submit"
-					type="submit"
-					aria-label="Send message"/>
-			</span>
-		</form>
+		<ChatInput
+			:network="network"
+			:channel="channel"/>
 	</div>
 </template>
 
 <script>
+require("intersection-observer");
+const socket = require("../js/socket");
 import Message from "./Message.vue";
 import Username from "./Username.vue";
+import ChatInput from "./ChatInput.vue";
 
 const modes = {
 	"~": "owner",
@@ -139,6 +139,7 @@ export default {
 	components: {
 		Message,
 		Username,
+		ChatInput,
 	},
 	props: {
 		network: Object,
@@ -158,6 +159,23 @@ export default {
 
 			return groups;
 		},
+	},
+	created() {
+		if (window.IntersectionObserver) {
+			this.historyObserver = new window.IntersectionObserver(loadMoreHistory, {
+				root: this.$refs.chat,
+			});
+		}
+	},
+	mounted() {
+		if (this.historyObserver) {
+			this.historyObserver.observe(this.$refs.loadMoreButton);
+		}
+	},
+	destroyed() {
+		if (this.historyObserver) {
+			this.historyObserver.unobserve(this.$refs.loadMoreButton);
+		}
 	},
 	methods: {
 		shouldDisplayDateMarker(id) {
@@ -180,16 +198,30 @@ export default {
 
 			return true;
 		},
-		getInputPlaceholder(channel) {
-			if (channel.type === "channel" || channel.type === "query") {
-				return `Write to ${channel.name}`;
-			}
-
-			return "";
-		},
 		getModeClass(mode) {
 			return modes[mode];
 		},
+		onShowMoreClick() {
+			let lastMessage = this.channel.messages[0];
+			lastMessage = lastMessage ? lastMessage.id : -1;
+
+			this.$set(this.channel, "historyLoading", true);
+
+			socket.emit("more", {
+				target: this.channel.id,
+				lastId: lastMessage,
+			});
+		},
 	},
 };
+
+function loadMoreHistory(entries) {
+	entries.forEach((entry) => {
+		if (!entry.isIntersecting) {
+			return;
+		}
+
+		entry.target.click();
+	});
+}
 </script>

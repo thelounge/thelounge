@@ -45,7 +45,6 @@ function findChannel(id) {
 }
 
 module.exports = {
-	Vue,
 	vueApp,
 	findChannel,
 };
