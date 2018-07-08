@@ -30,8 +30,6 @@ $("#form").on("submit", () => {
 	}
 });
 
-const chat = $("#chat");
-const sidebar = $("#sidebar");
 const emojiSearchTerms = Object.keys(emojiMap);
 const emojiStrategy = {
 	id: "emoji",

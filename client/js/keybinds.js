@@ -97,61 +97,6 @@ Mousetrap.bind([
 
 const inputTrap = Mousetrap(input.get(0));
 
-function enableHistory() {
-	const history = [""];
-	let position = 0;
-
-	input.on("input", () => {
-		position = 0;
-	});
-
-	inputTrap.bind("enter", function(e) {
-		position = 0;
-		const input = $(e.target);
-
-		if (input.data("autocompleting")) {
-			return false;
-		}
-
-		const text = input.val();
-
-		if (text.length === 0) {
-			return false;
-		}
-
-		// Store new message in history if last message isn't already equal
-		if (history[1] !== text) {
-			history.splice(1, 0, text);
-		}
-
-		return false;
-	});
-
-	inputTrap.bind(["up", "down"], function(e, key) {
-		if (e.target.selectionStart !== e.target.selectionEnd || input.data("autocompleting")) {
-			return;
-		}
-
-		if (position === 0) {
-			history[position] = input.val();
-		}
-
-		if (key === "up") {
-			if (position < history.length - 1) {
-				position++;
-			}
-		} else if (position > 0) {
-			position--;
-		}
-
-		input.val(history[position]);
-
-		return false;
-	});
-}
-
-enableHistory();
-
 const colorsHotkeys = {
 	k: "\x03",
 	b: "\x02",
