@@ -4,7 +4,6 @@ const $ = require("jquery");
 const Mousetrap = require("mousetrap");
 const wrapCursor = require("undate").wrapCursor;
 const utils = require("./utils");
-const form = $("#form");
 const input = $("#input");
 const sidebar = $("#sidebar");
 const windows = $("#windows");
@@ -106,8 +105,9 @@ function enableHistory() {
 		position = 0;
 	});
 
-	inputTrap.bind("enter", function() {
+	inputTrap.bind("enter", function(e) {
 		position = 0;
+		const input = $(e.target);
 
 		if (input.data("autocompleting")) {
 			return false;
@@ -118,9 +118,6 @@ function enableHistory() {
 		if (text.length === 0) {
 			return false;
 		}
-
-		// Submit the form when pressing enter instead of inserting a new line
-		form.trigger("submit");
 
 		// Store new message in history if last message isn't already equal
 		if (history[1] !== text) {
