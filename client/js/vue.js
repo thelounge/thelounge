@@ -24,12 +24,33 @@ const vueApp = new Vue({
 		appName: document.title,
 		activeChannel: null,
 		networks: [],
+		settings: {
+			syncSettings: false,
+			advanced: false,
+			autocomplete: true,
+			nickPostfix: "",
+			coloredNicks: true,
+			desktopNotifications: false,
+			highlights: [],
+			links: true,
+			motd: true,
+			notification: true,
+			notifyAllMessages: false,
+			showSeconds: false,
+			statusMessages: "condensed",
+			theme: document.getElementById("theme").dataset.serverTheme,
+			media: true,
+			userStyles: "",
+		},
 	},
 	render(createElement) {
 		return createElement(App, {
 			props: this,
 		});
 	},
+	mounted() {
+		Vue.nextTick(() => window.vueMounted());
+	}
 });
 
 function findChannel(id) {
