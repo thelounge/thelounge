@@ -91,13 +91,6 @@ function applySetting(name, value) {
 	if (name === "syncSettings" && value) {
 		$syncWarningOverride.hide();
 		$forceSyncButton.hide();
-	} else if (name === "motd") {
-		$chat.toggleClass("hide-" + name, !value);
-	} else if (name === "statusMessages") {
-		$chat.toggleClass("hide-status-messages", value === "hidden");
-		$chat.toggleClass("condensed-status-messages", value === "condensed");
-	} else if (name === "coloredNicks") {
-		$chat.toggleClass("colored-nicks", value);
 	} else if (name === "theme") {
 		value = `themes/${value}.css`;
 
