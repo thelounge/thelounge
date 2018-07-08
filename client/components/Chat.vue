@@ -51,62 +51,11 @@
 								v-else
 								class="btn">Show older messages</button>
 						</div>
-						<div
-							class="messages"
-							role="log"
-							aria-live="polite"
-							aria-relevant="additions"
-						>
-							<template v-for="(message, id) in channel.messages">
-								<div
-									v-if="shouldDisplayDateMarker(id)"
-									:key="message.id + '-date'"
-									:data-time="message.time"
-									:aria-label="message.time | localedate"
-									class="date-marker-container tooltipped tooltipped-s"
-								>
-									<div class="date-marker">
-										<span
-											:data-label="message.time | friendlydate"
-											class="date-marker-text"/>
-									</div>
-								</div>
-								<div
-									v-if="shouldDisplayUnreadMarker(message.id)"
-									:key="message.id + '-unread'"
-									class="unread-marker"
-								>
-									<span class="unread-marker-text"/>
-								</div>
-								<Message
-									:message="message"
-									:key="message.id"/>
-							</template>
-						</div>
+						<MessageList :channel="channel"/>
 					</div>
-					<aside
+					<ChatUserList
 						v-if="channel.type === 'channel'"
-						class="userlist">
-						<div class="count">
-							<input
-								:placeholder="channel.users.length + ' user' + (channel.users.length === 1 ? '' : 's')"
-								type="search"
-								class="search"
-								aria-label="Search among the user list"
-								tabindex="-1">
-						</div>
-						<div class="names">
-							<div
-								v-for="(users, mode) in groupedUsers"
-								:key="mode"
-								:class="['user-mode', getModeClass(mode)]">
-								<Username
-									v-for="user in users"
-									:key="user.nick"
-									:user="user"/>
-							</div>
-						</div>
-					</aside>
+						:channel="channel"/>
 				</div>
 			</div>
 		</div>
@@ -120,45 +69,20 @@
 <script>
 require("intersection-observer");
 const socket = require("../js/socket");
-import Message from "./Message.vue";
-import Username from "./Username.vue";
+import MessageList from "./MessageList.vue";
 import ChatInput from "./ChatInput.vue";
-
-const modes = {
-	"~": "owner",
-	"&": "admin",
-	"!": "admin",
-	"@": "op",
-	"%": "half-op",
-	"+": "voice",
-	"": "normal",
-};
+import ChatUserList from "./ChatUserList.vue";
 
 export default {
 	name: "Chat",
 	components: {
-		Message,
-		Username,
+		MessageList,
 		ChatInput,
+		ChatUserList,
 	},
 	props: {
 		network: Object,
 		channel: Object,
-	},
-	computed: {
-		groupedUsers() {
-			const groups = {};
-
-			for (const user of this.channel.users) {
-				if (!groups[user.mode]) {
-					groups[user.mode] = [user];
-				} else {
-					groups[user.mode].push(user);
-				}
-			}
-
-			return groups;
-		},
 	},
 	created() {
 		if (window.IntersectionObserver) {
@@ -178,29 +102,6 @@ export default {
 		}
 	},
 	methods: {
-		shouldDisplayDateMarker(id) {
-			const previousTime = this.channel.messages[id - 1];
-
-			if (!previousTime) {
-				return true;
-			}
-
-			const currentTime = this.channel.messages[id];
-
-			return (new Date(previousTime.time)).getDay() !== (new Date(currentTime.time)).getDay();
-		},
-		shouldDisplayUnreadMarker(msgId) {
-			if (this.channel.firstUnread < msgId) {
-				return false;
-			}
-
-			this.channel.firstUnread = 0;
-
-			return true;
-		},
-		getModeClass(mode) {
-			return modes[mode];
-		},
 		onShowMoreClick() {
 			let lastMessage = this.channel.messages[0];
 			lastMessage = lastMessage ? lastMessage.id : -1;
