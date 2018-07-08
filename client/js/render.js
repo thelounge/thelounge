@@ -24,25 +24,17 @@ const historyObserver = window.IntersectionObserver ?
 	}) : null;
 
 module.exports = {
-	appendMessage,
-	buildChannelMessages,
 	renderChannel,
-	renderChannelUsers,
 	renderNetworks,
 	trimMessageInChannel,
 };
-
-function buildChannelMessages(container, chanId, chanType, messages) {
-	return messages.reduce((docFragment, message) => {
-		appendMessage(docFragment, chanId, chanType, message);
-		return docFragment;
-	}, container);
-}
 
 function appendMessage(container, chanId, chanType, msg) {
 	if (utils.lastMessageId < msg.id) {
 		utils.lastMessageId = msg.id;
 	}
+
+	return;
 
 	let lastChild = container.children(".msg, .date-marker-container").last();
 	const renderedMessage = buildChatMessage(msg);
@@ -136,80 +128,18 @@ function renderChannel(data) {
 	renderChannelMessages(data);
 
 	if (data.type === "channel") {
-		const users = renderChannelUsers(data);
+		//const users = renderChannelUsers(data);
 
-		Userlist.handleKeybinds(users.find(".search"));
+		//Userlist.handleKeybinds(users.find(".search"));
 	}
 
 	if (historyObserver) {
-		historyObserver.observe(chat.find("#chan-" + data.id + " .show-more").get(0));
+		//historyObserver.observe(chat.find("#chan-" + data.id + " .show-more").get(0));
 	}
 }
 
 function renderChannelMessages(data) {
-	const documentFragment = buildChannelMessages($(document.createDocumentFragment()), data.id, data.type, data.messages);
 	const channel = chat.find("#chan-" + data.id + " .messages");
-
-	renderUnreadMarker($(templates.unread_marker()), data.firstUnread, channel);
-}
-
-function renderUnreadMarker(template, firstUnread, channel) {
-	if (firstUnread > 0) {
-		let first = channel.find("#msg-" + firstUnread);
-
-		if (!first.length) {
-			template.data("unread-id", firstUnread);
-			channel.prepend(template);
-		} else {
-			const parent = first.parent();
-
-			if (parent.hasClass("condensed")) {
-				first = parent;
-			}
-
-			first.before(template);
-		}
-	} else {
-		channel.append(template);
-	}
-}
-
-function renderChannelUsers(data) {
-	const users = chat.find("#chan-" + data.id).find(".userlist");
-	const nicks = data.users
-		.concat() // Make a copy of the user list, sort is applied in-place
-		.sort((a, b) => b.lastMessage - a.lastMessage)
-		.map((a) => a.nick);
-
-	// Before re-rendering the list of names, there might have been an entry
-	// marked as active (i.e. that was highlighted by keyboard navigation).
-	// It is `undefined` if there was none.
-	const previouslyActive = users.find(".active");
-
-	const search = users
-		.find(".search")
-		.prop("placeholder", nicks.length + " " + (nicks.length === 1 ? "user" : "users"));
-
-	users
-		.data("nicks", nicks)
-		.find(".names-original")
-		.html(templates.user(data));
-
-	// Refresh user search
-	if (search.val().length) {
-		search.trigger("input");
-	}
-
-	// If a nick was highlighted before re-rendering the lists, re-highlight it in
-	// the newly-rendered list.
-	if (previouslyActive.length > 0) {
-		// We need to un-highlight everything first because triggering `input` with
-		// a value highlights the first entry.
-		users.find(".user").removeClass("active");
-		users.find(`.user[data-name="${previouslyActive.attr("data-name")}"]`).addClass("active");
-	}
-
-	return users;
 }
 
 function renderNetworks(data, singleNetwork) {
@@ -234,20 +164,12 @@ function renderNetworks(data, singleNetwork) {
 			const chan = $("#chan-" + channel.id);
 
 			if (chan.length > 0) {
-				if (chan.data("type") === "channel") {
-					chan
-						.data("needsNamesRefresh", true)
-						.find(".header .topic")
-						.html(helpers_parse(channel.topic))
-						.prop("title", channel.topic);
+				if (channel.type === "channel") {
+					channel.usersOutdated = true;
 				}
 
 				if (channel.messages.length > 0) {
 					const container = chan.find(".messages");
-					buildChannelMessages(container, channel.id, channel.type, channel.messages);
-
-					const unreadMarker = container.find(".unread-marker").data("unread-id", 0);
-					renderUnreadMarker(unreadMarker, channel.firstUnread, container);
 
 					if (container.find(".msg").length >= 100) {
 						container.find(".show-more").addClass("show");
@@ -268,7 +190,7 @@ function renderNetworks(data, singleNetwork) {
 			renderChannel(channel);
 
 			if (channel.type === "channel") {
-				chat.find("#chan-" + channel.id).data("needsNamesRefresh", true);
+				channel.usersOutdated = true;
 			}
 		});
 	}

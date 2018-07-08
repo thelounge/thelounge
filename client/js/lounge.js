@@ -165,6 +165,7 @@ $(function() {
 		// sidebar specifically. Needs to be done better when window management gets
 		// refactored.
 		const inSidebar = self.parents("#sidebar, #footer").length > 0;
+		let channel;
 
 		if (inSidebar) {
 			chat.data(
@@ -176,7 +177,7 @@ $(function() {
 				self.data("id")
 			);
 
-			const channel = findChannel(self.data("id"));
+			channel = findChannel(self.data("id"));
 
 			vueApp.activeChannel = channel;
 
@@ -208,11 +209,9 @@ $(function() {
 		const lastActive = $("#windows > .active");
 
 		lastActive
-			.removeClass("active")
-			.find(".chat")
-			.unsticky();
+			.removeClass("active");
 
-		const lastActiveChan = lastActive.find(".chan.active");
+		/*const lastActiveChan = lastActive.find(".chan.active");
 
 		if (lastActiveChan.length > 0) {
 			lastActiveChan
@@ -222,7 +221,7 @@ $(function() {
 				.appendTo(lastActiveChan.find(".messages"));
 
 			render.trimMessageInChannel(lastActiveChan, 100);
-		}
+		}*/
 
 		const chan = $(target)
 			.addClass("active")
@@ -232,19 +231,9 @@ $(function() {
 		utils.updateTitle();
 
 		const type = chan.data("type");
-		let placeholder = "";
-
-		if (type === "channel" || type === "query") {
-			placeholder = `Write to ${chan.attr("aria-label")}`;
-		}
-
-		input
-			.prop("placeholder", placeholder)
-			.attr("aria-label", placeholder);
 
 		if (self.hasClass("chan")) {
 			$("#chat-container").addClass("active");
-			$("#nick").text(self.closest(".network").attr("data-nick"));
 		}
 
 		const chanChat = chan.find(".chat");
@@ -258,9 +247,12 @@ $(function() {
 			input.trigger("ontouchstart" in window ? "blur" : "focus");
 		}
 
-		if (chan.data("needsNamesRefresh") === true) {
-			chan.data("needsNamesRefresh", false);
-			socket.emit("names", {target: self.data("id")});
+		if (channel && channel.channel.usersOutdated) {
+			channel.channel.usersOutdated = false;
+
+			socket.emit("names", {
+				target: channel.channel.id,
+			});
 		}
 
 		// Pushes states to history web API when clicking elements with a data-target attribute.
