@@ -13,12 +13,17 @@
 	>
 		<template v-if="channel.type === 'lobby'">
 			<button
+				v-if="network.channels.length > 1"
 				:aria-controls="'network-' + network.uuid"
 				class="collapse-network"
 				aria-label="Collapse"
-				aria-expanded="true">
+				aria-expanded="true"
+			>
 				<span class="collapse-network-icon"/>
 			</button>
+			<span
+				v-else
+				class="collapse-network"/>
 			<div class="lobby-wrap">
 				<span
 					:title="channel.name"
