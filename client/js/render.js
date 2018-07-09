@@ -1,12 +1,7 @@
 "use strict";
 
 const $ = require("jquery");
-const templates = require("../views");
-const options = require("./options");
-const renderPreview = require("./renderPreview");
 const utils = require("./utils");
-const constants = require("./constants");
-const condensed = require("./condensed");
 const JoinChannel = require("./join-channel");
 const {vueApp} = require("./vue");
 
@@ -15,6 +10,7 @@ module.exports = {
 	trimMessageInChannel,
 };
 
+/*
 function appendMessage(container, chanId, chanType, msg) {
 	if (utils.lastMessageId < msg.id) {
 		utils.lastMessageId = msg.id;
@@ -109,6 +105,7 @@ function buildChatMessage(msg) {
 
 	return renderedMessage;
 }
+*/
 
 function renderNetworks(data, singleNetwork) {
 	// Add keyboard handlers to the "Join a channel…" form inputs/button
