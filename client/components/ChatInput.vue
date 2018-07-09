@@ -31,6 +31,33 @@
 <script>
 const $ = require("jquery");
 const socket = require("../js/socket");
+const Mousetrap = require("mousetrap");
+const {wrapCursor} = require("undate");
+
+const colorsHotkeys = {
+	k: "\x03",
+	b: "\x02",
+	u: "\x1F",
+	i: "\x1D",
+	o: "\x0F",
+	s: "\x1e",
+	m: "\x11",
+};
+
+// Autocomplete bracket and quote characters like in a modern IDE
+// For example, select `text`, press `[` key, and it becomes `[text]`
+const bracketWraps = {
+	'"': '"',
+	"'": "'",
+	"(": ")",
+	"<": ">",
+	"[": "]",
+	"{": "}",
+	"*": "*",
+	"`": "`",
+	"~": "~",
+	"_": "_",
+};
 
 export default {
 	name: "ChatInput",
@@ -42,6 +69,31 @@ export default {
 		if (this.$root.settings.autocomplete) {
 			require("../js/autocompletion").enable();
 		}
+
+		const inputTrap = Mousetrap(this.$refs.input);
+
+		for (const hotkey in colorsHotkeys) {
+			inputTrap.bind("mod+" + hotkey, function(e) {
+				// Key is lowercased because keybinds also get processed if caps lock is on
+				const modifier = colorsHotkeys[e.key.toLowerCase()];
+
+				wrapCursor(
+					e.target,
+					modifier,
+					e.target.selectionStart === e.target.selectionEnd ? "" : modifier
+				);
+
+				return false;
+			});
+		}
+
+		inputTrap.bind(Object.keys(bracketWraps), function(e) {
+			if (e.target.selectionStart !== e.target.selectionEnd) {
+				wrapCursor(e.target, e.key, bracketWraps[e.key]);
+
+				return false;
+			}
+		});
 	},
 	destroyed() {
 		require("../js/autocompletion").disable();
