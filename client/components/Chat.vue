@@ -4,7 +4,6 @@
 		class="window">
 		<div
 			id="chat"
-			ref="chat"
 			:data-id="channel.id"
 			:class="{
 				'hide-motd': !settings.motd,
@@ -45,7 +44,10 @@
 					</span>
 				</div>
 				<div class="chat-content">
-					<div class="chat">
+					<div
+						ref="chat"
+						class="chat"
+					>
 						<div class="show-more">
 							<button
 								ref="loadMoreButton"
@@ -97,6 +99,10 @@ export default {
 				root: this.$refs.chat,
 			});
 		}
+
+		this.$nextTick(() => {
+			this.$refs.chat.scrollTop = this.$refs.chat.scrollHeight;
+		});
 	},
 	mounted() {
 		if (this.historyObserver) {
@@ -106,6 +112,19 @@ export default {
 	destroyed() {
 		if (this.historyObserver) {
 			this.historyObserver.disconnect();
+		}
+	},
+	watch: {
+		"channel.messages": function() {
+			const el = this.$refs.chat;
+
+			if (el.scrollHeight - el.scrollTop - el.offsetHeight > 30) {
+				return;
+			}
+
+			this.$nextTick(() => {
+				el.scrollTop = el.scrollHeight;
+			});
 		}
 	},
 	methods: {
