@@ -67,7 +67,7 @@ export default {
 	},
 	mounted() {
 		if (this.$root.settings.autocomplete) {
-			require("../js/autocompletion").enable();
+			require("../js/autocompletion").enable(this.$refs.input);
 		}
 
 		const inputTrap = Mousetrap(this.$refs.input);
