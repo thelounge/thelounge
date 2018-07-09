@@ -2,17 +2,13 @@
 
 const $ = require("jquery");
 const Mousetrap = require("mousetrap");
-const wrapCursor = require("undate").wrapCursor;
 const utils = require("./utils");
-const input = $("#input");
-const sidebar = $("#sidebar");
-const windows = $("#windows");
 
 Mousetrap.bind([
 	"pageup",
 	"pagedown",
 ], function(e, key) {
-	let container = windows.find(".window.active");
+	let container = $("#windows .window.active");
 
 	// Chat windows scroll message container
 	if (container.prop("id") === "chat-container") {
@@ -39,6 +35,7 @@ Mousetrap.bind([
 	"alt+up",
 	"alt+down",
 ], function(e, keys) {
+	const sidebar = $("#sidebar");
 	const channels = sidebar.find(".chan").not(".network.collapsed :not(.lobby)");
 	const index = channels.index(channels.filter(".active"));
 	const direction = keys.split("+").pop();
@@ -64,6 +61,7 @@ Mousetrap.bind([
 	"alt+shift+up",
 	"alt+shift+down",
 ], function(e, keys) {
+	const sidebar = $("#sidebar");
 	const lobbies = sidebar.find(".lobby");
 	const direction = keys.split("+").pop();
 	let index = lobbies.index(lobbies.filter(".active"));
@@ -93,56 +91,6 @@ Mousetrap.bind([
 	utils.scrollIntoViewNicely(target[0]);
 
 	return false;
-});
-
-const inputTrap = Mousetrap(input.get(0));
-
-const colorsHotkeys = {
-	k: "\x03",
-	b: "\x02",
-	u: "\x1F",
-	i: "\x1D",
-	o: "\x0F",
-	s: "\x1e",
-	m: "\x11",
-};
-
-for (const hotkey in colorsHotkeys) {
-	inputTrap.bind("mod+" + hotkey, function(e) {
-		// Key is lowercased because keybinds also get processed if caps lock is on
-		const modifier = colorsHotkeys[e.key.toLowerCase()];
-
-		wrapCursor(
-			e.target,
-			modifier,
-			e.target.selectionStart === e.target.selectionEnd ? "" : modifier
-		);
-
-		return false;
-	});
-}
-
-// Autocomplete bracket and quote characters like in a modern IDE
-// For example, select `text`, press `[` key, and it becomes `[text]`
-const bracketWraps = {
-	'"': '"',
-	"'": "'",
-	"(": ")",
-	"<": ">",
-	"[": "]",
-	"{": "}",
-	"*": "*",
-	"`": "`",
-	"~": "~",
-	"_": "_",
-};
-
-inputTrap.bind(Object.keys(bracketWraps), function(e) {
-	if (e.target.selectionStart !== e.target.selectionEnd) {
-		wrapCursor(e.target, e.key, bracketWraps[e.key]);
-
-		return false;
-	}
 });
 
 // Ignored keys which should not automatically focus the input bar
@@ -201,6 +149,8 @@ $(document).on("keydown", (e) => {
 	if (tagName === "INPUT" || tagName === "TEXTAREA") {
 		return;
 	}
+
+	const input = $("#input");
 
 	// On enter, focus the input but do not propagate the event
 	// This way, a new line is not inserted
