@@ -2,7 +2,6 @@
 	<div
 		:id="'msg-' + message.id"
 		:class="['msg', message.type, {self: message.self, highlight: message.highlight}]"
-		:data-time="message.time"
 		:data-from="message.from && message.from.nick"
 	>
 		<span
