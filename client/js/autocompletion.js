@@ -172,12 +172,12 @@ const backgroundColorStrategy = {
 	index: 2,
 };
 
-function enableAutocomplete() {
+function enableAutocomplete(inputRef) {
 	enabled = true;
 	let tabCount = 0;
 	let lastMatch = "";
 	let currentMatches = [];
-	input = $("#input");
+	input = $(inputRef);
 
 	input.on("input.tabcomplete", () => {
 		tabCount = 0;
