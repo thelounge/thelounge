@@ -27,7 +27,10 @@
 				<span class="unread-marker-text"/>
 			</div>
 
-			<MessageCondensed v-if="message.type === 'condensed'" :key="message.id" :messages="message.messages"/>
+			<MessageCondensed
+				v-if="message.type === 'condensed'"
+				:key="message.id"
+				:messages="message.messages"/>
 			<Message
 				v-else
 				:message="message"
@@ -72,6 +75,7 @@ export default {
 
 				if (lastCondensedContainer === null) {
 					lastCondensedContainer = {
+						id: message.id, // Use id of first message in the condensed container
 						type: "condensed",
 						messages: [],
 					};
@@ -79,7 +83,6 @@ export default {
 					condensed.push(lastCondensedContainer);
 				}
 
-				lastCondensedContainer.id = message.id; // TODO
 				lastCondensedContainer.messages.push(message);
 			}
 
