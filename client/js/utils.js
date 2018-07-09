@@ -31,13 +31,7 @@ module.exports = {
 function findCurrentNetworkChan(name) {
 	name = name.toLowerCase();
 
-	return $(".network .chan.active")
-		.parent(".network")
-		.find(".chan")
-		.filter(function() {
-			return $(this).attr("aria-label").toLowerCase() === name;
-		})
-		.first();
+	return vueApp.activeChannel.network.channels.find((c) => c.name.toLowerCase() === name);
 }
 
 function resetHeight(element) {
@@ -80,8 +74,8 @@ function join(args) {
 	if (channel) {
 		const chan = findCurrentNetworkChan(channel);
 
-		if (chan.length) {
-			chan.trigger("click");
+		if (chan) {
+			$(`#sidebar .chan[data-id="${chan.id}"]`).trigger("click");
 		}
 	}
 }

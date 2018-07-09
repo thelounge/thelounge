@@ -52,8 +52,8 @@ function addWhoisItem() {
 	function whois(itemData) {
 		const chan = utils.findCurrentNetworkChan(itemData);
 
-		if (chan.length) {
-			chan.click();
+		if (chan) {
+			$(`#sidebar .chan[data-id="${chan.id}"]`).trigger("click");
 		}
 
 		socket.emit("input", {
@@ -87,8 +87,8 @@ function addQueryItem() {
 	function query(itemData) {
 		const chan = utils.findCurrentNetworkChan(itemData);
 
-		if (chan.length) {
-			chan.click();
+		if (chan) {
+			$(`#sidebar .chan[data-id="${chan.id}"]`).trigger("click");
 		}
 
 		socket.emit("input", {
