@@ -8,7 +8,6 @@
 		<span
 			:aria-label="message.time | localetime"
 			class="time tooltipped tooltipped-e">{{ message.time | tz }}</span>
-
 		<template v-if="message.type === 'unhandled'">
 			<span class="from">[{{ message.command }}]</span>
 			<span class="content">
@@ -17,7 +16,13 @@
 					:key="id">{{ param }}</span>
 			</span>
 		</template>
-		<template v-elseif="message.type === 'message'">
+		<template v-else-if="isAction()">
+			<span class="from"/>
+			<component
+				:is="messageComponent"
+				:message="message"/>
+		</template>
+		<template v-else>
 			<span class="from">
 				<template v-if="message.from && message.from.nick">
 					<Username :user="message.from"/>
@@ -40,14 +45,25 @@
 
 <script>
 import Username from "./Username.vue";
+import MessageTypes from "./MessageTypes";
+
+MessageTypes.Username = Username;
 
 export default {
 	name: "Message",
-	components: {
-		Username,
-	},
+	components: MessageTypes,
 	props: {
 		message: Object,
+	},
+	computed: {
+		messageComponent() {
+			return "message-" + this.message.type;
+		},
+	},
+	methods: {
+		isAction() {
+			return typeof MessageTypes["message-" + this.message.type] !== "undefined";
+		},
 	},
 };
 </script>
