@@ -11,7 +11,6 @@ const {vueApp, findChannel} = require("./vue");
 
 window.vueMounted = () => {
 	require("./socket-events");
-	require("./libs/jquery/stickyscroll");
 	const slideoutMenu = require("./slideout");
 	const templates = require("../views");
 	const contextMenuFactory = require("./contextMenuFactory");
@@ -55,7 +54,6 @@ window.vueMounted = () => {
 		const isOpen = !viewport.hasClass("userlist-open");
 
 		viewport.toggleClass("userlist-open", isOpen);
-		chat.find(".chan.active .chat").trigger("keepToBottom");
 		storeSidebarVisibility("thelounge.state.userlist", isOpen);
 
 		return false;
@@ -98,8 +96,6 @@ window.vueMounted = () => {
 				+ Math.round(parseFloat(style.borderTopWidth) || 0)
 				+ Math.round(parseFloat(style.borderBottomWidth) || 0)
 			) + "px";
-
-			chat.find(".chan.active .chat").trigger("keepToBottom"); // fix growing
 		});
 
 	if (navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i)) {
@@ -178,18 +174,6 @@ window.vueMounted = () => {
 		lastActive
 			.removeClass("active");
 
-		/*const lastActiveChan = lastActive.find(".chan.active");
-
-		if (lastActiveChan.length > 0) {
-			lastActiveChan
-				.removeClass("active")
-				.find(".unread-marker")
-				.data("unread-id", 0)
-				.appendTo(lastActiveChan.find(".messages"));
-
-			render.trimMessageInChannel(lastActiveChan, 100);
-		}*/
-
 		const chan = $(target)
 			.addClass("active")
 			.trigger("show");
@@ -206,8 +190,6 @@ window.vueMounted = () => {
 		const chanChat = chan.find(".chat");
 
 		if (chanChat.length > 0 && type !== "special") {
-			chanChat.sticky();
-
 			// On touch devices unfocus (blur) the input to correctly close the virtual keyboard
 			// An explicit blur is required, as the keyboard may open back up if the focus remains
 			// See https://github.com/thelounge/thelounge/issues/2257

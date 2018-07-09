@@ -2,7 +2,6 @@
 
 const $ = require("jquery");
 const socket = require("../socket");
-const render = require("../render");
 const utils = require("../utils");
 const options = require("../options");
 const cleanIrcMessage = require("../libs/handlebars/ircmessageparser/cleanIrcMessage");
@@ -23,6 +22,10 @@ try {
 }
 
 socket.on("msg", function(data) {
+	if (utils.lastMessageId < data.msg.id) {
+		utils.lastMessageId = data.msg.id;
+	}
+
 	// We set a maximum timeout of 2 seconds so that messages don't take too long to appear.
 	utils.requestIdleCallback(() => processReceivedMessage(data), 2000);
 });
@@ -54,17 +57,12 @@ function processReceivedMessage(data) {
 
 	const scrollContainer = channelContainer.find(".chat");
 	const container = channelContainer.find(".messages");
-	const activeChannelId = chat.find(".chan.active").data("id");
 
 	if (data.msg.type === "channel_list" || data.msg.type === "ban_list" || data.msg.type === "ignore_list") {
 		$(container).empty();
 	}
 
 	channel.channel.messages.push(data.msg);
-
-	if (activeChannelId === targetId) {
-		scrollContainer.trigger("keepToBottom");
-	}
 
 	notifyMessage(targetId, channelContainer, data);
 
@@ -91,20 +89,6 @@ function processReceivedMessage(data) {
 			.find(".unread-marker")
 			.data("unread-id", 0)
 			.appendTo(container);
-	}
-
-	let messageLimit = 0;
-
-	if (activeChannelId !== targetId) {
-		// If message arrives in non active channel, keep only 100 messages
-		messageLimit = 100;
-	} else if (scrollContainer.isScrollBottom()) {
-		// If message arrives in active channel, keep 500 messages if scroll is currently at the bottom
-		messageLimit = 500;
-	}
-
-	if (messageLimit > 0) {
-		render.trimMessageInChannel(channelContainer, messageLimit);
 	}
 
 	if ((data.msg.type === "message" || data.msg.type === "action") && channel.channel.type === "channel") {
