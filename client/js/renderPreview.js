@@ -102,8 +102,6 @@ function appendPreview(preview, msg, template) {
 	if (activeChannelId === channelId) {
 		// If this preview is in active channel, hide "More" button if necessary
 		previewContent.trigger("showMoreIfNeeded");
-
-		container.trigger("keepToBottom");
 	}
 }
 
