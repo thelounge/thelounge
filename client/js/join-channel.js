@@ -79,8 +79,8 @@ function handleKeybinds(networks) {
 			const key = form.find("input[name='key']").val();
 			const existingChannel = utils.findCurrentNetworkChan(channel);
 
-			if (existingChannel.length) {
-				existingChannel.trigger("click");
+			if (existingChannel) {
+				$(`#sidebar .chan[data-id="${chan.id}"]`).trigger("click");
 			} else {
 				socket.emit("input", {
 					text: `/join ${channel} ${key}`,

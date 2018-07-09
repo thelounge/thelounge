@@ -21,8 +21,6 @@ window.vueMounted = () => {
 	require("./clipboard");
 
 	const sidebar = $("#sidebar, #footer");
-	const chat = $("#chat");
-
 	const viewport = $("#viewport");
 
 	function storeSidebarVisibility(name, state) {
@@ -102,16 +100,16 @@ window.vueMounted = () => {
 		$(document.body).addClass("is-apple");
 	}
 
-	chat.on("click", ".inline-channel", function() {
+	viewport.on("click", ".inline-channel", function() {
 		const name = $(this).attr("data-chan");
 		const chan = utils.findCurrentNetworkChan(name);
 
-		if (chan.length) {
-			chan.trigger("click");
+		if (chan) {
+			$(`#sidebar .chan[data-id="${chan.id}"]`).trigger("click");
 		}
 
 		socket.emit("input", {
-			target: chat.data("id"),
+			target: vueApp.activeChannel.channel.id,
 			text: "/join " + name,
 		});
 	});
@@ -131,16 +129,7 @@ window.vueMounted = () => {
 		let channel;
 
 		if (inSidebar) {
-			chat.data(
-				"id",
-				self.data("id")
-			);
-			socket.emit(
-				"open",
-				self.data("id")
-			);
-
-			channel = findChannel(self.data("id"));
+			channel = findChannel(Number(self.attr("data-id")));
 
 			vueApp.activeChannel = channel;
 
@@ -148,6 +137,8 @@ window.vueMounted = () => {
 				channel.channel.highlight = 0;
 				channel.channel.unread = 0;
 			}
+
+			socket.emit("open", channel ? channel.channel.id : null);
 
 			let hasAnyHighlights = false;
 
