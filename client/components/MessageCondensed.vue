@@ -1,11 +1,15 @@
 <template>
-	<div class="msg condensed closed" ref="condensedContainer">
-		<div class="condensed-summary">
-			<span class="time"></span>
-			<span class="from"></span>
+	<div :class="[ 'msg', 'condensed', { closed: isCollapsed } ]">
+		<div
+			class="condensed-summary"
+			@click="isCollapsed = !isCollapsed">
+			<span class="time"/>
+			<span class="from"/>
 			<span class="content">
-				{{condensedText}}
-				<button class="toggle-button" aria-label="Toggle status messages" @click="onExpandClick"></button>
+				{{ condensedText }}
+				<button
+					class="toggle-button"
+					aria-label="Toggle status messages"/>
 			</span>
 		</div>
 		<Message
@@ -22,10 +26,15 @@ import Message from "./Message.vue";
 export default {
 	name: "MessageCondensed",
 	components: {
-		Message
+		Message,
 	},
 	props: {
 		messages: Array,
+	},
+	data() {
+		return {
+			isCollapsed: true,
+		};
 	},
 	computed: {
 		condensedText() {
@@ -81,11 +90,6 @@ export default {
 			}
 
 			return text;
-		},
-	},
-	methods: {
-		onExpandClick() {
-			this.$refs.condensedContainer.classList.toggle("closed");
 		},
 	},
 };
