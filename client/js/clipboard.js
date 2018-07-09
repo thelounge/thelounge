@@ -1,9 +1,8 @@
 "use strict";
 
 const $ = require("jquery");
-const chat = document.getElementById("chat");
 
-function copyMessages() {
+module.exports = function(chat) {
 	const selection = window.getSelection();
 
 	// If selection does not span multiple elements, do nothing
@@ -37,6 +36,4 @@ function copyMessages() {
 		selection.removeAllRanges();
 		selection.addRange(range);
 	}, 0);
-}
-
-$(chat).on("copy", ".messages", copyMessages);
+};

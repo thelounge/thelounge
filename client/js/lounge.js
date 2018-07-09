@@ -18,7 +18,6 @@ window.vueMounted = () => {
 	const utils = require("./utils");
 	require("./webpush");
 	require("./keybinds");
-	require("./clipboard");
 
 	const sidebar = $("#sidebar, #footer");
 	const viewport = $("#viewport");

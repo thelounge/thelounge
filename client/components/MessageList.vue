@@ -4,6 +4,7 @@
 		role="log"
 		aria-live="polite"
 		aria-relevant="additions"
+		@copy="onCopy"
 	>
 		<template v-for="(message, id) in getCondensedMessages">
 			<div
@@ -41,6 +42,7 @@
 
 <script>
 const constants = require("../js/constants");
+const clipboard = require("../js/clipboard");
 import Message from "./Message.vue";
 import MessageCondensed from "./MessageCondensed.vue";
 
@@ -109,6 +111,9 @@ export default {
 			this.channel.firstUnread = 0;
 
 			return true;
+		},
+		onCopy() {
+			clipboard(this.$el);
 		},
 	},
 };
