@@ -5,7 +5,7 @@
 		aria-live="polite"
 		aria-relevant="additions"
 	>
-		<template v-for="(message, id) in channel.messages">
+		<template v-for="(message, id) in getCondensedMessages">
 			<div
 				v-if="shouldDisplayDateMarker(id)"
 				:key="message.id + '-date'"
@@ -26,7 +26,10 @@
 			>
 				<span class="unread-marker-text"/>
 			</div>
+
+			<MessageCondensed v-if="message.type === 'condensed'" :key="message.id" :messages="message.messages"/>
 			<Message
+				v-else
 				:message="message"
 				:key="message.id"/>
 		</template>
@@ -34,15 +37,54 @@
 </template>
 
 <script>
+const constants = require("../js/constants");
 import Message from "./Message.vue";
+import MessageCondensed from "./MessageCondensed.vue";
 
 export default {
 	name: "MessageList",
 	components: {
 		Message,
+		MessageCondensed,
 	},
 	props: {
 		channel: Object,
+	},
+	computed: {
+		getCondensedMessages() {
+			if (this.channel.type !== "channel") {
+				return this.channel.messages;
+			}
+
+			const condensed = [];
+			let lastCondensedContainer = null;
+
+			for (const message of this.channel.messages) {
+				// If this message is not condensable, or its an action affecting our user,
+				// then just append the message to container and be done with it
+				if (message.self || message.highlight || !constants.condensedTypes.includes(message.type)) {
+					lastCondensedContainer = null;
+
+					condensed.push(message);
+
+					continue;
+				}
+
+				if (lastCondensedContainer === null) {
+					lastCondensedContainer = {
+						type: "condensed",
+						messages: [],
+					};
+
+					condensed.push(lastCondensedContainer);
+				}
+
+				lastCondensedContainer.id = message.id; // TODO
+				lastCondensedContainer.messages.push(message);
+			}
+
+			return condensed;
+		},
 	},
 	methods: {
 		shouldDisplayDateMarker(id) {
