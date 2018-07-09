@@ -5,6 +5,7 @@
 		<div
 			id="chat"
 			ref="chat"
+			:data-id="channel.id"
 			:class="{
 				'hide-motd': !settings.motd,
 				'hide-status-messages': settings.statusMessages === 'hidden',
