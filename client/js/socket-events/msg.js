@@ -6,8 +6,6 @@ const utils = require("../utils");
 const options = require("../options");
 const cleanIrcMessage = require("../libs/handlebars/ircmessageparser/cleanIrcMessage");
 const webpush = require("../webpush");
-const chat = $("#chat");
-const sidebar = $("#sidebar");
 const {vueApp, findChannel} = require("../vue");
 
 let pop;
@@ -33,7 +31,7 @@ socket.on("msg", function(data) {
 function processReceivedMessage(data) {
 	let targetId = data.chan;
 	let target = "#chan-" + targetId;
-	let channelContainer = chat.find(target);
+	let channelContainer = $("#chat").find(target);
 	let channel = findChannel(data.chan);
 
 	channel.channel.highlight = data.highlight;
@@ -52,7 +50,7 @@ function processReceivedMessage(data) {
 		targetId = data.chan = vueApp.activeChannel.channel.id;
 
 		target = "#chan-" + targetId;
-		channelContainer = chat.find(target);
+		channelContainer = $("#chat").find(target);
 	}
 
 	const scrollContainer = channelContainer.find(".chat");
@@ -91,6 +89,24 @@ function processReceivedMessage(data) {
 			.appendTo(container);
 	}
 
+	let messageLimit = 0;
+
+	if (!vueApp.activeChannel || vueApp.activeChannel.channel !== channel.channel) {
+		// If message arrives in non active channel, keep only 100 messages
+		messageLimit = 100;
+	} else {
+		const el = scrollContainer.get(0);
+
+		// If message arrives in active channel, keep 500 messages if scroll is currently at the bottom
+		if (el.scrollHeight - el.scrollTop - el.offsetHeight <= 30) {
+			messageLimit = 500;
+		}
+	}
+
+	if (messageLimit > 0) {
+		channel.channel.messages.splice(0, channel.channel.messages.length - messageLimit);
+	}
+
 	if ((data.msg.type === "message" || data.msg.type === "action") && channel.channel.type === "channel") {
 		const user = channel.channel.users.find((u) => u.nick === data.msg.from.nick);
 
@@ -110,7 +126,7 @@ function notifyMessage(targetId, channel, msg) {
 		return;
 	}
 
-	const button = sidebar.find(".chan[data-id='" + targetId + "']");
+	const button = $("#sidebar .chan[data-id='" + targetId + "']");
 
 	if (msg.highlight || (options.settings.notifyAllMessages && msg.type === "message")) {
 		if (!document.hasFocus() || !channel.hasClass("active")) {
