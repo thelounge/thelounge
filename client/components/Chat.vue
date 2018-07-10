@@ -116,7 +116,11 @@ export default {
 		"channel.messages"() {
 			const el = this.$refs.chat;
 
-			if (!el || el.scrollHeight - el.scrollTop - el.offsetHeight > 30) {
+			if (!el) {
+				return;
+			}
+
+			if (el.scrollHeight - el.scrollTop - el.offsetHeight > 30) {
 				return;
 			}
 
@@ -126,24 +130,26 @@ export default {
 		},
 	},
 	created() {
-		if (!this.$refs.chat) {
-			return;
-		}
-
-		if (window.IntersectionObserver) {
-			this.historyObserver = new window.IntersectionObserver(loadMoreHistory, {
-				root: this.$refs.chat,
-			});
-		}
-
 		this.$nextTick(() => {
+			if (!this.$refs.chat) {
+				return;
+			}
+
+			if (window.IntersectionObserver) {
+				this.historyObserver = new window.IntersectionObserver(loadMoreHistory, {
+					root: this.$refs.chat,
+				});
+			}
+
 			this.$refs.chat.scrollTop = this.$refs.chat.scrollHeight;
 		});
 	},
 	mounted() {
-		if (this.historyObserver) {
-			this.historyObserver.observe(this.$refs.loadMoreButton);
-		}
+		this.$nextTick(() => {
+			if (this.historyObserver) {
+				this.historyObserver.observe(this.$refs.loadMoreButton);
+			}
+		});
 	},
 	destroyed() {
 		if (this.historyObserver) {
