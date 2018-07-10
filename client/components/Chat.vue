@@ -57,7 +57,7 @@
 						ref="chat"
 						class="chat"
 					>
-						<div class="show-more">
+						<div :class="['show-more', { show: channel.moreHistoryAvailable }]">
 							<button
 								ref="loadMoreButton"
 								:disabled="channel.historyLoading || !$root.connected"
