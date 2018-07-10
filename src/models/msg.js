@@ -46,6 +46,9 @@ class Msg {
 			this.type !== Msg.Type.ERROR &&
 			this.type !== Msg.Type.BANLIST &&
 			this.type !== Msg.Type.IGNORELIST &&
+			this.type !== "channel_list" &&
+			this.type !== "channel_list_loading" &&
+			this.type !== "channel_list_truncated" &&
 			this.type !== Msg.Type.TOPIC_SET_BY &&
 			this.type !== Msg.Type.WHOIS;
 	}
