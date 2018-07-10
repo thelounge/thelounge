@@ -128,7 +128,11 @@ window.vueMounted = () => {
 		let channel;
 
 		if (vueApp.activeChannel) {
-			vueApp.activeChannel.channel.firstUnread = vueApp.activeChannel.channel.messages[vueApp.activeChannel.channel.messages.length - 1].id;
+			const {channel: lastChannel} = vueApp.activeChannel;
+
+			if (lastChannel.messages.length > 0) {
+				lastChannel.firstUnread = lastChannel.messages[lastChannel.messages.length - 1].id;
+			}
 		}
 
 		if (inSidebar) {
