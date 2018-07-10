@@ -145,12 +145,12 @@ const config = {
 		port: 9001,
 		proxy: {
 			"/": {
-				context: ['**', '!/css/**', '!/js/**'],
-				target: 'http://localhost:9000/',
+				context: ["**", "!/css/**", "!/js/**"],
+				target: "http://localhost:9000/",
 			},
 			"/socket.io": {
 				ws: true,
-				target: 'http://localhost:9000',
+				target: "http://localhost:9000",
 			},
 		},
 	},

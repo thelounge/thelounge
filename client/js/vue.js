@@ -44,14 +44,14 @@ const vueApp = new Vue({
 			userStyles: "",
 		},
 	},
+	mounted() {
+		Vue.nextTick(() => window.vueMounted());
+	},
 	render(createElement) {
 		return createElement(App, {
 			props: this,
 		});
 	},
-	mounted() {
-		Vue.nextTick(() => window.vueMounted());
-	}
 });
 
 function findChannel(id) {

@@ -96,9 +96,6 @@ function processReceivedMessage(data) {
 }
 
 function notifyMessage(targetId, channel, msg) {
-	const serverUnread = msg.unread;
-	const serverHighlight = msg.highlight;
-
 	msg = msg.msg;
 
 	if (msg.self) {

@@ -1,7 +1,6 @@
 "use strict";
 
 const Chan = require("../../models/chan");
-const Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
 	const client = this;
