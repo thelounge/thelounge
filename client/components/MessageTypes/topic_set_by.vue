@@ -1,4 +1,4 @@
-<template v-elseif="message.type === 'message'">
+<template>
 	<span class="content">
 		Topic set by
 		<Username :user="message.from"/>

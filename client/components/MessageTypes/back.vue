@@ -1,4 +1,4 @@
-<template v-elseif="message.type === 'message'">
+<template>
 	<span class="content">
 		<template v-if="message.self">
 			<i v-html="$options.filters.parse(message.text)"/>
