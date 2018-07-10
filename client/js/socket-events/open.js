@@ -22,14 +22,8 @@ socket.on("open", function(id) {
 	if (channel) {
 		channel.channel.highlight = 0;
 		channel.channel.unread = 0;
+		channel.channel.firstUnread = channel.channel.messages[channel.channel.messages.length - 1].id;
 	}
 
 	utils.updateTitle();
-
-	// Move unread marker to the bottom
-	const channelContainer = $("#chat #chan-" + id);
-	channelContainer
-		.find(".unread-marker")
-		.data("unread-id", 0)
-		.appendTo(channelContainer.find(".messages"));
 });
