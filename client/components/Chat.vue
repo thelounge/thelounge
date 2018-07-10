@@ -114,7 +114,7 @@ export default {
 		"channel.messages"() {
 			const el = this.$refs.chat;
 
-			if (el.scrollHeight - el.scrollTop - el.offsetHeight > 30) {
+			if (!el || el.scrollHeight - el.scrollTop - el.offsetHeight > 30) {
 				return;
 			}
 
