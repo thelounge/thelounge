@@ -93,6 +93,19 @@ export default {
 		network: Object,
 		channel: Object,
 	},
+	watch: {
+		"channel.messages"() {
+			const el = this.$refs.chat;
+
+			if (el.scrollHeight - el.scrollTop - el.offsetHeight > 30) {
+				return;
+			}
+
+			this.$nextTick(() => {
+				el.scrollTop = el.scrollHeight;
+			});
+		},
+	},
 	created() {
 		if (window.IntersectionObserver) {
 			this.historyObserver = new window.IntersectionObserver(loadMoreHistory, {
@@ -112,19 +125,6 @@ export default {
 	destroyed() {
 		if (this.historyObserver) {
 			this.historyObserver.disconnect();
-		}
-	},
-	watch: {
-		"channel.messages": function() {
-			const el = this.$refs.chat;
-
-			if (el.scrollHeight - el.scrollTop - el.offsetHeight > 30) {
-				return;
-			}
-
-			this.$nextTick(() => {
-				el.scrollTop = el.scrollHeight;
-			});
 		}
 	},
 	methods: {
