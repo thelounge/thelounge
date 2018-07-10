@@ -1380,12 +1380,13 @@ background on hover (unless active) */
 #chat .toggle-content {
 	background: #f6f6f6;
 	border-radius: 5px;
-	display: none;
 	max-width: 100%;
 	margin: 0;
 	margin-top: 6px;
 	overflow: hidden;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	display: inline-flex !important;
+	align-items: flex-start;
 }
 
 /* This applies to images of preview-type-image and thumbnails of preview-type-link */
@@ -1474,11 +1475,6 @@ background on hover (unless active) */
 
 #chat .toggle-content .more-caret::before {
 	content: "\f0da"; /* https://fontawesome.com/icons/caret-right?style=solid */
-}
-
-#chat .toggle-content.show {
-	display: inline-flex !important;
-	align-items: flex-start;
 }
 
 #chat audio {
