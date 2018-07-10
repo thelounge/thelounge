@@ -150,8 +150,8 @@ window.vueMounted = () => {
 			let hasAnyHighlights = false;
 
 			for (const network of vueApp.networks) {
-				for (const channel of network.channels) {
-					if (channel.highlight > 0) {
+				for (const chan of network.channels) {
+					if (chan.highlight > 0) {
 						hasAnyHighlights = true;
 						break;
 					}

@@ -1,6 +1,5 @@
 "use strict";
 
-const $ = require("jquery");
 const socket = require("../socket");
 const utils = require("../utils");
 const {vueApp, findChannel} = require("../vue");

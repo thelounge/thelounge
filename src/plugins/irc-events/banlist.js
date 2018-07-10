@@ -31,10 +31,10 @@ module.exports = function(irc, network) {
 
 		const chanName = `Banlist for ${channel}`;
 		let chan = network.getChannel(chanName);
-		const data = bans.map((data) => ({
-			hostmask: data.banned,
-			banned_by: data.banned_by,
-			banned_at: data.banned_at * 1000,
+		const data = bans.map((ban) => ({
+			hostmask: ban.banned,
+			banned_by: ban.banned_by,
+			banned_at: ban.banned_at * 1000,
 		}));
 
 		if (typeof chan === "undefined") {
