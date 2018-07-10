@@ -80,7 +80,7 @@ function handleKeybinds(networks) {
 			const existingChannel = utils.findCurrentNetworkChan(channel);
 
 			if (existingChannel) {
-				$(`#sidebar .chan[data-id="${chan.id}"]`).trigger("click");
+				$(`#sidebar .chan[data-id="${existingChannel.id}"]`).trigger("click");
 			} else {
 				socket.emit("input", {
 					text: `/join ${channel} ${key}`,

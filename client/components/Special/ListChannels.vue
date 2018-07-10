@@ -1,6 +1,8 @@
 <template>
-	<span v-if="channel.data.text">{{channel.data.text}}</span>
-	<table v-else class="channel-list">
+	<span v-if="channel.data.text">{{ channel.data.text }}</span>
+	<table
+		v-else
+		class="channel-list">
 		<thead>
 			<tr>
 				<th class="channel">Channel</th>

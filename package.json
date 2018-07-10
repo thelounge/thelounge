@@ -16,7 +16,7 @@
     "coverage": "run-s test:{client,server} && nyc --nycrc-path=test/.nycrc-report report",
     "dev": "run-p watch start",
     "lint:css": "stylelint --color \"client/**/*.css\"",
-    "lint:js": "eslint . --ext .vue --report-unused-disable-directives --color",
+    "lint:js": "eslint . --ext .js,.vue --report-unused-disable-directives --color",
     "start": "node index start",
     "test": "run-p --aggregate-output --continue-on-error lint:* test:{client,server}",
     "test:browser": "webpack-dev-server --config=webpack.config-browser.js",
