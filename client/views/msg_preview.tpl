@@ -46,7 +46,6 @@
 					{{body}}
 				</a>
 			</div>
-			</a>
 		</div>
 	{{/equal}}
 	{{#equal type "error"}}
