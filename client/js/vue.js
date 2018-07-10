@@ -20,11 +20,6 @@ Vue.filter("friendlysize", friendlysize);
 Vue.filter("colorClass", colorClass);
 Vue.filter("roundBadgeNumber", roundBadgeNumber);
 
-Vue.config.keyCodes = {
-	"page-up": 33,
-	"page-down": 34,
-};
-
 const vueApp = new Vue({
 	el: "#viewport",
 	data: {

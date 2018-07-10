@@ -28,6 +28,7 @@
 				<template v-if="userSearchInput.length > 0">
 					<UsernameFiltered
 						v-for="user in users"
+						:onHover="hoverUser"
 						:key="user.original.nick"
 						:active="user.original === activeUser"
 						:user="user"/>
@@ -35,6 +36,7 @@
 				<template v-else>
 					<Username
 						v-for="user in users"
+						:onHover="hoverUser"
 						:key="user.nick"
 						:active="user === activeUser"
 						:user="user"/>
@@ -75,19 +77,24 @@ export default {
 		};
 	},
 	computed: {
+		// filteredUsers is computed, to avoid unnecessary filtering
+		// as it is shared between filtering and keybindings.
+		filteredUsers() {
+			return fuzzy.filter(
+				this.userSearchInput,
+				this.channel.users,
+				{
+					pre: "<b>",
+					post: "</b>",
+					extract: (u) => u.nick,
+				}
+			);
+		},
 		groupedUsers() {
 			const groups = {};
 
 			if (this.userSearchInput) {
-				const result = fuzzy.filter(
-					this.userSearchInput,
-					this.channel.users,
-					{
-						pre: "<b>",
-						post: "</b>",
-						extract: (u) => u.nick,
-					}
-				);
+				const result = this.filteredUsers;
 
 				for (const user of result) {
 					if (!groups[user.original.mode]) {
@@ -131,21 +138,15 @@ export default {
 			});
 			el.dispatchEvent(ev);
 		},
+		hoverUser(user) {
+			this.activeUser = user;
+		},
 		navigateUserList(direction) {
 			let users = this.channel.users;
 
-			// If a search is active, get the matching user objects
-			// TODO: this could probably be cached via `computed`
-			//		 to avoid refiltering on each keypress
+			// Only using filteredUsers when we have to avoids filtering when it's not needed
 			if (this.userSearchInput) {
-				const results = fuzzy.filter(
-					this.userSearchInput,
-					this.channel.users,
-					{
-						extract: (u) => u.nick,
-					}
-				);
-				users = results.map((result) => result.original);
+				users = this.filteredUsers.map((result) => result.original);
 			}
 
 			// Bail out if there's no users to select
