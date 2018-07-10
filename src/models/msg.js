@@ -44,11 +44,6 @@ class Msg {
 
 		return this.type !== Msg.Type.MOTD &&
 			this.type !== Msg.Type.ERROR &&
-			this.type !== Msg.Type.BANLIST &&
-			this.type !== Msg.Type.IGNORELIST &&
-			this.type !== "channel_list" &&
-			this.type !== "channel_list_loading" &&
-			this.type !== "channel_list_truncated" &&
 			this.type !== Msg.Type.TOPIC_SET_BY &&
 			this.type !== Msg.Type.WHOIS;
 	}
@@ -76,8 +71,6 @@ Msg.Type = {
 	TOPIC: "topic",
 	TOPIC_SET_BY: "topic_set_by",
 	WHOIS: "whois",
-	BANLIST: "ban_list",
-	IGNORELIST: "ignore_list",
 };
 
 module.exports = Msg;

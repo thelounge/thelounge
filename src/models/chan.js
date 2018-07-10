@@ -16,6 +16,12 @@ Chan.Type = {
 	SPECIAL: "special",
 };
 
+Chan.SpecialType = {
+	BANLIST: "list_bans",
+	CHANNELLIST: "list_channels",
+	IGNORELIST: "list_ignored",
+};
+
 Chan.State = {
 	PARTED: 0,
 	JOINED: 1,
