@@ -30,6 +30,7 @@
 
 <script>
 const $ = require("jquery");
+const commands = require("../js/commands/index");
 const socket = require("../js/socket");
 const Mousetrap = require("mousetrap");
 const {wrapCursor} = require("undate");
@@ -121,11 +122,11 @@ export default {
 			this.channel.pendingMessage = "";
 			// resetInputHeight(input.get(0));
 
-			if (text.charAt(0) === "/") {
+			if (text[0] === "/") {
 				const args = text.substr(1).split(" ");
 				const cmd = args.shift().toLowerCase();
 
-				if (typeof utils.inputCommands[cmd] === "function" && utils.inputCommands[cmd](args)) {
+				if (commands[cmd] && commands[cmd].input(args)) {
 					return false;
 				}
 			}

@@ -11,7 +11,6 @@ var lastMessageId = -1; // eslint-disable-line no-var
 module.exports = {
 	// Same value as media query in CSS that forces sidebars to become overlays
 	mobileViewportPixels: 768,
-	inputCommands: {collapse, expand, join},
 	findCurrentNetworkChan,
 	serverHash,
 	lastMessageId,
@@ -56,28 +55,6 @@ function scrollIntoViewNicely(el) {
 	// Ideally this would use behavior: "smooth", but that does not consistently work in e.g. Chrome
 	// https://github.com/iamdustan/smoothscroll/issues/28#issuecomment-364061459
 	el.scrollIntoView({block: "center", inline: "nearest"});
-}
-
-function collapse() {
-	$(".chan.active .toggle-button.toggle-preview.opened").click();
-	return true;
-}
-
-function expand() {
-	$(".chan.active .toggle-button.toggle-preview:not(.opened)").click();
-	return true;
-}
-
-function join(args) {
-	const channel = args[0];
-
-	if (channel) {
-		const chan = findCurrentNetworkChan(channel);
-
-		if (chan) {
-			$(`#sidebar .chan[data-id="${chan.id}"]`).trigger("click");
-		}
-	}
 }
 
 const favicon = $("#favicon");
