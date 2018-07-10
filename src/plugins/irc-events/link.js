@@ -64,12 +64,12 @@ module.exports = function(client, chan, msg) {
 			accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
 			language: client.language,
 		}).then((res) => {
-			parse(msg, preview, res, client);
+			parse(msg, chan, preview, res, client);
 		}).catch((err) => {
 			preview.type = "error";
 			preview.error = "message";
 			preview.message = err.message;
-			handlePreview(client, msg, preview, null);
+			handlePreview(client, chan, msg, preview, null);
 		});
 
 		return cleanLinks;
@@ -80,7 +80,7 @@ function parseHtml(preview, res, client) {
 	return new Promise((resolve) => {
 		const $ = cheerio.load(res.data);
 
-		return parseHtmlMedia($, preview, res, client)
+		return parseHtmlMedia($, preview, client)
 			.then((newRes) => resolve(newRes))
 			.catch(() => {
 				preview.type = "link";
@@ -124,7 +124,7 @@ function parseHtml(preview, res, client) {
 	});
 }
 
-function parseHtmlMedia($, preview, res, client) {
+function parseHtmlMedia($, preview, client) {
 	return new Promise((resolve, reject) => {
 		let foundMedia = false;
 
@@ -178,7 +178,7 @@ function parseHtmlMedia($, preview, res, client) {
 	});
 }
 
-function parse(msg, preview, res, client) {
+function parse(msg, chan, preview, res, client) {
 	let promise;
 
 	switch (res.type) {
@@ -239,15 +239,15 @@ function parse(msg, preview, res, client) {
 	}
 
 	if (!promise) {
-		return handlePreview(client, msg, preview, res);
+		return handlePreview(client, chan, msg, preview, res);
 	}
 
-	promise.then((newRes) => handlePreview(client, msg, preview, newRes));
+	promise.then((newRes) => handlePreview(client, chan, msg, preview, newRes));
 }
 
-function handlePreview(client, msg, preview, res) {
+function handlePreview(client, chan, msg, preview, res) {
 	if (!preview.thumb.length || !Helper.config.prefetchStorage) {
-		return emitPreview(client, msg, preview);
+		return emitPreview(client, chan, msg, preview);
 	}
 
 	// Get the correct file extension for the provided content-type
@@ -262,17 +262,17 @@ function handlePreview(client, msg, preview, res) {
 		}
 
 		preview.thumb = "";
-		return emitPreview(client, msg, preview);
+		return emitPreview(client, chan, msg, preview);
 	}
 
 	storage.store(res.data, extension, (uri) => {
 		preview.thumb = uri;
 
-		emitPreview(client, msg, preview);
+		emitPreview(client, chan, msg, preview);
 	});
 }
 
-function emitPreview(client, msg, preview) {
+function emitPreview(client, chan, msg, preview) {
 	// If there is no title but there is preview or description, set title
 	// otherwise bail out and show no preview
 	if (!preview.head.length && preview.type === "link") {
@@ -283,8 +283,11 @@ function emitPreview(client, msg, preview) {
 		}
 	}
 
-	const id = msg.id;
-	client.emit("msg:preview", {id, preview});
+	client.emit("msg:preview", {
+		id: msg.id,
+		chan: chan.id,
+		preview: preview,
+	});
 }
 
 function removePreview(msg, preview) {

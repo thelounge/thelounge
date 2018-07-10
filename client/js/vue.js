@@ -8,6 +8,7 @@ const tz = require("./libs/handlebars/tz");
 const localetime = require("./libs/handlebars/localetime");
 const localedate = require("./libs/handlebars/localedate");
 const friendlydate = require("./libs/handlebars/friendlydate");
+const friendlysize = require("./libs/handlebars/friendlysize");
 const colorClass = require("./libs/handlebars/colorClass");
 
 Vue.filter("parse", parse);
@@ -15,6 +16,7 @@ Vue.filter("tz", tz);
 Vue.filter("localetime", localetime);
 Vue.filter("localedate", localedate);
 Vue.filter("friendlydate", friendlydate);
+Vue.filter("friendlysize", friendlysize);
 Vue.filter("colorClass", colorClass);
 Vue.filter("roundBadgeNumber", roundBadgeNumber);
 
