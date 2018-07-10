@@ -12,7 +12,7 @@
 			<span class="content">
 				<span
 					v-for="(param, id) in message.params"
-					:key="id">{{ param }}</span>
+					:key="id">{{ param }} </span>
 			</span>
 		</template>
 		<template v-else-if="isAction()">
