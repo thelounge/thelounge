@@ -32,11 +32,10 @@
 					class="text"
 					v-html="$options.filters.parse(message.text, message.users)"/>
 
-				<div
+				<LinkPreview
 					v-for="preview in message.previews"
 					:key="preview.link"
-					:data-url="preview.link"
-					class="preview"/>
+					:link="preview"/>
 			</span>
 		</template>
 	</div>
@@ -44,8 +43,10 @@
 
 <script>
 import Username from "./Username.vue";
+import LinkPreview from "./LinkPreview.vue";
 import MessageTypes from "./MessageTypes";
 
+MessageTypes.LinkPreview = LinkPreview;
 MessageTypes.Username = Username;
 
 export default {
