@@ -1,4 +1,4 @@
-<template v-elseif="message.type === 'message'">
+<template>
 	<span class="content">
 		<p>
 			<Username :user="{nick: message.whois.nick}"/>

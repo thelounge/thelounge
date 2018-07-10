@@ -1,4 +1,4 @@
-<template v-elseif="message.type === 'message'">
+<template>
 	<span class="content">
 		<template v-if="message.from && message.from.nick">
 			<Username :user="message.from"/>
