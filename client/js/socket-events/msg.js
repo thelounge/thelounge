@@ -64,29 +64,8 @@ function processReceivedMessage(data) {
 
 	notifyMessage(targetId, channelContainer, data);
 
-	let shouldMoveMarker = data.msg.self;
-
-	if (!shouldMoveMarker) {
-		const lastChild = container.children().last();
-
-		// If last element is hidden (e.g. hidden status messages) check the element before it.
-		// If it's unread marker or date marker, then move unread marker to the bottom
-		// so that it isn't displayed as the last element in chat.
-		// display properly is checked instead of using `:hidden` selector because it doesn't work in non-active channels.
-		if (lastChild.css("display") === "none") {
-			const prevChild = lastChild.prev();
-
-			shouldMoveMarker =
-				prevChild.hasClass("unread-marker") ||
-				(prevChild.hasClass("date-marker") && prevChild.prev().hasClass("unread-marker"));
-		}
-	}
-
-	if (shouldMoveMarker) {
-		container
-			.find(".unread-marker")
-			.data("unread-id", 0)
-			.appendTo(container);
+	if (data.msg.self) {
+		channel.channel.firstUnread = 0;
 	}
 
 	let messageLimit = 0;

@@ -104,13 +104,7 @@ export default {
 			return (new Date(previousTime.time)).getDay() !== (new Date(currentTime.time)).getDay();
 		},
 		shouldDisplayUnreadMarker(msgId) {
-			if (this.channel.firstUnread < msgId) {
-				return false;
-			}
-
-			this.channel.firstUnread = 0;
-
-			return true;
+			return this.channel.firstUnread === msgId;
 		},
 		onCopy() {
 			clipboard(this.$el);

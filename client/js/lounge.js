@@ -127,6 +127,10 @@ window.vueMounted = () => {
 		const inSidebar = self.parents("#sidebar, #footer").length > 0;
 		let channel;
 
+		if (vueApp.activeChannel) {
+			vueApp.activeChannel.channel.firstUnread = vueApp.activeChannel.channel.messages[vueApp.activeChannel.channel.messages.length - 1].id;
+		}
+
 		if (inSidebar) {
 			channel = findChannel(Number(self.attr("data-id")));
 
