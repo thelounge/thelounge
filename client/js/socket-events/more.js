@@ -18,6 +18,7 @@ socket.on("more", function(data) {
 		return;
 	}
 
+	channel.channel.moreHistoryAvailable = data.moreHistoryAvailable;
 	channel.channel.messages.unshift(...data.messages);
 	channel.channel.historyLoading = false;
 
@@ -26,8 +27,4 @@ socket.on("more", function(data) {
 		const position = chan.height() - heightOld;
 		scrollable.finish().scrollTop(position);
 	});
-
-	if (data.messages.length !== 100) {
-		scrollable.find(".show-more").removeClass("show");
-	}
 });
