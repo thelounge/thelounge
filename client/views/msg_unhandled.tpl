@@ -1,6 +1,6 @@
 <div class="msg msg-{{slugify command}} {{type}}{{#if self}} self{{/if}}{{#if highlight}} highlight{{/if}}" id="msg-{{id}}" data-time="{{time}}">
 	<span class="time tooltipped tooltipped-e" aria-label="{{localetime time}}">
-		{{tz time}}
+		{{{tz time}}}
 	</span>
 	<span class="from">[{{command}}]</span>
 	<span class="content">
