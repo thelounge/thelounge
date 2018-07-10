@@ -7,6 +7,7 @@ require("./join");
 require("./more");
 require("./msg");
 require("./msg_preview");
+require("./msg_special");
 require("./names");
 require("./network");
 require("./nick");

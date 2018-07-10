@@ -90,6 +90,7 @@ import MessageList from "./MessageList.vue";
 import ChatInput from "./ChatInput.vue";
 import ChatUserList from "./ChatUserList.vue";
 import ListBans from "./Special/ListBans.vue";
+import ListChannels from "./Special/ListChannels.vue";
 
 export default {
 	name: "Chat",
@@ -105,8 +106,9 @@ export default {
 	},
 	computed: {
 		specialComponent() {
-			if (this.channel.special === "list_bans") {
-				return ListBans;
+			switch (this.channel.special) {
+			case "list_bans": return ListBans;
+			case "list_channels": return ListChannels;
 			}
 		},
 	},
