@@ -1,4 +1,4 @@
-<template v-elseif="message.type === 'message'">
+<template>
 	<span class="content">
 		<Username :user="message.from"/>
 		has changed
