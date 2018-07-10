@@ -3,7 +3,6 @@
 const $ = require("jquery");
 
 exports.input = function(args) {
-	console.log(args);
 	const channel = args[0];
 	const utils = require("../utils");
 	const socket = require("../socket");
