@@ -31,29 +31,31 @@ module.exports = function(irc, network) {
 
 		const chanName = `Banlist for ${channel}`;
 		let chan = network.getChannel(chanName);
+		const data = bans.map((data) => ({
+			hostmask: data.banned,
+			banned_by: data.banned_by,
+			banned_at: data.banned_at * 1000,
+		}));
 
 		if (typeof chan === "undefined") {
 			chan = client.createChannel({
 				type: Chan.Type.SPECIAL,
+				special: Chan.SpecialType.BANLIST,
 				name: chanName,
+				data: data,
 			});
 			client.emit("join", {
 				network: network.uuid,
 				chan: chan.getFilteredClone(true),
 				index: network.addChannel(chan),
 			});
-		}
+		} else {
+			chan.data = data;
 
-		chan.pushMessage(client,
-			new Msg({
-				type: Msg.Type.BANLIST,
-				bans: bans.map((data) => ({
-					hostmask: data.banned,
-					banned_by: data.banned_by,
-					banned_at: data.banned_at * 1000,
-				})),
-			}),
-			true
-		);
+			client.emit("msg:special", {
+				chan: chan.id,
+				data: data,
+			});
+		}
 	});
 };

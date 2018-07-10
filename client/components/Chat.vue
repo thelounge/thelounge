@@ -43,7 +43,16 @@
 							aria-label="Toggle user list"/>
 					</span>
 				</div>
-				<div class="chat-content">
+				<div
+					v-if="channel.type === 'special'"
+					class="chat-content">
+					<component
+						:is="specialComponent"
+						:channel="channel"/>
+				</div>
+				<div
+					v-else
+					class="chat-content">
 					<div
 						ref="chat"
 						class="chat"
@@ -80,6 +89,7 @@ const socket = require("../js/socket");
 import MessageList from "./MessageList.vue";
 import ChatInput from "./ChatInput.vue";
 import ChatUserList from "./ChatUserList.vue";
+import ListBans from "./Special/ListBans.vue";
 
 export default {
 	name: "Chat",
@@ -92,6 +102,13 @@ export default {
 		settings: Object,
 		network: Object,
 		channel: Object,
+	},
+	computed: {
+		specialComponent() {
+			if (this.channel.special === "list_bans") {
+				return ListBans;
+			}
+		},
 	},
 	watch: {
 		"channel.messages"() {
@@ -107,6 +124,10 @@ export default {
 		},
 	},
 	created() {
+		if (!this.$refs.chat) {
+			return;
+		}
+
 		if (window.IntersectionObserver) {
 			this.historyObserver = new window.IntersectionObserver(loadMoreHistory, {
 				root: this.$refs.chat,
