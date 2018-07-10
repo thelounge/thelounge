@@ -1,6 +1,8 @@
 <template>
-	<div class="preview">
-		<div :class="['toggle-content', 'toggle-type-' + link.type, {show: link.shown}]">
+	<div
+		v-if="link.shown && link.canDisplay"
+		class="preview">
+		<div :class="['toggle-content', 'toggle-type-' + link.type]">
 			<template v-if="link.type === 'link'">
 				<a
 					v-if="link.thumb"
@@ -12,7 +14,8 @@
 						:src="link.thumb"
 						decoding="async"
 						alt=""
-						class="thumb">
+						class="thumb"
+						@load="onPreviewReady">
 				</a>
 				<div class="toggle-text">
 					<div class="head">
@@ -53,13 +56,15 @@
 					<img
 						:src="link.thumb"
 						decoding="async"
-						alt="">
+						alt=""
+						@load="onPreviewReady">
 				</a>
 			</template>
 			<template v-else-if="link.type === 'video'">
 				<video
 					preload="metadata"
-					controls>
+					controls
+					@canplay="onPreviewReady">
 					<source
 						:src="link.media"
 						:type="link.mediaType">
@@ -68,7 +73,8 @@
 			<template v-else-if="link.type === 'audio'">
 				<audio
 					controls
-					preload="metadata">
+					preload="metadata"
+					@canplay="onPreviewReady">
 					<source
 						:src="link.media"
 						:type="link.mediaType">
@@ -116,6 +122,17 @@ export default {
 	name: "LinkPreview",
 	props: {
 		link: Object,
+	},
+	mounted() {
+		if (this.link.shown) {
+			const options = require("../js/options");
+			this.$set(this.link, "canDisplay", options.shouldOpenMessagePreview(this.link.type));
+		}
+	},
+	methods: {
+		onPreviewReady() {
+
+		},
 	},
 };
 </script>
