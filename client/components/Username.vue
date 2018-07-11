@@ -2,9 +2,8 @@
 	<span
 		:class="['user', $options.filters.colorClass(user.nick), active ? 'active' : '']"
 		:data-name="user.nick"
-		role="button">{{ user.mode }}{{ user.nick }}
-		@mouseover="hover"
-	></span>
+		role="button"
+		v-on="onHover ? { mouseover: hover } : {}">{{ user.mode }}{{ user.nick }}</span>
 </template>
 
 <script>
@@ -17,7 +16,7 @@ export default {
 	},
 	methods: {
 		hover() {
-			this.onHover ? this.onHover(this.user) : null;
+			return this.onHover(this.user);
 		},
 	},
 };
