@@ -28,7 +28,7 @@
 				<template v-if="userSearchInput.length > 0">
 					<UsernameFiltered
 						v-for="user in users"
-						:onHover="hoverUser"
+						:on-hover="hoverUser"
 						:key="user.original.nick"
 						:active="user.original === activeUser"
 						:user="user"/>
@@ -36,7 +36,7 @@
 				<template v-else>
 					<Username
 						v-for="user in users"
-						:onHover="hoverUser"
+						:on-hover="hoverUser"
 						:key="user.nick"
 						:active="user === activeUser"
 						:user="user"/>
