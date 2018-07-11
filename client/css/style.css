@@ -323,8 +323,7 @@ kbd {
 
 #help .website-link::before,
 #help .documentation-link::before,
-#help .report-issue-link::before,
-#chat .toggle-button {
+#help .report-issue-link::before {
 	display: inline-block;
 	margin-right: 5px;
 
