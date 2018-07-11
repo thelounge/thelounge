@@ -93,7 +93,8 @@ module.exports = function parse(text, users = []) {
 		// Wrap these potentially styled fragments with links and channel buttons
 		if (textPart.link) {
 			const escapedLink = Handlebars.Utils.escapeExpression(textPart.link);
-			return `<a href="${escapedLink}" target="_blank" rel="noopener">${fragments}</a>`;
+			return `<a href="${escapedLink}" target="_blank" rel="noopener">${fragments}</a>` +
+				`<button class="toggle-button toggle-preview" data-url="${escapedLink}" hidden></button>`;
 		} else if (textPart.channel) {
 			const escapedChannel = Handlebars.Utils.escapeExpression(textPart.channel);
 			return `<span class="inline-channel" role="button" tabindex="0" data-chan="${escapedChannel}">${fragments}</span>`;

@@ -126,6 +126,14 @@ export default {
 	mounted() {
 		const options = require("../js/options");
 		this.$set(this.link, "canDisplay", this.link.type !== "loading" && options.shouldOpenMessagePreview(this.link.type));
+
+		this.$nextTick(() => {
+			const escapedLink = this.link.link.replace(/["\\]/g, "\\$&");
+
+			this.$parent.$refs.text
+				.querySelector(`.toggle-preview[data-url="${escapedLink}"]`)
+				.removeAttribute("hidden");
+		});
 	},
 	methods: {
 		onPreviewReady() {

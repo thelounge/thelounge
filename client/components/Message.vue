@@ -29,6 +29,7 @@
 			</span>
 			<span class="content">
 				<span
+					ref="text"
 					class="text"
 					v-html="$options.filters.parse(message.text, message.users)"/>
 
