@@ -30,8 +30,7 @@
 			<span class="content">
 				<span
 					ref="text"
-					class="text"
-					v-html="$options.filters.parse(message.text, message.users)"/>
+					class="text"><ParsedMessage :message="message"/></span>
 
 				<LinkPreview
 					v-for="preview in message.previews"
@@ -45,8 +44,10 @@
 <script>
 import Username from "./Username.vue";
 import LinkPreview from "./LinkPreview.vue";
+import ParsedMessage from "./ParsedMessage.vue";
 import MessageTypes from "./MessageTypes";
 
+MessageTypes.ParsedMessage = ParsedMessage;
 MessageTypes.LinkPreview = LinkPreview;
 MessageTypes.Username = Username;
 
