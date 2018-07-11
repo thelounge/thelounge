@@ -24,18 +24,18 @@ socket.on("msg", function(data) {
 		utils.lastMessageId = data.msg.id;
 	}
 
-	// We set a maximum timeout of 2 seconds so that messages don't take too long to appear.
-	utils.requestIdleCallback(() => processReceivedMessage(data), 2000);
-});
-
-function processReceivedMessage(data) {
 	let targetId = data.chan;
 	let target = "#chan-" + targetId;
 	let channelContainer = $("#chat").find(target);
 	let channel = findChannel(data.chan);
 
-	channel.channel.highlight = data.highlight;
-	channel.channel.unread = data.unread;
+	if (typeof data.highlight !== "undefined") {
+		channel.channel.highlight = data.highlight;
+	}
+
+	if (typeof data.unread !== "undefined") {
+		channel.channel.unread = data.unread;
+	}
 
 	if (data.msg.self || data.msg.highlight) {
 		utils.updateTitle();
@@ -65,7 +65,7 @@ function processReceivedMessage(data) {
 	notifyMessage(targetId, channelContainer, data);
 
 	if (data.msg.self) {
-		channel.channel.firstUnread = 0;
+		channel.channel.firstUnread = channel.channel.messages[channel.channel.messages.length - 1].id;
 	}
 
 	let messageLimit = 0;
@@ -93,7 +93,7 @@ function processReceivedMessage(data) {
 			user.lastMessage = (new Date(data.msg.time)).getTime() || Date.now();
 		}
 	}
-}
+});
 
 function notifyMessage(targetId, channel, msg) {
 	msg = msg.msg;
