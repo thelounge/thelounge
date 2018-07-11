@@ -6,9 +6,9 @@
 		aria-relevant="additions"
 		@copy="onCopy"
 	>
-		<template v-for="(message, id) in getCondensedMessages">
+		<template v-for="(message, id) in condensedMessages">
 			<div
-				v-if="shouldDisplayDateMarker(id)"
+				v-if="shouldDisplayDateMarker(message, id)"
 				:key="message.id + '-date'"
 				:data-time="message.time"
 				:aria-label="message.time | localedate"
@@ -21,7 +21,7 @@
 				</div>
 			</div>
 			<div
-				v-if="shouldDisplayUnreadMarker(message.id)"
+				v-if="shouldDisplayUnreadMarker(id)"
 				:key="message.id + '-unread'"
 				class="unread-marker"
 			>
@@ -56,7 +56,7 @@ export default {
 		channel: Object,
 	},
 	computed: {
-		getCondensedMessages() {
+		condensedMessages() {
 			if (this.channel.type !== "channel") {
 				return this.channel.messages;
 			}
@@ -78,6 +78,7 @@ export default {
 				if (lastCondensedContainer === null) {
 					lastCondensedContainer = {
 						id: message.id, // Use id of first message in the condensed container
+						time: message.time,
 						type: "condensed",
 						messages: [],
 					};
@@ -92,19 +93,23 @@ export default {
 		},
 	},
 	methods: {
-		shouldDisplayDateMarker(id) {
-			const previousTime = this.channel.messages[id - 1];
+		shouldDisplayDateMarker(message, id) {
+			const previousMessage = this.condensedMessages[id - 1];
 
-			if (!previousTime) {
+			if (!previousMessage) {
 				return true;
 			}
 
-			const currentTime = this.channel.messages[id];
-
-			return (new Date(previousTime.time)).getDay() !== (new Date(currentTime.time)).getDay();
+			return (new Date(previousMessage.time)).getDay() !== (new Date(message.time)).getDay();
 		},
-		shouldDisplayUnreadMarker(msgId) {
-			return this.channel.firstUnread === msgId;
+		shouldDisplayUnreadMarker(id) {
+			const previousMessage = this.condensedMessages[id - 1];
+
+			if (!previousMessage) {
+				return false;
+			}
+
+			return this.channel.firstUnread === previousMessage.id;
 		},
 		onCopy() {
 			clipboard(this.$el);
