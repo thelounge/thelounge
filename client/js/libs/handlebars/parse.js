@@ -9,6 +9,7 @@ const findNames = require("./ircmessageparser/findNames");
 const merge = require("./ircmessageparser/merge");
 const colorClass = require("./colorClass");
 const emojiMap = require("../fullnamemap.json");
+const LinkPreviewToggle = require("../../../components/LinkPreviewToggle.vue").default;
 
 // Create an HTML `span` with styling information for a given fragment
 function createFragment(fragment) {
@@ -108,7 +109,7 @@ function createVueFragment(fragment, createElement) {
 
 // Transform an IRC message potentially filled with styling control codes, URLs,
 // nicknames, and channels into a string of HTML elements to display on the client.
-module.exports = function parse(text, users = [], createElement = null) {
+module.exports = function parse(text, message = null, createElement = null) {
 	// Extract the styling information and get the plain text version from it
 	const styleFragments = parseStyle(text);
 	const cleanText = styleFragments.map((fragment) => fragment.text).join("");
@@ -121,7 +122,7 @@ module.exports = function parse(text, users = [], createElement = null) {
 	const channelParts = findChannels(cleanText, channelPrefixes, userModes);
 	const linkParts = findLinks(cleanText);
 	const emojiParts = findEmoji(cleanText);
-	const nameParts = findNames(cleanText, (users || []));
+	const nameParts = findNames(cleanText, message ? (message.users || []) : []);
 
 	const parts = channelParts
 		.concat(linkParts)
@@ -134,7 +135,8 @@ module.exports = function parse(text, users = [], createElement = null) {
 
 			// Wrap these potentially styled fragments with links and channel buttons
 			if (textPart.link) {
-				return createElement("a", {
+				const preview = message && message.previews.find((p) => p.link === textPart.link);
+				const link = createElement("a", {
 					class: [
 						"inline-channel",
 					],
@@ -144,6 +146,24 @@ module.exports = function parse(text, users = [], createElement = null) {
 						rel: "noopener",
 					},
 				}, fragments);
+
+				if (!preview) {
+					return link;
+				}
+
+				return [link, createElement(LinkPreviewToggle, {
+					class: ["toggle-button", "toggle-preview"],
+					props: {
+						link: preview,
+					},
+					on: {
+						linkPreviewToggle() {
+							console.log('it got toggled!!!')
+						}
+					}
+				}, fragments)];
+				
+				//`<button class="toggle-button toggle-preview" data-url="${escapedLink}" hidden></button>`;
 			} else if (textPart.channel) {
 				return createElement("span", {
 					class: [

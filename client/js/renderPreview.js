@@ -109,31 +109,6 @@ function appendPreview(preview, msg, template) {
 // their "More" button. Debounced handler to avoid performance cost.
 $(window).on("resize", debounce(togglePreviewMoreButtonsIfNeeded, 150));
 
-$("#chat").on("click", ".text .toggle-button", function() {
-	const self = $(this);
-	const content = self.closest(".content")
-		.find(`.preview[data-url="${self.data("url")}"] .toggle-content`);
-
-	self.toggleClass("opened");
-	content.toggleClass("show");
-
-	const isExpanded = content.hasClass("show");
-
-	if (isExpanded) {
-		content.trigger("showMoreIfNeeded");
-	}
-
-	// Tell the server we're toggling so it remembers at page reload
-	// TODO Avoid sending many single events when using `/collapse` or `/expand`
-	// See https://github.com/thelounge/thelounge/issues/1377
-	socket.emit("msg:preview:toggle", {
-		target: parseInt(self.closest(".chan").data("id"), 10),
-		msgId: parseInt(self.closest(".msg").prop("id").replace("msg-", ""), 10),
-		link: self.data("url"),
-		shown: isExpanded,
-	});
-});
-
 $("#chat").on("click", ".toggle-content .more", function() {
 	togglePreviewMore($(this));
 	return false;

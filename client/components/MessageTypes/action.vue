@@ -2,8 +2,8 @@
 	<span class="content">
 		<Username :user="message.from"/>
 		<span
-			class="text"
-			v-html="$options.filters.parse(message.text, message.users)"/>
+			ref="text"
+			class="text"><ParsedMessage :message="message"/></span>
 	</span>
 </template>
 
