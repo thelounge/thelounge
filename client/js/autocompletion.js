@@ -217,6 +217,9 @@ function enableAutocomplete(inputRef) {
 
 		input.val(text.substr(0, position) + newMatch);
 
+		// Propagate change to Vue model
+		input.get(0).dispatchEvent(new Event("input"));
+
 		lastMatch = newMatch;
 		tabCount++;
 	}, "keydown");
