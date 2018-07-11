@@ -131,6 +131,7 @@ window.vueMounted = () => {
 
 			if (lastChannel.messages.length > 0) {
 				lastChannel.firstUnread = lastChannel.messages[lastChannel.messages.length - 1].id;
+				lastChannel.messages.splice(0, lastChannel.messages.length - 100);
 			}
 		}
 
