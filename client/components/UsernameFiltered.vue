@@ -1,6 +1,6 @@
 <template>
 	<span
-		:class="['user', $options.filters.colorClass(user.original.nick), active ? 'active' : '']"
+		:class="['user', $options.filters.colorClass(user.original.nick), { active: active }]"
 		:data-name="user.original.nick"
 		role="button"
 		@mouseover="hover"
