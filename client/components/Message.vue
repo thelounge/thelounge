@@ -60,6 +60,9 @@ export default {
 			return "message-" + this.message.type;
 		},
 	},
+	mounted() {
+		require("../js/renderPreview");
+	},
 	methods: {
 		isAction() {
 			return typeof MessageTypes["message-" + this.message.type] !== "undefined";
