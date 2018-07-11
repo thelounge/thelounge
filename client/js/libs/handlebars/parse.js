@@ -156,11 +156,6 @@ module.exports = function parse(text, message = null, createElement = null) {
 					props: {
 						link: preview,
 					},
-					on: {
-						linkPreviewToggle() {
-							console.log('it got toggled!!!')
-						}
-					}
 				}, fragments)];
 				
 				//`<button class="toggle-button toggle-preview" data-url="${escapedLink}" hidden></button>`;
