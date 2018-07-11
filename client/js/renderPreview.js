@@ -111,10 +111,8 @@ $(window).on("resize", debounce(togglePreviewMoreButtonsIfNeeded, 150));
 
 $("#chat").on("click", ".text .toggle-button", function() {
 	const self = $(this);
-	const container = self.closest(".chat");
 	const content = self.closest(".content")
 		.find(`.preview[data-url="${self.data("url")}"] .toggle-content`);
-	const bottom = container.isScrollBottom();
 
 	self.toggleClass("opened");
 	content.toggleClass("show");
@@ -134,11 +132,6 @@ $("#chat").on("click", ".text .toggle-button", function() {
 		link: self.data("url"),
 		shown: isExpanded,
 	});
-
-	// If scrollbar was at the bottom before toggling the preview, keep it at the bottom
-	if (bottom) {
-		container.scrollBottom();
-	}
 });
 
 $("#chat").on("click", ".toggle-content .more", function() {
