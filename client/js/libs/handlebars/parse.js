@@ -62,9 +62,53 @@ function createFragment(fragment) {
 	return escapedText;
 }
 
+function createVueFragment(fragment, createElement) {
+	const classes = [];
+
+	if (fragment.bold) {
+		classes.push("irc-bold");
+	}
+
+	if (fragment.textColor !== undefined) {
+		classes.push("irc-fg" + fragment.textColor);
+	}
+
+	if (fragment.bgColor !== undefined) {
+		classes.push("irc-bg" + fragment.bgColor);
+	}
+
+	if (fragment.italic) {
+		classes.push("irc-italic");
+	}
+
+	if (fragment.underline) {
+		classes.push("irc-underline");
+	}
+
+	if (fragment.strikethrough) {
+		classes.push("irc-strikethrough");
+	}
+
+	if (fragment.monospace) {
+		classes.push("irc-monospace");
+	}
+
+	if (classes.length === 0 && !fragment.hexColor) {
+		return fragment.text;
+	}
+
+	return createElement("span", {
+		class: classes,
+		style: {
+			color: `#${fragment.hexColor}`,
+			"background-color": fragment.hexBgColor ? `#${fragment.hexBgColor}` : null,
+		},
+	}, fragment.text);
+}
+
 // Transform an IRC message potentially filled with styling control codes, URLs,
 // nicknames, and channels into a string of HTML elements to display on the client.
-module.exports = function parse(text, users = []) {
+module.exports = function parse(text, users = [], createElement = null) {
 	// Extract the styling information and get the plain text version from it
 	const styleFragments = parseStyle(text);
 	const cleanText = styleFragments.map((fragment) => fragment.text).join("");
@@ -84,6 +128,60 @@ module.exports = function parse(text, users = []) {
 		.concat(emojiParts)
 		.concat(nameParts);
 
+	if (createElement) {
+		return merge(parts, styleFragments, cleanText).map((textPart) => {
+			const fragments = textPart.fragments.map((fragment) => createVueFragment(fragment, createElement));
+
+			// Wrap these potentially styled fragments with links and channel buttons
+			if (textPart.link) {
+				return createElement("a", {
+					class: [
+						"inline-channel",
+					],
+					attrs: {
+						href: textPart.link,
+						target: "_blank",
+						rel: "noopener",
+					},
+				}, fragments);
+			} else if (textPart.channel) {
+				return createElement("span", {
+					class: [
+						"inline-channel",
+					],
+					attrs: {
+						role: "button",
+						tabindex: 0,
+						"data-chan": textPart.channel,
+					},
+				}, fragments);
+			} else if (textPart.emoji) {
+				return createElement("span", {
+					class: [
+						"emoji",
+					],
+					attrs: {
+						role: "img",
+						"aria-label": emojiMap[textPart.emoji] ? `Emoji: ${emojiMap[textPart.emoji]}` : null,
+					},
+				}, fragments);
+			} else if (textPart.nick) {
+				return createElement("span", {
+					class: [
+						"user",
+						colorClass(textPart.nick),
+					],
+					attrs: {
+						role: "button",
+						"data-name": textPart.nick,
+					},
+				}, fragments);
+			}
+
+			return fragments;
+		});
+	}
+	
 	// Merge the styling information with the channels / URLs / nicks / text objects and
 	// generate HTML strings with the resulting fragments
 	return merge(parts, styleFragments, cleanText).map((textPart) => {
