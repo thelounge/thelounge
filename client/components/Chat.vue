@@ -116,11 +116,11 @@ export default {
 	},
 	watch: {
 		"channel.id"() {
-			if (this.$refs.loadMoreButton) {
+			if (this.channel.moreHistoryAvailable && this.$refs.loadMoreButton) {
 				this.$nextTick(() => {
 					const bounding = this.$refs.loadMoreButton.getBoundingClientRect();
 
-					if (bounding.top >= 0) {
+					if (bounding.width > 0 && bounding.top >= 0) {
 						this.$refs.loadMoreButton.click();
 					}
 				});
