@@ -35,6 +35,7 @@
 			<Message
 				v-else
 				:message="message"
+				@linkPreviewToggle="onLinkPreviewToggle"
 				:key="message.id"/>
 		</template>
 	</div>
@@ -43,6 +44,7 @@
 <script>
 const constants = require("../js/constants");
 const clipboard = require("../js/clipboard");
+import socket from "../js/socket";
 import Message from "./Message.vue";
 import MessageCondensed from "./MessageCondensed.vue";
 
@@ -113,6 +115,17 @@ export default {
 		},
 		onCopy() {
 			clipboard(this.$el);
+		},
+		onLinkPreviewToggle(preview, message) {
+			// Tell the server we're toggling so it remembers at page reload
+			// TODO Avoid sending many single events when using `/collapse` or `/expand`
+			// See https://github.com/thelounge/thelounge/issues/1377
+			socket.emit("msg:preview:toggle", {
+				target: this.channel.id,
+				msgId: message.id,
+				link: preview.link,
+				shown: preview.shown,
+			});
 		},
 	},
 };
