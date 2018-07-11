@@ -124,10 +124,8 @@ export default {
 		link: Object,
 	},
 	mounted() {
-		if (this.link.shown) {
-			const options = require("../js/options");
-			this.$set(this.link, "canDisplay", options.shouldOpenMessagePreview(this.link.type));
-		}
+		const options = require("../js/options");
+		this.$set(this.link, "canDisplay", this.link.type !== "loading" && options.shouldOpenMessagePreview(this.link.type));
 	},
 	methods: {
 		onPreviewReady() {
