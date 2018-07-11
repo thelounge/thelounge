@@ -64,12 +64,7 @@ function createFragment(fragment) {
 
 // Transform an IRC message potentially filled with styling control codes, URLs,
 // nicknames, and channels into a string of HTML elements to display on the client.
-module.exports = function parse(text, users) {
-	// if it's not the users we're expecting, but rather is passed from Handlebars (occurs when users passed to template is null or undefined)
-	if (users && users.hash) {
-		users = [];
-	}
-
+module.exports = function parse(text, users = []) {
 	// Extract the styling information and get the plain text version from it
 	const styleFragments = parseStyle(text);
 	const cleanText = styleFragments.map((fragment) => fragment.text).join("");
