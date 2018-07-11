@@ -8,7 +8,7 @@ export default {
 		message: Object,
 	},
 	render(createElement, context) {
-		return parse(context.props.message.text, context.props.message.users, createElement);
+		return parse(context.props.message.text, context.props.message, createElement);
 	},
 };
 </script>
