@@ -65,12 +65,12 @@ function scrollIntoViewNicely(el) {
 
 function collapse() {
 	$(".chan.active .toggle-button.toggle-preview.opened").click();
-	return true;
+	return "";
 }
 
 function expand() {
 	$(".chan.active .toggle-button.toggle-preview:not(.opened)").click();
-	return true;
+	return "";
 }
 
 function join(args) {
@@ -81,6 +81,12 @@ function join(args) {
 
 		if (chan.length) {
 			chan.trigger("click");
+		}
+	} else {
+		const openChannel = $(".network .chan.active");
+
+		if (openChannel.hasClass("channel")) {
+			return "/join " + openChannel.attr("aria-label");
 		}
 	}
 }
