@@ -214,6 +214,7 @@ Client.prototype.connect = function(args) {
 		ip: args.ip || (client.config && client.config.ip) || client.ip,
 		hostname: args.hostname || (client.config && client.config.hostname) || client.hostname,
 		channels: channels,
+		ignoreList: args.ignoreList ? args.ignoreList : [],
 	});
 
 	// Set network lobby channel id

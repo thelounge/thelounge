@@ -309,6 +309,7 @@ function initializeClient(socket, client, token, lastMessage) {
 			data.hostname = null;
 			data.uuid = null;
 			data.commands = null;
+			data.ignoreList = null;
 
 			client.connect(data);
 		}
