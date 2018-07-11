@@ -2,8 +2,8 @@
 	<span
 		:class="['user', $options.filters.colorClass(user.original.nick), active ? 'active' : '']"
 		:data-name="user.original.nick"
-		@mouseover="hover"
 		role="button"
+		@mouseover="hover"
 		v-html="user.original.mode + user.string"/>
 </template>
 
