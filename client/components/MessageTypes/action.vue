@@ -8,11 +8,13 @@
 </template>
 
 <script>
+import ParsedMessage from "../ParsedMessage.vue";
 import Username from "../Username.vue";
 
 export default {
 	name: "MessageTypeAction",
 	components: {
+		ParsedMessage,
 		Username,
 	},
 	props: {
