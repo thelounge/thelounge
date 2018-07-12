@@ -5,17 +5,18 @@
 		has quit
 		<i
 			v-if="message.text"
-			class="quit-reason"
-			v-html="'(' + $options.filters.parse(message.text) + ')'"/>
+			class="quit-reason">(<ParsedMessage :message="message"/>)</i>
 	</span>
 </template>
 
 <script>
+import ParsedMessage from "../ParsedMessage.vue";
 import Username from "../Username.vue";
 
 export default {
 	name: "MessageTypeQuit",
 	components: {
+		ParsedMessage,
 		Username,
 	},
 	props: {

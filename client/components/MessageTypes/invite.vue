@@ -6,16 +6,18 @@
 		<Username
 			v-else
 			:user="message.target"/>
-		to <span v-html="$options.filters.parse(message.channel)"/>
+		to <ParsedMessage :text="message.channel"/>
 	</span>
 </template>
 
 <script>
+import ParsedMessage from "../ParsedMessage.vue";
 import Username from "../Username.vue";
 
 export default {
 	name: "MessageTypeInvite",
 	components: {
+		ParsedMessage,
 		Username,
 	},
 	props: {

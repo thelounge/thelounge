@@ -14,21 +14,22 @@
 			<tr
 				v-for="chan in channel.data"
 				:key="chan.channel">
-				<td
-					class="channel"
-					v-html="$options.filters.parse(chan.channel)"/>
+				<td class="channel"><ParsedMessage :text="chan.channel"/></td>
 				<td class="users">{{ chan.num_users }}</td>
-				<td
-					class="topic"
-					v-html="$options.filters.parse(chan.topic)"/>
+				<td class="topic"><ParsedMessage :text="chan.topic"/></td>
 			</tr>
 		</tbody>
 	</table>
 </template>
 
 <script>
+import ParsedMessage from "../ParsedMessage.vue";
+
 export default {
 	name: "ListChannels",
+	components: {
+		ParsedMessage,
+	},
 	props: {
 		channel: Object,
 	},

@@ -9,17 +9,18 @@
 		</template>
 		<span
 			v-if="message.text"
-			class="new-topic"
-			v-html="$options.filters.parse(message.text)"/>
+			class="new-topic"><ParsedMessage :message="message"/></span>
 	</span>
 </template>
 
 <script>
+import ParsedMessage from "../ParsedMessage.vue";
 import Username from "../Username.vue";
 
 export default {
 	name: "MessageTypeTopic",
 	components: {
+		ParsedMessage,
 		Username,
 	},
 	props: {

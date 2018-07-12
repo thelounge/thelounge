@@ -28,9 +28,7 @@
 				</template>
 			</span>
 			<span class="content">
-				<span
-					ref="text"
-					class="text"><ParsedMessage :message="message"/></span>
+				<span class="text"><ParsedMessage :message="message"/></span>
 
 				<LinkPreview
 					v-for="preview in message.previews"
