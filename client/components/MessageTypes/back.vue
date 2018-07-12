@@ -1,8 +1,8 @@
 <template>
 	<span class="content">
-		<template v-if="message.self">
-			<i v-html="$options.filters.parse(message.text)"/>
-		</template>
+		<ParsedMessage
+			v-if="message.self"
+			:message="message"/>
 		<template v-else>
 			<Username :user="message.from"/>
 			is back

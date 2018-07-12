@@ -5,17 +5,18 @@
 		has left the channel
 		<i
 			v-if="message.text"
-			class="part-reason"
-			v-html="'(' + $options.filters.parse(message.text) + ')'"/>
+			class="part-reason">(<ParsedMessage :message="message"/>)</i>
 	</span>
 </template>
 
 <script>
+import ParsedMessage from "../ParsedMessage.vue";
 import Username from "../Username.vue";
 
 export default {
 	name: "MessageTypePart",
 	components: {
+		ParsedMessage,
 		Username,
 	},
 	props: {

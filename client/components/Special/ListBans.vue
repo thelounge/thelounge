@@ -12,9 +12,7 @@
 				v-for="ban in channel.data"
 				:key="ban.hostmask">
 				<td class="hostmask">{{ ban.hostmask }}</td>
-				<td
-					class="banned_by"
-					v-html="$options.filters.parse(ban.banned_by)"/>
+				<td class="banned_by">{{ ban.banned_by }}</td>
 				<td class="banned_at">{{ ban.banned_at | localetime }}</td>
 			</tr>
 		</tbody>
