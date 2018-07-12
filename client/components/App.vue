@@ -14,7 +14,7 @@
 						class="logo-inverted"
 						alt="The Lounge">
 				</div>
-				<Network
+				<NetworkList
 					:networks="networks"
 					:active-channel="activeChannel"/>
 			</div>
@@ -93,13 +93,13 @@
 </template>
 
 <script>
-import Network from "./Network.vue";
+import NetworkList from "./NetworkList.vue";
 import Chat from "./Chat.vue";
 
 export default {
 	name: "App",
 	components: {
-		Network,
+		NetworkList,
 		Chat,
 	},
 	props: {

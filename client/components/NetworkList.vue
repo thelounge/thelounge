@@ -27,8 +27,7 @@
 			class="network"
 			role="region"
 		>
-			<Channel
-				:channel="network.channels[0]"
+			<NetworkLobby
 				:network="network"
 				:active-channel="activeChannel"
 				:is-join-channel-shown="network.isJoinChannelShown"
@@ -63,8 +62,9 @@
 
 <script>
 import Draggable from "vuedraggable";
-import JoinChannel from "./JoinChannel.vue";
+import NetworkLobby from "./NetworkLobby.vue";
 import Channel from "./Channel.vue";
+import JoinChannel from "./JoinChannel.vue";
 
 // TODO: ignoreSortSync should be removed
 import {findChannel} from "../js/vue";
@@ -72,9 +72,10 @@ import socket from "../js/socket";
 // import options from "../js/options";
 
 export default {
-	name: "Network",
+	name: "NetworkList",
 	components: {
 		JoinChannel,
+		NetworkLobby,
 		Channel,
 		Draggable,
 	},
