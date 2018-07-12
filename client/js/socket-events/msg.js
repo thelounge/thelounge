@@ -27,14 +27,14 @@ socket.on("msg", function(data) {
 	let targetId = data.chan;
 	let target = "#chan-" + targetId;
 	let channelContainer = $("#chat").find(target);
-	let channel = findChannel(data.chan);
+	let {channel} = findChannel(data.chan);
 
 	if (typeof data.highlight !== "undefined") {
-		channel.channel.highlight = data.highlight;
+		channel.highlight = data.highlight;
 	}
 
 	if (typeof data.unread !== "undefined") {
-		channel.channel.unread = data.unread;
+		channel.unread = data.unread;
 	}
 
 	if (data.msg.self || data.msg.highlight) {
@@ -45,36 +45,29 @@ socket.on("msg", function(data) {
 	// Reloading the page will put them back into the lobby window.
 	// We only want to put errors/notices in active channel if they arrive on the same network
 	if (data.msg.showInActive && vueApp.activeChannel && vueApp.activeChannel.network === channel.network) {
-		channel = vueApp.activeChannel;
+		channel = vueApp.activeChannel.channel;
 
-		targetId = data.chan = vueApp.activeChannel.channel.id;
+		targetId = data.chan = channel.id;
 
 		target = "#chan-" + targetId;
 		channelContainer = $("#chat").find(target);
 	}
 
-	const scrollContainer = channelContainer.find(".chat");
-	const container = channelContainer.find(".messages");
-
-	if (data.msg.type === "channel_list" || data.msg.type === "ban_list" || data.msg.type === "ignore_list") {
-		$(container).empty();
-	}
-
-	channel.channel.messages.push(data.msg);
-
-	notifyMessage(targetId, channelContainer, data);
+	channel.messages.push(data.msg);
 
 	if (data.msg.self) {
-		channel.channel.firstUnread = channel.channel.messages[channel.channel.messages.length - 1].id;
+		channel.firstUnread = channel.messages[channel.messages.length - 1].id;
+	} else {
+		notifyMessage(targetId, channel, vueApp.activeChannel, data.msg);
 	}
 
 	let messageLimit = 0;
 
-	if (!vueApp.activeChannel || vueApp.activeChannel.channel !== channel.channel) {
+	if (!vueApp.activeChannel || vueApp.activeChannel.channel !== channel) {
 		// If message arrives in non active channel, keep only 100 messages
 		messageLimit = 100;
 	} else {
-		const el = scrollContainer.get(0);
+		const el = channelContainer.find(".chat").get(0);
 
 		// If message arrives in active channel, keep 500 messages if scroll is currently at the bottom
 		if (el.scrollHeight - el.scrollTop - el.offsetHeight <= 30) {
@@ -83,11 +76,11 @@ socket.on("msg", function(data) {
 	}
 
 	if (messageLimit > 0) {
-		channel.channel.messages.splice(0, channel.channel.messages.length - messageLimit);
+		channel.messages.splice(0, channel.messages.length - messageLimit);
 	}
 
-	if ((data.msg.type === "message" || data.msg.type === "action") && channel.channel.type === "channel") {
-		const user = channel.channel.users.find((u) => u.nick === data.msg.from.nick);
+	if ((data.msg.type === "message" || data.msg.type === "action") && channel.type === "channel") {
+		const user = channel.users.find((u) => u.nick === data.msg.from.nick);
 
 		if (user) {
 			user.lastMessage = (new Date(data.msg.time)).getTime() || Date.now();
@@ -95,17 +88,11 @@ socket.on("msg", function(data) {
 	}
 });
 
-function notifyMessage(targetId, channel, msg) {
-	msg = msg.msg;
-
-	if (msg.self) {
-		return;
-	}
-
+function notifyMessage(targetId, channel, activeChannel, msg) {
 	const button = $("#sidebar .chan[data-id='" + targetId + "']");
 
 	if (msg.highlight || (options.settings.notifyAllMessages && msg.type === "message")) {
-		if (!document.hasFocus() || !channel.hasClass("active")) {
+		if (!document.hasFocus() || !activeChannel || activeChannel.channel !== channel) {
 			if (options.settings.notification) {
 				try {
 					pop.play();
@@ -126,8 +113,8 @@ function notifyMessage(targetId, channel, msg) {
 				} else {
 					title = msg.from.nick;
 
-					if (!button.hasClass("query")) {
-						title += " (" + button.attr("aria-label").trim() + ")";
+					if (channel.type !== "query") {
+						title += ` (${channel.name})`;
 					}
 
 					if (msg.type === "message") {
