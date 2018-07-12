@@ -10,6 +10,9 @@ const {vueApp} = require("../vue");
 socket.on("network", function(data) {
 	const network = data.networks[0];
 
+	network.isJoinChannelShown = false;
+	network.isCollapsed = false;
+
 	for (const channel of network.channels) {
 		if (channel.type === "channel") {
 			channel.usersOutdated = true;

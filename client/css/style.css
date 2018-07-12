@@ -1054,7 +1054,6 @@ background on hover (unless active) */
   * Toggled via JavaScript
   */
 #sidebar .join-form {
-	display: none;
 	padding: 0 18px 8px;
 }
 
