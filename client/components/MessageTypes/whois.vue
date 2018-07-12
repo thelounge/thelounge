@@ -27,7 +27,7 @@
 
 			<template v-if="message.whois.real_name">
 				<dt>Real name:</dt>
-				<dd v-html="$options.filters.parse(message.whois.real_name)"/>
+				<dd><ParsedMessage :text="message.whois.real_name"/></dd>
 			</template>
 
 			<template v-if="message.whois.registered_nick">
@@ -37,7 +37,7 @@
 
 			<template v-if="message.whois.channels">
 				<dt>Channels:</dt>
-				<dd v-html="$options.filters.parse(message.whois.channels)"/>
+				<dd><ParsedMessage :text="message.whois.channels"/></dd>
 			</template>
 
 			<template v-if="message.whois.modes">
@@ -67,7 +67,7 @@
 
 			<template v-if="message.whois.away">
 				<dt>Away:</dt>
-				<dd v-html="$options.filters.parse(message.whois.away)"/>
+				<dd><ParsedMessage :text="message.whois.away"/></dd>
 			</template>
 
 			<template v-if="message.whois.secure">
@@ -94,11 +94,13 @@
 </template>
 
 <script>
+import ParsedMessage from "../ParsedMessage.vue";
 import Username from "../Username.vue";
 
 export default {
 	name: "MessageTypeWhois",
 	components: {
+		ParsedMessage,
 		Username,
 	},
 	props: {

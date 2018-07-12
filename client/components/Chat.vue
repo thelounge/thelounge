@@ -28,8 +28,9 @@
 					<span class="title">{{ channel.name }}</span>
 					<span
 						:title="channel.topic"
-						class="topic"
-						v-html="$options.filters.parse(channel.topic)"/>
+						class="topic"><ParsedMessage
+							v-if="channel.topic"
+							:text="channel.topic"/></span>
 					<button
 						class="menu"
 						aria-label="Open the context menu"
@@ -86,6 +87,7 @@
 <script>
 require("intersection-observer");
 const socket = require("../js/socket");
+import ParsedMessage from "./ParsedMessage.vue";
 import MessageList from "./MessageList.vue";
 import ChatInput from "./ChatInput.vue";
 import ChatUserList from "./ChatUserList.vue";
@@ -96,6 +98,7 @@ import ListIgnored from "./Special/ListIgnored.vue";
 export default {
 	name: "Chat",
 	components: {
+		ParsedMessage,
 		MessageList,
 		ChatInput,
 		ChatUserList,
