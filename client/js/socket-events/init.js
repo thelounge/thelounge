@@ -23,6 +23,7 @@ socket.on("init", function(data) {
 	const networks = new Set(JSON.parse(storage.get("thelounge.networks.collapsed")));
 
 	for (const network of data.networks) {
+		network.isJoinChannelShown = false;
 		network.isCollapsed = networks.has(network.uuid);
 
 		for (const channel of network.channels) {

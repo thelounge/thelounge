@@ -31,8 +31,14 @@
 				:channel="network.channels[0]"
 				:network="network"
 				:active-channel="activeChannel"
+				:is-join-channel-shown="network.isJoinChannelShown"
+				@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown"
 			/>
-			<JoinChannel :channel="network.channels[0]"/>
+			<JoinChannel
+				v-if="network.isJoinChannelShown"
+				:channel="network.channels[0]"
+				@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown"
+			/>
 
 			<Draggable
 				:options="{ draggable: '.chan', ghostClass: 'chan-placeholder' }"

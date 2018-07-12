@@ -5,8 +5,12 @@
 		method="post"
 		action=""
 		autocomplete="off"
+		@keydown.esc.prevent="$emit('toggleJoinChannel')"
+		@submit.prevent="onSubmit"
 	>
 		<input
+			v-focus
+			v-model="inputChannel"
 			type="text"
 			class="input"
 			name="channel"
@@ -17,6 +21,7 @@
 			required
 		>
 		<input
+			v-model="inputPassword"
 			type="password"
 			class="input"
 			name="key"
@@ -33,10 +38,45 @@
 </template>
 
 <script>
+import socket from "../js/socket";
+
 export default {
 	name: "JoinChannel",
+	directives: {
+		focus: {
+			inserted(el) {
+				el.focus();
+			},
+		},
+	},
 	props: {
 		channel: Object,
+	},
+	data() {
+		return {
+			inputChannel: "",
+			inputPassword: "",
+		};
+	},
+	methods: {
+		onSubmit() {
+			const utils = require("../js/utils");
+			const existingChannel = utils.findCurrentNetworkChan(this.inputChannel);
+
+			if (existingChannel) {
+				const $ = require("jquery");
+				$(`#sidebar .chan[data-id="${existingChannel.id}"]`).trigger("click");
+			} else {
+				socket.emit("input", {
+					text: `/join ${this.inputChannel} ${this.inputPassword}`,
+					target: this.channel.id,
+				});
+			}
+
+			this.inputChannel = "";
+			this.inputPassword = "";
+			this.$emit("toggleJoinChannel");
+		},
 	},
 };
 </script>

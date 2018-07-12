@@ -1,11 +1,12 @@
 "use strict";
+
 const $ = require("jquery");
 const socket = require("./socket");
 const utils = require("./utils");
-const JoinChannel = require("./join-channel");
 const ContextMenu = require("./contextMenu");
 const contextMenuActions = [];
 const contextMenuItems = [];
+const {findChannel} = require("./vue");
 
 module.exports = {
 	addContextMenuItem,
@@ -332,8 +333,7 @@ function addBanListItem() {
 
 function addJoinItem() {
 	function openJoinForm(itemData) {
-		const network = $(`#join-channel-${itemData}`).closest(".network");
-		JoinChannel.openForm(network);
+		findChannel(Number(itemData)).network.isJoinChannelShown = true;
 	}
 
 	addContextMenuItem({
