@@ -86,9 +86,6 @@ module.exports = function parse(createElement, text, message = null) {
 		if (textPart.link) {
 			const preview = message && message.previews.find((p) => p.link === textPart.link);
 			const link = createElement("a", {
-				class: [
-					"inline-channel",
-				],
 				attrs: {
 					href: textPart.link,
 					target: "_blank",
