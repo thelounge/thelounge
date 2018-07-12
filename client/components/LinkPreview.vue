@@ -1,6 +1,7 @@
 <template>
 	<div
-		v-if="link.shown && link.canDisplay"
+		v-if="link.shown"
+		v-show="link.canDisplay"
 		ref="container"
 		class="preview">
 		<div
@@ -18,6 +19,8 @@
 						decoding="async"
 						alt=""
 						class="thumb"
+						@error="onThumbnailError"
+						@abort="onThumbnailError"
 						@load="onPreviewReady">
 				</a>
 				<div class="toggle-text">
@@ -135,28 +138,45 @@ export default {
 		},
 	},
 	mounted() {
-		const options = require("../js/options");
-		this.$set(this.link, "canDisplay", this.link.type !== "loading" && options.shouldOpenMessagePreview(this.link.type));
-
-		// parent 1 - message - parent 2 - messagelist
-		this.$parent.$parent.$emit("keepScrollPosition");
-
-		if (this.link.type !== "link") {
+		// Don't display previews while they are loading on the server
+		if (this.link.type === "loading") {
 			return;
 		}
 
-		this.$nextTick(() => {
-			if (!this.$refs.content) {
-				return;
-			}
+		// Error don't have any media to render
+		if (this.link.type === "error") {
+			this.onPreviewReady();
+		}
 
-			this.showMoreButton = this.$refs.content.offsetWidth >= this.$refs.container.offsetWidth;
-		});
+		// If link doesn't have a thumbnail, render it
+		if (this.link.type === "link" && !this.link.thumb) {
+			this.onPreviewReady();
+		}
 	},
 	methods: {
 		onPreviewReady() {
-			// TODO: Instead of forcing scroll position, wait for image to load before showing it
+			const options = require("../js/options");
+			this.$set(this.link, "canDisplay", this.link.type !== "loading" && options.shouldOpenMessagePreview(this.link.type));
+
+			// parent 1 - message - parent 2 - messagelist
 			this.$parent.$parent.$emit("keepScrollPosition");
+
+			if (this.link.type !== "link") {
+				return;
+			}
+
+			this.$nextTick(() => {
+				if (!this.$refs.content) {
+					return;
+				}
+
+				this.showMoreButton = this.$refs.content.offsetWidth >= this.$refs.container.offsetWidth;
+			});
+		},
+		onThumbnailError() {
+			// If thumbnail fails to load, hide it and show the preview without it
+			this.link.thumb = "";
+			this.onPreviewReady();
 		},
 		onMoreClick() {
 			this.isContentShown = !this.isContentShown;
