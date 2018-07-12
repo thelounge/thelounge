@@ -3,7 +3,6 @@
 const $ = require("jquery");
 const escape = require("css.escape");
 const socket = require("../socket");
-const render = require("../render");
 const webpush = require("../webpush");
 const slideoutMenu = require("../slideout");
 const sidebar = $("#sidebar");
@@ -25,17 +24,18 @@ socket.on("init", function(data) {
 
 	for (const network of data.networks) {
 		network.isCollapsed = networks.has(network.uuid);
+
+		for (const channel of network.channels) {
+			if (channel.type === "channel") {
+				channel.usersOutdated = true;
+			}
+		}
 	}
 
 	vueApp.networks = data.networks;
-
-	if (data.networks.length > 0) {
-		vueApp.$nextTick(() => render.renderNetworks(data));
-	}
+	vueApp.connected = true;
 
 	$("#connection-error").removeClass("shown");
-
-	vueApp.connected = true;
 
 	if (lastMessageId < 0) {
 		if (data.token) {
@@ -73,6 +73,18 @@ socket.on("init", function(data) {
 	}
 
 	vueApp.$nextTick(() => openCorrectChannel(previousActive, data.active));
+
+	utils.confirmExit();
+
+	for (const network of vueApp.networks) {
+		for (const channel of network.channels) {
+			if (channel.highlight > 0) {
+				utils.updateTitle();
+				utils.toggleNotificationMarkers(true);
+				return;
+			}
+		}
+	}
 });
 
 function openCorrectChannel(clientActive, serverActive) {

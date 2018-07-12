@@ -2,18 +2,23 @@
 
 const $ = require("jquery");
 const socket = require("../socket");
-const render = require("../render");
 const templates = require("../../views");
 const sidebar = $("#sidebar");
 const utils = require("../utils");
 const {vueApp} = require("../vue");
 
 socket.on("network", function(data) {
-	vueApp.networks.push(data.networks[0]);
+	const network = data.networks[0];
+
+	for (const channel of network.channels) {
+		if (channel.type === "channel") {
+			channel.usersOutdated = true;
+		}
+	}
+
+	vueApp.networks.push(network);
 
 	vueApp.$nextTick(() => {
-		render.renderNetworks(data, true);
-
 		sidebar.find(".chan")
 			.last()
 			.trigger("click");
