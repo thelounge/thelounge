@@ -101,7 +101,7 @@ function createVueFragment(fragment, createElement) {
 	return createElement("span", {
 		class: classes,
 		style: {
-			color: `#${fragment.hexColor}`,
+			"color": `#${fragment.hexColor}`,
 			"background-color": fragment.hexBgColor ? `#${fragment.hexBgColor}` : null,
 		},
 	}, fragment.text);
@@ -157,16 +157,14 @@ module.exports = function parse(text, message = null, createElement = null) {
 						link: preview,
 					},
 				}, fragments)];
-				
-				//`<button class="toggle-button toggle-preview" data-url="${escapedLink}" hidden></button>`;
 			} else if (textPart.channel) {
 				return createElement("span", {
 					class: [
 						"inline-channel",
 					],
 					attrs: {
-						role: "button",
-						tabindex: 0,
+						"role": "button",
+						"tabindex": 0,
 						"data-chan": textPart.channel,
 					},
 				}, fragments);
@@ -176,7 +174,7 @@ module.exports = function parse(text, message = null, createElement = null) {
 						"emoji",
 					],
 					attrs: {
-						role: "img",
+						"role": "img",
 						"aria-label": emojiMap[textPart.emoji] ? `Emoji: ${emojiMap[textPart.emoji]}` : null,
 					},
 				}, fragments);
@@ -187,7 +185,7 @@ module.exports = function parse(text, message = null, createElement = null) {
 						colorClass(textPart.nick),
 					],
 					attrs: {
-						role: "button",
+						"role": "button",
 						"data-name": textPart.nick,
 					},
 				}, fragments);
@@ -196,7 +194,7 @@ module.exports = function parse(text, message = null, createElement = null) {
 			return fragments;
 		});
 	}
-	
+
 	// Merge the styling information with the channels / URLs / nicks / text objects and
 	// generate HTML strings with the resulting fragments
 	return merge(parts, styleFragments, cleanText).map((textPart) => {

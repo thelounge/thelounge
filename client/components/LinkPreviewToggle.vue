@@ -1,8 +1,8 @@
 <template>
 	<button
 		v-if="link.canDisplay"
-		@click="onClick"
-		:class="['toggle-button', 'toggle-preview', { opened: link.shown }]"/>
+		:class="['toggle-button', 'toggle-preview', { opened: link.shown }]"
+		@click="onClick"/>
 </template>
 
 <script>
@@ -12,11 +12,11 @@ export default {
 		link: Object,
 	},
 	methods: {
-		onClick: function() {
+		onClick() {
 			this.link.shown = !this.link.shown;
 
 			this.$parent.$emit("linkPreviewToggle", this.link, this.$parent.message);
-		}
-	}
+		},
+	},
 };
 </script>

@@ -35,8 +35,8 @@
 			<Message
 				v-else
 				:message="message"
-				@linkPreviewToggle="onLinkPreviewToggle"
-				:key="message.id"/>
+				:key="message.id"
+				@linkPreviewToggle="onLinkPreviewToggle"/>
 		</template>
 	</div>
 </template>
