@@ -1,7 +1,6 @@
 <template>
 	<div
 		v-if="!network.isCollapsed || channel.highlight || channel.type === 'lobby'"
-		:key="channel.id"
 		:class="[ channel.type, { active: activeChannel && channel === activeChannel.channel } ]"
 		:aria-label="channel.name"
 		:title="channel.name"
@@ -46,13 +45,13 @@
 					class="badge">{{ channel.unread | roundBadgeNumber }}</span>
 			</div>
 			<span
-				class="add-channel-tooltip tooltipped tooltipped-w tooltipped-no-touch"
-				aria-label="Join a channel…"
-				data-alt-label="Cancel">
+				:aria-label="joinChannelLabel"
+				class="add-channel-tooltip tooltipped tooltipped-w tooltipped-no-touch">
 				<button
+					:class="['add-channel', { opened: isJoinChannelShown }]"
 					:aria-controls="'join-channel-' + channel.id"
-					class="add-channel"
-					aria-label="Join a channel…"/>
+					:aria-label="joinChannelLabel"
+					@click.stop="$emit('toggleJoinChannel')"/>
 			</span>
 		</template>
 		<template v-else>
@@ -94,6 +93,12 @@ export default {
 		activeChannel: Object,
 		network: Object,
 		channel: Object,
+		isJoinChannelShown: Boolean,
+	},
+	computed: {
+		joinChannelLabel() {
+			return this.isJoinChannelShown ? "Cancel" : "Join a channel…";
+		},
 	},
 	methods: {
 		onCollapseClick() {
