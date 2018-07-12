@@ -186,6 +186,16 @@ export default {
 			}
 
 			if (el.scrollHeight - el.scrollTop - el.offsetHeight > 30) {
+				if (this.channel.historyLoading) {
+					const heightOld = el.scrollHeight - el.scrollTop;
+
+					this.isWaitingForNextTick = true;
+					this.$nextTick(() => {
+						this.isWaitingForNextTick = false;
+						el.scrollTop = el.scrollHeight - heightOld;
+					});
+				}
+
 				return;
 			}
 
