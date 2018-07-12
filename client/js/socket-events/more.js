@@ -1,7 +1,7 @@
 "use strict";
 
 const socket = require("../socket");
-const {findChannel} = require("../vue");
+const {vueApp, findChannel} = require("../vue");
 
 socket.on("more", function(data) {
 	const channel = findChannel(data.chan);
@@ -12,5 +12,8 @@ socket.on("more", function(data) {
 
 	channel.channel.moreHistoryAvailable = data.moreHistoryAvailable;
 	channel.channel.messages.unshift(...data.messages);
-	channel.channel.historyLoading = false;
+
+	vueApp.$nextTick(() => {
+		channel.channel.historyLoading = false;
+	});
 });
