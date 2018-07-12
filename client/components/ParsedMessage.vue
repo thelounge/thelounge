@@ -2,8 +2,8 @@
 const parse = require("../js/libs/handlebars/parse");
 
 export default {
-    functional: true,
 	name: "ParsedMessage",
+	functional: true,
 	props: {
 		message: Object,
 	},

@@ -1,8 +1,11 @@
 <template>
 	<div
 		v-if="link.shown && link.canDisplay"
+		ref="container"
 		class="preview">
-		<div :class="['toggle-content', 'toggle-type-' + link.type]">
+		<div
+			ref="content"
+			:class="['toggle-content', 'toggle-type-' + link.type, { opened: isContentShown }]">
 			<template v-if="link.type === 'link'">
 				<a
 					v-if="link.thumb"
@@ -28,14 +31,12 @@
 						</div>
 
 						<button
+							v-if="showMoreButton"
+							:aria-expanded="isContentShown"
+							:aria-label="moreButtonLabel"
 							class="more"
-							aria-expanded="false"
-							aria-label="More"
-							data-closed-text="More"
-							data-opened-text="Less"
-						>
-							<span class="more-caret"/>
-						</button>
+							@click="onMoreClick"
+						><span class="more-caret"/></button>
 					</div>
 
 					<div class="body overflowable">
@@ -105,11 +106,10 @@
 					</div>
 
 					<button
+						:aria-expanded="isContentShown"
+						:aria-label="moreButtonLabel"
 						class="more"
-						aria-expanded="false"
-						aria-label="More"
-						data-closed-text="More"
-						data-opened-text="Less"
+						@click="onMoreClick"
 					><span class="more-caret"/></button>
 				</template>
 			</template>
@@ -123,13 +123,39 @@ export default {
 	props: {
 		link: Object,
 	},
+	data() {
+		return {
+			showMoreButton: false,
+			isContentShown: false,
+		};
+	},
+	computed: {
+		moreButtonLabel() {
+			return this.isContentShown ? "Less" : "More";
+		},
+	},
 	mounted() {
 		const options = require("../js/options");
 		this.$set(this.link, "canDisplay", this.link.type !== "loading" && options.shouldOpenMessagePreview(this.link.type));
+
+		if (this.link.type !== "link") {
+			return;
+		}
+
+		this.$nextTick(() => {
+			if (!this.$refs.content) {
+				return;
+			}
+
+			this.showMoreButton = this.$refs.content.offsetWidth >= this.$refs.container.offsetWidth;
+		});
 	},
 	methods: {
 		onPreviewReady() {
 
+		},
+		onMoreClick() {
+			this.isContentShown = !this.isContentShown;
 		},
 	},
 };
