@@ -177,7 +177,6 @@ window.vueMounted = () => {
 			.addClass("active")
 			.trigger("show");
 
-		utils.togglePreviewMoreButtonsIfNeeded();
 		utils.updateTitle();
 
 		const type = chan.data("type");
