@@ -118,17 +118,6 @@ export default {
 		},
 	},
 	watch: {
-		"channel.id"() {
-			if (this.channel.moreHistoryAvailable && this.$refs.loadMoreButton) {
-				this.$nextTick(() => {
-					const bounding = this.$refs.loadMoreButton.getBoundingClientRect();
-
-					if (bounding.width > 0 && bounding.top >= 0) {
-						this.$refs.loadMoreButton.click();
-					}
-				});
-			}
-		},
 		"channel.messages"() {
 			const el = this.$refs.chat;
 
