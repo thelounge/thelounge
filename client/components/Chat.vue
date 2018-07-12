@@ -69,7 +69,9 @@
 								<span v-else>Show older messages</span>
 							</button>
 						</div>
-						<MessageList :channel="channel"/>
+						<MessageList
+							:channel="channel"
+							@keepScrollPosition="keepScrollPosition"/>
 					</div>
 					<ChatUserList
 						v-if="channel.type === 'channel'"
@@ -119,19 +121,7 @@ export default {
 	},
 	watch: {
 		"channel.messages"() {
-			const el = this.$refs.chat;
-
-			if (!el) {
-				return;
-			}
-
-			if (el.scrollHeight - el.scrollTop - el.offsetHeight > 30) {
-				return;
-			}
-
-			this.$nextTick(() => {
-				el.scrollTop = el.scrollHeight;
-			});
+			this.keepScrollPosition();
 		},
 	},
 	created() {
@@ -141,7 +131,7 @@ export default {
 			}
 
 			if (window.IntersectionObserver) {
-				this.historyObserver = new window.IntersectionObserver(loadMoreHistory, {
+				this.historyObserver = new window.IntersectionObserver(this.onLoadButtonObserved, {
 					root: this.$refs.chat,
 				});
 			}
@@ -173,16 +163,38 @@ export default {
 				lastId: lastMessage,
 			});
 		},
+		onLoadButtonObserved(entries) {
+			entries.forEach((entry) => {
+				if (!entry.isIntersecting) {
+					return;
+				}
+
+				entry.target.click();
+			});
+		},
+		keepScrollPosition() {
+			// If we are already waiting for the next tick to force scroll position,
+			// we have no reason to perform more checks and set it again in the next tick
+			if (this.isWaitingForNextTick) {
+				return;
+			}
+
+			const el = this.$refs.chat;
+
+			if (!el) {
+				return;
+			}
+
+			if (el.scrollHeight - el.scrollTop - el.offsetHeight > 30) {
+				return;
+			}
+
+			this.isWaitingForNextTick = true;
+			this.$nextTick(() => {
+				this.isWaitingForNextTick = false;
+				el.scrollTop = el.scrollHeight;
+			});
+		},
 	},
 };
-
-function loadMoreHistory(entries) {
-	entries.forEach((entry) => {
-		if (!entry.isIntersecting) {
-			return;
-		}
-
-		entry.target.click();
-	});
-}
 </script>
