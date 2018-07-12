@@ -526,6 +526,14 @@ kbd {
 	touch-action: pan-y;
 	overscroll-behavior: contain;
 	-webkit-overflow-scrolling: touch;
+	-webkit-mask-image:
+		linear-gradient(to bottom, transparent, black 6px, black 60%, transparent 60%),
+		linear-gradient(to top, transparent, black 20px, black 60%, transparent 60%),
+		linear-gradient(to left, black, black 8px, transparent 8px, transparent);
+	mask-image:
+		linear-gradient(to bottom, transparent, black 6px, black 60%, transparent 60%),
+		linear-gradient(to top, transparent, black 20px, black 60%, transparent 60%),
+		linear-gradient(to left, black, black 8px, transparent 8px, transparent);
 }
 
 #sidebar .logo-container {
@@ -1049,6 +1057,14 @@ background on hover (unless active) */
 	flex-direction: column;
 	overscroll-behavior: contain;
 	-webkit-overflow-scrolling: touch;
+	-webkit-mask-image:
+		linear-gradient(to bottom, transparent, black 15px, black 60%, transparent 60%),
+		linear-gradient(to top, transparent, black 13px, black 60%, transparent 60%),
+		linear-gradient(to left, black, black 8px, transparent 8px, transparent);
+	mask-image:
+		linear-gradient(to bottom, transparent, black 15px, black 60%, transparent 60%),
+		linear-gradient(to top, transparent, black 13px, black 60%, transparent 60%),
+		linear-gradient(to left, black, black 8px, transparent 8px, transparent);
 }
 
 #chat .userlist {
@@ -1533,11 +1549,16 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	flex-grow: 1;
 	overflow: auto;
 	overflow-x: hidden;
-	padding-bottom: 10px;
 	width: 100%;
 	touch-action: pan-y;
 	overscroll-behavior: contain;
 	-webkit-overflow-scrolling: touch;
+	-webkit-mask-image:
+		linear-gradient(to top, transparent, black 10px),
+		linear-gradient(to left, black, black 8px, transparent 8px, transparent);
+	mask-image:
+		linear-gradient(to top, transparent, black 10px),
+		linear-gradient(to left, black, black 8px, transparent 8px, transparent);
 }
 
 #chat .names-filtered {
@@ -1551,13 +1572,21 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	white-space: nowrap;
 }
 
+#chat .user-mode {
+	margin-bottom: 10px;
+}
+
 #chat .user-mode::before {
 	content: "";
+	background: var(--window-bg-color);
 	border-bottom: 1px solid #eee;
 	display: block;
 	line-height: 1.6;
-	padding: 12px 16px 10px;
+	padding: 10px 16px;
 	margin-bottom: 10px;
+	position: sticky;
+	top: 0;
+	box-shadow: 0 0 15px 7px var(--window-bg-color);
 }
 
 #chat .user-mode.owner::before {
