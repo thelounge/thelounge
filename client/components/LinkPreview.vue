@@ -138,6 +138,9 @@ export default {
 		const options = require("../js/options");
 		this.$set(this.link, "canDisplay", this.link.type !== "loading" && options.shouldOpenMessagePreview(this.link.type));
 
+		// parent 1 - message - parent 2 - messagelist
+		this.$parent.$parent.$emit("keepScrollPosition");
+
 		if (this.link.type !== "link") {
 			return;
 		}
@@ -152,7 +155,8 @@ export default {
 	},
 	methods: {
 		onPreviewReady() {
-
+			// TODO: Instead of forcing scroll position, wait for image to load before showing it
+			this.$parent.$parent.$emit("keepScrollPosition");
 		},
 		onMoreClick() {
 			this.isContentShown = !this.isContentShown;
