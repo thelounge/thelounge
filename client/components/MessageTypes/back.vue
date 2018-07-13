@@ -11,11 +11,13 @@
 </template>
 
 <script>
+import ParsedMessage from "../ParsedMessage.vue";
 import Username from "../Username.vue";
 
 export default {
 	name: "MessageTypeBack",
 	components: {
+		ParsedMessage,
 		Username,
 	},
 	props: {
