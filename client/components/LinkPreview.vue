@@ -151,6 +151,11 @@ export default {
 
 		this.onPreviewUpdate();
 	},
+	destroyed() {
+		// Let this preview go through load/canplay events again,
+		// Otherwise the browser can cause a resize on video elements
+		this.link.canDisplay = false;
+	},
 	methods: {
 		onPreviewUpdate() {
 			// Error don't have any media to render
@@ -165,7 +170,7 @@ export default {
 		},
 		onPreviewReady() {
 			const options = require("../js/options");
-			this.$set(this.link, "canDisplay", this.link.type !== "loading" && options.shouldOpenMessagePreview(this.link.type));
+			this.$set(this.link, "canDisplay", options.shouldOpenMessagePreview(this.link.type));
 
 			this.keepScrollPosition();
 
