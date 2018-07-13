@@ -116,7 +116,7 @@ export default {
 	},
 	watch: {
 		"channel.id"() {
-			this.scrolledToBottom = true;
+			this.$set(this.link, "scrolledToBottom", true);
 		},
 		"channel.messages"() {
 			this.keepScrollPosition();
@@ -134,13 +134,13 @@ export default {
 				});
 			}
 
-			this.scrolledToBottom = true;
+			this.channel.scrolledToBottom = true;
 			this.$refs.chat.scrollTop = this.$refs.chat.scrollHeight;
 		});
 	},
 	mounted() {
 		this.debouncedResize = debounce(this.handleResize, 50);
-		this.debouncedScroll = debounce(this.handleScroll, 50)
+		this.debouncedScroll = debounce(this.handleScroll, 50);
 
 		window.addEventListener("resize", this.debouncedResize, {passive: true});
 		this.$refs.chat.addEventListener("scroll", this.debouncedScroll, {passive: true});
@@ -226,7 +226,7 @@ export default {
 				return;
 			}
 
-			if (!this.scrolledToBottom) {
+			if (!this.channel.scrolledToBottom) {
 				if (this.channel.historyLoading) {
 					const heightOld = el.scrollHeight - el.scrollTop;
 
@@ -253,13 +253,13 @@ export default {
 				return;
 			}
 
-			this.scrolledToBottom = el.scrollHeight - el.scrollTop - el.offsetHeight <= 30;
+			this.channel.scrolledToBottom = el.scrollHeight - el.scrollTop - el.offsetHeight <= 30;
 		},
 		handleResize() {
 			// Keep message list scrolled to bottom on resize
 			const el = this.$refs.chat;
 
-			if (el && this.scrolledToBottom) {
+			if (el && this.channel.scrolledToBottom) {
 				this.$nextTick(() => {
 					el.scrollTop = el.scrollHeight;
 				});
