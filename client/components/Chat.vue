@@ -54,25 +54,7 @@
 				<div
 					v-else
 					class="chat-content">
-					<div
-						ref="chat"
-						class="chat"
-					>
-						<div :class="['show-more', { show: channel.moreHistoryAvailable }]">
-							<button
-								ref="loadMoreButton"
-								:disabled="channel.historyLoading || !$root.connected"
-								class="btn"
-								@click="onShowMoreClick"
-							>
-								<span v-if="channel.historyLoading">Loading…</span>
-								<span v-else>Show older messages</span>
-							</button>
-						</div>
-						<MessageList
-							:channel="channel"
-							@keepScrollPosition="keepScrollPosition"/>
-					</div>
+					<MessageList :channel="channel"/>
 					<ChatUserList
 						v-if="channel.type === 'channel'"
 						:channel="channel"/>
@@ -87,8 +69,6 @@
 </template>
 
 <script>
-require("intersection-observer");
-const socket = require("../js/socket");
 import ParsedMessage from "./ParsedMessage.vue";
 import MessageList from "./MessageList.vue";
 import ChatInput from "./ChatInput.vue";
@@ -117,93 +97,6 @@ export default {
 			case "list_channels": return ListChannels;
 			case "list_ignored": return ListIgnored;
 			}
-		},
-	},
-	watch: {
-		"channel.messages"() {
-			this.keepScrollPosition();
-		},
-	},
-	created() {
-		this.$nextTick(() => {
-			if (!this.$refs.chat) {
-				return;
-			}
-
-			if (window.IntersectionObserver) {
-				this.historyObserver = new window.IntersectionObserver(this.onLoadButtonObserved, {
-					root: this.$refs.chat,
-				});
-			}
-
-			this.$refs.chat.scrollTop = this.$refs.chat.scrollHeight;
-		});
-	},
-	mounted() {
-		this.$nextTick(() => {
-			if (this.historyObserver) {
-				this.historyObserver.observe(this.$refs.loadMoreButton);
-			}
-		});
-	},
-	destroyed() {
-		if (this.historyObserver) {
-			this.historyObserver.disconnect();
-		}
-	},
-	methods: {
-		onShowMoreClick() {
-			let lastMessage = this.channel.messages[0];
-			lastMessage = lastMessage ? lastMessage.id : -1;
-
-			this.$set(this.channel, "historyLoading", true);
-
-			socket.emit("more", {
-				target: this.channel.id,
-				lastId: lastMessage,
-			});
-		},
-		onLoadButtonObserved(entries) {
-			entries.forEach((entry) => {
-				if (!entry.isIntersecting) {
-					return;
-				}
-
-				entry.target.click();
-			});
-		},
-		keepScrollPosition() {
-			// If we are already waiting for the next tick to force scroll position,
-			// we have no reason to perform more checks and set it again in the next tick
-			if (this.isWaitingForNextTick) {
-				return;
-			}
-
-			const el = this.$refs.chat;
-
-			if (!el) {
-				return;
-			}
-
-			if (el.scrollHeight - el.scrollTop - el.offsetHeight > 30) {
-				if (this.channel.historyLoading) {
-					const heightOld = el.scrollHeight - el.scrollTop;
-
-					this.isWaitingForNextTick = true;
-					this.$nextTick(() => {
-						this.isWaitingForNextTick = false;
-						el.scrollTop = el.scrollHeight - heightOld;
-					});
-				}
-
-				return;
-			}
-
-			this.isWaitingForNextTick = true;
-			this.$nextTick(() => {
-				this.isWaitingForNextTick = false;
-				el.scrollTop = el.scrollHeight;
-			});
 		},
 	},
 };

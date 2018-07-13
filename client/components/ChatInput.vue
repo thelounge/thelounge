@@ -67,20 +67,18 @@ export default {
 		channel: Object,
 	},
 	watch: {
-		"channel.pendingMessage": {
-			handler: function() {
-				const style = window.getComputedStyle(this.$refs.input);
-				const lineHeight = parseFloat(style.lineHeight, 10) || 1;
+		"channel.pendingMessage"() {
+			const style = window.getComputedStyle(this.$refs.input);
+			const lineHeight = parseFloat(style.lineHeight, 10) || 1;
 
-				// Start by resetting height before computing as scrollHeight does not
-				// decrease when deleting characters
-				resetInputHeight(this);
+			// Start by resetting height before computing as scrollHeight does not
+			// decrease when deleting characters
+			resetInputHeight(this);
 
-				// Use scrollHeight to calculate how many lines there are in input, and ceil the value
-				// because some browsers tend to incorrently round the values when using high density
-				// displays or using page zoom feature
-				this.$refs.input.style.height = Math.ceil(this.$refs.input.scrollHeight / lineHeight) * lineHeight + "px";
-			},
+			// Use scrollHeight to calculate how many lines there are in input, and ceil the value
+			// because some browsers tend to incorrently round the values when using high density
+			// displays or using page zoom feature
+			this.$refs.input.style.height = Math.ceil(this.$refs.input.scrollHeight / lineHeight) * lineHeight + "px";
 		},
 	},
 	mounted() {
