@@ -25,8 +25,6 @@ socket.on("msg", function(data) {
 	}
 
 	let targetId = data.chan;
-	let target = "#chan-" + targetId;
-	let channelContainer = $("#chat").find(target);
 	let {channel} = findChannel(data.chan);
 
 	if (typeof data.highlight !== "undefined") {
@@ -48,9 +46,6 @@ socket.on("msg", function(data) {
 		channel = vueApp.activeChannel.channel;
 
 		targetId = data.chan = channel.id;
-
-		target = "#chan-" + targetId;
-		channelContainer = $("#chat").find(target);
 	}
 
 	channel.messages.push(data.msg);
@@ -66,13 +61,9 @@ socket.on("msg", function(data) {
 	if (!vueApp.activeChannel || vueApp.activeChannel.channel !== channel) {
 		// If message arrives in non active channel, keep only 100 messages
 		messageLimit = 100;
-	} else {
-		const el = channelContainer.find(".chat").get(0);
-
+	} else if (channel.scrolledToBottom) {
 		// If message arrives in active channel, keep 500 messages if scroll is currently at the bottom
-		if (el.scrollHeight - el.scrollTop - el.offsetHeight <= 30) {
-			messageLimit = 500;
-		}
+		messageLimit = 500;
 	}
 
 	if (messageLimit > 0 && channel.messages.length > messageLimit) {
