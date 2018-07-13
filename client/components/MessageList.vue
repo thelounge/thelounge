@@ -60,6 +60,7 @@
 
 <script>
 require("intersection-observer");
+const debounce = require("lodash/debounce");
 
 const constants = require("../js/constants");
 const clipboard = require("../js/clipboard");
@@ -134,11 +135,18 @@ export default {
 		});
 	},
 	mounted() {
+		this.scrolledToBottom = true;
+		window.addEventListener("resize", debounce(this.handleResize, 50));
+		this.$refs.chat.addEventListener("scroll", debounce(this.handleScroll, 50));
 		this.$nextTick(() => {
 			if (this.historyObserver) {
 				this.historyObserver.observe(this.$refs.loadMoreButton);
 			}
 		});
+	},
+	beforeDestroy() {
+		window.removeEventListener("resize", this.handleResize);
+		this.$refs.chat.removeEventListener("scroll", this.handleScroll);
 	},
 	destroyed() {
 		if (this.historyObserver) {
@@ -230,6 +238,29 @@ export default {
 				this.isWaitingForNextTick = false;
 				el.scrollTop = el.scrollHeight;
 			});
+		},
+		handleScroll() {
+			const el = this.$refs.chat;
+
+			if (!el) {
+				return;
+			}
+
+			this.scrolledToBottom = !(el.scrollHeight - el.scrollTop - el.offsetHeight > 30);
+		},
+		handleResize() {
+			// Keep message list scrolled to bottom on resize
+			const el = this.$refs.chat;
+
+			if (!el) {
+				return;
+			}
+
+			if (this.scrolledToBottom) {
+				this.$nextTick(() => {
+					el.scrollTop = el.scrollHeight;
+				});
+			}
 		},
 	},
 };
