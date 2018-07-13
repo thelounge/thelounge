@@ -116,6 +116,7 @@ export default {
 	},
 	watch: {
 		"channel.messages"() {
+			this.scrolledToBottom = true;
 			this.keepScrollPosition();
 		},
 	},
@@ -131,13 +132,17 @@ export default {
 				});
 			}
 
+			this.scrolledToBottom = true;
 			this.$refs.chat.scrollTop = this.$refs.chat.scrollHeight;
 		});
 	},
 	mounted() {
-		this.scrolledToBottom = true;
-		window.addEventListener("resize", debounce(this.handleResize, 50), {passive: true});
-		this.$refs.chat.addEventListener("scroll", debounce(this.handleScroll, 50), {passive: true});
+		this.debouncedResize = debounce(this.handleResize, 50);
+		this.debouncedScroll = debounce(this.handleScroll, 50)
+
+		window.addEventListener("resize", this.debouncedResize, {passive: true});
+		this.$refs.chat.addEventListener("scroll", this.debouncedScroll, {passive: true});
+
 		this.$nextTick(() => {
 			if (this.historyObserver) {
 				this.historyObserver.observe(this.$refs.loadMoreButton);
@@ -145,8 +150,8 @@ export default {
 		});
 	},
 	beforeDestroy() {
-		window.removeEventListener("resize", this.handleResize);
-		this.$refs.chat.removeEventListener("scroll", this.handleScroll);
+		window.removeEventListener("resize", this.debouncedResize);
+		this.$refs.chat.removeEventListener("scroll", this.debouncedScroll);
 	},
 	destroyed() {
 		if (this.historyObserver) {
@@ -219,7 +224,7 @@ export default {
 				return;
 			}
 
-			if (el.scrollHeight - el.scrollTop - el.offsetHeight > 30) {
+			if (!this.scrolledToBottom) {
 				if (this.channel.historyLoading) {
 					const heightOld = el.scrollHeight - el.scrollTop;
 
@@ -246,17 +251,13 @@ export default {
 				return;
 			}
 
-			this.scrolledToBottom = !(el.scrollHeight - el.scrollTop - el.offsetHeight > 30);
+			this.scrolledToBottom = el.scrollHeight - el.scrollTop - el.offsetHeight <= 30;
 		},
 		handleResize() {
 			// Keep message list scrolled to bottom on resize
 			const el = this.$refs.chat;
 
-			if (!el) {
-				return;
-			}
-
-			if (this.scrolledToBottom) {
+			if (el && this.scrolledToBottom) {
 				this.$nextTick(() => {
 					el.scrollTop = el.scrollHeight;
 				});
