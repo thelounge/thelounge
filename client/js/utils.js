@@ -19,7 +19,6 @@ module.exports = {
 	hasRoleInChannel,
 	move,
 	closeChan,
-	resetHeight,
 	toggleNotificationMarkers,
 	updateTitle,
 	togglePasswordField,
@@ -31,10 +30,6 @@ function findCurrentNetworkChan(name) {
 	name = name.toLowerCase();
 
 	return vueApp.activeChannel.network.channels.find((c) => c.name.toLowerCase() === name);
-}
-
-function resetHeight(element) {
-	element.style.height = element.style.minHeight;
 }
 
 // Given a channel element will determine if the lounge user or a given nick is one of the supplied roles.
