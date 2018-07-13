@@ -115,8 +115,10 @@ export default {
 		},
 	},
 	watch: {
-		"channel.messages"() {
+		"channel.id"() {
 			this.scrolledToBottom = true;
+		},
+		"channel.messages"() {
 			this.keepScrollPosition();
 		},
 	},
