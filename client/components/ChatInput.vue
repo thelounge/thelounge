@@ -68,17 +68,19 @@ export default {
 	},
 	watch: {
 		"channel.pendingMessage"() {
-			const style = window.getComputedStyle(this.$refs.input);
-			const lineHeight = parseFloat(style.lineHeight, 10) || 1;
+			this.$nextTick(() => {
+				const style = window.getComputedStyle(this.$refs.input);
+				const lineHeight = parseFloat(style.lineHeight, 10) || 1;
 
-			// Start by resetting height before computing as scrollHeight does not
-			// decrease when deleting characters
-			resetInputHeight(this);
+				// Start by resetting height before computing as scrollHeight does not
+				// decrease when deleting characters
+				this.$refs.input.style.height = "";
 
-			// Use scrollHeight to calculate how many lines there are in input, and ceil the value
-			// because some browsers tend to incorrently round the values when using high density
-			// displays or using page zoom feature
-			this.$refs.input.style.height = Math.ceil(this.$refs.input.scrollHeight / lineHeight) * lineHeight + "px";
+				// Use scrollHeight to calculate how many lines there are in input, and ceil the value
+				// because some browsers tend to incorrently round the values when using high density
+				// displays or using page zoom feature
+				this.$refs.input.style.height = Math.ceil(this.$refs.input.scrollHeight / lineHeight) * lineHeight + "px";
+			});
 		},
 	},
 	mounted() {
@@ -122,9 +124,6 @@ export default {
 
 			return "";
 		},
-		resetInputHeight() {
-			this.$refs.input.style.height = "";
-		},
 		onSubmit() {
 			// Triggering click event opens the virtual keyboard on mobile
 			// This can only be called from another interactive event (e.g. button click)
@@ -138,7 +137,6 @@ export default {
 			}
 
 			this.channel.pendingMessage = "";
-			this.resetInputHeight();
 
 			if (text[0] === "/") {
 				const args = text.substr(1).split(" ");
