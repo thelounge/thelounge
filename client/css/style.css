@@ -961,7 +961,7 @@ background on hover (unless active) */
 }
 
 #windows .header .topic {
-	color: #777;
+	color: var(--body-color-muted);
 	margin-left: 8px;
 	word-break: break-all;
 	flex-grow: 1;
@@ -1185,7 +1185,7 @@ background on hover (unless active) */
 }
 
 #chat .time {
-	color: #999;
+	color: var(--body-color-muted);
 	padding-left: 10px;
 	width: 55px;
 }
@@ -1280,7 +1280,7 @@ background on hover (unless active) */
 #chat.colored-nicks .user.color-32 { color: #e60082; }
 
 #chat .self .text {
-	color: #999;
+	color: var(--body-color-muted);
 }
 
 #chat .msg.channel_list_loading .text {
@@ -1362,7 +1362,7 @@ background on hover (unless active) */
 #chat .quit .content,
 #chat .topic .content,
 #chat .topic_set_by .content {
-	color: #999;
+	color: var(--body-color-muted);
 }
 
 #chat .action .from,
