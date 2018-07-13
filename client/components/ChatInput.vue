@@ -68,11 +68,12 @@ export default {
 	},
 	watch: {
 		"channel.pendingMessage"() {
-			// Start by resetting height before computing as scrollHeight does not
-			// decrease when deleting characters
-			this.resetInputHeight();
-
-			this.$refs.input.style.height = this.$refs.input.scrollHeight + "px";
+			this.$nextTick(() => {
+				// Start by resetting height before computing as scrollHeight does not
+				// decrease when deleting characters
+				this.$refs.input.style.height = window.getComputedStyle(this.$refs.input).minHeight;
+				this.$refs.input.style.height = this.$refs.input.scrollHeight + "px";
+			});
 		},
 	},
 	mounted() {
@@ -116,9 +117,6 @@ export default {
 
 			return "";
 		},
-		resetInputHeight() {
-			this.$refs.input.style.height = this.$refs.input.style.minHeight;
-		},
 		onSubmit() {
 			// Triggering click event opens the virtual keyboard on mobile
 			// This can only be called from another interactive event (e.g. button click)
@@ -132,7 +130,6 @@ export default {
 			}
 
 			this.channel.pendingMessage = "";
-			this.resetInputHeight();
 
 			if (text[0] === "/") {
 				const args = text.substr(1).split(" ");
