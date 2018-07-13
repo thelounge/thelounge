@@ -67,14 +67,12 @@ export default {
 		channel: Object,
 	},
 	watch: {
-		"channel.pendingMessage": {
-			handler: function() {
-				// Start by resetting height before computing as scrollHeight does not
-				// decrease when deleting characters
-				this.resetInputHeight();
+		"channel.pendingMessage"() {
+			// Start by resetting height before computing as scrollHeight does not
+			// decrease when deleting characters
+			this.resetInputHeight();
 
-				this.$refs.input.style.height = this.$refs.input.scrollHeight + "px";
-			},
+			this.$refs.input.style.height = this.$refs.input.scrollHeight + "px";
 		},
 	},
 	mounted() {

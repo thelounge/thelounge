@@ -21,6 +21,17 @@
 				:is="messageComponent"
 				:message="message"/>
 		</template>
+		<template v-if="message.type === 'action'">
+			<span class="from"/>
+			<span class="content">
+				<span class="text"><Username :user="message.from"/> <ParsedMessage :message="message"/></span>
+				<LinkPreview
+					v-for="preview in message.previews"
+					:keep-scroll-position="keepScrollPosition"
+					:key="preview.link"
+					:link="preview"/>
+			</span>
+		</template>
 		<template v-else>
 			<span class="from">
 				<template v-if="message.from && message.from.nick">
@@ -29,9 +40,9 @@
 			</span>
 			<span class="content">
 				<span class="text"><ParsedMessage :message="message"/></span>
-
 				<LinkPreview
 					v-for="preview in message.previews"
+					:keep-scroll-position="keepScrollPosition"
 					:key="preview.link"
 					:link="preview"/>
 			</span>
@@ -54,6 +65,7 @@ export default {
 	components: MessageTypes,
 	props: {
 		message: Object,
+		keepScrollPosition: Function,
 	},
 	computed: {
 		messageComponent() {
