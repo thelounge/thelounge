@@ -125,6 +125,7 @@ export default {
 	name: "LinkPreview",
 	props: {
 		link: Object,
+		keepScrollPosition: Function,
 	},
 	data() {
 		return {
@@ -137,29 +138,36 @@ export default {
 			return this.isContentShown ? "Less" : "More";
 		},
 	},
+	watch: {
+		"link.type"() {
+			this.onPreviewUpdate();
+		},
+	},
 	mounted() {
 		// Don't display previews while they are loading on the server
 		if (this.link.type === "loading") {
 			return;
 		}
 
-		// Error don't have any media to render
-		if (this.link.type === "error") {
-			this.onPreviewReady();
-		}
-
-		// If link doesn't have a thumbnail, render it
-		if (this.link.type === "link" && !this.link.thumb) {
-			this.onPreviewReady();
-		}
+		this.onPreviewUpdate();
 	},
 	methods: {
+		onPreviewUpdate() {
+			// Error don't have any media to render
+			if (this.link.type === "error") {
+				this.onPreviewReady();
+			}
+
+			// If link doesn't have a thumbnail, render it
+			if (this.link.type === "link" && !this.link.thumb) {
+				this.onPreviewReady();
+			}
+		},
 		onPreviewReady() {
 			const options = require("../js/options");
 			this.$set(this.link, "canDisplay", this.link.type !== "loading" && options.shouldOpenMessagePreview(this.link.type));
 
-			// parent 1 - message - parent 2 - messagelist
-			this.$parent.$parent.$emit("keepScrollPosition");
+			this.keepScrollPosition();
 
 			if (this.link.type !== "link") {
 				return;
