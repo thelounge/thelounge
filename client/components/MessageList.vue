@@ -136,8 +136,8 @@ export default {
 	},
 	mounted() {
 		this.scrolledToBottom = true;
-		window.addEventListener("resize", debounce(this.handleResize, 50));
-		this.$refs.chat.addEventListener("scroll", debounce(this.handleScroll, 50));
+		window.addEventListener("resize", debounce(this.handleResize, 50), {passive: true});
+		this.$refs.chat.addEventListener("scroll", debounce(this.handleScroll, 50), {passive: true});
 		this.$nextTick(() => {
 			if (this.historyObserver) {
 				this.historyObserver.observe(this.$refs.loadMoreButton);
