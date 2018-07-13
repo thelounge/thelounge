@@ -13,7 +13,7 @@
 			:aria-label="getInputPlaceholder(channel)"
 			:disabled="!$root.connected"
 			class="mousetrap"
-			@keypress.enter.prevent="onSubmit"
+			@keypress.enter.exact.prevent="onSubmit"
 		/>
 		<span
 			v-if="$root.connected"
