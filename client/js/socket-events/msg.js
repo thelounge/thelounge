@@ -75,7 +75,7 @@ socket.on("msg", function(data) {
 		}
 	}
 
-	if (channel.messages.length > messageLimit) {
+	if (messageLimit > 0 && channel.messages.length > messageLimit) {
 		channel.messages.splice(0, channel.messages.length - messageLimit);
 		channel.moreHistoryAvailable = true;
 	}
