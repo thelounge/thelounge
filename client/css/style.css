@@ -5,6 +5,9 @@
 	/* Main text color */
 	--body-color: #222;
 
+	/* Secondary text color, dimmed. Make sure to keep contrast WCAG 2.0 AA compliant on var(--window-bg-color) */
+	--body-color-muted: #767676;
+
 	/* Background color of the whole page */
 	--body-bg-color: #415364;
 
@@ -1564,13 +1567,19 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	white-space: nowrap;
 }
 
+#chat .user-mode {
+	margin-bottom: 15px;
+}
+
 #chat .user-mode::before {
-	content: "";
-	border-bottom: 1px solid #eee;
+	background: var(--window-bg-color);
+	color: var(--body-color-muted);
 	display: block;
+	font-size: 0.85em;
 	line-height: 1.6;
-	padding: 12px 16px 10px;
-	margin-bottom: 10px;
+	padding: 5px 16px;
+	position: sticky;
+	top: 0;
 }
 
 #chat .user-mode.owner::before {
