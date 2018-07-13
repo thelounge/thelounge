@@ -9,7 +9,15 @@
  */
 
 (function() {
-	document.getElementById("loading-page-message").textContent = "Loading the app…";
+	const msg = document.getElementById("loading-page-message");
+	
+	if (msg) {
+		msg.textContent = "Loading the app…";
+
+		document.getElementById("loading-reload").addEventListener("click", function() {
+			location.reload(true);
+		});
+	}
 
 	var displayReload = function displayReload() {
 		var loadingReload = document.getElementById("loading-reload");
@@ -31,10 +39,6 @@
 			displayReload();
 		}
 	}, 5000);
-
-	document.getElementById("loading-reload").addEventListener("click", function() {
-		location.reload();
-	});
 
 	window.g_LoungeErrorHandler = function LoungeErrorHandler(e) {
 		var message = document.getElementById("loading-page-message");
