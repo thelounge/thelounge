@@ -21,7 +21,7 @@
 				:is="messageComponent"
 				:message="message"/>
 		</template>
-		<template v-if="message.type === 'action'">
+		<template v-else-if="message.type === 'action'">
 			<span class="from"/>
 			<span class="content">
 				<span class="text"><Username :user="message.from"/> <ParsedMessage :message="message"/></span>
