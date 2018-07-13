@@ -75,26 +75,6 @@ window.vueMounted = () => {
 		return contextMenuFactory.createContextMenu($(this), e).show();
 	});
 
-	function resetInputHeight(input) {
-		input.style.height = input.style.minHeight;
-	}
-
-	const input = $("#input")
-		.on("input", function() {
-			const style = window.getComputedStyle(this);
-
-			// Start by resetting height before computing as scrollHeight does not
-			// decrease when deleting characters
-			resetInputHeight(this);
-
-			this.style.height = Math.min(
-				Math.round(window.innerHeight - 100), // prevent overflow
-				this.scrollHeight
-				+ Math.round(parseFloat(style.borderTopWidth) || 0)
-				+ Math.round(parseFloat(style.borderBottomWidth) || 0)
-			) + "px";
-		});
-
 	if (navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i)) {
 		$(document.body).addClass("is-apple");
 	}
@@ -195,7 +175,7 @@ window.vueMounted = () => {
 			// On touch devices unfocus (blur) the input to correctly close the virtual keyboard
 			// An explicit blur is required, as the keyboard may open back up if the focus remains
 			// See https://github.com/thelounge/thelounge/issues/2257
-			input.trigger("ontouchstart" in window ? "blur" : "focus");
+			$("#input").trigger("ontouchstart" in window ? "blur" : "focus");
 		}
 
 		if (channel && channel.channel.usersOutdated) {
