@@ -2,15 +2,8 @@
 
 const $ = require("jquery");
 const socket = require("../socket");
-const options = require("../options");
 
 socket.on("sync_sort", function(data) {
-	// Syncs the order of channels or networks when they are reordered
-	if (options.ignoreSortSync) {
-		options.ignoreSortSync = false;
-		return; // Ignore syncing because we 'caused' it
-	}
-
 	const type = data.type;
 	const order = data.order;
 	const container = $(".networks");
