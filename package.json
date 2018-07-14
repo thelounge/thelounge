@@ -106,7 +106,6 @@
     "vue": "2.5.16",
     "vue-loader": "15.2.4",
     "vue-template-compiler": "2.5.16",
-    "vuedraggable": "2.16.0",
     "webpack": "4.17.1",
     "webpack-cli": "3.1.0",
     "webpack-dev-server": "3.1.5"

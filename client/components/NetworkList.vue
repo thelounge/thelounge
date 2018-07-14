@@ -4,15 +4,7 @@
 		class="empty">
 		You are not connected to any networks yet.
 	</div>
-	<Draggable
-		v-else
-		:list="networks"
-		:options="{ handle: '.lobby', draggable: '.network', ghostClass: 'network-placeholder' }"
-		class="networks"
-		@change="onNetworkSort"
-		@start="onDragStart"
-		@end="onDragEnd"
-	>
+	<div v-else class="networks">
 		<div
 			v-for="network in networks"
 			:key="network.uuid"
@@ -39,14 +31,7 @@
 				@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown"
 			/>
 
-			<Draggable
-				:options="{ draggable: '.chan', ghostClass: 'chan-placeholder' }"
-				:list="network.channels"
-				class="channels"
-				@change="onChannelSort"
-				@start="onDragStart"
-				@end="onDragEnd"
-			>
+			<div class="channels">
 				<Channel
 					v-for="(channel, index) in network.channels"
 					v-if="index > 0"
@@ -55,13 +40,12 @@
 					:network="network"
 					:active-channel="activeChannel"
 				/>
-			</Draggable>
+			</div>
 		</div>
-	</Draggable>
+	</div>
 </template>
 
 <script>
-import Draggable from "vuedraggable";
 import NetworkLobby from "./NetworkLobby.vue";
 import Channel from "./Channel.vue";
 import JoinChannel from "./JoinChannel.vue";
@@ -74,19 +58,12 @@ export default {
 		JoinChannel,
 		NetworkLobby,
 		Channel,
-		Draggable,
 	},
 	props: {
 		activeChannel: Object,
 		networks: Array,
 	},
 	methods: {
-		onDragStart(e) {
-			e.target.classList.add("ui-sortable-helper");
-		},
-		onDragEnd(e) {
-			e.target.classList.remove("ui-sortable-helper");
-		},
 		onNetworkSort(e) {
 			if (!e.moved) {
 				return;
