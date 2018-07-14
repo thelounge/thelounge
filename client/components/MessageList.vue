@@ -60,7 +60,8 @@
 
 <script>
 require("intersection-observer");
-const debounce = require("lodash/debounce");
+
+import {debounce, throttle} from "lodash";
 
 const constants = require("../js/constants");
 const clipboard = require("../js/clipboard");
@@ -116,7 +117,7 @@ export default {
 	},
 	watch: {
 		"channel.id"() {
-			this.$set(this.link, "scrolledToBottom", true);
+			this.$set(this.channel, "scrolledToBottom", true);
 		},
 		"channel.messages"() {
 			this.keepScrollPosition();
@@ -139,8 +140,8 @@ export default {
 		});
 	},
 	mounted() {
-		this.debouncedResize = debounce(this.handleResize, 50);
-		this.debouncedScroll = debounce(this.handleScroll, 50);
+		this.debouncedResize = debounce(this.handleResize, 500);
+		this.debouncedScroll = throttle(this.handleScroll, 150);
 
 		window.addEventListener("resize", this.debouncedResize, {passive: true});
 		this.$refs.chat.addEventListener("scroll", this.debouncedScroll, {passive: true});
@@ -260,9 +261,7 @@ export default {
 			const el = this.$refs.chat;
 
 			if (el && this.channel.scrolledToBottom) {
-				this.$nextTick(() => {
-					el.scrollTop = el.scrollHeight;
-				});
+				el.scrollTop = el.scrollHeight;
 			}
 		},
 	},
