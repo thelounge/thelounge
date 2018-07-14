@@ -66,10 +66,7 @@ import NetworkLobby from "./NetworkLobby.vue";
 import Channel from "./Channel.vue";
 import JoinChannel from "./JoinChannel.vue";
 
-// TODO: ignoreSortSync should be removed
-import {findChannel} from "../js/vue";
 import socket from "../js/socket";
-// import options from "../js/options";
 
 export default {
 	name: "NetworkList",
@@ -99,14 +96,13 @@ export default {
 				type: "networks",
 				order: this.networks.map((n) => n.uuid),
 			});
-
-			// options.settings.ignoreSortSync = true;
 		},
 		onChannelSort(e) {
 			if (!e.moved) {
 				return;
 			}
 
+			const {findChannel} = require("../js/vue");
 			const channel = findChannel(e.moved.element.id);
 
 			if (!channel) {
@@ -118,8 +114,6 @@ export default {
 				target: channel.network.uuid,
 				order: channel.network.channels.map((c) => c.id),
 			});
-
-			// options.settings.ignoreSortSync = true;
 		},
 	},
 };
