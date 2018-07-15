@@ -13,18 +13,33 @@ const {vueApp} = require("../vue");
 socket.on("init", function(data) {
 	$("#loading-page-message, #connection-error").text("Rendering…");
 
-	const lastMessageId = utils.lastMessageId;
-	let previousActive = 0;
-
-	if (lastMessageId > -1) {
-		previousActive = sidebar.find(".active").data("id");
-	}
+	let previousActive = vueApp.activeChannel && vueApp.activeChannel.channel.id;
 
 	const networks = new Set(JSON.parse(storage.get("thelounge.networks.collapsed")));
 
 	for (const network of data.networks) {
-		network.isJoinChannelShown = false;
-		network.isCollapsed = networks.has(network.uuid);
+		const currentNetwork = vueApp.networks.find((n) => n.uuid === network.uuid);
+
+		// TODO: Make this updating more efficient
+		if (currentNetwork) {
+			network.isJoinChannelShown = currentNetwork.isJoinChannelShown;
+			network.isCollapsed = currentNetwork.isCollapsed;
+
+			for (const channel of network.channels) {
+				const currentChannel = currentNetwork.channels.find((c) => c.id === channel.id);
+
+				if (currentChannel && currentChannel.messages) {
+					channel.messages = currentChannel.messages.concat(channel.messages);
+
+					if (currentChannel.moreHistoryAvailable) {
+						channel.moreHistoryAvailable = true;
+					}
+				}
+			}
+		} else {
+			network.isJoinChannelShown = false;
+			network.isCollapsed = networks.has(network.uuid);
+		}
 
 		for (const channel of network.channels) {
 			if (channel.type === "channel") {
@@ -38,7 +53,9 @@ socket.on("init", function(data) {
 
 	$("#connection-error").removeClass("shown");
 
-	if (lastMessageId < 0) {
+	if (!vueApp.initialized) {
+		vueApp.initialized = true;
+
 		if (data.token) {
 			storage.set("token", data.token);
 		}

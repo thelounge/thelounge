@@ -5,6 +5,7 @@ const socket = require("../socket");
 const storage = require("../localStorage");
 const utils = require("../utils");
 const templates = require("../../views");
+const {vueApp} = require("../vue");
 
 socket.on("auth", function(data) {
 	// If we reconnected and serverHash differs, that means the server restarted
@@ -67,7 +68,19 @@ socket.on("auth", function(data) {
 
 		if (token) {
 			$("#loading-page-message, #connection-error").text("Authorizing…");
-			const lastMessage = utils.lastMessageId;
+
+			let lastMessage = -1;
+
+			for (const network of vueApp.networks) {
+				for (const chan of network.channels) {
+					for (const msg of chan.messages) {
+						if (msg.id > lastMessage) {
+							lastMessage = msg.id;
+						}
+					}
+				}
+			}
+
 			socket.emit("auth", {user, token, lastMessage});
 		}
 	}
