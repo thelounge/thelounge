@@ -6,14 +6,12 @@ const viewport = $("#viewport");
 const {vueApp} = require("./vue");
 
 var serverHash = -1; // eslint-disable-line no-var
-var lastMessageId = -1; // eslint-disable-line no-var
 
 module.exports = {
 	// Same value as media query in CSS that forces sidebars to become overlays
 	mobileViewportPixels: 768,
 	findCurrentNetworkChan,
 	serverHash,
-	lastMessageId,
 	confirmExit,
 	scrollIntoViewNicely,
 	hasRoleInChannel,

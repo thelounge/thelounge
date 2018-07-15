@@ -20,10 +20,6 @@ try {
 }
 
 socket.on("msg", function(data) {
-	if (utils.lastMessageId < data.msg.id) {
-		utils.lastMessageId = data.msg.id;
-	}
-
 	let targetId = data.chan;
 	let {channel} = findChannel(data.chan);
 
