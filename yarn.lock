@@ -3647,9 +3647,9 @@ ipaddr.js@1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.6.0.tgz#e3fa357b773da619f26e95f049d055c72796f86b"
 
-irc-framework@3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/irc-framework/-/irc-framework-3.0.0.tgz#01eada23bc73e4a93274ac1a14f5a65081f2b30c"
+irc-framework@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/irc-framework/-/irc-framework-3.1.0.tgz#411193371a34a6388c681c3ed628571a9bad72fc"
   dependencies:
     eventemitter3 "^2.0.2"
     iconv-lite "^0.4.11"
