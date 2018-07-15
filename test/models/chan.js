@@ -175,6 +175,7 @@ describe("Chan", function() {
 				"id",
 				"key",
 				"messages",
+				"moreHistoryAvailable",
 				"name",
 				"state",
 				"topic",
