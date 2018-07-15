@@ -4,7 +4,9 @@
 		class="empty">
 		You are not connected to any networks yet.
 	</div>
-	<div v-else class="networks">
+	<div
+		v-else
+		class="networks">
 		<div
 			v-for="network in networks"
 			:key="network.uuid"
