@@ -49,9 +49,10 @@ socket.on("network:info", function(data) {
 			const uuid = $(this).find("input[name=uuid]").val();
 			const newName = $(this).find("#connect\\:name").val();
 
+			const network = vueApp.networks.find((n) => n.uuid === uuid);
+			network.name = network.channels[0].name = newName;
+
 			sidebar.find(`.network[data-uuid="${uuid}"] .chan.lobby .name`)
-				.attr("title", newName)
-				.text(newName)
 				.click();
 		});
 
