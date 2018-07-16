@@ -61,7 +61,7 @@
 <script>
 require("intersection-observer");
 
-import {debounce, throttle} from "lodash";
+import {throttle} from "lodash";
 
 const constants = require("../js/constants");
 const clipboard = require("../js/clipboard");
@@ -122,6 +122,12 @@ export default {
 		"channel.messages"() {
 			this.keepScrollPosition();
 		},
+		"channel.pendingMessage"() {
+			this.$nextTick(() => {
+				// Keep the scroll stuck when input gets resized while typing
+				this.keepScrollPosition();
+			});
+		},
 	},
 	created() {
 		this.$nextTick(() => {
@@ -140,7 +146,7 @@ export default {
 		});
 	},
 	mounted() {
-		this.debouncedResize = debounce(this.handleResize, 500);
+		this.debouncedResize = throttle(this.handleResize, 500);
 		this.debouncedScroll = throttle(this.handleScroll, 150);
 
 		window.addEventListener("resize", this.debouncedResize, {passive: true});
