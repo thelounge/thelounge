@@ -146,8 +146,8 @@ export default {
 		});
 	},
 	mounted() {
-		this.debouncedResize = throttle(this.handleResize, 500);
-		this.debouncedScroll = throttle(this.handleScroll, 150);
+		this.debouncedResize = throttle(this.handleResize, 100);
+		this.debouncedScroll = throttle(this.handleScroll, 100);
 
 		window.addEventListener("resize", this.debouncedResize, {passive: true});
 		this.$refs.chat.addEventListener("scroll", this.debouncedScroll, {passive: true});
