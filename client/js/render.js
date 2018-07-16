@@ -112,7 +112,10 @@ function buildChatMessage(msg) {
 		}
 
 		// Remove empty lines around the MOTD (but not within it)
-		msg.text = lines.join("\n").trim();
+		msg.text = lines
+			.map((line) => line.trimEnd())
+			.join("\n")
+			.replace(/^[\r\n]+|[\r\n]+$/g, "");
 	}
 
 	const renderedMessage = $(templates[template](msg));
