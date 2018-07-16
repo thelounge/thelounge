@@ -29,6 +29,7 @@ socket.on("init", function(data) {
 				const currentChannel = currentNetwork.channels.find((c) => c.id === channel.id);
 
 				if (currentChannel && currentChannel.messages) {
+					channel.scrolledToBottom = currentChannel.scrolledToBottom;
 					channel.messages = currentChannel.messages.concat(channel.messages);
 
 					if (currentChannel.moreHistoryAvailable) {
