@@ -2343,10 +2343,9 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		background: var(--body-bg-color);
 		height: 100%;
 		position: absolute;
-		left: -220px;
 		z-index: 2;
 		transition: transform 160ms;
-		transform: translateZ(0);
+		transform: translate3d(-220px, 0, 0);
 	}
 
 	#sidebar-overlay {
@@ -2368,7 +2367,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 	#viewport.menu-open #sidebar {
 		display: flex;
-		transform: translate3d(220px, 0, 0);
+		transform: translate3d(0, 0, 0);
 	}
 
 	#viewport.menu-dragging #sidebar-overlay,
@@ -2405,12 +2404,13 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		height: 100%;
 		position: absolute;
 		right: 0;
-		transform: translateX(180px);
+		transform: translate3d(180px, 0, 0);
 		transition: transform 0.2s;
+		display: flex;
 	}
 
 	#viewport.userlist-open #chat .userlist {
-		transform: translateX(0);
+		transform: translate3d(0, 0, 0);
 	}
 
 	#chat .header .title {
