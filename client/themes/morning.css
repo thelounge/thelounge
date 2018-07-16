@@ -158,6 +158,7 @@
 	color: #b7c5d1;
 }
 
+#chat .msg.motd .text,
 code,
 .irc-monospace {
 	background: #28333d;
