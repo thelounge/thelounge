@@ -27,7 +27,7 @@ export default {
 
 			// Remove empty lines around the MOTD (but not within it)
 			return lines
-				.map((line) => line.trimEnd())
+				.map((line) => line.replace(/\s*$/,""))
 				.join("\n")
 				.replace(/^[\r\n]+|[\r\n]+$/g, "");
 		},
