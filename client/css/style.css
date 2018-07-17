@@ -109,6 +109,7 @@ button {
 
 code,
 pre,
+#chat .msg.motd .text,
 .irc-monospace,
 textarea#user-specified-css-input {
 	font-family: Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
@@ -248,6 +249,7 @@ kbd {
 #chat .quit .from::before,
 #chat .topic .from::before,
 #chat .mode .from::before,
+#chat .motd .from::before,
 #chat .ctcp .from::before,
 #chat .ctcp_request .from::before,
 #chat .whois .from::before,
@@ -363,6 +365,10 @@ kbd {
 #chat .mode .from::before {
 	content: "\f05a"; /* http://fontawesome.io/icon/info-circle/ */
 	color: #2ecc40;
+}
+
+#chat .motd .from::before {
+	content: "\f02e"; /* https://fontawesome.com/icons/bookmark?style=solid */
 }
 
 #chat .ctcp .from::before,
@@ -1333,6 +1339,13 @@ background on hover (unless active) */
 #chat.hide-status-messages .condensed,
 #chat.hide-motd .motd {
 	display: none !important;
+}
+
+#chat .msg.motd .text {
+	background: #f6f6f6;
+	display: inline-block;
+	border-radius: 4px;
+	padding: 6px;
 }
 
 #chat .condensed .content,
