@@ -15,7 +15,7 @@ let pop;
 
 try {
 	pop = new Audio();
-	pop.src = "audio/pop.ogg";
+	pop.src = "audio/pop.wav";
 } catch (e) {
 	pop = {
 		play: $.noop,
