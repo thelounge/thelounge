@@ -47,7 +47,7 @@ socket.on("msg", function(data) {
 	channel.messages.push(data.msg);
 
 	if (data.msg.self) {
-		channel.firstUnread = channel.messages[channel.messages.length - 1].id;
+		channel.firstUnread = data.msg.id;
 	} else {
 		notifyMessage(targetId, channel, vueApp.activeChannel, data.msg);
 	}

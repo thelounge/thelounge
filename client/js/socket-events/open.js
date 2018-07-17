@@ -21,7 +21,10 @@ socket.on("open", function(id) {
 	if (channel) {
 		channel.channel.highlight = 0;
 		channel.channel.unread = 0;
-		channel.channel.firstUnread = channel.channel.messages[channel.channel.messages.length - 1].id;
+
+		if (channel.channel.messages.length > 0) {
+			channel.channel.firstUnread = channel.channel.messages[channel.channel.messages.length - 1].id;
+		}
 	}
 
 	utils.updateTitle();

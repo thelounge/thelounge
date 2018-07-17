@@ -422,9 +422,12 @@ Client.prototype.open = function(socketId, target) {
 		return;
 	}
 
-	target.chan.firstUnread = 0;
 	target.chan.unread = 0;
 	target.chan.highlight = 0;
+
+	if (target.chan.messages.length > 0) {
+		target.chan.firstUnread = target.chan.messages[target.chan.messages.length - 1].id;
+	}
 
 	attachedClient.openChannel = target.chan.id;
 	this.lastActiveChannel = target.chan.id;
