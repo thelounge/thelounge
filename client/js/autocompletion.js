@@ -174,19 +174,24 @@ const backgroundColorStrategy = {
 
 function enableAutocomplete(inputRef) {
 	enabled = true;
+	let autocompleting = false;
 	let tabCount = 0;
 	let lastMatch = "";
 	let currentMatches = [];
 	input = $(inputRef);
 
-	input.on("input.tabcomplete", () => {
+	input.on("input.tabcomplete", (e) => {
+		if (e.detail === "autocomplete") {
+			return;
+		}
+
 		tabCount = 0;
 		currentMatches = [];
 		lastMatch = "";
 	});
 
 	Mousetrap(input.get(0)).bind("tab", (e) => {
-		if (input.data("autocompleting")) {
+		if (autocompleting) {
 			return;
 		}
 
@@ -218,7 +223,9 @@ function enableAutocomplete(inputRef) {
 		input.val(text.substr(0, position) + newMatch);
 
 		// Propagate change to Vue model
-		input.get(0).dispatchEvent(new Event("input"));
+		input.get(0).dispatchEvent(new CustomEvent("input", {
+			detail: "autocomplete",
+		}));
 
 		lastMatch = newMatch;
 		tabCount++;
@@ -250,11 +257,11 @@ function enableAutocomplete(inputRef) {
 	});
 
 	textcomplete.on("show", () => {
-		input.data("autocompleting", true);
+		autocompleting = true;
 	});
 
 	textcomplete.on("hidden", () => {
-		input.data("autocompleting", false);
+		autocompleting = false;
 	});
 }
 
