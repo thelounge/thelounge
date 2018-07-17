@@ -59,7 +59,7 @@ Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 	if (msg.self) {
 		// reset counters/markers when receiving self-/echo-message
 		this.unread = 0;
-		this.firstUnread = 0;
+		this.firstUnread = msg.id;
 		this.highlight = 0;
 	} else if (!isOpen) {
 		if (!this.firstUnread) {
