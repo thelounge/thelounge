@@ -26,7 +26,7 @@ socket.on("configuration", function(data) {
 
 	$("#play").on("click", () => {
 		const pop = new Audio();
-		pop.src = "audio/pop.ogg";
+		pop.src = "audio/pop.wav";
 		pop.play();
 	});
 
