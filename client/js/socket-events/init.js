@@ -28,9 +28,13 @@ socket.on("init", function(data) {
 			for (const channel of network.channels) {
 				const currentChannel = currentNetwork.channels.find((c) => c.id === channel.id);
 
-				if (currentChannel && currentChannel.messages) {
+				if (currentChannel) {
 					channel.scrolledToBottom = currentChannel.scrolledToBottom;
-					channel.messages = currentChannel.messages.concat(channel.messages);
+					channel.pendingMessage = currentChannel.pendingMessage;
+
+					if (currentChannel.messages) {
+						channel.messages = currentChannel.messages.concat(channel.messages);
+					}
 
 					if (currentChannel.moreHistoryAvailable) {
 						channel.moreHistoryAvailable = true;
