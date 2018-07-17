@@ -13,7 +13,7 @@ const {vueApp} = require("../vue");
 socket.on("init", function(data) {
 	$("#loading-page-message, #connection-error").text("Rendering…");
 
-	let previousActive = vueApp.activeChannel && vueApp.activeChannel.channel.id;
+	const previousActive = vueApp.activeChannel && vueApp.activeChannel.channel.id;
 
 	const networks = new Set(JSON.parse(storage.get("thelounge.networks.collapsed")));
 
