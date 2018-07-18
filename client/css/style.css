@@ -257,6 +257,7 @@ kbd {
 #chat .action .from::before,
 #chat .toggle-button::after,
 #chat .toggle-content .more-caret::before,
+#chat .scroll-down-arrow::after,
 #version-checker::before,
 .context-menu-item::before,
 #help .website-link::before,
@@ -1078,6 +1079,65 @@ background on hover (unless active) */
 #chat .show-more .btn {
 	width: 100%;
 	margin: 0;
+}
+
+.scroll-down.fade-leave-active,
+.scroll-down.fade-enter-active {
+	opacity: 0;
+	transform: translateY(16px);
+	transition: opacity .3s, transform .3s;
+}
+
+.scroll-down.fade-enter-to {
+	opacity: 1;
+	transform: none;
+}
+
+.scroll-down {
+	position: absolute;
+
+	bottom: 16px;
+	right: 16px;
+	z-index: 2;
+	transition: right 0.2s ease-in-out;
+	cursor: pointer;
+}
+
+.scroll-down-number {
+	background: #84ce88;
+	border-radius: 50%;
+	text-align: center;
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	font-size: 12px;
+	margin-left: 9px;
+	z-index: 23;
+	position: absolute;
+	top: -20px;
+	font-weight: bold;
+}
+
+.scroll-down-arrow {
+	width: 48px;
+	height: 48px;
+	line-height: 48px;
+	border-radius: 50%;
+	background: #fff;
+	border: 1px solid #84ce88;
+	text-align: center;
+}
+
+.scroll-down:hover .scroll-down-arrow {
+	background: #84ce88;
+}
+
+.scroll-down-arrow::after {
+	content: "\f107"; /* https://fontawesome.com/icons/angle-down?style=solid */
+}
+
+.userlist-open #chat .scroll-down {
+	right: 196px;
 }
 
 #chat .messages {
