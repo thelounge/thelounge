@@ -8,7 +8,7 @@ const slideoutMenu = require("../slideout");
 const sidebar = $("#sidebar");
 const storage = require("../localStorage");
 const utils = require("../utils");
-const {vueApp} = require("../vue");
+const {vueApp, initChannel} = require("../vue");
 
 socket.on("init", function(data) {
 	$("#loading-page-message, #connection-error").text("Rendering…");
@@ -46,13 +46,7 @@ socket.on("init", function(data) {
 			network.isCollapsed = networks.has(network.uuid);
 		}
 
-		for (const channel of network.channels) {
-			channel.scrolledToBottom = true;
-
-			if (channel.type === "channel") {
-				channel.usersOutdated = true;
-			}
-		}
+		network.channels.forEach(initChannel);
 	}
 
 	vueApp.networks = data.networks;

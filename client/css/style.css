@@ -1085,7 +1085,7 @@ background on hover (unless active) */
 .scroll-down.fade-enter-active {
 	opacity: 0;
 	transform: translateY(16px);
-	transition: opacity .3s, transform .3s;
+	transition: opacity 0.3s, transform 0.3s;
 }
 
 .scroll-down.fade-enter-to {
@@ -1095,7 +1095,6 @@ background on hover (unless active) */
 
 .scroll-down {
 	position: absolute;
-
 	bottom: 16px;
 	right: 16px;
 	z-index: 2;
