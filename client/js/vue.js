@@ -67,7 +67,17 @@ function findChannel(id) {
 	return null;
 }
 
+function initChannel(channel) {
+	channel.historyLoading = false;
+	channel.scrolledToBottom = true;
+
+	if (channel.type === "channel") {
+		channel.usersOutdated = true;
+	}
+}
+
 module.exports = {
 	vueApp,
 	findChannel,
+	initChannel,
 };

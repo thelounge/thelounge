@@ -5,20 +5,17 @@ const socket = require("../socket");
 const templates = require("../../views");
 const sidebar = $("#sidebar");
 const utils = require("../utils");
-const {vueApp} = require("../vue");
+const {vueApp, initChannel} = require("../vue");
 
 socket.on("network", function(data) {
 	const network = data.networks[0];
 
 	network.isJoinChannelShown = false;
 	network.isCollapsed = false;
+	network.channels.forEach(initChannel);
 
 	for (const channel of network.channels) {
-		channel.scrolledToBottom = true;
-
-		if (channel.type === "channel") {
-			channel.usersOutdated = true;
-		}
+		initChannel(channel);
 	}
 
 	vueApp.networks.push(network);
