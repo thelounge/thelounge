@@ -7,8 +7,6 @@
 			:data-id="channel.id"
 			:class="{
 				'hide-motd': !settings.motd,
-				'hide-status-messages': settings.statusMessages === 'hidden',
-				'condensed-status-messages': settings.statusMessages === 'condensed',
 				'colored-nicks': settings.coloredNicks,
 				'show-seconds': settings.showSeconds,
 			}"
@@ -54,7 +52,9 @@
 				<div
 					v-else
 					class="chat-content">
-					<MessageList :channel="channel"/>
+					<MessageList
+						:channel="channel"
+						:settings="settings"/>
 					<ChatUserList
 						v-if="channel.type === 'channel'"
 						:channel="channel"/>
