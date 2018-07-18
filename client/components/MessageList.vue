@@ -240,7 +240,7 @@ export default {
 			let lastMessage = this.channel.messages[0];
 			lastMessage = lastMessage ? lastMessage.id : -1;
 
-			this.$set(this.channel, "historyLoading", true);
+			this.channel.historyLoading = true;
 
 			socket.emit("more", {
 				target: this.channel.id,

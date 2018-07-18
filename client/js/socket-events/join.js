@@ -3,9 +3,11 @@
 const $ = require("jquery");
 const socket = require("../socket");
 const sidebar = $("#sidebar");
-const {vueApp} = require("../vue");
+const {vueApp, initChannel} = require("../vue");
 
 socket.on("join", function(data) {
+	initChannel(data.chan);
+
 	vueApp.networks.find((n) => n.uuid === data.network)
 		.channels.splice(data.index || -1, 0, data.chan);
 
