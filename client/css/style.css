@@ -1564,7 +1564,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	white-space: nowrap;
 }
 
-+#chat .names .user:hover {
+#chat .names .user:hover {
 	opacity: 0.6;
 }
 
