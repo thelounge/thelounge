@@ -63,8 +63,8 @@
 				@click="jumpToBottom()">
 				<div class="scroll-down-arrow"/>
 				<div
-					v-if="unreadMessages > 0"
-					class="scroll-down-number">{{ unreadMessages }}</div>
+					v-if="channel.unread > 0"
+					class="scroll-down-number">{{ channel.unread }}</div>
 			</div>
 		</transition>
 	</div>
@@ -136,19 +136,6 @@ export default {
 			}
 
 			return condensed;
-		},
-		unreadMessages() {
-			let unread = 0;
-
-			for (let id = this.condensedMessages.length - 1; id > 0; id--) {
-				if (this.channel.firstUnread >= this.condensedMessages[id].id) {
-					break;
-				}
-
-				unread++;
-			}
-
-			return unread;
 		},
 	},
 	watch: {
