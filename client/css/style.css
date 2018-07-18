@@ -994,10 +994,6 @@ background on hover (unless active) */
 }
 
 #chat .condensed-summary {
-	display: none;
-}
-
-#chat.condensed-status-messages .condensed-summary {
 	display: flex;
 }
 
@@ -1009,7 +1005,7 @@ background on hover (unless active) */
 	opacity: 1;
 }
 
-#chat.condensed-status-messages .condensed.closed .msg {
+#chat .condensed.closed .msg {
 	display: none;
 }
 
@@ -1304,7 +1300,6 @@ background on hover (unless active) */
 	width: 50px;
 }
 
-#chat.hide-status-messages .condensed,
 #chat.hide-motd .motd {
 	display: none !important;
 }

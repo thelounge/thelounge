@@ -76,11 +76,22 @@ export default {
 		MessageCondensed,
 	},
 	props: {
+		settings: Object,
 		channel: Object,
 	},
 	computed: {
 		condensedMessages() {
 			if (this.channel.type !== "channel") {
+				return this.channel.messages;
+			}
+
+			// If actions are hidden, just return a message list with them excluded
+			if (this.settings.statusMessages === "hidden") {
+				return this.channel.messages.filter((message) => !constants.condensedTypes.includes(message.type));
+			}
+
+			// If actions are not condensed, just return raw message list
+			if (this.settings.statusMessages !== "condensed") {
 				return this.channel.messages;
 			}
 
