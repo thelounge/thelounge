@@ -55,6 +55,18 @@
 					@linkPreviewToggle="onLinkPreviewToggle"/>
 			</template>
 		</div>
+
+		<transition name="fade">
+			<div
+				v-if="!channel.scrolledToBottom"
+				class="scroll-down"
+				@click="jumpToBottom()">
+				<div class="scroll-down-arrow"/>
+				<div
+					v-if="unreadMessages > 0"
+					class="scroll-down-number">{{ unreadMessages }}</div>
+			</div>
+		</transition>
 	</div>
 </template>
 
@@ -125,10 +137,23 @@ export default {
 
 			return condensed;
 		},
+		unreadMessages() {
+			let unread = 0;
+
+			for (let id = this.condensedMessages.length - 1; id > 0; id--) {
+				if (this.channel.firstUnread >= this.condensedMessages[id].id) {
+					break;
+				}
+
+				unread++;
+			}
+
+			return unread;
+		},
 	},
 	watch: {
 		"channel.id"() {
-			this.$set(this.channel, "scrolledToBottom", true);
+			this.channel.scrolledToBottom = true;
 		},
 		"channel.messages"() {
 			this.keepScrollPosition();
@@ -153,7 +178,7 @@ export default {
 			}
 
 			this.channel.scrolledToBottom = true;
-			this.$refs.chat.scrollTop = this.$refs.chat.scrollHeight;
+			this.jumpToBottom();
 		});
 	},
 	mounted() {
@@ -261,7 +286,7 @@ export default {
 			this.isWaitingForNextTick = true;
 			this.$nextTick(() => {
 				this.isWaitingForNextTick = false;
-				el.scrollTop = el.scrollHeight;
+				this.jumpToBottom();
 			});
 		},
 		handleScroll() {
@@ -275,11 +300,13 @@ export default {
 		},
 		handleResize() {
 			// Keep message list scrolled to bottom on resize
-			const el = this.$refs.chat;
-
-			if (el && this.channel.scrolledToBottom) {
-				el.scrollTop = el.scrollHeight;
+			if (this.channel.scrolledToBottom) {
+				this.jumpToBottom();
 			}
+		},
+		jumpToBottom() {
+			const el = this.$refs.chat;
+			el.scrollTop = el.scrollHeight;
 		},
 	},
 };

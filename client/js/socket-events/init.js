@@ -47,6 +47,8 @@ socket.on("init", function(data) {
 		}
 
 		for (const channel of network.channels) {
+			channel.scrolledToBottom = true;
+
 			if (channel.type === "channel") {
 				channel.usersOutdated = true;
 			}
