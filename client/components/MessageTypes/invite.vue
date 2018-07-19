@@ -6,7 +6,9 @@
 		<Username
 			v-else
 			:user="message.target"/>
-		to <ParsedMessage :text="message.channel"/>
+		to <ParsedMessage
+			:network="network"
+			:text="message.channel"/>
 	</span>
 </template>
 
@@ -21,6 +23,7 @@ export default {
 		Username,
 	},
 	props: {
+		network: Object,
 		message: Object,
 	},
 };

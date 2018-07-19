@@ -5,7 +5,9 @@
 		<Username :user="message.target"/>
 		<i
 			v-if="message.text"
-			class="part-reason">(<ParsedMessage :message="message"/>)</i>
+			class="part-reason">(<ParsedMessage
+				:network="network"
+				:message="message"/>)</i>
 	</span>
 </template>
 
@@ -20,6 +22,7 @@ export default {
 		Username,
 	},
 	props: {
+		network: Object,
 		message: Object,
 	},
 };

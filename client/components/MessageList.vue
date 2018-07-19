@@ -46,9 +46,11 @@
 				<MessageCondensed
 					v-if="message.type === 'condensed'"
 					:key="message.id"
+					:network="network"
 					:messages="message.messages"/>
 				<Message
 					v-else
+					:network="network"
 					:message="message"
 					:key="message.id"
 					:keep-scroll-position="keepScrollPosition"
@@ -89,6 +91,7 @@ export default {
 	},
 	props: {
 		settings: Object,
+		network: Object,
 		channel: Object,
 	},
 	computed: {
