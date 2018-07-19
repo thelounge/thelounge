@@ -57,7 +57,7 @@ function createFragment(fragment, createElement) {
 
 // Transform an IRC message potentially filled with styling control codes, URLs,
 // nicknames, and channels into a string of HTML elements to display on the client.
-module.exports = function parse(createElement, text, message = null) {
+module.exports = function parse(createElement, text, message = undefined, network = undefined) {
 	// Extract the styling information and get the plain text version from it
 	const styleFragments = parseStyle(text);
 	const cleanText = styleFragments.map((fragment) => fragment.text).join("");
@@ -65,8 +65,8 @@ module.exports = function parse(createElement, text, message = null) {
 	// On the plain text, find channels and URLs, returned as "parts". Parts are
 	// arrays of objects containing start and end markers, as well as metadata
 	// depending on what was found (channel or link).
-	const channelPrefixes = ["#", "&"]; // TODO Channel prefixes should be RPL_ISUPPORT.CHANTYPES
-	const userModes = ["!", "@", "%", "+"]; // TODO User modes should be RPL_ISUPPORT.PREFIX
+	const channelPrefixes = network ? network.serverOptions.CHANTYPES : ["#", "&"];
+	const userModes = network ? network.serverOptions.PREFIX : ["!", "@", "%", "+"];
 	const channelParts = findChannels(cleanText, channelPrefixes, userModes);
 	const linkParts = findLinks(cleanText);
 	const emojiParts = findEmoji(cleanText);

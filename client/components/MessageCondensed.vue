@@ -11,6 +11,7 @@
 		</div>
 		<Message
 			v-for="message in messages"
+			:network="network"
 			:message="message"
 			:key="message.id"/>
 	</div>
@@ -26,6 +27,7 @@ export default {
 		Message,
 	},
 	props: {
+		network: Object,
 		messages: Array,
 	},
 	data() {

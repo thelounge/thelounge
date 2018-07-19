@@ -14,9 +14,13 @@
 			<tr
 				v-for="chan in channel.data"
 				:key="chan.channel">
-				<td class="channel"><ParsedMessage :text="chan.channel"/></td>
+				<td class="channel"><ParsedMessage
+					:network="network"
+					:text="chan.channel"/></td>
 				<td class="users">{{ chan.num_users }}</td>
-				<td class="topic"><ParsedMessage :text="chan.topic"/></td>
+				<td class="topic"><ParsedMessage
+					:network="network"
+					:text="chan.topic"/></td>
 			</tr>
 		</tbody>
 	</table>
@@ -31,6 +35,7 @@ export default {
 		ParsedMessage,
 	},
 	props: {
+		network: Object,
 		channel: Object,
 	},
 };

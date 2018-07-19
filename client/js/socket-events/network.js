@@ -27,7 +27,7 @@ socket.on("network", function(data) {
 		.prop("disabled", false);
 });
 
-socket.on("network_changed", function(data) {
+socket.on("network:options", function(data) {
 	vueApp.networks.find((n) => n.uuid === data.network).serverOptions = data.serverOptions;
 });
 
