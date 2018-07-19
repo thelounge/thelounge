@@ -3,7 +3,6 @@
 const $ = require("jquery");
 const escapeRegExp = require("lodash/escapeRegExp");
 const storage = require("./localStorage");
-const tz = require("./libs/handlebars/tz");
 const socket = require("./socket");
 const {vueApp} = require("./vue");
 require("../js/autocompletion");
