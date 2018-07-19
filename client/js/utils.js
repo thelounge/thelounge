@@ -36,7 +36,7 @@ function hasRoleInChannel(channel, roles, nick) {
 		return false;
 	}
 
-	const channelID = channel.data("id");
+	const channelID = channel.attr("data-id");
 	const network = $("#sidebar .network").has(`.chan[data-id="${channelID}"]`);
 	const target = nick || network.attr("data-nick");
 	const user = channel.find(`.names-original .user[data-name="${escape(target)}"]`).first();
@@ -142,7 +142,7 @@ function closeChan(chan) {
 	}
 
 	socket.emit("input", {
-		target: chan.data("id"),
+		target: Number(chan.attr("data-id")),
 		text: cmd,
 	});
 	chan.css({

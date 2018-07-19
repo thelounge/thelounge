@@ -126,7 +126,7 @@ function closeImageViewer({pushState = true} = {}) {
 	if (pushState) {
 		const clickTarget =
 			"#sidebar " +
-			`.chan[data-id="${$("#sidebar .chan.active").data("id")}"]`;
+			`.chan[data-id="${$("#sidebar .chan.active").attr("data-id")}"]`;
 		history.pushState({clickTarget}, null, null);
 	}
 }

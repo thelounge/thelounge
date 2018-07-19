@@ -58,7 +58,7 @@ function addWhoisItem() {
 		}
 
 		socket.emit("input", {
-			target: $("#chat").data("id"),
+			target: Number($("#chat").attr("data-id")),
 			text: "/whois " + itemData,
 		});
 	}
@@ -93,7 +93,7 @@ function addQueryItem() {
 		}
 
 		socket.emit("input", {
-			target: $("#chat").data("id"),
+			target: Number($("#chat").attr("data-id")),
 			text: "/query " + itemData,
 		});
 	}
@@ -139,7 +139,7 @@ function addConnectItem() {
 		check: (target) => target.hasClass("lobby") && target.parent().hasClass("not-connected"),
 		className: "connect",
 		displayName: "Connect",
-		data: (target) => target.data("id"),
+		data: (target) => target.attr("data-id"),
 		callback: connect,
 	});
 }
@@ -156,7 +156,7 @@ function addDisconnectItem() {
 		check: (target) => target.hasClass("lobby") && !target.parent().hasClass("not-connected"),
 		className: "disconnect",
 		displayName: "Disconnect",
-		data: (target) => target.data("id"),
+		data: (target) => target.attr("data-id"),
 		callback: disconnect,
 	});
 }
@@ -164,13 +164,13 @@ function addDisconnectItem() {
 function addKickItem() {
 	function kick(itemData) {
 		socket.emit("input", {
-			target: $("#chat").data("id"),
+			target: Number($("#chat").attr("data-id")),
 			text: "/kick " + itemData,
 		});
 	}
 
 	addContextMenuItem({
-		check: (target) => utils.hasRoleInChannel(target.closest(".chan"), ["op"]) && target.closest(".chan").data("type") === "channel",
+		check: (target) => utils.hasRoleInChannel(target.closest(".chan"), ["op"]) && target.closest(".chan").attr("data-type") === "channel",
 		className: "action-kick",
 		displayName: "Kick",
 		data: (target) => target.attr("data-name"),
@@ -181,7 +181,7 @@ function addKickItem() {
 function addOpItem() {
 	function op(itemData) {
 		socket.emit("input", {
-			target: $("#chat").data("id"),
+			target: Number($("#chat").attr("data-id")),
 			text: "/op " + itemData,
 		});
 	}
@@ -200,7 +200,7 @@ function addOpItem() {
 function addDeopItem() {
 	function deop(itemData) {
 		socket.emit("input", {
-			target: $("#chat").data("id"),
+			target: Number($("#chat").attr("data-id")),
 			text: "/deop " + itemData,
 		});
 	}
@@ -219,7 +219,7 @@ function addDeopItem() {
 function addVoiceItem() {
 	function voice(itemData) {
 		socket.emit("input", {
-			target: $("#chat").data("id"),
+			target: Number($("#chat").attr("data-id")),
 			text: "/voice " + itemData,
 		});
 	}
@@ -238,7 +238,7 @@ function addVoiceItem() {
 function addDevoiceItem() {
 	function devoice(itemData) {
 		socket.emit("input", {
-			target: $("#chat").data("id"),
+			target: Number($("#chat").attr("data-id")),
 			text: "/devoice " + itemData,
 		});
 	}
@@ -292,7 +292,7 @@ function addEditNetworkItem() {
 		check: (target) => target.hasClass("lobby"),
 		className: "edit",
 		displayName: "Edit this network…",
-		data: (target) => target.closest(".network").data("uuid"),
+		data: (target) => target.closest(".network").attr("data-uuid"),
 		callback: edit,
 	});
 }
@@ -309,7 +309,7 @@ function addChannelListItem() {
 		check: (target) => target.hasClass("lobby"),
 		className: "list",
 		displayName: "List all channels",
-		data: (target) => target.data("id"),
+		data: (target) => target.attr("data-id"),
 		callback: list,
 	});
 }
@@ -326,7 +326,7 @@ function addBanListItem() {
 		check: (target) => target.hasClass("channel"),
 		className: "list",
 		displayName: "List banned users",
-		data: (target) => target.data("id"),
+		data: (target) => target.attr("data-id"),
 		callback: banlist,
 	});
 }
@@ -340,7 +340,7 @@ function addJoinItem() {
 		check: (target) => target.hasClass("lobby"),
 		className: "join",
 		displayName: "Join a channel…",
-		data: (target) => target.data("id"),
+		data: (target) => target.attr("data-id"),
 		callback: openJoinForm,
 	});
 }
@@ -357,7 +357,7 @@ function addIgnoreListItem() {
 		check: (target) => target.hasClass("lobby"),
 		className: "list",
 		displayName: "List ignored users",
-		data: (target) => target.data("id"),
+		data: (target) => target.attr("data-id"),
 		callback: ignorelist,
 	});
 }
