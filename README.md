@@ -68,13 +68,13 @@ Run this in a terminal to install (or upgrade) the latest stable release from
 [npm registry](https://www.npmjs.com/):
 
 ```sh
-[sudo] yarn global add thelounge
+yarn global add thelounge
 ```
 
 If you already have The Lounge installed globally, use the following command to update it:
 
 ```sh
-[sudo] yarn global upgrade thelounge
+yarn global upgrade thelounge
 ```
 
 When installation is complete, run:
