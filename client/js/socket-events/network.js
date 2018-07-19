@@ -14,10 +14,6 @@ socket.on("network", function(data) {
 	network.isCollapsed = false;
 	network.channels.forEach(initChannel);
 
-	for (const channel of network.channels) {
-		initChannel(channel);
-	}
-
 	vueApp.networks.push(network);
 
 	vueApp.$nextTick(() => {
