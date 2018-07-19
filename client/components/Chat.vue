@@ -45,9 +45,15 @@
 				<div
 					v-if="channel.type === 'special'"
 					class="chat-content">
-					<component
-						:is="specialComponent"
-						:channel="channel"/>
+					<div class="chat">
+						<div class="messages">
+							<div class="msg">
+								<component
+									:is="specialComponent"
+									:channel="channel"/>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div
 					v-else
