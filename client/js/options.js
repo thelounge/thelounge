@@ -9,7 +9,6 @@ const {vueApp} = require("./vue");
 require("../js/autocompletion");
 
 const $windows = $("#windows");
-const $chat = $("#chat");
 const $settings = $("#settings");
 const $theme = $("#theme");
 const $userStyles = $("#user-specified-css");
@@ -125,10 +124,6 @@ function applySetting(name, value) {
 		} else {
 			module.exports.highlightsRE = null;
 		}
-	} else if (name === "showSeconds") {
-		$chat.find(".msg > .time").each(function() {
-			$(this).text(tz($(this).parent().data("time")));
-		});
 	} else if (name === "desktopNotifications") {
 		if (("Notification" in window) && value && Notification.permission !== "granted") {
 			Notification.requestPermission(updateDesktopNotificationStatus);

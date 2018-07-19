@@ -163,15 +163,13 @@ window.vueMounted = () => {
 
 		utils.updateTitle();
 
-		const type = chan.data("type");
-
 		if (self.hasClass("chan")) {
 			vueApp.$nextTick(() => $("#chat-container").addClass("active"));
 		}
 
 		const chanChat = chan.find(".chat");
 
-		if (chanChat.length > 0 && type !== "special") {
+		if (chanChat.length > 0 && channel.type !== "special") {
 			// On touch devices unfocus (blur) the input to correctly close the virtual keyboard
 			// An explicit blur is required, as the keyboard may open back up if the focus remains
 			// See https://github.com/thelounge/thelounge/issues/2257
@@ -200,7 +198,7 @@ window.vueMounted = () => {
 		if (self.prop("id")) {
 			state.clickTarget = `#${self.prop("id")}`;
 		} else if (self.hasClass("chan")) {
-			state.clickTarget = `#sidebar .chan[data-id="${self.data("id")}"]`;
+			state.clickTarget = `#sidebar .chan[data-id="${self.attr("data-id")}"]`;
 		} else {
 			state.clickTarget = `#footer button[data-target="${target}"]`;
 		}
