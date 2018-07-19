@@ -1135,7 +1135,7 @@ background on hover (unless active) */
 	content: "\f107"; /* https://fontawesome.com/icons/angle-down?style=solid */
 }
 
-.userlist-open #chat .scroll-down {
+.userlist-open .channel .scroll-down {
 	right: 196px;
 }
 
