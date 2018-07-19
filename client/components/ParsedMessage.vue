@@ -7,13 +7,15 @@ export default {
 	props: {
 		text: String,
 		message: Object,
+		network: Object,
 	},
 	render(createElement, context) {
-		if (typeof context.props.text !== "undefined") {
-			return parse(createElement, context.props.text);
-		}
-
-		return parse(createElement, context.props.message.text, context.props.message);
+		return parse(
+			createElement,
+			typeof context.props.text !== "undefined" ? context.props.text : context.props.message.text,
+			context.props.message,
+			context.props.network
+		);
 	},
 };
 </script>

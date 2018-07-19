@@ -23,6 +23,7 @@
 export default {
 	name: "ListBans",
 	props: {
+		network: Object,
 		channel: Object,
 	},
 };

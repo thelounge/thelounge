@@ -1,6 +1,8 @@
 <template>
 	<span class="content">
-		<span class="text"><ParsedMessage :text="cleanText"/></span>
+		<span class="text"><ParsedMessage
+			:network="network"
+			:text="cleanText"/></span>
 	</span>
 </template>
 
@@ -13,6 +15,7 @@ export default {
 		ParsedMessage,
 	},
 	props: {
+		network: Object,
 		message: Object,
 	},
 	computed: {

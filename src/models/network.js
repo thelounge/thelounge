@@ -40,6 +40,7 @@ function Network(attr) {
 		hostname: null,
 		irc: null,
 		serverOptions: {
+			CHANTYPES: [],
 			PREFIX: [],
 			NETWORK: "",
 		},

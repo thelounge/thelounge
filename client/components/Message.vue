@@ -19,12 +19,15 @@
 			<span class="from"/>
 			<component
 				:is="messageComponent"
+				:network="network"
 				:message="message"/>
 		</template>
 		<template v-else-if="message.type === 'action'">
 			<span class="from"/>
 			<span class="content">
-				<span class="text"><Username :user="message.from"/> <ParsedMessage :message="message"/></span>
+				<span class="text"><Username :user="message.from"/> <ParsedMessage
+					:network="network"
+					:message="message"/></span>
 				<LinkPreview
 					v-for="preview in message.previews"
 					:keep-scroll-position="keepScrollPosition"
@@ -39,7 +42,9 @@
 				</template>
 			</span>
 			<span class="content">
-				<span class="text"><ParsedMessage :message="message"/></span>
+				<span class="text"><ParsedMessage
+					:network="network"
+					:message="message"/></span>
 				<LinkPreview
 					v-for="preview in message.previews"
 					:keep-scroll-position="keepScrollPosition"
@@ -65,6 +70,7 @@ export default {
 	components: MessageTypes,
 	props: {
 		message: Object,
+		network: Object,
 		keepScrollPosition: Function,
 	},
 	computed: {

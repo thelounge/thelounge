@@ -28,6 +28,7 @@
 						:title="channel.topic"
 						class="topic"><ParsedMessage
 							v-if="channel.topic"
+							:network="network"
 							:text="channel.topic"/></span>
 					<button
 						class="menu"
@@ -50,6 +51,7 @@
 							<div class="msg">
 								<component
 									:is="specialComponent"
+									:network="network"
 									:channel="channel"/>
 							</div>
 						</div>
@@ -59,6 +61,7 @@
 					v-else
 					class="chat-content">
 					<MessageList
+						:network="network"
 						:channel="channel"
 						:settings="settings"/>
 					<ChatUserList

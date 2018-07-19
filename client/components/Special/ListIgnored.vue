@@ -21,6 +21,7 @@
 export default {
 	name: "ListIgnored",
 	props: {
+		network: Object,
 		channel: Object,
 	},
 };

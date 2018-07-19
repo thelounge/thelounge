@@ -142,20 +142,17 @@ module.exports = function(irc, network) {
 	});
 
 	irc.on("server options", function(data) {
-		if (network.serverOptions.PREFIX === data.options.PREFIX && network.serverOptions.NETWORK === data.options.NETWORK) {
-			return;
-		}
-
 		network.prefixLookup = {};
 
 		data.options.PREFIX.forEach((mode) => {
 			network.prefixLookup[mode.mode] = mode.symbol;
 		});
 
-		network.serverOptions.PREFIX = data.options.PREFIX;
+		network.serverOptions.CHANTYPES = data.options.CHANTYPES;
+		network.serverOptions.PREFIX = data.options.PREFIX.map((p) => p.symbol);
 		network.serverOptions.NETWORK = data.options.NETWORK;
 
-		client.emit("network_changed", {
+		client.emit("network:options", {
 			network: network.uuid,
 			serverOptions: network.serverOptions,
 		});
