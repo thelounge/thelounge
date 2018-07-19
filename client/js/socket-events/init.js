@@ -18,35 +18,39 @@ socket.on("init", function(data) {
 	const networks = new Set(JSON.parse(storage.get("thelounge.networks.collapsed")));
 
 	for (const network of data.networks) {
+		network.isCollapsed = networks.has(network.uuid);
+		network.channels.forEach(initChannel);
+
 		const currentNetwork = vueApp.networks.find((n) => n.uuid === network.uuid);
 
-		// TODO: Make this updating more efficient
-		if (currentNetwork) {
-			network.isJoinChannelShown = currentNetwork.isJoinChannelShown;
-			network.isCollapsed = currentNetwork.isCollapsed;
-
-			for (const channel of network.channels) {
-				const currentChannel = currentNetwork.channels.find((c) => c.id === channel.id);
-
-				if (currentChannel) {
-					channel.scrolledToBottom = currentChannel.scrolledToBottom;
-					channel.pendingMessage = currentChannel.pendingMessage;
-
-					if (currentChannel.messages) {
-						channel.messages = currentChannel.messages.concat(channel.messages);
-					}
-
-					if (currentChannel.moreHistoryAvailable) {
-						channel.moreHistoryAvailable = true;
-					}
-				}
-			}
-		} else {
+		// If we are reconnecting, merge existing state variables because they don't exist on the server
+		if (!currentNetwork) {
 			network.isJoinChannelShown = false;
-			network.isCollapsed = networks.has(network.uuid);
+
+			continue;
 		}
 
-		network.channels.forEach(initChannel);
+		network.isJoinChannelShown = currentNetwork.isJoinChannelShown;
+
+		for (const channel of network.channels) {
+			const currentChannel = currentNetwork.channels.find((c) => c.id === channel.id);
+
+			if (!currentChannel) {
+				continue;
+			}
+
+			channel.scrolledToBottom = currentChannel.scrolledToBottom;
+			channel.pendingMessage = currentChannel.pendingMessage;
+
+			// Reconnection only sends new messages, so merge it on the client
+			if (currentChannel.messages) {
+				channel.messages = currentChannel.messages.concat(channel.messages);
+			}
+
+			if (currentChannel.moreHistoryAvailable) {
+				channel.moreHistoryAvailable = true;
+			}
+		}
 	}
 
 	vueApp.networks = data.networks;
