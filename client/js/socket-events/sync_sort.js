@@ -13,7 +13,7 @@ socket.on("sync_sort", function(data) {
 		$.each(order, function(index, value) {
 			const position = $(container.children(".network")[index]);
 
-			if (position.data("id") === value) { // Network in correct place
+			if (Number(position.attr("data-id")) === value) { // Network in correct place
 				return true; // No point in continuing
 			}
 
@@ -27,7 +27,7 @@ socket.on("sync_sort", function(data) {
 
 			const position = $(network.children(".chan")[index]); // Target channel at position
 
-			if (position.data("id") === value) { // Channel in correct place
+			if (Number(position.attr("data-id")) === value) { // Channel in correct place
 				return true; // No point in continuing
 			}
 
