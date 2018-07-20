@@ -106,7 +106,7 @@ Please refer to the commit list given above for a complete list of changes, or w
 As with all pre-releases, this version requires explicit use of the \`next\` tag to be installed:
 
 \`\`\`sh
-npm install -g thelounge@next
+yarn global add thelounge@next
 \`\`\`
 `;
 }
