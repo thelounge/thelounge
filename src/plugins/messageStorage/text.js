@@ -41,7 +41,7 @@ class TextFileMessageStorage {
 			return;
 		}
 
-		let line = `[${log.getHumanDate()}] `;
+		let line = `[${log.getHumanDate(msg.time)}] `;
 
 		// message types from src/models/msg.js
 		switch (msg.type) {

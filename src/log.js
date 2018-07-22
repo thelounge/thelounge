@@ -32,7 +32,7 @@ module.exports = {
 		read(options, callback);
 	},
 
-	getHumanDate() {
-		return moment().format("YYYY-MM-DD HH:mm:ss");
+	getHumanDate(ts) {
+		return moment(ts).format("YYYY-MM-DD HH:mm:ss");
 	},
 };

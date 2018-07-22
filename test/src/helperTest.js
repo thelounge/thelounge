@@ -56,6 +56,6 @@ describe("Helper", function() {
 	});
 
 	describe("#getHumanDate()", function() {
-		expect(log.getHumanDate()).to.equal(moment().format("YYYY-MM-DD HH:mm:ss"));
+		expect(log.getHumanDate(moment(1455090480000).utc())).to.equal("2016-02-10 07:48:00");
 	});
 });
