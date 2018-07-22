@@ -97,7 +97,7 @@ class TextFileMessageStorage {
 
 		line += "\n";
 
-		fs.appendFile(path.join(logPath, cleanFilename(channel.name)), line, (e) => {
+		fs.appendFile(path.join(logPath, `${cleanFilename(channel.name)}.log`), line, (e) => {
 			if (e) {
 				log.error("Failed to write user log", e);
 			}
@@ -122,5 +122,5 @@ function cleanFilename(name) {
 	name = filenamify(name, {replacement: "_"});
 	name = name.toLowerCase();
 
-	return `${name}.log`;
+	return name;
 }
