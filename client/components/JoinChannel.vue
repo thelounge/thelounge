@@ -50,6 +50,7 @@ export default {
 		},
 	},
 	props: {
+		network: Object,
 		channel: Object,
 	},
 	data() {
@@ -60,8 +61,8 @@ export default {
 	},
 	methods: {
 		onSubmit() {
-			const utils = require("../js/utils");
-			const existingChannel = utils.findCurrentNetworkChan(this.inputChannel);
+			const channelToFind = this.inputChannel.toLowerCase();
+			const existingChannel = this.network.channels.find((c) => c.name.toLowerCase() === channelToFind);
 
 			if (existingChannel) {
 				const $ = require("jquery");
