@@ -126,7 +126,6 @@ export default {
 
 				if (lastCondensedContainer === null) {
 					lastCondensedContainer = {
-						id: message.id, // Use id of first message in the condensed container
 						time: message.time,
 						type: "condensed",
 						messages: [],
@@ -136,6 +135,10 @@ export default {
 				}
 
 				lastCondensedContainer.messages.push(message);
+
+				// Set id of the condensed container to last message id,
+				// which is required for the unread marker to work correctly
+				lastCondensedContainer.id = message.id;
 			}
 
 			return condensed;
