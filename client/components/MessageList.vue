@@ -139,6 +139,11 @@ export default {
 				// Set id of the condensed container to last message id,
 				// which is required for the unread marker to work correctly
 				lastCondensedContainer.id = message.id;
+
+				// If this message is the unread boundary, create a split condensed container
+				if (message.id === this.channel.firstUnread) {
+					lastCondensedContainer = null;
+				}
 			}
 
 			return condensed;
