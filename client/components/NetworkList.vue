@@ -35,6 +35,7 @@
 			/>
 			<JoinChannel
 				v-if="network.isJoinChannelShown"
+				:network="network"
 				:channel="network.channels[0]"
 				@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown"
 			/>
