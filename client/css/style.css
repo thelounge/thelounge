@@ -372,11 +372,13 @@ kbd {
 
 #chat .motd .from::before {
 	content: "\f02e"; /* https://fontawesome.com/icons/bookmark?style=solid */
+	color: var(--body-color-muted);
 }
 
 #chat .ctcp .from::before,
 #chat .ctcp_request .from::before {
 	content: "\f15c"; /* https://fontawesome.com/icons/file-alt?style=solid */
+	color: var(--body-color-muted);
 }
 
 #chat .whois .from::before {
@@ -1195,7 +1197,6 @@ background on hover (unless active) */
 }
 
 #chat .from {
-	color: #b1c3ce;
 	padding-right: 10px;
 	text-align: right;
 	width: 134px;
@@ -1211,6 +1212,10 @@ background on hover (unless active) */
 	padding-right: 6px;
 	border-left: 1px solid #f6f6f6;
 	overflow: hidden; /* Prevents Zalgo text to expand beyond messages */
+}
+
+#chat .unhandled .from {
+	color: var(--body-color-muted);
 }
 
 #chat .special .time,
@@ -1329,14 +1334,6 @@ background on hover (unless active) */
 #chat table.channel-list .users {
 	text-align: center;
 	width: 50px;
-}
-
-#chat table.channel-list td.channel .inline-channel {
-	color: #428bca;
-}
-
-#chat table.channel-list td {
-	color: #555;
 }
 
 #chat.hide-status-messages .condensed,
