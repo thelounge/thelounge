@@ -60,7 +60,7 @@ function hasRoleInChannel(channel, roles, nick) {
 function scrollIntoViewNicely(el) {
 	// Ideally this would use behavior: "smooth", but that does not consistently work in e.g. Chrome
 	// https://github.com/iamdustan/smoothscroll/issues/28#issuecomment-364061459
-	el.scrollIntoView({block: "nearest", inline: "nearest"});
+	el.scrollIntoView({block: "center", inline: "nearest"});
 }
 
 function collapse() {
