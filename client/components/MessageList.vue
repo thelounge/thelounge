@@ -152,6 +152,13 @@ export default {
 	watch: {
 		"channel.id"() {
 			this.channel.scrolledToBottom = true;
+
+			// Re-add the intersection observer to trigger the check again on channel switch
+			// Otherwise if last channel had the button visible, switching to a new channel won't trigger the history
+			if (this.historyObserver) {
+				this.historyObserver.unobserve(this.$refs.loadMoreButton);
+				this.historyObserver.observe(this.$refs.loadMoreButton);
+			}
 		},
 		"channel.messages"() {
 			this.keepScrollPosition();
@@ -253,7 +260,7 @@ export default {
 					return;
 				}
 
-				entry.target.click();
+				this.onShowMoreClick();
 			});
 		},
 		keepScrollPosition() {
