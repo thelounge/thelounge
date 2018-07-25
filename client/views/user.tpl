@@ -1,3 +1,4 @@
+<!-- htmlmin:ignore -->
 {{#diff "reset"}}{{/diff}}
 {{#each users}}
 	{{#diff mode}}
@@ -9,3 +10,4 @@
 	{{> user_name}}
 {{/each}}
 </div>
+<!-- htmlmin:ignore -->

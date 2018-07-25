@@ -5,6 +5,9 @@
 	/* Main text color */
 	--body-color: #222;
 
+	/* Secondary text color, dimmed. Make sure to keep contrast WCAG 2.0 AA compliant on var(--window-bg-color) */
+	--body-color-muted: #767676;
+
 	/* Background color of the whole page */
 	--body-bg-color: #415364;
 
@@ -369,11 +372,13 @@ kbd {
 
 #chat .motd .from::before {
 	content: "\f02e"; /* https://fontawesome.com/icons/bookmark?style=solid */
+	color: var(--body-color-muted);
 }
 
 #chat .ctcp .from::before,
 #chat .ctcp_request .from::before {
 	content: "\f15c"; /* https://fontawesome.com/icons/file-alt?style=solid */
+	color: var(--body-color-muted);
 }
 
 #chat .whois .from::before {
@@ -958,7 +963,7 @@ background on hover (unless active) */
 }
 
 #windows .header .topic {
-	color: #777;
+	color: var(--body-color-muted);
 	margin-left: 8px;
 	word-break: break-all;
 	flex-grow: 1;
@@ -1182,7 +1187,7 @@ background on hover (unless active) */
 }
 
 #chat .time {
-	color: #999;
+	color: var(--body-color-muted);
 	padding-left: 10px;
 	width: 55px;
 }
@@ -1192,7 +1197,6 @@ background on hover (unless active) */
 }
 
 #chat .from {
-	color: #b1c3ce;
 	padding-right: 10px;
 	text-align: right;
 	width: 134px;
@@ -1208,6 +1212,10 @@ background on hover (unless active) */
 	padding-right: 6px;
 	border-left: 1px solid #f6f6f6;
 	overflow: hidden; /* Prevents Zalgo text to expand beyond messages */
+}
+
+#chat .unhandled .from {
+	color: var(--body-color-muted);
 }
 
 #chat .special .time,
@@ -1277,7 +1285,7 @@ background on hover (unless active) */
 #chat.colored-nicks .user.color-32 { color: #e60082; }
 
 #chat .self .text {
-	color: #999;
+	color: var(--body-color-muted);
 }
 
 #chat .msg.channel_list_loading .text {
@@ -1328,14 +1336,6 @@ background on hover (unless active) */
 	width: 50px;
 }
 
-#chat table.channel-list td.channel .inline-channel {
-	color: #428bca;
-}
-
-#chat table.channel-list td {
-	color: #555;
-}
-
 #chat.hide-status-messages .condensed,
 #chat.hide-motd .motd {
 	display: none !important;
@@ -1359,7 +1359,7 @@ background on hover (unless active) */
 #chat .quit .content,
 #chat .topic .content,
 #chat .topic_set_by .content {
-	color: #999;
+	color: var(--body-color-muted);
 }
 
 #chat .action .from,
@@ -1564,13 +1564,19 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	white-space: nowrap;
 }
 
+#chat .user-mode {
+	margin-bottom: 15px;
+}
+
 #chat .user-mode::before {
-	content: "";
-	border-bottom: 1px solid #eee;
+	background: var(--window-bg-color);
+	color: var(--body-color-muted);
 	display: block;
+	font-size: 0.85em;
 	line-height: 1.6;
-	padding: 12px 16px 10px;
-	margin-bottom: 10px;
+	padding: 5px 16px;
+	position: sticky;
+	top: 0;
 }
 
 #chat .user-mode.owner::before {

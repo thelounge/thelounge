@@ -2,6 +2,7 @@
 
 :root {
 	--body-color: #f3f3f3;
+	--body-color-muted: #b7c5d1;
 	--link-color: #77abd9;
 	--window-bg-color: #303e4a;
 	--date-marker-color: #97ea70;
@@ -106,10 +107,6 @@
 	color: #b7c5d1;
 }
 
-#windows .header .topic {
-	color: #b7c5d1;
-}
-
 #viewport .lt,
 #viewport .rt,
 #chat button.menu,
@@ -122,40 +119,9 @@
 	color: #f3f3f3;
 }
 
-#chat .self .text {
-	color: #b7c5d1;
-}
-
 #chat .error,
 #chat .error .from {
 	color: #f92772;
-}
-
-#chat .unhandled .from {
-	color: #b7c5d1;
-}
-
-#chat .msg.topic {
-	color: #b7c5d1;
-}
-
-#chat .time,
-#chat .condensed .content,
-#chat .away .content,
-#chat .back .content,
-#chat .join .content,
-#chat .kick .content,
-#chat .mode .content,
-#chat .nick .content,
-#chat .part .content,
-#chat .quit .content,
-#chat .topic .content,
-#chat .topic_set_by .content {
-	color: #b7c5d1;
-}
-
-#chat table.channel-list td {
-	color: #b7c5d1;
 }
 
 #chat .msg.motd .text,
