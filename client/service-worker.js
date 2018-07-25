@@ -2,6 +2,62 @@
 /* global clients */
 "use strict";
 
+const excludedPathsFromCache = /^(?:socket\.io|storage|uploads|cdn-cgi)\//;
+
+self.addEventListener("install", function() {
+	self.skipWaiting();
+});
+
+self.addEventListener("activate", function(event) {
+	event.waitUntil(self.clients.claim());
+});
+
+self.addEventListener("fetch", function(event) {
+	if (event.request.method !== "GET") {
+		return;
+	}
+
+	const url = event.request.url;
+	const scope = self.registration.scope;
+
+	// Skip cross-origin requests
+	if (!url.startsWith(scope)) {
+		return;
+	}
+
+	const path = url.substring(scope.length);
+
+	// Skip ignored paths
+	if (excludedPathsFromCache.test(path)) {
+		return;
+	}
+
+	const uri = new URL(url);
+	uri.hash = "";
+	uri.search = "";
+
+	event.respondWith(networkOrCache(uri));
+});
+
+function networkOrCache(uri) {
+	return caches.open("thelounge").then(function(cache) {
+		// Despite the "no-cache" name, it is a conditional request if proper headers are set
+		return fetch(uri, {cache: "no-cache"})
+			.then(function(response) {
+				if (response.ok) {
+					return cache.put(uri, response.clone()).then(function() {
+						return response;
+					});
+				}
+			})
+			.catch(function() {
+				return cache.match(uri).then(function(matching) {
+					return matching || Promise.reject("request-not-in-cache");
+				});
+			});
+	});
+}
+
 self.addEventListener("message", function(event) {
 	showNotification(event, event.data);
 });

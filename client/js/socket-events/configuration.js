@@ -8,6 +8,18 @@ const webpush = require("../webpush");
 const connect = $("#connect");
 const utils = require("../utils");
 
+window.addEventListener("beforeinstallprompt", (installPromptEvent) => {
+	$("#webapp-install-button")
+		.on("click", function() {
+			if (installPromptEvent && installPromptEvent.prompt) {
+				installPromptEvent.prompt();
+			}
+
+			$(this).prop("hidden", true);
+		})
+		.prop("hidden", false);
+});
+
 socket.on("configuration", function(data) {
 	if (options.initialized) {
 		// Likely a reconnect, request sync for possibly missed settings.

@@ -44,7 +44,7 @@ audio:not([controls]) {
 }
 [hidden],
 template {
-  display: none;
+  display: none !important;
 }
 a {
   background: transparent;
