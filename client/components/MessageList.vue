@@ -47,6 +47,7 @@
 					v-if="message.type === 'condensed'"
 					:key="message.id"
 					:network="network"
+					:keep-scroll-position="keepScrollPosition"
 					:messages="message.messages"/>
 				<Message
 					v-else
@@ -277,6 +278,9 @@ export default {
 						el.scrollTop = el.scrollHeight - heightOld;
 					});
 				}
+
+				// Recalculate scroll position
+				this.$nextTick(this.handleScroll);
 
 				return;
 			}
