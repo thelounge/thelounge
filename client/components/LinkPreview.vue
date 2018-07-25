@@ -193,6 +193,7 @@ export default {
 		},
 		onMoreClick() {
 			this.isContentShown = !this.isContentShown;
+			this.keepScrollPosition();
 		},
 	},
 };

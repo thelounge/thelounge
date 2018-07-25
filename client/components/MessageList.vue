@@ -224,6 +224,8 @@ export default {
 			clipboard(this.$el);
 		},
 		onLinkPreviewToggle(preview, message) {
+			this.keepScrollPosition();
+
 			// Tell the server we're toggling so it remembers at page reload
 			// TODO Avoid sending many single events when using `/collapse` or `/expand`
 			// See https://github.com/thelounge/thelounge/issues/1377
