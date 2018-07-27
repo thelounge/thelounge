@@ -167,7 +167,8 @@ const colorsHotkeys = {
 
 for (const hotkey in colorsHotkeys) {
 	inputTrap.bind("mod+" + hotkey, function(e) {
-		const modifier = colorsHotkeys[e.key];
+		// Key is lowercased because keybinds also get processed if caps lock is on
+		const modifier = colorsHotkeys[e.key.toLowerCase()];
 
 		wrapCursor(
 			e.target,
