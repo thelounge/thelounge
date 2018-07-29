@@ -5,9 +5,7 @@ const parseStyle = require("./ircmessageparser/parseStyle");
 const findChannels = require("./ircmessageparser/findChannels");
 const findLinks = require("./ircmessageparser/findLinks");
 const findEmoji = require("./ircmessageparser/findEmoji");
-const findNames = require("./ircmessageparser/findNames");
 const merge = require("./ircmessageparser/merge");
-const colorClass = require("./colorClass");
 const emojiMap = require("../fullnamemap.json");
 
 // Create an HTML `span` with styling information for a given fragment
@@ -63,7 +61,7 @@ function createFragment(fragment) {
 }
 
 // Transform an IRC message potentially filled with styling control codes, URLs,
-// nicknames, and channels into a string of HTML elements to display on the client.
+// and channels into a string of HTML elements to display on the client.
 module.exports = function parse(text, users) {
 	// if it's not the users we're expecting, but rather is passed from Handlebars (occurs when users passed to template is null or undefined)
 	if (users && users.hash) {
@@ -82,14 +80,12 @@ module.exports = function parse(text, users) {
 	const channelParts = findChannels(cleanText, channelPrefixes, userModes);
 	const linkParts = findLinks(cleanText);
 	const emojiParts = findEmoji(cleanText);
-	const nameParts = findNames(cleanText, (users || []));
 
 	const parts = channelParts
 		.concat(linkParts)
-		.concat(emojiParts)
-		.concat(nameParts);
+		.concat(emojiParts);
 
-	// Merge the styling information with the channels / URLs / nicks / text objects and
+	// Merge the styling information with the channels / URLs / text objects and
 	// generate HTML strings with the resulting fragments
 	return merge(parts, styleFragments, cleanText).map((textPart) => {
 		// Create HTML strings with styling information
@@ -108,9 +104,6 @@ module.exports = function parse(text, users) {
 			}
 
 			return `<span class="emoji" role="img" aria-label="Emoji: ${emojiMap[textPart.emoji]}" title="${emojiMap[textPart.emoji]}">${fragments}</span>`;
-		} else if (textPart.nick) {
-			const nick = Handlebars.Utils.escapeExpression(textPart.nick);
-			return `<span role="button" class="user ${colorClass(textPart.nick)}" data-name="${nick}">${fragments}</span>`;
 		}
 
 		return fragments;
