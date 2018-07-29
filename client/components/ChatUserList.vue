@@ -1,13 +1,12 @@
 <template>
 	<aside
 		ref="userlist"
-		class="userlist"
-	>
+		class="userlist">
 		<div class="count">
 			<input
 				ref="input"
-				:placeholder="channel.users.length + ' user' + (channel.users.length === 1 ? '' : 's')"
 				v-model="userSearchInput"
+				:placeholder="channel.users.length + ' user' + (channel.users.length === 1 ? '' : 's')"
 				type="search"
 				class="search"
 				aria-label="Search among the user list"
@@ -16,30 +15,28 @@
 				@keydown.down="navigateUserList(1)"
 				@keydown.page-up="navigateUserList(-10)"
 				@keydown.page-down="navigateUserList(10)"
-				@keydown.enter="selectUser"
-			>
+				@keydown.enter="selectUser">
 		</div>
 		<div class="names">
 			<div
 				v-for="(users, mode) in groupedUsers"
 				:key="mode"
-				:class="['user-mode', getModeClass(mode)]"
-			>
+				:class="['user-mode', getModeClass(mode)]">
 				<template v-if="userSearchInput.length > 0">
 					<UsernameFiltered
 						v-for="user in users"
-						:on-hover="hoverUser"
 						:key="user.original.nick"
+						:on-hover="hoverUser"
 						:active="user.original === activeUser"
-						:user="user"/>
+						:user="user" />
 				</template>
 				<template v-else>
 					<Username
 						v-for="user in users"
-						:on-hover="hoverUser"
 						:key="user.nick"
+						:on-hover="hoverUser"
 						:active="user === activeUser"
-						:user="user"/>
+						:user="user" />
 				</template>
 			</div>
 		</div>

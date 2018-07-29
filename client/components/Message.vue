@@ -2,8 +2,7 @@
 	<div
 		:id="'msg-' + message.id"
 		:class="['msg', message.type, {self: message.self, highlight: message.highlight}]"
-		:data-from="message.from && message.from.nick"
-	>
+		:data-from="message.from && message.from.nick">
 		<span
 			:aria-label="message.time | localetime"
 			class="time tooltipped tooltipped-e">{{ message.time | tz }}</span>
@@ -16,40 +15,40 @@
 			</span>
 		</template>
 		<template v-else-if="isAction()">
-			<span class="from"/>
+			<span class="from" />
 			<component
 				:is="messageComponent"
 				:network="network"
-				:message="message"/>
+				:message="message" />
 		</template>
 		<template v-else-if="message.type === 'action'">
-			<span class="from"/>
+			<span class="from" />
 			<span class="content">
-				<span class="text"><Username :user="message.from"/> <ParsedMessage
+				<span class="text"><Username :user="message.from" /> <ParsedMessage
 					:network="network"
-					:message="message"/></span>
+					:message="message" /></span>
 				<LinkPreview
 					v-for="preview in message.previews"
-					:keep-scroll-position="keepScrollPosition"
 					:key="preview.link"
-					:link="preview"/>
+					:keep-scroll-position="keepScrollPosition"
+					:link="preview" />
 			</span>
 		</template>
 		<template v-else>
 			<span class="from">
 				<template v-if="message.from && message.from.nick">
-					<Username :user="message.from"/>
+					<Username :user="message.from" />
 				</template>
 			</span>
 			<span class="content">
 				<span class="text"><ParsedMessage
 					:network="network"
-					:message="message"/></span>
+					:message="message" /></span>
 				<LinkPreview
 					v-for="preview in message.previews"
-					:keep-scroll-position="keepScrollPosition"
 					:key="preview.link"
-					:link="preview"/>
+					:keep-scroll-position="keepScrollPosition"
+					:link="preview" />
 			</span>
 		</template>
 	</div>

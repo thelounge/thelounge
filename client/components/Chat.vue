@@ -9,38 +9,35 @@
 				'hide-motd': !settings.motd,
 				'colored-nicks': settings.coloredNicks,
 				'show-seconds': settings.showSeconds,
-			}"
-		>
+		}">
 			<div
 				:id="'chan-' + channel.id"
 				:class="[channel.type, 'chan', 'active']"
 				:data-id="channel.id"
 				:data-type="channel.type"
 				:aria-label="channel.name"
-				role="tabpanel"
-			>
+				role="tabpanel">
 				<div class="header">
 					<button
 						class="lt"
-						aria-label="Toggle channel list"/>
+						aria-label="Toggle channel list" />
 					<span class="title">{{ channel.name }}</span>
 					<span
 						:title="channel.topic"
 						class="topic"><ParsedMessage
 							v-if="channel.topic"
 							:network="network"
-							:text="channel.topic"/></span>
+							:text="channel.topic" /></span>
 					<button
 						class="menu"
-						aria-label="Open the context menu"
-					/>
+						aria-label="Open the context menu" />
 					<span
 						v-if="channel.type === 'channel'"
 						class="rt-tooltip tooltipped tooltipped-w"
 						aria-label="Toggle user list">
 						<button
 							class="rt"
-							aria-label="Toggle user list"/>
+							aria-label="Toggle user list" />
 					</span>
 				</div>
 				<div
@@ -52,7 +49,7 @@
 								<component
 									:is="specialComponent"
 									:network="network"
-									:channel="channel"/>
+									:channel="channel" />
 							</div>
 						</div>
 					</div>
@@ -63,17 +60,17 @@
 					<MessageList
 						:network="network"
 						:channel="channel"
-						:settings="settings"/>
+						:settings="settings" />
 					<ChatUserList
 						v-if="channel.type === 'channel'"
-						:channel="channel"/>
+						:channel="channel" />
 				</div>
 			</div>
 		</div>
-		<div id="connection-error"/>
+		<div id="connection-error" />
 		<ChatInput
 			:network="network"
-			:channel="channel"/>
+			:channel="channel" />
 	</div>
 </template>
 

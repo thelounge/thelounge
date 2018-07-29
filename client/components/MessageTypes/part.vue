@@ -1,13 +1,13 @@
 <template>
 	<span class="content">
-		<Username :user="message.from"/>
+		<Username :user="message.from" />
 		<i class="hostmask">({{ message.hostmask }})</i>
 		has left the channel
 		<i
 			v-if="message.text"
 			class="part-reason">(<ParsedMessage
 				:network="network"
-				:message="message"/>)</i>
+				:message="message" />)</i>
 	</span>
 </template>
 

@@ -38,8 +38,7 @@
 							:aria-expanded="isContentShown"
 							:aria-label="moreButtonLabel"
 							class="more"
-							@click="onMoreClick"
-						><span class="more-caret"/></button>
+							@click="onMoreClick"><span class="more-caret" /></button>
 					</div>
 
 					<div class="body overflowable">
@@ -112,8 +111,7 @@
 						:aria-expanded="isContentShown"
 						:aria-label="moreButtonLabel"
 						class="more"
-						@click="onMoreClick"
-					><span class="more-caret"/></button>
+						@click="onMoreClick"><span class="more-caret" /></button>
 				</template>
 			</template>
 		</div>

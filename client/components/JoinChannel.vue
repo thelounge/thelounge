@@ -6,11 +6,10 @@
 		action=""
 		autocomplete="off"
 		@keydown.esc.prevent="$emit('toggleJoinChannel')"
-		@submit.prevent="onSubmit"
-	>
+		@submit.prevent="onSubmit">
 		<input
-			v-focus
 			v-model="inputChannel"
+			v-focus
 			type="text"
 			class="input"
 			name="channel"
@@ -18,8 +17,7 @@
 			pattern="[^\s]+"
 			maxlength="200"
 			title="The channel name may not contain spaces"
-			required
-		>
+			required>
 		<input
 			v-model="inputPassword"
 			type="password"
@@ -29,8 +27,7 @@
 			pattern="[^\s]+"
 			maxlength="200"
 			title="The channel password may not contain spaces"
-			autocomplete="new-password"
-		>
+			autocomplete="new-password">
 		<button
 			type="submit"
 			class="btn btn-small">Join</button>

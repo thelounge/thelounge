@@ -1,7 +1,7 @@
 <template>
 	<span class="content">
 		<template v-if="message.from && message.from.nick">
-			<Username :user="message.from"/>
+			<Username :user="message.from" />
 			has changed the topic to:
 		</template>
 		<template v-else>
@@ -11,7 +11,7 @@
 			v-if="message.text"
 			class="new-topic"><ParsedMessage
 				:network="network"
-				:message="message"/></span>
+				:message="message" /></span>
 	</span>
 </template>
 

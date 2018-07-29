@@ -1,7 +1,7 @@
 <template>
 	<span class="content">
 		<p>
-			<Username :user="{nick: message.whois.nick}"/>
+			<Username :user="{nick: message.whois.nick}" />
 			<span v-if="message.whois.whowas"> is offline, last information:</span>
 		</p>
 
@@ -29,7 +29,7 @@
 				<dt>Real name:</dt>
 				<dd><ParsedMessage
 					:network="network"
-					:text="message.whois.real_name"/></dd>
+					:text="message.whois.real_name" /></dd>
 			</template>
 
 			<template v-if="message.whois.registered_nick">
@@ -41,7 +41,7 @@
 				<dt>Channels:</dt>
 				<dd><ParsedMessage
 					:network="network"
-					:text="message.whois.channels"/></dd>
+					:text="message.whois.channels" /></dd>
 			</template>
 
 			<template v-if="message.whois.modes">
@@ -73,7 +73,7 @@
 				<dt>Away:</dt>
 				<dd><ParsedMessage
 					:network="network"
-					:text="message.whois.away"/></dd>
+					:text="message.whois.away" /></dd>
 			</template>
 
 			<template v-if="message.whois.secure">
