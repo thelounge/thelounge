@@ -2,7 +2,7 @@
 	<button
 		v-if="link.canDisplay"
 		:class="['toggle-button', 'toggle-preview', { opened: link.shown }]"
-		@click="onClick"/>
+		@click="onClick" />
 </template>
 
 <script>

@@ -9,11 +9,10 @@
 			:aria-label="getExpandLabel(network)"
 			:aria-expanded="!network.isCollapsed"
 			class="collapse-network"
-			@click.stop="onCollapseClick"
-		><span class="collapse-network-icon"/></button>
+			@click.stop="onCollapseClick"><span class="collapse-network-icon" /></button>
 		<span
 			v-else
-			class="collapse-network"/>
+			class="collapse-network" />
 		<div class="lobby-wrap">
 			<span
 				:title="channel.name"
@@ -21,12 +20,12 @@
 			<span
 				class="not-secure-tooltip tooltipped tooltipped-w"
 				aria-label="Insecure connection">
-				<span class="not-secure-icon"/>
+				<span class="not-secure-icon" />
 			</span>
 			<span
 				class="not-connected-tooltip tooltipped tooltipped-w"
 				aria-label="Disconnected">
-				<span class="not-connected-icon"/>
+				<span class="not-connected-icon" />
 			</span>
 			<span
 				v-if="channel.unread"
@@ -40,7 +39,7 @@
 				:class="['add-channel', { opened: isJoinChannelShown }]"
 				:aria-controls="'join-channel-' + channel.id"
 				:aria-label="joinChannelLabel"
-				@click.stop="$emit('toggleJoinChannel')"/>
+				@click.stop="$emit('toggleJoinChannel')" />
 		</span>
 	</ChannelWrapper>
 </template>

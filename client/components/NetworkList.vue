@@ -9,40 +9,35 @@
 		class="networks">
 		<div
 			v-for="network in networks"
+			:id="'network-' + network.uuid"
 			:key="network.uuid"
 			:class="{
 				collapsed: network.isCollapsed,
 				'not-connected': !network.status.connected,
 				'not-secure': !network.status.secure,
 			}"
-			:id="'network-' + network.uuid"
 			:data-uuid="network.uuid"
 			:data-nick="network.nick"
 			class="network"
-			role="region"
-		>
+			role="region">
 			<NetworkLobby
 				:network="network"
 				:active-channel="activeChannel"
 				:is-join-channel-shown="network.isJoinChannelShown"
-				@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown"
-			/>
+				@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown" />
 			<JoinChannel
 				v-if="network.isJoinChannelShown"
 				:network="network"
 				:channel="network.channels[0]"
-				@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown"
-			/>
+				@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown" />
 
 			<div class="channels">
 				<Channel
-					v-for="(channel, index) in network.channels"
-					v-if="index > 0"
+					v-for="channel in getChannelsWithoutLobby(network)"
 					:key="channel.id"
 					:channel="channel"
 					:network="network"
-					:active-channel="activeChannel"
-				/>
+					:active-channel="activeChannel" />
 			</div>
 		</div>
 	</div>
@@ -67,6 +62,9 @@ export default {
 		networks: Array,
 	},
 	methods: {
+		getChannelsWithoutLobby(network) {
+			return network.channels.slice(1);
+		},
 		onNetworkSort(e) {
 			if (!e.moved) {
 				return;

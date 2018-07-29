@@ -1,8 +1,8 @@
 <template>
 	<span class="content">
-		<Username :user="message.from"/>
+		<Username :user="message.from" />
 		sent a <abbr title="Client-to-client protocol">CTCP</abbr> request:
-		<span class="ctcp-message"><ParsedMessage :text="message.ctcpMessage"/></span>
+		<span class="ctcp-message"><ParsedMessage :text="message.ctcpMessage" /></span>
 	</span>
 </template>
 

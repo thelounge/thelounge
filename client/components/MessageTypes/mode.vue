@@ -1,8 +1,8 @@
 <template>
 	<span class="content">
-		<Username :user="message.from"/>
+		<Username :user="message.from" />
 		sets mode
-		<ParsedMessage :message="message"/>
+		<ParsedMessage :message="message" />
 	</span>
 </template>
 

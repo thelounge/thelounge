@@ -3,13 +3,13 @@
 		<ParsedMessage
 			v-if="message.self"
 			:network="network"
-			:message="message"/>
+			:message="message" />
 		<template v-else>
-			<Username :user="message.from"/>
+			<Username :user="message.from" />
 			is away
 			<i class="away-message">(<ParsedMessage
 				:network="network"
-				:message="message"/>)</i>
+				:message="message" />)</i>
 		</template>
 	</span>
 </template>

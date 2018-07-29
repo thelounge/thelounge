@@ -9,12 +9,11 @@
 		:aria-controls="'#chan-' + channel.id"
 		:aria-selected="activeChannel && channel === activeChannel.channel"
 		class="chan"
-		role="tab"
-	>
+		role="tab">
 		<slot
 			:network="network"
 			:channel="channel"
-			:activeChannel="activeChannel"/>
+			:activeChannel="activeChannel" />
 	</div>
 </template>
 
