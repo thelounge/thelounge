@@ -1190,6 +1190,7 @@ background on hover (unless active) */
 	color: var(--body-color-muted);
 	padding-left: 10px;
 	width: 55px;
+	font-variant-numeric: tabular-nums;
 }
 
 #chat.show-seconds .time {
