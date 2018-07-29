@@ -1,19 +1,19 @@
 <template>
 	<div :class="[ 'msg', 'condensed', { closed: isCollapsed } ]">
 		<div class="condensed-summary">
-			<span class="time"/>
-			<span class="from"/>
+			<span class="time" />
+			<span class="from" />
 			<span
 				class="content"
 				@click="isCollapsed = !isCollapsed">{{ condensedText }}<button
 					class="toggle-button"
-					aria-label="Toggle status messages"/></span>
+					aria-label="Toggle status messages" /></span>
 		</div>
 		<Message
 			v-for="message in messages"
+			:key="message.id"
 			:network="network"
-			:message="message"
-			:key="message.id"/>
+			:message="message" />
 	</div>
 </template>
 

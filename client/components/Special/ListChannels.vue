@@ -16,11 +16,11 @@
 				:key="chan.channel">
 				<td class="channel"><ParsedMessage
 					:network="network"
-					:text="chan.channel"/></td>
+					:text="chan.channel" /></td>
 				<td class="users">{{ chan.num_users }}</td>
 				<td class="topic"><ParsedMessage
 					:network="network"
-					:text="chan.topic"/></td>
+					:text="chan.topic" /></td>
 			</tr>
 		</tbody>
 	</table>

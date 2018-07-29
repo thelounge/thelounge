@@ -1,15 +1,13 @@
 <template>
 	<div
 		ref="chat"
-		class="chat"
-	>
+		class="chat">
 		<div :class="['show-more', { show: channel.moreHistoryAvailable }]">
 			<button
 				ref="loadMoreButton"
 				:disabled="channel.historyLoading || !$root.connected"
 				class="btn"
-				@click="onShowMoreClick"
-			>
+				@click="onShowMoreClick">
 				<span v-if="channel.historyLoading">Loading…</span>
 				<span v-else>Show older messages</span>
 			</button>
@@ -19,42 +17,40 @@
 			role="log"
 			aria-live="polite"
 			aria-relevant="additions"
-			@copy="onCopy"
-		>
+			@copy="onCopy">
 			<template v-for="(message, id) in condensedMessages">
 				<div
 					v-if="shouldDisplayDateMarker(message, id)"
 					:key="message.id + '-date'"
 					:data-time="message.time"
 					:aria-label="message.time | localedate"
-					class="date-marker-container tooltipped tooltipped-s"
-				>
+					class="date-marker-container tooltipped tooltipped-s">
 					<div class="date-marker">
 						<span
 							:data-label="message.time | friendlydate"
-							class="date-marker-text"/>
+							class="date-marker-text" />
 					</div>
 				</div>
 				<div
 					v-if="shouldDisplayUnreadMarker(id)"
 					:key="message.id + '-unread'"
-					class="unread-marker"
-				>
-					<span class="unread-marker-text"/>
+					class="unread-marker">
+					<span class="unread-marker-text" />
 				</div>
 
 				<MessageCondensed
 					v-if="message.type === 'condensed'"
 					:key="message.id"
 					:network="network"
-					:messages="message.messages"/>
+					:keep-scroll-position="keepScrollPosition"
+					:messages="message.messages" />
 				<Message
 					v-else
+					:key="message.id"
 					:network="network"
 					:message="message"
-					:key="message.id"
 					:keep-scroll-position="keepScrollPosition"
-					@linkPreviewToggle="onLinkPreviewToggle"/>
+					@linkPreviewToggle="onLinkPreviewToggle" />
 			</template>
 		</div>
 
@@ -63,7 +59,7 @@
 				v-if="!channel.scrolledToBottom"
 				class="scroll-down"
 				@click="jumpToBottom()">
-				<div class="scroll-down-arrow"/>
+				<div class="scroll-down-arrow" />
 				<div
 					v-if="channel.unread > 0"
 					class="scroll-down-number">{{ channel.unread }}</div>

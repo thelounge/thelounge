@@ -1,7 +1,7 @@
 <template>
 	<span class="content">
-		<Username :user="message.from"/>
-		<span class="ctcp-message"><ParsedMessage :text="message.ctcpMessage"/></span>
+		<Username :user="message.from" />
+		<span class="ctcp-message"><ParsedMessage :text="message.ctcpMessage" /></span>
 	</span>
 </template>
 

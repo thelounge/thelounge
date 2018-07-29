@@ -13,8 +13,7 @@
 			:aria-label="getInputPlaceholder(channel)"
 			:disabled="!$root.connected"
 			class="mousetrap"
-			@keypress.enter.exact.prevent="onSubmit"
-		/>
+			@keypress.enter.exact.prevent="onSubmit" />
 		<span
 			v-if="$root.connected"
 			id="submit-tooltip"
@@ -23,7 +22,7 @@
 			<button
 				id="submit"
 				type="submit"
-				aria-label="Send message"/>
+				aria-label="Send message" />
 		</span>
 	</form>
 </template>

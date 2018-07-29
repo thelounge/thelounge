@@ -87,6 +87,7 @@ rules:
   yoda: error
   vue/html-indent: [error, tab]
   vue/require-default-prop: off
+  vue/no-v-html: off
 
 plugins:
   - vue

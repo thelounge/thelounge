@@ -17,7 +17,7 @@
 				aria-label="Leave">
 				<button
 					class="close"
-					aria-label="Leave"/>
+					aria-label="Leave" />
 			</span>
 		</template>
 		<template v-else>
@@ -26,7 +26,7 @@
 				aria-label="Close">
 				<button
 					class="close"
-					aria-label="Close"/>
+					aria-label="Close" />
 			</span>
 		</template>
 	</ChannelWrapper>

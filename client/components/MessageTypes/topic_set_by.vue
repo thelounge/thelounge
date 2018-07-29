@@ -1,7 +1,7 @@
 <template>
 	<span class="content">
 		Topic set by
-		<Username :user="message.from"/>
+		<Username :user="message.from" />
 		on {{ message.when | localetime }}
 	</span>
 </template>

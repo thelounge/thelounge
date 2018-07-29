@@ -1,8 +1,8 @@
 <template>
 	<span class="content">
-		<Username :user="message.from"/>
+		<Username :user="message.from" />
 		is now known as
-		<Username :user="{nick: message.new_nick, mode: message.from.mode}"/>
+		<Username :user="{nick: message.new_nick, mode: message.from.mode}" />
 	</span>
 </template>
 
