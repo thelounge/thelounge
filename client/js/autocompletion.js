@@ -16,6 +16,7 @@ module.exports = {
 	enable: enableAutocomplete,
 	disable() {
 		if (enabled) {
+			$("#form").off("submit.tabcomplete");
 			input.off("input.tabcomplete");
 			Mousetrap(input.get(0)).unbind("tab", "keydown");
 			textcomplete.destroy();
@@ -23,12 +24,6 @@ module.exports = {
 		}
 	},
 };
-
-$("#form").on("submit", () => {
-	if (enabled) {
-		textcomplete.hide();
-	}
-});
 
 const emojiSearchTerms = Object.keys(emojiMap);
 const emojiStrategy = {
@@ -262,6 +257,10 @@ function enableAutocomplete(inputRef) {
 
 	textcomplete.on("hidden", () => {
 		autocompleting = false;
+	});
+
+	$("#form").on("submit.tabcomplete", () => {
+		textcomplete.hide();
 	});
 }
 
