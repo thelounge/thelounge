@@ -3221,9 +3221,9 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6:
   version "4.1.11"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
 
-graphql-request@1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-1.7.0.tgz#bb7c9e76fef3bf2ca4d42835f3df7df34bc9aa51"
+graphql-request@1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/graphql-request/-/graphql-request-1.8.0.tgz#baa18d482b4c3f84cb913ba4b771ae734e09b409"
   dependencies:
     cross-fetch "2.0.0"
     graphql "^0.13.2"
