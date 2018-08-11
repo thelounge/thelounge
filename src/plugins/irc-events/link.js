@@ -301,6 +301,7 @@ function getRequestHeaders(headers) {
 	const formattedHeaders = {
 		"User-Agent": "Mozilla/5.0 (compatible; The Lounge IRC Client; +https://github.com/thelounge/thelounge)",
 		"Accept": headers.accept || "*/*",
+		"X-Purpose": "preview",
 	};
 
 	if (headers.language) {
