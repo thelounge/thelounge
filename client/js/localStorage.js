@@ -14,8 +14,8 @@ module.exports = {
 		try {
 			return window.localStorage.getItem(key);
 		} catch (e) {
-			// Do nothing. You can end up here because localStorage isn't 
-			// accessable due to browser blocking 3rd party cookies when 
+			// Do nothing. You can end up here because localStorage isn't
+			// accessable due to browser blocking 3rd party cookies when
 			// theLounge is loaded via iFrame.
 			// See: https://github.com/thelounge/thelounge/issues/2699
 
@@ -27,8 +27,8 @@ module.exports = {
 		try {
 			window.localStorage.removeItem(key);
 		} catch (e) {
-			// Do nothing. You can end up here because localStorage isn't 
-			// accessable due to browser blocking 3rd party cookies when 
+			// Do nothing. You can end up here because localStorage isn't
+			// accessable due to browser blocking 3rd party cookies when
 			// theLounge is loaded via iFrame
 			// See: https://github.com/thelounge/thelounge/issues/2699
 		}
@@ -37,8 +37,8 @@ module.exports = {
 		try {
 			window.localStorage.clear();
 		} catch (e) {
-			// Do nothing. You can end up here because localStorage isn't 
-			// accessable due to browser blocking 3rd party cookies when 
+			// Do nothing. You can end up here because localStorage isn't
+			// accessable due to browser blocking 3rd party cookies when
 			// theLounge is loaded via iFrame
 			// See: https://github.com/thelounge/thelounge/issues/2699
 		}
