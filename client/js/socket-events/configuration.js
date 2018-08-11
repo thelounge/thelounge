@@ -176,6 +176,12 @@ function parseOverrideParams(params, data) {
 			continue;
 		}
 
+		// When the network is locked, URL overrides should not affect disabled fields
+		if (data.lockNetwork &&
+				["host", "port", "tls", "rejectUnauthorized"].includes(key)) {
+			continue;
+		}
+
 		if (key === "join") {
 			value = value.split(",").map((chan) => {
 				if (!chan.match(/^[#&!+]/)) {
