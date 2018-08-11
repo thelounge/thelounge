@@ -11,12 +11,25 @@ module.exports = {
 		}
 	},
 	get(key) {
-		return window.localStorage.getItem(key);
+		try {
+			return window.localStorage.getItem(key);
+		} catch (e) {
+			console.warn("Cannot get item from localStorage");
+			return null;
+		}
 	},
 	remove(key) {
-		window.localStorage.removeItem(key);
+		try {
+			window.localStorage.removeItem(key);
+		} catch (e) {
+			console.warn("Cannot remove item from localStorage");
+		}
 	},
 	clear() {
-		window.localStorage.clear();
+		try {
+			window.localStorage.clear();
+		} catch (e) {
+			console.warn("Cannot clear localStorage");
+		}
 	},
 };
