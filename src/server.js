@@ -590,6 +590,7 @@ function getClientConfiguration(network) {
 	} else {
 		// Only send defaults that are visible on the client
 		config.defaults = _.pick(network || Helper.config.defaults, [
+			"name",
 			"nick",
 			"username",
 			"password",
