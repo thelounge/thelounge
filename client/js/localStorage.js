@@ -14,7 +14,12 @@ module.exports = {
 		try {
 			return window.localStorage.getItem(key);
 		} catch (e) {
-			console.warn("Cannot get item from localStorage");
+			// Do nothing. You can end up here because localStorage isn't 
+			// accessable due to browser blocking 3rd party cookies when 
+			// theLounge is loaded via iFrame.
+			// See: https://github.com/thelounge/thelounge/issues/2699
+
+			// Return null as if we we're a new client
 			return null;
 		}
 	},
@@ -22,14 +27,20 @@ module.exports = {
 		try {
 			window.localStorage.removeItem(key);
 		} catch (e) {
-			console.warn("Cannot remove item from localStorage");
+			// Do nothing. You can end up here because localStorage isn't 
+			// accessable due to browser blocking 3rd party cookies when 
+			// theLounge is loaded via iFrame
+			// See: https://github.com/thelounge/thelounge/issues/2699
 		}
 	},
 	clear() {
 		try {
 			window.localStorage.clear();
 		} catch (e) {
-			console.warn("Cannot clear localStorage");
+			// Do nothing. You can end up here because localStorage isn't 
+			// accessable due to browser blocking 3rd party cookies when 
+			// theLounge is loaded via iFrame
+			// See: https://github.com/thelounge/thelounge/issues/2699
 		}
 	},
 };
