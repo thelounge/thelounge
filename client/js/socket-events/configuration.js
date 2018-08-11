@@ -182,6 +182,11 @@ function parseOverrideParams(params, data) {
 			continue;
 		}
 
+		// When the network is not displayed, its name in the UI is not customizable
+		if (!data.displayNetwork && key === "name") {
+			continue;
+		}
+
 		if (key === "join") {
 			value = value.split(",").map((chan) => {
 				if (!chan.match(/^[#&!+]/)) {
