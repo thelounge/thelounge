@@ -11,11 +11,9 @@
 			v-model="channel.pendingMessage"
 			:placeholder="getInputPlaceholder(channel)"
 			:aria-label="getInputPlaceholder(channel)"
-			:disabled="!$root.connected"
 			class="mousetrap"
 			@keypress.enter.exact.prevent="onSubmit" />
 		<span
-			v-if="$root.connected"
 			id="submit-tooltip"
 			class="tooltipped tooltipped-w tooltipped-no-touch"
 			aria-label="Send message">
@@ -120,6 +118,10 @@ export default {
 			// Triggering click event opens the virtual keyboard on mobile
 			// This can only be called from another interactive event (e.g. button click)
 			$(this.$refs.input).trigger("click").trigger("focus");
+
+			if (!this.$root.connected) {
+				return false;
+			}
 
 			const target = this.channel.id;
 			const text = this.channel.pendingMessage;
