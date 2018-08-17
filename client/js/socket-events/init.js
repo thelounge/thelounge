@@ -45,7 +45,7 @@ socket.on("init", function(data) {
 		let isUserlistOpen = storage.get("thelounge.state.userlist");
 
 		if (viewportWidth >= utils.mobileViewportPixels) {
-			slideoutMenu.toggle(storage.get("thelounge.state.sidebar") === "true");
+			slideoutMenu.toggle(storage.get("thelounge.state.sidebar") !== "false");
 		}
 
 		// If The Lounge is opened on a small screen (less than 1024px), and we don't have stored
