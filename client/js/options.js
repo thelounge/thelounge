@@ -333,6 +333,8 @@ function initialize() {
 
 			return false;
 		});
+
+		$("#native-app").prop("hidden", false);
 	} else {
 		defaultClientButton.hide();
 	}
