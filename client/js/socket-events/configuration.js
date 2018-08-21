@@ -18,6 +18,8 @@ window.addEventListener("beforeinstallprompt", (installPromptEvent) => {
 			$(this).prop("hidden", true);
 		})
 		.prop("hidden", false);
+
+	$("#native-app").prop("hidden", false);
 });
 
 socket.on("configuration", function(data) {
