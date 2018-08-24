@@ -169,7 +169,7 @@ function closeChan(chan) {
 		cmd = "/quit";
 		const server = chan.find(".name").html();
 
-		if (!confirm("Disconnect from " + server + "?")) { // eslint-disable-line no-alert
+		if (!confirm(`Are you sure you want to remove ${server}?`)) { // eslint-disable-line no-alert
 			return false;
 		}
 	}
