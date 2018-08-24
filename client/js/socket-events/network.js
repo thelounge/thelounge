@@ -37,7 +37,10 @@ socket.on("network:status", function(data) {
 	network.status.secure = data.secure;
 
 	if (!data.connected) {
-		network.channels.forEach((channel) => channel.state = 0);
+		network.channels.forEach((channel) => {
+			channel.users = [];
+			channel.state = 0;
+		});
 	}
 });
 
