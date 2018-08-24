@@ -92,6 +92,7 @@ module.exports = function(irc, network) {
 		}
 
 		network.channels.forEach((chan) => {
+			chan.users = new Map();
 			chan.state = Chan.State.PARTED;
 		});
 
