@@ -35,7 +35,7 @@ socket.on("auth", function(data) {
 				values[obj.name] = obj.value;
 			});
 
-			storage.set("user", values.user);
+			storage.set("user", values.username);
 
 			socket.emit("auth", values);
 
