@@ -205,6 +205,7 @@ Client.prototype.connect = function(args) {
 		host: String(args.host || ""),
 		port: parseInt(args.port, 10),
 		tls: !!args.tls,
+		userDisconnected: !!args.userDisconnected,
 		rejectUnauthorized: !!args.rejectUnauthorized,
 		password: String(args.password || ""),
 		nick: String(args.nick || ""),
@@ -238,7 +239,13 @@ Client.prototype.connect = function(args) {
 		]);
 	});
 
-	network.irc.connect();
+	if (network.userDisconnected) {
+		network.channels[0].pushMessage(client, new Msg({
+			text: "You have manually disconnected from this network before, use /connect command to connect again.",
+		}), true);
+	} else {
+		network.irc.connect();
+	}
 
 	client.save();
 
