@@ -34,6 +34,14 @@ module.exports = function(irc, network) {
 					return;
 				}
 
+				if (chan.userAway === away) {
+					return;
+				}
+
+				// Store current away message on channel model,
+				// because query windows have no users
+				chan.userAway = away;
+
 				user = chan.getUser(data.nick);
 
 				break;
@@ -44,6 +52,8 @@ module.exports = function(irc, network) {
 				if (!user || user.away === away) {
 					return;
 				}
+
+				user.away = away;
 
 				break;
 
@@ -59,7 +69,6 @@ module.exports = function(irc, network) {
 			});
 
 			chan.pushMessage(client, msg);
-			user.away = away;
 		});
 	}
 };
