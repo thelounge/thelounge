@@ -5,7 +5,7 @@
 		<div class="count">
 			<input
 				ref="input"
-				v-model="userSearchInput"
+				v-bind:value="userSearchInput"
 				v-on:input="setUserSearchInput"
 				:placeholder="channel.users.length + ' user' + (channel.users.length === 1 ? '' : 's')"
 				type="search"
