@@ -69,7 +69,7 @@
     "sqlite3": "4.0.2"
   },
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "5.2.0",
+    "@fortawesome/fontawesome-free": "5.3.0",
     "babel-core": "6.26.3",
     "babel-loader": "7.1.5",
     "babel-preset-env": "1.7.0",
