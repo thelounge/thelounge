@@ -8,7 +8,8 @@
 		<textarea
 			id="input"
 			ref="input"
-			v-model="channel.pendingMessage"
+			v-bind:value="channel.pendingMessage"
+			v-on:input="setPendingMessage"
 			:placeholder="getInputPlaceholder(channel)"
 			:aria-label="getInputPlaceholder(channel)"
 			class="mousetrap"
@@ -26,7 +27,6 @@
 </template>
 
 <script>
-const $ = require("jquery");
 const commands = require("../js/commands/index");
 const socket = require("../js/socket");
 const Mousetrap = require("mousetrap");
@@ -63,16 +63,6 @@ export default {
 		network: Object,
 		channel: Object,
 	},
-	watch: {
-		"channel.pendingMessage"() {
-			this.$nextTick(() => {
-				// Start by resetting height before computing as scrollHeight does not
-				// decrease when deleting characters
-				this.$refs.input.style.height = window.getComputedStyle(this.$refs.input).minHeight;
-				this.$refs.input.style.height = this.$refs.input.scrollHeight + "px";
-			});
-		},
-	},
 	mounted() {
 		if (this.$root.settings.autocomplete) {
 			require("../js/autocompletion").enable(this.$refs.input);
@@ -107,6 +97,18 @@ export default {
 		require("../js/autocompletion").disable();
 	},
 	methods: {
+		setPendingMessage(e) {
+			this.channel.pendingMessage = e.target.value;
+			this.setInputSize();
+		},
+		setInputSize() {
+			this.$nextTick(() => {
+				// Start by resetting height before computing as scrollHeight does not
+				// decrease when deleting characters
+				this.$refs.input.style.height = window.getComputedStyle(this.$refs.input).minHeight;
+				this.$refs.input.style.height = this.$refs.input.scrollHeight + "px";
+			});
+		},
 		getInputPlaceholder(channel) {
 			if (channel.type === "channel" || channel.type === "query") {
 				return `Write to ${channel.name}`;
@@ -117,7 +119,8 @@ export default {
 		onSubmit() {
 			// Triggering click event opens the virtual keyboard on mobile
 			// This can only be called from another interactive event (e.g. button click)
-			$(this.$refs.input).trigger("click").trigger("focus");
+			this.$refs.input.click();
+			this.$refs.input.focus();
 
 			if (!this.$root.connected) {
 				return false;
@@ -131,6 +134,8 @@ export default {
 			}
 
 			this.channel.pendingMessage = "";
+			this.$refs.input.value = "";
+			this.setInputSize();
 
 			if (text[0] === "/") {
 				const args = text.substr(1).split(" ");
