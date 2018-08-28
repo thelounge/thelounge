@@ -5,12 +5,13 @@
 		<div class="count">
 			<input
 				ref="input"
-				v-model="userSearchInput"
+				:value="userSearchInput"
 				:placeholder="channel.users.length + ' user' + (channel.users.length === 1 ? '' : 's')"
 				type="search"
 				class="search"
 				aria-label="Search among the user list"
 				tabindex="-1"
+				@input="setUserSearchInput"
 				@keydown.up="navigateUserList(-1)"
 				@keydown.down="navigateUserList(1)"
 				@keydown.page-up="navigateUserList(-10)"
@@ -114,6 +115,9 @@ export default {
 		},
 	},
 	methods: {
+		setUserSearchInput(e) {
+			this.userSearchInput = e.target.value;
+		},
 		getModeClass(mode) {
 			return modes[mode];
 		},
