@@ -619,6 +619,10 @@ function getServerConfiguration() {
 }
 
 function performAuthentication(data) {
+	if (typeof data !== "object") {
+		return;
+	}
+
 	const socket = this;
 	let client;
 	let token = null;
