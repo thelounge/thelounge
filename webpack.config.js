@@ -141,19 +141,6 @@ const config = {
 		// socket.io uses debug, we don't need it
 		new webpack.NormalModuleReplacementPlugin(/debug/, path.resolve(__dirname, "scripts/noop.js")),
 	],
-	devServer: {
-		port: 9001,
-		proxy: {
-			"/": {
-				context: ["**", "!/css/**", "!/js/**"],
-				target: "http://localhost:9000/",
-			},
-			"/socket.io": {
-				ws: true,
-				target: "http://localhost:9000",
-			},
-		},
-	},
 };
 
 module.exports = config;
