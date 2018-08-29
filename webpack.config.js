@@ -44,7 +44,7 @@ const config = {
 					loader: "babel-loader",
 					options: {
 						presets: [
-							["env", {
+							["@babel/env", {
 								targets: {
 									browsers: [
 										"last 1 year",
