@@ -108,7 +108,7 @@ module.exports = function() {
 			process.exit();
 		}
 
-		server = require("spdy");
+		server = require("https");
 		server = server.createServer({
 			key: fs.readFileSync(keyPath),
 			cert: fs.readFileSync(certPath),
