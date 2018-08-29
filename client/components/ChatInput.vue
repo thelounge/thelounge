@@ -63,6 +63,11 @@ export default {
 		network: Object,
 		channel: Object,
 	},
+	watch: {
+		"channel.pendingMessage"() {
+			this.setInputSize();
+		},
+	},
 	mounted() {
 		if (this.$root.settings.autocomplete) {
 			require("../js/autocompletion").enable(this.$refs.input);
