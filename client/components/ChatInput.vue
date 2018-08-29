@@ -8,10 +8,11 @@
 		<textarea
 			id="input"
 			ref="input"
-			v-model="channel.pendingMessage"
+			:value="channel.pendingMessage"
 			:placeholder="getInputPlaceholder(channel)"
 			:aria-label="getInputPlaceholder(channel)"
 			class="mousetrap"
+			@input="setPendingMessage"
 			@keypress.enter.exact.prevent="onSubmit" />
 		<span
 			id="submit-tooltip"
@@ -26,7 +27,6 @@
 </template>
 
 <script>
-const $ = require("jquery");
 const commands = require("../js/commands/index");
 const socket = require("../js/socket");
 const Mousetrap = require("mousetrap");
@@ -65,19 +65,7 @@ export default {
 	},
 	watch: {
 		"channel.pendingMessage"() {
-			this.$nextTick(() => {
-				const style = window.getComputedStyle(this.$refs.input);
-				const lineHeight = parseFloat(style.lineHeight, 10) || 1;
-
-				// Start by resetting height before computing as scrollHeight does not
-				// decrease when deleting characters
-				this.$refs.input.style.height = "";
-
-				// Use scrollHeight to calculate how many lines there are in input, and ceil the value
-				// because some browsers tend to incorrently round the values when using high density
-				// displays or using page zoom feature
-				this.$refs.input.style.height = Math.ceil(this.$refs.input.scrollHeight / lineHeight) * lineHeight + "px";
-			});
+			this.setInputSize();
 		},
 	},
 	mounted() {
@@ -114,6 +102,25 @@ export default {
 		require("../js/autocompletion").disable();
 	},
 	methods: {
+		setPendingMessage(e) {
+			this.channel.pendingMessage = e.target.value;
+			this.setInputSize();
+		},
+		setInputSize() {
+			this.$nextTick(() => {
+				const style = window.getComputedStyle(this.$refs.input);
+				const lineHeight = parseFloat(style.lineHeight, 10) || 1;
+
+				// Start by resetting height before computing as scrollHeight does not
+				// decrease when deleting characters
+				this.$refs.input.style.height = "";
+
+				// Use scrollHeight to calculate how many lines there are in input, and ceil the value
+				// because some browsers tend to incorrently round the values when using high density
+				// displays or using page zoom feature
+				this.$refs.input.style.height = Math.ceil(this.$refs.input.scrollHeight / lineHeight) * lineHeight + "px";
+			});
+		},
 		getInputPlaceholder(channel) {
 			if (channel.type === "channel" || channel.type === "query") {
 				return `Write to ${channel.name}`;
@@ -124,7 +131,8 @@ export default {
 		onSubmit() {
 			// Triggering click event opens the virtual keyboard on mobile
 			// This can only be called from another interactive event (e.g. button click)
-			$(this.$refs.input).trigger("click").trigger("focus");
+			this.$refs.input.click();
+			this.$refs.input.focus();
 
 			if (!this.$root.connected) {
 				return false;
@@ -138,6 +146,8 @@ export default {
 			}
 
 			this.channel.pendingMessage = "";
+			this.$refs.input.value = "";
+			this.setInputSize();
 
 			if (text[0] === "/") {
 				const args = text.substr(1).split(" ");
