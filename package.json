@@ -57,7 +57,6 @@
     "request": "2.88.0",
     "semver": "5.5.1",
     "socket.io": "2.1.1",
-    "spdy": "3.4.7",
     "thelounge-ldapjs-non-maintained-fork": "1.0.2",
     "tlds": "1.203.1",
     "ua-parser-js": "0.7.18",
