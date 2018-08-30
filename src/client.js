@@ -452,7 +452,17 @@ Client.prototype.sort = function(data) {
 			return;
 		}
 
-		network.channels.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+		network.channels.sort((a, b) => {
+			// Always sort lobby to the top regardless of what the client has sent
+			// Because there's a lot of code that presumes channels[0] is the lobby
+			if (a.type === Chan.Type.LOBBY) {
+				return -1;
+			} else if (b.type === Chan.Type.LOBBY) {
+				return 1;
+			}
+
+			return order.indexOf(a.id) - order.indexOf(b.id);
+		});
 
 		// Sync order to connected clients
 		this.emit("sync_sort", {
