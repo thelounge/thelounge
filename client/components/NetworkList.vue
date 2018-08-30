@@ -7,12 +7,11 @@
 	<Draggable
 		v-else
 		:list="networks"
-		:options="{ handle: '.lobby', draggable: '.network', ghostClass: 'network-placeholder' }"
+		:options="{ handle: '.lobby', draggable: '.network', ghostClass: 'network-placeholder', disabled: isSortingEnabled }"
 		class="networks"
 		@change="onNetworkSort"
 		@start="onDragStart"
-		@end="onDragEnd"
-	>
+		@end="onDragEnd">
 		<div
 			v-for="network in networks"
 			:id="'network-' + network.uuid"
@@ -38,15 +37,15 @@
 				@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown" />
 
 			<Draggable
-				:options="{ draggable: '.chan', ghostClass: 'chan-placeholder' }"
+				:options="{ draggable: '.chan', ghostClass: 'chan-placeholder', disabled: isSortingEnabled }"
 				:list="network.channels"
 				class="channels"
 				@change="onChannelSort"
 				@start="onDragStart"
-				@end="onDragEnd"
-			>
+				@end="onDragEnd">
 				<Channel
-					v-for="channel in getChannelsWithoutLobby(network)"
+					v-for="(channel, index) in network.channels"
+					v-if="index > 0"
 					:key="channel.id"
 					:channel="channel"
 					:network="network"
@@ -75,6 +74,14 @@ export default {
 	props: {
 		activeChannel: Object,
 		networks: Array,
+	},
+	computed: {
+		isSortingEnabled() {
+			const isTouch = !!("ontouchstart" in window || (window.DocumentTouch && document instanceof window.DocumentTouch));
+
+			// TODO: Implement a way to sort on touch devices
+			return isTouch;
+		},
 	},
 	methods: {
 		onDragStart(e) {
