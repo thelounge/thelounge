@@ -187,8 +187,7 @@ export default {
 
 		this.$refs.chat.addEventListener("scroll", this.debouncedScroll, {passive: true});
 
-		this.resizeListener = () => {this.handleResize()}
-		this.$root.$on('resize', this.resizeListener);
+		this.$root.$on("resize", this.handleResize);
 
 		this.$nextTick(() => {
 			if (this.historyObserver) {
@@ -197,7 +196,7 @@ export default {
 		});
 	},
 	beforeDestroy() {
-		this.$root.$off('resize', this.resizeListener);
+		this.$root.$off("resize", this.handleResize);
 		this.$refs.chat.removeEventListener("scroll", this.debouncedScroll);
 	},
 	destroyed() {
