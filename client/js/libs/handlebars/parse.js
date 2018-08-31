@@ -115,13 +115,16 @@ module.exports = function parse(createElement, text, message = undefined, networ
 				},
 			}, fragments);
 		} else if (textPart.emoji) {
+			const title = emojiMap[textPart.emoji] ? `Emoji: ${emojiMap[textPart.emoji]}` : null;
+
 			return createElement("span", {
 				class: [
 					"emoji",
 				],
 				attrs: {
 					"role": "img",
-					"aria-label": emojiMap[textPart.emoji] ? `Emoji: ${emojiMap[textPart.emoji]}` : null,
+					"aria-label": title,
+					"title": title,
 				},
 			}, fragments);
 		} else if (textPart.nick) {
