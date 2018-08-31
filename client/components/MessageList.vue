@@ -183,11 +183,12 @@ export default {
 		});
 	},
 	mounted() {
-		this.debouncedResize = throttle(this.handleResize, 100);
 		this.debouncedScroll = throttle(this.handleScroll, 100);
 
-		window.addEventListener("resize", this.debouncedResize, {passive: true});
 		this.$refs.chat.addEventListener("scroll", this.debouncedScroll, {passive: true});
+
+		this.resizeListener = () => {this.handleResize()}
+		this.$root.$on('resize', this.resizeListener);
 
 		this.$nextTick(() => {
 			if (this.historyObserver) {
@@ -196,7 +197,7 @@ export default {
 		});
 	},
 	beforeDestroy() {
-		window.removeEventListener("resize", this.debouncedResize);
+		this.$root.$off('resize', this.resizeListener);
 		this.$refs.chat.removeEventListener("scroll", this.debouncedScroll);
 	},
 	destroyed() {

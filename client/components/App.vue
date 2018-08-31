@@ -93,6 +93,8 @@
 </template>
 
 <script>
+import {throttle} from "lodash";
+
 import NetworkList from "./NetworkList.vue";
 import Chat from "./Chat.vue";
 
@@ -109,6 +111,17 @@ export default {
 	},
 	methods: {
 		isPublic: () => document.body.classList.contains("public"),
+	},
+	mounted() {
+		// Make a single throttled resize listener available to all components
+		this.debouncedResize = throttle(() => {
+			this.$root.$emit('resize');
+		}, 100);
+
+		window.addEventListener("resize", this.debouncedResize, {passive: true});
+	},
+	beforeDestroy() {
+		window.removeEventListener("resize", this.debouncedResize);
 	},
 };
 </script>
