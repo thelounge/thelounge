@@ -5,12 +5,6 @@ const debounce = require("lodash/debounce");
 const Mousetrap = require("mousetrap");
 const templates = require("../views");
 
-const {togglePreviewMoreButtonsIfNeeded} = require("./utils");
-
-// On resize, previews in the current channel that are expanded need to compute
-// their "More" button. Debounced handler to avoid performance cost.
-$(window).on("resize", debounce(togglePreviewMoreButtonsIfNeeded, 150));
-
 /* Image viewer */
 
 const imageViewer = $("#image-viewer");
