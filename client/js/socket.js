@@ -20,11 +20,13 @@ socket.on("connect_error", handleDisconnect);
 socket.on("error", handleDisconnect);
 
 socket.on("reconnecting", function(attempt) {
-	$("#loading-page-message, #connection-error").text(`Reconnecting… (attempt ${attempt})`);
+	vueApp.connectionError = `Reconnecting… (attempt ${attempt})`;
+	$("#loading-page-message").text(vueApp.connectionError);
 });
 
 socket.on("connecting", function() {
-	$("#loading-page-message, #connection-error").text("Connecting…");
+	vueApp.connectionError = "Connecting…";
+	$("#loading-page-message").text(vueApp.connectionError);
 });
 
 socket.on("connect", function() {
@@ -33,19 +35,21 @@ socket.on("connect", function() {
 	// nothing is sent to the server that might have happened.
 	socket.sendBuffer = [];
 
-	$("#loading-page-message, #connection-error").text("Finalizing connection…");
+	vueApp.connectionError = "Finalizing connection…";
+	$("#loading-page-message").text(vueApp.connectionError);
 });
 
 socket.on("authorized", function() {
-	$("#loading-page-message, #connection-error").text("Loading messages…");
+	vueApp.connectionError = "Loading messages…";
+	$("#loading-page-message").text(vueApp.connectionError);
 });
 
 function handleDisconnect(data) {
 	const message = data.message || data;
 
 	vueApp.connected = false;
-
-	$("#loading-page-message, #connection-error").text(`Waiting to reconnect… (${message})`).addClass("shown");
+	vueApp.connectionError = `Waiting to reconnect… (${message})`;
+	$("#loading-page-message").text(vueApp.connectionError);
 
 	// If the server shuts down, socket.io skips reconnection
 	// and we have to manually call connect to start the process

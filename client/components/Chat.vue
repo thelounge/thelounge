@@ -67,7 +67,9 @@
 				</div>
 			</div>
 		</div>
-		<div id="connection-error" />
+		<div
+			v-if="this.$root.connectionError"
+			id="connection-error">{{ this.$root.connectionError }}</div>
 		<ChatInput
 			:network="network"
 			:channel="channel" />
