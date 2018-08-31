@@ -1979,11 +1979,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	background: #e74c3c;
 	color: #fff;
 	text-align: center;
-	display: none;
-}
-
-#connection-error.shown {
-	display: block;
 	cursor: pointer;
 }
 

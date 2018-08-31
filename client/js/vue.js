@@ -23,6 +23,7 @@ const vueApp = new Vue({
 	data: {
 		initialized: false,
 		connected: false,
+		connectionError: false,
 		appName: document.title,
 		activeChannel: null,
 		networks: [],
