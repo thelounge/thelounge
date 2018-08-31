@@ -109,19 +109,19 @@ export default {
 		activeChannel: Object,
 		networks: Array,
 	},
-	methods: {
-		isPublic: () => document.body.classList.contains("public"),
-	},
 	mounted() {
 		// Make a single throttled resize listener available to all components
 		this.debouncedResize = throttle(() => {
-			this.$root.$emit('resize');
+			this.$root.$emit("resize");
 		}, 100);
 
 		window.addEventListener("resize", this.debouncedResize, {passive: true});
 	},
 	beforeDestroy() {
 		window.removeEventListener("resize", this.debouncedResize);
+	},
+	methods: {
+		isPublic: () => document.body.classList.contains("public"),
 	},
 };
 </script>

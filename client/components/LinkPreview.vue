@@ -147,16 +147,17 @@ export default {
 			return;
 		}
 
-		this.resizeListener = () => {this.handleResize()};
-		this.$root.$on('resize', this.resizeListener);
+		this.$root.$on("resize", this.handleResize);
 
 		this.onPreviewUpdate();
+	},
+	beforeDestroy() {
+		this.$root.$off("resize", this.handleResize);
 	},
 	destroyed() {
 		// Let this preview go through load/canplay events again,
 		// Otherwise the browser can cause a resize on video elements
 		this.link.canDisplay = false;
-		this.$root.$off('resize', this.resizeListener);
 	},
 	methods: {
 		onPreviewUpdate() {
