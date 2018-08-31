@@ -147,12 +147,16 @@ export default {
 			return;
 		}
 
+		this.resizeListener = () => {this.handleResize()};
+		this.$root.$on('resize', this.resizeListener);
+
 		this.onPreviewUpdate();
 	},
 	destroyed() {
 		// Let this preview go through load/canplay events again,
 		// Otherwise the browser can cause a resize on video elements
 		this.link.canDisplay = false;
+		this.$root.$off('resize', this.resizeListener);
 	},
 	methods: {
 		onPreviewUpdate() {
@@ -176,13 +180,7 @@ export default {
 				return;
 			}
 
-			this.$nextTick(() => {
-				if (!this.$refs.content) {
-					return;
-				}
-
-				this.showMoreButton = this.$refs.content.offsetWidth >= this.$refs.container.offsetWidth;
-			});
+			this.handleResize();
 		},
 		onThumbnailError() {
 			// If thumbnail fails to load, hide it and show the preview without it
@@ -192,6 +190,15 @@ export default {
 		onMoreClick() {
 			this.isContentShown = !this.isContentShown;
 			this.keepScrollPosition();
+		},
+		handleResize() {
+			this.$nextTick(() => {
+				if (!this.$refs.content) {
+					return;
+				}
+
+				this.showMoreButton = this.$refs.content.offsetWidth >= this.$refs.container.offsetWidth;
+			});
 		},
 	},
 };
