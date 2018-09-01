@@ -1,7 +1,6 @@
 "use strict";
 
 const $ = require("jquery");
-const debounce = require("lodash/debounce");
 const Mousetrap = require("mousetrap");
 const templates = require("../views");
 

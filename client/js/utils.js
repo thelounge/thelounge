@@ -21,7 +21,6 @@ module.exports = {
 	updateTitle,
 	togglePasswordField,
 	requestIdleCallback,
-	togglePreviewMoreButtonsIfNeeded,
 };
 
 function findCurrentNetworkChan(name) {
@@ -160,10 +159,4 @@ function requestIdleCallback(callback, timeout) {
 	} else {
 		callback();
 	}
-}
-
-// Force handling preview display
-function togglePreviewMoreButtonsIfNeeded() {
-	$("#chat .chan.active .toggle-content.toggle-type-link.show")
-		.trigger("showMoreIfNeeded");
 }
