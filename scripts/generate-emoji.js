@@ -6,7 +6,7 @@ const fs = require("fs");
 const fuzzy = require("fuzzy");
 
 request.get({
-	url: "https://raw.githubusercontent.com/emojione/emojione/master/emoji_strategy.json",
+	url: "https://raw.githubusercontent.com/emojione/emojione/master/extras/alpha-codes/eac.json",
 	json: true,
 }, (error, response, emojiStrategy) => {
 	const emojiMap = {};
@@ -14,8 +14,8 @@ request.get({
 
 	for (const key in emojiStrategy) {
 		if (emojiStrategy.hasOwnProperty(key)) {
-			const shortname = prepareShortName(emojiStrategy[key].shortname);
-			const unicode = stringToUnicode(emojiStrategy[key].unicode_output);
+			const shortname = prepareShortName(emojiStrategy[key].alpha_code);
+			const unicode = stringToUnicode(emojiStrategy[key].output);
 			fullNameEmojiMap[unicode] = emojiStrategy[key].name;
 
 			// Skip tones, at least for now
@@ -25,7 +25,7 @@ request.get({
 
 			emojiMap[shortname] = unicode;
 
-			for (let alternative of emojiStrategy[key].shortname_alternates) {
+			for (let alternative of emojiStrategy[key].aliases.split("|")) {
 				alternative = prepareShortName(alternative);
 
 				if (fuzzy.test(shortname, alternative) || fuzzy.test(alternative, shortname)) {
