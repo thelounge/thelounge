@@ -25,7 +25,7 @@ window.vueMounted = () => {
 	function storeSidebarVisibility(name, state) {
 		storage.set(name, state);
 
-		utils.togglePreviewMoreButtonsIfNeeded();
+		vueApp.$emit("resize");
 	}
 
 	// If sidebar overlay is visible and it is clicked, close the sidebar
