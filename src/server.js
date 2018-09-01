@@ -248,7 +248,6 @@ function index(req, res, next) {
 		"form-action 'none'", // no default-src fallback
 		"connect-src 'self' ws: wss:", // allow self for polling; websockets
 		"style-src 'self' https: 'unsafe-inline'", // allow inline due to use in irc hex colors
-		"script-src 'self'", // javascript
 		"worker-src 'self'", // service worker
 		"child-src 'self'", // deprecated fall back for workers, Firefox <58, see #1902
 		"manifest-src 'self'", // manifest.json
@@ -256,13 +255,32 @@ function index(req, res, next) {
 		"media-src 'self' https:", // self for notification sound; allow https media (audio previews)
 	];
 
+	// Add google analytics
+	if (Helper.config.analytics.enable) {
+		var script_src_policy = "script-src 'self'"; // javascript
+		if (Helper.config.analytics.google.ga_id !== null) {
+			script_src_policy += " data: 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com"; // Google analytics tracking
+		}
+		policies.push(script_src_policy)
+	} else {
+		policies.push("script-src 'self'") // javascript
+	}
+
 	// If prefetch is enabled, but storage is not, we have to allow mixed content
 	// - https://user-images.githubusercontent.com is where we currently push our changelog screenshots
 	// - data: is required for the HTML5 video player
-	if (Helper.config.prefetchStorage || !Helper.config.prefetch) {
-		policies.push("img-src 'self' data: https://user-images.githubusercontent.com");
-		policies.unshift("block-all-mixed-content");
-	} else {
+	if (((Helper.config.prefetchStorage || !Helper.config.prefetch)) || Helper.config.analytics.enable) {
+		var img_src_policy = "img-src 'self' data:"
+		if (Helper.config.prefetchStorage || !Helper.config.prefetch) {
+			img_src_policy += " https://user-images.githubusercontent.com";
+			policies.unshift("block-all-mixed-content");
+		}
+		if (Helper.config.analytics.google.ga_id !== null) {
+			img_src_policy += " https://www.google-analytics.com"; // Google analytics tracking
+		}
+		policies.push(img_src_policy);
+	}
+	 else {
 		policies.push("img-src http: https: data:");
 	}
 

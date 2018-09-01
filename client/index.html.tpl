@@ -45,7 +45,10 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="theme-color" content="<%- themeColor %>">
-
+	<% if (analytics.enable === true && analytics.google.ga_id !== null) { %>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=<%- analytics.google.ga_id %>"></script>
+	<% } %>
 	</head>
 	<body class="signed-out<%- public ? " public" : "" %>" data-transports="<%- JSON.stringify(transports) %>">
 		<div id="viewport" role="tablist">
@@ -105,5 +108,14 @@
 
 		<script src="js/bundle.vendor.js"></script>
 		<script src="js/bundle.js"></script>
+		<% if (analytics.enable === true && analytics.google.ga_id !== null) { %> 	
+		<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', '<%- analytics.google.ga_id %>');
+		</script>
+		<% } %>
 	</body>
 </html>

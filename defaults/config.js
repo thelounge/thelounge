@@ -430,4 +430,27 @@ module.exports = {
 		// server window, displayed on the client.
 		raw: false,
 	},
+
+	// ## Analytics 
+	// For all your stats tracking needs
+	analytics: {
+
+		// ### `analytics.enable`
+		//
+		// when set to `true`, this globally enables the logic used to inject analytics
+		// trackers into thelounge
+		//
+		// Defaults to `false`
+		enable: false,
+
+		// ### `analytics.google`
+		//
+		// The google object is used to hold any configuration items specific to google analytics.
+		// Currently this is only the Google Analytics ID.
+		//
+		// ga_id is `null` by default. Change it to a string tracking ID to enable google analytics e.g. `UA-123456-1`
+		google: {
+			ga_id: null,
+		},
+	},
 };
