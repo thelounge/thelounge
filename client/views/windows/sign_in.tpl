@@ -3,11 +3,11 @@
 	<img src="img/logo-vertical-transparent-bg-inverted.svg" class="logo-inverted" alt="The Lounge" width="256" height="170">
 
 	<label>Username</label>
-	<input class="input" name="user" autocapitalize="none" autofocus>
+	<input class="input" name="username" autocapitalize="none" autocomplete="username" autofocus>
 
 	<div class="password-container">
 		<label>Password</label>
-		<input class="input" type="password" name="password">
+		<input class="input" type="password" name="password" autocomplete="current-password">
 		{{> ../reveal-password}}
 	</div>
 

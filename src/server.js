@@ -667,7 +667,7 @@ function performAuthentication(data) {
 			if (!client) {
 				log.warn(`Authentication for non existing user attempted from ${colors.bold(getClientIp(socket))}`);
 			} else {
-				log.warn(`Authentication failed for user ${colors.bold(data.user)} from ${colors.bold(getClientIp(socket))}`);
+				log.warn(`Authentication failed for user ${colors.bold(data.username)} from ${colors.bold(getClientIp(socket))}`);
 			}
 
 			socket.emit("auth", {success: false});
@@ -677,13 +677,13 @@ function performAuthentication(data) {
 		// If authorization succeeded but there is no loaded user,
 		// load it and find the user again (this happens with LDAP)
 		if (!client) {
-			client = manager.loadUser(data.user);
+			client = manager.loadUser(data.username);
 		}
 
 		initClient();
 	};
 
-	client = manager.findClient(data.user);
+	client = manager.findClient(data.username);
 
 	// We have found an existing user and client has provided a token
 	if (client && data.token) {
