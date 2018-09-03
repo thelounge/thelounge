@@ -242,6 +242,7 @@ kbd {
 #settings .extra-experimental,
 #settings .extra-help,
 #settings #play::before,
+#form #upload::before,
 #form #submit::before,
 #chat .away .from::before,
 #chat .back .from::before,
@@ -315,6 +316,7 @@ kbd {
 #footer .settings::before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
 #footer .help::before { content: "\f059"; /* http://fontawesome.io/icon/question/ */ }
 
+#form #upload::before { content: "\f0c6"; /* https://fontawesome.com/icons/paperclip?style=solid */ }
 #form #submit::before { content: "\f1d8"; /* http://fontawesome.io/icon/paper-plane/ */ }
 
 #chat .away .from::before,
@@ -1930,6 +1932,12 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	content: "\f00c"; /* http://fontawesome.io/icon/check/ */
 }
 
+#upload-progressbar {
+	background: blue;
+	width: 0%;
+	height: 2px;
+}
+
 #form {
 	flex: 0 0 auto;
 	border: 0;
@@ -1957,6 +1965,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #connection-error.shown {
 	display: block;
+	cursor: pointer;
 }
 
 #form #nick {
@@ -1991,6 +2000,11 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	touch-action: pan-y;
 }
 
+#form #upload-input {
+	display: none;
+}
+
+#form #upload,
 #form #submit {
 	color: #607992;
 	font-size: 14px;
@@ -2519,8 +2533,9 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	background: rgba(0, 0, 0, 0.6);
 }
 
-/* Image viewer */
+/* Image viewer and drag-and-drop overlay */
 
+#upload-overlay,
 #image-viewer,
 #image-viewer .close-btn {
 	/* Vertically and horizontally center stuff */
@@ -2530,6 +2545,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	justify-content: center;
 }
 
+#upload-overlay,
 #image-viewer {
 	position: fixed;
 	top: 0;
@@ -2546,6 +2562,11 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #image-viewer.opened {
 	visibility: visible;
 	opacity: 1;
+}
+
+#upload-overlay.is-dragover {
+	visibility: visible;
+	opacity: 0.3;
 }
 
 #image-viewer .close-btn,

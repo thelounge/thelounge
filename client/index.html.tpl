@@ -84,9 +84,14 @@
 				<div id="chat-container" class="window">
 					<div id="chat"></div>
 					<div id="connection-error"></div>
+					<span id="upload-progressbar"></span>
 					<form id="form" method="post" action="">
 						<span id="nick"></span>
 						<textarea id="input" class="mousetrap"></textarea>
+						<span id="upload-tooltip" class="tooltipped tooltipped-w tooltipped-no-touch" aria-label="Upload File">
+							<input id="upload-input" type="file" multiple></button>
+							<button id="upload" type="button" aria-label="Upload file"></button>
+						</span>
 						<span id="submit-tooltip" class="tooltipped tooltipped-w tooltipped-no-touch" aria-label="Send message">
 							<button id="submit" type="submit" aria-label="Send message"></button>
 						</span>
@@ -102,6 +107,7 @@
 
 		<div id="context-menu-container"></div>
 		<div id="image-viewer"></div>
+		<div id="upload-overlay"></div>
 
 		<script src="js/bundle.vendor.js"></script>
 		<script src="js/bundle.js"></script>

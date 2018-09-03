@@ -15,6 +15,7 @@ let configPath;
 let usersPath;
 let storagePath;
 let packagesPath;
+let fileUploadPath;
 let userLogsPath;
 
 const Helper = {
@@ -25,6 +26,7 @@ const Helper = {
 	getPackageModulePath,
 	getStoragePath,
 	getConfigPath,
+	getFileUploadPath,
 	getUsersPath,
 	getUserConfigPath,
 	getUserLogsPath,
@@ -92,6 +94,7 @@ function setHome(newPath) {
 	configPath = path.join(homePath, "config.js");
 	usersPath = path.join(homePath, "users");
 	storagePath = path.join(homePath, "storage");
+	fileUploadPath = path.join(homePath, "uploads");
 	packagesPath = path.join(homePath, "packages");
 	userLogsPath = path.join(homePath, "logs");
 
@@ -140,6 +143,10 @@ function getHomePath() {
 
 function getConfigPath() {
 	return configPath;
+}
+
+function getFileUploadPath() {
+	return fileUploadPath;
 }
 
 function getUsersPath() {

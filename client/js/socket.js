@@ -11,6 +11,10 @@ const socket = io({
 	reconnection: !$(document.body).hasClass("public"),
 });
 
+$("#connection-error").on("click", function() {
+	$(this).removeClass("shown");
+});
+
 socket.on("disconnect", handleDisconnect);
 socket.on("connect_error", handleDisconnect);
 socket.on("error", handleDisconnect);
@@ -42,6 +46,7 @@ function handleDisconnect(data) {
 	$("#loading-page-message, #connection-error").text(`Waiting to reconnect… (${message})`).addClass("shown");
 	$(".show-more button, #input").prop("disabled", true);
 	$("#submit").hide();
+	$("#upload").hide();
 
 	// If the server shuts down, socket.io skips reconnection
 	// and we have to manually call connect to start the process

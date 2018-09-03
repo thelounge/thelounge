@@ -10,6 +10,7 @@ const fs = require("fs");
 const path = require("path");
 const io = require("socket.io");
 const dns = require("dns");
+const Uploader = require("./plugins/uploader");
 const Helper = require("./helper");
 const colors = require("chalk");
 const net = require("net");
@@ -51,9 +52,13 @@ module.exports = function() {
 		.use(express.static(path.join(__dirname, "..", "public"), staticOptions))
 		.use("/storage/", express.static(Helper.getStoragePath(), staticOptions));
 
+	if (Helper.config.fileUpload.enable) {
+		Uploader.router(app);
+	}
+
 	// This route serves *installed themes only*. Local themes are served directly
 	// from the `public/themes/` folder as static assets, without entering this
-	// handler. Remember this is you make changes to this function, serving of
+	// handler. Remember this if you make changes to this function, serving of
 	// local themes will not get those changes.
 	app.get("/themes/:theme.css", (req, res) => {
 		const themeName = req.params.theme;
@@ -283,6 +288,10 @@ function initializeClient(socket, client, token, lastMessage) {
 	socket.emit("authorized");
 
 	client.clientAttach(socket.id, token);
+
+	if (Helper.config.fileUpload.enable) {
+		new Uploader(client, socket);
+	}
 
 	socket.on("disconnect", function() {
 		client.clientDetach(socket.id);
@@ -583,6 +592,7 @@ function getClientConfiguration(network) {
 		"prefetch",
 	]);
 
+	config.fileUpload = Helper.config.fileUpload.enable;
 	config.ldapEnabled = Helper.config.ldap.enable;
 
 	if (config.displayNetwork) {
@@ -605,6 +615,10 @@ function getClientConfiguration(network) {
 		config.themes = themes.getAll();
 		config.defaultTheme = Helper.config.theme;
 		config.defaults.nick = Helper.getDefaultNick();
+	}
+
+	if (Uploader) {
+		config.fileUploadMaxFileSize = Uploader.getMaxFileSize();
 	}
 
 	return config;
