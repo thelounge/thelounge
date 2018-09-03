@@ -89,7 +89,7 @@
 						<span id="nick"></span>
 						<textarea id="input" class="mousetrap"></textarea>
 						<span id="upload-tooltip" class="tooltipped tooltipped-w tooltipped-no-touch" aria-label="Upload File">
-							<input id="upload-input" type="file" multiple></button>
+							<input id="upload-input" type="file" multiple>
 							<button id="upload" type="button" aria-label="Upload file"></button>
 						</span>
 						<span id="submit-tooltip" class="tooltipped tooltipped-w tooltipped-no-touch" aria-label="Send message">
