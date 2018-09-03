@@ -15,6 +15,22 @@
 			@input="setPendingMessage"
 			@keypress.enter.exact.prevent="onSubmit" />
 		<span
+			v-if="this.$root.connected && this.$root.fileUploadEnabled"
+			id="upload-tooltip"
+			class="tooltipped tooltipped-w tooltipped-no-touch"
+			aria-label="Upload File"
+			@click="openFileUpload">
+			<input
+				id="upload-input"
+				ref="uploadInput"
+				type="file"
+				multiple>
+			<button
+				id="upload"
+				type="button"
+				aria-label="Upload file" />
+		</span>
+		<span
 			id="submit-tooltip"
 			class="tooltipped tooltipped-w tooltipped-no-touch"
 			aria-label="Send message">
@@ -29,6 +45,7 @@
 <script>
 const commands = require("../js/commands/index");
 const socket = require("../js/socket");
+const upload = require("../js/upload");
 const Mousetrap = require("mousetrap");
 const {wrapCursor} = require("undate");
 
@@ -97,6 +114,10 @@ export default {
 				return false;
 			}
 		});
+
+		if (this.$root.fileUploadEnabled) {
+			upload.initialize();
+		}
 	},
 	destroyed() {
 		require("../js/autocompletion").disable();
@@ -152,6 +173,9 @@ export default {
 			}
 
 			socket.emit("input", {target, text});
+		},
+		openFileUpload() {
+			this.$refs.uploadInput.click();
 		},
 	},
 };

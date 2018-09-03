@@ -24,6 +24,7 @@ const vueApp = new Vue({
 		initialized: false,
 		connected: false,
 		connectionError: false,
+		fileUploadEnabled: false,
 		appName: document.title,
 		activeChannel: null,
 		networks: [],
