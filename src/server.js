@@ -245,7 +245,7 @@ function index(req, res, next) {
 
 	const policies = [
 		"default-src 'none'", // default to nothing
-		"form-action 'none'", // no default-src fallback
+		"form-action 'self'", // 'self' to fix saving passwords in Firefox, even though login is handled in javascript
 		"connect-src 'self' ws: wss:", // allow self for polling; websockets
 		"style-src 'self' https: 'unsafe-inline'", // allow inline due to use in irc hex colors
 		"script-src 'self'", // javascript
