@@ -156,7 +156,7 @@ module.exports = {
 	//   `-1` disables the file size limit and allows files of any size. **Use at
 	//   your own risk.** This value is set to `10240` kilobytes by default.
 	fileUpload: {
-		enable: true,
+		enable: false,
 		maxFileSize: 10240,
 	},
 
