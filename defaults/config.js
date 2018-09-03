@@ -139,6 +139,27 @@ module.exports = {
 	// This value is set to `2048` kilobytes by default.
 	prefetchMaxImageSize: 2048,
 
+	// ### `fileUpload`
+	//
+	// Allow uploading files to the server hosting The Lounge.
+	//
+	// Files are stored in the `${THELOUNGE_HOME}/uploads` folder, do not expire,
+	// and are not removed by The Lounge. This may cause issues depending on your
+	// hardware, for example in terms of disk usage.
+	//
+	// The available keys for the `fileUpload` object are:
+	//
+	// - `enable`: When set to `true`, files can be uploaded on the client with a
+	//   drag-and-drop or using the upload dialog.
+	// - `maxFileSize`: When file upload is enabled, users sending files above
+	//   this limit will be prompted an error message in their browser. A value of
+	//   `-1` disables the file size limit and allows files of any size. **Use at
+	//   your own risk.** This value is set to `10240` kilobytes by default.
+	fileUpload: {
+		enable: true,
+		maxFileSize: 10240,
+	},
+
 	// ### `transports`
 	//
 	// Set `socket.io` transports.
