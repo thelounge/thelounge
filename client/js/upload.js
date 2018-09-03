@@ -4,14 +4,11 @@ const $ = require("jquery");
 const socket = require("./socket");
 const SocketIOFileUpload = require("socketio-file-upload/client");
 const instance = new SocketIOFileUpload(socket);
+const {vueApp} = require("./vue");
 
 function initialize() {
 	instance.listenOnInput(document.getElementById("upload-input"));
 	instance.listenOnDrop(document);
-
-	$("#upload").on("click", () => {
-		$("#upload-input").trigger("click");
-	});
 
 	instance.addEventListener("complete", () => {
 		// Reset progressbar
@@ -26,7 +23,7 @@ function initialize() {
 	instance.addEventListener("error", (event) => {
 		// Reset progressbar
 		$("#upload-progressbar").width(0);
-		$("#connection-error").addClass("shown").text(event.message);
+		vueApp.connectionError = event.message;
 	});
 
 	const $form = $(document);

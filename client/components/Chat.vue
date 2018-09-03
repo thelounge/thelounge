@@ -69,7 +69,9 @@
 		</div>
 		<div
 			v-if="this.$root.connectionError"
-			id="connection-error">{{ this.$root.connectionError }}</div>
+			id="connection-error"
+			@click="this.$root.connectionError = null">{{ this.$root.connectionError }}</div>
+		<span id="upload-progressbar" />
 		<ChatInput
 			:network="network"
 			:channel="channel" />

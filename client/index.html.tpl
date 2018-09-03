@@ -48,61 +48,17 @@
 
 	</head>
 	<body class="signed-out<%- public ? " public" : "" %>" data-transports="<%- JSON.stringify(transports) %>">
-		<div id="viewport" role="tablist">
-			<aside id="sidebar">
-				<div class="scrollable-area">
-					<div class="logo-container">
-						<img src="img/logo-<%- public ? 'horizontal-' : '' %>transparent-bg.svg" class="logo" alt="The Lounge">
-						<img src="img/logo-<%- public ? 'horizontal-' : '' %>transparent-bg-inverted.svg" class="logo-inverted" alt="The Lounge">
-					</div>
-					<div class="networks"></div>
-					<div class="empty">
-						You are not connected to any networks yet.
-					</div>
-				</div>
-				<footer id="footer">
-					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Sign in"><button class="icon sign-in" data-target="#sign-in" aria-label="Sign in" role="tab" aria-controls="sign-in" aria-selected="false"></button></span>
-					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Connect to network"><button class="icon connect" data-target="#connect" aria-label="Connect to network" role="tab" aria-controls="connect" aria-selected="false"></button></span>
-					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Settings"><button class="icon settings" data-target="#settings" aria-label="Settings" role="tab" aria-controls="settings" aria-selected="false"></button></span>
-					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Help"><button class="icon help" data-target="#help" aria-label="Help" role="tab" aria-controls="help" aria-selected="false"></button></span>
-				</footer>
-			</aside>
-			<div id="sidebar-overlay"></div>
-			<article id="windows">
-				<div id="loading" class="window active">
-					<div id="loading-status-container">
-						<img src="img/logo-vertical-transparent-bg.svg" class="logo" alt="The Lounge" width="256" height="170">
-						<img src="img/logo-vertical-transparent-bg-inverted.svg" class="logo-inverted" alt="The Lounge" width="256" height="170">
-						<p id="loading-page-message"><a href="https://enable-javascript.com/" target="_blank" rel="noopener">Your JavaScript must be enabled.</a></p>
-					</div>
-					<div id="loading-reload-container">
-						<p id="loading-slow">This is taking longer than it should, there might be connectivity issues.</p>
-						<button id="loading-reload" class="btn">Reload page</button>
-					</div>
-					<script async src="js/loading-error-handlers.js"></script>
-				</div>
-				<div id="chat-container" class="window">
-					<div id="chat"></div>
-					<div id="connection-error"></div>
-					<span id="upload-progressbar"></span>
-					<form id="form" method="post" action="">
-						<span id="nick"></span>
-						<textarea id="input" class="mousetrap"></textarea>
-						<span id="upload-tooltip" class="tooltipped tooltipped-w tooltipped-no-touch" aria-label="Upload file">
-							<input id="upload-input" type="file" multiple>
-							<button id="upload" type="button" aria-label="Upload file"></button>
-						</span>
-						<span id="submit-tooltip" class="tooltipped tooltipped-w tooltipped-no-touch" aria-label="Send message">
-							<button id="submit" type="submit" aria-label="Send message"></button>
-						</span>
-					</form>
-				</div>
-				<div id="sign-in" class="window" role="tabpanel" aria-label="Sign-in"></div>
-				<div id="connect" class="window" role="tabpanel" aria-label="Connect"></div>
-				<div id="settings" class="window" role="tabpanel" aria-label="Settings"></div>
-				<div id="help" class="window" role="tabpanel" aria-label="Help"></div>
-				<div id="changelog" class="window" aria-label="Changelog"></div>
-			</article>
+		<div id="loading">
+			<div id="loading-status-container">
+				<img src="img/logo-vertical-transparent-bg.svg" class="logo" alt="The Lounge" width="256" height="170">
+				<img src="img/logo-vertical-transparent-bg-inverted.svg" class="logo-inverted" alt="The Lounge" width="256" height="170">
+				<p id="loading-page-message"><a href="https://enable-javascript.com/" target="_blank" rel="noopener">Your JavaScript must be enabled.</a></p>
+			</div>
+			<div id="loading-reload-container">
+				<p id="loading-slow">This is taking longer than it should, there might be connectivity issues.</p>
+				<button id="loading-reload" class="btn">Reload page</button>
+			</div>
+			<script async src="js/loading-error-handlers.js"></script>
 		</div>
 		<div id="viewport"></div>
 
