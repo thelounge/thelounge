@@ -42,39 +42,37 @@ class Uploader {
 		});
 
 		uploader.on("complete", (data) => {
-			handleSaving(data).then((randomName) => {
-				const randomFileName = randomName;
-				const slug = data.file.base;
-				const url = `uploads/${randomFileName}/${slug}`;
-				socket.emit("upload:success", url);
-			});
-		});
+			let randomName;
+			let destPath;
 
-		uploader.on("error", (data) => {
-			log.error(`Error uploading ${data.error.name}`);
-			log.error(data.error);
-		});
-
-		// maxFileSize is in bytes, but config option is passed in as KB
-		uploader.maxFileSize = Uploader.getMaxFileSize();
-		uploader.listen(socket);
-
-		// Returns Promise
-		function handleSaving(data) {
-			const tempPath = path.join(Helper.getFileUploadPath(), ".tmp", data.file.name);
-			let randomName, destPath;
-
-			// If file conflicts
+			// Generate a random file name for storage on disk
 			do {
 				randomName = crypto.randomBytes(8).toString("hex");
 				destPath = path.join(Helper.getFileUploadPath(), randomName.substring(0, 2), randomName);
 			} while (fs.stat(destPath, (err) => (err ? true : false)));
 
-			return fsextra.move(tempPath, destPath)
-				.then(() => randomName).catch(() => {
-					log.warn(`Unable to move file ${tempPath} to ${destPath}`);
+			fsextra.move(data.file.pathName, destPath).then(() => {
+				const slug = path.basename(data.file.pathName);
+				const url = `uploads/${randomName}/${slug}`;
+				socket.emit("upload:success", url);
+			}).catch(() => {
+				log.warn(`Unable to move uploaded file "${data.file.pathName}"`);
+
+				// Emit failed upload to the client if file move fails
+				socket.emit("siofu_error", {
+					id: data.file.id,
+					message: "Unable to move uploaded file",
 				});
-		}
+			});
+		});
+
+		uploader.on("error", (data) => {
+			log.error(`File upload failed: ${data.error}`);
+		});
+
+		// maxFileSize is in bytes, but config option is passed in as KB
+		uploader.maxFileSize = Uploader.getMaxFileSize();
+		uploader.listen(socket);
 	}
 
 	static isValidType(mimeType) {
