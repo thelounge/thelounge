@@ -299,6 +299,13 @@ $(function() {
 		}
 	});
 
+	// Handle search toggling on mobile
+	$("#windows").on("click", ".header button.search", (e) => {
+		e.preventDefault();
+		$(".window .active .header div.search .input-container").toggleClass("open");
+		$(".window .active .header div.search .input-container input").focus();
+	});
+
 	// Compute how many milliseconds are remaining until the next day starts
 	function msUntilNextDay() {
 		return moment().add(1, "day").startOf("day") - moment();

@@ -116,6 +116,34 @@ socket.on("configuration", function(data) {
 		utils.togglePasswordField("#connect .reveal-password");
 	});
 
+	$("#windows").on("submit", ".window .header div.search form", function() {
+		const form = $(this);
+		const values = {};
+
+		$.each(form.serializeArray(), function(i, obj) {
+			if (obj.value !== "") {
+				values[obj.name] = obj.value;
+			}
+		});
+
+		const target = $("#sidebar .chan.active");
+
+		// Get the channel or query target from DOM if not already defined
+		if (!values.target) {
+			if (target.hasClass("channel") || target.hasClass("query")) {
+				values.target = target.attr("aria-label");
+			}
+		}
+
+		// Get network uuid from DOM if not already defined
+		if (!values.network) {
+			values.network = target.closest(".network").data("uuid");
+		}
+
+		socket.emit("search", values);
+		return false;
+	});
+
 	if ("URLSearchParams" in window) {
 		const params = new URLSearchParams(document.location.search);
 
@@ -124,6 +152,11 @@ socket.on("configuration", function(data) {
 		} else if ($(document.body).hasClass("public")) {
 			parseOverrideParams(params, data);
 		}
+	}
+
+	// Show the search form if searching is enabled
+	if (data.searchEnabled) {
+		$(document.body).addClass("search-enabled");
 	}
 });
 

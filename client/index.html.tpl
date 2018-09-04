@@ -65,6 +65,7 @@
 					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Connect to network"><button class="icon connect" data-target="#connect" aria-label="Connect to network" role="tab" aria-controls="connect" aria-selected="false"></button></span>
 					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Settings"><button class="icon settings" data-target="#settings" aria-label="Settings" role="tab" aria-controls="settings" aria-selected="false"></button></span>
 					<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Help"><button class="icon help" data-target="#help" aria-label="Help" role="tab" aria-controls="help" aria-selected="false"></button></span>
+					<span class="tooltipped tooltipped-n tooltipped-no-touch hidden" aria-label="Search"><button class="icon search" data-target="#search" aria-label="Search"></button></span>
 				</footer>
 			</aside>
 			<div id="sidebar-overlay"></div>
@@ -102,6 +103,34 @@
 				<div id="settings" class="window" role="tabpanel" aria-label="Settings"></div>
 				<div id="help" class="window" role="tabpanel" aria-label="Help"></div>
 				<div id="changelog" class="window" aria-label="Changelog"></div>
+
+				<div id="search" class="window" aria-label="Search">
+					<div class="header">
+						<button class="lt" aria-label="Toggle channel list"></button>
+
+						<span class="title">Search</span>
+						<span class="topic">
+							<span class="search-target"></span>
+							<span class="search-result-count"></span>
+						</span>
+
+						<div class="search">
+							<form class="" method="post" action="" data-event="search">
+								<input type="submit" class="hidden">
+								<div class="input-container">
+									<input type="text" name="text" class="input" placeholder="Search messages">
+								</div>
+								<input type="hidden" name="target" class="input" placeholder="Target">
+								<input type="hidden" name="network" class="input" placeholder="Network">
+							</form>
+						</div>
+
+					</div>
+					<div class="results" id="chat">
+						<div class="channel messages"></div>
+					</div>
+				</div>
+
 			</article>
 		</div>
 
