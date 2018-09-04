@@ -4,6 +4,7 @@ const path = require("path");
 const config = require("./webpack.config.js");
 
 config.target = "node";
+config.devtool = "eval";
 
 // Instrumentation for coverage with Istanbul
 config.module.rules.push({
