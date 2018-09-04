@@ -290,7 +290,7 @@ function initializeClient(socket, client, token, lastMessage) {
 	client.clientAttach(socket.id, token);
 
 	if (Helper.config.fileUpload.enable) {
-		new Uploader(client, socket);
+		new Uploader(socket);
 	}
 
 	socket.on("disconnect", function() {
