@@ -29,7 +29,7 @@ const whitelist = [
 ];
 
 class Uploader {
-	constructor(client, socket) {
+	constructor(socket) {
 		const uploader = new SocketIOFileUploadServer();
 		const folder = path.join(Helper.getFileUploadPath(), ".tmp");
 
@@ -46,7 +46,7 @@ class Uploader {
 				const randomFileName = randomName;
 				const slug = data.file.base;
 				const url = `uploads/${randomFileName}/${slug}`;
-				client.emit("upload:success", url);
+				socket.emit("upload:success", url);
 			});
 		});
 
