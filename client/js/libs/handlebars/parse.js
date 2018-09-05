@@ -42,17 +42,26 @@ function createFragment(fragment, createElement) {
 		classes.push("irc-monospace");
 	}
 
-	if (classes.length === 0 && !fragment.hexColor) {
-		return fragment.text;
+	const data = {};
+	let hasData = false;
+
+	if (classes.length > 0) {
+		hasData = true;
+		data.class = classes;
 	}
 
-	return createElement("span", {
-		class: classes,
-		style: {
-			"color": `#${fragment.hexColor}`,
-			"background-color": fragment.hexBgColor ? `#${fragment.hexBgColor}` : null,
-		},
-	}, fragment.text);
+	if (fragment.hexColor) {
+		hasData = true;
+		data.style = {
+			color: `#${fragment.hexColor}`,
+		};
+
+		if (fragment.hexBgColor) {
+			data.style["background-color"] = `#${fragment.hexBgColor}`;
+		}
+	}
+
+	return hasData ? createElement("span", data, fragment.text) : fragment.text;
 }
 
 // Transform an IRC message potentially filled with styling control codes, URLs,
