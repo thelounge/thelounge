@@ -132,21 +132,6 @@ window.vueMounted = () => {
 
 			socket.emit("open", channel ? channel.channel.id : null);
 
-			let hasAnyHighlights = false;
-
-			for (const network of vueApp.networks) {
-				for (const chan of network.channels) {
-					if (chan.highlight > 0) {
-						hasAnyHighlights = true;
-						break;
-					}
-				}
-			}
-
-			if (!hasAnyHighlights) {
-				utils.toggleNotificationMarkers(false);
-			}
-
 			if (!keepSidebarOpen && $(window).outerWidth() <= utils.mobileViewportPixels) {
 				slideoutMenu.toggle(false);
 			}
@@ -161,7 +146,7 @@ window.vueMounted = () => {
 			.addClass("active")
 			.trigger("show");
 
-		utils.updateTitle();
+		utils.synchronizeNotifiedState();
 
 		if (self.hasClass("chan")) {
 			vueApp.$nextTick(() => $("#chat-container").addClass("active"));
@@ -223,15 +208,7 @@ window.vueMounted = () => {
 	});
 
 	$(document).on("visibilitychange focus click", () => {
-		for (const network of vueApp.networks) {
-			for (const channel of network.channels) {
-				if (channel.highlight > 0) {
-					return;
-				}
-			}
-		}
-
-		utils.toggleNotificationMarkers(false);
+		utils.synchronizeNotifiedState();
 	});
 
 	// Compute how many milliseconds are remaining until the next day starts

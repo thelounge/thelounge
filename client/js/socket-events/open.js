@@ -27,5 +27,5 @@ socket.on("open", function(id) {
 		}
 	}
 
-	utils.updateTitle();
+	utils.synchronizeNotifiedState();
 });

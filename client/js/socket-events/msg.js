@@ -32,7 +32,7 @@ socket.on("msg", function(data) {
 	}
 
 	if (data.msg.self || data.msg.highlight) {
-		utils.updateTitle();
+		utils.synchronizeNotifiedState();
 	}
 
 	// Display received notices and errors in currently active channel.
@@ -88,8 +88,6 @@ function notifyMessage(targetId, channel, activeChannel, msg) {
 					// On mobile, sounds can not be played without user interaction.
 				}
 			}
-
-			utils.toggleNotificationMarkers(true);
 
 			if (options.settings.desktopNotifications && ("Notification" in window) && Notification.permission === "granted") {
 				let title;
