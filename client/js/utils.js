@@ -17,8 +17,7 @@ module.exports = {
 	hasRoleInChannel,
 	move,
 	closeChan,
-	toggleNotificationMarkers,
-	updateTitle,
+	synchronizeNotifiedState,
 	togglePasswordField,
 	requestIdleCallback,
 };
@@ -51,13 +50,31 @@ function scrollIntoViewNicely(el) {
 
 const favicon = $("#favicon");
 
+function synchronizeNotifiedState() {
+	updateTitle();
+
+	let hasAnyHighlights = false;
+
+	for (const network of vueApp.networks) {
+		for (const chan of network.channels) {
+			if (chan.highlight > 0) {
+				hasAnyHighlights = true;
+				break;
+			}
+		}
+	}
+
+	toggleNotificationMarkers(hasAnyHighlights);
+}
+
 function toggleNotificationMarkers(newState) {
 	// Toggles the favicon to red when there are unread notifications
-	if (favicon.data("toggled") !== newState) {
+	if (vueApp.isNotified !== newState) {
+		vueApp.isNotified = newState;
+
 		const old = favicon.prop("href");
 		favicon.prop("href", favicon.data("other"));
 		favicon.data("other", old);
-		favicon.data("toggled", newState);
 	}
 
 	// Toggles a dot on the menu icon when there are unread notifications

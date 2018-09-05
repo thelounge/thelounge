@@ -98,16 +98,7 @@ socket.on("init", function(data) {
 	vueApp.$nextTick(() => openCorrectChannel(previousActive, data.active));
 
 	utils.confirmExit();
-
-	for (const network of vueApp.networks) {
-		for (const channel of network.channels) {
-			if (channel.highlight > 0) {
-				utils.updateTitle();
-				utils.toggleNotificationMarkers(true);
-				return;
-			}
-		}
-	}
+	utils.synchronizeNotifiedState();
 });
 
 function openCorrectChannel(clientActive, serverActive) {
