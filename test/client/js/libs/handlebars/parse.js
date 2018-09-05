@@ -1,19 +1,35 @@
 "use strict";
 
 const expect = require("chai").expect;
-const parse = require("../../../../../client/js/libs/handlebars/parse");
+
+import {renderToString} from "@vue/server-test-utils";
+import ParsedMessageTestWrapper from "../../../components/ParsedMessageTestWrapper.vue";
+
+function getParsedMessageContents(text, message) {
+	let contents = renderToString(ParsedMessageTestWrapper, {
+		propsData: {
+			text,
+			message,
+		},
+	});
+
+	// The wrapper adds a surrounding div to the message html, so we clean that out here
+	contents = contents.replace(/^<div data-server-rendered="true">([^]+)<\/div>$/m, "$1");
+
+	return contents;
+}
 
 describe("parse Handlebars helper", () => {
 	it("should not introduce xss", () => {
 		const testCases = [{
 			input: "<img onerror='location.href=\"//youtube.com\"'>",
-			expected: "&lt;img onerror&#x3D;&#x27;location.href&#x3D;&quot;<a href=\"http://youtube.com\" target=\"_blank\" rel=\"noopener\">//youtube.com</a>&quot;&#x27;&gt;",
+			expected: "&lt;img onerror='location.href=&quot;<a href=\"http://youtube.com\" target=\"_blank\" rel=\"noopener\">//youtube.com</a>&quot;'&gt;",
 		}, {
 			input: '#&">bug',
-			expected: '<span class="inline-channel" role="button" tabindex="0" data-chan="#&amp;&quot;&gt;bug">#&amp;&quot;&gt;bug</span>',
+			expected: '<span role="button" tabindex="0" data-chan="#&amp;&quot;&gt;bug" class="inline-channel">#&amp;&quot;&gt;bug</span>',
 		}];
 
-		const actual = testCases.map((testCase) => parse(testCase.input));
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
@@ -25,7 +41,7 @@ describe("parse Handlebars helper", () => {
 			expected: '<span class="irc-underline irc-strikethrough irc-monospace">text\nwithcontrolcodestest</span>',
 		}];
 
-		const actual = testCases.map((testCase) => parse(testCase.input));
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
@@ -68,7 +84,7 @@ describe("parse Handlebars helper", () => {
 				"</a>",
 		}];
 
-		const actual = testCases.map((testCase) => parse(testCase.input));
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
@@ -79,11 +95,11 @@ describe("parse Handlebars helper", () => {
 			"bonuspunkt: your URL parser misparses this URL: https://msdn.microsoft.com/en-us/library/windows/desktop/ms644989(v=vs.85).aspx";
 		const correctResult =
 				"bonuspunkt: your URL parser misparses this URL: " +
-				'<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms644989(v&#x3D;vs.85).aspx" target="_blank" rel="noopener">' +
-					"https://msdn.microsoft.com/en-us/library/windows/desktop/ms644989(v&#x3D;vs.85).aspx" +
+				'<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms644989(v=vs.85).aspx" target="_blank" rel="noopener">' +
+					"https://msdn.microsoft.com/en-us/library/windows/desktop/ms644989(v=vs.85).aspx" +
 				"</a>";
 
-		const actual = parse(input);
+		const actual = getParsedMessageContents(input);
 
 		expect(actual).to.deep.equal(correctResult);
 	});
@@ -119,7 +135,7 @@ describe("parse Handlebars helper", () => {
 				"</a>",
 		}];
 
-		const actual = testCases.map((testCase) => parse(testCase.input));
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
@@ -134,7 +150,7 @@ describe("parse Handlebars helper", () => {
 			expected: "http://.",
 		}];
 
-		const actual = testCases.map((testCase) => parse(testCase.input));
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
@@ -144,45 +160,45 @@ describe("parse Handlebars helper", () => {
 		const testCases = [{
 			input: "#a",
 			expected:
-				'<span class="inline-channel" role="button" tabindex="0" data-chan="#a">' +
+				'<span role="button" tabindex="0" data-chan="#a" class="inline-channel">' +
 					"#a" +
 				"</span>",
 		}, {
 			input: "#test",
 			expected:
-				'<span class="inline-channel" role="button" tabindex="0" data-chan="#test">' +
+				'<span role="button" tabindex="0" data-chan="#test" class="inline-channel">' +
 					"#test" +
 				"</span>",
 		}, {
 			input: "#äöü",
 			expected:
-				'<span class="inline-channel" role="button" tabindex="0" data-chan="#äöü">' +
+				'<span role="button" tabindex="0" data-chan="#äöü" class="inline-channel">' +
 					"#äöü" +
 				"</span>",
 		}, {
 			input: "inline #channel text",
 			expected:
 				"inline " +
-				'<span class="inline-channel" role="button" tabindex="0" data-chan="#channel">' +
+				'<span role="button" tabindex="0" data-chan="#channel" class="inline-channel">' +
 					"#channel" +
 				"</span>" +
 				" text",
 		}, {
 			input: "#1,000",
 			expected:
-				'<span class="inline-channel" role="button" tabindex="0" data-chan="#1,000">' +
+				'<span role="button" tabindex="0" data-chan="#1,000" class="inline-channel">' +
 					"#1,000" +
 				"</span>",
 		}, {
 			input: "@#a",
 			expected:
 				"@" +
-				'<span class="inline-channel" role="button" tabindex="0" data-chan="#a">' +
+				'<span role="button" tabindex="0" data-chan="#a" class="inline-channel">' +
 					"#a" +
 				"</span>",
 		}];
 
-		const actual = testCases.map((testCase) => parse(testCase.input));
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
@@ -197,7 +213,7 @@ describe("parse Handlebars helper", () => {
 			expected: "#",
 		}];
 
-		const actual = testCases.map((testCase) => parse(testCase.input));
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
@@ -222,11 +238,11 @@ describe("parse Handlebars helper", () => {
 	}, {
 		name: "hex foreground color",
 		input: "\x04663399rebeccapurple",
-		expected: '<span style="color:#663399">rebeccapurple</span>',
+		expected: '<span style="color:#663399;">rebeccapurple</span>',
 	}, {
 		name: "hex foreground and background colors",
 		input: "\x04415364,ff9e18The Lounge",
-		expected: '<span style="color:#415364;background-color:#FF9E18">The Lounge</span>',
+		expected: '<span style="color:#415364;background-color:#FF9E18;">The Lounge</span>',
 	}, {
 		name: "italic",
 		input: "\x1ditalic",
@@ -281,22 +297,24 @@ describe("parse Handlebars helper", () => {
 			'<span class="irc-bold">bold</span>',
 	}].forEach((item) => { // TODO: In Node v6+, use `{name, input, expected}`
 		it(`should handle style characters: ${item.name}`, function() {
-			expect(parse(item.input)).to.equal(item.expected);
+			expect(getParsedMessageContents(item.input)).to.equal(item.expected);
 		});
 	});
 
 	it("should find nicks", () => {
 		const testCases = [{
-			users: ["MaxLeiter"],
+			message: {
+				users: ["MaxLeiter"],
+			},
 			input: "test, MaxLeiter",
 			expected:
 				"test, " +
-				'<span role="button" class="user color-12" data-name="MaxLeiter">' +
+				'<span role="button" data-name="MaxLeiter" class="user color-12">' +
 					"MaxLeiter" +
 				"</span>",
 		}];
 
-		const actual = testCases.map((testCase) => parse(testCase.input, testCase.users));
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input, testCase.message));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
@@ -307,7 +325,7 @@ describe("parse Handlebars helper", () => {
 			users: ["MaxLeiter, test"],
 			input: "#test-channelMaxLeiter",
 			expected:
-				'<span class="inline-channel" role="button" tabindex="0" data-chan="#test-channelMaxLeiter">' +
+				'<span role="button" tabindex="0" data-chan="#test-channelMaxLeiter" class="inline-channel">' +
 					"#test-channelMaxLeiter" +
 				"</span>",
 		},
@@ -322,7 +340,7 @@ describe("parse Handlebars helper", () => {
 
 		];
 
-		const actual = testCases.map((testCase) => parse(testCase.input));
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
@@ -342,13 +360,13 @@ describe("parse Handlebars helper", () => {
 		}, {
 			input: "\x02#\x038,9thelounge",
 			expected:
-				'<span class="inline-channel" role="button" tabindex="0" data-chan="#thelounge">' +
+				'<span role="button" tabindex="0" data-chan="#thelounge" class="inline-channel">' +
 					'<span class="irc-bold">#</span>' +
 					'<span class="irc-bold irc-fg8 irc-bg9">thelounge</span>' +
 				"</span>",
 		}];
 
-		const actual = testCases.map((testCase) => parse(testCase.input));
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
@@ -358,20 +376,20 @@ describe("parse Handlebars helper", () => {
 	[{
 		name: "in text",
 		input: "Hello💬",
-		expected: 'Hello<span class="emoji" role="img" aria-label="Emoji: speech balloon" title="speech balloon">💬</span>',
+		expected: 'Hello<span role="img" aria-label="Emoji: speech balloon" title="Emoji: speech balloon" class="emoji">💬</span>',
 	}, {
 		name: "complicated zero-join-width emoji",
 		input: "🤦🏿‍♀️",
-		expected: '<span class="emoji" role="img" aria-label="Emoji: woman facepalming: dark skin tone" title="woman facepalming: dark skin tone">🤦🏿‍♀️</span>',
+		expected: '<span role="img" aria-label="Emoji: woman facepalming: dark skin tone" title="Emoji: woman facepalming: dark skin tone" class="emoji">🤦🏿‍♀️</span>',
 	}, {
 		name: "with modifiers",
 		input: "🤷‍♀️",
-		expected: '<span class="emoji" role="img" aria-label="Emoji: woman shrugging" title="woman shrugging">🤷‍♀️</span>',
+		expected: '<span role="img" aria-label="Emoji: woman shrugging" title="Emoji: woman shrugging" class="emoji">🤷‍♀️</span>',
 	}, {
 		// FIXME: These multiple `span`s should be optimized into a single one. See https://github.com/thelounge/thelounge/issues/1783
 		name: "wrapped in style",
 		input: "Super \x034💚 green!",
-		expected: 'Super <span class="emoji" role="img" aria-label="Emoji: green heart" title="green heart"><span class="irc-fg4">💚</span></span><span class="irc-fg4"> green!</span>',
+		expected: 'Super <span role="img" aria-label="Emoji: green heart" title="Emoji: green heart" class="emoji"><span class="irc-fg4">💚</span></span><span class="irc-fg4"> green!</span>',
 	}, {
 		name: "wrapped in URLs",
 		input: "https://i.❤️.thelounge.chat",
@@ -381,10 +399,10 @@ describe("parse Handlebars helper", () => {
 		name: "wrapped in channels",
 		input: "#i❤️thelounge",
 		// FIXME: Emoji in text should be `<span class="emoji">❤️</span>`. See https://github.com/thelounge/thelounge/issues/1784
-		expected: '<span class="inline-channel" role="button" tabindex="0" data-chan="#i❤️thelounge">#i❤️thelounge</span>',
+		expected: '<span role="button" tabindex="0" data-chan="#i❤️thelounge" class="inline-channel">#i❤️thelounge</span>',
 	}].forEach((item) => { // TODO: In Node v6+, use `{name, input, expected}`
 		it(`should find emoji: ${item.name}`, function() {
-			expect(parse(item.input)).to.equal(item.expected);
+			expect(getParsedMessageContents(item.input)).to.equal(item.expected);
 		});
 	});
 
@@ -393,12 +411,12 @@ describe("parse Handlebars helper", () => {
 			input: 'test \x0312#\x0312\x0312"te\x0312st\x0312\x0312\x0312\x0312\x0312\x0312\x0312\x0312\x0312\x0312\x0312a',
 			expected:
 			"test " +
-				'<span class="inline-channel" role="button" tabindex="0" data-chan="#&quot;testa">' +
+				'<span role="button" tabindex="0" data-chan="#&quot;testa" class="inline-channel">' +
 				'<span class="irc-fg12">#&quot;testa</span>' +
 			"</span>",
 		}];
 
-		const actual = testCases.map((testCase) => parse(testCase.input));
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
@@ -421,7 +439,7 @@ describe("parse Handlebars helper", () => {
 				"</a>",
 		}];
 
-		const actual = testCases.map((testCase) => parse(testCase.input));
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
@@ -436,7 +454,7 @@ describe("parse Handlebars helper", () => {
 				"</a>",
 		}];
 
-		const actual = testCases.map((testCase) => parse(testCase.input));
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
@@ -444,20 +462,20 @@ describe("parse Handlebars helper", () => {
 
 	it("should not overlap parts", () => {
 		const input = "Url: http://example.com/path Channel: ##channel";
-		const actual = parse(input);
+		const actual = getParsedMessageContents(input);
 
 		expect(actual).to.equal(
 			'Url: <a href="http://example.com/path" target="_blank" rel="noopener">http://example.com/path</a> ' +
-			'Channel: <span class="inline-channel" role="button" tabindex="0" data-chan="##channel">##channel</span>'
+			'Channel: <span role="button" tabindex="0" data-chan="##channel" class="inline-channel">##channel</span>'
 		);
 	});
 
 	it("should handle overlapping parts by using first starting", () => {
 		const input = "#test-https://example.com";
-		const actual = parse(input);
+		const actual = getParsedMessageContents(input);
 
 		expect(actual).to.equal(
-			'<span class="inline-channel" role="button" tabindex="0" data-chan="#test-https://example.com">' +
+			'<span role="button" tabindex="0" data-chan="#test-https://example.com" class="inline-channel">' +
 				"#test-https://example.com" +
 			"</span>"
 		);
