@@ -71,6 +71,9 @@ function findChannel(id) {
 }
 
 function initChannel(channel) {
+	channel.pendingMessage = "";
+	channel.inputHistoryPosition = 0;
+	channel.inputHistory = [""];
 	channel.historyLoading = false;
 	channel.scrolledToBottom = true;
 
