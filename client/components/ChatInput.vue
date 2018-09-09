@@ -115,6 +115,29 @@ export default {
 			}
 		});
 
+		inputTrap.bind(["up", "down"], (e, key) => {
+			if (e.target.selectionStart !== e.target.selectionEnd) {
+				return;
+			}
+
+			if (this.channel.inputHistoryPosition === 0) {
+				this.channel.inputHistory[this.channel.inputHistoryPosition] = this.channel.pendingMessage;
+			}
+
+			if (key === "up") {
+				if (this.channel.inputHistoryPosition < this.channel.inputHistory.length - 1) {
+					this.channel.inputHistoryPosition++;
+				}
+			} else if (this.channel.inputHistoryPosition > 0) {
+				this.channel.inputHistoryPosition--;
+			}
+
+			this.channel.pendingMessage = this.$refs.input.value = this.channel.inputHistory[this.channel.inputHistoryPosition];
+			this.setInputSize();
+
+			return false;
+		});
+
 		if (this.$root.fileUploadEnabled) {
 			upload.initialize();
 		}
@@ -125,6 +148,7 @@ export default {
 	methods: {
 		setPendingMessage(e) {
 			this.channel.pendingMessage = e.target.value;
+			this.channel.inputHistoryPosition = 0;
 			this.setInputSize();
 		},
 		setInputSize() {
@@ -159,9 +183,15 @@ export default {
 				return false;
 			}
 
+			this.channel.inputHistoryPosition = 0;
 			this.channel.pendingMessage = "";
 			this.$refs.input.value = "";
 			this.setInputSize();
+
+			// Store new message in history if last message isn't already equal
+			if (this.channel.inputHistory[1] !== text) {
+				this.channel.inputHistory.splice(1, 0, text);
+			}
 
 			if (text[0] === "/") {
 				const args = text.substr(1).split(" ");
