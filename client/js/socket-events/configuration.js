@@ -25,7 +25,7 @@ window.addEventListener("beforeinstallprompt", (installPromptEvent) => {
 });
 
 socket.on("configuration", function(data) {
-	vueApp.fileUploadEnabled = data.fileUpload;
+	vueApp.isFileUploadEnabled = data.fileUpload;
 
 	if (options.initialized) {
 		// Likely a reconnect, request sync for possibly missed settings.

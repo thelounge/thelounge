@@ -11,8 +11,8 @@ const utils = require("../utils");
 const {vueApp, initChannel} = require("../vue");
 
 socket.on("init", function(data) {
-	vueApp.connectionError = "Rendering…";
-	$("#loading-page-message").text(vueApp.connectionError);
+	vueApp.currentUserVisibleError = "Rendering…";
+	$("#loading-page-message").text(vueApp.currentUserVisibleError);
 
 	const previousActive = vueApp.activeChannel && vueApp.activeChannel.channel.id;
 
@@ -55,8 +55,8 @@ socket.on("init", function(data) {
 	}
 
 	vueApp.networks = data.networks;
-	vueApp.connected = true;
-	vueApp.connectionError = false;
+	vueApp.isConnected = true;
+	vueApp.currentUserVisibleError = null;
 
 	if (!vueApp.initialized) {
 		vueApp.initialized = true;
