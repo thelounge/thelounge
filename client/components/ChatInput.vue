@@ -15,7 +15,7 @@
 			@input="setPendingMessage"
 			@keypress.enter.exact.prevent="onSubmit" />
 		<span
-			v-if="this.$root.connected && this.$root.fileUploadEnabled"
+			v-if="this.$root.isConnected && this.$root.isFileUploadEnabled"
 			id="upload-tooltip"
 			class="tooltipped tooltipped-w tooltipped-no-touch"
 			aria-label="Upload File"
@@ -138,7 +138,7 @@ export default {
 			return false;
 		});
 
-		if (this.$root.fileUploadEnabled) {
+		if (this.$root.isFileUploadEnabled) {
 			upload.initialize();
 		}
 	},
@@ -172,7 +172,7 @@ export default {
 			this.$refs.input.click();
 			this.$refs.input.focus();
 
-			if (!this.$root.connected) {
+			if (!this.$root.isConnected) {
 				return false;
 			}
 

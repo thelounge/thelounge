@@ -5,7 +5,7 @@
 		<div :class="['show-more', { show: channel.moreHistoryAvailable }]">
 			<button
 				ref="loadMoreButton"
-				:disabled="channel.historyLoading || !$root.connected"
+				:disabled="channel.historyLoading || !$root.isConnected"
 				class="btn"
 				@click="onShowMoreClick">
 				<span v-if="channel.historyLoading">Loading…</span>

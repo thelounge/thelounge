@@ -21,14 +21,14 @@ Vue.filter("roundBadgeNumber", roundBadgeNumber);
 const vueApp = new Vue({
 	el: "#viewport",
 	data: {
-		initialized: false,
-		connected: false,
-		connectionError: false,
-		fileUploadEnabled: false,
-		isNotified: false,
-		isAutoCompleting: false,
-		appName: document.title,
 		activeChannel: null,
+		appName: document.title,
+		currentUserVisibleError: null,
+		initialized: false,
+		isAutoCompleting: false,
+		isConnected: false,
+		isFileUploadEnabled: false,
+		isNotified: false,
 		networks: [],
 		settings: {
 			syncSettings: false,

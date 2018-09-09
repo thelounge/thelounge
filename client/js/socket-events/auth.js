@@ -12,8 +12,8 @@ socket.on("auth", function(data) {
 	// And we will reload the page to grab the latest version
 	if (utils.serverHash > -1 && data.serverHash > -1 && data.serverHash !== utils.serverHash) {
 		socket.disconnect();
-		vueApp.connected = false;
-		vueApp.connectionError = "Server restarted, reloading…";
+		vueApp.isConnected = false;
+		vueApp.currentUserVisibleError = "Server restarted, reloading…";
 		location.reload(true);
 		return;
 	}
@@ -53,8 +53,8 @@ socket.on("auth", function(data) {
 	if (!data.success) {
 		if (login.length === 0) {
 			socket.disconnect();
-			vueApp.connected = false;
-			vueApp.connectionError = "Authentication failed, reloading…";
+			vueApp.isConnected = false;
+			vueApp.currentUserVisibleError = "Authentication failed, reloading…";
 			location.reload();
 			return;
 		}
@@ -69,8 +69,8 @@ socket.on("auth", function(data) {
 		token = storage.get("token");
 
 		if (token) {
-			vueApp.connectionError = "Authorizing…";
-			$("#loading-page-message").text(vueApp.connectionError);
+			vueApp.currentUserVisibleError = "Authorizing…";
+			$("#loading-page-message").text(vueApp.currentUserVisibleError);
 
 			let lastMessage = -1;
 

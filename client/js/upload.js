@@ -23,7 +23,7 @@ function initialize() {
 	instance.addEventListener("error", (event) => {
 		// Reset progressbar
 		$("#upload-progressbar").width(0);
-		vueApp.connectionError = event.message;
+		vueApp.currentUserVisibleError = event.message;
 	});
 
 	const $form = $(document);
