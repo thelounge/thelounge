@@ -31,8 +31,7 @@ class TextFileMessageStorage {
 			return;
 		}
 
-		const networkFolderName = cleanFilename(`${network.name}-${network.uuid.substring(network.name.length + 1)}`);
-		const logPath = path.join(Helper.getUserLogsPath(), this.client.name, networkFolderName);
+		const logPath = path.join(Helper.getUserLogsPath(), this.client.name, TextFileMessageStorage.getNetworkFolderName(network));
 
 		try {
 			fsextra.ensureDirSync(logPath);
@@ -113,6 +112,14 @@ class TextFileMessageStorage {
 
 	canProvideMessages() {
 		return false;
+	}
+
+	static getNetworkFolderName(network) {
+		// Limit network name in the folder name to 23 characters
+		// So we can still fit 12 characters of the uuid for de-duplication
+		const networkName = cleanFilename(network.name.substring(0, 23).replace(/ /g, "-"));
+
+		return `${networkName}-${network.uuid.substring(networkName.length + 1)}`;
 	}
 }
 
