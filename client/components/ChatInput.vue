@@ -116,7 +116,7 @@ export default {
 		});
 
 		inputTrap.bind(["up", "down"], (e, key) => {
-			if (e.target.selectionStart !== e.target.selectionEnd) {
+			if (this.$root.isAutoCompleting || e.target.selectionStart !== e.target.selectionEnd) {
 				return;
 			}
 

@@ -21,6 +21,7 @@ module.exports = {
 			Mousetrap(input.get(0)).unbind("tab", "keydown");
 			textcomplete.destroy();
 			enabled = false;
+			vueApp.isAutoCompleting = false;
 		}
 	},
 };
@@ -169,7 +170,6 @@ const backgroundColorStrategy = {
 
 function enableAutocomplete(inputRef) {
 	enabled = true;
-	let autocompleting = false;
 	let tabCount = 0;
 	let lastMatch = "";
 	let currentMatches = [];
@@ -186,7 +186,7 @@ function enableAutocomplete(inputRef) {
 	});
 
 	Mousetrap(input.get(0)).bind("tab", (e) => {
-		if (autocompleting) {
+		if (vueApp.isAutoCompleting) {
 			return;
 		}
 
@@ -252,11 +252,11 @@ function enableAutocomplete(inputRef) {
 	});
 
 	textcomplete.on("show", () => {
-		autocompleting = true;
+		vueApp.isAutoCompleting = true;
 	});
 
 	textcomplete.on("hidden", () => {
-		autocompleting = false;
+		vueApp.isAutoCompleting = false;
 	});
 
 	$("#form").on("submit.tabcomplete", () => {
