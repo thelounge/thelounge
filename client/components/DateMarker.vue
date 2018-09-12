@@ -18,6 +18,11 @@ export default {
 	props: {
 		message: Object,
 	},
+	computed: {
+		localeDate() {
+			return moment(this.message.time).format("D MMMM YYYY");
+		},
+	},
 	mounted() {
 		if (this.hoursPassed() < 48) {
 			this.$root.$on("daychange", this.dayChange);
@@ -26,14 +31,9 @@ export default {
 	beforeDestroy() {
 		this.$root.$off("daychange", this.dayChange);
 	},
-	computed: {
-		localeDate() {
-			return moment(this.message.time).format("D MMMM YYYY");
-		},
-	},
 	methods: {
 		hoursPassed() {
-			return moment.duration(moment().diff(moment(this.message.time))).asHours()
+			return moment.duration(moment().diff(moment(this.message.time))).asHours();
 		},
 		dayChange() {
 			this.$forceUpdate();
