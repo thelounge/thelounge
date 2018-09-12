@@ -15,7 +15,7 @@
 			@input="setPendingMessage"
 			@keypress.enter.exact.prevent="onSubmit" />
 		<span
-			v-if="this.$root.isConnected && this.$root.isFileUploadEnabled"
+			v-if="this.$root.isFileUploadEnabled"
 			id="upload-tooltip"
 			class="tooltipped tooltipped-w tooltipped-no-touch"
 			aria-label="Upload File"
@@ -28,7 +28,8 @@
 			<button
 				id="upload"
 				type="button"
-				aria-label="Upload file" />
+				aria-label="Upload file"
+				:disabled="!this.$root.isConnected" />
 		</span>
 		<span
 			id="submit-tooltip"
