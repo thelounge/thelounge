@@ -2,7 +2,6 @@
 
 // vendor libraries
 const $ = require("jquery");
-const moment = require("moment");
 
 // our libraries
 const socket = require("./socket");
@@ -12,7 +11,6 @@ const {vueApp, findChannel} = require("./vue");
 window.vueMounted = () => {
 	require("./socket-events");
 	const slideoutMenu = require("./slideout");
-	const templates = require("../views");
 	const contextMenuFactory = require("./contextMenuFactory");
 	const storage = require("./localStorage");
 	const utils = require("./utils");
@@ -210,26 +208,6 @@ window.vueMounted = () => {
 	$(document).on("visibilitychange focus click", () => {
 		utils.synchronizeNotifiedState();
 	});
-
-	// Compute how many milliseconds are remaining until the next day starts
-	function msUntilNextDay() {
-		return moment().add(1, "day").startOf("day") - moment();
-	}
-
-	// Go through all Today/Yesterday date markers in the DOM and recompute their
-	// labels. When done, restart the timer for the next day.
-	function updateDateMarkers() {
-		$(".date-marker-text[data-label='Today'], .date-marker-text[data-label='Yesterday']")
-			.closest(".date-marker-container")
-			.each(function() {
-				$(this).replaceWith(templates.date_marker({time: $(this).data("time")}));
-			});
-
-		// This should always be 24h later but re-computing exact value just in case
-		setTimeout(updateDateMarkers, msUntilNextDay());
-	}
-
-	setTimeout(updateDateMarkers, msUntilNextDay());
 
 	window.addEventListener("popstate", (e) => {
 		const {state} = e;
