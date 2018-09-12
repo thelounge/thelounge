@@ -195,6 +195,11 @@ export default {
 				this.channel.inputHistory.splice(1, 0, text);
 			}
 
+			// Limit input history to a 100 entries
+			if (this.channel.inputHistory.length > 100) {
+				this.channel.inputHistory.pop();
+			}
+
 			if (text[0] === "/") {
 				const args = text.substr(1).split(" ");
 				const cmd = args.shift().toLowerCase();
