@@ -4493,9 +4493,9 @@ lolex@^2.3.2:
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/lolex/-/lolex-2.7.1.tgz#e40a8c4d1f14b536aa03e42a537c7adbaf0c20be"
 
-lolex@^2.7.2:
-  version "2.7.2"
-  resolved "https://registry.yarnpkg.com/lolex/-/lolex-2.7.2.tgz#ff11decab010cf37d6194ab44bb57970b5f4966b"
+lolex@^2.7.4:
+  version "2.7.4"
+  resolved "https://registry.yarnpkg.com/lolex/-/lolex-2.7.4.tgz#6514de2c3291e9d6f09d49ddce4a95f7d4d5a93f"
 
 longest-streak@^2.0.1:
   version "2.0.2"
@@ -6676,16 +6676,16 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
 
-sinon@6.2.0:
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/sinon/-/sinon-6.2.0.tgz#ec95af3a88aeb451f0275f14213e6e9f066879e2"
+sinon@6.3.1:
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/sinon/-/sinon-6.3.1.tgz#4b57a52d74d6cc2fb8db17cb3b23356becfa7c1b"
   dependencies:
     "@sinonjs/commons" "^1.0.2"
     "@sinonjs/formatio" "^2.0.0"
     "@sinonjs/samsam" "^2.0.0"
     diff "^3.5.0"
     lodash.get "^4.4.2"
-    lolex "^2.7.2"
+    lolex "^2.7.4"
     nise "^1.4.4"
     supports-color "^5.5.0"
     type-detect "^4.0.8"
