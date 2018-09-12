@@ -38,7 +38,8 @@
 			<button
 				id="submit"
 				type="submit"
-				aria-label="Send message" />
+				aria-label="Send message"
+				:disabled="!this.$root.isConnected" />
 		</span>
 	</form>
 </template>

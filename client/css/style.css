@@ -2027,6 +2027,11 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	flex: 0 0 auto;
 }
 
+#form #upload[disabled],
+#form #submit[disabled] {
+	opacity: 0.5;
+}
+
 #context-menu-container {
 	display: none;
 	position: absolute;
