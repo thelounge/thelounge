@@ -93,6 +93,8 @@
 </template>
 
 <script>
+const moment = require("moment");
+
 import {throttle} from "lodash";
 
 import NetworkList from "./NetworkList.vue";
@@ -116,12 +118,26 @@ export default {
 		}, 100);
 
 		window.addEventListener("resize", this.debouncedResize, {passive: true});
+
+		// Emit a daychange event every time the day changes so date markers know when to update themselves
+		const emitDayChange = () => {
+			this.$root.$emit("daychange");
+			// This should always be 24h later but re-computing exact value just in case
+			this.dayChangeTimeout = setTimeout(emitDayChange, this.msUntilNextDay());
+		};
+
+		this.dayChangeTimeout = setTimeout(emitDayChange, this.msUntilNextDay());
 	},
 	beforeDestroy() {
 		window.removeEventListener("resize", this.debouncedResize);
+		clearTimeout(this.dayChangeTimeout);
 	},
 	methods: {
 		isPublic: () => document.body.classList.contains("public"),
+		msUntilNextDay() {
+			// Compute how many milliseconds are remaining until the next day starts
+			return moment().add(1, "day").startOf("day") - moment();
+		},
 	},
 };
 </script>

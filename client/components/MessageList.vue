@@ -19,18 +19,10 @@
 			aria-relevant="additions"
 			@copy="onCopy">
 			<template v-for="(message, id) in condensedMessages">
-				<div
+				<DateMarker
 					v-if="shouldDisplayDateMarker(message, id)"
 					:key="message.id + '-date'"
-					:data-time="message.time"
-					:aria-label="message.time | localedate"
-					class="date-marker-container tooltipped tooltipped-s">
-					<div class="date-marker">
-						<span
-							:data-label="message.time | friendlydate"
-							class="date-marker-text" />
-					</div>
-				</div>
+					:message="message" />
 				<div
 					v-if="shouldDisplayUnreadMarker(id)"
 					:key="message.id + '-unread'"
@@ -78,12 +70,14 @@ const clipboard = require("../js/clipboard");
 import socket from "../js/socket";
 import Message from "./Message.vue";
 import MessageCondensed from "./MessageCondensed.vue";
+import DateMarker from "./DateMarker.vue";
 
 export default {
 	name: "MessageList",
 	components: {
 		Message,
 		MessageCondensed,
+		DateMarker,
 	},
 	props: {
 		settings: Object,
