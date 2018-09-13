@@ -5,7 +5,7 @@
 		:data-from="message.from && message.from.nick">
 		<span
 			:aria-label="message.time | localetime"
-			class="time tooltipped tooltipped-e">{{ message.time | tz }}</span>
+			class="time tooltipped tooltipped-e">{{ messageTime }}</span>
 		<template v-if="message.type === 'unhandled'">
 			<span class="from">[{{ message.command }}]</span>
 			<span class="content">
@@ -60,6 +60,9 @@ import LinkPreview from "./LinkPreview.vue";
 import ParsedMessage from "./ParsedMessage.vue";
 import MessageTypes from "./MessageTypes";
 
+const moment = require("moment");
+const constants = require("../js/constants");
+
 MessageTypes.ParsedMessage = ParsedMessage;
 MessageTypes.LinkPreview = LinkPreview;
 MessageTypes.Username = Username;
@@ -73,6 +76,11 @@ export default {
 		keepScrollPosition: Function,
 	},
 	computed: {
+		messageTime() {
+			const format = this.$root.settings.showSeconds ? constants.timeFormats.msgWithSeconds : constants.timeFormats.msgDefault;
+
+			return moment(this.message.time).format(format);
+		},
 		messageComponent() {
 			return "message-" + this.message.type;
 		},

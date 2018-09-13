@@ -3,12 +3,10 @@
 const Vue = require("vue").default;
 const App = require("../components/App.vue").default;
 const roundBadgeNumber = require("./libs/handlebars/roundBadgeNumber");
-const tz = require("./libs/handlebars/tz");
 const localetime = require("./libs/handlebars/localetime");
 const friendlysize = require("./libs/handlebars/friendlysize");
 const colorClass = require("./libs/handlebars/colorClass");
 
-Vue.filter("tz", tz);
 Vue.filter("localetime", localetime);
 Vue.filter("friendlysize", friendlysize);
 Vue.filter("colorClass", colorClass);
