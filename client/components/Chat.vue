@@ -6,9 +6,9 @@
 			id="chat"
 			:data-id="channel.id"
 			:class="{
-				'hide-motd': !settings.motd,
-				'colored-nicks': settings.coloredNicks,
-				'show-seconds': settings.showSeconds,
+				'hide-motd': !this.$root.settings.motd,
+				'colored-nicks': this.$root.settings.coloredNicks,
+				'show-seconds': this.$root.settings.showSeconds,
 		}">
 			<div
 				:id="'chan-' + channel.id"
@@ -59,8 +59,7 @@
 					class="chat-content">
 					<MessageList
 						:network="network"
-						:channel="channel"
-						:settings="settings" />
+						:channel="channel" />
 					<ChatUserList
 						v-if="channel.type === 'channel'"
 						:channel="channel" />
@@ -96,7 +95,6 @@ export default {
 		ChatUserList,
 	},
 	props: {
-		settings: Object,
 		network: Object,
 		channel: Object,
 	},

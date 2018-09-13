@@ -80,7 +80,6 @@ export default {
 		DateMarker,
 	},
 	props: {
-		settings: Object,
 		network: Object,
 		channel: Object,
 	},
@@ -91,12 +90,12 @@ export default {
 			}
 
 			// If actions are hidden, just return a message list with them excluded
-			if (this.settings.statusMessages === "hidden") {
+			if (this.$root.settings.statusMessages === "hidden") {
 				return this.channel.messages.filter((message) => !constants.condensedTypes.includes(message.type));
 			}
 
 			// If actions are not condensed, just return raw message list
-			if (this.settings.statusMessages !== "condensed") {
+			if (this.$root.settings.statusMessages !== "condensed") {
 				return this.channel.messages;
 			}
 

@@ -61,7 +61,6 @@
 		<article id="windows">
 			<Chat
 				v-if="activeChannel"
-				:settings="settings"
 				:network="activeChannel.network"
 				:channel="activeChannel.channel" />
 			<div
@@ -107,7 +106,6 @@ export default {
 		Chat,
 	},
 	props: {
-		settings: Object,
 		activeChannel: Object,
 		networks: Array,
 	},
