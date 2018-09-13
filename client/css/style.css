@@ -1420,7 +1420,6 @@ background on hover (unless active) */
 	margin-top: 6px;
 	overflow: hidden;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-	contain: content; /* This fixes a display bug where border-radius stopped working on image link hover */
 }
 
 /* This applies to images of preview-type-image and thumbnails of preview-type-link */
