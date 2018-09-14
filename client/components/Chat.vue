@@ -69,7 +69,7 @@
 		<div
 			v-if="this.$root.currentUserVisibleError"
 			id="connection-error"
-			@click="this.$root.currentUserVisibleError = null">{{ this.$root.currentUserVisibleError }}</div>
+			@click="hideUserVisibleError">{{ this.$root.currentUserVisibleError }}</div>
 		<span id="upload-progressbar" />
 		<ChatInput
 			:network="network"
@@ -106,6 +106,11 @@ export default {
 			case "list_ignored": return ListIgnored;
 			}
 		},
+	},
+	methods: {
+		hideUserVisibleError() {
+			this.$root.currentUserVisibleError = null;
+		}
 	},
 };
 </script>
