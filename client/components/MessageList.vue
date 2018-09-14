@@ -24,7 +24,7 @@
 					:key="message.id + '-date'"
 					:message="message" />
 				<div
-					v-if="shouldDisplayUnreadMarker(id)"
+					v-if="shouldDisplayUnreadMarker(message.id)"
 					:key="message.id + '-unread'"
 					class="unread-marker">
 					<span class="unread-marker-text" />
@@ -188,6 +188,9 @@ export default {
 			}
 		});
 	},
+	beforeUpdate() {
+		this.unreadMarkerShown = false;
+	},
 	beforeDestroy() {
 		this.$root.$off("resize", this.handleResize);
 		this.$refs.chat.removeEventListener("scroll", this.debouncedScroll);
@@ -208,13 +211,12 @@ export default {
 			return (new Date(previousMessage.time)).getDay() !== (new Date(message.time)).getDay();
 		},
 		shouldDisplayUnreadMarker(id) {
-			const previousMessage = this.condensedMessages[id - 1];
-
-			if (!previousMessage) {
-				return false;
+			if (!this.unreadMarkerShown && id > this.channel.firstUnread) {
+				this.unreadMarkerShown = true;
+				return true;
 			}
 
-			return this.channel.firstUnread === previousMessage.id;
+			return false;
 		},
 		onCopy() {
 			clipboard(this.$el);
