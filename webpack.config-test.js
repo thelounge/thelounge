@@ -1,21 +1,18 @@
 "use strict";
 
-const path = require("path");
 const config = require("./webpack.config.js");
 
 config.target = "node";
 config.devtool = "eval";
 
-// Instrumentation for coverage with Istanbul
-config.module.rules.push({
-	test: /\.js$/,
-	include: path.resolve(__dirname, "client"),
-	use: {
-		loader: "istanbul-instrumenter-loader",
-		options: {esModules: true},
-	},
-	enforce: "post",
-});
+// Add the istanbul plugin to babel-loader options
+for (const rule of config.module.rules) {
+	if (rule.use.loader === "babel-loader") {
+		rule.use.options.plugins = [
+			"istanbul",
+		];
+	}
+}
 
 // `optimization.splitChunks` is incompatible with a `target` of `node`. See:
 // - https://github.com/zinserjan/mocha-webpack/issues/84

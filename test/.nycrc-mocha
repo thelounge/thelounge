@@ -1,5 +1,6 @@
 {
   "all": true,
+  "instrument": true,
   "temp-dir": "./node_modules/.cache/nyc_output",
   "exclude": [
     "webpack.config*.js"

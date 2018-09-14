@@ -110,7 +110,7 @@ export default {
 	methods: {
 		hideUserVisibleError() {
 			this.$root.currentUserVisibleError = null;
-		}
+		},
 	},
 };
 </script>
