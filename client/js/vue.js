@@ -53,6 +53,11 @@ const vueApp = new Vue({
 	},
 });
 
+Vue.config.errorHandler = function(e) {
+	console.error(e); // eslint-disable-line
+	vueApp.currentUserVisibleError = `Vue error: ${e.message}. Please check devtools and report it in #thelounge`;
+};
+
 function findChannel(id) {
 	for (const network of vueApp.networks) {
 		for (const channel of network.channels) {
