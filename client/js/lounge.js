@@ -37,7 +37,7 @@ $(function() {
 	$("#sidebar-overlay").on("click", () => {
 		slideoutMenu.toggle(false);
 
-		if ($(window).outerWidth() >= utils.mobileViewportPixels) {
+		if ($(window).outerWidth() > utils.mobileViewportPixels) {
 			storeSidebarVisibility("thelounge.state.sidebar", false);
 		}
 	});
@@ -47,7 +47,7 @@ $(function() {
 
 		slideoutMenu.toggle(isOpen);
 
-		if ($(window).outerWidth() >= utils.mobileViewportPixels) {
+		if ($(window).outerWidth() > utils.mobileViewportPixels) {
 			storeSidebarVisibility("thelounge.state.sidebar", isOpen);
 		}
 	});
@@ -192,7 +192,7 @@ $(function() {
 				utils.toggleNotificationMarkers(false);
 			}
 
-			if (!keepSidebarOpen && $(window).outerWidth() < utils.mobileViewportPixels) {
+			if (!keepSidebarOpen && $(window).outerWidth() <= utils.mobileViewportPixels) {
 				slideoutMenu.toggle(false);
 			}
 		}
