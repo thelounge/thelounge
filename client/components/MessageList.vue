@@ -45,18 +45,6 @@
 					@linkPreviewToggle="onLinkPreviewToggle" />
 			</template>
 		</div>
-
-		<transition name="fade">
-			<div
-				v-if="!channel.scrolledToBottom"
-				class="scroll-down"
-				@click="jumpToBottom()">
-				<div class="scroll-down-arrow" />
-				<div
-					v-if="channel.unread > 0"
-					class="scroll-down-number">{{ channel.unread }}</div>
-			</div>
-		</transition>
 	</div>
 </template>
 
