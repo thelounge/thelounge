@@ -57,7 +57,16 @@
 				<div
 					v-else
 					class="chat-content">
+					<transition name="fade">
+						<div
+							v-if="!channel.scrolledToBottom"
+							class="scroll-down"
+							@click="$refs.messageList.jumpToBottom()">
+							<div class="scroll-down-arrow" />
+						</div>
+					</transition>
 					<MessageList
+						ref="messageList"
 						:network="network"
 						:channel="channel" />
 					<ChatUserList

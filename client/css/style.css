@@ -1102,27 +1102,13 @@ background on hover (unless active) */
 	cursor: pointer;
 }
 
-.scroll-down-number {
-	background: #84ce88;
-	border-radius: 50%;
-	text-align: center;
-	width: 30px;
-	height: 30px;
-	line-height: 30px;
-	font-size: 12px;
-	margin-left: 9px;
-	z-index: 23;
-	position: absolute;
-	top: -20px;
-	font-weight: bold;
-}
-
 .scroll-down-arrow {
 	width: 48px;
 	height: 48px;
 	line-height: 48px;
 	border-radius: 50%;
 	background: #fff;
+	color: #333;
 	border: 1px solid #84ce88;
 	text-align: center;
 }
