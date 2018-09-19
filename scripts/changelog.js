@@ -340,13 +340,25 @@ class RepositoryFetcher {
 		return data.repository.milestones.nodes.find(({title}) => title === targetVersion);
 	}
 
+	async fetchChunkedPullRequests(numbers) {
+		const chunks = _.chunk(numbers, 100);
+		let result = {};
+
+		for (const chunk of chunks) {
+			const data = await this.fetchPullRequests(chunk);
+			result = _.merge(result, data);
+		}
+
+		return result;
+	}
+
 	// Given a list of PR numbers, retrieve information for all those PRs. They
 	// are returned as a hash whose keys are `PR<number>`.
 	// This is a bit wonky (generating a dynamic GraphQL query) but the GitHub API
 	// does not have a way to retrieve multiple PRs given a list of IDs.
 	async fetchPullRequests(numbers) {
 		if (numbers.length === 0) {
-			return [];
+			return {};
 		}
 
 		const prQuery = `query fetchPullRequests($repositoryName: String!) {
@@ -386,7 +398,7 @@ class RepositoryFetcher {
 		const taggedCommit = await this.fetchTaggedCommit(tag);
 		const commits = await this.fetchCommitsSince(taggedCommit);
 		const pullRequestIds = pullRequestNumbersInCommits(commits);
-		const pullRequests = await this.fetchPullRequests(pullRequestIds);
+		const pullRequests = await this.fetchChunkedPullRequests(pullRequestIds);
 		return combine(commits, pullRequests);
 	}
 }
