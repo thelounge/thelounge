@@ -44,7 +44,7 @@ socket.on("init", function(data) {
 		const viewportWidth = $(window).outerWidth();
 		let isUserlistOpen = storage.get("thelounge.state.userlist");
 
-		if (viewportWidth >= utils.mobileViewportPixels) {
+		if (viewportWidth > utils.mobileViewportPixels) {
 			slideoutMenu.toggle(storage.get("thelounge.state.sidebar") !== "false");
 		}
 
