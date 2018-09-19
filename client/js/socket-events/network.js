@@ -33,6 +33,11 @@ socket.on("network:options", function(data) {
 
 socket.on("network:status", function(data) {
 	const network = vueApp.networks.find((n) => n.uuid === data.network);
+
+	if (!network) {
+		return;
+	}
+
 	network.status.connected = data.connected;
 	network.status.secure = data.secure;
 
