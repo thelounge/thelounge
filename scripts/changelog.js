@@ -667,7 +667,8 @@ async function generateChangelogEntry(targetVersion) {
 		contributors = extractContributors(codeCommitsAndPullRequests);
 
 		const websiteRepo = new RepositoryFetcher(client, "thelounge.github.io");
-		items.websiteDocumentation = await websiteRepo.fetchCommitsAndPullRequestsSince("v" + previousVersion);
+		const previousWebsiteVersion = await websiteRepo.fetchPreviousVersion(targetVersion);
+		items.websiteDocumentation = await websiteRepo.fetchCommitsAndPullRequestsSince("v" + previousWebsiteVersion);
 	}
 
 	items.version = targetVersion;
