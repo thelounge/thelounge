@@ -497,11 +497,12 @@ ${printList(items)}
 
 const dependencies = Object.keys(packageJson.dependencies);
 const devDependencies = Object.keys(packageJson.devDependencies);
+const optionalDependencies = Object.keys(packageJson.optionalDependencies);
 
 // Returns the package.json section in which that package exists, or undefined
 // if that package is not listed there.
 function whichDependencyType(packageName) {
-	if (dependencies.includes(packageName)) {
+	if (dependencies.includes(packageName) || optionalDependencies.includes(packageName)) {
 		return "dependencies";
 	} else if (devDependencies.includes(packageName)) {
 		return "devDependencies";
@@ -562,8 +563,20 @@ function isFeature({labels}) {
 //   Update `stylelint` to v1.2.3
 //   Update `express` and `ua-parser-js` to latest versions
 //   Update `express`, `chai`, and `ua-parser-js` to ...
+//   Update @fortawesome/fontawesome-free-webfonts to the latest version
+//   Update dependency request to v2.87.0
+//   chore(deps): update dependency mini-css-extract-plugin to v0.4.3
+//   fix(deps): update dependency web-push to v3.3.3
+//   chore(deps): update babel monorepo to v7.1.0
 function extractPackages(title) {
-	return /^Update ([\w-,`. ]+) to /.exec(title)[1]
+	const extracted = /(?:U|u)pdate(?: dependency)? ([\w-,` ./@]+?) (?:monorepo )?to /.exec(title);
+
+	if (!extracted) {
+		log.warn(`Failed to extract package from: ${title}`);
+		return [];
+	}
+
+	return extracted[1]
 		.replace(/`/g, "")
 		.split(/, and |, | and /);
 }
@@ -572,10 +585,12 @@ function extractPackages(title) {
 // based on different information that describes them.
 function parse(entries) {
 	return entries.reduce((result, entry) => {
+		let deps;
+
 		if (isSkipped(entry)) {
 			result.skipped.push(entry);
-		} else if (isDependency(entry)) {
-			extractPackages(entry.title).forEach((packageName) => {
+		} else if (isDependency(entry) && (deps = extractPackages(entry.title))) {
+			deps.forEach((packageName) => {
 				const dependencyType = whichDependencyType(packageName);
 
 				if (dependencyType) {
