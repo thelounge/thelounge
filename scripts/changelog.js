@@ -151,7 +151,7 @@ ${printList(items.documentation)}`
 }
 
 ${_.isEmpty(items.websiteDocumentation) ? "" :
-		`On the [website repository](https://github.com/thelounge/thelounge.chat):
+		`On the [website repository](https://github.com/thelounge/thelounge.github.io):
 
 ${printList(items.websiteDocumentation)}`
 }
@@ -654,7 +654,7 @@ async function generateChangelogEntry(targetVersion) {
 		items.milestone = await codeRepo.fetchMilestone(targetVersion);
 		contributors = extractContributors(codeCommitsAndPullRequests);
 
-		const websiteRepo = new RepositoryFetcher(client, "thelounge.chat");
+		const websiteRepo = new RepositoryFetcher(client, "thelounge.github.io");
 		items.websiteDocumentation = await websiteRepo.fetchCommitsAndPullRequestsSince("v" + previousVersion);
 	}
 
