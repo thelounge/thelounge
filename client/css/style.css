@@ -69,13 +69,8 @@ a:focus {
 	color: var(--link-color);
 }
 
-a {
-	transition: opacity 0.2s;
-}
-
 a:hover {
-	text-decoration: none;
-	opacity: 0.8;
+	text-decoration: underline;
 }
 
 /**
@@ -1240,12 +1235,11 @@ background on hover (unless active) */
 #chat .user,
 .inline-channel {
 	cursor: pointer;
-	transition: opacity 0.2s;
 }
 
 .chat .user:hover,
 .inline-channel:hover {
-	opacity: 0.6;
+	text-decoration: underline;
 }
 
 /* Nicknames */
