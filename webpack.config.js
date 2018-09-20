@@ -129,6 +129,7 @@ const config = {
 				to: "css/primer-tooltips.[ext]",
 			},
 		]),
+		new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
 		// socket.io uses debug, we don't need it
 		new webpack.NormalModuleReplacementPlugin(/debug/, path.resolve(__dirname, "scripts/noop.js")),
 	],
