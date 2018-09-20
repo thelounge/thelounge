@@ -33,7 +33,7 @@ export default {
 	},
 	methods: {
 		hoursPassed() {
-			return moment.duration(moment().diff(moment(this.message.time))).asHours();
+			return (Date.now() - Date.parse(this.message.time)) / 3600000;
 		},
 		dayChange() {
 			this.$forceUpdate();

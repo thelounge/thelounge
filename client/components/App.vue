@@ -92,8 +92,6 @@
 </template>
 
 <script>
-const moment = require("moment");
-
 import {throttle} from "lodash";
 
 import NetworkList from "./NetworkList.vue";
@@ -134,7 +132,10 @@ export default {
 		isPublic: () => document.body.classList.contains("public"),
 		msUntilNextDay() {
 			// Compute how many milliseconds are remaining until the next day starts
-			return moment().add(1, "day").startOf("day") - moment();
+			const today = new Date();
+			const tommorow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+
+			return tommorow - today;
 		},
 	},
 };
