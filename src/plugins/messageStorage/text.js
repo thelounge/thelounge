@@ -40,7 +40,7 @@ class TextFileMessageStorage {
 			return;
 		}
 
-		let line = `[${log.getHumanDate(msg.time)}] `;
+		let line = `[${msg.time.toISOString()}] `;
 
 		// message types from src/models/msg.js
 		switch (msg.type) {
