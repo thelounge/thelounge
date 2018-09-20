@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import {throttle} from "lodash";
+const throttle = require("lodash/throttle");
 
 import NetworkList from "./NetworkList.vue";
 import Chat from "./Chat.vue";

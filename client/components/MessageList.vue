@@ -51,7 +51,7 @@
 <script>
 require("intersection-observer");
 
-import {throttle} from "lodash";
+const throttle = require("lodash/throttle");
 
 const constants = require("../js/constants");
 const clipboard = require("../js/clipboard");
