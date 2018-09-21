@@ -1487,6 +1487,10 @@ background on hover (unless active) */
 	flex-shrink: 0;
 }
 
+#chat .toggle-content .more:hover {
+	text-decoration: underline;
+}
+
 #chat .toggle-content .more::after {
 	content: " " attr(aria-label);
 }
