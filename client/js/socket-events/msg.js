@@ -20,15 +20,25 @@ try {
 }
 
 socket.on("msg", function(data) {
-	let targetId = data.chan;
-	let {channel} = findChannel(data.chan);
+	const receivingChannel = findChannel(data.chan);
 
-	if (typeof data.highlight !== "undefined") {
-		channel.highlight = data.highlight;
+	if (!receivingChannel) {
+		return;
 	}
 
-	if (typeof data.unread !== "undefined") {
-		channel.unread = data.unread;
+	let channel = receivingChannel.channel;
+	const isActiveChannel = vueApp.activeChannel && vueApp.activeChannel.channel === channel;
+
+	// Do not set unread counter for channel if it is currently active on this client
+	// It may increase on the server before it processes channel open event from this client
+	if (!isActiveChannel) {
+		if (typeof data.highlight !== "undefined") {
+			channel.highlight = data.highlight;
+		}
+
+		if (typeof data.unread !== "undefined") {
+			channel.unread = data.unread;
+		}
 	}
 
 	if (data.msg.self || data.msg.highlight) {
@@ -38,10 +48,10 @@ socket.on("msg", function(data) {
 	// Display received notices and errors in currently active channel.
 	// Reloading the page will put them back into the lobby window.
 	// We only want to put errors/notices in active channel if they arrive on the same network
-	if (data.msg.showInActive && vueApp.activeChannel && vueApp.activeChannel.network === channel.network) {
+	if (data.msg.showInActive && vueApp.activeChannel && vueApp.activeChannel.network === receivingChannel.network) {
 		channel = vueApp.activeChannel.channel;
 
-		targetId = data.chan = channel.id;
+		data.chan = channel.id;
 	}
 
 	channel.messages.push(data.msg);
@@ -49,12 +59,12 @@ socket.on("msg", function(data) {
 	if (data.msg.self) {
 		channel.firstUnread = data.msg.id;
 	} else {
-		notifyMessage(targetId, channel, vueApp.activeChannel, data.msg);
+		notifyMessage(data.chan, channel, vueApp.activeChannel, data.msg);
 	}
 
 	let messageLimit = 0;
 
-	if (!vueApp.activeChannel || vueApp.activeChannel.channel !== channel) {
+	if (!isActiveChannel) {
 		// If message arrives in non active channel, keep only 100 messages
 		messageLimit = 100;
 	} else if (channel.scrolledToBottom) {
