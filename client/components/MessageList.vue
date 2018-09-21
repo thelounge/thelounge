@@ -51,8 +51,6 @@
 <script>
 require("intersection-observer");
 
-const throttle = require("lodash/throttle");
-
 const constants = require("../js/constants");
 const clipboard = require("../js/clipboard");
 import socket from "../js/socket";
@@ -159,14 +157,11 @@ export default {
 				});
 			}
 
-			this.channel.scrolledToBottom = true;
 			this.jumpToBottom();
 		});
 	},
 	mounted() {
-		this.debouncedScroll = throttle(this.handleScroll, 100);
-
-		this.$refs.chat.addEventListener("scroll", this.debouncedScroll, {passive: true});
+		this.$refs.chat.addEventListener("scroll", this.handleScroll, {passive: true});
 
 		this.$root.$on("resize", this.handleResize);
 
@@ -181,7 +176,7 @@ export default {
 	},
 	beforeDestroy() {
 		this.$root.$off("resize", this.handleResize);
-		this.$refs.chat.removeEventListener("scroll", this.debouncedScroll);
+		this.$refs.chat.removeEventListener("scroll", this.handleScroll);
 	},
 	destroyed() {
 		if (this.historyObserver) {
@@ -262,6 +257,7 @@ export default {
 					this.isWaitingForNextTick = true;
 					this.$nextTick(() => {
 						this.isWaitingForNextTick = false;
+						this.skipNextScrollEvent = true;
 						el.scrollTop = el.scrollHeight - heightOld;
 					});
 				}
@@ -276,6 +272,13 @@ export default {
 			});
 		},
 		handleScroll() {
+			// Setting scrollTop also triggers scroll event
+			// We don't want to perform calculations for that
+			if (this.skipNextScrollEvent) {
+				this.skipNextScrollEvent = false;
+				return;
+			}
+
 			const el = this.$refs.chat;
 
 			if (!el) {
@@ -291,6 +294,9 @@ export default {
 			}
 		},
 		jumpToBottom() {
+			this.skipNextScrollEvent = true;
+			this.channel.scrolledToBottom = true;
+
 			const el = this.$refs.chat;
 			el.scrollTop = el.scrollHeight;
 		},
