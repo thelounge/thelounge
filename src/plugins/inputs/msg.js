@@ -23,6 +23,8 @@ exports.input = function(network, chan, cmd, args) {
 		if (typeof channel !== "undefined") {
 			network.irc.emit("privmsg", {
 				nick: network.irc.user.nick,
+				ident: network.irc.user.username,
+				hostname: network.irc.user.host,
 				target: channel.name,
 				message: msg,
 			});

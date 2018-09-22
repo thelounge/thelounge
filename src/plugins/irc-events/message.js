@@ -45,7 +45,7 @@ module.exports = function(irc, network) {
 		const self = data.nick === irc.user.nick;
 
 		// Check if the sender is in our ignore list
-		const shouldIgnore = network.ignoreList.some(function(entry) {
+		const shouldIgnore = !self && network.ignoreList.some(function(entry) {
 			return Helper.compareHostmask(entry, data);
 		});
 
