@@ -5,7 +5,7 @@
 			<span class="from" />
 			<span
 				class="content"
-				@click="isCollapsed = !isCollapsed">{{ condensedText }}<button
+				@click="onCollapseClick">{{ condensedText }}<button
 					class="toggle-button"
 					aria-label="Toggle status messages" /></span>
 		</div>
@@ -29,6 +29,7 @@ export default {
 	props: {
 		network: Object,
 		messages: Array,
+		keepScrollPosition: Function,
 	},
 	data() {
 		return {
@@ -89,6 +90,12 @@ export default {
 			}
 
 			return text;
+		},
+	},
+	methods: {
+		onCollapseClick() {
+			this.isCollapsed = !this.isCollapsed;
+			this.keepScrollPosition();
 		},
 	},
 };
