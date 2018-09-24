@@ -146,11 +146,6 @@ export default {
 		this.link.shown = this.link.shown && shouldOpenByDefault;
 	},
 	mounted() {
-		// Don't display previews while they are loading on the server
-		if (this.link.type === "loading") {
-			return;
-		}
-
 		this.$root.$on("resize", this.handleResize);
 
 		this.onPreviewUpdate();
@@ -165,6 +160,11 @@ export default {
 	},
 	methods: {
 		onPreviewUpdate() {
+			// Don't display previews while they are loading on the server
+			if (this.link.type === "loading") {
+				return;
+			}
+
 			// Error don't have any media to render
 			if (this.link.type === "error") {
 				this.onPreviewReady();
