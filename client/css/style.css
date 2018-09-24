@@ -1083,25 +1083,22 @@ background on hover (unless active) */
 	margin: 0;
 }
 
-.scroll-down.fade-leave-active,
-.scroll-down.fade-enter-active {
-	opacity: 0;
-	transform: translateY(16px);
-	transition: opacity 0.3s, transform 0.3s;
-}
-
-.scroll-down.fade-enter-to {
-	opacity: 1;
-	transform: none;
-}
-
 .scroll-down {
 	position: absolute;
 	bottom: 16px;
 	right: 16px;
 	z-index: 2;
-	transition: right 0.2s ease-in-out;
+	pointer-events: none;
+	opacity: 0;
+	transform: translateY(16px);
+	transition: all 0.2s ease-in-out;
 	cursor: pointer;
+}
+
+.scroll-down-shown {
+	opacity: 1;
+	transform: none;
+	pointer-events: auto;
 }
 
 .scroll-down-arrow {
@@ -2381,7 +2378,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		height: 100%;
 		position: absolute;
 		left: -220px;
-		z-index: 2;
+		z-index: 10;
 		transition: transform 160ms;
 		transform: translateZ(0);
 	}
@@ -2396,7 +2393,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		opacity: 0;
 		visibility: hidden;
 		transition: opacity 160ms, visibility 160ms;
-		z-index: 1;
+		z-index: 9;
 	}
 
 	#viewport.menu-open #sidebar-overlay {
