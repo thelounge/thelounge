@@ -2,9 +2,7 @@
 
 const expect = require("chai").expect;
 const os = require("os");
-const moment = require("moment");
 const Helper = require("../../src/helper");
-const log = require("../../src/log");
 
 describe("Helper", function() {
 	describe("#expandHome", function() {
@@ -53,9 +51,5 @@ describe("Helper", function() {
 		it("should include a valid semver version", function() {
 			expect(version).to.match(/v[0-9]+\.[0-9]+\.[0-9]+/);
 		});
-	});
-
-	describe("#getHumanDate()", function() {
-		expect(log.getHumanDate(moment(1455090480000).utc())).to.equal("2016-02-10 07:48:00");
 	});
 });
