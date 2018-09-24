@@ -141,6 +141,10 @@ export default {
 			this.onPreviewUpdate();
 		},
 	},
+	created() {
+		const shouldOpenByDefault = this.link.type === "link" ? this.$root.settings.links : this.$root.settings.media;
+		this.link.shown = this.link.shown && shouldOpenByDefault;
+	},
 	mounted() {
 		// Don't display previews while they are loading on the server
 		if (this.link.type === "loading") {
@@ -172,8 +176,7 @@ export default {
 			}
 		},
 		onPreviewReady() {
-			const options = require("../js/options");
-			this.$set(this.link, "canDisplay", options.shouldOpenMessagePreview(this.link.type));
+			this.$set(this.link, "canDisplay", true);
 
 			this.keepScrollPosition();
 

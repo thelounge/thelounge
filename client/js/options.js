@@ -64,15 +64,10 @@ module.exports = {
 	initialized: false,
 	highlightsRE: null,
 	settings,
-	shouldOpenMessagePreview,
 	syncAllSettings,
 	processSetting,
 	initialize,
 };
-
-function shouldOpenMessagePreview(type) {
-	return type === "link" ? settings.links : settings.media;
-}
 
 // Updates the checkbox and warning in settings.
 // When notifications are not supported, this is never called (because
