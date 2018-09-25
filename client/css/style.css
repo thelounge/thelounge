@@ -1290,7 +1290,7 @@ background on hover (unless active) */
 #chat.colored-nicks .user.color-31 { color: #eb0400; }
 #chat.colored-nicks .user.color-32 { color: #e60082; }
 
-#chat .self .text {
+#chat .self .content {
 	color: var(--body-color-muted);
 }
 
@@ -1368,13 +1368,13 @@ background on hover (unless active) */
 }
 
 #chat .action .from,
-#chat .action .text,
+#chat .action .content,
 #chat .action .user {
 	color: #f39c12;
 }
 
 #chat .notice .time,
-#chat .notice .text,
+#chat .notice .content,
 #chat .chan .notice .user {
 	color: #0074d9 !important;
 }
@@ -2643,14 +2643,14 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
    For example: user has quit ( ===> L   O   L <=== )  */
 
 #windows .header .topic,
-#chat .message .text,
-#chat .motd .text,
-#chat .notice .text,
+#chat .message .content,
+#chat .motd .content,
+#chat .notice .content,
 #chat .ctcp-message,
 #chat .part-reason,
 #chat .quit-reason,
 #chat .new-topic,
-#chat .action .text,
+#chat .action .content,
 #chat table.channel-list .topic {
 	white-space: pre-wrap;
 }

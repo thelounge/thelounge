@@ -16,6 +16,7 @@ export default {
 		Username,
 	},
 	props: {
+		network: Object,
 		message: Object,
 	},
 };
