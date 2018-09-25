@@ -1423,6 +1423,7 @@ background on hover (unless active) */
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 	display: inline-flex !important;
 	align-items: flex-start;
+	white-space: normal;
 }
 
 /* This applies to images of preview-type-image and thumbnails of preview-type-link */
