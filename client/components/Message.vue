@@ -24,9 +24,9 @@
 		<template v-else-if="message.type === 'action'">
 			<span class="from" />
 			<span class="content">
-				<span class="text"><Username :user="message.from" /> <ParsedMessage
+				<Username :user="message.from" /> <ParsedMessage
 					:network="network"
-					:message="message" /></span>
+					:message="message" />
 				<LinkPreview
 					v-for="preview in message.previews"
 					:key="preview.link"
@@ -41,9 +41,9 @@
 				</template>
 			</span>
 			<span class="content">
-				<span class="text"><ParsedMessage
+				<ParsedMessage
 					:network="network"
-					:message="message" /></span>
+					:message="message" />
 				<LinkPreview
 					v-for="preview in message.previews"
 					:key="preview.link"
