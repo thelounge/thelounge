@@ -48,22 +48,22 @@ function openImageViewer(link, {pushState = true} = {}) {
 
 	// Previous image
 	let previousImage = link.closest(".preview").prev(".preview")
-		.find(".toggle-content.show .toggle-thumbnail").last();
+		.find(".toggle-content .toggle-thumbnail").last();
 
 	if (!previousImage.length) {
 		previousImage = link.closest(".msg").prevAll()
-			.find(".toggle-content.show .toggle-thumbnail").last();
+			.find(".toggle-content .toggle-thumbnail").last();
 	}
 
 	previousImage.addClass("previous-image");
 
 	// Next image
 	let nextImage = link.closest(".preview").next(".preview")
-		.find(".toggle-content.show .toggle-thumbnail").first();
+		.find(".toggle-content .toggle-thumbnail").first();
 
 	if (!nextImage.length) {
 		nextImage = link.closest(".msg").nextAll()
-			.find(".toggle-content.show .toggle-thumbnail").first();
+			.find(".toggle-content .toggle-thumbnail").first();
 	}
 
 	nextImage.addClass("next-image");
