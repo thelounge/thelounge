@@ -24,7 +24,7 @@
 		<template v-else-if="message.type === 'action'">
 			<span class="from" />
 			<span class="content">
-				<Username :user="message.from" /> <ParsedMessage
+				<span class="only-copy">* </span><Username :user="message.from" /> <ParsedMessage
 					:network="network"
 					:message="message" />
 				<LinkPreview

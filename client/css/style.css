@@ -227,6 +227,12 @@ kbd {
 	display: block;
 }
 
+.only-copy {
+	font-size: 0;
+	opacity: 0;
+	width: 0;
+}
+
 /* Icons */
 
 #viewport .lt::before,
