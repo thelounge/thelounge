@@ -5,7 +5,7 @@
 		:data-from="message.from && message.from.nick">
 		<span
 			:aria-label="message.time | localetime"
-			class="time tooltipped tooltipped-e">{{ messageTime }}</span>
+			class="time tooltipped tooltipped-e">{{ messageTime }} </span>
 		<template v-if="message.type === 'unhandled'">
 			<span class="from">[{{ message.command }}]</span>
 			<span class="content">
@@ -15,16 +15,16 @@
 			</span>
 		</template>
 		<template v-else-if="isAction()">
-			<span class="from" />
+			<span class="from"><span class="only-copy">*** </span></span>
 			<component
 				:is="messageComponent"
 				:network="network"
 				:message="message" />
 		</template>
 		<template v-else-if="message.type === 'action'">
-			<span class="from" />
+			<span class="from"><span class="only-copy">* </span></span>
 			<span class="content">
-				<span class="only-copy">* </span><Username :user="message.from" /> <ParsedMessage
+				<Username :user="message.from" />&#32;<ParsedMessage
 					:network="network"
 					:message="message" />
 				<LinkPreview
@@ -35,9 +35,22 @@
 			</span>
 		</template>
 		<template v-else>
-			<span class="from">
+			<span
+				v-if="message.type === 'message'"
+				class="from">
 				<template v-if="message.from && message.from.nick">
+					<span class="only-copy">&lt;</span>
 					<Username :user="message.from" />
+					<span class="only-copy">&gt; </span>
+				</template>
+			</span>
+			<span
+				v-else
+				class="from">
+				<template v-if="message.from && message.from.nick">
+					<span class="only-copy">-</span>
+					<Username :user="message.from" />
+					<span class="only-copy">- </span>
 				</template>
 			</span>
 			<span class="content">

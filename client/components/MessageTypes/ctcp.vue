@@ -1,6 +1,6 @@
 <template>
 	<span class="content">
-		<Username :user="message.from" />
+		<Username :user="message.from" />&#32;
 		<span class="ctcp-message"><ParsedMessage :text="message.ctcpMessage" /></span>
 	</span>
 </template>

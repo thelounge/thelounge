@@ -2498,6 +2498,12 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		padding: 0;
 	}
 
+	#chat .from::after {
+		/* Add a space because mobile view changes to block display without paddings */
+		content: " ";
+		white-space: pre;
+	}
+
 	#chat .channel .msg.highlight {
 		padding-left: 5px;
 	}
