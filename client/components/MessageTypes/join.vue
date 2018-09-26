@@ -1,7 +1,7 @@
 <template>
 	<span class="content">
 		<Username :user="message.from" />
-		<i class="hostmask">({{ message.hostmask }})</i>
+		<i class="hostmask"> ({{ message.hostmask }})</i>
 		has joined the channel
 	</span>
 </template>

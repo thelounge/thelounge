@@ -1,7 +1,5 @@
 "use strict";
 
-const $ = require("jquery");
-
 module.exports = function(chat) {
 	const selection = window.getSelection();
 
@@ -13,13 +11,6 @@ module.exports = function(chat) {
 	const range = selection.getRangeAt(0);
 	const documentFragment = range.cloneContents();
 	const div = document.createElement("div");
-
-	$(documentFragment)
-		.find(".from .user")
-		.each((_, el) => {
-			el = $(el);
-			el.text(`<${el.text()}>`);
-		});
 
 	div.id = "js-copy-hack";
 	div.appendChild(documentFragment);
