@@ -76,7 +76,7 @@
     "@babel/preset-env": "7.1.0",
     "@fortawesome/fontawesome-free": "5.3.1",
     "babel-loader": "8.0.4",
-    "chai": "4.1.2",
+    "chai": "4.2.0",
     "copy-webpack-plugin": "4.5.2",
     "css-loader": "0.28.11",
     "css.escape": "1.5.1",
