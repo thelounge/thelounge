@@ -101,7 +101,7 @@
     "nyc": "13.0.1",
     "sinon": "6.3.4",
     "socket.io-client": "2.1.1",
-    "stylelint": "9.5.0",
+    "stylelint": "9.6.0",
     "stylelint-config-standard": "18.2.0",
     "textcomplete": "0.17.1",
     "undate": "0.3.0",
