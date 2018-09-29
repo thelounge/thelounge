@@ -36,7 +36,8 @@
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=6.13.0"
+    "node": ">=6.13.0",
+    "yarn": ">=1.10.0"
   },
   "dependencies": {
     "bcryptjs": "2.4.3",
