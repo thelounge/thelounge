@@ -138,12 +138,12 @@ export default {
 	},
 	watch: {
 		"link.type"() {
+			this.updateShownState();
 			this.onPreviewUpdate();
 		},
 	},
 	created() {
-		const shouldOpenByDefault = this.link.type === "link" ? this.$root.settings.links : this.$root.settings.media;
-		this.link.shown = this.link.shown && shouldOpenByDefault;
+		this.updateShownState();
 	},
 	mounted() {
 		this.$root.$on("resize", this.handleResize);
@@ -203,6 +203,28 @@ export default {
 
 				this.showMoreButton = this.$refs.content.offsetWidth >= this.$refs.container.offsetWidth;
 			});
+		},
+		updateShownState() {
+			let defaultState = true;
+
+			switch (this.link.type) {
+			case "error":
+				defaultState = this.link.error === "image-too-big" ? this.$root.settings.media : this.$root.settings.links;
+				break;
+
+			case "loading":
+				defaultState = false;
+				break;
+
+			case "link":
+				defaultState = this.$root.settings.links;
+				break;
+
+			default:
+				defaultState = this.$root.settings.media;
+			}
+
+			this.link.shown = this.link.shown && defaultState;
 		},
 	},
 };
