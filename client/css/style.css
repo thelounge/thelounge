@@ -2075,7 +2075,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 .textcomplete-item a:hover {
-	opacity: 1;
+	text-decoration: none;
 }
 
 .emoji {
