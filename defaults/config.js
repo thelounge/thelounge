@@ -176,6 +176,14 @@ module.exports = {
 	// default.
 	leaveMessage: "The Lounge - https://thelounge.chat",
 
+	// ### `hideCtcpVersion`
+	//
+	// When set to `true`, The Lounge won't include the version number
+	// in a CTCP VERSION query reply.
+	//
+	// This value is set to `false` by default.
+	hideCtcpVersion: false,
+
 	// ## Default network
 
 	// ### `defaults`

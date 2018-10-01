@@ -13,7 +13,13 @@ const ctcpResponses = {
 		.join(" "),
 	PING: ({message}) => message.substring(5),
 	SOURCE: () => pkg.repository.url,
-	VERSION: () => pkg.name + " " + Helper.getVersion() + " -- " + pkg.homepage,
+	VERSION() {
+		if (Helper.config.hideCtcpVersion) {
+			return pkg.name + " -- " + pkg.homepage;
+		}
+
+		return pkg.name + " " + Helper.getVersion() + " -- " + pkg.homepage;
+	},
 };
 
 module.exports = function(irc, network) {
