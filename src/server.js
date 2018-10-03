@@ -257,7 +257,7 @@ function index(req, res, next) {
 		"worker-src 'self'", // service worker
 		"child-src 'self'", // deprecated fall back for workers, Firefox <58, see #1902
 		"manifest-src 'self'", // manifest.json
-		"font-src 'self' https:", // allow loading fonts from secure sites (e.g. google fonts)
+		"font-src 'self' https: data:", // allow loading fonts from secure sites (e.g. google fonts)
 		"media-src 'self' https:", // self for notification sound; allow https media (audio previews)
 	];
 
