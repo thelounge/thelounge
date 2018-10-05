@@ -38,8 +38,10 @@
 {{/if}}
 
 {{#if whois.special}}
-	<dt>Special:</dt>
-	<dd>{{whois.special}}</dd>
+	{{#each whois.special}}
+		<dt>Special:</dt>
+		<dd>{{this}}</dd>
+	{{/each}}
 {{/if}}
 
 {{#if whois.operator}}
