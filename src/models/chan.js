@@ -84,17 +84,25 @@ Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 
 		// If maxHistory is 0, image would be dereferenced before client had a chance to retrieve it,
 		// so for now, just don't implement dereferencing for this edge case.
-		if (Helper.config.prefetch && Helper.config.prefetchStorage && Helper.config.maxHistory > 0) {
+		if (Helper.config.maxHistory > 0) {
 			this.dereferencePreviews(deleted);
 		}
 	}
 };
 
 Chan.prototype.dereferencePreviews = function(messages) {
+	if (!Helper.config.prefetch || !Helper.config.prefetchStorage) {
+		return;
+	}
+
 	messages.forEach((message) => {
-		if (message.preview && message.preview.thumb) {
-			storage.dereference(message.preview.thumb);
-			message.preview.thumb = null;
+		if (message.previews) {
+			message.previews.forEach((preview) => {
+				if (preview.thumb) {
+					storage.dereference(preview.thumb);
+					preview.thumb = null;
+				}
+			});
 		}
 	});
 };
