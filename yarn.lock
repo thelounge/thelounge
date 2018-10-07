@@ -6777,9 +6777,9 @@ socket.io@2.1.1:
     socket.io-client "2.1.1"
     socket.io-parser "~3.2.0"
 
-socketio-file-upload@0.6.2:
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/socketio-file-upload/-/socketio-file-upload-0.6.2.tgz#0e13c5e2b2a6798f0754d2bdcf2b404f8707e192"
+socketio-file-upload@0.6.3:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/socketio-file-upload/-/socketio-file-upload-0.6.3.tgz#2145094a52c5ead27ca3a4a54e07dd1403accbbb"
 
 sockjs-client@1.1.5:
   version "1.1.5"
