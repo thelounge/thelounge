@@ -4,7 +4,6 @@
 	data-id="{{id}}"
 	data-target="#chan-{{id}}"
 	role="tab"
-	aria-label="{{name}}{{#if unread}} ({{unread}} unread{{#if highlight}}, {{highlight}} mentions{{/if}}){{/if}}"
 	aria-controls="chan-{{id}}"
 	aria-selected="false"
 >
