@@ -4,6 +4,7 @@
 	data-id="{{id}}"
 	data-target="#chan-{{id}}"
 	role="tab"
+	aria-label="{{name}}"
 	aria-controls="chan-{{id}}"
 	aria-selected="false"
 >
