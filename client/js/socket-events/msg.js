@@ -29,22 +29,6 @@ socket.on("msg", function(data) {
 	let channel = receivingChannel.channel;
 	const isActiveChannel = vueApp.activeChannel && vueApp.activeChannel.channel === channel;
 
-	// Do not set unread counter for channel if it is currently active on this client
-	// It may increase on the server before it processes channel open event from this client
-	if (!isActiveChannel) {
-		if (typeof data.highlight !== "undefined") {
-			channel.highlight = data.highlight;
-		}
-
-		if (typeof data.unread !== "undefined") {
-			channel.unread = data.unread;
-		}
-	}
-
-	if (data.msg.self || data.msg.highlight) {
-		utils.synchronizeNotifiedState();
-	}
-
 	// Display received notices and errors in currently active channel.
 	// Reloading the page will put them back into the lobby window.
 	// We only want to put errors/notices in active channel if they arrive on the same network
@@ -52,6 +36,17 @@ socket.on("msg", function(data) {
 		channel = vueApp.activeChannel.channel;
 
 		data.chan = channel.id;
+	} else if (!isActiveChannel) {
+		// Do not set unread counter for channel if it is currently active on this client
+		// It may increase on the server before it processes channel open event from this client
+
+		if (typeof data.highlight !== "undefined") {
+			channel.highlight = data.highlight;
+		}
+
+		if (typeof data.unread !== "undefined") {
+			channel.unread = data.unread;
+		}
 	}
 
 	channel.messages.push(data.msg);
@@ -83,6 +78,10 @@ socket.on("msg", function(data) {
 		if (user) {
 			user.lastMessage = (new Date(data.msg.time)).getTime() || Date.now();
 		}
+	}
+
+	if (data.msg.self || data.msg.highlight) {
+		utils.synchronizeNotifiedState();
 	}
 });
 
