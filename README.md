@@ -26,12 +26,9 @@
 	<a href="https://yarn.pm/thelounge"><img
 		alt="npm version"
 		src="https://img.shields.io/npm/v/thelounge.svg?style=flat-square&maxAge=3600"></a>
-	<a href="https://travis-ci.org/thelounge/thelounge"><img
+	<a href="https://travis-ci.com/thelounge/thelounge"><img
 		alt="Travis CI Build Status"
-		src="https://img.shields.io/travis/thelounge/thelounge/master.svg?label=linux&style=flat-square&maxAge=60"></a>
-	<a href="https://ci.appveyor.com/project/astorije/lounge/branch/master"><img
-		alt="AppVeyor Build Status"
-		src="https://img.shields.io/appveyor/ci/astorije/lounge/master.svg?label=windows&style=flat-square&maxAge=60"></a>
+		src="https://img.shields.io/travis/com/thelounge/thelounge/master.svg?style=flat-square&maxAge=60"></a>
 	<a href="https://david-dm.org/thelounge/thelounge"><img
 		alt="Dependencies Status"
 		src="https://img.shields.io/david/thelounge/thelounge.svg?style=flat-square&maxAge=3600"></a>

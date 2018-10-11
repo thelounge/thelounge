@@ -6,10 +6,20 @@ node_js:
 - 8 # EOL: December 2019
 - 6 # EOL: April 2019
 
+os:
+  - linux
+
 matrix:
   fast_finish: true
   include:
-    - node_js: 8 # Version used to deploy to npm registry
+    - node_js: 8
+      os: windows
+      env: YARN_GPG=no # starts gpg-agent that never exits
+    - node_js: 8
+      os: osx
+    - name: "Production build"
+      node_js: 8 # Version used to deploy to npm registry
+      os: linux
       env: BUILD_ENV=production
 
 cache: yarn
@@ -18,7 +28,7 @@ before_script:
   - NODE_ENV=$BUILD_ENV yarn build
 
 install:
-  - yarn --frozen-lockfile
+  - yarn --frozen-lockfile --non-interactive --network-timeout 300000
 
 notifications:
   email:
