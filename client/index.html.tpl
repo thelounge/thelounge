@@ -3,7 +3,7 @@
 	<head>
 
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, user-scalable=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 	<link rel="preload" as="script" href="js/bundle.vendor.js">
 	<link rel="preload" as="script" href="js/bundle.js">
