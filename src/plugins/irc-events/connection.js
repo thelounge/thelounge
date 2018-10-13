@@ -149,8 +149,14 @@ module.exports = function(irc, network) {
 			network.prefixLookup[mode.mode] = mode.symbol;
 		});
 
-		network.serverOptions.CHANTYPES = data.options.CHANTYPES;
-		network.serverOptions.PREFIX = data.options.PREFIX.map((p) => p.symbol);
+		if (data.options.CHANTYPES) {
+			network.serverOptions.CHANTYPES = data.options.CHANTYPES;
+		}
+
+		if (network.serverOptions.PREFIX) {
+			network.serverOptions.PREFIX = data.options.PREFIX.map((p) => p.symbol);
+		}
+
 		network.serverOptions.NETWORK = data.options.NETWORK;
 
 		client.emit("network:options", {
