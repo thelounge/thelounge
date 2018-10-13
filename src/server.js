@@ -46,6 +46,7 @@ module.exports = function() {
 	};
 
 	const app = express()
+		.set("env", "production")
 		.disable("x-powered-by")
 		.use(allRequests)
 		.use(index)
