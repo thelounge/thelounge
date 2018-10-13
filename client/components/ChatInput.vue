@@ -51,7 +51,7 @@ const upload = require("../js/upload");
 const Mousetrap = require("mousetrap");
 const {wrapCursor} = require("undate");
 
-const colorsHotkeys = {
+const formattingHotkeys = {
 	k: "\x03",
 	b: "\x02",
 	u: "\x1F",
@@ -94,10 +94,10 @@ export default {
 
 		const inputTrap = Mousetrap(this.$refs.input);
 
-		for (const hotkey in colorsHotkeys) {
+		for (const hotkey in formattingHotkeys) {
 			inputTrap.bind("mod+" + hotkey, function(e) {
 				// Key is lowercased because keybinds also get processed if caps lock is on
-				const modifier = colorsHotkeys[e.key.toLowerCase()];
+				const modifier = formattingHotkeys[e.key.toLowerCase()];
 
 				wrapCursor(
 					e.target,
@@ -211,7 +211,7 @@ export default {
 				const args = text.substr(1).split(" ");
 				const cmd = args.shift().toLowerCase();
 
-				if (commands[cmd] && commands[cmd].input(args)) {
+				if (commands.hasOwnProperty(cmd) && commands[cmd].input(args)) {
 					return false;
 				}
 			}
