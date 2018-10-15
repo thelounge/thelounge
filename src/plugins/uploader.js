@@ -52,7 +52,7 @@ class Uploader {
 			} while (fs.stat(destPath, (err) => (err ? true : false)));
 
 			fsextra.move(data.file.pathName, destPath).then(() => {
-				const slug = path.basename(data.file.pathName);
+				const slug = encodeURIComponent(path.basename(data.file.pathName));
 				const url = `uploads/${randomName}/${slug}`;
 				socket.emit("upload:success", url);
 			}).catch(() => {
