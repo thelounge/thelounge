@@ -74,7 +74,7 @@
 		</div>
 		<div
 			v-if="this.$root.currentUserVisibleError"
-			id="connection-error"
+			id="user-visible-error"
 			@click="hideUserVisibleError">{{ this.$root.currentUserVisibleError }}</div>
 		<span id="upload-progressbar" />
 		<ChatInput

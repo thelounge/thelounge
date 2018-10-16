@@ -1959,11 +1959,11 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	align-items: flex-end;
 }
 
-#connection-error {
-	font-size: 12px;
-	line-height: 36px;
-	font-weight: bold;
-	letter-spacing: 1px;
+#user-visible-error {
+	font-size: 14px;
+	line-height: 1.5;
+	font-weight: 600;
+	padding: 10px;
 	word-spacing: 3px;
 	text-transform: uppercase;
 	background: #e74c3c;
