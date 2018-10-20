@@ -29,13 +29,13 @@
 				<label for="connect:name">Name</label>
 			</div>
 			<div class="col-sm-9">
-				<input class="input" id="connect:name" name="name" value="{{defaults.name}}">
+				<input class="input" id="connect:name" name="name" value="{{defaults.name}}" maxlength="100">
 			</div>
 			<div class="col-sm-3">
 				<label for="connect:host">Server</label>
 			</div>
 			<div class="col-sm-6 col-xs-8">
-				<input class="input" id="connect:host" name="host" value="{{defaults.host}}" aria-label="Server address" required {{#if lockNetwork}}disabled{{/if}}>
+				<input class="input" id="connect:host" name="host" value="{{defaults.host}}" aria-label="Server address" maxlength="255" required {{#if lockNetwork}}disabled{{/if}}>
 			</div>
 			<div class="col-sm-3 col-xs-4">
 				<div class="port">
@@ -65,28 +65,28 @@
 			<label for="connect:nick">Nick</label>
 		</div>
 		<div class="col-sm-9">
-			<input class="input nick" id="connect:nick" name="nick" value="{{defaults.nick}}" required>
+			<input class="input nick" id="connect:nick" name="nick" value="{{defaults.nick}}" maxlength="100" required>
 		</div>
 	{{#unless useHexIp}}
 		<div class="col-sm-3">
 			<label for="connect:username">Username</label>
 		</div>
 		<div class="col-sm-9">
-			<input class="input username" id="connect:username" name="username" value="{{defaults.username}}">
+			<input class="input username" id="connect:username" name="username" value="{{defaults.username}}" maxlength="512">
 		</div>
 	{{/unless}}
 		<div class="col-sm-3">
 			<label for="connect:password">Password</label>
 		</div>
 		<div class="col-sm-9 password-container">
-			<input class="input" id="connect:password" type="password" name="password" value="{{defaults.password}}">
+			<input class="input" id="connect:password" type="password" name="password" value="{{defaults.password}}" maxlength="512">
 			{{> ../reveal-password}}
 		</div>
 		<div class="col-sm-3">
 			<label for="connect:realname">Real name</label>
 		</div>
 		<div class="col-sm-9">
-			<input class="input" id="connect:realname" name="realname" value="{{defaults.realname}}">
+			<input class="input" id="connect:realname" name="realname" value="{{defaults.realname}}" maxlength="512">
 		</div>
 	{{#if defaults.uuid}}
 		<div class="col-sm-3">

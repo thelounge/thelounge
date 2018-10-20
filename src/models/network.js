@@ -64,6 +64,11 @@ function Network(attr) {
 }
 
 Network.prototype.validate = function(client) {
+	// If entered nick is over 100 characters, limit it so we don't try to compile a big regex
+	if (this.nick && this.nick.length > 100) {
+		this.nick = this.nick.substring(0, 100);
+	}
+
 	this.setNick(String(this.nick || Helper.getDefaultNick()).replace(" ", "_"));
 
 	if (!this.username) {
