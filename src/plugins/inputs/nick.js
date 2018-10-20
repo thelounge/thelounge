@@ -24,6 +24,14 @@ exports.input = function(network, chan, cmd, args) {
 
 	const newNick = args[0];
 
+	if (newNick.length > 100) {
+		chan.pushMessage(this, new Msg({
+			type: Msg.Type.ERROR,
+			text: "Nicknames may not be this long.",
+		}));
+		return;
+	}
+
 	// If connected to IRC, send to server and wait for ACK
 	// otherwise update the nick and UI straight away
 	if (network.irc && network.irc.connection) {
