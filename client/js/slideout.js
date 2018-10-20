@@ -28,20 +28,19 @@ class SlideoutMenu {
 }
 
 function onTouchStart(e) {
+	touchStartPos = touchCurPos = e.touches.item(0);
+
 	if (e.touches.length !== 1) {
 		onTouchEnd();
 		return;
 	}
 
-	const touch = e.touches.item(0);
 	const styles = window.getComputedStyle(menu);
 
 	menuWidth = parseFloat(styles.width);
 	menuIsAbsolute = styles.position === "absolute";
 
-	if (!menuIsOpen || touch.screenX > menuWidth) {
-		touchStartPos = touch;
-		touchCurPos = touch;
+	if (!menuIsOpen || touchStartPos.screenX > menuWidth) {
 		touchStartTime = Date.now();
 
 		document.body.addEventListener("touchmove", onTouchMove, {passive: true});
