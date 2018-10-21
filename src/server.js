@@ -295,7 +295,7 @@ function initializeClient(socket, client, token, lastMessage) {
 	}
 
 	socket.on("disconnect", function() {
-		client.clientDetach(socket.id);
+		process.nextTick(() => client.clientDetach(socket.id));
 	});
 
 	socket.on("input", (data) => {

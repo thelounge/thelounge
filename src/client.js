@@ -404,9 +404,14 @@ Client.prototype.more = function(data) {
 };
 
 Client.prototype.open = function(socketId, target) {
+	// Due to how socket.io works internally, normal events may arrive later than
+	// the disconnect event, and because we can't control this timing precisely,
+	// process this event normally even if there is no attached client anymore.
+	const attachedClient = this.attachedClients[socketId] || {};
+
 	// Opening a window like settings
 	if (target === null) {
-		this.attachedClients[socketId].openChannel = -1;
+		attachedClient.openChannel = -1;
 		return;
 	}
 
@@ -420,7 +425,7 @@ Client.prototype.open = function(socketId, target) {
 	target.chan.unread = 0;
 	target.chan.highlight = 0;
 
-	this.attachedClients[socketId].openChannel = target.chan.id;
+	attachedClient.openChannel = target.chan.id;
 	this.lastActiveChannel = target.chan.id;
 
 	this.emit("open", target.chan.id);
