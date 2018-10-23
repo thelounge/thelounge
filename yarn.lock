@@ -6786,9 +6786,9 @@ sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
 
-sqlite3@4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/sqlite3/-/sqlite3-4.0.2.tgz#1bbeb68b03ead5d499e42a3a1b140064791c5a64"
+sqlite3@4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/sqlite3/-/sqlite3-4.0.3.tgz#da8c167a87941657fd22e27b248aa371e192b715"
   dependencies:
     nan "~2.10.0"
     node-pre-gyp "^0.10.3"
