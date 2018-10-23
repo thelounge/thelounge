@@ -2830,9 +2830,9 @@ file-entry-cache@^2.0.0:
     flat-cache "^1.2.1"
     object-assign "^4.0.1"
 
-file-type@10.0.0:
-  version "10.0.0"
-  resolved "https://registry.yarnpkg.com/file-type/-/file-type-10.0.0.tgz#084f32ab827238aa9a1482195ca7448c77a006b3"
+file-type@10.1.0:
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/file-type/-/file-type-10.1.0.tgz#f692a28722e1ac8e206e68fcc2fb032a759d16d0"
 
 filename-regex@^2.0.0:
   version "2.0.1"
