@@ -2,9 +2,10 @@ language: node_js
 
 # https://github.com/nodejs/Release
 node_js:
-- 10 # EOL: April 2021
-- 8 # EOL: December 2019
-- 6 # EOL: April 2019
+  - 11 # EOL: June 2019
+  - 10 # EOL: April 2021
+  - 8 # EOL: December 2019
+  - 6 # EOL: April 2019
 
 os:
   - linux
