@@ -62,16 +62,15 @@ module.exports = {
 
 	// ### `https`
 	//
-	// These three settings are used to run The Lounge using encrypted HTTP/2 on
-	// the server side. This will fallback to regular HTTPS if HTTP/2 is not
-	// supported.
+	// These settings are used to run The Lounge's web server using encrypted TLS.
 	//
 	// If you want more control over the webserver,
 	// [use a reverse proxy instead](https://thelounge.chat/docs/guides/reverse-proxies.html).
 	//
 	// The available keys for the `https` object are:
 	//
-	// - `enable`
+	// - `enable`: when set to `false`, HTTPS support is disabled
+	//    and all other values are ignored.
 	// - `key`: Path to the private key file.
 	// - `certificate`: Path to the certificate.
 	// - `ca`: Path to the CA bundle.
@@ -187,18 +186,19 @@ module.exports = {
 	//
 	// - `name`: Name to display in the channel list of The Lounge. This value is
 	//   not forwarded to the IRC network.
-	// - `host`
+	// - `host`: IP address or hostname of the IRC server.
 	// - `port`: Usually 6667 for unencrypted connections and 6697 for
 	//   connections encrypted with TLS.
-	// - `password`
+	// - `password`: Connection password. If the server supports SASL capability,
+	//   then this password will be used in SASL authentication.
 	// - `tls`: Enable TLS connections
 	// - `rejectUnauthorized`: Whether the server certificate should be verified
 	//   against the list of supplied Certificate Authorities (CAs) by your
 	//   Node.js installation.
-	// - `nick`: Percent signs (`%`) will be replaced by random numbers from 0 to
-	//   9. For example, `Guest%%%` may become `Guest123`.
-	// - `username`
-	// - `realname`
+	// - `nick`: Nick name. Percent signs (`%`) will be replaced by random
+	//   numbers from 0 to 9. For example, `Guest%%%` may become `Guest123`.
+	// - `username`: User name.
+	// - `realname`: Real name.
 	// - `join`: Comma-separated list of channels to auto-join once connected.
 	//
 	// This value is set to connect to the official channel of The Lounge on
@@ -408,7 +408,7 @@ module.exports = {
 		// - `searchDN`: LDAP search DN settings. This defines the procedure by
 		//   which The Lounge first looks for the user DN before authenticating them.
 		//   It is ignored if `baseDN` is specified. It is an object with the
-		// following keys:
+		//   following keys:
 		searchDN: {
 			//   - `rootDN`: This bind DN is used to query the server for the DN of
 			//     the user. This is supposed to be a system user that has access in
