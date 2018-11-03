@@ -38,7 +38,7 @@
 </p>
 
 <p align="center">
-	<img src="https://user-images.githubusercontent.com/613331/44947980-3b2f2f00-ae1e-11e8-9bd9-9e1aff5cd7e1.png" width="550">
+	<img src="https://raw.githubusercontent.com/thelounge/thelounge.github.io/master/img/screenshots/app.png" width="550">
 </p>
 
 ## Overview
