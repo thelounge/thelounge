@@ -117,8 +117,16 @@ function setHome(newPath) {
 		log.warn(`${colors.bold("displayNetwork")} and ${colors.bold("lockNetwork")} are false, setting ${colors.bold("lockNetwork")} to true.`);
 	}
 
-	// Load theme color from manifest.json
-	const manifest = require("../public/manifest.json");
+	const manifestPath = path.resolve(path.join(__dirname, "..", "public", "thelounge.webmanifest"));
+
+	// Check if manifest exists, if not, the app most likely was not built
+	if (!fs.existsSync(manifestPath)) {
+		log.error(`The client application was not built. Run ${colors.bold("NODE_ENV=production yarn build")} to resolve this.`);
+		process.exit(1);
+	}
+
+	// Load theme color from the web manifest
+	const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 	this.config.themeColor = manifest.theme_color;
 
 	// TODO: Remove in future release

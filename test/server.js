@@ -41,11 +41,12 @@ describe("Server", function() {
 		});
 
 		it("should serve static content correctly", (done) => {
-			request(webURL + "manifest.json", (error, response, body) => {
+			request(webURL + "thelounge.webmanifest", (error, response, body) => {
 				expect(error).to.be.null;
 
 				body = JSON.parse(body);
 				expect(body.name).to.equal("The Lounge");
+				expect(response.headers["content-type"]).to.equal("application/manifest+json");
 
 				done();
 			});

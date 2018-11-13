@@ -5,7 +5,6 @@ const log = require("../log");
 const fs = require("fs");
 const path = require("path");
 const program = require("commander");
-const colors = require("chalk");
 const Helper = require("../helper");
 const Utils = require("./utils");
 
@@ -19,18 +18,6 @@ program.version(Helper.getVersion(), "-v, --version")
 
 // Parse options from `argv` returning `argv` void of these options.
 const argvWithoutOptions = program.parseOptions(process.argv);
-
-// Check if the app was built before calling setHome as it wants to load manifest.json from the public folder
-if (!fs.existsSync(path.join(
-	__dirname,
-	"..",
-	"..",
-	"public",
-	"manifest.json"
-))) {
-	log.error(`The client application was not built. Run ${colors.bold("NODE_ENV=production yarn build")} to resolve this.`);
-	process.exit(1);
-}
 
 Helper.setHome(process.env.THELOUNGE_HOME || Utils.defaultHome());
 
