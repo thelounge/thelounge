@@ -124,7 +124,7 @@ class Uploader {
 		let type;
 
 		try {
-			buffer = readChunk.sync(filePath, 0, 4100);
+			buffer = readChunk.sync(filePath, 0, fileType.minimumBytes);
 		} catch (e) {
 			if (e.code === "ENOENT") { // doesn't exist
 				return;
