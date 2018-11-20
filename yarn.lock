@@ -5846,15 +5846,15 @@ prepend-http@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-2.0.0.tgz#e92434bfa5ea8c19f41cdfd401d741a3c819d897"
 
-primer-support@4.6.1:
-  version "4.6.1"
-  resolved "https://registry.yarnpkg.com/primer-support/-/primer-support-4.6.1.tgz#60f2fe176238abf0c410db193f8cfa9c8f3f1b81"
+primer-support@4.7.0:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/primer-support/-/primer-support-4.7.0.tgz#84521e06f9b17a7eb8cedf1e6c79a5f4933e18f6"
 
-primer-tooltips@1.5.8:
-  version "1.5.8"
-  resolved "https://registry.yarnpkg.com/primer-tooltips/-/primer-tooltips-1.5.8.tgz#a6afffbdfe48bdbbdc71c29cb93f59678d025b9c"
+primer-tooltips@1.5.9:
+  version "1.5.9"
+  resolved "https://registry.yarnpkg.com/primer-tooltips/-/primer-tooltips-1.5.9.tgz#a3ac66fee10068deef4e4bce6787025febe783fc"
   dependencies:
-    primer-support "4.6.1"
+    primer-support "4.7.0"
 
 private@^0.1.6:
   version "0.1.8"
