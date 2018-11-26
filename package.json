@@ -92,7 +92,7 @@
     "istanbul-instrumenter-loader": "3.0.1",
     "jquery": "3.3.1",
     "jquery-ui": "1.12.1",
-    "mini-css-extract-plugin": "0.4.4",
+    "mini-css-extract-plugin": "0.4.5",
     "mocha": "5.2.0",
     "mocha-loader": "2.0.0",
     "mocha-webpack": "2.0.0-beta.0",
