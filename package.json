@@ -49,7 +49,7 @@
     "fs-extra": "7.0.1",
     "irc-framework": "4.0.0",
     "is-utf8": "0.2.1",
-    "linkify-it": "2.0.3",
+    "linkify-it": "2.1.0",
     "lodash": "4.17.11",
     "mime-types": "2.1.21",
     "moment": "2.22.2",
