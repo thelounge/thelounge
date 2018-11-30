@@ -80,7 +80,7 @@ When installation is complete, run:
 thelounge start
 ```
 
-For more information, read the [documentation](https://thelounge.chat/docs/), [wiki](https://github.com/thelounge/thelounge/wiki), or run:
+For more information, read the [usage documentation](https://thelounge.chat/docs/usage) or run:
 
 ```sh
 thelounge --help
@@ -111,5 +111,6 @@ fork.
 Before submitting any change, make sure to:
 
 - Read the [Contributing instructions](https://github.com/thelounge/thelounge/blob/master/.github/CONTRIBUTING.md#contributing)
-- Run `npm test` to execute linters and test suite
-- Run `npm run build` if you change or add anything in `client/js` or `client/views`
+- Run `yarn test` to execute linters and test suite
+- Run `yarn build` if you change or add anything in `client/js` or `client/views`
+- `yarn dev` can be used to start The Lounge and watch for any file changes in the client folder
