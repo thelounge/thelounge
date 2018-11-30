@@ -28,6 +28,7 @@ const configContent = readFileSync(
 const docPath = join(process.argv[2], "_includes", "config.js.md");
 
 const extractedDoc = configContent
+	.replace(/https:\/\/thelounge\.chat\/docs/g, "/docs") // make links relative
 	.split("\n")
 	.reduce((acc, line) => {
 		line = line.trim();
