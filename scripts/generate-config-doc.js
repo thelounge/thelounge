@@ -9,7 +9,7 @@
 // ```
 
 const {readFileSync, writeFileSync} = require("fs");
-const colors = require("colors/safe");
+const colors = require("chalk");
 const log = require("../src/log");
 const {join} = require("path");
 const {spawnSync} = require("child_process");
