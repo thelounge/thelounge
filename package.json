@@ -70,8 +70,8 @@
     "sqlite3": "4.0.4"
   },
   "devDependencies": {
-    "@babel/core": "7.1.6",
-    "@babel/preset-env": "7.1.6",
+    "@babel/core": "7.2.0",
+    "@babel/preset-env": "7.2.0",
     "@fortawesome/fontawesome-free": "5.5.0",
     "babel-loader": "8.0.4",
     "chai": "4.2.0",
