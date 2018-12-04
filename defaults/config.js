@@ -151,7 +151,7 @@ module.exports = {
 	// - `enable`: When set to `true`, files can be uploaded on the client with a
 	//   drag-and-drop or using the upload dialog.
 	// - `maxFileSize`: When file upload is enabled, users sending files above
-	//   this limit will be prompted an error message in their browser. A value of
+	//   this limit will be prompted with an error message in their browser. A value of
 	//   `-1` disables the file size limit and allows files of any size. **Use at
 	//   your own risk.** This value is set to `10240` kilobytes by default.
 	fileUpload: {
