@@ -580,11 +580,11 @@ function isFeature({labels}) {
 //   chore(deps): update dependency mini-css-extract-plugin to v0.4.3
 //   fix(deps): update dependency web-push to v3.3.3
 //   chore(deps): update babel monorepo to v7.1.0
-function extractPackages(title) {
+function extractPackages({title, url}) {
 	const extracted = /(?:U|u)pdate(?: dependency)? ([\w-,` ./@]+?) (?:monorepo )?to /.exec(title);
 
 	if (!extracted) {
-		log.warn(`Failed to extract package from: ${title}`);
+		log.warn(`Failed to extract package from: ${title}  ${colors.gray(url)}`);
 		return [];
 	}
 
@@ -601,7 +601,7 @@ function parse(entries) {
 
 		if (isSkipped(entry)) {
 			result.skipped.push(entry);
-		} else if (isDependency(entry) && (deps = extractPackages(entry.title))) {
+		} else if (isDependency(entry) && (deps = extractPackages(entry))) {
 			deps.forEach((packageName) => {
 				const dependencyType = whichDependencyType(packageName);
 
@@ -612,7 +612,7 @@ function parse(entries) {
 
 					result[dependencyType][packageName].push(entry);
 				} else {
-					log.info(`${colors.bold(packageName)} was updated in ${colors.green("#" + entry.number)} then removed since last release. Skipping.`);
+					log.info(`${colors.bold(packageName)} was updated in ${colors.green("#" + entry.number)} then removed since last release. Skipping.  ${colors.gray(entry.url)}`);
 				}
 			});
 		} else if (isDocumentation(entry)) {
