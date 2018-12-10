@@ -78,7 +78,11 @@ if (!version) {
 	version = semver.inc(packageJson.version, process.argv[2]);
 }
 
-if (!/^[0-9]+\.[0-9]+\.[0-9]+(-(pre|rc)+\.[0-9]+)?$/.test(version)) {
+function isValidVersion(str) {
+	return (/^[0-9]+\.[0-9]+\.[0-9]+(-(pre|rc)+\.[0-9]+)?$/.test(str));
+}
+
+if (!isValidVersion(version)) {
 	log.error(`Argument ${colors.bold("version")} is incorrect It must be either:`);
 	log.error(`- A keyword among: ${colors.green("major")}, ${colors.green("minor")}, ${colors.green("patch")}, ${colors.green("prerelease")}, ${colors.green("pre")}`);
 	log.error(`- An explicit version of format ${colors.green("x.y.z")} (stable) or ${colors.green("x.y.z-(pre|rc).n")} (pre-release).`);
@@ -526,7 +530,15 @@ function hasAnnotatedComment(comments, expected) {
 }
 
 function isSkipped(entry) {
-	return hasLabelOrAnnotatedComment(entry, "Meta: Skip Changelog");
+	return (
+		(entry.messageHeadline && (
+			// Version bump commits created by `yarn version`
+			isValidVersion(entry.messageHeadline) ||
+			// Commit message suggested by this script
+			entry.messageHeadline.startsWith("Add changelog entry for v")
+		)) ||
+		hasLabelOrAnnotatedComment(entry, "Meta: Skip Changelog")
+	);
 }
 
 // Dependency update PRs are listed in a special, more concise way in the changelog.
