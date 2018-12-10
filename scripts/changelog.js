@@ -525,7 +525,7 @@ function hasLabel(labels, expected) {
 function hasAnnotatedComment(comments, expected) {
 	return comments && comments.nodes.some(({authorAssociation, body}) =>
 		["OWNER", "MEMBER"].includes(authorAssociation) &&
-		body.split("\n").includes(`[${expected}]`)
+		body.split("\r\n").includes(`[${expected}]`)
 	);
 }
 
