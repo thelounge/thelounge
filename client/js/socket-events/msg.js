@@ -49,6 +49,15 @@ socket.on("msg", function(data) {
 		}
 	}
 
+	// See if any of the custom highlight regexes match
+	// TODO: This needs to be done on the server side with settings sync
+	if (!data.msg.highlight && !data.msg.self
+		&& (data.msg.type === "message" || data.msg.type === "notice")
+		&& options.highlightsRE
+		&& options.highlightsRE.exec(data.msg.text)) {
+		data.msg.highlight = true;
+	}
+
 	channel.messages.push(data.msg);
 
 	if (data.msg.self) {
