@@ -205,6 +205,12 @@ function expandHome(shortenedPath) {
 		return "";
 	}
 
+	// no need to lookup the home dir if path doesn't contain '~'.
+	// os.homedir might throw and nothing will be expanded anyways.
+	if (shortenedPath.indexOf("~") === -1) {
+		return path.resolve(shortenedPath);
+	}
+
 	const home = os.homedir().replace("$", "$$$$");
 	return path.resolve(shortenedPath.replace(/^~($|\/|\\)/, home + "$1"));
 }
