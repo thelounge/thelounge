@@ -78,7 +78,11 @@ if (!version) {
 	version = semver.inc(packageJson.version, process.argv[2]);
 }
 
-if (!/^[0-9]+\.[0-9]+\.[0-9]+(-(pre|rc)+\.[0-9]+)?$/.test(version)) {
+function isValidVersion(str) {
+	return (/^[0-9]+\.[0-9]+\.[0-9]+(-(pre|rc)+\.[0-9]+)?$/.test(str));
+}
+
+if (!isValidVersion(version)) {
 	log.error(`Argument ${colors.bold("version")} is incorrect It must be either:`);
 	log.error(`- A keyword among: ${colors.green("major")}, ${colors.green("minor")}, ${colors.green("patch")}, ${colors.green("prerelease")}, ${colors.green("pre")}`);
 	log.error(`- An explicit version of format ${colors.green("x.y.z")} (stable) or ${colors.green("x.y.z-(pre|rc).n")} (pre-release).`);
@@ -151,7 +155,7 @@ ${printList(items.documentation)}`
 }
 
 ${_.isEmpty(items.websiteDocumentation) ? "" :
-		`On the [website repository](https://github.com/thelounge/thelounge.chat):
+		`On the [website repository](https://github.com/thelounge/thelounge.github.io):
 
 ${printList(items.websiteDocumentation)}`
 }
@@ -340,13 +344,25 @@ class RepositoryFetcher {
 		return data.repository.milestones.nodes.find(({title}) => title === targetVersion);
 	}
 
+	async fetchChunkedPullRequests(numbers) {
+		const chunks = _.chunk(numbers, 100);
+		let result = {};
+
+		for (const chunk of chunks) {
+			const data = await this.fetchPullRequests(chunk);
+			result = _.merge(result, data);
+		}
+
+		return result;
+	}
+
 	// Given a list of PR numbers, retrieve information for all those PRs. They
 	// are returned as a hash whose keys are `PR<number>`.
 	// This is a bit wonky (generating a dynamic GraphQL query) but the GitHub API
 	// does not have a way to retrieve multiple PRs given a list of IDs.
 	async fetchPullRequests(numbers) {
 		if (numbers.length === 0) {
-			return [];
+			return {};
 		}
 
 		const prQuery = `query fetchPullRequests($repositoryName: String!) {
@@ -386,7 +402,7 @@ class RepositoryFetcher {
 		const taggedCommit = await this.fetchTaggedCommit(tag);
 		const commits = await this.fetchCommitsSince(taggedCommit);
 		const pullRequestIds = pullRequestNumbersInCommits(commits);
-		const pullRequests = await this.fetchPullRequests(pullRequestIds);
+		const pullRequests = await this.fetchChunkedPullRequests(pullRequestIds);
 		return combine(commits, pullRequests);
 	}
 }
@@ -485,11 +501,12 @@ ${printList(items)}
 
 const dependencies = Object.keys(packageJson.dependencies);
 const devDependencies = Object.keys(packageJson.devDependencies);
+const optionalDependencies = Object.keys(packageJson.optionalDependencies);
 
 // Returns the package.json section in which that package exists, or undefined
 // if that package is not listed there.
 function whichDependencyType(packageName) {
-	if (dependencies.includes(packageName)) {
+	if (dependencies.includes(packageName) || optionalDependencies.includes(packageName)) {
 		return "dependencies";
 	} else if (devDependencies.includes(packageName)) {
 		return "devDependencies";
@@ -508,12 +525,20 @@ function hasLabel(labels, expected) {
 function hasAnnotatedComment(comments, expected) {
 	return comments && comments.nodes.some(({authorAssociation, body}) =>
 		["OWNER", "MEMBER"].includes(authorAssociation) &&
-		body.split("\n").includes(`[${expected}]`)
+		body.split("\r\n").includes(`[${expected}]`)
 	);
 }
 
 function isSkipped(entry) {
-	return hasLabelOrAnnotatedComment(entry, "Meta: Skip Changelog");
+	return (
+		(entry.messageHeadline && (
+			// Version bump commits created by `yarn version`
+			isValidVersion(entry.messageHeadline) ||
+			// Commit message suggested by this script
+			entry.messageHeadline.startsWith("Add changelog entry for v")
+		)) ||
+		hasLabelOrAnnotatedComment(entry, "Meta: Skip Changelog")
+	);
 }
 
 // Dependency update PRs are listed in a special, more concise way in the changelog.
@@ -550,8 +575,20 @@ function isFeature({labels}) {
 //   Update `stylelint` to v1.2.3
 //   Update `express` and `ua-parser-js` to latest versions
 //   Update `express`, `chai`, and `ua-parser-js` to ...
-function extractPackages(title) {
-	return /^Update ([\w-,`. ]+) to /.exec(title)[1]
+//   Update @fortawesome/fontawesome-free-webfonts to the latest version
+//   Update dependency request to v2.87.0
+//   chore(deps): update dependency mini-css-extract-plugin to v0.4.3
+//   fix(deps): update dependency web-push to v3.3.3
+//   chore(deps): update babel monorepo to v7.1.0
+function extractPackages({title, url}) {
+	const extracted = /(?:U|u)pdate(?: dependency)? ([\w-,` ./@]+?) (?:monorepo )?to /.exec(title);
+
+	if (!extracted) {
+		log.warn(`Failed to extract package from: ${title}  ${colors.gray(url)}`);
+		return [];
+	}
+
+	return extracted[1]
 		.replace(/`/g, "")
 		.split(/, and |, | and /);
 }
@@ -560,10 +597,12 @@ function extractPackages(title) {
 // based on different information that describes them.
 function parse(entries) {
 	return entries.reduce((result, entry) => {
+		let deps;
+
 		if (isSkipped(entry)) {
 			result.skipped.push(entry);
-		} else if (isDependency(entry)) {
-			extractPackages(entry.title).forEach((packageName) => {
+		} else if (isDependency(entry) && (deps = extractPackages(entry))) {
+			deps.forEach((packageName) => {
 				const dependencyType = whichDependencyType(packageName);
 
 				if (dependencyType) {
@@ -573,7 +612,7 @@ function parse(entries) {
 
 					result[dependencyType][packageName].push(entry);
 				} else {
-					log.info(`${colors.bold(packageName)} was updated in ${colors.green("#" + entry.number)} then removed since last release. Skipping.`);
+					log.info(`${colors.bold(packageName)} was updated in ${colors.green("#" + entry.number)} then removed since last release. Skipping.  ${colors.gray(entry.url)}`);
 				}
 			});
 		} else if (isDocumentation(entry)) {
@@ -654,8 +693,9 @@ async function generateChangelogEntry(targetVersion) {
 		items.milestone = await codeRepo.fetchMilestone(targetVersion);
 		contributors = extractContributors(codeCommitsAndPullRequests);
 
-		const websiteRepo = new RepositoryFetcher(client, "thelounge.chat");
-		items.websiteDocumentation = await websiteRepo.fetchCommitsAndPullRequestsSince("v" + previousVersion);
+		const websiteRepo = new RepositoryFetcher(client, "thelounge.github.io");
+		const previousWebsiteVersion = await websiteRepo.fetchPreviousVersion(targetVersion);
+		items.websiteDocumentation = await websiteRepo.fetchCommitsAndPullRequestsSince("v" + previousWebsiteVersion);
 	}
 
 	items.version = targetVersion;
