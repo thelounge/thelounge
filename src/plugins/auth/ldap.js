@@ -18,12 +18,18 @@ function ldapAuthCommon(user, bindDN, password, callback) {
 
 	ldapclient.on("error", function(err) {
 		log.error(`Unable to connect to LDAP server: ${err}`);
-		callback(!err);
+		callback(false);
 	});
 
 	ldapclient.bind(bindDN, password, function(err) {
 		ldapclient.unbind();
-		callback(!err);
+
+		if (err) {
+			log.error(`LDAP bind failed: ${err}`);
+			callback(false);
+		} else {
+			callback(true);
+		}
 	});
 }
 
@@ -67,7 +73,7 @@ function advancedLdapAuth(user, password, callback) {
 
 	ldapclient.on("error", function(err) {
 		log.error(`Unable to connect to LDAP server: ${err}`);
-		callback(!err);
+		callback(false);
 	});
 
 	ldapclient.bind(config.ldap.searchDN.rootDN, config.ldap.searchDN.rootPassword, function(err) {
@@ -78,7 +84,7 @@ function advancedLdapAuth(user, password, callback) {
 		} else {
 			ldapclient.search(base, searchOptions, function(err2, res) {
 				if (err2) {
-					log.warn(`User not found: ${userDN}`);
+					log.warn(`LDAP User not found: ${userDN}`);
 					ldapclient.unbind();
 					callback(false);
 				} else {
@@ -95,10 +101,11 @@ function advancedLdapAuth(user, password, callback) {
 						log.error(`LDAP error: ${err3}`);
 						callback(false);
 					});
-					res.on("end", function() {
+					res.on("end", function(result) {
 						ldapclient.unbind();
 
 						if (!found) {
+							log.warn(`LDAP Search did not find anything for: ${userDN} (${result.status})`);
 							callback(false);
 						}
 					});
