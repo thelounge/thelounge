@@ -9,7 +9,7 @@
 				'hide-motd': !this.$root.settings.motd,
 				'colored-nicks': this.$root.settings.coloredNicks,
 				'show-seconds': this.$root.settings.showSeconds,
-		}">
+			}">
 			<div
 				:id="'chan-' + channel.id"
 				:class="[channel.type, 'chan', 'active']"
@@ -46,7 +46,7 @@
 					<div class="chat">
 						<div class="messages">
 							<div class="msg">
-								<component
+								<Component
 									:is="specialComponent"
 									:network="network"
 									:channel="channel" />
@@ -111,6 +111,8 @@ export default {
 			case "list_channels": return ListChannels;
 			case "list_ignored": return ListIgnored;
 			}
+
+			return undefined;
 		},
 	},
 	methods: {
