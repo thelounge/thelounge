@@ -89,6 +89,9 @@ rules:
   vue/require-default-prop: off
   vue/no-v-html: off
   vue/no-use-v-if-with-v-for: off
+  vue/html-closing-bracket-newline: [error, {singleline: never, multiline: never}]
+  vue/multiline-html-element-content-newline: off
+  vue/singleline-html-element-content-newline: off
 
 plugins:
   - vue
