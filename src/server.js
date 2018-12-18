@@ -181,6 +181,11 @@ module.exports = function() {
 				return;
 			}
 
+			log.info("Exiting...");
+
+			// Close all client and IRC connections
+			manager.clients.forEach((client) => client.quit());
+
 			if (Helper.config.prefetchStorage) {
 				log.info("Clearing prefetch storage folder, this might take a while...");
 
@@ -189,11 +194,6 @@ module.exports = function() {
 
 			// Forcefully exit after 3 seconds
 			suicideTimeout = setTimeout(() => process.exit(1), 3000);
-
-			log.info("Exiting...");
-
-			// Close all client and IRC connections
-			manager.clients.forEach((client) => client.quit());
 
 			// Close http server
 			server.close(() => {
