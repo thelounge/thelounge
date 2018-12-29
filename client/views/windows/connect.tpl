@@ -10,7 +10,7 @@
 
 					Edit {{defaults.name}}
 				{{else}}
-					{{#if public}}The Lounge - {{/if}}
+					{{#if public}}{{title}} - {{/if}}
 					Connect
 					{{#unless displayNetwork}}
 						{{#if lockNetwork}}

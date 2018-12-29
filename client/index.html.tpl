@@ -16,7 +16,7 @@
 	<% }); %>
 	<style id="user-specified-css"></style>
 
-	<title>The Lounge</title>
+	<title><%- title %></title>
 
 	<!-- Browser tab icon -->
 	<link id="favicon" rel="icon" sizes="16x16 32x32 64x64" href="img/favicon-normal.ico" data-other="img/favicon-alerted.ico" data-toggled="false" type="image/x-icon">
@@ -36,7 +36,7 @@
 	<link rel="apple-touch-icon" sizes="180x180" href="img/logo-grey-bg-180x180px.png">
 
 	<!-- Windows 8/10 - Edge tiles -->
-	<meta name="application-name" content="The Lounge">
+	<meta name="application-name" content="<%- title %>">
 	<meta name="msapplication-TileColor" content="<%- themeColor %>">
 	<meta name="msapplication-square70x70logo" content="img/logo-grey-bg-120x120px.png">
 	<meta name="msapplication-square150x150logo" content="img/logo-grey-bg-152x152px.png">
@@ -52,8 +52,8 @@
 			<aside id="sidebar">
 				<div class="scrollable-area">
 					<div class="logo-container">
-						<img src="img/logo-<%- public ? 'horizontal-' : '' %>transparent-bg.svg" class="logo" alt="The Lounge">
-						<img src="img/logo-<%- public ? 'horizontal-' : '' %>transparent-bg-inverted.svg" class="logo-inverted" alt="The Lounge">
+						<img src="img/logo-<%- public ? 'horizontal-' : '' %>transparent-bg.svg" class="logo" alt="<%- title %>">
+						<img src="img/logo-<%- public ? 'horizontal-' : '' %>transparent-bg-inverted.svg" class="logo-inverted" alt="<%- title %>">
 					</div>
 					<div class="networks"></div>
 					<div class="empty">
@@ -71,8 +71,8 @@
 			<article id="windows">
 				<div id="loading" class="window active">
 					<div id="loading-status-container">
-						<img src="img/logo-vertical-transparent-bg.svg" class="logo" alt="The Lounge" width="256" height="170">
-						<img src="img/logo-vertical-transparent-bg-inverted.svg" class="logo-inverted" alt="The Lounge" width="256" height="170">
+						<img src="img/logo-vertical-transparent-bg.svg" class="logo" alt="<%- title %>" width="256" height="170">
+						<img src="img/logo-vertical-transparent-bg-inverted.svg" class="logo-inverted" alt="<%- title %>" width="256" height="170">
 						<p id="loading-page-message"><a href="https://enable-javascript.com/" target="_blank" rel="noopener">Your JavaScript must be enabled.</a></p>
 					</div>
 					<div id="loading-reload-container">

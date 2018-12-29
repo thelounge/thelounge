@@ -595,6 +595,7 @@ function getClientConfiguration(network) {
 
 	config.fileUpload = Helper.config.fileUpload.enable;
 	config.ldapEnabled = Helper.config.ldap.enable;
+	config.title = Helper.config.title;
 
 	if (config.displayNetwork) {
 		config.defaults = _.clone(network || Helper.config.defaults);

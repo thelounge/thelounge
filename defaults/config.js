@@ -102,6 +102,15 @@ module.exports = {
 	// This value is set to `"default"` by default.
 	theme: "default",
 
+	// ### `title`
+	//
+	// Set the title for this installation of The Lounge. This will modify parts of
+	// the UI to brand your installation for your IRC network, such as the `<title>`
+	// HTML tag and connection page.
+	//
+	// This value is set to `The Lounge` by default.
+	title: "The Lounge",
+
 	// ### `prefetch`
 	//
 	// When set to `true`, The Lounge will load thumbnails and site descriptions
