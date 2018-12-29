@@ -1,6 +1,6 @@
 <form class="container" method="post" action="">
-	<img src="img/logo-vertical-transparent-bg.svg" class="logo" alt="The Lounge" width="256" height="170">
-	<img src="img/logo-vertical-transparent-bg-inverted.svg" class="logo-inverted" alt="The Lounge" width="256" height="170">
+	<img src="img/logo-vertical-transparent-bg.svg" class="logo" alt="{{title}}" width="256" height="170">
+	<img src="img/logo-vertical-transparent-bg-inverted.svg" class="logo-inverted" alt="{{title}}" width="256" height="170">
 
 	<label>Username</label>
 	<input class="input" type="text" name="user" autocapitalize="none" autocorrect="off" autocomplete="username" required autofocus>

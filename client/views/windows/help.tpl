@@ -9,11 +9,13 @@
 			v{{version}}
 			(<a href="#" id="view-changelog" data-target="#changelog">release notes</a>)
 		</small>
-		About The Lounge
+		About {{title}}
 	</h2>
 
 	<div class="about">
 		<div id="version-checker"></div>
+
+		<p>Powered by The Lounge</p>
 
 		{{#if gitCommit}}
 			<p>
@@ -413,7 +415,7 @@
 		</div>
 		<div class="description">
 			<p>
-				Send an action message to the current channel. The Lounge will
+				Send an action message to the current channel. {{title}} will
 				display it inline, as if the message was posted in the third
 				person.
 			</p>
