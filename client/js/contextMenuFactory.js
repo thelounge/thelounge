@@ -272,7 +272,7 @@ function addFocusItem() {
 	addContextMenuItem({
 		check: (target) => target.hasClass("chan"),
 		className: getClass,
-		displayName: (target) => target.attr("aria-label"),
+		displayName: (target) => target.attr("data-name") || target.attr("aria-label"),
 		data: (target) => target.attr("data-target"),
 		callback: focusChan,
 	});
