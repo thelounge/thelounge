@@ -5,6 +5,8 @@ const ldapAuth = require("../../../src/plugins/auth/ldap");
 const Helper = require("../../../src/helper");
 const ldap = require("thelounge-ldapjs-non-maintained-fork");
 const expect = require("chai").expect;
+const stub = require("sinon").stub;
+const TestUtil = require("../../util");
 
 const user = "johndoe";
 const wrongUser = "eve";
@@ -95,15 +97,25 @@ function testLdapAuth() {
 	});
 
 	it("should fail to authenticate with incorrect password", function(done) {
+		let error = "";
+		stub(log, "error").callsFake(TestUtil.sanitizeLog((str) => error += str));
+
 		ldapAuth.auth(manager, client, user, wrongPassword, function(valid) {
 			expect(valid).to.equal(false);
+			expect(error).to.equal("LDAP bind failed: InsufficientAccessRightsError: InsufficientAccessRightsError\n");
+			log.error.restore();
 			done();
 		});
 	});
 
 	it("should fail to authenticate with incorrect username", function(done) {
+		let warning = "";
+		stub(log, "warn").callsFake(TestUtil.sanitizeLog((str) => warning += str));
+
 		ldapAuth.auth(manager, client, wrongUser, correctPassword, function(valid) {
 			expect(valid).to.equal(false);
+			expect(warning).to.equal("LDAP Search did not find anything for: eve (0)\n");
+			log.warn.restore();
 			done();
 		});
 	});
