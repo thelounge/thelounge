@@ -26,7 +26,7 @@ class Identification {
 			const server = net.createServer(this.serverConnection.bind(this));
 			server.listen({
 				port: Helper.config.identd.port || 113,
-				host: Helper.config.bind || Helper.config.host,
+				host: Helper.config.bind,
 			}, () => {
 				const address = server.address();
 				log.info(`Identd server available on ${colors.green(address.address + ":" + address.port)}`);
