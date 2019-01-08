@@ -670,23 +670,17 @@ function parse(entries) {
 }
 
 function dedupeEntries(changelog, items) {
-	const isNewEntry = (entry) => !changelog.includes(printEntryLink(entry));
+	const dedupe = (entries) =>
+		entries.filter((entry) => !changelog.includes(printEntryLink(entry)));
 
-	items.deprecations = items.deprecations.filter(isNewEntry);
-	items.documentation = items.documentation.filter(isNewEntry);
-	items.websiteDocumentation = items.websiteDocumentation.filter(isNewEntry);
-	items.internals = items.documentation.filter(isNewEntry);
-	items.security = items.documentation.filter(isNewEntry);
-	items.uncategorized.feature = items.uncategorized.feature.filter(isNewEntry);
-	items.uncategorized.bug = items.uncategorized.bug.filter(isNewEntry);
-	items.uncategorized.other = items.uncategorized.other.filter(isNewEntry);
-
-	Object.entries(items.dependencies).forEach(([name, entries]) => {
-		items.dependencies[name] = entries.filter(isNewEntry);
+	["deprecations", "documentation", "websiteDocumentation", "internals", "security"].forEach((type) => {
+		items[type] = dedupe(items[type]);
 	});
 
-	Object.entries(items.devDependencies).forEach(([name, entries]) => {
-		items.devDependencies[name] = entries.filter(isNewEntry);
+	["dependencies", "devDependencies", "uncategorized"].forEach((type) => {
+		Object.entries(items[type]).forEach(([name, entries]) => {
+			items[type][name] = dedupe(entries);
+		});
 	});
 }
 
