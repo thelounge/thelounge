@@ -226,7 +226,7 @@ function getClientLanguage(socket) {
 }
 
 function getClientIp(socket) {
-	let ip = socket.handshake.address;
+	let ip = socket.handshake.address || "127.0.0.1";
 
 	if (Helper.config.reverseProxy) {
 		const forwarded = (socket.request.headers["x-forwarded-for"] || "").split(/\s*,\s*/).filter(Boolean);
