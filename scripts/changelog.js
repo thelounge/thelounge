@@ -59,6 +59,8 @@ const token = process.env.CHANGELOG_TOKEN;
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 
+const changelogPath = "./CHANGELOG.md";
+
 // CLI argument validations
 
 if (token === undefined) {
@@ -115,6 +117,13 @@ yarn global add thelounge@next
 `;
 }
 
+// Check if the object is empty, or if all array values within this object are
+// empty
+function isEmpty(list) {
+	const values = Object.values(list);
+	return values.length === 0 || values.every((entries) => entries.length === 0);
+}
+
 function stableTemplate(items) {
 	return `
 ## v${items.version} - ${items.date}
@@ -129,7 +138,7 @@ For more details, [see the full changelog](${items.fullChangelogUrl}) and [miles
 
 ### Changed
 
-${_.isEmpty(items.dependencies) ? "" :
+${isEmpty(items.dependencies) ? "" :
 		`- Update production dependencies to their latest versions:
 ${printDependencyList(items.dependencies)}`
 }
@@ -148,13 +157,13 @@ ${printList(items.security)}
 
 ### Documentation
 
-${_.isEmpty(items.documentation) ? "" :
+${items.documentation.length === 0 ? "" :
 		`In the main repository:
 
 ${printList(items.documentation)}`
 }
 
-${_.isEmpty(items.websiteDocumentation) ? "" :
+${items.websiteDocumentation.length === 0 ? "" :
 		`On the [website repository](https://github.com/thelounge/thelounge.github.io):
 
 ${printList(items.websiteDocumentation)}`
@@ -162,8 +171,7 @@ ${printList(items.websiteDocumentation)}`
 
 ### Internals
 
-${printList(items.internals)}${
-	_.isEmpty(items.devDependencies) ? "" : `
+${printList(items.internals)}${isEmpty(items.devDependencies) ? "" : `
 - Update development dependencies to their latest versions:
 ${printDependencyList(items.devDependencies)}`}
 
@@ -441,14 +449,18 @@ function combine(allCommits, allPullRequests) {
 	}, []);
 }
 
-// Builds a Markdown link for a given pull request object
-function printPullRequestLink({number, url}) {
-	return `[#${number}](${url})`;
-}
-
 // Builds a Markdown link for a given author object
 function printAuthorLink({login, url}) {
 	return `by [@${login}](${url})`;
+}
+
+// Builds a Markdown link for a given pull request or commit object
+function printEntryLink(entry) {
+	const label = entry.title
+		? `#${entry.number}`
+		: `\`${entry.abbreviatedOid}\``;
+
+	return `[${label}](${entry.url})`;
 }
 
 // Builds a Markdown entry list item depending on its type
@@ -462,12 +474,12 @@ function printLine(entry) {
 
 // Builds a Markdown list item for a given pull request
 function printPullRequest(pullRequest) {
-	return `- ${pullRequest.title} (${printPullRequestLink(pullRequest)} ${printAuthorLink(pullRequest.author)})`;
+	return `- ${pullRequest.title} (${printEntryLink(pullRequest)} ${printAuthorLink(pullRequest.author)})`;
 }
 
 // Builds a Markdown list item for a commit made directly in `master`
-function printCommit({abbreviatedOid, messageHeadline, url, author}) {
-	return `- ${messageHeadline} ([\`${abbreviatedOid}\`](${url}) ${printAuthorLink(author)})`;
+function printCommit(commit) {
+	return `- ${commit.messageHeadline} (${printEntryLink(commit)} ${printAuthorLink(commit.author)})`;
 }
 
 // Builds a Markdown list of all given items
@@ -478,9 +490,15 @@ function printList(items) {
 // Given a "dependencies object" (i.e. keys are package names, values are arrays
 // of pull request numbers), builds a Markdown list of URLs
 function printDependencyList(dependencies) {
-	return _.map(dependencies, (pullRequests, name) =>
-		`  - \`${name}\` (${pullRequests.map(printPullRequestLink).join(", ")})`
-	).join("\n");
+	const list = [];
+
+	Object.entries(dependencies).forEach(([name, entries]) => {
+		if (entries.length > 0) {
+			list.push(`  - \`${name}\` (${entries.map(printEntryLink).join(", ")})`);
+		}
+	});
+
+	return list.join("\n");
 }
 
 function printUncategorizedList(uncategorized) {
@@ -651,6 +669,21 @@ function parse(entries) {
 	});
 }
 
+function dedupeEntries(changelog, items) {
+	const dedupe = (entries) =>
+		entries.filter((entry) => !changelog.includes(printEntryLink(entry)));
+
+	["deprecations", "documentation", "websiteDocumentation", "internals", "security"].forEach((type) => {
+		items[type] = dedupe(items[type]);
+	});
+
+	["dependencies", "devDependencies", "uncategorized"].forEach((type) => {
+		Object.entries(items[type]).forEach(([name, entries]) => {
+			items[type][name] = dedupe(entries);
+		});
+	});
+}
+
 // Given a list of entries (pull requests, commits), retrieves GitHub usernames
 // (with format `@username`) of everyone who contributed to this version.
 function extractContributors(entries) {
@@ -675,7 +708,7 @@ const client = new GraphQLClient("https://api.github.com/graphql", {
 // Main function. Given a version string (i.e. not a tag!), returns a changelog
 // entry and the list of contributors, for both pre-releases and stable
 // releases. Templates are located at the top of this file.
-async function generateChangelogEntry(targetVersion) {
+async function generateChangelogEntry(changelog, targetVersion) {
 	let items = {};
 	let template;
 	let contributors = [];
@@ -696,6 +729,8 @@ async function generateChangelogEntry(targetVersion) {
 		const websiteRepo = new RepositoryFetcher(client, "thelounge.github.io");
 		const previousWebsiteVersion = await websiteRepo.fetchPreviousVersion(targetVersion);
 		items.websiteDocumentation = await websiteRepo.fetchCommitsAndPullRequestsSince("v" + previousWebsiteVersion);
+
+		dedupeEntries(changelog, items);
 	}
 
 	items.version = targetVersion;
@@ -711,11 +746,9 @@ async function generateChangelogEntry(targetVersion) {
 
 // Write a changelog entry into the CHANGELOG.md file, right after a marker that
 // indicates where entries are listed.
-async function addToChangelog(newEntry) {
-	const changelogPath = "./CHANGELOG.md";
+function addToChangelog(changelog, newEntry) {
 	const changelogMarker = "<!-- New entries go after this line -->\n\n";
 
-	const changelog = await readFile(changelogPath, "utf8");
 	const markerPosition = changelog.indexOf(changelogMarker) + changelogMarker.length;
 	const newChangelog =
 		changelog.substring(0, markerPosition) +
@@ -734,8 +767,10 @@ async function addToChangelog(newEntry) {
 
 	// Step 1: Generate a changelog entry
 
+	const changelog = await readFile(changelogPath, "utf8");
+
 	try {
-		({changelogEntry, skipped, contributors} = await generateChangelogEntry(version));
+		({changelogEntry, skipped, contributors} = await generateChangelogEntry(changelog, version));
 	} catch (error) {
 		if (error.response && error.response.status === 401) {
 			log.error(`GitHub returned an error: ${colors.red(error.response.message)}`);
@@ -750,7 +785,7 @@ async function addToChangelog(newEntry) {
 	// Step 2: Write that changelog entry into the CHANGELOG.md file
 
 	try {
-		await addToChangelog(`${changelogEntry.trim()}\n\n`);
+		await addToChangelog(changelog, `${changelogEntry.trim()}\n\n`);
 	} catch (error) {
 		log.error(error);
 		process.exit(1);
