@@ -49,6 +49,11 @@ function networkOrCache(uri) {
 						return response;
 					});
 				}
+
+				// eslint-disable-next-line no-console
+				console.error(`Request for ${uri.href} failed with HTTP ${response.status}`);
+
+				return Promise.reject("request-failed");
 			})
 			.catch(function() {
 				return cache.match(uri).then(function(matching) {
