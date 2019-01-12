@@ -724,11 +724,16 @@ async function generateChangelogEntry(changelog, targetVersion) {
 		const codeCommitsAndPullRequests = await codeRepo.fetchCommitsAndPullRequestsSince("v" + previousVersion);
 		items = parse(codeCommitsAndPullRequests);
 		items.milestone = await codeRepo.fetchMilestone(targetVersion);
-		contributors = extractContributors(codeCommitsAndPullRequests);
 
 		const websiteRepo = new RepositoryFetcher(client, "thelounge.github.io");
 		const previousWebsiteVersion = await websiteRepo.fetchPreviousVersion(targetVersion);
-		items.websiteDocumentation = await websiteRepo.fetchCommitsAndPullRequestsSince("v" + previousWebsiteVersion);
+		const websiteCommitsAndPullRequests = await websiteRepo.fetchCommitsAndPullRequestsSince("v" + previousWebsiteVersion);
+		items.websiteDocumentation = websiteCommitsAndPullRequests;
+
+		contributors = extractContributors([
+			...codeCommitsAndPullRequests,
+			...websiteCommitsAndPullRequests,
+		]);
 
 		dedupeEntries(changelog, items);
 	}
