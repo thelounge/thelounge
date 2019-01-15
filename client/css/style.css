@@ -550,6 +550,7 @@ kbd {
 	overflow-x: auto;
 	flex-grow: 1;
 	touch-action: pan-y;
+	scrollbar-width: thin;
 	overscroll-behavior: contain;
 	-webkit-overflow-scrolling: touch;
 }
@@ -897,6 +898,7 @@ background on hover (unless active) */
 	display: none;
 	overflow-y: auto;
 	height: 100%;
+	scrollbar-width: thin;
 	overscroll-behavior: contain;
 	-webkit-overflow-scrolling: touch;
 }
@@ -1045,6 +1047,7 @@ background on hover (unless active) */
 	display: flex;
 	flex-grow: 1;
 	flex-direction: column;
+	scrollbar-width: thin;
 	overscroll-behavior: contain;
 	-webkit-overflow-scrolling: touch;
 	outline: none;
@@ -1569,6 +1572,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	padding-bottom: 10px;
 	width: 100%;
 	touch-action: pan-y;
+	scrollbar-width: thin;
 	overscroll-behavior: contain;
 	-webkit-overflow-scrolling: touch;
 }
