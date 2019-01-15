@@ -1,7 +1,8 @@
 <template>
 	<aside
 		ref="userlist"
-		class="userlist">
+		class="userlist"
+		@mouseleave="removeHoverUser">
 		<div class="count">
 			<input
 				ref="input"
@@ -141,6 +142,9 @@ export default {
 		},
 		hoverUser(user) {
 			this.activeUser = user;
+		},
+		removeHoverUser() {
+			this.activeUser = null;
 		},
 		navigateUserList(direction) {
 			let users = this.channel.users;
