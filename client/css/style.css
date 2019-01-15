@@ -935,7 +935,7 @@ background on hover (unless active) */
 	margin: 20px 0 10px;
 }
 
-#windows .active {
+#windows .window.active {
 	display: flex;
 	flex-direction: column;
 }
@@ -966,11 +966,6 @@ background on hover (unless active) */
 	flex-grow: 1;
 	overflow: hidden;
 	font-size: 14px;
-}
-
-#windows #chat-container.active {
-	display: flex;
-	flex-direction: column;
 }
 
 #chat {
