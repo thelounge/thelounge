@@ -49,8 +49,8 @@
 
 	<div class="help-item">
 		<div class="subject">
-			<span class="key-all"><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>↓</kbd></span>
 			<span class="key-apple"><kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>↓</kbd></span>
+			<span class="key-all"><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>↓</kbd></span>
 		</div>
 		<div class="description">
 			<p>Switch to the next lobby in the channel list.</p>
@@ -59,8 +59,8 @@
 
 	<div class="help-item">
 		<div class="subject">
-			<span class="key-all"><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>↑</kbd></span>
 			<span class="key-apple"><kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>↑</kbd></span>
+			<span class="key-all"><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>↑</kbd></span>
 		</div>
 		<div class="description">
 			<p>Switch to the previous lobby in the channel list.</p>
@@ -69,8 +69,8 @@
 
 	<div class="help-item">
 		<div class="subject">
-			<span class="key-all"><kbd>Alt</kbd> <kbd>↓</kbd></span>
 			<span class="key-apple"><kbd>⌥</kbd> <kbd>↓</kbd></span>
+			<span class="key-all"><kbd>Alt</kbd> <kbd>↓</kbd></span>
 		</div>
 		<div class="description">
 			<p>Switch to the next window in the channel list.</p>
@@ -79,8 +79,8 @@
 
 	<div class="help-item">
 		<div class="subject">
-			<span class="key-all"><kbd>Alt</kbd> <kbd>↑</kbd></span>
 			<span class="key-apple"><kbd>⌥</kbd> <kbd>↑</kbd></span>
+			<span class="key-all"><kbd>Alt</kbd> <kbd>↑</kbd></span>
 		</div>
 		<div class="description">
 			<p>Switch to the previous window in the channel list.</p>
@@ -90,7 +90,6 @@
 	<div class="help-item">
 		<div class="subject">
 			<span class="key-all"><kbd>Ctrl</kbd> <kbd>K</kbd></span>
-			<span class="key-apple"><kbd>⌘</kbd> <kbd>K</kbd></span>
 		</div>
 		<div class="description">
 			<p>
@@ -114,7 +113,6 @@
 	<div class="help-item">
 		<div class="subject">
 			<span class="key-all"><kbd>Ctrl</kbd> <kbd>B</kbd></span>
-			<span class="key-apple"><kbd>⌘</kbd> <kbd>B</kbd></span>
 		</div>
 		<div class="description">
 			<p>Mark all text typed after this shortcut as <span class="irc-bold">bold</span>.</p>
@@ -124,7 +122,6 @@
 	<div class="help-item">
 		<div class="subject">
 			<span class="key-all"><kbd>Ctrl</kbd> <kbd>U</kbd></span>
-			<span class="key-apple"><kbd>⌘</kbd> <kbd>U</kbd></span>
 		</div>
 		<div class="description">
 			<p>Mark all text typed after this shortcut as <span class="irc-underline">underlined</span>.</p>
@@ -134,7 +131,6 @@
 	<div class="help-item">
 		<div class="subject">
 			<span class="key-all"><kbd>Ctrl</kbd> <kbd>I</kbd></span>
-			<span class="key-apple"><kbd>⌘</kbd> <kbd>I</kbd></span>
 		</div>
 		<div class="description">
 			<p>Mark all text typed after this shortcut as <span class="irc-italic">italics</span>.</p>
@@ -144,7 +140,6 @@
 	<div class="help-item">
 		<div class="subject">
 			<span class="key-all"><kbd>Ctrl</kbd> <kbd>S</kbd></span>
-			<span class="key-apple"><kbd>⌘</kbd> <kbd>S</kbd></span>
 		</div>
 		<div class="description">
 			<p>Mark all text typed after this shortcut as <span class="irc-strikethrough">struck through</span>.</p>
@@ -154,7 +149,6 @@
 	<div class="help-item">
 		<div class="subject">
 			<span class="key-all"><kbd>Ctrl</kbd> <kbd>M</kbd></span>
-			<span class="key-apple"><kbd>⌘</kbd> <kbd>M</kbd></span>
 		</div>
 		<div class="description">
 			<p>Mark all text typed after this shortcut as <span class="irc-monospace">monospaced</span>.</p>
@@ -164,7 +158,6 @@
 	<div class="help-item">
 		<div class="subject">
 			<span class="key-all"><kbd>Ctrl</kbd> <kbd>O</kbd></span>
-			<span class="key-apple"><kbd>⌘</kbd> <kbd>O</kbd></span>
 		</div>
 		<div class="description">
 			<p>
@@ -544,8 +537,8 @@
 		</div>
 		<div class="description">
 			<p>
-				Get the topic in the current channel. 
-				If <code>newtopic</code> is specified, sets the 
+				Get the topic in the current channel.
+				If <code>newtopic</code> is specified, sets the
 				topic in the current channel.
 			</p>
 		</div>

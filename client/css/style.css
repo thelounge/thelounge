@@ -1813,7 +1813,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-bottom: 0;
 }
 
-.is-apple #help .key-all,
+.is-apple #help .key-apple + .key-all,
 #help .key-apple {
 	display: none;
 }
