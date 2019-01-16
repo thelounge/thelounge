@@ -494,7 +494,7 @@ function initializeClient(socket, client, token, lastMessage) {
 				return;
 			}
 
-			if (typeof newSetting.name !== "string" || newSetting.name[0] === "_") {
+			if (typeof newSetting.value === "object" || typeof newSetting.name !== "string" || newSetting.name[0] === "_") {
 				return;
 			}
 
