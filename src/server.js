@@ -498,11 +498,6 @@ function initializeClient(socket, client, token, lastMessage) {
 				return;
 			}
 
-			// Older user configs will not have the clientSettings property.
-			if (!client.config.hasOwnProperty("clientSettings")) {
-				client.config.clientSettings = {};
-			}
-
 			// We do not need to do write operations and emit events if nothing changed.
 			if (client.config.clientSettings[newSetting.name] !== newSetting.value) {
 				client.config.clientSettings[newSetting.name] = newSetting.value;
@@ -516,6 +511,10 @@ function initializeClient(socket, client, token, lastMessage) {
 				client.manager.updateUser(client.name, {
 					clientSettings: client.config.clientSettings,
 				});
+
+				if (newSetting.name === "highlights") {
+					client.compileCustomHighlights();
+				}
 			}
 		});
 

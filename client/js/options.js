@@ -1,7 +1,6 @@
 "use strict";
 
 const $ = require("jquery");
-const escapeRegExp = require("lodash/escapeRegExp");
 const storage = require("./localStorage");
 const socket = require("./socket");
 const {vueApp} = require("./vue");
@@ -27,9 +26,11 @@ const settings = vueApp.settings;
 
 const noSync = ["syncSettings"];
 
-// alwaysSync is reserved for things like "highlights".
-// TODO: figure out how to deal with legacy clients that have different settings.
-const alwaysSync = [];
+// alwaysSync is reserved for settings that should be synced
+// to the server regardless of the clients sync setting.
+const alwaysSync = [
+	"highlights",
+];
 
 // Process usersettings from localstorage.
 let userSettings = JSON.parse(storage.get("settings")) || false;
@@ -39,7 +40,13 @@ if (!userSettings) {
 	settings.syncSettings = true;
 } else {
 	for (const key in settings) {
-		if (userSettings[key] !== undefined) {
+		// Older The Lounge versions converted highlights to an array, turn it back into a string
+		if (key === "highlights" && typeof userSettings[key] === "object") {
+			userSettings[key] = userSettings[key].join(", ");
+		}
+
+		// Make sure the setting in local storage has the same type that the code expects
+		if (typeof userSettings[key] !== "undefined" && typeof settings[key] === typeof userSettings[key]) {
 			settings[key] = userSettings[key];
 		}
 	}
@@ -62,7 +69,6 @@ module.exports = {
 	alwaysSync,
 	noSync,
 	initialized: false,
-	highlightsRE: null,
 	settings,
 	syncAllSettings,
 	processSetting,
@@ -92,32 +98,6 @@ function applySetting(name, value) {
 		}
 	} else if (name === "userStyles" && !noCSSparamReg.test(window.location.search)) {
 		$userStyles.html(value);
-	} else if (name === "highlights") {
-		let highlights;
-
-		if (typeof value === "string") {
-			highlights = value.split(",").map(function(h) {
-				return h.trim();
-			});
-		} else {
-			highlights = value;
-		}
-
-		highlights = highlights.filter(function(h) {
-			// Ensure we don't have empty string in the list of highlights
-			// otherwise, users get notifications for everything
-			return h !== "";
-		});
-		// Construct regex with wordboundary for every highlight item
-		const highlightsTokens = highlights.map(function(h) {
-			return escapeRegExp(h);
-		});
-
-		if (highlightsTokens && highlightsTokens.length) {
-			module.exports.highlightsRE = new RegExp(`(?:^| |\t)(?:${highlightsTokens.join("|")})(?:\t| |$)`, "i");
-		} else {
-			module.exports.highlightsRE = null;
-		}
 	} else if (name === "desktopNotifications") {
 		if (("Notification" in window) && value && Notification.permission !== "granted") {
 			Notification.requestPermission(updateDesktopNotificationStatus);
@@ -135,25 +115,11 @@ function settingSetEmit(name, value) {
 
 // When sync is `true` the setting will also be send to the backend for syncing.
 function updateSetting(name, value, sync) {
-	let storeValue = value;
-
-	// First convert highlights if input is a string.
-	// Otherwise we are comparing the wrong types.
-	if (name === "highlights" && typeof value === "string") {
-		storeValue = value.split(",").map(function(h) {
-			return h.trim();
-		}).filter(function(h) {
-			// Ensure we don't have empty string in the list of highlights
-			// otherwise, users get notifications for everything
-			return h !== "";
-		});
-	}
-
 	const currentOption = settings[name];
 
 	// Only update and process when the setting is actually changed.
-	if (currentOption !== storeValue) {
-		settings[name] = storeValue;
+	if (currentOption !== value) {
+		settings[name] = value;
 		storage.set("settings", JSON.stringify(settings));
 		applySetting(name, value);
 

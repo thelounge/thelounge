@@ -117,6 +117,11 @@ module.exports = function(irc, network) {
 		// Non-self messages are highlighted as soon as the nick is detected
 		if (!msg.highlight && !msg.self) {
 			msg.highlight = network.highlightRegex.test(data.message);
+
+			// If we still don't have a highlight, test against custom highlights if there's any
+			if (!msg.highlight && client.highlightRegex) {
+				msg.highlight = client.highlightRegex.test(data.message);
+			}
 		}
 
 		let match;

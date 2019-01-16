@@ -10,6 +10,7 @@ const Network = require("./models/network");
 const Helper = require("./helper");
 const UAParser = require("ua-parser-js");
 const uuidv4 = require("uuid/v4");
+const escapeRegExp = require("lodash/escapeRegExp");
 
 const MessageStorage = require("./plugins/messageStorage/sqlite");
 const TextFileMessageStorage = require("./plugins/messageStorage/text");
@@ -81,6 +82,7 @@ function Client(manager, name, config = {}) {
 		sockets: manager.sockets,
 		manager: manager,
 		messageStorage: [],
+		highlightRegex: null,
 	});
 
 	const client = this;
@@ -110,6 +112,12 @@ function Client(manager, name, config = {}) {
 	if (typeof client.config.sessions !== "object") {
 		client.config.sessions = {};
 	}
+
+	if (typeof client.config.clientSettings !== "object") {
+		client.config.clientSettings = {};
+	}
+
+	client.compileCustomHighlights();
 
 	_.forOwn(client.config.sessions, (session) => {
 		if (session.pushSubscription) {
@@ -371,6 +379,29 @@ Client.prototype.inputLine = function(data) {
 			text: "You are not connected to the IRC network, unable to send your command.",
 		}));
 	}
+};
+
+Client.prototype.compileCustomHighlights = function() {
+	const client = this;
+
+	if (typeof client.config.clientSettings.highlights !== "string") {
+		client.highlightRegex = null;
+		return;
+	}
+
+	// Ensure we don't have empty string in the list of highlights
+	// otherwise, users get notifications for everything
+	const highlightsTokens = client.config.clientSettings.highlights
+		.split(",")
+		.map((highlight) => escapeRegExp(highlight.trim()))
+		.filter((highlight) => highlight.length > 0);
+
+	if (highlightsTokens.length === 0) {
+		client.highlightRegex = null;
+		return;
+	}
+
+	client.highlightRegex = new RegExp(`(?:^| |\t)(?:${highlightsTokens.join("|")})(?:\t| |$)`, "i");
 };
 
 Client.prototype.more = function(data) {

@@ -31,7 +31,7 @@ const vueApp = new Vue({
 			nickPostfix: "",
 			coloredNicks: true,
 			desktopNotifications: false,
-			highlights: [],
+			highlights: "",
 			links: true,
 			motd: true,
 			notification: true,
