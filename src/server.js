@@ -494,6 +494,10 @@ function initializeClient(socket, client, token, lastMessage) {
 				return;
 			}
 
+			if (typeof newSetting.name !== "string" || newSetting.name[0] === "_") {
+				return;
+			}
+
 			// Older user configs will not have the clientSettings property.
 			if (!client.config.hasOwnProperty("clientSettings")) {
 				client.config.clientSettings = {};
