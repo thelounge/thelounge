@@ -11,7 +11,7 @@
 	--highlight-border-color: #b08c4f;
 }
 
-#chat .channel .message.highlight .time {
+#chat .channel .msg.highlight .time {
 	color: white;
 }
 

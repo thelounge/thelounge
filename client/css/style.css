@@ -1375,22 +1375,22 @@ background on hover (unless active) */
 	color: #e74c3c;
 }
 
-#chat .channel .message.highlight {
+#chat .channel .msg.highlight {
 	background-color: var(--highlight-bg-color);
 	border-left: 5px solid var(--highlight-border-color);
 }
 
-#chat .channel .message.highlight .time {
+#chat .channel .msg.highlight .time {
 	padding-left: 5px;
 	width: 50px;
 	color: #696969;
 }
 
-#chat.show-seconds .channel .message.highlight .time {
+#chat.show-seconds .channel .msg.highlight .time {
 	width: 70px;
 }
 
-#chat .channel .message.highlight .content {
+#chat .channel .msg.highlight .content {
 	border-left: 1px solid var(--highlight-bg-color);
 }
 
@@ -2488,11 +2488,11 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		padding: 0;
 	}
 
-	#chat .channel .message.highlight {
+	#chat .channel .msg.highlight {
 		padding-left: 5px;
 	}
 
-	#chat .channel .message.highlight .time {
+	#chat .channel .msg.highlight .time {
 		padding-left: 0;
 	}
 
