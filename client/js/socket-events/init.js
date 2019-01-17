@@ -44,7 +44,8 @@ socket.on("init", function(data) {
 			channel.pendingMessage = currentChannel.pendingMessage;
 
 			// Reconnection only sends new messages, so merge it on the client
-			if (currentChannel.messages) {
+			// Only concat if server sent us less than 100 messages so we don't introduce gaps
+			if (currentChannel.messages && channel.messages.length < 100) {
 				channel.messages = currentChannel.messages.concat(channel.messages);
 			}
 
