@@ -49,7 +49,7 @@ class Uploader {
 			do {
 				randomName = crypto.randomBytes(8).toString("hex");
 				destPath = path.join(Helper.getFileUploadPath(), randomName.substring(0, 2), randomName);
-			} while (fs.stat(destPath, (err) => (err ? true : false)));
+			} while (fs.existsSync(destPath));
 
 			fsextra.move(data.file.pathName, destPath).then(() => {
 				const slug = encodeURIComponent(path.basename(data.file.pathName));
