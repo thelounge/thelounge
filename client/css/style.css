@@ -205,7 +205,8 @@ kbd {
 
 #js-copy-hack,
 #loading pre,
-#help,
+#help .container,
+#changelog .container,
 #windows .header .title,
 #windows .header .topic,
 #chat .messages {
