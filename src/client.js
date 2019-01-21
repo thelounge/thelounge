@@ -401,7 +401,7 @@ Client.prototype.compileCustomHighlights = function() {
 		return;
 	}
 
-	client.highlightRegex = new RegExp(`(?:^| |\t)(?:${highlightsTokens.join("|")})(?:\t| |$)`, "i");
+	client.highlightRegex = new RegExp(`(?:^|[ .,+!?|:<>(){}@&~-])(?:${highlightsTokens.join("|")})(?:$|[ .,+!?|:<>(){}-])`, "i");
 };
 
 Client.prototype.more = function(data) {
