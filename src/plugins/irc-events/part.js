@@ -13,6 +13,17 @@ module.exports = function(irc, network) {
 			return;
 		}
 
+		const user = chan.getUser(data.nick);
+		const msg = new Msg({
+			type: Msg.Type.PART,
+			time: data.time,
+			text: data.message || "",
+			hostmask: data.ident + "@" + data.hostname,
+			from: user,
+			self: data.nick === irc.user.nick,
+		});
+		chan.pushMessage(client, msg);
+
 		if (data.nick === irc.user.nick) {
 			network.channels = _.without(network.channels, chan);
 			chan.destroy();
@@ -21,17 +32,6 @@ module.exports = function(irc, network) {
 				chan: chan.id,
 			});
 		} else {
-			const user = chan.getUser(data.nick);
-
-			const msg = new Msg({
-				type: Msg.Type.PART,
-				time: data.time,
-				text: data.message || "",
-				hostmask: data.ident + "@" + data.hostname,
-				from: user,
-			});
-			chan.pushMessage(client, msg);
-
 			chan.removeUser(user);
 			client.emit("users", {
 				chan: chan.id,
