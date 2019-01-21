@@ -55,13 +55,8 @@ program
 
 			return Utils.executeYarnCommand(
 				"add",
-				"--json",
-				"--exact",
 				"--production",
-				"--ignore-scripts",
-				"--non-interactive",
-				"--cwd",
-				packagesPath,
+				"--exact",
 				`${json.name}@${json.version}`
 			).then(() => {
 				log.info(`${colors.green(json.name + " v" + json.version)} has been successfully installed.`);

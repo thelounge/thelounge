@@ -20,13 +20,8 @@ program
 		const packagesList = JSON.parse(fs.readFileSync(packagesConfig)).dependencies;
 		const argsList = [
 			"upgrade",
-			"--latest",
-			"--json",
 			"--production",
-			"--ignore-scripts",
-			"--non-interactive",
-			"--cwd",
-			packagesPath,
+			"--latest",
 		];
 
 		let count = 0;
@@ -44,7 +39,7 @@ program
 				log.info(`- ${colors.green(p)}`);
 
 				if (packagesList.hasOwnProperty(p)) {
-					argsList.splice(1, 0, p);
+					argsList.push(p);
 					count++;
 				} else {
 					log.error(`${colors.green(p)} is not installed.`);

@@ -39,11 +39,6 @@ program
 
 		return Utils.executeYarnCommand(
 			"remove",
-			"--json",
-			"--ignore-scripts",
-			"--non-interactive",
-			"--cwd",
-			packagesPath,
 			packageName
 		).then(() => {
 			log.info(`${colors.green(packageName)} has been successfully uninstalled.`);

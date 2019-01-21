@@ -107,7 +107,7 @@ class Utils {
 		return memo;
 	}
 
-	static executeYarnCommand(...parameters) {
+	static executeYarnCommand(command, ...parameters) {
 		// First off, try to find yarn inside of The Lounge
 		let yarn = path.join(
 			__dirname, "..", "..", "node_modules",
@@ -127,9 +127,27 @@ class Utils {
 			}
 		}
 
+		const packagesPath = Helper.getPackagesPath();
+		const cachePath = path.join(packagesPath, "package_manager_cache");
+
+		const staticParameters = [
+			"--cache-folder",
+			cachePath,
+			"--cwd",
+			packagesPath,
+			"--json",
+			"--ignore-scripts",
+			"--non-interactive",
+		];
+
 		return new Promise((resolve, reject) => {
 			let success = false;
-			const add = require("child_process").spawn(process.execPath, [yarn, ...parameters]);
+			const add = require("child_process").spawn(process.execPath, [
+				yarn,
+				command,
+				...staticParameters,
+				...parameters,
+			]);
 
 			add.stdout.on("data", (data) => {
 				data.toString().trim().split("\n").forEach((line) => {
