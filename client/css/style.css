@@ -1564,10 +1564,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	-webkit-overflow-scrolling: touch;
 }
 
-#chat .names-filtered {
-	display: none;
-}
-
 #chat .names .user {
 	display: block;
 	line-height: 1.6;
