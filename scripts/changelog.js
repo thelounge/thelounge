@@ -688,7 +688,7 @@ function dedupeEntries(changelog, items) {
 // (with format `@username`) of everyone who contributed to this version.
 function extractContributors(entries) {
 	const set = Object.values(entries).reduce((memo, pullRequest) => {
-		if (pullRequest.author.login !== "greenkeeper" && pullRequest.author.login !== "renovate-bot") {
+		if (pullRequest.author.login !== "renovate") {
 			memo.add("@" + pullRequest.author.login);
 		}
 
