@@ -16,7 +16,7 @@ const whitelist = [
 	"audio/midi",
 	"audio/mpeg",
 	"audio/ogg",
-	"audio/x-wav",
+	"audio/vnd.wave",
 	"image/bmp",
 	"image/gif",
 	"image/jpeg",
