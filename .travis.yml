@@ -63,5 +63,5 @@ deploy:
 # If the current release is a stable release, remove potential pre-release tag
 after_deploy: |
   if [ "$(npm_dist_tag)" == "latest" ]; then
-    yarn tag remove thelounge next || true
+    npm dist-tag rm thelounge next || true
   fi
