@@ -108,25 +108,7 @@ class Utils {
 	}
 
 	static executeYarnCommand(command, ...parameters) {
-		// First off, try to find yarn inside of The Lounge
-		let yarn = path.join(
-			__dirname, "..", "..", "node_modules",
-			"yarn", "bin", "yarn.js"
-		);
-
-		if (!fs.existsSync(yarn)) {
-			// Now try to find yarn in the same parent folder as The Lounge (flat install)
-			yarn = path.join(
-				__dirname, "..", "..", "..",
-				"yarn", "bin", "yarn.js"
-			);
-
-			if (!fs.existsSync(yarn)) {
-				// Fallback to global installation
-				yarn = "yarn";
-			}
-		}
-
+		const yarn = require.resolve("yarn/bin/yarn.js");
 		const packagesPath = Helper.getPackagesPath();
 		const cachePath = path.join(packagesPath, "package_manager_cache");
 
