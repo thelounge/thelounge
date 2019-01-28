@@ -58,7 +58,7 @@
     "request": "2.88.0",
     "semver": "5.6.0",
     "socket.io": "2.2.0",
-    "socketio-file-upload": "0.6.4",
+    "socketio-file-upload": "0.7.0",
     "thelounge-ldapjs-non-maintained-fork": "1.0.2",
     "tlds": "1.203.1",
     "ua-parser-js": "0.7.19",
