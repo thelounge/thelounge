@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "bcryptjs": "2.4.3",
-    "chalk": "2.4.1",
+    "chalk": "2.4.2",
     "cheerio": "0.22.0",
     "commander": "2.19.0",
     "express": "4.16.4",
