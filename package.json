@@ -64,7 +64,7 @@
     "ua-parser-js": "0.7.19",
     "uuid": "3.3.2",
     "web-push": "3.3.3",
-    "yarn": "1.12.3"
+    "yarn": "1.13.0"
   },
   "optionalDependencies": {
     "sqlite3": "4.0.6"
