@@ -1,5 +1,0 @@
----
-
-# Necessary to support async/await... grumble grumble...
-parserOptions:
-  ecmaVersion: 8
