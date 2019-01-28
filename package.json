@@ -44,7 +44,7 @@
     "cheerio": "0.22.0",
     "commander": "2.19.0",
     "express": "4.16.4",
-    "file-type": "10.7.0",
+    "file-type": "10.7.1",
     "filenamify": "2.1.0",
     "fs-extra": "7.0.1",
     "irc-framework": "4.1.0",
