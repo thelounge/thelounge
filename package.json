@@ -101,7 +101,7 @@
     "primer-tooltips": "1.5.11",
     "sinon": "7.2.3",
     "socket.io-client": "2.2.0",
-    "stylelint": "9.9.0",
+    "stylelint": "9.10.1",
     "stylelint-config-standard": "18.2.0",
     "textcomplete": "0.17.1",
     "undate": "0.3.0",
