@@ -13,13 +13,13 @@ os:
 matrix:
   fast_finish: true
   include:
-    - node_js: 8
+    - node_js: 10
       os: windows
       env: YARN_GPG=no # starts gpg-agent that never exits
-    - node_js: 8
+    - node_js: 10
       os: osx
     - name: "Production build"
-      node_js: 8 # Version used to deploy to npm registry
+      node_js: 10 # Version used to deploy to npm registry
       os: linux
       env: BUILD_ENV=production
 
@@ -55,7 +55,6 @@ deploy:
   api_key:
     secure: AMz3r6oUv71mcTwpjVWc13AJvoIdhCB5zZQly88VMz1kxEgEkhXsugC2E5UOBKE+u45xGypbDoZIMt/raJfPTirZ9emTnl9Q3USc+V74RJ9RmsGrmCF9Kyr6ZdOuhifCLgQGzPK1U3IDp0S2EC6TRMD4x/bPjTakQYoE+XiQGji5p1j1Fjff2jyiJo396CYSR2dRgfG0h1Uz8ilK6AeSQ6iErMqOUvKpYnmlmsa4h/qGCpbb2XQtnzRLpFNYFA264lXNUh3on3DmvKH5qlw5NYJ6hl4ZUNzIk4uNPD2BklHg1l7U6sTWXUk3VLI86GyymCHef29Ry47cKXXNCY0pR3r+ptOm9OxWvtS/8pZv/XFzRq/oCtEk27DWUc/NHJiv/+7uKXSAeSZ0OqDCNxLXfre0nFtzcrXZ5aV4aspjbKrbYZj10gef4q5/OzTFJOxRifPDjvpxnACwGsgZaqei/grRNHkVkHci1IRn56Vj7oKuFJemmckJXi/QuozXf72oYYfi4LUamdfNu/5i5tKV/cj4TFsB+sOt/by9qxPPo/YXkGKTrdoqSshLX0tKyf69zS8Bmp/mb768a1vrxZRco0EajP4YzzoNMjnWpgjFikTNOJ2DzuySdSjVcU2d0OLge7OBtui9yaYA68ETNaA0uhQVxmBOb/Ujt9OGAqrhskU=
   on:
-    node: 8
     condition: "$BUILD_ENV = production"
     tags: true
     repo: thelounge/thelounge
