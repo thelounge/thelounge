@@ -297,10 +297,10 @@ module.exports = {
 	//   For example:
 	//
 	//   ```json
-	//   {
+	//   webirc: {
 	//     "irc.example.net": "password1",
-	//     "irc.example.org": "passw0rd"
-	//   }
+	//     "irc.example.org": "passw0rd",
+	//   },
 	//   ```
 	//
 	// - **Advanced**: an object where keys are IRC hosts and values are functions
@@ -308,14 +308,14 @@ module.exports = {
 	//   object to be directly passed to `irc-framework`. For example:
 	//
 	//   ```js
-	//   {
+	//   webirc: {
 	//     "irc.example.net": (client, args, trusted) => ({
 	//       username: "thelounge",
 	//       password: "password1",
 	//       address: args.ip,
 	//       hostname: `webirc/${args.hostname}`
-	//     })
-	//   }
+	//     }),
+	//   },
 	//   ```
 	//
 	// This value is set to `null` to disable WEBIRC by default.
