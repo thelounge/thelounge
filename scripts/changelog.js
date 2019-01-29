@@ -227,6 +227,7 @@ class RepositoryFetcher {
 			repository(owner: "thelounge", name: $repositoryName) {
 				ref(qualifiedName: $tag) {
 					tag: target {
+						oid
 						... on Tag {
 							commit: target {
 								oid
@@ -237,7 +238,7 @@ class RepositoryFetcher {
 			}
 		}`;
 		const data = await this.fetch(tagQuery, {tag});
-		return data.repository.ref.tag.commit;
+		return data.repository.ref.tag.commit || data.repository.ref.tag;
 	}
 
 	// Returns an array of annotated commits that have been made on the master
