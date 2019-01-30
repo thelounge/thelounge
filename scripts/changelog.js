@@ -227,6 +227,7 @@ class RepositoryFetcher {
 			repository(owner: "thelounge", name: $repositoryName) {
 				ref(qualifiedName: $tag) {
 					tag: target {
+						oid
 						... on Tag {
 							commit: target {
 								oid
@@ -237,7 +238,7 @@ class RepositoryFetcher {
 			}
 		}`;
 		const data = await this.fetch(tagQuery, {tag});
-		return data.repository.ref.tag.commit;
+		return data.repository.ref.tag.commit || data.repository.ref.tag;
 	}
 
 	// Returns an array of annotated commits that have been made on the master
@@ -255,6 +256,7 @@ class RepositoryFetcher {
 									endCursor
 								}
 								commits: nodes {
+									__typename
 									oid
 									abbreviatedOid
 									messageHeadline
@@ -297,8 +299,6 @@ class RepositoryFetcher {
 		const commits = await fetchPaginatedCommits();
 
 		commits.forEach((commit) => {
-			commit.author = commit.author.user;
-
 			const resultPR = /^Merge pull request #([0-9]+) .+/.exec(commit.messageHeadline);
 
 			if (resultPR) {
@@ -377,9 +377,11 @@ class RepositoryFetcher {
 			repository(owner: "thelounge", name: $repositoryName) {
 				${numbers.map((number) => `
 					PR${number}: pullRequest(number: ${number}) {
+						__typename
 						title
 						url
 						author {
+							__typename
 							login
 							url
 						}
@@ -456,7 +458,7 @@ function printAuthorLink({login, url}) {
 
 // Builds a Markdown link for a given pull request or commit object
 function printEntryLink(entry) {
-	const label = entry.title
+	const label = entry.__typename === "PullRequest"
 		? `#${entry.number}`
 		: `\`${entry.abbreviatedOid}\``;
 
@@ -465,7 +467,7 @@ function printEntryLink(entry) {
 
 // Builds a Markdown entry list item depending on its type
 function printLine(entry) {
-	if (entry.title) {
+	if (entry.__typename === "PullRequest") {
 		return printPullRequest(entry);
 	}
 
@@ -479,7 +481,7 @@ function printPullRequest(pullRequest) {
 
 // Builds a Markdown list item for a commit made directly in `master`
 function printCommit(commit) {
-	return `- ${commit.messageHeadline} (${printEntryLink(commit)} ${printAuthorLink(commit.author)})`;
+	return `- ${commit.messageHeadline} (${printEntryLink(commit)} ${printAuthorLink(commit.author.user)})`;
 }
 
 // Builds a Markdown list of all given items
@@ -549,7 +551,7 @@ function hasAnnotatedComment(comments, expected) {
 
 function isSkipped(entry) {
 	return (
-		(entry.messageHeadline && (
+		(entry.__typename === "Commit" && (
 			// Version bump commits created by `yarn version`
 			isValidVersion(entry.messageHeadline) ||
 			// Commit message suggested by this script
@@ -687,9 +689,13 @@ function dedupeEntries(changelog, items) {
 // Given a list of entries (pull requests, commits), retrieves GitHub usernames
 // (with format `@username`) of everyone who contributed to this version.
 function extractContributors(entries) {
-	const set = Object.values(entries).reduce((memo, pullRequest) => {
-		if (pullRequest.author.login !== "greenkeeper" && pullRequest.author.login !== "renovate-bot") {
-			memo.add("@" + pullRequest.author.login);
+	const set = Object.values(entries).reduce((memo, {__typename, author}) => {
+		if (__typename === "PullRequest" && author.__typename !== "Bot") {
+			memo.add("@" + author.login);
+		// Commit authors are *always* of type "User", so have to discriminate some
+		// other way. Making the assumption of a suffix for now, see how that goes.
+		} else if (__typename === "Commit" && !author.user.login.endsWith("-bot")) {
+			memo.add("@" + author.user.login);
 		}
 
 		return memo;
