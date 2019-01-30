@@ -256,6 +256,7 @@ class RepositoryFetcher {
 									endCursor
 								}
 								commits: nodes {
+									__typename
 									oid
 									abbreviatedOid
 									messageHeadline
@@ -378,6 +379,7 @@ class RepositoryFetcher {
 			repository(owner: "thelounge", name: $repositoryName) {
 				${numbers.map((number) => `
 					PR${number}: pullRequest(number: ${number}) {
+						__typename
 						title
 						url
 						author {
@@ -457,7 +459,7 @@ function printAuthorLink({login, url}) {
 
 // Builds a Markdown link for a given pull request or commit object
 function printEntryLink(entry) {
-	const label = entry.title
+	const label = entry.__typename === "PullRequest"
 		? `#${entry.number}`
 		: `\`${entry.abbreviatedOid}\``;
 
@@ -466,7 +468,7 @@ function printEntryLink(entry) {
 
 // Builds a Markdown entry list item depending on its type
 function printLine(entry) {
-	if (entry.title) {
+	if (entry.__typename === "PullRequest") {
 		return printPullRequest(entry);
 	}
 
@@ -550,7 +552,7 @@ function hasAnnotatedComment(comments, expected) {
 
 function isSkipped(entry) {
 	return (
-		(entry.messageHeadline && (
+		(entry.__typename === "Commit" && (
 			// Version bump commits created by `yarn version`
 			isValidVersion(entry.messageHeadline) ||
 			// Commit message suggested by this script
