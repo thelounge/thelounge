@@ -299,8 +299,6 @@ class RepositoryFetcher {
 		const commits = await fetchPaginatedCommits();
 
 		commits.forEach((commit) => {
-			commit.author = commit.author.user;
-
 			const resultPR = /^Merge pull request #([0-9]+) .+/.exec(commit.messageHeadline);
 
 			if (resultPR) {
@@ -383,6 +381,7 @@ class RepositoryFetcher {
 						title
 						url
 						author {
+							__typename
 							login
 							url
 						}
@@ -482,7 +481,7 @@ function printPullRequest(pullRequest) {
 
 // Builds a Markdown list item for a commit made directly in `master`
 function printCommit(commit) {
-	return `- ${commit.messageHeadline} (${printEntryLink(commit)} ${printAuthorLink(commit.author)})`;
+	return `- ${commit.messageHeadline} (${printEntryLink(commit)} ${printAuthorLink(commit.author.user)})`;
 }
 
 // Builds a Markdown list of all given items
@@ -690,9 +689,13 @@ function dedupeEntries(changelog, items) {
 // Given a list of entries (pull requests, commits), retrieves GitHub usernames
 // (with format `@username`) of everyone who contributed to this version.
 function extractContributors(entries) {
-	const set = Object.values(entries).reduce((memo, pullRequest) => {
-		if (pullRequest.author.login !== "renovate") {
-			memo.add("@" + pullRequest.author.login);
+	const set = Object.values(entries).reduce((memo, {__typename, author}) => {
+		if (__typename === "PullRequest" && author.__typename !== "Bot") {
+			memo.add("@" + author.login);
+		// Commit authors are *always* of type "User", so have to discriminate some
+		// other way. Making the assumption of a suffix for now, see how that goes.
+		} else if (__typename === "Commit" && !author.user.login.endsWith("-bot")) {
+			memo.add("@" + author.user.login);
 		}
 
 		return memo;
