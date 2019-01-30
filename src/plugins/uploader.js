@@ -92,18 +92,19 @@ class Uploader {
 			const folder = name.substring(0, 2);
 			const uploadPath = Helper.getFileUploadPath();
 			const filePath = path.join(uploadPath, folder, name);
-			const type = Uploader.getFileType(filePath);
-			const mimeType = type || "application/octet-stream";
-			const contentDisposition = Uploader.isValidType(type) ? "inline" : "attachment";
+			const detectedMimeType = Uploader.getFileType(filePath);
 
 			// doesn't exist
-			if (type === undefined) {
+			if (detectedMimeType === null) {
 				return res.status(404).send("Not found");
 			}
 
+			// Force a download in the browser if it's not a whitelisted type (binary or otherwise unknown)
+			const contentDisposition = Uploader.isValidType(detectedMimeType) ? "inline" : "attachment";
+
 			res.setHeader("Content-Disposition", contentDisposition);
 			res.setHeader("Cache-Control", "max-age=86400");
-			res.contentType(mimeType);
+			res.contentType(detectedMimeType);
 
 			return res.sendFile(filePath);
 		});
@@ -119,31 +120,31 @@ class Uploader {
 		return configOption * 1024;
 	}
 
+	// Returns null if an error occurred (e.g. file not found)
+	// Returns a string with the type otherwise
 	static getFileType(filePath) {
-		let buffer;
-		let type;
-
 		try {
-			buffer = readChunk.sync(filePath, 0, fileType.minimumBytes);
-		} catch (e) {
-			if (e.code === "ENOENT") { // doesn't exist
-				return;
+			const buffer = readChunk.sync(filePath, 0, fileType.minimumBytes);
+
+			// returns {ext, mime} if found, null if not.
+			const file = fileType(buffer);
+
+			if (file) {
+				return file.mime;
 			}
 
-			log.warn(`Failed to read ${filePath}`);
-			return;
+			if (isUtf8(buffer)) {
+				return "text/plain";
+			}
+
+			return "application/octet-stream";
+		} catch (e) {
+			if (e.code !== "ENOENT") {
+				log.warn(`Failed to read ${filePath}: ${e.message}`);
+			}
 		}
 
-		// returns {ext, mime} if found, null if not.
-		const file = fileType(buffer);
-
-		if (file) {
-			type = file.mime;
-		} else if (isUtf8(buffer)) {
-			type = "text/plain";
-		}
-
-		return type;
+		return null;
 	}
 }
 
