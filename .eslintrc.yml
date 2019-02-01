@@ -2,56 +2,41 @@
 
 root: true
 
+extends:
+  - eslint:recommended
+  - airbnb-base
+
+parserOptions:
+  sourceType: script
+
 env:
-  es6: true
   browser: true
   mocha: true
   node: true
 
 rules:
-  arrow-body-style: error
   arrow-parens: [error, always]
-  arrow-spacing: error
-  block-scoped-var: error
-  block-spacing: [error, always]
-  brace-style: [error, 1tbs]
   comma-dangle:
     - error
     - always-multiline
   curly: [error, all]
-  dot-location: [error, property]
-  dot-notation: error
-  eol-last: error
   eqeqeq: error
   handle-callback-err: error
   indent: [error, tab]
-  key-spacing: [error, {beforeColon: false, afterColon: true}]
-  keyword-spacing: [error, {before: true, after: true}]
-  linebreak-style: [error, unix]
   no-alert: error
   no-catch-shadow: error
-  no-confusing-arrow: [error, {allowParens: true}]
   no-control-regex: off
-  no-duplicate-imports: error
-  no-else-return: error
+  no-else-return: [error, { allowElseIf: true }]
   no-implicit-globals: error
-  no-multi-spaces: error
   no-multiple-empty-lines: [error, { "max": 1 }]
-  no-shadow: error
-  no-template-curly-in-string: error
-  no-trailing-spaces: error
-  no-unsafe-negation: error
-  no-useless-computed-key: error
-  no-useless-constructor: error
-  no-useless-return: error
+  no-plusplus: off
+  no-tabs: off
   no-use-before-define: [error, {functions: false}]
-  no-var: error
   object-curly-spacing: [error, never]
   object-shorthand:
     - error
     - methods
     - avoidExplicitReturnArrows: true
-  padded-blocks: [error, never]
   padding-line-between-statements:
     - error
     - blankLine: always
@@ -64,26 +49,55 @@ rules:
       next:
         - block
         - block-like
-  prefer-const: error
-  prefer-rest-params: error
-  prefer-spread: error
   quote-props: [error, consistent-as-needed]
   quotes: [error, double, avoid-escape]
-  rest-spread-spacing: error
-  semi-spacing: error
-  semi-style: [error, last]
-  semi: [error, always]
-  space-before-blocks: error
   space-before-function-paren:
     - error
     - anonymous: never
       named: never
       asyncArrow: always # Otherwise requires `async()`
-  space-in-parens: [error, never]
-  space-infix-ops: error
-  spaced-comment: [error, always]
-  strict: error
-  template-curly-spacing: error
-  yoda: error
 
-extends: eslint:recommended
+  # todo: disable airbnb rules for now, need to fix the code and enable them
+  array-callback-return: off
+  camelcase: off
+  class-methods-use-this: off
+  consistent-return: off
+  default-case: off
+  func-names: off
+  function-paren-newline: off
+  global-require: off
+  guard-for-in: off
+  implicit-arrow-linebreak: off
+  import/newline-after-import: off
+  import/no-dynamic-require: off
+  import/no-extraneous-dependencies: off
+  import/order: off
+  lines-around-directive: off
+  max-len: off
+  no-await-in-loop: off
+  no-cond-assign: off
+  no-continue: off
+  no-lonely-if: off
+  no-mixed-operators: off
+  no-multi-assign: off
+  no-new: off
+  no-param-reassign: off
+  no-prototype-builtins: off
+  no-restricted-globals: off
+  no-restricted-properties: off
+  no-restricted-syntax: off
+  no-return-assign: off
+  no-sequences: off
+  no-throw-literal: off
+  no-underscore-dangle: off
+  no-unused-expressions: off
+  one-var-declaration-per-line: off
+  one-var: off
+  operator-linebreak: off
+  prefer-arrow-callback: off
+  prefer-destructuring: off
+  prefer-promise-reject-errors: off
+  prefer-template: off
+  radix: off
+  vars-on-top: off
+  wrap-iife: off
