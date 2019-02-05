@@ -12,14 +12,16 @@ module.exports = function(irc, network) {
 			chan = network.channels[0];
 		}
 
+		const invitedYou = data.invited === irc.user.nick;
+
 		const msg = new Msg({
 			type: Msg.Type.INVITE,
 			time: data.time,
 			from: chan.getUser(data.nick),
 			target: chan.getUser(data.invited),
 			channel: data.channel,
-			highlight: true,
-			invitedYou: data.invited === irc.user.nick,
+			highlight: invitedYou,
+			invitedYou: invitedYou,
 		});
 		chan.pushMessage(client, msg);
 	});
