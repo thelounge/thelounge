@@ -82,23 +82,22 @@ $(function() {
 	});
 
 	function resetInputHeight(input) {
-		input.style.height = input.style.minHeight;
+		input.style.height = "";
 	}
 
 	const input = $("#input")
 		.on("input", function() {
 			const style = window.getComputedStyle(this);
+			const lineHeight = parseFloat(style.lineHeight, 10) || 1;
 
 			// Start by resetting height before computing as scrollHeight does not
 			// decrease when deleting characters
 			resetInputHeight(this);
 
-			this.style.height = Math.min(
-				Math.round(window.innerHeight - 100), // prevent overflow
-				this.scrollHeight
-				+ Math.round(parseFloat(style.borderTopWidth) || 0)
-				+ Math.round(parseFloat(style.borderBottomWidth) || 0)
-			) + "px";
+			// Use scrollHeight to calculate how many lines there are in input, and ceil the value
+			// because some browsers tend to incorrently round the values when using high density
+			// displays or using page zoom feature
+			this.style.height = Math.ceil(this.scrollHeight / lineHeight) * lineHeight + "px";
 
 			chat.find(".chan.active .chat").trigger("keepToBottom"); // fix growing
 		});
