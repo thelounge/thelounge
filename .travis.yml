@@ -13,16 +13,16 @@ os:
 matrix:
   fast_finish: true
   include:
-    - node_js: 10
-      os: windows
-      cache: false
-      env: YARN_GPG=no # starts gpg-agent that never exits
-    - node_js: 10
-      os: osx
     - name: "Production build"
       node_js: 10 # Version used to deploy to npm registry
       os: linux
       env: BUILD_ENV=production
+    - node_js: 10
+      os: osx
+    - node_js: 10
+      os: windows
+      cache: false
+      env: YARN_GPG=no # starts gpg-agent that never exits
 
 cache: yarn
 
