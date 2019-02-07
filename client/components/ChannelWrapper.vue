@@ -1,7 +1,11 @@
 <template>
 	<div
 		v-if="!network.isCollapsed || channel.highlight || channel.type === 'lobby' || (activeChannel && channel === activeChannel.channel)"
-		:class="[ channel.type, { active: activeChannel && channel === activeChannel.channel } ]"
+		:class="[
+			channel.type,
+			{ active: activeChannel && channel === activeChannel.channel },
+			{ 'channel-is-parted': channel.type === 'channel' && channel.state === 0 }
+		]"
 		:aria-label="getAriaLabel()"
 		:title="getAriaLabel()"
 		:data-id="channel.id"

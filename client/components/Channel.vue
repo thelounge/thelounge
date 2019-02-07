@@ -4,7 +4,6 @@
 		:channel="channel"
 		:active-channel="activeChannel">
 		<span class="name">{{ channel.name }}</span>
-		<span v-if="channel.type === 'channel' && channel.state === 0">(parted)</span>
 		<span
 			v-if="channel.unread"
 			:class="{ highlight: channel.highlight }"
