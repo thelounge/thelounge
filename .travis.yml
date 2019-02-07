@@ -15,6 +15,7 @@ matrix:
   include:
     - node_js: 10
       os: windows
+      cache: false
       env: YARN_GPG=no # starts gpg-agent that never exits
     - node_js: 10
       os: osx
