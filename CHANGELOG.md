@@ -4,6 +4,72 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v3.0.1 - 2019-02-11
+
+This patch release fixes a few small things that made it to the previous release.
+
+It includes fixes for issues related to: reconnecting when a nickname is already in use, unnecessary highlights on invites, the auto-expandable message input, channels starting with `&` or `+`, the ` /disconnect` command, and file uploads. Additionnally, `part` messages for the current user are now logged.
+
+A more comprehensive list of changes is available below.
+
+### Changed
+
+- Update production dependencies to their latest versions:
+  - `file-type` ([#2939](https://github.com/thelounge/thelounge/pull/2939), [#3000](https://github.com/thelounge/thelounge/pull/3000))
+  - `chalk` ([#2957](https://github.com/thelounge/thelounge/pull/2957))
+  - `yarn` ([#2965](https://github.com/thelounge/thelounge/pull/2965))
+  - `socketio-file-upload` ([#3001](https://github.com/thelounge/thelounge/pull/3001))
+  - `irc-framework` ([#3040](https://github.com/thelounge/thelounge/pull/3040))
+
+### Fixed
+
+- Always emit `part` message (required for logging) ([#2989](https://github.com/thelounge/thelounge/pull/2989) by [@xPaw](https://github.com/xPaw))
+- Fix `line-height` to match height in input ([#2995](https://github.com/thelounge/thelounge/pull/2995) by [@xPaw](https://github.com/xPaw))
+- Fix incorrect 404 error for files with unknown file type ([#3010](https://github.com/thelounge/thelounge/pull/3010) by [@xPaw](https://github.com/xPaw))
+- Fix up link insertion after uploads to be saner ([#3011](https://github.com/thelounge/thelounge/pull/3011) by [@xPaw](https://github.com/xPaw))
+- Do not get highlight on invites ([#3031](https://github.com/thelounge/thelounge/pull/3031) by [@creesch](https://github.com/creesch))
+- Allow forcing /disconnect to stop reconnection timer from running ([#3034](https://github.com/thelounge/thelounge/pull/3034) by [@xPaw](https://github.com/xPaw))
+- Fix up textarea growing to avoid rounding issues in Chrome ([#3033](https://github.com/thelounge/thelounge/pull/3033) by [@xPaw](https://github.com/xPaw))
+
+### Documentation
+
+In the main repository:
+
+- Do not report the (renamed) Renovate bot as a contributor ([#2997](https://github.com/thelounge/thelounge/pull/2997) by [@astorije](https://github.com/astorije))
+- Add `webirc` key and commas in configuration file examples to make them more understandable ([#3008](https://github.com/thelounge/thelounge/pull/3008) by [@xPaw](https://github.com/xPaw))
+
+On the [website repository](https://github.com/thelounge/thelounge.github.io):
+
+- Use new URL for `ansible-thelounge` ([#196](https://github.com/thelounge/thelounge.github.io/pull/196) by [@astorije](https://github.com/astorije))
+- Add a link to a blog post in the Community page ([#195](https://github.com/thelounge/thelounge.github.io/pull/195) by [@astorije](https://github.com/astorije))
+- Simplify Caddy reverse proxy example by using `transparent` shorthand ([#197](https://github.com/thelounge/thelounge.github.io/pull/197) by [@MarkOtzen](https://github.com/MarkOtzen))
+- Place config update comment in noteblock for visual clarity. ([#198](https://github.com/thelounge/thelounge.github.io/pull/198) by [@EntityReborn](https://github.com/EntityReborn))
+- Regenerate config ([`78ada86`](https://github.com/thelounge/thelounge.github.io/commit/78ada860206376116fcdda13e9c09399e811bfde) by [@xPaw](https://github.com/xPaw))
+- Add title to iframe ([`7c4d0d2`](https://github.com/thelounge/thelounge.github.io/commit/7c4d0d279a686a6db9c0352a0f7c8f002a7678b0) by [@xPaw](https://github.com/xPaw))
+- Apply `word-break` to `<code>` only on small screens ([#202](https://github.com/thelounge/thelounge.github.io/pull/202) by [@xPaw](https://github.com/xPaw))
+
+### Internals
+
+- Use `require.resolve` for yarn ([#2993](https://github.com/thelounge/thelounge/pull/2993) by [@xPaw](https://github.com/xPaw))
+- Keep using npm to clean up dist-tags after a stable release ([#2999](https://github.com/thelounge/thelounge/pull/2999) by [@astorije](https://github.com/astorije))
+- Bump Travis to use Node 10 LTS for Windows, OSX, and production builds ([#3003](https://github.com/thelounge/thelounge/pull/3003) by [@xPaw](https://github.com/xPaw))
+- Make sure the editorconfig indent size applies to all file formats ([#3022](https://github.com/thelounge/thelounge/pull/3022) by [@astorije](https://github.com/astorije))
+- Update development dependencies to their latest versions:
+  - `@babel/preset-env` ([#2942](https://github.com/thelounge/thelounge/pull/2942))
+  - `moment` ([#2991](https://github.com/thelounge/thelounge/pull/2991))
+  - `primer-tooltips` ([#2962](https://github.com/thelounge/thelounge/pull/2962), [#3001](https://github.com/thelounge/thelounge/pull/3001))
+  - `emoji-regex` ([#2941](https://github.com/thelounge/thelounge/pull/2941))
+  - `handlebars-loader` ([#2938](https://github.com/thelounge/thelounge/pull/2938), [#3001](https://github.com/thelounge/thelounge/pull/3001))
+  - `@fortawesome/fontawesome-free` ([#2944](https://github.com/thelounge/thelounge/pull/2944), [#3006](https://github.com/thelounge/thelounge/pull/3006), [#3016](https://github.com/thelounge/thelounge/pull/3016))
+  - `sinon` ([#2986](https://github.com/thelounge/thelounge/pull/2986))
+  - `babel-loader` ([#2954](https://github.com/thelounge/thelounge/pull/2954))
+  - `webpack-cli` ([#2951](https://github.com/thelounge/thelounge/pull/2951), [#3030](https://github.com/thelounge/thelounge/pull/3030))
+  - `eslint` ([#2947](https://github.com/thelounge/thelounge/pull/2947), [#3015](https://github.com/thelounge/thelounge/pull/3015))
+  - `stylelint` ([#3001](https://github.com/thelounge/thelounge/pull/3001))
+  - `webpack` ([#3001](https://github.com/thelounge/thelounge/pull/3001), [#3028](https://github.com/thelounge/thelounge/pull/3028), [#3036](https://github.com/thelounge/thelounge/pull/3036))
+  - `nyc` ([#3029](https://github.com/thelounge/thelounge/pull/3029))
+  - `handlebars` ([#3038](https://github.com/thelounge/thelounge/pull/3038))
+
 ## v3.0.0 - 2019-01-27
 
 For more details, [see the full changelog](https://github.com/thelounge/thelounge/compare/v2.7.1...v3.0.0) and [milestone](https://github.com/thelounge/thelounge/milestone/28?closed=1).
