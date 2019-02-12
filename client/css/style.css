@@ -103,6 +103,8 @@ button {
 	margin: 0;
 	outline: none;
 	padding: 0;
+	-moz-user-select: inherit; /* Firefox makes buttons unselectable by default which breaks copying */
+	user-select: inherit;
 }
 
 code,
