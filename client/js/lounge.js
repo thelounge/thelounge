@@ -103,10 +103,15 @@ window.vueMounted = () => {
 		// sidebar specifically. Needs to be done better when window management gets
 		// refactored.
 		const inSidebar = self.parents("#sidebar, #footer").length > 0;
-		let channel;
+		const channel = inSidebar ? findChannel(Number(self.attr("data-id"))) : null;
 
 		if (vueApp.activeChannel) {
 			const {channel: lastChannel} = vueApp.activeChannel;
+
+			// If user clicks on the currently active channel, do nothing
+			if (channel && lastChannel === channel.channel) {
+				return;
+			}
 
 			if (lastChannel.messages.length > 0) {
 				lastChannel.firstUnread = lastChannel.messages[lastChannel.messages.length - 1].id;
@@ -119,8 +124,6 @@ window.vueMounted = () => {
 		}
 
 		if (inSidebar) {
-			channel = findChannel(Number(self.attr("data-id")));
-
 			vueApp.activeChannel = channel;
 
 			if (channel) {
