@@ -1,26 +1,32 @@
 language: node_js
 
 # https://github.com/nodejs/Release
+# Specify current LTS version here, which is used for publishing to npm
 node_js:
-  - 11 # EOL: June 2019
   - 10 # EOL: April 2021
-  - 8.10.0 # EOL: December 2019 (test exact LTS version)
 
 os:
   - linux
 
+# https://github.com/nodejs/Release
 matrix:
   fast_finish: true
   include:
-    - node_js: 10
+    - name: "Windows build"
       os: windows
+      cache: false # windows cache uploads are slow
       env: YARN_GPG=no # starts gpg-agent that never exits
-    - node_js: 10
+
+    - name: "macOS build"
       os: osx
+
+    # Version used to deploy to npm registry
     - name: "Production build"
-      node_js: 10 # Version used to deploy to npm registry
-      os: linux
       env: BUILD_ENV=production
+
+    # Next node version and minimum supported node version
+    - node_js: 11 # EOL: June 2019
+    - node_js: 8.10.0 # EOL: December 2019 (test exact LTS version)
 
 cache: yarn
 
