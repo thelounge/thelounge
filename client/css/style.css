@@ -1106,10 +1106,6 @@ background on hover (unless active) */
 	touch-action: pan-y;
 }
 
-#chat .chan:not(.special) .messages {
-	margin-top: auto;
-}
-
 #chat .msg {
 	word-wrap: break-word;
 	word-break: break-word; /* Webkit-specific */
