@@ -261,6 +261,7 @@ Chan.prototype.loadMessages = function(client, network) {
 			client.emit("more", {
 				chan: this.id,
 				messages: messages.slice(-100),
+				moreHistoryAvailable: messages.length > 100,
 			});
 
 			if (network.irc.network.cap.isEnabled("znc.in/playback")) {
