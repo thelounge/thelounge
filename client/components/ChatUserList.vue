@@ -13,10 +13,10 @@
 				aria-label="Search among the user list"
 				tabindex="-1"
 				@input="setUserSearchInput"
-				@keydown.up="navigateUserList(-1)"
-				@keydown.down="navigateUserList(1)"
-				@keydown.page-up="navigateUserList(-10)"
-				@keydown.page-down="navigateUserList(10)"
+				@keydown.up="navigateUserList($event, -1)"
+				@keydown.down="navigateUserList($event, 1)"
+				@keydown.page-up="navigateUserList($event, -10)"
+				@keydown.page-down="navigateUserList($event, 10)"
 				@keydown.enter="selectUser">
 		</div>
 		<div class="names">
@@ -146,7 +146,11 @@ export default {
 		removeHoverUser() {
 			this.activeUser = null;
 		},
-		navigateUserList(direction) {
+		navigateUserList(event, direction) {
+			// Prevent propagation to stop global keybind handler from capturing pagedown/pageup
+			// and redirecting it to the message list container for scrolling
+			event.stopImmediatePropagation();
+
 			let users = this.channel.users;
 
 			// Only using filteredUsers when we have to avoids filtering when it's not needed

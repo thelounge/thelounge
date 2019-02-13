@@ -1,7 +1,8 @@
 <template>
 	<div
 		ref="chat"
-		class="chat">
+		class="chat"
+		tabindex="-1">
 		<div :class="['show-more', { show: channel.moreHistoryAvailable }]">
 			<button
 				ref="loadMoreButton"

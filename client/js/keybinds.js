@@ -5,33 +5,6 @@ const Mousetrap = require("mousetrap");
 const utils = require("./utils");
 
 Mousetrap.bind([
-	"pageup",
-	"pagedown",
-], function(e, key) {
-	let container = $("#windows .window.active");
-
-	// Chat windows scroll message container
-	if (container.prop("id") === "chat-container") {
-		container = container.find(".chan.active .chat");
-	}
-
-	container.finish();
-
-	const offset = container.get(0).clientHeight * 0.9;
-	let scrollTop = container.scrollTop();
-
-	if (key === "pageup") {
-		scrollTop = Math.floor(scrollTop - offset);
-	} else {
-		scrollTop = Math.ceil(scrollTop + offset);
-	}
-
-	container.animate({scrollTop}, 200);
-
-	return false;
-});
-
-Mousetrap.bind([
 	"alt+up",
 	"alt+down",
 ], function(e, keys) {
@@ -104,8 +77,6 @@ const ignoredKeys = {
 	19: true, // Pause
 	20: true, // CapsLock
 	27: true, // Escape
-	33: true, // PageUp
-	34: true, // PageDown
 	35: true, // End
 	36: true, // Home
 	37: true, // ArrowLeft
@@ -140,6 +111,12 @@ $(document).on("keydown", (e) => {
 
 	// Ignore all ctrl keys except for ctrl+v to allow pasting
 	if ((e.ctrlKey || e.metaKey) && e.which !== 86) {
+		return;
+	}
+
+	// Redirect pagedown/pageup keys to messages container so it scrolls
+	if (e.which === 33 || e.which === 34) {
+		$("#windows .window.active .chan.active .chat").trigger("focus");
 		return;
 	}
 

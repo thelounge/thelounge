@@ -1044,6 +1044,7 @@ background on hover (unless active) */
 	flex-direction: column;
 	overscroll-behavior: contain;
 	-webkit-overflow-scrolling: touch;
+	outline: none;
 }
 
 #chat .userlist {
