@@ -55,7 +55,6 @@ const inputs = [
 	"mode",
 	"nick",
 	"notice",
-	"query",
 	"quit",
 	"raw",
 	"topic",
