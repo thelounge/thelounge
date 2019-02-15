@@ -888,8 +888,7 @@ background on hover (unless active) */
 	line-height: 1.5;
 }
 
-#loading,
-#windows .window {
+.window {
 	background: var(--window-bg-color);
 	display: none;
 	overflow-y: auto;
@@ -899,7 +898,7 @@ background on hover (unless active) */
 }
 
 #chat .chan,
-#windows .window {
+.window {
 	/* flexbox does not seem to scroll without doing this */
 	position: absolute;
 	bottom: 0;
@@ -1619,9 +1618,17 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #loading {
 	font-size: 14px;
-	z-index: 1;
+	height: 100%;
+}
+
+#loading .window {
+	height: initial;
 	display: flex;
 	flex-direction: column;
+	bottom: 5px;
+	left: 5px;
+	right: 5px;
+	top: 5px;
 }
 
 #loading p {
