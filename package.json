@@ -51,7 +51,7 @@
     "is-utf8": "0.2.1",
     "linkify-it": "2.1.0",
     "lodash": "4.17.11",
-    "mime-types": "2.1.21",
+    "mime-types": "2.1.22",
     "package-json": "6.0.0",
     "read": "1.0.7",
     "read-chunk": "3.0.0",
