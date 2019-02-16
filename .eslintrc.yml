@@ -1,5 +1,4 @@
 ---
-
 root: true
 
 parserOptions:
@@ -28,18 +27,28 @@ rules:
   eqeqeq: error
   handle-callback-err: error
   indent: [error, tab]
-  key-spacing: [error, {beforeColon: false, afterColon: true}]
-  keyword-spacing: [error, {before: true, after: true}]
+  key-spacing:
+    - error
+    - beforeColon: false
+      afterColon: true
+  keyword-spacing:
+    - error
+    - before: true
+      after: true
   linebreak-style: [error, unix]
   no-alert: error
   no-catch-shadow: error
-  no-confusing-arrow: [error, {allowParens: true}]
+  no-confusing-arrow:
+    - error
+    - allowParens: true
   no-control-regex: off
   no-duplicate-imports: error
   no-else-return: error
   no-implicit-globals: error
   no-multi-spaces: error
-  no-multiple-empty-lines: [error, { "max": 1 }]
+  no-multiple-empty-lines:
+    - error
+    - max: 1
   no-shadow: error
   no-template-curly-in-string: error
   no-trailing-spaces: error
@@ -47,7 +56,9 @@ rules:
   no-useless-computed-key: error
   no-useless-constructor: error
   no-useless-return: error
-  no-use-before-define: [error, {functions: false}]
+  no-use-before-define:
+    - error
+    - functions: false
   no-var: error
   object-curly-spacing: [error, never]
   object-shorthand:
@@ -92,7 +103,10 @@ rules:
   vue/require-default-prop: off
   vue/no-v-html: off
   vue/no-use-v-if-with-v-for: off
-  vue/html-closing-bracket-newline: [error, {singleline: never, multiline: never}]
+  vue/html-closing-bracket-newline:
+    - error
+    - singleline: never
+      multiline: never
   vue/multiline-html-element-content-newline: off
   vue/singleline-html-element-content-newline: off
 
