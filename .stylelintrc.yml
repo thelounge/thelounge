@@ -1,10 +1,11 @@
-extends: stylelint-config-standard
+extends:
+  - stylelint-config-standard
+  - stylelint-config-prettier
 
 ignoreFiles:
   - client/css/bootstrap.css
 
 rules:
-  indentation: tab
   # complains about FontAwesome
   font-family-no-missing-generic-family-keyword:
   # needs a lot of refactoring to be enabled
