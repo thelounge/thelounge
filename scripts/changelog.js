@@ -104,7 +104,7 @@ ${prereleaseType(items.version) === "rc" ?
 Bugs may be fixed, but no further features will be added until the next stable version.` :
 
 		`This is a pre-release for v${stableVersion(items.version)} to offer latest changes without having to wait for a stable release.
- At this stage, features may still be added or modified until the first release candidate for this version gets released.`
+At this stage, features may still be added or modified until the first release candidate for this version gets released.`
 }
 
 Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.

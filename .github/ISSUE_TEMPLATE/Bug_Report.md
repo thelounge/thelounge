@@ -1,15 +1,13 @@
 ---
 name: Bug Report
 about: Create a bug report
-
 ---
 
 <!-- Have a question? Join #thelounge on freenode -->
 
-* *Node version:* 
-* *Browser version:* 
-* *Device, operating system:* 
-* *The Lounge version:* 
+- _Node version:_
+- _Browser version:_
+- _Device, operating system:_
+- _The Lounge version:_
 
 ---
-
