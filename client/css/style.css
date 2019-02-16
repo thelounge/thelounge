@@ -47,8 +47,8 @@ body {
 body {
 	background: var(--body-bg-color);
 	color: var(--body-color);
-	font: 16px -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto,
-		"Helvetica Neue", Arial, sans-serif;
+	font: 16px -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+		Arial, sans-serif;
 	margin: 0;
 	-webkit-user-select: none;
 	-moz-user-select: none;
@@ -113,8 +113,8 @@ pre,
 #chat .msg.motd .text,
 .irc-monospace,
 textarea#user-specified-css-input {
-	font-family: Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono",
-		"Courier New", monospace;
+	font-family: Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New",
+		monospace;
 }
 
 code,
@@ -3169,14 +3169,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 			#eee 75%,
 			#eee 100%
 		),
-		linear-gradient(
-			45deg,
-			#eee 25%,
-			#fff 25%,
-			#fff 75%,
-			#eee 75%,
-			#eee 100%
-		);
+		linear-gradient(45deg, #eee 25%, #fff 25%, #fff 75%, #eee 75%, #eee 100%);
 }
 
 #image-viewer .open-btn {

@@ -11,47 +11,20 @@ env:
   node: true
 
 rules:
-  arrow-body-style: error
-  arrow-parens: [error, always]
-  arrow-spacing: error
   block-scoped-var: error
-  block-spacing: [error, always]
-  brace-style: [error, 1tbs]
-  comma-dangle:
-    - error
-    - always-multiline
   curly: [error, all]
-  dot-location: [error, property]
   dot-notation: error
-  eol-last: error
   eqeqeq: error
   handle-callback-err: error
-  indent: [error, tab]
-  key-spacing:
-    - error
-    - beforeColon: false
-      afterColon: true
-  keyword-spacing:
-    - error
-    - before: true
-      after: true
   linebreak-style: [error, unix]
   no-alert: error
   no-catch-shadow: error
-  no-confusing-arrow:
-    - error
-    - allowParens: true
   no-control-regex: off
   no-duplicate-imports: error
   no-else-return: error
   no-implicit-globals: error
-  no-multi-spaces: error
-  no-multiple-empty-lines:
-    - error
-    - max: 1
   no-shadow: error
   no-template-curly-in-string: error
-  no-trailing-spaces: error
   no-unsafe-negation: error
   no-useless-computed-key: error
   no-useless-constructor: error
@@ -60,12 +33,10 @@ rules:
     - error
     - functions: false
   no-var: error
-  object-curly-spacing: [error, never]
   object-shorthand:
     - error
     - methods
     - avoidExplicitReturnArrows: true
-  padded-blocks: [error, never]
   padding-line-between-statements:
     - error
     - blankLine: always
@@ -81,34 +52,12 @@ rules:
   prefer-const: error
   prefer-rest-params: error
   prefer-spread: error
-  quote-props: [error, consistent-as-needed]
-  quotes: [error, double, avoid-escape]
-  rest-spread-spacing: error
-  semi-spacing: error
-  semi-style: [error, last]
-  semi: [error, always]
-  space-before-blocks: error
-  space-before-function-paren:
-    - error
-    - anonymous: never
-      named: never
-      asyncArrow: always # Otherwise requires `async()`
-  space-in-parens: [error, never]
-  space-infix-ops: error
   spaced-comment: [error, always]
   strict: off
-  template-curly-spacing: error
   yoda: error
-  vue/html-indent: [error, tab]
   vue/require-default-prop: off
   vue/no-v-html: off
   vue/no-use-v-if-with-v-for: off
-  vue/html-closing-bracket-newline:
-    - error
-    - singleline: never
-      multiline: never
-  vue/multiline-html-element-content-newline: off
-  vue/singleline-html-element-content-newline: off
 
 plugins:
   - vue
@@ -116,3 +65,5 @@ plugins:
 extends:
   - eslint:recommended
   - plugin:vue/recommended
+  - prettier
+  - prettier/vue

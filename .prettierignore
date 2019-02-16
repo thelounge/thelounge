@@ -1,5 +1,3 @@
 client/css/bootstrap.css
 coverage/
 public/
-*.js
-*.vue
