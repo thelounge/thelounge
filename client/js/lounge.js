@@ -1,36 +1,29 @@
 "use strict";
 
 // vendor libraries
-require("jquery-ui/ui/widgets/sortable");
 const $ = require("jquery");
-const moment = require("moment");
 
 // our libraries
-require("./libs/jquery/stickyscroll");
-const slideoutMenu = require("./slideout");
-const templates = require("../views");
 const socket = require("./socket");
-const render = require("./render");
-require("./socket-events");
-const storage = require("./localStorage");
-const utils = require("./utils");
-require("./webpush");
-require("./keybinds");
-require("./clipboard");
-const contextMenuFactory = require("./contextMenuFactory");
 
-$(function() {
+const {vueApp, findChannel} = require("./vue");
+
+window.vueMounted = () => {
+	require("./socket-events");
+	const slideoutMenu = require("./slideout");
+	const contextMenuFactory = require("./contextMenuFactory");
+	const storage = require("./localStorage");
+	const utils = require("./utils");
+	require("./webpush");
+	require("./keybinds");
+
 	const sidebar = $("#sidebar, #footer");
-	const chat = $("#chat");
-
-	$(document.body).data("app-name", document.title);
-
 	const viewport = $("#viewport");
 
 	function storeSidebarVisibility(name, state) {
 		storage.set(name, state);
 
-		utils.togglePreviewMoreButtonsIfNeeded();
+		vueApp.$emit("resize");
 	}
 
 	// If sidebar overlay is visible and it is clicked, close the sidebar
@@ -56,7 +49,6 @@ $(function() {
 		const isOpen = !viewport.hasClass("userlist-open");
 
 		viewport.toggleClass("userlist-open", isOpen);
-		chat.find(".chan.active .chat").trigger("keepToBottom");
 		storeSidebarVisibility("thelounge.state.userlist", isOpen);
 
 		return false;
@@ -77,80 +69,26 @@ $(function() {
 	});
 
 	viewport.on("click", "#chat .menu", function(e) {
-		e.currentTarget = $(`#sidebar .chan[data-id="${$(this).closest(".chan").data("id")}"]`)[0];
+		e.currentTarget = $(`#sidebar .chan[data-id="${$(this).closest(".chan").attr("data-id")}"]`)[0];
 		return contextMenuFactory.createContextMenu($(this), e).show();
 	});
-
-	function resetInputHeight(input) {
-		input.style.height = "";
-	}
-
-	const input = $("#input")
-		.on("input", function() {
-			const style = window.getComputedStyle(this);
-			const lineHeight = parseFloat(style.lineHeight, 10) || 1;
-
-			// Start by resetting height before computing as scrollHeight does not
-			// decrease when deleting characters
-			resetInputHeight(this);
-
-			// Use scrollHeight to calculate how many lines there are in input, and ceil the value
-			// because some browsers tend to incorrently round the values when using high density
-			// displays or using page zoom feature
-			this.style.height = Math.ceil(this.scrollHeight / lineHeight) * lineHeight + "px";
-
-			chat.find(".chan.active .chat").trigger("keepToBottom"); // fix growing
-		});
 
 	if (navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i)) {
 		$(document.body).addClass("is-apple");
 	}
 
-	$("#form").on("submit", function() {
-		// Triggering click event opens the virtual keyboard on mobile
-		// This can only be called from another interactive event (e.g. button click)
-		input.trigger("click").trigger("focus");
-
-		const target = chat.data("id");
-		const text = input.val();
-
-		if (text.length === 0) {
-			return false;
-		}
-
-		input.val("");
-		resetInputHeight(input.get(0));
-
-		if (text.charAt(0) === "/") {
-			const args = text.substr(1).split(" ");
-			const cmd = args.shift().toLowerCase();
-
-			if (typeof utils.inputCommands[cmd] === "function" && utils.inputCommands[cmd](args)) {
-				return false;
-			}
-		}
-
-		socket.emit("input", {target, text});
-
-		return false;
-	});
-
-	chat.on("click", ".inline-channel", function() {
+	viewport.on("click", ".inline-channel", function() {
 		const name = $(this).attr("data-chan");
 		const chan = utils.findCurrentNetworkChan(name);
 
-		if (chan.length) {
-			chan.trigger("click");
+		if (chan) {
+			$(`#sidebar .chan[data-id="${chan.id}"]`).trigger("click");
 		}
 
 		socket.emit("input", {
-			target: chat.data("id"),
+			target: vueApp.activeChannel.channel.id,
 			text: "/join " + name,
 		});
-	});
-
-	chat.on("click", ".condensed-summary .content", function() {
-		$(this).closest(".msg.condensed").toggleClass("closed");
 	});
 
 	const openWindow = function openWindow(e, {keepSidebarOpen, pushState, replaceHistory} = {}) {
@@ -165,31 +103,35 @@ $(function() {
 		// sidebar specifically. Needs to be done better when window management gets
 		// refactored.
 		const inSidebar = self.parents("#sidebar, #footer").length > 0;
+		const channel = inSidebar ? findChannel(Number(self.attr("data-id"))) : null;
+
+		if (vueApp.activeChannel) {
+			const {channel: lastChannel} = vueApp.activeChannel;
+
+			// If user clicks on the currently active channel, do nothing
+			if (channel && lastChannel === channel.channel) {
+				return;
+			}
+
+			if (lastChannel.messages.length > 0) {
+				lastChannel.firstUnread = lastChannel.messages[lastChannel.messages.length - 1].id;
+			}
+
+			if (lastChannel.messages.length > 100) {
+				lastChannel.messages.splice(0, lastChannel.messages.length - 100);
+				lastChannel.moreHistoryAvailable = true;
+			}
+		}
 
 		if (inSidebar) {
-			chat.data(
-				"id",
-				self.data("id")
-			);
-			socket.emit(
-				"open",
-				self.data("id")
-			);
+			vueApp.activeChannel = channel;
 
-			sidebar.find(".active")
-				.removeClass("active")
-				.attr("aria-selected", false);
-
-			self.addClass("active")
-				.attr("aria-selected", true)
-				.find(".badge")
-				.attr("data-highlight", 0)
-				.removeClass("highlight")
-				.empty();
-
-			if (sidebar.find(".highlight").length === 0) {
-				utils.toggleNotificationMarkers(false);
+			if (channel) {
+				channel.channel.highlight = 0;
+				channel.channel.unread = 0;
 			}
+
+			socket.emit("open", channel ? channel.channel.id : null);
 
 			if (!keepSidebarOpen && $(window).outerWidth() <= utils.mobileViewportPixels) {
 				slideoutMenu.toggle(false);
@@ -199,59 +141,33 @@ $(function() {
 		const lastActive = $("#windows > .active");
 
 		lastActive
-			.removeClass("active")
-			.find(".chat")
-			.unsticky();
-
-		const lastActiveChan = lastActive.find(".chan.active");
-
-		if (lastActiveChan.length > 0) {
-			lastActiveChan
-				.removeClass("active")
-				.find(".unread-marker")
-				.data("unread-id", 0)
-				.appendTo(lastActiveChan.find(".messages"));
-
-			render.trimMessageInChannel(lastActiveChan, 100);
-		}
+			.removeClass("active");
 
 		const chan = $(target)
 			.addClass("active")
 			.trigger("show");
 
-		utils.togglePreviewMoreButtonsIfNeeded();
-		utils.updateTitle();
-
-		const type = chan.data("type");
-		let placeholder = "";
-
-		if (type === "channel" || type === "query") {
-			placeholder = `Write to ${chan.attr("aria-label")}`;
-		}
-
-		input
-			.prop("placeholder", placeholder)
-			.attr("aria-label", placeholder);
+		utils.synchronizeNotifiedState();
 
 		if (self.hasClass("chan")) {
-			$("#chat-container").addClass("active");
-			$("#nick").text(self.closest(".network").attr("data-nick"));
+			vueApp.$nextTick(() => $("#chat-container").addClass("active"));
 		}
 
 		const chanChat = chan.find(".chat");
 
-		if (chanChat.length > 0 && type !== "special") {
-			chanChat.sticky();
-
+		if (chanChat.length > 0 && channel.type !== "special") {
 			// On touch devices unfocus (blur) the input to correctly close the virtual keyboard
 			// An explicit blur is required, as the keyboard may open back up if the focus remains
 			// See https://github.com/thelounge/thelounge/issues/2257
-			input.trigger("ontouchstart" in window ? "blur" : "focus");
+			$("#input").trigger("ontouchstart" in window ? "blur" : "focus");
 		}
 
-		if (chan.data("needsNamesRefresh") === true) {
-			chan.data("needsNamesRefresh", false);
-			socket.emit("names", {target: self.data("id")});
+		if (channel && channel.channel.usersOutdated) {
+			channel.channel.usersOutdated = false;
+
+			socket.emit("names", {
+				target: channel.channel.id,
+			});
 		}
 
 		// Pushes states to history web API when clicking elements with a data-target attribute.
@@ -268,7 +184,7 @@ $(function() {
 		if (self.prop("id")) {
 			state.clickTarget = `#${self.prop("id")}`;
 		} else if (self.hasClass("chan")) {
-			state.clickTarget = `#sidebar .chan[data-id="${self.data("id")}"]`;
+			state.clickTarget = `#sidebar .chan[data-id="${self.attr("data-id")}"]`;
 		} else {
 			state.clickTarget = `#footer button[data-target="${target}"]`;
 		}
@@ -293,30 +209,8 @@ $(function() {
 	});
 
 	$(document).on("visibilitychange focus click", () => {
-		if (sidebar.find(".highlight").length === 0) {
-			utils.toggleNotificationMarkers(false);
-		}
+		utils.synchronizeNotifiedState();
 	});
-
-	// Compute how many milliseconds are remaining until the next day starts
-	function msUntilNextDay() {
-		return moment().add(1, "day").startOf("day") - moment();
-	}
-
-	// Go through all Today/Yesterday date markers in the DOM and recompute their
-	// labels. When done, restart the timer for the next day.
-	function updateDateMarkers() {
-		$(".date-marker-text[data-label='Today'], .date-marker-text[data-label='Yesterday']")
-			.closest(".date-marker-container")
-			.each(function() {
-				$(this).replaceWith(templates.date_marker({time: $(this).data("time")}));
-			});
-
-		// This should always be 24h later but re-computing exact value just in case
-		setTimeout(updateDateMarkers, msUntilNextDay());
-	}
-
-	setTimeout(updateDateMarkers, msUntilNextDay());
 
 	window.addEventListener("popstate", (e) => {
 		const {state} = e;
@@ -348,4 +242,4 @@ $(function() {
 
 	// Only start opening socket.io connection after all events have been registered
 	socket.open();
-});
+};

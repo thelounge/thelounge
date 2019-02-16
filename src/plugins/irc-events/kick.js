@@ -27,6 +27,11 @@ module.exports = function(irc, network) {
 		if (data.kicked === irc.user.nick) {
 			chan.users = new Map();
 			chan.state = Chan.State.PARTED;
+
+			client.emit("channel:state", {
+				chan: chan.id,
+				state: chan.state,
+			});
 		} else {
 			chan.removeUser(msg.target);
 		}

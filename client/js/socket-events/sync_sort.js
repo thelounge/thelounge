@@ -2,15 +2,8 @@
 
 const $ = require("jquery");
 const socket = require("../socket");
-const options = require("../options");
 
 socket.on("sync_sort", function(data) {
-	// Syncs the order of channels or networks when they are reordered
-	if (options.ignoreSortSync) {
-		options.ignoreSortSync = false;
-		return; // Ignore syncing because we 'caused' it
-	}
-
 	const type = data.type;
 	const order = data.order;
 	const container = $(".networks");
@@ -20,7 +13,7 @@ socket.on("sync_sort", function(data) {
 		$.each(order, function(index, value) {
 			const position = $(container.children(".network")[index]);
 
-			if (position.data("id") === value) { // Network in correct place
+			if (Number(position.attr("data-id")) === value) { // Network in correct place
 				return true; // No point in continuing
 			}
 
@@ -34,7 +27,7 @@ socket.on("sync_sort", function(data) {
 
 			const position = $(network.children(".chan")[index]); // Target channel at position
 
-			if (position.data("id") === value) { // Channel in correct place
+			if (Number(position.attr("data-id")) === value) { // Channel in correct place
 				return true; // No point in continuing
 			}
 

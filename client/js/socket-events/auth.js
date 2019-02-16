@@ -5,13 +5,15 @@ const socket = require("../socket");
 const storage = require("../localStorage");
 const utils = require("../utils");
 const templates = require("../../views");
+const {vueApp} = require("../vue");
 
 socket.on("auth", function(data) {
 	// If we reconnected and serverHash differs, that means the server restarted
 	// And we will reload the page to grab the latest version
 	if (utils.serverHash > -1 && data.serverHash > -1 && data.serverHash !== utils.serverHash) {
 		socket.disconnect();
-		$("#connection-error").text("Server restarted, reloading…");
+		vueApp.isConnected = false;
+		vueApp.currentUserVisibleError = "Server restarted, reloading…";
 		location.reload(true);
 		return;
 	}
@@ -51,7 +53,8 @@ socket.on("auth", function(data) {
 	if (!data.success) {
 		if (login.length === 0) {
 			socket.disconnect();
-			$("#connection-error").text("Authentication failed, reloading…");
+			vueApp.isConnected = false;
+			vueApp.currentUserVisibleError = "Authentication failed, reloading…";
 			location.reload();
 			return;
 		}
@@ -66,8 +69,21 @@ socket.on("auth", function(data) {
 		token = storage.get("token");
 
 		if (token) {
-			$("#loading-page-message, #connection-error").text("Authorizing…");
-			const lastMessage = utils.lastMessageId;
+			vueApp.currentUserVisibleError = "Authorizing…";
+			$("#loading-page-message").text(vueApp.currentUserVisibleError);
+
+			let lastMessage = -1;
+
+			for (const network of vueApp.networks) {
+				for (const chan of network.channels) {
+					for (const msg of chan.messages) {
+						if (msg.id > lastMessage) {
+							lastMessage = msg.id;
+						}
+					}
+				}
+			}
+
 			socket.emit("auth", {user, token, lastMessage});
 		}
 	}
@@ -80,6 +96,7 @@ socket.on("auth", function(data) {
 		return;
 	}
 
+	$("#loading").remove();
 	$("#footer")
 		.find(".sign-in")
 		.trigger("click", {

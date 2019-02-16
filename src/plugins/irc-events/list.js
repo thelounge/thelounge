@@ -1,7 +1,6 @@
 "use strict";
 
 const Chan = require("../../models/chan");
-const Msg = require("../../models/msg");
 
 module.exports = function(irc, network) {
 	const client = this;
@@ -10,30 +9,21 @@ module.exports = function(irc, network) {
 	irc.on("channel list start", function() {
 		network.chanCache = [];
 
-		updateListStatus(new Msg({
+		updateListStatus({
 			text: "Loading channel list, this can take a moment...",
-			type: "channel_list_loading",
-		}));
+		});
 	});
 
 	irc.on("channel list", function(channels) {
 		Array.prototype.push.apply(network.chanCache, channels);
+
+		updateListStatus({
+			text: `Loaded ${network.chanCache.length} channels...`,
+		});
 	});
 
 	irc.on("channel list end", function() {
-		updateListStatus(new Msg({
-			type: "channel_list",
-			channels: network.chanCache.sort(function(a, b) {
-				return b.num_users - a.num_users;
-			}).slice(0, MAX_CHANS),
-		}));
-
-		if (network.chanCache.length > MAX_CHANS) {
-			updateListStatus(new Msg({
-				type: "channel_list_truncated",
-				text: "Channel list is too large: truncated to " + MAX_CHANS + " channels.",
-			}));
-		}
+		updateListStatus(network.chanCache.sort((a, b) => b.num_users - a.num_users).slice(0, MAX_CHANS));
 
 		network.chanCache = [];
 	});
@@ -44,7 +34,9 @@ module.exports = function(irc, network) {
 		if (typeof chan === "undefined") {
 			chan = client.createChannel({
 				type: Chan.Type.SPECIAL,
+				special: Chan.SpecialType.CHANNELLIST,
 				name: "Channel List",
+				data: msg,
 			});
 
 			client.emit("join", {
@@ -52,11 +44,13 @@ module.exports = function(irc, network) {
 				chan: chan.getFilteredClone(true),
 				index: network.addChannel(chan),
 			});
-		}
+		} else {
+			chan.data = msg;
 
-		client.emit("msg", {
-			chan: chan.id,
-			msg: msg,
-		});
+			client.emit("msg:special", {
+				chan: chan.id,
+				data: msg,
+			});
+		}
 	}
 };

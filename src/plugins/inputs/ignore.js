@@ -92,27 +92,32 @@ exports.input = function(network, chan, cmd, args) {
 			}));
 		} else {
 			const chanName = "Ignored users";
+			const ignored = network.ignoreList.map((data) => ({
+				hostmask: `${data.nick}!${data.ident}@${data.hostname}`,
+				when: data.when,
+			}));
 			let newChan = network.getChannel(chanName);
 
 			if (typeof newChan === "undefined") {
 				newChan = client.createChannel({
 					type: Chan.Type.SPECIAL,
+					special: Chan.SpecialType.IGNORELIST,
 					name: chanName,
+					data: ignored,
 				});
 				client.emit("join", {
 					network: network.uuid,
 					chan: newChan.getFilteredClone(true),
 					index: network.addChannel(newChan),
 				});
-			}
+			} else {
+				newChan.data = ignored;
 
-			newChan.pushMessage(client, new Msg({
-				type: Msg.Type.IGNORELIST,
-				ignored: network.ignoreList.map((data) => ({
-					hostmask: `${data.nick}!${data.ident}@${data.hostname}`,
-					when: data.when,
-				})),
-			}), true);
+				client.emit("msg:special", {
+					chan: newChan.id,
+					data: ignored,
+				});
+			}
 		}
 
 		break;

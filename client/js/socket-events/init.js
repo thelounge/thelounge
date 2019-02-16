@@ -3,35 +3,65 @@
 const $ = require("jquery");
 const escape = require("css.escape");
 const socket = require("../socket");
-const render = require("../render");
 const webpush = require("../webpush");
 const slideoutMenu = require("../slideout");
 const sidebar = $("#sidebar");
 const storage = require("../localStorage");
 const utils = require("../utils");
+const {vueApp, initChannel} = require("../vue");
 
 socket.on("init", function(data) {
-	$("#loading-page-message, #connection-error").text("Rendering…");
+	vueApp.currentUserVisibleError = "Rendering…";
+	$("#loading-page-message").text(vueApp.currentUserVisibleError);
 
-	const lastMessageId = utils.lastMessageId;
-	let previousActive = 0;
+	const previousActive = vueApp.activeChannel && vueApp.activeChannel.channel.id;
 
-	if (lastMessageId > -1) {
-		previousActive = sidebar.find(".active").data("id");
-		sidebar.find(".networks").empty();
+	const networks = new Set(JSON.parse(storage.get("thelounge.networks.collapsed")));
+
+	for (const network of data.networks) {
+		network.isCollapsed = networks.has(network.uuid);
+		network.channels.forEach(initChannel);
+
+		const currentNetwork = vueApp.networks.find((n) => n.uuid === network.uuid);
+
+		// If we are reconnecting, merge existing state variables because they don't exist on the server
+		if (!currentNetwork) {
+			network.isJoinChannelShown = false;
+
+			continue;
+		}
+
+		network.isJoinChannelShown = currentNetwork.isJoinChannelShown;
+
+		for (const channel of network.channels) {
+			const currentChannel = currentNetwork.channels.find((c) => c.id === channel.id);
+
+			if (!currentChannel) {
+				continue;
+			}
+
+			channel.scrolledToBottom = currentChannel.scrolledToBottom;
+			channel.pendingMessage = currentChannel.pendingMessage;
+
+			// Reconnection only sends new messages, so merge it on the client
+			// Only concat if server sent us less than 100 messages so we don't introduce gaps
+			if (currentChannel.messages && channel.messages.length < 100) {
+				channel.messages = currentChannel.messages.concat(channel.messages);
+			}
+
+			if (currentChannel.moreHistoryAvailable) {
+				channel.moreHistoryAvailable = true;
+			}
+		}
 	}
 
-	if (data.networks.length === 0) {
-		sidebar.find(".empty").show();
-	} else {
-		render.renderNetworks(data);
-	}
+	vueApp.networks = data.networks;
+	vueApp.isConnected = true;
+	vueApp.currentUserVisibleError = null;
 
-	$("#connection-error").removeClass("shown");
-	$(".show-more button, #input").prop("disabled", false);
-	$("#submit").show();
+	if (!vueApp.initialized) {
+		vueApp.initialized = true;
 
-	if (lastMessageId < 0) {
 		if (data.token) {
 			storage.set("token", data.token);
 		}
@@ -66,7 +96,10 @@ socket.on("init", function(data) {
 		}
 	}
 
-	openCorrectChannel(previousActive, data.active);
+	vueApp.$nextTick(() => openCorrectChannel(previousActive, data.active));
+
+	utils.confirmExit();
+	utils.synchronizeNotifiedState();
 });
 
 function openCorrectChannel(clientActive, serverActive) {

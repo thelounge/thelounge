@@ -2,14 +2,11 @@
 
 const $ = require("jquery");
 const socket = require("../socket");
-const render = require("../render");
 const utils = require("../utils");
 const options = require("../options");
-const helpers_roundBadgeNumber = require("../libs/handlebars/roundBadgeNumber");
 const cleanIrcMessage = require("../libs/handlebars/ircmessageparser/cleanIrcMessage");
 const webpush = require("../webpush");
-const chat = $("#chat");
-const sidebar = $("#sidebar");
+const {vueApp, findChannel} = require("../vue");
 
 let pop;
 
@@ -23,130 +20,76 @@ try {
 }
 
 socket.on("msg", function(data) {
-	// We set a maximum timeout of 2 seconds so that messages don't take too long to appear.
-	utils.requestIdleCallback(() => processReceivedMessage(data), 2000);
-});
+	const receivingChannel = findChannel(data.chan);
 
-function processReceivedMessage(data) {
-	let targetId = data.chan;
-	let target = "#chan-" + targetId;
-	let channel = chat.find(target);
-	let sidebarTarget = sidebar.find("[data-target='" + target + "']");
+	if (!receivingChannel) {
+		return;
+	}
+
+	let channel = receivingChannel.channel;
+	const isActiveChannel = vueApp.activeChannel && vueApp.activeChannel.channel === channel;
 
 	// Display received notices and errors in currently active channel.
 	// Reloading the page will put them back into the lobby window.
-	if (data.msg.showInActive) {
-		const activeOnNetwork = sidebarTarget.parent().find(".active");
+	// We only want to put errors/notices in active channel if they arrive on the same network
+	if (data.msg.showInActive && vueApp.activeChannel && vueApp.activeChannel.network === receivingChannel.network) {
+		channel = vueApp.activeChannel.channel;
 
-		// We only want to put errors/notices in active channel if they arrive on the same network
-		if (activeOnNetwork.length > 0) {
-			targetId = data.chan = activeOnNetwork.data("id");
+		data.chan = channel.id;
+	} else if (!isActiveChannel) {
+		// Do not set unread counter for channel if it is currently active on this client
+		// It may increase on the server before it processes channel open event from this client
 
-			target = "#chan-" + targetId;
-			channel = chat.find(target);
-			sidebarTarget = sidebar.find("[data-target='" + target + "']");
+		if (typeof data.highlight !== "undefined") {
+			channel.highlight = data.highlight;
+		}
+
+		if (typeof data.unread !== "undefined") {
+			channel.unread = data.unread;
 		}
 	}
 
-	const scrollContainer = channel.find(".chat");
-	const container = channel.find(".messages");
-	const activeChannelId = chat.find(".chan.active").data("id");
+	channel.messages.push(data.msg);
 
-	if (data.msg.type === "channel_list" || data.msg.type === "ban_list" || data.msg.type === "ignore_list") {
-		$(container).empty();
-	}
-
-	// Add message to the container
-	render.appendMessage(
-		container,
-		targetId,
-		channel.data("type"),
-		data.msg
-	);
-
-	if (activeChannelId === targetId) {
-		scrollContainer.trigger("keepToBottom");
-	}
-
-	notifyMessage(targetId, channel, data);
-
-	let shouldMoveMarker = data.msg.self;
-
-	if (!shouldMoveMarker) {
-		const lastChild = container.children().last();
-
-		// If last element is hidden (e.g. hidden status messages) check the element before it.
-		// If it's unread marker or date marker, then move unread marker to the bottom
-		// so that it isn't displayed as the last element in chat.
-		// display properly is checked instead of using `:hidden` selector because it doesn't work in non-active channels.
-		if (lastChild.css("display") === "none") {
-			const prevChild = lastChild.prev();
-
-			shouldMoveMarker =
-				prevChild.hasClass("unread-marker") ||
-				(prevChild.hasClass("date-marker") && prevChild.prev().hasClass("unread-marker"));
-		}
-	}
-
-	if (shouldMoveMarker) {
-		container
-			.find(".unread-marker")
-			.data("unread-id", 0)
-			.appendTo(container);
-	}
-
-	// Clear unread/highlight counter if self-message
 	if (data.msg.self) {
-		sidebarTarget.find(".badge")
-			.attr("data-highlight", 0)
-			.removeClass("highlight")
-			.empty();
-
-		utils.updateTitle();
+		channel.firstUnread = data.msg.id;
+	} else {
+		notifyMessage(data.chan, channel, vueApp.activeChannel, data.msg);
 	}
 
 	let messageLimit = 0;
 
-	if (activeChannelId !== targetId) {
+	if (!isActiveChannel) {
 		// If message arrives in non active channel, keep only 100 messages
 		messageLimit = 100;
-	} else if (scrollContainer.isScrollBottom()) {
+	} else if (channel.scrolledToBottom) {
 		// If message arrives in active channel, keep 500 messages if scroll is currently at the bottom
 		messageLimit = 500;
 	}
 
-	if (messageLimit > 0) {
-		render.trimMessageInChannel(channel, messageLimit);
+	if (messageLimit > 0 && channel.messages.length > messageLimit) {
+		channel.messages.splice(0, channel.messages.length - messageLimit);
+		channel.moreHistoryAvailable = true;
 	}
 
-	if ((data.msg.type === "message" || data.msg.type === "action") && channel.hasClass("channel")) {
-		const nicks = channel.find(".userlist").data("nicks");
+	if ((data.msg.type === "message" || data.msg.type === "action") && channel.type === "channel") {
+		const user = channel.users.find((u) => u.nick === data.msg.from.nick);
 
-		if (nicks) {
-			const find = nicks.indexOf(data.msg.from.nick);
-
-			if (find !== -1) {
-				nicks.splice(find, 1);
-				nicks.unshift(data.msg.from.nick);
-			}
+		if (user) {
+			user.lastMessage = (new Date(data.msg.time)).getTime() || Date.now();
 		}
 	}
-}
 
-function notifyMessage(targetId, channel, msg) {
-	const serverUnread = msg.unread;
-	const serverHighlight = msg.highlight;
-
-	msg = msg.msg;
-
-	if (msg.self) {
-		return;
+	if (data.msg.self || data.msg.highlight) {
+		utils.synchronizeNotifiedState();
 	}
+});
 
-	const button = sidebar.find(".chan[data-id='" + targetId + "']");
+function notifyMessage(targetId, channel, activeChannel, msg) {
+	const button = $("#sidebar .chan[data-id='" + targetId + "']");
 
 	if (msg.highlight || (options.settings.notifyAllMessages && msg.type === "message")) {
-		if (!document.hasFocus() || !channel.hasClass("active")) {
+		if (!document.hasFocus() || !activeChannel || activeChannel.channel !== channel) {
 			if (options.settings.notification) {
 				try {
 					pop.play();
@@ -154,8 +97,6 @@ function notifyMessage(targetId, channel, msg) {
 					// On mobile, sounds can not be played without user interaction.
 				}
 			}
-
-			utils.toggleNotificationMarkers(true);
 
 			if (options.settings.desktopNotifications && ("Notification" in window) && Notification.permission === "granted") {
 				let title;
@@ -167,8 +108,8 @@ function notifyMessage(targetId, channel, msg) {
 				} else {
 					title = msg.from.nick;
 
-					if (!button.hasClass("query")) {
-						title += " (" + button.attr("aria-label").trim() + ")";
+					if (channel.type !== "query") {
+						title += ` (${channel.name})`;
 					}
 
 					if (msg.type === "message") {
@@ -210,19 +151,5 @@ function notifyMessage(targetId, channel, msg) {
 				}
 			}
 		}
-	}
-
-	if (!serverUnread || button.hasClass("active")) {
-		return;
-	}
-
-	const badge = button.find(".badge")
-		.attr("data-highlight", serverHighlight)
-		.html(helpers_roundBadgeNumber(serverUnread));
-
-	if (msg.highlight) {
-		badge.addClass("highlight");
-
-		utils.updateTitle();
 	}
 }

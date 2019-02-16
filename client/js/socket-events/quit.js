@@ -1,31 +1,23 @@
 "use strict";
 
 const $ = require("jquery");
-const chat = $("#chat");
 const socket = require("../socket");
 const sidebar = $("#sidebar");
+const {vueApp} = require("../vue");
 
 socket.on("quit", function(data) {
-	const id = data.network;
-	const network = sidebar.find(`.network[data-uuid="${id}"]`);
+	vueApp.networks.splice(vueApp.networks.findIndex((n) => n.uuid === data.network), 1);
 
-	network.children(".chan").each(function() {
-		// this = child
-		chat.find($(this).attr("data-target")).remove();
+	vueApp.$nextTick(() => {
+		const chan = sidebar.find(".chan");
+
+		if (chan.length === 0) {
+			// Open the connect window
+			$("#footer .connect").trigger("click", {
+				pushState: false,
+			});
+		} else {
+			chan.eq(0).trigger("click");
+		}
 	});
-
-	network.remove();
-
-	const chan = sidebar.find(".chan");
-
-	if (chan.length === 0) {
-		sidebar.find(".empty").show();
-
-		// Open the connect window
-		$("#footer .connect").trigger("click", {
-			pushState: false,
-		});
-	} else {
-		chan.eq(0).trigger("click");
-	}
 });

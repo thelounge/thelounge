@@ -10,6 +10,7 @@ const Network = require("./models/network");
 const Helper = require("./helper");
 const UAParser = require("ua-parser-js");
 const uuidv4 = require("uuid/v4");
+const escapeRegExp = require("lodash/escapeRegExp");
 
 const MessageStorage = require("./plugins/messageStorage/sqlite");
 const TextFileMessageStorage = require("./plugins/messageStorage/text");
@@ -81,6 +82,7 @@ function Client(manager, name, config = {}) {
 		sockets: manager.sockets,
 		manager: manager,
 		messageStorage: [],
+		highlightRegex: null,
 	});
 
 	const client = this;
@@ -110,6 +112,12 @@ function Client(manager, name, config = {}) {
 	if (typeof client.config.sessions !== "object") {
 		client.config.sessions = {};
 	}
+
+	if (typeof client.config.clientSettings !== "object") {
+		client.config.clientSettings = {};
+	}
+
+	client.compileCustomHighlights();
 
 	_.forOwn(client.config.sessions, (session) => {
 		if (session.pushSubscription) {
@@ -373,6 +381,29 @@ Client.prototype.inputLine = function(data) {
 	}
 };
 
+Client.prototype.compileCustomHighlights = function() {
+	const client = this;
+
+	if (typeof client.config.clientSettings.highlights !== "string") {
+		client.highlightRegex = null;
+		return;
+	}
+
+	// Ensure we don't have empty string in the list of highlights
+	// otherwise, users get notifications for everything
+	const highlightsTokens = client.config.clientSettings.highlights
+		.split(",")
+		.map((highlight) => escapeRegExp(highlight.trim()))
+		.filter((highlight) => highlight.length > 0);
+
+	if (highlightsTokens.length === 0) {
+		client.highlightRegex = null;
+		return;
+	}
+
+	client.highlightRegex = new RegExp(`(?:^| |\t)(?:${highlightsTokens.join("|")})(?:\t| |$)`, "i");
+};
+
 Client.prototype.more = function(data) {
 	const client = this;
 	const target = client.find(data.target);
@@ -400,6 +431,7 @@ Client.prototype.more = function(data) {
 	return {
 		chan: chan.id,
 		messages: messages,
+		moreHistoryAvailable: index > 100,
 	};
 };
 
@@ -421,9 +453,12 @@ Client.prototype.open = function(socketId, target) {
 		return;
 	}
 
-	target.chan.firstUnread = 0;
 	target.chan.unread = 0;
 	target.chan.highlight = 0;
+
+	if (target.chan.messages.length > 0) {
+		target.chan.firstUnread = target.chan.messages[target.chan.messages.length - 1].id;
+	}
 
 	attachedClient.openChannel = target.chan.id;
 	this.lastActiveChannel = target.chan.id;

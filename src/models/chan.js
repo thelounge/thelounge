@@ -16,6 +16,12 @@ Chan.Type = {
 	SPECIAL: "special",
 };
 
+Chan.SpecialType = {
+	BANLIST: "list_bans",
+	CHANNELLIST: "list_channels",
+	IGNORELIST: "list_ignored",
+};
+
 Chan.State = {
 	PARTED: 0,
 	JOINED: 1,
@@ -53,7 +59,7 @@ Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 	if (msg.self) {
 		// reset counters/markers when receiving self-/echo-message
 		this.unread = 0;
-		this.firstUnread = 0;
+		this.firstUnread = msg.id;
 		this.highlight = 0;
 	} else if (!isOpen) {
 		if (!this.firstUnread) {
@@ -172,12 +178,14 @@ Chan.prototype.getFilteredClone = function(lastActiveChannel, lastMessage) {
 				newChannel[prop] = this[prop]
 					.filter((m) => m.id > lastMessage)
 					.slice(-100);
+				newChannel.moreHistoryAvailable = this[prop].length > 100;
 			} else {
 				// If channel is active, send up to 100 last messages, for all others send just 1
 				// Client will automatically load more messages whenever needed based on last seen messages
-				const messagesToSend = lastActiveChannel === true || this.id === lastActiveChannel ? -100 : -1;
+				const messagesToSend = lastActiveChannel === true || this.id === lastActiveChannel ? 100 : 1;
 
-				newChannel[prop] = this[prop].slice(messagesToSend);
+				newChannel[prop] = this[prop].slice(-messagesToSend);
+				newChannel.moreHistoryAvailable = this[prop].length > messagesToSend;
 			}
 		} else {
 			newChannel[prop] = this[prop];
@@ -253,6 +261,7 @@ Chan.prototype.loadMessages = function(client, network) {
 			client.emit("more", {
 				chan: this.id,
 				messages: messages.slice(-100),
+				moreHistoryAvailable: messages.length > 100,
 			});
 
 			if (network.irc.network.cap.isEnabled("znc.in/playback")) {

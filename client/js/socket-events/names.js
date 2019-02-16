@@ -1,6 +1,12 @@
 "use strict";
 
 const socket = require("../socket");
-const render = require("../render");
+const {findChannel} = require("../vue");
 
-socket.on("names", render.renderChannelUsers);
+socket.on("names", function(data) {
+	const channel = findChannel(data.id);
+
+	if (channel) {
+		channel.channel.users = data.users;
+	}
+});

@@ -3,44 +3,29 @@
 const $ = require("jquery");
 const escape = require("css.escape");
 const viewport = $("#viewport");
+const {vueApp} = require("./vue");
 
 var serverHash = -1; // eslint-disable-line no-var
-var lastMessageId = -1; // eslint-disable-line no-var
 
 module.exports = {
 	// Same value as media query in CSS that forces sidebars to become overlays
 	mobileViewportPixels: 768,
-	inputCommands: {collapse, expand, join},
 	findCurrentNetworkChan,
 	serverHash,
-	lastMessageId,
 	confirmExit,
 	scrollIntoViewNicely,
 	hasRoleInChannel,
 	move,
 	closeChan,
-	resetHeight,
-	toggleNotificationMarkers,
-	updateTitle,
+	synchronizeNotifiedState,
 	togglePasswordField,
 	requestIdleCallback,
-	togglePreviewMoreButtonsIfNeeded,
 };
 
 function findCurrentNetworkChan(name) {
 	name = name.toLowerCase();
 
-	return $(".network .chan.active")
-		.parent(".network")
-		.find(".chan")
-		.filter(function() {
-			return $(this).attr("aria-label").toLowerCase() === name;
-		})
-		.first();
-}
-
-function resetHeight(element) {
-	element.style.height = element.style.minHeight;
+	return vueApp.activeChannel.network.channels.find((c) => c.name.toLowerCase() === name);
 }
 
 // Given a channel element will determine if the lounge user or a given nick is one of the supplied roles.
@@ -49,10 +34,10 @@ function hasRoleInChannel(channel, roles, nick) {
 		return false;
 	}
 
-	const channelID = channel.data("id");
+	const channelID = channel.attr("data-id");
 	const network = $("#sidebar .network").has(`.chan[data-id="${channelID}"]`);
 	const target = nick || network.attr("data-nick");
-	const user = channel.find(`.names-original .user[data-name="${escape(target)}"]`).first();
+	const user = channel.find(`.names .user[data-name="${escape(target)}"]`).first();
 	return user.parent().is("." + roles.join(", ."));
 }
 
@@ -63,37 +48,33 @@ function scrollIntoViewNicely(el) {
 	el.scrollIntoView({block: "center", inline: "nearest"});
 }
 
-function collapse() {
-	$(".chan.active .toggle-button.toggle-preview.opened").click();
-	return true;
-}
+const favicon = $("#favicon");
 
-function expand() {
-	$(".chan.active .toggle-button.toggle-preview:not(.opened)").click();
-	return true;
-}
+function synchronizeNotifiedState() {
+	updateTitle();
 
-function join(args) {
-	const channel = args[0];
+	let hasAnyHighlights = false;
 
-	if (channel) {
-		const chan = findCurrentNetworkChan(channel);
-
-		if (chan.length) {
-			chan.trigger("click");
+	for (const network of vueApp.networks) {
+		for (const chan of network.channels) {
+			if (chan.highlight > 0) {
+				hasAnyHighlights = true;
+				break;
+			}
 		}
 	}
-}
 
-const favicon = $("#favicon");
+	toggleNotificationMarkers(hasAnyHighlights);
+}
 
 function toggleNotificationMarkers(newState) {
 	// Toggles the favicon to red when there are unread notifications
-	if (favicon.data("toggled") !== newState) {
+	if (vueApp.isNotified !== newState) {
+		vueApp.isNotified = newState;
+
 		const old = favicon.prop("href");
 		favicon.prop("href", favicon.data("other"));
 		favicon.data("other", old);
-		favicon.data("toggled", newState);
 	}
 
 	// Toggles a dot on the menu icon when there are unread notifications
@@ -101,18 +82,20 @@ function toggleNotificationMarkers(newState) {
 }
 
 function updateTitle() {
-	let title = $(document.body).data("app-name");
-	const chanTitle = $("#sidebar").find(".chan.active").attr("aria-label");
+	let title = vueApp.appName;
 
-	if (chanTitle && chanTitle.length > 0) {
-		title = `${chanTitle} — ${title}`;
+	if (vueApp.activeChannel) {
+		title = `${vueApp.activeChannel.channel.name} — ${vueApp.activeChannel.network.name} — ${title}`;
 	}
 
 	// add highlight count to title
 	let alertEventCount = 0;
-	$(".badge.highlight").each(function() {
-		alertEventCount += parseInt($(this).attr("data-highlight"));
-	});
+
+	for (const network of vueApp.networks) {
+		for (const channel of network.channels) {
+			alertEventCount += channel.highlight;
+		}
+	}
 
 	if (alertEventCount > 0) {
 		title = `(${alertEventCount}) ${title}`;
@@ -175,7 +158,7 @@ function closeChan(chan) {
 	}
 
 	socket.emit("input", {
-		target: chan.data("id"),
+		target: Number(chan.attr("data-id")),
 		text: cmd,
 	});
 	chan.css({
@@ -193,10 +176,4 @@ function requestIdleCallback(callback, timeout) {
 	} else {
 		callback();
 	}
-}
-
-// Force handling preview display
-function togglePreviewMoreButtonsIfNeeded() {
-	$("#chat .chan.active .toggle-content.toggle-type-link.show")
-		.trigger("showMoreIfNeeded");
 }

@@ -1,9 +1,6 @@
 "use strict";
 
-const $ = require("jquery");
-const chat = document.getElementById("chat");
-
-function copyMessages() {
+module.exports = function(chat) {
 	const selection = window.getSelection();
 
 	// If selection does not span multiple elements, do nothing
@@ -14,17 +11,6 @@ function copyMessages() {
 	const range = selection.getRangeAt(0);
 	const documentFragment = range.cloneContents();
 	const div = document.createElement("div");
-
-	$(documentFragment)
-		.find(".from .user")
-		.each((_, el) => {
-			el = $(el);
-			el.text(`<${el.text()}>`);
-		});
-
-	$(documentFragment)
-		.find(".content > .user")
-		.prepend("* ");
 
 	div.id = "js-copy-hack";
 	div.appendChild(documentFragment);
@@ -37,6 +23,4 @@ function copyMessages() {
 		selection.removeAllRanges();
 		selection.addRange(range);
 	}, 0);
-}
-
-$(chat).on("copy", ".messages", copyMessages);
+};

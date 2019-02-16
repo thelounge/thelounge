@@ -92,6 +92,7 @@ module.exports = function(irc, network) {
 		}
 
 		network.channels.forEach((chan) => {
+			chan.users = new Map();
 			chan.state = Chan.State.PARTED;
 		});
 
@@ -142,20 +143,23 @@ module.exports = function(irc, network) {
 	});
 
 	irc.on("server options", function(data) {
-		if (network.serverOptions.PREFIX === data.options.PREFIX && network.serverOptions.NETWORK === data.options.NETWORK) {
-			return;
-		}
-
 		network.prefixLookup = {};
 
 		data.options.PREFIX.forEach((mode) => {
 			network.prefixLookup[mode.mode] = mode.symbol;
 		});
 
-		network.serverOptions.PREFIX = data.options.PREFIX;
+		if (data.options.CHANTYPES) {
+			network.serverOptions.CHANTYPES = data.options.CHANTYPES;
+		}
+
+		if (network.serverOptions.PREFIX) {
+			network.serverOptions.PREFIX = data.options.PREFIX.map((p) => p.symbol);
+		}
+
 		network.serverOptions.NETWORK = data.options.NETWORK;
 
-		client.emit("network_changed", {
+		client.emit("network:options", {
 			network: network.uuid,
 			serverOptions: network.serverOptions,
 		});

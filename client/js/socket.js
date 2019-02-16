@@ -2,7 +2,6 @@
 
 const $ = require("jquery");
 const io = require("socket.io-client");
-const utils = require("./utils");
 
 const socket = io({
 	transports: $(document.body).data("transports"),
@@ -11,20 +10,23 @@ const socket = io({
 	reconnection: !$(document.body).hasClass("public"),
 });
 
-$("#connection-error").on("click", function() {
-	$(this).removeClass("shown");
-});
+module.exports = socket;
+
+const {vueApp} = require("./vue");
+const {requestIdleCallback} = require("./utils");
 
 socket.on("disconnect", handleDisconnect);
 socket.on("connect_error", handleDisconnect);
 socket.on("error", handleDisconnect);
 
 socket.on("reconnecting", function(attempt) {
-	$("#loading-page-message, #connection-error").text(`Reconnecting… (attempt ${attempt})`);
+	vueApp.currentUserVisibleError = `Reconnecting… (attempt ${attempt})`;
+	$("#loading-page-message").text(vueApp.currentUserVisibleError);
 });
 
 socket.on("connecting", function() {
-	$("#loading-page-message, #connection-error").text("Connecting…");
+	vueApp.currentUserVisibleError = "Connecting…";
+	$("#loading-page-message").text(vueApp.currentUserVisibleError);
 });
 
 socket.on("connect", function() {
@@ -33,26 +35,25 @@ socket.on("connect", function() {
 	// nothing is sent to the server that might have happened.
 	socket.sendBuffer = [];
 
-	$("#loading-page-message, #connection-error").text("Finalizing connection…");
+	vueApp.currentUserVisibleError = "Finalizing connection…";
+	$("#loading-page-message").text(vueApp.currentUserVisibleError);
 });
 
 socket.on("authorized", function() {
-	$("#loading-page-message, #connection-error").text("Loading messages…");
+	vueApp.currentUserVisibleError = "Loading messages…";
+	$("#loading-page-message").text(vueApp.currentUserVisibleError);
 });
 
 function handleDisconnect(data) {
 	const message = data.message || data;
 
-	$("#loading-page-message, #connection-error").text(`Waiting to reconnect… (${message})`).addClass("shown");
-	$(".show-more button, #input").prop("disabled", true);
-	$("#submit").hide();
-	$("#upload").hide();
+	vueApp.isConnected = false;
+	vueApp.currentUserVisibleError = `Waiting to reconnect… (${message})`;
+	$("#loading-page-message").text(vueApp.currentUserVisibleError);
 
 	// If the server shuts down, socket.io skips reconnection
 	// and we have to manually call connect to start the process
 	if (socket.io.skipReconnect) {
-		utils.requestIdleCallback(() => socket.connect(), 2000);
+		requestIdleCallback(() => socket.connect(), 2000);
 	}
 }
-
-module.exports = socket;

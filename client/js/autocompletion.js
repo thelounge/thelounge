@@ -5,10 +5,10 @@ const fuzzy = require("fuzzy");
 const Mousetrap = require("mousetrap");
 const {Textcomplete, Textarea} = require("textcomplete");
 const emojiMap = require("./libs/simplemap.json");
-const options = require("./options");
 const constants = require("./constants");
+const {vueApp} = require("./vue");
 
-const input = $("#input");
+let input;
 let textcomplete;
 let enabled = false;
 
@@ -16,22 +16,16 @@ module.exports = {
 	enable: enableAutocomplete,
 	disable() {
 		if (enabled) {
+			$("#form").off("submit.tabcomplete");
 			input.off("input.tabcomplete");
 			Mousetrap(input.get(0)).unbind("tab", "keydown");
 			textcomplete.destroy();
 			enabled = false;
+			vueApp.isAutoCompleting = false;
 		}
 	},
 };
 
-$("#form").on("submit", () => {
-	if (enabled) {
-		textcomplete.hide();
-	}
-});
-
-const chat = $("#chat");
-const sidebar = $("#sidebar");
 const emojiSearchTerms = Object.keys(emojiMap);
 const emojiStrategy = {
 	id: "emoji",
@@ -69,17 +63,17 @@ const nicksStrategy = {
 	},
 	replace([, original], position = 1) {
 		// If no postfix specified, return autocompleted nick as-is
-		if (!options.settings.nickPostfix) {
+		if (!vueApp.settings.nickPostfix) {
 			return original;
 		}
 
 		// If there is whitespace in the input already, append space to nick
-		if (position > 0 && /\s/.test(input.val())) {
+		if (position > 0 && /\s/.test($("#input").val())) {
 			return original + " ";
 		}
 
 		// If nick is first in the input, append specified postfix
-		return original + options.settings.nickPostfix;
+		return original + vueApp.settings.nickPostfix;
 	},
 	index: 1,
 };
@@ -174,20 +168,25 @@ const backgroundColorStrategy = {
 	index: 2,
 };
 
-function enableAutocomplete() {
+function enableAutocomplete(inputRef) {
 	enabled = true;
 	let tabCount = 0;
 	let lastMatch = "";
 	let currentMatches = [];
+	input = $(inputRef);
 
-	input.on("input.tabcomplete", () => {
+	input.on("input.tabcomplete", (e) => {
+		if (e.detail === "autocomplete") {
+			return;
+		}
+
 		tabCount = 0;
 		currentMatches = [];
 		lastMatch = "";
 	});
 
 	Mousetrap(input.get(0)).bind("tab", (e) => {
-		if (input.data("autocompleting")) {
+		if (vueApp.isAutoCompleting) {
 			return;
 		}
 
@@ -217,6 +216,11 @@ function enableAutocomplete() {
 		const newMatch = nicksStrategy.replace([0, currentMatches[tabCount % currentMatches.length]], position);
 
 		input.val(text.substr(0, position) + newMatch);
+
+		// Propagate change to Vue model
+		input.get(0).dispatchEvent(new CustomEvent("input", {
+			detail: "autocomplete",
+		}));
 
 		lastMatch = newMatch;
 		tabCount++;
@@ -248,11 +252,15 @@ function enableAutocomplete() {
 	});
 
 	textcomplete.on("show", () => {
-		input.data("autocompleting", true);
+		vueApp.isAutoCompleting = true;
 	});
 
 	textcomplete.on("hidden", () => {
-		input.data("autocompleting", false);
+		vueApp.isAutoCompleting = false;
+	});
+
+	$("#form").on("submit.tabcomplete", () => {
+		textcomplete.hide();
 	});
 }
 
@@ -269,19 +277,17 @@ function fuzzyGrep(term, array) {
 }
 
 function rawNicks() {
-	const chan = chat.find(".active");
-	const users = chan.find(".userlist");
+	if (vueApp.activeChannel.channel.users.length > 0) {
+		const users = vueApp.activeChannel.channel.users.slice();
 
-	// If this channel has a list of nicks, just return it
-	if (users.length > 0) {
-		return users.data("nicks");
+		return users.sort((a, b) => b.lastMessage - a.lastMessage).map((u) => u.nick);
 	}
 
-	const me = $("#nick").text();
-	const otherUser = chan.attr("aria-label");
+	const me = vueApp.activeChannel.network.nick;
+	const otherUser = vueApp.activeChannel.channel.name;
 
 	// If this is a query, add their name to autocomplete
-	if (me !== otherUser && chan.data("type") === "query") {
+	if (me !== otherUser && vueApp.activeChannel.channel.type === "query") {
 		return [otherUser, me];
 	}
 
@@ -312,16 +318,11 @@ function completeCommands(word) {
 function completeChans(word) {
 	const words = [];
 
-	sidebar.find(".chan.active")
-		.parent()
-		.find(".chan")
-		.each(function() {
-			const self = $(this);
-
-			if (self.hasClass("channel")) {
-				words.push(self.attr("aria-label"));
-			}
-		});
+	for (const channel of vueApp.activeChannel.network.channels) {
+		if (channel.type === "channel") {
+			words.push(channel.name);
+		}
+	}
 
 	return fuzzyGrep(word, words);
 }
