@@ -3,12 +3,8 @@
 		<Username :user="message.from" />
 		invited
 		<span v-if="message.invitedYou">you</span>
-		<Username
-			v-else
-			:user="message.target" />
-		to <ParsedMessage
-			:network="network"
-			:text="message.channel" />
+		<Username v-else :user="message.target" />
+		to <ParsedMessage :network="network" :text="message.channel" />
 	</span>
 </template>
 

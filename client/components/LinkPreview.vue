@@ -1,19 +1,17 @@
 <template>
-	<div
-		v-if="link.shown"
-		v-show="link.canDisplay"
-		ref="container"
-		class="preview">
+	<div v-if="link.shown" v-show="link.canDisplay" ref="container" class="preview">
 		<div
 			ref="content"
-			:class="['toggle-content', 'toggle-type-' + link.type, { opened: isContentShown }]">
+			:class="['toggle-content', 'toggle-type-' + link.type, {opened: isContentShown}]"
+		>
 			<template v-if="link.type === 'link'">
 				<a
 					v-if="link.thumb"
 					:href="link.link"
 					class="toggle-thumbnail"
 					target="_blank"
-					rel="noopener">
+					rel="noopener"
+				>
 					<img
 						:src="link.thumb"
 						decoding="async"
@@ -21,7 +19,8 @@
 						class="thumb"
 						@error="onThumbnailError"
 						@abort="onThumbnailError"
-						@load="onPreviewReady">
+						@load="onPreviewReady"
+					/>
 				</a>
 				<div class="toggle-text">
 					<div class="head">
@@ -30,7 +29,9 @@
 								:href="link.link"
 								:title="link.head"
 								target="_blank"
-								rel="noopener">{{ link.head }}</a>
+								rel="noopener"
+								>{{ link.head }}</a
+							>
 						</div>
 
 						<button
@@ -38,72 +39,49 @@
 							:aria-expanded="isContentShown"
 							:aria-label="moreButtonLabel"
 							class="more"
-							@click="onMoreClick"><span class="more-caret" /></button>
+							@click="onMoreClick"
+						>
+							<span class="more-caret" />
+						</button>
 					</div>
 
 					<div class="body overflowable">
-						<a
-							:href="link.link"
-							:title="link.body"
-							target="_blank"
-							rel="noopener">{{ link.body }}</a>
+						<a :href="link.link" :title="link.body" target="_blank" rel="noopener">{{
+							link.body
+						}}</a>
 					</div>
 				</div>
 			</template>
 			<template v-else-if="link.type === 'image'">
-				<a
-					:href="link.link"
-					class="toggle-thumbnail"
-					target="_blank"
-					rel="noopener">
-					<img
-						:src="link.thumb"
-						decoding="async"
-						alt=""
-						@load="onPreviewReady">
+				<a :href="link.link" class="toggle-thumbnail" target="_blank" rel="noopener">
+					<img :src="link.thumb" decoding="async" alt="" @load="onPreviewReady" />
 				</a>
 			</template>
 			<template v-else-if="link.type === 'video'">
-				<video
-					preload="metadata"
-					controls
-					@canplay="onPreviewReady">
-					<source
-						:src="link.media"
-						:type="link.mediaType">
+				<video preload="metadata" controls @canplay="onPreviewReady">
+					<source :src="link.media" :type="link.mediaType" />
 				</video>
 			</template>
 			<template v-else-if="link.type === 'audio'">
-				<audio
-					controls
-					preload="metadata"
-					@canplay="onPreviewReady">
-					<source
-						:src="link.media"
-						:type="link.mediaType">
+				<audio controls preload="metadata" @canplay="onPreviewReady">
+					<source :src="link.media" :type="link.mediaType" />
 				</audio>
 			</template>
 			<template v-else-if="link.type === 'error'">
 				<em v-if="link.error === 'image-too-big'">
 					This image is larger than {{ link.maxSize | friendlysize }} and cannot be
 					previewed.
-					<a
-						:href="link.link"
-						target="_blank"
-						rel="noopener">Click here</a>
+					<a :href="link.link" target="_blank" rel="noopener">Click here</a>
 					to open it in a new window.
 				</em>
 				<template v-else-if="link.error === 'message'">
 					<div>
 						<em>
 							A preview could not be loaded.
-							<a
-								:href="link.link"
-								target="_blank"
-								rel="noopener">Click here</a>
+							<a :href="link.link" target="_blank" rel="noopener">Click here</a>
 							to open it in a new window.
 						</em>
-						<br>
+						<br />
 						<pre class="prefetch-error">{{ link.message }}</pre>
 					</div>
 
@@ -111,7 +89,10 @@
 						:aria-expanded="isContentShown"
 						:aria-label="moreButtonLabel"
 						class="more"
-						@click="onMoreClick"><span class="more-caret" /></button>
+						@click="onMoreClick"
+					>
+						<span class="more-caret" />
+					</button>
 				</template>
 			</template>
 		</div>
@@ -201,27 +182,31 @@ export default {
 					return;
 				}
 
-				this.showMoreButton = this.$refs.content.offsetWidth >= this.$refs.container.offsetWidth;
+				this.showMoreButton =
+					this.$refs.content.offsetWidth >= this.$refs.container.offsetWidth;
 			});
 		},
 		updateShownState() {
 			let defaultState = true;
 
 			switch (this.link.type) {
-			case "error":
-				defaultState = this.link.error === "image-too-big" ? this.$root.settings.media : this.$root.settings.links;
-				break;
+				case "error":
+					defaultState =
+						this.link.error === "image-too-big"
+							? this.$root.settings.media
+							: this.$root.settings.links;
+					break;
 
-			case "loading":
-				defaultState = false;
-				break;
+				case "loading":
+					defaultState = false;
+					break;
 
-			case "link":
-				defaultState = this.$root.settings.links;
-				break;
+				case "link":
+					defaultState = this.$root.settings.links;
+					break;
 
-			default:
-				defaultState = this.$root.settings.media;
+				default:
+					defaultState = this.$root.settings.media;
 			}
 
 			this.link.shown = this.link.shown && defaultState;

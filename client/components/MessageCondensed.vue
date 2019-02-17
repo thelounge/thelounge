@@ -1,19 +1,19 @@
 <template>
-	<div :class="[ 'msg', 'condensed', { closed: isCollapsed } ]">
+	<div :class="['msg', 'condensed', {closed: isCollapsed}]">
 		<div class="condensed-summary">
 			<span class="time" />
 			<span class="from" />
-			<span
-				class="content"
-				@click="onCollapseClick">{{ condensedText }}<button
-					class="toggle-button"
-					aria-label="Toggle status messages" /></span>
+			<span class="content" @click="onCollapseClick"
+				>{{ condensedText
+				}}<button class="toggle-button" aria-label="Toggle status messages"
+			/></span>
 		</div>
 		<Message
 			v-for="message in messages"
 			:key="message.id"
 			:network="network"
-			:message="message" />
+			:message="message"
+		/>
 	</div>
 </template>
 
@@ -55,30 +55,60 @@ export default {
 			constants.condensedTypes.forEach((type) => {
 				if (obj[type]) {
 					switch (type) {
-					case "away":
-						strings.push(obj[type] + (obj[type] > 1 ? " users have gone away" : " user has gone away"));
-						break;
-					case "back":
-						strings.push(obj[type] + (obj[type] > 1 ? " users have come back" : " user has come back"));
-						break;
-					case "chghost":
-						strings.push(obj[type] + (obj[type] > 1 ? " users have changed hostname" : " user has changed hostname"));
-						break;
-					case "join":
-						strings.push(obj[type] + (obj[type] > 1 ? " users have joined" : " user has joined"));
-						break;
-					case "part":
-						strings.push(obj[type] + (obj[type] > 1 ? " users have left" : " user has left"));
-						break;
-					case "nick":
-						strings.push(obj[type] + (obj[type] > 1 ? " users have changed nick" : " user has changed nick"));
-						break;
-					case "kick":
-						strings.push(obj[type] + (obj[type] > 1 ? " users were kicked" : " user was kicked"));
-						break;
-					case "mode":
-						strings.push(obj[type] + (obj[type] > 1 ? " modes were set" : " mode was set"));
-						break;
+						case "away":
+							strings.push(
+								obj[type] +
+									(obj[type] > 1
+										? " users have gone away"
+										: " user has gone away")
+							);
+							break;
+						case "back":
+							strings.push(
+								obj[type] +
+									(obj[type] > 1
+										? " users have come back"
+										: " user has come back")
+							);
+							break;
+						case "chghost":
+							strings.push(
+								obj[type] +
+									(obj[type] > 1
+										? " users have changed hostname"
+										: " user has changed hostname")
+							);
+							break;
+						case "join":
+							strings.push(
+								obj[type] +
+									(obj[type] > 1 ? " users have joined" : " user has joined")
+							);
+							break;
+						case "part":
+							strings.push(
+								obj[type] + (obj[type] > 1 ? " users have left" : " user has left")
+							);
+							break;
+						case "nick":
+							strings.push(
+								obj[type] +
+									(obj[type] > 1
+										? " users have changed nick"
+										: " user has changed nick")
+							);
+							break;
+						case "kick":
+							strings.push(
+								obj[type] +
+									(obj[type] > 1 ? " users were kicked" : " user was kicked")
+							);
+							break;
+						case "mode":
+							strings.push(
+								obj[type] + (obj[type] > 1 ? " modes were set" : " mode was set")
+							);
+							break;
 					}
 				}
 			});

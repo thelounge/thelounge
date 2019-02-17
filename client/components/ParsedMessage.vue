@@ -12,7 +12,9 @@ export default {
 	render(createElement, context) {
 		return parse(
 			createElement,
-			typeof context.props.text !== "undefined" ? context.props.text : context.props.message.text,
+			typeof context.props.text !== "undefined"
+				? context.props.text
+				: context.props.message.text,
 			context.props.message,
 			context.props.network
 		);

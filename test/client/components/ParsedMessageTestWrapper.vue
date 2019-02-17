@@ -1,9 +1,6 @@
 <template>
 	<div>
-		<ParsedMessage
-			:text="text"
-			:message="message"
-			:network="network" />
+		<ParsedMessage :text="text" :message="message" :network="network" />
 	</div>
 </template>
 

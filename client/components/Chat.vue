@@ -1,7 +1,5 @@
 <template>
-	<div
-		id="chat-container"
-		class="window">
+	<div id="chat-container" class="window">
 		<div
 			id="chat"
 			:data-id="channel.id"
@@ -9,77 +7,68 @@
 				'hide-motd': !this.$root.settings.motd,
 				'colored-nicks': this.$root.settings.coloredNicks,
 				'show-seconds': this.$root.settings.showSeconds,
-			}">
+			}"
+		>
 			<div
 				:id="'chan-' + channel.id"
 				:class="[channel.type, 'chan', 'active']"
 				:data-id="channel.id"
 				:data-type="channel.type"
 				:aria-label="channel.name"
-				role="tabpanel">
+				role="tabpanel"
+			>
 				<div class="header">
-					<button
-						class="lt"
-						aria-label="Toggle channel list" />
+					<button class="lt" aria-label="Toggle channel list" />
 					<span class="title">{{ channel.name }}</span>
-					<span
-						:title="channel.topic"
-						class="topic"><ParsedMessage
+					<span :title="channel.topic" class="topic"
+						><ParsedMessage
 							v-if="channel.topic"
 							:network="network"
-							:text="channel.topic" /></span>
-					<button
-						class="menu"
-						aria-label="Open the context menu" />
+							:text="channel.topic"
+					/></span>
+					<button class="menu" aria-label="Open the context menu" />
 					<span
 						v-if="channel.type === 'channel'"
 						class="rt-tooltip tooltipped tooltipped-w"
-						aria-label="Toggle user list">
-						<button
-							class="rt"
-							aria-label="Toggle user list" />
+						aria-label="Toggle user list"
+					>
+						<button class="rt" aria-label="Toggle user list" />
 					</span>
 				</div>
-				<div
-					v-if="channel.type === 'special'"
-					class="chat-content">
+				<div v-if="channel.type === 'special'" class="chat-content">
 					<div class="chat">
 						<div class="messages">
 							<div class="msg">
 								<Component
 									:is="specialComponent"
 									:network="network"
-									:channel="channel" />
+									:channel="channel"
+								/>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div
-					v-else
-					class="chat-content">
+				<div v-else class="chat-content">
 					<div
 						:class="['scroll-down', {'scroll-down-shown': !channel.scrolledToBottom}]"
-						@click="$refs.messageList.jumpToBottom()">
+						@click="$refs.messageList.jumpToBottom()"
+					>
 						<div class="scroll-down-arrow" />
 					</div>
-					<MessageList
-						ref="messageList"
-						:network="network"
-						:channel="channel" />
-					<ChatUserList
-						v-if="channel.type === 'channel'"
-						:channel="channel" />
+					<MessageList ref="messageList" :network="network" :channel="channel" />
+					<ChatUserList v-if="channel.type === 'channel'" :channel="channel" />
 				</div>
 			</div>
 		</div>
 		<div
 			v-if="this.$root.currentUserVisibleError"
 			id="user-visible-error"
-			@click="hideUserVisibleError">{{ this.$root.currentUserVisibleError }}</div>
+			@click="hideUserVisibleError"
+		>
+			{{ this.$root.currentUserVisibleError }}
+		</div>
 		<span id="upload-progressbar" />
-		<ChatInput
-			:network="network"
-			:channel="channel" />
+		<ChatInput :network="network" :channel="channel" />
 	</div>
 </template>
 
@@ -107,9 +96,12 @@ export default {
 	computed: {
 		specialComponent() {
 			switch (this.channel.special) {
-			case "list_bans": return ListBans;
-			case "list_channels": return ListChannels;
-			case "list_ignored": return ListIgnored;
+				case "list_bans":
+					return ListBans;
+				case "list_channels":
+					return ListChannels;
+				case "list_ignored":
+					return ListIgnored;
 			}
 
 			return undefined;

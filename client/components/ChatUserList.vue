@@ -1,13 +1,12 @@
 <template>
-	<aside
-		ref="userlist"
-		class="userlist"
-		@mouseleave="removeHoverUser">
+	<aside ref="userlist" class="userlist" @mouseleave="removeHoverUser">
 		<div class="count">
 			<input
 				ref="input"
 				:value="userSearchInput"
-				:placeholder="channel.users.length + ' user' + (channel.users.length === 1 ? '' : 's')"
+				:placeholder="
+					channel.users.length + ' user' + (channel.users.length === 1 ? '' : 's')
+				"
 				type="search"
 				class="search"
 				aria-label="Search among the user list"
@@ -17,20 +16,23 @@
 				@keydown.down="navigateUserList($event, 1)"
 				@keydown.page-up="navigateUserList($event, -10)"
 				@keydown.page-down="navigateUserList($event, 10)"
-				@keydown.enter="selectUser">
+				@keydown.enter="selectUser"
+			/>
 		</div>
 		<div class="names">
 			<div
 				v-for="(users, mode) in groupedUsers"
 				:key="mode"
-				:class="['user-mode', getModeClass(mode)]">
+				:class="['user-mode', getModeClass(mode)]"
+			>
 				<template v-if="userSearchInput.length > 0">
 					<UsernameFiltered
 						v-for="user in users"
 						:key="user.original.nick"
 						:on-hover="hoverUser"
 						:active="user.original === activeUser"
-						:user="user" />
+						:user="user"
+					/>
 				</template>
 				<template v-else>
 					<Username
@@ -38,7 +40,8 @@
 						:key="user.nick"
 						:on-hover="hoverUser"
 						:active="user === activeUser"
-						:user="user" />
+						:user="user"
+					/>
 				</template>
 			</div>
 		</div>
@@ -79,15 +82,11 @@ export default {
 		// filteredUsers is computed, to avoid unnecessary filtering
 		// as it is shared between filtering and keybindings.
 		filteredUsers() {
-			return fuzzy.filter(
-				this.userSearchInput,
-				this.channel.users,
-				{
-					pre: "<b>",
-					post: "</b>",
-					extract: (u) => u.nick,
-				}
-			);
+			return fuzzy.filter(this.userSearchInput, this.channel.users, {
+				pre: "<b>",
+				post: "</b>",
+				extract: (u) => u.nick,
+			});
 		},
 		groupedUsers() {
 			const groups = {};

@@ -7,9 +7,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr
-				v-for="user in channel.data"
-				:key="user.hostmask">
+			<tr v-for="user in channel.data" :key="user.hostmask">
 				<td class="hostmask">{{ user.hostmask }}</td>
 				<td class="when">{{ user.when | localetime }}</td>
 			</tr>

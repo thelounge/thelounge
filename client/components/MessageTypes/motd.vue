@@ -1,8 +1,6 @@
 <template>
 	<span class="content">
-		<span class="text"><ParsedMessage
-			:network="network"
-			:text="cleanText" /></span>
+		<span class="text"><ParsedMessage :network="network" :text="cleanText"/></span>
 	</span>
 </template>
 
@@ -30,7 +28,7 @@ export default {
 
 			// Remove empty lines around the MOTD (but not within it)
 			return lines
-				.map((line) => line.replace(/\s*$/,""))
+				.map((line) => line.replace(/\s*$/, ""))
 				.join("\n")
 				.replace(/^[\r\n]+|[\r\n]+$/g, "");
 		},
