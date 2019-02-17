@@ -119,23 +119,22 @@ export default {
 				return;
 			}
 
-			if (this.channel.inputHistoryPosition === 0) {
-				this.channel.inputHistory[
-					this.channel.inputHistoryPosition
-				] = this.channel.pendingMessage;
+			const {channel} = this;
+
+			if (channel.inputHistoryPosition === 0) {
+				channel.inputHistory[channel.inputHistoryPosition] = channel.pendingMessage;
 			}
 
 			if (key === "up") {
-				if (this.channel.inputHistoryPosition < this.channel.inputHistory.length - 1) {
-					this.channel.inputHistoryPosition++;
+				if (channel.inputHistoryPosition < channel.inputHistory.length - 1) {
+					channel.inputHistoryPosition++;
 				}
-			} else if (this.channel.inputHistoryPosition > 0) {
-				this.channel.inputHistoryPosition--;
+			} else if (channel.inputHistoryPosition > 0) {
+				channel.inputHistoryPosition--;
 			}
 
-			this.channel.pendingMessage = this.$refs.input.value = this.channel.inputHistory[
-				this.channel.inputHistoryPosition
-			];
+			channel.pendingMessage = channel.inputHistory[channel.inputHistoryPosition];
+			this.$refs.input.value = channel.pendingMessage;
 			this.setInputSize();
 
 			return false;
