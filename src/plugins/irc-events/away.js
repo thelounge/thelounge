@@ -29,36 +29,36 @@ module.exports = function(irc, network) {
 			let user;
 
 			switch (chan.type) {
-			case Chan.Type.QUERY:
-				if (data.nick.toLowerCase() !== chan.name.toLowerCase()) {
+				case Chan.Type.QUERY:
+					if (data.nick.toLowerCase() !== chan.name.toLowerCase()) {
+						return;
+					}
+
+					if (chan.userAway === away) {
+						return;
+					}
+
+					// Store current away message on channel model,
+					// because query windows have no users
+					chan.userAway = away;
+
+					user = chan.getUser(data.nick);
+
+					break;
+
+				case Chan.Type.CHANNEL:
+					user = chan.findUser(data.nick);
+
+					if (!user || user.away === away) {
+						return;
+					}
+
+					user.away = away;
+
+					break;
+
+				default:
 					return;
-				}
-
-				if (chan.userAway === away) {
-					return;
-				}
-
-				// Store current away message on channel model,
-				// because query windows have no users
-				chan.userAway = away;
-
-				user = chan.getUser(data.nick);
-
-				break;
-
-			case Chan.Type.CHANNEL:
-				user = chan.findUser(data.nick);
-
-				if (!user || user.away === away) {
-					return;
-				}
-
-				user.away = away;
-
-				break;
-
-			default:
-				return;
 			}
 
 			const msg = new Msg({

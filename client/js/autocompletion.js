@@ -33,8 +33,7 @@ const emojiStrategy = {
 	search(term, callback) {
 		// Trim colon from the matched term,
 		// as we are unable to get a clean string from match regex
-		term = term.replace(/:$/, ""),
-		callback(fuzzyGrep(term, emojiSearchTerms));
+		(term = term.replace(/:$/, "")), callback(fuzzyGrep(term, emojiSearchTerms));
 	},
 	template([string, original]) {
 		return `<span class="emoji">${emojiMap[original]}</span> ${string}`;
@@ -52,8 +51,7 @@ const nicksStrategy = {
 		term = term.slice(1);
 
 		if (term[0] === "@") {
-			callback(completeNicks(term.slice(1), true)
-				.map((val) => ["@" + val[0], "@" + val[1]]));
+			callback(completeNicks(term.slice(1), true).map((val) => ["@" + val[0], "@" + val[1]]));
 		} else {
 			callback(completeNicks(term, true));
 		}
@@ -118,10 +116,13 @@ const foregroundColorStrategy = {
 			.filter((i) => fuzzy.test(term, i[0]) || fuzzy.test(term, i[1]))
 			.map((i) => {
 				if (fuzzy.test(term, i[1])) {
-					return [i[0], fuzzy.match(term, i[1], {
-						pre: "<b>",
-						post: "</b>",
-					}).rendered];
+					return [
+						i[0],
+						fuzzy.match(term, i[1], {
+							pre: "<b>",
+							post: "</b>",
+						}).rendered,
+					];
 				}
 
 				return i;
@@ -147,10 +148,13 @@ const backgroundColorStrategy = {
 			.filter((i) => fuzzy.test(term, i[0]) || fuzzy.test(term, i[1]))
 			.map((pair) => {
 				if (fuzzy.test(term, pair[1])) {
-					return [pair[0], fuzzy.match(term, pair[1], {
-						pre: "<b>",
-						post: "</b>",
-					}).rendered];
+					return [
+						pair[0],
+						fuzzy.match(term, pair[1], {
+							pre: "<b>",
+							post: "</b>",
+						}).rendered,
+					];
 				}
 
 				return pair;
@@ -160,7 +164,10 @@ const backgroundColorStrategy = {
 		callback(matchingColorCodes);
 	},
 	template(value) {
-		return `<span class="irc-fg${parseInt(value[2], 10)} irc-bg irc-bg${parseInt(value[0], 10)}">${value[1]}</span>`;
+		return `<span class="irc-fg${parseInt(value[2], 10)} irc-bg irc-bg${parseInt(
+			value[0],
+			10
+		)}">${value[1]}</span>`;
 	},
 	replace(value) {
 		return "\x03$1," + value[0];
@@ -185,46 +192,55 @@ function enableAutocomplete(inputRef) {
 		lastMatch = "";
 	});
 
-	Mousetrap(input.get(0)).bind("tab", (e) => {
-		if (vueApp.isAutoCompleting) {
-			return;
-		}
-
-		e.preventDefault();
-
-		const text = input.val();
-
-		if (input.get(0).selectionStart !== text.length) {
-			return;
-		}
-
-		if (tabCount === 0) {
-			lastMatch = text.split(/\s/).pop();
-
-			if (lastMatch.length === 0) {
+	Mousetrap(input.get(0)).bind(
+		"tab",
+		(e) => {
+			if (vueApp.isAutoCompleting) {
 				return;
 			}
 
-			currentMatches = completeNicks(lastMatch, false);
+			e.preventDefault();
 
-			if (currentMatches.length === 0) {
+			const text = input.val();
+
+			if (input.get(0).selectionStart !== text.length) {
 				return;
 			}
-		}
 
-		const position = input.get(0).selectionStart - lastMatch.length;
-		const newMatch = nicksStrategy.replace([0, currentMatches[tabCount % currentMatches.length]], position);
+			if (tabCount === 0) {
+				lastMatch = text.split(/\s/).pop();
 
-		input.val(text.substr(0, position) + newMatch);
+				if (lastMatch.length === 0) {
+					return;
+				}
 
-		// Propagate change to Vue model
-		input.get(0).dispatchEvent(new CustomEvent("input", {
-			detail: "autocomplete",
-		}));
+				currentMatches = completeNicks(lastMatch, false);
 
-		lastMatch = newMatch;
-		tabCount++;
-	}, "keydown");
+				if (currentMatches.length === 0) {
+					return;
+				}
+			}
+
+			const position = input.get(0).selectionStart - lastMatch.length;
+			const newMatch = nicksStrategy.replace(
+				[0, currentMatches[tabCount % currentMatches.length]],
+				position
+			);
+
+			input.val(text.substr(0, position) + newMatch);
+
+			// Propagate change to Vue model
+			input.get(0).dispatchEvent(
+				new CustomEvent("input", {
+					detail: "autocomplete",
+				})
+			);
+
+			lastMatch = newMatch;
+			tabCount++;
+		},
+		"keydown"
+	);
 
 	const editor = new Textarea(input.get(0));
 	textcomplete = new Textcomplete(editor, {
@@ -265,14 +281,10 @@ function enableAutocomplete(inputRef) {
 }
 
 function fuzzyGrep(term, array) {
-	const results = fuzzy.filter(
-		term,
-		array,
-		{
-			pre: "<b>",
-			post: "</b>",
-		}
-	);
+	const results = fuzzy.filter(term, array, {
+		pre: "<b>",
+		post: "</b>",
+	});
 	return results.map((el) => [el.string, el.original]);
 }
 
@@ -303,10 +315,7 @@ function completeNicks(word, isFuzzy) {
 		return fuzzyGrep(word, users);
 	}
 
-	return $.grep(
-		users,
-		(w) => !w.toLowerCase().indexOf(word)
-	);
+	return $.grep(users, (w) => !w.toLowerCase().indexOf(word));
 }
 
 function completeCommands(word) {

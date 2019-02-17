@@ -81,13 +81,21 @@ if (!version) {
 }
 
 function isValidVersion(str) {
-	return (/^[0-9]+\.[0-9]+\.[0-9]+(-(pre|rc)+\.[0-9]+)?$/.test(str));
+	return /^[0-9]+\.[0-9]+\.[0-9]+(-(pre|rc)+\.[0-9]+)?$/.test(str);
 }
 
 if (!isValidVersion(version)) {
 	log.error(`Argument ${colors.bold("version")} is incorrect It must be either:`);
-	log.error(`- A keyword among: ${colors.green("major")}, ${colors.green("minor")}, ${colors.green("patch")}, ${colors.green("prerelease")}, ${colors.green("pre")}`);
-	log.error(`- An explicit version of format ${colors.green("x.y.z")} (stable) or ${colors.green("x.y.z-(pre|rc).n")} (pre-release).`);
+	log.error(
+		`- A keyword among: ${colors.green("major")}, ${colors.green("minor")}, ${colors.green(
+			"patch"
+		)}, ${colors.green("prerelease")}, ${colors.green("pre")}`
+	);
+	log.error(
+		`- An explicit version of format ${colors.green("x.y.z")} (stable) or ${colors.green(
+			"x.y.z-(pre|rc).n"
+		)} (pre-release).`
+	);
 	process.exit(1);
 }
 
@@ -99,11 +107,15 @@ function prereleaseTemplate(items) {
 
 [See the full changelog](${items.fullChangelogUrl})
 
-${prereleaseType(items.version) === "rc" ?
-		`This is a release candidate (RC) for v${stableVersion(items.version)} to ensure maximum stability for public release.
-Bugs may be fixed, but no further features will be added until the next stable version.` :
-
-		`This is a pre-release for v${stableVersion(items.version)} to offer latest changes without having to wait for a stable release.
+${
+	prereleaseType(items.version) === "rc"
+		? `This is a release candidate (RC) for v${stableVersion(
+				items.version
+		  )} to ensure maximum stability for public release.
+Bugs may be fixed, but no further features will be added until the next stable version.`
+		: `This is a pre-release for v${stableVersion(
+				items.version
+		  )} to offer latest changes without having to wait for a stable release.
 At this stage, features may still be added or modified until the first release candidate for this version gets released.`
 }
 
@@ -128,7 +140,9 @@ function stableTemplate(items) {
 	return `
 ## v${items.version} - ${items.date}
 
-For more details, [see the full changelog](${items.fullChangelogUrl}) and [milestone](${items.milestone.url}?closed=1).
+For more details, [see the full changelog](${items.fullChangelogUrl}) and [milestone](${
+		items.milestone.url
+	}?closed=1).
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @@ DESCRIPTION, ANNOUNCEMENT, ETC. @@
@@ -138,8 +152,10 @@ For more details, [see the full changelog](${items.fullChangelogUrl}) and [miles
 
 ### Changed
 
-${isEmpty(items.dependencies) ? "" :
-		`- Update production dependencies to their latest versions:
+${
+	isEmpty(items.dependencies)
+		? ""
+		: `- Update production dependencies to their latest versions:
 ${printDependencyList(items.dependencies)}`
 }
 
@@ -157,23 +173,31 @@ ${printList(items.security)}
 
 ### Documentation
 
-${items.documentation.length === 0 ? "" :
-		`In the main repository:
+${
+	items.documentation.length === 0
+		? ""
+		: `In the main repository:
 
 ${printList(items.documentation)}`
 }
 
-${items.websiteDocumentation.length === 0 ? "" :
-		`On the [website repository](https://github.com/thelounge/thelounge.github.io):
+${
+	items.websiteDocumentation.length === 0
+		? ""
+		: `On the [website repository](https://github.com/thelounge/thelounge.github.io):
 
 ${printList(items.websiteDocumentation)}`
 }
 
 ### Internals
 
-${printList(items.internals)}${isEmpty(items.devDependencies) ? "" : `
+${printList(items.internals)}${
+		isEmpty(items.devDependencies)
+			? ""
+			: `
 - Update development dependencies to their latest versions:
-${printDependencyList(items.devDependencies)}`}
+${printDependencyList(items.devDependencies)}`
+	}
 
 @@@@@@@@@@@@@@@@@@@
 @@ UNCATEGORIZED @@
@@ -375,7 +399,9 @@ class RepositoryFetcher {
 
 		const prQuery = `query fetchPullRequests($repositoryName: String!) {
 			repository(owner: "thelounge", name: $repositoryName) {
-				${numbers.map((number) => `
+				${numbers
+					.map(
+						(number) => `
 					PR${number}: pullRequest(number: ${number}) {
 						__typename
 						title
@@ -398,7 +424,9 @@ class RepositoryFetcher {
 							}
 						}
 					}
-				`).join("")}
+				`
+					)
+					.join("")}
 			}
 		}`;
 		const data = await this.fetch(prQuery);
@@ -458,9 +486,8 @@ function printAuthorLink({login, url}) {
 
 // Builds a Markdown link for a given pull request or commit object
 function printEntryLink(entry) {
-	const label = entry.__typename === "PullRequest"
-		? `#${entry.number}`
-		: `\`${entry.abbreviatedOid}\``;
+	const label =
+		entry.__typename === "PullRequest" ? `#${entry.number}` : `\`${entry.abbreviatedOid}\``;
 
 	return `[${label}](${entry.url})`;
 }
@@ -476,12 +503,16 @@ function printLine(entry) {
 
 // Builds a Markdown list item for a given pull request
 function printPullRequest(pullRequest) {
-	return `- ${pullRequest.title} (${printEntryLink(pullRequest)} ${printAuthorLink(pullRequest.author)})`;
+	return `- ${pullRequest.title} (${printEntryLink(pullRequest)} ${printAuthorLink(
+		pullRequest.author
+	)})`;
 }
 
 // Builds a Markdown list item for a commit made directly in `master`
 function printCommit(commit) {
-	return `- ${commit.messageHeadline} (${printEntryLink(commit)} ${printAuthorLink(commit.author.user)})`;
+	return `- ${commit.messageHeadline} (${printEntryLink(commit)} ${printAuthorLink(
+		commit.author.user
+	)})`;
 }
 
 // Builds a Markdown list of all given items
@@ -543,20 +574,23 @@ function hasLabel(labels, expected) {
 }
 
 function hasAnnotatedComment(comments, expected) {
-	return comments && comments.nodes.some(({authorAssociation, body}) =>
-		["OWNER", "MEMBER"].includes(authorAssociation) &&
-		body.split("\r\n").includes(`[${expected}]`)
+	return (
+		comments &&
+		comments.nodes.some(
+			({authorAssociation, body}) =>
+				["OWNER", "MEMBER"].includes(authorAssociation) &&
+				body.split("\r\n").includes(`[${expected}]`)
+		)
 	);
 }
 
 function isSkipped(entry) {
 	return (
-		(entry.__typename === "Commit" && (
+		(entry.__typename === "Commit" &&
 			// Version bump commits created by `yarn version`
-			isValidVersion(entry.messageHeadline) ||
-			// Commit message suggested by this script
-			entry.messageHeadline.startsWith("Add changelog entry for v")
-		)) ||
+			(isValidVersion(entry.messageHeadline) ||
+				// Commit message suggested by this script
+				entry.messageHeadline.startsWith("Add changelog entry for v"))) ||
 		hasLabelOrAnnotatedComment(entry, "Meta: Skip Changelog")
 	);
 }
@@ -608,76 +642,85 @@ function extractPackages({title, url}) {
 		return [];
 	}
 
-	return extracted[1]
-		.replace(/`/g, "")
-		.split(/, and |, | and /);
+	return extracted[1].replace(/`/g, "").split(/, and |, | and /);
 }
 
 // Given an array of entries (PRs or commits), separates them into sections,
 // based on different information that describes them.
 function parse(entries) {
-	return entries.reduce((result, entry) => {
-		let deps;
+	return entries.reduce(
+		(result, entry) => {
+			let deps;
 
-		if (isSkipped(entry)) {
-			result.skipped.push(entry);
-		} else if (isDependency(entry) && (deps = extractPackages(entry))) {
-			deps.forEach((packageName) => {
-				const dependencyType = whichDependencyType(packageName);
+			if (isSkipped(entry)) {
+				result.skipped.push(entry);
+			} else if (isDependency(entry) && (deps = extractPackages(entry))) {
+				deps.forEach((packageName) => {
+					const dependencyType = whichDependencyType(packageName);
 
-				if (dependencyType) {
-					if (!result[dependencyType][packageName]) {
-						result[dependencyType][packageName] = [];
+					if (dependencyType) {
+						if (!result[dependencyType][packageName]) {
+							result[dependencyType][packageName] = [];
+						}
+
+						result[dependencyType][packageName].push(entry);
+					} else {
+						log.info(
+							`${colors.bold(packageName)} was updated in ${colors.green(
+								"#" + entry.number
+							)} then removed since last release. Skipping.  ${colors.gray(
+								entry.url
+							)}`
+						);
 					}
-
-					result[dependencyType][packageName].push(entry);
-				} else {
-					log.info(`${colors.bold(packageName)} was updated in ${colors.green("#" + entry.number)} then removed since last release. Skipping.  ${colors.gray(entry.url)}`);
-				}
-			});
-		} else if (isDocumentation(entry)) {
-			result.documentation.push(entry);
-		} else if (isDeprecation(entry)) {
-			result.deprecations.push(entry);
-		} else if (isSecurity(entry)) {
-			result.security.push(entry);
-		} else if (isInternal(entry)) {
-			result.internals.push(entry);
-		} else {
-			if (isFeature(entry)) {
-				result.uncategorized.feature.push(entry);
-			} else if (isBug(entry)) {
-				result.uncategorized.bug.push(entry);
+				});
+			} else if (isDocumentation(entry)) {
+				result.documentation.push(entry);
+			} else if (isDeprecation(entry)) {
+				result.deprecations.push(entry);
+			} else if (isSecurity(entry)) {
+				result.security.push(entry);
+			} else if (isInternal(entry)) {
+				result.internals.push(entry);
 			} else {
-				result.uncategorized.other.push(entry);
+				if (isFeature(entry)) {
+					result.uncategorized.feature.push(entry);
+				} else if (isBug(entry)) {
+					result.uncategorized.bug.push(entry);
+				} else {
+					result.uncategorized.other.push(entry);
+				}
 			}
-		}
 
-		return result;
-	}, {
-		skipped: [],
-		dependencies: {},
-		devDependencies: {},
-		deprecations: [],
-		documentation: [],
-		internals: [],
-		security: [],
-		uncategorized: {
-			feature: [],
-			bug: [],
-			other: [],
+			return result;
 		},
-		unknownDependencies: new Set(),
-	});
+		{
+			skipped: [],
+			dependencies: {},
+			devDependencies: {},
+			deprecations: [],
+			documentation: [],
+			internals: [],
+			security: [],
+			uncategorized: {
+				feature: [],
+				bug: [],
+				other: [],
+			},
+			unknownDependencies: new Set(),
+		}
+	);
 }
 
 function dedupeEntries(changelog, items) {
 	const dedupe = (entries) =>
 		entries.filter((entry) => !changelog.includes(printEntryLink(entry)));
 
-	["deprecations", "documentation", "websiteDocumentation", "internals", "security"].forEach((type) => {
-		items[type] = dedupe(items[type]);
-	});
+	["deprecations", "documentation", "websiteDocumentation", "internals", "security"].forEach(
+		(type) => {
+			items[type] = dedupe(items[type]);
+		}
+	);
 
 	["dependencies", "devDependencies", "uncategorized"].forEach((type) => {
 		Object.entries(items[type]).forEach(([name, entries]) => {
@@ -692,8 +735,8 @@ function extractContributors(entries) {
 	const set = Object.values(entries).reduce((memo, {__typename, author}) => {
 		if (__typename === "PullRequest" && author.__typename !== "Bot") {
 			memo.add("@" + author.login);
-		// Commit authors are *always* of type "User", so have to discriminate some
-		// other way. Making the assumption of a suffix for now, see how that goes.
+			// Commit authors are *always* of type "User", so have to discriminate some
+			// other way. Making the assumption of a suffix for now, see how that goes.
 		} else if (__typename === "Commit" && !author.user.login.endsWith("-bot")) {
 			memo.add("@" + author.user.login);
 		}
@@ -701,8 +744,7 @@ function extractContributors(entries) {
 		return memo;
 	}, new Set());
 
-	return Array.from(set)
-		.sort((a, b) => a.localeCompare(b, "en", {sensitivity: "base"}));
+	return Array.from(set).sort((a, b) => a.localeCompare(b, "en", {sensitivity: "base"}));
 }
 
 const client = new GraphQLClient("https://api.github.com/graphql", {
@@ -727,13 +769,17 @@ async function generateChangelogEntry(changelog, targetVersion) {
 	} else {
 		template = stableTemplate;
 
-		const codeCommitsAndPullRequests = await codeRepo.fetchCommitsAndPullRequestsSince("v" + previousVersion);
+		const codeCommitsAndPullRequests = await codeRepo.fetchCommitsAndPullRequestsSince(
+			"v" + previousVersion
+		);
 		items = parse(codeCommitsAndPullRequests);
 		items.milestone = await codeRepo.fetchMilestone(targetVersion);
 
 		const websiteRepo = new RepositoryFetcher(client, "thelounge.github.io");
 		const previousWebsiteVersion = await websiteRepo.fetchPreviousVersion(targetVersion);
-		const websiteCommitsAndPullRequests = await websiteRepo.fetchCommitsAndPullRequestsSince("v" + previousWebsiteVersion);
+		const websiteCommitsAndPullRequests = await websiteRepo.fetchCommitsAndPullRequestsSince(
+			"v" + previousWebsiteVersion
+		);
 		items.websiteDocumentation = websiteCommitsAndPullRequests;
 
 		contributors = extractContributors([
@@ -781,11 +827,18 @@ function addToChangelog(changelog, newEntry) {
 	const changelog = await readFile(changelogPath, "utf8");
 
 	try {
-		({changelogEntry, skipped, contributors} = await generateChangelogEntry(changelog, version));
+		({changelogEntry, skipped, contributors} = await generateChangelogEntry(
+			changelog,
+			version
+		));
 	} catch (error) {
 		if (error.response && error.response.status === 401) {
 			log.error(`GitHub returned an error: ${colors.red(error.response.message)}`);
-			log.error(`Make sure your personal access token is set with ${colors.bold("public_repo")} scope.`);
+			log.error(
+				`Make sure your personal access token is set with ${colors.bold(
+					"public_repo"
+				)} scope.`
+			);
 		} else {
 			log.error(error);
 		}
@@ -806,10 +859,14 @@ function addToChangelog(changelog, newEntry) {
 
 	// Step 3 (optional): Print a list of skipped entries if there are any
 	if (skipped.length > 0) {
-		const pad = Math.max(...skipped.map((entry) => (entry.title || entry.messageHeadline).length));
+		const pad = Math.max(
+			...skipped.map((entry) => (entry.title || entry.messageHeadline).length)
+		);
 		log.warn(`${skipped.length} ${skipped.length > 1 ? "entries were" : "entry was"} skipped:`);
 		skipped.forEach((entry) => {
-			log.warn(`- ${(entry.title || entry.messageHeadline).padEnd(pad)}  ${colors.gray(entry.url)}`);
+			log.warn(
+				`- ${(entry.title || entry.messageHeadline).padEnd(pad)}  ${colors.gray(entry.url)}`
+			);
 		});
 	}
 
@@ -819,7 +876,11 @@ function addToChangelog(changelog, newEntry) {
 	if (isPrerelease(version)) {
 		log.info(`You can now run: ${colors.bold(commitCommand)}`);
 	} else {
-		log.info(`Please edit ${colors.bold("CHANGELOG.md")} to your liking then run: ${colors.bold(commitCommand)}`);
+		log.info(
+			`Please edit ${colors.bold("CHANGELOG.md")} to your liking then run: ${colors.bold(
+				commitCommand
+			)}`
+		);
 	}
 
 	log.info(`Finished in ${colors.bold(Date.now() - startTime)}ms.`);

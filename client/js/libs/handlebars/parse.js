@@ -79,7 +79,7 @@ module.exports = function parse(createElement, text, message = undefined, networ
 	const channelParts = findChannels(cleanText, channelPrefixes, userModes);
 	const linkParts = findLinks(cleanText);
 	const emojiParts = findEmoji(cleanText);
-	const nameParts = findNames(cleanText, message ? (message.users || []) : []);
+	const nameParts = findNames(cleanText, message ? message.users || [] : []);
 
 	const parts = channelParts
 		.concat(linkParts)
@@ -89,64 +89,82 @@ module.exports = function parse(createElement, text, message = undefined, networ
 	// Merge the styling information with the channels / URLs / nicks / text objects and
 	// generate HTML strings with the resulting fragments
 	return merge(parts, styleFragments, cleanText).map((textPart) => {
-		const fragments = textPart.fragments.map((fragment) => createFragment(fragment, createElement));
+		const fragments = textPart.fragments.map((fragment) =>
+			createFragment(fragment, createElement)
+		);
 
 		// Wrap these potentially styled fragments with links and channel buttons
 		if (textPart.link) {
 			const preview = message && message.previews.find((p) => p.link === textPart.link);
-			const link = createElement("a", {
-				attrs: {
-					href: textPart.link,
-					target: "_blank",
-					rel: "noopener",
+			const link = createElement(
+				"a",
+				{
+					attrs: {
+						href: textPart.link,
+						target: "_blank",
+						rel: "noopener",
+					},
 				},
-			}, fragments);
+				fragments
+			);
 
 			if (!preview) {
 				return link;
 			}
 
-			return [link, createElement(LinkPreviewToggle, {
-				class: ["toggle-button", "toggle-preview"],
-				props: {
-					link: preview,
-				},
-			}, fragments)];
+			return [
+				link,
+				createElement(
+					LinkPreviewToggle,
+					{
+						class: ["toggle-button", "toggle-preview"],
+						props: {
+							link: preview,
+						},
+					},
+					fragments
+				),
+			];
 		} else if (textPart.channel) {
-			return createElement("span", {
-				class: [
-					"inline-channel",
-				],
-				attrs: {
-					"role": "button",
-					"tabindex": 0,
-					"data-chan": textPart.channel,
+			return createElement(
+				"span",
+				{
+					class: ["inline-channel"],
+					attrs: {
+						role: "button",
+						tabindex: 0,
+						"data-chan": textPart.channel,
+					},
 				},
-			}, fragments);
+				fragments
+			);
 		} else if (textPart.emoji) {
 			const title = emojiMap[textPart.emoji] ? `Emoji: ${emojiMap[textPart.emoji]}` : null;
 
-			return createElement("span", {
-				class: [
-					"emoji",
-				],
-				attrs: {
-					"role": "img",
-					"aria-label": title,
-					"title": title,
+			return createElement(
+				"span",
+				{
+					class: ["emoji"],
+					attrs: {
+						role: "img",
+						"aria-label": title,
+						title: title,
+					},
 				},
-			}, fragments);
+				fragments
+			);
 		} else if (textPart.nick) {
-			return createElement("span", {
-				class: [
-					"user",
-					colorClass(textPart.nick),
-				],
-				attrs: {
-					"role": "button",
-					"data-name": textPart.nick,
+			return createElement(
+				"span",
+				{
+					class: ["user", colorClass(textPart.nick)],
+					attrs: {
+						role: "button",
+						"data-name": textPart.nick,
+					},
 				},
-			}, fragments);
+				fragments
+			);
 		}
 
 		return fragments;

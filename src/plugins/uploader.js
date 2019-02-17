@@ -48,22 +48,29 @@ class Uploader {
 			// Generate a random file name for storage on disk
 			do {
 				randomName = crypto.randomBytes(8).toString("hex");
-				destPath = path.join(Helper.getFileUploadPath(), randomName.substring(0, 2), randomName);
+				destPath = path.join(
+					Helper.getFileUploadPath(),
+					randomName.substring(0, 2),
+					randomName
+				);
 			} while (fs.existsSync(destPath));
 
-			fsextra.move(data.file.pathName, destPath).then(() => {
-				const slug = encodeURIComponent(path.basename(data.file.pathName));
-				const url = `uploads/${randomName}/${slug}`;
-				socket.emit("upload:success", url);
-			}).catch(() => {
-				log.warn(`Unable to move uploaded file "${data.file.pathName}"`);
+			fsextra
+				.move(data.file.pathName, destPath)
+				.then(() => {
+					const slug = encodeURIComponent(path.basename(data.file.pathName));
+					const url = `uploads/${randomName}/${slug}`;
+					socket.emit("upload:success", url);
+				})
+				.catch(() => {
+					log.warn(`Unable to move uploaded file "${data.file.pathName}"`);
 
-				// Emit failed upload to the client if file move fails
-				socket.emit("siofu_error", {
-					id: data.file.id,
-					message: "Unable to move uploaded file",
+					// Emit failed upload to the client if file move fails
+					socket.emit("siofu_error", {
+						id: data.file.id,
+						message: "Unable to move uploaded file",
+					});
 				});
-			});
 		});
 
 		uploader.on("error", (data) => {
@@ -100,7 +107,9 @@ class Uploader {
 			}
 
 			// Force a download in the browser if it's not a whitelisted type (binary or otherwise unknown)
-			const contentDisposition = Uploader.isValidType(detectedMimeType) ? "inline" : "attachment";
+			const contentDisposition = Uploader.isValidType(detectedMimeType)
+				? "inline"
+				: "attachment";
 
 			res.setHeader("Content-Disposition", contentDisposition);
 			res.setHeader("Cache-Control", "max-age=86400");
@@ -113,7 +122,8 @@ class Uploader {
 	static getMaxFileSize() {
 		const configOption = Helper.config.fileUpload.maxFileSize;
 
-		if (configOption === -1) { // no file size limit
+		if (configOption === -1) {
+			// no file size limit
 			return null;
 		}
 

@@ -7,10 +7,13 @@ exports.commands = ["kick"];
 
 exports.input = function({irc}, chan, cmd, args) {
 	if (chan.type !== Chan.Type.CHANNEL) {
-		chan.pushMessage(this, new Msg({
-			type: Msg.Type.ERROR,
-			text: `${cmd} command can only be used in channels.`,
-		}));
+		chan.pushMessage(
+			this,
+			new Msg({
+				type: Msg.Type.ERROR,
+				text: `${cmd} command can only be used in channels.`,
+			})
+		);
 
 		return;
 	}

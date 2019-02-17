@@ -43,7 +43,10 @@ class Storage {
 	}
 
 	store(data, extension, callback) {
-		const hash = crypto.createHash("sha256").update(data).digest("hex");
+		const hash = crypto
+			.createHash("sha256")
+			.update(data)
+			.digest("hex");
 		const a = hash.substring(0, 2);
 		const b = hash.substring(2, 4);
 		const folder = path.join(helper.getStoragePath(), a, b);
@@ -57,21 +60,24 @@ class Storage {
 			return callback(url);
 		}
 
-		fsextra.ensureDir(folder).then(() => {
-			fs.writeFile(filePath, data, (err) => {
-				if (err) {
-					log.error("Failed to store a file", err);
+		fsextra
+			.ensureDir(folder)
+			.then(() => {
+				fs.writeFile(filePath, data, (err) => {
+					if (err) {
+						log.error("Failed to store a file", err);
 
-					return callback("");
-				}
+						return callback("");
+					}
 
-				callback(url);
+					callback(url);
+				});
+			})
+			.catch((err) => {
+				log.error("Failed to create storage folder", err);
+
+				return callback("");
 			});
-		}).catch((err) => {
-			log.error("Failed to create storage folder", err);
-
-			return callback("");
-		});
 	}
 }
 

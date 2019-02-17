@@ -4,10 +4,7 @@ const $ = require("jquery");
 const Mousetrap = require("mousetrap");
 const utils = require("./utils");
 
-Mousetrap.bind([
-	"alt+up",
-	"alt+down",
-], function(e, keys) {
+Mousetrap.bind(["alt+up", "alt+down"], function(e, keys) {
 	const sidebar = $("#sidebar");
 	const channels = sidebar.find(".chan").not(".network.collapsed :not(.lobby)");
 	const index = channels.index(channels.filter(".active"));
@@ -15,13 +12,13 @@ Mousetrap.bind([
 	let target;
 
 	switch (direction) {
-	case "up":
-		target = (channels.length + (index - 1 + channels.length)) % channels.length;
-		break;
+		case "up":
+			target = (channels.length + (index - 1 + channels.length)) % channels.length;
+			break;
 
-	case "down":
-		target = (channels.length + (index + 1 + channels.length)) % channels.length;
-		break;
+		case "down":
+			target = (channels.length + (index + 1 + channels.length)) % channels.length;
+			break;
 	}
 
 	target = channels.eq(target).click();
@@ -30,10 +27,7 @@ Mousetrap.bind([
 	return false;
 });
 
-Mousetrap.bind([
-	"alt+shift+up",
-	"alt+shift+down",
-], function(e, keys) {
+Mousetrap.bind(["alt+shift+up", "alt+shift+down"], function(e, keys) {
 	const sidebar = $("#sidebar");
 	const lobbies = sidebar.find(".lobby");
 	const direction = keys.split("+").pop();
@@ -41,23 +35,33 @@ Mousetrap.bind([
 	let target;
 
 	switch (direction) {
-	case "up":
-		if (index < 0) {
-			target = lobbies.index(sidebar.find(".channel").filter(".active").siblings(".lobby")[0]);
-		} else {
-			target = (lobbies.length + (index - 1 + lobbies.length)) % lobbies.length;
-		}
+		case "up":
+			if (index < 0) {
+				target = lobbies.index(
+					sidebar
+						.find(".channel")
+						.filter(".active")
+						.siblings(".lobby")[0]
+				);
+			} else {
+				target = (lobbies.length + (index - 1 + lobbies.length)) % lobbies.length;
+			}
 
-		break;
+			break;
 
-	case "down":
-		if (index < 0) {
-			index = lobbies.index(sidebar.find(".channel").filter(".active").siblings(".lobby")[0]);
-		}
+		case "down":
+			if (index < 0) {
+				index = lobbies.index(
+					sidebar
+						.find(".channel")
+						.filter(".active")
+						.siblings(".lobby")[0]
+				);
+			}
 
-		target = (lobbies.length + (index + 1 + lobbies.length)) % lobbies.length;
+			target = (lobbies.length + (index + 1 + lobbies.length)) % lobbies.length;
 
-		break;
+			break;
 	}
 
 	target = lobbies.eq(target).click();

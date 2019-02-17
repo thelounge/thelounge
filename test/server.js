@@ -69,9 +69,7 @@ describe("Server", function() {
 				autoConnect: false,
 				reconnection: false,
 				timeout: 1000,
-				transports: [
-					"websocket",
-				],
+				transports: ["websocket"],
 			});
 
 			// Server emits events faster than the test can bind them
@@ -121,7 +119,9 @@ describe("Server", function() {
 				expect(data.pushSubscription).to.be.undefined;
 
 				// Private key defined in vapid.json is "01020304050607080910111213141516" for this public key.
-				expect(data.applicationServerKey).to.equal("BM0eTDpvDnH7ewlHuXWcPTE1NjlJ06XWIS1cQeBTZmsg4EDx5sOpY7kdX1pniTo8RakL3UdfFuIbC8_zog_BWIM");
+				expect(data.applicationServerKey).to.equal(
+					"BM0eTDpvDnH7ewlHuXWcPTE1NjlJ06XWIS1cQeBTZmsg4EDx5sOpY7kdX1pniTo8RakL3UdfFuIbC8_zog_BWIM"
+				);
 
 				done();
 			});

@@ -14,12 +14,15 @@ function MockClient() {
 util.inherits(MockClient, EventEmitter);
 
 MockClient.prototype.createMessage = function(opts) {
-	const message = _.extend({
-		text: "dummy message",
-		nick: "test-user",
-		target: "#test-channel",
-		previews: [],
-	}, opts);
+	const message = _.extend(
+		{
+			text: "dummy message",
+			nick: "test-user",
+			target: "#test-channel",
+			previews: [],
+		},
+		opts
+	);
 
 	return message;
 };
@@ -27,10 +30,12 @@ MockClient.prototype.createMessage = function(opts) {
 function sanitizeLog(callback) {
 	return function(...args) {
 		// Concats and removes ANSI colors. See https://stackoverflow.com/a/29497680
-		const stdout = args.join(" ").replace(
-			/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
-			""
-		);
+		const stdout = args
+			.join(" ")
+			.replace(
+				/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
+				""
+			);
 
 		callback(stdout + "\n");
 	};
@@ -43,9 +48,11 @@ module.exports = {
 	createNetwork() {
 		return new Network({
 			host: "example.com",
-			channels: [new Chan({
-				name: "#test-channel",
-			})],
+			channels: [
+				new Chan({
+					name: "#test-channel",
+				}),
+			],
 		});
 	},
 	createWebserver() {

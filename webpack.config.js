@@ -33,9 +33,7 @@ const config = {
 			},
 			{
 				test: /\.css$/,
-				include: [
-					path.resolve(__dirname, "client"),
-				],
+				include: [path.resolve(__dirname, "client")],
 				use: [
 					MiniCssExtractPlugin.loader,
 					{
@@ -49,48 +47,41 @@ const config = {
 			},
 			{
 				test: /\.js$/,
-				include: [
-					path.resolve(__dirname, "client"),
-				],
+				include: [path.resolve(__dirname, "client")],
 				use: {
 					loader: "babel-loader",
 					options: {
 						presets: [
-							["@babel/env", {
-								targets: {
-									browsers: [
-										"last 1 year",
-										"firefox esr",
-									],
+							[
+								"@babel/env",
+								{
+									targets: {
+										browsers: ["last 1 year", "firefox esr"],
+									},
 								},
-							}],
+							],
 						],
 					},
 				},
 			},
 			{
 				test: /\.tpl$/,
-				include: [
-					path.resolve(__dirname, "client/views"),
+				include: [path.resolve(__dirname, "client/views")],
+				use: [
+					{
+						loader: "handlebars-loader",
+						options: {
+							helperDirs: [path.resolve(__dirname, "client/js/libs/handlebars")],
+							extensions: [".tpl"],
+						},
+					},
+					{
+						loader: "html-minifier-loader",
+						options: {
+							ignoreCustomFragments: [/{{[\s\S]*?}}/],
+						},
+					},
 				],
-				use: [{
-					loader: "handlebars-loader",
-					options: {
-						helperDirs: [
-							path.resolve(__dirname, "client/js/libs/handlebars"),
-						],
-						extensions: [
-							".tpl",
-						],
-					},
-				}, {
-					loader: "html-minifier-loader",
-					options: {
-						ignoreCustomFragments: [
-							/{{[\s\S]*?}}/,
-						],
-					},
-				}],
 			},
 		],
 	},
@@ -144,7 +135,10 @@ const config = {
 		]),
 		new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
 		// socket.io uses debug, we don't need it
-		new webpack.NormalModuleReplacementPlugin(/debug/, path.resolve(__dirname, "scripts/noop.js")),
+		new webpack.NormalModuleReplacementPlugin(
+			/debug/,
+			path.resolve(__dirname, "scripts/noop.js")
+		),
 	],
 };
 

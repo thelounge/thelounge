@@ -5,59 +5,55 @@ const path = require("path");
 const fs = require("fs");
 const fuzzy = require("fuzzy");
 
-request.get({
-	url: "https://raw.githubusercontent.com/emojione/emojione/master/extras/alpha-codes/eac.json",
-	json: true,
-}, (error, response, emojiStrategy) => {
-	const emojiMap = {};
-	const fullNameEmojiMap = {};
+request.get(
+	{
+		url:
+			"https://raw.githubusercontent.com/emojione/emojione/master/extras/alpha-codes/eac.json",
+		json: true,
+	},
+	(error, response, emojiStrategy) => {
+		const emojiMap = {};
+		const fullNameEmojiMap = {};
 
-	for (const key in emojiStrategy) {
-		if (emojiStrategy.hasOwnProperty(key)) {
-			const shortname = prepareShortName(emojiStrategy[key].alpha_code);
-			const unicode = stringToUnicode(emojiStrategy[key].output);
-			fullNameEmojiMap[unicode] = emojiStrategy[key].name;
+		for (const key in emojiStrategy) {
+			if (emojiStrategy.hasOwnProperty(key)) {
+				const shortname = prepareShortName(emojiStrategy[key].alpha_code);
+				const unicode = stringToUnicode(emojiStrategy[key].output);
+				fullNameEmojiMap[unicode] = emojiStrategy[key].name;
 
-			// Skip tones, at least for now
-			if (shortname.includes("tone")) {
-				continue;
-			}
-
-			emojiMap[shortname] = unicode;
-
-			for (let alternative of emojiStrategy[key].aliases.split("|")) {
-				alternative = prepareShortName(alternative);
-
-				if (fuzzy.test(shortname, alternative) || fuzzy.test(alternative, shortname)) {
+				// Skip tones, at least for now
+				if (shortname.includes("tone")) {
 					continue;
 				}
 
-				emojiMap[alternative] = unicode;
+				emojiMap[shortname] = unicode;
+
+				for (let alternative of emojiStrategy[key].aliases.split("|")) {
+					alternative = prepareShortName(alternative);
+
+					if (fuzzy.test(shortname, alternative) || fuzzy.test(alternative, shortname)) {
+						continue;
+					}
+
+					emojiMap[alternative] = unicode;
+				}
 			}
 		}
+
+		const emojiMapOutput = JSON.stringify(emojiMap, null, 2) + "\n";
+		const fullNameEmojiMapOutput = JSON.stringify(fullNameEmojiMap, null, 2) + "\n";
+
+		fs.writeFileSync(
+			path.resolve(path.join(__dirname, "..", "client", "js", "libs", "simplemap.json")),
+			emojiMapOutput
+		);
+
+		fs.writeFileSync(
+			path.resolve(path.join(__dirname, "..", "client", "js", "libs", "fullnamemap.json")),
+			fullNameEmojiMapOutput
+		);
 	}
-
-	const emojiMapOutput = JSON.stringify(emojiMap, null, 2) + "\n";
-	const fullNameEmojiMapOutput = JSON.stringify(fullNameEmojiMap, null, 2) + "\n";
-
-	fs.writeFileSync(path.resolve(path.join(
-		__dirname,
-		"..",
-		"client",
-		"js",
-		"libs",
-		"simplemap.json"
-	)), emojiMapOutput);
-
-	fs.writeFileSync(path.resolve(path.join(
-		__dirname,
-		"..",
-		"client",
-		"js",
-		"libs",
-		"fullnamemap.json"
-	)), fullNameEmojiMapOutput);
-});
+);
 
 function stringToUnicode(key) {
 	return key
@@ -75,7 +71,5 @@ function prepareShortName(shortname) {
 		return "email";
 	}
 
-	return shortname
-		.slice(1, -1)
-		.replace("-", "_");
+	return shortname.slice(1, -1).replace("-", "_");
 }

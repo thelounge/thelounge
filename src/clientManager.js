@@ -31,7 +31,9 @@ ClientManager.prototype.findClient = function(name) {
 
 ClientManager.prototype.autoloadUsers = function() {
 	const users = this.getUsers();
-	const noUsersWarning = `There are currently no users. Create one with ${colors.bold("thelounge add <name>")}.`;
+	const noUsersWarning = `There are currently no users. Create one with ${colors.bold(
+		"thelounge add <name>"
+	)}.`;
 
 	if (users.length === 0) {
 		log.info(noUsersWarning);
@@ -39,28 +41,35 @@ ClientManager.prototype.autoloadUsers = function() {
 
 	users.forEach((name) => this.loadUser(name));
 
-	fs.watch(Helper.getUsersPath(), _.debounce(() => {
-		const loaded = this.clients.map((c) => c.name);
-		const updatedUsers = this.getUsers();
+	fs.watch(
+		Helper.getUsersPath(),
+		_.debounce(
+			() => {
+				const loaded = this.clients.map((c) => c.name);
+				const updatedUsers = this.getUsers();
 
-		if (updatedUsers.length === 0) {
-			log.info(noUsersWarning);
-		}
+				if (updatedUsers.length === 0) {
+					log.info(noUsersWarning);
+				}
 
-		// Reload all users. Existing users will only have their passwords reloaded.
-		updatedUsers.forEach((name) => this.loadUser(name));
+				// Reload all users. Existing users will only have their passwords reloaded.
+				updatedUsers.forEach((name) => this.loadUser(name));
 
-		// Existing users removed since last time users were loaded
-		_.difference(loaded, updatedUsers).forEach((name) => {
-			const client = _.find(this.clients, {name});
+				// Existing users removed since last time users were loaded
+				_.difference(loaded, updatedUsers).forEach((name) => {
+					const client = _.find(this.clients, {name});
 
-			if (client) {
-				client.quit(true);
-				this.clients = _.without(this.clients, client);
-				log.info(`User ${colors.bold(name)} disconnected and removed.`);
-			}
-		});
-	}, 1000, {maxWait: 10000}));
+					if (client) {
+						client.quit(true);
+						this.clients = _.without(this.clients, client);
+						log.info(`User ${colors.bold(name)} disconnected and removed.`);
+					}
+				});
+			},
+			1000,
+			{maxWait: 10000}
+		)
+	);
 };
 
 ClientManager.prototype.loadUser = function(name) {

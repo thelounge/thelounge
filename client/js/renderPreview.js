@@ -47,40 +47,52 @@ function openImageViewer(link, {pushState = true} = {}) {
 	// Only expanded thumbnails are being cycled through.
 
 	// Previous image
-	let previousImage = link.closest(".preview").prev(".preview")
-		.find(".toggle-content .toggle-thumbnail").last();
+	let previousImage = link
+		.closest(".preview")
+		.prev(".preview")
+		.find(".toggle-content .toggle-thumbnail")
+		.last();
 
 	if (!previousImage.length) {
-		previousImage = link.closest(".msg").prevAll()
-			.find(".toggle-content .toggle-thumbnail").last();
+		previousImage = link
+			.closest(".msg")
+			.prevAll()
+			.find(".toggle-content .toggle-thumbnail")
+			.last();
 	}
 
 	previousImage.addClass("previous-image");
 
 	// Next image
-	let nextImage = link.closest(".preview").next(".preview")
-		.find(".toggle-content .toggle-thumbnail").first();
+	let nextImage = link
+		.closest(".preview")
+		.next(".preview")
+		.find(".toggle-content .toggle-thumbnail")
+		.first();
 
 	if (!nextImage.length) {
-		nextImage = link.closest(".msg").nextAll()
-			.find(".toggle-content .toggle-thumbnail").first();
+		nextImage = link
+			.closest(".msg")
+			.nextAll()
+			.find(".toggle-content .toggle-thumbnail")
+			.first();
 	}
 
 	nextImage.addClass("next-image");
 
-	imageViewer.html(templates.image_viewer({
-		image: link.find("img").prop("src"),
-		link: link.prop("href"),
-		type: link.parent().hasClass("toggle-type-link") ? "link" : "image",
-		hasPreviousImage: previousImage.length > 0,
-		hasNextImage: nextImage.length > 0,
-	}));
+	imageViewer.html(
+		templates.image_viewer({
+			image: link.find("img").prop("src"),
+			link: link.prop("href"),
+			type: link.parent().hasClass("toggle-type-link") ? "link" : "image",
+			hasPreviousImage: previousImage.length > 0,
+			hasNextImage: nextImage.length > 0,
+		})
+	);
 
 	// Turn off transitionend listener before opening the viewer,
 	// which caused image viewer to become empty in rare cases
-	imageViewer
-		.off("transitionend")
-		.addClass("opened");
+	imageViewer.off("transitionend").addClass("opened");
 
 	// History management
 	if (pushState) {
@@ -109,17 +121,14 @@ imageViewer.on("click", ".next-image-btn", function() {
 });
 
 function closeImageViewer({pushState = true} = {}) {
-	imageViewer
-		.removeClass("opened")
-		.one("transitionend", function() {
-			imageViewer.empty();
-		});
+	imageViewer.removeClass("opened").one("transitionend", function() {
+		imageViewer.empty();
+	});
 
 	// History management
 	if (pushState) {
 		const clickTarget =
-			"#sidebar " +
-			`.chan[data-id="${$("#sidebar .chan.active").attr("data-id")}"]`;
+			"#sidebar " + `.chan[data-id="${$("#sidebar .chan.active").attr("data-id")}"]`;
 		history.pushState({clickTarget}, null, null);
 	}
 }

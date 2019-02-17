@@ -25,11 +25,17 @@ const linkify = LinkifyIt()
 // Known schemes to detect in text
 const commonSchemes = [
 	"sftp",
-	"smb", "file",
-	"irc", "ircs",
-	"svn", "git",
-	"steam", "mumble", "ts3server",
-	"svn+ssh", "ssh",
+	"smb",
+	"file",
+	"irc",
+	"ircs",
+	"svn",
+	"git",
+	"steam",
+	"mumble",
+	"ts3server",
+	"svn+ssh",
+	"ssh",
 ];
 
 for (const schema of commonSchemes) {

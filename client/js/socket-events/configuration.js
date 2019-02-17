@@ -187,8 +187,7 @@ function parseOverrideParams(params, data) {
 		}
 
 		// When the network is locked, URL overrides should not affect disabled fields
-		if (data.lockNetwork &&
-				["host", "port", "tls", "rejectUnauthorized"].includes(key)) {
+		if (data.lockNetwork && ["host", "port", "tls", "rejectUnauthorized"].includes(key)) {
 			continue;
 		}
 
@@ -198,20 +197,29 @@ function parseOverrideParams(params, data) {
 		}
 
 		if (key === "join") {
-			value = value.split(",").map((chan) => {
-				if (!chan.match(/^[#&!+]/)) {
-					return `#${chan}`;
-				}
+			value = value
+				.split(",")
+				.map((chan) => {
+					if (!chan.match(/^[#&!+]/)) {
+						return `#${chan}`;
+					}
 
-				return chan;
-			}).join(", ");
+					return chan;
+				})
+				.join(", ");
 		}
 
 		// Override server provided defaults with parameters passed in the URL if they match the data type
 		switch (typeof data.defaults[key]) {
-		case "boolean": data.defaults[key] = value === "1" || value === "true"; break;
-		case "number": data.defaults[key] = Number(value); break;
-		case "string": data.defaults[key] = String(value); break;
+			case "boolean":
+				data.defaults[key] = value === "1" || value === "true";
+				break;
+			case "number":
+				data.defaults[key] = Number(value);
+				break;
+			case "string":
+				data.defaults[key] = String(value);
+				break;
 		}
 	}
 }

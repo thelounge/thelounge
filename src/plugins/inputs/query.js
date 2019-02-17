@@ -10,10 +10,13 @@ exports.input = function(network, chan, cmd, args) {
 	const target = args[0];
 
 	if (args.length === 0 || target.length === 0) {
-		chan.pushMessage(this, new Msg({
-			type: Msg.Type.ERROR,
-			text: "You cannot open a query window without an argument.",
-		}));
+		chan.pushMessage(
+			this,
+			new Msg({
+				type: Msg.Type.ERROR,
+				text: "You cannot open a query window without an argument.",
+			})
+		);
 		return;
 	}
 
@@ -25,20 +28,29 @@ exports.input = function(network, chan, cmd, args) {
 
 	const char = target[0];
 
-	if (network.irc.network.options.CHANTYPES && network.irc.network.options.CHANTYPES.includes(char)) {
-		chan.pushMessage(this, new Msg({
-			type: Msg.Type.ERROR,
-			text: "You can not open query windows for channels, use /join instead.",
-		}));
+	if (
+		network.irc.network.options.CHANTYPES &&
+		network.irc.network.options.CHANTYPES.includes(char)
+	) {
+		chan.pushMessage(
+			this,
+			new Msg({
+				type: Msg.Type.ERROR,
+				text: "You can not open query windows for channels, use /join instead.",
+			})
+		);
 		return;
 	}
 
 	for (let i = 0; i < network.irc.network.options.PREFIX.length; i++) {
 		if (network.irc.network.options.PREFIX[i].symbol === char) {
-			chan.pushMessage(this, new Msg({
-				type: Msg.Type.ERROR,
-				text: "You can not open query windows for names starting with a user prefix.",
-			}));
+			chan.pushMessage(
+				this,
+				new Msg({
+					type: Msg.Type.ERROR,
+					text: "You can not open query windows for names starting with a user prefix.",
+				})
+			);
 			return;
 		}
 	}

@@ -7,10 +7,13 @@ exports.commands = ["cycle", "rejoin"];
 
 exports.input = function({irc}, chan) {
 	if (chan.type !== Chan.Type.CHANNEL) {
-		chan.pushMessage(this, new Msg({
-			type: Msg.Type.ERROR,
-			text: "You can only rejoin channels.",
-		}));
+		chan.pushMessage(
+			this,
+			new Msg({
+				type: Msg.Type.ERROR,
+				text: "You can only rejoin channels.",
+			})
+		);
 		return;
 	}
 

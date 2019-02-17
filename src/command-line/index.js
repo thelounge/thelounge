@@ -8,7 +8,8 @@ const program = require("commander");
 const Helper = require("../helper");
 const Utils = require("./utils");
 
-program.version(Helper.getVersion(), "-v, --version")
+program
+	.version(Helper.getVersion(), "-v, --version")
 	.option(
 		"-c, --config <key=value>",
 		"override entries of the configuration file, must be specified for each entry that needs to be overriden",
@@ -25,8 +26,12 @@ Helper.setHome(process.env.THELOUNGE_HOME || Utils.defaultHome());
 if (process.getuid) {
 	fs.stat(path.join(Helper.getHomePath(), "config.js"), (err, stat) => {
 		if (!err && stat.uid !== process.getuid()) {
-			log.warn("Config file owner does not match the user you are currently running The Lounge as.");
-			log.warn("To avoid issues, you should execute The Lounge commands under the same user.");
+			log.warn(
+				"Config file owner does not match the user you are currently running The Lounge as."
+			);
+			log.warn(
+				"To avoid issues, you should execute The Lounge commands under the same user."
+			);
 		}
 	});
 }

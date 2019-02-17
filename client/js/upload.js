@@ -16,7 +16,7 @@ function initialize() {
 	});
 
 	instance.addEventListener("progress", (event) => {
-		const percent = `${((event.bytesLoaded / event.file.size) * 100)}%`;
+		const percent = `${(event.bytesLoaded / event.file.size) * 100}%`;
 		$("#upload-progressbar").width(percent);
 	});
 
@@ -41,9 +41,9 @@ function initialize() {
 }
 
 /**
-* Called in the `configuration` socket event.
-* Makes it so the user can be notified if a file is too large without waiting for the upload to finish server-side.
-**/
+ * Called in the `configuration` socket event.
+ * Makes it so the user can be notified if a file is too large without waiting for the upload to finish server-side.
+ **/
 function setMaxFileSize(kb) {
 	instance.maxFileSize = kb;
 }

@@ -15,7 +15,10 @@ class WebPush {
 			const data = fs.readFileSync(vapidPath, "utf-8");
 			const parsedData = JSON.parse(data);
 
-			if (typeof parsedData.publicKey === "string" && typeof parsedData.privateKey === "string") {
+			if (
+				typeof parsedData.publicKey === "string" &&
+				typeof parsedData.privateKey === "string"
+			) {
 				this.vapidKeys = {
 					publicKey: parsedData.publicKey,
 					privateKey: parsedData.privateKey,
@@ -51,23 +54,25 @@ class WebPush {
 	}
 
 	pushSingle(client, subscription, payload) {
-		WebPushAPI
-			.sendNotification(subscription, JSON.stringify(payload))
-			.catch((error) => {
-				if (error.statusCode >= 400 && error.statusCode < 500) {
-					log.warn(`WebPush subscription for ${client.name} returned an error (${error.statusCode}), removing subscription`);
+		WebPushAPI.sendNotification(subscription, JSON.stringify(payload)).catch((error) => {
+			if (error.statusCode >= 400 && error.statusCode < 500) {
+				log.warn(
+					`WebPush subscription for ${client.name} returned an error (${
+						error.statusCode
+					}), removing subscription`
+				);
 
-					_.forOwn(client.config.sessions, ({pushSubscription}, token) => {
-						if (pushSubscription && pushSubscription.endpoint === subscription.endpoint) {
-							client.unregisterPushSubscription(token);
-						}
-					});
+				_.forOwn(client.config.sessions, ({pushSubscription}, token) => {
+					if (pushSubscription && pushSubscription.endpoint === subscription.endpoint) {
+						client.unregisterPushSubscription(token);
+					}
+				});
 
-					return;
-				}
+				return;
+			}
 
-				log.error(`WebPush Error (${error})`);
-			});
+			log.error(`WebPush Error (${error})`);
+		});
 	}
 }
 

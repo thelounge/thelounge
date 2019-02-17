@@ -48,12 +48,7 @@ const Helper = {
 
 module.exports = Helper;
 
-Helper.config = require(path.resolve(path.join(
-	__dirname,
-	"..",
-	"defaults",
-	"config.js"
-)));
+Helper.config = require(path.resolve(path.join(__dirname, "..", "defaults", "config.js")));
 
 function getVersion() {
 	const gitCommit = getGitCommit();
@@ -103,8 +98,16 @@ function setHome(newPath) {
 		const userConfig = require(configPath);
 
 		if (_.isEmpty(userConfig)) {
-			log.warn(`The file located at ${colors.green(configPath)} does not appear to expose anything.`);
-			log.warn(`Make sure it is non-empty and the configuration is exported using ${colors.bold("module.exports = { ... }")}.`);
+			log.warn(
+				`The file located at ${colors.green(
+					configPath
+				)} does not appear to expose anything.`
+			);
+			log.warn(
+				`Make sure it is non-empty and the configuration is exported using ${colors.bold(
+					"module.exports = { ... }"
+				)}.`
+			);
 			log.warn("Using default configuration...");
 		}
 
@@ -114,14 +117,24 @@ function setHome(newPath) {
 	if (!this.config.displayNetwork && !this.config.lockNetwork) {
 		this.config.lockNetwork = true;
 
-		log.warn(`${colors.bold("displayNetwork")} and ${colors.bold("lockNetwork")} are false, setting ${colors.bold("lockNetwork")} to true.`);
+		log.warn(
+			`${colors.bold("displayNetwork")} and ${colors.bold(
+				"lockNetwork"
+			)} are false, setting ${colors.bold("lockNetwork")} to true.`
+		);
 	}
 
-	const manifestPath = path.resolve(path.join(__dirname, "..", "public", "thelounge.webmanifest"));
+	const manifestPath = path.resolve(
+		path.join(__dirname, "..", "public", "thelounge.webmanifest")
+	);
 
 	// Check if manifest exists, if not, the app most likely was not built
 	if (!fs.existsSync(manifestPath)) {
-		log.error(`The client application was not built. Run ${colors.bold("NODE_ENV=production yarn build")} to resolve this.`);
+		log.error(
+			`The client application was not built. Run ${colors.bold(
+				"NODE_ENV=production yarn build"
+			)} to resolve this.`
+		);
 		process.exit(1);
 	}
 
@@ -132,13 +145,27 @@ function setHome(newPath) {
 	// TODO: Remove in future release
 	if (["example", "crypto", "zenburn"].includes(this.config.theme)) {
 		if (this.config.theme === "example") {
-			log.warn(`The default theme ${colors.red("example")} was renamed to ${colors.green("default")} as of The Lounge v3.`);
+			log.warn(
+				`The default theme ${colors.red("example")} was renamed to ${colors.green(
+					"default"
+				)} as of The Lounge v3.`
+			);
 		} else {
-			log.warn(`The theme ${colors.red(this.config.theme)} was moved to a separate theme as of The Lounge v3.`);
-			log.warn(`Install it with ${colors.bold("thelounge install thelounge-theme-" + this.config.theme)}.`);
+			log.warn(
+				`The theme ${colors.red(
+					this.config.theme
+				)} was moved to a separate theme as of The Lounge v3.`
+			);
+			log.warn(
+				`Install it with ${colors.bold(
+					"thelounge install thelounge-theme-" + this.config.theme
+				)}.`
+			);
 		}
 
-		log.warn(`Falling back to theme ${colors.green("default")} will be removed in a future release.`);
+		log.warn(
+			`Falling back to theme ${colors.green("default")} will be removed in a future release.`
+		);
 		log.warn("Please update your configuration file accordingly.");
 
 		this.config.theme = "default";
@@ -187,15 +214,18 @@ function ip2hex(address) {
 		return "00000000";
 	}
 
-	return address.split(".").map(function(octet) {
-		let hex = parseInt(octet, 10).toString(16);
+	return address
+		.split(".")
+		.map(function(octet) {
+			let hex = parseInt(octet, 10).toString(16);
 
-		if (hex.length === 1) {
-			hex = "0" + hex;
-		}
+			if (hex.length === 1) {
+				hex = "0" + hex;
+			}
 
-		return hex;
-	}).join("");
+			return hex;
+		})
+		.join("");
 }
 
 // Expand ~ into the current user home dir.
@@ -232,7 +262,11 @@ function getDefaultNick() {
 function mergeConfig(oldConfig, newConfig) {
 	return _.mergeWith(oldConfig, newConfig, (objValue, srcValue, key) => {
 		// Do not override config variables if the type is incorrect (e.g. object changed into a string)
-		if (typeof objValue !== "undefined" && objValue !== null && typeof objValue !== typeof srcValue) {
+		if (
+			typeof objValue !== "undefined" &&
+			objValue !== null &&
+			typeof objValue !== typeof srcValue
+		) {
 			log.warn(`Incorrect type for "${colors.bold(key)}", please verify your config.`);
 
 			return objValue;
@@ -282,5 +316,9 @@ function parseHostmask(hostmask) {
 }
 
 function compareHostmask(a, b) {
-	return (a.nick.toLowerCase() === b.nick.toLowerCase() || a.nick === "*") && (a.ident.toLowerCase() === b.ident.toLowerCase() || a.ident === "*") && (a.hostname.toLowerCase() === b.hostname.toLowerCase() || a.hostname === "*");
+	return (
+		(a.nick.toLowerCase() === b.nick.toLowerCase() || a.nick === "*") &&
+		(a.ident.toLowerCase() === b.ident.toLowerCase() || a.ident === "*") &&
+		(a.hostname.toLowerCase() === b.hostname.toLowerCase() || a.hostname === "*")
+	);
 }

@@ -170,7 +170,9 @@ function addKickItem() {
 	}
 
 	addContextMenuItem({
-		check: (target) => utils.hasRoleInChannel(target.closest(".chan"), ["op"]) && target.closest(".chan").attr("data-type") === "channel",
+		check: (target) =>
+			utils.hasRoleInChannel(target.closest(".chan"), ["op"]) &&
+			target.closest(".chan").attr("data-type") === "channel",
 		className: "action-kick",
 		displayName: "Kick",
 		data: (target) => target.attr("data-name"),

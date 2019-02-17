@@ -9,7 +9,8 @@ exports.input = function(network, chan, cmd, args) {
 		reason = args.join(" ") || " ";
 
 		network.irc.raw("AWAY", reason);
-	} else { // back command
+	} else {
+		// back command
 		network.irc.raw("AWAY");
 	}
 

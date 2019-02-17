@@ -85,7 +85,9 @@ function updateTitle() {
 	let title = vueApp.appName;
 
 	if (vueApp.activeChannel) {
-		title = `${vueApp.activeChannel.channel.name} — ${vueApp.activeChannel.network.name} — ${title}`;
+		title = `${vueApp.activeChannel.channel.name} — ${
+			vueApp.activeChannel.network.name
+		} — ${title}`;
 	}
 
 	// add highlight count to title
@@ -135,7 +137,7 @@ function move(array, old_index, new_index) {
 	if (new_index >= array.length) {
 		let k = new_index - array.length;
 
-		while ((k--) + 1) {
+		while (k-- + 1) {
 			this.push(undefined);
 		}
 	}
@@ -152,7 +154,8 @@ function closeChan(chan) {
 		cmd = "/quit";
 		const server = chan.find(".name").html();
 
-		if (!confirm(`Are you sure you want to remove ${server}?`)) { // eslint-disable-line no-alert
+		// eslint-disable-next-line no-alert
+		if (!confirm(`Are you sure you want to remove ${server}?`)) {
 			return false;
 		}
 	}

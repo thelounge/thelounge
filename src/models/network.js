@@ -86,11 +86,20 @@ Network.prototype.validate = function(client) {
 
 	if (Helper.config.lockNetwork) {
 		// This check is needed to prevent invalid user configurations
-		if (!Helper.config.public && this.host && this.host.length > 0 && this.host !== Helper.config.defaults.host) {
-			this.channels[0].pushMessage(client, new Msg({
-				type: Msg.Type.ERROR,
-				text: "Hostname you specified is not allowed.",
-			}), true);
+		if (
+			!Helper.config.public &&
+			this.host &&
+			this.host.length > 0 &&
+			this.host !== Helper.config.defaults.host
+		) {
+			this.channels[0].pushMessage(
+				client,
+				new Msg({
+					type: Msg.Type.ERROR,
+					text: "Hostname you specified is not allowed.",
+				}),
+				true
+			);
 
 			return false;
 		}
@@ -102,10 +111,14 @@ Network.prototype.validate = function(client) {
 	}
 
 	if (this.host.length === 0) {
-		this.channels[0].pushMessage(client, new Msg({
-			type: Msg.Type.ERROR,
-			text: "You must specify a hostname to connect.",
-		}), true);
+		this.channels[0].pushMessage(
+			client,
+			new Msg({
+				type: Msg.Type.ERROR,
+				text: "You must specify a hostname to connect.",
+			}),
+			true
+		);
 
 		return false;
 	}
@@ -150,7 +163,11 @@ Network.prototype.createWebIrc = function(client) {
 	}
 
 	if (!this.ip) {
-		log.warn(`Cannot find a valid WEBIRC configuration for ${this.nick}!${this.username}@${this.host}`);
+		log.warn(
+			`Cannot find a valid WEBIRC configuration for ${this.nick}!${this.username}@${
+				this.host
+			}`
+		);
 
 		return null;
 	}
@@ -237,12 +254,10 @@ Network.prototype.setNick = function(nick) {
 	this.highlightRegex = new RegExp(
 		// Do not match characters and numbers (unless IRC color)
 		"(?:^|[^a-z0-9]|\x03[0-9]{1,2})" +
-
-		// Escape nickname, as it may contain regex stuff
-		_.escapeRegExp(nick) +
-
-		// Do not match characters and numbers
-		"(?:[^a-z0-9]|$)",
+			// Escape nickname, as it may contain regex stuff
+			_.escapeRegExp(nick) +
+			// Do not match characters and numbers
+			"(?:[^a-z0-9]|$)",
 
 		// Case insensitive search
 		"i"
@@ -262,7 +277,9 @@ Network.prototype.getFilteredClone = function(lastActiveChannel, lastMessage) {
 	const filteredNetwork = Object.keys(this).reduce((newNetwork, prop) => {
 		if (prop === "channels") {
 			// Channels objects perform their own cloning
-			newNetwork[prop] = this[prop].map((channel) => channel.getFilteredClone(lastActiveChannel, lastMessage));
+			newNetwork[prop] = this[prop].map((channel) =>
+				channel.getFilteredClone(lastActiveChannel, lastMessage)
+			);
 		} else if (!filteredFromClient[prop]) {
 			// Some properties that are not useful for the client are skipped
 			newNetwork[prop] = this[prop];
@@ -307,8 +324,10 @@ Network.prototype.addChannel = function(newChan) {
 			const compareChan = this.channels[i];
 
 			// Negative if the new chan is alphabetically before the next chan in the list, positive if after
-			if (newChan.name.localeCompare(compareChan.name, {sensitivity: "base"}) <= 0
-				|| (compareChan.type !== Chan.Type.CHANNEL && compareChan.type !== Chan.Type.QUERY)) {
+			if (
+				newChan.name.localeCompare(compareChan.name, {sensitivity: "base"}) <= 0 ||
+				(compareChan.type !== Chan.Type.CHANNEL && compareChan.type !== Chan.Type.QUERY)
+			) {
 				index = i;
 				break;
 			}

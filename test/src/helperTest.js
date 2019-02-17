@@ -7,8 +7,9 @@ const Helper = require("../../src/helper");
 describe("Helper", function() {
 	describe("#expandHome", function() {
 		it("should correctly expand a Unix path", function() {
-			expect([`${os.homedir()}/tmp`, `${os.homedir()}\\tmp`])
-				.to.include(Helper.expandHome("~/tmp"));
+			expect([`${os.homedir()}/tmp`, `${os.homedir()}\\tmp`]).to.include(
+				Helper.expandHome("~/tmp")
+			);
 		});
 
 		it("should correctly expand a Windows path", function() {
@@ -24,8 +25,7 @@ describe("Helper", function() {
 		});
 
 		it("should not expand a tilde in the middle of a string", function() {
-			expect(Helper.expandHome("/tmp/~foo"))
-				.to.match(/^\/tmp\/~foo|[A-Z]:\\tmp\\~foo$/);
+			expect(Helper.expandHome("/tmp/~foo")).to.match(/^\/tmp\/~foo|[A-Z]:\\tmp\\~foo$/);
 		});
 
 		it("should return an empty string when given an empty string", function() {

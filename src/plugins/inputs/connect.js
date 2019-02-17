@@ -17,10 +17,13 @@ exports.input = function(network, chan, cmd, args) {
 		}
 
 		if (irc.connection && irc.connection.connected) {
-			chan.pushMessage(this, new Msg({
-				type: Msg.Type.ERROR,
-				text: "You are already connected.",
-			}));
+			chan.pushMessage(
+				this,
+				new Msg({
+					type: Msg.Type.ERROR,
+					text: "You are already connected.",
+				})
+			);
 			return;
 		}
 

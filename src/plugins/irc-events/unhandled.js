@@ -11,10 +11,14 @@ module.exports = function(irc, network) {
 			command.params.shift();
 		}
 
-		network.channels[0].pushMessage(client, new Msg({
-			type: Msg.Type.UNHANDLED,
-			command: command.command,
-			params: command.params,
-		}), true);
+		network.channels[0].pushMessage(
+			client,
+			new Msg({
+				type: Msg.Type.UNHANDLED,
+				command: command.command,
+				params: command.params,
+			}),
+			true
+		);
 	});
 };

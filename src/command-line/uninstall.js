@@ -37,13 +37,12 @@ program
 			process.exit(1);
 		}
 
-		return Utils.executeYarnCommand(
-			"remove",
-			packageName
-		).then(() => {
-			log.info(`${colors.green(packageName)} has been successfully uninstalled.`);
-		}).catch((code) => {
-			log.error(`Failed to uninstall ${colors.green(packageName)}. Exit code: ${code}`);
-			process.exit(1);
-		});
+		return Utils.executeYarnCommand("remove", packageName)
+			.then(() => {
+				log.info(`${colors.green(packageName)} has been successfully uninstalled.`);
+			})
+			.catch((code) => {
+				log.error(`Failed to uninstall ${colors.green(packageName)}. Exit code: ${code}`);
+				process.exit(1);
+			});
 	});

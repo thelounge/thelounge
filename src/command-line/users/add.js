@@ -21,7 +21,8 @@ program
 		const manager = new ClientManager();
 		const users = manager.getUsers();
 
-		if (users === undefined) { // There was an error, already logged
+		if (users === undefined) {
+			// There was an error, already logged
 			return;
 		}
 
@@ -30,31 +31,37 @@ program
 			return;
 		}
 
-		log.prompt({
-			text: "Enter password:",
-			silent: true,
-		}, function(err, password) {
-			if (!password) {
-				log.error("Password cannot be empty.");
-				return;
-			}
+		log.prompt(
+			{
+				text: "Enter password:",
+				silent: true,
+			},
+			function(err, password) {
+				if (!password) {
+					log.error("Password cannot be empty.");
+					return;
+				}
 
-			if (!err) {
-				log.prompt({
-					text: "Save logs to disk?",
-					default: "yes",
-				}, function(err2, enableLog) {
-					if (!err2) {
-						add(
-							manager,
-							name,
-							password,
-							enableLog.charAt(0).toLowerCase() === "y"
-						);
-					}
-				});
+				if (!err) {
+					log.prompt(
+						{
+							text: "Save logs to disk?",
+							default: "yes",
+						},
+						function(err2, enableLog) {
+							if (!err2) {
+								add(
+									manager,
+									name,
+									password,
+									enableLog.charAt(0).toLowerCase() === "y"
+								);
+							}
+						}
+					);
+				}
 			}
-		});
+		);
 	});
 
 function add(manager, name, password, enableLog) {

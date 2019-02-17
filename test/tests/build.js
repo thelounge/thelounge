@@ -27,6 +27,7 @@ describe("public folder", function() {
 	});
 
 	it("loading-error-handlers.js is copied", function() {
-		expect(fs.existsSync(path.join(publicFolder, "js", "loading-error-handlers.js"))).to.be.true;
+		expect(fs.existsSync(path.join(publicFolder, "js", "loading-error-handlers.js"))).to.be
+			.true;
 	});
 });

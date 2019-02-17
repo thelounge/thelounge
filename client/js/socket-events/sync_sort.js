@@ -13,7 +13,8 @@ socket.on("sync_sort", function(data) {
 		$.each(order, function(index, value) {
 			const position = $(container.children(".network")[index]);
 
-			if (Number(position.attr("data-id")) === value) { // Network in correct place
+			if (Number(position.attr("data-id")) === value) {
+				// Network in correct place
 				return true; // No point in continuing
 			}
 
@@ -21,13 +22,15 @@ socket.on("sync_sort", function(data) {
 		});
 	} else if (type === "channels") {
 		$.each(order, function(index, value) {
-			if (index === 0) { // Shouldn't attempt to move lobby
+			if (index === 0) {
+				// Shouldn't attempt to move lobby
 				return true; // same as `continue` -> skip to next item
 			}
 
 			const position = $(network.children(".chan")[index]); // Target channel at position
 
-			if (Number(position.attr("data-id")) === value) { // Channel in correct place
+			if (Number(position.attr("data-id")) === value) {
+				// Channel in correct place
 				return true; // No point in continuing
 			}
 

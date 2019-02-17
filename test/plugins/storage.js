@@ -12,12 +12,24 @@ describe("Image storage", function() {
 	this.slow(200);
 
 	const testImagePath = path.resolve(__dirname, "../../client/img/logo-grey-bg-120x120px.png");
-	const correctImageHash = crypto.createHash("sha256").update(fs.readFileSync(testImagePath)).digest("hex");
-	const correctImageURL = `storage/${correctImageHash.substring(0, 2)}/${correctImageHash.substring(2, 4)}/${correctImageHash.substring(4)}.png`;
+	const correctImageHash = crypto
+		.createHash("sha256")
+		.update(fs.readFileSync(testImagePath))
+		.digest("hex");
+	const correctImageURL = `storage/${correctImageHash.substring(
+		0,
+		2
+	)}/${correctImageHash.substring(2, 4)}/${correctImageHash.substring(4)}.png`;
 
 	const testSvgPath = path.resolve(__dirname, "../../client/img/logo-grey-bg.svg");
-	const correctSvgHash = crypto.createHash("sha256").update(fs.readFileSync(testSvgPath)).digest("hex");
-	const correctSvgURL = `storage/${correctSvgHash.substring(0, 2)}/${correctSvgHash.substring(2, 4)}/${correctSvgHash.substring(4)}.svg`;
+	const correctSvgHash = crypto
+		.createHash("sha256")
+		.update(fs.readFileSync(testSvgPath))
+		.digest("hex");
+	const correctSvgURL = `storage/${correctSvgHash.substring(0, 2)}/${correctSvgHash.substring(
+		2,
+		4
+	)}/${correctSvgHash.substring(4)}.svg`;
 
 	before(function(done) {
 		this.app = util.createWebserver();
@@ -49,7 +61,9 @@ describe("Image storage", function() {
 		link(this.irc, this.network.channels[0], message);
 
 		this.app.get("/thumb", function(req, res) {
-			res.send("<title>Google</title><meta property='og:image' content='http://localhost:9003/real-test-image.png'>");
+			res.send(
+				"<title>Google</title><meta property='og:image' content='http://localhost:9003/real-test-image.png'>"
+			);
 		});
 
 		this.irc.once("msg:preview", function(data) {
@@ -81,7 +95,9 @@ describe("Image storage", function() {
 		});
 
 		this.app.get("/svg-preview", function(req, res) {
-			res.send("<title>test title</title><meta property='og:image' content='http://localhost:9003/logo.svg'>");
+			res.send(
+				"<title>test title</title><meta property='og:image' content='http://localhost:9003/logo.svg'>"
+			);
 		});
 
 		link(this.irc, this.network.channels[0], message);

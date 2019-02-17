@@ -51,7 +51,10 @@ function loadPackages() {
 		let packageFile;
 
 		try {
-			packageInfo = require(path.join(Helper.getPackageModulePath(packageName), "package.json"));
+			packageInfo = require(path.join(
+				Helper.getPackageModulePath(packageName),
+				"package.json"
+			));
 			packageFile = require(Helper.getPackageModulePath(packageName));
 		} catch (e) {
 			log.warn(errorMsg);
