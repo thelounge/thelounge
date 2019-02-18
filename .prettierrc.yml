@@ -1,3 +1,7 @@
 arrowParens: always
 bracketSpacing: false
 trailingComma: "es5"
+overrides:
+  - files: "*.webmanifest"
+    options:
+      parser: json
