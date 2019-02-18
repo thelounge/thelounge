@@ -1121,9 +1121,7 @@ background on hover (unless active) */
 	border: 2px solid var(--button-color);
 	text-align: center;
 	transition: background 0.2s, color 0.2s;
-	box-shadow:
-		0 3px 5px -1px rgba(0, 0, 0, 0.2),
-		0 6px 10px 0 rgba(0, 0, 0, 0.14);
+	box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.15);
 }
 
 .scroll-down:hover .scroll-down-arrow {
