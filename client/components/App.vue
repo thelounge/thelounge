@@ -64,13 +64,10 @@
 			<Chat
 				v-if="activeChannel"
 				:network="activeChannel.network"
-				:channel="activeChannel.channel"
-			/>
-			<div id="sign-in" class="window" role="tabpanel" aria-label="Sign-in" />
-			<div id="connect" class="window" role="tabpanel" aria-label="Connect" />
-			<div id="settings" class="window" role="tabpanel" aria-label="Settings" />
-			<div id="help" class="window" role="tabpanel" aria-label="Help" />
-			<div id="changelog" class="window" aria-label="Changelog" />
+				:channel="activeChannel.channel" />
+			<component
+				:is="activeWindow"
+				ref="window" />
 		</article>
 	</div>
 </template>
@@ -80,14 +77,17 @@ const throttle = require("lodash/throttle");
 
 import NetworkList from "./NetworkList.vue";
 import Chat from "./Chat.vue";
+import SignIn from "./Windows/SignIn.vue";
 
 export default {
 	name: "App",
 	components: {
 		NetworkList,
 		Chat,
+		SignIn,
 	},
 	props: {
+		activeWindow: String,
 		activeChannel: Object,
 		networks: Array,
 	},

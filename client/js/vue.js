@@ -15,6 +15,7 @@ Vue.filter("roundBadgeNumber", roundBadgeNumber);
 const vueApp = new Vue({
 	el: "#viewport",
 	data: {
+		activeWindow: null,
 		activeChannel: null,
 		appName: document.title,
 		currentUserVisibleError: null,
@@ -48,6 +49,7 @@ const vueApp = new Vue({
 	},
 	render(createElement) {
 		return createElement(App, {
+			ref: "app",
 			props: this,
 		});
 	},
@@ -86,8 +88,13 @@ function initChannel(channel) {
 	}
 }
 
+function getActiveWindowComponent() {
+	return vueApp.$refs.app.$refs.window;
+}
+
 module.exports = {
 	vueApp,
 	findChannel,
 	initChannel,
+	getActiveWindowComponent,
 };

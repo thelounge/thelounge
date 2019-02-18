@@ -49,7 +49,6 @@ socket.on("init", function(data) {
 
 		$(document.body).removeClass("signed-out");
 		$("#loading").remove();
-		$("#sign-in").remove();
 
 		if (window.g_LoungeErrorHandler) {
 			window.removeEventListener("error", window.g_LoungeErrorHandler);

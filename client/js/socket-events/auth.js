@@ -4,8 +4,7 @@ const $ = require("jquery");
 const socket = require("../socket");
 const storage = require("../localStorage");
 const utils = require("../utils");
-const templates = require("../../views");
-const {vueApp} = require("../vue");
+const {vueApp, getActiveWindowComponent} = require("../vue");
 
 socket.on("auth", function(data) {
 	// If we reconnected and serverHash differs, that means the server restarted
@@ -18,40 +17,19 @@ socket.on("auth", function(data) {
 		return;
 	}
 
-	const login = $("#sign-in");
-
 	if (data.serverHash > -1) {
 		utils.serverHash = data.serverHash;
 
-		login.html(templates.windows.sign_in());
-
-		utils.togglePasswordField("#sign-in .reveal-password");
-
-		login.find("form").on("submit", function() {
-			const form = $(this);
-
-			form.find(".btn").prop("disabled", true);
-
-			const values = {};
-			$.each(form.serializeArray(), function(i, obj) {
-				values[obj.name] = obj.value;
-			});
-
-			storage.set("user", values.user);
-
-			socket.emit("auth", values);
-
-			return false;
-		});
+		vueApp.activeWindow = "SignIn";
 	} else {
-		login.find(".btn").prop("disabled", false);
+		getActiveWindowComponent().inFlight = false;
 	}
 
 	let token;
 	const user = storage.get("user");
 
 	if (!data.success) {
-		if (login.length === 0) {
+		if (vueApp.activeWindow !== "SignIn") {
 			socket.disconnect();
 			vueApp.isConnected = false;
 			vueApp.currentUserVisibleError = "Authentication failed, reloading…";
@@ -61,13 +39,7 @@ socket.on("auth", function(data) {
 
 		storage.remove("token");
 
-		const error = login.find(".error");
-		error
-			.show()
-			.closest("form")
-			.one("submit", function() {
-				error.hide();
-			});
+		getActiveWindowComponent().errorShown = true;
 	} else if (user) {
 		token = storage.get("token");
 
@@ -93,10 +65,6 @@ socket.on("auth", function(data) {
 
 			socket.emit("auth", {user, token, lastMessage, openChannel});
 		}
-	}
-
-	if (user) {
-		login.find("input[name='user']").val(user);
 	}
 
 	if (token) {

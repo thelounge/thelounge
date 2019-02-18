@@ -908,7 +908,8 @@ background on hover (unless active) */
 
 .window {
 	background: var(--window-bg-color);
-	display: none;
+	display: flex;
+	flex-direction: column;
 	overflow-y: auto;
 	height: 100%;
 	scrollbar-width: thin;
@@ -947,11 +948,6 @@ background on hover (unless active) */
 	color: var(--window-heading-color);
 	font-size: 18px;
 	margin: 20px 0 10px;
-}
-
-#windows .window.active {
-	display: flex;
-	flex-direction: column;
 }
 
 #windows .header {
@@ -1749,7 +1745,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #sign-in .error {
 	color: #e74c3c;
-	display: none; /* This message gets displayed on error only */
 	margin-top: 1em;
 	width: 100%;
 }
@@ -1878,7 +1873,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	content: "\f00c"; /* https://fontawesome.com/icons/check?style=solid */
 }
 
-.password-container .reveal-password.visible span::before {
+.password-container .reveal-password-visible span::before {
 	content: "\f070"; /* https://fontawesome.com/icons/eye-slash?style=solid */
 	color: #ff4136;
 }

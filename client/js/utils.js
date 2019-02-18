@@ -18,7 +18,6 @@ module.exports = {
 	move,
 	closeChan,
 	synchronizeNotifiedState,
-	togglePasswordField,
 	requestIdleCallback,
 };
 
@@ -102,25 +101,6 @@ function updateTitle() {
 	}
 
 	document.title = title;
-}
-
-function togglePasswordField(elem) {
-	$(elem).on("click", function() {
-		const $this = $(this);
-		const input = $this.closest("div").find("input");
-
-		input.attr("type", input.attr("type") === "password" ? "text" : "password");
-
-		swapLabel($this);
-		swapLabel($this.find("span"));
-		$this.toggleClass("visible");
-	});
-}
-
-// Given a element, swap its aria-label with the content of `data-alt-label`
-function swapLabel(element) {
-	const altText = element.data("alt-label");
-	element.data("alt-label", element.attr("aria-label")).attr("aria-label", altText);
 }
 
 function confirmExit() {

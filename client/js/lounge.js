@@ -127,7 +127,8 @@ window.vueMounted = () => {
 			}
 		}
 
-		if (inSidebar) {
+		if (channel) {
+			vueApp.activeWindow = null;
 			vueApp.activeChannel = channel;
 
 			if (channel) {
