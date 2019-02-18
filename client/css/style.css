@@ -1097,7 +1097,7 @@ background on hover (unless active) */
 	pointer-events: none;
 	opacity: 0;
 	transform: translateY(16px);
-	transition: all 0.2s ease-in-out;
+	transition: transform 0.2s, opacity 0.2s;
 	cursor: pointer;
 }
 
@@ -1108,18 +1108,23 @@ background on hover (unless active) */
 }
 
 .scroll-down-arrow {
-	width: 48px;
-	height: 48px;
-	line-height: 48px;
+	width: 36px;
+	height: 36px;
+	line-height: 34px;
 	border-radius: 50%;
-	background: #fff;
-	color: #333;
-	border: 1px solid #84ce88;
+	background: var(--window-bg-color);
+	color: #84ce88;
+	border: 2px solid #84ce88;
 	text-align: center;
+	transition: background 0.2s, color 0.2s;
+	box-shadow:
+		0 3px 5px -1px rgba(0, 0, 0, 0.2),
+		0 6px 10px 0 rgba(0, 0, 0, 0.14);
 }
 
 .scroll-down:hover .scroll-down-arrow {
 	background: #84ce88;
+	color: var(--window-bg-color);
 }
 
 .scroll-down-arrow::after {
