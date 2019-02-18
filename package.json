@@ -13,7 +13,7 @@
   "homepage": "https://thelounge.chat/",
   "scripts": {
     "build": "webpack",
-    "coverage": "run-s test:{client,server} && nyc --nycrc-path=test/.nycrc-report report",
+    "coverage": "run-s test:{client,server} && nyc --nycrc-path=test/.nycrc-report.json report",
     "dev": "run-p watch start",
     "format:prettier": "prettier --write \"**/*.{css,html,json,md,webmanifest,yml,yaml}\"",
     "lint:check-stylelint": "stylelint-config-prettier-check",
@@ -23,8 +23,8 @@
     "start": "node index start",
     "test": "run-p --aggregate-output --continue-on-error lint:* test:{client,server}",
     "test:browser": "webpack-dev-server --config=webpack.config-browser.js",
-    "test:client": "nyc --nycrc-path=test/.nycrc-mocha-webpack mocha-webpack --colors --opts=test/mocha-webpack.opts",
-    "test:server": "nyc --nycrc-path=test/.nycrc-mocha mocha --colors",
+    "test:client": "nyc --nycrc-path=test/.nycrc-mocha-webpack.json mocha-webpack --colors --opts=test/mocha-webpack.opts",
+    "test:server": "nyc --nycrc-path=test/.nycrc-mocha.json mocha --colors",
     "watch": "webpack --watch"
   },
   "keywords": [
