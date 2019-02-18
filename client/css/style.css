@@ -11,6 +11,10 @@
 	/* Background color of the whole page */
 	--body-bg-color: #415364;
 
+	/* Main button color. Applies to border, text, and background on hover */
+	--button-color: #84ce88;
+	--button-text-color-hover: #fff;
+
 	/* Links and link-looking buttons */
 	--link-color: #50a656;
 
@@ -155,9 +159,9 @@ kbd {
 }
 
 .btn {
-	border: 2px solid #84ce88;
+	border: 2px solid var(--button-color);
 	border-radius: 3px;
-	color: #84ce88;
+	color: var(--button-color);
 	display: inline-block;
 	font-size: 12px;
 	font-weight: bold;
@@ -177,8 +181,8 @@ kbd {
 .btn:disabled,
 .btn:hover,
 .btn:focus {
-	background: #84ce88;
-	color: #fff;
+	background: var(--button-color);
+	color: var(--button-text-color-hover);
 	opacity: 1;
 }
 
@@ -1113,8 +1117,8 @@ background on hover (unless active) */
 	line-height: 34px;
 	border-radius: 50%;
 	background: var(--window-bg-color);
-	color: #84ce88;
-	border: 2px solid #84ce88;
+	color: var(--button-color);
+	border: 2px solid var(--button-color);
 	text-align: center;
 	transition: background 0.2s, color 0.2s;
 	box-shadow:
@@ -1123,8 +1127,8 @@ background on hover (unless active) */
 }
 
 .scroll-down:hover .scroll-down-arrow {
-	background: #84ce88;
-	color: var(--window-bg-color);
+	background: var(--button-color);
+	color: var(--button-text-color-hover);
 }
 
 .scroll-down-arrow::after {
