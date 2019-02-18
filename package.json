@@ -76,7 +76,7 @@
     "@vue/server-test-utils": "1.0.0-beta.29",
     "@vue/test-utils": "1.0.0-beta.29",
     "babel-loader": "8.0.5",
-    "babel-plugin-istanbul": "5.1.0",
+    "babel-plugin-istanbul": "5.1.1",
     "chai": "4.2.0",
     "copy-webpack-plugin": "4.6.0",
     "css-loader": "0.28.11",
