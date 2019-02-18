@@ -58,7 +58,8 @@
 					v-else
 					class="chat-content">
 					<div
-						:class="['scroll-down', {'scroll-down-shown': !channel.scrolledToBottom}]"
+						:class="['scroll-down tooltipped tooltipped-w', {'scroll-down-shown': !channel.scrolledToBottom}]"
+						aria-label="Jump to recent messages"
 						@click="$refs.messageList.jumpToBottom()">
 						<div class="scroll-down-arrow" />
 					</div>
