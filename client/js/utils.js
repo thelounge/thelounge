@@ -85,7 +85,7 @@ function updateTitle() {
 	let title = vueApp.appName;
 
 	if (vueApp.activeChannel) {
-		title = `${vueApp.activeChannel.channel.name} — ${vueApp.activeChannel.network.name} — ${title}`;
+		title = `${vueApp.activeChannel.channel.name} — ${title}`;
 	}
 
 	// add highlight count to title
