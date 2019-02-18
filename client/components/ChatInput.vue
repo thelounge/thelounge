@@ -18,7 +18,7 @@
 			v-if="this.$root.isFileUploadEnabled"
 			id="upload-tooltip"
 			class="tooltipped tooltipped-w tooltipped-no-touch"
-			aria-label="Upload File"
+			aria-label="Upload file"
 			@click="openFileUpload">
 			<input
 				id="upload-input"
