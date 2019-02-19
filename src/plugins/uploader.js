@@ -1,7 +1,8 @@
 "use strict";
 
-const SocketIOFileUploadServer = require("socketio-file-upload/server");
 const Helper = require("../helper");
+const busboy = require("busboy");
+const uuidv4 = require("uuid/v4");
 const path = require("path");
 const fsextra = require("fs-extra");
 const fs = require("fs");
@@ -28,51 +29,20 @@ const whitelist = [
 	"video/webm",
 ];
 
+const uploadTokens = new Map();
+
 class Uploader {
 	constructor(socket) {
-		const uploader = new SocketIOFileUploadServer();
-		const folder = path.join(Helper.getFileUploadPath(), ".tmp");
+		socket.on("upload:auth", () => {
+			const token = uuidv4();
 
-		fsextra.ensureDir(folder, (err) => {
-			if (err) {
-				log.err(`Error ensuring ${folder} exists for uploads.`);
-			} else {
-				uploader.dir = folder;
-			}
+			uploadTokens.set(token, true);
+
+			socket.emit("upload:auth", token);
+
+			// Invalidate the token in one minute
+			setTimeout(() => uploadTokens.delete(token), 60 * 1000);
 		});
-
-		uploader.on("complete", (data) => {
-			let randomName;
-			let destPath;
-
-			// Generate a random file name for storage on disk
-			do {
-				randomName = crypto.randomBytes(8).toString("hex");
-				destPath = path.join(Helper.getFileUploadPath(), randomName.substring(0, 2), randomName);
-			} while (fs.existsSync(destPath));
-
-			fsextra.move(data.file.pathName, destPath).then(() => {
-				const slug = encodeURIComponent(path.basename(data.file.pathName));
-				const url = `uploads/${randomName}/${slug}`;
-				socket.emit("upload:success", url);
-			}).catch(() => {
-				log.warn(`Unable to move uploaded file "${data.file.pathName}"`);
-
-				// Emit failed upload to the client if file move fails
-				socket.emit("siofu_error", {
-					id: data.file.id,
-					message: "Unable to move uploaded file",
-				});
-			});
-		});
-
-		uploader.on("error", (data) => {
-			log.error(`File upload failed: ${data.error}`);
-		});
-
-		// maxFileSize is in bytes, but config option is passed in as KB
-		uploader.maxFileSize = Uploader.getMaxFileSize();
-		uploader.listen(socket);
 	}
 
 	static isValidType(mimeType) {
@@ -80,43 +50,173 @@ class Uploader {
 	}
 
 	static router(express) {
-		express.get("/uploads/:name/:slug*?", (req, res) => {
-			const name = req.params.name;
+		express.get("/uploads/:name/:slug*?", Uploader.routeGetFile);
+		express.post("/uploads/new/:token", Uploader.routeUploadFile);
+	}
 
-			const nameRegex = /^[0-9a-f]{16}$/;
+	static routeGetFile(req, res) {
+		const name = req.params.name;
 
-			if (!nameRegex.test(name)) {
-				return res.status(404).send("Not found");
+		const nameRegex = /^[0-9a-f]{16}$/;
+
+		if (!nameRegex.test(name)) {
+			return res.status(404).send("Not found");
+		}
+
+		const folder = name.substring(0, 2);
+		const uploadPath = Helper.getFileUploadPath();
+		const filePath = path.join(uploadPath, folder, name);
+		const detectedMimeType = Uploader.getFileType(filePath);
+
+		// doesn't exist
+		if (detectedMimeType === null) {
+			return res.status(404).send("Not found");
+		}
+
+		// Force a download in the browser if it's not a whitelisted type (binary or otherwise unknown)
+		const contentDisposition = Uploader.isValidType(detectedMimeType) ? "inline" : "attachment";
+
+		res.setHeader("Content-Disposition", contentDisposition);
+		res.setHeader("Cache-Control", "max-age=86400");
+		res.contentType(detectedMimeType);
+
+		return res.sendFile(filePath);
+	}
+
+	static routeUploadFile(req, res) {
+		let busboyInstance;
+		let uploadUrl;
+		let randomName;
+		let destDir;
+		let destPath;
+		let streamWriter;
+
+		const doneCallback = () => {
+			// detach the stream and drain any remaining data
+			if (busboyInstance) {
+				req.unpipe(busboyInstance);
+				req.on("readable", req.read.bind(req));
+
+				busboyInstance.removeAllListeners();
+				busboyInstance = null;
 			}
 
-			const folder = name.substring(0, 2);
-			const uploadPath = Helper.getFileUploadPath();
-			const filePath = path.join(uploadPath, folder, name);
-			const detectedMimeType = Uploader.getFileType(filePath);
+			// close the output file stream
+			if (streamWriter) {
+				streamWriter.end();
+				streamWriter = null;
+			}
+		};
 
-			// doesn't exist
-			if (detectedMimeType === null) {
-				return res.status(404).send("Not found");
+		const abortWithError = (err) => {
+			doneCallback();
+
+			// if we ended up erroring out, delete the output file from disk
+			if (destPath && fs.existsSync(destPath)) {
+				fs.unlinkSync(destPath);
+				destPath = null;
 			}
 
-			// Force a download in the browser if it's not a whitelisted type (binary or otherwise unknown)
-			const contentDisposition = Uploader.isValidType(detectedMimeType) ? "inline" : "attachment";
+			return res.status(400).json({error: err.message});
+		};
 
-			res.setHeader("Content-Disposition", contentDisposition);
-			res.setHeader("Cache-Control", "max-age=86400");
-			res.contentType(detectedMimeType);
+		// if the authentication token is incorrect, bail out
+		if (uploadTokens.delete(req.params.token) !== true) {
+			return abortWithError(Error("Unauthorized"));
+		}
 
-			return res.sendFile(filePath);
+		// if the request does not contain any body data, bail out
+		if (req.headers["content-length"] < 1) {
+			return abortWithError(Error("Length Required"));
+		}
+
+		// Only allow multipart, as busboy can throw an error on unsupported types
+		if (!req.headers["content-type"].startsWith("multipart/form-data")) {
+			return abortWithError(Error("Unsupported Content Type"));
+		}
+
+		// create a new busboy processor, it is wrapped in try/catch
+		// because it can throw on malformed headers
+		try {
+			busboyInstance = new busboy({
+				headers: req.headers,
+				limits: {
+					files: 1, // only allow one file per upload
+					fileSize: Uploader.getMaxFileSize(),
+				},
+			});
+		} catch (err) {
+			return abortWithError(err);
+		}
+
+		// Any error or limit from busboy will abort the upload with an error
+		busboyInstance.on("error", abortWithError);
+		busboyInstance.on("partsLimit", () => abortWithError(Error("Parts limit reached")));
+		busboyInstance.on("filesLimit", () => abortWithError(Error("Files limit reached")));
+		busboyInstance.on("fieldsLimit", () => abortWithError(Error("Fields limit reached")));
+
+		// generate a random output filename for the file
+		// we use do/while loop to prevent the rare case of generating a file name
+		// that already exists on disk
+		do {
+			randomName = crypto.randomBytes(8).toString("hex");
+			destDir = path.join(Helper.getFileUploadPath(), randomName.substring(0, 2));
+			destPath = path.join(destDir, randomName);
+		} while (fs.existsSync(destPath));
+
+		// we split the filename into subdirectories (by taking 2 letters from the beginning)
+		// this helps avoid file system and certain tooling limitations when there are
+		// too many files on one folder
+		try {
+			fsextra.ensureDirSync(destDir);
+		} catch (err) {
+			log.err(`Error ensuring ${destDir} exists for uploads: ${err.message}`);
+			return abortWithError(err);
+		}
+
+		// Open a file stream for writing
+		streamWriter = fs.createWriteStream(destPath);
+		streamWriter.on("error", abortWithError);
+
+		busboyInstance.on("file", (fieldname, fileStream, filename) => {
+			uploadUrl = `uploads/${randomName}/${encodeURIComponent(filename)}`;
+
+			// if the busboy data stream errors out or goes over the file size limit
+			// abort the processing with an error
+			fileStream.on("error", abortWithError);
+			fileStream.on("limit", () => {
+				fileStream.unpipe(streamWriter);
+				fileStream.on("readable", fileStream.read.bind(fileStream));
+
+				abortWithError(Error("File size limit reached"));
+			});
+
+			// Attempt to write the stream to file
+			fileStream.pipe(streamWriter);
 		});
+
+		busboyInstance.on("finish", () => {
+			doneCallback();
+
+			// upload was done, send the generated file url to the client
+			res.status(200).json({
+				url: uploadUrl,
+			});
+		});
+
+		// pipe request body to busboy for processing
+		return req.pipe(busboyInstance);
 	}
 
 	static getMaxFileSize() {
 		const configOption = Helper.config.fileUpload.maxFileSize;
 
-		if (configOption === -1) { // no file size limit
-			return null;
+		// Busboy uses Infinity to allow unlimited file size
+		if (configOption < 1) {
+			return Infinity;
 		}
 
+		// maxFileSize is in bytes, but config option is passed in as KB
 		return configOption * 1024;
 	}
 
@@ -129,14 +229,17 @@ class Uploader {
 			// returns {ext, mime} if found, null if not.
 			const file = fileType(buffer);
 
+			// if a file type was detected correctly, return it
 			if (file) {
 				return file.mime;
 			}
 
+			// if the buffer is a valid UTF-8 buffer, use text/plain
 			if (isUtf8(buffer)) {
 				return "text/plain";
 			}
 
+			// otherwise assume it's random binary data
 			return "application/octet-stream";
 		} catch (e) {
 			if (e.code !== "ENOENT") {

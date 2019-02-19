@@ -1959,6 +1959,12 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	background: blue;
 	width: 0%;
 	height: 2px;
+	visibility: hidden;
+}
+
+#upload-progressbar.upload-progressbar-visible {
+	visibility: visible;
+	transition: 0.3s width ease-in-out;
 }
 
 #form {
