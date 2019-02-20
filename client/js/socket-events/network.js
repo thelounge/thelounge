@@ -4,7 +4,6 @@ const $ = require("jquery");
 const socket = require("../socket");
 const templates = require("../../views");
 const sidebar = $("#sidebar");
-const utils = require("../utils");
 const {vueApp, initChannel, findChannel} = require("../vue");
 
 socket.on("network", function(data) {

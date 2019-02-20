@@ -78,6 +78,7 @@ import Chat from "./Chat.vue";
 import SignIn from "./Windows/SignIn.vue";
 import Settings from "./Windows/Settings.vue";
 import Help from "./Windows/Help.vue";
+import Changelog from "./Windows/Changelog.vue";
 
 export default {
 	name: "App",
@@ -87,6 +88,7 @@ export default {
 		SignIn,
 		Settings,
 		Help,
+		Changelog,
 	},
 	props: {
 		activeWindow: String,
