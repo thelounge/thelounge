@@ -77,6 +77,7 @@ import NetworkList from "./NetworkList.vue";
 import Chat from "./Chat.vue";
 import SignIn from "./Windows/SignIn.vue";
 import Settings from "./Windows/Settings.vue";
+import Help from "./Windows/Help.vue";
 
 export default {
 	name: "App",
@@ -85,6 +86,7 @@ export default {
 		Chat,
 		SignIn,
 		Settings,
+		Help,
 	},
 	props: {
 		activeWindow: String,

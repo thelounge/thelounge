@@ -14,11 +14,11 @@
 
 			<h2>
 				<small class="pull-right">
-					v{{ version }}
+					v{{ $root.serverConfiguration.version }}
 					(<a
 						id="view-changelog"
 						href="#"
-						data-target="#changelog">release notes</a>)
+						data-target="Changelog">release notes</a>)
 				</small>
 				About The Lounge
 			</h2>
@@ -26,33 +26,33 @@
 			<div class="about">
 				<div id="version-checker" />
 
-				{{#if gitCommit}}
-				<p>
-					The Lounge is running from source
-					(<a
-						href="https://github.com/thelounge/thelounge/tree/{{gitCommit}}"
-						target="_blank"
-						rel="noopener">commit <code>{{ gitCommit }}</code></a>).
-				</p>
+				<template v-if="$root.serverConfiguration.gitCommit">
+					<p>
+						The Lounge is running from source
+						(<a
+							:href="`https://github.com/thelounge/thelounge/tree/${$root.serverConfiguration.gitCommit}`"
+							target="_blank"
+							rel="noopener">commit <code>{{ $root.serverConfiguration.gitCommit }}</code></a>).
+					</p>
 
-				<ul>
-					<li>
-						Compare
-						<a
-							href="https://github.com/thelounge/thelounge/compare/{{gitCommit}}...master"
-							target="_blank"
-							rel="noopener">between <code>{{ gitCommit }}</code> and <code>master</code></a>
-						to see what you are missing
-					</li>
-					<li>
-						Compare
-						<a
-							href="https://github.com/thelounge/thelounge/compare/{{version}}...{{gitCommit}}"
-							target="_blank"
-							rel="noopener">between <code>{{ version }}</code> and <code>{{ gitCommit }}</code></a>
-						to see your local changes</li>
-				</ul>
-				{{/if}}
+					<ul>
+						<li>
+							Compare
+							<a
+								:href="`https://github.com/thelounge/thelounge/compare/${$root.serverConfiguration.gitCommit}...master`"
+								target="_blank"
+								rel="noopener">between <code>{{ $root.serverConfiguration.gitCommit }}</code> and <code>master</code></a>
+							to see what you are missing
+						</li>
+						<li>
+							Compare
+							<a
+								:href="`https://github.com/thelounge/thelounge/compare/${$root.serverConfiguration.version}...${$root.serverConfiguration.gitCommit}`"
+								target="_blank"
+								rel="noopener">between <code>{{ $root.serverConfiguration.version }}</code> and <code>{{ $root.serverConfiguration.gitCommit }}</code></a>
+							to see your local changes</li>
+					</ul>
+				</template>
 
 				<p>
 					<a
@@ -402,7 +402,7 @@
 				<div class="description">
 					<p>
 						Invite a user to the specified channel. If
-						<code>channel</code> is ommitted, user will be invited to the
+						<code>channel</code> is omitted, user will be invited to the
 						current channel.
 					</p>
 				</div>
@@ -528,7 +528,7 @@
 				<div class="description">
 					<p>
 						Close the specified channel or private message window, or the
-						current channel if <code>channel</code> is ommitted.
+						current channel if <code>channel</code> is omitted.
 					</p>
 					<p>Aliases: <code>/close</code>, <code>/leave</code></p>
 				</div>
@@ -644,7 +644,6 @@
 				</div>
 			</div>
 		</div>
-
 	</div>
 </template>
 
