@@ -6,7 +6,6 @@ const socket = require("./socket");
 const {vueApp} = require("./vue");
 require("../js/autocompletion");
 
-const $windows = $("#windows");
 const $settings = $("#settings");
 const $theme = $("#theme");
 const $userStyles = $("#user-specified-css");
@@ -18,8 +17,6 @@ const noCSSparamReg = /[?&]nocss/;
 let $syncWarningOverride;
 let $syncWarningBase;
 let $forceSyncButton;
-let $warningUnsupported;
-let $warningBlocked;
 
 // Default settings
 const settings = vueApp.settings;
@@ -85,10 +82,10 @@ module.exports = {
 // When notifications are not supported, this is never called (because
 // checkbox state can not be changed).
 function updateDesktopNotificationStatus() {
-	if (Notification.permission === "denied") {
-		$warningBlocked.show();
+	if (Notification.permission === "granted") {
+		vueApp.desktopNotificationState = "granted";
 	} else {
-		$warningBlocked.hide();
+		vueApp.desktopNotificationState = "blocked";
 	}
 }
 
@@ -114,10 +111,10 @@ function applySetting(name, value) {
 	} else if (name === "userStyles" && !noCSSparamReg.test(window.location.search)) {
 		$userStyles.html(value);
 	} else if (name === "desktopNotifications") {
-		if ("Notification" in window && value && Notification.permission !== "granted") {
+		updateDesktopNotificationStatus();
+
+		if (("Notification" in window) && value && Notification.permission !== "granted") {
 			Notification.requestPermission(updateDesktopNotificationStatus);
-		} else if (!value) {
-			$warningBlocked.hide();
 		}
 	} else if (name === "advanced") {
 		$("#settings [data-advanced]").toggle(settings[name]);
@@ -180,9 +177,7 @@ function syncAllSettings(force = false) {
 
 // If `save` is set to true it will pass the setting to `updateSetting()`  processSetting
 function processSetting(name, value, save) {
-	if (name === "userStyles") {
-		$settings.find("#user-specified-css-input").val(value);
-	} else if (name === "highlights") {
+	if (name === "highlights") {
 		$settings.find(`input[name=${name}]`).val(value);
 	} else if (name === "nickPostfix") {
 		$settings.find(`input[name=${name}]`).val(value);
@@ -205,14 +200,10 @@ function processSetting(name, value, save) {
 }
 
 function initialize() {
-	$warningBlocked = $settings.find("#warnBlockedDesktopNotifications");
-	$warningUnsupported = $settings.find("#warnUnsupportedDesktopNotifications");
-
 	$syncWarningOverride = $settings.find(".sync-warning-override");
 	$syncWarningBase = $settings.find(".sync-warning-base");
 	$forceSyncButton = $settings.find(".force-sync-button");
 
-	$warningBlocked.hide();
 	module.exports.initialized = true;
 
 	// Settings have now entirely updated, apply settings to the client.
@@ -222,11 +213,10 @@ function initialize() {
 
 	// If browser does not support notifications
 	// display proper message in settings.
-	if ("Notification" in window) {
-		$warningUnsupported.hide();
-		$windows.on("show", "#settings", updateDesktopNotificationStatus);
+	if (("Notification" in window)) {
+		updateDesktopNotificationStatus();
 	} else {
-		$warningUnsupported.show();
+		vueApp.desktopNotificationState = "unsupported";
 	}
 
 	$settings.on("change", "input, select, textarea", function(e) {
@@ -247,10 +237,6 @@ function initialize() {
 				updateSetting(name, $self.val(), true);
 			}
 		}
-	});
-
-	$settings.find("#forceSync").on("click", () => {
-		syncAllSettings(true);
 	});
 
 	// Local init is done, let's sync

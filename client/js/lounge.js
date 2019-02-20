@@ -141,15 +141,10 @@ window.vueMounted = () => {
 			if ($(window).outerWidth() <= utils.mobileViewportPixels) {
 				slideoutMenu.toggle(false);
 			}
+		} else {
+			vueApp.activeChannel = null;
+			vueApp.activeWindow = target;
 		}
-
-		const lastActive = $("#windows > .active");
-
-		lastActive.removeClass("active");
-
-		const chan = $(target)
-			.addClass("active")
-			.trigger("show");
 
 		utils.synchronizeNotifiedState();
 
@@ -157,6 +152,7 @@ window.vueMounted = () => {
 			vueApp.$nextTick(() => $("#chat-container").addClass("active"));
 		}
 
+		/* TODO: move to ChatInput.vue
 		const chanChat = chan.find(".chat");
 
 		if (chanChat.length > 0 && channel.type !== "special") {
@@ -165,6 +161,7 @@ window.vueMounted = () => {
 			// See https://github.com/thelounge/thelounge/issues/2257
 			$("#input").trigger("ontouchstart" in window ? "blur" : "focus");
 		}
+*/
 
 		if (channel && channel.channel.usersOutdated) {
 			channel.channel.usersOutdated = false;

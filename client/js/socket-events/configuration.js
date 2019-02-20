@@ -6,7 +6,6 @@ const templates = require("../../views");
 const options = require("../options");
 const webpush = require("../webpush");
 const connect = $("#connect");
-const utils = require("../utils");
 const upload = require("../upload");
 const {vueApp} = require("../vue");
 
@@ -33,9 +32,7 @@ socket.on("configuration", function(data) {
 		return;
 	}
 
-	$("#settings").html(templates.windows.settings(data));
-	$("#help").html(templates.windows.help(data));
-	$("#changelog").html(templates.windows.changelog());
+	vueApp.serverConfiguration = data;
 
 	$("#settings").on("show", () => {
 		$("#session-list").html("<p>Loading…</p>");

@@ -25,6 +25,9 @@ const vueApp = new Vue({
 		isFileUploadEnabled: false,
 		isNotified: false,
 		networks: [],
+		pushNotificationState: "unsupported",
+		desktopNotificationState: "unsupported",
+		serverConfiguration: {},
 		settings: {
 			syncSettings: false,
 			advanced: false,

@@ -40,8 +40,8 @@
 						class="btn">Open irc:// URLs with The Lounge</button>
 				</div>
 
-				{{#unless public}}
 				<div
+					v-if="!this.$root.serverConfiguration.public"
 					class="col-sm-12"
 					data-advanced>
 					<h2>
@@ -64,13 +64,13 @@
 					<p class="sync-warning-base"><strong>Warning</strong> No settings have been synced before. Enabling this will sync all settings of this client as the base for other clients.</p>
 					<div class="opt force-sync-button">
 						<button
-							id="forceSync"
 							type="button"
-							class="btn">Force sync settings</button>
+							class="btn"
+							@click="onForceSyncClick">Force sync settings</button>
 						<p>This will override any settings already synced to the server.</p>
 					</div>
 				</div>
-				{{/unless}}
+
 				<div class="col-sm-12">
 					<h2>Messages</h2>
 				</div>
@@ -169,59 +169,62 @@
 						id="theme-select"
 						name="theme"
 						class="input">
-						{{#each themes}}
-						<option value="{{name}}">
-							{{ displayName }}
+						<option
+							v-for="theme in this.$root.serverConfiguration.themes"
+							:key="theme.name">
+							{{ theme.displayName }}
 						</option>
-						{{/each}}
 					</select>
 				</div>
-				{{#if prefetch}}
-				<div class="col-sm-12">
-					<h2>Link previews</h2>
-				</div>
-				<div class="col-sm-6">
-					<label class="opt">
-						<input
-							type="checkbox"
-							name="media">
-						Auto-expand media
-					</label>
-				</div>
-				<div class="col-sm-6">
-					<label class="opt">
-						<input
-							type="checkbox"
-							name="links">
-						Auto-expand websites
-					</label>
-				</div>
-				{{/if}}
-				{{#unless public}}
-				<div class="col-sm-12">
-					<h2>Push Notifications</h2>
-				</div>
-				<div class="col-sm-12">
-					<button
-						id="pushNotifications"
-						type="button"
-						class="btn"
-						disabled
-						data-text-alternate="Unsubscribe from push notifications">Subscribe to push notifications</button>
-					<div
-						id="pushNotificationsHttps"
-						class="error">
-						<strong>Warning</strong>:
-						Push notifications are only supported over HTTPS connections.
+
+				<template v-if="this.$root.serverConfiguration.prefetch">
+					<div class="col-sm-12">
+						<h2>Link previews</h2>
 					</div>
-					<div
-						id="pushNotificationsUnsupported"
-						class="error">
-						<strong>Warning</strong>:
-						<span>Push notifications are not supported by your browser.</span>
+					<div class="col-sm-6">
+						<label class="opt">
+							<input
+								type="checkbox"
+								name="media">
+							Auto-expand media
+						</label>
 					</div>
-				</div>
-				{{/unless}}
+					<div class="col-sm-6">
+						<label class="opt">
+							<input
+								type="checkbox"
+								name="links">
+							Auto-expand websites
+						</label>
+					</div>
+				</template>
+
+				<template v-if="!this.$root.serverConfiguration.public">
+					<div class="col-sm-12">
+						<h2>Push Notifications</h2>
+					</div>
+					<div class="col-sm-12">
+						<button
+							id="pushNotifications"
+							type="button"
+							class="btn"
+							disabled
+							data-text-alternate="Unsubscribe from push notifications">Subscribe to push notifications</button>
+						<div
+							v-if="this.$root.pushNotificationState === 'nohttps'"
+							class="error">
+							<strong>Warning</strong>:
+							Push notifications are only supported over HTTPS connections.
+						</div>
+						<div
+							v-if="this.$root.pushNotificationState === 'unsupported'"
+							class="error">
+							<strong>Warning</strong>:
+							<span>Push notifications are not supported by your browser.</span>
+						</div>
+					</div>
+				</template>
+
 				<div class="col-sm-12">
 					<h2>Browser Notifications</h2>
 				</div>
@@ -233,12 +236,13 @@
 							name="desktopNotifications">
 						Enable browser notifications<br>
 						<div
-							id="warnUnsupportedDesktopNotifications"
+							v-if="this.$root.desktopNotificationState === 'unsupported'"
 							class="error">
 							<strong>Warning</strong>:
 							Notifications are not supported by your browser.
 						</div>
 						<div
+							v-if="this.$root.desktopNotificationState === 'blocked'"
 							id="warnBlockedDesktopNotifications"
 							class="error">
 							<strong>Warning</strong>:
@@ -287,9 +291,9 @@
 					</label>
 				</div>
 
-				{{#unless public}}
-				{{#unless ldapEnabled}}
-				<div id="change-password">
+				<div
+					v-if="!this.$root.serverConfiguration.public && !this.$root.serverConfiguration.ldapEnabled"
+					id="change-password">
 					<form
 						action=""
 						method="post"
@@ -307,7 +311,6 @@
 								name="old_password"
 								class="input"
 								placeholder="Enter current password">
-							{{> ../reveal-password}}
 						</div>
 						<div class="col-sm-12 password-container">
 							<label
@@ -319,7 +322,6 @@
 								name="new_password"
 								class="input"
 								placeholder="Enter desired new password">
-							{{> ../reveal-password}}
 						</div>
 						<div class="col-sm-12 password-container">
 							<label
@@ -331,7 +333,6 @@
 								name="verify_password"
 								class="input"
 								placeholder="Repeat new password">
-							{{> ../reveal-password}}
 						</div>
 						<div class="col-sm-12 feedback" />
 						<div class="col-sm-12">
@@ -341,8 +342,7 @@
 						</div>
 					</form>
 				</div>
-				{{/unless}}
-				{{/unless}}
+
 				<div
 					class="col-sm-12"
 					data-advanced>
@@ -356,14 +356,16 @@
 						class="sr-only">Custom stylesheet. You can override any style with CSS here.</label>
 					<textarea
 						id="user-specified-css-input"
+						v-model="$root.settings.userStyles"
 						class="input"
 						name="userStyles"
 						placeholder="/* You can override any style with CSS here */" />
 				</div>
 			</div>
 
-			{{#unless public}}
-			<div class="session-list">
+			<div
+				v-if="!this.$root.serverConfiguration.public"
+				class="session-list">
 				<h2>Sessions</h2>
 
 				<h3>Current session</h3>
@@ -372,7 +374,6 @@
 				<h3>Other sessions</h3>
 				<div id="session-list" />
 			</div>
-			{{/unless}}
 		</div>
 
 	</div>
@@ -409,6 +410,10 @@ export default {
 			storage.set("user", values.user);
 
 			socket.emit("auth", values);
+		},
+		onForceSyncClick() {
+			const options = require("../../js/options");
+			options.syncAllSettings(true);
 		},
 	},
 };
