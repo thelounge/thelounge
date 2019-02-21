@@ -354,7 +354,7 @@
 		<div class="description">
 			<p>
 				Invite a user to the specified channel. If
-				<code>channel</code> is ommitted, user will be invited to the
+				<code>channel</code> is omitted, user will be invited to the
 				current channel.
 			</p>
 		</div>
@@ -480,7 +480,7 @@
 		<div class="description">
 			<p>
 				Close the specified channel or private message window, or the
-				current channel if <code>channel</code> is ommitted.
+				current channel if <code>channel</code> is omitted.
 			</p>
 			<p>Aliases: <code>/close</code>, <code>/leave</code></p>
 		</div>
