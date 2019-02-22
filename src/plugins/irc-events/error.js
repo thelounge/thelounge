@@ -21,13 +21,26 @@ module.exports = function(irc, network) {
 			text += data.error;
 		}
 
-		const lobby = network.channels[0];
 		const msg = new Msg({
 			type: Msg.Type.ERROR,
 			text: text,
 			showInActive: true,
 		});
-		lobby.pushMessage(client, msg, true);
+
+		let target = network.channels[0];
+
+		// If this error is channel specific and a channel
+		// with this name exists, put this error in that channel
+		if (data.channel) {
+			const channel = network.getChannel(data.channel);
+
+			if (typeof channel !== "undefined") {
+				target = channel;
+				msg.showInActive = false;
+			}
+		}
+
+		target.pushMessage(client, msg, true);
 	});
 
 	irc.on("nick in use", function(data) {
