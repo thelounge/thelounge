@@ -3,7 +3,8 @@
 		<ParsedMessage
 			:text="text"
 			:message="message"
-			:network="network" />
+			:network="network"
+		/>
 	</div>
 </template>
 

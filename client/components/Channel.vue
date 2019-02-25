@@ -2,28 +2,34 @@
 	<ChannelWrapper
 		:network="network"
 		:channel="channel"
-		:active-channel="activeChannel">
+		:active-channel="activeChannel"
+	>
 		<span class="name">{{ channel.name }}</span>
 		<span
 			v-if="channel.unread"
 			:class="{ highlight: channel.highlight }"
-			class="badge">{{ channel.unread | roundBadgeNumber }}</span>
+			class="badge"
+		>{{ channel.unread | roundBadgeNumber }}</span>
 		<template v-if="channel.type === 'channel'">
 			<span
 				class="close-tooltip tooltipped tooltipped-w"
-				aria-label="Leave">
+				aria-label="Leave"
+			>
 				<button
 					class="close"
-					aria-label="Leave" />
+					aria-label="Leave"
+				/>
 			</span>
 		</template>
 		<template v-else>
 			<span
 				class="close-tooltip tooltipped tooltipped-w"
-				aria-label="Close">
+				aria-label="Close"
+			>
 				<button
 					class="close"
-					aria-label="Close" />
+					aria-label="Close"
+				/>
 			</span>
 		</template>
 	</ChannelWrapper>

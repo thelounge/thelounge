@@ -2,16 +2,19 @@
 	<div
 		:id="'msg-' + message.id"
 		:class="['msg', message.type, {self: message.self, highlight: message.highlight}]"
-		:data-from="message.from && message.from.nick">
+		:data-from="message.from && message.from.nick"
+	>
 		<span
 			:aria-label="message.time | localetime"
-			class="time tooltipped tooltipped-e">{{ messageTime }} </span>
+			class="time tooltipped tooltipped-e"
+		>{{ messageTime }} </span>
 		<template v-if="message.type === 'unhandled'">
 			<span class="from">[{{ message.command }}]</span>
 			<span class="content">
 				<span
 					v-for="(param, id) in message.params"
-					:key="id">{{ param }} </span>
+					:key="id"
+				>{{ param }} </span>
 			</span>
 		</template>
 		<template v-else-if="isAction()">
@@ -19,25 +22,29 @@
 			<Component
 				:is="messageComponent"
 				:network="network"
-				:message="message" />
+				:message="message"
+			/>
 		</template>
 		<template v-else-if="message.type === 'action'">
 			<span class="from"><span class="only-copy">* </span></span>
 			<span class="content">
 				<Username :user="message.from" />&#32;<ParsedMessage
 					:network="network"
-					:message="message" />
+					:message="message"
+				/>
 				<LinkPreview
 					v-for="preview in message.previews"
 					:key="preview.link"
 					:keep-scroll-position="keepScrollPosition"
-					:link="preview" />
+					:link="preview"
+				/>
 			</span>
 		</template>
 		<template v-else>
 			<span
 				v-if="message.type === 'message'"
-				class="from">
+				class="from"
+			>
 				<template v-if="message.from && message.from.nick">
 					<span class="only-copy">&lt;</span>
 					<Username :user="message.from" />
@@ -46,7 +53,8 @@
 			</span>
 			<span
 				v-else
-				class="from">
+				class="from"
+			>
 				<template v-if="message.from && message.from.nick">
 					<span class="only-copy">-</span>
 					<Username :user="message.from" />
@@ -56,12 +64,14 @@
 			<span class="content">
 				<ParsedMessage
 					:network="network"
-					:message="message" />
+					:message="message"
+				/>
 				<LinkPreview
 					v-for="preview in message.previews"
 					:key="preview.link"
 					:keep-scroll-position="keepScrollPosition"
-					:link="preview" />
+					:link="preview"
+				/>
 			</span>
 		</template>
 	</div>

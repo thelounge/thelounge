@@ -2,7 +2,8 @@
 	<span v-if="channel.data.text">{{ channel.data.text }}</span>
 	<table
 		v-else
-		class="channel-list">
+		class="channel-list"
+	>
 		<thead>
 			<tr>
 				<th class="channel">Channel</th>
@@ -13,14 +14,17 @@
 		<tbody>
 			<tr
 				v-for="chan in channel.data"
-				:key="chan.channel">
+				:key="chan.channel"
+			>
 				<td class="channel"><ParsedMessage
 					:network="network"
-					:text="chan.channel" /></td>
+					:text="chan.channel"
+				/></td>
 				<td class="users">{{ chan.num_users }}</td>
 				<td class="topic"><ParsedMessage
 					:network="network"
-					:text="chan.topic" /></td>
+					:text="chan.topic"
+				/></td>
 			</tr>
 		</tbody>
 	</table>

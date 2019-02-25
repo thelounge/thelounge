@@ -20,7 +20,8 @@
 					<a
 						:href="'https://ipinfo.io/' + message.whois.actual_ip"
 						target="_blank"
-						rel="noopener">{{ message.whois.actual_ip }}</a>
+						rel="noopener"
+					>{{ message.whois.actual_ip }}</a>
 					<i v-if="message.whois.actual_hostname != message.whois.actual_ip"> ({{ message.whois.actual_hostname }})</i>
 				</dd>
 			</template>
@@ -29,7 +30,8 @@
 				<dt>Real name:</dt>
 				<dd><ParsedMessage
 					:network="network"
-					:text="message.whois.real_name" /></dd>
+					:text="message.whois.real_name"
+				/></dd>
 			</template>
 
 			<template v-if="message.whois.registered_nick">
@@ -41,7 +43,8 @@
 				<dt>Channels:</dt>
 				<dd><ParsedMessage
 					:network="network"
-					:text="message.whois.channels" /></dd>
+					:text="message.whois.channels"
+				/></dd>
 			</template>
 
 			<template v-if="message.whois.modes">
@@ -75,7 +78,8 @@
 				<dt>Away:</dt>
 				<dd><ParsedMessage
 					:network="network"
-					:text="message.whois.away" /></dd>
+					:text="message.whois.away"
+				/></dd>
 			</template>
 
 			<template v-if="message.whois.secure">

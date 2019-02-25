@@ -3,17 +3,20 @@
 		v-if="link.shown"
 		v-show="link.canDisplay"
 		ref="container"
-		class="preview">
+		class="preview"
+	>
 		<div
 			ref="content"
-			:class="['toggle-content', 'toggle-type-' + link.type, { opened: isContentShown }]">
+			:class="['toggle-content', 'toggle-type-' + link.type, { opened: isContentShown }]"
+		>
 			<template v-if="link.type === 'link'">
 				<a
 					v-if="link.thumb"
 					:href="link.link"
 					class="toggle-thumbnail"
 					target="_blank"
-					rel="noopener">
+					rel="noopener"
+				>
 					<img
 						:src="link.thumb"
 						decoding="async"
@@ -21,7 +24,8 @@
 						class="thumb"
 						@error="onThumbnailError"
 						@abort="onThumbnailError"
-						@load="onPreviewReady">
+						@load="onPreviewReady"
+					>
 				</a>
 				<div class="toggle-text">
 					<div class="head">
@@ -30,7 +34,8 @@
 								:href="link.link"
 								:title="link.head"
 								target="_blank"
-								rel="noopener">{{ link.head }}</a>
+								rel="noopener"
+							>{{ link.head }}</a>
 						</div>
 
 						<button
@@ -38,7 +43,8 @@
 							:aria-expanded="isContentShown"
 							:aria-label="moreButtonLabel"
 							class="more"
-							@click="onMoreClick"><span class="more-caret" /></button>
+							@click="onMoreClick"
+						><span class="more-caret" /></button>
 					</div>
 
 					<div class="body overflowable">
@@ -46,7 +52,8 @@
 							:href="link.link"
 							:title="link.body"
 							target="_blank"
-							rel="noopener">{{ link.body }}</a>
+							rel="noopener"
+						>{{ link.body }}</a>
 					</div>
 				</div>
 			</template>
@@ -55,32 +62,38 @@
 					:href="link.link"
 					class="toggle-thumbnail"
 					target="_blank"
-					rel="noopener">
+					rel="noopener"
+				>
 					<img
 						:src="link.thumb"
 						decoding="async"
 						alt=""
-						@load="onPreviewReady">
+						@load="onPreviewReady"
+					>
 				</a>
 			</template>
 			<template v-else-if="link.type === 'video'">
 				<video
 					preload="metadata"
 					controls
-					@canplay="onPreviewReady">
+					@canplay="onPreviewReady"
+				>
 					<source
 						:src="link.media"
-						:type="link.mediaType">
+						:type="link.mediaType"
+					>
 				</video>
 			</template>
 			<template v-else-if="link.type === 'audio'">
 				<audio
 					controls
 					preload="metadata"
-					@canplay="onPreviewReady">
+					@canplay="onPreviewReady"
+				>
 					<source
 						:src="link.media"
-						:type="link.mediaType">
+						:type="link.mediaType"
+					>
 				</audio>
 			</template>
 			<template v-else-if="link.type === 'error'">
@@ -90,7 +103,8 @@
 					<a
 						:href="link.link"
 						target="_blank"
-						rel="noopener">Click here</a>
+						rel="noopener"
+					>Click here</a>
 					to open it in a new window.
 				</em>
 				<template v-else-if="link.error === 'message'">
@@ -100,7 +114,8 @@
 							<a
 								:href="link.link"
 								target="_blank"
-								rel="noopener">Click here</a>
+								rel="noopener"
+							>Click here</a>
 							to open it in a new window.
 						</em>
 						<br>
@@ -111,7 +126,8 @@
 						:aria-expanded="isContentShown"
 						:aria-label="moreButtonLabel"
 						class="more"
-						@click="onMoreClick"><span class="more-caret" /></button>
+						@click="onMoreClick"
+					><span class="more-caret" /></button>
 				</template>
 			</template>
 		</div>

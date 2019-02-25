@@ -5,9 +5,11 @@
 		<Username :user="message.target" />
 		<i
 			v-if="message.text"
-			class="part-reason"> (<ParsedMessage
-				:network="network"
-				:message="message" />)</i>
+			class="part-reason"
+		> (<ParsedMessage
+			:network="network"
+			:message="message"
+		/>)</i>
 	</span>
 </template>
 

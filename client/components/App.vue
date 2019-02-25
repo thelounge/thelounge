@@ -1,60 +1,72 @@
 <template>
 	<div
 		id="viewport"
-		role="tablist">
+		role="tablist"
+	>
 		<aside id="sidebar">
 			<div class="scrollable-area">
 				<div class="logo-container">
 					<img
 						:src="`img/logo-${isPublic() ? 'horizontal-' : ''}transparent-bg.svg`"
 						class="logo"
-						alt="The Lounge">
+						alt="The Lounge"
+					>
 					<img
 						:src="`img/logo-${isPublic() ? 'horizontal-' : ''}transparent-bg-inverted.svg`"
 						class="logo-inverted"
-						alt="The Lounge">
+						alt="The Lounge"
+					>
 				</div>
 				<NetworkList
 					:networks="networks"
-					:active-channel="activeChannel" />
+					:active-channel="activeChannel"
+				/>
 			</div>
 			<footer id="footer">
 				<span
 					class="tooltipped tooltipped-n tooltipped-no-touch"
-					aria-label="Sign in"><button
-						class="icon sign-in"
-						data-target="#sign-in"
-						aria-label="Sign in"
-						role="tab"
-						aria-controls="sign-in"
-						aria-selected="false" /></span>
+					aria-label="Sign in"
+				><button
+					class="icon sign-in"
+					data-target="#sign-in"
+					aria-label="Sign in"
+					role="tab"
+					aria-controls="sign-in"
+					aria-selected="false"
+				/></span>
 				<span
 					class="tooltipped tooltipped-n tooltipped-no-touch"
-					aria-label="Connect to network"><button
-						class="icon connect"
-						data-target="#connect"
-						aria-label="Connect to network"
-						role="tab"
-						aria-controls="connect"
-						aria-selected="false" /></span>
+					aria-label="Connect to network"
+				><button
+					class="icon connect"
+					data-target="#connect"
+					aria-label="Connect to network"
+					role="tab"
+					aria-controls="connect"
+					aria-selected="false"
+				/></span>
 				<span
 					class="tooltipped tooltipped-n tooltipped-no-touch"
-					aria-label="Settings"><button
-						class="icon settings"
-						data-target="#settings"
-						aria-label="Settings"
-						role="tab"
-						aria-controls="settings"
-						aria-selected="false" /></span>
+					aria-label="Settings"
+				><button
+					class="icon settings"
+					data-target="#settings"
+					aria-label="Settings"
+					role="tab"
+					aria-controls="settings"
+					aria-selected="false"
+				/></span>
 				<span
 					class="tooltipped tooltipped-n tooltipped-no-touch"
-					aria-label="Help"><button
-						class="icon help"
-						data-target="#help"
-						aria-label="Help"
-						role="tab"
-						aria-controls="help"
-						aria-selected="false" /></span>
+					aria-label="Help"
+				><button
+					class="icon help"
+					data-target="#help"
+					aria-label="Help"
+					role="tab"
+					aria-controls="help"
+					aria-selected="false"
+				/></span>
 			</footer>
 		</aside>
 		<div id="sidebar-overlay" />
@@ -62,31 +74,37 @@
 			<Chat
 				v-if="activeChannel"
 				:network="activeChannel.network"
-				:channel="activeChannel.channel" />
+				:channel="activeChannel.channel"
+			/>
 			<div
 				id="sign-in"
 				class="window"
 				role="tabpanel"
-				aria-label="Sign-in" />
+				aria-label="Sign-in"
+			/>
 			<div
 				id="connect"
 				class="window"
 				role="tabpanel"
-				aria-label="Connect" />
+				aria-label="Connect"
+			/>
 			<div
 				id="settings"
 				class="window"
 				role="tabpanel"
-				aria-label="Settings" />
+				aria-label="Settings"
+			/>
 			<div
 				id="help"
 				class="window"
 				role="tabpanel"
-				aria-label="Help" />
+				aria-label="Help"
+			/>
 			<div
 				id="changelog"
 				class="window"
-				aria-label="Changelog" />
+				aria-label="Changelog"
+			/>
 		</article>
 	</div>
 </template>
