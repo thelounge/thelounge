@@ -279,6 +279,7 @@ kbd {
 #image-viewer .next-image-btn::before,
 #sidebar .not-secure-icon::before,
 #sidebar .not-connected-icon::before,
+#sidebar .parted-channel-icon::before,
 #sidebar .collapse-network-icon::before {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-size: inherit; /* Can't have font-size inherit on line above, so need to override */
@@ -307,7 +308,8 @@ kbd {
 	content: "\f071"; /* https://fontawesome.com/icons/exclamation-triangle?style=solid */
 }
 
-#sidebar .not-connected-icon::before {
+#sidebar .not-connected-icon::before,
+#sidebar .parted-channel-icon::before {
 	content: "\f127"; /* https://fontawesome.com/icons/unlink?style=solid */
 }
 
@@ -659,13 +661,15 @@ background on hover (unless active) */
 }
 
 #sidebar .not-connected-tooltip,
-#sidebar .not-secure-tooltip {
+#sidebar .not-secure-tooltip,
+#sidebar .parted-channel-tooltip {
 	display: none;
 	margin: 0 8px;
 }
 
 #sidebar .not-connected .not-connected-tooltip,
-#sidebar .not-secure .not-secure-tooltip {
+#sidebar .not-secure .not-secure-tooltip,
+#sidebar .parted-channel .parted-channel-tooltip {
 	display: inline-block;
 }
 
@@ -683,12 +687,15 @@ background on hover (unless active) */
 	color: #f8c572;
 }
 
-#sidebar .not-connected .chan.lobby {
+#sidebar .not-connected .chan.lobby,
+#sidebar .parted-channel {
 	color: #e74c3c;
 }
 
 #sidebar .not-connected .chan.lobby .lobby-wrap:hover,
-#sidebar .not-connected .chan.lobby.active {
+#sidebar .not-connected .chan.lobby.active,
+#sidebar .parted-channel:hover,
+#sidebar .parted-channel.active {
 	color: #f1978e;
 }
 

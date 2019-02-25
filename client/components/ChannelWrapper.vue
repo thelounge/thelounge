@@ -4,7 +4,7 @@
 		:class="[
 			channel.type,
 			{ active: activeChannel && channel === activeChannel.channel },
-			{ 'channel-is-parted': channel.type === 'channel' && channel.state === 0 }
+			{ 'parted-channel': channel.type === 'channel' && channel.state === 0 }
 		]"
 		:aria-label="getAriaLabel()"
 		:title="getAriaLabel()"
