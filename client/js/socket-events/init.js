@@ -17,7 +17,7 @@ socket.on("init", function(data) {
 	const previousActive = vueApp.activeChannel && vueApp.activeChannel.channel.id;
 
 	vueApp.networks = mergeNetworkData(data.networks);
-	vueApp.isConnected = true;
+	vueApp.$store.commit("isConnected", true);
 	vueApp.currentUserVisibleError = null;
 
 	if (!vueApp.initialized) {

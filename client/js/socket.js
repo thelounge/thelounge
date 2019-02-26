@@ -47,7 +47,7 @@ socket.on("authorized", function() {
 function handleDisconnect(data) {
 	const message = data.message || data;
 
-	vueApp.isConnected = false;
+	vueApp.$store.commit("isConnected", false);
 	vueApp.currentUserVisibleError = `Waiting to reconnect… (${message})`;
 	$("#loading-page-message").text(vueApp.currentUserVisibleError);
 

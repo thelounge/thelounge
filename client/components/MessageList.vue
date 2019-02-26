@@ -3,7 +3,7 @@
 		<div :class="['show-more', {show: channel.moreHistoryAvailable}]">
 			<button
 				ref="loadMoreButton"
-				:disabled="channel.historyLoading || !$root.isConnected"
+				:disabled="channel.historyLoading || !$store.state.isConnected"
 				class="btn"
 				@click="onShowMoreClick"
 			>
@@ -228,7 +228,7 @@ export default {
 			});
 		},
 		onShowMoreClick() {
-			if (!this.$root.isConnected) {
+			if (!this.$store.state.isConnected) {
 				return;
 			}
 

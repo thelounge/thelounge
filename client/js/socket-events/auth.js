@@ -11,7 +11,7 @@ socket.on("auth", function(data) {
 	// And we will reload the page to grab the latest version
 	if (utils.serverHash > -1 && data.serverHash > -1 && data.serverHash !== utils.serverHash) {
 		socket.disconnect();
-		vueApp.isConnected = false;
+		vueApp.$store.commit("isConnected", false);
 		vueApp.currentUserVisibleError = "Server restarted, reloading…";
 		location.reload(true);
 		return;
@@ -31,7 +31,7 @@ socket.on("auth", function(data) {
 	if (!data.success) {
 		if (vueApp.activeWindow !== "SignIn") {
 			socket.disconnect();
-			vueApp.isConnected = false;
+			vueApp.$store.commit("isConnected", false);
 			vueApp.currentUserVisibleError = "Authentication failed, reloading…";
 			location.reload();
 			return;

@@ -1,6 +1,7 @@
 "use strict";
 
 const Vue = require("vue").default;
+const store = require("./store").default;
 const App = require("../components/App.vue").default;
 const roundBadgeNumber = require("./libs/handlebars/roundBadgeNumber");
 const localetime = require("./libs/handlebars/localetime");
@@ -21,7 +22,6 @@ const vueApp = new Vue({
 		currentUserVisibleError: null,
 		initialized: false,
 		isAutoCompleting: false,
-		isConnected: false,
 		isFileUploadEnabled: false,
 		isNotified: false,
 		networks: [],
@@ -56,6 +56,7 @@ const vueApp = new Vue({
 			props: this,
 		});
 	},
+	store,
 });
 
 Vue.config.errorHandler = function(e) {
