@@ -661,21 +661,24 @@ background on hover (unless active) */
 }
 
 #sidebar .not-connected-tooltip,
-#sidebar .not-secure-tooltip,
-#sidebar .parted-channel-tooltip {
+#sidebar .not-secure-tooltip {
 	display: none;
-	margin: 0 8px;
 }
 
 #sidebar .not-connected .not-connected-tooltip,
-#sidebar .not-secure .not-secure-tooltip,
-#sidebar .parted-channel .parted-channel-tooltip {
+#sidebar .not-secure .not-secure-tooltip {
 	display: inline-block;
 }
 
 #sidebar .not-connected .not-secure-tooltip {
 	/* Do not display insecure icon if disconnected */
 	display: none;
+}
+
+#sidebar .not-connected-tooltip,
+#sidebar .not-secure-tooltip,
+#sidebar .parted-channel-tooltip {
+	margin: 0 8px;
 }
 
 #sidebar .not-secure .chan.lobby {

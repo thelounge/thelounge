@@ -10,6 +10,7 @@
 			class="badge">{{ channel.unread | roundBadgeNumber }}</span>
 		<template v-if="channel.type === 'channel'">
 			<span
+				v-if="channel.state === 0"
 				class="parted-channel-tooltip tooltipped tooltipped-w"
 				aria-label="Not currently joined">
 				<span class="parted-channel-icon" />
