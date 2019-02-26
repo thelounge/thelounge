@@ -11,6 +11,10 @@
 	--highlight-border-color: #b08c4f;
 }
 
+body {
+	scrollbar-color: rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0.05);
+}
+
 #chat .channel .msg.highlight .time {
 	color: white;
 }
