@@ -2497,15 +2497,13 @@ deep-is@~0.1.3:
   resolved "https://registry.yarnpkg.com/deep-is/-/deep-is-0.1.3.tgz#b369d6fb5dbc13eecf524f91b070feedc357cf34"
   integrity sha1-s2nW+128E+7PUk+RsHD+7cNXzzQ=
 
-default-gateway@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/default-gateway/-/default-gateway-3.1.0.tgz#85248c9b2b28336ab852be2f08c19a52e187ec4f"
-  integrity sha512-MRhxv1cqdpKZh93zMFBkXcZfr2QFasrDlxjGa+M22Hv9EBmdWCccFe03KqSnkPLpYXlFhrR152kDX99S//3/Xw==
+default-gateway@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/default-gateway/-/default-gateway-4.0.1.tgz#3a7d071ca610a2831190341bd0666382b9dbc340"
+  integrity sha512-JnSsMUgrBFy9ycs+tmOvLHN1GpILe+hNSUrIVM8mXjymfcBH9a7LJjOdoHLuUqKGuCUk6mSIPJjZ11Zszrg3oQ==
   dependencies:
     execa "^1.0.0"
     ip-regex "^2.1.0"
-  optionalDependencies:
-    idb-connector "^1.1.8"
 
 default-require-extensions@^2.0.0:
   version "2.0.0"
@@ -4032,14 +4030,6 @@ icss-utils@^2.1.0:
   dependencies:
     postcss "^6.0.1"
 
-idb-connector@^1.1.8:
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/idb-connector/-/idb-connector-1.1.8.tgz#622cad7e28ecfdd8af199d1db618ff987bffe3a5"
-  integrity sha512-x+NIYJYmBnmFSbALM0GniG6idlEx3z+wnWqe+nKn948+sjY3TRzMmdG2ZqcBrlV/AsOTl3CidCIgdqRnxL1jiA==
-  dependencies:
-    node-addon-api "^1.2.0"
-    node-pre-gyp "^0.11.0"
-
 ieee754@^1.1.4:
   version "1.1.12"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.12.tgz#50bf24e5b9c8bb98af4964c941cdb0918da7b60b"
@@ -4163,12 +4153,12 @@ inquirer@^6.2.2:
     strip-ansi "^5.0.0"
     through "^2.3.6"
 
-internal-ip@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/internal-ip/-/internal-ip-4.0.0.tgz#9e2637d1ac16e78d0f64f2b94e1519b92f373f2b"
-  integrity sha512-3Raw3cuBScBi7iQzisDbmG0KE/FyTYNYmBO34D9CCao3Exa7s4Eqxe3cQMDNuhTtKvG/zlYCXB4GBhxH2uARLg==
+internal-ip@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/internal-ip/-/internal-ip-4.2.0.tgz#46e81b638d84c338e5c67e42b1a17db67d0814fa"
+  integrity sha512-ZY8Rk+hlvFeuMmG5uH1MXhhdeMntmIaxaInvAmzMq/SHV8rv4Kh+6GiQNNDQd0wZFrcO+FiTBo8lui/osKOyJw==
   dependencies:
-    default-gateway "^3.1.0"
+    default-gateway "^4.0.1"
     ipaddr.js "^1.9.0"
 
 interpret@^1.0.1, interpret@^1.1.0:
@@ -5544,11 +5534,6 @@ no-case@^2.2.0:
   integrity sha512-rmTZ9kz+f3rCvK2TD1Ue/oZlns7OGoIWP4fc3llxxRXlOkHKoWPPWJOfFYpITabSow43QJbRIoHQXtt10VldyQ==
   dependencies:
     lower-case "^1.1.1"
-
-node-addon-api@^1.2.0:
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-1.6.2.tgz#d8aad9781a5cfc4132cc2fecdbdd982534265217"
-  integrity sha512-479Bjw9nTE5DdBSZZWprFryHGjUaQC31y1wHo19We/k0BZlrmhqQitWoUL0cD8+scljCbIUL+E58oRDEakdGGA==
 
 node-fetch@2.1.2:
   version "2.1.2"
@@ -8785,10 +8770,10 @@ webpack-dev-middleware@^3.5.1:
     range-parser "^1.0.3"
     webpack-log "^2.0.0"
 
-webpack-dev-server@3.2.0:
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-3.2.0.tgz#cf22c8819e0d41736ba1922dde985274716f1214"
-  integrity sha512-CUGPLQsUBVKa/qkZl1MMo8krm30bsOHAP8jtn78gUICpT+sR3esN4Zb0TSBzOEEQJF0zHNEbwx5GHInkqcmlsA==
+webpack-dev-server@3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/webpack-dev-server/-/webpack-dev-server-3.2.1.tgz#1b45ce3ecfc55b6ebe5e36dab2777c02bc508c4e"
+  integrity sha512-sjuE4mnmx6JOh9kvSbPYw3u/6uxCLHNWfhWaIPwcXWsvWOPN+nc5baq4i9jui3oOBRXGonK9+OI0jVkaz6/rCw==
   dependencies:
     ansi-html "0.0.7"
     bonjour "^3.5.0"
@@ -8801,7 +8786,7 @@ webpack-dev-server@3.2.0:
     html-entities "^1.2.0"
     http-proxy-middleware "^0.19.1"
     import-local "^2.0.0"
-    internal-ip "^4.0.0"
+    internal-ip "^4.2.0"
     ip "^1.1.5"
     killable "^1.0.0"
     loglevel "^1.4.1"
