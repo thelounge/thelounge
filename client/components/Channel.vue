@@ -14,7 +14,8 @@
 			<span
 				v-if="channel.state === 0"
 				class="parted-channel-tooltip tooltipped tooltipped-w"
-				aria-label="Not currently joined">
+				aria-label="Not currently joined"
+			>
 				<span class="parted-channel-icon" />
 			</span>
 			<span
