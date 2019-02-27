@@ -2,13 +2,15 @@
 	<div
 		ref="chat"
 		class="chat"
-		tabindex="-1">
+		tabindex="-1"
+	>
 		<div :class="['show-more', { show: channel.moreHistoryAvailable }]">
 			<button
 				ref="loadMoreButton"
 				:disabled="channel.historyLoading || !$root.isConnected"
 				class="btn"
-				@click="onShowMoreClick">
+				@click="onShowMoreClick"
+			>
 				<span v-if="channel.historyLoading">Loading…</span>
 				<span v-else>Show older messages</span>
 			</button>
@@ -18,16 +20,19 @@
 			role="log"
 			aria-live="polite"
 			aria-relevant="additions"
-			@copy="onCopy">
+			@copy="onCopy"
+		>
 			<template v-for="(message, id) in condensedMessages">
 				<DateMarker
 					v-if="shouldDisplayDateMarker(message, id)"
 					:key="message.id + '-date'"
-					:message="message" />
+					:message="message"
+				/>
 				<div
 					v-if="shouldDisplayUnreadMarker(message.id)"
 					:key="message.id + '-unread'"
-					class="unread-marker">
+					class="unread-marker"
+				>
 					<span class="unread-marker-text" />
 				</div>
 
@@ -36,14 +41,16 @@
 					:key="message.id"
 					:network="network"
 					:keep-scroll-position="keepScrollPosition"
-					:messages="message.messages" />
+					:messages="message.messages"
+				/>
 				<Message
 					v-else
 					:key="message.id"
 					:network="network"
 					:message="message"
 					:keep-scroll-position="keepScrollPosition"
-					@linkPreviewToggle="onLinkPreviewToggle" />
+					@linkPreviewToggle="onLinkPreviewToggle"
+				/>
 			</template>
 		</div>
 	</div>

@@ -5,15 +5,18 @@
 			<span class="from" />
 			<span
 				class="content"
-				@click="onCollapseClick">{{ condensedText }}<button
-					class="toggle-button"
-					aria-label="Toggle status messages" /></span>
+				@click="onCollapseClick"
+			>{{ condensedText }}<button
+				class="toggle-button"
+				aria-label="Toggle status messages"
+			/></span>
 		</div>
 		<Message
 			v-for="message in messages"
 			:key="message.id"
 			:network="network"
-			:message="message" />
+			:message="message"
+		/>
 	</div>
 </template>
 

@@ -1,7 +1,8 @@
 <template>
 	<div
 		v-if="networks.length === 0"
-		class="empty">
+		class="empty"
+	>
 		You are not connected to any networks yet.
 	</div>
 	<Draggable
@@ -11,7 +12,8 @@
 		class="networks"
 		@change="onNetworkSort"
 		@start="onDragStart"
-		@end="onDragEnd">
+		@end="onDragEnd"
+	>
 		<div
 			v-for="network in networks"
 			:id="'network-' + network.uuid"
@@ -24,17 +26,20 @@
 			:data-uuid="network.uuid"
 			:data-nick="network.nick"
 			class="network"
-			role="region">
+			role="region"
+		>
 			<NetworkLobby
 				:network="network"
 				:active-channel="activeChannel"
 				:is-join-channel-shown="network.isJoinChannelShown"
-				@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown" />
+				@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown"
+			/>
 			<JoinChannel
 				v-if="network.isJoinChannelShown"
 				:network="network"
 				:channel="network.channels[0]"
-				@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown" />
+				@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown"
+			/>
 
 			<Draggable
 				:options="{ draggable: '.chan', ghostClass: 'chan-placeholder', disabled: isSortingEnabled }"
@@ -42,14 +47,16 @@
 				class="channels"
 				@change="onChannelSort"
 				@start="onDragStart"
-				@end="onDragEnd">
+				@end="onDragEnd"
+			>
 				<Channel
 					v-for="(channel, index) in network.channels"
 					v-if="index > 0"
 					:key="channel.id"
 					:channel="channel"
 					:network="network"
-					:active-channel="activeChannel" />
+					:active-channel="activeChannel"
+				/>
 			</Draggable>
 		</div>
 	</Draggable>

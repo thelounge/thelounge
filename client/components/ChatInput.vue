@@ -3,7 +3,8 @@
 		id="form"
 		method="post"
 		action=""
-		@submit.prevent="onSubmit">
+		@submit.prevent="onSubmit"
+	>
 		<span id="nick">{{ network.nick }}</span>
 		<textarea
 			id="input"
@@ -13,33 +14,39 @@
 			:aria-label="getInputPlaceholder(channel)"
 			class="mousetrap"
 			@input="setPendingMessage"
-			@keypress.enter.exact.prevent="onSubmit" />
+			@keypress.enter.exact.prevent="onSubmit"
+		/>
 		<span
 			v-if="this.$root.isFileUploadEnabled"
 			id="upload-tooltip"
 			class="tooltipped tooltipped-w tooltipped-no-touch"
 			aria-label="Upload file"
-			@click="openFileUpload">
+			@click="openFileUpload"
+		>
 			<input
 				id="upload-input"
 				ref="uploadInput"
 				type="file"
-				multiple>
+				multiple
+			>
 			<button
 				id="upload"
 				type="button"
 				aria-label="Upload file"
-				:disabled="!this.$root.isConnected" />
+				:disabled="!this.$root.isConnected"
+			/>
 		</span>
 		<span
 			id="submit-tooltip"
 			class="tooltipped tooltipped-w tooltipped-no-touch"
-			aria-label="Send message">
+			aria-label="Send message"
+		>
 			<button
 				id="submit"
 				type="submit"
 				aria-label="Send message"
-				:disabled="!this.$root.isConnected" />
+				:disabled="!this.$root.isConnected"
+			/>
 		</span>
 	</form>
 </template>

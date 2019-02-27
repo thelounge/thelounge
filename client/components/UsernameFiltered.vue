@@ -4,7 +4,8 @@
 		:data-name="user.original.nick"
 		role="button"
 		@mouseover="hover"
-		v-html="user.original.mode + user.string" />
+		v-html="user.original.mode + user.string"
+	/>
 </template>
 
 <script>

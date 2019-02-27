@@ -1,7 +1,8 @@
 <template>
 	<div
 		id="chat-container"
-		class="window">
+		class="window"
+	>
 		<div
 			id="chat"
 			:data-id="channel.id"
@@ -9,78 +10,94 @@
 				'hide-motd': !this.$root.settings.motd,
 				'colored-nicks': this.$root.settings.coloredNicks,
 				'show-seconds': this.$root.settings.showSeconds,
-			}">
+			}"
+		>
 			<div
 				:id="'chan-' + channel.id"
 				:class="[channel.type, 'chan', 'active']"
 				:data-id="channel.id"
 				:data-type="channel.type"
 				:aria-label="channel.name"
-				role="tabpanel">
+				role="tabpanel"
+			>
 				<div class="header">
 					<button
 						class="lt"
-						aria-label="Toggle channel list" />
+						aria-label="Toggle channel list"
+					/>
 					<span class="title">{{ channel.name }}</span>
 					<span
 						:title="channel.topic"
-						class="topic"><ParsedMessage
-							v-if="channel.topic"
-							:network="network"
-							:text="channel.topic" /></span>
+						class="topic"
+					><ParsedMessage
+						v-if="channel.topic"
+						:network="network"
+						:text="channel.topic"
+					/></span>
 					<button
 						class="menu"
-						aria-label="Open the context menu" />
+						aria-label="Open the context menu"
+					/>
 					<span
 						v-if="channel.type === 'channel'"
 						class="rt-tooltip tooltipped tooltipped-w"
-						aria-label="Toggle user list">
+						aria-label="Toggle user list"
+					>
 						<button
 							class="rt"
-							aria-label="Toggle user list" />
+							aria-label="Toggle user list"
+						/>
 					</span>
 				</div>
 				<div
 					v-if="channel.type === 'special'"
-					class="chat-content">
+					class="chat-content"
+				>
 					<div class="chat">
 						<div class="messages">
 							<div class="msg">
 								<Component
 									:is="specialComponent"
 									:network="network"
-									:channel="channel" />
+									:channel="channel"
+								/>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div
 					v-else
-					class="chat-content">
+					class="chat-content"
+				>
 					<div
 						:class="['scroll-down tooltipped tooltipped-w', {'scroll-down-shown': !channel.scrolledToBottom}]"
 						aria-label="Jump to recent messages"
-						@click="$refs.messageList.jumpToBottom()">
+						@click="$refs.messageList.jumpToBottom()"
+					>
 						<div class="scroll-down-arrow" />
 					</div>
 					<MessageList
 						ref="messageList"
 						:network="network"
-						:channel="channel" />
+						:channel="channel"
+					/>
 					<ChatUserList
 						v-if="channel.type === 'channel'"
-						:channel="channel" />
+						:channel="channel"
+					/>
 				</div>
 			</div>
 		</div>
 		<div
 			v-if="this.$root.currentUserVisibleError"
 			id="user-visible-error"
-			@click="hideUserVisibleError">{{ this.$root.currentUserVisibleError }}</div>
+			@click="hideUserVisibleError"
+		>{{ this.$root.currentUserVisibleError }}</div>
 		<span id="upload-progressbar" />
 		<ChatInput
 			:network="network"
-			:channel="channel" />
+			:channel="channel"
+		/>
 	</div>
 </template>
 

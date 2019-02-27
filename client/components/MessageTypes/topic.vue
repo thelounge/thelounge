@@ -4,9 +4,11 @@
 		<template v-else>The topic is: </template>
 		<span
 			v-if="message.text"
-			class="new-topic"><ParsedMessage
-				:network="network"
-				:message="message" /></span>
+			class="new-topic"
+		><ParsedMessage
+			:network="network"
+			:message="message"
+		/></span>
 	</span>
 </template>
 
