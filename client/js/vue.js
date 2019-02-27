@@ -23,7 +23,6 @@ const vueApp = new Vue({
 		initialized: false,
 		isAutoCompleting: false,
 		isFileUploadEnabled: false,
-		isNotified: false,
 		networks: [],
 		pushNotificationState: "unsupported",
 		desktopNotificationState: "unsupported",

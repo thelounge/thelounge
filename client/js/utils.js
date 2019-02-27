@@ -67,17 +67,15 @@ function synchronizeNotifiedState() {
 }
 
 function toggleNotificationMarkers(newState) {
-	// Toggles the favicon to red when there are unread notifications
-	if (vueApp.isNotified !== newState) {
-		vueApp.isNotified = newState;
+	if (vueApp.$store.state.isNotified !== newState) {
+		// Toggles a dot on the menu icon when there are unread notifications
+		vueApp.$store.commit("isNotified", newState);
 
+		// Toggles the favicon to red when there are unread notifications
 		const old = favicon.prop("href");
 		favicon.prop("href", favicon.data("other"));
 		favicon.data("other", old);
 	}
-
-	// Toggles a dot on the menu icon when there are unread notifications
-	viewport.toggleClass("notified", newState);
 }
 
 function updateTitle() {

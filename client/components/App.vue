@@ -1,6 +1,7 @@
 <template>
 	<div
 		id="viewport"
+		:class="{notified: $store.state.isNotified}"
 		role="tablist">
 		<Sidebar
 			:networks="networks"
