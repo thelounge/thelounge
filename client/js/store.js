@@ -7,6 +7,7 @@ export default new Vuex.Store({
 	state: {
 		isConnected: false,
 		isNotified: false,
+		activeWindow: null,
 	},
 	mutations: {
 		isConnected(state, payload) {
@@ -14,6 +15,9 @@ export default new Vuex.Store({
 		},
 		isNotified(state, payload) {
 			state.isNotified = payload;
+		},
+		activeWindow(state, payload) {
+			state.activeWindow = payload;
 		},
 	}
 });

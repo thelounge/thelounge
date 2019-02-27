@@ -128,7 +128,7 @@ window.vueMounted = () => {
 		}
 
 		if (channel) {
-			vueApp.activeWindow = null;
+			vueApp.$store.commit("activeWindow", null);
 			vueApp.activeChannel = channel;
 
 			if (channel) {
@@ -143,7 +143,7 @@ window.vueMounted = () => {
 			}
 		} else {
 			vueApp.activeChannel = null;
-			vueApp.activeWindow = target;
+			vueApp.$store.commit("activeWindow", target);
 		}
 
 		utils.synchronizeNotifiedState();

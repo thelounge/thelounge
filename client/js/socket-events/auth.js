@@ -20,7 +20,7 @@ socket.on("auth", function(data) {
 	if (data.serverHash > -1) {
 		utils.serverHash = data.serverHash;
 
-		vueApp.activeWindow = "SignIn";
+		vueApp.$store.commit("activeWindow", "SignIn");
 	} else {
 		getActiveWindowComponent().inFlight = false;
 	}
@@ -29,7 +29,7 @@ socket.on("auth", function(data) {
 	const user = storage.get("user");
 
 	if (!data.success) {
-		if (vueApp.activeWindow !== "SignIn") {
+		if (vueApp.$store.state.activeWindow !== "SignIn") {
 			socket.disconnect();
 			vueApp.$store.commit("isConnected", false);
 			vueApp.currentUserVisibleError = "Authentication failed, reloading…";

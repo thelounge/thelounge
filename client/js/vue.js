@@ -16,7 +16,6 @@ Vue.filter("roundBadgeNumber", roundBadgeNumber);
 const vueApp = new Vue({
 	el: "#viewport",
 	data: {
-		activeWindow: null,
 		activeChannel: null,
 		appName: document.title,
 		currentUserVisibleError: null,

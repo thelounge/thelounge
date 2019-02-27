@@ -12,7 +12,7 @@
 				:network="activeChannel.network"
 				:channel="activeChannel.channel" />
 			<component
-				:is="activeWindow"
+				:is="$store.state.activeWindow"
 				ref="window" />
 		</article>
 	</div>
