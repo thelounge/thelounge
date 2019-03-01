@@ -26,6 +26,8 @@ import NetworkList from "./NetworkList.vue";
 import Chat from "./Chat.vue";
 import SignIn from "./Windows/SignIn.vue";
 import Settings from "./Windows/Settings.vue";
+import NetworkEdit from "./Windows/NetworkEdit.vue";
+import Connect from "./Windows/Connect.vue";
 import Help from "./Windows/Help.vue";
 import Changelog from "./Windows/Changelog.vue";
 
@@ -37,6 +39,8 @@ export default {
 		Chat,
 		SignIn,
 		Settings,
+		NetworkEdit,
+		Connect,
 		Help,
 		Changelog,
 	},

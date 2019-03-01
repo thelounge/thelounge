@@ -2,7 +2,6 @@
 
 const $ = require("jquery");
 const socket = require("../socket");
-const templates = require("../../views");
 const sidebar = $("#sidebar");
 const {vueApp, initChannel, findChannel} = require("../vue");
 
@@ -58,20 +57,7 @@ socket.on("channel:state", function(data) {
 });
 
 socket.on("network:info", function(data) {
-	$("#connect")
-		.html(templates.windows.connect(data))
-		.find("form")
-		.on("submit", function() {
-			const uuid = $(this)
-				.find("input[name=uuid]")
-				.val();
-			const newName = $(this)
-				.find("#connect\\:name")
-				.val();
-
-			const network = vueApp.networks.find((n) => n.uuid === uuid);
-			network.name = network.channels[0].name = newName;
-
-			sidebar.find(`.network[data-uuid="${uuid}"] .chan.lobby .name`).click();
-		});
+	vueApp.$store.commit("currentNetworkConfig", data.defaults);
+	vueApp.$store.commit("activeWindow", "NetworkEdit");
+	vueApp.activeChannel = null;
 });

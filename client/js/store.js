@@ -19,5 +19,8 @@ export default new Vuex.Store({
 		activeWindow(state, payload) {
 			state.activeWindow = payload;
 		},
-	}
+		currentNetworkConfig(state, payload) {
+			state.currentNetworkConfig = payload;
+		},
+	},
 });

@@ -302,6 +302,7 @@
 							<h2>Change password</h2>
 						</div>
 						<div class="col-sm-12 password-container">
+							<!-- TODO: use revealPassword -->
 							<label
 								for="old_password_input"
 								class="sr-only">Enter current password</label>

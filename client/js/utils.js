@@ -2,7 +2,6 @@
 
 const $ = require("jquery");
 const escape = require("css.escape");
-const viewport = $("#viewport");
 const {vueApp} = require("./vue");
 
 var serverHash = -1; // eslint-disable-line no-var
