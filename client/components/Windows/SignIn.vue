@@ -3,24 +3,28 @@
 		id="sign-in"
 		class="window"
 		role="tabpanel"
-		aria-label="Sign-in">
+		aria-label="Sign-in"
+	>
 		<form
 			class="container"
 			method="post"
 			action=""
-			@submit="onSubmit">
+			@submit="onSubmit"
+		>
 			<img
 				src="img/logo-vertical-transparent-bg.svg"
 				class="logo"
 				alt="The Lounge"
 				width="256"
-				height="170">
+				height="170"
+			>
 			<img
 				src="img/logo-vertical-transparent-bg-inverted.svg"
 				class="logo-inverted"
 				alt="The Lounge"
 				width="256"
-				height="170">
+				height="170"
+			>
 
 			<label for="signin-username">Username</label>
 			<input
@@ -34,7 +38,8 @@
 				autocomplete="username"
 				:value="getStoredUser()"
 				required
-				autofocus>
+				autofocus
+			>
 
 			<div class="password-container">
 				<label for="signin-password">Password</label>
@@ -48,18 +53,21 @@
 						autocapitalize="none"
 						autocorrect="off"
 						autocomplete="current-password"
-						required>
+						required
+					>
 				</RevealPassword>
 			</div>
 
 			<div
 				v-if="errorShown"
-				class="error">Authentication failed.</div>
+				class="error"
+			>Authentication failed.</div>
 
 			<button
 				:disabled="inFlight"
 				type="submit"
-				class="btn">Sign in</button>
+				class="btn"
+			>Sign in</button>
 		</form>
 	</div>
 </template>

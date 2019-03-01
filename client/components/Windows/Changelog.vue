@@ -2,17 +2,20 @@
 	<div
 		id="changelog"
 		class="window"
-		aria-label="Changelog">
+		aria-label="Changelog"
+	>
 		<div class="header">
 			<button
 				class="lt"
-				aria-label="Toggle channel list" />
+				aria-label="Toggle channel list"
+			/>
 		</div>
 		<div class="container">
 			<a
 				id="back-to-help"
 				href="#"
-				data-target="Help">« Help</a>
+				data-target="Help"
+			>« Help</a>
 
 			<template v-if="version">
 				<h1 class="title">Release notes for {{ version }}</h1>
@@ -27,7 +30,8 @@
 						<a
 							:href="`https://github.com/thelounge/thelounge/releases/tag/v${version}`"
 							target="_blank"
-							rel="noopener">View release notes for this version on GitHub</a>
+							rel="noopener"
+						>View release notes for this version on GitHub</a>
 					</p>
 				</template>
 			</template>

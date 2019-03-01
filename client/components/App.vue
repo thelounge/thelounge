@@ -2,18 +2,22 @@
 	<div
 		id="viewport"
 		:class="{notified: $store.state.isNotified}"
-		role="tablist">
+		role="tablist"
+	>
 		<Sidebar
 			:networks="networks"
-			:active-channel="activeChannel" />
+			:active-channel="activeChannel"
+		/>
 		<article id="windows">
 			<Chat
 				v-if="activeChannel"
 				:network="activeChannel.network"
-				:channel="activeChannel.channel" />
+				:channel="activeChannel.channel"
+			/>
 			<component
 				:is="$store.state.activeWindow"
-				ref="window" />
+				ref="window"
+			/>
 		</article>
 	</div>
 </template>

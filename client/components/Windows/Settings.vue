@@ -3,11 +3,13 @@
 		id="settings"
 		class="window"
 		role="tabpanel"
-		aria-label="Settings">
+		aria-label="Settings"
+	>
 		<div class="header">
 			<button
 				class="lt"
-				aria-label="Toggle channel list" />
+				aria-label="Toggle channel list"
+			/>
 		</div>
 		<div class="container">
 			<h1 class="title">Settings</h1>
@@ -17,7 +19,8 @@
 					<label class="opt">
 						<input
 							type="checkbox"
-							name="advanced">
+							name="advanced"
+						>
 						Advanced settings
 					</label>
 				</div>
@@ -27,37 +30,44 @@
 				<div
 					id="native-app"
 					class="col-sm-12"
-					hidden>
+					hidden
+				>
 					<h2>Native app</h2>
 					<button
 						id="webapp-install-button"
 						type="button"
 						class="btn"
-						hidden>Add The Lounge to Home screen</button>
+						hidden
+					>Add The Lounge to Home screen</button>
 					<button
 						id="make-default-client"
 						type="button"
-						class="btn">Open irc:// URLs with The Lounge</button>
+						class="btn"
+					>Open irc:// URLs with The Lounge</button>
 				</div>
 
 				<div
 					v-if="!this.$root.serverConfiguration.public"
 					class="col-sm-12"
-					data-advanced>
+					data-advanced
+				>
 					<h2>
 						Settings synchronisation
 						<span
 							class="tooltipped tooltipped-n tooltipped-no-delay"
-							aria-label="Note: This is an experimental feature and may change in future releases.">
+							aria-label="Note: This is an experimental feature and may change in future releases."
+						>
 							<button
 								class="extra-experimental"
-								aria-label="Note: This is an experimental feature and may change in future releases." />
+								aria-label="Note: This is an experimental feature and may change in future releases."
+							/>
 						</span>
 					</h2>
 					<label class="opt">
 						<input
 							type="checkbox"
-							name="syncSettings">
+							name="syncSettings"
+						>
 						Synchronize settings with other clients.
 					</label>
 					<p class="sync-warning-override"><strong>Warning</strong> Checking this box will override the settings of this client with those stored on the server.</p>
@@ -66,7 +76,8 @@
 						<button
 							type="button"
 							class="btn"
-							@click="onForceSyncClick">Force sync settings</button>
+							@click="onForceSyncClick"
+						>Force sync settings</button>
 						<p>This will override any settings already synced to the server.</p>
 					</div>
 				</div>
@@ -78,7 +89,8 @@
 					<label class="opt">
 						<input
 							type="checkbox"
-							name="motd">
+							name="motd"
+						>
 						Show <abbr title="Message Of The Day">MOTD</abbr>
 					</label>
 				</div>
@@ -86,7 +98,8 @@
 					<label class="opt">
 						<input
 							type="checkbox"
-							name="showSeconds">
+							name="showSeconds"
+						>
 						Show seconds in timestamp
 					</label>
 				</div>
@@ -95,10 +108,12 @@
 						Status messages
 						<span
 							class="tooltipped tooltipped-n tooltipped-no-delay"
-							aria-label="Joins, parts, kicks, nick changes, away changes, and mode changes">
+							aria-label="Joins, parts, kicks, nick changes, away changes, and mode changes"
+						>
 							<button
 								class="extra-help"
-								aria-label="Joins, parts, kicks, nick changes, away changes, and mode changes" />
+								aria-label="Joins, parts, kicks, nick changes, away changes, and mode changes"
+							/>
 						</span>
 					</h2>
 				</div>
@@ -107,21 +122,24 @@
 						<input
 							type="radio"
 							name="statusMessages"
-							value="shown">
+							value="shown"
+						>
 						Show all status messages individually
 					</label>
 					<label class="opt">
 						<input
 							type="radio"
 							name="statusMessages"
-							value="condensed">
+							value="condensed"
+						>
 						Condense status messages together
 					</label>
 					<label class="opt">
 						<input
 							type="radio"
 							name="statusMessages"
-							value="hidden">
+							value="hidden"
+						>
 						Hide all status messages
 					</label>
 				</div>
@@ -132,29 +150,34 @@
 					<label class="opt">
 						<input
 							type="checkbox"
-							name="coloredNicks">
+							name="coloredNicks"
+						>
 						Enable colored nicknames
 					</label>
 					<label class="opt">
 						<input
 							type="checkbox"
-							name="autocomplete">
+							name="autocomplete"
+						>
 						Enable autocomplete
 					</label>
 				</div>
 				<div
 					class="col-sm-12"
-					data-advanced>
+					data-advanced
+				>
 					<label class="opt">
 						<label
 							for="nickPostfix"
-							class="sr-only">Nick autocomplete postfix (e.g. <code>, </code>)</label>
+							class="sr-only"
+						>Nick autocomplete postfix (e.g. <code>, </code>)</label>
 						<input
 							id="nickPostfix"
 							type="text"
 							name="nickPostfix"
 							class="input"
-							placeholder="Nick autocomplete postfix (e.g. ', ')">
+							placeholder="Nick autocomplete postfix (e.g. ', ')"
+						>
 					</label>
 				</div>
 
@@ -164,14 +187,17 @@
 				<div class="col-sm-12">
 					<label
 						for="theme-select"
-						class="sr-only">Theme</label>
+						class="sr-only"
+					>Theme</label>
 					<select
 						id="theme-select"
 						name="theme"
-						class="input">
+						class="input"
+					>
 						<option
 							v-for="theme in this.$root.serverConfiguration.themes"
-							:key="theme.name">
+							:key="theme.name"
+						>
 							{{ theme.displayName }}
 						</option>
 					</select>
@@ -185,7 +211,8 @@
 						<label class="opt">
 							<input
 								type="checkbox"
-								name="media">
+								name="media"
+							>
 							Auto-expand media
 						</label>
 					</div>
@@ -193,7 +220,8 @@
 						<label class="opt">
 							<input
 								type="checkbox"
-								name="links">
+								name="links"
+							>
 							Auto-expand websites
 						</label>
 					</div>
@@ -209,16 +237,19 @@
 							type="button"
 							class="btn"
 							disabled
-							data-text-alternate="Unsubscribe from push notifications">Subscribe to push notifications</button>
+							data-text-alternate="Unsubscribe from push notifications"
+						>Subscribe to push notifications</button>
 						<div
 							v-if="this.$root.pushNotificationState === 'nohttps'"
-							class="error">
+							class="error"
+						>
 							<strong>Warning</strong>:
 							Push notifications are only supported over HTTPS connections.
 						</div>
 						<div
 							v-if="this.$root.pushNotificationState === 'unsupported'"
-							class="error">
+							class="error"
+						>
 							<strong>Warning</strong>:
 							<span>Push notifications are not supported by your browser.</span>
 						</div>
@@ -233,18 +264,21 @@
 						<input
 							id="desktopNotifications"
 							type="checkbox"
-							name="desktopNotifications">
+							name="desktopNotifications"
+						>
 						Enable browser notifications<br>
 						<div
 							v-if="this.$root.desktopNotificationState === 'unsupported'"
-							class="error">
+							class="error"
+						>
 							<strong>Warning</strong>:
 							Notifications are not supported by your browser.
 						</div>
 						<div
 							v-if="this.$root.desktopNotificationState === 'blocked'"
 							id="warnBlockedDesktopNotifications"
-							class="error">
+							class="error"
+						>
 							<strong>Warning</strong>:
 							Notifications are blocked by your browser.
 						</div>
@@ -254,7 +288,8 @@
 					<label class="opt">
 						<input
 							type="checkbox"
-							name="notification">
+							name="notification"
+						>
 						Enable notification sound
 					</label>
 				</div>
@@ -266,38 +301,45 @@
 
 				<div
 					class="col-sm-12"
-					data-advanced>
+					data-advanced
+				>
 					<label class="opt">
 						<input
 							type="checkbox"
-							name="notifyAllMessages">
+							name="notifyAllMessages"
+						>
 						Enable notification for all messages
 					</label>
 				</div>
 
 				<div
 					class="col-sm-12"
-					data-advanced>
+					data-advanced
+				>
 					<label class="opt">
 						<label
 							for="highlights"
-							class="sr-only">Custom highlights (comma-separated keywords)</label>
+							class="sr-only"
+						>Custom highlights (comma-separated keywords)</label>
 						<input
 							id="highlights"
 							type="text"
 							name="highlights"
 							class="input"
-							placeholder="Custom highlights (comma-separated keywords)">
+							placeholder="Custom highlights (comma-separated keywords)"
+						>
 					</label>
 				</div>
 
 				<div
 					v-if="!this.$root.serverConfiguration.public && !this.$root.serverConfiguration.ldapEnabled"
-					id="change-password">
+					id="change-password"
+				>
 					<form
 						action=""
 						method="post"
-						data-event="change-password">
+						data-event="change-password"
+					>
 						<div class="col-sm-12">
 							<h2>Change password</h2>
 						</div>
@@ -305,68 +347,80 @@
 							<!-- TODO: use revealPassword -->
 							<label
 								for="old_password_input"
-								class="sr-only">Enter current password</label>
+								class="sr-only"
+							>Enter current password</label>
 							<input
 								id="old_password_input"
 								type="password"
 								name="old_password"
 								class="input"
-								placeholder="Enter current password">
+								placeholder="Enter current password"
+							>
 						</div>
 						<div class="col-sm-12 password-container">
 							<label
 								for="new_password_input"
-								class="sr-only">Enter desired new password</label>
+								class="sr-only"
+							>Enter desired new password</label>
 							<input
 								id="new_password_input"
 								type="password"
 								name="new_password"
 								class="input"
-								placeholder="Enter desired new password">
+								placeholder="Enter desired new password"
+							>
 						</div>
 						<div class="col-sm-12 password-container">
 							<label
 								for="verify_password_input"
-								class="sr-only">Repeat new password</label>
+								class="sr-only"
+							>Repeat new password</label>
 							<input
 								id="verify_password_input"
 								type="password"
 								name="verify_password"
 								class="input"
-								placeholder="Repeat new password">
+								placeholder="Repeat new password"
+							>
 						</div>
 						<div class="col-sm-12 feedback" />
 						<div class="col-sm-12">
 							<button
 								type="submit"
-								class="btn">Change password</button>
+								class="btn"
+							>Change password</button>
 						</div>
 					</form>
 				</div>
 
 				<div
 					class="col-sm-12"
-					data-advanced>
+					data-advanced
+				>
 					<h2>Custom Stylesheet</h2>
 				</div>
 				<div
 					class="col-sm-12"
-					data-advanced>
+					data-advanced
+				>
 					<label
 						for="user-specified-css-input"
-						class="sr-only">Custom stylesheet. You can override any style with CSS here.</label>
+						class="sr-only"
+					>Custom stylesheet. You can override any style with CSS here.</label>
 					<textarea
 						id="user-specified-css-input"
 						v-model="$root.settings.userStyles"
 						class="input"
 						name="userStyles"
-						placeholder="/* You can override any style with CSS here */" />
+						placeholder="/* You can override any style with CSS here */"
+					/>
 				</div>
 			</div>
 
 			<div
 				v-if="!this.$root.serverConfiguration.public"
-				class="session-list">
+				class="session-list"
+			>
 				<h2>Sessions</h2>
 
 				<h3>Current session</h3>

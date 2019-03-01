@@ -9,9 +9,11 @@
 				{ 'reveal-password-visible': isVisible },
 			]"
 			:aria-label="isVisible ? 'Hide password' : 'Show password'"
-			@click="onClick">
+			@click="onClick"
+		>
 			<span
-				:aria-label="isVisible ? 'Hide password' : 'Show password'" />
+				:aria-label="isVisible ? 'Hide password' : 'Show password'"
+			/>
 		</span>
 	</div>
 </template>

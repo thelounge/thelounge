@@ -3,11 +3,13 @@
 		id="connect"
 		class="window"
 		role="tabpanel"
-		aria-label="Connect">
+		aria-label="Connect"
+	>
 		<div class="header">
 			<button
 				class="lt"
-				aria-label="Toggle channel list" />
+				aria-label="Toggle channel list"
+			/>
 		</div>
 		<form
 			class="container"
@@ -23,7 +25,8 @@
 							<input
 								type="hidden"
 								name="uuid"
-								:value="defaults.uuid">
+								:value="defaults.uuid"
+							>
 							Edit {{ defaults.name }}
 						</template>
 						<template v-else>
@@ -51,7 +54,8 @@
 								class="input"
 								name="name"
 								:value="defaults.name"
-								maxlength="100">
+								maxlength="100"
+							>
 						</div>
 						<div class="col-sm-3">
 							<label for="connect:host">Server</label>
@@ -66,7 +70,7 @@
 								maxlength="255"
 								required
 								:disabled="config.lockNetwork ? true : false"
-								>
+							>
 						</div>
 						<div class="col-sm-3 col-xs-4">
 							<div class="port">
@@ -79,7 +83,7 @@
 									:value="defaults.port"
 									aria-label="Server port"
 									:disabled="config.lockNetwork ? true : false"
-									>
+								>
 							</div>
 						</div>
 						<div class="clearfix" />
@@ -90,7 +94,7 @@
 									name="tls"
 									:checked="defaults.tls ? true : false"
 									:disabled="config.lockNetwork ? true : false"
-									>
+								>
 								Use secure connection (TLS)
 							</label>
 						</div>
@@ -101,7 +105,7 @@
 									name="rejectUnauthorized"
 									:checked="defaults.rejectUnauthorized ? true : false"
 									:disabled="config.lockNetwork ? true : false"
-									>
+								>
 								Only allow trusted certificates
 							</label>
 						</div>
@@ -121,7 +125,8 @@
 						name="nick"
 						:value="defaults.nick"
 						maxlength="100"
-						required>
+						required
+					>
 				</div>
 				<template v-if="!config.useHexIp">
 					<div class="col-sm-3">
@@ -133,7 +138,8 @@
 							class="input username"
 							name="username"
 							:value="defaults.username"
-							maxlength="512">
+							maxlength="512"
+						>
 					</div>
 				</template>
 				<div class="col-sm-3">
@@ -147,7 +153,8 @@
 							class="input"
 							:type="slotProps.isVisible ? 'text' : 'password'"
 							name="password"
-							maxlength="512">
+							maxlength="512"
+						>
 					</RevealPassword>
 				</div>
 				<div class="col-sm-3">
@@ -159,7 +166,8 @@
 						class="input"
 						name="realname"
 						:value="defaults.realname"
-						maxlength="512">
+						maxlength="512"
+					>
 				</div>
 				<template v-if="defaults.uuid">
 					<div class="col-sm-3">
@@ -172,7 +180,7 @@
 							name="commands"
 							placeholder="One raw command per line, each command will be executed on new connection"
 							:value="defaults.commands ? defaults.commands.join('\n') : ''"
-							/>
+						/>
 					</div>
 					<div class="col-sm-9 col-sm-offset-3">
 						<button
@@ -191,7 +199,8 @@
 							id="connect:channels"
 							class="input"
 							name="join"
-							:value="defaults.join">
+							:value="defaults.join"
+						>
 					</div>
 					<div class="col-sm-9 col-sm-offset-3">
 						<button

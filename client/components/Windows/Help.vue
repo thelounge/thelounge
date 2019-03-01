@@ -3,11 +3,13 @@
 		id="help"
 		class="window"
 		role="tabpanel"
-		aria-label="Help">
+		aria-label="Help"
+	>
 		<div class="header">
 			<button
 				class="lt"
-				aria-label="Toggle channel list" />
+				aria-label="Toggle channel list"
+			/>
 		</div>
 		<div class="container">
 			<h1 class="title">Help</h1>
@@ -18,7 +20,8 @@
 					(<a
 						id="view-changelog"
 						href="#"
-						data-target="Changelog">release notes</a>)
+						data-target="Changelog"
+					>release notes</a>)
 				</small>
 				About The Lounge
 			</h2>
@@ -32,7 +35,8 @@
 						(<a
 							:href="`https://github.com/thelounge/thelounge/tree/${$root.serverConfiguration.gitCommit}`"
 							target="_blank"
-							rel="noopener">commit <code>{{ $root.serverConfiguration.gitCommit }}</code></a>).
+							rel="noopener"
+						>commit <code>{{ $root.serverConfiguration.gitCommit }}</code></a>).
 					</p>
 
 					<ul>
@@ -41,7 +45,8 @@
 							<a
 								:href="`https://github.com/thelounge/thelounge/compare/${$root.serverConfiguration.gitCommit}...master`"
 								target="_blank"
-								rel="noopener">between <code>{{ $root.serverConfiguration.gitCommit }}</code> and <code>master</code></a>
+								rel="noopener"
+							>between <code>{{ $root.serverConfiguration.gitCommit }}</code> and <code>master</code></a>
 							to see what you are missing
 						</li>
 						<li>
@@ -49,7 +54,8 @@
 							<a
 								:href="`https://github.com/thelounge/thelounge/compare/${$root.serverConfiguration.version}...${$root.serverConfiguration.gitCommit}`"
 								target="_blank"
-								rel="noopener">between <code>{{ $root.serverConfiguration.version }}</code> and <code>{{ $root.serverConfiguration.gitCommit }}</code></a>
+								rel="noopener"
+							>between <code>{{ $root.serverConfiguration.version }}</code> and <code>{{ $root.serverConfiguration.gitCommit }}</code></a>
 							to see your local changes</li>
 					</ul>
 				</template>
@@ -59,21 +65,24 @@
 						href="https://thelounge.chat/"
 						target="_blank"
 						rel="noopener"
-						class="website-link">Website</a>
+						class="website-link"
+					>Website</a>
 				</p>
 				<p>
 					<a
 						href="https://thelounge.chat/docs/"
 						target="_blank"
 						rel="noopener"
-						class="documentation-link">Documentation</a>
+						class="documentation-link"
+					>Documentation</a>
 				</p>
 				<p>
 					<a
 						href="https://github.com/thelounge/thelounge/issues/new"
 						target="_blank"
 						rel="noopener"
-						class="report-issue-link">Report an issue…</a>
+						class="report-issue-link"
+					>Report an issue…</a>
 				</p>
 			</div>
 
@@ -151,7 +160,8 @@
 						<a
 							href="https://modern.ircdocs.horse/formatting.html#colors"
 							target="_blank"
-							rel="noopener">here</a>.
+							rel="noopener"
+						>here</a>.
 					</p>
 				</div>
 			</div>
@@ -342,7 +352,8 @@
 						<a
 							href="https://en.wikipedia.org/wiki/Client-to-client_protocol"
 							target="_blank"
-							rel="noopener">the dedicated Wikipedia article</a>.
+							rel="noopener"
+						>the dedicated Wikipedia article</a>.
 					</p>
 				</div>
 			</div>
