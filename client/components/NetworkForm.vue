@@ -15,7 +15,6 @@
 			class="container"
 			method="post"
 			action=""
-			:data-event="defaults.uuid ? 'network:edit' : 'network:new'"
 			@submit.prevent="onSubmit"
 		>
 			<div class="row">

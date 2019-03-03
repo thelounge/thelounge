@@ -11,13 +11,19 @@
 				aria-label="Toggle channel list"
 			/>
 		</div>
-		<div class="container">
+		<form
+			ref="settingsForm"
+			class="container"
+			@change="onChange"
+			@submit.prevent
+		>
 			<h1 class="title">Settings</h1>
 
 			<div class="row">
 				<div class="col-sm-6">
 					<label class="opt">
 						<input
+							v-model="$root.serverConfiguration.advanced"
 							type="checkbox"
 							name="advanced"
 						>
@@ -28,9 +34,9 @@
 
 			<div class="row">
 				<div
+					v-if="canRegisterProtocol"
 					id="native-app"
 					class="col-sm-12"
-					hidden
 				>
 					<h2>Native app</h2>
 					<button
@@ -43,13 +49,13 @@
 						id="make-default-client"
 						type="button"
 						class="btn"
+						@click.prevent="registerProtocol"
 					>Open irc:// URLs with The Lounge</button>
 				</div>
 
 				<div
-					v-if="!this.$root.serverConfiguration.public"
+					v-if="!$root.serverConfiguration.public && $root.serverConfiguration.advanced"
 					class="col-sm-12"
-					data-advanced
 				>
 					<h2>
 						Settings synchronisation
@@ -65,14 +71,28 @@
 					</h2>
 					<label class="opt">
 						<input
+							v-model="$root.settings.syncSettings"
 							type="checkbox"
 							name="syncSettings"
 						>
 						Synchronize settings with other clients.
 					</label>
-					<p class="sync-warning-override"><strong>Warning</strong> Checking this box will override the settings of this client with those stored on the server.</p>
-					<p class="sync-warning-base"><strong>Warning</strong> No settings have been synced before. Enabling this will sync all settings of this client as the base for other clients.</p>
-					<div class="opt force-sync-button">
+					<p
+						v-if="!$root.settings.syncSettings"
+						class="sync-warning-override"
+					>
+						<strong>Warning</strong> Checking this box will override the settings of this client with those stored on the server.
+					</p>
+					<p
+						v-if="!$root.settings.syncSettings"
+						class="sync-warning-base"
+					>
+						<strong>Warning</strong> No settings have been synced before. Enabling this will sync all settings of this client as the base for other clients.
+					</p>
+					<div
+						v-if="$root.settings.syncSettings"
+						class="opt force-sync-button"
+					>
 						<button
 							type="button"
 							class="btn"
@@ -88,6 +108,7 @@
 				<div class="col-sm-6">
 					<label class="opt">
 						<input
+							v-model="$root.settings.motd"
 							type="checkbox"
 							name="motd"
 						>
@@ -97,6 +118,7 @@
 				<div class="col-sm-6">
 					<label class="opt">
 						<input
+							v-model="$root.settings.showSeconds"
 							type="checkbox"
 							name="showSeconds"
 						>
@@ -120,6 +142,7 @@
 				<div class="col-sm-12">
 					<label class="opt">
 						<input
+							v-model="$root.settings.statusMessages"
 							type="radio"
 							name="statusMessages"
 							value="shown"
@@ -128,6 +151,7 @@
 					</label>
 					<label class="opt">
 						<input
+							v-model="$root.settings.statusMessages"
 							type="radio"
 							name="statusMessages"
 							value="condensed"
@@ -136,6 +160,7 @@
 					</label>
 					<label class="opt">
 						<input
+							v-model="$root.settings.statusMessages"
 							type="radio"
 							name="statusMessages"
 							value="hidden"
@@ -149,6 +174,7 @@
 				<div class="col-sm-12">
 					<label class="opt">
 						<input
+							v-model="$root.settings.coloredNicks"
 							type="checkbox"
 							name="coloredNicks"
 						>
@@ -156,6 +182,7 @@
 					</label>
 					<label class="opt">
 						<input
+							v-model="$root.settings.autocomplete"
 							type="checkbox"
 							name="autocomplete"
 						>
@@ -163,8 +190,8 @@
 					</label>
 				</div>
 				<div
+					v-if="$root.serverConfiguration.advanced"
 					class="col-sm-12"
-					data-advanced
 				>
 					<label class="opt">
 						<label
@@ -173,6 +200,7 @@
 						>Nick autocomplete postfix (e.g. <code>, </code>)</label>
 						<input
 							id="nickPostfix"
+							v-model="$root.settings.nickPostfix"
 							type="text"
 							name="nickPostfix"
 							class="input"
@@ -191,11 +219,12 @@
 					>Theme</label>
 					<select
 						id="theme-select"
+						v-model="$root.settings.theme"
 						name="theme"
 						class="input"
 					>
 						<option
-							v-for="theme in this.$root.serverConfiguration.themes"
+							v-for="theme in $root.serverConfiguration.themes"
 							:key="theme.name"
 						>
 							{{ theme.displayName }}
@@ -203,7 +232,7 @@
 					</select>
 				</div>
 
-				<template v-if="this.$root.serverConfiguration.prefetch">
+				<template v-if="$root.serverConfiguration.prefetch">
 					<div class="col-sm-12">
 						<h2>Link previews</h2>
 					</div>
@@ -219,6 +248,7 @@
 					<div class="col-sm-6">
 						<label class="opt">
 							<input
+								v-model="$root.settings.links"
 								type="checkbox"
 								name="links"
 							>
@@ -227,7 +257,7 @@
 					</div>
 				</template>
 
-				<template v-if="!this.$root.serverConfiguration.public">
+				<template v-if="!$root.serverConfiguration.public">
 					<div class="col-sm-12">
 						<h2>Push Notifications</h2>
 					</div>
@@ -240,14 +270,14 @@
 							data-text-alternate="Unsubscribe from push notifications"
 						>Subscribe to push notifications</button>
 						<div
-							v-if="this.$root.pushNotificationState === 'nohttps'"
+							v-if="$root.pushNotificationState === 'nohttps'"
 							class="error"
 						>
 							<strong>Warning</strong>:
 							Push notifications are only supported over HTTPS connections.
 						</div>
 						<div
-							v-if="this.$root.pushNotificationState === 'unsupported'"
+							v-if="$root.pushNotificationState === 'unsupported'"
 							class="error"
 						>
 							<strong>Warning</strong>:
@@ -261,6 +291,7 @@
 				</div>
 				<div class="col-sm-12">
 					<label class="opt">
+						<!-- TODO: handle enabling/disabling notifications -->
 						<input
 							id="desktopNotifications"
 							type="checkbox"
@@ -268,14 +299,14 @@
 						>
 						Enable browser notifications<br>
 						<div
-							v-if="this.$root.desktopNotificationState === 'unsupported'"
+							v-if="$root.desktopNotificationState === 'unsupported'"
 							class="error"
 						>
 							<strong>Warning</strong>:
 							Notifications are not supported by your browser.
 						</div>
 						<div
-							v-if="this.$root.desktopNotificationState === 'blocked'"
+							v-if="$root.desktopNotificationState === 'blocked'"
 							id="warnBlockedDesktopNotifications"
 							class="error"
 						>
@@ -287,6 +318,7 @@
 				<div class="col-sm-12">
 					<label class="opt">
 						<input
+							v-model="$root.settings.notification"
 							type="checkbox"
 							name="notification"
 						>
@@ -295,16 +327,20 @@
 				</div>
 				<div class="col-sm-12">
 					<div class="opt">
-						<button id="play">Play sound</button>
+						<button
+							id="play"
+							@click.prevent="playNotification"
+						>Play sound</button>
 					</div>
 				</div>
 
 				<div
+					v-if="$root.serverConfiguration.advanced"
 					class="col-sm-12"
-					data-advanced
 				>
 					<label class="opt">
 						<input
+							v-model="$root.settings.notifyAllMessages"
 							type="checkbox"
 							name="notifyAllMessages"
 						>
@@ -313,8 +349,8 @@
 				</div>
 
 				<div
+					v-if="$root.serverConfiguration.advanced"
 					class="col-sm-12"
-					data-advanced
 				>
 					<label class="opt">
 						<label
@@ -323,6 +359,7 @@
 						>Custom highlights (comma-separated keywords)</label>
 						<input
 							id="highlights"
+							v-model="$root.settings.highlights"
 							type="text"
 							name="highlights"
 							class="input"
@@ -332,76 +369,87 @@
 				</div>
 
 				<div
-					v-if="!this.$root.serverConfiguration.public && !this.$root.serverConfiguration.ldapEnabled"
+					v-if="!$root.serverConfiguration.public && !$root.serverConfiguration.ldapEnabled"
 					id="change-password"
 				>
-					<form
-						action=""
-						method="post"
-						data-event="change-password"
-					>
-						<div class="col-sm-12">
-							<h2>Change password</h2>
-						</div>
-						<div class="col-sm-12 password-container">
-							<!-- TODO: use revealPassword -->
-							<label
-								for="old_password_input"
-								class="sr-only"
-							>Enter current password</label>
+					<div class="col-sm-12">
+						<h2>Change password</h2>
+					</div>
+					<div class="col-sm-12 password-container">
+						<label
+							for="old_password_input"
+							class="sr-only"
+						>Enter current password</label>
+						<RevealPassword v-slot:default="slotProps">
 							<input
 								id="old_password_input"
-								type="password"
+								:type="slotProps.isVisible ? 'text' : 'password'"
 								name="old_password"
 								class="input"
 								placeholder="Enter current password"
 							>
-						</div>
-						<div class="col-sm-12 password-container">
-							<label
-								for="new_password_input"
-								class="sr-only"
-							>Enter desired new password</label>
+						</RevealPassword>
+					</div>
+					<div class="col-sm-12 password-container">
+						<label
+							for="new_password_input"
+							class="sr-only"
+						>Enter desired new password</label>
+						<RevealPassword v-slot:default="slotProps">
 							<input
 								id="new_password_input"
-								type="password"
+								:type="slotProps.isVisible ? 'text' : 'password'"
 								name="new_password"
 								class="input"
 								placeholder="Enter desired new password"
 							>
-						</div>
-						<div class="col-sm-12 password-container">
-							<label
-								for="verify_password_input"
-								class="sr-only"
-							>Repeat new password</label>
+						</RevealPassword>
+					</div>
+					<div class="col-sm-12 password-container">
+						<label
+							for="verify_password_input"
+							class="sr-only"
+						>Repeat new password</label>
+						<RevealPassword v-slot:default="slotProps">
 							<input
 								id="verify_password_input"
-								type="password"
+								:type="slotProps.isVisible ? 'text' : 'password'"
 								name="verify_password"
 								class="input"
 								placeholder="Repeat new password"
 							>
-						</div>
-						<div class="col-sm-12 feedback" />
-						<div class="col-sm-12">
-							<button
-								type="submit"
-								class="btn"
-							>Change password</button>
-						</div>
-					</form>
+						</RevealPassword>
+					</div>
+					<div
+						v-if="passwordChangeStatus && passwordChangeStatus.success"
+						class="col-sm-12 feedback success"
+					>
+						Successfully updated your password
+					</div>
+					<div
+						v-else-if="passwordChangeStatus && passwordChangeStatus.error"
+						class="col-sm-12 feedback error"
+					>
+						{{ passwordErrors[passwordChangeStatus.error] }}
+					</div>
+					<div class="col-sm-12">
+						<button
+							type="submit"
+							class="btn"
+							@click.prevent="changePassword"
+						>Change password</button>
+					</div>
 				</div>
 
 				<div
+					v-if="$root.serverConfiguration.advanced"
 					class="col-sm-12"
-					data-advanced
 				>
 					<h2>Custom Stylesheet</h2>
 				</div>
 				<div
+					v-if="$root.serverConfiguration.advanced"
 					class="col-sm-12"
-					data-advanced
 				>
 					<label
 						for="user-specified-css-input"
@@ -418,10 +466,11 @@
 			</div>
 
 			<div
-				v-if="!this.$root.serverConfiguration.public"
+				v-if="!$root.serverConfiguration.public"
 				class="session-list"
 			>
 				<h2>Sessions</h2>
+				<!-- TODO: Sessions -->
 
 				<h3>Current session</h3>
 				<div id="session-current" />
@@ -429,13 +478,13 @@
 				<h3>Other sessions</h3>
 				<div id="session-list" />
 			</div>
-		</div>
+		</form>
 
 	</div>
 </template>
 
 <script>
-const storage = require("../../js/localStorage");
+// const storage = require("../../js/localStorage");  // TODO: use this
 import socket from "../../js/socket";
 import RevealPassword from "../RevealPassword.vue";
 
@@ -446,29 +495,94 @@ export default {
 	},
 	data() {
 		return {
-			inFlight: false,
-			errorShown: false,
+			canRegisterProtocol: false,
+			passwordChangeStatus: null,
+			passwordErrors: {
+				missing_fields: "Please enter a new password",
+				password_mismatch: "Both new password fields must match",
+				password_incorrect: "The current password field does not match your account password",
+				update_failed: "Failed to update your password",
+			},
 		};
 	},
+	mounted() {
+		// Enable protocol handler registration if supported
+		if (window.navigator.registerProtocolHandler) {
+			this.canRegisterProtocol = true;
+		}
+	},
 	methods: {
-		onSubmit(event) {
-			event.preventDefault();
+		onChange(event) {
+			const ignore = [
+				"old_password",
+				"new_password",
+				"verify_password",
+			];
 
-			this.inFlight = true;
-			this.errorShown = false;
+			const name = event.target.name;
 
-			const values = {
-				user: this.$refs.username.value,
-				password: this.$refs.password.value,
+			if (ignore.includes(name)) {
+				return;
+			}
+
+			let value;
+
+			if (event.target.type === "checkbox") {
+				value = event.target.checked;
+			} else {
+				value = event.target.value;
+			}
+
+			this.storeSetting(name, value);
+		},
+		storeSetting(name, value) {
+			// TODO: port logic from options.js
+			socket.emit("setting:set", {name, value});
+		},
+		changePassword() {
+			const allFields = new FormData(this.$refs.settingsForm);
+			const data = {
+				old_password: allFields.get("old_password"),
+				new_password: allFields.get("new_password"),
+				verify_password: allFields.get("verify_password"),
 			};
 
-			storage.set("user", values.user);
+			if (!data.old_password || !data.new_password || !data.verify_password) {
+				this.passwordChangeStatus = {
+					success: false,
+					error: "missing_fields",
+				};
+				return;
+			}
 
-			socket.emit("auth", values);
+			if (data.new_password !== data.verify_password) {
+				this.passwordChangeStatus = {
+					success: false,
+					error: "password_mismatch",
+				};
+				return;
+			}
+
+			socket.once("change-password", (response) => {
+				this.passwordChangeStatus = response;
+			});
+
+			socket.emit("change-password", data);
 		},
 		onForceSyncClick() {
 			const options = require("../../js/options");
 			options.syncAllSettings(true);
+		},
+		registerProtocol() {
+			const uri = document.location.origin + document.location.pathname + "?uri=%s";
+
+			window.navigator.registerProtocolHandler("irc", uri, "The Lounge");
+			window.navigator.registerProtocolHandler("ircs", uri, "The Lounge");
+		},
+		playNotification() {
+			const pop = new Audio();
+			pop.src = "audio/pop.wav";
+			pop.play();
 		},
 	},
 };

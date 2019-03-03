@@ -39,12 +39,6 @@ socket.on("configuration", function(data) {
 		socket.emit("sessions:get");
 	});
 
-	$("#play").on("click", () => {
-		const pop = new Audio();
-		pop.src = "audio/pop.wav";
-		pop.play();
-	});
-
 	if (data.fileUpload) {
 		upload.initialize(data.fileUploadMaxFileSize);
 	}
@@ -62,6 +56,7 @@ socket.on("configuration", function(data) {
 		document.querySelector('meta[name="theme-color"]').content = currentTheme.themeColor;
 	}
 
+	/*
 	function handleFormSubmit() {
 		const form = $(this);
 		const event = form.data("event");
@@ -79,10 +74,9 @@ socket.on("configuration", function(data) {
 
 		return false;
 	}
+	*/
 
-	$("#change-password form").on("submit", handleFormSubmit);
-	connect.on("submit", "form", handleFormSubmit);
-
+	// TODO: move to component (this mirrors the nick to the username field if the username is empty)
 	connect.on("show", function() {
 		connect
 			.html(templates.windows.connect(data))
