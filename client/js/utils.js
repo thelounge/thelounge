@@ -15,7 +15,6 @@ module.exports = {
 	scrollIntoViewNicely,
 	hasRoleInChannel,
 	move,
-	closeChan,
 	synchronizeNotifiedState,
 	requestIdleCallback,
 };
@@ -119,31 +118,6 @@ function move(array, old_index, new_index) {
 
 	array.splice(new_index, 0, array.splice(old_index, 1)[0]);
 	return array;
-}
-
-function closeChan(chan) {
-	const socket = require("./socket");
-	let cmd = "/close";
-
-	if (chan.hasClass("lobby")) {
-		cmd = "/quit";
-		const server = chan.find(".name").html();
-
-		// eslint-disable-next-line no-alert
-		if (!confirm(`Are you sure you want to remove ${server}?`)) {
-			return false;
-		}
-	}
-
-	socket.emit("input", {
-		target: Number(chan.attr("data-id")),
-		text: cmd,
-	});
-	chan.css({
-		transition: "none",
-		opacity: 0.4,
-	});
-	return false;
 }
 
 function requestIdleCallback(callback, timeout) {

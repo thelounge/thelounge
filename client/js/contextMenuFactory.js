@@ -123,7 +123,16 @@ function addCloseItem() {
 		className: "close",
 		displayName: getCloseDisplay,
 		data: (target) => target.attr("data-target"),
-		callback: (itemData) => utils.closeChan($(`.networks .chan[data-target="${itemData}"]`)),
+		callback(itemData) {
+			const close = document.querySelector(
+				`.networks .chan[data-target="${itemData}"] .close`
+			);
+
+			if (close) {
+				// TODO: After context menus are ported to Vue, figure out a direct api
+				close.click();
+			}
+		},
 	});
 }
 

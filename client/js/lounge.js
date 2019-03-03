@@ -161,7 +161,7 @@ window.vueMounted = () => {
 			// See https://github.com/thelounge/thelounge/issues/2257
 			$("#input").trigger("ontouchstart" in window ? "blur" : "focus");
 		}
-*/
+		*/
 
 		if (channel && channel.channel.usersOutdated) {
 			channel.channel.usersOutdated = false;
@@ -204,10 +204,6 @@ window.vueMounted = () => {
 	sidebar.on("click", ".chan, button", openWindow);
 	$("#help").on("click", "#view-changelog, #back-to-help", openWindow);
 	$("#changelog").on("click", "#back-to-help", openWindow);
-
-	sidebar.on("click", ".close", function() {
-		utils.closeChan($(this).closest(".chan"));
-	});
 
 	$(document).on("visibilitychange focus click", () => {
 		utils.synchronizeNotifiedState();
