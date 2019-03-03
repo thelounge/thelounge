@@ -5,6 +5,7 @@ const updateCursor = require("undate").update;
 
 class Uploader {
 	init() {
+		this.xhr = null;
 		this.fileQueue = [];
 		this.overlay = document.getElementById("upload-overlay");
 		this.uploadInput = document.getElementById("upload-input");
@@ -106,6 +107,7 @@ class Uploader {
 
 	uploadSingleFile(file, token) {
 		const xhr = new XMLHttpRequest();
+		this.xhr = xhr;
 
 		xhr.upload.addEventListener("progress", (e) => {
 			const percent = Math.floor(e.loaded / e.total * 1000) / 10;
@@ -114,6 +116,8 @@ class Uploader {
 
 		xhr.onreadystatechange = () => {
 			if (xhr.readyState === XMLHttpRequest.DONE) {
+				this.xhr = null;
+
 				let response;
 
 				try {
@@ -177,6 +181,16 @@ class Uploader {
 		// Set the cursor after the link and a space
 		textbox.selectionStart = textbox.selectionEnd = textBeforeTail.length;
 	}
+
+	// TODO: This is a temporary hack while Vue porting is finalized
+	abort() {
+		this.fileQueue = [];
+
+		if (this.xhr) {
+			this.xhr.abort();
+			this.xhr = null;
+		}
+	}
 }
 
 const instance = new Uploader();
@@ -194,4 +208,8 @@ function setMaxFileSize(kb) {
 	instance.maxFileSize = kb;
 }
 
-module.exports = {initialize, setMaxFileSize};
+module.exports = {
+	abort: () => instance.abort(),
+	initialize,
+	setMaxFileSize,
+};
