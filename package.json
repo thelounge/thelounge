@@ -111,7 +111,7 @@
     "vue-loader": "15.6.4",
     "vue-server-renderer": "2.6.8",
     "vue-template-compiler": "2.6.8",
-    "vuedraggable": "2.18.1",
+    "vuedraggable": "2.19.0",
     "webpack": "4.29.6",
     "webpack-cli": "3.2.3",
     "webpack-dev-server": "3.2.1"
