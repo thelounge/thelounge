@@ -34,11 +34,6 @@ socket.on("configuration", function(data) {
 
 	vueApp.serverConfiguration = data;
 
-	$("#settings").on("show", () => {
-		$("#session-list").html("<p>Loading…</p>");
-		socket.emit("sessions:get");
-	});
-
 	if (data.fileUpload) {
 		upload.initialize(data.fileUploadMaxFileSize);
 	}

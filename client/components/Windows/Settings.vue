@@ -471,13 +471,29 @@
 				class="session-list"
 			>
 				<h2>Sessions</h2>
-				<!-- TODO: Sessions -->
 
 				<h3>Current session</h3>
-				<div id="session-current" />
+				<div
+					v-if="$store.getters.currentSession"
+					id="session-current"
+				>
+					<Session :session="$store.getters.currentSession" />
+				</div>
 
 				<h3>Other sessions</h3>
-				<div id="session-list" />
+				<div id="session-list">
+					<p v-if="$store.state.sessions.length == 0">Loading…</p>
+					<p v-else-if="$store.getters.otherSessions.length == 0">
+						<em>You are not currently logged in to any other device.</em>'
+					</p>
+					<template v-else>
+						<Session
+							v-for="session in $store.getters.otherSessions"
+							:key="session.token"
+							:session="session"
+						/>
+					</template>
+				</div>
 			</div>
 		</form>
 
@@ -488,11 +504,13 @@
 // const storage = require("../../js/localStorage");  // TODO: use this
 import socket from "../../js/socket";
 import RevealPassword from "../RevealPassword.vue";
+import Session from "../Session.vue";
 
 export default {
 	name: "Settings",
 	components: {
 		RevealPassword,
+		Session,
 	},
 	data() {
 		return {
@@ -509,6 +527,8 @@ export default {
 	},
 	mounted() {
 		this.options = require("../../js/options"); // TODO: do this in a smarter way
+
+		socket.emit("sessions:get");
 
 		// Enable protocol handler registration if supported
 		if (window.navigator.registerProtocolHandler) {

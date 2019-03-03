@@ -8,6 +8,7 @@ export default new Vuex.Store({
 		isConnected: false,
 		isNotified: false,
 		activeWindow: null,
+		sessions: [],
 	},
 	mutations: {
 		isConnected(state, payload) {
@@ -22,5 +23,12 @@ export default new Vuex.Store({
 		currentNetworkConfig(state, payload) {
 			state.currentNetworkConfig = payload;
 		},
+		sessions(state, payload) {
+			state.sessions = payload;
+		},
+	},
+	getters: {
+		currentSession: (state) => state.sessions.find((item) => item.current),
+		otherSessions: (state) => state.sessions.filter((item) => !item.current),
 	},
 });
