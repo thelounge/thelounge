@@ -1,4 +1,5 @@
 <template>
+	<!-- TODO: move all class toggling to vue, since vue clears existing classes when changing the notified class -->
 	<div
 		id="viewport"
 		:class="{notified: $store.state.isNotified}"

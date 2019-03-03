@@ -226,6 +226,7 @@
 						<option
 							v-for="theme in $root.serverConfiguration.themes"
 							:key="theme.name"
+							:value="theme.name"
 						>
 							{{ theme.displayName }}
 						</option>
@@ -495,6 +496,7 @@ export default {
 	},
 	data() {
 		return {
+			options: null,
 			canRegisterProtocol: false,
 			passwordChangeStatus: null,
 			passwordErrors: {
@@ -506,6 +508,8 @@ export default {
 		};
 	},
 	mounted() {
+		this.options = require("../../js/options"); // TODO: do this in a smarter way
+
 		// Enable protocol handler registration if supported
 		if (window.navigator.registerProtocolHandler) {
 			this.canRegisterProtocol = true;
@@ -533,11 +537,7 @@ export default {
 				value = event.target.value;
 			}
 
-			this.storeSetting(name, value);
-		},
-		storeSetting(name, value) {
-			// TODO: port logic from options.js
-			socket.emit("setting:set", {name, value});
+			this.options.updateSetting(name, value);
 		},
 		changePassword() {
 			const allFields = new FormData(this.$refs.settingsForm);

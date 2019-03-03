@@ -6,17 +6,10 @@ const socket = require("./socket");
 const {vueApp} = require("./vue");
 require("../js/autocompletion");
 
-const $settings = $("#settings");
 const $theme = $("#theme");
 const $userStyles = $("#user-specified-css");
 
 const noCSSparamReg = /[?&]nocss/;
-
-// Not yet available at this point but used in various functionaly.
-// Will be assigned when `initialize` is called.
-let $syncWarningOverride;
-let $syncWarningBase;
-let $forceSyncButton;
 
 // Default settings
 const settings = vueApp.settings;
@@ -76,6 +69,7 @@ module.exports = {
 	syncAllSettings,
 	processSetting,
 	initialize,
+	updateSetting,
 };
 
 // Updates the checkbox and warning in settings.
@@ -125,30 +119,19 @@ function settingSetEmit(name, value) {
 
 // When sync is `true` the setting will also be send to the backend for syncing.
 function updateSetting(name, value, sync) {
-	const currentOption = settings[name];
+	settings[name] = value;
+	storage.set("settings", JSON.stringify(settings));
+	applySetting(name, value);
 
-	// Only update and process when the setting is actually changed.
-	if (currentOption !== value) {
-		settings[name] = value;
-		storage.set("settings", JSON.stringify(settings));
-		applySetting(name, value);
+	// Sync is checked, request settings from server.
+	if (name === "syncSettings" && value) {
+		socket.emit("setting:get");
+	}
 
-		// Sync is checked, request settings from server.
-		if (name === "syncSettings" && value) {
-			socket.emit("setting:get");
-			$syncWarningOverride.hide();
-			$syncWarningBase.hide();
-			$forceSyncButton.hide();
-		} else if (name === "syncSettings") {
-			$syncWarningOverride.show();
-			$forceSyncButton.show();
-		}
-
-		if (settings.syncSettings && !noSync.includes(name) && sync) {
-			settingSetEmit(name, value);
-		} else if (alwaysSync.includes(name) && sync) {
-			settingSetEmit(name, value);
-		}
+	if (settings.syncSettings && !noSync.includes(name) && sync) {
+		settingSetEmit(name, value);
+	} else if (alwaysSync.includes(name) && sync) {
+		settingSetEmit(name, value);
 	}
 }
 
@@ -162,31 +145,11 @@ function syncAllSettings(force = false) {
 				settingSetEmit(name, settings[name]);
 			}
 		}
-
-		$syncWarningOverride.hide();
-		$syncWarningBase.hide();
-		$forceSyncButton.hide();
-	} else {
-		$syncWarningOverride.hide();
-		$forceSyncButton.hide();
-		$syncWarningBase.show();
 	}
 }
 
 // If `save` is set to true it will pass the setting to `updateSetting()`  processSetting
 function processSetting(name, value, save) {
-	if (name === "highlights") {
-		$settings.find(`input[name=${name}]`).val(value);
-	} else if (name === "nickPostfix") {
-		$settings.find(`input[name=${name}]`).val(value);
-	} else if (name === "statusMessages") {
-		$settings.find(`input[name=${name}][value=${value}]`).prop("checked", true);
-	} else if (name === "theme") {
-		$settings.find("#theme-select").val(value);
-	} else if (typeof value === "boolean") {
-		$settings.find(`input[name=${name}]`).prop("checked", value);
-	}
-
 	// No need to also call processSetting when `save` is true.
 	// updateSetting does take care of that.
 	if (save) {
@@ -198,10 +161,6 @@ function processSetting(name, value, save) {
 }
 
 function initialize() {
-	$syncWarningOverride = $settings.find(".sync-warning-override");
-	$syncWarningBase = $settings.find(".sync-warning-base");
-	$forceSyncButton = $settings.find(".force-sync-button");
-
 	module.exports.initialized = true;
 
 	// Settings have now entirely updated, apply settings to the client.
@@ -216,28 +175,6 @@ function initialize() {
 	} else {
 		vueApp.desktopNotificationState = "unsupported";
 	}
-
-	/*
-	$settings.on("change", "input, select, textarea", function(e) {
-		// We only want to trigger on human triggered changes.
-		if (e.originalEvent) {
-			const $self = $(this);
-			const type = $self.prop("type");
-			const name = $self.prop("name");
-
-			if (type === "radio") {
-				if ($self.prop("checked")) {
-					updateSetting(name, $self.val(), true);
-				}
-			} else if (type === "checkbox") {
-				updateSetting(name, $self.prop("checked"), true);
-				settings[name] = $self.prop("checked");
-			} else if (type !== "password") {
-				updateSetting(name, $self.val(), true);
-			}
-		}
-	});
-	*/
 
 	// Local init is done, let's sync
 	// We always ask for synced settings even if it is disabled.
