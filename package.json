@@ -108,7 +108,7 @@
     "textcomplete": "0.17.1",
     "undate": "0.3.0",
     "vue": "2.6.8",
-    "vue-loader": "15.6.4",
+    "vue-loader": "15.7.0",
     "vue-server-renderer": "2.6.8",
     "vue-template-compiler": "2.6.8",
     "vuedraggable": "2.19.0",
