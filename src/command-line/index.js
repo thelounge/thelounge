@@ -1,6 +1,5 @@
 "use strict";
 
-const _ = require("lodash");
 const log = require("../log");
 const fs = require("fs");
 const path = require("path");
@@ -34,7 +33,7 @@ if (process.getuid) {
 Utils.checkOldHome();
 
 // Merge config key-values passed as CLI options into the main config
-_.merge(Helper.config, program.config);
+Helper.mergeConfig(Helper.config, program.config);
 
 require("./start");
 
