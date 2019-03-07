@@ -134,6 +134,7 @@ Network.prototype.createIrcFramework = function(client) {
 	});
 
 	this.irc.requestCap([
+		"draft/setname", // https://github.com/ircv3/ircv3-specifications/pull/361
 		"znc.in/self-message", // Legacy echo-message for ZNC
 	]);
 
@@ -216,7 +217,7 @@ Network.prototype.edit = function(client, args) {
 			}
 		}
 
-		if (connected && this.realname !== oldRealname) {
+		if (connected && this.realname !== oldRealname && this.irc.network.cap.isEnabled("draft/setname")) {
 			this.irc.raw("SETNAME", this.realname);
 		}
 
