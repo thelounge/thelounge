@@ -81,7 +81,7 @@
     "copy-webpack-plugin": "5.0.0",
     "css-loader": "0.28.11",
     "css.escape": "1.5.1",
-    "emoji-regex": "7.0.3",
+    "emoji-regex": "8.0.0",
     "eslint": "5.15.0",
     "eslint-plugin-vue": "5.2.2",
     "fuzzy": "0.1.3",
