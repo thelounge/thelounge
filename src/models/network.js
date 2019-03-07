@@ -70,14 +70,20 @@ Network.prototype.validate = function(client) {
 		this.nick = this.nick.substring(0, 100);
 	}
 
-	this.setNick(String(this.nick || Helper.getDefaultNick()).replace(" ", "_"));
+	this.setNick(String(this.nick || Helper.getDefaultNick()).replace(/\s/g, "_"));
 
 	if (!this.username) {
 		this.username = this.nick.replace(/[^a-zA-Z0-9]/g, "");
+	} else {
+		// Remove any whitespace from usernames as that is not valid
+		this.username = this.username.replace(/\s/g, "_").substring(0, 100);
 	}
 
 	if (!this.realname) {
 		this.realname = "The Lounge User";
+	} else {
+		// Remove newlines from realnames
+		this.realname = this.realname.replace(/[\r\n]/g, "_").substring(0, 128);
 	}
 
 	if (!this.port) {
