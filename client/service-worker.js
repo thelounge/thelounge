@@ -2,6 +2,7 @@
 /* global clients */
 "use strict";
 
+const cacheName = "thelounge";
 const excludedPathsFromCache = /^(?:socket\.io|storage|uploads|cdn-cgi)\//;
 
 self.addEventListener("install", function() {
@@ -36,31 +37,33 @@ self.addEventListener("fetch", function(event) {
 	uri.hash = "";
 	uri.search = "";
 
-	event.respondWith(networkOrCache(uri));
+	event.respondWith(networkOrCache(event, uri));
 });
 
-function networkOrCache(uri) {
-	return caches.open("thelounge").then(function(cache) {
-		// Despite the "no-cache" name, it is a conditional request if proper headers are set
-		return fetch(uri, {cache: "no-cache"})
-			.then(function(response) {
-				if (response.ok) {
-					return cache.put(uri, response.clone()).then(function() {
-						return response;
-					});
-				}
+async function putInCache(uri, response) {
+	const cache = await caches.open(cacheName);
+	await cache.put(uri, response);
+}
 
-				// eslint-disable-next-line no-console
-				console.error(`Request for ${uri.href} failed with HTTP ${response.status}`);
+async function networkOrCache(event, uri) {
+	try {
+		const response = await fetch(uri, {cache: "no-cache"});
 
-				return Promise.reject("request-failed");
-			})
-			.catch(function() {
-				return cache.match(uri).then(function(matching) {
-					return matching || Promise.reject("request-not-in-cache");
-				});
-			});
-	});
+		if (response.ok) {
+			event.waitUntil(putInCache(uri, response));
+			return response.clone();
+		}
+
+		throw new Error(`Request failed with HTTP ${response.status}`);
+	} catch (e) {
+		// eslint-disable-next-line no-console
+		console.error(e.message, uri.href);
+
+		const cache = await caches.open(cacheName);
+		const matching = await cache.match(uri);
+
+		return matching || Promise.reject("request-not-in-cache");
+	}
 }
 
 self.addEventListener("message", function(event) {
