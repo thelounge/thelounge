@@ -5,11 +5,12 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no">
 
-	<link rel="preload" as="script" href="js/bundle.vendor.js">
-	<link rel="preload" as="script" href="js/bundle.js">
+	<link rel="preload" as="script" href="js/loading-error-handlers.js?v=<%- cacheBust %>">
+	<link rel="preload" as="script" href="js/bundle.vendor.js?v=<%- cacheBust %>">
+	<link rel="preload" as="script" href="js/bundle.js?v=<%- cacheBust %>">
 
-	<link rel="stylesheet" href="css/primer-tooltips.css">
-	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/primer-tooltips.css?v=<%- cacheBust %>">
+	<link rel="stylesheet" href="css/style.css?v=<%- cacheBust %>">
 	<link id="theme" rel="stylesheet" href="themes/<%- theme %>.css" data-server-theme="<%- theme %>">
 	<% _.forEach(stylesheets, function(css) { %>
 		<link rel="stylesheet" href="packages/<%- css %>">
@@ -59,7 +60,7 @@
 					<p id="loading-slow">This is taking longer than it should, there might be connectivity issues.</p>
 					<button id="loading-reload" class="btn">Reload page</button>
 				</div>
-				<script async src="js/loading-error-handlers.js"></script>
+				<script async src="js/loading-error-handlers.js?v=<%- cacheBust %>"></script>
 			</div>
 		</div>
 		<div id="viewport"></div>
@@ -68,7 +69,7 @@
 		<div id="image-viewer"></div>
 		<div id="upload-overlay"></div>
 
-		<script src="js/bundle.vendor.js"></script>
-		<script src="js/bundle.js"></script>
+		<script src="js/bundle.vendor.js?v=<%- cacheBust %>"></script>
+		<script src="js/bundle.js?v=<%- cacheBust %>"></script>
 	</body>
 </html>

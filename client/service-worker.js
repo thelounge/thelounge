@@ -2,7 +2,7 @@
 /* global clients */
 "use strict";
 
-const cacheName = "thelounge";
+const cacheName = "__HASH__";
 const excludedPathsFromCache = /^(?:socket\.io|storage|uploads|cdn-cgi)\//;
 
 self.addEventListener("install", function() {
@@ -10,6 +10,12 @@ self.addEventListener("install", function() {
 });
 
 self.addEventListener("activate", function(event) {
+	event.waitUntil(caches.keys().then((names) => Promise.all(
+		names
+			.filter((name) => name !== cacheName)
+			.map((name) => caches.delete(name))
+	)));
+
 	event.waitUntil(self.clients.claim());
 });
 
@@ -33,34 +39,30 @@ self.addEventListener("fetch", function(event) {
 		return;
 	}
 
-	const uri = new URL(url);
-	uri.hash = "";
-	uri.search = "";
-
-	event.respondWith(networkOrCache(event, uri));
+	event.respondWith(networkOrCache(event));
 });
 
-async function putInCache(uri, response) {
+async function putInCache(request, response) {
 	const cache = await caches.open(cacheName);
-	await cache.put(uri, response);
+	await cache.put(request, response);
 }
 
-async function networkOrCache(event, uri) {
+async function networkOrCache(event) {
 	try {
-		const response = await fetch(uri, {cache: "no-cache"});
+		const response = await fetch(event.request, {cache: "no-cache"});
 
 		if (response.ok) {
-			event.waitUntil(putInCache(uri, response));
+			event.waitUntil(putInCache(event.request, response));
 			return response.clone();
 		}
 
 		throw new Error(`Request failed with HTTP ${response.status}`);
 	} catch (e) {
 		// eslint-disable-next-line no-console
-		console.error(e.message, uri.href);
+		console.error(e.message, event.request.url);
 
 		const cache = await caches.open(cacheName);
-		const matching = await cache.match(uri);
+		const matching = await cache.match(event.request);
 
 		return matching || Promise.reject("request-not-in-cache");
 	}

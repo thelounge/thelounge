@@ -9,6 +9,7 @@ const fs = require("fs");
 const net = require("net");
 const bcrypt = require("bcryptjs");
 const colors = require("chalk");
+const crypto = require("crypto");
 
 let homePath;
 let configPath;
@@ -32,6 +33,7 @@ const Helper = {
 	getUserLogsPath,
 	setHome,
 	getVersion,
+	getVersionCacheBust,
 	getGitCommit,
 	ip2hex,
 	mergeConfig,
@@ -87,6 +89,12 @@ function getGitCommit() {
 		_gitCommit = null;
 		return null;
 	}
+}
+
+function getVersionCacheBust() {
+	const hash = crypto.createHash("sha256").update(Helper.getVersion()).digest("hex");
+
+	return hash.substring(0, 10);
 }
 
 function setHome(newPath) {

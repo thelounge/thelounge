@@ -281,7 +281,10 @@ function index(req, res, next) {
 			throw err;
 		}
 
-		res.send(_.template(file)(getServerConfiguration()));
+		const config = getServerConfiguration();
+		config.cacheBust = Helper.getVersionCacheBust();
+
+		res.send(_.template(file)(config));
 	});
 }
 
