@@ -44,6 +44,10 @@ export const config = normalizeConfig({
 		default: "",
 		sync: "always",
 	},
+	awayMessage: {
+		default: "",
+		sync: "always",
+	},
 	links: {
 		default: true,
 	},
