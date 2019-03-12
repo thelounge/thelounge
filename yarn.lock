@@ -7738,10 +7738,10 @@ sort-keys@^1.0.0:
   dependencies:
     is-plain-obj "^1.0.0"
 
-sortablejs@^1.8.3:
-  version "1.8.3"
-  resolved "https://registry.yarnpkg.com/sortablejs/-/sortablejs-1.8.3.tgz#5ae908ef96300966e95440a143340f5dd565a0df"
-  integrity sha512-AftvD4hdKcR5QlGi7L/JST506zGNGrysE8/QohDpwKXJarHWqCt+TUlrtoMk/wkECB607Q019/OZlJViyWiD6A==
+sortablejs@^1.8.4:
+  version "1.8.4"
+  resolved "https://registry.yarnpkg.com/sortablejs/-/sortablejs-1.8.4.tgz#1bbfeafa96d399b83f28e25d8e49d4fbfd867f30"
+  integrity sha512-Brqnzelu1AhFuc0Fn3N/qFex1tlIiuQIUsfu2J8luJ4cRgXYkWrByxa+y5mWEBlj8A0YoABukflIJwvHyrwJ6Q==
 
 source-list-map@^2.0.0:
   version "2.0.1"
@@ -8866,18 +8866,12 @@ vue@2.6.8:
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.8.tgz#f21cbc536bfc14f7d1d792a137bb12f69e60ea91"
   integrity sha512-+vp9lEC2Kt3yom673pzg1J7T1NVGuGzO9j8Wxno+rQN2WYVBX2pyo/RGQ3fXCLh2Pk76Skw/laAPCuBuEQ4diw==
 
-vue@^2.5.22:
-  version "2.6.7"
-  resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.7.tgz#254f188e7621d2d19ee28d0c0442c6d21b53ae2d"
-  integrity sha512-g7ADfQ82QU+j6F/bVDioVQf2ccIMYLuR4E8ev+RsDBlmwRkhGO3HhgF4PF9vpwjdPpxyb1zzLur2nQ2oIMAMEg==
-
-vuedraggable@2.19.0:
-  version "2.19.0"
-  resolved "https://registry.yarnpkg.com/vuedraggable/-/vuedraggable-2.19.0.tgz#f9de67efa5e6ea0114297ba047dbc442138a31b4"
-  integrity sha512-HFcq2QWS/KEeMFyzrWGt7EVhlFou5vH+Sk6nhG3cALWMWm7173qctSQM6Pncw7zQmK9fKkNG1n8on6kz+TB7yA==
+vuedraggable@2.19.2:
+  version "2.19.2"
+  resolved "https://registry.yarnpkg.com/vuedraggable/-/vuedraggable-2.19.2.tgz#a82a35e081eb63272c53c71b51b7e4e4f906e394"
+  integrity sha512-O9xmztFDrs/bjWFBOHxQHm8cbvdMP6pPl5KwTewy+F8B89MtC3+dOrs0CUcsfRVQpq7vLSk890jndJJykODIgA==
   dependencies:
-    sortablejs "^1.8.3"
-    vue "^2.5.22"
+    sortablejs "^1.8.4"
 
 watchpack@^1.5.0:
   version "1.6.0"
