@@ -2,6 +2,7 @@
 	<button
 		v-if="link.type !== 'loading'"
 		:class="['toggle-button', 'toggle-preview', { opened: link.shown }]"
+		:aria-label="ariaLabel"
 		@click="onClick"
 	/>
 </template>
@@ -11,6 +12,11 @@ export default {
 	name: "LinkPreviewToggle",
 	props: {
 		link: Object,
+	},
+	computed: {
+		ariaLabel() {
+			return this.link.shown ? "Collapse preview" : "Expand preview";
+		},
 	},
 	methods: {
 		onClick() {
