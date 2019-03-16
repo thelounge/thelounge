@@ -53,6 +53,7 @@ const inputs = [
 	"ignore",
 	"invite",
 	"kick",
+	"kill",
 	"mode",
 	"nick",
 	"notice",
