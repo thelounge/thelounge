@@ -260,6 +260,7 @@ kbd {
 #chat .part .from::before,
 #chat .quit .from::before,
 #chat .topic .from::before,
+#chat .mode_channel .from::before,
 #chat .mode .from::before,
 #chat .motd .from::before,
 #chat .ctcp .from::before,
@@ -377,6 +378,7 @@ kbd {
 	color: #2ecc40;
 }
 
+#chat .mode_channel .from::before,
 #chat .mode .from::before {
 	content: "\f05a"; /* http://fontawesome.io/icon/info-circle/ */
 	color: #2ecc40;

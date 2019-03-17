@@ -31,6 +31,12 @@ module.exports = function(irc, network) {
 				client.save();
 			}
 		});
+
+		const msg = new Msg({
+			type: Msg.Type.MODE_CHANNEL,
+			text: `${data.raw_modes} ${data.raw_params}`,
+		});
+		targetChan.pushMessage(client, msg);
 	});
 
 	irc.on("mode", function(data) {
