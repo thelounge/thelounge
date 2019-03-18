@@ -78,7 +78,7 @@
     "babel-loader": "8.0.5",
     "babel-plugin-istanbul": "5.1.1",
     "chai": "4.2.0",
-    "copy-webpack-plugin": "5.0.0",
+    "copy-webpack-plugin": "5.0.1",
     "css-loader": "0.28.11",
     "css.escape": "1.5.1",
     "emoji-regex": "8.0.0",
