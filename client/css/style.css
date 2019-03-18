@@ -30,6 +30,9 @@
 	/* Background and left-border color of highlight messages */
 	--highlight-bg-color: #efe8dc;
 	--highlight-border-color: #b08c4f;
+
+	/* Color of the progress bar that appears as a file is being uploaded to the server. Defaults to button color */
+	--upload-progressbar-color: var(--button-color);
 }
 
 /* Samsung Internet <7.0 and Microsoft Edge support (yes, both of them use webkit prefix) */
@@ -1956,7 +1959,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #upload-progressbar {
-	background: blue;
+	background: var(--upload-progressbar-color);
+	box-shadow: 0 0 10px var(--upload-progressbar-color);
 	width: 0%;
 	height: 2px;
 	visibility: hidden;
