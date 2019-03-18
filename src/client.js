@@ -250,7 +250,7 @@ Client.prototype.connect = function(args) {
 
 	if (network.userDisconnected) {
 		network.channels[0].pushMessage(client, new Msg({
-			text: "You have manually disconnected from this network before, use /connect command to connect again.",
+			text: "You have manually disconnected from this network before, use the /connect command to connect again.",
 		}), true);
 	} else {
 		network.irc.connect();
