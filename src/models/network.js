@@ -140,6 +140,7 @@ Network.prototype.createIrcFramework = function(client) {
 	});
 
 	this.irc.requestCap([
+		"draft/setname", // https://github.com/ircv3/ircv3-specifications/pull/361
 		"znc.in/self-message", // Legacy echo-message for ZNC
 	]);
 
@@ -179,6 +180,7 @@ Network.prototype.createWebIrc = function(client) {
 
 Network.prototype.edit = function(client, args) {
 	const oldNick = this.nick;
+	const oldRealname = this.realname;
 
 	this.nick = args.nick;
 	this.host = String(args.host || "");
@@ -204,8 +206,10 @@ Network.prototype.edit = function(client, args) {
 	}
 
 	if (this.irc) {
+		const connected = this.irc.connection && this.irc.connection.connected;
+
 		if (this.nick !== oldNick) {
-			if (this.irc.connection && this.irc.connection.connected) {
+			if (connected) {
 				// Send new nick straight away
 				this.irc.raw("NICK", this.nick);
 			} else {
@@ -217,6 +221,10 @@ Network.prototype.edit = function(client, args) {
 					nick: this.nick,
 				});
 			}
+		}
+
+		if (connected && this.realname !== oldRealname && this.irc.network.cap.isEnabled("draft/setname")) {
+			this.irc.raw("SETNAME", this.realname);
 		}
 
 		this.irc.options.host = this.host;
