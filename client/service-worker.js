@@ -2,6 +2,7 @@
 /* global clients */
 "use strict";
 
+const cacheName = "__HASH__";
 const excludedPathsFromCache = /^(?:socket\.io|storage|uploads|cdn-cgi)\//;
 
 self.addEventListener("install", function() {
@@ -9,6 +10,12 @@ self.addEventListener("install", function() {
 });
 
 self.addEventListener("activate", function(event) {
+	event.waitUntil(caches.keys().then((names) => Promise.all(
+		names
+			.filter((name) => name !== cacheName)
+			.map((name) => caches.delete(name))
+	)));
+
 	event.waitUntil(self.clients.claim());
 });
 
@@ -32,35 +39,33 @@ self.addEventListener("fetch", function(event) {
 		return;
 	}
 
-	const uri = new URL(url);
-	uri.hash = "";
-	uri.search = "";
-
-	event.respondWith(networkOrCache(uri));
+	event.respondWith(networkOrCache(event));
 });
 
-function networkOrCache(uri) {
-	return caches.open("thelounge").then(function(cache) {
-		// Despite the "no-cache" name, it is a conditional request if proper headers are set
-		return fetch(uri, {cache: "no-cache"})
-			.then(function(response) {
-				if (response.ok) {
-					return cache.put(uri, response.clone()).then(function() {
-						return response;
-					});
-				}
+async function putInCache(request, response) {
+	const cache = await caches.open(cacheName);
+	await cache.put(request, response);
+}
 
-				// eslint-disable-next-line no-console
-				console.error(`Request for ${uri.href} failed with HTTP ${response.status}`);
+async function networkOrCache(event) {
+	try {
+		const response = await fetch(event.request, {cache: "no-cache"});
 
-				return Promise.reject("request-failed");
-			})
-			.catch(function() {
-				return cache.match(uri).then(function(matching) {
-					return matching || Promise.reject("request-not-in-cache");
-				});
-			});
-	});
+		if (response.ok) {
+			event.waitUntil(putInCache(event.request, response));
+			return response.clone();
+		}
+
+		throw new Error(`Request failed with HTTP ${response.status}`);
+	} catch (e) {
+		// eslint-disable-next-line no-console
+		console.error(e.message, event.request.url);
+
+		const cache = await caches.open(cacheName);
+		const matching = await cache.match(event.request);
+
+		return matching || Promise.reject("request-not-in-cache");
+	}
 }
 
 self.addEventListener("message", function(event) {

@@ -5,6 +5,7 @@ const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const VueLoaderPlugin = require("vue-loader/lib/plugin");
+const Helper = require("./src/helper.js");
 
 const config = {
 	mode: process.env.NODE_ENV === "production" ? "production" : "development",
@@ -123,7 +124,17 @@ const config = {
 			{
 				from: "./client/*",
 				to: "[name].[ext]",
-				ignore: "index.html.tpl",
+				ignore: [
+					"index.html.tpl",
+					"service-worker.js",
+				],
+			},
+			{
+				from: "./client/service-worker.js",
+				to: "[name].[ext]",
+				transform(content) {
+					return content.toString().replace("__HASH__", Helper.getVersionCacheBust());
+				},
 			},
 			{
 				from: "./client/audio/*",
