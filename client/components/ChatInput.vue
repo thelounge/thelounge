@@ -153,6 +153,7 @@ export default {
 	},
 	destroyed() {
 		require("../js/autocompletion").disable();
+		upload.abort();
 	},
 	methods: {
 		setPendingMessage(e) {
