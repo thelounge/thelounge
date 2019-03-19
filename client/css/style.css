@@ -582,6 +582,9 @@ kbd {
 }
 
 #sidebar .chan {
+	display: flex;
+	padding: 8px 14px;
+	position: relative;
 	cursor: pointer;
 }
 
@@ -606,19 +609,31 @@ background on hover (unless active) */
 }
 
 /* Remove background on hovered/active channel when sorting/drag-and-dropping */
-#sidebar .ui-sortable-helper .chan.active, /* Networks */
-#sidebar .ui-sortable-helper .chan:hover,
-#sidebar .chan.ui-sortable-helper.active, /* Channels */
-#sidebar .chan.ui-sortable-helper:hover {
-	background-color: transparent;
+#sidebar .chan.ui-sortable-dragged,
+#sidebar .ui-sortable-dragged .chan,
+#sidebar .ui-sortable-active .chan:hover,
+#sidebar .ui-sortable-active .chan.active {
+	background: transparent;
+}
+
+#sidebar .ui-sortable-ghost::after {
+	background: var(--body-bg-color);
+	border: 1px dashed #99a2b4;
+	border-radius: 6px;
+	content: " ";
+	display: block;
+	position: absolute;
+	left: 10px;
+	top: 0;
+	bottom: 0;
+	right: 10px;
 }
 
 #sidebar .networks {
 	padding-top: 5px;
 }
 
-#sidebar .network,
-#sidebar .network-placeholder {
+#sidebar .network {
 	position: relative;
 	margin-bottom: 20px;
 	touch-action: pan-y;
@@ -629,23 +644,6 @@ background on hover (unless active) */
 	line-height: 1.6;
 	padding: 40px 20px;
 	text-align: center;
-}
-
-#sidebar .chan,
-#sidebar .chan-placeholder {
-	display: flex;
-	padding: 8px 14px;
-}
-
-#sidebar .network-placeholder,
-#sidebar .chan-placeholder {
-	border: 1px dashed #99a2b4;
-	border-radius: 6px;
-	margin: -1px;
-}
-
-#sidebar .network-placeholder {
-	margin-bottom: 29px;
 }
 
 #sidebar .chan.lobby {
