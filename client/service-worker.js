@@ -47,9 +47,33 @@ async function putInCache(request, response) {
 	await cache.put(request, response);
 }
 
+async function cleanRedirect(response) {
+	// Not all browsers support the Response.body stream, so fall back
+	// to reading the entire body into memory as a blob.
+	const bodyPromise = "body" in response ?
+		Promise.resolve(response.body) :
+		response.blob();
+
+	const body = await bodyPromise;
+
+	// new Response() is happy when passed either a stream or a Blob.
+	return new Response(body, {
+		headers: response.headers,
+		status: response.status,
+		statusText: response.statusText,
+	});
+}
+
 async function networkOrCache(event) {
 	try {
-		const response = await fetch(event.request, {cache: "no-cache"});
+		let response = await fetch(event.request, {
+			cache: "no-cache",
+			redirect: "follow",
+		});
+
+		if (response.redirected) {
+			response = await cleanRedirect(response.clone());
+		}
 
 		if (response.ok) {
 			event.waitUntil(putInCache(event.request, response));
