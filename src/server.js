@@ -49,7 +49,10 @@ module.exports = function() {
 		.set("env", "production")
 		.disable("x-powered-by")
 		.use(allRequests)
-		.use(index)
+		.get("/", indexRequest)
+		.get("/service-worker.js", forceNoCacheRequest)
+		.get("/js/bundle.js.map", forceNoCacheRequest)
+		.get("/css/style.css.map", forceNoCacheRequest)
 		.use(express.static(path.join(__dirname, "..", "public"), staticOptions))
 		.use("/storage/", express.static(Helper.getStoragePath(), staticOptions));
 
@@ -244,11 +247,14 @@ function allRequests(req, res, next) {
 	return next();
 }
 
-function index(req, res, next) {
-	if (req.url.split("?")[0] !== "/") {
-		return next();
-	}
+function forceNoCacheRequest(req, res, next) {
+	// Intermittent proxies must not cache the following requests,
+	// browsers must fetch the latest version of these files (service worker, source maps)
+	res.setHeader("Cache-Control", "no-cache, no-transform");
+	return next();
+}
 
+function indexRequest(req, res) {
 	const policies = [
 		"default-src 'none'", // default to nothing
 		"form-action 'self'", // 'self' to fix saving passwords in Firefox, even though login is handled in javascript
