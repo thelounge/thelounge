@@ -2,6 +2,7 @@
 
 const log = require("../../src/log");
 const expect = require("chai").expect;
+const stub = require("sinon").stub;
 const mergeConfig = require("../../src/helper").mergeConfig;
 
 describe("mergeConfig", function() {
@@ -34,6 +35,9 @@ describe("mergeConfig", function() {
 	});
 
 	it("should extend objects", function() {
+		let warning = "";
+		stub(log, "warn").callsFake((str) => warning += str);
+
 		expect(mergeConfig({
 			tlsOptions: {},
 		}, {
@@ -47,6 +51,9 @@ describe("mergeConfig", function() {
 				thing: 123,
 			},
 		});
+
+		log.warn.restore();
+		expect(warning).to.contain("Unknown key");
 	});
 
 	it("should allow changing nulls", function() {
