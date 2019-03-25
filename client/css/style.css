@@ -1000,7 +1000,6 @@ background on hover (unless active) */
 #chat .condensed-summary .content {
 	display: block;
 	cursor: pointer;
-	transition: opacity 0.2s;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
@@ -1012,11 +1011,7 @@ background on hover (unless active) */
 }
 
 #chat .condensed-summary .content:hover {
-	opacity: 0.6;
-}
-
-#chat .condensed-summary .toggle-button:hover {
-	opacity: 1;
+	text-decoration: underline;
 }
 
 #chat .condensed.closed .msg {
