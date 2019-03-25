@@ -53,7 +53,7 @@
     "linkify-it": "2.1.0",
     "lodash": "4.17.11",
     "mime-types": "2.1.22",
-    "package-json": "6.1.0",
+    "package-json": "6.2.0",
     "read": "1.0.7",
     "read-chunk": "3.1.0",
     "request": "2.88.0",
