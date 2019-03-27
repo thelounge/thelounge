@@ -2,6 +2,7 @@
 	<div
 		v-if="!network.isCollapsed || channel.highlight || channel.type === 'lobby' || (activeChannel && channel === activeChannel.channel)"
 		:class="[
+			'chan',
 			channel.type,
 			{ active: activeChannel && channel === activeChannel.channel },
 			{ 'parted-channel': channel.type === 'channel' && channel.state === 0 }
@@ -13,7 +14,6 @@
 		:data-name="channel.name"
 		:aria-controls="'#chan-' + channel.id"
 		:aria-selected="activeChannel && channel === activeChannel.channel"
-		class="chan"
 		role="tab"
 	>
 		<slot

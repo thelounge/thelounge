@@ -8,7 +8,12 @@
 	<Draggable
 		v-else
 		:list="networks"
-		:options="{ handle: '.lobby', draggable: '.network', ghostClass: 'network-placeholder', disabled: isSortingEnabled }"
+		:disabled="isSortingEnabled"
+		handle=".lobby"
+		draggable=".network"
+		ghost-class="ui-sortable-ghost"
+		drag-class="ui-sortable-dragged"
+		group="networks"
 		class="networks"
 		@change="onNetworkSort"
 		@start="onDragStart"
@@ -42,7 +47,11 @@
 			/>
 
 			<Draggable
-				:options="{ draggable: '.chan', ghostClass: 'chan-placeholder', disabled: isSortingEnabled }"
+				draggable=".chan"
+				ghost-class="ui-sortable-ghost"
+				drag-class="ui-sortable-dragged"
+				:group="network.uuid"
+				:disabled="isSortingEnabled"
 				:list="network.channels"
 				class="channels"
 				@change="onChannelSort"
@@ -92,10 +101,10 @@ export default {
 	},
 	methods: {
 		onDragStart(e) {
-			e.target.classList.add("ui-sortable-helper");
+			e.target.classList.add("ui-sortable-active");
 		},
 		onDragEnd(e) {
-			e.target.classList.remove("ui-sortable-helper");
+			e.target.classList.remove("ui-sortable-active");
 		},
 		onNetworkSort(e) {
 			if (!e.moved) {
