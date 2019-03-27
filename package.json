@@ -57,7 +57,7 @@
     "read": "1.0.7",
     "read-chunk": "3.1.0",
     "request": "2.88.0",
-    "semver": "5.6.0",
+    "semver": "6.0.0",
     "socket.io": "2.2.0",
     "thelounge-ldapjs-non-maintained-fork": "1.0.2",
     "tlds": "1.203.1",
