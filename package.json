@@ -20,7 +20,7 @@
     "start": "node index start",
     "test": "run-p --aggregate-output --continue-on-error lint:* test:{client,server}",
     "test:browser": "webpack-dev-server --config=webpack.config-browser.js",
-    "test:client": "nyc --nycrc-path=test/.nycrc-mocha-webpack mocha-webpack --colors --opts=test/mocha-webpack.opts",
+    "test:client": "nyc --nycrc-path=test/.nycrc-mochapack mochapack --colors --opts=test/mochapack.opts",
     "test:server": "nyc --nycrc-path=test/.nycrc-mocha mocha --colors",
     "watch": "webpack --watch"
   },
@@ -95,7 +95,7 @@
     "mini-css-extract-plugin": "0.5.0",
     "mocha": "6.0.2",
     "mocha-loader": "2.0.1",
-    "mocha-webpack": "2.0.0-beta.0",
+    "mochapack": "1.1.0",
     "moment": "2.24.0",
     "mousetrap": "1.6.3",
     "npm-run-all": "4.1.5",
