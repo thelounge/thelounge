@@ -5315,10 +5315,10 @@ mocha@6.0.2:
     yargs-parser "11.1.1"
     yargs-unparser "1.5.0"
 
-mochapack@1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/mochapack/-/mochapack-1.1.0.tgz#0fe24228b4b92a987ece2258e96188f59f248435"
-  integrity sha512-IFNA4LasRYWu2pNRjDRpoU8I/aLLgdVfkqlWz+x+tMLBrQO3HC18b+gjevIKeIfjVJ3msNJSSa4elOLNVd9HPw==
+mochapack@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/mochapack/-/mochapack-1.1.1.tgz#98d7f4bd4b7f32dfd4e3aed68d562f4c97fe38b1"
+  integrity sha512-t8WchR4+38f0BO7+nBcUexqe1NNhzr8vsylOp5wF/J1EWP47T76KRVnZIrHHjxXdnp5JJHZtUD8C0pkJG2iv0g==
   dependencies:
     babel-runtime "^6.18.0"
     chalk "^2.3.0"
