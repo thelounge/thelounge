@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "bcryptjs": "2.4.3",
-    "busboy": "0.3.0",
+    "busboy": "0.3.1",
     "chalk": "2.4.2",
     "cheerio": "0.22.0",
     "commander": "2.19.0",
