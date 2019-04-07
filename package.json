@@ -54,7 +54,7 @@
     "mime-types": "2.1.22",
     "package-json": "6.3.0",
     "read": "1.0.7",
-    "read-chunk": "3.1.0",
+    "read-chunk": "3.2.0",
     "request": "2.88.0",
     "semver": "6.0.0",
     "socket.io": "2.2.0",
