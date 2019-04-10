@@ -90,7 +90,7 @@
     "html-minifier": "4.0.0",
     "html-minifier-loader": "1.4.1",
     "intersection-observer": "0.5.1",
-    "jquery": "3.3.1",
+    "jquery": "3.4.0",
     "mini-css-extract-plugin": "0.5.0",
     "mocha": "6.1.2",
     "mochapack": "1.1.1",
