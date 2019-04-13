@@ -1,4 +1,5 @@
 <template>
+	<!-- TODO: move closed style to it's own class -->
 	<div
 		v-if="
 			!network.isCollapsed ||

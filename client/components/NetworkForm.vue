@@ -6,10 +6,7 @@
 		aria-label="Connect"
 	>
 		<div class="header">
-			<button
-				class="lt"
-				aria-label="Toggle channel list"
-			/>
+			<SidebarToggle />
 		</div>
 		<form
 			class="container"
@@ -217,11 +214,13 @@
 
 <script>
 import RevealPassword from "./RevealPassword.vue";
+import SidebarToggle from "./SidebarToggle.vue";
 
 export default {
 	name: "NetworkForm",
 	components: {
 		RevealPassword,
+		SidebarToggle,
 	},
 	props: {
 		handleSubmit: Function,

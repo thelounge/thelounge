@@ -5,10 +5,7 @@
 		aria-label="Changelog"
 	>
 		<div class="header">
-			<button
-				class="lt"
-				aria-label="Toggle channel list"
-			/>
+			<SidebarToggle />
 		</div>
 		<div class="container">
 			<a
@@ -42,8 +39,13 @@
 </template>
 
 <script>
+import SidebarToggle from "../SidebarToggle.vue";
+
 export default {
 	name: "Changelog",
+	components: {
+		SidebarToggle,
+	},
 	mounted() {
 
 	},

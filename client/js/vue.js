@@ -7,6 +7,8 @@ const roundBadgeNumber = require("./libs/handlebars/roundBadgeNumber");
 const localetime = require("./libs/handlebars/localetime");
 const friendlysize = require("./libs/handlebars/friendlysize");
 const colorClass = require("./libs/handlebars/colorClass");
+const slideoutMenu = require("../js/slideout");
+const storage = require("./localStorage");
 
 Vue.filter("localetime", localetime);
 Vue.filter("friendlysize", friendlysize);
@@ -47,6 +49,38 @@ const vueApp = new Vue({
 	},
 	mounted() {
 		Vue.nextTick(() => window.vueMounted());
+	},
+	methods: {
+		onSocketInit() {
+			this.initialized = true;
+			this.$store.commit("isConnected", true);
+
+			// TODO: handle slideut in vue
+			slideoutMenu.enable();
+		},
+		setSidebar(state) {
+			const utils = require("./utils");
+
+			this.$store.commit("sidebarOpen", state);
+			slideoutMenu.toggle(false);
+
+			if (window.outerWidth > utils.mobileViewportPixels) {
+				storage.set("thelounge.state.sidebar", state);
+			}
+
+			this.$emit("resize");
+		},
+		toggleSidebar() {
+			this.setSidebar(!this.$store.state.sidebarOpen);
+		},
+		setUserlist(state) {
+			storage.set("thelounge.state.userlist", state);
+			this.$store.commit("userlistOpen", state);
+			this.$emit("resize");
+		},
+		toggleUserlist() {
+			this.setUserlist(!this.$store.state.userlistOpen);
+		},
 	},
 	render(createElement) {
 		return createElement(App, {

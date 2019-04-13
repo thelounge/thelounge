@@ -2,7 +2,7 @@
 	<!-- TODO: move all class toggling to vue, since vue clears existing classes when changing the notified class -->
 	<div
 		id="viewport"
-		:class="{notified: $store.state.isNotified}"
+		:class="viewportClasses"
 		role="tablist"
 	>
 		<Sidebar
@@ -53,6 +53,15 @@ export default {
 		activeWindow: String,
 		activeChannel: Object,
 		networks: Array,
+	},
+	computed: {
+		viewportClasses() {
+			return {
+				"notified": this.$store.state.isNotified,
+				"menu-open": this.$store.state.sidebarOpen,
+				"userlist-open": this.$store.state.userlistOpen,
+			};
+		},
 	},
 	mounted() {
 		// Make a single throttled resize listener available to all components

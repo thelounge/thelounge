@@ -6,10 +6,7 @@
 		aria-label="Settings"
 	>
 		<div class="header">
-			<button
-				class="lt"
-				aria-label="Toggle channel list"
-			/>
+			<SidebarToggle />
 		</div>
 		<form
 			ref="settingsForm"
@@ -505,12 +502,14 @@
 import socket from "../../js/socket";
 import RevealPassword from "../RevealPassword.vue";
 import Session from "../Session.vue";
+import SidebarToggle from "../SidebarToggle.vue";
 
 export default {
 	name: "Settings",
 	components: {
 		RevealPassword,
 		Session,
+		SidebarToggle,
 	},
 	data() {
 		return {

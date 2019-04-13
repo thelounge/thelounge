@@ -66,7 +66,10 @@
 				/></span>
 			</footer>
 		</aside>
-		<div id="sidebar-overlay" />
+		<div
+			id="sidebar-overlay"
+			@click="$root.setSidebar(false)"
+		/>
 	</div>
 </template>
 

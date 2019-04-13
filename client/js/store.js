@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+const storage = require("./localStorage");
 
 Vue.use(Vuex);
 
@@ -9,6 +10,8 @@ export default new Vuex.Store({
 		isNotified: false,
 		activeWindow: null,
 		sessions: [],
+		sidebarOpen: false,
+		userlistOpen: storage.get("thelounge.state.userlist") !== "false",
 	},
 	mutations: {
 		isConnected(state, payload) {
@@ -25,6 +28,12 @@ export default new Vuex.Store({
 		},
 		sessions(state, payload) {
 			state.sessions = payload;
+		},
+		sidebarOpen(state, payload) {
+			state.sidebarOpen = payload;
+		},
+		userlistOpen(state, payload) {
+			state.userlistOpen = payload;
 		},
 	},
 	getters: {

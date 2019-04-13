@@ -4,7 +4,6 @@ const $ = require("jquery");
 const escape = require("css.escape");
 const socket = require("../socket");
 const webpush = require("../webpush");
-const slideoutMenu = require("../slideout");
 const sidebar = $("#sidebar");
 const storage = require("../localStorage");
 const utils = require("../utils");
@@ -21,7 +20,7 @@ socket.on("init", function(data) {
 	vueApp.currentUserVisibleError = null;
 
 	if (!vueApp.initialized) {
-		vueApp.initialized = true;
+		vueApp.onSocketInit();
 
 		if (data.token) {
 			storage.set("token", data.token);
@@ -29,14 +28,11 @@ socket.on("init", function(data) {
 
 		webpush.configurePushNotifications(data.pushSubscription, data.applicationServerKey);
 
-		slideoutMenu.enable();
-
-		const viewport = $("#viewport");
-		const viewportWidth = $(window).outerWidth();
+		const viewportWidth = window.outerWidth;
 		let isUserlistOpen = storage.get("thelounge.state.userlist");
 
 		if (viewportWidth > utils.mobileViewportPixels) {
-			slideoutMenu.toggle(storage.get("thelounge.state.sidebar") !== "false");
+			vueApp.setSidebar(storage.get("thelounge.state.sidebar") !== "false");
 		}
 
 		// If The Lounge is opened on a small screen (less than 1024px), and we don't have stored
@@ -45,7 +41,7 @@ socket.on("init", function(data) {
 			isUserlistOpen = "true";
 		}
 
-		viewport.toggleClass("userlist-open", isUserlistOpen === "true");
+		vueApp.setUserlist(isUserlistOpen === "true");
 
 		$(document.body).removeClass("signed-out");
 		$("#loading").remove();

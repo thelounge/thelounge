@@ -10,49 +10,13 @@ const {vueApp, findChannel} = require("./vue");
 
 window.vueMounted = () => {
 	require("./socket-events");
-	const slideoutMenu = require("./slideout");
 	const contextMenuFactory = require("./contextMenuFactory");
-	const storage = require("./localStorage");
 	const utils = require("./utils");
 	require("./webpush");
 	require("./keybinds");
 
 	const sidebar = $("#sidebar, #footer");
 	const viewport = $("#viewport");
-
-	function storeSidebarVisibility(name, state) {
-		storage.set(name, state);
-
-		vueApp.$emit("resize");
-	}
-
-	// If sidebar overlay is visible and it is clicked, close the sidebar
-	$("#sidebar-overlay").on("click", () => {
-		slideoutMenu.toggle(false);
-
-		if ($(window).outerWidth() > utils.mobileViewportPixels) {
-			storeSidebarVisibility("thelounge.state.sidebar", false);
-		}
-	});
-
-	$("#windows").on("click", "button.lt", () => {
-		const isOpen = !slideoutMenu.isOpen();
-
-		slideoutMenu.toggle(isOpen);
-
-		if ($(window).outerWidth() > utils.mobileViewportPixels) {
-			storeSidebarVisibility("thelounge.state.sidebar", isOpen);
-		}
-	});
-
-	viewport.on("click", ".rt", function() {
-		const isOpen = !viewport.hasClass("userlist-open");
-
-		viewport.toggleClass("userlist-open", isOpen);
-		storeSidebarVisibility("thelounge.state.userlist", isOpen);
-
-		return false;
-	});
 
 	viewport.on("contextmenu", ".network .chan", function(e) {
 		return contextMenuFactory.createContextMenu($(this), e).show();
@@ -138,8 +102,8 @@ window.vueMounted = () => {
 
 			socket.emit("open", channel ? channel.channel.id : null);
 
-			if ($(window).outerWidth() <= utils.mobileViewportPixels) {
-				slideoutMenu.toggle(false);
+			if (!keepSidebarOpen && $(window).outerWidth() <= utils.mobileViewportPixels) {
+				vueApp.setSidebar(false);
 			}
 		} else {
 			vueApp.activeChannel = null;

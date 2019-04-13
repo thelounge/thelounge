@@ -6,10 +6,7 @@
 		aria-label="Help"
 	>
 		<div class="header">
-			<button
-				class="lt"
-				aria-label="Toggle channel list"
-			/>
+			<SidebarToggle />
 		</div>
 		<div class="container">
 			<h1 class="title">Help</h1>
@@ -659,7 +656,12 @@
 </template>
 
 <script>
+import SidebarToggle from "../SidebarToggle.vue";
+
 export default {
 	name: "Help",
+	components: {
+		SidebarToggle,
+	},
 };
 </script>
