@@ -107,6 +107,7 @@ import MessageList from "./MessageList.vue";
 import ChatInput from "./ChatInput.vue";
 import ChatUserList from "./ChatUserList.vue";
 import ListBans from "./Special/ListBans.vue";
+import ListInvites from "./Special/ListInvites.vue";
 import ListChannels from "./Special/ListChannels.vue";
 import ListIgnored from "./Special/ListIgnored.vue";
 
@@ -126,6 +127,7 @@ export default {
 		specialComponent() {
 			switch (this.channel.special) {
 			case "list_bans": return ListBans;
+			case "list_invites": return ListInvites;
 			case "list_channels": return ListChannels;
 			case "list_ignored": return ListIgnored;
 			}

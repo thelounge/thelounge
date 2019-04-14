@@ -43,6 +43,7 @@ const commands = [
 	"/ignore",
 	"/ignorelist",
 	"/invite",
+	"/invitelist",
 	"/join",
 	"/kick",
 	"/leave",

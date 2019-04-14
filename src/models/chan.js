@@ -18,6 +18,7 @@ Chan.Type = {
 
 Chan.SpecialType = {
 	BANLIST: "list_bans",
+	INVITELIST: "list_invites",
 	CHANNELLIST: "list_channels",
 	IGNORELIST: "list_ignored",
 };
