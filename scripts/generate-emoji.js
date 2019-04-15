@@ -1,14 +1,13 @@
 "use strict";
 
-const request = require("request");
+const got = require("got");
 const path = require("path");
 const fs = require("fs");
 const fuzzy = require("fuzzy");
 
-request.get({
-	url: "https://raw.githubusercontent.com/emojione/emojione/master/extras/alpha-codes/eac.json",
-	json: true,
-}, (error, response, emojiStrategy) => {
+(async () => {
+	const response = await got("https://raw.githubusercontent.com/emojione/emojione/master/extras/alpha-codes/eac.json");
+	const emojiStrategy = JSON.parse(response.body);
 	const emojiMap = {};
 	const fullNameEmojiMap = {};
 
@@ -57,7 +56,7 @@ request.get({
 		"libs",
 		"fullnamemap.json"
 	)), fullNameEmojiMapOutput);
-});
+})();
 
 function stringToUnicode(key) {
 	return key
