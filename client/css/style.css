@@ -1318,6 +1318,7 @@ background on hover (unless active) */
 
 #chat table.channel-list,
 #chat table.ban-list,
+#chat table.invite-list,
 #chat table.ignore-list {
 	margin: 5px 10px;
 	width: calc(100% - 30px);
@@ -1325,9 +1326,11 @@ background on hover (unless active) */
 
 #chat table.channel-list th,
 #chat table.ban-list th,
+#chat table.invite-list th,
 #chat table.ignore-list th,
 #chat table.channel-list td,
 #chat table.ban-list td,
+#chat table.invite-list td,
 #chat.table.ignore-list td {
 	padding: 5px;
 	vertical-align: top;
