@@ -1,7 +1,7 @@
 "use strict";
 
 const cheerio = require("cheerio");
-const request = require("request");
+const got = require("got");
 const URL = require("url").URL;
 const mime = require("mime-types");
 const Helper = require("../../helper");
@@ -9,6 +9,7 @@ const cleanIrcMessage = require("../../../client/js/libs/handlebars/ircmessagepa
 const findLinks = require("../../../client/js/libs/handlebars/ircmessageparser/findLinks");
 const storage = require("../storage");
 const currentFetchPromises = new Map();
+const imageTypeRegex = /^image\/.+/;
 const mediaTypeRegex = /^(audio|video)\/.+/;
 
 // Fix ECDH curve client compatibility in Node v8/v9
@@ -107,7 +108,7 @@ function parseHtml(preview, res, client) {
 				if (preview.thumb.length) {
 					fetch(preview.thumb, {language: client.language}).then((resThumb) => {
 						if (resThumb === null
-						|| !(/^image\/.+/.test(resThumb.type))
+						|| !(imageTypeRegex.test(resThumb.type))
 						|| resThumb.size > (Helper.config.prefetchMaxImageSize * 1024)) {
 							preview.thumb = "";
 						}
@@ -324,70 +325,69 @@ function fetch(uri, headers) {
 	}
 
 	promise = new Promise((resolve, reject) => {
-		let req;
+		let buffer = Buffer.from("");
+		let request;
+		let response;
+		let limit = Helper.config.prefetchMaxImageSize * 1024;
+
+		limit = 10240;
 
 		try {
-			req = request.get({
-				url: uri,
-				maxRedirects: 5,
-				timeout: 5000,
-				headers: getRequestHeaders(headers),
-			});
+			got
+				.stream(uri, {
+					timeout: 5000,
+					headers: getRequestHeaders(headers),
+					rejectUnauthorized: false,
+				})
+				.on("request", (req) => request = req)
+				.on("response", function(res) {
+					response = res;
+
+					if (imageTypeRegex.test(res.headers["content-type"])) {
+						// response is an image
+						// if Content-Length header reports a size exceeding the prefetch limit, abort fetch
+						const contentLength = parseInt(res.headers["content-length"], 10) || 0;
+
+						if (contentLength > limit) {
+							request.abort();
+						}
+					} else if (mediaTypeRegex.test(res.headers["content-type"])) {
+						// We don't need to download the file any further after we received content-type header
+						request.abort();
+					} else {
+						// if not image, limit download to 50kb, since we need only meta tags
+						// twitter.com sends opengraph meta tags within ~20kb of data for individual tweets
+						limit = 1024 * 50;
+					}
+				})
+				.on("error", (e) => reject(e))
+				.on("data", (data) => {
+					buffer = Buffer.concat(
+						[buffer, data],
+						buffer.length + data.length
+					);
+
+					if (buffer.length >= limit) {
+						request.abort();
+					}
+				})
+				.on("end", () => {
+					let type = "";
+					let size = parseInt(response.headers["content-length"], 10) || buffer.length;
+
+					if (size < buffer.length) {
+						size = buffer.length;
+					}
+
+					if (response.headers["content-type"]) {
+						type = response.headers["content-type"].split(/ *; */).shift();
+					}
+
+					resolve({data: buffer, type, size});
+				});
 		} catch (e) {
 			return reject(e);
 		}
-
-		const buffers = [];
-		let length = 0;
-		let limit = Helper.config.prefetchMaxImageSize * 1024;
-
-		req
-			.on("response", function(res) {
-				if (/^image\/.+/.test(res.headers["content-type"])) {
-					// response is an image
-					// if Content-Length header reports a size exceeding the prefetch limit, abort fetch
-					const contentLength = parseInt(res.headers["content-length"], 10) || 0;
-
-					if (contentLength > limit) {
-						req.abort();
-					}
-				} else if (mediaTypeRegex.test(res.headers["content-type"])) {
-					// We don't need to download the file any further after we received content-type header
-					req.abort();
-				} else {
-					// if not image, limit download to 50kb, since we need only meta tags
-					// twitter.com sends opengraph meta tags within ~20kb of data for individual tweets
-					limit = 1024 * 50;
-				}
-			})
-			.on("error", (e) => reject(e))
-			.on("data", (data) => {
-				length += data.length;
-				buffers.push(data);
-
-				if (length > limit) {
-					req.abort();
-				}
-			})
-			.on("end", () => {
-				if (req.response.statusCode < 200 || req.response.statusCode > 299) {
-					return reject(new Error(`HTTP ${req.response.statusCode}`));
-				}
-
-				let type = "";
-				let size = parseInt(req.response.headers["content-length"], 10) || length;
-
-				if (size < length) {
-					size = length;
-				}
-
-				if (req.response.headers["content-type"]) {
-					type = req.response.headers["content-type"].split(/ *; */).shift();
-				}
-
-				const data = Buffer.concat(buffers, length);
-				resolve({data, type, size});
-			});
 	});
 
 	const removeCache = () => currentFetchPromises.delete(cacheKey);

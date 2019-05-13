@@ -1,7 +1,8 @@
 "use strict";
 
+const got = require("got");
+const log = require("../log");
 const pkg = require("../../package.json");
-const request = require("request");
 
 const TIME_TO_LIVE = 15 * 60 * 1000; // 15 minutes, in milliseconds
 
@@ -15,30 +16,29 @@ const versions = {
 	},
 };
 
-function fetch(callback) {
+async function fetch() {
 	// Serving information from cache
 	if (versions.current.changelog) {
-		callback(versions);
-		return;
+		return versions;
 	}
 
-	request.get({
-		uri: "https://api.github.com/repos/thelounge/thelounge/releases",
-		headers: {
-			"Accept": "application/vnd.github.v3.html", // Request rendered markdown
-			"User-Agent": pkg.name + "; +" + pkg.repository.git, // Identify the client
-		},
-	}, (error, response, body) => {
-		if (error || response.statusCode !== 200) {
-			callback(versions);
-			return;
+	try {
+		const response = await got("https://api.github.com/repos/thelounge/thelounge/releases", {
+			headers: {
+				"Accept": "application/vnd.github.v3.html", // Request rendered markdown
+				"User-Agent": pkg.name + "; +" + pkg.repository.git, // Identify the client
+			},
+		});
+
+		if (response.statusCode !== 200) {
+			return versions;
 		}
 
 		let i;
 		let release;
 		let prerelease = false;
 
-		body = JSON.parse(body);
+		const body = JSON.parse(response.body);
 
 		// Find the current release among releases on GitHub
 		for (i = 0; i < body.length; i++) {
@@ -78,7 +78,9 @@ function fetch(callback) {
 			delete versions.current.changelog;
 			delete versions.latest;
 		}, TIME_TO_LIVE);
+	} catch (error) {
+		log.error(`Failed to fetch changelog: ${error}`);
+	}
 
-		callback(versions);
-	});
+	return versions;
 }

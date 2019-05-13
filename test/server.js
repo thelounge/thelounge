@@ -3,7 +3,7 @@
 const log = require("../src/log");
 const Helper = require("../src/helper");
 const expect = require("chai").expect;
-const request = require("request");
+const got = require("got");
 const io = require("socket.io-client");
 
 describe("Server", function() {
@@ -30,26 +30,20 @@ describe("Server", function() {
 	const webURL = `http://${Helper.config.host}:${Helper.config.port}/`;
 
 	describe("Express", () => {
-		it("should run a web server on " + webURL, (done) => {
-			request(webURL, (error, response, body) => {
-				expect(error).to.be.null;
-				expect(body).to.include("<title>The Lounge</title>");
-				expect(body).to.include("js/bundle.js");
-
-				done();
-			});
+		it("should run a web server on " + webURL, async () => {
+			const response = await got(webURL);
+			expect(response.statusCode).to.equal(200);
+			expect(response.body).to.include("<title>The Lounge</title>");
+			expect(response.body).to.include("js/bundle.js");
 		});
 
-		it("should serve static content correctly", (done) => {
-			request(webURL + "thelounge.webmanifest", (error, response, body) => {
-				expect(error).to.be.null;
+		it("should serve static content correctly", async () => {
+			const response = await got(webURL + "thelounge.webmanifest");
+			const body = JSON.parse(response.body);
 
-				body = JSON.parse(body);
-				expect(body.name).to.equal("The Lounge");
-				expect(response.headers["content-type"]).to.equal("application/manifest+json");
-
-				done();
-			});
+			expect(response.statusCode).to.equal(200);
+			expect(body.name).to.equal("The Lounge");
+			expect(response.headers["content-type"]).to.equal("application/manifest+json");
 		});
 	});
 
