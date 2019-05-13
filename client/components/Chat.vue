@@ -70,7 +70,7 @@
 					class="chat-content"
 				>
 					<div
-						:class="['scroll-down tooltipped tooltipped-w', {'scroll-down-shown': !channel.scrolledToBottom}]"
+						:class="['scroll-down tooltipped tooltipped-w tooltipped-no-touch', {'scroll-down-shown': !channel.scrolledToBottom}]"
 						aria-label="Jump to recent messages"
 						@click="$refs.messageList.jumpToBottom()"
 					>
