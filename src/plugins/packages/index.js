@@ -20,6 +20,9 @@ const packageApis = function(packageName) {
 		Stylesheets: {
 			addFile: addStylesheet.bind(this, packageName),
 		},
+		Config: {
+			getConfig: () => Helper.config,
+		},
 	};
 };
 
