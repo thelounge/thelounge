@@ -8841,10 +8841,10 @@ watchpack@^1.5.0:
     graceful-fs "^4.1.2"
     neo-async "^2.5.0"
 
-web-push@3.3.4:
-  version "3.3.4"
-  resolved "https://registry.yarnpkg.com/web-push/-/web-push-3.3.4.tgz#7628b5207e400cd49a00eea7271b7a6fa0db971a"
-  integrity sha512-OLJbQPFX9g5mHhqxFBr9bdGK7YIEBkk4lXtUn+HpYp0HdoDIdgJvIa+ktJkDsRUOKksQqKIEaLAVuS7ewuC5nA==
+web-push@3.3.5:
+  version "3.3.5"
+  resolved "https://registry.yarnpkg.com/web-push/-/web-push-3.3.5.tgz#4d35f88bd2f109497b14abb5f0729f9c2ee477a2"
+  integrity sha512-sukVBk0chRCL4n+Xwurl2TlD4/JmezNv4L2nwlTZx4KwMeUPfmD9TdGl6A6taayNgjObYzp0k0gubAcQCp7TMg==
   dependencies:
     asn1.js "^5.0.0"
     http_ece "1.1.0"
