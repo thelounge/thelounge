@@ -16,6 +16,7 @@ class Uploader {
 		document.addEventListener("dragover", (e) => this.dragOver(e));
 		document.addEventListener("dragleave", (e) => this.dragLeave(e));
 		document.addEventListener("drop", (e) => this.drop(e));
+		document.addEventListener("paste", (e) => this.paste(e));
 	}
 
 	dragOver(event) {
@@ -57,6 +58,24 @@ class Uploader {
 			files = Array.from(event.dataTransfer.files);
 		}
 
+		this.triggerUpload(files);
+	}
+
+	paste(event) {
+		const items = event.clipboardData.items;
+		const files = [];
+
+		for (const item of items) {
+			if (item.kind === "file") {
+				files.push(item.getAsFile());
+			}
+		}
+
+		if (files.length === 0) {
+			return;
+		}
+
+		event.preventDefault();
 		this.triggerUpload(files);
 	}
 
