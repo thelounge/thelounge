@@ -147,7 +147,7 @@ class Uploader {
 					// if there is still data to be uploaded. Servers will only error in extreme cases like bad
 					// authentication or server-side errors.
 					response = {
-						error: "Connection aborted",
+						error: `Upload aborted: HTTP ${xhr.status}`,
 					};
 				}
 
