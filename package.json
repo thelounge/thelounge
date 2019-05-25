@@ -110,7 +110,7 @@
     "vue-server-renderer": "2.6.10",
     "vue-template-compiler": "2.6.10",
     "vuedraggable": "2.21.0",
-    "webpack": "4.32.0",
+    "webpack": "4.32.2",
     "webpack-cli": "3.3.2"
   }
 }
