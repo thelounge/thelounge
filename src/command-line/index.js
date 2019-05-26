@@ -3,6 +3,7 @@
 const log = require("../log");
 const fs = require("fs");
 const path = require("path");
+const colors = require("chalk");
 const program = require("commander");
 const Helper = require("../helper");
 const Utils = require("./utils");
@@ -22,8 +23,14 @@ Helper.setHome(process.env.THELOUNGE_HOME || Utils.defaultHome());
 
 // Check config file owner and warn if we're running under a different user
 if (process.getuid) {
+	const uid = process.getuid();
+
+	if (uid === 0) {
+		log.warn(`You are currently running The Lounge as root. ${colors.bold.red("We highly discourage running as root!")}`);
+	}
+
 	fs.stat(path.join(Helper.getHomePath(), "config.js"), (err, stat) => {
-		if (!err && stat.uid !== process.getuid()) {
+		if (!err && stat.uid !== uid) {
 			log.warn("Config file owner does not match the user you are currently running The Lounge as.");
 			log.warn("To avoid issues, you should execute The Lounge commands under the same user.");
 		}
