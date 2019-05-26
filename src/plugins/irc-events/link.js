@@ -330,8 +330,6 @@ function fetch(uri, headers) {
 		let response;
 		let limit = Helper.config.prefetchMaxImageSize * 1024;
 
-		limit = 10240;
-
 		try {
 			got
 				.stream(uri, {
