@@ -65,6 +65,9 @@
     "web-push": "3.3.5",
     "yarn": "1.16.0"
   },
+  "resolutions": {
+    "runes": "0.4.3"
+  },
   "optionalDependencies": {
     "sqlite3": "4.0.8"
   },

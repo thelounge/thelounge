@@ -7363,10 +7363,10 @@ run-queue@^1.0.0, run-queue@^1.0.3:
   dependencies:
     aproba "^1.1.1"
 
-"runes@github:kiwiirc/runes":
+runes@0.4.3, "runes@github:kiwiirc/runes":
   version "0.4.3"
-  uid "172b21bf5b103221bd6c4409f0371076edc0c7e4"
-  resolved "https://codeload.github.com/kiwiirc/runes/tar.gz/172b21bf5b103221bd6c4409f0371076edc0c7e4"
+  resolved "https://registry.yarnpkg.com/runes/-/runes-0.4.3.tgz#32f7738844bc767b65cc68171528e3373c7bb355"
+  integrity sha512-K6p9y4ZyL9wPzA+PMDloNQPfoDGTiFYDvdlXznyGKgD10BJpcAosvATKrExRKOrNLgD8E7Um7WGW0lxsnOuNLg==
 
 rxjs@^6.4.0:
   version "6.4.0"
