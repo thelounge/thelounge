@@ -71,7 +71,7 @@
   "devDependencies": {
     "@babel/core": "7.4.5",
     "@babel/preset-env": "7.4.5",
-    "@fortawesome/fontawesome-free": "5.8.2",
+    "@fortawesome/fontawesome-free": "5.9.0",
     "@vue/server-test-utils": "1.0.0-beta.29",
     "@vue/test-utils": "1.0.0-beta.29",
     "babel-loader": "8.0.6",
