@@ -9,6 +9,7 @@ const merge = require("./ircmessageparser/merge");
 const colorClass = require("./colorClass");
 const emojiMap = require("../fullnamemap.json");
 const LinkPreviewToggle = require("../../../components/LinkPreviewToggle.vue").default;
+const emojiModifiersRegex = /[\u{1f3fb}-\u{1f3ff}]/ug;
 
 // Create an HTML `span` with styling information for a given fragment
 function createFragment(fragment, createElement) {
@@ -124,7 +125,8 @@ module.exports = function parse(createElement, text, message = undefined, networ
 				},
 			}, fragments);
 		} else if (textPart.emoji) {
-			const title = emojiMap[textPart.emoji] ? `Emoji: ${emojiMap[textPart.emoji]}` : null;
+			const emojiWithoutModifiers = textPart.emoji.replace(emojiModifiersRegex, "");
+			const title = emojiMap[emojiWithoutModifiers] ? `Emoji: ${emojiMap[emojiWithoutModifiers]}` : null;
 
 			return createElement("span", {
 				class: [

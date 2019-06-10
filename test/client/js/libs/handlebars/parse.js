@@ -380,7 +380,15 @@ describe("parse Handlebars helper", () => {
 	}, {
 		name: "complicated zero-join-width emoji",
 		input: "🤦🏿‍♀️",
-		expected: '<span role="img" aria-label="Emoji: woman facepalming: dark skin tone" title="Emoji: woman facepalming: dark skin tone" class="emoji">🤦🏿‍♀️</span>',
+		expected: '<span role="img" aria-label="Emoji: woman facepalming" title="Emoji: woman facepalming" class="emoji">🤦🏿‍♀️</span>',
+	}, {
+		name: "unicode 12 emojis",
+		input: "🧘🏿👨‍👨‍👧‍👧",
+		expected: '<span role="img" aria-label="Emoji: person in lotus position" title="Emoji: person in lotus position" class="emoji">🧘🏿</span><span role="img" aria-label="Emoji: family: man, man, girl, girl" title="Emoji: family: man, man, girl, girl" class="emoji">👨‍👨‍👧‍👧</span>',
+	}, {
+		name: "unicode 12 emojis with multiple modifiers",
+		input: "👩🏾‍🤝‍👨🏽",
+		expected: '<span role="img" class="emoji">👩🏾‍🤝‍👨🏽</span>',
 	}, {
 		name: "with modifiers",
 		input: "🤷‍♀️",
