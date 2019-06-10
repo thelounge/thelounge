@@ -159,6 +159,8 @@ module.exports = function() {
 		});
 
 		sockets.on("connect", (socket) => {
+			socket.on("error", (err) => log.error(`io socket error: ${err}`));
+
 			if (Helper.config.public) {
 				performAuthentication.call(socket, {});
 			} else {

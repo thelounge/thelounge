@@ -42,6 +42,7 @@ class Identification {
 	}
 
 	serverConnection(socket) {
+		socket.on("error", (err) => log.error(`Identd socket error: ${err}`));
 		socket.on("data", (data) => {
 			this.respondToIdent(socket, data);
 			socket.end();
