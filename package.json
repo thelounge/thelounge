@@ -60,7 +60,7 @@
     "socket.io": "2.2.0",
     "thelounge-ldapjs-non-maintained-fork": "1.0.2",
     "tlds": "1.203.1",
-    "ua-parser-js": "0.7.19",
+    "ua-parser-js": "0.7.20",
     "uuid": "3.3.2",
     "web-push": "3.3.5",
     "yarn": "1.16.0"
