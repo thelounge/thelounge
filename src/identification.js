@@ -24,6 +24,9 @@ class Identification {
 			}
 
 			const server = net.createServer(this.serverConnection.bind(this));
+
+			server.on("error", (err) => log.error(`Identd server error: ${err}`));
+
 			server.listen({
 				port: Helper.config.identd.port || 113,
 				host: Helper.config.bind,
@@ -39,6 +42,7 @@ class Identification {
 	}
 
 	serverConnection(socket) {
+		socket.on("error", (err) => log.error(`Identd socket error: ${err}`));
 		socket.on("data", (data) => {
 			this.respondToIdent(socket, data);
 			socket.end();
