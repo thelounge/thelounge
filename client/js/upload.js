@@ -162,7 +162,7 @@ class Uploader {
 
 		const formData = new FormData();
 		formData.append("file", file);
-		xhr.open("POST", `/uploads/new/${token}`);
+		xhr.open("POST", `uploads/new/${token}`);
 		xhr.send(formData);
 	}
 
