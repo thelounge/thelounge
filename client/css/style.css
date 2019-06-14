@@ -1393,7 +1393,7 @@ background on hover (unless active) */
 	color: #0074d9 !important;
 }
 
-#chat .notice .user::before {
+#chat .notice .from .user::before {
 	content: "Notice: ";
 }
 
