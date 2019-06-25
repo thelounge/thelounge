@@ -34,44 +34,7 @@ async function fetch() {
 			return versions;
 		}
 
-		let i;
-		let release;
-		let prerelease = false;
-
-		const body = JSON.parse(response.body);
-
-		// Find the current release among releases on GitHub
-		for (i = 0; i < body.length; i++) {
-			release = body[i];
-
-			if (release.tag_name === versions.current.version) {
-				versions.current.changelog = release.body_html;
-				prerelease = release.prerelease;
-
-				break;
-			}
-		}
-
-		// Find the latest release made after the current one if there is one
-		if (i > 0) {
-			for (let j = 0; j < i; j++) {
-				release = body[j];
-
-				// Find latest release or pre-release if current version is also a pre-release
-				if (!release.prerelease || release.prerelease === prerelease) {
-					versions.latest = {
-						prerelease: release.prerelease,
-						version: release.tag_name,
-						url: release.html_url,
-					};
-
-					break;
-				}
-			}
-		}
-
-		// Add expiration date to the data to send to the client for later refresh
-		versions.expiresAt = Date.now() + TIME_TO_LIVE;
+		updateVersions(response);
 
 		// Emptying cached information after reaching said expiration date
 		setTimeout(() => {
@@ -83,4 +46,45 @@ async function fetch() {
 	}
 
 	return versions;
+}
+
+function updateVersions(response) {
+	let i;
+	let release;
+	let prerelease = false;
+
+	const body = JSON.parse(response.body);
+
+	// Find the current release among releases on GitHub
+	for (i = 0; i < body.length; i++) {
+		release = body[i];
+
+		if (release.tag_name === versions.current.version) {
+			versions.current.changelog = release.body_html;
+			prerelease = release.prerelease;
+
+			break;
+		}
+	}
+
+	// Find the latest release made after the current one if there is one
+	if (i > 0) {
+		for (let j = 0; j < i; j++) {
+			release = body[j];
+
+			// Find latest release or pre-release if current version is also a pre-release
+			if (!release.prerelease || release.prerelease === prerelease) {
+				versions.latest = {
+					prerelease: release.prerelease,
+					version: release.tag_name,
+					url: release.html_url,
+				};
+
+				break;
+			}
+		}
+	}
+
+	// Add expiration date to the data to send to the client for later refresh
+	versions.expiresAt = Date.now() + TIME_TO_LIVE;
 }

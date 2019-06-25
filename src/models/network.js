@@ -152,7 +152,7 @@ Network.prototype.createIrcFramework = function(client) {
 };
 
 Network.prototype.createWebIrc = function(client) {
-	if (!Helper.config.webirc || !Helper.config.webirc.hasOwnProperty(this.host)) {
+	if (!Helper.config.webirc || !Object.prototype.hasOwnProperty.call(Helper.config.webirc, this.host)) {
 		return null;
 	}
 

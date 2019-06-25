@@ -182,7 +182,7 @@ function parseOverrideParams(params, data) {
 			key = "join";
 		}
 
-		if (!data.defaults.hasOwnProperty(key)) {
+		if (!Object.prototype.hasOwnProperty.call(data.defaults, key)) {
 			continue;
 		}
 

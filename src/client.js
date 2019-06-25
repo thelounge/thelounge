@@ -362,7 +362,7 @@ Client.prototype.inputLine = function(data) {
 	const irc = target.network.irc;
 	let connected = irc && irc.connection && irc.connection.connected;
 
-	if (inputs.hasOwnProperty(cmd) && typeof inputs[cmd].input === "function") {
+	if (Object.prototype.hasOwnProperty.call(inputs, cmd) && typeof inputs[cmd].input === "function") {
 		const plugin = inputs[cmd];
 
 		if (connected || plugin.allowDisconnected) {
