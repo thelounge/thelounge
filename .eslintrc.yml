@@ -35,6 +35,7 @@ rules:
   no-catch-shadow: error
   no-confusing-arrow: [error, {allowParens: true}]
   no-control-regex: off
+  no-console: error
   no-duplicate-imports: error
   no-else-return: error
   no-implicit-globals: error

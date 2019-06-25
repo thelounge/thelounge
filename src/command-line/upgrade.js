@@ -38,7 +38,7 @@ program
 			packages.forEach((p) => {
 				log.info(`- ${colors.green(p)}`);
 
-				if (packagesList.hasOwnProperty(p)) {
+				if (Object.prototype.hasOwnProperty.call(packagesList, p)) {
 					argsList.push(p);
 					count++;
 				} else {

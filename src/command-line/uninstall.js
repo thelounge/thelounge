@@ -32,7 +32,7 @@ program
 
 		const packages = JSON.parse(fs.readFileSync(packagesConfig, "utf-8"));
 
-		if (!packages.dependencies || !packages.dependencies.hasOwnProperty(packageName)) {
+		if (!packages.dependencies || !Object.prototype.hasOwnProperty.call(packages.dependencies, packageName)) {
 			log.warn(packageWasNotInstalled);
 			process.exit(1);
 		}

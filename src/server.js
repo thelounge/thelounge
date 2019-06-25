@@ -464,7 +464,7 @@ function initializeClient(socket, client, token, lastMessage) {
 
 	if (!Helper.config.public) {
 		socket.on("push:register", (subscription) => {
-			if (!client.config.sessions.hasOwnProperty(token)) {
+			if (!Object.prototype.hasOwnProperty.call(client.config.sessions, token)) {
 				return;
 			}
 
@@ -529,7 +529,7 @@ function initializeClient(socket, client, token, lastMessage) {
 		});
 
 		socket.on("setting:get", () => {
-			if (!client.config.hasOwnProperty("clientSettings")) {
+			if (!Object.prototype.hasOwnProperty.call(client.config, "clientSettings")) {
 				socket.emit("setting:all", {});
 				return;
 			}
@@ -545,7 +545,7 @@ function initializeClient(socket, client, token, lastMessage) {
 			tokenToSignOut = token;
 		}
 
-		if (!client.config.sessions.hasOwnProperty(tokenToSignOut)) {
+		if (!Object.prototype.hasOwnProperty.call(client.config.sessions, tokenToSignOut)) {
 			return;
 		}
 
@@ -717,7 +717,7 @@ function performAuthentication(data) {
 	if (client && data.token) {
 		const providedToken = client.calculateTokenHash(data.token);
 
-		if (client.config.sessions.hasOwnProperty(providedToken)) {
+		if (Object.prototype.hasOwnProperty.call(client.config.sessions, providedToken)) {
 			token = providedToken;
 
 			client.updateSession(providedToken, getClientIp(socket), socket.request);

@@ -239,7 +239,7 @@ function getDefaultNick() {
 
 function mergeConfig(oldConfig, newConfig) {
 	return _.mergeWith(oldConfig, newConfig, (objValue, srcValue, key, object) => {
-		if (!object.hasOwnProperty(key)) {
+		if (!Object.prototype.hasOwnProperty.call(object, key)) {
 			log.warn(`Unknown key "${colors.bold(key)}", please verify your config.`);
 		}
 

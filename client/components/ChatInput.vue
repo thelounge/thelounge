@@ -219,7 +219,7 @@ export default {
 				const args = text.substr(1).split(" ");
 				const cmd = args.shift().toLowerCase();
 
-				if (commands.hasOwnProperty(cmd) && commands[cmd].input(args)) {
+				if (Object.prototype.hasOwnProperty.call(commands, cmd) && commands[cmd].input(args)) {
 					return false;
 				}
 			}
