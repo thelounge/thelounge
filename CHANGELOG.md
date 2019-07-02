@@ -4,6 +4,158 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v3.1.0 - 2019-07-11
+
+For more details, [see the full changelog](https://github.com/thelounge/thelounge/compare/v3.0.1...v3.1.0) and [milestone](https://github.com/thelounge/thelounge/milestone/30?closed=1).
+
+This is the first release that includes a largely rewritten frontend, which is built on top of the Vue.js framework! 
+We have started slowly transitioning the frontend to use Vue.js, which allows us to structure the code in a better fashion
+and to remove all the hacks related to keeping the state in the DOM using jQuery data attributes. 
+This paves the road for future support of client customization and a plugin system.
+
+While this release is mostly related to the rewrite, there are many user facing changes and improvements in this release!
+
+### Added
+
+- Added scroll to bottom button
+- Put channel errors and unhandled numerics to relevant channel if it exists ([#3079](https://github.com/thelounge/thelounge/pull/3079) by [@xPaw](https://github.com/xPaw))
+- Set scrollbar properties for Firefox 64+ ([#2974](https://github.com/thelounge/thelounge/pull/2974) by [@xPaw](https://github.com/xPaw))
+- Display a broken link icon and red text color when not joined on a channel ([#3082](https://github.com/thelounge/thelounge/pull/3082) by [@astorije](https://github.com/astorije))
+- Print a warning for invalid keys in config file or cli arguments ([#3100](https://github.com/thelounge/thelounge/pull/3100), [#3286](https://github.com/thelounge/thelounge/pull/3286) by [@xPaw](https://github.com/xPaw))
+- Add support for `/kill` ([#3123](https://github.com/thelounge/thelounge/pull/3123) by [@kramerc](https://github.com/kramerc))
+- Display current channel mode on /mode command ([#3109](https://github.com/thelounge/thelounge/pull/3109) by [@xPaw](https://github.com/xPaw))
+- Send SETNAME command if user edits realname field ([#3107](https://github.com/thelounge/thelounge/pull/3107) by [@xPaw](https://github.com/xPaw))
+- Implement invite list ([#3176](https://github.com/thelounge/thelounge/pull/3176) by [@xPaw](https://github.com/xPaw))
+- Add server config api ([#2761](https://github.com/thelounge/thelounge/pull/2761) by [@McInkay](https://github.com/McInkay))
+- Add aria-label on link preview toggle button ([#3116](https://github.com/thelounge/thelounge/pull/3116) by [@xPaw](https://github.com/xPaw))
+- Add support for command plugins ([#2757](https://github.com/thelounge/thelounge/pull/2757), [#3281](https://github.com/thelounge/thelounge/pull/3281) by [@McInkay](https://github.com/McInkay))
+
+### Changed
+
+- Only active channel is rendered in DOM instead of them all. ([#1270](https://github.com/thelounge/thelounge/pull/1270))
+- Input is no longer global (each channel gets its own input field). ([#706](https://github.com/thelounge/thelounge/pull/706))
+- Input history is also per-channel now. ([#2791](https://github.com/thelounge/thelounge/pull/2791))
+- Collapsing a network stays in active channel (and the active channel is still visible in the list)
+- Collapsed networks still show channels with highlights. ([#2223](https://github.com/thelounge/thelounge/pull/2223))
+- Client commands are refactored and `/join` can assume current channel. ([#2004](https://github.com/thelounge/thelounge/pull/2004)) ([#2281](https://github.com/thelounge/thelounge/pull/2281)) ([#2266](https://github.com/thelounge/thelounge/pull/2266)) 
+- Channel `/list` persists on page reloads. ([#2249](https://github.com/thelounge/thelounge/pull/2249)) 
+- Message parser now returns Vue elements (via createElement) instead of raw html content (no more manual escaping!)
+- Message parser now actually accepts` CHANTYPES` and `PREFIX` from network. ([#443](https://github.com/thelounge/thelounge/pull/443))
+- Hidden status messages are no longer rendered in DOM. ([#813](https://github.com/thelounge/thelounge/pull/813))
+- Channel state is synchronised to the client (and is displayed). ([#2245](https://github.com/thelounge/thelounge/pull/2245))
+- Chat input is no longer disabled when disconnected (still can't submit though)
+- All channels user lists are cleared when disconnected from the network
+- New utility function to update window title, notified state, favicon consistently. Which fixes titles or favicon sometimes not updating, e.g. on channel part. ([#2746](https://github.com/thelounge/thelounge/pull/2746)). ([#1311](https://github.com/thelounge/thelounge/pull/1311))
+- `<>` and `*` around nicks have been moved to DOM so copying is consistent. ([#2801](https://github.com/thelounge/thelounge/pull/2801))
+- Added `***` before actions when copying (e.g. topic set, joins, etc), and dashes around nick for notices.
+- Removed `jquery-ui` in favor of Sortable.js. ([#932](https://github.com/thelounge/thelounge/pull/932))
+- Image too big error is now handled by `auto expand media` setting, while other errors are handled by `auto expand websites` option. ([#2800](https://github.com/thelounge/thelounge/pull/2800))
+- Custom highlights are now synced to the server and highlight code works on the server, this means that push notifications work for custom highlights, and they get synced across clients correctly.
+- PageDown/PageUp now scroll natively without manually calculating and animating the offset.
+- Sending long lines will now try splitting input into multiple lines on word boundaries.
+- Images can now be pasted (Ctrl-v) and automatically uploaded ([#3226](https://github.com/thelounge/thelounge/pull/3226) by [@SwayUser](https://github.com/SwayUser))
+- Bump minimum node version to 8 LTS ([#3004](https://github.com/thelounge/thelounge/pull/3004) by [@xPaw](https://github.com/xPaw))
+- Use github's emoji data (support unicode 12) ([#3251](https://github.com/thelounge/thelounge/pull/3251) by [@xPaw](https://github.com/xPaw))
+- Let the user know a CTCP request was sent ([#3019](https://github.com/thelounge/thelounge/pull/3019) by [@Zarthus](https://github.com/Zarthus))
+- Extend custom highlight regex ([#3073](https://github.com/thelounge/thelounge/pull/3073) by [@Jay2k1](https://github.com/Jay2k1))
+- Change condensed summary hover to an underline ([#3145](https://github.com/thelounge/thelounge/pull/3145) by [@xPaw](https://github.com/xPaw))
+- Change styling when dragging channels. ([#3114](https://github.com/thelounge/thelounge/pull/3114) by [@xPaw](https://github.com/xPaw))
+- Update production dependencies to their latest versions:
+  - `package-json` ([#3007](https://github.com/thelounge/thelounge/pull/3007), [#3115](https://github.com/thelounge/thelounge/pull/3115), [#3142](https://github.com/thelounge/thelounge/pull/3142), [#3156](https://github.com/thelounge/thelounge/pull/3156), [#3254](https://github.com/thelounge/thelounge/pull/3254))
+  - `mime-types` ([#3050](https://github.com/thelounge/thelounge/pull/3050), [#3181](https://github.com/thelounge/thelounge/pull/3181))
+  - `file-type` ([#3069](https://github.com/thelounge/thelounge/pull/3069), [#3103](https://github.com/thelounge/thelounge/pull/3103), [#3159](https://github.com/thelounge/thelounge/pull/3159), [#3169](https://github.com/thelounge/thelounge/pull/3169), [#3198](https://github.com/thelounge/thelounge/pull/3198), [#3232](https://github.com/thelounge/thelounge/pull/3232), [#3255](https://github.com/thelounge/thelounge/pull/3255), [#3285](https://github.com/thelounge/thelounge/pull/3285))
+  - `read-chunk` ([#3106](https://github.com/thelounge/thelounge/pull/3106), [#3158](https://github.com/thelounge/thelounge/pull/3158))
+  - `filenamify` ([#3110](https://github.com/thelounge/thelounge/pull/3110), [#3157](https://github.com/thelounge/thelounge/pull/3157), [#3242](https://github.com/thelounge/thelounge/pull/3242))
+  - `yarn` ([#3149](https://github.com/thelounge/thelounge/pull/3149), [#3210](https://github.com/thelounge/thelounge/pull/3210))
+  - `semver` ([#3148](https://github.com/thelounge/thelounge/pull/3148), [#3231](https://github.com/thelounge/thelounge/pull/3231), [#3240](https://github.com/thelounge/thelounge/pull/3240), [#3270](https://github.com/thelounge/thelounge/pull/3270), [#3274](https://github.com/thelounge/thelounge/pull/3274))
+  - `busboy` ([#3163](https://github.com/thelounge/thelounge/pull/3163))
+  - `commander` ([#3162](https://github.com/thelounge/thelounge/pull/3162))
+  - `irc-framework` ([#3201](https://github.com/thelounge/thelounge/pull/3201), [#3272](https://github.com/thelounge/thelounge/pull/3272))
+  - `sqlite3` ([#3205](https://github.com/thelounge/thelounge/pull/3205), [#3213](https://github.com/thelounge/thelounge/pull/3213), [#3257](https://github.com/thelounge/thelounge/pull/3257))
+  - `fs-extra` ([#3215](https://github.com/thelounge/thelounge/pull/3215), [#3222](https://github.com/thelounge/thelounge/pull/3222), [#3273](https://github.com/thelounge/thelounge/pull/3273))
+  - `web-push` ([#3214](https://github.com/thelounge/thelounge/pull/3214), [#3223](https://github.com/thelounge/thelounge/pull/3223))
+  - `express` ([#3225](https://github.com/thelounge/thelounge/pull/3225), [#3238](https://github.com/thelounge/thelounge/pull/3238))
+  - `ua-parser-js` ([#3249](https://github.com/thelounge/thelounge/pull/3249))
+  - `lodash` ([#3289](https://github.com/thelounge/thelounge/pull/3289))
+
+### Fixed
+
+- Fix copying text in Firefox around image previews ([#3044](https://github.com/thelounge/thelounge/pull/3044) by [@xPaw](https://github.com/xPaw))
+- Fix (dis)connect icons in context menu being reverse of what they should be ([#3093](https://github.com/thelounge/thelounge/pull/3093) by [@xPaw](https://github.com/xPaw))
+- Sanitize user and real names ([#3108](https://github.com/thelounge/thelounge/pull/3108) by [@xPaw](https://github.com/xPaw))
+- Force no-cache on service-worker and sourcemap files ([#3137](https://github.com/thelounge/thelounge/pull/3137) by [@xPaw](https://github.com/xPaw))
+- Handle redirected requests correctly in service worker ([#3136](https://github.com/thelounge/thelounge/pull/3136) by [@xPaw](https://github.com/xPaw))
+- Fix file uploading when lounge is proxied in a subfolder ([#3258](https://github.com/thelounge/thelounge/pull/3258) by [@xPaw](https://github.com/xPaw))
+- Only prepend text with 'Notice: ' if it's the nick it's from ([#3259](https://github.com/thelounge/thelounge/pull/3259) by [@emersonveenstra](https://github.com/emersonveenstra))
+- Make sure unhandled command has params ([#3276](https://github.com/thelounge/thelounge/pull/3276) by [@xPaw](https://github.com/xPaw))
+- [Updated ldapjs](https://github.com/thelounge/node-ldapjs) to support Node v10+ ([node-ldapjs#497](https://github.com/joyent/node-ldapjs/pull/497) by [@acappella2017](https://github.com/acappella2017))
+
+### Documentation
+
+In the main repository:
+
+- help.tpl: Fix typo (ommitted -> omitted) ([#3077](https://github.com/thelounge/thelounge/pull/3077) by [@Zarthus](https://github.com/Zarthus))
+- Spelling fix for manual disconnect message ([#3125](https://github.com/thelounge/thelounge/pull/3125) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Print a warning when running as root ([#3235](https://github.com/thelounge/thelounge/pull/3235) by [@xPaw](https://github.com/xPaw))
+- Remove incorrect lowest node version from readme (#3217) ([`0967fa2`](https://github.com/thelounge/thelounge/commit/0967fa26cf8d30abd5e3fb27b91803a59876a6a7) by [@McInkay](https://github.com/McInkay))
+- Add a message about experimental API ([#3279](https://github.com/thelounge/thelounge/pull/3279) by [@xPaw](https://github.com/xPaw))
+- Change unable to load sqlite3 message ([#3280](https://github.com/thelounge/thelounge/pull/3280) by [@xPaw](https://github.com/xPaw))
+
+On the [website repository](https://github.com/thelounge/thelounge.github.io):
+
+- Updated non-functioning CSS for "Thinner User List" ([#204](https://github.com/thelounge/thelounge.github.io/pull/204) by [@theoneandonlyewok](https://github.com/theoneandonlyewok))
+- Remove CSS snippet to hide messages from a specific user, now replaced with `/ignore` ([#203](https://github.com/thelounge/thelounge.github.io/pull/203) by [@xnaas](https://github.com/xnaas))
+- Display page title dynamically to avoid confusing bots that search for metadata ([#205](https://github.com/thelounge/thelounge.github.io/pull/205) by [@astorije](https://github.com/astorije))
+- Add page descriptions ([#164](https://github.com/thelounge/thelounge.github.io/pull/164) by [@xPaw](https://github.com/xPaw))
+- Add a guide about ZNC (#206) ([`ae48ead`](https://github.com/thelounge/thelounge.github.io/commit/ae48ead17d512dc6f59ce28d8eba0ca762bdf6dc) by [@brunnre8](https://github.com/brunnre8))
+- Add a link to our Twitter in the header ([#210](https://github.com/thelounge/thelounge.github.io/pull/210) by [@astorije](https://github.com/astorije))
+- add warning about using the correct user to usage.md (#211) ([`3668a1c`](https://github.com/thelounge/thelounge.github.io/commit/3668a1c2f02ba5eedf8b6745c753174b7cdc03a5) by [@brunnre8](https://github.com/brunnre8))
+- Add config API docs (#212) ([`6e46b2c`](https://github.com/thelounge/thelounge.github.io/commit/6e46b2cfded1a415f710ccba47a38052e57129a5) by [@McInkay](https://github.com/McInkay))
+- Fix version command ([`25f42d1`](https://github.com/thelounge/thelounge.github.io/commit/25f42d167d1a90a4522e621919676789f8e7adda) by [@xPaw](https://github.com/xPaw))
+- Add note about using sudo for the deb package (#208) ([`965379e`](https://github.com/thelounge/thelounge.github.io/commit/965379e05487a398c16652d6a8fa9036ee31b2f3) by [@Jay2k1](https://github.com/Jay2k1))
+- Add docs about client_max_body_size ([#213](https://github.com/thelounge/thelounge.github.io/pull/213) by [@xPaw](https://github.com/xPaw))
+
+### Internals
+
+- Change build priority order in Travis ([#3045](https://github.com/thelounge/thelounge/pull/3045) by [@xPaw](https://github.com/xPaw))
+- Move closing brackets on a new line in Vue files ([#3083](https://github.com/thelounge/thelounge/pull/3083) by [@astorije](https://github.com/astorije))
+- Use Vue to show/hide insecure/disconnected icons instead of CSS ([#3088](https://github.com/thelounge/thelounge/pull/3088) by [@astorije](https://github.com/astorije))
+- Use async/await in service worker, do not wait for cache for successful requests ([#3111](https://github.com/thelounge/thelounge/pull/3111) by [@xPaw](https://github.com/xPaw))
+- Move favicon.ico to the root folder ([#3126](https://github.com/thelounge/thelounge/pull/3126) by [@xPaw](https://github.com/xPaw))
+- Re-implement file uploading with old school multipart forms ([#3037](https://github.com/thelounge/thelounge/pull/3037) by [@xPaw](https://github.com/xPaw))
+- Hide unknown key warning in mergeConfig test ([#3133](https://github.com/thelounge/thelounge/pull/3133) by [@xPaw](https://github.com/xPaw))
+- Replace mocha-webpack with mochapack, and remove browser test setup that we never used ([#3150](https://github.com/thelounge/thelounge/pull/3150) by [@astorije](https://github.com/astorije))
+- Replace `request` with `got` ([#3179](https://github.com/thelounge/thelounge/pull/3179) by [@xPaw](https://github.com/xPaw))
+- Change upload abort error message ([#3236](https://github.com/thelounge/thelounge/pull/3236) by [@xPaw](https://github.com/xPaw))
+- Add extra socket/server error event handlers ([#3250](https://github.com/thelounge/thelounge/pull/3250) by [@xPaw](https://github.com/xPaw))
+- Move query to msg, fix #3049 ([#3138](https://github.com/thelounge/thelounge/pull/3138) by [@Dominent](https://github.com/Dominent))
+- Update development dependencies to their latest versions:
+  - `@fortawesome/fontawesome-free` ([#3048](https://github.com/thelounge/thelounge/pull/3048), [#3129](https://github.com/thelounge/thelounge/pull/3129), [#3202](https://github.com/thelounge/thelounge/pull/3202), [#3246](https://github.com/thelounge/thelounge/pull/3246))
+  - `nyc` ([#3051](https://github.com/thelounge/thelounge/pull/3051), [#3178](https://github.com/thelounge/thelounge/pull/3178), [#3196](https://github.com/thelounge/thelounge/pull/3196))
+  - `webpack` ([#3053](https://github.com/thelounge/thelounge/pull/3053), [#3065](https://github.com/thelounge/thelounge/pull/3065), [#3091](https://github.com/thelounge/thelounge/pull/3091), [#3171](https://github.com/thelounge/thelounge/pull/3171), [#3207](https://github.com/thelounge/thelounge/pull/3207), [#3228](https://github.com/thelounge/thelounge/pull/3228), [#3230](https://github.com/thelounge/thelounge/pull/3230), [#3245](https://github.com/thelounge/thelounge/pull/3245), [#3256](https://github.com/thelounge/thelounge/pull/3256), [#3264](https://github.com/thelounge/thelounge/pull/3264), [#3275](https://github.com/thelounge/thelounge/pull/3275))
+  - `eslint` ([#3054](https://github.com/thelounge/thelounge/pull/3054), [#3068](https://github.com/thelounge/thelounge/pull/3068), [#3095](https://github.com/thelounge/thelounge/pull/3095), [#3101](https://github.com/thelounge/thelounge/pull/3101), [#3119](https://github.com/thelounge/thelounge/pull/3119), [#3127](https://github.com/thelounge/thelounge/pull/3127), [#3155](https://github.com/thelounge/thelounge/pull/3155), [#3266](https://github.com/thelounge/thelounge/pull/3266))
+  - `eslint-plugin-vue` ([#3057](https://github.com/thelounge/thelounge/pull/3057), [#3066](https://github.com/thelounge/thelounge/pull/3066))
+  - `@babel/core` ([#3055](https://github.com/thelounge/thelounge/pull/3055), [#3277](https://github.com/thelounge/thelounge/pull/3277))
+  - `babel-plugin-istanbul` ([#3061](https://github.com/thelounge/thelounge/pull/3061), [#3177](https://github.com/thelounge/thelounge/pull/3177), [#3186](https://github.com/thelounge/thelounge/pull/3186), [#3195](https://github.com/thelounge/thelounge/pull/3195))
+  - `sinon` ([#3067](https://github.com/thelounge/thelounge/pull/3067), [#3090](https://github.com/thelounge/thelounge/pull/3090), [#3098](https://github.com/thelounge/thelounge/pull/3098), [#3134](https://github.com/thelounge/thelounge/pull/3134), [#3151](https://github.com/thelounge/thelounge/pull/3151), [#3180](https://github.com/thelounge/thelounge/pull/3180))
+  - `vue-loader` ([#3071](https://github.com/thelounge/thelounge/pull/3071), [#3074](https://github.com/thelounge/thelounge/pull/3074), [#3092](https://github.com/thelounge/thelounge/pull/3092))
+  - `copy-webpack-plugin` ([#3075](https://github.com/thelounge/thelounge/pull/3075), [#3112](https://github.com/thelounge/thelounge/pull/3112), [#3141](https://github.com/thelounge/thelounge/pull/3141), [#3187](https://github.com/thelounge/thelounge/pull/3187))
+  - `vue` ([#3078](https://github.com/thelounge/thelounge/pull/3078), [#3094](https://github.com/thelounge/thelounge/pull/3094), [#3118](https://github.com/thelounge/thelounge/pull/3118), [#3131](https://github.com/thelounge/thelounge/pull/3131))
+  - `mocha` ([#3072](https://github.com/thelounge/thelounge/pull/3072), [#3164](https://github.com/thelounge/thelounge/pull/3164), [#3165](https://github.com/thelounge/thelounge/pull/3165), [#3170](https://github.com/thelounge/thelounge/pull/3170), [#3182](https://github.com/thelounge/thelounge/pull/3182))
+  - `vuedraggable` ([#3081](https://github.com/thelounge/thelounge/pull/3081), [#3096](https://github.com/thelounge/thelounge/pull/3096), [#3102](https://github.com/thelounge/thelounge/pull/3102), [#3135](https://github.com/thelounge/thelounge/pull/3135), [#3143](https://github.com/thelounge/thelounge/pull/3143), [#3227](https://github.com/thelounge/thelounge/pull/3227), [#3267](https://github.com/thelounge/thelounge/pull/3267))
+  - `mousetrap` ([#3099](https://github.com/thelounge/thelounge/pull/3099))
+  - `emoji-regex` ([#3104](https://github.com/thelounge/thelounge/pull/3104))
+  - `webpack-cli` ([#3120](https://github.com/thelounge/thelounge/pull/3120), [#3183](https://github.com/thelounge/thelounge/pull/3183), [#3199](https://github.com/thelounge/thelounge/pull/3199), [#3247](https://github.com/thelounge/thelounge/pull/3247), [#3252](https://github.com/thelounge/thelounge/pull/3252), [#3268](https://github.com/thelounge/thelounge/pull/3268))
+  - `handlebars` ([#3124](https://github.com/thelounge/thelounge/pull/3124), [#3175](https://github.com/thelounge/thelounge/pull/3175))
+  - `mochapack` ([#3153](https://github.com/thelounge/thelounge/pull/3153))
+  - `html-minifier` ([#3160](https://github.com/thelounge/thelounge/pull/3160))
+  - `jquery` ([#3167](https://github.com/thelounge/thelounge/pull/3167), [#3194](https://github.com/thelounge/thelounge/pull/3194))
+  - `mini-css-extract-plugin` ([#3166](https://github.com/thelounge/thelounge/pull/3166), [#3239](https://github.com/thelounge/thelounge/pull/3239))
+  - `stylelint-config-standard` ([#3174](https://github.com/thelounge/thelounge/pull/3174))
+  - `stylelint` ([#3173](https://github.com/thelounge/thelounge/pull/3173), [#3248](https://github.com/thelounge/thelounge/pull/3248))
+  - `intersection-observer` ([#3188](https://github.com/thelounge/thelounge/pull/3188), [#3212](https://github.com/thelounge/thelounge/pull/3212))
+  - `babel-loader` ([#3216](https://github.com/thelounge/thelounge/pull/3216))
+
 ## v3.1.0-rc.1 - 2019-07-05 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v3.1.0-pre.3...v3.1.0-rc.1)
