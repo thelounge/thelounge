@@ -17,19 +17,6 @@ describe("client-side constants", function() {
 		});
 	});
 
-	describe(".commands", function() {
-		it("should be a non-empty array", function() {
-			expect(constants.commands).to.be.an("array").that.is.not.empty;
-		});
-
-		it("should only contain strings with no whitespaces and starting with /", function() {
-			constants.commands.forEach((command) => {
-				expect(command).to.be.a("string").that.does.not.match(/\s/);
-				expect(command[0]).to.equal("/");
-			});
-		});
-	});
-
 	describe(".condensedTypes", function() {
 		it("should be a non-empty array", function() {
 			expect(constants.condensedTypes).to.be.an("array").that.is.not.empty;

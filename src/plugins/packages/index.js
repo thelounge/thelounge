@@ -6,6 +6,7 @@ const path = require("path");
 const Helper = require("../../helper");
 const themes = require("./themes");
 const packageMap = new Map();
+const inputs = require("../inputs");
 
 const stylesheets = [];
 
@@ -15,10 +16,14 @@ module.exports = {
 	loadPackages,
 };
 
-const packageApis = function(packageName) {
+const packageApis = function(clientManager, packageName) {
 	return {
 		Stylesheets: {
 			addFile: addStylesheet.bind(this, packageName),
+		},
+		Commands: {
+			add: (command, func) => inputs.userInputs[command] = func,
+			runAsUser: (line, userName, target) => clientManager.findClient(userName).inputLine({target, text: line}),
 		},
 		Config: {
 			getConfig: () => Helper.config,
@@ -38,7 +43,7 @@ function getPackage(name) {
 	return packageMap.get(name);
 }
 
-function loadPackages() {
+function loadPackages(clientManager) {
 	const packageJson = path.join(Helper.getPackagesPath(), "package.json");
 	let packages;
 
@@ -75,7 +80,7 @@ function loadPackages() {
 		}
 
 		if (packageFile.onServerStart) {
-			packageFile.onServerStart(packageApis(packageName));
+			packageFile.onServerStart(packageApis(clientManager, packageName));
 		}
 
 		log.info(`Package ${colors.bold(packageName)} loaded`);

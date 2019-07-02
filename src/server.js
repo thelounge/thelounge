@@ -16,12 +16,12 @@ const colors = require("chalk");
 const net = require("net");
 const Identification = require("./identification");
 const changelog = require("./plugins/changelog");
+const inputs = require("./plugins/inputs");
 
 const themes = require("./plugins/packages/themes");
 themes.loadLocalThemes();
 
 const packages = require("./plugins/packages/index");
-packages.loadPackages();
 
 // The order defined the priority: the first available plugin is used
 // ALways keep local auth in the end, which should always be enabled.
@@ -173,6 +173,7 @@ module.exports = function() {
 		});
 
 		manager = new ClientManager();
+		packages.loadPackages(manager);
 
 		new Identification((identHandler) => {
 			manager.init(identHandler, sockets);
@@ -582,6 +583,7 @@ function initializeClient(socket, client, token, lastMessage) {
 			networks: client.networks.map((network) => network.getFilteredClone(client.lastActiveChannel, lastMessage)),
 			token: tokenToSend,
 		});
+		socket.emit("commands", inputs.getCommands());
 	};
 
 	if (!Helper.config.public && token === null) {

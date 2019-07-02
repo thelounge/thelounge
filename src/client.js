@@ -11,6 +11,7 @@ const Helper = require("./helper");
 const UAParser = require("ua-parser-js");
 const uuidv4 = require("uuid/v4");
 const escapeRegExp = require("lodash/escapeRegExp");
+const inputs = require("./plugins/inputs");
 
 const MessageStorage = require("./plugins/messageStorage/sqlite");
 const TextFileMessageStorage = require("./plugins/messageStorage/text");
@@ -40,33 +41,6 @@ const events = [
 	"list",
 	"whois",
 ];
-const inputs = [
-	"ban",
-	"ctcp",
-	"msg",
-	"part",
-	"rejoin",
-	"action",
-	"away",
-	"connect",
-	"disconnect",
-	"ignore",
-	"invite",
-	"kick",
-	"kill",
-	"mode",
-	"nick",
-	"notice",
-	"quit",
-	"raw",
-	"topic",
-	"list",
-	"whois",
-].reduce(function(plugins, name) {
-	const plugin = require(`./plugins/inputs/${name}`);
-	plugin.commands.forEach((command) => plugins[command] = plugin);
-	return plugins;
-}, {});
 
 function Client(manager, name, config = {}) {
 	_.merge(this, {
@@ -362,12 +336,20 @@ Client.prototype.inputLine = function(data) {
 	const irc = target.network.irc;
 	let connected = irc && irc.connection && irc.connection.connected;
 
-	if (Object.prototype.hasOwnProperty.call(inputs, cmd) && typeof inputs[cmd].input === "function") {
-		const plugin = inputs[cmd];
+	if (Object.prototype.hasOwnProperty.call(inputs.userInputs, cmd) && typeof inputs.userInputs[cmd].input === "function") {
+		const plugin = inputs.userInputs[cmd];
 
 		if (connected || plugin.allowDisconnected) {
 			connected = true;
-			plugin.input.apply(client, [target.network, target.chan, cmd, args]);
+			plugin.input.apply(client,
+				[
+					target.network,
+					target.chan,
+					cmd,
+					args,
+					(command) => this.inputLine({target: data.target, text: command}),
+				]
+			);
 		}
 	} else if (connected) {
 		irc.raw(text);
