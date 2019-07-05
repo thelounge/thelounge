@@ -12,6 +12,7 @@ const UAParser = require("ua-parser-js");
 const uuidv4 = require("uuid/v4");
 const escapeRegExp = require("lodash/escapeRegExp");
 const inputs = require("./plugins/inputs");
+const PublicClient = require("./plugins/packages/publicClient");
 
 const MessageStorage = require("./plugins/messageStorage/sqlite");
 const TextFileMessageStorage = require("./plugins/messageStorage/text");
@@ -336,20 +337,19 @@ Client.prototype.inputLine = function(data) {
 	const irc = target.network.irc;
 	let connected = irc && irc.connection && irc.connection.connected;
 
-	if (Object.prototype.hasOwnProperty.call(inputs.userInputs, cmd) && typeof inputs.userInputs[cmd].input === "function") {
-		const plugin = inputs.userInputs[cmd];
+	if (inputs.userInputs.has(cmd)) {
+		const plugin = inputs.userInputs.get(cmd);
 
-		if (connected || plugin.allowDisconnected) {
+		if (typeof plugin.input === "function" && (connected || plugin.allowDisconnected)) {
 			connected = true;
-			plugin.input.apply(client,
-				[
-					target.network,
-					target.chan,
-					cmd,
-					args,
-					(command) => this.inputLine({target: data.target, text: command}),
-				]
-			);
+			plugin.input.apply(client, [target.network, target.chan, cmd, args]);
+		}
+	} else if (inputs.pluginCommands.has(cmd)) {
+		const plugin = inputs.pluginCommands.get(cmd);
+
+		if (typeof plugin.input === "function" && (connected || plugin.allowDisconnected)) {
+			connected = true;
+			plugin.input(new PublicClient(client), {network: target.network, chan: target.chan}, cmd, args);
 		}
 	} else if (connected) {
 		irc.raw(text);

@@ -173,7 +173,7 @@ module.exports = function() {
 		});
 
 		manager = new ClientManager();
-		packages.loadPackages(manager);
+		packages.loadPackages();
 
 		new Identification((identHandler) => {
 			manager.init(identHandler, sockets);

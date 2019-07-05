@@ -16,14 +16,14 @@ module.exports = {
 	loadPackages,
 };
 
-const packageApis = function(clientManager, packageName) {
+const packageApis = function(packageName) {
 	return {
 		Stylesheets: {
 			addFile: addStylesheet.bind(this, packageName),
 		},
 		Commands: {
-			add: (command, func) => inputs.userInputs[command] = func,
-			runAsUser: (line, userName, target) => clientManager.findClient(userName).inputLine({target, text: line}),
+			add: inputs.addPluginCommand,
+			runAsUser: (command, targetId, client) => client.inputLine({target: targetId, text: command}),
 		},
 		Config: {
 			getConfig: () => Helper.config,
@@ -43,7 +43,7 @@ function getPackage(name) {
 	return packageMap.get(name);
 }
 
-function loadPackages(clientManager) {
+function loadPackages() {
 	const packageJson = path.join(Helper.getPackagesPath(), "package.json");
 	let packages;
 	let anyPlugins = false;
@@ -83,7 +83,7 @@ function loadPackages(clientManager) {
 		}
 
 		if (packageFile.onServerStart) {
-			packageFile.onServerStart(packageApis(clientManager, packageName));
+			packageFile.onServerStart(packageApis(packageName));
 		}
 
 		log.info(`Package ${colors.bold(packageName)} loaded`);

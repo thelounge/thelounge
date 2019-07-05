@@ -37,18 +37,25 @@ const userInputs = [
 	"whois",
 ].reduce(function(plugins, name) {
 	const plugin = require(`./${name}`);
-	plugin.commands.forEach((command) => (plugins[command] = plugin));
+	plugin.commands.forEach((command) => plugins.set(command, plugin));
 	return plugins;
-}, {});
+}, new Map());
+
+const pluginCommands = new Map();
 
 const getCommands = () =>
-	Object.keys(userInputs)
+	Array.from(userInputs.keys())
+		.concat(Array.from(pluginCommands.keys()))
 		.map((command) => `/${command}`)
 		.concat(clientSideCommands)
 		.concat(passThroughCommands)
 		.sort();
 
+const addPluginCommand = (command, func) => pluginCommands.set(command, func);
+
 module.exports = {
+	addPluginCommand,
 	getCommands,
+	pluginCommands,
 	userInputs,
 };
