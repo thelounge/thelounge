@@ -46,6 +46,7 @@ function getPackage(name) {
 function loadPackages(clientManager) {
 	const packageJson = path.join(Helper.getPackagesPath(), "package.json");
 	let packages;
+	let anyPlugins = false;
 
 	try {
 		packages = Object.keys(require(packageJson).dependencies);
@@ -77,6 +78,8 @@ function loadPackages(clientManager) {
 
 		if (packageInfo.type === "theme") {
 			themes.addTheme(packageName, packageInfo);
+		} else {
+			anyPlugins = true;
 		}
 
 		if (packageFile.onServerStart) {
@@ -85,4 +88,8 @@ function loadPackages(clientManager) {
 
 		log.info(`Package ${colors.bold(packageName)} loaded`);
 	});
+
+	if (anyPlugins) {
+		log.info("There are packages using the experimental plugin API. Be aware that this API is not yet stable and may change in future The Lounge releases.");
+	}
 }

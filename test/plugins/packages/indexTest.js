@@ -55,7 +55,7 @@ describe("packages", function() {
 
 			packages.loadPackages();
 
-			expect(stdout).to.deep.equal("Package thelounge-package-foo loaded\n");
+			expect(stdout).to.deep.equal("Package thelounge-package-foo loaded\nThere are packages using the experimental plugin API. Be aware that this API is not yet stable and may change in future The Lounge releases.\n");
 		});
 	});
 });
