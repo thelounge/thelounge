@@ -238,11 +238,13 @@ function getDefaultNick() {
 }
 
 function mergeConfig(oldConfig, newConfig) {
-	return _.mergeWith(oldConfig, newConfig, (objValue, srcValue, key, object) => {
-		if (!Object.prototype.hasOwnProperty.call(object, key)) {
+	for (const key in newConfig) {
+		if (!Object.prototype.hasOwnProperty.call(oldConfig, key)) {
 			log.warn(`Unknown key "${colors.bold(key)}", please verify your config.`);
 		}
+	}
 
+	return _.mergeWith(oldConfig, newConfig, (objValue, srcValue, key) => {
 		// Do not override config variables if the type is incorrect (e.g. object changed into a string)
 		if (typeof objValue !== "undefined" && objValue !== null && typeof objValue !== typeof srcValue) {
 			log.warn(`Incorrect type for "${colors.bold(key)}", please verify your config.`);
