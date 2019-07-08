@@ -4,6 +4,7 @@ const log = require("../../src/log");
 const expect = require("chai").expect;
 const stub = require("sinon").stub;
 const mergeConfig = require("../../src/helper").mergeConfig;
+const TestUtil = require("../util");
 
 describe("mergeConfig", function() {
 	it("should mutate object", function() {
@@ -35,9 +36,6 @@ describe("mergeConfig", function() {
 	});
 
 	it("should extend objects", function() {
-		let warning = "";
-		stub(log, "warn").callsFake((str) => warning += str);
-
 		expect(mergeConfig({
 			tlsOptions: {},
 		}, {
@@ -51,9 +49,42 @@ describe("mergeConfig", function() {
 				thing: 123,
 			},
 		});
+	});
+
+	it("should warn for unknown top level keys", function() {
+		let warning = "";
+		stub(log, "warn").callsFake(TestUtil.sanitizeLog((str) => warning += str));
+
+		expect(mergeConfig({
+			optionOne: 123,
+		}, {
+			optionOne: 456,
+			optionTwo: 789,
+		})).to.deep.equal({
+			optionOne: 456,
+			optionTwo: 789,
+		});
 
 		log.warn.restore();
-		expect(warning).to.contain("Unknown key");
+		expect(warning).to.equal('Unknown key "optionTwo", please verify your config.\n');
+	});
+
+	it("should not warn for unknown second level keys", function() {
+		expect(mergeConfig({
+			optionOne: {
+				subOne: 123,
+			},
+		}, {
+			optionOne: {
+				subOne: 123,
+				subTwo: 123,
+			},
+		})).to.deep.equal({
+			optionOne: {
+				subOne: 123,
+				subTwo: 123,
+			},
+		});
 	});
 
 	it("should allow changing nulls", function() {
@@ -63,6 +94,38 @@ describe("mergeConfig", function() {
 			oidentd: "some path",
 		})).to.deep.equal({
 			oidentd: "some path",
+		});
+	});
+
+	it("should allow changing nulls with objects", function() {
+		expect(mergeConfig({
+			webirc: null,
+		}, {
+			webirc: {
+				serverone: "password",
+				servertwo: "password2",
+			},
+		})).to.deep.equal({
+			webirc: {
+				serverone: "password",
+				servertwo: "password2",
+			},
+		});
+	});
+
+	it("should allow changing nulls with objects that has function", function() {
+		const callbackFunction = () => ({});
+
+		expect(mergeConfig({
+			webirc: null,
+		}, {
+			webirc: {
+				servercb: callbackFunction,
+			},
+		})).to.deep.equal({
+			webirc: {
+				servercb: callbackFunction,
+			},
 		});
 	});
 
