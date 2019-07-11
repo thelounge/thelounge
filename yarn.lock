@@ -8314,10 +8314,10 @@ textcomplete@0.17.1:
     textarea-caret "^3.0.1"
     undate "^0.2.3"
 
-thelounge-ldapjs-non-maintained-fork@1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/thelounge-ldapjs-non-maintained-fork/-/thelounge-ldapjs-non-maintained-fork-1.0.3.tgz#600fc0ff587eb550ce692c664659992a78b42e90"
-  integrity sha512-rUNzJ6Beigj1DMnaMi48u01hKxv+bqPLW8fs62X4DfPrVnvy+mUatoUoPAZycBzfSVhWbtydLvygfm2173oCVQ==
+thelounge-ldapjs-non-maintained-fork@1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/thelounge-ldapjs-non-maintained-fork/-/thelounge-ldapjs-non-maintained-fork-1.0.4.tgz#a6a414eb235ea4812440996a17865dcd7620289f"
+  integrity sha512-uf6H6UMv6EKmU81V1Q5lECwiGz4noSua+C+nGiC/Vgtayu3VRjtSSIJzUJDUjJT3YS8HJgkvBe2SsgGrPlT/7g==
   dependencies:
     abstract-logging "^1.0.0"
     asn1 "0.2.3"
