@@ -58,7 +58,7 @@
     "read-chunk": "3.2.0",
     "semver": "6.2.0",
     "socket.io": "2.2.0",
-    "thelounge-ldapjs-non-maintained-fork": "1.0.3",
+    "thelounge-ldapjs-non-maintained-fork": "1.0.4",
     "tlds": "1.203.1",
     "ua-parser-js": "0.7.20",
     "uuid": "3.3.2",
@@ -69,8 +69,8 @@
     "sqlite3": "4.0.9"
   },
   "devDependencies": {
-    "@babel/core": "7.5.0",
-    "@babel/preset-env": "7.5.0",
+    "@babel/core": "7.5.4",
+    "@babel/preset-env": "7.5.4",
     "@fortawesome/fontawesome-free": "5.9.0",
     "@vue/server-test-utils": "1.0.0-beta.29",
     "@vue/test-utils": "1.0.0-beta.29",
@@ -110,7 +110,7 @@
     "vue-server-renderer": "2.6.10",
     "vue-template-compiler": "2.6.10",
     "vuedraggable": "2.23.0",
-    "webpack": "4.35.2",
+    "webpack": "4.35.3",
     "webpack-cli": "3.3.5"
   }
 }
