@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v3.1.1 - 2019-07-11
+
+[See the full changelog](https://github.com/thelounge/thelounge/compare/v3.1.0...v3.1.1)
+
+Minor release to fix an issue where v3.1.0 fails to install on Linux/macOS using npm cli.
+
 ## v3.1.0 - 2019-07-11
 
 For more details, [see the full changelog](https://github.com/thelounge/thelounge/compare/v3.0.1...v3.1.0) and [milestone](https://github.com/thelounge/thelounge/milestone/30?closed=1).
