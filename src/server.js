@@ -744,11 +744,23 @@ function performAuthentication(data) {
 }
 
 function reverseDnsLookup(ip, callback) {
-	dns.reverse(ip, (err, hostnames) => {
-		if (!err && hostnames.length) {
-			return callback(hostnames[0]);
+	dns.reverse(ip, (reverseErr, hostnames) => {
+		if (reverseErr || hostnames.length < 1) {
+			return callback(ip);
 		}
 
-		callback(ip);
+		dns.resolve(hostnames[0], net.isIP(ip) === 6 ? "AAAA" : "A", (resolveErr, resolvedIps) => {
+			if (resolveErr || resolvedIps.length < 1) {
+				return callback(ip);
+			}
+
+			for (const resolvedIp of resolvedIps) {
+				if (ip === resolvedIp) {
+					return callback(hostnames[0]);
+				}
+			}
+
+			return callback(ip);
+		});
 	});
 }
