@@ -53,6 +53,7 @@ describe("Utils", function() {
 
 			it("should correctly parse empty strings", function() {
 				expect(Utils.parseConfigOptions("foo=")).to.deep.equal({foo: ""});
+				expect(Utils.parseConfigOptions("foo= ")).to.deep.equal({foo: " "});
 			});
 
 			it("should correctly parse null values", function() {
@@ -90,6 +91,16 @@ describe("Utils", function() {
 			it("should correctly parse keys using array-notation", function() {
 				expect(Utils.parseConfigOptions("foo[0]=value"))
 					.to.deep.equal({foo: ["value"]});
+			});
+
+			it("should correctly change type to number", function() {
+				expect(Utils.parseConfigOptions("foo=1337")).to.deep.equal({foo: 1337});
+				expect(Utils.parseConfigOptions("foo=5")).to.deep.equal({foo: 5});
+				expect(Utils.parseConfigOptions("foo=0")).to.deep.equal({foo: 0});
+				expect(Utils.parseConfigOptions("foo=9876543210")).to.deep.equal({foo: 9876543210});
+				expect(Utils.parseConfigOptions("foo=0987654321")).to.deep.equal({foo: 987654321});
+				expect(Utils.parseConfigOptions("foo=-1")).to.deep.equal({foo: -1});
+				expect(Utils.parseConfigOptions("foo=-0")).to.deep.equal({foo: -0});
 			});
 		});
 
