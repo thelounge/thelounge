@@ -71,6 +71,8 @@ class Utils {
 				return undefined;
 			} else if (value === "null") {
 				return null;
+			} else if (/^-?[0-9]+$/.test(value)) { // Numbers like port
+				value = parseInt(value, 10);
 			} else if (/^\[.*\]$/.test(value)) { // Arrays
 				// Supporting arrays `[a,b]` and `[a, b]`
 				const array = value.slice(1, -1).split(/,\s*/);
