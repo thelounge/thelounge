@@ -8,7 +8,7 @@
 	<Draggable
 		v-else
 		:list="networks"
-		:disabled="isSortingEnabled"
+		:filter="isCurrentlyInTouch"
 		handle=".lobby"
 		draggable=".network"
 		ghost-class="ui-sortable-ghost"
@@ -51,7 +51,7 @@
 				ghost-class="ui-sortable-ghost"
 				drag-class="ui-sortable-dragged"
 				:group="network.uuid"
-				:disabled="isSortingEnabled"
+				:filter="isCurrentlyInTouch"
 				:list="network.channels"
 				class="channels"
 				@change="onChannelSort"
@@ -91,15 +91,11 @@ export default {
 		activeChannel: Object,
 		networks: Array,
 	},
-	computed: {
-		isSortingEnabled() {
-			const isTouch = !!("ontouchstart" in window || (window.DocumentTouch && document instanceof window.DocumentTouch));
-
-			// TODO: Implement a way to sort on touch devices
-			return isTouch;
-		},
-	},
 	methods: {
+		isCurrentlyInTouch(e) {
+			// TODO: Implement a way to sort on touch devices
+			return e.pointerType !== "mouse";
+		},
 		onDragStart(e) {
 			e.target.classList.add("ui-sortable-active");
 		},
