@@ -91,7 +91,7 @@ window.vueMounted = () => {
 		});
 	});
 
-	const openWindow = function openWindow(e, {keepSidebarOpen, pushState, replaceHistory} = {}) {
+	const openWindow = function openWindow(e, {pushState, replaceHistory} = {}) {
 		const self = $(this);
 		const target = self.attr("data-target");
 
@@ -133,7 +133,7 @@ window.vueMounted = () => {
 
 			socket.emit("open", channel ? channel.channel.id : null);
 
-			if (!keepSidebarOpen && $(window).outerWidth() <= utils.mobileViewportPixels) {
+			if ($(window).outerWidth() <= utils.mobileViewportPixels) {
 				slideoutMenu.toggle(false);
 			}
 		}

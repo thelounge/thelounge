@@ -16,46 +16,7 @@ socket.on("init", function(data) {
 
 	const previousActive = vueApp.activeChannel && vueApp.activeChannel.channel.id;
 
-	const networks = new Set(JSON.parse(storage.get("thelounge.networks.collapsed")));
-
-	for (const network of data.networks) {
-		network.isCollapsed = networks.has(network.uuid);
-		network.channels.forEach(initChannel);
-
-		const currentNetwork = vueApp.networks.find((n) => n.uuid === network.uuid);
-
-		// If we are reconnecting, merge existing state variables because they don't exist on the server
-		if (!currentNetwork) {
-			network.isJoinChannelShown = false;
-
-			continue;
-		}
-
-		network.isJoinChannelShown = currentNetwork.isJoinChannelShown;
-
-		for (const channel of network.channels) {
-			const currentChannel = currentNetwork.channels.find((c) => c.id === channel.id);
-
-			if (!currentChannel) {
-				continue;
-			}
-
-			channel.scrolledToBottom = currentChannel.scrolledToBottom;
-			channel.pendingMessage = currentChannel.pendingMessage;
-
-			// Reconnection only sends new messages, so merge it on the client
-			// Only concat if server sent us less than 100 messages so we don't introduce gaps
-			if (currentChannel.messages && channel.messages.length < 100) {
-				channel.messages = currentChannel.messages.concat(channel.messages);
-			}
-
-			if (currentChannel.moreHistoryAvailable) {
-				channel.moreHistoryAvailable = true;
-			}
-		}
-	}
-
-	vueApp.networks = data.networks;
+	vueApp.networks = mergeNetworkData(data.networks);
 	vueApp.isConnected = true;
 	vueApp.currentUserVisibleError = null;
 
@@ -138,4 +99,84 @@ function openCorrectChannel(clientActive, serverActive) {
 	$("#footer .connect").trigger("click", {
 		pushState: false,
 	});
+}
+
+function mergeNetworkData(newNetworks) {
+	const collapsedNetworks = new Set(JSON.parse(storage.get("thelounge.networks.collapsed")));
+
+	for (let n = 0; n < newNetworks.length; n++) {
+		const network = newNetworks[n];
+		const currentNetwork = vueApp.networks.find((net) => net.uuid === network.uuid);
+
+		// If this network is new, set some default variables and initalize channel variables
+		if (!currentNetwork) {
+			network.isJoinChannelShown = false;
+			network.isCollapsed = collapsedNetworks.has(network.uuid);
+			network.channels.forEach(initChannel);
+
+			continue;
+		}
+
+		// Merge received network object into existing network object on the client
+		// so the object reference stays the same (e.g. for vueApp.currentChannel)
+		for (const key in network) {
+			if (!Object.prototype.hasOwnProperty.call(network, key)) {
+				continue;
+			}
+
+			// Channels require extra care to be merged correctly
+			if (key === "channels") {
+				currentNetwork.channels = mergeChannelData(currentNetwork.channels, network.channels);
+			} else {
+				currentNetwork[key] = network[key];
+			}
+		}
+
+		newNetworks[n] = currentNetwork;
+	}
+
+	return newNetworks;
+}
+
+function mergeChannelData(oldChannels, newChannels) {
+	for (let c = 0; c < newChannels.length; c++) {
+		const channel = newChannels[c];
+		const currentChannel = oldChannels.find((chan) => chan.id === channel.id);
+
+		// This is a new channel that was joined while client was disconnected, initialize it
+		if (!currentChannel) {
+			initChannel(channel);
+
+			continue;
+		}
+
+		// Merge received channel object into existing currentChannel
+		// so the object references are exactly the same (e.g. in vueApp.activeChannel)
+		for (const key in channel) {
+			if (!Object.prototype.hasOwnProperty.call(channel, key)) {
+				continue;
+			}
+
+			// Server sends an empty users array, client requests it whenever needed
+			if (key === "users") {
+				if (channel.type === "channel") {
+					channel.usersOutdated = true;
+				}
+
+				continue;
+			}
+
+			// Reconnection only sends new messages, so merge it on the client
+			// Only concat if server sent us less than 100 messages so we don't introduce gaps
+			if (key === "messages" && currentChannel.messages && channel.messages.length < 100) {
+				currentChannel.messages = currentChannel.messages.concat(channel.messages);
+			} else {
+				currentChannel[key] = channel[key];
+			}
+		}
+
+		newChannels[c] = currentChannel;
+	}
+
+	return newChannels;
 }
