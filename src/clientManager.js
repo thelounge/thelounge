@@ -118,6 +118,7 @@ ClientManager.prototype.addUser = function(name, password, enableLog) {
 		networks: [],
 		sessions: {},
 		clientSettings: {},
+		browser: {},
 	};
 
 	try {

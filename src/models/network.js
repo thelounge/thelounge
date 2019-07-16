@@ -1,7 +1,6 @@
 "use strict";
 
 const _ = require("lodash");
-const log = require("../log");
 const uuidv4 = require("uuid/v4");
 const IrcFramework = require("irc-framework");
 const Chan = require("./chan");
@@ -36,8 +35,6 @@ function Network(attr) {
 		username: "",
 		realname: "",
 		channels: [],
-		ip: null,
-		hostname: null,
 		irc: null,
 		serverOptions: {
 			CHANTYPES: ["#", "&"],
@@ -125,7 +122,7 @@ Network.prototype.createIrcFramework = function(client) {
 		host: this.host,
 		port: this.port,
 		nick: this.nick,
-		username: Helper.config.useHexIp ? Helper.ip2hex(this.ip) : this.username,
+		username: Helper.config.useHexIp ? Helper.ip2hex(client.config.browser.ip) : this.username,
 		gecos: this.realname,
 		password: this.password,
 		tls: this.tls,
@@ -156,26 +153,19 @@ Network.prototype.createWebIrc = function(client) {
 		return null;
 	}
 
-	if (!this.ip) {
-		log.warn(`Cannot find a valid WEBIRC configuration for ${this.nick}!${this.username}@${this.host}`);
-
-		return null;
-	}
-
-	if (!this.hostname) {
-		this.hostname = this.ip;
-	}
-
-	if (typeof Helper.config.webirc[this.host] === "function") {
-		return Helper.config.webirc[this.host](client, this);
-	}
-
-	return {
+	const webircObject = {
 		password: Helper.config.webirc[this.host],
 		username: "thelounge",
-		address: this.ip,
-		hostname: this.hostname,
+		address: client.config.browser.ip,
+		hostname: client.config.browser.hostname,
 	};
+
+	if (typeof Helper.config.webirc[this.host] === "function") {
+		webircObject.password = null;
+		return Helper.config.webirc[this.host](webircObject, this);
+	}
+
+	return webircObject;
 };
 
 Network.prototype.edit = function(client, args) {
@@ -348,8 +338,6 @@ Network.prototype.export = function() {
 		"username",
 		"realname",
 		"commands",
-		"ip",
-		"hostname",
 		"ignoreList",
 	]);
 

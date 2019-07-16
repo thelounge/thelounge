@@ -8,7 +8,9 @@ const Network = require("../src/models/network");
 const Chan = require("../src/models/chan");
 
 function MockClient() {
-	this.user = {nick: "test-user"};
+	this.config = {
+		browser: {},
+	};
 }
 
 util.inherits(MockClient, EventEmitter);

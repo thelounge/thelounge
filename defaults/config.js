@@ -298,23 +298,23 @@ module.exports = {
 	//
 	//   ```json
 	//   webirc: {
-	//     "irc.example.net": "password1",
-	//     "irc.example.org": "passw0rd",
+	//     "irc.example.net": "thisiswebircpassword1",
+	//     "irc.example.org": "thisiswebircpassword2",
 	//   },
 	//   ```
 	//
 	// - **Advanced**: an object where keys are IRC hosts and values are functions
-	//   that take three arguments (`client`, `args`, `trusted`) and return an
-	//   object to be directly passed to `irc-framework`. For example:
+	//   that take two arguments (`webircObj`, `network`) and return an
+	//   object to be directly passed to `irc-framework`. `webircObj` contains the
+	//   generated object which you can modify. For example:
 	//
 	//   ```js
 	//   webirc: {
-	//     "irc.example.net": (client, args, trusted) => ({
-	//       username: "thelounge",
-	//       password: "password1",
-	//       address: args.ip,
-	//       hostname: `webirc/${args.hostname}`
-	//     }),
+	//     "irc.example.com": (webircObj, network) => {
+	//       webircObj.password = "thisiswebircpassword";
+	//       webircObj.hostname = `webirc/${webircObj.hostname}`;
+	//       return webircObj;
+	//     },
 	//   },
 	//   ```
 	//
