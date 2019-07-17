@@ -152,8 +152,8 @@ function closeChan(chan) {
 		cmd = "/quit";
 		const server = chan.find(".name").html();
 
+		// eslint-disable-next-line no-alert
 		if (!confirm(`Are you sure you want to remove ${server}?`)) {
-			// eslint-disable-line no-alert
 			return false;
 		}
 	}
