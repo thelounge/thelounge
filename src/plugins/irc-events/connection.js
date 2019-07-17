@@ -115,9 +115,8 @@ module.exports = function(irc, network) {
 	if (Helper.config.debug.raw) {
 		irc.on("raw", function(message) {
 			network.channels[0].pushMessage(client, new Msg({
-				from: message.from_server ? "«" : "»",
 				self: !message.from_server,
-				type: "raw",
+				type: Msg.Type.RAW,
 				text: message.line,
 			}), true);
 		});
