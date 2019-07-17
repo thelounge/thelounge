@@ -43,10 +43,7 @@ socket.on("changelog", function(data) {
 	// When there is a button to refresh the checker available, display it when
 	// data is expired. Before that, server would return same information anyway.
 	if (data.expiresAt) {
-		setTimeout(
-			() => $("#version-checker #check-now").show(),
-			data.expiresAt - Date.now()
-		);
+		setTimeout(() => $("#version-checker #check-now").show(), data.expiresAt - Date.now());
 	}
 });
 
@@ -62,6 +59,7 @@ $("#help").on("click", "#check-now", () => {
 // Given a status and latest release information, update the version checker
 // (CSS class and content)
 function renderVersionChecker({status, latest}) {
-	$("#version-checker").prop("class", status)
+	$("#version-checker")
+		.prop("class", status)
 		.html(templates.version_checker({latest, status}));
 }

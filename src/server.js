@@ -25,10 +25,7 @@ const packages = require("./plugins/packages/index");
 
 // The order defined the priority: the first available plugin is used
 // ALways keep local auth in the end, which should always be enabled.
-const authPlugins = [
-	require("./plugins/auth/ldap"),
-	require("./plugins/auth/local"),
-];
+const authPlugins = [require("./plugins/auth/ldap"), require("./plugins/auth/local")];
 
 // A random number that will force clients to reload the page if it differs
 const serverHash = Math.floor(Date.now() * Math.random());
@@ -37,7 +34,9 @@ let manager = null;
 
 module.exports = function() {
 	log.info(`The Lounge ${colors.green(Helper.getVersion())} \
-(Node.js ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${process.arch})`);
+(Node.js ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${
+		process.arch
+	})`);
 	log.info(`Configuration file: ${colors.green(Helper.getConfigPath())}`);
 
 	const staticOptions = {
@@ -91,7 +90,9 @@ module.exports = function() {
 	let server = null;
 
 	if (Helper.config.public && (Helper.config.ldap || {}).enable) {
-		log.warn("Server is public and set to use LDAP. Set to private mode if trying to use LDAP authentication.");
+		log.warn(
+			"Server is public and set to use LDAP. Set to private mode if trying to use LDAP authentication."
+		);
 	}
 
 	if (!Helper.config.https.enable) {
@@ -118,11 +119,14 @@ module.exports = function() {
 		}
 
 		server = require("https");
-		server = server.createServer({
-			key: fs.readFileSync(keyPath),
-			cert: fs.readFileSync(certPath),
-			ca: caPath ? fs.readFileSync(caPath) : undefined,
-		}, app);
+		server = server.createServer(
+			{
+				key: fs.readFileSync(keyPath),
+				cert: fs.readFileSync(certPath),
+				ca: caPath ? fs.readFileSync(caPath) : undefined,
+			},
+			app
+		);
 	}
 
 	let listenParams;
@@ -147,8 +151,8 @@ module.exports = function() {
 
 			log.info(
 				"Available at " +
-				colors.green(`${protocol}://${address.address}:${address.port}/`) +
-				` in ${colors.bold(Helper.config.public ? "public" : "private")} mode`
+					colors.green(`${protocol}://${address.address}:${address.port}/`) +
+					` in ${colors.bold(Helper.config.public ? "public" : "private")} mode`
 			);
 		}
 
@@ -235,7 +239,9 @@ function getClientIp(socket) {
 	let ip = socket.handshake.address || "127.0.0.1";
 
 	if (Helper.config.reverseProxy) {
-		const forwarded = (socket.handshake.headers["x-forwarded-for"] || "").split(/\s*,\s*/).filter(Boolean);
+		const forwarded = (socket.handshake.headers["x-forwarded-for"] || "")
+			.split(/\s*,\s*/)
+			.filter(Boolean);
 
 		if (forwarded.length && net.isIP(forwarded[0])) {
 			ip = forwarded[0];
@@ -295,16 +301,20 @@ function indexRequest(req, res) {
 	res.setHeader("Content-Security-Policy", policies.join("; "));
 	res.setHeader("Referrer-Policy", "no-referrer");
 
-	return fs.readFile(path.join(__dirname, "..", "client", "index.html.tpl"), "utf-8", (err, file) => {
-		if (err) {
-			throw err;
+	return fs.readFile(
+		path.join(__dirname, "..", "client", "index.html.tpl"),
+		"utf-8",
+		(err, file) => {
+			if (err) {
+				throw err;
+			}
+
+			const config = getServerConfiguration();
+			config.cacheBust = Helper.getVersionCacheBust();
+
+			res.send(_.template(file)(config));
 		}
-
-		const config = getServerConfiguration();
-		config.cacheBust = Helper.getVersionCacheBust();
-
-		res.send(_.template(file)(config));
-	});
+	);
 }
 
 function initializeClient(socket, client, token, lastMessage) {
@@ -401,7 +411,8 @@ function initializeClient(socket, client, token, lastMessage) {
 					.then((matching) => {
 						if (!matching) {
 							socket.emit("change-password", {
-								error: "The current password field does not match your account password",
+								error:
+									"The current password field does not match your account password",
 							});
 							return;
 						}
@@ -419,7 +430,8 @@ function initializeClient(socket, client, token, lastMessage) {
 
 							socket.emit("change-password", obj);
 						});
-					}).catch((error) => {
+					})
+					.catch((error) => {
 						log.error(`Error while checking users password. Error: ${error}`);
 					});
 			}
@@ -477,7 +489,10 @@ function initializeClient(socket, client, token, lastMessage) {
 				return;
 			}
 
-			const registration = client.registerPushSubscription(client.config.sessions[token], subscription);
+			const registration = client.registerPushSubscription(
+				client.config.sessions[token],
+				subscription
+			);
 
 			if (registration) {
 				client.manager.webPush.pushSingle(client, registration, {
@@ -513,7 +528,11 @@ function initializeClient(socket, client, token, lastMessage) {
 				return;
 			}
 
-			if (typeof newSetting.value === "object" || typeof newSetting.name !== "string" || newSetting.name[0] === "_") {
+			if (
+				typeof newSetting.value === "object" ||
+				typeof newSetting.name !== "string" ||
+				newSetting.name[0] === "_"
+			) {
 				return;
 			}
 
@@ -588,7 +607,9 @@ function initializeClient(socket, client, token, lastMessage) {
 			applicationServerKey: manager.webPush.vapidKeys.publicKey,
 			pushSubscription: client.config.sessions[token],
 			active: client.lastActiveChannel,
-			networks: client.networks.map((network) => network.getFilteredClone(client.lastActiveChannel, lastMessage)),
+			networks: client.networks.map((network) =>
+				network.getFilteredClone(client.lastActiveChannel, lastMessage)
+			),
 			token: tokenToSend,
 		});
 		socket.emit("commands", inputs.getCommands());
@@ -714,9 +735,17 @@ function performAuthentication(data) {
 		// Authorization failed
 		if (!success) {
 			if (!client) {
-				log.warn(`Authentication for non existing user attempted from ${colors.bold(getClientIp(socket))}`);
+				log.warn(
+					`Authentication for non existing user attempted from ${colors.bold(
+						getClientIp(socket)
+					)}`
+				);
 			} else {
-				log.warn(`Authentication failed for user ${colors.bold(data.user)} from ${colors.bold(getClientIp(socket))}`);
+				log.warn(
+					`Authentication failed for user ${colors.bold(data.user)} from ${colors.bold(
+						getClientIp(socket)
+					)}`
+				);
 			}
 
 			socket.emit("auth", {success: false});

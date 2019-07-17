@@ -4,7 +4,11 @@ const socket = require("../socket");
 const options = require("../options");
 
 function evaluateSetting(name, value) {
-	if (options.settings.syncSettings && options.settings[name] !== value && !options.noSync.includes(name)) {
+	if (
+		options.settings.syncSettings &&
+		options.settings[name] !== value &&
+		!options.noSync.includes(name)
+	) {
 		options.processSetting(name, value, true);
 	} else if (options.alwaysSync.includes(name)) {
 		options.processSetting(name, value, true);

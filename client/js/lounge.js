@@ -69,7 +69,11 @@ window.vueMounted = () => {
 	});
 
 	viewport.on("click", "#chat .menu", function(e) {
-		e.currentTarget = $(`#sidebar .chan[data-id="${$(this).closest(".chan").attr("data-id")}"]`)[0];
+		e.currentTarget = $(
+			`#sidebar .chan[data-id="${$(this)
+				.closest(".chan")
+				.attr("data-id")}"]`
+		)[0];
 		return contextMenuFactory.createContextMenu($(this), e).show();
 	});
 
@@ -140,8 +144,7 @@ window.vueMounted = () => {
 
 		const lastActive = $("#windows > .active");
 
-		lastActive
-			.removeClass("active");
+		lastActive.removeClass("active");
 
 		const chan = $(target)
 			.addClass("active")

@@ -26,24 +26,20 @@ function sortParts(a, b) {
 // fragments will contain duplicate styling attributes.
 function merge(textParts, styleFragments, cleanText) {
 	// Remove overlapping parts
-	textParts = textParts
-		.sort(sortParts)
-		.reduce((prev, curr) => {
-			const intersection = prev.some((p) => anyIntersection(p, curr));
+	textParts = textParts.sort(sortParts).reduce((prev, curr) => {
+		const intersection = prev.some((p) => anyIntersection(p, curr));
 
-			if (intersection) {
-				return prev;
-			}
+		if (intersection) {
+			return prev;
+		}
 
-			return prev.concat([curr]);
-		}, []);
+		return prev.concat([curr]);
+	}, []);
 
 	// Every section of the original text that has not been captured in a "part"
 	// is filled with "text" parts, dummy objects with start/end but no extra
 	// metadata.
-	const allParts = textParts
-		.concat(fill(textParts, cleanText))
-		.sort(sortParts); // Sort all parts identified based on their position in the original text
+	const allParts = textParts.concat(fill(textParts, cleanText)).sort(sortParts); // Sort all parts identified based on their position in the original text
 
 	// Distribute the style fragments within the text parts
 	return allParts.map((textPart) => {

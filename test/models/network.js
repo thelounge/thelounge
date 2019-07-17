@@ -103,25 +103,28 @@ describe("Network", function() {
 			let saveCalled = false;
 
 			const network = new Network();
-			network.edit({
-				save() {
-					saveCalled = true;
+			network.edit(
+				{
+					save() {
+						saveCalled = true;
+					},
 				},
-			}, {
-				nick: "newNick",
-				host: "new.tld",
-				name: "Lounge Test Network",
-				port: "1337",
-				tls: undefined,
-				rejectUnauthorized: undefined,
-				username: 1234,
-				password: 4567,
-				realname: 8901,
-				commands: "/command 1 2 3\r\n/ping HELLO\r\r\r\r/whois test\r\n\r\n",
-				ip: "newIp",
-				hostname: "newHostname",
-				guid: "newGuid",
-			});
+				{
+					nick: "newNick",
+					host: "new.tld",
+					name: "Lounge Test Network",
+					port: "1337",
+					tls: undefined,
+					rejectUnauthorized: undefined,
+					username: 1234,
+					password: 4567,
+					realname: 8901,
+					commands: "/command 1 2 3\r\n/ping HELLO\r\r\r\r/whois test\r\n\r\n",
+					ip: "newIp",
+					hostname: "newHostname",
+					guid: "newGuid",
+				}
+			);
 
 			expect(saveCalled).to.be.true;
 			expect(network.guid).to.not.equal("newGuid");
@@ -182,18 +185,20 @@ describe("Network", function() {
 
 			const network = new Network({
 				name: "networkName",
-				channels: [
-					chan,
-				],
+				channels: [chan],
 			});
 
-			chan.messages.push(new Msg({
-				text: "message in original instance",
-			}));
+			chan.messages.push(
+				new Msg({
+					text: "message in original instance",
+				})
+			);
 
-			network.channels[1].messages.push(new Msg({
-				text: "message after network creation",
-			}));
+			network.channels[1].messages.push(
+				new Msg({
+					text: "message after network creation",
+				})
+			);
 
 			expect(network.channels[1].messages).to.have.lengthOf(3);
 			expect(network.channels[1].messages[0].text).to.equal("message in constructor");
@@ -208,9 +213,7 @@ describe("Network", function() {
 			chan.setUser(new User({nick: "test"}));
 
 			const network = new Network({
-				channels: [
-					chan,
-				],
+				channels: [chan],
 			});
 
 			expect(network.channels[0].users).to.be.empty;
@@ -220,26 +223,27 @@ describe("Network", function() {
 			const network = new Network();
 			const clone = network.getFilteredClone();
 
-			expect(clone).to.be.an("object").that.has.all.keys(
-				"channels",
-				"commands",
-				"host",
-				"name",
-				"port",
-				"realname",
-				"serverOptions",
-				"status",
-				"tls",
-				"userDisconnected",
-				"rejectUnauthorized",
-				"uuid",
-				"username"
-			);
+			expect(clone)
+				.to.be.an("object")
+				.that.has.all.keys(
+					"channels",
+					"commands",
+					"host",
+					"name",
+					"port",
+					"realname",
+					"serverOptions",
+					"status",
+					"tls",
+					"userDisconnected",
+					"rejectUnauthorized",
+					"uuid",
+					"username"
+				);
 
-			expect(clone.status).to.be.an("object").that.has.all.keys(
-				"connected",
-				"secure"
-			);
+			expect(clone.status)
+				.to.be.an("object")
+				.that.has.all.keys("connected", "secure");
 		});
 	});
 
@@ -248,9 +252,7 @@ describe("Network", function() {
 			const chan = new Chan({name: "#thelounge"});
 
 			const network = new Network({
-				channels: [
-					chan,
-				],
+				channels: [chan],
 			});
 			// Lobby and initial channel
 			expect(network.channels.length).to.equal(2);
@@ -267,11 +269,7 @@ describe("Network", function() {
 			const chan3 = new Chan({name: "#zero"});
 
 			const network = new Network({
-				channels: [
-					chan1,
-					chan2,
-					chan3,
-				],
+				channels: [chan1, chan2, chan3],
 				name: "freenode",
 			});
 
@@ -290,10 +288,7 @@ describe("Network", function() {
 			const chan2 = new Chan({name: "#THELOUNGE"});
 
 			const network = new Network({
-				channels: [
-					chan1,
-					chan2,
-				],
+				channels: [chan1, chan2],
 			});
 
 			const newChan = new Chan({name: "#freenode"});
@@ -309,10 +304,7 @@ describe("Network", function() {
 			const chan2 = new Chan({name: "#THELOUNGE"});
 
 			const network = new Network({
-				channels: [
-					chan1,
-					chan2,
-				],
+				channels: [chan1, chan2],
 			});
 
 			const newUser = new Chan({name: "mcinkay", type: Chan.Type.QUERY});
@@ -330,12 +322,7 @@ describe("Network", function() {
 			const user2 = new Chan({name: "xpaw", type: Chan.Type.QUERY});
 
 			const network = new Network({
-				channels: [
-					chan1,
-					chan2,
-					user1,
-					user2,
-				],
+				channels: [chan1, chan2, user1, user2],
 			});
 
 			const newUser = new Chan({name: "mcinkay", type: Chan.Type.QUERY});
@@ -355,12 +342,7 @@ describe("Network", function() {
 			const user2 = new Chan({name: "xpaw", type: Chan.Type.QUERY});
 
 			const network = new Network({
-				channels: [
-					chan1,
-					chan2,
-					user1,
-					user2,
-				],
+				channels: [chan1, chan2, user1, user2],
 			});
 
 			const newBanlist = new Chan({name: "Banlist for #THELOUNGE", type: Chan.Type.SPECIAL});
@@ -379,11 +361,7 @@ describe("Network", function() {
 			const user1 = new Chan({name: "astorije", type: Chan.Type.QUERY});
 
 			const network = new Network({
-				channels: [
-					chan1,
-					chan2,
-					user1,
-				],
+				channels: [chan1, chan2, user1],
 			});
 
 			const newBanlist = new Chan({name: "Banlist for #THELOUNGE", type: Chan.Type.SPECIAL});
@@ -404,11 +382,7 @@ describe("Network", function() {
 			const user1 = new Chan({name: "astorije", type: Chan.Type.QUERY});
 
 			const network = new Network({
-				channels: [
-					banlist,
-					chan1,
-					user1,
-				],
+				channels: [banlist, chan1, user1],
 			});
 
 			const newChan = new Chan({name: "#freenode"});

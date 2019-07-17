@@ -19,7 +19,7 @@
 			maxlength="200"
 			title="The channel name may not contain spaces"
 			required
-		>
+		/>
 		<input
 			v-model="inputPassword"
 			type="password"
@@ -30,11 +30,8 @@
 			maxlength="200"
 			title="The channel password may not contain spaces"
 			autocomplete="new-password"
-		>
-		<button
-			type="submit"
-			class="btn btn-small"
-		>Join</button>
+		/>
+		<button type="submit" class="btn btn-small">Join</button>
 	</form>
 </template>
 
@@ -63,7 +60,9 @@ export default {
 	methods: {
 		onSubmit() {
 			const channelToFind = this.inputChannel.toLowerCase();
-			const existingChannel = this.network.channels.find((c) => c.name.toLowerCase() === channelToFind);
+			const existingChannel = this.network.channels.find(
+				(c) => c.name.toLowerCase() === channelToFind
+			);
 
 			if (existingChannel) {
 				const $ = require("jquery");

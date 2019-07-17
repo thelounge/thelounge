@@ -1,9 +1,5 @@
 <template>
-	<ChannelWrapper
-		:network="network"
-		:channel="channel"
-		:active-channel="activeChannel"
-	>
+	<ChannelWrapper :network="network" :channel="channel" :active-channel="activeChannel">
 		<button
 			v-if="network.channels.length > 1"
 			:aria-controls="'network-' + network.uuid"
@@ -11,16 +7,12 @@
 			:aria-expanded="!network.isCollapsed"
 			class="collapse-network"
 			@click.stop="onCollapseClick"
-		><span class="collapse-network-icon" /></button>
-		<span
-			v-else
-			class="collapse-network"
-		/>
+		>
+			<span class="collapse-network-icon" />
+		</button>
+		<span v-else class="collapse-network" />
 		<div class="lobby-wrap">
-			<span
-				:title="channel.name"
-				class="name"
-			>{{ channel.name }}</span>
+			<span :title="channel.name" class="name">{{ channel.name }}</span>
 			<span
 				v-if="network.status.connected && !network.status.secure"
 				class="not-secure-tooltip tooltipped tooltipped-w"
@@ -35,18 +27,16 @@
 			>
 				<span class="not-connected-icon" />
 			</span>
-			<span
-				v-if="channel.unread"
-				:class="{ highlight: channel.highlight }"
-				class="badge"
-			>{{ channel.unread | roundBadgeNumber }}</span>
+			<span v-if="channel.unread" :class="{highlight: channel.highlight}" class="badge">{{
+				channel.unread | roundBadgeNumber
+			}}</span>
 		</div>
 		<span
 			:aria-label="joinChannelLabel"
 			class="add-channel-tooltip tooltipped tooltipped-w tooltipped-no-touch"
 		>
 			<button
-				:class="['add-channel', { opened: isJoinChannelShown }]"
+				:class="['add-channel', {opened: isJoinChannelShown}]"
 				:aria-controls="'join-channel-' + channel.id"
 				:aria-label="joinChannelLabel"
 				@click.stop="$emit('toggleJoinChannel')"

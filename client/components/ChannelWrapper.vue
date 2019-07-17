@@ -1,11 +1,16 @@
 <template>
 	<div
-		v-if="!network.isCollapsed || channel.highlight || channel.type === 'lobby' || (activeChannel && channel === activeChannel.channel)"
+		v-if="
+			!network.isCollapsed ||
+				channel.highlight ||
+				channel.type === 'lobby' ||
+				(activeChannel && channel === activeChannel.channel)
+		"
 		:class="[
 			'chan',
 			channel.type,
-			{ active: activeChannel && channel === activeChannel.channel },
-			{ 'parted-channel': channel.type === 'channel' && channel.state === 0 }
+			{active: activeChannel && channel === activeChannel.channel},
+			{'parted-channel': channel.type === 'channel' && channel.state === 0},
 		]"
 		:aria-label="getAriaLabel()"
 		:title="getAriaLabel()"
@@ -16,11 +21,7 @@
 		:aria-selected="activeChannel && channel === activeChannel.channel"
 		role="tab"
 	>
-		<slot
-			:network="network"
-			:channel="channel"
-			:activeChannel="activeChannel"
-		/>
+		<slot :network="network" :channel="channel" :activeChannel="activeChannel" />
 	</div>
 </template>
 

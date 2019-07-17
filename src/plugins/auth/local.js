@@ -13,7 +13,11 @@ function localAuth(manager, client, user, password, callback) {
 
 	// If this user has no password set, fail the authentication
 	if (!client.config.password) {
-		log.error(`User ${colors.bold(user)} with no local password set tried to sign in. (Probably a LDAP user)`);
+		log.error(
+			`User ${colors.bold(
+				user
+			)} with no local password set tried to sign in. (Probably a LDAP user)`
+		);
 		return callback(false);
 	}
 
@@ -25,13 +29,18 @@ function localAuth(manager, client, user, password, callback) {
 
 				client.setPassword(hash, (success) => {
 					if (success) {
-						log.info(`User ${colors.bold(client.name)} logged in and their hashed password has been updated to match new security requirements`);
+						log.info(
+							`User ${colors.bold(
+								client.name
+							)} logged in and their hashed password has been updated to match new security requirements`
+						);
 					}
 				});
 			}
 
 			callback(matching);
-		}).catch((error) => {
+		})
+		.catch((error) => {
 			log.error(`Error while checking users password. Error: ${error}`);
 		});
 }
@@ -40,4 +49,3 @@ module.exports = {
 	auth: localAuth,
 	isEnabled: () => true,
 };
-

@@ -6,11 +6,13 @@ const findEmoji = require("../../../../../../client/js/libs/handlebars/ircmessag
 describe("findEmoji", () => {
 	it("should find default emoji presentation character", () => {
 		const input = "test \u{231A} test";
-		const expected = [{
-			start: 5,
-			end: 6,
-			emoji: "\u{231A}",
-		}];
+		const expected = [
+			{
+				start: 5,
+				end: 6,
+				emoji: "\u{231A}",
+			},
+		];
 
 		const actual = findEmoji(input);
 
@@ -19,11 +21,13 @@ describe("findEmoji", () => {
 
 	it("should find default text presentation character rendered as emoji", () => {
 		const input = "test \u{2194}\u{FE0F} test";
-		const expected = [{
-			start: 5,
-			end: 7,
-			emoji: "\u{2194}\u{FE0F}",
-		}];
+		const expected = [
+			{
+				start: 5,
+				end: 7,
+				emoji: "\u{2194}\u{FE0F}",
+			},
+		];
 
 		const actual = findEmoji(input);
 
@@ -32,11 +36,13 @@ describe("findEmoji", () => {
 
 	it("should find emoji modifier base", () => {
 		const input = "test\u{1F469}test";
-		const expected = [{
-			start: 4,
-			end: 6,
-			emoji: "\u{1F469}",
-		}];
+		const expected = [
+			{
+				start: 4,
+				end: 6,
+				emoji: "\u{1F469}",
+			},
+		];
 
 		const actual = findEmoji(input);
 
@@ -45,11 +51,13 @@ describe("findEmoji", () => {
 
 	it("should find emoji modifier base followed by a modifier", () => {
 		const input = "test\u{1F469}\u{1F3FF}test";
-		const expected = [{
-			start: 4,
-			end: 8,
-			emoji: "\u{1F469}\u{1F3FF}",
-		}];
+		const expected = [
+			{
+				start: 4,
+				end: 8,
+				emoji: "\u{1F469}\u{1F3FF}",
+			},
+		];
 
 		const actual = findEmoji(input);
 

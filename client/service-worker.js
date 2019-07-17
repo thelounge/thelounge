@@ -10,11 +10,15 @@ self.addEventListener("install", function() {
 });
 
 self.addEventListener("activate", function(event) {
-	event.waitUntil(caches.keys().then((names) => Promise.all(
-		names
-			.filter((name) => name !== cacheName)
-			.map((name) => caches.delete(name))
-	)));
+	event.waitUntil(
+		caches
+			.keys()
+			.then((names) =>
+				Promise.all(
+					names.filter((name) => name !== cacheName).map((name) => caches.delete(name))
+				)
+			)
+	);
 
 	event.waitUntil(self.clients.claim());
 });
@@ -50,9 +54,7 @@ async function putInCache(request, response) {
 async function cleanRedirect(response) {
 	// Not all browsers support the Response.body stream, so fall back
 	// to reading the entire body into memory as a blob.
-	const bodyPromise = "body" in response ?
-		Promise.resolve(response.body) :
-		response.blob();
+	const bodyPromise = "body" in response ? Promise.resolve(response.body) : response.blob();
 
 	const body = await bodyPromise;
 
@@ -134,29 +136,33 @@ function showNotification(event, payload) {
 self.addEventListener("notificationclick", function(event) {
 	event.notification.close();
 
-	event.waitUntil(clients.matchAll({
-		includeUncontrolled: true,
-		type: "window",
-	}).then((clientList) => {
-		if (clientList.length === 0) {
-			if (clients.openWindow) {
-				return clients.openWindow(`.#${event.notification.tag}`);
-			}
+	event.waitUntil(
+		clients
+			.matchAll({
+				includeUncontrolled: true,
+				type: "window",
+			})
+			.then((clientList) => {
+				if (clientList.length === 0) {
+					if (clients.openWindow) {
+						return clients.openWindow(`.#${event.notification.tag}`);
+					}
 
-			return;
-		}
+					return;
+				}
 
-		const client = findSuitableClient(clientList);
+				const client = findSuitableClient(clientList);
 
-		client.postMessage({
-			type: "open",
-			channel: event.notification.tag,
-		});
+				client.postMessage({
+					type: "open",
+					channel: event.notification.tag,
+				});
 
-		if ("focus" in client) {
-			client.focus();
-		}
-	}));
+				if ("focus" in client) {
+					client.focus();
+				}
+			})
+	);
 });
 
 function findSuitableClient(clientList) {

@@ -64,14 +64,16 @@ module.exports = function(client, chan, msg) {
 		fetch(url, {
 			accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
 			language: client.config.browser.language,
-		}).then((res) => {
-			parse(msg, chan, preview, res, client);
-		}).catch((err) => {
-			preview.type = "error";
-			preview.error = "message";
-			preview.message = err.message;
-			handlePreview(client, chan, msg, preview, null);
-		});
+		})
+			.then((res) => {
+				parse(msg, chan, preview, res, client);
+			})
+			.catch((err) => {
+				preview.type = "error";
+				preview.error = "message";
+				preview.message = err.message;
+				handlePreview(client, chan, msg, preview, null);
+			});
 
 		return cleanLinks;
 	}, []);
@@ -86,18 +88,20 @@ function parseHtml(preview, res, client) {
 			.catch(() => {
 				preview.type = "link";
 				preview.head =
-					$('meta[property="og:title"]').attr("content")
-					|| $("head > title, title").first().text()
-					|| "";
+					$('meta[property="og:title"]').attr("content") ||
+					$("head > title, title")
+						.first()
+						.text() ||
+					"";
 				preview.body =
-					$('meta[property="og:description"]').attr("content")
-					|| $('meta[name="description"]').attr("content")
-					|| "";
+					$('meta[property="og:description"]').attr("content") ||
+					$('meta[name="description"]').attr("content") ||
+					"";
 				preview.thumb =
-					$('meta[property="og:image"]').attr("content")
-					|| $('meta[name="twitter:image:src"]').attr("content")
-					|| $('link[rel="image_src"]').attr("href")
-					|| "";
+					$('meta[property="og:image"]').attr("content") ||
+					$('meta[name="twitter:image:src"]').attr("content") ||
+					$('link[rel="image_src"]').attr("href") ||
+					"";
 
 				// Make sure thumbnail is a valid and absolute url
 				if (preview.thumb.length) {
@@ -106,18 +110,22 @@ function parseHtml(preview, res, client) {
 
 				// Verify that thumbnail pic exists and is under allowed size
 				if (preview.thumb.length) {
-					fetch(preview.thumb, {language: client.config.browser.language}).then((resThumb) => {
-						if (resThumb === null
-						|| !(imageTypeRegex.test(resThumb.type))
-						|| resThumb.size > (Helper.config.prefetchMaxImageSize * 1024)) {
-							preview.thumb = "";
-						}
+					fetch(preview.thumb, {language: client.config.browser.language})
+						.then((resThumb) => {
+							if (
+								resThumb === null ||
+								!imageTypeRegex.test(resThumb.type) ||
+								resThumb.size > Helper.config.prefetchMaxImageSize * 1024
+							) {
+								preview.thumb = "";
+							}
 
-						resolve(resThumb);
-					}).catch(() => {
-						preview.thumb = "";
-						resolve(null);
-					});
+							resolve(resThumb);
+						})
+						.catch(() => {
+							preview.thumb = "";
+							resolve(null);
+						});
 				} else {
 					resolve(res);
 				}
@@ -152,21 +160,24 @@ function parseHtmlMedia($, preview, client) {
 					foundMedia = true;
 
 					fetch(mediaUrl, {
-						accept: type === "video" ?
-							"video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5" :
-							"audio/webm, audio/ogg, audio/wav, audio/*;q=0.9, application/ogg;q=0.7, video/*;q=0.6; */*;q=0.5",
+						accept:
+							type === "video"
+								? "video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5"
+								: "audio/webm, audio/ogg, audio/wav, audio/*;q=0.9, application/ogg;q=0.7, video/*;q=0.6; */*;q=0.5",
 						language: client.config.browser.language,
-					}).then((resMedia) => {
-						if (resMedia === null || !mediaTypeRegex.test(resMedia.type)) {
-							return reject();
-						}
+					})
+						.then((resMedia) => {
+							if (resMedia === null || !mediaTypeRegex.test(resMedia.type)) {
+								return reject();
+							}
 
-						preview.type = type;
-						preview.media = mediaUrl;
-						preview.mediaType = resMedia.type;
+							preview.type = type;
+							preview.media = mediaUrl;
+							preview.mediaType = resMedia.type;
 
-						resolve(resMedia);
-					}).catch(reject);
+							resolve(resMedia);
+						})
+						.catch(reject);
 
 					return false;
 				}
@@ -183,60 +194,60 @@ function parse(msg, chan, preview, res, client) {
 	let promise;
 
 	switch (res.type) {
-	case "text/html":
-		promise = parseHtml(preview, res, client);
-		break;
-
-	case "image/png":
-	case "image/gif":
-	case "image/jpg":
-	case "image/jpeg":
-	case "image/webp":
-		if (res.size > (Helper.config.prefetchMaxImageSize * 1024)) {
-			preview.type = "error";
-			preview.error = "image-too-big";
-			preview.maxSize = Helper.config.prefetchMaxImageSize * 1024;
-		} else {
-			preview.type = "image";
-			preview.thumb = preview.link;
-		}
-
-		break;
-
-	case "audio/midi":
-	case "audio/mpeg":
-	case "audio/mpeg3":
-	case "audio/ogg":
-	case "audio/wav":
-	case "audio/x-mid":
-	case "audio/x-midi":
-	case "audio/x-mpeg":
-	case "audio/x-mpeg-3":
-		if (!preview.link.startsWith("https://")) {
+		case "text/html":
+			promise = parseHtml(preview, res, client);
 			break;
-		}
 
-		preview.type = "audio";
-		preview.media = preview.link;
-		preview.mediaType = res.type;
+		case "image/png":
+		case "image/gif":
+		case "image/jpg":
+		case "image/jpeg":
+		case "image/webp":
+			if (res.size > Helper.config.prefetchMaxImageSize * 1024) {
+				preview.type = "error";
+				preview.error = "image-too-big";
+				preview.maxSize = Helper.config.prefetchMaxImageSize * 1024;
+			} else {
+				preview.type = "image";
+				preview.thumb = preview.link;
+			}
 
-		break;
-
-	case "video/webm":
-	case "video/ogg":
-	case "video/mp4":
-		if (!preview.link.startsWith("https://")) {
 			break;
-		}
 
-		preview.type = "video";
-		preview.media = preview.link;
-		preview.mediaType = res.type;
+		case "audio/midi":
+		case "audio/mpeg":
+		case "audio/mpeg3":
+		case "audio/ogg":
+		case "audio/wav":
+		case "audio/x-mid":
+		case "audio/x-midi":
+		case "audio/x-mpeg":
+		case "audio/x-mpeg-3":
+			if (!preview.link.startsWith("https://")) {
+				break;
+			}
 
-		break;
+			preview.type = "audio";
+			preview.media = preview.link;
+			preview.mediaType = res.type;
 
-	default:
-		return removePreview(msg, preview);
+			break;
+
+		case "video/webm":
+		case "video/ogg":
+		case "video/mp4":
+			if (!preview.link.startsWith("https://")) {
+				break;
+			}
+
+			preview.type = "video";
+			preview.media = preview.link;
+			preview.mediaType = res.type;
+
+			break;
+
+		default:
+			return removePreview(msg, preview);
 	}
 
 	if (!promise) {
@@ -303,8 +314,9 @@ function removePreview(msg, preview) {
 
 function getRequestHeaders(headers) {
 	const formattedHeaders = {
-		"User-Agent": "Mozilla/5.0 (compatible; The Lounge IRC Client; +https://github.com/thelounge/thelounge)",
-		"Accept": headers.accept || "*/*",
+		"User-Agent":
+			"Mozilla/5.0 (compatible; The Lounge IRC Client; +https://github.com/thelounge/thelounge)",
+		Accept: headers.accept || "*/*",
 		"X-Purpose": "preview",
 	};
 
@@ -331,13 +343,12 @@ function fetch(uri, headers) {
 		let limit = Helper.config.prefetchMaxImageSize * 1024;
 
 		try {
-			got
-				.stream(uri, {
-					timeout: 5000,
-					headers: getRequestHeaders(headers),
-					rejectUnauthorized: false,
-				})
-				.on("request", (req) => request = req)
+			got.stream(uri, {
+				timeout: 5000,
+				headers: getRequestHeaders(headers),
+				rejectUnauthorized: false,
+			})
+				.on("request", (req) => (request = req))
 				.on("response", function(res) {
 					response = res;
 
@@ -360,10 +371,7 @@ function fetch(uri, headers) {
 				})
 				.on("error", (e) => reject(e))
 				.on("data", (data) => {
-					buffer = Buffer.concat(
-						[buffer, data],
-						buffer.length + data.length
-					);
+					buffer = Buffer.concat([buffer, data], buffer.length + data.length);
 
 					if (buffer.length >= limit) {
 						request.abort();

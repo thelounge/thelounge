@@ -16,7 +16,11 @@ module.exports = class ContextMenu {
 	}
 
 	show() {
-		const contextMenu = showContextMenu(this.contextMenuItems, this.selectedElement, this.event);
+		const contextMenu = showContextMenu(
+			this.contextMenuItems,
+			this.selectedElement,
+			this.event
+		);
 		this.bindEvents(contextMenu);
 		return false;
 	}
@@ -33,7 +37,8 @@ module.exports = class ContextMenu {
 	bindEvents(contextMenu) {
 		const contextMenuActions = this.contextMenuActions;
 
-		contextMenuActions.execute = (id, ...args) => contextMenuActions[id] && contextMenuActions[id](...args);
+		contextMenuActions.execute = (id, ...args) =>
+			contextMenuActions[id] && contextMenuActions[id](...args);
 
 		const clickItem = (item) => {
 			const itemData = item.attr("data-data");
@@ -109,19 +114,25 @@ function showContextMenu(contextMenuItems, selectedElement, event) {
 			if (item.divider) {
 				contextMenu.append(templates.contextmenu_divider());
 			} else {
-				contextMenu.append(templates.contextmenu_item({
-					class: typeof item.className === "function" ? item.className(target) : item.className,
-					action: item.actionId,
-					text: typeof item.displayName === "function" ? item.displayName(target) : item.displayName,
-					data: typeof item.data === "function" ? item.data(target) : item.data,
-				}));
+				contextMenu.append(
+					templates.contextmenu_item({
+						class:
+							typeof item.className === "function"
+								? item.className(target)
+								: item.className,
+						action: item.actionId,
+						text:
+							typeof item.displayName === "function"
+								? item.displayName(target)
+								: item.displayName,
+						data: typeof item.data === "function" ? item.data(target) : item.data,
+					})
+				);
 			}
 		}
 	}
 
-	contextMenuContainer
-		.html(contextMenu)
-		.show();
+	contextMenuContainer.html(contextMenu).show();
 
 	contextMenu
 		.css(positionContextMenu(contextMenu, selectedElement, event))
@@ -145,11 +156,11 @@ function positionContextMenu(contextMenu, selectedElement, e) {
 
 	offset = {left: e.pageX, top: e.pageY};
 
-	if ((window.innerWidth - offset.left) < menuWidth) {
+	if (window.innerWidth - offset.left < menuWidth) {
 		offset.left = window.innerWidth - menuWidth;
 	}
 
-	if ((window.innerHeight - offset.top) < menuHeight) {
+	if (window.innerHeight - offset.top < menuHeight) {
 		offset.top = window.innerHeight - menuHeight;
 	}
 

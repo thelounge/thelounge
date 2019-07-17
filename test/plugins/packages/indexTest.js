@@ -27,9 +27,7 @@ describe("packages", function() {
 		it("should return the list of registered stylesheets for loaded packages", function() {
 			packages.loadPackages();
 
-			expect(packages.getStylesheets()).to.deep.equal([
-				"thelounge-package-foo/style.css",
-			]);
+			expect(packages.getStylesheets()).to.deep.equal(["thelounge-package-foo/style.css"]);
 		});
 	});
 
@@ -41,8 +39,7 @@ describe("packages", function() {
 		it("should return details of a registered package after it was loaded", function() {
 			packages.loadPackages();
 
-			expect(packages.getPackage("thelounge-package-foo"))
-				.to.have.key("onServerStart");
+			expect(packages.getPackage("thelounge-package-foo")).to.have.key("onServerStart");
 		});
 	});
 
@@ -51,11 +48,13 @@ describe("packages", function() {
 			// Mock `log.info` to extract its effect into a string
 			log.info.restore();
 			let stdout = "";
-			stub(log, "info").callsFake(TestUtil.sanitizeLog((str) => stdout += str));
+			stub(log, "info").callsFake(TestUtil.sanitizeLog((str) => (stdout += str)));
 
 			packages.loadPackages();
 
-			expect(stdout).to.deep.equal("Package thelounge-package-foo loaded\nThere are packages using the experimental plugin API. Be aware that this API is not yet stable and may change in future The Lounge releases.\n");
+			expect(stdout).to.deep.equal(
+				"Package thelounge-package-foo loaded\nThere are packages using the experimental plugin API. Be aware that this API is not yet stable and may change in future The Lounge releases.\n"
+			);
 		});
 	});
 });

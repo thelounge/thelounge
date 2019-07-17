@@ -8,9 +8,7 @@ config.devtool = "eval";
 // Add the istanbul plugin to babel-loader options
 for (const rule of config.module.rules) {
 	if (rule.use.loader === "babel-loader") {
-		rule.use.options.plugins = [
-			"istanbul",
-		];
+		rule.use.options.plugins = ["istanbul"];
 	}
 }
 

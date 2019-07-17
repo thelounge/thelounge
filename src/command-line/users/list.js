@@ -20,7 +20,8 @@ program
 		const ClientManager = require("../../clientManager");
 		const users = new ClientManager().getUsers();
 
-		if (users === undefined) { // There was an error, already logged
+		if (users === undefined) {
+			// There was an error, already logged
 			return;
 		}
 
@@ -30,6 +31,10 @@ program
 				log.info(`${i + 1}. ${colors.bold(user)}`);
 			});
 		} else {
-			log.info(`There are currently no users. Create one with ${colors.bold("thelounge add <name>")}.`);
+			log.info(
+				`There are currently no users. Create one with ${colors.bold(
+					"thelounge add <name>"
+				)}.`
+			);
 		}
 	});

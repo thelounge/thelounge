@@ -176,14 +176,13 @@ Chan.prototype.getFilteredClone = function(lastActiveChannel, lastMessage) {
 			if (lastMessage > -1) {
 				// When reconnecting, always send up to 100 messages to prevent message gaps on the client
 				// See https://github.com/thelounge/thelounge/issues/1883
-				newChannel[prop] = this[prop]
-					.filter((m) => m.id > lastMessage)
-					.slice(-100);
+				newChannel[prop] = this[prop].filter((m) => m.id > lastMessage).slice(-100);
 				newChannel.moreHistoryAvailable = this[prop].length > 100;
 			} else {
 				// If channel is active, send up to 100 last messages, for all others send just 1
 				// Client will automatically load more messages whenever needed based on last seen messages
-				const messagesToSend = lastActiveChannel === true || this.id === lastActiveChannel ? 100 : 1;
+				const messagesToSend =
+					lastActiveChannel === true || this.id === lastActiveChannel ? 100 : 1;
 
 				newChannel[prop] = this[prop].slice(-messagesToSend);
 				newChannel.moreHistoryAvailable = this[prop].length > messagesToSend;

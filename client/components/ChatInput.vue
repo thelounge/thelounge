@@ -1,10 +1,5 @@
 <template>
-	<form
-		id="form"
-		method="post"
-		action=""
-		@submit.prevent="onSubmit"
-	>
+	<form id="form" method="post" action="" @submit.prevent="onSubmit">
 		<span id="nick">{{ network.nick }}</span>
 		<textarea
 			id="input"
@@ -23,12 +18,7 @@
 			aria-label="Upload file"
 			@click="openFileUpload"
 		>
-			<input
-				id="upload-input"
-				ref="uploadInput"
-				type="file"
-				multiple
-			>
+			<input id="upload-input" ref="uploadInput" type="file" multiple />
 			<button
 				id="upload"
 				type="button"
@@ -80,7 +70,7 @@ const bracketWraps = {
 	"*": "*",
 	"`": "`",
 	"~": "~",
-	"_": "_",
+	_: "_",
 };
 
 export default {
@@ -130,7 +120,9 @@ export default {
 			}
 
 			if (this.channel.inputHistoryPosition === 0) {
-				this.channel.inputHistory[this.channel.inputHistoryPosition] = this.channel.pendingMessage;
+				this.channel.inputHistory[
+					this.channel.inputHistoryPosition
+				] = this.channel.pendingMessage;
 			}
 
 			if (key === "up") {
@@ -141,7 +133,9 @@ export default {
 				this.channel.inputHistoryPosition--;
 			}
 
-			this.channel.pendingMessage = this.$refs.input.value = this.channel.inputHistory[this.channel.inputHistoryPosition];
+			this.channel.pendingMessage = this.$refs.input.value = this.channel.inputHistory[
+				this.channel.inputHistoryPosition
+			];
 			this.setInputSize();
 
 			return false;
@@ -173,7 +167,8 @@ export default {
 				// Use scrollHeight to calculate how many lines there are in input, and ceil the value
 				// because some browsers tend to incorrently round the values when using high density
 				// displays or using page zoom feature
-				this.$refs.input.style.height = Math.ceil(this.$refs.input.scrollHeight / lineHeight) * lineHeight + "px";
+				this.$refs.input.style.height =
+					Math.ceil(this.$refs.input.scrollHeight / lineHeight) * lineHeight + "px";
 			});
 		},
 		getInputPlaceholder(channel) {
@@ -219,7 +214,10 @@ export default {
 				const args = text.substr(1).split(" ");
 				const cmd = args.shift().toLowerCase();
 
-				if (Object.prototype.hasOwnProperty.call(commands, cmd) && commands[cmd].input(args)) {
+				if (
+					Object.prototype.hasOwnProperty.call(commands, cmd) &&
+					commands[cmd].input(args)
+				) {
 					return false;
 				}
 			}

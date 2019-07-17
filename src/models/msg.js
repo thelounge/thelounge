@@ -42,12 +42,14 @@ class Msg {
 			return !!this.from.nick;
 		}
 
-		return this.type !== Msg.Type.MOTD &&
+		return (
+			this.type !== Msg.Type.MOTD &&
 			this.type !== Msg.Type.ERROR &&
 			this.type !== Msg.Type.TOPIC_SET_BY &&
 			this.type !== Msg.Type.MODE_CHANNEL &&
 			this.type !== Msg.Type.RAW &&
-			this.type !== Msg.Type.WHOIS;
+			this.type !== Msg.Type.WHOIS
+		);
 	}
 }
 

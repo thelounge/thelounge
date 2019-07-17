@@ -1,8 +1,5 @@
 <template>
-	<div
-		v-if="networks.length === 0"
-		class="empty"
-	>
+	<div v-if="networks.length === 0" class="empty">
 		You are not connected to any networks yet.
 	</div>
 	<Draggable

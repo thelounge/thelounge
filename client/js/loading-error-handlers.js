@@ -42,7 +42,8 @@
 
 	window.g_LoungeErrorHandler = function LoungeErrorHandler(e) {
 		var message = document.getElementById("loading-page-message");
-		message.textContent = "An error has occurred that prevented the client from loading correctly.";
+		message.textContent =
+			"An error has occurred that prevented the client from loading correctly.";
 
 		var summary = document.createElement("summary");
 		summary.textContent = "More details";

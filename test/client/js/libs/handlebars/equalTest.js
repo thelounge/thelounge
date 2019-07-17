@@ -20,7 +20,6 @@ describe("equal Handlebars helper", function() {
 	it("should throw if too few or too many arguments are given", function() {
 		expect(() => equal("foo", block)).to.throw(Error, /expects 3 arguments/);
 
-		expect(() => equal("foo", "bar", "baz", block))
-			.to.throw(Error, /expects 3 arguments/);
+		expect(() => equal("foo", "bar", "baz", block)).to.throw(Error, /expects 3 arguments/);
 	});
 });

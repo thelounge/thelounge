@@ -92,7 +92,9 @@ function advancedLdapAuth(user, password, callback) {
 					res.on("searchEntry", function(entry) {
 						found = true;
 						const bindDN = entry.objectName;
-						log.info(`Auth against LDAP ${config.ldap.url} with found bindDN ${bindDN}`);
+						log.info(
+							`Auth against LDAP ${config.ldap.url} with found bindDN ${bindDN}`
+						);
 						ldapclient.unbind();
 
 						ldapAuthCommon(user, bindDN, password, callback);
@@ -105,7 +107,9 @@ function advancedLdapAuth(user, password, callback) {
 						ldapclient.unbind();
 
 						if (!found) {
-							log.warn(`LDAP Search did not find anything for: ${userDN} (${result.status})`);
+							log.warn(
+								`LDAP Search did not find anything for: ${userDN} (${result.status})`
+							);
 							callback(false);
 						}
 					});

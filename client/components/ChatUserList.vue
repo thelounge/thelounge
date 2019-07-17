@@ -1,14 +1,12 @@
 <template>
-	<aside
-		ref="userlist"
-		class="userlist"
-		@mouseleave="removeHoverUser"
-	>
+	<aside ref="userlist" class="userlist" @mouseleave="removeHoverUser">
 		<div class="count">
 			<input
 				ref="input"
 				:value="userSearchInput"
-				:placeholder="channel.users.length + ' user' + (channel.users.length === 1 ? '' : 's')"
+				:placeholder="
+					channel.users.length + ' user' + (channel.users.length === 1 ? '' : 's')
+				"
 				type="search"
 				class="search"
 				aria-label="Search among the user list"
@@ -19,7 +17,7 @@
 				@keydown.page-up="navigateUserList($event, -10)"
 				@keydown.page-down="navigateUserList($event, 10)"
 				@keydown.enter="selectUser"
-			>
+			/>
 		</div>
 		<div class="names">
 			<div
@@ -84,15 +82,11 @@ export default {
 		// filteredUsers is computed, to avoid unnecessary filtering
 		// as it is shared between filtering and keybindings.
 		filteredUsers() {
-			return fuzzy.filter(
-				this.userSearchInput,
-				this.channel.users,
-				{
-					pre: "<b>",
-					post: "</b>",
-					extract: (u) => u.nick,
-				}
-			);
+			return fuzzy.filter(this.userSearchInput, this.channel.users, {
+				pre: "<b>",
+				post: "</b>",
+				extract: (u) => u.nick,
+			});
 		},
 		groupedUsers() {
 			const groups = {};

@@ -33,7 +33,16 @@ function parseStyle(text) {
 
 	// At any given time, these carry style information since last time a styling
 	// control code was met.
-	let colorCodes, bold, textColor, bgColor, hexColor, hexBgColor, italic, underline, strikethrough, monospace;
+	let colorCodes,
+		bold,
+		textColor,
+		bgColor,
+		hexColor,
+		hexBgColor,
+		italic,
+		underline,
+		strikethrough,
+		monospace;
 
 	const resetStyle = () => {
 		bold = false;
@@ -90,96 +99,96 @@ function parseStyle(text) {
 	// encountered since the previous styling character.
 	while (position < text.length) {
 		switch (text[position]) {
-		case RESET:
-			emitFragment();
-			resetStyle();
-			break;
+			case RESET:
+				emitFragment();
+				resetStyle();
+				break;
 
-		// Meeting a BOLD character means that the ongoing text is either going to
-		// be in bold or that the previous one was in bold and the following one
-		// must be reset.
-		// This same behavior applies to COLOR, REVERSE, ITALIC, and UNDERLINE.
-		case BOLD:
-			emitFragment();
-			bold = !bold;
-			break;
+			// Meeting a BOLD character means that the ongoing text is either going to
+			// be in bold or that the previous one was in bold and the following one
+			// must be reset.
+			// This same behavior applies to COLOR, REVERSE, ITALIC, and UNDERLINE.
+			case BOLD:
+				emitFragment();
+				bold = !bold;
+				break;
 
-		case COLOR:
-			emitFragment();
+			case COLOR:
+				emitFragment();
 
-			// Go one step further to find the corresponding color
-			colorCodes = text.slice(position + 1).match(colorRx);
+				// Go one step further to find the corresponding color
+				colorCodes = text.slice(position + 1).match(colorRx);
 
-			if (colorCodes) {
-				textColor = Number(colorCodes[1]);
+				if (colorCodes) {
+					textColor = Number(colorCodes[1]);
 
-				if (colorCodes[2]) {
-					bgColor = Number(colorCodes[2]);
+					if (colorCodes[2]) {
+						bgColor = Number(colorCodes[2]);
+					}
+
+					// Color code length is > 1, so bump the current position cursor by as
+					// much (and reset the start cursor for the current text block as well)
+					position += colorCodes[0].length;
+					start = position + 1;
+				} else {
+					// If no color codes were found, toggles back to no colors (like BOLD).
+					textColor = undefined;
+					bgColor = undefined;
 				}
 
-				// Color code length is > 1, so bump the current position cursor by as
-				// much (and reset the start cursor for the current text block as well)
-				position += colorCodes[0].length;
-				start = position + 1;
-			} else {
-				// If no color codes were found, toggles back to no colors (like BOLD).
-				textColor = undefined;
-				bgColor = undefined;
-			}
+				break;
 
-			break;
+			case HEX_COLOR:
+				emitFragment();
 
-		case HEX_COLOR:
-			emitFragment();
+				colorCodes = text.slice(position + 1).match(hexColorRx);
 
-			colorCodes = text.slice(position + 1).match(hexColorRx);
+				if (colorCodes) {
+					hexColor = colorCodes[1].toUpperCase();
 
-			if (colorCodes) {
-				hexColor = colorCodes[1].toUpperCase();
+					if (colorCodes[2]) {
+						hexBgColor = colorCodes[2].toUpperCase();
+					}
 
-				if (colorCodes[2]) {
-					hexBgColor = colorCodes[2].toUpperCase();
+					// Color code length is > 1, so bump the current position cursor by as
+					// much (and reset the start cursor for the current text block as well)
+					position += colorCodes[0].length;
+					start = position + 1;
+				} else {
+					// If no color codes were found, toggles back to no colors (like BOLD).
+					hexColor = undefined;
+					hexBgColor = undefined;
 				}
 
-				// Color code length is > 1, so bump the current position cursor by as
-				// much (and reset the start cursor for the current text block as well)
-				position += colorCodes[0].length;
-				start = position + 1;
-			} else {
-				// If no color codes were found, toggles back to no colors (like BOLD).
-				hexColor = undefined;
-				hexBgColor = undefined;
+				break;
+
+			case REVERSE: {
+				emitFragment();
+				const tmp = bgColor;
+				bgColor = textColor;
+				textColor = tmp;
+				break;
 			}
 
-			break;
+			case ITALIC:
+				emitFragment();
+				italic = !italic;
+				break;
 
-		case REVERSE: {
-			emitFragment();
-			const tmp = bgColor;
-			bgColor = textColor;
-			textColor = tmp;
-			break;
-		}
+			case UNDERLINE:
+				emitFragment();
+				underline = !underline;
+				break;
 
-		case ITALIC:
-			emitFragment();
-			italic = !italic;
-			break;
+			case STRIKETHROUGH:
+				emitFragment();
+				strikethrough = !strikethrough;
+				break;
 
-		case UNDERLINE:
-			emitFragment();
-			underline = !underline;
-			break;
-
-		case STRIKETHROUGH:
-			emitFragment();
-			strikethrough = !strikethrough;
-			break;
-
-		case MONOSPACE:
-			emitFragment();
-			monospace = !monospace;
-			break;
+			case MONOSPACE:
+				emitFragment();
+				monospace = !monospace;
+				break;
 		}
 
 		// Evaluate the next character at the next iteration
@@ -192,25 +201,37 @@ function parseStyle(text) {
 	return result;
 }
 
-const properties = ["bold", "textColor", "bgColor", "hexColor", "hexBgColor", "italic", "underline", "strikethrough", "monospace"];
+const properties = [
+	"bold",
+	"textColor",
+	"bgColor",
+	"hexColor",
+	"hexBgColor",
+	"italic",
+	"underline",
+	"strikethrough",
+	"monospace",
+];
 
 function prepare(text) {
-	return parseStyle(text)
-		// This optimizes fragments by combining them together when all their values
-		// for the properties defined above are equal.
-		.reduce((prev, curr) => {
-			if (prev.length) {
-				const lastEntry = prev[prev.length - 1];
+	return (
+		parseStyle(text)
+			// This optimizes fragments by combining them together when all their values
+			// for the properties defined above are equal.
+			.reduce((prev, curr) => {
+				if (prev.length) {
+					const lastEntry = prev[prev.length - 1];
 
-				if (properties.every((key) => curr[key] === lastEntry[key])) {
-					lastEntry.text += curr.text;
-					lastEntry.end += curr.text.length;
-					return prev;
+					if (properties.every((key) => curr[key] === lastEntry[key])) {
+						lastEntry.text += curr.text;
+						lastEntry.end += curr.text.length;
+						return prev;
+					}
 				}
-			}
 
-			return prev.concat([curr]);
-		}, []);
+				return prev.concat([curr]);
+			}, [])
+	);
 }
 
 module.exports = prepare;

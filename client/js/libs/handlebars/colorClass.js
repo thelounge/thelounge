@@ -13,5 +13,5 @@ module.exports = function(str) {
 		due to A being ascii 65 (100 0001)
 		 while a being ascii 97 (110 0001)
 	*/
-	return "color-" + (1 + hash % 32);
+	return "color-" + (1 + (hash % 32));
 };

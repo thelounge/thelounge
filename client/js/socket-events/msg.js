@@ -32,7 +32,11 @@ socket.on("msg", function(data) {
 	// Display received notices and errors in currently active channel.
 	// Reloading the page will put them back into the lobby window.
 	// We only want to put errors/notices in active channel if they arrive on the same network
-	if (data.msg.showInActive && vueApp.activeChannel && vueApp.activeChannel.network === receivingChannel.network) {
+	if (
+		data.msg.showInActive &&
+		vueApp.activeChannel &&
+		vueApp.activeChannel.network === receivingChannel.network
+	) {
 		channel = vueApp.activeChannel.channel;
 
 		data.chan = channel.id;
@@ -76,7 +80,7 @@ socket.on("msg", function(data) {
 		const user = channel.users.find((u) => u.nick === data.msg.from.nick);
 
 		if (user) {
-			user.lastMessage = (new Date(data.msg.time)).getTime() || Date.now();
+			user.lastMessage = new Date(data.msg.time).getTime() || Date.now();
 		}
 	}
 
@@ -98,7 +102,11 @@ function notifyMessage(targetId, channel, activeChannel, msg) {
 				}
 			}
 
-			if (options.settings.desktopNotifications && ("Notification" in window) && Notification.permission === "granted") {
+			if (
+				options.settings.desktopNotifications &&
+				"Notification" in window &&
+				Notification.permission === "granted"
+			) {
 				let title;
 				let body;
 

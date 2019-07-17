@@ -23,7 +23,8 @@ socket.on("open", function(id) {
 		channel.channel.unread = 0;
 
 		if (channel.channel.messages.length > 0) {
-			channel.channel.firstUnread = channel.channel.messages[channel.channel.messages.length - 1].id;
+			channel.channel.firstUnread =
+				channel.channel.messages[channel.channel.messages.length - 1].id;
 		}
 	}
 

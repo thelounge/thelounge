@@ -1,7 +1,7 @@
 <template>
 	<button
 		v-if="link.type !== 'loading'"
-		:class="['toggle-button', 'toggle-preview', { opened: link.shown }]"
+		:class="['toggle-button', 'toggle-preview', {opened: link.shown}]"
 		:aria-label="ariaLabel"
 		@click="onClick"
 	/>

@@ -135,7 +135,7 @@ function move(array, old_index, new_index) {
 	if (new_index >= array.length) {
 		let k = new_index - array.length;
 
-		while ((k--) + 1) {
+		while (k-- + 1) {
 			this.push(undefined);
 		}
 	}
@@ -152,7 +152,8 @@ function closeChan(chan) {
 		cmd = "/quit";
 		const server = chan.find(".name").html();
 
-		if (!confirm(`Are you sure you want to remove ${server}?`)) { // eslint-disable-line no-alert
+		if (!confirm(`Are you sure you want to remove ${server}?`)) {
+			// eslint-disable-line no-alert
 			return false;
 		}
 	}

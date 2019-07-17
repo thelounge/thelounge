@@ -21,7 +21,8 @@ program
 		const ClientManager = require("../../clientManager");
 		const users = new ClientManager().getUsers();
 
-		if (users === undefined) { // There was an error, already logged
+		if (users === undefined) {
+			// There was an error, already logged
 			return;
 		}
 
@@ -36,6 +37,10 @@ program
 			{stdio: "inherit"}
 		);
 		child_spawn.on("error", function() {
-			log.error(`Unable to open ${colors.green(Helper.getUserConfigPath(name))}. ${colors.bold("$EDITOR")} is not set, and ${colors.bold("vi")} was not found.`);
+			log.error(
+				`Unable to open ${colors.green(Helper.getUserConfigPath(name))}. ${colors.bold(
+					"$EDITOR"
+				)} is not set, and ${colors.bold("vi")} was not found.`
+			);
 		});
 	});

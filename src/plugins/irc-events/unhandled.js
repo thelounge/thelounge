@@ -23,10 +23,14 @@ module.exports = function(irc, network) {
 			}
 		}
 
-		target.pushMessage(client, new Msg({
-			type: Msg.Type.UNHANDLED,
-			command: command.command,
-			params: command.params,
-		}), true);
+		target.pushMessage(
+			client,
+			new Msg({
+				type: Msg.Type.UNHANDLED,
+				command: command.command,
+				params: command.params,
+			}),
+			true
+		);
 	});
 };
