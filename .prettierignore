@@ -23,5 +23,3 @@ yarn.lock
 .gitattributes
 
 *.css
-*.js
-*.vue
