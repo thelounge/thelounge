@@ -14,9 +14,9 @@ Minor release to fix an issue where v3.1.0 fails to install on Linux/macOS using
 
 For more details, [see the full changelog](https://github.com/thelounge/thelounge/compare/v3.0.1...v3.1.0) and [milestone](https://github.com/thelounge/thelounge/milestone/30?closed=1).
 
-This is the first release that includes a largely rewritten frontend, which is built on top of the Vue.js framework! 
+This is the first release that includes a largely rewritten frontend, which is built on top of the Vue.js framework!
 We have started slowly transitioning the frontend to use Vue.js, which allows us to structure the code in a better fashion
-and to remove all the hacks related to keeping the state in the DOM using jQuery data attributes. 
+and to remove all the hacks related to keeping the state in the DOM using jQuery data attributes.
 This paves the road for future support of client customization and a plugin system.
 
 While this release is mostly related to the rewrite, there are many user facing changes and improvements in this release!
@@ -43,10 +43,10 @@ While this release is mostly related to the rewrite, there are many user facing 
 - Input history is also per-channel now. ([#2791](https://github.com/thelounge/thelounge/pull/2791))
 - Collapsing a network stays in active channel (and the active channel is still visible in the list)
 - Collapsed networks still show channels with highlights. ([#2223](https://github.com/thelounge/thelounge/pull/2223))
-- Client commands are refactored and `/join` can assume current channel. ([#2004](https://github.com/thelounge/thelounge/pull/2004)) ([#2281](https://github.com/thelounge/thelounge/pull/2281)) ([#2266](https://github.com/thelounge/thelounge/pull/2266)) 
-- Channel `/list` persists on page reloads. ([#2249](https://github.com/thelounge/thelounge/pull/2249)) 
+- Client commands are refactored and `/join` can assume current channel. ([#2004](https://github.com/thelounge/thelounge/pull/2004)) ([#2281](https://github.com/thelounge/thelounge/pull/2281)) ([#2266](https://github.com/thelounge/thelounge/pull/2266))
+- Channel `/list` persists on page reloads. ([#2249](https://github.com/thelounge/thelounge/pull/2249))
 - Message parser now returns Vue elements (via createElement) instead of raw html content (no more manual escaping!)
-- Message parser now actually accepts` CHANTYPES` and `PREFIX` from network. ([#443](https://github.com/thelounge/thelounge/pull/443))
+- Message parser now actually accepts `CHANTYPES` and `PREFIX` from network. ([#443](https://github.com/thelounge/thelounge/pull/443))
 - Hidden status messages are no longer rendered in DOM. ([#813](https://github.com/thelounge/thelounge/pull/813))
 - Channel state is synchronised to the client (and is displayed). ([#2245](https://github.com/thelounge/thelounge/pull/2245))
 - Chat input is no longer disabled when disconnected (still can't submit though)
@@ -182,7 +182,7 @@ yarn global add thelounge@next
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v3.1.0-pre.2...v3.1.0-pre.3)
 
 This is a pre-release for v3.1.0 to offer latest changes without having to wait for a stable release.
- At this stage, features may still be added or modified until the first release candidate for this version gets released.
+At this stage, features may still be added or modified until the first release candidate for this version gets released.
 
 Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
 
@@ -197,7 +197,7 @@ yarn global add thelounge@next
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v3.1.0-pre.1...v3.1.0-pre.2)
 
 This is a pre-release for v3.1.0 to offer latest changes without having to wait for a stable release.
- At this stage, features may still be added or modified until the first release candidate for this version gets released.
+At this stage, features may still be added or modified until the first release candidate for this version gets released.
 
 Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
 
@@ -212,7 +212,7 @@ yarn global add thelounge@next
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v3.0.1...v3.1.0-pre.1)
 
 This is a pre-release for v3.1.0 to offer latest changes without having to wait for a stable release.
- At this stage, features may still be added or modified until the first release candidate for this version gets released.
+At this stage, features may still be added or modified until the first release candidate for this version gets released.
 
 Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
 
@@ -226,7 +226,7 @@ yarn global add thelounge@next
 
 This patch release fixes a few small things that made it to the previous release.
 
-It includes fixes for issues related to: reconnecting when a nickname is already in use, unnecessary highlights on invites, the auto-expandable message input, channels starting with `&` or `+`, the ` /disconnect` command, and file uploads. Additionnally, `part` messages for the current user are now logged.
+It includes fixes for issues related to: reconnecting when a nickname is already in use, unnecessary highlights on invites, the auto-expandable message input, channels starting with `&` or `+`, the `/disconnect` command, and file uploads. Additionnally, `part` messages for the current user are now logged.
 
 A more comprehensive list of changes is available below.
 
@@ -477,7 +477,7 @@ _One more thing: we started [an Open Collective](https://opencollective.com/thel
 - Add "User information" (`whois`) support to the sidebar context menu ([#2587](https://github.com/thelounge/thelounge/pull/2587) by [@aspotton](https://github.com/aspotton))
 - Implement `irc://` and `ircs://` protocol handlers ([#2571](https://github.com/thelounge/thelounge/pull/2571) by [@xPaw](https://github.com/xPaw))
 - Add file uploading support ([#2552](https://github.com/thelounge/thelounge/pull/2552) by [@MaxLeiter](https://github.com/MaxLeiter), [#2743](https://github.com/thelounge/thelounge/pull/2743), [#2744](https://github.com/thelounge/thelounge/pull/2744), [#2748](https://github.com/thelounge/thelounge/pull/2748),
-[#2749](https://github.com/thelounge/thelounge/pull/2749), [#2851](https://github.com/thelounge/thelounge/pull/2851), [#2985](https://github.com/thelounge/thelounge/pull/2985) by [@xPaw](https://github.com/xPaw), [#2983](https://github.com/thelounge/thelounge/pull/2983) by [@astorije](https://github.com/astorije))
+  [#2749](https://github.com/thelounge/thelounge/pull/2749), [#2851](https://github.com/thelounge/thelounge/pull/2851), [#2985](https://github.com/thelounge/thelounge/pull/2985) by [@xPaw](https://github.com/xPaw), [#2983](https://github.com/thelounge/thelounge/pull/2983) by [@astorije](https://github.com/astorije))
 
 ### Changed
 
@@ -487,7 +487,7 @@ _One more thing: we started [an Open Collective](https://opencollective.com/thel
 - Improve monospace formatting in messages ([#2031](https://github.com/thelounge/thelounge/pull/2031) by [@astorije](https://github.com/astorije))
 - Switch default home location to `~/.thelounge` ([#1734](https://github.com/thelounge/thelounge/pull/1734) by [@astorije](https://github.com/astorije))
 - Report server errors when preview fetch fails ([#2036](https://github.com/thelounge/thelounge/pull/2036) by [@xPaw](https://github.com/xPaw))
-- Relay client's preferred language in link preview requests  ([#1918](https://github.com/thelounge/thelounge/pull/1918) by [@williamboman](https://github.com/williamboman))
+- Relay client's preferred language in link preview requests ([#1918](https://github.com/thelounge/thelounge/pull/1918) by [@williamboman](https://github.com/williamboman))
 - Allow generating random numbers in nick on page load ([#2090](https://github.com/thelounge/thelounge/pull/2090) by [@xPaw](https://github.com/xPaw))
 - Word prefetch errors differently ([#2101](https://github.com/thelounge/thelounge/pull/2101) by [@xPaw](https://github.com/xPaw))
 - Log socket close error if any ([#2108](https://github.com/thelounge/thelounge/pull/2108) by [@xPaw](https://github.com/xPaw))
@@ -551,8 +551,8 @@ _One more thing: we started [an Open Collective](https://opencollective.com/thel
   - `request` ([#2202](https://github.com/thelounge/thelounge/pull/2202), [#2454](https://github.com/thelounge/thelounge/pull/2454), [#2698](https://github.com/thelounge/thelounge/pull/2698))
   - `sqlite3` ([#2238](https://github.com/thelounge/thelounge/pull/2238), [#2584](https://github.com/thelounge/thelounge/pull/2584), [#2651](https://github.com/thelounge/thelounge/pull/2651), [#2863](https://github.com/thelounge/thelounge/pull/2863), [#2894](https://github.com/thelounge/thelounge/pull/2894), [#2972](https://github.com/thelounge/thelounge/pull/2972))
   - `express` ([#2241](https://github.com/thelounge/thelounge/pull/2241), [#2844](https://github.com/thelounge/thelounge/pull/2844))
-  - `socket.io` and `socketio-file-upload`  ([#2310](https://github.com/thelounge/thelounge/pull/2310), [#2456](https://github.com/thelounge/thelounge/pull/2456), [#2911](https://github.com/thelounge/thelounge/pull/2911)),
-	[#2832](https://github.com/thelounge/thelounge/pull/2832), [#2868](https://github.com/thelounge/thelounge/pull/2868))
+  - `socket.io` and `socketio-file-upload` ([#2310](https://github.com/thelounge/thelounge/pull/2310), [#2456](https://github.com/thelounge/thelounge/pull/2456), [#2911](https://github.com/thelounge/thelounge/pull/2911)),
+    [#2832](https://github.com/thelounge/thelounge/pull/2832), [#2868](https://github.com/thelounge/thelounge/pull/2868))
   - `lodash` ([#2384](https://github.com/thelounge/thelounge/pull/2384), [#2772](https://github.com/thelounge/thelounge/pull/2772))
   - `fs-extra` ([#2410](https://github.com/thelounge/thelounge/pull/2410), [#2450](https://github.com/thelounge/thelounge/pull/2450), [#2654](https://github.com/thelounge/thelounge/pull/2654), [#2893](https://github.com/thelounge/thelounge/pull/2893))
   - `ua-parser-js` ([#2422](https://github.com/thelounge/thelounge/pull/2422), [#2873](https://github.com/thelounge/thelounge/pull/2873))
@@ -734,7 +734,7 @@ On the [website repository](https://github.com/thelounge/thelounge.github.io):
 - Update Bootstrap to be able to use collapsible components (for navigation) and minify it ([#102](https://github.com/thelounge/thelounge.github.io/pull/102) by [@astorije](https://github.com/astorije))
 - Search feature ([#101](https://github.com/thelounge/thelounge.github.io/pull/101) by [@astorije](https://github.com/astorije), [#185](https://github.com/thelounge/thelounge.github.io/pull/185) by [@xPaw](https://github.com/xPaw))
 - Make `16px` favicon sharper ([#105](https://github.com/thelounge/thelounge.github.io/pull/105) by [@xPaw](https://github.com/xPaw))
-- Add security headers  ([#107](https://github.com/thelounge/thelounge.github.io/pull/107) by [@xPaw](https://github.com/xPaw))
+- Add security headers ([#107](https://github.com/thelounge/thelounge.github.io/pull/107) by [@xPaw](https://github.com/xPaw))
 - Use Muli font for the site ([#106](https://github.com/thelounge/thelounge.github.io/pull/106) by [@xPaw](https://github.com/xPaw))
 - Rewrite install docs ([#104](https://github.com/thelounge/thelounge.github.io/pull/104) by [@astorije](https://github.com/astorije), [#191](https://github.com/thelounge/thelounge.github.io/pull/191) by [@GewoonYorick](https://github.com/GewoonYorick))
 - Update configuration doc with the config generated from the main repo (to master) ([#109](https://github.com/thelounge/thelounge.github.io/pull/109), [`abc0aba`](https://github.com/thelounge/thelounge.github.io/commit/abc0aba03b3d562c163b1a3eff0ee0195f7935ef) by [@xPaw](https://github.com/xPaw), [#184](https://github.com/thelounge/thelounge.github.io/pull/184) by [@MaxLeiter](https://github.com/MaxLeiter))
@@ -980,7 +980,7 @@ yarn global add thelounge@next
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v3.0.0-pre.7...v3.0.0-pre.8)
 
 This is a pre-release for v3.0.0 to offer latest changes without having to wait for a stable release.
- At this stage, features may still be added or modified until the first release candidate for this version gets released.
+At this stage, features may still be added or modified until the first release candidate for this version gets released.
 
 Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
 
@@ -995,7 +995,7 @@ yarn global add thelounge@next
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v3.0.0-pre.6...v3.0.0-pre.7)
 
 This is a pre-release for v3.0.0 to offer latest changes without having to wait for a stable release.
- At this stage, features may still be added or modified until the first release candidate for this version gets released.
+At this stage, features may still be added or modified until the first release candidate for this version gets released.
 
 Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
 
@@ -1010,7 +1010,7 @@ npm install -g thelounge@next
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v3.0.0-pre.5...v3.0.0-pre.6)
 
 This is a pre-release for v3.0.0 to offer latest changes without having to wait for a stable release.
- At this stage, features may still be added or modified until the first release candidate for this version gets released.
+At this stage, features may still be added or modified until the first release candidate for this version gets released.
 
 Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
 
@@ -1025,7 +1025,7 @@ npm install -g thelounge@next
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v3.0.0-pre.4...v3.0.0-pre.5)
 
 This is a pre-release for v3.0.0 to offer latest changes without having to wait for a stable release.
- At this stage, features may still be added or modified until the first release candidate for this version gets released.
+At this stage, features may still be added or modified until the first release candidate for this version gets released.
 
 Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
 
@@ -1040,7 +1040,7 @@ npm install -g thelounge@next
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v3.0.0-pre.3...v3.0.0-pre.4)
 
 This is a pre-release for v3.0.0 to offer latest changes without having to wait for a stable release.
- At this stage, features may still be added or modified until the first release candidate for this version gets released.
+At this stage, features may still be added or modified until the first release candidate for this version gets released.
 
 Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
 
@@ -1055,7 +1055,7 @@ npm install -g thelounge@next
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v3.0.0-pre.2...v3.0.0-pre.3)
 
 This is a pre-release for v3.0.0 to offer latest changes without having to wait for a stable release.
- At this stage, features may still be added or modified until the first release candidate for this version gets released.
+At this stage, features may still be added or modified until the first release candidate for this version gets released.
 
 Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
 
@@ -1070,7 +1070,7 @@ npm install -g thelounge@next
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v3.0.0-pre.1...v3.0.0-pre.2)
 
 This is a pre-release for v3.0.0 to offer latest changes without having to wait for a stable release.
- At this stage, features may still be added or modified until the first release candidate for this version gets released.
+At this stage, features may still be added or modified until the first release candidate for this version gets released.
 
 Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
 
@@ -1085,7 +1085,7 @@ npm install -g thelounge@next
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v2.7.1...v3.0.0-pre.1)
 
 This is a pre-release for v3.0.0 to offer latest changes without having to wait for a stable release.
- At this stage, features may still be added or modified until the first release candidate for this version gets released.
+At this stage, features may still be added or modified until the first release candidate for this version gets released.
 
 Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
 
@@ -1257,7 +1257,6 @@ The CLI has also been improved:
 - All options for the `start` command are being removed, replaced with the `--config`/`-c` option mentioned above. For example, `--public` becomes `-c public=true`, `--port 9001` becomes `-c port=9001`, etc.
 - Referring to themes in the `theme` option of the configuration file is now done through their name, not their CSS file name.
 
-
 And finally... **The Lounge has its own logo!** 🎉
 
 <p align="center">
@@ -1269,7 +1268,7 @@ We will start rolling out our new logo in all the relevant places as of The Loun
 
 ### Added
 
-- Link and color nicks mentioned in messages  ([#1709](https://github.com/thelounge/thelounge/pull/1709), [#1758](https://github.com/thelounge/thelounge/pull/1758) by [@MaxLeiter](https://github.com/MaxLeiter), [#1779](https://github.com/thelounge/thelounge/pull/1779), [#1901](https://github.com/thelounge/thelounge/pull/1901) by [@xPaw](https://github.com/xPaw))
+- Link and color nicks mentioned in messages ([#1709](https://github.com/thelounge/thelounge/pull/1709), [#1758](https://github.com/thelounge/thelounge/pull/1758) by [@MaxLeiter](https://github.com/MaxLeiter), [#1779](https://github.com/thelounge/thelounge/pull/1779), [#1901](https://github.com/thelounge/thelounge/pull/1901) by [@xPaw](https://github.com/xPaw))
 - Detect `image/webp` as an image ([#1753](https://github.com/thelounge/thelounge/pull/1753) by [@xPaw](https://github.com/xPaw))
 - Implement strikethrough and monospace formatting ([#1792](https://github.com/thelounge/thelounge/pull/1792) by [@grissly-man](https://github.com/grissly-man), [#1814](https://github.com/thelounge/thelounge/pull/1814) by [@xPaw](https://github.com/xPaw))
 - Add the user's actual IP in the result of `/whois` ([#1788](https://github.com/thelounge/thelounge/pull/1788) by [@PolarizedIons](https://github.com/PolarizedIons))
@@ -1771,7 +1770,7 @@ On the [website repository](https://github.com/thelounge/thelounge.chat):
 - Move even more code out of `lounge.js` ([#1500](https://github.com/thelounge/thelounge/pull/1500) by [@xPaw](https://github.com/xPaw))
 - Remove unnecessary `end()` calls ([#1518](https://github.com/thelounge/thelounge/pull/1518) by [@xPaw](https://github.com/xPaw))
 - Move user log function where it belongs ([#1528](https://github.com/thelounge/thelounge/pull/1528), [#1585](https://github.com/thelounge/thelounge/pull/1585) by [@xPaw](https://github.com/xPaw), [#1535](https://github.com/thelounge/thelounge/pull/1535) by [@astorije](https://github.com/astorije))
-- Enable `no-console` and `no-alert` ESLint rules  ([#1538](https://github.com/thelounge/thelounge/pull/1538) by [@astorije](https://github.com/astorije))
+- Enable `no-console` and `no-alert` ESLint rules ([#1538](https://github.com/thelounge/thelounge/pull/1538) by [@astorije](https://github.com/astorije))
 - Use `Mousetrap` for image viewer shortcuts ([#1566](https://github.com/thelounge/thelounge/pull/1566) by [@astorije](https://github.com/astorije))
 - Remove `event-stream` dependency in favor of plain `Buffers` ([#1554](https://github.com/thelounge/thelounge/pull/1554) by [@astorije](https://github.com/astorije))
 - Skip cleanup on Travis ([`da31317`](https://github.com/thelounge/thelounge/commit/da31317156047000819fa0363c435005104aa572) by [@xPaw](https://github.com/xPaw))
@@ -2444,7 +2443,7 @@ Enjoy!
 - Strict mode for all JS files ([#684](https://github.com/thelounge/thelounge/pull/684) by [@astorije](https://github.com/astorije))
 - Enforce more ESLint rules ([#681](https://github.com/thelounge/thelounge/pull/681) by [@xPaw](https://github.com/xPaw))
 - Use CI caches for downloaded files instead of installed ones ([#687](https://github.com/thelounge/thelounge/pull/687) by [@astorije](https://github.com/astorije))
-- Consolidate version numbers throughout all interfaces  ([#592](https://github.com/thelounge/thelounge/pull/592) by [@williamboman](https://github.com/williamboman))
+- Consolidate version numbers throughout all interfaces ([#592](https://github.com/thelounge/thelounge/pull/592) by [@williamboman](https://github.com/williamboman))
 - Replace lodash's each/map with ES5 native forEach/map ([#689](https://github.com/thelounge/thelounge/pull/689) by [@astorije](https://github.com/astorije))
 
 ### Removed

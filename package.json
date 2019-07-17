@@ -13,14 +13,16 @@
   "homepage": "https://thelounge.chat/",
   "scripts": {
     "build": "webpack",
-    "coverage": "run-s test:{client,server} && nyc --nycrc-path=test/.nycrc-report report",
+    "coverage": "run-s test:{client,server} && nyc --nycrc-path=test/.nycrc-report.json report",
     "dev": "run-p watch start",
-    "lint:css": "stylelint --color \"client/**/*.css\"",
-    "lint:js": "eslint . --ext .js,.vue --report-unused-disable-directives --color",
+    "format:prettier": "prettier --write \"**/*.*\"",
+    "lint:eslint": "eslint . --ext .js,.vue --report-unused-disable-directives --color",
+    "lint:prettier": "prettier --list-different \"**/*.*\"",
+    "lint:stylelint": "stylelint --color \"client/**/*.css\"",
     "start": "node index start",
     "test": "run-p --aggregate-output --continue-on-error lint:* test:{client,server}",
-    "test:client": "nyc --nycrc-path=test/.nycrc-mochapack mochapack --colors --opts=test/mochapack.opts",
-    "test:server": "nyc --nycrc-path=test/.nycrc-mocha mocha --colors",
+    "test:client": "nyc --nycrc-path=test/.nycrc-mochapack.json mochapack --colors --opts=test/mochapack.opts",
+    "test:server": "nyc --nycrc-path=test/.nycrc-mocha.json mocha --colors",
     "watch": "webpack --watch"
   },
   "keywords": [
@@ -89,6 +91,7 @@
     "handlebars-loader": "1.7.1",
     "html-minifier": "4.0.0",
     "html-minifier-loader": "1.4.1",
+    "husky": "3.0.0",
     "intersection-observer": "0.7.0",
     "jquery": "3.4.1",
     "mini-css-extract-plugin": "0.8.0",
@@ -98,6 +101,8 @@
     "mousetrap": "1.6.3",
     "npm-run-all": "4.1.5",
     "nyc": "14.1.1",
+    "prettier": "1.18.2",
+    "pretty-quick": "1.11.1",
     "primer-tooltips": "2.0.0",
     "sinon": "7.3.2",
     "socket.io-client": "2.2.0",
@@ -112,5 +117,10 @@
     "vuedraggable": "2.23.0",
     "webpack": "4.35.3",
     "webpack-cli": "3.3.6"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   }
 }
