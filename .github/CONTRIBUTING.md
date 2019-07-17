@@ -28,6 +28,6 @@ your contributions.
   Pope's guidelines](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
 - Each PR will be reviewed by at least two different project maintainers. You
   can read more about this in the [maintainers'
-corner](https://github.com/thelounge/thelounge/wiki/Maintainers'-corner).
+  corner](https://github.com/thelounge/thelounge/wiki/Maintainers'-corner).
 - Please document any relevant changes in the documentation that can be found
   [in its own repository](https://github.com/thelounge/thelounge.chat).

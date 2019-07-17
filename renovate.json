@@ -1,13 +1,7 @@
 {
-  "extends": [
-    "config:base"
-  ],
-  "ignorePaths": [
-    "test/"
-  ],
-  "labels": [
-    "Type: Dependencies"
-  ],
+  "extends": ["config:base"],
+  "ignorePaths": ["test/"],
+  "labels": ["Type: Dependencies"],
   "rebaseStalePrs": true,
   "statusCheckVerify": true
 }
