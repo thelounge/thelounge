@@ -271,6 +271,7 @@ kbd {
 #chat .whois .from::before,
 #chat .nick .from::before,
 #chat .action .from::before,
+#chat .raw .from::before,
 #chat .toggle-button::after,
 #chat .toggle-content .more-caret::before,
 #chat .scroll-down-arrow::after,
@@ -416,6 +417,15 @@ kbd {
 #chat .kick .from::before {
 	content: "\f05e"; /* http://fontawesome.io/icon/ban/ */
 	color: #ff4136;
+}
+
+#chat .raw .from::before {
+	content: "\f101"; /* https://fontawesome.com/icons/angle-double-right?style=solid */
+}
+
+#chat .raw.self .from::before {
+	content: "\f359"; /* https://fontawesome.com/icons/arrow-alt-circle-left?style=solid */
+	color: #2ecc40;
 }
 
 #chat .action .from::before {
