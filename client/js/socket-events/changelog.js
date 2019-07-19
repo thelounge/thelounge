@@ -29,6 +29,8 @@ socket.on("changelog", function(data) {
 
 	if (data.latest) {
 		status = "new-version";
+	} else if (data.packages) {
+		status = "new-packages";
 	} else if (data.current.changelog) {
 		status = "up-to-date";
 	} else {

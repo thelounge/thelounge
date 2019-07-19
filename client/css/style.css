@@ -1932,12 +1932,14 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	content: "\f253"; /* https://fontawesome.com/icons/hourglass-end?style=solid */
 }
 
-#version-checker.new-version {
+#version-checker.new-version,
+#version-checker.new-packages {
 	color: #8a6d3b;
 	background-color: #fcf8e3;
 }
 
-#version-checker.new-version::before {
+#version-checker.new-version::before,
+#version-checker.new-packages::before {
 	content: "\f164"; /* https://fontawesome.com/icons/thumbs-up?style=solid */
 }
 

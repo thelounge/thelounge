@@ -12,6 +12,12 @@
 			Read more on GitHub
 		</a>
 	</p>
+{{else equal status "new-packages"}}
+	<p>
+		The Lounge is up to date, but there are out of date packages
+		
+		Run <code>thelounge upgrade</code> on the server to upgrade packages.
+	</p>
 {{else equal status "up-to-date"}}
 	<p>
 		The Lounge is up to date!

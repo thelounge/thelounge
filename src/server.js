@@ -454,9 +454,13 @@ function initializeClient(socket, client, token, lastMessage) {
 		}
 	});
 
-	socket.on("changelog", async () => {
-		const data = await changelog.fetch();
-		socket.emit("changelog", data);
+	socket.on("changelog", () => {
+		Promise.all([changelog.fetch(), packages.outdated()]).then(
+			([changelogData, packageUpdate]) => {
+				changelogData.packages = packageUpdate;
+				socket.emit("changelog", changelogData);
+			}
+		);
 	});
 
 	socket.on("msg:preview:toggle", (data) => {
