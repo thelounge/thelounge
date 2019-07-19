@@ -1,10 +1,6 @@
 <template>
-	<div
-		ref="chat"
-		class="chat"
-		tabindex="-1"
-	>
-		<div :class="['show-more', { show: channel.moreHistoryAvailable }]">
+	<div ref="chat" class="chat" tabindex="-1">
+		<div :class="['show-more', {show: channel.moreHistoryAvailable}]">
 			<button
 				ref="loadMoreButton"
 				:disabled="channel.historyLoading || !$root.isConnected"
@@ -85,7 +81,9 @@ export default {
 
 			// If actions are hidden, just return a message list with them excluded
 			if (this.$root.settings.statusMessages === "hidden") {
-				return this.channel.messages.filter((message) => !constants.condensedTypes.includes(message.type));
+				return this.channel.messages.filter(
+					(message) => !constants.condensedTypes.includes(message.type)
+				);
 			}
 
 			// If actions are not condensed, just return raw message list
@@ -99,7 +97,11 @@ export default {
 			for (const message of this.channel.messages) {
 				// If this message is not condensable, or its an action affecting our user,
 				// then just append the message to container and be done with it
-				if (message.self || message.highlight || !constants.condensedTypes.includes(message.type)) {
+				if (
+					message.self ||
+					message.highlight ||
+					!constants.condensedTypes.includes(message.type)
+				) {
 					lastCondensedContainer = null;
 
 					condensed.push(message);
@@ -199,7 +201,7 @@ export default {
 				return true;
 			}
 
-			return (new Date(previousMessage.time)).getDay() !== (new Date(message.time)).getDay();
+			return new Date(previousMessage.time).getDay() !== new Date(message.time).getDay();
 		},
 		shouldDisplayUnreadMarker(id) {
 			if (!this.unreadMarkerShown && id > this.channel.firstUnread) {

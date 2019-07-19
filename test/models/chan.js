@@ -89,23 +89,31 @@ describe("Chan", function() {
 
 		it("returns unsorted list on null irc object", function() {
 			const chan = new Chan();
-			[
-				"JocelynD", "YaManicKill", "astorije", "xPaw", "Max-P",
-			].forEach((nick) => chan.setUser(new User({nick})));
+			["JocelynD", "YaManicKill", "astorije", "xPaw", "Max-P"].forEach((nick) =>
+				chan.setUser(new User({nick}))
+			);
 
 			expect(chan.getSortedUsers().map((u) => u.nick)).to.deep.equal([
-				"JocelynD", "YaManicKill", "astorije", "xPaw", "Max-P",
+				"JocelynD",
+				"YaManicKill",
+				"astorije",
+				"xPaw",
+				"Max-P",
 			]);
 		});
 
 		it("should sort a simple user list", function() {
 			const chan = new Chan();
-			[
-				"JocelynD", "YaManicKill", "astorije", "xPaw", "Max-P",
-			].forEach((nick) => chan.setUser(new User({nick}, prefixLookup)));
+			["JocelynD", "YaManicKill", "astorije", "xPaw", "Max-P"].forEach((nick) =>
+				chan.setUser(new User({nick}, prefixLookup))
+			);
 
 			expect(getUserNames(chan)).to.deep.equal([
-				"astorije", "JocelynD", "Max-P", "xPaw", "YaManicKill",
+				"astorije",
+				"JocelynD",
+				"Max-P",
+				"xPaw",
+				"YaManicKill",
 			]);
 		});
 
@@ -118,7 +126,11 @@ describe("Chan", function() {
 			chan.setUser(new User({nick: "Max-P", modes: ["o"]}, prefixLookup));
 
 			expect(getUserNames(chan)).to.deep.equal([
-				"xPaw", "JocelynD", "Max-P", "astorije", "YaManicKill",
+				"xPaw",
+				"JocelynD",
+				"Max-P",
+				"astorije",
+				"YaManicKill",
 			]);
 		});
 
@@ -130,16 +142,20 @@ describe("Chan", function() {
 			chan.setUser(new User({nick: "xPaw"}, prefixLookup));
 			chan.setUser(new User({nick: "Max-P", modes: ["o"]}, prefixLookup));
 
-			expect(getUserNames(chan)).to.deep.equal(
-				["Max-P", "YaManicKill", "astorije", "JocelynD", "xPaw"]
-			);
+			expect(getUserNames(chan)).to.deep.equal([
+				"Max-P",
+				"YaManicKill",
+				"astorije",
+				"JocelynD",
+				"xPaw",
+			]);
 		});
 
 		it("should be case-insensitive", function() {
 			const chan = new Chan();
-			[
-				"aB", "Ad", "AA", "ac",
-			].forEach((nick) => chan.setUser(new User({nick}, prefixLookup)));
+			["aB", "Ad", "AA", "ac"].forEach((nick) =>
+				chan.setUser(new User({nick}, prefixLookup))
+			);
 
 			expect(getUserNames(chan)).to.deep.equal(["AA", "aB", "ac", "Ad"]);
 		});
@@ -147,13 +163,33 @@ describe("Chan", function() {
 		it("should parse special characters successfully", function() {
 			const chan = new Chan();
 			[
-				"[foo", "]foo", "(foo)", "{foo}", "<foo>", "_foo", "@foo", "^foo",
-				"&foo", "!foo", "+foo", "Foo",
+				"[foo",
+				"]foo",
+				"(foo)",
+				"{foo}",
+				"<foo>",
+				"_foo",
+				"@foo",
+				"^foo",
+				"&foo",
+				"!foo",
+				"+foo",
+				"Foo",
 			].forEach((nick) => chan.setUser(new User({nick}, prefixLookup)));
 
 			expect(getUserNames(chan)).to.deep.equal([
-				"!foo", "&foo", "(foo)", "+foo", "<foo>", "@foo", "[foo", "]foo",
-				"^foo", "_foo", "Foo", "{foo}",
+				"!foo",
+				"&foo",
+				"(foo)",
+				"+foo",
+				"<foo>",
+				"@foo",
+				"[foo",
+				"]foo",
+				"^foo",
+				"_foo",
+				"Foo",
+				"{foo}",
 			]);
 		});
 	});
@@ -169,20 +205,22 @@ describe("Chan", function() {
 		it("should keep necessary properties", function() {
 			const chan = new Chan();
 
-			expect(chan.getFilteredClone()).to.be.an("object").that.has.all.keys(
-				"firstUnread",
-				"highlight",
-				"id",
-				"key",
-				"messages",
-				"moreHistoryAvailable",
-				"name",
-				"state",
-				"topic",
-				"type",
-				"unread",
-				"users"
-			);
+			expect(chan.getFilteredClone())
+				.to.be.an("object")
+				.that.has.all.keys(
+					"firstUnread",
+					"highlight",
+					"id",
+					"key",
+					"messages",
+					"moreHistoryAvailable",
+					"name",
+					"state",
+					"topic",
+					"type",
+					"unread",
+					"users"
+				);
 		});
 
 		it("should send only last message for non active channel", function() {

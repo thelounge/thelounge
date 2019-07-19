@@ -5,7 +5,9 @@ const path = require("path");
 const fs = require("fs");
 
 (async () => {
-	const response = await got("https://raw.githubusercontent.com/github/gemoji/master/db/emoji.json");
+	const response = await got(
+		"https://raw.githubusercontent.com/github/gemoji/master/db/emoji.json"
+	);
 	const emojiStrategy = JSON.parse(response.body);
 	const emojiMap = {};
 	const fullNameEmojiMap = {};
@@ -21,21 +23,13 @@ const fs = require("fs");
 	const emojiMapOutput = JSON.stringify(emojiMap, null, 2) + "\n";
 	const fullNameEmojiMapOutput = JSON.stringify(fullNameEmojiMap, null, 2) + "\n";
 
-	fs.writeFileSync(path.resolve(path.join(
-		__dirname,
-		"..",
-		"client",
-		"js",
-		"libs",
-		"simplemap.json"
-	)), emojiMapOutput);
+	fs.writeFileSync(
+		path.resolve(path.join(__dirname, "..", "client", "js", "libs", "simplemap.json")),
+		emojiMapOutput
+	);
 
-	fs.writeFileSync(path.resolve(path.join(
-		__dirname,
-		"..",
-		"client",
-		"js",
-		"libs",
-		"fullnamemap.json"
-	)), fullNameEmojiMapOutput);
+	fs.writeFileSync(
+		path.resolve(path.join(__dirname, "..", "client", "js", "libs", "fullnamemap.json")),
+		fullNameEmojiMapOutput
+	);
 })();

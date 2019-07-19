@@ -1,15 +1,9 @@
 <template>
-	<ChannelWrapper
-		:network="network"
-		:channel="channel"
-		:active-channel="activeChannel"
-	>
+	<ChannelWrapper :network="network" :channel="channel" :active-channel="activeChannel">
 		<span class="name">{{ channel.name }}</span>
-		<span
-			v-if="channel.unread"
-			:class="{ highlight: channel.highlight }"
-			class="badge"
-		>{{ channel.unread | roundBadgeNumber }}</span>
+		<span v-if="channel.unread" :class="{highlight: channel.highlight}" class="badge">{{
+			channel.unread | roundBadgeNumber
+		}}</span>
 		<template v-if="channel.type === 'channel'">
 			<span
 				v-if="channel.state === 0"
@@ -18,25 +12,13 @@
 			>
 				<span class="parted-channel-icon" />
 			</span>
-			<span
-				class="close-tooltip tooltipped tooltipped-w"
-				aria-label="Leave"
-			>
-				<button
-					class="close"
-					aria-label="Leave"
-				/>
+			<span class="close-tooltip tooltipped tooltipped-w" aria-label="Leave">
+				<button class="close" aria-label="Leave" />
 			</span>
 		</template>
 		<template v-else>
-			<span
-				class="close-tooltip tooltipped tooltipped-w"
-				aria-label="Close"
-			>
-				<button
-					class="close"
-					aria-label="Close"
-				/>
+			<span class="close-tooltip tooltipped tooltipped-w" aria-label="Close">
+				<button class="close" aria-label="Close" />
 			</span>
 		</template>
 	</ChannelWrapper>

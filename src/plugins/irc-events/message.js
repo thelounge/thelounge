@@ -45,9 +45,11 @@ module.exports = function(irc, network) {
 		const self = data.nick === irc.user.nick;
 
 		// Check if the sender is in our ignore list
-		const shouldIgnore = !self && network.ignoreList.some(function(entry) {
-			return Helper.compareHostmask(entry, data);
-		});
+		const shouldIgnore =
+			!self &&
+			network.ignoreList.some(function(entry) {
+				return Helper.compareHostmask(entry, data);
+			});
 
 		// Server messages go to server window, no questions asked
 		if (data.from_server) {
@@ -154,20 +156,28 @@ module.exports = function(irc, network) {
 
 			// If a channel is active on any client, highlight won't increment and notification will say (0 mention)
 			if (chan.highlight > 0) {
-				title += ` (${chan.highlight} ${chan.type === Chan.Type.QUERY ? "new message" : "mention"}${chan.highlight > 1 ? "s" : ""})`;
+				title += ` (${chan.highlight} ${
+					chan.type === Chan.Type.QUERY ? "new message" : "mention"
+				}${chan.highlight > 1 ? "s" : ""})`;
 			}
 
 			if (chan.highlight > 1) {
-				body += `\n\n… and ${chan.highlight - 1} other message${chan.highlight > 2 ? "s" : ""}`;
+				body += `\n\n… and ${chan.highlight - 1} other message${
+					chan.highlight > 2 ? "s" : ""
+				}`;
 			}
 
-			client.manager.webPush.push(client, {
-				type: "notification",
-				chanId: chan.id,
-				timestamp: data.time || Date.now(),
-				title: title,
-				body: body,
-			}, true);
+			client.manager.webPush.push(
+				client,
+				{
+					type: "notification",
+					chanId: chan.id,
+					timestamp: data.time || Date.now(),
+					title: title,
+					body: body,
+				},
+				true
+			);
 		}
 	}
 };

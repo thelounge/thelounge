@@ -23,7 +23,8 @@ const packageApis = function(packageName) {
 		},
 		Commands: {
 			add: inputs.addPluginCommand,
-			runAsUser: (command, targetId, client) => client.inputLine({target: targetId, text: command}),
+			runAsUser: (command, targetId, client) =>
+				client.inputLine({target: targetId, text: command}),
 		},
 		Config: {
 			getConfig: () => Helper.config,
@@ -60,7 +61,10 @@ function loadPackages() {
 		let packageFile;
 
 		try {
-			packageInfo = require(path.join(Helper.getPackageModulePath(packageName), "package.json"));
+			packageInfo = require(path.join(
+				Helper.getPackageModulePath(packageName),
+				"package.json"
+			));
 			packageFile = require(Helper.getPackageModulePath(packageName));
 		} catch (e) {
 			log.warn(errorMsg);
@@ -90,6 +94,8 @@ function loadPackages() {
 	});
 
 	if (anyPlugins) {
-		log.info("There are packages using the experimental plugin API. Be aware that this API is not yet stable and may change in future The Lounge releases.");
+		log.info(
+			"There are packages using the experimental plugin API. Be aware that this API is not yet stable and may change in future The Lounge releases."
+		);
 	}
 }

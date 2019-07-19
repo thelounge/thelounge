@@ -13,15 +13,18 @@ module.exports = requireViews.keys().reduce((acc, path) => {
 	// Split path by folders, and create a new property if necessary/
 	// First 2 characters are "./"/
 	// Last element in the array ends with `.tpl` and needs to be `require`d.
-	path.substr(2).split("/").forEach((key) => {
-		if (key.endsWith(".tpl")) { //
-			tmp[key.substr(0, key.length - 4)] = requireViews(path);
-		} else {
-			tmp[key] = tmp[key] || {};
-		}
+	path.substr(2)
+		.split("/")
+		.forEach((key) => {
+			if (key.endsWith(".tpl")) {
+				//
+				tmp[key.substr(0, key.length - 4)] = requireViews(path);
+			} else {
+				tmp[key] = tmp[key] || {};
+			}
 
-		tmp = tmp[key];
-	});
+			tmp = tmp[key];
+		});
 
 	return acc;
 }, {});

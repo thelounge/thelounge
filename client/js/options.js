@@ -28,9 +28,7 @@ const noSync = ["syncSettings"];
 
 // alwaysSync is reserved for settings that should be synced
 // to the server regardless of the clients sync setting.
-const alwaysSync = [
-	"highlights",
-];
+const alwaysSync = ["highlights"];
 
 // Process usersettings from localstorage.
 let userSettings = JSON.parse(storage.get("settings")) || false;
@@ -46,7 +44,10 @@ if (!userSettings) {
 		}
 
 		// Make sure the setting in local storage has the same type that the code expects
-		if (typeof userSettings[key] !== "undefined" && typeof settings[key] === typeof userSettings[key]) {
+		if (
+			typeof userSettings[key] !== "undefined" &&
+			typeof settings[key] === typeof userSettings[key]
+		) {
 			settings[key] = userSettings[key];
 		}
 	}
@@ -59,7 +60,10 @@ if (typeof userSettings.userStyles === "string" && !noCSSparamReg.test(window.lo
 	$userStyles.html(userSettings.userStyles);
 }
 
-if (typeof userSettings.theme === "string" && $theme.attr("href") !== `themes/${userSettings.theme}.css`) {
+if (
+	typeof userSettings.theme === "string" &&
+	$theme.attr("href") !== `themes/${userSettings.theme}.css`
+) {
 	$theme.attr("href", `themes/${userSettings.theme}.css`);
 }
 
@@ -99,7 +103,7 @@ function applySetting(name, value) {
 	} else if (name === "userStyles" && !noCSSparamReg.test(window.location.search)) {
 		$userStyles.html(value);
 	} else if (name === "desktopNotifications") {
-		if (("Notification" in window) && value && Notification.permission !== "granted") {
+		if ("Notification" in window && value && Notification.permission !== "granted") {
 			Notification.requestPermission(updateDesktopNotificationStatus);
 		} else if (!value) {
 			$warningBlocked.hide();
@@ -172,8 +176,7 @@ function processSetting(name, value, save) {
 	} else if (name === "nickPostfix") {
 		$settings.find(`input[name=${name}]`).val(value);
 	} else if (name === "statusMessages") {
-		$settings.find(`input[name=${name}][value=${value}]`)
-			.prop("checked", true);
+		$settings.find(`input[name=${name}][value=${value}]`).prop("checked", true);
 	} else if (name === "theme") {
 		$settings.find("#theme-select").val(value);
 	} else if (typeof value === "boolean") {
@@ -208,7 +211,7 @@ function initialize() {
 
 	// If browser does not support notifications
 	// display proper message in settings.
-	if (("Notification" in window)) {
+	if ("Notification" in window) {
 		$warningUnsupported.hide();
 		$windows.on("show", "#settings", updateDesktopNotificationStatus);
 	} else {

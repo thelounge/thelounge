@@ -126,7 +126,10 @@ function mergeNetworkData(newNetworks) {
 
 			// Channels require extra care to be merged correctly
 			if (key === "channels") {
-				currentNetwork.channels = mergeChannelData(currentNetwork.channels, network.channels);
+				currentNetwork.channels = mergeChannelData(
+					currentNetwork.channels,
+					network.channels
+				);
 			} else {
 				currentNetwork[key] = network[key];
 			}

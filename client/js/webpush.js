@@ -11,7 +11,9 @@ let applicationServerKey;
 if ("serviceWorker" in navigator) {
 	navigator.serviceWorker.addEventListener("message", (event) => {
 		if (event.data && event.data.type === "open") {
-			$("#sidebar").find(`.chan[data-target="#${event.data.channel}"]`).trigger("click");
+			$("#sidebar")
+				.find(`.chan[data-target="#${event.data.channel}"]`)
+				.trigger("click");
 		}
 	});
 }
@@ -47,73 +49,89 @@ module.exports.initialize = () => {
 	$("#pushNotificationsHttps").hide();
 
 	if ("serviceWorker" in navigator) {
-		navigator.serviceWorker.register("service-worker.js").then((registration) => {
-			module.exports.hasServiceWorker = true;
+		navigator.serviceWorker
+			.register("service-worker.js")
+			.then((registration) => {
+				module.exports.hasServiceWorker = true;
 
-			if (!registration.pushManager) {
-				return;
-			}
-
-			return registration.pushManager.getSubscription().then((subscription) => {
-				$("#pushNotificationsUnsupported").hide();
-
-				pushNotificationsButton
-					.prop("disabled", false)
-					.on("click", onPushButton);
-
-				clientSubscribed = !!subscription;
-
-				if (clientSubscribed) {
-					alternatePushButton();
+				if (!registration.pushManager) {
+					return;
 				}
+
+				return registration.pushManager.getSubscription().then((subscription) => {
+					$("#pushNotificationsUnsupported").hide();
+
+					pushNotificationsButton.prop("disabled", false).on("click", onPushButton);
+
+					clientSubscribed = !!subscription;
+
+					if (clientSubscribed) {
+						alternatePushButton();
+					}
+				});
+			})
+			.catch((err) => {
+				$("#pushNotificationsUnsupported span").text(err);
 			});
-		}).catch((err) => {
-			$("#pushNotificationsUnsupported span").text(err);
-		});
 	}
 };
 
 function onPushButton() {
 	pushNotificationsButton.prop("disabled", true);
 
-	navigator.serviceWorker.ready.then((registration) =>
-		registration.pushManager.getSubscription().then((existingSubscription) => {
-			if (existingSubscription) {
-				socket.emit("push:unregister");
+	navigator.serviceWorker.ready
+		.then((registration) =>
+			registration.pushManager
+				.getSubscription()
+				.then((existingSubscription) => {
+					if (existingSubscription) {
+						socket.emit("push:unregister");
 
-				return existingSubscription.unsubscribe();
-			}
+						return existingSubscription.unsubscribe();
+					}
 
-			return registration.pushManager.subscribe({
-				applicationServerKey: urlBase64ToUint8Array(applicationServerKey),
-				userVisibleOnly: true,
-			}).then((subscription) => {
-				const rawKey = subscription.getKey ? subscription.getKey("p256dh") : "";
-				const key = rawKey ? window.btoa(String.fromCharCode(...new Uint8Array(rawKey))) : "";
-				const rawAuthSecret = subscription.getKey ? subscription.getKey("auth") : "";
-				const authSecret = rawAuthSecret ? window.btoa(String.fromCharCode(...new Uint8Array(rawAuthSecret))) : "";
+					return registration.pushManager
+						.subscribe({
+							applicationServerKey: urlBase64ToUint8Array(applicationServerKey),
+							userVisibleOnly: true,
+						})
+						.then((subscription) => {
+							const rawKey = subscription.getKey ? subscription.getKey("p256dh") : "";
+							const key = rawKey
+								? window.btoa(String.fromCharCode(...new Uint8Array(rawKey)))
+								: "";
+							const rawAuthSecret = subscription.getKey
+								? subscription.getKey("auth")
+								: "";
+							const authSecret = rawAuthSecret
+								? window.btoa(String.fromCharCode(...new Uint8Array(rawAuthSecret)))
+								: "";
 
-				socket.emit("push:register", {
-					token: storage.get("token"),
-					endpoint: subscription.endpoint,
-					keys: {
-						p256dh: key,
-						auth: authSecret,
-					},
-				});
+							socket.emit("push:register", {
+								token: storage.get("token"),
+								endpoint: subscription.endpoint,
+								keys: {
+									p256dh: key,
+									auth: authSecret,
+								},
+							});
 
-				return true;
-			});
-		}).then((successful) => {
-			if (successful) {
-				alternatePushButton().prop("disabled", false);
-			}
-		})
-	).catch((err) => {
-		$("#pushNotificationsUnsupported")
-			.find("span").text(`An error has occurred: ${err}`).end()
-			.show();
-	});
+							return true;
+						});
+				})
+				.then((successful) => {
+					if (successful) {
+						alternatePushButton().prop("disabled", false);
+					}
+				})
+		)
+		.catch((err) => {
+			$("#pushNotificationsUnsupported")
+				.find("span")
+				.text(`An error has occurred: ${err}`)
+				.end()
+				.show();
+		});
 
 	return false;
 }
@@ -127,10 +145,8 @@ function alternatePushButton() {
 }
 
 function urlBase64ToUint8Array(base64String) {
-	const padding = "=".repeat((4 - base64String.length % 4) % 4);
-	const base64 = (base64String + padding)
-		.replace(/-/g, "+")
-		.replace(/_/g, "/");
+	const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+	const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
 
 	const rawData = window.atob(base64);
 	const outputArray = new Uint8Array(rawData.length);
@@ -143,5 +159,9 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 function isAllowedServiceWorkersHost() {
-	return location.protocol === "https:" || location.hostname === "localhost" || location.hostname === "127.0.0.1";
+	return (
+		location.protocol === "https:" ||
+		location.hostname === "localhost" ||
+		location.hostname === "127.0.0.1"
+	);
 }

@@ -32,7 +32,7 @@ describe("Utils", function() {
 		it("should contain information about THELOUNGE_HOME env var", function() {
 			// Mock `log.raw` to extract its effect into a concatenated string
 			let stdout = "";
-			stub(log, "raw").callsFake(TestUtil.sanitizeLog((str) => stdout += str));
+			stub(log, "raw").callsFake(TestUtil.sanitizeLog((str) => (stdout += str)));
 
 			Utils.extraHelp();
 
@@ -61,36 +61,35 @@ describe("Utils", function() {
 			});
 
 			it("should correctly parse undefined values", function() {
-				expect(Utils.parseConfigOptions("foo=undefined"))
-					.to.deep.equal({foo: undefined});
+				expect(Utils.parseConfigOptions("foo=undefined")).to.deep.equal({foo: undefined});
 			});
 
 			it("should correctly parse array values", function() {
-				expect(Utils.parseConfigOptions("foo=[bar,true]"))
-					.to.deep.equal({foo: ["bar", true]});
+				expect(Utils.parseConfigOptions("foo=[bar,true]")).to.deep.equal({
+					foo: ["bar", true],
+				});
 
-				expect(Utils.parseConfigOptions("foo=[bar, true]"))
-					.to.deep.equal({foo: ["bar", true]});
+				expect(Utils.parseConfigOptions("foo=[bar, true]")).to.deep.equal({
+					foo: ["bar", true],
+				});
 			});
 
 			it("should correctly parse empty array values", function() {
-				expect(Utils.parseConfigOptions("foo=[]"))
-					.to.deep.equal({foo: []});
+				expect(Utils.parseConfigOptions("foo=[]")).to.deep.equal({foo: []});
 			});
 
 			it("should correctly parse values that contain `=` sign", function() {
-				expect(Utils.parseConfigOptions("foo=bar=42"))
-					.to.deep.equal({foo: "bar=42"});
+				expect(Utils.parseConfigOptions("foo=bar=42")).to.deep.equal({foo: "bar=42"});
 			});
 
 			it("should correctly parse keys using dot-notation", function() {
-				expect(Utils.parseConfigOptions("foo.bar=value"))
-					.to.deep.equal({foo: {bar: "value"}});
+				expect(Utils.parseConfigOptions("foo.bar=value")).to.deep.equal({
+					foo: {bar: "value"},
+				});
 			});
 
 			it("should correctly parse keys using array-notation", function() {
-				expect(Utils.parseConfigOptions("foo[0]=value"))
-					.to.deep.equal({foo: ["value"]});
+				expect(Utils.parseConfigOptions("foo[0]=value")).to.deep.equal({foo: ["value"]});
 			});
 
 			it("should correctly change type to number", function() {
@@ -111,18 +110,22 @@ describe("Utils", function() {
 			});
 
 			it("should combine a new option with previously parsed ones", function() {
-				expect(Utils.parseConfigOptions("bar=false", {foo: true}))
-					.to.deep.equal({foo: true, bar: false});
+				expect(Utils.parseConfigOptions("bar=false", {foo: true})).to.deep.equal({
+					foo: true,
+					bar: false,
+				});
 			});
 
 			it("should maintain existing properties of a nested object", function() {
-				expect(Utils.parseConfigOptions("foo.bar=true", {foo: {baz: false}}))
-					.to.deep.equal({foo: {bar: true, baz: false}});
+				expect(Utils.parseConfigOptions("foo.bar=true", {foo: {baz: false}})).to.deep.equal(
+					{foo: {bar: true, baz: false}}
+				);
 			});
 
 			it("should maintain existing entries of an array", function() {
-				expect(Utils.parseConfigOptions("foo[1]=baz", {foo: ["bar"]}))
-					.to.deep.equal({foo: ["bar", "baz"]});
+				expect(Utils.parseConfigOptions("foo[1]=baz", {foo: ["bar"]})).to.deep.equal({
+					foo: ["bar", "baz"],
+				});
 			});
 
 			describe("when given the same key multiple times", function() {
@@ -133,13 +136,14 @@ describe("Utils", function() {
 				it("should not override options", function() {
 					stub(log, "warn");
 
-					expect(Utils.parseConfigOptions("foo=baz", {foo: "bar"}))
-						.to.deep.equal({foo: "bar"});
+					expect(Utils.parseConfigOptions("foo=baz", {foo: "bar"})).to.deep.equal({
+						foo: "bar",
+					});
 				});
 
 				it("should display a warning", function() {
 					let warning = "";
-					stub(log, "warn").callsFake(TestUtil.sanitizeLog((str) => warning += str));
+					stub(log, "warn").callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
 
 					Utils.parseConfigOptions("foo=bar", {foo: "baz"});
 

@@ -20,7 +20,8 @@ program
 		const ClientManager = require("../../clientManager");
 		const users = new ClientManager().getUsers();
 
-		if (users === undefined) { // There was an error, already logged
+		if (users === undefined) {
+			// There was an error, already logged
 			return;
 		}
 
@@ -31,20 +32,20 @@ program
 
 		const file = Helper.getUserConfigPath(name);
 		const user = require(file);
-		log.prompt({
-			text: "Enter new password:",
-			silent: true,
-		}, function(err, password) {
-			if (err) {
-				return;
-			}
+		log.prompt(
+			{
+				text: "Enter new password:",
+				silent: true,
+			},
+			function(err, password) {
+				if (err) {
+					return;
+				}
 
-			user.password = Helper.password.hash(password);
-			user.sessions = {};
-			fs.writeFileSync(
-				file,
-				JSON.stringify(user, null, "\t")
-			);
-			log.info(`Successfully reset password for ${colors.bold(name)}.`);
-		});
+				user.password = Helper.password.hash(password);
+				user.sessions = {};
+				fs.writeFileSync(file, JSON.stringify(user, null, "\t"));
+				log.info(`Successfully reset password for ${colors.bold(name)}.`);
+			}
+		);
 	});

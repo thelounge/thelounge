@@ -1,10 +1,5 @@
 <template>
-	<form
-		id="form"
-		method="post"
-		action=""
-		@submit.prevent="onSubmit"
-	>
+	<form id="form" method="post" action="" @submit.prevent="onSubmit">
 		<span id="nick">{{ network.nick }}</span>
 		<textarea
 			id="input"
@@ -23,12 +18,7 @@
 			aria-label="Upload file"
 			@click="openFileUpload"
 		>
-			<input
-				id="upload-input"
-				ref="uploadInput"
-				type="file"
-				multiple
-			>
+			<input id="upload-input" ref="uploadInput" type="file" multiple />
 			<button
 				id="upload"
 				type="button"
@@ -80,7 +70,7 @@ const bracketWraps = {
 	"*": "*",
 	"`": "`",
 	"~": "~",
-	"_": "_",
+	_: "_",
 };
 
 export default {
@@ -129,19 +119,22 @@ export default {
 				return;
 			}
 
-			if (this.channel.inputHistoryPosition === 0) {
-				this.channel.inputHistory[this.channel.inputHistoryPosition] = this.channel.pendingMessage;
+			const {channel} = this;
+
+			if (channel.inputHistoryPosition === 0) {
+				channel.inputHistory[channel.inputHistoryPosition] = channel.pendingMessage;
 			}
 
 			if (key === "up") {
-				if (this.channel.inputHistoryPosition < this.channel.inputHistory.length - 1) {
-					this.channel.inputHistoryPosition++;
+				if (channel.inputHistoryPosition < channel.inputHistory.length - 1) {
+					channel.inputHistoryPosition++;
 				}
-			} else if (this.channel.inputHistoryPosition > 0) {
-				this.channel.inputHistoryPosition--;
+			} else if (channel.inputHistoryPosition > 0) {
+				channel.inputHistoryPosition--;
 			}
 
-			this.channel.pendingMessage = this.$refs.input.value = this.channel.inputHistory[this.channel.inputHistoryPosition];
+			channel.pendingMessage = channel.inputHistory[channel.inputHistoryPosition];
+			this.$refs.input.value = channel.pendingMessage;
 			this.setInputSize();
 
 			return false;
@@ -173,7 +166,8 @@ export default {
 				// Use scrollHeight to calculate how many lines there are in input, and ceil the value
 				// because some browsers tend to incorrently round the values when using high density
 				// displays or using page zoom feature
-				this.$refs.input.style.height = Math.ceil(this.$refs.input.scrollHeight / lineHeight) * lineHeight + "px";
+				this.$refs.input.style.height =
+					Math.ceil(this.$refs.input.scrollHeight / lineHeight) * lineHeight + "px";
 			});
 		},
 		getInputPlaceholder(channel) {
@@ -219,7 +213,10 @@ export default {
 				const args = text.substr(1).split(" ");
 				const cmd = args.shift().toLowerCase();
 
-				if (Object.prototype.hasOwnProperty.call(commands, cmd) && commands[cmd].input(args)) {
+				if (
+					Object.prototype.hasOwnProperty.call(commands, cmd) &&
+					commands[cmd].input(args)
+				) {
 					return false;
 				}
 			}

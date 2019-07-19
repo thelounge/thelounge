@@ -7,21 +7,21 @@ socket.on("sync_sort", function(data) {
 	const order = data.order;
 
 	switch (data.type) {
-	case "networks":
-		vueApp.networks.sort((a, b) => order.indexOf(a.uuid) - order.indexOf(b.uuid));
+		case "networks":
+			vueApp.networks.sort((a, b) => order.indexOf(a.uuid) - order.indexOf(b.uuid));
 
-		break;
+			break;
 
-	case "channels": {
-		const network = vueApp.networks.find((n) => n.uuid === data.target);
+		case "channels": {
+			const network = vueApp.networks.find((n) => n.uuid === data.target);
 
-		if (!network) {
-			return;
+			if (!network) {
+				return;
+			}
+
+			network.channels.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+
+			break;
 		}
-
-		network.channels.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
-
-		break;
-	}
 	}
 });

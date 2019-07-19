@@ -19,17 +19,7 @@ const colorCodeMap = [
 	["15", "Light Grey"],
 ];
 
-const condensedTypes = [
-	"away",
-	"back",
-	"chghost",
-	"join",
-	"part",
-	"quit",
-	"nick",
-	"kick",
-	"mode",
-];
+const condensedTypes = ["away", "back", "chghost", "join", "part", "quit", "nick", "kick", "mode"];
 const condensedTypesQuery = "." + condensedTypes.join(", .");
 
 const timeFormats = {

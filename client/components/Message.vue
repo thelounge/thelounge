@@ -4,26 +4,18 @@
 		:class="['msg', message.type, {self: message.self, highlight: message.highlight}]"
 		:data-from="message.from && message.from.nick"
 	>
-		<span
-			:aria-label="message.time | localetime"
-			class="time tooltipped tooltipped-e"
-		>{{ messageTime }} </span>
+		<span :aria-label="message.time | localetime" class="time tooltipped tooltipped-e"
+			>{{ messageTime }}
+		</span>
 		<template v-if="message.type === 'unhandled'">
 			<span class="from">[{{ message.command }}]</span>
 			<span class="content">
-				<span
-					v-for="(param, id) in message.params"
-					:key="id"
-				>{{ param }} </span>
+				<span v-for="(param, id) in message.params" :key="id">{{ param }} </span>
 			</span>
 		</template>
 		<template v-else-if="isAction()">
 			<span class="from"><span class="only-copy">*** </span></span>
-			<Component
-				:is="messageComponent"
-				:network="network"
-				:message="message"
-			/>
+			<Component :is="messageComponent" :network="network" :message="message" />
 		</template>
 		<template v-else-if="message.type === 'action'">
 			<span class="from"><span class="only-copy">* </span></span>
@@ -41,20 +33,14 @@
 			</span>
 		</template>
 		<template v-else>
-			<span
-				v-if="message.type === 'message'"
-				class="from"
-			>
+			<span v-if="message.type === 'message'" class="from">
 				<template v-if="message.from && message.from.nick">
 					<span class="only-copy">&lt;</span>
 					<Username :user="message.from" />
 					<span class="only-copy">&gt; </span>
 				</template>
 			</span>
-			<span
-				v-else
-				class="from"
-			>
+			<span v-else class="from">
 				<template v-if="message.from && message.from.nick">
 					<span class="only-copy">-</span>
 					<Username :user="message.from" />
@@ -62,10 +48,7 @@
 				</template>
 			</span>
 			<span class="content">
-				<ParsedMessage
-					:network="network"
-					:message="message"
-				/>
+				<ParsedMessage :network="network" :message="message" />
 				<LinkPreview
 					v-for="preview in message.previews"
 					:key="preview.link"
@@ -100,7 +83,9 @@ export default {
 	},
 	computed: {
 		messageTime() {
-			const format = this.$root.settings.showSeconds ? constants.timeFormats.msgWithSeconds : constants.timeFormats.msgDefault;
+			const format = this.$root.settings.showSeconds
+				? constants.timeFormats.msgWithSeconds
+				: constants.timeFormats.msgDefault;
 
 			return moment(this.message.time).format(format);
 		},

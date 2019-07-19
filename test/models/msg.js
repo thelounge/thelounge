@@ -9,10 +9,13 @@ describe("Msg", function() {
 	["from", "target"].forEach((prop) => {
 		it(`should keep a copy of the original user in the \`${prop}\` property`, function() {
 			const prefixLookup = {a: "&", o: "@"};
-			const user = new User({
-				modes: ["o"],
-				nick: "foo",
-			}, prefixLookup);
+			const user = new User(
+				{
+					modes: ["o"],
+					nick: "foo",
+				},
+				prefixLookup
+			);
 			const msg = new Msg({[prop]: user});
 
 			// Mutating the user
@@ -26,31 +29,32 @@ describe("Msg", function() {
 
 	describe("#findPreview(link)", function() {
 		const msg = new Msg({
-			previews: [{
-				body: "",
-				head: "Example Domain",
-				link: "https://example.org/",
-				thumb: "",
-				type: "link",
-				shown: true,
-			}, {
-				body: "",
-				head: "The Lounge",
-				link: "https://thelounge.chat/",
-				thumb: "",
-				type: "link",
-				shown: true,
-			}],
+			previews: [
+				{
+					body: "",
+					head: "Example Domain",
+					link: "https://example.org/",
+					thumb: "",
+					type: "link",
+					shown: true,
+				},
+				{
+					body: "",
+					head: "The Lounge",
+					link: "https://thelounge.chat/",
+					thumb: "",
+					type: "link",
+					shown: true,
+				},
+			],
 		});
 
 		it("should find a preview given an existing link", function() {
-			expect(msg.findPreview("https://thelounge.chat/").head)
-				.to.equal("The Lounge");
+			expect(msg.findPreview("https://thelounge.chat/").head).to.equal("The Lounge");
 		});
 
 		it("should not find a preview that does not exist", function() {
-			expect(msg.findPreview("https://github.com/thelounge/thelounge"))
-				.to.be.undefined;
+			expect(msg.findPreview("https://github.com/thelounge/thelounge")).to.be.undefined;
 		});
 	});
 });

@@ -49,7 +49,7 @@ function onTouchStart(e) {
 }
 
 function onTouchMove(e) {
-	const touch = touchCurPos = e.touches.item(0);
+	const touch = (touchCurPos = e.touches.item(0));
 	let distX = touch.screenX - touchStartPos.screenX;
 	const distY = touch.screenY - touchStartPos.screenY;
 
@@ -93,7 +93,7 @@ function onTouchEnd() {
 	const diff = touchCurPos.screenX - touchStartPos.screenX;
 	const absDiff = Math.abs(diff);
 
-	if (absDiff > menuWidth / 2 || Date.now() - touchStartTime < 180 && absDiff > 50) {
+	if (absDiff > menuWidth / 2 || (Date.now() - touchStartTime < 180 && absDiff > 50)) {
 		SlideoutMenu.toggle(diff > 0);
 	}
 

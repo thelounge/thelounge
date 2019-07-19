@@ -7,28 +7,37 @@ exports.allowDisconnected = true;
 
 exports.input = function(network, chan, cmd, args) {
 	if (args.length === 0) {
-		chan.pushMessage(this, new Msg({
-			type: Msg.Type.ERROR,
-			text: "Usage: /nick <your new nick>",
-		}));
+		chan.pushMessage(
+			this,
+			new Msg({
+				type: Msg.Type.ERROR,
+				text: "Usage: /nick <your new nick>",
+			})
+		);
 		return;
 	}
 
 	if (args.length !== 1) {
-		chan.pushMessage(this, new Msg({
-			type: Msg.Type.ERROR,
-			text: "Nicknames may not contain spaces.",
-		}));
+		chan.pushMessage(
+			this,
+			new Msg({
+				type: Msg.Type.ERROR,
+				text: "Nicknames may not contain spaces.",
+			})
+		);
 		return;
 	}
 
 	const newNick = args[0];
 
 	if (newNick.length > 100) {
-		chan.pushMessage(this, new Msg({
-			type: Msg.Type.ERROR,
-			text: "Nicknames may not be this long.",
-		}));
+		chan.pushMessage(
+			this,
+			new Msg({
+				type: Msg.Type.ERROR,
+				text: "Nicknames may not be this long.",
+			})
+		);
 		return;
 	}
 

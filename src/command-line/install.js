@@ -30,41 +30,63 @@ program
 		packageJson(packageName, {
 			fullMetadata: true,
 			version: packageVersion,
-		}).then((json) => {
-			if (!("thelounge" in json)) {
-				log.error(`${colors.red(json.name + " v" + json.version)} does not have The Lounge metadata.`);
+		})
+			.then((json) => {
+				if (!("thelounge" in json)) {
+					log.error(
+						`${colors.red(
+							json.name + " v" + json.version
+						)} does not have The Lounge metadata.`
+					);
 
+					process.exit(1);
+				}
+
+				log.info(`Installing ${colors.green(json.name + " v" + json.version)}...`);
+
+				const packagesPath = Helper.getPackagesPath();
+				const packagesConfig = path.join(packagesPath, "package.json");
+
+				// Create node_modules folder, otherwise yarn will start walking upwards to find one
+				fsextra.ensureDirSync(path.join(packagesPath, "node_modules"));
+
+				// Create package.json with private set to true, if it doesn't exist already
+				if (!fs.existsSync(packagesConfig)) {
+					fs.writeFileSync(
+						packagesConfig,
+						JSON.stringify(
+							{
+								private: true,
+								description:
+									"Packages for The Lounge. All packages in node_modules directory will be automatically loaded.",
+							},
+							null,
+							"\t"
+						)
+					);
+				}
+
+				return Utils.executeYarnCommand(
+					"add",
+					"--production",
+					"--exact",
+					`${json.name}@${json.version}`
+				)
+					.then(() => {
+						log.info(
+							`${colors.green(
+								json.name + " v" + json.version
+							)} has been successfully installed.`
+						);
+					})
+					.catch((code) => {
+						throw `Failed to install ${colors.green(
+							json.name + " v" + json.version
+						)}. Exit code: ${code}`;
+					});
+			})
+			.catch((e) => {
+				log.error(`${e}`);
 				process.exit(1);
-			}
-
-			log.info(`Installing ${colors.green(json.name + " v" + json.version)}...`);
-
-			const packagesPath = Helper.getPackagesPath();
-			const packagesConfig = path.join(packagesPath, "package.json");
-
-			// Create node_modules folder, otherwise yarn will start walking upwards to find one
-			fsextra.ensureDirSync(path.join(packagesPath, "node_modules"));
-
-			// Create package.json with private set to true, if it doesn't exist already
-			if (!fs.existsSync(packagesConfig)) {
-				fs.writeFileSync(packagesConfig, JSON.stringify({
-					private: true,
-					description: "Packages for The Lounge. All packages in node_modules directory will be automatically loaded.",
-				}, null, "\t"));
-			}
-
-			return Utils.executeYarnCommand(
-				"add",
-				"--production",
-				"--exact",
-				`${json.name}@${json.version}`
-			).then(() => {
-				log.info(`${colors.green(json.name + " v" + json.version)} has been successfully installed.`);
-			}).catch((code) => {
-				throw `Failed to install ${colors.green(json.name + " v" + json.version)}. Exit code: ${code}`;
 			});
-		}).catch((e) => {
-			log.error(`${e}`);
-			process.exit(1);
-		});
 	});

@@ -32,18 +32,20 @@ program
 
 		const packages = JSON.parse(fs.readFileSync(packagesConfig, "utf-8"));
 
-		if (!packages.dependencies || !Object.prototype.hasOwnProperty.call(packages.dependencies, packageName)) {
+		if (
+			!packages.dependencies ||
+			!Object.prototype.hasOwnProperty.call(packages.dependencies, packageName)
+		) {
 			log.warn(packageWasNotInstalled);
 			process.exit(1);
 		}
 
-		return Utils.executeYarnCommand(
-			"remove",
-			packageName
-		).then(() => {
-			log.info(`${colors.green(packageName)} has been successfully uninstalled.`);
-		}).catch((code) => {
-			log.error(`Failed to uninstall ${colors.green(packageName)}. Exit code: ${code}`);
-			process.exit(1);
-		});
+		return Utils.executeYarnCommand("remove", packageName)
+			.then(() => {
+				log.info(`${colors.green(packageName)} has been successfully uninstalled.`);
+			})
+			.catch((code) => {
+				log.error(`Failed to uninstall ${colors.green(packageName)}. Exit code: ${code}`);
+				process.exit(1);
+			});
 	});

@@ -62,9 +62,12 @@ socket.on("auth", function(data) {
 		storage.remove("token");
 
 		const error = login.find(".error");
-		error.show().closest("form").one("submit", function() {
-			error.hide();
-		});
+		error
+			.show()
+			.closest("form")
+			.one("submit", function() {
+				error.hide();
+			});
 	} else if (user) {
 		token = storage.get("token");
 

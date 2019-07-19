@@ -23,7 +23,9 @@ module.exports = function(irc, network) {
 	});
 
 	irc.on("channel list end", function() {
-		updateListStatus(network.chanCache.sort((a, b) => b.num_users - a.num_users).slice(0, MAX_CHANS));
+		updateListStatus(
+			network.chanCache.sort((a, b) => b.num_users - a.num_users).slice(0, MAX_CHANS)
+		);
 
 		network.chanCache = [];
 	});

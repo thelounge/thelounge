@@ -1,13 +1,7 @@
 <template>
-	<div
-		:aria-label="localeDate"
-		class="date-marker-container tooltipped tooltipped-s"
-	>
+	<div :aria-label="localeDate" class="date-marker-container tooltipped tooltipped-s">
 		<div class="date-marker">
-			<span
-				:data-label="friendlyDate()"
-				class="date-marker-text"
-			/>
+			<span :data-label="friendlyDate()" class="date-marker-text" />
 		</div>
 	</div>
 </template>

@@ -128,10 +128,14 @@ class Uploader {
 		const xhr = new XMLHttpRequest();
 		this.xhr = xhr;
 
-		xhr.upload.addEventListener("progress", (e) => {
-			const percent = Math.floor(e.loaded / e.total * 1000) / 10;
-			this.setProgress(percent);
-		}, false);
+		xhr.upload.addEventListener(
+			"progress",
+			(e) => {
+				const percent = Math.floor((e.loaded / e.total) * 1000) / 10;
+				this.setProgress(percent);
+			},
+			false
+		);
 
 		xhr.onreadystatechange = () => {
 			if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -182,12 +186,12 @@ class Uploader {
 	}
 
 	insertUploadUrl(url) {
-		const fullURL = (new URL(url, location)).toString();
+		const fullURL = new URL(url, location).toString();
 		const textbox = document.getElementById("input");
 		const initStart = textbox.selectionStart;
 
 		// Get the text before the cursor, and add a space if it's not in the beginning
-		const headToCursor = initStart > 0 ? (textbox.value.substr(0, initStart) + " ") : "";
+		const headToCursor = initStart > 0 ? textbox.value.substr(0, initStart) + " " : "";
 
 		// Get the remaining text after the cursor
 		const cursorToTail = textbox.value.substr(initStart);
@@ -220,9 +224,9 @@ function initialize() {
 }
 
 /**
-* Called in the `configuration` socket event.
-* Makes it so the user can be notified if a file is too large without waiting for the upload to finish server-side.
-**/
+ * Called in the `configuration` socket event.
+ * Makes it so the user can be notified if a file is too large without waiting for the upload to finish server-side.
+ **/
 function setMaxFileSize(kb) {
 	instance.maxFileSize = kb;
 }
