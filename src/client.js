@@ -92,6 +92,10 @@ function Client(manager, name, config = {}) {
 		client.config.clientSettings = {};
 	}
 
+	if (typeof client.config.browser !== "object") {
+		client.config.browser = {};
+	}
+
 	client.compileCustomHighlights();
 
 	_.forOwn(client.config.sessions, (session) => {
@@ -195,8 +199,6 @@ Client.prototype.connect = function(args) {
 		username: String(args.username || ""),
 		realname: String(args.realname || ""),
 		commands: args.commands || [],
-		ip: args.ip || (client.config && client.config.ip) || client.ip,
-		hostname: args.hostname || (client.config && client.config.hostname) || client.hostname,
 		channels: channels,
 		ignoreList: args.ignoreList ? args.ignoreList : [],
 	});
@@ -547,7 +549,6 @@ Client.prototype.quit = function(signOut) {
 
 Client.prototype.clientAttach = function(socketId, token) {
 	const client = this;
-	let save = false;
 
 	if (client.awayMessage && _.size(client.attachedClients) === 0) {
 		client.networks.forEach(function(network) {
@@ -561,27 +562,6 @@ Client.prototype.clientAttach = function(socketId, token) {
 
 	const openChannel = client.lastActiveChannel;
 	client.attachedClients[socketId] = {token, openChannel};
-
-	// Update old networks to store ip and hostmask
-	client.networks.forEach((network) => {
-		if (!network.ip) {
-			save = true;
-			network.ip = (client.config && client.config.ip) || client.ip;
-		}
-
-		if (!network.hostname) {
-			const hostmask = (client.config && client.config.hostname) || client.hostname;
-
-			if (hostmask) {
-				save = true;
-				network.hostmask = hostmask;
-			}
-		}
-	});
-
-	if (save) {
-		client.save();
-	}
 };
 
 Client.prototype.clientDetach = function(socketId) {

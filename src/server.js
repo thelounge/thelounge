@@ -235,7 +235,7 @@ function getClientIp(socket) {
 	let ip = socket.handshake.address || "127.0.0.1";
 
 	if (Helper.config.reverseProxy) {
-		const forwarded = (socket.request.headers["x-forwarded-for"] || "").split(/\s*,\s*/).filter(Boolean);
+		const forwarded = (socket.handshake.headers["x-forwarded-for"] || "").split(/\s*,\s*/).filter(Boolean);
 
 		if (forwarded.length && net.isIP(forwarded[0])) {
 			ip = forwarded[0];
@@ -243,6 +243,16 @@ function getClientIp(socket) {
 	}
 
 	return ip.replace(/^::ffff:/, "");
+}
+
+function getClientSecure(socket) {
+	let secure = socket.handshake.secure;
+
+	if (Helper.config.reverseProxy && socket.handshake.headers["x-forwarded-proto"] === "https") {
+		secure = true;
+	}
+
+	return secure;
 }
 
 function allRequests(req, res, next) {
@@ -329,8 +339,6 @@ function initializeClient(socket, client, token, lastMessage) {
 	socket.on("network:new", (data) => {
 		if (typeof data === "object") {
 			// prevent people from overriding webirc settings
-			data.ip = null;
-			data.hostname = null;
 			data.uuid = null;
 			data.commands = null;
 			data.ignoreList = null;
@@ -657,21 +665,32 @@ function performAuthentication(data) {
 	let client;
 	let token = null;
 
-	const finalInit = () => initializeClient(socket, client, token, data.lastMessage || -1);
+	const finalInit = () => {
+		initializeClient(socket, client, token, data.lastMessage || -1);
+
+		if (!Helper.config.public) {
+			client.manager.updateUser(client.name, {
+				browser: client.config.browser,
+			});
+		}
+	};
 
 	const initClient = () => {
 		socket.emit("configuration", getClientConfiguration());
 
-		client.ip = getClientIp(socket);
-		client.language = getClientLanguage(socket);
+		client.config.browser = {
+			ip: getClientIp(socket),
+			isSecure: getClientSecure(socket),
+			language: getClientLanguage(socket),
+		};
 
 		// If webirc is enabled perform reverse dns lookup
 		if (Helper.config.webirc === null) {
 			return finalInit();
 		}
 
-		reverseDnsLookup(client.ip, (hostname) => {
-			client.hostname = hostname;
+		reverseDnsLookup(client.config.browser.ip, (hostname) => {
+			client.config.browser.hostname = hostname;
 
 			finalInit();
 		});

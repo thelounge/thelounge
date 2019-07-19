@@ -63,7 +63,7 @@ module.exports = function(client, chan, msg) {
 
 		fetch(url, {
 			accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-			language: client.language,
+			language: client.config.browser.language,
 		}).then((res) => {
 			parse(msg, chan, preview, res, client);
 		}).catch((err) => {
@@ -106,7 +106,7 @@ function parseHtml(preview, res, client) {
 
 				// Verify that thumbnail pic exists and is under allowed size
 				if (preview.thumb.length) {
-					fetch(preview.thumb, {language: client.language}).then((resThumb) => {
+					fetch(preview.thumb, {language: client.config.browser.language}).then((resThumb) => {
 						if (resThumb === null
 						|| !(imageTypeRegex.test(resThumb.type))
 						|| resThumb.size > (Helper.config.prefetchMaxImageSize * 1024)) {
@@ -155,7 +155,7 @@ function parseHtmlMedia($, preview, client) {
 						accept: type === "video" ?
 							"video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5" :
 							"audio/webm, audio/ogg, audio/wav, audio/*;q=0.9, application/ogg;q=0.7, video/*;q=0.6; */*;q=0.5",
-						language: client.language,
+						language: client.config.browser.language,
 					}).then((resMedia) => {
 						if (resMedia === null || !mediaTypeRegex.test(resMedia.type)) {
 							return reject();

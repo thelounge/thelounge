@@ -39,8 +39,6 @@ describe("Network", function() {
 				realname: "",
 				commands: [],
 				nick: "chillin`",
-				ip: null,
-				hostname: null,
 				channels: [
 					{name: "#thelounge", key: ""},
 					{name: "&foobar", key: ""},
@@ -127,8 +125,8 @@ describe("Network", function() {
 
 			expect(saveCalled).to.be.true;
 			expect(network.guid).to.not.equal("newGuid");
-			expect(network.ip).to.be.null;
-			expect(network.hostname).to.be.null;
+			expect(network.ip).to.be.undefined;
+			expect(network.hostname).to.be.undefined;
 
 			expect(network.name).to.equal("Lounge Test Network");
 			expect(network.channels[0].name).to.equal("Lounge Test Network");
@@ -226,8 +224,6 @@ describe("Network", function() {
 				"channels",
 				"commands",
 				"host",
-				"hostname",
-				"ip",
 				"name",
 				"port",
 				"realname",

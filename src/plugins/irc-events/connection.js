@@ -79,7 +79,7 @@ module.exports = function(irc, network) {
 		let ident = client.name || network.username;
 
 		if (Helper.config.useHexIp) {
-			ident = Helper.ip2hex(network.ip);
+			ident = Helper.ip2hex(client.config.browser.ip);
 		}
 
 		identSocketId = client.manager.identHandler.addSocket(socket, ident);

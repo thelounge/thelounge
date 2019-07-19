@@ -287,7 +287,7 @@ describe("Link plugin", function() {
 
 	it("should use client's preferred language as Accept-Language header", function(done) {
 		const language = "sv,en-GB;q=0.9,en;q=0.8";
-		this.irc.language = language;
+		this.irc.config.browser.language = language;
 
 		app.get("/language-check", function(req, res) {
 			expect(req.headers["accept-language"]).to.equal(language);
@@ -449,7 +449,7 @@ describe("Link plugin", function() {
 		let requests = 0;
 		let responses = 0;
 
-		this.irc.language = "very nice language";
+		this.irc.config.browser.language = "very nice language";
 
 		link(this.irc, this.network.channels[0], message);
 		link(this.irc, this.network.channels[0], message);
@@ -489,11 +489,11 @@ describe("Link plugin", function() {
 		const requests = [];
 		let responses = 0;
 
-		this.irc.language = "first language";
+		this.irc.config.browser.language = "first language";
 		link(this.irc, this.network.channels[0], message);
 
 		setTimeout(() => {
-			this.irc.language = "second language";
+			this.irc.config.browser.language = "second language";
 			link(this.irc, this.network.channels[0], message);
 		}, 100);
 
