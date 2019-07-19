@@ -6,6 +6,7 @@
 		v-else
 		:list="networks"
 		:filter="isCurrentlyInTouch"
+		:prevent-on-filter="false"
 		handle=".lobby"
 		draggable=".network"
 		ghost-class="ui-sortable-ghost"
@@ -49,6 +50,7 @@
 				drag-class="ui-sortable-dragged"
 				:group="network.uuid"
 				:filter="isCurrentlyInTouch"
+				:prevent-on-filter="false"
 				:list="network.channels"
 				class="channels"
 				@change="onChannelSort"
