@@ -31,3 +31,7 @@ your contributions.
   corner](https://github.com/thelounge/thelounge/wiki/Maintainers'-corner).
 - Please document any relevant changes in the documentation that can be found
   [in its own repository](https://github.com/thelounge/thelounge.chat).
+- Note that we use prettier on the project. You can set up IDE plugins to format
+  on save ([see VS Code one here](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)).
+- We have a git hook to automatically run prettier before commit, in case you don't install the plugin.
+- If for any reason, prettier does not work for you, you can run `yarn format:prettier` and that should format everything.
