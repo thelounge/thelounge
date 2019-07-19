@@ -16,7 +16,6 @@ rules:
   dot-notation: error
   eqeqeq: error
   handle-callback-err: error
-  linebreak-style: [error, unix]
   no-alert: error
   no-catch-shadow: error
   no-control-regex: off
