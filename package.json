@@ -84,7 +84,7 @@
     "css-loader": "0.28.11",
     "css.escape": "1.5.1",
     "emoji-regex": "8.0.0",
-    "eslint": "6.0.1",
+    "eslint": "6.1.0",
     "eslint-config-prettier": "6.0.0",
     "eslint-plugin-vue": "5.2.3",
     "fuzzy": "0.1.3",
