@@ -2,6 +2,7 @@
 
 const socket = require("./socket");
 const updateCursor = require("undate").update;
+const punycode = require('punycode');
 
 class Uploader {
 	init() {
@@ -190,6 +191,10 @@ class Uploader {
 		const textbox = document.getElementById("input");
 		const initStart = textbox.selectionStart;
 
+		// An IDN url can be in encoded form at this point so decode it into human readable format
+		// Only the Punycoded parts of the input will be converted
+		const decodedURL = punycode.toUnicode(fullURL);
+
 		// Get the text before the cursor, and add a space if it's not in the beginning
 		const headToCursor = initStart > 0 ? textbox.value.substr(0, initStart) + " " : "";
 
@@ -197,7 +202,7 @@ class Uploader {
 		const cursorToTail = textbox.value.substr(initStart);
 
 		// Construct the value until the point where we want the cursor to be
-		const textBeforeTail = headToCursor + fullURL + " ";
+		const textBeforeTail = headToCursor + decodedURL + " ";
 
 		updateCursor(textbox, textBeforeTail + cursorToTail);
 
