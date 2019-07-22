@@ -9,21 +9,19 @@ const themes = new Map();
 module.exports = {
 	addTheme,
 	getAll,
-	getFilename,
+	getByName,
 	loadLocalThemes,
 };
 
 function loadLocalThemes() {
-	fs.readdir(path.join(__dirname, "..", "..", "..", "public", "themes"), (err, builtInThemes) => {
-		if (err) {
-			return;
-		}
+	const builtInThemes = fs.readdirSync(
+		path.join(__dirname, "..", "..", "..", "public", "themes")
+	);
 
-		builtInThemes
-			.filter((theme) => theme.endsWith(".css"))
-			.map(makeLocalThemeObject)
-			.forEach((theme) => themes.set(theme.name, theme));
-	});
+	builtInThemes
+		.filter((theme) => theme.endsWith(".css"))
+		.map(makeLocalThemeObject)
+		.forEach((theme) => themes.set(theme.name, theme));
 }
 
 function addTheme(packageName, packageObject) {
@@ -35,13 +33,17 @@ function addTheme(packageName, packageObject) {
 }
 
 function getAll() {
-	return _.sortBy(Array.from(themes.values()), "displayName");
+	const filteredThemes = [];
+
+	for (const theme of themes.values()) {
+		filteredThemes.push(_.pick(theme, ["displayName", "name", "themeColor"]));
+	}
+
+	return _.sortBy(filteredThemes, "displayName");
 }
 
-function getFilename(module) {
-	if (themes.has(module)) {
-		return themes.get(module).filename;
-	}
+function getByName(name) {
+	return themes.get(name);
 }
 
 function makeLocalThemeObject(css) {
@@ -49,6 +51,7 @@ function makeLocalThemeObject(css) {
 	return {
 		displayName: themeName.charAt(0).toUpperCase() + themeName.slice(1),
 		name: themeName,
+		themeColor: null,
 	};
 }
 
@@ -57,10 +60,12 @@ function makePackageThemeObject(moduleName, module) {
 		return;
 	}
 
+	const themeColor = /^#[0-9A-F]{6}$/i.test(module.themeColor) ? module.themeColor : null;
 	const modulePath = Helper.getPackageModulePath(moduleName);
 	return {
 		displayName: module.name || moduleName,
 		filename: path.join(modulePath, module.css),
 		name: moduleName,
+		themeColor: themeColor,
 	};
 }

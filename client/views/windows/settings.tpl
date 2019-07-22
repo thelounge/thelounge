@@ -104,7 +104,7 @@
 			<label for="theme-select" class="sr-only">Theme</label>
 			<select id="theme-select" name="theme" class="input">
 				{{#each themes}}
-					<option value="{{name}}">
+					<option value="{{name}}" data-theme-color="{{themeColor}}">
 						{{displayName}}
 					</option>
 				{{/each}}

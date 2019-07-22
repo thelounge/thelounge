@@ -30,6 +30,8 @@ const noSync = ["syncSettings"];
 // to the server regardless of the clients sync setting.
 const alwaysSync = ["highlights"];
 
+const defaultThemeColor = document.querySelector('meta[name="theme-color"]').content;
+
 // Process usersettings from localstorage.
 let userSettings = JSON.parse(storage.get("settings")) || false;
 
@@ -95,10 +97,19 @@ function applySetting(name, value) {
 		$syncWarningOverride.hide();
 		$forceSyncButton.hide();
 	} else if (name === "theme") {
-		value = `themes/${value}.css`;
+		const themeUrl = `themes/${value}.css`;
 
-		if ($theme.attr("href") !== value) {
-			$theme.attr("href", value);
+		if ($theme.attr("href") !== themeUrl) {
+			$theme.attr("href", themeUrl);
+
+			const newTheme = $settings.find("#theme-select option[value='" + value + "']");
+			let themeColor = defaultThemeColor;
+
+			if (newTheme.length > 0 && newTheme[0].dataset.themeColor) {
+				themeColor = newTheme[0].dataset.themeColor;
+			}
+
+			document.querySelector('meta[name="theme-color"]').content = themeColor;
 		}
 	} else if (name === "userStyles" && !noCSSparamReg.test(window.location.search)) {
 		$userStyles.html(value);
