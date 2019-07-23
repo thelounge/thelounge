@@ -9,7 +9,7 @@
  */
 
 (function() {
-	const msg = document.getElementById("loading-page-message");
+	var msg = document.getElementById("loading-page-message");
 
 	if (msg) {
 		msg.textContent = "Loading the app…";
@@ -69,5 +69,19 @@
 	// Trigger early service worker registration
 	if ("serviceWorker" in navigator) {
 		navigator.serviceWorker.register("service-worker.js");
+
+		// Handler for messages coming from the service worker
+		var messageHandler = function ServiceWorkerMessageHandler(event) {
+			if (event.data.type === "fetch-error") {
+				window.g_LoungeErrorHandler({
+					message: `Service worker failed to fetch an url: ${event.data.message}`,
+				});
+
+				// Display only one fetch error
+				navigator.serviceWorker.removeEventListener("message", messageHandler);
+			}
+		};
+
+		navigator.serviceWorker.addEventListener("message", messageHandler);
 	}
 })();
