@@ -67,13 +67,16 @@ module.exports.initialize = () => {
 						alternatePushButton();
 					}
 				});
-		}).catch(() => {
-			vueApp.pushNotificationState = "unsupported";
-		});
+			})
+			.catch(() => {
+				vueApp.pushNotificationState = "unsupported";
+			});
 	}
 };
 
-function onPushButton() {
+module.exports.onPushButton = () => {
+	// TODO: move dom logic to Settings.vue
+	pushNotificationsButton = $("#pushNotifications");
 	pushNotificationsButton.prop("disabled", true);
 
 	navigator.serviceWorker.ready
@@ -127,7 +130,7 @@ function onPushButton() {
 		});
 
 	return false;
-}
+};
 
 function alternatePushButton() {
 	const text = pushNotificationsButton.text();

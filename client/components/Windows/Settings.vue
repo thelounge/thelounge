@@ -264,8 +264,9 @@
 							id="pushNotifications"
 							type="button"
 							class="btn"
-							disabled
+							:disabled="$root.pushNotificationState !== 'supported'"
 							data-text-alternate="Unsubscribe from push notifications"
+							@click="onPushButtonClick"
 						>Subscribe to push notifications</button>
 						<div
 							v-if="$root.pushNotificationState === 'nohttps'"
@@ -533,6 +534,10 @@ export default {
 		if (window.navigator.registerProtocolHandler) {
 			this.canRegisterProtocol = true;
 		}
+
+		// TODO: Rework push notification code to avoid reinitializing it here
+		const webpush = require("../../js/webpush");
+		webpush.initialize();
 	},
 	methods: {
 		onChange(event) {
@@ -602,6 +607,10 @@ export default {
 			const pop = new Audio();
 			pop.src = "audio/pop.wav";
 			pop.play();
+		},
+		onPushButtonClick() {
+			const webpush = require("../../js/webpush"); // TODO: do this in a smarter way
+			webpush.onPushButton();
 		},
 	},
 };
