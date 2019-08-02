@@ -25,7 +25,8 @@
 					aria-label="Sign in"
 				><button
 					class="icon sign-in"
-					data-target="SignIn"
+					data-target="#sign-in"
+					data-component="SignIn"
 					aria-label="Sign in"
 					role="tab"
 					aria-controls="sign-in"
@@ -36,7 +37,8 @@
 					aria-label="Connect to network"
 				><button
 					class="icon connect"
-					data-target="Connect"
+					data-target="#connect"
+					data-component="Connect"
 					aria-label="Connect to network"
 					role="tab"
 					aria-controls="connect"
@@ -47,7 +49,8 @@
 					aria-label="Settings"
 				><button
 					class="icon settings"
-					data-target="Settings"
+					data-target="#settings"
+					data-component="Settings"
 					aria-label="Settings"
 					role="tab"
 					aria-controls="settings"
@@ -58,7 +61,8 @@
 					aria-label="Help"
 				><button
 					class="icon help"
-					data-target="Help"
+					data-target="#help"
+					data-component="Help"
 					aria-label="Help"
 					role="tab"
 					aria-controls="help"

@@ -107,7 +107,8 @@ window.vueMounted = () => {
 			}
 		} else {
 			vueApp.activeChannel = null;
-			vueApp.$store.commit("activeWindow", target);
+			const component = self.attr("data-component");
+			vueApp.$store.commit("activeWindow", component);
 
 			if (!keepSidebarOpen && $(window).outerWidth() <= utils.mobileViewportPixels) {
 				vueApp.setSidebar(false);
