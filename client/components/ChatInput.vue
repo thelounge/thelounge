@@ -49,13 +49,13 @@ const Mousetrap = require("mousetrap");
 const {wrapCursor} = require("undate");
 
 const formattingHotkeys = {
-	k: "\x03",
-	b: "\x02",
-	u: "\x1F",
-	i: "\x1D",
-	o: "\x0F",
-	s: "\x1e",
-	m: "\x11",
+	"mod+k": "\x03",
+	"mod+b": "\x02",
+	"mod+u": "\x1F",
+	"mod+i": "\x1D",
+	"mod+o": "\x0F",
+	"mod+s": "\x1e",
+	"mod+m": "\x11",
 };
 
 // Autocomplete bracket and quote characters like in a modern IDE
@@ -91,24 +91,21 @@ export default {
 
 		const inputTrap = Mousetrap(this.$refs.input);
 
-		for (const hotkey in formattingHotkeys) {
-			inputTrap.bind("mod+" + hotkey, function(e) {
-				// Key is lowercased because keybinds also get processed if caps lock is on
-				const modifier = formattingHotkeys[e.key.toLowerCase()];
+		inputTrap.bind(Object.keys(formattingHotkeys), function(e, key) {
+			const modifier = formattingHotkeys[key];
 
-				wrapCursor(
-					e.target,
-					modifier,
-					e.target.selectionStart === e.target.selectionEnd ? "" : modifier
-				);
+			wrapCursor(
+				e.target,
+				modifier,
+				e.target.selectionStart === e.target.selectionEnd ? "" : modifier
+			);
 
-				return false;
-			});
-		}
+			return false;
+		});
 
-		inputTrap.bind(Object.keys(bracketWraps), function(e) {
+		inputTrap.bind(Object.keys(bracketWraps), function(e, key) {
 			if (e.target.selectionStart !== e.target.selectionEnd) {
-				wrapCursor(e.target, e.key, bracketWraps[e.key]);
+				wrapCursor(e.target, key, bracketWraps[key]);
 
 				return false;
 			}
