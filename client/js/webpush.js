@@ -125,7 +125,7 @@ module.exports.onPushButton = () => {
 					}
 				})
 		)
-		.catch((err) => {
+		.catch(() => {
 			vueApp.pushNotificationState = "unsupported";
 		});
 

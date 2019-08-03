@@ -33,8 +33,7 @@ export default {
 			const network = this.$root.networks.find((n) => n.uuid === data.uuid);
 			network.name = network.channels[0].name = data.name;
 
-			sidebar.find(`.network[data-uuid="${data.uuid}"] .chan.lobby .name`)
-				.click();
+			sidebar.find(`.network[data-uuid="${data.uuid}"] .chan.lobby .name`).click();
 		},
 	},
 };

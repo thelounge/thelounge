@@ -6,14 +6,12 @@
 			type="button"
 			:class="[
 				'reveal-password tooltipped tooltipped-n tooltipped-no-delay',
-				{ 'reveal-password-visible': isVisible },
+				{'reveal-password-visible': isVisible},
 			]"
 			:aria-label="isVisible ? 'Hide password' : 'Show password'"
 			@click="onClick"
 		>
-			<span
-				:aria-label="isVisible ? 'Hide password' : 'Show password'"
-			/>
+			<span :aria-label="isVisible ? 'Hide password' : 'Show password'" />
 		</span>
 	</div>
 </template>

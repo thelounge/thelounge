@@ -1,19 +1,9 @@
 <template>
-	<div
-		id="settings"
-		class="window"
-		role="tabpanel"
-		aria-label="Settings"
-	>
+	<div id="settings" class="window" role="tabpanel" aria-label="Settings">
 		<div class="header">
 			<SidebarToggle />
 		</div>
-		<form
-			ref="settingsForm"
-			class="container"
-			@change="onChange"
-			@submit.prevent
-		>
+		<form ref="settingsForm" class="container" @change="onChange" @submit.prevent>
 			<h1 class="title">Settings</h1>
 
 			<div class="row">
@@ -23,31 +13,26 @@
 							v-model="$root.serverConfiguration.advanced"
 							type="checkbox"
 							name="advanced"
-						>
+						/>
 						Advanced settings
 					</label>
 				</div>
 			</div>
 
 			<div class="row">
-				<div
-					v-if="canRegisterProtocol"
-					id="native-app"
-					class="col-sm-12"
-				>
+				<div v-if="canRegisterProtocol" id="native-app" class="col-sm-12">
 					<h2>Native app</h2>
-					<button
-						id="webapp-install-button"
-						type="button"
-						class="btn"
-						hidden
-					>Add The Lounge to Home screen</button>
+					<button id="webapp-install-button" type="button" class="btn" hidden>
+						Add The Lounge to Home screen
+					</button>
 					<button
 						id="make-default-client"
 						type="button"
 						class="btn"
 						@click.prevent="registerProtocol"
-					>Open irc:// URLs with The Lounge</button>
+					>
+						Open irc:// URLs with The Lounge
+					</button>
 				</div>
 
 				<div
@@ -71,30 +56,21 @@
 							v-model="$root.settings.syncSettings"
 							type="checkbox"
 							name="syncSettings"
-						>
-						Synchronize settings with other clients.
+						/>
+						Synchronize settings with other clients
 					</label>
-					<p
-						v-if="!$root.settings.syncSettings"
-						class="sync-warning-override"
-					>
-						<strong>Warning</strong> Checking this box will override the settings of this client with those stored on the server.
+					<p v-if="!$root.settings.syncSettings" class="sync-warning-override">
+						<strong>Warning</strong> Checking this box will override the settings of
+						this client with those stored on the server.
 					</p>
-					<p
-						v-if="!$root.settings.syncSettings"
-						class="sync-warning-base"
-					>
-						<strong>Warning</strong> No settings have been synced before. Enabling this will sync all settings of this client as the base for other clients.
+					<p v-if="!$root.settings.syncSettings" class="sync-warning-base">
+						<strong>Warning</strong> No settings have been synced before. Enabling this
+						will sync all settings of this client as the base for other clients.
 					</p>
-					<div
-						v-if="$root.settings.syncSettings"
-						class="opt force-sync-button"
-					>
-						<button
-							type="button"
-							class="btn"
-							@click="onForceSyncClick"
-						>Force sync settings</button>
+					<div v-if="$root.settings.syncSettings" class="opt force-sync-button">
+						<button type="button" class="btn" @click="onForceSyncClick">
+							Force sync settings
+						</button>
 						<p>This will override any settings already synced to the server.</p>
 					</div>
 				</div>
@@ -104,11 +80,7 @@
 				</div>
 				<div class="col-sm-6">
 					<label class="opt">
-						<input
-							v-model="$root.settings.motd"
-							type="checkbox"
-							name="motd"
-						>
+						<input v-model="$root.settings.motd" type="checkbox" name="motd" />
 						Show <abbr title="Message Of The Day">MOTD</abbr>
 					</label>
 				</div>
@@ -118,7 +90,7 @@
 							v-model="$root.settings.showSeconds"
 							type="checkbox"
 							name="showSeconds"
-						>
+						/>
 						Show seconds in timestamp
 					</label>
 				</div>
@@ -143,7 +115,7 @@
 							type="radio"
 							name="statusMessages"
 							value="shown"
-						>
+						/>
 						Show all status messages individually
 					</label>
 					<label class="opt">
@@ -152,7 +124,7 @@
 							type="radio"
 							name="statusMessages"
 							value="condensed"
-						>
+						/>
 						Condense status messages together
 					</label>
 					<label class="opt">
@@ -161,7 +133,7 @@
 							type="radio"
 							name="statusMessages"
 							value="hidden"
-						>
+						/>
 						Hide all status messages
 					</label>
 				</div>
@@ -174,7 +146,7 @@
 							v-model="$root.settings.coloredNicks"
 							type="checkbox"
 							name="coloredNicks"
-						>
+						/>
 						Enable colored nicknames
 					</label>
 					<label class="opt">
@@ -182,19 +154,15 @@
 							v-model="$root.settings.autocomplete"
 							type="checkbox"
 							name="autocomplete"
-						>
+						/>
 						Enable autocomplete
 					</label>
 				</div>
-				<div
-					v-if="$root.serverConfiguration.advanced"
-					class="col-sm-12"
-				>
+				<div v-if="$root.serverConfiguration.advanced" class="col-sm-12">
 					<label class="opt">
-						<label
-							for="nickPostfix"
-							class="sr-only"
-						>Nick autocomplete postfix (e.g. <code>, </code>)</label>
+						<label for="nickPostfix" class="sr-only"
+							>Nick autocomplete postfix (e.g. <code>, </code>)</label
+						>
 						<input
 							id="nickPostfix"
 							v-model="$root.settings.nickPostfix"
@@ -202,7 +170,7 @@
 							name="nickPostfix"
 							class="input"
 							placeholder="Nick autocomplete postfix (e.g. ', ')"
-						>
+						/>
 					</label>
 				</div>
 
@@ -210,10 +178,7 @@
 					<h2>Theme</h2>
 				</div>
 				<div class="col-sm-12">
-					<label
-						for="theme-select"
-						class="sr-only"
-					>Theme</label>
+					<label for="theme-select" class="sr-only">Theme</label>
 					<select
 						id="theme-select"
 						v-model="$root.settings.theme"
@@ -236,20 +201,13 @@
 					</div>
 					<div class="col-sm-6">
 						<label class="opt">
-							<input
-								type="checkbox"
-								name="media"
-							>
+							<input type="checkbox" name="media" />
 							Auto-expand media
 						</label>
 					</div>
 					<div class="col-sm-6">
 						<label class="opt">
-							<input
-								v-model="$root.settings.links"
-								type="checkbox"
-								name="links"
-							>
+							<input v-model="$root.settings.links" type="checkbox" name="links" />
 							Auto-expand websites
 						</label>
 					</div>
@@ -267,18 +225,14 @@
 							:disabled="$root.pushNotificationState !== 'supported'"
 							data-text-alternate="Unsubscribe from push notifications"
 							@click="onPushButtonClick"
-						>Subscribe to push notifications</button>
-						<div
-							v-if="$root.pushNotificationState === 'nohttps'"
-							class="error"
 						>
-							<strong>Warning</strong>:
-							Push notifications are only supported over HTTPS connections.
+							Subscribe to push notifications
+						</button>
+						<div v-if="$root.pushNotificationState === 'nohttps'" class="error">
+							<strong>Warning</strong>: Push notifications are only supported over
+							HTTPS connections.
 						</div>
-						<div
-							v-if="$root.pushNotificationState === 'unsupported'"
-							class="error"
-						>
+						<div v-if="$root.pushNotificationState === 'unsupported'" class="error">
 							<strong>Warning</strong>:
 							<span>Push notifications are not supported by your browser.</span>
 						</div>
@@ -295,22 +249,18 @@
 							id="desktopNotifications"
 							type="checkbox"
 							name="desktopNotifications"
-						>
-						Enable browser notifications<br>
-						<div
-							v-if="$root.desktopNotificationState === 'unsupported'"
-							class="error"
-						>
-							<strong>Warning</strong>:
-							Notifications are not supported by your browser.
+						/>
+						Enable browser notifications<br />
+						<div v-if="$root.desktopNotificationState === 'unsupported'" class="error">
+							<strong>Warning</strong>: Notifications are not supported by your
+							browser.
 						</div>
 						<div
 							v-if="$root.desktopNotificationState === 'blocked'"
 							id="warnBlockedDesktopNotifications"
 							class="error"
 						>
-							<strong>Warning</strong>:
-							Notifications are blocked by your browser.
+							<strong>Warning</strong>: Notifications are blocked by your browser.
 						</div>
 					</label>
 				</div>
@@ -320,42 +270,32 @@
 							v-model="$root.settings.notification"
 							type="checkbox"
 							name="notification"
-						>
+						/>
 						Enable notification sound
 					</label>
 				</div>
 				<div class="col-sm-12">
 					<div class="opt">
-						<button
-							id="play"
-							@click.prevent="playNotification"
-						>Play sound</button>
+						<button id="play" @click.prevent="playNotification">Play sound</button>
 					</div>
 				</div>
 
-				<div
-					v-if="$root.serverConfiguration.advanced"
-					class="col-sm-12"
-				>
+				<div v-if="$root.serverConfiguration.advanced" class="col-sm-12">
 					<label class="opt">
 						<input
 							v-model="$root.settings.notifyAllMessages"
 							type="checkbox"
 							name="notifyAllMessages"
-						>
+						/>
 						Enable notification for all messages
 					</label>
 				</div>
 
-				<div
-					v-if="$root.serverConfiguration.advanced"
-					class="col-sm-12"
-				>
+				<div v-if="$root.serverConfiguration.advanced" class="col-sm-12">
 					<label class="opt">
-						<label
-							for="highlights"
-							class="sr-only"
-						>Custom highlights (comma-separated keywords)</label>
+						<label for="highlights" class="sr-only"
+							>Custom highlights (comma-separated keywords)</label
+						>
 						<input
 							id="highlights"
 							v-model="$root.settings.highlights"
@@ -363,22 +303,23 @@
 							name="highlights"
 							class="input"
 							placeholder="Custom highlights (comma-separated keywords)"
-						>
+						/>
 					</label>
 				</div>
 
 				<div
-					v-if="!$root.serverConfiguration.public && !$root.serverConfiguration.ldapEnabled"
+					v-if="
+						!$root.serverConfiguration.public && !$root.serverConfiguration.ldapEnabled
+					"
 					id="change-password"
 				>
 					<div class="col-sm-12">
 						<h2>Change password</h2>
 					</div>
 					<div class="col-sm-12 password-container">
-						<label
-							for="old_password_input"
-							class="sr-only"
-						>Enter current password</label>
+						<label for="old_password_input" class="sr-only"
+							>Enter current password</label
+						>
 						<RevealPassword v-slot:default="slotProps">
 							<input
 								id="old_password_input"
@@ -386,14 +327,13 @@
 								name="old_password"
 								class="input"
 								placeholder="Enter current password"
-							>
+							/>
 						</RevealPassword>
 					</div>
 					<div class="col-sm-12 password-container">
-						<label
-							for="new_password_input"
-							class="sr-only"
-						>Enter desired new password</label>
+						<label for="new_password_input" class="sr-only"
+							>Enter desired new password</label
+						>
 						<RevealPassword v-slot:default="slotProps">
 							<input
 								id="new_password_input"
@@ -401,14 +341,13 @@
 								name="new_password"
 								class="input"
 								placeholder="Enter desired new password"
-							>
+							/>
 						</RevealPassword>
 					</div>
 					<div class="col-sm-12 password-container">
-						<label
-							for="verify_password_input"
-							class="sr-only"
-						>Repeat new password</label>
+						<label for="verify_password_input" class="sr-only"
+							>Repeat new password</label
+						>
 						<RevealPassword v-slot:default="slotProps">
 							<input
 								id="verify_password_input"
@@ -416,7 +355,7 @@
 								name="verify_password"
 								class="input"
 								placeholder="Repeat new password"
-							>
+							/>
 						</RevealPassword>
 					</div>
 					<div
@@ -432,28 +371,19 @@
 						{{ passwordErrors[passwordChangeStatus.error] }}
 					</div>
 					<div class="col-sm-12">
-						<button
-							type="submit"
-							class="btn"
-							@click.prevent="changePassword"
-						>Change password</button>
+						<button type="submit" class="btn" @click.prevent="changePassword">
+							Change password
+						</button>
 					</div>
 				</div>
 
-				<div
-					v-if="$root.serverConfiguration.advanced"
-					class="col-sm-12"
-				>
+				<div v-if="$root.serverConfiguration.advanced" class="col-sm-12">
 					<h2>Custom Stylesheet</h2>
 				</div>
-				<div
-					v-if="$root.serverConfiguration.advanced"
-					class="col-sm-12"
-				>
-					<label
-						for="user-specified-css-input"
-						class="sr-only"
-					>Custom stylesheet. You can override any style with CSS here.</label>
+				<div v-if="$root.serverConfiguration.advanced" class="col-sm-12">
+					<label for="user-specified-css-input" class="sr-only"
+						>Custom stylesheet. You can override any style with CSS here.</label
+					>
 					<textarea
 						id="user-specified-css-input"
 						v-model="$root.settings.userStyles"
@@ -464,17 +394,11 @@
 				</div>
 			</div>
 
-			<div
-				v-if="!$root.serverConfiguration.public"
-				class="session-list"
-			>
+			<div v-if="!$root.serverConfiguration.public" class="session-list">
 				<h2>Sessions</h2>
 
 				<h3>Current session</h3>
-				<div
-					v-if="$store.getters.currentSession"
-					id="session-current"
-				>
+				<div v-if="$store.getters.currentSession" id="session-current">
 					<Session :session="$store.getters.currentSession" />
 				</div>
 
@@ -494,7 +418,6 @@
 				</div>
 			</div>
 		</form>
-
 	</div>
 </template>
 
@@ -520,7 +443,8 @@ export default {
 			passwordErrors: {
 				missing_fields: "Please enter a new password",
 				password_mismatch: "Both new password fields must match",
-				password_incorrect: "The current password field does not match your account password",
+				password_incorrect:
+					"The current password field does not match your account password",
 				update_failed: "Failed to update your password",
 			},
 		};
@@ -541,11 +465,7 @@ export default {
 	},
 	methods: {
 		onChange(event) {
-			const ignore = [
-				"old_password",
-				"new_password",
-				"verify_password",
-			];
+			const ignore = ["old_password", "new_password", "verify_password"];
 
 			const name = event.target.name;
 

@@ -1,13 +1,13 @@
 <template>
 	<!-- TODO: move closed style to it's own class -->
 	<div
-		ref="element"
 		v-if="
 			!network.isCollapsed ||
 				channel.highlight ||
 				channel.type === 'lobby' ||
 				(activeChannel && channel === activeChannel.channel)
 		"
+		ref="element"
 		:class="[
 			'chan',
 			channel.type,
@@ -50,8 +50,8 @@ export default {
 			if (this.channel.type === "lobby") {
 				cmd = "/quit";
 
+				// eslint-disable-next-line no-alert
 				if (!confirm(`Are you sure you want to remove ${this.channel.name}?`)) {
-					// eslint-disable-line no-alert
 					return false;
 				}
 			}

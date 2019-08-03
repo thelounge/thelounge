@@ -36,7 +36,7 @@ class SlideoutMenu {
 		};
 
 		this.onTouchMove = (e) => {
-			const touch = this.touchCurPos = e.touches.item(0);
+			const touch = (this.touchCurPos = e.touches.item(0));
 			let distX = touch.screenX - this.touchStartPos.screenX;
 			const distY = touch.screenY - this.touchStartPos.screenY;
 
@@ -80,7 +80,10 @@ class SlideoutMenu {
 			const diff = this.touchCurPos.screenX - this.touchStartPos.screenX;
 			const absDiff = Math.abs(diff);
 
-			if (absDiff > this.menuWidth / 2 || Date.now() - this.touchStartTime < 180 && absDiff > 50) {
+			if (
+				absDiff > this.menuWidth / 2 ||
+				(Date.now() - this.touchStartTime < 180 && absDiff > 50)
+			) {
 				this.toggle(diff > 0);
 			}
 
@@ -109,4 +112,4 @@ class SlideoutMenu {
 	}
 }
 
-module.exports = (new SlideoutMenu);
+module.exports = new SlideoutMenu();

@@ -1,9 +1,6 @@
 <template>
 	<p>
-		<button
-			class="btn pull-right remove-session"
-			@click.prevent="signOut"
-		>
+		<button class="btn pull-right remove-session" @click.prevent="signOut">
 			<template v-if="session.current">
 				Sign out
 			</template>
@@ -14,14 +11,12 @@
 
 		<strong>{{ session.agent }}</strong>
 
-		<a
-			:href="'https://ipinfo.io/'+session.ip"
-			target="_blank"
-			rel="noopener"
-		>{{ session.ip }}</a>
+		<a :href="'https://ipinfo.io/' + session.ip" target="_blank" rel="noopener">{{
+			session.ip
+		}}</a>
 
 		<template v-if="!session.current">
-			<br>
+			<br />
 			<template v-if="session.active">
 				<em>Currently active</em>
 			</template>

@@ -1,32 +1,20 @@
 <template>
-	<div
-		id="connect"
-		class="window"
-		role="tabpanel"
-		aria-label="Connect"
-	>
+	<div id="connect" class="window" role="tabpanel" aria-label="Connect">
 		<div class="header">
 			<SidebarToggle />
 		</div>
-		<form
-			class="container"
-			method="post"
-			action=""
-			@submit.prevent="onSubmit"
-		>
+		<form class="container" method="post" action="" @submit.prevent="onSubmit">
 			<div class="row">
 				<div class="col-sm-12">
 					<h1 class="title">
 						<template v-if="defaults.uuid">
-							<input
-								type="hidden"
-								name="uuid"
-								:value="defaults.uuid"
-							>
+							<input type="hidden" name="uuid" :value="defaults.uuid" />
 							Edit {{ defaults.name }}
 						</template>
 						<template v-else>
-							<template v-if="config.public">The Lounge - </template>
+							<template v-if="config.public"
+								>The Lounge -
+							</template>
 							Connect
 							<template v-if="!config.displayNetwork">
 								<template v-if="config.lockNetwork">
@@ -51,7 +39,7 @@
 								name="name"
 								:value="defaults.name"
 								maxlength="100"
-							>
+							/>
 						</div>
 						<div class="col-sm-3">
 							<label for="connect:host">Server</label>
@@ -66,7 +54,7 @@
 								maxlength="255"
 								required
 								:disabled="config.lockNetwork ? true : false"
-							>
+							/>
 						</div>
 						<div class="col-sm-3 col-xs-4">
 							<div class="port">
@@ -79,7 +67,7 @@
 									:value="defaults.port"
 									aria-label="Server port"
 									:disabled="config.lockNetwork ? true : false"
-								>
+								/>
 							</div>
 						</div>
 						<div class="clearfix" />
@@ -90,7 +78,7 @@
 									name="tls"
 									:checked="defaults.tls ? true : false"
 									:disabled="config.lockNetwork ? true : false"
-								>
+								/>
 								Use secure connection (TLS)
 							</label>
 						</div>
@@ -101,7 +89,7 @@
 									name="rejectUnauthorized"
 									:checked="defaults.rejectUnauthorized ? true : false"
 									:disabled="config.lockNetwork ? true : false"
-								>
+								/>
 								Only allow trusted certificates
 							</label>
 						</div>
@@ -122,7 +110,7 @@
 						:value="defaults.nick"
 						maxlength="100"
 						required
-					>
+					/>
 				</div>
 				<template v-if="!config.useHexIp">
 					<div class="col-sm-3">
@@ -135,7 +123,7 @@
 							name="username"
 							:value="defaults.username"
 							maxlength="512"
-						>
+						/>
 					</div>
 				</template>
 				<div class="col-sm-3">
@@ -150,7 +138,7 @@
 							:type="slotProps.isVisible ? 'text' : 'password'"
 							name="password"
 							maxlength="512"
-						>
+						/>
 					</RevealPassword>
 				</div>
 				<div class="col-sm-3">
@@ -163,7 +151,7 @@
 						name="realname"
 						:value="defaults.realname"
 						maxlength="512"
-					>
+					/>
 				</div>
 				<template v-if="defaults.uuid">
 					<div class="col-sm-3">
@@ -179,11 +167,9 @@
 						/>
 					</div>
 					<div class="col-sm-9 col-sm-offset-3">
-						<button
-							type="submit"
-							class="btn"
-							:disabled="disabled ? true : false"
-						>Save</button>
+						<button type="submit" class="btn" :disabled="disabled ? true : false">
+							Save
+						</button>
 					</div>
 				</template>
 				<template v-else>
@@ -196,19 +182,16 @@
 							class="input"
 							name="join"
 							:value="defaults.join"
-						>
+						/>
 					</div>
 					<div class="col-sm-9 col-sm-offset-3">
-						<button
-							type="submit"
-							class="btn"
-							:disabled="disabled ? true : false"
-						>Connect</button>
+						<button type="submit" class="btn" :disabled="disabled ? true : false">
+							Connect
+						</button>
 					</div>
 				</template>
 			</div>
 		</form>
-
 	</div>
 </template>
 

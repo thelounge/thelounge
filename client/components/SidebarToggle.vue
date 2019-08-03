@@ -1,9 +1,5 @@
 <template>
-	<button
-		class="lt"
-		aria-label="Toggle channel list"
-		@click="$root.toggleSidebar"
-	/>
+	<button class="lt" aria-label="Toggle channel list" @click="$root.toggleSidebar" />
 </template>
 
 <script>

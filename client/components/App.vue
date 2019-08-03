@@ -1,24 +1,14 @@
 <template>
 	<!-- TODO: move all class toggling to vue, since vue clears existing classes when changing the notified class -->
-	<div
-		id="viewport"
-		:class="viewportClasses"
-		role="tablist"
-	>
-		<Sidebar
-			:networks="networks"
-			:active-channel="activeChannel"
-		/>
+	<div id="viewport" :class="viewportClasses" role="tablist">
+		<Sidebar :networks="networks" :active-channel="activeChannel" />
 		<article id="windows">
 			<Chat
 				v-if="activeChannel"
 				:network="activeChannel.network"
 				:channel="activeChannel.channel"
 			/>
-			<component
-				:is="$store.state.activeWindow"
-				ref="window"
-			/>
+			<component :is="$store.state.activeWindow" ref="window" />
 		</article>
 	</div>
 </template>
@@ -57,7 +47,7 @@ export default {
 	computed: {
 		viewportClasses() {
 			return {
-				"notified": this.$store.state.isNotified,
+				notified: this.$store.state.isNotified,
 				"menu-open": this.$store.state.sidebarOpen,
 				"userlist-open": this.$store.state.userlistOpen,
 			};

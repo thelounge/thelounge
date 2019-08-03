@@ -107,7 +107,7 @@ function applySetting(name, value) {
 	} else if (name === "desktopNotifications") {
 		updateDesktopNotificationStatus();
 
-		if (("Notification" in window) && value && Notification.permission !== "granted") {
+		if ("Notification" in window && value && Notification.permission !== "granted") {
 			Notification.requestPermission(updateDesktopNotificationStatus);
 		}
 	}
@@ -170,7 +170,7 @@ function initialize() {
 
 	// If browser does not support notifications
 	// display proper message in settings.
-	if (("Notification" in window)) {
+	if ("Notification" in window) {
 		updateDesktopNotificationStatus();
 	} else {
 		vueApp.desktopNotificationState = "unsupported";

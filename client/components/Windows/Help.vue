@@ -1,10 +1,5 @@
 <template>
-	<div
-		id="help"
-		class="window"
-		role="tabpanel"
-		aria-label="Help"
-	>
+	<div id="help" class="window" role="tabpanel" aria-label="Help">
 		<div class="header">
 			<SidebarToggle />
 		</div>
@@ -13,12 +8,12 @@
 
 			<h2>
 				<small class="pull-right">
-					v{{ $root.serverConfiguration.version }}
-					(<a
+					v{{ $root.serverConfiguration.version }} (<a
 						id="view-changelog"
 						href="#"
 						data-target="Changelog"
-					>release notes</a>)
+						>release notes</a
+					>)
 				</small>
 				About The Lounge
 			</h2>
@@ -28,32 +23,43 @@
 
 				<template v-if="$root.serverConfiguration.gitCommit">
 					<p>
-						The Lounge is running from source
-						(<a
-							:href="`https://github.com/thelounge/thelounge/tree/${$root.serverConfiguration.gitCommit}`"
+						The Lounge is running from source (<a
+							:href="
+								`https://github.com/thelounge/thelounge/tree/${$root.serverConfiguration.gitCommit}`
+							"
 							target="_blank"
 							rel="noopener"
-						>commit <code>{{ $root.serverConfiguration.gitCommit }}</code></a>).
+							>commit <code>{{ $root.serverConfiguration.gitCommit }}</code></a
+						>).
 					</p>
 
 					<ul>
 						<li>
 							Compare
 							<a
-								:href="`https://github.com/thelounge/thelounge/compare/${$root.serverConfiguration.gitCommit}...master`"
+								:href="
+									`https://github.com/thelounge/thelounge/compare/${$root.serverConfiguration.gitCommit}...master`
+								"
 								target="_blank"
 								rel="noopener"
-							>between <code>{{ $root.serverConfiguration.gitCommit }}</code> and <code>master</code></a>
+								>between <code>{{ $root.serverConfiguration.gitCommit }}</code> and
+								<code>master</code></a
+							>
 							to see what you are missing
 						</li>
 						<li>
 							Compare
 							<a
-								:href="`https://github.com/thelounge/thelounge/compare/${$root.serverConfiguration.version}...${$root.serverConfiguration.gitCommit}`"
+								:href="
+									`https://github.com/thelounge/thelounge/compare/${$root.serverConfiguration.version}...${$root.serverConfiguration.gitCommit}`
+								"
 								target="_blank"
 								rel="noopener"
-							>between <code>{{ $root.serverConfiguration.version }}</code> and <code>{{ $root.serverConfiguration.gitCommit }}</code></a>
-							to see your local changes</li>
+								>between <code>{{ $root.serverConfiguration.version }}</code> and
+								<code>{{ $root.serverConfiguration.gitCommit }}</code></a
+							>
+							to see your local changes
+						</li>
 					</ul>
 				</template>
 
@@ -63,7 +69,8 @@
 						target="_blank"
 						rel="noopener"
 						class="website-link"
-					>Website</a>
+						>Website</a
+					>
 				</p>
 				<p>
 					<a
@@ -71,7 +78,8 @@
 						target="_blank"
 						rel="noopener"
 						class="documentation-link"
-					>Documentation</a>
+						>Documentation</a
+					>
 				</p>
 				<p>
 					<a
@@ -79,7 +87,8 @@
 						target="_blank"
 						rel="noopener"
 						class="report-issue-link"
-					>Report an issue…</a>
+						>Report an issue…</a
+					>
 				</p>
 			</div>
 
@@ -142,15 +151,15 @@
 				</div>
 				<div class="description">
 					<p>
-						Mark any text typed after this shortcut to be colored. After
-						hitting this shortcut, enter an integer in the range
-						<code>0—15</code> to select the desired color, or use the
-						autocompletion menu to choose a color name (see below).
+						Mark any text typed after this shortcut to be colored. After hitting this
+						shortcut, enter an integer in the range
+						<code>0—15</code> to select the desired color, or use the autocompletion
+						menu to choose a color name (see below).
 					</p>
 					<p>
-						Background color can be specified by putting a comma and
-						another integer in the range <code>0—15</code> after the
-						foreground color number (autocompletion works too).
+						Background color can be specified by putting a comma and another integer in
+						the range <code>0—15</code> after the foreground color number
+						(autocompletion works too).
 					</p>
 					<p>
 						A color reference can be found
@@ -158,7 +167,8 @@
 							href="https://modern.ircdocs.horse/formatting.html#colors"
 							target="_blank"
 							rel="noopener"
-						>here</a>.
+							>here</a
+						>.
 					</p>
 				</div>
 			</div>
@@ -169,7 +179,10 @@
 					<span class="key-apple"><kbd>⌘</kbd> <kbd>B</kbd></span>
 				</div>
 				<div class="description">
-					<p>Mark all text typed after this shortcut as <span class="irc-bold">bold</span>.</p>
+					<p>
+						Mark all text typed after this shortcut as
+						<span class="irc-bold">bold</span>.
+					</p>
 				</div>
 			</div>
 
@@ -179,7 +192,10 @@
 					<span class="key-apple"><kbd>⌘</kbd> <kbd>U</kbd></span>
 				</div>
 				<div class="description">
-					<p>Mark all text typed after this shortcut as <span class="irc-underline">underlined</span>.</p>
+					<p>
+						Mark all text typed after this shortcut as
+						<span class="irc-underline">underlined</span>.
+					</p>
 				</div>
 			</div>
 
@@ -189,7 +205,10 @@
 					<span class="key-apple"><kbd>⌘</kbd> <kbd>I</kbd></span>
 				</div>
 				<div class="description">
-					<p>Mark all text typed after this shortcut as <span class="irc-italic">italics</span>.</p>
+					<p>
+						Mark all text typed after this shortcut as
+						<span class="irc-italic">italics</span>.
+					</p>
 				</div>
 			</div>
 
@@ -199,7 +218,10 @@
 					<span class="key-apple"><kbd>⌘</kbd> <kbd>S</kbd></span>
 				</div>
 				<div class="description">
-					<p>Mark all text typed after this shortcut as <span class="irc-strikethrough">struck through</span>.</p>
+					<p>
+						Mark all text typed after this shortcut as
+						<span class="irc-strikethrough">struck through</span>.
+					</p>
 				</div>
 			</div>
 
@@ -209,7 +231,10 @@
 					<span class="key-apple"><kbd>⌘</kbd> <kbd>M</kbd></span>
 				</div>
 				<div class="description">
-					<p>Mark all text typed after this shortcut as <span class="irc-monospace">monospaced</span>.</p>
+					<p>
+						Mark all text typed after this shortcut as
+						<span class="irc-monospace">monospaced</span>.
+					</p>
 				</div>
 			</div>
 
@@ -220,8 +245,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Mark all text typed after this shortcut to be reset to its
-						original formatting.
+						Mark all text typed after this shortcut to be reset to its original
+						formatting.
 					</p>
 				</div>
 			</div>
@@ -229,9 +254,10 @@
 			<h2>Autocompletion</h2>
 
 			<p>
-				To auto-complete nicknames, channels, commands, and emoji, type one of the characters below to open
-				a suggestion list. Use the <kbd>↑</kbd> and <kbd>↓</kbd> keys to highlight an item, and insert it by
-				pressing <kbd>Tab</kbd> or <kbd>Enter</kbd> (or by clicking the desired item).
+				To auto-complete nicknames, channels, commands, and emoji, type one of the
+				characters below to open a suggestion list. Use the <kbd>↑</kbd> and
+				<kbd>↓</kbd> keys to highlight an item, and insert it by pressing <kbd>Tab</kbd> or
+				<kbd>Enter</kbd> (or by clicking the desired item).
 			</p>
 			<p>
 				Autocompletion can be disabled in settings.
@@ -269,7 +295,10 @@
 					<code>:</code>
 				</div>
 				<div class="description">
-					<p>Emoji (note: requires two search characters, to avoid conflicting with common emoticons like <code>:)</code>)</p>
+					<p>
+						Emoji (note: requires two search characters, to avoid conflicting with
+						common emoticons like <code>:)</code>)
+					</p>
 				</div>
 			</div>
 
@@ -298,8 +327,10 @@
 					<code>/ban nick</code>
 				</div>
 				<div class="description">
-					<p>Ban (<code>+b</code>) a user from the current channel.
-						This can be a nickname or a hostmask.</p>
+					<p>
+						Ban (<code>+b</code>) a user from the current channel. This can be a
+						nickname or a hostmask.
+					</p>
 				</div>
 			</div>
 
@@ -330,9 +361,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Connect to a new IRC network. If <code>port</code> starts with
-						a <code>+</code> sign, the connection will be made secure
-						using TLS.
+						Connect to a new IRC network. If <code>port</code> starts with a
+						<code>+</code> sign, the connection will be made secure using TLS.
 					</p>
 					<p>Alias: <code>/server</code></p>
 				</div>
@@ -350,7 +380,8 @@
 							href="https://en.wikipedia.org/wiki/Client-to-client_protocol"
 							target="_blank"
 							rel="noopener"
-						>the dedicated Wikipedia article</a>.
+							>the dedicated Wikipedia article</a
+						>.
 					</p>
 				</div>
 			</div>
@@ -361,8 +392,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Remove op (<code>-o</code>) from one or several users in the
-						current channel.
+						Remove op (<code>-o</code>) from one or several users in the current
+						channel.
 					</p>
 				</div>
 			</div>
@@ -373,8 +404,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Remove voice (<code>-v</code>) from one or several users in
-						the current channel.
+						Remove voice (<code>-v</code>) from one or several users in the current
+						channel.
 					</p>
 				</div>
 			</div>
@@ -385,8 +416,7 @@
 				</div>
 				<div class="description">
 					<p>
-						Disconnect from the current network with an
-						optionally-provided message.
+						Disconnect from the current network with an optionally-provided message.
 					</p>
 				</div>
 			</div>
@@ -410,8 +440,8 @@
 				<div class="description">
 					<p>
 						Invite a user to the specified channel. If
-						<code>channel</code> is omitted, user will be invited to the
-						current channel.
+						<code>channel</code> is omitted, user will be invited to the current
+						channel.
 					</p>
 				</div>
 			</div>
@@ -422,8 +452,9 @@
 				</div>
 				<div class="description">
 					<p>
-						Block any messages from the specified user on the current network.
-						This can be a nickname or a hostmask.</p>
+						Block any messages from the specified user on the current network. This can
+						be a nickname or a hostmask.
+					</p>
 				</div>
 			</div>
 
@@ -469,9 +500,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Send an action message to the current channel. The Lounge will
-						display it inline, as if the message was posted in the third
-						person.
+						Send an action message to the current channel. The Lounge will display it
+						inline, as if the message was posted in the third person.
 					</p>
 				</div>
 			</div>
@@ -482,10 +512,9 @@
 				</div>
 				<div class="description">
 					<p>
-						Set the given flags to the current channel if the active
-						window is a channel, another user if the active window is a
-						private message window, or yourself if the current window is a
-						server window.
+						Set the given flags to the current channel if the active window is a
+						channel, another user if the active window is a private message window, or
+						yourself if the current window is a server window.
 					</p>
 				</div>
 			</div>
@@ -523,8 +552,7 @@
 				</div>
 				<div class="description">
 					<p>
-						Give op (<code>+o</code>) to one or several users in the
-						current channel.
+						Give op (<code>+o</code>) to one or several users in the current channel.
 					</p>
 				</div>
 			</div>
@@ -535,8 +563,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Close the specified channel or private message window, or the
-						current channel if <code>channel</code> is omitted.
+						Close the specified channel or private message window, or the current
+						channel if <code>channel</code> is omitted.
 					</p>
 					<p>Aliases: <code>/close</code>, <code>/leave</code></p>
 				</div>
@@ -548,8 +576,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Leave and immediately rejoin the current channel. Useful to
-						quickly get op from ChanServ in an empty channel, for example.
+						Leave and immediately rejoin the current channel. Useful to quickly get op
+						from ChanServ in an empty channel, for example.
 					</p>
 					<p>Alias: <code>/cycle</code></p>
 				</div>
@@ -600,9 +628,8 @@
 				</div>
 				<div class="description">
 					<p>
-						Get the topic in the current channel.
-						If <code>newtopic</code> is specified, sets the
-						topic in the current channel.
+						Get the topic in the current channel. If <code>newtopic</code> is specified,
+						sets the topic in the current channel.
 					</p>
 				</div>
 			</div>
@@ -612,8 +639,10 @@
 					<code>/unban nick</code>
 				</div>
 				<div class="description">
-					<p>Unban (<code>-b</code>) a user from the current channel.
-						This can be a nickname or a hostmask.</p>
+					<p>
+						Unban (<code>-b</code>) a user from the current channel. This can be a
+						nickname or a hostmask.
+					</p>
 				</div>
 			</div>
 
@@ -623,8 +652,9 @@
 				</div>
 				<div class="description">
 					<p>
-						Unblock messages from the specified user on the current network.
-						This can be a nickname or a hostmask.</p>
+						Unblock messages from the specified user on the current network. This can be
+						a nickname or a hostmask.
+					</p>
 				</div>
 			</div>
 
@@ -634,8 +664,7 @@
 				</div>
 				<div class="description">
 					<p>
-						Give voice (<code>+v</code>) to one or several users in the
-						current channel.
+						Give voice (<code>+v</code>) to one or several users in the current channel.
 					</p>
 				</div>
 			</div>
@@ -646,8 +675,7 @@
 				</div>
 				<div class="description">
 					<p>
-						Retrieve information about the given user on the current
-						network.
+						Retrieve information about the given user on the current network.
 					</p>
 				</div>
 			</div>
