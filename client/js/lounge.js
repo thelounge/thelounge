@@ -102,7 +102,7 @@ window.vueMounted = () => {
 
 			socket.emit("open", channel ? channel.channel.id : null);
 
-			if (!keepSidebarOpen && $(window).outerWidth() <= utils.mobileViewportPixels) {
+			if ($(window).outerWidth() <= utils.mobileViewportPixels) {
 				vueApp.setSidebar(false);
 			}
 		} else {
@@ -110,7 +110,7 @@ window.vueMounted = () => {
 			const component = self.attr("data-component");
 			vueApp.$store.commit("activeWindow", component);
 
-			if (!keepSidebarOpen && $(window).outerWidth() <= utils.mobileViewportPixels) {
+			if ($(window).outerWidth() <= utils.mobileViewportPixels) {
 				vueApp.setSidebar(false);
 			}
 		}

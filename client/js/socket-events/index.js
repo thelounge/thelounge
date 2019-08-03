@@ -1,7 +1,6 @@
 "use strict";
 
 require("./auth");
-require("./change_password");
 require("./commands");
 require("./init");
 require("./join");
