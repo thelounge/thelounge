@@ -16,7 +16,7 @@ function getTarget(cmd, args, chan) {
 }
 
 exports.input = function(network, chan, cmd, args) {
-	const targetName = getTarget(cmd, args, chan);
+	let targetName = getTarget(cmd, args, chan);
 
 	if (cmd === "query") {
 		if (!targetName) {
@@ -92,6 +92,14 @@ exports.input = function(network, chan, cmd, args) {
 	network.irc.say(targetName, msg);
 
 	if (!network.irc.network.cap.isEnabled("echo-message")) {
+		const parsedTarget = network.irc.network.extractTargetGroup(targetName);
+		let targetGroup;
+
+		if (parsedTarget) {
+			targetName = parsedTarget.target;
+			targetGroup = parsedTarget.target_group;
+		}
+
 		const channel = network.getChannel(targetName);
 
 		if (typeof channel !== "undefined") {
@@ -99,7 +107,8 @@ exports.input = function(network, chan, cmd, args) {
 				nick: network.irc.user.nick,
 				ident: network.irc.user.username,
 				hostname: network.irc.user.host,
-				target: channel.name,
+				target: targetName,
+				group: targetGroup,
 				message: msg,
 			});
 		}
