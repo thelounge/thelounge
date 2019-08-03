@@ -84,20 +84,18 @@ function updateDesktopNotificationStatus() {
 }
 
 function applySetting(name, value) {
-	if (name === "syncSettings" && value) {
-		$syncWarningOverride.hide();
-		$forceSyncButton.hide();
-	} else if (name === "theme") {
+	if (name === "theme") {
 		const themeUrl = `themes/${value}.css`;
 
 		if ($theme.attr("href") !== themeUrl) {
 			$theme.attr("href", themeUrl);
-
-			const newTheme = $settings.find("#theme-select option[value='" + value + "']");
+			const newTheme = vueApp.serverConfiguration.themes.filter(
+				(theme) => theme.name === value
+			)[0];
 			let themeColor = defaultThemeColor;
 
-			if (newTheme.length > 0 && newTheme[0].dataset.themeColor) {
-				themeColor = newTheme[0].dataset.themeColor;
+			if (newTheme.themeColor) {
+				themeColor = newTheme.themeColor;
 			}
 
 			document.querySelector('meta[name="theme-color"]').content = themeColor;
@@ -117,7 +115,7 @@ function settingSetEmit(name, value) {
 	socket.emit("setting:set", {name, value});
 }
 
-// When sync is `true` the setting will also be send to the backend for syncing.
+// When sync is `true` the setting will also be sent to the backend for syncing.
 function updateSetting(name, value, sync) {
 	settings[name] = value;
 	storage.set("settings", JSON.stringify(settings));

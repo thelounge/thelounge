@@ -481,7 +481,7 @@ export default {
 				value = event.target.value;
 			}
 
-			this.options.updateSetting(name, value);
+			this.options.updateSetting(name, value, true);
 		},
 		changePassword() {
 			const allFields = new FormData(this.$refs.settingsForm);
