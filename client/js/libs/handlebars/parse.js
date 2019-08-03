@@ -113,19 +113,27 @@ module.exports = function parse(createElement, text, message = undefined, networ
 				return link;
 			}
 
-			return [
-				link,
-				createElement(
-					LinkPreviewToggle,
-					{
-						class: ["toggle-button", "toggle-preview"],
-						props: {
-							link: preview,
-						},
+			return createElement(
+				"span",
+				{
+					attrs: {
+						dir: "auto",
 					},
-					fragments
-				),
-			];
+				},
+				[
+					link,
+					createElement(
+						LinkPreviewToggle,
+						{
+							class: ["toggle-button", "toggle-preview"],
+							props: {
+								link: preview,
+							},
+						},
+						fragments
+					),
+				]
+			);
 		} else if (textPart.channel) {
 			return createElement(
 				"span",
@@ -133,6 +141,7 @@ module.exports = function parse(createElement, text, message = undefined, networ
 					class: ["inline-channel"],
 					attrs: {
 						role: "button",
+						dir: "auto",
 						tabindex: 0,
 						"data-chan": textPart.channel,
 					},
@@ -164,6 +173,7 @@ module.exports = function parse(createElement, text, message = undefined, networ
 					class: ["user", colorClass(textPart.nick)],
 					attrs: {
 						role: "button",
+						dir: "auto",
 						"data-name": textPart.nick,
 					},
 				},
