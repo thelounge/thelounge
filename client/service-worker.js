@@ -87,6 +87,17 @@ async function networkOrCache(event) {
 		// eslint-disable-next-line no-console
 		console.error(e.message, event.request.url);
 
+		if (event.clientId) {
+			const client = await clients.get(event.clientId);
+
+			if (client) {
+				client.postMessage({
+					type: "fetch-error",
+					message: e.message,
+				});
+			}
+		}
+
 		const cache = await caches.open(cacheName);
 		const matching = await cache.match(event.request);
 
