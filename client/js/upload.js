@@ -5,6 +5,7 @@ const updateCursor = require("undate").update;
 
 class Uploader {
 	init() {
+		this.vueApp = require("./vue").vueApp;
 		this.xhr = null;
 		this.fileQueue = [];
 		this.overlay = document.getElementById("upload-overlay");
@@ -17,6 +18,8 @@ class Uploader {
 		document.addEventListener("dragleave", (e) => this.dragLeave(e));
 		document.addEventListener("drop", (e) => this.drop(e));
 		document.addEventListener("paste", (e) => this.paste(e));
+
+		socket.on("upload:auth", (token) => this.uploadNextFileInQueue(token));
 	}
 
 	dragOver(event) {
@@ -89,6 +92,14 @@ class Uploader {
 			return;
 		}
 
+		if (!this.vueApp.isConnected) {
+			this.handleResponse({
+				error: `You are currently disconnected, unable to initiate upload process.`,
+			});
+
+			return;
+		}
+
 		const wasQueueEmpty = this.fileQueue.length === 0;
 
 		for (const file of files) {
@@ -105,18 +116,12 @@ class Uploader {
 
 		// if the queue was empty and we added some files to it, start uploading them
 		if (wasQueueEmpty && this.fileQueue.length > 0) {
-			this.dequeueNextFile();
+			this.requestToken();
 		}
 	}
 
-	dequeueNextFile() {
-		const file = this.fileQueue.shift();
-
-		// request an upload authentication token and then upload a file using said token
+	requestToken() {
 		socket.emit("upload:auth");
-		socket.once("upload:auth", (token) => {
-			this.uploadSingleFile(file, token);
-		});
 	}
 
 	setProgress(value) {
@@ -124,7 +129,8 @@ class Uploader {
 		this.uploadProgressbar.style.width = value + "%";
 	}
 
-	uploadSingleFile(file, token) {
+	uploadNextFileInQueue(token) {
+		const file = this.fileQueue.shift();
 		const xhr = new XMLHttpRequest();
 		this.xhr = xhr;
 
@@ -159,7 +165,7 @@ class Uploader {
 
 				// this file was processed, if we still have files in the queue, upload the next one
 				if (this.fileQueue.length > 0) {
-					this.dequeueNextFile();
+					this.requestToken();
 				}
 			}
 		};
