@@ -65,13 +65,13 @@ module.exports = function() {
 	// local themes will not get those changes.
 	app.get("/themes/:theme.css", (req, res) => {
 		const themeName = req.params.theme;
-		const theme = themes.getFilename(themeName);
+		const theme = themes.getByName(themeName);
 
 		if (theme === undefined) {
 			return res.status(404).send("Not found");
 		}
 
-		return res.sendFile(theme);
+		return res.sendFile(theme.filename);
 	});
 
 	app.get("/packages/:package/:filename", (req, res) => {
@@ -179,6 +179,19 @@ module.exports = function() {
 
 		manager = new ClientManager();
 		packages.loadPackages();
+
+		const defaultTheme = themes.getByName(Helper.config.theme);
+
+		if (defaultTheme === undefined) {
+			log.warn(
+				`The specified default theme "${colors.red(
+					Helper.config.theme
+				)}" does not exist, verify your config.`
+			);
+			Helper.config.theme = "default";
+		} else if (defaultTheme.themeColor) {
+			Helper.config.themeColor = defaultTheme.themeColor;
+		}
 
 		new Identification((identHandler) => {
 			manager.init(identHandler, sockets);

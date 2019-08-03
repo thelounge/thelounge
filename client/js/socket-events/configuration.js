@@ -59,8 +59,12 @@ socket.on("configuration", function(data) {
 
 	// If localStorage contains a theme that does not exist on this server, switch
 	// back to its default theme.
-	if (!data.themes.map((t) => t.name).includes(options.settings.theme)) {
+	const currentTheme = data.themes.find((t) => t.name === options.settings.theme);
+
+	if (currentTheme === undefined) {
 		options.processSetting("theme", data.defaultTheme, true);
+	} else if (currentTheme.themeColor) {
+		document.querySelector('meta[name="theme-color"]').content = currentTheme.themeColor;
 	}
 
 	function handleFormSubmit() {
