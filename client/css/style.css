@@ -978,6 +978,19 @@ background on hover (unless active) */
 	font-size: 14px;
 }
 
+#windows .header .topic-edit {
+	color: inherit;
+	background: transparent;
+	border: 1px solid #cdd3da;
+	border-radius: 2px;
+	margin: 2px 0 2px 8px;
+	padding: 0 10px;
+	flex-grow: 1;
+	overflow: hidden;
+	font-size: 14px;
+	outline: none;
+}
+
 #chat {
 	overflow: hidden;
 	flex: 1 0 auto;
