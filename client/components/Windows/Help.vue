@@ -11,7 +11,8 @@
 					v{{ $root.serverConfiguration.version }} (<a
 						id="view-changelog"
 						href="#"
-						data-target="Changelog"
+						data-target="#changelog"
+						data-component="Changelog"
 						>release notes</a
 					>)
 				</small>

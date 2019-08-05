@@ -4,21 +4,32 @@
 			<SidebarToggle />
 		</div>
 		<div class="container">
-			<a id="back-to-help" href="#" data-target="Help">« Help</a>
+			<a id="back-to-help" href="#" data-target="#help" data-component="Help">« Help</a>
 
-			<template v-if="version">
-				<h1 class="title">Release notes for {{ version }}</h1>
+			<template
+				v-if="
+					$store.state.versionData &&
+						$store.state.versionData.current &&
+						$store.state.versionData.current.version
+				"
+			>
+				<h1 class="title">
+					Release notes for {{ $store.state.versionData.current.version }}
+				</h1>
 
-				<template v-if="changelog">
+				<template v-if="$store.state.versionData.current.changelog">
 					<h3>Introduction</h3>
-					<div class="changelog-text">{{ changelog }}</div>
+					<div
+						class="changelog-text"
+						v-html="$store.state.versionData.current.changelog"
+					></div>
 				</template>
 				<template v-else>
 					<p>Unable to retrieve releases from GitHub.</p>
 					<p>
 						<a
 							:href="
-								`https://github.com/thelounge/thelounge/releases/tag/v${version}`
+								`https://github.com/thelounge/thelounge/releases/tag/v${$root.serverConfiguration.version}`
 							"
 							target="_blank"
 							rel="noopener"
@@ -40,6 +51,10 @@ export default {
 	components: {
 		SidebarToggle,
 	},
-	mounted() {},
+	mounted() {
+		if (!this.$store.state.versionData) {
+			socket.emit("changelog");
+		}
+	},
 };
 </script>

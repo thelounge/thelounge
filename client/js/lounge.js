@@ -171,8 +171,7 @@ window.vueMounted = () => {
 	};
 
 	sidebar.on("click", ".chan, button", openWindow);
-	$("#help").on("click", "#view-changelog, #back-to-help", openWindow);
-	$("#changelog").on("click", "#back-to-help", openWindow);
+	$("#windows").on("click", "#view-changelog, #back-to-help", openWindow);
 
 	$(document).on("visibilitychange focus click", () => {
 		utils.synchronizeNotifiedState();
