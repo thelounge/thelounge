@@ -48,24 +48,33 @@ node scripts/changelog <version>
 const _ = require("lodash");
 const colors = require("chalk");
 const fs = require("fs");
+const path = require("path");
 const GraphQLClient = require("graphql-request").GraphQLClient;
 const moment = require("moment");
 const semver = require("semver");
 const util = require("util");
 const log = require("../src/log");
 const packageJson = require("../package.json");
-const token = process.env.CHANGELOG_TOKEN;
+let token = process.env.CHANGELOG_TOKEN;
 
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 
-const changelogPath = "./CHANGELOG.md";
+const changelogPath = path.resolve(__dirname, "..", "CHANGELOG.md");
 
 // CLI argument validations
 
 if (token === undefined) {
-	log.error(`Environment variable ${colors.bold("CHANGELOG_TOKEN")} must be set.`);
-	process.exit(1);
+	try {
+		token = fs
+			.readFileSync(path.resolve(__dirname, "./github_token.txt"))
+			.toString()
+			.trim();
+	} catch (e) {
+		log.error(`Environment variable ${colors.bold("CHANGELOG_TOKEN")} must be set.`);
+		log.error(`Alternative create ${colors.bold("scripts/github_token.txt")} file.`);
+		process.exit(1);
+	}
 }
 
 if (process.argv[2] === undefined) {
