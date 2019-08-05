@@ -1999,11 +1999,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	color: #3c763d;
 }
 
-#version-checker.up-to-date #check-now {
-	/* "Check now" button is hidden until data expires */
-	display: none;
-}
-
 #version-checker.up-to-date::before {
 	content: "\f00c"; /* http://fontawesome.io/icon/check/ */
 }

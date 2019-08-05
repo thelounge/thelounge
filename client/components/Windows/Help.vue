@@ -19,7 +19,7 @@
 			</h2>
 
 			<div class="about">
-				<div id="version-checker" />
+				<VersionChecker />
 
 				<template v-if="$root.serverConfiguration.gitCommit">
 					<p>
@@ -685,11 +685,13 @@
 
 <script>
 import SidebarToggle from "../SidebarToggle.vue";
+import VersionChecker from "../VersionChecker.vue";
 
 export default {
 	name: "Help",
 	components: {
 		SidebarToggle,
+		VersionChecker,
 	},
 };
 </script>

@@ -13,6 +13,9 @@ export default new Vuex.Store({
 		sidebarOpen: false,
 		sidebarDragging: false,
 		userlistOpen: storage.get("thelounge.state.userlist") !== "false",
+		versionData: null,
+		versionStatus: "loading",
+		versionDataExpired: false,
 	},
 	mutations: {
 		isConnected(state, payload) {
@@ -38,6 +41,15 @@ export default new Vuex.Store({
 		},
 		userlistOpen(state, payload) {
 			state.userlistOpen = payload;
+		},
+		versionData(state, payload) {
+			state.versionData = payload;
+		},
+		versionStatus(state, payload) {
+			state.versionStatus = payload;
+		},
+		versionDataExpired(state, payload) {
+			state.versionDataExpired = payload;
 		},
 	},
 	getters: {
