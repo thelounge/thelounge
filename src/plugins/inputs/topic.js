@@ -18,6 +18,13 @@ exports.input = function({irc}, chan, cmd, args) {
 		return;
 	}
 
-	irc.setTopic(chan.name, args.join(" "));
+	if (args.length > 0) {
+		// We construct a command manually because we want to allow clearing a topic when sending "/topic "
+		// and irc-framework's "raw" function wouldn't put a colon for an empty argument
+		irc.connection.write(`TOPIC ${chan.name} :${args.join(" ")}`);
+	} else {
+		irc.raw("TOPIC", chan.name);
+	}
+
 	return true;
 };
