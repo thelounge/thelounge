@@ -1,7 +1,7 @@
 <template>
-	<!-- TODO: move all class toggling to vue, since vue clears existing classes when changing the notified class -->
 	<div id="viewport" :class="viewportClasses" role="tablist">
-		<Sidebar :networks="networks" :active-channel="activeChannel" />
+		<Sidebar :networks="networks" :active-channel="activeChannel" :overlay="$refs.overlay" />
+		<div id="sidebar-overlay" ref="overlay" @click="$root.setSidebar(false)" />
 		<article id="windows">
 			<Chat
 				v-if="activeChannel"

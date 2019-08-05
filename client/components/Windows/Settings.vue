@@ -422,7 +422,6 @@
 </template>
 
 <script>
-// const storage = require("../../js/localStorage");  // TODO: use this
 import socket from "../../js/socket";
 import RevealPassword from "../RevealPassword.vue";
 import Session from "../Session.vue";
