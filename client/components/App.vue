@@ -49,6 +49,7 @@ export default {
 			return {
 				notified: this.$store.state.isNotified,
 				"menu-open": this.$store.state.sidebarOpen,
+				"menu-dragging": this.$store.state.sidebarDragging,
 				"userlist-open": this.$store.state.userlistOpen,
 			};
 		},

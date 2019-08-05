@@ -11,6 +11,7 @@ export default new Vuex.Store({
 		activeWindow: null,
 		sessions: [],
 		sidebarOpen: false,
+		sidebarDragging: false,
 		userlistOpen: storage.get("thelounge.state.userlist") !== "false",
 	},
 	mutations: {
@@ -31,6 +32,9 @@ export default new Vuex.Store({
 		},
 		sidebarOpen(state, payload) {
 			state.sidebarOpen = payload;
+		},
+		sidebarDragging(state, payload) {
+			state.sidebarDragging = payload;
 		},
 		userlistOpen(state, payload) {
 			state.userlistOpen = payload;
