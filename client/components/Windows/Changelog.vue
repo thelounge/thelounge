@@ -20,6 +20,7 @@
 				<template v-if="$store.state.versionData.current.changelog">
 					<h3>Introduction</h3>
 					<div
+						ref="changelog"
 						class="changelog-text"
 						v-html="$store.state.versionData.current.changelog"
 					></div>
@@ -56,6 +57,26 @@ export default {
 		if (!this.$store.state.versionData) {
 			socket.emit("changelog");
 		}
+
+		this.patchChangelog();
+	},
+	updated() {
+		this.patchChangelog();
+	},
+	methods: {
+		patchChangelog() {
+			const links = this.$refs.changelog.querySelectorAll("a");
+
+			for (const link of links) {
+				// Make sure all links will open a new tab instead of exiting the application
+				link.setAttribute("target", "_blank");
+
+				if (link.querySelector("img")) {
+					// Add required metadata to image links, to support built-in image viewer
+					link.classList.add("toggle-thumbnail");
+				}
+			}
+		},
 	},
 };
 </script>

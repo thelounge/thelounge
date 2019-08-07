@@ -7,18 +7,6 @@ socket.on("changelog", function(data) {
 	vueApp.$store.commit("versionData", data);
 	vueApp.$store.commit("versionDataExpired", false);
 
-	/* TODO: implement changelog rendering in Vue
-	// 1. Release notes window for the current version
-	$("#changelog").html(templates.windows.changelog(data.current));
-
-	const links = $("#changelog .changelog-text a");
-	// Make sure all links will open a new tab instead of exiting the application
-	links.prop("target", "_blank");
-	// Add required metadata to image links, to support built-in image viewer
-	links.has("img").addClass("toggle-thumbnail");
-	*/
-
-	// 2. Version checker visible in Help window
 	let status;
 
 	if (data.latest) {
