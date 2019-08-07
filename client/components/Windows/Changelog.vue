@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import socket from "../../js/socket";
 import SidebarToggle from "../SidebarToggle.vue";
 
 export default {
