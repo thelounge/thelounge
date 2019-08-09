@@ -3,6 +3,7 @@
 const $ = require("jquery");
 const Mousetrap = require("mousetrap");
 const utils = require("./utils");
+const {vueApp} = require("./vue");
 
 Mousetrap.bind(["alt+up", "alt+down"], function(e, keys) {
 	const sidebar = $("#sidebar");
@@ -66,6 +67,31 @@ Mousetrap.bind(["alt+shift+up", "alt+shift+down"], function(e, keys) {
 
 	target = lobbies.eq(target).click();
 	utils.scrollIntoViewNicely(target[0]);
+
+	return false;
+});
+
+// Jump to the first window with a highlight in it, or the first with unread
+// activity if there are none with highlights.
+Mousetrap.bind(["alt+a"], function() {
+	let targetchan;
+
+	outer_loop: for (const network of vueApp.networks) {
+		for (const chan of network.channels) {
+			if (chan.highlight) {
+				targetchan = chan;
+				break outer_loop;
+			}
+
+			if (chan.unread && !targetchan) {
+				targetchan = chan;
+			}
+		}
+	}
+
+	if (targetchan) {
+		$(`#sidebar .chan[data-id="${targetchan.id}"]`).trigger("click");
+	}
 
 	return false;
 });

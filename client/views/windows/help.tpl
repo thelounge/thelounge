@@ -89,6 +89,16 @@
 
 	<div class="help-item">
 		<div class="subject">
+			<span class="key-all"><kbd>Alt</kbd> <kbd>A</kbd></span>
+			<span class="key-apple"><kbd>⌥</kbd> <kbd>A</kbd></span>
+		</div>
+		<div class="description">
+			<p>Switch to the first window with unread messages.</p>
+		</div>
+	</div>
+
+	<div class="help-item">
+		<div class="subject">
 			<span class="key-all"><kbd>Ctrl</kbd> <kbd>K</kbd></span>
 			<span class="key-apple"><kbd>⌘</kbd> <kbd>K</kbd></span>
 		</div>
