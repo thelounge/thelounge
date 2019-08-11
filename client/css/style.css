@@ -277,6 +277,7 @@ kbd {
 #chat .toggle-button::after,
 #chat .toggle-content .more-caret::before,
 #chat .scroll-down-arrow::after,
+#chat .topic-container .save-topic span::before,
 #version-checker::before,
 .context-menu-item::before,
 #help .website-link::before,
@@ -969,6 +970,12 @@ background on hover (unless active) */
 	flex-shrink: 0;
 }
 
+.topic-container {
+	position: relative;
+	flex-grow: 1;
+	padding-left: 10px;
+}
+
 #windows .header .topic {
 	color: var(--body-color-muted);
 	margin-left: 8px;
@@ -978,17 +985,39 @@ background on hover (unless active) */
 	font-size: 14px;
 }
 
-#windows .header .topic-edit {
+#windows .header .topic-input {
 	color: inherit;
 	background: transparent;
 	border: 1px solid #cdd3da;
 	border-radius: 2px;
-	margin: 2px 0 2px 8px;
-	padding: 0 10px;
-	flex-grow: 1;
+	padding-right: 37px;
+	padding-left: 10px;
+	width: 100%;
+	height: 35px;
 	overflow: hidden;
 	font-size: 14px;
 	outline: none;
+}
+
+.topic-container .save-topic {
+	position: absolute;
+	top: 6px;
+	right: 0;
+}
+
+.topic-container .save-topic span {
+	font-size: 16px;
+	color: #607992;
+	width: 35px;
+	height: 35px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+}
+
+.topic-container .save-topic span:hover {
+	opacity: 0.6;
 }
 
 #chat {
@@ -1840,6 +1869,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 .password-container .reveal-password span::before {
 	content: "\f06e"; /* https://fontawesome.com/icons/eye?style=solid */
+}
+
+.topic-container .save-topic span::before {
+	content: "\f00c"; /* https://fontawesome.com/icons/check?style=solid */
 }
 
 .password-container .reveal-password.visible span::before {

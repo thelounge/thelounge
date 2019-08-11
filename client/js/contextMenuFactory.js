@@ -322,7 +322,7 @@ function addEditTopicItem() {
 		document.querySelector(`#sidebar .chan[data-id="${Number(itemData)}"]`).click();
 
 		vueApp.$nextTick(() => {
-			document.querySelector(`#chan-${Number(itemData)} .topic-edit`).focus();
+			document.querySelector(`#chan-${Number(itemData)} .topic-input`).focus();
 		});
 	}
 

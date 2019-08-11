@@ -20,15 +20,18 @@
 				<div class="header">
 					<button class="lt" aria-label="Toggle channel list" />
 					<span class="title">{{ channel.name }}</span>
-					<input
-						v-if="channel.editTopic === true"
-						:value="channel.topic"
-						class="topic-edit"
-						placeholder="Set channel topic"
-						@keyup.enter="saveTopic"
-						@keyup.esc="channel.editTopic = false"
-						@blur="channel.editTopic = false"
-					/>
+					<div v-if="channel.editTopic === true" class="topic-container">
+						<input
+							:value="channel.topic"
+							class="topic-input"
+							placeholder="Set channel topic"
+							@keyup.enter="saveTopic"
+							@keyup.esc="channel.editTopic = false"
+						/>
+						<span aria-label="Save topic" class="save-topic" @click="saveTopic">
+							<span type="button" aria-label="Save topic"></span>
+						</span>
+					</div>
 					<span v-else :title="channel.topic" class="topic" @dblclick="editTopic"
 						><ParsedMessage
 							v-if="channel.topic"
@@ -133,13 +136,13 @@ export default {
 				this.channel.editTopic = true;
 
 				this.$nextTick(() => {
-					document.querySelector(`#chan-${this.channel.id} .topic-edit`).focus();
+					document.querySelector(`#chan-${this.channel.id} .topic-input`).focus();
 				});
 			}
 		},
-		saveTopic(event) {
+		saveTopic() {
 			this.channel.editTopic = false;
-			const newTopic = event.target.value;
+			const newTopic = document.querySelector(`#chan-${this.channel.id} .topic-input`).value;
 
 			if (this.channel.topic !== newTopic) {
 				const target = this.channel.id;
