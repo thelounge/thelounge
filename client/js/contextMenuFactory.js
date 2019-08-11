@@ -6,7 +6,7 @@ const utils = require("./utils");
 const ContextMenu = require("./contextMenu");
 const contextMenuActions = [];
 const contextMenuItems = [];
-const {findChannel} = require("./vue");
+const {vueApp, findChannel} = require("./vue");
 
 module.exports = {
 	addContextMenuItem,
@@ -316,6 +316,25 @@ function addChannelListItem() {
 	});
 }
 
+function addEditTopicItem() {
+	function setEditTopic(itemData) {
+		findChannel(Number(itemData)).channel.editTopic = true;
+		document.querySelector(`#sidebar .chan[data-id="${Number(itemData)}"]`).click();
+
+		vueApp.$nextTick(() => {
+			document.querySelector(`#chan-${Number(itemData)} .topic-input`).focus();
+		});
+	}
+
+	addContextMenuItem({
+		check: (target) => target.hasClass("channel"),
+		className: "edit",
+		displayName: "Edit topic",
+		data: (target) => target.attr("data-id"),
+		callback: setEditTopic,
+	});
+}
+
 function addBanListItem() {
 	function banlist(itemData) {
 		socket.emit("input", {
@@ -376,6 +395,7 @@ function addDefaultItems() {
 	addEditNetworkItem();
 	addJoinItem();
 	addChannelListItem();
+	addEditTopicItem();
 	addBanListItem();
 	addIgnoreListItem();
 	addConnectItem();

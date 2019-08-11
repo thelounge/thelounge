@@ -20,7 +20,19 @@
 				<div class="header">
 					<button class="lt" aria-label="Toggle channel list" />
 					<span class="title">{{ channel.name }}</span>
-					<span :title="channel.topic" class="topic"
+					<div v-if="channel.editTopic === true" class="topic-container">
+						<input
+							:value="channel.topic"
+							class="topic-input"
+							placeholder="Set channel topic"
+							@keyup.enter="saveTopic"
+							@keyup.esc="channel.editTopic = false"
+						/>
+						<span aria-label="Save topic" class="save-topic" @click="saveTopic">
+							<span type="button" aria-label="Save topic"></span>
+						</span>
+					</div>
+					<span v-else :title="channel.topic" class="topic" @dblclick="editTopic"
 						><ParsedMessage
 							v-if="channel.topic"
 							:network="network"
@@ -77,6 +89,7 @@
 </template>
 
 <script>
+const socket = require("../js/socket");
 import ParsedMessage from "./ParsedMessage.vue";
 import MessageList from "./MessageList.vue";
 import ChatInput from "./ChatInput.vue";
@@ -117,6 +130,25 @@ export default {
 	methods: {
 		hideUserVisibleError() {
 			this.$root.currentUserVisibleError = null;
+		},
+		editTopic() {
+			if (this.channel.type === "channel") {
+				this.channel.editTopic = true;
+
+				this.$nextTick(() => {
+					document.querySelector(`#chan-${this.channel.id} .topic-input`).focus();
+				});
+			}
+		},
+		saveTopic() {
+			this.channel.editTopic = false;
+			const newTopic = document.querySelector(`#chan-${this.channel.id} .topic-input`).value;
+
+			if (this.channel.topic !== newTopic) {
+				const target = this.channel.id;
+				const text = `/raw TOPIC ${this.channel.name} :${newTopic}`;
+				socket.emit("input", {target, text});
+			}
 		},
 	},
 };

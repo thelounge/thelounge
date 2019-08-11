@@ -76,6 +76,7 @@ function initChannel(channel) {
 	channel.inputHistory = [""];
 	channel.historyLoading = false;
 	channel.scrolledToBottom = true;
+	channel.editTopic = false;
 
 	if (channel.type === "channel") {
 		channel.usersOutdated = true;
