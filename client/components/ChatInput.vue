@@ -1,5 +1,5 @@
 <template>
-	<form id="form" method="post" action="" @submit.prevent="onSubmit">
+	<form id="form" method="post" action="" @submit.prevent="onSubmit" :data-name="channel.name">
 		<span id="nick">{{ network.nick }}</span>
 		<textarea
 			id="input"
