@@ -15,6 +15,12 @@ program
 		"override entries of the configuration file, must be specified for each entry that needs to be overriden",
 		Utils.parseConfigOptions
 	)
+	.on("command:*", () => {
+		log.error(
+			`Unknown command. See ${colors.bold("--help")} for a list of available commands.`
+		);
+		process.exit(1);
+	})
 	.on("--help", Utils.extraHelp);
 
 // Parse options from `argv` returning `argv` void of these options.
