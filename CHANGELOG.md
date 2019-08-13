@@ -4,9 +4,81 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v3.2.0 - 2019-08-19
+
+For more details, [see the full changelog](https://github.com/thelounge/thelounge/compare/v3.1.1...v3.2.0) and [milestone](https://github.com/thelounge/thelounge/milestone/32?closed=1).
+
+This is a minor release that fixes some bugs. There are not many directly user facing changes in this release,
+but the biggest one is the ability to edit channel topic by double clicking it (or using the edit topic option in the context menu).
+
+<p align="center">
+  <img alt="Edit channel topic by double clicking it" src="https://user-images.githubusercontent.com/613331/62932560-0915a380-bdc9-11e9-975b-416189e1d79e.gif">
+</p>
+
+We have switched to using [Prettier](https://prettier.io/) for code formatting,
+which hopefully makes it easier for other developers to contribute.
+
+### Added
+
+- Add functionality to edit channel topic from the user interface ([#3349](https://github.com/thelounge/thelounge/pull/3349) by [@ollipa](https://github.com/ollipa))
+- Add check for outdated packages, and show on the help screen. ([#2760](https://github.com/thelounge/thelounge/pull/2760) by [@McInkay](https://github.com/McInkay))
+- Allow themes to change theme-color ([#3326](https://github.com/thelounge/thelounge/pull/3326) by [@xPaw](https://github.com/xPaw))
+- Add keybind for cycling to the next unread window ([#3359](https://github.com/thelounge/thelounge/pull/3359) by [@plett](https://github.com/plett))
+- Send service worker fetch errors to client ([#3329](https://github.com/thelounge/thelounge/pull/3329) by [@xPaw](https://github.com/xPaw))
+- Verify reverse DNS when looking up hostnames for webirc ([#3294](https://github.com/thelounge/thelounge/pull/3294) by [@xPaw](https://github.com/xPaw))
+
+### Changed
+
+- Improve raw messages ([#3310](https://github.com/thelounge/thelounge/pull/3310) by [@xPaw](https://github.com/xPaw))
+- Update production dependencies to their latest versions:
+  - `yarn` ([#3300](https://github.com/thelounge/thelounge/pull/3300))
+  - `linkify-it` ([#3298](https://github.com/thelounge/thelounge/pull/3298))
+  - `lodash` ([#3317](https://github.com/thelounge/thelounge/pull/3317))
+  - `file-type` ([#3334](https://github.com/thelounge/thelounge/pull/3334))
+  - `semver` ([#3330](https://github.com/thelounge/thelounge/pull/3330))
+  - `package-json` ([#3327](https://github.com/thelounge/thelounge/pull/3327))
+  - `commander` ([#3360](https://github.com/thelounge/thelounge/pull/3360))
+
+### Fixed
+
+- Correctly parse numbers when passed in CLI ([#3296](https://github.com/thelounge/thelounge/pull/3296) by [@xPaw](https://github.com/xPaw))
+- Fix channel sorting to work across clients on Vue ([#3299](https://github.com/thelounge/thelounge/pull/3299) by [@xPaw](https://github.com/xPaw))
+- A better way of disabling sorting on touch devices ([#3297](https://github.com/thelounge/thelounge/pull/3297) by [@xPaw](https://github.com/xPaw))
+- Merge network/channel objects when reconnecting to keep object references ([#3305](https://github.com/thelounge/thelounge/pull/3305) by [@xPaw](https://github.com/xPaw))
+- Add custom focus outlines for inputs and green buttons ([#1873](https://github.com/thelounge/thelounge/pull/1873) by [@astorije](https://github.com/astorije))
+- Fix channel list not working on some touch devices ([#3320](https://github.com/thelounge/thelounge/pull/3320) by [@xPaw](https://github.com/xPaw))
+- Parse target group for sent messages when echo-message is not enabled ([#3339](https://github.com/thelounge/thelounge/pull/3339) by [@xPaw](https://github.com/xPaw))
+- Fix formatting hotkeys on non english locales ([#3343](https://github.com/thelounge/thelounge/pull/3343) by [@xPaw](https://github.com/xPaw))
+- Handle upload token requesting in a better way ([#3335](https://github.com/thelounge/thelounge/pull/3335) by [@xPaw](https://github.com/xPaw))
+- Make `/raw` actually write to network as-is ([#3352](https://github.com/thelounge/thelounge/pull/3352) by [@xPaw](https://github.com/xPaw))
+- Open list channel on data updates ([#3347](https://github.com/thelounge/thelounge/pull/3347) by [@xPaw](https://github.com/xPaw))
+- Display an error on unknown command ([#3361](https://github.com/thelounge/thelounge/pull/3361) by [@xPaw](https://github.com/xPaw))
+
+### Internals
+
+- Set up Prettier on HTML, JSON, Markdown, and YAML files ([#3060](https://github.com/thelounge/thelounge/pull/3060) by [@astorije](https://github.com/astorije))
+- Set up prettier for JS/Vue files ([#3312](https://github.com/thelounge/thelounge/pull/3312) by [@McInkay](https://github.com/McInkay))
+- Store ip and language in a separate object in user file ([#3307](https://github.com/thelounge/thelounge/pull/3307) by [@xPaw](https://github.com/xPaw))
+- Disable io cookie ([#3342](https://github.com/thelounge/thelounge/pull/3342) by [@xPaw](https://github.com/xPaw))
+- Update development dependencies to their latest versions:
+  - `webpack-cli` ([#3304](https://github.com/thelounge/thelounge/pull/3304))
+  - `mini-css-extract-plugin` ([#3308](https://github.com/thelounge/thelounge/pull/3308))
+  - `mochapack` ([#3306](https://github.com/thelounge/thelounge/pull/3306), [#3340](https://github.com/thelounge/thelounge/pull/3340))
+  - `vue-loader` ([#3314](https://github.com/thelounge/thelounge/pull/3314))
+  - `husky` ([#3315](https://github.com/thelounge/thelounge/pull/3315), [#3337](https://github.com/thelounge/thelounge/pull/3337), [#3356](https://github.com/thelounge/thelounge/pull/3356))
+  - `mocha` ([#3316](https://github.com/thelounge/thelounge/pull/3316))
+  - `webpack` ([#3311](https://github.com/thelounge/thelounge/pull/3311), [#3328](https://github.com/thelounge/thelounge/pull/3328))
+  - `eslint-config-prettier` ([#3319](https://github.com/thelounge/thelounge/pull/3319))
+  - `eslint` ([#3321](https://github.com/thelounge/thelounge/pull/3321))
+  - `babel-plugin-istanbul` ([#3323](https://github.com/thelounge/thelounge/pull/3323))
+  - `@fortawesome/fontawesome-free` ([#3336](https://github.com/thelounge/thelounge/pull/3336), [#3341](https://github.com/thelounge/thelounge/pull/3341))
+  - `copy-webpack-plugin` ([#3333](https://github.com/thelounge/thelounge/pull/3333))
+  - `sinon` ([#3355](https://github.com/thelounge/thelounge/pull/3355))
+  - `textcomplete` ([#3353](https://github.com/thelounge/thelounge/pull/3353))
+
 ## v3.2.0-rc.2 - 2019-08-13 [Pre-release]
 
-[See the full changelog](https://github.com/thelounge/thelounge/compare/v3.1.1...v3.2.0-rc.1)
+[See the full changelog](https://github.com/thelounge/thelounge/compare/v3.2.0-rc.1...v3.2.0-rc.2)
 
 This is a release candidate (RC) for v3.2.0 to ensure maximum stability for public release.
 Bugs may be fixed, but no further features will be added until the next stable version.
