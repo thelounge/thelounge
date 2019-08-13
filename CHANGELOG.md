@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v3.2.0-rc.2 - 2019-08-13 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/thelounge/compare/v3.1.1...v3.2.0-rc.1)
+
+This is a release candidate (RC) for v3.2.0 to ensure maximum stability for public release.
+Bugs may be fixed, but no further features will be added until the next stable version.
+
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+yarn global add thelounge@next
+```
+
 ## v3.2.0-rc.1 - 2019-08-04 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v3.1.1...v3.2.0-rc.1)
