@@ -820,6 +820,10 @@ background on hover (unless active) */
 	opacity: 1;
 }
 
+#sidebar .chan.active {
+	cursor: default;
+}
+
 #sidebar .chan.active .close {
 	opacity: 0.4;
 	display: unset;
