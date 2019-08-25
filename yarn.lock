@@ -5610,10 +5610,10 @@ mocha@6.2.0:
     yargs-parser "13.0.0"
     yargs-unparser "1.5.0"
 
-mochapack@1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/mochapack/-/mochapack-1.1.3.tgz#9f249958cc4cb58508591565b74298c56af8b1ac"
-  integrity sha512-awRa/n1Zh9QDCdGF2f7qFmp40L0JjXYMk+TXeOnB1rjJGnYKUZnjftnLHQhw81mk+VllngViXHX7iCM1amF8/g==
+mochapack@1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/mochapack/-/mochapack-1.1.4.tgz#cd587f0f95389d24a41e0ad61c7b29916ccbb250"
+  integrity sha512-gg1yOfu5DHfxpNzW9Ahm443medujpceudoQ9o0xyM+gRmsALumxCVsxC4zRhDrGkvGMyFaXrsd81GeEdaKSwbQ==
   dependencies:
     babel-runtime "^6.26.0"
     chalk "^2.4.2"
@@ -5625,6 +5625,7 @@ mochapack@1.1.3:
     loader-utils "^1.2.3"
     lodash "^4.17.15"
     memory-fs "^0.4.1"
+    minimatch "^3.0.4"
     nodent-runtime "^3.2.1"
     normalize-path "^3.0.0"
     progress "^2.0.3"
