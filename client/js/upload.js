@@ -115,8 +115,9 @@ class Uploader {
 			this.fileQueue.push(file);
 		}
 
-		// if the queue was empty and we added some files to it, start uploading them
-		if (wasQueueEmpty && this.fileQueue.length > 0) {
+		// if the queue was empty and we added some files to it, and there currently
+		// is no upload in process, request a token to start the upload process
+		if (wasQueueEmpty && this.xhr === null && this.fileQueue.length > 0) {
 			this.requestToken();
 		}
 	}
@@ -132,10 +133,9 @@ class Uploader {
 
 	uploadNextFileInQueue(token) {
 		const file = this.fileQueue.shift();
-		const xhr = new XMLHttpRequest();
-		this.xhr = xhr;
+		this.xhr = new XMLHttpRequest();
 
-		xhr.upload.addEventListener(
+		this.xhr.upload.addEventListener(
 			"progress",
 			(e) => {
 				const percent = Math.floor((e.loaded / e.total) * 1000) / 10;
@@ -144,25 +144,25 @@ class Uploader {
 			false
 		);
 
-		xhr.onreadystatechange = () => {
-			if (xhr.readyState === XMLHttpRequest.DONE) {
-				this.xhr = null;
-
+		this.xhr.onreadystatechange = () => {
+			if (this.xhr.readyState === XMLHttpRequest.DONE) {
 				let response;
 
 				try {
-					response = JSON.parse(xhr.responseText);
+					response = JSON.parse(this.xhr.responseText);
 				} catch (err) {
 					// This is just a safe guard and should not happen if server doesn't throw any errors.
 					// Browsers break the HTTP spec by aborting the request without reading any response data,
 					// if there is still data to be uploaded. Servers will only error in extreme cases like bad
 					// authentication or server-side errors.
 					response = {
-						error: `Upload aborted: HTTP ${xhr.status}`,
+						error: `Upload aborted: HTTP ${this.xhr.status}`,
 					};
 				}
 
 				this.handleResponse(response);
+
+				this.xhr = null;
 
 				// this file was processed, if we still have files in the queue, upload the next one
 				if (this.fileQueue.length > 0) {
@@ -173,8 +173,8 @@ class Uploader {
 
 		const formData = new FormData();
 		formData.append("file", file);
-		xhr.open("POST", `uploads/new/${token}`);
-		xhr.send(formData);
+		this.xhr.open("POST", `uploads/new/${token}`);
+		this.xhr.send(formData);
 	}
 
 	handleResponse(response) {
