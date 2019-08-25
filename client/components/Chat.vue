@@ -1,5 +1,5 @@
 <template>
-	<div id="chat-container" class="window">
+	<div id="chat-container" class="window" :data-current-channel="channel.name">
 		<div
 			id="chat"
 			:data-id="channel.id"
