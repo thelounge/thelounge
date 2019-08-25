@@ -118,7 +118,7 @@
     "vue-template-compiler": "2.6.10",
     "vuedraggable": "2.23.0",
     "webpack": "4.39.2",
-    "webpack-cli": "3.3.6"
+    "webpack-cli": "3.3.7"
   },
   "husky": {
     "hooks": {
