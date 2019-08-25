@@ -85,6 +85,7 @@ class Uploader {
 	filesChanged() {
 		const files = Array.from(this.uploadInput.files);
 		this.triggerUpload(files);
+		this.uploadInput.value = ""; // Reset <input> element so you can upload the same file
 	}
 
 	triggerUpload(files) {
