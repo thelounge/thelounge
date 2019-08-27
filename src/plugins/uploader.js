@@ -122,7 +122,7 @@ class Uploader {
 
 		// if the authentication token is incorrect, bail out
 		if (uploadTokens.delete(req.params.token) !== true) {
-			return abortWithError(Error("Unauthorized"));
+			return abortWithError(Error("Invalid upload token"));
 		}
 
 		// if the request does not contain any body data, bail out
@@ -197,6 +197,10 @@ class Uploader {
 
 		busboyInstance.on("finish", () => {
 			doneCallback();
+
+			if (!uploadUrl) {
+				return res.status(400).json({error: "Missing file"});
+			}
 
 			// upload was done, send the generated file url to the client
 			res.status(200).json({
