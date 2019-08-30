@@ -41,6 +41,7 @@ function Chan(attr) {
 		unread: 0,
 		highlight: 0,
 		users: new Map(),
+		previewConf: {},
 	});
 }
 

@@ -8,7 +8,8 @@
 				<a
 					v-if="link.thumb"
 					:href="link.link"
-					class="toggle-thumbnail"
+					:class="toggleThumbnail"
+					:style="blurStyle"
 					target="_blank"
 					rel="noopener"
 				>
@@ -53,12 +54,30 @@
 				</div>
 			</template>
 			<template v-else-if="link.type === 'image'">
-				<a :href="link.link" class="toggle-thumbnail" target="_blank" rel="noopener">
+				<a
+					:href="link.link"
+					:class="toggleThumbnail"
+					:style="blurStyle"
+					target="_blank"
+					rel="noopener"
+				>
 					<img :src="link.thumb" decoding="async" alt="" @load="onPreviewReady" />
 				</a>
 			</template>
 			<template v-else-if="link.type === 'video'">
-				<video preload="metadata" controls @canplay="onPreviewReady">
+				<video
+					preload="metadata"
+					controls
+					:class="{unBlurOnHover: unBlurOnHover}"
+					:style="!fullScreen && !playing && blurStyle"
+					@fullscreenchange="onPreviewFullscreenChange"
+					@webkitfullscreenchange="onPreviewFullscreenChange"
+					@mozfullscreenchange="onPreviewFullscreenChange"
+					@msfullscreenchange="onPreviewFullscreenChange"
+					@pause="onPreviewPause"
+					@play="onPreviewPlay"
+					@canplay="onPreviewReady"
+				>
 					<source :src="link.media" :type="link.mediaType" />
 				</video>
 			</template>
@@ -105,16 +124,34 @@ export default {
 	props: {
 		link: Object,
 		keepScrollPosition: Function,
+		previewConf: Object,
 	},
 	data() {
 		return {
 			showMoreButton: false,
 			isContentShown: false,
+			playing: false,
+			fullScreen: false,
 		};
 	},
 	computed: {
 		moreButtonLabel() {
 			return this.isContentShown ? "Less" : "More";
+		},
+		blurStyle() {
+			const {blur} = this.previewConf;
+			return blur && `filter: blur(${blur}px); -webkit-filter: blur(${blur}px);`;
+		},
+		unBlurOnHover() {
+			const {blur, unBlurOnHover} = this.previewConf;
+			return blur && unBlurOnHover;
+		},
+		toggleThumbnail() {
+			const ret = {
+				"toggle-thumbnail": true,
+				unBlurOnHover: this.unBlurOnHover,
+			};
+			return ret;
 		},
 	},
 	watch: {
@@ -128,7 +165,6 @@ export default {
 	},
 	mounted() {
 		this.$root.$on("resize", this.handleResize);
-
 		this.onPreviewUpdate();
 	},
 	beforeDestroy() {
@@ -166,6 +202,15 @@ export default {
 			}
 
 			this.handleResize();
+		},
+		onPreviewPause() {
+			this.playing = false;
+		},
+		onPreviewPlay() {
+			this.playing = true;
+		},
+		onPreviewFullscreenChange() {
+			this.fullScreen = !this.fullScreen;
 		},
 		onThumbnailError() {
 			// If thumbnail fails to load, hide it and show the preview without it

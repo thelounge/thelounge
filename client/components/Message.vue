@@ -29,6 +29,7 @@
 					:key="preview.link"
 					:keep-scroll-position="keepScrollPosition"
 					:link="preview"
+					:previewConf="previewConf"
 				/>
 			</span>
 		</template>
@@ -54,6 +55,7 @@
 					:key="preview.link"
 					:keep-scroll-position="keepScrollPosition"
 					:link="preview"
+					:previewConf="previewConf"
 				/>
 			</span>
 		</template>
@@ -80,6 +82,7 @@ export default {
 		message: Object,
 		network: Object,
 		keepScrollPosition: Function,
+		previewConf: Object,
 	},
 	computed: {
 		messageTime() {

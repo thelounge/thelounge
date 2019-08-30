@@ -45,6 +45,7 @@
 					:network="network"
 					:message="message"
 					:keep-scroll-position="keepScrollPosition"
+					:previewConf="channel.previewConf"
 					@linkPreviewToggle="onLinkPreviewToggle"
 				/>
 			</template>

@@ -46,6 +46,7 @@ const Helper = {
 		compare: passwordCompare,
 		requiresUpdate: passwordRequiresUpdate,
 	},
+	sanitizePreviewConf,
 };
 
 module.exports = Helper;
@@ -338,4 +339,17 @@ function compareHostmask(a, b) {
 		(a.ident.toLowerCase() === b.ident.toLowerCase() || a.ident === "*") &&
 		(a.hostname.toLowerCase() === b.hostname.toLowerCase() || a.hostname === "*")
 	);
+}
+
+function sanitizePreviewConf(previewConf) {
+	const retConf = {};
+
+	if (previewConf) {
+		if ("blur" in previewConf && typeof previewConf.blur === "number") {
+			retConf.blur = previewConf.blur;
+			retConf.unBlurOnHover = Boolean(previewConf.unBlurOnHover);
+		}
+	}
+
+	return retConf;
 }

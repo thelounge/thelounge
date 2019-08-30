@@ -164,6 +164,7 @@ Client.prototype.connect = function(args) {
 					name: chan.name,
 					key: chan.key || "",
 					type: chan.type,
+					previewConf: Helper.sanitizePreviewConf(chan.previewConf),
 				})
 			);
 		});

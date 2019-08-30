@@ -352,6 +352,20 @@ function addBanListItem() {
 	});
 }
 
+function addConfigListItem() {
+	function config(itemData) {
+		socket.emit("channel:get", itemData);
+	}
+
+	addContextMenuItem({
+		check: (target) => target.hasClass("channel"),
+		className: "configure",
+		displayName: "Configure channel",
+		data: (target) => target.closest(".network").attr("data-uuid"),
+		callback: config,
+	});
+}
+
 function addJoinItem() {
 	function openJoinForm(itemData) {
 		findChannel(Number(itemData)).network.isJoinChannelShown = true;
@@ -393,6 +407,7 @@ function addDefaultItems() {
 	addVoiceItem();
 	addDevoiceItem();
 	addEditNetworkItem();
+	//addConfigListItem();
 	addJoinItem();
 	addChannelListItem();
 	addEditTopicItem();
