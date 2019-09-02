@@ -45,9 +45,10 @@
 const commands = require("../js/commands/index");
 const socket = require("../js/socket");
 const upload = require("../js/upload");
+const parseMarkdown = require("../js/parseMarkdown");
 const Mousetrap = require("mousetrap");
 const {wrapCursor} = require("undate");
-
+console.log(parseMarkdown);
 const formattingHotkeys = {
 	"mod+k": "\x03",
 	"mod+b": "\x02",
@@ -218,7 +219,7 @@ export default {
 				}
 			}
 
-			socket.emit("input", {target, text});
+			socket.emit("input", {target, text: parseMarkdown(text)});
 		},
 		openFileUpload() {
 			this.$refs.uploadInput.click();

@@ -60,6 +60,7 @@
     "read": "1.0.7",
     "read-chunk": "3.2.0",
     "semver": "6.3.0",
+    "simple-markdown": "0.5.2",
     "socket.io": "2.2.0",
     "thelounge-ldapjs-non-maintained-fork": "1.0.4",
     "tlds": "1.203.1",
