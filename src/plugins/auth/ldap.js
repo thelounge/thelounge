@@ -2,11 +2,7 @@
 
 const log = require("../../log");
 const Helper = require("../../helper");
-
-// Forked ldapjs for 2 reasons:
-// 1. Removed bunyan https://github.com/joyent/node-ldapjs/pull/399
-// 2. Remove dtrace-provider dependency
-const ldap = require("thelounge-ldapjs-non-maintained-fork");
+const ldap = require("ldapjs");
 
 function ldapAuthCommon(user, bindDN, password, callback) {
 	const config = Helper.config;
