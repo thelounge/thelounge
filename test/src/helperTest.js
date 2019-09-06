@@ -21,11 +21,13 @@ describe("Helper", function() {
 		});
 
 		it("should not expand paths not starting with tilde", function() {
-			expect(Helper.expandHome("/tmp")).to.match(/^\/tmp|[A-Z]:\\tmp$/);
+			expect(Helper.expandHome("/tmp")).to.match(/^\/tmp|[a-zA-Z]:\\{1,2}tmp$/);
 		});
 
 		it("should not expand a tilde in the middle of a string", function() {
-			expect(Helper.expandHome("/tmp/~foo")).to.match(/^\/tmp\/~foo|[A-Z]:\\tmp\\~foo$/);
+			expect(Helper.expandHome("/tmp/~foo")).to.match(
+				/^\/tmp\/~foo|[a-zA-Z]:\\{1,2}?tmp\\{1,2}~foo$/
+			);
 		});
 
 		it("should return an empty string when given an empty string", function() {

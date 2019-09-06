@@ -29,6 +29,9 @@
 	<a href="https://travis-ci.com/thelounge/thelounge"><img
 		alt="Travis CI Build Status"
 		src="https://img.shields.io/travis/com/thelounge/thelounge/master.svg?style=flat-square&maxAge=60"></a>
+	<a href="https://github.com/thelounge/thelounge/actions"><img
+		alt="Build Status"
+		src="https://github.com/thelounge/thelounge/workflows/Build/badge.svg"></a>
 	<a href="https://david-dm.org/thelounge/thelounge"><img
 		alt="Dependencies Status"
 		src="https://img.shields.io/david/thelounge/thelounge.svg?style=flat-square&maxAge=3600"></a>
