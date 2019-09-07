@@ -93,7 +93,7 @@
     "handlebars-loader": "1.7.1",
     "html-minifier": "4.0.0",
     "html-minifier-loader": "1.4.1",
-    "husky": "3.0.4",
+    "husky": "3.0.5",
     "intersection-observer": "0.7.0",
     "jquery": "3.4.1",
     "mini-css-extract-plugin": "0.8.0",
