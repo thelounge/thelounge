@@ -24,9 +24,8 @@ matrix:
     - name: "Production build"
       env: BUILD_ENV=production
 
-    # Next node version and minimum supported node version
+    # Next node version
     - node_js: 11 # EOL: June 2019
-    - node_js: 8.10.0 # EOL: December 2019 (test exact LTS version)
 
 cache: yarn
 

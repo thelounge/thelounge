@@ -29,6 +29,9 @@
 	<a href="https://travis-ci.com/thelounge/thelounge"><img
 		alt="Travis CI Build Status"
 		src="https://img.shields.io/travis/com/thelounge/thelounge/master.svg?style=flat-square&maxAge=60"></a>
+	<a href="https://github.com/thelounge/thelounge/actions"><img
+		alt="Build Status"
+		src="https://github.com/thelounge/thelounge/workflows/Build/badge.svg"></a>
 	<a href="https://david-dm.org/thelounge/thelounge"><img
 		alt="Dependencies Status"
 		src="https://img.shields.io/david/thelounge/thelounge.svg?style=flat-square&maxAge=3600"></a>
@@ -55,7 +58,7 @@ The Lounge is the official and community-managed fork of [Shout](https://github.
 
 ## Installation and usage
 
-The Lounge requires [Node.js](https://nodejs.org/) v8 or more recent.
+The Lounge requires latest [Node.js](https://nodejs.org/) LTS version or more recent.
 [Yarn package manager](https://yarnpkg.com/) is also recommended.  
 If you want to install with npm, `--unsafe-perm` is required for a correct install.
 
