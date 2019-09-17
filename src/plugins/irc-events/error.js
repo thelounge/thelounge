@@ -44,10 +44,22 @@ module.exports = function(irc, network) {
 	});
 
 	irc.on("nick in use", function(data) {
+		let message = data.nick + ": " + (data.reason || "Nickname is already in use.");
+
+		if (irc.connection.registered === false && !Helper.config.public) {
+			message += " An attempt to use it will be made when this nick quits.";
+
+			// Clients usually get nick in use on connect when reconnecting to a network
+			// after a network failure (like ping timeout), and as a result of that,
+			// TL will append a random number to the nick.
+			// keepNick will try to set the original nick name back if it sees a QUIT for that nick.
+			network.keepNick = irc.user.nick;
+		}
+
 		const lobby = network.channels[0];
 		const msg = new Msg({
 			type: Msg.Type.ERROR,
-			text: data.nick + ": " + (data.reason || "Nickname is already in use."),
+			text: message,
 			showInActive: true,
 		});
 		lobby.pushMessage(client, msg, true);

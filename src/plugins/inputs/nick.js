@@ -41,16 +41,27 @@ exports.input = function(network, chan, cmd, args) {
 		return;
 	}
 
+	// If we were trying to keep a nick and user changes nick, stop trying to keep the old one
+	network.keepNick = null;
+
 	// If connected to IRC, send to server and wait for ACK
 	// otherwise update the nick and UI straight away
-	if (network.irc && network.irc.connection) {
-		network.irc.raw("NICK", newNick);
-	} else {
-		network.setNick(newNick);
+	if (network.irc) {
+		if (network.irc.connection && network.irc.connection.connected) {
+			network.irc.changeNick(newNick);
 
-		this.emit("nick", {
-			network: network.uuid,
-			nick: newNick,
-		});
+			return;
+		}
+
+		network.irc.options.nick = network.irc.user.nick = newNick;
 	}
+
+	network.setNick(newNick);
+
+	this.emit("nick", {
+		network: network.uuid,
+		nick: newNick,
+	});
+
+	this.save();
 };

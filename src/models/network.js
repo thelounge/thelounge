@@ -19,6 +19,7 @@ const filteredFromClient = {
 	irc: true,
 	password: true,
 	ignoreList: true,
+	keepNick: true,
 };
 
 function Network(attr) {
@@ -43,6 +44,7 @@ function Network(attr) {
 		},
 		chanCache: [],
 		ignoreList: [],
+		keepNick: null,
 	});
 
 	if (!this.uuid) {
@@ -188,6 +190,7 @@ Network.prototype.edit = function(client, args) {
 	const oldNick = this.nick;
 	const oldRealname = this.realname;
 
+	this.keepNick = null;
 	this.nick = args.nick;
 	this.host = String(args.host || "");
 	this.name = String(args.name || "") || this.host;
@@ -217,7 +220,7 @@ Network.prototype.edit = function(client, args) {
 		if (this.nick !== oldNick) {
 			if (connected) {
 				// Send new nick straight away
-				this.irc.raw("NICK", this.nick);
+				this.irc.changeNick(this.nick);
 			} else {
 				this.irc.options.nick = this.irc.user.nick = this.nick;
 
@@ -269,6 +272,10 @@ Network.prototype.setNick = function(nick) {
 		// Case insensitive search
 		"i"
 	);
+
+	if (this.keepNick === nick) {
+		this.keepNick = null;
+	}
 };
 
 /**
