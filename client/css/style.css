@@ -1,5 +1,5 @@
+@import "../../node_modules/normalize.css/normalize.css";
 @import "fontawesome.css";
-@import "bootstrap.css";
 @import "../../node_modules/primer-tooltips/build/build.css";
 
 :root {
@@ -47,6 +47,47 @@
 	opacity: 1; /* fix opacity in Firefox */
 }
 
+html {
+	box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: inherit;
+}
+
+input,
+button,
+select,
+textarea {
+	font: inherit;
+	color: inherit;
+}
+
+img {
+	vertical-align: middle;
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+}
+
+abbr[title] {
+	cursor: help;
+}
+
+.pull-right {
+	float: right !important;
+}
+
 html,
 body {
 	height: 100%;
@@ -73,22 +114,17 @@ a,
 a:hover,
 a:focus {
 	color: var(--link-color);
+	text-decoration: none;
 }
 
 a:hover {
 	text-decoration: underline;
 }
 
-/**
- * From Normalize. See https://github.com/thelounge/thelounge/pull/1217
- * 1. Remove the bottom border in Chrome 57- and Firefox 39-.
- * 2. Add the correct text decoration in Chrome, Edge, IE, Opera, and Safari.
- */
-
-abbr[title] {
-	border-bottom: none; /* 1 */
-	text-decoration: underline; /* 2 */
-	text-decoration: underline dotted; /* 2 */
+a:focus {
+	outline: thin dotted;
+	outline: 5px auto -webkit-focus-ring-color;
+	outline-offset: -2px;
 }
 
 h1,
