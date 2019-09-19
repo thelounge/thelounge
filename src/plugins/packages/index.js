@@ -65,23 +65,22 @@ function loadPackages() {
 	}
 
 	packages.forEach((packageName) => {
-		const errorMsg = `Package ${colors.bold(packageName)} could not be loaded`;
 		let packageInfo;
 		let packageFile;
 
 		try {
-			packageInfo = require(path.join(
-				Helper.getPackageModulePath(packageName),
-				"package.json"
-			));
-			packageFile = require(Helper.getPackageModulePath(packageName));
-		} catch (e) {
-			log.warn(errorMsg);
-			return;
-		}
+			const packagePath = Helper.getPackageModulePath(packageName);
 
-		if (!packageInfo.thelounge) {
-			log.warn(errorMsg);
+			packageInfo = require(path.join(packagePath, "package.json"));
+
+			if (!packageInfo.thelounge) {
+				throw "'thelounge' is not present in package.json";
+			}
+
+			packageFile = require(packagePath);
+		} catch (e) {
+			log.error(`Package ${colors.bold(packageName)} could not be loaded: ${colors.red(e)}`);
+			log.debug(e.stack);
 			return;
 		}
 
