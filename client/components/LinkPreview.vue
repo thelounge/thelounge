@@ -11,6 +11,7 @@
 					class="toggle-thumbnail"
 					target="_blank"
 					rel="noopener"
+					@click="onThumbnailClick"
 				>
 					<img
 						:src="link.thumb"
@@ -54,7 +55,13 @@
 				</div>
 			</template>
 			<template v-else-if="link.type === 'image'">
-				<a :href="link.link" class="toggle-thumbnail" target="_blank" rel="noopener">
+				<a
+					:href="link.link"
+					class="toggle-thumbnail"
+					target="_blank"
+					rel="noopener"
+					@click="onThumbnailClick"
+				>
 					<img :src="link.thumb" decoding="async" alt="" @load="onPreviewReady" />
 				</a>
 			</template>
@@ -172,6 +179,12 @@ export default {
 			// If thumbnail fails to load, hide it and show the preview without it
 			this.link.thumb = "";
 			this.onPreviewReady();
+		},
+		onThumbnailClick(e) {
+			e.preventDefault();
+
+			const imageViewer = this.$root.$refs.app.$refs.imageViewer;
+			imageViewer.link = this.link;
 		},
 		onMoreClick() {
 			this.isContentShown = !this.isContentShown;

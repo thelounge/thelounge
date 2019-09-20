@@ -10,6 +10,7 @@
 			/>
 			<component :is="$store.state.activeWindow" ref="window" />
 		</article>
+		<ImageViewer ref="imageViewer" />
 	</div>
 </template>
 
@@ -19,6 +20,7 @@ const throttle = require("lodash/throttle");
 import Sidebar from "./Sidebar.vue";
 import NetworkList from "./NetworkList.vue";
 import Chat from "./Chat.vue";
+import ImageViewer from "./ImageViewer.vue";
 import SignIn from "./Windows/SignIn.vue";
 import Settings from "./Windows/Settings.vue";
 import NetworkEdit from "./Windows/NetworkEdit.vue";
@@ -31,6 +33,7 @@ export default {
 	components: {
 		Sidebar,
 		NetworkList,
+		ImageViewer,
 		Chat,
 		SignIn,
 		Settings,
