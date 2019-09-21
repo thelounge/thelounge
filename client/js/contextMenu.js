@@ -2,7 +2,6 @@
 
 const $ = require("jquery");
 const Mousetrap = require("mousetrap");
-const templates = require("../views");
 
 const contextMenuContainer = $("#context-menu-container");
 
@@ -112,20 +111,25 @@ function showContextMenu(contextMenuItems, selectedElement, event) {
 	for (const item of contextMenuItems) {
 		if (item.check(target)) {
 			if (item.divider) {
-				contextMenu.append(templates.contextmenu_divider());
+				contextMenu.append('<li class="context-menu-divider" aria-hidden="true"></li>');
 			} else {
+				// <li class="context-menu-item context-menu-{{class}}" data-action="{{action}}"{{#if data}} data-data="{{data}}"{{/if}} tabindex="0" role="menuitem">{{text}}</li>
 				contextMenu.append(
-					templates.contextmenu_item({
+					$("<li>", {
 						class:
-							typeof item.className === "function"
+							"context-menu-item context-menu-" +
+							(typeof item.className === "function"
 								? item.className(target)
-								: item.className,
-						action: item.actionId,
+								: item.className),
 						text:
 							typeof item.displayName === "function"
 								? item.displayName(target)
 								: item.displayName,
-						data: typeof item.data === "function" ? item.data(target) : item.data,
+						"data-action": item.actionId,
+						"data-data":
+							typeof item.data === "function" ? item.data(target) : item.data,
+						tabindex: 0,
+						role: "menuitem",
 					})
 				);
 			}

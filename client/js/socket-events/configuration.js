@@ -2,10 +2,8 @@
 
 const $ = require("jquery");
 const socket = require("../socket");
-const templates = require("../../views");
 const options = require("../options");
 const webpush = require("../webpush");
-const connect = $("#connect");
 const upload = require("../upload");
 const {vueApp} = require("../vue");
 
@@ -52,7 +50,7 @@ socket.on("configuration", function(data) {
 	}
 
 	// TODO: move to component (this mirrors the nick to the username field if the username is empty)
-	connect.on("show", function() {
+	/* connect.on("show", function() {
 		connect
 			.html(templates.windows.connect(data))
 			.find("#connect\\:nick")
@@ -76,7 +74,7 @@ socket.on("configuration", function(data) {
 				// Store the "previous" value, for next time
 				$(this).data("lastvalue", nick);
 			});
-	});
+	});*/
 
 	if ("URLSearchParams" in window) {
 		const params = new URLSearchParams(document.location.search);

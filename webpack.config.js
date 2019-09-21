@@ -63,25 +63,6 @@ const config = {
 					},
 				},
 			},
-			{
-				test: /\.tpl$/,
-				include: [path.resolve(__dirname, "client/views")],
-				use: [
-					{
-						loader: "handlebars-loader",
-						options: {
-							helperDirs: [path.resolve(__dirname, "client/js/libs/handlebars")],
-							extensions: [".tpl"],
-						},
-					},
-					{
-						loader: "html-minifier-loader",
-						options: {
-							ignoreCustomFragments: [/{{[\s\S]*?}}/],
-						},
-					},
-				],
-			},
 		],
 	},
 	optimization: {
