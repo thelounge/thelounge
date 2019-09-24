@@ -137,6 +137,35 @@ ClientManager.prototype.addUser = function(name, password, enableLog) {
 		throw e;
 	}
 
+	try {
+		const userFolderStat = fs.statSync(Helper.getUsersPath());
+		const userFileStat = fs.statSync(userPath);
+
+		if (
+			userFolderStat &&
+			userFileStat &&
+			(userFolderStat.uid !== userFileStat.uid || userFolderStat.gid !== userFileStat.gid)
+		) {
+			log.warn(
+				`User ${colors.green(
+					name
+				)} has been created, but with a different uid (or gid) than expected.`
+			);
+			log.warn(
+				"The file owner has been changed to the expected user. " +
+					"To prevent any issues, please run thelounge commands " +
+					"as the correct user that owns the config folder."
+			);
+			log.warn(
+				"See https://thelounge.chat/docs/usage#using-the-correct-system-user for more information."
+			);
+			fs.chownSync(userPath, userFolderStat.uid, userFolderStat.gid);
+		}
+	} catch (e) {
+		// We're simply verifying file owner as a safe guard for users
+		// that run `thelounge add` as root, so we don't care if it fails
+	}
+
 	return true;
 };
 
