@@ -65,7 +65,7 @@
     "tlds": "1.203.1",
     "ua-parser-js": "0.7.20",
     "uuid": "3.3.3",
-    "web-push": "3.3.5",
+    "web-push": "3.4.0",
     "yarn": "1.17.3"
   },
   "optionalDependencies": {
