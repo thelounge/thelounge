@@ -11,6 +11,7 @@ const fs = require("fs");
 const Utils = require("../../command-line/utils");
 
 const stylesheets = [];
+const files = [];
 
 const TIME_TO_LIVE = 15 * 60 * 1000; // 15 minutes, in milliseconds
 
@@ -19,6 +20,7 @@ const cache = {
 };
 
 module.exports = {
+	getFiles,
 	getStylesheets,
 	getPackage,
 	loadPackages,
@@ -29,6 +31,9 @@ const packageApis = function(packageName) {
 	return {
 		Stylesheets: {
 			addFile: addStylesheet.bind(this, packageName),
+		},
+		PublicFiles: {
+			add: addFile.bind(this, packageName),
 		},
 		Commands: {
 			add: inputs.addPluginCommand,
@@ -47,6 +52,14 @@ function addStylesheet(packageName, filename) {
 
 function getStylesheets() {
 	return stylesheets;
+}
+
+function addFile(packageName, filename) {
+	files.push(packageName + "/" + filename);
+}
+
+function getFiles() {
+	return files.concat(stylesheets);
 }
 
 function getPackage(name) {
@@ -90,6 +103,10 @@ function loadPackages() {
 
 		if (packageInfo.type === "theme") {
 			themes.addTheme(packageName, packageInfo);
+
+			if (packageInfo.files) {
+				packageInfo.files.forEach((file) => addFile(packageName, file));
+			}
 		} else {
 			anyPlugins = true;
 		}
