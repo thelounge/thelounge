@@ -40,6 +40,7 @@ function Chan(attr) {
 		firstUnread: 0,
 		unread: 0,
 		highlight: 0,
+		commands: [],
 		users: new Map(),
 	});
 }

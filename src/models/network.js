@@ -383,6 +383,10 @@ Network.prototype.export = function() {
 				keys.push("type");
 			}
 
+			if (chan.commands !== []) {
+				keys.push("commands");
+			}
+
 			return _.pick(chan, keys);
 		});
 

@@ -34,6 +34,18 @@ module.exports = function(irc, network) {
 				chan: chan.id,
 				state: chan.state,
 			});
+
+			if (chan.commands !== []) {
+				const delay = 1000;
+				chan.commands.forEach(function(cmd) {
+					setTimeout(function() {
+						client.input({
+							target: network.channels[0].id,
+							text: cmd,
+						});
+					}, delay);
+				});
+			}
 		}
 
 		const user = new User({nick: data.nick});
