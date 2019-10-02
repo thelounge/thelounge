@@ -10,6 +10,7 @@ const colorClass = require("./colorClass");
 const emojiMap = require("../fullnamemap.json");
 const LinkPreviewToggle = require("../../../components/LinkPreviewToggle.vue").default;
 const emojiModifiersRegex = /[\u{1f3fb}-\u{1f3ff}]/gu;
+const emojiVariationsRegex = /[\u{fe0e}-\u{fe0f}]/gu;
 
 // Create an HTML `span` with styling information for a given fragment
 function createFragment(fragment, createElement) {
@@ -140,7 +141,10 @@ module.exports = function parse(createElement, text, message = undefined, networ
 				fragments
 			);
 		} else if (textPart.emoji) {
-			const emojiWithoutModifiers = textPart.emoji.replace(emojiModifiersRegex, "");
+			const emojiWithoutModifiers = textPart.emoji
+				.replace(emojiModifiersRegex, "")
+				.replace(emojiVariationsRegex, "");
+
 			const title = emojiMap[emojiWithoutModifiers]
 				? `Emoji: ${emojiMap[emojiWithoutModifiers]}`
 				: null;
