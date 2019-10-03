@@ -278,6 +278,7 @@ kbd {
 #help .report-issue-link::before,
 #image-viewer .previous-image-btn::before,
 #image-viewer .next-image-btn::before,
+#image-viewer .open-btn::before,
 #sidebar .not-secure-icon::before,
 #sidebar .not-connected-icon::before,
 #sidebar .parted-channel-icon::before,
@@ -475,6 +476,10 @@ kbd {
 
 #image-viewer .next-image-btn::before {
 	content: "\f105"; /* http://fontawesome.io/icon/angle-right/ */
+}
+
+#image-viewer .open-btn::before {
+	content: "\f35d"; /* https://fontawesome.com/icons/external-link-alt?style=solid */
 }
 
 /* End icons */
@@ -2616,6 +2621,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #upload-overlay,
 #image-viewer,
+#image-viewer .open-btn,
 #image-viewer .close-btn {
 	/* Vertically and horizontally center stuff */
 	display: flex;
@@ -2636,6 +2642,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	opacity: 0;
 	transition: opacity 0.2s, visibility 0.2s;
 	z-index: 999;
+	user-select: none;
 }
 
 #image-viewer.opened {
@@ -2649,6 +2656,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #image-viewer .close-btn,
+#image-viewer .open-btn,
 #image-viewer .previous-image-btn,
 #image-viewer .next-image-btn {
 	position: fixed;
@@ -2668,6 +2676,14 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #image-viewer .close-btn::before {
 	content: "×";
+}
+
+#image-viewer .open-btn {
+	right: 0;
+	bottom: 0;
+	top: auto;
+	height: 2em;
+	z-index: 1002;
 }
 
 #image-viewer .previous-image-btn,
@@ -2690,19 +2706,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	opacity: 1;
 }
 
-#image-viewer .image-link {
-	margin: 10px;
-}
-
-#image-viewer .image-link:hover {
-	opacity: 1;
-}
-
-#image-viewer .image-link img {
-	max-width: 100%;
-
-	/* Top/Bottom margins + button height + image/button margin */
-	max-height: calc(100vh - 2 * 10px - 37px - 10px);
+#image-viewer > img {
+	cursor: grab;
+	position: absolute;
+	transform-origin: 50% 50%;
 
 	/* Checkered background for transparent images */
 	background-position: 0 0, 10px 10px;
@@ -2710,10 +2717,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	background-image:
 		linear-gradient(45deg, #eee 25%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 75%, #eee 75%, #eee 100%),
 		linear-gradient(45deg, #eee 25%, #fff 25%, #fff 75%, #eee 75%, #eee 100%);
-}
-
-#image-viewer .open-btn {
-	margin: 0 auto 10px;
 }
 
 /* Correctly handle multiple successive whitespace characters.
