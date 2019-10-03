@@ -79,7 +79,7 @@ module.exports = function() {
 		const fileName = req.params.filename;
 		const packageFile = packages.getPackage(packageName);
 
-		if (!packageFile || !packages.getStylesheets().includes(`${packageName}/${fileName}`)) {
+		if (!packageFile || !packages.getFiles().includes(`${packageName}/${fileName}`)) {
 			return res.status(404).send("Not found");
 		}
 
