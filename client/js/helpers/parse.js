@@ -12,7 +12,7 @@ import LinkPreviewFileSize from "../../components/LinkPreviewFileSize.vue";
 import InlineChannel from "../../components/InlineChannel.vue";
 import Username from "../../components/Username.vue";
 
-const emojiModifiersRegex = /[\u{1f3fb}-\u{1f3ff}]/gu;
+const emojiModifiersRegex = /[\u{1f3fb}-\u{1f3ff}]|\u{fe0f}/gu;
 
 // Create an HTML `span` with styling information for a given fragment
 function createFragment(fragment, createElement) {
