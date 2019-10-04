@@ -202,13 +202,13 @@ function enableAutocomplete(inputRef) {
 			e.preventDefault();
 
 			const text = input.val();
-
-			if (input.get(0).selectionStart !== text.length) {
-				return;
-			}
+			const element = input.get(0);
 
 			if (tabCount === 0) {
-				lastMatch = text.split(/\s/).pop();
+				lastMatch = text
+					.substring(0, element.selectionStart)
+					.split(/\s/)
+					.pop();
 
 				if (lastMatch.length === 0) {
 					return;
@@ -221,16 +221,19 @@ function enableAutocomplete(inputRef) {
 				}
 			}
 
-			const position = input.get(0).selectionStart - lastMatch.length;
+			const position = element.selectionStart - lastMatch.length;
 			const newMatch = nicksStrategy.replace(
 				[0, currentMatches[tabCount % currentMatches.length]],
 				position
 			);
+			const remainder = text.substr(element.selectionStart);
 
-			input.val(text.substr(0, position) + newMatch);
+			input.val(text.substr(0, position) + newMatch + remainder);
+			element.selectionStart -= remainder.length;
+			element.selectionEnd = element.selectionStart;
 
 			// Propagate change to Vue model
-			input.get(0).dispatchEvent(
+			element.dispatchEvent(
 				new CustomEvent("input", {
 					detail: "autocomplete",
 				})
