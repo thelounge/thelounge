@@ -147,6 +147,10 @@ const config = {
 			/debug/,
 			path.resolve(__dirname, "scripts/noop.js")
 		),
+		new webpack.ContextReplacementPlugin(
+			/vue-server-renderer/,
+			path.resolve(__dirname, "./src/vue-server-renderer")
+		),
 	],
 };
 
