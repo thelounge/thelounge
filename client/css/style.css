@@ -531,7 +531,12 @@ p {
 
 #viewport {
 	display: flex;
-	height: 100%;
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: calc(0px - env(safe-area-inset-top));
+	overflow: hidden;
 }
 
 #form button,
