@@ -39,7 +39,10 @@ describe("Image storage", function() {
 		this.app.get("/logo.svg", function(req, res) {
 			res.sendFile(testSvgPath);
 		});
-		this.connection = this.app.listen(9003, done);
+		this.connection = this.app.listen(0, () => {
+			this.port = this.connection.address().port;
+			done();
+		});
 	});
 
 	after(function(done) {
@@ -54,49 +57,56 @@ describe("Image storage", function() {
 	});
 
 	it("should store the thumbnail", function(done) {
+		const port = this.port;
 		const message = this.irc.createMessage({
-			text: "http://localhost:9003/thumb",
+			text: "http://localhost:" + port + "/thumb",
 		});
 
 		link(this.irc, this.network.channels[0], message);
 
 		this.app.get("/thumb", function(req, res) {
 			res.send(
-				"<title>Google</title><meta property='og:image' content='http://localhost:9003/real-test-image.png'>"
+				"<title>Google</title><meta property='og:image' content='http://localhost:" +
+					port +
+					"/real-test-image.png'>"
 			);
 		});
 
 		this.irc.once("msg:preview", function(data) {
 			expect(data.preview.head).to.equal("Google");
-			expect(data.preview.link).to.equal("http://localhost:9003/thumb");
+			expect(data.preview.link).to.equal("http://localhost:" + port + "/thumb");
 			expect(data.preview.thumb).to.equal(correctImageURL);
 			done();
 		});
 	});
 
 	it("should store the image", function(done) {
+		const port = this.port;
 		const message = this.irc.createMessage({
-			text: "http://localhost:9003/real-test-image.png",
+			text: "http://localhost:" + port + "/real-test-image.png",
 		});
 
 		link(this.irc, this.network.channels[0], message);
 
 		this.irc.once("msg:preview", function(data) {
 			expect(data.preview.type).to.equal("image");
-			expect(data.preview.link).to.equal("http://localhost:9003/real-test-image.png");
+			expect(data.preview.link).to.equal("http://localhost:" + port + "/real-test-image.png");
 			expect(data.preview.thumb).to.equal(correctImageURL);
 			done();
 		});
 	});
 
 	it("should lookup correct extension type", function(done) {
+		const port = this.port;
 		const message = this.irc.createMessage({
-			text: "http://localhost:9003/svg-preview",
+			text: "http://localhost:" + port + "/svg-preview",
 		});
 
 		this.app.get("/svg-preview", function(req, res) {
 			res.send(
-				"<title>test title</title><meta property='og:image' content='http://localhost:9003/logo.svg'>"
+				"<title>test title</title><meta property='og:image' content='http://localhost:" +
+					port +
+					"/logo.svg'>"
 			);
 		});
 
@@ -104,7 +114,7 @@ describe("Image storage", function() {
 
 		this.irc.once("msg:preview", function(data) {
 			expect(data.preview.type).to.equal("link");
-			expect(data.preview.link).to.equal("http://localhost:9003/svg-preview");
+			expect(data.preview.link).to.equal("http://localhost:" + port + "/svg-preview");
 			expect(data.preview.thumb).to.equal(correctSvgURL);
 			done();
 		});
