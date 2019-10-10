@@ -68,8 +68,15 @@ export default {
 				const $ = require("jquery");
 				$(`#sidebar .chan[data-id="${existingChannel.id}"]`).trigger("click");
 			} else {
+				const chanTypes = this.network.serverOptions.CHANTYPES;
+				let channel = this.inputChannel;
+
+				if (chanTypes && chanTypes.length > 0 && !chanTypes.includes(channel[0])) {
+					channel = chanTypes[0] + channel;
+				}
+
 				socket.emit("input", {
-					text: `/join ${this.inputChannel} ${this.inputPassword}`,
+					text: `/join ${channel} ${this.inputPassword}`,
 					target: this.channel.id,
 				});
 			}

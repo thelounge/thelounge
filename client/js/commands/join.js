@@ -8,13 +8,33 @@ exports.input = function(args) {
 	const {vueApp} = require("../vue");
 
 	if (args.length > 0) {
-		const channel = args[0];
+		let channels = args[0];
 
-		if (channel.length > 0) {
-			const chan = utils.findCurrentNetworkChan(channel);
+		if (channels.length > 0) {
+			const chanTypes = vueApp.activeChannel.network.serverOptions.CHANTYPES;
+			const channelList = args[0].split(",");
+
+			if (chanTypes && chanTypes.length > 0) {
+				for (let c = 0; c < channelList.length; c++) {
+					if (!chanTypes.includes(channelList[c][0])) {
+						channelList[c] = chanTypes[0] + channelList[c];
+					}
+				}
+			}
+
+			channels = channelList.join(",");
+
+			const chan = utils.findCurrentNetworkChan(channels);
 
 			if (chan) {
 				$(`#sidebar .chan[data-id="${chan.id}"]`).trigger("click");
+			} else {
+				socket.emit("input", {
+					text: `/join ${channels} ${args.length > 1 ? args[1] : ""}`,
+					target: vueApp.activeChannel.channel.id,
+				});
+
+				return true;
 			}
 		}
 	} else if (vueApp.activeChannel.channel.type === "channel") {
