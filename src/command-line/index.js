@@ -40,16 +40,20 @@ if (process.getuid) {
 		);
 	}
 
-	fs.stat(path.join(Helper.getHomePath(), "config.js"), (err, stat) => {
-		if (!err && stat.uid !== uid) {
-			log.warn(
-				"Config file owner does not match the user you are currently running The Lounge as."
-			);
-			log.warn(
-				"To avoid issues, you should execute The Lounge commands under the same user."
-			);
-		}
-	});
+	const configStat = fs.statSync(path.join(Helper.getHomePath(), "config.js"));
+
+	if (configStat && configStat.uid !== uid) {
+		log.warn(
+			"Config file owner does not match the user you are currently running The Lounge as."
+		);
+		log.warn(
+			"To prevent any issues, please run thelounge commands " +
+				"as the correct user that owns the config folder."
+		);
+		log.warn(
+			"See https://thelounge.chat/docs/usage#using-the-correct-system-user for more information."
+		);
+	}
 }
 
 Utils.checkOldHome();
