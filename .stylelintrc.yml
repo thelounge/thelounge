@@ -9,3 +9,10 @@ rules:
   font-family-no-missing-generic-family-keyword:
   # needs a lot of refactoring to be enabled
   no-descending-specificity:
+
+  # we have autoprefixer
+  at-rule-no-vendor-prefix: true
+  media-feature-name-no-vendor-prefix: true
+  property-no-vendor-prefix: true
+  selector-no-vendor-prefix: true
+  value-no-vendor-prefix: true

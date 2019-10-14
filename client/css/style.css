@@ -38,11 +38,6 @@
 	--upload-progressbar-color: var(--button-color);
 }
 
-/* Samsung Internet <7.0 and Microsoft Edge support (yes, both of them use webkit prefix) */
-::-webkit-input-placeholder {
-	color: rgba(0, 0, 0, 0.35);
-}
-
 ::placeholder {
 	color: rgba(0, 0, 0, 0.35);
 	opacity: 1; /* fix opacity in Firefox */
@@ -59,9 +54,6 @@ body {
 	color: var(--body-color);
 	font: 16px -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 	margin: 0;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
 	user-select: none;
 	cursor: default;
 	touch-action: none;
@@ -109,7 +101,6 @@ button {
 	margin: 0;
 	outline: none;
 	padding: 0;
-	-moz-user-select: inherit; /* Firefox makes buttons unselectable by default which breaks copying */
 	user-select: inherit;
 }
 
@@ -224,9 +215,6 @@ kbd {
 #windows .header .title,
 #windows .header .topic,
 #chat .messages {
-	-webkit-user-select: text;
-	-moz-user-select: text;
-	-ms-user-select: text;
 	user-select: text;
 	cursor: text;
 }
@@ -723,7 +711,6 @@ background on hover (unless active) */
 
 #windows .header .topic,
 #sidebar .chan .name {
-	-webkit-mask-image: linear-gradient(to left, transparent, black 20px);
 	mask-image: linear-gradient(to left, transparent, black 20px);
 }
 
@@ -1058,9 +1045,6 @@ background on hover (unless active) */
 #chat .condensed-summary .content {
 	display: block;
 	cursor: pointer;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
 	user-select: none;
 }
 
@@ -1915,21 +1899,17 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 .whois {
-	display: -ms-grid; /* Edge 15- */
 	display: grid;
-	-ms-grid-template-columns: max-content auto;
 	grid-template-columns: max-content auto;
 	margin: 0;
 }
 
 .whois dt {
-	-ms-grid-column-start: 1;
 	grid-column-start: 1;
 	margin-right: 20px;
 }
 
 .whois dd {
-	-ms-grid-column-start: 2;
 	grid-column-start: 2;
 }
 
@@ -2423,7 +2403,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	/* Fade out for long usernames */
 	#chat .from {
 		padding-left: 10px;
-		-webkit-mask-image: linear-gradient(to left, transparent, black 10px);
 		mask-image: linear-gradient(to left, transparent, black 10px);
 	}
 }
