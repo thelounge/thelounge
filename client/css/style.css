@@ -21,6 +21,9 @@
 	/* Background color of the main window */
 	--window-bg-color: #fff;
 
+	/* Text color for <h2> and <h3> headings in windows */
+	--window-heading-color: #6c797a;
+
 	/* Color of the date marker, text and separator */
 	--date-marker-color: rgba(0, 107, 59, 0.5);
 
@@ -932,8 +935,8 @@ background on hover (unless active) */
 }
 
 #windows .window h2 {
-	border-bottom: 1px solid #7f8c8d;
-	color: #7f8c8d;
+	border-bottom: 1px solid currentColor;
+	color: var(--window-heading-color);
 	font-size: 22px;
 	margin: 30px 0 10px;
 	padding-bottom: 7px;
@@ -945,7 +948,7 @@ background on hover (unless active) */
 }
 
 #windows .window h3 {
-	color: #7f8c8d;
+	color: var(--window-heading-color);
 	font-size: 18px;
 	margin: 20px 0 10px;
 }
@@ -1794,11 +1797,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	color: #84ce88;
 }
 
-#settings .extra-help,
-#settings #play {
-	color: #7f8c8d;
-}
-
 #settings .extra-experimental,
 #settings .extra-help {
 	cursor: help;
@@ -1812,6 +1810,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #settings #play {
 	font-size: 14px;
 	transition: opacity 0.2s;
+	color: var(--window-heading-color);
 }
 
 #settings #play:hover {
@@ -1942,8 +1941,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 .window#changelog h3 {
 	font-size: 20px;
-	border-bottom: 1px solid #7f8c8d;
-	color: #7f8c8d;
+	border-bottom: 1px solid currentColor;
+	color: var(--window-heading-color);
 	margin: 30px 0 10px;
 	padding-bottom: 7px;
 }
