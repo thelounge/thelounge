@@ -18,45 +18,50 @@
 		<footer id="footer">
 			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Sign in"
 				><button
-					class="icon sign-in"
+					:class="['icon', 'sign-in', {active: $store.state.activeWindow === 'SignIn'}]"
 					data-target="#sign-in"
 					data-component="SignIn"
 					aria-label="Sign in"
 					role="tab"
 					aria-controls="sign-in"
-					aria-selected="false"
+					:aria-selected="$store.state.activeWindow === 'SignIn'"
 			/></span>
 			<span
 				class="tooltipped tooltipped-n tooltipped-no-touch"
 				aria-label="Connect to network"
 				><button
-					class="icon connect"
+					:class="['icon', 'connect', {active: $store.state.activeWindow === 'Connect'}]"
 					data-target="#connect"
 					data-component="Connect"
 					aria-label="Connect to network"
 					role="tab"
 					aria-controls="connect"
-					aria-selected="false"
+					:aria-selected="$store.state.activeWindow === 'Connect'"
 			/></span>
 			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Settings"
 				><button
+					:class="[
+						'icon',
+						'settings',
+						{active: $store.state.activeWindow === 'Settings'},
+					]"
 					class="icon settings"
 					data-target="#settings"
 					data-component="Settings"
 					aria-label="Settings"
 					role="tab"
 					aria-controls="settings"
-					aria-selected="false"
+					:aria-selected="$store.state.activeWindow === 'Settings'"
 			/></span>
 			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Help"
 				><button
-					class="icon help"
+					:class="['icon', 'help', {active: $store.state.activeWindow === 'Help'}]"
 					data-target="#help"
 					data-component="Help"
 					aria-label="Help"
 					role="tab"
 					aria-controls="help"
-					aria-selected="false"
+					:aria-selected="$store.state.activeWindow === 'Help'"
 			/></span>
 		</footer>
 	</aside>
