@@ -48,6 +48,10 @@ const vueApp = new Vue({
 	},
 	mounted() {
 		Vue.nextTick(() => window.vueMounted());
+
+		if (navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i)) {
+			document.body.classList.add("is-apple");
+		}
 	},
 	methods: {
 		onSocketInit() {

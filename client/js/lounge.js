@@ -10,40 +10,12 @@ const {vueApp, findChannel} = require("./vue");
 
 window.vueMounted = () => {
 	require("./socket-events");
-	const contextMenuFactory = require("./contextMenuFactory");
+	require("./contextMenuFactory");
 	const utils = require("./utils");
 	require("./webpush");
 	require("./keybinds");
 
 	const sidebar = $("#sidebar, #footer");
-	const viewport = $("#viewport");
-
-	viewport.on("contextmenu", ".network .chan", function(e) {
-		return contextMenuFactory.createContextMenu($(this), e).show();
-	});
-
-	viewport.on("click contextmenu", ".user", function(e) {
-		// If user is selecting text, do not open context menu
-		// This primarily only targets mobile devices where selection is performed with touch
-		if (!window.getSelection().isCollapsed) {
-			return true;
-		}
-
-		return contextMenuFactory.createContextMenu($(this), e).show();
-	});
-
-	viewport.on("click", "#chat .menu", function(e) {
-		e.currentTarget = $(
-			`#sidebar .chan[data-id="${$(this)
-				.closest(".chan")
-				.attr("data-id")}"]`
-		)[0];
-		return contextMenuFactory.createContextMenu($(this), e).show();
-	});
-
-	if (navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i)) {
-		$(document.body).addClass("is-apple");
-	}
 
 	const openWindow = function openWindow(e, {pushState, replaceHistory} = {}) {
 		const self = $(this);

@@ -8,12 +8,8 @@ const contextMenuActions = [];
 const contextMenuItems = [];
 const {vueApp, findChannel} = require("./vue");
 
-module.exports = {
-	addContextMenuItem,
-	createContextMenu,
-};
-
 addDefaultItems();
+registerEvents();
 
 /**
  * Used for adding context menu items. eg:
@@ -409,4 +405,31 @@ function addDefaultItems() {
 	addConnectItem();
 	addDisconnectItem();
 	addCloseItem();
+}
+
+function registerEvents() {
+	const viewport = $("#viewport");
+
+	viewport.on("contextmenu", ".network .chan", function(e) {
+		return createContextMenu($(this), e).show();
+	});
+
+	viewport.on("click contextmenu", ".user", function(e) {
+		// If user is selecting text, do not open context menu
+		// This primarily only targets mobile devices where selection is performed with touch
+		if (!window.getSelection().isCollapsed) {
+			return true;
+		}
+
+		return createContextMenu($(this), e).show();
+	});
+
+	viewport.on("click", "#chat .menu", function(e) {
+		e.currentTarget = $(
+			`#sidebar .chan[data-id="${$(this)
+				.closest(".chan")
+				.attr("data-id")}"]`
+		)[0];
+		return createContextMenu($(this), e).show();
+	});
 }
