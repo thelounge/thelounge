@@ -3,12 +3,7 @@
 		<Sidebar :networks="networks" :active-channel="activeChannel" :overlay="$refs.overlay" />
 		<div id="sidebar-overlay" ref="overlay" @click="$root.setSidebar(false)" />
 		<article id="windows">
-			<Chat
-				v-if="activeChannel"
-				:network="activeChannel.network"
-				:channel="activeChannel.channel"
-			/>
-			<component :is="$store.state.activeWindow" ref="window" />
+			<router-view></router-view>
 		</article>
 		<ImageViewer ref="imageViewer" />
 	</div>
@@ -18,29 +13,13 @@
 const throttle = require("lodash/throttle");
 
 import Sidebar from "./Sidebar.vue";
-import NetworkList from "./NetworkList.vue";
-import Chat from "./Chat.vue";
 import ImageViewer from "./ImageViewer.vue";
-import SignIn from "./Windows/SignIn.vue";
-import Settings from "./Windows/Settings.vue";
-import NetworkEdit from "./Windows/NetworkEdit.vue";
-import Connect from "./Windows/Connect.vue";
-import Help from "./Windows/Help.vue";
-import Changelog from "./Windows/Changelog.vue";
 
 export default {
 	name: "App",
 	components: {
 		Sidebar,
-		NetworkList,
 		ImageViewer,
-		Chat,
-		SignIn,
-		Settings,
-		NetworkEdit,
-		Connect,
-		Help,
-		Changelog,
 	},
 	props: {
 		activeWindow: String,

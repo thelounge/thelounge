@@ -8,12 +8,10 @@
 
 			<h2>
 				<small class="pull-right">
-					v{{ $root.serverConfiguration.version }} (<a
+					v{{ $root.serverConfiguration.version }} (<router-link
 						id="view-changelog"
-						href="#"
-						data-target="#changelog"
-						data-component="Changelog"
-						>release notes</a
+						to="changelog"
+						>release notes</router-link
 					>)
 				</small>
 				About The Lounge

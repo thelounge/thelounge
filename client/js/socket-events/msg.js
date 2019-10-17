@@ -2,7 +2,6 @@
 
 const $ = require("jquery");
 const socket = require("../socket");
-const utils = require("../utils");
 const options = require("../options");
 const cleanIrcMessage = require("../libs/handlebars/ircmessageparser/cleanIrcMessage");
 const webpush = require("../webpush");
@@ -91,7 +90,7 @@ socket.on("msg", function(data) {
 	}
 
 	if (data.msg.self || data.msg.highlight) {
-		utils.synchronizeNotifiedState();
+		vueApp.synchronizeNotifiedState();
 	}
 });
 

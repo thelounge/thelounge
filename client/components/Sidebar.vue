@@ -25,6 +25,7 @@
 					role="tab"
 					aria-controls="sign-in"
 					:aria-selected="$store.state.activeWindow === 'SignIn'"
+					@click="navigate('sign-in')"
 			/></span>
 			<span
 				class="tooltipped tooltipped-n tooltipped-no-touch"
@@ -37,6 +38,7 @@
 					role="tab"
 					aria-controls="connect"
 					:aria-selected="$store.state.activeWindow === 'Connect'"
+					@click="navigate('connect')"
 			/></span>
 			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Settings"
 				><button
@@ -52,6 +54,7 @@
 					role="tab"
 					aria-controls="settings"
 					:aria-selected="$store.state.activeWindow === 'Settings'"
+					@click="navigate('settings')"
 			/></span>
 			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Help"
 				><button
@@ -62,6 +65,7 @@
 					role="tab"
 					aria-controls="help"
 					:aria-selected="$store.state.activeWindow === 'Help'"
+					@click="navigate('help')"
 			/></span>
 		</footer>
 	</aside>
@@ -176,6 +180,16 @@ export default {
 
 		this.toggle = (state) => {
 			this.$store.commit("sidebarOpen", state);
+		};
+
+		this.navigate = (to) => {
+			if (this.activeChannel && this.activeChannel.channel) {
+				this.$root.switchOutOfChannel(this.activeChannel.channel);
+			}
+
+			this.$root.activeChannel = null;
+			this.$root.closeSidebarIfNeeded();
+			this.$router.push(to);
 		};
 
 		document.body.addEventListener("touchstart", this.onTouchStart, {passive: true});

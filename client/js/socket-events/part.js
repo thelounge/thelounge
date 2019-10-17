@@ -2,7 +2,6 @@
 
 const $ = require("jquery");
 const socket = require("../socket");
-const utils = require("../utils");
 const {vueApp, findChannel} = require("../vue");
 
 socket.on("part", function(data) {
@@ -23,5 +22,5 @@ socket.on("part", function(data) {
 		);
 	}
 
-	utils.synchronizeNotifiedState();
+	vueApp.synchronizeNotifiedState();
 });

@@ -4,7 +4,7 @@
 			<SidebarToggle />
 		</div>
 		<div class="container">
-			<a id="back-to-help" href="#" data-target="#help" data-component="Help">« Help</a>
+			<router-link id="back-to-help" to="help">« Help</router-link>
 
 			<template
 				v-if="
@@ -65,6 +65,10 @@ export default {
 	},
 	methods: {
 		patchChangelog() {
+			if (!this.$refs.changelog) {
+				return;
+			}
+
 			const links = this.$refs.changelog.querySelectorAll("a");
 
 			for (const link of links) {

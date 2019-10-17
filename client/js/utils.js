@@ -7,15 +7,12 @@ const {vueApp} = require("./vue");
 var serverHash = -1; // eslint-disable-line no-var
 
 module.exports = {
-	// Same value as media query in CSS that forces sidebars to become overlays
-	mobileViewportPixels: 768,
 	findCurrentNetworkChan,
 	serverHash,
 	confirmExit,
 	scrollIntoViewNicely,
 	hasRoleInChannel,
 	move,
-	synchronizeNotifiedState,
 	requestIdleCallback,
 };
 
@@ -43,60 +40,6 @@ function scrollIntoViewNicely(el) {
 	// Ideally this would use behavior: "smooth", but that does not consistently work in e.g. Chrome
 	// https://github.com/iamdustan/smoothscroll/issues/28#issuecomment-364061459
 	el.scrollIntoView({block: "center", inline: "nearest"});
-}
-
-const favicon = $("#favicon");
-
-function synchronizeNotifiedState() {
-	updateTitle();
-
-	let hasAnyHighlights = false;
-
-	for (const network of vueApp.networks) {
-		for (const chan of network.channels) {
-			if (chan.highlight > 0) {
-				hasAnyHighlights = true;
-				break;
-			}
-		}
-	}
-
-	toggleNotificationMarkers(hasAnyHighlights);
-}
-
-function toggleNotificationMarkers(newState) {
-	if (vueApp.$store.state.isNotified !== newState) {
-		// Toggles a dot on the menu icon when there are unread notifications
-		vueApp.$store.commit("isNotified", newState);
-
-		// Toggles the favicon to red when there are unread notifications
-		const old = favicon.prop("href");
-		favicon.prop("href", favicon.data("other"));
-		favicon.data("other", old);
-	}
-}
-
-function updateTitle() {
-	let title = vueApp.appName;
-
-	if (vueApp.activeChannel) {
-		title = `${vueApp.activeChannel.channel.name} — ${title}`;
-	}
-
-	// add highlight count to title
-	let alertEventCount = 0;
-
-	for (const network of vueApp.networks) {
-		for (const channel of network.channels) {
-			alertEventCount += channel.highlight;
-		}
-	}
-
-	if (alertEventCount > 0) {
-		title = `(${alertEventCount}) ${title}`;
-	}
-
-	document.title = title;
 }
 
 function confirmExit() {

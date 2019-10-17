@@ -7,6 +7,7 @@ const webpush = require("../webpush");
 const sidebar = $("#sidebar");
 const storage = require("../localStorage");
 const utils = require("../utils");
+const constants = require("../constants");
 const {vueApp, initChannel} = require("../vue");
 
 socket.on("init", function(data) {
@@ -31,7 +32,7 @@ socket.on("init", function(data) {
 		const viewportWidth = window.outerWidth;
 		let isUserlistOpen = storage.get("thelounge.state.userlist");
 
-		if (viewportWidth > utils.mobileViewportPixels) {
+		if (viewportWidth > constants.mobileViewportPixels) {
 			vueApp.setSidebar(storage.get("thelounge.state.sidebar") !== "false");
 		}
 
@@ -55,7 +56,7 @@ socket.on("init", function(data) {
 	vueApp.$nextTick(() => openCorrectChannel(previousActive, data.active));
 
 	utils.confirmExit();
-	utils.synchronizeNotifiedState();
+	vueApp.synchronizeNotifiedState();
 });
 
 function openCorrectChannel(clientActive, serverActive) {

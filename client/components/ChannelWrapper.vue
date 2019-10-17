@@ -23,6 +23,7 @@
 		:aria-selected="activeChannel && channel === activeChannel.channel"
 		:style="closed ? {transition: 'none', opacity: 0.4} : null"
 		role="tab"
+		@click="click"
 	>
 		<slot :network="network" :channel="channel" :activeChannel="activeChannel" />
 	</div>
@@ -79,6 +80,11 @@ export default {
 			}
 
 			return this.channel.name;
+		},
+		click() {
+			// TODO: Find out why this sometimes throws `uncaught exception: Object`
+			this.$router.push("chan-" + this.channel.id);
+			this.$root.closeSidebarIfNeeded();
 		},
 	},
 };

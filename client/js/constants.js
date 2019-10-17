@@ -36,4 +36,6 @@ module.exports = {
 	condensedTypesQuery,
 	timeFormats,
 	sizeUnits,
+	// Same value as media query in CSS that forces sidebars to become overlays
+	mobileViewportPixels: 768,
 };

@@ -133,7 +133,38 @@ export default {
 			return undefined;
 		},
 	},
+	watch: {
+		channel(_, previousChannel) {
+			this.channelChanged(previousChannel);
+		},
+	},
+	mounted() {
+		this.channelChanged();
+	},
 	methods: {
+		channelChanged(previousChannel) {
+			// Triggered when active channel is set or changed
+
+			if (previousChannel) {
+				this.$root.switchOutOfChannel(previousChannel);
+			}
+
+			this.channel.highlight = 0;
+			this.channel.unread = 0;
+
+			this.$store.commit("activeWindow", null);
+			socket.emit("open", this.channel.id);
+
+			if (this.channel.usersOutdated) {
+				this.channel.usersOutdated = false;
+
+				socket.emit("names", {
+					target: this.channel.id,
+				});
+			}
+
+			this.$root.synchronizeNotifiedState();
+		},
 		hideUserVisibleError() {
 			this.$root.currentUserVisibleError = null;
 		},

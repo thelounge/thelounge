@@ -1,6 +1,7 @@
 "use strict";
 
 const Vue = require("vue").default;
+
 const store = require("./store").default;
 const App = require("../components/App.vue").default;
 const roundBadgeNumber = require("./libs/handlebars/roundBadgeNumber");
@@ -8,6 +9,8 @@ const localetime = require("./libs/handlebars/localetime");
 const friendlysize = require("./libs/handlebars/friendlysize");
 const colorClass = require("./libs/handlebars/colorClass");
 const storage = require("./localStorage");
+const router = require("./router").default;
+const constants = require("./constants");
 
 Vue.filter("localetime", localetime);
 Vue.filter("friendlysize", friendlysize);
@@ -46,12 +49,17 @@ const vueApp = new Vue({
 			userStyles: "",
 		},
 	},
+	router,
 	mounted() {
 		Vue.nextTick(() => window.vueMounted());
 
 		if (navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i)) {
 			document.body.classList.add("is-apple");
 		}
+
+		document.addEventListener("visibilitychange", this.synchronizeNotifiedState());
+		document.addEventListener("focus", this.synchronizeNotifiedState());
+		document.addEventListener("click", this.synchronizeNotifiedState());
 	},
 	methods: {
 		onSocketInit() {
@@ -59,11 +67,9 @@ const vueApp = new Vue({
 			this.$store.commit("isConnected", true);
 		},
 		setSidebar(state) {
-			const utils = require("./utils");
-
 			this.$store.commit("sidebarOpen", state);
 
-			if (window.outerWidth > utils.mobileViewportPixels) {
+			if (window.outerWidth > constants.mobileViewportPixels) {
 				storage.set("thelounge.state.sidebar", state);
 			}
 
@@ -72,6 +78,11 @@ const vueApp = new Vue({
 		toggleSidebar() {
 			this.setSidebar(!this.$store.state.sidebarOpen);
 		},
+		closeSidebarIfNeeded() {
+			if (window.innerWidth <= constants.mobileViewportPixels) {
+				this.setSidebar(false);
+			}
+		},
 		setUserlist(state) {
 			storage.set("thelounge.state.userlist", state);
 			this.$store.commit("userlistOpen", state);
@@ -79,6 +90,78 @@ const vueApp = new Vue({
 		},
 		toggleUserlist() {
 			this.setUserlist(!this.$store.state.userlistOpen);
+		},
+		findChannel(id) {
+			for (const network of this.networks) {
+				for (const channel of network.channels) {
+					if (channel.id === id) {
+						return {network, channel};
+					}
+				}
+			}
+
+			return null;
+		},
+		switchOutOfChannel(channel) {
+			// When switching out of a channel, mark everything as read
+			if (channel.messages.length > 0) {
+				channel.firstUnread = channel.messages[channel.messages.length - 1].id;
+			}
+
+			if (channel.messages.length > 100) {
+				channel.messages.splice(0, channel.messages.length - 100);
+				channel.moreHistoryAvailable = true;
+			}
+		},
+		synchronizeNotifiedState() {
+			this.updateTitle();
+
+			let hasAnyHighlights = false;
+
+			for (const network of this.networks) {
+				for (const chan of network.channels) {
+					if (chan.highlight > 0) {
+						hasAnyHighlights = true;
+						break;
+					}
+				}
+			}
+
+			this.toggleNotificationMarkers(hasAnyHighlights);
+		},
+		updateTitle() {
+			let title = this.appName;
+
+			if (this.activeChannel) {
+				title = `${this.activeChannel.channel.name} — ${title}`;
+			}
+
+			// add highlight count to title
+			let alertEventCount = 0;
+
+			for (const network of this.networks) {
+				for (const channel of network.channels) {
+					alertEventCount += channel.highlight;
+				}
+			}
+
+			if (alertEventCount > 0) {
+				title = `(${alertEventCount}) ${title}`;
+			}
+
+			document.title = title;
+		},
+		toggleNotificationMarkers(newState) {
+			if (this.$store.state.isNotified !== newState) {
+				// Toggles a dot on the menu icon when there are unread notifications
+				this.$store.commit("isNotified", newState);
+
+				// Toggles the favicon to red when there are unread notifications
+				const favicon = document.getElementById("favicon");
+				const old = favicon.getAttribute("href");
+				favicon.setAttribute("href", favicon.dataset.other);
+				favicon.dataset.other = old;
+			}
 		},
 	},
 	render(createElement) {
@@ -96,15 +179,7 @@ Vue.config.errorHandler = function(e) {
 };
 
 function findChannel(id) {
-	for (const network of vueApp.networks) {
-		for (const channel of network.channels) {
-			if (channel.id === id) {
-				return {network, channel};
-			}
-		}
-	}
-
-	return null;
+	return vueApp.findChannel(id);
 }
 
 function initChannel(channel) {
