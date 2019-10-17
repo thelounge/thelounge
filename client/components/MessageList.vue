@@ -228,6 +228,10 @@ export default {
 			});
 		},
 		onShowMoreClick() {
+			if (!this.$root.isConnected) {
+				return;
+			}
+
 			let lastMessage = this.channel.messages[0];
 			lastMessage = lastMessage ? lastMessage.id : -1;
 
