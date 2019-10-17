@@ -12,14 +12,6 @@ os:
 matrix:
   fast_finish: true
   include:
-    - name: "Windows build"
-      os: windows
-      cache: false # windows cache uploads are slow
-      env: YARN_GPG=no # starts gpg-agent that never exits
-
-    - name: "macOS build"
-      os: osx
-
     # Version used to deploy to npm registry
     - name: "Production build"
       env: BUILD_ENV=production
