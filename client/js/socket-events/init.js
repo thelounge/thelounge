@@ -169,6 +169,15 @@ function mergeChannelData(oldChannels, newChannels) {
 				continue;
 			}
 
+			// Server sends total count of messages in memory, we compare it to amount of messages
+			// on the client, and decide whether theres more messages to load from server
+			if (key === "totalMessages") {
+				currentChannel.moreHistoryAvailable =
+					channel.totalMessages > currentChannel.messages.length;
+
+				continue;
+			}
+
 			// Reconnection only sends new messages, so merge it on the client
 			// Only concat if server sent us less than 100 messages so we don't introduce gaps
 			if (key === "messages" && currentChannel.messages && channel.messages.length < 100) {

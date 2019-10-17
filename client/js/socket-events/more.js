@@ -10,7 +10,8 @@ socket.on("more", function(data) {
 		return;
 	}
 
-	channel.channel.moreHistoryAvailable = data.moreHistoryAvailable;
+	channel.channel.moreHistoryAvailable =
+		data.totalMessages > channel.channel.messages.length + data.messages.length;
 	channel.channel.messages.unshift(...data.messages);
 
 	vueApp.$nextTick(() => {

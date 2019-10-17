@@ -448,7 +448,7 @@ Client.prototype.more = function(data) {
 	return {
 		chan: chan.id,
 		messages: messages,
-		moreHistoryAvailable: index > 100,
+		totalMessages: chan.messages.length,
 	};
 };
 
