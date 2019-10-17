@@ -45,20 +45,6 @@ window.vueMounted = () => {
 		$(document.body).addClass("is-apple");
 	}
 
-	viewport.on("click", ".inline-channel", function() {
-		const name = $(this).attr("data-chan");
-		const chan = utils.findCurrentNetworkChan(name);
-
-		if (chan) {
-			$(`#sidebar .chan[data-id="${chan.id}"]`).trigger("click");
-		}
-
-		socket.emit("input", {
-			target: vueApp.activeChannel.channel.id,
-			text: "/join " + name,
-		});
-	});
-
 	const openWindow = function openWindow(e, {pushState, replaceHistory} = {}) {
 		const self = $(this);
 		const target = self.attr("data-target");

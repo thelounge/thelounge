@@ -10,6 +10,7 @@ const colorClass = require("./colorClass");
 const emojiMap = require("../fullnamemap.json");
 const LinkPreviewToggle = require("../../../components/LinkPreviewToggle.vue").default;
 const LinkPreviewFileSize = require("../../../components/LinkPreviewFileSize.vue").default;
+const InlineChannel = require("../../../components/InlineChannel.vue").default;
 const emojiModifiersRegex = /[\u{1f3fb}-\u{1f3ff}]/gu;
 
 // Create an HTML `span` with styling information for a given fragment
@@ -151,14 +152,10 @@ module.exports = function parse(createElement, text, message = undefined, networ
 			);
 		} else if (textPart.channel) {
 			return createElement(
-				"span",
+				InlineChannel,
 				{
-					class: ["inline-channel"],
-					attrs: {
-						role: "button",
-						dir: "auto",
-						tabindex: 0,
-						"data-chan": textPart.channel,
+					props: {
+						channel: textPart.channel,
 					},
 				},
 				fragments
