@@ -17,7 +17,7 @@ matrix:
       env: BUILD_ENV=production
 
     # Next node version
-    - node_js: 11 # EOL: June 2019
+    - node_js: 12 # EOL: April 2022
 
 cache: yarn
 
