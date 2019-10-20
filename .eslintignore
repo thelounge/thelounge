@@ -1,5 +1,2 @@
-# third party
-client/js/libs/jquery/*.js
-
 public/
 coverage/
