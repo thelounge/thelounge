@@ -17,36 +17,39 @@
 		</div>
 		<footer id="footer">
 			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Sign in"
-				><button
-					:class="['icon', 'sign-in', {active: $store.state.activeWindow === 'SignIn'}]"
+				><router-link
+					to="/sign-in"
+					tag="button"
+					active-class="active"
+					:class="['icon', 'sign-in']"
 					data-target="#sign-in"
 					data-component="SignIn"
 					aria-label="Sign in"
 					role="tab"
 					aria-controls="sign-in"
 					:aria-selected="$store.state.activeWindow === 'SignIn'"
-					@click="navigate('sign-in')"
 			/></span>
 			<span
 				class="tooltipped tooltipped-n tooltipped-no-touch"
 				aria-label="Connect to network"
-				><button
-					:class="['icon', 'connect', {active: $store.state.activeWindow === 'Connect'}]"
+				><router-link
+					to="/connect"
+					tag="button"
+					active-class="active"
+					:class="['icon', 'connect']"
 					data-target="#connect"
 					data-component="Connect"
 					aria-label="Connect to network"
 					role="tab"
 					aria-controls="connect"
 					:aria-selected="$store.state.activeWindow === 'Connect'"
-					@click="navigate('connect')"
 			/></span>
 			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Settings"
-				><button
-					:class="[
-						'icon',
-						'settings',
-						{active: $store.state.activeWindow === 'Settings'},
-					]"
+				><router-link
+					to="/settings"
+					tag="button"
+					active-class="active"
+					:class="['icon', 'settings']"
 					class="icon settings"
 					data-target="#settings"
 					data-component="Settings"
@@ -54,18 +57,19 @@
 					role="tab"
 					aria-controls="settings"
 					:aria-selected="$store.state.activeWindow === 'Settings'"
-					@click="navigate('settings')"
 			/></span>
 			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Help"
-				><button
-					:class="['icon', 'help', {active: $store.state.activeWindow === 'Help'}]"
+				><router-link
+					to="/help"
+					tag="button"
+					active-class="active"
+					:class="['icon', 'help']"
 					data-target="#help"
 					data-component="Help"
 					aria-label="Help"
 					role="tab"
 					aria-controls="help"
 					:aria-selected="$store.state.activeWindow === 'Help'"
-					@click="navigate('help')"
 			/></span>
 		</footer>
 	</aside>
@@ -180,16 +184,6 @@ export default {
 
 		this.toggle = (state) => {
 			this.$store.commit("sidebarOpen", state);
-		};
-
-		this.navigate = (to) => {
-			if (this.activeChannel && this.activeChannel.channel) {
-				this.$root.switchOutOfChannel(this.activeChannel.channel);
-			}
-
-			this.$root.activeChannel = null;
-			this.$root.closeSidebarIfNeeded();
-			this.$router.push(to);
 		};
 
 		document.body.addEventListener("touchstart", this.onTouchStart, {passive: true});

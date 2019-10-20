@@ -13,13 +13,74 @@ const RoutedChat = require("../components/RoutedChat.vue").default;
 
 const router = new VueRouter({
 	routes: [
-		{path: "/sign-in", component: SignIn},
-		{path: "/connect", component: Connect},
-		{path: "/settings", component: Settings},
-		{path: "/help", component: Help},
-		{path: "/changelog", component: Changelog},
-		{path: "/chan-*", component: RoutedChat},
+		{
+			path: "/sign-in",
+			component: SignIn,
+			meta: {
+				isChat: false,
+				windowName: "SignIn",
+			},
+		},
+		{
+			path: "/connect",
+			component: Connect,
+			meta: {
+				isChat: false,
+				windowName: "Connect",
+			},
+		},
+		{
+			path: "/settings",
+			component: Settings,
+			meta: {
+				isChat: false,
+				windowName: "Settings",
+			},
+		},
+		{
+			path: "/help",
+			component: Help,
+			meta: {
+				isChat: false,
+				windowName: "Help",
+			},
+		},
+		{
+			path: "/changelog",
+			component: Changelog,
+			meta: {
+				isChat: false,
+				windowName: "Changelog",
+			},
+		},
+		{
+			path: "/chan-*",
+			component: RoutedChat,
+			meta: {
+				isChat: true,
+				windowName: "RoutedChat",
+			},
+		},
 	],
+});
+
+router.afterEach((to) => {
+	if (!router.app.initialized) {
+		return;
+	}
+
+	router.app.closeSidebarIfNeeded();
+
+	if (!to.meta.isChat) {
+		// Navigating out of a chat window
+		router.app.$store.commit("activeWindow", to.meta.windowName);
+
+		if (router.app.activeChannel && router.app.activeChannel.channel) {
+			router.app.switchOutOfChannel(router.app.activeChannel.channel);
+		}
+
+		router.app.activeChannel = null;
+	}
 });
 
 export default router;

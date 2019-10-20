@@ -84,7 +84,6 @@ export default {
 		click() {
 			// TODO: Find out why this sometimes throws `uncaught exception: Object`
 			this.$router.push("chan-" + this.channel.id);
-			this.$root.closeSidebarIfNeeded();
 		},
 	},
 };
