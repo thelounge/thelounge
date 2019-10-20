@@ -6,7 +6,6 @@ const socket = require("../socket");
 const webpush = require("../webpush");
 const sidebar = $("#sidebar");
 const storage = require("../localStorage");
-const utils = require("../utils");
 const constants = require("../constants");
 const {vueApp, initChannel} = require("../vue");
 
@@ -54,9 +53,14 @@ socket.on("init", function(data) {
 	}
 
 	vueApp.$nextTick(() => openCorrectChannel(previousActive, data.active));
-
-	utils.confirmExit();
 	vueApp.synchronizeNotifiedState();
+
+	if (document.body.classList.contains("public")) {
+		window.addEventListener(
+			"beforeunload",
+			() => "Are you sure you want to navigate away from this page?"
+		);
+	}
 });
 
 function openCorrectChannel(clientActive, serverActive) {

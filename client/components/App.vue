@@ -58,7 +58,6 @@ export default {
 		clearTimeout(this.dayChangeTimeout);
 	},
 	methods: {
-		isPublic: () => document.body.classList.contains("public"),
 		msUntilNextDay() {
 			// Compute how many milliseconds are remaining until the next day starts
 			const today = new Date();

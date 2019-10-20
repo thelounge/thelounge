@@ -9,7 +9,6 @@ var serverHash = -1; // eslint-disable-line no-var
 module.exports = {
 	findCurrentNetworkChan,
 	serverHash,
-	confirmExit,
 	scrollIntoViewNicely,
 	hasRoleInChannel,
 	move,
@@ -40,14 +39,6 @@ function scrollIntoViewNicely(el) {
 	// Ideally this would use behavior: "smooth", but that does not consistently work in e.g. Chrome
 	// https://github.com/iamdustan/smoothscroll/issues/28#issuecomment-364061459
 	el.scrollIntoView({block: "center", inline: "nearest"});
-}
-
-function confirmExit() {
-	if ($(document.body).hasClass("public")) {
-		window.onbeforeunload = function() {
-			return "Are you sure you want to navigate away from this page?";
-		};
-	}
 }
 
 function move(array, old_index, new_index) {
