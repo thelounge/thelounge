@@ -74,6 +74,7 @@ export default {
 			for (const link of links) {
 				// Make sure all links will open a new tab instead of exiting the application
 				link.setAttribute("target", "_blank");
+				link.setAttribute("rel", "noopener");
 
 				if (link.querySelector("img")) {
 					// Add required metadata to image links, to support built-in image viewer
