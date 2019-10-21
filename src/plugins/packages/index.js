@@ -146,7 +146,11 @@ async function outdated(cacheTimeout = TIME_TO_LIVE) {
 
 	// Check if the configuration file exists
 	if (!fs.existsSync(packagesConfig)) {
-		log.warn("There are no packages installed.");
+		// CLI calls outdated with zero TTL, so we can print the warning there
+		if (!cacheTimeout) {
+			log.warn("There are no packages installed.");
+		}
+
 		return false;
 	}
 
