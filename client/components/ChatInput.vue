@@ -18,7 +18,13 @@
 			aria-label="Upload file"
 			@click="openFileUpload"
 		>
-			<input id="upload-input" ref="uploadInput" type="file" multiple />
+			<input
+				id="upload-input"
+				ref="uploadInput"
+				type="file"
+				multiple
+				@change="onUploadInputChange"
+			/>
 			<button
 				id="upload"
 				type="button"
@@ -138,7 +144,7 @@ export default {
 		});
 
 		if (this.$root.isFileUploadEnabled) {
-			upload.initialize();
+			upload.mounted();
 		}
 	},
 	destroyed() {
@@ -219,6 +225,11 @@ export default {
 			}
 
 			socket.emit("input", {target, text});
+		},
+		onUploadInputChange() {
+			const files = Array.from(this.$refs.uploadInput.files);
+			upload.triggerUpload(files);
+			this.$refs.uploadInput.value = ""; // Reset <input> element so you can upload the same file
 		},
 		openFileUpload() {
 			this.$refs.uploadInput.click();
