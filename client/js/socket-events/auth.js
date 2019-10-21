@@ -79,15 +79,19 @@ socket.on("auth", function(data) {
 
 			for (const network of vueApp.networks) {
 				for (const chan of network.channels) {
-					for (const msg of chan.messages) {
-						if (msg.id > lastMessage) {
-							lastMessage = msg.id;
+					if (chan.messages.length > 0) {
+						const id = chan.messages[chan.messages.length - 1].id;
+
+						if (lastMessage < id) {
+							lastMessage = id;
 						}
 					}
 				}
 			}
 
-			socket.emit("auth", {user, token, lastMessage});
+			const openChannel = (vueApp.activeChannel && vueApp.activeChannel.channel.id) || null;
+
+			socket.emit("auth", {user, token, lastMessage, openChannel});
 		}
 	}
 

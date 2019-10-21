@@ -331,10 +331,22 @@ function indexRequest(req, res) {
 	);
 }
 
-function initializeClient(socket, client, token, lastMessage) {
+function initializeClient(socket, client, token, lastMessage, openChannel) {
 	socket.emit("authorized");
 
 	client.clientAttach(socket.id, token);
+
+	// Client sends currently active channel on reconnect,
+	// pass it into `open` directly so it is verified and updated if necessary
+	if (openChannel) {
+		client.open(socket.id, openChannel);
+
+		// If client provided channel passes checks, use it. if client has invalid
+		// channel open (or windows like settings) then use last known server active channel
+		openChannel = client.attachedClients[socket.id].openChannel || client.lastActiveChannel;
+	} else {
+		openChannel = client.lastActiveChannel;
+	}
 
 	if (Helper.config.fileUpload.enable) {
 		new Uploader(socket);
@@ -624,9 +636,9 @@ function initializeClient(socket, client, token, lastMessage) {
 		socket.emit("init", {
 			applicationServerKey: manager.webPush.vapidKeys.publicKey,
 			pushSubscription: client.config.sessions[token],
-			active: client.lastActiveChannel,
+			active: openChannel,
 			networks: client.networks.map((network) =>
-				network.getFilteredClone(client.lastActiveChannel, lastMessage)
+				network.getFilteredClone(openChannel, lastMessage)
 			),
 			token: tokenToSend,
 		});
@@ -705,7 +717,7 @@ function performAuthentication(data) {
 	let token = null;
 
 	const finalInit = () => {
-		initializeClient(socket, client, token, data.lastMessage || -1);
+		initializeClient(socket, client, token, data.lastMessage || -1, data.openChannel);
 
 		if (!Helper.config.public) {
 			client.manager.updateUser(client.name, {
