@@ -163,7 +163,16 @@ function mergeChannelData(oldChannels, newChannels) {
 			// Server sends an empty users array, client requests it whenever needed
 			if (key === "users") {
 				if (channel.type === "channel") {
-					channel.usersOutdated = true;
+					if (vueApp.activeChannel && vueApp.activeChannel.channel === currentChannel) {
+						// For currently open channel, request the user list straight away
+						socket.emit("names", {
+							target: channel.id,
+						});
+					} else {
+						// For all other channels, mark the user list as outdated
+						// so an update will be requested whenever user switches to these channels
+						currentChannel.usersOutdated = true;
+					}
 				}
 
 				continue;
