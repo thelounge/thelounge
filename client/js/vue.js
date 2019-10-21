@@ -78,6 +78,9 @@ function initChannel(channel) {
 	channel.scrolledToBottom = true;
 	channel.editTopic = false;
 
+	channel.moreHistoryAvailable = channel.totalMessages > channel.messages.length;
+	delete channel.totalMessages;
+
 	if (channel.type === "channel") {
 		channel.usersOutdated = true;
 	}
