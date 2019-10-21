@@ -5,6 +5,7 @@
 	--body-color-muted: #b7c5d1;
 	--link-color: #77abd9;
 	--window-bg-color: #303e4a;
+	--window-heading-color: #b7c5d1;
 	--date-marker-color: #97ea70;
 	--unread-marker-color: #f92772;
 	--highlight-bg-color: #4d4332;
@@ -107,10 +108,6 @@ body {
 
 #windows .window {
 	box-shadow: 0 0 25px rgba(0, 0, 0, 0.75);
-}
-
-#windows .window h2 {
-	color: #b7c5d1;
 }
 
 #viewport .lt,
