@@ -414,6 +414,7 @@ class RepositoryFetcher {
 					PR${number}: pullRequest(number: ${number}) {
 						__typename
 						title
+						body
 						url
 						author {
 							__typename
@@ -643,8 +644,43 @@ function isFeature({labels}) {
 //   chore(deps): update dependency mini-css-extract-plugin to v0.4.3
 //   fix(deps): update dependency web-push to v3.3.3
 //   chore(deps): update babel monorepo to v7.1.0
-function extractPackages({title, url}) {
-	const extracted = /(?:U|u)pdate(?: dependency)? ([\w-,` ./@]+?) (?:monorepo )?to /.exec(title);
+function extractPackages({title, body, url}) {
+	// Extract updated packages from renovate-bot's pull request body
+	let list = /^This PR contains the following updates:\n\n(?:[\s\S]+?)---\|$\n([\s\S]+?)\n\n---/m.exec(
+		body
+	);
+
+	if (list) {
+		const packages = [];
+		list = list[1].split("\n");
+
+		for (let line of list) {
+			line = line
+				.split("|")[1] // Split the table and take the first column
+				.trim()
+				.split(" ")[0]; // Remove any spaces and take the first word (skip source link, etc)
+
+			const pkgName = /([\w-, ./@]+)/.exec(line);
+
+			if (!pkgName) {
+				log.warn(`Failed to extract package name from: ${url}`);
+				continue;
+			}
+
+			packages.push(pkgName[1]);
+		}
+
+		if (packages.length > 0) {
+			return packages;
+		}
+
+		log.warn(`Failed to extract package from: ${url}`);
+	}
+
+	// Fallback to extracting package from title
+	const extracted = /(?:U|u)pdate(?: dependency)? ([\w-,` ./@]+?) (?:packages |monorepo )?to /.exec(
+		title
+	);
 
 	if (!extracted) {
 		log.warn(`Failed to extract package from: ${title}  ${colors.gray(url)}`);
