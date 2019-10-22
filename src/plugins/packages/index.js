@@ -27,16 +27,16 @@ module.exports = {
 	outdated,
 };
 
-const packageApis = function(packageName) {
+const packageApis = function(packageInfo) {
 	return {
 		Stylesheets: {
-			addFile: addStylesheet.bind(this, packageName),
+			addFile: addStylesheet.bind(this, packageInfo.packageName),
 		},
 		PublicFiles: {
-			add: addFile.bind(this, packageName),
+			add: addFile.bind(this, packageInfo.packageName),
 		},
 		Commands: {
-			add: inputs.addPluginCommand,
+			add: inputs.addPluginCommand.bind(this, packageInfo),
 			runAsUser: (command, targetId, client) =>
 				client.inputLine({target: targetId, text: command}),
 		},
@@ -98,6 +98,7 @@ function loadPackages() {
 		}
 
 		packageInfo = packageInfo.thelounge;
+		packageInfo.packageName = packageName;
 
 		packageMap.set(packageName, packageFile);
 
@@ -112,7 +113,7 @@ function loadPackages() {
 		}
 
 		if (packageFile.onServerStart) {
-			packageFile.onServerStart(packageApis(packageName));
+			packageFile.onServerStart(packageApis(packageInfo));
 		}
 
 		log.info(`Package ${colors.bold(packageName)} loaded`);

@@ -51,7 +51,10 @@ const getCommands = () =>
 		.concat(passThroughCommands)
 		.sort();
 
-const addPluginCommand = (command, func) => pluginCommands.set(command, func);
+const addPluginCommand = (packageInfo, command, func) => {
+	func.packageInfo = packageInfo;
+	pluginCommands.set(command, func);
+};
 
 module.exports = {
 	addPluginCommand,

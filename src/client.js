@@ -374,7 +374,7 @@ Client.prototype.inputLine = function(data) {
 		if (typeof plugin.input === "function" && (connected || plugin.allowDisconnected)) {
 			connected = true;
 			plugin.input(
-				new PublicClient(client),
+				new PublicClient(client, plugin.packageInfo),
 				{network: target.network, chan: target.chan},
 				cmd,
 				args
