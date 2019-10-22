@@ -84,6 +84,11 @@ Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 		return;
 	}
 
+	// showInActive is only processed on "msg", don't need it on page reload
+	if (msg.showInActive) {
+		delete msg.showInActive;
+	}
+
 	this.writeUserLog(client, msg);
 
 	if (Helper.config.maxHistory >= 0 && this.messages.length > Helper.config.maxHistory) {

@@ -39,7 +39,13 @@ socket.on("msg", function(data) {
 	) {
 		channel = vueApp.activeChannel.channel;
 
-		data.chan = channel.id;
+		if (data.chan === channel.id) {
+			// If active channel is the intended channel for this message,
+			// remove the showInActive flag
+			data.msg.showInActive = false;
+		} else {
+			data.chan = channel.id;
+		}
 	} else if (!isActiveChannel) {
 		// Do not set unread counter for channel if it is currently active on this client
 		// It may increase on the server before it processes channel open event from this client
