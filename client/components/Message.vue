@@ -43,7 +43,7 @@
 			<span v-else-if="message.type === 'plugin'" class="from">
 				<template v-if="message.from && message.from.nick">
 					<span class="only-copy">[</span>
-					*{{ message.from.nick }}
+					{{ message.from.nick }}
 					<span class="only-copy">] </span>
 				</template>
 			</span>
