@@ -1,3 +1,5 @@
+const Msg = require("../../models/msg");
+
 module.exports = class PublicClient {
 	constructor(client) {
 		this.client = client;
@@ -36,5 +38,25 @@ module.exports = class PublicClient {
 	 */
 	getChannel(chanId) {
 		return this.client.find(chanId);
+	}
+
+	/**
+	 * Sends a message to this client, displayed in the given channel.
+	 *
+	 * @param {String} text the message to send
+	 * @param {Chan} chan the channel to send the message to
+	 * @param {String} identifier the identifier/name of the packages that is sending this message
+	 */
+	sendMessage(text, chan, identifier) {
+		chan.pushMessage(
+			this.client,
+			new Msg({
+				type: Msg.Type.PLUGIN,
+				text: text,
+				from: {
+					nick: identifier,
+				},
+			})
+		);
 	}
 };
