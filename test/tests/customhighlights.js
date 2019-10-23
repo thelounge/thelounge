@@ -1,12 +1,22 @@
 "use strict";
 
 const expect = require("chai").expect;
-
+const stub = require("sinon").stub;
+const log = require("../../src/log");
 const Client = require("../../src/client");
-
-const client = new Client({}, "test", {clientSettings: {highlights: "foo, @all,   sp ace   , 고"}});
+const TestUtil = require("../util");
 
 describe("Custom highlights", function() {
+	let userLoadedLog = "";
+	stub(log, "info").callsFake(TestUtil.sanitizeLog((str) => (userLoadedLog += str)));
+
+	const client = new Client({}, "test", {
+		clientSettings: {highlights: "foo, @all,   sp ace   , 고"},
+	});
+
+	log.info.restore();
+	expect(userLoadedLog).to.equal("User test loaded\n");
+
 	it("should NOT highlight", function() {
 		const teststrings = [
 			"and foos stuff",
