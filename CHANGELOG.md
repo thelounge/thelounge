@@ -4,6 +4,86 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v3.3.0 - 2019-10-28
+
+For more details, [see the full changelog](https://github.com/thelounge/thelounge/compare/v3.2.0...v3.3.0) and [milestone](https://github.com/thelounge/thelounge/milestone/33?closed=1).
+
+This is a minor release aimed at mostly fixing bugs and increasing stability.
+
+**This release bumps required Node.js version to at least 10.16.3 or higher.**
+We suggest updating to Node.js v12, which is the latest LTS version.
+
+Feature wise, there are a couple of things that have been added.
+If you reconnect to a network and the nick you want is in use,
+The Lounge will now attempt to regain your original nick if it sees that nick quit the network.
+
+The `/join` command will now prefix channel names if there is no prefix. For example,
+you can execute `/join thelounge`, and client will automatically turn that into `#thelounge`
+_(first prefix from CHANTYPES is taken)_.
+
+We have been working heavily on porting the client code base to the Vue.js framework,
+and hope to have it ready for release soon™.
+
+### Added
+
+- Implement keep nick when client gets "nick in use" on connection ([#3404](https://github.com/thelounge/thelounge/pull/3404) by [@xPaw](https://github.com/xPaw))
+- Add public files for plugins ([#3432](https://github.com/thelounge/thelounge/pull/3432) by [@McInkay](https://github.com/McInkay))
+- Set correct file owner for created user files and warn about it ([#3416](https://github.com/thelounge/thelounge/pull/3416) by [@xPaw](https://github.com/xPaw))
+- Prefix channel before join ([#3438](https://github.com/thelounge/thelounge/pull/3438) by [@FryDay](https://github.com/FryDay))
+
+### Fixed
+
+- Allow tab completion in middle of input ([#3437](https://github.com/thelounge/thelounge/pull/3437) by [@FryDay](https://github.com/FryDay))
+- Fix condensed messages closing when a new status message is added ([#3435](https://github.com/thelounge/thelounge/pull/3435) by [@FryDay](https://github.com/FryDay))
+- Synchronize user list correctly on reconnection ([#3453](https://github.com/thelounge/thelounge/pull/3453) by [@xPaw](https://github.com/xPaw))
+- Synchronize open channel on client on reconnection ([#3461](https://github.com/thelounge/thelounge/pull/3461) by [@xPaw](https://github.com/xPaw))
+- Fix history not loading in certain cases after reconnect ([#3460](https://github.com/thelounge/thelounge/pull/3460) by [@xPaw](https://github.com/xPaw))
+- Do not print "no packages" warning when opening help on client ([#3458](https://github.com/thelounge/thelounge/pull/3458) by [@xPaw](https://github.com/xPaw))
+- Fix uploader being initialized more than once ([#3467](https://github.com/thelounge/thelounge/pull/3467) by [@xPaw](https://github.com/xPaw))
+
+### Changed
+
+- Increase contrast of headers in windows ([#3451](https://github.com/thelounge/thelounge/pull/3451) by [@xPaw](https://github.com/xPaw))
+- Use default cursor for active channels ([#3364](https://github.com/thelounge/thelounge/pull/3364) by [@xPaw](https://github.com/xPaw))
+- Update context and auto complete menu styles ([#3466](https://github.com/thelounge/thelounge/pull/3466) by [@xPaw](https://github.com/xPaw))
+- Update production dependencies to their latest versions:
+  - `sqlite3` ([#3367](https://github.com/thelounge/thelounge/pull/3367))
+  - `file-type` ([#3370](https://github.com/thelounge/thelounge/pull/3370), [#3389](https://github.com/thelounge/thelounge/pull/3389), [#3468](https://github.com/thelounge/thelounge/pull/3468))
+  - `uuid` ([#3374](https://github.com/thelounge/thelounge/pull/3374))
+  - `commander` ([#3384](https://github.com/thelounge/thelounge/pull/3384), [#3422](https://github.com/thelounge/thelounge/pull/3422))
+  - `socket.io` ([#3408](https://github.com/thelounge/thelounge/pull/3408))
+  - `web-push` ([#3424](https://github.com/thelounge/thelounge/pull/3424), [#3472](https://github.com/thelounge/thelounge/pull/3472))
+  - `yarn` ([#3426](https://github.com/thelounge/thelounge/pull/3426), [#3441](https://github.com/thelounge/thelounge/pull/3441))
+
+### Internals
+
+- Add `data-current-channel` to `#chat-container` ([#3366](https://github.com/thelounge/thelounge/pull/3366) by [@gunnvaldr](https://github.com/gunnvaldr))
+- Some fixes in file uploading ([#3382](https://github.com/thelounge/thelounge/pull/3382) by [@xPaw](https://github.com/xPaw))
+- Add GitHub actions for CI ([#3393](https://github.com/thelounge/thelounge/pull/3393) by [@xPaw](https://github.com/xPaw))
+- Bump minimum node version to v10 ([#3392](https://github.com/thelounge/thelounge/pull/3392) by [@xPaw](https://github.com/xPaw))
+- Print error and stacktrace when package fails to load ([#3406](https://github.com/thelounge/thelounge/pull/3406) by [@xPaw](https://github.com/xPaw))
+- Let OS generate a port in link prefetch tests ([#3436](https://github.com/thelounge/thelounge/pull/3436) by [@xPaw](https://github.com/xPaw))
+- Bump ecmaVersion to 2018 ([#3465](https://github.com/thelounge/thelounge/pull/3465) by [@xPaw](https://github.com/xPaw))
+- Extract updated packages from pull request body ([#3455](https://github.com/thelounge/thelounge/pull/3455) by [@xPaw](https://github.com/xPaw))
+- Hide user loaded message in tests ([#3473](https://github.com/thelounge/thelounge/pull/3473) by [@xPaw](https://github.com/xPaw))
+- Update development dependencies to their latest versions:
+  - `husky` ([#3368](https://github.com/thelounge/thelounge/pull/3368), [#3386](https://github.com/thelounge/thelounge/pull/3386), [#3425](https://github.com/thelounge/thelounge/pull/3425), [#3447](https://github.com/thelounge/thelounge/pull/3447))
+  - `eslint` ([#3371](https://github.com/thelounge/thelounge/pull/3371), [#3379](https://github.com/thelounge/thelounge/pull/3379), [#3385](https://github.com/thelounge/thelounge/pull/3385), [#3401](https://github.com/thelounge/thelounge/pull/3401), [#3427](https://github.com/thelounge/thelounge/pull/3427))
+  - `webpack` ([#3365](https://github.com/thelounge/thelounge/pull/3365), [#3383](https://github.com/thelounge/thelounge/pull/3383), [#3400](https://github.com/thelounge/thelounge/pull/3400), [#3417](https://github.com/thelounge/thelounge/pull/3417), [#3445](https://github.com/thelounge/thelounge/pull/3445), [#3452](https://github.com/thelounge/thelounge/pull/3452))
+  - `webpack-cli` ([#3369](https://github.com/thelounge/thelounge/pull/3369), [#3394](https://github.com/thelounge/thelounge/pull/3394), [#3405](https://github.com/thelounge/thelounge/pull/3405))
+  - `mochapack` ([#3377](https://github.com/thelounge/thelounge/pull/3377), [#3411](https://github.com/thelounge/thelounge/pull/3411))
+  - `eslint-config-prettier` ([#3375](https://github.com/thelounge/thelounge/pull/3375), [#3388](https://github.com/thelounge/thelounge/pull/3388), [#3397](https://github.com/thelounge/thelounge/pull/3397), [#3440](https://github.com/thelounge/thelounge/pull/3440))
+  - `@fortawesome/fontawesome-free` ([#3378](https://github.com/thelounge/thelounge/pull/3378), [#3407](https://github.com/thelounge/thelounge/pull/3407), [#3413](https://github.com/thelounge/thelounge/pull/3413))
+  - `sinon` ([#3387](https://github.com/thelounge/thelounge/pull/3387), [#3412](https://github.com/thelounge/thelounge/pull/3412))
+  - `@babel/core` ([#3395](https://github.com/thelounge/thelounge/pull/3395), [#3414](https://github.com/thelounge/thelounge/pull/3414), [#3442](https://github.com/thelounge/thelounge/pull/3442))
+  - `@babel/preset-env` ([#3395](https://github.com/thelounge/thelounge/pull/3395), [#3414](https://github.com/thelounge/thelounge/pull/3414), [#3442](https://github.com/thelounge/thelounge/pull/3442))
+  - `stylelint` ([#3402](https://github.com/thelounge/thelounge/pull/3402), [#3443](https://github.com/thelounge/thelounge/pull/3443))
+  - `stylelint-config-standard` ([#3403](https://github.com/thelounge/thelounge/pull/3403))
+  - `socket.io-client` ([#3408](https://github.com/thelounge/thelounge/pull/3408))
+  - `vuedraggable` ([#3410](https://github.com/thelounge/thelounge/pull/3410), [#3431](https://github.com/thelounge/thelounge/pull/3431))
+  - `mocha` ([#3428](https://github.com/thelounge/thelounge/pull/3428), [#3464](https://github.com/thelounge/thelounge/pull/3464))
+  - `pretty-quick` ([#3448](https://github.com/thelounge/thelounge/pull/3448))
+
 ## v3.3.0-rc.2 - 2019-10-23 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v3.3.0-rc.1...v3.3.0-rc.2)
