@@ -49,7 +49,7 @@ socket.on("configuration", function(data) {
 	});
 
 	if (data.fileUpload) {
-		upload.setMaxFileSize(data.fileUploadMaxFileSize);
+		upload.initialize(data.fileUploadMaxFileSize);
 	}
 
 	utils.togglePasswordField("#change-password .reveal-password");
