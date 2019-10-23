@@ -65,8 +65,7 @@ export default {
 			);
 
 			if (existingChannel) {
-				const $ = require("jquery");
-				$(`#sidebar .chan[data-id="${existingChannel.id}"]`).trigger("click");
+				this.$router.push("chan-" + existingChannel.id);
 			} else {
 				const chanTypes = this.network.serverOptions.CHANTYPES;
 				let channel = this.inputChannel;
