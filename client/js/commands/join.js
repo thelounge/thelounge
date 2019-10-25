@@ -1,7 +1,5 @@
 "use strict";
 
-const $ = require("jquery");
-
 exports.input = function(args) {
 	const utils = require("../utils");
 	const socket = require("../socket");
@@ -27,7 +25,7 @@ exports.input = function(args) {
 			const chan = utils.findCurrentNetworkChan(channels);
 
 			if (chan) {
-				$(`#sidebar .chan[data-id="${chan.id}"]`).trigger("click");
+				vueApp.$router.push("chan-" + chan.id);
 			} else {
 				socket.emit("input", {
 					text: `/join ${channels} ${args.length > 1 ? args[1] : ""}`,

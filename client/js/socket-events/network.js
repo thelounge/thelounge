@@ -2,7 +2,6 @@
 
 const $ = require("jquery");
 const socket = require("../socket");
-const sidebar = $("#sidebar");
 const {vueApp, initChannel, findChannel} = require("../vue");
 
 socket.on("network", function(data) {
@@ -13,13 +12,7 @@ socket.on("network", function(data) {
 	network.channels.forEach(initChannel);
 
 	vueApp.networks.push(network);
-
-	vueApp.$nextTick(() => {
-		sidebar
-			.find(".chan")
-			.last()
-			.trigger("click");
-	});
+	vueApp.$router.push("chan-" + network.channels[0].id);
 
 	$("#connect")
 		.find(".btn")

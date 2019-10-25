@@ -90,7 +90,7 @@ Mousetrap.bind(["alt+a"], function() {
 	}
 
 	if (targetchan) {
-		$(`#sidebar .chan[data-id="${targetchan.id}"]`).trigger("click");
+		vueApp.$router.push("chan-" + targetchan.id);
 	}
 
 	return false;

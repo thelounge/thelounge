@@ -1,6 +1,5 @@
 "use strict";
 
-const $ = require("jquery");
 const socket = require("../socket");
 const {vueApp, initChannel} = require("../vue");
 
@@ -16,7 +15,5 @@ socket.on("join", function(data) {
 		return;
 	}
 
-	vueApp.$nextTick(() => {
-		$(`#sidebar .chan[data-id="${data.chan.id}"]`).trigger("click");
-	});
+	vueApp.$router.push("chan-" + data.chan.id);
 });

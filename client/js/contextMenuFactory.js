@@ -50,7 +50,7 @@ function addWhoisItem() {
 		const chan = utils.findCurrentNetworkChan(itemData);
 
 		if (chan) {
-			$(`#sidebar .chan[data-id="${chan.id}"]`).trigger("click");
+			vueApp.$router.push("chan-" + chan.id);
 		}
 
 		socket.emit("input", {
@@ -85,7 +85,7 @@ function addQueryItem() {
 		const chan = utils.findCurrentNetworkChan(itemData);
 
 		if (chan) {
-			$(`#sidebar .chan[data-id="${chan.id}"]`).trigger("click");
+			vueApp.$router.push("chan-" + chan.id);
 		}
 
 		socket.emit("input", {
