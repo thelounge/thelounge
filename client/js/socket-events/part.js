@@ -6,7 +6,7 @@ const {vueApp, findChannel} = require("../vue");
 socket.on("part", function(data) {
 	// When parting from the active channel/query, jump to the network's lobby
 	if (vueApp.activeChannel && vueApp.activeChannel.channel.id === data.chan) {
-		vueApp.$router.push("chan-" + vueApp.activeChannel.network.id);
+		vueApp.switchToChannel(vueApp.activeChannel.network);
 	}
 
 	const channel = findChannel(data.chan);

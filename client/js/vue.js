@@ -102,6 +102,13 @@ const vueApp = new Vue({
 
 			return null;
 		},
+		switchToChannel(channel) {
+			if (this.activeChannel && this.activeChannel.channel.id === channel.id) {
+				return;
+			}
+
+			this.$router.push("chan-" + channel.id);
+		},
 		switchOutOfChannel(channel) {
 			// When switching out of a channel, mark everything as read
 			if (channel.messages.length > 0) {

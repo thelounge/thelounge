@@ -90,7 +90,7 @@ Mousetrap.bind(["alt+a"], function() {
 	}
 
 	if (targetchan) {
-		vueApp.$router.push("chan-" + targetchan.id);
+		vueApp.switchToChannel(targetchan);
 	}
 
 	return false;

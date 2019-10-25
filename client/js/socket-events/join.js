@@ -15,5 +15,5 @@ socket.on("join", function(data) {
 		return;
 	}
 
-	vueApp.$router.push("chan-" + data.chan.id);
+	vueApp.switchToChannel(vueApp.findChannel(data.chan.id));
 });

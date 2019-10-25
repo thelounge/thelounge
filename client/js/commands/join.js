@@ -25,7 +25,7 @@ exports.input = function(args) {
 			const chan = utils.findCurrentNetworkChan(channels);
 
 			if (chan) {
-				vueApp.$router.push("chan-" + chan.id);
+				vueApp.switchToChannel(chan);
 			} else {
 				socket.emit("input", {
 					text: `/join ${channels} ${args.length > 1 ? args[1] : ""}`,

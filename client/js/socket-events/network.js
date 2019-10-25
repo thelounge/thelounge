@@ -12,7 +12,7 @@ socket.on("network", function(data) {
 	network.channels.forEach(initChannel);
 
 	vueApp.networks.push(network);
-	vueApp.$router.push("chan-" + network.channels[0].id);
+	vueApp.switchToChannel(network.channels[0]);
 
 	$("#connect")
 		.find(".btn")

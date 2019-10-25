@@ -82,8 +82,7 @@ export default {
 			return this.channel.name;
 		},
 		click() {
-			// TODO: Find out why this sometimes throws `uncaught exception: Object`
-			this.$router.push("chan-" + this.channel.id);
+			this.$root.switchToChannel(this.channel);
 		},
 	},
 };
