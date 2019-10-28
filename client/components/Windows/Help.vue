@@ -10,7 +10,7 @@
 				<small class="pull-right">
 					v{{ $root.serverConfiguration.version }} (<router-link
 						id="view-changelog"
-						to="changelog"
+						to="/changelog"
 						>release notes</router-link
 					>)
 				</small>

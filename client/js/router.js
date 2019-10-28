@@ -9,6 +9,7 @@ const Connect = require("../components/Windows/Connect.vue").default;
 const Settings = require("../components/Windows/Settings.vue").default;
 const Help = require("../components/Windows/Help.vue").default;
 const Changelog = require("../components/Windows/Changelog.vue").default;
+const NetworkEdit = require("../components/Windows/NetworkEdit.vue").default;
 const RoutedChat = require("../components/RoutedChat.vue").default;
 
 const router = new VueRouter({
@@ -51,6 +52,14 @@ const router = new VueRouter({
 			meta: {
 				isChat: false,
 				windowName: "Changelog",
+			},
+		},
+		{
+			path: "/edit-network/:uuid",
+			component: NetworkEdit,
+			meta: {
+				isChat: false,
+				windowName: "NetworkEdit",
 			},
 		},
 		{

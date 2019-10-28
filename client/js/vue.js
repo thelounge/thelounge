@@ -102,12 +102,21 @@ const vueApp = new Vue({
 
 			return null;
 		},
+		findNetwork(uuid) {
+			for (const network of this.networks) {
+				if (network.uuid === uuid) {
+					return network;
+				}
+			}
+
+			return null;
+		},
 		switchToChannel(channel) {
 			if (this.activeChannel && this.activeChannel.channel.id === channel.id) {
 				return;
 			}
 
-			this.$router.push("chan-" + channel.id);
+			this.$router.push("/chan-" + channel.id);
 		},
 		switchOutOfChannel(channel) {
 			// When switching out of a channel, mark everything as read

@@ -4,7 +4,7 @@
 			<SidebarToggle />
 		</div>
 		<div class="container">
-			<router-link id="back-to-help" to="help">« Help</router-link>
+			<router-link id="back-to-help" to="/help">« Help</router-link>
 
 			<template
 				v-if="

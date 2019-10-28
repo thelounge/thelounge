@@ -290,8 +290,8 @@ function addFocusItem() {
 }
 
 function addEditNetworkItem() {
-	function edit(itemData) {
-		socket.emit("network:get", itemData);
+	function edit(networkUuid) {
+		vueApp.$router.push("/edit-network/" + networkUuid);
 	}
 
 	addContextMenuItem({

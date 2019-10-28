@@ -1,8 +1,8 @@
 <template>
 	<NetworkForm
-		v-if="$store.state.currentNetworkConfig"
+		v-if="networkData"
 		:handle-submit="handleSubmit"
-		:defaults="$store.state.currentNetworkConfig"
+		:defaults="networkData"
 		:disabled="disabled"
 	/>
 </template>
@@ -21,9 +21,21 @@ export default {
 	data() {
 		return {
 			disabled: false,
+			networkData: null,
 		};
 	},
+	watch: {
+		"$route.params.uuid"() {
+			this.setNetworkData();
+		},
+	},
+	mounted() {
+		this.setNetworkData();
+	},
 	methods: {
+		setNetworkData() {
+			this.networkData = this.$root.findNetwork(this.$route.params.uuid);
+		},
 		handleSubmit(data) {
 			this.disabled = true;
 			socket.emit("network:edit", data);
@@ -32,7 +44,6 @@ export default {
 			// TODO: move networks to vuex and update state when the network info comes in
 			const network = this.$root.networks.find((n) => n.uuid === data.uuid);
 			network.name = network.channels[0].name = data.name;
-
 			sidebar.find(`.network[data-uuid="${data.uuid}"] .chan.lobby .name`).click();
 		},
 	},
