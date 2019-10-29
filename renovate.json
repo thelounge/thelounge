@@ -3,5 +3,15 @@
   "ignorePaths": ["test/"],
   "labels": ["Type: Dependencies"],
   "rebaseStalePrs": true,
-  "statusCheckVerify": true
+  "statusCheckVerify": true,
+  "stabilityDays": 1,
+  "vulnerabilityAlerts": {
+    "labels": ["Type: Security"]
+  },
+  "packageRules": [
+    {
+      "depTypeList": ["devDependencies"],
+      "extends": ["schedule:weekends"]
+    }
+  ]
 }
