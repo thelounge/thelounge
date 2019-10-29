@@ -4407,10 +4407,10 @@ ipaddr.js@1.9.0:
   resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.9.0.tgz#37df74e430a0e47550fe54a2defe30d8acd95f65"
   integrity sha512-M4Sjn6N/+O6/IXSJseKqHoFc+5FdGJ22sXqnjTpdZweHK64MzEPAyQZyEU3R/KRv2GLoa7nNtg/C2Ev6m7z+eA==
 
-irc-framework@4.4.0:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/irc-framework/-/irc-framework-4.4.0.tgz#ab0c16ab293f092d4d450d76dae8d0c3181e436f"
-  integrity sha512-81ZjeFg0J+OdwGO4S90f8/GpwNwIcP9KaCt0lvRqt1GueT7cKPX2v1yiRML3cJXofkz/MsVZqJCnAEThYYaTUQ==
+irc-framework@4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/irc-framework/-/irc-framework-4.5.0.tgz#e1388d5fae5f2afe92d6634f67e9107d15728d40"
+  integrity sha512-EY2XqV/rswMirkM8IZMsoilnCuUq1F+3PlAzF04L0YML7z75NzWcmDacGbXYT8AqkmZRLamtJM2rtHZAw/MxGg==
   dependencies:
     core-js "^3.0.1"
     eventemitter3 "^2.0.2"
