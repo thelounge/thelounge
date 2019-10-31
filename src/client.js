@@ -61,7 +61,6 @@ function Client(manager, name, config = {}) {
 	});
 
 	const client = this;
-	let delay = 0;
 
 	if (!Helper.config.public && client.config.log) {
 		if (Helper.config.messageStorage.includes("sqlite")) {
@@ -77,12 +76,11 @@ function Client(manager, name, config = {}) {
 		}
 	}
 
-	(client.config.networks || []).forEach((n) => {
-		setTimeout(function() {
-			client.connect(n);
-		}, delay);
-		delay += 1000;
-	});
+	(client.config.networks || []).forEach((network) => client.connect(network, true));
+
+	// Networks are stored directly in the client object
+	// We don't need to keep it in the config object
+	delete client.config.networks;
 
 	if (typeof client.config.sessions !== "object") {
 		client.config.sessions = {};
@@ -106,6 +104,21 @@ function Client(manager, name, config = {}) {
 
 	if (client.name) {
 		log.info(`User ${colors.bold(client.name)} loaded`);
+
+		// Networks are created instantly, but to reduce server load on startup
+		// We randomize the IRC connections and channel log loading
+		let delay = manager.clients.length * 500;
+		client.networks.forEach((network) => {
+			setTimeout(() => {
+				network.channels.forEach((channel) => channel.loadMessages(client, network));
+
+				if (!network.userDisconnected && network.irc) {
+					network.irc.connect();
+				}
+			}, delay);
+
+			delay += 1000 + Math.floor(Math.random() * 1000);
+		});
 	}
 }
 
@@ -143,7 +156,7 @@ Client.prototype.find = function(channelId) {
 	return false;
 };
 
-Client.prototype.connect = function(args) {
+Client.prototype.connect = function(args, isStartup = false) {
 	const client = this;
 	let channels = [];
 
@@ -240,13 +253,14 @@ Client.prototype.connect = function(args) {
 			}),
 			true
 		);
-	} else {
+	} else if (!isStartup) {
 		network.irc.connect();
 	}
 
-	client.save();
-
-	channels.forEach((channel) => channel.loadMessages(client, network));
+	if (!isStartup) {
+		client.save();
+		channels.forEach((channel) => channel.loadMessages(client, network));
+	}
 };
 
 Client.prototype.generateToken = function(callback) {
