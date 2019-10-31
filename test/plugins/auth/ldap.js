@@ -150,6 +150,11 @@ describe("LDAP authentication plugin", function() {
 		Helper.config.ldap.primaryKey = primaryKey;
 	});
 
+	afterEach(function() {
+		Helper.config.public = true;
+		Helper.config.ldap.enable = false;
+	});
+
 	describe("LDAP authentication availability", function() {
 		it("checks that the configuration is correctly tied to isEnabled()", function() {
 			Helper.config.ldap.enable = true;
