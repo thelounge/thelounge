@@ -135,6 +135,16 @@ function setHome(newPath) {
 		);
 	}
 
+	if (this.config.fileUpload.baseUrl) {
+		try {
+			new URL("test/file.png", this.config.fileUpload.baseUrl);
+		} catch (e) {
+			this.config.fileUpload.baseUrl = null;
+
+			log.warn(`The ${colors.bold("fileUpload.baseUrl")} you specified is invalid: ${e}`);
+		}
+	}
+
 	const manifestPath = path.resolve(
 		path.join(__dirname, "..", "public", "thelounge.webmanifest")
 	);

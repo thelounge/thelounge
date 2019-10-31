@@ -179,7 +179,13 @@ class Uploader {
 		streamWriter.on("error", abortWithError);
 
 		busboyInstance.on("file", (fieldname, fileStream, filename) => {
-			uploadUrl = `uploads/${randomName}/${encodeURIComponent(filename)}`;
+			uploadUrl = `${randomName}/${encodeURIComponent(filename)}`;
+
+			if (Helper.config.fileUpload.baseUrl) {
+				uploadUrl = new URL(uploadUrl, Helper.config.fileUpload.baseUrl).toString();
+			} else {
+				uploadUrl = `uploads/${uploadUrl}`;
+			}
 
 			// if the busboy data stream errors out or goes over the file size limit
 			// abort the processing with an error
