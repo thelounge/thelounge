@@ -1,5 +1,5 @@
 <template>
-	<div v-if="link.shown" v-show="link.canDisplay" ref="container" class="preview">
+	<div v-if="link.shown" v-show="link.canDisplay" ref="container" class="preview" dir="ltr">
 		<div
 			ref="content"
 			:class="['toggle-content', 'toggle-type-' + link.type, {opened: isContentShown}]"
@@ -22,7 +22,7 @@
 						@load="onPreviewReady"
 					/>
 				</a>
-				<div class="toggle-text">
+				<div class="toggle-text" dir="auto">
 					<div class="head">
 						<div class="overflowable">
 							<a
@@ -38,6 +38,7 @@
 							v-if="showMoreButton"
 							:aria-expanded="isContentShown"
 							:aria-label="moreButtonLabel"
+							dir="auto"
 							class="more"
 							@click="onMoreClick"
 						>

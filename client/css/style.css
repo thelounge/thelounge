@@ -1300,6 +1300,7 @@ background on hover (unless active) */
 	padding-right: 6px;
 	border-left: 1px solid #f6f6f6;
 	overflow: hidden; /* Prevents Zalgo text to expand beyond messages */
+	text-align: left; /* so RTL text will still be aligned left, not right */
 }
 
 #chat .unhandled .from {
@@ -1537,6 +1538,7 @@ background on hover (unless active) */
 #chat .toggle-content .toggle-text {
 	white-space: nowrap;
 	overflow: hidden;
+	text-align: initial;
 }
 
 #chat .toggle-content.opened .toggle-text {

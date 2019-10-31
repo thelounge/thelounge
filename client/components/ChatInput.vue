@@ -4,6 +4,7 @@
 		<textarea
 			id="input"
 			ref="input"
+			dir="auto"
 			:value="channel.pendingMessage"
 			:placeholder="getInputPlaceholder(channel)"
 			:aria-label="getInputPlaceholder(channel)"
