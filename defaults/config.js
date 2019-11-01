@@ -154,9 +154,16 @@ module.exports = {
 	//   this limit will be prompted with an error message in their browser. A value of
 	//   `-1` disables the file size limit and allows files of any size. **Use at
 	//   your own risk.** This value is set to `10240` kilobytes by default.
+	// - `baseUrl`: If you want change the URL where uploaded files are accessed,
+	//   you can set this option to `"https://example.com/folder/"` and the final URL
+	//   would look like `"https://example.com/folder/aabbccddeeff1234/name.png"`.
+	//   If you use this option, you must have a reverse proxy configured,
+	//   to correctly proxy the uploads URLs back to The Lounge.
+	//   This value is set to `null` by default.
 	fileUpload: {
 		enable: false,
 		maxFileSize: 10240,
+		baseUrl: null,
 	},
 
 	// ### `transports`
