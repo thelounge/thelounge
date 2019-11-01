@@ -1,7 +1,10 @@
 "use strict";
 
+if (!require("../../helper").config.ldap.enable) {
+	require("./add");
+	require("./reset");
+}
+
 require("./list");
-require("./add");
 require("./remove");
-require("./reset");
 require("./edit");
