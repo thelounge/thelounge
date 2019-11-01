@@ -52,11 +52,6 @@ describe("Server", function() {
 
 		let client;
 
-		before((done) => {
-			Helper.config.public = true;
-			done();
-		});
-
 		beforeEach(() => {
 			client = io(webURL, {
 				path: "/socket.io/",

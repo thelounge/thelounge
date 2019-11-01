@@ -56,6 +56,10 @@ describe("Image storage", function() {
 		Helper.config.prefetchStorage = true;
 	});
 
+	afterEach(function() {
+		Helper.config.prefetchStorage = false;
+	});
+
 	it("should store the thumbnail", function(done) {
 		const port = this.port;
 		const message = this.irc.createMessage({

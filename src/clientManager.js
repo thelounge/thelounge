@@ -20,8 +20,14 @@ ClientManager.prototype.init = function(identHandler, sockets) {
 	this.identHandler = identHandler;
 	this.webPush = new WebPush();
 
-	if (!Helper.config.public && !Helper.config.ldap.enable) {
-		this.autoloadUsers();
+	if (!Helper.config.public) {
+		this.loadUsers();
+
+		// LDAP does not have user commands, and users are dynamically
+		// created upon logon, so we don't need to watch for new files
+		if (!Helper.config.ldap.enable) {
+			this.autoloadUsers();
+		}
 	}
 };
 
@@ -29,18 +35,19 @@ ClientManager.prototype.findClient = function(name) {
 	return this.clients.find((u) => u.name === name);
 };
 
-ClientManager.prototype.autoloadUsers = function() {
+ClientManager.prototype.loadUsers = function() {
 	const users = this.getUsers();
-	const noUsersWarning = `There are currently no users. Create one with ${colors.bold(
-		"thelounge add <name>"
-	)}.`;
 
 	if (users.length === 0) {
-		log.info(noUsersWarning);
+		log.info(
+			`There are currently no users. Create one with ${colors.bold("thelounge add <name>")}.`
+		);
 	}
 
 	users.forEach((name) => this.loadUser(name));
+};
 
+ClientManager.prototype.autoloadUsers = function() {
 	fs.watch(
 		Helper.getUsersPath(),
 		_.debounce(
@@ -49,7 +56,11 @@ ClientManager.prototype.autoloadUsers = function() {
 				const updatedUsers = this.getUsers();
 
 				if (updatedUsers.length === 0) {
-					log.info(noUsersWarning);
+					log.info(
+						`There are currently no users. Create one with ${colors.bold(
+							"thelounge add <name>"
+						)}.`
+					);
 				}
 
 				// Reload all users. Existing users will only have their passwords reloaded.
