@@ -60,7 +60,7 @@ require("./outdated");
 // See https://github.com/tj/commander.js/blob/fefda77f463292/index.js#L686-L763
 program.parse(argvWithoutOptions.args.concat(argvWithoutOptions.unknown));
 
-if (!program.args.length) {
+if (program.rawArgs.length < 3) {
 	program.help();
 }
 
