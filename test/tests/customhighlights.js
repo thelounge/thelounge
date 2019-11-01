@@ -10,9 +10,15 @@ describe("Custom highlights", function() {
 	let userLoadedLog = "";
 	stub(log, "info").callsFake(TestUtil.sanitizeLog((str) => (userLoadedLog += str)));
 
-	const client = new Client({}, "test", {
-		clientSettings: {highlights: "foo, @all,   sp ace   , 고"},
-	});
+	const client = new Client(
+		{
+			clients: [],
+		},
+		"test",
+		{
+			clientSettings: {highlights: "foo, @all,   sp ace   , 고"},
+		}
+	);
 
 	log.info.restore();
 	expect(userLoadedLog).to.equal("User test loaded\n");
