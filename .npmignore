@@ -19,4 +19,5 @@ scripts/
 test/
 appveyor.yml
 webpack.config*.js
+postcss.config.js
 renovate.json

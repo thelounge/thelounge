@@ -41,7 +41,14 @@ const config = {
 						loader: "css-loader",
 						options: {
 							url: false,
-							minimize: process.env.NODE_ENV === "production",
+							importLoaders: 1,
+							sourceMap: true,
+						},
+					},
+					{
+						loader: "postcss-loader",
+						options: {
+							sourceMap: true,
 						},
 					},
 				],
@@ -52,16 +59,7 @@ const config = {
 				use: {
 					loader: "babel-loader",
 					options: {
-						presets: [
-							[
-								"@babel/env",
-								{
-									targets: {
-										browsers: ["last 1 year", "firefox esr"],
-									},
-								},
-							],
-						],
+						presets: [["@babel/env"]],
 					},
 				},
 			},
