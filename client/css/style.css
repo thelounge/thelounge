@@ -264,6 +264,7 @@ kbd {
 #chat .whois .from::before,
 #chat .nick .from::before,
 #chat .action .from::before,
+#chat .plugin .from::before,
 #chat .raw .from::before,
 #chat .toggle-button::after,
 #chat .toggle-content .more-caret::before,
@@ -424,6 +425,13 @@ kbd {
 
 #chat .action .from::before {
 	content: "\f005"; /* http://fontawesome.io/icon/star/ */
+}
+
+#chat .plugin .from::before {
+	content: "\f1e6"; /* http://fontawesome.io/icon/plug/ */
+	transform: rotate(45deg);
+	display: inline-block;
+	padding: 1px;
 }
 
 #chat .toggle-button {
