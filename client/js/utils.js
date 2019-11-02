@@ -2,7 +2,7 @@
 
 const $ = require("jquery");
 const escape = require("css.escape");
-const {vueApp} = require("./vue");
+const store = require("./store").default;
 
 var serverHash = -1; // eslint-disable-line no-var
 
@@ -11,14 +11,13 @@ module.exports = {
 	serverHash,
 	scrollIntoViewNicely,
 	hasRoleInChannel,
-	move,
 	requestIdleCallback,
 };
 
 function findCurrentNetworkChan(name) {
 	name = name.toLowerCase();
 
-	return vueApp.activeChannel.network.channels.find((c) => c.name.toLowerCase() === name);
+	return store.state.activeChannel.network.channels.find((c) => c.name.toLowerCase() === name);
 }
 
 // Given a channel element will determine if the lounge user or a given nick is one of the supplied roles.
@@ -39,19 +38,6 @@ function scrollIntoViewNicely(el) {
 	// Ideally this would use behavior: "smooth", but that does not consistently work in e.g. Chrome
 	// https://github.com/iamdustan/smoothscroll/issues/28#issuecomment-364061459
 	el.scrollIntoView({block: "center", inline: "nearest"});
-}
-
-function move(array, old_index, new_index) {
-	if (new_index >= array.length) {
-		let k = new_index - array.length;
-
-		while (k-- + 1) {
-			this.push(undefined);
-		}
-	}
-
-	array.splice(new_index, 0, array.splice(old_index, 1)[0]);
-	return array;
 }
 
 function requestIdleCallback(callback, timeout) {

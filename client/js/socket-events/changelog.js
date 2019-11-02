@@ -1,11 +1,11 @@
 "use strict";
 
 const socket = require("../socket");
-const {vueApp} = require("../vue");
+const store = require("../store").default;
 
 socket.on("changelog", function(data) {
-	vueApp.$store.commit("versionData", data);
-	vueApp.$store.commit("versionDataExpired", false);
+	store.commit("versionData", data);
+	store.commit("versionDataExpired", false);
 
 	let status;
 
@@ -19,14 +19,11 @@ socket.on("changelog", function(data) {
 		status = "error";
 	}
 
-	vueApp.$store.commit("versionStatus", status);
+	store.commit("versionStatus", status);
 
 	// When there is a button to refresh the checker available, display it when
 	// data is expired. Before that, server would return same information anyway.
 	if (data.expiresAt) {
-		setTimeout(
-			() => vueApp.$store.commit("versionDataExpired", true),
-			data.expiresAt - Date.now()
-		);
+		setTimeout(() => store.commit("versionDataExpired", true), data.expiresAt - Date.now());
 	}
 });

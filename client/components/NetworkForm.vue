@@ -210,7 +210,7 @@ export default {
 	},
 	data() {
 		return {
-			config: this.$root.serverConfiguration,
+			config: this.$store.state.serverConfiguration,
 		};
 	},
 	methods: {

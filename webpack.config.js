@@ -10,7 +10,7 @@ const Helper = require("./src/helper.js");
 const config = {
 	mode: process.env.NODE_ENV === "production" ? "production" : "development",
 	entry: {
-		"js/bundle.js": [path.resolve(__dirname, "client/js/lounge.js")],
+		"js/bundle.js": [path.resolve(__dirname, "client/js/vue.js")],
 		"css/style": path.resolve(__dirname, "client/css/style.css"),
 	},
 	devtool: "source-map",

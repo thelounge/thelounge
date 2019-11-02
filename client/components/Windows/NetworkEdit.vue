@@ -43,7 +43,7 @@ export default {
 
 			const sidebar = $("#sidebar");
 			// TODO: move networks to vuex and update state when the network info comes in
-			const network = this.$root.networks.find((n) => n.uuid === data.uuid);
+			const network = this.$root.findNetwork(data.uuid);
 			network.name = network.channels[0].name = data.name;
 			sidebar.find(`.network[data-uuid="${data.uuid}"] .chan.lobby .name`).click();
 		},

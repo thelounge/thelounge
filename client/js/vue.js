@@ -17,19 +17,12 @@ Vue.filter("friendlysize", friendlysize);
 Vue.filter("colorClass", colorClass);
 Vue.filter("roundBadgeNumber", roundBadgeNumber);
 
+const appName = document.title;
+
 const vueApp = new Vue({
 	el: "#viewport",
 	data: {
-		activeChannel: null,
-		appName: document.title,
-		currentUserVisibleError: null,
 		initialized: false,
-		isAutoCompleting: false,
-		isFileUploadEnabled: false,
-		networks: [],
-		pushNotificationState: "unsupported",
-		desktopNotificationState: "unsupported",
-		serverConfiguration: {},
 		settings: {
 			syncSettings: false,
 			advanced: false,
@@ -51,8 +44,6 @@ const vueApp = new Vue({
 	},
 	router,
 	mounted() {
-		Vue.nextTick(() => window.vueMounted());
-
 		if (navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i)) {
 			document.body.classList.add("is-apple");
 		}
@@ -60,6 +51,20 @@ const vueApp = new Vue({
 		document.addEventListener("visibilitychange", this.synchronizeNotifiedState());
 		document.addEventListener("focus", this.synchronizeNotifiedState());
 		document.addEventListener("click", this.synchronizeNotifiedState());
+
+		// TODO: Hackfix because socket-events require vueApp somewhere
+		// and that breaks due to cyclical depenency as by this point vue.js
+		// does not export anything yet.
+		setTimeout(() => {
+			const socket = require("./socket");
+
+			require("./socket-events");
+			require("./contextMenuFactory");
+			require("./webpush");
+			require("./keybinds");
+
+			socket.open();
+		}, 1);
 	},
 	methods: {
 		onSocketInit() {
@@ -92,7 +97,7 @@ const vueApp = new Vue({
 			this.setUserlist(!this.$store.state.userlistOpen);
 		},
 		findChannel(id) {
-			for (const network of this.networks) {
+			for (const network of this.$store.state.networks) {
 				for (const channel of network.channels) {
 					if (channel.id === id) {
 						return {network, channel};
@@ -103,7 +108,7 @@ const vueApp = new Vue({
 			return null;
 		},
 		findNetwork(uuid) {
-			for (const network of this.networks) {
+			for (const network of this.$store.state.networks) {
 				if (network.uuid === uuid) {
 					return network;
 				}
@@ -112,7 +117,10 @@ const vueApp = new Vue({
 			return null;
 		},
 		switchToChannel(channel) {
-			if (this.activeChannel && this.activeChannel.channel.id === channel.id) {
+			if (
+				this.$store.state.activeChannel &&
+				this.$store.state.activeChannel.channel.id === channel.id
+			) {
 				return;
 			}
 
@@ -134,7 +142,7 @@ const vueApp = new Vue({
 
 			let hasAnyHighlights = false;
 
-			for (const network of this.networks) {
+			for (const network of this.$store.state.networks) {
 				for (const chan of network.channels) {
 					if (chan.highlight > 0) {
 						hasAnyHighlights = true;
@@ -146,16 +154,16 @@ const vueApp = new Vue({
 			this.toggleNotificationMarkers(hasAnyHighlights);
 		},
 		updateTitle() {
-			let title = this.appName;
+			let title = appName;
 
-			if (this.activeChannel) {
-				title = `${this.activeChannel.channel.name} — ${title}`;
+			if (this.$store.state.activeChannel) {
+				title = `${this.$store.state.activeChannel.channel.name} — ${title}`;
 			}
 
 			// add highlight count to title
 			let alertEventCount = 0;
 
-			for (const network of this.networks) {
+			for (const network of this.$store.state.networks) {
 				for (const channel of network.channels) {
 					alertEventCount += channel.highlight;
 				}
@@ -190,8 +198,8 @@ const vueApp = new Vue({
 });
 
 Vue.config.errorHandler = function(e) {
+	store.commit("currentUserVisibleError", `Vue error: ${e.message}`);
 	console.error(e); // eslint-disable-line
-	vueApp.currentUserVisibleError = `Vue error: ${e.message}. Please check devtools and report it in #thelounge`;
 };
 
 function findChannel(id) {

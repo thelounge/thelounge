@@ -2,11 +2,11 @@
 
 const socket = require("./socket");
 const updateCursor = require("undate").update;
+const store = require("./store").default;
 
 class Uploader {
 	init(maxFileSize) {
 		this.maxFileSize = maxFileSize;
-		this.vueApp = require("./vue").vueApp;
 		this.xhr = null;
 		this.fileQueue = [];
 
@@ -89,7 +89,7 @@ class Uploader {
 			return;
 		}
 
-		if (!this.vueApp.$store.state.isConnected) {
+		if (!store.state.isConnected) {
 			this.handleResponse({
 				error: `You are currently disconnected, unable to initiate upload process.`,
 			});
@@ -177,7 +177,7 @@ class Uploader {
 		this.setProgress(0);
 
 		if (response.error) {
-			this.vueApp.currentUserVisibleError = response.error;
+			store.commit("currentUserVisibleError", response.error);
 			return;
 		}
 

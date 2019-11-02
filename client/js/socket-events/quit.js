@@ -4,12 +4,10 @@ const $ = require("jquery");
 const socket = require("../socket");
 const sidebar = $("#sidebar");
 const {vueApp} = require("../vue");
+const store = require("../store").default;
 
 socket.on("quit", function(data) {
-	vueApp.networks.splice(
-		vueApp.networks.findIndex((n) => n.uuid === data.network),
-		1
-	);
+	store.commit("removeNetwork", data.network);
 
 	vueApp.$nextTick(() => {
 		const chan = sidebar.find(".chan");

@@ -12,21 +12,21 @@ const socket = io({
 
 module.exports = socket;
 
-const {vueApp} = require("./vue");
 const {requestIdleCallback} = require("./utils");
+const store = require("./store").default;
 
 socket.on("disconnect", handleDisconnect);
 socket.on("connect_error", handleDisconnect);
 socket.on("error", handleDisconnect);
 
 socket.on("reconnecting", function(attempt) {
-	vueApp.currentUserVisibleError = `Reconnecting… (attempt ${attempt})`;
-	$("#loading-page-message").text(vueApp.currentUserVisibleError);
+	store.commit("currentUserVisibleError", `Reconnecting… (attempt ${attempt})`);
+	$("#loading-page-message").text(store.state.currentUserVisibleError);
 });
 
 socket.on("connecting", function() {
-	vueApp.currentUserVisibleError = "Connecting…";
-	$("#loading-page-message").text(vueApp.currentUserVisibleError);
+	store.commit("currentUserVisibleError", `Connecting…`);
+	$("#loading-page-message").text(store.state.currentUserVisibleError);
 });
 
 socket.on("connect", function() {
@@ -35,21 +35,21 @@ socket.on("connect", function() {
 	// nothing is sent to the server that might have happened.
 	socket.sendBuffer = [];
 
-	vueApp.currentUserVisibleError = "Finalizing connection…";
-	$("#loading-page-message").text(vueApp.currentUserVisibleError);
+	store.commit("currentUserVisibleError", "Finalizing connection…");
+	$("#loading-page-message").text(store.state.currentUserVisibleError);
 });
 
 socket.on("authorized", function() {
-	vueApp.currentUserVisibleError = "Loading messages…";
-	$("#loading-page-message").text(vueApp.currentUserVisibleError);
+	store.commit("currentUserVisibleError", "Loading messages…");
+	$("#loading-page-message").text(store.state.currentUserVisibleError);
 });
 
 function handleDisconnect(data) {
 	const message = data.message || data;
 
-	vueApp.$store.commit("isConnected", false);
-	vueApp.currentUserVisibleError = `Waiting to reconnect… (${message})`;
-	$("#loading-page-message").text(vueApp.currentUserVisibleError);
+	store.commit("isConnected", false);
+	store.commit("currentUserVisibleError", `Waiting to reconnect… (${message})`);
+	$("#loading-page-message").text(store.state.currentUserVisibleError);
 
 	// If the server shuts down, socket.io skips reconnection
 	// and we have to manually call connect to start the process

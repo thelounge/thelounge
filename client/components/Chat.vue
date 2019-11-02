@@ -81,11 +81,11 @@
 			</div>
 		</div>
 		<div
-			v-if="this.$root.currentUserVisibleError"
+			v-if="this.$store.state.currentUserVisibleError"
 			id="user-visible-error"
 			@click="hideUserVisibleError"
 		>
-			{{ this.$root.currentUserVisibleError }}
+			{{ this.$store.state.currentUserVisibleError }}
 		</div>
 		<span id="upload-progressbar" />
 		<ChatInput :network="network" :channel="channel" />
@@ -166,7 +166,7 @@ export default {
 			this.$root.synchronizeNotifiedState();
 		},
 		hideUserVisibleError() {
-			this.$root.currentUserVisibleError = null;
+			this.$store.commit("currentUserVisibleError", null);
 		},
 		editTopic() {
 			if (this.channel.type === "channel") {

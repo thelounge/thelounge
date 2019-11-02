@@ -8,16 +8,18 @@ const sidebar = $("#sidebar");
 const storage = require("../localStorage");
 const constants = require("../constants");
 const {vueApp, initChannel} = require("../vue");
+const store = require("../store").default;
 
 socket.on("init", function(data) {
-	vueApp.currentUserVisibleError = "Rendering…";
-	$("#loading-page-message").text(vueApp.currentUserVisibleError);
+	store.commit("currentUserVisibleError", "Rendering…");
 
-	const previousActive = vueApp.activeChannel && vueApp.activeChannel.channel.id;
+	$("#loading-page-message").text(store.state.currentUserVisibleError);
 
-	vueApp.networks = mergeNetworkData(data.networks);
-	vueApp.$store.commit("isConnected", true);
-	vueApp.currentUserVisibleError = null;
+	const previousActive = store.state.activeChannel && store.state.activeChannel.channel.id;
+
+	store.commit("networks", mergeNetworkData(data.networks));
+	store.commit("isConnected", true);
+	store.commit("currentUserVisibleError", null);
 
 	if (!vueApp.initialized) {
 		vueApp.onSocketInit();
@@ -106,7 +108,7 @@ function mergeNetworkData(newNetworks) {
 
 	for (let n = 0; n < newNetworks.length; n++) {
 		const network = newNetworks[n];
-		const currentNetwork = vueApp.networks.find((net) => net.uuid === network.uuid);
+		const currentNetwork = vueApp.findNetwork(network.uuid);
 
 		// If this network is new, set some default variables and initalize channel variables
 		if (!currentNetwork) {
@@ -154,7 +156,7 @@ function mergeChannelData(oldChannels, newChannels) {
 		}
 
 		// Merge received channel object into existing currentChannel
-		// so the object references are exactly the same (e.g. in vueApp.activeChannel)
+		// so the object references are exactly the same (e.g. in store.state.activeChannel)
 		for (const key in channel) {
 			if (!Object.prototype.hasOwnProperty.call(channel, key)) {
 				continue;
@@ -163,7 +165,10 @@ function mergeChannelData(oldChannels, newChannels) {
 			// Server sends an empty users array, client requests it whenever needed
 			if (key === "users") {
 				if (channel.type === "channel") {
-					if (vueApp.activeChannel && vueApp.activeChannel.channel === currentChannel) {
+					if (
+						store.state.activeChannel &&
+						store.state.activeChannel.channel === currentChannel
+					) {
 						// For currently open channel, request the user list straight away
 						socket.emit("names", {
 							target: channel.id,

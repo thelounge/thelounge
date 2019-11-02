@@ -13,7 +13,7 @@ export default {
 	methods: {
 		onClick() {
 			const channelToFind = this.channel.toLowerCase();
-			const existingChannel = this.$root.activeChannel.network.channels.find(
+			const existingChannel = this.$store.state.activeChannel.network.channels.find(
 				(c) => c.name.toLowerCase() === channelToFind
 			);
 
@@ -24,7 +24,7 @@ export default {
 			// TODO: Required here because it breaks tests
 			const socket = require("../js/socket");
 			socket.emit("input", {
-				target: this.$root.activeChannel.channel.id,
+				target: this.$store.state.activeChannel.channel.id,
 				text: "/join " + this.channel,
 			});
 		},

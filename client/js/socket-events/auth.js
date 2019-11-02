@@ -4,15 +4,16 @@ const $ = require("jquery");
 const socket = require("../socket");
 const storage = require("../localStorage");
 const utils = require("../utils");
-const {vueApp, getActiveWindowComponent} = require("../vue");
+const {getActiveWindowComponent} = require("../vue");
+const store = require("../store").default;
 
 socket.on("auth", function(data) {
 	// If we reconnected and serverHash differs, that means the server restarted
 	// And we will reload the page to grab the latest version
 	if (utils.serverHash > -1 && data.serverHash > -1 && data.serverHash !== utils.serverHash) {
 		socket.disconnect();
-		vueApp.$store.commit("isConnected", false);
-		vueApp.currentUserVisibleError = "Server restarted, reloading…";
+		store.commit("isConnected", false);
+		store.commit("currentUserVisibleError", "Server restarted, reloading…");
 		location.reload(true);
 		return;
 	}
@@ -27,10 +28,10 @@ socket.on("auth", function(data) {
 	const user = storage.get("user");
 
 	if (!data.success) {
-		if (vueApp.$store.state.activeWindow !== "SignIn") {
+		if (store.state.activeWindow !== "SignIn") {
 			socket.disconnect();
-			vueApp.$store.commit("isConnected", false);
-			vueApp.currentUserVisibleError = "Authentication failed, reloading…";
+			store.commit("isConnected", false);
+			store.commit("currentUserVisibleError", "Authentication failed, reloading…");
 			location.reload();
 			return;
 		}
@@ -42,12 +43,12 @@ socket.on("auth", function(data) {
 		token = storage.get("token");
 
 		if (token) {
-			vueApp.currentUserVisibleError = "Authorizing…";
-			$("#loading-page-message").text(vueApp.currentUserVisibleError);
+			store.commit("currentUserVisibleError", "Authorizing…");
+			$("#loading-page-message").text(store.state.currentUserVisibleError);
 
 			let lastMessage = -1;
 
-			for (const network of vueApp.networks) {
+			for (const network of store.state.networks) {
 				for (const chan of network.channels) {
 					if (chan.messages.length > 0) {
 						const id = chan.messages[chan.messages.length - 1].id;
@@ -59,7 +60,8 @@ socket.on("auth", function(data) {
 				}
 			}
 
-			const openChannel = (vueApp.activeChannel && vueApp.activeChannel.channel.id) || null;
+			const openChannel =
+				(store.state.activeChannel && store.state.activeChannel.channel.id) || null;
 
 			socket.emit("auth", {user, token, lastMessage, openChannel});
 		}

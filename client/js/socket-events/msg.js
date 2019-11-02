@@ -6,6 +6,7 @@ const options = require("../options");
 const cleanIrcMessage = require("../libs/handlebars/ircmessageparser/cleanIrcMessage");
 const webpush = require("../webpush");
 const {vueApp, findChannel} = require("../vue");
+const store = require("../store").default;
 
 let pop;
 
@@ -26,17 +27,18 @@ socket.on("msg", function(data) {
 	}
 
 	let channel = receivingChannel.channel;
-	const isActiveChannel = vueApp.activeChannel && vueApp.activeChannel.channel === channel;
+	const isActiveChannel =
+		store.state.activeChannel && store.state.activeChannel.channel === channel;
 
 	// Display received notices and errors in currently active channel.
 	// Reloading the page will put them back into the lobby window.
 	// We only want to put errors/notices in active channel if they arrive on the same network
 	if (
 		data.msg.showInActive &&
-		vueApp.activeChannel &&
-		vueApp.activeChannel.network === receivingChannel.network
+		store.state.activeChannel &&
+		store.state.activeChannel.network === receivingChannel.network
 	) {
-		channel = vueApp.activeChannel.channel;
+		channel = store.state.activeChannel.channel;
 
 		if (data.chan === channel.id) {
 			// If active channel is the intended channel for this message,
@@ -63,7 +65,7 @@ socket.on("msg", function(data) {
 	if (data.msg.self) {
 		channel.firstUnread = data.msg.id;
 	} else {
-		notifyMessage(data.chan, channel, vueApp.activeChannel, data.msg);
+		notifyMessage(data.chan, channel, store.state.activeChannel, data.msg);
 	}
 
 	let messageLimit = 0;

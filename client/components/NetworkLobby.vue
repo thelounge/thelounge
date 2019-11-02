@@ -1,5 +1,5 @@
 <template>
-	<ChannelWrapper :network="network" :channel="channel" :active-channel="activeChannel">
+	<ChannelWrapper :network="network" :channel="channel">
 		<button
 			v-if="network.channels.length > 1"
 			:aria-controls="'network-' + network.uuid"
@@ -57,7 +57,6 @@ export default {
 		ChannelWrapper,
 	},
 	props: {
-		activeChannel: Object,
 		network: Object,
 		isJoinChannelShown: Boolean,
 	},

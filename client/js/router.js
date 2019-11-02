@@ -4,6 +4,8 @@ const Vue = require("vue").default;
 const VueRouter = require("vue-router").default;
 Vue.use(VueRouter);
 
+const store = require("./store").default;
+
 const SignIn = require("../components/Windows/SignIn.vue").default;
 const Connect = require("../components/Windows/Connect.vue").default;
 const Settings = require("../components/Windows/Settings.vue").default;
@@ -82,13 +84,13 @@ router.afterEach((to) => {
 
 	if (!to.meta.isChat) {
 		// Navigating out of a chat window
-		router.app.$store.commit("activeWindow", to.meta.windowName);
+		store.commit("activeWindow", to.meta.windowName);
 
-		if (router.app.activeChannel && router.app.activeChannel.channel) {
-			router.app.switchOutOfChannel(router.app.activeChannel.channel);
+		if (store.state.activeChannel && store.state.activeChannel.channel) {
+			router.app.switchOutOfChannel(store.state.activeChannel.channel);
 		}
 
-		router.app.activeChannel = null;
+		store.commit("activeChannel", null);
 	}
 });
 

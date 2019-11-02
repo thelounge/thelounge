@@ -1,8 +1,9 @@
 "use strict";
+
 const socket = require("../socket");
-const {vueApp} = require("../vue");
+const store = require("../store").default;
 
 socket.on("sessions:list", function(data) {
 	data.sort((a, b) => b.lastUse - a.lastUse);
-	vueApp.$store.commit("sessions", data);
+	store.commit("sessions", data);
 });

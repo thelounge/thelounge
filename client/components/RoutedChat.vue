@@ -28,7 +28,7 @@ export default {
 	},
 	methods: {
 		setActiveChannel() {
-			this.$root.activeChannel = this.activeChannel;
+			this.$store.commit("activeChannel", this.activeChannel);
 		},
 	},
 };

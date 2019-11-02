@@ -5,7 +5,7 @@ const socket = require("../socket");
 const options = require("../options");
 const webpush = require("../webpush");
 const upload = require("../upload");
-const {vueApp} = require("../vue");
+const store = require("../store").default;
 
 window.addEventListener("beforeinstallprompt", (installPromptEvent) => {
 	$("#webapp-install-button")
@@ -22,7 +22,7 @@ window.addEventListener("beforeinstallprompt", (installPromptEvent) => {
 });
 
 socket.on("configuration", function(data) {
-	vueApp.isFileUploadEnabled = data.fileUpload;
+	store.commit("isFileUploadEnabled", data.fileUpload);
 
 	if (options.initialized) {
 		// Likely a reconnect, request sync for possibly missed settings.
@@ -30,7 +30,7 @@ socket.on("configuration", function(data) {
 		return;
 	}
 
-	vueApp.serverConfiguration = data;
+	store.commit("serverConfiguration", data);
 
 	if (data.fileUpload) {
 		upload.initialize(data.fileUploadMaxFileSize);

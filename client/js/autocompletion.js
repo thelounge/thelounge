@@ -7,6 +7,7 @@ const {Textcomplete, Textarea} = require("textcomplete");
 const emojiMap = require("./libs/simplemap.json");
 const constants = require("./constants");
 const {vueApp} = require("./vue");
+const store = require("./store").default;
 
 let input;
 let textcomplete;
@@ -21,7 +22,7 @@ module.exports = {
 			Mousetrap(input.get(0)).unbind("tab", "keydown");
 			textcomplete.destroy();
 			enabled = false;
-			vueApp.isAutoCompleting = false;
+			store.commit("isAutoCompleting", false);
 		}
 	},
 };
@@ -195,7 +196,7 @@ function enableAutocomplete(inputRef) {
 	Mousetrap(input.get(0)).bind(
 		"tab",
 		(e) => {
-			if (vueApp.isAutoCompleting) {
+			if (store.state.isAutoCompleting) {
 				return;
 			}
 
@@ -271,11 +272,11 @@ function enableAutocomplete(inputRef) {
 	});
 
 	textcomplete.on("show", () => {
-		vueApp.isAutoCompleting = true;
+		store.commit("isAutoCompleting", true);
 	});
 
 	textcomplete.on("hidden", () => {
-		vueApp.isAutoCompleting = false;
+		store.commit("isAutoCompleting", false);
 	});
 
 	$("#form").on("submit.tabcomplete", () => {
@@ -292,17 +293,17 @@ function fuzzyGrep(term, array) {
 }
 
 function rawNicks() {
-	if (vueApp.activeChannel.channel.users.length > 0) {
-		const users = vueApp.activeChannel.channel.users.slice();
+	if (store.state.activeChannel.channel.users.length > 0) {
+		const users = store.state.activeChannel.channel.users.slice();
 
 		return users.sort((a, b) => b.lastMessage - a.lastMessage).map((u) => u.nick);
 	}
 
-	const me = vueApp.activeChannel.network.nick;
-	const otherUser = vueApp.activeChannel.channel.name;
+	const me = store.state.activeChannel.network.nick;
+	const otherUser = store.state.activeChannel.channel.name;
 
 	// If this is a query, add their name to autocomplete
-	if (me !== otherUser && vueApp.activeChannel.channel.type === "query") {
+	if (me !== otherUser && store.state.activeChannel.channel.type === "query") {
 		return [otherUser, me];
 	}
 
@@ -330,7 +331,7 @@ function completeCommands(word) {
 function completeChans(word) {
 	const words = [];
 
-	for (const channel of vueApp.activeChannel.network.channels) {
+	for (const channel of store.state.activeChannel.network.channels) {
 		if (channel.type === "channel") {
 			words.push(channel.name);
 		}

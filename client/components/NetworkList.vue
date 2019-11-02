@@ -33,7 +33,6 @@
 		>
 			<NetworkLobby
 				:network="network"
-				:active-channel="activeChannel"
 				:is-join-channel-shown="network.isJoinChannelShown"
 				@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown"
 			/>
@@ -63,7 +62,6 @@
 					:key="channel.id"
 					:channel="channel"
 					:network="network"
-					:active-channel="activeChannel"
 				/>
 			</Draggable>
 		</div>
@@ -86,9 +84,10 @@ export default {
 		Channel,
 		Draggable,
 	},
-	props: {
-		activeChannel: Object,
-		networks: Array,
+	computed: {
+		networks() {
+			return this.$store.state.networks;
+		},
 	},
 	methods: {
 		isCurrentlyInTouch(e) {

@@ -1,7 +1,7 @@
 <template>
 	<NetworkForm
 		:handle-submit="handleSubmit"
-		:defaults="$root.serverConfiguration.defaults"
+		:defaults="$store.state.serverConfiguration.defaults"
 		:disabled="disabled"
 	/>
 </template>

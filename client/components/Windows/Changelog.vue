@@ -30,7 +30,7 @@
 					<p>
 						<a
 							:href="
-								`https://github.com/thelounge/thelounge/releases/tag/v${$root.serverConfiguration.version}`
+								`https://github.com/thelounge/thelounge/releases/tag/v${$store.state.serverConfiguration.version}`
 							"
 							target="_blank"
 							rel="noopener"

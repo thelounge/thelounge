@@ -1,8 +1,8 @@
 <template>
 	<div id="viewport" :class="viewportClasses" role="tablist">
-		<Sidebar :networks="networks" :active-channel="activeChannel" :overlay="$refs.overlay" />
+		<Sidebar :overlay="$refs.overlay" />
 		<div id="sidebar-overlay" ref="overlay" @click="$root.setSidebar(false)" />
-		<article id="windows">
+		<article v-if="$root.initialized" id="windows">
 			<router-view></router-view>
 		</article>
 		<ImageViewer ref="imageViewer" />
@@ -23,8 +23,6 @@ export default {
 	},
 	props: {
 		activeWindow: String,
-		activeChannel: Object,
-		networks: Array,
 	},
 	computed: {
 		viewportClasses() {

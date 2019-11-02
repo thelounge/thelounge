@@ -37,12 +37,16 @@ export default {
 	props: {
 		network: Object,
 		channel: Object,
-		activeChannel: Object,
 	},
 	data() {
 		return {
 			closed: false,
 		};
+	},
+	computed: {
+		activeChannel() {
+			return this.$store.state.activeChannel;
+		},
 	},
 	methods: {
 		close() {

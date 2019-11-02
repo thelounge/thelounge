@@ -13,7 +13,7 @@
 					alt="The Lounge"
 				/>
 			</div>
-			<NetworkList :networks="networks" :active-channel="activeChannel" />
+			<NetworkList />
 		</div>
 		<footer id="footer">
 			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Sign in"
@@ -84,8 +84,6 @@ export default {
 		NetworkList,
 	},
 	props: {
-		activeChannel: Object,
-		networks: Array,
 		overlay: HTMLElement,
 	},
 	mounted() {

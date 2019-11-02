@@ -8,7 +8,7 @@
 
 			<h2>
 				<small class="pull-right">
-					v{{ $root.serverConfiguration.version }} (<router-link
+					v{{ $store.state.serverConfiguration.version }} (<router-link
 						id="view-changelog"
 						to="/changelog"
 						>release notes</router-link
@@ -20,15 +20,15 @@
 			<div class="about">
 				<VersionChecker />
 
-				<template v-if="$root.serverConfiguration.gitCommit">
+				<template v-if="$store.state.serverConfiguration.gitCommit">
 					<p>
 						The Lounge is running from source (<a
 							:href="
-								`https://github.com/thelounge/thelounge/tree/${$root.serverConfiguration.gitCommit}`
+								`https://github.com/thelounge/thelounge/tree/${$store.state.serverConfiguration.gitCommit}`
 							"
 							target="_blank"
 							rel="noopener"
-							>commit <code>{{ $root.serverConfiguration.gitCommit }}</code></a
+							>commit <code>{{ $store.state.serverConfiguration.gitCommit }}</code></a
 						>).
 					</p>
 
@@ -37,11 +37,12 @@
 							Compare
 							<a
 								:href="
-									`https://github.com/thelounge/thelounge/compare/${$root.serverConfiguration.gitCommit}...master`
+									`https://github.com/thelounge/thelounge/compare/${$store.state.serverConfiguration.gitCommit}...master`
 								"
 								target="_blank"
 								rel="noopener"
-								>between <code>{{ $root.serverConfiguration.gitCommit }}</code> and
+								>between
+								<code>{{ $store.state.serverConfiguration.gitCommit }}</code> and
 								<code>master</code></a
 							>
 							to see what you are missing
@@ -50,12 +51,13 @@
 							Compare
 							<a
 								:href="
-									`https://github.com/thelounge/thelounge/compare/${$root.serverConfiguration.version}...${$root.serverConfiguration.gitCommit}`
+									`https://github.com/thelounge/thelounge/compare/${$store.state.serverConfiguration.version}...${$store.state.serverConfiguration.gitCommit}`
 								"
 								target="_blank"
 								rel="noopener"
-								>between <code>{{ $root.serverConfiguration.version }}</code> and
-								<code>{{ $root.serverConfiguration.gitCommit }}</code></a
+								>between
+								<code>{{ $store.state.serverConfiguration.version }}</code> and
+								<code>{{ $store.state.serverConfiguration.gitCommit }}</code></a
 							>
 							to see your local changes
 						</li>

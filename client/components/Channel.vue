@@ -1,10 +1,5 @@
 <template>
-	<ChannelWrapper
-		ref="wrapper"
-		:network="network"
-		:channel="channel"
-		:active-channel="activeChannel"
-	>
+	<ChannelWrapper ref="wrapper" :network="network" :channel="channel">
 		<span class="name">{{ channel.name }}</span>
 		<span v-if="channel.unread" :class="{highlight: channel.highlight}" class="badge">{{
 			channel.unread | roundBadgeNumber
@@ -38,7 +33,6 @@ export default {
 		ChannelWrapper,
 	},
 	props: {
-		activeChannel: Object,
 		network: Object,
 		channel: Object,
 	},

@@ -4,6 +4,7 @@ const $ = require("jquery");
 const storage = require("./localStorage");
 const socket = require("./socket");
 const {vueApp} = require("./vue");
+const store = require("./store").default;
 require("../js/autocompletion");
 
 const $theme = $("#theme");
@@ -77,9 +78,9 @@ module.exports = {
 // checkbox state can not be changed).
 function updateDesktopNotificationStatus() {
 	if (Notification.permission === "granted") {
-		vueApp.desktopNotificationState = "granted";
+		store.commit("desktopNotificationState", "granted");
 	} else {
-		vueApp.desktopNotificationState = "blocked";
+		store.commit("desktopNotificationState", "blocked");
 	}
 }
 
@@ -89,7 +90,7 @@ function applySetting(name, value) {
 
 		if ($theme.attr("href") !== themeUrl) {
 			$theme.attr("href", themeUrl);
-			const newTheme = vueApp.serverConfiguration.themes.filter(
+			const newTheme = store.state.serverConfiguration.themes.filter(
 				(theme) => theme.name === value
 			)[0];
 			let themeColor = defaultThemeColor;
@@ -171,7 +172,7 @@ function initialize() {
 	if ("Notification" in window) {
 		updateDesktopNotificationStatus();
 	} else {
-		vueApp.desktopNotificationState = "unsupported";
+		store.commit("desktopNotificationState", "unsupported");
 	}
 
 	// Local init is done, let's sync

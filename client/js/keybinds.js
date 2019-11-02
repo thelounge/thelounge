@@ -4,6 +4,7 @@ const $ = require("jquery");
 const Mousetrap = require("mousetrap");
 const utils = require("./utils");
 const {vueApp} = require("./vue");
+const store = require("./store").default;
 
 Mousetrap.bind(["alt+up", "alt+down"], function(e, keys) {
 	const sidebar = $("#sidebar");
@@ -76,7 +77,7 @@ Mousetrap.bind(["alt+shift+up", "alt+shift+down"], function(e, keys) {
 Mousetrap.bind(["alt+a"], function() {
 	let targetchan;
 
-	outer_loop: for (const network of vueApp.networks) {
+	outer_loop: for (const network of store.state.networks) {
 		for (const chan of network.channels) {
 			if (chan.highlight) {
 				targetchan = chan;

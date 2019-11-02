@@ -1,10 +1,11 @@
 "use strict";
 
 const socket = require("../socket");
-const {vueApp, findChannel} = require("../vue");
+const {findChannel} = require("../vue");
+const store = require("../store").default;
 
 socket.on("users", function(data) {
-	if (vueApp.activeChannel && vueApp.activeChannel.channel.id === data.chan) {
+	if (store.state.activeChannel && store.state.activeChannel.channel.id === data.chan) {
 		return socket.emit("names", {
 			target: data.chan,
 		});

@@ -10,7 +10,7 @@
 				<div class="col-sm-6">
 					<label class="opt">
 						<input
-							v-model="$root.serverConfiguration.advanced"
+							v-model="$store.state.serverConfiguration.advanced"
 							type="checkbox"
 							name="advanced"
 						/>
@@ -36,7 +36,10 @@
 				</div>
 
 				<div
-					v-if="!$root.serverConfiguration.public && $root.serverConfiguration.advanced"
+					v-if="
+						!$store.state.serverConfiguration.public &&
+							$store.state.serverConfiguration.advanced
+					"
 					class="col-sm-12"
 				>
 					<h2>
@@ -158,7 +161,7 @@
 						Enable autocomplete
 					</label>
 				</div>
-				<div v-if="$root.serverConfiguration.advanced" class="col-sm-12">
+				<div v-if="$store.state.serverConfiguration.advanced" class="col-sm-12">
 					<label class="opt">
 						<label for="nickPostfix" class="sr-only"
 							>Nick autocomplete postfix (e.g. <code>, </code>)</label
@@ -186,7 +189,7 @@
 						class="input"
 					>
 						<option
-							v-for="theme in $root.serverConfiguration.themes"
+							v-for="theme in $store.state.serverConfiguration.themes"
 							:key="theme.name"
 							:value="theme.name"
 						>
@@ -195,7 +198,7 @@
 					</select>
 				</div>
 
-				<template v-if="$root.serverConfiguration.prefetch">
+				<template v-if="$store.state.serverConfiguration.prefetch">
 					<div class="col-sm-12">
 						<h2>Link previews</h2>
 					</div>
@@ -213,7 +216,7 @@
 					</div>
 				</template>
 
-				<template v-if="!$root.serverConfiguration.public">
+				<template v-if="!$store.state.serverConfiguration.public">
 					<div class="col-sm-12">
 						<h2>Push Notifications</h2>
 					</div>
@@ -222,17 +225,20 @@
 							id="pushNotifications"
 							type="button"
 							class="btn"
-							:disabled="$root.pushNotificationState !== 'supported'"
+							:disabled="$store.state.pushNotificationState !== 'supported'"
 							data-text-alternate="Unsubscribe from push notifications"
 							@click="onPushButtonClick"
 						>
 							Subscribe to push notifications
 						</button>
-						<div v-if="$root.pushNotificationState === 'nohttps'" class="error">
+						<div v-if="$store.state.pushNotificationState === 'nohttps'" class="error">
 							<strong>Warning</strong>: Push notifications are only supported over
 							HTTPS connections.
 						</div>
-						<div v-if="$root.pushNotificationState === 'unsupported'" class="error">
+						<div
+							v-if="$store.state.pushNotificationState === 'unsupported'"
+							class="error"
+						>
 							<strong>Warning</strong>:
 							<span>Push notifications are not supported by your browser.</span>
 						</div>
@@ -251,12 +257,15 @@
 							name="desktopNotifications"
 						/>
 						Enable browser notifications<br />
-						<div v-if="$root.desktopNotificationState === 'unsupported'" class="error">
+						<div
+							v-if="$store.state.desktopNotificationState === 'unsupported'"
+							class="error"
+						>
 							<strong>Warning</strong>: Notifications are not supported by your
 							browser.
 						</div>
 						<div
-							v-if="$root.desktopNotificationState === 'blocked'"
+							v-if="$store.state.desktopNotificationState === 'blocked'"
 							id="warnBlockedDesktopNotifications"
 							class="error"
 						>
@@ -280,7 +289,7 @@
 					</div>
 				</div>
 
-				<div v-if="$root.serverConfiguration.advanced" class="col-sm-12">
+				<div v-if="$store.state.serverConfiguration.advanced" class="col-sm-12">
 					<label class="opt">
 						<input
 							v-model="$root.settings.notifyAllMessages"
@@ -291,7 +300,7 @@
 					</label>
 				</div>
 
-				<div v-if="$root.serverConfiguration.advanced" class="col-sm-12">
+				<div v-if="$store.state.serverConfiguration.advanced" class="col-sm-12">
 					<label class="opt">
 						<label for="highlights" class="sr-only"
 							>Custom highlights (comma-separated keywords)</label
@@ -309,7 +318,8 @@
 
 				<div
 					v-if="
-						!$root.serverConfiguration.public && !$root.serverConfiguration.ldapEnabled
+						!$store.state.serverConfiguration.public &&
+							!$store.state.serverConfiguration.ldapEnabled
 					"
 					id="change-password"
 				>
@@ -377,10 +387,10 @@
 					</div>
 				</div>
 
-				<div v-if="$root.serverConfiguration.advanced" class="col-sm-12">
+				<div v-if="$store.state.serverConfiguration.advanced" class="col-sm-12">
 					<h2>Custom Stylesheet</h2>
 				</div>
-				<div v-if="$root.serverConfiguration.advanced" class="col-sm-12">
+				<div v-if="$store.state.serverConfiguration.advanced" class="col-sm-12">
 					<label for="user-specified-css-input" class="sr-only"
 						>Custom stylesheet. You can override any style with CSS here.</label
 					>
@@ -394,7 +404,7 @@
 				</div>
 			</div>
 
-			<div v-if="!$root.serverConfiguration.public" class="session-list">
+			<div v-if="!$store.state.serverConfiguration.public" class="session-list">
 				<h2>Sessions</h2>
 
 				<h3>Current session</h3>

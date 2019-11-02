@@ -3,7 +3,7 @@
 const $ = require("jquery");
 const storage = require("./localStorage");
 const socket = require("./socket");
-const {vueApp} = require("./vue");
+const store = require("./store").default;
 
 let pushNotificationsButton;
 let clientSubscribed = null;
@@ -44,7 +44,7 @@ module.exports.initialize = () => {
 	pushNotificationsButton = $("#pushNotifications");
 
 	if (!isAllowedServiceWorkersHost()) {
-		vueApp.pushNotificationState = "nohttps";
+		store.commit("pushNotificationState", "nohttps");
 		return;
 	}
 
@@ -59,7 +59,7 @@ module.exports.initialize = () => {
 				}
 
 				return registration.pushManager.getSubscription().then((subscription) => {
-					vueApp.pushNotificationState = "supported";
+					store.commit("pushNotificationState", "supported");
 
 					clientSubscribed = !!subscription;
 
@@ -69,7 +69,7 @@ module.exports.initialize = () => {
 				});
 			})
 			.catch(() => {
-				vueApp.pushNotificationState = "unsupported";
+				store.commit("pushNotificationState", "unsupported");
 			});
 	}
 };
@@ -126,7 +126,7 @@ module.exports.onPushButton = () => {
 				})
 		)
 		.catch(() => {
-			vueApp.pushNotificationState = "unsupported";
+			store.commit("pushNotificationState", "unsupported");
 		});
 
 	return false;
