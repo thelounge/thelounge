@@ -42,11 +42,13 @@
 				@click.stop="$emit('toggleJoinChannel')"
 			/>
 		</span>
+		<button class="close" hidden @click="close" />
 	</ChannelWrapper>
 </template>
 
 <script>
 import ChannelWrapper from "./ChannelWrapper.vue";
+import socket from "../js/socket";
 const storage = require("../js/localStorage");
 
 export default {
@@ -68,6 +70,17 @@ export default {
 		},
 	},
 	methods: {
+		close() {
+			// eslint-disable-next-line no-alert
+			if (!confirm(`Are you sure you want to remove ${this.channel.name}?`)) {
+				return false;
+			}
+
+			socket.emit("input", {
+				target: Number(this.channel.id),
+				text: "/quit",
+			});
+		},
 		onCollapseClick() {
 			const networks = new Set(JSON.parse(storage.get("thelounge.networks.collapsed")));
 			this.network.isCollapsed = !this.network.isCollapsed;

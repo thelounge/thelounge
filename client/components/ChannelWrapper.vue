@@ -46,22 +46,11 @@ export default {
 	},
 	methods: {
 		close() {
-			let cmd = "/close";
-
-			if (this.channel.type === "lobby") {
-				cmd = "/quit";
-
-				// eslint-disable-next-line no-alert
-				if (!confirm(`Are you sure you want to remove ${this.channel.name}?`)) {
-					return false;
-				}
-			}
-
 			this.closed = true;
 
 			socket.emit("input", {
 				target: Number(this.channel.id),
-				text: cmd,
+				text: "/close",
 			});
 		},
 		getAriaLabel() {
