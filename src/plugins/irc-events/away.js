@@ -29,7 +29,7 @@ module.exports = function(irc, network) {
 			let user;
 
 			switch (chan.type) {
-				case Chan.Type.QUERY:
+				case Chan.Type.QUERY: {
 					if (data.nick.toLowerCase() !== chan.name.toLowerCase()) {
 						return;
 					}
@@ -44,9 +44,19 @@ module.exports = function(irc, network) {
 
 					user = chan.getUser(data.nick);
 
-					break;
+					const msg = new Msg({
+						type: type,
+						text: away || "",
+						time: data.time,
+						from: user,
+					});
 
-				case Chan.Type.CHANNEL:
+					chan.pushMessage(client, msg);
+
+					break;
+				}
+
+				case Chan.Type.CHANNEL: {
 					user = chan.findUser(data.nick);
 
 					if (!user || user.away === away) {
@@ -56,19 +66,8 @@ module.exports = function(irc, network) {
 					user.away = away;
 
 					break;
-
-				default:
-					return;
+				}
 			}
-
-			const msg = new Msg({
-				type: type,
-				text: away || "",
-				time: data.time,
-				from: user,
-			});
-
-			chan.pushMessage(client, msg);
 		});
 	}
 };
