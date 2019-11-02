@@ -1,8 +1,7 @@
 "use strict";
 
-const $ = require("jquery");
 const socket = require("../socket");
-const {vueApp, initChannel, findChannel} = require("../vue");
+const {vueApp, initChannel, findChannel, findNetwork} = require("../vue");
 
 socket.on("network", function(data) {
 	const network = data.networks[0];
@@ -13,10 +12,6 @@ socket.on("network", function(data) {
 
 	vueApp.networks.push(network);
 	vueApp.switchToChannel(network.channels[0]);
-
-	$("#connect")
-		.find(".btn")
-		.prop("disabled", false);
 });
 
 socket.on("network:options", function(data) {
@@ -50,7 +45,13 @@ socket.on("channel:state", function(data) {
 });
 
 socket.on("network:info", function(data) {
-	vueApp.$store.commit("currentNetworkConfig", data.defaults);
-	vueApp.$store.commit("activeWindow", "NetworkEdit");
-	vueApp.activeChannel = null;
+	const network = findNetwork(data.uuid);
+
+	if (!network) {
+		return;
+	}
+
+	for (const key in data) {
+		vueApp.$set(network, key, data[key]);
+	}
 });

@@ -91,10 +91,12 @@ describe("Server", function() {
 			client.on("network", (data) => {
 				expect(data.networks).to.be.an("array");
 				expect(data.networks).to.have.lengthOf(1);
-				expect(data.networks[0].realname).to.equal("The Lounge Test");
+				expect(data.networks[0].nick).to.equal("test-user");
+				expect(data.networks[0].name).to.equal("Test Network");
 				expect(data.networks[0].channels).to.have.lengthOf(3);
 				expect(data.networks[0].channels[0].name).to.equal("Test Network");
 				expect(data.networks[0].channels[1].name).to.equal("#thelounge");
+				expect(data.networks[0].channels[2].name).to.equal("#spam");
 				done();
 			});
 		});

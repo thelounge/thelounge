@@ -34,6 +34,7 @@ export default {
 	},
 	methods: {
 		setNetworkData() {
+			socket.emit("network:get", this.$route.params.uuid);
 			this.networkData = this.$root.findNetwork(this.$route.params.uuid);
 		},
 		handleSubmit(data) {

@@ -399,7 +399,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 			return;
 		}
 
-		socket.emit("network:info", getClientConfiguration(network.export()));
+		socket.emit("network:info", network.exportForEdit());
 	});
 
 	socket.on("network:edit", (data) => {
@@ -657,7 +657,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 	}
 }
 
-function getClientConfiguration(network) {
+function getClientConfiguration() {
 	const config = _.pick(Helper.config, [
 		"public",
 		"lockNetwork",
@@ -670,10 +670,10 @@ function getClientConfiguration(network) {
 	config.ldapEnabled = Helper.config.ldap.enable;
 
 	if (config.displayNetwork) {
-		config.defaults = _.clone(network || Helper.config.defaults);
+		config.defaults = _.clone(Helper.config.defaults);
 	} else {
 		// Only send defaults that are visible on the client
-		config.defaults = _.pick(network || Helper.config.defaults, [
+		config.defaults = _.pick(Helper.config.defaults, [
 			"name",
 			"nick",
 			"username",
@@ -683,13 +683,11 @@ function getClientConfiguration(network) {
 		]);
 	}
 
-	if (!network) {
-		config.version = pkg.version;
-		config.gitCommit = Helper.getGitCommit();
-		config.themes = themes.getAll();
-		config.defaultTheme = Helper.config.theme;
-		config.defaults.nick = Helper.getDefaultNick();
-	}
+	config.version = pkg.version;
+	config.gitCommit = Helper.getGitCommit();
+	config.themes = themes.getAll();
+	config.defaultTheme = Helper.config.theme;
+	config.defaults.nick = Helper.getDefaultNick();
 
 	if (Uploader) {
 		config.fileUploadMaxFileSize = Uploader.getMaxFileSize();

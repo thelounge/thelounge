@@ -198,6 +198,10 @@ function findChannel(id) {
 	return vueApp.findChannel(id);
 }
 
+function findNetwork(uuid) {
+	return vueApp.findNetwork(uuid);
+}
+
 function initChannel(channel) {
 	channel.pendingMessage = "";
 	channel.inputHistoryPosition = 0;
@@ -221,6 +225,7 @@ function getActiveWindowComponent() {
 module.exports = {
 	vueApp,
 	findChannel,
+	findNetwork,
 	initChannel,
 	getActiveWindowComponent,
 };
