@@ -34,6 +34,19 @@ describe("public folder", function() {
 		expect(fs.existsSync(path.join(publicFolder, "css", "style.css.map"))).to.be.true;
 	});
 
+	it("style files contain expected content", function(done) {
+		fs.readFile(path.join(publicFolder, "css", "style.css"), "utf8", function(err, contents) {
+			expect(err).to.be.null;
+
+			expect(contents.includes("var(--body-color)")).to.be.true;
+			expect(contents.includes("url(../fonts/fa-solid-900.woff2)")).to.be.true;
+			expect(contents.includes(".tooltipped{position:relative}")).to.be.true;
+			expect(contents.includes("sourceMappingURL")).to.be.true;
+
+			done();
+		});
+	});
+
 	it("javascript map is created", function() {
 		expect(fs.existsSync(path.join(publicFolder, "js", "bundle.js.map"))).to.be.true;
 	});
