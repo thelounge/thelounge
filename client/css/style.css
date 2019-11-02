@@ -1,5 +1,6 @@
 @import "fontawesome.css";
 @import "bootstrap.css";
+@import "../../node_modules/primer-tooltips/build/build.css";
 
 :root {
 	/* Main text color */

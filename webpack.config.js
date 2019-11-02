@@ -134,10 +134,6 @@ const config = {
 				from: "./client/themes/*",
 				to: "themes/[name].[ext]",
 			},
-			{
-				from: "./node_modules/primer-tooltips/build/build.css",
-				to: "css/primer-tooltips.[ext]",
-			},
 		]),
 		new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
 		// socket.io uses debug, we don't need it
