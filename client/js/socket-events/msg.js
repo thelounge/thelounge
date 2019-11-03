@@ -5,7 +5,7 @@ const socket = require("../socket");
 const options = require("../options");
 const cleanIrcMessage = require("../libs/handlebars/ircmessageparser/cleanIrcMessage");
 const webpush = require("../webpush");
-const {vueApp, findChannel} = require("../vue");
+const {vueApp} = require("../vue");
 const store = require("../store").default;
 
 let pop;
@@ -20,7 +20,7 @@ try {
 }
 
 socket.on("msg", function(data) {
-	const receivingChannel = findChannel(data.chan);
+	const receivingChannel = store.getters.findChannel(data.chan);
 
 	if (!receivingChannel) {
 		return;

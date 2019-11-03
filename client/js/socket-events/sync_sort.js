@@ -1,7 +1,6 @@
 "use strict";
 
 const socket = require("../socket");
-const {findNetwork} = require("../vue");
 const store = require("../store").default;
 
 socket.on("sync_sort", function(data) {
@@ -14,7 +13,7 @@ socket.on("sync_sort", function(data) {
 			break;
 
 		case "channels": {
-			const network = findNetwork(data.target);
+			const network = store.getters.findNetwork(data.target);
 
 			if (!network) {
 				return;

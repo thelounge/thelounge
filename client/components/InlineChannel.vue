@@ -12,10 +12,7 @@ export default {
 	},
 	methods: {
 		onClick() {
-			const channelToFind = this.channel.toLowerCase();
-			const existingChannel = this.$store.state.activeChannel.network.channels.find(
-				(c) => c.name.toLowerCase() === channelToFind
-			);
+			const existingChannel = this.$store.getters.findChannelOnCurrentNetwork(this.channel);
 
 			if (existingChannel) {
 				this.$root.switchToChannel(existingChannel);

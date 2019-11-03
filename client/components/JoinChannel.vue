@@ -59,10 +59,7 @@ export default {
 	},
 	methods: {
 		onSubmit() {
-			const channelToFind = this.inputChannel.toLowerCase();
-			const existingChannel = this.network.channels.find(
-				(c) => c.name.toLowerCase() === channelToFind
-			);
+			const existingChannel = this.$store.getters.findChannelOnCurrentNetwork(this.channel);
 
 			if (existingChannel) {
 				this.$root.switchToChannel(existingChannel);

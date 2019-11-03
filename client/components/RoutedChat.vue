@@ -14,7 +14,7 @@ export default {
 	computed: {
 		activeChannel() {
 			const chan_id = parseInt(this.$route.params.pathMatch);
-			const channel = this.$root.findChannel(chan_id);
+			const channel = this.$store.getters.findChannel(chan_id);
 			return channel;
 		},
 	},

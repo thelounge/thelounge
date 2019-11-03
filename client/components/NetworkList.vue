@@ -115,8 +115,7 @@ export default {
 				return;
 			}
 
-			const {findChannel} = require("../js/vue");
-			const channel = findChannel(e.moved.element.id);
+			const channel = this.$store.getters.findChannel(e.moved.element.id);
 
 			if (!channel) {
 				return;

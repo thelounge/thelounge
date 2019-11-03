@@ -1,10 +1,10 @@
 "use strict";
 
 const socket = require("../socket");
-const {findNetwork} = require("../vue");
+const store = require("../store").default;
 
 socket.on("nick", function(data) {
-	const network = findNetwork(data.network);
+	const network = store.getters.findNetwork(data.network);
 
 	if (network) {
 		network.nick = data.nick;

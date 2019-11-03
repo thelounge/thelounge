@@ -1,7 +1,7 @@
 "use strict";
 
 const socket = require("../socket");
-const {vueApp, findChannel} = require("../vue");
+const {vueApp} = require("../vue");
 const store = require("../store").default;
 
 // Sync unread badge and marker when other clients open a channel
@@ -16,7 +16,7 @@ socket.on("open", function(id) {
 	}
 
 	// Clear the unread badge
-	const channel = findChannel(id);
+	const channel = store.getters.findChannel(id);
 
 	if (channel) {
 		channel.channel.highlight = 0;

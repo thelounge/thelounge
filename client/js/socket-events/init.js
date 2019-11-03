@@ -108,7 +108,7 @@ function mergeNetworkData(newNetworks) {
 
 	for (let n = 0; n < newNetworks.length; n++) {
 		const network = newNetworks[n];
-		const currentNetwork = vueApp.findNetwork(network.uuid);
+		const currentNetwork = store.getters.findNetwork(network.uuid);
 
 		// If this network is new, set some default variables and initalize channel variables
 		if (!currentNetwork) {

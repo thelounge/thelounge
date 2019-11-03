@@ -2,7 +2,6 @@
 
 const $ = require("jquery");
 const Mousetrap = require("mousetrap");
-const utils = require("./utils");
 const {vueApp} = require("./vue");
 const store = require("./store").default;
 

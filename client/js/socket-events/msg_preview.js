@@ -1,10 +1,11 @@
 "use strict";
 
 const socket = require("../socket");
-const {vueApp, findChannel} = require("../vue");
+const {vueApp} = require("../vue");
+const store = require("../store").default;
 
 socket.on("msg:preview", function(data) {
-	const {channel} = findChannel(data.chan);
+	const {channel} = store.getters.findChannel(data.chan);
 	const message = channel.messages.find((m) => m.id === data.id);
 
 	if (!message) {

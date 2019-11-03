@@ -6,7 +6,7 @@ const utils = require("./utils");
 const ContextMenu = require("./contextMenu");
 const contextMenuActions = [];
 const contextMenuItems = [];
-const {vueApp, findChannel} = require("./vue");
+const {vueApp} = require("./vue");
 const store = require("./store").default;
 
 addDefaultItems();
@@ -323,7 +323,7 @@ function addChannelListItem() {
 
 function addEditTopicItem() {
 	function setEditTopic(itemData) {
-		findChannel(Number(itemData)).channel.editTopic = true;
+		store.getters.findChannel(Number(itemData)).channel.editTopic = true;
 		document.querySelector(`#sidebar .chan[data-id="${Number(itemData)}"]`).click();
 
 		vueApp.$nextTick(() => {
@@ -359,7 +359,7 @@ function addBanListItem() {
 
 function addJoinItem() {
 	function openJoinForm(itemData) {
-		findChannel(Number(itemData)).network.isJoinChannelShown = true;
+		store.getters.findChannel(Number(itemData)).network.isJoinChannelShown = true;
 	}
 
 	addContextMenuItem({

@@ -96,26 +96,6 @@ const vueApp = new Vue({
 		toggleUserlist() {
 			this.setUserlist(!this.$store.state.userlistOpen);
 		},
-		findChannel(id) {
-			for (const network of this.$store.state.networks) {
-				for (const channel of network.channels) {
-					if (channel.id === id) {
-						return {network, channel};
-					}
-				}
-			}
-
-			return null;
-		},
-		findNetwork(uuid) {
-			for (const network of this.$store.state.networks) {
-				if (network.uuid === uuid) {
-					return network;
-				}
-			}
-
-			return null;
-		},
 		switchToChannel(channel) {
 			if (
 				this.$store.state.activeChannel &&
@@ -202,14 +182,6 @@ Vue.config.errorHandler = function(e) {
 	console.error(e); // eslint-disable-line
 };
 
-function findChannel(id) {
-	return vueApp.findChannel(id);
-}
-
-function findNetwork(uuid) {
-	return vueApp.findNetwork(uuid);
-}
-
 function initChannel(channel) {
 	channel.pendingMessage = "";
 	channel.inputHistoryPosition = 0;
@@ -232,8 +204,6 @@ function getActiveWindowComponent() {
 
 module.exports = {
 	vueApp,
-	findChannel,
-	findNetwork,
 	initChannel,
 	getActiveWindowComponent,
 };

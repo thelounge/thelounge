@@ -94,6 +94,26 @@ const store = new Vuex.Store({
 			name = name.toLowerCase();
 			return state.activeChannel.network.channels.find((c) => c.name.toLowerCase() === name);
 		},
+		findChannel: (state) => (id) => {
+			for (const network of state.networks) {
+				for (const channel of network.channels) {
+					if (channel.id === id) {
+						return {network, channel};
+					}
+				}
+			}
+
+			return null;
+		},
+		findNetwork: (state) => (uuid) => {
+			for (const network of state.networks) {
+				if (network.uuid === uuid) {
+					return network;
+				}
+			}
+
+			return null;
+		},
 	},
 });
 
