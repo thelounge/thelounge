@@ -2,7 +2,7 @@
 	<div id="viewport" :class="viewportClasses" role="tablist">
 		<Sidebar :overlay="$refs.overlay" />
 		<div id="sidebar-overlay" ref="overlay" @click="$root.setSidebar(false)" />
-		<article v-if="$root.initialized" id="windows">
+		<article id="windows">
 			<router-view></router-view>
 		</article>
 		<ImageViewer ref="imageViewer" />

@@ -8,6 +8,7 @@ const sidebar = $("#sidebar");
 const storage = require("../localStorage");
 const constants = require("../constants");
 const {vueApp, initChannel} = require("../vue");
+const router = require("../router");
 const store = require("../store").default;
 
 socket.on("init", function(data) {
@@ -22,6 +23,7 @@ socket.on("init", function(data) {
 	store.commit("currentUserVisibleError", null);
 
 	if (!vueApp.initialized) {
+		router.initialize();
 		vueApp.onSocketInit();
 
 		if (data.token) {

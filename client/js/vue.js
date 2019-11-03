@@ -9,7 +9,7 @@ const localetime = require("./libs/handlebars/localetime");
 const friendlysize = require("./libs/handlebars/friendlysize");
 const colorClass = require("./libs/handlebars/colorClass");
 const storage = require("./localStorage");
-const router = require("./router").default;
+const {router} = require("./router");
 const constants = require("./constants");
 
 Vue.filter("localetime", localetime);

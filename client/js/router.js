@@ -24,6 +24,38 @@ const router = new VueRouter({
 				windowName: "SignIn",
 			},
 		},
+	],
+});
+
+router.afterEach((to) => {
+	if (!router.app.initialized) {
+		return;
+	}
+
+	router.app.closeSidebarIfNeeded();
+
+	if (!to.meta.isChat) {
+		// Navigating out of a chat window
+		store.commit("activeWindow", to.meta.windowName);
+
+		if (store.state.activeChannel && store.state.activeChannel.channel) {
+			router.app.switchOutOfChannel(store.state.activeChannel.channel);
+		}
+
+		store.commit("activeChannel", null);
+	}
+});
+
+function initialize() {
+	router.addRoutes([
+		{
+			path: "/sign-in",
+			component: SignIn,
+			meta: {
+				isChat: false,
+				windowName: "SignIn",
+			},
+		},
 		{
 			path: "/connect",
 			component: Connect,
@@ -72,26 +104,10 @@ const router = new VueRouter({
 				windowName: "RoutedChat",
 			},
 		},
-	],
-});
+	]);
+}
 
-router.afterEach((to) => {
-	if (!router.app.initialized) {
-		return;
-	}
-
-	router.app.closeSidebarIfNeeded();
-
-	if (!to.meta.isChat) {
-		// Navigating out of a chat window
-		store.commit("activeWindow", to.meta.windowName);
-
-		if (store.state.activeChannel && store.state.activeChannel.channel) {
-			router.app.switchOutOfChannel(store.state.activeChannel.channel);
-		}
-
-		store.commit("activeChannel", null);
-	}
-});
-
-export default router;
+module.exports = {
+	initialize,
+	router,
+};
