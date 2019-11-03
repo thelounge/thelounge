@@ -24,7 +24,7 @@ Mousetrap.bind(["alt+up", "alt+down"], function(e, keys) {
 	}
 
 	target = channels.eq(target).click();
-	utils.scrollIntoViewNicely(target[0]);
+	scrollIntoViewNicely(target[0]);
 
 	return false;
 });
@@ -67,7 +67,7 @@ Mousetrap.bind(["alt+shift+up", "alt+shift+down"], function(e, keys) {
 	}
 
 	target = lobbies.eq(target).click();
-	utils.scrollIntoViewNicely(target[0]);
+	scrollIntoViewNicely(target[0]);
 
 	return false;
 });
@@ -169,3 +169,9 @@ $(document).on("keydown", (e) => {
 
 	input.trigger("focus");
 });
+
+function scrollIntoViewNicely(el) {
+	// Ideally this would use behavior: "smooth", but that does not consistently work in e.g. Chrome
+	// https://github.com/iamdustan/smoothscroll/issues/28#issuecomment-364061459
+	el.scrollIntoView({block: "center", inline: "nearest"});
+}

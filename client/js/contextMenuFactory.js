@@ -7,6 +7,7 @@ const ContextMenu = require("./contextMenu");
 const contextMenuActions = [];
 const contextMenuItems = [];
 const {vueApp, findChannel} = require("./vue");
+const store = require("./store").default;
 
 addDefaultItems();
 registerEvents();
@@ -47,7 +48,7 @@ function createContextMenu(that, event) {
 
 function addWhoisItem() {
 	function whois(itemData) {
-		const chan = utils.findCurrentNetworkChan(itemData);
+		const chan = store.getters.findChannelOnCurrentNetwork(itemData);
 
 		if (chan) {
 			vueApp.switchToChannel(chan);
@@ -82,7 +83,7 @@ function addWhoisItem() {
 
 function addQueryItem() {
 	function query(itemData) {
-		const chan = utils.findCurrentNetworkChan(itemData);
+		const chan = store.getters.findChannelOnCurrentNetwork(itemData);
 
 		if (chan) {
 			vueApp.switchToChannel(chan);

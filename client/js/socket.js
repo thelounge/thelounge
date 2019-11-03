@@ -12,7 +12,6 @@ const socket = io({
 
 module.exports = socket;
 
-const {requestIdleCallback} = require("./utils");
 const store = require("./store").default;
 
 socket.on("disconnect", handleDisconnect);
@@ -55,5 +54,15 @@ function handleDisconnect(data) {
 	// and we have to manually call connect to start the process
 	if (socket.io.skipReconnect) {
 		requestIdleCallback(() => socket.connect(), 2000);
+	}
+}
+
+function requestIdleCallback(callback, timeout) {
+	if (window.requestIdleCallback) {
+		// During an idle period the user agent will run idle callbacks in FIFO order
+		// until either the idle period ends or there are no more idle callbacks eligible to be run.
+		window.requestIdleCallback(callback, {timeout});
+	} else {
+		callback();
 	}
 }

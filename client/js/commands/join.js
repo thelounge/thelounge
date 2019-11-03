@@ -1,10 +1,10 @@
 "use strict";
 
+const socket = require("../socket");
+const store = require("../store").default;
+
 exports.input = function(args) {
-	const utils = require("../utils");
-	const socket = require("../socket");
 	const {vueApp} = require("../vue");
-	const store = require("../store").default;
 
 	if (args.length > 0) {
 		let channels = args[0];
@@ -23,7 +23,7 @@ exports.input = function(args) {
 
 			channels = channelList.join(",");
 
-			const chan = utils.findCurrentNetworkChan(channels);
+			const chan = store.getters.findChannelOnCurrentNetwork(channels);
 
 			if (chan) {
 				vueApp.switchToChannel(chan);

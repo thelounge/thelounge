@@ -3,14 +3,14 @@
 const $ = require("jquery");
 const socket = require("../socket");
 const storage = require("../localStorage");
-const utils = require("../utils");
 const {getActiveWindowComponent} = require("../vue");
 const store = require("../store").default;
+let lastServerHash = -1;
 
 socket.on("auth", function(data) {
 	// If we reconnected and serverHash differs, that means the server restarted
 	// And we will reload the page to grab the latest version
-	if (utils.serverHash > -1 && data.serverHash > -1 && data.serverHash !== utils.serverHash) {
+	if (lastServerHash > -1 && data.serverHash > -1 && data.serverHash !== lastServerHash) {
 		socket.disconnect();
 		store.commit("isConnected", false);
 		store.commit("currentUserVisibleError", "Server restarted, reloading…");
@@ -19,7 +19,7 @@ socket.on("auth", function(data) {
 	}
 
 	if (data.serverHash > -1) {
-		utils.serverHash = data.serverHash;
+		lastServerHash = data.serverHash;
 	} else {
 		getActiveWindowComponent().inFlight = false;
 	}

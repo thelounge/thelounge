@@ -90,6 +90,10 @@ const store = new Vuex.Store({
 	getters: {
 		currentSession: (state) => state.sessions.find((item) => item.current),
 		otherSessions: (state) => state.sessions.filter((item) => !item.current),
+		findChannelOnCurrentNetwork: (state) => (name) => {
+			name = name.toLowerCase();
+			return state.activeChannel.network.channels.find((c) => c.name.toLowerCase() === name);
+		},
 	},
 });
 
