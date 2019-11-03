@@ -17,26 +17,21 @@ const RoutedChat = require("../components/RoutedChat.vue").default;
 const router = new VueRouter({
 	routes: [
 		{
+			name: "SignIn",
 			path: "/sign-in",
 			component: SignIn,
-			meta: {
-				isChat: false,
-				windowName: "SignIn",
-			},
 		},
 	],
 });
 
 router.afterEach((to) => {
-	if (!router.app.initialized) {
-		return;
+	if (router.app.initialized) {
+		router.app.closeSidebarIfNeeded();
 	}
 
-	router.app.closeSidebarIfNeeded();
-
-	if (!to.meta.isChat) {
+	if (to.name !== "RoutedChat") {
 		// Navigating out of a chat window
-		store.commit("activeWindow", to.meta.windowName);
+		store.commit("activeWindow", to.name);
 
 		if (store.state.activeChannel && store.state.activeChannel.channel) {
 			router.app.switchOutOfChannel(store.state.activeChannel.channel);
@@ -49,60 +44,34 @@ router.afterEach((to) => {
 function initialize() {
 	router.addRoutes([
 		{
-			path: "/sign-in",
-			component: SignIn,
-			meta: {
-				isChat: false,
-				windowName: "SignIn",
-			},
-		},
-		{
+			name: "Connect",
 			path: "/connect",
 			component: Connect,
-			meta: {
-				isChat: false,
-				windowName: "Connect",
-			},
 		},
 		{
+			name: "Settings",
 			path: "/settings",
 			component: Settings,
-			meta: {
-				isChat: false,
-				windowName: "Settings",
-			},
 		},
 		{
+			name: "Help",
 			path: "/help",
 			component: Help,
-			meta: {
-				isChat: false,
-				windowName: "Help",
-			},
 		},
 		{
+			name: "Changelog",
 			path: "/changelog",
 			component: Changelog,
-			meta: {
-				isChat: false,
-				windowName: "Changelog",
-			},
 		},
 		{
+			name: "NetworkEdit",
 			path: "/edit-network/:uuid",
 			component: NetworkEdit,
-			meta: {
-				isChat: false,
-				windowName: "NetworkEdit",
-			},
 		},
 		{
+			name: "RoutedChat",
 			path: "/chan-*",
 			component: RoutedChat,
-			meta: {
-				isChat: true,
-				windowName: "RoutedChat",
-			},
 		},
 	]);
 }

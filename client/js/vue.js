@@ -48,9 +48,9 @@ const vueApp = new Vue({
 			document.body.classList.add("is-apple");
 		}
 
-		document.addEventListener("visibilitychange", this.synchronizeNotifiedState());
-		document.addEventListener("focus", this.synchronizeNotifiedState());
-		document.addEventListener("click", this.synchronizeNotifiedState());
+		document.addEventListener("visibilitychange", this.synchronizeNotifiedState);
+		document.addEventListener("focus", this.synchronizeNotifiedState);
+		document.addEventListener("click", this.synchronizeNotifiedState);
 
 		// TODO: Hackfix because socket-events require vueApp somewhere
 		// and that breaks due to cyclical depenency as by this point vue.js

@@ -1,10 +1,8 @@
 "use strict";
 
 const $ = require("jquery");
-const escape = require("css.escape");
 const socket = require("../socket");
 const webpush = require("../webpush");
-const sidebar = $("#sidebar");
 const storage = require("../localStorage");
 const constants = require("../constants");
 const {vueApp, initChannel} = require("../vue");
@@ -15,8 +13,6 @@ socket.on("init", function(data) {
 	store.commit("currentUserVisibleError", "Rendering…");
 
 	$("#loading-page-message").text(store.state.currentUserVisibleError);
-
-	const previousActive = store.state.activeChannel && store.state.activeChannel.channel.id;
 
 	store.commit("networks", mergeNetworkData(data.networks));
 	store.commit("isConnected", true);
@@ -54,9 +50,23 @@ socket.on("init", function(data) {
 			window.removeEventListener("error", window.g_LoungeErrorHandler);
 			window.g_LoungeErrorHandler = null;
 		}
+
+		if (!vueApp.$route.name || vueApp.$route.name === "SignIn") {
+			const channel = store.getters.findChannel(data.active);
+
+			if (channel) {
+				vueApp.switchToChannel(channel.channel);
+			} else if (store.state.networks.length > 0) {
+				// Server is telling us to open a channel that does not exist
+				// For example, it can be unset if you first open the page after server start
+				vueApp.switchToChannel(store.state.networks[0].channels[0]);
+			} else {
+				// TODO: Use vue router
+				$("#footer .connect").trigger("click");
+			}
+		}
 	}
 
-	vueApp.$nextTick(() => openCorrectChannel(previousActive, data.active));
 	vueApp.synchronizeNotifiedState();
 
 	if (document.body.classList.contains("public")) {
@@ -66,44 +76,6 @@ socket.on("init", function(data) {
 		);
 	}
 });
-
-function openCorrectChannel(clientActive, serverActive) {
-	let target = $();
-
-	// Open last active channel
-	if (clientActive > 0) {
-		target = sidebar.find(`.chan[data-id="${clientActive}"]`);
-	}
-
-	// Open window provided in location.hash
-	if (target.length === 0 && window.location.hash) {
-		target = $(`[data-target="${escape(window.location.hash)}"]`).first();
-	}
-
-	// Open last active channel according to the server
-	if (serverActive > 0 && target.length === 0) {
-		target = sidebar.find(`.chan[data-id="${serverActive}"]`);
-	}
-
-	// Open first available channel
-	if (target.length === 0) {
-		target = sidebar.find(".chan").first();
-	}
-
-	// If target channel is found, open it
-	if (target.length > 0) {
-		target.trigger("click", {
-			replaceHistory: true,
-		});
-
-		return;
-	}
-
-	// Open the connect window
-	$("#footer .connect").trigger("click", {
-		pushState: false,
-	});
-}
 
 function mergeNetworkData(newNetworks) {
 	const collapsedNetworks = new Set(JSON.parse(storage.get("thelounge.networks.collapsed")));

@@ -3,7 +3,7 @@
 		<Sidebar :overlay="$refs.overlay" />
 		<div id="sidebar-overlay" ref="overlay" @click="$root.setSidebar(false)" />
 		<article id="windows">
-			<router-view></router-view>
+			<router-view ref="window"></router-view>
 		</article>
 		<ImageViewer ref="imageViewer" />
 	</div>
@@ -20,9 +20,6 @@ export default {
 	components: {
 		Sidebar,
 		ImageViewer,
-	},
-	props: {
-		activeWindow: String,
 	},
 	computed: {
 		viewportClasses() {
