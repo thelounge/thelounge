@@ -80,14 +80,14 @@ export default {
 			}
 
 			// If actions are hidden, just return a message list with them excluded
-			if (this.$root.settings.statusMessages === "hidden") {
+			if (this.$store.state.settings.statusMessages === "hidden") {
 				return this.channel.messages.filter(
 					(message) => !constants.condensedTypes.includes(message.type)
 				);
 			}
 
 			// If actions are not condensed, just return raw message list
-			if (this.$root.settings.statusMessages !== "condensed") {
+			if (this.$store.state.settings.statusMessages !== "condensed") {
 				return this.channel.messages;
 			}
 

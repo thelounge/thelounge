@@ -2,11 +2,12 @@
 
 const socket = require("../socket");
 const options = require("../options");
+const store = require("../store").default;
 
 function evaluateSetting(name, value) {
 	if (
-		options.settings.syncSettings &&
-		options.settings[name] !== value &&
+		store.state.settings.syncSettings &&
+		store.state.settings[name] !== value &&
 		!options.noSync.includes(name)
 	) {
 		options.processSetting(name, value, true);

@@ -6,7 +6,6 @@ const Mousetrap = require("mousetrap");
 const {Textcomplete, Textarea} = require("textcomplete");
 const emojiMap = require("./libs/simplemap.json");
 const constants = require("./constants");
-const {vueApp} = require("./vue");
 const store = require("./store").default;
 
 let input;
@@ -62,7 +61,7 @@ const nicksStrategy = {
 	},
 	replace([, original], position = 1) {
 		// If no postfix specified, return autocompleted nick as-is
-		if (!vueApp.settings.nickPostfix) {
+		if (!store.state.settings.nickPostfix) {
 			return original;
 		}
 
@@ -72,7 +71,7 @@ const nicksStrategy = {
 		}
 
 		// If nick is first in the input, append specified postfix
-		return original + vueApp.settings.nickPostfix;
+		return original + store.state.settings.nickPostfix;
 	},
 	index: 1,
 };

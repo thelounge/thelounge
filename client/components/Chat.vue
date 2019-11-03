@@ -4,9 +4,9 @@
 			id="chat"
 			:data-id="channel.id"
 			:class="{
-				'hide-motd': !this.$root.settings.motd,
-				'colored-nicks': this.$root.settings.coloredNicks,
-				'show-seconds': this.$root.settings.showSeconds,
+				'hide-motd': !$store.state.settings.motd,
+				'colored-nicks': $store.state.settings.coloredNicks,
+				'show-seconds': $store.state.settings.showSeconds,
 			}"
 		>
 			<div

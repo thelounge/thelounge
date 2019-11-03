@@ -90,7 +90,7 @@ export default {
 	},
 	computed: {
 		messageTime() {
-			const format = this.$root.settings.showSeconds
+			const format = this.$store.state.settings.showSeconds
 				? constants.timeFormats.msgWithSeconds
 				: constants.timeFormats.msgDefault;
 

@@ -10,7 +10,7 @@
 				<div class="col-sm-6">
 					<label class="opt">
 						<input
-							v-model="$store.state.serverConfiguration.advanced"
+							:checked="$store.state.settings.advanced"
 							type="checkbox"
 							name="advanced"
 						/>
@@ -37,8 +37,7 @@
 
 				<div
 					v-if="
-						!$store.state.serverConfiguration.public &&
-							$store.state.serverConfiguration.advanced
+						!$store.state.serverConfiguration.public && $store.state.settings.advanced
 					"
 					class="col-sm-12"
 				>
@@ -56,21 +55,21 @@
 					</h2>
 					<label class="opt">
 						<input
-							v-model="$root.settings.syncSettings"
+							:checked="$store.state.settings.syncSettings"
 							type="checkbox"
 							name="syncSettings"
 						/>
 						Synchronize settings with other clients
 					</label>
-					<p v-if="!$root.settings.syncSettings" class="sync-warning-override">
+					<p v-if="!$store.state.settings.syncSettings" class="sync-warning-override">
 						<strong>Warning</strong> Checking this box will override the settings of
 						this client with those stored on the server.
 					</p>
-					<p v-if="!$root.settings.syncSettings" class="sync-warning-base">
+					<p v-if="!$store.state.settings.syncSettings" class="sync-warning-base">
 						<strong>Warning</strong> No settings have been synced before. Enabling this
 						will sync all settings of this client as the base for other clients.
 					</p>
-					<div v-if="$root.settings.syncSettings" class="opt force-sync-button">
+					<div v-if="$store.state.settings.syncSettings" class="opt force-sync-button">
 						<button type="button" class="btn" @click="onForceSyncClick">
 							Force sync settings
 						</button>
@@ -83,14 +82,14 @@
 				</div>
 				<div class="col-sm-6">
 					<label class="opt">
-						<input v-model="$root.settings.motd" type="checkbox" name="motd" />
+						<input :checked="$store.state.settings.motd" type="checkbox" name="motd" />
 						Show <abbr title="Message Of The Day">MOTD</abbr>
 					</label>
 				</div>
 				<div class="col-sm-6">
 					<label class="opt">
 						<input
-							v-model="$root.settings.showSeconds"
+							:checked="$store.state.settings.showSeconds"
 							type="checkbox"
 							name="showSeconds"
 						/>
@@ -114,7 +113,7 @@
 				<div class="col-sm-12">
 					<label class="opt">
 						<input
-							v-model="$root.settings.statusMessages"
+							:checked="$store.state.settings.statusMessages === 'shown'"
 							type="radio"
 							name="statusMessages"
 							value="shown"
@@ -123,7 +122,7 @@
 					</label>
 					<label class="opt">
 						<input
-							v-model="$root.settings.statusMessages"
+							:checked="$store.state.settings.statusMessages === 'condensed'"
 							type="radio"
 							name="statusMessages"
 							value="condensed"
@@ -132,7 +131,7 @@
 					</label>
 					<label class="opt">
 						<input
-							v-model="$root.settings.statusMessages"
+							:checked="$store.state.settings.statusMessages === 'hidden'"
 							type="radio"
 							name="statusMessages"
 							value="hidden"
@@ -146,7 +145,7 @@
 				<div class="col-sm-12">
 					<label class="opt">
 						<input
-							v-model="$root.settings.coloredNicks"
+							:checked="$store.state.settings.coloredNicks"
 							type="checkbox"
 							name="coloredNicks"
 						/>
@@ -154,21 +153,21 @@
 					</label>
 					<label class="opt">
 						<input
-							v-model="$root.settings.autocomplete"
+							:checked="$store.state.settings.autocomplete"
 							type="checkbox"
 							name="autocomplete"
 						/>
 						Enable autocomplete
 					</label>
 				</div>
-				<div v-if="$store.state.serverConfiguration.advanced" class="col-sm-12">
+				<div v-if="$store.state.settings.advanced" class="col-sm-12">
 					<label class="opt">
-						<label for="nickPostfix" class="sr-only"
-							>Nick autocomplete postfix (e.g. <code>, </code>)</label
-						>
+						<label for="nickPostfix" class="sr-only">
+							Nick autocomplete postfix (e.g. <code>, </code>)
+						</label>
 						<input
 							id="nickPostfix"
-							v-model="$root.settings.nickPostfix"
+							:value="$store.state.settings.nickPostfix"
 							type="text"
 							name="nickPostfix"
 							class="input"
@@ -184,7 +183,7 @@
 					<label for="theme-select" class="sr-only">Theme</label>
 					<select
 						id="theme-select"
-						v-model="$root.settings.theme"
+						:value="$store.state.settings.theme"
 						name="theme"
 						class="input"
 					>
@@ -198,19 +197,27 @@
 					</select>
 				</div>
 
-				<template v-if="$store.state.serverConfiguration.prefetch">
+				<template v-if="$store.state.settings.prefetch">
 					<div class="col-sm-12">
 						<h2>Link previews</h2>
 					</div>
 					<div class="col-sm-6">
 						<label class="opt">
-							<input type="checkbox" name="media" />
+							<input
+								:checked="$store.state.settings.media"
+								type="checkbox"
+								name="media"
+							/>
 							Auto-expand media
 						</label>
 					</div>
 					<div class="col-sm-6">
 						<label class="opt">
-							<input v-model="$root.settings.links" type="checkbox" name="links" />
+							<input
+								:checked="$store.state.settings.links"
+								type="checkbox"
+								name="links"
+							/>
 							Auto-expand websites
 						</label>
 					</div>
@@ -276,7 +283,7 @@
 				<div class="col-sm-12">
 					<label class="opt">
 						<input
-							v-model="$root.settings.notification"
+							:checked="$store.state.settings.notification"
 							type="checkbox"
 							name="notification"
 						/>
@@ -289,10 +296,10 @@
 					</div>
 				</div>
 
-				<div v-if="$store.state.serverConfiguration.advanced" class="col-sm-12">
+				<div v-if="$store.state.settings.advanced" class="col-sm-12">
 					<label class="opt">
 						<input
-							v-model="$root.settings.notifyAllMessages"
+							:checked="$store.state.settings.notifyAllMessages"
 							type="checkbox"
 							name="notifyAllMessages"
 						/>
@@ -300,14 +307,14 @@
 					</label>
 				</div>
 
-				<div v-if="$store.state.serverConfiguration.advanced" class="col-sm-12">
+				<div v-if="$store.state.settings.advanced" class="col-sm-12">
 					<label class="opt">
-						<label for="highlights" class="sr-only"
-							>Custom highlights (comma-separated keywords)</label
-						>
+						<label for="highlights" class="sr-only">
+							Custom highlights (comma-separated keywords)
+						</label>
 						<input
 							id="highlights"
-							v-model="$root.settings.highlights"
+							:value="$store.state.settings.highlights"
 							type="text"
 							name="highlights"
 							class="input"
@@ -327,9 +334,9 @@
 						<h2>Change password</h2>
 					</div>
 					<div class="col-sm-12 password-container">
-						<label for="old_password_input" class="sr-only"
-							>Enter current password</label
-						>
+						<label for="old_password_input" class="sr-only">
+							Enter current password
+						</label>
 						<RevealPassword v-slot:default="slotProps">
 							<input
 								id="old_password_input"
@@ -341,9 +348,9 @@
 						</RevealPassword>
 					</div>
 					<div class="col-sm-12 password-container">
-						<label for="new_password_input" class="sr-only"
-							>Enter desired new password</label
-						>
+						<label for="new_password_input" class="sr-only">
+							Enter desired new password
+						</label>
 						<RevealPassword v-slot:default="slotProps">
 							<input
 								id="new_password_input"
@@ -355,9 +362,9 @@
 						</RevealPassword>
 					</div>
 					<div class="col-sm-12 password-container">
-						<label for="verify_password_input" class="sr-only"
-							>Repeat new password</label
-						>
+						<label for="verify_password_input" class="sr-only">
+							Repeat new password
+						</label>
 						<RevealPassword v-slot:default="slotProps">
 							<input
 								id="verify_password_input"
@@ -387,16 +394,16 @@
 					</div>
 				</div>
 
-				<div v-if="$store.state.serverConfiguration.advanced" class="col-sm-12">
+				<div v-if="$store.state.settings.advanced" class="col-sm-12">
 					<h2>Custom Stylesheet</h2>
 				</div>
-				<div v-if="$store.state.serverConfiguration.advanced" class="col-sm-12">
-					<label for="user-specified-css-input" class="sr-only"
-						>Custom stylesheet. You can override any style with CSS here.</label
-					>
+				<div v-if="$store.state.settings.advanced" class="col-sm-12">
+					<label for="user-specified-css-input" class="sr-only">
+						Custom stylesheet. You can override any style with CSS here.
+					</label>
 					<textarea
 						id="user-specified-css-input"
-						v-model="$root.settings.userStyles"
+						:value="$store.state.settings.userStyles"
 						class="input"
 						name="userStyles"
 						placeholder="/* You can override any style with CSS here */"
@@ -416,7 +423,7 @@
 				<div id="session-list">
 					<p v-if="$store.state.sessions.length == 0">Loading…</p>
 					<p v-else-if="$store.getters.otherSessions.length == 0">
-						<em>You are not currently logged in to any other device.</em>'
+						<em>You are not currently logged in to any other device.</em>
 					</p>
 					<template v-else>
 						<Session

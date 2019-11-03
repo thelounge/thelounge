@@ -92,7 +92,7 @@ export default {
 		},
 	},
 	mounted() {
-		if (this.$root.settings.autocomplete) {
+		if (this.$store.state.settings.autocomplete) {
 			require("../js/autocompletion").enable(this.$refs.input);
 		}
 

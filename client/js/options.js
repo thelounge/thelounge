@@ -3,7 +3,6 @@
 const $ = require("jquery");
 const storage = require("./localStorage");
 const socket = require("./socket");
-const {vueApp} = require("./vue");
 const store = require("./store").default;
 require("../js/autocompletion");
 
@@ -13,7 +12,7 @@ const $userStyles = $("#user-specified-css");
 const noCSSparamReg = /[?&]nocss/;
 
 // Default settings
-const settings = vueApp.settings;
+const settings = store.state.settings;
 
 const noSync = ["syncSettings"];
 
@@ -28,7 +27,7 @@ let userSettings = JSON.parse(storage.get("settings")) || false;
 
 if (!userSettings) {
 	// Enable sync by default if there are no user defined settings.
-	settings.syncSettings = true;
+	store.commit("settings/syncSettings", true);
 } else {
 	for (const key in settings) {
 		// Older The Lounge versions converted highlights to an array, turn it back into a string
@@ -41,7 +40,7 @@ if (!userSettings) {
 			typeof userSettings[key] !== "undefined" &&
 			typeof settings[key] === typeof userSettings[key]
 		) {
-			settings[key] = userSettings[key];
+			store.commit(`settings/${key}`, userSettings[key]);
 		}
 	}
 }
@@ -118,7 +117,7 @@ function settingSetEmit(name, value) {
 
 // When sync is `true` the setting will also be sent to the backend for syncing.
 function updateSetting(name, value, sync) {
-	settings[name] = value;
+	store.commit(`settings/${name}`, value);
 	storage.set("settings", JSON.stringify(settings));
 	applySetting(name, value);
 

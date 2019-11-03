@@ -41,7 +41,7 @@ socket.on("configuration", function(data) {
 
 	// If localStorage contains a theme that does not exist on this server, switch
 	// back to its default theme.
-	const currentTheme = data.themes.find((t) => t.name === options.settings.theme);
+	const currentTheme = data.themes.find((t) => t.name === store.state.settings.theme);
 
 	if (currentTheme === undefined) {
 		options.processSetting("theme", data.defaultTheme, true);

@@ -207,8 +207,8 @@ export default {
 				case "error":
 					defaultState =
 						this.link.error === "image-too-big"
-							? this.$root.settings.media
-							: this.$root.settings.links;
+							? this.$store.state.settings.media
+							: this.$store.state.settings.links;
 					break;
 
 				case "loading":
@@ -216,11 +216,11 @@ export default {
 					break;
 
 				case "link":
-					defaultState = this.$root.settings.links;
+					defaultState = this.$store.state.settings.links;
 					break;
 
 				default:
-					defaultState = this.$root.settings.media;
+					defaultState = this.$store.state.settings.media;
 			}
 
 			this.link.shown = this.link.shown && defaultState;

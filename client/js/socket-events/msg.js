@@ -2,7 +2,6 @@
 
 const $ = require("jquery");
 const socket = require("../socket");
-const options = require("../options");
 const cleanIrcMessage = require("../libs/handlebars/ircmessageparser/cleanIrcMessage");
 const webpush = require("../webpush");
 const {vueApp} = require("../vue");
@@ -99,9 +98,9 @@ socket.on("msg", function(data) {
 function notifyMessage(targetId, channel, activeChannel, msg) {
 	const button = $("#sidebar .chan[data-id='" + targetId + "']");
 
-	if (msg.highlight || (options.settings.notifyAllMessages && msg.type === "message")) {
+	if (msg.highlight || (store.state.settings.notifyAllMessages && msg.type === "message")) {
 		if (!document.hasFocus() || !activeChannel || activeChannel.channel !== channel) {
-			if (options.settings.notification) {
+			if (store.state.settings.notification) {
 				try {
 					pop.play();
 				} catch (exception) {
@@ -110,7 +109,7 @@ function notifyMessage(targetId, channel, activeChannel, msg) {
 			}
 
 			if (
-				options.settings.desktopNotifications &&
+				store.state.settings.desktopNotifications &&
 				"Notification" in window &&
 				Notification.permission === "granted"
 			) {
