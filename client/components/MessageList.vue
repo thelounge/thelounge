@@ -218,8 +218,6 @@ export default {
 			this.keepScrollPosition();
 
 			// Tell the server we're toggling so it remembers at page reload
-			// TODO Avoid sending many single events when using `/collapse` or `/expand`
-			// See https://github.com/thelounge/thelounge/issues/1377
 			socket.emit("msg:preview:toggle", {
 				target: this.channel.id,
 				msgId: message.id,
