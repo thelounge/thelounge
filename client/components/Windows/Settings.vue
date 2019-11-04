@@ -232,11 +232,21 @@
 							id="pushNotifications"
 							type="button"
 							class="btn"
-							:disabled="$store.state.pushNotificationState !== 'supported'"
-							data-text-alternate="Unsubscribe from push notifications"
+							:disabled="
+								$store.state.pushNotificationState !== 'supported' &&
+									$store.state.pushNotificationState !== 'subscribed'
+							"
 							@click="onPushButtonClick"
 						>
-							Subscribe to push notifications
+							<template v-if="$store.state.pushNotificationState === 'subscribed'">
+								Unsubscribe from push notifications
+							</template>
+							<template v-else-if="$store.state.pushNotificationState === 'loading'">
+								Loading…
+							</template>
+							<template v-else>
+								Subscribe to push notifications
+							</template>
 						</button>
 						<div v-if="$store.state.pushNotificationState === 'nohttps'" class="error">
 							<strong>Warning</strong>: Push notifications are only supported over
@@ -257,9 +267,9 @@
 				</div>
 				<div class="col-sm-12">
 					<label class="opt">
-						<!-- TODO: handle enabling/disabling notifications -->
 						<input
 							id="desktopNotifications"
+							:checked="$store.state.settings.desktopNotifications"
 							type="checkbox"
 							name="desktopNotifications"
 						/>

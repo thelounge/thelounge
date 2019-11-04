@@ -1,20 +1,22 @@
 "use strict";
 
-const $ = require("jquery");
 const storage = require("./localStorage");
 const socket = require("./socket");
 const store = require("./store").default;
 
-let pushNotificationsButton;
 let clientSubscribed = null;
 let applicationServerKey;
 
 if ("serviceWorker" in navigator) {
 	navigator.serviceWorker.addEventListener("message", (event) => {
 		if (event.data && event.data.type === "open") {
-			$("#sidebar")
-				.find(`.chan[data-target="#${event.data.channel}"]`)
-				.trigger("click");
+			const channelTarget = document.querySelector(
+				"#sidebar .chan[data-target='#" + event.data.channel + "']"
+			);
+
+			if (channelTarget) {
+				channelTarget.click();
+			}
 		}
 	});
 }
@@ -27,22 +29,18 @@ module.exports.configurePushNotifications = (subscribedOnServer, key) => {
 	// If client has push registration but the server knows nothing about it,
 	// this subscription is broken and client has to register again
 	if (clientSubscribed === true && subscribedOnServer === false) {
-		pushNotificationsButton.prop("disabled", true);
+		store.commit("pushNotificationState", "loading");
 
 		navigator.serviceWorker.ready
 			.then((registration) => registration.pushManager.getSubscription())
 			.then((subscription) => subscription && subscription.unsubscribe())
 			.then((successful) => {
-				if (successful) {
-					alternatePushButton().prop("disabled", false);
-				}
+				store.commit("pushNotificationState", successful ? "supported" : "unsupported");
 			});
 	}
 };
 
 module.exports.initialize = () => {
-	pushNotificationsButton = $("#pushNotifications");
-
 	if (!isAllowedServiceWorkersHost()) {
 		store.commit("pushNotificationState", "nohttps");
 		return;
@@ -59,13 +57,12 @@ module.exports.initialize = () => {
 				}
 
 				return registration.pushManager.getSubscription().then((subscription) => {
-					store.commit("pushNotificationState", "supported");
-
 					clientSubscribed = !!subscription;
 
-					if (clientSubscribed) {
-						alternatePushButton();
-					}
+					store.commit(
+						"pushNotificationState",
+						clientSubscribed ? "subscribed" : "supported"
+					);
 				});
 			})
 			.catch(() => {
@@ -75,55 +72,48 @@ module.exports.initialize = () => {
 };
 
 module.exports.onPushButton = () => {
-	// TODO: move dom logic to Settings.vue
-	pushNotificationsButton = $("#pushNotifications");
-	pushNotificationsButton.prop("disabled", true);
+	store.commit("pushNotificationState", "loading");
 
 	navigator.serviceWorker.ready
 		.then((registration) =>
-			registration.pushManager
-				.getSubscription()
-				.then((existingSubscription) => {
-					if (existingSubscription) {
-						socket.emit("push:unregister");
+			registration.pushManager.getSubscription().then((existingSubscription) => {
+				if (existingSubscription) {
+					socket.emit("push:unregister");
 
-						return existingSubscription.unsubscribe();
-					}
+					return existingSubscription.unsubscribe().then(() => {
+						store.commit("pushNotificationState", "supported");
+					});
+				}
 
-					return registration.pushManager
-						.subscribe({
-							applicationServerKey: urlBase64ToUint8Array(applicationServerKey),
-							userVisibleOnly: true,
-						})
-						.then((subscription) => {
-							const rawKey = subscription.getKey ? subscription.getKey("p256dh") : "";
-							const key = rawKey
-								? window.btoa(String.fromCharCode(...new Uint8Array(rawKey)))
-								: "";
-							const rawAuthSecret = subscription.getKey
-								? subscription.getKey("auth")
-								: "";
-							const authSecret = rawAuthSecret
-								? window.btoa(String.fromCharCode(...new Uint8Array(rawAuthSecret)))
-								: "";
+				return registration.pushManager
+					.subscribe({
+						applicationServerKey: urlBase64ToUint8Array(applicationServerKey),
+						userVisibleOnly: true,
+					})
+					.then((subscription) => {
+						const rawKey = subscription.getKey ? subscription.getKey("p256dh") : "";
+						const key = rawKey
+							? window.btoa(String.fromCharCode(...new Uint8Array(rawKey)))
+							: "";
+						const rawAuthSecret = subscription.getKey
+							? subscription.getKey("auth")
+							: "";
+						const authSecret = rawAuthSecret
+							? window.btoa(String.fromCharCode(...new Uint8Array(rawAuthSecret)))
+							: "";
 
-							socket.emit("push:register", {
-								token: storage.get("token"),
-								endpoint: subscription.endpoint,
-								keys: {
-									p256dh: key,
-									auth: authSecret,
-								},
-							});
-
-							return true;
+						socket.emit("push:register", {
+							token: storage.get("token"),
+							endpoint: subscription.endpoint,
+							keys: {
+								p256dh: key,
+								auth: authSecret,
+							},
 						});
-				})
-				.then((successful) => {
-					if (successful) {
-						alternatePushButton().prop("disabled", false);
-					}
-				})
+
+						store.commit("pushNotificationState", "subscribed");
+					});
+			})
 		)
 		.catch(() => {
 			store.commit("pushNotificationState", "unsupported");
@@ -131,14 +121,6 @@ module.exports.onPushButton = () => {
 
 	return false;
 };
-
-function alternatePushButton() {
-	const text = pushNotificationsButton.text();
-
-	return pushNotificationsButton
-		.text(pushNotificationsButton.data("text-alternate"))
-		.data("text-alternate", text);
-}
 
 function urlBase64ToUint8Array(base64String) {
 	const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
