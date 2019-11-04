@@ -160,6 +160,10 @@ module.exports = {
 	//   If you use this option, you must have a reverse proxy configured,
 	//   to correctly proxy the uploads URLs back to The Lounge.
 	//   This value is set to `null` by default.
+	//
+	//  For example:
+	//    - Set baseUrl to "https://example.com/somewhere"
+	//    - Then configure nginx to re-route "https://example.com/somewhere/*" to "http://127.0.0.1:9000/uploads/*"
 	fileUpload: {
 		enable: false,
 		maxFileSize: 10240,
