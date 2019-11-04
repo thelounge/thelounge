@@ -39,6 +39,11 @@
 							:text="channel.topic"
 					/></span>
 					<button
+						class="mentions"
+						aria-label="Open your mentions"
+						@click="openMentions"
+					/>
+					<button
 						class="menu"
 						aria-label="Open the context menu"
 						@click="openContextMenu"
@@ -196,6 +201,11 @@ export default {
 				event: event,
 				channel: this.channel,
 				network: this.network,
+			});
+		},
+		openMentions() {
+			this.$root.$emit("mentions:toggle", {
+				event: event,
 			});
 		},
 	},

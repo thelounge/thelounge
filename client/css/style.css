@@ -283,6 +283,7 @@ p {
 
 #viewport .lt::before,
 #viewport .rt::before,
+#chat button.mentions::before,
 #chat button.menu::before,
 .channel-list-item::before,
 #footer .icon,
@@ -336,6 +337,7 @@ p {
 #viewport .lt::before { content: "\f0c9"; /* http://fontawesome.io/icon/bars/ */ }
 #viewport .rt::before { content: "\f0c0"; /* https://fontawesome.com/icons/users?style=solid */ }
 #chat button.menu::before { content: "\f142"; /* http://fontawesome.io/icon/ellipsis-v/ */ }
+#chat button.mentions::before { content: "\f1fa"; /* https://fontawesome.com/icons/at?style=solid */ }
 
 .context-menu-join::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
 .context-menu-user::before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
@@ -547,6 +549,7 @@ p {
 
 #viewport .lt,
 #viewport .rt,
+#chat button.mentions,
 #chat button.menu {
 	color: #607992;
 	display: flex;
@@ -560,6 +563,7 @@ p {
 
 #viewport .lt::before,
 #viewport .rt::before,
+#chat button.mentions::before,
 #chat button.menu::before {
 	width: 36px;
 	line-height: 36px; /* Fix alignment in Microsoft Edge */
@@ -2166,6 +2170,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	opacity: 0.5;
 }
 
+#mentions-popup-container,
 #context-menu-container {
 	position: absolute;
 	top: 0;
@@ -2176,6 +2181,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	background: transparent;
 }
 
+.mentions-popup,
 #context-menu,
 .textcomplete-menu {
 	position: absolute;
