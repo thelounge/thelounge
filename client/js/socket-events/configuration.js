@@ -21,15 +21,8 @@ window.addEventListener("beforeinstallprompt", (installPromptEvent) => {
 	$("#native-app").prop("hidden", false);
 });
 
-socket.on("configuration", function(data) {
+socket.once("configuration", function(data) {
 	store.commit("isFileUploadEnabled", data.fileUpload);
-
-	if (options.initialized) {
-		// Likely a reconnect, request sync for possibly missed settings.
-		socket.emit("setting:get");
-		return;
-	}
-
 	store.commit("serverConfiguration", data);
 
 	if (data.fileUpload) {

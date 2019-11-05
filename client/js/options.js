@@ -64,7 +64,6 @@ userSettings = null;
 module.exports = {
 	alwaysSync,
 	noSync,
-	initialized: false,
 	settings,
 	syncAllSettings,
 	processSetting,
@@ -159,8 +158,6 @@ function processSetting(name, value, save) {
 }
 
 function initialize() {
-	module.exports.initialized = true;
-
 	// Settings have now entirely updated, apply settings to the client.
 	for (const name in settings) {
 		processSetting(name, settings[name], false);
