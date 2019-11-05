@@ -1,9 +1,9 @@
 "use strict";
 
 const expect = require("chai").expect;
-const friendlysize = require("../../../../../client/js/libs/handlebars/friendlysize");
+const friendlysize = require("../../../../client/js/helpers/friendlysize");
 
-describe("friendlysize Handlebars helper", function() {
+describe("friendlysize helper", function() {
 	it("should render big values in human-readable version", function() {
 		expect(friendlysize(51200)).to.equal("50 KB");
 	});

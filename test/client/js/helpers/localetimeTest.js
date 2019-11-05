@@ -1,9 +1,9 @@
 "use strict";
 
 const expect = require("chai").expect;
-const localetime = require("../../../../../client/js/libs/handlebars/localetime");
+const localetime = require("../../../../client/js/helpers/localetime");
 
-describe("localetime Handlebars helper", () => {
+describe("localetime helper", () => {
 	it("should render a human-readable date", () => {
 		// 12PM in UTC time
 		const date = new Date("2014-05-22T12:00:00Z");

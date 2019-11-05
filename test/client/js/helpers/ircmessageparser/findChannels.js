@@ -1,7 +1,7 @@
 "use strict";
 
 const expect = require("chai").expect;
-const findChannels = require("../../../../../../client/js/libs/handlebars/ircmessageparser/findChannels");
+const findChannels = require("../../../../../client/js/helpers/ircmessageparser/findChannels");
 
 describe("findChannels", () => {
 	it("should find single letter channel", () => {

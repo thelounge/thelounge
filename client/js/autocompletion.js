@@ -4,7 +4,7 @@ const $ = require("jquery");
 const fuzzy = require("fuzzy");
 const Mousetrap = require("mousetrap");
 const {Textcomplete, Textarea} = require("textcomplete");
-const emojiMap = require("./libs/simplemap.json");
+const emojiMap = require("./helpers/simplemap.json");
 const constants = require("./constants");
 const store = require("./store").default;
 

@@ -1,7 +1,7 @@
 "use strict";
 
 const socket = require("../socket");
-const cleanIrcMessage = require("../libs/handlebars/ircmessageparser/cleanIrcMessage");
+const cleanIrcMessage = require("../helpers/ircmessageparser/cleanIrcMessage");
 const webpush = require("../webpush");
 const {vueApp} = require("../vue");
 const store = require("../store").default;

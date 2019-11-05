@@ -28,7 +28,7 @@
 				<span class="not-connected-icon" />
 			</span>
 			<span v-if="channel.unread" :class="{highlight: channel.highlight}" class="badge">{{
-				channel.unread | roundBadgeNumber
+				unreadCount
 			}}</span>
 		</div>
 		<span
@@ -47,6 +47,7 @@
 </template>
 
 <script>
+const roundBadgeNumber = require("../js/helpers/roundBadgeNumber");
 import ChannelWrapper from "./ChannelWrapper.vue";
 import socket from "../js/socket";
 const storage = require("../js/localStorage");
@@ -66,6 +67,9 @@ export default {
 		},
 		joinChannelLabel() {
 			return this.isJoinChannelShown ? "Cancel" : "Join a channel…";
+		},
+		unreadCount() {
+			return roundBadgeNumber(this.channel.unread);
 		},
 	},
 	methods: {

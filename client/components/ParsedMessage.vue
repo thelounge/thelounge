@@ -1,5 +1,5 @@
 <script>
-const parse = require("../js/libs/handlebars/parse");
+const parse = require("../js/helpers/parse");
 
 export default {
 	name: "ParsedMessage",

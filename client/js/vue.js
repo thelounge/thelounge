@@ -4,18 +4,12 @@ const Vue = require("vue").default;
 
 const store = require("./store").default;
 const App = require("../components/App.vue").default;
-const roundBadgeNumber = require("./libs/handlebars/roundBadgeNumber");
-const localetime = require("./libs/handlebars/localetime");
-const friendlysize = require("./libs/handlebars/friendlysize");
-const colorClass = require("./libs/handlebars/colorClass");
+const localetime = require("./helpers/localetime");
 const storage = require("./localStorage");
 const {router} = require("./router");
 const constants = require("./constants");
 
 Vue.filter("localetime", localetime);
-Vue.filter("friendlysize", friendlysize);
-Vue.filter("colorClass", colorClass);
-Vue.filter("roundBadgeNumber", roundBadgeNumber);
 
 const appName = document.title;
 

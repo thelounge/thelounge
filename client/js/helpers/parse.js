@@ -7,10 +7,10 @@ const findEmoji = require("./ircmessageparser/findEmoji");
 const findNames = require("./ircmessageparser/findNames");
 const merge = require("./ircmessageparser/merge");
 const colorClass = require("./colorClass");
-const emojiMap = require("../fullnamemap.json");
-const LinkPreviewToggle = require("../../../components/LinkPreviewToggle.vue").default;
-const LinkPreviewFileSize = require("../../../components/LinkPreviewFileSize.vue").default;
-const InlineChannel = require("../../../components/InlineChannel.vue").default;
+const emojiMap = require("./fullnamemap.json");
+const LinkPreviewToggle = require("../../components/LinkPreviewToggle.vue").default;
+const LinkPreviewFileSize = require("../../components/LinkPreviewFileSize.vue").default;
+const InlineChannel = require("../../components/InlineChannel.vue").default;
 const emojiModifiersRegex = /[\u{1f3fb}-\u{1f3ff}]/gu;
 
 // Create an HTML `span` with styling information for a given fragment

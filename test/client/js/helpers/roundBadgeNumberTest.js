@@ -1,9 +1,9 @@
 "use strict";
 
 const expect = require("chai").expect;
-const roundBadgeNumber = require("../../../../../client/js/libs/handlebars/roundBadgeNumber");
+const roundBadgeNumber = require("../../../../client/js/helpers/roundBadgeNumber");
 
-describe("roundBadgeNumber Handlebars helper", function() {
+describe("roundBadgeNumber helper", function() {
 	it("should return any number under 1000 as a string", function() {
 		expect(roundBadgeNumber(123)).to.equal("123");
 	});

@@ -24,12 +24,12 @@ const fs = require("fs");
 	const fullNameEmojiMapOutput = JSON.stringify(fullNameEmojiMap, null, 2) + "\n";
 
 	fs.writeFileSync(
-		path.resolve(path.join(__dirname, "..", "client", "js", "libs", "simplemap.json")),
+		path.resolve(path.join(__dirname, "..", "client", "js", "helpers", "simplemap.json")),
 		emojiMapOutput
 	);
 
 	fs.writeFileSync(
-		path.resolve(path.join(__dirname, "..", "client", "js", "libs", "fullnamemap.json")),
+		path.resolve(path.join(__dirname, "..", "client", "js", "helpers", "fullnamemap.json")),
 		fullNameEmojiMapOutput
 	);
 })();

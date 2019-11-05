@@ -77,8 +77,7 @@
 			</template>
 			<template v-else-if="link.type === 'error'">
 				<em v-if="link.error === 'image-too-big'">
-					This image is larger than {{ link.maxSize | friendlysize }} and cannot be
-					previewed.
+					This image is larger than {{ imageMaxSize }} and cannot be previewed.
 					<a :href="link.link" target="_blank" rel="noopener">Click here</a>
 					to open it in a new window.
 				</em>
@@ -108,6 +107,8 @@
 </template>
 
 <script>
+const friendlysize = require("../js/helpers/friendlysize");
+
 export default {
 	name: "LinkPreview",
 	props: {
@@ -123,6 +124,9 @@ export default {
 	computed: {
 		moreButtonLabel() {
 			return this.isContentShown ? "Less" : "More";
+		},
+		imageMaxSize() {
+			return friendlysize(this.link.maxSize);
 		},
 	},
 	watch: {

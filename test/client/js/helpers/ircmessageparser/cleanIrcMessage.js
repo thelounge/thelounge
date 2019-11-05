@@ -1,7 +1,7 @@
 "use strict";
 
 const expect = require("chai").expect;
-const cleanIrcMessage = require("../../../../../../client/js/libs/handlebars/ircmessageparser/cleanIrcMessage");
+const cleanIrcMessage = require("../../../../../client/js/helpers/ircmessageparser/cleanIrcMessage");
 
 describe("cleanIrcMessage", function() {
 	it("should remove all formatting", function() {

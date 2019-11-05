@@ -1,6 +1,6 @@
 <template>
 	<span
-		:class="['user', $options.filters.colorClass(user.original.nick), {active: active}]"
+		:class="['user', nickColor, {active: active}]"
 		:data-name="user.original.nick"
 		role="button"
 		@mouseover="hover"
@@ -9,12 +9,19 @@
 </template>
 
 <script>
+const colorClass = require("../js/helpers/colorClass");
+
 export default {
 	name: "UsernameFiltered",
 	props: {
 		user: Object,
 		active: Boolean,
 		onHover: Function,
+	},
+	computed: {
+		nickColor() {
+			return colorClass(this.user.original.nick);
+		},
 	},
 	methods: {
 		hover() {

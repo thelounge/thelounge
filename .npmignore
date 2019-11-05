@@ -9,8 +9,8 @@
 # Ignore client folder as it's being built into public/ folder
 # except for the specified files which are used by the server
 client/**
-!client/js/libs/handlebars/ircmessageparser/findLinks.js
-!client/js/libs/handlebars/ircmessageparser/cleanIrcMessage.js
+!client/js/helpers/ircmessageparser/findLinks.js
+!client/js/helpers/ircmessageparser/cleanIrcMessage.js
 !client/index.html.tpl
 
 public/js/bundle.vendor.js.map

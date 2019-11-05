@@ -3,7 +3,7 @@
 const expect = require("chai").expect;
 
 import {renderToString} from "@vue/server-test-utils";
-import ParsedMessageTestWrapper from "../../../components/ParsedMessageTestWrapper.vue";
+import ParsedMessageTestWrapper from "../../components/ParsedMessageTestWrapper.vue";
 
 function getParsedMessageContents(text, message) {
 	let contents = renderToString(ParsedMessageTestWrapper, {
@@ -19,7 +19,7 @@ function getParsedMessageContents(text, message) {
 	return contents;
 }
 
-describe("parse Handlebars helper", () => {
+describe("IRC formatted message parser", () => {
 	it("should not introduce xss", () => {
 		const testCases = [
 			{

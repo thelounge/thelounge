@@ -1,7 +1,7 @@
 "use strict";
 
 const expect = require("chai").expect;
-const findLinks = require("../../../../../../client/js/libs/handlebars/ircmessageparser/findLinks");
+const findLinks = require("../../../../../client/js/helpers/ircmessageparser/findLinks");
 
 describe("findLinks", () => {
 	it("should find url", () => {

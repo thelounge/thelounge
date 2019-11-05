@@ -2,7 +2,7 @@
 	<ChannelWrapper ref="wrapper" :network="network" :channel="channel">
 		<span class="name">{{ channel.name }}</span>
 		<span v-if="channel.unread" :class="{highlight: channel.highlight}" class="badge">{{
-			channel.unread | roundBadgeNumber
+			unreadCount
 		}}</span>
 		<template v-if="channel.type === 'channel'">
 			<span
@@ -25,6 +25,7 @@
 </template>
 
 <script>
+const roundBadgeNumber = require("../js/helpers/roundBadgeNumber");
 import ChannelWrapper from "./ChannelWrapper.vue";
 
 export default {
@@ -35,6 +36,11 @@ export default {
 	props: {
 		network: Object,
 		channel: Object,
+	},
+	computed: {
+		unreadCount() {
+			return roundBadgeNumber(this.channel.unread);
+		},
 	},
 	methods: {
 		close() {
