@@ -9,7 +9,7 @@ let lastServerHash = null;
 
 socket.on("auth:success", function() {
 	store.commit("currentUserVisibleError", "Loading messages…");
-	$("#loading-page-message").text(store.state.currentUserVisibleError);
+	updateLoadingMessage();
 });
 
 socket.on("auth:failed", function() {
@@ -48,7 +48,7 @@ socket.on("auth:start", function(serverHash) {
 	// If we have user and token stored, perform auth without showing sign-in first
 	if (doFastAuth) {
 		store.commit("currentUserVisibleError", "Authorizing…");
-		$("#loading-page-message").text(store.state.currentUserVisibleError);
+		updateLoadingMessage();
 
 		let lastMessage = -1;
 
@@ -90,4 +90,12 @@ function reloadPage(message) {
 	socket.disconnect();
 	store.commit("currentUserVisibleError", message);
 	location.reload(true);
+}
+
+function updateLoadingMessage() {
+	const loading = document.getElementById("loading-page-message");
+
+	if (loading) {
+		loading.textContent = store.state.currentUserVisibleError;
+	}
 }

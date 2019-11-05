@@ -1,5 +1,6 @@
 "use strict";
 
+require("./connection");
 require("./auth");
 require("./commands");
 require("./init");
