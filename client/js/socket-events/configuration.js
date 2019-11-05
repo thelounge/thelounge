@@ -2,7 +2,6 @@
 
 const $ = require("jquery");
 const socket = require("../socket");
-const options = require("../options");
 const webpush = require("../webpush");
 const upload = require("../upload");
 const store = require("../store").default;
@@ -25,11 +24,15 @@ socket.once("configuration", function(data) {
 	store.commit("isFileUploadEnabled", data.fileUpload);
 	store.commit("serverConfiguration", data);
 
+	// 'theme' setting depends on serverConfiguration.themes so
+	// settings cannot be applied before this point
+	store.dispatch("settings/applyAll");
+
 	if (data.fileUpload) {
 		upload.initialize(data.fileUploadMaxFileSize);
 	}
 
-	options.initialize();
+	socket.emit("setting:get");
 	webpush.initialize();
 
 	// If localStorage contains a theme that does not exist on this server, switch
@@ -37,7 +40,7 @@ socket.once("configuration", function(data) {
 	const currentTheme = data.themes.find((t) => t.name === store.state.settings.theme);
 
 	if (currentTheme === undefined) {
-		options.processSetting("theme", data.defaultTheme, true);
+		store.commit("settings/update", {name: "theme", value: data.defaultTheme, sync: true});
 	} else if (currentTheme.themeColor) {
 		document.querySelector('meta[name="theme-color"]').content = currentTheme.themeColor;
 	}

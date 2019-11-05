@@ -463,7 +463,6 @@ export default {
 	},
 	data() {
 		return {
-			options: null,
 			canRegisterProtocol: false,
 			passwordChangeStatus: null,
 			passwordErrors: {
@@ -476,8 +475,6 @@ export default {
 		};
 	},
 	mounted() {
-		this.options = require("../../js/options"); // TODO: do this in a smarter way
-
 		socket.emit("sessions:get");
 
 		// Enable protocol handler registration if supported
@@ -507,7 +504,7 @@ export default {
 				value = event.target.value;
 			}
 
-			this.options.updateSetting(name, value, true);
+			this.$store.dispatch("settings/update", {name, value, sync: true});
 		},
 		changePassword() {
 			const allFields = new FormData(this.$refs.settingsForm);
@@ -540,8 +537,7 @@ export default {
 			socket.emit("change-password", data);
 		},
 		onForceSyncClick() {
-			const options = require("../../js/options");
-			options.syncAllSettings(true);
+			this.$store.dispatch("settings/syncAll", true);
 		},
 		registerProtocol() {
 			const uri = document.location.origin + document.location.pathname + "?uri=%s";

@@ -1,20 +1,27 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import settings from "./store-settings";
+import {createSettingsStore} from "./store-settings";
 
 const storage = require("./localStorage");
 
 Vue.use(Vuex);
 
+function detectDesktopNotificationState() {
+	if (!("Notification" in window)) {
+		return "unsupported";
+	} else if (Notification.permission === "granted") {
+		return "granted";
+	}
+
+	return "blocked";
+}
+
 const store = new Vuex.Store({
-	modules: {
-		settings,
-	},
 	state: {
 		appLoaded: false,
 		activeChannel: null,
 		currentUserVisibleError: null,
-		desktopNotificationState: "unsupported",
+		desktopNotificationState: detectDesktopNotificationState(),
 		isAutoCompleting: false,
 		isConnected: false,
 		isFileUploadEnabled: false,
@@ -41,8 +48,8 @@ const store = new Vuex.Store({
 		currentUserVisibleError(state, error) {
 			state.currentUserVisibleError = error;
 		},
-		desktopNotificationState(state, desktopNotificationState) {
-			state.desktopNotificationState = desktopNotificationState;
+		refreshDesktopNotificationState(state) {
+			state.desktopNotificationState = detectDesktopNotificationState();
 		},
 		isAutoCompleting(state, isAutoCompleting) {
 			state.isAutoCompleting = isAutoCompleting;
@@ -128,5 +135,9 @@ const store = new Vuex.Store({
 		},
 	},
 });
+
+// Settings module is registered dynamically because it benefits
+// from a direct reference to the store
+store.registerModule("settings", createSettingsStore(store));
 
 export default store;
