@@ -174,11 +174,8 @@ module.exports = function(options = {}) {
 			if (Helper.config.public) {
 				performAuthentication.call(socket, {});
 			} else {
-				socket.emit("auth", {
-					serverHash: serverHash,
-					success: true,
-				});
-				socket.on("auth", performAuthentication);
+				socket.on("auth:perform", performAuthentication);
+				socket.emit("auth:start", serverHash);
 			}
 		});
 
@@ -337,7 +334,8 @@ function indexRequest(req, res) {
 }
 
 function initializeClient(socket, client, token, lastMessage, openChannel) {
-	socket.emit("authorized");
+	socket.off("auth:perform", performAuthentication);
+	socket.emit("auth:success");
 
 	client.clientAttach(socket.id, token);
 
@@ -789,7 +787,7 @@ function performAuthentication(data) {
 				);
 			}
 
-			socket.emit("auth", {success: false});
+			socket.emit("auth:failed");
 			return;
 		}
 

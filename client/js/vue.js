@@ -15,9 +15,6 @@ const appName = document.title;
 
 const vueApp = new Vue({
 	el: "#viewport",
-	data: {
-		initialized: false,
-	},
 	router,
 	mounted() {
 		if (navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i)) {
@@ -43,10 +40,6 @@ const vueApp = new Vue({
 		}, 1);
 	},
 	methods: {
-		onSocketInit() {
-			this.initialized = true;
-			this.$store.commit("isConnected", true);
-		},
 		setSidebar(state) {
 			this.$store.commit("sidebarOpen", state);
 

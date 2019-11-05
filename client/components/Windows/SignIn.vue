@@ -85,7 +85,7 @@ export default {
 
 			storage.set("user", values.user);
 
-			socket.emit("auth", values);
+			socket.emit("auth:perform", values);
 		},
 		getStoredUser() {
 			return storage.get("user");

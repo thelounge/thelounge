@@ -10,17 +10,14 @@ const router = require("../router");
 const store = require("../store").default;
 
 socket.on("init", function(data) {
-	store.commit("currentUserVisibleError", "Rendering…");
-
-	$("#loading-page-message").text(store.state.currentUserVisibleError);
-
 	store.commit("networks", mergeNetworkData(data.networks));
 	store.commit("isConnected", true);
 	store.commit("currentUserVisibleError", null);
 
-	if (!vueApp.initialized) {
+	if (!store.state.appLoaded) {
 		router.initialize();
-		vueApp.onSocketInit();
+
+		store.commit("appLoaded");
 
 		if (data.token) {
 			storage.set("token", data.token);
@@ -43,12 +40,10 @@ socket.on("init", function(data) {
 
 		vueApp.setUserlist(isUserlistOpen === "true");
 
-		$(document.body).removeClass("signed-out");
-		$("#loading").remove();
+		document.body.classList.remove("signed-out");
 
-		if (window.g_LoungeErrorHandler) {
-			window.removeEventListener("error", window.g_LoungeErrorHandler);
-			window.g_LoungeErrorHandler = null;
+		if (window.g_TheLoungeRemoveLoading) {
+			window.g_TheLoungeRemoveLoading();
 		}
 
 		if (!vueApp.$route.name || vueApp.$route.name === "SignIn") {

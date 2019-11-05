@@ -25,7 +25,7 @@ const router = new VueRouter({
 });
 
 router.afterEach((to) => {
-	if (router.app.initialized) {
+	if (store.state.appLoaded) {
 		router.app.closeSidebarIfNeeded();
 	}
 

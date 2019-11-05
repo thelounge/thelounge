@@ -72,7 +72,7 @@ describe("Server", function() {
 		});
 
 		it("should emit authorized message", (done) => {
-			client.on("authorized", done);
+			client.on("auth:success", done);
 		});
 
 		it("should create network", (done) => {

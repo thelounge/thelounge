@@ -1,4 +1,4 @@
-/* eslint strict: 0, no-var: 0 */
+/* eslint strict: 0 */
 "use strict";
 
 /*
@@ -9,71 +9,66 @@
  */
 
 (function() {
-	var msg = document.getElementById("loading-page-message");
+	const msg = document.getElementById("loading-page-message");
+	msg.textContent = "Loading the app…";
 
-	if (msg) {
-		msg.textContent = "Loading the app…";
+	document
+		.getElementById("loading-reload")
+		.addEventListener("click", () => location.reload(true));
 
-		document.getElementById("loading-reload").addEventListener("click", function() {
-			location.reload(true);
-		});
-	}
-
-	var displayReload = function displayReload() {
-		var loadingReload = document.getElementById("loading-reload");
+	const displayReload = () => {
+		const loadingReload = document.getElementById("loading-reload");
 
 		if (loadingReload) {
 			loadingReload.style.visibility = "visible";
 		}
 	};
 
-	var loadingSlowTimeout = setTimeout(function() {
-		var loadingSlow = document.getElementById("loading-slow");
-
-		// The parent element, #loading, is being removed when the app is loaded.
-		// Since the timer is not cancelled, `loadingSlow` can be not found after
-		// 5s. Wrap everything in this block to make sure nothing happens if the
-		// element does not exist (i.e. page has loaded).
-		if (loadingSlow) {
-			loadingSlow.style.visibility = "visible";
-			displayReload();
-		}
+	const loadingSlowTimeout = setTimeout(() => {
+		const loadingSlow = document.getElementById("loading-slow");
+		loadingSlow.style.visibility = "visible";
+		displayReload();
 	}, 5000);
 
-	window.g_LoungeErrorHandler = function LoungeErrorHandler(e) {
-		var message = document.getElementById("loading-page-message");
-		message.textContent =
-			"An error has occurred that prevented the client from loading correctly.";
+	const errorHandler = (e) => {
+		msg.textContent = "An error has occurred that prevented the client from loading correctly.";
 
-		var summary = document.createElement("summary");
+		const summary = document.createElement("summary");
 		summary.textContent = "More details";
 
-		var data = document.createElement("pre");
+		const data = document.createElement("pre");
 		data.textContent = e.message; // e is an ErrorEvent
 
-		var info = document.createElement("p");
+		const info = document.createElement("p");
 		info.textContent = "Open the developer tools of your browser for more information.";
 
-		var details = document.createElement("details");
+		const details = document.createElement("details");
 		details.appendChild(summary);
 		details.appendChild(data);
 		details.appendChild(info);
-		message.parentNode.insertBefore(details, message.nextSibling);
+		msg.parentNode.insertBefore(details, msg.nextSibling);
 
 		window.clearTimeout(loadingSlowTimeout);
 		displayReload();
 	};
 
-	window.addEventListener("error", window.g_LoungeErrorHandler);
+	window.addEventListener("error", errorHandler);
+
+	window.g_TheLoungeRemoveLoading = () => {
+		delete window.g_TheLoungeRemoveLoading;
+		window.clearTimeout(loadingSlowTimeout);
+		window.removeEventListener("error", errorHandler);
+		document.getElementById("loading").remove();
+	};
 
 	// Trigger early service worker registration
 	if ("serviceWorker" in navigator) {
 		navigator.serviceWorker.register("service-worker.js");
 
 		// Handler for messages coming from the service worker
-		var messageHandler = function ServiceWorkerMessageHandler(event) {
+		const messageHandler = (event) => {
 			if (event.data.type === "fetch-error") {
-				window.g_LoungeErrorHandler({
+				errorHandler({
 					message: `Service worker failed to fetch an url: ${event.data.message}`,
 				});
 

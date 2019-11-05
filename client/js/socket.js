@@ -38,21 +38,18 @@ socket.on("connect", function() {
 	$("#loading-page-message").text(store.state.currentUserVisibleError);
 });
 
-socket.on("authorized", function() {
-	store.commit("currentUserVisibleError", "Loading messages…");
-	$("#loading-page-message").text(store.state.currentUserVisibleError);
-});
-
 function handleDisconnect(data) {
 	const message = data.message || data;
 
 	store.commit("isConnected", false);
+
 	store.commit("currentUserVisibleError", `Waiting to reconnect… (${message})`);
 	$("#loading-page-message").text(store.state.currentUserVisibleError);
 
 	// If the server shuts down, socket.io skips reconnection
 	// and we have to manually call connect to start the process
-	if (socket.io.skipReconnect) {
+	// However, do not reconnect if TL client manually closed the connection
+	if (socket.io.skipReconnect && message !== "io client disconnect") {
 		requestIdleCallback(() => socket.connect(), 2000);
 	}
 }

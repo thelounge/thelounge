@@ -11,6 +11,7 @@ const store = new Vuex.Store({
 		settings,
 	},
 	state: {
+		appLoaded: false,
 		activeChannel: null,
 		currentUserVisibleError: null,
 		desktopNotificationState: "unsupported",
@@ -31,6 +32,9 @@ const store = new Vuex.Store({
 		versionDataExpired: false,
 	},
 	mutations: {
+		appLoaded(state) {
+			state.appLoaded = true;
+		},
 		activeChannel(state, channel) {
 			state.activeChannel = channel;
 		},
