@@ -9,7 +9,6 @@
 	<link rel="preload" as="script" href="js/bundle.vendor.js?v=<%- cacheBust %>">
 	<link rel="preload" as="script" href="js/bundle.js?v=<%- cacheBust %>">
 
-	<link rel="stylesheet" href="css/primer-tooltips.css?v=<%- cacheBust %>">
 	<link rel="stylesheet" href="css/style.css?v=<%- cacheBust %>">
 	<link id="theme" rel="stylesheet" href="themes/<%- theme %>.css" data-server-theme="<%- theme %>">
 	<% _.forEach(stylesheets, function(css) { %>
