@@ -38,7 +38,7 @@ socket.on("init", function(data) {
 			isUserlistOpen = "true";
 		}
 
-		vueApp.setUserlist(isUserlistOpen === "true");
+		store.commit("userlistOpen", isUserlistOpen === "true");
 
 		document.body.classList.remove("signed-out");
 

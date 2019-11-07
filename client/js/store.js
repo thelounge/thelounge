@@ -96,6 +96,9 @@ const store = new Vuex.Store({
 		toggleSidebar(state) {
 			state.sidebarOpen = !state.sidebarOpen;
 		},
+		toggleUserlist(state) {
+			state.userlistOpen = !state.userlistOpen;
+		},
 		userlistOpen(state, payload) {
 			state.userlistOpen = payload;
 		},

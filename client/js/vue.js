@@ -36,14 +36,6 @@ const vueApp = new Vue({
 		}, 1);
 	},
 	methods: {
-		setUserlist(state) {
-			storage.set("thelounge.state.userlist", state);
-			this.$store.commit("userlistOpen", state);
-			this.$emit("resize");
-		},
-		toggleUserlist() {
-			this.setUserlist(!this.$store.state.userlistOpen);
-		},
 		switchToChannel(channel) {
 			if (
 				this.$store.state.activeChannel &&
@@ -132,6 +124,14 @@ store.watch(
 			storage.set("thelounge.state.sidebar", sidebarOpen);
 		}
 
+		vueApp.$emit("resize");
+	}
+);
+
+store.watch(
+	(state) => state.userlistOpen,
+	(userlistOpen) => {
+		storage.set("thelounge.state.userlist", userlistOpen);
 		vueApp.$emit("resize");
 	}
 );

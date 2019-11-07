@@ -47,7 +47,7 @@
 						<button
 							class="rt"
 							aria-label="Toggle user list"
-							@click="$root.toggleUserlist"
+							@click="$store.commit('toggleUserlist')"
 						/>
 					</span>
 				</div>
