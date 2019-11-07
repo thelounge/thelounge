@@ -17,10 +17,6 @@ const vueApp = new Vue({
 	el: "#viewport",
 	router,
 	mounted() {
-		if (navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i)) {
-			document.body.classList.add("is-apple");
-		}
-
 		document.addEventListener("visibilitychange", this.synchronizeNotifiedState);
 		document.addEventListener("focus", this.synchronizeNotifiedState);
 		document.addEventListener("click", this.synchronizeNotifiedState);

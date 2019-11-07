@@ -97,8 +97,8 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<span class="key-all"><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>↓</kbd></span>
-					<span class="key-apple"><kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>↓</kbd></span>
+					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>↓</kbd></span>
+					<span v-else><kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>↓</kbd></span>
 				</div>
 				<div class="description">
 					<p>Switch to the next lobby in the channel list.</p>
@@ -107,8 +107,8 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<span class="key-all"><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>↑</kbd></span>
-					<span class="key-apple"><kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>↑</kbd></span>
+					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>↑</kbd></span>
+					<span v-else><kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>↑</kbd></span>
 				</div>
 				<div class="description">
 					<p>Switch to the previous lobby in the channel list.</p>
@@ -117,8 +117,8 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<span class="key-all"><kbd>Alt</kbd> <kbd>↓</kbd></span>
-					<span class="key-apple"><kbd>⌥</kbd> <kbd>↓</kbd></span>
+					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>↓</kbd></span>
+					<span v-else><kbd>⌥</kbd> <kbd>↓</kbd></span>
 				</div>
 				<div class="description">
 					<p>Switch to the next window in the channel list.</p>
@@ -127,8 +127,8 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<span class="key-all"><kbd>Alt</kbd> <kbd>↑</kbd></span>
-					<span class="key-apple"><kbd>⌥</kbd> <kbd>↑</kbd></span>
+					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>↑</kbd></span>
+					<span v-else><kbd>⌥</kbd> <kbd>↑</kbd></span>
 				</div>
 				<div class="description">
 					<p>Switch to the previous window in the channel list.</p>
@@ -137,8 +137,8 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<span class="key-all"><kbd>Alt</kbd> <kbd>A</kbd></span>
-					<span class="key-apple"><kbd>⌥</kbd> <kbd>A</kbd></span>
+					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>A</kbd></span>
+					<span v-else><kbd>⌥</kbd> <kbd>A</kbd></span>
 				</div>
 				<div class="description">
 					<p>Switch to the first window with unread messages.</p>
@@ -147,8 +147,8 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<span class="key-all"><kbd>Ctrl</kbd> <kbd>K</kbd></span>
-					<span class="key-apple"><kbd>⌘</kbd> <kbd>K</kbd></span>
+					<span v-if="!isApple"><kbd>Ctrl</kbd> <kbd>K</kbd></span>
+					<span v-else><kbd>⌘</kbd> <kbd>K</kbd></span>
 				</div>
 				<div class="description">
 					<p>
@@ -176,8 +176,8 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<span class="key-all"><kbd>Ctrl</kbd> <kbd>B</kbd></span>
-					<span class="key-apple"><kbd>⌘</kbd> <kbd>B</kbd></span>
+					<span v-if="!isApple"><kbd>Ctrl</kbd> <kbd>B</kbd></span>
+					<span v-else><kbd>⌘</kbd> <kbd>B</kbd></span>
 				</div>
 				<div class="description">
 					<p>
@@ -189,8 +189,8 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<span class="key-all"><kbd>Ctrl</kbd> <kbd>U</kbd></span>
-					<span class="key-apple"><kbd>⌘</kbd> <kbd>U</kbd></span>
+					<span v-if="!isApple"><kbd>Ctrl</kbd> <kbd>U</kbd></span>
+					<span v-else><kbd>⌘</kbd> <kbd>U</kbd></span>
 				</div>
 				<div class="description">
 					<p>
@@ -202,8 +202,8 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<span class="key-all"><kbd>Ctrl</kbd> <kbd>I</kbd></span>
-					<span class="key-apple"><kbd>⌘</kbd> <kbd>I</kbd></span>
+					<span v-if="!isApple"><kbd>Ctrl</kbd> <kbd>I</kbd></span>
+					<span v-else><kbd>⌘</kbd> <kbd>I</kbd></span>
 				</div>
 				<div class="description">
 					<p>
@@ -215,8 +215,8 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<span class="key-all"><kbd>Ctrl</kbd> <kbd>S</kbd></span>
-					<span class="key-apple"><kbd>⌘</kbd> <kbd>S</kbd></span>
+					<span v-if="!isApple"><kbd>Ctrl</kbd> <kbd>S</kbd></span>
+					<span v-else><kbd>⌘</kbd> <kbd>S</kbd></span>
 				</div>
 				<div class="description">
 					<p>
@@ -228,8 +228,8 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<span class="key-all"><kbd>Ctrl</kbd> <kbd>M</kbd></span>
-					<span class="key-apple"><kbd>⌘</kbd> <kbd>M</kbd></span>
+					<span v-if="!isApple"><kbd>Ctrl</kbd> <kbd>M</kbd></span>
+					<span v-else><kbd>⌘</kbd> <kbd>M</kbd></span>
 				</div>
 				<div class="description">
 					<p>
@@ -241,8 +241,8 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<span class="key-all"><kbd>Ctrl</kbd> <kbd>O</kbd></span>
-					<span class="key-apple"><kbd>⌘</kbd> <kbd>O</kbd></span>
+					<span v-if="!isApple"><kbd>Ctrl</kbd> <kbd>O</kbd></span>
+					<span v-else><kbd>⌘</kbd> <kbd>O</kbd></span>
 				</div>
 				<div class="description">
 					<p>
@@ -693,6 +693,11 @@ export default {
 	components: {
 		SidebarToggle,
 		VersionChecker,
+	},
+	data() {
+		return {
+			isApple: navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i) || false,
+		};
 	},
 };
 </script>

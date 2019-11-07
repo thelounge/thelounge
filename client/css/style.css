@@ -1904,15 +1904,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-bottom: 0;
 }
 
-.is-apple #help .key-all,
-#help .key-apple {
-	display: none;
-}
-
-.is-apple #help .key-apple {
-	display: inline-block;
-}
-
 .whois {
 	display: grid;
 	grid-template-columns: max-content auto;
