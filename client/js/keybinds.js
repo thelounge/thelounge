@@ -5,6 +5,7 @@ const Mousetrap = require("mousetrap");
 const {vueApp} = require("./vue");
 const store = require("./store").default;
 
+// Switch to the next/previous window in the channel list.
 Mousetrap.bind(["alt+up", "alt+down"], function(e, keys) {
 	const sidebar = $("#sidebar");
 	const channels = sidebar.find(".chan").not(".network.collapsed :not(.lobby)");
@@ -28,6 +29,7 @@ Mousetrap.bind(["alt+up", "alt+down"], function(e, keys) {
 	return false;
 });
 
+// Switch to the next/previous lobby in the channel list
 Mousetrap.bind(["alt+shift+up", "alt+shift+down"], function(e, keys) {
 	const sidebar = $("#sidebar");
 	const lobbies = sidebar.find(".lobby");
@@ -132,7 +134,7 @@ const ignoredKeys = {
 	224: true, // Meta
 };
 
-$(document).on("keydown", (e) => {
+document.addEventListener("keydown", (e) => {
 	// Ignore any key that uses alt modifier
 	// Ignore keys defined above
 	if (e.altKey || ignoredKeys[e.which]) {
@@ -146,7 +148,12 @@ $(document).on("keydown", (e) => {
 
 	// Redirect pagedown/pageup keys to messages container so it scrolls
 	if (e.which === 33 || e.which === 34) {
-		$("#windows .window.active .chan.active .chat").trigger("focus");
+		const chat = document.querySelector("#windows .chan.active .chat");
+
+		if (chat) {
+			chat.focus();
+		}
+
 		return;
 	}
 
@@ -157,16 +164,19 @@ $(document).on("keydown", (e) => {
 		return;
 	}
 
-	const input = $("#input");
+	const input = document.getElementById("input");
+
+	if (!input) {
+		return;
+	}
+
+	input.focus();
 
 	// On enter, focus the input but do not propagate the event
 	// This way, a new line is not inserted
 	if (e.which === 13) {
-		input.trigger("focus");
-		return false;
+		e.preventDefault();
 	}
-
-	input.trigger("focus");
 });
 
 function scrollIntoViewNicely(el) {
