@@ -20,8 +20,35 @@ const router = new VueRouter({
 			name: "SignIn",
 			path: "/sign-in",
 			component: SignIn,
+			beforeEnter(to, from, next) {
+				// Prevent navigating to sign-in when already signed in
+				if (store.state.appLoaded) {
+					next(false);
+					return;
+				}
+
+				next();
+			},
 		},
 	],
+});
+
+router.beforeEach((to, from, next) => {
+	// Handle closing image viewer with the browser back button
+	if (!router.app.$refs.app) {
+		next();
+		return;
+	}
+
+	const imageViewer = router.app.$root.$refs.app.$refs.imageViewer;
+
+	if (imageViewer && imageViewer.link) {
+		imageViewer.closeViewer();
+		next(false);
+		return;
+	}
+
+	next();
 });
 
 router.afterEach((to) => {
