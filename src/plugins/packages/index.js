@@ -97,8 +97,10 @@ function loadPackages() {
 			return;
 		}
 
+		const version = packageInfo.version;
 		packageInfo = packageInfo.thelounge;
 		packageInfo.packageName = packageName;
+		packageInfo.version = version;
 
 		packageMap.set(packageName, packageFile);
 
@@ -116,7 +118,7 @@ function loadPackages() {
 			packageFile.onServerStart(packageApis(packageInfo));
 		}
 
-		log.info(`Package ${colors.bold(packageName)} loaded`);
+		log.info(`Package ${colors.bold(packageName)} ${colors.green("v" + version)} loaded`);
 	});
 
 	if (anyPlugins) {
