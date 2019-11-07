@@ -32,7 +32,7 @@ const serverHash = Math.floor(Date.now() * Math.random());
 
 let manager = null;
 
-module.exports = function() {
+module.exports = function(options = {}) {
 	log.info(`The Lounge ${colors.green(Helper.getVersion())} \
 (Node.js ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${
 		process.arch
@@ -44,8 +44,13 @@ module.exports = function() {
 		maxAge: 86400 * 1000,
 	};
 
-	const app = express()
-		.set("env", "production")
+	const app = express();
+
+	if (options.dev) {
+		require("./plugins/dev-server.js")(app);
+	}
+
+	app.set("env", "production")
 		.disable("x-powered-by")
 		.use(allRequests)
 		.get("/", indexRequest)

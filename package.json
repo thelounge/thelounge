@@ -14,7 +14,7 @@
   "scripts": {
     "build": "webpack",
     "coverage": "run-s test:{client,server} && nyc --nycrc-path=test/.nycrc-report.json report",
-    "dev": "run-p watch start",
+    "dev": "node index start --dev",
     "format:prettier": "prettier --write \"**/*.*\"",
     "lint:check-eslint": "eslint --print-config .eslintrc.yml | eslint-config-prettier-check",
     "lint:eslint": "eslint . --ext .js,.vue --report-unused-disable-directives --color",
@@ -122,7 +122,9 @@
     "vue-template-compiler": "2.6.10",
     "vuedraggable": "2.23.2",
     "webpack": "4.41.2",
-    "webpack-cli": "3.3.10"
+    "webpack-cli": "3.3.10",
+    "webpack-dev-middleware": "3.7.2",
+    "webpack-hot-middleware": "2.25.0"
   },
   "husky": {
     "hooks": {
