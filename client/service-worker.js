@@ -156,7 +156,7 @@ self.addEventListener("notificationclick", function(event) {
 			.then((clientList) => {
 				if (clientList.length === 0) {
 					if (clients.openWindow) {
-						return clients.openWindow(`.#${event.notification.tag}`);
+						return clients.openWindow(`.#/${event.notification.tag}`);
 					}
 
 					return;

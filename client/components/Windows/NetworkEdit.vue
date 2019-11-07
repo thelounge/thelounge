@@ -8,9 +8,7 @@
 </template>
 
 <script>
-const $ = require("jquery");
 const socket = require("../../js/socket");
-
 import NetworkForm from "../NetworkForm.vue";
 
 export default {
@@ -41,11 +39,11 @@ export default {
 			this.disabled = true;
 			socket.emit("network:edit", data);
 
-			const sidebar = $("#sidebar");
 			// TODO: move networks to vuex and update state when the network info comes in
 			const network = this.$store.getters.findNetwork(data.uuid);
 			network.name = network.channels[0].name = data.name;
-			sidebar.find(`.network[data-uuid="${data.uuid}"] .chan.lobby .name`).click();
+
+			this.$root.switchToChannel(network.channels[0]);
 		},
 	},
 };

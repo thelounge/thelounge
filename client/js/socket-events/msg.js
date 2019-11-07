@@ -155,12 +155,10 @@ function notifyMessage(targetId, channel, activeChannel, msg) {
 							this.close();
 							window.focus();
 
-							const channelTarget = document.querySelector(
-								"#sidebar .chan[data-id='" + targetId + "']"
-							);
+							const channelTarget = store.getters.findChannel(targetId);
 
 							if (channelTarget) {
-								channelTarget.click();
+								vueApp.switchToChannel(channelTarget);
 							}
 						});
 					}

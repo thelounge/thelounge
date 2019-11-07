@@ -2,6 +2,7 @@
 
 const storage = require("./localStorage");
 const socket = require("./socket");
+const vueApp = require("./vue");
 const store = require("./store").default;
 
 let clientSubscribed = null;
@@ -10,12 +11,11 @@ let applicationServerKey;
 if ("serviceWorker" in navigator) {
 	navigator.serviceWorker.addEventListener("message", (event) => {
 		if (event.data && event.data.type === "open") {
-			const channelTarget = document.querySelector(
-				"#sidebar .chan[data-target='#" + event.data.channel + "']"
-			);
+			const id = event.data.channel.substr(5); // remove "chan-" prefix
+			const channelTarget = store.getters.findChannel(id);
 
 			if (channelTarget) {
-				channelTarget.click();
+				vueApp.switchToChannel(channelTarget);
 			}
 		}
 	});
