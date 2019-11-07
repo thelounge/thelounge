@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import {createSettingsStore} from "./store-settings";
 
 const storage = require("./localStorage");
+const appName = document.title;
 
 Vue.use(Vuex);
 
@@ -138,6 +139,13 @@ const store = new Vuex.Store({
 			}
 
 			return null;
+		},
+		title(state, getters) {
+			const alertEventCount = getters.highlightCount ? `(${getters.highlightCount}) ` : "";
+
+			const channelname = state.activeChannel ? `${state.activeChannel.channel.name} — ` : "";
+
+			return alertEventCount + channelname + appName;
 		},
 	},
 });

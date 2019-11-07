@@ -11,16 +11,10 @@ const constants = require("./constants");
 
 Vue.filter("localetime", localetime);
 
-const appName = document.title;
-
 const vueApp = new Vue({
 	el: "#viewport",
 	router,
 	mounted() {
-		document.addEventListener("visibilitychange", this.synchronizeNotifiedState);
-		document.addEventListener("focus", this.synchronizeNotifiedState);
-		document.addEventListener("click", this.synchronizeNotifiedState);
-
 		// TODO: Hackfix because socket-events require vueApp somewhere
 		// and that breaks due to cyclical depenency as by this point vue.js
 		// does not export anything yet.
@@ -58,8 +52,6 @@ const vueApp = new Vue({
 			}
 		},
 		synchronizeNotifiedState() {
-			this.updateTitle();
-
 			let hasAnyHighlights = false;
 
 			for (const network of this.$store.state.networks) {
@@ -72,28 +64,6 @@ const vueApp = new Vue({
 			}
 
 			this.toggleNotificationMarkers(hasAnyHighlights);
-		},
-		updateTitle() {
-			let title = appName;
-
-			if (this.$store.state.activeChannel) {
-				title = `${this.$store.state.activeChannel.channel.name} — ${title}`;
-			}
-
-			// add highlight count to title
-			let alertEventCount = 0;
-
-			for (const network of this.$store.state.networks) {
-				for (const channel of network.channels) {
-					alertEventCount += channel.highlight;
-				}
-			}
-
-			if (alertEventCount > 0) {
-				title = `(${alertEventCount}) ${title}`;
-			}
-
-			document.title = title;
 		},
 		toggleNotificationMarkers(newState) {
 			if (this.$store.state.isNotified !== newState) {
@@ -133,6 +103,13 @@ store.watch(
 	(userlistOpen) => {
 		storage.set("thelounge.state.userlist", userlistOpen);
 		vueApp.$emit("resize");
+	}
+);
+
+store.watch(
+	(_, getters) => getters.title,
+	(title) => {
+		document.title = title;
 	}
 );
 
