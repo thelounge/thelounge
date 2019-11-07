@@ -29,7 +29,7 @@ socket.on("init", function(data) {
 		let isUserlistOpen = storage.get("thelounge.state.userlist");
 
 		if (viewportWidth > constants.mobileViewportPixels) {
-			vueApp.setSidebar(storage.get("thelounge.state.sidebar") !== "false");
+			store.commit("sidebarOpen", storage.get("thelounge.state.sidebar") !== "false");
 		}
 
 		// If The Lounge is opened on a small screen (less than 1024px), and we don't have stored

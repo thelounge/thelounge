@@ -1,7 +1,7 @@
 <template>
 	<div id="viewport" :class="viewportClasses" role="tablist">
 		<Sidebar :overlay="$refs.overlay" />
-		<div id="sidebar-overlay" ref="overlay" @click="$root.setSidebar(false)" />
+		<div id="sidebar-overlay" ref="overlay" @click="$store.commit('sidebarOpen', false)" />
 		<article id="windows">
 			<router-view ref="window"></router-view>
 		</article>

@@ -36,23 +36,6 @@ const vueApp = new Vue({
 		}, 1);
 	},
 	methods: {
-		setSidebar(state) {
-			this.$store.commit("sidebarOpen", state);
-
-			if (window.outerWidth > constants.mobileViewportPixels) {
-				storage.set("thelounge.state.sidebar", state);
-			}
-
-			this.$emit("resize");
-		},
-		toggleSidebar() {
-			this.setSidebar(!this.$store.state.sidebarOpen);
-		},
-		closeSidebarIfNeeded() {
-			if (window.innerWidth <= constants.mobileViewportPixels) {
-				this.setSidebar(false);
-			}
-		},
 		setUserlist(state) {
 			storage.set("thelounge.state.userlist", state);
 			this.$store.commit("userlistOpen", state);
@@ -141,6 +124,17 @@ const vueApp = new Vue({
 	},
 	store,
 });
+
+store.watch(
+	(state) => state.sidebarOpen,
+	(sidebarOpen) => {
+		if (window.outerWidth > constants.mobileViewportPixels) {
+			storage.set("thelounge.state.sidebar", sidebarOpen);
+		}
+
+		vueApp.$emit("resize");
+	}
+);
 
 Vue.config.errorHandler = function(e) {
 	store.commit("currentUserVisibleError", `Vue error: ${e.message}`);

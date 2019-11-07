@@ -13,6 +13,7 @@ const Help = require("../components/Windows/Help.vue").default;
 const Changelog = require("../components/Windows/Changelog.vue").default;
 const NetworkEdit = require("../components/Windows/NetworkEdit.vue").default;
 const RoutedChat = require("../components/RoutedChat.vue").default;
+const constants = require("./constants");
 
 const router = new VueRouter({
 	routes: [
@@ -66,7 +67,9 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach((to) => {
 	if (store.state.appLoaded) {
-		router.app.closeSidebarIfNeeded();
+		if (window.innerWidth <= constants.mobileViewportPixels) {
+			store.commit("sidebarOpen", false);
+		}
 	}
 
 	if (to.name !== "RoutedChat") {
