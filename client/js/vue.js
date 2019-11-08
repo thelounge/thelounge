@@ -11,6 +11,10 @@ const constants = require("./constants");
 
 Vue.filter("localetime", localetime);
 
+const favicon = document.getElementById("favicon");
+const faviconNormal = favicon.getAttribute("href");
+const faviconAlerted = favicon.dataset.other;
+
 const vueApp = new Vue({
 	el: "#viewport",
 	router,
@@ -51,32 +55,6 @@ const vueApp = new Vue({
 				channel.moreHistoryAvailable = true;
 			}
 		},
-		synchronizeNotifiedState() {
-			let hasAnyHighlights = false;
-
-			for (const network of this.$store.state.networks) {
-				for (const chan of network.channels) {
-					if (chan.highlight > 0) {
-						hasAnyHighlights = true;
-						break;
-					}
-				}
-			}
-
-			this.toggleNotificationMarkers(hasAnyHighlights);
-		},
-		toggleNotificationMarkers(newState) {
-			if (this.$store.state.isNotified !== newState) {
-				// Toggles a dot on the menu icon when there are unread notifications
-				this.$store.commit("isNotified", newState);
-
-				// Toggles the favicon to red when there are unread notifications
-				const favicon = document.getElementById("favicon");
-				const old = favicon.getAttribute("href");
-				favicon.setAttribute("href", favicon.dataset.other);
-				favicon.dataset.other = old;
-			}
-		},
 	},
 	render(createElement) {
 		return createElement(App, {
@@ -110,6 +88,14 @@ store.watch(
 	(_, getters) => getters.title,
 	(title) => {
 		document.title = title;
+	}
+);
+
+// Toggles the favicon to red when there are unread notifications
+store.watch(
+	(_, getters) => getters.highlightCount,
+	(highlightCount) => {
+		favicon.setAttribute("href", highlightCount > 0 ? faviconAlerted : faviconNormal);
 	}
 );
 

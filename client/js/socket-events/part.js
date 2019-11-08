@@ -18,6 +18,4 @@ socket.on("part", function(data) {
 			1
 		);
 	}
-
-	vueApp.synchronizeNotifiedState();
 });

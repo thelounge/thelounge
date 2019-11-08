@@ -162,8 +162,6 @@ export default {
 					target: this.channel.id,
 				});
 			}
-
-			this.$root.synchronizeNotifiedState();
 		},
 		hideUserVisibleError() {
 			this.$store.commit("currentUserVisibleError", null);

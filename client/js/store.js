@@ -140,6 +140,17 @@ const store = new Vuex.Store({
 
 			return null;
 		},
+		highlightCount(state) {
+			let highlightCount = 0;
+
+			for (const network of state.networks) {
+				for (const channel of network.channels) {
+					highlightCount += channel.highlight;
+				}
+			}
+
+			return highlightCount;
+		},
 		title(state, getters) {
 			const alertEventCount = getters.highlightCount ? `(${getters.highlightCount}) ` : "";
 

@@ -62,8 +62,6 @@ socket.on("init", function(data) {
 		}
 	}
 
-	vueApp.synchronizeNotifiedState();
-
 	if (document.body.classList.contains("public")) {
 		window.addEventListener(
 			"beforeunload",

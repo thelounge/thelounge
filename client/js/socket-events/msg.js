@@ -88,10 +88,6 @@ socket.on("msg", function(data) {
 			user.lastMessage = new Date(data.msg.time).getTime() || Date.now();
 		}
 	}
-
-	if (data.msg.self || data.msg.highlight) {
-		vueApp.synchronizeNotifiedState();
-	}
 });
 
 function notifyMessage(targetId, channel, activeChannel, msg) {
