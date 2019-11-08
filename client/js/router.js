@@ -35,7 +35,8 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
 	// Disallow navigating to non-existing routes
-	if (!to.matched.length) {
+
+	if (store.state.appLoaded && !to.matched.length) {
 		next(false);
 		return;
 	}
@@ -84,8 +85,9 @@ function initialize() {
 	router.addRoutes([
 		{
 			name: "Connect",
-			path: "/connect",
+			path: "/connect*",
 			component: Connect,
+			props: (route) => ({queryParams: route.query}),
 		},
 		{
 			name: "Settings",

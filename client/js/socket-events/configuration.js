@@ -5,6 +5,7 @@ const socket = require("../socket");
 const webpush = require("../webpush");
 const upload = require("../upload");
 const store = require("../store").default;
+const {vueApp} = require("../vue");
 
 window.addEventListener("beforeinstallprompt", (installPromptEvent) => {
 	$("#webapp-install-button")
@@ -75,16 +76,32 @@ socket.once("configuration", function(data) {
 	if ("URLSearchParams" in window) {
 		const params = new URLSearchParams(document.location.search);
 
+		const cleanParams = () => {
+			// Remove query parameters from url without reloading the page
+			const cleanUri =
+				window.location.origin + window.location.pathname + window.location.hash;
+			window.history.replaceState({}, document.title, cleanUri);
+		};
+
 		if (params.has("uri")) {
-			parseIrcUri(params.get("uri") + location.hash, data);
-		} else if ($(document.body).hasClass("public")) {
-			parseOverrideParams(params, data);
+			// Set default connection settings from IRC protocol links
+			const uri =
+				params.get("uri") +
+				(location.hash.includes("#/") ? location.hash.split("#/")[0] : location.hash);
+			const queryParams = parseIrcUri(uri, data);
+			cleanParams();
+			vueApp.$router.push({path: "/connect", query: queryParams});
+		} else if (document.body.classList.contains("public") && document.location.search) {
+			// Set default connection settings from url params
+			const queryParams = document.location.search;
+			cleanParams();
+			vueApp.$router.push("/connect" + queryParams);
 		}
 	}
 });
 
-function parseIrcUri(stringUri, defaults) {
-	const data = Object.assign({}, defaults.defaults);
+function parseIrcUri(stringUri) {
+	const data = {};
 
 	try {
 		// https://tools.ietf.org/html/draft-butcher-irc-url-04
@@ -125,61 +142,9 @@ function parseIrcUri(stringUri, defaults) {
 		}
 
 		data.join = channel;
-
-		// TODO: Need to show connect window with uri params without overriding defaults
-		defaults.defaults = data;
-
-		$('button[data-target="#connect"]').trigger("click");
 	} catch (e) {
 		// do nothing on invalid uri
 	}
-}
 
-function parseOverrideParams(params, data) {
-	for (let [key, value] of params) {
-		// Support `channels` as a compatibility alias with other clients
-		if (key === "channels") {
-			key = "join";
-		}
-
-		if (!Object.prototype.hasOwnProperty.call(data.defaults, key)) {
-			continue;
-		}
-
-		// When the network is locked, URL overrides should not affect disabled fields
-		if (data.lockNetwork && ["host", "port", "tls", "rejectUnauthorized"].includes(key)) {
-			continue;
-		}
-
-		// When the network is not displayed, its name in the UI is not customizable
-		if (!data.displayNetwork && key === "name") {
-			continue;
-		}
-
-		if (key === "join") {
-			value = value
-				.split(",")
-				.map((chan) => {
-					if (!chan.match(/^[#&!+]/)) {
-						return `#${chan}`;
-					}
-
-					return chan;
-				})
-				.join(", ");
-		}
-
-		// Override server provided defaults with parameters passed in the URL if they match the data type
-		switch (typeof data.defaults[key]) {
-			case "boolean":
-				data.defaults[key] = value === "1" || value === "true";
-				break;
-			case "number":
-				data.defaults[key] = Number(value);
-				break;
-			case "string":
-				data.defaults[key] = String(value);
-				break;
-		}
-	}
+	return data;
 }
