@@ -12,12 +12,13 @@ const Utils = require("./utils");
 program
 	.command("start")
 	.description("Start the server")
+	.option("--dev", "Development mode with hot module reloading")
 	.on("--help", Utils.extraHelp)
-	.action(function() {
+	.action(function(options) {
 		initalizeConfig();
 
 		const server = require("../server");
-		server();
+		server(options);
 	});
 
 function initalizeConfig() {
