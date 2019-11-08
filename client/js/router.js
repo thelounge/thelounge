@@ -40,6 +40,12 @@ router.beforeEach((to, from, next) => {
 		return;
 	}
 
+	// Disallow navigating to invalid channels
+	if (to.name === "RoutedChat" && !store.getters.findChannel(Number(to.params.pathMatch))) {
+		next(false);
+		return;
+	}
+
 	// Handle closing image viewer with the browser back button
 	if (!router.app.$refs.app) {
 		next();
