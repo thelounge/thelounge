@@ -108,6 +108,7 @@
 						:value="defaults.nick"
 						maxlength="100"
 						required
+						@input="onNickChanged"
 					/>
 				</div>
 				<template v-if="!config.useHexIp">
@@ -117,6 +118,7 @@
 					<div class="col-sm-9">
 						<input
 							id="connect:username"
+							ref="usernameInput"
 							class="input username"
 							name="username"
 							:value="defaults.username"
@@ -211,9 +213,20 @@ export default {
 	data() {
 		return {
 			config: this.$store.state.serverConfiguration,
+			previousUsername: this.defaults.username,
 		};
 	},
 	methods: {
+		onNickChanged(event) {
+			if (
+				!this.$refs.usernameInput.value ||
+				this.$refs.usernameInput.value === this.previousUsername
+			) {
+				this.$refs.usernameInput.value = event.target.value;
+			}
+
+			this.previousUsername = event.target.value;
+		},
 		onSubmit(event) {
 			const formData = new FormData(event.target);
 			const data = {};

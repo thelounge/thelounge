@@ -46,33 +46,6 @@ socket.once("configuration", function(data) {
 		document.querySelector('meta[name="theme-color"]').content = currentTheme.themeColor;
 	}
 
-	// TODO: move to component (this mirrors the nick to the username field if the username is empty)
-	/* connect.on("show", function() {
-		connect
-			.html(templates.windows.connect(data))
-			.find("#connect\\:nick")
-			.on("focusin", function() {
-				// Need to set the first "lastvalue", so it can be used in the below function
-				const nick = $(this);
-				nick.data("lastvalue", nick.val());
-			})
-			.on("input", function() {
-				const nick = $(this).val();
-				const usernameInput = connect.find(".username");
-
-				// Because this gets called /after/ it has already changed, we need use the previous value
-				const lastValue = $(this).data("lastvalue");
-
-				// They were the same before the change, so update the username field
-				if (usernameInput.val() === lastValue) {
-					usernameInput.val(nick);
-				}
-
-				// Store the "previous" value, for next time
-				$(this).data("lastvalue", nick);
-			});
-	});*/
-
 	if ("URLSearchParams" in window) {
 		const params = new URLSearchParams(document.location.search);
 
