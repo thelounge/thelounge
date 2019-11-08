@@ -43,6 +43,7 @@ module.exports = function(client, chan, msg) {
 			head: "",
 			body: "",
 			thumb: "",
+			size: -1,
 			link: link.link, // Send original matched link to the client
 			shown: true,
 		};
@@ -181,8 +182,11 @@ function parseHtmlMedia($, preview, client) {
 function parse(msg, chan, preview, res, client) {
 	let promise;
 
+	preview.size = res.size;
+
 	switch (res.type) {
 		case "text/html":
+			preview.size = -1;
 			promise = parseHtml(preview, res, client);
 			break;
 

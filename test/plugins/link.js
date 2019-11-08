@@ -45,6 +45,7 @@ describe("Link plugin", function() {
 				head: "",
 				link: url,
 				thumb: "",
+				size: -1,
 				type: "loading",
 				shown: true,
 			},
@@ -278,6 +279,7 @@ describe("Link plugin", function() {
 			expect(data.preview.thumb).to.equal(
 				"http://localhost:" + port + "/real-test-image.png"
 			);
+			expect(data.preview.size).to.equal(960);
 			done();
 		});
 	});
@@ -296,6 +298,7 @@ describe("Link plugin", function() {
 				head: "",
 				link: "http://localhost:" + port + "/one",
 				thumb: "",
+				size: -1,
 				type: "loading",
 				shown: true,
 			},
@@ -304,6 +307,7 @@ describe("Link plugin", function() {
 				head: "",
 				link: "http://localhost:" + port + "/two",
 				thumb: "",
+				size: -1,
 				type: "loading",
 				shown: true,
 			},
@@ -496,6 +500,7 @@ describe("Link plugin", function() {
 				head: "",
 				body: "",
 				thumb: "",
+				size: -1,
 				link: "http://localhost:" + port + "",
 				shown: true,
 			},

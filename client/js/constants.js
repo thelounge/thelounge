@@ -27,10 +27,13 @@ const timeFormats = {
 	msgWithSeconds: "HH:mm:ss",
 };
 
+const sizeUnits = ["B", "KiB", "MiB", "GiB", "TiB"];
+
 module.exports = {
 	colorCodeMap,
 	commands: [],
 	condensedTypes,
 	condensedTypesQuery,
 	timeFormats,
+	sizeUnits,
 };

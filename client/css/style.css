@@ -1475,6 +1475,11 @@ background on hover (unless active) */
 	border-left: 1px solid var(--highlight-bg-color);
 }
 
+#chat .preview-size {
+	margin-left: 5px;
+	user-select: none;
+}
+
 #chat .toggle-content.opened .more-caret, /* Expand/Collapse link previews */
 #chat .toggle-button.opened, /* Thumbnail toggle */
 #chat .msg.condensed:not(.closed) .toggle-button { /* Expanded status message toggle */

@@ -25,7 +25,7 @@ describe("parse Handlebars helper", () => {
 			{
 				input: "<img onerror='location.href=\"//youtube.com\"'>",
 				expected:
-					'&lt;img onerror=\'location.href=&quot;<a href="http://youtube.com" target="_blank" rel="noopener">//youtube.com</a>&quot;\'&gt;',
+					'&lt;img onerror=\'location.href=&quot;<a href="http://youtube.com" dir="auto" target="_blank" rel="noopener">//youtube.com</a>&quot;\'&gt;',
 			},
 			{
 				input: '#&">bug',
@@ -61,14 +61,14 @@ describe("parse Handlebars helper", () => {
 			{
 				input: "irc://freenode.net/thelounge",
 				expected:
-					'<a href="irc://freenode.net/thelounge" target="_blank" rel="noopener">' +
+					'<a href="irc://freenode.net/thelounge" dir="auto" target="_blank" rel="noopener">' +
 					"irc://freenode.net/thelounge" +
 					"</a>",
 			},
 			{
 				input: "www.nooooooooooooooo.com",
 				expected:
-					'<a href="http://www.nooooooooooooooo.com" target="_blank" rel="noopener">' +
+					'<a href="http://www.nooooooooooooooo.com" dir="auto" target="_blank" rel="noopener">' +
 					"www.nooooooooooooooo.com" +
 					"</a>",
 			},
@@ -76,7 +76,7 @@ describe("parse Handlebars helper", () => {
 				input: "look at https://thelounge.chat/ for more information",
 				expected:
 					"look at " +
-					'<a href="https://thelounge.chat/" target="_blank" rel="noopener">' +
+					'<a href="https://thelounge.chat/" dir="auto" target="_blank" rel="noopener">' +
 					"https://thelounge.chat/" +
 					"</a>" +
 					" for more information",
@@ -85,7 +85,7 @@ describe("parse Handlebars helper", () => {
 				input: "use www.duckduckgo.com for privacy reasons",
 				expected:
 					"use " +
-					'<a href="http://www.duckduckgo.com" target="_blank" rel="noopener">' +
+					'<a href="http://www.duckduckgo.com" dir="auto" target="_blank" rel="noopener">' +
 					"www.duckduckgo.com" +
 					"</a>" +
 					" for privacy reasons",
@@ -93,7 +93,7 @@ describe("parse Handlebars helper", () => {
 			{
 				input: "svn+ssh://example.org",
 				expected:
-					'<a href="svn+ssh://example.org" target="_blank" rel="noopener">' +
+					'<a href="svn+ssh://example.org" dir="auto" target="_blank" rel="noopener">' +
 					"svn+ssh://example.org" +
 					"</a>",
 			},
@@ -110,7 +110,7 @@ describe("parse Handlebars helper", () => {
 			"bonuspunkt: your URL parser misparses this URL: https://msdn.microsoft.com/en-us/library/windows/desktop/ms644989(v=vs.85).aspx";
 		const correctResult =
 			"bonuspunkt: your URL parser misparses this URL: " +
-			'<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms644989(v=vs.85).aspx" target="_blank" rel="noopener">' +
+			'<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms644989(v=vs.85).aspx" dir="auto" target="_blank" rel="noopener">' +
 			"https://msdn.microsoft.com/en-us/library/windows/desktop/ms644989(v=vs.85).aspx" +
 			"</a>";
 
@@ -125,7 +125,7 @@ describe("parse Handlebars helper", () => {
 				input: "<https://theos.kyriasis.com/~kyrias/stats/archlinux.html>",
 				expected:
 					"&lt;" +
-					'<a href="https://theos.kyriasis.com/~kyrias/stats/archlinux.html" target="_blank" rel="noopener">' +
+					'<a href="https://theos.kyriasis.com/~kyrias/stats/archlinux.html" dir="auto" target="_blank" rel="noopener">' +
 					"https://theos.kyriasis.com/~kyrias/stats/archlinux.html" +
 					"</a>" +
 					"&gt;",
@@ -134,7 +134,7 @@ describe("parse Handlebars helper", () => {
 				input: "abc (www.example.com)",
 				expected:
 					"abc (" +
-					'<a href="http://www.example.com" target="_blank" rel="noopener">' +
+					'<a href="http://www.example.com" dir="auto" target="_blank" rel="noopener">' +
 					"www.example.com" +
 					"</a>" +
 					")",
@@ -142,14 +142,14 @@ describe("parse Handlebars helper", () => {
 			{
 				input: "http://example.com/Test_(Page)",
 				expected:
-					'<a href="http://example.com/Test_(Page)" target="_blank" rel="noopener">' +
+					'<a href="http://example.com/Test_(Page)" dir="auto" target="_blank" rel="noopener">' +
 					"http://example.com/Test_(Page)" +
 					"</a>",
 			},
 			{
 				input: "www.example.com/Test_(Page)",
 				expected:
-					'<a href="http://www.example.com/Test_(Page)" target="_blank" rel="noopener">' +
+					'<a href="http://www.example.com/Test_(Page)" dir="auto" target="_blank" rel="noopener">' +
 					"www.example.com/Test_(Page)" +
 					"</a>",
 			},
@@ -386,7 +386,7 @@ describe("parse Handlebars helper", () => {
 				users: ["MaxLeiter, test"],
 				input: "https://www.MaxLeiter.com/test",
 				expected:
-					'<a href="https://www.MaxLeiter.com/test" target="_blank" rel="noopener">' +
+					'<a href="https://www.MaxLeiter.com/test" dir="auto" target="_blank" rel="noopener">' +
 					"https://www.MaxLeiter.com/test" +
 					"</a>",
 			},
@@ -403,7 +403,7 @@ describe("parse Handlebars helper", () => {
 			{
 				input: "\x02irc\x0f://\x1dfreenode.net\x0f/\x034,8thelounge",
 				expected:
-					'<a href="irc://freenode.net/thelounge" target="_blank" rel="noopener">' +
+					'<a href="irc://freenode.net/thelounge" dir="auto" target="_blank" rel="noopener">' +
 					'<span class="irc-bold">irc</span>' +
 					"://" +
 					'<span class="irc-italic">freenode.net</span>' +
@@ -470,7 +470,7 @@ describe("parse Handlebars helper", () => {
 			input: "https://i.❤️.thelounge.chat",
 			// FIXME: Emoji in text should be `<span class="emoji">❤️</span>`. See https://github.com/thelounge/thelounge/issues/1784
 			expected:
-				'<a href="https://i.❤️.thelounge.chat" target="_blank" rel="noopener">https://i.❤️.thelounge.chat</a>',
+				'<a href="https://i.❤️.thelounge.chat" dir="auto" target="_blank" rel="noopener">https://i.❤️.thelounge.chat</a>',
 		},
 		{
 			name: "wrapped in channels",
@@ -511,7 +511,7 @@ describe("parse Handlebars helper", () => {
 				input: "like..http://example.com",
 				expected:
 					"like.." +
-					'<a href="http://example.com" target="_blank" rel="noopener">' +
+					'<a href="http://example.com" dir="auto" target="_blank" rel="noopener">' +
 					"http://example.com" +
 					"</a>",
 			},
@@ -519,7 +519,7 @@ describe("parse Handlebars helper", () => {
 				input: "like..HTTP://example.com",
 				expected:
 					"like.." +
-					'<a href="HTTP://example.com" target="_blank" rel="noopener">' +
+					'<a href="HTTP://example.com" dir="auto" target="_blank" rel="noopener">' +
 					"HTTP://example.com" +
 					"</a>",
 			},
@@ -536,7 +536,7 @@ describe("parse Handlebars helper", () => {
 			{
 				input: "http://example.com/#hash",
 				expected:
-					'<a href="http://example.com/#hash" target="_blank" rel="noopener">' +
+					'<a href="http://example.com/#hash" dir="auto" target="_blank" rel="noopener">' +
 					"http://example.com/#hash" +
 					"</a>",
 			},
@@ -553,7 +553,7 @@ describe("parse Handlebars helper", () => {
 		const actual = getParsedMessageContents(input);
 
 		expect(actual).to.equal(
-			'Url: <a href="http://example.com/path" target="_blank" rel="noopener">http://example.com/path</a> ' +
+			'Url: <a href="http://example.com/path" dir="auto" target="_blank" rel="noopener">http://example.com/path</a> ' +
 				'Channel: <span role="button" dir="auto" tabindex="0" data-chan="##channel" class="inline-channel">##channel</span>'
 		);
 	});

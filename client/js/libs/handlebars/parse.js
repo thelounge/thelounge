@@ -9,6 +9,7 @@ const merge = require("./ircmessageparser/merge");
 const colorClass = require("./colorClass");
 const emojiMap = require("../fullnamemap.json");
 const LinkPreviewToggle = require("../../../components/LinkPreviewToggle.vue").default;
+const LinkPreviewFileSize = require("../../../components/LinkPreviewFileSize.vue").default;
 const emojiModifiersRegex = /[\u{1f3fb}-\u{1f3ff}]/gu;
 
 // Create an HTML `span` with styling information for a given fragment
@@ -96,12 +97,16 @@ module.exports = function parse(createElement, text, message = undefined, networ
 
 		// Wrap these potentially styled fragments with links and channel buttons
 		if (textPart.link) {
-			const preview = message && message.previews.find((p) => p.link === textPart.link);
+			const preview =
+				message &&
+				message.previews &&
+				message.previews.find((p) => p.link === textPart.link);
 			const link = createElement(
 				"a",
 				{
 					attrs: {
 						href: textPart.link,
+						dir: preview ? null : "auto",
 						target: "_blank",
 						rel: "noopener",
 					},
@@ -113,6 +118,28 @@ module.exports = function parse(createElement, text, message = undefined, networ
 				return link;
 			}
 
+			const linkEls = [link];
+
+			if (preview.size > 0) {
+				linkEls.push(
+					createElement(LinkPreviewFileSize, {
+						props: {
+							size: preview.size,
+						},
+					})
+				);
+			}
+
+			linkEls.push(
+				createElement(LinkPreviewToggle, {
+					props: {
+						link: preview,
+					},
+				})
+			);
+
+			// We wrap the link, size, and the toggle button into <span dir="auto">
+			// to correctly keep the left-to-right order of these elements
 			return createElement(
 				"span",
 				{
@@ -120,19 +147,7 @@ module.exports = function parse(createElement, text, message = undefined, networ
 						dir: "auto",
 					},
 				},
-				[
-					link,
-					createElement(
-						LinkPreviewToggle,
-						{
-							class: ["toggle-button", "toggle-preview"],
-							props: {
-								link: preview,
-							},
-						},
-						fragments
-					),
-				]
+				linkEls
 			);
 		} else if (textPart.channel) {
 			return createElement(
