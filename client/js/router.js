@@ -34,6 +34,12 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+	// Disallow navigating to non-existing routes
+	if (!to.matched.length) {
+		next(false);
+		return;
+	}
+
 	// Handle closing image viewer with the browser back button
 	if (!router.app.$refs.app) {
 		next();
