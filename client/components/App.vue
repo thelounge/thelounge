@@ -24,7 +24,7 @@ export default {
 	computed: {
 		viewportClasses() {
 			return {
-				notified: this.$store.state.isNotified,
+				notified: this.$store.getters.highlightCount > 0,
 				"menu-open": this.$store.state.sidebarOpen,
 				"menu-dragging": this.$store.state.sidebarDragging,
 				"userlist-open": this.$store.state.userlistOpen,
