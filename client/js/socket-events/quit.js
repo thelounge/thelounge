@@ -6,7 +6,10 @@ const sidebar = $("#sidebar");
 const {vueApp} = require("../vue");
 
 socket.on("quit", function(data) {
-	vueApp.networks.splice(vueApp.networks.findIndex((n) => n.uuid === data.network), 1);
+	vueApp.networks.splice(
+		vueApp.networks.findIndex((n) => n.uuid === data.network),
+		1
+	);
 
 	vueApp.$nextTick(() => {
 		const chan = sidebar.find(".chan");

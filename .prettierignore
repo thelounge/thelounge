@@ -21,5 +21,6 @@ yarn.lock
 .editorconfig
 .eslintignore
 .gitattributes
+.browserslistrc
 
 *.css
