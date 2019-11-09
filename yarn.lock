@@ -2020,7 +2020,7 @@ cheerio@^1.0.0-rc.2:
     lodash "^4.15.0"
     parse5 "^3.0.1"
 
-chokidar@2.1.8, chokidar@^2.0.2:
+chokidar@^2.0.0, chokidar@^2.0.2:
   version "2.1.8"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-2.1.8.tgz#804b3a7b6a99358c3c5c61e71d8728f041cff917"
   integrity sha512-ZmZUazfOzf0Nve7duiCKD23PFSCs4JPoYyccjUFF3aQkQadqBhfzhjkwBH2mNOG9cTBwhamM37EIsIkZw3nRgg==
@@ -5687,14 +5687,14 @@ mocha@6.2.2:
     yargs-parser "13.1.1"
     yargs-unparser "1.6.0"
 
-mochapack@1.1.8:
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/mochapack/-/mochapack-1.1.8.tgz#c766a1bb5927b0c981c6a55b50696b87e4aaa097"
-  integrity sha512-41cORHfu70ZRyEdt3vogbMEBQ/b1GsGq6yP/GYPCmTmNKlORrRkcPs9ZS6ovaZvn2t2ZmAvHx6D2Q3HNzQ/vsA==
+mochapack@1.1.9:
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/mochapack/-/mochapack-1.1.9.tgz#583e131d820697d1a0c6462db8ebac4f8a779fd1"
+  integrity sha512-YEqHmeQQ6IgYXu3ZHWUlZ3YUklIhK6LQh51xHSd4Sudthjh5V6N8cmoH4N1FwdbJWVgX18adWQngpRNUdzYSTQ==
   dependencies:
     babel-runtime "^6.26.0"
     chalk "^2.4.2"
-    chokidar "2.1.8"
+    chokidar "^2.0.0"
     gitbook-plugin-github "^2.0.0"
     glob-parent "5.1.0"
     globby "^10.0.1"
