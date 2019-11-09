@@ -2067,7 +2067,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #context-menu-container {
-	display: none;
 	position: absolute;
 	top: 0;
 	left: 0;

@@ -13,7 +13,6 @@ const socket = require("./socket");
 Vue.filter("localetime", localetime);
 
 require("./socket-events");
-require("./contextMenuFactory");
 require("./webpush");
 require("./keybinds");
 

@@ -6,6 +6,7 @@
 			<router-view ref="window"></router-view>
 		</article>
 		<ImageViewer ref="imageViewer" />
+		<ContextMenu ref="contextMenu" />
 	</div>
 </template>
 
@@ -16,12 +17,14 @@ const storage = require("../js/localStorage");
 
 import Sidebar from "./Sidebar.vue";
 import ImageViewer from "./ImageViewer.vue";
+import ContextMenu from "./ContextMenu.vue";
 
 export default {
 	name: "App",
 	components: {
 		Sidebar,
 		ImageViewer,
+		ContextMenu,
 	},
 	computed: {
 		viewportClasses() {
@@ -83,6 +86,10 @@ export default {
 			}
 
 			this.$store.commit("userlistOpen", isUserlistOpen === "true");
+		},
+		openContextMenu(event, items) {
+			// TODO: maybe move this method to the store or some other more accessible place
+			this.$refs.contextMenu.open(event, items);
 		},
 	},
 };

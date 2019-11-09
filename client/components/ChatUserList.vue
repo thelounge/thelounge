@@ -32,6 +32,7 @@
 						:on-hover="hoverUser"
 						:active="user.original === activeUser"
 						:user="user"
+						:context-menu-callback="openContextMenu"
 					/>
 				</template>
 				<template v-else>
@@ -41,6 +42,7 @@
 						:on-hover="hoverUser"
 						:active="user === activeUser"
 						:user="user"
+						:context-menu-callback="openContextMenu"
 					/>
 				</template>
 			</div>
@@ -52,6 +54,7 @@
 const fuzzy = require("fuzzy");
 import Username from "./Username.vue";
 import UsernameFiltered from "./UsernameFiltered.vue";
+import {generateUserContextMenu} from "../js/helpers/contextMenu.js";
 
 const modes = {
 	"~": "owner",
@@ -193,6 +196,11 @@ export default {
 				const el = this.$refs.userlist.querySelector(".active");
 				el.scrollIntoView({block: "nearest", inline: "nearest"});
 			});
+		},
+		openContextMenu(event, user) {
+			const {network} = this.$store.getters.findChannel(this.channel.id);
+			const items = generateUserContextMenu(this.$root, this.channel, network, user);
+			this.$root.$refs.app.openContextMenu(event, items);
 		},
 	},
 };

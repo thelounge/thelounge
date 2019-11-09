@@ -38,7 +38,11 @@
 							:network="network"
 							:text="channel.topic"
 					/></span>
-					<button class="menu" aria-label="Open the context menu" />
+					<button
+						class="menu"
+						aria-label="Open the context menu"
+						@click="openContextMenu"
+					/>
 					<span
 						v-if="channel.type === 'channel'"
 						class="rt-tooltip tooltipped tooltipped-w"
@@ -93,7 +97,8 @@
 </template>
 
 <script>
-const socket = require("../js/socket");
+import socket from "../js/socket";
+import {generateChannelContextMenu} from "../js/helpers/contextMenu.js";
 import ParsedMessage from "./ParsedMessage.vue";
 import MessageList from "./MessageList.vue";
 import ChatInput from "./ChatInput.vue";
@@ -178,6 +183,10 @@ export default {
 				const text = `/raw TOPIC ${this.channel.name} :${newTopic}`;
 				socket.emit("input", {target, text});
 			}
+		},
+		openContextMenu(event) {
+			const items = generateChannelContextMenu(this.$root, this.channel, this.network);
+			this.$root.$refs.app.openContextMenu(event, items);
 		},
 	},
 };

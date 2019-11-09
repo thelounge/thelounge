@@ -42,6 +42,7 @@
 				<Message
 					v-else
 					:key="message.id"
+					:channel="channel"
 					:network="network"
 					:message="message"
 					:keep-scroll-position="keepScrollPosition"

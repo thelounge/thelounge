@@ -12,6 +12,8 @@ const LinkPreviewToggle = require("../../components/LinkPreviewToggle.vue").defa
 const LinkPreviewFileSize = require("../../components/LinkPreviewFileSize.vue").default;
 const InlineChannel = require("../../components/InlineChannel.vue").default;
 const emojiModifiersRegex = /[\u{1f3fb}-\u{1f3ff}]/gu;
+const store = require("../store").default;
+const {generateUserContextMenu} = require("./contextMenu");
 
 // Create an HTML `span` with styling information for a given fragment
 function createFragment(fragment, createElement) {
@@ -69,7 +71,13 @@ function createFragment(fragment, createElement) {
 
 // Transform an IRC message potentially filled with styling control codes, URLs,
 // nicknames, and channels into a string of HTML elements to display on the client.
-module.exports = function parse(createElement, text, message = undefined, network = undefined) {
+module.exports = function parse(
+	createElement,
+	text,
+	message = undefined,
+	network = undefined,
+	$root
+) {
 	// Extract the styling information and get the plain text version from it
 	const styleFragments = parseStyle(text);
 	const cleanText = styleFragments.map((fragment) => fragment.text).join("");
@@ -187,6 +195,23 @@ module.exports = function parse(createElement, text, message = undefined, networ
 						role: "button",
 						dir: "auto",
 						"data-name": textPart.nick,
+					},
+					on: {
+						contextmenu($event) {
+							$event.preventDefault();
+							const channel = store.state.activeChannel.channel;
+							let user = channel.users.find((u) => u.nick === textPart.nick);
+
+							if (!user) {
+								user = {
+									nick: textPart.nick,
+									mode: "",
+								};
+							}
+
+							const items = generateUserContextMenu($root, channel, network, user);
+							$root.$refs.app.openContextMenu($event, items);
+						},
 					},
 				},
 				fragments

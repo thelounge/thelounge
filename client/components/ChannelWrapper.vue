@@ -24,6 +24,7 @@
 		:style="closed ? {transition: 'none', opacity: 0.4} : null"
 		role="tab"
 		@click="click"
+		@contextmenu.prevent="openContextMenu"
 	>
 		<slot :network="network" :channel="channel" :activeChannel="activeChannel" />
 	</div>
@@ -31,6 +32,7 @@
 
 <script>
 import socket from "../js/socket";
+import {generateChannelContextMenu} from "../js/helpers/contextMenu.js";
 
 export default {
 	name: "ChannelWrapper",
@@ -76,6 +78,10 @@ export default {
 		},
 		click() {
 			this.$root.switchToChannel(this.channel);
+		},
+		openContextMenu(event) {
+			const items = generateChannelContextMenu(this.$root, this.channel, this.network);
+			this.$root.$refs.app.openContextMenu(event, items);
 		},
 	},
 };

@@ -64,7 +64,6 @@
 		</div>
 		<div id="viewport"></div>
 
-		<div id="context-menu-container"></div>
 		<div id="upload-overlay"></div>
 
 		<script src="js/bundle.vendor.js?v=<%- cacheBust %>"></script>
