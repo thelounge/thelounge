@@ -232,8 +232,16 @@ export default {
 				return;
 			}
 
-			let lastMessage = this.channel.messages[0];
-			lastMessage = lastMessage ? lastMessage.id : -1;
+			let lastMessage = -1;
+
+			// Find the id of first message that isn't showInActive
+			// If showInActive is set, this message is actually in another channel
+			for (const message of this.channel.messages) {
+				if (!message.showInActive) {
+					lastMessage = message.id;
+					break;
+				}
+			}
 
 			this.channel.historyLoading = true;
 
