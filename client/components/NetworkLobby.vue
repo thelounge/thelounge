@@ -42,7 +42,7 @@
 				@click.stop="$emit('toggleJoinChannel')"
 			/>
 		</span>
-		<button class="close" hidden @click="close" />
+		<button class="close" hidden @click.stop="close" />
 	</ChannelWrapper>
 </template>
 

@@ -13,12 +13,12 @@
 				<span class="parted-channel-icon" />
 			</span>
 			<span class="close-tooltip tooltipped tooltipped-w" aria-label="Leave">
-				<button class="close" aria-label="Leave" @click="close" />
+				<button class="close" aria-label="Leave" @click.stop="close" />
 			</span>
 		</template>
 		<template v-else>
 			<span class="close-tooltip tooltipped tooltipped-w" aria-label="Close">
-				<button class="close" aria-label="Close" @click="close" />
+				<button class="close" aria-label="Close" @click.stop="close" />
 			</span>
 		</template>
 	</ChannelWrapper>
