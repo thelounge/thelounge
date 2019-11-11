@@ -1,12 +1,13 @@
 "use strict";
 
+import Vue from "vue";
+
 const $ = require("jquery");
 const socket = require("./socket");
 const utils = require("./utils");
 const ContextMenu = require("./contextMenu");
 const contextMenuActions = [];
 const contextMenuItems = [];
-const {vueApp} = require("./vue");
 const {switchToChannel, navigate} = require("./router");
 const store = require("./store").default;
 
@@ -327,7 +328,7 @@ function addEditTopicItem() {
 		store.getters.findChannel(Number(itemData)).channel.editTopic = true;
 		document.querySelector(`#sidebar .chan[data-id="${Number(itemData)}"]`).click();
 
-		vueApp.$nextTick(() => {
+		Vue.nextTick(() => {
 			document.querySelector(`#chan-${Number(itemData)} .topic-input`).focus();
 		});
 	}

@@ -1,7 +1,9 @@
 "use strict";
 
+import Vue from "vue";
+
 const socket = require("../socket");
-const {vueApp, initChannel} = require("../vue");
+const {initChannel} = require("../vue");
 const store = require("../store").default;
 const {switchToChannel} = require("../router");
 
@@ -58,6 +60,6 @@ socket.on("network:info", function(data) {
 	}
 
 	for (const key in data) {
-		vueApp.$set(network, key, data[key]);
+		Vue.set(network, key, data[key]);
 	}
 });

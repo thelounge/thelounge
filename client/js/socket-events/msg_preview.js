@@ -1,7 +1,8 @@
 "use strict";
 
+import Vue from "vue";
+
 const socket = require("../socket");
-const {vueApp} = require("../vue");
 const store = require("../store").default;
 
 socket.on("msg:preview", function(data) {
@@ -15,6 +16,6 @@ socket.on("msg:preview", function(data) {
 	const previewIndex = message.previews.findIndex((m) => m.link === data.preview.link);
 
 	if (previewIndex > -1) {
-		vueApp.$set(message.previews, previewIndex, data.preview);
+		Vue.set(message.previews, previewIndex, data.preview);
 	}
 });

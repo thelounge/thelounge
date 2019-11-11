@@ -1,7 +1,8 @@
 "use strict";
 
+import Vue from "vue";
+
 const socket = require("../socket");
-const {vueApp} = require("../vue");
 const store = require("../store").default;
 
 socket.on("more", function(data) {
@@ -15,7 +16,7 @@ socket.on("more", function(data) {
 		data.totalMessages > channel.channel.messages.length + data.messages.length;
 	channel.channel.messages.unshift(...data.messages);
 
-	vueApp.$nextTick(() => {
+	Vue.nextTick(() => {
 		channel.channel.historyLoading = false;
 	});
 });
