@@ -71,7 +71,17 @@ export default {
 			errorShown: false,
 		};
 	},
+	mounted() {
+		this.$root.$on("auth:failed", this.onAuthFailed);
+	},
+	beforeDestroy() {
+		this.$root.$off("auth:failed", this.onAuthFailed);
+	},
 	methods: {
+		onAuthFailed() {
+			this.inFlight = false;
+			this.errorShown = true;
+		},
 		onSubmit(event) {
 			event.preventDefault();
 

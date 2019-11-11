@@ -2,7 +2,7 @@
 
 const socket = require("../socket");
 const storage = require("../localStorage");
-const {vueApp, getActiveWindowComponent} = require("../vue");
+const {vueApp} = require("../vue");
 const store = require("../store").default;
 let lastServerHash = null;
 
@@ -18,12 +18,9 @@ socket.on("auth:failed", function() {
 		return reloadPage("Authentication failed, reloading…");
 	}
 
-	// TODO: This will most likely fail getActiveWindowComponent
 	showSignIn();
 
-	// TODO: getActiveWindowComponent is the SignIn component, find a better way to set this
-	getActiveWindowComponent().errorShown = true;
-	getActiveWindowComponent().inFlight = false;
+	vueApp.$emit("auth:failed");
 });
 
 socket.on("auth:start", function(serverHash) {
@@ -78,7 +75,9 @@ function showSignIn() {
 		window.g_TheLoungeRemoveLoading();
 	}
 
-	vueApp.$router.push("/sign-in");
+	if (vueApp.$route.name !== "SignIn") {
+		vueApp.$router.push("/sign-in");
+	}
 }
 
 function reloadPage(message) {
