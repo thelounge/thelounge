@@ -43,7 +43,7 @@ Helper.mergeConfig(Helper.config, program.config);
 
 require("./start");
 
-if (!Helper.config.public && !Helper.config.ldap.enable) {
+if (!Helper.config.public) {
 	require("./users");
 }
 
