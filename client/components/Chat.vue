@@ -134,25 +134,19 @@ export default {
 		},
 	},
 	watch: {
-		channel(_, previousChannel) {
-			this.channelChanged(previousChannel);
+		channel() {
+			this.channelChanged();
 		},
 	},
 	mounted() {
 		this.channelChanged();
 	},
 	methods: {
-		channelChanged(previousChannel) {
+		channelChanged() {
 			// Triggered when active channel is set or changed
-
-			if (previousChannel) {
-				this.$root.switchOutOfChannel(previousChannel);
-			}
-
 			this.channel.highlight = 0;
 			this.channel.unread = 0;
 
-			this.$store.commit("activeWindow", null);
 			socket.emit("open", this.channel.id);
 
 			if (this.channel.usersOutdated) {

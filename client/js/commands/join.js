@@ -2,10 +2,9 @@
 
 const socket = require("../socket");
 const store = require("../store").default;
+const {switchToChannel} = require("../router");
 
 exports.input = function(args) {
-	const {vueApp} = require("../vue");
-
 	if (args.length > 0) {
 		let channels = args[0];
 
@@ -26,7 +25,7 @@ exports.input = function(args) {
 			const chan = store.getters.findChannelOnCurrentNetwork(channels);
 
 			if (chan) {
-				vueApp.switchToChannel(chan);
+				switchToChannel(chan);
 			} else {
 				socket.emit("input", {
 					text: `/join ${channels} ${args.length > 1 ? args[1] : ""}`,

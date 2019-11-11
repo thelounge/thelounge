@@ -5,6 +5,7 @@ const webpush = require("../webpush");
 const storage = require("../localStorage");
 const constants = require("../constants");
 const {vueApp, initChannel} = require("../vue");
+const {switchToChannel, navigate} = require("../router");
 const router = require("../router");
 const store = require("../store").default;
 
@@ -49,13 +50,13 @@ socket.on("init", function(data) {
 			const channel = store.getters.findChannel(data.active);
 
 			if (channel) {
-				vueApp.switchToChannel(channel.channel);
+				switchToChannel(channel.channel);
 			} else if (store.state.networks.length > 0) {
 				// Server is telling us to open a channel that does not exist
 				// For example, it can be unset if you first open the page after server start
-				vueApp.switchToChannel(store.state.networks[0].channels[0]);
+				switchToChannel(store.state.networks[0].channels[0]);
 			} else {
-				vueApp.$router.push("/connect");
+				navigate("Connect");
 			}
 		}
 	}

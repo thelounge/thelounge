@@ -2,8 +2,8 @@
 
 const $ = require("jquery");
 const Mousetrap = require("mousetrap");
-const {vueApp} = require("./vue");
 const store = require("./store").default;
+const {switchToChannel} = require("./router");
 
 // Switch to the next/previous window in the channel list.
 Mousetrap.bind(["alt+up", "alt+down"], function(e, keys) {
@@ -92,7 +92,7 @@ Mousetrap.bind(["alt+a"], function() {
 	}
 
 	if (targetchan) {
-		vueApp.switchToChannel(targetchan);
+		switchToChannel(targetchan);
 	}
 
 	return false;

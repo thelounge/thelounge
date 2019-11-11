@@ -3,8 +3,8 @@
 const socket = require("../socket");
 const cleanIrcMessage = require("../helpers/ircmessageparser/cleanIrcMessage");
 const webpush = require("../webpush");
-const {vueApp} = require("../vue");
 const store = require("../store").default;
+const {switchToChannel} = require("../router");
 
 let pop;
 
@@ -154,7 +154,7 @@ function notifyMessage(targetId, channel, activeChannel, msg) {
 							const channelTarget = store.getters.findChannel(targetId);
 
 							if (channelTarget) {
-								vueApp.switchToChannel(channelTarget);
+								switchToChannel(channelTarget);
 							}
 						});
 					}

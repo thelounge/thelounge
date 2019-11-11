@@ -26,7 +26,6 @@ const store = new Vuex.Store({
 		isAutoCompleting: false,
 		isConnected: false,
 		isFileUploadEnabled: false,
-		activeWindow: null,
 		networks: [],
 		pushNotificationState: "unsupported",
 		serverConfiguration: {},
@@ -59,9 +58,6 @@ const store = new Vuex.Store({
 		},
 		isFileUploadEnabled(state, isFileUploadEnabled) {
 			state.isFileUploadEnabled = isFileUploadEnabled;
-		},
-		activeWindow(state, payload) {
-			state.activeWindow = payload;
 		},
 		networks(state, networks) {
 			state.networks = networks;

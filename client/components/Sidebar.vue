@@ -22,12 +22,10 @@
 					tag="button"
 					active-class="active"
 					:class="['icon', 'sign-in']"
-					data-target="#sign-in"
-					data-component="SignIn"
 					aria-label="Sign in"
 					role="tab"
 					aria-controls="sign-in"
-					:aria-selected="$store.state.activeWindow === 'SignIn'"
+					:aria-selected="$route.name === 'SignIn'"
 			/></span>
 			<span
 				class="tooltipped tooltipped-n tooltipped-no-touch"
@@ -37,12 +35,10 @@
 					tag="button"
 					active-class="active"
 					:class="['icon', 'connect']"
-					data-target="#connect"
-					data-component="Connect"
 					aria-label="Connect to network"
 					role="tab"
 					aria-controls="connect"
-					:aria-selected="$store.state.activeWindow === 'Connect'"
+					:aria-selected="$route.name === 'Connect'"
 			/></span>
 			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Settings"
 				><router-link
@@ -50,13 +46,10 @@
 					tag="button"
 					active-class="active"
 					:class="['icon', 'settings']"
-					class="icon settings"
-					data-target="#settings"
-					data-component="Settings"
 					aria-label="Settings"
 					role="tab"
 					aria-controls="settings"
-					:aria-selected="$store.state.activeWindow === 'Settings'"
+					:aria-selected="$route.name === 'Settings'"
 			/></span>
 			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Help"
 				><router-link
@@ -64,12 +57,10 @@
 					tag="button"
 					active-class="active"
 					:class="['icon', 'help']"
-					data-target="#help"
-					data-component="Help"
 					aria-label="Help"
 					role="tab"
 					aria-controls="help"
-					:aria-selected="$store.state.activeWindow === 'Help'"
+					:aria-selected="$route.name === 'Help'"
 			/></span>
 		</footer>
 	</aside>

@@ -7,6 +7,7 @@ const ContextMenu = require("./contextMenu");
 const contextMenuActions = [];
 const contextMenuItems = [];
 const {vueApp} = require("./vue");
+const {switchToChannel, navigate} = require("./router");
 const store = require("./store").default;
 
 addDefaultItems();
@@ -51,7 +52,7 @@ function addWhoisItem() {
 		const chan = store.getters.findChannelOnCurrentNetwork(itemData);
 
 		if (chan) {
-			vueApp.switchToChannel(chan);
+			switchToChannel(chan);
 		}
 
 		socket.emit("input", {
@@ -86,7 +87,7 @@ function addQueryItem() {
 		const chan = store.getters.findChannelOnCurrentNetwork(itemData);
 
 		if (chan) {
-			vueApp.switchToChannel(chan);
+			switchToChannel(chan);
 		}
 
 		socket.emit("input", {
@@ -292,7 +293,7 @@ function addFocusItem() {
 
 function addEditNetworkItem() {
 	function edit(networkUuid) {
-		vueApp.$router.push("/edit-network/" + networkUuid);
+		navigate("NetworkEdit", {uuid: networkUuid});
 	}
 
 	addContextMenuItem({

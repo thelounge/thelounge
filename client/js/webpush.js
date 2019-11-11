@@ -2,8 +2,8 @@
 
 const storage = require("./localStorage");
 const socket = require("./socket");
-const vueApp = require("./vue");
 const store = require("./store").default;
+const {switchToChannel} = require("./router");
 
 let clientSubscribed = null;
 let applicationServerKey;
@@ -15,7 +15,7 @@ if ("serviceWorker" in navigator) {
 			const channelTarget = store.getters.findChannel(id);
 
 			if (channelTarget) {
-				vueApp.switchToChannel(channelTarget);
+				switchToChannel(channelTarget);
 			}
 		}
 	});

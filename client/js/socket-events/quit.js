@@ -1,7 +1,7 @@
 "use strict";
 
 const socket = require("../socket");
-const {vueApp} = require("../vue");
+const {switchToChannel, navigate} = require("../router");
 const store = require("../store").default;
 
 socket.on("quit", function(data) {
@@ -17,8 +17,8 @@ socket.on("quit", function(data) {
 	}
 
 	if (store.state.networks.length > 0) {
-		vueApp.switchToChannel(store.state.networks[0].channels[0]);
+		switchToChannel(store.state.networks[0].channels[0]);
 	} else {
-		vueApp.$router.push("/connect");
+		navigate("Connect");
 	}
 });

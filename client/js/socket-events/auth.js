@@ -3,6 +3,7 @@
 const socket = require("../socket");
 const storage = require("../localStorage");
 const {vueApp} = require("../vue");
+const {navigate} = require("../router");
 const store = require("../store").default;
 let lastServerHash = null;
 
@@ -76,7 +77,7 @@ function showSignIn() {
 	}
 
 	if (vueApp.$route.name !== "SignIn") {
-		vueApp.$router.push("/sign-in");
+		navigate("SignIn");
 	}
 }
 

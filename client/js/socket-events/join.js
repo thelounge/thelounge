@@ -1,8 +1,9 @@
 "use strict";
 
 const socket = require("../socket");
-const {vueApp, initChannel} = require("../vue");
+const {initChannel} = require("../vue");
 const store = require("../store").default;
+const {switchToChannel} = require("../router");
 
 socket.on("join", function(data) {
 	initChannel(data.chan);
@@ -20,5 +21,5 @@ socket.on("join", function(data) {
 		return;
 	}
 
-	vueApp.switchToChannel(store.getters.findChannel(data.chan.id).channel);
+	switchToChannel(store.getters.findChannel(data.chan.id).channel);
 });

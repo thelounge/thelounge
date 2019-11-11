@@ -3,6 +3,7 @@
 const socket = require("../socket");
 const {vueApp, initChannel} = require("../vue");
 const store = require("../store").default;
+const {switchToChannel} = require("../router");
 
 socket.on("network", function(data) {
 	const network = data.networks[0];
@@ -12,7 +13,7 @@ socket.on("network", function(data) {
 	network.channels.forEach(initChannel);
 
 	store.commit("networks", [...store.state.networks, network]);
-	vueApp.switchToChannel(network.channels[0]);
+	switchToChannel(network.channels[0]);
 });
 
 socket.on("network:options", function(data) {

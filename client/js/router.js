@@ -36,14 +36,13 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
 	// Disallow navigating to non-existing routes
-
 	if (store.state.appLoaded && !to.matched.length) {
 		next(false);
 		return;
 	}
 
 	// Disallow navigating to invalid channels
-	if (to.name === "RoutedChat" && !store.getters.findChannel(Number(to.params.pathMatch))) {
+	if (to.name === "RoutedChat" && !store.getters.findChannel(Number(to.params.id))) {
 		next(false);
 		return;
 	}
@@ -65,22 +64,26 @@ router.beforeEach((to, from, next) => {
 	next();
 });
 
-router.afterEach((to) => {
+router.afterEach(() => {
 	if (store.state.appLoaded) {
 		if (window.innerWidth <= constants.mobileViewportPixels) {
 			store.commit("sidebarOpen", false);
 		}
 	}
 
-	if (to.name !== "RoutedChat") {
-		// Navigating out of a chat window
-		store.commit("activeWindow", to.name);
+	if (store.state.activeChannel) {
+		const channel = store.state.activeChannel.channel;
+		store.commit("activeChannel", null);
 
-		if (store.state.activeChannel && store.state.activeChannel.channel) {
-			router.app.switchOutOfChannel(store.state.activeChannel.channel);
+		// When switching out of a channel, mark everything as read
+		if (channel.messages.length > 0) {
+			channel.firstUnread = channel.messages[channel.messages.length - 1].id;
 		}
 
-		store.commit("activeChannel", null);
+		if (channel.messages.length > 100) {
+			channel.messages.splice(0, channel.messages.length - 100);
+			channel.moreHistoryAvailable = true;
+		}
 	}
 });
 
@@ -114,13 +117,19 @@ function initialize() {
 		},
 		{
 			name: "RoutedChat",
-			path: "/chan-*",
+			path: "/chan-:id",
 			component: RoutedChat,
 		},
 	]);
 }
 
+function navigate(routeName, params = {}) {
+	router.push({name: routeName, params}).catch(() => {});
+}
+
 module.exports = {
 	initialize,
 	router,
+	navigate,
+	switchToChannel: (channel) => navigate("RoutedChat", {id: channel.id}),
 };

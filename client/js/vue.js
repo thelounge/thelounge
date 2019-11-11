@@ -6,7 +6,7 @@ const store = require("./store").default;
 const App = require("../components/App.vue").default;
 const localetime = require("./helpers/localetime");
 const storage = require("./localStorage");
-const {router} = require("./router");
+const {router, navigate} = require("./router");
 const constants = require("./constants");
 
 Vue.filter("localetime", localetime);
@@ -35,25 +35,7 @@ const vueApp = new Vue({
 	},
 	methods: {
 		switchToChannel(channel) {
-			if (
-				this.$store.state.activeChannel &&
-				this.$store.state.activeChannel.channel.id === channel.id
-			) {
-				return;
-			}
-
-			this.$router.push("/chan-" + channel.id);
-		},
-		switchOutOfChannel(channel) {
-			// When switching out of a channel, mark everything as read
-			if (channel.messages.length > 0) {
-				channel.firstUnread = channel.messages[channel.messages.length - 1].id;
-			}
-
-			if (channel.messages.length > 100) {
-				channel.messages.splice(0, channel.messages.length - 100);
-				channel.moreHistoryAvailable = true;
-			}
+			navigate("RoutedChat", {id: channel.id});
 		},
 	},
 	render(createElement) {
