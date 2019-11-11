@@ -1,9 +1,8 @@
 "use strict";
 
-const $ = require("jquery");
 const socket = require("../socket");
 const storage = require("../localStorage");
-const {getActiveWindowComponent} = require("../vue");
+const {vueApp, getActiveWindowComponent} = require("../vue");
 const store = require("../store").default;
 let lastServerHash = null;
 
@@ -79,11 +78,7 @@ function showSignIn() {
 		window.g_TheLoungeRemoveLoading();
 	}
 
-	$("#footer")
-		.find(".sign-in")
-		.trigger("click", {
-			pushState: false,
-		});
+	vueApp.$router.push("/sign-in");
 }
 
 function reloadPage(message) {

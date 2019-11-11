@@ -1,6 +1,5 @@
 "use strict";
 
-const $ = require("jquery");
 const socket = require("../socket");
 const webpush = require("../webpush");
 const storage = require("../localStorage");
@@ -56,8 +55,7 @@ socket.on("init", function(data) {
 				// For example, it can be unset if you first open the page after server start
 				vueApp.switchToChannel(store.state.networks[0].channels[0]);
 			} else {
-				// TODO: Use vue router
-				$("#footer .connect").trigger("click");
+				vueApp.$router.push("/connect");
 			}
 		}
 	}
