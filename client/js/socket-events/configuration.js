@@ -22,7 +22,6 @@ window.addEventListener("beforeinstallprompt", (installPromptEvent) => {
 });
 
 socket.once("configuration", function(data) {
-	store.commit("isFileUploadEnabled", data.fileUpload);
 	store.commit("serverConfiguration", data);
 
 	// 'theme' setting depends on serverConfiguration.themes so

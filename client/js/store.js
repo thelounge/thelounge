@@ -25,7 +25,6 @@ const store = new Vuex.Store({
 		desktopNotificationState: detectDesktopNotificationState(),
 		isAutoCompleting: false,
 		isConnected: false,
-		isFileUploadEnabled: false,
 		networks: [],
 		pushNotificationState: "unsupported",
 		serverConfiguration: null,
@@ -55,9 +54,6 @@ const store = new Vuex.Store({
 		},
 		isConnected(state, payload) {
 			state.isConnected = payload;
-		},
-		isFileUploadEnabled(state, isFileUploadEnabled) {
-			state.isFileUploadEnabled = isFileUploadEnabled;
 		},
 		networks(state, networks) {
 			state.networks = networks;

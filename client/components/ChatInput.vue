@@ -13,7 +13,7 @@
 			@keypress.enter.exact.prevent="onSubmit"
 		/>
 		<span
-			v-if="$store.state.isFileUploadEnabled"
+			v-if="$store.state.serverConfiguration.fileUpload"
 			id="upload-tooltip"
 			class="tooltipped tooltipped-w tooltipped-no-touch"
 			aria-label="Upload file"
@@ -147,7 +147,7 @@ export default {
 			return false;
 		});
 
-		if (this.$store.state.isFileUploadEnabled) {
+		if (this.$store.state.serverConfiguration.fileUpload) {
 			upload.mounted();
 		}
 	},
