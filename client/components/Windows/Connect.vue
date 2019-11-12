@@ -36,7 +36,7 @@ export default {
 			const parsedParams = {};
 
 			for (let key of Object.keys(params)) {
-				if (params[key] === null) {
+				if (!params[key]) {
 					continue;
 				}
 
@@ -59,7 +59,7 @@ export default {
 
 				// When the network is locked, URL overrides should not affect disabled fields
 				if (
-					this.$store.state.lockNetwork &&
+					this.$store.state.serverConfiguration.lockNetwork &&
 					["host", "port", "tls", "rejectUnauthorized"].includes(key)
 				) {
 					continue;

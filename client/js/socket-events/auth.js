@@ -3,7 +3,7 @@
 const socket = require("../socket");
 const storage = require("../localStorage");
 const {vueApp} = require("../vue");
-const {navigate} = require("../router");
+const {router, navigate} = require("../router");
 const store = require("../store").default;
 let lastServerHash = null;
 
@@ -64,7 +64,13 @@ socket.on("auth:start", function(serverHash) {
 		const openChannel =
 			(store.state.activeChannel && store.state.activeChannel.channel.id) || null;
 
-		socket.emit("auth:perform", {user, token, lastMessage, openChannel});
+		socket.emit("auth:perform", {
+			user,
+			token,
+			lastMessage,
+			openChannel,
+			hasConfig: store.state.serverConfiguration !== null,
+		});
 	} else {
 		showSignIn();
 	}
@@ -76,7 +82,7 @@ function showSignIn() {
 		window.g_TheLoungeRemoveLoading();
 	}
 
-	if (vueApp.$route.name !== "SignIn") {
+	if (router.currentRoute.name !== "SignIn") {
 		navigate("SignIn");
 	}
 }

@@ -28,7 +28,7 @@ const store = new Vuex.Store({
 		isFileUploadEnabled: false,
 		networks: [],
 		pushNotificationState: "unsupported",
-		serverConfiguration: {},
+		serverConfiguration: null,
 		sessions: [],
 		sidebarOpen: false,
 		sidebarDragging: false,

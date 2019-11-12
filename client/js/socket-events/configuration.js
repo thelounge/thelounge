@@ -5,7 +5,7 @@ const socket = require("../socket");
 const webpush = require("../webpush");
 const upload = require("../upload");
 const store = require("../store").default;
-const {vueApp} = require("../vue");
+const router = require("../router");
 
 window.addEventListener("beforeinstallprompt", (installPromptEvent) => {
 	$("#webapp-install-button")
@@ -35,6 +35,7 @@ socket.once("configuration", function(data) {
 
 	socket.emit("setting:get");
 	webpush.initialize();
+	router.initialize();
 
 	// If localStorage contains a theme that does not exist on this server, switch
 	// back to its default theme.
@@ -47,31 +48,36 @@ socket.once("configuration", function(data) {
 	}
 
 	if ("URLSearchParams" in window) {
-		const params = new URLSearchParams(document.location.search);
-
-		const cleanParams = () => {
-			// Remove query parameters from url without reloading the page
-			const cleanUri =
-				window.location.origin + window.location.pathname + window.location.hash;
-			window.history.replaceState({}, document.title, cleanUri);
-		};
-
-		if (params.has("uri")) {
-			// Set default connection settings from IRC protocol links
-			const uri =
-				params.get("uri") +
-				(location.hash.includes("#/") ? location.hash.split("#/")[0] : location.hash);
-			const queryParams = parseIrcUri(uri, data);
-			cleanParams();
-			vueApp.$router.push({path: "/connect", query: queryParams});
-		} else if (document.body.classList.contains("public") && document.location.search) {
-			// Set default connection settings from url params
-			const queryParams = document.location.search;
-			cleanParams();
-			vueApp.$router.push("/connect" + queryParams);
-		}
+		handleQueryParams();
 	}
 });
+
+function handleQueryParams() {
+	const params = new URLSearchParams(document.location.search);
+
+	const cleanParams = () => {
+		// Remove query parameters from url without reloading the page
+		const cleanUri = window.location.origin + window.location.pathname + window.location.hash;
+		window.history.replaceState({}, document.title, cleanUri);
+	};
+
+	if (params.has("uri")) {
+		// Set default connection settings from IRC protocol links
+		const uri =
+			params.get("uri") +
+			(location.hash.startsWith("#/") ? `#${location.hash.substring(2)}` : location.hash);
+		const queryParams = parseIrcUri(uri);
+
+		cleanParams();
+		router.router.push({name: "Connect", query: queryParams});
+	} else if (document.body.classList.contains("public") && document.location.search) {
+		// Set default connection settings from url params
+		const queryParams = Object.fromEntries(params.entries());
+
+		cleanParams();
+		router.router.push({name: "Connect", query: queryParams});
+	}
+}
 
 function parseIrcUri(stringUri) {
 	const data = {};
@@ -104,8 +110,8 @@ function parseIrcUri(stringUri) {
 
 		data.host = data.name = uri.hostname;
 		data.port = uri.port;
-		data.username = window.decodeURIComponent(uri.username) || data.username;
-		data.password = window.decodeURIComponent(uri.password) || data.password;
+		data.username = window.decodeURIComponent(uri.username);
+		data.password = window.decodeURIComponent(uri.password);
 
 		let channel = (uri.pathname + uri.hash).substr(1);
 		const index = channel.indexOf(",");

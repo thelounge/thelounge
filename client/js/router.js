@@ -91,7 +91,7 @@ function initialize() {
 	router.addRoutes([
 		{
 			name: "Connect",
-			path: "/connect*",
+			path: "/connect",
 			component: Connect,
 			props: (route) => ({queryParams: route.query}),
 		},

@@ -4,9 +4,8 @@ const socket = require("../socket");
 const webpush = require("../webpush");
 const storage = require("../localStorage");
 const constants = require("../constants");
-const {vueApp, initChannel} = require("../vue");
-const {switchToChannel, navigate} = require("../router");
-const router = require("../router");
+const {initChannel} = require("../vue");
+const {router, switchToChannel, navigate} = require("../router");
 const store = require("../store").default;
 
 socket.on("init", function(data) {
@@ -15,8 +14,6 @@ socket.on("init", function(data) {
 	store.commit("currentUserVisibleError", null);
 
 	if (!store.state.appLoaded) {
-		router.initialize();
-
 		store.commit("appLoaded");
 
 		if (data.token) {
@@ -46,7 +43,7 @@ socket.on("init", function(data) {
 			window.g_TheLoungeRemoveLoading();
 		}
 
-		if (!vueApp.$route.name || vueApp.$route.name === "SignIn") {
+		if (!router.currentRoute.name || router.currentRoute.name === "SignIn") {
 			const channel = store.getters.findChannel(data.active);
 
 			if (channel) {
@@ -86,7 +83,7 @@ function mergeNetworkData(newNetworks) {
 		}
 
 		// Merge received network object into existing network object on the client
-		// so the object reference stays the same (e.g. for vueApp.currentChannel)
+		// so the object reference stays the same (e.g. for currentChannel state)
 		for (const key in network) {
 			if (!Object.prototype.hasOwnProperty.call(network, key)) {
 				continue;

@@ -736,7 +736,11 @@ function performAuthentication(data) {
 	};
 
 	const initClient = () => {
-		socket.emit("configuration", getClientConfiguration());
+		// Configuration does not change during runtime of TL,
+		// and the client listens to this event only once
+		if (!data.hasConfig) {
+			socket.emit("configuration", getClientConfiguration());
+		}
 
 		client.config.browser = {
 			ip: getClientIp(socket),
