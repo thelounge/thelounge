@@ -47,7 +47,7 @@
 	<meta name="theme-color" content="<%- themeColor %>">
 
 	</head>
-	<body class="signed-out<%- public ? " public" : "" %>" data-transports="<%- JSON.stringify(transports) %>">
+	<body class="<%- public ? " public" : "" %>" data-transports="<%- JSON.stringify(transports) %>">
 		<div id="loading">
 			<div class="window">
 				<div id="loading-status-container">

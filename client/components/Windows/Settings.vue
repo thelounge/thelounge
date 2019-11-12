@@ -450,6 +450,7 @@
 
 <script>
 import socket from "../../js/socket";
+import webpush from "../../js/webpush";
 import RevealPassword from "../RevealPassword.vue";
 import Session from "../Session.vue";
 import SidebarToggle from "../SidebarToggle.vue";
@@ -481,10 +482,6 @@ export default {
 		if (window.navigator.registerProtocolHandler) {
 			this.canRegisterProtocol = true;
 		}
-
-		// TODO: Rework push notification code to avoid reinitializing it here
-		const webpush = require("../../js/webpush");
-		webpush.initialize();
 	},
 	methods: {
 		onChange(event) {
@@ -551,8 +548,7 @@ export default {
 			pop.play();
 		},
 		onPushButtonClick() {
-			const webpush = require("../../js/webpush"); // TODO: do this in a smarter way
-			webpush.onPushButton();
+			webpush.togglePushSubscription();
 		},
 	},
 };

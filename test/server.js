@@ -101,18 +101,38 @@ describe("Server", function() {
 			});
 		});
 
+		it("should emit configuration message", (done) => {
+			client.on("configuration", (data) => {
+				// Private key defined in vapid.json is "01020304050607080910111213141516" for this public key.
+				expect(data.applicationServerKey).to.equal(
+					"BM0eTDpvDnH7ewlHuXWcPTE1NjlJ06XWIS1cQeBTZmsg4EDx5sOpY7kdX1pniTo8RakL3UdfFuIbC8_zog_BWIM"
+				);
+
+				expect(data.public).to.equal(true);
+				expect(data.defaultTheme).to.equal("default");
+				expect(data.themes).to.be.an("array");
+				expect(data.lockNetwork).to.equal(false);
+				expect(data.displayNetwork).to.equal(true);
+				expect(data.useHexIp).to.equal(false);
+
+				done();
+			});
+		});
+
+		it("should emit push subscription state message", (done) => {
+			client.on("push:issubscribed", (data) => {
+				expect(data).to.be.false;
+
+				done();
+			});
+		});
+
 		it("should emit init message", (done) => {
 			client.on("init", (data) => {
 				expect(data.active).to.equal(-1);
 				expect(data.networks).to.be.an("array");
 				expect(data.networks).to.be.empty;
 				expect(data.token).to.be.null;
-				expect(data.pushSubscription).to.be.undefined;
-
-				// Private key defined in vapid.json is "01020304050607080910111213141516" for this public key.
-				expect(data.applicationServerKey).to.equal(
-					"BM0eTDpvDnH7ewlHuXWcPTE1NjlJ06XWIS1cQeBTZmsg4EDx5sOpY7kdX1pniTo8RakL3UdfFuIbC8_zog_BWIM"
-				);
 
 				done();
 			});

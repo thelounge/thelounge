@@ -2,7 +2,6 @@
 
 const $ = require("jquery");
 const socket = require("../socket");
-const webpush = require("../webpush");
 const upload = require("../upload");
 const store = require("../store").default;
 const router = require("../router");
@@ -33,7 +32,6 @@ socket.once("configuration", function(data) {
 		upload.initialize();
 	}
 
-	webpush.initialize();
 	router.initialize();
 
 	// If localStorage contains a theme that does not exist on this server, switch

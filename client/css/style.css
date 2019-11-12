@@ -324,7 +324,6 @@ kbd {
 
 #sidebar .chan.special::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
 
-#footer .sign-in::before { content: "\f023"; /* http://fontawesome.io/icon/lock/ */ }
 #footer .connect::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
 #footer .settings::before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
 #footer .help::before { content: "\f059"; /* http://fontawesome.io/icon/question/ */ }
@@ -852,26 +851,6 @@ background on hover (unless active) */
 	width: 45px;
 	height: 100%;
 	border-radius: 5px;
-}
-
-.signed-out #footer .sign-in {
-	display: inline-block;
-}
-
-.signed-out #footer .connect {
-	display: none;
-}
-
-.public #footer .sign-in {
-	display: none;
-}
-
-#footer .sign-in {
-	display: none;
-}
-
-.signed-out #sidebar {
-	display: none; /* Hide the sidebar when user is signed out */
 }
 
 #windows li,

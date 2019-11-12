@@ -1,7 +1,6 @@
 "use strict";
 
 const socket = require("../socket");
-const webpush = require("../webpush");
 const storage = require("../localStorage");
 const {router, switchToChannel, navigate} = require("../router");
 const store = require("../store").default;
@@ -17,11 +16,6 @@ socket.on("init", function(data) {
 
 	if (!store.state.appLoaded) {
 		store.commit("appLoaded");
-
-		// TODO: Try to move webpush key to configuration event
-		webpush.configurePushNotifications(data.pushSubscription, data.applicationServerKey);
-
-		document.body.classList.remove("signed-out");
 
 		if (window.g_TheLoungeRemoveLoading) {
 			window.g_TheLoungeRemoveLoading();

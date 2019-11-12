@@ -645,8 +645,6 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 
 	const sendInitEvent = (tokenToSend) => {
 		socket.emit("init", {
-			applicationServerKey: manager.webPush.vapidKeys.publicKey,
-			pushSubscription: client.config.sessions[token],
 			active: openChannel,
 			networks: client.networks.map((network) =>
 				network.getFilteredClone(openChannel, lastMessage)
@@ -695,6 +693,7 @@ function getClientConfiguration() {
 		]);
 	}
 
+	config.applicationServerKey = manager.webPush.vapidKeys.publicKey;
 	config.version = pkg.version;
 	config.gitCommit = Helper.getGitCommit();
 	config.themes = themes.getAll();
@@ -740,6 +739,11 @@ function performAuthentication(data) {
 		// and the client listens to this event only once
 		if (!data.hasConfig) {
 			socket.emit("configuration", getClientConfiguration());
+
+			socket.emit(
+				"push:issubscribed",
+				token && client.config.sessions[token].pushSubscription ? true : false
+			);
 		}
 
 		client.config.browser = {

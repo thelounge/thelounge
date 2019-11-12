@@ -16,17 +16,6 @@
 			<NetworkList />
 		</div>
 		<footer id="footer">
-			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Sign in"
-				><router-link
-					to="/sign-in"
-					tag="button"
-					active-class="active"
-					:class="['icon', 'sign-in']"
-					aria-label="Sign in"
-					role="tab"
-					aria-controls="sign-in"
-					:aria-selected="$route.name === 'SignIn'"
-			/></span>
 			<span
 				class="tooltipped tooltipped-n tooltipped-no-touch"
 				aria-label="Connect to network"
