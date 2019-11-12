@@ -72,10 +72,10 @@ export default {
 		};
 	},
 	mounted() {
-		this.$root.$on("auth:failed", this.onAuthFailed);
+		socket.on("auth:failed", this.onAuthFailed);
 	},
 	beforeDestroy() {
-		this.$root.$off("auth:failed", this.onAuthFailed);
+		socket.off("auth:failed", this.onAuthFailed);
 	},
 	methods: {
 		onAuthFailed() {

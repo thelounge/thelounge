@@ -2,7 +2,6 @@
 
 const socket = require("../socket");
 const storage = require("../localStorage");
-const {vueApp} = require("../vue");
 const {router, navigate} = require("../router");
 const store = require("../store").default;
 let lastServerHash = null;
@@ -20,8 +19,6 @@ socket.on("auth:failed", function() {
 	}
 
 	showSignIn();
-
-	vueApp.$emit("auth:failed");
 });
 
 socket.on("auth:start", function(serverHash) {

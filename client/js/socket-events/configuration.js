@@ -27,12 +27,12 @@ socket.once("configuration", function(data) {
 	// 'theme' setting depends on serverConfiguration.themes so
 	// settings cannot be applied before this point
 	store.dispatch("settings/applyAll");
+	socket.emit("setting:get");
 
 	if (data.fileUpload) {
-		upload.initialize(data.fileUploadMaxFileSize);
+		upload.initialize();
 	}
 
-	socket.emit("setting:get");
 	webpush.initialize();
 	router.initialize();
 
@@ -46,83 +46,10 @@ socket.once("configuration", function(data) {
 		document.querySelector('meta[name="theme-color"]').content = currentTheme.themeColor;
 	}
 
-	if ("URLSearchParams" in window) {
-		handleQueryParams();
+	if (document.body.classList.contains("public")) {
+		window.addEventListener(
+			"beforeunload",
+			() => "Are you sure you want to navigate away from this page?"
+		);
 	}
 });
-
-function handleQueryParams() {
-	const params = new URLSearchParams(document.location.search);
-
-	const cleanParams = () => {
-		// Remove query parameters from url without reloading the page
-		const cleanUri = window.location.origin + window.location.pathname + window.location.hash;
-		window.history.replaceState({}, document.title, cleanUri);
-	};
-
-	if (params.has("uri")) {
-		// Set default connection settings from IRC protocol links
-		const uri =
-			params.get("uri") +
-			(location.hash.startsWith("#/") ? `#${location.hash.substring(2)}` : location.hash);
-		const queryParams = parseIrcUri(uri);
-
-		cleanParams();
-		router.router.push({name: "Connect", query: queryParams});
-	} else if (document.body.classList.contains("public") && document.location.search) {
-		// Set default connection settings from url params
-		const queryParams = Object.fromEntries(params.entries());
-
-		cleanParams();
-		router.router.push({name: "Connect", query: queryParams});
-	}
-}
-
-function parseIrcUri(stringUri) {
-	const data = {};
-
-	try {
-		// https://tools.ietf.org/html/draft-butcher-irc-url-04
-		const uri = new URL(stringUri);
-
-		// Replace protocol with a "special protocol" (that's what it's called in WHATWG spec)
-		// So that the uri can be properly parsed
-		if (uri.protocol === "irc:") {
-			uri.protocol = "http:";
-
-			if (!uri.port) {
-				uri.port = 6667;
-			}
-
-			data.tls = false;
-		} else if (uri.protocol === "ircs:") {
-			uri.protocol = "https:";
-
-			if (!uri.port) {
-				uri.port = 6697;
-			}
-
-			data.tls = true;
-		} else {
-			return;
-		}
-
-		data.host = data.name = uri.hostname;
-		data.port = uri.port;
-		data.username = window.decodeURIComponent(uri.username);
-		data.password = window.decodeURIComponent(uri.password);
-
-		let channel = (uri.pathname + uri.hash).substr(1);
-		const index = channel.indexOf(",");
-
-		if (index > -1) {
-			channel = channel.substring(0, index);
-		}
-
-		data.join = channel;
-	} catch (e) {
-		// do nothing on invalid uri
-	}
-
-	return data;
-}

@@ -3,7 +3,6 @@
 const socket = require("../socket");
 const webpush = require("../webpush");
 const storage = require("../localStorage");
-const constants = require("../constants");
 const {initChannel} = require("../vue");
 const {router, switchToChannel, navigate} = require("../router");
 const store = require("../store").default;
@@ -13,29 +12,15 @@ socket.on("init", function(data) {
 	store.commit("isConnected", true);
 	store.commit("currentUserVisibleError", null);
 
+	if (data.token) {
+		storage.set("token", data.token);
+	}
+
 	if (!store.state.appLoaded) {
 		store.commit("appLoaded");
 
-		if (data.token) {
-			storage.set("token", data.token);
-		}
-
+		// TODO: Try to move webpush key to configuration event
 		webpush.configurePushNotifications(data.pushSubscription, data.applicationServerKey);
-
-		const viewportWidth = window.outerWidth;
-		let isUserlistOpen = storage.get("thelounge.state.userlist");
-
-		if (viewportWidth > constants.mobileViewportPixels) {
-			store.commit("sidebarOpen", storage.get("thelounge.state.sidebar") !== "false");
-		}
-
-		// If The Lounge is opened on a small screen (less than 1024px), and we don't have stored
-		// user list state, close it by default
-		if (viewportWidth >= 1024 && isUserlistOpen !== "true" && isUserlistOpen !== "false") {
-			isUserlistOpen = "true";
-		}
-
-		store.commit("userlistOpen", isUserlistOpen === "true");
 
 		document.body.classList.remove("signed-out");
 
@@ -43,6 +28,7 @@ socket.on("init", function(data) {
 			window.g_TheLoungeRemoveLoading();
 		}
 
+		// TODO: Review this code and make it better
 		if (!router.currentRoute.name || router.currentRoute.name === "SignIn") {
 			const channel = store.getters.findChannel(data.active);
 
@@ -56,13 +42,10 @@ socket.on("init", function(data) {
 				navigate("Connect");
 			}
 		}
-	}
 
-	if (document.body.classList.contains("public")) {
-		window.addEventListener(
-			"beforeunload",
-			() => "Are you sure you want to navigate away from this page?"
-		);
+		if ("URLSearchParams" in window) {
+			handleQueryParams();
+		}
 	}
 });
 
@@ -168,4 +151,80 @@ function mergeChannelData(oldChannels, newChannels) {
 	}
 
 	return newChannels;
+}
+
+function handleQueryParams() {
+	const params = new URLSearchParams(document.location.search);
+
+	const cleanParams = () => {
+		// Remove query parameters from url without reloading the page
+		const cleanUri = window.location.origin + window.location.pathname + window.location.hash;
+		window.history.replaceState({}, document.title, cleanUri);
+	};
+
+	if (params.has("uri")) {
+		// Set default connection settings from IRC protocol links
+		const uri =
+			params.get("uri") +
+			(location.hash.startsWith("#/") ? `#${location.hash.substring(2)}` : location.hash);
+		const queryParams = parseIrcUri(uri);
+
+		cleanParams();
+		router.router.push({name: "Connect", query: queryParams});
+	} else if (document.body.classList.contains("public") && document.location.search) {
+		// Set default connection settings from url params
+		const queryParams = Object.fromEntries(params.entries());
+
+		cleanParams();
+		router.router.push({name: "Connect", query: queryParams});
+	}
+}
+
+function parseIrcUri(stringUri) {
+	const data = {};
+
+	try {
+		// https://tools.ietf.org/html/draft-butcher-irc-url-04
+		const uri = new URL(stringUri);
+
+		// Replace protocol with a "special protocol" (that's what it's called in WHATWG spec)
+		// So that the uri can be properly parsed
+		if (uri.protocol === "irc:") {
+			uri.protocol = "http:";
+
+			if (!uri.port) {
+				uri.port = 6667;
+			}
+
+			data.tls = false;
+		} else if (uri.protocol === "ircs:") {
+			uri.protocol = "https:";
+
+			if (!uri.port) {
+				uri.port = 6697;
+			}
+
+			data.tls = true;
+		} else {
+			return;
+		}
+
+		data.host = data.name = uri.hostname;
+		data.port = uri.port;
+		data.username = window.decodeURIComponent(uri.username);
+		data.password = window.decodeURIComponent(uri.password);
+
+		let channel = (uri.pathname + uri.hash).substr(1);
+		const index = channel.indexOf(",");
+
+		if (index > -1) {
+			channel = channel.substring(0, index);
+		}
+
+		data.join = channel;
+	} catch (e) {
+		// do nothing on invalid uri
+	}
+
+	return data;
 }

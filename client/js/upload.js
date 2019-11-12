@@ -5,8 +5,7 @@ const updateCursor = require("undate").update;
 const store = require("./store").default;
 
 class Uploader {
-	init(maxFileSize) {
-		this.maxFileSize = maxFileSize;
+	init() {
 		this.xhr = null;
 		this.fileQueue = [];
 
@@ -98,9 +97,10 @@ class Uploader {
 		}
 
 		const wasQueueEmpty = this.fileQueue.length === 0;
+		const maxFileSize = store.state.serverConfiguration.fileUploadMaxFileSize;
 
 		for (const file of files) {
-			if (this.maxFileSize > 0 && file.size > this.maxFileSize) {
+			if (maxFileSize > 0 && file.size > maxFileSize) {
 				this.handleResponse({
 					error: `File ${file.name} is over the maximum allowed size`,
 				});
