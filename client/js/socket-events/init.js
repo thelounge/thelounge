@@ -3,7 +3,6 @@
 const socket = require("../socket");
 const webpush = require("../webpush");
 const storage = require("../localStorage");
-const {initChannel} = require("../vue");
 const {router, switchToChannel, navigate} = require("../router");
 const store = require("../store").default;
 
@@ -60,7 +59,7 @@ function mergeNetworkData(newNetworks) {
 		if (!currentNetwork) {
 			network.isJoinChannelShown = false;
 			network.isCollapsed = collapsedNetworks.has(network.uuid);
-			network.channels.forEach(initChannel);
+			network.channels.forEach(store.getters.initChannel);
 
 			continue;
 		}
@@ -96,7 +95,7 @@ function mergeChannelData(oldChannels, newChannels) {
 
 		// This is a new channel that was joined while client was disconnected, initialize it
 		if (!currentChannel) {
-			initChannel(channel);
+			store.getters.initChannel(channel);
 
 			continue;
 		}

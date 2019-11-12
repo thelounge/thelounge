@@ -3,7 +3,6 @@
 import Vue from "vue";
 
 const socket = require("../socket");
-const {initChannel} = require("../vue");
 const store = require("../store").default;
 const {switchToChannel} = require("../router");
 
@@ -12,7 +11,7 @@ socket.on("network", function(data) {
 
 	network.isJoinChannelShown = false;
 	network.isCollapsed = false;
-	network.channels.forEach(initChannel);
+	network.channels.forEach(store.getters.initChannel);
 
 	store.commit("networks", [...store.state.networks, network]);
 	switchToChannel(network.channels[0]);

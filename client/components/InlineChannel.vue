@@ -5,6 +5,8 @@
 </template>
 
 <script>
+const socket = require("../js/socket");
+
 export default {
 	name: "InlineChannel",
 	props: {
@@ -18,8 +20,6 @@ export default {
 				this.$root.switchToChannel(existingChannel);
 			}
 
-			// TODO: Required here because it breaks tests
-			const socket = require("../js/socket");
 			socket.emit("input", {
 				target: this.$store.state.activeChannel.channel.id,
 				text: "/join " + this.channel,
