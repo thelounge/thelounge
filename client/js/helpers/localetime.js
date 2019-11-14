@@ -1,7 +1,7 @@
 "use strict";
 
-const moment = require("moment");
+import dayjs from "dayjs";
 
-module.exports = function(time) {
-	return moment(time).format("D MMMM YYYY, HH:mm:ss");
+export const localetime = function(time) {
+	return dayjs(time).format("D MMMM YYYY, HH:mm:ss");
 };

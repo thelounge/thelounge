@@ -4,7 +4,7 @@ const Vue = require("vue").default;
 
 const store = require("./store").default;
 const App = require("../components/App.vue").default;
-const localetime = require("./helpers/localetime");
+const {localetime} = require("./helpers/localetime");
 const storage = require("./localStorage");
 const {router, navigate} = require("./router");
 const constants = require("./constants");

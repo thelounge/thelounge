@@ -116,7 +116,6 @@ const config = {
 				to: "themes/[name].[ext]",
 			},
 		]),
-		new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
 		// socket.io uses debug, we don't need it
 		new webpack.NormalModuleReplacementPlugin(
 			/debug/,

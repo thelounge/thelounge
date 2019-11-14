@@ -68,12 +68,12 @@
 </template>
 
 <script>
+import dayjs from "dayjs";
 import Username from "./Username.vue";
 import LinkPreview from "./LinkPreview.vue";
 import ParsedMessage from "./ParsedMessage.vue";
 import MessageTypes from "./MessageTypes";
 
-const moment = require("moment");
 const constants = require("../js/constants");
 
 MessageTypes.ParsedMessage = ParsedMessage;
@@ -94,7 +94,7 @@ export default {
 				? constants.timeFormats.msgWithSeconds
 				: constants.timeFormats.msgDefault;
 
-			return moment(this.message.time).format(format);
+			return dayjs(this.message.time).format(format);
 		},
 		messageComponent() {
 			return "message-" + this.message.type;
