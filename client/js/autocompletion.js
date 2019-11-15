@@ -1,6 +1,5 @@
 "use strict";
 
-const $ = require("jquery");
 const fuzzy = require("fuzzy");
 const Mousetrap = require("mousetrap");
 const {Textcomplete, Textarea} = require("textcomplete");
@@ -8,23 +7,7 @@ const emojiMap = require("./helpers/simplemap.json");
 const constants = require("./constants");
 const store = require("./store").default;
 
-let input;
-let textcomplete;
-let enabled = false;
-
-module.exports = {
-	enable: enableAutocomplete,
-	disable() {
-		if (enabled) {
-			$("#form").off("submit.tabcomplete");
-			input.off("input.tabcomplete");
-			Mousetrap(input.get(0)).unbind("tab", "keydown");
-			textcomplete.destroy();
-			enabled = false;
-			store.commit("isAutoCompleting", false);
-		}
-	},
-};
+export default enableAutocomplete;
 
 const emojiSearchTerms = Object.keys(emojiMap);
 const emojiStrategy = {
@@ -66,7 +49,7 @@ const nicksStrategy = {
 		}
 
 		// If there is whitespace in the input already, append space to nick
-		if (position > 0 && /\s/.test($("#input").val())) {
+		if (position > 0 && /\s/.test(store.state.activeChannel.channel.pendingMessage)) {
 			return original + " ";
 		}
 
@@ -175,14 +158,12 @@ const backgroundColorStrategy = {
 	index: 2,
 };
 
-function enableAutocomplete(inputRef) {
-	enabled = true;
+function enableAutocomplete(input) {
 	let tabCount = 0;
 	let lastMatch = "";
 	let currentMatches = [];
-	input = $(inputRef);
 
-	input.on("input.tabcomplete", (e) => {
+	input.addEventListener("input", (e) => {
 		if (e.detail === "autocomplete") {
 			return;
 		}
@@ -192,7 +173,7 @@ function enableAutocomplete(inputRef) {
 		lastMatch = "";
 	});
 
-	Mousetrap(input.get(0)).bind(
+	Mousetrap(input).bind(
 		"tab",
 		(e) => {
 			if (store.state.isAutoCompleting) {
@@ -201,12 +182,11 @@ function enableAutocomplete(inputRef) {
 
 			e.preventDefault();
 
-			const text = input.val();
-			const element = input.get(0);
+			const text = input.value;
 
 			if (tabCount === 0) {
 				lastMatch = text
-					.substring(0, element.selectionStart)
+					.substring(0, input.selectionStart)
 					.split(/\s/)
 					.pop();
 
@@ -221,19 +201,19 @@ function enableAutocomplete(inputRef) {
 				}
 			}
 
-			const position = element.selectionStart - lastMatch.length;
+			const position = input.selectionStart - lastMatch.length;
 			const newMatch = nicksStrategy.replace(
 				[0, currentMatches[tabCount % currentMatches.length]],
 				position
 			);
-			const remainder = text.substr(element.selectionStart);
+			const remainder = text.substr(input.selectionStart);
 
-			input.val(text.substr(0, position) + newMatch + remainder);
-			element.selectionStart -= remainder.length;
-			element.selectionEnd = element.selectionStart;
+			input.value = text.substr(0, position) + newMatch + remainder;
+			input.selectionStart -= remainder.length;
+			input.selectionEnd = input.selectionStart;
 
 			// Propagate change to Vue model
-			element.dispatchEvent(
+			input.dispatchEvent(
 				new CustomEvent("input", {
 					detail: "autocomplete",
 				})
@@ -245,8 +225,8 @@ function enableAutocomplete(inputRef) {
 		"keydown"
 	);
 
-	const editor = new Textarea(input.get(0));
-	textcomplete = new Textcomplete(editor, {
+	const editor = new Textarea(input);
+	const textcomplete = new Textcomplete(editor, {
 		dropdown: {
 			className: "textcomplete-menu",
 			placement: "top",
@@ -278,9 +258,15 @@ function enableAutocomplete(inputRef) {
 		store.commit("isAutoCompleting", false);
 	});
 
-	$("#form").on("submit.tabcomplete", () => {
-		textcomplete.hide();
-	});
+	return {
+		hide() {
+			textcomplete.hide();
+		},
+		destroy() {
+			textcomplete.destroy();
+			store.commit("isAutoCompleting", false);
+		},
+	};
 }
 
 function fuzzyGrep(term, array) {
@@ -318,7 +304,7 @@ function completeNicks(word, isFuzzy) {
 		return fuzzyGrep(word, users);
 	}
 
-	return $.grep(users, (w) => !w.toLowerCase().indexOf(word));
+	return users.filter((w) => !w.toLowerCase().indexOf(word));
 }
 
 function completeCommands(word) {

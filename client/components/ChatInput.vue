@@ -8,7 +8,6 @@
 			:value="channel.pendingMessage"
 			:placeholder="getInputPlaceholder(channel)"
 			:aria-label="getInputPlaceholder(channel)"
-			class="mousetrap"
 			@input="setPendingMessage"
 			@keypress.enter.exact.prevent="onSubmit"
 		/>
@@ -49,6 +48,7 @@
 </template>
 
 <script>
+import autocompletion from "../js/autocompletion";
 const commands = require("../js/commands/index");
 const socket = require("../js/socket");
 const upload = require("../js/upload");
@@ -80,6 +80,8 @@ const bracketWraps = {
 	_: "_",
 };
 
+let autocompletionRef = null;
+
 export default {
 	name: "ChatInput",
 	props: {
@@ -93,7 +95,7 @@ export default {
 	},
 	mounted() {
 		if (this.$store.state.settings.autocomplete) {
-			require("../js/autocompletion").enable(this.$refs.input);
+			autocompletionRef = autocompletion(this.$refs.input);
 		}
 
 		const inputTrap = Mousetrap(this.$refs.input);
@@ -152,7 +154,11 @@ export default {
 		}
 	},
 	destroyed() {
-		require("../js/autocompletion").disable();
+		if (autocompletionRef) {
+			autocompletionRef.destroy();
+			autocompletionRef = null;
+		}
+
 		upload.abort();
 	},
 	methods: {
@@ -199,6 +205,10 @@ export default {
 
 			if (text.length === 0) {
 				return false;
+			}
+
+			if (autocompletionRef) {
+				autocompletionRef.hide();
 			}
 
 			this.channel.inputHistoryPosition = 0;
