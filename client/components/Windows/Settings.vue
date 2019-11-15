@@ -20,13 +20,18 @@
 			</div>
 
 			<div class="row">
-				<div v-if="canRegisterProtocol" id="native-app" class="col-sm-12">
+				<div v-if="canRegisterProtocol || hasInstallPromptEvent" class="col-sm-12">
 					<h2>Native app</h2>
-					<button id="webapp-install-button" type="button" class="btn" hidden>
+					<button
+						v-if="hasInstallPromptEvent"
+						type="button"
+						class="btn"
+						@click.prevent="nativeInstallPrompt"
+					>
 						Add The Lounge to Home screen
 					</button>
 					<button
-						id="make-default-client"
+						v-if="canRegisterProtocol"
 						type="button"
 						class="btn"
 						@click.prevent="registerProtocol"
@@ -455,6 +460,13 @@ import RevealPassword from "../RevealPassword.vue";
 import Session from "../Session.vue";
 import SidebarToggle from "../SidebarToggle.vue";
 
+let installPromptEvent = null;
+
+window.addEventListener("beforeinstallprompt", (e) => {
+	e.preventDefault();
+	installPromptEvent = e;
+});
+
 export default {
 	name: "Settings",
 	components: {
@@ -474,6 +486,12 @@ export default {
 				update_failed: "Failed to update your password",
 			},
 		};
+	},
+	computed: {
+		hasInstallPromptEvent() {
+			// TODO: This doesn't hide the button after clicking
+			return installPromptEvent !== null;
+		},
 	},
 	mounted() {
 		socket.emit("sessions:get");
@@ -541,6 +559,10 @@ export default {
 
 			window.navigator.registerProtocolHandler("irc", uri, "The Lounge");
 			window.navigator.registerProtocolHandler("ircs", uri, "The Lounge");
+		},
+		nativeInstallPrompt() {
+			installPromptEvent.prompt();
+			installPromptEvent = null;
 		},
 		playNotification() {
 			const pop = new Audio();

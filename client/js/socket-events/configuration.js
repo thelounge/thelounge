@@ -1,24 +1,9 @@
 "use strict";
 
-const $ = require("jquery");
 const socket = require("../socket");
 const upload = require("../upload");
 const store = require("../store").default;
 const router = require("../router");
-
-window.addEventListener("beforeinstallprompt", (installPromptEvent) => {
-	$("#webapp-install-button")
-		.on("click", function() {
-			if (installPromptEvent && installPromptEvent.prompt) {
-				installPromptEvent.prompt();
-			}
-
-			$(this).prop("hidden", true);
-		})
-		.prop("hidden", false);
-
-	$("#native-app").prop("hidden", false);
-});
 
 socket.once("configuration", function(data) {
 	store.commit("serverConfiguration", data);
