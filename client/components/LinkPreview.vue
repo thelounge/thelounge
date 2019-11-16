@@ -107,7 +107,7 @@
 </template>
 
 <script>
-const friendlysize = require("../js/helpers/friendlysize");
+import friendlysize from "../js/helpers/friendlysize";
 
 export default {
 	name: "LinkPreview",

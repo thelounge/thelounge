@@ -1,8 +1,10 @@
 "use strict";
 
-const socket = require("./socket");
-const store = require("./store").default;
-const {switchToChannel} = require("./router");
+import socket from "./socket";
+import store from "./store";
+import {switchToChannel} from "./router";
+
+export default {togglePushSubscription};
 
 if ("serviceWorker" in navigator) {
 	navigator.serviceWorker.addEventListener("message", (event) => {
@@ -17,8 +19,6 @@ if ("serviceWorker" in navigator) {
 	});
 }
 
-module.exports.hasServiceWorker = false;
-
 socket.once("push:issubscribed", function(hasSubscriptionOnServer) {
 	if (!isAllowedServiceWorkersHost()) {
 		store.commit("pushNotificationState", "nohttps");
@@ -32,7 +32,7 @@ socket.once("push:issubscribed", function(hasSubscriptionOnServer) {
 	navigator.serviceWorker
 		.register("service-worker.js")
 		.then((registration) => {
-			module.exports.hasServiceWorker = true;
+			store.commit("hasServiceWorker");
 
 			if (!registration.pushManager) {
 				return;
@@ -62,7 +62,7 @@ socket.once("push:issubscribed", function(hasSubscriptionOnServer) {
 		});
 });
 
-module.exports.togglePushSubscription = () => {
+function togglePushSubscription() {
 	store.commit("pushNotificationState", "loading");
 
 	navigator.serviceWorker.ready
@@ -94,7 +94,7 @@ module.exports.togglePushSubscription = () => {
 			store.commit("pushNotificationState", "unsupported");
 			console.error(err); // eslint-disable-line no-console
 		});
-};
+}
 
 function isAllowedServiceWorkersHost() {
 	return (

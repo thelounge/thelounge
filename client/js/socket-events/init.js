@@ -1,9 +1,9 @@
 "use strict";
 
-const socket = require("../socket");
-const storage = require("../localStorage");
-const {router, switchToChannel, navigate} = require("../router");
-const store = require("../store").default;
+import socket from "../socket";
+import storage from "../localStorage";
+import {router, switchToChannel, navigate} from "../router";
+import store from "../store";
 
 socket.on("init", function(data) {
 	store.commit("networks", mergeNetworkData(data.networks));

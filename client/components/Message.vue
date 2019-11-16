@@ -75,8 +75,7 @@ import LinkPreview from "./LinkPreview.vue";
 import ParsedMessage from "./ParsedMessage.vue";
 import MessageTypes from "./MessageTypes";
 import {generateUserContextMenu} from "../js/helpers/contextMenu.js";
-
-const constants = require("../js/constants");
+import constants from "../js/constants";
 
 MessageTypes.ParsedMessage = ParsedMessage;
 MessageTypes.LinkPreview = LinkPreview;

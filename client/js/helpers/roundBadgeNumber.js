@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = function(count) {
+export default (count) => {
 	if (count < 1000) {
 		return count.toString();
 	}

@@ -1,8 +1,8 @@
 "use strict";
 
-const socket = require("../socket");
-const store = require("../store").default;
-const {switchToChannel} = require("../router");
+import socket from "../socket";
+import store from "../store";
+import {switchToChannel} from "../router";
 
 socket.on("part", function(data) {
 	// When parting from the active channel/query, jump to the network's lobby

@@ -10,7 +10,7 @@
 </template>
 
 <script>
-const colorClass = require("../js/helpers/colorClass");
+import colorClass from "../js/helpers/colorClass";
 
 export default {
 	name: "UsernameFiltered",

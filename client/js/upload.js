@@ -1,8 +1,9 @@
 "use strict";
 
-const socket = require("./socket");
-const updateCursor = require("undate").update;
-const store = require("./store").default;
+import {update as updateCursor} from "undate";
+
+import socket from "./socket";
+import store from "./store";
 
 class Uploader {
 	init() {
@@ -219,7 +220,7 @@ class Uploader {
 
 const instance = new Uploader();
 
-module.exports = {
+export default {
 	abort: () => instance.abort(),
 	initialize: () => instance.init(),
 	mounted: () => instance.mounted(),

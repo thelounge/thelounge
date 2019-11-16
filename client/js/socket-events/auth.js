@@ -1,9 +1,10 @@
 "use strict";
 
-const socket = require("../socket");
-const storage = require("../localStorage");
-const {router, navigate} = require("../router");
-const store = require("../store").default;
+import socket from "../socket";
+import storage from "../localStorage";
+import {router, navigate} from "../router";
+import store from "../store";
+import location from "../location";
 let lastServerHash = null;
 
 socket.on("auth:success", function() {

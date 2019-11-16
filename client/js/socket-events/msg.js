@@ -1,10 +1,9 @@
 "use strict";
 
-const socket = require("../socket");
-const cleanIrcMessage = require("../helpers/ircmessageparser/cleanIrcMessage");
-const webpush = require("../webpush");
-const store = require("../store").default;
-const {switchToChannel} = require("../router");
+import socket from "../socket";
+import cleanIrcMessage from "../helpers/ircmessageparser/cleanIrcMessage";
+import store from "../store";
+import {switchToChannel} from "../router";
 
 let pop;
 
@@ -129,7 +128,7 @@ function notifyMessage(targetId, channel, activeChannel, msg) {
 				const timestamp = Date.parse(msg.time);
 
 				try {
-					if (webpush.hasServiceWorker) {
+					if (store.state.hasServiceWorker) {
 						navigator.serviceWorker.ready.then((registration) => {
 							registration.active.postMessage({
 								type: "notification",

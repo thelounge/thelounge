@@ -6,7 +6,7 @@
 // Second argument says it's recursive, third makes sure we only load templates.
 const requireViews = require.context(".", false, /\.vue$/);
 
-module.exports = requireViews.keys().reduce((acc, path) => {
+export default requireViews.keys().reduce((acc, path) => {
 	acc["message-" + path.substring(2, path.length - 4)] = requireViews(path).default;
 
 	return acc;

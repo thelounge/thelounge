@@ -17,4 +17,4 @@ function findEmoji(text) {
 	return result;
 }
 
-module.exports = findEmoji;
+export default findEmoji;

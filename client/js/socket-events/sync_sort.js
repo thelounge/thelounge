@@ -1,7 +1,7 @@
 "use strict";
 
-const socket = require("../socket");
-const store = require("../store").default;
+import socket from "../socket";
+import store from "../store";
 
 socket.on("sync_sort", function(data) {
 	const order = data.order;

@@ -1,4 +1,4 @@
-const socket = require("./socket");
+import socket from "./socket";
 
 const defaultSettingConfig = {
 	apply() {},

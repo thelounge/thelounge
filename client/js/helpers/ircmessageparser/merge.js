@@ -1,7 +1,7 @@
 "use strict";
 
-const anyIntersection = require("./anyIntersection");
-const fill = require("./fill");
+import anyIntersection from "./anyIntersection";
+import fill from "./fill";
 
 // Merge text part information within a styling fragment
 function assign(textPart, fragment) {
@@ -51,4 +51,4 @@ function merge(textParts, styleFragments, cleanText) {
 	});
 }
 
-module.exports = merge;
+export default merge;

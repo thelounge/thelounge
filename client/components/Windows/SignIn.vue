@@ -56,7 +56,7 @@
 </template>
 
 <script>
-const storage = require("../../js/localStorage");
+import storage from "../../js/localStorage";
 import socket from "../../js/socket";
 import RevealPassword from "../RevealPassword.vue";
 

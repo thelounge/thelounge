@@ -1,5 +1,5 @@
 <script>
-const parse = require("../js/helpers/parse");
+import parse from "../js/helpers/parse";
 
 export default {
 	name: "ParsedMessage",

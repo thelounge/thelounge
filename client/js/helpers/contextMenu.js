@@ -1,4 +1,5 @@
 "use strict";
+
 import socket from "../socket";
 
 export function generateChannelContextMenu($root, channel, network) {

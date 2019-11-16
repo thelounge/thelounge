@@ -2,8 +2,8 @@
 
 import Vue from "vue";
 
-const socket = require("../socket");
-const store = require("../store").default;
+import socket from "../socket";
+import store from "../store";
 
 socket.on("msg:preview", function(data) {
 	const {channel} = store.getters.findChannel(data.chan);

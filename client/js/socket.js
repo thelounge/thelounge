@@ -1,6 +1,6 @@
 "use strict";
 
-const io = require("socket.io-client");
+import io from "socket.io-client";
 
 const socket = io({
 	transports: JSON.parse(document.body.dataset.transports),
@@ -9,4 +9,4 @@ const socket = io({
 	reconnection: !document.body.classList.contains("public"),
 });
 
-module.exports = socket;
+export default socket;

@@ -25,7 +25,7 @@
 </template>
 
 <script>
-const roundBadgeNumber = require("../js/helpers/roundBadgeNumber");
+import roundBadgeNumber from "../js/helpers/roundBadgeNumber";
 import ChannelWrapper from "./ChannelWrapper.vue";
 
 export default {

@@ -11,9 +11,9 @@
 </template>
 
 <script>
-const throttle = require("lodash/throttle");
-const constants = require("../js/constants");
-const storage = require("../js/localStorage");
+import throttle from "lodash/throttle";
+import constants from "../js/constants";
+import storage from "../js/localStorage";
 
 import Sidebar from "./Sidebar.vue";
 import ImageViewer from "./ImageViewer.vue";

@@ -1,10 +1,10 @@
 "use strict";
 
-const socket = require("../socket");
-const store = require("../store").default;
-const {switchToChannel} = require("../router");
+import socket from "../socket";
+import store from "../store";
+import {switchToChannel} from "../router";
 
-exports.input = function(args) {
+function input(args) {
 	if (args.length > 0) {
 		let channels = args[0];
 
@@ -44,4 +44,6 @@ exports.input = function(args) {
 
 		return true;
 	}
-};
+}
+
+export default {input};

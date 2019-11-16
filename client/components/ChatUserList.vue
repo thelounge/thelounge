@@ -51,7 +51,7 @@
 </template>
 
 <script>
-const fuzzy = require("fuzzy");
+import {filter as fuzzyFilter} from "fuzzy";
 import Username from "./Username.vue";
 import UsernameFiltered from "./UsernameFiltered.vue";
 import {generateUserContextMenu} from "../js/helpers/contextMenu.js";
@@ -85,7 +85,7 @@ export default {
 		// filteredUsers is computed, to avoid unnecessary filtering
 		// as it is shared between filtering and keybindings.
 		filteredUsers() {
-			return fuzzy.filter(this.userSearchInput, this.channel.users, {
+			return fuzzyFilter(this.userSearchInput, this.channel.users, {
 				pre: "<b>",
 				post: "</b>",
 				extract: (u) => u.nick,

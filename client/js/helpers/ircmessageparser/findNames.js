@@ -25,4 +25,4 @@ function findNames(text, users) {
 	return result;
 }
 
-module.exports = findNames;
+export default findNames;

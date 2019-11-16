@@ -8,14 +8,14 @@
 // Second argument says it's recursive, third makes sure we only load javascript.
 const commands = require.context("./", true, /\.js$/);
 
-module.exports = commands.keys().reduce((acc, path) => {
+export default commands.keys().reduce((acc, path) => {
 	const command = path.substring(2, path.length - 3);
 
 	if (command === "index") {
 		return acc;
 	}
 
-	acc[command] = commands(path);
+	acc[command] = commands(path).default;
 
 	return acc;
 }, {});

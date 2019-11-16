@@ -32,4 +32,4 @@ function fill(existingEntries, text) {
 	return result;
 }
 
-module.exports = fill;
+export default fill;

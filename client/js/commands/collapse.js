@@ -1,9 +1,9 @@
 "use strict";
 
-const socket = require("../socket");
-const store = require("../store").default;
+import socket from "../socket";
+import store from "../store";
 
-exports.input = function() {
+function input() {
 	const messageIds = [];
 
 	for (const message of store.state.activeChannel.channel.messages) {
@@ -31,4 +31,6 @@ exports.input = function() {
 	}
 
 	return true;
-};
+}
+
+export default {input};

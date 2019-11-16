@@ -1,8 +1,8 @@
 "use strict";
 
-const socket = require("../socket");
-const {switchToChannel, navigate} = require("../router");
-const store = require("../store").default;
+import socket from "../socket";
+import {switchToChannel, navigate} from "../router";
+import store from "../store";
 
 socket.on("quit", function(data) {
 	// If we're in a channel, and it's on the network that is being removed,

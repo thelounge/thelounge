@@ -3,7 +3,7 @@
 // Escapes the RegExp special characters "^", "$", "", ".", "*", "+", "?", "(",
 // ")", "[", "]", "{", "}", and "|" in string.
 // See https://lodash.com/docs/#escapeRegExp
-const escapeRegExp = require("lodash/escapeRegExp");
+import escapeRegExp from "lodash/escapeRegExp";
 
 // Given an array of channel prefixes (such as "#" and "&") and an array of user
 // modes (such as "@" and "+"), this function extracts channels and nicks from a
@@ -40,4 +40,4 @@ function findChannels(text, channelPrefixes, userModes) {
 	return result;
 }
 
-module.exports = findChannels;
+export default findChannels;

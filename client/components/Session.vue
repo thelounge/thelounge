@@ -28,8 +28,8 @@
 </template>
 
 <script>
-const Auth = require("../js/auth");
-const socket = require("../js/socket");
+import Auth from "../js/auth";
+import socket from "../js/socket";
 
 export default {
 	name: "Session",

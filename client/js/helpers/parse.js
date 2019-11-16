@@ -1,19 +1,20 @@
 "use strict";
 
-const parseStyle = require("./ircmessageparser/parseStyle");
-const findChannels = require("./ircmessageparser/findChannels");
-const findLinks = require("./ircmessageparser/findLinks");
-const findEmoji = require("./ircmessageparser/findEmoji");
-const findNames = require("./ircmessageparser/findNames");
-const merge = require("./ircmessageparser/merge");
-const colorClass = require("./colorClass");
-const emojiMap = require("./fullnamemap.json");
-const LinkPreviewToggle = require("../../components/LinkPreviewToggle.vue").default;
-const LinkPreviewFileSize = require("../../components/LinkPreviewFileSize.vue").default;
-const InlineChannel = require("../../components/InlineChannel.vue").default;
+import parseStyle from "./ircmessageparser/parseStyle";
+import findChannels from "./ircmessageparser/findChannels";
+import findLinks from "./ircmessageparser/findLinks";
+import findEmoji from "./ircmessageparser/findEmoji";
+import findNames from "./ircmessageparser/findNames";
+import merge from "./ircmessageparser/merge";
+import colorClass from "./colorClass";
+import emojiMap from "./fullnamemap.json";
+import LinkPreviewToggle from "../../components/LinkPreviewToggle.vue";
+import LinkPreviewFileSize from "../../components/LinkPreviewFileSize.vue";
+import InlineChannel from "../../components/InlineChannel.vue";
+import store from "../store";
+import {generateUserContextMenu} from "./contextMenu";
+
 const emojiModifiersRegex = /[\u{1f3fb}-\u{1f3ff}]/gu;
-const store = require("../store").default;
-const {generateUserContextMenu} = require("./contextMenu");
 
 // Create an HTML `span` with styling information for a given fragment
 function createFragment(fragment, createElement) {
@@ -71,13 +72,7 @@ function createFragment(fragment, createElement) {
 
 // Transform an IRC message potentially filled with styling control codes, URLs,
 // nicknames, and channels into a string of HTML elements to display on the client.
-module.exports = function parse(
-	createElement,
-	text,
-	message = undefined,
-	network = undefined,
-	$root
-) {
+function parse(createElement, text, message = undefined, network = undefined, $root) {
 	// Extract the styling information and get the plain text version from it
 	const styleFragments = parseStyle(text);
 	const cleanText = styleFragments.map((fragment) => fragment.text).join("");
@@ -220,4 +215,6 @@ module.exports = function parse(
 
 		return fragments;
 	});
-};
+}
+
+export default parse;

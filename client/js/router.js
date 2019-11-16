@@ -1,19 +1,19 @@
 "use strict";
 
-const Vue = require("vue").default;
-const VueRouter = require("vue-router").default;
+import Vue from "vue";
+import VueRouter from "vue-router";
+
 Vue.use(VueRouter);
 
-const store = require("./store").default;
-
-const SignIn = require("../components/Windows/SignIn.vue").default;
-const Connect = require("../components/Windows/Connect.vue").default;
-const Settings = require("../components/Windows/Settings.vue").default;
-const Help = require("../components/Windows/Help.vue").default;
-const Changelog = require("../components/Windows/Changelog.vue").default;
-const NetworkEdit = require("../components/Windows/NetworkEdit.vue").default;
-const RoutedChat = require("../components/RoutedChat.vue").default;
-const constants = require("./constants");
+import SignIn from "../components/Windows/SignIn.vue";
+import Connect from "../components/Windows/Connect.vue";
+import Settings from "../components/Windows/Settings.vue";
+import Help from "../components/Windows/Help.vue";
+import Changelog from "../components/Windows/Changelog.vue";
+import NetworkEdit from "../components/Windows/NetworkEdit.vue";
+import RoutedChat from "../components/RoutedChat.vue";
+import constants from "./constants";
+import store from "./store";
 
 const router = new VueRouter({
 	routes: [
@@ -127,9 +127,8 @@ function navigate(routeName, params = {}) {
 	router.push({name: routeName, params}).catch(() => {});
 }
 
-module.exports = {
-	initialize,
-	router,
-	navigate,
-	switchToChannel: (channel) => navigate("RoutedChat", {id: channel.id}),
-};
+function switchToChannel(channel) {
+	return navigate("RoutedChat", {id: channel.id});
+}
+
+export {initialize, router, navigate, switchToChannel};

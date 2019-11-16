@@ -1,9 +1,10 @@
 "use strict";
 
+import Mousetrap from "mousetrap";
+
 const $ = require("jquery");
-const Mousetrap = require("mousetrap");
-const store = require("./store").default;
-const {switchToChannel} = require("./router");
+import store from "./store";
+import {switchToChannel} from "./router";
 
 // Switch to the next/previous window in the channel list.
 Mousetrap.bind(["alt+up", "alt+down"], function(e, keys) {

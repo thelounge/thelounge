@@ -8,7 +8,7 @@
 </template>
 
 <script>
-const socket = require("../../js/socket");
+import socket from "../../js/socket";
 import NetworkForm from "../NetworkForm.vue";
 
 export default {

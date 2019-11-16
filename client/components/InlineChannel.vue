@@ -5,7 +5,7 @@
 </template>
 
 <script>
-const socket = require("../js/socket");
+import socket from "../js/socket";
 
 export default {
 	name: "InlineChannel",

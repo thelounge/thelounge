@@ -1,7 +1,7 @@
 "use strict";
 
-const socket = require("../socket");
-const store = require("../store").default;
+import socket from "../socket";
+import store from "../store";
 
 // Sync unread badge and marker when other clients open a channel
 socket.on("open", function(id) {

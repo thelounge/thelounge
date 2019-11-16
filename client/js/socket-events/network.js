@@ -2,9 +2,9 @@
 
 import Vue from "vue";
 
-const socket = require("../socket");
-const store = require("../store").default;
-const {switchToChannel} = require("../router");
+import socket from "../socket";
+import store from "../store";
+import {switchToChannel} from "../router";
 
 socket.on("network", function(data) {
 	const network = data.networks[0];

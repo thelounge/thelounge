@@ -48,12 +48,12 @@
 </template>
 
 <script>
+import Mousetrap from "mousetrap";
+import {wrapCursor} from "undate";
 import autocompletion from "../js/autocompletion";
-const commands = require("../js/commands/index");
-const socket = require("../js/socket");
-const upload = require("../js/upload");
-const Mousetrap = require("mousetrap");
-const {wrapCursor} = require("undate");
+import commands from "../js/commands/index";
+import socket from "../js/socket";
+import upload from "../js/upload";
 
 const formattingHotkeys = {
 	"mod+k": "\x03",

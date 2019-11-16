@@ -47,10 +47,10 @@
 </template>
 
 <script>
-const roundBadgeNumber = require("../js/helpers/roundBadgeNumber");
+import roundBadgeNumber from "../js/helpers/roundBadgeNumber";
 import ChannelWrapper from "./ChannelWrapper.vue";
 import socket from "../js/socket";
-const storage = require("../js/localStorage");
+import storage from "../js/localStorage";
 
 export default {
 	name: "Channel",

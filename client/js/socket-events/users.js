@@ -1,7 +1,7 @@
 "use strict";
 
-const socket = require("../socket");
-const store = require("../store").default;
+import socket from "../socket";
+import store from "../store";
 
 socket.on("users", function(data) {
 	if (store.state.activeChannel && store.state.activeChannel.channel.id === data.chan) {

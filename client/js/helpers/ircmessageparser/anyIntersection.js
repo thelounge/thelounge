@@ -11,4 +11,4 @@ function anyIntersection(a, b) {
 	);
 }
 
-module.exports = anyIntersection;
+export default anyIntersection;

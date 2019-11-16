@@ -234,4 +234,4 @@ function prepare(text) {
 	);
 }
 
-module.exports = prepare;
+export default prepare;

@@ -1,20 +1,19 @@
 "use strict";
 
-const Vue = require("vue").default;
-
-const store = require("./store").default;
-const App = require("../components/App.vue").default;
-const {localetime} = require("./helpers/localetime");
-const storage = require("./localStorage");
-const {router, navigate} = require("./router");
-const constants = require("./constants");
-const socket = require("./socket");
+import Vue from "vue";
+import store from "./store";
+import App from "../components/App.vue";
+import localetime from "./helpers/localetime";
+import storage from "./localStorage";
+import {router, navigate} from "./router";
+import constants from "./constants";
+import socket from "./socket";
 
 Vue.filter("localetime", localetime);
 
-require("./socket-events");
-require("./webpush");
-require("./keybinds");
+import "./socket-events";
+import "./webpush";
+import "./keybinds";
 
 const favicon = document.getElementById("favicon");
 const faviconNormal = favicon.getAttribute("href");

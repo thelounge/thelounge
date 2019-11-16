@@ -1,5 +1,5 @@
-const store = require("../store").default;
-const socket = require("../socket");
+import store from "../store";
+import socket from "../socket";
 
 socket.on("disconnect", handleDisconnect);
 socket.on("connect_error", handleDisconnect);

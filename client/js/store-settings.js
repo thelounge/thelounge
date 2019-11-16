@@ -1,5 +1,5 @@
-const storage = require("./localStorage");
-const socket = require("./socket");
+import storage from "./localStorage";
+import socket from "./socket";
 import {config, createState} from "./settings";
 
 export function createSettingsStore(store) {

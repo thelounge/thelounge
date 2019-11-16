@@ -1,8 +1,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import {createSettingsStore} from "./store-settings";
+import storage from "./localStorage";
 
-const storage = require("./localStorage");
 const appName = document.title;
 
 Vue.use(Vuex);
@@ -26,6 +26,7 @@ const store = new Vuex.Store({
 		isAutoCompleting: false,
 		isConnected: false,
 		networks: [],
+		hasServiceWorker: false,
 		pushNotificationState: "unsupported",
 		serverConfiguration: null,
 		sessions: [],
@@ -66,6 +67,9 @@ const store = new Vuex.Store({
 		},
 		sortNetworks(state, sortFn) {
 			state.networks.sort(sortFn);
+		},
+		hasServiceWorker(state) {
+			state.hasServiceWorker = true;
 		},
 		pushNotificationState(state, pushNotificationState) {
 			state.pushNotificationState = pushNotificationState;

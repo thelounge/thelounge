@@ -19,7 +19,7 @@
 </template>
 
 <script>
-const Mousetrap = require("mousetrap");
+import Mousetrap from "mousetrap";
 
 export default {
 	name: "ContextMenu",

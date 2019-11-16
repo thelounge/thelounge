@@ -29,7 +29,7 @@ const timeFormats = {
 
 const sizeUnits = ["B", "KiB", "MiB", "GiB", "TiB"];
 
-module.exports = {
+export default {
 	colorCodeMap,
 	commands: [],
 	condensedTypes,

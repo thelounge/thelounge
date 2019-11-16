@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = function(chat) {
+export default function(chat) {
 	// Disable in Firefox as it already copies flex text correctly
 	if (typeof window.InstallTrigger !== "undefined") {
 		return;
@@ -28,4 +28,4 @@ module.exports = function(chat) {
 		selection.removeAllRanges();
 		selection.addRange(range);
 	}, 0);
-};
+}

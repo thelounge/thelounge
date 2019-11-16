@@ -1,11 +1,12 @@
 "use strict";
 
-const fuzzy = require("fuzzy");
-const Mousetrap = require("mousetrap");
-const {Textcomplete, Textarea} = require("textcomplete");
-const emojiMap = require("./helpers/simplemap.json");
-const constants = require("./constants");
-const store = require("./store").default;
+import Mousetrap from "mousetrap";
+import {Textcomplete, Textarea} from "textcomplete";
+import fuzzy from "fuzzy";
+
+import emojiMap from "./helpers/simplemap.json";
+import constants from "./constants";
+import store from "./store";
 
 export default enableAutocomplete;
 
