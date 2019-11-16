@@ -3662,11 +3662,6 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-gitbook-plugin-github@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/gitbook-plugin-github/-/gitbook-plugin-github-2.0.0.tgz#5166e763cfcc402d432880b7a6c85c1c54b56a8d"
-  integrity sha1-UWbnY8/MQC1DKIC3pshcHFS1ao0=
-
 glob-parent@5.1.0, glob-parent@^5.0.0, glob-parent@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-5.1.0.tgz#5f4c1d1e748d30cd73ad2944b3577a81b081e8c2"
@@ -4011,11 +4006,6 @@ hmac-drbg@^1.0.0:
     hash.js "^1.0.3"
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.1"
-
-hoek@6.1.3:
-  version "6.1.3"
-  resolved "https://registry.yarnpkg.com/hoek/-/hoek-6.1.3.tgz#73b7d33952e01fe27a38b0457294b79dd8da242c"
-  integrity sha512-YXXAAhmF9zpQbC7LEcREFtXfGq5K1fmd+4PHkBq8NUqmzW3G+Dq10bI/i0KucLRwss3YYFQ0fSfoxBZYiGUqtQ==
 
 homedir-polyfill@^1.0.1:
   version "1.0.3"
@@ -5558,18 +5548,16 @@ mocha@6.2.2:
     yargs-parser "13.1.1"
     yargs-unparser "1.6.0"
 
-mochapack@1.1.9:
-  version "1.1.9"
-  resolved "https://registry.yarnpkg.com/mochapack/-/mochapack-1.1.9.tgz#583e131d820697d1a0c6462db8ebac4f8a779fd1"
-  integrity sha512-YEqHmeQQ6IgYXu3ZHWUlZ3YUklIhK6LQh51xHSd4Sudthjh5V6N8cmoH4N1FwdbJWVgX18adWQngpRNUdzYSTQ==
+mochapack@1.1.11:
+  version "1.1.11"
+  resolved "https://registry.yarnpkg.com/mochapack/-/mochapack-1.1.11.tgz#9495305a105e133dd7463b29e5c45f9792bfc5fe"
+  integrity sha512-vRXu4lTFu222yw9CWRLhISxQr8G1hqEVZl/R5qDRVMLNVB8F6mZPKZRtnMgPoC13lKam1Whu9QTCqhZAWv08vQ==
   dependencies:
     babel-runtime "^6.26.0"
     chalk "^2.4.2"
     chokidar "^2.0.0"
-    gitbook-plugin-github "^2.0.0"
     glob-parent "5.1.0"
     globby "^10.0.1"
-    hoek "6.1.3"
     interpret "^1.2.0"
     is-glob "^4.0.1"
     loader-utils "^1.2.3"
@@ -5580,7 +5568,6 @@ mochapack@1.1.9:
     normalize-path "^3.0.0"
     progress "^2.0.3"
     source-map-support "^0.5.13"
-    strip-ansi "^5.2.0"
     toposort "^2.0.2"
     yargs "14.0.0"
 
