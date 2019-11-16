@@ -4915,10 +4915,10 @@ ldap-filter@^0.3.3:
   dependencies:
     assert-plus "^1.0.0"
 
-ldapjs@2.0.0-pre.2:
-  version "2.0.0-pre.2"
-  resolved "https://registry.yarnpkg.com/ldapjs/-/ldapjs-2.0.0-pre.2.tgz#17ab8bb5a737bcf505434d621f3403bdd7b567a2"
-  integrity sha512-KZnKiFXu5eEU4jKWoz29yUWh6fS8pIBuxFq9njji8LfHu3T4i05j6lsnGyDLayhJDw+rtKpEgmS3/As7CXg7WQ==
+ldapjs@2.0.0-pre.3:
+  version "2.0.0-pre.3"
+  resolved "https://registry.yarnpkg.com/ldapjs/-/ldapjs-2.0.0-pre.3.tgz#dcf9369f3b802844241ca830ef9617da76f6e1ec"
+  integrity sha512-3OHNUWulzXDj6UnxNss3LGL2ycBOn+q4OLQUiuorOGeruQeVryNMd29IrqYA5IIrSOYz4aVXKLacohOtW+ZQtg==
   dependencies:
     abstract-logging "^1.0.0"
     asn1 "^0.2.4"
