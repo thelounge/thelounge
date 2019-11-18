@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    tags: v*
+
+jobs:
+  release:
+    name: Release workflow
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          registry-url: "https://registry.npmjs.org/"
+
+      - name: Install
+        run: yarn --frozen-lockfile --non-interactive
+
+      - name: Build
+        run: yarn build
+        env:
+          NODE_ENV: production
+
+      - name: Test
+        run: yarn test
+
+      - name: Publish latest
+        if: "!contains(github.ref, '-')"
+        run: npm publish --tag latest
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+
+      - name: Publish next
+        if: contains(github.ref, '-')
+        run: npm publish --tag next
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+
+      - name: Remove next tag
+        if: "!contains(github.ref, '-')"
+        run: npm dist-tag rm thelounge next || true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
