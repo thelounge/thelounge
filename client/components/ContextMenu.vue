@@ -1,19 +1,34 @@
 <template>
-	<div v-if="isOpen" id="context-menu-container" @click="close" @contextmenu.prevent="close">
-		<ul id="context-menu" ref="contextMenu" role="menu" :style="style">
-			<li
-				v-for="item of items"
-				:key="item.name"
-				:class="[
-					'context-menu-' + item.type,
-					item.class ? 'context-menu-' + item.class : null,
-				]"
-				tabindex="0"
-				role="menuitem"
-				@click="clickItem(item)"
-			>
-				{{ item.label }}
-			</li>
+	<div
+		v-if="isOpen"
+		id="context-menu-container"
+		@click="containerClick"
+		@contextmenu.prevent="containerClick"
+	>
+		<ul
+			id="context-menu"
+			ref="contextMenu"
+			role="menu"
+			:style="style"
+			tabindex="-1"
+			@mouseleave="activeItem = -1"
+			@keydown.enter.prevent="clickActiveItem"
+		>
+			<template v-for="(item, id) of items">
+				<li
+					:key="item.name"
+					:class="[
+						'context-menu-' + item.type,
+						item.class ? 'context-menu-' + item.class : null,
+						{active: id === activeItem},
+					]"
+					role="menuitem"
+					@mouseover="hoverItem(id)"
+					@click="clickItem(item)"
+				>
+					{{ item.label }}
+				</li>
+			</template>
 		</ul>
 	</div>
 </template>
@@ -31,6 +46,7 @@ export default {
 			isOpen: false,
 			previousActiveElement: null,
 			items: [],
+			activeItem: -1,
 			style: {
 				left: 0,
 				top: 0,
@@ -39,57 +55,27 @@ export default {
 	},
 	mounted() {
 		Mousetrap.bind("esc", this.close);
-
-		const trap = Mousetrap(this.$refs.contextMenu);
-
-		trap.bind(["up", "down"], (e, key) => {
-			if (!this.isOpen) {
-				return;
-			}
-
-			const items = this.$refs.contextMenu.querySelectorAll(".context-menu-item");
-			let index = Array.from(items).findIndex((item) => item === document.activeElement);
-
-			if (key === "down") {
-				index = (index + 1) % items.length;
-			} else {
-				index = Math.max(index, 0) - 1;
-
-				if (index < 0) {
-					index = items.length + index;
-				}
-			}
-
-			items[index].focus();
-		});
-
-		trap.bind("enter", () => {
-			if (!this.isOpen) {
-				return;
-			}
-
-			const item = this.$refs.contextMenu.querySelector(":focus");
-			item.click();
-
-			return false;
-		});
+		Mousetrap.bind(["up", "down", "tab", "shift+tab"], this.navigateMenu);
 	},
 	destroyed() {
 		Mousetrap.unbind("esc", this.close);
+		Mousetrap.unbind(["up", "down", "tab", "shift+tab"], this.navigateMenu);
 	},
 	methods: {
 		open(event, items) {
-			this.items = items;
-			this.isOpen = true;
+			event.preventDefault();
+
 			this.previousActiveElement = document.activeElement;
+			this.items = items;
+			this.activeItem = 0;
+			this.isOpen = true;
 
 			// Position the menu and set the focus on the first item after it's size has updated
 			this.$nextTick(() => {
 				const pos = this.positionContextMenu(event);
 				this.style.left = pos.left + "px";
 				this.style.top = pos.top + "px";
-
-				this.$refs.contextMenu.querySelector(".context-menu-item:first-child").focus();
+				this.$refs.contextMenu.focus();
 			});
 		},
 		close() {
@@ -98,17 +84,59 @@ export default {
 			}
 
 			this.isOpen = false;
+			this.items = [];
 
 			if (this.previousActiveElement) {
 				this.previousActiveElement.focus();
 				this.previousActiveElement = null;
 			}
 		},
+		hoverItem(id) {
+			this.activeItem = id;
+		},
 		clickItem(item) {
 			if (item.action) {
 				item.action();
+				this.close();
 			} else if (item.link) {
 				this.$router.push(item.link);
+				this.close();
+			}
+		},
+		clickActiveItem() {
+			if (this.items[this.activeItem]) {
+				this.clickItem(this.items[this.activeItem]);
+			}
+		},
+		navigateMenu(event, key) {
+			event.preventDefault();
+
+			const direction = key === "down" || key === "tab" ? 1 : -1;
+
+			let currentIndex = this.activeItem;
+
+			currentIndex += direction;
+
+			const nextItem = this.items[currentIndex];
+
+			// If the next item we would select is a divider, skip over it
+			if (nextItem && !nextItem.action && !nextItem.link) {
+				currentIndex += direction;
+			}
+
+			if (currentIndex < 0) {
+				currentIndex += this.items.length;
+			}
+
+			if (currentIndex > this.items.length - 1) {
+				currentIndex -= this.items.length;
+			}
+
+			this.activeItem = currentIndex;
+		},
+		containerClick(event) {
+			if (event.currentTarget === event.target) {
+				this.close();
 			}
 		},
 		positionContextMenu(event) {

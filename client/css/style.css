@@ -2088,6 +2088,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
 	border: 1px solid rgba(0, 0, 0, 0.15);
 	border-radius: 5px;
+	outline: 0;
 }
 
 .context-menu-divider {
@@ -2109,15 +2110,13 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	border-radius: 3px;
 }
 
-.context-menu-item:focus,
+.context-menu-item.active,
 .textcomplete-item:focus,
-.context-menu-item:hover,
 .textcomplete-item:hover,
 .textcomplete-menu .active,
 #chat .userlist .user.active {
 	background-color: rgba(0, 0, 0, 0.1);
 	transition: none;
-	outline: 0;
 }
 
 .context-menu-item::before,

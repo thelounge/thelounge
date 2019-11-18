@@ -4,6 +4,7 @@
 		:data-name="user.original.nick"
 		role="button"
 		@mouseover="hover"
+		@click.prevent="rightClick($event)"
 		@contextmenu.prevent="rightClick($event)"
 		v-html="user.original.mode + user.string"
 	/>

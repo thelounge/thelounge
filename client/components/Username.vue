@@ -4,6 +4,7 @@
 		:data-name="user.nick"
 		role="button"
 		v-on="onHover ? {mouseover: hover} : {}"
+		@click.prevent="rightClick($event)"
 		@contextmenu.prevent="rightClick($event)"
 		>{{ user.mode }}{{ user.nick }}</span
 	>
