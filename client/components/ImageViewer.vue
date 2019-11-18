@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import Mousetrap from "mousetrap";
+
 export default {
 	name: "ImageViewer",
 	data() {
@@ -61,14 +63,17 @@ export default {
 		},
 	},
 	mounted() {
-		document.addEventListener("keydown", (e) => {
-			if (e.code === "Escape") {
-				this.closeViewer();
-			}
-		});
+		Mousetrap.bind("esc", this.closeViewer);
+	},
+	destroyed() {
+		Mousetrap.unbind("esc", this.closeViewer);
 	},
 	methods: {
 		closeViewer() {
+			if (this.link === null) {
+				return;
+			}
+
 			this.$root.$off("resize", this.correctPosition);
 			this.link = null;
 		},

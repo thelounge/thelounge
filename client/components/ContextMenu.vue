@@ -38,11 +38,7 @@ export default {
 		};
 	},
 	mounted() {
-		document.addEventListener("keydown", (e) => {
-			if (e.code === "Escape") {
-				this.close();
-			}
-		});
+		Mousetrap.bind("esc", this.close);
 
 		const trap = Mousetrap(this.$refs.contextMenu);
 
@@ -77,6 +73,9 @@ export default {
 
 			return false;
 		});
+	},
+	destroyed() {
+		Mousetrap.unbind("esc", this.close);
 	},
 	methods: {
 		open(event, items) {
