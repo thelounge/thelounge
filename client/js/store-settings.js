@@ -13,9 +13,11 @@ export function createSettingsStore(store) {
 		},
 		actions: {
 			syncAll({state}, force = false) {
-				if (state.syncSettings === false || force === false) {
+				if (state.syncSettings === false && force === false) {
 					return;
 				}
+
+				store.commit("serverHasSettings", true);
 
 				for (const name in state) {
 					if (config[name].sync !== "never" || config[name].sync === "always") {

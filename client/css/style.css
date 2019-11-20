@@ -1760,8 +1760,33 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-top: 30px;
 }
 
-#settings .sync-warning-base {
-	display: none;
+#settings .settings-sync-panel {
+	padding: 10px;
+	margin-bottom: 16px;
+	border-radius: 2px;
+	background-color: #d9edf7;
+	color: #31708f;
+}
+
+#settings .settings-sync-panel p:last-child {
+	margin-bottom: 0;
+}
+
+#settings .settings-sync-panel .btn {
+	color: #007bff;
+	border-color: #007bff;
+	margin-bottom: 0;
+}
+
+#settings .settings-sync-panel .btn:hover,
+#settings .settings-sync-panel .btn:focus {
+	background-color: #007bff;
+	color: #fff;
+}
+
+#settings .settings-sync-panel .btn:active,
+#settings .settings-sync-panel .btn:focus {
+	box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
 }
 
 #settings .opt {

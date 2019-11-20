@@ -10,11 +10,15 @@ socket.on("setting:new", function(data) {
 });
 
 socket.on("setting:all", function(settings) {
-	if (Object.keys(settings).length === 0) {
-		store.dispatch("settings/syncAll");
-	} else {
+	const serverHasSettings = Object.keys(settings).length > 0;
+
+	store.commit("serverHasSettings", serverHasSettings);
+
+	if (serverHasSettings) {
 		for (const name in settings) {
 			store.dispatch("settings/update", {name, value: settings[name], sync: false});
 		}
+	} else {
+		store.dispatch("settings/syncAll");
 	}
 });

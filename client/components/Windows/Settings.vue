@@ -66,20 +66,28 @@
 						/>
 						Synchronize settings with other clients
 					</label>
-					<p v-if="!$store.state.settings.syncSettings" class="sync-warning-override">
-						<strong>Warning</strong> Checking this box will override the settings of
-						this client with those stored on the server.
-					</p>
-					<p v-if="!$store.state.settings.syncSettings" class="sync-warning-base">
-						<strong>Warning</strong> No settings have been synced before. Enabling this
-						will sync all settings of this client as the base for other clients.
-					</p>
-					<div v-if="$store.state.settings.syncSettings" class="opt force-sync-button">
-						<button type="button" class="btn" @click="onForceSyncClick">
-							Force sync settings
-						</button>
-						<p>This will override any settings already synced to the server.</p>
-					</div>
+					<template v-if="!$store.state.settings.syncSettings">
+						<div v-if="$store.state.serverHasSettings" class="settings-sync-panel">
+							<p>
+								<strong>Warning:</strong> Checking this box will override the
+								settings of this client with those stored on the server.
+							</p>
+							<p>
+								Use the button below to enable synchronization, and override any
+								settings already synced to the server.
+							</p>
+							<button type="button" class="btn btn-small" @click="onForceSyncClick">
+								Sync settings and enable
+							</button>
+						</div>
+						<div v-else class="settings-sync-panel">
+							<p>
+								<strong>Warning:</strong> No settings have been synced before.
+								Enabling this will sync all settings of this client as the base for
+								other clients.
+							</p>
+						</div>
+					</template>
 				</div>
 
 				<div class="col-sm-12">
@@ -553,6 +561,11 @@ export default {
 		},
 		onForceSyncClick() {
 			this.$store.dispatch("settings/syncAll", true);
+			this.$store.dispatch("settings/update", {
+				name: "syncSettings",
+				value: true,
+				sync: true,
+			});
 		},
 		registerProtocol() {
 			const uri = document.location.origin + document.location.pathname + "?uri=%s";

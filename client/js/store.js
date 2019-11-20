@@ -36,6 +36,7 @@ const store = new Vuex.Store({
 		versionData: null,
 		versionStatus: "loading",
 		versionDataExpired: false,
+		serverHasSettings: false,
 	},
 	mutations: {
 		appLoaded(state) {
@@ -103,6 +104,9 @@ const store = new Vuex.Store({
 		},
 		versionDataExpired(state, payload) {
 			state.versionDataExpired = payload;
+		},
+		serverHasSettings(state, value) {
+			state.serverHasSettings = value;
 		},
 	},
 	getters: {

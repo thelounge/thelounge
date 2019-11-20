@@ -11,7 +11,9 @@ export const config = normalizeConfig({
 		default: true,
 		sync: "never",
 		apply(store, value) {
-			value && socket.emit("setting:get");
+			if (value) {
+				socket.emit("setting:get");
+			}
 		},
 	},
 	advanced: {
