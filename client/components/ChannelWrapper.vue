@@ -11,8 +11,6 @@
 		]"
 		:aria-label="getAriaLabel()"
 		:title="getAriaLabel()"
-		:data-id="channel.id"
-		:data-target="'#chan-' + channel.id"
 		:data-name="channel.name"
 		:aria-controls="'#chan-' + channel.id"
 		:aria-selected="activeChannel && channel === activeChannel.channel"

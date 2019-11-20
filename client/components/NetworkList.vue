@@ -26,8 +26,6 @@
 				'not-connected': !network.status.connected,
 				'not-secure': !network.status.secure,
 			}"
-			:data-uuid="network.uuid"
-			:data-nick="network.nick"
 			class="network"
 			role="region"
 		>

@@ -2,7 +2,6 @@
 	<div id="chat-container" class="window" :data-current-channel="channel.name">
 		<div
 			id="chat"
-			:data-id="channel.id"
 			:class="{
 				'hide-motd': !$store.state.settings.motd,
 				'colored-nicks': $store.state.settings.coloredNicks,
@@ -12,8 +11,6 @@
 			<div
 				:id="'chan-' + channel.id"
 				:class="[channel.type, 'chan', 'active']"
-				:data-id="channel.id"
-				:data-type="channel.type"
 				:aria-label="channel.name"
 				role="tabpanel"
 			>

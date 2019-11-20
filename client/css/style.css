@@ -1234,7 +1234,7 @@ background on hover (unless active) */
 }
 
 #chat .date-marker-text::before {
-	content: attr(data-label);
+	content: attr(aria-label);
 	background-color: var(--window-bg-color);
 	color: var(--date-marker-color);
 	padding: 0 10px;
