@@ -9,4 +9,9 @@ const socket = io({
 	reconnection: !document.body.classList.contains("public"),
 });
 
+// Ease debugging socket during development
+if (process.env.NODE_ENV === "development") {
+	window.socket = socket;
+}
+
 export default socket;

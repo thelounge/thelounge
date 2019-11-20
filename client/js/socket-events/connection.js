@@ -11,7 +11,7 @@ socket.on("reconnecting", function(attempt) {
 });
 
 socket.on("connecting", function() {
-	store.commit("currentUserVisibleError", `Connecting…`);
+	store.commit("currentUserVisibleError", "Connecting…");
 	updateLoadingMessage();
 });
 
@@ -29,6 +29,16 @@ function handleDisconnect(data) {
 	const message = data.message || data;
 
 	store.commit("isConnected", false);
+
+	if (!socket.io.reconnection()) {
+		store.commit(
+			"currentUserVisibleError",
+			`Disconnected from the server (${message}), The Lounge does not reconnect in public mode.`
+		);
+		updateLoadingMessage();
+		return;
+	}
+
 	store.commit("currentUserVisibleError", `Waiting to reconnect… (${message})`);
 	updateLoadingMessage();
 
