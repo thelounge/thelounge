@@ -48,6 +48,7 @@
 
 	</head>
 	<body class="<%- public ? " public" : "" %>" data-transports="<%- JSON.stringify(transports) %>">
+		<div id="viewport"></div>
 		<div id="loading">
 			<div class="window">
 				<div id="loading-status-container">
@@ -59,13 +60,9 @@
 					<p id="loading-slow">This is taking longer than it should, there might be connectivity issues.</p>
 					<button id="loading-reload" class="btn">Reload page</button>
 				</div>
-				<script src="js/loading-error-handlers.js?v=<%- cacheBust %>"></script>
 			</div>
 		</div>
-		<div id="viewport"></div>
-
-		<div id="upload-overlay"></div>
-
+		<script src="js/loading-error-handlers.js?v=<%- cacheBust %>"></script>
 		<script src="js/bundle.vendor.js?v=<%- cacheBust %>"></script>
 		<script src="js/bundle.js?v=<%- cacheBust %>"></script>
 	</body>

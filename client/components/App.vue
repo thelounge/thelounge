@@ -7,6 +7,7 @@
 		</article>
 		<ImageViewer ref="imageViewer" />
 		<ContextMenu ref="contextMenu" />
+		<div id="upload-overlay"></div>
 	</div>
 </template>
 
