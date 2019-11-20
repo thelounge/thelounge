@@ -2,74 +2,69 @@
 
 import Mousetrap from "mousetrap";
 
-const $ = require("jquery");
 import store from "./store";
 import {switchToChannel} from "./router";
+import isChannelCollapsed from "./helpers/isChannelCollapsed";
 
 // Switch to the next/previous window in the channel list.
 Mousetrap.bind(["alt+up", "alt+down"], function(e, keys) {
-	const sidebar = $("#sidebar");
-	const channels = sidebar.find(".chan").not(".network.collapsed :not(.lobby)");
-	const index = channels.index(channels.filter(".active"));
-	const direction = keys.split("+").pop();
-	let target;
-
-	switch (direction) {
-		case "up":
-			target = (channels.length + (index - 1 + channels.length)) % channels.length;
-			break;
-
-		case "down":
-			target = (channels.length + (index + 1 + channels.length)) % channels.length;
-			break;
+	if (store.state.networks.length === 0) {
+		return false;
 	}
 
-	target = channels.eq(target).click();
-	scrollIntoViewNicely(target[0]);
+	const direction = keys.split("+").pop() === "up" ? -1 : 1;
+	const flatChannels = [];
+	let index = -1;
+
+	for (const network of store.state.networks) {
+		for (const channel of network.channels) {
+			if (isChannelCollapsed(network, channel)) {
+				continue;
+			}
+
+			if (
+				index === -1 &&
+				store.state.activeChannel &&
+				store.state.activeChannel.channel === channel
+			) {
+				index = flatChannels.length;
+			}
+
+			flatChannels.push(channel);
+		}
+	}
+
+	// Circular array, and a modulo bug workaround because in JS it stays negative
+	const length = flatChannels.length;
+	index = (((index + direction) % length) + length) % length;
+
+	jumpToChannel(flatChannels[index]);
 
 	return false;
 });
 
 // Switch to the next/previous lobby in the channel list
 Mousetrap.bind(["alt+shift+up", "alt+shift+down"], function(e, keys) {
-	const sidebar = $("#sidebar");
-	const lobbies = sidebar.find(".lobby");
-	const direction = keys.split("+").pop();
-	let index = lobbies.index(lobbies.filter(".active"));
-	let target;
+	const length = store.state.networks.length;
 
-	switch (direction) {
-		case "up":
-			if (index < 0) {
-				target = lobbies.index(
-					sidebar
-						.find(".channel")
-						.filter(".active")
-						.siblings(".lobby")[0]
-				);
-			} else {
-				target = (lobbies.length + (index - 1 + lobbies.length)) % lobbies.length;
-			}
-
-			break;
-
-		case "down":
-			if (index < 0) {
-				index = lobbies.index(
-					sidebar
-						.find(".channel")
-						.filter(".active")
-						.siblings(".lobby")[0]
-				);
-			}
-
-			target = (lobbies.length + (index + 1 + lobbies.length)) % lobbies.length;
-
-			break;
+	if (length === 0) {
+		return false;
 	}
 
-	target = lobbies.eq(target).click();
-	scrollIntoViewNicely(target[0]);
+	const direction = keys.split("+").pop() === "up" ? -1 : 1;
+	let index = 0;
+
+	// If we're in another window, jump to first lobby
+	if (store.state.activeChannel) {
+		index = store.state.networks.findIndex((n) => n === store.state.activeChannel.network);
+
+		// If we're in a channel, and it's not the lobby, jump to lobby of this network when going up
+		if (direction !== -1 || store.state.activeChannel.channel.type === "lobby") {
+			index = (((index + direction) % length) + length) % length;
+		}
+	}
+
+	jumpToChannel(store.state.networks[index].channels[0]);
 
 	return false;
 });
@@ -77,27 +72,33 @@ Mousetrap.bind(["alt+shift+up", "alt+shift+down"], function(e, keys) {
 // Jump to the first window with a highlight in it, or the first with unread
 // activity if there are none with highlights.
 Mousetrap.bind(["alt+a"], function() {
-	let targetchan;
+	let targetChannel;
 
 	outer_loop: for (const network of store.state.networks) {
 		for (const chan of network.channels) {
 			if (chan.highlight) {
-				targetchan = chan;
+				targetChannel = chan;
 				break outer_loop;
 			}
 
-			if (chan.unread && !targetchan) {
-				targetchan = chan;
+			if (chan.unread && !targetChannel) {
+				targetChannel = chan;
 			}
 		}
 	}
 
-	if (targetchan) {
-		switchToChannel(targetchan);
+	if (targetChannel) {
+		jumpToChannel(targetChannel);
 	}
 
 	return false;
 });
+
+function jumpToChannel(targetChannel) {
+	switchToChannel(targetChannel);
+
+	scrollIntoViewNicely(document.querySelector(`#sidebar .chan[data-id="${targetChannel.id}"]`));
+}
 
 // Ignored keys which should not automatically focus the input bar
 const ignoredKeys = {

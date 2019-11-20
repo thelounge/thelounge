@@ -1,12 +1,7 @@
 <template>
 	<!-- TODO: move closed style to it's own class -->
 	<div
-		v-if="
-			!network.isCollapsed ||
-				channel.highlight ||
-				channel.type === 'lobby' ||
-				(activeChannel && channel === activeChannel.channel)
-		"
+		v-if="isChannelVisible"
 		ref="element"
 		:class="[
 			'chan',
@@ -33,6 +28,7 @@
 <script>
 import socket from "../js/socket";
 import {generateChannelContextMenu} from "../js/helpers/contextMenu.js";
+import isChannelCollapsed from "../js/helpers/isChannelCollapsed";
 
 export default {
 	name: "ChannelWrapper",
@@ -48,6 +44,9 @@ export default {
 	computed: {
 		activeChannel() {
 			return this.$store.state.activeChannel;
+		},
+		isChannelVisible() {
+			return !isChannelCollapsed(this.network, this.channel);
 		},
 	},
 	methods: {
