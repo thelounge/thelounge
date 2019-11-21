@@ -1,7 +1,7 @@
 "use strict";
 
 const expect = require("chai").expect;
-const roundBadgeNumber = require("../../../../client/js/helpers/roundBadgeNumber");
+const roundBadgeNumber = require("../../../../client/js/helpers/roundBadgeNumber").default;
 
 describe("roundBadgeNumber helper", function() {
 	it("should return any number under 1000 as a string", function() {

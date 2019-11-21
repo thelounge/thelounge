@@ -1,7 +1,7 @@
 "use strict";
 
 const expect = require("chai").expect;
-const friendlysize = require("../../../../client/js/helpers/friendlysize");
+const friendlysize = require("../../../../client/js/helpers/friendlysize").default;
 
 describe("friendlysize helper", function() {
 	it("should render big values in human-readable version", function() {

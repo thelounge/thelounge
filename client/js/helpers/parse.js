@@ -11,8 +11,6 @@ import emojiMap from "./fullnamemap.json";
 import LinkPreviewToggle from "../../components/LinkPreviewToggle.vue";
 import LinkPreviewFileSize from "../../components/LinkPreviewFileSize.vue";
 import InlineChannel from "../../components/InlineChannel.vue";
-import store from "../store";
-import {generateUserContextMenu} from "./contextMenu";
 
 const emojiModifiersRegex = /[\u{1f3fb}-\u{1f3ff}]/gu;
 
@@ -182,6 +180,11 @@ function parse(createElement, text, message = undefined, network = undefined, $r
 				fragments
 			);
 		} else if (textPart.nick) {
+			// TODO: This really does not belong here, find a better way
+			const openContextMenu = (event) => {
+				$root.$refs.app.openContextMenuForMentionedNick(event, network, textPart.nick);
+			};
+
 			return createElement(
 				"span",
 				{
@@ -192,21 +195,8 @@ function parse(createElement, text, message = undefined, network = undefined, $r
 						"data-name": textPart.nick,
 					},
 					on: {
-						contextmenu($event) {
-							$event.preventDefault();
-							const channel = store.state.activeChannel.channel;
-							let user = channel.users.find((u) => u.nick === textPart.nick);
-
-							if (!user) {
-								user = {
-									nick: textPart.nick,
-									mode: "",
-								};
-							}
-
-							const items = generateUserContextMenu($root, channel, network, user);
-							$root.$refs.app.openContextMenu($event, items);
-						},
+						contextmenu: openContextMenu,
+						click: openContextMenu,
 					},
 				},
 				fragments

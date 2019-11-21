@@ -106,7 +106,7 @@ export default {
 		isAction() {
 			return typeof MessageTypes["message-" + this.message.type] !== "undefined";
 		},
-		openUserContextMenu($event, user) {
+		openUserContextMenu(event, user) {
 			const items = generateUserContextMenu(this.$root, this.channel, this.network, user);
 			this.$root.$refs.app.openContextMenu(event, items);
 		},

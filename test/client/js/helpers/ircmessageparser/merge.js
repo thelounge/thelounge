@@ -1,7 +1,7 @@
 "use strict";
 
 const expect = require("chai").expect;
-const merge = require("../../../../../client/js/helpers/ircmessageparser/merge");
+const merge = require("../../../../../client/js/helpers/ircmessageparser/merge").default;
 
 describe("merge", () => {
 	it("should split style information", () => {

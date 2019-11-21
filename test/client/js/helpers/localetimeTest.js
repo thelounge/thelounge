@@ -1,7 +1,7 @@
 "use strict";
 
 const expect = require("chai").expect;
-const localetime = require("../../../../client/js/helpers/localetime");
+const localetime = require("../../../../client/js/helpers/localetime").default;
 
 describe("localetime helper", () => {
 	it("should render a human-readable date", () => {

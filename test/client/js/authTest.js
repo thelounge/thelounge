@@ -2,9 +2,9 @@
 
 const expect = require("chai").expect;
 const stub = require("sinon").stub;
-const Auth = require("../../../client/js/auth");
-const localStorage = require("../../../client/js/localStorage");
-const location = require("../../../client/js/location");
+const Auth = require("../../../client/js/auth").default;
+const localStorage = require("../../../client/js/localStorage").default;
+const location = require("../../../client/js/location").default;
 
 describe("Auth", function() {
 	describe(".signout", function() {

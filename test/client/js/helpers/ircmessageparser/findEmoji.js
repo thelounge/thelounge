@@ -1,7 +1,7 @@
 "use strict";
 
 const expect = require("chai").expect;
-const findEmoji = require("../../../../../client/js/helpers/ircmessageparser/findEmoji");
+const findEmoji = require("../../../../../client/js/helpers/ircmessageparser/findEmoji").default;
 
 describe("findEmoji", () => {
 	it("should find default emoji presentation character", () => {

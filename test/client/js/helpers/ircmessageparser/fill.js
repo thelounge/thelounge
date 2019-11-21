@@ -1,7 +1,7 @@
 "use strict";
 
 const expect = require("chai").expect;
-const fill = require("../../../../../client/js/helpers/ircmessageparser/fill");
+const fill = require("../../../../../client/js/helpers/ircmessageparser/fill").default;
 
 describe("fill", () => {
 	const text = "01234567890123456789";
