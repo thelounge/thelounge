@@ -82,7 +82,6 @@
     "chai": "4.2.0",
     "copy-webpack-plugin": "5.0.5",
     "css-loader": "3.2.0",
-    "css.escape": "1.5.1",
     "cssnano": "4.1.10",
     "dayjs": "1.8.17",
     "emoji-regex": "8.0.0",
