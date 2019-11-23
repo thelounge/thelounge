@@ -265,3 +265,31 @@ export function generateUserContextMenu($root, channel, network, user) {
 
 	return items;
 }
+
+export function generateRemoveNetwork($root, lobby) {
+	return [
+		{
+			label: lobby.name,
+			type: "item",
+			class: "network",
+		},
+		{
+			type: "divider",
+		},
+		{
+			label: "Yes, remove this",
+			type: "item",
+			action() {
+				lobby.closed = true;
+				socket.emit("input", {
+					target: Number(lobby.id),
+					text: "/quit",
+				});
+			},
+		},
+		{
+			label: "Cancel",
+			type: "item",
+		},
+	];
+}

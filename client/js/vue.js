@@ -30,19 +30,30 @@ const vueApp = new Vue({
 			navigate("RoutedChat", {id: channel.id});
 		},
 		closeChannel(channel) {
-			if (
-				channel.type === "lobby" &&
-				// eslint-disable-next-line no-alert
-				!confirm(`Are you sure you want to remove ${channel.name}?`)
-			) {
-				return false;
+			if (channel.type === "lobby") {
+				const el = document.querySelector(
+					`#sidebar .chan[aria-controls="#chan-${channel.id}"]`
+				);
+				const rect = el.getBoundingClientRect();
+				const event = new MouseEvent("click", {
+					view: window,
+					clientX: rect.x + 10,
+					clientY: rect.y,
+				});
+
+				this.$root.$emit("contextmenu:removenetwork", {
+					event: event,
+					lobby: channel,
+				});
+
+				return;
 			}
 
 			channel.closed = true;
 
 			socket.emit("input", {
 				target: Number(channel.id),
-				text: channel.type === "lobby" ? "/quit" : "/close",
+				text: "/close",
 			});
 		},
 	},
