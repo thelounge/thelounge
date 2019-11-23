@@ -16,8 +16,7 @@ export default {
 				? context.props.text
 				: context.props.message.text,
 			context.props.message,
-			context.props.network,
-			context.parent.$root
+			context.props.network
 		);
 	},
 };

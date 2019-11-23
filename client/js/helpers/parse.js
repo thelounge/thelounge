@@ -6,11 +6,11 @@ import findLinks from "./ircmessageparser/findLinks";
 import findEmoji from "./ircmessageparser/findEmoji";
 import findNames from "./ircmessageparser/findNames";
 import merge from "./ircmessageparser/merge";
-import colorClass from "./colorClass";
 import emojiMap from "./fullnamemap.json";
 import LinkPreviewToggle from "../../components/LinkPreviewToggle.vue";
 import LinkPreviewFileSize from "../../components/LinkPreviewFileSize.vue";
 import InlineChannel from "../../components/InlineChannel.vue";
+import Username from "../../components/Username.vue";
 
 const emojiModifiersRegex = /[\u{1f3fb}-\u{1f3ff}]/gu;
 
@@ -70,7 +70,7 @@ function createFragment(fragment, createElement) {
 
 // Transform an IRC message potentially filled with styling control codes, URLs,
 // nicknames, and channels into a string of HTML elements to display on the client.
-function parse(createElement, text, message = undefined, network = undefined, $root) {
+function parse(createElement, text, message = undefined, network = undefined) {
 	// Extract the styling information and get the plain text version from it
 	const styleFragments = parseStyle(text);
 	const cleanText = styleFragments.map((fragment) => fragment.text).join("");
@@ -180,23 +180,16 @@ function parse(createElement, text, message = undefined, network = undefined, $r
 				fragments
 			);
 		} else if (textPart.nick) {
-			// TODO: This really does not belong here, find a better way
-			const openContextMenu = (event) => {
-				$root.$refs.app.openContextMenuForMentionedNick(event, network, textPart.nick);
-			};
-
 			return createElement(
-				"span",
+				Username,
 				{
-					class: ["user", colorClass(textPart.nick)],
-					attrs: {
-						role: "button",
-						dir: "auto",
-						"data-name": textPart.nick,
+					props: {
+						user: {
+							nick: textPart.nick,
+						},
 					},
-					on: {
-						contextmenu: openContextMenu,
-						click: openContextMenu,
+					attrs: {
+						dir: "auto",
 					},
 				},
 				fragments

@@ -91,52 +91,46 @@ export function generateChannelContextMenu($root, channel, network) {
 
 	// Add menu items for channels
 	if (channel.type === "channel") {
-		items = [
-			...items,
-			{
-				label: "Edit topic",
-				type: "item",
-				class: "edit",
-				action() {
-					channel.editTopic = true;
-					$root.switchToChannel(channel);
+		items.push({
+			label: "Edit topic",
+			type: "item",
+			class: "edit",
+			action() {
+				channel.editTopic = true;
+				$root.switchToChannel(channel);
 
-					$root.$nextTick(() =>
-						document.querySelector(`#chan-${channel.id} .topic-input`).focus()
-					);
-				},
+				$root.$nextTick(() =>
+					document.querySelector(`#chan-${channel.id} .topic-input`).focus()
+				);
 			},
-			{
-				label: "List banned users",
-				type: "item",
-				class: "list",
-				action() {
-					socket.emit("input", {
-						target: channel.id,
-						text: "/banlist",
-					});
-				},
+		});
+		items.push({
+			label: "List banned users",
+			type: "item",
+			class: "list",
+			action() {
+				socket.emit("input", {
+					target: channel.id,
+					text: "/banlist",
+				});
 			},
-		];
+		});
 	}
 
 	// Add menu items for queries
 	if (channel.type === "query") {
-		items = [
-			...items,
-			{
-				label: "User information",
-				type: "item",
-				class: "action-whois",
-				action() {
-					$root.switchToChannel(channel);
-					socket.emit("input", {
-						target: $root.$store.state.activeChannel.channel.id,
-						text: "/whois " + channel.name,
-					});
-				},
+		items.push({
+			label: "User information",
+			type: "item",
+			class: "action-whois",
+			action() {
+				$root.switchToChannel(channel);
+				socket.emit("input", {
+					target: channel.id,
+					text: "/whois " + channel.name,
+				});
 			},
-		];
+		});
 	}
 
 	// Add close menu item
@@ -159,7 +153,7 @@ export function generateChannelContextMenu($root, channel, network) {
 }
 
 export function generateUserContextMenu($root, channel, network, user) {
-	const currentChannelUser = channel.users.filter((u) => u.nick === network.nick)[0];
+	const currentChannelUser = channel.users.find((u) => u.nick === network.nick) || {};
 
 	const whois = () => {
 		const chan = $root.$store.getters.findChannelOnCurrentNetwork(user.nick);

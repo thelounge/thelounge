@@ -35,6 +35,7 @@
 
 <script>
 import Mousetrap from "mousetrap";
+import {generateUserContextMenu, generateChannelContextMenu} from "../js/helpers/contextMenu.js";
 
 export default {
 	name: "ContextMenu",
@@ -56,12 +57,33 @@ export default {
 	mounted() {
 		Mousetrap.bind("esc", this.close);
 		Mousetrap.bind(["up", "down", "tab", "shift+tab"], this.navigateMenu);
+
+		this.$root.$on("contextmenu:user", this.openUserContextMenu);
+		this.$root.$on("contextmenu:channel", this.openChannelContextMenu);
 	},
 	destroyed() {
 		Mousetrap.unbind("esc", this.close);
 		Mousetrap.unbind(["up", "down", "tab", "shift+tab"], this.navigateMenu);
+
+		this.$root.$off("contextmenu:user", this.openUserContextMenu);
+		this.$root.$off("contextmenu:channel", this.openChannelContextMenu);
 	},
 	methods: {
+		openChannelContextMenu(data) {
+			const items = generateChannelContextMenu(this.$root, data.channel, data.network);
+			this.open(data.event, items);
+		},
+		openUserContextMenu(data) {
+			const {network, channel} = this.$store.state.activeChannel;
+
+			const items = generateUserContextMenu(
+				this.$root,
+				channel,
+				network,
+				channel.users.find((u) => u.nick === data.user.nick) || {nick: data.user.nick}
+			);
+			this.open(data.event, items);
+		},
 		open(event, items) {
 			event.preventDefault();
 

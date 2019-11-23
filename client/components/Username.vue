@@ -4,8 +4,8 @@
 		:data-name="user.nick"
 		role="button"
 		v-on="onHover ? {mouseover: hover} : {}"
-		@click.prevent="rightClick($event)"
-		@contextmenu.prevent="rightClick($event)"
+		@click.prevent="openContextMenu"
+		@contextmenu.prevent="openContextMenu"
 		>{{ user.mode }}{{ user.nick }}</span
 	>
 </template>
@@ -19,7 +19,6 @@ export default {
 		user: Object,
 		active: Boolean,
 		onHover: Function,
-		contextMenuCallback: Function,
 	},
 	computed: {
 		nickColor() {
@@ -30,10 +29,11 @@ export default {
 		hover() {
 			return this.onHover(this.user);
 		},
-		rightClick($event) {
-			if (this.contextMenuCallback) {
-				this.contextMenuCallback($event, this.user);
-			}
+		openContextMenu(event) {
+			this.$root.$emit("contextmenu:user", {
+				event: event,
+				user: this.user,
+			});
 		},
 	},
 };

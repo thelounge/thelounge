@@ -358,7 +358,7 @@ describe("IRC formatted message parser", () => {
 				input: "test, MaxLeiter",
 				expected:
 					"test, " +
-					'<span role="button" dir="auto" data-name="MaxLeiter" class="user color-12">' +
+					'<span data-name="MaxLeiter" role="button" dir="auto" class="user color-12">' +
 					"MaxLeiter" +
 					"</span>",
 			},

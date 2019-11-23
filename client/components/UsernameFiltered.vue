@@ -3,9 +3,9 @@
 		:class="['user', nickColor, {active: active}]"
 		:data-name="user.original.nick"
 		role="button"
-		@mouseover="hover"
-		@click.prevent="rightClick($event)"
-		@contextmenu.prevent="rightClick($event)"
+		@mouseover="onHover(user.original)"
+		@click.prevent="openContextMenu"
+		@contextmenu.prevent="openContextMenu"
 		v-html="user.original.mode + user.string"
 	/>
 </template>
@@ -19,7 +19,6 @@ export default {
 		user: Object,
 		active: Boolean,
 		onHover: Function,
-		contextMenuCallback: Function,
 	},
 	computed: {
 		nickColor() {
@@ -27,13 +26,11 @@ export default {
 		},
 	},
 	methods: {
-		hover() {
-			this.onHover ? this.onHover(this.user.original) : null;
-		},
-		rightClick($event) {
-			if (this.contextMenuCallback) {
-				this.contextMenuCallback($event, this.user);
-			}
+		openContextMenu(event) {
+			this.$root.$emit("contextmenu:user", {
+				event: event,
+				user: this.user.original,
+			});
 		},
 	},
 };

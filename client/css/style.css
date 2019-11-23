@@ -2133,6 +2133,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	line-height: 1.4;
 	transition: background-color 0.2s;
 	border-radius: 3px;
+	white-space: nowrap;
 }
 
 .context-menu-item.active,

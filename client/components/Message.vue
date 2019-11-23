@@ -20,11 +20,9 @@
 		<template v-else-if="message.type === 'action'">
 			<span class="from"><span class="only-copy">* </span></span>
 			<span class="content" dir="auto">
-				<Username
-					:user="message.from"
-					dir="auto"
-					:context-menu-callback="openUserContextMenu"
-				/>&#32;<ParsedMessage :network="network" :message="message" />
+				<Username :user="message.from" dir="auto" />&#32;<ParsedMessage
+					:message="message"
+				/>
 				<LinkPreview
 					v-for="preview in message.previews"
 					:key="preview.link"
@@ -37,7 +35,7 @@
 			<span v-if="message.type === 'message'" class="from">
 				<template v-if="message.from && message.from.nick">
 					<span class="only-copy">&lt;</span>
-					<Username :user="message.from" :context-menu-callback="openUserContextMenu" />
+					<Username :user="message.from" />
 					<span class="only-copy">&gt; </span>
 				</template>
 			</span>
@@ -51,7 +49,7 @@
 			<span v-else class="from">
 				<template v-if="message.from && message.from.nick">
 					<span class="only-copy">-</span>
-					<Username :user="message.from" :context-menu-callback="openUserContextMenu" />
+					<Username :user="message.from" />
 					<span class="only-copy">- </span>
 				</template>
 			</span>
@@ -74,7 +72,6 @@ import Username from "./Username.vue";
 import LinkPreview from "./LinkPreview.vue";
 import ParsedMessage from "./ParsedMessage.vue";
 import MessageTypes from "./MessageTypes";
-import {generateUserContextMenu} from "../js/helpers/contextMenu.js";
 import constants from "../js/constants";
 
 MessageTypes.ParsedMessage = ParsedMessage;
@@ -105,10 +102,6 @@ export default {
 	methods: {
 		isAction() {
 			return typeof MessageTypes["message-" + this.message.type] !== "undefined";
-		},
-		openUserContextMenu(event, user) {
-			const items = generateUserContextMenu(this.$root, this.channel, this.network, user);
-			this.$root.$refs.app.openContextMenu(event, items);
 		},
 	},
 };

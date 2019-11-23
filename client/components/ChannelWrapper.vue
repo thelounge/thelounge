@@ -25,7 +25,6 @@
 
 <script>
 import socket from "../js/socket";
-import {generateChannelContextMenu} from "../js/helpers/contextMenu.js";
 import isChannelCollapsed from "../js/helpers/isChannelCollapsed";
 
 export default {
@@ -77,8 +76,11 @@ export default {
 			this.$root.switchToChannel(this.channel);
 		},
 		openContextMenu(event) {
-			const items = generateChannelContextMenu(this.$root, this.channel, this.network);
-			this.$root.$refs.app.openContextMenu(event, items);
+			this.$root.$emit("contextmenu:channel", {
+				event: event,
+				channel: this.channel,
+				network: this.network,
+			});
 		},
 	},
 };

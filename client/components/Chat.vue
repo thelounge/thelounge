@@ -95,7 +95,6 @@
 
 <script>
 import socket from "../js/socket";
-import {generateChannelContextMenu} from "../js/helpers/contextMenu.js";
 import ParsedMessage from "./ParsedMessage.vue";
 import MessageList from "./MessageList.vue";
 import ChatInput from "./ChatInput.vue";
@@ -182,8 +181,11 @@ export default {
 			}
 		},
 		openContextMenu(event) {
-			const items = generateChannelContextMenu(this.$root, this.channel, this.network);
-			this.$root.$refs.app.openContextMenu(event, items);
+			this.$root.$emit("contextmenu:channel", {
+				event: event,
+				channel: this.channel,
+				network: this.network,
+			});
 		},
 	},
 };

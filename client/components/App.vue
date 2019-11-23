@@ -15,7 +15,6 @@
 import throttle from "lodash/throttle";
 import constants from "../js/constants";
 import storage from "../js/localStorage";
-import {generateUserContextMenu} from "../js/helpers/contextMenu";
 
 import Sidebar from "./Sidebar.vue";
 import ImageViewer from "./ImageViewer.vue";
@@ -88,27 +87,6 @@ export default {
 			}
 
 			this.$store.commit("userlistOpen", isUserlistOpen === "true");
-		},
-		openContextMenu(event, items) {
-			// TODO: maybe move this method to the store or some other more accessible place
-			this.$refs.contextMenu.open(event, items);
-		},
-		openContextMenuForMentionedNick(event, network, nick) {
-			// TODO: Find a better way to do this
-
-			const channel = this.$store.state.activeChannel.channel;
-			let user = channel.users.find((u) => u.nick === nick);
-
-			if (!user) {
-				user = {
-					nick: nick,
-					mode: "",
-				};
-			}
-
-			const items = generateUserContextMenu(this.$root, channel, network, user);
-
-			this.openContextMenu(event, items);
 		},
 	},
 };
