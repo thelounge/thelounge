@@ -14,7 +14,7 @@
 		:data-name="channel.name"
 		:aria-controls="'#chan-' + channel.id"
 		:aria-selected="activeChannel && channel === activeChannel.channel"
-		:style="closed ? {transition: 'none', opacity: 0.4} : null"
+		:style="channel.closed ? {transition: 'none', opacity: 0.4} : null"
 		role="tab"
 		@click="click"
 		@contextmenu.prevent="openContextMenu"
@@ -24,7 +24,6 @@
 </template>
 
 <script>
-import socket from "../js/socket";
 import isChannelCollapsed from "../js/helpers/isChannelCollapsed";
 
 export default {
@@ -32,11 +31,6 @@ export default {
 	props: {
 		network: Object,
 		channel: Object,
-	},
-	data() {
-		return {
-			closed: false,
-		};
 	},
 	computed: {
 		activeChannel() {
@@ -47,14 +41,6 @@ export default {
 		},
 	},
 	methods: {
-		close() {
-			this.closed = true;
-
-			socket.emit("input", {
-				target: Number(this.channel.id),
-				text: "/close",
-			});
-		},
 		getAriaLabel() {
 			const extra = [];
 

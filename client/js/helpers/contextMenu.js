@@ -139,13 +139,7 @@ export function generateChannelContextMenu($root, channel, network) {
 		type: "item",
 		class: "close",
 		action() {
-			const close = document.querySelector(
-				`.networks .chan[data-target="#chan-${channel.id}"] .close`
-			);
-
-			if (close) {
-				close.click();
-			}
+			$root.closeChannel(channel);
 		},
 	});
 

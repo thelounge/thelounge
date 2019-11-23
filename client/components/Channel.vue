@@ -44,7 +44,7 @@ export default {
 	},
 	methods: {
 		close() {
-			this.$refs.wrapper.close();
+			this.$root.closeChannel(this.channel);
 		},
 	},
 };

@@ -29,6 +29,22 @@ const vueApp = new Vue({
 		switchToChannel(channel) {
 			navigate("RoutedChat", {id: channel.id});
 		},
+		closeChannel(channel) {
+			if (
+				channel.type === "lobby" &&
+				// eslint-disable-next-line no-alert
+				!confirm(`Are you sure you want to remove ${channel.name}?`)
+			) {
+				return false;
+			}
+
+			channel.closed = true;
+
+			socket.emit("input", {
+				target: Number(channel.id),
+				text: channel.type === "lobby" ? "/quit" : "/close",
+			});
+		},
 	},
 	render(createElement) {
 		return createElement(App, {
