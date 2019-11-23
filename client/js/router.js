@@ -64,7 +64,7 @@ router.beforeEach((to, from, next) => {
 	next();
 });
 
-router.afterEach(() => {
+router.afterEach((to) => {
 	if (store.state.appLoaded) {
 		if (window.innerWidth <= constants.mobileViewportPixels) {
 			store.commit("sidebarOpen", false);
@@ -73,7 +73,10 @@ router.afterEach(() => {
 
 	if (store.state.activeChannel) {
 		const channel = store.state.activeChannel.channel;
-		store.commit("activeChannel", null);
+
+		if (to.name !== "RoutedChat") {
+			store.commit("activeChannel", null);
+		}
 
 		// When switching out of a channel, mark everything as read
 		if (channel.messages.length > 0) {
