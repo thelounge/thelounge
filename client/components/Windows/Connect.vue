@@ -39,8 +39,12 @@ export default {
 					continue;
 				}
 
+				let value = params[key];
+
 				// Param can contain multiple values in an array if its supplied more than once
-				let value = typeof params[key] === "string" ? params[key] : params[key][0];
+				if (Array.isArray(value)) {
+					value = value[0];
+				}
 
 				// Support `channels` as a compatibility alias with other clients
 				if (key === "channels") {
@@ -85,7 +89,12 @@ export default {
 				// Override server provided defaults with parameters passed in the URL if they match the data type
 				switch (typeof this.$store.state.serverConfiguration.defaults[key]) {
 					case "boolean":
-						parsedParams[key] = value === "1" || value === "true";
+						if (value === "0" || value === "false") {
+							parsedParams[key] = false;
+						} else {
+							parsedParams[key] = !!value;
+						}
+
 						break;
 					case "number":
 						parsedParams[key] = Number(value);

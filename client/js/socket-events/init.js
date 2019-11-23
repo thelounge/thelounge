@@ -4,6 +4,7 @@ import socket from "../socket";
 import storage from "../localStorage";
 import {router, switchToChannel, navigate} from "../router";
 import store from "../store";
+import parseIrcUri from "../helpers/parseIrcUri";
 
 socket.on("init", function(data) {
 	store.commit("networks", mergeNetworkData(data.networks));
@@ -157,67 +158,16 @@ function handleQueryParams() {
 
 	if (params.has("uri")) {
 		// Set default connection settings from IRC protocol links
-		const uri =
-			params.get("uri") +
-			(location.hash.startsWith("#/") ? `#${location.hash.substring(2)}` : location.hash);
+		const uri = params.get("uri");
 		const queryParams = parseIrcUri(uri);
 
 		cleanParams();
-		router.router.push({name: "Connect", query: queryParams});
+		router.push({name: "Connect", query: queryParams});
 	} else if (document.body.classList.contains("public") && document.location.search) {
 		// Set default connection settings from url params
 		const queryParams = Object.fromEntries(params.entries());
 
 		cleanParams();
-		router.router.push({name: "Connect", query: queryParams});
+		router.push({name: "Connect", query: queryParams});
 	}
-}
-
-function parseIrcUri(stringUri) {
-	const data = {};
-
-	try {
-		// https://tools.ietf.org/html/draft-butcher-irc-url-04
-		const uri = new URL(stringUri);
-
-		// Replace protocol with a "special protocol" (that's what it's called in WHATWG spec)
-		// So that the uri can be properly parsed
-		if (uri.protocol === "irc:") {
-			uri.protocol = "http:";
-
-			if (!uri.port) {
-				uri.port = 6667;
-			}
-
-			data.tls = false;
-		} else if (uri.protocol === "ircs:") {
-			uri.protocol = "https:";
-
-			if (!uri.port) {
-				uri.port = 6697;
-			}
-
-			data.tls = true;
-		} else {
-			return;
-		}
-
-		data.host = data.name = uri.hostname;
-		data.port = uri.port;
-		data.username = window.decodeURIComponent(uri.username);
-		data.password = window.decodeURIComponent(uri.password);
-
-		let channel = (uri.pathname + uri.hash).substr(1);
-		const index = channel.indexOf(",");
-
-		if (index > -1) {
-			channel = channel.substring(0, index);
-		}
-
-		data.join = channel;
-	} catch (e) {
-		// do nothing on invalid uri
-	}
-
-	return data;
 }
