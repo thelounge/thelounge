@@ -6,7 +6,7 @@
 		v-on="onHover ? {mouseover: hover} : {}"
 		@click.prevent="openContextMenu"
 		@contextmenu.prevent="openContextMenu"
-		>{{ user.mode }}{{ user.nick }}</span
+		><slot>{{ user.mode }}{{ user.nick }}</slot></span
 	>
 </template>
 

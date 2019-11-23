@@ -26,12 +26,13 @@
 				:class="['user-mode', getModeClass(mode)]"
 			>
 				<template v-if="userSearchInput.length > 0">
-					<UsernameFiltered
+					<Username
 						v-for="user in users"
 						:key="user.original.nick"
 						:on-hover="hoverUser"
 						:active="user.original === activeUser"
-						:user="user"
+						:user="user.original"
+						v-html="user.original.mode + user.string"
 					/>
 				</template>
 				<template v-else>
@@ -51,7 +52,6 @@
 <script>
 import {filter as fuzzyFilter} from "fuzzy";
 import Username from "./Username.vue";
-import UsernameFiltered from "./UsernameFiltered.vue";
 
 const modes = {
 	"~": "owner",
@@ -67,7 +67,6 @@ export default {
 	name: "ChatUserList",
 	components: {
 		Username,
-		UsernameFiltered,
 	},
 	props: {
 		channel: Object,
