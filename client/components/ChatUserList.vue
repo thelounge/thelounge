@@ -148,6 +148,7 @@ export default {
 			// Prevent propagation to stop global keybind handler from capturing pagedown/pageup
 			// and redirecting it to the message list container for scrolling
 			event.stopImmediatePropagation();
+			event.preventDefault();
 
 			let users = this.channel.users;
 
