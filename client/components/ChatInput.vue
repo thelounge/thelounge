@@ -89,6 +89,11 @@ export default {
 		channel: Object,
 	},
 	watch: {
+		"channel.id"() {
+			if (autocompletionRef) {
+				autocompletionRef.hide();
+			}
+		},
 		"channel.pendingMessage"() {
 			this.setInputSize();
 		},
