@@ -71,9 +71,8 @@ store.watch(
 	(sidebarOpen) => {
 		if (window.outerWidth > constants.mobileViewportPixels) {
 			storage.set("thelounge.state.sidebar", sidebarOpen);
+			vueApp.$emit("resize");
 		}
-
-		vueApp.$emit("resize");
 	}
 );
 

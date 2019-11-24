@@ -127,7 +127,14 @@ function initialize() {
 }
 
 function navigate(routeName, params = {}) {
-	router.push({name: routeName, params}).catch(() => {});
+	if (router.currentRoute.name) {
+		router.push({name: routeName, params}).catch(() => {});
+	} else {
+		// If current route is null, replace the history entry
+		// This prevents invalid entries from lingering in history,
+		// and then the route guard preventing proper navigation
+		router.replace({name: routeName, params}).catch(() => {});
+	}
 }
 
 function switchToChannel(channel) {
