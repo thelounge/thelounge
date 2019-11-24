@@ -10,8 +10,6 @@ describe("parseIrcUri helper", function() {
 			name: "example.com",
 			host: "example.com",
 			port: "6667",
-			username: "",
-			password: "",
 			join: "",
 		});
 	});
@@ -22,8 +20,6 @@ describe("parseIrcUri helper", function() {
 			name: "example.com",
 			host: "example.com",
 			port: "6697",
-			username: "",
-			password: "",
 			join: "",
 		});
 	});
@@ -34,8 +30,6 @@ describe("parseIrcUri helper", function() {
 			name: "example.com",
 			host: "example.com",
 			port: "1337",
-			username: "",
-			password: "",
 			join: "",
 		});
 	});
@@ -46,60 +40,7 @@ describe("parseIrcUri helper", function() {
 			name: "example.com",
 			host: "example.com",
 			port: "1337",
-			username: "",
-			password: "",
 			join: "",
-		});
-	});
-
-	it("should parse username, password and port", function() {
-		expect(parseIrcUri("ircs://user:password@example.com:1337")).to.deep.equal({
-			tls: true,
-			name: "example.com",
-			host: "example.com",
-			port: "1337",
-			username: "user",
-			password: "password",
-			join: "",
-		});
-	});
-
-	it("should parse channel from query", function() {
-		expect(parseIrcUri("ircs://example.com:1337/channel,channel2")).to.deep.equal({
-			tls: true,
-			name: "example.com",
-			host: "example.com",
-			port: "1337",
-			username: "",
-			password: "",
-			join: "channel",
-		});
-	});
-
-	it("should parse channel from hash", function() {
-		const obj = {
-			tls: true,
-			name: "example.com",
-			host: "example.com",
-			port: "1337",
-			username: "",
-			password: "",
-			join: "channel",
-		};
-
-		expect(parseIrcUri("ircs://example.com:1337#channel,channel2")).to.deep.equal(obj);
-		expect(parseIrcUri("ircs://example.com:1337/#channel,channel2")).to.deep.equal(obj);
-	});
-
-	it("accepts query over hash", function() {
-		expect(parseIrcUri("ircs://example.com:1337/channel#channel2")).to.deep.equal({
-			tls: true,
-			name: "example.com",
-			host: "example.com",
-			port: "1337",
-			username: "",
-			password: "",
-			join: "channel",
 		});
 	});
 
@@ -107,15 +48,47 @@ describe("parseIrcUri helper", function() {
 		expect(parseIrcUri("ircs://example.com:lol")).to.deep.equal({});
 	});
 
+	it("should not parse plus in port", function() {
+		expect(parseIrcUri("irc://example.com:+6697")).to.deep.equal({});
+	});
+
 	it("should not channel on empty query and hash", function() {
-		expect(parseIrcUri("irc://example.com/#")).to.deep.equal({
+		const obj = {
 			tls: false,
 			name: "example.com",
 			host: "example.com",
 			port: "6667",
-			username: "",
-			password: "",
 			join: "",
-		});
+		};
+
+		expect(parseIrcUri("irc://example.com#")).to.deep.equal(obj);
+		expect(parseIrcUri("irc://example.com/")).to.deep.equal(obj);
+		expect(parseIrcUri("irc://example.com/#")).to.deep.equal(obj);
+	});
+
+	it("should parse multiple channels", function() {
+		const obj = {
+			tls: true,
+			name: "example.com",
+			host: "example.com",
+			port: "1337",
+			join: "#channel,channel2",
+		};
+
+		expect(parseIrcUri("ircs://example.com:1337#channel,channel2")).to.deep.equal(obj);
+		expect(parseIrcUri("ircs://example.com:1337/#channel,channel2")).to.deep.equal(obj);
+
+		obj.join = "channel,channel2";
+		expect(parseIrcUri("ircs://example.com:1337/channel,channel2")).to.deep.equal(obj);
+
+		obj.join = "chan,#chan2,#chan3";
+		expect(parseIrcUri("ircs://example.com:1337/chan,#chan2,#chan3")).to.deep.equal(obj);
+
+		obj.join = "&chan,@chan2,#chan3";
+		expect(parseIrcUri("ircs://example.com:1337/&chan,@chan2,#chan3")).to.deep.equal(obj);
+
+		// URL() drops empty hash
+		obj.join = "chan";
+		expect(parseIrcUri("ircs://example.com:1337/chan#")).to.deep.equal(obj);
 	});
 });

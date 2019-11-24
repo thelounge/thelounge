@@ -35,27 +35,18 @@ export default (stringUri) => {
 
 		data.host = data.name = uri.hostname;
 		data.port = uri.port;
-		data.username = decodeURIComponent(uri.username);
-		data.password = decodeURIComponent(uri.password);
 
 		let channel = "";
 
 		if (uri.pathname.length > 1) {
-			channel = uri.pathname;
-		} else if (uri.hash.length > 1) {
-			channel = uri.hash;
+			channel = uri.pathname.substr(1); // Remove slash
 		}
 
-		if (channel) {
-			channel = channel.substr(1); // remove / or #
-
-			const index = channel.indexOf(",");
-
-			if (index > -1) {
-				channel = channel.substring(0, index);
-			}
+		if (uri.hash.length > 1) {
+			channel += uri.hash;
 		}
 
+		// We don't split channels or append # here because the connect window takes care of that
 		data.join = channel;
 	} catch (e) {
 		// do nothing on invalid uri
