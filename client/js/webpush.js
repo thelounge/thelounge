@@ -9,11 +9,12 @@ export default {togglePushSubscription};
 if ("serviceWorker" in navigator) {
 	navigator.serviceWorker.addEventListener("message", (event) => {
 		if (event.data && event.data.type === "open") {
-			const id = event.data.channel.substr(5); // remove "chan-" prefix
+			const id = parseInt(event.data.channel.substr(5), 10); // remove "chan-" prefix
+
 			const channelTarget = store.getters.findChannel(id);
 
 			if (channelTarget) {
-				switchToChannel(channelTarget);
+				switchToChannel(channelTarget.channel);
 			}
 		}
 	});

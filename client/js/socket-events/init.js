@@ -2,7 +2,7 @@
 
 import socket from "../socket";
 import storage from "../localStorage";
-import {router, switchToChannel, navigate} from "../router";
+import {router, switchToChannel, navigate, initialize as routerInitialize} from "../router";
 import store from "../store";
 import parseIrcUri from "../helpers/parseIrcUri";
 
@@ -16,6 +16,10 @@ socket.on("init", function(data) {
 	}
 
 	if (!store.state.appLoaded) {
+		// Routes are initialized after networks data is merged
+		// so the route guard for channels works correctly on page load
+		routerInitialize();
+
 		store.commit("appLoaded");
 
 		if (window.g_TheLoungeRemoveLoading) {

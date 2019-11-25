@@ -3,7 +3,6 @@
 import socket from "../socket";
 import upload from "../upload";
 import store from "../store";
-import {initialize as routerInitialize} from "../router";
 
 socket.once("configuration", function(data) {
 	store.commit("serverConfiguration", data);
@@ -16,8 +15,6 @@ socket.once("configuration", function(data) {
 	if (data.fileUpload) {
 		upload.initialize();
 	}
-
-	routerInitialize();
 
 	// If localStorage contains a theme that does not exist on this server, switch
 	// back to its default theme.
