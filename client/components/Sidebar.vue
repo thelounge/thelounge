@@ -12,6 +12,18 @@
 					class="logo-inverted"
 					alt="The Lounge"
 				/>
+				<span
+					v-if="isDevelopment"
+					title="The Lounge has been built in development mode"
+					:style="{
+						backgroundColor: '#ff9e18',
+						color: '#000',
+						padding: '2px',
+						borderRadius: '4px',
+						fontSize: '12px',
+					}"
+					>DEVELOPER</span
+				>
 			</div>
 			<NetworkList />
 		</div>
@@ -65,6 +77,11 @@ export default {
 	},
 	props: {
 		overlay: HTMLElement,
+	},
+	data() {
+		return {
+			isDevelopment: process.env.NODE_ENV !== "production",
+		};
 	},
 	mounted() {
 		this.touchStartPos = null;
