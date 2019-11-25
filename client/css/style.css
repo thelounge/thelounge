@@ -1467,6 +1467,10 @@ background on hover (unless active) */
 	transform: rotate(90deg);
 }
 
+#chat .preview {
+	display: flex; /* Fix odd margin added by inline-flex in .toggle-content */
+}
+
 #chat .toggle-content {
 	background: #f6f6f6;
 	border-radius: 5px;

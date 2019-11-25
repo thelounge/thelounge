@@ -1,5 +1,11 @@
 <template>
-	<div v-if="link.shown" v-show="link.canDisplay" ref="container" class="preview" dir="ltr">
+	<div
+		v-if="link.shown"
+		v-show="link.sourceLoaded || link.type === 'link'"
+		ref="container"
+		class="preview"
+		dir="ltr"
+	>
 		<div
 			ref="content"
 			:class="['toggle-content', 'toggle-type-' + link.type, {opened: isContentShown}]"
@@ -7,6 +13,7 @@
 			<template v-if="link.type === 'link'">
 				<a
 					v-if="link.thumb"
+					v-show="link.sourceLoaded"
 					:href="link.link"
 					class="toggle-thumbnail"
 					target="_blank"
@@ -62,16 +69,32 @@
 					rel="noopener"
 					@click="onThumbnailClick"
 				>
-					<img :src="link.thumb" decoding="async" alt="" @load="onPreviewReady" />
+					<img
+						v-show="link.sourceLoaded"
+						:src="link.thumb"
+						decoding="async"
+						alt=""
+						@load="onPreviewReady"
+					/>
 				</a>
 			</template>
 			<template v-else-if="link.type === 'video'">
-				<video preload="metadata" controls @canplay="onPreviewReady">
+				<video
+					v-show="link.sourceLoaded"
+					preload="metadata"
+					controls
+					@canplay="onPreviewReady"
+				>
 					<source :src="link.media" :type="link.mediaType" />
 				</video>
 			</template>
 			<template v-else-if="link.type === 'audio'">
-				<audio controls preload="metadata" @canplay="onPreviewReady">
+				<audio
+					v-show="link.sourceLoaded"
+					controls
+					preload="metadata"
+					@canplay="onPreviewReady"
+				>
 					<source :src="link.media" :type="link.mediaType" />
 				</audio>
 			</template>
@@ -126,6 +149,10 @@ export default {
 			return this.isContentShown ? "Less" : "More";
 		},
 		imageMaxSize() {
+			if (!this.link.maxSize) {
+				return;
+			}
+
 			return friendlysize(this.link.maxSize);
 		},
 	},
@@ -149,7 +176,7 @@ export default {
 	destroyed() {
 		// Let this preview go through load/canplay events again,
 		// Otherwise the browser can cause a resize on video elements
-		this.link.canDisplay = false;
+		this.link.sourceLoaded = false;
 	},
 	methods: {
 		onPreviewUpdate() {
@@ -158,26 +185,25 @@ export default {
 				return;
 			}
 
-			// Error don't have any media to render
+			// Error does not have any media to render
 			if (this.link.type === "error") {
 				this.onPreviewReady();
 			}
 
 			// If link doesn't have a thumbnail, render it
-			if (this.link.type === "link" && !this.link.thumb) {
-				this.onPreviewReady();
+			if (this.link.type === "link") {
+				this.handleResize();
+				this.keepScrollPosition();
 			}
 		},
 		onPreviewReady() {
-			this.$set(this.link, "canDisplay", true);
+			this.$set(this.link, "sourceLoaded", true);
 
 			this.keepScrollPosition();
 
-			if (this.link.type !== "link") {
-				return;
+			if (this.link.type === "link") {
+				this.handleResize();
 			}
-
-			this.handleResize();
 		},
 		onThumbnailError() {
 			// If thumbnail fails to load, hide it and show the preview without it
