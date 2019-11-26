@@ -1,93 +1,105 @@
 "use strict";
 
-const Vue = require("vue").default;
-const App = require("../components/App.vue").default;
-const roundBadgeNumber = require("./libs/handlebars/roundBadgeNumber");
-const localetime = require("./libs/handlebars/localetime");
-const friendlysize = require("./libs/handlebars/friendlysize");
-const colorClass = require("./libs/handlebars/colorClass");
+import Vue from "vue";
+import store from "./store";
+import App from "../components/App.vue";
+import localetime from "./helpers/localetime";
+import storage from "./localStorage";
+import {router, navigate} from "./router";
+import constants from "./constants";
+import socket from "./socket";
 
 Vue.filter("localetime", localetime);
-Vue.filter("friendlysize", friendlysize);
-Vue.filter("colorClass", colorClass);
-Vue.filter("roundBadgeNumber", roundBadgeNumber);
+
+import "./socket-events";
+import "./webpush";
+import "./keybinds";
+
+const favicon = document.getElementById("favicon");
+const faviconNormal = favicon.getAttribute("href");
+const faviconAlerted = favicon.dataset.other;
 
 const vueApp = new Vue({
 	el: "#viewport",
-	data: {
-		activeChannel: null,
-		appName: document.title,
-		currentUserVisibleError: null,
-		initialized: false,
-		isAutoCompleting: false,
-		isConnected: false,
-		isFileUploadEnabled: false,
-		isNotified: false,
-		networks: [],
-		settings: {
-			syncSettings: false,
-			advanced: false,
-			autocomplete: true,
-			nickPostfix: "",
-			coloredNicks: true,
-			desktopNotifications: false,
-			highlights: "",
-			links: true,
-			motd: true,
-			notification: true,
-			notifyAllMessages: false,
-			showSeconds: false,
-			statusMessages: "condensed",
-			theme: document.getElementById("theme").dataset.serverTheme,
-			media: true,
-			userStyles: "",
-		},
-	},
+	router,
 	mounted() {
-		Vue.nextTick(() => window.vueMounted());
+		socket.open();
+	},
+	methods: {
+		switchToChannel(channel) {
+			navigate("RoutedChat", {id: channel.id});
+		},
+		closeChannel(channel) {
+			if (channel.type === "lobby") {
+				const el = document.querySelector(
+					`#sidebar .chan[aria-controls="#chan-${channel.id}"]`
+				);
+				const rect = el.getBoundingClientRect();
+				const event = new MouseEvent("click", {
+					view: window,
+					clientX: rect.x + 10,
+					clientY: rect.y,
+				});
+
+				this.$root.$emit("contextmenu:removenetwork", {
+					event: event,
+					lobby: channel,
+				});
+
+				return;
+			}
+
+			channel.closed = true;
+
+			socket.emit("input", {
+				target: Number(channel.id),
+				text: "/close",
+			});
+		},
 	},
 	render(createElement) {
 		return createElement(App, {
+			ref: "app",
 			props: this,
 		});
 	},
+	store,
 });
 
-Vue.config.errorHandler = function(e) {
-	console.error(e); // eslint-disable-line
-	vueApp.currentUserVisibleError = `Vue error: ${e.message}. Please check devtools and report it in #thelounge`;
-};
-
-function findChannel(id) {
-	for (const network of vueApp.networks) {
-		for (const channel of network.channels) {
-			if (channel.id === id) {
-				return {network, channel};
-			}
+store.watch(
+	(state) => state.sidebarOpen,
+	(sidebarOpen) => {
+		if (window.outerWidth > constants.mobileViewportPixels) {
+			storage.set("thelounge.state.sidebar", sidebarOpen);
+			vueApp.$emit("resize");
 		}
 	}
+);
 
-	return null;
-}
-
-function initChannel(channel) {
-	channel.pendingMessage = "";
-	channel.inputHistoryPosition = 0;
-	channel.inputHistory = [""];
-	channel.historyLoading = false;
-	channel.scrolledToBottom = true;
-	channel.editTopic = false;
-
-	channel.moreHistoryAvailable = channel.totalMessages > channel.messages.length;
-	delete channel.totalMessages;
-
-	if (channel.type === "channel") {
-		channel.usersOutdated = true;
+store.watch(
+	(state) => state.userlistOpen,
+	(userlistOpen) => {
+		storage.set("thelounge.state.userlist", userlistOpen);
+		vueApp.$emit("resize");
 	}
-}
+);
 
-module.exports = {
-	vueApp,
-	findChannel,
-	initChannel,
+store.watch(
+	(_, getters) => getters.title,
+	(title) => {
+		document.title = title;
+	}
+);
+
+// Toggles the favicon to red when there are unread notifications
+store.watch(
+	(_, getters) => getters.highlightCount,
+	(highlightCount) => {
+		favicon.setAttribute("href", highlightCount > 0 ? faviconAlerted : faviconNormal);
+	}
+);
+
+Vue.config.errorHandler = function(e) {
+	store.commit("currentUserVisibleError", `Vue error: ${e.message}`);
+	console.error(e); // eslint-disable-line
 };

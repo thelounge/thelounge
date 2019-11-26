@@ -1,10 +1,12 @@
 "use strict";
 
-const socket = require("../socket");
-const {vueApp, findChannel} = require("../vue");
+import Vue from "vue";
+
+import socket from "../socket";
+import store from "../store";
 
 socket.on("msg:preview", function(data) {
-	const {channel} = findChannel(data.chan);
+	const {channel} = store.getters.findChannel(data.chan);
 	const message = channel.messages.find((m) => m.id === data.id);
 
 	if (!message) {
@@ -14,6 +16,6 @@ socket.on("msg:preview", function(data) {
 	const previewIndex = message.previews.findIndex((m) => m.link === data.preview.link);
 
 	if (previewIndex > -1) {
-		vueApp.$set(message.previews, previewIndex, data.preview);
+		Vue.set(message.previews, previewIndex, data.preview);
 	}
 });

@@ -3,7 +3,7 @@
 		<div :class="['show-more', {show: channel.moreHistoryAvailable}]">
 			<button
 				ref="loadMoreButton"
-				:disabled="channel.historyLoading || !$root.isConnected"
+				:disabled="channel.historyLoading || !$store.state.isConnected"
 				class="btn"
 				@click="onShowMoreClick"
 			>
@@ -42,6 +42,7 @@
 				<Message
 					v-else
 					:key="message.id"
+					:channel="channel"
 					:network="network"
 					:message="message"
 					:keep-scroll-position="keepScrollPosition"
@@ -55,8 +56,8 @@
 <script>
 require("intersection-observer");
 
-const constants = require("../js/constants");
-const clipboard = require("../js/clipboard");
+import constants from "../js/constants";
+import clipboard from "../js/clipboard";
 import socket from "../js/socket";
 import Message from "./Message.vue";
 import MessageCondensed from "./MessageCondensed.vue";
@@ -80,14 +81,14 @@ export default {
 			}
 
 			// If actions are hidden, just return a message list with them excluded
-			if (this.$root.settings.statusMessages === "hidden") {
+			if (this.$store.state.settings.statusMessages === "hidden") {
 				return this.channel.messages.filter(
 					(message) => !constants.condensedTypes.includes(message.type)
 				);
 			}
 
 			// If actions are not condensed, just return raw message list
-			if (this.$root.settings.statusMessages !== "condensed") {
+			if (this.$store.state.settings.statusMessages !== "condensed") {
 				return this.channel.messages;
 			}
 
@@ -218,8 +219,6 @@ export default {
 			this.keepScrollPosition();
 
 			// Tell the server we're toggling so it remembers at page reload
-			// TODO Avoid sending many single events when using `/collapse` or `/expand`
-			// See https://github.com/thelounge/thelounge/issues/1377
 			socket.emit("msg:preview:toggle", {
 				target: this.channel.id,
 				msgId: message.id,
@@ -228,7 +227,7 @@ export default {
 			});
 		},
 		onShowMoreClick() {
-			if (!this.$root.isConnected) {
+			if (!this.$store.state.isConnected) {
 				return;
 			}
 

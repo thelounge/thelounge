@@ -227,21 +227,7 @@ describe("Network", function() {
 
 			expect(clone)
 				.to.be.an("object")
-				.that.has.all.keys(
-					"channels",
-					"commands",
-					"host",
-					"name",
-					"port",
-					"realname",
-					"serverOptions",
-					"status",
-					"tls",
-					"userDisconnected",
-					"rejectUnauthorized",
-					"uuid",
-					"username"
-				);
+				.that.has.all.keys("channels", "status", "nick", "name", "serverOptions", "uuid");
 
 			expect(clone.status)
 				.to.be.an("object")

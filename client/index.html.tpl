@@ -47,27 +47,22 @@
 	<meta name="theme-color" content="<%- themeColor %>">
 
 	</head>
-	<body class="signed-out<%- public ? " public" : "" %>" data-transports="<%- JSON.stringify(transports) %>">
+	<body class="<%- public ? " public" : "" %>" data-transports="<%- JSON.stringify(transports) %>">
+		<div id="viewport"></div>
 		<div id="loading">
 			<div class="window">
 				<div id="loading-status-container">
 					<img src="img/logo-vertical-transparent-bg.svg" class="logo" alt="The Lounge" width="256" height="170">
 					<img src="img/logo-vertical-transparent-bg-inverted.svg" class="logo-inverted" alt="The Lounge" width="256" height="170">
-					<p id="loading-page-message"><a href="https://enable-javascript.com/" target="_blank" rel="noopener">Your JavaScript must be enabled.</a></p>
+					<p id="loading-page-message">The Lounge requires a modern browser with JavaScript enabled.</p>
 				</div>
 				<div id="loading-reload-container">
 					<p id="loading-slow">This is taking longer than it should, there might be connectivity issues.</p>
 					<button id="loading-reload" class="btn">Reload page</button>
 				</div>
-				<script async src="js/loading-error-handlers.js?v=<%- cacheBust %>"></script>
 			</div>
 		</div>
-		<div id="viewport"></div>
-
-		<div id="context-menu-container"></div>
-		<div id="image-viewer"></div>
-		<div id="upload-overlay"></div>
-
+		<script src="js/loading-error-handlers.js?v=<%- cacheBust %>"></script>
 		<script src="js/bundle.vendor.js?v=<%- cacheBust %>"></script>
 		<script src="js/bundle.js?v=<%- cacheBust %>"></script>
 	</body>

@@ -1,95 +1,44 @@
 <template>
-	<div id="viewport" role="tablist">
-		<aside id="sidebar">
-			<div class="scrollable-area">
-				<div class="logo-container">
-					<img
-						:src="`img/logo-${isPublic() ? 'horizontal-' : ''}transparent-bg.svg`"
-						class="logo"
-						alt="The Lounge"
-					/>
-					<img
-						:src="
-							`img/logo-${isPublic() ? 'horizontal-' : ''}transparent-bg-inverted.svg`
-						"
-						class="logo-inverted"
-						alt="The Lounge"
-					/>
-				</div>
-				<NetworkList :networks="networks" :active-channel="activeChannel" />
-			</div>
-			<footer id="footer">
-				<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Sign in"
-					><button
-						class="icon sign-in"
-						data-target="#sign-in"
-						aria-label="Sign in"
-						role="tab"
-						aria-controls="sign-in"
-						aria-selected="false"
-				/></span>
-				<span
-					class="tooltipped tooltipped-n tooltipped-no-touch"
-					aria-label="Connect to network"
-					><button
-						class="icon connect"
-						data-target="#connect"
-						aria-label="Connect to network"
-						role="tab"
-						aria-controls="connect"
-						aria-selected="false"
-				/></span>
-				<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Settings"
-					><button
-						class="icon settings"
-						data-target="#settings"
-						aria-label="Settings"
-						role="tab"
-						aria-controls="settings"
-						aria-selected="false"
-				/></span>
-				<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Help"
-					><button
-						class="icon help"
-						data-target="#help"
-						aria-label="Help"
-						role="tab"
-						aria-controls="help"
-						aria-selected="false"
-				/></span>
-			</footer>
-		</aside>
-		<div id="sidebar-overlay" />
+	<div id="viewport" :class="viewportClasses" role="tablist">
+		<Sidebar v-if="$store.state.appLoaded" :overlay="$refs.overlay" />
+		<div id="sidebar-overlay" ref="overlay" @click="$store.commit('sidebarOpen', false)" />
 		<article id="windows">
-			<Chat
-				v-if="activeChannel"
-				:network="activeChannel.network"
-				:channel="activeChannel.channel"
-			/>
-			<div id="sign-in" class="window" role="tabpanel" aria-label="Sign-in" />
-			<div id="connect" class="window" role="tabpanel" aria-label="Connect" />
-			<div id="settings" class="window" role="tabpanel" aria-label="Settings" />
-			<div id="help" class="window" role="tabpanel" aria-label="Help" />
-			<div id="changelog" class="window" aria-label="Changelog" />
+			<router-view ref="window"></router-view>
 		</article>
+		<ImageViewer ref="imageViewer" />
+		<ContextMenu ref="contextMenu" />
+		<div id="upload-overlay"></div>
 	</div>
 </template>
 
 <script>
-const throttle = require("lodash/throttle");
+import throttle from "lodash/throttle";
+import constants from "../js/constants";
+import storage from "../js/localStorage";
 
-import NetworkList from "./NetworkList.vue";
-import Chat from "./Chat.vue";
+import Sidebar from "./Sidebar.vue";
+import ImageViewer from "./ImageViewer.vue";
+import ContextMenu from "./ContextMenu.vue";
 
 export default {
 	name: "App",
 	components: {
-		NetworkList,
-		Chat,
+		Sidebar,
+		ImageViewer,
+		ContextMenu,
 	},
-	props: {
-		activeChannel: Object,
-		networks: Array,
+	computed: {
+		viewportClasses() {
+			return {
+				notified: this.$store.getters.highlightCount > 0,
+				"menu-open": this.$store.state.appLoaded && this.$store.state.sidebarOpen,
+				"menu-dragging": this.$store.state.sidebarDragging,
+				"userlist-open": this.$store.state.userlistOpen,
+			};
+		},
+	},
+	created() {
+		this.prepareOpenStates();
 	},
 	mounted() {
 		// Make a single throttled resize listener available to all components
@@ -113,13 +62,31 @@ export default {
 		clearTimeout(this.dayChangeTimeout);
 	},
 	methods: {
-		isPublic: () => document.body.classList.contains("public"),
 		msUntilNextDay() {
 			// Compute how many milliseconds are remaining until the next day starts
 			const today = new Date();
 			const tommorow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
 
 			return tommorow - today;
+		},
+		prepareOpenStates() {
+			const viewportWidth = window.outerWidth;
+			let isUserlistOpen = storage.get("thelounge.state.userlist");
+
+			if (viewportWidth > constants.mobileViewportPixels) {
+				this.$store.commit(
+					"sidebarOpen",
+					storage.get("thelounge.state.sidebar") !== "false"
+				);
+			}
+
+			// If The Lounge is opened on a small screen (less than 1024px), and we don't have stored
+			// user list state, close it by default
+			if (viewportWidth >= 1024 && isUserlistOpen !== "true" && isUserlistOpen !== "false") {
+				isUserlistOpen = "true";
+			}
+
+			this.$store.commit("userlistOpen", isUserlistOpen === "true");
 		},
 	},
 };

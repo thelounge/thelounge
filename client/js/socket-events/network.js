@@ -1,39 +1,32 @@
 "use strict";
 
-const $ = require("jquery");
-const socket = require("../socket");
-const templates = require("../../views");
-const sidebar = $("#sidebar");
-const utils = require("../utils");
-const {vueApp, initChannel, findChannel} = require("../vue");
+import Vue from "vue";
+
+import socket from "../socket";
+import store from "../store";
+import {switchToChannel} from "../router";
 
 socket.on("network", function(data) {
 	const network = data.networks[0];
 
 	network.isJoinChannelShown = false;
 	network.isCollapsed = false;
-	network.channels.forEach(initChannel);
+	network.channels.forEach(store.getters.initChannel);
 
-	vueApp.networks.push(network);
-
-	vueApp.$nextTick(() => {
-		sidebar
-			.find(".chan")
-			.last()
-			.trigger("click");
-	});
-
-	$("#connect")
-		.find(".btn")
-		.prop("disabled", false);
+	store.commit("networks", [...store.state.networks, network]);
+	switchToChannel(network.channels[0]);
 });
 
 socket.on("network:options", function(data) {
-	vueApp.networks.find((n) => n.uuid === data.network).serverOptions = data.serverOptions;
+	const network = store.getters.findNetwork(data.network);
+
+	if (network) {
+		network.serverOptions = data.serverOptions;
+	}
 });
 
 socket.on("network:status", function(data) {
-	const network = vueApp.networks.find((n) => n.uuid === data.network);
+	const network = store.getters.findNetwork(data.network);
 
 	if (!network) {
 		return;
@@ -51,7 +44,7 @@ socket.on("network:status", function(data) {
 });
 
 socket.on("channel:state", function(data) {
-	const channel = findChannel(data.chan);
+	const channel = store.getters.findChannel(data.chan);
 
 	if (channel) {
 		channel.channel.state = data.state;
@@ -59,22 +52,13 @@ socket.on("channel:state", function(data) {
 });
 
 socket.on("network:info", function(data) {
-	$("#connect")
-		.html(templates.windows.connect(data))
-		.find("form")
-		.on("submit", function() {
-			const uuid = $(this)
-				.find("input[name=uuid]")
-				.val();
-			const newName = $(this)
-				.find("#connect\\:name")
-				.val();
+	const network = store.getters.findNetwork(data.uuid);
 
-			const network = vueApp.networks.find((n) => n.uuid === uuid);
-			network.name = network.channels[0].name = newName;
+	if (!network) {
+		return;
+	}
 
-			sidebar.find(`.network[data-uuid="${uuid}"] .chan.lobby .name`).click();
-		});
-
-	utils.togglePasswordField("#connect .reveal-password");
+	for (const key in data) {
+		Vue.set(network, key, data[key]);
+	}
 });

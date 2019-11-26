@@ -278,6 +278,7 @@ kbd {
 #help .report-issue-link::before,
 #image-viewer .previous-image-btn::before,
 #image-viewer .next-image-btn::before,
+#image-viewer .open-btn::before,
 #sidebar .not-secure-icon::before,
 #sidebar .not-connected-icon::before,
 #sidebar .parted-channel-icon::before,
@@ -323,7 +324,6 @@ kbd {
 
 #sidebar .chan.special::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
 
-#footer .sign-in::before { content: "\f023"; /* http://fontawesome.io/icon/lock/ */ }
 #footer .connect::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
 #footer .settings::before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
 #footer .help::before { content: "\f059"; /* http://fontawesome.io/icon/question/ */ }
@@ -477,6 +477,10 @@ kbd {
 	content: "\f105"; /* http://fontawesome.io/icon/angle-right/ */
 }
 
+#image-viewer .open-btn::before {
+	content: "\f35d"; /* https://fontawesome.com/icons/external-link-alt?style=solid */
+}
+
 /* End icons */
 
 #viewport {
@@ -559,6 +563,7 @@ kbd {
 	display: none;
 	flex-direction: column;
 	width: 220px;
+	max-height: 100%;
 	will-change: transform;
 }
 
@@ -848,26 +853,6 @@ background on hover (unless active) */
 	border-radius: 5px;
 }
 
-.signed-out #footer .sign-in {
-	display: inline-block;
-}
-
-.signed-out #footer .connect {
-	display: none;
-}
-
-.public #footer .sign-in {
-	display: none;
-}
-
-#footer .sign-in {
-	display: none;
-}
-
-.signed-out #sidebar {
-	display: none; /* Hide the sidebar when user is signed out */
-}
-
 #windows li,
 #windows p,
 #windows label,
@@ -908,7 +893,8 @@ background on hover (unless active) */
 
 .window {
 	background: var(--window-bg-color);
-	display: none;
+	display: flex;
+	flex-direction: column;
 	overflow-y: auto;
 	height: 100%;
 	scrollbar-width: thin;
@@ -947,11 +933,6 @@ background on hover (unless active) */
 	color: var(--window-heading-color);
 	font-size: 18px;
 	margin: 20px 0 10px;
-}
-
-#windows .window.active {
-	display: flex;
-	flex-direction: column;
 }
 
 #windows .header {
@@ -1253,7 +1234,7 @@ background on hover (unless active) */
 }
 
 #chat .date-marker-text::before {
-	content: attr(data-label);
+	content: attr(aria-label);
 	background-color: var(--window-bg-color);
 	color: var(--date-marker-color);
 	padding: 0 10px;
@@ -1484,6 +1465,10 @@ background on hover (unless active) */
 #chat .toggle-button.opened, /* Thumbnail toggle */
 #chat .msg.condensed:not(.closed) .toggle-button { /* Expanded status message toggle */
 	transform: rotate(90deg);
+}
+
+#chat .preview {
+	display: flex; /* Fix odd margin added by inline-flex in .toggle-content */
 }
 
 #chat .toggle-content {
@@ -1749,7 +1734,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #sign-in .error {
 	color: #e74c3c;
-	display: none; /* This message gets displayed on error only */
 	margin-top: 1em;
 	width: 100%;
 }
@@ -1780,8 +1764,33 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-top: 30px;
 }
 
-#settings .sync-warning-base {
-	display: none;
+#settings .settings-sync-panel {
+	padding: 10px;
+	margin-bottom: 16px;
+	border-radius: 2px;
+	background-color: #d9edf7;
+	color: #31708f;
+}
+
+#settings .settings-sync-panel p:last-child {
+	margin-bottom: 0;
+}
+
+#settings .settings-sync-panel .btn {
+	color: #007bff;
+	border-color: #007bff;
+	margin-bottom: 0;
+}
+
+#settings .settings-sync-panel .btn:hover,
+#settings .settings-sync-panel .btn:focus {
+	background-color: #007bff;
+	color: #fff;
+}
+
+#settings .settings-sync-panel .btn:active,
+#settings .settings-sync-panel .btn:focus {
+	box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
 }
 
 #settings .opt {
@@ -1878,7 +1887,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	content: "\f00c"; /* https://fontawesome.com/icons/check?style=solid */
 }
 
-.password-container .reveal-password.visible span::before {
+.password-container .reveal-password-visible span::before {
 	content: "\f070"; /* https://fontawesome.com/icons/eye-slash?style=solid */
 	color: #ff4136;
 }
@@ -1901,15 +1910,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #help .help-item .description p {
 	margin-bottom: 0;
-}
-
-.is-apple #help .key-all,
-#help .key-apple {
-	display: none;
-}
-
-.is-apple #help .key-apple {
-	display: inline-block;
 }
 
 .whois {
@@ -2001,11 +2001,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #version-checker.up-to-date {
 	background-color: #dff0d8;
 	color: #3c763d;
-}
-
-#version-checker.up-to-date #check-now {
-	/* "Check now" button is hidden until data expires */
-	display: none;
 }
 
 #version-checker.up-to-date::before {
@@ -2101,7 +2096,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #context-menu-container {
-	display: none;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -2123,6 +2117,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
 	border: 1px solid rgba(0, 0, 0, 0.15);
 	border-radius: 5px;
+	outline: 0;
 }
 
 .context-menu-divider {
@@ -2142,17 +2137,16 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	line-height: 1.4;
 	transition: background-color 0.2s;
 	border-radius: 3px;
+	white-space: nowrap;
 }
 
-.context-menu-item:focus,
+.context-menu-item.active,
 .textcomplete-item:focus,
-.context-menu-item:hover,
 .textcomplete-item:hover,
 .textcomplete-menu .active,
 #chat .userlist .user.active {
 	background-color: rgba(0, 0, 0, 0.1);
 	transition: none;
-	outline: 0;
 }
 
 .context-menu-item::before,
@@ -2625,6 +2619,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #upload-overlay,
 #image-viewer,
+#image-viewer .open-btn,
 #image-viewer .close-btn {
 	/* Vertically and horizontally center stuff */
 	display: flex;
@@ -2645,6 +2640,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	opacity: 0;
 	transition: opacity 0.2s, visibility 0.2s;
 	z-index: 999;
+	user-select: none;
 }
 
 #image-viewer.opened {
@@ -2658,6 +2654,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #image-viewer .close-btn,
+#image-viewer .open-btn,
 #image-viewer .previous-image-btn,
 #image-viewer .next-image-btn {
 	position: fixed;
@@ -2677,6 +2674,14 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #image-viewer .close-btn::before {
 	content: "×";
+}
+
+#image-viewer .open-btn {
+	right: 0;
+	bottom: 0;
+	top: auto;
+	height: 2em;
+	z-index: 1002;
 }
 
 #image-viewer .previous-image-btn,
@@ -2699,19 +2704,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	opacity: 1;
 }
 
-#image-viewer .image-link {
-	margin: 10px;
-}
-
-#image-viewer .image-link:hover {
-	opacity: 1;
-}
-
-#image-viewer .image-link img {
-	max-width: 100%;
-
-	/* Top/Bottom margins + button height + image/button margin */
-	max-height: calc(100vh - 2 * 10px - 37px - 10px);
+#image-viewer > img {
+	cursor: grab;
+	position: absolute;
+	transform-origin: 50% 50%;
 
 	/* Checkered background for transparent images */
 	background-position: 0 0, 10px 10px;
@@ -2719,10 +2715,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	background-image:
 		linear-gradient(45deg, #eee 25%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 75%, #eee 75%, #eee 100%),
 		linear-gradient(45deg, #eee 25%, #fff 25%, #fff 75%, #eee 75%, #eee 100%);
-}
-
-#image-viewer .open-btn {
-	margin: 0 auto 10px;
 }
 
 /* Correctly handle multiple successive whitespace characters.

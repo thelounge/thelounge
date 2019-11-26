@@ -1,26 +1,24 @@
 "use strict";
 
-const $ = require("jquery");
-const socket = require("../socket");
-const sidebar = $("#sidebar");
-const {vueApp} = require("../vue");
+import socket from "../socket";
+import {switchToChannel, navigate} from "../router";
+import store from "../store";
 
 socket.on("quit", function(data) {
-	vueApp.networks.splice(
-		vueApp.networks.findIndex((n) => n.uuid === data.network),
-		1
-	);
+	// If we're in a channel, and it's on the network that is being removed,
+	// then open another channel window
+	const isCurrentNetworkBeingRemoved =
+		store.state.activeChannel && store.state.activeChannel.network.uuid === data.network;
 
-	vueApp.$nextTick(() => {
-		const chan = sidebar.find(".chan");
+	store.commit("removeNetwork", data.network);
 
-		if (chan.length === 0) {
-			// Open the connect window
-			$("#footer .connect").trigger("click", {
-				pushState: false,
-			});
-		} else {
-			chan.eq(0).trigger("click");
-		}
-	});
+	if (!isCurrentNetworkBeingRemoved) {
+		return;
+	}
+
+	if (store.state.networks.length > 0) {
+		switchToChannel(store.state.networks[0].channels[0]);
+	} else {
+		navigate("Connect");
+	}
 });

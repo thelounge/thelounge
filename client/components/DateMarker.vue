@@ -1,13 +1,16 @@
 <template>
 	<div :aria-label="localeDate" class="date-marker-container tooltipped tooltipped-s">
 		<div class="date-marker">
-			<span :data-label="friendlyDate()" class="date-marker-text" />
+			<span :aria-label="friendlyDate()" class="date-marker-text" />
 		</div>
 	</div>
 </template>
 
 <script>
-const moment = require("moment");
+import dayjs from "dayjs";
+import calendar from "dayjs/plugin/calendar";
+
+dayjs.extend(calendar);
 
 export default {
 	name: "DateMarker",
@@ -16,7 +19,7 @@ export default {
 	},
 	computed: {
 		localeDate() {
-			return moment(this.message.time).format("D MMMM YYYY");
+			return dayjs(this.message.time).format("D MMMM YYYY");
 		},
 	},
 	mounted() {
@@ -40,7 +43,7 @@ export default {
 		},
 		friendlyDate() {
 			// See http://momentjs.com/docs/#/displaying/calendar-time/
-			return moment(this.message.time).calendar(null, {
+			return dayjs(this.message.time).calendar(null, {
 				sameDay: "[Today]",
 				lastDay: "[Yesterday]",
 				lastWeek: "D MMMM YYYY",

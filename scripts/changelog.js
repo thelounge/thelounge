@@ -50,7 +50,7 @@ const colors = require("chalk");
 const fs = require("fs");
 const path = require("path");
 const GraphQLClient = require("graphql-request").GraphQLClient;
-const moment = require("moment");
+const dayjs = require("dayjs");
 const semver = require("semver");
 const util = require("util");
 const log = require("../src/log");
@@ -836,7 +836,7 @@ async function generateChangelogEntry(changelog, targetVersion) {
 	}
 
 	items.version = targetVersion;
-	items.date = moment().format("YYYY-MM-DD");
+	items.date = dayjs().format("YYYY-MM-DD");
 	items.fullChangelogUrl = fullChangelogUrl(previousVersion, targetVersion);
 
 	return {

@@ -10,21 +10,19 @@ const Helper = require("../helper");
 module.exports = Network;
 
 /**
- * @type {Object} List of keys which should not be sent to the client.
+ * @type {Object} List of keys which should be sent to the client by default.
  */
-const filteredFromClient = {
-	awayMessage: true,
-	chanCache: true,
-	highlightRegex: true,
-	irc: true,
-	password: true,
-	ignoreList: true,
-	keepNick: true,
+const fieldsForClient = {
+	uuid: true,
+	name: true,
+	nick: true,
+	serverOptions: true,
 };
 
 function Network(attr) {
 	_.defaults(this, attr, {
 		name: "",
+		nick: "",
 		host: "",
 		port: 6667,
 		tls: false,
@@ -294,7 +292,7 @@ Network.prototype.getFilteredClone = function(lastActiveChannel, lastMessage) {
 			newNetwork[prop] = this[prop].map((channel) =>
 				channel.getFilteredClone(lastActiveChannel, lastMessage)
 			);
-		} else if (!filteredFromClient[prop]) {
+		} else if (fieldsForClient[prop]) {
 			// Some properties that are not useful for the client are skipped
 			newNetwork[prop] = this[prop];
 		}
@@ -350,6 +348,32 @@ Network.prototype.addChannel = function(newChan) {
 
 	this.channels.splice(index, 0, newChan);
 	return index;
+};
+
+Network.prototype.exportForEdit = function() {
+	let fieldsToReturn;
+
+	if (Helper.config.displayNetwork) {
+		// Return fields required to edit a network
+		fieldsToReturn = [
+			"uuid",
+			"nick",
+			"name",
+			"host",
+			"port",
+			"tls",
+			"rejectUnauthorized",
+			"password",
+			"username",
+			"realname",
+			"commands",
+		];
+	} else {
+		// Same fields as in getClientConfiguration when network is hidden
+		fieldsToReturn = ["name", "nick", "username", "password", "realname"];
+	}
+
+	return _.pick(this, fieldsToReturn);
 };
 
 Network.prototype.export = function() {

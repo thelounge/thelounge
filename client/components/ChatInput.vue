@@ -8,12 +8,11 @@
 			:value="channel.pendingMessage"
 			:placeholder="getInputPlaceholder(channel)"
 			:aria-label="getInputPlaceholder(channel)"
-			class="mousetrap"
 			@input="setPendingMessage"
 			@keypress.enter.exact.prevent="onSubmit"
 		/>
 		<span
-			v-if="this.$root.isFileUploadEnabled"
+			v-if="$store.state.serverConfiguration.fileUpload"
 			id="upload-tooltip"
 			class="tooltipped tooltipped-w tooltipped-no-touch"
 			aria-label="Upload file"
@@ -30,7 +29,7 @@
 				id="upload"
 				type="button"
 				aria-label="Upload file"
-				:disabled="!this.$root.isConnected"
+				:disabled="!$store.state.isConnected"
 			/>
 		</span>
 		<span
@@ -42,18 +41,19 @@
 				id="submit"
 				type="submit"
 				aria-label="Send message"
-				:disabled="!this.$root.isConnected"
+				:disabled="!$store.state.isConnected"
 			/>
 		</span>
 	</form>
 </template>
 
 <script>
-const commands = require("../js/commands/index");
-const socket = require("../js/socket");
-const upload = require("../js/upload");
-const Mousetrap = require("mousetrap");
-const {wrapCursor} = require("undate");
+import Mousetrap from "mousetrap";
+import {wrapCursor} from "undate";
+import autocompletion from "../js/autocompletion";
+import commands from "../js/commands/index";
+import socket from "../js/socket";
+import upload from "../js/upload";
 
 const formattingHotkeys = {
 	"mod+k": "\x03",
@@ -80,6 +80,8 @@ const bracketWraps = {
 	_: "_",
 };
 
+let autocompletionRef = null;
+
 export default {
 	name: "ChatInput",
 	props: {
@@ -87,13 +89,18 @@ export default {
 		channel: Object,
 	},
 	watch: {
+		"channel.id"() {
+			if (autocompletionRef) {
+				autocompletionRef.hide();
+			}
+		},
 		"channel.pendingMessage"() {
 			this.setInputSize();
 		},
 	},
 	mounted() {
-		if (this.$root.settings.autocomplete) {
-			require("../js/autocompletion").enable(this.$refs.input);
+		if (this.$store.state.settings.autocomplete) {
+			autocompletionRef = autocompletion(this.$refs.input);
 		}
 
 		const inputTrap = Mousetrap(this.$refs.input);
@@ -119,7 +126,10 @@ export default {
 		});
 
 		inputTrap.bind(["up", "down"], (e, key) => {
-			if (this.$root.isAutoCompleting || e.target.selectionStart !== e.target.selectionEnd) {
+			if (
+				this.$store.state.isAutoCompleting ||
+				e.target.selectionStart !== e.target.selectionEnd
+			) {
 				return;
 			}
 
@@ -144,12 +154,16 @@ export default {
 			return false;
 		});
 
-		if (this.$root.isFileUploadEnabled) {
+		if (this.$store.state.serverConfiguration.fileUpload) {
 			upload.mounted();
 		}
 	},
 	destroyed() {
-		require("../js/autocompletion").disable();
+		if (autocompletionRef) {
+			autocompletionRef.destroy();
+			autocompletionRef = null;
+		}
+
 		upload.abort();
 	},
 	methods: {
@@ -187,7 +201,7 @@ export default {
 			this.$refs.input.click();
 			this.$refs.input.focus();
 
-			if (!this.$root.isConnected) {
+			if (!this.$store.state.isConnected) {
 				return false;
 			}
 
@@ -196,6 +210,10 @@ export default {
 
 			if (text.length === 0) {
 				return false;
+			}
+
+			if (autocompletionRef) {
+				autocompletionRef.hide();
 			}
 
 			this.channel.inputHistoryPosition = 0;

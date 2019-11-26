@@ -26,14 +26,11 @@
 				'not-connected': !network.status.connected,
 				'not-secure': !network.status.secure,
 			}"
-			:data-uuid="network.uuid"
-			:data-nick="network.nick"
 			class="network"
 			role="region"
 		>
 			<NetworkLobby
 				:network="network"
-				:active-channel="activeChannel"
 				:is-join-channel-shown="network.isJoinChannelShown"
 				@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown"
 			/>
@@ -63,7 +60,6 @@
 					:key="channel.id"
 					:channel="channel"
 					:network="network"
-					:active-channel="activeChannel"
 				/>
 			</Draggable>
 		</div>
@@ -86,9 +82,10 @@ export default {
 		Channel,
 		Draggable,
 	},
-	props: {
-		activeChannel: Object,
-		networks: Array,
+	computed: {
+		networks() {
+			return this.$store.state.networks;
+		},
 	},
 	methods: {
 		isCurrentlyInTouch(e) {
@@ -116,8 +113,7 @@ export default {
 				return;
 			}
 
-			const {findChannel} = require("../js/vue");
-			const channel = findChannel(e.moved.element.id);
+			const channel = this.$store.getters.findChannel(e.moved.element.id);
 
 			if (!channel) {
 				return;

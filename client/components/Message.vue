@@ -21,7 +21,6 @@
 			<span class="from"><span class="only-copy">* </span></span>
 			<span class="content" dir="auto">
 				<Username :user="message.from" dir="auto" />&#32;<ParsedMessage
-					:network="network"
 					:message="message"
 				/>
 				<LinkPreview
@@ -68,13 +67,12 @@
 </template>
 
 <script>
+import dayjs from "dayjs";
 import Username from "./Username.vue";
 import LinkPreview from "./LinkPreview.vue";
 import ParsedMessage from "./ParsedMessage.vue";
 import MessageTypes from "./MessageTypes";
-
-const moment = require("moment");
-const constants = require("../js/constants");
+import constants from "../js/constants";
 
 MessageTypes.ParsedMessage = ParsedMessage;
 MessageTypes.LinkPreview = LinkPreview;
@@ -85,23 +83,21 @@ export default {
 	components: MessageTypes,
 	props: {
 		message: Object,
+		channel: Object,
 		network: Object,
 		keepScrollPosition: Function,
 	},
 	computed: {
 		messageTime() {
-			const format = this.$root.settings.showSeconds
+			const format = this.$store.state.settings.showSeconds
 				? constants.timeFormats.msgWithSeconds
 				: constants.timeFormats.msgDefault;
 
-			return moment(this.message.time).format(format);
+			return dayjs(this.message.time).format(format);
 		},
 		messageComponent() {
 			return "message-" + this.message.type;
 		},
-	},
-	mounted() {
-		require("../js/renderPreview");
 	},
 	methods: {
 		isAction() {

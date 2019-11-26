@@ -1,5 +1,5 @@
 <template>
-	<ChannelWrapper :network="network" :channel="channel" :active-channel="activeChannel">
+	<ChannelWrapper :network="network" :channel="channel">
 		<button
 			v-if="network.channels.length > 1"
 			:aria-controls="'network-' + network.uuid"
@@ -28,7 +28,7 @@
 				<span class="not-connected-icon" />
 			</span>
 			<span v-if="channel.unread" :class="{highlight: channel.highlight}" class="badge">{{
-				channel.unread | roundBadgeNumber
+				unreadCount
 			}}</span>
 		</div>
 		<span
@@ -46,8 +46,9 @@
 </template>
 
 <script>
+import roundBadgeNumber from "../js/helpers/roundBadgeNumber";
 import ChannelWrapper from "./ChannelWrapper.vue";
-const storage = require("../js/localStorage");
+import storage from "../js/localStorage";
 
 export default {
 	name: "Channel",
@@ -55,7 +56,6 @@ export default {
 		ChannelWrapper,
 	},
 	props: {
-		activeChannel: Object,
 		network: Object,
 		isJoinChannelShown: Boolean,
 	},
@@ -65,6 +65,9 @@ export default {
 		},
 		joinChannelLabel() {
 			return this.isJoinChannelShown ? "Cancel" : "Join a channel…";
+		},
+		unreadCount() {
+			return roundBadgeNumber(this.channel.unread);
 		},
 	},
 	methods: {

@@ -1,112 +1,100 @@
 "use strict";
 
-const $ = require("jquery");
-const socket = require("../socket");
-const storage = require("../localStorage");
-const utils = require("../utils");
-const templates = require("../../views");
-const {vueApp} = require("../vue");
+import socket from "../socket";
+import storage from "../localStorage";
+import {router, navigate} from "../router";
+import store from "../store";
+import location from "../location";
+let lastServerHash = null;
 
-socket.on("auth", function(data) {
+socket.on("auth:success", function() {
+	store.commit("currentUserVisibleError", "Loading messages…");
+	updateLoadingMessage();
+});
+
+socket.on("auth:failed", function() {
+	storage.remove("token");
+
+	if (store.state.appLoaded) {
+		return reloadPage("Authentication failed, reloading…");
+	}
+
+	showSignIn();
+});
+
+socket.on("auth:start", function(serverHash) {
 	// If we reconnected and serverHash differs, that means the server restarted
 	// And we will reload the page to grab the latest version
-	if (utils.serverHash > -1 && data.serverHash > -1 && data.serverHash !== utils.serverHash) {
-		socket.disconnect();
-		vueApp.isConnected = false;
-		vueApp.currentUserVisibleError = "Server restarted, reloading…";
-		location.reload(true);
-		return;
+	if (lastServerHash && serverHash !== lastServerHash) {
+		return reloadPage("Server restarted, reloading…");
 	}
 
-	const login = $("#sign-in");
+	lastServerHash = serverHash;
 
-	if (data.serverHash > -1) {
-		utils.serverHash = data.serverHash;
-
-		login.html(templates.windows.sign_in());
-
-		utils.togglePasswordField("#sign-in .reveal-password");
-
-		login.find("form").on("submit", function() {
-			const form = $(this);
-
-			form.find(".btn").prop("disabled", true);
-
-			const values = {};
-			$.each(form.serializeArray(), function(i, obj) {
-				values[obj.name] = obj.value;
-			});
-
-			storage.set("user", values.user);
-
-			socket.emit("auth", values);
-
-			return false;
-		});
-	} else {
-		login.find(".btn").prop("disabled", false);
-	}
-
-	let token;
 	const user = storage.get("user");
+	const token = storage.get("token");
+	const doFastAuth = user && token;
 
-	if (!data.success) {
-		if (login.length === 0) {
-			socket.disconnect();
-			vueApp.isConnected = false;
-			vueApp.currentUserVisibleError = "Authentication failed, reloading…";
-			location.reload();
-			return;
-		}
+	// If we reconnect and no longer have a stored token, reload the page
+	if (store.state.appLoaded && !doFastAuth) {
+		return reloadPage("Authentication failed, reloading…");
+	}
 
-		storage.remove("token");
+	// If we have user and token stored, perform auth without showing sign-in first
+	if (doFastAuth) {
+		store.commit("currentUserVisibleError", "Authorizing…");
+		updateLoadingMessage();
 
-		const error = login.find(".error");
-		error
-			.show()
-			.closest("form")
-			.one("submit", function() {
-				error.hide();
-			});
-	} else if (user) {
-		token = storage.get("token");
+		let lastMessage = -1;
 
-		if (token) {
-			vueApp.currentUserVisibleError = "Authorizing…";
-			$("#loading-page-message").text(vueApp.currentUserVisibleError);
+		for (const network of store.state.networks) {
+			for (const chan of network.channels) {
+				if (chan.messages.length > 0) {
+					const id = chan.messages[chan.messages.length - 1].id;
 
-			let lastMessage = -1;
-
-			for (const network of vueApp.networks) {
-				for (const chan of network.channels) {
-					if (chan.messages.length > 0) {
-						const id = chan.messages[chan.messages.length - 1].id;
-
-						if (lastMessage < id) {
-							lastMessage = id;
-						}
+					if (lastMessage < id) {
+						lastMessage = id;
 					}
 				}
 			}
-
-			const openChannel = (vueApp.activeChannel && vueApp.activeChannel.channel.id) || null;
-
-			socket.emit("auth", {user, token, lastMessage, openChannel});
 		}
-	}
 
-	if (user) {
-		login.find("input[name='user']").val(user);
-	}
+		const openChannel =
+			(store.state.activeChannel && store.state.activeChannel.channel.id) || null;
 
-	if (token) {
-		return;
-	}
-
-	$("#loading").remove();
-	$("#footer")
-		.find(".sign-in")
-		.trigger("click", {
-			pushState: false,
+		socket.emit("auth:perform", {
+			user,
+			token,
+			lastMessage,
+			openChannel,
+			hasConfig: store.state.serverConfiguration !== null,
 		});
+	} else {
+		showSignIn();
+	}
 });
+
+function showSignIn() {
+	// TODO: this flashes grey background because it takes a little time for vue to mount signin
+	if (window.g_TheLoungeRemoveLoading) {
+		window.g_TheLoungeRemoveLoading();
+	}
+
+	if (router.currentRoute.name !== "SignIn") {
+		navigate("SignIn");
+	}
+}
+
+function reloadPage(message) {
+	socket.disconnect();
+	store.commit("currentUserVisibleError", message);
+	location.reload(true);
+}
+
+function updateLoadingMessage() {
+	const loading = document.getElementById("loading-page-message");
+
+	if (loading) {
+		loading.textContent = store.state.currentUserVisibleError;
+	}
+}

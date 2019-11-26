@@ -1,10 +1,10 @@
 "use strict";
 
-const socket = require("../socket");
-const {findChannel} = require("../vue");
+import socket from "../socket";
+import store from "../store";
 
 socket.on("topic", function(data) {
-	const channel = findChannel(data.chan);
+	const channel = store.getters.findChannel(data.chan);
 
 	if (channel) {
 		channel.channel.topic = data.topic;

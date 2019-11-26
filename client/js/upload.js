@@ -1,12 +1,12 @@
 "use strict";
 
-const socket = require("./socket");
-const updateCursor = require("undate").update;
+import {update as updateCursor} from "undate";
+
+import socket from "./socket";
+import store from "./store";
 
 class Uploader {
-	init(maxFileSize) {
-		this.maxFileSize = maxFileSize;
-		this.vueApp = require("./vue").vueApp;
+	init() {
 		this.xhr = null;
 		this.fileQueue = [];
 
@@ -89,7 +89,7 @@ class Uploader {
 			return;
 		}
 
-		if (!this.vueApp.isConnected) {
+		if (!store.state.isConnected) {
 			this.handleResponse({
 				error: `You are currently disconnected, unable to initiate upload process.`,
 			});
@@ -98,9 +98,10 @@ class Uploader {
 		}
 
 		const wasQueueEmpty = this.fileQueue.length === 0;
+		const maxFileSize = store.state.serverConfiguration.fileUploadMaxFileSize;
 
 		for (const file of files) {
-			if (this.maxFileSize > 0 && file.size > this.maxFileSize) {
+			if (maxFileSize > 0 && file.size > maxFileSize) {
 				this.handleResponse({
 					error: `File ${file.name} is over the maximum allowed size`,
 				});
@@ -177,9 +178,7 @@ class Uploader {
 		this.setProgress(0);
 
 		if (response.error) {
-			// require here due to circular dependency
-			const {vueApp} = require("./vue");
-			vueApp.currentUserVisibleError = response.error;
+			store.commit("currentUserVisibleError", response.error);
 			return;
 		}
 
@@ -221,7 +220,7 @@ class Uploader {
 
 const instance = new Uploader();
 
-module.exports = {
+export default {
 	abort: () => instance.abort(),
 	initialize: () => instance.init(),
 	mounted: () => instance.mounted(),

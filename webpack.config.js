@@ -10,7 +10,7 @@ const Helper = require("./src/helper.js");
 const config = {
 	mode: process.env.NODE_ENV === "production" ? "production" : "development",
 	entry: {
-		"js/bundle.js": [path.resolve(__dirname, "client/js/lounge.js")],
+		"js/bundle.js": [path.resolve(__dirname, "client/js/vue.js")],
 		"css/style": path.resolve(__dirname, "client/css/style.css"),
 	},
 	devtool: "source-map",
@@ -62,25 +62,6 @@ const config = {
 						presets: [["@babel/env"]],
 					},
 				},
-			},
-			{
-				test: /\.tpl$/,
-				include: [path.resolve(__dirname, "client/views")],
-				use: [
-					{
-						loader: "handlebars-loader",
-						options: {
-							helperDirs: [path.resolve(__dirname, "client/js/libs/handlebars")],
-							extensions: [".tpl"],
-						},
-					},
-					{
-						loader: "html-minifier-loader",
-						options: {
-							ignoreCustomFragments: [/{{[\s\S]*?}}/],
-						},
-					},
-				],
 			},
 		],
 	},
@@ -135,7 +116,6 @@ const config = {
 				to: "themes/[name].[ext]",
 			},
 		]),
-		new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
 		// socket.io uses debug, we don't need it
 		new webpack.NormalModuleReplacementPlugin(
 			/debug/,

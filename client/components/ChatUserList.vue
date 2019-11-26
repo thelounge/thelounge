@@ -26,12 +26,13 @@
 				:class="['user-mode', getModeClass(mode)]"
 			>
 				<template v-if="userSearchInput.length > 0">
-					<UsernameFiltered
+					<Username
 						v-for="user in users"
 						:key="user.original.nick"
 						:on-hover="hoverUser"
 						:active="user.original === activeUser"
-						:user="user"
+						:user="user.original"
+						v-html="user.original.mode + user.string"
 					/>
 				</template>
 				<template v-else>
@@ -49,9 +50,8 @@
 </template>
 
 <script>
-const fuzzy = require("fuzzy");
+import {filter as fuzzyFilter} from "fuzzy";
 import Username from "./Username.vue";
-import UsernameFiltered from "./UsernameFiltered.vue";
 
 const modes = {
 	"~": "owner",
@@ -67,7 +67,6 @@ export default {
 	name: "ChatUserList",
 	components: {
 		Username,
-		UsernameFiltered,
 	},
 	props: {
 		channel: Object,
@@ -82,7 +81,7 @@ export default {
 		// filteredUsers is computed, to avoid unnecessary filtering
 		// as it is shared between filtering and keybindings.
 		filteredUsers() {
-			return fuzzy.filter(this.userSearchInput, this.channel.users, {
+			return fuzzyFilter(this.userSearchInput, this.channel.users, {
 				pre: "<b>",
 				post: "</b>",
 				extract: (u) => u.nick,
@@ -149,6 +148,7 @@ export default {
 			// Prevent propagation to stop global keybind handler from capturing pagedown/pageup
 			// and redirecting it to the message list container for scrolling
 			event.stopImmediatePropagation();
+			event.preventDefault();
 
 			let users = this.channel.users;
 

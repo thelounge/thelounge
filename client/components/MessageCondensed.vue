@@ -18,7 +18,7 @@
 </template>
 
 <script>
-const constants = require("../js/constants");
+import constants from "../js/constants";
 import Message from "./Message.vue";
 
 export default {
