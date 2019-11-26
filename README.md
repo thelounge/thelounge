@@ -25,9 +25,6 @@
 	<a href="https://yarn.pm/thelounge"><img
 		alt="npm version"
 		src="https://img.shields.io/npm/v/thelounge.svg?colorA=333a41&maxAge=3600"></a>
-	<a href="https://travis-ci.com/thelounge/thelounge"><img
-		alt="Travis CI Build Status"
-		src="https://img.shields.io/travis/com/thelounge/thelounge/master.svg?colorA=333a41&logo=travis-ci&logoColor=959da5&label=Build&maxAge=60"></a>
 	<a href="https://github.com/thelounge/thelounge/actions"><img
 		alt="Build Status"
 		src="https://github.com/thelounge/thelounge/workflows/Build/badge.svg"></a>
