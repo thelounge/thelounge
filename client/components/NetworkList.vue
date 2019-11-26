@@ -2,71 +2,125 @@
 	<div v-if="networks.length === 0" class="empty">
 		You are not connected to any networks yet.
 	</div>
-	<Draggable
-		v-else
-		:list="networks"
-		:filter="isCurrentlyInTouch"
-		:prevent-on-filter="false"
-		handle=".channel-list-item[data-type='lobby']"
-		draggable=".network"
-		ghost-class="ui-sortable-ghost"
-		drag-class="ui-sortable-dragged"
-		group="networks"
-		class="networks"
-		@change="onNetworkSort"
-		@start="onDragStart"
-		@end="onDragEnd"
-	>
-		<div
-			v-for="network in networks"
-			:id="'network-' + network.uuid"
-			:key="network.uuid"
-			:class="{
-				collapsed: network.isCollapsed,
-			}"
-			class="network"
-			role="region"
-		>
-			<NetworkLobby
-				:network="network"
-				:is-join-channel-shown="network.isJoinChannelShown"
-				@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown"
+	<div v-else>
+		<div class="jump-to-input">
+			<input
+				ref="searchInput"
+				:value="searchText"
+				placeholder="Jump to..."
+				type="search"
+				class="search input mousetrap"
+				aria-label="Search among the channel list"
+				tabindex="-1"
+				@input="setSearchText"
+				@keydown.up="navigateResults($event, -1)"
+				@keydown.down="navigateResults($event, 1)"
+				@keydown.page-up="navigateResults($event, -10)"
+				@keydown.page-down="navigateResults($event, 10)"
+				@keydown.enter="selectResult"
+				@keydown.escape="deactivateSearch"
+				@focus="activateSearch"
 			/>
-			<JoinChannel
-				v-if="network.isJoinChannelShown"
-				:network="network"
-				:channel="network.channels[0]"
-				@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown"
-			/>
-
-			<Draggable
-				draggable=".channel-list-item"
-				ghost-class="ui-sortable-ghost"
-				drag-class="ui-sortable-dragged"
-				:group="network.uuid"
-				:filter="isCurrentlyInTouch"
-				:prevent-on-filter="false"
-				:list="network.channels"
-				class="channels"
-				@change="onChannelSort"
-				@start="onDragStart"
-				@end="onDragEnd"
-			>
-				<Channel
-					v-for="(channel, index) in network.channels"
-					v-if="index > 0"
-					:key="channel.id"
-					:channel="channel"
-					:network="network"
-				/>
-			</Draggable>
 		</div>
-	</Draggable>
+		<div v-if="searchText" class="jump-to-results">
+			<div v-if="results.length" ref="results">
+				<div
+					v-for="item in results"
+					:key="item.channel.id"
+					v-on="{mouseover: () => setActiveSearchItem(item.channel)}"
+					@click.prevent="selectResult"
+				>
+					<Channel
+						v-if="item.channel.type !== 'lobby'"
+						:channel="item.channel"
+						:network="item.network"
+						:active="item.channel === activeSearchItem"
+						:is-filtering="true"
+					/>
+					<NetworkLobby
+						v-else
+						:channel="item.channel"
+						:network="item.network"
+						:active="item.channel === activeSearchItem"
+						:is-filtering="true"
+					/>
+				</div>
+			</div>
+			<div v-else class="no-results">
+				No results found.
+			</div>
+		</div>
+		<Draggable
+			v-else
+			:list="networks"
+			:filter="isCurrentlyInTouch"
+			:prevent-on-filter="false"
+			handle=".channel-list-item[data-type='lobby']"
+			draggable=".network"
+			ghost-class="ui-sortable-ghost"
+			drag-class="ui-sortable-dragged"
+			group="networks"
+			class="networks"
+			@change="onNetworkSort"
+			@start="onDragStart"
+			@end="onDragEnd"
+		>
+			<div
+				v-for="network in networks"
+				:id="'network-' + network.uuid"
+				:key="network.uuid"
+				:class="{
+					collapsed: network.isCollapsed,
+					'not-connected': !network.status.connected,
+					'not-secure': !network.status.secure,
+				}"
+				class="network"
+				role="region"
+			>
+				<NetworkLobby
+					:network="network"
+					:is-join-channel-shown="network.isJoinChannelShown"
+					:active="activeChannel && network.channels[0] === activeChannel.channel"
+					@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown"
+				/>
+				<JoinChannel
+					v-if="network.isJoinChannelShown"
+					:network="network"
+					:channel="network.channels[0]"
+					@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown"
+				/>
+
+				<Draggable
+					draggable=".channel-list-item"
+					ghost-class="ui-sortable-ghost"
+					drag-class="ui-sortable-dragged"
+					:group="network.uuid"
+					:filter="isCurrentlyInTouch"
+					:prevent-on-filter="false"
+					:list="network.channels"
+					class="channels"
+					@change="onChannelSort"
+					@start="onDragStart"
+					@end="onDragEnd"
+				>
+					<Channel
+						v-for="(channel, index) in network.channels"
+						v-if="index > 0"
+						:key="channel.id"
+						:channel="channel"
+						:network="network"
+						:active="activeChannel && channel === activeChannel.channel"
+					/>
+				</Draggable>
+			</div>
+		</Draggable>
+	</div>
 </template>
 
 <script>
 import Mousetrap from "mousetrap";
 import Draggable from "vuedraggable";
+import {filter as fuzzyFilter} from "fuzzy";
 import NetworkLobby from "./NetworkLobby.vue";
 import Channel from "./Channel.vue";
 import JoinChannel from "./JoinChannel.vue";
@@ -82,10 +136,55 @@ export default {
 		Channel,
 		Draggable,
 	},
+	data() {
+		return {
+			searchText: "",
+			activeSearchItem: null,
+		};
+	},
 	computed: {
+		activeChannel() {
+			return this.$store.state.activeChannel;
+		},
 		networks() {
 			return this.$store.state.networks;
 		},
+		items() {
+			const items = [];
+
+			for (const network of this.$store.state.networks) {
+				for (const channel of network.channels) {
+					if (
+						this.$store.state.activeChannel &&
+						channel === this.$store.state.activeChannel.channel
+					) {
+						continue;
+					}
+
+					items.push({network, channel});
+				}
+			}
+
+			return items;
+		},
+		results() {
+			const results = fuzzyFilter(this.searchText, this.items, {
+				extract: (item) => item.channel.name,
+			}).map((item) => item.original);
+
+			return results;
+		},
+	},
+	watch: {
+		searchText() {
+			this.setActiveSearchItem();
+		},
+	},
+	mounted() {
+		Mousetrap.bind("alt+j", this.toggleSearch);
+	},
+	destroyed() {
+		Mousetrap.unbind("alt+j", this.toggleSearch);
 	},
 	mounted() {
 		Mousetrap.bind("alt+shift+right", this.expandNetwork);
@@ -141,6 +240,110 @@ export default {
 				type: "channels",
 				target: channel.network.uuid,
 				order: channel.network.channels.map((c) => c.id),
+			});
+		},
+		toggleSearch(event) {
+			event.preventDefault();
+
+			if (this.$refs.searchInput === document.activeElement) {
+				this.closeSearch();
+				return;
+			}
+
+			this.activateSearch();
+		},
+		activateSearch() {
+			if (this.$refs.searchInput === document.activeElement) {
+				return;
+			}
+
+			this.sidebarWasOpen = this.$store.state.sidebarOpen;
+			this.$store.commit("sidebarOpen", true);
+			this.$nextTick(() => {
+				this.$refs.searchInput.focus();
+			});
+		},
+		deactivateSearch() {
+			this.activeSearchItem = null;
+			this.searchText = "";
+			this.$refs.searchInput.blur();
+
+			if (!this.sidebarWasOpen) {
+				this.$store.commit("sidebarOpen", false);
+			}
+		},
+		setSearchText(e) {
+			this.searchText = e.target.value;
+		},
+		setActiveSearchItem(channel) {
+			if (!this.results.length) {
+				return;
+			}
+
+			if (!channel) {
+				channel = this.results[0].channel;
+			}
+
+			this.activeSearchItem = channel;
+		},
+		selectResult() {
+			if (!this.searchText || !this.results.length) {
+				return;
+			}
+
+			this.$root.switchToChannel(this.activeSearchItem);
+			this.deactivateSearch();
+		},
+		navigateResults(event, direction) {
+			// Prevent propagation to stop global keybind handler from capturing pagedown/pageup
+			// and redirecting it to the message list container for scrolling
+			event.stopImmediatePropagation();
+			event.preventDefault();
+
+			if (!this.searchText) {
+				return;
+			}
+
+			const channels = this.results.map((r) => r.channel);
+
+			// Bail out if there's no channels to select
+			if (!channels.length) {
+				this.activeSearchItem = null;
+				return;
+			}
+
+			let currentIndex = channels.indexOf(this.activeSearchItem);
+
+			// If there's no active channel select the first or last one depending on direction
+			if (!this.activeSearchItem || currentIndex === -1) {
+				this.activeSearchItem = direction ? channels[0] : channels[channels.length - 1];
+				this.scrollToActive();
+				return;
+			}
+
+			currentIndex += direction;
+
+			// Wrap around the list if necessary. Normaly each loop iterates once at most,
+			// but might iterate more often if pgup or pgdown are used in a very short list
+			while (currentIndex < 0) {
+				currentIndex += channels.length;
+			}
+
+			while (currentIndex > channels.length - 1) {
+				currentIndex -= channels.length;
+			}
+
+			this.activeSearchItem = channels[currentIndex];
+			this.scrollToActive();
+		},
+		scrollToActive() {
+			// Scroll the list if needed after the active class is applied
+			this.$nextTick(() => {
+				const el = this.$refs.results.querySelector(".active-result");
+
+				if (el) {
+					el.scrollIntoView({block: "nearest", inline: "nearest"});
+				}
 			});
 		},
 	},

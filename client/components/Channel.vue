@@ -1,5 +1,5 @@
 <template>
-	<ChannelWrapper ref="wrapper" :network="network" :channel="channel">
+	<ChannelWrapper ref="wrapper" v-bind="$props">
 		<span class="name">{{ channel.name }}</span>
 		<span v-if="channel.unread" :class="{highlight: channel.highlight}" class="badge">{{
 			unreadCount
@@ -36,6 +36,8 @@ export default {
 	props: {
 		network: Object,
 		channel: Object,
+		active: Boolean,
+		isFiltering: Boolean,
 	},
 	computed: {
 		unreadCount() {

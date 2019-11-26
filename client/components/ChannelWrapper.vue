@@ -5,7 +5,7 @@
 		ref="element"
 		:class="[
 			'channel-list-item',
-			{active: activeChannel && channel === activeChannel.channel},
+			{active: active},
 			{'parted-channel': channel.type === 'channel' && channel.state === 0},
 			{'has-draft': channel.pendingMessage},
 			{
@@ -19,7 +19,7 @@
 		:data-name="channel.name"
 		:data-type="channel.type"
 		:aria-controls="'#chan-' + channel.id"
-		:aria-selected="activeChannel && channel === activeChannel.channel"
+		:aria-selected="active"
 		:style="channel.closed ? {transition: 'none', opacity: 0.4} : null"
 		role="tab"
 		@click="click"
@@ -37,13 +37,15 @@ export default {
 	props: {
 		network: Object,
 		channel: Object,
+		active: Boolean,
+		isFiltering: Boolean,
 	},
 	computed: {
 		activeChannel() {
 			return this.$store.state.activeChannel;
 		},
 		isChannelVisible() {
-			return !isChannelCollapsed(this.network, this.channel);
+			return this.isFiltering || !isChannelCollapsed(this.network, this.channel);
 		},
 	},
 	methods: {
