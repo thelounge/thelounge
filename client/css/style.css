@@ -2135,7 +2135,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-top: 6px;
 	margin-bottom: 6px;
 	line-height: 1.4;
-	transition: background-color 0.2s;
 	border-radius: 3px;
 	white-space: nowrap;
 }
@@ -2146,7 +2145,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 .textcomplete-menu .active,
 #chat .userlist .user.active {
 	background-color: rgba(0, 0, 0, 0.1);
-	transition: none;
 }
 
 .context-menu-item::before,
