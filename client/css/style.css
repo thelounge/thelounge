@@ -324,6 +324,8 @@ kbd {
 
 #sidebar .chan.special::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
 
+#sidebar .chan.has-draft:not(.active):not(.lobby)::before { content: "\f304"; /* https://fontawesome.com/icons/pen?style=solid */ }
+
 #footer .connect::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
 #footer .settings::before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
 #footer .help::before { content: "\f059"; /* http://fontawesome.io/icon/question/ */ }
