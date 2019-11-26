@@ -37,6 +37,11 @@ export function createSettingsStore(store) {
 
 				const settingConfig = config[name];
 
+				// Trying to update a non existing setting (e.g. server has an old key)
+				if (!settingConfig) {
+					return;
+				}
+
 				if (
 					sync === false &&
 					(state.syncSettings === false || settingConfig.sync === "never")
@@ -64,7 +69,13 @@ export function createSettingsStore(store) {
 }
 
 function loadFromLocalStorage() {
-	const storedSettings = JSON.parse(storage.get("settings")) || false;
+	let storedSettings;
+
+	try {
+		storedSettings = JSON.parse(storage.get("settings"));
+	} catch (e) {
+		storage.remove("settings");
+	}
 
 	if (!storedSettings) {
 		return {};
