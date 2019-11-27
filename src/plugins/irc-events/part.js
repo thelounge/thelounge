@@ -33,9 +33,6 @@ module.exports = function(irc, network) {
 			});
 		} else {
 			chan.removeUser(user);
-			client.emit("users", {
-				chan: chan.id,
-			});
 		}
 	});
 };

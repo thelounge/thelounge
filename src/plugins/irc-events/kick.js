@@ -35,9 +35,5 @@ module.exports = function(irc, network) {
 		} else {
 			chan.removeUser(msg.target);
 		}
-
-		client.emit("users", {
-			chan: chan.id,
-		});
 	});
 };

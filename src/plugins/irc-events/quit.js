@@ -23,9 +23,6 @@ module.exports = function(irc, network) {
 			chan.pushMessage(client, msg);
 
 			chan.removeUser(user);
-			client.emit("users", {
-				chan: chan.id,
-			});
 		});
 
 		// If user with the nick we are trying to keep has quit, try to get this nick
