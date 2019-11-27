@@ -8,6 +8,7 @@
 			channel.type,
 			{active: activeChannel && channel === activeChannel.channel},
 			{'parted-channel': channel.type === 'channel' && channel.state === 0},
+			{'has-draft': channel.pendingMessage},
 		]"
 		:aria-label="getAriaLabel()"
 		:title="getAriaLabel()"
