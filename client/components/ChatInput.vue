@@ -5,6 +5,7 @@
 			id="input"
 			ref="input"
 			dir="auto"
+			class="mousetrap"
 			:value="channel.pendingMessage"
 			:placeholder="getInputPlaceholder(channel)"
 			:aria-label="getInputPlaceholder(channel)"
