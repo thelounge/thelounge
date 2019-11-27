@@ -81,6 +81,10 @@ export default {
 		// filteredUsers is computed, to avoid unnecessary filtering
 		// as it is shared between filtering and keybindings.
 		filteredUsers() {
+			if (!this.userSearchInput) {
+				return;
+			}
+
 			return fuzzyFilter(this.userSearchInput, this.channel.users, {
 				pre: "<b>",
 				post: "</b>",
