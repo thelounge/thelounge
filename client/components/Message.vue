@@ -1,7 +1,10 @@
 <template>
 	<div
 		:id="'msg-' + message.id"
-		:class="['msg', {self: message.self, highlight: message.highlight}]"
+		:class="[
+			'msg',
+			{self: message.self, highlight: message.highlight, 'previous-source': isPreviousSource},
+		]"
 		:data-type="message.type"
 		:data-from="message.from && message.from.nick"
 	>
@@ -87,6 +90,7 @@ export default {
 		channel: Object,
 		network: Object,
 		keepScrollPosition: Function,
+		isPreviousSource: Boolean,
 	},
 	computed: {
 		messageTime() {
