@@ -459,6 +459,22 @@ describe("IRC formatted message parser", () => {
 				'<span role="img" aria-label="Emoji: woman shrugging" title="Emoji: woman shrugging" class="emoji">🤷‍♀️</span>',
 		},
 		{
+			name: "with emoji variant selector",
+			input: "\u{2695}\u{FE0F}",
+			expected:
+				'<span role="img" aria-label="Emoji: medical symbol" title="Emoji: medical symbol" class="emoji">\u{2695}\u{FE0F}</span>',
+		},
+		{
+			name: "with text variant selector",
+			input: "\u{2695}\u{FE0E}",
+			expected: "\u{2695}\u{FE0E}", // this does not match because FE0E is specifically a text variant
+		},
+		{
+			name: "without variant selector",
+			input: "\u{2695}",
+			expected: "\u{2695}", // this does not match because emoji-regex expects \uFE0F as per the emoji specification
+		},
+		{
 			// FIXME: These multiple `span`s should be optimized into a single one. See https://github.com/thelounge/thelounge/issues/1783
 			name: "wrapped in style",
 			input: "Super \x034💚 green!",
