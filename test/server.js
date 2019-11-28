@@ -7,7 +7,7 @@ const got = require("got");
 const io = require("socket.io-client");
 
 describe("Server", function() {
-	// Travis is having issues with slow workers and thus tests timeout
+	// Increase timeout due to unpredictable I/O on CI services
 	this.timeout(process.env.CI ? 25000 : 5000);
 
 	let server;

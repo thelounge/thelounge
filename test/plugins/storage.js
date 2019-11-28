@@ -9,6 +9,8 @@ const Helper = require("../../src/helper");
 const link = require("../../src/plugins/irc-events/link.js");
 
 describe("Image storage", function() {
+	// Increase timeout due to unpredictable I/O on CI services
+	this.timeout(process.env.CI ? 25000 : 5000);
 	this.slow(200);
 
 	const testImagePath = path.resolve(__dirname, "../../client/img/logo-grey-bg-120x120px.png");

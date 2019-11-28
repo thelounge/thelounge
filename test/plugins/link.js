@@ -7,6 +7,8 @@ const Helper = require("../../src/helper");
 const link = require("../../src/plugins/irc-events/link.js");
 
 describe("Link plugin", function() {
+	// Increase timeout due to unpredictable I/O on CI services
+	this.timeout(process.env.CI ? 25000 : 5000);
 	this.slow(200);
 
 	let app;

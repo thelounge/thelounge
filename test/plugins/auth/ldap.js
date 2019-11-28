@@ -124,6 +124,8 @@ function testLdapAuth() {
 }
 
 describe("LDAP authentication plugin", function() {
+	// Increase timeout due to unpredictable I/O on CI services
+	this.timeout(process.env.CI ? 25000 : 5000);
 	this.slow(200);
 
 	let server;
