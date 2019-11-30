@@ -5,8 +5,8 @@ const expect = require("chai").expect;
 import {renderToString} from "@vue/server-test-utils";
 import ParsedMessageTestWrapper from "../../components/ParsedMessageTestWrapper.vue";
 
-function getParsedMessageContents(text, message) {
-	let contents = renderToString(ParsedMessageTestWrapper, {
+async function getParsedMessageContents(text, message) {
+	let contents = await renderToString(ParsedMessageTestWrapper, {
 		propsData: {
 			text,
 			message,
@@ -20,7 +20,7 @@ function getParsedMessageContents(text, message) {
 }
 
 describe("IRC formatted message parser", () => {
-	it("should not introduce xss", () => {
+	it("should not introduce xss", async () => {
 		const testCases = [
 			{
 				input: "<img onerror='location.href=\"//youtube.com\"'>",
@@ -34,13 +34,15 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
+		const actual = await Promise.all(
+			testCases.map((testCase) => getParsedMessageContents(testCase.input))
+		);
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should skip all <32 ASCII codes except linefeed", () => {
+	it("should skip all <32 ASCII codes except linefeed", async () => {
 		const testCases = [
 			{
 				input:
@@ -50,13 +52,15 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
+		const actual = await Promise.all(
+			testCases.map((testCase) => getParsedMessageContents(testCase.input))
+		);
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should find urls", () => {
+	it("should find urls", async () => {
 		const testCases = [
 			{
 				input: "irc://freenode.net/thelounge",
@@ -99,13 +103,15 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
+		const actual = await Promise.all(
+			testCases.map((testCase) => getParsedMessageContents(testCase.input))
+		);
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("url with a dot parsed correctly", () => {
+	it("url with a dot parsed correctly", async () => {
 		const input =
 			"bonuspunkt: your URL parser misparses this URL: https://msdn.microsoft.com/en-us/library/windows/desktop/ms644989(v=vs.85).aspx";
 		const correctResult =
@@ -114,12 +120,12 @@ describe("IRC formatted message parser", () => {
 			"https://msdn.microsoft.com/en-us/library/windows/desktop/ms644989(v=vs.85).aspx" +
 			"</a>";
 
-		const actual = getParsedMessageContents(input);
+		const actual = await getParsedMessageContents(input);
 
 		expect(actual).to.deep.equal(correctResult);
 	});
 
-	it("should balance brackets", () => {
+	it("should balance brackets", async () => {
 		const testCases = [
 			{
 				input: "<https://theos.kyriasis.com/~kyrias/stats/archlinux.html>",
@@ -155,13 +161,15 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
+		const actual = await Promise.all(
+			testCases.map((testCase) => getParsedMessageContents(testCase.input))
+		);
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should not find urls", () => {
+	it("should not find urls", async () => {
 		const testCases = [
 			{
 				input: "text www. text",
@@ -173,13 +181,15 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
+		const actual = await Promise.all(
+			testCases.map((testCase) => getParsedMessageContents(testCase.input))
+		);
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should find channels", () => {
+	it("should find channels", async () => {
 		const testCases = [
 			{
 				input: "#a",
@@ -228,13 +238,15 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
+		const actual = await Promise.all(
+			testCases.map((testCase) => getParsedMessageContents(testCase.input))
+		);
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should not find channels", () => {
+	it("should not find channels", async () => {
 		const testCases = [
 			{
 				input: "hi#test",
@@ -246,7 +258,9 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
+		const actual = await Promise.all(
+			testCases.map((testCase) => getParsedMessageContents(testCase.input))
+		);
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
@@ -342,14 +356,13 @@ describe("IRC formatted message parser", () => {
 			expected:
 				'<span class="irc-bold">bold</span>' + " " + '<span class="irc-bold">bold</span>',
 		},
-	].forEach((item) => {
-		// TODO: In Node v6+, use `{name, input, expected}`
-		it(`should handle style characters: ${item.name}`, function() {
-			expect(getParsedMessageContents(item.input)).to.equal(item.expected);
+	].forEach(({name, input, expected}) => {
+		it(`should handle style characters: ${name}`, async () => {
+			expect(await getParsedMessageContents(input)).to.equal(expected);
 		});
 	});
 
-	it("should find nicks", () => {
+	it("should find nicks", async () => {
 		const testCases = [
 			{
 				message: {
@@ -364,15 +377,15 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = testCases.map((testCase) =>
-			getParsedMessageContents(testCase.input, testCase.message)
+		const actual = await Promise.all(
+			testCases.map((testCase) => getParsedMessageContents(testCase.input, testCase.message))
 		);
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should not find nicks", () => {
+	it("should not find nicks", async () => {
 		const testCases = [
 			{
 				users: ["MaxLeiter, test"],
@@ -392,13 +405,15 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
+		const actual = await Promise.all(
+			testCases.map((testCase) => getParsedMessageContents(testCase.input))
+		);
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should go bonkers like mirc", () => {
+	it("should go bonkers like mirc", async () => {
 		const testCases = [
 			{
 				input: "\x02irc\x0f://\x1dfreenode.net\x0f/\x034,8thelounge",
@@ -421,7 +436,9 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
+		const actual = await Promise.all(
+			testCases.map((testCase) => getParsedMessageContents(testCase.input))
+		);
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
@@ -495,14 +512,13 @@ describe("IRC formatted message parser", () => {
 			expected:
 				'<span dir="auto" role="button" tabindex="0" class="inline-channel">#i❤️thelounge</span>',
 		},
-	].forEach((item) => {
-		// TODO: In Node v6+, use `{name, input, expected}`
-		it(`should find emoji: ${item.name}`, function() {
-			expect(getParsedMessageContents(item.input)).to.equal(item.expected);
+	].forEach(({name, input, expected}) => {
+		it(`should find emoji: ${name}`, async () => {
+			expect(await getParsedMessageContents(input)).to.equal(expected);
 		});
 	});
 
-	it("should optimize generated html", () => {
+	it("should optimize generated html", async () => {
 		const testCases = [
 			{
 				input:
@@ -515,13 +531,15 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
+		const actual = await Promise.all(
+			testCases.map((testCase) => getParsedMessageContents(testCase.input))
+		);
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should trim common protocols", () => {
+	it("should trim common protocols", async () => {
 		const testCases = [
 			{
 				input: "like..http://example.com",
@@ -541,13 +559,15 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
+		const actual = await Promise.all(
+			testCases.map((testCase) => getParsedMessageContents(testCase.input))
+		);
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should not find channel in fragment", () => {
+	it("should not find channel in fragment", async () => {
 		const testCases = [
 			{
 				input: "http://example.com/#hash",
@@ -558,15 +578,17 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
+		const actual = await Promise.all(
+			testCases.map((testCase) => getParsedMessageContents(testCase.input))
+		);
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should not overlap parts", () => {
+	it("should not overlap parts", async () => {
 		const input = "Url: http://example.com/path Channel: ##channel";
-		const actual = getParsedMessageContents(input);
+		const actual = await getParsedMessageContents(input);
 
 		expect(actual).to.equal(
 			'Url: <a href="http://example.com/path" dir="auto" target="_blank" rel="noopener">http://example.com/path</a> ' +
@@ -574,9 +596,9 @@ describe("IRC formatted message parser", () => {
 		);
 	});
 
-	it("should handle overlapping parts by using first starting", () => {
+	it("should handle overlapping parts by using first starting", async () => {
 		const input = "#test-https://example.com";
-		const actual = getParsedMessageContents(input);
+		const actual = await getParsedMessageContents(input);
 
 		expect(actual).to.equal(
 			'<span dir="auto" role="button" tabindex="0" class="inline-channel">' +
