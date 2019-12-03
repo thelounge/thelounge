@@ -45,7 +45,7 @@ const events = [
 
 function Client(manager, name, config = {}) {
 	_.merge(this, {
-		awayMessage: config.awayMessage || "",
+		awayMessage: "",
 		lastActiveChannel: -1,
 		attachedClients: {},
 		config: config,
@@ -92,6 +92,16 @@ function Client(manager, name, config = {}) {
 
 	if (typeof client.config.browser !== "object") {
 		client.config.browser = {};
+	}
+
+	// TODO: Backwards compatibility with older versions, remove in a future release?
+	if (client.config.awayMessage) {
+		client.config.clientSettings.awayMessage = client.config.awayMessage;
+		delete client.config.awayMessage;
+	}
+
+	if (client.config.clientSettings.awayMessage) {
+		client.awayMessage = client.config.clientSettings.awayMessage;
 	}
 
 	client.compileCustomHighlights();

@@ -109,6 +109,21 @@
 						Show seconds in timestamp
 					</label>
 				</div>
+				<div v-if="$store.state.settings.advanced" class="col-sm-12">
+					<h2>Automatic away message</h2>
+
+					<label class="opt">
+						<label for="awayMessage" class="sr-only">Automatic away message</label>
+						<input
+							id="awayMessage"
+							:value="$store.state.settings.awayMessage"
+							type="text"
+							name="awayMessage"
+							class="input"
+							placeholder="Away message if The Lounge is not open"
+						/>
+					</label>
+				</div>
 				<div class="col-sm-12">
 					<h2>
 						Status messages
