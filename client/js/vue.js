@@ -69,7 +69,7 @@ const vueApp = new Vue({
 store.watch(
 	(state) => state.sidebarOpen,
 	(sidebarOpen) => {
-		if (window.outerWidth > constants.mobileViewportPixels) {
+		if (window.innerWidth > constants.mobileViewportPixels) {
 			storage.set("thelounge.state.sidebar", sidebarOpen);
 			vueApp.$emit("resize");
 		}

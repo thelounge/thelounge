@@ -70,7 +70,7 @@ export default {
 			return tommorow - today;
 		},
 		prepareOpenStates() {
-			const viewportWidth = window.outerWidth;
+			const viewportWidth = window.innerWidth;
 			let isUserlistOpen = storage.get("thelounge.state.userlist");
 
 			if (viewportWidth > constants.mobileViewportPixels) {
