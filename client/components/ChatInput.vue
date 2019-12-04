@@ -1,5 +1,6 @@
 <template>
 	<form id="form" method="post" action="" @submit.prevent="onSubmit">
+		<span id="upload-progressbar" />
 		<span id="nick">{{ network.nick }}</span>
 		<textarea
 			id="input"
