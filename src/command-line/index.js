@@ -36,8 +36,6 @@ try {
 	// fs.statSync will throw if config.js does not exist (e.g. first run)
 }
 
-Utils.checkOldHome();
-
 // Merge config key-values passed as CLI options into the main config
 Helper.mergeConfig(Helper.config, program.config);
 
