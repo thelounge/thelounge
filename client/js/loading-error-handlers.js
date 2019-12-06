@@ -61,6 +61,29 @@
 		document.getElementById("loading").remove();
 	};
 
+	// Apply user theme as soon as possible, before any other code loads
+	// This prevents flash of white while other code loads and socket connects
+	try {
+		const userSettings = JSON.parse(localStorage.getItem("settings"));
+		const themeEl = document.getElementById("theme");
+
+		if (
+			typeof userSettings.theme === "string" &&
+			themeEl.dataset.serverTheme !== userSettings.theme
+		) {
+			themeEl.attributes.href.value = `themes/${userSettings.theme}.css`;
+		}
+
+		if (
+			typeof userSettings.userStyles === "string" &&
+			!/[?&]nocss/.test(window.location.search)
+		) {
+			document.getElementById("user-specified-css").innerHTML = userSettings.userStyles;
+		}
+	} catch (e) {
+		//
+	}
+
 	// Trigger early service worker registration
 	if ("serviceWorker" in navigator) {
 		navigator.serviceWorker.register("service-worker.js");
