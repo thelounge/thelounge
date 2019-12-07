@@ -1580,8 +1580,12 @@ background on hover (unless active) */
 	max-width: 100%;
 }
 
-#chat video {
+#chat .toggle-type-video {
 	max-width: 640px;
+}
+
+#chat video {
+	max-width: 100%;
 	max-height: 240px;
 }
 
