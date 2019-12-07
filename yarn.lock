@@ -5054,10 +5054,10 @@ ldap-filter@^0.3.3:
   dependencies:
     assert-plus "^1.0.0"
 
-ldapjs@2.0.0-pre.3:
-  version "2.0.0-pre.3"
-  resolved "https://registry.yarnpkg.com/ldapjs/-/ldapjs-2.0.0-pre.3.tgz#dcf9369f3b802844241ca830ef9617da76f6e1ec"
-  integrity sha512-3OHNUWulzXDj6UnxNss3LGL2ycBOn+q4OLQUiuorOGeruQeVryNMd29IrqYA5IIrSOYz4aVXKLacohOtW+ZQtg==
+ldapjs@2.0.0-pre.4:
+  version "2.0.0-pre.4"
+  resolved "https://registry.yarnpkg.com/ldapjs/-/ldapjs-2.0.0-pre.4.tgz#95e6dca62915d3eb89f17e1fc7d0163e28b2d0e9"
+  integrity sha512-G3TmEWko48YffwIIsze7UB6XL3LT1LzfmskQgvl0MepmZIDHYnHHmwtDDEc1Id0zyucIMLdG/F17+bOBJXu17w==
   dependencies:
     abstract-logging "^1.0.0"
     asn1 "^0.2.4"
