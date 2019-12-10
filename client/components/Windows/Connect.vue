@@ -35,10 +35,6 @@ export default {
 			const parsedParams = {};
 
 			for (let key of Object.keys(params)) {
-				if (!params[key]) {
-					continue;
-				}
-
 				let value = params[key];
 
 				// Param can contain multiple values in an array if its supplied more than once
