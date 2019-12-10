@@ -282,9 +282,9 @@ kbd {
 #image-viewer .previous-image-btn::before,
 #image-viewer .next-image-btn::before,
 #image-viewer .open-btn::before,
-#sidebar .not-secure-icon::before,
-#sidebar .not-connected-icon::before,
-#sidebar .parted-channel-icon::before,
+.channel-list-item .not-secure-icon::before,
+.channel-list-item .not-connected-icon::before,
+.channel-list-item .parted-channel-icon::before,
 #sidebar .collapse-network-icon::before {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-size: inherit; /* Can't have font-size inherit on line above, so need to override */
@@ -309,12 +309,12 @@ kbd {
 .context-menu-network::before { content: "\f233"; /* https://fontawesome.com/icons/server?style=solid */ }
 .context-menu-edit::before { content: "\f303"; /* https://fontawesome.com/icons/pencil-alt?style=solid */ }
 
-#sidebar .not-secure-icon::before {
+.channel-list-item .not-secure-icon::before {
 	content: "\f071"; /* https://fontawesome.com/icons/exclamation-triangle?style=solid */
 }
 
-#sidebar .not-connected-icon::before,
-#sidebar .parted-channel-icon::before {
+.channel-list-item .not-connected-icon::before,
+.channel-list-item .parted-channel-icon::before {
 	content: "\f127"; /* https://fontawesome.com/icons/unlink?style=solid */
 }
 
@@ -609,8 +609,7 @@ kbd {
 /* All sidebar buttons and channels/queries must be white on hover and active */
 #sidebar button:hover,
 .channel-list-item:hover,
-.channel-list-item .active,
-#sidebar .active {
+.channel-list-item.active {
 	color: #fff;
 }
 
@@ -622,20 +621,23 @@ background on hover (unless active) */
 }
 
 /* All active elements, hovered or not, must have a background */
-#sidebar .active,
-#sidebar .active:hover {
+#sidebar button.active,
+#sidebar button.active:hover,
+.channel-list-item.active,
+.channel-list-item.active:hover {
 	background-color: #303e4a;
 }
 
 /* Remove background on hovered/active channel when sorting/drag-and-dropping */
-#sidebar .channel-list-item.ui-sortable-dragged,
-#sidebar .ui-sortable-dragged .channel-list-item,
-#sidebar .ui-sortable-active .channel-list-item:hover,
-#sidebar .ui-sortable-active .channel-list-item.active {
+.ui-sortable-ghost,
+.channel-list-item.ui-sortable-dragged,
+.ui-sortable-dragged .channel-list-item,
+.ui-sortable-active .channel-list-item:hover,
+.ui-sortable-active .channel-list-item.active {
 	background: transparent;
 }
 
-#sidebar .ui-sortable-ghost::after {
+.ui-sortable-ghost::after {
 	background: var(--body-bg-color);
 	border: 1px dashed #99a2b4;
 	border-radius: 6px;
@@ -678,7 +680,7 @@ background on hover (unless active) */
 	overflow: hidden;
 }
 
-.channel-list-item[data-type="lobby"] .lobby-wrap:hover,
+.channel-list-item[data-type="lobby"]:hover,
 .channel-list-item[data-type="lobby"].active {
 	color: #c0f8c3;
 }
@@ -689,22 +691,22 @@ background on hover (unless active) */
 	margin: 0 8px;
 }
 
-#sidebar .not-secure .channel-list-item[data-type="lobby"] {
+.network.not-secure .channel-list-item[data-type="lobby"] {
 	color: #f39c12;
 }
 
-#sidebar .not-secure .channel-list-item[data-type="lobby"] .lobby-wrap:hover,
-#sidebar .not-secure .channel-list-item[data-type="lobby"].active {
+.network.not-secure .channel-list-item[data-type="lobby"]:hover,
+.network.not-secure .channel-list-item[data-type="lobby"].active {
 	color: #f8c572;
 }
 
-#sidebar .not-connected .channel-list-item[data-type="lobby"],
+.network.not-connected .channel-list-item[data-type="lobby"],
 .channel-list-item.parted-channel {
 	color: #e74c3c;
 }
 
-#sidebar .not-connected .channel-list-item[data-type="lobby"] .lobby-wrap:hover,
-#sidebar .not-connected .channel-list-item[data-type="lobby"].active,
+.network.not-connected .channel-list-item[data-type="lobby"]:hover,
+.network.not-connected .channel-list-item[data-type="lobby"].active,
 .channel-list-item.parted-channel:hover,
 .channel-list-item.parted-channel.active {
 	color: #f1978e;
@@ -729,14 +731,14 @@ background on hover (unless active) */
 	mask-image: linear-gradient(to left, transparent, black 20px);
 }
 
-#sidebar .badge,
+.channel-list-item .badge,
 #sidebar .add-channel-tooltip,
 .channel-list-item .close-tooltip {
 	flex-shrink: 0;
 	line-height: 1;
 }
 
-#sidebar .badge {
+.channel-list-item .badge {
 	background: rgba(255, 255, 255, 0.06);
 	border-radius: 3px;
 	color: #afb6c0;
@@ -745,11 +747,11 @@ background on hover (unless active) */
 	transition: background-color 0.2s, color 0.2s;
 }
 
-#sidebar .badge:empty {
+.channel-list-item .badge:empty {
 	display: none;
 }
 
-#sidebar .badge.highlight {
+.channel-list-item .badge.highlight {
 	background: #fff;
 	color: #49505a;
 }
@@ -803,6 +805,7 @@ background on hover (unless active) */
 	opacity: 0.4;
 	padding-left: 11px;
 	transition: opacity 0.2s;
+	flex-shrink: 0;
 }
 
 #sidebar .network .collapse-network-icon {
@@ -896,7 +899,7 @@ background on hover (unless active) */
 	background: var(--window-bg-color);
 	display: flex;
 	flex-direction: column;
-	flex: 1 0 auto;
+	flex: 1 1 auto;
 	position: relative;
 	overflow-y: auto;
 	height: 100%;
@@ -2639,14 +2642,14 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	user-select: none;
 }
 
+#upload-overlay.is-dragover,
 #image-viewer.opened {
 	visibility: visible;
 	opacity: 1;
 }
 
-#upload-overlay.is-dragover {
-	visibility: visible;
-	opacity: 1;
+#image-viewer {
+	background: rgba(0, 0, 0, 0.9);
 }
 
 #image-viewer .close-btn,
