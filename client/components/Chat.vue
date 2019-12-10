@@ -10,7 +10,8 @@
 		>
 			<div
 				:id="'chan-' + channel.id"
-				:class="[channel.type, 'chan', 'active']"
+				class="chat-view"
+				:data-type="channel.type"
 				:aria-label="channel.name"
 				role="tabpanel"
 			>
@@ -88,7 +89,6 @@
 		>
 			{{ this.$store.state.currentUserVisibleError }}
 		</div>
-		<span id="upload-progressbar" />
 		<ChatInput :network="network" :channel="channel" />
 	</div>
 </template>

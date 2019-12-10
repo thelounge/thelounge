@@ -98,7 +98,9 @@ function jumpToChannel(targetChannel) {
 	switchToChannel(targetChannel);
 
 	scrollIntoViewNicely(
-		document.querySelector(`#sidebar .chan[aria-controls="#chan-${targetChannel.id}"]`)
+		document.querySelector(
+			`#sidebar .channel-list-item[aria-controls="#chan-${targetChannel.id}"]`
+		)
 	);
 }
 
@@ -152,7 +154,7 @@ document.addEventListener("keydown", (e) => {
 
 	// Redirect pagedown/pageup keys to messages container so it scrolls
 	if (e.which === 33 || e.which === 34) {
-		const chat = document.querySelector("#windows .chan.active .chat");
+		const chat = document.querySelector("#windows .chat-content .chat");
 
 		if (chat) {
 			chat.focus();

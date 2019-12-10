@@ -4,8 +4,7 @@
 		v-if="isChannelVisible"
 		ref="element"
 		:class="[
-			'chan',
-			channel.type,
+			'channel-list-item',
 			{active: activeChannel && channel === activeChannel.channel},
 			{'parted-channel': channel.type === 'channel' && channel.state === 0},
 			{'has-draft': channel.pendingMessage},
@@ -13,6 +12,7 @@
 		:aria-label="getAriaLabel()"
 		:title="getAriaLabel()"
 		:data-name="channel.name"
+		:data-type="channel.type"
 		:aria-controls="'#chan-' + channel.id"
 		:aria-selected="activeChannel && channel === activeChannel.channel"
 		:style="channel.closed ? {transition: 'none', opacity: 0.4} : null"

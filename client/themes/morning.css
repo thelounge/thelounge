@@ -16,17 +16,17 @@ body {
 	scrollbar-color: rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0.05);
 }
 
-#chat .channel .msg.highlight .time {
+#chat .chat-view[data-type="channel"] .msg.highlight .time {
 	color: white;
 }
 
 #loading .logo,
-#windows .logo {
+.window .logo {
 	display: none;
 }
 
 #loading .logo-inverted,
-#windows .logo-inverted {
+.window .logo-inverted {
 	display: inline-block;
 }
 
@@ -40,7 +40,7 @@ body {
 
 /* Borders */
 #chat .content,
-#windows #chat .header,
+#chat .header,
 #chat .user-mode::before,
 #chat .userlist {
 	border-color: #28333d;
@@ -106,7 +106,7 @@ body {
 	color: #f3f3f3;
 }
 
-#windows .window {
+.window {
 	box-shadow: 0 0 25px rgba(0, 0, 0, 0.75);
 }
 

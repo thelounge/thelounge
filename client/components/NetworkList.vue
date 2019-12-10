@@ -42,7 +42,7 @@
 			/>
 
 			<Draggable
-				draggable=".chan"
+				draggable=".channel-list-item"
 				ghost-class="ui-sortable-ghost"
 				drag-class="ui-sortable-dragged"
 				:group="network.uuid"

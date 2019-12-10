@@ -2,9 +2,7 @@
 	<div id="viewport" :class="viewportClasses" role="tablist">
 		<Sidebar v-if="$store.state.appLoaded" :overlay="$refs.overlay" />
 		<div id="sidebar-overlay" ref="overlay" @click="$store.commit('sidebarOpen', false)" />
-		<article id="windows">
-			<router-view ref="window"></router-view>
-		</article>
+		<router-view ref="window"></router-view>
 		<ImageViewer ref="imageViewer" />
 		<ContextMenu ref="contextMenu" />
 		<div id="upload-overlay"></div>

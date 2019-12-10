@@ -32,7 +32,7 @@ const vueApp = new Vue({
 		closeChannel(channel) {
 			if (channel.type === "lobby") {
 				const el = document.querySelector(
-					`#sidebar .chan[aria-controls="#chan-${channel.id}"]`
+					`#sidebar .channel-list-item[aria-controls="#chan-${channel.id}"]`
 				);
 				const rect = el.getBoundingClientRect();
 				const event = new MouseEvent("click", {

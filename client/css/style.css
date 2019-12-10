@@ -16,6 +16,9 @@
 	--button-color: #84ce88;
 	--button-text-color-hover: #fff;
 
+	/* Color for sidebar overlay and other things that dim the viewport when something else is on top */
+	--overlay-bg-color: rgba(0, 0, 0, 0.5);
+
 	/* Links and link-looking buttons */
 	--link-color: #50a656;
 
@@ -213,8 +216,8 @@ kbd {
 #loading pre,
 #help .container,
 #changelog .container,
-#windows .header .title,
-#windows .header .topic,
+.header .title,
+.header .topic,
 #chat .messages {
 	user-select: text;
 	cursor: text;
@@ -241,7 +244,7 @@ kbd {
 #viewport .lt::before,
 #viewport .rt::before,
 #chat button.menu::before,
-#sidebar .chan::before,
+.channel-list-item::before,
 #footer .icon,
 #chat .count::before,
 #settings .extra-experimental,
@@ -317,14 +320,14 @@ kbd {
 
 .context-menu-query::before,
 .context-menu-action-query::before,
-#sidebar .chan.query::before { content: "\f075"; /* https://fontawesome.com/icons/comment?style=solid */ }
+.channel-list-item[data-type="query"]::before { content: "\f075"; /* https://fontawesome.com/icons/comment?style=solid */ }
 
 .context-menu-chan::before,
-#sidebar .chan.channel::before { content: "\f086"; /* http://fontawesome.io/icon/comments/ */ }
+.channel-list-item[data-type="channel"]::before { content: "\f086"; /* http://fontawesome.io/icon/comments/ */ }
 
-#sidebar .chan.special::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
+.channel-list-item[data-type="special"]::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
 
-#sidebar .chan.has-draft:not(.active):not(.lobby)::before { content: "\f304"; /* https://fontawesome.com/icons/pen?style=solid */ }
+.channel-list-item.has-draft:not(.active)::before { content: "\f304"; /* https://fontawesome.com/icons/pen?style=solid */ }
 
 #footer .connect::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
 #footer .settings::before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
@@ -490,11 +493,6 @@ kbd {
 	height: 100%;
 }
 
-#windows {
-	flex: 1 0 auto;
-	position: relative;
-}
-
 #form button,
 .header button,
 .reveal-password span {
@@ -595,13 +593,13 @@ kbd {
 	display: none;
 }
 
-#sidebar .chan,
+.channel-list-item,
 #sidebar .empty {
 	color: #b7c5d1;
 	font-size: 14px;
 }
 
-#sidebar .chan {
+.channel-list-item {
 	display: flex;
 	padding: 8px 14px;
 	position: relative;
@@ -610,14 +608,15 @@ kbd {
 
 /* All sidebar buttons and channels/queries must be white on hover and active */
 #sidebar button:hover,
-#sidebar .chan:hover,
+.channel-list-item:hover,
+.channel-list-item .active,
 #sidebar .active {
 	color: #fff;
 }
 
 /* All lobbies/channels/queries and footer buttons must have a half-transparent
 background on hover (unless active) */
-#sidebar .chan:hover,
+.channel-list-item:hover,
 #footer button:hover {
 	background-color: rgba(48, 62, 74, 0.5); /* #303e4a x 50% alpha */
 }
@@ -629,10 +628,10 @@ background on hover (unless active) */
 }
 
 /* Remove background on hovered/active channel when sorting/drag-and-dropping */
-#sidebar .chan.ui-sortable-dragged,
-#sidebar .ui-sortable-dragged .chan,
-#sidebar .ui-sortable-active .chan:hover,
-#sidebar .ui-sortable-active .chan.active {
+#sidebar .channel-list-item.ui-sortable-dragged,
+#sidebar .ui-sortable-dragged .channel-list-item,
+#sidebar .ui-sortable-active .channel-list-item:hover,
+#sidebar .ui-sortable-active .channel-list-item.active {
 	background: transparent;
 }
 
@@ -666,58 +665,58 @@ background on hover (unless active) */
 	text-align: center;
 }
 
-#sidebar .chan.lobby {
+.channel-list-item[data-type="lobby"] {
 	color: #84ce88;
 	font-size: 15px;
 	font-weight: bold;
 	padding-left: 0;
 }
 
-#sidebar .lobby-wrap {
+.channel-list-item .lobby-wrap {
 	display: flex;
 	flex-grow: 1;
 	overflow: hidden;
 }
 
-#sidebar .chan.lobby .lobby-wrap:hover,
-#sidebar .chan.lobby.active {
+.channel-list-item[data-type="lobby"] .lobby-wrap:hover,
+.channel-list-item[data-type="lobby"].active {
 	color: #c0f8c3;
 }
 
-#sidebar .not-connected-tooltip,
-#sidebar .not-secure-tooltip,
-#sidebar .parted-channel-tooltip {
+.channel-list-item .not-connected-tooltip,
+.channel-list-item .not-secure-tooltip,
+.channel-list-item .parted-channel-tooltip {
 	margin: 0 8px;
 }
 
-#sidebar .not-secure .chan.lobby {
+#sidebar .not-secure .channel-list-item[data-type="lobby"] {
 	color: #f39c12;
 }
 
-#sidebar .not-secure .chan.lobby .lobby-wrap:hover,
-#sidebar .not-secure .chan.lobby.active {
+#sidebar .not-secure .channel-list-item[data-type="lobby"] .lobby-wrap:hover,
+#sidebar .not-secure .channel-list-item[data-type="lobby"].active {
 	color: #f8c572;
 }
 
-#sidebar .not-connected .chan.lobby,
-#sidebar .parted-channel {
+#sidebar .not-connected .channel-list-item[data-type="lobby"],
+.channel-list-item.parted-channel {
 	color: #e74c3c;
 }
 
-#sidebar .not-connected .chan.lobby .lobby-wrap:hover,
-#sidebar .not-connected .chan.lobby.active,
-#sidebar .parted-channel:hover,
-#sidebar .parted-channel.active {
+#sidebar .not-connected .channel-list-item[data-type="lobby"] .lobby-wrap:hover,
+#sidebar .not-connected .channel-list-item[data-type="lobby"].active,
+.channel-list-item.parted-channel:hover,
+.channel-list-item.parted-channel.active {
 	color: #f1978e;
 }
 
-#sidebar .chan::before {
+.channel-list-item::before {
 	width: 14px;
 	margin-right: 12px;
 	line-height: 18px;
 }
 
-#sidebar .chan .name {
+.channel-list-item .name {
 	position: relative;
 	flex-grow: 1;
 	overflow: hidden;
@@ -725,14 +724,14 @@ background on hover (unless active) */
 	margin-right: 5px;
 }
 
-#windows .header .topic,
-#sidebar .chan .name {
+.header .topic,
+.channel-list-item .name {
 	mask-image: linear-gradient(to left, transparent, black 20px);
 }
 
 #sidebar .badge,
 #sidebar .add-channel-tooltip,
-#sidebar .close-tooltip {
+.channel-list-item .close-tooltip {
 	flex-shrink: 0;
 	line-height: 1;
 }
@@ -755,14 +754,14 @@ background on hover (unless active) */
 	color: #49505a;
 }
 
-#sidebar .close {
+.channel-list-item .close {
 	width: 18px;
 	height: 18px;
 	display: none;
 	transition: opacity 0.2s, background-color 0.2s;
 }
 
-#sidebar .close::before {
+.channel-list-item .close::before {
 	font-size: 20px;
 	font-weight: normal;
 	display: inline-block;
@@ -772,7 +771,7 @@ background on hover (unless active) */
 	color: #fff;
 }
 
-#sidebar .lobby .add-channel {
+.channel-list-item[data-type="lobby"] .add-channel {
 	border-radius: 3px;
 	width: 18px;
 	height: 18px;
@@ -780,7 +779,7 @@ background on hover (unless active) */
 	transition: opacity 0.2s, background-color 0.2s, transform 0.2s;
 }
 
-#sidebar .lobby .add-channel::before {
+.channel-list-item[data-type="lobby"] .add-channel::before {
 	font-size: 20px;
 	font-weight: normal;
 	display: inline-block;
@@ -790,11 +789,11 @@ background on hover (unless active) */
 	color: #fff;
 }
 
-#sidebar .lobby .add-channel:hover {
+.channel-list-item[data-type="lobby"] .add-channel:hover {
 	opacity: 1;
 }
 
-#sidebar .lobby .add-channel.opened {
+.channel-list-item[data-type="lobby"] .add-channel.opened {
 	/* translateZ(0) enables hardware acceleration, this is to avoid jittering when animating */
 	transform: rotate(45deg) translateZ(0);
 }
@@ -826,16 +825,16 @@ background on hover (unless active) */
 	opacity: 1;
 }
 
-#sidebar .chan.active {
+.channel-list-item.active {
 	cursor: default;
 }
 
-#sidebar .chan.active .close {
+.channel-list-item.active .close {
 	opacity: 0.4;
 	display: unset;
 }
 
-#sidebar .chan.active .close:hover {
+.channel-list-item.active .close:hover {
 	opacity: 1;
 }
 
@@ -855,9 +854,9 @@ background on hover (unless active) */
 	border-radius: 5px;
 }
 
-#windows li,
-#windows p,
-#windows label,
+.window li,
+.window p,
+.window label,
 #settings .error {
 	font-size: 14px;
 }
@@ -897,6 +896,8 @@ background on hover (unless active) */
 	background: var(--window-bg-color);
 	display: flex;
 	flex-direction: column;
+	flex: 1 0 auto;
+	position: relative;
 	overflow-y: auto;
 	height: 100%;
 	scrollbar-width: thin;
@@ -904,8 +905,8 @@ background on hover (unless active) */
 	-webkit-overflow-scrolling: touch;
 }
 
-#chat .chan,
-.window {
+#loading,
+#chat .chat-view {
 	/* flexbox does not seem to scroll without doing this */
 	position: absolute;
 	bottom: 0;
@@ -914,11 +915,11 @@ background on hover (unless active) */
 	top: 0;
 }
 
-#windows .window h1 {
+.window h1 {
 	font-size: 36px;
 }
 
-#windows .window h2 {
+.window h2 {
 	border-bottom: 1px solid currentColor;
 	color: var(--window-heading-color);
 	font-size: 22px;
@@ -926,18 +927,18 @@ background on hover (unless active) */
 	padding-bottom: 7px;
 }
 
-#windows .window h2 small {
+.window h2 small {
 	color: inherit;
 	line-height: 30px;
 }
 
-#windows .window h3 {
+.window h3 {
 	color: var(--window-heading-color);
 	font-size: 18px;
 	margin: 20px 0 10px;
 }
 
-#windows .header {
+.header {
 	line-height: 45px;
 	height: 45px;
 	padding: 0 6px;
@@ -946,11 +947,11 @@ background on hover (unless active) */
 	overflow: hidden;
 }
 
-#windows #chat .header {
+#chat .header {
 	border-bottom: 1px solid #e7e7e7;
 }
 
-#windows .header .title {
+.header .title {
 	font-size: 15px;
 	padding-left: 6px;
 	flex-shrink: 0;
@@ -962,7 +963,7 @@ background on hover (unless active) */
 	padding-left: 10px;
 }
 
-#windows .header .topic {
+.header .topic {
 	color: var(--body-color-muted);
 	margin-left: 8px;
 	word-break: break-all;
@@ -971,7 +972,7 @@ background on hover (unless active) */
 	font-size: 14px;
 }
 
-#windows .header .topic-input {
+.header .topic-input {
 	color: inherit;
 	background: transparent;
 	border: 1px solid #cdd3da;
@@ -1012,13 +1013,9 @@ background on hover (unless active) */
 	position: relative;
 }
 
-#chat .chan {
-	display: none;
-	flex-direction: column;
-}
-
-#chat .chan.active {
+#chat .chat-view {
 	display: flex;
+	flex-direction: column;
 }
 
 #chat .condensed {
@@ -1056,7 +1053,7 @@ background on hover (unless active) */
 	visibility: hidden;
 }
 
-#windows #form,
+#form,
 .messages .msg,
 .userlist {
 	font-size: 14px;
@@ -1165,7 +1162,7 @@ background on hover (unless active) */
 	content: "\f107"; /* https://fontawesome.com/icons/angle-down?style=solid */
 }
 
-.userlist-open .channel .scroll-down {
+.userlist-open .chat-view[data-type="channel"] .scroll-down {
 	right: 196px;
 }
 
@@ -1174,7 +1171,7 @@ background on hover (unless active) */
 	touch-action: pan-y;
 }
 
-#chat .chan:not(.special) .messages {
+#chat .chat-view:not([data-type="special"]) .messages {
 	margin-top: auto;
 }
 
@@ -1283,7 +1280,7 @@ background on hover (unless active) */
 	color: var(--body-color-muted);
 }
 
-#chat .special table th {
+#chat .chat-view[data-type="special"] table th {
 	word-break: normal;
 }
 
@@ -1367,8 +1364,7 @@ background on hover (unless active) */
 #chat table.ignore-list th,
 #chat table.channel-list td,
 #chat table.ban-list td,
-#chat table.invite-list td,
-#chat.table.ignore-list td {
+#chat table.invite-list td {
 	padding: 5px;
 	vertical-align: top;
 	border-bottom: #eee 1px solid;
@@ -1426,7 +1422,7 @@ background on hover (unless active) */
 
 #chat .notice .time,
 #chat .notice .content,
-#chat .chan .notice .user {
+#chat .chat-view .notice .user {
 	color: #0074d9 !important;
 }
 
@@ -1439,22 +1435,22 @@ background on hover (unless active) */
 	color: #e74c3c;
 }
 
-#chat .channel .msg.highlight {
+#chat .chat-view[data-type="channel"] .msg.highlight {
 	background-color: var(--highlight-bg-color);
 	border-left: 5px solid var(--highlight-border-color);
 }
 
-#chat .channel .msg.highlight .time {
+#chat .chat-view[data-type="channel"] .msg.highlight .time {
 	padding-left: 5px;
 	width: 50px;
 	color: #696969;
 }
 
-#chat.show-seconds .channel .msg.highlight .time {
+#chat.show-seconds .chat-view[data-type="channel"] .msg.highlight .time {
 	width: 70px;
 }
 
-#chat .channel .msg.highlight .content {
+#chat .chat-view[data-type="channel"] .msg.highlight .content {
 	border-left: 1px solid var(--highlight-bg-color);
 }
 
@@ -1675,6 +1671,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #loading {
+	display: flex;
 	font-size: 14px;
 	height: 100%;
 }
@@ -1683,10 +1680,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	height: initial;
 	display: flex;
 	flex-direction: column;
-	bottom: 5px;
-	left: 5px;
-	right: 5px;
-	top: 5px;
 }
 
 #loading p {
@@ -1724,7 +1717,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #loading .logo-inverted,
-#windows .logo-inverted {
+.window .logo-inverted {
 	display: none; /* In dark themes, inverted logo must be used instead */
 }
 
@@ -2019,6 +2012,9 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	width: 0%;
 	height: 2px;
 	visibility: hidden;
+	position: absolute;
+	top: -1px; /* put it on top of #form's border */
+	left: 0;
 }
 
 #upload-progressbar.upload-progressbar-visible {
@@ -2036,6 +2032,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	background: white;
 	display: flex;
 	align-items: flex-end;
+	position: relative;
 }
 
 #user-visible-error {
@@ -2439,10 +2436,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	}
 
 	#sidebar button,
-	#sidebar .chan,
+	.channel-list-item,
 	#sidebar .empty,
-	#windows label,
-	#windows .header .topic,
+	.window label,
+	.header .topic,
 	#settings .error,
 	#help .help-item,
 	#loading,
@@ -2470,7 +2467,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		bottom: 0;
 		left: 0;
 		right: 0;
-		background: rgba(0, 0, 0, 0.5);
+		background: var(--overlay-bg-color);
 		opacity: 0;
 		visibility: hidden;
 		transition: opacity 160ms, visibility 160ms;
@@ -2498,11 +2495,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	#viewport.menu-open #sidebar-overlay,
 	#viewport.menu-dragging #sidebar-overlay {
 		visibility: visible;
-	}
-
-	#viewport .lt,
-	#viewport .channel .rt {
-		display: flex;
 	}
 
 	/* On mobile display, channel list button stays at the top */
@@ -2546,7 +2538,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		margin: 20px 0;
 	}
 
-	#windows .input {
+	.input {
 		margin-bottom: 2px;
 	}
 
@@ -2578,11 +2570,11 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		white-space: pre;
 	}
 
-	#chat .channel .msg.highlight {
+	#chat .chat-view[data-type="channel"] .msg.highlight {
 		padding-left: 5px;
 	}
 
-	#chat .channel .msg.highlight .time {
+	#chat .chat-view[data-type="channel"] .msg.highlight .time {
 		padding-left: 0;
 	}
 
@@ -2639,7 +2631,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	bottom: 0;
 	left: 0;
 	right: 0;
-	background: black;
+	background: var(--overlay-bg-color);
 	visibility: hidden;
 	opacity: 0;
 	transition: opacity 0.2s, visibility 0.2s;
@@ -2654,7 +2646,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #upload-overlay.is-dragover {
 	visibility: visible;
-	opacity: 0.3;
+	opacity: 1;
 }
 
 #image-viewer .close-btn,
@@ -2724,7 +2716,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 /* Correctly handle multiple successive whitespace characters.
    For example: user has quit ( ===> L   O   L <=== )  */
 
-#windows .header .topic,
+.header .topic,
 #chat .message .content,
 #chat .motd .content,
 #chat .notice .content,
