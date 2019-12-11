@@ -519,10 +519,11 @@ export default {
 	mounted() {
 		socket.emit("sessions:get");
 
-		// Enable protocol handler registration if supported
-		if (window.navigator.registerProtocolHandler) {
-			this.canRegisterProtocol = true;
-		}
+		// Enable protocol handler registration if supported,
+		// and the network configuration is not locked
+		this.canRegisterProtocol =
+			window.navigator.registerProtocolHandler &&
+			!this.$store.state.serverConfiguration.lockNetwork;
 	},
 	methods: {
 		onChange(event) {
