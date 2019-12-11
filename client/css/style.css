@@ -606,8 +606,7 @@ kbd {
 	cursor: pointer;
 }
 
-/* All sidebar buttons and channels/queries must be white on hover and active */
-#sidebar button:hover,
+/* Channels/queries must be white on hover and active */
 .channel-list-item:hover,
 .channel-list-item.active {
 	color: #fff;
@@ -620,12 +619,10 @@ background on hover (unless active) */
 	background-color: rgba(48, 62, 74, 0.5); /* #303e4a x 50% alpha */
 }
 
-/* All active elements, hovered or not, must have a background */
-#sidebar button.active,
-#sidebar button.active:hover,
-.channel-list-item.active,
-.channel-list-item.active:hover {
+/* Darker background and defualt cursor for active channels */
+.channel-list-item.active {
 	background-color: #303e4a;
+	cursor: default;
 }
 
 /* Remove background on hovered/active channel when sorting/drag-and-dropping */
@@ -773,6 +770,15 @@ background on hover (unless active) */
 	color: #fff;
 }
 
+.channel-list-item.active .close {
+	opacity: 0.4;
+	display: unset;
+}
+
+.channel-list-item.active .close:hover {
+	opacity: 1;
+}
+
 .channel-list-item[data-type="lobby"] .add-channel {
 	border-radius: 3px;
 	width: 18px;
@@ -825,19 +831,6 @@ background on hover (unless active) */
 }
 
 #sidebar .collapse-network:hover {
-	opacity: 1;
-}
-
-.channel-list-item.active {
-	cursor: default;
-}
-
-.channel-list-item.active .close {
-	opacity: 0.4;
-	display: unset;
-}
-
-.channel-list-item.active .close:hover {
 	opacity: 1;
 }
 
@@ -2438,7 +2431,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		margin-top: 5px;
 	}
 
-	#sidebar button,
 	.channel-list-item,
 	#sidebar .empty,
 	.window label,
