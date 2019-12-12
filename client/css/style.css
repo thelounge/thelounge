@@ -84,10 +84,6 @@ abbr[title] {
 	cursor: help;
 }
 
-.pull-right {
-	float: right !important;
-}
-
 html,
 body {
 	height: 100%;
@@ -968,7 +964,7 @@ textarea.input {
 }
 
 .window h2 small {
-	color: inherit;
+	font-size: 16px;
 	line-height: 30px;
 }
 
@@ -1949,6 +1945,11 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	color: #ff4136;
 }
 
+#help .help-version-title {
+	display: flex;
+	justify-content: space-between;
+}
+
 #help .help-item {
 	display: table-row;
 	font-size: 14px;
@@ -2608,6 +2609,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	#connect .btn {
 		margin-left: 0;
 		width: 100%;
+	}
+
+	#help .help-version-title {
+		flex-direction: column;
 	}
 
 	#chat .messages {
