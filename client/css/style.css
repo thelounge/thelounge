@@ -142,6 +142,7 @@ button {
 	outline: none;
 	padding: 0;
 	user-select: inherit;
+	cursor: pointer;
 }
 
 code,
@@ -189,6 +190,10 @@ kbd {
 	border: 1px solid #bbb;
 	border-radius: 4px;
 	box-shadow: 0 2px 0 #bbb, inset 0 1px 1px #fff, inset 0 -1px 3px #ccc;
+}
+
+p {
+	margin: 0 0 10px;
 }
 
 .btn {
@@ -243,8 +248,10 @@ kbd {
 }
 
 .container {
+	padding: 0 15px;
 	margin-bottom: 20px;
-	max-width: 480px;
+	width: 480px;
+	align-self: center;
 	touch-action: pan-y;
 }
 
@@ -917,9 +924,10 @@ background on hover (unless active) */
 	border-color: #84ce88;
 }
 
-#user-specified-css-input {
+textarea.input {
 	resize: vertical;
-	height: 10em;
+	height: 100px;
+	min-height: 35px;
 	padding: 6px 10px;
 	line-height: 1.5;
 }
@@ -1769,30 +1777,48 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	width: 100%;
 }
 
+#connect .connect-row {
+	display: flex;
+}
+
+#connect .connect-row > .input,
+#connect .connect-row > .input-wrap {
+	flex-grow: 1;
+}
+
 #connect label {
-	display: block;
+	width: 25%;
+	flex-shrink: 0;
 	margin-top: 11px;
 }
 
-#connect .port::before {
-	content: ":";
-	margin: 9px 0 0 -17px;
-	position: absolute;
-}
-
 #connect .tls {
-	float: left;
+	width: 100%;
+	display: block;
 	margin-top: 6px;
 }
 
 #connect .tls input {
-	float: left;
 	margin: 3px 10px 0 0;
 }
 
+#connect\:host {
+	width: 70%;
+}
+
+#connect\:port {
+	width: 25%;
+}
+
+#connect\:portseparator {
+	width: 5%;
+	text-align: center;
+	display: inline-block;
+}
+
 #connect .btn {
-	float: left;
-	margin-top: 30px;
+	margin-left: 25%;
+	margin-top: 15px;
 }
 
 #settings .settings-sync-panel {
@@ -1889,13 +1915,13 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #sign-in .password-container .reveal-password {
 	top: 31px;
-	right: 0;
 }
 
 .password-container .reveal-password {
 	position: absolute;
 	top: 2px;
-	right: 15px;
+	right: 0;
+	appearance: none;
 }
 
 .password-container .reveal-password span {
@@ -2558,6 +2584,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 @media (max-width: 479px) {
 	.container {
+		max-width: 100%;
 		margin: 0;
 	}
 
@@ -2565,12 +2592,22 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		width: 100%;
 	}
 
-	#connect .tls {
-		margin: 20px 0;
-	}
-
 	.input {
 		margin-bottom: 2px;
+	}
+
+	#connect .connect-row {
+		flex-direction: column;
+	}
+
+	#connect .connect-row > .input,
+	#connect .connect-row > .input-wrap {
+		flex-grow: 1;
+	}
+
+	#connect .btn {
+		margin-left: 0;
+		width: 100%;
 	}
 
 	#chat .messages {

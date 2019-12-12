@@ -4,193 +4,160 @@
 			<SidebarToggle />
 		</div>
 		<form class="container" method="post" action="" @submit.prevent="onSubmit">
-			<div class="row">
-				<div class="col-sm-12">
-					<h1 class="title">
-						<template v-if="defaults.uuid">
-							<input type="hidden" name="uuid" :value="defaults.uuid" />
-							Edit {{ defaults.name }}
-						</template>
-						<template v-else>
-							<template v-if="config.public">The Lounge - </template>
-							Connect
-							<template v-if="!config.displayNetwork">
-								<template v-if="config.lockNetwork">
-									to {{ defaults.name }}
-								</template>
-							</template>
-						</template>
-					</h1>
-				</div>
-				<template v-if="config.displayNetwork">
-					<div>
-						<div class="col-sm-12">
-							<h2>Network settings</h2>
-						</div>
-						<div class="col-sm-3">
-							<label for="connect:name">Name</label>
-						</div>
-						<div class="col-sm-9">
-							<input
-								id="connect:name"
-								class="input"
-								name="name"
-								:value="defaults.name"
-								maxlength="100"
-							/>
-						</div>
-						<div class="col-sm-3">
-							<label for="connect:host">Server</label>
-						</div>
-						<div class="col-sm-6 col-xs-8">
-							<input
-								id="connect:host"
-								class="input"
-								name="host"
-								:value="defaults.host"
-								aria-label="Server address"
-								maxlength="255"
-								required
-								:disabled="config.lockNetwork ? true : false"
-							/>
-						</div>
-						<div class="col-sm-3 col-xs-4">
-							<div class="port">
-								<input
-									class="input"
-									type="number"
-									min="1"
-									max="65535"
-									name="port"
-									:value="defaults.port"
-									aria-label="Server port"
-									:disabled="config.lockNetwork ? true : false"
-								/>
-							</div>
-						</div>
-						<div class="clearfix" />
-						<div class="col-sm-9 col-sm-offset-3">
-							<label class="tls">
-								<input
-									type="checkbox"
-									name="tls"
-									:checked="defaults.tls ? true : false"
-									:disabled="config.lockNetwork ? true : false"
-								/>
-								Use secure connection (TLS)
-							</label>
-						</div>
-						<div class="col-sm-9 col-sm-offset-3">
-							<label class="tls">
-								<input
-									type="checkbox"
-									name="rejectUnauthorized"
-									:checked="defaults.rejectUnauthorized ? true : false"
-									:disabled="config.lockNetwork ? true : false"
-								/>
-								Only allow trusted certificates
-							</label>
-						</div>
-						<div class="clearfix" />
-					</div>
+			<h1 class="title">
+				<template v-if="defaults.uuid">
+					<input type="hidden" name="uuid" :value="defaults.uuid" />
+					Edit {{ defaults.name }}
 				</template>
-				<div class="col-sm-12">
-					<h2>User preferences</h2>
-				</div>
-				<div class="col-sm-3">
-					<label for="connect:nick">Nick</label>
-				</div>
-				<div class="col-sm-9">
+				<template v-else>
+					<template v-if="config.public">The Lounge - </template>
+					Connect
+					<template v-if="!config.displayNetwork">
+						<template v-if="config.lockNetwork"> to {{ defaults.name }} </template>
+					</template>
+				</template>
+			</h1>
+			<template v-if="config.displayNetwork">
+				<h2>Network settings</h2>
+				<div class="connect-row">
+					<label for="connect:name">Name</label>
 					<input
-						id="connect:nick"
-						class="input nick"
-						name="nick"
-						:value="defaults.nick"
+						id="connect:name"
+						class="input"
+						name="name"
+						:value="defaults.name"
 						maxlength="100"
-						required
-						@input="onNickChanged"
 					/>
 				</div>
-				<template v-if="!config.useHexIp">
-					<div class="col-sm-3">
-						<label for="connect:username">Username</label>
-					</div>
-					<div class="col-sm-9">
+				<div class="connect-row">
+					<label for="connect:host">Server</label>
+					<div class="input-wrap">
 						<input
-							id="connect:username"
-							ref="usernameInput"
-							class="input username"
-							name="username"
-							:value="defaults.username"
-							maxlength="512"
-						/>
-					</div>
-				</template>
-				<div class="col-sm-3">
-					<label for="connect:password">Password</label>
-				</div>
-				<div class="col-sm-9 password-container">
-					<RevealPassword v-slot:default="slotProps">
-						<input
-							id="connect:password"
-							v-model="defaults.password"
+							id="connect:host"
 							class="input"
-							:type="slotProps.isVisible ? 'text' : 'password'"
-							name="password"
-							maxlength="512"
+							name="host"
+							:value="defaults.host"
+							aria-label="Server address"
+							maxlength="255"
+							required
+							:disabled="config.lockNetwork ? true : false"
 						/>
-					</RevealPassword>
+						<span id="connect:portseparator">:</span>
+						<input
+							id="connect:port"
+							class="input"
+							type="number"
+							min="1"
+							max="65535"
+							name="port"
+							:value="defaults.port"
+							aria-label="Server port"
+							:disabled="config.lockNetwork ? true : false"
+						/>
+					</div>
 				</div>
-				<div class="col-sm-3">
-					<label for="connect:realname">Real name</label>
+				<div class="connect-row">
+					<label></label>
+					<div class="input-wrap">
+						<label class="tls">
+							<input
+								type="checkbox"
+								name="tls"
+								:checked="defaults.tls ? true : false"
+								:disabled="config.lockNetwork ? true : false"
+							/>
+							Use secure connection (TLS)
+						</label>
+						<label class="tls">
+							<input
+								type="checkbox"
+								name="rejectUnauthorized"
+								:checked="defaults.rejectUnauthorized ? true : false"
+								:disabled="config.lockNetwork ? true : false"
+							/>
+							Only allow trusted certificates
+						</label>
+					</div>
 				</div>
-				<div class="col-sm-9">
+			</template>
+
+			<h2>User preferences</h2>
+			<div class="connect-row">
+				<label for="connect:nick">Nick</label>
+				<input
+					id="connect:nick"
+					class="input nick"
+					name="nick"
+					:value="defaults.nick"
+					maxlength="100"
+					required
+					@input="onNickChanged"
+				/>
+			</div>
+			<template v-if="!config.useHexIp">
+				<div class="connect-row">
+					<label for="connect:username">Username</label>
 					<input
-						id="connect:realname"
-						class="input"
-						name="realname"
-						:value="defaults.realname"
+						id="connect:username"
+						ref="usernameInput"
+						class="input username"
+						name="username"
+						:value="defaults.username"
 						maxlength="512"
 					/>
 				</div>
-				<template v-if="defaults.uuid">
-					<div class="col-sm-3">
-						<label for="connect:commands">Commands</label>
-					</div>
-					<div class="col-sm-9">
-						<textarea
-							id="connect:commands"
-							class="input"
-							name="commands"
-							placeholder="One raw command per line, each command will be executed on new connection"
-							:value="defaults.commands ? defaults.commands.join('\n') : ''"
-						/>
-					</div>
-					<div class="col-sm-9 col-sm-offset-3">
-						<button type="submit" class="btn" :disabled="disabled ? true : false">
-							Save
-						</button>
-					</div>
-				</template>
-				<template v-else>
-					<div class="col-sm-3">
-						<label for="connect:channels">Channels</label>
-					</div>
-					<div class="col-sm-9">
-						<input
-							id="connect:channels"
-							class="input"
-							name="join"
-							:value="defaults.join"
-						/>
-					</div>
-					<div class="col-sm-9 col-sm-offset-3">
-						<button type="submit" class="btn" :disabled="disabled ? true : false">
-							Connect
-						</button>
-					</div>
-				</template>
+			</template>
+			<div class="connect-row">
+				<label for="connect:password">Password</label>
+				<RevealPassword class="input-wrap password-container" v-slot:default="slotProps">
+					<input
+						id="connect:password"
+						v-model="defaults.password"
+						class="input"
+						:type="slotProps.isVisible ? 'text' : 'password'"
+						name="password"
+						maxlength="512"
+					/>
+				</RevealPassword>
 			</div>
+			<div class="connect-row">
+				<label for="connect:realname">Real name</label>
+				<input
+					id="connect:realname"
+					class="input"
+					name="realname"
+					:value="defaults.realname"
+					maxlength="512"
+				/>
+			</div>
+			<template v-if="defaults.uuid">
+				<div class="connect-row">
+					<label for="connect:commands">Commands</label>
+					<textarea
+						id="connect:commands"
+						class="input"
+						name="commands"
+						placeholder="One raw command per line, each command will be executed on new connection"
+						:value="defaults.commands ? defaults.commands.join('\n') : ''"
+					/>
+				</div>
+				<div>
+					<button type="submit" class="btn" :disabled="disabled ? true : false">
+						Save
+					</button>
+				</div>
+			</template>
+			<template v-else>
+				<div class="connect-row">
+					<label for="connect:channels">Channels</label>
+					<input id="connect:channels" class="input" name="join" :value="defaults.join" />
+				</div>
+				<div>
+					<button type="submit" class="btn" :disabled="disabled ? true : false">
+						Connect
+					</button>
+				</div>
+			</template>
 		</form>
 	</div>
 </template>
