@@ -1157,7 +1157,6 @@ textarea.input {
 	padding-top: 15px;
 	padding-bottom: 0;
 	width: 100%;
-	display: none;
 }
 
 #chat .show-more .btn {
@@ -1250,10 +1249,6 @@ textarea.input {
 	background-color: var(--window-bg-color);
 	color: var(--unread-marker-color);
 	padding: 0 10px;
-}
-
-#chat .unread-marker:last-child {
-	display: none;
 }
 
 #chat .date-marker {
