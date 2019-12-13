@@ -74,7 +74,7 @@ function getEnabledPackages(packageJson) {
 		const json = JSON.parse(fs.readFileSync(packageJson, "utf-8"));
 		return Object.keys(json.dependencies);
 	} catch (e) {
-		//
+		log.error(`Failed to read packages/package.json: ${colors.red(e)}`);
 	}
 
 	return [];
