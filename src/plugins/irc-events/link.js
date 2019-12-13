@@ -61,7 +61,7 @@ module.exports = function(client, chan, msg) {
 				preview.type = "error";
 				preview.error = "message";
 				preview.message = err.message;
-				handlePreview(client, chan, msg, preview, null);
+				emitPreview(client, chan, msg, preview);
 			});
 
 		return cleanLinks;
@@ -86,35 +86,32 @@ function parseHtml(preview, res, client) {
 					$('meta[property="og:description"]').attr("content") ||
 					$('meta[name="description"]').attr("content") ||
 					"";
-				preview.thumb =
+				let thumb =
 					$('meta[property="og:image"]').attr("content") ||
 					$('meta[name="twitter:image:src"]').attr("content") ||
 					$('link[rel="image_src"]').attr("href") ||
 					"";
 
 				// Make sure thumbnail is a valid and absolute url
-				if (preview.thumb.length) {
-					preview.thumb = normalizeURL(preview.thumb, preview.link) || "";
+				if (thumb.length) {
+					thumb = normalizeURL(thumb, preview.link) || "";
 				}
 
 				// Verify that thumbnail pic exists and is under allowed size
-				if (preview.thumb.length) {
-					fetch(preview.thumb, {language: client.config.browser.language})
+				if (thumb.length) {
+					fetch(thumb, {language: client.config.browser.language})
 						.then((resThumb) => {
 							if (
-								resThumb === null ||
-								!imageTypeRegex.test(resThumb.type) ||
-								resThumb.size > Helper.config.prefetchMaxImageSize * 1024
+								resThumb !== null &&
+								imageTypeRegex.test(resThumb.type) &&
+								resThumb.size <= Helper.config.prefetchMaxImageSize * 1024
 							) {
-								preview.thumb = "";
+								preview.thumbActualUrl = thumb;
 							}
 
 							resolve(resThumb);
 						})
-						.catch(() => {
-							preview.thumb = "";
-							resolve(null);
-						});
+						.catch(() => resolve(null));
 				} else {
 					resolve(res);
 				}
@@ -201,7 +198,7 @@ function parse(msg, chan, preview, res, client) {
 				preview.maxSize = Helper.config.prefetchMaxImageSize * 1024;
 			} else {
 				preview.type = "image";
-				preview.thumb = preview.link;
+				preview.thumbActualUrl = preview.link;
 			}
 
 			break;
@@ -250,7 +247,11 @@ function parse(msg, chan, preview, res, client) {
 }
 
 function handlePreview(client, chan, msg, preview, res) {
-	if (!preview.thumb.length || !Helper.config.prefetchStorage) {
+	const thumb = preview.thumbActualUrl || "";
+	delete preview.thumbActualUrl;
+
+	if (!thumb.length || !Helper.config.prefetchStorage) {
+		preview.thumb = thumb;
 		return emitPreview(client, chan, msg, preview);
 	}
 
@@ -265,7 +266,6 @@ function handlePreview(client, chan, msg, preview, res) {
 			return removePreview(msg, preview);
 		}
 
-		preview.thumb = "";
 		return emitPreview(client, chan, msg, preview);
 	}
 

@@ -112,7 +112,7 @@ Chan.prototype.dereferencePreviews = function(messages) {
 			message.previews.forEach((preview) => {
 				if (preview.thumb) {
 					storage.dereference(preview.thumb);
-					preview.thumb = null;
+					preview.thumb = "";
 				}
 			});
 		}
