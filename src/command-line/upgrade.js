@@ -18,7 +18,7 @@ program
 		const packagesPath = Helper.getPackagesPath();
 		const packagesConfig = path.join(packagesPath, "package.json");
 		const packagesList = JSON.parse(fs.readFileSync(packagesConfig)).dependencies;
-		const argsList = ["upgrade", "--production", "--latest"];
+		const argsList = ["upgrade", "--latest"];
 
 		let count = 0;
 
