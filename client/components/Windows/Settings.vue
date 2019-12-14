@@ -225,7 +225,7 @@
 					</select>
 				</div>
 
-				<template v-if="$store.state.settings.prefetch">
+				<template v-if="$store.state.serverConfiguration.prefetch">
 					<div class="col-sm-12">
 						<h2>Link previews</h2>
 					</div>
