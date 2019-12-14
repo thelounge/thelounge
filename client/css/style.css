@@ -286,7 +286,6 @@ p {
 .channel-list-item::before,
 #footer .icon,
 #chat .count::before,
-#settings .extra-experimental,
 #settings .extra-help,
 #settings #play::before,
 #form #upload::before,
@@ -505,10 +504,6 @@ p {
 	position: absolute;
 	right: 13px;
 	line-height: 45px;
-}
-
-#settings .extra-experimental::before {
-	content: "\f0c3"; /* https://fontawesome.com/icons/flask?style=solid */
 }
 
 #settings .extra-help::before {
@@ -1857,16 +1852,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-right: 6px;
 }
 
-#settings .extra-experimental {
-	color: #84ce88;
-}
-
-#settings .extra-experimental,
 #settings .extra-help {
 	cursor: help;
 }
 
-#settings .extra-experimental,
 #settings h2 .extra-help {
 	font-size: 0.8em;
 }

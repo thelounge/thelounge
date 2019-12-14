@@ -38,18 +38,7 @@
 			</div>
 
 			<div v-if="!$store.state.serverConfiguration.public && $store.state.settings.advanced">
-				<h2>
-					Settings synchronisation
-					<span
-						class="tooltipped tooltipped-n tooltipped-no-delay"
-						aria-label="Note: This is an experimental feature and may change in future releases."
-					>
-						<button
-							class="extra-experimental"
-							aria-label="Note: This is an experimental feature and may change in future releases."
-						/>
-					</span>
-				</h2>
+				<h2>Settings synchronisation</h2>
 				<label class="opt">
 					<input
 						:checked="$store.state.settings.syncSettings"
