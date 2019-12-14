@@ -1,5 +1,6 @@
 "use strict";
 
+const _ = require("lodash");
 const log = require("../../log");
 const colors = require("chalk");
 const path = require("path");
@@ -18,6 +19,8 @@ const TIME_TO_LIVE = 15 * 60 * 1000; // 15 minutes, in milliseconds
 const cache = {
 	outdated: undefined,
 };
+
+let experimentalWarningPrinted = false;
 
 module.exports = {
 	getFiles,
@@ -66,66 +69,99 @@ function getPackage(name) {
 	return packageMap.get(name);
 }
 
-function loadPackages() {
-	const packageJson = path.join(Helper.getPackagesPath(), "package.json");
-	let packages;
-	let anyPlugins = false;
+function getEnabledPackages(packageJson) {
+	try {
+		const json = JSON.parse(fs.readFileSync(packageJson, "utf-8"));
+		return Object.keys(json.dependencies);
+	} catch (e) {
+		log.error(`Failed to read packages/package.json: ${colors.red(e)}`);
+	}
+
+	return [];
+}
+
+function loadPackage(packageName) {
+	let packageInfo;
+	let packageFile;
 
 	try {
-		packages = Object.keys(require(packageJson).dependencies);
+		const packagePath = Helper.getPackageModulePath(packageName);
+
+		packageInfo = JSON.parse(fs.readFileSync(path.join(packagePath, "package.json"), "utf-8"));
+
+		if (!packageInfo.thelounge) {
+			throw "'thelounge' is not present in package.json";
+		}
+
+		packageFile = require(packagePath);
 	} catch (e) {
-		packages = [];
+		log.error(`Package ${colors.bold(packageName)} could not be loaded: ${colors.red(e)}`);
+		log.debug(e.stack);
+		return;
 	}
 
-	packages.forEach((packageName) => {
-		let packageInfo;
-		let packageFile;
+	const version = packageInfo.version;
+	packageInfo = packageInfo.thelounge;
+	packageInfo.packageName = packageName;
+	packageInfo.version = version;
 
-		try {
-			const packagePath = Helper.getPackageModulePath(packageName);
+	packageMap.set(packageName, packageFile);
 
-			packageInfo = require(path.join(packagePath, "package.json"));
+	if (packageInfo.type === "theme") {
+		themes.addTheme(packageName, packageInfo);
 
-			if (!packageInfo.thelounge) {
-				throw "'thelounge' is not present in package.json";
-			}
-
-			packageFile = require(packagePath);
-		} catch (e) {
-			log.error(`Package ${colors.bold(packageName)} could not be loaded: ${colors.red(e)}`);
-			log.debug(e.stack);
-			return;
+		if (packageInfo.files) {
+			packageInfo.files.forEach((file) => addFile(packageName, file));
 		}
+	}
 
-		const version = packageInfo.version;
-		packageInfo = packageInfo.thelounge;
-		packageInfo.packageName = packageName;
-		packageInfo.version = version;
+	if (packageFile.onServerStart) {
+		packageFile.onServerStart(packageApis(packageInfo));
+	}
 
-		packageMap.set(packageName, packageFile);
+	log.info(`Package ${colors.bold(packageName)} ${colors.green("v" + version)} loaded`);
 
-		if (packageInfo.type === "theme") {
-			themes.addTheme(packageName, packageInfo);
+	if (packageInfo.type !== "theme" && !experimentalWarningPrinted) {
+		experimentalWarningPrinted = true;
 
-			if (packageInfo.files) {
-				packageInfo.files.forEach((file) => addFile(packageName, file));
-			}
-		} else {
-			anyPlugins = true;
-		}
-
-		if (packageFile.onServerStart) {
-			packageFile.onServerStart(packageApis(packageInfo));
-		}
-
-		log.info(`Package ${colors.bold(packageName)} ${colors.green("v" + version)} loaded`);
-	});
-
-	if (anyPlugins) {
 		log.info(
-			"There are packages using the experimental plugin API. Be aware that this API is not yet stable and may change in future The Lounge releases."
+			"There are packages using the experimental plugin API. " +
+				"Be aware that this API is not yet stable and may change in future The Lounge releases."
 		);
 	}
+}
+
+function loadPackages() {
+	const packageJson = path.join(Helper.getPackagesPath(), "package.json");
+	const packages = getEnabledPackages(packageJson);
+
+	packages.forEach(loadPackage);
+
+	watchPackages(packageJson);
+}
+
+function watchPackages(packageJson) {
+	fs.watch(
+		packageJson,
+		{
+			persistent: false,
+		},
+		_.debounce(
+			() => {
+				const updated = getEnabledPackages(packageJson);
+
+				for (const packageName of updated) {
+					if (packageMap.has(packageName)) {
+						continue;
+					}
+
+					loadPackage(packageName);
+				}
+			},
+			1000,
+			{maxWait: 10000}
+		)
+	);
 }
 
 async function outdated(cacheTimeout = TIME_TO_LIVE) {

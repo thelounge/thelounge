@@ -2,6 +2,7 @@
 
 const log = require("../log");
 const fs = require("fs");
+const fsextra = require("fs-extra");
 const path = require("path");
 const colors = require("chalk");
 const program = require("commander");
@@ -36,6 +37,9 @@ try {
 	// fs.statSync will throw if config.js does not exist (e.g. first run)
 }
 
+// Create packages/package.json
+createPackagesFolder();
+
 // Merge config key-values passed as CLI options into the main config
 Helper.mergeConfig(Helper.config, program.config);
 
@@ -60,6 +64,31 @@ program.parse(argvWithoutOptions.args.concat(argvWithoutOptions.unknown));
 
 if (program.rawArgs.length < 3) {
 	program.help();
+}
+
+function createPackagesFolder() {
+	const packagesPath = Helper.getPackagesPath();
+	const packagesConfig = path.join(packagesPath, "package.json");
+
+	// Create node_modules folder, otherwise yarn will start walking upwards to find one
+	fsextra.ensureDirSync(path.join(packagesPath, "node_modules"));
+
+	// Create package.json with private set to true, if it doesn't exist already
+	if (!fs.existsSync(packagesConfig)) {
+		fs.writeFileSync(
+			packagesConfig,
+			JSON.stringify(
+				{
+					private: true,
+					description:
+						"Packages for The Lounge. All packages in node_modules directory will be automatically loaded.",
+					dependencies: {},
+				},
+				null,
+				"\t"
+			)
+		);
+	}
 }
 
 function verifyFileOwner() {
