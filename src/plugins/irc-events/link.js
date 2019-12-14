@@ -330,31 +330,32 @@ function fetch(uri, headers) {
 
 	promise = new Promise((resolve, reject) => {
 		let buffer = Buffer.from("");
-		let request;
-		let response;
+		let contentLength = 0;
+		let contentType;
 		let limit = Helper.config.prefetchMaxImageSize * 1024;
 
 		try {
-			got.stream(uri, {
+			const gotStream = got.stream(uri, {
+				retry: 0,
 				timeout: 5000,
 				headers: getRequestHeaders(headers),
 				rejectUnauthorized: false,
-			})
-				.on("request", (req) => (request = req))
-				.on("response", function(res) {
-					response = res;
+			});
 
-					if (imageTypeRegex.test(res.headers["content-type"])) {
+			gotStream
+				.on("response", function(res) {
+					contentLength = parseInt(res.headers["content-length"], 10) || 0;
+					contentType = res.headers["content-type"];
+
+					if (imageTypeRegex.test(contentType)) {
 						// response is an image
 						// if Content-Length header reports a size exceeding the prefetch limit, abort fetch
-						const contentLength = parseInt(res.headers["content-length"], 10) || 0;
-
 						if (contentLength > limit) {
-							request.abort();
+							gotStream.destroy();
 						}
-					} else if (mediaTypeRegex.test(res.headers["content-type"])) {
+					} else if (mediaTypeRegex.test(contentType)) {
 						// We don't need to download the file any further after we received content-type header
-						request.abort();
+						gotStream.destroy();
 					} else {
 						// if not image, limit download to 50kb, since we need only meta tags
 						// twitter.com sends opengraph meta tags within ~20kb of data for individual tweets
@@ -366,19 +367,18 @@ function fetch(uri, headers) {
 					buffer = Buffer.concat([buffer, data], buffer.length + data.length);
 
 					if (buffer.length >= limit) {
-						request.abort();
+						gotStream.destroy();
 					}
 				})
-				.on("end", () => {
+				.on("end", () => gotStream.destroy())
+				.on("close", () => {
 					let type = "";
-					let size = parseInt(response.headers["content-length"], 10) || buffer.length;
 
-					if (size < buffer.length) {
-						size = buffer.length;
-					}
+					// If we downloaded more data then specified in Content-Length, use real data size
+					const size = contentLength > buffer.length ? contentLength : buffer.length;
 
-					if (response.headers["content-type"]) {
-						type = response.headers["content-type"].split(/ *; */).shift();
+					if (contentType) {
+						type = contentType.split(/ *; */).shift();
 					}
 
 					resolve({data: buffer, type, size});
