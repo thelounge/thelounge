@@ -66,12 +66,7 @@ program
 					);
 				}
 
-				return Utils.executeYarnCommand(
-					"add",
-					"--production",
-					"--exact",
-					`${json.name}@${json.version}`
-				)
+				return Utils.executeYarnCommand("add", "--exact", `${json.name}@${json.version}`)
 					.then(() => {
 						log.info(
 							`${colors.green(
