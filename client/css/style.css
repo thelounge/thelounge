@@ -1,5 +1,5 @@
+@import "../../node_modules/normalize.css/normalize.css";
 @import "fontawesome.css";
-@import "bootstrap.css";
 @import "../../node_modules/primer-tooltips/build/build.css";
 
 :root {
@@ -47,6 +47,43 @@
 	opacity: 1; /* fix opacity in Firefox */
 }
 
+html {
+	box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: inherit;
+}
+
+input,
+button,
+select,
+textarea {
+	font: inherit;
+	color: inherit;
+}
+
+img {
+	vertical-align: middle;
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+}
+
+abbr[title] {
+	cursor: help;
+}
+
 html,
 body {
 	height: 100%;
@@ -73,22 +110,17 @@ a,
 a:hover,
 a:focus {
 	color: var(--link-color);
+	text-decoration: none;
 }
 
 a:hover {
 	text-decoration: underline;
 }
 
-/**
- * From Normalize. See https://github.com/thelounge/thelounge/pull/1217
- * 1. Remove the bottom border in Chrome 57- and Firefox 39-.
- * 2. Add the correct text decoration in Chrome, Edge, IE, Opera, and Safari.
- */
-
-abbr[title] {
-	border-bottom: none; /* 1 */
-	text-decoration: underline; /* 2 */
-	text-decoration: underline dotted; /* 2 */
+a:focus {
+	outline: thin dotted;
+	outline: 5px auto -webkit-focus-ring-color;
+	outline-offset: -2px;
 }
 
 h1,
@@ -106,6 +138,7 @@ button {
 	outline: none;
 	padding: 0;
 	user-select: inherit;
+	cursor: pointer;
 }
 
 code,
@@ -153,6 +186,10 @@ kbd {
 	border: 1px solid #bbb;
 	border-radius: 4px;
 	box-shadow: 0 2px 0 #bbb, inset 0 1px 1px #fff, inset 0 -1px 3px #ccc;
+}
+
+p {
+	margin: 0 0 10px;
 }
 
 .btn {
@@ -207,8 +244,10 @@ kbd {
 }
 
 .container {
+	padding: 0 15px;
 	margin-bottom: 20px;
-	max-width: 480px;
+	width: 480px;
+	align-self: center;
 	touch-action: pan-y;
 }
 
@@ -247,7 +286,6 @@ kbd {
 .channel-list-item::before,
 #footer .icon,
 #chat .count::before,
-#settings .extra-experimental,
 #settings .extra-help,
 #settings #play::before,
 #form #upload::before,
@@ -357,12 +395,19 @@ kbd {
 #help .documentation-link::before { content: "\f19d"; /* http://fontawesome.io/icon/graduation-cap/ */ }
 #help .report-issue-link::before { content: "\f188"; /* http://fontawesome.io/icon/bug/ */ }
 
-.session-list strong {
-	display: block;
+.session-list .session-item {
+	display: flex;
+	font-size: 14px;
 }
 
-.session-list p {
-	margin-bottom: 10px;
+.session-list .session-item-info {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+.session-list .session-item-btn {
+	flex-shrink: 0;
 }
 
 #chat .invite .from::before {
@@ -459,10 +504,6 @@ kbd {
 	position: absolute;
 	right: 13px;
 	line-height: 45px;
-}
-
-#settings .extra-experimental::before {
-	content: "\f0c3"; /* https://fontawesome.com/icons/flask?style=solid */
 }
 
 #settings .extra-help::before {
@@ -881,9 +922,10 @@ background on hover (unless active) */
 	border-color: #84ce88;
 }
 
-#user-specified-css-input {
+textarea.input {
 	resize: vertical;
-	height: 10em;
+	height: 100px;
+	min-height: 35px;
 	padding: 6px 10px;
 	line-height: 1.5;
 }
@@ -924,7 +966,7 @@ background on hover (unless active) */
 }
 
 .window h2 small {
-	color: inherit;
+	font-size: 16px;
 	line-height: 30px;
 }
 
@@ -1110,7 +1152,6 @@ background on hover (unless active) */
 	padding-top: 15px;
 	padding-bottom: 0;
 	width: 100%;
-	display: none;
 }
 
 #chat .show-more .btn {
@@ -1203,10 +1244,6 @@ background on hover (unless active) */
 	background-color: var(--window-bg-color);
 	color: var(--unread-marker-color);
 	padding: 0 10px;
-}
-
-#chat .unread-marker:last-child {
-	display: none;
 }
 
 #chat .date-marker {
@@ -1733,30 +1770,48 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	width: 100%;
 }
 
+#connect .connect-row {
+	display: flex;
+}
+
+#connect .connect-row > .input,
+#connect .connect-row > .input-wrap {
+	flex-grow: 1;
+}
+
 #connect label {
-	display: block;
+	width: 25%;
+	flex-shrink: 0;
 	margin-top: 11px;
 }
 
-#connect .port::before {
-	content: ":";
-	margin: 9px 0 0 -17px;
-	position: absolute;
-}
-
 #connect .tls {
-	float: left;
+	width: 100%;
+	display: block;
 	margin-top: 6px;
 }
 
 #connect .tls input {
-	float: left;
 	margin: 3px 10px 0 0;
 }
 
+#connect\:host {
+	width: 70%;
+}
+
+#connect\:port {
+	width: 25%;
+}
+
+#connect\:portseparator {
+	width: 5%;
+	text-align: center;
+	display: inline-block;
+}
+
 #connect .btn {
-	float: left;
-	margin-top: 30px;
+	margin-left: 25%;
+	margin-top: 15px;
 }
 
 #settings .settings-sync-panel {
@@ -1797,16 +1852,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-right: 6px;
 }
 
-#settings .extra-experimental {
-	color: #84ce88;
-}
-
-#settings .extra-experimental,
 #settings .extra-help {
 	cursor: help;
 }
 
-#settings .extra-experimental,
 #settings h2 .extra-help {
 	font-size: 0.8em;
 }
@@ -1853,13 +1902,13 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #sign-in .password-container .reveal-password {
 	top: 31px;
-	right: 0;
 }
 
 .password-container .reveal-password {
 	position: absolute;
 	top: 2px;
-	right: 15px;
+	right: 0;
+	appearance: none;
 }
 
 .password-container .reveal-password span {
@@ -1885,6 +1934,11 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 .password-container .reveal-password-visible span::before {
 	content: "\f070"; /* https://fontawesome.com/icons/eye-slash?style=solid */
 	color: #ff4136;
+}
+
+#help .help-version-title {
+	display: flex;
+	justify-content: space-between;
 }
 
 #help .help-item {
@@ -2522,6 +2576,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 @media (max-width: 479px) {
 	.container {
+		max-width: 100%;
 		margin: 0;
 	}
 
@@ -2529,12 +2584,26 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		width: 100%;
 	}
 
-	#connect .tls {
-		margin: 20px 0;
-	}
-
 	.input {
 		margin-bottom: 2px;
+	}
+
+	#connect .connect-row {
+		flex-direction: column;
+	}
+
+	#connect .connect-row > .input,
+	#connect .connect-row > .input-wrap {
+		flex-grow: 1;
+	}
+
+	#connect .btn {
+		margin-left: 0;
+		width: 100%;
+	}
+
+	#help .help-version-title {
+		flex-direction: column;
 	}
 
 	#chat .messages {

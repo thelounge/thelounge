@@ -1,6 +1,6 @@
 <template>
 	<div ref="chat" class="chat" tabindex="-1">
-		<div :class="['show-more', {show: channel.moreHistoryAvailable}]">
+		<div v-show="channel.moreHistoryAvailable" class="show-more">
 			<button
 				ref="loadMoreButton"
 				:disabled="channel.historyLoading || !$store.state.isConnected"

@@ -6,15 +6,15 @@
 		<div class="container">
 			<h1 class="title">Help</h1>
 
-			<h2>
-				<small class="pull-right">
+			<h2 class="help-version-title">
+				<span>About The Lounge</span>
+				<small>
 					v{{ $store.state.serverConfiguration.version }} (<router-link
 						id="view-changelog"
 						to="/changelog"
 						>release notes</router-link
 					>)
 				</small>
-				About The Lounge
 			</h2>
 
 			<div class="about">

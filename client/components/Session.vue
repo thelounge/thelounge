@@ -1,30 +1,28 @@
 <template>
-	<p>
-		<button class="btn pull-right remove-session" @click.prevent="signOut">
-			<template v-if="session.current">
-				Sign out
-			</template>
-			<template v-else>
-				Revoke
-			</template>
-		</button>
+	<div class="session-item">
+		<div class="session-item-info">
+			<strong>{{ session.agent }}</strong>
 
-		<strong>{{ session.agent }}</strong>
+			<a :href="'https://ipinfo.io/' + session.ip" target="_blank" rel="noopener">{{
+				session.ip
+			}}</a>
 
-		<a :href="'https://ipinfo.io/' + session.ip" target="_blank" rel="noopener">{{
-			session.ip
-		}}</a>
-
-		<template v-if="!session.current">
-			<br />
-			<template v-if="session.active">
-				<em>Currently active</em>
+			<template v-if="!session.current">
+				<p v-if="session.active">
+					<em>Currently active</em>
+				</p>
+				<p v-else>
+					Last used on <time>{{ session.lastUse | localetime }}</time>
+				</p>
 			</template>
-			<template v-else>
-				Last used on <time>{{ session.lastUse | localetime }}</time>
-			</template>
-		</template>
-	</p>
+		</div>
+		<div class="session-item-btn">
+			<button class="btn" @click.prevent="signOut">
+				<template v-if="session.current">Sign out</template>
+				<template v-else>Revoke</template>
+			</button>
+		</div>
+	</div>
 </template>
 
 <script>
