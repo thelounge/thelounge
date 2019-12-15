@@ -190,8 +190,10 @@ ClientManager.prototype.updateUser = function(name, opts, callback) {
 	_.assign(user, opts);
 	const newUser = JSON.stringify(user, null, "\t");
 
+
 	// Do not touch the disk if object has not changed
 	if (currentUser === newUser) {
+		console.log("same");
 		return callback ? callback() : true;
 	}
 

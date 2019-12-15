@@ -316,6 +316,7 @@ Client.prototype.updateSession = function(token, ip, request) {
 	});
 
 	client.manager.updateUser(client.name, {
+		browser: client.config.browser,
 		sessions: client.config.sessions,
 	});
 };
