@@ -88,7 +88,7 @@
 					Show seconds in timestamp
 				</label>
 			</div>
-			<div v-if="$store.state.settings.advanced">
+			<div v-if="!$store.state.serverConfiguration.public && $store.state.settings.advanced">
 				<h2>Automatic away message</h2>
 
 				<label class="opt">
@@ -308,7 +308,7 @@
 				</label>
 			</div>
 
-			<div v-if="$store.state.settings.advanced">
+			<div v-if="!$store.state.serverConfiguration.public && $store.state.settings.advanced">
 				<label class="opt">
 					<label for="highlights" class="sr-only">
 						Custom highlights (comma-separated keywords)
