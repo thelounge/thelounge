@@ -62,6 +62,9 @@ function Client(manager, name, config = {}) {
 
 	const client = this;
 
+	client.config.log = Boolean(client.config.log);
+	client.config.password = String(client.config.password);
+
 	if (!Helper.config.public && client.config.log) {
 		if (Helper.config.messageStorage.includes("sqlite")) {
 			client.messageStorage.push(new MessageStorage(client));
