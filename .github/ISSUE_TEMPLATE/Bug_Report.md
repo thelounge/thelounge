@@ -1,6 +1,7 @@
 ---
 name: Bug Report
 about: Create a bug report
+labels: "Type: Bug"
 ---
 
 <!-- Have a question? Join #thelounge on freenode -->
