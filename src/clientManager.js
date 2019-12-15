@@ -195,8 +195,15 @@ ClientManager.prototype.updateUser = function(name, opts, callback) {
 		return callback ? callback() : true;
 	}
 
+	const pathReal = Helper.getUserConfigPath(name);
+	const pathTemp = pathReal + ".tmp";
+
 	try {
-		fs.writeFileSync(Helper.getUserConfigPath(name), newUser);
+		// Write to a temp file first, in case the write fails
+		// we do not lose the original file (for example when disk is full)
+		fs.writeFileSync(pathTemp, newUser);
+		fs.renameSync(pathTemp, pathReal);
+
 		return callback ? callback() : true;
 	} catch (e) {
 		log.error(`Failed to update user ${colors.green(name)} (${e})`);
