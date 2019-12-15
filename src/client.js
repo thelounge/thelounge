@@ -315,29 +315,23 @@ Client.prototype.updateSession = function(token, ip, request) {
 		agent: friendlyAgent,
 	});
 
-	client.manager.updateUser(client.name, {
-		browser: client.config.browser,
-		sessions: client.config.sessions,
-	});
+	client.save();
 };
 
 Client.prototype.setPassword = function(hash, callback) {
 	const client = this;
 
-	client.manager.updateUser(
-		client.name,
-		{
-			password: hash,
-		},
-		function(err) {
-			if (err) {
-				return callback(false);
-			}
-
-			client.config.password = hash;
-			return callback(true);
+	const oldHash = client.config.password;
+	client.config.password = hash;
+	client.manager.saveUser(client, function(err) {
+		if (err) {
+			// If user file fails to write, reset it back
+			client.config.password = oldHash;
+			return callback(false);
 		}
-	);
+
+		return callback(true);
+	});
 };
 
 Client.prototype.input = function(data) {
@@ -662,9 +656,7 @@ Client.prototype.registerPushSubscription = function(session, subscription, noSa
 	session.pushSubscription = data;
 
 	if (!noSave) {
-		this.manager.updateUser(this.name, {
-			sessions: this.config.sessions,
-		});
+		this.save();
 	}
 
 	return data;
@@ -672,9 +664,7 @@ Client.prototype.registerPushSubscription = function(session, subscription, noSa
 
 Client.prototype.unregisterPushSubscription = function(token) {
 	this.config.sessions[token].pushSubscription = null;
-	this.manager.updateUser(this.name, {
-		sessions: this.config.sessions,
-	});
+	this.save();
 };
 
 Client.prototype.save = _.debounce(
@@ -684,9 +674,7 @@ Client.prototype.save = _.debounce(
 		}
 
 		const client = this;
-		const json = {};
-		json.networks = this.networks.map((n) => n.export());
-		client.manager.updateUser(client.name, json);
+		client.manager.saveUser(client);
 	},
 	1000,
 	{maxWait: 10000}

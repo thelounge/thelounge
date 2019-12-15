@@ -179,25 +179,13 @@ ClientManager.prototype.addUser = function(name, password, enableLog) {
 	return true;
 };
 
-ClientManager.prototype.updateUser = function(name, opts, callback) {
-	const user = readUserConfig(name);
+ClientManager.prototype.saveUser = function(client, callback) {
+	const json = Object.assign({}, client.config, {
+		networks: client.networks.map((n) => n.export()),
+	});
+	const newUser = JSON.stringify(json, null, "\t");
 
-	if (!user) {
-		return callback ? callback(true) : false;
-	}
-
-	const currentUser = JSON.stringify(user, null, "\t");
-	_.assign(user, opts);
-	const newUser = JSON.stringify(user, null, "\t");
-
-
-	// Do not touch the disk if object has not changed
-	if (currentUser === newUser) {
-		console.log("same");
-		return callback ? callback() : true;
-	}
-
-	const pathReal = Helper.getUserConfigPath(name);
+	const pathReal = Helper.getUserConfigPath(client.name);
 	const pathTemp = pathReal + ".tmp";
 
 	try {
@@ -208,7 +196,7 @@ ClientManager.prototype.updateUser = function(name, opts, callback) {
 
 		return callback ? callback() : true;
 	} catch (e) {
-		log.error(`Failed to update user ${colors.green(name)} (${e})`);
+		log.error(`Failed to update user ${colors.green(client.name)} (${e})`);
 
 		if (callback) {
 			callback(e);

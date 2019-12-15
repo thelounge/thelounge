@@ -591,9 +591,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 					value: newSetting.value,
 				});
 
-				client.manager.updateUser(client.name, {
-					clientSettings: client.config.clientSettings,
-				});
+				client.save();
 
 				if (newSetting.name === "highlights") {
 					client.compileCustomHighlights();
@@ -630,9 +628,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 
 		delete client.config.sessions[tokenToSignOut];
 
-		client.manager.updateUser(client.name, {
-			sessions: client.config.sessions,
-		});
+		client.save();
 
 		_.map(client.attachedClients, (attachedClient, socketId) => {
 			if (attachedClient.token !== tokenToSignOut) {
