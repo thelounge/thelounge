@@ -1742,7 +1742,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
-	width: 100%;
 }
 
 #loading-reload-container {
