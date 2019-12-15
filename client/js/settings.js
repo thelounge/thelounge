@@ -10,8 +10,9 @@ export const config = normalizeConfig({
 	syncSettings: {
 		default: true,
 		sync: "never",
-		apply(store, value) {
-			if (value) {
+		apply(store, value, auto = false) {
+			// If applied by settings/applyAll, do not emit to server
+			if (value && !auto) {
 				socket.emit("setting:get");
 			}
 		},

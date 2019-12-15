@@ -10,7 +10,6 @@ socket.once("configuration", function(data) {
 	// 'theme' setting depends on serverConfiguration.themes so
 	// settings cannot be applied before this point
 	store.dispatch("settings/applyAll");
-	socket.emit("setting:get");
 
 	if (data.fileUpload) {
 		upload.initialize();

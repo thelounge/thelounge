@@ -22,6 +22,8 @@ socket.on("init", function(data) {
 
 		store.commit("appLoaded");
 
+		socket.emit("setting:get");
+
 		if (window.g_TheLoungeRemoveLoading) {
 			window.g_TheLoungeRemoveLoading();
 		}

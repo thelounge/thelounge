@@ -27,7 +27,7 @@ export function createSettingsStore(store) {
 			},
 			applyAll({state}) {
 				for (const settingName in config) {
-					config[settingName].apply(store, state[settingName]);
+					config[settingName].apply(store, state[settingName], true);
 				}
 			},
 			update({state, commit}, {name, value, sync = false}) {
