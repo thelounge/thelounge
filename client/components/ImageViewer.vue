@@ -45,10 +45,15 @@ export default {
 	},
 	computed: {
 		computeImageStyles() {
+			// Sub pixels may cause the image to blur in certain browsers
+			// round it down to prevent that
+			const transformX = Math.floor(this.transform.x);
+			const transformY = Math.floor(this.transform.y);
+
 			return {
 				left: `${this.position.x}px`,
 				top: `${this.position.y}px`,
-				transform: `translate3d(${this.transform.x}px, ${this.transform.y}px, 0) scale3d(${this.transform.scale}, ${this.transform.scale}, 1)`,
+				transform: `translate3d(${transformX}px, ${transformY}px, 0) scale3d(${this.transform.scale}, ${this.transform.scale}, 1)`,
 			};
 		},
 	},
@@ -87,8 +92,8 @@ export default {
 			const height = viewer.offsetHeight;
 			const scale = Math.min(1, width / image.width, height / image.height);
 
-			this.position.x = -image.naturalWidth / 2;
-			this.position.y = -image.naturalHeight / 2;
+			this.position.x = Math.floor(-image.naturalWidth / 2);
+			this.position.y = Math.floor(-image.naturalHeight / 2);
 			this.transform.scale = Math.max(scale, 0.1);
 			this.transform.x = width / 2;
 			this.transform.y = height / 2;
