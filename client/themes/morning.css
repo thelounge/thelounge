@@ -118,16 +118,12 @@ body {
 }
 
 /* Setup text colors */
-#chat .message {
-	color: #f3f3f3;
-}
-
-#chat .error,
-#chat .error .from {
+#chat .msg[data-type="error"],
+#chat .msg[data-type="error"] .from {
 	color: #f92772;
 }
 
-#chat .msg.motd .text,
+#chat .msg[data-type="motd"] .text,
 code,
 .irc-monospace {
 	background: #28333d;

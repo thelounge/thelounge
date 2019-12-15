@@ -1,7 +1,8 @@
 <template>
 	<div
 		:id="'msg-' + message.id"
-		:class="['msg', message.type, {self: message.self, highlight: message.highlight}]"
+		:class="['msg', {self: message.self, highlight: message.highlight}]"
+		:data-type="message.type"
 		:data-from="message.from && message.from.nick"
 	>
 		<span :aria-label="message.time | localetime" class="time tooltipped tooltipped-e"

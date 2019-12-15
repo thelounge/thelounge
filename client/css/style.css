@@ -143,7 +143,7 @@ button {
 
 code,
 pre,
-#chat .msg.motd .text,
+#chat .msg[data-type="motd"] .text,
 .irc-monospace,
 textarea#user-specified-css-input {
 	font-family: Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
@@ -267,7 +267,7 @@ p {
 	left: -999999px;
 }
 
-#chat #js-copy-hack .condensed:not(.closed) .msg,
+#chat #js-copy-hack .msg[data-type="condensed"]:not(.closed) .msg,
 #chat #js-copy-hack > .msg {
 	display: block;
 }
@@ -290,24 +290,24 @@ p {
 #settings #play::before,
 #form #upload::before,
 #form #submit::before,
-#chat .away .from::before,
-#chat .back .from::before,
-#chat .invite .from::before,
-#chat .join .from::before,
-#chat .kick .from::before,
-#chat .part .from::before,
-#chat .quit .from::before,
-#chat .topic .from::before,
-#chat .mode_channel .from::before,
-#chat .mode .from::before,
-#chat .motd .from::before,
-#chat .ctcp .from::before,
-#chat .ctcp_request .from::before,
-#chat .whois .from::before,
-#chat .nick .from::before,
-#chat .action .from::before,
-#chat .plugin .from::before,
-#chat .raw .from::before,
+#chat .msg[data-type="away"] .from::before,
+#chat .msg[data-type="back"] .from::before,
+#chat .msg[data-type="invite"] .from::before,
+#chat .msg[data-type="join"] .from::before,
+#chat .msg[data-type="kick"] .from::before,
+#chat .msg[data-type="part"] .from::before,
+#chat .msg[data-type="quit"] .from::before,
+#chat .msg[data-type="topic"] .from::before,
+#chat .msg[data-type="mode_channel"] .from::before,
+#chat .msg[data-type="mode"] .from::before,
+#chat .msg[data-type="motd"] .from::before,
+#chat .msg[data-type="ctcp"] .from::before,
+#chat .msg[data-type="ctcp_request"] .from::before,
+#chat .msg[data-type="whois"] .from::before,
+#chat .msg[data-type="nick"] .from::before,
+#chat .msg[data-type="action"] .from::before,
+#chat .msg[data-type="plugin"] .from::before,
+#chat .msg[data-type="raw"] .from::before,
 #chat .toggle-button::after,
 #chat .toggle-content .more-caret::before,
 #chat .scroll-down-arrow::after,
@@ -374,8 +374,8 @@ p {
 #form #upload::before { content: "\f0c6"; /* https://fontawesome.com/icons/paperclip?style=solid */ }
 #form #submit::before { content: "\f1d8"; /* http://fontawesome.io/icon/paper-plane/ */ }
 
-#chat .away .from::before,
-#chat .back .from::before {
+#chat .msg[data-type="away"] .from::before,
+#chat .msg[data-type="back"] .from::before {
 	content: "\f017"; /* https://fontawesome.com/icons/clock?style=solid */
 	color: #7f8c8d;
 }
@@ -410,75 +410,75 @@ p {
 	flex-shrink: 0;
 }
 
-#chat .invite .from::before {
+#chat .msg[data-type="invite"] .from::before {
 	content: "\f0e0"; /* https://fontawesome.com/icons/envelope?style=solid */
 	color: #2ecc40;
 }
 
-#chat .part .from::before,
-#chat .quit .from::before {
+#chat .msg[data-type="part"] .from::before,
+#chat .msg[data-type="quit"] .from::before {
 	content: "\f2f5"; /* https://fontawesome.com/icons/sign-out-alt?style=solid */
 	color: #ff4136;
 	display: inline-block;
 	transform: rotate(180deg);
 }
 
-#chat .topic .from::before {
+#chat .msg[data-type="topic"] .from::before {
 	content: "\f0a1"; /* http://fontawesome.io/icon/bullhorn/ */
 	color: #2ecc40;
 }
 
-#chat .mode_channel .from::before,
-#chat .mode .from::before {
+#chat .msg[data-type="mode_channel"] .from::before,
+#chat .msg[data-type="mode"] .from::before {
 	content: "\f05a"; /* http://fontawesome.io/icon/info-circle/ */
 	color: #2ecc40;
 }
 
-#chat .motd .from::before {
+#chat .msg[data-type="motd"] .from::before {
 	content: "\f02e"; /* https://fontawesome.com/icons/bookmark?style=solid */
 	color: var(--body-color-muted);
 }
 
-#chat .ctcp .from::before,
-#chat .ctcp_request .from::before {
+#chat .msg[data-type="ctcp"] .from::before,
+#chat .msg[data-type="ctcp_request"] .from::before {
 	content: "\f15c"; /* https://fontawesome.com/icons/file-alt?style=solid */
 	color: var(--body-color-muted);
 }
 
-#chat .whois .from::before {
+#chat .msg[data-type="whois"] .from::before {
 	content: "\f007"; /* http://fontawesome.io/icon/user/ */
 	color: #2ecc40;
 }
 
-#chat .nick .from::before {
+#chat .msg[data-type="nick"] .from::before {
 	content: "\f007"; /* http://fontawesome.io/icon/user/ */
 	color: #2ecc40;
 }
 
-#chat .join .from::before {
+#chat .msg[data-type="join"] .from::before {
 	content: "\f2f6"; /* https://fontawesome.com/icons/sign-in-alt?style=solid */
 	color: #2ecc40;
 }
 
-#chat .kick .from::before {
+#chat .msg[data-type="kick"] .from::before {
 	content: "\f05e"; /* http://fontawesome.io/icon/ban/ */
 	color: #ff4136;
 }
 
-#chat .raw .from::before {
+#chat .msg[data-type="raw"] .from::before {
 	content: "\f101"; /* https://fontawesome.com/icons/angle-double-right?style=solid */
 }
 
-#chat .raw.self .from::before {
+#chat .msg.self[data-type="raw"] .from::before {
 	content: "\f359"; /* https://fontawesome.com/icons/arrow-alt-circle-left?style=solid */
 	color: #2ecc40;
 }
 
-#chat .action .from::before {
+#chat .msg[data-type="action"] .from::before {
 	content: "\f005"; /* http://fontawesome.io/icon/star/ */
 }
 
-#chat .plugin .from::before {
+#chat .msg[data-type="plugin"] .from::before {
 	content: "\f1e6"; /* http://fontawesome.io/icon/plug/ */
 	transform: rotate(45deg);
 	display: inline-block;
@@ -1056,16 +1056,16 @@ textarea.input {
 	flex-direction: column;
 }
 
-#chat .condensed {
+#chat .msg[data-type="condensed"] {
 	flex-wrap: wrap;
 }
 
-#chat .condensed .content {
+#chat .msg[data-type="condensed"] .content {
 	flex: 1;
 }
 
 /* Ensures expanded status messages always take up the full width */
-#chat .condensed .msg {
+#chat .msg[data-type="condensed"] .msg {
 	flex-basis: 100%;
 }
 
@@ -1083,7 +1083,7 @@ textarea.input {
 	text-decoration: underline;
 }
 
-#chat .condensed.closed .msg {
+#chat .msg.closed[data-type="condensed"] .msg {
 	display: none;
 }
 
@@ -1309,7 +1309,7 @@ textarea.input {
 	text-align: left; /* so RTL text will still be aligned left, not right */
 }
 
-#chat .unhandled .from {
+#chat .msg[data-type="unhandled"] .from {
 	color: var(--body-color-muted);
 }
 
@@ -1422,49 +1422,49 @@ textarea.input {
 	width: 50px;
 }
 
-#chat.hide-motd .motd {
+#chat.hide-motd .msg[data-type="motd"] {
 	display: none !important;
 }
 
-#chat .msg.motd .text {
+#chat .msg[data-type="motd"] .text {
 	background: #f6f6f6;
 	display: inline-block;
 	border-radius: 4px;
 	padding: 6px;
 }
 
-#chat .condensed .content,
-#chat .away .content,
-#chat .back .content,
-#chat .join .content,
-#chat .kick .content,
-#chat .mode .content,
-#chat .nick .content,
-#chat .part .content,
-#chat .quit .content,
-#chat .topic .content,
-#chat .topic_set_by .content {
+#chat .msg[data-type="condensed"] .content,
+#chat .msg[data-type="away"] .content,
+#chat .msg[data-type="back"] .content,
+#chat .msg[data-type="join"] .content,
+#chat .msg[data-type="kick"] .content,
+#chat .msg[data-type="mode"] .content,
+#chat .msg[data-type="nick"] .content,
+#chat .msg[data-type="part"] .content,
+#chat .msg[data-type="quit"] .content,
+#chat .msg[data-type="topic"] .content,
+#chat .msg[data-type="topic_set_by"] .content {
 	color: var(--body-color-muted);
 }
 
-#chat .action .from,
-#chat .action .content,
-#chat .action .user {
+#chat .msg[data-type="action"] .from,
+#chat .msg[data-type="action"] .content,
+#chat .msg[data-type="action"] .user {
 	color: #f39c12;
 }
 
-#chat .notice .time,
-#chat .notice .content,
-#chat .chat-view .notice .user {
-	color: #0074d9 !important;
+#chat .msg[data-type="notice"] .time,
+#chat .msg[data-type="notice"] .content,
+#chat .msg[data-type="notice"] .user {
+	color: #0074d9;
 }
 
-#chat .notice .from .user::before {
+#chat .msg[data-type="notice"] .from .user::before {
 	content: "Notice: ";
 }
 
-#chat .error,
-#chat .error .from {
+#chat .msg[data-type="error"],
+#chat .msg[data-type="error"] .from {
 	color: #e74c3c;
 }
 
@@ -1494,7 +1494,7 @@ textarea.input {
 
 #chat .toggle-content.opened .more-caret, /* Expand/Collapse link previews */
 #chat .toggle-button.opened, /* Thumbnail toggle */
-#chat .msg.condensed:not(.closed) .toggle-button { /* Expanded status message toggle */
+#chat .msg:not(.closed)[data-type="condensed"] .toggle-button { /* Expanded status message toggle */
 	transform: rotate(90deg);
 }
 
@@ -2615,7 +2615,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		padding: 2px 10px;
 	}
 
-	#chat .condensed .msg {
+	#chat .msg[data-type="condensed"] .msg {
 		padding: 2px 0;
 	}
 
@@ -2780,14 +2780,14 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
    For example: user has quit ( ===> L   O   L <=== )  */
 
 .header .topic,
-#chat .message .content,
-#chat .motd .content,
-#chat .notice .content,
+#chat .msg[data-type="action"] .content,
+#chat .msg[data-type="message"] .content,
+#chat .msg[data-type="motd"] .content,
+#chat .msg[data-type="notice"] .content,
 #chat .ctcp-message,
 #chat .part-reason,
 #chat .quit-reason,
 #chat .new-topic,
-#chat .action .content,
 #chat table.channel-list .topic {
 	white-space: pre-wrap;
 }
