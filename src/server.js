@@ -154,6 +154,10 @@ module.exports = function(options = {}) {
 			const protocol = Helper.config.https.enable ? "https" : "http";
 			const address = server.address();
 
+			if (address.family === "IPv6") {
+				address.address = "[" + address.address + "]";
+			}
+
 			log.info(
 				"Available at " +
 					colors.green(`${protocol}://${address.address}:${address.port}/`) +
