@@ -27,7 +27,7 @@ const timeFormats = {
 	msgWithSeconds: "HH:mm:ss",
 };
 
-const sizeUnits = ["B", "KiB", "MiB", "GiB", "TiB"];
+const sizeUnits = ["B", "KB", "MB", "GB", "TB"];
 
 export default {
 	colorCodeMap,
