@@ -131,7 +131,7 @@ module.exports = function(irc, network) {
 			network.setNick(network.keepNick);
 			network.keepNick = null;
 
-			this.emit("nick", {
+			client.emit("nick", {
 				network: network.uuid,
 				nick: network.nick,
 			});
