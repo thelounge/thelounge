@@ -154,7 +154,7 @@ document.addEventListener("keydown", (e) => {
 
 	// Redirect pagedown/pageup keys to messages container so it scrolls
 	if (e.which === 33 || e.which === 34) {
-		const chat = document.querySelector("#windows .chat-content .chat");
+		const chat = document.querySelector(".window .chat-content .chat");
 
 		if (chat) {
 			chat.focus();
