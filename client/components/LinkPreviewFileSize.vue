@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import constants from "../js/constants";
+import friendlysize from "../js/helpers/friendlysize";
 
 export default {
 	name: "LinkPreviewFileSize",
@@ -12,22 +12,7 @@ export default {
 	},
 	computed: {
 		previewSize() {
-			let size = this.size;
-
-			// Threshold for SI units
-			const thresh = 1024;
-
-			let u = 0;
-
-			do {
-				size /= thresh;
-				++u;
-			} while (size >= thresh && u < constants.sizeUnits.length - 1);
-
-			const displaySize = size.toFixed(1);
-			const unit = constants.sizeUnits[u];
-
-			return `${displaySize} ${unit}`;
+			return friendlysize(this.size);
 		},
 	},
 };

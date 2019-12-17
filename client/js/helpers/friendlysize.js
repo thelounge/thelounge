@@ -1,6 +1,6 @@
 "use strict";
 
-const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+const sizes = ["Bytes", "KiB", "MiB", "GiB", "TiB", "PiB"];
 
 export default (size) => {
 	// Loosely inspired from https://stackoverflow.com/a/18650828/1935861

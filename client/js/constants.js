@@ -26,14 +26,11 @@ const timeFormats = {
 	msgWithSeconds: "HH:mm:ss",
 };
 
-const sizeUnits = ["B", "KiB", "MiB", "GiB", "TiB"];
-
 export default {
 	colorCodeMap,
 	commands: [],
 	condensedTypes,
 	timeFormats,
-	sizeUnits,
 	// Same value as media query in CSS that forces sidebars to become overlays
 	mobileViewportPixels: 768,
 };
