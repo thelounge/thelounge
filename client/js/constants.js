@@ -19,8 +19,7 @@ const colorCodeMap = [
 	["15", "Light Grey"],
 ];
 
-const condensedTypes = ["chghost", "join", "part", "quit", "nick", "kick", "mode"];
-const condensedTypesQuery = "." + condensedTypes.join(", .");
+const condensedTypes = new Set(["chghost", "join", "part", "quit", "nick", "kick", "mode"]);
 
 const timeFormats = {
 	msgDefault: "HH:mm",
@@ -33,7 +32,6 @@ export default {
 	colorCodeMap,
 	commands: [],
 	condensedTypes,
-	condensedTypesQuery,
 	timeFormats,
 	sizeUnits,
 	// Same value as media query in CSS that forces sidebars to become overlays

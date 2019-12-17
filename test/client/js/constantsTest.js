@@ -23,7 +23,7 @@ describe("client-side constants", function() {
 
 	describe(".condensedTypes", function() {
 		it("should be a non-empty array", function() {
-			expect(constants.condensedTypes).to.be.an("array").that.is.not.empty;
+			expect(constants.condensedTypes).to.be.an.instanceof(Set).that.is.not.empty;
 		});
 
 		it("should only contain ASCII strings", function() {

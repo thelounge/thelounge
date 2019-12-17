@@ -83,7 +83,7 @@ export default {
 			// If actions are hidden, just return a message list with them excluded
 			if (this.$store.state.settings.statusMessages === "hidden") {
 				return this.channel.messages.filter(
-					(message) => !constants.condensedTypes.includes(message.type)
+					(message) => !constants.condensedTypes.has(message.type)
 				);
 			}
 
@@ -101,7 +101,7 @@ export default {
 				if (
 					message.self ||
 					message.highlight ||
-					!constants.condensedTypes.includes(message.type)
+					!constants.condensedTypes.has(message.type)
 				) {
 					lastCondensedContainer = null;
 
