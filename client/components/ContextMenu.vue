@@ -4,6 +4,10 @@
 		id="context-menu-container"
 		@click="containerClick"
 		@contextmenu.prevent="containerClick"
+		@keydown.exact.up.prevent="navigateMenu(-1)"
+		@keydown.exact.down.prevent="navigateMenu(1)"
+		@keydown.exact.tab.prevent="navigateMenu(1)"
+		@keydown.shift.tab.prevent="navigateMenu(-1)"
 	>
 		<ul
 			id="context-menu"
@@ -60,7 +64,6 @@ export default {
 	},
 	mounted() {
 		Mousetrap.bind("esc", this.close);
-		Mousetrap.bind(["up", "down", "tab", "shift+tab"], this.navigateMenu);
 
 		this.$root.$on("contextmenu:user", this.openUserContextMenu);
 		this.$root.$on("contextmenu:channel", this.openChannelContextMenu);
@@ -68,11 +71,12 @@ export default {
 	},
 	destroyed() {
 		Mousetrap.unbind("esc", this.close);
-		Mousetrap.unbind(["up", "down", "tab", "shift+tab"], this.navigateMenu);
 
 		this.$root.$off("contextmenu:user", this.openUserContextMenu);
 		this.$root.$off("contextmenu:channel", this.openChannelContextMenu);
 		this.$root.$off("contextmenu:removenetwork", this.openRemoveNetworkContextMenu);
+
+		this.close();
 	},
 	methods: {
 		openRemoveNetworkContextMenu(data) {
@@ -140,11 +144,7 @@ export default {
 				this.clickItem(this.items[this.activeItem]);
 			}
 		},
-		navigateMenu(event, key) {
-			event.preventDefault();
-
-			const direction = key === "down" || key === "tab" ? 1 : -1;
-
+		navigateMenu(direction) {
 			let currentIndex = this.activeItem;
 
 			currentIndex += direction;
