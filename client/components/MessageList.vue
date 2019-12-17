@@ -247,6 +247,7 @@ export default {
 			socket.emit("more", {
 				target: this.channel.id,
 				lastId: lastMessage,
+				condensed: this.$store.state.settings.statusMessages !== "shown",
 			});
 		},
 		onLoadButtonObserved(entries) {
