@@ -56,7 +56,7 @@
 <script>
 require("intersection-observer");
 
-import constants from "../js/constants";
+const constants = require("../js/constants");
 import clipboard from "../js/clipboard";
 import socket from "../js/socket";
 import Message from "./Message.vue";

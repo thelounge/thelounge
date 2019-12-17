@@ -1,5 +1,7 @@
 "use strict";
 
+const constants = require("./constants");
+
 import Vue from "vue";
 import VueRouter from "vue-router";
 
@@ -12,7 +14,6 @@ import Help from "../components/Windows/Help.vue";
 import Changelog from "../components/Windows/Changelog.vue";
 import NetworkEdit from "../components/Windows/NetworkEdit.vue";
 import RoutedChat from "../components/RoutedChat.vue";
-import constants from "./constants";
 import store from "./store";
 
 const router = new VueRouter({
