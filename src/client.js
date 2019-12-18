@@ -54,7 +54,6 @@ function Client(manager, name, config = {}) {
 		idMsg: 1,
 		name: name,
 		networks: [],
-		sockets: manager.sockets,
 		manager: manager,
 		messageStorage: [],
 		highlightRegex: null,
@@ -145,8 +144,8 @@ Client.prototype.createChannel = function(attr) {
 };
 
 Client.prototype.emit = function(event, data) {
-	if (this.sockets !== null) {
-		this.sockets.in(this.id).emit(event, data);
+	if (this.manager !== null) {
+		this.manager.sockets.in(this.id).emit(event, data);
 	}
 };
 
@@ -574,7 +573,7 @@ Client.prototype.names = function(data) {
 };
 
 Client.prototype.quit = function(signOut) {
-	const sockets = this.sockets.sockets;
+	const sockets = this.manager.sockets.sockets;
 	const room = sockets.adapter.rooms[this.id];
 
 	if (room && room.sockets) {
