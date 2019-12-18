@@ -26,9 +26,9 @@ socket.once("configuration", function(data) {
 	}
 
 	if (document.body.classList.contains("public")) {
-		window.addEventListener(
-			"beforeunload",
-			() => "Are you sure you want to navigate away from this page?"
-		);
+		window.addEventListener("beforeunload", (e) => {
+			e.preventDefault();
+			e.returnValue = "Are you sure you want to navigate away from this page?";
+		});
 	}
 });
