@@ -132,6 +132,8 @@ function Client(manager, name, config = {}) {
 
 			delay += 1000 + Math.floor(Math.random() * 1000);
 		});
+
+		client.fileHash = manager.getDataToSave(client).newHash;
 	}
 }
 
@@ -679,6 +681,6 @@ Client.prototype.save = _.debounce(
 		const client = this;
 		client.manager.saveUser(client);
 	},
-	1000,
-	{maxWait: 10000}
+	5000,
+	{maxWait: 20000}
 );

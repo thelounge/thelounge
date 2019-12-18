@@ -3,6 +3,7 @@
 const _ = require("lodash");
 const log = require("./log");
 const colors = require("chalk");
+const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
 const Client = require("./client");
@@ -175,11 +176,26 @@ ClientManager.prototype.addUser = function(name, password, enableLog) {
 	return true;
 };
 
-ClientManager.prototype.saveUser = function(client, callback) {
+ClientManager.prototype.getDataToSave = function(client) {
 	const json = Object.assign({}, client.config, {
 		networks: client.networks.map((n) => n.export()),
 	});
 	const newUser = JSON.stringify(json, null, "\t");
+	const newHash = crypto
+		.createHash("sha256")
+		.update(newUser)
+		.digest("hex");
+
+	return {newUser, newHash};
+};
+
+ClientManager.prototype.saveUser = function(client, callback) {
+	const {newUser, newHash} = this.getDataToSave(client);
+
+	// Do not write to disk if the exported data hasn't actually changed
+	if (client.fileHash === newHash) {
+		return;
+	}
 
 	const pathReal = Helper.getUserConfigPath(client.name);
 	const pathTemp = pathReal + ".tmp";

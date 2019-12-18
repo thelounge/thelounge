@@ -13,6 +13,12 @@ describe("Custom highlights", function() {
 	const client = new Client(
 		{
 			clients: [],
+			getDataToSave() {
+				return {
+					newUser: "",
+					newHash: "",
+				};
+			},
 		},
 		"test",
 		{
