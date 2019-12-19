@@ -23,8 +23,6 @@
 			:key="network.uuid"
 			:class="{
 				collapsed: network.isCollapsed,
-				'not-connected': !network.status.connected,
-				'not-secure': !network.status.secure,
 			}"
 			class="network"
 			role="region"

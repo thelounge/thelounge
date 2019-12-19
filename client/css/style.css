@@ -729,22 +729,22 @@ background on hover (unless active) */
 	margin: 0 8px;
 }
 
-.network.not-secure .channel-list-item[data-type="lobby"] {
+.channel-list-item.not-secure[data-type="lobby"] {
 	color: #f39c12;
 }
 
-.network.not-secure .channel-list-item[data-type="lobby"]:hover,
-.network.not-secure .channel-list-item[data-type="lobby"].active {
+.channel-list-item.not-secure[data-type="lobby"]:hover,
+.channel-list-item.not-secure[data-type="lobby"].active {
 	color: #f8c572;
 }
 
-.network.not-connected .channel-list-item[data-type="lobby"],
+.channel-list-item.not-connected[data-type="lobby"],
 .channel-list-item.parted-channel {
 	color: #e74c3c;
 }
 
-.network.not-connected .channel-list-item[data-type="lobby"]:hover,
-.network.not-connected .channel-list-item[data-type="lobby"].active,
+.channel-list-item.not-connected[data-type="lobby"]:hover,
+.channel-list-item.not-connected[data-type="lobby"].active,
 .channel-list-item.parted-channel:hover,
 .channel-list-item.parted-channel.active {
 	color: #f1978e;
