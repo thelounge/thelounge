@@ -591,9 +591,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 					value: newSetting.value,
 				});
 
-				client.manager.updateUser(client.name, {
-					clientSettings: client.config.clientSettings,
-				});
+				client.save();
 
 				if (newSetting.name === "highlights") {
 					client.compileCustomHighlights();
@@ -630,9 +628,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 
 		delete client.config.sessions[tokenToSignOut];
 
-		client.manager.updateUser(client.name, {
-			sessions: client.config.sessions,
-		});
+		client.save();
 
 		_.map(client.attachedClients, (attachedClient, socketId) => {
 			if (attachedClient.token !== tokenToSignOut) {
@@ -664,15 +660,19 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 		socket.emit("commands", inputs.getCommands());
 	};
 
-	if (!Helper.config.public && token === null) {
+	if (Helper.config.public) {
+		sendInitEvent(null);
+	} else if (token === null) {
 		client.generateToken((newToken) => {
-			client.attachedClients[socket.id].token = token = client.calculateTokenHash(newToken);
+			token = client.calculateTokenHash(newToken);
+			client.attachedClients[socket.id].token = token;
 
 			client.updateSession(token, getClientIp(socket), socket.request);
 
 			sendInitEvent(newToken);
 		});
 	} else {
+		client.updateSession(token, getClientIp(socket), socket.request);
 		sendInitEvent(null);
 	}
 }
@@ -734,15 +734,8 @@ function performAuthentication(data) {
 	let client;
 	let token = null;
 
-	const finalInit = () => {
+	const finalInit = () =>
 		initializeClient(socket, client, token, data.lastMessage || -1, data.openChannel);
-
-		if (!Helper.config.public) {
-			client.manager.updateUser(client.name, {
-				browser: client.config.browser,
-			});
-		}
-	};
 
 	const initClient = () => {
 		// Configuration does not change during runtime of TL,
@@ -826,8 +819,6 @@ function performAuthentication(data) {
 
 		if (Object.prototype.hasOwnProperty.call(client.config.sessions, providedToken)) {
 			token = providedToken;
-
-			client.updateSession(providedToken, getClientIp(socket), socket.request);
 
 			return authCallback(true);
 		}

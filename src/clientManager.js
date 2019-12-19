@@ -3,6 +3,7 @@
 const _ = require("lodash");
 const log = require("./log");
 const colors = require("chalk");
+const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
 const Client = require("./client");
@@ -134,10 +135,6 @@ ClientManager.prototype.addUser = function(name, password, enableLog) {
 	const user = {
 		password: password || "",
 		log: enableLog,
-		networks: [],
-		sessions: {},
-		clientSettings: {},
-		browser: {},
 	};
 
 	try {
@@ -179,27 +176,39 @@ ClientManager.prototype.addUser = function(name, password, enableLog) {
 	return true;
 };
 
-ClientManager.prototype.updateUser = function(name, opts, callback) {
-	const user = readUserConfig(name);
+ClientManager.prototype.getDataToSave = function(client) {
+	const json = Object.assign({}, client.config, {
+		networks: client.networks.map((n) => n.export()),
+	});
+	const newUser = JSON.stringify(json, null, "\t");
+	const newHash = crypto
+		.createHash("sha256")
+		.update(newUser)
+		.digest("hex");
 
-	if (!user) {
-		return callback ? callback(true) : false;
+	return {newUser, newHash};
+};
+
+ClientManager.prototype.saveUser = function(client, callback) {
+	const {newUser, newHash} = this.getDataToSave(client);
+
+	// Do not write to disk if the exported data hasn't actually changed
+	if (client.fileHash === newHash) {
+		return;
 	}
 
-	const currentUser = JSON.stringify(user, null, "\t");
-	_.assign(user, opts);
-	const newUser = JSON.stringify(user, null, "\t");
-
-	// Do not touch the disk if object has not changed
-	if (currentUser === newUser) {
-		return callback ? callback() : true;
-	}
+	const pathReal = Helper.getUserConfigPath(client.name);
+	const pathTemp = pathReal + ".tmp";
 
 	try {
-		fs.writeFileSync(Helper.getUserConfigPath(name), newUser);
+		// Write to a temp file first, in case the write fails
+		// we do not lose the original file (for example when disk is full)
+		fs.writeFileSync(pathTemp, newUser);
+		fs.renameSync(pathTemp, pathReal);
+
 		return callback ? callback() : true;
 	} catch (e) {
-		log.error(`Failed to update user ${colors.green(name)} (${e})`);
+		log.error(`Failed to update user ${colors.green(client.name)} (${e})`);
 
 		if (callback) {
 			callback(e);
