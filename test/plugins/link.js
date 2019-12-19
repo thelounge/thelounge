@@ -11,6 +11,16 @@ describe("Link plugin", function() {
 	this.timeout(process.env.CI ? 25000 : 5000);
 	this.slow(200);
 
+	const loremIpsum = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.\
+Vivamus at pretium mauris. Aenean eu orci id erat pulvinar\
+commodo cursus ac augue. Ut dui quam, tempus ac felis et,\
+efficitur auctor nisl. Sed semper sit amet metus eu fringilla.\
+Vivamus vitae ligula quis eros rutrum tristique. Suspendisse\
+luctus molestie tortor, in finibus nulla rutrum quis. Proin\
+congue ut elit eget congue. Nam pretium blandit nibh nec laoreet.\
+Suspendisse vehicula turpis urna, sit amet molestie diam dapibus in.\
+Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
+
 	let app;
 
 	beforeEach(function(done) {
@@ -63,6 +73,67 @@ describe("Link plugin", function() {
 			expect(data.preview.type).to.equal("link");
 			expect(data.preview.head).to.equal("test title");
 			expect(data.preview.body).to.equal("simple description");
+			expect(data.preview.link).to.equal(url);
+
+			expect(message.previews).to.deep.equal([data.preview]);
+			done();
+		});
+	});
+
+	it("should be able to display body for text/plain", function(done) {
+		const url = "http://localhost:" + this.port + "/basic-text";
+		const message = this.irc.createMessage({
+			text: url,
+		});
+
+		link(this.irc, this.network.channels[0], message);
+
+		expect(message.previews).to.deep.equal([
+			{
+				body: "",
+				head: "",
+				link: url,
+				thumb: "",
+				size: -1,
+				type: "loading",
+				shown: true,
+			},
+		]);
+
+		app.get("/basic-text", function(req, res) {
+			res.type("text").send(loremIpsum);
+		});
+
+		this.irc.once("msg:preview", function(data) {
+			expect(data.preview.type).to.equal("link");
+			expect(data.preview.head).to.equal("Untitled page");
+			expect(data.preview.body).to.equal(loremIpsum.substring(0, 300));
+			expect(data.preview.body).to.have.length(300);
+			expect(data.preview.link).to.equal(url);
+
+			expect(message.previews).to.deep.equal([data.preview]);
+			done();
+		});
+	});
+
+	it("should truncate head and body", function(done) {
+		const url = "http://localhost:" + this.port + "/truncate";
+		const message = this.irc.createMessage({
+			text: url,
+		});
+
+		link(this.irc, this.network.channels[0], message);
+
+		app.get("/truncate", function(req, res) {
+			res.send(
+				`<title>${loremIpsum}</title><meta name='description' content='${loremIpsum}'>`
+			);
+		});
+
+		this.irc.once("msg:preview", function(data) {
+			expect(data.preview.type).to.equal("link");
+			expect(data.preview.head).to.equal(loremIpsum.substring(0, 100));
+			expect(data.preview.body).to.equal(loremIpsum.substring(0, 300));
 			expect(data.preview.link).to.equal(url);
 
 			expect(message.previews).to.deep.equal([data.preview]);
@@ -239,6 +310,27 @@ describe("Link plugin", function() {
 				"http://localhost:" + port + "/real-test-image.png"
 			);
 			expect(data.preview.link).to.equal("http://localhost:" + port + "/thumb-no-title");
+			done();
+		});
+	});
+
+	it("should send untitled page if there is body", function(done) {
+		const port = this.port;
+		const message = this.irc.createMessage({
+			text: "http://localhost:" + this.port + "/body-no-title",
+		});
+
+		link(this.irc, this.network.channels[0], message);
+
+		app.get("/body-no-title", function(req, res) {
+			res.send("<meta name='description' content='hello world'>");
+		});
+
+		this.irc.once("msg:preview", function(data) {
+			expect(data.preview.head).to.equal("Untitled page");
+			expect(data.preview.body).to.equal("hello world");
+			expect(data.preview.thumb).to.equal("");
+			expect(data.preview.link).to.equal("http://localhost:" + port + "/body-no-title");
 			done();
 		});
 	});
