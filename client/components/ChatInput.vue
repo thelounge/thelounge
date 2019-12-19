@@ -260,10 +260,30 @@ export default {
 				autocompletionRef.hide();
 			}
 
-			this.channel.inputHistoryPosition = 0;
-			this.channel.pendingMessage = "";
-			this.$refs.input.value = "";
-			this.setInputSize();
+			const resetInput = () => {
+				this.channel.inputHistoryPosition = 0;
+				this.channel.pendingMessage = "";
+				this.$refs.input.value = "";
+				this.setInputSize();
+			};
+
+			if (this.$store.state.serverConfiguration.fileUpload) {
+				const lines = 1 + (text.match(/\n/g) || "").length;
+
+				// TODO: Offer a confirmation to user whether they want to upload
+				if (lines > 3 || text.length > 700) {
+					resetInput();
+
+					const file = new File([text], "paste.txt", {
+						type: "text/plain",
+					});
+					upload.triggerUpload([file]);
+
+					return false;
+				}
+			}
+
+			resetInput();
 
 			// Store new message in history if last message isn't already equal
 			if (this.channel.inputHistory[1] !== text) {
