@@ -1039,6 +1039,7 @@ textarea.input {
 	justify-content: center;
 	align-items: center;
 	cursor: pointer;
+	appearance: none;
 }
 
 .topic-container .save-topic span:hover {
