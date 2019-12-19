@@ -97,11 +97,13 @@ Mousetrap.bind(["alt+a"], function() {
 function jumpToChannel(targetChannel) {
 	switchToChannel(targetChannel);
 
-	scrollIntoViewNicely(
-		document.querySelector(
-			`#sidebar .channel-list-item[aria-controls="#chan-${targetChannel.id}"]`
-		)
+	const element = document.querySelector(
+		`#sidebar .channel-list-item[aria-controls="#chan-${targetChannel.id}"]`
 	);
+
+	if (element) {
+		scrollIntoViewNicely(element);
+	}
 }
 
 // Ignored keys which should not automatically focus the input bar
