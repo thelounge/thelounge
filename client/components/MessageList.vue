@@ -46,6 +46,7 @@
 					:network="network"
 					:message="message"
 					:keep-scroll-position="keepScrollPosition"
+					:is-previous-source="isPreviousSource(message, id)"
 					@linkPreviewToggle="onLinkPreviewToggle"
 				/>
 			</template>
@@ -211,6 +212,16 @@ export default {
 			}
 
 			return false;
+		},
+		isPreviousSource(currentMessage, id) {
+			const previousMessage = this.condensedMessages[id - 1];
+			return (
+				previousMessage &&
+				currentMessage.type === "message" &&
+				previousMessage.type === "message" &&
+				previousMessage.from &&
+				currentMessage.from.nick === previousMessage.from.nick
+			);
 		},
 		onCopy() {
 			clipboard(this.$el);
