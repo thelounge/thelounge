@@ -11,6 +11,7 @@ const Helper = require("./helper");
 const UAParser = require("ua-parser-js");
 const uuidv4 = require("uuid/v4");
 const escapeRegExp = require("lodash/escapeRegExp");
+const constants = require("../client/js/constants.js");
 const inputs = require("./plugins/inputs");
 const PublicClient = require("./plugins/packages/publicClient");
 
@@ -465,7 +466,31 @@ Client.prototype.more = function(data) {
 
 	// If requested id is not found, an empty array will be sent
 	if (index > 0) {
-		messages = chan.messages.slice(Math.max(0, index - 100), index);
+		let startIndex = index;
+
+		if (data.condensed) {
+			// Limit to 1000 messages (that's 10x normal limit)
+			const indexToStop = Math.max(0, index - 1000);
+			let realMessagesLeft = 100;
+
+			for (let i = index - 1; i >= indexToStop; i--) {
+				startIndex--;
+
+				// Do not count condensed messages towards the 100 messages
+				if (constants.condensedTypes.has(chan.messages[i].type)) {
+					continue;
+				}
+
+				// Count up actual 100 visible messages
+				if (--realMessagesLeft === 0) {
+					break;
+				}
+			}
+		} else {
+			startIndex = Math.max(0, index - 100);
+		}
+
+		messages = chan.messages.slice(startIndex, index);
 	}
 
 	return {

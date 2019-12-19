@@ -10,8 +10,8 @@
 </template>
 
 <script>
+const constants = require("../js/constants");
 import throttle from "lodash/throttle";
-import constants from "../js/constants";
 import storage from "../js/localStorage";
 
 import Sidebar from "./Sidebar.vue";

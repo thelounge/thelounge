@@ -1,11 +1,12 @@
 "use strict";
 
+const constants = require("./constants");
+
 import Mousetrap from "mousetrap";
 import {Textcomplete, Textarea} from "textcomplete";
 import fuzzy from "fuzzy";
 
 import emojiMap from "./helpers/simplemap.json";
-import constants from "./constants";
 import store from "./store";
 
 export default enableAutocomplete;

@@ -57,7 +57,7 @@
 <script>
 require("intersection-observer");
 
-import constants from "../js/constants";
+const constants = require("../js/constants");
 import clipboard from "../js/clipboard";
 import socket from "../js/socket";
 import Message from "./Message.vue";
@@ -258,6 +258,7 @@ export default {
 			socket.emit("more", {
 				target: this.channel.id,
 				lastId: lastMessage,
+				condensed: this.$store.state.settings.statusMessages !== "shown",
 			});
 		},
 		onLoadButtonObserved(entries) {

@@ -1,7 +1,7 @@
 "use strict";
 
 const expect = require("chai").expect;
-const constants = require("../../../client/js/constants").default;
+const constants = require("../../../client/js/constants");
 
 describe("client-side constants", function() {
 	describe(".colorCodeMap", function() {

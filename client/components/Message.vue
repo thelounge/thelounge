@@ -71,12 +71,12 @@
 </template>
 
 <script>
+const constants = require("../js/constants");
 import dayjs from "dayjs";
 import Username from "./Username.vue";
 import LinkPreview from "./LinkPreview.vue";
 import ParsedMessage from "./ParsedMessage.vue";
 import MessageTypes from "./MessageTypes";
-import constants from "../js/constants";
 
 MessageTypes.ParsedMessage = ParsedMessage;
 MessageTypes.LinkPreview = LinkPreview;
