@@ -92,6 +92,14 @@ function parseHtml(preview, res, client) {
 					$('link[rel="image_src"]').attr("href") ||
 					"";
 
+				if (preview.head.length) {
+					preview.head = preview.head.substr(0, 100);
+				}
+
+				if (preview.body.length) {
+					preview.body = preview.body.substr(0, 300);
+				}
+
 				// Make sure thumbnail is a valid and absolute url
 				if (thumb.length) {
 					thumb = normalizeURL(thumb, preview.link) || "";
@@ -185,6 +193,11 @@ function parse(msg, chan, preview, res, client) {
 		case "text/html":
 			preview.size = -1;
 			promise = parseHtml(preview, res, client);
+			break;
+
+		case "text/plain":
+			preview.type = "link";
+			preview.body = res.data.toString().substr(0, 300);
 			break;
 
 		case "image/png":
