@@ -98,10 +98,6 @@ export function generateChannelContextMenu($root, channel, network) {
 			action() {
 				channel.editTopic = true;
 				$root.switchToChannel(channel);
-
-				$root.$nextTick(() =>
-					document.querySelector(`#chan-${channel.id} .topic-input`).focus()
-				);
 			},
 		});
 		items.push({

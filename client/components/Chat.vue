@@ -20,6 +20,7 @@
 					<span class="title">{{ channel.name }}</span>
 					<div v-if="channel.editTopic === true" class="topic-container">
 						<input
+							ref="topicInput"
 							:value="channel.topic"
 							class="topic-input"
 							placeholder="Set channel topic"
@@ -138,9 +139,22 @@ export default {
 		channel() {
 			this.channelChanged();
 		},
+		"channel.editTopic"(newValue) {
+			if (newValue) {
+				this.$nextTick(() => {
+					this.$refs.topicInput.focus();
+				});
+			}
+		},
 	},
 	mounted() {
 		this.channelChanged();
+
+		if (this.channel.editTopic) {
+			this.$nextTick(() => {
+				this.$refs.topicInput.focus();
+			});
+		}
 	},
 	methods: {
 		channelChanged() {
@@ -164,15 +178,11 @@ export default {
 		editTopic() {
 			if (this.channel.type === "channel") {
 				this.channel.editTopic = true;
-
-				this.$nextTick(() => {
-					document.querySelector(`#chan-${this.channel.id} .topic-input`).focus();
-				});
 			}
 		},
 		saveTopic() {
 			this.channel.editTopic = false;
-			const newTopic = document.querySelector(`#chan-${this.channel.id} .topic-input`).value;
+			const newTopic = this.$refs.topicInput.value;
 
 			if (this.channel.topic !== newTopic) {
 				const target = this.channel.id;
