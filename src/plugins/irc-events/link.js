@@ -319,8 +319,11 @@ function removePreview(msg, preview) {
 
 function getRequestHeaders(headers) {
 	const formattedHeaders = {
+		// Certain websites like Amazon only add <meta> tags to known bots,
+		// lets pretend to be them to get the metadata
 		"User-Agent":
-			"Mozilla/5.0 (compatible; The Lounge IRC Client; +https://github.com/thelounge/thelounge)",
+			"Mozilla/5.0 (compatible; The Lounge IRC Client; +https://github.com/thelounge/thelounge)" +
+			" facebookexternalhit/1.1 Twitterbot/1.0",
 		Accept: headers.accept || "*/*",
 		"X-Purpose": "preview",
 	};
