@@ -3459,10 +3459,10 @@ file-entry-cache@^5.0.1:
   dependencies:
     flat-cache "^2.0.1"
 
-file-type@12.4.1:
-  version "12.4.1"
-  resolved "https://registry.yarnpkg.com/file-type/-/file-type-12.4.1.tgz#a4bdd36a160d46e3eb4cea214d4b5a543b69d0e1"
-  integrity sha512-LHQ6hW+tdjrYgUPLc3HYZp9DuaKgxI1BKrPf9AVwbBehy8PjU2Wq4t/S3j1XsrN2oCeYwjy3EOi1myOmCNKejg==
+file-type@12.4.2:
+  version "12.4.2"
+  resolved "https://registry.yarnpkg.com/file-type/-/file-type-12.4.2.tgz#a344ea5664a1d01447ee7fb1b635f72feb6169d9"
+  integrity sha512-UssQP5ZgIOKelfsaB5CuGAL+Y+q7EmONuiwF3N5HAH0t27rvrttgi6Ra9k/+DVaY9UF6+ybxu5pOXLUdA8N7Vg==
 
 filename-reserved-regex@^2.0.0:
   version "2.0.0"
