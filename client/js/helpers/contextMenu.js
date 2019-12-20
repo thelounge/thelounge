@@ -93,6 +93,12 @@ export function generateChannelContextMenu($root, channel, network) {
 	// Add menu items for channels
 	if (channel.type === "channel") {
 		items.push({
+			label: "Edit this channel…",
+			type: "item",
+			class: "edit",
+			link: `/edit-channel/${channel.id}`,
+		});
+		items.push({
 			label: "Edit topic",
 			type: "item",
 			class: "edit",

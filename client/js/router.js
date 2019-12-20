@@ -12,6 +12,7 @@ import Connect from "../components/Windows/Connect.vue";
 import Settings from "../components/Windows/Settings.vue";
 import Help from "../components/Windows/Help.vue";
 import Changelog from "../components/Windows/Changelog.vue";
+import ChannelEdit from "../components/Windows/ChannelEdit.vue";
 import NetworkEdit from "../components/Windows/NetworkEdit.vue";
 import RoutedChat from "../components/RoutedChat.vue";
 import store from "./store";
@@ -57,6 +58,11 @@ const router = new VueRouter({
 			name: "NetworkEdit",
 			path: "/edit-network/:uuid",
 			component: NetworkEdit,
+		},
+		{
+			name: "ChannelEdit",
+			path: "/edit-channel/:id",
+			component: ChannelEdit,
 		},
 		{
 			name: "RoutedChat",
