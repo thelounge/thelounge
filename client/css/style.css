@@ -365,7 +365,7 @@ p {
 
 .channel-list-item[data-type="special"]::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
 
-.channel-list-item.has-draft:not(.active)::before { content: "\f304"; /* https://fontawesome.com/icons/pen?style=solid */ }
+.channel-list-item.has-draft:not(.active):not([data-type="lobby"])::before { content: "\f304"; /* https://fontawesome.com/icons/pen?style=solid */ }
 
 #footer .connect::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
 #footer .settings::before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
