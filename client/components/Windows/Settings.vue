@@ -107,12 +107,9 @@
 				Status messages
 				<span
 					class="tooltipped tooltipped-n tooltipped-no-delay"
-					aria-label="Joins, parts, kicks, nick changes, away changes, and mode changes"
+					aria-label="Joins, parts, quits, kicks, nick changes, and mode changes"
 				>
-					<button
-						class="extra-help"
-						aria-label="Joins, parts, kicks, nick changes, away changes, and mode changes"
-					/>
+					<button class="extra-help" />
 				</span>
 			</h2>
 			<div>
