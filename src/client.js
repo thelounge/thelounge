@@ -79,12 +79,6 @@ function Client(manager, name, config = {}) {
 		}
 	}
 
-	(client.config.networks || []).forEach((network) => client.connect(network, true));
-
-	// Networks are stored directly in the client object
-	// We don't need to keep it in the config object
-	delete client.config.networks;
-
 	if (typeof client.config.sessions !== "object") {
 		client.config.sessions = {};
 	}
@@ -114,6 +108,12 @@ function Client(manager, name, config = {}) {
 			this.registerPushSubscription(session, session.pushSubscription, true);
 		}
 	});
+
+	(client.config.networks || []).forEach((network) => client.connect(network, true));
+
+	// Networks are stored directly in the client object
+	// We don't need to keep it in the config object
+	delete client.config.networks;
 
 	if (client.name) {
 		log.info(`User ${colors.bold(client.name)} loaded`);
