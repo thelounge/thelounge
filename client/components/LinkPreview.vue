@@ -231,19 +231,20 @@ export default {
 			});
 		},
 		updateShownState() {
-			let defaultState = true;
+			// User has manually toggled the preview, do not apply default
+			if (this.link.shown !== null) {
+				return;
+			}
+
+			let defaultState = false;
 
 			switch (this.link.type) {
 				case "error":
 					// Collapse all errors by default unless its a message about image being too big
-					defaultState =
-						this.link.error === "image-too-big"
-							? this.$store.state.settings.media
-							: false;
-					break;
+					if (this.link.error === "image-too-big") {
+						defaultState = this.$store.state.settings.media;
+					}
 
-				case "loading":
-					defaultState = false;
 					break;
 
 				case "link":
@@ -254,7 +255,7 @@ export default {
 					defaultState = this.$store.state.settings.media;
 			}
 
-			this.link.shown = this.link.shown && defaultState;
+			this.link.shown = defaultState;
 		},
 	},
 };

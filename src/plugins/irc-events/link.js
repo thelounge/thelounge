@@ -45,7 +45,7 @@ module.exports = function(client, chan, msg) {
 			thumb: "",
 			size: -1,
 			link: link.link, // Send original matched link to the client
-			shown: true,
+			shown: null,
 		};
 
 		cleanLinks.push(preview);
@@ -58,7 +58,6 @@ module.exports = function(client, chan, msg) {
 				parse(msg, chan, preview, res, client);
 			})
 			.catch((err) => {
-				preview.shown = false;
 				preview.type = "error";
 				preview.error = "message";
 				preview.message = err.message;
