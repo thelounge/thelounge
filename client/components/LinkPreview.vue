@@ -235,10 +235,11 @@ export default {
 
 			switch (this.link.type) {
 				case "error":
+					// Collapse all errors by default unless its a message about image being too big
 					defaultState =
 						this.link.error === "image-too-big"
 							? this.$store.state.settings.media
-							: this.$store.state.settings.links;
+							: false;
 					break;
 
 				case "loading":

@@ -569,6 +569,8 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 
 		this.irc.once("msg:preview", function(data) {
 			expect(data.preview.link).to.equal("http://localhost:" + port + "");
+			expect(data.preview.type).to.equal("error");
+			expect(data.preview.shown).to.equal(false);
 			done();
 		});
 	});
@@ -602,6 +604,8 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 
 		this.irc.once("msg:preview", function(data) {
 			expect(data.preview.link).to.equal("http://localhost:" + port + "");
+			expect(data.preview.type).to.equal("error");
+			expect(data.preview.shown).to.equal(false);
 			done();
 		});
 	});

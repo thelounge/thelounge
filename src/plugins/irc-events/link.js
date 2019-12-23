@@ -58,6 +58,7 @@ module.exports = function(client, chan, msg) {
 				parse(msg, chan, preview, res, client);
 			})
 			.catch((err) => {
+				preview.shown = false;
 				preview.type = "error";
 				preview.error = "message";
 				preview.message = err.message;
