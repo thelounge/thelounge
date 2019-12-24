@@ -172,6 +172,7 @@ async function outdated(cacheTimeout = TIME_TO_LIVE) {
 	// Get paths to the location of packages directory
 	const packagesPath = Helper.getPackagesPath();
 	const packagesConfig = path.join(packagesPath, "package.json");
+	const packagesList = JSON.parse(fs.readFileSync(packagesConfig), "utf-8").dependencies;
 	const argsList = [
 		"outdated",
 		"--latest",
@@ -184,7 +185,7 @@ async function outdated(cacheTimeout = TIME_TO_LIVE) {
 	];
 
 	// Check if the configuration file exists
-	if (!fs.existsSync(packagesConfig)) {
+	if (!Object.entries(packagesList).length) {
 		// CLI calls outdated with zero TTL, so we can print the warning there
 		if (!cacheTimeout) {
 			log.warn("There are no packages installed.");
