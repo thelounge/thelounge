@@ -197,7 +197,6 @@ export default {
 			const touchMove = (moveEvent) => {
 				touch = this.reduceTouches(moveEvent.touches);
 
-				// TODO: There's bugs with multi finger interactions, needs more testing
 				if (currentTouches.length !== moveEvent.touches.length) {
 					currentTransform.x = touch.x;
 					currentTransform.y = touch.y;
@@ -221,16 +220,10 @@ export default {
 					startTransform.y
 				);
 
-				if (newScale > 1) {
-					this.transform.x = fixedPosition.x + deltaX;
-					this.transform.y = fixedPosition.y + deltaY;
-				} else if (Math.abs(deltaX) > Math.abs(deltaY)) {
-					this.transform.x = fixedPosition.x + deltaX;
-				} else {
-					this.transform.y = fixedPosition.y + deltaY;
-				}
-
+				this.transform.x = fixedPosition.x + deltaX;
+				this.transform.y = fixedPosition.y + deltaY;
 				this.transform.scale = newScale;
+				this.correctPosition();
 			};
 
 			const touchEnd = (endEvent) => {
@@ -302,6 +295,8 @@ export default {
 				if (centerY < 0 || heightScaled + centerY > containerHeight) {
 					this.transform.y = startTransformY + newY;
 				}
+
+				this.correctPosition();
 			};
 
 			const mouseUp = (upEvent) => {
