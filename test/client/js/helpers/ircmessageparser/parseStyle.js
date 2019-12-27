@@ -4,7 +4,7 @@ const expect = require("chai").expect;
 const parseStyle = require("../../../../../client/js/helpers/ircmessageparser/parseStyle").default;
 
 describe("parseStyle", () => {
-	it("should skip control codes", () => {
+	it("should replace control codes", () => {
 		const input = "text\x01with\x04control\x05codes";
 		const expected = [
 			{
@@ -17,10 +17,10 @@ describe("parseStyle", () => {
 				underline: false,
 				strikethrough: false,
 				monospace: false,
-				text: "textwithcontrolcodes",
+				text: "text withcontrol codes",
 
 				start: 0,
-				end: 20,
+				end: 22,
 			},
 		];
 

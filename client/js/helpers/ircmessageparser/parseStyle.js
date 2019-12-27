@@ -67,7 +67,7 @@ function parseStyle(text) {
 		const textPart = text.slice(start, position);
 
 		// Filters out all non-style related control codes present in this text
-		const processedText = textPart.replace(controlCodesRx, "");
+		const processedText = textPart.replace(controlCodesRx, " ");
 
 		if (processedText.length) {
 			// Current fragment starts where the previous one ends, or at 0 if none
