@@ -59,6 +59,19 @@ module.exports = function(irc, network) {
 			text: `${data.raw_modes} ${data.raw_params.join(" ")}`,
 			self: data.nick === irc.user.nick,
 		});
+
+		for (const param of data.raw_params) {
+			const users = [];
+
+			if (targetChan.findUser(param)) {
+				users.push(param);
+			}
+
+			if (users.length > 0) {
+				msg.users = users;
+			}
+		}
+
 		targetChan.pushMessage(client, msg);
 
 		let usersUpdated;
