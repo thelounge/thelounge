@@ -13,6 +13,7 @@ import Settings from "../components/Windows/Settings.vue";
 import Help from "../components/Windows/Help.vue";
 import Changelog from "../components/Windows/Changelog.vue";
 import NetworkEdit from "../components/Windows/NetworkEdit.vue";
+import SearchResults from "../components/Windows/SearchResults.vue";
 import RoutedChat from "../components/RoutedChat.vue";
 import store from "./store";
 
@@ -123,6 +124,11 @@ function initialize() {
 			name: "RoutedChat",
 			path: "/chan-:id",
 			component: RoutedChat,
+		},
+		{
+			name: "SearchResults",
+			path: "/search/:uuid/:target/:term",
+			component: SearchResults,
 		},
 	]);
 }

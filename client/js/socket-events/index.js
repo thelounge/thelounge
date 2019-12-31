@@ -25,3 +25,4 @@ import "./changelog";
 import "./setting";
 import "./history_clear";
 import "./mentions";
+import "./search";

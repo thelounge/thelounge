@@ -528,6 +528,16 @@ Client.prototype.clearHistory = function (data) {
 	}
 };
 
+Client.prototype.search = function(query) {
+	if (this.messageStorage) {
+		for (const storage of this.messageStorage) {
+			if (storage.database) {
+				return storage.search(query);
+			}
+		}
+	}
+};
+
 Client.prototype.open = function (socketId, target) {
 	// Due to how socket.io works internally, normal events may arrive later than
 	// the disconnect event, and because we can't control this timing precisely,
