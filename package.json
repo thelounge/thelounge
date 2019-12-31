@@ -50,7 +50,7 @@
     "file-type": "12.4.2",
     "filenamify": "4.1.0",
     "fs-extra": "8.1.0",
-    "got": "10.1.0",
+    "got": "10.2.0",
     "irc-framework": "4.6.0",
     "is-utf8": "0.2.1",
     "ldapjs": "2.0.0-pre.5",
