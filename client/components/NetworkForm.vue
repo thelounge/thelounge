@@ -137,7 +137,7 @@
 						id="connect:commands"
 						class="input"
 						name="commands"
-						placeholder="One raw command per line, each command will be executed on new connection"
+						placeholder="One /command per line, each command will be executed in the server tab on new connection"
 						:value="defaults.commands ? defaults.commands.join('\n') : ''"
 					/>
 				</div>
