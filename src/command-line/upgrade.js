@@ -15,15 +15,13 @@ program
 		const path = require("path");
 
 		// Get paths to the location of packages directory
-		const packagesPath = Helper.getPackagesPath();
-		const packagesConfig = path.join(packagesPath, "package.json");
-		const packagesList = JSON.parse(fs.readFileSync(packagesConfig)).dependencies;
+		const packagesConfig = path.join(Helper.getPackagesPath(), "package.json");
+		const packagesList = JSON.parse(fs.readFileSync(packagesConfig), "utf-8").dependencies;
 		const argsList = ["upgrade", "--latest"];
 
 		let count = 0;
 
-		// Check if the configuration file exists
-		if (!fs.existsSync(packagesConfig)) {
+		if (!Object.entries(packagesList).length) {
 			log.warn("There are no packages installed.");
 			return;
 		}
@@ -55,6 +53,7 @@ program
 				log.info("Package(s) have been successfully upgraded.");
 			})
 			.catch((code) => {
-				throw `Failed to upgrade package(s). Exit code ${code}`;
+				log.error(`Failed to upgrade package(s). Exit code ${code}`);
+				process.exit(1);
 			});
 	});
