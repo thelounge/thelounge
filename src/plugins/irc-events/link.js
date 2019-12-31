@@ -45,7 +45,7 @@ module.exports = function(client, chan, msg) {
 			thumb: "",
 			size: -1,
 			link: link.link, // Send original matched link to the client
-			shown: true,
+			shown: null,
 		};
 
 		cleanLinks.push(preview);

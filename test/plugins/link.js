@@ -59,7 +59,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 				thumb: "",
 				size: -1,
 				type: "loading",
-				shown: true,
+				shown: null,
 			},
 		]);
 
@@ -96,7 +96,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 				thumb: "",
 				size: -1,
 				type: "loading",
-				shown: true,
+				shown: null,
 			},
 		]);
 
@@ -394,7 +394,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 				thumb: "",
 				size: -1,
 				type: "loading",
-				shown: true,
+				shown: null,
 			},
 			{
 				body: "",
@@ -403,7 +403,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 				thumb: "",
 				size: -1,
 				type: "loading",
-				shown: true,
+				shown: null,
 			},
 		]);
 
@@ -569,6 +569,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 
 		this.irc.once("msg:preview", function(data) {
 			expect(data.preview.link).to.equal("http://localhost:" + port + "");
+			expect(data.preview.type).to.equal("error");
 			done();
 		});
 	});
@@ -596,12 +597,13 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 				thumb: "",
 				size: -1,
 				link: "http://localhost:" + port + "",
-				shown: true,
+				shown: null,
 			},
 		]);
 
 		this.irc.once("msg:preview", function(data) {
 			expect(data.preview.link).to.equal("http://localhost:" + port + "");
+			expect(data.preview.type).to.equal("error");
 			done();
 		});
 	});
