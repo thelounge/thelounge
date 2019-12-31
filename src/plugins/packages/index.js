@@ -172,7 +172,7 @@ async function outdated(cacheTimeout = TIME_TO_LIVE) {
 	// Get paths to the location of packages directory
 	const packagesPath = Helper.getPackagesPath();
 	const packagesConfig = path.join(packagesPath, "package.json");
-	const packagesList = JSON.parse(fs.readFileSync(packagesConfig), "utf-8").dependencies;
+	const packagesList = JSON.parse(fs.readFileSync(packagesConfig, "utf-8")).dependencies;
 	const argsList = [
 		"outdated",
 		"--latest",
