@@ -200,9 +200,52 @@ class MessageStorage {
 		});
 	}
 
+	search(query) {
+		if (!this.isEnabled) {
+			return Promise.resolve([]);
+		}
+
+		let select =
+			'SELECT msg, type, time, channel FROM messages WHERE type = "message" AND network = ? AND (json_extract(msg, "$.text") LIKE ? OR json_extract(msg, "$.from") LIKE ?)';
+		const params = [query.networkUuid, `%${query.searchTerm}%`, `%${query.searchTerm}%`];
+
+		if (query.channelName) {
+			select += " AND channel = ? ";
+			params.push(query.channelName);
+		}
+
+		select += " ORDER BY time DESC LIMIT 100 OFFSET ? ";
+		params.push(query.offset || 0);
+
+		return new Promise((resolve, reject) => {
+			this.database.all(select, params, (err, rows) => {
+				if (err) {
+					reject(err);
+				} else {
+					const response = {
+						searchTerm: query.searchTerm,
+						target: query.channelName,
+						networkUuid: query.networkUuid,
+						offset: query.offset,
+						results: rows.map(parseRowToMessage),
+					};
+					resolve(response);
+				}
+			});
+		});
+	}
+
 	canProvideMessages() {
 		return this.isEnabled;
 	}
 }
 
 module.exports = MessageStorage;
+
+function parseRowToMessage(row) {
+	const msg = JSON.parse(row.msg);
+	msg.time = row.time;
+	msg.type = row.type;
+
+	return new Msg(msg);
+}

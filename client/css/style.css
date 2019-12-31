@@ -285,6 +285,7 @@ p {
 #viewport .rt::before,
 #chat button.mentions::before,
 #chat button.menu::before,
+#chat button.search::before,
 .channel-list-item::before,
 #footer .icon,
 #chat .count::before,
@@ -342,6 +343,7 @@ p {
 #viewport .rt::before { content: "\f0c0"; /* https://fontawesome.com/icons/users?style=solid */ }
 #chat button.menu::before { content: "\f142"; /* http://fontawesome.io/icon/ellipsis-v/ */ }
 #chat button.mentions::before { content: "\f1fa"; /* https://fontawesome.com/icons/at?style=solid */ }
+#chat button.search::before { content: "\f002"; /* https://fontawesome.com/icons/search?style=solid */ }
 
 .context-menu-join::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
 .context-menu-user::before { content: "\f007"; /* http://fontawesome.io/icon/user/ */ }
@@ -574,7 +576,9 @@ p {
 
 #viewport .lt,
 #viewport .rt,
+<<<<<<< HEAD
 #chat button.mentions,
+#chat button.search,
 #chat button.menu {
 	color: #607992;
 	display: flex;
@@ -589,6 +593,7 @@ p {
 #viewport .lt::before,
 #viewport .rt::before,
 #chat button.mentions::before,
+#chat button.search::before,
 #chat button.menu::before {
 	width: 36px;
 	line-height: 36px; /* Fix alignment in Microsoft Edge */
@@ -2847,4 +2852,73 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #chat .new-topic,
 #chat table.channel-list .topic {
 	white-space: pre-wrap;
+}
+
+form.message-search {
+	display: flex;
+}
+
+form.message-search .input-wrapper {
+	display: flex;
+}
+
+form.message-search button {
+	display: none !important;
+}
+
+form.message-search input {
+	width: 100%;
+	height: auto !important;
+	margin: 7px 0;
+	border: 0;
+	color: inherit;
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+form.message-search input::placeholder {
+	color: rgba(255, 255, 255, 0.35);
+}
+
+@media (min-width: 480px) {
+	form.message-search input {
+		min-width: 140px;
+		transition: min-width 0.2s;
+	}
+
+	form.message-search input:focus {
+		min-width: 220px;
+	}
+}
+
+@media (max-width: 479px) {
+	form.message-search .input-wrapper {
+		position: absolute;
+		top: 45px;
+		left: 0;
+		right: 0;
+		z-index: 1;
+		height: 0;
+		transition: height 0.2s;
+		overflow: hidden;
+		background: var(--window-bg-color);
+	}
+
+	form.message-search .input-wrapper input {
+		margin: 7px;
+	}
+
+	form.message-search.opened .input-wrapper {
+		height: 50px;
+	}
+
+	form.message-search button {
+		display: flex !important;
+	}
+}
+
+.chat-view[data-type="search-results"] .search-status {
+	display: flex;
+	height: 100%;
+	justify-content: center;
+	align-items: center;
 }
