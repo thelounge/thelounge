@@ -19,6 +19,9 @@ const config = {
 		filename: "[name]",
 		publicPath: "/",
 	},
+	performance: {
+		hints: false,
+	},
 	module: {
 		rules: [
 			{
