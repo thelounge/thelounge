@@ -24,6 +24,12 @@ socket.on("changelog", function(data) {
 	// When there is a button to refresh the checker available, display it when
 	// data is expired. Before that, server would return same information anyway.
 	if (data.expiresAt) {
-		setTimeout(() => store.commit("versionDataExpired", true), data.expiresAt - Date.now());
+		const expires = data.expiresAt - Date.now();
+
+		if (expires > 0) {
+			setTimeout(() => store.commit("versionDataExpired", true), expires);
+		} else {
+			store.commit("versionDataExpired", true);
+		}
 	}
 });

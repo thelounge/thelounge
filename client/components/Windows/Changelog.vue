@@ -26,7 +26,7 @@
 					></div>
 				</template>
 				<template v-else>
-					<p>Unable to retrieve releases from GitHub.</p>
+					<p>Unable to retrieve changelog for current release from GitHub.</p>
 					<p>
 						<a
 							:href="

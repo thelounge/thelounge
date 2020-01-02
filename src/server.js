@@ -241,6 +241,18 @@ module.exports = function(options = {}) {
 		}
 	});
 
+	changelog.fetch().then((versionData) => {
+		if (!versionData.latest) {
+			return;
+		}
+
+		log.info(
+			`The Lounge ${colors.green(
+				versionData.latest.version
+			)} is available. Read more on GitHub: ${versionData.latest.url}`
+		);
+	});
+
 	return server;
 };
 
