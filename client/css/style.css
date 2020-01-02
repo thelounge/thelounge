@@ -906,6 +906,18 @@ background on hover (unless active) */
 	border-radius: 5px;
 }
 
+#footer .help.notified::after {
+	content: "\f021";
+	position: absolute;
+	bottom: 10px;
+	right: 7px;
+	padding: 2px;
+	font-size: 10px;
+	border-radius: 50%;
+	color: var(--link-color);
+	background: var(--body-bg-color);
+}
+
 .window li,
 .window p,
 .window label,

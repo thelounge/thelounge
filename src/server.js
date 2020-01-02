@@ -715,6 +715,7 @@ function getClientConfiguration() {
 		]);
 	}
 
+	config.isUpdateAvailable = changelog.isUpdateAvailable;
 	config.applicationServerKey = manager.webPush.vapidKeys.publicKey;
 	config.version = pkg.version;
 	config.gitCommit = Helper.getGitCommit();
