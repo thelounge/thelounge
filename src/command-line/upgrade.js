@@ -16,7 +16,7 @@ program
 
 		// Get paths to the location of packages directory
 		const packagesConfig = path.join(Helper.getPackagesPath(), "package.json");
-		const packagesList = JSON.parse(fs.readFileSync(packagesConfig), "utf-8").dependencies;
+		const packagesList = JSON.parse(fs.readFileSync(packagesConfig, "utf-8")).dependencies;
 		const argsList = ["upgrade", "--latest"];
 
 		let count = 0;
