@@ -46,9 +46,9 @@
 </template>
 
 <script>
+import collapseNetwork from "../js/helpers/collapseNetwork";
 import roundBadgeNumber from "../js/helpers/roundBadgeNumber";
 import ChannelWrapper from "./ChannelWrapper.vue";
-import storage from "../js/localStorage";
 
 export default {
 	name: "Channel",
@@ -72,16 +72,7 @@ export default {
 	},
 	methods: {
 		onCollapseClick() {
-			const networks = new Set(JSON.parse(storage.get("thelounge.networks.collapsed")));
-			this.network.isCollapsed = !this.network.isCollapsed;
-
-			if (this.network.isCollapsed) {
-				networks.add(this.network.uuid);
-			} else {
-				networks.delete(this.network.uuid);
-			}
-
-			storage.set("thelounge.networks.collapsed", JSON.stringify([...networks]));
+			collapseNetwork(this.network, !this.network.isCollapsed);
 		},
 		getExpandLabel(network) {
 			return network.isCollapsed ? "Expand" : "Collapse";

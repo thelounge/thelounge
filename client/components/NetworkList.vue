@@ -65,12 +65,14 @@
 </template>
 
 <script>
+import Mousetrap from "mousetrap";
 import Draggable from "vuedraggable";
 import NetworkLobby from "./NetworkLobby.vue";
 import Channel from "./Channel.vue";
 import JoinChannel from "./JoinChannel.vue";
 
 import socket from "../js/socket";
+import collapseNetwork from "../js/helpers/collapseNetwork";
 
 export default {
 	name: "NetworkList",
@@ -85,7 +87,25 @@ export default {
 			return this.$store.state.networks;
 		},
 	},
+	mounted() {
+		Mousetrap.bind("alt+shift+right", this.expandNetwork);
+		Mousetrap.bind("alt+shift+left", this.collapseNetwork);
+	},
+	beforeDestroy() {
+		Mousetrap.unbind("alt+shift+right", this.expandNetwork);
+		Mousetrap.unbind("alt+shift+left", this.collapseNetwork);
+	},
 	methods: {
+		expandNetwork() {
+			if (this.$store.state.activeChannel) {
+				collapseNetwork(this.$store.state.activeChannel.network, false);
+			}
+		},
+		collapseNetwork() {
+			if (this.$store.state.activeChannel) {
+				collapseNetwork(this.$store.state.activeChannel.network, true);
+			}
+		},
 		isCurrentlyInTouch(e) {
 			// TODO: Implement a way to sort on touch devices
 			return e.pointerType !== "mouse";
