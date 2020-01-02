@@ -45,6 +45,7 @@
 						<span id="connect:portseparator">:</span>
 						<input
 							id="connect:port"
+							ref="serverPort"
 							class="input"
 							type="number"
 							min="1"
@@ -65,6 +66,7 @@
 								name="tls"
 								:checked="defaults.tls ? true : false"
 								:disabled="config.lockNetwork ? true : false"
+								@change="onSecureChanged"
 							/>
 							Use secure connection (TLS)
 						</label>
@@ -193,6 +195,16 @@ export default {
 			}
 
 			this.previousUsername = event.target.value;
+		},
+		onSecureChanged(event) {
+			const ports = ["6667", "6697"];
+			const newPort = event.target.checked ? 0 : 1;
+
+			// If you disable TLS and current port is 6697,
+			// set it to 6667, and vice versa
+			if (this.$refs.serverPort.value === ports[newPort]) {
+				this.$refs.serverPort.value = ports[1 - newPort];
+			}
 		},
 		onSubmit(event) {
 			const formData = new FormData(event.target);
