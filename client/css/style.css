@@ -649,6 +649,8 @@ p {
 }
 
 /* Channels/queries must be white on hover and active */
+#footer button:hover,
+#footer button.active,
 .channel-list-item:hover,
 .channel-list-item.active {
 	color: #fff;
@@ -662,6 +664,7 @@ background on hover (unless active) */
 }
 
 /* Darker background and defualt cursor for active channels */
+#footer button.active,
 .channel-list-item.active {
 	background-color: #303e4a;
 	cursor: default;
