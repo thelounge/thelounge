@@ -55,32 +55,9 @@ The Lounge requires latest [Node.js](https://nodejs.org/) LTS version or more re
 [Yarn package manager](https://yarnpkg.com/) is also recommended.  
 If you want to install with npm, `--unsafe-perm` is required for a correct install.
 
-### Running stable releases using Yarn (recommended)
+### Running stable releases
 
-Run this in a terminal to install (or upgrade) the latest stable release from
-[npm registry](https://www.npmjs.com/):
-
-```sh
-yarn global add thelounge
-```
-
-If you already have The Lounge installed globally, use the following command to update it:
-
-```sh
-yarn global upgrade thelounge
-```
-
-When installation is complete, run:
-
-```sh
-thelounge start
-```
-
-For more information, read the [usage documentation](https://thelounge.chat/docs/usage) or run:
-
-```sh
-thelounge --help
-```
+Please refer to the [install and upgrade documentation on our website](https://thelounge.chat/docs/install-and-upgrade) for all available installation methods.
 
 ### Running from source
 
