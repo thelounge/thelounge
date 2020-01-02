@@ -11,6 +11,7 @@
 
 <script>
 const constants = require("../js/constants");
+import Mousetrap from "mousetrap";
 import throttle from "lodash/throttle";
 import storage from "../js/localStorage";
 
@@ -39,6 +40,9 @@ export default {
 		this.prepareOpenStates();
 	},
 	mounted() {
+		Mousetrap.bind("alt+u", this.toggleUserList);
+		Mousetrap.bind("alt+s", this.toggleSidebar);
+
 		// Make a single throttled resize listener available to all components
 		this.debouncedResize = throttle(() => {
 			this.$root.$emit("resize");
@@ -56,10 +60,19 @@ export default {
 		this.dayChangeTimeout = setTimeout(emitDayChange, this.msUntilNextDay());
 	},
 	beforeDestroy() {
+		Mousetrap.unbind("alt+u", this.toggleUserList);
+		Mousetrap.unbind("alt+s", this.toggleSidebar);
+
 		window.removeEventListener("resize", this.debouncedResize);
 		clearTimeout(this.dayChangeTimeout);
 	},
 	methods: {
+		toggleSidebar() {
+			this.$store.commit("toggleSidebar");
+		},
+		toggleUserList() {
+			this.$store.commit("toggleUserlist");
+		},
 		msUntilNextDay() {
 			// Compute how many milliseconds are remaining until the next day starts
 			const today = new Date();

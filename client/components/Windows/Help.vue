@@ -147,6 +147,26 @@
 
 			<div class="help-item">
 				<div class="subject">
+					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>S</kbd></span>
+					<span v-else><kbd>⌥</kbd> <kbd>S</kbd></span>
+				</div>
+				<div class="description">
+					<p>Toggle sidebar.</p>
+				</div>
+			</div>
+
+			<div class="help-item">
+				<div class="subject">
+					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>U</kbd></span>
+					<span v-else><kbd>⌥</kbd> <kbd>U</kbd></span>
+				</div>
+				<div class="description">
+					<p>Toggle channel user list.</p>
+				</div>
+			</div>
+
+			<div class="help-item">
+				<div class="subject">
 					<span v-if="!isApple"><kbd>Ctrl</kbd> <kbd>K</kbd></span>
 					<span v-else><kbd>⌘</kbd> <kbd>K</kbd></span>
 				</div>
