@@ -26,7 +26,7 @@ async function fetch() {
 		const response = await got("https://api.github.com/repos/thelounge/thelounge/releases", {
 			headers: {
 				Accept: "application/vnd.github.v3.html", // Request rendered markdown
-				"User-Agent": pkg.name + "; +" + pkg.repository.git, // Identify the client
+				"User-Agent": pkg.name + "; +" + pkg.repository.url, // Identify the client
 			},
 		});
 
