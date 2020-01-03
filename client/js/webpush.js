@@ -2,23 +2,8 @@
 
 import socket from "./socket";
 import store from "./store";
-import {switchToChannel} from "./router";
 
 export default {togglePushSubscription};
-
-if ("serviceWorker" in navigator) {
-	navigator.serviceWorker.addEventListener("message", (event) => {
-		if (event.data && event.data.type === "open") {
-			const id = parseInt(event.data.channel.substr(5), 10); // remove "chan-" prefix
-
-			const channelTarget = store.getters.findChannel(id);
-
-			if (channelTarget) {
-				switchToChannel(channelTarget.channel);
-			}
-		}
-	});
-}
 
 socket.once("push:issubscribed", function(hasSubscriptionOnServer) {
 	if (!isAllowedServiceWorkersHost()) {
