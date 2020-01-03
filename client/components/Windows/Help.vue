@@ -117,6 +117,26 @@
 
 			<div class="help-item">
 				<div class="subject">
+					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>←</kbd></span>
+					<span v-else><kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>←</kbd></span>
+				</div>
+				<div class="description">
+					<p>Collapse current network.</p>
+				</div>
+			</div>
+
+			<div class="help-item">
+				<div class="subject">
+					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>Shift</kbd> <kbd>→</kbd></span>
+					<span v-else><kbd>⌥</kbd> <kbd>⇧</kbd> <kbd>→</kbd></span>
+				</div>
+				<div class="description">
+					<p>Expand current network.</p>
+				</div>
+			</div>
+
+			<div class="help-item">
+				<div class="subject">
 					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>↓</kbd></span>
 					<span v-else><kbd>⌥</kbd> <kbd>↓</kbd></span>
 				</div>
@@ -144,6 +164,28 @@
 					<p>Switch to the first window with unread messages.</p>
 				</div>
 			</div>
+
+			<div class="help-item">
+				<div class="subject">
+					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>S</kbd></span>
+					<span v-else><kbd>⌥</kbd> <kbd>S</kbd></span>
+				</div>
+				<div class="description">
+					<p>Toggle sidebar.</p>
+				</div>
+			</div>
+
+			<div class="help-item">
+				<div class="subject">
+					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>U</kbd></span>
+					<span v-else><kbd>⌥</kbd> <kbd>U</kbd></span>
+				</div>
+				<div class="description">
+					<p>Toggle channel user list.</p>
+				</div>
+			</div>
+
+			<h2>Formatting Shortcuts</h2>
 
 			<div class="help-item">
 				<div class="subject">
