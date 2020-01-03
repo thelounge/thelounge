@@ -3299,6 +3299,11 @@ execall@^2.0.0:
   dependencies:
     clone-regexp "^2.1.0"
 
+exif-be-gone@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/exif-be-gone/-/exif-be-gone-1.0.0.tgz#aa793bcaa1e3db821eadd53e09e24114e7577904"
+  integrity sha512-Df3doT6MeJ5/+8u4rgZv1cndJEehVbXEBI/eBCb1faO63XLet/aJJZkzCr01f+JPUNnTn+HZydpzWZmPGlk0CQ==
+
 expand-brackets@^2.1.4:
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/expand-brackets/-/expand-brackets-2.1.4.tgz#b77735e315ce30f6b6eff0f83b04151a22449622"

@@ -154,6 +154,8 @@ module.exports = {
 	//   this limit will be prompted with an error message in their browser. A value of
 	//   `-1` disables the file size limit and allows files of any size. **Use at
 	//   your own risk.** This value is set to `10240` kilobytes by default.
+	// - `removeExif`: When set to `true`, [Exif data](https://en.wikipedia.org/wiki/Exif)
+	//   will be removed from uploaded files. This transformation runs on all uploaded files.
 	// - `baseUrl`: If you want change the URL where uploaded files are accessed,
 	//   you can set this option to `"https://example.com/folder/"` and the final URL
 	//   would look like `"https://example.com/folder/aabbccddeeff1234/name.png"`.
@@ -163,6 +165,7 @@ module.exports = {
 	fileUpload: {
 		enable: false,
 		maxFileSize: 10240,
+		removeExif: true,
 		baseUrl: null,
 	},
 

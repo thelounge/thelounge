@@ -1,5 +1,6 @@
 "use strict";
 
+const ExifTransformer = require("exif-be-gone");
 const Helper = require("../helper");
 const busboy = require("busboy");
 const uuidv4 = require("uuid/v4");
@@ -198,7 +199,12 @@ class Uploader {
 			});
 
 			// Attempt to write the stream to file
-			fileStream.pipe(streamWriter);
+			// If exif removal is enabled, pipe through exif-be-gone
+			if (Helper.config.fileUpload.removeExif) {
+				fileStream.pipe(new ExifTransformer()).pipe(streamWriter);
+			} else {
+				fileStream.pipe(streamWriter);
+			}
 		});
 
 		busboyInstance.on("finish", () => {
