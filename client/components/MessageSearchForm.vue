@@ -15,7 +15,7 @@
 			class="search"
 			type="button"
 			aria-label="Search messages in this channel"
-			@click.prevent="toggleSearch"
+			@mousedown.prevent="toggleSearch"
 		/>
 	</form>
 </template>
@@ -40,13 +40,14 @@ export default {
 		closeSearch() {
 			this.searchOpened = false;
 		},
-		toggleSearch(event) {
-			event.preventDefault();
-			this.searchOpened = !this.searchOpened;
-
+		toggleSearch() {
 			if (this.searchOpened) {
-				this.$refs.searchInputField.focus();
+				this.$refs.searchInputField.blur();
+				return;
 			}
+
+			this.searchOpened = true;
+			this.$refs.searchInputField.focus();
 		},
 		searchMessages(event) {
 			event.preventDefault();
