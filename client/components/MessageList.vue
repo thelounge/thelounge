@@ -29,7 +29,9 @@
 					:key="message.id + '-unread'"
 					class="unread-marker"
 				>
-					<span class="unread-marker-text" />
+					<span class="tooltipped tooltipped-n" aria-label="Dismiss">
+						<span class="unread-marker-text" @click="clearUnreadMarker" />
+					</span>
 				</div>
 
 				<MessageCondensed
@@ -332,6 +334,9 @@ export default {
 
 			const el = this.$refs.chat;
 			el.scrollTop = el.scrollHeight;
+		},
+		clearUnreadMarker() {
+			this.channel.firstUnread = this.channel.messages[this.channel.messages.length - 1].id;
 		},
 	},
 };
