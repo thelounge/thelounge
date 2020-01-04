@@ -187,6 +187,11 @@ export default {
 	},
 	methods: {
 		onNickChanged(event) {
+			// Username input is not available when useHexIp is set
+			if (!this.$refs.usernameInput) {
+				return;
+			}
+
 			if (
 				!this.$refs.usernameInput.value ||
 				this.$refs.usernameInput.value === this.previousUsername
