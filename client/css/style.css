@@ -309,6 +309,7 @@ p {
 #chat .msg[data-type="action"] .from::before,
 #chat .msg[data-type="plugin"] .from::before,
 #chat .msg[data-type="raw"] .from::before,
+#chat .msg-shown-in-active span::before,
 #chat .toggle-button::after,
 #chat .toggle-content .more-caret::before,
 #chat .scroll-down-arrow::after,
@@ -484,6 +485,16 @@ p {
 	transform: rotate(45deg);
 	display: inline-block;
 	padding: 1px;
+}
+
+#chat .msg-shown-in-active {
+	cursor: help;
+	margin-right: 5px;
+}
+
+#chat .msg-shown-in-active span::before {
+	font-size: 10px;
+	content: "\f06e"; /* https://fontawesome.com/icons/eye?style=solid */
 }
 
 #chat .toggle-button {
