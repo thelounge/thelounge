@@ -29,25 +29,29 @@ socket.on("msg", function(data) {
 
 	// Display received notices and errors in currently active channel.
 	// Reloading the page will put them back into the lobby window.
-	// We only want to put errors/notices in active channel if they arrive on the same network
-	if (
-		data.msg.showInActive &&
-		store.state.activeChannel &&
-		store.state.activeChannel.network === receivingChannel.network
-	) {
-		channel = store.state.activeChannel.channel;
+	if (data.msg.showInActive) {
+		// We only want to put errors/notices in active channel if they arrive on the same network
+		if (
+			store.state.activeChannel &&
+			store.state.activeChannel.network === receivingChannel.network
+		) {
+			channel = store.state.activeChannel.channel;
 
-		if (data.chan === channel.id) {
-			// If active channel is the intended channel for this message,
-			// remove the showInActive flag
-			data.msg.showInActive = false;
+			if (data.chan === channel.id) {
+				// If active channel is the intended channel for this message,
+				// remove the showInActive flag
+				delete data.msg.showInActive;
+			} else {
+				data.chan = channel.id;
+			}
 		} else {
-			data.chan = channel.id;
+			delete data.msg.showInActive;
 		}
-	} else if (!isActiveChannel) {
-		// Do not set unread counter for channel if it is currently active on this client
-		// It may increase on the server before it processes channel open event from this client
+	}
 
+	// Do not set unread counter for channel if it is currently active on this client
+	// It may increase on the server before it processes channel open event from this client
+	if (!isActiveChannel) {
 		if (typeof data.highlight !== "undefined") {
 			channel.highlight = data.highlight;
 		}
