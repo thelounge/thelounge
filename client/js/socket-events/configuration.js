@@ -20,7 +20,7 @@ socket.once("configuration", function(data) {
 	const currentTheme = data.themes.find((t) => t.name === store.state.settings.theme);
 
 	if (currentTheme === undefined) {
-		store.commit("settings/update", {name: "theme", value: data.defaultTheme, sync: true});
+		store.dispatch("settings/update", {name: "theme", value: data.defaultTheme, sync: true});
 	} else if (currentTheme.themeColor) {
 		document.querySelector('meta[name="theme-color"]').content = currentTheme.themeColor;
 	}
