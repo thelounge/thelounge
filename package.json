@@ -81,7 +81,7 @@
     "babel-plugin-istanbul": "6.0.0",
     "chai": "4.2.0",
     "copy-webpack-plugin": "5.1.1",
-    "css-loader": "3.4.0",
+    "css-loader": "3.4.1",
     "cssnano": "4.1.10",
     "dayjs": "1.8.18",
     "emoji-regex": "8.0.0",
