@@ -11,18 +11,25 @@
 			<tr v-for="invite in channel.data" :key="invite.hostmask">
 				<td class="hostmask">{{ invite.hostmask }}</td>
 				<td class="invitened_by">{{ invite.invited_by }}</td>
-				<td class="invitened_at">{{ invite.invited_at | localetime }}</td>
+				<td class="invitened_at">{{ localetime(invite.invited_at) }}</td>
 			</tr>
 		</tbody>
 	</table>
 </template>
 
 <script>
+import localetime from "../../js/helpers/localetime";
+
 export default {
 	name: "ListInvites",
 	props: {
 		network: Object,
 		channel: Object,
+	},
+	methods: {
+		localetime(date) {
+			return localetime(date);
+		},
 	},
 };
 </script>

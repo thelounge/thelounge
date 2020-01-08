@@ -8,7 +8,7 @@
 		:data-type="message.type"
 		:data-from="message.from && message.from.nick"
 	>
-		<span :aria-label="message.time | localetime" class="time tooltipped tooltipped-e"
+		<span :aria-label="messageTimeLocale" class="time tooltipped tooltipped-e"
 			>{{ messageTime }}
 		</span>
 		<template v-if="message.type === 'unhandled'">
@@ -78,6 +78,7 @@
 
 <script>
 const constants = require("../js/constants");
+import localetime from "../js/helpers/localetime";
 import dayjs from "dayjs";
 import Username from "./Username.vue";
 import LinkPreview from "./LinkPreview.vue";
@@ -105,6 +106,9 @@ export default {
 				: constants.timeFormats.msgDefault;
 
 			return dayjs(this.message.time).format(format);
+		},
+		messageTimeLocale() {
+			return localetime(this.message.time);
 		},
 		messageComponent() {
 			return "message-" + this.message.type;
