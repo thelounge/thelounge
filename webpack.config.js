@@ -7,8 +7,9 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const VueLoaderPlugin = require("vue-loader/lib/plugin");
 const Helper = require("./src/helper.js");
 
+const isProduction = process.env.NODE_ENV === "production";
 const config = {
-	mode: process.env.NODE_ENV === "production" ? "production" : "development",
+	mode: isProduction ? "production" : "development",
 	entry: {
 		"js/bundle.js": [path.resolve(__dirname, "client/js/vue.js")],
 	},
@@ -108,7 +109,9 @@ const config = {
 				from: "./client/service-worker.js",
 				to: "[name].[ext]",
 				transform(content) {
-					return content.toString().replace("__HASH__", Helper.getVersionCacheBust());
+					return content
+						.toString()
+						.replace("__HASH__", isProduction ? Helper.getVersionCacheBust() : "dev");
 				},
 			},
 			{
