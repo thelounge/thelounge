@@ -12,7 +12,7 @@
 					<em>Currently active</em>
 				</p>
 				<p v-else>
-					Last used on <time>{{ session.lastUse | localetime }}</time>
+					Last used on <time>{{ lastUse }}</time>
 				</p>
 			</template>
 		</div>
@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import localetime from "../js/helpers/localetime";
 import Auth from "../js/auth";
 import socket from "../js/socket";
 
@@ -33,6 +34,11 @@ export default {
 	name: "Session",
 	props: {
 		session: Object,
+	},
+	computed: {
+		lastUse() {
+			return localetime(this.session.lastUse);
+		},
 	},
 	methods: {
 		signOut() {

@@ -5,12 +5,9 @@ const constants = require("./constants");
 import Vue from "vue";
 import store from "./store";
 import App from "../components/App.vue";
-import localetime from "./helpers/localetime";
 import storage from "./localStorage";
 import {router, navigate} from "./router";
 import socket from "./socket";
-
-Vue.filter("localetime", localetime);
 
 import "./socket-events";
 import "./webpush";

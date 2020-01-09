@@ -90,18 +90,19 @@
 
 			<template v-if="message.whois.logonTime">
 				<dt>Connected at:</dt>
-				<dd>{{ message.whois.logonTime | localetime }}</dd>
+				<dd>{{ localetime(message.whois.logonTime) }}</dd>
 			</template>
 
 			<template v-if="message.whois.idle">
 				<dt>Idle since:</dt>
-				<dd>{{ message.whois.idleTime | localetime }}</dd>
+				<dd>{{ localetime(message.whois.idleTime) }}</dd>
 			</template>
 		</dl>
 	</span>
 </template>
 
 <script>
+import localetime from "../../js/helpers/localetime";
 import ParsedMessage from "../ParsedMessage.vue";
 import Username from "../Username.vue";
 
@@ -114,6 +115,11 @@ export default {
 	props: {
 		network: Object,
 		message: Object,
+	},
+	methods: {
+		localetime(date) {
+			return localetime(date);
+		},
 	},
 };
 </script>
