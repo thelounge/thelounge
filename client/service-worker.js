@@ -78,7 +78,10 @@ async function networkOrCache(event) {
 		}
 
 		if (response.ok) {
-			event.waitUntil(putInCache(event.request, response));
+			if (cacheName !== "dev") {
+				event.waitUntil(putInCache(event.request, response));
+			}
+
 			return response.clone();
 		}
 
