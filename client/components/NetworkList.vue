@@ -117,6 +117,66 @@
 	</div>
 </template>
 
+<style>
+.jump-to-input {
+	margin: 8px;
+	position: relative;
+}
+
+.jump-to-input .input {
+	margin: 0;
+	width: 100%;
+	border: 0;
+	color: inherit;
+	background-color: rgba(255, 255, 255, 0.1);
+	padding-right: 35px;
+}
+
+.jump-to-input .input::placeholder {
+	color: rgba(255, 255, 255, 0.35);
+}
+
+.jump-to-input::before {
+	content: "\f002"; /* http://fontawesome.io/icon/search/ */
+	color: rgba(255, 255, 255, 0.35);
+	position: absolute;
+	right: 8px;
+	top: 0;
+	bottom: 0;
+	pointer-events: none;
+	line-height: 35px !important;
+}
+
+.jump-to-results {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	overflow: auto;
+}
+
+.jump-to-results .no-results {
+	margin: 14px 8px;
+	text-align: center;
+}
+
+.jump-to-results .channel-list-item.active {
+	cursor: pointer;
+}
+
+.jump-to-results .channel-list-item .add-channel,
+.jump-to-results .channel-list-item .close-tooltip {
+	display: none;
+}
+
+.jump-to-results .channel-list-item[data-type="lobby"] {
+	padding: 8px 14px;
+}
+
+.jump-to-results .channel-list-item[data-type="lobby"]::before {
+	content: "\f233";
+}
+</style>
+
 <script>
 import Mousetrap from "mousetrap";
 import Draggable from "vuedraggable";
@@ -181,18 +241,14 @@ export default {
 		},
 	},
 	mounted() {
-		Mousetrap.bind("alt+j", this.toggleSearch);
-	},
-	destroyed() {
-		Mousetrap.unbind("alt+j", this.toggleSearch);
-	},
-	mounted() {
 		Mousetrap.bind("alt+shift+right", this.expandNetwork);
 		Mousetrap.bind("alt+shift+left", this.collapseNetwork);
+		Mousetrap.bind("alt+j", this.toggleSearch);
 	},
 	beforeDestroy() {
 		Mousetrap.unbind("alt+shift+right", this.expandNetwork);
 		Mousetrap.unbind("alt+shift+left", this.collapseNetwork);
+		Mousetrap.unbind("alt+j", this.toggleSearch);
 	},
 	methods: {
 		expandNetwork() {
