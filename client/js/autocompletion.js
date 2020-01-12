@@ -14,24 +14,25 @@ export default enableAutocomplete;
 const emojiSearchTerms = Object.keys(emojiMap);
 const emojiStrategy = {
 	id: "emoji",
-	match: /\B:([-+\w:?]{2,}):?$/,
+	match: /(^|\s):([-+\w:?]{2,}):?$/,
 	search(term, callback) {
 		// Trim colon from the matched term,
 		// as we are unable to get a clean string from match regex
-		(term = term.replace(/:$/, "")), callback(fuzzyGrep(term, emojiSearchTerms));
+		term = term.replace(/:$/, "");
+		callback(fuzzyGrep(term, emojiSearchTerms));
 	},
 	template([string, original]) {
 		return `<span class="emoji">${emojiMap[original]}</span> ${string}`;
 	},
 	replace([, original]) {
-		return emojiMap[original];
+		return "$1" + emojiMap[original];
 	},
-	index: 1,
+	index: 2,
 };
 
 const nicksStrategy = {
 	id: "nicks",
-	match: /\B(@([a-zA-Z_[\]\\^{}|`@][a-zA-Z0-9_[\]\\^{}|`-]*)?)$/,
+	match: /(^|\s)(@([a-zA-Z_[\]\\^{}|`@][a-zA-Z0-9_[\]\\^{}|`-]*)?)$/,
 	search(term, callback) {
 		term = term.slice(1);
 
@@ -47,33 +48,33 @@ const nicksStrategy = {
 	replace([, original], position = 1) {
 		// If no postfix specified, return autocompleted nick as-is
 		if (!store.state.settings.nickPostfix) {
-			return original;
+			return "$1" + original;
 		}
 
 		// If there is whitespace in the input already, append space to nick
 		if (position > 0 && /\s/.test(store.state.activeChannel.channel.pendingMessage)) {
-			return original + " ";
+			return "$1" + original + " ";
 		}
 
 		// If nick is first in the input, append specified postfix
-		return original + store.state.settings.nickPostfix;
+		return "$1" + original + store.state.settings.nickPostfix;
 	},
-	index: 1,
+	index: 2,
 };
 
 const chanStrategy = {
 	id: "chans",
-	match: /\B((#|\+|&|![A-Z0-9]{5})([^\x00\x0A\x0D\x20\x2C\x3A]+(:[^\x00\x0A\x0D\x20\x2C\x3A]*)?)?)$/,
-	search(term, callback, match) {
-		callback(completeChans(match[0]));
+	match: /(^|\s)((?:#|\+|&|![A-Z0-9]{5})(?:[^\s]+)?)$/,
+	search(term, callback) {
+		callback(completeChans(term));
 	},
 	template([string]) {
 		return string;
 	},
 	replace([, original]) {
-		return original;
+		return "$1" + original;
 	},
-	index: 1,
+	index: 2,
 };
 
 const commandStrategy = {
@@ -319,7 +320,8 @@ function completeChans(word) {
 	const words = [];
 
 	for (const channel of store.state.activeChannel.network.channels) {
-		if (channel.type === "channel") {
+		// Push all channels that start with the same CHANTYPE
+		if (channel.type === "channel" && channel.name[0] === word[0]) {
 			words.push(channel.name);
 		}
 	}
