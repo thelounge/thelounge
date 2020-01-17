@@ -1,6 +1,7 @@
 "use strict";
 
 const got = require("got");
+const colors = require("chalk");
 const log = require("../log");
 const pkg = require("../../package.json");
 
@@ -9,6 +10,7 @@ const TIME_TO_LIVE = 15 * 60 * 1000; // 15 minutes, in milliseconds
 module.exports = {
 	isUpdateAvailable: false,
 	fetch,
+	checkForUpdates,
 };
 
 const versions = {
@@ -86,4 +88,23 @@ function updateVersions(response) {
 			}
 		}
 	}
+}
+
+function checkForUpdates() {
+	fetch().then((versionData) => {
+		if (!module.exports.isUpdateAvailable) {
+			// Check for updates every 24 hours + random jitter of <3 hours
+			setTimeout(checkForUpdates, 24 * 3600 * 1000 + Math.floor(Math.random() * 10000000));
+		}
+
+		if (!versionData.latest) {
+			return;
+		}
+
+		log.info(
+			`The Lounge ${colors.green(
+				versionData.latest.version
+			)} is available. Read more on GitHub: ${versionData.latest.url}`
+		);
+	});
 }
