@@ -33,3 +33,7 @@ socket.on("changelog", function(data) {
 		}
 	}
 });
+
+socket.on("changelog:newversion", () => {
+	store.state.serverConfiguration.isUpdateAvailable = true;
+});

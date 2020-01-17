@@ -239,9 +239,9 @@ module.exports = function(options = {}) {
 		if (Helper.config.prefetchStorage) {
 			require("./plugins/storage").emptyDir();
 		}
-	});
 
-	changelog.checkForUpdates();
+		changelog.checkForUpdates(manager);
+	});
 
 	return server;
 };

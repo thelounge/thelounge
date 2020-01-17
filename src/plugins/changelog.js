@@ -90,7 +90,7 @@ function updateVersions(response) {
 	}
 }
 
-function checkForUpdates() {
+function checkForUpdates(manager) {
 	fetch().then((versionData) => {
 		if (!module.exports.isUpdateAvailable) {
 			// Check for updates every 24 hours + random jitter of <3 hours
@@ -106,5 +106,8 @@ function checkForUpdates() {
 				versionData.latest.version
 			)} is available. Read more on GitHub: ${versionData.latest.url}`
 		);
+
+		// Notify all connected clients about the new version
+		manager.clients.forEach((client) => client.emit("changelog:newversion"));
 	});
 }
