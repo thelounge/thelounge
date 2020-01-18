@@ -331,8 +331,8 @@ export default {
 			const startY = e.clientY;
 			const startTransformX = this.transform.x;
 			const startTransformY = this.transform.y;
-			const widthScaled = this.$refs.image.width * this.transform.scale;
-			const heightScaled = this.$refs.image.height * this.transform.scale;
+			const widthScaled = image.width * this.transform.scale;
+			const heightScaled = image.height * this.transform.scale;
 			const containerWidth = viewer.offsetWidth;
 			const containerHeight = viewer.offsetHeight;
 			const centerX = this.transform.x - widthScaled / 2;
