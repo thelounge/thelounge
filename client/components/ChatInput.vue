@@ -56,6 +56,7 @@ import autocompletion from "../js/autocompletion";
 import commands from "../js/commands/index";
 import socket from "../js/socket";
 import upload from "../js/upload";
+import parseMarkdown from "../js/parseMarkdown";
 
 const formattingHotkeys = {
 	"mod+k": "\x03",
@@ -245,7 +246,7 @@ export default {
 				}
 			}
 
-			socket.emit("input", {target, text});
+			socket.emit("input", {target, text: parseMarkdown(text)});
 		},
 		onUploadInputChange() {
 			const files = Array.from(this.$refs.uploadInput.files);

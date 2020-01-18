@@ -15,8 +15,8 @@
 					v-if="link.thumb"
 					v-show="link.sourceLoaded"
 					:href="link.link"
-					class="toggle-thumbnail"
-					:style="containerStyle"
+					:class="toggleThumbnail"
+					:style="blurStyle"
 					target="_blank"
 					rel="noopener"
 					@click="onThumbnailClick"
@@ -26,7 +26,6 @@
 						decoding="async"
 						alt=""
 						class="thumb"
-						:style="imageStyle"
 						@error="onThumbnailError"
 						@abort="onThumbnailError"
 						@load="onPreviewReady"
@@ -66,8 +65,8 @@
 			<template v-else-if="link.type === 'image'">
 				<a
 					:href="link.link"
-					class="toggle-thumbnail"
 					:style="containerStyle"
+					:class="toggleThumbnail"
 					target="_blank"
 					rel="noopener"
 					@click="onThumbnailClick"
@@ -87,6 +86,14 @@
 					v-show="link.sourceLoaded"
 					preload="metadata"
 					controls
+					:class="{unBlurOnHover: unBlurOnHover}"
+					:style="!fullScreen && !playing && blurStyle"
+					@fullscreenchange="onPreviewFullscreenChange"
+					@webkitfullscreenchange="onPreviewFullscreenChange"
+					@mozfullscreenchange="onPreviewFullscreenChange"
+					@msfullscreenchange="onPreviewFullscreenChange"
+					@pause="onPreviewPause"
+					@play="onPreviewPlay"
 					@canplay="onPreviewReady"
 				>
 					<source :src="link.media" :type="link.mediaType" />
@@ -144,6 +151,7 @@ export default {
 	props: {
 		link: Object,
 		keepScrollPosition: Function,
+		previewConf: Object,
 	},
 	data() {
 		return {
@@ -151,6 +159,8 @@ export default {
 			showMoreButton: false,
 			isContentShown: false,
 			imageSize: null,
+			playing: false,
+			fullScreen: false,
 		};
 	},
 	computed: {
@@ -169,6 +179,21 @@ export default {
 		},
 		moreButtonLabel() {
 			return this.isContentShown ? "Less" : "More";
+		},
+		blurStyle() {
+			const {blur} = this.previewConf;
+			return blur && `filter: blur(${blur}px); -webkit-filter: blur(${blur}px);`;
+		},
+		unBlurOnHover() {
+			const {blur, unBlurOnHover} = this.previewConf;
+			return blur && unBlurOnHover;
+		},
+		toggleThumbnail() {
+			const ret = {
+				"toggle-thumbnail": true,
+				unBlurOnHover: this.unBlurOnHover,
+			};
+			return ret;
 		},
 		imageMaxSize() {
 			if (!this.link.maxSize) {
@@ -239,7 +264,7 @@ export default {
 		},
 		containerStyle() {
 			if (!this.imageSize) {
-				return;
+				return this.blurStyle;
 			}
 
 			let width, height;
@@ -256,6 +281,7 @@ export default {
 			return `
 				width: ${width}px;
 				height: ${height}px;
+        ${this.blurStyle ? this.blurStyle : ''}
 			`;
 		},
 	},
@@ -270,7 +296,6 @@ export default {
 	},
 	mounted() {
 		this.$root.$on("resize", this.handleResize);
-
 		this.onPreviewUpdate();
 	},
 	beforeDestroy() {
@@ -328,6 +353,15 @@ export default {
 				width: img.offsetWidth,
 				height: img.offsetHeight,
 			};
+		},
+		onPreviewPause() {
+			this.playing = false;
+		},
+		onPreviewPlay() {
+			this.playing = true;
+		},
+		onPreviewFullscreenChange() {
+			this.fullScreen = !this.fullScreen;
 		},
 		onThumbnailError() {
 			// If thumbnail fails to load, hide it and show the preview without it

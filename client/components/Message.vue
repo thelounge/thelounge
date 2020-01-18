@@ -32,6 +32,7 @@
 					:key="preview.link"
 					:keep-scroll-position="keepScrollPosition"
 					:link="preview"
+					:preview-conf="previewConf"
 				/>
 			</span>
 		</template>
@@ -70,6 +71,7 @@
 					:key="preview.link"
 					:keep-scroll-position="keepScrollPosition"
 					:link="preview"
+					:preview-conf="previewConf"
 				/>
 			</span>
 		</template>
@@ -97,6 +99,7 @@ export default {
 		channel: Object,
 		network: Object,
 		keepScrollPosition: Function,
+		previewConf: Object,
 		isPreviousSource: Boolean,
 	},
 	computed: {

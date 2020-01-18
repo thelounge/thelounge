@@ -46,6 +46,7 @@
 					:network="network"
 					:message="message"
 					:keep-scroll-position="keepScrollPosition"
+					:preview-conf="channel.previewConf"
 					:is-previous-source="isPreviousSource(message, id)"
 					@linkPreviewToggle="onLinkPreviewToggle"
 				/>

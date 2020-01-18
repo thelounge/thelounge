@@ -348,6 +348,7 @@ p {
 .context-menu-action-voice::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
 .context-menu-network::before { content: "\f233"; /* https://fontawesome.com/icons/server?style=solid */ }
 .context-menu-edit::before { content: "\f303"; /* https://fontawesome.com/icons/pencil-alt?style=solid */ }
+.context-menu-configure::before { content: "\f013"; /* https://fontawesome.com/icons/cog?style=solid */ }
 
 .channel-list-item .not-secure-icon::before {
 	content: "\f071"; /* https://fontawesome.com/icons/exclamation-triangle?style=solid */
@@ -1630,6 +1631,11 @@ textarea.input {
 part/quit messages where we don't load previews (adds a blank line otherwise) */
 #chat .preview:empty {
 	display: none;
+}
+
+#chat .preview .unBlurOnHover:hover {
+	filter: none !important;
+	-webkit-filter: none !important;
 }
 
 #chat .userlist .count {

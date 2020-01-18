@@ -61,10 +61,7 @@ const store = new Vuex.Store({
 			state.networks = networks;
 		},
 		removeNetwork(state, networkId) {
-			state.networks.splice(
-				store.state.networks.findIndex((n) => n.uuid === networkId),
-				1
-			);
+			state.networks.splice(store.state.networks.findIndex((n) => n.uuid === networkId), 1);
 		},
 		sortNetworks(state, sortFn) {
 			state.networks.sort(sortFn);

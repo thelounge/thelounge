@@ -18,8 +18,12 @@
 		</div>
 		<div class="session-item-btn">
 			<button class="btn" @click.prevent="signOut">
-				<template v-if="session.current">Sign out</template>
-				<template v-else>Revoke</template>
+				<template v-if="session.current"
+					>Sign out</template
+				>
+				<template v-else
+					>Revoke</template
+				>
 			</button>
 		</div>
 	</div>
