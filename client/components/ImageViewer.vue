@@ -26,6 +26,9 @@
 
 <script>
 import Mousetrap from "mousetrap";
+import constants from "../js/constants";
+
+const {exifOrientations} = constants;
 
 export default {
 	name: "ImageViewer",
@@ -47,14 +50,71 @@ export default {
 		computeImageStyles() {
 			// Sub pixels may cause the image to blur in certain browsers
 			// round it down to prevent that
-			const transformX = Math.floor(this.transform.x);
-			const transformY = Math.floor(this.transform.y);
+			let translateX = Math.floor(this.transform.x);
+			let translateY = Math.floor(this.transform.y);
+			const {rot, flipped} = this.orientation;
+			const flip = flipped ? -1 : 1;
+
+			let scaleX = this.transform.scale;
+			let scaleY = this.transform.scale;
+
+			switch (rot) {
+				case 0:
+					{
+						scaleX = scaleX * flip;
+					}
+
+					break;
+				case 90:
+					{
+						scaleY = scaleY * flip;
+						const tempX = translateX;
+						translateX = translateY;
+						translateY = -tempX;
+					}
+
+					break;
+				case 180:
+					{
+						scaleX = scaleX * flip;
+						translateX = -translateX;
+						translateY = -translateY;
+					}
+
+					break;
+				case 270:
+					{
+						scaleY = scaleY * flip;
+						const tempX = translateX;
+						translateX = -translateY;
+						translateY = tempX;
+					}
+
+					break;
+			}
 
 			return {
 				left: `${this.position.x}px`,
 				top: `${this.position.y}px`,
-				transform: `translate3d(${transformX}px, ${transformY}px, 0) scale3d(${this.transform.scale}, ${this.transform.scale}, 1)`,
+				transform: `rotate(${rot}deg) translate3d(${translateX}px, ${translateY}px, 0) scale3d(${scaleX}, ${scaleY}, 1)`,
 			};
+		},
+		orientation() {
+			if (!this.link) {
+				return exifOrientations[1];
+			}
+
+			const orientation = Math.trunc(this.link.orientation - 1);
+
+			if (isNaN(orientation)) {
+				return exifOrientations[1];
+			}
+
+			if (orientation >= exifOrientations.length) {
+				return exifOrientations[1];
+			}
+
+			return exifOrientations[orientation];
 		},
 	},
 	watch: {
@@ -271,8 +331,8 @@ export default {
 			const startY = e.clientY;
 			const startTransformX = this.transform.x;
 			const startTransformY = this.transform.y;
-			const widthScaled = image.width * this.transform.scale;
-			const heightScaled = image.height * this.transform.scale;
+			const widthScaled = this.$refs.image.width * this.transform.scale;
+			const heightScaled = this.$refs.image.height * this.transform.scale;
 			const containerWidth = viewer.offsetWidth;
 			const containerHeight = viewer.offsetHeight;
 			const centerX = this.transform.x - widthScaled / 2;

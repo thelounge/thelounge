@@ -1533,8 +1533,6 @@ textarea.input {
 
 /* This applies to images of preview-type-image and thumbnails of preview-type-link */
 #chat .toggle-content img {
-	max-width: 100%;
-	max-height: 128px;
 	display: block;
 	cursor: zoom-in;
 }
@@ -1552,12 +1550,6 @@ textarea.input {
 
 #chat .toggle-content.opened .prefetch-error {
 	display: inline;
-}
-
-/* This applies to thumbnails of preview-type-link only */
-#chat .toggle-content .thumb {
-	max-height: 54px;
-	max-width: 96px;
 }
 
 #chat .toggle-type-error,

@@ -16,6 +16,7 @@
 					v-show="link.sourceLoaded"
 					:href="link.link"
 					class="toggle-thumbnail"
+					:style="containerStyle"
 					target="_blank"
 					rel="noopener"
 					@click="onThumbnailClick"
@@ -25,6 +26,7 @@
 						decoding="async"
 						alt=""
 						class="thumb"
+						:style="imageStyle"
 						@error="onThumbnailError"
 						@abort="onThumbnailError"
 						@load="onPreviewReady"
@@ -65,6 +67,7 @@
 				<a
 					:href="link.link"
 					class="toggle-thumbnail"
+					:style="containerStyle"
 					target="_blank"
 					rel="noopener"
 					@click="onThumbnailClick"
@@ -72,6 +75,7 @@
 					<img
 						v-show="link.sourceLoaded"
 						:src="link.thumb"
+						:style="imageStyle"
 						decoding="async"
 						alt=""
 						@load="onPreviewReady"
@@ -131,7 +135,22 @@
 
 <script>
 import friendlysize from "../js/helpers/friendlysize";
+import constants from "../js/constants";
 
+const {exifOrientations} = constants;
+
+/*
+	max-width: 100%;
+	max-height: 128px;
+*/
+
+/* This applies to thumbnails of preview-type-link only */
+/*
+#chat .toggle-content .thumb {
+	max-height: 54px;
+	max-width: 96px;
+}
+*/
 export default {
 	name: "LinkPreview",
 	props: {
@@ -140,11 +159,30 @@ export default {
 	},
 	data() {
 		return {
+			containerWidth: "100%",
 			showMoreButton: false,
 			isContentShown: false,
+			imageSize: null,
 		};
 	},
 	computed: {
+		orientation() {
+			if (!this.link) {
+				return exifOrientations[1];
+			}
+
+			const orientation = Math.trunc(this.link.orientation - 1);
+
+			if (isNaN(orientation)) {
+				return exifOrientations[1];
+			}
+
+			if (orientation >= exifOrientations.length) {
+				return exifOrientations[1];
+			}
+
+			return exifOrientations[orientation];
+		},
 		moreButtonLabel() {
 			return this.isContentShown ? "Less" : "More";
 		},
@@ -154,6 +192,87 @@ export default {
 			}
 
 			return friendlysize(this.link.maxSize);
+		},
+		maxWidth() {
+			if (this.link.type === "link" && this.link.thumb) {
+				return "96px";
+			}
+
+			return this.containerWidth;
+		},
+		maxHeight() {
+			if (this.link.type === "link" && this.link.thumb) {
+				return "54px";
+			}
+
+			return "128px";
+		},
+		imageStyle() {
+			let translateY = "0",
+				translateX = "0",
+				scaleX = 1,
+				scaleY = 1;
+			let maxWidth;
+			let maxHeight;
+			const {rot, flipped} = this.orientation;
+			const flip = flipped ? -1 : 1;
+
+			switch (rot) {
+				case 90:
+					translateY = flipped ? "0" : "-100%";
+					maxWidth = this.maxHeight;
+					maxHeight = this.maxWidth;
+					scaleY *= flip;
+					break;
+				case 270:
+					translateX = "-100%";
+					translateY = flipped ? "100%" : "0";
+					maxWidth = this.maxHeight;
+					maxHeight = this.maxWidth;
+					scaleY *= flip;
+					break;
+				case 180:
+					translateX = flipped ? "0" : "-100%";
+					translateY = "-100%";
+					maxWidth = this.maxWidth;
+					maxHeight = this.maxHeight;
+					scaleX *= flip;
+					break;
+				default:
+					translateX = flipped ? "100%" : "0";
+					maxWidth = this.maxWidth;
+					maxHeight = this.maxHeight;
+					scaleX *= flip;
+			}
+
+			const style = `
+			max-width: ${maxWidth};
+			max-height: ${maxHeight};
+			transform-origin: top left;
+			transform: rotate(${this.orientation.rot}deg) translate(${translateX}, ${translateY}) scale(${scaleX}, ${scaleY});
+			`;
+			return style;
+		},
+		containerStyle() {
+			if (!this.imageSize) {
+				return;
+			}
+
+			let width, height;
+			const {rot} = this.orientation;
+
+			if (rot === 90 || rot === 270) {
+				width = this.imageSize.height;
+				height = this.imageSize.width;
+			} else {
+				width = this.imageSize.width;
+				height = this.imageSize.height;
+			}
+
+			return `
+				width: ${width}px;
+				height: ${height}px;
+			`;
 		},
 	},
 	watch: {
@@ -196,7 +315,7 @@ export default {
 				this.keepScrollPosition();
 			}
 		},
-		onPreviewReady() {
+		onPreviewReady(ev) {
 			this.$set(this.link, "sourceLoaded", true);
 
 			this.keepScrollPosition();
@@ -204,6 +323,27 @@ export default {
 			if (this.link.type === "link") {
 				this.handleResize();
 			}
+
+			if (ev) {
+				this.$nextTick(() => this.calculateImageSize(ev.target));
+			} else {
+				this.calculateImageSize();
+			}
+		},
+		calculateImageSize(img) {
+			this.containerWidth = this.$refs.container
+				? `${this.$refs.container.offsetWidth}px`
+				: "100%";
+
+			if (!img) {
+				this.imageSize = null;
+				return;
+			}
+
+			this.imageSize = {
+				width: img.offsetWidth,
+				height: img.offsetHeight,
+			};
 		},
 		onThumbnailError() {
 			// If thumbnail fails to load, hide it and show the preview without it
@@ -226,6 +366,7 @@ export default {
 					return;
 				}
 
+				this.containerWidth = this.$refs.container.offsetWidth;
 				this.showMoreButton =
 					this.$refs.content.offsetWidth >= this.$refs.container.offsetWidth;
 			});

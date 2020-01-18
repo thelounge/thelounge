@@ -265,6 +265,16 @@ function handlePreview(client, chan, msg, preview, res) {
 	const thumb = preview.thumbActualUrl || "";
 	delete preview.thumbActualUrl;
 
+	if (res && res.type === "image/jpeg") {
+		const exifParser = new ExifOrientationParser();
+
+		try {
+			preview.orientation = exifParser.parseChunk(res.data);
+		} catch (err) {
+			log.debug(err);
+		}
+	}
+
 	if (!thumb.length || !Helper.config.prefetchStorage) {
 		preview.thumb = thumb;
 		return emitPreview(client, chan, msg, preview);

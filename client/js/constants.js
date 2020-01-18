@@ -19,6 +19,41 @@ const colorCodeMap = [
 	["15", "Light Grey"],
 ];
 
+const exifOrientations = [
+	{
+		rot: 0,
+		flipped: false,
+	},
+	{
+		rot: 0,
+		flipped: true,
+	},
+	{
+		rot: 180,
+		flipped: false,
+	},
+	{
+		rot: 180,
+		flipped: true,
+	},
+	{
+		rot: 90,
+		flipped: true,
+	},
+	{
+		rot: 90,
+		flipped: false,
+	},
+	{
+		rot: 270,
+		flipped: true,
+	},
+	{
+		rot: 270,
+		flipped: false,
+	},
+];
+
 const condensedTypes = new Set(["chghost", "join", "part", "quit", "nick", "kick", "mode"]);
 
 const timeFormats = {
@@ -34,4 +69,5 @@ module.exports = {
 	timeFormats,
 	// Same value as media query in CSS that forces sidebars to become overlays
 	mobileViewportPixels: 768,
+	exifOrientations,
 };
