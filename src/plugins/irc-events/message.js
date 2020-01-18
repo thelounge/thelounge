@@ -14,7 +14,7 @@ module.exports = function(irc, network) {
 		// Some servers send notices without any nickname
 		if (!data.nick) {
 			data.from_server = true;
-			data.nick = network.host;
+			data.nick = data.hostname || network.host;
 		}
 
 		data.type = Msg.Type.NOTICE;
