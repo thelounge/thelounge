@@ -3,28 +3,28 @@
 const log = require("../src/log");
 const Helper = require("../src/helper");
 const expect = require("chai").expect;
+const stub = require("sinon").stub;
 const got = require("got");
 const io = require("socket.io-client");
+const changelog = require("../src/plugins/changelog");
 
 describe("Server", function() {
 	// Increase timeout due to unpredictable I/O on CI services
 	this.timeout(process.env.CI ? 25000 : 5000);
 
 	let server;
-	let originalLogInfo;
 
 	before(function() {
-		originalLogInfo = log.info;
-
-		log.info = () => {};
+		stub(log, "info");
+		stub(changelog, "checkForUpdates");
 
 		server = require("../src/server")();
 	});
 
 	after(function(done) {
 		server.close(done);
-
-		log.info = originalLogInfo;
+		log.info.restore();
+		changelog.checkForUpdates.restore();
 	});
 
 	const webURL = `http://${Helper.config.host}:${Helper.config.port}/`;
