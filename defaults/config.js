@@ -138,6 +138,14 @@ module.exports = {
 	// This value is set to `2048` kilobytes by default.
 	prefetchMaxImageSize: 2048,
 
+	// ### `prefetchTimeout`
+	//
+	// When `prefetch` is enabled, this is the maxumum amount of time (in milliseconds)
+	// a request is allowed to take, after which it timeouts.
+	//
+	// This value is set to `5000` milliseconds by default.
+	prefetchTimeout: 5000,
+
 	// ### `fileUpload`
 	//
 	// Allow uploading files to the server hosting The Lounge.
