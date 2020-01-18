@@ -139,18 +139,6 @@ import constants from "../js/constants";
 
 const {exifOrientations} = constants;
 
-/*
-	max-width: 100%;
-	max-height: 128px;
-*/
-
-/* This applies to thumbnails of preview-type-link only */
-/*
-#chat .toggle-content .thumb {
-	max-height: 54px;
-	max-width: 96px;
-}
-*/
 export default {
 	name: "LinkPreview",
 	props: {
@@ -173,11 +161,7 @@ export default {
 
 			const orientation = Math.trunc(this.link.orientation - 1);
 
-			if (isNaN(orientation)) {
-				return exifOrientations[1];
-			}
-
-			if (orientation >= exifOrientations.length) {
+			if (orientation >= exifOrientations.length || isNaN(orientation)) {
 				return exifOrientations[1];
 			}
 

@@ -1,3 +1,7 @@
+// Loosely based on https://github.com/exif-js/exif-js
+// But made to work with node.js instead of in a browser
+// and also works with arbitrary bytestreams
+
 const log = require("../log");
 
 function readTag(buffer, entryOffset) {
