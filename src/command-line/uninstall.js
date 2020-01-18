@@ -2,7 +2,6 @@
 
 const log = require("../log");
 const colors = require("chalk");
-const path = require("path");
 const program = require("commander");
 const Helper = require("../helper");
 const Utils = require("./utils");
@@ -13,32 +12,20 @@ program
 	.on("--help", Utils.extraHelp)
 	.action(function(packageName) {
 		const fs = require("fs");
+		const path = require("path");
 
-		if (!fs.existsSync(Helper.getConfigPath())) {
-			log.error(`${Helper.getConfigPath()} does not exist.`);
-			return;
-		}
-
-		log.info(`Uninstalling ${colors.green(packageName)}...`);
-
-		const packagesPath = Helper.getPackagesPath();
-		const packagesConfig = path.join(packagesPath, "package.json");
-		const packageWasNotInstalled = `${colors.green(packageName)} was not installed.`;
-
-		if (!fs.existsSync(packagesConfig)) {
-			log.warn(packageWasNotInstalled);
-			process.exit(1);
-		}
-
-		const packages = JSON.parse(fs.readFileSync(packagesConfig, "utf-8"));
+		const packagesConfig = path.join(Helper.getPackagesPath(), "package.json");
+		const packages = JSON.parse(fs.readFileSync(packagesConfig, "utf-8")).dependencies;
 
 		if (
 			!packages.dependencies ||
 			!Object.prototype.hasOwnProperty.call(packages.dependencies, packageName)
 		) {
-			log.warn(packageWasNotInstalled);
+			log.warn(`${colors.green(packageName)} is not installed.`);
 			process.exit(1);
 		}
+
+		log.info(`Uninstalling ${colors.green(packageName)}...`);
 
 		return Utils.executeYarnCommand("remove", packageName)
 			.then(() => {

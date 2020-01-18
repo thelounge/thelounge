@@ -2,26 +2,25 @@
 	<div id="chat-container" class="window" :data-current-channel="channel.name">
 		<div
 			id="chat"
-			:data-id="channel.id"
 			:class="{
-				'hide-motd': !this.$root.settings.motd,
-				'colored-nicks': this.$root.settings.coloredNicks,
-				'show-seconds': this.$root.settings.showSeconds,
+				'hide-motd': !$store.state.settings.motd,
+				'colored-nicks': $store.state.settings.coloredNicks,
+				'show-seconds': $store.state.settings.showSeconds,
 			}"
 		>
 			<div
 				:id="'chan-' + channel.id"
-				:class="[channel.type, 'chan', 'active']"
-				:data-id="channel.id"
+				class="chat-view"
 				:data-type="channel.type"
 				:aria-label="channel.name"
 				role="tabpanel"
 			>
 				<div class="header">
-					<button class="lt" aria-label="Toggle channel list" />
+					<SidebarToggle />
 					<span class="title">{{ channel.name }}</span>
 					<div v-if="channel.editTopic === true" class="topic-container">
 						<input
+							ref="topicInput"
 							:value="channel.topic"
 							class="topic-input"
 							placeholder="Set channel topic"
@@ -38,13 +37,21 @@
 							:network="network"
 							:text="channel.topic"
 					/></span>
-					<button class="menu" aria-label="Open the context menu" />
+					<button
+						class="menu"
+						aria-label="Open the context menu"
+						@click="openContextMenu"
+					/>
 					<span
 						v-if="channel.type === 'channel'"
 						class="rt-tooltip tooltipped tooltipped-w"
 						aria-label="Toggle user list"
 					>
-						<button class="rt" aria-label="Toggle user list" />
+						<button
+							class="rt"
+							aria-label="Toggle user list"
+							@click="$store.commit('toggleUserlist')"
+						/>
 					</span>
 				</div>
 				<div v-if="channel.type === 'special'" class="chat-content">
@@ -77,23 +84,23 @@
 			</div>
 		</div>
 		<div
-			v-if="this.$root.currentUserVisibleError"
+			v-if="this.$store.state.currentUserVisibleError"
 			id="user-visible-error"
 			@click="hideUserVisibleError"
 		>
-			{{ this.$root.currentUserVisibleError }}
+			{{ this.$store.state.currentUserVisibleError }}
 		</div>
-		<span id="upload-progressbar" />
 		<ChatInput :network="network" :channel="channel" />
 	</div>
 </template>
 
 <script>
-const socket = require("../js/socket");
+import socket from "../js/socket";
 import ParsedMessage from "./ParsedMessage.vue";
 import MessageList from "./MessageList.vue";
 import ChatInput from "./ChatInput.vue";
 import ChatUserList from "./ChatUserList.vue";
+import SidebarToggle from "./SidebarToggle.vue";
 import ListBans from "./Special/ListBans.vue";
 import ListInvites from "./Special/ListInvites.vue";
 import ListChannels from "./Special/ListChannels.vue";
@@ -106,6 +113,7 @@ export default {
 		MessageList,
 		ChatInput,
 		ChatUserList,
+		SidebarToggle,
 	},
 	props: {
 		network: Object,
@@ -127,28 +135,67 @@ export default {
 			return undefined;
 		},
 	},
+	watch: {
+		channel() {
+			this.channelChanged();
+		},
+		"channel.editTopic"(newValue) {
+			if (newValue) {
+				this.$nextTick(() => {
+					this.$refs.topicInput.focus();
+				});
+			}
+		},
+	},
+	mounted() {
+		this.channelChanged();
+
+		if (this.channel.editTopic) {
+			this.$nextTick(() => {
+				this.$refs.topicInput.focus();
+			});
+		}
+	},
 	methods: {
+		channelChanged() {
+			// Triggered when active channel is set or changed
+			this.channel.highlight = 0;
+			this.channel.unread = 0;
+
+			socket.emit("open", this.channel.id);
+
+			if (this.channel.usersOutdated) {
+				this.channel.usersOutdated = false;
+
+				socket.emit("names", {
+					target: this.channel.id,
+				});
+			}
+		},
 		hideUserVisibleError() {
-			this.$root.currentUserVisibleError = null;
+			this.$store.commit("currentUserVisibleError", null);
 		},
 		editTopic() {
 			if (this.channel.type === "channel") {
 				this.channel.editTopic = true;
-
-				this.$nextTick(() => {
-					document.querySelector(`#chan-${this.channel.id} .topic-input`).focus();
-				});
 			}
 		},
 		saveTopic() {
 			this.channel.editTopic = false;
-			const newTopic = document.querySelector(`#chan-${this.channel.id} .topic-input`).value;
+			const newTopic = this.$refs.topicInput.value;
 
 			if (this.channel.topic !== newTopic) {
 				const target = this.channel.id;
 				const text = `/raw TOPIC ${this.channel.name} :${newTopic}`;
 				socket.emit("input", {target, text});
 			}
+		},
+		openContextMenu(event) {
+			this.$root.$emit("contextmenu:channel", {
+				event: event,
+				channel: this.channel,
+				network: this.network,
+			});
 		},
 	},
 };

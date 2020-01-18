@@ -23,31 +23,6 @@ class Utils {
 		].forEach((e) => log.raw(e));
 	}
 
-	// TODO: Remove in a couple of releases
-	static checkOldHome() {
-		const currentHome = Helper.getHomePath();
-		const oldHome = currentHome.replace(/\.thelounge$/, ".lounge");
-
-		if (currentHome === oldHome || !fs.existsSync(oldHome)) {
-			return;
-		}
-
-		console.log(); // eslint-disable-line no-console
-		log.warn(`Folder ${colors.bold.red(oldHome)} still exists.`);
-		log.warn(
-			`In v3, we renamed the default configuration folder to ${colors.bold.green(
-				".thelounge"
-			)} for consistency.`
-		);
-		log.warn(
-			`You might want to rename the folder from ${colors.bold.red(
-				".lounge"
-			)} to ${colors.bold.green(".thelounge")} to keep existing configuration.`
-		);
-		log.warn("Make sure to look at the release notes to see other breaking changes.");
-		console.log(); // eslint-disable-line no-console
-	}
-
 	static defaultHome() {
 		if (home) {
 			return home;
@@ -131,14 +106,26 @@ class Utils {
 			"--non-interactive",
 		];
 
+		const env = {
+			// We only ever operate in production mode
+			NODE_ENV: "production",
+
+			// If The Lounge runs from a user that does not have a home directory,
+			// yarn may fail when it tries to read certain folders,
+			// we give it an existing folder so the reads do not throw a permission error.
+			// Yarn uses os.homedir() to figure out the path, which internally reads
+			// from the $HOME env on unix. On Windows it uses $USERPROFILE, but
+			// the user folder should always exist on Windows, so we don't set it.
+			HOME: cachePath,
+		};
+
 		return new Promise((resolve, reject) => {
 			let success = false;
-			const add = require("child_process").spawn(process.execPath, [
-				yarn,
-				command,
-				...staticParameters,
-				...parameters,
-			]);
+			const add = require("child_process").spawn(
+				process.execPath,
+				[yarn, command, ...staticParameters, ...parameters],
+				{env: env}
+			);
 
 			add.stdout.on("data", (data) => {
 				data.toString()

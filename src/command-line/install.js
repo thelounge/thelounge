@@ -12,8 +12,6 @@ program
 	.on("--help", Utils.extraHelp)
 	.action(function(packageName) {
 		const fs = require("fs");
-		const fsextra = require("fs-extra");
-		const path = require("path");
 		const packageJson = require("package-json");
 
 		if (!fs.existsSync(Helper.getConfigPath())) {
@@ -44,34 +42,7 @@ program
 
 				log.info(`Installing ${colors.green(json.name + " v" + json.version)}...`);
 
-				const packagesPath = Helper.getPackagesPath();
-				const packagesConfig = path.join(packagesPath, "package.json");
-
-				// Create node_modules folder, otherwise yarn will start walking upwards to find one
-				fsextra.ensureDirSync(path.join(packagesPath, "node_modules"));
-
-				// Create package.json with private set to true, if it doesn't exist already
-				if (!fs.existsSync(packagesConfig)) {
-					fs.writeFileSync(
-						packagesConfig,
-						JSON.stringify(
-							{
-								private: true,
-								description:
-									"Packages for The Lounge. All packages in node_modules directory will be automatically loaded.",
-							},
-							null,
-							"\t"
-						)
-					);
-				}
-
-				return Utils.executeYarnCommand(
-					"add",
-					"--production",
-					"--exact",
-					`${json.name}@${json.version}`
-				)
+				return Utils.executeYarnCommand("add", "--exact", `${json.name}@${json.version}`)
 					.then(() => {
 						log.info(
 							`${colors.green(

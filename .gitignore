@@ -6,3 +6,5 @@ package-lock.json
 
 coverage/
 public/
+
+/.vs

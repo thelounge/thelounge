@@ -1,161 +1,85 @@
 "use strict";
 
-const $ = require("jquery");
-const storage = require("./localStorage");
-const socket = require("./socket");
+import socket from "./socket";
+import store from "./store";
 
-let pushNotificationsButton;
-let clientSubscribed = null;
-let applicationServerKey;
+export default {togglePushSubscription};
 
-if ("serviceWorker" in navigator) {
-	navigator.serviceWorker.addEventListener("message", (event) => {
-		if (event.data && event.data.type === "open") {
-			$("#sidebar")
-				.find(`.chan[data-target="#${event.data.channel}"]`)
-				.trigger("click");
-		}
-	});
-}
-
-module.exports.hasServiceWorker = false;
-
-module.exports.configurePushNotifications = (subscribedOnServer, key) => {
-	applicationServerKey = key;
-
-	// If client has push registration but the server knows nothing about it,
-	// this subscription is broken and client has to register again
-	if (clientSubscribed === true && subscribedOnServer === false) {
-		pushNotificationsButton.prop("disabled", true);
-
-		navigator.serviceWorker.ready
-			.then((registration) => registration.pushManager.getSubscription())
-			.then((subscription) => subscription && subscription.unsubscribe())
-			.then((successful) => {
-				if (successful) {
-					alternatePushButton().prop("disabled", false);
-				}
-			});
-	}
-};
-
-module.exports.initialize = () => {
-	pushNotificationsButton = $("#pushNotifications");
-
+socket.once("push:issubscribed", function(hasSubscriptionOnServer) {
 	if (!isAllowedServiceWorkersHost()) {
+		store.commit("pushNotificationState", "nohttps");
 		return;
 	}
 
-	$("#pushNotificationsHttps").hide();
-
-	if ("serviceWorker" in navigator) {
-		navigator.serviceWorker
-			.register("service-worker.js")
-			.then((registration) => {
-				module.exports.hasServiceWorker = true;
-
-				if (!registration.pushManager) {
-					return;
-				}
-
-				return registration.pushManager.getSubscription().then((subscription) => {
-					$("#pushNotificationsUnsupported").hide();
-
-					pushNotificationsButton.prop("disabled", false).on("click", onPushButton);
-
-					clientSubscribed = !!subscription;
-
-					if (clientSubscribed) {
-						alternatePushButton();
-					}
-				});
-			})
-			.catch((err) => {
-				$("#pushNotificationsUnsupported span").text(err);
-			});
+	if (!("serviceWorker" in navigator)) {
+		return;
 	}
-};
 
-function onPushButton() {
-	pushNotificationsButton.prop("disabled", true);
+	navigator.serviceWorker
+		.register("service-worker.js")
+		.then((registration) => {
+			store.commit("hasServiceWorker");
+
+			if (!registration.pushManager) {
+				return;
+			}
+
+			return registration.pushManager.getSubscription().then((subscription) => {
+				// If client has push registration but the server knows nothing about it,
+				// this subscription is broken and client has to register again
+				if (subscription && hasSubscriptionOnServer === false) {
+					subscription.unsubscribe().then((successful) => {
+						store.commit(
+							"pushNotificationState",
+							successful ? "supported" : "unsupported"
+						);
+					});
+				} else {
+					store.commit(
+						"pushNotificationState",
+						subscription ? "subscribed" : "supported"
+					);
+				}
+			});
+		})
+		.catch((err) => {
+			store.commit("pushNotificationState", "unsupported");
+			console.error(err); // eslint-disable-line no-console
+		});
+});
+
+function togglePushSubscription() {
+	store.commit("pushNotificationState", "loading");
 
 	navigator.serviceWorker.ready
 		.then((registration) =>
-			registration.pushManager
-				.getSubscription()
-				.then((existingSubscription) => {
-					if (existingSubscription) {
-						socket.emit("push:unregister");
+			registration.pushManager.getSubscription().then((existingSubscription) => {
+				if (existingSubscription) {
+					socket.emit("push:unregister");
 
-						return existingSubscription.unsubscribe();
-					}
+					return existingSubscription.unsubscribe().then((successful) => {
+						store.commit(
+							"pushNotificationState",
+							successful ? "supported" : "unsupported"
+						);
+					});
+				}
 
-					return registration.pushManager
-						.subscribe({
-							applicationServerKey: urlBase64ToUint8Array(applicationServerKey),
-							userVisibleOnly: true,
-						})
-						.then((subscription) => {
-							const rawKey = subscription.getKey ? subscription.getKey("p256dh") : "";
-							const key = rawKey
-								? window.btoa(String.fromCharCode(...new Uint8Array(rawKey)))
-								: "";
-							const rawAuthSecret = subscription.getKey
-								? subscription.getKey("auth")
-								: "";
-							const authSecret = rawAuthSecret
-								? window.btoa(String.fromCharCode(...new Uint8Array(rawAuthSecret)))
-								: "";
-
-							socket.emit("push:register", {
-								token: storage.get("token"),
-								endpoint: subscription.endpoint,
-								keys: {
-									p256dh: key,
-									auth: authSecret,
-								},
-							});
-
-							return true;
-						});
-				})
-				.then((successful) => {
-					if (successful) {
-						alternatePushButton().prop("disabled", false);
-					}
-				})
+				return registration.pushManager
+					.subscribe({
+						applicationServerKey: store.state.serverConfiguration.applicationServerKey,
+						userVisibleOnly: true,
+					})
+					.then((subscription) => {
+						socket.emit("push:register", subscription.toJSON());
+						store.commit("pushNotificationState", "subscribed");
+					});
+			})
 		)
 		.catch((err) => {
-			$("#pushNotificationsUnsupported")
-				.find("span")
-				.text(`An error has occurred: ${err}`)
-				.end()
-				.show();
+			store.commit("pushNotificationState", "unsupported");
+			console.error(err); // eslint-disable-line no-console
 		});
-
-	return false;
-}
-
-function alternatePushButton() {
-	const text = pushNotificationsButton.text();
-
-	return pushNotificationsButton
-		.text(pushNotificationsButton.data("text-alternate"))
-		.data("text-alternate", text);
-}
-
-function urlBase64ToUint8Array(base64String) {
-	const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-	const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
-
-	const rawData = window.atob(base64);
-	const outputArray = new Uint8Array(rawData.length);
-
-	for (let i = 0; i < rawData.length; ++i) {
-		outputArray[i] = rawData.charCodeAt(i);
-	}
-
-	return outputArray;
 }
 
 function isAllowedServiceWorkersHost() {

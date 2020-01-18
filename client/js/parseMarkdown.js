@@ -1,4 +1,4 @@
-const markdown = require("simple-markdown");
+import markdown from "simple-markdown";
 
 const rules = {
 	Array: Object.assign({}, markdown.defaultRules.Array, {
@@ -92,9 +92,7 @@ const parser = markdown.parserFor(rules);
 
 const ircOutput = markdown.outputFor(rules, "irc");
 
-function parseMarkdown(input) {
+export default function parseMarkdown(input) {
 	const state = {inline: true};
 	return ircOutput(parser(input, state), state);
 }
-
-module.exports = parseMarkdown;

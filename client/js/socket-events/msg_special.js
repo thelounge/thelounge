@@ -1,13 +1,11 @@
 "use strict";
 
-const $ = require("jquery");
-const socket = require("../socket");
-const {vueApp, findChannel} = require("../vue");
+import socket from "../socket";
+import store from "../store";
+import {switchToChannel} from "../router";
 
 socket.on("msg:special", function(data) {
-	findChannel(data.chan).channel.data = data.data;
-
-	vueApp.$nextTick(() => {
-		$(`#sidebar .chan[data-id="${data.chan}"]`).trigger("click");
-	});
+	const channel = store.getters.findChannel(data.chan);
+	channel.channel.data = data.data;
+	switchToChannel(channel.channel);
 });

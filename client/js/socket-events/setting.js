@@ -1,32 +1,24 @@
 "use strict";
 
-const socket = require("../socket");
-const options = require("../options");
-
-function evaluateSetting(name, value) {
-	if (
-		options.settings.syncSettings &&
-		options.settings[name] !== value &&
-		!options.noSync.includes(name)
-	) {
-		options.processSetting(name, value, true);
-	} else if (options.alwaysSync.includes(name)) {
-		options.processSetting(name, value, true);
-	}
-}
+import socket from "../socket";
+import store from "../store";
 
 socket.on("setting:new", function(data) {
 	const name = data.name;
 	const value = data.value;
-	evaluateSetting(name, value);
+	store.dispatch("settings/update", {name, value, sync: false});
 });
 
 socket.on("setting:all", function(settings) {
-	if (Object.keys(settings).length === 0) {
-		options.syncAllSettings();
-	} else {
+	const serverHasSettings = Object.keys(settings).length > 0;
+
+	store.commit("serverHasSettings", serverHasSettings);
+
+	if (serverHasSettings) {
 		for (const name in settings) {
-			evaluateSetting(name, settings[name]);
+			store.dispatch("settings/update", {name, value: settings[name], sync: false});
 		}
+	} else {
+		store.dispatch("settings/syncAll");
 	}
 });

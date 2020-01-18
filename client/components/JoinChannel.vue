@@ -59,17 +59,22 @@ export default {
 	},
 	methods: {
 		onSubmit() {
-			const channelToFind = this.inputChannel.toLowerCase();
-			const existingChannel = this.network.channels.find(
-				(c) => c.name.toLowerCase() === channelToFind
+			const existingChannel = this.$store.getters.findChannelOnCurrentNetwork(
+				this.inputChannel
 			);
 
 			if (existingChannel) {
-				const $ = require("jquery");
-				$(`#sidebar .chan[data-id="${existingChannel.id}"]`).trigger("click");
+				this.$root.switchToChannel(existingChannel);
 			} else {
+				const chanTypes = this.network.serverOptions.CHANTYPES;
+				let channel = this.inputChannel;
+
+				if (chanTypes && chanTypes.length > 0 && !chanTypes.includes(channel[0])) {
+					channel = chanTypes[0] + channel;
+				}
+
 				socket.emit("input", {
-					text: `/join ${this.inputChannel} ${this.inputPassword}`,
+					text: `/join ${channel} ${this.inputPassword}`,
 					target: this.channel.id,
 				});
 			}

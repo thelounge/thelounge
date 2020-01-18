@@ -4,6 +4,9 @@ const got = require("got");
 const path = require("path");
 const fs = require("fs");
 
+// same regex as found in client/../parse.js
+const emojiModifiersRegex = /[\u{1f3fb}-\u{1f3ff}]|\u{fe0f}/gu;
+
 (async () => {
 	const response = await got(
 		"https://raw.githubusercontent.com/github/gemoji/master/db/emoji.json"
@@ -13,7 +16,8 @@ const fs = require("fs");
 	const fullNameEmojiMap = {};
 
 	for (const emoji of emojiStrategy) {
-		fullNameEmojiMap[emoji.emoji] = emoji.description;
+		const cleanEmoji = emoji.emoji.replace(emojiModifiersRegex, "");
+		fullNameEmojiMap[cleanEmoji] = emoji.description;
 
 		for (const alias of emoji.aliases) {
 			emojiMap[alias] = emoji.emoji;
@@ -24,12 +28,12 @@ const fs = require("fs");
 	const fullNameEmojiMapOutput = JSON.stringify(fullNameEmojiMap, null, 2) + "\n";
 
 	fs.writeFileSync(
-		path.resolve(path.join(__dirname, "..", "client", "js", "libs", "simplemap.json")),
+		path.resolve(path.join(__dirname, "..", "client", "js", "helpers", "simplemap.json")),
 		emojiMapOutput
 	);
 
 	fs.writeFileSync(
-		path.resolve(path.join(__dirname, "..", "client", "js", "libs", "fullnamemap.json")),
+		path.resolve(path.join(__dirname, "..", "client", "js", "helpers", "fullnamemap.json")),
 		fullNameEmojiMapOutput
 	);
 })();

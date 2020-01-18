@@ -78,7 +78,10 @@ async function networkOrCache(event) {
 		}
 
 		if (response.ok) {
-			event.waitUntil(putInCache(event.request, response));
+			if (cacheName !== "dev") {
+				event.waitUntil(putInCache(event.request, response));
+			}
+
 			return response.clone();
 		}
 
@@ -156,7 +159,7 @@ self.addEventListener("notificationclick", function(event) {
 			.then((clientList) => {
 				if (clientList.length === 0) {
 					if (clients.openWindow) {
-						return clients.openWindow(`.#${event.notification.tag}`);
+						return clients.openWindow(`.#/${event.notification.tag}`);
 					}
 
 					return;

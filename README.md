@@ -21,20 +21,16 @@
 <p align="center">
 	<a href="https://demo.thelounge.chat/"><img
 		alt="#thelounge IRC channel on freenode"
-		src="https://img.shields.io/badge/freenode-%23thelounge-415364.svg?colorA=ff9e18&style=flat-square"></a>
-	<br>
+		src="https://img.shields.io/badge/freenode-%23thelounge-415364.svg?colorA=ff9e18"></a>
 	<a href="https://yarn.pm/thelounge"><img
 		alt="npm version"
-		src="https://img.shields.io/npm/v/thelounge.svg?style=flat-square&maxAge=3600"></a>
-	<a href="https://travis-ci.com/thelounge/thelounge"><img
-		alt="Travis CI Build Status"
-		src="https://img.shields.io/travis/com/thelounge/thelounge/master.svg?style=flat-square&maxAge=60"></a>
-	<a href="https://david-dm.org/thelounge/thelounge"><img
-		alt="Dependencies Status"
-		src="https://img.shields.io/david/thelounge/thelounge.svg?style=flat-square&maxAge=3600"></a>
+		src="https://img.shields.io/npm/v/thelounge.svg?colorA=333a41&maxAge=3600"></a>
+	<a href="https://github.com/thelounge/thelounge/actions"><img
+		alt="Build Status"
+		src="https://github.com/thelounge/thelounge/workflows/Build/badge.svg"></a>
 	<a href="https://npm-stat.com/charts.html?package=thelounge&from=2016-02-12"><img
 		alt="Total downloads on npm"
-		src="https://img.shields.io/npm/dt/thelounge.svg?colorB=007dc7&style=flat-square&maxAge=3600"></a>
+		src="https://img.shields.io/npm/dy/thelounge.svg?colorA=333a41&colorB=007dc7&maxAge=3600&label=Downloads"></a>
 </p>
 
 <p align="center">
@@ -55,36 +51,13 @@ The Lounge is the official and community-managed fork of [Shout](https://github.
 
 ## Installation and usage
 
-The Lounge requires [Node.js](https://nodejs.org/) v8 or more recent.
+The Lounge requires latest [Node.js](https://nodejs.org/) LTS version or more recent.
 [Yarn package manager](https://yarnpkg.com/) is also recommended.  
 If you want to install with npm, `--unsafe-perm` is required for a correct install.
 
-### Running stable releases using Yarn (recommended)
+### Running stable releases
 
-Run this in a terminal to install (or upgrade) the latest stable release from
-[npm registry](https://www.npmjs.com/):
-
-```sh
-yarn global add thelounge
-```
-
-If you already have The Lounge installed globally, use the following command to update it:
-
-```sh
-yarn global upgrade thelounge
-```
-
-When installation is complete, run:
-
-```sh
-thelounge start
-```
-
-For more information, read the [usage documentation](https://thelounge.chat/docs/usage) or run:
-
-```sh
-thelounge --help
-```
+Please refer to the [install and upgrade documentation on our website](https://thelounge.chat/docs/install-and-upgrade) for all available installation methods.
 
 ### Running from source
 
@@ -113,4 +86,4 @@ Before submitting any change, make sure to:
 - Read the [Contributing instructions](https://github.com/thelounge/thelounge/blob/master/.github/CONTRIBUTING.md#contributing)
 - Run `yarn test` to execute linters and test suite
 - Run `yarn build` if you change or add anything in `client/js` or `client/views`
-- `yarn dev` can be used to start The Lounge and watch for any file changes in the client folder
+- `yarn dev` can be used to start The Lounge with hot module reloading

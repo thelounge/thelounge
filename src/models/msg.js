@@ -48,7 +48,8 @@ class Msg {
 			this.type !== Msg.Type.TOPIC_SET_BY &&
 			this.type !== Msg.Type.MODE_CHANNEL &&
 			this.type !== Msg.Type.RAW &&
-			this.type !== Msg.Type.WHOIS
+			this.type !== Msg.Type.WHOIS &&
+			this.type !== Msg.Type.PLUGIN
 		);
 	}
 }
@@ -77,6 +78,7 @@ Msg.Type = {
 	TOPIC_SET_BY: "topic_set_by",
 	WHOIS: "whois",
 	RAW: "raw",
+	PLUGIN: "plugin",
 };
 
 module.exports = Msg;

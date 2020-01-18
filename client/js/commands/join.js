@@ -1,29 +1,49 @@
 "use strict";
 
-const $ = require("jquery");
+import socket from "../socket";
+import store from "../store";
+import {switchToChannel} from "../router";
 
-exports.input = function(args) {
-	const utils = require("../utils");
-	const socket = require("../socket");
-	const {vueApp} = require("../vue");
-
+function input(args) {
 	if (args.length > 0) {
-		const channel = args[0];
+		let channels = args[0];
 
-		if (channel.length > 0) {
-			const chan = utils.findCurrentNetworkChan(channel);
+		if (channels.length > 0) {
+			const chanTypes = store.state.activeChannel.network.serverOptions.CHANTYPES;
+			const channelList = args[0].split(",");
+
+			if (chanTypes && chanTypes.length > 0) {
+				for (let c = 0; c < channelList.length; c++) {
+					if (!chanTypes.includes(channelList[c][0])) {
+						channelList[c] = chanTypes[0] + channelList[c];
+					}
+				}
+			}
+
+			channels = channelList.join(",");
+
+			const chan = store.getters.findChannelOnCurrentNetwork(channels);
 
 			if (chan) {
-				$(`#sidebar .chan[data-id="${chan.id}"]`).trigger("click");
+				switchToChannel(chan);
+			} else {
+				socket.emit("input", {
+					text: `/join ${channels} ${args.length > 1 ? args[1] : ""}`,
+					target: store.state.activeChannel.channel.id,
+				});
+
+				return true;
 			}
 		}
-	} else if (vueApp.activeChannel.channel.type === "channel") {
+	} else if (store.state.activeChannel.channel.type === "channel") {
 		// If `/join` command is used without any arguments, re-join current channel
 		socket.emit("input", {
-			target: vueApp.activeChannel.channel.id,
-			text: `/join ${vueApp.activeChannel.channel.name}`,
+			target: store.state.activeChannel.channel.id,
+			text: `/join ${store.state.activeChannel.channel.name}`,
 		});
 
 		return true;
 	}
-};
+}
+
+export default {input};

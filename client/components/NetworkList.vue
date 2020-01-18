@@ -7,7 +7,7 @@
 		:list="networks"
 		:filter="isCurrentlyInTouch"
 		:prevent-on-filter="false"
-		handle=".lobby"
+		handle=".channel-list-item[data-type='lobby']"
 		draggable=".network"
 		ghost-class="ui-sortable-ghost"
 		drag-class="ui-sortable-dragged"
@@ -23,17 +23,12 @@
 			:key="network.uuid"
 			:class="{
 				collapsed: network.isCollapsed,
-				'not-connected': !network.status.connected,
-				'not-secure': !network.status.secure,
 			}"
-			:data-uuid="network.uuid"
-			:data-nick="network.nick"
 			class="network"
 			role="region"
 		>
 			<NetworkLobby
 				:network="network"
-				:active-channel="activeChannel"
 				:is-join-channel-shown="network.isJoinChannelShown"
 				@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown"
 			/>
@@ -45,7 +40,7 @@
 			/>
 
 			<Draggable
-				draggable=".chan"
+				draggable=".channel-list-item"
 				ghost-class="ui-sortable-ghost"
 				drag-class="ui-sortable-dragged"
 				:group="network.uuid"
@@ -63,7 +58,6 @@
 					:key="channel.id"
 					:channel="channel"
 					:network="network"
-					:active-channel="activeChannel"
 				/>
 			</Draggable>
 		</div>
@@ -71,12 +65,14 @@
 </template>
 
 <script>
+import Mousetrap from "mousetrap";
 import Draggable from "vuedraggable";
 import NetworkLobby from "./NetworkLobby.vue";
 import Channel from "./Channel.vue";
 import JoinChannel from "./JoinChannel.vue";
 
 import socket from "../js/socket";
+import collapseNetwork from "../js/helpers/collapseNetwork";
 
 export default {
 	name: "NetworkList",
@@ -86,11 +82,30 @@ export default {
 		Channel,
 		Draggable,
 	},
-	props: {
-		activeChannel: Object,
-		networks: Array,
+	computed: {
+		networks() {
+			return this.$store.state.networks;
+		},
+	},
+	mounted() {
+		Mousetrap.bind("alt+shift+right", this.expandNetwork);
+		Mousetrap.bind("alt+shift+left", this.collapseNetwork);
+	},
+	beforeDestroy() {
+		Mousetrap.unbind("alt+shift+right", this.expandNetwork);
+		Mousetrap.unbind("alt+shift+left", this.collapseNetwork);
 	},
 	methods: {
+		expandNetwork() {
+			if (this.$store.state.activeChannel) {
+				collapseNetwork(this.$store.state.activeChannel.network, false);
+			}
+		},
+		collapseNetwork() {
+			if (this.$store.state.activeChannel) {
+				collapseNetwork(this.$store.state.activeChannel.network, true);
+			}
+		},
 		isCurrentlyInTouch(e) {
 			// TODO: Implement a way to sort on touch devices
 			return e.pointerType !== "mouse";
@@ -116,8 +131,7 @@ export default {
 				return;
 			}
 
-			const {findChannel} = require("../js/vue");
-			const channel = findChannel(e.moved.element.id);
+			const channel = this.$store.getters.findChannel(e.moved.element.id);
 
 			if (!channel) {
 				return;

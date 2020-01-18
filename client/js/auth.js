@@ -1,11 +1,11 @@
 "use strict";
 
-const localStorage = require("./localStorage");
-const location = require("./location");
+import storage from "./localStorage";
+import location from "./location";
 
-module.exports = class Auth {
+export default class Auth {
 	static signout() {
-		localStorage.clear();
+		storage.clear();
 		location.reload();
 	}
-};
+}

@@ -1,10 +1,14 @@
 <template>
 	<div
 		:id="'msg-' + message.id"
-		:class="['msg', message.type, {self: message.self, highlight: message.highlight}]"
+		:class="[
+			'msg',
+			{self: message.self, highlight: message.highlight, 'previous-source': isPreviousSource},
+		]"
+		:data-type="message.type"
 		:data-from="message.from && message.from.nick"
 	>
-		<span :aria-label="message.time | localetime" class="time tooltipped tooltipped-e"
+		<span :aria-label="messageTimeLocale" class="time tooltipped tooltipped-e"
 			>{{ messageTime }}
 		</span>
 		<template v-if="message.type === 'unhandled'">
@@ -19,9 +23,8 @@
 		</template>
 		<template v-else-if="message.type === 'action'">
 			<span class="from"><span class="only-copy">* </span></span>
-			<span class="content">
-				<Username :user="message.from" />&#32;<ParsedMessage
-					:network="network"
+			<span class="content" dir="auto">
+				<Username :user="message.from" dir="auto" />&#32;<ParsedMessage
 					:message="message"
 				/>
 				<LinkPreview
@@ -29,7 +32,7 @@
 					:key="preview.link"
 					:keep-scroll-position="keepScrollPosition"
 					:link="preview"
-					:previewConf="previewConf"
+					:preview-conf="previewConf"
 				/>
 			</span>
 		</template>
@@ -41,6 +44,13 @@
 					<span class="only-copy">&gt; </span>
 				</template>
 			</span>
+			<span v-else-if="message.type === 'plugin'" class="from">
+				<template v-if="message.from && message.from.nick">
+					<span class="only-copy">[</span>
+					{{ message.from.nick }}
+					<span class="only-copy">] </span>
+				</template>
+			</span>
 			<span v-else class="from">
 				<template v-if="message.from && message.from.nick">
 					<span class="only-copy">-</span>
@@ -48,14 +58,20 @@
 					<span class="only-copy">- </span>
 				</template>
 			</span>
-			<span class="content">
+			<span class="content" dir="auto">
+				<span
+					v-if="message.showInActive"
+					aria-label="This message was shown in your active channel"
+					class="msg-shown-in-active tooltipped tooltipped-e"
+					><span></span
+				></span>
 				<ParsedMessage :network="network" :message="message" />
 				<LinkPreview
 					v-for="preview in message.previews"
 					:key="preview.link"
 					:keep-scroll-position="keepScrollPosition"
 					:link="preview"
-					:previewConf="previewConf"
+					:preview-conf="previewConf"
 				/>
 			</span>
 		</template>
@@ -63,13 +79,13 @@
 </template>
 
 <script>
+const constants = require("../js/constants");
+import localetime from "../js/helpers/localetime";
+import dayjs from "dayjs";
 import Username from "./Username.vue";
 import LinkPreview from "./LinkPreview.vue";
 import ParsedMessage from "./ParsedMessage.vue";
 import MessageTypes from "./MessageTypes";
-
-const moment = require("moment");
-const constants = require("../js/constants");
 
 MessageTypes.ParsedMessage = ParsedMessage;
 MessageTypes.LinkPreview = LinkPreview;
@@ -80,24 +96,26 @@ export default {
 	components: MessageTypes,
 	props: {
 		message: Object,
+		channel: Object,
 		network: Object,
 		keepScrollPosition: Function,
 		previewConf: Object,
+		isPreviousSource: Boolean,
 	},
 	computed: {
 		messageTime() {
-			const format = this.$root.settings.showSeconds
+			const format = this.$store.state.settings.showSeconds
 				? constants.timeFormats.msgWithSeconds
 				: constants.timeFormats.msgDefault;
 
-			return moment(this.message.time).format(format);
+			return dayjs(this.message.time).format(format);
+		},
+		messageTimeLocale() {
+			return localetime(this.message.time);
 		},
 		messageComponent() {
 			return "message-" + this.message.type;
 		},
-	},
-	mounted() {
-		require("../js/renderPreview");
 	},
 	methods: {
 		isAction() {

@@ -3,7 +3,7 @@
 const log = require("../../../src/log");
 const ldapAuth = require("../../../src/plugins/auth/ldap");
 const Helper = require("../../../src/helper");
-const ldap = require("thelounge-ldapjs-non-maintained-fork");
+const ldap = require("ldapjs");
 const expect = require("chai").expect;
 const stub = require("sinon").stub;
 const TestUtil = require("../../util");
@@ -124,6 +124,8 @@ function testLdapAuth() {
 }
 
 describe("LDAP authentication plugin", function() {
+	// Increase timeout due to unpredictable I/O on CI services
+	this.timeout(process.env.CI ? 25000 : 5000);
 	this.slow(200);
 
 	let server;
@@ -148,6 +150,11 @@ describe("LDAP authentication plugin", function() {
 		Helper.config.ldap.enable = true;
 		Helper.config.ldap.url = "ldap://localhost:" + String(serverPort);
 		Helper.config.ldap.primaryKey = primaryKey;
+	});
+
+	afterEach(function() {
+		Helper.config.public = true;
+		Helper.config.ldap.enable = false;
 	});
 
 	describe("LDAP authentication availability", function() {

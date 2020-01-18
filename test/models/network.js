@@ -73,6 +73,8 @@ describe("Network", function() {
 
 		it("lockNetwork should be enforced when validating", function() {
 			Helper.config.lockNetwork = true;
+
+			// Make sure we lock in private mode
 			Helper.config.public = false;
 
 			const network = new Network({
@@ -87,6 +89,7 @@ describe("Network", function() {
 			expect(network.tls).to.be.true;
 			expect(network.rejectUnauthorized).to.be.true;
 
+			// Make sure we lock in public mode (also resets public=true for other tests)
 			Helper.config.public = true;
 
 			const network2 = new Network({
@@ -96,7 +99,6 @@ describe("Network", function() {
 			expect(network2.host).to.equal("chat.freenode.net");
 
 			Helper.config.lockNetwork = false;
-			Helper.config.public = false;
 		});
 
 		it("editing a network should enforce correct types", function() {
@@ -225,21 +227,7 @@ describe("Network", function() {
 
 			expect(clone)
 				.to.be.an("object")
-				.that.has.all.keys(
-					"channels",
-					"commands",
-					"host",
-					"name",
-					"port",
-					"realname",
-					"serverOptions",
-					"status",
-					"tls",
-					"userDisconnected",
-					"rejectUnauthorized",
-					"uuid",
-					"username"
-				);
+				.that.has.all.keys("channels", "status", "nick", "name", "serverOptions", "uuid");
 
 			expect(clone.status)
 				.to.be.an("object")

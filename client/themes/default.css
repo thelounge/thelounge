@@ -1,3 +1,7 @@
+#loading .window {
+	margin: 5px;
+}
+
 #viewport {
 	padding: 5px;
 }
@@ -12,20 +16,20 @@
 }
 
 @media (max-width: 768px) {
+	#loading .window {
+		margin: 0;
+	}
+
 	#viewport,
 	#viewport.menu-open {
 		padding: 0;
-	}
-
-	#viewport #sign-in {
-		margin-left: 0;
 	}
 
 	#footer .icon {
 		border-radius: 0;
 	}
 
-	#windows .window {
+	.window {
 		border-radius: 0;
 	}
 }

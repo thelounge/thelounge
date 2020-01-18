@@ -5,24 +5,12 @@ const got = require("got");
 const URL = require("url").URL;
 const mime = require("mime-types");
 const Helper = require("../../helper");
-const cleanIrcMessage = require("../../../client/js/libs/handlebars/ircmessageparser/cleanIrcMessage");
-const findLinks = require("../../../client/js/libs/handlebars/ircmessageparser/findLinks");
+const cleanIrcMessage = require("../../../client/js/helpers/ircmessageparser/cleanIrcMessage");
+const findLinks = require("../../../client/js/helpers/ircmessageparser/findLinks");
 const storage = require("../storage");
 const currentFetchPromises = new Map();
 const imageTypeRegex = /^image\/.+/;
 const mediaTypeRegex = /^(audio|video)\/.+/;
-
-// Fix ECDH curve client compatibility in Node v8/v9
-// This is fixed in Node 10, but The Lounge supports LTS versions
-// https://github.com/nodejs/node/issues/16196
-// https://github.com/nodejs/node/pull/16853
-// https://github.com/nodejs/node/pull/15206
-const tls = require("tls");
-const semver = require("semver");
-
-if (semver.gte(process.version, "8.6.0") && tls.DEFAULT_ECDH_CURVE === "prime256v1") {
-	tls.DEFAULT_ECDH_CURVE = "auto";
-}
 
 module.exports = function(client, chan, msg) {
 	if (!Helper.config.prefetch) {
@@ -55,8 +43,9 @@ module.exports = function(client, chan, msg) {
 			head: "",
 			body: "",
 			thumb: "",
+			size: -1,
 			link: link.link, // Send original matched link to the client
-			shown: true,
+			shown: null,
 		};
 
 		cleanLinks.push(preview);
@@ -72,7 +61,7 @@ module.exports = function(client, chan, msg) {
 				preview.type = "error";
 				preview.error = "message";
 				preview.message = err.message;
-				handlePreview(client, chan, msg, preview, null);
+				emitPreview(client, chan, msg, preview);
 			});
 
 		return cleanLinks;
@@ -97,35 +86,40 @@ function parseHtml(preview, res, client) {
 					$('meta[property="og:description"]').attr("content") ||
 					$('meta[name="description"]').attr("content") ||
 					"";
-				preview.thumb =
+				let thumb =
 					$('meta[property="og:image"]').attr("content") ||
 					$('meta[name="twitter:image:src"]').attr("content") ||
 					$('link[rel="image_src"]').attr("href") ||
 					"";
 
+				if (preview.head.length) {
+					preview.head = preview.head.substr(0, 100);
+				}
+
+				if (preview.body.length) {
+					preview.body = preview.body.substr(0, 300);
+				}
+
 				// Make sure thumbnail is a valid and absolute url
-				if (preview.thumb.length) {
-					preview.thumb = normalizeURL(preview.thumb, preview.link) || "";
+				if (thumb.length) {
+					thumb = normalizeURL(thumb, preview.link) || "";
 				}
 
 				// Verify that thumbnail pic exists and is under allowed size
-				if (preview.thumb.length) {
-					fetch(preview.thumb, {language: client.config.browser.language})
+				if (thumb.length) {
+					fetch(thumb, {language: client.config.browser.language})
 						.then((resThumb) => {
 							if (
-								resThumb === null ||
-								!imageTypeRegex.test(resThumb.type) ||
-								resThumb.size > Helper.config.prefetchMaxImageSize * 1024
+								resThumb !== null &&
+								imageTypeRegex.test(resThumb.type) &&
+								resThumb.size <= Helper.config.prefetchMaxImageSize * 1024
 							) {
-								preview.thumb = "";
+								preview.thumbActualUrl = thumb;
 							}
 
 							resolve(resThumb);
 						})
-						.catch(() => {
-							preview.thumb = "";
-							resolve(null);
-						});
+						.catch(() => resolve(null));
 				} else {
 					resolve(res);
 				}
@@ -193,9 +187,17 @@ function parseHtmlMedia($, preview, client) {
 function parse(msg, chan, preview, res, client) {
 	let promise;
 
+	preview.size = res.size;
+
 	switch (res.type) {
 		case "text/html":
+			preview.size = -1;
 			promise = parseHtml(preview, res, client);
+			break;
+
+		case "text/plain":
+			preview.type = "link";
+			preview.body = res.data.toString().substr(0, 300);
 			break;
 
 		case "image/png":
@@ -209,7 +211,7 @@ function parse(msg, chan, preview, res, client) {
 				preview.maxSize = Helper.config.prefetchMaxImageSize * 1024;
 			} else {
 				preview.type = "image";
-				preview.thumb = preview.link;
+				preview.thumbActualUrl = preview.link;
 			}
 
 			break;
@@ -258,7 +260,11 @@ function parse(msg, chan, preview, res, client) {
 }
 
 function handlePreview(client, chan, msg, preview, res) {
-	if (!preview.thumb.length || !Helper.config.prefetchStorage) {
+	const thumb = preview.thumbActualUrl || "";
+	delete preview.thumbActualUrl;
+
+	if (!thumb.length || !Helper.config.prefetchStorage) {
+		preview.thumb = thumb;
 		return emitPreview(client, chan, msg, preview);
 	}
 
@@ -273,7 +279,6 @@ function handlePreview(client, chan, msg, preview, res) {
 			return removePreview(msg, preview);
 		}
 
-		preview.thumb = "";
 		return emitPreview(client, chan, msg, preview);
 	}
 
@@ -314,8 +319,11 @@ function removePreview(msg, preview) {
 
 function getRequestHeaders(headers) {
 	const formattedHeaders = {
+		// Certain websites like Amazon only add <meta> tags to known bots,
+		// lets pretend to be them to get the metadata
 		"User-Agent":
-			"Mozilla/5.0 (compatible; The Lounge IRC Client; +https://github.com/thelounge/thelounge)",
+			"Mozilla/5.0 (compatible; The Lounge IRC Client; +https://github.com/thelounge/thelounge)" +
+			" facebookexternalhit/1.1 Twitterbot/1.0",
 		Accept: headers.accept || "*/*",
 		"X-Purpose": "preview",
 	};
@@ -338,31 +346,32 @@ function fetch(uri, headers) {
 
 	promise = new Promise((resolve, reject) => {
 		let buffer = Buffer.from("");
-		let request;
-		let response;
+		let contentLength = 0;
+		let contentType;
 		let limit = Helper.config.prefetchMaxImageSize * 1024;
 
 		try {
-			got.stream(uri, {
+			const gotStream = got.stream(uri, {
+				retry: 0,
 				timeout: 5000,
 				headers: getRequestHeaders(headers),
 				rejectUnauthorized: false,
-			})
-				.on("request", (req) => (request = req))
-				.on("response", function(res) {
-					response = res;
+			});
 
-					if (imageTypeRegex.test(res.headers["content-type"])) {
+			gotStream
+				.on("response", function(res) {
+					contentLength = parseInt(res.headers["content-length"], 10) || 0;
+					contentType = res.headers["content-type"];
+
+					if (imageTypeRegex.test(contentType)) {
 						// response is an image
 						// if Content-Length header reports a size exceeding the prefetch limit, abort fetch
-						const contentLength = parseInt(res.headers["content-length"], 10) || 0;
-
 						if (contentLength > limit) {
-							request.abort();
+							gotStream.destroy();
 						}
-					} else if (mediaTypeRegex.test(res.headers["content-type"])) {
+					} else if (mediaTypeRegex.test(contentType)) {
 						// We don't need to download the file any further after we received content-type header
-						request.abort();
+						gotStream.destroy();
 					} else {
 						// if not image, limit download to 50kb, since we need only meta tags
 						// twitter.com sends opengraph meta tags within ~20kb of data for individual tweets
@@ -374,19 +383,18 @@ function fetch(uri, headers) {
 					buffer = Buffer.concat([buffer, data], buffer.length + data.length);
 
 					if (buffer.length >= limit) {
-						request.abort();
+						gotStream.destroy();
 					}
 				})
-				.on("end", () => {
+				.on("end", () => gotStream.destroy())
+				.on("close", () => {
 					let type = "";
-					let size = parseInt(response.headers["content-length"], 10) || buffer.length;
 
-					if (size < buffer.length) {
-						size = buffer.length;
-					}
+					// If we downloaded more data then specified in Content-Length, use real data size
+					const size = contentLength > buffer.length ? contentLength : buffer.length;
 
-					if (response.headers["content-type"]) {
-						type = response.headers["content-type"].split(/ *; */).shift();
+					if (contentType) {
+						type = contentType.split(/ *; */).shift();
 					}
 
 					resolve({data: buffer, type, size});

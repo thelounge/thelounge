@@ -7,17 +7,20 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const VueLoaderPlugin = require("vue-loader/lib/plugin");
 const Helper = require("./src/helper.js");
 
+const isProduction = process.env.NODE_ENV === "production";
 const config = {
-	mode: process.env.NODE_ENV === "production" ? "production" : "development",
+	mode: isProduction ? "production" : "development",
 	entry: {
-		"js/bundle.js": path.resolve(__dirname, "client/js/lounge.js"),
-		"css/style": path.resolve(__dirname, "client/css/style.css"),
+		"js/bundle.js": [path.resolve(__dirname, "client/js/vue.js")],
 	},
 	devtool: "source-map",
 	output: {
 		path: path.resolve(__dirname, "public"),
 		filename: "[name]",
 		publicPath: "/",
+	},
+	performance: {
+		hints: false,
 	},
 	module: {
 		rules: [
@@ -34,14 +37,25 @@ const config = {
 			},
 			{
 				test: /\.css$/,
-				include: [path.resolve(__dirname, "client")],
 				use: [
-					MiniCssExtractPlugin.loader,
+					{
+						loader: MiniCssExtractPlugin.loader,
+						options: {
+							hmr: false,
+						},
+					},
 					{
 						loader: "css-loader",
 						options: {
 							url: false,
-							minimize: process.env.NODE_ENV === "production",
+							importLoaders: 1,
+							sourceMap: true,
+						},
+					},
+					{
+						loader: "postcss-loader",
+						options: {
+							sourceMap: true,
 						},
 					},
 				],
@@ -52,37 +66,9 @@ const config = {
 				use: {
 					loader: "babel-loader",
 					options: {
-						presets: [
-							[
-								"@babel/env",
-								{
-									targets: {
-										browsers: ["last 1 year", "firefox esr"],
-									},
-								},
-							],
-						],
+						presets: [["@babel/env"]],
 					},
 				},
-			},
-			{
-				test: /\.tpl$/,
-				include: [path.resolve(__dirname, "client/views")],
-				use: [
-					{
-						loader: "handlebars-loader",
-						options: {
-							helperDirs: [path.resolve(__dirname, "client/js/libs/handlebars")],
-							extensions: [".tpl"],
-						},
-					},
-					{
-						loader: "html-minifier-loader",
-						options: {
-							ignoreCustomFragments: [/{{[\s\S]*?}}/],
-						},
-					},
-				],
 			},
 		],
 	},
@@ -101,8 +87,10 @@ const config = {
 		json3: "JSON", // socket.io uses json3.js, but we do not target any browsers that need it
 	},
 	plugins: [
-		new MiniCssExtractPlugin(),
 		new VueLoaderPlugin(),
+		new MiniCssExtractPlugin({
+			filename: "css/style.css",
+		}),
 		new CopyPlugin([
 			{
 				from: "./node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff*",
@@ -121,7 +109,9 @@ const config = {
 				from: "./client/service-worker.js",
 				to: "[name].[ext]",
 				transform(content) {
-					return content.toString().replace("__HASH__", Helper.getVersionCacheBust());
+					return content
+						.toString()
+						.replace("__HASH__", isProduction ? Helper.getVersionCacheBust() : "dev");
 				},
 			},
 			{
@@ -136,12 +126,7 @@ const config = {
 				from: "./client/themes/*",
 				to: "themes/[name].[ext]",
 			},
-			{
-				from: "./node_modules/primer-tooltips/build/build.css",
-				to: "css/primer-tooltips.[ext]",
-			},
 		]),
-		new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
 		// socket.io uses debug, we don't need it
 		new webpack.NormalModuleReplacementPlugin(
 			/debug/,

@@ -54,7 +54,7 @@ class Uploader {
 		express.post("/uploads/new/:token", Uploader.routeUploadFile);
 	}
 
-	static routeGetFile(req, res) {
+	static async routeGetFile(req, res) {
 		const name = req.params.name;
 
 		const nameRegex = /^[0-9a-f]{16}$/;
@@ -66,7 +66,7 @@ class Uploader {
 		const folder = name.substring(0, 2);
 		const uploadPath = Helper.getFileUploadPath();
 		const filePath = path.join(uploadPath, folder, name);
-		const detectedMimeType = Uploader.getFileType(filePath);
+		const detectedMimeType = await Uploader.getFileType(filePath);
 
 		// doesn't exist
 		if (detectedMimeType === null) {
@@ -179,7 +179,13 @@ class Uploader {
 		streamWriter.on("error", abortWithError);
 
 		busboyInstance.on("file", (fieldname, fileStream, filename) => {
-			uploadUrl = `uploads/${randomName}/${encodeURIComponent(filename)}`;
+			uploadUrl = `${randomName}/${encodeURIComponent(filename)}`;
+
+			if (Helper.config.fileUpload.baseUrl) {
+				uploadUrl = new URL(uploadUrl, Helper.config.fileUpload.baseUrl).toString();
+			} else {
+				uploadUrl = `uploads/${uploadUrl}`;
+			}
 
 			// if the busboy data stream errors out or goes over the file size limit
 			// abort the processing with an error
@@ -226,12 +232,12 @@ class Uploader {
 
 	// Returns null if an error occurred (e.g. file not found)
 	// Returns a string with the type otherwise
-	static getFileType(filePath) {
+	static async getFileType(filePath) {
 		try {
 			const buffer = readChunk.sync(filePath, 0, fileType.minimumBytes);
 
 			// returns {ext, mime} if found, null if not.
-			const file = fileType(buffer);
+			const file = await fileType.fromBuffer(buffer);
 
 			// if a file type was detected correctly, return it
 			if (file) {

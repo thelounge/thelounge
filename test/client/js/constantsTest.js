@@ -12,19 +12,18 @@ describe("client-side constants", function() {
 		});
 
 		it("should be made of pairs of strings", function() {
-			constants.colorCodeMap.forEach((tuple) => {
-				// TODO: In Node v6+, use `[code, name]`
-				expect(tuple[0])
+			constants.colorCodeMap.forEach(([code, name]) => {
+				expect(code)
 					.to.be.a("string")
 					.that.match(/[0-9]{2}/);
-				expect(tuple[1]).to.be.a("string");
+				expect(name).to.be.a("string");
 			});
 		});
 	});
 
 	describe(".condensedTypes", function() {
 		it("should be a non-empty array", function() {
-			expect(constants.condensedTypes).to.be.an("array").that.is.not.empty;
+			expect(constants.condensedTypes).to.be.an.instanceof(Set).that.is.not.empty;
 		});
 
 		it("should only contain ASCII strings", function() {

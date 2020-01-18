@@ -10,7 +10,7 @@
 // https://github.com/thelounge/thelounge/issues/2699
 // https://www.chromium.org/for-testers/bug-reporting-guidelines/uncaught-securityerror-failed-to-read-the-localstorage-property-from-window-access-is-denied-for-this-document
 
-module.exports = {
+export default {
 	set(key, value) {
 		try {
 			window.localStorage.setItem(key, value);

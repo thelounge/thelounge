@@ -1,12 +1,9 @@
 "use strict";
 
-const $ = require("jquery");
-const socket = require("../socket");
-const utils = require("../utils");
-const options = require("../options");
-const cleanIrcMessage = require("../libs/handlebars/ircmessageparser/cleanIrcMessage");
-const webpush = require("../webpush");
-const {vueApp, findChannel} = require("../vue");
+import socket from "../socket";
+import cleanIrcMessage from "../helpers/ircmessageparser/cleanIrcMessage";
+import store from "../store";
+import {switchToChannel} from "../router";
 
 let pop;
 
@@ -15,35 +12,46 @@ try {
 	pop.src = "audio/pop.wav";
 } catch (e) {
 	pop = {
-		play: $.noop,
+		play() {},
 	};
 }
 
 socket.on("msg", function(data) {
-	const receivingChannel = findChannel(data.chan);
+	const receivingChannel = store.getters.findChannel(data.chan);
 
 	if (!receivingChannel) {
 		return;
 	}
 
 	let channel = receivingChannel.channel;
-	const isActiveChannel = vueApp.activeChannel && vueApp.activeChannel.channel === channel;
+	const isActiveChannel =
+		store.state.activeChannel && store.state.activeChannel.channel === channel;
 
 	// Display received notices and errors in currently active channel.
 	// Reloading the page will put them back into the lobby window.
-	// We only want to put errors/notices in active channel if they arrive on the same network
-	if (
-		data.msg.showInActive &&
-		vueApp.activeChannel &&
-		vueApp.activeChannel.network === receivingChannel.network
-	) {
-		channel = vueApp.activeChannel.channel;
+	if (data.msg.showInActive) {
+		// We only want to put errors/notices in active channel if they arrive on the same network
+		if (
+			store.state.activeChannel &&
+			store.state.activeChannel.network === receivingChannel.network
+		) {
+			channel = store.state.activeChannel.channel;
 
-		data.chan = channel.id;
-	} else if (!isActiveChannel) {
-		// Do not set unread counter for channel if it is currently active on this client
-		// It may increase on the server before it processes channel open event from this client
+			if (data.chan === channel.id) {
+				// If active channel is the intended channel for this message,
+				// remove the showInActive flag
+				delete data.msg.showInActive;
+			} else {
+				data.chan = channel.id;
+			}
+		} else {
+			delete data.msg.showInActive;
+		}
+	}
 
+	// Do not set unread counter for channel if it is currently active on this client
+	// It may increase on the server before it processes channel open event from this client
+	if (!isActiveChannel) {
 		if (typeof data.highlight !== "undefined") {
 			channel.highlight = data.highlight;
 		}
@@ -58,7 +66,7 @@ socket.on("msg", function(data) {
 	if (data.msg.self) {
 		channel.firstUnread = data.msg.id;
 	} else {
-		notifyMessage(data.chan, channel, vueApp.activeChannel, data.msg);
+		notifyMessage(data.chan, channel, store.state.activeChannel, data.msg);
 	}
 
 	let messageLimit = 0;
@@ -83,18 +91,12 @@ socket.on("msg", function(data) {
 			user.lastMessage = new Date(data.msg.time).getTime() || Date.now();
 		}
 	}
-
-	if (data.msg.self || data.msg.highlight) {
-		utils.synchronizeNotifiedState();
-	}
 });
 
 function notifyMessage(targetId, channel, activeChannel, msg) {
-	const button = $("#sidebar .chan[data-id='" + targetId + "']");
-
-	if (msg.highlight || (options.settings.notifyAllMessages && msg.type === "message")) {
+	if (msg.highlight || (store.state.settings.notifyAllMessages && msg.type === "message")) {
 		if (!document.hasFocus() || !activeChannel || activeChannel.channel !== channel) {
-			if (options.settings.notification) {
+			if (store.state.settings.notification) {
 				try {
 					pop.play();
 				} catch (exception) {
@@ -103,7 +105,7 @@ function notifyMessage(targetId, channel, activeChannel, msg) {
 			}
 
 			if (
-				options.settings.desktopNotifications &&
+				store.state.settings.desktopNotifications &&
 				"Notification" in window &&
 				Notification.permission === "granted"
 			) {
@@ -130,7 +132,7 @@ function notifyMessage(targetId, channel, activeChannel, msg) {
 				const timestamp = Date.parse(msg.time);
 
 				try {
-					if (webpush.hasServiceWorker) {
+					if (store.state.hasServiceWorker) {
 						navigator.serviceWorker.ready.then((registration) => {
 							registration.active.postMessage({
 								type: "notification",
@@ -149,9 +151,14 @@ function notifyMessage(targetId, channel, activeChannel, msg) {
 							timestamp: timestamp,
 						});
 						notify.addEventListener("click", function() {
-							window.focus();
-							button.trigger("click");
 							this.close();
+							window.focus();
+
+							const channelTarget = store.getters.findChannel(targetId);
+
+							if (channelTarget) {
+								switchToChannel(channelTarget);
+							}
 						});
 					}
 				} catch (exception) {

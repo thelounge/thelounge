@@ -19,18 +19,19 @@ const colorCodeMap = [
 	["15", "Light Grey"],
 ];
 
-const condensedTypes = ["away", "back", "chghost", "join", "part", "quit", "nick", "kick", "mode"];
-const condensedTypesQuery = "." + condensedTypes.join(", .");
+const condensedTypes = new Set(["chghost", "join", "part", "quit", "nick", "kick", "mode"]);
 
 const timeFormats = {
 	msgDefault: "HH:mm",
 	msgWithSeconds: "HH:mm:ss",
 };
 
+// This file is required by server, can't use es6 export
 module.exports = {
 	colorCodeMap,
 	commands: [],
 	condensedTypes,
-	condensedTypesQuery,
 	timeFormats,
+	// Same value as media query in CSS that forces sidebars to become overlays
+	mobileViewportPixels: 768,
 };

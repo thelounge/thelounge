@@ -1,10 +1,10 @@
 "use strict";
 
-const socket = require("../socket");
-const {vueApp} = require("../vue");
+import socket from "../socket";
+import store from "../store";
 
 socket.on("nick", function(data) {
-	const network = vueApp.networks.find((n) => n.uuid === data.network);
+	const network = store.getters.findNetwork(data.network);
 
 	if (network) {
 		network.nick = data.nick;

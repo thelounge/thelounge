@@ -136,6 +136,16 @@ function setHome(newPath) {
 		);
 	}
 
+	if (this.config.fileUpload.baseUrl) {
+		try {
+			new URL("test/file.png", this.config.fileUpload.baseUrl);
+		} catch (e) {
+			this.config.fileUpload.baseUrl = null;
+
+			log.warn(`The ${colors.bold("fileUpload.baseUrl")} you specified is invalid: ${e}`);
+		}
+	}
+
 	const manifestPath = path.resolve(
 		path.join(__dirname, "..", "public", "thelounge.webmanifest")
 	);
@@ -153,35 +163,6 @@ function setHome(newPath) {
 	// Load theme color from the web manifest
 	const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 	this.config.themeColor = manifest.theme_color;
-
-	// TODO: Remove in future release
-	if (["example", "crypto", "zenburn"].includes(this.config.theme)) {
-		if (this.config.theme === "example") {
-			log.warn(
-				`The default theme ${colors.red("example")} was renamed to ${colors.green(
-					"default"
-				)} as of The Lounge v3.`
-			);
-		} else {
-			log.warn(
-				`The theme ${colors.red(
-					this.config.theme
-				)} was moved to a separate theme as of The Lounge v3.`
-			);
-			log.warn(
-				`Install it with ${colors.bold(
-					"thelounge install thelounge-theme-" + this.config.theme
-				)}.`
-			);
-		}
-
-		log.warn(
-			`Falling back to theme ${colors.green("default")} will be removed in a future release.`
-		);
-		log.warn("Please update your configuration file accordingly.");
-
-		this.config.theme = "default";
-	}
 }
 
 function getHomePath() {

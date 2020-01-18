@@ -1,5 +1,6 @@
 "use strict";
 
+const _ = require("lodash");
 const log = require("../../log");
 const colors = require("chalk");
 const path = require("path");
@@ -11,6 +12,7 @@ const fs = require("fs");
 const Utils = require("../../command-line/utils");
 
 const stylesheets = [];
+const files = [];
 
 const TIME_TO_LIVE = 15 * 60 * 1000; // 15 minutes, in milliseconds
 
@@ -18,20 +20,26 @@ const cache = {
 	outdated: undefined,
 };
 
+let experimentalWarningPrinted = false;
+
 module.exports = {
+	getFiles,
 	getStylesheets,
 	getPackage,
 	loadPackages,
 	outdated,
 };
 
-const packageApis = function(packageName) {
+const packageApis = function(packageInfo) {
 	return {
 		Stylesheets: {
-			addFile: addStylesheet.bind(this, packageName),
+			addFile: addStylesheet.bind(this, packageInfo.packageName),
+		},
+		PublicFiles: {
+			add: addFile.bind(this, packageInfo.packageName),
 		},
 		Commands: {
-			add: inputs.addPluginCommand,
+			add: inputs.addPluginCommand.bind(this, packageInfo),
 			runAsUser: (command, targetId, client) =>
 				client.inputLine({target: targetId, text: command}),
 		},
@@ -49,64 +57,111 @@ function getStylesheets() {
 	return stylesheets;
 }
 
+function addFile(packageName, filename) {
+	files.push(packageName + "/" + filename);
+}
+
+function getFiles() {
+	return files.concat(stylesheets);
+}
+
 function getPackage(name) {
 	return packageMap.get(name);
 }
 
-function loadPackages() {
-	const packageJson = path.join(Helper.getPackagesPath(), "package.json");
-	let packages;
-	let anyPlugins = false;
+function getEnabledPackages(packageJson) {
+	try {
+		const json = JSON.parse(fs.readFileSync(packageJson, "utf-8"));
+		return Object.keys(json.dependencies);
+	} catch (e) {
+		log.error(`Failed to read packages/package.json: ${colors.red(e)}`);
+	}
+
+	return [];
+}
+
+function loadPackage(packageName) {
+	let packageInfo;
+	let packageFile;
 
 	try {
-		packages = Object.keys(require(packageJson).dependencies);
-	} catch (e) {
-		packages = [];
-	}
+		const packagePath = Helper.getPackageModulePath(packageName);
 
-	packages.forEach((packageName) => {
-		const errorMsg = `Package ${colors.bold(packageName)} could not be loaded`;
-		let packageInfo;
-		let packageFile;
-
-		try {
-			packageInfo = require(path.join(
-				Helper.getPackageModulePath(packageName),
-				"package.json"
-			));
-			packageFile = require(Helper.getPackageModulePath(packageName));
-		} catch (e) {
-			log.warn(errorMsg);
-			return;
-		}
+		packageInfo = JSON.parse(fs.readFileSync(path.join(packagePath, "package.json"), "utf-8"));
 
 		if (!packageInfo.thelounge) {
-			log.warn(errorMsg);
-			return;
+			throw "'thelounge' is not present in package.json";
 		}
 
-		packageInfo = packageInfo.thelounge;
+		packageFile = require(packagePath);
+	} catch (e) {
+		log.error(`Package ${colors.bold(packageName)} could not be loaded: ${colors.red(e)}`);
+		log.debug(e.stack);
+		return;
+	}
 
-		packageMap.set(packageName, packageFile);
+	const version = packageInfo.version;
+	packageInfo = packageInfo.thelounge;
+	packageInfo.packageName = packageName;
+	packageInfo.version = version;
 
-		if (packageInfo.type === "theme") {
-			themes.addTheme(packageName, packageInfo);
-		} else {
-			anyPlugins = true;
+	packageMap.set(packageName, packageFile);
+
+	if (packageInfo.type === "theme") {
+		themes.addTheme(packageName, packageInfo);
+
+		if (packageInfo.files) {
+			packageInfo.files.forEach((file) => addFile(packageName, file));
 		}
+	}
 
-		if (packageFile.onServerStart) {
-			packageFile.onServerStart(packageApis(packageName));
-		}
+	if (packageFile.onServerStart) {
+		packageFile.onServerStart(packageApis(packageInfo));
+	}
 
-		log.info(`Package ${colors.bold(packageName)} loaded`);
-	});
+	log.info(`Package ${colors.bold(packageName)} ${colors.green("v" + version)} loaded`);
 
-	if (anyPlugins) {
+	if (packageInfo.type !== "theme" && !experimentalWarningPrinted) {
+		experimentalWarningPrinted = true;
+
 		log.info(
-			"There are packages using the experimental plugin API. Be aware that this API is not yet stable and may change in future The Lounge releases."
+			"There are packages using the experimental plugin API. " +
+				"Be aware that this API is not yet stable and may change in future The Lounge releases."
 		);
 	}
+}
+
+function loadPackages() {
+	const packageJson = path.join(Helper.getPackagesPath(), "package.json");
+	const packages = getEnabledPackages(packageJson);
+
+	packages.forEach(loadPackage);
+
+	watchPackages(packageJson);
+}
+
+function watchPackages(packageJson) {
+	fs.watch(
+		packageJson,
+		{
+			persistent: false,
+		},
+		_.debounce(
+			() => {
+				const updated = getEnabledPackages(packageJson);
+
+				for (const packageName of updated) {
+					if (packageMap.has(packageName)) {
+						continue;
+					}
+
+					loadPackage(packageName);
+				}
+			},
+			1000,
+			{maxWait: 10000}
+		)
+	);
 }
 
 async function outdated(cacheTimeout = TIME_TO_LIVE) {
@@ -117,6 +172,7 @@ async function outdated(cacheTimeout = TIME_TO_LIVE) {
 	// Get paths to the location of packages directory
 	const packagesPath = Helper.getPackagesPath();
 	const packagesConfig = path.join(packagesPath, "package.json");
+	const packagesList = JSON.parse(fs.readFileSync(packagesConfig, "utf-8")).dependencies;
 	const argsList = [
 		"outdated",
 		"--latest",
@@ -129,8 +185,12 @@ async function outdated(cacheTimeout = TIME_TO_LIVE) {
 	];
 
 	// Check if the configuration file exists
-	if (!fs.existsSync(packagesConfig)) {
-		log.warn("There are no packages installed.");
+	if (!Object.entries(packagesList).length) {
+		// CLI calls outdated with zero TTL, so we can print the warning there
+		if (!cacheTimeout) {
+			log.warn("There are no packages installed.");
+		}
+
 		return false;
 	}
 

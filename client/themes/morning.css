@@ -5,6 +5,7 @@
 	--body-color-muted: #b7c5d1;
 	--link-color: #77abd9;
 	--window-bg-color: #303e4a;
+	--window-heading-color: #b7c5d1;
 	--date-marker-color: #97ea70;
 	--unread-marker-color: #f92772;
 	--highlight-bg-color: #4d4332;
@@ -15,17 +16,17 @@ body {
 	scrollbar-color: rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0.05);
 }
 
-#chat .channel .msg.highlight .time {
+#chat .chat-view[data-type="channel"] .msg.highlight .time {
 	color: white;
 }
 
 #loading .logo,
-#windows .logo {
+.window .logo {
 	display: none;
 }
 
 #loading .logo-inverted,
-#windows .logo-inverted {
+.window .logo-inverted {
 	display: inline-block;
 }
 
@@ -39,7 +40,7 @@ body {
 
 /* Borders */
 #chat .content,
-#windows #chat .header,
+#chat .header,
 #chat .user-mode::before,
 #chat .userlist {
 	border-color: #28333d;
@@ -105,12 +106,8 @@ body {
 	color: #f3f3f3;
 }
 
-#windows .window {
+.window {
 	box-shadow: 0 0 25px rgba(0, 0, 0, 0.75);
-}
-
-#windows .window h2 {
-	color: #b7c5d1;
 }
 
 #viewport .lt,
@@ -121,16 +118,12 @@ body {
 }
 
 /* Setup text colors */
-#chat .message {
-	color: #f3f3f3;
-}
-
-#chat .error,
-#chat .error .from {
+#chat .msg[data-type="error"],
+#chat .msg[data-type="error"] .from {
 	color: #f92772;
 }
 
-#chat .msg.motd .text,
+#chat .msg[data-type="motd"] .text,
 code,
 .irc-monospace {
 	background: #28333d;
@@ -157,6 +150,7 @@ kbd {
 }
 
 /* Form elements */
+/* stylelint-disable selector-no-vendor-prefix */
 
 #chat-container ::-moz-placeholder {
 	color: #b7c5d1;
@@ -172,5 +166,7 @@ kbd {
 	color: #b7c5d1;
 	opacity: 0.75;
 }
+
+/* stylelint-enable selector-no-vendor-prefix */
 
 /* End form elements */

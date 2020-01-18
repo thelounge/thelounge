@@ -1,18 +1,15 @@
 "use strict";
 
-const socket = require("./socket");
-const updateCursor = require("undate").update;
+import {update as updateCursor} from "undate";
+
+import socket from "./socket";
+import store from "./store";
 
 class Uploader {
 	init() {
-		this.vueApp = require("./vue").vueApp;
 		this.xhr = null;
 		this.fileQueue = [];
-		this.overlay = document.getElementById("upload-overlay");
-		this.uploadInput = document.getElementById("upload-input");
-		this.uploadProgressbar = document.getElementById("upload-progressbar");
 
-		this.uploadInput.addEventListener("change", (e) => this.filesChanged(e));
 		document.addEventListener("dragenter", (e) => this.dragEnter(e));
 		document.addEventListener("dragover", (e) => this.dragOver(e));
 		document.addEventListener("dragleave", (e) => this.dragLeave(e));
@@ -20,6 +17,11 @@ class Uploader {
 		document.addEventListener("paste", (e) => this.paste(e));
 
 		socket.on("upload:auth", (token) => this.uploadNextFileInQueue(token));
+	}
+
+	mounted() {
+		this.overlay = document.getElementById("upload-overlay");
+		this.uploadProgressbar = document.getElementById("upload-progressbar");
 	}
 
 	dragOver(event) {
@@ -82,18 +84,12 @@ class Uploader {
 		this.triggerUpload(files);
 	}
 
-	filesChanged() {
-		const files = Array.from(this.uploadInput.files);
-		this.triggerUpload(files);
-		this.uploadInput.value = ""; // Reset <input> element so you can upload the same file
-	}
-
 	triggerUpload(files) {
 		if (!files.length) {
 			return;
 		}
 
-		if (!this.vueApp.isConnected) {
+		if (!store.state.isConnected) {
 			this.handleResponse({
 				error: `You are currently disconnected, unable to initiate upload process.`,
 			});
@@ -102,9 +98,10 @@ class Uploader {
 		}
 
 		const wasQueueEmpty = this.fileQueue.length === 0;
+		const maxFileSize = store.state.serverConfiguration.fileUploadMaxFileSize;
 
 		for (const file of files) {
-			if (this.maxFileSize > 0 && file.size > this.maxFileSize) {
+			if (maxFileSize > 0 && file.size > maxFileSize) {
 				this.handleResponse({
 					error: `File ${file.name} is over the maximum allowed size`,
 				});
@@ -181,9 +178,7 @@ class Uploader {
 		this.setProgress(0);
 
 		if (response.error) {
-			// require here due to circular dependency
-			const {vueApp} = require("./vue");
-			vueApp.currentUserVisibleError = response.error;
+			store.commit("currentUserVisibleError", response.error);
 			return;
 		}
 
@@ -225,21 +220,9 @@ class Uploader {
 
 const instance = new Uploader();
 
-function initialize() {
-	instance.init();
-	return instance;
-}
-
-/**
- * Called in the `configuration` socket event.
- * Makes it so the user can be notified if a file is too large without waiting for the upload to finish server-side.
- **/
-function setMaxFileSize(kb) {
-	instance.maxFileSize = kb;
-}
-
-module.exports = {
+export default {
 	abort: () => instance.abort(),
-	initialize,
-	setMaxFileSize,
+	initialize: () => instance.init(),
+	mounted: () => instance.mounted(),
+	triggerUpload: (files) => instance.triggerUpload(files),
 };

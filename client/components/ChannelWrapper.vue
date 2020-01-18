@@ -1,37 +1,50 @@
 <template>
+	<!-- TODO: move closed style to it's own class -->
 	<div
-		v-if="
-			!network.isCollapsed ||
-				channel.highlight ||
-				channel.type === 'lobby' ||
-				(activeChannel && channel === activeChannel.channel)
-		"
+		v-if="isChannelVisible"
+		ref="element"
 		:class="[
-			'chan',
-			channel.type,
+			'channel-list-item',
 			{active: activeChannel && channel === activeChannel.channel},
 			{'parted-channel': channel.type === 'channel' && channel.state === 0},
+			{'has-draft': channel.pendingMessage},
+			{
+				'not-secure':
+					channel.type === 'lobby' && network.status.connected && !network.status.secure,
+			},
+			{'not-connected': channel.type === 'lobby' && !network.status.connected},
 		]"
 		:aria-label="getAriaLabel()"
 		:title="getAriaLabel()"
-		:data-id="channel.id"
-		:data-target="'#chan-' + channel.id"
 		:data-name="channel.name"
+		:data-type="channel.type"
 		:aria-controls="'#chan-' + channel.id"
 		:aria-selected="activeChannel && channel === activeChannel.channel"
+		:style="channel.closed ? {transition: 'none', opacity: 0.4} : null"
 		role="tab"
+		@click="click"
+		@contextmenu.prevent="openContextMenu"
 	>
 		<slot :network="network" :channel="channel" :activeChannel="activeChannel" />
 	</div>
 </template>
 
 <script>
+import isChannelCollapsed from "../js/helpers/isChannelCollapsed";
+
 export default {
 	name: "ChannelWrapper",
 	props: {
 		network: Object,
 		channel: Object,
-		activeChannel: Object,
+	},
+	computed: {
+		activeChannel() {
+			return this.$store.state.activeChannel;
+		},
+		isChannelVisible() {
+			return !isChannelCollapsed(this.network, this.channel);
+		},
 	},
 	methods: {
 		getAriaLabel() {
@@ -50,6 +63,16 @@ export default {
 			}
 
 			return this.channel.name;
+		},
+		click() {
+			this.$root.switchToChannel(this.channel);
+		},
+		openContextMenu(event) {
+			this.$root.$emit("contextmenu:channel", {
+				event: event,
+				channel: this.channel,
+				network: this.network,
+			});
 		},
 	},
 };

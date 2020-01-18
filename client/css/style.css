@@ -1,5 +1,6 @@
+@import "../../node_modules/normalize.css/normalize.css";
 @import "fontawesome.css";
-@import "bootstrap.css";
+@import "../../node_modules/primer-tooltips/build/build.css";
 
 :root {
 	/* Main text color */
@@ -15,11 +16,17 @@
 	--button-color: #84ce88;
 	--button-text-color-hover: #fff;
 
+	/* Color for sidebar overlay and other things that dim the viewport when something else is on top */
+	--overlay-bg-color: rgba(0, 0, 0, 0.5);
+
 	/* Links and link-looking buttons */
 	--link-color: #50a656;
 
 	/* Background color of the main window */
 	--window-bg-color: #fff;
+
+	/* Text color for <h2> and <h3> headings in windows */
+	--window-heading-color: #6c797a;
 
 	/* Color of the date marker, text and separator */
 	--date-marker-color: rgba(0, 107, 59, 0.5);
@@ -35,14 +42,47 @@
 	--upload-progressbar-color: var(--button-color);
 }
 
-/* Samsung Internet <7.0 and Microsoft Edge support (yes, both of them use webkit prefix) */
-::-webkit-input-placeholder {
-	color: rgba(0, 0, 0, 0.35);
-}
-
 ::placeholder {
 	color: rgba(0, 0, 0, 0.35);
 	opacity: 1; /* fix opacity in Firefox */
+}
+
+html {
+	box-sizing: border-box;
+	-webkit-tap-highlight-color: transparent; /* remove tap highlight on touch devices */
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: inherit;
+}
+
+input,
+button,
+select,
+textarea {
+	font: inherit;
+	color: inherit;
+}
+
+img {
+	vertical-align: middle;
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+}
+
+abbr[title] {
+	cursor: help;
 }
 
 html,
@@ -56,9 +96,6 @@ body {
 	color: var(--body-color);
 	font: 16px -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 	margin: 0;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
 	user-select: none;
 	cursor: default;
 	touch-action: none;
@@ -74,22 +111,17 @@ a,
 a:hover,
 a:focus {
 	color: var(--link-color);
+	text-decoration: none;
 }
 
 a:hover {
 	text-decoration: underline;
 }
 
-/**
- * From Normalize. See https://github.com/thelounge/thelounge/pull/1217
- * 1. Remove the bottom border in Chrome 57- and Firefox 39-.
- * 2. Add the correct text decoration in Chrome, Edge, IE, Opera, and Safari.
- */
-
-abbr[title] {
-	border-bottom: none; /* 1 */
-	text-decoration: underline; /* 2 */
-	text-decoration: underline dotted; /* 2 */
+a:focus {
+	outline: thin dotted;
+	outline: 5px auto -webkit-focus-ring-color;
+	outline-offset: -2px;
 }
 
 h1,
@@ -106,13 +138,13 @@ button {
 	margin: 0;
 	outline: none;
 	padding: 0;
-	-moz-user-select: inherit; /* Firefox makes buttons unselectable by default which breaks copying */
 	user-select: inherit;
+	cursor: pointer;
 }
 
 code,
 pre,
-#chat .msg.motd .text,
+#chat .msg[data-type="motd"] .text,
 .irc-monospace,
 textarea#user-specified-css-input {
 	font-family: Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
@@ -155,6 +187,10 @@ kbd {
 	border: 1px solid #bbb;
 	border-radius: 4px;
 	box-shadow: 0 2px 0 #bbb, inset 0 1px 1px #fff, inset 0 -1px 3px #ccc;
+}
+
+p {
+	margin: 0 0 10px;
 }
 
 .btn {
@@ -209,8 +245,10 @@ kbd {
 }
 
 .container {
+	padding: 0 15px;
 	margin-bottom: 20px;
-	max-width: 480px;
+	width: 480px;
+	align-self: center;
 	touch-action: pan-y;
 }
 
@@ -218,12 +256,9 @@ kbd {
 #loading pre,
 #help .container,
 #changelog .container,
-#windows .header .title,
-#windows .header .topic,
+.header .title,
+.header .topic,
 #chat .messages {
-	-webkit-user-select: text;
-	-moz-user-select: text;
-	-ms-user-select: text;
 	user-select: text;
 	cursor: text;
 }
@@ -233,7 +268,7 @@ kbd {
 	left: -999999px;
 }
 
-#chat #js-copy-hack .condensed:not(.closed) .msg,
+#chat #js-copy-hack .msg[data-type="condensed"]:not(.closed) .msg,
 #chat #js-copy-hack > .msg {
 	display: block;
 }
@@ -249,31 +284,32 @@ kbd {
 #viewport .lt::before,
 #viewport .rt::before,
 #chat button.menu::before,
-#sidebar .chan::before,
+.channel-list-item::before,
 #footer .icon,
 #chat .count::before,
-#settings .extra-experimental,
 #settings .extra-help,
 #settings #play::before,
 #form #upload::before,
 #form #submit::before,
-#chat .away .from::before,
-#chat .back .from::before,
-#chat .invite .from::before,
-#chat .join .from::before,
-#chat .kick .from::before,
-#chat .part .from::before,
-#chat .quit .from::before,
-#chat .topic .from::before,
-#chat .mode_channel .from::before,
-#chat .mode .from::before,
-#chat .motd .from::before,
-#chat .ctcp .from::before,
-#chat .ctcp_request .from::before,
-#chat .whois .from::before,
-#chat .nick .from::before,
-#chat .action .from::before,
-#chat .raw .from::before,
+#chat .msg[data-type="away"] .from::before,
+#chat .msg[data-type="back"] .from::before,
+#chat .msg[data-type="invite"] .from::before,
+#chat .msg[data-type="join"] .from::before,
+#chat .msg[data-type="kick"] .from::before,
+#chat .msg[data-type="part"] .from::before,
+#chat .msg[data-type="quit"] .from::before,
+#chat .msg[data-type="topic"] .from::before,
+#chat .msg[data-type="mode_channel"] .from::before,
+#chat .msg[data-type="mode"] .from::before,
+#chat .msg[data-type="motd"] .from::before,
+#chat .msg[data-type="ctcp"] .from::before,
+#chat .msg[data-type="ctcp_request"] .from::before,
+#chat .msg[data-type="whois"] .from::before,
+#chat .msg[data-type="nick"] .from::before,
+#chat .msg[data-type="action"] .from::before,
+#chat .msg[data-type="plugin"] .from::before,
+#chat .msg[data-type="raw"] .from::before,
+#chat .msg-shown-in-active span::before,
 #chat .toggle-button::after,
 #chat .toggle-content .more-caret::before,
 #chat .scroll-down-arrow::after,
@@ -285,9 +321,10 @@ kbd {
 #help .report-issue-link::before,
 #image-viewer .previous-image-btn::before,
 #image-viewer .next-image-btn::before,
-#sidebar .not-secure-icon::before,
-#sidebar .not-connected-icon::before,
-#sidebar .parted-channel-icon::before,
+#image-viewer .open-btn::before,
+.channel-list-item .not-secure-icon::before,
+.channel-list-item .not-connected-icon::before,
+.channel-list-item .parted-channel-icon::before,
 #sidebar .collapse-network-icon::before {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-size: inherit; /* Can't have font-size inherit on line above, so need to override */
@@ -313,25 +350,26 @@ kbd {
 .context-menu-edit::before { content: "\f303"; /* https://fontawesome.com/icons/pencil-alt?style=solid */ }
 .context-menu-configure::before { content: "\f013"; /* https://fontawesome.com/icons/cog?style=solid */ }
 
-#sidebar .not-secure-icon::before {
+.channel-list-item .not-secure-icon::before {
 	content: "\f071"; /* https://fontawesome.com/icons/exclamation-triangle?style=solid */
 }
 
-#sidebar .not-connected-icon::before,
-#sidebar .parted-channel-icon::before {
+.channel-list-item .not-connected-icon::before,
+.channel-list-item .parted-channel-icon::before {
 	content: "\f127"; /* https://fontawesome.com/icons/unlink?style=solid */
 }
 
 .context-menu-query::before,
 .context-menu-action-query::before,
-#sidebar .chan.query::before { content: "\f075"; /* https://fontawesome.com/icons/comment?style=solid */ }
+.channel-list-item[data-type="query"]::before { content: "\f075"; /* https://fontawesome.com/icons/comment?style=solid */ }
 
 .context-menu-chan::before,
-#sidebar .chan.channel::before { content: "\f086"; /* http://fontawesome.io/icon/comments/ */ }
+.channel-list-item[data-type="channel"]::before { content: "\f086"; /* http://fontawesome.io/icon/comments/ */ }
 
-#sidebar .chan.special::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
+.channel-list-item[data-type="special"]::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
 
-#footer .sign-in::before { content: "\f023"; /* http://fontawesome.io/icon/lock/ */ }
+.channel-list-item.has-draft:not(.active):not([data-type="lobby"])::before { content: "\f304"; /* https://fontawesome.com/icons/pen?style=solid */ }
+
 #footer .connect::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
 #footer .settings::before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
 #footer .help::before { content: "\f059"; /* http://fontawesome.io/icon/question/ */ }
@@ -339,8 +377,8 @@ kbd {
 #form #upload::before { content: "\f0c6"; /* https://fontawesome.com/icons/paperclip?style=solid */ }
 #form #submit::before { content: "\f1d8"; /* http://fontawesome.io/icon/paper-plane/ */ }
 
-#chat .away .from::before,
-#chat .back .from::before {
+#chat .msg[data-type="away"] .from::before,
+#chat .msg[data-type="back"] .from::before {
 	content: "\f017"; /* https://fontawesome.com/icons/clock?style=solid */
 	color: #7f8c8d;
 }
@@ -360,80 +398,104 @@ kbd {
 #help .documentation-link::before { content: "\f19d"; /* http://fontawesome.io/icon/graduation-cap/ */ }
 #help .report-issue-link::before { content: "\f188"; /* http://fontawesome.io/icon/bug/ */ }
 
-.session-list strong {
-	display: block;
+.session-list .session-item {
+	display: flex;
+	font-size: 14px;
 }
 
-.session-list p {
-	margin-bottom: 10px;
+.session-list .session-item-info {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
 }
 
-#chat .invite .from::before {
+.session-list .session-item-btn {
+	flex-shrink: 0;
+}
+
+#chat .msg[data-type="invite"] .from::before {
 	content: "\f0e0"; /* https://fontawesome.com/icons/envelope?style=solid */
 	color: #2ecc40;
 }
 
-#chat .part .from::before,
-#chat .quit .from::before {
+#chat .msg[data-type="part"] .from::before,
+#chat .msg[data-type="quit"] .from::before {
 	content: "\f2f5"; /* https://fontawesome.com/icons/sign-out-alt?style=solid */
 	color: #ff4136;
 	display: inline-block;
 	transform: rotate(180deg);
 }
 
-#chat .topic .from::before {
+#chat .msg[data-type="topic"] .from::before {
 	content: "\f0a1"; /* http://fontawesome.io/icon/bullhorn/ */
 	color: #2ecc40;
 }
 
-#chat .mode_channel .from::before,
-#chat .mode .from::before {
+#chat .msg[data-type="mode_channel"] .from::before,
+#chat .msg[data-type="mode"] .from::before {
 	content: "\f05a"; /* http://fontawesome.io/icon/info-circle/ */
 	color: #2ecc40;
 }
 
-#chat .motd .from::before {
+#chat .msg[data-type="motd"] .from::before {
 	content: "\f02e"; /* https://fontawesome.com/icons/bookmark?style=solid */
 	color: var(--body-color-muted);
 }
 
-#chat .ctcp .from::before,
-#chat .ctcp_request .from::before {
+#chat .msg[data-type="ctcp"] .from::before,
+#chat .msg[data-type="ctcp_request"] .from::before {
 	content: "\f15c"; /* https://fontawesome.com/icons/file-alt?style=solid */
 	color: var(--body-color-muted);
 }
 
-#chat .whois .from::before {
+#chat .msg[data-type="whois"] .from::before {
 	content: "\f007"; /* http://fontawesome.io/icon/user/ */
 	color: #2ecc40;
 }
 
-#chat .nick .from::before {
+#chat .msg[data-type="nick"] .from::before {
 	content: "\f007"; /* http://fontawesome.io/icon/user/ */
 	color: #2ecc40;
 }
 
-#chat .join .from::before {
+#chat .msg[data-type="join"] .from::before {
 	content: "\f2f6"; /* https://fontawesome.com/icons/sign-in-alt?style=solid */
 	color: #2ecc40;
 }
 
-#chat .kick .from::before {
+#chat .msg[data-type="kick"] .from::before {
 	content: "\f05e"; /* http://fontawesome.io/icon/ban/ */
 	color: #ff4136;
 }
 
-#chat .raw .from::before {
+#chat .msg[data-type="raw"] .from::before {
 	content: "\f101"; /* https://fontawesome.com/icons/angle-double-right?style=solid */
 }
 
-#chat .raw.self .from::before {
+#chat .msg.self[data-type="raw"] .from::before {
 	content: "\f359"; /* https://fontawesome.com/icons/arrow-alt-circle-left?style=solid */
 	color: #2ecc40;
 }
 
-#chat .action .from::before {
+#chat .msg[data-type="action"] .from::before {
 	content: "\f005"; /* http://fontawesome.io/icon/star/ */
+}
+
+#chat .msg[data-type="plugin"] .from::before {
+	content: "\f1e6"; /* http://fontawesome.io/icon/plug/ */
+	transform: rotate(45deg);
+	display: inline-block;
+	padding: 1px;
+}
+
+#chat .msg-shown-in-active {
+	cursor: help;
+	margin-right: 5px;
+}
+
+#chat .msg-shown-in-active span::before {
+	font-size: 10px;
+	content: "\f06e"; /* https://fontawesome.com/icons/eye?style=solid */
 }
 
 #chat .toggle-button {
@@ -457,10 +519,6 @@ kbd {
 	line-height: 45px;
 }
 
-#settings .extra-experimental::before {
-	content: "\f0c3"; /* https://fontawesome.com/icons/flask?style=solid */
-}
-
 #settings .extra-help::before {
 	content: "\f059"; /* http://fontawesome.io/icon/question-circle/ */
 }
@@ -478,16 +536,15 @@ kbd {
 	content: "\f105"; /* http://fontawesome.io/icon/angle-right/ */
 }
 
+#image-viewer .open-btn::before {
+	content: "\f35d"; /* https://fontawesome.com/icons/external-link-alt?style=solid */
+}
+
 /* End icons */
 
 #viewport {
 	display: flex;
 	height: 100%;
-}
-
-#windows {
-	flex: 1 0 auto;
-	position: relative;
 }
 
 #form button,
@@ -560,6 +617,7 @@ kbd {
 	display: none;
 	flex-direction: column;
 	width: 220px;
+	max-height: 100%;
 	will-change: transform;
 }
 
@@ -589,48 +647,51 @@ kbd {
 	display: none;
 }
 
-#sidebar .chan,
+.channel-list-item,
 #sidebar .empty {
 	color: #b7c5d1;
 	font-size: 14px;
 }
 
-#sidebar .chan {
+.channel-list-item {
 	display: flex;
 	padding: 8px 14px;
 	position: relative;
 	cursor: pointer;
 }
 
-/* All sidebar buttons and channels/queries must be white on hover and active */
-#sidebar button:hover,
-#sidebar .chan:hover,
-#sidebar .active {
+/* Channels/queries must be white on hover and active */
+#footer button:hover,
+#footer button.active,
+.channel-list-item:hover,
+.channel-list-item.active {
 	color: #fff;
 }
 
 /* All lobbies/channels/queries and footer buttons must have a half-transparent
 background on hover (unless active) */
-#sidebar .chan:hover,
+.channel-list-item:hover,
 #footer button:hover {
 	background-color: rgba(48, 62, 74, 0.5); /* #303e4a x 50% alpha */
 }
 
-/* All active elements, hovered or not, must have a background */
-#sidebar .active,
-#sidebar .active:hover {
+/* Darker background and defualt cursor for active channels */
+#footer button.active,
+.channel-list-item.active {
 	background-color: #303e4a;
+	cursor: default;
 }
 
 /* Remove background on hovered/active channel when sorting/drag-and-dropping */
-#sidebar .chan.ui-sortable-dragged,
-#sidebar .ui-sortable-dragged .chan,
-#sidebar .ui-sortable-active .chan:hover,
-#sidebar .ui-sortable-active .chan.active {
+.ui-sortable-ghost,
+.channel-list-item.ui-sortable-dragged,
+.ui-sortable-dragged .channel-list-item,
+.ui-sortable-active .channel-list-item:hover,
+.ui-sortable-active .channel-list-item.active {
 	background: transparent;
 }
 
-#sidebar .ui-sortable-ghost::after {
+.ui-sortable-ghost::after {
 	background: var(--body-bg-color);
 	border: 1px dashed #99a2b4;
 	border-radius: 6px;
@@ -660,58 +721,58 @@ background on hover (unless active) */
 	text-align: center;
 }
 
-#sidebar .chan.lobby {
+.channel-list-item[data-type="lobby"] {
 	color: #84ce88;
 	font-size: 15px;
 	font-weight: bold;
 	padding-left: 0;
 }
 
-#sidebar .lobby-wrap {
+.channel-list-item .lobby-wrap {
 	display: flex;
 	flex-grow: 1;
 	overflow: hidden;
 }
 
-#sidebar .chan.lobby .lobby-wrap:hover,
-#sidebar .chan.lobby.active {
+.channel-list-item[data-type="lobby"]:hover,
+.channel-list-item[data-type="lobby"].active {
 	color: #c0f8c3;
 }
 
-#sidebar .not-connected-tooltip,
-#sidebar .not-secure-tooltip,
-#sidebar .parted-channel-tooltip {
+.channel-list-item .not-connected-tooltip,
+.channel-list-item .not-secure-tooltip,
+.channel-list-item .parted-channel-tooltip {
 	margin: 0 8px;
 }
 
-#sidebar .not-secure .chan.lobby {
+.channel-list-item.not-secure {
 	color: #f39c12;
 }
 
-#sidebar .not-secure .chan.lobby .lobby-wrap:hover,
-#sidebar .not-secure .chan.lobby.active {
+.channel-list-item.not-secure:hover,
+.channel-list-item.not-secure.active {
 	color: #f8c572;
 }
 
-#sidebar .not-connected .chan.lobby,
-#sidebar .parted-channel {
+.channel-list-item.not-connected,
+.channel-list-item.parted-channel {
 	color: #e74c3c;
 }
 
-#sidebar .not-connected .chan.lobby .lobby-wrap:hover,
-#sidebar .not-connected .chan.lobby.active,
-#sidebar .parted-channel:hover,
-#sidebar .parted-channel.active {
+.channel-list-item.not-connected:hover,
+.channel-list-item.not-connected.active,
+.channel-list-item.parted-channel:hover,
+.channel-list-item.parted-channel.active {
 	color: #f1978e;
 }
 
-#sidebar .chan::before {
+.channel-list-item::before {
 	width: 14px;
 	margin-right: 12px;
 	line-height: 18px;
 }
 
-#sidebar .chan .name {
+.channel-list-item .name {
 	position: relative;
 	flex-grow: 1;
 	overflow: hidden;
@@ -719,20 +780,19 @@ background on hover (unless active) */
 	margin-right: 5px;
 }
 
-#windows .header .topic,
-#sidebar .chan .name {
-	-webkit-mask-image: linear-gradient(to left, transparent, black 20px);
+.header .topic,
+.channel-list-item .name {
 	mask-image: linear-gradient(to left, transparent, black 20px);
 }
 
-#sidebar .badge,
+.channel-list-item .badge,
 #sidebar .add-channel-tooltip,
-#sidebar .close-tooltip {
+.channel-list-item .close-tooltip {
 	flex-shrink: 0;
 	line-height: 1;
 }
 
-#sidebar .badge {
+.channel-list-item .badge {
 	background: rgba(255, 255, 255, 0.06);
 	border-radius: 3px;
 	color: #afb6c0;
@@ -741,23 +801,23 @@ background on hover (unless active) */
 	transition: background-color 0.2s, color 0.2s;
 }
 
-#sidebar .badge:empty {
+.channel-list-item .badge:empty {
 	display: none;
 }
 
-#sidebar .badge.highlight {
+.channel-list-item .badge.highlight {
 	background: #fff;
 	color: #49505a;
 }
 
-#sidebar .close {
+.channel-list-item .close {
 	width: 18px;
 	height: 18px;
 	display: none;
 	transition: opacity 0.2s, background-color 0.2s;
 }
 
-#sidebar .close::before {
+.channel-list-item .close::before {
 	font-size: 20px;
 	font-weight: normal;
 	display: inline-block;
@@ -767,7 +827,16 @@ background on hover (unless active) */
 	color: #fff;
 }
 
-#sidebar .lobby .add-channel {
+.channel-list-item.active .close {
+	opacity: 0.4;
+	display: unset;
+}
+
+.channel-list-item.active .close:hover {
+	opacity: 1;
+}
+
+.channel-list-item[data-type="lobby"] .add-channel {
 	border-radius: 3px;
 	width: 18px;
 	height: 18px;
@@ -775,7 +844,7 @@ background on hover (unless active) */
 	transition: opacity 0.2s, background-color 0.2s, transform 0.2s;
 }
 
-#sidebar .lobby .add-channel::before {
+.channel-list-item[data-type="lobby"] .add-channel::before {
 	font-size: 20px;
 	font-weight: normal;
 	display: inline-block;
@@ -785,11 +854,11 @@ background on hover (unless active) */
 	color: #fff;
 }
 
-#sidebar .lobby .add-channel:hover {
+.channel-list-item[data-type="lobby"] .add-channel:hover {
 	opacity: 1;
 }
 
-#sidebar .lobby .add-channel.opened {
+.channel-list-item[data-type="lobby"] .add-channel.opened {
 	/* translateZ(0) enables hardware acceleration, this is to avoid jittering when animating */
 	transform: rotate(45deg) translateZ(0);
 }
@@ -799,6 +868,7 @@ background on hover (unless active) */
 	opacity: 0.4;
 	padding-left: 11px;
 	transition: opacity 0.2s;
+	flex-shrink: 0;
 }
 
 #sidebar .network .collapse-network-icon {
@@ -821,15 +891,6 @@ background on hover (unless active) */
 	opacity: 1;
 }
 
-#sidebar .chan.active .close {
-	opacity: 0.4;
-	display: unset;
-}
-
-#sidebar .chan.active .close:hover {
-	opacity: 1;
-}
-
 #footer {
 	height: 45px;
 	font-size: 14px;
@@ -846,29 +907,9 @@ background on hover (unless active) */
 	border-radius: 5px;
 }
 
-.signed-out #footer .sign-in {
-	display: inline-block;
-}
-
-.signed-out #footer .connect {
-	display: none;
-}
-
-.public #footer .sign-in {
-	display: none;
-}
-
-#footer .sign-in {
-	display: none;
-}
-
-.signed-out #sidebar {
-	display: none; /* Hide the sidebar when user is signed out */
-}
-
-#windows li,
-#windows p,
-#windows label,
+.window li,
+.window p,
+.window label,
 #settings .error {
 	font-size: 14px;
 }
@@ -897,16 +938,20 @@ background on hover (unless active) */
 	border-color: #84ce88;
 }
 
-#user-specified-css-input {
+textarea.input {
 	resize: vertical;
-	height: 10em;
+	height: 100px;
+	min-height: 35px;
 	padding: 6px 10px;
 	line-height: 1.5;
 }
 
 .window {
 	background: var(--window-bg-color);
-	display: none;
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 auto;
+	position: relative;
 	overflow-y: auto;
 	height: 100%;
 	scrollbar-width: thin;
@@ -914,8 +959,8 @@ background on hover (unless active) */
 	-webkit-overflow-scrolling: touch;
 }
 
-#chat .chan,
-.window {
+#loading,
+#chat .chat-view {
 	/* flexbox does not seem to scroll without doing this */
 	position: absolute;
 	bottom: 0;
@@ -924,35 +969,30 @@ background on hover (unless active) */
 	top: 0;
 }
 
-#windows .window h1 {
+.window h1 {
 	font-size: 36px;
 }
 
-#windows .window h2 {
-	border-bottom: 1px solid #7f8c8d;
-	color: #7f8c8d;
+.window h2 {
+	border-bottom: 1px solid currentColor;
+	color: var(--window-heading-color);
 	font-size: 22px;
 	margin: 30px 0 10px;
 	padding-bottom: 7px;
 }
 
-#windows .window h2 small {
-	color: inherit;
+.window h2 small {
+	font-size: 16px;
 	line-height: 30px;
 }
 
-#windows .window h3 {
-	color: #7f8c8d;
+.window h3 {
+	color: var(--window-heading-color);
 	font-size: 18px;
 	margin: 20px 0 10px;
 }
 
-#windows .window.active {
-	display: flex;
-	flex-direction: column;
-}
-
-#windows .header {
+.header {
 	line-height: 45px;
 	height: 45px;
 	padding: 0 6px;
@@ -961,11 +1001,11 @@ background on hover (unless active) */
 	overflow: hidden;
 }
 
-#windows #chat .header {
+#chat .header {
 	border-bottom: 1px solid #e7e7e7;
 }
 
-#windows .header .title {
+.header .title {
 	font-size: 15px;
 	padding-left: 6px;
 	flex-shrink: 0;
@@ -977,7 +1017,7 @@ background on hover (unless active) */
 	padding-left: 10px;
 }
 
-#windows .header .topic {
+.header .topic {
 	color: var(--body-color-muted);
 	margin-left: 8px;
 	word-break: break-all;
@@ -986,7 +1026,7 @@ background on hover (unless active) */
 	font-size: 14px;
 }
 
-#windows .header .topic-input {
+.header .topic-input {
 	color: inherit;
 	background: transparent;
 	border: 1px solid #cdd3da;
@@ -1015,6 +1055,7 @@ background on hover (unless active) */
 	justify-content: center;
 	align-items: center;
 	cursor: pointer;
+	appearance: none;
 }
 
 .topic-container .save-topic span:hover {
@@ -1027,34 +1068,27 @@ background on hover (unless active) */
 	position: relative;
 }
 
-#chat .chan {
-	display: none;
+#chat .chat-view {
+	display: flex;
 	flex-direction: column;
 }
 
-#chat .chan.active {
-	display: flex;
-}
-
-#chat .condensed {
+#chat .msg[data-type="condensed"] {
 	flex-wrap: wrap;
 }
 
-#chat .condensed .content {
+#chat .msg[data-type="condensed"] .content {
 	flex: 1;
 }
 
 /* Ensures expanded status messages always take up the full width */
-#chat .condensed .msg {
+#chat .msg[data-type="condensed"] .msg {
 	flex-basis: 100%;
 }
 
 #chat .condensed-summary .content {
 	display: block;
 	cursor: pointer;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
 	user-select: none;
 }
 
@@ -1066,7 +1100,7 @@ background on hover (unless active) */
 	text-decoration: underline;
 }
 
-#chat .condensed.closed .msg {
+#chat .msg.closed[data-type="condensed"] .msg {
 	display: none;
 }
 
@@ -1074,7 +1108,7 @@ background on hover (unless active) */
 	visibility: hidden;
 }
 
-#windows #form,
+#form,
 .messages .msg,
 .userlist {
 	font-size: 14px;
@@ -1135,7 +1169,6 @@ background on hover (unless active) */
 	padding-top: 15px;
 	padding-bottom: 0;
 	width: 100%;
-	display: none;
 }
 
 #chat .show-more .btn {
@@ -1183,7 +1216,7 @@ background on hover (unless active) */
 	content: "\f107"; /* https://fontawesome.com/icons/angle-down?style=solid */
 }
 
-.userlist-open .channel .scroll-down {
+.userlist-open .chat-view[data-type="channel"] .scroll-down {
 	right: 196px;
 }
 
@@ -1192,7 +1225,7 @@ background on hover (unless active) */
 	touch-action: pan-y;
 }
 
-#chat .chan:not(.special) .messages {
+#chat .chat-view:not([data-type="special"]) .messages {
 	margin-top: auto;
 }
 
@@ -1230,10 +1263,6 @@ background on hover (unless active) */
 	padding: 0 10px;
 }
 
-#chat .unread-marker:last-child {
-	display: none;
-}
-
 #chat .date-marker {
 	position: relative;
 	text-align: center;
@@ -1254,7 +1283,7 @@ background on hover (unless active) */
 }
 
 #chat .date-marker-text::before {
-	content: attr(data-label);
+	content: attr(aria-label);
 	background-color: var(--window-bg-color);
 	color: var(--date-marker-color);
 	padding: 0 10px;
@@ -1294,13 +1323,14 @@ background on hover (unless active) */
 	padding-right: 6px;
 	border-left: 1px solid #f6f6f6;
 	overflow: hidden; /* Prevents Zalgo text to expand beyond messages */
+	text-align: left; /* so RTL text will still be aligned left, not right */
 }
 
-#chat .unhandled .from {
+#chat .msg[data-type="unhandled"] .from {
 	color: var(--body-color-muted);
 }
 
-#chat .special table th {
+#chat .chat-view[data-type="special"] table th {
 	word-break: normal;
 }
 
@@ -1384,8 +1414,7 @@ background on hover (unless active) */
 #chat table.ignore-list th,
 #chat table.channel-list td,
 #chat table.ban-list td,
-#chat table.invite-list td,
-#chat.table.ignore-list td {
+#chat table.invite-list td {
 	padding: 5px;
 	vertical-align: top;
 	border-bottom: #eee 1px solid;
@@ -1410,75 +1439,84 @@ background on hover (unless active) */
 	width: 50px;
 }
 
-#chat.hide-motd .motd {
+#chat.hide-motd .msg[data-type="motd"] {
 	display: none !important;
 }
 
-#chat .msg.motd .text {
+#chat .msg[data-type="motd"] .text {
 	background: #f6f6f6;
 	display: inline-block;
 	border-radius: 4px;
 	padding: 6px;
 }
 
-#chat .condensed .content,
-#chat .away .content,
-#chat .back .content,
-#chat .join .content,
-#chat .kick .content,
-#chat .mode .content,
-#chat .nick .content,
-#chat .part .content,
-#chat .quit .content,
-#chat .topic .content,
-#chat .topic_set_by .content {
+#chat .msg[data-type="condensed"] .content,
+#chat .msg[data-type="away"] .content,
+#chat .msg[data-type="back"] .content,
+#chat .msg[data-type="join"] .content,
+#chat .msg[data-type="kick"] .content,
+#chat .msg[data-type="mode"] .content,
+#chat .msg[data-type="nick"] .content,
+#chat .msg[data-type="part"] .content,
+#chat .msg[data-type="quit"] .content,
+#chat .msg[data-type="topic"] .content,
+#chat .msg[data-type="topic_set_by"] .content {
 	color: var(--body-color-muted);
 }
 
-#chat .action .from,
-#chat .action .content,
-#chat .action .user {
+#chat .msg[data-type="action"] .from,
+#chat .msg[data-type="action"] .content,
+#chat .msg[data-type="action"] .user {
 	color: #f39c12;
 }
 
-#chat .notice .time,
-#chat .notice .content,
-#chat .chan .notice .user {
-	color: #0074d9 !important;
+#chat .msg[data-type="notice"] .time,
+#chat .msg[data-type="notice"] .content,
+#chat .msg[data-type="notice"] .user {
+	color: #0074d9;
 }
 
-#chat .notice .from .user::before {
+#chat .msg[data-type="notice"] .from .user::before {
 	content: "Notice: ";
 }
 
-#chat .error,
-#chat .error .from {
+#chat .msg[data-type="error"],
+#chat .msg[data-type="error"] .from {
 	color: #e74c3c;
 }
 
-#chat .channel .msg.highlight {
+#chat .chat-view[data-type="channel"] .msg.highlight {
 	background-color: var(--highlight-bg-color);
 	border-left: 5px solid var(--highlight-border-color);
 }
 
-#chat .channel .msg.highlight .time {
+#chat .chat-view[data-type="channel"] .msg.highlight .time {
 	padding-left: 5px;
 	width: 50px;
 	color: #696969;
 }
 
-#chat.show-seconds .channel .msg.highlight .time {
+#chat.show-seconds .chat-view[data-type="channel"] .msg.highlight .time {
 	width: 70px;
 }
 
-#chat .channel .msg.highlight .content {
+#chat .chat-view[data-type="channel"] .msg.highlight .content {
 	border-left: 1px solid var(--highlight-bg-color);
+}
+
+#chat .preview-size {
+	margin-left: 5px;
+	user-select: none;
 }
 
 #chat .toggle-content.opened .more-caret, /* Expand/Collapse link previews */
 #chat .toggle-button.opened, /* Thumbnail toggle */
-#chat .msg.condensed:not(.closed) .toggle-button { /* Expanded status message toggle */
+#chat .msg:not(.closed)[data-type="condensed"] .toggle-button { /* Expanded status message toggle */
 	transform: rotate(90deg);
+}
+
+#chat .preview {
+	display: flex; /* Fix odd margin added by inline-flex in .toggle-content */
 }
 
 #chat .toggle-content {
@@ -1531,6 +1569,7 @@ background on hover (unless active) */
 #chat .toggle-content .toggle-text {
 	white-space: nowrap;
 	overflow: hidden;
+	text-align: initial;
 }
 
 #chat .toggle-content.opened .toggle-text {
@@ -1587,8 +1626,12 @@ background on hover (unless active) */
 	max-width: 100%;
 }
 
-#chat video {
+#chat .toggle-type-video {
 	max-width: 640px;
+}
+
+#chat video {
+	max-width: 100%;
 	max-height: 240px;
 }
 
@@ -1683,6 +1726,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #loading {
+	display: flex;
 	font-size: 14px;
 	height: 100%;
 }
@@ -1691,10 +1735,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	height: initial;
 	display: flex;
 	flex-direction: column;
-	bottom: 5px;
-	left: 5px;
-	right: 5px;
-	top: 5px;
 }
 
 #loading p {
@@ -1724,7 +1764,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
-	width: 100%;
 }
 
 #loading-reload-container {
@@ -1732,7 +1771,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #loading .logo-inverted,
-#windows .logo-inverted {
+.window .logo-inverted {
 	display: none; /* In dark themes, inverted logo must be used instead */
 }
 
@@ -1748,39 +1787,81 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #sign-in .error {
 	color: #e74c3c;
-	display: none; /* This message gets displayed on error only */
 	margin-top: 1em;
 	width: 100%;
 }
 
+#connect .connect-row {
+	display: flex;
+}
+
+#connect .connect-row > .input,
+#connect .connect-row > .input-wrap {
+	flex-grow: 1;
+}
+
 #connect label {
-	display: block;
+	width: 25%;
+	flex-shrink: 0;
 	margin-top: 11px;
 }
 
-#connect .port::before {
-	content: ":";
-	margin: 9px 0 0 -17px;
-	position: absolute;
-}
-
 #connect .tls {
-	float: left;
+	width: 100%;
+	display: block;
 	margin-top: 6px;
 }
 
 #connect .tls input {
-	float: left;
 	margin: 3px 10px 0 0;
 }
 
-#connect .btn {
-	float: left;
-	margin-top: 30px;
+#connect\:host {
+	width: 70%;
 }
 
-#settings .sync-warning-base {
-	display: none;
+#connect\:port {
+	width: 25%;
+}
+
+#connect\:portseparator {
+	width: 5%;
+	text-align: center;
+	display: inline-block;
+}
+
+#connect .btn {
+	margin-left: 25%;
+	margin-top: 15px;
+}
+
+#settings .settings-sync-panel {
+	padding: 10px;
+	margin-bottom: 16px;
+	border-radius: 2px;
+	background-color: #d9edf7;
+	color: #31708f;
+}
+
+#settings .settings-sync-panel p:last-child {
+	margin-bottom: 0;
+}
+
+#settings .settings-sync-panel .btn {
+	color: #007bff;
+	border-color: #007bff;
+	margin-bottom: 0;
+}
+
+#settings .settings-sync-panel .btn:hover,
+#settings .settings-sync-panel .btn:focus {
+	background-color: #007bff;
+	color: #fff;
+}
+
+#settings .settings-sync-panel .btn:active,
+#settings .settings-sync-panel .btn:focus {
+	box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
 }
 
 #settings .opt {
@@ -1792,21 +1873,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-right: 6px;
 }
 
-#settings .extra-experimental {
-	color: #84ce88;
-}
-
-#settings .extra-help,
-#settings #play {
-	color: #7f8c8d;
-}
-
-#settings .extra-experimental,
 #settings .extra-help {
 	cursor: help;
 }
 
-#settings .extra-experimental,
 #settings h2 .extra-help {
 	font-size: 0.8em;
 }
@@ -1814,6 +1884,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #settings #play {
 	font-size: 14px;
 	transition: opacity 0.2s;
+	color: var(--window-heading-color);
 }
 
 #settings #play:hover {
@@ -1852,13 +1923,13 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #sign-in .password-container .reveal-password {
 	top: 31px;
-	right: 0;
 }
 
 .password-container .reveal-password {
 	position: absolute;
 	top: 2px;
-	right: 15px;
+	right: 0;
+	appearance: none;
 }
 
 .password-container .reveal-password span {
@@ -1881,9 +1952,14 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	content: "\f00c"; /* https://fontawesome.com/icons/check?style=solid */
 }
 
-.password-container .reveal-password.visible span::before {
+.password-container .reveal-password-visible span::before {
 	content: "\f070"; /* https://fontawesome.com/icons/eye-slash?style=solid */
 	color: #ff4136;
+}
+
+#help .help-version-title {
+	display: flex;
+	justify-content: space-between;
 }
 
 #help .help-item {
@@ -1906,31 +1982,18 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-bottom: 0;
 }
 
-.is-apple #help .key-all,
-#help .key-apple {
-	display: none;
-}
-
-.is-apple #help .key-apple {
-	display: inline-block;
-}
-
 .whois {
-	display: -ms-grid; /* Edge 15- */
 	display: grid;
-	-ms-grid-template-columns: max-content auto;
 	grid-template-columns: max-content auto;
 	margin: 0;
 }
 
 .whois dt {
-	-ms-grid-column-start: 1;
 	grid-column-start: 1;
 	margin-right: 20px;
 }
 
 .whois dd {
-	-ms-grid-column-start: 2;
 	grid-column-start: 2;
 }
 
@@ -1944,8 +2007,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 .window#changelog h3 {
 	font-size: 20px;
-	border-bottom: 1px solid #7f8c8d;
-	color: #7f8c8d;
+	border-bottom: 1px solid currentColor;
+	color: var(--window-heading-color);
 	margin: 30px 0 10px;
 	padding-bottom: 7px;
 }
@@ -2010,11 +2073,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	color: #3c763d;
 }
 
-#version-checker.up-to-date #check-now {
-	/* "Check now" button is hidden until data expires */
-	display: none;
-}
-
 #version-checker.up-to-date::before {
 	content: "\f00c"; /* http://fontawesome.io/icon/check/ */
 }
@@ -2025,6 +2083,9 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	width: 0%;
 	height: 2px;
 	visibility: hidden;
+	position: absolute;
+	top: -1px; /* put it on top of #form's border */
+	left: 0;
 }
 
 #upload-progressbar.upload-progressbar-visible {
@@ -2042,6 +2103,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	background: white;
 	display: flex;
 	align-items: flex-end;
+	position: relative;
 }
 
 #user-visible-error {
@@ -2108,7 +2170,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #context-menu-container {
-	display: none;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -2123,13 +2184,14 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	position: absolute;
 	list-style: none;
 	margin: 0;
-	padding: 0;
+	padding: 0 6px;
 	min-width: 180px;
 	font-size: 14px;
 	background-color: #fff;
 	box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
 	border: 1px solid rgba(0, 0, 0, 0.15);
-	border-radius: 2px;
+	border-radius: 5px;
+	outline: 0;
 }
 
 .context-menu-divider {
@@ -2147,18 +2209,16 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-top: 6px;
 	margin-bottom: 6px;
 	line-height: 1.4;
-	transition: background-color 0.2s;
+	border-radius: 3px;
+	white-space: nowrap;
 }
 
-.context-menu-item:focus,
+.context-menu-item.active,
 .textcomplete-item:focus,
-.context-menu-item:hover,
 .textcomplete-item:hover,
 .textcomplete-menu .active,
 #chat .userlist .user.active {
-	background-color: #f6f6f6;
-	transition: none;
-	outline: 0;
+	background-color: rgba(0, 0, 0, 0.1);
 }
 
 .context-menu-item::before,
@@ -2423,7 +2483,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	/* Fade out for long usernames */
 	#chat .from {
 		padding-left: 10px;
-		-webkit-mask-image: linear-gradient(to left, transparent, black 10px);
 		mask-image: linear-gradient(to left, transparent, black 10px);
 	}
 }
@@ -2447,11 +2506,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		margin-top: 5px;
 	}
 
-	#sidebar button,
-	#sidebar .chan,
+	.channel-list-item,
 	#sidebar .empty,
-	#windows label,
-	#windows .header .topic,
+	.window label,
+	.header .topic,
 	#settings .error,
 	#help .help-item,
 	#loading,
@@ -2479,7 +2537,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		bottom: 0;
 		left: 0;
 		right: 0;
-		background: rgba(0, 0, 0, 0.5);
+		background: var(--overlay-bg-color);
 		opacity: 0;
 		visibility: hidden;
 		transition: opacity 160ms, visibility 160ms;
@@ -2507,11 +2565,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	#viewport.menu-open #sidebar-overlay,
 	#viewport.menu-dragging #sidebar-overlay {
 		visibility: visible;
-	}
-
-	#viewport .lt,
-	#viewport .channel .rt {
-		display: flex;
 	}
 
 	/* On mobile display, channel list button stays at the top */
@@ -2544,6 +2597,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 @media (max-width: 479px) {
 	.container {
+		max-width: 100%;
 		margin: 0;
 	}
 
@@ -2551,12 +2605,26 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		width: 100%;
 	}
 
-	#connect .tls {
-		margin: 20px 0;
+	.input {
+		margin-bottom: 2px;
 	}
 
-	#windows .input {
-		margin-bottom: 2px;
+	#connect .connect-row {
+		flex-direction: column;
+	}
+
+	#connect .connect-row > .input,
+	#connect .connect-row > .input-wrap {
+		flex-grow: 1;
+	}
+
+	#connect .btn {
+		margin-left: 0;
+		width: 100%;
+	}
+
+	#help .help-version-title {
+		flex-direction: column;
 	}
 
 	#chat .messages {
@@ -2569,7 +2637,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		padding: 2px 10px;
 	}
 
-	#chat .condensed .msg {
+	#chat .msg[data-type="condensed"] .msg {
 		padding: 2px 0;
 	}
 
@@ -2587,11 +2655,11 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		white-space: pre;
 	}
 
-	#chat .channel .msg.highlight {
+	#chat .chat-view[data-type="channel"] .msg.highlight {
 		padding-left: 5px;
 	}
 
-	#chat .channel .msg.highlight .time {
+	#chat .chat-view[data-type="channel"] .msg.highlight .time {
 		padding-left: 0;
 	}
 
@@ -2632,6 +2700,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #upload-overlay,
 #image-viewer,
+#image-viewer .open-btn,
 #image-viewer .close-btn {
 	/* Vertically and horizontally center stuff */
 	display: flex;
@@ -2647,24 +2716,26 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	bottom: 0;
 	left: 0;
 	right: 0;
-	background: black;
+	background: var(--overlay-bg-color);
 	visibility: hidden;
 	opacity: 0;
 	transition: opacity 0.2s, visibility 0.2s;
 	z-index: 999;
+	user-select: none;
 }
 
+#upload-overlay.is-dragover,
 #image-viewer.opened {
 	visibility: visible;
 	opacity: 1;
 }
 
-#upload-overlay.is-dragover {
-	visibility: visible;
-	opacity: 0.3;
+#image-viewer {
+	background: rgba(0, 0, 0, 0.9);
 }
 
 #image-viewer .close-btn,
+#image-viewer .open-btn,
 #image-viewer .previous-image-btn,
 #image-viewer .next-image-btn {
 	position: fixed;
@@ -2684,6 +2755,14 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #image-viewer .close-btn::before {
 	content: "×";
+}
+
+#image-viewer .open-btn {
+	right: 0;
+	bottom: 0;
+	top: auto;
+	height: 2em;
+	z-index: 1002;
 }
 
 #image-viewer .previous-image-btn,
@@ -2706,19 +2785,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	opacity: 1;
 }
 
-#image-viewer .image-link {
-	margin: 10px;
-}
-
-#image-viewer .image-link:hover {
-	opacity: 1;
-}
-
-#image-viewer .image-link img {
-	max-width: 100%;
-
-	/* Top/Bottom margins + button height + image/button margin */
-	max-height: calc(100vh - 2 * 10px - 37px - 10px);
+#image-viewer > img {
+	cursor: grab;
+	position: absolute;
+	transform-origin: 50% 50%;
 
 	/* Checkered background for transparent images */
 	background-position: 0 0, 10px 10px;
@@ -2728,22 +2798,18 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		linear-gradient(45deg, #eee 25%, #fff 25%, #fff 75%, #eee 75%, #eee 100%);
 }
 
-#image-viewer .open-btn {
-	margin: 0 auto 10px;
-}
-
 /* Correctly handle multiple successive whitespace characters.
    For example: user has quit ( ===> L   O   L <=== )  */
 
-#windows .header .topic,
-#chat .message .content,
-#chat .motd .content,
-#chat .notice .content,
+.header .topic,
+#chat .msg[data-type="action"] .content,
+#chat .msg[data-type="message"] .content,
+#chat .msg[data-type="motd"] .content,
+#chat .msg[data-type="notice"] .content,
 #chat .ctcp-message,
 #chat .part-reason,
 #chat .quit-reason,
 #chat .new-topic,
-#chat .action .content,
 #chat table.channel-list .topic {
 	white-space: pre-wrap;
 }

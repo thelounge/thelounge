@@ -1,5 +1,5 @@
 <template>
-	<div :class="['msg', 'condensed', {closed: isCollapsed}]">
+	<div :class="['msg', {closed: isCollapsed}]" data-type="condensed">
 		<div class="condensed-summary">
 			<span class="time" />
 			<span class="from" />
@@ -55,22 +55,6 @@ export default {
 			constants.condensedTypes.forEach((type) => {
 				if (obj[type]) {
 					switch (type) {
-						case "away":
-							strings.push(
-								obj[type] +
-									(obj[type] > 1
-										? " users have gone away"
-										: " user has gone away")
-							);
-							break;
-						case "back":
-							strings.push(
-								obj[type] +
-									(obj[type] > 1
-										? " users have come back"
-										: " user has come back")
-							);
-							break;
 						case "chghost":
 							strings.push(
 								obj[type] +

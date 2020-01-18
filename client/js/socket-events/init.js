@@ -1,124 +1,72 @@
 "use strict";
 
-const $ = require("jquery");
-const escape = require("css.escape");
-const socket = require("../socket");
-const webpush = require("../webpush");
-const slideoutMenu = require("../slideout");
-const sidebar = $("#sidebar");
-const storage = require("../localStorage");
-const utils = require("../utils");
-const {vueApp, initChannel} = require("../vue");
+import socket from "../socket";
+import storage from "../localStorage";
+import {router, switchToChannel, navigate, initialize as routerInitialize} from "../router";
+import store from "../store";
+import parseIrcUri from "../helpers/parseIrcUri";
 
 socket.on("init", function(data) {
-	vueApp.currentUserVisibleError = "Rendering…";
-	$("#loading-page-message").text(vueApp.currentUserVisibleError);
+	store.commit("networks", mergeNetworkData(data.networks));
+	store.commit("isConnected", true);
+	store.commit("currentUserVisibleError", null);
 
-	const previousActive = vueApp.activeChannel && vueApp.activeChannel.channel.id;
-
-	vueApp.networks = mergeNetworkData(data.networks);
-	vueApp.isConnected = true;
-	vueApp.currentUserVisibleError = null;
-
-	if (!vueApp.initialized) {
-		vueApp.initialized = true;
-
-		if (data.token) {
-			storage.set("token", data.token);
-		}
-
-		webpush.configurePushNotifications(data.pushSubscription, data.applicationServerKey);
-
-		slideoutMenu.enable();
-
-		const viewport = $("#viewport");
-		const viewportWidth = $(window).outerWidth();
-		let isUserlistOpen = storage.get("thelounge.state.userlist");
-
-		if (viewportWidth > utils.mobileViewportPixels) {
-			slideoutMenu.toggle(storage.get("thelounge.state.sidebar") !== "false");
-		}
-
-		// If The Lounge is opened on a small screen (less than 1024px), and we don't have stored
-		// user list state, close it by default
-		if (viewportWidth >= 1024 && isUserlistOpen !== "true" && isUserlistOpen !== "false") {
-			isUserlistOpen = "true";
-		}
-
-		viewport.toggleClass("userlist-open", isUserlistOpen === "true");
-
-		$(document.body).removeClass("signed-out");
-		$("#loading").remove();
-		$("#sign-in").remove();
-
-		if (window.g_LoungeErrorHandler) {
-			window.removeEventListener("error", window.g_LoungeErrorHandler);
-			window.g_LoungeErrorHandler = null;
-		}
+	if (data.token) {
+		storage.set("token", data.token);
 	}
 
-	vueApp.$nextTick(() => openCorrectChannel(previousActive, data.active));
+	if (!store.state.appLoaded) {
+		// Routes are initialized after networks data is merged
+		// so the route guard for channels works correctly on page load
+		routerInitialize();
 
-	utils.confirmExit();
-	utils.synchronizeNotifiedState();
+		store.commit("appLoaded");
+
+		socket.emit("setting:get");
+
+		if (window.g_TheLoungeRemoveLoading) {
+			window.g_TheLoungeRemoveLoading();
+		}
+
+		// TODO: Review this code and make it better
+		if (!router.currentRoute.name || router.currentRoute.name === "SignIn") {
+			const channel = store.getters.findChannel(data.active);
+
+			if (channel) {
+				switchToChannel(channel.channel);
+			} else if (store.state.networks.length > 0) {
+				// Server is telling us to open a channel that does not exist
+				// For example, it can be unset if you first open the page after server start
+				switchToChannel(store.state.networks[0].channels[0]);
+			} else {
+				navigate("Connect");
+			}
+		}
+
+		if ("URLSearchParams" in window) {
+			handleQueryParams();
+		}
+	}
 });
-
-function openCorrectChannel(clientActive, serverActive) {
-	let target = $();
-
-	// Open last active channel
-	if (clientActive > 0) {
-		target = sidebar.find(`.chan[data-id="${clientActive}"]`);
-	}
-
-	// Open window provided in location.hash
-	if (target.length === 0 && window.location.hash) {
-		target = $(`[data-target="${escape(window.location.hash)}"]`).first();
-	}
-
-	// Open last active channel according to the server
-	if (serverActive > 0 && target.length === 0) {
-		target = sidebar.find(`.chan[data-id="${serverActive}"]`);
-	}
-
-	// Open first available channel
-	if (target.length === 0) {
-		target = sidebar.find(".chan").first();
-	}
-
-	// If target channel is found, open it
-	if (target.length > 0) {
-		target.trigger("click", {
-			replaceHistory: true,
-		});
-
-		return;
-	}
-
-	// Open the connect window
-	$("#footer .connect").trigger("click", {
-		pushState: false,
-	});
-}
 
 function mergeNetworkData(newNetworks) {
 	const collapsedNetworks = new Set(JSON.parse(storage.get("thelounge.networks.collapsed")));
 
 	for (let n = 0; n < newNetworks.length; n++) {
 		const network = newNetworks[n];
-		const currentNetwork = vueApp.networks.find((net) => net.uuid === network.uuid);
+		const currentNetwork = store.getters.findNetwork(network.uuid);
 
 		// If this network is new, set some default variables and initalize channel variables
 		if (!currentNetwork) {
 			network.isJoinChannelShown = false;
 			network.isCollapsed = collapsedNetworks.has(network.uuid);
-			network.channels.forEach(initChannel);
+			network.channels.forEach(store.getters.initChannel);
 
 			continue;
 		}
 
 		// Merge received network object into existing network object on the client
-		// so the object reference stays the same (e.g. for vueApp.currentChannel)
+		// so the object reference stays the same (e.g. for currentChannel state)
 		for (const key in network) {
 			if (!Object.prototype.hasOwnProperty.call(network, key)) {
 				continue;
@@ -148,13 +96,13 @@ function mergeChannelData(oldChannels, newChannels) {
 
 		// This is a new channel that was joined while client was disconnected, initialize it
 		if (!currentChannel) {
-			initChannel(channel);
+			store.getters.initChannel(channel);
 
 			continue;
 		}
 
 		// Merge received channel object into existing currentChannel
-		// so the object references are exactly the same (e.g. in vueApp.activeChannel)
+		// so the object references are exactly the same (e.g. in store.state.activeChannel)
 		for (const key in channel) {
 			if (!Object.prototype.hasOwnProperty.call(channel, key)) {
 				continue;
@@ -163,8 +111,29 @@ function mergeChannelData(oldChannels, newChannels) {
 			// Server sends an empty users array, client requests it whenever needed
 			if (key === "users") {
 				if (channel.type === "channel") {
-					channel.usersOutdated = true;
+					if (
+						store.state.activeChannel &&
+						store.state.activeChannel.channel === currentChannel
+					) {
+						// For currently open channel, request the user list straight away
+						socket.emit("names", {
+							target: channel.id,
+						});
+					} else {
+						// For all other channels, mark the user list as outdated
+						// so an update will be requested whenever user switches to these channels
+						currentChannel.usersOutdated = true;
+					}
 				}
+
+				continue;
+			}
+
+			// Server sends total count of messages in memory, we compare it to amount of messages
+			// on the client, and decide whether theres more messages to load from server
+			if (key === "totalMessages") {
+				currentChannel.moreHistoryAvailable =
+					channel.totalMessages > currentChannel.messages.length;
 
 				continue;
 			}
@@ -182,4 +151,29 @@ function mergeChannelData(oldChannels, newChannels) {
 	}
 
 	return newChannels;
+}
+
+function handleQueryParams() {
+	const params = new URLSearchParams(document.location.search);
+
+	const cleanParams = () => {
+		// Remove query parameters from url without reloading the page
+		const cleanUri = window.location.origin + window.location.pathname + window.location.hash;
+		window.history.replaceState({}, document.title, cleanUri);
+	};
+
+	if (params.has("uri")) {
+		// Set default connection settings from IRC protocol links
+		const uri = params.get("uri");
+		const queryParams = parseIrcUri(uri);
+
+		cleanParams();
+		router.push({name: "Connect", query: queryParams});
+	} else if (document.body.classList.contains("public") && document.location.search) {
+		// Set default connection settings from url params
+		const queryParams = Object.fromEntries(params.entries());
+
+		cleanParams();
+		router.push({name: "Connect", query: queryParams});
+	}
 }

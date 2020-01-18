@@ -8,6 +8,9 @@ const Helper = require("../../src/helper");
 const MessageStorage = require("../../src/plugins/messageStorage/sqlite.js");
 
 describe("SQLite Message Storage", function() {
+	// Increase timeout due to unpredictable I/O on CI services
+	this.timeout(process.env.CI ? 25000 : 5000);
+
 	const expectedPath = path.join(Helper.getHomePath(), "logs", "testUser.sqlite3");
 	let store;
 

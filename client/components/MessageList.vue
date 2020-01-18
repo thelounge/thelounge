@@ -1,9 +1,9 @@
 <template>
 	<div ref="chat" class="chat" tabindex="-1">
-		<div :class="['show-more', {show: channel.moreHistoryAvailable}]">
+		<div v-show="channel.moreHistoryAvailable" class="show-more">
 			<button
 				ref="loadMoreButton"
-				:disabled="channel.historyLoading || !$root.isConnected"
+				:disabled="channel.historyLoading || !$store.state.isConnected"
 				class="btn"
 				@click="onShowMoreClick"
 			>
@@ -34,7 +34,7 @@
 
 				<MessageCondensed
 					v-if="message.type === 'condensed'"
-					:key="message.id"
+					:key="message.messages[0].id"
 					:network="network"
 					:keep-scroll-position="keepScrollPosition"
 					:messages="message.messages"
@@ -42,10 +42,12 @@
 				<Message
 					v-else
 					:key="message.id"
+					:channel="channel"
 					:network="network"
 					:message="message"
 					:keep-scroll-position="keepScrollPosition"
-					:previewConf="channel.previewConf"
+					:preview-conf="channel.previewConf"
+					:is-previous-source="isPreviousSource(message, id)"
 					@linkPreviewToggle="onLinkPreviewToggle"
 				/>
 			</template>
@@ -57,7 +59,7 @@
 require("intersection-observer");
 
 const constants = require("../js/constants");
-const clipboard = require("../js/clipboard");
+import clipboard from "../js/clipboard";
 import socket from "../js/socket";
 import Message from "./Message.vue";
 import MessageCondensed from "./MessageCondensed.vue";
@@ -81,14 +83,14 @@ export default {
 			}
 
 			// If actions are hidden, just return a message list with them excluded
-			if (this.$root.settings.statusMessages === "hidden") {
+			if (this.$store.state.settings.statusMessages === "hidden") {
 				return this.channel.messages.filter(
-					(message) => !constants.condensedTypes.includes(message.type)
+					(message) => !constants.condensedTypes.has(message.type)
 				);
 			}
 
 			// If actions are not condensed, just return raw message list
-			if (this.$root.settings.statusMessages !== "condensed") {
+			if (this.$store.state.settings.statusMessages !== "condensed") {
 				return this.channel.messages;
 			}
 
@@ -101,7 +103,7 @@ export default {
 				if (
 					message.self ||
 					message.highlight ||
-					!constants.condensedTypes.includes(message.type)
+					!constants.condensedTypes.has(message.type)
 				) {
 					lastCondensedContainer = null;
 
@@ -212,6 +214,16 @@ export default {
 
 			return false;
 		},
+		isPreviousSource(currentMessage, id) {
+			const previousMessage = this.condensedMessages[id - 1];
+			return (
+				previousMessage &&
+				currentMessage.type === "message" &&
+				previousMessage.type === "message" &&
+				previousMessage.from &&
+				currentMessage.from.nick === previousMessage.from.nick
+			);
+		},
 		onCopy() {
 			clipboard(this.$el);
 		},
@@ -219,8 +231,6 @@ export default {
 			this.keepScrollPosition();
 
 			// Tell the server we're toggling so it remembers at page reload
-			// TODO Avoid sending many single events when using `/collapse` or `/expand`
-			// See https://github.com/thelounge/thelounge/issues/1377
 			socket.emit("msg:preview:toggle", {
 				target: this.channel.id,
 				msgId: message.id,
@@ -229,14 +239,27 @@ export default {
 			});
 		},
 		onShowMoreClick() {
-			let lastMessage = this.channel.messages[0];
-			lastMessage = lastMessage ? lastMessage.id : -1;
+			if (!this.$store.state.isConnected) {
+				return;
+			}
+
+			let lastMessage = -1;
+
+			// Find the id of first message that isn't showInActive
+			// If showInActive is set, this message is actually in another channel
+			for (const message of this.channel.messages) {
+				if (!message.showInActive) {
+					lastMessage = message.id;
+					break;
+				}
+			}
 
 			this.channel.historyLoading = true;
 
 			socket.emit("more", {
 				target: this.channel.id,
 				lastId: lastMessage,
+				condensed: this.$store.state.settings.statusMessages !== "shown",
 			});
 		},
 		onLoadButtonObserved(entries) {

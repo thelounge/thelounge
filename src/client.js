@@ -11,6 +11,7 @@ const Helper = require("./helper");
 const UAParser = require("ua-parser-js");
 const uuidv4 = require("uuid/v4");
 const escapeRegExp = require("lodash/escapeRegExp");
+const constants = require("../client/js/constants.js");
 const inputs = require("./plugins/inputs");
 const PublicClient = require("./plugins/packages/publicClient");
 
@@ -45,7 +46,7 @@ const events = [
 
 function Client(manager, name, config = {}) {
 	_.merge(this, {
-		awayMessage: config.awayMessage || "",
+		awayMessage: "",
 		lastActiveChannel: -1,
 		attachedClients: {},
 		config: config,
@@ -54,14 +55,15 @@ function Client(manager, name, config = {}) {
 		idMsg: 1,
 		name: name,
 		networks: [],
-		sockets: manager.sockets,
 		manager: manager,
 		messageStorage: [],
 		highlightRegex: null,
 	});
 
 	const client = this;
-	let delay = 0;
+
+	client.config.log = Boolean(client.config.log);
+	client.config.password = String(client.config.password);
 
 	if (!Helper.config.public && client.config.log) {
 		if (Helper.config.messageStorage.includes("sqlite")) {
@@ -77,13 +79,6 @@ function Client(manager, name, config = {}) {
 		}
 	}
 
-	(client.config.networks || []).forEach((n) => {
-		setTimeout(function() {
-			client.connect(n);
-		}, delay);
-		delay += 1000;
-	});
-
 	if (typeof client.config.sessions !== "object") {
 		client.config.sessions = {};
 	}
@@ -96,6 +91,16 @@ function Client(manager, name, config = {}) {
 		client.config.browser = {};
 	}
 
+	// TODO: Backwards compatibility with older versions, remove in a future release?
+	if (client.config.awayMessage) {
+		client.config.clientSettings.awayMessage = client.config.awayMessage;
+		delete client.config.awayMessage;
+	}
+
+	if (client.config.clientSettings.awayMessage) {
+		client.awayMessage = client.config.clientSettings.awayMessage;
+	}
+
 	client.compileCustomHighlights();
 
 	_.forOwn(client.config.sessions, (session) => {
@@ -104,8 +109,31 @@ function Client(manager, name, config = {}) {
 		}
 	});
 
+	(client.config.networks || []).forEach((network) => client.connect(network, true));
+
+	// Networks are stored directly in the client object
+	// We don't need to keep it in the config object
+	delete client.config.networks;
+
 	if (client.name) {
 		log.info(`User ${colors.bold(client.name)} loaded`);
+
+		// Networks are created instantly, but to reduce server load on startup
+		// We randomize the IRC connections and channel log loading
+		let delay = manager.clients.length * 500;
+		client.networks.forEach((network) => {
+			setTimeout(() => {
+				network.channels.forEach((channel) => channel.loadMessages(client, network));
+
+				if (!network.userDisconnected && network.irc) {
+					network.irc.connect();
+				}
+			}, delay);
+
+			delay += 1000 + Math.floor(Math.random() * 1000);
+		});
+
+		client.fileHash = manager.getDataToSave(client).newHash;
 	}
 }
 
@@ -117,8 +145,8 @@ Client.prototype.createChannel = function(attr) {
 };
 
 Client.prototype.emit = function(event, data) {
-	if (this.sockets !== null) {
-		this.sockets.in(this.id).emit(event, data);
+	if (this.manager !== null) {
+		this.manager.sockets.in(this.id).emit(event, data);
 	}
 };
 
@@ -143,7 +171,7 @@ Client.prototype.find = function(channelId) {
 	return false;
 };
 
-Client.prototype.connect = function(args) {
+Client.prototype.connect = function(args, isStartup = false) {
 	const client = this;
 	let channels = [];
 
@@ -241,13 +269,14 @@ Client.prototype.connect = function(args) {
 			}),
 			true
 		);
-	} else {
+	} else if (!isStartup) {
 		network.irc.connect();
 	}
 
-	client.save();
-
-	channels.forEach((channel) => channel.loadMessages(client, network));
+	if (!isStartup) {
+		client.save();
+		channels.forEach((channel) => channel.loadMessages(client, network));
+	}
 };
 
 Client.prototype.generateToken = function(callback) {
@@ -292,28 +321,23 @@ Client.prototype.updateSession = function(token, ip, request) {
 		agent: friendlyAgent,
 	});
 
-	client.manager.updateUser(client.name, {
-		sessions: client.config.sessions,
-	});
+	client.save();
 };
 
 Client.prototype.setPassword = function(hash, callback) {
 	const client = this;
 
-	client.manager.updateUser(
-		client.name,
-		{
-			password: hash,
-		},
-		function(err) {
-			if (err) {
-				return callback(false);
-			}
-
-			client.config.password = hash;
-			return callback(true);
+	const oldHash = client.config.password;
+	client.config.password = hash;
+	client.manager.saveUser(client, function(err) {
+		if (err) {
+			// If user file fails to write, reset it back
+			client.config.password = oldHash;
+			return callback(false);
 		}
-	);
+
+		return callback(true);
+	});
 };
 
 Client.prototype.input = function(data) {
@@ -375,7 +399,7 @@ Client.prototype.inputLine = function(data) {
 		if (typeof plugin.input === "function" && (connected || plugin.allowDisconnected)) {
 			connected = true;
 			plugin.input(
-				new PublicClient(client),
+				new PublicClient(client, plugin.packageInfo),
 				{network: target.network, chan: target.chan},
 				cmd,
 				args
@@ -443,13 +467,37 @@ Client.prototype.more = function(data) {
 
 	// If requested id is not found, an empty array will be sent
 	if (index > 0) {
-		messages = chan.messages.slice(Math.max(0, index - 100), index);
+		let startIndex = index;
+
+		if (data.condensed) {
+			// Limit to 1000 messages (that's 10x normal limit)
+			const indexToStop = Math.max(0, index - 1000);
+			let realMessagesLeft = 100;
+
+			for (let i = index - 1; i >= indexToStop; i--) {
+				startIndex--;
+
+				// Do not count condensed messages towards the 100 messages
+				if (constants.condensedTypes.has(chan.messages[i].type)) {
+					continue;
+				}
+
+				// Count up actual 100 visible messages
+				if (--realMessagesLeft === 0) {
+					break;
+				}
+			}
+		} else {
+			startIndex = Math.max(0, index - 100);
+		}
+
+		messages = chan.messages.slice(startIndex, index);
 	}
 
 	return {
 		chan: chan.id,
 		messages: messages,
-		moreHistoryAvailable: index > 100,
+		totalMessages: chan.messages.length,
 	};
 };
 
@@ -551,7 +599,7 @@ Client.prototype.names = function(data) {
 };
 
 Client.prototype.quit = function(signOut) {
-	const sockets = this.sockets.sockets;
+	const sockets = this.manager.sockets.sockets;
 	const room = sockets.adapter.rooms[this.id];
 
 	if (room && room.sockets) {
@@ -638,9 +686,7 @@ Client.prototype.registerPushSubscription = function(session, subscription, noSa
 	session.pushSubscription = data;
 
 	if (!noSave) {
-		this.manager.updateUser(this.name, {
-			sessions: this.config.sessions,
-		});
+		this.save();
 	}
 
 	return data;
@@ -648,9 +694,7 @@ Client.prototype.registerPushSubscription = function(session, subscription, noSa
 
 Client.prototype.unregisterPushSubscription = function(token) {
 	this.config.sessions[token].pushSubscription = null;
-	this.manager.updateUser(this.name, {
-		sessions: this.config.sessions,
-	});
+	this.save();
 };
 
 Client.prototype.save = _.debounce(
@@ -660,10 +704,8 @@ Client.prototype.save = _.debounce(
 		}
 
 		const client = this;
-		const json = {};
-		json.networks = this.networks.map((n) => n.export());
-		client.manager.updateUser(client.name, json);
+		client.manager.saveUser(client);
 	},
-	1000,
-	{maxWait: 10000}
+	5000,
+	{maxWait: 20000}
 );

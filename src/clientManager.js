@@ -3,6 +3,7 @@
 const _ = require("lodash");
 const log = require("./log");
 const colors = require("chalk");
+const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
 const Client = require("./client");
@@ -20,8 +21,14 @@ ClientManager.prototype.init = function(identHandler, sockets) {
 	this.identHandler = identHandler;
 	this.webPush = new WebPush();
 
-	if (!Helper.config.public && !Helper.config.ldap.enable) {
-		this.autoloadUsers();
+	if (!Helper.config.public) {
+		this.loadUsers();
+
+		// LDAP does not have user commands, and users are dynamically
+		// created upon logon, so we don't need to watch for new files
+		if (!Helper.config.ldap.enable) {
+			this.autoloadUsers();
+		}
 	}
 };
 
@@ -29,18 +36,19 @@ ClientManager.prototype.findClient = function(name) {
 	return this.clients.find((u) => u.name === name);
 };
 
-ClientManager.prototype.autoloadUsers = function() {
+ClientManager.prototype.loadUsers = function() {
 	const users = this.getUsers();
-	const noUsersWarning = `There are currently no users. Create one with ${colors.bold(
-		"thelounge add <name>"
-	)}.`;
 
 	if (users.length === 0) {
-		log.info(noUsersWarning);
+		log.info(
+			`There are currently no users. Create one with ${colors.bold("thelounge add <name>")}.`
+		);
 	}
 
 	users.forEach((name) => this.loadUser(name));
+};
 
+ClientManager.prototype.autoloadUsers = function() {
 	fs.watch(
 		Helper.getUsersPath(),
 		_.debounce(
@@ -49,7 +57,11 @@ ClientManager.prototype.autoloadUsers = function() {
 				const updatedUsers = this.getUsers();
 
 				if (updatedUsers.length === 0) {
-					log.info(noUsersWarning);
+					log.info(
+						`There are currently no users. Create one with ${colors.bold(
+							"thelounge add <name>"
+						)}.`
+					);
 				}
 
 				// Reload all users. Existing users will only have their passwords reloaded.
@@ -123,11 +135,6 @@ ClientManager.prototype.addUser = function(name, password, enableLog) {
 	const user = {
 		password: password || "",
 		log: enableLog,
-		awayMessage: "",
-		networks: [],
-		sessions: {},
-		clientSettings: {},
-		browser: {},
 	};
 
 	try {
@@ -137,30 +144,71 @@ ClientManager.prototype.addUser = function(name, password, enableLog) {
 		throw e;
 	}
 
+	try {
+		const userFolderStat = fs.statSync(Helper.getUsersPath());
+		const userFileStat = fs.statSync(userPath);
+
+		if (
+			userFolderStat &&
+			userFileStat &&
+			(userFolderStat.uid !== userFileStat.uid || userFolderStat.gid !== userFileStat.gid)
+		) {
+			log.warn(
+				`User ${colors.green(
+					name
+				)} has been created, but with a different uid (or gid) than expected.`
+			);
+			log.warn(
+				"The file owner has been changed to the expected user. " +
+					"To prevent any issues, please run thelounge commands " +
+					"as the correct user that owns the config folder."
+			);
+			log.warn(
+				"See https://thelounge.chat/docs/usage#using-the-correct-system-user for more information."
+			);
+			fs.chownSync(userPath, userFolderStat.uid, userFolderStat.gid);
+		}
+	} catch (e) {
+		// We're simply verifying file owner as a safe guard for users
+		// that run `thelounge add` as root, so we don't care if it fails
+	}
+
 	return true;
 };
 
-ClientManager.prototype.updateUser = function(name, opts, callback) {
-	const user = readUserConfig(name);
+ClientManager.prototype.getDataToSave = function(client) {
+	const json = Object.assign({}, client.config, {
+		networks: client.networks.map((n) => n.export()),
+	});
+	const newUser = JSON.stringify(json, null, "\t");
+	const newHash = crypto
+		.createHash("sha256")
+		.update(newUser)
+		.digest("hex");
 
-	if (!user) {
-		return callback ? callback(true) : false;
+	return {newUser, newHash};
+};
+
+ClientManager.prototype.saveUser = function(client, callback) {
+	const {newUser, newHash} = this.getDataToSave(client);
+
+	// Do not write to disk if the exported data hasn't actually changed
+	if (client.fileHash === newHash) {
+		return;
 	}
 
-	const currentUser = JSON.stringify(user, null, "\t");
-	_.assign(user, opts);
-	const newUser = JSON.stringify(user, null, "\t");
-
-	// Do not touch the disk if object has not changed
-	if (currentUser === newUser) {
-		return callback ? callback() : true;
-	}
+	const pathReal = Helper.getUserConfigPath(client.name);
+	const pathTemp = pathReal + ".tmp";
 
 	try {
-		fs.writeFileSync(Helper.getUserConfigPath(name), newUser);
+		// Write to a temp file first, in case the write fails
+		// we do not lose the original file (for example when disk is full)
+		fs.writeFileSync(pathTemp, newUser);
+		fs.renameSync(pathTemp, pathReal);
+
 		return callback ? callback() : true;
 	} catch (e) {
-		log.error(`Failed to update user ${colors.green(name)} (${e})`);
+		log.error(`Failed to update user ${colors.green(client.name)} (${e})`);
 
 		if (callback) {
 			callback(e);

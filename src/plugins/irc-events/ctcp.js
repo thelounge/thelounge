@@ -49,6 +49,16 @@ module.exports = function(irc, network) {
 		"ctcp request",
 		_.throttle(
 			(data) => {
+				// Ignore echoed ctcp requests that aren't targeted at us
+				// See https://github.com/kiwiirc/irc-framework/issues/225
+				if (
+					data.nick === irc.user.nick &&
+					data.nick !== data.target &&
+					network.irc.network.cap.isEnabled("echo-message")
+				) {
+					return;
+				}
+
 				const shouldIgnore = network.ignoreList.some(function(entry) {
 					return Helper.compareHostmask(entry, data);
 				});

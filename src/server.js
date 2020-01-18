@@ -32,7 +32,7 @@ const serverHash = Math.floor(Date.now() * Math.random());
 
 let manager = null;
 
-module.exports = function() {
+module.exports = function(options = {}) {
 	log.info(`The Lounge ${colors.green(Helper.getVersion())} \
 (Node.js ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${
 		process.arch
@@ -44,8 +44,13 @@ module.exports = function() {
 		maxAge: 86400 * 1000,
 	};
 
-	const app = express()
-		.set("env", "production")
+	const app = express();
+
+	if (options.dev) {
+		require("./plugins/dev-server.js")(app);
+	}
+
+	app.set("env", "production")
 		.disable("x-powered-by")
 		.use(allRequests)
 		.get("/", indexRequest)
@@ -79,7 +84,7 @@ module.exports = function() {
 		const fileName = req.params.filename;
 		const packageFile = packages.getPackage(packageName);
 
-		if (!packageFile || !packages.getStylesheets().includes(`${packageName}/${fileName}`)) {
+		if (!packageFile || !packages.getFiles().includes(`${packageName}/${fileName}`)) {
 			return res.status(404).send("Not found");
 		}
 
@@ -149,6 +154,10 @@ module.exports = function() {
 			const protocol = Helper.config.https.enable ? "https" : "http";
 			const address = server.address();
 
+			if (address.family === "IPv6") {
+				address.address = "[" + address.address + "]";
+			}
+
 			log.info(
 				"Available at " +
 					colors.green(`${protocol}://${address.address}:${address.port}/`) +
@@ -169,11 +178,8 @@ module.exports = function() {
 			if (Helper.config.public) {
 				performAuthentication.call(socket, {});
 			} else {
-				socket.emit("auth", {
-					serverHash: serverHash,
-					success: true,
-				});
-				socket.on("auth", performAuthentication);
+				socket.on("auth:perform", performAuthentication);
+				socket.emit("auth:start", serverHash);
 			}
 		});
 
@@ -331,10 +337,23 @@ function indexRequest(req, res) {
 	);
 }
 
-function initializeClient(socket, client, token, lastMessage) {
-	socket.emit("authorized");
+function initializeClient(socket, client, token, lastMessage, openChannel) {
+	socket.off("auth:perform", performAuthentication);
+	socket.emit("auth:success");
 
 	client.clientAttach(socket.id, token);
+
+	// Client sends currently active channel on reconnect,
+	// pass it into `open` directly so it is verified and updated if necessary
+	if (openChannel) {
+		client.open(socket.id, openChannel);
+
+		// If client provided channel passes checks, use it. if client has invalid
+		// channel open (or windows like settings) then use last known server active channel
+		openChannel = client.attachedClients[socket.id].openChannel || client.lastActiveChannel;
+	} else {
+		openChannel = client.lastActiveChannel;
+	}
 
 	if (Helper.config.fileUpload.enable) {
 		new Uploader(socket);
@@ -382,7 +401,7 @@ function initializeClient(socket, client, token, lastMessage) {
 			return;
 		}
 
-		socket.emit("network:info", getClientConfiguration(network.export()));
+		socket.emit("network:info", network.exportForEdit());
 	});
 
 	socket.on("network:edit", (data) => {
@@ -406,16 +425,10 @@ function initializeClient(socket, client, token, lastMessage) {
 				const p1 = data.new_password;
 				const p2 = data.verify_password;
 
-				if (typeof p1 === "undefined" || p1 === "") {
+				if (typeof p1 === "undefined" || p1 === "" || p1 !== p2) {
 					socket.emit("change-password", {
-						error: "Please enter a new password",
-					});
-					return;
-				}
-
-				if (p1 !== p2) {
-					socket.emit("change-password", {
-						error: "Both new password fields must match",
+						error: "",
+						success: false,
 					});
 					return;
 				}
@@ -425,8 +438,8 @@ function initializeClient(socket, client, token, lastMessage) {
 					.then((matching) => {
 						if (!matching) {
 							socket.emit("change-password", {
-								error:
-									"The current password field does not match your account password",
+								error: "password_incorrect",
+								success: false,
 							});
 							return;
 						}
@@ -434,12 +447,12 @@ function initializeClient(socket, client, token, lastMessage) {
 						const hash = Helper.password.hash(p1);
 
 						client.setPassword(hash, (success) => {
-							const obj = {};
+							const obj = {success: false};
 
 							if (success) {
-								obj.success = "Successfully updated your password";
+								obj.success = true;
 							} else {
-								obj.error = "Failed to update your password";
+								obj.error = "update_failed";
 							}
 
 							socket.emit("change-password", obj);
@@ -483,8 +496,22 @@ function initializeClient(socket, client, token, lastMessage) {
 		}
 
 		const networkAndChan = client.find(data.target);
+		const newState = Boolean(data.shown);
 
 		if (!networkAndChan) {
+			return;
+		}
+
+		// Process multiple message at once for /collapse and /expand commands
+		if (Array.isArray(data.messageIds)) {
+			for (const msgId of data.messageIds) {
+				const message = networkAndChan.chan.findMessage(msgId);
+
+				for (const preview of message.previews) {
+					preview.shown = newState;
+				}
+			}
+
 			return;
 		}
 
@@ -497,7 +524,7 @@ function initializeClient(socket, client, token, lastMessage) {
 		const preview = message.findPreview(data.link);
 
 		if (preview) {
-			preview.shown = data.shown;
+			preview.shown = newState;
 		}
 	});
 
@@ -564,12 +591,16 @@ function initializeClient(socket, client, token, lastMessage) {
 					value: newSetting.value,
 				});
 
-				client.manager.updateUser(client.name, {
-					clientSettings: client.config.clientSettings,
-				});
+				client.save();
 
 				if (newSetting.name === "highlights") {
 					client.compileCustomHighlights();
+				} else if (newSetting.name === "awayMessage") {
+					if (typeof newSetting.value !== "string") {
+						newSetting.value = "";
+					}
+
+					client.awayMessage = newSetting.value;
 				}
 			}
 		});
@@ -597,9 +628,7 @@ function initializeClient(socket, client, token, lastMessage) {
 
 		delete client.config.sessions[tokenToSignOut];
 
-		client.manager.updateUser(client.name, {
-			sessions: client.config.sessions,
-		});
+		client.save();
 
 		_.map(client.attachedClients, (attachedClient, socketId) => {
 			if (attachedClient.token !== tokenToSignOut) {
@@ -622,31 +651,33 @@ function initializeClient(socket, client, token, lastMessage) {
 
 	const sendInitEvent = (tokenToSend) => {
 		socket.emit("init", {
-			applicationServerKey: manager.webPush.vapidKeys.publicKey,
-			pushSubscription: client.config.sessions[token],
-			active: client.lastActiveChannel,
+			active: openChannel,
 			networks: client.networks.map((network) =>
-				network.getFilteredClone(client.lastActiveChannel, lastMessage)
+				network.getFilteredClone(openChannel, lastMessage)
 			),
 			token: tokenToSend,
 		});
 		socket.emit("commands", inputs.getCommands());
 	};
 
-	if (!Helper.config.public && token === null) {
+	if (Helper.config.public) {
+		sendInitEvent(null);
+	} else if (token === null) {
 		client.generateToken((newToken) => {
-			client.attachedClients[socket.id].token = token = client.calculateTokenHash(newToken);
+			token = client.calculateTokenHash(newToken);
+			client.attachedClients[socket.id].token = token;
 
 			client.updateSession(token, getClientIp(socket), socket.request);
 
 			sendInitEvent(newToken);
 		});
 	} else {
+		client.updateSession(token, getClientIp(socket), socket.request);
 		sendInitEvent(null);
 	}
 }
 
-function getClientConfiguration(network) {
+function getClientConfiguration() {
 	const config = _.pick(Helper.config, [
 		"public",
 		"lockNetwork",
@@ -659,10 +690,10 @@ function getClientConfiguration(network) {
 	config.ldapEnabled = Helper.config.ldap.enable;
 
 	if (config.displayNetwork) {
-		config.defaults = _.clone(network || Helper.config.defaults);
+		config.defaults = _.clone(Helper.config.defaults);
 	} else {
 		// Only send defaults that are visible on the client
-		config.defaults = _.pick(network || Helper.config.defaults, [
+		config.defaults = _.pick(Helper.config.defaults, [
 			"name",
 			"nick",
 			"username",
@@ -672,13 +703,12 @@ function getClientConfiguration(network) {
 		]);
 	}
 
-	if (!network) {
-		config.version = pkg.version;
-		config.gitCommit = Helper.getGitCommit();
-		config.themes = themes.getAll();
-		config.defaultTheme = Helper.config.theme;
-		config.defaults.nick = Helper.getDefaultNick();
-	}
+	config.applicationServerKey = manager.webPush.vapidKeys.publicKey;
+	config.version = pkg.version;
+	config.gitCommit = Helper.getGitCommit();
+	config.themes = themes.getAll();
+	config.defaultTheme = Helper.config.theme;
+	config.defaults.nick = Helper.getDefaultNick();
 
 	if (Uploader) {
 		config.fileUploadMaxFileSize = Uploader.getMaxFileSize();
@@ -704,18 +734,20 @@ function performAuthentication(data) {
 	let client;
 	let token = null;
 
-	const finalInit = () => {
-		initializeClient(socket, client, token, data.lastMessage || -1);
-
-		if (!Helper.config.public) {
-			client.manager.updateUser(client.name, {
-				browser: client.config.browser,
-			});
-		}
-	};
+	const finalInit = () =>
+		initializeClient(socket, client, token, data.lastMessage || -1, data.openChannel);
 
 	const initClient = () => {
-		socket.emit("configuration", getClientConfiguration());
+		// Configuration does not change during runtime of TL,
+		// and the client listens to this event only once
+		if (!data.hasConfig) {
+			socket.emit("configuration", getClientConfiguration());
+
+			socket.emit(
+				"push:issubscribed",
+				token && client.config.sessions[token].pushSubscription ? true : false
+			);
+		}
 
 		client.config.browser = {
 			ip: getClientIp(socket),
@@ -766,7 +798,7 @@ function performAuthentication(data) {
 				);
 			}
 
-			socket.emit("auth", {success: false});
+			socket.emit("auth:failed");
 			return;
 		}
 
@@ -787,8 +819,6 @@ function performAuthentication(data) {
 
 		if (Object.prototype.hasOwnProperty.call(client.config.sessions, providedToken)) {
 			token = providedToken;
-
-			client.updateSession(providedToken, getClientIp(socket), socket.request);
 
 			return authCallback(true);
 		}

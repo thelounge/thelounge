@@ -34,7 +34,7 @@ module.exports = function(irc, network) {
 
 		const msg = new Msg({
 			type: Msg.Type.MODE_CHANNEL,
-			text: `${data.raw_modes} ${data.raw_params}`,
+			text: `${data.raw_modes} ${data.raw_params.join(" ")}`,
 		});
 		targetChan.pushMessage(client, msg);
 	});
@@ -52,6 +52,28 @@ module.exports = function(irc, network) {
 			}
 		}
 
+		const msg = new Msg({
+			time: data.time,
+			type: Msg.Type.MODE,
+			from: targetChan.getUser(data.nick),
+			text: `${data.raw_modes} ${data.raw_params.join(" ")}`,
+			self: data.nick === irc.user.nick,
+		});
+
+		for (const param of data.raw_params) {
+			const users = [];
+
+			if (targetChan.findUser(param)) {
+				users.push(param);
+			}
+
+			if (users.length > 0) {
+				msg.users = users;
+			}
+		}
+
+		targetChan.pushMessage(client, msg);
+
 		let usersUpdated;
 		const userModeSortPriority = {};
 		const supportsMultiPrefix = network.irc.network.cap.isEnabled("multi-prefix");
@@ -61,27 +83,13 @@ module.exports = function(irc, network) {
 		});
 
 		data.modes.forEach((mode) => {
-			let text = mode.mode;
-			const add = text[0] === "+";
-			const char = text[1];
+			const add = mode.mode[0] === "+";
+			const char = mode.mode[1];
 
 			if (char === "k") {
 				targetChan.key = add ? mode.param : "";
 				client.save();
 			}
-
-			if (mode.param) {
-				text += " " + mode.param;
-			}
-
-			const msg = new Msg({
-				time: data.time,
-				type: Msg.Type.MODE,
-				from: targetChan.getUser(data.nick),
-				text: text,
-				self: data.nick === irc.user.nick,
-			});
-			targetChan.pushMessage(client, msg);
 
 			if (!mode.param) {
 				return;
