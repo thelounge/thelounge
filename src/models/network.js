@@ -62,26 +62,24 @@ function Network(attr) {
 }
 
 Network.prototype.validate = function(client) {
-	// If entered nick is over 100 characters, limit it so we don't try to compile a big regex
-	if (this.nick && this.nick.length > 100) {
-		this.nick = this.nick.substring(0, 100);
-	}
+	// Remove !, :, @ and whitespace characters from nicknames and usernames
+	const cleanNick = (str) => str.replace(/[\x00\s:!@]/g, "_").substring(0, 100);
 
-	this.setNick(String(this.nick || Helper.getDefaultNick()).replace(/\s/g, "_"));
+	// Remove new lines and limit length
+	const cleanString = (str) => str.replace(/[\x00\r\n]/g, "").substring(0, 300);
+
+	this.setNick(cleanNick(String(this.nick || Helper.getDefaultNick())));
 
 	if (!this.username) {
+		// If username is empty, make one from the provided nick
 		this.username = this.nick.replace(/[^a-zA-Z0-9]/g, "");
-	} else {
-		// Remove any whitespace from usernames as that is not valid
-		this.username = this.username.replace(/\s/g, "_").substring(0, 100);
 	}
 
-	if (!this.realname) {
-		this.realname = "The Lounge User";
-	} else {
-		// Remove newlines from realnames
-		this.realname = this.realname.replace(/[\r\n]/g, "_").substring(0, 128);
-	}
+	this.username = cleanNick(this.username) || "thelounge";
+	this.realname = cleanString(this.realname) || "The Lounge User";
+	this.password = cleanString(this.password);
+	this.host = cleanString(this.host);
+	this.name = cleanString(this.name);
 
 	if (!this.port) {
 		this.port = this.tls ? 6697 : 6667;
