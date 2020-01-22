@@ -90,6 +90,7 @@
 					id="connect:nick"
 					class="input nick"
 					name="nick"
+					pattern="[^\s:!@]+"
 					:value="defaults.nick"
 					maxlength="100"
 					required
@@ -104,8 +105,9 @@
 						ref="usernameInput"
 						class="input username"
 						name="username"
+						pattern="[^\s:!@]+"
 						:value="defaults.username"
-						maxlength="512"
+						maxlength="100"
 					/>
 				</div>
 			</template>
@@ -118,7 +120,7 @@
 						class="input"
 						:type="slotProps.isVisible ? 'text' : 'password'"
 						name="password"
-						maxlength="512"
+						maxlength="300"
 					/>
 				</RevealPassword>
 			</div>
@@ -129,7 +131,7 @@
 					class="input"
 					name="realname"
 					:value="defaults.realname"
-					maxlength="512"
+					maxlength="300"
 				/>
 			</div>
 			<template v-if="defaults.uuid">
