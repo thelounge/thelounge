@@ -14,7 +14,9 @@ socket.on("network", function(data) {
 	network.channels.forEach(store.getters.initChannel);
 
 	store.commit("networks", [...store.state.networks, network]);
-	switchToChannel(network.channels[0]);
+
+	// Open last channel specified in `join`
+	switchToChannel(network.channels[network.channels.length - 1]);
 });
 
 socket.on("network:options", function(data) {
