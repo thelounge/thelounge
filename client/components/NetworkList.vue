@@ -2,7 +2,7 @@
 	<div v-if="networks.length === 0" class="empty">
 		You are not connected to any networks yet.
 	</div>
-	<div v-else>
+	<div v-else ref="networklist">
 		<div class="jump-to-input">
 			<input
 				ref="searchInput"
@@ -23,11 +23,11 @@
 			/>
 		</div>
 		<div v-if="searchText" class="jump-to-results">
-			<div v-if="results.length" ref="results">
+			<div v-if="results.length">
 				<div
 					v-for="item in results"
 					:key="item.channel.id"
-					v-on="{mouseover: () => setActiveSearchItem(item.channel)}"
+					@mouseenter="setActiveSearchItem(item.channel)"
 					@click.prevent="selectResult"
 				>
 					<Channel
@@ -127,7 +127,7 @@
 	margin: 0;
 	width: 100%;
 	border: 0;
-	color: inherit;
+	color: #fff;
 	background-color: rgba(255, 255, 255, 0.1);
 	padding-right: 35px;
 }
@@ -299,21 +299,26 @@ export default {
 			});
 		},
 		toggleSearch(event) {
-			event.preventDefault();
+			// Do not handle this keybind in the chat input because
+			// it can be used to type letters with umlauts
+			if (event.target.tagName === "TEXTAREA") {
+				return true;
+			}
 
 			if (this.$refs.searchInput === document.activeElement) {
-				this.closeSearch();
-				return;
+				this.deactivateSearch();
+				return false;
 			}
 
 			this.activateSearch();
+			return false;
 		},
 		activateSearch() {
 			if (this.$refs.searchInput === document.activeElement) {
 				return;
 			}
 
-			this.sidebarWasOpen = this.$store.state.sidebarOpen;
+			this.sidebarWasClosed = this.$store.state.sidebarOpen ? false : true;
 			this.$store.commit("sidebarOpen", true);
 			this.$nextTick(() => {
 				this.$refs.searchInput.focus();
@@ -324,7 +329,7 @@ export default {
 			this.searchText = "";
 			this.$refs.searchInput.blur();
 
-			if (!this.sidebarWasOpen) {
+			if (this.sidebarWasClosed) {
 				this.$store.commit("sidebarOpen", false);
 			}
 		},
@@ -349,6 +354,7 @@ export default {
 
 			this.$root.switchToChannel(this.activeSearchItem);
 			this.deactivateSearch();
+			this.scrollToActive();
 		},
 		navigateResults(event, direction) {
 			// Prevent propagation to stop global keybind handler from capturing pagedown/pageup
@@ -395,7 +401,7 @@ export default {
 		scrollToActive() {
 			// Scroll the list if needed after the active class is applied
 			this.$nextTick(() => {
-				const el = this.$refs.results.querySelector(".active-result");
+				const el = this.$refs.networklist.querySelector(".channel-list-item.active");
 
 				if (el) {
 					el.scrollIntoView({block: "nearest", inline: "nearest"});

@@ -9,10 +9,6 @@
 	</div>
 </template>
 
-<style>
-@import "../css/style.css";
-</style>
-
 <script>
 const constants = require("../js/constants");
 import Mousetrap from "mousetrap";
