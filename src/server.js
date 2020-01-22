@@ -239,6 +239,8 @@ module.exports = function(options = {}) {
 		if (Helper.config.prefetchStorage) {
 			require("./plugins/storage").emptyDir();
 		}
+
+		changelog.checkForUpdates(manager);
 	});
 
 	return server;
@@ -703,6 +705,7 @@ function getClientConfiguration() {
 		]);
 	}
 
+	config.isUpdateAvailable = changelog.isUpdateAvailable;
 	config.applicationServerKey = manager.webPush.vapidKeys.publicKey;
 	config.version = pkg.version;
 	config.gitCommit = Helper.getGitCommit();

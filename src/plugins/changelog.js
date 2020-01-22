@@ -1,13 +1,16 @@
 "use strict";
 
 const got = require("got");
+const colors = require("chalk");
 const log = require("../log");
 const pkg = require("../../package.json");
 
 const TIME_TO_LIVE = 15 * 60 * 1000; // 15 minutes, in milliseconds
 
 module.exports = {
+	isUpdateAvailable: false,
 	fetch,
+	checkForUpdates,
 };
 
 const versions = {
@@ -17,8 +20,10 @@ const versions = {
 };
 
 async function fetch() {
+	const time = Date.now();
+
 	// Serving information from cache
-	if (versions.current.changelog) {
+	if (versions.expiresAt > time) {
 		return versions;
 	}
 
@@ -36,11 +41,8 @@ async function fetch() {
 
 		updateVersions(response);
 
-		// Emptying cached information after reaching said expiration date
-		setTimeout(() => {
-			delete versions.current.changelog;
-			delete versions.latest;
-		}, TIME_TO_LIVE);
+		// Add expiration date to the data to send to the client for later refresh
+		versions.expiresAt = time + TIME_TO_LIVE;
 	} catch (error) {
 		log.error(`Failed to fetch changelog: ${error}`);
 	}
@@ -74,6 +76,8 @@ function updateVersions(response) {
 
 			// Find latest release or pre-release if current version is also a pre-release
 			if (!release.prerelease || release.prerelease === prerelease) {
+				module.exports.isUpdateAvailable = true;
+
 				versions.latest = {
 					prerelease: release.prerelease,
 					version: release.tag_name,
@@ -84,7 +88,26 @@ function updateVersions(response) {
 			}
 		}
 	}
+}
 
-	// Add expiration date to the data to send to the client for later refresh
-	versions.expiresAt = Date.now() + TIME_TO_LIVE;
+function checkForUpdates(manager) {
+	fetch().then((versionData) => {
+		if (!module.exports.isUpdateAvailable) {
+			// Check for updates every 24 hours + random jitter of <3 hours
+			setTimeout(checkForUpdates, 24 * 3600 * 1000 + Math.floor(Math.random() * 10000000));
+		}
+
+		if (!versionData.latest) {
+			return;
+		}
+
+		log.info(
+			`The Lounge ${colors.green(
+				versionData.latest.version
+			)} is available. Read more on GitHub: ${versionData.latest.url}`
+		);
+
+		// Notify all connected clients about the new version
+		manager.clients.forEach((client) => client.emit("changelog:newversion"));
+	});
 }

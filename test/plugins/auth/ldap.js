@@ -129,12 +129,9 @@ describe("LDAP authentication plugin", function() {
 	this.slow(200);
 
 	let server;
-	let originalLogInfo;
 
 	before(function(done) {
-		originalLogInfo = log.info;
-
-		log.info = () => {};
+		stub(log, "info");
 
 		server = startLdapServer(done);
 	});
@@ -142,7 +139,7 @@ describe("LDAP authentication plugin", function() {
 	after(function() {
 		server.close();
 
-		log.info = originalLogInfo;
+		log.info.restore();
 	});
 
 	beforeEach(function() {

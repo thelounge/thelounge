@@ -1,7 +1,7 @@
 <template>
 	<div id="version-checker" :class="[$store.state.versionStatus]">
 		<p v-if="$store.state.versionStatus === 'loading'">
-			Checking for updates...
+			Checking for updates…
 		</p>
 		<p v-if="$store.state.versionStatus === 'new-version'">
 			The Lounge <b>{{ $store.state.versionData.latest.version }}</b>
@@ -35,7 +35,7 @@
 		</template>
 		<template v-if="$store.state.versionStatus === 'error'">
 			<p>
-				Information about latest releases could not be retrieved.
+				Information about latest release could not be retrieved.
 			</p>
 
 			<button id="check-now" class="btn btn-small" @click="checkNow">Try again</button>
@@ -48,11 +48,6 @@ import socket from "../js/socket";
 
 export default {
 	name: "VersionChecker",
-	data() {
-		return {
-			status: "loading",
-		};
-	},
 	mounted() {
 		if (!this.$store.state.versionData) {
 			this.checkNow();

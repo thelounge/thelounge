@@ -248,9 +248,7 @@ describe("mergeConfig", function() {
 	});
 
 	it("should only merge same type", function() {
-		const originalLog = log.info;
-
-		log.warn = () => {};
+		stub(log, "warn");
 
 		expect(
 			mergeConfig(
@@ -282,6 +280,6 @@ describe("mergeConfig", function() {
 			shouldBeString: "string",
 		});
 
-		log.warn = originalLog;
+		log.warn.restore();
 	});
 });
