@@ -71,7 +71,15 @@ Mousetrap.bind(["alt+shift+up", "alt+shift+down"], function(e, keys) {
 
 // Jump to the first window with a highlight in it, or the first with unread
 // activity if there are none with highlights.
-Mousetrap.bind(["alt+a"], function() {
+Mousetrap.bind(["alt+a"], function(e) {
+	// Do not handle this keybind in the chat input because
+	// it can be used to type letters with umlauts
+	// Normally this is not required, but since chat input has the "mousetrap"
+	// class for other keybinds to work, we need to add this check
+	if (e.target.tagName === "TEXTAREA") {
+		return true;
+	}
+
 	let targetChannel;
 
 	outer_loop: for (const network of store.state.networks) {
