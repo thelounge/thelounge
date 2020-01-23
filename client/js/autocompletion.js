@@ -45,19 +45,8 @@ const nicksStrategy = {
 	template([string]) {
 		return string;
 	},
-	replace([, original], position = 1) {
-		// If no postfix specified, return autocompleted nick as-is
-		if (!store.state.settings.nickPostfix) {
-			return "$1" + original;
-		}
-
-		// If there is whitespace in the input already, append space to nick
-		if (position > 0 && /\s/.test(store.state.activeChannel.channel.pendingMessage)) {
-			return "$1" + original + " ";
-		}
-
-		// If nick is first in the input, append specified postfix
-		return "$1" + original + store.state.settings.nickPostfix;
+	replace([, original]) {
+		return "$1" + replaceNick(original);
 	},
 	index: 2,
 };
@@ -205,8 +194,8 @@ function enableAutocomplete(input) {
 			}
 
 			const position = input.selectionStart - lastMatch.length;
-			const newMatch = nicksStrategy.replace(
-				[0, currentMatches[tabCount % currentMatches.length]],
+			const newMatch = replaceNick(
+				currentMatches[tabCount % currentMatches.length],
 				position
 			);
 			const remainder = text.substr(input.selectionStart);
@@ -270,6 +259,21 @@ function enableAutocomplete(input) {
 			store.commit("isAutoCompleting", false);
 		},
 	};
+}
+
+function replaceNick(original, position = 1) {
+	// If no postfix specified, return autocompleted nick as-is
+	if (!store.state.settings.nickPostfix) {
+		return original;
+	}
+
+	// If there is whitespace in the input already, append space to nick
+	if (position > 0 && /\s/.test(store.state.activeChannel.channel.pendingMessage)) {
+		return original + " ";
+	}
+
+	// If nick is first in the input, append specified postfix
+	return original + store.state.settings.nickPostfix;
 }
 
 function fuzzyGrep(term, array) {
