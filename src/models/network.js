@@ -75,7 +75,7 @@ Network.prototype.validate = function(client) {
 		this.username = this.nick.replace(/[^a-zA-Z0-9]/g, "");
 	}
 
-	this.username = cleanNick(this.username) || "thelounge";
+	this.username = cleanString(this.username) || "thelounge";
 	this.realname = cleanString(this.realname) || "The Lounge User";
 	this.password = cleanString(this.password);
 	this.host = cleanString(this.host);
