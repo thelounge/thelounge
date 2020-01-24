@@ -44,6 +44,7 @@ export default {
 		this.prepareOpenStates();
 	},
 	mounted() {
+		Mousetrap.bind("esc", this.escapeKey);
 		Mousetrap.bind("alt+u", this.toggleUserList);
 		Mousetrap.bind("alt+s", this.toggleSidebar);
 
@@ -64,6 +65,7 @@ export default {
 		this.dayChangeTimeout = setTimeout(emitDayChange, this.msUntilNextDay());
 	},
 	beforeDestroy() {
+		Mousetrap.unbind("esc", this.escapeKey);
 		Mousetrap.unbind("alt+u", this.toggleUserList);
 		Mousetrap.unbind("alt+s", this.toggleSidebar);
 
@@ -71,6 +73,9 @@ export default {
 		clearTimeout(this.dayChangeTimeout);
 	},
 	methods: {
+		escapeKey() {
+			this.$root.$emit("escapekey");
+		},
 		toggleSidebar(e) {
 			// Do not handle this keybind in the chat input because
 			// it can be used to type letters with umlauts
