@@ -71,11 +71,27 @@ export default {
 		clearTimeout(this.dayChangeTimeout);
 	},
 	methods: {
-		toggleSidebar() {
+		toggleSidebar(e) {
+			// Do not handle this keybind in the chat input because
+			// it can be used to type letters with umlauts
+			if (e.target.tagName === "TEXTAREA") {
+				return true;
+			}
+
 			this.$store.commit("toggleSidebar");
+
+			return false;
 		},
-		toggleUserList() {
+		toggleUserList(e) {
+			// Do not handle this keybind in the chat input because
+			// it can be used to type letters with umlauts
+			if (e.target.tagName === "TEXTAREA") {
+				return true;
+			}
+
 			this.$store.commit("toggleUserlist");
+
+			return false;
 		},
 		msUntilNextDay() {
 			// Compute how many milliseconds are remaining until the next day starts
