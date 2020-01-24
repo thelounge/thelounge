@@ -137,8 +137,8 @@ export default {
 				view: window,
 				bubbles: true,
 				cancelable: true,
-				clientX: rect.x,
-				clientY: rect.y + rect.height,
+				clientX: rect.left,
+				clientY: rect.top + rect.height,
 			});
 			el.dispatchEvent(ev);
 		},

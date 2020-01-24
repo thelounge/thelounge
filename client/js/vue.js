@@ -35,8 +35,8 @@ const vueApp = new Vue({
 				const rect = el.getBoundingClientRect();
 				const event = new MouseEvent("click", {
 					view: window,
-					clientX: rect.x + 10,
-					clientY: rect.y,
+					clientX: rect.left + 10,
+					clientY: rect.top,
 				});
 
 				this.$root.$emit("contextmenu:removenetwork", {
