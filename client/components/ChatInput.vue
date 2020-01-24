@@ -101,6 +101,8 @@ export default {
 		},
 	},
 	mounted() {
+		this.$root.$on("escapekey", this.blurInput);
+
 		if (this.$store.state.settings.autocomplete) {
 			autocompletionRef = autocompletion(this.$refs.input);
 		}
@@ -161,6 +163,8 @@ export default {
 		}
 	},
 	destroyed() {
+		this.$root.$off("escapekey", this.blurInput);
+
 		if (autocompletionRef) {
 			autocompletionRef.destroy();
 			autocompletionRef = null;
@@ -254,6 +258,9 @@ export default {
 		},
 		openFileUpload() {
 			this.$refs.uploadInput.click();
+		},
+		blurInput() {
+			this.$refs.input.blur();
 		},
 	},
 };
