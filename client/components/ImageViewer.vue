@@ -25,8 +25,6 @@
 </template>
 
 <script>
-import Mousetrap from "mousetrap";
-
 export default {
 	name: "ImageViewer",
 	data() {
@@ -68,10 +66,10 @@ export default {
 		},
 	},
 	mounted() {
-		Mousetrap.bind("esc", this.closeViewer);
+		this.$root.$on("escapekey", this.closeViewer);
 	},
 	destroyed() {
-		Mousetrap.unbind("esc", this.closeViewer);
+		this.$root.$off("escapekey", this.closeViewer);
 	},
 	methods: {
 		closeViewer() {

@@ -38,7 +38,6 @@
 </template>
 
 <script>
-import Mousetrap from "mousetrap";
 import {
 	generateUserContextMenu,
 	generateChannelContextMenu,
@@ -63,15 +62,13 @@ export default {
 		};
 	},
 	mounted() {
-		Mousetrap.bind("esc", this.close);
-
+		this.$root.$on("escapekey", this.close);
 		this.$root.$on("contextmenu:user", this.openUserContextMenu);
 		this.$root.$on("contextmenu:channel", this.openChannelContextMenu);
 		this.$root.$on("contextmenu:removenetwork", this.openRemoveNetworkContextMenu);
 	},
 	destroyed() {
-		Mousetrap.unbind("esc", this.close);
-
+		this.$root.$off("escapekey", this.close);
 		this.$root.$off("contextmenu:user", this.openUserContextMenu);
 		this.$root.$off("contextmenu:channel", this.openChannelContextMenu);
 		this.$root.$off("contextmenu:removenetwork", this.openRemoveNetworkContextMenu);
