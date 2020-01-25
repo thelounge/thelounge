@@ -75,8 +75,9 @@ socket.on("msg", function(data) {
 		// If message arrives in non active channel, keep only 100 messages
 		messageLimit = 100;
 	} else if (channel.scrolledToBottom) {
-		// If message arrives in active channel, keep 500 messages if scroll is currently at the bottom
-		messageLimit = 500;
+		// If message arrives in active channel, keep 1500 messages if scroll is currently at the bottom
+		// One history load may load up to 1000 messages at once if condendesed or hidden events are enabled
+		messageLimit = 1500;
 	}
 
 	if (messageLimit > 0 && channel.messages.length > messageLimit) {
