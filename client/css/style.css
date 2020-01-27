@@ -1666,6 +1666,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	font: inherit;
 	outline: 0;
 	padding: 13px;
+	padding-right: 30px;
 	width: 100%;
 }
 
