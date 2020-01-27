@@ -105,7 +105,6 @@
 						ref="usernameInput"
 						class="input username"
 						name="username"
-						pattern="[^\s:!@]+"
 						:value="defaults.username"
 						maxlength="100"
 					/>
