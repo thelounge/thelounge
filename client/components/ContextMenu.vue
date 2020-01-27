@@ -27,7 +27,7 @@
 						{active: id === activeItem},
 					]"
 					role="menuitem"
-					@mouseover="hoverItem(id)"
+					@mouseenter="hoverItem(id)"
 					@click="clickItem(item)"
 				>
 					{{ item.label }}

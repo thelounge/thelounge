@@ -3,7 +3,7 @@
 		:class="['user', nickColor, {active: active}]"
 		:data-name="user.nick"
 		role="button"
-		v-on="onHover ? {mouseover: hover} : {}"
+		v-on="onHover ? {mouseenter: hover} : {}"
 		@click.prevent="openContextMenu"
 		@contextmenu.prevent="openContextMenu"
 		><slot>{{ user.mode }}{{ user.nick }}</slot></span
