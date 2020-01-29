@@ -97,6 +97,9 @@ describe("SQLite Message Storage", function() {
 				{
 					name: "#thisISaCHANNEL",
 				},
+				{
+					ignoreChannels: []
+				},
 				new Msg({
 					time: 123456789,
 					text: "Hello from sqlite world!",

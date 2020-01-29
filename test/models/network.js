@@ -47,6 +47,7 @@ describe("Network", function() {
 					{name: "PrivateChat", type: "query"},
 				],
 				ignoreList: [],
+				ignoreChannels: [],
 			});
 		});
 

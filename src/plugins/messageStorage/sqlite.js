@@ -121,6 +121,10 @@ class MessageStorage {
 			return;
 		}
 
+		if (network.ignoreChannels.includes(channel.name.toLowerCase())) {
+			return;
+		}
+
 		const clonedMsg = Object.keys(msg).reduce((newMsg, prop) => {
 			// id is regenerated when messages are retrieved
 			// previews are not stored because storage is cleared on lounge restart

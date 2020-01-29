@@ -239,6 +239,7 @@ Client.prototype.connect = function(args, isStartup = false) {
 		commands: args.commands || [],
 		channels: channels,
 		ignoreList: args.ignoreList ? args.ignoreList : [],
+		ignoreChannels: args.ignoreChannels ? args.ignoreChannels : [],
 	});
 
 	// Set network lobby channel id

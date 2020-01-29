@@ -31,6 +31,10 @@ class TextFileMessageStorage {
 			return;
 		}
 
+		if (network.ignoreChannels.includes(channel.name.toLowerCase())) {
+			return;
+		}
+
 		const logPath = path.join(
 			Helper.getUserLogsPath(),
 			this.client.name,

@@ -42,6 +42,7 @@ function Network(attr) {
 		},
 		chanCache: [],
 		ignoreList: [],
+		ignoreChannels: [],
 		keepNick: null,
 	});
 
@@ -390,6 +391,7 @@ Network.prototype.export = function() {
 		"realname",
 		"commands",
 		"ignoreList",
+		"ignoreChannels",
 	]);
 
 	network.channels = this.channels
