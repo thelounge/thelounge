@@ -129,6 +129,27 @@ export function generateChannelContextMenu($root, channel, network) {
 		});
 	}
 
+	if (channel.type === "channel" || channel.type === "query") {
+		items.push({
+			label: "Clear history",
+			type: "item",
+			class: "clear-history",
+			action() {
+				// TODO: Confirmation window
+
+				channel.messages = [];
+				channel.unread = 0;
+				channel.highlight = 0;
+				channel.firstUnread = 0;
+				channel.moreHistoryAvailable = false;
+
+				socket.emit("history:clear", {
+					target: channel.id,
+				});
+			},
+		});
+	}
+
 	// Add close menu item
 	items.push({
 		label: closeMap[channel.type],
