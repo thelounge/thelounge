@@ -144,6 +144,20 @@ class MessageStorage {
 		);
 	}
 
+	deleteChannel(network, channel) {
+		if (!this.isEnabled) {
+			return;
+		}
+
+		this.database.serialize(() =>
+			this.database.run(
+				"DELETE FROM messages WHERE network = ? AND channel = ?",
+				network.uuid,
+				channel.name.toLowerCase()
+			)
+		);
+	}
+
 	/**
 	 * Load messages for given channel on a given network and resolve a promise with loaded messages.
 	 *

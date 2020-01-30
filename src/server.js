@@ -420,6 +420,12 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 		network.edit(client, data);
 	});
 
+	socket.on("history:clear", (data) => {
+		if (typeof data === "object") {
+			client.clearHistory(data);
+		}
+	});
+
 	if (!Helper.config.public && !Helper.config.ldap.enable) {
 		socket.on("change-password", (data) => {
 			if (typeof data === "object") {
