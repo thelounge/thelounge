@@ -3,7 +3,7 @@
 const Chan = require("../../models/chan");
 const Msg = require("../../models/msg");
 
-exports.commands = ["slap", "me"];
+exports.commands = ["slap", "me", "shrug"];
 
 exports.input = function({irc}, chan, cmd, args) {
 	if (chan.type !== Chan.Type.CHANNEL && chan.type !== Chan.Type.QUERY) {
@@ -33,16 +33,31 @@ exports.input = function({irc}, chan, cmd, args) {
 
 			irc.action(chan.name, text);
 
-			if (!irc.network.cap.isEnabled("echo-message")) {
-				irc.emit("action", {
-					nick: irc.user.nick,
-					target: chan.name,
-					message: text,
-				});
+			echoMessage(text, irc, chan);
+
+			break;
+		case "shrug":
+			let text = "";
+			if (args.length !== 0) {
+				text = args.join(" ") + " ";
 			}
+
+			text = text + "¯\\_(ツ)_/¯";
+			irc.action(chan.name, text);
+			echoMessage(text, irc, chan);
 
 			break;
 	}
 
 	return true;
 };
+
+function echoMessage(text, irc, chan) {
+	if (!irc.network.cap.isEnabled("echo-message")) {
+		irc.emit("action", {
+			nick: irc.user.nick,
+			target: chan.name,
+			message: text,
+		});
+	}
+}
