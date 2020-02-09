@@ -61,4 +61,7 @@ module.exports = {
 		return express();
 	},
 	sanitizeLog,
+	isRunningOnCI() {
+		return process.env.CI || process.env.GITHUB_ACTIONS;
+	},
 };

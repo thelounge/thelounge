@@ -3,13 +3,15 @@
 const fs = require("fs");
 const path = require("path");
 const expect = require("chai").expect;
+const util = require("../util");
 const Msg = require("../../src/models/msg");
 const Helper = require("../../src/helper");
 const MessageStorage = require("../../src/plugins/messageStorage/sqlite.js");
 
 describe("SQLite Message Storage", function() {
 	// Increase timeout due to unpredictable I/O on CI services
-	this.timeout(process.env.CI ? 25000 : 5000);
+	this.timeout(util.isRunningOnCI() ? 25000 : 5000);
+	this.slow(300);
 
 	const expectedPath = path.join(Helper.getHomePath(), "logs", "testUser.sqlite3");
 	let store;
