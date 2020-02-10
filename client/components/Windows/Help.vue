@@ -185,6 +185,16 @@
 				</div>
 			</div>
 
+			<div class="help-item">
+				<div class="subject">
+					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>J</kbd></span>
+					<span v-else><kbd>⌥</kbd> <kbd>J</kbd></span>
+				</div>
+				<div class="description">
+					<p>Toggle jump to channel switcher.</p>
+				</div>
+			</div>
+
 			<h2>Formatting Shortcuts</h2>
 
 			<div class="help-item">
