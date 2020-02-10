@@ -6,11 +6,12 @@ const expect = require("chai").expect;
 const stub = require("sinon").stub;
 const got = require("got");
 const io = require("socket.io-client");
+const util = require("./util");
 const changelog = require("../src/plugins/changelog");
 
 describe("Server", function() {
 	// Increase timeout due to unpredictable I/O on CI services
-	this.timeout(process.env.CI ? 25000 : 5000);
+	this.timeout(util.isRunningOnCI() ? 25000 : 5000);
 
 	let server;
 
