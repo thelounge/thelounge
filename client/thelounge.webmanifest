@@ -40,7 +40,13 @@
 		{
 			"src": "img/logo-grey-bg.svg",
 			"type": "image/svg+xml",
+			"purpose": "maskable any",
 			"sizes": "513x513"
+		},
+		{
+			"src": "img/icon-black-transparent-bg.svg",
+			"type": "image/svg+xml",
+			"purpose": "monochrome"
 		}
 	]
 }
