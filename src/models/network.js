@@ -174,6 +174,13 @@ Network.prototype.createWebIrc = function(client) {
 		hostname: client.config.browser.hostname,
 	};
 
+	// https://ircv3.net/specs/extensions/webirc#options
+	if (client.config.browser.isSecure) {
+		webircObject.options = {
+			secure: true,
+		};
+	}
+
 	if (typeof Helper.config.webirc[this.host] === "function") {
 		webircObject.password = null;
 		return Helper.config.webirc[this.host](webircObject, this);
