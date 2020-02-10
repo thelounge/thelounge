@@ -2,6 +2,7 @@
 
 const constants = require("./constants");
 
+import "../css/style.css";
 import Vue from "vue";
 import store from "./store";
 import App from "../components/App.vue";

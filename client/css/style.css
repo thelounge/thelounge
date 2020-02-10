@@ -325,6 +325,7 @@ p {
 .channel-list-item .not-secure-icon::before,
 .channel-list-item .not-connected-icon::before,
 .channel-list-item .parted-channel-icon::before,
+.jump-to-input::before,
 #sidebar .collapse-network-icon::before {
 	font: normal normal normal 14px/1 FontAwesome;
 	font-size: inherit; /* Can't have font-size inherit on line above, so need to override */
@@ -618,6 +619,7 @@ p {
 	width: 220px;
 	max-height: 100%;
 	will-change: transform;
+	color: #b7c5d1; /* same as .channel-list-item color */
 }
 
 #viewport.menu-open #sidebar {
@@ -648,7 +650,6 @@ p {
 
 .channel-list-item,
 #sidebar .empty {
-	color: #b7c5d1;
 	font-size: 14px;
 }
 
@@ -701,10 +702,6 @@ background on hover (unless active) */
 	top: 0;
 	bottom: 0;
 	right: 10px;
-}
-
-#sidebar .networks {
-	padding-top: 5px;
 }
 
 #sidebar .network {
