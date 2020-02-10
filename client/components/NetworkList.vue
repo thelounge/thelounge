@@ -1,5 +1,5 @@
 <template>
-	<div v-if="networks.length === 0" class="empty">
+	<div v-if="$store.state.networks.length === 0" class="empty">
 		You are not connected to any networks yet.
 	</div>
 	<div v-else ref="networklist">
@@ -52,7 +52,7 @@
 		</div>
 		<Draggable
 			v-else
-			:list="networks"
+			:list="$store.state.networks"
 			:filter="isCurrentlyInTouch"
 			:prevent-on-filter="false"
 			handle=".channel-list-item[data-type='lobby']"
@@ -66,7 +66,7 @@
 			@end="onDragEnd"
 		>
 			<div
-				v-for="network in networks"
+				v-for="network in $store.state.networks"
 				:id="'network-' + network.uuid"
 				:key="network.uuid"
 				:class="{
@@ -80,7 +80,10 @@
 				<NetworkLobby
 					:network="network"
 					:is-join-channel-shown="network.isJoinChannelShown"
-					:active="activeChannel && network.channels[0] === activeChannel.channel"
+					:active="
+						$store.state.activeChannel &&
+							network.channels[0] === $store.state.activeChannel.channel
+					"
 					@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown"
 				/>
 				<JoinChannel
@@ -109,7 +112,10 @@
 						:key="channel.id"
 						:channel="channel"
 						:network="network"
-						:active="activeChannel && channel === activeChannel.channel"
+						:active="
+							$store.state.activeChannel &&
+								channel === $store.state.activeChannel.channel
+						"
 					/>
 				</Draggable>
 			</div>
@@ -203,12 +209,6 @@ export default {
 		};
 	},
 	computed: {
-		activeChannel() {
-			return this.$store.state.activeChannel;
-		},
-		networks() {
-			return this.$store.state.networks;
-		},
 		items() {
 			const items = [];
 
@@ -278,7 +278,7 @@ export default {
 
 			socket.emit("sort", {
 				type: "networks",
-				order: this.networks.map((n) => n.uuid),
+				order: this.$store.state.networks.map((n) => n.uuid),
 			});
 		},
 		onChannelSort(e) {

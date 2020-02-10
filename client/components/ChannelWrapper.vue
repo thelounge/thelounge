@@ -67,6 +67,10 @@ export default {
 			return this.channel.name;
 		},
 		click() {
+			if (this.isFiltering) {
+				return;
+			}
+
 			this.$root.switchToChannel(this.channel);
 		},
 		openContextMenu(event) {
