@@ -47,7 +47,7 @@
     "cheerio": "1.0.0-rc.3",
     "commander": "4.1.0",
     "express": "4.17.1",
-    "file-type": "14.1.1",
+    "file-type": "14.1.2",
     "filenamify": "4.1.0",
     "fs-extra": "8.1.0",
     "got": "10.4.0",
