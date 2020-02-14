@@ -3729,10 +3729,10 @@ file-entry-cache@^5.0.1:
   dependencies:
     flat-cache "^2.0.1"
 
-file-type@14.1.1:
-  version "14.1.1"
-  resolved "https://registry.yarnpkg.com/file-type/-/file-type-14.1.1.tgz#d624d512da648cf8916d1416303297493a97011b"
-  integrity sha512-fGmNwmRgDi3uMDNbJfRRKaOUGN/uzeWRl2Ti9RJdvLpzFMKbl5cBGP3ngHYKiBSbHPB8wzMckP9x9SixJDFftg==
+file-type@14.1.2:
+  version "14.1.2"
+  resolved "https://registry.yarnpkg.com/file-type/-/file-type-14.1.2.tgz#ee7adfa2a0483d8be3a38aea58fdf2705ab00fb4"
+  integrity sha512-9NI4+QzDlEPB6OETc/FcJt8i8vNT396VweRwEwLcE07MnorWkZDopNuc+MeoYA7ArbzoK044JbaDExWys8deTQ==
   dependencies:
     readable-web-to-node-stream "^2.0.0"
     strtok3 "^6.0.0"
