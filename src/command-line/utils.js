@@ -132,10 +132,16 @@ class Utils {
 					.trim()
 					.split("\n")
 					.forEach((line) => {
-						line = JSON.parse(line);
+						try {
+							line = JSON.parse(line);
 
-						if (line.type === "success") {
-							success = true;
+							if (line.type === "success") {
+								success = true;
+							}
+						} catch (e) {
+							// Stdout buffer has limitations and yarn may print
+							// big package trees, for example in the upgrade command
+							// See https://github.com/thelounge/thelounge/issues/3679
 						}
 					});
 			});
