@@ -24,7 +24,7 @@ socket.on("msg", function(data) {
 	}
 
 	let channel = receivingChannel.channel;
-	const isActiveChannel =
+	let isActiveChannel =
 		store.state.activeChannel && store.state.activeChannel.channel === channel;
 
 	// Display received notices and errors in currently active channel.
@@ -36,6 +36,10 @@ socket.on("msg", function(data) {
 			store.state.activeChannel.network === receivingChannel.network
 		) {
 			channel = store.state.activeChannel.channel;
+
+			// Do not update unread/highlight counters for this channel
+			// as we are putting this message in the active channel
+			isActiveChannel = true;
 
 			if (data.chan === channel.id) {
 				// If active channel is the intended channel for this message,
