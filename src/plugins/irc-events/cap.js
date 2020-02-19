@@ -1,6 +1,7 @@
 "use strict";
 
 const Msg = require("../../models/msg");
+const STSPolicies = require("../sts");
 
 module.exports = function(irc, network) {
 	const client = this;
@@ -27,7 +28,13 @@ module.exports = function(irc, network) {
 		});
 
 		if (isSecure) {
-			// TODO: store and update duration
+			const duration = parseInt(values.duration, 10);
+
+			if (isNaN(duration)) {
+				return;
+			}
+
+			STSPolicies.update(network.host, network.port, duration);
 		} else {
 			const port = parseInt(values.port, 10);
 
@@ -38,7 +45,7 @@ module.exports = function(irc, network) {
 			network.channels[0].pushMessage(
 				client,
 				new Msg({
-					text: `Server sent a strict transport security policy, reconnecting to port ${port}…`,
+					text: `Server sent a strict transport security policy, reconnecting to ${network.host}:${port}…`,
 				}),
 				true
 			);

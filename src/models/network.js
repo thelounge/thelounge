@@ -6,6 +6,7 @@ const IrcFramework = require("irc-framework");
 const Chan = require("./chan");
 const Msg = require("./msg");
 const Helper = require("../helper");
+const STSPolicies = require("../plugins/sts");
 
 module.exports = Network;
 
@@ -78,7 +79,7 @@ Network.prototype.validate = function(client) {
 	this.username = cleanString(this.username) || "thelounge";
 	this.realname = cleanString(this.realname) || "The Lounge User";
 	this.password = cleanString(this.password);
-	this.host = cleanString(this.host);
+	this.host = cleanString(this.host).toLowerCase();
 	this.name = cleanString(this.name);
 
 	if (!this.port) {
@@ -122,6 +123,23 @@ Network.prototype.validate = function(client) {
 		);
 
 		return false;
+	}
+
+	const stsPolicy = STSPolicies.get(this.host);
+
+	if (stsPolicy && !this.tls) {
+		this.channels[0].pushMessage(
+			client,
+			new Msg({
+				type: Msg.Type.ERROR,
+				text: `${this.host} has an active strict transport security policy, will connect to port ${stsPolicy.port} over a secure connection.`,
+			}),
+			true
+		);
+
+		this.port = stsPolicy.port;
+		this.tls = true;
+		this.rejectUnauthorized = true;
 	}
 
 	return true;
