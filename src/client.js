@@ -22,6 +22,7 @@ module.exports = Client;
 
 const events = [
 	"away",
+	"cap",
 	"connection",
 	"unhandled",
 	"ctcp",
