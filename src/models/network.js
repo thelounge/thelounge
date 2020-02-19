@@ -373,6 +373,17 @@ Network.prototype.addChannel = function(newChan) {
 	return index;
 };
 
+Network.prototype.quit = function(quitMessage) {
+	if (!this.irc) {
+		return;
+	}
+
+	// https://ircv3.net/specs/extensions/sts#rescheduling-expiry-on-disconnect
+	STSPolicies.refreshExpiration(this.host);
+
+	this.irc.quit(quitMessage || Helper.config.leaveMessage);
+};
+
 Network.prototype.exportForEdit = function() {
 	let fieldsToReturn;
 

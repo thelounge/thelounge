@@ -1,7 +1,6 @@
 "use strict";
 
 const _ = require("lodash");
-const Helper = require("../../helper");
 
 exports.commands = ["quit"];
 exports.allowDisconnected = true;
@@ -16,10 +15,8 @@ exports.input = function(network, chan, cmd, args) {
 		network: network.uuid,
 	});
 
-	if (network.irc) {
-		const quitMessage = args[0] ? args.join(" ") : Helper.config.leaveMessage;
-		network.irc.quit(quitMessage);
-	}
+	const quitMessage = args[0] ? args.join(" ") : null;
+	network.quit(quitMessage);
 
 	return true;
 };

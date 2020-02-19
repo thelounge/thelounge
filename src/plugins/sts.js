@@ -23,6 +23,7 @@ class STSPolicies {
 			if (value.expires > now) {
 				this.policies.set(value.host, {
 					port: value.port,
+					duration: value.duration,
 					expires: value.expires,
 				});
 			}
@@ -49,6 +50,7 @@ class STSPolicies {
 		if (duration > 0) {
 			this.policies.set(host, {
 				port: port,
+				duration: duration,
 				expires: Date.now() + duration * 1000,
 			});
 		} else {
@@ -58,6 +60,16 @@ class STSPolicies {
 		this.refresh();
 	}
 
+	refreshExpiration(host) {
+		const policy = this.policies.get(host);
+
+		if (typeof policy === "undefined") {
+			return null;
+		}
+
+		policy.expires = Date.now() + policy.duration * 1000;
+	}
+
 	saveFile() {
 		const policiesToStore = [];
 
@@ -65,6 +77,7 @@ class STSPolicies {
 			policiesToStore.push({
 				host: key,
 				port: value.port,
+				duration: value.duration,
 				expires: value.expires,
 			});
 		});
