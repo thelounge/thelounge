@@ -396,7 +396,11 @@ Network.prototype.exportForEdit = function() {
 		fieldsToReturn = ["name", "nick", "username", "password", "realname"];
 	}
 
-	return _.pick(this, fieldsToReturn);
+	const data = _.pick(this, fieldsToReturn);
+
+	data.hasSTSPolicy = !!STSPolicies.get(this.host);
+
+	return data;
 };
 
 Network.prototype.export = function() {
