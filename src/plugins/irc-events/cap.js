@@ -7,14 +7,14 @@ module.exports = function(irc, network) {
 	const client = this;
 
 	irc.on("cap ls", (data) => {
-		handleSTS(data);
+		handleSTS(data, true);
 	});
 
 	irc.on("cap new", (data) => {
-		handleSTS(data);
+		handleSTS(data, false);
 	});
 
-	function handleSTS(data) {
+	function handleSTS(data, shouldReconnect) {
 		if (!Object.prototype.hasOwnProperty.call(data.capabilities, "sts")) {
 			return;
 		}
@@ -50,8 +50,12 @@ module.exports = function(irc, network) {
 				true
 			);
 
-			// Forcefully end the connection
-			irc.connection.end();
+			// Forcefully end the connection if STS is seen in CAP LS
+			// We will update the port and tls setting if we see CAP NEW,
+			// but will not force a reconnection
+			if (shouldReconnect) {
+				irc.connection.end();
+			}
 
 			// Update the port
 			network.port = port;
@@ -63,8 +67,10 @@ module.exports = function(irc, network) {
 			irc.options.tls = true;
 			irc.options.rejectUnauthorized = true;
 
-			// Start a new connection
-			irc.connect();
+			if (shouldReconnect) {
+				// Start a new connection
+				irc.connect();
+			}
 
 			client.save();
 		}
