@@ -2,7 +2,7 @@
 
 const Helper = require("../helper");
 const busboy = require("busboy");
-const uuidv4 = require("uuid/v4");
+const {v4: uuidv4} = require("uuid");
 const path = require("path");
 const fsextra = require("fs-extra");
 const fs = require("fs");
