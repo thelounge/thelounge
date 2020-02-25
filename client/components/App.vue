@@ -5,6 +5,7 @@
 		<router-view ref="window"></router-view>
 		<ImageViewer ref="imageViewer" />
 		<ContextMenu ref="contextMenu" />
+		<ConfirmDialog ref="confirmDialog" />
 		<div id="upload-overlay"></div>
 	</div>
 </template>
@@ -18,6 +19,7 @@ import storage from "../js/localStorage";
 import Sidebar from "./Sidebar.vue";
 import ImageViewer from "./ImageViewer.vue";
 import ContextMenu from "./ContextMenu.vue";
+import ConfirmDialog from "./ConfirmDialog.vue";
 
 export default {
 	name: "App",
@@ -25,6 +27,7 @@ export default {
 		Sidebar,
 		ImageViewer,
 		ContextMenu,
+		ConfirmDialog,
 	},
 	computed: {
 		viewportClasses() {

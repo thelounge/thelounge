@@ -135,17 +135,29 @@ export function generateChannelContextMenu($root, channel, network) {
 			type: "item",
 			class: "clear-history",
 			action() {
-				// TODO: Confirmation window
+				$root.$emit(
+					"confirm-dialog",
+					{
+						title: "Clear history",
+						text: `Are you sure you want to clear history for ${channel.name}? This cannot be undone.`,
+						button: "Clear history",
+					},
+					(result) => {
+						if (!result) {
+							return;
+						}
 
-				channel.messages = [];
-				channel.unread = 0;
-				channel.highlight = 0;
-				channel.firstUnread = 0;
-				channel.moreHistoryAvailable = false;
+						channel.messages = [];
+						channel.unread = 0;
+						channel.highlight = 0;
+						channel.firstUnread = 0;
+						channel.moreHistoryAvailable = false;
 
-				socket.emit("history:clear", {
-					target: channel.id,
-				});
+						socket.emit("history:clear", {
+							target: channel.id,
+						});
+					}
+				);
 			},
 		});
 	}
@@ -281,32 +293,4 @@ export function generateUserContextMenu($root, channel, network, user) {
 	}
 
 	return items;
-}
-
-export function generateRemoveNetwork($root, lobby) {
-	return [
-		{
-			label: lobby.name,
-			type: "item",
-			class: "network",
-		},
-		{
-			type: "divider",
-		},
-		{
-			label: "Yes, remove this",
-			type: "item",
-			action() {
-				lobby.closed = true;
-				socket.emit("input", {
-					target: Number(lobby.id),
-					text: "/quit",
-				});
-			},
-		},
-		{
-			label: "Cancel",
-			type: "item",
-		},
-	];
 }

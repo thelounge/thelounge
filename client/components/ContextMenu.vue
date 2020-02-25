@@ -38,11 +38,7 @@
 </template>
 
 <script>
-import {
-	generateUserContextMenu,
-	generateChannelContextMenu,
-	generateRemoveNetwork,
-} from "../js/helpers/contextMenu.js";
+import {generateUserContextMenu, generateChannelContextMenu} from "../js/helpers/contextMenu.js";
 
 export default {
 	name: "ContextMenu",
@@ -65,21 +61,15 @@ export default {
 		this.$root.$on("escapekey", this.close);
 		this.$root.$on("contextmenu:user", this.openUserContextMenu);
 		this.$root.$on("contextmenu:channel", this.openChannelContextMenu);
-		this.$root.$on("contextmenu:removenetwork", this.openRemoveNetworkContextMenu);
 	},
 	destroyed() {
 		this.$root.$off("escapekey", this.close);
 		this.$root.$off("contextmenu:user", this.openUserContextMenu);
 		this.$root.$off("contextmenu:channel", this.openChannelContextMenu);
-		this.$root.$off("contextmenu:removenetwork", this.openRemoveNetworkContextMenu);
 
 		this.close();
 	},
 	methods: {
-		openRemoveNetworkContextMenu(data) {
-			const items = generateRemoveNetwork(this.$root, data.lobby);
-			this.open(data.event, items);
-		},
 		openChannelContextMenu(data) {
 			const items = generateChannelContextMenu(this.$root, data.channel, data.network);
 			this.open(data.event, items);

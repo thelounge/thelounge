@@ -30,20 +30,25 @@ const vueApp = new Vue({
 		},
 		closeChannel(channel) {
 			if (channel.type === "lobby") {
-				const el = document.querySelector(
-					`#sidebar .channel-list-item[aria-controls="#chan-${channel.id}"]`
-				);
-				const rect = el.getBoundingClientRect();
-				const event = new MouseEvent("click", {
-					view: window,
-					clientX: rect.left + 10,
-					clientY: rect.top,
-				});
+				this.$root.$emit(
+					"confirm-dialog",
+					{
+						title: "Remove network",
+						text: `Are you sure you want to quit and remove ${channel.name}? This cannot be undone.`,
+						button: "Remove network",
+					},
+					(result) => {
+						if (!result) {
+							return;
+						}
 
-				this.$root.$emit("contextmenu:removenetwork", {
-					event: event,
-					lobby: channel,
-				});
+						channel.closed = true;
+						socket.emit("input", {
+							target: Number(channel.id),
+							text: "/quit",
+						});
+					}
+				);
 
 				return;
 			}
