@@ -1,7 +1,7 @@
 "use strict";
 
 const _ = require("lodash");
-const uuidv4 = require("uuid/v4");
+const {v4: uuidv4} = require("uuid");
 const IrcFramework = require("irc-framework");
 const Chan = require("./chan");
 const Msg = require("./msg");
