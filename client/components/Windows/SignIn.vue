@@ -33,18 +33,20 @@
 
 			<div class="password-container">
 				<label for="signin-password">Password</label>
-				<RevealPassword v-slot:default="slotProps">
-					<input
-						id="signin-password"
-						ref="password"
-						:type="slotProps.isVisible ? 'text' : 'password'"
-						name="password"
-						class="input"
-						autocapitalize="none"
-						autocorrect="off"
-						autocomplete="current-password"
-						required
-					/>
+				<RevealPassword>
+					<template v-slot:default="slotProps">
+						<input
+							id="signin-password"
+							ref="password"
+							:type="slotProps.isVisible ? 'text' : 'password'"
+							name="password"
+							class="input"
+							autocapitalize="none"
+							autocorrect="off"
+							autocomplete="current-password"
+							required
+						/>
+					</template>
 				</RevealPassword>
 			</div>
 
