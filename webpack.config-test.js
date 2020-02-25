@@ -3,7 +3,7 @@
 const webpack = require("webpack");
 const fs = require("fs");
 const path = require("path");
-const VueLoaderPlugin = require("vue-loader/lib/plugin");
+const {VueLoaderPlugin} = require("vue-loader");
 const config = require("./webpack.config.js");
 
 const testFile = path.resolve(__dirname, "test/public/testclient.js");
