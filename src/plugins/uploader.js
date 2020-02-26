@@ -66,7 +66,7 @@ class Uploader {
 		const folder = name.substring(0, 2);
 		const uploadPath = Helper.getFileUploadPath();
 		const filePath = path.join(uploadPath, folder, name);
-		const detectedMimeType = await Uploader.getFileType(filePath);
+		let detectedMimeType = await Uploader.getFileType(filePath);
 
 		// doesn't exist
 		if (detectedMimeType === null) {
@@ -75,6 +75,12 @@ class Uploader {
 
 		// Force a download in the browser if it's not a whitelisted type (binary or otherwise unknown)
 		const contentDisposition = Uploader.isValidType(detectedMimeType) ? "inline" : "attachment";
+
+		if (detectedMimeType === "audio/vnd.wave") {
+			// Send a more common mime type for wave audio files
+			// so that browsers can play them correctly
+			detectedMimeType = "audio/wav";
+		}
 
 		res.setHeader("Content-Disposition", contentDisposition);
 		res.setHeader("Cache-Control", "max-age=86400");
