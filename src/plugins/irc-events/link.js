@@ -221,6 +221,7 @@ function parse(msg, chan, preview, res, client) {
 		case "audio/mpeg3":
 		case "audio/ogg":
 		case "audio/wav":
+		case "audio/x-wav":
 		case "audio/x-mid":
 		case "audio/x-midi":
 		case "audio/x-mpeg":
