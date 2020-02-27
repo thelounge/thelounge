@@ -7,24 +7,14 @@ module.exports = function(irc, network) {
 	const client = this;
 
 	irc.on("irc error", function(data) {
-		let text = "";
-
-		if (data.channel) {
-			text = `${data.channel}: `;
-		}
-
-		if (data.error === "user_on_channel") {
-			text += `User (${data.nick}) is already on channel`;
-		} else if (data.reason) {
-			text += `${data.reason} (${data.error})`;
-		} else {
-			text += data.error;
-		}
-
 		const msg = new Msg({
 			type: Msg.Type.ERROR,
-			text: text,
+			error: data.error,
 			showInActive: true,
+			nick: data.nick,
+			channel: data.channel,
+			reason: data.reason,
+			command: data.command,
 		});
 
 		let target = network.channels[0];
