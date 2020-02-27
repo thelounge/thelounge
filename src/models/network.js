@@ -159,6 +159,7 @@ Network.prototype.createIrcFramework = function(client) {
 		rejectUnauthorized: this.rejectUnauthorized,
 		enable_chghost: true,
 		enable_echomessage: true,
+		enable_setname: true,
 		auto_reconnect: true,
 		auto_reconnect_wait: 10000 + Math.floor(Math.random() * 1000), // If multiple users are connected to the same network, randomize their reconnections a little
 		auto_reconnect_max_retries: 360, // At least one hour (plus timeouts) worth of reconnections
@@ -166,7 +167,6 @@ Network.prototype.createIrcFramework = function(client) {
 	});
 
 	this.irc.requestCap([
-		"draft/setname", // https://github.com/ircv3/ircv3-specifications/pull/361
 		"znc.in/self-message", // Legacy echo-message for ZNC
 	]);
 
@@ -256,7 +256,7 @@ Network.prototype.edit = function(client, args) {
 		if (
 			connected &&
 			this.realname !== oldRealname &&
-			this.irc.network.cap.isEnabled("draft/setname")
+			this.irc.network.cap.isEnabled("setname")
 		) {
 			this.irc.raw("SETNAME", this.realname);
 		}
