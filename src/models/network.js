@@ -6,6 +6,7 @@ const IrcFramework = require("irc-framework");
 const Chan = require("./chan");
 const Msg = require("./msg");
 const Helper = require("../helper");
+const STSPolicies = require("../plugins/sts");
 
 module.exports = Network;
 
@@ -78,7 +79,7 @@ Network.prototype.validate = function(client) {
 	this.username = cleanString(this.username) || "thelounge";
 	this.realname = cleanString(this.realname) || "The Lounge User";
 	this.password = cleanString(this.password);
-	this.host = cleanString(this.host);
+	this.host = cleanString(this.host).toLowerCase();
 	this.name = cleanString(this.name);
 
 	if (!this.port) {
@@ -122,6 +123,23 @@ Network.prototype.validate = function(client) {
 		);
 
 		return false;
+	}
+
+	const stsPolicy = STSPolicies.get(this.host);
+
+	if (stsPolicy && !this.tls) {
+		this.channels[0].pushMessage(
+			client,
+			new Msg({
+				type: Msg.Type.ERROR,
+				text: `${this.host} has an active strict transport security policy, will connect to port ${stsPolicy.port} over a secure connection.`,
+			}),
+			true
+		);
+
+		this.port = stsPolicy.port;
+		this.tls = true;
+		this.rejectUnauthorized = true;
 	}
 
 	return true;
@@ -355,6 +373,17 @@ Network.prototype.addChannel = function(newChan) {
 	return index;
 };
 
+Network.prototype.quit = function(quitMessage) {
+	if (!this.irc) {
+		return;
+	}
+
+	// https://ircv3.net/specs/extensions/sts#rescheduling-expiry-on-disconnect
+	STSPolicies.refreshExpiration(this.host);
+
+	this.irc.quit(quitMessage || Helper.config.leaveMessage);
+};
+
 Network.prototype.exportForEdit = function() {
 	let fieldsToReturn;
 
@@ -378,7 +407,11 @@ Network.prototype.exportForEdit = function() {
 		fieldsToReturn = ["name", "nick", "username", "password", "realname"];
 	}
 
-	return _.pick(this, fieldsToReturn);
+	const data = _.pick(this, fieldsToReturn);
+
+	data.hasSTSPolicy = !!STSPolicies.get(this.host);
+
+	return data;
 };
 
 Network.prototype.export = function() {

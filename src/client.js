@@ -22,6 +22,7 @@ module.exports = Client;
 
 const events = [
 	"away",
+	"cap",
 	"connection",
 	"unhandled",
 	"ctcp",
@@ -616,10 +617,7 @@ Client.prototype.quit = function(signOut) {
 	}
 
 	this.networks.forEach((network) => {
-		if (network.irc) {
-			network.irc.quit(Helper.config.leaveMessage);
-		}
-
+		network.quit(Helper.config.leaveMessage);
 		network.destroy();
 	});
 

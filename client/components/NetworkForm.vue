@@ -65,10 +65,18 @@
 								type="checkbox"
 								name="tls"
 								:checked="defaults.tls ? true : false"
-								:disabled="config.lockNetwork ? true : false"
+								:disabled="
+									config.lockNetwork || defaults.hasSTSPolicy ? true : false
+								"
 								@change="onSecureChanged"
 							/>
 							Use secure connection (TLS)
+							<span
+								v-if="defaults.hasSTSPolicy"
+								class="tooltipped tooltipped-n tooltipped-no-delay"
+								aria-label="This network has a strict transport security policy, you will be unable to disable TLS"
+								>🔒 STS</span
+							>
 						</label>
 						<label class="tls">
 							<input
