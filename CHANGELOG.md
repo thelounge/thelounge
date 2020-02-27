@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v4.1.0-rc.1 - 2020-02-27 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/thelounge/compare/v4.0.0...v4.1.0-rc.1)
+
+This is a release candidate (RC) for v4.1.0 to ensure maximum stability for public release.
+Bugs may be fixed, but no further features will be added until the next stable version.
+
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+yarn global add thelounge@next
+```
+
 ## v4.0.0 - 2019-12-31
 
 For more details, [see the full changelog](https://github.com/thelounge/thelounge/compare/v3.3.0...v4.0.0) and [milestone](https://github.com/thelounge/thelounge/milestone/34?closed=1).
