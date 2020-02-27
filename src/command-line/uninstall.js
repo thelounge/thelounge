@@ -15,7 +15,7 @@ program
 		const path = require("path");
 
 		const packagesConfig = path.join(Helper.getPackagesPath(), "package.json");
-		const packages = JSON.parse(fs.readFileSync(packagesConfig, "utf-8")).dependencies;
+		const packages = JSON.parse(fs.readFileSync(packagesConfig, "utf-8"));
 
 		if (
 			!packages.dependencies ||
