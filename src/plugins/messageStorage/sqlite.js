@@ -159,7 +159,7 @@ class MessageStorage {
 		const limit = Helper.config.maxHistory < 0 ? 100000 : Helper.config.maxHistory;
 
 		return new Promise((resolve, reject) => {
-			this.database.parallelize(() =>
+			this.database.serialize(() =>
 				this.database.all(
 					"SELECT msg, type, time FROM messages WHERE network = ? AND channel = ? ORDER BY time DESC LIMIT ?",
 					[network.uuid, channel.name.toLowerCase(), limit],
