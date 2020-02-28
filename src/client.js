@@ -514,6 +514,10 @@ Client.prototype.clearHistory = function(data) {
 	target.chan.highlight = 0;
 	target.chan.firstUnread = 0;
 
+	client.emit("history:clear", {
+		target: target.chan.id,
+	});
+
 	if (!target.chan.isLoggable()) {
 		return;
 	}

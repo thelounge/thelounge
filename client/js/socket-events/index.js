@@ -23,3 +23,4 @@ import "./sessions_list";
 import "./configuration";
 import "./changelog";
 import "./setting";
+import "./history_clear";

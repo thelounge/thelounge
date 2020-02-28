@@ -147,12 +147,6 @@ export function generateChannelContextMenu($root, channel, network) {
 							return;
 						}
 
-						channel.messages = [];
-						channel.unread = 0;
-						channel.highlight = 0;
-						channel.firstUnread = 0;
-						channel.moreHistoryAvailable = false;
-
 						socket.emit("history:clear", {
 							target: channel.id,
 						});
