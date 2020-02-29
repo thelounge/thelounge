@@ -64,6 +64,9 @@ export const config = normalizeConfig({
 	showSeconds: {
 		default: false,
 	},
+	use12hClock: {
+		default: false,
+	},
 	statusMessages: {
 		default: "condensed",
 	},

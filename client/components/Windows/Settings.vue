@@ -88,6 +88,16 @@
 					Show seconds in timestamp
 				</label>
 			</div>
+			<div>
+				<label class="opt">
+					<input
+						:checked="$store.state.settings.use12hClock"
+						type="checkbox"
+						name="use12hClock"
+					/>
+					Show 12-hour timestamps
+				</label>
+			</div>
 			<div v-if="!$store.state.serverConfiguration.public && $store.state.settings.advanced">
 				<h2>Automatic away message</h2>
 
