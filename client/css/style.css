@@ -1309,10 +1309,16 @@ textarea.input {
 	padding-left: 10px;
 	width: 55px;
 	font-variant-numeric: tabular-nums;
+	box-sizing: content-box; /* highlights have a border-left */
 }
 
-#chat.show-seconds .time {
+#chat.time-12h .time,
+#chat.time-seconds .time {
 	width: 75px;
+}
+
+#chat.time-seconds.time-12h .time {
+	width: 90px;
 }
 
 #chat .from {
@@ -1500,12 +1506,7 @@ textarea.input {
 
 #chat .chat-view[data-type="channel"] .msg.highlight .time {
 	padding-left: 5px;
-	width: 50px;
 	color: #696969;
-}
-
-#chat.show-seconds .chat-view[data-type="channel"] .msg.highlight .time {
-	width: 70px;
 }
 
 #chat .chat-view[data-type="channel"] .msg.highlight .content {
