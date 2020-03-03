@@ -103,7 +103,7 @@
 					/>
 				</label>
 			</div>
-			<h2>
+			<h2 id="label-status-messages">
 				Status messages
 				<span
 					class="tooltipped tooltipped-n tooltipped-no-delay"
@@ -112,7 +112,7 @@
 					<button class="extra-help" />
 				</span>
 			</h2>
-			<div>
+			<div role="group" aria-labelledby="label-status-messages">
 				<label class="opt">
 					<input
 						:checked="$store.state.settings.statusMessages === 'shown'"
@@ -163,7 +163,7 @@
 			<div v-if="$store.state.settings.advanced">
 				<label class="opt">
 					<label for="nickPostfix" class="sr-only">
-						Nick autocomplete postfix (e.g. <code>, </code>)
+						Nick autocomplete postfix (for example a comma)
 					</label>
 					<input
 						id="nickPostfix"
@@ -338,8 +338,10 @@
 						!$store.state.serverConfiguration.ldapEnabled
 				"
 				id="change-password"
+				role="group"
+				aria-labelledby="label-change-password"
 			>
-				<h2>Change password</h2>
+				<h2 id="label-change-password">Change password</h2>
 				<div class="password-container">
 					<label for="old_password_input" class="sr-only">
 						Enter current password
@@ -415,7 +417,7 @@
 				/>
 			</div>
 
-			<div v-if="!$store.state.serverConfiguration.public" class="session-list">
+			<div v-if="!$store.state.serverConfiguration.public" class="session-list" role="group">
 				<h2>Sessions</h2>
 
 				<h3>Current session</h3>
