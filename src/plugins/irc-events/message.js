@@ -72,8 +72,14 @@ module.exports = function(irc, network) {
 			if (typeof chan === "undefined") {
 				// Send notices that are not targeted at us into the server window
 				if (data.type === Msg.Type.NOTICE) {
-					showInActive = true;
-					chan = network.channels[0];
+					const noticeChannel = tryGetChannelFromNotice(network, data.message);
+
+					if (typeof noticeChannel !== "undefined") {
+						chan = noticeChannel;
+					} else {
+						showInActive = true;
+						chan = network.channels[0];
+					}
 				} else {
 					chan = client.createChannel({
 						type: Chan.Type.QUERY,
@@ -181,3 +187,27 @@ module.exports = function(irc, network) {
 		}
 	}
 };
+
+// Handle notices that begin with "[#channel]" format
+function tryGetChannelFromNotice(network, message) {
+	if (message[0] !== "[") {
+		return;
+	}
+
+	let i = 0;
+	let char;
+
+	for (i = 0; i < message.length; i++) {
+		char = message[i];
+
+		if (char === " " || char === "," || char === "]") {
+			break;
+		}
+	}
+
+	if (char !== "]") {
+		return;
+	}
+
+	return network.getChannel(message.substring(1, i));
+}
