@@ -206,16 +206,32 @@ class MessageStorage {
 		}
 
 		let select =
-			'SELECT msg, type, time, channel FROM messages WHERE type = "message" AND network = ? AND json_extract(msg, "$.text") LIKE ?';
-		const params = [query.networkUuid, `%${query.searchTerm}%`];
+			'SELECT msg, type, time, channel FROM messages WHERE type = "message" AND (json_extract(msg, "$.text") LIKE ?';
+		const params = [`%${query.searchTerm}%`];
+
+		if (query.searchNicks) {
+			select += ' OR json_extract(msg, "$.from.nick") LIKE ?)';
+			params.push(query.searchTerm);
+		} else {
+			select += ")";
+		}
+
+		if (query.networkUuid) {
+			select += " AND network = ? ";
+			params.push(query.networkUuid);
+		}
 
 		if (query.channelName) {
 			select += " AND channel = ? ";
 			params.push(query.channelName);
 		}
 
-		select += " ORDER BY time DESC LIMIT 100 OFFSET ? ";
-		params.push(query.offset || 0);
+		const maxResults = 100;
+
+		select += " ORDER BY time DESC LIMIT ? OFFSET ? ";
+		params.push(maxResults);
+		query.offset = parseInt(query.offset, 10) || 0;
+		params.push(query.offset);
 
 		return new Promise((resolve, reject) => {
 			this.database.all(select, params, (err, rows) => {
@@ -227,7 +243,7 @@ class MessageStorage {
 						target: query.channelName,
 						networkUuid: query.networkUuid,
 						offset: query.offset,
-						results: rows.map(parseRowToMessage),
+						results: parseRowsToMessages(query.offset, rows),
 					};
 					resolve(response);
 				}
@@ -242,10 +258,17 @@ class MessageStorage {
 
 module.exports = MessageStorage;
 
-function parseRowToMessage(row) {
-	const msg = JSON.parse(row.msg);
-	msg.time = row.time;
-	msg.type = row.type;
+function parseRowsToMessages(id, rows) {
+	const messages = [];
 
-	return new Msg(msg);
+	for (const row of rows) {
+		const msg = JSON.parse(row.msg);
+		msg.time = row.time;
+		msg.type = row.type;
+		msg.id = id;
+		messages.push(new Msg(msg));
+		id += 1;
+	}
+
+	return messages;
 }
