@@ -29,7 +29,7 @@
 								ref="loadMoreButton"
 								:disabled="
 									$store.state.messageSearchInProgress ||
-										!$store.state.isConnected
+									!$store.state.isConnected
 								"
 								class="btn"
 								@click="onShowMoreClick"
@@ -55,14 +55,15 @@
 							<template v-for="(message, id) in messages">
 								<DateMarker
 									v-if="shouldDisplayDateMarker(message, id)"
-									:key="message.time + '-date'"
+									:key="message.date"
 									:message="message"
 								/>
 								<Message
-									:key="message.time"
+									:key="message.id"
 									:channel="channel"
 									:network="network"
 									:message="message"
+									:data-id="message.id"
 								/>
 							</template>
 						</div>
@@ -178,7 +179,7 @@ export default {
 				networkUuid: this.$route.params.uuid,
 				channelName: this.$route.params.target,
 				searchTerm: this.$route.params.term,
-				offset: this.offset,
+				offset: this.offset + 1,
 			});
 		},
 		jumpToBottom() {

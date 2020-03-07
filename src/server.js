@@ -592,12 +592,6 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 
 	socket.on("sessions:get", sendSessionList);
 
-	socket.on("search", (query) => {
-		client.search(query).then((results) => {
-			socket.emit("search:results", results);
-		});
-	});
-
 	if (!Helper.config.public) {
 		socket.on("setting:set", (newSetting) => {
 			if (!newSetting || typeof newSetting !== "object") {
@@ -644,6 +638,12 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 
 			const clientSettings = client.config.clientSettings;
 			socket.emit("setting:all", clientSettings);
+		});
+
+		socket.on("search", (query) => {
+			client.search(query).then((results) => {
+				socket.emit("search:results", results);
+			});
 		});
 	}
 
