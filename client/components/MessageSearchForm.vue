@@ -6,7 +6,7 @@
 				type="text"
 				name="search"
 				class="input"
-				placeholder="Search messages..."
+				placeholder="Search messages…"
 				@input="setSearchInput"
 				@blur="closeSearch"
 			/>
