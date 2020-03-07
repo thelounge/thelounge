@@ -40,7 +40,7 @@
 						</div>
 
 						<div v-if="$store.state.messageSearchInProgress" class="search-status">
-							Searching...
+							Searching…
 						</div>
 						<div v-else-if="!messages.length" class="search-status">
 							No results found.
