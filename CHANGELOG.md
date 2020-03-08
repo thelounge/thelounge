@@ -4,6 +4,113 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v4.1.0 - 2020-03-09
+
+For more details, [see the full changelog](https://github.com/thelounge/thelounge/compare/v4.0.0...v4.1.0) and [milestone](https://github.com/thelounge/thelounge/milestone/35?closed=1).
+
+This is a minor release that fixes up some of the bugs that have made it into the 4.0.0 release.
+This release adds a jump to channel switcher (a search box that can be activated with <kbd>Alt+J</kbd>).
+
+Support for the IRCv3 [strict transport security](https://ircv3.net/specs/extensions/sts) specification has been added.
+If a network sends a `sts` capability, The Lounge will automatically upgrade the connection to TLS and will stay on it.
+
+### Added
+
+- Jump to channel switcher ([#3594](https://github.com/thelounge/thelounge/pull/3594) by [@richrd](https://github.com/richrd))
+- Implemented strict transport security (STS) for IRC networks ([#3770](https://github.com/thelounge/thelounge/pull/3770) by [@xPaw](https://github.com/xPaw))
+- Add keybinds to toggle sidebar, user list, and networks ([#3660](https://github.com/thelounge/thelounge/pull/3660) by [@xPaw](https://github.com/xPaw))
+- Display the original sets mode string and make nicks clickable ([#3647](https://github.com/thelounge/thelounge/pull/3647) by [@xPaw](https://github.com/xPaw))
+- Show an icon for "show in active" messages ([#3670](https://github.com/thelounge/thelounge/pull/3670) by [@xPaw](https://github.com/xPaw))
+- Display icon when update is available, check on server start ([#3658](https://github.com/thelounge/thelounge/pull/3658) by [@xPaw](https://github.com/xPaw))
+- Switch default ports when toggling TLS ([#3645](https://github.com/thelounge/thelounge/pull/3645) by [@xPaw](https://github.com/xPaw))
+- Added emojis 13.0 ([#3735](https://github.com/thelounge/thelounge/pull/3735) by [@xPaw](https://github.com/xPaw))
+
+### Changed
+
+- Collapse prefetch errors by default, and correctly track user toggle ([#3628](https://github.com/thelounge/thelounge/pull/3628) by [@xPaw](https://github.com/xPaw))
+- Write prettier error messages for certain errors ([#3741](https://github.com/thelounge/thelounge/pull/3741) by [@RockyTV](https://github.com/RockyTV))
+- Update production dependencies to their latest versions:
+  - `got` ([#3630](https://github.com/thelounge/thelounge/pull/3630), [#3657](https://github.com/thelounge/thelounge/pull/3657), [#3689](https://github.com/thelounge/thelounge/pull/3689), [#3722](https://github.com/thelounge/thelounge/pull/3722), [#3734](https://github.com/thelounge/thelounge/pull/3734), [#3743](https://github.com/thelounge/thelounge/pull/3743))
+  - `commander` ([#3675](https://github.com/thelounge/thelounge/pull/3675))
+  - `mime-types` ([#3674](https://github.com/thelounge/thelounge/pull/3674))
+  - `file-type` ([#3678](https://github.com/thelounge/thelounge/pull/3678), [#3683](https://github.com/thelounge/thelounge/pull/3683), [#3698](https://github.com/thelounge/thelounge/pull/3698), [#3713](https://github.com/thelounge/thelounge/pull/3713), [#3739](https://github.com/thelounge/thelounge/pull/3739), [#3755](https://github.com/thelounge/thelounge/pull/3755), [#3776](https://github.com/thelounge/thelounge/pull/3776))
+  - `uuid` ([#3704](https://github.com/thelounge/thelounge/pull/3704), [#3777](https://github.com/thelounge/thelounge/pull/3777), [#3780](https://github.com/thelounge/thelounge/pull/3780))
+  - `semver` ([#3733](https://github.com/thelounge/thelounge/pull/3733), [#3754](https://github.com/thelounge/thelounge/pull/3754))
+  - `yarn` ([#3742](https://github.com/thelounge/thelounge/pull/3742))
+  - `irc-framework` ([#3782](https://github.com/thelounge/thelounge/pull/3782))
+
+### Fixed
+
+- Change sqlite parallelize to serialize when loading messages ([#3762](https://github.com/thelounge/thelounge/pull/3762) by [@xPaw](https://github.com/xPaw))
+- Fix url in useragent when fetching releases from github ([#3654](https://github.com/thelounge/thelounge/pull/3654) by [@xPaw](https://github.com/xPaw))
+- Ignore echoed ctcp requests that aren't targeted at us ([#3656](https://github.com/thelounge/thelounge/pull/3656) by [@xPaw](https://github.com/xPaw))
+- Fix active styles on footer buttons ([#3659](https://github.com/thelounge/thelounge/pull/3659) by [@xPaw](https://github.com/xPaw))
+- Check that usernameInput ref exists ([#3662](https://github.com/thelounge/thelounge/pull/3662) by [@xPaw](https://github.com/xPaw))
+- Open last channel in the list when creating a network ([#3703](https://github.com/thelounge/thelounge/pull/3703) by [@xPaw](https://github.com/xPaw))
+- Trigger autocompletion only after whitespace ([#3696](https://github.com/thelounge/thelounge/pull/3696), [#3718](https://github.com/thelounge/thelounge/pull/3718) by [@xPaw](https://github.com/xPaw))
+- Fix settings update when unknown theme is stored ([#3682](https://github.com/thelounge/thelounge/pull/3682) by [@xPaw](https://github.com/xPaw))
+- Ignore Alt+letter keybinds when focused in chat input ([#3720](https://github.com/thelounge/thelounge/pull/3720) by [@xPaw](https://github.com/xPaw))
+- Fix escape key handling ([#3721](https://github.com/thelounge/thelounge/pull/3721) by [@xPaw](https://github.com/xPaw))
+- Fix DOMRect coordinates in Safari ([#3723](https://github.com/thelounge/thelounge/pull/3723) by [@xPaw](https://github.com/xPaw))
+- Wrap stdout parsing from yarn into try/catch ([#3753](https://github.com/thelounge/thelounge/pull/3753) by [@xPaw](https://github.com/xPaw))
+- Fix incorrectly updating unread counter for 'show in active' messages ([#3765](https://github.com/thelounge/thelounge/pull/3765) by [@xPaw](https://github.com/xPaw))
+- Improve wav audio detection ([#3781](https://github.com/thelounge/thelounge/pull/3781) by [@xPaw](https://github.com/xPaw))
+- Fix not being able to uninstall packages ([#3783](https://github.com/thelounge/thelounge/pull/3783) by [@xPaw](https://github.com/xPaw))
+
+### Documentation
+
+In the main repository:
+
+- Link to official docs for stable releases ([#3651](https://github.com/thelounge/thelounge/pull/3651) by [@xPaw](https://github.com/xPaw))
+- Add an explanation why push notifications are not supported on iOS ([#3779](https://github.com/thelounge/thelounge/pull/3779) by [@xPaw](https://github.com/xPaw))
+
+On the [website repository](https://github.com/thelounge/thelounge.github.io):
+
+- Only run GA code on the main domain ([`4d070c7`](https://github.com/thelounge/thelounge.github.io/commit/4d070c75f4226212d7742f586e00a562ac70c4a6) by [@xPaw](https://github.com/xPaw))
+- Update yarn link ([`84343c2`](https://github.com/thelounge/thelounge.github.io/commit/84343c2fb37edfd8f281fae6ba3609cca79dfbbe) by [@xPaw](https://github.com/xPaw))
+- Remove dead links ([`8a1d8ea`](https://github.com/thelounge/thelounge.github.io/commit/8a1d8ea7f79103cd6b97da4de47fc2e617214309) by [@xPaw](https://github.com/xPaw))
+- Float anchor link to the right on mobile ([`f2c3c89`](https://github.com/thelounge/thelounge.github.io/commit/f2c3c891d6fb362aa6a021cb8d023250b2d2b23d) by [@xPaw](https://github.com/xPaw))
+- Add a note about localhost ([`ceb8d4b`](https://github.com/thelounge/thelounge.github.io/commit/ceb8d4bccb0f47a4571d00751005b185481e6fd2) by [@xPaw](https://github.com/xPaw))
+- Remove mentions of playback module as its not maintained ([`a867830`](https://github.com/thelounge/thelounge.github.io/commit/a8678301375c751a1860f7dcff9fddc32c642aa2) by [@xPaw](https://github.com/xPaw))
+
+### Internals
+
+- Add maskable icon purpose in webmanifest ([#3744](https://github.com/thelounge/thelounge/pull/3744) by [@xPaw](https://github.com/xPaw), [#3793](https://github.com/thelounge/thelounge/pull/3793) by [@NotWoods](https://github.com/NotWoods))
+- Turn off webpack hints ([#3650](https://github.com/thelounge/thelounge/pull/3650) by [@xPaw](https://github.com/xPaw))
+- Remove cyclical dependency in router<->webpush ([#3663](https://github.com/thelounge/thelounge/pull/3663) by [@xPaw](https://github.com/xPaw))
+- Remove the only use of Vue.filter ([#3681](https://github.com/thelounge/thelounge/pull/3681) by [@xPaw](https://github.com/xPaw))
+- Load styles from vue components, fix hot reload ([#3684](https://github.com/thelounge/thelounge/pull/3684) by [@xPaw](https://github.com/xPaw))
+- Remove `child-src` from CSP, add `base-uri 'none'` ([#3676](https://github.com/thelounge/thelounge/pull/3676) by [@xPaw](https://github.com/xPaw))
+- Disallow some invalid characters in nicknames ([#3715](https://github.com/thelounge/thelounge/pull/3715) by [@xPaw](https://github.com/xPaw))
+- Increase buffer size for active and scrolled down channels ([#3728](https://github.com/thelounge/thelounge/pull/3728) by [@xPaw](https://github.com/xPaw))
+- Use hostname from notice if available ([#3711](https://github.com/thelounge/thelounge/pull/3711) by [@xPaw](https://github.com/xPaw))
+- Small fixes to user list search ([#3730](https://github.com/thelounge/thelounge/pull/3730) by [@xPaw](https://github.com/xPaw))
+- Fix increasing test timeout on github actions ([#3752](https://github.com/thelounge/thelounge/pull/3752) by [@xPaw](https://github.com/xPaw))
+- Add support for webirc secure option ([#3712](https://github.com/thelounge/thelounge/pull/3712) by [@xPaw](https://github.com/xPaw))
+- Unprefix setname cap ([#3767](https://github.com/thelounge/thelounge/pull/3767) by [@xPaw](https://github.com/xPaw))
+- NetworkForm.vue: clarify autoconnect command help text ([#3649](https://github.com/thelounge/thelounge/pull/3649) by [@Mikaela](https://github.com/Mikaela))
+- Update development dependencies to their latest versions:
+  - `eslint-config-prettier` ([#3639](https://github.com/thelounge/thelounge/pull/3639), [#3738](https://github.com/thelounge/thelounge/pull/3738))
+  - `stylelint` ([#3641](https://github.com/thelounge/thelounge/pull/3641), [#3694](https://github.com/thelounge/thelounge/pull/3694), [#3750](https://github.com/thelounge/thelounge/pull/3750), [#3758](https://github.com/thelounge/thelounge/pull/3758))
+  - `sinon` ([#3624](https://github.com/thelounge/thelounge/pull/3624), [#3687](https://github.com/thelounge/thelounge/pull/3687), [#3707](https://github.com/thelounge/thelounge/pull/3707), [#3727](https://github.com/thelounge/thelounge/pull/3727), [#3774](https://github.com/thelounge/thelounge/pull/3774))
+  - `webpack` ([#3642](https://github.com/thelounge/thelounge/pull/3642), [#3760](https://github.com/thelounge/thelounge/pull/3760))
+  - `babel-plugin-istanbul` ([#3643](https://github.com/thelounge/thelounge/pull/3643))
+  - `eslint-plugin-vue` ([#3640](https://github.com/thelounge/thelounge/pull/3640), [#3763](https://github.com/thelounge/thelounge/pull/3763))
+  - `nyc` ([#3644](https://github.com/thelounge/thelounge/pull/3644))
+  - `css-loader` ([#3665](https://github.com/thelounge/thelounge/pull/3665), [#3685](https://github.com/thelounge/thelounge/pull/3685))
+  - `husky` ([#3688](https://github.com/thelounge/thelounge/pull/3688), [#3706](https://github.com/thelounge/thelounge/pull/3706), [#3724](https://github.com/thelounge/thelounge/pull/3724), [#3757](https://github.com/thelounge/thelounge/pull/3757))
+  - `@babel/core` ([#3693](https://github.com/thelounge/thelounge/pull/3693), [#3705](https://github.com/thelounge/thelounge/pull/3705), [#3737](https://github.com/thelounge/thelounge/pull/3737))
+  - `@babel/preset-env` ([#3693](https://github.com/thelounge/thelounge/pull/3693), [#3705](https://github.com/thelounge/thelounge/pull/3705), [#3737](https://github.com/thelounge/thelounge/pull/3737))
+  - `dayjs` ([#3686](https://github.com/thelounge/thelounge/pull/3686), [#3749](https://github.com/thelounge/thelounge/pull/3749))
+  - `@vue/server-test-utils` ([#3708](https://github.com/thelounge/thelounge/pull/3708))
+  - `@vue/test-utils` ([#3708](https://github.com/thelounge/thelounge/pull/3708))
+  - `vue-router` ([#3708](https://github.com/thelounge/thelounge/pull/3708))
+  - `mousetrap` ([#3725](https://github.com/thelounge/thelounge/pull/3725))
+  - `@fortawesome/fontawesome-free` ([#3748](https://github.com/thelounge/thelounge/pull/3748))
+  - `stylelint-config-standard` ([#3751](https://github.com/thelounge/thelounge/pull/3751))
+  - `vue-loader` ([#3759](https://github.com/thelounge/thelounge/pull/3759))
+  - `webpack-cli` ([#3761](https://github.com/thelounge/thelounge/pull/3761))
+
 ## v4.1.0-rc.1 - 2020-02-27 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v4.0.0...v4.1.0-rc.1)
