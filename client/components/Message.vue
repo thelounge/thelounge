@@ -32,6 +32,7 @@
 					:key="preview.link"
 					:keep-scroll-position="keepScrollPosition"
 					:link="preview"
+					:channel="channel"
 				/>
 			</span>
 		</template>
@@ -70,6 +71,7 @@
 					:key="preview.link"
 					:keep-scroll-position="keepScrollPosition"
 					:link="preview"
+					:channel="channel"
 				/>
 			</span>
 		</template>

@@ -9,6 +9,20 @@
 	>
 		<template v-if="link !== null">
 			<button class="close-btn" aria-label="Close"></button>
+
+			<button
+				v-if="previousImage"
+				class="previous-image-btn"
+				aria-label="Previous image"
+				@click.stop="previous"
+			></button>
+			<button
+				v-if="nextImage"
+				class="next-image-btn"
+				aria-label="Next image"
+				@click.stop="next"
+			></button>
+
 			<a class="open-btn" :href="link.link" target="_blank" rel="noopener"></a>
 
 			<img
@@ -25,11 +39,17 @@
 </template>
 
 <script>
+import Mousetrap from "mousetrap";
+
 export default {
 	name: "ImageViewer",
 	data() {
 		return {
 			link: null,
+			previousImage: null,
+			nextImage: null,
+			channel: null,
+
 			position: {
 				x: 0,
 				y: 0,
@@ -62,14 +82,20 @@ export default {
 				return;
 			}
 
+			this.setPrevNextImages();
+
 			this.$root.$on("resize", this.correctPosition);
 		},
 	},
 	mounted() {
 		this.$root.$on("escapekey", this.closeViewer);
+		Mousetrap.bind("left", this.previous);
+		Mousetrap.bind("right", this.next);
 	},
 	destroyed() {
 		this.$root.$off("escapekey", this.closeViewer);
+		Mousetrap.unbind("left", this.previous);
+		Mousetrap.unbind("right", this.next);
 	},
 	methods: {
 		closeViewer() {
@@ -78,7 +104,35 @@ export default {
 			}
 
 			this.$root.$off("resize", this.correctPosition);
+			this.channel = null;
+			this.previousImage = null;
+			this.nextImage = null;
 			this.link = null;
+		},
+		setPrevNextImages() {
+			if (!this.channel) {
+				return null;
+			}
+
+			const links = this.channel.messages
+				.map((msg) => msg.previews)
+				.flat()
+				.filter((preview) => preview.thumb);
+
+			const currentIndex = links.indexOf(this.link);
+
+			this.previousImage = links[currentIndex - 1] || null;
+			this.nextImage = links[currentIndex + 1] || null;
+		},
+		previous() {
+			if (this.previousImage) {
+				this.link = this.previousImage;
+			}
+		},
+		next() {
+			if (this.nextImage) {
+				this.link = this.nextImage;
+			}
 		},
 		onImageLoad() {
 			this.prepareImage();
