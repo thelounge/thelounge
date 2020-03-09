@@ -501,6 +501,32 @@ Client.prototype.more = function(data) {
 	};
 };
 
+Client.prototype.clearHistory = function(data) {
+	const client = this;
+	const target = client.find(data.target);
+
+	if (!target) {
+		return;
+	}
+
+	target.chan.messages = [];
+	target.chan.unread = 0;
+	target.chan.highlight = 0;
+	target.chan.firstUnread = 0;
+
+	client.emit("history:clear", {
+		target: target.chan.id,
+	});
+
+	if (!target.chan.isLoggable()) {
+		return;
+	}
+
+	for (const messageStorage of this.messageStorage) {
+		messageStorage.deleteChannel(target.network, target.chan);
+	}
+};
+
 Client.prototype.open = function(socketId, target) {
 	// Due to how socket.io works internally, normal events may arrive later than
 	// the disconnect event, and because we can't control this timing precisely,

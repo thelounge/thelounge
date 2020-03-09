@@ -100,11 +100,35 @@ class TextFileMessageStorage {
 
 		line += "\n";
 
-		fs.appendFile(path.join(logPath, `${cleanFilename(channel.name)}.log`), line, (e) => {
-			if (e) {
-				log.error("Failed to write user log", e);
+		fs.appendFile(
+			path.join(logPath, TextFileMessageStorage.getChannelFileName(channel)),
+			line,
+			(e) => {
+				if (e) {
+					log.error("Failed to write user log", e);
+				}
 			}
-		});
+		);
+	}
+
+	deleteChannel() {
+		/* TODO: Truncating text logs is disabled, until we figure out some UI for it
+		if (!this.isEnabled) {
+			return;
+		}
+
+		const logPath = path.join(
+			Helper.getUserLogsPath(),
+			this.client.name,
+			TextFileMessageStorage.getNetworkFolderName(network),
+			TextFileMessageStorage.getChannelFileName(channel)
+		);
+
+		fs.truncate(logPath, 0, (e) => {
+			if (e) {
+				log.error("Failed to truncate user log", e);
+			}
+		});*/
 	}
 
 	getMessages() {
@@ -124,6 +148,10 @@ class TextFileMessageStorage {
 		const networkName = cleanFilename(network.name.substring(0, 23).replace(/ /g, "-"));
 
 		return `${networkName}-${network.uuid.substring(networkName.length + 1)}`;
+	}
+
+	static getChannelFileName(channel) {
+		return `${cleanFilename(channel.name)}.log`;
 	}
 }
 

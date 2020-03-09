@@ -349,6 +349,7 @@ p {
 .context-menu-action-voice::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
 .context-menu-network::before { content: "\f233"; /* https://fontawesome.com/icons/server?style=solid */ }
 .context-menu-edit::before { content: "\f303"; /* https://fontawesome.com/icons/pencil-alt?style=solid */ }
+.context-menu-clear-history::before { content: "\f1f8"; /* https://fontawesome.com/icons/trash?style=solid */ }
 
 .channel-list-item .not-secure-icon::before {
 	content: "\f071"; /* https://fontawesome.com/icons/exclamation-triangle?style=solid */
@@ -2709,6 +2710,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 /* Image viewer and drag-and-drop overlay */
 
+#confirm-dialog-overlay,
 #upload-overlay,
 #image-viewer,
 #image-viewer .open-btn,
@@ -2720,6 +2722,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	justify-content: center;
 }
 
+#confirm-dialog-overlay,
 #upload-overlay,
 #image-viewer {
 	position: fixed;
@@ -2735,12 +2738,14 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	user-select: none;
 }
 
+#confirm-dialog-overlay.opened,
 #upload-overlay.is-dragover,
 #image-viewer.opened {
 	visibility: visible;
 	opacity: 1;
 }
 
+#confirm-dialog-overlay,
 #image-viewer {
 	background: rgba(0, 0, 0, 0.9);
 }
