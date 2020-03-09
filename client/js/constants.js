@@ -24,6 +24,8 @@ const condensedTypes = new Set(["chghost", "join", "part", "quit", "nick", "kick
 const timeFormats = {
 	msgDefault: "HH:mm",
 	msgWithSeconds: "HH:mm:ss",
+	msg12h: "hh:mm A",
+	msg12hWithSeconds: "hh:mm:ss A",
 };
 
 // This file is required by server, can't use es6 export

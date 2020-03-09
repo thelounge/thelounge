@@ -100,12 +100,19 @@ export default {
 		isPreviousSource: Boolean,
 	},
 	computed: {
-		messageTime() {
-			const format = this.$store.state.settings.showSeconds
-				? constants.timeFormats.msgWithSeconds
-				: constants.timeFormats.msgDefault;
+		timeFormat() {
+			let format;
 
-			return dayjs(this.message.time).format(format);
+			if (this.$store.state.settings.use12hClock) {
+				format = this.$store.state.settings.showSeconds ? "msg12hWithSeconds" : "msg12h";
+			} else {
+				format = this.$store.state.settings.showSeconds ? "msgWithSeconds" : "msgDefault";
+			}
+
+			return constants.timeFormats[format];
+		},
+		messageTime() {
+			return dayjs(this.message.time).format(this.timeFormat);
 		},
 		messageTimeLocale() {
 			return localetime(this.message.time);
