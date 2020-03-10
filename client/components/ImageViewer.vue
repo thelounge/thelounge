@@ -76,26 +76,25 @@ export default {
 		},
 	},
 	watch: {
-		link() {
+		link(newLink, oldLink) {
 			// TODO: history.pushState
-			if (this.link === null) {
+			if (newLink === null) {
+				this.$root.$off("escapekey", this.closeViewer);
+				this.$root.$off("resize", this.correctPosition);
+				Mousetrap.unbind("left", this.previous);
+				Mousetrap.unbind("right", this.next);
 				return;
 			}
 
 			this.setPrevNextImages();
 
-			this.$root.$on("resize", this.correctPosition);
+			if (!oldLink) {
+				this.$root.$on("escapekey", this.closeViewer);
+				this.$root.$on("resize", this.correctPosition);
+				Mousetrap.bind("left", this.previous);
+				Mousetrap.bind("right", this.next);
+			}
 		},
-	},
-	mounted() {
-		this.$root.$on("escapekey", this.closeViewer);
-		Mousetrap.bind("left", this.previous);
-		Mousetrap.bind("right", this.next);
-	},
-	destroyed() {
-		this.$root.$off("escapekey", this.closeViewer);
-		Mousetrap.unbind("left", this.previous);
-		Mousetrap.unbind("right", this.next);
 	},
 	methods: {
 		closeViewer() {
@@ -103,7 +102,6 @@ export default {
 				return;
 			}
 
-			this.$root.$off("resize", this.correctPosition);
 			this.channel = null;
 			this.previousImage = null;
 			this.nextImage = null;
