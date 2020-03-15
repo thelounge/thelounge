@@ -9,14 +9,16 @@ exports.commands = ["close", "leave", "part"];
 exports.allowDisconnected = true;
 
 exports.input = function(network, chan, cmd, args) {
-	let target = args.length === 0 ? chan : _.find(network.channels, {name: args[0]});
-	let partMessage = args.length <= 1 ? Helper.config.leaveMessage : args.slice(1).join(" ");
+	let target = chan;
 
-	if (typeof target === "undefined") {
-		// In this case, we assume that the word args[0] is part of the leave
-		// message and we part the current chan.
-		target = chan;
-		partMessage = args.join(" ");
+	if (args.length > 0) {
+		const newTarget = network.getChannel(args[0]);
+
+		if (typeof newTarget !== "undefined") {
+			// If first argument is a channel user is in, part that channel
+			target = newTarget;
+			args.shift();
+		}
 	}
 
 	if (target.type === Chan.Type.LOBBY) {
@@ -46,6 +48,7 @@ exports.input = function(network, chan, cmd, args) {
 		});
 		this.save();
 	} else {
+		const partMessage = args.join(" ") || Helper.config.leaveMessage;
 		network.irc.part(target.name, partMessage);
 	}
 
