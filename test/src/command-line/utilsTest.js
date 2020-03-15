@@ -19,10 +19,9 @@ describe("Utils", function() {
 
 			Utils.extraHelp();
 
-			// Starts with 2 empty lines
+			// Starts with 1 empty line
 			expect(stdout[0]).to.equal("\n");
-			expect(stdout[1]).to.equal("\n");
-			expect(stdout[2]).to.not.equal("\n");
+			expect(stdout[1]).to.not.equal("\n");
 
 			// Ends with 1 empty line
 			expect(stdout[stdout.length - 2]).to.not.equal("\n");

@@ -10,7 +10,7 @@ const Utils = require("../utils");
 
 program
 	.command("edit <name>")
-	.description(`Edit user file located at ${colors.green(Helper.getUserConfigPath("<name>"))}.`)
+	.description(`Edit user file located at ${colors.green(Helper.getUserConfigPath("<name>"))}`)
 	.on("--help", Utils.extraHelp)
 	.action(function(name) {
 		if (!fs.existsSync(Helper.getUsersPath())) {

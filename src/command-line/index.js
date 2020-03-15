@@ -16,12 +16,6 @@ program
 		"override entries of the configuration file, must be specified for each entry that needs to be overriden",
 		Utils.parseConfigOptions
 	)
-	.on("command:*", () => {
-		log.error(
-			`Unknown command. See ${colors.bold("--help")} for a list of available commands.`
-		);
-		process.exit(1);
-	})
 	.on("--help", Utils.extraHelp);
 
 // Parse options from `argv` returning `argv` void of these options.
@@ -58,13 +52,9 @@ require("./outdated");
 // a version of `argv` that does not contain options already parsed by
 // `parseOptions` above.
 // This is done by giving it the updated `argv` that `parseOptions` returned,
-// except it returns an object with `args`/`unknown`, so we need to concat them.
+// except it returns an object with `operands`/`unknown`, so we need to concat them.
 // See https://github.com/tj/commander.js/blob/fefda77f463292/index.js#L686-L763
-program.parse(argvWithoutOptions.args.concat(argvWithoutOptions.unknown));
-
-if (program.rawArgs.length < 3) {
-	program.help();
-}
+program.parse(argvWithoutOptions.operands.concat(argvWithoutOptions.unknown));
 
 function createPackagesFolder() {
 	const packagesPath = Helper.getPackagesPath();

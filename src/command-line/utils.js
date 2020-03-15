@@ -13,12 +13,10 @@ class Utils {
 	static extraHelp() {
 		[
 			"",
-			"",
-			"  Environment variable:",
-			"",
-			`    THELOUNGE_HOME   Path for all configuration files and folders. Defaults to ${colors.green(
+			"Environment variable:",
+			`  THELOUNGE_HOME            Path for all configuration files and folders. Defaults to ${colors.green(
 				Helper.expandHome(Utils.defaultHome())
-			)}.`,
+			)}`,
 			"",
 		].forEach((e) => log.raw(e));
 	}
