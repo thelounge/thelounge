@@ -130,6 +130,7 @@
 </template>
 
 <script>
+import eventbus from "../js/eventbus";
 import friendlysize from "../js/helpers/friendlysize";
 
 export default {
@@ -167,12 +168,12 @@ export default {
 		this.updateShownState();
 	},
 	mounted() {
-		this.$root.$on("resize", this.handleResize);
+		eventbus.on("resize", this.handleResize);
 
 		this.onPreviewUpdate();
 	},
 	beforeDestroy() {
-		this.$root.$off("resize", this.handleResize);
+		eventbus.off("resize", this.handleResize);
 	},
 	destroyed() {
 		// Let this preview go through load/canplay events again,

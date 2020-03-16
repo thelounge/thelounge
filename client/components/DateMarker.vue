@@ -9,6 +9,7 @@
 <script>
 import dayjs from "dayjs";
 import calendar from "dayjs/plugin/calendar";
+import eventbus from "../js/eventbus";
 
 dayjs.extend(calendar);
 
@@ -24,11 +25,11 @@ export default {
 	},
 	mounted() {
 		if (this.hoursPassed() < 48) {
-			this.$root.$on("daychange", this.dayChange);
+			eventbus.on("daychange", this.dayChange);
 		}
 	},
 	beforeDestroy() {
-		this.$root.$off("daychange", this.dayChange);
+		eventbus.off("daychange", this.dayChange);
 	},
 	methods: {
 		hoursPassed() {
@@ -38,7 +39,7 @@ export default {
 			this.$forceUpdate();
 
 			if (this.hoursPassed() >= 48) {
-				this.$root.$off("daychange", this.dayChange);
+				eventbus.off("daychange", this.dayChange);
 			}
 		},
 		friendlyDate() {

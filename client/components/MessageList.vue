@@ -56,6 +56,7 @@
 
 <script>
 const constants = require("../js/constants");
+import eventbus from "../js/eventbus";
 import clipboard from "../js/clipboard";
 import socket from "../js/socket";
 import Message from "./Message.vue";
@@ -173,7 +174,7 @@ export default {
 	mounted() {
 		this.$refs.chat.addEventListener("scroll", this.handleScroll, {passive: true});
 
-		this.$root.$on("resize", this.handleResize);
+		eventbus.on("resize", this.handleResize);
 
 		this.$nextTick(() => {
 			if (this.historyObserver) {
@@ -185,7 +186,7 @@ export default {
 		this.unreadMarkerShown = false;
 	},
 	beforeDestroy() {
-		this.$root.$off("resize", this.handleResize);
+		eventbus.off("resize", this.handleResize);
 		this.$refs.chat.removeEventListener("scroll", this.handleScroll);
 	},
 	destroyed() {

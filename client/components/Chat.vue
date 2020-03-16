@@ -102,6 +102,7 @@
 
 <script>
 import socket from "../js/socket";
+import eventbus from "../js/eventbus";
 import ParsedMessage from "./ParsedMessage.vue";
 import MessageList from "./MessageList.vue";
 import ChatInput from "./ChatInput.vue";
@@ -197,14 +198,14 @@ export default {
 			}
 		},
 		openContextMenu(event) {
-			this.$root.$emit("contextmenu:channel", {
+			eventbus.emit("contextmenu:channel", {
 				event: event,
 				channel: this.channel,
 				network: this.network,
 			});
 		},
 		openMentions() {
-			this.$root.$emit("mentions:toggle", {
+			eventbus.emit("mentions:toggle", {
 				event: event,
 			});
 		},

@@ -1,6 +1,7 @@
 "use strict";
 
 import socket from "../socket";
+import eventbus from "../eventbus";
 
 export function generateChannelContextMenu($root, channel, network) {
 	const typeMap = {
@@ -135,7 +136,7 @@ export function generateChannelContextMenu($root, channel, network) {
 			type: "item",
 			class: "clear-history",
 			action() {
-				$root.$emit(
+				eventbus.emit(
 					"confirm-dialog",
 					{
 						title: "Clear history",

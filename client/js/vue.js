@@ -9,6 +9,7 @@ import App from "../components/App.vue";
 import storage from "./localStorage";
 import {router, navigate} from "./router";
 import socket from "./socket";
+import eventbus from "./eventbus";
 
 import "./socket-events";
 import "./webpush";
@@ -18,7 +19,7 @@ const favicon = document.getElementById("favicon");
 const faviconNormal = favicon.getAttribute("href");
 const faviconAlerted = favicon.dataset.other;
 
-const vueApp = new Vue({
+new Vue({
 	el: "#viewport",
 	router,
 	mounted() {
@@ -30,7 +31,7 @@ const vueApp = new Vue({
 		},
 		closeChannel(channel) {
 			if (channel.type === "lobby") {
-				this.$root.$emit(
+				eventbus.emit(
 					"confirm-dialog",
 					{
 						title: "Remove network",
@@ -75,7 +76,7 @@ store.watch(
 	(sidebarOpen) => {
 		if (window.innerWidth > constants.mobileViewportPixels) {
 			storage.set("thelounge.state.sidebar", sidebarOpen);
-			vueApp.$emit("resize");
+			eventbus.emit("resize");
 		}
 	}
 );
@@ -84,7 +85,7 @@ store.watch(
 	(state) => state.userlistOpen,
 	(userlistOpen) => {
 		storage.set("thelounge.state.userlist", userlistOpen);
-		vueApp.$emit("resize");
+		eventbus.emit("resize");
 	}
 );
 

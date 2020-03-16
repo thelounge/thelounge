@@ -40,6 +40,7 @@
 
 <script>
 import Mousetrap from "mousetrap";
+import eventbus from "../js/eventbus";
 
 export default {
 	name: "ImageViewer",
@@ -79,8 +80,8 @@ export default {
 		link(newLink, oldLink) {
 			// TODO: history.pushState
 			if (newLink === null) {
-				this.$root.$off("escapekey", this.closeViewer);
-				this.$root.$off("resize", this.correctPosition);
+				eventbus.off("escapekey", this.closeViewer);
+				eventbus.off("resize", this.correctPosition);
 				Mousetrap.unbind("left", this.previous);
 				Mousetrap.unbind("right", this.next);
 				return;
@@ -89,8 +90,8 @@ export default {
 			this.setPrevNextImages();
 
 			if (!oldLink) {
-				this.$root.$on("escapekey", this.closeViewer);
-				this.$root.$on("resize", this.correctPosition);
+				eventbus.on("escapekey", this.closeViewer);
+				eventbus.on("resize", this.correctPosition);
 				Mousetrap.bind("left", this.previous);
 				Mousetrap.bind("right", this.next);
 			}
