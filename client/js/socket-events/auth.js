@@ -80,7 +80,7 @@ function showSignIn() {
 		window.g_TheLoungeRemoveLoading();
 	}
 
-	if (router.currentRoute.name !== "SignIn") {
+	if (router.currentRoute.value.name !== "SignIn") {
 		navigate("SignIn");
 	}
 }

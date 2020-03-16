@@ -13,7 +13,9 @@
 
 <script>
 const constants = require("../js/constants");
+import socket from "../js/socket";
 import eventbus from "../js/eventbus";
+import {navigate} from "../js/router";
 import Mousetrap from "mousetrap";
 import throttle from "lodash/throttle";
 import storage from "../js/localStorage";
@@ -67,6 +69,8 @@ export default {
 		};
 
 		this.dayChangeTimeout = setTimeout(emitDayChange, this.msUntilNextDay());
+
+		socket.open();
 	},
 	beforeDestroy() {
 		Mousetrap.unbind("esc", this.escapeKey);
@@ -123,6 +127,41 @@ export default {
 			}
 
 			this.$store.commit("userlistOpen", isUserlistOpen === "true");
+		},
+		switchToChannel(channel) {
+			navigate("RoutedChat", {id: channel.id});
+		},
+		closeChannel(channel) {
+			if (channel.type === "lobby") {
+				eventbus.emit(
+					"confirm-dialog",
+					{
+						title: "Remove network",
+						text: `Are you sure you want to quit and remove ${channel.name}? This cannot be undone.`,
+						button: "Remove network",
+					},
+					(result) => {
+						if (!result) {
+							return;
+						}
+
+						channel.closed = true;
+						socket.emit("input", {
+							target: Number(channel.id),
+							text: "/quit",
+						});
+					}
+				);
+
+				return;
+			}
+
+			channel.closed = true;
+
+			socket.emit("input", {
+				target: Number(channel.id),
+				text: "/close",
+			});
 		},
 	},
 };

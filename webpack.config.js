@@ -87,6 +87,10 @@ const config = {
 		json3: "JSON", // socket.io uses json3.js, but we do not target any browsers that need it
 	},
 	plugins: [
+		new webpack.DefinePlugin({
+			__VUE_OPTIONS_API__: true,
+			__VUE_PROD_DEVTOOLS__: false,
+		}),
 		new VueLoaderPlugin(),
 		new MiniCssExtractPlugin({
 			filename: "css/style.css",

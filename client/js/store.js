@@ -1,11 +1,8 @@
-import Vue from "vue";
-import Vuex from "vuex";
+import {createStore} from "vuex";
 import {createSettingsStore} from "./store-settings";
 import storage from "./localStorage";
 
 const appName = document.title;
-
-Vue.use(Vuex);
 
 function detectDesktopNotificationState() {
 	if (!("Notification" in window)) {
@@ -17,7 +14,7 @@ function detectDesktopNotificationState() {
 	return "blocked";
 }
 
-const store = new Vuex.Store({
+const store = createStore({
 	state: {
 		appLoaded: false,
 		activeChannel: null,

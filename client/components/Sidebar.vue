@@ -31,27 +31,30 @@
 			<span
 				class="tooltipped tooltipped-n tooltipped-no-touch"
 				aria-label="Connect to network"
-				><router-link
-					to="/connect"
-					tag="button"
-					active-class="active"
-					:class="['icon', 'connect']"
-					aria-label="Connect to network"
-					role="tab"
-					aria-controls="connect"
-					:aria-selected="$route.name === 'Connect'"
-			/></span>
-			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Settings"
-				><router-link
-					to="/settings"
-					tag="button"
-					active-class="active"
-					:class="['icon', 'settings']"
-					aria-label="Settings"
-					role="tab"
-					aria-controls="settings"
-					:aria-selected="$route.name === 'Settings'"
-			/></span>
+			>
+				<router-link v-slot="{navigate, isActive}" to="/connect" custom>
+					<button
+						role="tab"
+						aria-label="Connect to network"
+						aria-controls="connect"
+						:class="['icon', 'connect', {active: isActive}]"
+						:aria-selected="isActive"
+						@click="navigate"
+					></button>
+				</router-link>
+			</span>
+			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Settings">
+				<router-link v-slot="{navigate, isActive}" to="/settings" custom>
+					<button
+						role="tab"
+						aria-label="Settings"
+						aria-controls="settings"
+						:class="['icon', 'settings', {active: isActive}]"
+						:aria-selected="isActive"
+						@click="navigate"
+					></button>
+				</router-link>
+			</span>
 			<span
 				class="tooltipped tooltipped-n tooltipped-no-touch"
 				:aria-label="
@@ -59,20 +62,23 @@
 						? 'Help\n(update available)'
 						: 'Help'
 				"
-				><router-link
-					to="/help"
-					tag="button"
-					active-class="active"
-					:class="[
-						'icon',
-						'help',
-						{notified: $store.state.serverConfiguration.isUpdateAvailable},
-					]"
-					aria-label="Help"
-					role="tab"
-					aria-controls="help"
-					:aria-selected="$route.name === 'Help'"
-			/></span>
+			>
+				<router-link v-slot="{navigate, isActive}" to="/help" custom>
+					<button
+						role="tab"
+						aria-label="Help"
+						aria-controls="help"
+						:class="[
+							'icon',
+							'help',
+							{active: isActive},
+							{notified: $store.state.serverConfiguration.isUpdateAvailable},
+						]"
+						:aria-selected="isActive"
+						@click="navigate"
+					></button>
+				</router-link>
+			</span>
 		</footer>
 	</aside>
 </template>
