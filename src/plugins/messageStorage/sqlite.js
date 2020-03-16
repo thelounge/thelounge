@@ -2,7 +2,7 @@
 
 const log = require("../../log");
 const path = require("path");
-const fsextra = require("fs-extra");
+const fs = require("fs");
 const Helper = require("../../helper");
 const Msg = require("../../models/msg");
 
@@ -39,7 +39,7 @@ class MessageStorage {
 		const sqlitePath = path.join(logsPath, `${this.client.name}.sqlite3`);
 
 		try {
-			fsextra.ensureDirSync(logsPath);
+			fs.mkdirSync(logsPath, {recursive: true});
 		} catch (e) {
 			log.error("Unable to create logs directory", e);
 
