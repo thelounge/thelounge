@@ -6,6 +6,7 @@ const crypto = require("crypto");
 const expect = require("chai").expect;
 const util = require("../util");
 const Helper = require("../../src/helper");
+const storage = require("../../src/plugins/storage");
 const link = require("../../src/plugins/irc-events/link.js");
 
 describe("Image storage", function () {
@@ -49,6 +50,13 @@ describe("Image storage", function () {
 
 	after(function (done) {
 		this.connection.close(done);
+	});
+
+	after(function (done) {
+		// After storage tests run, remove the remaining empty
+		// storage folder so we return to the clean state
+		const dir = Helper.getStoragePath();
+		fs.rmdir(dir, done);
 	});
 
 	beforeEach(function () {
@@ -124,5 +132,14 @@ describe("Image storage", function () {
 			expect(data.preview.thumb).to.equal(correctSvgURL);
 			done();
 		});
+	});
+
+	it("should clear storage folder", function () {
+		const dir = Helper.getStoragePath();
+
+		expect(fs.readdirSync(dir)).to.not.be.empty;
+		storage.emptyDir();
+		expect(fs.readdirSync(dir)).to.be.empty;
+		expect(fs.existsSync(dir)).to.be.true;
 	});
 });
