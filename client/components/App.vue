@@ -15,6 +15,7 @@ const constants = require("../js/constants");
 import Mousetrap from "mousetrap";
 import throttle from "lodash/throttle";
 import storage from "../js/localStorage";
+import isIgnoredKeybind from "../js/helpers/isIgnoredKeybind";
 
 import Sidebar from "./Sidebar.vue";
 import ImageViewer from "./ImageViewer.vue";
@@ -76,9 +77,7 @@ export default {
 			this.$root.$emit("escapekey");
 		},
 		toggleSidebar(e) {
-			// Do not handle this keybind in the chat input because
-			// it can be used to type letters with umlauts
-			if (e.target.tagName === "TEXTAREA") {
+			if (isIgnoredKeybind(e)) {
 				return true;
 			}
 
@@ -87,9 +86,7 @@ export default {
 			return false;
 		},
 		toggleUserList(e) {
-			// Do not handle this keybind in the chat input because
-			// it can be used to type letters with umlauts
-			if (e.target.tagName === "TEXTAREA") {
+			if (isIgnoredKeybind(e)) {
 				return true;
 			}
 
