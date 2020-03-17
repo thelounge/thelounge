@@ -431,18 +431,24 @@
 				<h2>Sessions</h2>
 
 				<h3>Current session</h3>
-				<Session
-					v-if="$store.getters.currentSession"
-					:session="$store.getters.currentSession"
-				/>
+				<Session v-if="currentSession" :session="currentSession" />
+
+				<template v-if="activeSessions.length > 0">
+					<h3>Active sessions</h3>
+					<Session
+						v-for="session in activeSessions"
+						:key="session.token"
+						:session="session"
+					/>
+				</template>
 
 				<h3>Other sessions</h3>
 				<p v-if="$store.state.sessions.length === 0">Loading…</p>
-				<p v-else-if="$store.getters.otherSessions.length === 0">
+				<p v-else-if="otherSessions.length === 0">
 					<em>You are not currently logged in to any other device.</em>
 				</p>
 				<Session
-					v-for="session in $store.getters.otherSessions"
+					v-for="session in otherSessions"
 					v-else
 					:key="session.token"
 					:session="session"
@@ -491,6 +497,15 @@ export default {
 		hasInstallPromptEvent() {
 			// TODO: This doesn't hide the button after clicking
 			return installPromptEvent !== null;
+		},
+		currentSession() {
+			return this.$store.state.sessions.find((item) => item.current);
+		},
+		activeSessions() {
+			return this.$store.state.sessions.filter((item) => !item.current && item.active > 0);
+		},
+		otherSessions() {
+			return this.$store.state.sessions.filter((item) => !item.current && !item.active);
 		},
 	},
 	mounted() {

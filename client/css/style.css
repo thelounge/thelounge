@@ -399,21 +399,6 @@ p {
 #help .documentation-link::before { content: "\f19d"; /* http://fontawesome.io/icon/graduation-cap/ */ }
 #help .report-issue-link::before { content: "\f188"; /* http://fontawesome.io/icon/bug/ */ }
 
-.session-list .session-item {
-	display: flex;
-	font-size: 14px;
-}
-
-.session-list .session-item-info {
-	display: flex;
-	flex-direction: column;
-	flex-grow: 1;
-}
-
-.session-list .session-item-btn {
-	flex-shrink: 0;
-}
-
 #chat .msg[data-type="invite"] .from::before {
 	content: "\f0e0"; /* https://fontawesome.com/icons/envelope?style=solid */
 	color: #2ecc40;

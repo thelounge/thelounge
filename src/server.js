@@ -563,7 +563,11 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 	const sendSessionList = () => {
 		const sessions = _.map(client.config.sessions, (session, sessionToken) => ({
 			current: sessionToken === token,
-			active: _.find(client.attachedClients, (u) => u.token === sessionToken) !== undefined,
+			active: _.reduce(
+				client.attachedClients,
+				(count, attachedClient) => count + (attachedClient.token === sessionToken ? 1 : 0),
+				0
+			),
 			lastUse: session.lastUse,
 			ip: session.ip,
 			agent: session.agent,
