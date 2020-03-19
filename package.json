@@ -49,7 +49,7 @@
     "express": "4.17.1",
     "file-type": "14.1.4",
     "filenamify": "4.1.0",
-    "fs-extra": "8.1.0",
+    "fs-extra": "9.0.0",
     "got": "10.6.0",
     "irc-framework": "4.7.0",
     "is-utf8": "0.2.1",
