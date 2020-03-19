@@ -185,7 +185,7 @@ document.addEventListener("keydown", (e) => {
 		return;
 	}
 
-	const input = document.getElementById("input");
+	const input = document.getElementById("wysiwyg-input");
 
 	if (!input) {
 		return;

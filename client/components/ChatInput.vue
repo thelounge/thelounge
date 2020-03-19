@@ -1,19 +1,71 @@
 <template>
 	<form id="form" method="post" action="" @submit.prevent="onSubmit">
+		<div class="toolbar-container" :class="{opened: showToolbar}">
+			<div class="toolbar">
+				<button
+					class="format format-b"
+					type="button"
+					aria-label="Bold"
+					@click="applyFormatting('bold')"
+				></button>
+				<button
+					class="format format-u"
+					type="button"
+					aria-label="Underline"
+					@click="applyFormatting('underline')"
+				></button>
+				<button
+					class="format format-i"
+					type="button"
+					aria-label="Italic"
+					@click="applyFormatting('italic')"
+				></button>
+				<button
+					class="format format-s"
+					type="button"
+					aria-label="Strikethrough"
+					@click="applyFormatting('strikeThrough')"
+				></button>
+				<button
+					class="format format-m"
+					type="button"
+					aria-label="Monospace"
+					@click="applyFormatting('monospace')"
+				></button>
+				<button
+					class="format format-c"
+					type="button"
+					aria-label="Color"
+					@click="applyFormatting('color')"
+				></button>
+				<button
+					class="format format-o"
+					type="button"
+					aria-label="Clear formatting"
+					@click="applyFormatting('removeFormat')"
+				></button>
+			</div>
+		</div>
 		<span id="upload-progressbar" />
 		<span id="nick">{{ network.nick }}</span>
-		<textarea
-			id="input"
-			ref="input"
-			dir="auto"
-			class="mousetrap"
-			enterkeyhint="send"
-			:value="channel.pendingMessage"
+		<WysiwygInput
+			ref="wysiwyg"
 			:placeholder="getInputPlaceholder(channel)"
-			:aria-label="getInputPlaceholder(channel)"
-			@input="setPendingMessage"
-			@keypress.enter.exact.prevent="onSubmit"
+			@submit="onSubmit"
 		/>
+		<span
+			id="format-tooltip"
+			class="tooltipped tooltipped-w tooltipped-no-touch"
+			aria-label="Text formatting"
+		>
+			<button
+				id="format"
+				type="button"
+				class="chat-input-button"
+				aria-label="Text formatting"
+				@click="toggleToolbar"
+			/>
+		</span>
 		<span
 			v-if="$store.state.serverConfiguration.fileUpload"
 			id="upload-tooltip"
@@ -26,12 +78,14 @@
 				ref="uploadInput"
 				type="file"
 				aria-labelledby="upload"
+				class="chat-input-button"
 				multiple
 				@change="onUploadInputChange"
 			/>
 			<button
 				id="upload"
 				type="button"
+				class="chat-input-button"
 				aria-label="Upload file"
 				:disabled="!$store.state.isConnected"
 			/>
@@ -44,6 +98,7 @@
 			<button
 				id="submit"
 				type="submit"
+				class="chat-input-button"
 				aria-label="Send message"
 				:disabled="!$store.state.isConnected"
 			/>
@@ -51,86 +106,113 @@
 	</form>
 </template>
 
+<style>
+.toolbar button.format-b::before {
+	content: "\f032"; /* https://fontawesome.io/icon/bold/ */
+}
+.toolbar button.format-u::before {
+	content: "\f0cd"; /* https://fontawesome.io/icon/underline/ */
+}
+.toolbar button.format-i::before {
+	content: "\f033"; /* https://fontawesome.io/icon/italic/ */
+}
+.toolbar button.format-s::before {
+	content: "\f0cc"; /* https://fontawesome.io/icon/strikethrough/ */
+}
+.toolbar button.format-m::before {
+	content: "\f121"; /* https://fontawesome.io/icon/code/ */
+}
+.toolbar button.format-c::before {
+	content: "\f53f"; /* https://fontawesome.com/icons/palette?style=solid */
+}
+.toolbar button.format-o::before {
+	content: "\f87d"; /* https://fontawesome.com/icons/remove-format?style=solid */
+}
+#form #format::before {
+	content: "\f031"; /* https://fontawesome.io/icons/font/ */
+}
+
+#form .toolbar-container {
+	position: absolute;
+	top: -70px;
+	left: 0;
+	right: 0;
+	pointer-events: none;
+	display: flex;
+	justify-content: center;
+}
+
+#form .toolbar-container.opened {
+	display: flex;
+}
+
+#form .toolbar-container .toolbar {
+	display: flex;
+	background: var(--body-bg-color);
+	color: var(--button-color);
+	padding: 0 6px;
+	border-radius: 5px;
+	opacity: 0;
+	transition: opacity 0.2s;
+}
+
+#form .toolbar-container.opened .toolbar {
+	pointer-events: all;
+	opacity: 1;
+}
+
+#form .toolbar-container .toolbar button {
+	padding: 10px 9px;
+}
+</style>
+
 <script>
-import Mousetrap from "mousetrap";
-import {wrapCursor} from "undate";
-import autocompletion from "../js/autocompletion";
-import commands from "../js/commands/index";
+// import autocompletion from "../js/autocompletion"; TODO
+// import commands from "../js/commands/index"; TODO
 import socket from "../js/socket";
 import upload from "../js/upload";
 import eventbus from "../js/eventbus";
-
-const formattingHotkeys = {
-	"mod+k": "\x03",
-	"mod+b": "\x02",
-	"mod+u": "\x1F",
-	"mod+i": "\x1D",
-	"mod+o": "\x0F",
-	"mod+s": "\x1e",
-	"mod+m": "\x11",
-};
-
-// Autocomplete bracket and quote characters like in a modern IDE
-// For example, select `text`, press `[` key, and it becomes `[text]`
-const bracketWraps = {
-	'"': '"',
-	"'": "'",
-	"(": ")",
-	"<": ">",
-	"[": "]",
-	"{": "}",
-	"*": "*",
-	"`": "`",
-	"~": "~",
-	_: "_",
-};
+import WysiwygInput from "./WysiwygInput.vue";
 
 let autocompletionRef = null;
 
 export default {
 	name: "ChatInput",
+	components: {
+		WysiwygInput,
+	},
 	props: {
 		network: Object,
 		channel: Object,
+	},
+	data() {
+		return {
+			showToolbar: false,
+		};
 	},
 	watch: {
 		"channel.id"() {
 			if (autocompletionRef) {
 				autocompletionRef.hide();
 			}
+
+			this.closeToolbar();
 		},
 		"channel.pendingMessage"() {
-			this.setInputSize();
+			this.closeToolbar();
 		},
 	},
 	mounted() {
 		eventbus.on("escapekey", this.blurInput);
 
+		/* TODO
 		if (this.$store.state.settings.autocomplete) {
 			autocompletionRef = autocompletion(this.$refs.input);
 		}
+		*/
 
+		/* TODO
 		const inputTrap = Mousetrap(this.$refs.input);
-
-		inputTrap.bind(Object.keys(formattingHotkeys), function (e, key) {
-			const modifier = formattingHotkeys[key];
-
-			wrapCursor(
-				e.target,
-				modifier,
-				e.target.selectionStart === e.target.selectionEnd ? "" : modifier
-			);
-
-			return false;
-		});
-
-		inputTrap.bind(Object.keys(bracketWraps), function (e, key) {
-			if (e.target.selectionStart !== e.target.selectionEnd) {
-				wrapCursor(e.target, key, bracketWraps[key]);
-
-				return false;
-			}
-		});
 
 		inputTrap.bind(["up", "down"], (e, key) => {
 			if (
@@ -160,6 +242,7 @@ export default {
 
 			return false;
 		});
+		*/
 
 		if (this.$store.state.serverConfiguration.fileUpload) {
 			upload.mounted();
@@ -181,22 +264,6 @@ export default {
 			this.channel.inputHistoryPosition = 0;
 			this.setInputSize();
 		},
-		setInputSize() {
-			this.$nextTick(() => {
-				const style = window.getComputedStyle(this.$refs.input);
-				const lineHeight = parseFloat(style.lineHeight, 10) || 1;
-
-				// Start by resetting height before computing as scrollHeight does not
-				// decrease when deleting characters
-				this.$refs.input.style.height = "";
-
-				// Use scrollHeight to calculate how many lines there are in input, and ceil the value
-				// because some browsers tend to incorrently round the values when using high density
-				// displays or using page zoom feature
-				this.$refs.input.style.height =
-					Math.ceil(this.$refs.input.scrollHeight / lineHeight) * lineHeight + "px";
-			});
-		},
 		getInputPlaceholder(channel) {
 			if (channel.type === "channel" || channel.type === "query") {
 				return `Write to ${channel.name}`;
@@ -204,6 +271,25 @@ export default {
 
 			return "";
 		},
+		onSubmit(e) {
+			e.preventDefault();
+
+			if (!this.$store.state.isConnected) {
+				return false;
+			}
+
+			const target = this.channel.id;
+			// const content = this.$refs.wysiwyg.getHtmlContent(); TODO: use this for input history
+			const lines = this.$refs.wysiwyg.getIrcLines();
+
+			this.$refs.wysiwyg.clear();
+			this.$refs.wysiwyg.focus();
+
+			const message = lines.join("\n");
+			socket.emit("input", {target, text: message});
+		},
+
+		/*
 		onSubmit() {
 			// Triggering click event opens the virtual keyboard on mobile
 			// This can only be called from another interactive event (e.g. button click)
@@ -254,6 +340,7 @@ export default {
 
 			socket.emit("input", {target, text});
 		},
+		*/
 		onUploadInputChange() {
 			const files = Array.from(this.$refs.uploadInput.files);
 			upload.triggerUpload(files);
@@ -263,7 +350,20 @@ export default {
 			this.$refs.uploadInput.click();
 		},
 		blurInput() {
-			this.$refs.input.blur();
+			this.$refs.wysiwyg.blur();
+		},
+		closeToolbar() {
+			this.showToolbar = false;
+		},
+		toggleToolbar() {
+			this.showToolbar = !this.showToolbar;
+			this.$refs.wysiwyg.focus();
+		},
+		applyFormatting(command) {
+			this.$refs.wysiwyg.runCommand(command);
+			this.closeToolbar();
+			this.$refs.wysiwyg.focus();
+			return false;
 		},
 	},
 };
