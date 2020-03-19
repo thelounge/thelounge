@@ -195,6 +195,18 @@
 				</div>
 			</div>
 
+			<div class="help-item">
+				<div class="subject">
+					<span><kbd>Esc</kbd></span>
+				</div>
+				<div class="description">
+					<p>
+						Close current contextual window (context menu, image viewer, topic edit,
+						etc) and remove focus from input.
+					</p>
+				</div>
+			</div>
+
 			<h2>Formatting Shortcuts</h2>
 
 			<div class="help-item">
