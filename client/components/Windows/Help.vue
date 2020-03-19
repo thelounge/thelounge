@@ -210,24 +210,10 @@
 				</div>
 				<div class="description">
 					<p>
-						Mark any text typed after this shortcut to be colored. After hitting this
-						shortcut, enter an integer in the range
-						<code>0—15</code> to select the desired color, or use the autocompletion
-						menu to choose a color name (see below).
-					</p>
-					<p>
-						Background color can be specified by putting a comma and another integer in
-						the range <code>0—15</code> after the foreground color number
-						(autocompletion works too).
-					</p>
-					<p>
-						A color reference can be found
-						<a
-							href="https://modern.ircdocs.horse/formatting.html#colors"
-							target="_blank"
-							rel="noopener"
-							>here</a
-						>.
+						Open a color picker for coloring the currently selected text. You can select
+						a color with the mouse or arrow keys and apply the color by pressing
+						<kbd>Enter</kbd>. You can toggle between foreground and background color
+						with the buttons or by pressing <kbd>T</kbd>.
 					</p>
 				</div>
 			</div>
@@ -239,7 +225,7 @@
 				</div>
 				<div class="description">
 					<p>
-						Mark all text typed after this shortcut as
+						Format selected text as
 						<span class="irc-bold">bold</span>.
 					</p>
 				</div>
@@ -252,7 +238,7 @@
 				</div>
 				<div class="description">
 					<p>
-						Mark all text typed after this shortcut as
+						Format selected text as
 						<span class="irc-underline">underlined</span>.
 					</p>
 				</div>
@@ -265,7 +251,7 @@
 				</div>
 				<div class="description">
 					<p>
-						Mark all text typed after this shortcut as
+						Format selected text as
 						<span class="irc-italic">italics</span>.
 					</p>
 				</div>
@@ -278,7 +264,7 @@
 				</div>
 				<div class="description">
 					<p>
-						Mark all text typed after this shortcut as
+						Format selected text as
 						<span class="irc-strikethrough">struck through</span>.
 					</p>
 				</div>
@@ -291,7 +277,7 @@
 				</div>
 				<div class="description">
 					<p>
-						Mark all text typed after this shortcut as
+						Format selected text as
 						<span class="irc-monospace">monospaced</span>.
 					</p>
 				</div>
@@ -304,8 +290,7 @@
 				</div>
 				<div class="description">
 					<p>
-						Mark all text typed after this shortcut to be reset to its original
-						formatting.
+						Remove all formatting from selected text.
 					</p>
 				</div>
 			</div>

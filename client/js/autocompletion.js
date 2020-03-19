@@ -19,7 +19,8 @@ const emojiStrategy = {
 		// Trim colon from the matched term,
 		// as we are unable to get a clean string from match regex
 		term = term.replace(/:$/, "");
-		callback(fuzzyGrep(term, emojiSearchTerms));
+		const res = fuzzyGrep(term, emojiSearchTerms);
+		callback(res);
 	},
 	template([string, original]) {
 		return `<span class="emoji">${emojiMap[original]}</span> ${string}`;
