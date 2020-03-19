@@ -10,10 +10,9 @@
 					Edit {{ defaults.name }}
 				</template>
 				<template v-else>
-					<template v-if="config.public">The Lounge - </template>
 					Connect
-					<template v-if="!config.displayNetwork">
-						<template v-if="config.lockNetwork"> to {{ defaults.name }} </template>
+					<template v-if="!config.displayNetwork && config.lockNetwork">
+						to {{ defaults.name }}
 					</template>
 				</template>
 			</h1>
