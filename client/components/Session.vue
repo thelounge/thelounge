@@ -7,14 +7,12 @@
 				session.ip
 			}}</a>
 
-			<template v-if="!session.current">
-				<p v-if="session.active">
-					<em>Currently active</em>
-				</p>
-				<p v-else>
-					Last used on <time>{{ lastUse }}</time>
-				</p>
-			</template>
+			<p v-if="session.active > 1" class="session-usage">
+				Active in {{ session.active }} browsers
+			</p>
+			<p v-else-if="!session.current && !session.active" class="session-usage">
+				Last used on <time>{{ lastUse }}</time>
+			</p>
 		</div>
 		<div class="session-item-btn">
 			<button class="btn" @click.prevent="signOut">
@@ -24,6 +22,28 @@
 		</div>
 	</div>
 </template>
+
+<style>
+.session-list .session-item {
+	display: flex;
+	font-size: 14px;
+}
+
+.session-list .session-item-info {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+.session-list .session-item-btn {
+	flex-shrink: 0;
+}
+
+.session-list .session-usage {
+	font-style: italic;
+	color: var(--body-color-muted);
+}
+</style>
 
 <script>
 import localetime from "../js/helpers/localetime";
