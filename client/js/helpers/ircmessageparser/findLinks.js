@@ -18,9 +18,7 @@ LinkifyIt.prototype.normalize = function normalize(match) {
 	}
 };
 
-const linkify = LinkifyIt()
-	.tlds(require("tlds"))
-	.tlds("onion", true);
+const linkify = LinkifyIt().tlds(require("tlds")).tlds("onion", true);
 
 // Known schemes to detect in text
 const commonSchemes = [

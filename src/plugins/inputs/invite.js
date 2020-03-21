@@ -5,7 +5,7 @@ const Msg = require("../../models/msg");
 
 exports.commands = ["invite", "invitelist"];
 
-exports.input = function({irc}, chan, cmd, args) {
+exports.input = function ({irc}, chan, cmd, args) {
 	if (cmd === "invitelist") {
 		irc.inviteList(chan.name);
 		return;

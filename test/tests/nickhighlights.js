@@ -6,8 +6,8 @@ const Network = require("../../src/models/network");
 
 const network = new Network({name: "networkName"});
 
-describe("Nickname highlights", function() {
-	it("should NOT highlight nickname", function() {
+describe("Nickname highlights", function () {
+	it("should NOT highlight nickname", function () {
 		network.setNick("lounge-bot");
 
 		expect("").to.not.match(network.highlightRegex);
@@ -27,7 +27,7 @@ describe("Nickname highlights", function() {
 		expect("lounge-botW").to.not.match(network.highlightRegex);
 	});
 
-	it("should highlight nickname", function() {
+	it("should highlight nickname", function () {
 		network.setNick("lounge-bot");
 
 		expect("lounge-bot").to.match(network.highlightRegex);
@@ -49,7 +49,7 @@ describe("Nickname highlights", function() {
 		expect("LOUNGE-bot|sleep, hey").to.match(network.highlightRegex);
 	});
 
-	it("changing name should update regex", function() {
+	it("changing name should update regex", function () {
 		network.setNick("lounge-bot");
 
 		expect("lounge-bot, hello").to.match(network.highlightRegex);

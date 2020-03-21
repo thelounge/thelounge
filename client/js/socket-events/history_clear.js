@@ -3,7 +3,7 @@
 import socket from "../socket";
 import store from "../store";
 
-socket.on("history:clear", function(data) {
+socket.on("history:clear", function (data) {
 	const {channel} = store.getters.findChannel(data.target);
 
 	channel.messages = [];

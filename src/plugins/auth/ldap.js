@@ -12,12 +12,12 @@ function ldapAuthCommon(user, bindDN, password, callback) {
 		tlsOptions: config.ldap.tlsOptions,
 	});
 
-	ldapclient.on("error", function(err) {
+	ldapclient.on("error", function (err) {
 		log.error(`Unable to connect to LDAP server: ${err}`);
 		callback(false);
 	});
 
-	ldapclient.bind(bindDN, password, function(err) {
+	ldapclient.bind(bindDN, password, function (err) {
 		ldapclient.unbind();
 
 		if (err) {
@@ -67,25 +67,25 @@ function advancedLdapAuth(user, password, callback) {
 		attributes: ["dn"],
 	};
 
-	ldapclient.on("error", function(err) {
+	ldapclient.on("error", function (err) {
 		log.error(`Unable to connect to LDAP server: ${err}`);
 		callback(false);
 	});
 
-	ldapclient.bind(config.ldap.searchDN.rootDN, config.ldap.searchDN.rootPassword, function(err) {
+	ldapclient.bind(config.ldap.searchDN.rootDN, config.ldap.searchDN.rootPassword, function (err) {
 		if (err) {
 			log.error("Invalid LDAP root credentials");
 			ldapclient.unbind();
 			callback(false);
 		} else {
-			ldapclient.search(base, searchOptions, function(err2, res) {
+			ldapclient.search(base, searchOptions, function (err2, res) {
 				if (err2) {
 					log.warn(`LDAP User not found: ${userDN}`);
 					ldapclient.unbind();
 					callback(false);
 				} else {
 					let found = false;
-					res.on("searchEntry", function(entry) {
+					res.on("searchEntry", function (entry) {
 						found = true;
 						const bindDN = entry.objectName;
 						log.info(
@@ -95,11 +95,11 @@ function advancedLdapAuth(user, password, callback) {
 
 						ldapAuthCommon(user, bindDN, password, callback);
 					});
-					res.on("error", function(err3) {
+					res.on("error", function (err3) {
 						log.error(`LDAP error: ${err3}`);
 						callback(false);
 					});
-					res.on("end", function(result) {
+					res.on("end", function (result) {
 						ldapclient.unbind();
 
 						if (!found) {

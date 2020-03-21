@@ -2,12 +2,12 @@
 
 const Msg = require("../../models/msg");
 
-module.exports = function(irc, network) {
+module.exports = function (irc, network) {
 	const client = this;
 
 	// If server supports CHGHOST cap, then changing the hostname does not require
 	// sending PART and JOIN, which means less work for us over all
-	irc.on("user updated", function(data) {
+	irc.on("user updated", function (data) {
 		network.channels.forEach((chan) => {
 			const user = chan.findUser(data.nick);
 

@@ -2,10 +2,10 @@
 
 const Msg = require("../../models/msg");
 
-module.exports = function(irc, network) {
+module.exports = function (irc, network) {
 	const client = this;
 
-	irc.on("quit", function(data) {
+	irc.on("quit", function (data) {
 		network.channels.forEach((chan) => {
 			const user = chan.findUser(data.nick);
 

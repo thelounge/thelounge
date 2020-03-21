@@ -6,13 +6,13 @@ const stub = require("sinon").stub;
 const TestUtil = require("../../util");
 const Utils = require("../../../src/command-line/utils");
 
-describe("Utils", function() {
-	describe(".extraHelp", function() {
-		afterEach(function() {
+describe("Utils", function () {
+	describe(".extraHelp", function () {
+		afterEach(function () {
 			log.raw.restore();
 		});
 
-		it("should start and end with empty lines to display correctly with --help", function() {
+		it("should start and end with empty lines to display correctly with --help", function () {
 			// Mock `log.raw` to extract its effect into an array
 			const stdout = [];
 			stub(log, "raw").callsFake(TestUtil.sanitizeLog((str) => stdout.push(str)));
@@ -28,7 +28,7 @@ describe("Utils", function() {
 			expect(stdout[stdout.length - 1]).to.equal("\n");
 		});
 
-		it("should contain information about THELOUNGE_HOME env var", function() {
+		it("should contain information about THELOUNGE_HOME env var", function () {
 			// Mock `log.raw` to extract its effect into a concatenated string
 			let stdout = "";
 			stub(log, "raw").callsFake(TestUtil.sanitizeLog((str) => (stdout += str)));
@@ -39,31 +39,31 @@ describe("Utils", function() {
 		});
 	});
 
-	describe(".parseConfigOptions", function() {
-		describe("when it's the first option given", function() {
-			it("should return nothing when passed an invalid config", function() {
+	describe(".parseConfigOptions", function () {
+		describe("when it's the first option given", function () {
+			it("should return nothing when passed an invalid config", function () {
 				expect(Utils.parseConfigOptions("foo")).to.be.undefined;
 			});
 
-			it("should correctly parse boolean values", function() {
+			it("should correctly parse boolean values", function () {
 				expect(Utils.parseConfigOptions("foo=true")).to.deep.equal({foo: true});
 				expect(Utils.parseConfigOptions("foo=false")).to.deep.equal({foo: false});
 			});
 
-			it("should correctly parse empty strings", function() {
+			it("should correctly parse empty strings", function () {
 				expect(Utils.parseConfigOptions("foo=")).to.deep.equal({foo: ""});
 				expect(Utils.parseConfigOptions("foo= ")).to.deep.equal({foo: " "});
 			});
 
-			it("should correctly parse null values", function() {
+			it("should correctly parse null values", function () {
 				expect(Utils.parseConfigOptions("foo=null")).to.deep.equal({foo: null});
 			});
 
-			it("should correctly parse undefined values", function() {
+			it("should correctly parse undefined values", function () {
 				expect(Utils.parseConfigOptions("foo=undefined")).to.deep.equal({foo: undefined});
 			});
 
-			it("should correctly parse array values", function() {
+			it("should correctly parse array values", function () {
 				expect(Utils.parseConfigOptions("foo=[bar,true]")).to.deep.equal({
 					foo: ["bar", true],
 				});
@@ -73,25 +73,25 @@ describe("Utils", function() {
 				});
 			});
 
-			it("should correctly parse empty array values", function() {
+			it("should correctly parse empty array values", function () {
 				expect(Utils.parseConfigOptions("foo=[]")).to.deep.equal({foo: []});
 			});
 
-			it("should correctly parse values that contain `=` sign", function() {
+			it("should correctly parse values that contain `=` sign", function () {
 				expect(Utils.parseConfigOptions("foo=bar=42")).to.deep.equal({foo: "bar=42"});
 			});
 
-			it("should correctly parse keys using dot-notation", function() {
+			it("should correctly parse keys using dot-notation", function () {
 				expect(Utils.parseConfigOptions("foo.bar=value")).to.deep.equal({
 					foo: {bar: "value"},
 				});
 			});
 
-			it("should correctly parse keys using array-notation", function() {
+			it("should correctly parse keys using array-notation", function () {
 				expect(Utils.parseConfigOptions("foo[0]=value")).to.deep.equal({foo: ["value"]});
 			});
 
-			it("should correctly change type to number", function() {
+			it("should correctly change type to number", function () {
 				expect(Utils.parseConfigOptions("foo=1337")).to.deep.equal({foo: 1337});
 				expect(Utils.parseConfigOptions("foo=5")).to.deep.equal({foo: 5});
 				expect(Utils.parseConfigOptions("foo=0")).to.deep.equal({foo: 0});
@@ -102,37 +102,37 @@ describe("Utils", function() {
 			});
 		});
 
-		describe("when some options have already been parsed", function() {
-			it("should not modify existing options when passed an invalid config", function() {
+		describe("when some options have already been parsed", function () {
+			it("should not modify existing options when passed an invalid config", function () {
 				const memo = {foo: "bar"};
 				expect(Utils.parseConfigOptions("foo", memo)).to.equal(memo);
 			});
 
-			it("should combine a new option with previously parsed ones", function() {
+			it("should combine a new option with previously parsed ones", function () {
 				expect(Utils.parseConfigOptions("bar=false", {foo: true})).to.deep.equal({
 					foo: true,
 					bar: false,
 				});
 			});
 
-			it("should maintain existing properties of a nested object", function() {
+			it("should maintain existing properties of a nested object", function () {
 				expect(
 					Utils.parseConfigOptions("foo.bar=true", {foo: {baz: false}})
 				).to.deep.equal({foo: {bar: true, baz: false}});
 			});
 
-			it("should maintain existing entries of an array", function() {
+			it("should maintain existing entries of an array", function () {
 				expect(Utils.parseConfigOptions("foo[1]=baz", {foo: ["bar"]})).to.deep.equal({
 					foo: ["bar", "baz"],
 				});
 			});
 
-			describe("when given the same key multiple times", function() {
-				afterEach(function() {
+			describe("when given the same key multiple times", function () {
+				afterEach(function () {
 					log.warn.restore();
 				});
 
-				it("should not override options", function() {
+				it("should not override options", function () {
 					stub(log, "warn");
 
 					expect(Utils.parseConfigOptions("foo=baz", {foo: "bar"})).to.deep.equal({
@@ -140,7 +140,7 @@ describe("Utils", function() {
 					});
 				});
 
-				it("should display a warning", function() {
+				it("should display a warning", function () {
 					let warning = "";
 					stub(log, "warn").callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
 

@@ -2,10 +2,10 @@
 
 const Msg = require("../../models/msg");
 
-module.exports = function(irc, network) {
+module.exports = function (irc, network) {
 	const client = this;
 
-	irc.on("unknown command", function(command) {
+	irc.on("unknown command", function (command) {
 		let target = network.channels[0];
 
 		// Do not display users own name

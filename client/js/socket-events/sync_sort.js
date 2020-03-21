@@ -3,7 +3,7 @@
 import socket from "../socket";
 import store from "../store";
 
-socket.on("sync_sort", function(data) {
+socket.on("sync_sort", function (data) {
 	const order = data.order;
 
 	switch (data.type) {

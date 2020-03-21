@@ -4,7 +4,7 @@ import socket from "../socket";
 import upload from "../upload";
 import store from "../store";
 
-socket.once("configuration", function(data) {
+socket.once("configuration", function (data) {
 	store.commit("serverConfiguration", data);
 
 	// 'theme' setting depends on serverConfiguration.themes so

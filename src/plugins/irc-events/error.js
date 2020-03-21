@@ -3,10 +3,10 @@
 const Msg = require("../../models/msg");
 const Helper = require("../../helper");
 
-module.exports = function(irc, network) {
+module.exports = function (irc, network) {
 	const client = this;
 
-	irc.on("irc error", function(data) {
+	irc.on("irc error", function (data) {
 		const msg = new Msg({
 			type: Msg.Type.ERROR,
 			error: data.error,
@@ -33,7 +33,7 @@ module.exports = function(irc, network) {
 		target.pushMessage(client, msg, true);
 	});
 
-	irc.on("nick in use", function(data) {
+	irc.on("nick in use", function (data) {
 		let message = data.nick + ": " + (data.reason || "Nickname is already in use.");
 
 		if (irc.connection.registered === false && !Helper.config.public) {
@@ -65,7 +65,7 @@ module.exports = function(irc, network) {
 		});
 	});
 
-	irc.on("nick invalid", function(data) {
+	irc.on("nick invalid", function (data) {
 		const lobby = network.channels[0];
 		const msg = new Msg({
 			type: Msg.Type.ERROR,

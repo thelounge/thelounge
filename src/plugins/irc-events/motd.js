@@ -2,10 +2,10 @@
 
 const Msg = require("../../models/msg");
 
-module.exports = function(irc, network) {
+module.exports = function (irc, network) {
 	const client = this;
 
-	irc.on("motd", function(data) {
+	irc.on("motd", function (data) {
 		const lobby = network.channels[0];
 
 		if (data.motd) {

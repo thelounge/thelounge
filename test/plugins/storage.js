@@ -8,7 +8,7 @@ const util = require("../util");
 const Helper = require("../../src/helper");
 const link = require("../../src/plugins/irc-events/link.js");
 
-describe("Image storage", function() {
+describe("Image storage", function () {
 	// Increase timeout due to unpredictable I/O on CI services
 	this.timeout(util.isRunningOnCI() ? 25000 : 5000);
 	this.slow(300);
@@ -33,12 +33,12 @@ describe("Image storage", function() {
 		4
 	)}/${correctSvgHash.substring(4)}.svg`;
 
-	before(function(done) {
+	before(function (done) {
 		this.app = util.createWebserver();
-		this.app.get("/real-test-image.png", function(req, res) {
+		this.app.get("/real-test-image.png", function (req, res) {
 			res.sendFile(testImagePath);
 		});
-		this.app.get("/logo.svg", function(req, res) {
+		this.app.get("/logo.svg", function (req, res) {
 			res.sendFile(testSvgPath);
 		});
 		this.connection = this.app.listen(0, () => {
@@ -47,22 +47,22 @@ describe("Image storage", function() {
 		});
 	});
 
-	after(function(done) {
+	after(function (done) {
 		this.connection.close(done);
 	});
 
-	beforeEach(function() {
+	beforeEach(function () {
 		this.irc = util.createClient();
 		this.network = util.createNetwork();
 
 		Helper.config.prefetchStorage = true;
 	});
 
-	afterEach(function() {
+	afterEach(function () {
 		Helper.config.prefetchStorage = false;
 	});
 
-	it("should store the thumbnail", function(done) {
+	it("should store the thumbnail", function (done) {
 		const port = this.port;
 		const message = this.irc.createMessage({
 			text: "http://localhost:" + port + "/thumb",
@@ -70,7 +70,7 @@ describe("Image storage", function() {
 
 		link(this.irc, this.network.channels[0], message);
 
-		this.app.get("/thumb", function(req, res) {
+		this.app.get("/thumb", function (req, res) {
 			res.send(
 				"<title>Google</title><meta property='og:image' content='http://localhost:" +
 					port +
@@ -78,7 +78,7 @@ describe("Image storage", function() {
 			);
 		});
 
-		this.irc.once("msg:preview", function(data) {
+		this.irc.once("msg:preview", function (data) {
 			expect(data.preview.head).to.equal("Google");
 			expect(data.preview.link).to.equal("http://localhost:" + port + "/thumb");
 			expect(data.preview.thumb).to.equal(correctImageURL);
@@ -86,7 +86,7 @@ describe("Image storage", function() {
 		});
 	});
 
-	it("should store the image", function(done) {
+	it("should store the image", function (done) {
 		const port = this.port;
 		const message = this.irc.createMessage({
 			text: "http://localhost:" + port + "/real-test-image.png",
@@ -94,7 +94,7 @@ describe("Image storage", function() {
 
 		link(this.irc, this.network.channels[0], message);
 
-		this.irc.once("msg:preview", function(data) {
+		this.irc.once("msg:preview", function (data) {
 			expect(data.preview.type).to.equal("image");
 			expect(data.preview.link).to.equal("http://localhost:" + port + "/real-test-image.png");
 			expect(data.preview.thumb).to.equal(correctImageURL);
@@ -102,13 +102,13 @@ describe("Image storage", function() {
 		});
 	});
 
-	it("should lookup correct extension type", function(done) {
+	it("should lookup correct extension type", function (done) {
 		const port = this.port;
 		const message = this.irc.createMessage({
 			text: "http://localhost:" + port + "/svg-preview",
 		});
 
-		this.app.get("/svg-preview", function(req, res) {
+		this.app.get("/svg-preview", function (req, res) {
 			res.send(
 				"<title>test title</title><meta property='og:image' content='http://localhost:" +
 					port +
@@ -118,7 +118,7 @@ describe("Image storage", function() {
 
 		link(this.irc, this.network.channels[0], message);
 
-		this.irc.once("msg:preview", function(data) {
+		this.irc.once("msg:preview", function (data) {
 			expect(data.preview.type).to.equal("link");
 			expect(data.preview.link).to.equal("http://localhost:" + port + "/svg-preview");
 			expect(data.preview.thumb).to.equal(correctSvgURL);

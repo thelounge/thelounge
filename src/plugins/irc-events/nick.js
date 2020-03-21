@@ -2,10 +2,10 @@
 
 const Msg = require("../../models/msg");
 
-module.exports = function(irc, network) {
+module.exports = function (irc, network) {
 	const client = this;
 
-	irc.on("nick", function(data) {
+	irc.on("nick", function (data) {
 		const self = data.nick === irc.user.nick;
 
 		if (self) {

@@ -238,7 +238,7 @@
 						class="btn"
 						:disabled="
 							$store.state.pushNotificationState !== 'supported' &&
-								$store.state.pushNotificationState !== 'subscribed'
+							$store.state.pushNotificationState !== 'subscribed'
 						"
 						@click="onPushButtonClick"
 					>
@@ -345,7 +345,7 @@
 			<div
 				v-if="
 					!$store.state.serverConfiguration.public &&
-						!$store.state.serverConfiguration.ldapEnabled
+					!$store.state.serverConfiguration.ldapEnabled
 				"
 				id="change-password"
 				role="group"

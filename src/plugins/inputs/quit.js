@@ -5,7 +5,7 @@ const _ = require("lodash");
 exports.commands = ["quit"];
 exports.allowDisconnected = true;
 
-exports.input = function(network, chan, cmd, args) {
+exports.input = function (network, chan, cmd, args) {
 	const client = this;
 
 	client.networks = _.without(client.networks, network);

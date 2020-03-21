@@ -10,7 +10,7 @@ program
 	.command("uninstall <package>")
 	.description("Uninstall a theme or a package")
 	.on("--help", Utils.extraHelp)
-	.action(function(packageName) {
+	.action(function (packageName) {
 		const fs = require("fs");
 		const path = require("path");
 

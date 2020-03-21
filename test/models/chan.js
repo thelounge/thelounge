@@ -5,7 +5,7 @@ const Chan = require("../../src/models/chan");
 const Msg = require("../../src/models/msg");
 const User = require("../../src/models/user");
 
-describe("Chan", function() {
+describe("Chan", function () {
 	const network = {
 		network: {
 			options: {
@@ -26,7 +26,7 @@ describe("Chan", function() {
 		prefixLookup[mode.mode] = mode.symbol;
 	});
 
-	describe("#findMessage(id)", function() {
+	describe("#findMessage(id)", function () {
 		const chan = new Chan({
 			messages: [
 				new Msg({id: 1}),
@@ -38,24 +38,24 @@ describe("Chan", function() {
 			],
 		});
 
-		it("should find a message in the list of messages", function() {
+		it("should find a message in the list of messages", function () {
 			expect(chan.findMessage(2).text).to.equal("Message to be found");
 		});
 
-		it("should not find a message that does not exist", function() {
+		it("should not find a message that does not exist", function () {
 			expect(chan.findMessage(42)).to.be.undefined;
 		});
 	});
 
-	describe("#setUser(user)", function() {
-		it("should make key lowercase", function() {
+	describe("#setUser(user)", function () {
+		it("should make key lowercase", function () {
 			const chan = new Chan();
 			chan.setUser(new User({nick: "TestUser"}));
 
 			expect(chan.users.has("testuser")).to.be.true;
 		});
 
-		it("should update user object", function() {
+		it("should update user object", function () {
 			const chan = new Chan();
 			chan.setUser(new User({nick: "TestUser"}, prefixLookup));
 			chan.setUser(new User({nick: "TestUseR", modes: ["o"]}, prefixLookup));
@@ -65,8 +65,8 @@ describe("Chan", function() {
 		});
 	});
 
-	describe("#getUser(nick)", function() {
-		it("should returning existing object", function() {
+	describe("#getUser(nick)", function () {
+		it("should returning existing object", function () {
 			const chan = new Chan();
 			chan.setUser(new User({nick: "TestUseR", modes: ["o"]}, prefixLookup));
 			const user = chan.getUser("TestUSER");
@@ -74,7 +74,7 @@ describe("Chan", function() {
 			expect(user.mode).to.equal("@");
 		});
 
-		it("should make new User object if not found", function() {
+		it("should make new User object if not found", function () {
 			const chan = new Chan();
 			const user = chan.getUser("very-testy-user");
 
@@ -82,12 +82,12 @@ describe("Chan", function() {
 		});
 	});
 
-	describe("#getSortedUsers(irc)", function() {
-		const getUserNames = function(chan) {
+	describe("#getSortedUsers(irc)", function () {
+		const getUserNames = function (chan) {
 			return chan.getSortedUsers(network).map((u) => u.nick);
 		};
 
-		it("returns unsorted list on null irc object", function() {
+		it("returns unsorted list on null irc object", function () {
 			const chan = new Chan();
 			["JocelynD", "YaManicKill", "astorije", "xPaw", "Max-P"].forEach((nick) =>
 				chan.setUser(new User({nick}))
@@ -102,7 +102,7 @@ describe("Chan", function() {
 			]);
 		});
 
-		it("should sort a simple user list", function() {
+		it("should sort a simple user list", function () {
 			const chan = new Chan();
 			["JocelynD", "YaManicKill", "astorije", "xPaw", "Max-P"].forEach((nick) =>
 				chan.setUser(new User({nick}, prefixLookup))
@@ -117,7 +117,7 @@ describe("Chan", function() {
 			]);
 		});
 
-		it("should group users by modes", function() {
+		it("should group users by modes", function () {
 			const chan = new Chan();
 			chan.setUser(new User({nick: "JocelynD", modes: ["a", "o"]}, prefixLookup));
 			chan.setUser(new User({nick: "YaManicKill", modes: ["v"]}, prefixLookup));
@@ -134,7 +134,7 @@ describe("Chan", function() {
 			]);
 		});
 
-		it("should sort a mix of users and modes", function() {
+		it("should sort a mix of users and modes", function () {
 			const chan = new Chan();
 			chan.setUser(new User({nick: "JocelynD"}, prefixLookup));
 			chan.setUser(new User({nick: "YaManicKill", modes: ["o"]}, prefixLookup));
@@ -151,7 +151,7 @@ describe("Chan", function() {
 			]);
 		});
 
-		it("should be case-insensitive", function() {
+		it("should be case-insensitive", function () {
 			const chan = new Chan();
 			["aB", "Ad", "AA", "ac"].forEach((nick) =>
 				chan.setUser(new User({nick}, prefixLookup))
@@ -160,7 +160,7 @@ describe("Chan", function() {
 			expect(getUserNames(chan)).to.deep.equal(["AA", "aB", "ac", "Ad"]);
 		});
 
-		it("should parse special characters successfully", function() {
+		it("should parse special characters successfully", function () {
 			const chan = new Chan();
 			[
 				"[foo",
@@ -194,15 +194,15 @@ describe("Chan", function() {
 		});
 	});
 
-	describe("#getFilteredClone(lastActiveChannel, lastMessage)", function() {
-		it("should send empty user list", function() {
+	describe("#getFilteredClone(lastActiveChannel, lastMessage)", function () {
+		it("should send empty user list", function () {
 			const chan = new Chan();
 			chan.setUser(new User({nick: "test"}));
 
 			expect(chan.getFilteredClone().users).to.be.empty;
 		});
 
-		it("should keep necessary properties", function() {
+		it("should keep necessary properties", function () {
 			const chan = new Chan();
 
 			expect(chan.getFilteredClone())
@@ -223,7 +223,7 @@ describe("Chan", function() {
 				);
 		});
 
-		it("should send only last message for non active channel", function() {
+		it("should send only last message for non active channel", function () {
 			const chan = new Chan({
 				id: 1337,
 				messages: [
@@ -242,7 +242,7 @@ describe("Chan", function() {
 			expect(messages[0].id).to.equal(13);
 		});
 
-		it("should send more messages for active channel", function() {
+		it("should send more messages for active channel", function () {
 			const chan = new Chan({
 				id: 1337,
 				messages: [
@@ -264,7 +264,7 @@ describe("Chan", function() {
 			expect(chan.getFilteredClone(true).messages).to.have.lengthOf(4);
 		});
 
-		it("should only send new messages", function() {
+		it("should only send new messages", function () {
 			const chan = new Chan({
 				id: 1337,
 				messages: [

@@ -6,7 +6,7 @@ const Msg = require("../../models/msg");
 const Chan = require("../../models/chan");
 const Helper = require("../../helper");
 
-module.exports = function(irc, network) {
+module.exports = function (irc, network) {
 	const client = this;
 
 	network.channels[0].pushMessage(
@@ -17,7 +17,7 @@ module.exports = function(irc, network) {
 		true
 	);
 
-	irc.on("registered", function() {
+	irc.on("registered", function () {
 		if (network.irc.network.cap.enabled.length > 0) {
 			network.channels[0].pushMessage(
 				client,
@@ -40,7 +40,7 @@ module.exports = function(irc, network) {
 
 		if (Array.isArray(network.commands)) {
 			network.commands.forEach((cmd) => {
-				setTimeout(function() {
+				setTimeout(function () {
 					client.input({
 						target: network.channels[0].id,
 						text: cmd,
@@ -55,16 +55,16 @@ module.exports = function(irc, network) {
 				return;
 			}
 
-			setTimeout(function() {
+			setTimeout(function () {
 				network.irc.join(chan.name, chan.key);
 			}, delay);
 			delay += 1000;
 		});
 	});
 
-	irc.on("socket connected", function() {
+	irc.on("socket connected", function () {
 		network.prefixLookup = {};
-		irc.network.options.PREFIX.forEach(function(mode) {
+		irc.network.options.PREFIX.forEach(function (mode) {
 			network.prefixLookup[mode.mode] = mode.symbol;
 		});
 
@@ -79,7 +79,7 @@ module.exports = function(irc, network) {
 		sendStatus();
 	});
 
-	irc.on("close", function() {
+	irc.on("close", function () {
 		network.channels[0].pushMessage(
 			client,
 			new Msg({
@@ -92,7 +92,7 @@ module.exports = function(irc, network) {
 
 	let identSocketId;
 
-	irc.on("raw socket connected", function(socket) {
+	irc.on("raw socket connected", function (socket) {
 		let ident = client.name || network.username;
 
 		if (Helper.config.useHexIp) {
@@ -102,7 +102,7 @@ module.exports = function(irc, network) {
 		identSocketId = client.manager.identHandler.addSocket(socket, ident);
 	});
 
-	irc.on("socket close", function(error) {
+	irc.on("socket close", function (error) {
 		if (identSocketId > 0) {
 			client.manager.identHandler.removeSocket(identSocketId);
 			identSocketId = 0;
@@ -141,7 +141,7 @@ module.exports = function(irc, network) {
 	});
 
 	if (Helper.config.debug.ircFramework) {
-		irc.on("debug", function(message) {
+		irc.on("debug", function (message) {
 			log.debug(
 				`[${client.name} (${client.id}) on ${network.name} (${network.uuid}]`,
 				message
@@ -150,7 +150,7 @@ module.exports = function(irc, network) {
 	}
 
 	if (Helper.config.debug.raw) {
-		irc.on("raw", function(message) {
+		irc.on("raw", function (message) {
 			network.channels[0].pushMessage(
 				client,
 				new Msg({
@@ -163,7 +163,7 @@ module.exports = function(irc, network) {
 		});
 	}
 
-	irc.on("socket error", function(err) {
+	irc.on("socket error", function (err) {
 		network.channels[0].pushMessage(
 			client,
 			new Msg({
@@ -174,7 +174,7 @@ module.exports = function(irc, network) {
 		);
 	});
 
-	irc.on("reconnecting", function(data) {
+	irc.on("reconnecting", function (data) {
 		network.channels[0].pushMessage(
 			client,
 			new Msg({
@@ -191,7 +191,7 @@ module.exports = function(irc, network) {
 		);
 	});
 
-	irc.on("ping timeout", function() {
+	irc.on("ping timeout", function () {
 		network.channels[0].pushMessage(
 			client,
 			new Msg({
@@ -201,7 +201,7 @@ module.exports = function(irc, network) {
 		);
 	});
 
-	irc.on("server options", function(data) {
+	irc.on("server options", function (data) {
 		network.prefixLookup = {};
 
 		data.options.PREFIX.forEach((mode) => {

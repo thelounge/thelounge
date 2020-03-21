@@ -7,12 +7,12 @@ import store from "../store";
 import location from "../location";
 let lastServerHash = null;
 
-socket.on("auth:success", function() {
+socket.on("auth:success", function () {
 	store.commit("currentUserVisibleError", "Loading messages…");
 	updateLoadingMessage();
 });
 
-socket.on("auth:failed", function() {
+socket.on("auth:failed", function () {
 	storage.remove("token");
 
 	if (store.state.appLoaded) {
@@ -22,7 +22,7 @@ socket.on("auth:failed", function() {
 	showSignIn();
 });
 
-socket.on("auth:start", function(serverHash) {
+socket.on("auth:start", function (serverHash) {
 	// If we reconnected and serverHash differs, that means the server restarted
 	// And we will reload the page to grab the latest version
 	if (lastServerHash && serverHash !== lastServerHash) {

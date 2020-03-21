@@ -3,8 +3,8 @@
 const expect = require("chai").expect;
 const Helper = require("../../src/helper");
 
-describe("Hostmask", function() {
-	it(".parseHostmask", function() {
+describe("Hostmask", function () {
+	it(".parseHostmask", function () {
 		expect(Helper.parseHostmask("nick").nick).to.equal("nick");
 		expect(Helper.parseHostmask("nick").ident).to.equal("*");
 		expect(Helper.parseHostmask("nick").hostname).to.equal("*");
@@ -46,14 +46,14 @@ describe("Hostmask", function() {
 		expect(Helper.parseHostmask("NiCK!uSEr@HOST").hostname).to.equal("host");
 	});
 
-	it(".compareHostmask (wildcard)", function() {
+	it(".compareHostmask (wildcard)", function () {
 		const a = Helper.parseHostmask("nick!user@host");
 		const b = Helper.parseHostmask("nick!*@*");
 		expect(Helper.compareHostmask(b, a)).to.be.true;
 		expect(Helper.compareHostmask(a, b)).to.be.false;
 	});
 
-	it(".compareHostmask", function() {
+	it(".compareHostmask", function () {
 		const a = Helper.parseHostmask("nick!user@host");
 		const b = Helper.parseHostmask("NiCK!useR@HOST");
 		expect(Helper.compareHostmask(b, a)).to.be.true;

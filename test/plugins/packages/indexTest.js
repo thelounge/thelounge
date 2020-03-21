@@ -7,44 +7,44 @@ const TestUtil = require("../../util");
 
 let packages;
 
-describe("packages", function() {
-	beforeEach(function() {
+describe("packages", function () {
+	beforeEach(function () {
 		stub(log, "info");
 
 		delete require.cache[require.resolve("../../../src/plugins/packages")];
 		packages = require("../../../src/plugins/packages");
 	});
 
-	afterEach(function() {
+	afterEach(function () {
 		log.info.restore();
 	});
 
-	describe(".getStylesheets", function() {
-		it("should contain no stylesheets before packages are loaded", function() {
+	describe(".getStylesheets", function () {
+		it("should contain no stylesheets before packages are loaded", function () {
 			expect(packages.getStylesheets()).to.be.empty;
 		});
 
-		it("should return the list of registered stylesheets for loaded packages", function() {
+		it("should return the list of registered stylesheets for loaded packages", function () {
 			packages.loadPackages();
 
 			expect(packages.getStylesheets()).to.deep.equal(["thelounge-package-foo/style.css"]);
 		});
 	});
 
-	describe(".getPackage", function() {
-		it("should contain no reference to packages before loading them", function() {
+	describe(".getPackage", function () {
+		it("should contain no reference to packages before loading them", function () {
 			expect(packages.getPackage("thelounge-package-foo")).to.be.undefined;
 		});
 
-		it("should return details of a registered package after it was loaded", function() {
+		it("should return details of a registered package after it was loaded", function () {
 			packages.loadPackages();
 
 			expect(packages.getPackage("thelounge-package-foo")).to.have.key("onServerStart");
 		});
 	});
 
-	describe(".loadPackages", function() {
-		it("should display report about loading packages", function() {
+	describe(".loadPackages", function () {
+		it("should display report about loading packages", function () {
 			// Mock `log.info` to extract its effect into a string
 			log.info.restore();
 			let stdout = "";

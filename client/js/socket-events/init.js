@@ -6,7 +6,7 @@ import {router, switchToChannel, navigate, initialize as routerInitialize} from 
 import store from "../store";
 import parseIrcUri from "../helpers/parseIrcUri";
 
-socket.on("init", function(data) {
+socket.on("init", function (data) {
 	store.commit("networks", mergeNetworkData(data.networks));
 	store.commit("isConnected", true);
 	store.commit("currentUserVisibleError", null);

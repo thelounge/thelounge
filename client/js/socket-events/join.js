@@ -4,7 +4,7 @@ import socket from "../socket";
 import store from "../store";
 import {switchToChannel} from "../router";
 
-socket.on("join", function(data) {
+socket.on("join", function (data) {
 	store.getters.initChannel(data.chan);
 
 	const network = store.getters.findNetwork(data.network);

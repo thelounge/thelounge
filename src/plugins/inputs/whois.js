@@ -2,7 +2,7 @@
 
 exports.commands = ["whois"];
 
-exports.input = function({irc}, chan, cmd, args) {
+exports.input = function ({irc}, chan, cmd, args) {
 	if (args.length === 1) {
 		// This queries server of the other user and not of the current user, which
 		// does not know idle time.

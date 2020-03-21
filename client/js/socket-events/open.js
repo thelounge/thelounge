@@ -4,7 +4,7 @@ import socket from "../socket";
 import store from "../store";
 
 // Sync unread badge and marker when other clients open a channel
-socket.on("open", function(id) {
+socket.on("open", function (id) {
 	if (id < 1) {
 		return;
 	}

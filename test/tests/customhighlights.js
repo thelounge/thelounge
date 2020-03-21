@@ -6,7 +6,7 @@ const log = require("../../src/log");
 const Client = require("../../src/client");
 const TestUtil = require("../util");
 
-describe("Custom highlights", function() {
+describe("Custom highlights", function () {
 	let userLoadedLog = "";
 	stub(log, "info").callsFake(TestUtil.sanitizeLog((str) => (userLoadedLog += str)));
 
@@ -29,7 +29,7 @@ describe("Custom highlights", function() {
 	log.info.restore();
 	expect(userLoadedLog).to.equal("User test loaded\n");
 
-	it("should NOT highlight", function() {
+	it("should NOT highlight", function () {
 		const teststrings = [
 			"and foos stuff",
 			"test foobar",
@@ -47,7 +47,7 @@ describe("Custom highlights", function() {
 		}
 	});
 
-	it("should highlight", function() {
+	it("should highlight", function () {
 		const teststrings = [
 			"Hey foo hello",
 			"hey Foo: hi",
@@ -82,11 +82,11 @@ describe("Custom highlights", function() {
 		}
 	});
 
-	it("should trim custom highlights in the compiled regex", function() {
+	it("should trim custom highlights in the compiled regex", function () {
 		expect(client.highlightRegex).to.match(/\(\?:foo\|@all\|sp ace\|고\)/);
 	});
 
-	it("should NOT compile a regex", function() {
+	it("should NOT compile a regex", function () {
 		// test updating the regex and invalid custom hl inputs
 		client.config.clientSettings.highlights = ",,";
 		client.compileCustomHighlights();

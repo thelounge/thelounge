@@ -5,7 +5,7 @@ const Chan = require("../../models/chan");
 
 exports.commands = ["cycle", "rejoin"];
 
-exports.input = function({irc}, chan) {
+exports.input = function ({irc}, chan) {
 	if (chan.type !== Chan.Type.CHANNEL) {
 		chan.pushMessage(
 			this,

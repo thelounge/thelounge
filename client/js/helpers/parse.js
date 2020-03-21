@@ -85,10 +85,7 @@ function parse(createElement, text, message = undefined, network = undefined) {
 	const emojiParts = findEmoji(cleanText);
 	const nameParts = findNames(cleanText, message ? message.users || [] : []);
 
-	const parts = channelParts
-		.concat(linkParts)
-		.concat(emojiParts)
-		.concat(nameParts);
+	const parts = channelParts.concat(linkParts).concat(emojiParts).concat(nameParts);
 
 	// Merge the styling information with the channels / URLs / nicks / text objects and
 	// generate HTML strings with the resulting fragments

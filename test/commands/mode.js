@@ -5,8 +5,8 @@ const expect = require("chai").expect;
 const Chan = require("../../src/models/chan");
 const ModeCommand = require("../../src/plugins/inputs/mode");
 
-describe("Commands", function() {
-	describe("/mode", function() {
+describe("Commands", function () {
+	describe("/mode", function () {
 		const channel = new Chan({
 			name: "#thelounge",
 		});
@@ -26,8 +26,8 @@ describe("Commands", function() {
 			},
 		};
 
-		it("should not mess with the given target", function() {
-			const test = function(expected, args) {
+		it("should not mess with the given target", function () {
+			const test = function (expected, args) {
 				ModeCommand.input(testableNetwork, channel, "mode", Array.from(args));
 				expect(testableNetwork.lastCommand).to.equal(expected);
 
@@ -43,7 +43,7 @@ describe("Commands", function() {
 			test("MODE #thelounge", ["#thelounge"]);
 		});
 
-		it("should assume target if none given", function() {
+		it("should assume target if none given", function () {
 			ModeCommand.input(testableNetwork, channel, "mode", []);
 			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge");
 
@@ -63,7 +63,7 @@ describe("Commands", function() {
 			expect(testableNetwork.lastCommand).to.equal("MODE xPaw -i idk");
 		});
 
-		it("should support shorthand commands", function() {
+		it("should support shorthand commands", function () {
 			ModeCommand.input(testableNetwork, channel, "op", ["xPaw"]);
 			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge +o xPaw");
 

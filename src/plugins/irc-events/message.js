@@ -7,10 +7,10 @@ const cleanIrcMessage = require("../../../client/js/helpers/ircmessageparser/cle
 const Helper = require("../../helper");
 const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\w[\]\\`^{|}-]+)/g;
 
-module.exports = function(irc, network) {
+module.exports = function (irc, network) {
 	const client = this;
 
-	irc.on("notice", function(data) {
+	irc.on("notice", function (data) {
 		// Some servers send notices without any nickname
 		if (!data.nick) {
 			data.from_server = true;
@@ -21,17 +21,17 @@ module.exports = function(irc, network) {
 		handleMessage(data);
 	});
 
-	irc.on("action", function(data) {
+	irc.on("action", function (data) {
 		data.type = Msg.Type.ACTION;
 		handleMessage(data);
 	});
 
-	irc.on("privmsg", function(data) {
+	irc.on("privmsg", function (data) {
 		data.type = Msg.Type.MESSAGE;
 		handleMessage(data);
 	});
 
-	irc.on("wallops", function(data) {
+	irc.on("wallops", function (data) {
 		data.from_server = true;
 		data.type = Msg.Type.NOTICE;
 		handleMessage(data);
@@ -47,7 +47,7 @@ module.exports = function(irc, network) {
 		// Check if the sender is in our ignore list
 		const shouldIgnore =
 			!self &&
-			network.ignoreList.some(function(entry) {
+			network.ignoreList.some(function (entry) {
 				return Helper.compareHostmask(entry, data);
 			});
 

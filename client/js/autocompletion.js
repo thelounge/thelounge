@@ -177,10 +177,7 @@ function enableAutocomplete(input) {
 			const text = input.value;
 
 			if (tabCount === 0) {
-				lastMatch = text
-					.substring(0, input.selectionStart)
-					.split(/\s/)
-					.pop();
+				lastMatch = text.substring(0, input.selectionStart).split(/\s/).pop();
 
 				if (lastMatch.length === 0) {
 					return;

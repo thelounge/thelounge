@@ -43,10 +43,7 @@ class Storage {
 	}
 
 	store(data, extension, callback) {
-		const hash = crypto
-			.createHash("sha256")
-			.update(data)
-			.digest("hex");
+		const hash = crypto.createHash("sha256").update(data).digest("hex");
 		const a = hash.substring(0, 2);
 		const b = hash.substring(2, 4);
 		const folder = path.join(helper.getStoragePath(), a, b);

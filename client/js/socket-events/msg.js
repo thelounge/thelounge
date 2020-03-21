@@ -16,7 +16,7 @@ try {
 	};
 }
 
-socket.on("msg", function(data) {
+socket.on("msg", function (data) {
 	const receivingChannel = store.getters.findChannel(data.chan);
 
 	if (!receivingChannel) {
@@ -155,7 +155,7 @@ function notifyMessage(targetId, channel, activeChannel, msg) {
 							body: body,
 							timestamp: timestamp,
 						});
-						notify.addEventListener("click", function() {
+						notify.addEventListener("click", function () {
 							this.close();
 							window.focus();
 

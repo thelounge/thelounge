@@ -3,8 +3,8 @@
 const expect = require("chai").expect;
 const cleanIrcMessage = require("../../../../../client/js/helpers/ircmessageparser/cleanIrcMessage");
 
-describe("cleanIrcMessage", function() {
-	it("should remove all formatting", function() {
+describe("cleanIrcMessage", function () {
+	it("should remove all formatting", function () {
 		const testCases = [
 			{
 				input: "\x0303",

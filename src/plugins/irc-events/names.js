@@ -1,9 +1,9 @@
 "use strict";
 
-module.exports = function(irc, network) {
+module.exports = function (irc, network) {
 	const client = this;
 
-	irc.on("userlist", function(data) {
+	irc.on("userlist", function (data) {
 		const chan = network.getChannel(data.channel);
 
 		if (typeof chan === "undefined") {

@@ -16,14 +16,14 @@ function User(attr, prefixLookup) {
 	this.setModes(this.modes, prefixLookup);
 }
 
-User.prototype.setModes = function(modes, prefixLookup) {
+User.prototype.setModes = function (modes, prefixLookup) {
 	// irc-framework sets character mode, but The Lounge works with symbols
 	this.modes = modes.map((mode) => prefixLookup[mode]);
 
 	this.mode = this.modes[0] || "";
 };
 
-User.prototype.toJSON = function() {
+User.prototype.toJSON = function () {
 	return {
 		nick: this.nick,
 		mode: this.mode,
