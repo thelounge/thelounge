@@ -3,13 +3,13 @@
 import socket from "../socket";
 import store from "../store";
 
-socket.on("setting:new", function(data) {
+socket.on("setting:new", function (data) {
 	const name = data.name;
 	const value = data.value;
 	store.dispatch("settings/update", {name, value, sync: false});
 });
 
-socket.on("setting:all", function(settings) {
+socket.on("setting:all", function (settings) {
 	const serverHasSettings = Object.keys(settings).length > 0;
 
 	store.commit("serverHasSettings", serverHasSettings);

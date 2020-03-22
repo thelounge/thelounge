@@ -5,11 +5,11 @@
 const cacheName = "__HASH__";
 const excludedPathsFromCache = /^(?:socket\.io|storage|uploads|cdn-cgi)\//;
 
-self.addEventListener("install", function() {
+self.addEventListener("install", function () {
 	self.skipWaiting();
 });
 
-self.addEventListener("activate", function(event) {
+self.addEventListener("activate", function (event) {
 	event.waitUntil(
 		caches
 			.keys()
@@ -23,7 +23,7 @@ self.addEventListener("activate", function(event) {
 	event.waitUntil(self.clients.claim());
 });
 
-self.addEventListener("fetch", function(event) {
+self.addEventListener("fetch", function (event) {
 	if (event.request.method !== "GET") {
 		return;
 	}
@@ -108,11 +108,11 @@ async function networkOrCache(event) {
 	}
 }
 
-self.addEventListener("message", function(event) {
+self.addEventListener("message", function (event) {
 	showNotification(event, event.data);
 });
 
-self.addEventListener("push", function(event) {
+self.addEventListener("push", function (event) {
 	if (!event.data) {
 		return;
 	}
@@ -147,7 +147,7 @@ function showNotification(event, payload) {
 	);
 }
 
-self.addEventListener("notificationclick", function(event) {
+self.addEventListener("notificationclick", function (event) {
 	event.notification.close();
 
 	event.waitUntil(

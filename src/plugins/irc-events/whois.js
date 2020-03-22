@@ -3,7 +3,7 @@
 const Chan = require("../../models/chan");
 const Msg = require("../../models/msg");
 
-module.exports = function(irc, network) {
+module.exports = function (irc, network) {
 	const client = this;
 
 	irc.on("whois", handleWhois);

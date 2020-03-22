@@ -2,11 +2,11 @@
 
 const Chan = require("../../models/chan");
 
-module.exports = function(irc, network) {
+module.exports = function (irc, network) {
 	const client = this;
 	const MAX_CHANS = 500;
 
-	irc.on("channel list start", function() {
+	irc.on("channel list start", function () {
 		network.chanCache = [];
 
 		updateListStatus({
@@ -14,7 +14,7 @@ module.exports = function(irc, network) {
 		});
 	});
 
-	irc.on("channel list", function(channels) {
+	irc.on("channel list", function (channels) {
 		Array.prototype.push.apply(network.chanCache, channels);
 
 		updateListStatus({
@@ -22,7 +22,7 @@ module.exports = function(irc, network) {
 		});
 	});
 
-	irc.on("channel list end", function() {
+	irc.on("channel list end", function () {
 		updateListStatus(
 			network.chanCache.sort((a, b) => b.num_users - a.num_users).slice(0, MAX_CHANS)
 		);

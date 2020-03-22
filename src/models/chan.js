@@ -44,11 +44,11 @@ function Chan(attr) {
 	});
 }
 
-Chan.prototype.destroy = function() {
+Chan.prototype.destroy = function () {
 	this.dereferencePreviews(this.messages);
 };
 
-Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
+Chan.prototype.pushMessage = function (client, msg, increasesUnread) {
 	const chan = this.id;
 	const obj = {chan, msg};
 
@@ -102,7 +102,7 @@ Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 	}
 };
 
-Chan.prototype.dereferencePreviews = function(messages) {
+Chan.prototype.dereferencePreviews = function (messages) {
 	if (!Helper.config.prefetch || !Helper.config.prefetchStorage) {
 		return;
 	}
@@ -119,7 +119,7 @@ Chan.prototype.dereferencePreviews = function(messages) {
 	});
 };
 
-Chan.prototype.getSortedUsers = function(irc) {
+Chan.prototype.getSortedUsers = function (irc) {
 	const users = Array.from(this.users.values());
 
 	if (!irc || !irc.network || !irc.network.options || !irc.network.options.PREFIX) {
@@ -133,7 +133,7 @@ Chan.prototype.getSortedUsers = function(irc) {
 
 	userModeSortPriority[""] = 99; // No mode is lowest
 
-	return users.sort(function(a, b) {
+	return users.sort(function (a, b) {
 		if (a.mode === b.mode) {
 			return a.nick.toLowerCase() < b.nick.toLowerCase() ? -1 : 1;
 		}
@@ -142,23 +142,23 @@ Chan.prototype.getSortedUsers = function(irc) {
 	});
 };
 
-Chan.prototype.findMessage = function(msgId) {
+Chan.prototype.findMessage = function (msgId) {
 	return this.messages.find((message) => message.id === msgId);
 };
 
-Chan.prototype.findUser = function(nick) {
+Chan.prototype.findUser = function (nick) {
 	return this.users.get(nick.toLowerCase());
 };
 
-Chan.prototype.getUser = function(nick) {
+Chan.prototype.getUser = function (nick) {
 	return this.findUser(nick) || new User({nick});
 };
 
-Chan.prototype.setUser = function(user) {
+Chan.prototype.setUser = function (user) {
 	this.users.set(user.nick.toLowerCase(), user);
 };
 
-Chan.prototype.removeUser = function(user) {
+Chan.prototype.removeUser = function (user) {
 	this.users.delete(user.nick.toLowerCase());
 };
 
@@ -171,7 +171,7 @@ Chan.prototype.removeUser = function(user) {
  *                                         If true, channel is assumed active.
  * @param {int} lastMessage - Last message id seen by active client to avoid sending duplicates.
  */
-Chan.prototype.getFilteredClone = function(lastActiveChannel, lastMessage) {
+Chan.prototype.getFilteredClone = function (lastActiveChannel, lastMessage) {
 	return Object.keys(this).reduce((newChannel, prop) => {
 		if (prop === "users") {
 			// Do not send users, client requests updated user list whenever needed
@@ -200,7 +200,7 @@ Chan.prototype.getFilteredClone = function(lastActiveChannel, lastMessage) {
 	}, {});
 };
 
-Chan.prototype.writeUserLog = function(client, msg) {
+Chan.prototype.writeUserLog = function (client, msg) {
 	this.messages.push(msg);
 
 	// Are there any logs enabled
@@ -235,7 +235,7 @@ Chan.prototype.writeUserLog = function(client, msg) {
 	}
 };
 
-Chan.prototype.loadMessages = function(client, network) {
+Chan.prototype.loadMessages = function (client, network) {
 	if (!this.isLoggable()) {
 		return;
 	}
@@ -278,7 +278,7 @@ Chan.prototype.loadMessages = function(client, network) {
 		.catch((err) => log.error(`Failed to load messages: ${err}`));
 };
 
-Chan.prototype.isLoggable = function() {
+Chan.prototype.isLoggable = function () {
 	return this.type === Chan.Type.CHANNEL || this.type === Chan.Type.QUERY;
 };
 

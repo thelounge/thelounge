@@ -6,7 +6,7 @@ import socket from "../socket";
 import store from "../store";
 import {switchToChannel} from "../router";
 
-socket.on("network", function(data) {
+socket.on("network", function (data) {
 	const network = data.networks[0];
 
 	network.isJoinChannelShown = false;
@@ -19,7 +19,7 @@ socket.on("network", function(data) {
 	switchToChannel(network.channels[network.channels.length - 1]);
 });
 
-socket.on("network:options", function(data) {
+socket.on("network:options", function (data) {
 	const network = store.getters.findNetwork(data.network);
 
 	if (network) {
@@ -27,7 +27,7 @@ socket.on("network:options", function(data) {
 	}
 });
 
-socket.on("network:status", function(data) {
+socket.on("network:status", function (data) {
 	const network = store.getters.findNetwork(data.network);
 
 	if (!network) {
@@ -45,7 +45,7 @@ socket.on("network:status", function(data) {
 	}
 });
 
-socket.on("channel:state", function(data) {
+socket.on("channel:state", function (data) {
 	const channel = store.getters.findChannel(data.chan);
 
 	if (channel) {
@@ -53,7 +53,7 @@ socket.on("channel:state", function(data) {
 	}
 });
 
-socket.on("network:info", function(data) {
+socket.on("network:info", function (data) {
 	const network = store.getters.findNetwork(data.uuid);
 
 	if (!network) {

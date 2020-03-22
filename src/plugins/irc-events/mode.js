@@ -3,14 +3,14 @@
 const _ = require("lodash");
 const Msg = require("../../models/msg");
 
-module.exports = function(irc, network) {
+module.exports = function (irc, network) {
 	const client = this;
 
 	// The following saves the channel key based on channel mode instead of
 	// extracting it from `/join #channel key`. This lets us not have to
 	// temporarily store the key until successful join, but also saves the key
 	// if a key is set or changed while being on the channel.
-	irc.on("channel info", function(data) {
+	irc.on("channel info", function (data) {
 		if (!data.modes) {
 			return;
 		}
@@ -39,7 +39,7 @@ module.exports = function(irc, network) {
 		targetChan.pushMessage(client, msg);
 	});
 
-	irc.on("mode", function(data) {
+	irc.on("mode", function (data) {
 		let targetChan;
 
 		if (data.target === irc.user.nick) {
@@ -113,7 +113,7 @@ module.exports = function(irc, network) {
 				_.pull(user.modes, changedMode);
 			} else if (!user.modes.includes(changedMode)) {
 				user.modes.push(changedMode);
-				user.modes.sort(function(a, b) {
+				user.modes.sort(function (a, b) {
 					return userModeSortPriority[a] - userModeSortPriority[b];
 				});
 			}

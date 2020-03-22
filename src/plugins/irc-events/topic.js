@@ -2,10 +2,10 @@
 
 const Msg = require("../../models/msg");
 
-module.exports = function(irc, network) {
+module.exports = function (irc, network) {
 	const client = this;
 
-	irc.on("topic", function(data) {
+	irc.on("topic", function (data) {
 		const chan = network.getChannel(data.channel);
 
 		if (typeof chan === "undefined") {
@@ -28,7 +28,7 @@ module.exports = function(irc, network) {
 		});
 	});
 
-	irc.on("topicsetby", function(data) {
+	irc.on("topicsetby", function (data) {
 		const chan = network.getChannel(data.channel);
 
 		if (typeof chan === "undefined") {

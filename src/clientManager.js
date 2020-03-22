@@ -16,7 +16,7 @@ function ClientManager() {
 	this.clients = [];
 }
 
-ClientManager.prototype.init = function(identHandler, sockets) {
+ClientManager.prototype.init = function (identHandler, sockets) {
 	this.sockets = sockets;
 	this.identHandler = identHandler;
 	this.webPush = new WebPush();
@@ -32,11 +32,11 @@ ClientManager.prototype.init = function(identHandler, sockets) {
 	}
 };
 
-ClientManager.prototype.findClient = function(name) {
+ClientManager.prototype.findClient = function (name) {
 	return this.clients.find((u) => u.name === name);
 };
 
-ClientManager.prototype.loadUsers = function() {
+ClientManager.prototype.loadUsers = function () {
 	const users = this.getUsers();
 
 	if (users.length === 0) {
@@ -48,7 +48,7 @@ ClientManager.prototype.loadUsers = function() {
 	users.forEach((name) => this.loadUser(name));
 };
 
-ClientManager.prototype.autoloadUsers = function() {
+ClientManager.prototype.autoloadUsers = function () {
 	fs.watch(
 		Helper.getUsersPath(),
 		_.debounce(
@@ -84,7 +84,7 @@ ClientManager.prototype.autoloadUsers = function() {
 	);
 };
 
-ClientManager.prototype.loadUser = function(name) {
+ClientManager.prototype.loadUser = function (name) {
 	const userConfig = readUserConfig(name);
 
 	if (!userConfig) {
@@ -113,14 +113,14 @@ ClientManager.prototype.loadUser = function(name) {
 	return client;
 };
 
-ClientManager.prototype.getUsers = function() {
+ClientManager.prototype.getUsers = function () {
 	return fs
 		.readdirSync(Helper.getUsersPath())
 		.filter((file) => file.endsWith(".json"))
 		.map((file) => file.slice(0, -5));
 };
 
-ClientManager.prototype.addUser = function(name, password, enableLog) {
+ClientManager.prototype.addUser = function (name, password, enableLog) {
 	if (path.basename(name) !== name) {
 		throw new Error(`${name} is an invalid username.`);
 	}
@@ -176,20 +176,17 @@ ClientManager.prototype.addUser = function(name, password, enableLog) {
 	return true;
 };
 
-ClientManager.prototype.getDataToSave = function(client) {
+ClientManager.prototype.getDataToSave = function (client) {
 	const json = Object.assign({}, client.config, {
 		networks: client.networks.map((n) => n.export()),
 	});
 	const newUser = JSON.stringify(json, null, "\t");
-	const newHash = crypto
-		.createHash("sha256")
-		.update(newUser)
-		.digest("hex");
+	const newHash = crypto.createHash("sha256").update(newUser).digest("hex");
 
 	return {newUser, newHash};
 };
 
-ClientManager.prototype.saveUser = function(client, callback) {
+ClientManager.prototype.saveUser = function (client, callback) {
 	const {newUser, newHash} = this.getDataToSave(client);
 
 	// Do not write to disk if the exported data hasn't actually changed
@@ -216,7 +213,7 @@ ClientManager.prototype.saveUser = function(client, callback) {
 	}
 };
 
-ClientManager.prototype.removeUser = function(name) {
+ClientManager.prototype.removeUser = function (name) {
 	const userPath = Helper.getUserConfigPath(name);
 
 	if (!fs.existsSync(userPath)) {

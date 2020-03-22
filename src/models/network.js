@@ -62,7 +62,7 @@ function Network(attr) {
 	);
 }
 
-Network.prototype.validate = function(client) {
+Network.prototype.validate = function (client) {
 	// Remove !, :, @ and whitespace characters from nicknames and usernames
 	const cleanNick = (str) => str.replace(/[\x00\s:!@]/g, "_").substring(0, 100);
 
@@ -145,7 +145,7 @@ Network.prototype.validate = function(client) {
 	return true;
 };
 
-Network.prototype.createIrcFramework = function(client) {
+Network.prototype.createIrcFramework = function (client) {
 	this.irc = new IrcFramework.Client({
 		version: false, // We handle it ourselves
 		host: this.host,
@@ -177,7 +177,7 @@ Network.prototype.createIrcFramework = function(client) {
 	}
 };
 
-Network.prototype.createWebIrc = function(client) {
+Network.prototype.createWebIrc = function (client) {
 	if (
 		!Helper.config.webirc ||
 		!Object.prototype.hasOwnProperty.call(Helper.config.webirc, this.host)
@@ -207,7 +207,7 @@ Network.prototype.createWebIrc = function(client) {
 	return webircObject;
 };
 
-Network.prototype.edit = function(client, args) {
+Network.prototype.edit = function (client, args) {
 	const oldNick = this.nick;
 	const oldRealname = this.realname;
 
@@ -276,11 +276,11 @@ Network.prototype.edit = function(client, args) {
 	client.save();
 };
 
-Network.prototype.destroy = function() {
+Network.prototype.destroy = function () {
 	this.channels.forEach((channel) => channel.destroy());
 };
 
-Network.prototype.setNick = function(nick) {
+Network.prototype.setNick = function (nick) {
 	this.nick = nick;
 	this.highlightRegex = new RegExp(
 		// Do not match characters and numbers (unless IRC color)
@@ -308,7 +308,7 @@ Network.prototype.setNick = function(nick) {
  *
  * @see {@link Chan#getFilteredClone}
  */
-Network.prototype.getFilteredClone = function(lastActiveChannel, lastMessage) {
+Network.prototype.getFilteredClone = function (lastActiveChannel, lastMessage) {
 	const filteredNetwork = Object.keys(this).reduce((newNetwork, prop) => {
 		if (prop === "channels") {
 			// Channels objects perform their own cloning
@@ -328,7 +328,7 @@ Network.prototype.getFilteredClone = function(lastActiveChannel, lastMessage) {
 	return filteredNetwork;
 };
 
-Network.prototype.getNetworkStatus = function() {
+Network.prototype.getNetworkStatus = function () {
 	const status = {
 		connected: false,
 		secure: false,
@@ -349,7 +349,7 @@ Network.prototype.getNetworkStatus = function() {
 	return status;
 };
 
-Network.prototype.addChannel = function(newChan) {
+Network.prototype.addChannel = function (newChan) {
 	let index = this.channels.length; // Default to putting as the last item in the array
 
 	// Don't sort special channels in amongst channels/users.
@@ -373,7 +373,7 @@ Network.prototype.addChannel = function(newChan) {
 	return index;
 };
 
-Network.prototype.quit = function(quitMessage) {
+Network.prototype.quit = function (quitMessage) {
 	if (!this.irc) {
 		return;
 	}
@@ -384,7 +384,7 @@ Network.prototype.quit = function(quitMessage) {
 	this.irc.quit(quitMessage || Helper.config.leaveMessage);
 };
 
-Network.prototype.exportForEdit = function() {
+Network.prototype.exportForEdit = function () {
 	let fieldsToReturn;
 
 	if (Helper.config.displayNetwork) {
@@ -414,7 +414,7 @@ Network.prototype.exportForEdit = function() {
 	return data;
 };
 
-Network.prototype.export = function() {
+Network.prototype.export = function () {
 	const network = _.pick(this, [
 		"uuid",
 		"awayMessage",
@@ -433,10 +433,10 @@ Network.prototype.export = function() {
 	]);
 
 	network.channels = this.channels
-		.filter(function(channel) {
+		.filter(function (channel) {
 			return channel.type === Chan.Type.CHANNEL || channel.type === Chan.Type.QUERY;
 		})
-		.map(function(chan) {
+		.map(function (chan) {
 			const keys = ["name"];
 
 			if (chan.type === Chan.Type.CHANNEL) {
@@ -451,10 +451,10 @@ Network.prototype.export = function() {
 	return network;
 };
 
-Network.prototype.getChannel = function(name) {
+Network.prototype.getChannel = function (name) {
 	name = name.toLowerCase();
 
-	return _.find(this.channels, function(that, i) {
+	return _.find(this.channels, function (that, i) {
 		// Skip network lobby (it's always unshifted into first position)
 		return i > 0 && that.name.toLowerCase() === name;
 	});

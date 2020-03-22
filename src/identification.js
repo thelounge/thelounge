@@ -109,7 +109,7 @@ class Identification {
 				` { reply "${connection.user}" }\n`;
 		});
 
-		fs.writeFile(this.oidentdFile, file, {flag: "w+"}, function(err) {
+		fs.writeFile(this.oidentdFile, file, {flag: "w+"}, function (err) {
 			if (err) {
 				log.error("Failed to update oidentd file!", err);
 			}

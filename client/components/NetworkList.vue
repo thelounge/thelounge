@@ -82,7 +82,7 @@
 					:is-join-channel-shown="network.isJoinChannelShown"
 					:active="
 						$store.state.activeChannel &&
-							network.channels[0] === $store.state.activeChannel.channel
+						network.channels[0] === $store.state.activeChannel.channel
 					"
 					@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown"
 				/>
@@ -114,7 +114,7 @@
 						:network="network"
 						:active="
 							$store.state.activeChannel &&
-								channel === $store.state.activeChannel.channel
+							channel === $store.state.activeChannel.channel
 						"
 					/>
 				</Draggable>

@@ -4,10 +4,10 @@ const Chan = require("../../models/chan");
 const Msg = require("../../models/msg");
 const User = require("../../models/user");
 
-module.exports = function(irc, network) {
+module.exports = function (irc, network) {
 	const client = this;
 
-	irc.on("join", function(data) {
+	irc.on("join", function (data) {
 		let chan = network.getChannel(data.channel);
 
 		if (typeof chan === "undefined") {

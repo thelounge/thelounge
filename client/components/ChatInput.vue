@@ -109,7 +109,7 @@ export default {
 
 		const inputTrap = Mousetrap(this.$refs.input);
 
-		inputTrap.bind(Object.keys(formattingHotkeys), function(e, key) {
+		inputTrap.bind(Object.keys(formattingHotkeys), function (e, key) {
 			const modifier = formattingHotkeys[key];
 
 			wrapCursor(
@@ -121,7 +121,7 @@ export default {
 			return false;
 		});
 
-		inputTrap.bind(Object.keys(bracketWraps), function(e, key) {
+		inputTrap.bind(Object.keys(bracketWraps), function (e, key) {
 			if (e.target.selectionStart !== e.target.selectionEnd) {
 				wrapCursor(e.target, key, bracketWraps[key]);
 

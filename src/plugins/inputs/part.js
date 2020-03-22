@@ -8,7 +8,7 @@ const Helper = require("../../helper");
 exports.commands = ["close", "leave", "part"];
 exports.allowDisconnected = true;
 
-exports.input = function(network, chan, cmd, args) {
+exports.input = function (network, chan, cmd, args) {
 	let target = chan;
 
 	if (args.length > 0) {

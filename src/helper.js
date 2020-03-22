@@ -87,10 +87,7 @@ function getGitCommit() {
 }
 
 function getVersionCacheBust() {
-	const hash = crypto
-		.createHash("sha256")
-		.update(Helper.getVersion())
-		.digest("hex");
+	const hash = crypto.createHash("sha256").update(Helper.getVersion()).digest("hex");
 
 	return hash.substring(0, 10);
 }
@@ -208,7 +205,7 @@ function ip2hex(address) {
 
 	return address
 		.split(".")
-		.map(function(octet) {
+		.map(function (octet) {
 			let hex = parseInt(octet, 10).toString(16);
 
 			if (hex.length === 1) {

@@ -103,7 +103,7 @@ store.watch(
 	}
 );
 
-Vue.config.errorHandler = function(e) {
+Vue.config.errorHandler = function (e) {
 	store.commit("currentUserVisibleError", `Vue error: ${e.message}`);
 	console.error(e); // eslint-disable-line
 };

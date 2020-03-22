@@ -1,6 +1,6 @@
 <template>
 	<span class="content">
-		<span class="text"><ParsedMessage :network="network" :text="cleanText"/></span>
+		<span class="text"><ParsedMessage :network="network" :text="cleanText" /></span>
 	</span>
 </template>
 

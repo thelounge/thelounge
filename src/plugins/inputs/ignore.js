@@ -6,7 +6,7 @@ const Helper = require("../../helper");
 
 exports.commands = ["ignore", "unignore", "ignorelist"];
 
-exports.input = function(network, chan, cmd, args) {
+exports.input = function (network, chan, cmd, args) {
 	const client = this;
 	let target;
 	let hostmask;
@@ -41,7 +41,7 @@ exports.input = function(network, chan, cmd, args) {
 					})
 				);
 			} else if (
-				!network.ignoreList.some(function(entry) {
+				!network.ignoreList.some(function (entry) {
 					return Helper.compareHostmask(entry, hostmask);
 				})
 			) {
@@ -70,7 +70,7 @@ exports.input = function(network, chan, cmd, args) {
 		}
 
 		case "unignore": {
-			const idx = network.ignoreList.findIndex(function(entry) {
+			const idx = network.ignoreList.findIndex(function (entry) {
 				return Helper.compareHostmask(entry, hostmask);
 			});
 

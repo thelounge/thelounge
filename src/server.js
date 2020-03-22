@@ -32,7 +32,7 @@ const serverHash = Math.floor(Date.now() * Math.random());
 
 let manager = null;
 
-module.exports = function(options = {}) {
+module.exports = function (options = {}) {
 	log.info(`The Lounge ${colors.green(Helper.getVersion())} \
 (Node.js ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${
 		process.arch
@@ -206,7 +206,7 @@ module.exports = function(options = {}) {
 		// Handle ctrl+c and kill gracefully
 		let suicideTimeout = null;
 
-		const exitGracefully = function() {
+		const exitGracefully = function () {
 			if (suicideTimeout !== null) {
 				return;
 			}
@@ -361,7 +361,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 		new Uploader(socket);
 	}
 
-	socket.on("disconnect", function() {
+	socket.on("disconnect", function () {
 		process.nextTick(() => client.clientDetach(socket.id));
 	});
 
@@ -784,7 +784,7 @@ function performAuthentication(data) {
 		client = new Client(manager);
 		manager.clients.push(client);
 
-		socket.on("disconnect", function() {
+		socket.on("disconnect", function () {
 			manager.clients = _.without(manager.clients, client);
 			client.quit();
 		});

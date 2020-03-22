@@ -2,7 +2,7 @@
 
 exports.commands = ["away", "back"];
 
-exports.input = function(network, chan, cmd, args) {
+exports.input = function (network, chan, cmd, args) {
 	let reason = "";
 
 	if (cmd === "away") {

@@ -15,7 +15,7 @@ function getTarget(cmd, args, chan) {
 	}
 }
 
-exports.input = function(network, chan, cmd, args) {
+exports.input = function (network, chan, cmd, args) {
 	let targetName = getTarget(cmd, args, chan);
 
 	if (cmd === "query") {

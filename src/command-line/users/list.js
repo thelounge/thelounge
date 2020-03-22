@@ -11,7 +11,7 @@ program
 	.command("list")
 	.description("List all users")
 	.on("--help", Utils.extraHelp)
-	.action(function() {
+	.action(function () {
 		if (!fs.existsSync(Helper.getUsersPath())) {
 			log.error(`${Helper.getUsersPath()} does not exist.`);
 			return;

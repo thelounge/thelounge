@@ -8,7 +8,7 @@
  *    so that the timeout can be triggered while slow JS is loading
  */
 
-(function() {
+(function () {
 	const msg = document.getElementById("loading-page-message");
 	msg.textContent = "Loading the app…";
 

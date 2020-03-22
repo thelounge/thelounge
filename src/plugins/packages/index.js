@@ -30,7 +30,7 @@ module.exports = {
 	outdated,
 };
 
-const packageApis = function(packageInfo) {
+const packageApis = function (packageInfo) {
 	return {
 		Stylesheets: {
 			addFile: addStylesheet.bind(this, packageInfo.packageName),

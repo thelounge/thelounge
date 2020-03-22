@@ -43,8 +43,8 @@ function startLdapServer(callback) {
 		return next(new ldap.InsufficientAccessRightsError());
 	}
 
-	Object.keys(authorizedUsers).forEach(function(dn) {
-		server.bind(dn, function(req, res, next) {
+	Object.keys(authorizedUsers).forEach(function (dn) {
+		server.bind(dn, function (req, res, next) {
 			const bindDN = req.dn.toString();
 			const password = req.credentials;
 
@@ -58,7 +58,7 @@ function startLdapServer(callback) {
 		});
 	});
 
-	server.search(searchConf.base, authorize, function(req, res) {
+	server.search(searchConf.base, authorize, function (req, res) {
 		const obj = {
 			dn: userDN,
 			attributes: {
@@ -89,18 +89,18 @@ function testLdapAuth() {
 	const manager = {};
 	const client = true;
 
-	it("should successfully authenticate with correct password", function(done) {
-		ldapAuth.auth(manager, client, user, correctPassword, function(valid) {
+	it("should successfully authenticate with correct password", function (done) {
+		ldapAuth.auth(manager, client, user, correctPassword, function (valid) {
 			expect(valid).to.equal(true);
 			done();
 		});
 	});
 
-	it("should fail to authenticate with incorrect password", function(done) {
+	it("should fail to authenticate with incorrect password", function (done) {
 		let error = "";
 		stub(log, "error").callsFake(TestUtil.sanitizeLog((str) => (error += str)));
 
-		ldapAuth.auth(manager, client, user, wrongPassword, function(valid) {
+		ldapAuth.auth(manager, client, user, wrongPassword, function (valid) {
 			expect(valid).to.equal(false);
 			expect(error).to.equal(
 				"LDAP bind failed: InsufficientAccessRightsError: InsufficientAccessRightsError\n"
@@ -110,11 +110,11 @@ function testLdapAuth() {
 		});
 	});
 
-	it("should fail to authenticate with incorrect username", function(done) {
+	it("should fail to authenticate with incorrect username", function (done) {
 		let warning = "";
 		stub(log, "warn").callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
 
-		ldapAuth.auth(manager, client, wrongUser, correctPassword, function(valid) {
+		ldapAuth.auth(manager, client, wrongUser, correctPassword, function (valid) {
 			expect(valid).to.equal(false);
 			expect(warning).to.equal("LDAP Search did not find anything for: eve (0)\n");
 			log.warn.restore();
@@ -123,39 +123,39 @@ function testLdapAuth() {
 	});
 }
 
-describe("LDAP authentication plugin", function() {
+describe("LDAP authentication plugin", function () {
 	// Increase timeout due to unpredictable I/O on CI services
 	this.timeout(TestUtil.isRunningOnCI() ? 25000 : 5000);
 	this.slow(300);
 
 	let server;
 
-	before(function(done) {
+	before(function (done) {
 		stub(log, "info");
 
 		server = startLdapServer(done);
 	});
 
-	after(function() {
+	after(function () {
 		server.close();
 
 		log.info.restore();
 	});
 
-	beforeEach(function() {
+	beforeEach(function () {
 		Helper.config.public = false;
 		Helper.config.ldap.enable = true;
 		Helper.config.ldap.url = "ldap://localhost:" + String(serverPort);
 		Helper.config.ldap.primaryKey = primaryKey;
 	});
 
-	afterEach(function() {
+	afterEach(function () {
 		Helper.config.public = true;
 		Helper.config.ldap.enable = false;
 	});
 
-	describe("LDAP authentication availability", function() {
-		it("checks that the configuration is correctly tied to isEnabled()", function() {
+	describe("LDAP authentication availability", function () {
+		it("checks that the configuration is correctly tied to isEnabled()", function () {
 			Helper.config.ldap.enable = true;
 			expect(ldapAuth.isEnabled()).to.equal(true);
 
@@ -164,12 +164,12 @@ describe("LDAP authentication plugin", function() {
 		});
 	});
 
-	describe("Simple LDAP authentication (predefined DN pattern)", function() {
+	describe("Simple LDAP authentication (predefined DN pattern)", function () {
 		Helper.config.ldap.baseDN = baseDN;
 		testLdapAuth();
 	});
 
-	describe("Advanced LDAP authentication (DN found by a prior search query)", function() {
+	describe("Advanced LDAP authentication (DN found by a prior search query)", function () {
 		delete Helper.config.ldap.baseDN;
 		testLdapAuth();
 	});

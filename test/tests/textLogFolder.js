@@ -3,8 +3,8 @@
 const expect = require("chai").expect;
 const TextFileMessageStorage = require("../../src/plugins/messageStorage/text");
 
-describe("TextFileMessageStorage", function() {
-	it("should combine network name and uuid into a safe name", function() {
+describe("TextFileMessageStorage", function () {
+	it("should combine network name and uuid into a safe name", function () {
 		expect(
 			TextFileMessageStorage.getNetworkFolderName({
 				name: "Freenode",
@@ -13,7 +13,7 @@ describe("TextFileMessageStorage", function() {
 		).to.equal("freenode-4016-45e0-a8a8-d378fb252628");
 	});
 
-	it("network name should be cleaned up and lowercased", function() {
+	it("network name should be cleaned up and lowercased", function () {
 		expect(
 			TextFileMessageStorage.getNetworkFolderName({
 				name: '@ TeSt ../..\\<>:"/\\|?*',
@@ -22,7 +22,7 @@ describe("TextFileMessageStorage", function() {
 		).to.equal("@-test-.._..--45e0-a8a8-d378fb252628");
 	});
 
-	it("folder name may contain two dashes if on boundary", function() {
+	it("folder name may contain two dashes if on boundary", function () {
 		expect(
 			TextFileMessageStorage.getNetworkFolderName({
 				name: "Freenod",
@@ -31,7 +31,7 @@ describe("TextFileMessageStorage", function() {
 		).to.equal("freenod--4016-45e0-a8a8-d378fb252628");
 	});
 
-	it("should limit network name length", function() {
+	it("should limit network name length", function () {
 		expect(
 			TextFileMessageStorage.getNetworkFolderName({
 				name: "This network name is longer than the uuid itself but it should be limited",

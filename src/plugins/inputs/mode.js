@@ -5,7 +5,7 @@ const Msg = require("../../models/msg");
 
 exports.commands = ["mode", "op", "deop", "hop", "dehop", "voice", "devoice"];
 
-exports.input = function({irc, nick}, chan, cmd, args) {
+exports.input = function ({irc, nick}, chan, cmd, args) {
 	if (cmd !== "mode") {
 		if (chan.type !== Chan.Type.CHANNEL) {
 			chan.pushMessage(
@@ -40,7 +40,7 @@ exports.input = function({irc, nick}, chan, cmd, args) {
 			devoice: "-v",
 		}[cmd];
 
-		args.forEach(function(target) {
+		args.forEach(function (target) {
 			irc.raw("MODE", chan.name, mode, target);
 		});
 

@@ -16,12 +16,12 @@ const ctcpResponses = {
 	VERSION: () => pkg.name + " " + Helper.getVersion() + " -- " + pkg.homepage,
 };
 
-module.exports = function(irc, network) {
+module.exports = function (irc, network) {
 	const client = this;
 	const lobby = network.channels[0];
 
-	irc.on("ctcp response", function(data) {
-		const shouldIgnore = network.ignoreList.some(function(entry) {
+	irc.on("ctcp response", function (data) {
+		const shouldIgnore = network.ignoreList.some(function (entry) {
 			return Helper.compareHostmask(entry, data);
 		});
 
@@ -59,7 +59,7 @@ module.exports = function(irc, network) {
 					return;
 				}
 
-				const shouldIgnore = network.ignoreList.some(function(entry) {
+				const shouldIgnore = network.ignoreList.some(function (entry) {
 					return Helper.compareHostmask(entry, data);
 				});
 

@@ -11,7 +11,7 @@ program
 	.command("add <name>")
 	.description("Add a new user")
 	.on("--help", Utils.extraHelp)
-	.action(function(name) {
+	.action(function (name) {
 		if (!fs.existsSync(Helper.getUsersPath())) {
 			log.error(`${Helper.getUsersPath()} does not exist.`);
 			return;
@@ -36,7 +36,7 @@ program
 				text: "Enter password:",
 				silent: true,
 			},
-			function(err, password) {
+			function (err, password) {
 				if (!password) {
 					log.error("Password cannot be empty.");
 					return;
@@ -48,7 +48,7 @@ program
 							text: "Save logs to disk?",
 							default: "yes",
 						},
-						function(err2, enableLog) {
+						function (err2, enableLog) {
 							if (!err2) {
 								add(
 									manager,

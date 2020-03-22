@@ -14,7 +14,7 @@ program
 	.description("Start the server")
 	.option("--dev", "Development mode with hot module reloading")
 	.on("--help", Utils.extraHelp)
-	.action(function(options) {
+	.action(function (options) {
 		initalizeConfig();
 
 		const server = require("../server");

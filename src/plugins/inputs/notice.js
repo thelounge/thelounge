@@ -2,7 +2,7 @@
 
 exports.commands = ["notice"];
 
-exports.input = function(network, chan, cmd, args) {
+exports.input = function (network, chan, cmd, args) {
 	if (!args[1]) {
 		return;
 	}

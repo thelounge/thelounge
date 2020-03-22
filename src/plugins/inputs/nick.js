@@ -5,7 +5,7 @@ const Msg = require("../../models/msg");
 exports.commands = ["nick"];
 exports.allowDisconnected = true;
 
-exports.input = function(network, chan, cmd, args) {
+exports.input = function (network, chan, cmd, args) {
 	if (args.length === 0) {
 		chan.pushMessage(
 			this,

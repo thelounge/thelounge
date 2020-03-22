@@ -5,17 +5,17 @@ socket.on("disconnect", handleDisconnect);
 socket.on("connect_error", handleDisconnect);
 socket.on("error", handleDisconnect);
 
-socket.on("reconnecting", function(attempt) {
+socket.on("reconnecting", function (attempt) {
 	store.commit("currentUserVisibleError", `Reconnecting… (attempt ${attempt})`);
 	updateLoadingMessage();
 });
 
-socket.on("connecting", function() {
+socket.on("connecting", function () {
 	store.commit("currentUserVisibleError", "Connecting…");
 	updateLoadingMessage();
 });
 
-socket.on("connect", function() {
+socket.on("connect", function () {
 	// Clear send buffer when reconnecting, socket.io would emit these
 	// immediately upon connection and it will have no effect, so we ensure
 	// nothing is sent to the server that might have happened.

@@ -9,8 +9,8 @@
 			<template
 				v-if="
 					$store.state.versionData &&
-						$store.state.versionData.current &&
-						$store.state.versionData.current.version
+					$store.state.versionData.current &&
+					$store.state.versionData.current.version
 				"
 			>
 				<h1 class="title">
@@ -29,9 +29,7 @@
 					<p>Unable to retrieve changelog for current release from GitHub.</p>
 					<p>
 						<a
-							:href="
-								`https://github.com/thelounge/thelounge/releases/tag/v${$store.state.serverConfiguration.version}`
-							"
+							:href="`https://github.com/thelounge/thelounge/releases/tag/v${$store.state.serverConfiguration.version}`"
 							target="_blank"
 							rel="noopener"
 							>View release notes for this version on GitHub</a

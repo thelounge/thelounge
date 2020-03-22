@@ -5,7 +5,7 @@ import store from "./store";
 
 export default {togglePushSubscription};
 
-socket.once("push:issubscribed", function(hasSubscriptionOnServer) {
+socket.once("push:issubscribed", function (hasSubscriptionOnServer) {
 	if (!isAllowedServiceWorkersHost()) {
 		store.commit("pushNotificationState", "nohttps");
 		return;

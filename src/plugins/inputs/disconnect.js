@@ -3,7 +3,7 @@
 exports.commands = ["disconnect"];
 exports.allowDisconnected = true;
 
-exports.input = function(network, chan, cmd, args) {
+exports.input = function (network, chan, cmd, args) {
 	const quitMessage = args[0] ? args.join(" ") : null;
 
 	network.quit(quitMessage);

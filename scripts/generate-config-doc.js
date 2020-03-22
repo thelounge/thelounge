@@ -63,8 +63,5 @@ log.info(
 );
 
 function getPrettyDate() {
-	return new Date()
-		.toISOString()
-		.split(".")[0]
-		.replace("T", " ");
+	return new Date().toISOString().split(".")[0].replace("T", " ");
 }

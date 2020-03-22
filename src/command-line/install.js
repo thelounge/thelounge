@@ -10,7 +10,7 @@ program
 	.command("install <package>")
 	.description("Install a theme or a package")
 	.on("--help", Utils.extraHelp)
-	.action(function(packageName) {
+	.action(function (packageName) {
 		const fs = require("fs");
 		const packageJson = require("package-json");
 

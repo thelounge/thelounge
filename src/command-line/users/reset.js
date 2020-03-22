@@ -11,7 +11,7 @@ program
 	.command("reset <name>")
 	.description("Reset user password")
 	.on("--help", Utils.extraHelp)
-	.action(function(name) {
+	.action(function (name) {
 		if (!fs.existsSync(Helper.getUsersPath())) {
 			log.error(`${Helper.getUsersPath()} does not exist.`);
 			return;
@@ -39,7 +39,7 @@ program
 				text: "Enter new password:",
 				silent: true,
 			},
-			function(err, password) {
+			function (err, password) {
 				if (err) {
 					return;
 				}

@@ -6,8 +6,8 @@ const stub = require("sinon").stub;
 const mergeConfig = require("../../src/helper").mergeConfig;
 const TestUtil = require("../util");
 
-describe("mergeConfig", function() {
-	it("should mutate object", function() {
+describe("mergeConfig", function () {
+	it("should mutate object", function () {
 		const config = {
 			ip: "default",
 		};
@@ -25,7 +25,7 @@ describe("mergeConfig", function() {
 		});
 	});
 
-	it("should merge new properties", function() {
+	it("should merge new properties", function () {
 		expect(
 			mergeConfig(
 				{
@@ -42,7 +42,7 @@ describe("mergeConfig", function() {
 		});
 	});
 
-	it("should extend objects", function() {
+	it("should extend objects", function () {
 		expect(
 			mergeConfig(
 				{
@@ -63,7 +63,7 @@ describe("mergeConfig", function() {
 		});
 	});
 
-	it("should warn for unknown top level keys", function() {
+	it("should warn for unknown top level keys", function () {
 		let warning = "";
 		stub(log, "warn").callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
 
@@ -86,7 +86,7 @@ describe("mergeConfig", function() {
 		expect(warning).to.equal('Unknown key "optionTwo", please verify your config.\n');
 	});
 
-	it("should not warn for unknown second level keys", function() {
+	it("should not warn for unknown second level keys", function () {
 		expect(
 			mergeConfig(
 				{
@@ -109,7 +109,7 @@ describe("mergeConfig", function() {
 		});
 	});
 
-	it("should allow changing nulls", function() {
+	it("should allow changing nulls", function () {
 		expect(
 			mergeConfig(
 				{
@@ -124,7 +124,7 @@ describe("mergeConfig", function() {
 		});
 	});
 
-	it("should allow changing nulls with objects", function() {
+	it("should allow changing nulls with objects", function () {
 		expect(
 			mergeConfig(
 				{
@@ -145,7 +145,7 @@ describe("mergeConfig", function() {
 		});
 	});
 
-	it("should allow changing nulls with objects that has function", function() {
+	it("should allow changing nulls with objects that has function", function () {
 		const callbackFunction = () => ({});
 
 		expect(
@@ -166,7 +166,7 @@ describe("mergeConfig", function() {
 		});
 	});
 
-	it("should keep new properties inside of objects", function() {
+	it("should keep new properties inside of objects", function () {
 		expect(
 			mergeConfig(
 				{
@@ -204,7 +204,7 @@ describe("mergeConfig", function() {
 		});
 	});
 
-	it("should not merge arrays", function() {
+	it("should not merge arrays", function () {
 		expect(
 			mergeConfig(
 				{
@@ -232,7 +232,7 @@ describe("mergeConfig", function() {
 		});
 	});
 
-	it("should change order in arrays", function() {
+	it("should change order in arrays", function () {
 		expect(
 			mergeConfig(
 				{
@@ -247,7 +247,7 @@ describe("mergeConfig", function() {
 		});
 	});
 
-	it("should only merge same type", function() {
+	it("should only merge same type", function () {
 		stub(log, "warn");
 
 		expect(

@@ -3,7 +3,7 @@
 import socket from "../socket";
 import store from "../store";
 
-socket.on("names", function(data) {
+socket.on("names", function (data) {
 	const channel = store.getters.findChannel(data.id);
 
 	if (channel) {

@@ -4,10 +4,7 @@ const colors = require("chalk");
 const read = require("read");
 
 function timestamp() {
-	const datetime = new Date()
-		.toISOString()
-		.split(".")[0]
-		.replace("T", " ");
+	const datetime = new Date().toISOString().split(".")[0].replace("T", " ");
 
 	return colors.dim(datetime);
 }

@@ -12,7 +12,7 @@ const currentFetchPromises = new Map();
 const imageTypeRegex = /^image\/.+/;
 const mediaTypeRegex = /^(audio|video)\/.+/;
 
-module.exports = function(client, chan, msg) {
+module.exports = function (client, chan, msg) {
 	if (!Helper.config.prefetch) {
 		return;
 	}
@@ -78,9 +78,7 @@ function parseHtml(preview, res, client) {
 				preview.type = "link";
 				preview.head =
 					$('meta[property="og:title"]').attr("content") ||
-					$("head > title, title")
-						.first()
-						.text() ||
+					$("head > title, title").first().text() ||
 					"";
 				preview.body =
 					$('meta[property="og:description"]').attr("content") ||
@@ -136,7 +134,7 @@ function parseHtmlMedia($, preview, client) {
 				return;
 			}
 
-			$(`meta[property="og:${type}:type"]`).each(function(i) {
+			$(`meta[property="og:${type}:type"]`).each(function (i) {
 				const mimeType = $(this).attr("content");
 
 				if (mediaTypeRegex.test(mimeType)) {
@@ -360,7 +358,7 @@ function fetch(uri, headers) {
 			});
 
 			gotStream
-				.on("response", function(res) {
+				.on("response", function (res) {
 					contentLength = parseInt(res.headers["content-length"], 10) || 0;
 					contentType = res.headers["content-type"];
 

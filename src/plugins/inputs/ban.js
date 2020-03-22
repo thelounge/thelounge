@@ -5,7 +5,7 @@ const Msg = require("../../models/msg");
 
 exports.commands = ["ban", "unban", "banlist"];
 
-exports.input = function({irc}, chan, cmd, args) {
+exports.input = function ({irc}, chan, cmd, args) {
 	if (chan.type !== Chan.Type.CHANNEL) {
 		chan.pushMessage(
 			this,

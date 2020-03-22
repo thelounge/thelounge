@@ -12,7 +12,7 @@ program
 	.command("edit <name>")
 	.description(`Edit user file located at ${colors.green(Helper.getUserConfigPath("<name>"))}`)
 	.on("--help", Utils.extraHelp)
-	.action(function(name) {
+	.action(function (name) {
 		if (!fs.existsSync(Helper.getUsersPath())) {
 			log.error(`${Helper.getUsersPath()} does not exist.`);
 			return;
@@ -36,7 +36,7 @@ program
 			[Helper.getUserConfigPath(name)],
 			{stdio: "inherit"}
 		);
-		child_spawn.on("error", function() {
+		child_spawn.on("error", function () {
 			log.error(
 				`Unable to open ${colors.green(Helper.getUserConfigPath(name))}. ${colors.bold(
 					"$EDITOR"

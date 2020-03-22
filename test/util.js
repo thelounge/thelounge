@@ -15,7 +15,7 @@ function MockClient() {
 
 util.inherits(MockClient, EventEmitter);
 
-MockClient.prototype.createMessage = function(opts) {
+MockClient.prototype.createMessage = function (opts) {
 	const message = _.extend(
 		{
 			text: "dummy message",
@@ -30,7 +30,7 @@ MockClient.prototype.createMessage = function(opts) {
 };
 
 function sanitizeLog(callback) {
-	return function(...args) {
+	return function (...args) {
 		// Concats and removes ANSI colors. See https://stackoverflow.com/a/29497680
 		const stdout = args
 			.join(" ")

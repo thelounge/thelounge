@@ -4,7 +4,7 @@ const Msg = require("../../models/msg");
 
 exports.commands = ["ctcp"];
 
-exports.input = function({irc}, chan, cmd, args) {
+exports.input = function ({irc}, chan, cmd, args) {
 	if (args.length < 2) {
 		chan.pushMessage(
 			this,
