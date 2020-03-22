@@ -94,7 +94,10 @@ function checkForUpdates(manager) {
 	fetch().then((versionData) => {
 		if (!module.exports.isUpdateAvailable) {
 			// Check for updates every 24 hours + random jitter of <3 hours
-			setTimeout(checkForUpdates, 24 * 3600 * 1000 + Math.floor(Math.random() * 10000000));
+			setTimeout(
+				() => checkForUpdates(manager),
+				24 * 3600 * 1000 + Math.floor(Math.random() * 10000000)
+			);
 		}
 
 		if (!versionData.latest) {
