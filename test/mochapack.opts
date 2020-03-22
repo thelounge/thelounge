@@ -1,6 +1,0 @@
---check-leaks
---interactive false
---recursive
---reporter dot
---webpack-config webpack.config-test.js
-test/client/**/*.js

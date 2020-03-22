@@ -1,6 +1,0 @@
-{
-  "all": true,
-  "temp-dir": "./node_modules/.cache/nyc_output",
-  "include": ["client/"],
-  "reporter": ["json", "text-summary"]
-}
