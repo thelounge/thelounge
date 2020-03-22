@@ -72,12 +72,12 @@
     "sqlite3": "4.1.1"
   },
   "devDependencies": {
-    "@babel/core": "7.8.7",
-    "@babel/preset-env": "7.8.7",
+    "@babel/core": "7.9.0",
+    "@babel/preset-env": "7.9.0",
     "@fortawesome/fontawesome-free": "5.12.1",
     "@vue/server-test-utils": "1.0.0-beta.32",
     "@vue/test-utils": "1.0.0-beta.32",
-    "babel-loader": "8.0.6",
+    "babel-loader": "8.1.0",
     "babel-plugin-istanbul": "6.0.0",
     "chai": "4.2.0",
     "copy-webpack-plugin": "5.1.1",
