@@ -104,7 +104,7 @@ body {
 	  * Disable pull-to-refresh on mobile that conflicts with scrolling the message list.
 	  * See http://stackoverflow.com/a/29313685/1935861
 	  */
-	overflow-y: hidden;
+	overflow: hidden; /* iOS Safari requires overflow rather than overflow-y */
 }
 
 a,
