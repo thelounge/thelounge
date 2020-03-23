@@ -193,6 +193,7 @@ import JoinChannel from "./JoinChannel.vue";
 
 import socket from "../js/socket";
 import collapseNetwork from "../js/helpers/collapseNetwork";
+import isIgnoredKeybind from "../js/helpers/isIgnoredKeybind";
 
 export default {
 	name: "NetworkList",
@@ -251,15 +252,27 @@ export default {
 		Mousetrap.unbind("alt+j", this.toggleSearch);
 	},
 	methods: {
-		expandNetwork() {
+		expandNetwork(event) {
+			if (isIgnoredKeybind(event)) {
+				return true;
+			}
+
 			if (this.$store.state.activeChannel) {
 				collapseNetwork(this.$store.state.activeChannel.network, false);
 			}
+
+			return false;
 		},
-		collapseNetwork() {
+		collapseNetwork(event) {
+			if (isIgnoredKeybind(event)) {
+				return true;
+			}
+
 			if (this.$store.state.activeChannel) {
 				collapseNetwork(this.$store.state.activeChannel.network, true);
 			}
+
+			return false;
 		},
 		isCurrentlyInTouch(e) {
 			// TODO: Implement a way to sort on touch devices
@@ -299,9 +312,7 @@ export default {
 			});
 		},
 		toggleSearch(event) {
-			// Do not handle this keybind in the chat input because
-			// it can be used to type letters with umlauts
-			if (event.target.tagName === "TEXTAREA") {
+			if (isIgnoredKeybind(event)) {
 				return true;
 			}
 
