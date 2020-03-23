@@ -16,18 +16,25 @@ describe("SQLite Message Storage", function () {
 	const expectedPath = path.join(Helper.getHomePath(), "logs", "testUser.sqlite3");
 	let store;
 
-	// Delete database file from previous test run
 	before(function (done) {
 		store = new MessageStorage({
 			name: "testUser",
 			idMsg: 1,
 		});
 
+		// Delete database file from previous test run
 		if (fs.existsSync(expectedPath)) {
 			fs.unlink(expectedPath, done);
 		} else {
 			done();
 		}
+	});
+
+	after(function (done) {
+		// After tests run, remove the logs folder
+		// so we return to the clean state
+		fs.unlinkSync(expectedPath);
+		fs.rmdir(path.join(Helper.getHomePath(), "logs"), done);
 	});
 
 	it("should resolve an empty array when disabled", function (done) {

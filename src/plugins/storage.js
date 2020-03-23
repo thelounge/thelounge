@@ -2,7 +2,6 @@
 
 const log = require("../log");
 const fs = require("fs");
-const fsextra = require("fs-extra");
 const path = require("path");
 const crypto = require("crypto");
 const helper = require("../helper");
@@ -16,7 +15,19 @@ class Storage {
 		// Ensures that a directory is empty.
 		// Deletes directory contents if the directory is not empty.
 		// If the directory does not exist, it is created.
-		fsextra.emptyDirSync(helper.getStoragePath());
+
+		const dir = helper.getStoragePath();
+		let items;
+
+		try {
+			items = fs.readdirSync(dir);
+		} catch (e) {
+			fs.mkdirSync(dir, {recursive: true});
+			return;
+		}
+
+		// TODO: Use `fs.rmdirSync(dir, {recursive: true});` when it's stable (node 13+)
+		items.forEach((item) => deleteFolder(path.join(dir, item)));
 	}
 
 	dereference(url) {
@@ -57,25 +68,38 @@ class Storage {
 			return callback(url);
 		}
 
-		fsextra
-			.ensureDir(folder)
-			.then(() => {
-				fs.writeFile(filePath, data, (err) => {
-					if (err) {
-						log.error("Failed to store a file", err);
-
-						return callback("");
-					}
-
-					callback(url);
-				});
-			})
-			.catch((err) => {
-				log.error("Failed to create storage folder", err);
+		fs.mkdir(folder, {recursive: true}, (mkdirErr) => {
+			if (mkdirErr) {
+				log.error("Failed to create storage folder", mkdirErr);
 
 				return callback("");
+			}
+
+			fs.writeFile(filePath, data, (err) => {
+				if (err) {
+					log.error("Failed to store a file", err);
+
+					return callback("");
+				}
+
+				callback(url);
 			});
+		});
 	}
 }
 
 module.exports = new Storage();
+
+function deleteFolder(dir) {
+	fs.readdirSync(dir).forEach((item) => {
+		item = path.join(dir, item);
+
+		if (fs.lstatSync(item).isDirectory()) {
+			deleteFolder(item);
+		} else {
+			fs.unlinkSync(item);
+		}
+	});
+
+	fs.rmdirSync(dir);
+}

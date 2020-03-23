@@ -2,7 +2,6 @@
 
 const log = require("../../log");
 const fs = require("fs");
-const fsextra = require("fs-extra");
 const path = require("path");
 const filenamify = require("filenamify");
 const Helper = require("../../helper");
@@ -38,7 +37,7 @@ class TextFileMessageStorage {
 		);
 
 		try {
-			fsextra.ensureDirSync(logPath);
+			fs.mkdirSync(logPath, {recursive: true});
 		} catch (e) {
 			log.error("Unable to create logs directory", e);
 			return;

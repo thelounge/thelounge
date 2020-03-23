@@ -4,7 +4,6 @@ const Helper = require("../helper");
 const busboy = require("busboy");
 const {v4: uuidv4} = require("uuid");
 const path = require("path");
-const fsextra = require("fs-extra");
 const fs = require("fs");
 const fileType = require("file-type");
 const readChunk = require("read-chunk");
@@ -174,7 +173,7 @@ class Uploader {
 		// this helps avoid file system and certain tooling limitations when there are
 		// too many files on one folder
 		try {
-			fsextra.ensureDirSync(destDir);
+			fs.mkdirSync(destDir, {recursive: true});
 		} catch (err) {
 			log.err(`Error ensuring ${destDir} exists for uploads: ${err.message}`);
 			return abortWithError(err);
