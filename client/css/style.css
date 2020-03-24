@@ -105,6 +105,13 @@ body {
 	  * See http://stackoverflow.com/a/29313685/1935861
 	  */
 	overflow: hidden; /* iOS Safari requires overflow rather than overflow-y */
+
+	/* To support "viewport-fit=cover" */
+	padding:
+		env(safe-area-inset-top)
+		env(safe-area-inset-right)
+		env(safe-area-inset-bottom)
+		env(safe-area-inset-left);
 }
 
 a,
@@ -2476,6 +2483,13 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	font-size: 12px;
 }
 
+@media (display-mode: standalone) {
+	/* When running as a web app with "viewport-fit=cover" */
+	body {
+		height: 100vh;
+	}
+}
+
 @media (min-width: 480px) {
 	/* Fade out for long usernames */
 	#chat .from {
@@ -2515,6 +2529,22 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	.textcomplete-menu,
 	.messages .msg {
 		font-size: 15px;
+	}
+
+	@media (display-mode: standalone) {
+		#viewport > * {
+			padding-top: env(safe-area-inset-top);
+		}
+
+		#sidebar {
+			height: 100vh;
+			max-height: 100vh;
+		}
+
+		body {
+			height: 100vh;
+			padding-top: 0;
+		}
 	}
 
 	#sidebar {
