@@ -92,7 +92,7 @@
     "husky": "4.2.3",
     "intersection-observer": "0.7.0",
     "mini-css-extract-plugin": "0.9.0",
-    "mocha": "6.2.2",
+    "mocha": "6.2.3",
     "mochapack": "1.1.13",
     "mousetrap": "1.6.5",
     "normalize.css": "8.0.1",
