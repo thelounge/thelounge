@@ -148,23 +148,16 @@ Network.prototype.validate = function (client) {
 Network.prototype.createIrcFramework = function (client) {
 	this.irc = new IrcFramework.Client({
 		version: false, // We handle it ourselves
-		host: this.host,
-		port: this.port,
-		nick: this.nick,
-		username: Helper.config.useHexIp ? Helper.ip2hex(client.config.browser.ip) : this.username,
-		gecos: this.realname,
-		password: this.password,
-		tls: this.tls,
 		outgoing_addr: Helper.config.bind,
-		rejectUnauthorized: this.rejectUnauthorized,
 		enable_chghost: true,
 		enable_echomessage: true,
 		enable_setname: true,
 		auto_reconnect: true,
 		auto_reconnect_wait: 10000 + Math.floor(Math.random() * 1000), // If multiple users are connected to the same network, randomize their reconnections a little
 		auto_reconnect_max_retries: 360, // At least one hour (plus timeouts) worth of reconnections
-		webirc: this.createWebIrc(client),
 	});
+
+	this.setIrcFrameworkOptions(client);
 
 	this.irc.requestCap([
 		"znc.in/self-message", // Legacy echo-message for ZNC
@@ -175,6 +168,20 @@ Network.prototype.createIrcFramework = function (client) {
 	if (client.config.log && client.messageStorage.find((s) => s.canProvideMessages())) {
 		this.irc.requestCap("znc.in/playback");
 	}
+};
+
+Network.prototype.setIrcFrameworkOptions = function (client) {
+	this.irc.options.host = this.host;
+	this.irc.options.port = this.port;
+	this.irc.options.password = this.password;
+	this.irc.options.nick = this.nick;
+	this.irc.options.username = Helper.config.useHexIp
+		? Helper.ip2hex(client.config.browser.ip)
+		: this.username;
+	this.irc.options.gecos = this.realname;
+	this.irc.options.tls = this.tls;
+	this.irc.options.rejectUnauthorized = this.rejectUnauthorized;
+	this.irc.options.webirc = this.createWebIrc(client);
 };
 
 Network.prototype.createWebIrc = function (client) {
@@ -243,7 +250,7 @@ Network.prototype.edit = function (client, args) {
 				// Send new nick straight away
 				this.irc.changeNick(this.nick);
 			} else {
-				this.irc.options.nick = this.irc.user.nick = this.nick;
+				this.irc.user.nick = this.nick;
 
 				// Update UI nick straight away if IRC is not connected
 				client.emit("nick", {
@@ -261,16 +268,10 @@ Network.prototype.edit = function (client, args) {
 			this.irc.raw("SETNAME", this.realname);
 		}
 
-		this.irc.options.host = this.host;
-		this.irc.options.port = this.port;
-		this.irc.options.password = this.password;
-		this.irc.options.gecos = this.irc.user.gecos = this.realname;
-		this.irc.options.tls = this.tls;
-		this.irc.options.rejectUnauthorized = this.rejectUnauthorized;
+		this.setIrcFrameworkOptions(client);
 
-		if (!Helper.config.useHexIp) {
-			this.irc.options.username = this.irc.user.username = this.username;
-		}
+		this.irc.user.username = this.irc.options.username;
+		this.irc.user.gecos = this.irc.options.gecos;
 	}
 
 	client.save();
@@ -296,6 +297,10 @@ Network.prototype.setNick = function (nick) {
 
 	if (this.keepNick === nick) {
 		this.keepNick = null;
+	}
+
+	if (this.irc) {
+		this.irc.options.nick = nick;
 	}
 };
 
