@@ -49,7 +49,7 @@
     "express": "4.17.1",
     "file-type": "14.1.4",
     "filenamify": "4.1.0",
-    "got": "10.6.0",
+    "got": "10.7.0",
     "irc-framework": "4.7.0",
     "is-utf8": "0.2.1",
     "ldapjs": "2.0.0-pre.5",
