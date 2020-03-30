@@ -7,6 +7,7 @@ const Chan = require("./chan");
 const Msg = require("./msg");
 const Helper = require("../helper");
 const STSPolicies = require("../plugins/sts");
+const ClientCertificate = require("../plugins/clientCertificate");
 
 module.exports = Network;
 
@@ -84,6 +85,10 @@ Network.prototype.validate = function (client) {
 
 	if (!this.port) {
 		this.port = this.tls ? 6697 : 6667;
+	}
+
+	if (!this.tls) {
+		ClientCertificate.remove(this.uuid);
 	}
 
 	if (Helper.config.lockNetwork) {
@@ -182,6 +187,14 @@ Network.prototype.setIrcFrameworkOptions = function (client) {
 	this.irc.options.tls = this.tls;
 	this.irc.options.rejectUnauthorized = this.rejectUnauthorized;
 	this.irc.options.webirc = this.createWebIrc(client);
+
+	this.irc.options.client_certificate = this.tls ? ClientCertificate.get(this.uuid) : null;
+
+	if (this.irc.options.client_certificate && !this.irc.options.password) {
+		this.irc.options.sasl_mechanism = "EXTERNAL";
+	} else {
+		delete this.irc.options.sasl_mechanism;
+	}
 };
 
 Network.prototype.createWebIrc = function (client) {

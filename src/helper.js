@@ -18,6 +18,7 @@ let storagePath;
 let packagesPath;
 let fileUploadPath;
 let userLogsPath;
+let clientCertificatesPath;
 
 const Helper = {
 	config: null,
@@ -31,6 +32,7 @@ const Helper = {
 	getUsersPath,
 	getUserConfigPath,
 	getUserLogsPath,
+	getClientCertificatesPath,
 	setHome,
 	getVersion,
 	getVersionCacheBust,
@@ -100,6 +102,7 @@ function setHome(newPath) {
 	fileUploadPath = path.join(homePath, "uploads");
 	packagesPath = path.join(homePath, "packages");
 	userLogsPath = path.join(homePath, "logs");
+	clientCertificatesPath = path.join(homePath, "certificates");
 
 	// Reload config from new home location
 	if (fs.existsSync(configPath)) {
@@ -183,6 +186,10 @@ function getUserConfigPath(name) {
 
 function getUserLogsPath() {
 	return userLogsPath;
+}
+
+function getClientCertificatesPath() {
+	return clientCertificatesPath;
 }
 
 function getStoragePath() {
