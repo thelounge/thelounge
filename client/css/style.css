@@ -1826,8 +1826,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #connect .btn {
-	margin-left: 25%;
 	margin-top: 15px;
+	width: 100%;
 }
 
 #settings .apple-push-unsupported,
@@ -2619,11 +2619,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	#connect .connect-row > .input,
 	#connect .connect-row > .input-wrap {
 		flex-grow: 1;
-	}
-
-	#connect .btn {
-		margin-left: 0;
-		width: 100%;
 	}
 
 	#help .help-version-title {

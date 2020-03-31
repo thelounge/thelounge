@@ -57,6 +57,23 @@
 					</div>
 				</div>
 				<div class="connect-row">
+					<label for="connect:password">Password</label>
+					<RevealPassword
+						v-slot:default="slotProps"
+						class="input-wrap password-container"
+					>
+						<input
+							id="connect:password"
+							v-model="defaults.password"
+							class="input"
+							:type="slotProps.isVisible ? 'text' : 'password'"
+							placeholder="Server password (optional)"
+							name="password"
+							maxlength="300"
+						/>
+					</RevealPassword>
+				</div>
+				<div class="connect-row">
 					<label></label>
 					<div class="input-wrap">
 						<label class="tls">
@@ -118,19 +135,6 @@
 				</div>
 			</template>
 			<div class="connect-row">
-				<label for="connect:password">Password</label>
-				<RevealPassword v-slot:default="slotProps" class="input-wrap password-container">
-					<input
-						id="connect:password"
-						v-model="defaults.password"
-						class="input"
-						:type="slotProps.isVisible ? 'text' : 'password'"
-						name="password"
-						maxlength="300"
-					/>
-				</RevealPassword>
-			</div>
-			<div class="connect-row">
 				<label for="connect:realname">Real name</label>
 				<input
 					id="connect:realname"
@@ -151,26 +155,161 @@
 						:value="defaults.commands ? defaults.commands.join('\n') : ''"
 					/>
 				</div>
-				<div>
-					<button type="submit" class="btn" :disabled="disabled ? true : false">
-						Save
-					</button>
-				</div>
 			</template>
 			<template v-else>
 				<div class="connect-row">
 					<label for="connect:channels">Channels</label>
 					<input id="connect:channels" class="input" name="join" :value="defaults.join" />
 				</div>
-				<div>
-					<button type="submit" class="btn" :disabled="disabled ? true : false">
-						Connect
-					</button>
+			</template>
+
+			<template v-if="$store.state.serverConfiguration.public">
+				<template v-if="!config.displayNetwork">
+					<div class="connect-row">
+						<label></label>
+						<div class="input-wrap">
+							<label class="tls">
+								<input v-model="displayPasswordField" type="checkbox" />
+								I have a password
+							</label>
+						</div>
+					</div>
+					<div v-if="displayPasswordField" class="connect-row">
+						<label for="connect:password">Password</label>
+						<RevealPassword
+							v-slot:default="slotProps"
+							class="input-wrap password-container"
+						>
+							<input
+								id="connect:password"
+								v-model="defaults.password"
+								class="input"
+								:type="slotProps.isVisible ? 'text' : 'password'"
+								placeholder="Server password (optional)"
+								name="password"
+								maxlength="300"
+							/>
+						</RevealPassword>
+					</div>
+				</template>
+			</template>
+			<template v-else>
+				<h2 id="label-auth">Authentication</h2>
+				<div class="connect-row connect-auth" role="group" aria-labelledby="label-auth">
+					<label class="opt">
+						<input
+							:checked="!defaults.sasl"
+							type="radio"
+							name="sasl"
+							value=""
+							@change="setSaslAuth('')"
+						/>
+						No authentication
+					</label>
+					<label class="opt">
+						<input
+							:checked="defaults.sasl === 'plain'"
+							type="radio"
+							name="sasl"
+							value="plain"
+							@change="setSaslAuth('plain')"
+						/>
+						Username + password (SASL PLAIN)
+					</label>
+					<label
+						v-if="!$store.state.serverConfiguration.public && defaults.tls"
+						class="opt"
+					>
+						<input
+							:checked="defaults.sasl === 'external'"
+							type="radio"
+							name="sasl"
+							value="external"
+							@change="setSaslAuth('external')"
+						/>
+						Client certificate (SASL EXTERNAL)
+					</label>
+				</div>
+
+				<template v-if="defaults.sasl === 'plain'">
+					<div class="connect-row">
+						<label for="connect:username">Account</label>
+						<input
+							id="connect:saslAccount"
+							:value="defaults.saslAccount"
+							class="input"
+							name="saslAccount"
+							maxlength="100"
+							required
+						/>
+					</div>
+					<div class="connect-row">
+						<label for="connect:password">Password</label>
+						<RevealPassword
+							v-slot:default="slotProps"
+							class="input-wrap password-container"
+						>
+							<input
+								id="connect:saslPassword"
+								:value="defaults.saslPassword"
+								class="input"
+								:type="slotProps.isVisible ? 'text' : 'password'"
+								name="saslPassword"
+								maxlength="300"
+								required
+							/>
+						</RevealPassword>
+					</div>
+				</template>
+				<div v-else-if="defaults.sasl === 'external'" class="connect-sasl-external">
+					<p>
+						The Lounge automatically generates and manages the client certificate.
+					</p>
+					<p>
+						On the IRC server, you will need to tell the services to attach the
+						certificate fingerprint (certfp) to your account, for example:
+					</p>
+					<pre><code>/msg NickServ CERT ADD</code></pre>
 				</div>
 			</template>
+
+			<div>
+				<button type="submit" class="btn" :disabled="disabled ? true : false">
+					<template v-if="defaults.uuid">Save network</template>
+					<template v-else>Connect</template>
+				</button>
+			</div>
 		</form>
 	</div>
 </template>
+
+<style>
+#connect .connect-auth {
+	display: block;
+	margin-bottom: 10px;
+}
+
+#connect .connect-auth .opt {
+	display: block;
+	width: 100%;
+}
+
+#connect .connect-auth input {
+	margin: 3px 10px 0 0;
+}
+
+#connect .connect-sasl-external {
+	padding: 10px;
+	border-radius: 2px;
+	background-color: #d9edf7;
+	color: #31708f;
+}
+
+#connect .connect-sasl-external pre {
+	margin: 0;
+	user-select: text;
+}
+</style>
 
 <script>
 import RevealPassword from "./RevealPassword.vue";
@@ -191,9 +330,13 @@ export default {
 		return {
 			config: this.$store.state.serverConfiguration,
 			previousUsername: this.defaults.username,
+			displayPasswordField: false,
 		};
 	},
 	methods: {
+		setSaslAuth(type) {
+			this.defaults.sasl = type;
+		},
 		onNickChanged(event) {
 			// Username input is not available when useHexIp is set
 			if (!this.$refs.usernameInput) {

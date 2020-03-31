@@ -35,6 +35,9 @@ function Network(attr) {
 		commands: [],
 		username: "",
 		realname: "",
+		sasl: "",
+		saslAccount: "",
+		saslPassword: "",
 		channels: [],
 		irc: null,
 		serverOptions: {
@@ -82,9 +85,15 @@ Network.prototype.validate = function (client) {
 	this.password = cleanString(this.password);
 	this.host = cleanString(this.host).toLowerCase();
 	this.name = cleanString(this.name);
+	this.saslAccount = cleanString(this.saslAccount);
+	this.saslPassword = cleanString(this.saslPassword);
 
 	if (!this.port) {
 		this.port = this.tls ? 6697 : 6667;
+	}
+
+	if (!["", "plain", "external"].includes(this.sasl)) {
+		this.sasl = "";
 	}
 
 	if (!this.tls) {
@@ -190,10 +199,18 @@ Network.prototype.setIrcFrameworkOptions = function (client) {
 
 	this.irc.options.client_certificate = this.tls ? ClientCertificate.get(this.uuid) : null;
 
-	if (this.irc.options.client_certificate && !this.irc.options.password) {
-		this.irc.options.sasl_mechanism = "EXTERNAL";
-	} else {
+	if (!this.sasl) {
 		delete this.irc.options.sasl_mechanism;
+		delete this.irc.options.account;
+	} else if (this.sasl === "external") {
+		this.irc.options.sasl_mechanism = "EXTERNAL";
+		this.irc.options.account = {};
+	} else if (this.sasl === "plain") {
+		delete this.irc.options.sasl_mechanism;
+		this.irc.options.account = {
+			account: this.saslAccount,
+			password: this.saslPassword,
+		};
 	}
 };
 
@@ -241,6 +258,9 @@ Network.prototype.edit = function (client, args) {
 	this.password = String(args.password || "");
 	this.username = String(args.username || "");
 	this.realname = String(args.realname || "");
+	this.sasl = String(args.sasl || "");
+	this.saslAccount = String(args.saslAccount || "");
+	this.saslPassword = String(args.saslPassword || "");
 
 	// Split commands into an array
 	this.commands = String(args.commands || "")
@@ -403,26 +423,24 @@ Network.prototype.quit = function (quitMessage) {
 };
 
 Network.prototype.exportForEdit = function () {
-	let fieldsToReturn;
+	const fieldsToReturn = [
+		"uuid",
+		"name",
+		"nick",
+		"password",
+		"username",
+		"realname",
+		"sasl",
+		"saslAccount",
+		"saslPassword",
+		"commands",
+	];
 
 	if (Helper.config.displayNetwork) {
-		// Return fields required to edit a network
-		fieldsToReturn = [
-			"uuid",
-			"nick",
-			"name",
-			"host",
-			"port",
-			"tls",
-			"rejectUnauthorized",
-			"password",
-			"username",
-			"realname",
-			"commands",
-		];
-	} else {
-		// Same fields as in getClientConfiguration when network is hidden
-		fieldsToReturn = ["name", "nick", "username", "password", "realname"];
+		fieldsToReturn.push("host");
+		fieldsToReturn.push("port");
+		fieldsToReturn.push("tls");
+		fieldsToReturn.push("rejectUnauthorized");
 	}
 
 	const data = _.pick(this, fieldsToReturn);
@@ -446,6 +464,9 @@ Network.prototype.export = function () {
 		"password",
 		"username",
 		"realname",
+		"sasl",
+		"saslAccount",
+		"saslPassword",
 		"commands",
 		"ignoreList",
 	]);

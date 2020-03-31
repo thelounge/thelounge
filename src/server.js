@@ -738,6 +738,9 @@ function getClientConfiguration() {
 	config.themes = themes.getAll();
 	config.defaultTheme = Helper.config.theme;
 	config.defaults.nick = Helper.getDefaultNick();
+	config.defaults.sasl = "";
+	config.defaults.saslAccount = "";
+	config.defaults.saslPassword = "";
 
 	if (Uploader) {
 		config.fileUploadMaxFileSize = Uploader.getMaxFileSize();
