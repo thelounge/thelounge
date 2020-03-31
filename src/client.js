@@ -227,7 +227,7 @@ Client.prototype.connect = function (args, isStartup = false) {
 	const network = new Network({
 		uuid: args.uuid,
 		name: String(
-			args.name || (Helper.config.displayNetwork ? "" : Helper.config.defaults.name) || ""
+			args.name || (Helper.config.lockNetwork ? Helper.config.defaults.name : "") || ""
 		),
 		host: String(args.host || ""),
 		port: parseInt(args.port, 10),

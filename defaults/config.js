@@ -238,25 +238,11 @@ module.exports = {
 		join: "#thelounge",
 	},
 
-	// ### `displayNetwork`
-	//
-	// When set to `false`, network fields will not be shown in the "Connect"
-	// window.
-	//
-	// Note that even though users cannot access and set these fields, they can
-	// still connect to other networks using the `/connect` command. See the
-	// `lockNetwork` setting to restrict users from connecting to other networks.
-	//
-	// This value is set to `true` by default.
-	displayNetwork: true,
-
 	// ### `lockNetwork`
 	//
 	// When set to `true`, users will not be able to modify host, port and TLS
 	// settings and will be limited to the configured network.
-	//
-	// It is often useful to use it with `displayNetwork` when setting The
-	// Lounge as a public web client for a specific IRC network.
+	// These fields will also be hidden from the UI.
 	//
 	// This value is set to `false` by default.
 	lockNetwork: false,

@@ -125,16 +125,6 @@ function setHome(newPath) {
 		mergeConfig(this.config, userConfig);
 	}
 
-	if (!this.config.displayNetwork && !this.config.lockNetwork) {
-		this.config.lockNetwork = true;
-
-		log.warn(
-			`${colors.bold("displayNetwork")} and ${colors.bold(
-				"lockNetwork"
-			)} are false, setting ${colors.bold("lockNetwork")} to true.`
-		);
-	}
-
 	if (this.config.fileUpload.baseUrl) {
 		try {
 			new URL("test/file.png", this.config.fileUpload.baseUrl);

@@ -120,6 +120,7 @@ Network.prototype.validate = function (client) {
 			return false;
 		}
 
+		this.name = Helper.config.defaults.name;
 		this.host = Helper.config.defaults.host;
 		this.port = Helper.config.defaults.port;
 		this.tls = Helper.config.defaults.tls;
@@ -436,7 +437,7 @@ Network.prototype.exportForEdit = function () {
 		"commands",
 	];
 
-	if (Helper.config.displayNetwork) {
+	if (!Helper.config.lockNetwork) {
 		fieldsToReturn.push("host");
 		fieldsToReturn.push("port");
 		fieldsToReturn.push("tls");

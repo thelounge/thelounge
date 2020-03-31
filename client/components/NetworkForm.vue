@@ -11,12 +11,10 @@
 				</template>
 				<template v-else>
 					Connect
-					<template v-if="!config.displayNetwork && config.lockNetwork">
-						to {{ defaults.name }}
-					</template>
+					<template v-if="config.lockNetwork">to {{ defaults.name }}</template>
 				</template>
 			</h1>
-			<template v-if="config.displayNetwork">
+			<template v-if="!config.lockNetwork">
 				<h2>Network settings</h2>
 				<div class="connect-row">
 					<label for="connect:name">Name</label>
@@ -39,7 +37,6 @@
 							aria-label="Server address"
 							maxlength="255"
 							required
-							:disabled="config.lockNetwork ? true : false"
 						/>
 						<span id="connect:portseparator">:</span>
 						<input
@@ -52,7 +49,6 @@
 							name="port"
 							:value="defaults.port"
 							aria-label="Server port"
-							:disabled="config.lockNetwork ? true : false"
 						/>
 					</div>
 				</div>
@@ -81,9 +77,7 @@
 								type="checkbox"
 								name="tls"
 								:checked="defaults.tls ? true : false"
-								:disabled="
-									config.lockNetwork || defaults.hasSTSPolicy ? true : false
-								"
+								:disabled="defaults.hasSTSPolicy ? true : false"
 								@change="onSecureChanged"
 							/>
 							Use secure connection (TLS)
@@ -99,7 +93,6 @@
 								type="checkbox"
 								name="rejectUnauthorized"
 								:checked="defaults.rejectUnauthorized ? true : false"
-								:disabled="config.lockNetwork ? true : false"
 							/>
 							Only allow trusted certificates
 						</label>
@@ -164,7 +157,7 @@
 			</template>
 
 			<template v-if="$store.state.serverConfiguration.public">
-				<template v-if="!config.displayNetwork">
+				<template v-if="config.lockNetwork">
 					<div class="connect-row">
 						<label></label>
 						<div class="input-wrap">
