@@ -481,6 +481,12 @@ This may break orientation if your browser does not support that."
 	</div>
 </template>
 
+<style>
+textarea#user-specified-css-input {
+	height: 100px;
+}
+</style>
+
 <script>
 import socket from "../../js/socket";
 import webpush from "../../js/webpush";

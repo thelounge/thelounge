@@ -6,7 +6,7 @@
 		<form class="container" method="post" action="" @submit.prevent="onSubmit">
 			<h1 class="title">
 				<template v-if="defaults.uuid">
-					<input type="hidden" name="uuid" :value="defaults.uuid" />
+					<input v-model="defaults.uuid" type="hidden" name="uuid" />
 					Edit {{ defaults.name }}
 				</template>
 				<template v-else>
@@ -20,9 +20,9 @@
 					<label for="connect:name">Name</label>
 					<input
 						id="connect:name"
+						v-model="defaults.name"
 						class="input"
 						name="name"
-						:value="defaults.name"
 						maxlength="100"
 					/>
 				</div>
@@ -31,9 +31,9 @@
 					<div class="input-wrap">
 						<input
 							id="connect:host"
+							v-model="defaults.host"
 							class="input"
 							name="host"
-							:value="defaults.host"
 							aria-label="Server address"
 							maxlength="255"
 							required
@@ -41,13 +41,12 @@
 						<span id="connect:portseparator">:</span>
 						<input
 							id="connect:port"
-							ref="serverPort"
+							v-model="defaults.port"
 							class="input"
 							type="number"
 							min="1"
 							max="65535"
 							name="port"
-							:value="defaults.port"
 							aria-label="Server port"
 						/>
 					</div>
@@ -74,11 +73,10 @@
 					<div class="input-wrap">
 						<label class="tls">
 							<input
+								v-model="defaults.tls"
 								type="checkbox"
 								name="tls"
-								:checked="defaults.tls ? true : false"
-								:disabled="defaults.hasSTSPolicy ? true : false"
-								@change="onSecureChanged"
+								:disabled="defaults.hasSTSPolicy"
 							/>
 							Use secure connection (TLS)
 							<span
@@ -90,9 +88,9 @@
 						</label>
 						<label class="tls">
 							<input
+								v-model="defaults.rejectUnauthorized"
 								type="checkbox"
 								name="rejectUnauthorized"
-								:checked="defaults.rejectUnauthorized ? true : false"
 							/>
 							Only allow trusted certificates
 						</label>
@@ -105,10 +103,10 @@
 				<label for="connect:nick">Nick</label>
 				<input
 					id="connect:nick"
+					v-model="defaults.nick"
 					class="input nick"
 					name="nick"
 					pattern="[^\s:!@]+"
-					:value="defaults.nick"
 					maxlength="100"
 					required
 					@input="onNickChanged"
@@ -120,9 +118,9 @@
 					<input
 						id="connect:username"
 						ref="usernameInput"
+						v-model="defaults.username"
 						class="input username"
 						name="username"
-						:value="defaults.username"
 						maxlength="100"
 					/>
 				</div>
@@ -131,28 +129,44 @@
 				<label for="connect:realname">Real name</label>
 				<input
 					id="connect:realname"
+					v-model="defaults.realname"
 					class="input"
 					name="realname"
-					:value="defaults.realname"
 					maxlength="300"
 				/>
 			</div>
-			<template v-if="defaults.uuid">
+			<template v-if="defaults.uuid && !$store.state.serverConfiguration.public">
 				<div class="connect-row">
-					<label for="connect:commands">Commands</label>
+					<label for="connect:commands">
+						Commands
+						<span
+							class="tooltipped tooltipped-ne tooltipped-no-delay"
+							aria-label="One /command per line.
+Each command will be executed in
+the server tab on new connection"
+						>
+							<button class="extra-help" />
+						</span>
+					</label>
 					<textarea
 						id="connect:commands"
+						ref="commandsInput"
+						:value="defaults.commands ? defaults.commands.join('\n') : ''"
 						class="input"
 						name="commands"
-						placeholder="One /command per line, each command will be executed in the server tab on new connection"
-						:value="defaults.commands ? defaults.commands.join('\n') : ''"
+						@input="resizeCommandsInput"
 					/>
 				</div>
 			</template>
-			<template v-else>
+			<template v-else-if="!defaults.uuid">
 				<div class="connect-row">
 					<label for="connect:channels">Channels</label>
-					<input id="connect:channels" class="input" name="join" :value="defaults.join" />
+					<input
+						id="connect:channels"
+						v-model="defaults.join"
+						class="input"
+						name="join"
+					/>
 				</div>
 			</template>
 
@@ -175,6 +189,7 @@
 						>
 							<input
 								id="connect:password"
+								ref="publicPassword"
 								v-model="defaults.password"
 								class="input"
 								:type="slotProps.isVisible ? 'text' : 'password'"
@@ -229,7 +244,7 @@
 						<label for="connect:username">Account</label>
 						<input
 							id="connect:saslAccount"
-							:value="defaults.saslAccount"
+							v-model="defaults.saslAccount"
 							class="input"
 							name="saslAccount"
 							maxlength="100"
@@ -244,7 +259,7 @@
 						>
 							<input
 								id="connect:saslPassword"
-								:value="defaults.saslPassword"
+								v-model="defaults.saslPassword"
 								class="input"
 								:type="slotProps.isVisible ? 'text' : 'password'"
 								name="saslPassword"
@@ -326,6 +341,26 @@ export default {
 			displayPasswordField: false,
 		};
 	},
+	watch: {
+		displayPasswordField(value) {
+			if (value) {
+				this.$nextTick(() => this.$refs.publicPassword.focus());
+			}
+		},
+		"defaults.commands"() {
+			this.$nextTick(this.resizeCommandsInput);
+		},
+		"defaults.tls"(isSecureChecked) {
+			const ports = [6667, 6697];
+			const newPort = isSecureChecked ? 0 : 1;
+
+			// If you disable TLS and current port is 6697,
+			// set it to 6667, and vice versa
+			if (this.defaults.port === ports[newPort]) {
+				this.defaults.port = ports[1 - newPort];
+			}
+		},
+	},
 	methods: {
 		setSaslAuth(type) {
 			this.defaults.sasl = type;
@@ -345,16 +380,6 @@ export default {
 
 			this.previousUsername = event.target.value;
 		},
-		onSecureChanged(event) {
-			const ports = ["6667", "6697"];
-			const newPort = event.target.checked ? 0 : 1;
-
-			// If you disable TLS and current port is 6697,
-			// set it to 6667, and vice versa
-			if (this.$refs.serverPort.value === ports[newPort]) {
-				this.$refs.serverPort.value = ports[1 - newPort];
-			}
-		},
 		onSubmit(event) {
 			const formData = new FormData(event.target);
 			const data = {};
@@ -364,6 +389,18 @@ export default {
 			}
 
 			this.handleSubmit(data);
+		},
+		resizeCommandsInput() {
+			if (!this.$refs.commandsInput) {
+				return;
+			}
+
+			// Reset height first so it can down size
+			this.$refs.commandsInput.style.height = "";
+
+			// 2 pixels to account for the border
+			this.$refs.commandsInput.style.height =
+				Math.ceil(this.$refs.commandsInput.scrollHeight + 2) + "px";
 		},
 	},
 };
