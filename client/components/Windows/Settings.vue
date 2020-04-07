@@ -229,6 +229,29 @@
 				</div>
 			</template>
 
+			<div
+				v-if="$store.state.settings.advanced && $store.state.serverConfiguration.fileUpload"
+			>
+				<h2>File uploads</h2>
+				<div>
+					<label class="opt">
+						<input
+							:checked="$store.state.settings.uploadCanvas"
+							type="checkbox"
+							name="uploadCanvas"
+						/>
+						Attempt to remove metadata from images before uploading
+						<span
+							class="tooltipped tooltipped-n tooltipped-no-delay"
+							aria-label="This option renders the image into a canvas element to remove metadata from the image.
+This may break orientation if your browser does not support that."
+						>
+							<button class="extra-help" />
+						</span>
+					</label>
+				</div>
+			</div>
+
 			<template v-if="!$store.state.serverConfiguration.public">
 				<h2>Push Notifications</h2>
 				<div>
