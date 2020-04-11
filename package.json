@@ -104,7 +104,7 @@
     "prettier": "2.0.3",
     "pretty-quick": "2.0.1",
     "primer-tooltips": "2.0.0",
-    "sinon": "9.0.1",
+    "sinon": "9.0.2",
     "socket.io-client": "2.3.0",
     "stylelint": "13.3.1",
     "stylelint-config-standard": "20.0.0",
