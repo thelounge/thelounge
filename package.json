@@ -13,7 +13,7 @@
   "homepage": "https://thelounge.chat/",
   "scripts": {
     "build": "webpack",
-    "coverage": "run-s test:{client,server} && nyc --nycrc-path=test/.nycrc-report.json report",
+    "coverage": "run-s test:* && nyc --nycrc-path=test/.nycrc-report.json report",
     "dev": "node index start --dev",
     "format:prettier": "prettier --write \"**/*.*\"",
     "lint:check-eslint": "eslint --print-config .eslintrc.yml | eslint-config-prettier-check",
@@ -21,9 +21,8 @@
     "lint:prettier": "prettier --list-different \"**/*.*\"",
     "lint:stylelint": "stylelint --color \"client/**/*.css\"",
     "start": "node index start",
-    "test": "run-p --aggregate-output --continue-on-error lint:* test:{client,server}",
-    "test:client": "nyc --nycrc-path=test/.nycrc-mochapack.json mochapack --colors --opts=test/mochapack.opts",
-    "test:server": "nyc --nycrc-path=test/.nycrc-mocha.json mocha --colors",
+    "test": "run-p --aggregate-output --continue-on-error lint:* test:*",
+    "test:mocha": "webpack --config webpack.config-test.js && nyc --nycrc-path=test/.nycrc-mocha.json mocha --colors --config=test/.mocharc.yml",
     "watch": "webpack --watch"
   },
   "keywords": [
@@ -92,8 +91,7 @@
     "husky": "4.2.5",
     "intersection-observer": "0.7.0",
     "mini-css-extract-plugin": "0.9.0",
-    "mocha": "6.2.2",
-    "mochapack": "1.1.13",
+    "mocha": "7.1.1",
     "mousetrap": "1.6.5",
     "normalize.css": "8.0.1",
     "npm-run-all": "4.1.5",

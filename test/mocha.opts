@@ -1,5 +1,0 @@
---check-leaks
---recursive
---reporter dot
---require test/fixtures/env
-test/{,!(client)/**/}*.js
