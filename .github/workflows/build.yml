@@ -13,6 +13,9 @@ jobs:
             10.x, # EOL: April 2021
             12.x, # EOL: April 2022
           ]
+        exclude:
+          - os: macOS-latest
+            node_version: 10.x
 
     runs-on: ${{ matrix.os }}
 
