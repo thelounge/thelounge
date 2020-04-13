@@ -26,6 +26,7 @@ const store = new Vuex.Store({
 		isAutoCompleting: false,
 		isConnected: false,
 		networks: [],
+		mentions: [],
 		hasServiceWorker: false,
 		pushNotificationState: "unsupported",
 		serverConfiguration: null,
@@ -59,6 +60,9 @@ const store = new Vuex.Store({
 		},
 		networks(state, networks) {
 			state.networks = networks;
+		},
+		mentions(state, mentions) {
+			state.mentions = mentions;
 		},
 		removeNetwork(state, networkId) {
 			state.networks.splice(
