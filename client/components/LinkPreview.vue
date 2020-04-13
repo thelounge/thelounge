@@ -137,6 +137,7 @@ export default {
 	props: {
 		link: Object,
 		keepScrollPosition: Function,
+		channel: Object,
 	},
 	data() {
 		return {
@@ -214,6 +215,7 @@ export default {
 			e.preventDefault();
 
 			const imageViewer = this.$root.$refs.app.$refs.imageViewer;
+			imageViewer.channel = this.channel;
 			imageViewer.link = this.link;
 		},
 		onMoreClick() {
