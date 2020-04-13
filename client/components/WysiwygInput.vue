@@ -1,6 +1,7 @@
 <template>
 	<div id="input" ref="container" class="wysiwyg-container">
-		<div ref="indicator" class="indicator"></div>
+		<div ref="selectionIndicator" class="selectionIndicator"></div>
+		<div ref="textboxIndicator" class="textboxIndicator"></div>
 		<IrcColorPicker ref="colorpicker" />
 		<div
 			id="wysiwyg-input"
@@ -12,6 +13,8 @@
 			:aria-label="placeholder"
 			@focus="onFocus"
 			@blur="onBlur"
+			@keydown.exact.up="navigate('up')"
+			@keydown.exact.down="navigate('down')"
 		></div>
 	</div>
 </template>
@@ -44,7 +47,10 @@
 	display: block;
 	content: attr(data-placeholder);
 }
-
+.wysiwyg-container .wysiwyg-input::after {
+	content: "";
+	display: inline-block;
+}
 .wysiwyg-container .wysiwyg-input sub {
 	font-size: inherit;
 	font-family: monospace;
@@ -52,12 +58,18 @@
 }
 
 /* TODO: remove this */
-.wysiwyg-container .indicator {
+.wysiwyg-container .selectionIndicator,
+.wysiwyg-container .textboxIndicator {
 	display: inline-block;
-	display: none;
-	border: 1px solid black;
 	position: fixed;
 	z-index: 100;
+	pointer-events: none;
+}
+.wysiwyg-container .textboxIndicator {
+	border: 1px solid cyan;
+}
+.wysiwyg-container .textboxIndicator {
+	border: 1px solid magenta;
 }
 </style>
 
@@ -70,6 +82,7 @@ import {
 	getLinesAsFragments,
 	cloneNodeTreeSelective,
 	cleanWysiwygMarkup,
+	splitDomAtElementBoundaries,
 } from "../js/helpers/wysiwyg";
 
 // Mapping of HTML tag names to IRC format control characters
@@ -185,7 +198,7 @@ export default {
 		});
 
 		this.$refs.input.addEventListener("keyup", () => {
-			this.updateSelectionIndicator();
+			this.updateIndicators();
 		});
 
 		// Formatting
@@ -208,10 +221,11 @@ export default {
 			return !this.$refs.input.textContent;
 		},
 		getHtmlContent() {
-			// TODO: format & setter
-			// TODO Move <br> removal to cleanup and do it dom based instead of string based
+			this.cleanInputDom();
+
 			let html = this.$refs.input.innerHTML;
 
+			// TODO Move <br> removal to cleanup and do it dom based instead of string based
 			if (html.endsWith("<br>")) {
 				// Remove the last trailing newline
 				html = html.substring(0, html.length - 4);
@@ -276,8 +290,6 @@ export default {
 
 			const html = this.$refs.input.innerHTML;
 			const ircFormat = toIrcFormat(html);
-
-			document.getElementById("input").value = ircFormat;
 		},
 		onInput() {
 			this.onChange();
@@ -287,7 +299,9 @@ export default {
 				this.setAutoHeight();
 			}
 
-			this.updateSelectionIndicator();
+			this.updateIndicators();
+
+			this.$emit("change");
 		},
 
 		// Actions
@@ -341,7 +355,6 @@ export default {
 			});
 		},
 		pickColor() {
-			// TODO: This should be broken up into parts
 			const sel = window.getSelection();
 
 			// If there is no selection do nothing (sel.type is `Caret`)
@@ -349,13 +362,14 @@ export default {
 				return;
 			}
 
-			// Get the cursor positon
+			// Get the position for the color selector based on the cursor positon of the selection
 			const range = sel.getRangeAt(0);
 			const rect = range.getBoundingClientRect();
 			const pos = {x: rect.left, y: rect.top - 5};
 
 			// Open the color picker above the current selection
 			this.$refs.colorpicker.open(pos, (colors) => {
+				// Focus the input after the color selector has completed
 				this.focus();
 
 				// If the color picker was exited or no colors were chosen do nothing
@@ -379,6 +393,8 @@ export default {
 				const currentSelection = range.extractContents();
 
 				// Clone the selected tree, remove any spans but keep their content
+				// This ensures that the selection to be colored will not contain
+				// any nested coloring
 				const newTree = cloneNodeTreeSelective(
 					currentSelection,
 					(el) => el.nodeName === "SPAN"
@@ -392,18 +408,9 @@ export default {
 				// Insert the color span into the container
 				range.insertNode(span);
 
-				// Split the dom at the boundaries of the selection to break any possible parent spans
-				// This is done by removing and re-inserting the nodes before and after the selection
-
-				// Extract and re-insert everything before the users selection
-				range.setStart(this.$refs.input, 0);
-				range.setEndBefore(span);
-				range.insertNode(range.extractContents());
-
-				// Extract and re-insert everything after the users selection
-				range.selectNodeContents(this.$refs.input);
-				range.setStartAfter(span);
-				range.insertNode(range.extractContents());
+				// Split the dom preserving styles at the start and end of the range
+				// This prevents nesting between the selection boundary (span)
+				splitDomAtElementBoundaries(this.$refs.input, span, range);
 
 				if (span.parentNode.nodeName === "SPAN") {
 					// If still nested in a color tag, replace the parent with the current color
@@ -415,20 +422,66 @@ export default {
 				range.setEndBefore(span);
 			});
 		},
-		updateSelectionIndicator() {
+		updateIndicators() {
 			// TODO: this is only for debugging
 			const sel = window.getSelection();
 			const range = sel.getRangeAt(0);
-			const rect = range.getBoundingClientRect();
+			const selectionRect = range.getBoundingClientRect();
 
-			const indicator = this.$refs.indicator;
+			this.$refs.selectionIndicator.style.top = selectionRect.top + "px";
+			this.$refs.selectionIndicator.style.left = selectionRect.left + "px";
+			this.$refs.selectionIndicator.style.width = selectionRect.width + "px";
+			this.$refs.selectionIndicator.style.height = selectionRect.height + "px";
 
-			indicator.style.top = rect.top + "px";
-			indicator.style.left = rect.left + "px";
-			indicator.style.width = rect.width + "px";
-			indicator.style.height = rect.height + "px";
+			const inputRect = this.$refs.input.getBoundingClientRect();
+
+			this.$refs.textboxIndicator.style.top = inputRect.top + "px";
+			this.$refs.textboxIndicator.style.left = inputRect.left + "px";
+			this.$refs.textboxIndicator.style.width = inputRect.width + "px";
+			this.$refs.textboxIndicator.style.height = inputRect.height + "px";
+
+			// const topDist = Math.abs(selectionRect.top - inputRect.top)
+			// const bottomDist = Math.abs(selectionRect.bottom - inputRect.bottom)
+			// console.log("===========================")
+			// // console.log("selectionRect", selectionRect);
+			// // console.log("inputRect", inputRect);
+			// console.log("topDist", topDist)
+			// console.log("bottomDist", bottomDist)
 
 			return false;
+		},
+
+		// Emit up and down events when on first or last line
+		navigate(direction) {
+			// TODO: this is only for debugging
+			const sel = window.getSelection();
+			const range = sel.getRangeAt(0);
+
+			const selectionRect = range.getBoundingClientRect();
+			const inputRect = this.$refs.input.getBoundingClientRect();
+
+			const topDist = Math.abs(selectionRect.top - inputRect.top);
+			const bottomDist = Math.abs(selectionRect.bottom - inputRect.bottom);
+
+			const threshhold = 3; // Max diff
+			if (
+				direction === "up" &&
+				(this.isEmpty() ||
+					topDist <= threshhold ||
+					sel.anchorNode === this.$refs.input ||
+					sel.anchorNode === this.$refs.input.firstChild)
+			) {
+				this.$emit("navigate", {direction: "up"});
+			}
+			if (
+				direction === "down" &&
+				(this.isEmpty() ||
+					bottomDist <= threshhold ||
+					sel.anchorNode === this.$refs.input ||
+					sel.anchorNode === this.$refs.input.lastChild)
+			) {
+				this.$emit("navigate", {direction: "down"});
+			}
 		},
 	},
 };

@@ -68,6 +68,21 @@ export function getLinesAsFragments(element, range) {
 	return fragments;
 }
 
+export function splitDomAtElementBoundaries(root, element, range) {
+	// Split the dom at the boundaries of the selection to break any possible parent spans
+	// This is done by removing and re-inserting the nodes before and after the selection
+
+	// Extract and re-insert everything before the users selection
+	range.setStart(root, 0);
+	range.setEndBefore(element);
+	range.insertNode(range.extractContents());
+
+	// Extract and re-insert everything after the users selection
+	range.selectNodeContents(root);
+	range.setStartAfter(element);
+	range.insertNode(range.extractContents());
+}
+
 // Recursively clone a node tree and omit elements that
 // dont pass the test while keeping their children
 export function cloneNodeTreeSelective(from, omitTest) {

@@ -51,7 +51,9 @@
 		<WysiwygInput
 			ref="wysiwyg"
 			:placeholder="getInputPlaceholder(channel)"
+			@change="onChange"
 			@submit="onSubmit"
+			@navigate="onNavigate"
 		/>
 		<span
 			id="format-tooltip"
@@ -257,10 +259,10 @@ export default {
 		upload.abort();
 	},
 	methods: {
-		setPendingMessage(e) {
-			this.channel.pendingMessage = e.target.value;
+		setPendingMessage(text) {
+			console.log("setPendingMessage", text);
+			this.channel.pendingMessage = text;
 			this.channel.inputHistoryPosition = 0;
-			this.setInputSize();
 		},
 		getInputPlaceholder(channel) {
 			if (channel.type === "channel" || channel.type === "query") {
@@ -268,6 +270,11 @@ export default {
 			}
 
 			return "";
+		},
+		onChange() {
+			console.log("onChange");
+			this.setPendingMessage(this.$refs.wysiwyg.getHtmlContent());
+			console.log(this.channel.pendingMessage);
 		},
 		onSubmit(e) {
 			e.preventDefault();
@@ -277,14 +284,53 @@ export default {
 			}
 
 			const target = this.channel.id;
-			// const content = this.$refs.wysiwyg.getHtmlContent(); TODO: use this for input history
+			const text = this.$refs.wysiwyg.getHtmlContent(); // TODO: use this for input history
 			const lines = this.$refs.wysiwyg.getIrcLines();
+			const message = lines.join("\n");
+
+			if (!message) {
+				return false;
+			}
+
+			this.channel.inputHistoryPosition = 0;
+			this.channel.pendingMessage = "";
+			// this.$refs.input.value = ""; TODO: check if necessary
+			//this.setInputSize();
+
+			// Store new message in history if last message isn't already equal
+			if (this.channel.inputHistory[1] !== text) {
+				this.channel.inputHistory.splice(1, 0, text);
+			}
+
+			// Limit input history to a 100 entries
+			if (this.channel.inputHistory.length > 100) {
+				this.channel.inputHistory.pop();
+			}
 
 			this.$refs.wysiwyg.clear();
 			this.$refs.wysiwyg.focus();
 
-			const message = lines.join("\n");
+			console.log(`SENDING: "${message}"`);
 			socket.emit("input", {target, text: message});
+		},
+		onNavigate(data) {
+			console.log("onNavigate", data);
+			const {channel} = this;
+
+			if (channel.inputHistoryPosition === 0) {
+				channel.inputHistory[channel.inputHistoryPosition] = channel.pendingMessage;
+			}
+
+			if (data.direction === "up") {
+				if (channel.inputHistoryPosition < channel.inputHistory.length - 1) {
+					channel.inputHistoryPosition++;
+				}
+			} else if (channel.inputHistoryPosition > 0) {
+				channel.inputHistoryPosition--;
+			}
+
+			channel.pendingMessage = channel.inputHistory[channel.inputHistoryPosition];
+			this.$refs.wysiwyg.setHtmlContent(channel.pendingMessage);
 		},
 
 		/*
