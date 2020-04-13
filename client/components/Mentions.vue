@@ -43,6 +43,10 @@
 </template>
 
 <style>
+#mentions-popup-container {
+	z-index: 8;
+}
+
 .mentions-popup {
 	background-color: var(--window-bg-color);
 	position: absolute;
