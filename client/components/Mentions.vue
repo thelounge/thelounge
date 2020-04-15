@@ -8,10 +8,10 @@
 		<div class="mentions-popup">
 			<div class="mentions-popup-title">
 				Recent mentions
-				<span v-if="isLoading">- Loading…</span>
 			</div>
 			<template v-if="resolvedMessages.length === 0">
-				<p>There are no recent mentions.</p>
+				<p v-if="isLoading">Loading…</p>
+				<p v-else>There are no recent mentions.</p>
 			</template>
 			<template v-for="message in resolvedMessages" v-else>
 				<div :key="message.id" :class="['msg', message.type]">
