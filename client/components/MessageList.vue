@@ -55,8 +55,6 @@
 </template>
 
 <script>
-require("intersection-observer");
-
 const constants = require("../js/constants");
 import clipboard from "../js/clipboard";
 import socket from "../js/socket";
