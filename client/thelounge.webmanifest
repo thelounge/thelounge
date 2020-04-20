@@ -4,8 +4,8 @@
 	"description": "Self-hosted web IRC client",
 	"start_url": ".",
 	"display": "standalone",
-	"theme_color": "#415363",
-	"background_color": "#415363",
+	"theme_color": "#415364",
+	"background_color": "#415364",
 	"icons": [
 		{
 			"src": "img/logo-grey-bg-120x120px.png",

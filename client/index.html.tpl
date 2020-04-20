@@ -22,7 +22,7 @@
 	<link id="favicon" rel="icon" sizes="16x16 32x32 64x64" href="favicon.ico" data-other="img/favicon-alerted.ico" type="image/x-icon">
 
 	<!-- Safari pinned tab icon -->
-	<link rel="mask-icon" href="img/icon-black-transparent-bg.svg" color="#415363">
+	<link rel="mask-icon" href="img/icon-black-transparent-bg.svg" color="#415364">
 
 	<link rel="manifest" href="thelounge.webmanifest">
 
