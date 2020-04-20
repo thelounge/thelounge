@@ -3,7 +3,7 @@
 		v-if="isOpen"
 		id="mentions-popup-container"
 		@click="containerClick"
-		@contextmenu.prevent="containerClick"
+		@contextmenu="containerClick"
 	>
 		<div class="mentions-popup">
 			<div class="mentions-popup-title">
@@ -15,24 +15,32 @@
 			</template>
 			<template v-for="message in resolvedMessages" v-else>
 				<div :key="message.id" :class="['msg', message.type]">
-					<span class="from">
-						<Username :user="message.from" />
-						<template v-if="message.channel">
-							in {{ message.channel.channel.name }} on
-							{{ message.channel.network.name }}
-						</template>
-						<template v-else>
-							in unknown channel
-						</template>
-					</span>
-					<span :title="message.time | localetime" class="time">
-						{{ messageTime(message.time) }}
-					</span>
-					<button
-						class="msg-hide"
-						aria-label="Hide this mention"
-						@click="hideMention(message)"
-					></button>
+					<div class="mentions-info">
+						<div>
+							<span class="from">
+								<Username :user="message.from" />
+								<template v-if="message.channel">
+									in {{ message.channel.channel.name }} on
+									{{ message.channel.network.name }}
+								</template>
+								<template v-else>
+									in unknown channel
+								</template>
+							</span>
+							<span :title="message.localetime" class="time">
+								{{ messageTime(message.time) }}
+							</span>
+						</div>
+						<div>
+							<span class="close-tooltip tooltipped tooltipped-w" aria-label="Close">
+								<button
+									class="msg-hide"
+									aria-label="Hide this mention"
+									@click="hideMention(message)"
+								></button>
+							</span>
+						</div>
+					</div>
 					<div class="content" dir="auto">
 						<ParsedMessage :network="null" :message="message" />
 					</div>
@@ -64,6 +72,11 @@
 	font-size: 20px;
 }
 
+.mentions-popup .mentions-info {
+	display: flex;
+	justify-content: space-between;
+}
+
 .mentions-popup .msg {
 	margin-bottom: 15px;
 	user-select: text;
@@ -89,6 +102,10 @@
 	content: "×";
 }
 
+.mentions-popup .msg-hide:hover {
+	color: var(--link-color);
+}
+
 @media (max-width: 768px) {
 	.mentions-popup {
 		border-radius: 0;
@@ -108,6 +125,7 @@
 import Username from "./Username.vue";
 import ParsedMessage from "./ParsedMessage.vue";
 import socket from "../js/socket";
+import localetime from "../js/helpers/localetime";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
@@ -130,6 +148,7 @@ export default {
 			const messages = this.$store.state.mentions.slice().reverse();
 
 			for (const message of messages) {
+				message.localetime = localetime(message.time);
 				message.channel = this.$store.getters.findChannel(message.chanId);
 			}
 
