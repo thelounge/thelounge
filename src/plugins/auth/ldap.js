@@ -144,6 +144,7 @@ function isLdapEnabled() {
 }
 
 module.exports = {
+	moduleName: "ldap",
 	auth: ldapAuth,
 	isEnabled: isLdapEnabled,
 };

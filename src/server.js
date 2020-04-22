@@ -17,15 +17,12 @@ const net = require("net");
 const Identification = require("./identification");
 const changelog = require("./plugins/changelog");
 const inputs = require("./plugins/inputs");
+const Auth = require("./plugins/auth");
 
 const themes = require("./plugins/packages/themes");
 themes.loadLocalThemes();
 
 const packages = require("./plugins/packages/index");
-
-// The order defined the priority: the first available plugin is used
-// ALways keep local auth in the end, which should always be enabled.
-const authPlugins = [require("./plugins/auth/ldap"), require("./plugins/auth/local")];
 
 // A random number that will force clients to reload the page if it differs
 const serverHash = Math.floor(Date.now() * Math.random());
@@ -854,18 +851,7 @@ function performAuthentication(data) {
 	}
 
 	// Perform password checking
-	let auth = () => {
-		log.error("None of the auth plugins is enabled");
-	};
-
-	for (let i = 0; i < authPlugins.length; ++i) {
-		if (authPlugins[i].isEnabled()) {
-			auth = authPlugins[i].auth;
-			break;
-		}
-	}
-
-	auth(manager, client, data.user, data.password, authCallback);
+	Auth.auth(manager, client, data.user, data.password, authCallback);
 }
 
 function reverseDnsLookup(ip, callback) {
