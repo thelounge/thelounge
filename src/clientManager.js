@@ -6,6 +6,7 @@ const colors = require("chalk");
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
+const Auth = require("./plugins/auth");
 const Client = require("./client");
 const Helper = require("./helper");
 const WebPush = require("./plugins/webpush");
@@ -45,7 +46,15 @@ ClientManager.prototype.loadUsers = function () {
 		);
 	}
 
-	users.forEach((name) => this.loadUser(name));
+	// This callback is used by Auth plugins to load users they deem acceptable
+	const callbackLoadUser = (user) => {
+		this.loadUser(user);
+	};
+
+	if (!Auth.loadUsers(users, callbackLoadUser)) {
+		// Fallback to loading all users
+		users.forEach((name) => this.loadUser(name));
+	}
 };
 
 ClientManager.prototype.autoloadUsers = function () {

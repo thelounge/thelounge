@@ -21,6 +21,12 @@ module.exports = {
 
 	// Must override: implements authentication mechanism
 	auth: () => unimplemented("auth"),
+
+	// Optional to override: implements filter for loading users at start up
+	// This allows an auth plugin to check if a user is still acceptable, if the plugin
+	// can do so without access to the user's unhashed password.
+	// Returning 'false' triggers fallback to default behaviour of loading all users
+	loadUsers: () => false,
 };
 
 // local auth should always be enabled, but check here to verify
