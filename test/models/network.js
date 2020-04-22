@@ -14,6 +14,9 @@ describe("Network", function () {
 				uuid: "hello world",
 				awayMessage: "I am away",
 				name: "networkName",
+				sasl: "plain",
+				saslAccount: "testaccount",
+				saslPassword: "testpassword",
 				channels: [
 					new Chan({name: "#thelounge", key: ""}),
 					new Chan({name: "&foobar", key: ""}),
@@ -37,6 +40,9 @@ describe("Network", function () {
 				password: "",
 				username: "",
 				realname: "",
+				sasl: "plain",
+				saslAccount: "testaccount",
+				saslPassword: "testpassword",
 				commands: [],
 				nick: "chillin`",
 				channels: [
@@ -121,6 +127,9 @@ describe("Network", function () {
 					username: 1234,
 					password: 4567,
 					realname: 8901,
+					sasl: "something",
+					saslAccount: 1337,
+					saslPassword: 1337,
 					commands: "/command 1 2 3\r\n/ping HELLO\r\r\r\r/whois test\r\n\r\n",
 					ip: "newIp",
 					hostname: "newHostname",
@@ -144,6 +153,9 @@ describe("Network", function () {
 			expect(network.username).to.equal("1234");
 			expect(network.password).to.equal("4567");
 			expect(network.realname).to.equal("8901");
+			expect(network.sasl).to.equal("");
+			expect(network.saslAccount).to.equal("1337");
+			expect(network.saslPassword).to.equal("1337");
 			expect(network.commands).to.deep.equal([
 				"/command 1 2 3",
 				"/ping HELLO",

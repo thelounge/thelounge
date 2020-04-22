@@ -288,6 +288,7 @@ p {
 .channel-list-item::before,
 #footer .icon,
 #chat .count::before,
+#connect .extra-help,
 #settings .extra-help,
 #settings #play::before,
 #form #upload::before,
@@ -507,6 +508,7 @@ p {
 	line-height: 45px;
 }
 
+#connect .extra-help::before,
 #settings .extra-help::before {
 	content: "\f059"; /* http://fontawesome.io/icon/question-circle/ */
 }
@@ -938,7 +940,6 @@ background on hover (unless active) */
 
 textarea.input {
 	resize: vertical;
-	height: 100px;
 	min-height: 35px;
 	padding: 6px 10px;
 	line-height: 1.5;
@@ -1826,8 +1827,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 }
 
 #connect .btn {
-	margin-left: 25%;
 	margin-top: 15px;
+	width: 100%;
 }
 
 #settings .apple-push-unsupported,
@@ -1874,6 +1875,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-right: 6px;
 }
 
+#connect .extra-help,
 #settings .extra-help {
 	cursor: help;
 }
@@ -2619,11 +2621,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	#connect .connect-row > .input,
 	#connect .connect-row > .input-wrap {
 		flex-grow: 1;
-	}
-
-	#connect .btn {
-		margin-left: 0;
-		width: 100%;
 	}
 
 	#help .help-version-title {

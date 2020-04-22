@@ -706,18 +706,12 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 }
 
 function getClientConfiguration() {
-	const config = _.pick(Helper.config, [
-		"public",
-		"lockNetwork",
-		"displayNetwork",
-		"useHexIp",
-		"prefetch",
-	]);
+	const config = _.pick(Helper.config, ["public", "lockNetwork", "useHexIp", "prefetch"]);
 
 	config.fileUpload = Helper.config.fileUpload.enable;
 	config.ldapEnabled = Helper.config.ldap.enable;
 
-	if (config.displayNetwork) {
+	if (!config.lockNetwork) {
 		config.defaults = _.clone(Helper.config.defaults);
 	} else {
 		// Only send defaults that are visible on the client
@@ -738,6 +732,9 @@ function getClientConfiguration() {
 	config.themes = themes.getAll();
 	config.defaultTheme = Helper.config.theme;
 	config.defaults.nick = Helper.getDefaultNick();
+	config.defaults.sasl = "";
+	config.defaults.saslAccount = "";
+	config.defaults.saslPassword = "";
 
 	if (Uploader) {
 		config.fileUploadMaxFileSize = Uploader.getMaxFileSize();
