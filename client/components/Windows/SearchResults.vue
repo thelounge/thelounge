@@ -39,10 +39,13 @@
 							</button>
 						</div>
 
-						<div v-if="$store.state.messageSearchInProgress" class="search-status">
+						<div
+							v-if="$store.state.messageSearchInProgress && !offset"
+							class="search-status"
+						>
 							Searching…
 						</div>
-						<div v-else-if="!messages.length" class="search-status">
+						<div v-else-if="!messages.length && !offset" class="search-status">
 							No results found.
 						</div>
 						<div
@@ -94,6 +97,8 @@ export default {
 		return {
 			offset: 0,
 			moreResultsAvailable: false,
+			oldScrollTop: 0,
+			oldChatHeight: 0,
 		};
 	},
 	computed: {
@@ -145,7 +150,16 @@ export default {
 		},
 		messages() {
 			this.moreResultsAvailable = this.messages.length && !(this.messages.length % 100);
-			this.jumpToBottom();
+
+			if (!this.offset) {
+				this.jumpToBottom();
+			} else {
+				this.$nextTick(() => {
+					const currentChatHeight = this.$refs.chat.scrollHeight;
+					this.$refs.chat.scrollTop =
+						this.oldScrollTop + currentChatHeight - this.oldChatHeight;
+				});
+			}
 		},
 	},
 	mounted() {
@@ -164,7 +178,11 @@ export default {
 		doSearch() {
 			this.offset = 0;
 			this.$store.commit("messageSearchInProgress", true);
-			this.$store.commit("messageSearchResults", null); // Only reset if not getting offset
+
+			if (!this.offset) {
+				this.$store.commit("messageSearchResults", null); // Only reset if not getting offset
+			}
+
 			socket.emit("search", {
 				networkUuid: this.$route.params.uuid,
 				channelName: this.$route.params.target,
@@ -175,6 +193,10 @@ export default {
 		onShowMoreClick() {
 			this.offset += 100;
 			this.$store.commit("messageSearchInProgress", true);
+
+			this.oldScrollTop = this.$refs.chat.scrollTop;
+			this.oldChatHeight = this.$refs.chat.scrollHeight;
+
 			socket.emit("search", {
 				networkUuid: this.$route.params.uuid,
 				channelName: this.$route.params.target,
