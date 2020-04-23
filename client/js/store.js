@@ -120,6 +120,10 @@ const store = new Vuex.Store({
 		messageSearchResults(state, value) {
 			state.messageSearchResults = value;
 		},
+		addMessageSearchResults(state, value) {
+			value.results = [...state.messageSearchResults.results, ...value.results];
+			state.messageSearchResults = value;
+		},
 	},
 	getters: {
 		findChannelOnCurrentNetwork: (state) => (name) => {
