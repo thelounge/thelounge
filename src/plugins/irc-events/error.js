@@ -55,8 +55,14 @@ module.exports = function (irc, network) {
 		lobby.pushMessage(client, msg, true);
 
 		if (irc.connection.registered === false) {
+			const nickLen = parseInt(network.irc.network.options.NICKLEN, 10) || 16;
 			const random = (data.nick || irc.user.nick) + Math.floor(Math.random() * 10);
-			irc.changeNick(random);
+
+			// Safeguard nick changes up to allowed length
+			// Some servers may send "nick in use" error even for randomly generated nicks
+			if (random.length <= nickLen) {
+				irc.changeNick(random);
+			}
 		}
 
 		client.emit("nick", {
