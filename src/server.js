@@ -546,7 +546,6 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 			client.mentions.findIndex((m) => m.msgId === msgId),
 			1
 		);
-		// TODO: emit to other clients?
 	});
 
 	if (!Helper.config.public) {
