@@ -54,7 +54,7 @@
     "ldapjs": "2.0.0-pre.5",
     "linkify-it": "2.2.0",
     "lodash": "4.17.15",
-    "mime-types": "2.1.26",
+    "mime-types": "2.1.27",
     "node-forge": "0.9.1",
     "package-json": "6.5.0",
     "read": "1.0.7",
