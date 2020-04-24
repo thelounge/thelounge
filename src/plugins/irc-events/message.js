@@ -126,6 +126,10 @@ module.exports = function (irc, network) {
 			}
 		}
 
+		if (data.group) {
+			msg.statusmsgGroup = data.group;
+		}
+
 		let match;
 
 		while ((match = nickRegExp.exec(data.message))) {

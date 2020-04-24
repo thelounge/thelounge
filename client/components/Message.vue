@@ -65,6 +65,12 @@
 					class="msg-shown-in-active tooltipped tooltipped-e"
 					><span></span
 				></span>
+				<span
+					v-if="message.statusmsgGroup"
+					:aria-label="`This message was only shown to users with ${message.statusmsgGroup} mode`"
+					class="msg-statusmsg tooltipped tooltipped-e"
+					><span>{{ message.statusmsgGroup }}</span></span
+				>
 				<ParsedMessage :network="network" :message="message" />
 				<LinkPreview
 					v-for="preview in message.previews"

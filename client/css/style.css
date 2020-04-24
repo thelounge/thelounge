@@ -311,6 +311,7 @@ p {
 #chat .msg[data-type="action"] .from::before,
 #chat .msg[data-type="plugin"] .from::before,
 #chat .msg[data-type="raw"] .from::before,
+#chat .msg-statusmsg span::before,
 #chat .msg-shown-in-active span::before,
 #chat .toggle-button::after,
 #chat .toggle-content .more-caret::before,
@@ -477,14 +478,23 @@ p {
 	padding: 1px;
 }
 
+#chat .msg-statusmsg,
 #chat .msg-shown-in-active {
 	cursor: help;
 	margin-right: 5px;
 }
 
+#chat .msg-statusmsg span::before,
 #chat .msg-shown-in-active span::before {
 	font-size: 10px;
 	content: "\f06e"; /* https://fontawesome.com/icons/eye?style=solid */
+}
+
+#chat .msg-statusmsg {
+	border-radius: 2px;
+	padding: 2px 4px;
+	background-color: #ff9e18;
+	color: #222;
 }
 
 #chat .toggle-button {
