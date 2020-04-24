@@ -24,9 +24,12 @@
 		<template v-else-if="message.type === 'action'">
 			<span class="from"><span class="only-copy">* </span></span>
 			<span class="content" dir="auto">
-				<Username :user="message.from" dir="auto" />&#32;<ParsedMessage
-					:message="message"
-				/>
+				<Username
+					:user="message.from"
+					:network="network"
+					:channel="channel"
+					dir="auto"
+				/>&#32;<ParsedMessage :message="message" />
 				<LinkPreview
 					v-for="preview in message.previews"
 					:key="preview.link"
@@ -40,7 +43,7 @@
 			<span v-if="message.type === 'message'" class="from">
 				<template v-if="message.from && message.from.nick">
 					<span class="only-copy">&lt;</span>
-					<Username :user="message.from" />
+					<Username :user="message.from" :network="network" :channel="channel" />
 					<span class="only-copy">&gt; </span>
 				</template>
 			</span>
@@ -54,7 +57,7 @@
 			<span v-else class="from">
 				<template v-if="message.from && message.from.nick">
 					<span class="only-copy">-</span>
-					<Username :user="message.from" />
+					<Username :user="message.from" :network="network" :channel="channel" />
 					<span class="only-copy">- </span>
 				</template>
 			</span>

@@ -170,10 +170,12 @@ export function generateChannelContextMenu($root, channel, network) {
 }
 
 export function generateUserContextMenu($root, channel, network, user) {
-	const currentChannelUser = channel.users.find((u) => u.nick === network.nick) || {};
+	const currentChannelUser = channel
+		? channel.users.find((u) => u.nick === network.nick) || {}
+		: {};
 
 	const whois = () => {
-		const chan = $root.$store.getters.findChannelOnCurrentNetwork(user.nick);
+		const chan = network.channels.find((c) => c.name === user.nick);
 
 		if (chan) {
 			$root.switchToChannel(chan);

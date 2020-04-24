@@ -17,7 +17,23 @@ function detectDesktopNotificationState() {
 	return "blocked";
 }
 
-const store = new Vuex.Store({
+let store = null;
+
+const setMessageNetworkChannel = (message) => {
+	const channelAndNetwork = store.getters.findChannelOnNetwork(
+		message.networkUuid,
+		message.channelName
+	);
+
+	if (channelAndNetwork) {
+		message.network = channelAndNetwork.network;
+		message.channel = channelAndNetwork.channel;
+	}
+
+	return message;
+};
+
+store = new Vuex.Store({
 	state: {
 		appLoaded: false,
 		activeChannel: null,
@@ -118,10 +134,24 @@ const store = new Vuex.Store({
 			state.messageSearchInProgress = value;
 		},
 		messageSearchResults(state, value) {
+			if (value) {
+				// Set the search results and add networks and channels to messages
+				state.messageSearchResults = {
+					...value,
+					...value.results.map(setMessageNetworkChannel),
+				};
+				return;
+			}
+
 			state.messageSearchResults = value;
 		},
 		addMessageSearchResults(state, value) {
-			value.results = [...state.messageSearchResults.results, ...value.results];
+			// Append the search results and add networks and channels to new messages
+			value.results = [
+				...state.messageSearchResults.results,
+				...value.results.map(setMessageNetworkChannel),
+			];
+
 			state.messageSearchResults = value;
 		},
 	},
