@@ -206,7 +206,7 @@ class MessageStorage {
 		}
 
 		let select =
-			'SELECT msg, type, time, channel FROM messages WHERE type = "message" AND (json_extract(msg, "$.text") LIKE ?';
+			'SELECT msg, type, time, network, channel FROM messages WHERE type = "message" AND (json_extract(msg, "$.text") LIKE ?';
 		const params = [`%${query.searchTerm}%`];
 
 		if (query.searchNicks) {
@@ -243,7 +243,7 @@ class MessageStorage {
 						target: query.channelName,
 						networkUuid: query.networkUuid,
 						offset: query.offset,
-						results: parseRowsToMessages(query.offset, rows),
+						results: parseSearchRowsToMessages(query.offset, rows),
 					};
 					resolve(response);
 				}
@@ -258,13 +258,15 @@ class MessageStorage {
 
 module.exports = MessageStorage;
 
-function parseRowsToMessages(id, rows) {
+function parseSearchRowsToMessages(id, rows) {
 	const messages = [];
 
 	for (const row of rows) {
 		const msg = JSON.parse(row.msg);
 		msg.time = row.time;
 		msg.type = row.type;
+		msg.networkUuid = row.network;
+		msg.channelName = row.channel;
 		msg.id = id;
 		messages.push(new Msg(msg));
 		id += 1;

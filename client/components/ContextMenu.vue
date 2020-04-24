@@ -76,7 +76,7 @@ export default {
 			this.open(data.event, items);
 		},
 		openUserContextMenu(data) {
-			const {network, channel} = this.$store.state.activeChannel;
+			const {network, channel} = this.$store.state.activeChannel || data;
 
 			const items = generateUserContextMenu(
 				this.$root,
