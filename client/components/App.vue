@@ -13,6 +13,7 @@
 
 <script>
 const constants = require("../js/constants");
+import eventbus from "../js/eventbus";
 import Mousetrap from "mousetrap";
 import throttle from "lodash/throttle";
 import storage from "../js/localStorage";
@@ -53,14 +54,14 @@ export default {
 
 		// Make a single throttled resize listener available to all components
 		this.debouncedResize = throttle(() => {
-			this.$root.$emit("resize");
+			eventbus.emit("resize");
 		}, 100);
 
 		window.addEventListener("resize", this.debouncedResize, {passive: true});
 
 		// Emit a daychange event every time the day changes so date markers know when to update themselves
 		const emitDayChange = () => {
-			this.$root.$emit("daychange");
+			eventbus.emit("daychange");
 			// This should always be 24h later but re-computing exact value just in case
 			this.dayChangeTimeout = setTimeout(emitDayChange, this.msUntilNextDay());
 		};
@@ -77,7 +78,7 @@ export default {
 	},
 	methods: {
 		escapeKey() {
-			this.$root.$emit("escapekey");
+			eventbus.emit("escapekey");
 		},
 		toggleSidebar(e) {
 			if (isIgnoredKeybind(e)) {
