@@ -9,9 +9,9 @@ class EventBus {
 	 */
 	on(type, handler) {
 		if (events.has(type)) {
-			events[type].push(handler);
+			events.get(type).push(handler);
 		} else {
-			events[type] = [handler];
+			events.set(type, [handler]);
 		}
 	}
 
@@ -23,7 +23,10 @@ class EventBus {
 	 */
 	off(type, handler) {
 		if (events.has(type)) {
-			events[type] = events[type].filter((item) => item !== handler);
+			events.set(
+				type,
+				events.get(type).filter((item) => item !== handler)
+			);
 		}
 	}
 
@@ -35,7 +38,12 @@ class EventBus {
 	 */
 	emit(type, evt) {
 		if (events.has(type)) {
-			events[type].slice().map((handler) => handler(evt));
+			events
+				.get(type)
+				.slice()
+				.map((handler) => {
+					handler(evt);
+				});
 		}
 	}
 }
