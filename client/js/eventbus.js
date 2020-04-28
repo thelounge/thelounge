@@ -36,13 +36,13 @@ class EventBus {
 	 * @param {String} type  The event type to invoke.
 	 * @param {Any} [evt]  Any value (object is recommended and powerful), passed to each handler.
 	 */
-	emit(type, evt) {
+	emit(type, ...evt) {
 		if (events.has(type)) {
 			events
 				.get(type)
 				.slice()
 				.map((handler) => {
-					handler(evt);
+					handler(...evt);
 				});
 		}
 	}
