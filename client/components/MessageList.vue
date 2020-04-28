@@ -63,6 +63,8 @@ import Message from "./Message.vue";
 import MessageCondensed from "./MessageCondensed.vue";
 import DateMarker from "./DateMarker.vue";
 
+let unreadMarkerShown = false;
+
 export default {
 	name: "MessageList",
 	components: {
@@ -183,7 +185,7 @@ export default {
 		});
 	},
 	beforeUpdate() {
-		this.unreadMarkerShown = false;
+		unreadMarkerShown = false;
 	},
 	beforeDestroy() {
 		eventbus.off("resize", this.handleResize);
@@ -205,8 +207,8 @@ export default {
 			return new Date(previousMessage.time).getDay() !== new Date(message.time).getDay();
 		},
 		shouldDisplayUnreadMarker(id) {
-			if (!this.unreadMarkerShown && id > this.channel.firstUnread) {
-				this.unreadMarkerShown = true;
+			if (!unreadMarkerShown && id > this.channel.firstUnread) {
+				unreadMarkerShown = true;
 				return true;
 			}
 
