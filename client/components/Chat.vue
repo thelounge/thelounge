@@ -64,7 +64,7 @@
 					<div class="chat">
 						<div class="messages">
 							<div class="msg">
-								<Component
+								<component
 									:is="specialComponent"
 									:network="network"
 									:channel="channel"

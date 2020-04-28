@@ -19,7 +19,7 @@
 		</template>
 		<template v-else-if="isAction()">
 			<span class="from"><span class="only-copy">*** </span></span>
-			<Component :is="messageComponent" :network="network" :message="message" />
+			<component :is="messageComponent" :network="network" :message="message" />
 		</template>
 		<template v-else-if="message.type === 'action'">
 			<span class="from"><span class="only-copy">* </span></span>
