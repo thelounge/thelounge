@@ -106,17 +106,18 @@
 					@start="onDragStart"
 					@end="onDragEnd"
 				>
-					<Channel
-						v-for="(channel, index) in network.channels"
-						v-if="index > 0"
-						:key="channel.id"
-						:channel="channel"
-						:network="network"
-						:active="
-							$store.state.activeChannel &&
-							channel === $store.state.activeChannel.channel
-						"
-					/>
+					<template v-for="(channel, index) in network.channels">
+						<Channel
+							v-if="index > 0"
+							:key="channel.id"
+							:channel="channel"
+							:network="network"
+							:active="
+								$store.state.activeChannel &&
+								channel === $store.state.activeChannel.channel
+							"
+						/>
+					</template>
 				</Draggable>
 			</div>
 		</Draggable>
