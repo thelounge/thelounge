@@ -1036,18 +1036,18 @@
   optionalDependencies:
     prettier "^1.18.2"
 
-"@vue/server-test-utils@1.0.0-beta.33":
-  version "1.0.0-beta.33"
-  resolved "https://registry.yarnpkg.com/@vue/server-test-utils/-/server-test-utils-1.0.0-beta.33.tgz#d3e284c0646d404ec6a4192b96ace99dd90a3033"
-  integrity sha512-vXZHy3Wh+Dj4Yn5jGll3m0DYdq3sZVwEsLViP/5CpBYQmqJKn55Y7ZMP07A+dAGcilXwL6MgP5/vCKnQkhUs7Q==
+"@vue/server-test-utils@1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@vue/server-test-utils/-/server-test-utils-1.0.2.tgz#b9d11ae5fe08185270dee309c348f3608d6f91fe"
+  integrity sha512-71IDCsVjZ9CsuBd2aQqdGacncYYglfhhOlb4OBlV7pYZdPD9yoHGoW2HPbxxE7qvcPjie/52Z9PUE0mdNGznrA==
   dependencies:
     "@types/cheerio" "^0.22.10"
     cheerio "^1.0.0-rc.2"
 
-"@vue/test-utils@1.0.0-beta.33":
-  version "1.0.0-beta.33"
-  resolved "https://registry.yarnpkg.com/@vue/test-utils/-/test-utils-1.0.0-beta.33.tgz#627511afbd4307e7557634f860a1b985bd25d9cd"
-  integrity sha512-Xzqoe0lTLn3QRWfjhmKPOXYR86l0Y+g/zPHaheJQOkPLj5ojJl3rG0t4F3kXFWuLD88YzUVRMIBWOG7v9KOJQQ==
+"@vue/test-utils@1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@vue/test-utils/-/test-utils-1.0.2.tgz#68134747cb88d996e4c9703ca4b103b4d23fda14"
+  integrity sha512-pnRWJbb0cLqjSJIKRpqoSISeYtufEn8D16VmhlCrDWIVt4iAY4Og4JpOPmFytvtQVz96p6n7T6ERI55ue6n0Ew==
   dependencies:
     dom-event-types "^1.0.0"
     lodash "^4.17.15"
