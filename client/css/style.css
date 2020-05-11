@@ -40,6 +40,9 @@
 
 	/* Color of the progress bar that appears as a file is being uploaded to the server. Defaults to button color */
 	--upload-progressbar-color: var(--button-color);
+
+	/* Color of borders for forms, chat, header, etc */
+	--border-color: #e7e7e7;
 }
 
 ::placeholder {
@@ -1011,7 +1014,7 @@ textarea.input {
 }
 
 #chat .header {
-	border-bottom: 1px solid #e7e7e7;
+	border-bottom: 1px solid var(--border-color);
 }
 
 .header .title {
@@ -1144,7 +1147,7 @@ textarea.input {
 }
 
 #chat .userlist {
-	border-left: 1px solid #e7e7e7;
+	border-left: 1px solid var(--border-color);
 	width: 180px;
 	display: none;
 	flex-direction: column;
@@ -1367,38 +1370,38 @@ textarea.input {
 	color: #50a656;
 }
 
-#chat.colored-nicks .user.color-1 { color: #107ead; }
-#chat.colored-nicks .user.color-2 { color: #a86500; }
-#chat.colored-nicks .user.color-3 { color: #008a3c; }
-#chat.colored-nicks .user.color-4 { color: #e00096; }
-#chat.colored-nicks .user.color-5 { color: #f0000c; }
-#chat.colored-nicks .user.color-6 { color: #000094; }
-#chat.colored-nicks .user.color-7 { color: #006441; }
-#chat.colored-nicks .user.color-8 { color: #00566e; }
-#chat.colored-nicks .user.color-9 { color: #e6006b; }
-#chat.colored-nicks .user.color-10 { color: #0d8766; }
-#chat.colored-nicks .user.color-11 { color: #006b3b; }
-#chat.colored-nicks .user.color-12 { color: #00857e; }
-#chat.colored-nicks .user.color-13 { color: #00465b; }
-#chat.colored-nicks .user.color-14 { color: #eb005a; }
-#chat.colored-nicks .user.color-15 { color: #e62600; }
-#chat.colored-nicks .user.color-16 { color: #0f8546; }
-#chat.colored-nicks .user.color-17 { color: #e60067; }
-#chat.colored-nicks .user.color-18 { color: #eb002b; }
-#chat.colored-nicks .user.color-19 { color: #eb003f; }
-#chat.colored-nicks .user.color-20 { color: #007a56; }
-#chat.colored-nicks .user.color-21 { color: #095092; }
-#chat.colored-nicks .user.color-22 { color: #000bde; }
-#chat.colored-nicks .user.color-23 { color: #008577; }
-#chat.colored-nicks .user.color-24 { color: #00367d; }
-#chat.colored-nicks .user.color-25 { color: #007e9e; }
-#chat.colored-nicks .user.color-26 { color: #006119; }
-#chat.colored-nicks .user.color-27 { color: #007ea8; }
-#chat.colored-nicks .user.color-28 { color: #3c8500; }
-#chat.colored-nicks .user.color-29 { color: #e6007e; }
-#chat.colored-nicks .user.color-30 { color: #c75300; }
-#chat.colored-nicks .user.color-31 { color: #eb0400; }
-#chat.colored-nicks .user.color-32 { color: #e60082; }
+.colored-nicks .user.color-1 { color: #107ead; }
+.colored-nicks .user.color-2 { color: #a86500; }
+.colored-nicks .user.color-3 { color: #008a3c; }
+.colored-nicks .user.color-4 { color: #e00096; }
+.colored-nicks .user.color-5 { color: #f0000c; }
+.colored-nicks .user.color-6 { color: #000094; }
+.colored-nicks .user.color-7 { color: #006441; }
+.colored-nicks .user.color-8 { color: #00566e; }
+.colored-nicks .user.color-9 { color: #e6006b; }
+.colored-nicks .user.color-10 { color: #0d8766; }
+.colored-nicks .user.color-11 { color: #006b3b; }
+.colored-nicks .user.color-12 { color: #00857e; }
+.colored-nicks .user.color-13 { color: #00465b; }
+.colored-nicks .user.color-14 { color: #eb005a; }
+.colored-nicks .user.color-15 { color: #e62600; }
+.colored-nicks .user.color-16 { color: #0f8546; }
+.colored-nicks .user.color-17 { color: #e60067; }
+.colored-nicks .user.color-18 { color: #eb002b; }
+.colored-nicks .user.color-19 { color: #eb003f; }
+.colored-nicks .user.color-20 { color: #007a56; }
+.colored-nicks .user.color-21 { color: #095092; }
+.colored-nicks .user.color-22 { color: #000bde; }
+.colored-nicks .user.color-23 { color: #008577; }
+.colored-nicks .user.color-24 { color: #00367d; }
+.colored-nicks .user.color-25 { color: #007e9e; }
+.colored-nicks .user.color-26 { color: #006119; }
+.colored-nicks .user.color-27 { color: #007ea8; }
+.colored-nicks .user.color-28 { color: #3c8500; }
+.colored-nicks .user.color-29 { color: #e6007e; }
+.colored-nicks .user.color-30 { color: #c75300; }
+.colored-nicks .user.color-31 { color: #eb0400; }
+.colored-nicks .user.color-32 { color: #e60082; }
 
 #chat .self .content {
 	color: var(--body-color-muted);
@@ -2109,7 +2112,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #form {
 	flex: 0 0 auto;
 	border: 0;
-	border-top: 1px solid #e7e7e7;
+	border-top: 1px solid var(--border-color);
 	border-radius: 0;
 	margin: 0;
 	padding: 6px;

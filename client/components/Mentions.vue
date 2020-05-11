@@ -5,20 +5,37 @@
 		@click="containerClick"
 		@contextmenu="containerClick"
 	>
-		<div class="mentions-popup">
+		<div
+			:class="{
+				'mentions-popup': true,
+				'colored-nicks': $store.state.settings.coloredNicks,
+			}"
+		>
 			<div class="mentions-popup-title">
-				Recent mentions
+				<span>
+					Recent mentions
+					<span v-if="resolvedMessages.length">({{ resolvedMessages.length }})</span>
+				</span>
+				<button
+					v-if="resolvedMessages.length"
+					class="btn clear-all-mentions"
+					@click="removeMentions()"
+				>
+					Clear all
+				</button>
 			</div>
 			<template v-if="resolvedMessages.length === 0">
 				<p v-if="isLoading">Loading…</p>
-				<p v-else>There are no recent mentions.</p>
+				<p v-else>You have no recent mentions.</p>
 			</template>
 			<template v-for="message in resolvedMessages" v-else>
 				<div :key="message.id" :class="['msg', message.type]">
 					<div class="mentions-info">
 						<div>
 							<span class="from">
-								<Username :user="message.from" />
+								<button>
+									<Username :user="message.from" />
+								</button>
 								<template v-if="message.channel">
 									in {{ message.channel.channel.name }} on
 									{{ message.channel.network.name }}
@@ -61,15 +78,17 @@
 	width: 400px;
 	right: 80px;
 	top: 55px;
-	max-height: 400px;
+	max-height: 800px;
 	overflow-y: scroll;
 	z-index: 2;
 	padding: 10px;
 }
 
 .mentions-popup > .mentions-popup-title {
-	margin-bottom: 10px;
+	display: flex;
+	justify-content: space-between;
 	font-size: 20px;
+	align-items: baseline;
 }
 
 .mentions-popup .mentions-info {
@@ -78,8 +97,10 @@
 }
 
 .mentions-popup .msg {
-	margin-bottom: 15px;
+	margin-bottom: 10px;
 	user-select: text;
+	border-top: 1px solid var(--border-color);
+	padding-top: 10px;
 }
 
 .mentions-popup .msg:last-child {
@@ -104,6 +125,14 @@
 
 .mentions-popup .msg-hide:hover {
 	color: var(--link-color);
+}
+
+.mentions-popup .clear-all-mentions {
+	font-size: 13px;
+	font-weight: normal;
+	display: inline-block;
+	line-height: 14px;
+	text-align: center;
 }
 
 @media (max-width: 768px) {
@@ -170,6 +199,11 @@ export default {
 	methods: {
 		messageTime(time) {
 			return dayjs(time).fromNow();
+		},
+		removeMentions() {
+			for (let i = this.$store.state.mentions.length - 1; i >= 0; i--) {
+				this.hideMention(this.$store.state.mentions[i]);
+			}
 		},
 		hideMention(message) {
 			this.$store.state.mentions.splice(
