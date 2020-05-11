@@ -8,7 +8,7 @@ const pkg = require("../../../package.json");
 
 const ctcpResponses = {
 	CLIENTINFO: () =>
-		Object.getOwnPropertyNames(ctcpResponses) // TODO: This is currently handled by irc-framework
+		Object.getOwnPropertyNames(ctcpResponses)
 			.filter((key) => key !== "CLIENTINFO" && typeof ctcpResponses[key] === "function")
 			.join(" "),
 	PING: ({message}) => message.substring(5),

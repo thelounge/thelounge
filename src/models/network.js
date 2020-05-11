@@ -173,8 +173,10 @@ Network.prototype.createIrcFramework = function (client) {
 		enable_echomessage: true,
 		enable_setname: true,
 		auto_reconnect: true,
-		auto_reconnect_wait: 10000 + Math.floor(Math.random() * 1000), // If multiple users are connected to the same network, randomize their reconnections a little
-		auto_reconnect_max_retries: 360, // At least one hour (plus timeouts) worth of reconnections
+
+		// Exponential backoff maxes out at 300 seconds after 9 reconnects,
+		// it will keep trying for well over an hour (plus the timeouts)
+		auto_reconnect_max_retries: 30,
 	});
 
 	this.setIrcFrameworkOptions(client);
