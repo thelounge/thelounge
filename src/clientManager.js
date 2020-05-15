@@ -34,17 +34,39 @@ ClientManager.prototype.init = function (identHandler, sockets) {
 };
 
 ClientManager.prototype.findClient = function (name) {
-	return this.clients.find((u) => u.name === name);
+	name = name.toLowerCase();
+	return this.clients.find((u) => u.name.toLowerCase() === name);
 };
 
 ClientManager.prototype.loadUsers = function () {
-	const users = this.getUsers();
+	let users = this.getUsers();
 
 	if (users.length === 0) {
 		log.info(
 			`There are currently no users. Create one with ${colors.bold("thelounge add <name>")}.`
 		);
+
+		return;
 	}
+
+	const alreadySeenUsers = new Set();
+	users = users.filter((user) => {
+		user = user.toLowerCase();
+
+		if (alreadySeenUsers.has(user)) {
+			log.error(
+				`There is more than one user named "${colors.bold(
+					user
+				)}". Usernames are now case insensitive, duplicate users will not load.`
+			);
+
+			return false;
+		}
+
+		alreadySeenUsers.add(user);
+
+		return true;
+	});
 
 	// This callback is used by Auth plugins to load users they deem acceptable
 	const callbackLoadUser = (user) => {
