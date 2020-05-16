@@ -19,6 +19,10 @@ describe("public folder", function () {
 		expect(fs.existsSync(path.join(publicFolder, "thelounge.webmanifest"))).to.be.true;
 	});
 
+	it("audio files are copied", function () {
+		expect(fs.existsSync(path.join(publicFolder, "audio", "pop.wav"))).to.be.true;
+	});
+
 	it("index HTML file is not copied", function () {
 		expect(fs.existsSync(path.join(publicFolder, "index.html"))).to.be.false;
 		expect(fs.existsSync(path.join(publicFolder, "index.html.tpl"))).to.be.false;
@@ -32,6 +36,8 @@ describe("public folder", function () {
 	it("style files are built", function () {
 		expect(fs.existsSync(path.join(publicFolder, "css", "style.css"))).to.be.true;
 		expect(fs.existsSync(path.join(publicFolder, "css", "style.css.map"))).to.be.true;
+		expect(fs.existsSync(path.join(publicFolder, "themes", "default.css"))).to.be.true;
+		expect(fs.existsSync(path.join(publicFolder, "themes", "morning.css"))).to.be.true;
 	});
 
 	it("style files contain expected content", function (done) {
@@ -54,5 +60,16 @@ describe("public folder", function () {
 	it("loading-error-handlers.js is copied", function () {
 		expect(fs.existsSync(path.join(publicFolder, "js", "loading-error-handlers.js"))).to.be
 			.true;
+	});
+
+	it("service worker has cacheName set", function (done) {
+		fs.readFile(path.join(publicFolder, "service-worker.js"), "utf8", function (err, contents) {
+			expect(err).to.be.null;
+
+			expect(contents.includes("const cacheName =")).to.be.true;
+			expect(contents.includes("__HASH__")).to.be.false;
+
+			done();
+		});
 	});
 });

@@ -91,42 +91,50 @@ const config = {
 		new MiniCssExtractPlugin({
 			filename: "css/style.css",
 		}),
-		new CopyPlugin([
-			{
-				from: "./node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff*",
-				to: "fonts/[name].[ext]",
-			},
-			{
-				from: "./client/js/loading-error-handlers.js",
-				to: "js/[name].[ext]",
-			},
-			{
-				from: "./client/*",
-				to: "[name].[ext]",
-				ignore: ["index.html.tpl", "service-worker.js"],
-			},
-			{
-				from: "./client/service-worker.js",
-				to: "[name].[ext]",
-				transform(content) {
-					return content
-						.toString()
-						.replace("__HASH__", isProduction ? Helper.getVersionCacheBust() : "dev");
+		new CopyPlugin({
+			patterns: [
+				{
+					from:
+						"./node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff*",
+					to: "fonts/[name].[ext]",
 				},
-			},
-			{
-				from: "./client/audio/*",
-				to: "audio/[name].[ext]",
-			},
-			{
-				from: "./client/img/*",
-				to: "img/[name].[ext]",
-			},
-			{
-				from: "./client/themes/*",
-				to: "themes/[name].[ext]",
-			},
-		]),
+				{
+					from: "./client/js/loading-error-handlers.js",
+					to: "js/[name].[ext]",
+				},
+				{
+					from: "./client/*",
+					to: "[name].[ext]",
+					globOptions: {
+						ignore: ["**/index.html.tpl", "**/service-worker.js"],
+					},
+				},
+				{
+					from: "./client/service-worker.js",
+					to: "[name].[ext]",
+					transform(content) {
+						return content
+							.toString()
+							.replace(
+								"__HASH__",
+								isProduction ? Helper.getVersionCacheBust() : "dev"
+							);
+					},
+				},
+				{
+					from: "./client/audio/*",
+					to: "audio/[name].[ext]",
+				},
+				{
+					from: "./client/img/*",
+					to: "img/[name].[ext]",
+				},
+				{
+					from: "./client/themes/*",
+					to: "themes/[name].[ext]",
+				},
+			],
+		}),
 		// socket.io uses debug, we don't need it
 		new webpack.NormalModuleReplacementPlugin(
 			/debug/,
