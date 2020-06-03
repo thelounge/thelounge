@@ -223,7 +223,7 @@ class MessageStorage {
 
 		if (query.channelName) {
 			select += " AND channel = ? ";
-			params.push(query.channelName);
+			params.push(query.channelName.toLowerCase());
 		}
 
 		const maxResults = 100;
