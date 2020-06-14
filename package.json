@@ -106,7 +106,7 @@
     "socket.io-client": "2.3.0",
     "stylelint": "13.6.0",
     "stylelint-config-standard": "20.0.0",
-    "textcomplete": "0.18.1",
+    "textcomplete": "0.18.2",
     "undate": "0.3.0",
     "vue": "2.6.11",
     "vue-loader": "15.9.2",
