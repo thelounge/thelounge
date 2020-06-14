@@ -67,17 +67,18 @@ module.exports = function (irc, network) {
 					return;
 				}
 
+				const target = data.from_server ? data.hostname : data.nick;
 				const response = ctcpResponses[data.type];
 
 				if (response) {
-					irc.ctcpResponse(data.nick, data.type, response(data));
+					irc.ctcpResponse(target, data.type, response(data));
 				}
 
 				// Let user know someone is making a CTCP request against their nick
 				const msg = new Msg({
 					type: Msg.Type.CTCP_REQUEST,
 					time: data.time,
-					from: new User({nick: data.nick}),
+					from: new User({nick: target}),
 					hostmask: data.ident + "@" + data.hostname,
 					ctcpMessage: data.message,
 				});
