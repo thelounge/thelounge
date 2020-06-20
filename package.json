@@ -116,7 +116,7 @@
     "vuedraggable": "2.23.2",
     "vuex": "3.4.0",
     "webpack": "4.43.0",
-    "webpack-cli": "3.3.11",
+    "webpack-cli": "3.3.12",
     "webpack-dev-middleware": "3.7.2",
     "webpack-hot-middleware": "2.25.0"
   },
