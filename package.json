@@ -109,7 +109,7 @@
     "textcomplete": "0.18.2",
     "undate": "0.3.0",
     "vue": "2.6.11",
-    "vue-loader": "15.9.2",
+    "vue-loader": "15.9.3",
     "vue-router": "3.3.4",
     "vue-server-renderer": "2.6.11",
     "vue-template-compiler": "2.6.11",
