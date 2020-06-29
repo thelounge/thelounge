@@ -6,6 +6,7 @@
 			{self: message.self, highlight: message.highlight, 'previous-source': isPreviousSource},
 		]"
 		:data-type="message.type"
+		:data-command="message.command"
 		:data-from="message.from && message.from.nick"
 	>
 		<span :aria-label="messageTimeLocale" class="time tooltipped tooltipped-e"
