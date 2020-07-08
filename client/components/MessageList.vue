@@ -204,7 +204,14 @@ export default {
 				return true;
 			}
 
-			return new Date(previousMessage.time).getDay() !== new Date(message.time).getDay();
+			const oldDate = new Date(previousMessage.time);
+			const newDate = new Date(message.time);
+
+			return (
+				oldDate.getDate() !== newDate.getDate() ||
+				oldDate.getMonth() !== newDate.getMonth() ||
+				oldDate.getFullYear() !== newDate.getFullYear()
+			);
 		},
 		shouldDisplayUnreadMarker(id) {
 			if (!unreadMarkerShown && id > this.channel.firstUnread) {
