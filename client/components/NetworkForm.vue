@@ -11,7 +11,9 @@
 				</template>
 				<template v-else>
 					Connect
-					<template v-if="config.lockNetwork">to {{ defaults.name }}</template>
+					<template v-if="config.lockNetwork && $store.state.serverConfiguration.public">
+						to {{ defaults.name }}
+					</template>
 				</template>
 			</h1>
 			<template v-if="!config.lockNetwork">
@@ -95,6 +97,19 @@
 							Only allow trusted certificates
 						</label>
 					</div>
+				</div>
+			</template>
+			<template v-else-if="config.lockNetwork && !$store.state.serverConfiguration.public">
+				<h2>Network settings</h2>
+				<div class="connect-row">
+					<label for="connect:name">Name</label>
+					<input
+						id="connect:name"
+						v-model="defaults.name"
+						class="input"
+						name="name"
+						maxlength="100"
+					/>
 				</div>
 			</template>
 
