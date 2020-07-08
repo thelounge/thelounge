@@ -803,6 +803,10 @@ function performAuthentication(data) {
 		return;
 	}
 
+	if (typeof data.user !== "string") {
+		return;
+	}
+
 	const authCallback = (success) => {
 		// Authorization failed
 		if (!success) {
