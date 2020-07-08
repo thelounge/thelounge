@@ -111,6 +111,23 @@
 						maxlength="100"
 					/>
 				</div>
+				<div class="connect-row">
+					<label for="connect:password">Password</label>
+					<RevealPassword
+						v-slot:default="slotProps"
+						class="input-wrap password-container"
+					>
+						<input
+							id="connect:password"
+							v-model="defaults.password"
+							class="input"
+							:type="slotProps.isVisible ? 'text' : 'password'"
+							placeholder="Server password (optional)"
+							name="password"
+							maxlength="300"
+						/>
+					</RevealPassword>
+				</div>
 			</template>
 
 			<h2>User preferences</h2>
