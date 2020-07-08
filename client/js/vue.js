@@ -101,6 +101,14 @@ store.watch(
 	(_, getters) => getters.highlightCount,
 	(highlightCount) => {
 		favicon.setAttribute("href", highlightCount > 0 ? faviconAlerted : faviconNormal);
+
+		if (navigator.setAppBadge) {
+			if (highlightCount > 0) {
+				navigator.setAppBadge(highlightCount);
+			} else {
+				navigator.clearAppBadge();
+			}
+		}
 	}
 );
 
