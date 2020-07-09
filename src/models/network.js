@@ -120,7 +120,12 @@ Network.prototype.validate = function (client) {
 			return false;
 		}
 
-		this.name = Helper.config.defaults.name;
+		if (Helper.config.public) {
+			this.name = Helper.config.defaults.name;
+			// Sync lobby channel name
+			this.channels[0].name = Helper.config.defaults.name;
+		}
+
 		this.host = Helper.config.defaults.host;
 		this.port = Helper.config.defaults.port;
 		this.tls = Helper.config.defaults.tls;
