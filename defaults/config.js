@@ -116,9 +116,9 @@ module.exports = {
 	// thumbnails on the filesystem rather than directly display the content at
 	// the original URLs.
 	//
-	// This improves security and privacy by not exposing the client IP address,
-	// always loading images from The Lounge and making all assets secure, which
-	// resolves mixed content warnings.
+	// This option primarily exists to resolve mixed content warnings by not
+	// loading images from http hosts. This option does not work for video
+	// or audio as The Lounge will only load these from https hosts.
 	//
 	// If storage is enabled, The Lounge will fetch and store images and thumbnails
 	// in the `${THELOUNGE_HOME}/storage` folder.
