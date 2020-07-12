@@ -110,6 +110,18 @@ module.exports = {
 	// This value is set to `false` by default.
 	prefetch: false,
 
+	// ### `disableMediaPreview`
+	//
+	// When set to `true`, The Lounge will not preview media (images, video and
+	// audio) hosted on third-party sites. This ensures the client does not
+	// make any requests to external sites. If `prefetchStorage` is enabled,
+	// images proxied via the The Lounge will be previewed.
+	//
+	// This has no effect if `prefetch` is set to `false`.
+	//
+	// This value is set to `false` by default.
+	disableMediaPreview: false,
+
 	// ### `prefetchStorage`
 
 	// When set to `true`, The Lounge will store and proxy prefetched images and

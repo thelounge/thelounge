@@ -222,6 +222,70 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 		});
 	});
 
+	describe("test disableMediaPreview", function () {
+		beforeEach(function (done) {
+			Helper.config.disableMediaPreview = true;
+			done();
+		});
+		afterEach(function (done) {
+			Helper.config.disableMediaPreview = false;
+			done();
+		});
+		it("should ignore og:image if disableMediaPreview", function (done) {
+			const port = this.port;
+
+			app.get("/nonexistent-test-image.png", function () {
+				throw "Should not fetch image";
+			});
+
+			app.get("/thumb", function (req, res) {
+				res.send(
+					"<title>Google</title><meta property='og:image' content='http://localhost:" +
+						port +
+						"/nonexistent-test-image.png'>"
+				);
+			});
+			const message = this.irc.createMessage({
+				text: "http://localhost:" + port + "/thumb",
+			});
+
+			link(this.irc, this.network.channels[0], message);
+
+			this.irc.once("msg:preview", function (data) {
+				expect(data.preview.head).to.equal("Google");
+				expect(data.preview.type).to.equal("link");
+				expect(data.preview.thumb).to.equal("");
+				done();
+			});
+		});
+		it("should ignore og:video if disableMediaPreview", function (done) {
+			const port = this.port;
+
+			app.get("/nonexistent-video.mpr", function () {
+				throw "Should not fetch video";
+			});
+
+			app.get("/thumb", function (req, res) {
+				res.send(
+					"<title>Google</title><meta property='og:video:type' content='video/mp4'><meta property='og:video' content='http://localhost:" +
+						port +
+						"/nonexistent-video.mp4'>"
+				);
+			});
+			const message = this.irc.createMessage({
+				text: "http://localhost:" + port + "/thumb",
+			});
+
+			link(this.irc, this.network.channels[0], message);
+
+			this.irc.once("msg:preview", function (data) {
+				expect(data.preview.head).to.equal("Google");
+				expect(data.preview.type).to.equal("link");
+				done();
+			});
+		});
+	});
+
 	it("should find image_src", function (done) {
 		const port = this.port;
 		const message = this.irc.createMessage({
