@@ -73,11 +73,13 @@ function togglePushSubscription() {
 					.then((subscription) => {
 						socket.emit("push:register", subscription.toJSON());
 						store.commit("pushNotificationState", "subscribed");
+						store.commit("refreshDesktopNotificationState");
 					});
 			})
 		)
 		.catch((err) => {
 			store.commit("pushNotificationState", "unsupported");
+			store.commit("refreshDesktopNotificationState");
 			console.error(err); // eslint-disable-line no-console
 		});
 }
