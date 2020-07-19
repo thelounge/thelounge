@@ -548,6 +548,10 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 		);
 	});
 
+	socket.on("mentions:hide_all", () => {
+		client.mentions = [];
+	});
+
 	if (!Helper.config.public) {
 		socket.on("push:register", (subscription) => {
 			if (!Object.prototype.hasOwnProperty.call(client.config.sessions, token)) {
