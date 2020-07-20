@@ -94,6 +94,12 @@ router.beforeEach((to, from, next) => {
 		return;
 	}
 
+	// Disallow navigating to invalid networks
+	if (to.name === "NetworkEdit" && !store.getters.findNetwork(to.params.uuid)) {
+		next(false);
+		return;
+	}
+
 	// Handle closing image viewer with the browser back button
 	if (!router.app.$refs.app) {
 		next();
