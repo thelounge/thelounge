@@ -100,6 +100,8 @@
 	border-radius: 5px;
 	padding: 6px;
 	margin-top: 2px;
+	word-wrap: break-word;
+	word-break: break-word; /* Webkit-specific */
 }
 
 .mentions-popup .msg-hide::before {
