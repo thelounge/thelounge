@@ -8,7 +8,7 @@
 import ParsedMessage from "../ParsedMessage.vue";
 
 export default {
-	name: "MessageTypeMOTD",
+	name: "MessageTypeMonospaceBlock",
 	components: {
 		ParsedMessage,
 	},

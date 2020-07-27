@@ -28,6 +28,8 @@ const events = [
 	"ctcp",
 	"chghost",
 	"error",
+	"help",
+	"info",
 	"invite",
 	"join",
 	"kick",

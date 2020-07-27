@@ -144,7 +144,7 @@ button {
 
 code,
 pre,
-#chat .msg[data-type="motd"] .text,
+#chat .msg[data-type="monospace_block"] .text,
 .irc-monospace,
 textarea#user-specified-css-input {
 	font-family: Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
@@ -303,7 +303,9 @@ p {
 #chat .msg[data-type="topic"] .from::before,
 #chat .msg[data-type="mode_channel"] .from::before,
 #chat .msg[data-type="mode"] .from::before,
-#chat .msg[data-type="motd"] .from::before,
+#chat .msg[data-command="motd"] .from::before,
+#chat .msg[data-command="help"] .from::before,
+#chat .msg[data-command="info"] .from::before,
 #chat .msg[data-type="ctcp"] .from::before,
 #chat .msg[data-type="ctcp_request"] .from::before,
 #chat .msg[data-type="whois"] .from::before,
@@ -427,8 +429,18 @@ p {
 	color: #2ecc40;
 }
 
-#chat .msg[data-type="motd"] .from::before {
+#chat .msg[data-command="motd"] .from::before {
 	content: "\f02e"; /* https://fontawesome.com/icons/bookmark?style=solid */
+	color: var(--body-color-muted);
+}
+
+#chat .msg[data-command="help"] .from::before {
+	content: "\f059"; /* https://fontawesome.com/icons/question-circle?style=solid */
+	color: var(--body-color-muted);
+}
+
+#chat .msg[data-command="info"] .from::before {
+	content: "\f05a"; /* https://fontawesome.com/icons/info-circle?style=solid */
 	color: var(--body-color-muted);
 }
 
@@ -1454,11 +1466,11 @@ textarea.input {
 	width: 50px;
 }
 
-#chat.hide-motd .msg[data-type="motd"] {
+#chat.hide-motd .msg[data-command="motd"] {
 	display: none !important;
 }
 
-#chat .msg[data-type="motd"] .text {
+#chat .msg[data-type="monospace_block"] .text {
 	background: #f6f6f6;
 	display: inline-block;
 	border-radius: 4px;
@@ -2826,7 +2838,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 .header .topic,
 #chat .msg[data-type="action"] .content,
 #chat .msg[data-type="message"] .content,
-#chat .msg[data-type="motd"] .content,
+#chat .msg[data-type="monospace_block"] .content,
 #chat .msg[data-type="notice"] .content,
 #chat .ctcp-message,
 #chat .part-reason,

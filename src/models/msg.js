@@ -43,7 +43,7 @@ class Msg {
 		}
 
 		return (
-			this.type !== Msg.Type.MOTD &&
+			this.type !== Msg.Type.MONOSPACE_BLOCK &&
 			this.type !== Msg.Type.ERROR &&
 			this.type !== Msg.Type.TOPIC_SET_BY &&
 			this.type !== Msg.Type.MODE_CHANNEL &&
@@ -66,7 +66,7 @@ Msg.Type = {
 	MESSAGE: "message",
 	MODE: "mode",
 	MODE_CHANNEL: "mode_channel",
-	MOTD: "motd",
+	MONOSPACE_BLOCK: "monospace_block",
 	NICK: "nick",
 	NOTICE: "notice",
 	PART: "part",

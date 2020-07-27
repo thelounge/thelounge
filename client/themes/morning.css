@@ -124,7 +124,7 @@ body {
 	color: #f92772;
 }
 
-#chat .msg[data-type="motd"] .text,
+#chat .msg[data-type="monospace_block"] .text,
 code,
 .irc-monospace {
 	background: #28333d;
