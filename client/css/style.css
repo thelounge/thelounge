@@ -2026,6 +2026,14 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	padding-bottom: 7px;
 }
 
+.window#chat-container {
+	/*
+		Chat has its own scrollbar, so remove the one on parent
+		This caused a performance issue in Chrome
+	*/
+	overflow: hidden;
+}
+
 #version-checker {
 	display: flex;
 	align-items: center;
