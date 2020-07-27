@@ -11,7 +11,9 @@ const crypto = require("crypto");
 const isUtf8 = require("is-utf8");
 const log = require("../log");
 
-const whitelist = [
+// List of allowed mime types that can be rendered in browser
+// without forcing it to be downloaded
+const inlineContentDispositionTypes = [
 	"application/ogg",
 	"audio/midi",
 	"audio/mpeg",
@@ -35,17 +37,33 @@ class Uploader {
 		socket.on("upload:auth", () => {
 			const token = uuidv4();
 
-			uploadTokens.set(token, true);
-
 			socket.emit("upload:auth", token);
 
 			// Invalidate the token in one minute
-			setTimeout(() => uploadTokens.delete(token), 60 * 1000);
+			const timeout = Uploader.createTokenTimeout(token);
+
+			uploadTokens.set(token, timeout);
+		});
+
+		socket.on("upload:ping", (token) => {
+			if (typeof token !== "string") {
+				return;
+			}
+
+			let timeout = uploadTokens.get(token);
+
+			if (!timeout) {
+				return;
+			}
+
+			clearTimeout(timeout);
+			timeout = Uploader.createTokenTimeout(token);
+			uploadTokens.set(token, timeout);
 		});
 	}
 
-	static isValidType(mimeType) {
-		return whitelist.includes(mimeType);
+	static createTokenTimeout(token) {
+		return setTimeout(() => uploadTokens.delete(token), 60 * 1000);
 	}
 
 	static router(express) {
@@ -72,8 +90,10 @@ class Uploader {
 			return res.status(404).send("Not found");
 		}
 
-		// Force a download in the browser if it's not a whitelisted type (binary or otherwise unknown)
-		const contentDisposition = Uploader.isValidType(detectedMimeType) ? "inline" : "attachment";
+		// Force a download in the browser if it's not an allowed type (binary or otherwise unknown)
+		const contentDisposition = inlineContentDispositionTypes.includes(detectedMimeType)
+			? "inline"
+			: "attachment";
 
 		if (detectedMimeType === "audio/vnd.wave") {
 			// Send a more common mime type for wave audio files
