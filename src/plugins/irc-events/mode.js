@@ -60,16 +60,16 @@ module.exports = function (irc, network) {
 			self: data.nick === irc.user.nick,
 		});
 
-		for (const param of data.raw_params) {
-			const users = [];
+		const users = [];
 
+		for (const param of data.raw_params) {
 			if (targetChan.findUser(param)) {
 				users.push(param);
 			}
+		}
 
-			if (users.length > 0) {
-				msg.users = users;
-			}
+		if (users.length > 0) {
+			msg.users = users;
 		}
 
 		targetChan.pushMessage(client, msg);
