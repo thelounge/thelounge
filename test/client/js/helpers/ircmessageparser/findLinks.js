@@ -1,7 +1,10 @@
 "use strict";
 
 const expect = require("chai").expect;
-const findLinks = require("../../../../../client/js/helpers/ircmessageparser/findLinks");
+const {
+	findLinks,
+	findLinksWithSchema,
+} = require("../../../../../client/js/helpers/ircmessageparser/findLinks");
 
 describe("findLinks", () => {
 	it("should find url", () => {
@@ -351,6 +354,26 @@ describe("findLinks", () => {
 		];
 
 		const actual = findLinks(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should not return urls with no schema if flag is specified", () => {
+		const input = "https://example.global //example.com http://example.group example.py";
+		const expected = [
+			{
+				link: "https://example.global",
+				start: 0,
+				end: 22,
+			},
+			{
+				end: 57,
+				link: "http://example.group",
+				start: 37,
+			},
+		];
+
+		const actual = findLinksWithSchema(input);
 
 		expect(actual).to.deep.equal(expected);
 	});

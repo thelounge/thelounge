@@ -2,7 +2,7 @@
 
 import parseStyle from "./ircmessageparser/parseStyle";
 import findChannels from "./ircmessageparser/findChannels";
-import findLinks from "./ircmessageparser/findLinks";
+import {findLinks} from "./ircmessageparser/findLinks";
 import findEmoji from "./ircmessageparser/findEmoji";
 import findNames from "./ircmessageparser/findNames";
 import merge from "./ircmessageparser/merge";

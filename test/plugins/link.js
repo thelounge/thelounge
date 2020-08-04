@@ -623,19 +623,15 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 		});
 	});
 
-	it("should fetch protocol-aware links", function (done) {
+	it("should not fetch links without a schema", function () {
 		const port = this.port;
 		const message = this.irc.createMessage({
-			text: "//localhost:" + port + "",
+			text: `//localhost:${port} localhost:${port} //localhost:${port}/test localhost:${port}/test`,
 		});
 
 		link(this.irc, this.network.channels[0], message);
 
-		this.irc.once("msg:preview", function (data) {
-			expect(data.preview.link).to.equal("http://localhost:" + port + "");
-			expect(data.preview.type).to.equal("error");
-			done();
-		});
+		expect(message.previews).to.be.empty;
 	});
 
 	it("should de-duplicate links", function (done) {
