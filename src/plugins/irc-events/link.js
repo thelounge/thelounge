@@ -6,7 +6,7 @@ const URL = require("url").URL;
 const mime = require("mime-types");
 const Helper = require("../../helper");
 const cleanIrcMessage = require("../../../client/js/helpers/ircmessageparser/cleanIrcMessage");
-const findLinks = require("../../../client/js/helpers/ircmessageparser/findLinks");
+const {findLinksWithSchema} = require("../../../client/js/helpers/ircmessageparser/findLinks");
 const storage = require("../storage");
 const currentFetchPromises = new Map();
 const imageTypeRegex = /^image\/.+/;
@@ -20,7 +20,7 @@ module.exports = function (client, chan, msg) {
 	// Remove all IRC formatting characters before searching for links
 	const cleanText = cleanIrcMessage(msg.text);
 
-	msg.previews = findLinks(cleanText).reduce((cleanLinks, link) => {
+	msg.previews = findLinksWithSchema(cleanText).reduce((cleanLinks, link) => {
 		const url = normalizeURL(link.link);
 
 		// If the URL is invalid and cannot be normalized, don't fetch it
