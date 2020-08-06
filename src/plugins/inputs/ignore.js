@@ -118,12 +118,15 @@ exports.input = function (network, chan, cmd, args) {
 				let newChan = network.getChannel(chanName);
 
 				if (typeof newChan === "undefined") {
-					newChan = client.createChannel({
-						type: Chan.Type.SPECIAL,
-						special: Chan.SpecialType.IGNORELIST,
-						name: chanName,
-						data: ignored,
-					});
+					newChan = client.createChannel(
+						{
+							type: Chan.Type.SPECIAL,
+							special: Chan.SpecialType.IGNORELIST,
+							name: chanName,
+							data: ignored,
+						},
+						network
+					);
 					client.emit("join", {
 						network: network.uuid,
 						chan: newChan.getFilteredClone(true),

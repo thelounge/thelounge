@@ -141,9 +141,22 @@ function Client(manager, name, config = {}) {
 	}
 }
 
-Client.prototype.createChannel = function (attr) {
+Client.prototype.createChannel = function (attr, network) {
 	const chan = new Chan(attr);
 	chan.id = this.idChan++;
+
+	if (!chan.isLoggable() || !network) {
+		return chan;
+	}
+
+	const messageStorage = this.messageStorage.find((s) => s.canProvideMessages());
+
+	if (messageStorage) {
+		messageStorage
+			.getChannelId(network, chan)
+			.then((id) => (chan.idStorage = id))
+			.catch((err) => log.error(`Failed to get storage channel id: ${err}`));
+	}
 
 	return chan;
 };
@@ -177,54 +190,6 @@ Client.prototype.find = function (channelId) {
 
 Client.prototype.connect = function (args, isStartup = false) {
 	const client = this;
-	let channels = [];
-
-	// Get channel id for lobby before creating other channels for nicer ids
-	const lobbyChannelId = client.idChan++;
-
-	if (args.channels) {
-		let badName = false;
-
-		args.channels.forEach((chan) => {
-			if (!chan.name) {
-				badName = true;
-				return;
-			}
-
-			channels.push(
-				client.createChannel({
-					name: chan.name,
-					key: chan.key || "",
-					type: chan.type,
-				})
-			);
-		});
-
-		if (badName && client.name) {
-			log.warn(
-				"User '" +
-					client.name +
-					"' on network '" +
-					args.name +
-					"' has an invalid channel which has been ignored"
-			);
-		}
-		// `join` is kept for backwards compatibility when updating from versions <2.0
-		// also used by the "connect" window
-	} else if (args.join) {
-		channels = args.join
-			.replace(/,/g, " ")
-			.split(/\s+/g)
-			.map((chan) => {
-				if (!chan.match(/^[#&!+]/)) {
-					chan = `#${chan}`;
-				}
-
-				return client.createChannel({
-					name: chan,
-				});
-			});
-	}
 
 	const network = new Network({
 		uuid: args.uuid,
@@ -244,12 +209,60 @@ Client.prototype.connect = function (args, isStartup = false) {
 		saslAccount: String(args.saslAccount || ""),
 		saslPassword: String(args.saslPassword || ""),
 		commands: args.commands || [],
-		channels: channels,
 		ignoreList: args.ignoreList ? args.ignoreList : [],
 	});
 
-	// Set network lobby channel id
-	network.channels[0].id = lobbyChannelId;
+	if (args.channels) {
+		let badName = false;
+
+		args.channels.forEach((chan) => {
+			if (!chan.name) {
+				badName = true;
+				return;
+			}
+
+			network.channels.push(
+				client.createChannel(
+					{
+						name: chan.name,
+						key: chan.key || "",
+						type: chan.type,
+					},
+					network
+				)
+			);
+		});
+
+		if (badName && client.name) {
+			log.warn(
+				"User '" +
+					client.name +
+					"' on network '" +
+					args.name +
+					"' has an invalid channel which has been ignored"
+			);
+		}
+	} else if (args.join) {
+		// `join` is kept for backwards compatibility when updating from versions <2.0
+		// also used by the "connect" window
+		args.join
+			.replace(/,/g, " ")
+			.split(/\s+/g)
+			.forEach((chan) => {
+				if (!chan.match(/^[#&!+]/)) {
+					chan = `#${chan}`;
+				}
+
+				network.channels.push(
+					client.createChannel(
+						{
+							name: chan,
+						},
+						network
+					)
+				);
+			});
+	}
 
 	client.networks.push(network);
 	client.emit("network", {
@@ -281,7 +294,7 @@ Client.prototype.connect = function (args, isStartup = false) {
 
 	if (!isStartup) {
 		client.save();
-		channels.forEach((channel) => channel.loadMessages(client, network));
+		network.channels.forEach((channel) => channel.loadMessages(client, network));
 	}
 };
 

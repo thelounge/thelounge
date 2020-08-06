@@ -31,6 +31,7 @@ Chan.State = {
 function Chan(attr) {
 	_.defaults(this, attr, {
 		id: 0,
+		idStorage: 0,
 		messages: [],
 		name: "",
 		key: "",
@@ -192,7 +193,7 @@ Chan.prototype.getFilteredClone = function (lastActiveChannel, lastMessage) {
 			}
 
 			newChannel.totalMessages = this[prop].length;
-		} else {
+		} else if (prop !== "idStorage") {
 			newChannel[prop] = this[prop];
 		}
 

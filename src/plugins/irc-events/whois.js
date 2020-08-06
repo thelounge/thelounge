@@ -22,10 +22,13 @@ module.exports = function (irc, network) {
 			if (data.error) {
 				chan = network.channels[0];
 			} else {
-				chan = client.createChannel({
-					type: Chan.Type.QUERY,
-					name: data.nick,
-				});
+				chan = client.createChannel(
+					{
+						type: Chan.Type.QUERY,
+						name: data.nick,
+					},
+					network
+				);
 
 				client.emit("join", {
 					shouldOpen: true,

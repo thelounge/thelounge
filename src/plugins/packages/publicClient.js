@@ -18,9 +18,10 @@ module.exports = class PublicClient {
 	/**
 	 *
 	 * @param {Object} attributes
+	 * @param {Network} network
 	 */
-	createChannel(attributes) {
-		return this.client.createChannel(attributes);
+	createChannel(attributes, network) {
+		return this.client.createChannel(attributes, network);
 	}
 
 	/**

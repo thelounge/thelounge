@@ -21,9 +21,12 @@ try {
 const currentSchemaVersion = 1520239200;
 
 const schema = [
-	// Schema version #1
+	// Tables
 	"CREATE TABLE IF NOT EXISTS options (name TEXT, value TEXT, CONSTRAINT name_unique UNIQUE (name))",
+	"CREATE TABLE IF NOT EXISTS channels (channel_id INTEGER PRIMARY KEY, network TEXT, channel TEXT, CONSTRAINT unique_channel UNIQUE (network, channel))",
 	"CREATE TABLE IF NOT EXISTS messages (network TEXT, channel TEXT, time INTEGER, type TEXT, msg TEXT)",
+
+	// Indexes
 	"CREATE INDEX IF NOT EXISTS network_channel ON messages (network, channel)",
 	"CREATE INDEX IF NOT EXISTS time ON messages (time)",
 ];
@@ -116,6 +119,13 @@ class MessageStorage {
 		});
 	}
 
+	/**
+	 * Store a new message in specified channel
+	 *
+	 * @param Network network - Network object where the channel is
+	 * @param Chan channel - Channel object
+	 * @param Msg msg - Message object to store
+	 */
 	index(network, channel, msg) {
 		if (!this.isEnabled) {
 			return;
@@ -144,6 +154,12 @@ class MessageStorage {
 		);
 	}
 
+	/**
+	 * Delete stored all stored messages in a channel
+	 *
+	 * @param Network network - Network object where the channel is
+	 * @param Chan channel - Channel object
+	 */
 	deleteChannel(network, channel) {
 		if (!this.isEnabled) {
 			return;
@@ -156,6 +172,51 @@ class MessageStorage {
 				channel.name.toLowerCase()
 			)
 		);
+	}
+
+	/**
+	 * Get the stored channel id, creates one if does not exist.
+	 *
+	 * @param Network network - Network object where the channel is
+	 * @param Chan channel - Channel object
+	 */
+	getChannelId(network, channel) {
+		if (!this.isEnabled) {
+			return Promise.resolve(0);
+		}
+
+		const channelName = channel.name.toLowerCase();
+
+		return new Promise((resolve, reject) => {
+			this.database.serialize(() =>
+				this.database.get(
+					"SELECT channel_id FROM channels WHERE network = ? AND channel = ?",
+					[network.uuid, channelName],
+					(err, row) => {
+						if (err) {
+							return reject(err);
+						}
+
+						if (row) {
+							return resolve(row.channel_id);
+						}
+
+						// This channel was not found, create it and "recursively" call getChannelId again
+						this.database.run(
+							"INSERT INTO channels (network, channel) VALUES (?, ?)",
+							[network.uuid, channelName],
+							(err2) => {
+								if (err2) {
+									return reject(err2);
+								}
+
+								this.getChannelId(network, channel).then(resolve).catch(reject);
+							}
+						);
+					}
+				)
+			);
+		});
 	}
 
 	/**

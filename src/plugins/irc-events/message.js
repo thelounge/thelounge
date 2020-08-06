@@ -75,10 +75,13 @@ module.exports = function (irc, network) {
 					showInActive = true;
 					chan = network.channels[0];
 				} else {
-					chan = client.createChannel({
-						type: Chan.Type.QUERY,
-						name: target,
-					});
+					chan = client.createChannel(
+						{
+							type: Chan.Type.QUERY,
+							name: target,
+						},
+						network
+					);
 
 					client.emit("join", {
 						network: network.uuid,

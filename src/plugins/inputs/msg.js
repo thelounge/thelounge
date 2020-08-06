@@ -63,10 +63,13 @@ exports.input = function (network, chan, cmd, args) {
 				}
 			}
 
-			const newChan = this.createChannel({
-				type: Chan.Type.QUERY,
-				name: targetName,
-			});
+			const newChan = this.createChannel(
+				{
+					type: Chan.Type.QUERY,
+					name: targetName,
+				},
+				network
+			);
 
 			this.emit("join", {
 				network: network.uuid,

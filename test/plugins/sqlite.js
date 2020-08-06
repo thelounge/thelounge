@@ -67,6 +67,12 @@ describe("SQLite Message Storage", function () {
 								"CREATE TABLE options (name TEXT, value TEXT, CONSTRAINT name_unique UNIQUE (name))",
 						},
 						{
+							name: "channels",
+							tbl_name: "channels",
+							sql:
+								"CREATE TABLE channels (channel_id INTEGER PRIMARY KEY, network TEXT, channel TEXT, CONSTRAINT unique_channel UNIQUE (network, channel))",
+						},
+						{
 							name: "messages",
 							tbl_name: "messages",
 							sql:
@@ -78,6 +84,37 @@ describe("SQLite Message Storage", function () {
 				}
 			)
 		);
+	});
+
+	it("should create channel id if not exists", function (done) {
+		const network = {
+			uuid: "network-uuid",
+		};
+
+		store
+			.getChannelId(network, {
+				name: "#This-Is-Channel-One",
+			})
+			.then((id) => {
+				expect(id).to.equal(1);
+
+				store
+					.getChannelId(network, {
+						name: "#this-is-channel-ONE",
+					})
+					.then((id2) => {
+						expect(id2).to.equal(1);
+
+						store
+							.getChannelId(network, {
+								name: "#this-is-channel-two",
+							})
+							.then((id3) => {
+								expect(id3).to.equal(2);
+								done();
+							});
+					});
+			});
 	});
 
 	it("should insert schema version to options table", function (done) {
