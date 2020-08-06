@@ -212,6 +212,9 @@ Client.prototype.connect = function (args, isStartup = false) {
 		ignoreList: args.ignoreList ? args.ignoreList : [],
 	});
 
+	// Set network lobby channel id
+	network.channels[0].id = client.idChan++;
+
 	if (args.channels) {
 		let badName = false;
 
