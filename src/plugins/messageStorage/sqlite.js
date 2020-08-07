@@ -202,16 +202,18 @@ class MessageStorage {
 						}
 
 						// This channel was not found, create it and "recursively" call getChannelId again
-						this.database.run(
-							"INSERT INTO channels (network, channel) VALUES (?, ?)",
-							[network.uuid, channelName],
-							(err2) => {
-								if (err2) {
-									return reject(err2);
-								}
+						this.database.serialize(() =>
+							this.database.run(
+								"INSERT INTO channels (network, channel) VALUES (?, ?)",
+								[network.uuid, channelName],
+								(err2) => {
+									if (err2) {
+										return reject(err2);
+									}
 
-								this.getChannelId(network, channel).then(resolve).catch(reject);
-							}
+									this.getChannelId(network, channel).then(resolve).catch(reject);
+								}
+							)
 						);
 					}
 				)
