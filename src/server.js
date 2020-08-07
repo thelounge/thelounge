@@ -363,13 +363,13 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 	});
 
 	socket.on("input", (data) => {
-		if (typeof data === "object") {
+		if (_.isPlainObject(data)) {
 			client.input(data);
 		}
 	});
 
 	socket.on("more", (data) => {
-		if (typeof data === "object") {
+		if (_.isPlainObject(data)) {
 			const history = client.more(data);
 
 			if (history !== null) {
@@ -379,7 +379,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 	});
 
 	socket.on("network:new", (data) => {
-		if (typeof data === "object") {
+		if (_.isPlainObject(data)) {
 			// prevent people from overriding webirc settings
 			data.uuid = null;
 			data.commands = null;
@@ -404,7 +404,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 	});
 
 	socket.on("network:edit", (data) => {
-		if (typeof data !== "object") {
+		if (!_.isPlainObject(data)) {
 			return;
 		}
 
@@ -418,14 +418,14 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 	});
 
 	socket.on("history:clear", (data) => {
-		if (typeof data === "object") {
+		if (_.isPlainObject(data)) {
 			client.clearHistory(data);
 		}
 	});
 
 	if (!Helper.config.public && !Helper.config.ldap.enable) {
 		socket.on("change-password", (data) => {
-			if (typeof data === "object") {
+			if (_.isPlainObject(data)) {
 				const old = data.old_password;
 				const p1 = data.new_password;
 				const p2 = data.verify_password;
@@ -475,13 +475,13 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 	});
 
 	socket.on("sort", (data) => {
-		if (typeof data === "object") {
+		if (_.isPlainObject(data)) {
 			client.sort(data);
 		}
 	});
 
 	socket.on("names", (data) => {
-		if (typeof data === "object") {
+		if (_.isPlainObject(data)) {
 			client.names(data);
 		}
 	});
@@ -496,7 +496,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 	});
 
 	socket.on("msg:preview:toggle", (data) => {
-		if (typeof data !== "object") {
+		if (!_.isPlainObject(data)) {
 			return;
 		}
 
@@ -597,7 +597,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 
 	if (!Helper.config.public) {
 		socket.on("setting:set", (newSetting) => {
-			if (!newSetting || typeof newSetting !== "object") {
+			if (!_.isPlainObject(newSetting)) {
 				return;
 			}
 
@@ -646,7 +646,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 
 	socket.on("sign-out", (tokenToSignOut) => {
 		// If no token provided, sign same client out
-		if (!tokenToSignOut) {
+		if (!tokenToSignOut || typeof tokenToSignOut !== "string") {
 			tokenToSignOut = token;
 		}
 
@@ -752,7 +752,7 @@ function getServerConfiguration() {
 }
 
 function performAuthentication(data) {
-	if (typeof data !== "object") {
+	if (!_.isPlainObject(data)) {
 		return;
 	}
 

@@ -83,15 +83,15 @@ function Client(manager, name, config = {}) {
 		}
 	}
 
-	if (typeof client.config.sessions !== "object") {
+	if (!_.isPlainObject(client.config.sessions)) {
 		client.config.sessions = {};
 	}
 
-	if (typeof client.config.clientSettings !== "object") {
+	if (!_.isPlainObject(client.config.clientSettings)) {
 		client.config.clientSettings = {};
 	}
 
-	if (typeof client.config.browser !== "object") {
+	if (!_.isPlainObject(client.config.browser)) {
 		client.config.browser = {};
 	}
 
