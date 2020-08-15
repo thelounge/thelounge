@@ -82,7 +82,7 @@
     "copy-webpack-plugin": "6.0.3",
     "css-loader": "4.2.0",
     "cssnano": "4.1.10",
-    "dayjs": "1.8.31",
+    "dayjs": "1.8.33",
     "emoji-regex": "9.0.0",
     "eslint": "7.6.0",
     "eslint-config-prettier": "6.11.0",
