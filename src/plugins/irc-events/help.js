@@ -14,7 +14,7 @@ module.exports = function (irc, network) {
 				command: "help",
 				text: data.help,
 			});
-			lobby.pushMessage(client, msg);
+			lobby.pushMessage(client, msg, true);
 		}
 	});
 };
