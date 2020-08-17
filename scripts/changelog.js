@@ -49,7 +49,7 @@ const _ = require("lodash");
 const colors = require("chalk");
 const fs = require("fs");
 const path = require("path");
-const GraphQLClient = require("graphql-request").GraphQLClient;
+const got = require("got");
 const dayjs = require("dayjs");
 const semver = require("semver");
 const util = require("util");
@@ -236,19 +236,31 @@ function fullChangelogUrl(v1, v2) {
 // This class is a facade to fetching details about commits / PRs / tags / etc.
 // for a given repository of our organization.
 class RepositoryFetcher {
-	// Holds a GraphQLClient and the name of the repository within the
-	// organization https://github.com/thelounge.
-	constructor(graphqlClient, repositoryName) {
-		this.graphqlClient = graphqlClient;
+	// Holds a Github token and repository name
+	constructor(githubToken, repositoryName) {
+		this.githubToken = githubToken;
 		this.repositoryName = repositoryName;
 	}
 
 	// Base function that actually makes the GraphQL API call
 	async fetch(query, variables = {}) {
-		return this.graphqlClient.request(
-			query,
-			Object.assign(variables, {repositoryName: this.repositoryName})
-		);
+		const response = await got
+			.post("https://api.github.com/graphql", {
+				json: {
+					query: query,
+					variables: Object.assign(variables, {repositoryName: this.repositoryName}),
+				},
+				headers: {
+					Authorization: `Bearer ${this.githubToken}`,
+				},
+			})
+			.json();
+
+		if (!response.errors && response.data) {
+			return response.data;
+		}
+
+		throw new Error(`GraphQL request returned no data: ${JSON.stringify(response)}`);
 	}
 
 	// Returns the git commit that is attached to a given tag
@@ -789,12 +801,6 @@ function extractContributors(entries) {
 	return Array.from(set).sort((a, b) => a.localeCompare(b, "en", {sensitivity: "base"}));
 }
 
-const client = new GraphQLClient("https://api.github.com/graphql", {
-	headers: {
-		Authorization: `bearer ${token}`,
-	},
-});
-
 // Main function. Given a version string (i.e. not a tag!), returns a changelog
 // entry and the list of contributors, for both pre-releases and stable
 // releases. Templates are located at the top of this file.
@@ -803,7 +809,7 @@ async function generateChangelogEntry(changelog, targetVersion) {
 	let template;
 	let contributors = [];
 
-	const codeRepo = new RepositoryFetcher(client, "thelounge");
+	const codeRepo = new RepositoryFetcher(token, "thelounge");
 	const previousVersion = await codeRepo.fetchPreviousVersion(targetVersion);
 
 	if (isPrerelease(targetVersion)) {
@@ -817,7 +823,7 @@ async function generateChangelogEntry(changelog, targetVersion) {
 		items = parse(codeCommitsAndPullRequests);
 		items.milestone = await codeRepo.fetchMilestone(targetVersion);
 
-		const websiteRepo = new RepositoryFetcher(client, "thelounge.github.io");
+		const websiteRepo = new RepositoryFetcher(token, "thelounge.github.io");
 		const previousWebsiteVersion = await websiteRepo.fetchPreviousVersion(targetVersion);
 		const websiteCommitsAndPullRequests = await websiteRepo.fetchCommitsAndPullRequestsSince(
 			"v" + previousWebsiteVersion
