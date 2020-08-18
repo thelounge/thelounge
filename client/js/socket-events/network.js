@@ -64,3 +64,8 @@ socket.on("network:info", function (data) {
 		Vue.set(network, key, data[key]);
 	}
 });
+
+socket.on("network:name", function (data) {
+	const network = store.getters.findNetwork(data.uuid);
+	network.name = network.channels[0].name = data.name;
+});

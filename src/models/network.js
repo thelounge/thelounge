@@ -253,6 +253,7 @@ Network.prototype.createWebIrc = function (client) {
 };
 
 Network.prototype.edit = function (client, args) {
+	const oldNetworkName = this.name;
 	const oldNick = this.nick;
 	const oldRealname = this.realname;
 
@@ -278,6 +279,14 @@ Network.prototype.edit = function (client, args) {
 
 	// Sync lobby channel name
 	this.channels[0].name = this.name;
+
+	if (this.name !== oldNetworkName) {
+		// Send updated network name to all connected clients
+		client.emit("network:name", {
+			uuid: this.uuid,
+			name: this.name,
+		});
+	}
 
 	if (!this.validate(client)) {
 		return;
