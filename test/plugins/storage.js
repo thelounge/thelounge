@@ -76,7 +76,7 @@ describe("Image storage", function () {
 			text: "http://localhost:" + port + "/thumb",
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		this.app.get("/thumb", function (req, res) {
 			res.send(
@@ -100,7 +100,7 @@ describe("Image storage", function () {
 			text: "http://localhost:" + port + "/real-test-image.png",
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		this.irc.once("msg:preview", function (data) {
 			expect(data.preview.type).to.equal("image");
@@ -124,7 +124,7 @@ describe("Image storage", function () {
 			);
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		this.irc.once("msg:preview", function (data) {
 			expect(data.preview.type).to.equal("link");

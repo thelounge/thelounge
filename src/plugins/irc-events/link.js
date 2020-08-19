@@ -5,20 +5,16 @@ const got = require("got");
 const URL = require("url").URL;
 const mime = require("mime-types");
 const Helper = require("../../helper");
-const cleanIrcMessage = require("../../../client/js/helpers/ircmessageparser/cleanIrcMessage");
 const {findLinksWithSchema} = require("../../../client/js/helpers/ircmessageparser/findLinks");
 const storage = require("../storage");
 const currentFetchPromises = new Map();
 const imageTypeRegex = /^image\/.+/;
 const mediaTypeRegex = /^(audio|video)\/.+/;
 
-module.exports = function (client, chan, msg) {
+module.exports = function (client, chan, msg, cleanText) {
 	if (!Helper.config.prefetch) {
 		return;
 	}
-
-	// Remove all IRC formatting characters before searching for links
-	const cleanText = cleanIrcMessage(msg.text);
 
 	msg.previews = findLinksWithSchema(cleanText).reduce((cleanLinks, link) => {
 		const url = normalizeURL(link.link);

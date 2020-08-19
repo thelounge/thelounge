@@ -22,7 +22,10 @@ describe("Custom highlights", function () {
 		},
 		"test",
 		{
-			clientSettings: {highlights: "foo, @all,   sp ace   , 고"},
+			clientSettings: {
+				highlights: "foo, @all,   sp ace   , 고",
+				highlightExceptions: "foo bar, bar @all, test sp ace test",
+			},
 		}
 	);
 
@@ -95,5 +98,54 @@ describe("Custom highlights", function () {
 		client.config.clientSettings.highlights = "  ";
 		client.compileCustomHighlights();
 		expect(client.highlightRegex).to.be.null;
+	});
+
+	// tests for highlight exceptions
+	it("should NOT highlight due to highlight exceptions", function () {
+		const teststrings = [
+			"foo bar baz",
+			"test foo bar",
+			"foo bar @all test",
+			"with a test sp ace test",
+		];
+
+		for (const teststring of teststrings) {
+			expect(teststring).to.match(client.highlightExceptionRegex);
+		}
+	});
+
+	it("should highlight regardless of highlight exceptions", function () {
+		const teststrings = [
+			"Hey foo hello",
+			"hey Foo: hi",
+			"hey Foo, hi",
+			"<foo> testing",
+			"foo",
+			"hey @all test",
+			"testing foo's stuff",
+			'"foo"',
+			'"@all"',
+			"foo!",
+			"www.foo.bar",
+			"www.bar.foo/page",
+			"고",
+			"test 고",
+			"고!",
+			"www.고.com",
+			"hey @Foo",
+			"hey ~Foo",
+			"hey +Foo",
+			"hello &foo",
+			"@all",
+			"@all wtf",
+			"wtfbar @all",
+			"@@all",
+			"@고",
+			"f00 sp ace: bar",
+		];
+
+		for (const teststring of teststrings) {
+			expect(teststring).to.not.match(client.highlightExceptionRegex);
+		}
 	});
 });

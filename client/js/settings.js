@@ -46,6 +46,10 @@ export const config = normalizeConfig({
 		default: "",
 		sync: "always",
 	},
+	highlightExceptions: {
+		default: "",
+		sync: "always",
+	},
 	awayMessage: {
 		default: "",
 		sync: "always",

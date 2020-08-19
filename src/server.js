@@ -621,7 +621,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 
 				client.save();
 
-				if (newSetting.name === "highlights") {
+				if (newSetting.name === "highlights" || newSetting.name === "highlightExceptions") {
 					client.compileCustomHighlights();
 				} else if (newSetting.name === "awayMessage") {
 					if (typeof newSetting.value !== "string") {
