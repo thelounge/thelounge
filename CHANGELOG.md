@@ -4,6 +4,103 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v4.2.0 - 2020-08-19
+
+For more details, [see the full changelog](https://github.com/thelounge/thelounge/compare/v4.1.0...v4.2.0) and [milestone](https://github.com/thelounge/thelounge/milestone/36?closed=1).
+
+This is a minor release with one significant new feature: a mentions panel!
+
+<p align="center">
+  <img width="466" alt="Mentions panel" src="https://user-images.githubusercontent.com/613331/90796491-0fadf380-e318-11ea-8fda-51613a9a3221.png">
+</p>
+
+Other notable additions include custom highlight exceptions, a new configuration option to not send preview requests to 3rd party websites, and uploaded images will have [EXIF](https://en.wikipedia.org/wiki/Exif) data automatically removed.
+
+There's also a new section for configuring SASL on the Connect screen, and `SASL EXTERNAL` is now supported.
+
+<p align="center">
+  <img width="489" alt="SASL authentication" src="https://user-images.githubusercontent.com/613331/90796501-15a3d480-e318-11ea-9dab-c225816a6685.png">
+  <img width="474" alt="SASL external (certfp)" src="https://user-images.githubusercontent.com/613331/90796504-15a3d480-e318-11ea-9636-c1025c9d2306.png">
+</p>
+
+Along with other bugs, a Chrome bug causing lag when typing has been fixed. Additionally, the `node-sqlite3` dependency has been updated, and you no longer need to re-install The Lounge when you update Node.js.
+
+And as an update for our Docker users, `thelounge-docker` now has support for ARM images; thanks [@williamboman](https://github.com/williamboman) and [@klausenbusk](https://github.com/klausenbusk)!
+
+### Added
+
+- Track mentions/highlights and add a window to view them ([#3858](https://github.com/thelounge/thelounge/pull/3858), [#3993](https://github.com/thelounge/thelounge/pull/3993), [#3862](https://github.com/thelounge/thelounge/pull/3862), [#3868](https://github.com/thelounge/thelounge/pull/3868), [#4003](https://github.com/thelounge/thelounge/pull/4003) by [@xPaw](https://github.com/xPaw))
+- Add an option to display 12-hour times ([#3787](https://github.com/thelounge/thelounge/pull/3787) by [@xPaw](https://github.com/xPaw))
+- Add clear channel history (available in channel context menu)([#3778](https://github.com/thelounge/thelounge/pull/3778) by [@xPaw](https://github.com/xPaw))
+- Add CertFP support; separate SASL configuration; merge `displayNetwork` and `lockNetwork` in The Lounge configuration file ([#3844](https://github.com/thelounge/thelounge/pull/3844) by [@xPaw](https://github.com/xPaw))
+- Add an indicator to `STATUSMSG` messages ([#3875](https://github.com/thelounge/thelounge/pull/3875) by [@xPaw](https://github.com/xPaw))
+- Add native app badges for highlights (Chrome 81+) ([#3845](https://github.com/thelounge/thelounge/pull/3845) by [@xPaw](https://github.com/xPaw))
+- Add generic monospace blocks for `INFO` and `HELP` numerics ([#3962](https://github.com/thelounge/thelounge/pull/3962) by [@xPaw](https://github.com/xPaw), [#4032](https://github.com/thelounge/thelounge/pull/4032) by [@xPaw](https://github.com/xPaw))
+- Add option to disable media preview ([#3983](https://github.com/thelounge/thelounge/pull/3983) by [@dalcde](https://github.com/dalcde))
+- Add custom highlight exceptions ([#3998](https://github.com/thelounge/thelounge/pull/3998) by [@Jay2k1](https://github.com/Jay2k1))
+- Add navigation in image viewer ([#3798](https://github.com/thelounge/thelounge/pull/3798) by [@richrd](https://github.com/richrd))
+- Render images in canvas before upload to remove EXIF data ([#3764](https://github.com/thelounge/thelounge/pull/3764) by [@xPaw](https://github.com/xPaw))
+
+### Changed
+
+- Disable link prefetching for urls with no schema specified ([#4014](https://github.com/thelounge/thelounge/pull/4014) by [@xPaw](https://github.com/xPaw))
+- Disable settings sync for browser notifications and notification sound ([#4028](https://github.com/thelounge/thelounge/pull/4028) by [@xPaw](https://github.com/xPaw))
+- Make usernames case-insensitive when logging in ([#3918](https://github.com/thelounge/thelounge/pull/3918) by [@ashwinikammar](https://github.com/ashwinikammar))
+- Separate active sessions section ([#3817](https://github.com/thelounge/thelounge/pull/3817) by [@xPaw](https://github.com/xPaw))
+- Add `role=group` to status messages setting ([#3790](https://github.com/thelounge/thelounge/pull/3790) by [@xPaw](https://github.com/xPaw))
+- Filter user loading at startup for "advanced" LDAP ([#3871](https://github.com/thelounge/thelounge/pull/3871) by [@ebardie](https://github.com/ebardie))
+- Reconnects now use exponential backoff
+- Update production dependencies to their latest versions:
+  - `uuid` ([#3791](https://github.com/thelounge/thelounge/pull/3791), [#3837](https://github.com/thelounge/thelounge/pull/3837), [#3890](https://github.com/thelounge/thelounge/pull/3890), [#3919](https://github.com/thelounge/thelounge/pull/3919), [#3957](https://github.com/thelounge/thelounge/pull/3957), [#4004](https://github.com/thelounge/thelounge/pull/4004))
+  - `yarn` ([#3792](https://github.com/thelounge/thelounge/pull/3792), [#3800](https://github.com/thelounge/thelounge/pull/3800))
+  - `file-type` ([#3801](https://github.com/thelounge/thelounge/pull/3801), [#3896](https://github.com/thelounge/thelounge/pull/3896), [#3909](https://github.com/thelounge/thelounge/pull/3909), [#3920](https://github.com/thelounge/thelounge/pull/3920), [#3934](https://github.com/thelounge/thelounge/pull/3934), [#3940](https://github.com/thelounge/thelounge/pull/3940))
+  - `commander` ([#3807](https://github.com/thelounge/thelounge/pull/3807), [#3992](https://github.com/thelounge/thelounge/pull/3992))
+  - `got` ([#3829](https://github.com/thelounge/thelounge/pull/3829), [#3869](https://github.com/thelounge/thelounge/pull/3869), [#3898](https://github.com/thelounge/thelounge/pull/3898), [#3905](https://github.com/thelounge/thelounge/pull/3905), [#3932](https://github.com/thelounge/thelounge/pull/3932), [#3935](https://github.com/thelounge/thelounge/pull/3935), [#3972](https://github.com/thelounge/thelounge/pull/3972), [#3988](https://github.com/thelounge/thelounge/pull/3988))
+  - `irc-framework` ([#3838](https://github.com/thelounge/thelounge/pull/3838), [#3984](https://github.com/thelounge/thelounge/pull/3984))
+  - `chalk` ([#3839](https://github.com/thelounge/thelounge/pull/3839))
+  - `semver` ([#3843](https://github.com/thelounge/thelounge/pull/3843), [#3863](https://github.com/thelounge/thelounge/pull/3863))
+  - `web-push` ([#3904](https://github.com/thelounge/thelounge/pull/3904))
+  - `linkify-it` ([#3917](https://github.com/thelounge/thelounge/pull/3917))
+  - `sqlite3` ([#3886](https://github.com/thelounge/thelounge/pull/3886))
+  - `ldapjs` ([#3931](https://github.com/thelounge/thelounge/pull/3931), [#3996](https://github.com/thelounge/thelounge/pull/3996))
+  - `tlds` ([#4015](https://github.com/thelounge/thelounge/pull/4015))
+
+### Fixed
+
+- Fix sending unhandled numerics to target channel ([#3789](https://github.com/thelounge/thelounge/pull/3789) by [@xPaw](https://github.com/xPaw))
+- Fix up first argument not being used as part message ([#3808](https://github.com/thelounge/thelounge/pull/3808) by [@xPaw](https://github.com/xPaw))
+- Pass in client manager object in update checker ([#3797](https://github.com/thelounge/thelounge/pull/3797) by [@xPaw](https://github.com/xPaw))
+- Do not handle navigation keybinds in inputs if not empty ([#3814](https://github.com/thelounge/thelounge/pull/3814) by [@xPaw](https://github.com/xPaw))
+- Fix body overscroll and overflow on iOS Safari ([#3828](https://github.com/thelounge/thelounge/pull/3828) by [@stevenengler](https://github.com/stevenengler))
+- Fix off-by-one color error in webmanifest ([#3867](https://github.com/thelounge/thelounge/pull/3867) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Support multiple arguments in eventbus emit ([#3885](https://github.com/thelounge/thelounge/pull/3885) by [@xPaw](https://github.com/xPaw))
+- Fix msg id order when loading from sqlite ([#3888](https://github.com/thelounge/thelounge/pull/3888) by [@xPaw](https://github.com/xPaw))
+- Reply to the server if that's where CTCP VERSION originated ([#3906](https://github.com/thelounge/thelounge/pull/3906) by [@xPaw](https://github.com/xPaw))
+- Fix date marker not displaying sometimes ([#3978](https://github.com/thelounge/thelounge/pull/3978) by [@xPaw](https://github.com/xPaw))
+- Allow changing network name in private mode with lockNetwork ([#3977](https://github.com/thelounge/thelounge/pull/3977) by [@xPaw](https://github.com/xPaw))
+- Fix upload tokens expiring while uploading when TL is proxied ([#3986](https://github.com/thelounge/thelounge/pull/3986) by [@xPaw](https://github.com/xPaw))
+- Refresh notification permission state when push is enabled ([#3987](https://github.com/thelounge/thelounge/pull/3987) by [@xPaw](https://github.com/xPaw))
+- Fix mode message only making last nick clickable ([#4005](https://github.com/thelounge/thelounge/pull/4005) by [@xPaw](https://github.com/xPaw))
+- Sync changed network name to open clients ([#4038](https://github.com/thelounge/thelounge/pull/4038) by [@xPaw](https://github.com/xPaw))
+- Fix layout trashing in Chrome causing typing lag ([#3999](https://github.com/thelounge/thelounge/pull/3999) by [@xPaw](https://github.com/xPaw))
+- Fixed a rare bug in `irc-framework` that caused duplicate messages
+
+### Internals
+
+- Optimize user list updates for quit/part/kick events ([#3857](https://github.com/thelounge/thelounge/pull/3857) by [@xPaw](https://github.com/xPaw))
+- Remove "The Lounge" from connect in public ([#3816](https://github.com/thelounge/thelounge/pull/3816) by [@xPaw](https://github.com/xPaw))
+- Replace all uses of `fs-extra` with native methods ([#3810](https://github.com/thelounge/thelounge/pull/3810) by [@xPaw](https://github.com/xPaw))
+- Upgrade to `mocha@7` and remove `mochapack` ([#3826](https://github.com/thelounge/thelounge/pull/3826) by [@xPaw](https://github.com/xPaw))
+- Remove `intersection-observer` polyfill ([#3864](https://github.com/thelounge/thelounge/pull/3864) by [@xPaw](https://github.com/xPaw))
+- Safeguard nick randomizer up to allowed length ([#3870](https://github.com/thelounge/thelounge/pull/3870) by [@xPaw](https://github.com/xPaw))
+- Replace vue events with our own event bus ([#3872](https://github.com/thelounge/thelounge/pull/3872) by [@xPaw](https://github.com/xPaw))
+- Cleanup vue router route guards ([#3995](https://github.com/thelounge/thelounge/pull/3995) by [@xPaw](https://github.com/xPaw))
+- Use lodash where possible ([#4020](https://github.com/thelounge/thelounge/pull/4020) by [@xPaw](https://github.com/xPaw))
+- Replace dashes to underscores in emoji autocompletion ([#4029](https://github.com/thelounge/thelounge/pull/4029) by [@xPaw](https://github.com/xPaw))
+- Changes required for vue 3 ([#3889](https://github.com/thelounge/thelounge/pull/3889) by [@timmw](https://github.com/timmw))
+- Test node v14 ([#3976](https://github.com/thelounge/thelounge/pull/3976) by [@xPaw](https://github.com/xPaw))
+- Update development dependencies to their latest versions.
+
 ## v4.2.0-pre.2 - 2020-07-28 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v4.2.0-pre.1...v4.2.0-pre.2)
