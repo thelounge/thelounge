@@ -134,6 +134,19 @@ function parseHtmlMedia($, preview, client) {
 		}
 
 		let foundMedia = false;
+		const openGraphType = $('meta[property="og:type"]').attr("content");
+
+		// Certain news websites may include video and audio tags,
+		// despite actually being an article (as indicated by og:type).
+		// If there is og:type tag, we will only select video or audio if it matches
+		if (
+			openGraphType &&
+			!openGraphType.startsWith("video") &&
+			!openGraphType.startsWith("music")
+		) {
+			reject();
+			return;
+		}
 
 		["video", "audio"].forEach((type) => {
 			if (foundMedia) {
