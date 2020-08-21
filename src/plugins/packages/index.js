@@ -4,6 +4,7 @@ const _ = require("lodash");
 const log = require("../../log");
 const colors = require("chalk");
 const path = require("path");
+const semver = require("semver");
 const Helper = require("../../helper");
 const themes = require("./themes");
 const packageMap = new Map();
@@ -91,6 +92,13 @@ function loadPackage(packageName) {
 
 		if (!packageInfo.thelounge) {
 			throw "'thelounge' is not present in package.json";
+		}
+
+		if (
+			packageInfo.thelounge.supports &&
+			!semver.satisfies(Helper.getVersionNumber(), packageInfo.thelounge.supports)
+		) {
+			throw `v${packageInfo.version} does not support this version of The Lounge. Supports: ${packageInfo.thelounge.supports}`;
 		}
 
 		packageFile = require(packagePath);

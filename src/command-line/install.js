@@ -2,6 +2,7 @@
 
 const log = require("../log");
 const colors = require("chalk");
+const semver = require("semver");
 const program = require("commander");
 const Helper = require("../helper");
 const Utils = require("./utils");
@@ -38,6 +39,21 @@ program
 					);
 
 					process.exit(1);
+				}
+
+				if (
+					json.thelounge.supports &&
+					!semver.satisfies(Helper.getVersionNumber(), json.thelounge.supports)
+				) {
+					log.error(
+						`${colors.red(
+							json.name + " v" + json.version
+						)} does not support The Lounge v${Helper.getVersionNumber()}. Supported version(s): ${
+							json.thelounge.supports
+						}`
+					);
+
+					process.exit(2);
 				}
 
 				log.info(`Installing ${colors.green(json.name + " v" + json.version)}...`);
