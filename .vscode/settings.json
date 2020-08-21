@@ -1,0 +1,10 @@
+{
+  "editor.formatOnSave": true,
+  "vetur.format.enable": false,
+  "prettier.useEditorConfig": true,
+  "prettier.requireConfig": true,
+  "prettier.disableLanguages": [],
+  "prettier.packageManager": "yarn",
+  "eslint.packageManager": "yarn",
+  "eslint.codeActionsOnSave.mode": "all"
+}
