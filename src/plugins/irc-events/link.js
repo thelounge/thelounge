@@ -131,6 +131,7 @@ function parseHtmlMedia($, preview, client) {
 	return new Promise((resolve, reject) => {
 		if (Helper.config.disableMediaPreview) {
 			reject();
+			return;
 		}
 
 		let foundMedia = false;
