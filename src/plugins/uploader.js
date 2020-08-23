@@ -24,6 +24,7 @@ const inlineContentDispositionTypes = [
 	"image/jpeg",
 	"image/png",
 	"image/webp",
+	"image/avif",
 	"text/plain",
 	"video/mp4",
 	"video/ogg",
