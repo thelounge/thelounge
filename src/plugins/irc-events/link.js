@@ -223,6 +223,7 @@ function parse(msg, chan, preview, res, client) {
 		case "image/jpg":
 		case "image/jpeg":
 		case "image/webp":
+		case "image/avif":
 			if (!Helper.config.prefetchStorage && Helper.config.disableMediaPreview) {
 				return removePreview(msg, preview);
 			}
