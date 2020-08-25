@@ -1,13 +1,9 @@
 <template>
 	<div id="version-checker" :class="[$store.state.versionStatus]">
-		<p v-if="$store.state.versionStatus === 'loading'">
-			Checking for updates…
-		</p>
+		<p v-if="$store.state.versionStatus === 'loading'">Checking for updates…</p>
 		<p v-if="$store.state.versionStatus === 'new-version'">
 			The Lounge <b>{{ $store.state.versionData.latest.version }}</b>
-			<template v-if="$store.state.versionData.latest.prerelease">
-				(pre-release)
-			</template>
+			<template v-if="$store.state.versionData.latest.prerelease"> (pre-release) </template>
 			is now available.
 			<br />
 
@@ -20,9 +16,7 @@
 			<code>thelounge upgrade</code> on the server to upgrade packages.
 		</p>
 		<template v-if="$store.state.versionStatus === 'up-to-date'">
-			<p>
-				The Lounge is up to date!
-			</p>
+			<p>The Lounge is up to date!</p>
 
 			<button
 				v-if="$store.state.versionDataExpired"
@@ -34,9 +28,7 @@
 			</button>
 		</template>
 		<template v-if="$store.state.versionStatus === 'error'">
-			<p>
-				Information about latest release could not be retrieved.
-			</p>
+			<p>Information about latest release could not be retrieved.</p>
 
 			<button id="check-now" class="btn btn-small" @click="checkNow">Try again</button>
 		</template>

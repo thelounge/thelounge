@@ -46,9 +46,7 @@
 					/>
 				</div>
 			</div>
-			<div v-else class="no-results">
-				No results found.
-			</div>
+			<div v-else class="no-results">No results found.</div>
 		</div>
 		<Draggable
 			v-else

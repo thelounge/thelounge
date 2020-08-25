@@ -271,9 +271,7 @@ This may break orientation if your browser does not support that."
 						<template v-else-if="$store.state.pushNotificationState === 'loading'">
 							Loading…
 						</template>
-						<template v-else>
-							Subscribe to push notifications
-						</template>
+						<template v-else> Subscribe to push notifications </template>
 					</button>
 					<div v-if="$store.state.pushNotificationState === 'nohttps'" class="error">
 						<strong>Warning</strong>: Push notifications are only supported over HTTPS
@@ -407,9 +405,7 @@ your nickname or expressions defined in custom highlights."
 			>
 				<h2 id="label-change-password">Change password</h2>
 				<div class="password-container">
-					<label for="old_password_input" class="sr-only">
-						Enter current password
-					</label>
+					<label for="old_password_input" class="sr-only"> Enter current password </label>
 					<RevealPassword v-slot:default="slotProps">
 						<input
 							id="old_password_input"
@@ -435,9 +431,7 @@ your nickname or expressions defined in custom highlights."
 					</RevealPassword>
 				</div>
 				<div class="password-container">
-					<label for="verify_password_input" class="sr-only">
-						Repeat new password
-					</label>
+					<label for="verify_password_input" class="sr-only"> Repeat new password </label>
 					<RevealPassword v-slot:default="slotProps">
 						<input
 							id="verify_password_input"
