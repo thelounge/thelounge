@@ -10,6 +10,9 @@ Vue.use(VueRouter);
 import SignIn from "../components/Windows/SignIn.vue";
 import Connect from "../components/Windows/Connect.vue";
 import Settings from "../components/Windows/Settings.vue";
+import MainSettings from "../components/Windows/settings/Main.vue";
+import MessageSettings from "../components/Windows/settings/Messages.vue";
+import NotificationSettings from "../components/Windows/settings/Notifications.vue";
 import Help from "../components/Windows/Help.vue";
 import Changelog from "../components/Windows/Changelog.vue";
 import NetworkEdit from "../components/Windows/NetworkEdit.vue";
@@ -42,6 +45,27 @@ const router = new VueRouter({
 			name: "Settings",
 			path: "/settings",
 			component: Settings,
+			children: [
+				{
+					path: "main",
+					name: "Main",
+					component: MainSettings,
+				},
+				{
+					path: "messages",
+					name: "Messages",
+					component: MessageSettings,
+				},
+				{
+					path: "notifications",
+					name: "Notifications",
+					component: NotificationSettings,
+				},
+				{
+					path: "",
+					redirect: {name: "Main"},
+				},
+			],
 		},
 		{
 			name: "Help",
