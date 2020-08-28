@@ -24,6 +24,7 @@
 				id="upload-input"
 				ref="uploadInput"
 				type="file"
+				aria-labelledby="upload"
 				multiple
 				@change="onUploadInputChange"
 			/>
