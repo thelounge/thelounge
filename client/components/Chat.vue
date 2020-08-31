@@ -25,6 +25,7 @@
 							:value="channel.topic"
 							class="topic-input"
 							placeholder="Set channel topic"
+							enterkeyhint="done"
 							@keyup.enter="saveTopic"
 							@keyup.esc="channel.editTopic = false"
 						/>
