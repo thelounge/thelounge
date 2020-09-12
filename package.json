@@ -62,7 +62,7 @@
     "semver": "7.3.2",
     "socket.io": "2.3.0",
     "tlds": "1.209.0",
-    "ua-parser-js": "0.7.21",
+    "ua-parser-js": "0.7.22",
     "uuid": "8.3.0",
     "web-push": "3.4.4",
     "yarn": "1.22.5"
