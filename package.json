@@ -103,7 +103,7 @@
     "primer-tooltips": "2.0.0",
     "sinon": "9.0.3",
     "socket.io-client": "2.3.0",
-    "stylelint": "13.7.0",
+    "stylelint": "13.7.1",
     "stylelint-config-standard": "20.0.0",
     "textcomplete": "0.18.2",
     "undate": "0.3.0",
