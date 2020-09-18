@@ -10,6 +10,7 @@
   },
   "packageRules": [
     {
+      "depTypeList": ["dependencies", "devDependencies"],
       "extends": ["schedule:monthly"]
     }
   ]
