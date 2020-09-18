@@ -18,12 +18,8 @@
 			aria-relevant="additions"
 			@copy="onCopy"
 		>
-			<template v-for="(message, id) in condensedMessages">
-				<DateMarker
-					v-if="shouldDisplayDateMarker(message, id)"
-					:key="message.id + '-date'"
-					:message="message"
-				/>
+			<template v-for="(message, id) in condensedMessages" :key="message.id + '-date'">
+				<DateMarker v-if="shouldDisplayDateMarker(message, id)" :message="message" />
 				<div
 					v-if="shouldDisplayUnreadMarker(message.id)"
 					:key="message.id + '-unread'"

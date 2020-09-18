@@ -104,10 +104,9 @@
 					@start="onDragStart"
 					@end="onDragEnd"
 				>
-					<template v-for="(channel, index) in network.channels">
+					<template v-for="(channel, index) in network.channels" :key="channel.id">
 						<Channel
 							v-if="index > 0"
-							:key="channel.id"
 							:channel="channel"
 							:network="network"
 							:active="
