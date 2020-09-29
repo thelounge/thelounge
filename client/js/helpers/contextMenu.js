@@ -172,6 +172,7 @@ export function generateChannelContextMenu($root, channel, network) {
 
 export function generateUserContextMenu($root, channel, network, user) {
 	const currentChannelUser = channel.users.find((u) => u.nick === network.nick) || {};
+	const currentChannelModes = currentChannelUser.modes || [];
 
 	const whois = () => {
 		const chan = $root.$store.getters.findChannelOnCurrentNetwork(user.nick);
@@ -221,7 +222,7 @@ export function generateUserContextMenu($root, channel, network, user) {
 		},
 	];
 
-	if (currentChannelUser.mode === "@") {
+	if (currentChannelModes.includes("@")) {
 		items.push({
 			label: "Kick",
 			type: "item",
@@ -234,7 +235,7 @@ export function generateUserContextMenu($root, channel, network, user) {
 			},
 		});
 
-		if (user.mode === "@") {
+		if (user.modes.includes("@")) {
 			items.push({
 				label: "Revoke operator (-o)",
 				type: "item",
@@ -260,7 +261,7 @@ export function generateUserContextMenu($root, channel, network, user) {
 			});
 		}
 
-		if (user.mode === "+") {
+		if (user.modes.includes("+")) {
 			items.push({
 				label: "Revoke voice (-v)",
 				type: "item",

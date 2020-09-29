@@ -117,9 +117,6 @@ module.exports = function (irc, network) {
 					return userModeSortPriority[a] - userModeSortPriority[b];
 				});
 			}
-
-			// TODO: remove in future
-			user.mode = (user.modes && user.modes[0]) || "";
 		});
 
 		if (!usersUpdated) {

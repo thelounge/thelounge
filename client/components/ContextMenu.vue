@@ -82,7 +82,10 @@ export default {
 				this.$root,
 				channel,
 				network,
-				channel.users.find((u) => u.nick === data.user.nick) || {nick: data.user.nick}
+				channel.users.find((u) => u.nick === data.user.nick) || {
+					nick: data.user.nick,
+					modes: [],
+				}
 			);
 			this.open(data.event, items);
 		},

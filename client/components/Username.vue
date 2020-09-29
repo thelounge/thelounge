@@ -6,7 +6,7 @@
 		v-on="onHover ? {mouseenter: hover} : {}"
 		@click.prevent="openContextMenu"
 		@contextmenu.prevent="openContextMenu"
-		><slot>{{ user.mode }}{{ user.nick }}</slot></span
+		><slot>{{ mode }}{{ user.nick }}</slot></span
 	>
 </template>
 
@@ -22,6 +22,14 @@ export default {
 		onHover: Function,
 	},
 	computed: {
+		mode() {
+			// Message objects have a singular mode, but user objects have modes array
+			if (this.user.modes) {
+				return this.user.modes[0];
+			}
+
+			return this.user.mode;
+		},
 		nickColor() {
 			return colorClass(this.user.nick);
 		},
