@@ -82,13 +82,13 @@
 						$store.state.activeChannel &&
 						network.channels[0] === $store.state.activeChannel.channel
 					"
-					@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown"
+					@toggle-join-channel="network.isJoinChannelShown = !network.isJoinChannelShown"
 				/>
 				<JoinChannel
 					v-if="network.isJoinChannelShown"
 					:network="network"
 					:channel="network.channels[0]"
-					@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown"
+					@toggle-join-channel="network.isJoinChannelShown = !network.isJoinChannelShown"
 				/>
 
 				<Draggable

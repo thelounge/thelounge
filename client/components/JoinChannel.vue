@@ -5,7 +5,7 @@
 		method="post"
 		action=""
 		autocomplete="off"
-		@keydown.esc.prevent="$emit('toggleJoinChannel')"
+		@keydown.esc.prevent="$emit('toggle-join-channel')"
 		@submit.prevent="onSubmit"
 	>
 		<input
@@ -81,7 +81,7 @@ export default {
 
 			this.inputChannel = "";
 			this.inputPassword = "";
-			this.$emit("toggleJoinChannel");
+			this.$emit("toggle-join-channel");
 		},
 	},
 };
