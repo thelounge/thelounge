@@ -33,7 +33,7 @@
 							<span type="button" aria-label="Save topic"></span>
 						</span>
 					</div>
-					<span v-else :title="channel.topic" class="topic" @dblclick="editTopic"
+					<span v-else :title="channel.topic" class="topic" @click.self="showTopic"
 						><ParsedMessage
 							v-if="channel.topic"
 							:network="network"
@@ -183,10 +183,14 @@ export default {
 		hideUserVisibleError() {
 			this.$store.commit("currentUserVisibleError", null);
 		},
-		editTopic() {
-			if (this.channel.type === "channel") {
-				this.channel.editTopic = true;
+		showTopic() {
+			if (this.channel.type !== "channel" || !this.channel.topic) {
+				return;
 			}
+
+			const target = this.channel.id;
+			const text = `/raw TOPIC ${this.channel.name}`;
+			socket.emit("input", {target, text});
 		},
 		saveTopic() {
 			this.channel.editTopic = false;
