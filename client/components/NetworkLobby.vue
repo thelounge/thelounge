@@ -39,7 +39,7 @@
 				:class="['add-channel', {opened: isJoinChannelShown}]"
 				:aria-controls="'join-channel-' + channel.id"
 				:aria-label="joinChannelLabel"
-				@click.stop="$emit('toggleJoinChannel')"
+				@click.stop="$emit('toggle-join-channel')"
 			/>
 		</span>
 	</ChannelWrapper>
