@@ -25,4 +25,21 @@ module.exports = function (irc, network) {
 		});
 		chan.pushMessage(client, msg);
 	});
+
+	irc.on("invited", function (data) {
+		const chan = network.getChannel(data.channel);
+
+		if (typeof chan === "undefined") {
+			return;
+		}
+
+		const msg = new Msg({
+			type: Msg.Type.INVITE,
+			time: data.time,
+			from: chan.getUser(irc.user.nick),
+			target: chan.getUser(data.nick),
+			channel: data.channel,
+		});
+		chan.pushMessage(client, msg);
+	});
 };
