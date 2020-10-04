@@ -11,7 +11,8 @@ program
 	.command("reset <name>")
 	.description("Reset user password")
 	.on("--help", Utils.extraHelp)
-	.action(function (name) {
+	.option("--password [password]", "new password, will be prompted if not specified")
+	.action(function (name, cmdObj) {
 		if (!fs.existsSync(Helper.getUsersPath())) {
 			log.error(`${Helper.getUsersPath()} does not exist.`);
 			return;
@@ -30,9 +31,10 @@ program
 			return;
 		}
 
-		const pathReal = Helper.getUserConfigPath(name);
-		const pathTemp = pathReal + ".tmp";
-		const user = JSON.parse(fs.readFileSync(pathReal, "utf-8"));
+		if (cmdObj.password) {
+			change(name, cmdObj.password);
+			return;
+		}
 
 		log.prompt(
 			{
@@ -44,17 +46,25 @@ program
 					return;
 				}
 
-				user.password = Helper.password.hash(password);
-				user.sessions = {};
-
-				const newUser = JSON.stringify(user, null, "\t");
-
-				// Write to a temp file first, in case the write fails
-				// we do not lose the original file (for example when disk is full)
-				fs.writeFileSync(pathTemp, newUser);
-				fs.renameSync(pathTemp, pathReal);
-
-				log.info(`Successfully reset password for ${colors.bold(name)}.`);
+				change(name, password);
 			}
 		);
 	});
+
+function change(name, password) {
+	const pathReal = Helper.getUserConfigPath(name);
+	const pathTemp = pathReal + ".tmp";
+	const user = JSON.parse(fs.readFileSync(pathReal, "utf-8"));
+
+	user.password = Helper.password.hash(password);
+	user.sessions = {};
+
+	const newUser = JSON.stringify(user, null, "\t");
+
+	// Write to a temp file first, in case the write fails
+	// we do not lose the original file (for example when disk is full)
+	fs.writeFileSync(pathTemp, newUser);
+	fs.renameSync(pathTemp, pathReal);
+
+	log.info(`Successfully reset password for ${colors.bold(name)}.`);
+}

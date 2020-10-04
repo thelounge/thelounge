@@ -11,7 +11,9 @@ program
 	.command("add <name>")
 	.description("Add a new user")
 	.on("--help", Utils.extraHelp)
-	.action(function (name) {
+	.option("--password [password]", "new password, will be prompted if not specified")
+	.option("--save-logs", "if password is specified, this enables saving logs to disk")
+	.action(function (name, cmdObj) {
 		if (!fs.existsSync(Helper.getUsersPath())) {
 			log.error(`${Helper.getUsersPath()} does not exist.`);
 			return;
@@ -28,6 +30,11 @@ program
 
 		if (users.includes(name)) {
 			log.error(`User ${colors.bold(name)} already exists.`);
+			return;
+		}
+
+		if (cmdObj.password) {
+			add(manager, name, cmdObj.password, !!cmdObj.saveLogs);
 			return;
 		}
 
