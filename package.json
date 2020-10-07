@@ -102,7 +102,7 @@
     "pretty-quick": "3.0.2",
     "primer-tooltips": "2.0.0",
     "sinon": "9.1.0",
-    "socket.io-client": "2.3.0",
+    "socket.io-client": "2.3.1",
     "stylelint": "13.7.2",
     "stylelint-config-standard": "20.0.0",
     "textcomplete": "0.18.2",
