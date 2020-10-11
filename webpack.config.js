@@ -41,7 +41,7 @@ const config = {
 					{
 						loader: MiniCssExtractPlugin.loader,
 						options: {
-							hmr: false,
+							esModule: false,
 						},
 					},
 					{
