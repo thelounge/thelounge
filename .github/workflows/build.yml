@@ -25,6 +25,10 @@ jobs:
           - os: windows-latest
             node_version: 14.x
 
+          # EOL: June 2021
+          - os: ubuntu-latest
+            node_version: 15.x
+
     runs-on: ${{ matrix.os }}
 
     steps:
