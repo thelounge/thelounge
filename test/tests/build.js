@@ -66,7 +66,7 @@ describe("public folder", function () {
 		fs.readFile(path.join(publicFolder, "service-worker.js"), "utf8", function (err, contents) {
 			expect(err).to.be.null;
 
-			expect(contents.includes("const cacheName =")).to.be.true;
+			expect(contents.includes("const cacheName")).to.be.true;
 			expect(contents.includes("__HASH__")).to.be.false;
 
 			done();
