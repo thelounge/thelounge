@@ -204,8 +204,7 @@ Network.prototype.setIrcFrameworkOptions = function (client) {
 	this.irc.options.tls = this.tls;
 	this.irc.options.rejectUnauthorized = this.rejectUnauthorized;
 	this.irc.options.webirc = this.createWebIrc(client);
-
-	this.irc.options.client_certificate = this.tls ? ClientCertificate.get(this.uuid) : null;
+	this.irc.options.client_certificate = null;
 
 	if (!this.sasl) {
 		delete this.irc.options.sasl_mechanism;
@@ -213,6 +212,7 @@ Network.prototype.setIrcFrameworkOptions = function (client) {
 	} else if (this.sasl === "external") {
 		this.irc.options.sasl_mechanism = "EXTERNAL";
 		this.irc.options.account = {};
+		this.irc.options.client_certificate = ClientCertificate.get(this.uuid);
 	} else if (this.sasl === "plain") {
 		delete this.irc.options.sasl_mechanism;
 		this.irc.options.account = {
