@@ -116,18 +116,31 @@ export function generateChannelContextMenu($root, channel, network) {
 
 	// Add menu items for queries
 	if (channel.type === "query") {
-		items.push({
-			label: "User information",
-			type: "item",
-			class: "action-whois",
-			action() {
-				$root.switchToChannel(channel);
-				socket.emit("input", {
-					target: channel.id,
-					text: "/whois " + channel.name,
-				});
+		items.push(
+			{
+				label: "User information",
+				type: "item",
+				class: "action-whois",
+				action() {
+					$root.switchToChannel(channel);
+					socket.emit("input", {
+						target: channel.id,
+						text: "/whois " + channel.name,
+					});
+				},
 			},
-		});
+			{
+				label: "Ignore user",
+				type: "item",
+				class: "action-ignore",
+				action() {
+					socket.emit("input", {
+						target: channel.id,
+						text: "/ignore " + channel.name,
+					});
+				},
+			}
+		);
 	}
 
 	if (channel.type === "channel" || channel.type === "query") {
@@ -202,6 +215,17 @@ export function generateUserContextMenu($root, channel, network, user) {
 			type: "item",
 			class: "action-whois",
 			action: whois,
+		},
+		{
+			label: "Ignore user",
+			type: "item",
+			class: "action-ignore",
+			action() {
+				socket.emit("input", {
+					target: channel.id,
+					text: "/ignore " + user.nick,
+				});
+			},
 		},
 		{
 			label: "Direct messages",

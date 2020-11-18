@@ -350,6 +350,7 @@ p {
 .context-menu-disconnect::before { content: "\f127"; /* https://fontawesome.com/icons/unlink?style=solid */ }
 .context-menu-connect::before { content: "\f0c1"; /* https://fontawesome.com/icons/link?style=solid */ }
 .context-menu-action-whois::before { content: "\f05a"; /* http://fontawesome.io/icon/info-circle/  */ }
+.context-menu-action-ignore::before { content: "\f506"; /* https://fontawesome.com/icons/user-slash?style=solid  */ }
 .context-menu-action-kick::before { content: "\f05e"; /* http://fontawesome.io/icon/ban/ */ }
 .context-menu-action-op::before { content: "\f1fa"; /* http://fontawesome.io/icon/at/ */ }
 .context-menu-action-voice::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
