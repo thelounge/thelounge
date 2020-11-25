@@ -141,7 +141,8 @@ class Uploader {
 		if (
 			store.state.settings.uploadCanvas &&
 			file.type.startsWith("image/") &&
-			!file.type.includes("svg")
+			!file.type.includes("svg") &&
+			file.type !== "image/gif"
 		) {
 			this.renderImage(file, (newFile) => this.performUpload(token, newFile));
 		} else {
