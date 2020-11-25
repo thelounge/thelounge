@@ -52,7 +52,7 @@ The Lounge is the official and community-managed fork of [Shout](https://github.
 ## Installation and usage
 
 The Lounge requires latest [Node.js](https://nodejs.org/) LTS version or more recent.
-[Yarn package manager](https://yarnpkg.com/) is also recommended.  
+[Yarn package manager](https://yarnpkg.com/) is also recommended.
 If you want to install with npm, `--unsafe-perm` is required for a correct install.
 
 ### Running stable releases
@@ -87,3 +87,4 @@ Before submitting any change, make sure to:
 - Run `yarn test` to execute linters and test suite
 - Run `yarn build` if you change or add anything in `client/js` or `client/views`
 - `yarn dev` can be used to start The Lounge with hot module reloading
+- `yarn start-irc` can be used to start an IRC server for local testing on `localhost:6667` (without TLS)

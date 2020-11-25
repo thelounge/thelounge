@@ -37,6 +37,7 @@ createPackagesFolder();
 Helper.mergeConfig(Helper.config, program.config);
 
 require("./start");
+require("./start-irc");
 
 if (!Helper.config.public) {
 	require("./users");
