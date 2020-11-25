@@ -241,6 +241,7 @@ Client.prototype.connect = function (args, isStartup = false) {
 		nick: String(args.nick || ""),
 		username: String(args.username || ""),
 		realname: String(args.realname || ""),
+		leaveMessage: String(args.leaveMessage || ""),
 		sasl: String(args.sasl || ""),
 		saslAccount: String(args.saslAccount || ""),
 		saslPassword: String(args.saslPassword || ""),

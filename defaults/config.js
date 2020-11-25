@@ -218,6 +218,7 @@ module.exports = {
 	//   numbers from 0 to 9. For example, `Guest%%%` may become `Guest123`.
 	// - `username`: User name.
 	// - `realname`: Real name.
+	// - `leaveMessage`: Network specific leave message (overrides global leaveMessage)
 	// - `join`: Comma-separated list of channels to auto-join once connected.
 	//
 	// This value is set to connect to the official channel of The Lounge on
@@ -248,6 +249,7 @@ module.exports = {
 		username: "thelounge",
 		realname: "The Lounge User",
 		join: "#thelounge",
+		leaveMessage: "",
 	},
 
 	// ### `lockNetwork`
