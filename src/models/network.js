@@ -439,7 +439,7 @@ Network.prototype.quit = function (quitMessage) {
 	// https://ircv3.net/specs/extensions/sts#rescheduling-expiry-on-disconnect
 	STSPolicies.refreshExpiration(this.host);
 
-	this.irc.quit(quitMessage || Helper.config.leaveMessage);
+	this.irc.quit(quitMessage || this.leaveMessage || Helper.config.leaveMessage);
 };
 
 Network.prototype.exportForEdit = function () {

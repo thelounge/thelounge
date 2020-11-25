@@ -650,7 +650,7 @@ Client.prototype.quit = function (signOut) {
 	}
 
 	this.networks.forEach((network) => {
-		network.quit(Helper.config.leaveMessage);
+		network.quit();
 		network.destroy();
 	});
 
