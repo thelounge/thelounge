@@ -663,7 +663,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 				return;
 			}
 
-			const socketToRemove = manager.sockets.of("/").connected[socketId];
+			const socketToRemove = manager.sockets.of("/").sockets.get(socketId);
 
 			socketToRemove.emit("sign-out");
 			socketToRemove.disconnect();
