@@ -1364,6 +1364,10 @@ textarea.input {
 
 /* Parsed nicks and channels */
 
+.inline-channel {
+	font-weight: bold;
+}
+
 #chat .user,
 .inline-channel {
 	cursor: pointer;
