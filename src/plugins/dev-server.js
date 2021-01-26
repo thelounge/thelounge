@@ -13,19 +13,6 @@ module.exports = (app) => {
 		"webpack-hot-middleware/client?path=storage/__webpack_hmr"
 	);
 
-	// Enable hot module reload support in mini-css-extract-plugin
-	for (const rule of webpackConfig.module.rules) {
-		if (!Array.isArray(rule.use)) {
-			continue;
-		}
-
-		for (const use of rule.use) {
-			if (use.options && typeof use.options.hmr !== "undefined") {
-				use.options.hmr = true;
-			}
-		}
-	}
-
 	const compiler = webpack(webpackConfig);
 
 	app.use(

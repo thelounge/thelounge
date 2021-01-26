@@ -1,8 +1,9 @@
 "use strict";
 
+import Vue from "vue";
 import socket from "../socket";
 import storage from "../localStorage";
-import {router, switchToChannel, navigate, initialize as routerInitialize} from "../router";
+import {router, switchToChannel, navigate} from "../router";
 import store from "../store";
 import parseIrcUri from "../helpers/parseIrcUri";
 
@@ -16,10 +17,6 @@ socket.on("init", function (data) {
 	}
 
 	if (!store.state.appLoaded) {
-		// Routes are initialized after networks data is merged
-		// so the route guard for channels works correctly on page load
-		routerInitialize();
-
 		store.commit("appLoaded");
 
 		socket.emit("setting:get");
@@ -28,24 +25,27 @@ socket.on("init", function (data) {
 			window.g_TheLoungeRemoveLoading();
 		}
 
-		// TODO: Review this code and make it better
-		if (!router.currentRoute.name || router.currentRoute.name === "SignIn") {
-			const channel = store.getters.findChannel(data.active);
+		Vue.nextTick(() => {
+			// If we handled query parameters like irc:// links or just general
+			// connect parameters in public mode, then nothing to do here
+			if (!handleQueryParams()) {
+				// If we are on an unknown route or still on SignIn component
+				// then we can open last known channel on server, or Connect window if none
+				if (!router.currentRoute.name || router.currentRoute.name === "SignIn") {
+					const channel = store.getters.findChannel(data.active);
 
-			if (channel) {
-				switchToChannel(channel.channel);
-			} else if (store.state.networks.length > 0) {
-				// Server is telling us to open a channel that does not exist
-				// For example, it can be unset if you first open the page after server start
-				switchToChannel(store.state.networks[0].channels[0]);
-			} else {
-				navigate("Connect");
+					if (channel) {
+						switchToChannel(channel.channel);
+					} else if (store.state.networks.length > 0) {
+						// Server is telling us to open a channel that does not exist
+						// For example, it can be unset if you first open the page after server start
+						switchToChannel(store.state.networks[0].channels[0]);
+					} else {
+						navigate("Connect");
+					}
+				}
 			}
-		}
-
-		if ("URLSearchParams" in window) {
-			handleQueryParams();
-		}
+		});
 	}
 });
 
@@ -154,6 +154,10 @@ function mergeChannelData(oldChannels, newChannels) {
 }
 
 function handleQueryParams() {
+	if (!("URLSearchParams" in window)) {
+		return false;
+	}
+
 	const params = new URLSearchParams(document.location.search);
 
 	const cleanParams = () => {
@@ -169,11 +173,17 @@ function handleQueryParams() {
 
 		cleanParams();
 		router.push({name: "Connect", query: queryParams});
+
+		return true;
 	} else if (document.body.classList.contains("public") && document.location.search) {
 		// Set default connection settings from url params
 		const queryParams = Object.fromEntries(params.entries());
 
 		cleanParams();
 		router.push({name: "Connect", query: queryParams});
+
+		return true;
 	}
+
+	return false;
 }

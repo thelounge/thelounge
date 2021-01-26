@@ -109,10 +109,18 @@ describe("Network", function () {
 
 		it("editing a network should enforce correct types", function () {
 			let saveCalled = false;
+			let nameEmitCalled = false;
 
 			const network = new Network();
 			network.edit(
 				{
+					emit(name, data) {
+						if (name === "network:name") {
+							nameEmitCalled = true;
+							expect(data.uuid).to.equal(network.uuid);
+							expect(data.name).to.equal("Lounge Test Network");
+						}
+					},
 					save() {
 						saveCalled = true;
 					},
@@ -133,12 +141,13 @@ describe("Network", function () {
 					commands: "/command 1 2 3\r\n/ping HELLO\r\r\r\r/whois test\r\n\r\n",
 					ip: "newIp",
 					hostname: "newHostname",
-					guid: "newGuid",
+					uuid: "newuuid",
 				}
 			);
 
 			expect(saveCalled).to.be.true;
-			expect(network.guid).to.not.equal("newGuid");
+			expect(nameEmitCalled).to.be.true;
+			expect(network.uuid).to.not.equal("newuuid");
 			expect(network.ip).to.be.undefined;
 			expect(network.hostname).to.be.undefined;
 

@@ -178,14 +178,9 @@ module.exports = function (irc, network) {
 		network.channels[0].pushMessage(
 			client,
 			new Msg({
-				text:
-					"Disconnected from the network. Reconnecting in " +
-					Math.round(data.wait / 1000) +
-					" seconds… (Attempt " +
-					data.attempt +
-					" of " +
-					data.max_retries +
-					")",
+				text: `Disconnected from the network. Reconnecting in ${Math.round(
+					data.wait / 1000
+				)} seconds… (Attempt ${data.attempt})`,
 			}),
 			true
 		);

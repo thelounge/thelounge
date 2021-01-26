@@ -1,0 +1,11 @@
+{
+  "configurations": [
+    {
+      "type": "node-terminal",
+      "name": "Run Dev",
+      "request": "launch",
+      "command": "yarn dev",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

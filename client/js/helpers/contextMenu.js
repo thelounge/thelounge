@@ -1,6 +1,7 @@
 "use strict";
 
 import socket from "../socket";
+import eventbus from "../eventbus";
 
 export function generateChannelContextMenu($root, channel, network) {
 	const typeMap = {
@@ -115,18 +116,31 @@ export function generateChannelContextMenu($root, channel, network) {
 
 	// Add menu items for queries
 	if (channel.type === "query") {
-		items.push({
-			label: "User information",
-			type: "item",
-			class: "action-whois",
-			action() {
-				$root.switchToChannel(channel);
-				socket.emit("input", {
-					target: channel.id,
-					text: "/whois " + channel.name,
-				});
+		items.push(
+			{
+				label: "User information",
+				type: "item",
+				class: "action-whois",
+				action() {
+					$root.switchToChannel(channel);
+					socket.emit("input", {
+						target: channel.id,
+						text: "/whois " + channel.name,
+					});
+				},
 			},
-		});
+			{
+				label: "Ignore user",
+				type: "item",
+				class: "action-ignore",
+				action() {
+					socket.emit("input", {
+						target: channel.id,
+						text: "/ignore " + channel.name,
+					});
+				},
+			}
+		);
 	}
 
 	if (channel.type === "channel" || channel.type === "query") {
@@ -135,7 +149,7 @@ export function generateChannelContextMenu($root, channel, network) {
 			type: "item",
 			class: "clear-history",
 			action() {
-				$root.$emit(
+				eventbus.emit(
 					"confirm-dialog",
 					{
 						title: "Clear history",
@@ -170,9 +184,9 @@ export function generateChannelContextMenu($root, channel, network) {
 }
 
 export function generateUserContextMenu($root, channel, network, user) {
-	const currentChannelUser = channel
-		? channel.users.find((u) => u.nick === network.nick) || {}
-		: {};
+	const currentChannelUser =
+		(channel && channel.users.find((u) => u.nick === network.nick)) || {};
+	const currentChannelModes = currentChannelUser.modes || [];
 
 	const whois = () => {
 		const chan = network.channels.find((c) => c.name === user.nick);
@@ -204,6 +218,17 @@ export function generateUserContextMenu($root, channel, network, user) {
 			action: whois,
 		},
 		{
+			label: "Ignore user",
+			type: "item",
+			class: "action-ignore",
+			action() {
+				socket.emit("input", {
+					target: channel.id,
+					text: "/ignore " + user.nick,
+				});
+			},
+		},
+		{
 			label: "Direct messages",
 			type: "item",
 			class: "action-query",
@@ -222,7 +247,7 @@ export function generateUserContextMenu($root, channel, network, user) {
 		},
 	];
 
-	if (currentChannelUser.mode === "@") {
+	if (currentChannelModes.includes("@")) {
 		items.push({
 			label: "Kick",
 			type: "item",
@@ -235,7 +260,7 @@ export function generateUserContextMenu($root, channel, network, user) {
 			},
 		});
 
-		if (user.mode === "@") {
+		if (user.modes.includes("@")) {
 			items.push({
 				label: "Revoke operator (-o)",
 				type: "item",
@@ -261,7 +286,7 @@ export function generateUserContextMenu($root, channel, network, user) {
 			});
 		}
 
-		if (user.mode === "+") {
+		if (user.modes.includes("+")) {
 			items.push({
 				label: "Revoke voice (-v)",
 				type: "item",

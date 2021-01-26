@@ -49,7 +49,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			text: url,
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		expect(message.previews).to.deep.equal([
 			{
@@ -86,7 +86,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			text: url,
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		expect(message.previews).to.deep.equal([
 			{
@@ -122,7 +122,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			text: url,
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		app.get("/truncate", function (req, res) {
 			res.send(
@@ -146,7 +146,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			text: "http://localhost:" + this.port + "/basic-og",
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		app.get("/basic-og", function (req, res) {
 			res.send("<title>test</title><meta property='og:title' content='opengraph test'>");
@@ -163,7 +163,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			text: "http://localhost:" + this.port + "/duplicate-tags",
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		app.get("/duplicate-tags", function (req, res) {
 			res.send(
@@ -183,7 +183,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			text: "http://localhost:" + this.port + "/description-og",
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		app.get("/description-og", function (req, res) {
 			res.send(
@@ -203,7 +203,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			text: "http://localhost:" + this.port + "/thumb",
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		app.get("/thumb", function (req, res) {
 			res.send(
@@ -222,13 +222,77 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 		});
 	});
 
+	describe("test disableMediaPreview", function () {
+		beforeEach(function (done) {
+			Helper.config.disableMediaPreview = true;
+			done();
+		});
+		afterEach(function (done) {
+			Helper.config.disableMediaPreview = false;
+			done();
+		});
+		it("should ignore og:image if disableMediaPreview", function (done) {
+			const port = this.port;
+
+			app.get("/nonexistent-test-image.png", function () {
+				throw "Should not fetch image";
+			});
+
+			app.get("/thumb", function (req, res) {
+				res.send(
+					"<title>Google</title><meta property='og:image' content='http://localhost:" +
+						port +
+						"/nonexistent-test-image.png'>"
+				);
+			});
+			const message = this.irc.createMessage({
+				text: "http://localhost:" + port + "/thumb",
+			});
+
+			link(this.irc, this.network.channels[0], message, message.text);
+
+			this.irc.once("msg:preview", function (data) {
+				expect(data.preview.head).to.equal("Google");
+				expect(data.preview.type).to.equal("link");
+				expect(data.preview.thumb).to.equal("");
+				done();
+			});
+		});
+		it("should ignore og:video if disableMediaPreview", function (done) {
+			const port = this.port;
+
+			app.get("/nonexistent-video.mpr", function () {
+				throw "Should not fetch video";
+			});
+
+			app.get("/thumb", function (req, res) {
+				res.send(
+					"<title>Google</title><meta property='og:video:type' content='video/mp4'><meta property='og:video' content='http://localhost:" +
+						port +
+						"/nonexistent-video.mp4'>"
+				);
+			});
+			const message = this.irc.createMessage({
+				text: "http://localhost:" + port + "/thumb",
+			});
+
+			link(this.irc, this.network.channels[0], message, message.text);
+
+			this.irc.once("msg:preview", function (data) {
+				expect(data.preview.head).to.equal("Google");
+				expect(data.preview.type).to.equal("link");
+				done();
+			});
+		});
+	});
+
 	it("should find image_src", function (done) {
 		const port = this.port;
 		const message = this.irc.createMessage({
 			text: "http://localhost:" + this.port + "/thumb-image-src",
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		app.get("/thumb-image-src", function (req, res) {
 			res.send(
@@ -250,7 +314,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			text: "http://localhost:" + this.port + "/thumb-image-src",
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		app.get("/thumb-image-src", function (req, res) {
 			res.send("<link rel='image_src' href='//localhost:" + port + "/real-test-image.png'>");
@@ -270,7 +334,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			text: "http://localhost:" + this.port + "/relative-thumb",
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		app.get("/relative-thumb", function (req, res) {
 			res.send(
@@ -294,7 +358,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			text: "http://localhost:" + this.port + "/thumb-no-title",
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		app.get("/thumb-no-title", function (req, res) {
 			res.send(
@@ -320,7 +384,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			text: "http://localhost:" + this.port + "/body-no-title",
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		app.get("/body-no-title", function (req, res) {
 			res.send("<meta name='description' content='hello world'>");
@@ -341,7 +405,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			text: "http://localhost:" + this.port + "/thumb-404",
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		app.get("/thumb-404", function (req, res) {
 			res.send(
@@ -365,7 +429,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			text: "http://localhost:" + port + "/real-test-image.png",
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		this.irc.once("msg:preview", function (data) {
 			expect(data.preview.type).to.equal("image");
@@ -384,7 +448,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			text: "http://localhost:" + port + "/one http://localhost:" + this.port + "/two",
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		expect(message.previews).to.eql([
 			{
@@ -447,7 +511,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			text: "http://localhost:" + this.port + "/language-check",
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 	});
 
 	it("should send accept text/html for initial request", function (done) {
@@ -463,7 +527,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			text: "http://localhost:" + this.port + "/accept-header-html",
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 	});
 
 	it("should send accept */* for meta image", function (done) {
@@ -487,7 +551,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			text: "http://localhost:" + port + "/accept-header-thumb",
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 	});
 
 	it("should not add slash to url", function (done) {
@@ -496,7 +560,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			text: "http://localhost:" + port + "",
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		this.irc.once("msg:preview", function (data) {
 			expect(data.preview.link).to.equal("http://localhost:" + port + "");
@@ -527,7 +591,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 				"/unicodeq/?q=🙈-emoji-test",
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		app.get("/unicode/:q", function (req, res) {
 			res.send(`<title>${req.params.q}</title>`);
@@ -559,19 +623,15 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 		});
 	});
 
-	it("should fetch protocol-aware links", function (done) {
+	it("should not fetch links without a schema", function () {
 		const port = this.port;
 		const message = this.irc.createMessage({
-			text: "//localhost:" + port + "",
+			text: `//localhost:${port} localhost:${port} //localhost:${port}/test localhost:${port}/test`,
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
-		this.irc.once("msg:preview", function (data) {
-			expect(data.preview.link).to.equal("http://localhost:" + port + "");
-			expect(data.preview.type).to.equal("error");
-			done();
-		});
+		expect(message.previews).to.be.empty;
 	});
 
 	it("should de-duplicate links", function (done) {
@@ -587,7 +647,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 				"",
 		});
 
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		expect(message.previews).to.deep.equal([
 			{
@@ -635,9 +695,9 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 
 		this.irc.config.browser.language = "very nice language";
 
-		link(this.irc, this.network.channels[0], message);
-		link(this.irc, this.network.channels[0], message);
-		process.nextTick(() => link(this.irc, this.network.channels[0], message));
+		link(this.irc, this.network.channels[0], message, message.text);
+		link(this.irc, this.network.channels[0], message, message.text);
+		process.nextTick(() => link(this.irc, this.network.channels[0], message, message.text));
 
 		app.get("/basic-og-once", function (req, res) {
 			requests++;
@@ -674,11 +734,11 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 		let responses = 0;
 
 		this.irc.config.browser.language = "first language";
-		link(this.irc, this.network.channels[0], message);
+		link(this.irc, this.network.channels[0], message, message.text);
 
 		setTimeout(() => {
 			this.irc.config.browser.language = "second language";
-			link(this.irc, this.network.channels[0], message);
+			link(this.irc, this.network.channels[0], message, message.text);
 		}, 100);
 
 		app.get("/basic-og-once-lang", function (req, res) {

@@ -183,18 +183,16 @@ class MessageStorage {
 						}
 
 						resolve(
-							rows
-								.map((row) => {
-									const msg = JSON.parse(row.msg);
-									msg.time = row.time;
-									msg.type = row.type;
+							rows.reverse().map((row) => {
+								const msg = JSON.parse(row.msg);
+								msg.time = row.time;
+								msg.type = row.type;
 
-									const newMsg = new Msg(msg);
-									newMsg.id = this.client.idMsg++;
+								const newMsg = new Msg(msg);
+								newMsg.id = this.client.idMsg++;
 
-									return newMsg;
-								})
-								.reverse()
+								return newMsg;
+							})
 						);
 					}
 				)

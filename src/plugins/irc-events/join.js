@@ -41,6 +41,8 @@ module.exports = function (irc, network) {
 			time: data.time,
 			from: user,
 			hostmask: data.ident + "@" + data.hostname,
+			gecos: data.gecos,
+			account: data.account,
 			type: Msg.Type.JOIN,
 			self: data.nick === irc.user.nick,
 		});

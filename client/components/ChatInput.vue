@@ -7,6 +7,7 @@
 			ref="input"
 			dir="auto"
 			class="mousetrap"
+			enterkeyhint="send"
 			:value="channel.pendingMessage"
 			:placeholder="getInputPlaceholder(channel)"
 			:aria-label="getInputPlaceholder(channel)"
@@ -24,6 +25,7 @@
 				id="upload-input"
 				ref="uploadInput"
 				type="file"
+				aria-labelledby="upload"
 				multiple
 				@change="onUploadInputChange"
 			/>
@@ -56,6 +58,7 @@ import autocompletion from "../js/autocompletion";
 import commands from "../js/commands/index";
 import socket from "../js/socket";
 import upload from "../js/upload";
+import eventbus from "../js/eventbus";
 
 const formattingHotkeys = {
 	"mod+k": "\x03",
@@ -101,7 +104,7 @@ export default {
 		},
 	},
 	mounted() {
-		this.$root.$on("escapekey", this.blurInput);
+		eventbus.on("escapekey", this.blurInput);
 
 		if (this.$store.state.settings.autocomplete) {
 			autocompletionRef = autocompletion(this.$refs.input);
@@ -163,7 +166,7 @@ export default {
 		}
 	},
 	destroyed() {
-		this.$root.$off("escapekey", this.blurInput);
+		eventbus.off("escapekey", this.blurInput);
 
 		if (autocompletionRef) {
 			autocompletionRef.destroy();

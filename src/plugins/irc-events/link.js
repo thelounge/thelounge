@@ -5,22 +5,18 @@ const got = require("got");
 const URL = require("url").URL;
 const mime = require("mime-types");
 const Helper = require("../../helper");
-const cleanIrcMessage = require("../../../client/js/helpers/ircmessageparser/cleanIrcMessage");
-const findLinks = require("../../../client/js/helpers/ircmessageparser/findLinks");
+const {findLinksWithSchema} = require("../../../client/js/helpers/ircmessageparser/findLinks");
 const storage = require("../storage");
 const currentFetchPromises = new Map();
 const imageTypeRegex = /^image\/.+/;
 const mediaTypeRegex = /^(audio|video)\/.+/;
 
-module.exports = function (client, chan, msg) {
+module.exports = function (client, chan, msg, cleanText) {
 	if (!Helper.config.prefetch) {
 		return;
 	}
 
-	// Remove all IRC formatting characters before searching for links
-	const cleanText = cleanIrcMessage(msg.text);
-
-	msg.previews = findLinks(cleanText).reduce((cleanLinks, link) => {
+	msg.previews = findLinksWithSchema(cleanText).reduce((cleanLinks, link) => {
 		const url = normalizeURL(link.link);
 
 		// If the URL is invalid and cannot be normalized, don't fetch it
@@ -84,11 +80,6 @@ function parseHtml(preview, res, client) {
 					$('meta[property="og:description"]').attr("content") ||
 					$('meta[name="description"]').attr("content") ||
 					"";
-				let thumb =
-					$('meta[property="og:image"]').attr("content") ||
-					$('meta[name="twitter:image:src"]').attr("content") ||
-					$('link[rel="image_src"]').attr("href") ||
-					"";
 
 				if (preview.head.length) {
 					preview.head = preview.head.substr(0, 100);
@@ -97,6 +88,17 @@ function parseHtml(preview, res, client) {
 				if (preview.body.length) {
 					preview.body = preview.body.substr(0, 300);
 				}
+
+				if (!Helper.config.prefetchStorage && Helper.config.disableMediaPreview) {
+					resolve(res);
+					return;
+				}
+
+				let thumb =
+					$('meta[property="og:image"]').attr("content") ||
+					$('meta[name="twitter:image:src"]').attr("content") ||
+					$('link[rel="image_src"]').attr("href") ||
+					"";
 
 				// Make sure thumbnail is a valid and absolute url
 				if (thumb.length) {
@@ -127,7 +129,25 @@ function parseHtml(preview, res, client) {
 
 function parseHtmlMedia($, preview, client) {
 	return new Promise((resolve, reject) => {
+		if (Helper.config.disableMediaPreview) {
+			reject();
+			return;
+		}
+
 		let foundMedia = false;
+		const openGraphType = $('meta[property="og:type"]').attr("content");
+
+		// Certain news websites may include video and audio tags,
+		// despite actually being an article (as indicated by og:type).
+		// If there is og:type tag, we will only select video or audio if it matches
+		if (
+			openGraphType &&
+			!openGraphType.startsWith("video") &&
+			!openGraphType.startsWith("music")
+		) {
+			reject();
+			return;
+		}
 
 		["video", "audio"].forEach((type) => {
 			if (foundMedia) {
@@ -203,6 +223,11 @@ function parse(msg, chan, preview, res, client) {
 		case "image/jpg":
 		case "image/jpeg":
 		case "image/webp":
+		case "image/avif":
+			if (!Helper.config.prefetchStorage && Helper.config.disableMediaPreview) {
+				return removePreview(msg, preview);
+			}
+
 			if (res.size > Helper.config.prefetchMaxImageSize * 1024) {
 				preview.type = "error";
 				preview.error = "image-too-big";
@@ -228,6 +253,10 @@ function parse(msg, chan, preview, res, client) {
 				break;
 			}
 
+			if (Helper.config.disableMediaPreview) {
+				return removePreview(msg, preview);
+			}
+
 			preview.type = "audio";
 			preview.media = preview.link;
 			preview.mediaType = res.type;
@@ -239,6 +268,10 @@ function parse(msg, chan, preview, res, client) {
 		case "video/mp4":
 			if (!preview.link.startsWith("https://")) {
 				break;
+			}
+
+			if (Helper.config.disableMediaPreview) {
+				return removePreview(msg, preview);
 			}
 
 			preview.type = "video";
@@ -354,7 +387,9 @@ function fetch(uri, headers) {
 				retry: 0,
 				timeout: 5000,
 				headers: getRequestHeaders(headers),
-				rejectUnauthorized: false,
+				https: {
+					rejectUnauthorized: false,
+				},
 			});
 
 			gotStream

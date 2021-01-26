@@ -46,9 +46,7 @@
 					/>
 				</div>
 			</div>
-			<div v-else class="no-results">
-				No results found.
-			</div>
+			<div v-else class="no-results">No results found.</div>
 		</div>
 		<Draggable
 			v-else
@@ -84,13 +82,13 @@
 						$store.state.activeChannel &&
 						network.channels[0] === $store.state.activeChannel.channel
 					"
-					@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown"
+					@toggle-join-channel="network.isJoinChannelShown = !network.isJoinChannelShown"
 				/>
 				<JoinChannel
 					v-if="network.isJoinChannelShown"
 					:network="network"
 					:channel="network.channels[0]"
-					@toggleJoinChannel="network.isJoinChannelShown = !network.isJoinChannelShown"
+					@toggle-join-channel="network.isJoinChannelShown = !network.isJoinChannelShown"
 				/>
 
 				<Draggable
@@ -106,17 +104,18 @@
 					@start="onDragStart"
 					@end="onDragEnd"
 				>
-					<Channel
-						v-for="(channel, index) in network.channels"
-						v-if="index > 0"
-						:key="channel.id"
-						:channel="channel"
-						:network="network"
-						:active="
-							$store.state.activeChannel &&
-							channel === $store.state.activeChannel.channel
-						"
-					/>
+					<template v-for="(channel, index) in network.channels">
+						<Channel
+							v-if="index > 0"
+							:key="channel.id"
+							:channel="channel"
+							:network="network"
+							:active="
+								$store.state.activeChannel &&
+								channel === $store.state.activeChannel.channel
+							"
+						/>
+					</template>
 				</Draggable>
 			</div>
 		</Draggable>

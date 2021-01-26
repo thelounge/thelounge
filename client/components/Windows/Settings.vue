@@ -271,9 +271,7 @@ This may break orientation if your browser does not support that."
 						<template v-else-if="$store.state.pushNotificationState === 'loading'">
 							Loading…
 						</template>
-						<template v-else>
-							Subscribe to push notifications
-						</template>
+						<template v-else> Subscribe to push notifications </template>
 					</button>
 					<div v-if="$store.state.pushNotificationState === 'nohttps'" class="error">
 						<strong>Warning</strong>: Push notifications are only supported over HTTPS
@@ -351,8 +349,15 @@ This may break orientation if your browser does not support that."
 
 			<div v-if="!$store.state.serverConfiguration.public && $store.state.settings.advanced">
 				<label class="opt">
-					<label for="highlights" class="sr-only">
-						Custom highlights (comma-separated keywords)
+					<label for="highlights" class="opt">
+						Custom highlights
+						<span
+							class="tooltipped tooltipped-n tooltipped-no-delay"
+							aria-label="If a message contains any of these comma-separated 
+expressions, it will trigger a highlight."
+						>
+							<button class="extra-help" />
+						</span>
 					</label>
 					<input
 						id="highlights"
@@ -360,7 +365,31 @@ This may break orientation if your browser does not support that."
 						type="text"
 						name="highlights"
 						class="input"
-						placeholder="Custom highlights (comma-separated keywords)"
+						placeholder="Comma-separated, e.g.: word, some more words, anotherword"
+					/>
+				</label>
+			</div>
+
+			<div v-if="!$store.state.serverConfiguration.public && $store.state.settings.advanced">
+				<label class="opt">
+					<label for="highlightExceptions" class="opt">
+						Highlight exceptions
+						<span
+							class="tooltipped tooltipped-n tooltipped-no-delay"
+							aria-label="If a message contains any of these comma-separated 
+expressions, it will not trigger a highlight even if it contains 
+your nickname or expressions defined in custom highlights."
+						>
+							<button class="extra-help" />
+						</span>
+					</label>
+					<input
+						id="highlightExceptions"
+						:value="$store.state.settings.highlightExceptions"
+						type="text"
+						name="highlightExceptions"
+						class="input"
+						placeholder="Comma-separated, e.g.: word, some more words, anotherword"
 					/>
 				</label>
 			</div>
@@ -376,9 +405,7 @@ This may break orientation if your browser does not support that."
 			>
 				<h2 id="label-change-password">Change password</h2>
 				<div class="password-container">
-					<label for="old_password_input" class="sr-only">
-						Enter current password
-					</label>
+					<label for="old_password_input" class="sr-only"> Enter current password </label>
 					<RevealPassword v-slot:default="slotProps">
 						<input
 							id="old_password_input"
@@ -404,9 +431,7 @@ This may break orientation if your browser does not support that."
 					</RevealPassword>
 				</div>
 				<div class="password-container">
-					<label for="verify_password_input" class="sr-only">
-						Repeat new password
-					</label>
+					<label for="verify_password_input" class="sr-only"> Repeat new password </label>
 					<RevealPassword v-slot:default="slotProps">
 						<input
 							id="verify_password_input"
