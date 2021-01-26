@@ -56,18 +56,20 @@
 							aria-relevant="additions"
 						>
 							<template v-for="(message, id) in messages">
-								<DateMarker
-									v-if="shouldDisplayDateMarker(message, id)"
-									:key="message.date"
-									:message="message"
-								/>
-								<Message
-									:key="message.id"
-									:channel="channel"
-									:network="network"
-									:message="message"
-									:data-id="message.id"
-								/>
+								<div class="result" v-on:click="jump(message, id)">
+									<DateMarker
+										v-if="shouldDisplayDateMarker(message, id)"
+										:key="message.date"
+										:message="message"
+									/>
+									<Message
+										:key="message.id"
+										:channel="channel"
+										:network="network"
+										:message="message"
+										:data-id="message.id"
+									/>
+								</div>
 							</template>
 						</div>
 					</div>
@@ -209,6 +211,20 @@ export default {
 				const el = this.$refs.chat;
 				el.scrollTop = el.scrollHeight;
 			});
+		},
+		jump(message, id) {
+			// TODO: Implement jumping to messages!
+			// This is difficult because it means client will need to handle a potentially nonlinear message set
+			// (loading IntersectionObserver both before AND after the messages)
+			// this.$router.push({
+			// 	name: "MessageList",
+			// 	params: {
+			// 		id: this.chan.id,
+			// 	},
+			//  query: {
+			//    focused: id
+			//  }
+			// });
 		},
 	},
 };

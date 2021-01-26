@@ -30,6 +30,7 @@ export default {
 		network: Object,
 		messages: Array,
 		keepScrollPosition: Function,
+		focused: Boolean,
 	},
 	data() {
 		return {
