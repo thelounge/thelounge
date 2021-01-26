@@ -3,7 +3,11 @@
 		:id="'msg-' + message.id"
 		:class="[
 			'msg',
-			{self: message.self, highlight: message.highlight, 'previous-source': isPreviousSource},
+			{
+				self: message.self,
+				highlight: message.highlight || focused,
+				'previous-source': isPreviousSource,
+			},
 		]"
 		:data-type="message.type"
 		:data-command="message.command"
@@ -110,6 +114,7 @@ export default {
 		network: Object,
 		keepScrollPosition: Function,
 		isPreviousSource: Boolean,
+		focused: Boolean,
 	},
 	computed: {
 		timeFormat() {

@@ -90,7 +90,12 @@
 					>
 						<div class="scroll-down-arrow" />
 					</div>
-					<MessageList ref="messageList" :network="network" :channel="channel" />
+					<MessageList
+						ref="messageList"
+						:network="network"
+						:channel="channel"
+						:focused="focused"
+					/>
 					<ChatUserList v-if="channel.type === 'channel'" :channel="channel" />
 				</div>
 			</div>
@@ -133,6 +138,7 @@ export default {
 	props: {
 		network: Object,
 		channel: Object,
+		focused: String,
 	},
 	computed: {
 		specialComponent() {
