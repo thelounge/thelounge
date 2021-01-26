@@ -33,18 +33,75 @@ const router = new VueRouter({
 				next();
 			},
 		},
+		{
+			name: "Connect",
+			path: "/connect",
+			component: Connect,
+			props: (route) => ({queryParams: route.query}),
+		},
+		{
+			name: "Settings",
+			path: "/settings",
+			component: Settings,
+		},
+		{
+			name: "Help",
+			path: "/help",
+			component: Help,
+		},
+		{
+			name: "Changelog",
+			path: "/changelog",
+			component: Changelog,
+		},
+		{
+			name: "NetworkEdit",
+			path: "/edit-network/:uuid",
+			component: NetworkEdit,
+		},
+		{
+			name: "RoutedChat",
+			path: "/chan-:id",
+			component: RoutedChat,
+		},
+		{
+			name: "SearchResults",
+			path: "/search/:uuid/:target/:term",
+			component: SearchResults,
+		},
 	],
 });
 
 router.beforeEach((to, from, next) => {
+	// If user is not yet signed in, wait for appLoaded state to change
+	// unless they are trying to open SignIn (which can be triggered in auth.js)
+	if (!store.state.appLoaded && to.name !== "SignIn") {
+		store.watch(
+			(state) => state.appLoaded,
+			() => next()
+		);
+
+		return;
+	}
+
+	next();
+});
+
+router.beforeEach((to, from, next) => {
 	// Disallow navigating to non-existing routes
-	if (store.state.appLoaded && !to.matched.length) {
+	if (!to.matched.length) {
 		next(false);
 		return;
 	}
 
 	// Disallow navigating to invalid channels
 	if (to.name === "RoutedChat" && !store.getters.findChannel(Number(to.params.id))) {
+		next(false);
+		return;
+	}
+
+	// Disallow navigating to invalid networks
+	if (to.name === "NetworkEdit" && !store.getters.findNetwork(to.params.uuid)) {
 		next(false);
 		return;
 	}
@@ -92,47 +149,6 @@ router.afterEach((to) => {
 	}
 });
 
-function initialize() {
-	router.addRoutes([
-		{
-			name: "Connect",
-			path: "/connect",
-			component: Connect,
-			props: (route) => ({queryParams: route.query}),
-		},
-		{
-			name: "Settings",
-			path: "/settings",
-			component: Settings,
-		},
-		{
-			name: "Help",
-			path: "/help",
-			component: Help,
-		},
-		{
-			name: "Changelog",
-			path: "/changelog",
-			component: Changelog,
-		},
-		{
-			name: "NetworkEdit",
-			path: "/edit-network/:uuid",
-			component: NetworkEdit,
-		},
-		{
-			name: "RoutedChat",
-			path: "/chan-:id",
-			component: RoutedChat,
-		},
-		{
-			name: "SearchResults",
-			path: "/search/:uuid/:target/:term",
-			component: SearchResults,
-		},
-	]);
-}
-
 function navigate(routeName, params = {}) {
 	if (router.currentRoute.name) {
 		router.push({name: routeName, params}).catch(() => {});
@@ -162,4 +178,4 @@ if ("serviceWorker" in navigator) {
 	});
 }
 
-export {initialize, router, navigate, switchToChannel};
+export {router, navigate, switchToChannel};

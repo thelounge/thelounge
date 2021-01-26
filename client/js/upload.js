@@ -9,6 +9,7 @@ class Uploader {
 	init() {
 		this.xhr = null;
 		this.fileQueue = [];
+		this.tokenKeepAlive = null;
 
 		document.addEventListener("dragenter", (e) => this.dragEnter(e));
 		document.addEventListener("dragover", (e) => this.dragOver(e));
@@ -131,10 +132,17 @@ class Uploader {
 	uploadNextFileInQueue(token) {
 		const file = this.fileQueue.shift();
 
+		// Tell the server that we are still upload to this token
+		// so it does not become invalidated and fail the upload.
+		// This issue only happens if The Lounge is proxied through other software
+		// as it may buffer the upload before the upload request will be processed by The Lounge.
+		this.tokenKeepAlive = setInterval(() => socket.emit("upload:ping", token), 40 * 1000);
+
 		if (
 			store.state.settings.uploadCanvas &&
 			file.type.startsWith("image/") &&
-			!file.type.includes("svg")
+			!file.type.includes("svg") &&
+			file.type !== "image/gif"
 		) {
 			this.renderImage(file, (newFile) => this.performUpload(token, newFile));
 		} else {
@@ -218,6 +226,11 @@ class Uploader {
 
 	handleResponse(response) {
 		this.setProgress(0);
+
+		if (this.tokenKeepAlive) {
+			clearInterval(this.tokenKeepAlive);
+			this.tokenKeepAlive = null;
+		}
 
 		if (response.error) {
 			store.commit("currentUserVisibleError", response.error);

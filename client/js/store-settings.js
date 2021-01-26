@@ -82,7 +82,7 @@ function loadFromLocalStorage() {
 	}
 
 	// Older The Lounge versions converted highlights to an array, turn it back into a string
-	if (typeof storedSettings.highlights === "object") {
+	if (storedSettings.highlights !== null && typeof storedSettings.highlights === "object") {
 		storedSettings.highlights = storedSettings.highlights.join(", ");
 	}
 

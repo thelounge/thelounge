@@ -32,7 +32,7 @@
 						:on-hover="hoverUser"
 						:active="user.original === activeUser"
 						:user="user.original"
-						v-html="user.original.mode + user.string"
+						v-html="user.string"
 					/>
 				</template>
 				<template v-else>
@@ -98,18 +98,25 @@ export default {
 				const result = this.filteredUsers;
 
 				for (const user of result) {
-					if (!groups[user.original.mode]) {
-						groups[user.original.mode] = [];
+					const mode = user.original.modes[0] || "";
+
+					if (!groups[mode]) {
+						groups[mode] = [];
 					}
 
-					groups[user.original.mode].push(user);
+					// Prepend user mode to search result
+					user.string = mode + user.string;
+
+					groups[mode].push(user);
 				}
 			} else {
 				for (const user of this.channel.users) {
-					if (!groups[user.mode]) {
-						groups[user.mode] = [user];
+					const mode = user.modes[0] || "";
+
+					if (!groups[mode]) {
+						groups[mode] = [user];
 					} else {
-						groups[user.mode].push(user);
+						groups[mode].push(user);
 					}
 				}
 			}

@@ -6,11 +6,12 @@
 		v-on="onHover ? {mouseenter: hover} : {}"
 		@click.prevent="openContextMenu"
 		@contextmenu.prevent="openContextMenu"
-		><slot>{{ user.mode }}{{ user.nick }}</slot></span
+		><slot>{{ mode }}{{ user.nick }}</slot></span
 	>
 </template>
 
 <script>
+import eventbus from "../js/eventbus";
 import colorClass from "../js/helpers/colorClass";
 
 export default {
@@ -23,6 +24,14 @@ export default {
 		network: Object,
 	},
 	computed: {
+		mode() {
+			// Message objects have a singular mode, but user objects have modes array
+			if (this.user.modes) {
+				return this.user.modes[0];
+			}
+
+			return this.user.mode;
+		},
 		nickColor() {
 			return colorClass(this.user.nick);
 		},
@@ -32,7 +41,7 @@ export default {
 			return this.onHover(this.user);
 		},
 		openContextMenu(event) {
-			this.$root.$emit("contextmenu:user", {
+			eventbus.emit("contextmenu:user", {
 				event: event,
 				user: this.user,
 				network: this.network,

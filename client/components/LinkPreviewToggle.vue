@@ -22,7 +22,7 @@ export default {
 		onClick() {
 			this.link.shown = !this.link.shown;
 
-			this.$parent.$emit("linkPreviewToggle", this.link, this.$parent.message);
+			this.$parent.$emit("toggle-link-preview", this.link, this.$parent.message);
 		},
 	},
 };

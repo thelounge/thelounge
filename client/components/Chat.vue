@@ -1,5 +1,5 @@
 <template>
-	<div id="chat-container" class="window" :data-current-channel="channel.name">
+	<div id="chat-container" class="window" :data-current-channel="channel.name" lang="">
 		<div
 			id="chat"
 			:class="{
@@ -25,6 +25,7 @@
 							:value="channel.topic"
 							class="topic-input"
 							placeholder="Set channel topic"
+							enterkeyhint="done"
 							@keyup.enter="saveTopic"
 							@keyup.esc="channel.editTopic = false"
 						/>
@@ -69,7 +70,7 @@
 					<div class="chat">
 						<div class="messages">
 							<div class="msg">
-								<Component
+								<component
 									:is="specialComponent"
 									:network="network"
 									:channel="channel"
@@ -107,6 +108,7 @@
 
 <script>
 import socket from "../js/socket";
+import eventbus from "../js/eventbus";
 import ParsedMessage from "./ParsedMessage.vue";
 import MessageList from "./MessageList.vue";
 import ChatInput from "./ChatInput.vue";
@@ -204,14 +206,14 @@ export default {
 			}
 		},
 		openContextMenu(event) {
-			this.$root.$emit("contextmenu:channel", {
+			eventbus.emit("contextmenu:channel", {
 				event: event,
 				channel: this.channel,
 				network: this.network,
 			});
 		},
 		openMentions() {
-			this.$root.$emit("mentions:toggle", {
+			eventbus.emit("mentions:toggle", {
 				event: event,
 			});
 		},

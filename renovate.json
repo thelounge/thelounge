@@ -10,8 +10,8 @@
   },
   "packageRules": [
     {
-      "depTypeList": ["devDependencies"],
-      "extends": ["schedule:weekends"]
+      "depTypeList": ["dependencies", "devDependencies"],
+      "extends": ["schedule:monthly"]
     }
   ]
 }

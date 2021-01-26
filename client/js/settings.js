@@ -31,6 +31,7 @@ export const config = normalizeConfig({
 	},
 	desktopNotifications: {
 		default: false,
+		sync: "never",
 		apply(store, value) {
 			store.commit("refreshDesktopNotificationState", null, {root: true});
 
@@ -42,6 +43,10 @@ export const config = normalizeConfig({
 		},
 	},
 	highlights: {
+		default: "",
+		sync: "always",
+	},
+	highlightExceptions: {
 		default: "",
 		sync: "always",
 	},
@@ -57,6 +62,7 @@ export const config = normalizeConfig({
 	},
 	notification: {
 		default: true,
+		sync: "never",
 	},
 	notifyAllMessages: {
 		default: false,

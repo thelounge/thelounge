@@ -10,7 +10,8 @@ module.exports = function (irc, network) {
 
 		if (data.motd) {
 			const msg = new Msg({
-				type: Msg.Type.MOTD,
+				type: Msg.Type.MONOSPACE_BLOCK,
+				command: "motd",
 				text: data.motd,
 			});
 			lobby.pushMessage(client, msg);
@@ -18,7 +19,8 @@ module.exports = function (irc, network) {
 
 		if (data.error) {
 			const msg = new Msg({
-				type: Msg.Type.MOTD,
+				type: Msg.Type.MONOSPACE_BLOCK,
+				command: "motd",
 				text: data.error,
 			});
 			lobby.pushMessage(client, msg);

@@ -10,23 +10,28 @@ const readChunk = require("read-chunk");
 const crypto = require("crypto");
 const isUtf8 = require("is-utf8");
 const log = require("../log");
+const contentDisposition = require("content-disposition");
 
-const whitelist = [
-	"application/ogg",
-	"audio/midi",
-	"audio/mpeg",
-	"audio/ogg",
-	"audio/vnd.wave",
-	"image/bmp",
-	"image/gif",
-	"image/jpeg",
-	"image/png",
-	"image/webp",
-	"text/plain",
-	"video/mp4",
-	"video/ogg",
-	"video/webm",
-];
+// Map of allowed mime types to their respecive default filenames
+// that will be rendered in browser without forcing them to be downloaded
+const inlineContentDispositionTypes = {
+	"application/ogg": "media.ogx",
+	"audio/midi": "audio.midi",
+	"audio/mpeg": "audio.mp3",
+	"audio/ogg": "audio.ogg",
+	"audio/vnd.wave": "audio.wav",
+	"audio/flac": "audio.flac",
+	"image/bmp": "image.bmp",
+	"image/gif": "image.gif",
+	"image/jpeg": "image.jpg",
+	"image/png": "image.png",
+	"image/webp": "image.webp",
+	"image/avif": "image.avif",
+	"text/plain": "text.txt",
+	"video/mp4": "video.mp4",
+	"video/ogg": "video.ogv",
+	"video/webm": "video.webm",
+};
 
 const uploadTokens = new Map();
 
@@ -35,17 +40,33 @@ class Uploader {
 		socket.on("upload:auth", () => {
 			const token = uuidv4();
 
-			uploadTokens.set(token, true);
-
 			socket.emit("upload:auth", token);
 
 			// Invalidate the token in one minute
-			setTimeout(() => uploadTokens.delete(token), 60 * 1000);
+			const timeout = Uploader.createTokenTimeout(token);
+
+			uploadTokens.set(token, timeout);
+		});
+
+		socket.on("upload:ping", (token) => {
+			if (typeof token !== "string") {
+				return;
+			}
+
+			let timeout = uploadTokens.get(token);
+
+			if (!timeout) {
+				return;
+			}
+
+			clearTimeout(timeout);
+			timeout = Uploader.createTokenTimeout(token);
+			uploadTokens.set(token, timeout);
 		});
 	}
 
-	static isValidType(mimeType) {
-		return whitelist.includes(mimeType);
+	static createTokenTimeout(token) {
+		return setTimeout(() => uploadTokens.delete(token), 60 * 1000);
 	}
 
 	static router(express) {
@@ -72,8 +93,21 @@ class Uploader {
 			return res.status(404).send("Not found");
 		}
 
-		// Force a download in the browser if it's not a whitelisted type (binary or otherwise unknown)
-		const contentDisposition = Uploader.isValidType(detectedMimeType) ? "inline" : "attachment";
+		// Force a download in the browser if it's not an allowed type (binary or otherwise unknown)
+		let slug = req.params.slug;
+		const isInline = detectedMimeType in inlineContentDispositionTypes;
+		let disposition = isInline ? "inline" : "attachment";
+
+		if (!slug && isInline) {
+			slug = inlineContentDispositionTypes[detectedMimeType];
+		}
+
+		if (slug) {
+			disposition = contentDisposition(slug.trim(), {
+				fallback: false,
+				type: disposition,
+			});
+		}
 
 		if (detectedMimeType === "audio/vnd.wave") {
 			// Send a more common mime type for wave audio files
@@ -81,7 +115,7 @@ class Uploader {
 			detectedMimeType = "audio/wav";
 		}
 
-		res.setHeader("Content-Disposition", contentDisposition);
+		res.setHeader("Content-Disposition", disposition);
 		res.setHeader("Cache-Control", "max-age=86400");
 		res.contentType(detectedMimeType);
 

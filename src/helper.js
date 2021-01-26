@@ -36,6 +36,7 @@ const Helper = {
 	setHome,
 	getVersion,
 	getVersionCacheBust,
+	getVersionNumber,
 	getGitCommit,
 	ip2hex,
 	mergeConfig,
@@ -58,6 +59,10 @@ function getVersion() {
 	const gitCommit = getGitCommit();
 	const version = `v${pkg.version}`;
 	return gitCommit ? `source (${gitCommit} / ${version})` : version;
+}
+
+function getVersionNumber() {
+	return pkg.version;
 }
 
 let _gitCommit;

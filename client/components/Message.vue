@@ -6,6 +6,7 @@
 			{self: message.self, highlight: message.highlight, 'previous-source': isPreviousSource},
 		]"
 		:data-type="message.type"
+		:data-command="message.command"
 		:data-from="message.from && message.from.nick"
 	>
 		<span :aria-label="messageTimeLocale" class="time tooltipped tooltipped-e"
@@ -19,7 +20,7 @@
 		</template>
 		<template v-else-if="isAction()">
 			<span class="from"><span class="only-copy">*** </span></span>
-			<Component :is="messageComponent" :network="network" :message="message" />
+			<component :is="messageComponent" :network="network" :message="message" />
 		</template>
 		<template v-else-if="message.type === 'action'">
 			<span class="from"><span class="only-copy">* </span></span>
@@ -68,6 +69,12 @@
 					class="msg-shown-in-active tooltipped tooltipped-e"
 					><span></span
 				></span>
+				<span
+					v-if="message.statusmsgGroup"
+					:aria-label="`This message was only shown to users with ${message.statusmsgGroup} mode`"
+					class="msg-statusmsg tooltipped tooltipped-e"
+					><span>{{ message.statusmsgGroup }}</span></span
+				>
 				<ParsedMessage :network="network" :message="message" />
 				<LinkPreview
 					v-for="preview in message.previews"

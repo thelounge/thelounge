@@ -5,7 +5,7 @@ socket.on("disconnect", handleDisconnect);
 socket.on("connect_error", handleDisconnect);
 socket.on("error", handleDisconnect);
 
-socket.on("reconnecting", function (attempt) {
+socket.io.on("reconnect_attempt", function (attempt) {
 	store.commit("currentUserVisibleError", `Reconnecting… (attempt ${attempt})`);
 	updateLoadingMessage();
 });

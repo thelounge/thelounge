@@ -39,6 +39,7 @@
 
 <script>
 import {generateUserContextMenu, generateChannelContextMenu} from "../js/helpers/contextMenu.js";
+import eventbus from "../js/eventbus";
 
 export default {
 	name: "ContextMenu",
@@ -58,14 +59,14 @@ export default {
 		};
 	},
 	mounted() {
-		this.$root.$on("escapekey", this.close);
-		this.$root.$on("contextmenu:user", this.openUserContextMenu);
-		this.$root.$on("contextmenu:channel", this.openChannelContextMenu);
+		eventbus.on("escapekey", this.close);
+		eventbus.on("contextmenu:user", this.openUserContextMenu);
+		eventbus.on("contextmenu:channel", this.openChannelContextMenu);
 	},
 	destroyed() {
-		this.$root.$off("escapekey", this.close);
-		this.$root.$off("contextmenu:user", this.openUserContextMenu);
-		this.$root.$off("contextmenu:channel", this.openChannelContextMenu);
+		eventbus.off("escapekey", this.close);
+		eventbus.off("contextmenu:user", this.openUserContextMenu);
+		eventbus.off("contextmenu:channel", this.openChannelContextMenu);
 
 		this.close();
 	},
@@ -75,19 +76,17 @@ export default {
 			this.open(data.event, items);
 		},
 		openUserContextMenu(data) {
-			const activeChannel = this.$store.state.activeChannel;
-			// If there's an active network and channel use them
-			let {network, channel} = activeChannel ? activeChannel : {network: null, channel: null};
+			const {network, channel} = this.$store.state.activeChannel;
 
-			// Use network and channel from event if specified
-			network = data.network ? data.network : network;
-			channel = data.channel ? data.channel : channel;
-
-			const defaultUser = {nick: data.user.nick};
-			let user = channel ? channel.users.find((u) => u.nick === data.user.nick) : defaultUser;
-			user = user ? user : defaultUser;
-
-			const items = generateUserContextMenu(this.$root, channel, network, user);
+			const items = generateUserContextMenu(
+				this.$root,
+				channel,
+				network,
+				channel.users.find((u) => u.nick === data.user.nick) || {
+					nick: data.user.nick,
+					modes: [],
+				}
+			);
 			this.open(data.event, items);
 		},
 		open(event, items) {

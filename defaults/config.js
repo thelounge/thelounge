@@ -110,15 +110,27 @@ module.exports = {
 	// This value is set to `false` by default.
 	prefetch: false,
 
+	// ### `disableMediaPreview`
+	//
+	// When set to `true`, The Lounge will not preview media (images, video and
+	// audio) hosted on third-party sites. This ensures the client does not
+	// make any requests to external sites. If `prefetchStorage` is enabled,
+	// images proxied via the The Lounge will be previewed.
+	//
+	// This has no effect if `prefetch` is set to `false`.
+	//
+	// This value is set to `false` by default.
+	disableMediaPreview: false,
+
 	// ### `prefetchStorage`
 
 	// When set to `true`, The Lounge will store and proxy prefetched images and
 	// thumbnails on the filesystem rather than directly display the content at
 	// the original URLs.
 	//
-	// This improves security and privacy by not exposing the client IP address,
-	// always loading images from The Lounge and making all assets secure, which
-	// resolves mixed content warnings.
+	// This option primarily exists to resolve mixed content warnings by not
+	// loading images from http hosts. This option does not work for video
+	// or audio as The Lounge will only load these from https hosts.
 	//
 	// If storage is enabled, The Lounge will fetch and store images and thumbnails
 	// in the `${THELOUNGE_HOME}/storage` folder.
@@ -137,6 +149,15 @@ module.exports = {
 	//
 	// This value is set to `2048` kilobytes by default.
 	prefetchMaxImageSize: 2048,
+
+	// ### prefetchMaxSearchSize
+	//
+	// This value sets the maximum request size made to find the Open Graph tags
+	// for link previews. For some sites like YouTube this can easily exceed 300
+	// kilobytes.
+	//
+	// This value is set to `50` kilobytes by default.
+	prefetchMaxSearchSize: 50,
 
 	// ### `fileUpload`
 	//
@@ -206,6 +227,7 @@ module.exports = {
 	//   numbers from 0 to 9. For example, `Guest%%%` may become `Guest123`.
 	// - `username`: User name.
 	// - `realname`: Real name.
+	// - `leaveMessage`: Network specific leave message (overrides global leaveMessage)
 	// - `join`: Comma-separated list of channels to auto-join once connected.
 	//
 	// This value is set to connect to the official channel of The Lounge on
@@ -236,6 +258,7 @@ module.exports = {
 		username: "thelounge",
 		realname: "The Lounge User",
 		join: "#thelounge",
+		leaveMessage: "",
 	},
 
 	// ### `lockNetwork`

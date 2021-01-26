@@ -11,7 +11,9 @@
 				</template>
 				<template v-else>
 					Connect
-					<template v-if="config.lockNetwork">to {{ defaults.name }}</template>
+					<template v-if="config.lockNetwork && $store.state.serverConfiguration.public">
+						to {{ defaults.name }}
+					</template>
 				</template>
 			</h1>
 			<template v-if="!config.lockNetwork">
@@ -97,6 +99,36 @@
 					</div>
 				</div>
 			</template>
+			<template v-else-if="config.lockNetwork && !$store.state.serverConfiguration.public">
+				<h2>Network settings</h2>
+				<div class="connect-row">
+					<label for="connect:name">Name</label>
+					<input
+						id="connect:name"
+						v-model="defaults.name"
+						class="input"
+						name="name"
+						maxlength="100"
+					/>
+				</div>
+				<div class="connect-row">
+					<label for="connect:password">Password</label>
+					<RevealPassword
+						v-slot:default="slotProps"
+						class="input-wrap password-container"
+					>
+						<input
+							id="connect:password"
+							v-model="defaults.password"
+							class="input"
+							:type="slotProps.isVisible ? 'text' : 'password'"
+							placeholder="Server password (optional)"
+							name="password"
+							maxlength="300"
+						/>
+					</RevealPassword>
+				</div>
+			</template>
 
 			<h2>User preferences</h2>
 			<div class="connect-row">
@@ -133,6 +165,16 @@
 					class="input"
 					name="realname"
 					maxlength="300"
+				/>
+			</div>
+			<div class="connect-row">
+				<label for="connect:leaveMessage">Leave message</label>
+				<input
+					id="connect:leaveMessage"
+					v-model="defaults.leaveMessage"
+					class="input"
+					name="leaveMessage"
+					placeholder="The Lounge - https://thelounge.chat"
 				/>
 			</div>
 			<template v-if="defaults.uuid && !$store.state.serverConfiguration.public">
@@ -270,9 +312,7 @@ the server tab on new connection"
 					</div>
 				</template>
 				<div v-else-if="defaults.sasl === 'external'" class="connect-sasl-external">
-					<p>
-						The Lounge automatically generates and manages the client certificate.
-					</p>
+					<p>The Lounge automatically generates and manages the client certificate.</p>
 					<p>
 						On the IRC server, you will need to tell the services to attach the
 						certificate fingerprint (certfp) to your account, for example:

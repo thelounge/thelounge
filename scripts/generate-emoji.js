@@ -19,7 +19,14 @@ const emojiModifiersRegex = /[\u{1f3fb}-\u{1f3ff}]|\u{fe0f}/gu;
 		const cleanEmoji = emoji.emoji.replace(emojiModifiersRegex, "");
 		fullNameEmojiMap[cleanEmoji] = emoji.description;
 
-		for (const alias of emoji.aliases) {
+		for (let alias of emoji.aliases) {
+			if (alias !== "-1") {
+				// Replace dashes to underscores except for :-1:
+				// This removes autocompletion prompt for :-P
+				// prompting for :non-potable_water:
+				alias = alias.replace(/-/g, "_");
+			}
+
 			emojiMap[alias] = emoji.emoji;
 		}
 	}

@@ -144,7 +144,7 @@ button {
 
 code,
 pre,
-#chat .msg[data-type="motd"] .text,
+#chat .msg[data-type="monospace_block"] .text,
 .irc-monospace,
 textarea#user-specified-css-input {
 	font-family: Consolas, Menlo, Monaco, "Lucida Console", "DejaVu Sans Mono", "Courier New", monospace;
@@ -304,7 +304,9 @@ p {
 #chat .msg[data-type="topic"] .from::before,
 #chat .msg[data-type="mode_channel"] .from::before,
 #chat .msg[data-type="mode"] .from::before,
-#chat .msg[data-type="motd"] .from::before,
+#chat .msg[data-command="motd"] .from::before,
+#chat .msg[data-command="help"] .from::before,
+#chat .msg[data-command="info"] .from::before,
 #chat .msg[data-type="ctcp"] .from::before,
 #chat .msg[data-type="ctcp_request"] .from::before,
 #chat .msg[data-type="whois"] .from::before,
@@ -312,6 +314,7 @@ p {
 #chat .msg[data-type="action"] .from::before,
 #chat .msg[data-type="plugin"] .from::before,
 #chat .msg[data-type="raw"] .from::before,
+#chat .msg-statusmsg span::before,
 #chat .msg-shown-in-active span::before,
 #chat .toggle-button::after,
 #chat .toggle-content .more-caret::before,
@@ -349,9 +352,10 @@ p {
 .context-menu-disconnect::before { content: "\f127"; /* https://fontawesome.com/icons/unlink?style=solid */ }
 .context-menu-connect::before { content: "\f0c1"; /* https://fontawesome.com/icons/link?style=solid */ }
 .context-menu-action-whois::before { content: "\f05a"; /* http://fontawesome.io/icon/info-circle/  */ }
+.context-menu-action-ignore::before { content: "\f506"; /* https://fontawesome.com/icons/user-slash?style=solid  */ }
 .context-menu-action-kick::before { content: "\f05e"; /* http://fontawesome.io/icon/ban/ */ }
-.context-menu-action-op::before { content: "\f1fa"; /* http://fontawesome.io/icon/at/ */ }
-.context-menu-action-voice::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
+.context-menu-action-set-mode::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
+.context-menu-action-revoke-mode::before { content: "\f068"; /* http://fontawesome.io/icon/minus/ */ }
 .context-menu-network::before { content: "\f233"; /* https://fontawesome.com/icons/server?style=solid */ }
 .context-menu-edit::before { content: "\f303"; /* https://fontawesome.com/icons/pencil-alt?style=solid */ }
 .context-menu-clear-history::before { content: "\f1f8"; /* https://fontawesome.com/icons/trash?style=solid */ }
@@ -428,8 +432,18 @@ p {
 	color: #2ecc40;
 }
 
-#chat .msg[data-type="motd"] .from::before {
+#chat .msg[data-command="motd"] .from::before {
 	content: "\f02e"; /* https://fontawesome.com/icons/bookmark?style=solid */
+	color: var(--body-color-muted);
+}
+
+#chat .msg[data-command="help"] .from::before {
+	content: "\f059"; /* https://fontawesome.com/icons/question-circle?style=solid */
+	color: var(--body-color-muted);
+}
+
+#chat .msg[data-command="info"] .from::before {
+	content: "\f05a"; /* https://fontawesome.com/icons/info-circle?style=solid */
 	color: var(--body-color-muted);
 }
 
@@ -479,14 +493,23 @@ p {
 	padding: 1px;
 }
 
+#chat .msg-statusmsg,
 #chat .msg-shown-in-active {
 	cursor: help;
 	margin-right: 5px;
 }
 
+#chat .msg-statusmsg span::before,
 #chat .msg-shown-in-active span::before {
 	font-size: 10px;
 	content: "\f06e"; /* https://fontawesome.com/icons/eye?style=solid */
+}
+
+#chat .msg-statusmsg {
+	border-radius: 2px;
+	padding: 2px 4px;
+	background-color: #ff9e18;
+	color: #222;
 }
 
 #chat .toggle-button {
@@ -1448,11 +1471,11 @@ textarea.input {
 	width: 50px;
 }
 
-#chat.hide-motd .msg[data-type="motd"] {
+#chat.hide-motd .msg[data-command="motd"] {
 	display: none !important;
 }
 
-#chat .msg[data-type="motd"] .text {
+#chat .msg[data-type="monospace_block"] .text {
 	background: #f6f6f6;
 	display: inline-block;
 	border-radius: 4px;
@@ -2018,6 +2041,14 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	color: var(--window-heading-color);
 	margin: 30px 0 10px;
 	padding-bottom: 7px;
+}
+
+.window#chat-container {
+	/*
+		Chat has its own scrollbar, so remove the one on parent
+		This caused a performance issue in Chrome
+	*/
+	overflow: hidden;
 }
 
 #version-checker {
@@ -2812,7 +2843,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 .header .topic,
 #chat .msg[data-type="action"] .content,
 #chat .msg[data-type="message"] .content,
-#chat .msg[data-type="motd"] .content,
+#chat .msg[data-type="monospace_block"] .content,
 #chat .msg[data-type="notice"] .content,
 #chat .ctcp-message,
 #chat .part-reason,

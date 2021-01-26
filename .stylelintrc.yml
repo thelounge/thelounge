@@ -1,8 +1,5 @@
 extends: stylelint-config-standard
 
-ignoreFiles:
-  - client/css/bootstrap.css
-
 rules:
   indentation: tab
   # complains about FontAwesome

@@ -28,6 +28,8 @@ const events = [
 	"ctcp",
 	"chghost",
 	"error",
+	"help",
+	"info",
 	"invite",
 	"join",
 	"kick",
@@ -60,6 +62,7 @@ function Client(manager, name, config = {}) {
 		manager: manager,
 		messageStorage: [],
 		highlightRegex: null,
+		highlightExceptionRegex: null,
 	});
 
 	const client = this;
@@ -81,15 +84,15 @@ function Client(manager, name, config = {}) {
 		}
 	}
 
-	if (typeof client.config.sessions !== "object") {
+	if (!_.isPlainObject(client.config.sessions)) {
 		client.config.sessions = {};
 	}
 
-	if (typeof client.config.clientSettings !== "object") {
+	if (!_.isPlainObject(client.config.clientSettings)) {
 		client.config.clientSettings = {};
 	}
 
-	if (typeof client.config.browser !== "object") {
+	if (!_.isPlainObject(client.config.browser)) {
 		client.config.browser = {};
 	}
 
@@ -238,6 +241,7 @@ Client.prototype.connect = function (args, isStartup = false) {
 		nick: String(args.nick || ""),
 		username: String(args.username || ""),
 		realname: String(args.realname || ""),
+		leaveMessage: String(args.leaveMessage || ""),
 		sasl: String(args.sasl || ""),
 		saslAccount: String(args.saslAccount || ""),
 		saslPassword: String(args.saslPassword || ""),
@@ -422,30 +426,32 @@ Client.prototype.inputLine = function (data) {
 };
 
 Client.prototype.compileCustomHighlights = function () {
-	const client = this;
+	this.highlightRegex = compileHighlightRegex(this.config.clientSettings.highlights);
+	this.highlightExceptionRegex = compileHighlightRegex(
+		this.config.clientSettings.highlightExceptions
+	);
+};
 
-	if (typeof client.config.clientSettings.highlights !== "string") {
-		client.highlightRegex = null;
-		return;
+function compileHighlightRegex(customHighlightString) {
+	if (typeof customHighlightString !== "string") {
+		return null;
 	}
 
-	// Ensure we don't have empty string in the list of highlights
-	// otherwise, users get notifications for everything
-	const highlightsTokens = client.config.clientSettings.highlights
+	// Ensure we don't have empty strings in the list of highlights
+	const highlightsTokens = customHighlightString
 		.split(",")
 		.map((highlight) => escapeRegExp(highlight.trim()))
 		.filter((highlight) => highlight.length > 0);
 
 	if (highlightsTokens.length === 0) {
-		client.highlightRegex = null;
-		return;
+		return null;
 	}
 
-	client.highlightRegex = new RegExp(
+	return new RegExp(
 		`(?:^|[ .,+!?|/:<>(){}'"@&~-])(?:${highlightsTokens.join("|")})(?:$|[ .,+!?|/:<>(){}'"-])`,
 		"i"
 	);
-};
+}
 
 Client.prototype.more = function (data) {
 	const client = this;
@@ -632,11 +638,11 @@ Client.prototype.names = function (data) {
 
 Client.prototype.quit = function (signOut) {
 	const sockets = this.manager.sockets.sockets;
-	const room = sockets.adapter.rooms[this.id];
+	const room = sockets.adapter.rooms.get(this.id);
 
-	if (room && room.sockets) {
-		for (const user in room.sockets) {
-			const socket = sockets.connected[user];
+	if (room) {
+		for (const user of room) {
+			const socket = sockets.sockets.get(user);
 
 			if (socket) {
 				if (signOut) {
@@ -649,7 +655,7 @@ Client.prototype.quit = function (signOut) {
 	}
 
 	this.networks.forEach((network) => {
-		network.quit(Helper.config.leaveMessage);
+		network.quit();
 		network.destroy();
 	});
 
