@@ -56,7 +56,7 @@
 							aria-relevant="additions"
 						>
 							<template v-for="(message, id) in messages">
-								<div class="result" v-on:click="jump(message, id)">
+								<div :key="message.id" class="result" @:click="jump(message, id)">
 									<DateMarker
 										v-if="shouldDisplayDateMarker(message, id)"
 										:key="message.date"
@@ -216,15 +216,15 @@ export default {
 			// TODO: Implement jumping to messages!
 			// This is difficult because it means client will need to handle a potentially nonlinear message set
 			// (loading IntersectionObserver both before AND after the messages)
-			// this.$router.push({
-			// 	name: "MessageList",
-			// 	params: {
-			// 		id: this.chan.id,
-			// 	},
-			//  query: {
-			//    focused: id
-			//  }
-			// });
+			this.$router.push({
+				name: "MessageList",
+				params: {
+					id: this.chan.id,
+				},
+				query: {
+					focused: id,
+				},
+			});
 		},
 	},
 };
