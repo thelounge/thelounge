@@ -1,9 +1,3 @@
-# Emacs/Vim turds
-.\#*\#
-\#*\#
-*~
-.tern-port
-
 node_modules/
 npm-debug.log*
 yarn-debug.log*
