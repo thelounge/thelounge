@@ -36,6 +36,8 @@ const commonSchemes = [
 	"ts3server",
 	"svn+ssh",
 	"ssh",
+	"gopher",
+	"gemini",
 ];
 
 for (const schema of commonSchemes) {
