@@ -43,7 +43,7 @@
     "bcryptjs": "2.4.3",
     "busboy": "0.3.1",
     "chalk": "4.1.0",
-    "cheerio": "1.0.0-rc.3",
+    "cheerio": "1.0.0-rc.5",
     "commander": "6.2.0",
     "express": "4.17.1",
     "file-type": "16.0.1",
