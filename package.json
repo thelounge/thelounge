@@ -60,7 +60,7 @@
     "read": "1.0.7",
     "read-chunk": "3.2.0",
     "semver": "7.3.2",
-    "socket.io": "2.3.0",
+    "socket.io": "2.4.0",
     "tlds": "1.214.0",
     "ua-parser-js": "0.7.22",
     "uuid": "8.3.1",
