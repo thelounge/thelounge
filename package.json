@@ -84,7 +84,7 @@
     "cssnano": "4.1.10",
     "dayjs": "1.9.6",
     "emoji-regex": "9.2.0",
-    "eslint": "7.14.0",
+    "eslint": "7.19.0",
     "eslint-config-prettier": "6.15.0",
     "eslint-plugin-vue": "7.1.0",
     "fuzzy": "0.1.3",
