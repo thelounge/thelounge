@@ -39,8 +39,14 @@ jobs:
         with:
           node-version: ${{ matrix.node_version }}
 
+      - name: Setup windows-build-tools
+        if: matrix.os == 'windows-latest'
+        run: npm i -g windows-build-tools
+
       - name: Install
         run: yarn --frozen-lockfile --non-interactive
+        env:
+          GYP_MSVS_OVERRIDE_PATH: C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools
 
       - name: Build
         run: yarn build
