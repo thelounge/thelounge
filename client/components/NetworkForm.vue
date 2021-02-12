@@ -174,7 +174,7 @@
 					v-model="defaults.leaveMessage"
 					class="input"
 					name="leaveMessage"
-					placeholder="Smell ya later"
+					placeholder="The Lounge - https://thelounge.chat"
 				/>
 			</div>
 			<template v-if="defaults.uuid && !$store.state.serverConfiguration.public">
