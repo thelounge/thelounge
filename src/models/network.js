@@ -35,6 +35,7 @@ function Network(attr) {
 		commands: [],
 		username: "",
 		realname: "",
+		leaveMessage: "",
 		sasl: "",
 		saslAccount: "",
 		saslPassword: "",
@@ -82,6 +83,7 @@ Network.prototype.validate = function (client) {
 
 	this.username = cleanString(this.username) || "thelounge";
 	this.realname = cleanString(this.realname) || "The Lounge User";
+	this.leaveMessage = cleanString(this.leaveMessage);
 	this.password = cleanString(this.password);
 	this.host = cleanString(this.host).toLowerCase();
 	this.name = cleanString(this.name);
@@ -267,6 +269,7 @@ Network.prototype.edit = function (client, args) {
 	this.password = String(args.password || "");
 	this.username = String(args.username || "");
 	this.realname = String(args.realname || "");
+	this.leaveMessage = String(args.leaveMessage || "");
 	this.sasl = String(args.sasl || "");
 	this.saslAccount = String(args.saslAccount || "");
 	this.saslPassword = String(args.saslPassword || "");
@@ -436,7 +439,7 @@ Network.prototype.quit = function (quitMessage) {
 	// https://ircv3.net/specs/extensions/sts#rescheduling-expiry-on-disconnect
 	STSPolicies.refreshExpiration(this.host);
 
-	this.irc.quit(quitMessage || Helper.config.leaveMessage);
+	this.irc.quit(quitMessage || this.leaveMessage || Helper.config.leaveMessage);
 };
 
 Network.prototype.exportForEdit = function () {
@@ -447,6 +450,7 @@ Network.prototype.exportForEdit = function () {
 		"password",
 		"username",
 		"realname",
+		"leaveMessage",
 		"sasl",
 		"saslAccount",
 		"saslPassword",
@@ -481,6 +485,7 @@ Network.prototype.export = function () {
 		"password",
 		"username",
 		"realname",
+		"leaveMessage",
 		"sasl",
 		"saslAccount",
 		"saslPassword",

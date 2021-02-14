@@ -48,7 +48,7 @@ exports.input = function (network, chan, cmd, args) {
 		});
 		this.save();
 	} else {
-		const partMessage = args.join(" ") || Helper.config.leaveMessage;
+		const partMessage = args.join(" ") || network.leaveMessage || Helper.config.leaveMessage;
 		network.irc.part(target.name, partMessage);
 	}
 

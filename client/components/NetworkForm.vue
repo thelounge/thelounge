@@ -167,6 +167,16 @@
 					maxlength="300"
 				/>
 			</div>
+			<div class="connect-row">
+				<label for="connect:leaveMessage">Away message</label>
+				<input
+					id="connect:leaveMessage"
+					v-model="defaults.leaveMessage"
+					class="input"
+					name="leaveMessage"
+					placeholder="The Lounge - https://thelounge.chat"
+				/>
+			</div>
 			<template v-if="defaults.uuid && !$store.state.serverConfiguration.public">
 				<div class="connect-row">
 					<label for="connect:commands">

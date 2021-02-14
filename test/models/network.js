@@ -40,6 +40,7 @@ describe("Network", function () {
 				password: "",
 				username: "",
 				realname: "",
+				leaveMessage: "",
 				sasl: "plain",
 				saslAccount: "testaccount",
 				saslPassword: "testpassword",

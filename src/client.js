@@ -241,6 +241,7 @@ Client.prototype.connect = function (args, isStartup = false) {
 		nick: String(args.nick || ""),
 		username: String(args.username || ""),
 		realname: String(args.realname || ""),
+		leaveMessage: String(args.leaveMessage || ""),
 		sasl: String(args.sasl || ""),
 		saslAccount: String(args.saslAccount || ""),
 		saslPassword: String(args.saslPassword || ""),
@@ -649,7 +650,7 @@ Client.prototype.quit = function (signOut) {
 	}
 
 	this.networks.forEach((network) => {
-		network.quit(Helper.config.leaveMessage);
+		network.quit();
 		network.destroy();
 	});
 
