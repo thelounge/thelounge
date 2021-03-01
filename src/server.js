@@ -167,6 +167,7 @@ module.exports = function (options = {}) {
 			cookie: false,
 			serveClient: false,
 			transports: Helper.config.transports,
+			pingTimeout: 60000,
 		});
 
 		sockets.on("connect", (socket) => {
