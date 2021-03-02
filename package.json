@@ -44,7 +44,7 @@
     "busboy": "0.3.1",
     "chalk": "4.1.0",
     "cheerio": "1.0.0-rc.5",
-    "commander": "7.0.0",
+    "commander": "7.1.0",
     "express": "4.17.1",
     "file-type": "16.2.0",
     "filenamify": "4.2.0",
