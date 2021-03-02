@@ -633,11 +633,11 @@ Client.prototype.names = function (data) {
 
 Client.prototype.quit = function (signOut) {
 	const sockets = this.manager.sockets.sockets;
-	const room = sockets.adapter.rooms[this.id];
+	const room = sockets.adapter.rooms.get(this.id);
 
-	if (room && room.sockets) {
-		for (const user in room.sockets) {
-			const socket = sockets.connected[user];
+	if (room) {
+		for (const user of room) {
+			const socket = sockets.sockets.get(user);
 
 			if (socket) {
 				if (signOut) {
