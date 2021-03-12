@@ -172,10 +172,13 @@ module.exports = {
 	//   If you use this option, you must have a reverse proxy configured,
 	//   to correctly proxy the uploads URLs back to The Lounge.
 	//   This value is set to `null` by default.
+	// - `useDumpinen`: The client will upload the file to
+	//   https://dumpinen.com if set to `true`.
 	fileUpload: {
 		enable: false,
 		maxFileSize: 10240,
 		baseUrl: null,
+		useDumpinen: false,
 	},
 
 	// ### `transports`

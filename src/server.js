@@ -57,7 +57,8 @@ module.exports = function (options = {}) {
 		.use(express.static(path.join(__dirname, "..", "public"), staticOptions))
 		.use("/storage/", express.static(Helper.getStoragePath(), staticOptions));
 
-	if (Helper.config.fileUpload.enable) {
+	// If file upload is enabled and we aren't using dumpinen we'll add the Uploader routes.
+	if (Helper.config.fileUpload.enable && !Helper.config.fileUpload.useDumpinen) {
 		Uploader.router(app);
 	}
 
@@ -294,11 +295,18 @@ function forceNoCacheRequest(req, res, next) {
 }
 
 function indexRequest(req, res) {
+	// allow self for polling; websockets and if useDumpinen is set to true
+	// we'll also allow connections to dumpinen.com
+	const connectSrcPolicy =
+		Helper.config.fileUpload.enable && Helper.config.fileUpload.useDumpinen
+			? `connect-src 'self' https://dumpinen.com ws: wss:`
+			: `connect-src 'self' ws: wss:`;
+
 	const policies = [
 		"default-src 'none'", // default to nothing
 		"base-uri 'none'", // disallow <base>, has no fallback to default-src
 		"form-action 'self'", // 'self' to fix saving passwords in Firefox, even though login is handled in javascript
-		"connect-src 'self' ws: wss:", // allow self for polling; websockets
+		connectSrcPolicy,
 		"style-src 'self' https: 'unsafe-inline'", // allow inline due to use in irc hex colors
 		"script-src 'self'", // javascript
 		"worker-src 'self'", // service worker
@@ -710,6 +718,9 @@ function getClientConfiguration() {
 	const config = _.pick(Helper.config, ["public", "lockNetwork", "useHexIp", "prefetch"]);
 
 	config.fileUpload = Helper.config.fileUpload.enable;
+	config.fileUploadOptions = {
+		useDumpinen: Helper.config.fileUpload.useDumpinen,
+	};
 	config.ldapEnabled = Helper.config.ldap.enable;
 
 	if (!config.lockNetwork) {

@@ -12,7 +12,7 @@ socket.once("configuration", function (data) {
 	store.dispatch("settings/applyAll");
 
 	if (data.fileUpload) {
-		upload.initialize();
+		upload.initialize(data.fileUploadOptions);
 	}
 
 	// If localStorage contains a theme that does not exist on this server, switch

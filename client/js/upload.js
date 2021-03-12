@@ -6,7 +6,8 @@ import socket from "./socket";
 import store from "./store";
 
 class Uploader {
-	init() {
+	init({useDumpinen}) {
+		this.useDumpinen = useDumpinen;
 		this.xhr = null;
 		this.fileQueue = [];
 		this.tokenKeepAlive = null;
@@ -195,16 +196,25 @@ class Uploader {
 			if (this.xhr.readyState === XMLHttpRequest.DONE) {
 				let response;
 
-				try {
-					response = JSON.parse(this.xhr.responseText);
-				} catch (err) {
-					// This is just a safe guard and should not happen if server doesn't throw any errors.
-					// Browsers break the HTTP spec by aborting the request without reading any response data,
-					// if there is still data to be uploaded. Servers will only error in extreme cases like bad
-					// authentication or server-side errors.
-					response = {
-						error: `Upload aborted: HTTP ${this.xhr.status}`,
-					};
+				if (this.useDumpinen) {
+					// A successful dump returns 201 and the URL of the dump in plain text.
+					// Unless the status code is 201 we've gotten an error message in the response text.
+					response =
+						this.xhr.status === 201
+							? {url: this.xhr.responseText}
+							: {error: this.xhr.responseText};
+				} else {
+					try {
+						response = JSON.parse(this.xhr.responseText);
+					} catch (err) {
+						// This is just a safe guard and should not happen if server doesn't throw any errors.
+						// Browsers break the HTTP spec by aborting the request without reading any response data,
+						// if there is still data to be uploaded. Servers will only error in extreme cases like bad
+						// authentication or server-side errors.
+						response = {
+							error: `Upload aborted: HTTP ${this.xhr.status}`,
+						};
+					}
 				}
 
 				this.handleResponse(response);
@@ -218,10 +228,15 @@ class Uploader {
 			}
 		};
 
-		const formData = new FormData();
-		formData.append("file", file);
-		this.xhr.open("POST", `uploads/new/${token}`);
-		this.xhr.send(formData);
+		if (this.useDumpinen) {
+			this.xhr.open("POST", "https://dumpinen.com");
+			this.xhr.send(file);
+		} else {
+			const formData = new FormData();
+			formData.append("file", file);
+			this.xhr.open("POST", `uploads/new/${token}`);
+			this.xhr.send(formData);
+		}
 	}
 
 	handleResponse(response) {
@@ -277,7 +292,7 @@ const instance = new Uploader();
 
 export default {
 	abort: () => instance.abort(),
-	initialize: () => instance.init(),
+	initialize: (opts) => instance.init(opts),
 	mounted: () => instance.mounted(),
 	triggerUpload: (files) => instance.triggerUpload(files),
 };
