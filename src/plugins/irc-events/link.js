@@ -407,9 +407,14 @@ function fetch(uri, headers) {
 						// We don't need to download the file any further after we received content-type header
 						gotStream.destroy();
 					} else {
-						// if not image, limit download to 50kb, since we need only meta tags
-						// twitter.com sends opengraph meta tags within ~20kb of data for individual tweets
-						limit = 1024 * 50;
+						// if not image, limit download to the max search size, since we need only meta tags
+						// twitter.com sends opengraph meta tags within ~20kb of data for individual tweets, the default is set to 50.
+						// for sites like Youtube the og tags are in the first 300K and hence this is configurable by the admin
+						limit =
+							"prefetchMaxSearchSize" in Helper.config
+								? Helper.config.prefetchMaxSearchSize * 1024
+								: // set to the previous size if config option is unset
+								  50 * 1024;
 					}
 				})
 				.on("error", (e) => reject(e))

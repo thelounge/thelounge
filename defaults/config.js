@@ -150,6 +150,15 @@ module.exports = {
 	// This value is set to `2048` kilobytes by default.
 	prefetchMaxImageSize: 2048,
 
+	// ### prefetchMaxSearchSize
+	//
+	// This value sets the maximum request size made to find the Open Graph tags
+	// for link previews. For some sites like YouTube this can easily exceed 300
+	// kilobytes.
+	//
+	// This value is set to `50` kilobytes by default.
+	prefetchMaxSearchSize: 50,
+
 	// ### `fileUpload`
 	//
 	// Allow uploading files to the server hosting The Lounge.
