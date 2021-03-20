@@ -355,14 +355,17 @@ export default {
 				channel = this.results[0].channel;
 			}
 
-			this.activeSearchItem = channel;
+			this.activeSearchItem = {channel, network};
 		},
 		selectResult() {
 			if (!this.searchText || !this.results.length) {
 				return;
 			}
 
-			this.$root.switchToChannel(this.activeSearchItem);
+			this.$root.switchToChannel(
+				this.activeSearchItem.network,
+				this.activeSearchItem.channel
+			);
 			this.deactivateSearch();
 			this.scrollToActive();
 		},

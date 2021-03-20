@@ -64,7 +64,7 @@ export default {
 			);
 
 			if (existingChannel) {
-				this.$root.switchToChannel(existingChannel);
+				this.$root.switchToChannel(this.$store.activeChannel.network, existingChannel);
 			} else {
 				const chanTypes = this.network.serverOptions.CHANTYPES;
 				let channel = this.inputChannel;

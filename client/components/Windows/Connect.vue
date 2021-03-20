@@ -15,6 +15,7 @@ export default {
 		queryParams: Object,
 	},
 	data() {
+		console.log(this.queryParams);
 		// Merge settings from url params into default settings
 		const defaults = Object.assign(
 			{},

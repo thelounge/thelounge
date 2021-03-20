@@ -60,7 +60,7 @@ const router = new VueRouter({
 		},
 		{
 			name: "RoutedChat",
-			path: "/chan-:id",
+			path: "/:networkHost/:channelName?",
 			component: RoutedChat,
 		},
 	],
@@ -88,8 +88,27 @@ router.beforeEach((to, from, next) => {
 		return;
 	}
 
-	// Disallow navigating to invalid channels
-	if (to.name === "RoutedChat" && !store.getters.findChannel(Number(to.params.id))) {
+	// If trying to navigate to an invalid channel,
+	// we attempt to either open a connection dialog to the network
+	// or populate the Join Channel field in the exiting network.
+	if (
+		to.name === "RoutedChat" &&
+		!store.getters.findChannelByName(to.params.networkHost, to.params.channelName)
+	) {
+		const existingNetwork = store.state.networks.find(
+			(network) => network.host === to.params.networkHost
+		);
+
+		if (existingNetwork) {
+			// Join UI
+		} else {
+			// Connect UI
+			next({
+				path: "/connect",
+				query: {...to.query, host: to.params.networkHost, channels: to.params.channelName},
+			});
+			return;
+		}
 		next(false);
 		return;
 	}
@@ -154,8 +173,8 @@ function navigate(routeName, params = {}) {
 	}
 }
 
-function switchToChannel(channel) {
-	return navigate("RoutedChat", {id: channel.id});
+function switchToChannel(network, channel) {
+	return navigate("RoutedChat", {networkHost: network.host, channelName: channel.name});
 }
 
 if ("serviceWorker" in navigator) {
@@ -164,9 +183,8 @@ if ("serviceWorker" in navigator) {
 			const id = parseInt(event.data.channel.substr(5), 10); // remove "chan-" prefix
 
 			const channelTarget = store.getters.findChannel(id);
-
 			if (channelTarget) {
-				switchToChannel(channelTarget.channel);
+				switchToChannel(channelTarget.network, channelTarget.channel);
 			}
 		}
 	});

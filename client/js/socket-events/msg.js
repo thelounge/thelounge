@@ -158,7 +158,7 @@ function notifyMessage(targetId, channel, activeChannel, msg) {
 							const channelTarget = store.getters.findChannel(targetId);
 
 							if (channelTarget) {
-								switchToChannel(channelTarget);
+								switchToChannel(channelTarget.network, channelTarget.channel);
 							}
 						});
 					}

@@ -72,7 +72,7 @@ export default {
 				return;
 			}
 
-			this.$root.switchToChannel(this.channel);
+			this.$root.switchToChannel(this.network, this.channel);
 		},
 		openContextMenu(event) {
 			eventbus.emit("contextmenu:channel", {

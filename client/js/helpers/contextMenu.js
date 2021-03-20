@@ -98,7 +98,7 @@ export function generateChannelContextMenu($root, channel, network) {
 			class: "edit",
 			action() {
 				channel.editTopic = true;
-				$root.switchToChannel(channel);
+				$root.switchToChannel(network, channel);
 			},
 		});
 		items.push({
@@ -122,7 +122,7 @@ export function generateChannelContextMenu($root, channel, network) {
 				type: "item",
 				class: "action-whois",
 				action() {
-					$root.switchToChannel(channel);
+					$root.switchToChannel(network, channel);
 					socket.emit("input", {
 						target: channel.id,
 						text: "/whois " + channel.name,
@@ -191,7 +191,7 @@ export function generateUserContextMenu($root, channel, network, user) {
 		const chan = $root.$store.getters.findChannelOnCurrentNetwork(user.nick);
 
 		if (chan) {
-			$root.switchToChannel(chan);
+			$root.switchToChannel(network, chan);
 		}
 
 		socket.emit("input", {
@@ -235,7 +235,7 @@ export function generateUserContextMenu($root, channel, network, user) {
 				const chan = $root.$store.getters.findChannelOnCurrentNetwork(user.nick);
 
 				if (chan) {
-					$root.switchToChannel(chan);
+					$root.switchToChannel(network, chan);
 				}
 
 				socket.emit("input", {
