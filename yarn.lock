@@ -3294,6 +3294,13 @@ execall@^2.0.0:
   dependencies:
     clone-regexp "^2.1.0"
 
+exifreader@3.14.1:
+  version "3.14.1"
+  resolved "https://registry.yarnpkg.com/exifreader/-/exifreader-3.14.1.tgz#3c2a81600bce04044cb01030399b6c01f2f605b7"
+  integrity sha512-SUxpOk39IvFc+KqglisSy42P8nNTrX/8HC6VijSQUzDRBolqa0ps7M8patMWCZ4NKuleLVq6qR41pOvF5ITdKg==
+  optionalDependencies:
+    xmldom "^0.1.31"
+
 express@4.17.1:
   version "4.17.1"
   resolved "https://registry.yarnpkg.com/express/-/express-4.17.1.tgz#4491fc38605cf51f8629d39c2b5d026f98a4c134"
@@ -8403,6 +8410,11 @@ ws@~7.4.2:
   version "7.4.3"
   resolved "https://registry.yarnpkg.com/ws/-/ws-7.4.3.tgz#1f9643de34a543b8edb124bdcbc457ae55a6e5cd"
   integrity sha512-hr6vCR76GsossIRsr8OLR9acVVm1jyfEWvhbNjtgPOrfvAlKzvyeg/P6r8RuDjRyrcQoPQT7K0DGEPc7Ae6jzA==
+
+xmldom@^0.1.31:
+  version "0.1.31"
+  resolved "https://registry.yarnpkg.com/xmldom/-/xmldom-0.1.31.tgz#b76c9a1bd9f0a9737e5a72dc37231cf38375e2ff"
+  integrity sha512-yS2uJflVQs6n+CyjHoaBmVSqIDevTAWrzMmjG1Gc7h1qQ7uVozNhEPJAwZXWyGQ/Gafo3fCwrcaokezLPupVyQ==
 
 xmlhttprequest-ssl@~1.5.4:
   version "1.5.5"

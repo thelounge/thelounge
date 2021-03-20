@@ -45,6 +45,7 @@
     "chalk": "4.1.0",
     "cheerio": "1.0.0-rc.5",
     "commander": "7.1.0",
+    "exifreader": "3.14.1",
     "express": "4.17.1",
     "file-type": "16.2.0",
     "filenamify": "4.2.0",

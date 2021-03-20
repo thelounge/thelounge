@@ -2,6 +2,7 @@
 
 import {update as updateCursor} from "undate";
 
+import ExifReader from "exifreader";
 import socket from "./socket";
 import store from "./store";
 
@@ -141,10 +142,18 @@ class Uploader {
 		if (
 			store.state.settings.uploadCanvas &&
 			file.type.startsWith("image/") &&
-			!file.type.includes("svg") &&
-			file.type !== "image/gif"
+			!file.type.includes("svg")
 		) {
-			this.renderImage(file, (newFile) => this.performUpload(token, newFile));
+			file.arrayBuffer().then((buffer) => {
+				try {
+					ExifReader.load(buffer);
+				} catch (e) {
+					this.performUpload(token, file);
+					return;
+				}
+
+				this.renderImage(file, (newFile) => this.performUpload(token, newFile));
+			});
 		} else {
 			this.performUpload(token, file);
 		}
