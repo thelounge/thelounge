@@ -61,6 +61,7 @@ export default {
 		active: Boolean,
 		isFiltering: Boolean,
 	},
+	emits: ["toggle-join-channel"],
 	computed: {
 		channel() {
 			return this.network.channels[0];

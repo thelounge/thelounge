@@ -18,12 +18,8 @@
 			aria-relevant="additions"
 			@copy="onCopy"
 		>
-			<template v-for="(message, id) in condensedMessages">
-				<DateMarker
-					v-if="shouldDisplayDateMarker(message, id)"
-					:key="message.id + '-date'"
-					:message="message"
-				/>
+			<template v-for="(message, id) in condensedMessages" :key="message.id + '-date'">
+				<DateMarker v-if="shouldDisplayDateMarker(message, id)" :message="message" />
 				<div
 					v-if="shouldDisplayUnreadMarker(message.id)"
 					:key="message.id + '-unread'"
@@ -148,8 +144,11 @@ export default {
 				this.historyObserver.observe(this.$refs.loadMoreButton);
 			}
 		},
-		"channel.messages"() {
-			this.keepScrollPosition();
+		"channel.messages": {
+			handler() {
+				this.keepScrollPosition();
+			},
+			deep: true,
 		},
 		"channel.pendingMessage"() {
 			this.$nextTick(() => {
@@ -187,11 +186,11 @@ export default {
 	beforeUpdate() {
 		unreadMarkerShown = false;
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		eventbus.off("resize", this.handleResize);
 		this.$refs.chat.removeEventListener("scroll", this.handleScroll);
 	},
-	destroyed() {
+	unmounted() {
 		if (this.historyObserver) {
 			this.historyObserver.disconnect();
 		}

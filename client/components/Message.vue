@@ -15,7 +15,7 @@
 		<template v-if="message.type === 'unhandled'">
 			<span class="from">[{{ message.command }}]</span>
 			<span class="content">
-				<span v-for="(param, id) in message.params" :key="id">{{ param }} </span>
+				<span class="content">{{ message.params.join(" ") }}</span>
 			</span>
 		</template>
 		<template v-else-if="isAction()">

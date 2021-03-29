@@ -3,12 +3,11 @@
 const constants = require("./constants");
 
 import "../css/style.css";
-import Vue from "vue";
+import {createApp} from "vue";
 import store from "./store";
 import App from "../components/App.vue";
 import storage from "./localStorage";
-import {router, navigate} from "./router";
-import socket from "./socket";
+import {router} from "./router";
 import eventbus from "./eventbus";
 
 import "./socket-events";
@@ -19,57 +18,13 @@ const favicon = document.getElementById("favicon");
 const faviconNormal = favicon.getAttribute("href");
 const faviconAlerted = favicon.dataset.other;
 
-new Vue({
-	el: "#viewport",
-	router,
-	mounted() {
-		socket.open();
-	},
-	methods: {
-		switchToChannel(channel) {
-			navigate("RoutedChat", {id: channel.id});
-		},
-		closeChannel(channel) {
-			if (channel.type === "lobby") {
-				eventbus.emit(
-					"confirm-dialog",
-					{
-						title: "Remove network",
-						text: `Are you sure you want to quit and remove ${channel.name}? This cannot be undone.`,
-						button: "Remove network",
-					},
-					(result) => {
-						if (!result) {
-							return;
-						}
+const vueApp = createApp(App);
+vueApp.use(store);
+vueApp.use(router);
+// https://next.router.vuejs.org/guide/migration/#removal-of-router-app
+router.app = vueApp;
 
-						channel.closed = true;
-						socket.emit("input", {
-							target: Number(channel.id),
-							text: "/quit",
-						});
-					}
-				);
-
-				return;
-			}
-
-			channel.closed = true;
-
-			socket.emit("input", {
-				target: Number(channel.id),
-				text: "/close",
-			});
-		},
-	},
-	render(createElement) {
-		return createElement(App, {
-			ref: "app",
-			props: this,
-		});
-	},
-	store,
-});
+vueApp.mount("#viewport-mount");
 
 store.watch(
 	(state) => state.sidebarOpen,
@@ -112,7 +67,11 @@ store.watch(
 	}
 );
 
-Vue.config.errorHandler = function (e) {
+vueApp.config.errorHandler = function (e) {
 	store.commit("currentUserVisibleError", `Vue error: ${e.message}`);
 	console.error(e); // eslint-disable-line
+};
+
+export default {
+	app: vueApp,
 };

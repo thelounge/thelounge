@@ -48,7 +48,7 @@
 
 	</head>
 	<body class="<%- public ? " public" : "" %>" data-transports="<%- JSON.stringify(transports) %>">
-		<div id="viewport"></div>
+		<div id="viewport-mount"></div>
 		<div id="loading">
 			<div class="window">
 				<div id="loading-status-container">

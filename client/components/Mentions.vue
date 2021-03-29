@@ -20,8 +20,8 @@
 				<p v-if="isLoading">Loading…</p>
 				<p v-else>You have no recent mentions.</p>
 			</template>
-			<template v-for="message in resolvedMessages" v-else>
-				<div :key="message.msgId" :class="['msg', message.type]">
+			<template v-for="message in resolvedMessages" v-else :key="message.msgId">
+				<div :class="['msg', message.type]">
 					<div class="mentions-info">
 						<div>
 							<span class="from">
@@ -177,14 +177,17 @@ export default {
 		},
 	},
 	watch: {
-		"$store.state.mentions"() {
-			this.isLoading = false;
+		"$store.state.mentions": {
+			handler() {
+				this.isLoading = false;
+			},
+			deep: true,
 		},
 	},
 	mounted() {
 		eventbus.on("mentions:toggle", this.openPopup);
 	},
-	destroyed() {
+	unmounted() {
 		eventbus.off("mentions:toggle", this.openPopup);
 	},
 	methods: {

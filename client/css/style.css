@@ -555,6 +555,10 @@ p {
 
 /* End icons */
 
+#viewport-mount {
+	height: 100%;
+}
+
 #viewport {
 	display: flex;
 	height: 100%;

@@ -42,7 +42,7 @@ export default {
 	name: "JoinChannel",
 	directives: {
 		focus: {
-			inserted(el) {
+			mounted(el) {
 				el.focus();
 			},
 		},
@@ -51,6 +51,7 @@ export default {
 		network: Object,
 		channel: Object,
 	},
+	emits: ["toggle-join-channel"],
 	data() {
 		return {
 			inputChannel: "",

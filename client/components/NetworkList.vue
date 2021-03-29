@@ -104,10 +104,9 @@
 					@start="onDragStart"
 					@end="onDragEnd"
 				>
-					<template v-for="(channel, index) in network.channels">
+					<template v-for="(channel, index) in network.channels" :key="channel.id">
 						<Channel
 							v-if="index > 0"
-							:key="channel.id"
 							:channel="channel"
 							:network="network"
 							:active="
@@ -245,7 +244,7 @@ export default {
 		Mousetrap.bind("alt+shift+left", this.collapseNetwork);
 		Mousetrap.bind("alt+j", this.toggleSearch);
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		Mousetrap.unbind("alt+shift+right", this.expandNetwork);
 		Mousetrap.unbind("alt+shift+left", this.collapseNetwork);
 		Mousetrap.unbind("alt+j", this.toggleSearch);

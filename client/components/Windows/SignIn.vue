@@ -74,7 +74,7 @@ export default {
 	mounted() {
 		socket.on("auth:failed", this.onAuthFailed);
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		socket.off("auth:failed", this.onAuthFailed);
 	},
 	methods: {

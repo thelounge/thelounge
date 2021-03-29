@@ -39,7 +39,7 @@
 					aria-label="Connect to network"
 					role="tab"
 					aria-controls="connect"
-					:aria-selected="$route.name === 'Connect'"
+					:aria-selected="doesRouteMatch('Connect')"
 			/></span>
 			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Settings"
 				><router-link
@@ -50,7 +50,7 @@
 					aria-label="Settings"
 					role="tab"
 					aria-controls="settings"
-					:aria-selected="$route.name === 'Settings'"
+					:aria-selected="doesRouteMatch('Settings')"
 			/></span>
 			<span
 				class="tooltipped tooltipped-n tooltipped-no-touch"
@@ -71,7 +71,7 @@
 					aria-label="Help"
 					role="tab"
 					aria-controls="help"
-					:aria-selected="$route.name === 'Help'"
+					:aria-selected="doesRouteMatch('Help')"
 			/></span>
 		</footer>
 	</aside>
@@ -195,6 +195,9 @@ export default {
 	},
 	methods: {
 		isPublic: () => document.body.classList.contains("public"),
+		doesRouteMatch(route) {
+			return this.$route.name === route ? true : null;
+		},
 	},
 };
 </script>

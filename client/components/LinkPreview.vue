@@ -172,10 +172,10 @@ export default {
 
 		this.onPreviewUpdate();
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		eventbus.off("resize", this.handleResize);
 	},
-	destroyed() {
+	unmounted() {
 		// Let this preview go through load/canplay events again,
 		// Otherwise the browser can cause a resize on video elements
 		this.link.sourceLoaded = false;
@@ -199,8 +199,6 @@ export default {
 			}
 		},
 		onPreviewReady() {
-			this.$set(this.link, "sourceLoaded", true);
-
 			this.keepScrollPosition();
 
 			if (this.link.type === "link") {

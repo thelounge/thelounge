@@ -28,7 +28,7 @@ export default {
 			eventbus.on("daychange", this.dayChange);
 		}
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		eventbus.off("daychange", this.dayChange);
 	},
 	methods: {

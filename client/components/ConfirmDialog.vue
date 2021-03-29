@@ -65,7 +65,7 @@ export default {
 		eventbus.on("escapekey", this.close);
 		eventbus.on("confirm-dialog", this.open);
 	},
-	destroyed() {
+	unmounted() {
 		eventbus.off("escapekey", this.close);
 		eventbus.off("confirm-dialog", this.open);
 	},

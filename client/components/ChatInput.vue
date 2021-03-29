@@ -103,7 +103,7 @@ export default {
 			this.setInputSize();
 		},
 	},
-	mounted() {
+	beforeUnmount() {
 		eventbus.on("escapekey", this.blurInput);
 
 		if (this.$store.state.settings.autocomplete) {
@@ -165,7 +165,7 @@ export default {
 			upload.mounted();
 		}
 	},
-	destroyed() {
+	unmounted() {
 		eventbus.off("escapekey", this.blurInput);
 
 		if (autocompletionRef) {

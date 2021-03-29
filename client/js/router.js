@@ -2,10 +2,7 @@
 
 const constants = require("./constants");
 
-import Vue from "vue";
-import VueRouter from "vue-router";
-
-Vue.use(VueRouter);
+import {createRouter, createWebHashHistory} from "vue-router";
 
 import SignIn from "../components/Windows/SignIn.vue";
 import Connect from "../components/Windows/Connect.vue";
@@ -16,7 +13,8 @@ import NetworkEdit from "../components/Windows/NetworkEdit.vue";
 import RoutedChat from "../components/RoutedChat.vue";
 import store from "./store";
 
-const router = new VueRouter({
+const router = createRouter({
+	history: createWebHashHistory(),
 	routes: [
 		{
 			name: "SignIn",
@@ -100,19 +98,19 @@ router.beforeEach((to, from, next) => {
 		return;
 	}
 
-	// Handle closing image viewer with the browser back button
-	if (!router.app.$refs.app) {
-		next();
-		return;
-	}
+	// // Handle closing image viewer with the browser back button
+	// if (router.app.$refs.app) {
+	// 	next();
+	// 	return;
+	// }
 
-	const imageViewer = router.app.$root.$refs.app.$refs.imageViewer;
+	// const imageViewer = router.app.$refs.app.$refs.imageViewer;
 
-	if (imageViewer && imageViewer.link) {
-		imageViewer.closeViewer();
-		next(false);
-		return;
-	}
+	// if (imageViewer && imageViewer.link) {
+	// 	imageViewer.closeViewer();
+	// 	next(false);
+	// 	return;
+	// }
 
 	next();
 });
@@ -144,7 +142,7 @@ router.afterEach((to) => {
 });
 
 function navigate(routeName, params = {}) {
-	if (router.currentRoute.name) {
+	if (router.currentRoute.value.name) {
 		router.push({name: routeName, params}).catch(() => {});
 	} else {
 		// If current route is null, replace the history entry

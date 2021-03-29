@@ -18,9 +18,8 @@
 			@mouseleave="activeItem = -1"
 			@keydown.enter.prevent="clickActiveItem"
 		>
-			<template v-for="(item, id) of items">
+			<template v-for="(item, id) of items" :key="item.name">
 				<li
-					:key="item.name"
 					:class="[
 						'context-menu-' + item.type,
 						item.class ? 'context-menu-' + item.class : null,
@@ -63,7 +62,7 @@ export default {
 		eventbus.on("contextmenu:user", this.openUserContextMenu);
 		eventbus.on("contextmenu:channel", this.openChannelContextMenu);
 	},
-	destroyed() {
+	unmounted() {
 		eventbus.off("escapekey", this.close);
 		eventbus.off("contextmenu:user", this.openUserContextMenu);
 		eventbus.off("contextmenu:channel", this.openChannelContextMenu);

@@ -4,7 +4,7 @@ const webpack = require("webpack");
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const VueLoaderPlugin = require("vue-loader/lib/plugin");
+const {VueLoaderPlugin} = require("vue-loader");
 const Helper = require("./src/helper.js");
 
 const isProduction = process.env.NODE_ENV === "production";
@@ -22,6 +22,11 @@ const config = {
 	performance: {
 		hints: false,
 	},
+	resolve: {
+		alias: {
+			vue: "@vue/compat",
+		},
+	},
 	module: {
 		rules: [
 			{
@@ -31,6 +36,9 @@ const config = {
 					options: {
 						compilerOptions: {
 							preserveWhitespace: false,
+							compatConfig: {
+								MODE: 3,
+							},
 						},
 					},
 				},
@@ -87,6 +95,10 @@ const config = {
 		json3: "JSON", // socket.io uses json3.js, but we do not target any browsers that need it
 	},
 	plugins: [
+		new webpack.DefinePlugin({
+			__VUE_OPTIONS_API__: true,
+			__VUE_PROD_DEVTOOLS__: false,
+		}),
 		new VueLoaderPlugin(),
 		new MiniCssExtractPlugin({
 			filename: "css/style.css",

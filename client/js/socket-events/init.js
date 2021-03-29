@@ -1,6 +1,6 @@
 "use strict";
 
-import Vue from "vue";
+import {nextTick} from "vue";
 import socket from "../socket";
 import storage from "../localStorage";
 import {router, switchToChannel, navigate} from "../router";
@@ -25,13 +25,16 @@ socket.on("init", function (data) {
 			window.g_TheLoungeRemoveLoading();
 		}
 
-		Vue.nextTick(() => {
+		nextTick(() => {
 			// If we handled query parameters like irc:// links or just general
 			// connect parameters in public mode, then nothing to do here
 			if (!handleQueryParams()) {
 				// If we are on an unknown route or still on SignIn component
 				// then we can open last known channel on server, or Connect window if none
-				if (!router.currentRoute.name || router.currentRoute.name === "SignIn") {
+				if (
+					!router.currentRoute.value.name ||
+					router.currentRoute.value.name === "SignIn"
+				) {
 					const channel = store.getters.findChannel(data.active);
 
 					if (channel) {
