@@ -239,6 +239,10 @@ export default {
 		searchText() {
 			this.setActiveSearchItem();
 		},
+		"this.$route.query.channel"(value) {
+			const activeNetwork = this.$store.state.activeChannel.network;
+			activeNetwork.isJoinChannelShown = true;
+		},
 	},
 	mounted() {
 		Mousetrap.bind("alt+shift+right", this.expandNetwork);

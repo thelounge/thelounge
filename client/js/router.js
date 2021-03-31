@@ -90,17 +90,46 @@ router.beforeEach((to, from, next) => {
 
 	// If trying to navigate to an invalid channel,
 	// we attempt to either open a connection dialog to the network
-	// or populate the Join Channel field in the exiting network.
-	if (
-		to.name === "RoutedChat" &&
-		!store.getters.findChannelByName(to.params.networkHost, to.params.channelName)
-	) {
+	// or populate the Join Channel field in the existing network.
+	if (to.name === "RoutedChat") {
+		let channel = to.hash;
+		const {networkHost, channelName} = to.params;
+
+		// If the channel isn't provided as the hash, check if it's provided as the next param
+		if (!channel) {
+			if (channelName) {
+				channel = channelName;
+			}
+		}
+		if (store.getters.findChannelByName(networkHost, channel)) {
+			next();
+			return;
+		}
+
 		const existingNetwork = store.state.networks.find(
 			(network) => network.host === to.params.networkHost
 		);
 
 		if (existingNetwork) {
-			// Join UI
+			// Join Channel UI
+
+			const activeChannel = store.state.activeChannel;
+			// if the active channel is in the network, send the user back to that channel, else to the lobby
+			if (activeChannel && activeChannel.network.uuid === existingNetwork.uuid) {
+				next({
+					path: `/${to.params.networkHost}/${encodeURIComponent(
+						activeChannel.channel.name
+					)}`,
+					query: {channel},
+				});
+				return;
+			} else {
+				next({
+					path: `/${to.params.networkHost}/${existingNetwork.name}`,
+					query: {channel},
+				});
+				return;
+			}
 		} else {
 			// Connect UI
 			next({
