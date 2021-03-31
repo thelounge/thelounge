@@ -352,8 +352,8 @@ p {
 .context-menu-action-whois::before { content: "\f05a"; /* http://fontawesome.io/icon/info-circle/  */ }
 .context-menu-action-ignore::before { content: "\f506"; /* https://fontawesome.com/icons/user-slash?style=solid  */ }
 .context-menu-action-kick::before { content: "\f05e"; /* http://fontawesome.io/icon/ban/ */ }
-.context-menu-action-op::before { content: "\f1fa"; /* http://fontawesome.io/icon/at/ */ }
-.context-menu-action-voice::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
+.context-menu-action-set-mode::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
+.context-menu-action-revoke-mode::before { content: "\f068"; /* http://fontawesome.io/icon/minus/ */ }
 .context-menu-network::before { content: "\f233"; /* https://fontawesome.com/icons/server?style=solid */ }
 .context-menu-edit::before { content: "\f303"; /* https://fontawesome.com/icons/pencil-alt?style=solid */ }
 .context-menu-clear-history::before { content: "\f1f8"; /* https://fontawesome.com/icons/trash?style=solid */ }
