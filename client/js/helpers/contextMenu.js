@@ -245,8 +245,8 @@ export function generateUserContextMenu($root, channel, network, user) {
 		},
 	];
 
-	// Bail because we don't have a special mode.
-	if (currentChannelUser.modes.length < 1) {
+	// Bail because we're in a query or we don't have a special mode.
+	if (!currentChannelUser.modes || currentChannelUser.modes.length < 1) {
 		return items;
 	}
 
