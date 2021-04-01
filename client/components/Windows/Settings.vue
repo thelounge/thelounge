@@ -242,15 +242,14 @@
 				<div>
 					<label class="opt">
 						<input
-							:checked="$store.state.settings.uploadCanvas"
+							:checked="$store.state.settings.removeImageMetadata"
 							type="checkbox"
-							name="uploadCanvas"
+							name="removeImageMetadata"
 						/>
 						Attempt to remove metadata from images before uploading
 						<span
 							class="tooltipped tooltipped-n tooltipped-no-delay"
-							aria-label="This option renders the image into a canvas element to remove metadata from the image.
-This may break orientation if your browser does not support that."
+							aria-label="This option will removes metadata from images and animated wepb files. This may break the images orientation."
 						>
 							<button class="extra-help" />
 						</span>
@@ -359,7 +358,7 @@ This may break orientation if your browser does not support that."
 						Custom highlights
 						<span
 							class="tooltipped tooltipped-n tooltipped-no-delay"
-							aria-label="If a message contains any of these comma-separated 
+							aria-label="If a message contains any of these comma-separated
 expressions, it will trigger a highlight."
 						>
 							<button class="extra-help" />
@@ -382,8 +381,8 @@ expressions, it will trigger a highlight."
 						Highlight exceptions
 						<span
 							class="tooltipped tooltipped-n tooltipped-no-delay"
-							aria-label="If a message contains any of these comma-separated 
-expressions, it will not trigger a highlight even if it contains 
+							aria-label="If a message contains any of these comma-separated
+expressions, it will not trigger a highlight even if it contains
 your nickname or expressions defined in custom highlights."
 						>
 							<button class="extra-help" />
