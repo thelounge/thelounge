@@ -246,13 +246,7 @@
 							type="checkbox"
 							name="removeImageMetadata"
 						/>
-						Attempt to remove metadata from images before uploading
-						<span
-							class="tooltipped tooltipped-n tooltipped-no-delay"
-							aria-label="This option will removes metadata from images and animated wepb files. This may break the images orientation."
-						>
-							<button class="extra-help" />
-						</span>
+						Remove metadata from uploaded images
 					</label>
 				</div>
 			</div>

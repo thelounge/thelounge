@@ -251,8 +251,12 @@ class Uploader {
 						chunks.push(chunk);
 					})
 					.on("end", () => {
-						const buffer = Buffer.concat(chunks);
-						sharp(buffer, {animated: true, pages: -1, sequentialRead: true})
+						sharp(Buffer.concat(chunks), {
+							animated: true,
+							pages: -1,
+							sequentialRead: true,
+						})
+							.rotate() // auto-orient based on the EXIF Orientation tag
 							.toFile(destPath) // Removes metadata by default https://sharp.pixelplumbing.com/api-output#tofile
 							.catch(abortWithError);
 					});
