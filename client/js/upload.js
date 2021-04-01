@@ -137,46 +137,7 @@ class Uploader {
 		// This issue only happens if The Lounge is proxied through other software
 		// as it may buffer the upload before the upload request will be processed by The Lounge.
 		this.tokenKeepAlive = setInterval(() => socket.emit("upload:ping", token), 40 * 1000);
-
-		if (
-			store.state.settings.uploadCanvas &&
-			file.type.startsWith("image/") &&
-			!file.type.includes("svg") &&
-			file.type !== "image/gif"
-		) {
-			this.renderImage(file, (newFile) => this.performUpload(token, newFile));
-		} else {
-			this.performUpload(token, file);
-		}
-	}
-
-	renderImage(file, callback) {
-		const fileReader = new FileReader();
-
-		fileReader.onabort = () => callback(file);
-		fileReader.onerror = () => fileReader.abort();
-
-		fileReader.onload = () => {
-			const img = new Image();
-
-			img.onerror = () => callback(file);
-
-			img.onload = () => {
-				const canvas = document.createElement("canvas");
-				canvas.width = img.width;
-				canvas.height = img.height;
-				const ctx = canvas.getContext("2d");
-				ctx.drawImage(img, 0, 0);
-
-				canvas.toBlob((blob) => {
-					callback(new File([blob], file.name));
-				}, file.type);
-			};
-
-			img.src = fileReader.result;
-		};
-
-		fileReader.readAsDataURL(file);
+		this.performUpload(token, file);
 	}
 
 	performUpload(token, file) {

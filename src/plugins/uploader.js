@@ -11,6 +11,7 @@ const crypto = require("crypto");
 const isUtf8 = require("is-utf8");
 const log = require("../log");
 const contentDisposition = require("content-disposition");
+const sharp = require("sharp");
 
 // Map of allowed mime types to their respecive default filenames
 // that will be rendered in browser without forcing them to be downloaded
@@ -217,7 +218,7 @@ class Uploader {
 		streamWriter = fs.createWriteStream(destPath);
 		streamWriter.on("error", abortWithError);
 
-		busboyInstance.on("file", (fieldname, fileStream, filename) => {
+		busboyInstance.on("file", (fieldname, fileStream, filename, encoding, contentType) => {
 			uploadUrl = `${randomName}/${encodeURIComponent(filename)}`;
 
 			if (Helper.config.fileUpload.baseUrl) {
@@ -226,18 +227,39 @@ class Uploader {
 				uploadUrl = `uploads/${uploadUrl}`;
 			}
 
+			// Sharps prebuilt libvips does not include gif support, but that is not a problem,
+			// as GIFs don't support EXIF metadata or anything alike
+			const isImage = contentType.startsWith("image/") && !contentType.endsWith("gif");
+
 			// if the busboy data stream errors out or goes over the file size limit
 			// abort the processing with an error
 			fileStream.on("error", abortWithError);
 			fileStream.on("limit", () => {
-				fileStream.unpipe(streamWriter);
+				if (!isImage) {
+					fileStream.unpipe(streamWriter);
+				}
+
 				fileStream.on("readable", fileStream.read.bind(fileStream));
 
 				abortWithError(Error("File size limit reached"));
 			});
 
-			// Attempt to write the stream to file
-			fileStream.pipe(streamWriter);
+			if (isImage) {
+				const chunks = [];
+				fileStream
+					.on("data", (chunk) => {
+						chunks.push(chunk);
+					})
+					.on("end", () => {
+						const buffer = Buffer.concat(chunks);
+						sharp(buffer, {animated: true, pages: -1, sequentialRead: true})
+							.toFile(destPath) // Removes metadata by default https://sharp.pixelplumbing.com/api-output#tofile
+							.catch(abortWithError);
+					});
+			} else {
+				// Attempt to write the stream to file
+				fileStream.pipe(streamWriter);
+			}
 		});
 
 		busboyInstance.on("finish", () => {
