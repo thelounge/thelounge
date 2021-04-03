@@ -20,13 +20,15 @@
 			>
 				<span class="not-secure-icon" />
 			</span>
-			<span
+			<button
 				v-if="!network.status.connected"
 				class="not-connected-tooltip tooltipped tooltipped-w"
-				aria-label="Disconnected"
+				aria-label="Reconnect"
+				:aria-controls="'network-connection-' + network.uuid"
+				@click.stop="onDisconnectedClick"
 			>
 				<span class="not-connected-icon" />
-			</span>
+			</button>
 			<span v-if="channel.unread" :class="{highlight: channel.highlight}" class="badge">{{
 				unreadCount
 			}}</span>
@@ -49,6 +51,7 @@
 import collapseNetwork from "../js/helpers/collapseNetwork";
 import roundBadgeNumber from "../js/helpers/roundBadgeNumber";
 import ChannelWrapper from "./ChannelWrapper.vue";
+import socket from "../js/socket";
 
 export default {
 	name: "Channel",
@@ -75,6 +78,14 @@ export default {
 	methods: {
 		onCollapseClick() {
 			collapseNetwork(this.network, !this.network.isCollapsed);
+		},
+		onDisconnectedClick() {
+			socket.emit("input", {
+				target: this.network.channels.find((channel) => {
+					return channel.type === "lobby";
+				}).id,
+				text: "/connect",
+			});
 		},
 		getExpandLabel(network) {
 			return network.isCollapsed ? "Expand" : "Collapse";
