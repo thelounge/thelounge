@@ -125,6 +125,11 @@
 					</button>
 				</template>
 			</template>
+			<span
+				v-if="link.filename && link.type !== 'error'"
+				class="preview-filename"
+				v-text="link.filename"
+			></span>
 		</div>
 	</div>
 </template>

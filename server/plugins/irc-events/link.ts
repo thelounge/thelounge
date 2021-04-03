@@ -243,6 +243,7 @@ function parse(msg: Msg, chan: Chan, preview: LinkPreview, res: FetchRequest, cl
 	let promise: Promise<FetchRequest | null> | null = null;
 
 	preview.size = res.size;
+	preview.filename = res.filename;
 
 	switch (res.type) {
 		case "text/html":
@@ -431,6 +432,7 @@ function fetch(uri: string, headers: Record<string, string>) {
 		let contentLength = 0;
 		let contentType: string | undefined;
 		let limit = Config.values.prefetchMaxImageSize * 1024;
+		let filename: string | null = null;
 
 		try {
 			const gotStream = got.stream(uri, {
@@ -444,6 +446,16 @@ function fetch(uri: string, headers: Record<string, string>) {
 				.on("response", function (res) {
 					contentLength = parseInt(res.headers["content-length"], 10) || 0;
 					contentType = res.headers["content-type"];
+					filename =
+						"content-disposition" in res.headers
+							? contentDisposition.parse(res.headers["content-disposition"])
+									.parameters.filename || null
+							: null;
+
+					if (filename === null) {
+						const basename = decodeURI(path.basename(new URL(uri).pathname));
+						filename = basename.indexOf(".") > 0 ? basename : null;
+					}
 
 					if (contentType && imageTypeRegex.test(contentType)) {
 						// response is an image
@@ -488,7 +500,7 @@ function fetch(uri: string, headers: Record<string, string>) {
 						type = contentType.split(/ *; */).shift() || "";
 					}
 
-					resolve({data: buffer, type, size});
+					resolve({data: buffer, type, size, filename});
 				});
 		} catch (e: any) {
 			return reject(e);
