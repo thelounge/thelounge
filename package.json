@@ -45,6 +45,7 @@
     "chalk": "4.1.0",
     "cheerio": "1.0.0-rc.5",
     "commander": "7.2.0",
+    "content-disposition": "0.5.3",
     "express": "4.17.1",
     "file-type": "16.2.0",
     "filenamify": "4.2.0",

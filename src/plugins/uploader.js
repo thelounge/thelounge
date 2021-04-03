@@ -10,26 +10,27 @@ const readChunk = require("read-chunk");
 const crypto = require("crypto");
 const isUtf8 = require("is-utf8");
 const log = require("../log");
+const contentDisposition = require("content-disposition");
 
-// List of allowed mime types that can be rendered in browser
-// without forcing it to be downloaded
-const inlineContentDispositionTypes = [
-	"application/ogg",
-	"audio/midi",
-	"audio/mpeg",
-	"audio/ogg",
-	"audio/vnd.wave",
-	"image/bmp",
-	"image/gif",
-	"image/jpeg",
-	"image/png",
-	"image/webp",
-	"image/avif",
-	"text/plain",
-	"video/mp4",
-	"video/ogg",
-	"video/webm",
-];
+// Map of allowed mime types to their respecive default filenames
+// that will be rendered in browser without forcing them to be downloaded
+const inlineContentDispositionTypes = {
+	"application/ogg": "media.ogx",
+	"audio/midi": "audio.midi",
+	"audio/mpeg": "audio.mp3",
+	"audio/ogg": "audio.ogg",
+	"audio/vnd.wave": "audio.wav",
+	"image/bmp": "image.bmp",
+	"image/gif": "image.gif",
+	"image/jpeg": "image.jpg",
+	"image/png": "image.png",
+	"image/webp": "image.webp",
+	"image/avif": "image.avif",
+	"text/plain": "text.txt",
+	"video/mp4": "video.mp4",
+	"video/ogg": "video.ogv",
+	"video/webm": "video.webm",
+};
 
 const uploadTokens = new Map();
 
@@ -92,9 +93,20 @@ class Uploader {
 		}
 
 		// Force a download in the browser if it's not an allowed type (binary or otherwise unknown)
-		const contentDisposition = inlineContentDispositionTypes.includes(detectedMimeType)
-			? "inline"
-			: "attachment";
+		let slug = req.params.slug;
+		const isInline = detectedMimeType in inlineContentDispositionTypes;
+		let disposition = isInline ? "inline" : "attachment";
+
+		if (!slug && isInline) {
+			slug = inlineContentDispositionTypes[detectedMimeType];
+		}
+
+		if (slug) {
+			disposition = contentDisposition(slug.trim(), {
+				fallback: false,
+				type: disposition,
+			});
+		}
 
 		if (detectedMimeType === "audio/vnd.wave") {
 			// Send a more common mime type for wave audio files
@@ -102,7 +114,7 @@ class Uploader {
 			detectedMimeType = "audio/wav";
 		}
 
-		res.setHeader("Content-Disposition", contentDisposition);
+		res.setHeader("Content-Disposition", disposition);
 		res.setHeader("Cache-Control", "max-age=86400");
 		res.contentType(detectedMimeType);
 
