@@ -168,7 +168,7 @@
 				/>
 			</div>
 			<div class="connect-row">
-				<label for="connect:leaveMessage">Away message</label>
+				<label for="connect:leaveMessage">Leave message</label>
 				<input
 					id="connect:leaveMessage"
 					v-model="defaults.leaveMessage"
