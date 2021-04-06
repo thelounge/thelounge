@@ -148,7 +148,7 @@ module.exports = function (irc, network) {
 
 		// No prefetch URLs unless are simple MESSAGE or ACTION types
 		if ([Msg.Type.MESSAGE, Msg.Type.ACTION].includes(data.type)) {
-			LinkPrefetch(client, chan, msg, cleanMessage);
+			LinkPrefetch(client, chan, msg, cleanMessage, network);
 		}
 
 		chan.pushMessage(client, msg, !msg.self);
