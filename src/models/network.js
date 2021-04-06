@@ -33,6 +33,7 @@ function Network(attr) {
 		password: "",
 		awayMessage: "",
 		commands: [],
+		mediaPreviewBlacklist: {},
 		username: "",
 		realname: "",
 		leaveMessage: "",
@@ -491,6 +492,7 @@ Network.prototype.export = function () {
 		"saslPassword",
 		"commands",
 		"ignoreList",
+		"mediaPreviewBlacklist",
 	]);
 
 	network.channels = this.channels

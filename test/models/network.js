@@ -45,6 +45,7 @@ describe("Network", function () {
 				saslAccount: "testaccount",
 				saslPassword: "testpassword",
 				commands: [],
+				mediaPreviewBlacklist: {},
 				nick: "chillin`",
 				channels: [
 					{name: "#thelounge", key: ""},
@@ -140,6 +141,7 @@ describe("Network", function () {
 					saslAccount: 1337,
 					saslPassword: 1337,
 					commands: "/command 1 2 3\r\n/ping HELLO\r\r\r\r/whois test\r\n\r\n",
+					mediaPreviewBlacklist: {users: ["user1"], channels: ["channel1"]},
 					ip: "newIp",
 					hostname: "newHostname",
 					uuid: "newuuid",
