@@ -206,8 +206,8 @@ function disableMediaPreviewDueBlacklist(msg, chan, network) {
 	const sender = msg.from ? msg.from.nick : msg.nick;
 
 	return (
-		(network.mediaPreviewBlacklist.channels || []).includes(chan.name) ||
-		(network.mediaPreviewBlacklist.users || []).includes(sender)
+		[chan.name, sender].filter((value) => (network.mediaPreviewBlacklist || []).includes(value))
+			.length > 0
 	);
 }
 

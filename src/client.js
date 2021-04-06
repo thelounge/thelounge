@@ -247,7 +247,7 @@ Client.prototype.connect = function (args, isStartup = false) {
 		saslPassword: String(args.saslPassword || ""),
 		commands: args.commands || [],
 		channels: channels,
-		mediaPreviewBlacklist: args.mediaPreviewBlacklist || {},
+		mediaPreviewBlacklist: args.mediaPreviewBlacklist || [],
 		ignoreList: args.ignoreList ? args.ignoreList : [],
 	});
 

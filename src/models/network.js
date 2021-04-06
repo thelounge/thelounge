@@ -33,7 +33,7 @@ function Network(attr) {
 		password: "",
 		awayMessage: "",
 		commands: [],
-		mediaPreviewBlacklist: {},
+		mediaPreviewBlacklist: [],
 		username: "",
 		realname: "",
 		leaveMessage: "",
