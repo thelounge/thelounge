@@ -172,8 +172,14 @@
 			</div>
 			<div v-if="$store.state.settings.advanced">
 				<label class="opt">
-					<label for="nickPostfix" class="sr-only">
-						Nick autocomplete postfix (for example a comma)
+					<label for="nickPostfix" class="opt">
+						Nick autocomplete postfix
+						<span
+							class="tooltipped tooltipped-n tooltipped-no-delay"
+							aria-label="Nick autocomplete postfix (for example a comma)"
+						>
+							<button class="extra-help" />
+						</span>
 					</label>
 					<input
 						id="nickPostfix"
