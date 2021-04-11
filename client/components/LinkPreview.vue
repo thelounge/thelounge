@@ -8,7 +8,11 @@
 	>
 		<div
 			ref="content"
-			:class="['toggle-content', 'toggle-type-' + link.type, {opened: isContentShown}]"
+			:class="[
+				'toggle-content',
+				'toggle-type-' + link.type,
+				{opened: isContentShown, 'with-filename': link.filename},
+			]"
 		>
 			<template v-if="link.type === 'link'">
 				<a
@@ -64,11 +68,17 @@
 			<template v-else-if="link.type === 'image'">
 				<a
 					:href="link.link"
+					:title="link.filename"
 					class="toggle-thumbnail"
 					target="_blank"
 					rel="noopener"
 					@click="onThumbnailClick"
 				>
+					<div v-if="link.filename" class="image-filename">
+						<span class="inner-image-filename">
+							{{ link.filename }}
+						</span>
+					</div>
 					<img
 						v-show="link.sourceLoaded"
 						:src="link.thumb"
@@ -79,6 +89,7 @@
 				</a>
 			</template>
 			<template v-else-if="link.type === 'video'">
+				<span v-if="link.filename" class="video-filename">{{ link.filename }}</span>
 				<video
 					v-show="link.sourceLoaded"
 					preload="metadata"
@@ -89,14 +100,28 @@
 				</video>
 			</template>
 			<template v-else-if="link.type === 'audio'">
-				<audio
-					v-show="link.sourceLoaded"
-					controls
-					preload="metadata"
-					@canplay="onPreviewReady"
-				>
-					<source :src="link.media" :type="link.mediaType" />
-				</audio>
+				<div>
+					<a
+						v-if="link.filename"
+						:href="link.link"
+						:title="link.filename"
+						target="_blank"
+						rel="noopener"
+						class="audio-filename"
+					>
+						<span class="inner-audio-filename">
+							{{ link.filename }}
+						</span>
+					</a>
+					<audio
+						v-show="link.sourceLoaded"
+						controls
+						preload="metadata"
+						@canplay="onPreviewReady"
+					>
+						<source :src="link.media" :type="link.mediaType" />
+					</audio>
+				</div>
 			</template>
 			<template v-else-if="link.type === 'error'">
 				<em v-if="link.error === 'image-too-big'">
@@ -125,11 +150,6 @@
 					</button>
 				</template>
 			</template>
-			<span
-				v-if="link.filename && link.type !== 'error'"
-				class="preview-filename"
-				v-text="link.filename"
-			></span>
 		</div>
 	</div>
 </template>
