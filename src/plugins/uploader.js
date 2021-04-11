@@ -20,6 +20,7 @@ const inlineContentDispositionTypes = {
 	"audio/mpeg": "audio.mp3",
 	"audio/ogg": "audio.ogg",
 	"audio/vnd.wave": "audio.wav",
+	"audio/flac": "audio.flac",
 	"image/bmp": "image.bmp",
 	"image/gif": "image.gif",
 	"image/jpeg": "image.jpg",
