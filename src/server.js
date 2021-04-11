@@ -404,6 +404,34 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 		socket.emit("network:info", network.exportForEdit());
 	});
 
+	socket.on("network:media-preview-toggle", (data) => {
+		if (!_.isPlainObject(data)) {
+			return;
+		}
+
+		const network = _.find(client.networks, {uuid: data.uuid});
+
+		if (!network) {
+			return;
+		}
+
+		if (network.mediaPreviewBlacklist.includes(data.name)) {
+			network.mediaPreviewBlacklist.splice(
+				network.mediaPreviewBlacklist.indexOf(data.name),
+				1
+			);
+		} else {
+			network.mediaPreviewBlacklist.push(data.name);
+		}
+
+		client.save();
+
+		socket.emit("network:info", {
+			uuid: network.uuid,
+			mediaPreviewBlacklist: network.mediaPreviewBlacklist,
+		});
+	});
+
 	socket.on("network:edit", (data) => {
 		if (!_.isPlainObject(data)) {
 			return;

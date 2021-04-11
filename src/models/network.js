@@ -19,6 +19,7 @@ const fieldsForClient = {
 	name: true,
 	nick: true,
 	serverOptions: true,
+	mediaPreviewBlacklist: true,
 };
 
 function Network(attr) {

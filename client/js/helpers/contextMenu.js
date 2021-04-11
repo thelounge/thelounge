@@ -144,30 +144,45 @@ export function generateChannelContextMenu($root, channel, network) {
 	}
 
 	if (channel.type === "channel" || channel.type === "query") {
-		items.push({
-			label: "Clear history",
-			type: "item",
-			class: "clear-history",
-			action() {
-				eventbus.emit(
-					"confirm-dialog",
-					{
-						title: "Clear history",
-						text: `Are you sure you want to clear history for ${channel.name}? This cannot be undone.`,
-						button: "Clear history",
-					},
-					(result) => {
-						if (!result) {
-							return;
-						}
+		items.push(
+			{
+				label: "Clear history",
+				type: "item",
+				class: "clear-history",
+				action() {
+					eventbus.emit(
+						"confirm-dialog",
+						{
+							title: "Clear history",
+							text: `Are you sure you want to clear history for ${channel.name}? This cannot be undone.`,
+							button: "Clear history",
+						},
+						(result) => {
+							if (!result) {
+								return;
+							}
 
-						socket.emit("history:clear", {
-							target: channel.id,
-						});
-					}
-				);
+							socket.emit("history:clear", {
+								target: channel.id,
+							});
+						}
+					);
+				},
 			},
-		});
+			{
+				label:
+					(network.mediaPreviewBlacklist.includes(channel.name) ? "Enable" : "Disable") +
+					" media preview",
+				type: "item",
+				class: "photo-video",
+				action() {
+					socket.emit("network:media-preview-toggle", {
+						uuid: network.uuid,
+						name: channel.name,
+					});
+				},
+			}
+		);
 	}
 
 	// Add close menu item
@@ -240,6 +255,19 @@ export function generateUserContextMenu($root, channel, network, user) {
 				socket.emit("input", {
 					target: channel.id,
 					text: "/query " + user.nick,
+				});
+			},
+		},
+		{
+			label:
+				(network.mediaPreviewBlacklist.includes(user.nick) ? "Enable" : "Disable") +
+				" media preview",
+			type: "item",
+			class: "photo-video",
+			action() {
+				socket.emit("network:media-preview-toggle", {
+					uuid: network.uuid,
+					name: user.nick,
 				});
 			},
 		},
