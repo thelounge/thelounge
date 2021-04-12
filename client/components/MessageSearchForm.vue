@@ -12,6 +12,7 @@
 			/>
 		</div>
 		<button
+			v-if="!onSearchPage"
 			class="search"
 			type="button"
 			aria-label="Search messages in this channel"
@@ -29,27 +30,22 @@ form.message-search .input-wrapper {
 	display: flex;
 }
 
-form.message-search button {
-	display: none !important;
-}
-
 form.message-search input {
 	width: 100%;
 	height: auto !important;
 	margin: 7px 0;
 	border: 0;
 	color: inherit;
-	background-color: rgba(128, 128, 128, 0.15);
+	background-color: #fafafa;
 }
 
 form.message-search input::placeholder {
-	color: rgba(128, 128, 128, 0.4);
+	color: rgba(0, 0, 0, 0.35);
 }
 
 @media (min-width: 480px) {
 	form.message-search input {
 		min-width: 140px;
-		transition: min-width 0.2s;
 	}
 
 	form.message-search input:focus {
@@ -57,30 +53,28 @@ form.message-search input::placeholder {
 	}
 }
 
-@media (max-width: 768px) {
-	form.message-search .input-wrapper {
-		position: absolute;
-		top: 45px;
-		left: 0;
-		right: 0;
-		z-index: 1;
-		height: 0;
-		transition: height 0.2s;
-		overflow: hidden;
-		background: var(--window-bg-color);
-	}
+form.message-search .input-wrapper {
+	position: absolute;
+	top: 45px;
+	left: 0;
+	right: 0;
+	z-index: 1;
+	height: 0;
+	overflow: hidden;
+	background: var(--window-bg-color);
+}
 
-	form.message-search .input-wrapper input {
-		margin: 7px;
-	}
+form.message-search .input-wrapper input {
+	margin: 7px;
+}
 
-	form.message-search.opened .input-wrapper {
-		height: 50px;
-	}
+form.message-search.opened .input-wrapper {
+	height: 50px;
+}
 
-	form.message-search button {
-		display: flex !important;
-	}
+#chat form.message-search button {
+	display: flex;
+	color: #607992;
 }
 </style>
 
@@ -97,6 +91,11 @@ export default {
 			searchInput: "",
 		};
 	},
+	computed: {
+		onSearchPage() {
+			return this.$route.name === "SearchResults";
+		},
+	},
 	watch: {
 		"$route.query.q"() {
 			this.searchInput = this.$route.query.q;
@@ -104,10 +103,13 @@ export default {
 	},
 	mounted() {
 		this.searchInput = this.$route.query.q;
+		this.searchOpened = this.onSearchPage;
 	},
 	methods: {
 		closeSearch() {
-			this.searchOpened = false;
+			if (!this.onSearchPage) {
+				this.searchOpened = false;
+			}
 		},
 		toggleSearch() {
 			if (this.searchOpened) {
@@ -124,8 +126,6 @@ export default {
 			if (!this.searchInput) {
 				return;
 			}
-
-			this.searchOpened = false;
 
 			this.$router
 				.push({

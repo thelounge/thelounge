@@ -118,6 +118,15 @@ body {
 	color: #b7c5d1;
 }
 
+/* Search Form */
+form.message-search input {
+	background-color: #28333d;
+}
+
+#chat form.message-search button {
+	color: #b7c5d1;
+}
+
 /* Setup text colors */
 #chat .msg[data-type="error"],
 #chat .msg[data-type="error"] .from {
