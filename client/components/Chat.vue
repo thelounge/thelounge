@@ -40,7 +40,10 @@
 							:text="channel.topic"
 					/></span>
 					<MessageSearchForm
-						v-if="['channel', 'query'].includes(channel.type)"
+						v-if="
+							$store.state.settings.searchEnabled &&
+							['channel', 'query'].includes(channel.type)
+						"
 						:network="network"
 						:channel="channel"
 					/>

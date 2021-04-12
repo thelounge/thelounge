@@ -109,6 +109,9 @@ export const config = normalizeConfig({
 			}
 		},
 	},
+	searchEnabled: {
+		default: false,
+	},
 });
 
 export function createState() {

@@ -189,7 +189,7 @@ Network.prototype.createIrcFramework = function (client) {
 
 	// Request only new messages from ZNC if we have sqlite logging enabled
 	// See http://wiki.znc.in/Playback
-	if (client.config.log && client.messageStorage.find((s) => s.canProvideMessages())) {
+	if (client.messageProvider) {
 		this.irc.requestCap("znc.in/playback");
 	}
 };

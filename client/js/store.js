@@ -56,6 +56,7 @@ store = new Vuex.Store({
 		serverHasSettings: false,
 		messageSearchResults: null,
 		messageSearchInProgress: false,
+		searchEnabled: false,
 	},
 	mutations: {
 		appLoaded(state) {
