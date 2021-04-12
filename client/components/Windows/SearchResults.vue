@@ -4,7 +4,8 @@
 			id="chat"
 			:class="{
 				'colored-nicks': $store.state.settings.coloredNicks,
-				'show-seconds': $store.state.settings.showSeconds,
+				'time-seconds': $store.state.settings.showSeconds,
+				'time-12h': $store.state.settings.use12hClock,
 			}"
 		>
 			<div
