@@ -21,6 +21,7 @@ const inlineContentDispositionTypes = {
 	"audio/ogg": "audio.ogg",
 	"audio/vnd.wave": "audio.wav",
 	"audio/flac": "audio.flac",
+	"audio/x-flac": "audio.flac",
 	"image/bmp": "image.bmp",
 	"image/gif": "image.gif",
 	"image/jpeg": "image.jpg",
@@ -113,6 +114,12 @@ class Uploader {
 			// Send a more common mime type for wave audio files
 			// so that browsers can play them correctly
 			detectedMimeType = "audio/wav";
+		}
+
+		if (detectedMimeType === "audio/x-flac") {
+			// Send a more common mime type for wave audio files
+			// so that browsers can play them correctly
+			detectedMimeType = "audio/flac";
 		}
 
 		res.setHeader("Content-Disposition", disposition);
