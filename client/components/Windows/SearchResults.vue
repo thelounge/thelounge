@@ -163,11 +163,17 @@ export default {
 				});
 			}
 		},
+		chan() {
+			this.setActiveChannel();
+		},
 	},
 	mounted() {
 		this.doSearch();
 	},
 	methods: {
+		setActiveChannel() {
+			this.$store.commit("activeChannel", this.chan);
+		},
 		shouldDisplayDateMarker(message, id) {
 			const previousMessage = this.messages[id - 1];
 
