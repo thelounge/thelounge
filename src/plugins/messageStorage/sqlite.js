@@ -206,15 +206,8 @@ class MessageStorage {
 		}
 
 		let select =
-			'SELECT msg, type, time, network, channel FROM messages WHERE type = "message" AND (json_extract(msg, "$.text") LIKE ?';
+			'SELECT msg, type, time, network, channel FROM messages WHERE type = "message" AND json_extract(msg, "$.text") LIKE ?';
 		const params = [`%${query.searchTerm}%`];
-
-		if (query.searchNicks) {
-			select += ' OR json_extract(msg, "$.from.nick") LIKE ?)';
-			params.push(query.searchTerm);
-		} else {
-			select += ")";
-		}
 
 		if (query.networkUuid) {
 			select += " AND network = ? ";
