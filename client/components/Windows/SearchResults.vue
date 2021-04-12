@@ -170,6 +170,10 @@ export default {
 	},
 	mounted() {
 		this.doSearch();
+		this.$root.$on("re-search", this.doSearch); // Enable MessageSearchForm to search for the same query again
+	},
+	beforeDestroy() {
+		this.$root.$off("re-search");
 	},
 	methods: {
 		setActiveChannel() {

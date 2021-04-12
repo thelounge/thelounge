@@ -127,16 +127,23 @@ export default {
 
 			this.searchOpened = false;
 
-			this.$router.push({
-				name: "SearchResults",
-				params: {
-					uuid: this.network.uuid,
-					target: this.channel.name,
-				},
-				query: {
-					q: this.searchInput,
-				},
-			});
+			this.$router
+				.push({
+					name: "SearchResults",
+					params: {
+						uuid: this.network.uuid,
+						target: this.channel.name,
+					},
+					query: {
+						q: this.searchInput,
+					},
+				})
+				.catch((err) => {
+					if (err.name === "NavigationDuplicated") {
+						// Search for the same query again
+						this.$root.$emit("re-search");
+					}
+				});
 		},
 	},
 };
