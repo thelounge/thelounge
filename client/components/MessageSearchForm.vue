@@ -3,11 +3,11 @@
 		<div class="input-wrapper">
 			<input
 				ref="searchInputField"
+				v-model="searchInput"
 				type="text"
 				name="search"
 				class="input"
 				placeholder="Search messages…"
-				@input="setSearchInput"
 				@blur="closeSearch"
 			/>
 		</div>
@@ -97,10 +97,15 @@ export default {
 			searchInput: "",
 		};
 	},
-	methods: {
-		setSearchInput(event) {
-			this.searchInput = event.target.value;
+	watch: {
+		"$route.query.q"() {
+			this.searchInput = this.$route.query.q;
 		},
+	},
+	mounted() {
+		this.searchInput = this.$route.query.q;
+	},
+	methods: {
 		closeSearch() {
 			this.searchOpened = false;
 		},
