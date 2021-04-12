@@ -127,7 +127,9 @@ export default {
 				params: {
 					uuid: this.network.uuid,
 					target: this.channel.name,
-					term: this.searchInput,
+				},
+				query: {
+					q: this.searchInput,
 				},
 			});
 		},

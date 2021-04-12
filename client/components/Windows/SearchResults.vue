@@ -17,7 +17,7 @@
 				<div class="header">
 					<SidebarToggle />
 					<span class="title"
-						>Search results for "{{ $route.params.term }}" in
+						>Search results for "{{ $route.query.q }}" in
 						{{ $route.params.target }}</span
 					>
 					<span class="topic"></span>
@@ -148,7 +148,7 @@ export default {
 		"$route.params.target"() {
 			this.doSearch();
 		},
-		"$route.params.term"() {
+		"$route.query.q"() {
 			this.doSearch();
 		},
 		messages() {
@@ -195,7 +195,7 @@ export default {
 			socket.emit("search", {
 				networkUuid: this.$route.params.uuid,
 				channelName: this.$route.params.target,
-				searchTerm: this.$route.params.term,
+				searchTerm: this.$route.query.q,
 				offset: this.offset,
 			});
 		},
@@ -209,7 +209,7 @@ export default {
 			socket.emit("search", {
 				networkUuid: this.$route.params.uuid,
 				channelName: this.$route.params.target,
-				searchTerm: this.$route.params.term,
+				searchTerm: this.$route.query.q,
 				offset: this.offset + 1,
 			});
 		},
