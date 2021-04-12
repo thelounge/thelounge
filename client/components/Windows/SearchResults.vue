@@ -17,10 +17,10 @@
 				<div class="header">
 					<SidebarToggle />
 					<span class="title"
-						>Search results for "{{ $route.query.q }}" in
-						{{ $route.params.target }}</span
+						>Searching in
+						<span class="channel-name">{{ $route.params.target }}</span> for</span
 					>
-					<span class="topic"></span>
+					<span class="topic">{{ $route.query.q }}</span>
 					<MessageSearchForm :network="network" :channel="channel" />
 				</div>
 				<div class="chat-content">
@@ -79,6 +79,12 @@
 		</div>
 	</div>
 </template>
+
+<style>
+.channel-name {
+	font-weight: 700;
+}
+</style>
 
 <script>
 import socket from "../../js/socket";
