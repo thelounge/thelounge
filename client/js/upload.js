@@ -180,6 +180,7 @@ class Uploader {
 		};
 
 		const formData = new FormData();
+		formData.append("removeMetadata", store.state.settings.removeImageMetadata);
 		formData.append("file", file);
 		this.xhr.open("POST", `uploads/new/${token}`);
 		this.xhr.send(formData);

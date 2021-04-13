@@ -130,6 +130,7 @@ class Uploader {
 		let destDir;
 		let destPath;
 		let streamWriter;
+		let removeMetadata;
 
 		const doneCallback = () => {
 			// detach the stream and drain any remaining data
@@ -207,6 +208,11 @@ class Uploader {
 		busboyInstance.on("partsLimit", () => abortWithError(Error("Parts limit reached")));
 		busboyInstance.on("filesLimit", () => abortWithError(Error("Files limit reached")));
 		busboyInstance.on("fieldsLimit", () => abortWithError(Error("Fields limit reached")));
+		busboyInstance.on("field", (fieldname, val) => {
+			if (fieldname === "removeMetadata") {
+				removeMetadata = val === "true";
+			}
+		});
 
 		// generate a random output filename for the file
 		// we use do/while loop to prevent the rare case of generating a file name
@@ -259,6 +265,10 @@ class Uploader {
 					pages: -1,
 					sequentialRead: true,
 				});
+
+				if (!removeMetadata) {
+					sharpInstance = sharpInstance.withMetadata();
+				}
 
 				sharpInstance
 					.rotate() // auto-orient based on the EXIF Orientation tag
