@@ -172,6 +172,7 @@
 				<input
 					id="connect:leaveMessage"
 					v-model="defaults.leaveMessage"
+					autocomplete="off"
 					class="input"
 					name="leaveMessage"
 					placeholder="The Lounge - https://thelounge.chat"
@@ -193,6 +194,7 @@ the server tab on new connection"
 					<textarea
 						id="connect:commands"
 						ref="commandsInput"
+						autocomplete="off"
 						:value="defaults.commands ? defaults.commands.join('\n') : ''"
 						class="input"
 						name="commands"
