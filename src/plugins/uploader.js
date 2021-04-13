@@ -148,6 +148,19 @@ class Uploader {
 			}
 		};
 
+		const successfullCompletion = () => {
+			doneCallback();
+
+			if (!uploadUrl) {
+				return res.status(400).json({error: "Missing file"});
+			}
+
+			// upload was done, send the generated file url to the client
+			res.status(200).json({
+				url: uploadUrl,
+			});
+		};
+
 		const abortWithError = (err) => {
 			doneCallback();
 
@@ -214,10 +227,6 @@ class Uploader {
 			return abortWithError(err);
 		}
 
-		// Open a file stream for writing
-		streamWriter = fs.createWriteStream(destPath);
-		streamWriter.on("error", abortWithError);
-
 		busboyInstance.on("file", (fieldname, fileStream, filename, encoding, contentType) => {
 			uploadUrl = `${randomName}/${encodeURIComponent(filename)}`;
 
@@ -245,38 +254,33 @@ class Uploader {
 			});
 
 			if (isImage) {
-				const chunks = [];
-				fileStream
-					.on("data", (chunk) => {
-						chunks.push(chunk);
-					})
-					.on("end", () => {
-						sharp(Buffer.concat(chunks), {
-							animated: true,
-							pages: -1,
-							sequentialRead: true,
-						})
-							.rotate() // auto-orient based on the EXIF Orientation tag
-							.toFile(destPath) // Removes metadata by default https://sharp.pixelplumbing.com/api-output#tofile
-							.catch(abortWithError);
+				let sharpInstance = sharp({
+					animated: true,
+					pages: -1,
+					sequentialRead: true,
+				});
+
+				sharpInstance
+					.rotate() // auto-orient based on the EXIF Orientation tag
+					.toFile(destPath, (err) => {
+						// Removes metadata by default https://sharp.pixelplumbing.com/api-output#tofile if no `withMetadata` is present
+						if (err) {
+							abortWithError(err);
+						} else {
+							successfullCompletion();
+						}
 					});
+
+				fileStream.pipe(sharpInstance);
 			} else {
+				// Open a file stream for writing
+				streamWriter = fs.createWriteStream(destPath);
+				streamWriter.on("error", abortWithError);
+				streamWriter.on("finish", successfullCompletion);
+
 				// Attempt to write the stream to file
 				fileStream.pipe(streamWriter);
 			}
-		});
-
-		busboyInstance.on("finish", () => {
-			doneCallback();
-
-			if (!uploadUrl) {
-				return res.status(400).json({error: "Missing file"});
-			}
-
-			// upload was done, send the generated file url to the client
-			res.status(200).json({
-				url: uploadUrl,
-			});
 		});
 
 		// pipe request body to busboy for processing
