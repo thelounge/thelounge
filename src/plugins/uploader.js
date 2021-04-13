@@ -11,6 +11,7 @@ const crypto = require("crypto");
 const isUtf8 = require("is-utf8");
 const log = require("../log");
 const contentDisposition = require("content-disposition");
+const sharp = require("sharp");
 
 // Map of allowed mime types to their respecive default filenames
 // that will be rendered in browser without forcing them to be downloaded
@@ -129,6 +130,7 @@ class Uploader {
 		let destDir;
 		let destPath;
 		let streamWriter;
+		let removeMetadata;
 
 		const doneCallback = () => {
 			// detach the stream and drain any remaining data
@@ -145,6 +147,19 @@ class Uploader {
 				streamWriter.end();
 				streamWriter = null;
 			}
+		};
+
+		const successfullCompletion = () => {
+			doneCallback();
+
+			if (!uploadUrl) {
+				return res.status(400).json({error: "Missing file"});
+			}
+
+			// upload was done, send the generated file url to the client
+			res.status(200).json({
+				url: uploadUrl,
+			});
 		};
 
 		const abortWithError = (err) => {
@@ -193,6 +208,11 @@ class Uploader {
 		busboyInstance.on("partsLimit", () => abortWithError(Error("Parts limit reached")));
 		busboyInstance.on("filesLimit", () => abortWithError(Error("Files limit reached")));
 		busboyInstance.on("fieldsLimit", () => abortWithError(Error("Fields limit reached")));
+		busboyInstance.on("field", (fieldname, val) => {
+			if (fieldname === "removeMetadata") {
+				removeMetadata = val === "true";
+			}
+		});
 
 		// generate a random output filename for the file
 		// we use do/while loop to prevent the rare case of generating a file name
@@ -213,11 +233,7 @@ class Uploader {
 			return abortWithError(err);
 		}
 
-		// Open a file stream for writing
-		streamWriter = fs.createWriteStream(destPath);
-		streamWriter.on("error", abortWithError);
-
-		busboyInstance.on("file", (fieldname, fileStream, filename) => {
+		busboyInstance.on("file", (fieldname, fileStream, filename, encoding, contentType) => {
 			uploadUrl = `${randomName}/${encodeURIComponent(filename)}`;
 
 			if (Helper.config.fileUpload.baseUrl) {
@@ -226,31 +242,55 @@ class Uploader {
 				uploadUrl = `uploads/${uploadUrl}`;
 			}
 
+			// Sharps prebuilt libvips does not include gif support, but that is not a problem,
+			// as GIFs don't support EXIF metadata or anything alike
+			const isImage = contentType.startsWith("image/") && !contentType.endsWith("gif");
+
 			// if the busboy data stream errors out or goes over the file size limit
 			// abort the processing with an error
 			fileStream.on("error", abortWithError);
 			fileStream.on("limit", () => {
-				fileStream.unpipe(streamWriter);
+				if (!isImage) {
+					fileStream.unpipe(streamWriter);
+				}
+
 				fileStream.on("readable", fileStream.read.bind(fileStream));
 
 				abortWithError(Error("File size limit reached"));
 			});
 
-			// Attempt to write the stream to file
-			fileStream.pipe(streamWriter);
-		});
+			if (isImage) {
+				let sharpInstance = sharp({
+					animated: true,
+					pages: -1,
+					sequentialRead: true,
+				});
 
-		busboyInstance.on("finish", () => {
-			doneCallback();
+				if (!removeMetadata) {
+					sharpInstance = sharpInstance.withMetadata();
+				}
 
-			if (!uploadUrl) {
-				return res.status(400).json({error: "Missing file"});
+				sharpInstance
+					.rotate() // auto-orient based on the EXIF Orientation tag
+					.toFile(destPath, (err) => {
+						// Removes metadata by default https://sharp.pixelplumbing.com/api-output#tofile if no `withMetadata` is present
+						if (err) {
+							abortWithError(err);
+						} else {
+							successfullCompletion();
+						}
+					});
+
+				fileStream.pipe(sharpInstance);
+			} else {
+				// Open a file stream for writing
+				streamWriter = fs.createWriteStream(destPath);
+				streamWriter.on("error", abortWithError);
+				streamWriter.on("finish", successfullCompletion);
+
+				// Attempt to write the stream to file
+				fileStream.pipe(streamWriter);
 			}
-
-			// upload was done, send the generated file url to the client
-			res.status(200).json({
-				url: uploadUrl,
-			});
 		});
 
 		// pipe request body to busboy for processing
