@@ -52,17 +52,26 @@ export default {
 	methods: {
 		getAriaLabel() {
 			const extra = [];
+			const type = this.channel.type;
 
 			if (this.channel.unread > 0) {
-				extra.push(`${this.channel.unread} unread`);
+				if (this.channel.unread > 1) {
+					extra.push(`${this.channel.unread} unread messages`);
+				} else {
+					extra.push(`${this.channel.unread} unread message`);
+				}
 			}
 
 			if (this.channel.highlight > 0) {
-				extra.push(`${this.channel.highlight} mention`);
+				if (this.channel.highlight > 1) {
+					extra.push(`${this.channel.highlight} mentions`);
+				} else {
+					extra.push(`${this.channel.highlight} mention`);
+				}
 			}
 
 			if (extra.length > 0) {
-				return `${this.channel.name} (${extra.join(", ")})`;
+				return `${type}: ${this.channel.name} (${extra.join(", ")})`;
 			}
 
 			return this.channel.name;

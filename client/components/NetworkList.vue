@@ -1,8 +1,8 @@
 <template>
-	<div v-if="$store.state.networks.length === 0" class="empty">
+	<div v-if="$store.state.networks.length === 0" class="empty" role="navigation">
 		You are not connected to any networks yet.
 	</div>
-	<div v-else ref="networklist">
+	<div v-else ref="networklist" role="navigation">
 		<div class="jump-to-input">
 			<input
 				ref="searchInput"
@@ -74,6 +74,7 @@
 				}"
 				class="network"
 				role="region"
+				aria-live="polite"
 			>
 				<NetworkLobby
 					:network="network"
