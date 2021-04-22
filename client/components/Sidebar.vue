@@ -178,11 +178,13 @@ export default {
 					if (this.$store.state.sidebarOpen) {
 						distX += this.menuWidth;
 					}
+
 					if (distX > this.menuWidth) {
 						distX = this.menuWidth;
 					} else if (distX < 0) {
 						distX = 0;
 					}
+
 					this.$refs.sidebar.style.transform = "translate3d(" + distX + "px, 0, 0)";
 					this.overlay.style.opacity = distX / this.menuWidth;
 					break;
@@ -190,8 +192,7 @@ export default {
 				case 1:
 					this.$refs.sidebar.style.transform = "translate3d(0px, 0, 0)";
 					this.overlay.style.opacity = 0;
-					const userlistClosed = distX > this.userlistWidth / 2;
-					this.$store.commit("userlistOpen", !userlistClosed);
+					this.$store.commit("userlistOpen", distX <= this.userlistWidth / 2);
 					break;
 				// control both
 				case 2:
@@ -203,9 +204,11 @@ export default {
 						if (distX > this.menuWidth) {
 							distX = this.menuWidth;
 						}
+
 						this.$refs.sidebar.style.transform = "translate3d(" + distX + "px, 0, 0)";
 						this.overlay.style.opacity = distX / this.menuWidth;
 					}
+
 					break;
 				default:
 					break;
@@ -217,7 +220,7 @@ export default {
 			const absDiff = Math.abs(diff);
 
 			if (
-				this.controlCode != 1 &&
+				this.controlCode !== 1 &&
 				(absDiff > this.menuWidth / 2 ||
 					(Date.now() - this.touchStartTime < 180 && absDiff > 50))
 			) {
