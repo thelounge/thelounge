@@ -66,7 +66,7 @@ const router = new VueRouter({
 		},
 		{
 			name: "SearchResults",
-			path: "/search/:uuid/:target",
+			path: "/chan-:id/search",
 			component: SearchResults,
 		},
 	],

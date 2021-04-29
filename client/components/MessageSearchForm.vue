@@ -131,8 +131,7 @@ export default {
 				.push({
 					name: "SearchResults",
 					params: {
-						uuid: this.network.uuid,
-						target: this.channel.name,
+						id: this.channel.id,
 					},
 					query: {
 						q: this.searchInput,

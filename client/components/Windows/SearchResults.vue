@@ -17,8 +17,7 @@
 				<div class="header">
 					<SidebarToggle />
 					<span class="title"
-						>Searching in
-						<span class="channel-name">{{ $route.params.target }}</span> for</span
+						>Searching in <span class="channel-name">{{ channel.name }}</span> for</span
 					>
 					<span class="topic">{{ $route.query.q }}</span>
 					<MessageSearchForm :network="network" :channel="channel" />
@@ -122,15 +121,8 @@ export default {
 			return this.search.results.slice().reverse();
 		},
 		chan() {
-			if (!this.search) {
-				return;
-			}
-
-			const chan = this.$store.getters.findChannelOnNetwork(
-				this.search.networkUuid,
-				this.search.target
-			);
-			return chan;
+			const chanId = parseInt(this.$route.params.id, 10);
+			return this.$store.getters.findChannel(chanId);
 		},
 		network() {
 			if (!this.chan) {
@@ -148,14 +140,13 @@ export default {
 		},
 	},
 	watch: {
-		"$route.params.uuid"() {
+		"$route.params.id"() {
 			this.doSearch();
-		},
-		"$route.params.target"() {
-			this.doSearch();
+			this.setActiveChannel();
 		},
 		"$route.query.q"() {
 			this.doSearch();
+			this.setActiveChannel();
 		},
 		messages() {
 			this.moreResultsAvailable = this.messages.length && !(this.messages.length % 100);
@@ -170,11 +161,9 @@ export default {
 				});
 			}
 		},
-		chan() {
-			this.setActiveChannel();
-		},
 	},
 	mounted() {
+		this.setActiveChannel();
 		this.doSearch();
 		this.$root.$on("re-search", this.doSearch); // Enable MessageSearchForm to search for the same query again
 	},
@@ -203,8 +192,8 @@ export default {
 			}
 
 			socket.emit("search", {
-				networkUuid: this.$route.params.uuid,
-				channelName: this.$route.params.target,
+				networkUuid: this.network.uuid,
+				channelName: this.channel.name,
 				searchTerm: this.$route.query.q,
 				offset: this.offset,
 			});
@@ -217,8 +206,8 @@ export default {
 			this.oldChatHeight = this.$refs.chat.scrollHeight;
 
 			socket.emit("search", {
-				networkUuid: this.$route.params.uuid,
-				channelName: this.$route.params.target,
+				networkUuid: this.network.uuid,
+				channelName: this.channel.name,
 				searchTerm: this.$route.query.q,
 				offset: this.offset + 1,
 			});
