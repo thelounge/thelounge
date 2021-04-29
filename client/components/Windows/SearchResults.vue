@@ -21,6 +21,12 @@
 					>
 					<span class="topic">{{ $route.query.q }}</span>
 					<MessageSearchForm :network="network" :channel="channel" />
+					<button
+						class="close"
+						aria-label="Close search window"
+						title="Close search window"
+						@click="closeSearch"
+					/>
 				</div>
 				<div class="chat-content">
 					<div ref="chat" class="chat" tabindex="-1">
@@ -173,6 +179,9 @@ export default {
 	methods: {
 		setActiveChannel() {
 			this.$store.commit("activeChannel", this.chan);
+		},
+		closeSearch() {
+			this.$root.switchToChannel(this.channel);
 		},
 		shouldDisplayDateMarker(message, id) {
 			const previousMessage = this.messages[id - 1];
