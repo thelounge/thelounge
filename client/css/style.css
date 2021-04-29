@@ -1191,6 +1191,7 @@ textarea.input {
 }
 
 #chat .show-more {
+	margin-top: 50px;
 	padding: 10px;
 	padding-top: 15px;
 	padding-bottom: 0;
