@@ -12,6 +12,13 @@ socket.on("more", function (data) {
 		return;
 	}
 
+	channel.inputHistory = channel.inputHistory.concat(
+		data.messages
+			.filter((m) => m.self && m.text && m.type === "message")
+			.map((m) => m.text)
+			.reverse()
+			.slice(null, 100 - channel.inputHistory.length)
+	);
 	channel.moreHistoryAvailable =
 		data.totalMessages > channel.messages.length + data.messages.length;
 	channel.messages.unshift(...data.messages);
