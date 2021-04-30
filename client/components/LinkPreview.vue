@@ -69,7 +69,7 @@
 				<a
 					:href="link.link"
 					:title="link.filename"
-					class="toggle-thumbnail"
+					:class="['toggle-thumbnail', {'wide-view': useWideImageView}]"
 					target="_blank"
 					rel="noopener"
 					@click="onThumbnailClick"
@@ -81,6 +81,7 @@
 					</div>
 					<img
 						v-show="link.sourceLoaded"
+						ref="image"
 						:src="link.thumb"
 						decoding="async"
 						alt=""
@@ -192,7 +193,9 @@ export default defineComponent({
 
 		const showMoreButton = ref(false);
 		const isContentShown = ref(false);
+		const useWideImageView = ref(false);
 		const imageViewer = inject(imageViewerKey);
+		const image = ref(null);
 
 		onBeforeRouteUpdate((to, from, next) => {
 			// cancel the navigation if the user is trying to close the image viewer
@@ -242,6 +245,20 @@ export default defineComponent({
 			}
 		};
 
+		const updateWideImageViewDecision = () => {
+			if (window.innerWidth < 480) {
+				// Mobile
+				useWideImageView.value =
+					(image.value && image.value.naturalWidth / image.value.naturalHeight <= 1.34) ||
+					false; // aspect ratio around 4:3 and slimmer
+			} else {
+				// Desktop
+				useWideImageView.value =
+					(image.value && image.value.naturalWidth / image.value.naturalHeight <= 1.6) ||
+					false; // aspect ratio 16:10 and slimmer
+			}
+		};
+
 		const onPreviewUpdate = () => {
 			// Don't display previews while they are loading on the server
 			if (props.link.type === "loading") {
@@ -258,6 +275,8 @@ export default defineComponent({
 				handleResize();
 				props.keepScrollPosition();
 			}
+
+			updateWideImageViewDecision();
 		};
 
 		const onThumbnailError = () => {
@@ -346,8 +365,11 @@ export default defineComponent({
 			onPreviewUpdate,
 			showMoreButton,
 			isContentShown,
+			useWideImageView,
+			image,
 			content,
 			container,
+			updateWideImageViewDecision,
 		};
 	},
 });

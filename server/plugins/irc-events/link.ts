@@ -10,11 +10,14 @@ import storage from "../storage";
 import Client from "../../client";
 import Chan from "../../models/chan";
 import Msg from "../../models/msg";
+import contentDisposition from "content-disposition";
+import path from "path";
 
 type FetchRequest = {
 	data: Buffer;
 	type: string;
 	size: number;
+	filename: string | null;
 };
 const currentFetchPromises = new Map<string, Promise<FetchRequest>>();
 const imageTypeRegex = /^image\/.+/;
@@ -30,6 +33,7 @@ export type LinkPreview = {
 	shown?: boolean | null;
 	error?: string;
 	message?: string;
+	filename: string | null;
 
 	media?: string;
 	mediaType?: string;
@@ -68,6 +72,7 @@ export default function (client: Client, chan: Chan, msg: Msg, cleanText: string
 			size: -1,
 			link: link.link, // Send original matched link to the client
 			shown: null,
+			filename: null,
 		};
 
 		cleanLinks.push(preview);
@@ -446,9 +451,10 @@ function fetch(uri: string, headers: Record<string, string>) {
 				.on("response", function (res) {
 					contentLength = parseInt(res.headers["content-length"], 10) || 0;
 					contentType = res.headers["content-type"];
+
 					filename =
 						"content-disposition" in res.headers
-							? contentDisposition.parse(res.headers["content-disposition"])
+							? contentDisposition?.parse(res.headers["content-disposition"])
 									.parameters.filename || null
 							: null;
 
