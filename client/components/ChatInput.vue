@@ -140,18 +140,28 @@ export default {
 				return;
 			}
 
+			const onRow = (
+				this.$refs.input.value.slice(null, this.$refs.input.selectionStart).match(/\n/g) ||
+				[]
+			).length;
+			const totalRows = (this.$refs.input.value.match(/\n/g) || []).length;
+
 			const {channel} = this;
 
 			if (channel.inputHistoryPosition === 0) {
 				channel.inputHistory[channel.inputHistoryPosition] = channel.pendingMessage;
 			}
 
-			if (key === "up") {
+			if (key === "up" && onRow === 0) {
 				if (channel.inputHistoryPosition < channel.inputHistory.length - 1) {
 					channel.inputHistoryPosition++;
+				} else {
+					return;
 				}
-			} else if (channel.inputHistoryPosition > 0) {
+			} else if (key === "down" && channel.inputHistoryPosition > 0 && onRow === totalRows) {
 				channel.inputHistoryPosition--;
+			} else {
+				return;
 			}
 
 			channel.pendingMessage = channel.inputHistory[channel.inputHistoryPosition];
