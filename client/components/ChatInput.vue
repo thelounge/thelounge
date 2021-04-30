@@ -140,11 +140,10 @@ export default {
 				return;
 			}
 
-			const onRow = (
-				this.$refs.input.value.slice(null, this.$refs.input.selectionStart).match(/\n/g) ||
-				[]
-			).length;
-			const totalRows = (this.$refs.input.value.match(/\n/g) || []).length;
+			const oldValue = this.$refs.input.value;
+			const oldPosition = this.$refs.input.selectionStart;
+			const onRow = (oldValue.slice(null, oldPosition).match(/\n/g) || []).length;
+			const totalRows = (oldValue.match(/\n/g) || []).length;
 
 			const {channel} = this;
 
@@ -165,7 +164,29 @@ export default {
 			}
 
 			channel.pendingMessage = channel.inputHistory[channel.inputHistoryPosition];
-			this.$refs.input.value = channel.pendingMessage;
+			const newValue = channel.pendingMessage;
+			this.$refs.input.value = newValue;
+
+			let newPosition;
+
+			if (key === "up") {
+				const lastIndexOfNewLine = newValue.lastIndexOf("\n");
+				const lastLine = newValue.slice(null, lastIndexOfNewLine);
+				newPosition =
+					oldPosition > lastLine.length
+						? newValue.length
+						: lastIndexOfNewLine + oldPosition + 1;
+			} else {
+				const lastPositionOnFirstLine =
+					newValue.indexOf("\n") === -1 ? newValue.length + 1 : newValue.indexOf("\n");
+				const relativeRowPos = oldPosition - oldValue.lastIndexOf("\n") - 1;
+				newPosition =
+					relativeRowPos > lastPositionOnFirstLine
+						? lastPositionOnFirstLine
+						: relativeRowPos;
+			}
+
+			this.$refs.input.setSelectionRange(newPosition, newPosition);
 			this.setInputSize();
 
 			return false;
