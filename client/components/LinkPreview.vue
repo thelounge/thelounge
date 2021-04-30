@@ -69,7 +69,7 @@
 				<a
 					:href="link.link"
 					:title="link.filename"
-					class="toggle-thumbnail"
+					:class="['toggle-thumbnail', {'wide-view': useWideImageView}]"
 					target="_blank"
 					rel="noopener"
 					@click="onThumbnailClick"
@@ -81,6 +81,7 @@
 					</div>
 					<img
 						v-show="link.sourceLoaded"
+						ref="image"
 						:src="link.thumb"
 						decoding="async"
 						alt=""
@@ -169,6 +170,7 @@ export default {
 		return {
 			showMoreButton: false,
 			isContentShown: false,
+			useWideImageView: false,
 		};
 	},
 	computed: {
@@ -231,6 +233,8 @@ export default {
 			if (this.link.type === "link") {
 				this.handleResize();
 			}
+
+			this.updateWideImageViewDecision();
 		},
 		onThumbnailError() {
 			// If thumbnail fails to load, hide it and show the preview without it
@@ -256,7 +260,22 @@ export default {
 
 				this.showMoreButton =
 					this.$refs.content.offsetWidth >= this.$refs.container.offsetWidth;
+
+				this.updateWideImageViewDecision();
 			});
+		},
+		updateWideImageViewDecision() {
+			if (window.innerWidth < 480) {
+				// Mobile
+				this.useWideImageView =
+					this.$refs.image &&
+					this.$refs.image.naturalWidth / this.$refs.image.naturalHeight <= 1.34; // aspect ratio around 4:3 and slimmer
+			} else {
+				// Desktop
+				this.useWideImageView =
+					this.$refs.image &&
+					this.$refs.image.naturalWidth / this.$refs.image.naturalHeight <= 1.6; // aspect ratio 16:10 and slimmer
+			}
 		},
 		updateShownState() {
 			// User has manually toggled the preview, do not apply default

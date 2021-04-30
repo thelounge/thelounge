@@ -1555,6 +1555,24 @@ textarea.input {
 	white-space: normal;
 }
 
+#chat .toggle-content .wide-view {
+	display: flex;
+	flex-direction: row;
+}
+
+#chat .toggle-content .wide-view .image-filename {
+	order: 2;
+}
+
+#chat .toggle-content .wide-view .image-filename span {
+	width: auto;
+	max-width: 500px;
+}
+
+#chat .toggle-content .wide-view img {
+	order: 1;
+}
+
 /* This applies to images of preview-type-image and thumbnails of preview-type-link */
 #chat .toggle-content img {
 	max-width: 100%;
