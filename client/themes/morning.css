@@ -114,7 +114,17 @@ body {
 #viewport .rt,
 #chat button.mentions,
 #chat button.menu,
+#chat button.close,
 #form #submit {
+	color: #b7c5d1;
+}
+
+/* Search Form */
+form.message-search input {
+	background-color: #28333d;
+}
+
+#chat form.message-search button {
 	color: #b7c5d1;
 }
 
