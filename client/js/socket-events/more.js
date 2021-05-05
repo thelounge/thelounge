@@ -6,7 +6,7 @@ import socket from "../socket";
 import store from "../store";
 
 socket.on("more", function (data) {
-	const channel = store.getters.findChannel(data.chan).channel;
+	const channel = store.getters.findChannel(data.chan)?.channel;
 
 	if (!channel) {
 		return;
