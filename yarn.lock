@@ -4406,20 +4406,19 @@ interpret@^2.2.0:
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-2.2.0.tgz#1a78a0b5965c40a5416d007ad6f50ad27c417df9"
   integrity sha512-Ju0Bz/cEia55xDwUWEa8+olFpCiQoypjnQySseKtmjNrnps3P+xfpUmGr90T7yjlVJmOtybRvPXhKMbHr+fWnw==
 
-ipaddr.js@0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-0.1.3.tgz#27a9ca37f148d2102b0ef191ccbf2c51a8f025c6"
-  integrity sha1-J6nKN/FI0hArDvGRzL8sUajwJcY=
+ip@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/ip/-/ip-1.1.5.tgz#bdded70114290828c0a039e72ef25f5aaec4354a"
+  integrity sha1-vd7XARQpCCjAoDnnLvJfWq7ENUo=
 
 ipaddr.js@1.9.1:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.9.1.tgz#bff38543eeb8984825079ff3a2a8e6cbd46781b3"
   integrity sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==
 
-irc-framework@4.9.0:
-  version "4.9.0"
-  resolved "https://registry.yarnpkg.com/irc-framework/-/irc-framework-4.9.0.tgz#7c27a20d87099e47f32023edf1cab6da6d7a05b9"
-  integrity sha512-cUYMnnKwcNpXtEw/CXnEwUtglmaWZbfu0E/0iI7bENC3bASPNfcvcyTsFQcdknpnoFLyh5kXpQCjPBWKTbOQAQ==
+"irc-framework@github:mstrodl/irc-framework#feature/fix-socks":
+  version "4.10.0"
+  resolved "https://codeload.github.com/mstrodl/irc-framework/tar.gz/ee974c211ecfa21e0053faf1021b2aa53b023357"
   dependencies:
     core-js "^3.6.5"
     eventemitter3 "^4.0.3"
@@ -4429,7 +4428,7 @@ irc-framework@4.9.0:
     lodash "^4.17.15"
     middleware-handler "^0.2.0"
     regenerator-runtime "^0.13.5"
-    socksjs "^0.5.0"
+    socks "^2.6.1"
 
 is-absolute-url@^2.0.0:
   version "2.1.0"
@@ -7592,6 +7591,11 @@ slice-ansi@^4.0.0:
     astral-regex "^2.0.0"
     is-fullwidth-code-point "^3.0.0"
 
+smart-buffer@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-4.1.0.tgz#91605c25d91652f4661ea69ccf45f1b331ca21ba"
+  integrity sha512-iVICrxOzCynf/SNaBQCw34eM9jROU/s5rzIhpOvzhzuYHfJR/DhZfDkXiZSgKXfgv26HT3Yni3AV/DGw0cGnnw==
+
 socket.io-adapter@~2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/socket.io-adapter/-/socket.io-adapter-2.1.0.tgz#edc5dc36602f2985918d631c1399215e97a1b527"
@@ -7634,12 +7638,13 @@ socket.io@3.1.2:
     socket.io-adapter "~2.1.0"
     socket.io-parser "~4.0.3"
 
-socksjs@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/socksjs/-/socksjs-0.5.0.tgz#77b005e32d1bfc96e560fedd5d7eedcf120f87e3"
-  integrity sha1-d7AF4y0b/JblYP7dXX7tzxIPh+M=
+socks@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/socks/-/socks-2.6.1.tgz#989e6534a07cf337deb1b1c94aaa44296520d30e"
+  integrity sha512-kLQ9N5ucj8uIcxrDwjm0Jsqk06xdpBjGNQtpXy4Q8/QY2k+fY7nZH8CARy+hkbG+SGAovmzzuauCpBlb8FrnBA==
   dependencies:
-    ipaddr.js "0.1.3"
+    ip "^1.1.5"
+    smart-buffer "^4.1.0"
 
 sortablejs@1.10.2:
   version "1.10.2"
