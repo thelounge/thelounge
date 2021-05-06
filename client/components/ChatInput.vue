@@ -183,6 +183,10 @@ export default {
 		},
 		setInputSize() {
 			this.$nextTick(() => {
+				if (!this.$refs.input) {
+					return;
+				}
+
 				const style = window.getComputedStyle(this.$refs.input);
 				const lineHeight = parseFloat(style.lineHeight, 10) || 1;
 
