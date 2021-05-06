@@ -257,6 +257,12 @@ Client.prototype.connect = function (args, isStartup = false) {
 		commands: args.commands || [],
 		channels: channels,
 		ignoreList: args.ignoreList ? args.ignoreList : [],
+
+		proxyEnabled: !!args.proxyEnabled,
+		proxyHost: String(args.proxyHost || ""),
+		proxyPort: parseInt(args.proxyPort, 10),
+		proxyUsername: String(args.proxyUsername || ""),
+		proxyPassword: String(args.proxyPassword || ""),
 	});
 
 	// Set network lobby channel id
