@@ -1195,7 +1195,6 @@ textarea.input {
 }
 
 #chat .show-more {
-	margin-top: 50px;
 	padding: 10px;
 	padding-top: 15px;
 	padding-bottom: 0;
@@ -2863,4 +2862,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	height: 100%;
 	justify-content: center;
 	align-items: center;
+}
+
+.chat-view[data-type="search-results"] .chat-content {
+	padding-top: 50px;
 }
