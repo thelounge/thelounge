@@ -98,6 +98,8 @@ import SidebarToggle from "../SidebarToggle.vue";
 import Message from "../Message.vue";
 import MessageSearchForm from "../MessageSearchForm.vue";
 import DateMarker from "../DateMarker.vue";
+import Mark from "mark.js";
+import escapeStringRegexp from "escape-string-regexp";
 
 export default {
 	name: "SearchResults",
@@ -166,12 +168,19 @@ export default {
 						this.oldScrollTop + currentChatHeight - this.oldChatHeight;
 				});
 			}
+
+			this.$nextTick(() => {
+				this.marker.markRegExp(new RegExp(escapeStringRegexp(this.$route.query.q), "i"), {
+					exclude: ["mark"],
+				});
+			});
 		},
 	},
 	mounted() {
 		this.setActiveChannel();
 		this.doSearch();
 		this.$root.$on("re-search", this.doSearch); // Enable MessageSearchForm to search for the same query again
+		this.marker = new Mark(".msg .content");
 	},
 	beforeDestroy() {
 		this.$root.$off("re-search");
