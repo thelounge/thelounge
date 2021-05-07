@@ -8,6 +8,8 @@
 			{active: active},
 			{'parted-channel': channel.type === 'channel' && channel.state === 0},
 			{'has-draft': channel.pendingMessage},
+			{'has-unread': channel.unread},
+			{'has-highlight': channel.highlight},
 			{
 				'not-secure':
 					channel.type === 'lobby' && network.status.connected && !network.status.secure,
