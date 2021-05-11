@@ -328,6 +328,7 @@ p {
 #image-viewer .next-image-btn::before,
 #image-viewer .open-btn::before,
 #image-viewer .download-btn::before,
+#image-viewer .gotomsg-btn::before,
 .channel-list-item .not-secure-icon::before,
 .channel-list-item .not-connected-icon::before,
 .channel-list-item .parted-channel-icon::before,
@@ -555,7 +556,11 @@ p {
 }
 
 #image-viewer .download-btn::before {
-	content: "\f019"; /* https://fontawesome.com/icons/external-link-alt?style=solid */
+	content: "\f019"; /* https://fontawesome.com/icons/download?style=solid */
+}
+
+#image-viewer .gotomsg-btn::before {
+	content: "\f4ad"; /* https://fontawesome.com/icons/comment-dots?style=regular */
 }
 
 /* End icons */
@@ -2799,6 +2804,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #image-viewer,
 #image-viewer .open-btn,
 #image-viewer .download-btn,
+#image-viewer .gotomsg-btn,
 #image-viewer .close-btn {
 	/* Vertically and horizontally center stuff */
 	display: flex;
@@ -2837,7 +2843,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #image-viewer .icons {
 	position: fixed;
-	top: 0;
 	right: 0;
 	bottom: 0;
 	top: auto;
@@ -2858,14 +2863,18 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	transition: 0.2s opacity;
 }
 
-#image-viewer .open-btn,
-#image-viewer .download-btn {
+#image-viewer .icons > a {
 	width: 2em;
 	height: 2em;
 	font-size: 36px;
 	color: white;
 	opacity: 0.6;
 	transition: 0.2s opacity;
+	cursor: pointer;
+}
+
+#image-viewer .icons > a:hover {
+	text-decoration: none;
 }
 
 #image-viewer .close-btn {

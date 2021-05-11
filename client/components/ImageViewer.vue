@@ -24,20 +24,21 @@
 			></button>
 
 			<div class="icons">
+				<a ref="gotoMsg" class="gotomsg-btn" rel="noopener" @click.stop="gotoMessage"></a>
 				<a
 					ref="downloadLink"
 					class="download-btn"
-					:href="link.thumb"
-					:download="link.filename"
+					:href="link.image.thumb"
+					:download="link.image.filename"
 					target="_blank"
 					rel="noopener"
 				></a>
-				<a class="open-btn" :href="link.link" target="_blank" rel="noopener"></a>
+				<a class="open-btn" :href="link.image.link" target="_blank" rel="noopener"></a>
 			</div>
 
 			<img
 				ref="image"
-				:src="link.thumb"
+				:src="link.image.thumb"
 				alt=""
 				:style="computeImageStyles"
 				@load="onImageLoad"
@@ -125,12 +126,17 @@ export default {
 				return null;
 			}
 
-			const links = this.channel.messages
-				.map((msg) => msg.previews)
-				.flat()
-				.filter((preview) => preview.thumb);
+			const links = [];
 
-			const currentIndex = links.indexOf(this.link);
+			for (const msg of this.channel.messages) {
+				for (const preview of msg.previews) {
+					if (preview.thumb) {
+						links.push({message: msg, image: preview});
+					}
+				}
+			}
+
+			const currentIndex = links.map((item) => item.image).indexOf(this.link.image);
 
 			this.previousImage = links[currentIndex - 1] || null;
 			this.nextImage = links[currentIndex + 1] || null;
@@ -144,6 +150,12 @@ export default {
 			if (this.nextImage) {
 				this.link = this.nextImage;
 			}
+		},
+		gotoMessage() {
+			document
+				.getElementById("msg-" + this.link.message.id)
+				.scrollIntoView({behavior: "smooth"});
+			this.closeViewer();
 		},
 		onImageLoad() {
 			this.prepareImage();
@@ -410,7 +422,11 @@ export default {
 		},
 		onClick(e) {
 			// If click triggers on the image, ignore it
-			if (e.target === this.$refs.image || e.target === this.$refs.downloadLink) {
+			if (
+				e.target === this.$refs.image ||
+				e.target === this.$refs.downloadLink ||
+				e.target === this.$refs.gotoMsg
+			) {
 				return;
 			}
 

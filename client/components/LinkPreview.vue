@@ -165,6 +165,7 @@ export default {
 		link: Object,
 		keepScrollPosition: Function,
 		channel: Object,
+		message: Object,
 	},
 	data() {
 		return {
@@ -246,7 +247,7 @@ export default {
 
 			const imageViewer = this.$root.$refs.app.$refs.imageViewer;
 			imageViewer.channel = this.channel;
-			imageViewer.link = this.link;
+			imageViewer.link = {message: this.message, image: this.link};
 		},
 		onMoreClick() {
 			this.isContentShown = !this.isContentShown;
