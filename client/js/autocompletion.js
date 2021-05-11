@@ -219,6 +219,10 @@ function enableAutocomplete(input) {
 
 	class ChatInputEditor extends TextareaEditor {
 		applySearchResult(searchResult) {
+			let start = this.el.selectionStart;
+			let end = this.el.selectionEnd;
+			this.el.setSelectionRange(start, start);
+
 			const beforeCursor = this.getBeforeCursor();
 
 			if (beforeCursor !== null) {
@@ -227,12 +231,17 @@ function enableAutocomplete(input) {
 
 				if (Array.isArray(replace)) {
 					update(this.el, replace[0], replace[1]);
+					const startDelta = replace[0].length - beforeCursor.length;
+					start += startDelta;
+					end += startDelta;
 
 					if (this.el) {
 						this.el.dispatchEvent(createCustomEvent("input"));
 					}
 				}
 			}
+
+			this.el.setSelectionRange(start, end);
 		}
 	}
 
