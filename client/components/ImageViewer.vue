@@ -23,7 +23,17 @@
 				@click.stop="next"
 			></button>
 
-			<a class="open-btn" :href="link.link" target="_blank" rel="noopener"></a>
+			<div class="icons">
+				<a
+					ref="downloadLink"
+					class="download-btn"
+					:href="link.thumb"
+					:download="link.filename"
+					target="_blank"
+					rel="noopener"
+				></a>
+				<a class="open-btn" :href="link.link" target="_blank" rel="noopener"></a>
+			</div>
 
 			<img
 				ref="image"
@@ -394,7 +404,7 @@ export default {
 		},
 		onClick(e) {
 			// If click triggers on the image, ignore it
-			if (e.target === this.$refs.image) {
+			if (e.target === this.$refs.image || e.target === this.$refs.downloadLink) {
 				return;
 			}
 

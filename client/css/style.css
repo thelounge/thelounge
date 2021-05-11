@@ -327,6 +327,7 @@ p {
 #image-viewer .previous-image-btn::before,
 #image-viewer .next-image-btn::before,
 #image-viewer .open-btn::before,
+#image-viewer .download-btn::before,
 .channel-list-item .not-secure-icon::before,
 .channel-list-item .not-connected-icon::before,
 .channel-list-item .parted-channel-icon::before,
@@ -551,6 +552,10 @@ p {
 
 #image-viewer .open-btn::before {
 	content: "\f35d"; /* https://fontawesome.com/icons/external-link-alt?style=solid */
+}
+
+#image-viewer .download-btn::before {
+	content: "\f019"; /* https://fontawesome.com/icons/external-link-alt?style=solid */
 }
 
 /* End icons */
@@ -2793,6 +2798,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #upload-overlay,
 #image-viewer,
 #image-viewer .open-btn,
+#image-viewer .download-btn,
 #image-viewer .close-btn {
 	/* Vertically and horizontally center stuff */
 	display: flex;
@@ -2829,13 +2835,33 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	background: rgba(0, 0, 0, 0.9);
 }
 
+#image-viewer .icons {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	top: auto;
+	z-index: 1002;
+	display: flex;
+	flex-direction: row;
+}
+
 #image-viewer .close-btn,
-#image-viewer .open-btn,
 #image-viewer .previous-image-btn,
 #image-viewer .next-image-btn {
 	position: fixed;
 	top: 0;
 	width: 2em;
+	font-size: 36px;
+	color: white;
+	opacity: 0.6;
+	transition: 0.2s opacity;
+}
+
+#image-viewer .open-btn,
+#image-viewer .download-btn {
+	width: 2em;
+	height: 2em;
 	font-size: 36px;
 	color: white;
 	opacity: 0.6;
@@ -2850,14 +2876,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #image-viewer .close-btn::before {
 	content: "×";
-}
-
-#image-viewer .open-btn {
-	right: 0;
-	bottom: 0;
-	top: auto;
-	height: 2em;
-	z-index: 1002;
 }
 
 #image-viewer .previous-image-btn,
