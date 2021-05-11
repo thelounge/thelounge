@@ -41,6 +41,7 @@
 					:keep-scroll-position="keepScrollPosition"
 					:link="preview"
 					:channel="channel"
+					:message="message"
 				/>
 			</span>
 		</template>
@@ -86,6 +87,7 @@
 					:keep-scroll-position="keepScrollPosition"
 					:link="preview"
 					:channel="channel"
+					:message="message"
 				/>
 			</span>
 		</template>

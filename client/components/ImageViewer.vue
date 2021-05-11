@@ -23,11 +23,35 @@
 				@click.stop="next"
 			></button>
 
-			<a class="open-btn" :href="link.link" target="_blank" rel="noopener"></a>
+			<div class="icons">
+				<a
+					ref="gotoMsg"
+					class="gotomsg-btn"
+					rel="noopener"
+					title="Go to message (g)"
+					@click.stop="gotoMessage"
+				></a>
+				<a
+					ref="downloadLink"
+					class="download-btn"
+					:href="link.image.thumb"
+					:download="link.image.filename"
+					target="_blank"
+					title="Download image (CTRL/CMD+S)"
+					rel="noopener"
+				></a>
+				<a
+					class="open-btn"
+					:href="link.image.link"
+					target="_blank"
+					title="Open image in a new tab (o)"
+					rel="noopener"
+				></a>
+			</div>
 
 			<img
 				ref="image"
-				:src="link.thumb"
+				:src="link.image.thumb"
 				alt=""
 				:style="computeImageStyles"
 				@load="onImageLoad"
@@ -84,6 +108,9 @@ export default {
 				eventbus.off("resize", this.correctPosition);
 				Mousetrap.unbind("left", this.previous);
 				Mousetrap.unbind("right", this.next);
+				Mousetrap.unbind("mod+s", this.downloadImage);
+				Mousetrap.unbind("o", this.openLink);
+				Mousetrap.unbind("g", this.gotoMessage);
 				return;
 			}
 
@@ -94,6 +121,9 @@ export default {
 				eventbus.on("resize", this.correctPosition);
 				Mousetrap.bind("left", this.previous);
 				Mousetrap.bind("right", this.next);
+				Mousetrap.bind("mod+s", this.downloadImage);
+				Mousetrap.bind("o", this.openLink);
+				Mousetrap.bind("g", this.gotoMessage);
 			}
 		},
 	},
@@ -113,12 +143,17 @@ export default {
 				return null;
 			}
 
-			const links = this.channel.messages
-				.map((msg) => msg.previews)
-				.flat()
-				.filter((preview) => preview.thumb);
+			const links = [];
 
-			const currentIndex = links.indexOf(this.link);
+			for (const msg of this.channel.messages) {
+				for (const preview of msg.previews) {
+					if (preview.thumb) {
+						links.push({message: msg, image: preview});
+					}
+				}
+			}
+
+			const currentIndex = links.map((item) => item.image).indexOf(this.link.image);
 
 			this.previousImage = links[currentIndex - 1] || null;
 			this.nextImage = links[currentIndex + 1] || null;
@@ -133,8 +168,29 @@ export default {
 				this.link = this.nextImage;
 			}
 		},
+		gotoMessage(event) {
+			if (event.preventDefault) {
+				event.preventDefault();
+			}
+
+			document
+				.getElementById("msg-" + this.link.message.id)
+				.scrollIntoView({behavior: "smooth"});
+			this.closeViewer();
+		},
+		openLink(event) {
+			if (event.preventDefault) {
+				event.preventDefault();
+			}
+
+			window.open(this.link.image.link, "_blank");
+		},
 		onImageLoad() {
 			this.prepareImage();
+		},
+		downloadImage(event) {
+			this.$refs.downloadLink.click();
+			event.preventDefault();
 		},
 		prepareImage() {
 			const viewer = this.$refs.viewer;
@@ -394,7 +450,11 @@ export default {
 		},
 		onClick(e) {
 			// If click triggers on the image, ignore it
-			if (e.target === this.$refs.image) {
+			if (
+				e.target === this.$refs.image ||
+				e.target === this.$refs.downloadLink ||
+				e.target === this.$refs.gotoMsg
+			) {
 				return;
 			}
 
