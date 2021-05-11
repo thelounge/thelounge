@@ -94,6 +94,7 @@ export default {
 				eventbus.off("resize", this.correctPosition);
 				Mousetrap.unbind("left", this.previous);
 				Mousetrap.unbind("right", this.next);
+				Mousetrap.unbind("mod+s", this.downloadImage);
 				return;
 			}
 
@@ -104,6 +105,7 @@ export default {
 				eventbus.on("resize", this.correctPosition);
 				Mousetrap.bind("left", this.previous);
 				Mousetrap.bind("right", this.next);
+				Mousetrap.bind("mod+s", this.downloadImage);
 			}
 		},
 	},
@@ -145,6 +147,10 @@ export default {
 		},
 		onImageLoad() {
 			this.prepareImage();
+		},
+		downloadImage(event) {
+			this.$refs.downloadLink.click();
+			event.preventDefault();
 		},
 		prepareImage() {
 			const viewer = this.$refs.viewer;
