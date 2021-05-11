@@ -24,16 +24,29 @@
 			></button>
 
 			<div class="icons">
-				<a ref="gotoMsg" class="gotomsg-btn" rel="noopener" @click.stop="gotoMessage"></a>
+				<a
+					ref="gotoMsg"
+					class="gotomsg-btn"
+					rel="noopener"
+					title="Go to message (g)"
+					@click.stop="gotoMessage"
+				></a>
 				<a
 					ref="downloadLink"
 					class="download-btn"
 					:href="link.image.thumb"
 					:download="link.image.filename"
 					target="_blank"
+					title="Download image (CTRL/CMD+S)"
 					rel="noopener"
 				></a>
-				<a class="open-btn" :href="link.image.link" target="_blank" rel="noopener"></a>
+				<a
+					class="open-btn"
+					:href="link.image.link"
+					target="_blank"
+					title="Open image in a new tab (o)"
+					rel="noopener"
+				></a>
 			</div>
 
 			<img

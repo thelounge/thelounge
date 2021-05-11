@@ -310,6 +310,36 @@
 				</div>
 			</div>
 
+			<h2>Image Viewer Shortcuts</h2>
+
+			<div class="help-item">
+				<div class="subject">
+					<span v-if="!isApple"><kbd>Ctrl</kbd> <kbd>S</kbd></span>
+					<span v-else><kbd>⌘</kbd> <kbd>S</kbd></span>
+				</div>
+				<div class="description">
+					<p>Download image to machine.</p>
+				</div>
+			</div>
+
+			<div class="help-item">
+				<div class="subject">
+					<span><kbd>O</kbd></span>
+				</div>
+				<div class="description">
+					<p>Open image in a new tab.</p>
+				</div>
+			</div>
+
+			<div class="help-item">
+				<div class="subject">
+					<span><kbd>G</kbd></span>
+				</div>
+				<div class="description">
+					<p>Go to the corresponding message of the image.</p>
+				</div>
+			</div>
+
 			<h2>Autocompletion</h2>
 
 			<p>
