@@ -3,6 +3,8 @@
 const constants = require("./constants");
 const {Textcomplete} = require("@textcomplete/core");
 const {TextareaEditor} = require("@textcomplete/textarea");
+import {update} from "undate";
+import {createCustomEvent} from "@textcomplete/core";
 
 import Mousetrap from "mousetrap";
 import fuzzy from "fuzzy";
@@ -215,7 +217,24 @@ function enableAutocomplete(input) {
 		"keydown"
 	);
 
+	class ChatInputEditor extends TextareaEditor {
+		applySearchResult(searchResult) {
+			const beforeCursor = this.getBeforeCursor();
 
+			if (beforeCursor !== null) {
+				const replace = searchResult.replace(beforeCursor, this.getAfterCursor());
+				this.el.focus(); // Clicking a dropdown item removes focus from the element.
+
+				if (Array.isArray(replace)) {
+					update(this.el, replace[0], replace[1]);
+
+					if (this.el) {
+						this.el.dispatchEvent(createCustomEvent("input"));
+					}
+				}
+			}
+		}
+	}
 
 	const editor = new ChatInputEditor(input);
 	const textcomplete = new Textcomplete(
