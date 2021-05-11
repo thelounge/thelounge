@@ -40,6 +40,8 @@
     "node": ">=10.15.0"
   },
   "dependencies": {
+    "@textcomplete/core": "0.1.9",
+    "@textcomplete/textarea": "0.1.9",
     "bcryptjs": "2.4.3",
     "busboy": "0.3.1",
     "chalk": "4.1.1",
@@ -108,7 +110,6 @@
     "socket.io-client": "3.1.1",
     "stylelint": "13.9.0",
     "stylelint-config-standard": "20.0.0",
-    "textcomplete": "0.18.2",
     "undate": "0.3.0",
     "vue": "2.6.12",
     "vue-loader": "15.9.6",
