@@ -96,6 +96,8 @@ export default {
 				Mousetrap.unbind("left", this.previous);
 				Mousetrap.unbind("right", this.next);
 				Mousetrap.unbind("mod+s", this.downloadImage);
+				Mousetrap.unbind("o", this.openLink);
+				Mousetrap.unbind("g", this.gotoMessage);
 				return;
 			}
 
@@ -107,6 +109,8 @@ export default {
 				Mousetrap.bind("left", this.previous);
 				Mousetrap.bind("right", this.next);
 				Mousetrap.bind("mod+s", this.downloadImage);
+				Mousetrap.bind("o", this.openLink);
+				Mousetrap.bind("g", this.gotoMessage);
 			}
 		},
 	},
@@ -151,11 +155,22 @@ export default {
 				this.link = this.nextImage;
 			}
 		},
-		gotoMessage() {
+		gotoMessage(event) {
+			if (event.preventDefault) {
+				event.preventDefault();
+			}
+
 			document
 				.getElementById("msg-" + this.link.message.id)
 				.scrollIntoView({behavior: "smooth"});
 			this.closeViewer();
+		},
+		openLink(event) {
+			if (event.preventDefault) {
+				event.preventDefault();
+			}
+
+			window.open(this.link.image.link, "_blank");
 		},
 		onImageLoad() {
 			this.prepareImage();
