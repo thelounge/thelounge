@@ -189,6 +189,7 @@ const store = new Vuex.Store({
 		initChannel: () => (channel) => {
 			// TODO: This should be a mutation
 			channel.pendingMessage = "";
+			channel.pendingMessagePreviews = [];
 			channel.inputHistoryPosition = 0;
 			channel.inputHistory = [""];
 			channel.historyLoading = false;
