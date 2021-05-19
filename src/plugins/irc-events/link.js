@@ -249,6 +249,8 @@ function parse(msg, chan, preview, res, client) {
 		case "audio/x-midi":
 		case "audio/x-mpeg":
 		case "audio/x-mpeg-3":
+		case "audio/flac":
+		case "audio/x-m4a":
 			if (!preview.link.startsWith("https://")) {
 				break;
 			}

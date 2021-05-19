@@ -26,31 +26,36 @@ class Uploader {
 	}
 
 	dragOver(event) {
-		// Prevent dragover event completely and do nothing with it
-		// This stops the browser from trying to guess which cursor to show
-		event.preventDefault();
+		if (event.dataTransfer.types.includes("Files")) {
+			// Prevent dragover event completely and do nothing with it
+			// This stops the browser from trying to guess which cursor to show
+			event.preventDefault();
+		}
 	}
 
 	dragEnter(event) {
-		event.preventDefault();
-
 		// relatedTarget is the target where we entered the drag from
 		// when dragging from another window, the target is null, otherwise its a DOM element
 		if (!event.relatedTarget && event.dataTransfer.types.includes("Files")) {
+			event.preventDefault();
+
 			this.overlay.classList.add("is-dragover");
 		}
 	}
 
 	dragLeave(event) {
-		event.preventDefault();
-
 		// If relatedTarget is null, that means we are no longer dragging over the page
 		if (!event.relatedTarget) {
+			event.preventDefault();
 			this.overlay.classList.remove("is-dragover");
 		}
 	}
 
 	drop(event) {
+		if (!event.dataTransfer.types.includes("Files")) {
+			return;
+		}
+
 		event.preventDefault();
 		this.overlay.classList.remove("is-dragover");
 
