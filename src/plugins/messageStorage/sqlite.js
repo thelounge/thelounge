@@ -243,10 +243,6 @@ class MessageStorage {
 			});
 		});
 	}
-
-	canProvideMessages() {
-		return this.isEnabled;
-	}
 }
 
 module.exports = MessageStorage;

@@ -137,10 +137,6 @@ class TextFileMessageStorage {
 		return Promise.resolve([]);
 	}
 
-	canProvideMessages() {
-		return false;
-	}
-
 	static getNetworkFolderName(network) {
 		// Limit network name in the folder name to 23 characters
 		// So we can still fit 12 characters of the uuid for de-duplication
