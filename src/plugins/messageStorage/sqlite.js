@@ -236,30 +236,30 @@ class MessageStorage {
 						target: query.channelName,
 						networkUuid: query.networkUuid,
 						offset: query.offset,
-						results: parseSearchRowsToMessages(query.offset, rows),
+						results: this._parseSearchRowsToMessages(query.offset, rows),
 					};
 					resolve(response);
 				}
 			});
 		});
 	}
+
+	_parseSearchRowsToMessages(id, rows) {
+		const messages = [];
+
+		for (const row of rows) {
+			const msg = JSON.parse(row.msg);
+			msg.time = row.time;
+			msg.type = row.type;
+			msg.networkUuid = row.network;
+			msg.channelName = row.channel;
+			msg.id = id;
+			messages.push(new Msg(msg));
+			id += 1;
+		}
+
+		return messages;
+	}
 }
 
 module.exports = MessageStorage;
-
-function parseSearchRowsToMessages(id, rows) {
-	const messages = [];
-
-	for (const row of rows) {
-		const msg = JSON.parse(row.msg);
-		msg.time = row.time;
-		msg.type = row.type;
-		msg.networkUuid = row.network;
-		msg.channelName = row.channel;
-		msg.id = id;
-		messages.push(new Msg(msg));
-		id += 1;
-	}
-
-	return messages;
-}
