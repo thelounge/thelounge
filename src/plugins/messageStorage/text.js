@@ -11,10 +11,22 @@ class MessageStorage {
 	constructor(client) {
 		this.client = client;
 		this.isEnabled = false;
+		this._clientFolder = null;
 	}
 
 	enable() {
 		this.isEnabled = true;
+		const clientFolder = path.join(Helper.getUserLogsPath(), this.client.name);
+
+		try {
+			fs.mkdirSync(clientFolder, {recursive: true});
+			this._clientFolder = clientFolder;
+			this.isEnabled = true;
+			return true;
+		} catch (e) {
+			log.error(`Unable to create client log directory at: "${clientFolder}"`, e);
+			return false;
+		}
 	}
 
 	close(callback) {
@@ -94,7 +106,7 @@ class MessageStorage {
 
 		fs.appendFile(logPath, line, (e) => {
 			if (e) {
-				log.error("Failed to write user log", e);
+				log.error(`Failed to write user log at: "${logPath}"`, e);
 			}
 		});
 	}
@@ -111,17 +123,13 @@ class MessageStorage {
 	}
 
 	_getLogPath(network, channel) {
-		const logFolder = path.join(
-			Helper.getUserLogsPath(),
-			this.client.name,
-			this._getNetworkFolderName(network)
-		);
+		const logFolder = path.join(this._clientFolder, this._getNetworkFolderName(network));
 
 		try {
 			fs.mkdirSync(logFolder, {recursive: true});
 			return path.join(logFolder, this._getChannelFileName(channel));
 		} catch (e) {
-			log.error("Unable to create logs directory", e);
+			log.error(`Unable to create network log directory at: "${logFolder}"`, e);
 		}
 	}
 

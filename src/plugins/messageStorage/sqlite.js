@@ -35,19 +35,21 @@ class MessageStorage {
 	}
 
 	enable() {
+		if (!sqlite3) {
+			return false;
+		}
+
 		const logsPath = Helper.getUserLogsPath();
-		const sqlitePath = path.join(logsPath, `${this.client.name}.sqlite3`);
 
 		try {
 			fs.mkdirSync(logsPath, {recursive: true});
 		} catch (e) {
 			log.error("Unable to create logs directory", e);
 
-			return;
+			return false;
 		}
 
-		this.isEnabled = true;
-
+		const sqlitePath = path.join(logsPath, `${this.client.name}.sqlite3`);
 		this.database = new sqlite3.Database(sqlitePath);
 		this.database.serialize(() => {
 			schema.forEach((line) => this.database.run(line));
@@ -56,6 +58,7 @@ class MessageStorage {
 				"SELECT value FROM options WHERE name = 'schema_version'",
 				(err, row) => {
 					if (err) {
+						this.isEnabled = false;
 						return log.error(`Failed to retrieve schema version: ${err}`);
 					}
 
@@ -78,6 +81,7 @@ class MessageStorage {
 					}
 
 					if (storedSchemaVersion > currentSchemaVersion) {
+						this.isEnabled = false;
 						return log.error(
 							`sqlite messages schema version is higher than expected (${storedSchemaVersion} > ${currentSchemaVersion}). Is The Lounge out of date?`
 						);
@@ -96,6 +100,9 @@ class MessageStorage {
 				}
 			);
 		});
+
+		this.isEnabled = true;
+		return true;
 	}
 
 	close(callback) {
