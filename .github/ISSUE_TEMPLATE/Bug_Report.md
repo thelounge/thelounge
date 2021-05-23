@@ -4,7 +4,7 @@ about: Create a bug report
 labels: "Type: Bug"
 ---
 
-<!-- Have a question? Join #thelounge on freenode -->
+<!-- Have a question? Join #thelounge on Libera.Chat -->
 
 - _Node version:_
 - _Browser version:_
