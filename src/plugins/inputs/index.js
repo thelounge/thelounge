@@ -1,4 +1,4 @@
-const clientSideCommands = ["/collapse", "/expand"];
+const clientSideCommands = ["/collapse", "/expand", "/search"];
 
 const passThroughCommands = [
 	"/as",

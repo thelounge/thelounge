@@ -104,6 +104,10 @@ export default {
 	mounted() {
 		this.searchInput = this.$route.query.q;
 		this.searchOpened = this.onSearchPage;
+
+		if (!this.searchInput) {
+			this.$refs.searchInputField.focus();
+		}
 	},
 	methods: {
 		closeSearch() {
