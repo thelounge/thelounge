@@ -55,8 +55,8 @@ describe("cleanIrcMessage", function () {
 				expected: "bold bold",
 			},
 			{
-				input: "\x02irc\x0f://\x1dfreenode.net\x0f/\x034,8thelounge",
-				expected: "irc://freenode.net/thelounge",
+				input: "\x02irc\x0f://\x1dirc.example.com\x0f/\x034,8thelounge",
+				expected: "irc://irc.example.com/thelounge",
 			},
 			{
 				input: "\x02#\x038,9thelounge",
