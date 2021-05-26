@@ -12,7 +12,7 @@ describe("findLinks", () => {
 		const expected = [
 			{
 				start: 0,
-				end: 28,
+				end: 31,
 				link: "irc://irc.example.com/thelounge",
 			},
 		];
