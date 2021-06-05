@@ -4,7 +4,7 @@
 			<input
 				ref="searchInputField"
 				v-model="searchInput"
-				type="text"
+				type="search"
 				name="search"
 				class="input"
 				placeholder="Search messages…"
@@ -105,7 +105,7 @@ export default {
 		this.searchInput = this.$route.query.q;
 		this.searchOpened = this.onSearchPage;
 
-		if (!this.searchInput) {
+		if (!this.searchInput && this.searchOpened) {
 			this.$refs.searchInputField.focus();
 		}
 	},
