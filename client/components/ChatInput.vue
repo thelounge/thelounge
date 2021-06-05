@@ -121,6 +121,13 @@ export default {
 				e.target.selectionStart === e.target.selectionEnd ? "" : modifier
 			);
 
+			// Fix autocomplete position
+			const start = e.target.selectionStart;
+			const end = e.target.selectionEnd;
+			e.target.setSelectionRange(start, start);
+			e.target.dispatchEvent(new Event("input"));
+			e.target.setSelectionRange(start, end);
+
 			return false;
 		});
 

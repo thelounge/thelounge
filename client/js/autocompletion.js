@@ -1,9 +1,12 @@
 "use strict";
 
 const constants = require("./constants");
+const {Textcomplete} = require("@textcomplete/core");
+const {TextareaEditor} = require("@textcomplete/textarea");
+import {update} from "undate";
+import {createCustomEvent} from "@textcomplete/core";
 
 import Mousetrap from "mousetrap";
-import {Textcomplete, Textarea} from "textcomplete";
 import fuzzy from "fuzzy";
 
 import emojiMap from "./helpers/simplemap.json";
@@ -214,22 +217,53 @@ function enableAutocomplete(input) {
 		"keydown"
 	);
 
-	const editor = new Textarea(input);
-	const textcomplete = new Textcomplete(editor, {
-		dropdown: {
-			className: "textcomplete-menu",
-			placement: "top",
-		},
-	});
+	class ChatInputEditor extends TextareaEditor {
+		applySearchResult(searchResult) {
+			let start = this.el.selectionStart;
+			let end = this.el.selectionEnd;
+			this.el.setSelectionRange(start, start);
 
-	textcomplete.register([
-		emojiStrategy,
-		nicksStrategy,
-		chanStrategy,
-		commandStrategy,
-		foregroundColorStrategy,
-		backgroundColorStrategy,
-	]);
+			const beforeCursor = this.getBeforeCursor();
+
+			if (beforeCursor !== null) {
+				const replace = searchResult.replace(beforeCursor, this.getAfterCursor());
+				this.el.focus(); // Clicking a dropdown item removes focus from the element.
+
+				if (Array.isArray(replace)) {
+					update(this.el, replace[0], replace[1]);
+					const startDelta = replace[0].length - beforeCursor.length;
+					start += startDelta;
+					end += startDelta;
+
+					if (this.el) {
+						this.el.dispatchEvent(createCustomEvent("input"));
+					}
+				}
+			}
+
+			this.el.setSelectionRange(start, end);
+		}
+	}
+
+	const editor = new ChatInputEditor(input);
+	const textcomplete = new Textcomplete(
+		editor,
+		[
+			emojiStrategy,
+			nicksStrategy,
+			chanStrategy,
+			commandStrategy,
+			foregroundColorStrategy,
+			backgroundColorStrategy,
+		],
+		{
+			dropdown: {
+				className: "textcomplete-menu",
+				placement: "top",
+				rotate: true,
+			},
+		}
+	);
 
 	// Activate the first item by default
 	// https://github.com/yuku-t/textcomplete/issues/93

@@ -1246,6 +1246,29 @@
   dependencies:
     defer-to-connect "^2.0.0"
 
+"@textcomplete/core@0.1.9", "@textcomplete/core@^0.1.9":
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/@textcomplete/core/-/core-0.1.9.tgz#1a09c0f4672fc105064306b0d0c7fcbec2e1686e"
+  integrity sha512-fiVO93dwfFqgvPdyEL5QgYLAZjaWfvLC4HqgrPLbASqSPHJkFbGy3568aRvCc2EkiU8DAnhtlVoUKqK9oui16w==
+  dependencies:
+    eventemitter3 "^4.0.4"
+
+"@textcomplete/textarea@0.1.9":
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/@textcomplete/textarea/-/textarea-0.1.9.tgz#3f3ab3821a801dbdb6d2251401c6fee816b8ef68"
+  integrity sha512-3zZjfOyuItafGVvsz68eL1OXxadQ89IO5BAsYRYs3dBW+x1SvaTPgY1bbCIaHmOPWMZnJRDHxKfrK8j4KcIa5Q==
+  dependencies:
+    "@textcomplete/core" "^0.1.9"
+    "@textcomplete/utils" "^0.1.9"
+    "@types/textarea-caret" "^3.0.0"
+    textarea-caret "^3.1.0"
+    undate "^0.3.0"
+
+"@textcomplete/utils@^0.1.9":
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/@textcomplete/utils/-/utils-0.1.9.tgz#0115926cfda8cfbdbdce8c65765e2d223a7803d0"
+  integrity sha512-3yqiEcYlR0OS15PTpp2G8fVpl+4Zhdh8+VRIrdiC6C1bklVB1q3K29OTAZVB5UNAGV3oUcGs8znWVXPt9LELbw==
+
 "@tokenizer/token@^0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@tokenizer/token/-/token-0.1.1.tgz#f0d92c12f87079ddfd1b29f614758b9696bc29e3"
@@ -1441,6 +1464,11 @@
   dependencies:
     "@types/mime" "*"
     "@types/node" "*"
+
+"@types/textarea-caret@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@types/textarea-caret/-/textarea-caret-3.0.0.tgz#4c5c5e3de5c59511f93ffe929e5383471b828896"
+  integrity sha512-RNXko6Kl+oQibqxuQZJZ+RgsQAGez4VQxeC4zq+GXjUlHcfjy5EthnsPIQXC5wUSRf5WbyA+4+//mVSc6XwxNw==
 
 "@types/unist@*", "@types/unist@^2.0.0", "@types/unist@^2.0.2":
   version "2.0.3"
@@ -3480,12 +3508,7 @@ etag@~1.8.1:
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
-eventemitter3@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-2.0.3.tgz#b5e1079b59fb5e1ba2771c0a993be060a58c99ba"
-  integrity sha1-teEHm1n7XhuidxwKmTvgYKWMmbo=
-
-eventemitter3@^4.0.3:
+eventemitter3@^4.0.3, eventemitter3@^4.0.4:
   version "4.0.7"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
   integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
@@ -8152,19 +8175,10 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-textarea-caret@^3.0.1:
+textarea-caret@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/textarea-caret/-/textarea-caret-3.1.0.tgz#5d5a35bb035fd06b2ff0e25d5359e97f2655087f"
   integrity sha512-cXAvzO9pP5CGa6NKx0WYHl+8CHKZs8byMkt3PCJBCmq2a34YA9pO1NrQET5pzeqnBjBdToF5No4rrmkDUgQC2Q==
-
-textcomplete@0.18.2:
-  version "0.18.2"
-  resolved "https://registry.yarnpkg.com/textcomplete/-/textcomplete-0.18.2.tgz#de0d806567102f7e32daffcbcc3db05af1515eb5"
-  integrity sha512-Z7RocuECp4S/Dld2swLRdXPYqCCMZvKmwrZHp8MQA4UJHX171/MjLeAj0uENEJPpa8JOtU01PK0iuVQUoFjSfg==
-  dependencies:
-    eventemitter3 "^2.0.3"
-    textarea-caret "^3.0.1"
-    undate "^0.2.3"
 
 timsort@^0.3.0:
   version "0.3.0"
@@ -8305,15 +8319,10 @@ uc.micro@^1.0.1:
   resolved "https://registry.yarnpkg.com/uc.micro/-/uc.micro-1.0.6.tgz#9c411a802a409a91fc6cf74081baba34b24499ac"
   integrity sha512-8Y75pvTYkLJW2hWQHXxoqRgV7qb9B+9vFEtidML+7koHUFapnVJAZ6cKs+Qjz5Aw3aZWHMC6u0wJE3At+nSGwA==
 
-undate@0.3.0:
+undate@0.3.0, undate@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/undate/-/undate-0.3.0.tgz#cbf6b1f179d69ace7393e6d92400c3afdf43d140"
   integrity sha512-ssH8QTNBY6B+2fRr3stSQ+9m2NT8qTaun3ExTx5ibzYQvP7yX4+BnX0McNxFCvh6S5ia/DYu6bsCKQx/U4nb/Q==
-
-undate@^0.2.3:
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/undate/-/undate-0.2.4.tgz#ccb2a8cf38edc035d1006fcb2909c4c6024a8400"
-  integrity sha512-k1WTRVhI076HYqP6e3pZPzS7K2xNAcuhCcWOPjHmR8SwU3byyKYvyNZ4XTEAd7Ofe40+wrEjNq6WmmO8WoUVNg==
 
 unicode-canonical-property-names-ecmascript@^1.0.4:
   version "1.0.4"
