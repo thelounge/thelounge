@@ -41,6 +41,14 @@
 							:network="network"
 							:text="channel.topic"
 					/></span>
+					<MessageSearchForm
+						v-if="
+							$store.state.settings.searchEnabled &&
+							['channel', 'query'].includes(channel.type)
+						"
+						:network="network"
+						:channel="channel"
+					/>
 					<button
 						class="mentions"
 						aria-label="Open your mentions"
@@ -87,7 +95,12 @@
 					>
 						<div class="scroll-down-arrow" />
 					</div>
-					<MessageList ref="messageList" :network="network" :channel="channel" />
+					<MessageList
+						ref="messageList"
+						:network="network"
+						:channel="channel"
+						:focused="focused"
+					/>
 					<ChatUserList v-if="channel.type === 'channel'" :channel="channel" />
 				</div>
 			</div>
@@ -111,6 +124,7 @@ import MessageList from "./MessageList.vue";
 import ChatInput from "./ChatInput.vue";
 import ChatUserList from "./ChatUserList.vue";
 import SidebarToggle from "./SidebarToggle.vue";
+import MessageSearchForm from "./MessageSearchForm.vue";
 import ListBans from "./Special/ListBans.vue";
 import ListInvites from "./Special/ListInvites.vue";
 import ListChannels from "./Special/ListChannels.vue";
@@ -124,10 +138,12 @@ export default {
 		ChatInput,
 		ChatUserList,
 		SidebarToggle,
+		MessageSearchForm,
 	},
 	props: {
 		network: Object,
 		channel: Object,
+		focused: String,
 	},
 	computed: {
 		specialComponent() {

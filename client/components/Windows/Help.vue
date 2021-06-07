@@ -675,6 +675,15 @@
 
 			<div class="help-item">
 				<div class="subject">
+					<code>/search query</code>
+				</div>
+				<div class="description">
+					<p>Search for messages in the current channel / user</p>
+				</div>
+			</div>
+
+			<div class="help-item">
+				<div class="subject">
 					<code>/topic [newtopic]</code>
 				</div>
 				<div class="description">

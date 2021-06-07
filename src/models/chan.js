@@ -236,17 +236,11 @@ Chan.prototype.writeUserLog = function (client, msg) {
 };
 
 Chan.prototype.loadMessages = function (client, network) {
-	if (!this.isLoggable()) {
+	if (!this.isLoggable() || !client.messageProvider) {
 		return;
 	}
 
-	const messageStorage = client.messageStorage.find((s) => s.canProvideMessages());
-
-	if (!messageStorage) {
-		return;
-	}
-
-	messageStorage
+	client.messageProvider
 		.getMessages(network, this)
 		.then((messages) => {
 			if (messages.length === 0) {
