@@ -101,7 +101,9 @@ export default {
 			return false;
 		},
 		toggleMentions() {
-			eventbus.emit("mentions:toggle");
+			if (this.$store.state.networks.length !== 0) {
+				eventbus.emit("mentions:toggle");
+			}
 		},
 		msUntilNextDay() {
 			// Compute how many milliseconds are remaining until the next day starts
