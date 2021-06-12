@@ -239,6 +239,16 @@
 						Auto-expand websites
 					</label>
 				</div>
+				<div>
+					<label class="opt">
+						<input
+							:checked="$store.state.settings.hideNsfw"
+							type="checkbox"
+							name="hideNsfw"
+						/>
+						Hide NSFW
+					</label>
+				</div>
 			</template>
 
 			<div

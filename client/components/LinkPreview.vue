@@ -234,8 +234,13 @@ export default {
 			});
 		},
 		updateShownState() {
-			// User has manually toggled the preview, do not apply default
-			if (this.link.shown !== null) {
+			// User has manually toggled the preview, or the image is marked as nsfw
+			// and the setting has been enabled do not apply default
+			const hideNsfw =
+				this.$parent.message.text.toLowerCase().includes("nsfw") &&
+				this.$store.state.settings.hideNsfw;
+
+			if (this.link.shown !== null || hideNsfw) {
 				return;
 			}
 
