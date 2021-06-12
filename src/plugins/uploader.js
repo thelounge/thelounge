@@ -11,7 +11,7 @@ const crypto = require("crypto");
 const isUtf8 = require("is-utf8");
 const log = require("../log");
 const contentDisposition = require("content-disposition");
-const sharp = require("sharp");
+const gm = require("gm").subClass({imageMagick: true});
 
 // Map of allowed mime types to their respecive default filenames
 // that will be rendered in browser without forcing them to be downloaded
@@ -246,8 +246,6 @@ class Uploader {
 				uploadUrl = `uploads/${uploadUrl}`;
 			}
 
-			// Sharps prebuilt libvips does not include gif support, but that is not a problem,
-			// as GIFs don't support EXIF metadata or anything alike
 			const isImage = contentType.startsWith("image/") && !contentType.endsWith("gif");
 
 			// if the busboy data stream errors out or goes over the file size limit
@@ -264,28 +262,19 @@ class Uploader {
 			});
 
 			if (isImage) {
-				let sharpInstance = sharp({
-					animated: true,
-					pages: -1,
-					sequentialRead: true,
-				});
+				const rotatedImage = gm(fileStream).autoOrient();
 
-				if (!removeMetadata) {
-					sharpInstance = sharpInstance.withMetadata();
+				if (removeMetadata) {
+					rotatedImage.noProfile();
 				}
 
-				sharpInstance
-					.rotate() // auto-orient based on the EXIF Orientation tag
-					.toFile(destPath, (err) => {
-						// Removes metadata by default https://sharp.pixelplumbing.com/api-output#tofile if no `withMetadata` is present
-						if (err) {
-							abortWithError(err);
-						} else {
-							successfullCompletion();
-						}
-					});
-
-				fileStream.pipe(sharpInstance);
+				rotatedImage.write(destPath, (err) => {
+					if (err) {
+						abortWithError(err);
+					} else {
+						successfullCompletion();
+					}
+				});
 			} else {
 				// Open a file stream for writing
 				streamWriter = fs.createWriteStream(destPath);
