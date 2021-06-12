@@ -246,7 +246,14 @@ class Uploader {
 				uploadUrl = `uploads/${uploadUrl}`;
 			}
 
-			const isImage = contentType.startsWith("image/") && !contentType.endsWith("gif");
+			// On some OS ImageMagick is too old to deal with HEIF. Instead of
+			// erroring and not uploading any picture HEIF files will be
+			// uploaded as is.
+			//
+			// When sharing HEIF pictures from iOS devices the OS takes care of
+			// converting the picture to JPEG beforehand which then will be
+			// successfully rotated and stripped from metadata.
+			const isImage = contentType.startsWith("image/") && !contentType.endsWith("heif");
 
 			// if the busboy data stream errors out or goes over the file size limit
 			// abort the processing with an error
