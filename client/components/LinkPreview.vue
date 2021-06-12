@@ -132,7 +132,6 @@
 <script>
 import eventbus from "../js/eventbus";
 import friendlysize from "../js/helpers/friendlysize";
-const escapeRegExp = require("lodash/escapeRegExp");
 
 export default {
 	name: "LinkPreview",
@@ -238,7 +237,7 @@ export default {
 			// Ensure we don't have empty strings in the list of preview filters
 			const filterTokens = this.$store.state.settings.hidePreviewFilters
 				.split(",")
-				.map((filter) => escapeRegExp(filter.trim()))
+				.map((filter) => filter.trim())
 				.filter((filter) => filter.length > 0);
 
 			const messageText = this.$parent.message.text.toLowerCase();
