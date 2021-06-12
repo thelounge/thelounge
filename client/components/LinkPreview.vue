@@ -132,6 +132,7 @@
 <script>
 import eventbus from "../js/eventbus";
 import friendlysize from "../js/helpers/friendlysize";
+const escapeRegExp = require("lodash/escapeRegExp");
 
 export default {
 	name: "LinkPreview",
@@ -234,13 +235,21 @@ export default {
 			});
 		},
 		updateShownState() {
-			// User has manually toggled the preview, or the image is marked as nsfw
-			// and the setting has been enabled do not apply default
-			const hideNsfw =
-				this.$parent.message.text.toLowerCase().includes("nsfw") &&
-				this.$store.state.settings.hideNsfw;
+			// Ensure we don't have empty strings in the list of preview filters
+			const filterTokens = this.$store.state.settings.hidePreviewFilters
+				.split(",")
+				.map((filter) => escapeRegExp(filter.trim()))
+				.filter((filter) => filter.length > 0);
 
-			if (this.link.shown !== null || hideNsfw) {
+			const messageText = this.$parent.message.text.toLowerCase();
+
+			const caughtFilter = filterTokens.some((filter) => {
+				return messageText.includes(filter.toLowerCase());
+			});
+
+			// User has manually toggled the preview, or the message has been filtered
+			// by the preview filter settings, do not apply default
+			if (this.link.shown !== null || caughtFilter) {
 				return;
 			}
 

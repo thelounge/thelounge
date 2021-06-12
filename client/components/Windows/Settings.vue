@@ -240,14 +240,24 @@
 					</label>
 				</div>
 				<div>
-					<label class="opt">
-						<input
-							:checked="$store.state.settings.hideNsfw"
-							type="checkbox"
-							name="hideNsfw"
-						/>
-						Hide previews for links containing "NSFW"
+					<label for="hidePreviewFilters" class="opt">
+						Media filters
+						<span
+							class="tooltipped tooltipped-n tooltipped-no-delay"
+							aria-label="If a message contains any of these comma-separated
+expressions, it will hide the preview."
+						>
+							<button class="extra-help" />
+						</span>
 					</label>
+					<input
+						id="hidePreviewFilters"
+						:value="$store.state.settings.hidePreviewFilters"
+						type="text"
+						name="hidePreviewFilters"
+						class="input"
+						placeholder="Comma-separated, e.g.: word, some more words, anotherword"
+					/>
 				</div>
 			</template>
 
