@@ -246,7 +246,7 @@
 							type="checkbox"
 							name="hideNsfw"
 						/>
-						Hide NSFW
+						Hide previews for links containing "NSFW"
 					</label>
 				</div>
 			</template>
