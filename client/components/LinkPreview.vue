@@ -132,6 +132,7 @@
 <script>
 import eventbus from "../js/eventbus";
 import friendlysize from "../js/helpers/friendlysize";
+import messageMatchFilters from "../js/helpers/messageMatchFilters";
 
 export default {
 	name: "LinkPreview",
@@ -233,22 +234,16 @@ export default {
 					this.$refs.content.offsetWidth >= this.$refs.container.offsetWidth;
 			});
 		},
+		shouldHidePreview() {
+			return messageMatchFilters(
+				this.$parent.message.text,
+				this.$store.state.settings.hidePreviewFilters
+			);
+		},
 		updateShownState() {
-			// Ensure we don't have empty strings in the list of preview filters
-			const filterTokens = this.$store.state.settings.hidePreviewFilters
-				.split(",")
-				.map((filter) => filter.trim())
-				.filter((filter) => filter.length > 0);
-
-			const messageText = this.$parent.message.text.toLowerCase();
-
-			const caughtFilter = filterTokens.some((filter) => {
-				return messageText.includes(filter.toLowerCase());
-			});
-
 			// User has manually toggled the preview, or the message has been filtered
 			// by the preview filter settings, do not apply default
-			if (this.link.shown !== null || caughtFilter) {
+			if (this.link.shown !== null || this.shouldHidePreview()) {
 				return;
 			}
 
