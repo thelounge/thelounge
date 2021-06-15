@@ -105,9 +105,9 @@
 					<div class="input-wrap">
 						<label for="connect:proxyEnabled">
 							<input
+								id="connect:proxyEnabled"
 								v-model="defaults.proxyEnabled"
 								type="checkbox"
-								id="connect:proxyEnabled"
 								name="proxyEnabled"
 							/>
 							Enable Proxy
