@@ -72,11 +72,7 @@ export default {
 				}
 			}
 
-			if (extra.length > 0) {
-				return `${type}: ${this.channel.name} (${extra.join(", ")})`;
-			}
-
-			return this.channel.name;
+			return `${type}: ${this.channel.name} ${extra.length ? `(${extra.join(", ")})` : ""}`;
 		},
 		click() {
 			if (this.isFiltering) {
