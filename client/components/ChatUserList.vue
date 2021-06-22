@@ -3,9 +3,7 @@
 		ref="userlist"
 		class="userlist"
 		@mouseleave="removeHoverUser"
-		aria-label="User List for "
-		+
-		channel.name
+		:aria-label="'User list for ' + channel.name"
 	>
 		<div class="count">
 			<input
