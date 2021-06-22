@@ -1,5 +1,12 @@
 <template>
-	<aside ref="userlist" class="userlist" @mouseleave="removeHoverUser">
+	<aside
+		ref="userlist"
+		class="userlist"
+		@mouseleave="removeHoverUser"
+		aria-label="User List for "
+		+
+		channel.name
+	>
 		<div class="count">
 			<input
 				ref="input"
