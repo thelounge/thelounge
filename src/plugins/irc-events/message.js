@@ -33,7 +33,7 @@ module.exports = function (irc, network) {
 
 	irc.on("wallops", function (data) {
 		data.from_server = true;
-		data.type = Msg.Type.NOTICE;
+		data.type = Msg.Type.WALLOPS;
 		handleMessage(data);
 	});
 
