@@ -43,7 +43,7 @@
     "bcryptjs": "2.4.3",
     "busboy": "0.3.1",
     "chalk": "4.1.1",
-    "cheerio": "1.0.0-rc.9",
+    "cheerio": "1.0.0-rc.10",
     "commander": "7.2.0",
     "content-disposition": "0.5.3",
     "express": "4.17.1",
@@ -54,7 +54,7 @@
     "is-utf8": "0.2.1",
     "ldapjs": "2.2.3",
     "linkify-it": "3.0.2",
-    "lodash": "4.17.20",
+    "lodash": "4.17.21",
     "mime-types": "2.1.28",
     "node-forge": "0.10.0",
     "package-json": "6.5.0",
@@ -73,8 +73,8 @@
     "sqlite3": "5.0.2"
   },
   "devDependencies": {
-    "@babel/core": "7.14.3",
-    "@babel/preset-env": "7.14.4",
+    "@babel/core": "7.14.6",
+    "@babel/preset-env": "7.14.7",
     "@fortawesome/fontawesome-free": "5.15.3",
     "@vue/server-test-utils": "1.1.3",
     "@vue/test-utils": "1.1.3",
