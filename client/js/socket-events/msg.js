@@ -133,11 +133,14 @@ function notifyMessage(targetId, channel, activeChannel, msg) {
 				const timestamp = Date.parse(msg.time);
 
 				try {
+					const channelTarget = store.getters.findChannel(targetId);
+
 					if (store.state.hasServiceWorker) {
 						navigator.serviceWorker.ready.then((registration) => {
 							registration.active.postMessage({
 								type: "notification",
-								chanId: targetId,
+								channelName: channelTarget.name,
+								networkHost: channelTarget.network.host,
 								timestamp: timestamp,
 								title: title,
 								body: body,
@@ -154,8 +157,6 @@ function notifyMessage(targetId, channel, activeChannel, msg) {
 						notify.addEventListener("click", function () {
 							this.close();
 							window.focus();
-
-							const channelTarget = store.getters.findChannel(targetId);
 
 							if (channelTarget) {
 								switchToChannel(channelTarget.network, channelTarget.channel);

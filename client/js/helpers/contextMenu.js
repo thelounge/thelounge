@@ -23,7 +23,7 @@ export function generateChannelContextMenu($root, channel, network) {
 			label: channel.name,
 			type: "item",
 			class: typeMap[channel.type],
-			link: `/chan-${channel.id}`,
+			link: `/${network.host}/${channel.name}`,
 		},
 		{
 			type: "divider",
