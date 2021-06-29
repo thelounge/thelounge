@@ -20,8 +20,8 @@
 </p>
 <p align="center">
 	<a href="https://demo.thelounge.chat/"><img
-		alt="#thelounge IRC channel on freenode"
-		src="https://img.shields.io/badge/freenode-%23thelounge-415364.svg?colorA=ff9e18"></a>
+		alt="#thelounge IRC channel on Libera.Chat"
+		src="https://img.shields.io/badge/Libera.Chat-%23thelounge-415364.svg?colorA=ff9e18"></a>
 	<a href="https://yarn.pm/thelounge"><img
 		alt="npm version"
 		src="https://img.shields.io/npm/v/thelounge.svg?colorA=333a41&maxAge=3600"></a>
@@ -85,5 +85,5 @@ Before submitting any change, make sure to:
 
 - Read the [Contributing instructions](https://github.com/thelounge/thelounge/blob/master/.github/CONTRIBUTING.md#contributing)
 - Run `yarn test` to execute linters and test suite
-- Run `yarn build` if you change or add anything in `client/js` or `client/views`
+- Run `yarn build` if you change or add anything in `client/js` or `client/components`
 - `yarn dev` can be used to start The Lounge with hot module reloading

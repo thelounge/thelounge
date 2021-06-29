@@ -9,7 +9,7 @@
 		</thead>
 		<tbody>
 			<tr v-for="ban in channel.data" :key="ban.hostmask">
-				<td class="hostmask">{{ ban.hostmask }}</td>
+				<td class="hostmask"><ParsedMessage :network="network" :text="ban.hostmask" /></td>
 				<td class="banned_by">{{ ban.banned_by }}</td>
 				<td class="banned_at">{{ localetime(ban.banned_at) }}</td>
 			</tr>
@@ -18,10 +18,14 @@
 </template>
 
 <script>
+import ParsedMessage from "../ParsedMessage.vue";
 import localetime from "../../js/helpers/localetime";
 
 export default {
 	name: "ListBans",
+	components: {
+		ParsedMessage,
+	},
 	props: {
 		network: Object,
 		channel: Object,

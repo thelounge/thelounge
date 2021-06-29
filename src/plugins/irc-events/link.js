@@ -222,6 +222,7 @@ function parse(msg, chan, preview, res, client) {
 		case "image/gif":
 		case "image/jpg":
 		case "image/jpeg":
+		case "image/jxl":
 		case "image/webp":
 		case "image/avif":
 			if (!Helper.config.prefetchStorage && Helper.config.disableMediaPreview) {
@@ -249,6 +250,8 @@ function parse(msg, chan, preview, res, client) {
 		case "audio/x-midi":
 		case "audio/x-mpeg":
 		case "audio/x-mpeg-3":
+		case "audio/flac":
+		case "audio/x-m4a":
 			if (!preview.link.startsWith("https://")) {
 				break;
 			}

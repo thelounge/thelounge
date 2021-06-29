@@ -200,9 +200,70 @@ class MessageStorage {
 		});
 	}
 
+	search(query) {
+		if (!this.isEnabled) {
+			return Promise.resolve([]);
+		}
+
+		let select =
+			'SELECT msg, type, time, network, channel FROM messages WHERE type = "message" AND json_extract(msg, "$.text") LIKE ?';
+		const params = [`%${query.searchTerm}%`];
+
+		if (query.networkUuid) {
+			select += " AND network = ? ";
+			params.push(query.networkUuid);
+		}
+
+		if (query.channelName) {
+			select += " AND channel = ? ";
+			params.push(query.channelName.toLowerCase());
+		}
+
+		const maxResults = 100;
+
+		select += " ORDER BY time DESC LIMIT ? OFFSET ? ";
+		params.push(maxResults);
+		query.offset = parseInt(query.offset, 10) || 0;
+		params.push(query.offset);
+
+		return new Promise((resolve, reject) => {
+			this.database.all(select, params, (err, rows) => {
+				if (err) {
+					reject(err);
+				} else {
+					const response = {
+						searchTerm: query.searchTerm,
+						target: query.channelName,
+						networkUuid: query.networkUuid,
+						offset: query.offset,
+						results: parseSearchRowsToMessages(query.offset, rows),
+					};
+					resolve(response);
+				}
+			});
+		});
+	}
+
 	canProvideMessages() {
 		return this.isEnabled;
 	}
 }
 
 module.exports = MessageStorage;
+
+function parseSearchRowsToMessages(id, rows) {
+	const messages = [];
+
+	for (const row of rows) {
+		const msg = JSON.parse(row.msg);
+		msg.time = row.time;
+		msg.type = row.type;
+		msg.networkUuid = row.network;
+		msg.channelName = row.channel;
+		msg.id = id;
+		messages.push(new Msg(msg));
+		id += 1;
+	}
+
+	return messages;
+}

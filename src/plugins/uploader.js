@@ -10,26 +10,31 @@ const readChunk = require("read-chunk");
 const crypto = require("crypto");
 const isUtf8 = require("is-utf8");
 const log = require("../log");
+const contentDisposition = require("content-disposition");
+const sharp = require("sharp");
 
-// List of allowed mime types that can be rendered in browser
-// without forcing it to be downloaded
-const inlineContentDispositionTypes = [
-	"application/ogg",
-	"audio/midi",
-	"audio/mpeg",
-	"audio/ogg",
-	"audio/vnd.wave",
-	"image/bmp",
-	"image/gif",
-	"image/jpeg",
-	"image/png",
-	"image/webp",
-	"image/avif",
-	"text/plain",
-	"video/mp4",
-	"video/ogg",
-	"video/webm",
-];
+// Map of allowed mime types to their respecive default filenames
+// that will be rendered in browser without forcing them to be downloaded
+const inlineContentDispositionTypes = {
+	"application/ogg": "media.ogx",
+	"audio/midi": "audio.midi",
+	"audio/mpeg": "audio.mp3",
+	"audio/ogg": "audio.ogg",
+	"audio/vnd.wave": "audio.wav",
+	"audio/x-flac": "audio.flac",
+	"audio/x-m4a": "audio.m4a",
+	"image/bmp": "image.bmp",
+	"image/gif": "image.gif",
+	"image/jpeg": "image.jpg",
+	"image/png": "image.png",
+	"image/webp": "image.webp",
+	"image/avif": "image.avif",
+	"image/jxl": "image.jxl",
+	"text/plain": "text.txt",
+	"video/mp4": "video.mp4",
+	"video/ogg": "video.ogv",
+	"video/webm": "video.webm",
+};
 
 const uploadTokens = new Map();
 
@@ -92,17 +97,30 @@ class Uploader {
 		}
 
 		// Force a download in the browser if it's not an allowed type (binary or otherwise unknown)
-		const contentDisposition = inlineContentDispositionTypes.includes(detectedMimeType)
-			? "inline"
-			: "attachment";
+		let slug = req.params.slug;
+		const isInline = detectedMimeType in inlineContentDispositionTypes;
+		let disposition = isInline ? "inline" : "attachment";
 
-		if (detectedMimeType === "audio/vnd.wave") {
-			// Send a more common mime type for wave audio files
-			// so that browsers can play them correctly
-			detectedMimeType = "audio/wav";
+		if (!slug && isInline) {
+			slug = inlineContentDispositionTypes[detectedMimeType];
 		}
 
-		res.setHeader("Content-Disposition", contentDisposition);
+		if (slug) {
+			disposition = contentDisposition(slug.trim(), {
+				fallback: false,
+				type: disposition,
+			});
+		}
+
+		// Send a more common mime type for audio files
+		// so that browsers can play them correctly
+		if (detectedMimeType === "audio/vnd.wave") {
+			detectedMimeType = "audio/wav";
+		} else if (detectedMimeType === "audio/x-flac") {
+			detectedMimeType = "audio/flac";
+		}
+
+		res.setHeader("Content-Disposition", disposition);
 		res.setHeader("Cache-Control", "max-age=86400");
 		res.contentType(detectedMimeType);
 
@@ -116,6 +134,7 @@ class Uploader {
 		let destDir;
 		let destPath;
 		let streamWriter;
+		let removeMetadata;
 
 		const doneCallback = () => {
 			// detach the stream and drain any remaining data
@@ -132,6 +151,19 @@ class Uploader {
 				streamWriter.end();
 				streamWriter = null;
 			}
+		};
+
+		const successfullCompletion = () => {
+			doneCallback();
+
+			if (!uploadUrl) {
+				return res.status(400).json({error: "Missing file"});
+			}
+
+			// upload was done, send the generated file url to the client
+			res.status(200).json({
+				url: uploadUrl,
+			});
 		};
 
 		const abortWithError = (err) => {
@@ -180,6 +212,11 @@ class Uploader {
 		busboyInstance.on("partsLimit", () => abortWithError(Error("Parts limit reached")));
 		busboyInstance.on("filesLimit", () => abortWithError(Error("Files limit reached")));
 		busboyInstance.on("fieldsLimit", () => abortWithError(Error("Fields limit reached")));
+		busboyInstance.on("field", (fieldname, val) => {
+			if (fieldname === "removeMetadata") {
+				removeMetadata = val === "true";
+			}
+		});
 
 		// generate a random output filename for the file
 		// we use do/while loop to prevent the rare case of generating a file name
@@ -200,11 +237,7 @@ class Uploader {
 			return abortWithError(err);
 		}
 
-		// Open a file stream for writing
-		streamWriter = fs.createWriteStream(destPath);
-		streamWriter.on("error", abortWithError);
-
-		busboyInstance.on("file", (fieldname, fileStream, filename) => {
+		busboyInstance.on("file", (fieldname, fileStream, filename, encoding, contentType) => {
 			uploadUrl = `${randomName}/${encodeURIComponent(filename)}`;
 
 			if (Helper.config.fileUpload.baseUrl) {
@@ -213,31 +246,55 @@ class Uploader {
 				uploadUrl = `uploads/${uploadUrl}`;
 			}
 
+			// Sharps prebuilt libvips does not include gif support, but that is not a problem,
+			// as GIFs don't support EXIF metadata or anything alike
+			const isImage = contentType.startsWith("image/") && !contentType.endsWith("gif");
+
 			// if the busboy data stream errors out or goes over the file size limit
 			// abort the processing with an error
 			fileStream.on("error", abortWithError);
 			fileStream.on("limit", () => {
-				fileStream.unpipe(streamWriter);
+				if (!isImage) {
+					fileStream.unpipe(streamWriter);
+				}
+
 				fileStream.on("readable", fileStream.read.bind(fileStream));
 
 				abortWithError(Error("File size limit reached"));
 			});
 
-			// Attempt to write the stream to file
-			fileStream.pipe(streamWriter);
-		});
+			if (isImage) {
+				let sharpInstance = sharp({
+					animated: true,
+					pages: -1,
+					sequentialRead: true,
+				});
 
-		busboyInstance.on("finish", () => {
-			doneCallback();
+				if (!removeMetadata) {
+					sharpInstance = sharpInstance.withMetadata();
+				}
 
-			if (!uploadUrl) {
-				return res.status(400).json({error: "Missing file"});
+				sharpInstance
+					.rotate() // auto-orient based on the EXIF Orientation tag
+					.toFile(destPath, (err) => {
+						// Removes metadata by default https://sharp.pixelplumbing.com/api-output#tofile if no `withMetadata` is present
+						if (err) {
+							abortWithError(err);
+						} else {
+							successfullCompletion();
+						}
+					});
+
+				fileStream.pipe(sharpInstance);
+			} else {
+				// Open a file stream for writing
+				streamWriter = fs.createWriteStream(destPath);
+				streamWriter.on("error", abortWithError);
+				streamWriter.on("finish", successfullCompletion);
+
+				// Attempt to write the stream to file
+				fileStream.pipe(streamWriter);
 			}
-
-			// upload was done, send the generated file url to the client
-			res.status(200).json({
-				url: uploadUrl,
-			});
 		});
 
 		// pipe request body to busboy for processing

@@ -17,6 +17,7 @@ export default {
 	name: "DateMarker",
 	props: {
 		message: Object,
+		focused: Boolean,
 	},
 	computed: {
 		localeDate() {

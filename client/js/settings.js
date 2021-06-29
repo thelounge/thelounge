@@ -98,7 +98,7 @@ export const config = normalizeConfig({
 	media: {
 		default: true,
 	},
-	uploadCanvas: {
+	removeImageMetadata: {
 		default: true,
 	},
 	userStyles: {
@@ -108,6 +108,9 @@ export const config = normalizeConfig({
 				document.getElementById("user-specified-css").innerHTML = value;
 			}
 		},
+	},
+	searchEnabled: {
+		default: false,
 	},
 });
 

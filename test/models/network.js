@@ -91,7 +91,7 @@ describe("Network", function () {
 				rejectUnauthorized: false,
 			});
 			expect(network.validate()).to.be.true;
-			expect(network.host).to.equal("chat.freenode.net");
+			expect(network.host).to.equal("irc.example.com");
 			expect(network.port).to.equal(6697);
 			expect(network.tls).to.be.true;
 			expect(network.rejectUnauthorized).to.be.true;
@@ -103,7 +103,7 @@ describe("Network", function () {
 				host: "some.fake.tld",
 			});
 			expect(network2.validate()).to.be.true;
-			expect(network2.host).to.equal("chat.freenode.net");
+			expect(network2.host).to.equal("irc.example.com");
 
 			Helper.config.lockNetwork = false;
 		});
@@ -273,7 +273,7 @@ describe("Network", function () {
 			// Lobby and initial channel
 			expect(network.channels.length).to.equal(2);
 
-			const newChan = new Chan({name: "#freenode"});
+			const newChan = new Chan({name: "#foo"});
 			network.addChannel(newChan);
 
 			expect(network.channels.length).to.equal(3);
@@ -286,13 +286,13 @@ describe("Network", function () {
 
 			const network = new Network({
 				channels: [chan1, chan2, chan3],
-				name: "freenode",
+				name: "foo",
 			});
 
-			const newChan = new Chan({name: "#freenode"});
+			const newChan = new Chan({name: "#foo"});
 			network.addChannel(newChan);
 
-			expect(network.channels[0].name).to.equal("freenode");
+			expect(network.channels[0].name).to.equal("foo");
 			expect(network.channels[1]).to.equal(chan1);
 			expect(network.channels[2]).to.equal(newChan);
 			expect(network.channels[3]).to.equal(chan2);
@@ -307,7 +307,7 @@ describe("Network", function () {
 				channels: [chan1, chan2],
 			});
 
-			const newChan = new Chan({name: "#freenode"});
+			const newChan = new Chan({name: "#foo"});
 			network.addChannel(newChan);
 
 			expect(network.channels[1]).to.equal(chan1);
@@ -401,7 +401,7 @@ describe("Network", function () {
 				channels: [banlist, chan1, user1],
 			});
 
-			const newChan = new Chan({name: "#freenode"});
+			const newChan = new Chan({name: "#foo"});
 			network.addChannel(newChan);
 
 			expect(network.channels[1]).to.equal(newChan);
@@ -412,7 +412,7 @@ describe("Network", function () {
 
 		it("should never add something in front of the lobby", function () {
 			const network = new Network({
-				name: "freenode",
+				name: "foo",
 				channels: [],
 			});
 

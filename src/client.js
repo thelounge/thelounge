@@ -63,6 +63,7 @@ function Client(manager, name, config = {}) {
 		messageStorage: [],
 		highlightRegex: null,
 		highlightExceptionRegex: null,
+		messageProvider: undefined,
 	});
 
 	const client = this;
@@ -72,7 +73,8 @@ function Client(manager, name, config = {}) {
 
 	if (!Helper.config.public && client.config.log) {
 		if (Helper.config.messageStorage.includes("sqlite")) {
-			client.messageStorage.push(new MessageStorage(client));
+			client.messageProvider = new MessageStorage(client);
+			client.messageStorage.push(client.messageProvider);
 		}
 
 		if (Helper.config.messageStorage.includes("text")) {
@@ -102,9 +104,16 @@ function Client(manager, name, config = {}) {
 		delete client.config.awayMessage;
 	}
 
+	if (client.config.uploadCanvas) {
+		client.config.clientSettings.removeImageMetadata = client.config.uploadCanvas;
+		delete client.config.uploadCanvas;
+	}
+
 	if (client.config.clientSettings.awayMessage) {
 		client.awayMessage = client.config.clientSettings.awayMessage;
 	}
+
+	client.config.clientSettings.searchEnabled = client.messageProvider !== undefined;
 
 	client.compileCustomHighlights();
 
@@ -532,6 +541,14 @@ Client.prototype.clearHistory = function (data) {
 	for (const messageStorage of this.messageStorage) {
 		messageStorage.deleteChannel(target.network, target.chan);
 	}
+};
+
+Client.prototype.search = function (query) {
+	if (this.messageProvider === undefined) {
+		return Promise.resolve([]);
+	}
+
+	return this.messageProvider.search(query);
 };
 
 Client.prototype.open = function (socketId, target) {

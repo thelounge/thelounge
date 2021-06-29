@@ -3,7 +3,13 @@
 		<div class="header">
 			<SidebarToggle />
 		</div>
-		<form ref="settingsForm" class="container" @change="onChange" @submit.prevent>
+		<form
+			ref="settingsForm"
+			class="container"
+			autocomplete="off"
+			@change="onChange"
+			@submit.prevent
+		>
 			<h1 class="title">Settings</h1>
 
 			<div>
@@ -172,8 +178,14 @@
 			</div>
 			<div v-if="$store.state.settings.advanced">
 				<label class="opt">
-					<label for="nickPostfix" class="sr-only">
-						Nick autocomplete postfix (for example a comma)
+					<label for="nickPostfix" class="opt">
+						Nick autocomplete postfix
+						<span
+							class="tooltipped tooltipped-n tooltipped-no-delay"
+							aria-label="Nick autocomplete postfix (for example a comma)"
+						>
+							<button class="extra-help" />
+						</span>
 					</label>
 					<input
 						id="nickPostfix"
@@ -236,18 +248,11 @@
 				<div>
 					<label class="opt">
 						<input
-							:checked="$store.state.settings.uploadCanvas"
+							:checked="$store.state.settings.removeImageMetadata"
 							type="checkbox"
-							name="uploadCanvas"
+							name="removeImageMetadata"
 						/>
-						Attempt to remove metadata from images before uploading
-						<span
-							class="tooltipped tooltipped-n tooltipped-no-delay"
-							aria-label="This option renders the image into a canvas element to remove metadata from the image.
-This may break orientation if your browser does not support that."
-						>
-							<button class="extra-help" />
-						</span>
+						Remove metadata from uploaded images
 					</label>
 				</div>
 			</div>
@@ -353,7 +358,7 @@ This may break orientation if your browser does not support that."
 						Custom highlights
 						<span
 							class="tooltipped tooltipped-n tooltipped-no-delay"
-							aria-label="If a message contains any of these comma-separated 
+							aria-label="If a message contains any of these comma-separated
 expressions, it will trigger a highlight."
 						>
 							<button class="extra-help" />
@@ -376,8 +381,8 @@ expressions, it will trigger a highlight."
 						Highlight exceptions
 						<span
 							class="tooltipped tooltipped-n tooltipped-no-delay"
-							aria-label="If a message contains any of these comma-separated 
-expressions, it will not trigger a highlight even if it contains 
+							aria-label="If a message contains any of these comma-separated
+expressions, it will not trigger a highlight even if it contains
 your nickname or expressions defined in custom highlights."
 						>
 							<button class="extra-help" />
@@ -405,10 +410,11 @@ your nickname or expressions defined in custom highlights."
 			>
 				<h2 id="label-change-password">Change password</h2>
 				<div class="password-container">
-					<label for="old_password_input" class="sr-only"> Enter current password </label>
+					<label for="current-password" class="sr-only"> Enter current password </label>
 					<RevealPassword v-slot:default="slotProps">
 						<input
-							id="old_password_input"
+							id="current-password"
+							autocomplete="current-password"
 							:type="slotProps.isVisible ? 'text' : 'password'"
 							name="old_password"
 							class="input"
@@ -417,26 +423,26 @@ your nickname or expressions defined in custom highlights."
 					</RevealPassword>
 				</div>
 				<div class="password-container">
-					<label for="new_password_input" class="sr-only">
-						Enter desired new password
-					</label>
+					<label for="new-password" class="sr-only"> Enter desired new password </label>
 					<RevealPassword v-slot:default="slotProps">
 						<input
-							id="new_password_input"
+							id="new-password"
 							:type="slotProps.isVisible ? 'text' : 'password'"
 							name="new_password"
+							autocomplete="new-password"
 							class="input"
 							placeholder="Enter desired new password"
 						/>
 					</RevealPassword>
 				</div>
 				<div class="password-container">
-					<label for="verify_password_input" class="sr-only"> Repeat new password </label>
+					<label for="new-password-verify" class="sr-only"> Repeat new password </label>
 					<RevealPassword v-slot:default="slotProps">
 						<input
-							id="verify_password_input"
+							id="new-password-verify"
 							:type="slotProps.isVisible ? 'text' : 'password'"
 							name="verify_password"
+							autocomplete="new-password"
 							class="input"
 							placeholder="Repeat new password"
 						/>
