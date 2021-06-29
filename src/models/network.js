@@ -43,7 +43,12 @@ function Network(attr) {
 		irc: null,
 		serverOptions: {
 			CHANTYPES: ["#", "&"],
-			PREFIX: ["!", "@", "%", "+"],
+			PREFIX: [
+				{symbol: "!", mode: "Y"},
+				{symbol: "@", mode: "o"},
+				{symbol: "%", mode: "h"},
+				{symbol: "+", mode: "v"},
+			],
 			NETWORK: "",
 		},
 

@@ -202,13 +202,10 @@ module.exports = function (irc, network) {
 		data.options.PREFIX.forEach((mode) => {
 			network.prefixLookup[mode.mode] = mode.symbol;
 		});
+		network.serverOptions.PREFIX = data.options.PREFIX;
 
 		if (data.options.CHANTYPES) {
 			network.serverOptions.CHANTYPES = data.options.CHANTYPES;
-		}
-
-		if (network.serverOptions.PREFIX) {
-			network.serverOptions.PREFIX = data.options.PREFIX.map((p) => p.symbol);
 		}
 
 		network.serverOptions.NETWORK = data.options.NETWORK;
