@@ -1507,13 +1507,20 @@ textarea.input {
 }
 
 #chat .msg[data-type="notice"] .time,
+#chat .msg[data-type="wallops"] .time,
 #chat .msg[data-type="notice"] .content,
-#chat .msg[data-type="notice"] .user {
+#chat .msg[data-type="wallops"] .content,
+#chat .msg[data-type="notice"] .user,
+#chat .msg[data-type="wallops"] .user {
 	color: #0074d9;
 }
 
 #chat .msg[data-type="notice"] .from .user::before {
 	content: "Notice: ";
+}
+
+#chat .msg[data-type="wallops"] .from .user::before {
+	content: "Wallops: ";
 }
 
 #chat .msg[data-type="error"],

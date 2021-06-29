@@ -79,6 +79,7 @@ Msg.Type = {
 	WHOIS: "whois",
 	RAW: "raw",
 	PLUGIN: "plugin",
+	WALLOPS: "wallops",
 };
 
 module.exports = Msg;
