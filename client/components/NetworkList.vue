@@ -77,18 +77,20 @@
 			>
 				<NetworkLobby
 					:network="network"
-					:is-join-channel-shown="network.isJoinChannelShown"
+					:is-join-channel-shown="
+						network.isJoinChannelShown || !!getChannelQueryIfPresent()
+					"
 					:active="
 						$store.state.activeChannel &&
 						network.channels[0] === $store.state.activeChannel.channel
 					"
-					@toggle-join-channel="network.isJoinChannelShown = !network.isJoinChannelShown"
+					@toggle-join-channel="toggleJoinChannel(network)"
 				/>
 				<JoinChannel
-					v-if="network.isJoinChannelShown"
+					v-if="network.isJoinChannelShown || getChannelQueryIfPresent()"
 					:network="network"
 					:channel="network.channels[0]"
-					@toggle-join-channel="network.isJoinChannelShown = !network.isJoinChannelShown"
+					@toggle-join-channel="toggleJoinChannel(network)"
 				/>
 
 				<Draggable
@@ -183,6 +185,7 @@
 </style>
 
 <script>
+import VueRouter from "vue-router";
 import Mousetrap from "mousetrap";
 import Draggable from "vuedraggable";
 import {filter as fuzzyFilter} from "fuzzy";
@@ -193,6 +196,8 @@ import JoinChannel from "./JoinChannel.vue";
 import socket from "../js/socket";
 import collapseNetwork from "../js/helpers/collapseNetwork";
 import isIgnoredKeybind from "../js/helpers/isIgnoredKeybind";
+
+const {isNavigationFailure, NavigationFailureType} = VueRouter;
 
 export default {
 	name: "NetworkList",
@@ -238,10 +243,6 @@ export default {
 	watch: {
 		searchText() {
 			this.setActiveSearchItem();
-		},
-		"this.$route.query.channel"(value) {
-			const activeNetwork = this.$store.state.activeChannel.network;
-			activeNetwork.isJoinChannelShown = true;
 		},
 	},
 	mounted() {
@@ -359,7 +360,7 @@ export default {
 				channel = this.results[0].channel;
 			}
 
-			this.activeSearchItem = {channel, network};
+			this.activeSearchItem = channel;
 		},
 		selectResult() {
 			if (!this.searchText || !this.results.length) {
@@ -424,6 +425,29 @@ export default {
 					el.scrollIntoView({block: "nearest", inline: "nearest"});
 				}
 			});
+		},
+		getChannelQueryIfPresent() {
+			return this.$route.query.channel;
+		},
+		toggleJoinChannel(network) {
+			network.isJoinChannelShown = !network.isJoinChannelShown;
+
+			// Clear the `channel` query if the user closes the join channel UI.
+			// The UI opens automatically if `channel` is present, so this is only true when the Join Channel
+			// form is being closed and we can safely set isJoinChannelShown to false.
+			if (this.$route.query.channel) {
+				const query = Object.assign({}, this.$route.query);
+				delete query.channel;
+
+				this.$router.push({path: this.$route.path, query}).catch((e) => {
+					// Required because Vue complains when pushing a route with the same path
+					if (!isNavigationFailure(e, NavigationFailureType.duplicated)) {
+						throw e;
+					}
+				});
+				// Manually set to false.
+				network.isJoinChannelShown = false;
+			}
 		},
 	},
 };

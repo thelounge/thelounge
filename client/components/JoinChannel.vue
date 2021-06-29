@@ -53,8 +53,8 @@ export default {
 	},
 	data() {
 		return {
-			inputChannel: this.$route.query.channel ? this.$route.query.channel : "",
-			inputPassword: this.$route.query.password ? this.$route.query.password : "",
+			inputChannel: this.$route.query.channel || "",
+			inputPassword: this.$route.query.password || "",
 		};
 	},
 	methods: {

@@ -101,6 +101,7 @@ router.beforeEach((to, from, next) => {
 				channel = channelName;
 			}
 		}
+
 		if (store.getters.findChannelByName(networkHost, channel)) {
 			next();
 			return;
@@ -114,6 +115,7 @@ router.beforeEach((to, from, next) => {
 			// Join Channel UI
 
 			const activeChannel = store.state.activeChannel;
+
 			// if the active channel is in the network, send the user back to that channel, else to the lobby
 			if (activeChannel && activeChannel.network.uuid === existingNetwork.uuid) {
 				next({
@@ -123,22 +125,20 @@ router.beforeEach((to, from, next) => {
 					query: {channel},
 				});
 				return;
-			} else {
-				next({
-					path: `/${to.params.networkHost}/${existingNetwork.name}`,
-					query: {channel},
-				});
-				return;
 			}
-		} else {
-			// Connect UI
+
 			next({
-				path: "/connect",
-				query: {...to.query, host: to.params.networkHost, channels: to.params.channelName},
+				path: `/${to.params.networkHost}/${existingNetwork.name}`,
+				query: {channel},
 			});
 			return;
 		}
-		next(false);
+
+		// Connect UI
+		next({
+			path: "/connect",
+			query: {...to.query, host: to.params.networkHost, channels: to.params.channelName},
+		});
 		return;
 	}
 
@@ -212,6 +212,7 @@ if ("serviceWorker" in navigator) {
 			const id = parseInt(event.data.channel.substr(5), 10); // remove "chan-" prefix
 
 			const channelTarget = store.getters.findChannel(id);
+
 			if (channelTarget) {
 				switchToChannel(channelTarget.network, channelTarget.channel);
 			}

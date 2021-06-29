@@ -13,7 +13,7 @@ export default {
 	},
 	computed: {
 		activeChannel() {
-			let channel = this.$store.getters.findChannelByName(
+			const channel = this.$store.getters.findChannelByName(
 				this.$route.params.networkHost,
 				this.$route.params.channelName
 			);
