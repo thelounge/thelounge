@@ -45,6 +45,7 @@ describe("Network", function () {
 				saslAccount: "testaccount",
 				saslPassword: "testpassword",
 				commands: [],
+				mediaPreviewBlacklist: [],
 				nick: "chillin`",
 				channels: [
 					{name: "#thelounge", key: ""},
@@ -140,6 +141,7 @@ describe("Network", function () {
 					saslAccount: 1337,
 					saslPassword: 1337,
 					commands: "/command 1 2 3\r\n/ping HELLO\r\r\r\r/whois test\r\n\r\n",
+					mediaPreviewBlacklist: ["user", "#channel"],
 					ip: "newIp",
 					hostname: "newHostname",
 					uuid: "newuuid",
@@ -249,7 +251,15 @@ describe("Network", function () {
 
 			expect(clone)
 				.to.be.an("object")
-				.that.has.all.keys("channels", "status", "nick", "name", "serverOptions", "uuid");
+				.that.has.all.keys(
+					"channels",
+					"mediaPreviewBlacklist",
+					"status",
+					"nick",
+					"name",
+					"serverOptions",
+					"uuid"
+				);
 
 			expect(clone.status).to.be.an("object").that.has.all.keys("connected", "secure");
 		});

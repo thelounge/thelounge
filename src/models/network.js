@@ -12,14 +12,9 @@ const ClientCertificate = require("../plugins/clientCertificate");
 module.exports = Network;
 
 /**
- * @type {Object} List of keys which should be sent to the client by default.
+ * @type {Array} List of keys which should be sent to the client by default.
  */
-const fieldsForClient = {
-	uuid: true,
-	name: true,
-	nick: true,
-	serverOptions: true,
-};
+const fieldsForClient = ["uuid", "name", "nick", "serverOptions", "mediaPreviewBlacklist"];
 
 function Network(attr) {
 	_.defaults(this, attr, {
@@ -33,6 +28,7 @@ function Network(attr) {
 		password: "",
 		awayMessage: "",
 		commands: [],
+		mediaPreviewBlacklist: [],
 		username: "",
 		realname: "",
 		leaveMessage: "",
@@ -373,7 +369,7 @@ Network.prototype.getFilteredClone = function (lastActiveChannel, lastMessage) {
 			newNetwork[prop] = this[prop].map((channel) =>
 				channel.getFilteredClone(lastActiveChannel, lastMessage)
 			);
-		} else if (fieldsForClient[prop]) {
+		} else if (fieldsForClient.includes(prop)) {
 			// Some properties that are not useful for the client are skipped
 			newNetwork[prop] = this[prop];
 		}
@@ -491,6 +487,7 @@ Network.prototype.export = function () {
 		"saslPassword",
 		"commands",
 		"ignoreList",
+		"mediaPreviewBlacklist",
 	]);
 
 	network.channels = this.channels

@@ -11,7 +11,7 @@ const currentFetchPromises = new Map();
 const imageTypeRegex = /^image\/.+/;
 const mediaTypeRegex = /^(audio|video)\/.+/;
 
-module.exports = function (client, chan, msg, cleanText) {
+module.exports = function (client, chan, msg, cleanText, network) {
 	if (!Helper.config.prefetch) {
 		return;
 	}
@@ -51,7 +51,7 @@ module.exports = function (client, chan, msg, cleanText) {
 			language: client.config.browser.language,
 		})
 			.then((res) => {
-				parse(msg, chan, preview, res, client);
+				parse(msg, chan, preview, res, client, network);
 			})
 			.catch((err) => {
 				preview.type = "error";
@@ -202,10 +202,23 @@ function parseHtmlMedia($, preview, client) {
 	});
 }
 
-function parse(msg, chan, preview, res, client) {
+function disableMediaPreviewDueBlacklist(msg, chan, network) {
+	const sender = msg.from ? msg.from.nick : msg.nick;
+
+	return (
+		[chan.name, sender].filter((value) => (network.mediaPreviewBlacklist || []).includes(value))
+			.length > 0
+	);
+}
+
+function parse(msg, chan, preview, res, client, network) {
 	let promise;
 
 	preview.size = res.size;
+
+	if (disableMediaPreviewDueBlacklist(msg, chan, network)) {
+		preview.shown = false;
+	}
 
 	switch (res.type) {
 		case "text/html":
