@@ -191,6 +191,16 @@
 
 			<div class="help-item">
 				<div class="subject">
+					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>M</kbd></span>
+					<span v-else><kbd>⌥</kbd> <kbd>M</kbd></span>
+				</div>
+				<div class="description">
+					<p>Toggle recent mentions popup.</p>
+				</div>
+			</div>
+
+			<div class="help-item">
+				<div class="subject">
 					<span><kbd>Esc</kbd></span>
 				</div>
 				<div class="description">
