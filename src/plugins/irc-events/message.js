@@ -33,7 +33,7 @@ module.exports = function (irc, network) {
 
 	irc.on("wallops", function (data) {
 		data.from_server = true;
-		data.type = Msg.Type.NOTICE;
+		data.type = Msg.Type.WALLOPS;
 		handleMessage(data);
 	});
 
@@ -51,8 +51,13 @@ module.exports = function (irc, network) {
 				return Helper.compareHostmask(entry, data);
 			});
 
-		// Server messages go to server window, no questions asked
-		if (data.from_server) {
+		// Server messages that aren't targeted at a channel go to the server window
+		if (
+			data.from_server &&
+			(!data.target ||
+				!network.getChannel(data.target) ||
+				network.getChannel(data.target).type !== Chan.Type.CHANNEL)
+		) {
 			chan = network.channels[0];
 			from = chan.getUser(data.nick);
 		} else {

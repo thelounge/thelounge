@@ -34,7 +34,7 @@ try {
 createPackagesFolder();
 
 // Merge config key-values passed as CLI options into the main config
-Helper.mergeConfig(Helper.config, program.config);
+Helper.mergeConfig(Helper.config, program.opts().config);
 
 require("./start");
 

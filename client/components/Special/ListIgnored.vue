@@ -8,7 +8,7 @@
 		</thead>
 		<tbody>
 			<tr v-for="user in channel.data" :key="user.hostmask">
-				<td class="hostmask">{{ user.hostmask }}</td>
+				<td class="hostmask"><ParsedMessage :network="network" :text="user.hostmask" /></td>
 				<td class="when">{{ localetime(user.when) }}</td>
 			</tr>
 		</tbody>
@@ -16,10 +16,14 @@
 </template>
 
 <script>
+import ParsedMessage from "../ParsedMessage.vue";
 import localetime from "../../js/helpers/localetime";
 
 export default {
 	name: "ListIgnored",
+	components: {
+		ParsedMessage,
+	},
 	props: {
 		network: Object,
 		channel: Object,

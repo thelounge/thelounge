@@ -51,6 +51,7 @@ export default {
 		Mousetrap.bind("esc", this.escapeKey);
 		Mousetrap.bind("alt+u", this.toggleUserList);
 		Mousetrap.bind("alt+s", this.toggleSidebar);
+		Mousetrap.bind("alt+m", this.toggleMentions);
 
 		// Make a single throttled resize listener available to all components
 		this.debouncedResize = throttle(() => {
@@ -72,6 +73,7 @@ export default {
 		Mousetrap.unbind("esc", this.escapeKey);
 		Mousetrap.unbind("alt+u", this.toggleUserList);
 		Mousetrap.unbind("alt+s", this.toggleSidebar);
+		Mousetrap.unbind("alt+m", this.toggleMentions);
 
 		window.removeEventListener("resize", this.debouncedResize);
 		clearTimeout(this.dayChangeTimeout);
@@ -97,6 +99,11 @@ export default {
 			this.$store.commit("toggleUserlist");
 
 			return false;
+		},
+		toggleMentions() {
+			if (this.$store.state.networks.length !== 0) {
+				eventbus.emit("mentions:toggle");
+			}
 		},
 		msUntilNextDay() {
 			// Compute how many milliseconds are remaining until the next day starts
