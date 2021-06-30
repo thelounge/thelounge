@@ -1846,19 +1846,23 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-top: 6px;
 }
 
-#connect .tls input {
+#connect .tls input,
+#connect input[name="proxyEnabled"] {
 	margin: 3px 10px 0 0;
 }
 
-#connect\:host {
+#connect\:host,
+#connect\:proxyHost {
 	width: 70%;
 }
 
-#connect\:port {
+#connect\:port,
+#connect\:proxyPort {
 	width: 25%;
 }
 
-#connect\:portseparator {
+#connect\:portseparator,
+#connect\:proxyPortSeparator {
 	width: 5%;
 	text-align: center;
 	display: inline-block;

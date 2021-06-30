@@ -46,6 +46,10 @@ describe("Network", function () {
 				saslPassword: "testpassword",
 				commands: [],
 				nick: "chillin`",
+				proxyEnabled: false,
+				proxyHost: "",
+				proxyPort: 1080,
+				proxyUsername: "",
 				channels: [
 					{name: "#thelounge", key: ""},
 					{name: "&foobar", key: ""},

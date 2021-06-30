@@ -98,6 +98,80 @@
 						</label>
 					</div>
 				</div>
+
+				<h2>Proxy Settings</h2>
+				<div class="connect-row">
+					<label></label>
+					<div class="input-wrap">
+						<label for="connect:proxyEnabled">
+							<input
+								id="connect:proxyEnabled"
+								v-model="defaults.proxyEnabled"
+								type="checkbox"
+								name="proxyEnabled"
+							/>
+							Enable Proxy
+						</label>
+					</div>
+				</div>
+				<template v-if="defaults.proxyEnabled">
+					<div class="connect-row">
+						<label for="connect:proxyHost">SOCKS Address</label>
+						<div class="input-wrap">
+							<input
+								id="connect:proxyHost"
+								v-model="defaults.proxyHost"
+								class="input"
+								name="proxyHost"
+								aria-label="Proxy host"
+								maxlength="255"
+							/>
+							<span id="connect:proxyPortSeparator">:</span>
+							<input
+								id="connect:proxyPort"
+								v-model="defaults.proxyPort"
+								class="input"
+								type="number"
+								min="1"
+								max="65535"
+								name="proxyPort"
+								aria-label="SOCKS port"
+							/>
+						</div>
+					</div>
+
+					<div class="connect-row">
+						<label for="connect:proxyUsername">Proxy username</label>
+						<input
+							id="connect:proxyUsername"
+							ref="proxyUsernameInput"
+							v-model="defaults.proxyUsername"
+							class="input username"
+							name="proxyUsername"
+							maxlength="100"
+							placeholder="Proxy username"
+						/>
+					</div>
+
+					<div class="connect-row">
+						<label for="connect:proxyPassword">Proxy password</label>
+						<RevealPassword
+							v-slot:default="slotProps"
+							class="input-wrap password-container"
+						>
+							<input
+								id="connect:proxyPassword"
+								ref="proxyPassword"
+								v-model="defaults.proxyPassword"
+								class="input"
+								:type="slotProps.isVisible ? 'text' : 'password'"
+								placeholder="Proxy password"
+								name="password"
+								maxlength="300"
+							/>
+						</RevealPassword>
+					</div>
+				</template>
 			</template>
 			<template v-else-if="config.lockNetwork && !$store.state.serverConfiguration.public">
 				<h2>Network settings</h2>

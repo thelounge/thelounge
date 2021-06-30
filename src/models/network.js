@@ -46,6 +46,13 @@ function Network(attr) {
 			PREFIX: ["!", "@", "%", "+"],
 			NETWORK: "",
 		},
+
+		proxyHost: "",
+		proxyPort: 1080,
+		proxyUsername: "",
+		proxyPassword: "",
+		proxyEnabled: false,
+
 		chanCache: [],
 		ignoreList: [],
 		keepNick: null,
@@ -89,6 +96,12 @@ Network.prototype.validate = function (client) {
 	this.name = cleanString(this.name);
 	this.saslAccount = cleanString(this.saslAccount);
 	this.saslPassword = cleanString(this.saslPassword);
+
+	this.proxyHost = cleanString(this.proxyHost);
+	this.proxyPort = this.proxyPort || 1080;
+	this.proxyUsername = cleanString(this.proxyUsername);
+	this.proxyPassword = cleanString(this.proxyPassword);
+	this.proxyEnabled = !!this.proxyEnabled;
 
 	if (!this.port) {
 		this.port = this.tls ? 6697 : 6667;
@@ -208,6 +221,17 @@ Network.prototype.setIrcFrameworkOptions = function (client) {
 	this.irc.options.webirc = this.createWebIrc(client);
 	this.irc.options.client_certificate = null;
 
+	if (this.proxyEnabled) {
+		this.irc.options.socks = {
+			host: this.proxyHost,
+			port: this.proxyPort,
+			user: this.proxyUsername,
+			pass: this.proxyPassword,
+		};
+	} else {
+		delete this.irc.options.socks;
+	}
+
 	if (!this.sasl) {
 		delete this.irc.options.sasl_mechanism;
 		delete this.irc.options.account;
@@ -273,6 +297,12 @@ Network.prototype.edit = function (client, args) {
 	this.sasl = String(args.sasl || "");
 	this.saslAccount = String(args.saslAccount || "");
 	this.saslPassword = String(args.saslPassword || "");
+
+	this.proxyHost = String(args.proxyHost || "");
+	this.proxyPort = parseInt(args.proxyPort, 10);
+	this.proxyUsername = String(args.proxyUsername || "");
+	this.proxyPassword = String(args.proxyPassword || "");
+	this.proxyEnabled = !!args.proxyEnabled;
 
 	// Split commands into an array
 	this.commands = String(args.commands || "")
@@ -455,6 +485,12 @@ Network.prototype.exportForEdit = function () {
 		"saslAccount",
 		"saslPassword",
 		"commands",
+
+		"proxyEnabled",
+		"proxyHost",
+		"proxyPort",
+		"proxyUsername",
+		"proxyPassword",
 	];
 
 	if (!Helper.config.lockNetwork) {
@@ -491,6 +527,11 @@ Network.prototype.export = function () {
 		"saslPassword",
 		"commands",
 		"ignoreList",
+
+		"proxyHost",
+		"proxyPort",
+		"proxyUsername",
+		"proxyEnabled",
 	]);
 
 	network.channels = this.channels
