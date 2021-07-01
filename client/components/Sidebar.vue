@@ -6,11 +6,13 @@
 					:src="`img/logo-${isPublic() ? 'horizontal-' : ''}transparent-bg.svg`"
 					class="logo"
 					alt="The Lounge"
+					role="presentation"
 				/>
 				<img
 					:src="`img/logo-${isPublic() ? 'horizontal-' : ''}transparent-bg-inverted.svg`"
 					class="logo-inverted"
 					alt="The Lounge"
+					role="presentation"
 				/>
 				<span
 					v-if="isDevelopment"

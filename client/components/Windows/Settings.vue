@@ -91,7 +91,7 @@
 						type="checkbox"
 						name="showSeconds"
 					/>
-					Show seconds in timestamp
+					Include seconds in timestamp
 				</label>
 			</div>
 			<div>
@@ -101,7 +101,7 @@
 						type="checkbox"
 						name="use12hClock"
 					/>
-					Show 12-hour timestamps
+					Use 12-hour timestamps
 				</label>
 			</div>
 			<div v-if="!$store.state.serverConfiguration.public && $store.state.settings.advanced">

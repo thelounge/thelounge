@@ -1,7 +1,12 @@
 <template>
 	<div id="viewport" :class="viewportClasses" role="tablist">
 		<Sidebar v-if="$store.state.appLoaded" :overlay="$refs.overlay" />
-		<div id="sidebar-overlay" ref="overlay" @click="$store.commit('sidebarOpen', false)" />
+		<div
+			aria-hidden="true"
+			id="sidebar-overlay"
+			ref="overlay"
+			@click="$store.commit('sidebarOpen', false)"
+		/>
 		<router-view ref="window"></router-view>
 		<Mentions />
 		<ImageViewer ref="imageViewer" />

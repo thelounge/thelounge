@@ -13,8 +13,12 @@
 		:data-command="message.command"
 		:data-from="message.from && message.from.nick"
 	>
-		<span :aria-label="messageTimeLocale" class="time tooltipped tooltipped-e"
-			>{{ messageTime }}
+		<span
+			aria-hidden="true"
+			:aria-label="messageTimeLocale"
+			class="time tooltipped tooltipped-e"
+		>
+			{{ messageTime }}
 		</span>
 		<template v-if="message.type === 'unhandled'">
 			<span class="from">[{{ message.command }}]</span>
@@ -47,23 +51,23 @@
 		<template v-else>
 			<span v-if="message.type === 'message'" class="from">
 				<template v-if="message.from && message.from.nick">
-					<span class="only-copy">&lt;</span>
+					<span class="only-copy" aria-hidden="true">&lt;</span>
 					<Username :user="message.from" :network="network" :channel="channel" />
-					<span class="only-copy">&gt; </span>
+					<span class="only-copy" aria-hidden="true">&gt; </span>
 				</template>
 			</span>
 			<span v-else-if="message.type === 'plugin'" class="from">
 				<template v-if="message.from && message.from.nick">
-					<span class="only-copy">[</span>
+					<span class="only-copy" aria-hidden="true">[</span>
 					{{ message.from.nick }}
-					<span class="only-copy">] </span>
+					<span class="only-copy" aria-hidden="true">] </span>
 				</template>
 			</span>
 			<span v-else class="from">
 				<template v-if="message.from && message.from.nick">
-					<span class="only-copy">-</span>
+					<span class="only-copy" aria-hidden="true">-</span>
 					<Username :user="message.from" :network="network" :channel="channel" />
-					<span class="only-copy">- </span>
+					<span class="only-copy" aria-hidden="true">- </span>
 				</template>
 			</span>
 			<span class="content" dir="auto">
