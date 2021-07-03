@@ -20,6 +20,13 @@ describe("Commands", function () {
 			lastCommand: null,
 			nick: "xPaw",
 			irc: {
+				network: {
+					supports(type) {
+						if (type.toUpperCase() === "MODES") {
+							return "4";
+						}
+					},
+				},
 				raw(...args) {
 					testableNetwork.lastCommand = args.join(" ");
 				},
@@ -82,9 +89,18 @@ describe("Commands", function () {
 			ModeCommand.input(testableNetwork, channel, "devoice", ["xPaw"]);
 			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge -v xPaw");
 
-			// Multiple arguments are supported, sent as separate commands
-			ModeCommand.input(testableNetwork, channel, "devoice", ["xPaw", "Max-P"]);
-			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge -v Max-P");
+			ModeCommand.input(testableNetwork, channel, "voice", ["xPaw", "Max-P"]);
+			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge +vv xPaw Max-P");
+
+			// since the limit for modes on tests is 4, it should send two commands
+			ModeCommand.input(testableNetwork, channel, "devoice", [
+				"xPaw",
+				"Max-P",
+				"hey",
+				"idk",
+				"thelounge",
+			]);
+			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge -v thelounge");
 		});
 	});
 });
