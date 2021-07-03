@@ -27,6 +27,12 @@ module.exports = function (irc, network) {
 	});
 
 	irc.on("privmsg", function (data) {
+		// Some servers send messages without any nickname
+		if (!data.nick) {
+			data.from_server = true;
+			data.nick = data.hostname || network.host;
+		}
+
 		data.type = Msg.Type.MESSAGE;
 		handleMessage(data);
 	});
