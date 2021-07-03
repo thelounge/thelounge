@@ -3,10 +3,14 @@
 const Chan = require("../../models/chan");
 const Msg = require("../../models/msg");
 
-exports.commands = ["mode", "op", "deop", "hop", "dehop", "voice", "devoice"];
+exports.commands = ["mode", "umode", "op", "deop", "hop", "dehop", "voice", "devoice"];
 
 exports.input = function ({irc, nick}, chan, cmd, args) {
-	if (cmd !== "mode") {
+	if (cmd === "umode") {
+		irc.raw("MODE", nick, ...args);
+
+		return;
+	} else if (cmd !== "mode") {
 		if (chan.type !== Chan.Type.CHANNEL) {
 			chan.pushMessage(
 				this,
