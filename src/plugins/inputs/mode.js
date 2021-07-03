@@ -19,7 +19,9 @@ exports.input = function ({irc, nick}, chan, cmd, args) {
 			return;
 		}
 
-		if (args.length === 0) {
+		const target = args.filter((arg) => arg !== "");
+
+		if (target.length === 0) {
 			chan.pushMessage(
 				this,
 				new Msg({
@@ -40,9 +42,13 @@ exports.input = function ({irc, nick}, chan, cmd, args) {
 			devoice: "-v",
 		}[cmd];
 
-		args.forEach(function (target) {
-			irc.raw("MODE", chan.name, mode, target);
-		});
+		const limit = parseInt(irc.network.supports("modes")) || 1;
+
+		for (let i = 0; i < target.length; i += limit) {
+			const targets = target.slice(i, i + limit);
+			const amode = `${mode[0]}${mode[1].repeat(targets.length)}`;
+			irc.raw("MODE", chan.name, amode, ...targets);
+		}
 
 		return;
 	}
