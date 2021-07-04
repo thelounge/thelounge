@@ -1,4 +1,4 @@
-const clientSideCommands = ["/collapse", "/expand", "/search"];
+const clientSideCommands = ["/collapse", "/expand"];
 
 const passThroughCommands = [
 	"/as",
@@ -43,13 +43,19 @@ const userInputs = [
 
 const pluginCommands = new Map();
 
-const getCommands = () =>
-	Array.from(userInputs.keys())
+const getCommands = (client) => {
+	const commands = Array.from(userInputs.keys())
 		.concat(Array.from(pluginCommands.keys()))
 		.map((command) => `/${command}`)
 		.concat(clientSideCommands)
-		.concat(passThroughCommands)
-		.sort();
+		.concat(passThroughCommands);
+
+	if (client.messageProvider !== undefined) {
+		commands.push("/search");
+	}
+
+	return commands.sort();
+};
 
 const addPluginCommand = (packageInfo, command, func) => {
 	func.packageInfo = packageInfo;
