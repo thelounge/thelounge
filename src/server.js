@@ -692,7 +692,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 			),
 			token: tokenToSend,
 		});
-		socket.emit("commands", inputs.getCommands(client));
+		socket.emit("commands", inputs.getCommands());
 	};
 
 	if (Helper.config.public) {
