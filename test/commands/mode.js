@@ -33,6 +33,19 @@ describe("Commands", function () {
 			},
 		};
 
+		const testableNetworkNoSupports = Object.assign({}, testableNetwork, {
+			irc: {
+				network: {
+					supports() {
+						return null;
+					},
+				},
+				raw(...args) {
+					testableNetworkNoSupports.lastCommand = args.join(" ");
+				},
+			},
+		});
+
 		it("should not mess with the given target", function () {
 			const test = function (expected, args) {
 				ModeCommand.input(testableNetwork, channel, "mode", Array.from(args));
@@ -88,7 +101,9 @@ describe("Commands", function () {
 
 			ModeCommand.input(testableNetwork, channel, "devoice", ["xPaw"]);
 			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge -v xPaw");
+		});
 
+		it("should use ISUPPORT MODES on shorthand commands", function () {
 			ModeCommand.input(testableNetwork, channel, "voice", ["xPaw", "Max-P"]);
 			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge +vv xPaw Max-P");
 
@@ -101,6 +116,14 @@ describe("Commands", function () {
 				"thelounge",
 			]);
 			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge -v thelounge");
+		});
+
+		it("should fallback to default limit of 1 mode for shorthand commands", function () {
+			ModeCommand.input(testableNetworkNoSupports, channel, "voice", ["xPaw"]);
+			expect(testableNetworkNoSupports.lastCommand).to.equal("MODE #thelounge +v xPaw");
+
+			ModeCommand.input(testableNetworkNoSupports, channel, "devoice", ["xPaw", "Max-P"]);
+			expect(testableNetworkNoSupports.lastCommand).to.equal("MODE #thelounge -v Max-P");
 		});
 	});
 });
