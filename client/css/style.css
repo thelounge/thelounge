@@ -2635,6 +2635,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		right: 0;
 		transform: translateX(180px);
 		transition: transform 0.2s;
+		z-index: 1;
 	}
 
 	#viewport.userlist-open #chat .userlist {
