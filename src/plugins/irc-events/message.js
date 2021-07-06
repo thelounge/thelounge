@@ -11,12 +11,6 @@ module.exports = function (irc, network) {
 	const client = this;
 
 	irc.on("notice", function (data) {
-		// Some servers send notices without any nickname
-		if (!data.nick) {
-			data.from_server = true;
-			data.nick = data.hostname || network.host;
-		}
-
 		data.type = Msg.Type.NOTICE;
 		handleMessage(data);
 	});
@@ -43,6 +37,12 @@ module.exports = function (irc, network) {
 		let highlight = false;
 		let showInActive = false;
 		const self = data.nick === irc.user.nick;
+
+		// Some servers send messages without any nickname
+		if (!data.nick) {
+			data.from_server = true;
+			data.nick = data.hostname || network.host;
+		}
 
 		// Check if the sender is in our ignore list
 		const shouldIgnore =
