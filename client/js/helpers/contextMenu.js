@@ -275,7 +275,7 @@ export function generateUserContextMenu($root, channel, network, user) {
 		},
 	};
 
-	const networkModeSymbols = network.serverOptions.PREFIX.map((m) => m.symbol);
+	const networkModeSymbols = network.serverOptions.PREFIX.symbols;
 
 	/**
 	 * Determine whether the prefix of mode p1 has access to perform actions on p2.
@@ -296,7 +296,7 @@ export function generateUserContextMenu($root, channel, network, user) {
 			: networkModeSymbols.indexOf(p1) < networkModeSymbols.indexOf(p2);
 	}
 
-	network.serverOptions.PREFIX.forEach((mode) => {
+	network.serverOptions.PREFIX.prefix.forEach((mode) => {
 		if (!compare(currentChannelUser.modes[0], mode.symbol)) {
 			// Our highest mode is below the current mode.  Bail.
 			return;

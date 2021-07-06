@@ -63,10 +63,9 @@ module.exports = function (irc, network) {
 	});
 
 	irc.on("socket connected", function () {
-		network.prefixLookup = {};
-		irc.network.options.PREFIX.forEach(function (mode) {
-			network.prefixLookup[mode.mode] = mode.symbol;
-		});
+		if (irc.network.options.PREFIX) {
+			network.serverOptions.PREFIX.update(irc.network.options.PREFIX);
+		}
 
 		network.channels[0].pushMessage(
 			client,
@@ -197,12 +196,7 @@ module.exports = function (irc, network) {
 	});
 
 	irc.on("server options", function (data) {
-		network.prefixLookup = {};
-
-		data.options.PREFIX.forEach((mode) => {
-			network.prefixLookup[mode.mode] = mode.symbol;
-		});
-		network.serverOptions.PREFIX = data.options.PREFIX;
+		network.serverOptions.PREFIX.update(data.options.PREFIX);
 
 		if (data.options.CHANTYPES) {
 			network.serverOptions.CHANTYPES = data.options.CHANTYPES;
