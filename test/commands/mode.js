@@ -118,12 +118,14 @@ describe("Commands", function () {
 			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge -v thelounge");
 		});
 
-		it("should fallback to default limit of 1 mode for shorthand commands", function () {
+		it("should fallback to all modes at once for shorthand commands", function () {
 			ModeCommand.input(testableNetworkNoSupports, channel, "voice", ["xPaw"]);
 			expect(testableNetworkNoSupports.lastCommand).to.equal("MODE #thelounge +v xPaw");
 
 			ModeCommand.input(testableNetworkNoSupports, channel, "devoice", ["xPaw", "Max-P"]);
-			expect(testableNetworkNoSupports.lastCommand).to.equal("MODE #thelounge -v Max-P");
+			expect(testableNetworkNoSupports.lastCommand).to.equal(
+				"MODE #thelounge -vv xPaw Max-P"
+			);
 		});
 	});
 });

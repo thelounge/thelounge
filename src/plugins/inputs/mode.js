@@ -42,7 +42,7 @@ exports.input = function ({irc, nick}, chan, cmd, args) {
 			devoice: "-v",
 		}[cmd];
 
-		const limit = parseInt(irc.network.supports("MODES")) || 1;
+		const limit = parseInt(irc.network.supports("MODES")) || target.length;
 
 		for (let i = 0; i < target.length; i += limit) {
 			const targets = target.slice(i, i + limit);
