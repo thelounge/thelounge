@@ -12,6 +12,8 @@ function detectDesktopNotificationState() {
 		return "unsupported";
 	} else if (Notification.permission === "granted") {
 		return "granted";
+	} else if (!window.isSecureContext) {
+		return "nohttps";
 	}
 
 	return "blocked";
