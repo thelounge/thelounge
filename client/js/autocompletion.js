@@ -6,7 +6,6 @@ import Mousetrap from "mousetrap";
 import {Textcomplete, Textarea} from "textcomplete";
 import fuzzy from "fuzzy";
 
-import commands from "./commands/index";
 import emojiMap from "./helpers/simplemap.json";
 import store from "./store";
 
@@ -313,14 +312,17 @@ function completeNicks(word, isFuzzy) {
 }
 
 function getCommands() {
-	const clientCommands = Object.keys(commands).map((cmd) => `/${cmd}`);
-	const cmds = [...new Set(Array.from(constants.commands).concat(clientCommands))];
+	const cmds = constants.commands;
 
-	if (!store.state.settings.searchEnabled) {
-		cmds.pop("/search");
+	if (store.state.settings.searchEnabled === false) {
+		const search = cmds.indexOf("/search");
+
+		if (search !== -1) {
+			cmds.splice(search, 1);
+		}
 	}
 
-	return cmds.sort();
+	return cmds;
 }
 
 function completeCommands(word) {
