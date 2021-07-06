@@ -17,6 +17,7 @@ describe("Commands", function () {
 		});
 
 		const testableNetwork = {
+			firstCommand: null,
 			lastCommand: null,
 			nick: "xPaw",
 			irc: {
@@ -28,6 +29,7 @@ describe("Commands", function () {
 					},
 				},
 				raw(...args) {
+					testableNetwork.firstCommand = testableNetwork.lastCommand;
 					testableNetwork.lastCommand = args.join(" ");
 				},
 			},
@@ -41,6 +43,7 @@ describe("Commands", function () {
 					},
 				},
 				raw(...args) {
+					testableNetworkNoSupports.firstCommand = testableNetworkNoSupports.lastCommand;
 					testableNetworkNoSupports.lastCommand = args.join(" ");
 				},
 			},
@@ -115,6 +118,9 @@ describe("Commands", function () {
 				"idk",
 				"thelounge",
 			]);
+			expect(testableNetwork.firstCommand).to.equal(
+				"MODE #thelounge -vvvv xPaw Max-P hey idk"
+			);
 			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge -v thelounge");
 		});
 
