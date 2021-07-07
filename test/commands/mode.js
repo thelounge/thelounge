@@ -17,14 +17,37 @@ describe("Commands", function () {
 		});
 
 		const testableNetwork = {
+			firstCommand: null,
 			lastCommand: null,
 			nick: "xPaw",
 			irc: {
+				network: {
+					supports(type) {
+						if (type.toUpperCase() === "MODES") {
+							return "4";
+						}
+					},
+				},
 				raw(...args) {
+					testableNetwork.firstCommand = testableNetwork.lastCommand;
 					testableNetwork.lastCommand = args.join(" ");
 				},
 			},
 		};
+
+		const testableNetworkNoSupports = Object.assign({}, testableNetwork, {
+			irc: {
+				network: {
+					supports() {
+						return null;
+					},
+				},
+				raw(...args) {
+					testableNetworkNoSupports.firstCommand = testableNetworkNoSupports.lastCommand;
+					testableNetworkNoSupports.lastCommand = args.join(" ");
+				},
+			},
+		});
 
 		it("should not mess with the given target", function () {
 			const test = function (expected, args) {
@@ -81,10 +104,34 @@ describe("Commands", function () {
 
 			ModeCommand.input(testableNetwork, channel, "devoice", ["xPaw"]);
 			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge -v xPaw");
+		});
 
-			// Multiple arguments are supported, sent as separate commands
-			ModeCommand.input(testableNetwork, channel, "devoice", ["xPaw", "Max-P"]);
-			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge -v Max-P");
+		it("should use ISUPPORT MODES on shorthand commands", function () {
+			ModeCommand.input(testableNetwork, channel, "voice", ["xPaw", "Max-P"]);
+			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge +vv xPaw Max-P");
+
+			// since the limit for modes on tests is 4, it should send two commands
+			ModeCommand.input(testableNetwork, channel, "devoice", [
+				"xPaw",
+				"Max-P",
+				"hey",
+				"idk",
+				"thelounge",
+			]);
+			expect(testableNetwork.firstCommand).to.equal(
+				"MODE #thelounge -vvvv xPaw Max-P hey idk"
+			);
+			expect(testableNetwork.lastCommand).to.equal("MODE #thelounge -v thelounge");
+		});
+
+		it("should fallback to all modes at once for shorthand commands", function () {
+			ModeCommand.input(testableNetworkNoSupports, channel, "voice", ["xPaw"]);
+			expect(testableNetworkNoSupports.lastCommand).to.equal("MODE #thelounge +v xPaw");
+
+			ModeCommand.input(testableNetworkNoSupports, channel, "devoice", ["xPaw", "Max-P"]);
+			expect(testableNetworkNoSupports.lastCommand).to.equal(
+				"MODE #thelounge -vv xPaw Max-P"
+			);
 		});
 	});
 });
