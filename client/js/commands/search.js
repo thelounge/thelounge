@@ -5,7 +5,14 @@ import {router} from "../router";
 
 function input(args) {
 	if (!store.state.settings.searchEnabled) {
-		store.commit("currentUserVisibleError", "Search is currently not enabled.");
+		const disabled = "Search is currently not enabled.";
+		store.commit("currentUserVisibleError", disabled);
+		setTimeout(
+			() =>
+				store.state.currentUserVisibleError === disabled &&
+				store.commit("currentUserVisibleError", null),
+			5000
+		);
 	} else {
 		router.push({
 			name: "SearchResults",

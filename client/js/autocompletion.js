@@ -312,7 +312,7 @@ function completeNicks(word, isFuzzy) {
 }
 
 function getCommands() {
-	const cmds = constants.commands;
+	const cmds = constants.commands.slice();
 
 	if (store.state.settings.searchEnabled === false) {
 		const search = cmds.indexOf("/search");
@@ -326,7 +326,7 @@ function getCommands() {
 }
 
 function completeCommands(word) {
-	const words = getCommands().slice();
+	const words = getCommands();
 
 	return fuzzyGrep(word, words);
 }
