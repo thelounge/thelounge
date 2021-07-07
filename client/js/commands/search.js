@@ -2,22 +2,22 @@
 
 import store from "../store";
 import {router} from "../router";
+const Msg = require("../../../src/models/msg");
 
 function input(args) {
+	const {channel} = store.state.activeChannel;
+
 	if (!store.state.settings.searchEnabled) {
-		const disabled = "Search is currently not enabled.";
-		store.commit("currentUserVisibleError", disabled);
-		setTimeout(
-			() =>
-				store.state.currentUserVisibleError === disabled &&
-				store.commit("currentUserVisibleError", null),
-			5000
-		);
+		const message = new Msg({
+			type: Msg.Type.ERROR,
+			text: "Search is currently not enabled.",
+		});
+		channel.messages.push(message);
 	} else {
 		router.push({
 			name: "SearchResults",
 			params: {
-				id: store.state.activeChannel.channel.id,
+				id: channel.id,
 			},
 			query: {
 				q: args.join(" "),
