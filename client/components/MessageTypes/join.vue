@@ -1,7 +1,7 @@
 <template>
 	<span class="content">
 		<Username :user="message.from" />
-		<i class="hostmask"> ({{ message.hostmask }})</i>
+		<i class="hostmask"> (<ParsedMessage :network="network" :text="message.hostmask" />)</i>
 		<template v-if="message.account">
 			<i class="account"> [{{ message.account }}]</i>
 		</template>
@@ -13,11 +13,13 @@
 </template>
 
 <script>
+import ParsedMessage from "../ParsedMessage.vue";
 import Username from "../Username.vue";
 
 export default {
 	name: "MessageTypeJoin",
 	components: {
+		ParsedMessage,
 		Username,
 	},
 	props: {

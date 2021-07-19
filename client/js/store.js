@@ -12,6 +12,8 @@ function detectDesktopNotificationState() {
 		return "unsupported";
 	} else if (Notification.permission === "granted") {
 		return "granted";
+	} else if (!window.isSecureContext) {
+		return "nohttps";
 	}
 
 	return "blocked";
@@ -190,7 +192,14 @@ const store = new Vuex.Store({
 			// TODO: This should be a mutation
 			channel.pendingMessage = "";
 			channel.inputHistoryPosition = 0;
-			channel.inputHistory = [""];
+
+			channel.inputHistory = [""].concat(
+				channel.messages
+					.filter((m) => m.self && m.text && m.type === "message")
+					.map((m) => m.text)
+					.reverse()
+					.slice(null, 99)
+			);
 			channel.historyLoading = false;
 			channel.scrolledToBottom = true;
 			channel.editTopic = false;

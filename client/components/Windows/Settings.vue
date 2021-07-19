@@ -91,7 +91,7 @@
 						type="checkbox"
 						name="showSeconds"
 					/>
-					Show seconds in timestamp
+					Include seconds in timestamp
 				</label>
 			</div>
 			<div>
@@ -101,7 +101,7 @@
 						type="checkbox"
 						name="use12hClock"
 					/>
-					Show 12-hour timestamps
+					Use 12-hour timestamps
 				</label>
 			</div>
 			<div v-if="!$store.state.serverConfiguration.public && $store.state.settings.advanced">
@@ -306,6 +306,7 @@
 					<input
 						id="desktopNotifications"
 						:checked="$store.state.settings.desktopNotifications"
+						:disabled="$store.state.desktopNotificationState === 'nohttps'"
 						type="checkbox"
 						name="desktopNotifications"
 					/>
@@ -315,6 +316,14 @@
 						class="error"
 					>
 						<strong>Warning</strong>: Notifications are not supported by your browser.
+					</div>
+					<div
+						v-if="$store.state.desktopNotificationState === 'nohttps'"
+						id="warnBlockedDesktopNotifications"
+						class="error"
+					>
+						<strong>Warning</strong>: Notifications are only supported over HTTPS
+						connections.
 					</div>
 					<div
 						v-if="$store.state.desktopNotificationState === 'blocked'"

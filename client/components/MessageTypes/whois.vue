@@ -12,7 +12,12 @@
 			</template>
 
 			<dt>Host mask:</dt>
-			<dd class="hostmask">{{ message.whois.ident }}@{{ message.whois.hostname }}</dd>
+			<dd class="hostmask">
+				<ParsedMessage
+					:network="network"
+					:text="message.whois.ident + '@' + message.whois.hostname"
+				/>
+			</dd>
 
 			<template v-if="message.whois.actual_hostname">
 				<dt>Actual host:</dt>

@@ -8,12 +8,12 @@ const {
 
 describe("findLinks", () => {
 	it("should find url", () => {
-		const input = "irc://freenode.net/thelounge";
+		const input = "irc://irc.example.com/thelounge";
 		const expected = [
 			{
 				start: 0,
-				end: 28,
-				link: "irc://freenode.net/thelounge",
+				end: 31,
+				link: "irc://irc.example.com/thelounge",
 			},
 		];
 

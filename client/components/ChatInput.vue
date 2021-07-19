@@ -140,22 +140,53 @@ export default {
 				return;
 			}
 
+			const oldValue = this.$refs.input.value;
+			const oldPosition = this.$refs.input.selectionStart;
+			const onRow = (oldValue.slice(null, oldPosition).match(/\n/g) || []).length;
+			const totalRows = (oldValue.match(/\n/g) || []).length;
+
 			const {channel} = this;
 
 			if (channel.inputHistoryPosition === 0) {
 				channel.inputHistory[channel.inputHistoryPosition] = channel.pendingMessage;
 			}
 
-			if (key === "up") {
+			if (key === "up" && onRow === 0) {
 				if (channel.inputHistoryPosition < channel.inputHistory.length - 1) {
 					channel.inputHistoryPosition++;
+				} else {
+					return;
 				}
-			} else if (channel.inputHistoryPosition > 0) {
+			} else if (key === "down" && channel.inputHistoryPosition > 0 && onRow === totalRows) {
 				channel.inputHistoryPosition--;
+			} else {
+				return;
 			}
 
 			channel.pendingMessage = channel.inputHistory[channel.inputHistoryPosition];
-			this.$refs.input.value = channel.pendingMessage;
+			const newValue = channel.pendingMessage;
+			this.$refs.input.value = newValue;
+
+			let newPosition;
+
+			if (key === "up") {
+				const lastIndexOfNewLine = newValue.lastIndexOf("\n");
+				const lastLine = newValue.slice(null, lastIndexOfNewLine);
+				newPosition =
+					oldPosition > lastLine.length
+						? newValue.length
+						: lastIndexOfNewLine + oldPosition + 1;
+			} else {
+				const lastPositionOnFirstLine =
+					newValue.indexOf("\n") === -1 ? newValue.length + 1 : newValue.indexOf("\n");
+				const relativeRowPos = oldPosition - oldValue.lastIndexOf("\n") - 1;
+				newPosition =
+					relativeRowPos > lastPositionOnFirstLine
+						? lastPositionOnFirstLine
+						: relativeRowPos;
+			}
+
+			this.$refs.input.setSelectionRange(newPosition, newPosition);
 			this.setInputSize();
 
 			return false;
@@ -183,6 +214,10 @@ export default {
 		},
 		setInputSize() {
 			this.$nextTick(() => {
+				if (!this.$refs.input) {
+					return;
+				}
+
 				const style = window.getComputedStyle(this.$refs.input);
 				const lineHeight = parseFloat(style.lineHeight, 10) || 1;
 

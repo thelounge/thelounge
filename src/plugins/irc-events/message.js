@@ -11,12 +11,6 @@ module.exports = function (irc, network) {
 	const client = this;
 
 	irc.on("notice", function (data) {
-		// Some servers send notices without any nickname
-		if (!data.nick) {
-			data.from_server = true;
-			data.nick = data.hostname || network.host;
-		}
-
 		data.type = Msg.Type.NOTICE;
 		handleMessage(data);
 	});
@@ -33,7 +27,7 @@ module.exports = function (irc, network) {
 
 	irc.on("wallops", function (data) {
 		data.from_server = true;
-		data.type = Msg.Type.NOTICE;
+		data.type = Msg.Type.WALLOPS;
 		handleMessage(data);
 	});
 
@@ -44,6 +38,12 @@ module.exports = function (irc, network) {
 		let showInActive = false;
 		const self = data.nick === irc.user.nick;
 
+		// Some servers send messages without any nickname
+		if (!data.nick) {
+			data.from_server = true;
+			data.nick = data.hostname || network.host;
+		}
+
 		// Check if the sender is in our ignore list
 		const shouldIgnore =
 			!self &&
@@ -51,8 +51,13 @@ module.exports = function (irc, network) {
 				return Helper.compareHostmask(entry, data);
 			});
 
-		// Server messages go to server window, no questions asked
-		if (data.from_server) {
+		// Server messages that aren't targeted at a channel go to the server window
+		if (
+			data.from_server &&
+			(!data.target ||
+				!network.getChannel(data.target) ||
+				network.getChannel(data.target).type !== Chan.Type.CHANNEL)
+		) {
 			chan = network.channels[0];
 			from = chan.getUser(data.nick);
 		} else {

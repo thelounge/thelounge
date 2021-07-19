@@ -18,7 +18,9 @@
 			>
 				<div class="header">
 					<SidebarToggle />
-					<span class="title">{{ channel.name }}</span>
+					<span class="title" :aria-label="'Currently open ' + channel.type">{{
+						channel.name
+					}}</span>
 					<div v-if="channel.editTopic === true" class="topic-container">
 						<input
 							ref="topicInput"
@@ -93,13 +95,13 @@
 					>
 						<div class="scroll-down-arrow" />
 					</div>
+					<ChatUserList v-if="channel.type === 'channel'" :channel="channel" />
 					<MessageList
 						ref="messageList"
 						:network="network"
 						:channel="channel"
 						:focused="focused"
 					/>
-					<ChatUserList v-if="channel.type === 'channel'" :channel="channel" />
 				</div>
 			</div>
 		</div>

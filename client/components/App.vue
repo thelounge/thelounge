@@ -1,7 +1,12 @@
 <template>
 	<div id="viewport" :class="viewportClasses" role="tablist">
 		<Sidebar v-if="$store.state.appLoaded" :overlay="$refs.overlay" />
-		<div id="sidebar-overlay" ref="overlay" @click="$store.commit('sidebarOpen', false)" />
+		<div
+			id="sidebar-overlay"
+			ref="overlay"
+			aria-hidden="true"
+			@click="$store.commit('sidebarOpen', false)"
+		/>
 		<router-view ref="window"></router-view>
 		<Mentions />
 		<ImageViewer ref="imageViewer" />
@@ -51,6 +56,7 @@ export default {
 		Mousetrap.bind("esc", this.escapeKey);
 		Mousetrap.bind("alt+u", this.toggleUserList);
 		Mousetrap.bind("alt+s", this.toggleSidebar);
+		Mousetrap.bind("alt+m", this.toggleMentions);
 
 		// Make a single throttled resize listener available to all components
 		this.debouncedResize = throttle(() => {
@@ -72,6 +78,7 @@ export default {
 		Mousetrap.unbind("esc", this.escapeKey);
 		Mousetrap.unbind("alt+u", this.toggleUserList);
 		Mousetrap.unbind("alt+s", this.toggleSidebar);
+		Mousetrap.unbind("alt+m", this.toggleMentions);
 
 		window.removeEventListener("resize", this.debouncedResize);
 		clearTimeout(this.dayChangeTimeout);
@@ -97,6 +104,11 @@ export default {
 			this.$store.commit("toggleUserlist");
 
 			return false;
+		},
+		toggleMentions() {
+			if (this.$store.state.networks.length !== 0) {
+				eventbus.emit("mentions:toggle");
+			}
 		},
 		msUntilNextDay() {
 			// Compute how many milliseconds are remaining until the next day starts

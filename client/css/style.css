@@ -1147,6 +1147,7 @@ textarea.input {
 
 #chat .chat-content {
 	display: flex;
+	flex-direction: row-reverse;
 	flex-grow: 1;
 	overflow: hidden;
 	position: relative;
@@ -1195,7 +1196,6 @@ textarea.input {
 }
 
 #chat .show-more {
-	margin-top: 50px;
 	padding: 10px;
 	padding-top: 15px;
 	padding-bottom: 0;
@@ -1508,13 +1508,20 @@ textarea.input {
 }
 
 #chat .msg[data-type="notice"] .time,
+#chat .msg[data-type="wallops"] .time,
 #chat .msg[data-type="notice"] .content,
-#chat .msg[data-type="notice"] .user {
+#chat .msg[data-type="wallops"] .content,
+#chat .msg[data-type="notice"] .user,
+#chat .msg[data-type="wallops"] .user {
 	color: #0074d9;
 }
 
 #chat .msg[data-type="notice"] .from .user::before {
 	content: "Notice: ";
+}
+
+#chat .msg[data-type="wallops"] .from .user::before {
+	content: "Wallops: ";
 }
 
 #chat .msg[data-type="error"],
@@ -1840,19 +1847,23 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	margin-top: 6px;
 }
 
-#connect .tls input {
+#connect .tls input,
+#connect input[name="proxyEnabled"] {
 	margin: 3px 10px 0 0;
 }
 
-#connect\:host {
+#connect\:host,
+#connect\:proxyHost {
 	width: 70%;
 }
 
-#connect\:port {
+#connect\:port,
+#connect\:proxyPort {
 	width: 25%;
 }
 
-#connect\:portseparator {
+#connect\:portseparator,
+#connect\:proxyPortSeparator {
 	width: 5%;
 	text-align: center;
 	display: inline-block;
@@ -2624,6 +2635,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		right: 0;
 		transform: translateX(180px);
 		transition: transform 0.2s;
+		z-index: 1;
 	}
 
 	#viewport.userlist-open #chat .userlist {

@@ -63,10 +63,10 @@ describe("IRC formatted message parser", () => {
 	it("should find urls", async () => {
 		const testCases = [
 			{
-				input: "irc://freenode.net/thelounge",
+				input: "irc://irc.example.com/thelounge",
 				expected:
-					'<a href="irc://freenode.net/thelounge" dir="auto" target="_blank" rel="noopener">' +
-					"irc://freenode.net/thelounge" +
+					'<a href="irc://irc.example.com/thelounge" dir="auto" target="_blank" rel="noopener">' +
+					"irc://irc.example.com/thelounge" +
 					"</a>",
 			},
 			{
@@ -416,12 +416,12 @@ describe("IRC formatted message parser", () => {
 	it("should go bonkers like mirc", async () => {
 		const testCases = [
 			{
-				input: "\x02irc\x0f://\x1dfreenode.net\x0f/\x034,8thelounge",
+				input: "\x02irc\x0f://\x1dirc.example.com\x0f/\x034,8thelounge",
 				expected:
-					'<a href="irc://freenode.net/thelounge" dir="auto" target="_blank" rel="noopener">' +
+					'<a href="irc://irc.example.com/thelounge" dir="auto" target="_blank" rel="noopener">' +
 					'<span class="irc-bold">irc</span>' +
 					"://" +
-					'<span class="irc-italic">freenode.net</span>' +
+					'<span class="irc-italic">irc.example.com</span>' +
 					"/" +
 					'<span class="irc-fg4 irc-bg8">thelounge</span>' +
 					"</a>",
