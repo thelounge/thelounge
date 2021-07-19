@@ -261,7 +261,7 @@ export function generateUserContextMenu($root, channel, network, user) {
 		"+": "voice",
 	};
 
-	// Labels for the mode changes.  For example .rev(['admin', 'a']) => 'Revoke admin (-a)'
+	// Labels for the mode changes.  For example .rev({mode: "a", symbol: "&"}) => 'Revoke admin (-a)'
 	const modeTextTemplate = {
 		revoke(m) {
 			const name = modeCharToName[m.symbol];
