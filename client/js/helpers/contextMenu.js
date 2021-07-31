@@ -170,10 +170,16 @@ export function generateChannelContextMenu($root, channel, network) {
 		});
 	}
 
-	// The entire network is muted if the lobby is selected
-	const humanFriendlyChanType = channel.type === "lobby" ? "network" : channel.type;
+	const humanFriendlyChanTypeMap = {
+		lobby: "network",
+		channel: "channel",
+		query: "conversation",
+	};
+
+	const chanType = humanFriendlyChanTypeMap[channel.type];
+
 	items.push({
-		label: channel.muted ? `Unmute ${humanFriendlyChanType}` : `Mute ${humanFriendlyChanType}`,
+		label: channel.muted ? `Unmute ${chanType}` : `Mute ${chanType}`,
 		type: "item",
 		class: "mute",
 		action() {
