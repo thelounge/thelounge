@@ -57,11 +57,23 @@ program
 						},
 						function (err2, enableLog) {
 							if (!err2) {
-								add(
-									manager,
-									name,
-									password,
-									enableLog.charAt(0).toLowerCase() === "y"
+								var enableLog = enableLog.charAt(0).toLowerCase() === "y";
+								log.prompt(
+									{
+										text: "Outgoing address?",
+										default: "undefined",
+									},
+									function (err2, bind) {
+										if (!err2) {
+											add(
+												manager,
+												name,
+												password,
+												enableLog,
+												bind
+											);
+										}
+									}
 								);
 							}
 						}
@@ -71,9 +83,9 @@ program
 		);
 	});
 
-function add(manager, name, password, enableLog) {
+function add(manager, name, password, enableLog, bind) {
 	const hash = Helper.password.hash(password);
-	manager.addUser(name, hash, enableLog);
+	manager.addUser(name, hash, enableLog, bind);
 
 	log.info(`User ${colors.bold(name)} created.`);
 	log.info(`User file located at ${colors.green(Helper.getUserConfigPath(name))}.`);

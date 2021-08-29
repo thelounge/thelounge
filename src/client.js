@@ -70,6 +70,7 @@ function Client(manager, name, config = {}) {
 
 	client.config.log = Boolean(client.config.log);
 	client.config.password = String(client.config.password);
+	client.config.bind = String(client.config.bind);
 
 	if (!Helper.config.public && client.config.log) {
 		if (Helper.config.messageStorage.includes("sqlite")) {

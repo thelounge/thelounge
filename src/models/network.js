@@ -187,9 +187,13 @@ Network.prototype.validate = function (client) {
 };
 
 Network.prototype.createIrcFramework = function (client) {
+	var outgoing_addr = Helper.config.bind;
+	if (client.config.bind !== 'undefined') {
+		outgoing_addr = client.config.bind;
+	}
 	this.irc = new IrcFramework.Client({
 		version: false, // We handle it ourselves
-		outgoing_addr: Helper.config.bind,
+		outgoing_addr: outgoing_addr,
 		enable_chghost: true,
 		enable_echomessage: true,
 		enable_setname: true,

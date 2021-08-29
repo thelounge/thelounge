@@ -136,6 +136,11 @@ ClientManager.prototype.loadUser = function (name) {
 			client.config.password = userConfig.password;
 			log.info(`Password for user ${colors.bold(name)} was reset.`);
 		}
+
+		if (userConfig.bind !== client.config.bind) {
+			client.config.bind = userConfig.bind;
+			log.info(`Bind for user ${colors.bold(name)} was changed.`);
+		}
 	} else {
 		client = new Client(this, name, userConfig);
 		this.clients.push(client);
@@ -151,7 +156,7 @@ ClientManager.prototype.getUsers = function () {
 		.map((file) => file.slice(0, -5));
 };
 
-ClientManager.prototype.addUser = function (name, password, enableLog) {
+ClientManager.prototype.addUser = function (name, password, enableLog, bind) {
 	if (path.basename(name) !== name) {
 		throw new Error(`${name} is an invalid username.`);
 	}
@@ -166,6 +171,7 @@ ClientManager.prototype.addUser = function (name, password, enableLog) {
 	const user = {
 		password: password || "",
 		log: enableLog,
+		bind: bind,
 	};
 
 	try {
