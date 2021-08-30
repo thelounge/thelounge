@@ -57,7 +57,6 @@ program
 						},
 						function (err2, enableLog) {
 							if (!err2) {
-								var enableLog = enableLog.charAt(0).toLowerCase() === "y";
 								log.prompt(
 									{
 										text: "Outgoing address?",
