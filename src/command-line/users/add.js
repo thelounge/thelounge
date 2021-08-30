@@ -68,7 +68,7 @@ program
 												manager,
 												name,
 												password,
-												enableLog,
+												enableLog.charAt(0).toLowerCase() === "y",
 												bind
 											);
 										}
