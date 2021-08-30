@@ -63,8 +63,8 @@ program
 										text: "Outgoing address?",
 										default: "undefined",
 									},
-									function (err2, bind) {
-										if (!err2) {
+									function (err3, bind) {
+										if (!err3) {
 											add(
 												manager,
 												name,
