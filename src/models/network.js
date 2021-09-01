@@ -187,10 +187,9 @@ Network.prototype.validate = function (client) {
 };
 
 Network.prototype.createIrcFramework = function (client) {
-	var outgoing_addr = Helper.config.bind;
-	if (client.config.bind !== 'undefined') {
-		outgoing_addr = client.config.bind;
-	}
+	const outgoing_addr = client.config.bind !== 'undefined'
+							?  client.config.bind
+							: Helper.config.bind;
 	this.irc = new IrcFramework.Client({
 		version: false, // We handle it ourselves
 		outgoing_addr: outgoing_addr,
