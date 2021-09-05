@@ -23,7 +23,6 @@ program
 function initalizeConfig() {
 	if (!fs.existsSync(Helper.getConfigPath())) {
 		fs.mkdirSync(Helper.getHomePath(), {recursive: true});
-		fs.chmodSync(Helper.getHomePath(), "0700");
 		fs.copyFileSync(
 			path.resolve(path.join(__dirname, "..", "..", "defaults", "config.js")),
 			Helper.getConfigPath()
@@ -31,5 +30,6 @@ function initalizeConfig() {
 		log.info(`Configuration file created at ${colors.green(Helper.getConfigPath())}.`);
 	}
 
+	fs.chmodSync(Helper.getHomePath(), "0700");
 	fs.mkdirSync(Helper.getUsersPath(), {recursive: true});
 }
