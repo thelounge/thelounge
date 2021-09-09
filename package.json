@@ -72,8 +72,8 @@
     "sqlite3": "5.0.2"
   },
   "devDependencies": {
-    "@babel/core": "7.14.6",
-    "@babel/preset-env": "7.14.7",
+    "@babel/core": "7.15.5",
+    "@babel/preset-env": "7.15.6",
     "@fortawesome/fontawesome-free": "5.15.3",
     "@vue/server-test-utils": "1.1.3",
     "@vue/test-utils": "1.1.3",
