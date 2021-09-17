@@ -30,7 +30,7 @@ exports.input = function (network, chan, cmd, args) {
 				new Msg({
 					type: Msg.Type.ERROR,
 					text: `No open ${
-						args.length - targets.length === 1 ? "change" : "changes"
+						args.length - targets.length === 1 ? "channel or user" : "channels or users"
 					} found for ${missing.join(",")}`,
 				})
 			);
