@@ -3,40 +3,56 @@ const Msg = require("../../models/msg");
 
 exports.commands = ["mute", "unmute"];
 
+function args_to_channels(network, args) {
+	const targets = [];
+
+	for (const arg of args) {
+		const target = network.channels.find((c) => c.name === arg);
+
+		if (target) {
+			targets.push(target);
+		}
+	}
+
+	return targets;
+}
+
+function change_mute_state(client, target, valueToSet) {
+	target.setMuteStatus(valueToSet);
+	client.emit("mute:changed", {
+		target: target.id,
+		status: valueToSet,
+	});
+}
+
 exports.input = function (network, chan, cmd, args) {
 	const valueToSet = cmd === "mute" ? true : false;
+	const client = this;
 
 	if (args.length === 0) {
-		chan.setMuteStatus(valueToSet);
-	} else if (args.length > 1) {
-		const targets = [];
+		change_mute_state(client, chan, valueToSet);
+		return;
+	}
 
-		for (const arg of args) {
-			const target = network.channels.find((c) => c.name === arg);
+	const targets = args_to_channels(network, args);
 
-			if (target) {
-				targets.push(target);
-			}
-		}
+	if (targets.length !== args.length) {
+		const targetNames = targets.map((ch) => ch.name);
+		const missing = args.filter((x) => !targetNames.includes(x));
+		chan.pushMessage(
+			client,
+			new Msg({
+				type: Msg.Type.ERROR,
+				text: `No open ${
+					missing.length === 1 ? "channel or user" : "channels or users"
+				} found for ${missing.join(",")}`,
+			})
+		);
+		return;
+	}
 
-		if (targets.length === args.length) {
-			for (const target of targets) {
-				target.setMuteStatus(valueToSet);
-			}
-		} else {
-			const missing = targets.filter((x) => !args.includes(x));
-			chan.pushMessage(
-				this,
-				new Msg({
-					type: Msg.Type.ERROR,
-					text: `No open ${
-						args.length - targets.length === 1 ? "channel or user" : "channels or users"
-					} found for ${missing.join(",")}`,
-				})
-			);
-
-			return;
-		}
+	for (const target of targets) {
+		change_mute_state(client, target, valueToSet);
 	}
 
 	return true;
