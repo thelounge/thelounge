@@ -138,7 +138,15 @@ export default {
 				}
 			}
 
-			return condensed;
+			return condensed.map((message) => {
+				// Skip condensing single messages, it doesn't save any
+				// space but makes useful information harder to see
+				if (message.type === "condensed" && message.messages.length === 1) {
+					return message.messages[0];
+				}
+
+				return message;
+			});
 		},
 	},
 	watch: {
