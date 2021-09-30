@@ -14,7 +14,7 @@ exports.input = function (network, chan, cmd, args) {
 			target: "network:quit",
 			data: {
 				uuid: network.uuid,
-				quiteMessage: args[0] ? args.join(" ") : null,
+				quitMessage: args[0] ? args.join(" ") : null,
 			},
 		},
 	});
