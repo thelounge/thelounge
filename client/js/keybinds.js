@@ -3,7 +3,7 @@
 import Mousetrap from "mousetrap";
 
 import store from "./store";
-import {switchToChannel} from "./router";
+import {switchToChannel, navigate} from "./router";
 import isChannelCollapsed from "./helpers/isChannelCollapsed";
 import isIgnoredKeybind from "./helpers/isIgnoredKeybind";
 
@@ -103,6 +103,17 @@ Mousetrap.bind(["alt+a"], function (e) {
 	if (targetChannel) {
 		jumpToChannel(targetChannel);
 	}
+
+	return false;
+});
+
+// Show the help menu
+Mousetrap.bind(["command+/", "ctrl+/"], function (e) {
+	if (isIgnoredKeybind(e)) {
+		return true;
+	}
+
+	navigate("Help");
 
 	return false;
 });
