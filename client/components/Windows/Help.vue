@@ -201,8 +201,8 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<span v-if="!isApple"><kbd>Ctrl</kbd> <kbd>/</kbd></span>
-					<span v-else><kbd>⌘</kbd> <kbd>/</kbd></span>
+					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>/</kbd></span>
+					<span v-else><kbd>⌥</kbd> <kbd>/</kbd></span>
 				</div>
 				<div class="description">
 					<p>Switch to the help menu.</p>

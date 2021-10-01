@@ -108,7 +108,7 @@ Mousetrap.bind(["alt+a"], function (e) {
 });
 
 // Show the help menu.
-Mousetrap.bind(["command+/", "ctrl+/"], function (e) {
+Mousetrap.bind(["alt+/"], function (e) {
 	if (isIgnoredKeybind(e)) {
 		return true;
 	}
