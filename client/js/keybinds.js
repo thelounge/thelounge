@@ -108,13 +108,11 @@ Mousetrap.bind(["alt+a"], function (e) {
 });
 
 // Show the help menu.
-let previousRoute;
 Mousetrap.bind(["command+/", "ctrl+/"], function (e) {
 	if (isIgnoredKeybind(e)) {
 		return true;
 	}
 
-	previousRoute = router.currentRoute;
 	navigate("Help");
 
 	return false;
@@ -170,9 +168,8 @@ const ignoredKeys = {
 
 document.addEventListener("keydown", (e) => {
 	// Allow navigating back to the previous page when on the help screen.
-	if (e.key === "Escape" && router.currentRoute.name === "Help" && previousRoute) {
-		navigate(previousRoute.name, previousRoute.params);
-		previousRoute = undefined;
+	if (e.key === "Escape" && router.currentRoute.name === "Help") {
+		router.go(-1);
 		return;
 	}
 
