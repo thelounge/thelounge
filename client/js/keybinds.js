@@ -170,7 +170,7 @@ const ignoredKeys = {
 
 document.addEventListener("keydown", (e) => {
 	// Allow navigating back to the previous page when on the help screen.
-	if (e.which === 27 && router.currentRoute.name === "Help" && previousRoute) {
+	if (e.key === "Escape" && router.currentRoute.name === "Help" && previousRoute) {
 		navigate(previousRoute.name, previousRoute.params);
 		previousRoute = undefined;
 		return;
