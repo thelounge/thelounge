@@ -119,7 +119,7 @@
     "webpack": "5.21.2",
     "webpack-cli": "4.5.0",
     "webpack-dev-middleware": "4.1.0",
-    "webpack-hot-middleware": "2.25.0"
+    "webpack-hot-middleware": "2.25.1"
   },
   "husky": {
     "hooks": {
