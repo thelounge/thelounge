@@ -105,6 +105,23 @@ module.exports = function (irc, network) {
 			}
 		}
 
+		if (irc.network.cap.isEnabled("twitch.tv/tags") && data.tags) {
+			// Twitch uses display-name to confer capitalization that users have set
+			// for their nicknames in Settings, and otherwise sends them lowercase.
+			const displayName = data.tags["display-name"];
+
+			// Promote the correct capitalization for the user, when present
+			if (displayName && displayName.toLowerCase() === data.nick) {
+				if (from.nick !== displayName) {
+					from.nick = displayName;
+
+					client.emit("users", {
+						chan: chan.id,
+					});
+				}
+			}
+		}
+
 		// msg is constructed down here because `from` is being copied in the constructor
 		const msg = new Msg({
 			type: data.type,
