@@ -13,7 +13,7 @@
 					class="btn hide-all-mentions"
 					@click="hideAllMentions()"
 				>
-					Hide all
+					Dismiss all
 				</button>
 			</div>
 			<template v-if="resolvedMessages.length === 0">
