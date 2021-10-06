@@ -20,6 +20,7 @@ const fieldsForClient = {
 	name: true,
 	nick: true,
 	serverOptions: true,
+	host: true,
 };
 
 function Network(attr) {
