@@ -87,6 +87,36 @@
 				</p>
 			</div>
 
+			<h2 v-if="isTouch">Gestures</h2>
+
+			<div v-if="isTouch" class="help-item">
+				<div class="subject gesture">Single-Finger Swipe Left</div>
+				<div class="description">
+					<p>Hide sidebar.</p>
+				</div>
+			</div>
+
+			<div v-if="isTouch" class="help-item">
+				<div class="subject gesture">Single-Finger Swipe Right</div>
+				<div class="description">
+					<p>Show sidebar.</p>
+				</div>
+			</div>
+
+			<div v-if="isTouch" class="help-item">
+				<div class="subject gesture">Two-Finger Swipe Left</div>
+				<div class="description">
+					<p>Switch to the next window in the channel list.</p>
+				</div>
+			</div>
+
+			<div v-if="isTouch" class="help-item">
+				<div class="subject gesture">Two-Finger Swipe Right</div>
+				<div class="description">
+					<p>Switch to the previous window in the channel list.</p>
+				</div>
+			</div>
+
 			<h2>Keyboard Shortcuts</h2>
 
 			<div class="help-item">
@@ -764,6 +794,7 @@ export default {
 	data() {
 		return {
 			isApple: navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i) || false,
+			isTouch: navigator.maxTouchPoints > 0,
 		};
 	},
 };

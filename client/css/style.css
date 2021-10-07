@@ -2024,6 +2024,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	padding-right: 15px;
 }
 
+#help .help-item .subject.gesture {
+	font-weight: bold;
+}
+
 #help .help-item .description p {
 	margin-bottom: 0;
 }
