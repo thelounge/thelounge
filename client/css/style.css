@@ -1067,6 +1067,7 @@ textarea.input {
 	height: 35px;
 	overflow: hidden;
 	font-size: 14px;
+	line-height: normal;
 	outline: none;
 }
 
