@@ -82,11 +82,15 @@ export default {
 			this.$root.switchToChannel(this.channel);
 		},
 		openContextMenu(event) {
-			eventbus.emit("contextmenu:channel", {
-				event: event,
-				channel: this.channel,
-				network: this.network,
-			});
+			// events.buttons will be 0 when the event is caused by a long
+			// touch on Android.
+			if (event.buttons !== 0) {
+				eventbus.emit("contextmenu:channel", {
+					event: event,
+					channel: this.channel,
+					network: this.network,
+				});
+			}
 		},
 	},
 };

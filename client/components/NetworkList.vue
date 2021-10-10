@@ -56,17 +56,18 @@
 		<Draggable
 			v-else
 			:list="$store.state.networks"
-			:filter="isCurrentlyInTouch"
-			:prevent-on-filter="false"
+			:delay="LONG_TOUCH_DURATION"
+			:delay-on-touch-only="true"
+			:touch-start-threshold="10"
 			handle=".channel-list-item[data-type='lobby']"
 			draggable=".network"
 			ghost-class="ui-sortable-ghost"
-			drag-class="ui-sortable-dragged"
+			drag-class="ui-sortable-dragging"
 			group="networks"
 			class="networks"
 			@change="onNetworkSort"
-			@start="onDragStart"
-			@end="onDragEnd"
+			@choose="onDraggableChoose"
+			@unchoose="onDraggableUnchoose"
 		>
 			<div
 				v-for="network in $store.state.networks"
@@ -100,15 +101,16 @@
 				<Draggable
 					draggable=".channel-list-item"
 					ghost-class="ui-sortable-ghost"
-					drag-class="ui-sortable-dragged"
+					drag-class="ui-sortable-dragging"
 					:group="network.uuid"
-					:filter="isCurrentlyInTouch"
-					:prevent-on-filter="false"
 					:list="network.channels"
+					:delay="LONG_TOUCH_DURATION"
+					:delay-on-touch-only="true"
+					:touch-start-threshold="10"
 					class="channels"
 					@change="onChannelSort"
-					@start="onDragStart"
-					@end="onDragEnd"
+					@choose="onDraggableChoose"
+					@unchoose="onDraggableUnchoose"
 				>
 					<template v-for="(channel, index) in network.channels">
 						<Channel
@@ -246,6 +248,10 @@ export default {
 			this.setActiveSearchItem();
 		},
 	},
+	created() {
+		// Number of milliseconds a touch has to last to be considered long
+		this.LONG_TOUCH_DURATION = 500;
+	},
 	mounted() {
 		Mousetrap.bind("alt+shift+right", this.expandNetwork);
 		Mousetrap.bind("alt+shift+left", this.collapseNetwork);
@@ -279,16 +285,6 @@ export default {
 
 			return false;
 		},
-		isCurrentlyInTouch(e) {
-			// TODO: Implement a way to sort on touch devices
-			return e.pointerType !== "mouse";
-		},
-		onDragStart(e) {
-			e.target.classList.add("ui-sortable-active");
-		},
-		onDragEnd(e) {
-			e.target.classList.remove("ui-sortable-active");
-		},
 		onNetworkSort(e) {
 			if (!e.moved) {
 				return;
@@ -315,6 +311,26 @@ export default {
 				target: channel.network.uuid,
 				order: channel.network.channels.map((c) => c.id),
 			});
+		},
+		isTouchEvent(event) {
+			// This is the same way Sortable.js detects a touch event. See
+			// SortableJS/Sortable@daaefeda:/src/Sortable.js#L465
+			return (
+				(event.touches && event.touches[0]) ||
+				(event.pointerType && event.pointerType === "touch")
+			);
+		},
+		onDraggableChoose(event) {
+			if (this.isTouchEvent(event.originalEvent)) {
+				// onDrag is only triggered when the user actually moves the
+				// dragged object but onChoose is triggered as soon as the
+				// item is eligible for dragging. This gives us an opportunity
+				// to tell the user they've held the touch long enough.
+				event.item.classList.add("ui-sortable-dragging-touch-cue");
+			}
+		},
+		onDraggableUnchoose(event) {
+			event.item.classList.remove("ui-sortable-dragging-touch-cue");
 		},
 		toggleSearch(event) {
 			if (isIgnoredKeybind(event)) {

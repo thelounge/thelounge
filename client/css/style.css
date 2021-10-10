@@ -707,14 +707,19 @@ background on hover (unless active) */
 
 /* Remove background on hovered/active channel when sorting/drag-and-dropping */
 .ui-sortable-ghost,
-.channel-list-item.ui-sortable-dragged,
-.ui-sortable-dragged .channel-list-item,
-.ui-sortable-active .channel-list-item:hover,
-.ui-sortable-active .channel-list-item.active {
+.ui-sortable-dragging .channel-list-item,
+.ui-sortable-dragging,
+.ui-sortable-dragging:hover,
+.ui-sortable-dragging.active,
+.ui-sortable-dragging-touch-cue .channel-list-item,
+.ui-sortable-dragging-touch-cue,
+.ui-sortable-dragging-touch-cue:hover,
+.ui-sortable-dragging-touch-cue.active {
 	background: transparent;
 }
 
-.ui-sortable-ghost::after {
+.ui-sortable-ghost::after,
+.ui-sortable-dragging-touch-cue:not(.ui-sortable-dragging)::after {
 	background: var(--body-bg-color);
 	border: 1px dashed #99a2b4;
 	border-radius: 6px;
@@ -725,6 +730,10 @@ background on hover (unless active) */
 	top: 0;
 	bottom: 0;
 	right: 10px;
+}
+
+.ui-sortable-dragging-touch-cue:not(.ui-sortable-ghost)::after {
+	background: transparent;
 }
 
 #sidebar .network {
