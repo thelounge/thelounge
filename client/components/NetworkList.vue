@@ -81,6 +81,9 @@
 				class="network"
 				role="region"
 				aria-live="polite"
+				@touchstart="onDraggableTouchStart"
+				@touchend="onDraggableTouchEnd"
+				@touchcancel="onDraggableTouchEnd"
 			>
 				<NetworkLobby
 					:network="network"
@@ -331,6 +334,18 @@ export default {
 		},
 		onDraggableUnchoose(event) {
 			event.item.classList.remove("ui-sortable-dragging-touch-cue");
+		},
+		onDraggableTouchStart() {
+			if (event.touches.length === 1) {
+				// This prevents an iOS long touch default behavior: selecting
+				// the nearest selectable text.
+				document.body.classList.add("force-no-select");
+			}
+		},
+		onDraggableTouchEnd(event) {
+			if (event.touches.length === 0) {
+				document.body.classList.remove("force-no-select");
+			}
 		},
 		toggleSearch(event) {
 			if (isIgnoredKeybind(event)) {

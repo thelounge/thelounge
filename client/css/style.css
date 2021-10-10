@@ -107,6 +107,10 @@ body {
 	overflow: hidden; /* iOS Safari requires overflow rather than overflow-y */
 }
 
+body.force-no-select * {
+	user-select: none !important;
+}
+
 a,
 a:hover,
 a:focus {
