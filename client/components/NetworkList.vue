@@ -141,6 +141,7 @@
 	color: #fff;
 	background-color: rgba(255, 255, 255, 0.1);
 	padding-right: 35px;
+	appearance: none;
 }
 
 .jump-to-input .input::placeholder {
