@@ -3,7 +3,7 @@
 import Mousetrap from "mousetrap";
 
 import store from "./store";
-import {switchToChannel} from "./router";
+import {switchToChannel, router, navigate} from "./router";
 import isChannelCollapsed from "./helpers/isChannelCollapsed";
 import isIgnoredKeybind from "./helpers/isIgnoredKeybind";
 
@@ -107,6 +107,17 @@ Mousetrap.bind(["alt+a"], function (e) {
 	return false;
 });
 
+// Show the help menu.
+Mousetrap.bind(["alt+/"], function (e) {
+	if (isIgnoredKeybind(e)) {
+		return true;
+	}
+
+	navigate("Help");
+
+	return false;
+});
+
 function jumpToChannel(targetChannel) {
 	switchToChannel(targetChannel);
 
@@ -156,6 +167,12 @@ const ignoredKeys = {
 };
 
 document.addEventListener("keydown", (e) => {
+	// Allow navigating back to the previous page when on the help screen.
+	if (e.key === "Escape" && router.currentRoute.name === "Help") {
+		router.go(-1);
+		return;
+	}
+
 	// Ignore any key that uses alt modifier
 	// Ignore keys defined above
 	if (e.altKey || ignoredKeys[e.which]) {
