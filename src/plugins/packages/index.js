@@ -46,6 +46,7 @@ const packageApis = function (packageInfo) {
 		},
 		Config: {
 			getConfig: () => Helper.config,
+			getPersistentStorageDir: getPersistentStorageDir.bind(this, packageInfo.packageName),
 		},
 		Logger: {
 			error: (...args) => log.error(...args),
@@ -85,6 +86,12 @@ function getEnabledPackages(packageJson) {
 	}
 
 	return [];
+}
+
+function getPersistentStorageDir(packageName) {
+	const dir = path.join(Helper.getPackagesPath(), packageName);
+	fs.mkdirSync(dir, {recursive: true}); // we don't care if it already exists or not
+	return dir;
 }
 
 function loadPackage(packageName) {
