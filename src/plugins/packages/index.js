@@ -47,6 +47,12 @@ const packageApis = function (packageInfo) {
 		Config: {
 			getConfig: () => Helper.config,
 		},
+		Logger: {
+			error: (...args) => log.error(...args),
+			warn: (...args) => log.warn(...args),
+			info: (...args) => log.info(...args),
+			debug: (...args) => log.debug(...args),
+		},
 	};
 };
 
