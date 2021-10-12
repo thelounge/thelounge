@@ -10,10 +10,10 @@
 				Recent mentions
 				<button
 					v-if="resolvedMessages.length"
-					class="btn hide-all-mentions"
-					@click="hideAllMentions()"
+					class="btn dismiss-all-mentions"
+					@click="dismissAllMentions()"
 				>
-					Hide all
+					Dismiss all
 				</button>
 			</div>
 			<template v-if="resolvedMessages.length === 0">
@@ -37,11 +37,14 @@
 							</span>
 						</div>
 						<div>
-							<span class="close-tooltip tooltipped tooltipped-w" aria-label="Close">
+							<span
+								class="close-tooltip tooltipped tooltipped-w"
+								aria-label="Dismiss this mention"
+							>
 								<button
-									class="msg-hide"
-									aria-label="Hide this mention"
-									@click="hideMention(message)"
+									class="msg-dismiss"
+									aria-label="Dismiss this mention"
+									@click="dismissMention(message)"
 								></button>
 							</span>
 						</div>
@@ -102,7 +105,7 @@
 	word-break: break-word; /* Webkit-specific */
 }
 
-.mentions-popup .msg-hide::before {
+.mentions-popup .msg-dismiss::before {
 	font-size: 20px;
 	font-weight: normal;
 	display: inline-block;
@@ -111,11 +114,11 @@
 	content: "×";
 }
 
-.mentions-popup .msg-hide:hover {
+.mentions-popup .msg-dismiss:hover {
 	color: var(--link-color);
 }
 
-.mentions-popup .hide-all-mentions {
+.mentions-popup .dismiss-all-mentions {
 	margin: 0;
 	padding: 4px 6px;
 }
@@ -191,17 +194,17 @@ export default {
 		messageTime(time) {
 			return dayjs(time).fromNow();
 		},
-		hideMention(message) {
+		dismissMention(message) {
 			this.$store.state.mentions.splice(
 				this.$store.state.mentions.findIndex((m) => m.msgId === message.msgId),
 				1
 			);
 
-			socket.emit("mentions:hide", message.msgId);
+			socket.emit("mentions:dismiss", message.msgId);
 		},
-		hideAllMentions() {
+		dismissAllMentions() {
 			this.$store.state.mentions = [];
-			socket.emit("mentions:hide_all");
+			socket.emit("mentions:dismiss_all");
 		},
 		containerClick(event) {
 			if (event.currentTarget === event.target) {

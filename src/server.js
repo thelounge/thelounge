@@ -538,7 +538,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 		socket.emit("mentions:list", client.mentions);
 	});
 
-	socket.on("mentions:hide", (msgId) => {
+	socket.on("mentions:dismiss", (msgId) => {
 		if (typeof msgId !== "number") {
 			return;
 		}
@@ -549,7 +549,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 		);
 	});
 
-	socket.on("mentions:hide_all", () => {
+	socket.on("mentions:dismiss_all", () => {
 		client.mentions = [];
 	});
 
