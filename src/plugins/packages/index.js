@@ -49,10 +49,10 @@ const packageApis = function (packageInfo) {
 			getPersistentStorageDir: getPersistentStorageDir.bind(this, packageInfo.packageName),
 		},
 		Logger: {
-			error: (...args) => log.error(...args),
-			warn: (...args) => log.warn(...args),
-			info: (...args) => log.info(...args),
-			debug: (...args) => log.debug(...args),
+			error: (...args) => log.error(`[${packageInfo.packageName}]`, ...args),
+			warn: (...args) => log.warn(`[${packageInfo.packageName}]`, ...args),
+			info: (...args) => log.info(`[${packageInfo.packageName}]`, ...args),
+			debug: (...args) => log.debug(`[${packageInfo.packageName}]`, ...args),
 		},
 	};
 };
