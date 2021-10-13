@@ -125,5 +125,8 @@
     "hooks": {
       "pre-commit": "pretty-quick --staged"
     }
+  },
+  "resolutions": {
+    "sortablejs": "1.14.0"
   }
 }
