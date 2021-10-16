@@ -7,7 +7,7 @@ const filenamify = require("filenamify");
 const Helper = require("../../helper");
 const Msg = require("../../models/msg");
 
-class MessageStorage {
+class TextFileMessageStorage {
 	constructor(client) {
 		this.client = client;
 		this.isEnabled = false;
@@ -15,7 +15,6 @@ class MessageStorage {
 	}
 
 	enable() {
-		this.isEnabled = true;
 		const clientFolder = path.join(Helper.getUserLogsPath(), this.client.name);
 
 		try {
@@ -153,4 +152,4 @@ class MessageStorage {
 	}
 }
 
-module.exports = MessageStorage;
+module.exports = TextFileMessageStorage;

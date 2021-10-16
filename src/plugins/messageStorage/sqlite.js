@@ -87,7 +87,7 @@ class MessageStorage {
 				})();
 			}
 		} catch (error) {
-			log.error(`Failed to initialize sqltie database: ${error}`);
+			log.error(`Failed to initialize sqlite database: ${error}`);
 			return false;
 		}
 
@@ -168,20 +168,17 @@ class MessageStorage {
 		// If unlimited history is specified, load 100k messages
 		const limit = Helper.config.maxHistory < 0 ? 100000 : Helper.config.maxHistory;
 
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			const selectStmt = this.database.prepare(
-				"SELECT * FROM messages WHERE network = ? AND channel = ? ORDER BY time ASC LIMIT ?"
+				"SELECT * FROM messages WHERE network = ? AND channel = ? ORDER BY time DESC LIMIT ?"
 			);
 
-			try {
-				return resolve(
-					selectStmt
-						.all(network.uuid, channel.name.toLowerCase(), limit)
-						.map(this._messageParser(true))
-				);
-			} catch (error) {
-				return reject(error);
-			}
+			resolve(
+				selectStmt
+					.all(network.uuid, channel.name.toLowerCase(), limit)
+					.reverse()
+					.map(this._createMessageParser(() => this.client.idMsg++))
+			);
 		});
 	}
 
@@ -204,43 +201,36 @@ class MessageStorage {
 			params.push(query.channelName.toLowerCase());
 		}
 
-		select += " ORDER BY time ASC LIMIT ? OFFSET ? ";
+		select += " ORDER BY time DESC LIMIT ? OFFSET ? ";
 		params.push(100);
 
 		query.offset = parseInt(query.offset, 10) || 0;
 		params.push(query.offset);
 
-		return new Promise((resolve, reject) => {
-			try {
-				resolve({
-					searchTerm: query.searchTerm,
-					target: query.channelName,
-					networkUuid: query.networkUuid,
-					offset: query.offset,
-					results: this.database
-						.prepare(select)
-						.all(params)
-						.map(this._messageParser(false, query.offset)),
-				});
-			} catch (error) {
-				return reject(error);
-			}
+		return new Promise((resolve) => {
+			let msgId = query.offset;
+			resolve({
+				searchTerm: query.searchTerm,
+				target: query.channelName,
+				networkUuid: query.networkUuid,
+				offset: query.offset,
+				results: this.database
+					.prepare(select)
+					.all(params)
+					.reverse()
+					.map(this._createMessageParser(() => msgId++)),
+			});
 		});
 	}
 
-	_messageParser(useClientId, start) {
+	_createMessageParser(getId) {
 		return (row) => {
 			const msg = JSON.parse(row.msg);
 			msg.time = row.time;
 			msg.type = row.type;
 			msg.networkUuid = row.network;
 			msg.channelName = row.channel;
-
-			if (useClientId) {
-				msg.id = this.client.idMsg++;
-			} else {
-				msg.id = start++;
-			}
+			msg.id = getId();
 
 			return new Msg(msg);
 		};
