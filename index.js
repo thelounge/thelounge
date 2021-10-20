@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/home/orson/.nvm/versions/node/v16.0.0/bin/node
 
 "use strict";
 
