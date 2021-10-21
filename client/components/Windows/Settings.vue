@@ -386,6 +386,7 @@ expressions, it will trigger a highlight."
 						type="text"
 						name="highlights"
 						class="input"
+						autocomplete="off"
 						placeholder="Comma-separated, e.g.: word, some more words, anotherword"
 					/>
 				</label>
@@ -410,6 +411,7 @@ your nickname or expressions defined in custom highlights."
 						type="text"
 						name="highlightExceptions"
 						class="input"
+						autocomplete="off"
 						placeholder="Comma-separated, e.g.: word, some more words, anotherword"
 					/>
 				</label>
