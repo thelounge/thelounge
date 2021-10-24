@@ -538,6 +538,7 @@ Network.prototype.export = function () {
 		"proxyPort",
 		"proxyUsername",
 		"proxyEnabled",
+		"proxyPassword",
 	]);
 
 	network.channels = this.channels
