@@ -43,6 +43,7 @@ const Helper = {
 	getDefaultNick,
 	parseHostmask,
 	compareHostmask,
+	compareWithWildcard,
 
 	password: {
 		hash: passwordHash,
@@ -314,8 +315,27 @@ function parseHostmask(hostmask) {
 
 function compareHostmask(a, b) {
 	return (
-		(a.nick.toLowerCase() === b.nick.toLowerCase() || a.nick === "*") &&
-		(a.ident.toLowerCase() === b.ident.toLowerCase() || a.ident === "*") &&
-		(a.hostname.toLowerCase() === b.hostname.toLowerCase() || a.hostname === "*")
+		compareWithWildcard(a.nick, b.nick) &&
+		compareWithWildcard(a.ident, b.ident) &&
+		compareWithWildcard(a.hostname, b.hostname)
 	);
+}
+
+function compareWithWildcard(a, b) {
+	// we allow '*' and '?' wildcards in our comparison.
+	// this is mostly aligned with https://modern.ircdocs.horse/#wildcard-expressions
+	// but we do not support the escaping. The ABNF does not seem to be clear as to
+	// how to escape the escape char '\', which is valid in a nick,
+	// whereas the wildcards tend not to be (as per RFC1459).
+
+	// The "*" wildcard is ".*" in regex, "?" is "."
+	// so we tokenize and join with the proper char back together,
+	// escaping any other regex modifier
+	const wildmany_split = a.split("*").map((sub) => {
+		const wildone_split = sub.split("?").map((p) => _.escapeRegExp(p));
+		return wildone_split.join(".");
+	});
+	const user_regex = wildmany_split.join(".*");
+	const re = new RegExp(`^${user_regex}$`, "i"); // case insensitive
+	return re.test(b);
 }
