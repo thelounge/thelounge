@@ -1052,7 +1052,10 @@ textarea.input {
 .header .title {
 	font-size: 15px;
 	padding-left: 6px;
-	flex-shrink: 0;
+	flex-shrink: 1;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .topic-container {
@@ -1068,6 +1071,12 @@ textarea.input {
 	flex-grow: 1;
 	overflow: hidden;
 	font-size: 14px;
+	flex-shrink: 99999999;
+	min-width: 25px;
+}
+
+.header .topic.empty {
+	min-width: 0;
 }
 
 .header .topic-input {

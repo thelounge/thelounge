@@ -35,7 +35,11 @@
 							<span type="button" aria-label="Save topic"></span>
 						</span>
 					</div>
-					<span v-else :title="channel.topic" class="topic" @dblclick="editTopic"
+					<span
+						v-else
+						:title="channel.topic"
+						:class="{topic: true, empty: !channel.topic}"
+						@dblclick="editTopic"
 						><ParsedMessage
 							v-if="channel.topic"
 							:network="network"
