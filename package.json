@@ -53,7 +53,7 @@
     "irc-framework": "4.11.0",
     "is-utf8": "0.2.1",
     "ldapjs": "2.3.1",
-    "linkify-it": "3.0.2",
+    "linkify-it": "3.0.3",
     "lodash": "4.17.21",
     "mime-types": "2.1.33",
     "node-forge": "0.10.0",
