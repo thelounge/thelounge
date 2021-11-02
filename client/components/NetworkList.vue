@@ -82,6 +82,7 @@
 				role="region"
 				aria-live="polite"
 				@touchstart="onDraggableTouchStart"
+				@touchmove="onDraggableTouchMove"
 				@touchend="onDraggableTouchEnd"
 				@touchcancel="onDraggableTouchEnd"
 			>
@@ -205,6 +206,8 @@ import JoinChannel from "./JoinChannel.vue";
 import socket from "../js/socket";
 import collapseNetwork from "../js/helpers/collapseNetwork";
 import isIgnoredKeybind from "../js/helpers/isIgnoredKeybind";
+import distance from "../js/helpers/distance";
+import eventbus from "../js/eventbus";
 
 export default {
 	name: "NetworkList",
@@ -325,22 +328,43 @@ export default {
 			);
 		},
 		onDraggableChoose(event) {
-			if (this.isTouchEvent(event.originalEvent)) {
+			const original = event.originalEvent;
+
+			if (this.isTouchEvent(original)) {
 				// onDrag is only triggered when the user actually moves the
 				// dragged object but onChoose is triggered as soon as the
 				// item is eligible for dragging. This gives us an opportunity
 				// to tell the user they've held the touch long enough.
 				event.item.classList.add("ui-sortable-dragging-touch-cue");
+
+				if (original instanceof TouchEvent && original.touches.length > 0) {
+					this.startDrag = [original.touches[0].clientX, original.touches[0].clientY];
+				} else if (original instanceof PointerEvent) {
+					this.startDrag = [original.clientX, original.clientY];
+				}
 			}
 		},
 		onDraggableUnchoose(event) {
 			event.item.classList.remove("ui-sortable-dragging-touch-cue");
+			this.startDrag = null;
 		},
 		onDraggableTouchStart() {
 			if (event.touches.length === 1) {
 				// This prevents an iOS long touch default behavior: selecting
 				// the nearest selectable text.
 				document.body.classList.add("force-no-select");
+			}
+		},
+		onDraggableTouchMove(event) {
+			if (this.startDrag && event.touches.length > 0) {
+				const touch = event.touches[0];
+				const currentPosition = [touch.clientX, touch.clientY];
+
+				if (distance(this.startDrag, currentPosition) > 10) {
+					// Context menu is shown on Android after long touch.
+					// Dismiss it now that we're sure the user is dragging.
+					eventbus.emit("contextmenu:cancel");
+				}
 			}
 		},
 		onDraggableTouchEnd(event) {

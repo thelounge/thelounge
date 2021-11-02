@@ -127,6 +127,6 @@
     }
   },
   "resolutions": {
-    "sortablejs": "1.14.0"
+    "sortablejs": "git+https://github.com/itsjohncs/Sortable.git"
   }
 }
