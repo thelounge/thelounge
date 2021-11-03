@@ -1713,6 +1713,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #chat .userlist .search {
 	color: var(--body-color);
+	appearance: none;
 	border: 0;
 	background: none;
 	font: inherit;
