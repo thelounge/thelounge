@@ -312,13 +312,15 @@ function completeNicks(word, isFuzzy) {
 }
 
 function getCommands() {
-	const cmds = constants.commands.slice();
+	const optionalCommands = {
+		"/search": store.state.settings.searchEnabled === true,
+	};
 
-	if (store.state.settings.searchEnabled === false) {
-		const search = cmds.indexOf("/search");
+	let cmds = constants.commands.slice();
 
-		if (search !== -1) {
-			cmds.splice(search, 1);
+	for (const [command, dependsOn] of Object.entries(optionalCommands)) {
+		if (dependsOn === false) {
+			cmds = cmds.filter((c) => c !== command);
 		}
 	}
 
@@ -326,9 +328,8 @@ function getCommands() {
 }
 
 function completeCommands(word) {
-	const words = getCommands();
-
-	return fuzzyGrep(word, words);
+	const commands = getCommands();
+	return fuzzyGrep(word, commands);
 }
 
 function completeChans(word) {
