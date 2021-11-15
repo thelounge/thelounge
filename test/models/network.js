@@ -49,6 +49,7 @@ describe("Network", function () {
 				proxyEnabled: false,
 				proxyHost: "",
 				proxyPort: 1080,
+				proxyPassword: "",
 				proxyUsername: "",
 				channels: [
 					{name: "#thelounge", key: ""},

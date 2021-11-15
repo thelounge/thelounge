@@ -152,8 +152,9 @@ module.exports = {
 
 	// ### prefetchMaxSearchSize
 	//
-	// This value sets the maximum request size made to find the Open Graph tags
-	// for link previews. For some sites like YouTube this can easily exceed 300
+	// This value sets the maximum response size allowed when finding the Open
+	// Graph tags for link previews. The entire response is temporarily stored
+	// in memory and for some sites like YouTube this can easily exceed 300
 	// kilobytes.
 	//
 	// This value is set to `50` kilobytes by default.

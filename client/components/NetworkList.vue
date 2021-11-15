@@ -56,17 +56,18 @@
 		<Draggable
 			v-else
 			:list="$store.state.networks"
-			:filter="isCurrentlyInTouch"
-			:prevent-on-filter="false"
+			:delay="LONG_TOUCH_DURATION"
+			:delay-on-touch-only="true"
+			:touch-start-threshold="10"
 			handle=".channel-list-item[data-type='lobby']"
 			draggable=".network"
 			ghost-class="ui-sortable-ghost"
-			drag-class="ui-sortable-dragged"
+			drag-class="ui-sortable-dragging"
 			group="networks"
 			class="networks"
 			@change="onNetworkSort"
-			@start="onDragStart"
-			@end="onDragEnd"
+			@choose="onDraggableChoose"
+			@unchoose="onDraggableUnchoose"
 		>
 			<div
 				v-for="network in $store.state.networks"
@@ -80,6 +81,10 @@
 				class="network"
 				role="region"
 				aria-live="polite"
+				@touchstart="onDraggableTouchStart"
+				@touchmove="onDraggableTouchMove"
+				@touchend="onDraggableTouchEnd"
+				@touchcancel="onDraggableTouchEnd"
 			>
 				<NetworkLobby
 					:network="network"
@@ -100,15 +105,16 @@
 				<Draggable
 					draggable=".channel-list-item"
 					ghost-class="ui-sortable-ghost"
-					drag-class="ui-sortable-dragged"
+					drag-class="ui-sortable-dragging"
 					:group="network.uuid"
-					:filter="isCurrentlyInTouch"
-					:prevent-on-filter="false"
 					:list="network.channels"
+					:delay="LONG_TOUCH_DURATION"
+					:delay-on-touch-only="true"
+					:touch-start-threshold="10"
 					class="channels"
 					@change="onChannelSort"
-					@start="onDragStart"
-					@end="onDragEnd"
+					@choose="onDraggableChoose"
+					@unchoose="onDraggableUnchoose"
 				>
 					<template v-for="(channel, index) in network.channels">
 						<Channel
@@ -141,6 +147,7 @@
 	color: #fff;
 	background-color: rgba(255, 255, 255, 0.1);
 	padding-right: 35px;
+	appearance: none;
 }
 
 .jump-to-input .input::placeholder {
@@ -199,6 +206,8 @@ import JoinChannel from "./JoinChannel.vue";
 import socket from "../js/socket";
 import collapseNetwork from "../js/helpers/collapseNetwork";
 import isIgnoredKeybind from "../js/helpers/isIgnoredKeybind";
+import distance from "../js/helpers/distance";
+import eventbus from "../js/eventbus";
 
 export default {
 	name: "NetworkList",
@@ -246,6 +255,10 @@ export default {
 			this.setActiveSearchItem();
 		},
 	},
+	created() {
+		// Number of milliseconds a touch has to last to be considered long
+		this.LONG_TOUCH_DURATION = 500;
+	},
 	mounted() {
 		Mousetrap.bind("alt+shift+right", this.expandNetwork);
 		Mousetrap.bind("alt+shift+left", this.collapseNetwork);
@@ -279,16 +292,6 @@ export default {
 
 			return false;
 		},
-		isCurrentlyInTouch(e) {
-			// TODO: Implement a way to sort on touch devices
-			return e.pointerType !== "mouse";
-		},
-		onDragStart(e) {
-			e.target.classList.add("ui-sortable-active");
-		},
-		onDragEnd(e) {
-			e.target.classList.remove("ui-sortable-active");
-		},
 		onNetworkSort(e) {
 			if (!e.moved) {
 				return;
@@ -315,6 +318,59 @@ export default {
 				target: channel.network.uuid,
 				order: channel.network.channels.map((c) => c.id),
 			});
+		},
+		isTouchEvent(event) {
+			// This is the same way Sortable.js detects a touch event. See
+			// SortableJS/Sortable@daaefeda:/src/Sortable.js#L465
+			return (
+				(event.touches && event.touches[0]) ||
+				(event.pointerType && event.pointerType === "touch")
+			);
+		},
+		onDraggableChoose(event) {
+			const original = event.originalEvent;
+
+			if (this.isTouchEvent(original)) {
+				// onDrag is only triggered when the user actually moves the
+				// dragged object but onChoose is triggered as soon as the
+				// item is eligible for dragging. This gives us an opportunity
+				// to tell the user they've held the touch long enough.
+				event.item.classList.add("ui-sortable-dragging-touch-cue");
+
+				if (original instanceof TouchEvent && original.touches.length > 0) {
+					this.startDrag = [original.touches[0].clientX, original.touches[0].clientY];
+				} else if (original instanceof PointerEvent) {
+					this.startDrag = [original.clientX, original.clientY];
+				}
+			}
+		},
+		onDraggableUnchoose(event) {
+			event.item.classList.remove("ui-sortable-dragging-touch-cue");
+			this.startDrag = null;
+		},
+		onDraggableTouchStart() {
+			if (event.touches.length === 1) {
+				// This prevents an iOS long touch default behavior: selecting
+				// the nearest selectable text.
+				document.body.classList.add("force-no-select");
+			}
+		},
+		onDraggableTouchMove(event) {
+			if (this.startDrag && event.touches.length > 0) {
+				const touch = event.touches[0];
+				const currentPosition = [touch.clientX, touch.clientY];
+
+				if (distance(this.startDrag, currentPosition) > 10) {
+					// Context menu is shown on Android after long touch.
+					// Dismiss it now that we're sure the user is dragging.
+					eventbus.emit("contextmenu:cancel");
+				}
+			}
+		},
+		onDraggableTouchEnd(event) {
+			if (event.touches.length === 0) {
+				document.body.classList.remove("force-no-select");
+			}
 		},
 		toggleSearch(event) {
 			if (isIgnoredKeybind(event)) {

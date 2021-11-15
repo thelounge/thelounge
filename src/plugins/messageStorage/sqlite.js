@@ -236,7 +236,7 @@ class MessageStorage {
 						target: query.channelName,
 						networkUuid: query.networkUuid,
 						offset: query.offset,
-						results: parseSearchRowsToMessages(query.offset, rows),
+						results: parseSearchRowsToMessages(query.offset, rows).reverse(),
 					};
 					resolve(response);
 				}

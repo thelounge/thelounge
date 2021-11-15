@@ -37,6 +37,7 @@ form.message-search input {
 	border: 0;
 	color: inherit;
 	background-color: #fafafa;
+	appearance: none;
 }
 
 form.message-search input::placeholder {

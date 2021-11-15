@@ -195,6 +195,9 @@ export default {
 
 		document.body.addEventListener("touchstart", this.onTouchStart, {passive: true});
 	},
+	destroyed() {
+		document.body.removeEventListener("touchstart", this.onTouchStart, {passive: true});
+	},
 	methods: {
 		isPublic: () => document.body.classList.contains("public"),
 	},

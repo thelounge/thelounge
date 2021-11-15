@@ -2,6 +2,7 @@
 	<div
 		v-if="isOpen"
 		id="context-menu-container"
+		:class="{passthrough}"
 		@click="containerClick"
 		@contextmenu.prevent="containerClick"
 		@keydown.exact.up.prevent="navigateMenu(-1)"
@@ -49,6 +50,7 @@ export default {
 	data() {
 		return {
 			isOpen: false,
+			passthrough: false,
 			previousActiveElement: null,
 			items: [],
 			activeItem: -1,
@@ -60,18 +62,35 @@ export default {
 	},
 	mounted() {
 		eventbus.on("escapekey", this.close);
+		eventbus.on("contextmenu:cancel", this.close);
 		eventbus.on("contextmenu:user", this.openUserContextMenu);
 		eventbus.on("contextmenu:channel", this.openChannelContextMenu);
 	},
 	destroyed() {
 		eventbus.off("escapekey", this.close);
+		eventbus.off("contextmenu:cancel", this.close);
 		eventbus.off("contextmenu:user", this.openUserContextMenu);
 		eventbus.off("contextmenu:channel", this.openChannelContextMenu);
 
 		this.close();
 	},
 	methods: {
+		enablePointerEvents() {
+			this.passthrough = false;
+			document.body.removeEventListener("pointerup", this.enablePointerEvents, {
+				passive: true,
+			});
+		},
 		openChannelContextMenu(data) {
+			if (data.event.type === "contextmenu") {
+				// Pass through all pointer events to allow the network list's
+				// dragging events to continue triggering.
+				this.passthrough = true;
+				document.body.addEventListener("pointerup", this.enablePointerEvents, {
+					passive: true,
+				});
+			}
+
 			const items = generateChannelContextMenu(this.$root, data.channel, data.network);
 			this.open(data.event, items);
 		},

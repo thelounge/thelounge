@@ -50,6 +50,7 @@ module.exports = function (options = {}) {
 	app.set("env", "production")
 		.disable("x-powered-by")
 		.use(allRequests)
+		.use(addSecurityHeaders)
 		.get("/", indexRequest)
 		.get("/service-worker.js", forceNoCacheRequest)
 		.get("/js/bundle.js.map", forceNoCacheRequest)
@@ -286,14 +287,7 @@ function allRequests(req, res, next) {
 	return next();
 }
 
-function forceNoCacheRequest(req, res, next) {
-	// Intermittent proxies must not cache the following requests,
-	// browsers must fetch the latest version of these files (service worker, source maps)
-	res.setHeader("Cache-Control", "no-cache, no-transform");
-	return next();
-}
-
-function indexRequest(req, res) {
+function addSecurityHeaders(req, res, next) {
 	const policies = [
 		"default-src 'none'", // default to nothing
 		"base-uri 'none'", // disallow <base>, has no fallback to default-src
@@ -317,9 +311,21 @@ function indexRequest(req, res) {
 		policies.push("img-src http: https: data:");
 	}
 
-	res.setHeader("Content-Type", "text/html");
 	res.setHeader("Content-Security-Policy", policies.join("; "));
 	res.setHeader("Referrer-Policy", "no-referrer");
+
+	return next();
+}
+
+function forceNoCacheRequest(req, res, next) {
+	// Intermittent proxies must not cache the following requests,
+	// browsers must fetch the latest version of these files (service worker, source maps)
+	res.setHeader("Cache-Control", "no-cache, no-transform");
+	return next();
+}
+
+function indexRequest(req, res) {
+	res.setHeader("Content-Type", "text/html");
 
 	return fs.readFile(
 		path.join(__dirname, "..", "client", "index.html.tpl"),
@@ -538,7 +544,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 		socket.emit("mentions:list", client.mentions);
 	});
 
-	socket.on("mentions:hide", (msgId) => {
+	socket.on("mentions:dismiss", (msgId) => {
 		if (typeof msgId !== "number") {
 			return;
 		}
@@ -549,7 +555,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 		);
 	});
 
-	socket.on("mentions:hide_all", () => {
+	socket.on("mentions:dismiss_all", () => {
 		client.mentions = [];
 	});
 

@@ -87,6 +87,36 @@
 				</p>
 			</div>
 
+			<h2 v-if="isTouch">Gestures</h2>
+
+			<div v-if="isTouch" class="help-item">
+				<div class="subject gesture">Single-Finger Swipe Left</div>
+				<div class="description">
+					<p>Hide sidebar.</p>
+				</div>
+			</div>
+
+			<div v-if="isTouch" class="help-item">
+				<div class="subject gesture">Single-Finger Swipe Right</div>
+				<div class="description">
+					<p>Show sidebar.</p>
+				</div>
+			</div>
+
+			<div v-if="isTouch" class="help-item">
+				<div class="subject gesture">Two-Finger Swipe Left</div>
+				<div class="description">
+					<p>Switch to the next window in the channel list.</p>
+				</div>
+			</div>
+
+			<div v-if="isTouch" class="help-item">
+				<div class="subject gesture">Two-Finger Swipe Right</div>
+				<div class="description">
+					<p>Switch to the previous window in the channel list.</p>
+				</div>
+			</div>
+
 			<h2>Keyboard Shortcuts</h2>
 
 			<div class="help-item">
@@ -196,6 +226,16 @@
 				</div>
 				<div class="description">
 					<p>Toggle recent mentions popup.</p>
+				</div>
+			</div>
+
+			<div class="help-item">
+				<div class="subject">
+					<span v-if="!isApple"><kbd>Alt</kbd> <kbd>/</kbd></span>
+					<span v-else><kbd>⌥</kbd> <kbd>/</kbd></span>
+				</div>
+				<div class="description">
+					<p>Switch to the help menu.</p>
 				</div>
 			</div>
 
@@ -764,6 +804,7 @@ export default {
 	data() {
 		return {
 			isApple: navigator.platform.match(/(Mac|iPhone|iPod|iPad)/i) || false,
+			isTouch: navigator.maxTouchPoints > 0,
 		};
 	},
 };
