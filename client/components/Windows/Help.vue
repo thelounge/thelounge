@@ -723,7 +723,7 @@
 				</div>
 			</div>
 
-			<div class="help-item">
+			<div v-if="$store.state.settings.searchEnabled" class="help-item">
 				<div class="subject">
 					<code>/search query</code>
 				</div>

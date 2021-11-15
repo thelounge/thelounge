@@ -312,23 +312,18 @@ function completeNicks(word, isFuzzy) {
 }
 
 function getCommands() {
-	const cmds = constants.commands.slice();
+	let cmds = constants.commands.slice();
 
-	if (store.state.settings.searchEnabled === false) {
-		const search = cmds.indexOf("/search");
-
-		if (search !== -1) {
-			cmds.splice(search, 1);
-		}
+	if (!store.state.settings.searchEnabled) {
+		cmds = cmds.filter((c) => c !== "/search");
 	}
 
 	return cmds;
 }
 
 function completeCommands(word) {
-	const words = getCommands();
-
-	return fuzzyGrep(word, words);
+	const commands = getCommands();
+	return fuzzyGrep(word, commands);
 }
 
 function completeChans(word) {
