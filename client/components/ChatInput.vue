@@ -275,7 +275,7 @@ export default {
 					this.channel.inputHistory.splice(1, 0, text);
 				}
 
-				// Limit input history to a 100 entries
+				// Limit input history to 100 entries
 				if (this.channel.inputHistory.length > 100) {
 					this.channel.inputHistory.pop();
 				}
@@ -304,7 +304,8 @@ export default {
 						{
 							title: "Upload as file?",
 							text: `You're trying to send a lot of text. Would you like to upload it?`,
-							button: "Upload",
+							confirmButton: "Upload",
+							cancelButton: "Send anyway",
 						},
 						(result) => {
 							if (!result) {

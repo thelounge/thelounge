@@ -36,7 +36,7 @@ new Vue({
 					{
 						title: "Remove network",
 						text: `Are you sure you want to quit and remove ${channel.name}? This cannot be undone.`,
-						button: "Remove network",
+						confirmButton: "Remove network",
 					},
 					(result) => {
 						if (!result) {
