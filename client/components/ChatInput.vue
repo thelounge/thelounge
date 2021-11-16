@@ -267,47 +267,65 @@ export default {
 				this.setInputSize();
 			};
 
+			const sendMessage = () => {
+				resetInput();
+
+				// Store new message in history if last message isn't already equal
+				if (this.channel.inputHistory[1] !== text) {
+					this.channel.inputHistory.splice(1, 0, text);
+				}
+
+				// Limit input history to a 100 entries
+				if (this.channel.inputHistory.length > 100) {
+					this.channel.inputHistory.pop();
+				}
+
+				if (text[0] === "/") {
+					const args = text.substr(1).split(" ");
+					const cmd = args.shift().toLowerCase();
+
+					if (
+						Object.prototype.hasOwnProperty.call(commands, cmd) &&
+						commands[cmd].input(args)
+					) {
+						return false;
+					}
+				}
+
+				socket.emit("input", {target, text});
+			};
+
 			if (this.$store.state.serverConfiguration.fileUpload) {
 				const lines = 1 + (text.match(/\n/g) || "").length;
 
-				// TODO: Offer a confirmation to user whether they want to upload
 				if (lines > 3 || text.length > 700) {
-					resetInput();
+					eventbus.emit(
+						"confirm-dialog",
+						{
+							title: "Upload as file?",
+							text: `You're trying to send a lot of text. Would you like to upload it?`,
+							button: "Upload",
+						},
+						(result) => {
+							if (!result) {
+								sendMessage();
+								return;
+							}
 
-					const file = new File([text], "paste.txt", {
-						type: "text/plain",
-					});
-					upload.triggerUpload([file]);
+							resetInput();
+
+							const file = new File([text], "paste.txt", {
+								type: "text/plain",
+							});
+							upload.triggerUpload([file]);
+						}
+					);
 
 					return false;
 				}
 			}
 
-			resetInput();
-
-			// Store new message in history if last message isn't already equal
-			if (this.channel.inputHistory[1] !== text) {
-				this.channel.inputHistory.splice(1, 0, text);
-			}
-
-			// Limit input history to a 100 entries
-			if (this.channel.inputHistory.length > 100) {
-				this.channel.inputHistory.pop();
-			}
-
-			if (text[0] === "/") {
-				const args = text.substr(1).split(" ");
-				const cmd = args.shift().toLowerCase();
-
-				if (
-					Object.prototype.hasOwnProperty.call(commands, cmd) &&
-					commands[cmd].input(args)
-				) {
-					return false;
-				}
-			}
-
-			socket.emit("input", {target, text});
+			sendMessage();
 		},
 		onUploadInputChange() {
 			const files = Array.from(this.$refs.uploadInput.files);
