@@ -5,14 +5,13 @@ import {router} from "../router";
 
 function input(args) {
 	if (!store.state.settings.searchEnabled) {
-		return true;
+		return false;
 	}
 
-	const {channel} = store.state.activeChannel;
 	router.push({
 		name: "SearchResults",
 		params: {
-			id: channel.id,
+			id: store.state.activeChannel.channel.id,
 		},
 		query: {
 			q: args.join(" "),

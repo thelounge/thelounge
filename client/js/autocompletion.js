@@ -312,16 +312,10 @@ function completeNicks(word, isFuzzy) {
 }
 
 function getCommands() {
-	const optionalCommands = {
-		"/search": store.state.settings.searchEnabled === true,
-	};
-
 	let cmds = constants.commands.slice();
 
-	for (const [command, dependsOn] of Object.entries(optionalCommands)) {
-		if (dependsOn === false) {
-			cmds = cmds.filter((c) => c !== command);
-		}
+	if (store.state.settings.searchEnabled === false) {
+		cmds = cmds.filter((c) => c !== "/search");
 	}
 
 	return cmds;
