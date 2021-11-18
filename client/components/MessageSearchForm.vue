@@ -114,6 +114,7 @@ export default {
 	methods: {
 		closeSearch() {
 			if (!this.onSearchPage) {
+				this.searchInput = "";
 				this.searchOpened = false;
 			}
 		},
