@@ -9,6 +9,7 @@
 				class="input"
 				placeholder="Search messages…"
 				@blur="closeSearch"
+				@keyup.esc="closeSearch"
 			/>
 		</div>
 		<button
