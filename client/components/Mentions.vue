@@ -185,10 +185,10 @@ export default {
 		},
 	},
 	mounted() {
-		eventbus.on("mentions:toggle", this.openPopup);
+		eventbus.on("mentions:toggle", this.togglePopup);
 	},
 	destroyed() {
-		eventbus.off("mentions:toggle", this.openPopup);
+		eventbus.off("mentions:toggle", this.togglePopup);
 	},
 	methods: {
 		messageTime(time) {
@@ -211,7 +211,7 @@ export default {
 				this.isOpen = false;
 			}
 		},
-		openPopup() {
+		togglePopup() {
 			this.isOpen = !this.isOpen;
 
 			if (this.isOpen) {
