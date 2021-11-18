@@ -186,9 +186,11 @@ export default {
 	},
 	mounted() {
 		eventbus.on("mentions:toggle", this.togglePopup);
+		eventbus.on("escapekey", this.closePopup);
 	},
 	destroyed() {
 		eventbus.off("mentions:toggle", this.togglePopup);
+		eventbus.off("escapekey", this.closePopup);
 	},
 	methods: {
 		messageTime(time) {
@@ -218,6 +220,9 @@ export default {
 				this.isLoading = true;
 				socket.emit("mentions:get");
 			}
+		},
+		closePopup() {
+			this.isOpen = false;
 		},
 	},
 };
