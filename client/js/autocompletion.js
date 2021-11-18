@@ -314,7 +314,7 @@ function completeNicks(word, isFuzzy) {
 function getCommands() {
 	let cmds = constants.commands.slice();
 
-	if (store.state.settings.searchEnabled === false) {
+	if (!store.state.settings.searchEnabled) {
 		cmds = cmds.filter((c) => c !== "/search");
 	}
 
