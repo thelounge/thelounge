@@ -93,6 +93,7 @@
 
 <script>
 import socket from "../../js/socket";
+import eventbus from "../../js/eventbus";
 
 import SidebarToggle from "../SidebarToggle.vue";
 import Message from "../Message.vue";
@@ -171,10 +172,15 @@ export default {
 	mounted() {
 		this.setActiveChannel();
 		this.doSearch();
+
+		eventbus.on("escapekey", this.closeSearch);
 		this.$root.$on("re-search", this.doSearch); // Enable MessageSearchForm to search for the same query again
 	},
 	beforeDestroy() {
 		this.$root.$off("re-search");
+	},
+	destroyed() {
+		eventbus.off("escapekey", this.closeSearch);
 	},
 	methods: {
 		setActiveChannel() {
