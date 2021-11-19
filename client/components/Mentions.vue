@@ -185,10 +185,12 @@ export default {
 		},
 	},
 	mounted() {
-		eventbus.on("mentions:toggle", this.openPopup);
+		eventbus.on("mentions:toggle", this.togglePopup);
+		eventbus.on("escapekey", this.closePopup);
 	},
 	destroyed() {
-		eventbus.off("mentions:toggle", this.openPopup);
+		eventbus.off("mentions:toggle", this.togglePopup);
+		eventbus.off("escapekey", this.closePopup);
 	},
 	methods: {
 		messageTime(time) {
@@ -211,13 +213,16 @@ export default {
 				this.isOpen = false;
 			}
 		},
-		openPopup() {
+		togglePopup() {
 			this.isOpen = !this.isOpen;
 
 			if (this.isOpen) {
 				this.isLoading = true;
 				socket.emit("mentions:get");
 			}
+		},
+		closePopup() {
+			this.isOpen = false;
 		},
 	},
 };
