@@ -127,6 +127,6 @@
     }
   },
   "resolutions": {
-    "sortablejs": "git+https://github.com/itsjohncs/Sortable.git"
+    "sortablejs": "git+https://github.com/thelounge/Sortable.git"
   }
 }
