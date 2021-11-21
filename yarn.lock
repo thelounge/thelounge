@@ -7527,9 +7527,9 @@ socks@^2.6.1:
     ip "^1.1.5"
     smart-buffer "^4.1.0"
 
-sortablejs@1.10.2, "sortablejs@git+https://github.com/itsjohncs/Sortable.git":
+sortablejs@1.10.2, "sortablejs@git+https://github.com/thelounge/Sortable.git":
   version "1.14.0"
-  resolved "git+https://github.com/itsjohncs/Sortable.git#21053e18ea6501e2aac8cac9029872115ab82844"
+  resolved "git+https://github.com/thelounge/Sortable.git#9730c70cd48da38d8feb3dd6808b1893157d8dfb"
 
 source-list-map@^2.0.0, source-list-map@^2.0.1:
   version "2.0.1"
