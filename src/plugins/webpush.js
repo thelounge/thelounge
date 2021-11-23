@@ -11,7 +11,28 @@ class WebPush {
 	constructor() {
 		const vapidPath = path.join(Helper.getHomePath(), "vapid.json");
 
-		if (fs.existsSync(vapidPath)) {
+		let vapidStat = undefined;
+
+		try {
+			vapidStat = fs.statSync(vapidPath);
+		} catch {
+			// ignored on purpose, node v14.17.0 will give us {throwIfNoEntry: false}
+		}
+
+		if (vapidStat) {
+			const isWorldReadable = (vapidStat.mode & 0o004) !== 0;
+
+			if (isWorldReadable) {
+				log.warn(
+					vapidPath,
+					"is world readable. The file contains secrets. Please fix the permissions"
+				);
+
+				if (require("os").platform() !== "win32") {
+					log.warn(`run \`chmod o= ${vapidPath}\` to correct it`);
+				}
+			}
+
 			const data = fs.readFileSync(vapidPath, "utf-8");
 			const parsedData = JSON.parse(data);
 
@@ -29,7 +50,9 @@ class WebPush {
 		if (!this.vapidKeys) {
 			this.vapidKeys = WebPushAPI.generateVAPIDKeys();
 
-			fs.writeFileSync(vapidPath, JSON.stringify(this.vapidKeys, null, "\t"));
+			fs.writeFileSync(vapidPath, JSON.stringify(this.vapidKeys, null, "\t"), {
+				mode: 0o600,
+			});
 
 			log.info("New VAPID key pair has been generated for use with push subscription.");
 		}
