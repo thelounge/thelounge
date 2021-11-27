@@ -175,6 +175,10 @@ const store = new Vuex.Store({
 
 			for (const network of state.networks) {
 				for (const channel of network.channels) {
+					if (channel.muted) {
+						continue;
+					}
+
 					highlightCount += channel.highlight;
 				}
 			}
