@@ -3,9 +3,10 @@
 import Mousetrap from "mousetrap";
 
 import store from "./store";
-import {switchToChannel} from "./router";
+import {switchToChannel, router, navigate} from "./router";
 import isChannelCollapsed from "./helpers/isChannelCollapsed";
 import isIgnoredKeybind from "./helpers/isIgnoredKeybind";
+import listenForTwoFingerSwipes from "./helpers/listenForTwoFingerSwipes";
 
 // Switch to the next/previous window in the channel list.
 Mousetrap.bind(["alt+up", "alt+down"], function (e, keys) {
@@ -13,11 +14,22 @@ Mousetrap.bind(["alt+up", "alt+down"], function (e, keys) {
 		return true;
 	}
 
+	navigateWindow(keys.split("+").pop() === "up" ? -1 : 1);
+
+	return false;
+});
+
+listenForTwoFingerSwipes(function (cardinalDirection) {
+	if (cardinalDirection === "e" || cardinalDirection === "w") {
+		navigateWindow(cardinalDirection === "e" ? -1 : 1);
+	}
+});
+
+function navigateWindow(direction) {
 	if (store.state.networks.length === 0) {
-		return false;
+		return;
 	}
 
-	const direction = keys.split("+").pop() === "up" ? -1 : 1;
 	const flatChannels = [];
 	let index = -1;
 
@@ -44,9 +56,7 @@ Mousetrap.bind(["alt+up", "alt+down"], function (e, keys) {
 	index = (((index + direction) % length) + length) % length;
 
 	jumpToChannel(flatChannels[index]);
-
-	return false;
-});
+}
 
 // Switch to the next/previous lobby in the channel list
 Mousetrap.bind(["alt+shift+up", "alt+shift+down"], function (e, keys) {
@@ -107,6 +117,17 @@ Mousetrap.bind(["alt+a"], function (e) {
 	return false;
 });
 
+// Show the help menu.
+Mousetrap.bind(["alt+/"], function (e) {
+	if (isIgnoredKeybind(e)) {
+		return true;
+	}
+
+	navigate("Help");
+
+	return false;
+});
+
 function jumpToChannel(targetChannel) {
 	switchToChannel(targetChannel);
 
@@ -156,6 +177,12 @@ const ignoredKeys = {
 };
 
 document.addEventListener("keydown", (e) => {
+	// Allow navigating back to the previous page when on the help screen.
+	if (e.key === "Escape" && router.currentRoute.name === "Help") {
+		router.go(-1);
+		return;
+	}
+
 	// Ignore any key that uses alt modifier
 	// Ignore keys defined above
 	if (e.altKey || ignoredKeys[e.which]) {

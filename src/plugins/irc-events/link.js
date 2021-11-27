@@ -403,7 +403,8 @@ function fetch(uri, headers) {
 					if (imageTypeRegex.test(contentType)) {
 						// response is an image
 						// if Content-Length header reports a size exceeding the prefetch limit, abort fetch
-						if (contentLength > limit) {
+						// and if file is not to be stored we don't need to download further either
+						if (contentLength > limit || !Helper.config.prefetchStorage) {
 							gotStream.destroy();
 						}
 					} else if (mediaTypeRegex.test(contentType)) {

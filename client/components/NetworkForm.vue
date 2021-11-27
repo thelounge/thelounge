@@ -166,7 +166,7 @@
 								class="input"
 								:type="slotProps.isVisible ? 'text' : 'password'"
 								placeholder="Proxy password"
-								name="password"
+								name="proxyPassword"
 								maxlength="300"
 							/>
 						</RevealPassword>

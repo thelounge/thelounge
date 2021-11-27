@@ -9,6 +9,7 @@
 				class="input"
 				placeholder="Search messages…"
 				@blur="closeSearch"
+				@keyup.esc="closeSearch"
 			/>
 		</div>
 		<button
@@ -37,6 +38,7 @@ form.message-search input {
 	border: 0;
 	color: inherit;
 	background-color: #fafafa;
+	appearance: none;
 }
 
 form.message-search input::placeholder {
@@ -112,6 +114,7 @@ export default {
 	methods: {
 		closeSearch() {
 			if (!this.onSearchPage) {
+				this.searchInput = "";
 				this.searchOpened = false;
 			}
 		},

@@ -4,6 +4,227 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v4.3.0 - 2021-11-22
+
+For more details, [see the full changelog](https://github.com/thelounge/thelounge/compare/v4.2.0...v4.3.0) and [milestone](https://github.com/thelounge/thelounge/milestone/37?closed=1).
+
+4.3 is a smaller release with one major feature: message search! A big thank you to [richrd](https://github.com/richrd) and [Nachtalb](https://github.com/Nachtalb) for working on this. Note that it is somewhat limited at the moment — you cannot jump to messages or see context around them, but this was a major hurdle and we can improve upon it. You can try it out by using `/search` or by clicking or tapping the new icon in the topic bar above channels or queries as long as your `messageStorage` server setting includes `sqlite`. Some other additions are an improved ordering of elements for screen reader users, more context menu options, and new gestures for touchscreen users. You can learn about the gestures and new commands by navigating to the Help page with the `?` button in the bottom of your channel sidebar.
+
+Additionally, support for Node 10 has been removed as it reached its end-of-life and the new minimum supported version is Node 12.0.0.
+
+A huge thank you to the 32 contributors who made this release possible!
+
+### Added
+
+- Classes for channels in list with unread counts and highlights ([#4214](https://github.com/thelounge/thelounge/pull/4214) by [@sha1sum](https://github.com/sha1sum))
+- Add proper filename to the content-disposition header ([#4187](https://github.com/thelounge/thelounge/pull/4187) by [@Nachtalb](https://github.com/Nachtalb))
+- Add HTML lang and labelled-by field to upload ([#4051](https://github.com/thelounge/thelounge/pull/4051) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Improve inline audio file support ([#4210](https://github.com/thelounge/thelounge/pull/4210) by [@Nachtalb](https://github.com/Nachtalb))
+- Show give/revoke modes and kick in context menu on other modes than +o ([#4176](https://github.com/thelounge/thelounge/pull/4176) by [@mitaka8](https://github.com/mitaka8), [#4181](https://github.com/thelounge/thelounge/pull/4181) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Add prefetchMaxSearchSize to override limit for link previews ([#4135](https://github.com/thelounge/thelounge/pull/4135) by [@brunnre8](https://github.com/brunnre8))
+- Skip video/audio embeds if og:type exists but does not specify it ([#4040](https://github.com/thelounge/thelounge/pull/4040) by [@xPaw](https://github.com/xPaw))
+- Add version support for packages. ([#4041](https://github.com/thelounge/thelounge/pull/4041) by [@McInkay](https://github.com/McInkay))
+- Add enterkeyhint on chat input and topic save ([#4055](https://github.com/thelounge/thelounge/pull/4055) by [@xPaw](https://github.com/xPaw))
+- Make `add` and `reset` CLI commands scriptable ([#4090](https://github.com/thelounge/thelounge/pull/4090) by [@supertassu](https://github.com/supertassu))
+- Add extended join information to join message ([#4105](https://github.com/thelounge/thelounge/pull/4105) by [@GewoonYorick](https://github.com/GewoonYorick))
+- Add ignore option to contextmenu ([#4104](https://github.com/thelounge/thelounge/pull/4104) by [@GewoonYorick](https://github.com/GewoonYorick))
+- Add gopher and gemini to the commonSchemes ([#4151](https://github.com/thelounge/thelounge/pull/4151) by [@Willamin](https://github.com/Willamin))
+- Add network specific leave message ([#4116](https://github.com/thelounge/thelounge/pull/4116) by [@Nachtalb](https://github.com/Nachtalb))
+- Message Search ([#4197](https://github.com/thelounge/thelounge/pull/4197) by [@Nachtalb](https://github.com/Nachtalb), [`69c37a5`](https://github.com/thelounge/thelounge/commit/69c37a535b91226ad744068fb38cdfdea5be167e), [`521426b`](https://github.com/thelounge/thelounge/commit/521426bb05ada1784bc61d157fd0d965fbe5fffc) by [@JeDaYoshi](https://github.com/JeDaYoshi), [`40a5ee7`](https://github.com/thelounge/thelounge/commit/40a5ee70b6b5eaaef8380b430172491a6ae4f7bb) by [@MaxLeiter](https://github.com/MaxLeiter), [#3664](https://github.com/thelounge/thelounge/pull/4197) by [@richrd](https://github.com/richrd))
+- Fill inputhistory on channel load and more message load ([#4206](https://github.com/thelounge/thelounge/pull/4206) by [@Nachtalb](https://github.com/Nachtalb), [`af96f77`](https://github.com/thelounge/thelounge/commit/af96f7771cd067b71a9fbe92b7de5640fe9f2087) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Allow installation of local packages ([#4251](https://github.com/thelounge/thelounge/pull/4251) by [@brunnre8](https://github.com/brunnre8))
+- Toggle recent mentions popup with ctrl/alt+m ([#4258](https://github.com/thelounge/thelounge/pull/4258) by [@bl1nk](https://github.com/bl1nk))
+- Add support for SOCKS ([#4211](https://github.com/thelounge/thelounge/pull/4211) by [@Mstrodl](https://github.com/Mstrodl))
+- Accessibility improvements (re-order, hide, and label certain DOM elements)([#4201](https://github.com/thelounge/thelounge/pull/4201) by [@MaxLeiter](https://github.com/MaxLeiter), [#4279](https://github.com/thelounge/thelounge/pull/4279) by [@JeDaYoshi](https://github.com/JeDaYoshi))
+- Add /umode support ([#4274](https://github.com/thelounge/thelounge/pull/4274) by [@JeDaYoshi](https://github.com/JeDaYoshi))
+- Add warning for HTTPS requirement on notifications ([#4280](https://github.com/thelounge/thelounge/pull/4280) by [@JeDaYoshi](https://github.com/JeDaYoshi))
+- Allow network list reordering via touch. ([#4326](https://github.com/thelounge/thelounge/pull/4326), [#4332](https://github.com/thelounge/thelounge/pull/4332) by [@itsjohncs](https://github.com/itsjohncs))
+- Two-finger swipe now switches windows (#3901) ([#4324](https://github.com/thelounge/thelounge/pull/4324) by [@itsjohncs](https://github.com/itsjohncs))
+- Improve responsiveness of channel name and topic. ([#4340](https://github.com/thelounge/thelounge/pull/4340) by [@itsjohncs](https://github.com/itsjohncs))
+- Add more plugin functionality ([#4329](https://github.com/thelounge/thelounge/pull/4329) by [@brunnre8](https://github.com/brunnre8))
+- Add keyboard shortcut for help screen (#4315) ([`9a0ba1d`](https://github.com/thelounge/thelounge/commit/9a0ba1da6c318e74545d931ec67c67e87071285a) by [@NoahvdAa](https://github.com/NoahvdAa))
+
+### Changed
+
+- Vertically center topic editing input in Safari. (#4325) ([`2ab6716`](https://github.com/thelounge/thelounge/commit/2ab671664e1ac550fbb22b81284c665f72eee1d9) by [@itsjohncs](https://github.com/itsjohncs))
+- Do not condense single messages (#4313) ([`7873847`](https://github.com/thelounge/thelounge/commit/7873847a7ebb4c26c0c380c6304f55a431a3872e) by [@supertassu](https://github.com/supertassu))
+- MessageSearchForm: do not focus input if search is closed ([#4242](https://github.com/thelounge/thelounge/pull/4242) by [@brunnre8](https://github.com/brunnre8))
+- Add new "/search query" command to open the search window ([#4213](https://github.com/thelounge/thelounge/pull/4213) by [@Nachtalb](https://github.com/Nachtalb))
+- Add support for JPEG XL image previews ([#4219](https://github.com/thelounge/thelounge/pull/4219) by [@TheDecryptor](https://github.com/TheDecryptor))
+- Make esc key close mentions window (#4365) ([`9dbf647`](https://github.com/thelounge/thelounge/commit/9dbf647f7e3248eedd0f237be55ef7244647a005) by [@brunnre8](https://github.com/brunnre8))
+- Display server-originated notices to channels in the channel window ([#4260](https://github.com/thelounge/thelounge/pull/4260) by [@BradleyShaw](https://github.com/BradleyShaw))
+- Optimise modes based on ISUPPORT ([#4275](https://github.com/thelounge/thelounge/pull/4275) by [@JeDaYoshi](https://github.com/JeDaYoshi))
+- Allow wildcards in hostmask ([#4351](https://github.com/thelounge/thelounge/pull/4351) by [@brunnre8](https://github.com/brunnre8))
+- Only scroll history when cursor is on first or last row ([#4205](https://github.com/thelounge/thelounge/pull/4205) by [@Nachtalb](https://github.com/Nachtalb))
+- Cleanup of SQLite message storage ([#4345](https://github.com/thelounge/thelounge/pull/4345) by [@itsjohncs](https://github.com/itsjohncs))
+- Do not generate and send client certificate unless SASL EXTERNAL is requested ([#4093](https://github.com/thelounge/thelounge/pull/4093) by [@xPaw](https://github.com/xPaw))
+- NetworkForm: s/away message/leave message/ ([#4193](https://github.com/thelounge/thelounge/pull/4193) by [@brunnre8](https://github.com/brunnre8))
+- Settings: show label for nick autocompletion postfix ([#4195](https://github.com/thelounge/thelounge/pull/4195) by [@brunnre8](https://github.com/brunnre8))
+- Move font assignment of password reveal icon ([#4342](https://github.com/thelounge/thelounge/pull/4342) by [@deejayy](https://github.com/deejayy))
+- Prevent round and white search styling in iOS 15. ([#4352](https://github.com/thelounge/thelounge/pull/4352) by [@itsjohncs](https://github.com/itsjohncs))
+- Allow escape key to close search bar and search page ([#4364](https://github.com/thelounge/thelounge/pull/4364) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Use SortableJS 1.14.0. (#4330) ([`2b634a6`](https://github.com/thelounge/thelounge/commit/2b634a6ba61bfc4c3b45f620b11396497f2f77a5) by [@itsjohncs](https://github.com/itsjohncs))
+- Switch to thelounge/Sortable fork for Sortable.js (#4368) ([`315198a`](https://github.com/thelounge/thelounge/commit/315198ac0ba07400a33e8949ba50cddb774695c4) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Update production dependencies to their latest versions:
+  - `tlds` ([#4046](https://github.com/thelounge/thelounge/pull/4046))
+  - `commander` ([#4168](https://github.com/thelounge/thelounge/pull/4168), [#4185](https://github.com/thelounge/thelounge/pull/4185))
+  - `sqlite3` ([#4142](https://github.com/thelounge/thelounge/pull/4142))
+  - `chalk` ([#4208](https://github.com/thelounge/thelounge/pull/4208))
+  - `mime-types` ([#4349](https://github.com/thelounge/thelounge/pull/4349))
+  - `linkify-it` ([#4348](https://github.com/thelounge/thelounge/pull/4348))
+
+### Fixed
+
+- Differentiate WALLOPS from NOTICE ([#4264](https://github.com/thelounge/thelounge/pull/4264) by [@BradleyShaw](https://github.com/BradleyShaw))
+- Fix sporadic rounding on message search bar. ([#4333]((https://github.com/thelounge/thelounge/pull/4333), [#4328](<(https://github.com/thelounge/thelounge/pull/4328)>) by [@itsjohncs](https://github.com/itsjohncs))
+- Fix missing users in userlist after removing searchinput ([#4221](https://github.com/thelounge/thelounge/pull/4221) by [@Nachtalb](https://github.com/Nachtalb))
+- Always use multi-prefix modes ([#4060](https://github.com/thelounge/thelounge/pull/4060) by [@xPaw](https://github.com/xPaw))
+- Fix breaking GIFs while removing metadata ([#4110](https://github.com/thelounge/thelounge/pull/4110) by [@Nachtalb](https://github.com/Nachtalb))
+- Improved handling of empty userdata ([#4190](https://github.com/thelounge/thelounge/pull/4190) by [@Nachtalb](https://github.com/Nachtalb))
+- Restrict what the browser should try to autocomplete ([#4192](https://github.com/thelounge/thelounge/pull/4192) by [@Nachtalb](https://github.com/Nachtalb), [#4337](https://github.com/thelounge/thelounge/commit/3ba7fb6de4270db1310b8624c9f308e858352f4a) by [@brunnre8](https://github.com/brunnre8))
+- Render styling for colored host masks ([#4235](https://github.com/thelounge/thelounge/pull/4235) by [@angerson](https://github.com/angerson))
+- Fix not overriding config options with -c ([#4262](https://github.com/thelounge/thelounge/pull/4262) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Fix nick-less messages from servers ([#4277](https://github.com/thelounge/thelounge/pull/4277) by [@JeDaYoshi](https://github.com/JeDaYoshi))
+- Fix authenticated proxy ([#4341](https://github.com/thelounge/thelounge/pull/4341) by [@Nachtalb](https://github.com/Nachtalb))
+- Allow text drag & drop into input text field ([#4212](https://github.com/thelounge/thelounge/pull/4212) by [@Nachtalb](https://github.com/Nachtalb))
+
+### Security
+
+- Update dependency ua-parser-js to v0.7.24 ([#4216](https://github.com/thelounge/thelounge/pull/4216) by [@renovate](https://github.com/apps/renovate))
+- Update dependency postcss to v8.2.10 ([#4223](https://github.com/thelounge/thelounge/pull/4223) by [@renovate](https://github.com/apps/renovate))
+- CSP adjustments ([#4344](https://github.com/thelounge/thelounge/pull/4344) by [@brunnre8](https://github.com/brunnre8))
+- Bump required node version to 12.x and add 16.x builds ([#4356](https://github.com/thelounge/thelounge/pull/4356) by [@MaxLeiter](https://github.com/MaxLeiter))
+
+### Documentation
+
+In the main repository:
+
+- Clarify description of prefetchMaxSearchSize. (#4338) ([`21c6abd`](https://github.com/thelounge/thelounge/commit/21c6abdd1d9e7ab09612250857ea418beb2885ec) by [@itsjohncs](https://github.com/itsjohncs))
+- `client/views` -> `client/components` in README ([#4196](https://github.com/thelounge/thelounge/pull/4196) by [@MaxLeiter](https://github.com/MaxLeiter))
+
+On the [website repository](https://github.com/thelounge/thelounge.github.io):
+
+- Update commands API docs (#217) ([`9c6a9e4`](https://github.com/thelounge/thelounge.github.io/commit/9c6a9e4b7d31efa37708a2796254f6cbe6e9abdf) by [@McInkay](https://github.com/McInkay))
+- Add Caddy v2 examples (#230) ([`5554338`](https://github.com/thelounge/thelounge.github.io/commit/55543386feaf1f41dd845d500458a49be417da39) by [@Jay2k1](https://github.com/Jay2k1))
+- Add self hosted pod to community.md (#231) ([`9e658c6`](https://github.com/thelounge/thelounge.github.io/commit/9e658c618daa144c8d757826c54d9bd67c53a133) by [@MaxLeiter](https://github.com/MaxLeiter))
+- reword note on daemonizing when installing from npm (#232) ([`6fab4fe`](https://github.com/thelounge/thelounge.github.io/commit/6fab4fe456abed6343b84f21f7caf5a3a0c6fed3) by [@igalic](https://github.com/igalic))
+- Add css snippets for hiding account and realname from join messages ([#233](https://github.com/thelounge/thelounge.github.io/pull/233) by [@GewoonYorick](https://github.com/GewoonYorick))
+- Add macOS Instructions ([#237](https://github.com/thelounge/thelounge.github.io/pull/237) by [@xnaas](https://github.com/xnaas))
+- add "Hide unread counters in sidebar, just show a highlight indicator" ([#235](https://github.com/thelounge/thelounge.github.io/pull/235) by [@Jay2k1](https://github.com/Jay2k1))
+- Clarify enabling Advanced settings to access custom CSS ([`cb0a427`](https://github.com/thelounge/thelounge.github.io/commit/cb0a427f49a313d7fc0eb56b0e422c14eb234574) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Update outdated CSS snippets in custom-css.md (#238) ([`fe9d09c`](https://github.com/thelounge/thelounge.github.io/commit/fe9d09c5062dd7dbe3563c7e72f82ef0c1a9eeb9) by [@EliteOfGods](https://github.com/EliteOfGods))
+- Change the IRC server to Libera.Chat (#242) ([`7b8c010`](https://github.com/thelounge/thelounge.github.io/commit/7b8c0100fc66e368e02ece5e8a62e40f0817b3ae) by [@mhajder](https://github.com/mhajder))
+- Fix spaces ([`3a41b12`](https://github.com/thelounge/thelounge.github.io/commit/3a41b121ec0d5e0b93694438dec8a4758b88627b) by [@xPaw](https://github.com/xPaw))
+- Update custom-css.md ([#240](https://github.com/thelounge/thelounge.github.io/pull/240) by [@PeGaSuS-Coder](https://github.com/PeGaSuS-Coder))
+- Alphabetically sorted unofficial install methods, added Swizzin ([#236](https://github.com/thelounge/thelounge.github.io/pull/236) by [@flying-sausages](https://github.com/flying-sausages))
+- Update dependencies and community page (#245) ([`0762606`](https://github.com/thelounge/thelounge.github.io/commit/0762606c3bbfe55a4b053d6a6bddd0129ba1fff8) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Update config.js.md (#247) ([`3036977`](https://github.com/thelounge/thelounge.github.io/commit/3036977f3ea7c521cd22f29bfb3425f079ce5ed3) by [@ledakis](https://github.com/ledakis))
+- Docs - Adding plugins section on main website (#248) ([`1fbaa17`](https://github.com/thelounge/thelounge.github.io/commit/1fbaa17cd9baa74e8d4c3dfab91b445105a503e5) by [@aab12345](https://github.com/aab12345))
+- Docs - Change header links on main website (#249) ([`52eb866`](https://github.com/thelounge/thelounge.github.io/commit/52eb8668577ba9e7a4813831c77440be64c5aac8) by [@aab12345](https://github.com/aab12345))
+- Extend theming guide with "files" section (#252) ([`94b8c8d`](https://github.com/thelounge/thelounge.github.io/commit/94b8c8dacea0d8b5941e35ca9a6b0ed30eaa7b2d) by [@deejayy](https://github.com/deejayy))
+- Protect The Lounge with HTTPS (#253) ([`c4cfe60`](https://github.com/thelounge/thelounge.github.io/commit/c4cfe60421dc19e530119f63b637991ac0c465d8) by [@aab12345](https://github.com/aab12345))
+- Plugin docs (#254) ([`45b32c5`](https://github.com/thelounge/thelounge.github.io/commit/45b32c5bf5282fc207427e9c22bdbc622b947eb0) by [@brunnre8](https://github.com/brunnre8))
+
+### Internals
+
+- Clean up global listener in Sidebar component. (#4331) ([`5d76ed8`](https://github.com/thelounge/thelounge/commit/5d76ed888ce8d328913c15fde0b1026f0d60eb54) by [@itsjohncs](https://github.com/itsjohncs))
+- Properly track user modes for context menu (#4267) ([`8fcd079`](https://github.com/thelounge/thelounge/commit/8fcd079204f6c44cadf7fff95c00a44242a61c68) by [@brunnre8](https://github.com/brunnre8))
+- Optimise commands processing ([`0d839c5`](https://github.com/thelounge/thelounge/commit/0d839c501efa0cf56bce72263ab5c93535e34cd1) by [@JeDaYoshi](https://github.com/JeDaYoshi))
+- Fix linter warnings for aria-label placement ([`d05cf5f`](https://github.com/thelounge/thelounge/commit/d05cf5fe628596a55a8aebda03e5692488890d94) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Configure server ping timeout to 60 seconds ([#4171](https://github.com/thelounge/thelounge/pull/4171) by [@emilyst](https://github.com/emilyst))
+- Fix test for production build ([`c2e8eaf`](https://github.com/thelounge/thelounge/commit/c2e8eaf9dfed3720657b80619397f6d037d1c835) by [@xPaw](https://github.com/xPaw))
+- Add node 15 to test matrix ([`69986b3`](https://github.com/thelounge/thelounge/commit/69986b3ee5727cee9ecd274efcfcfe5137116857) by [@xPaw](https://github.com/xPaw))
+- Add .vscode settings and suggested extensions ([#4042](https://github.com/thelounge/thelounge/pull/4042) by [@xPaw](https://github.com/xPaw))
+- Change the IRC server to Libera.Chat ([#4238](https://github.com/thelounge/thelounge/pull/4238) by [@mhajder](https://github.com/mhajder))
+- Update prettier and apply formatting ([`b74b692`](https://github.com/thelounge/thelounge/commit/b74b6923912ec7c498a8fbcd0a6f53c44c7a3f25) by [@xPaw](https://github.com/xPaw))
+- Update dependencies ([[`#4155`](https://github.com/thelounge/thelounge/pulls/4155), [`#4252`](https://github.com/thelounge/thelounge/pulls/4252), [`#4265`](https://github.com/thelounge/thelounge/pulls/4265), [`#4281`](https://github.com/thelounge/thelounge/pulls/4281), [`#4312`](https://github.com/thelounge/thelounge/pulls/4312) by [@MaxLeiter], [#4087](https://github.com/thelounge/thelounge/pulls/4087) by [@xPaw](https://github.com/xPaw))
+- Change renovate to monthly ([`7ee0732`](https://github.com/thelounge/thelounge/commit/7ee0732f56644f4f337cfdc5244f44e3e27dc8bc) by [@xPaw](https://github.com/xPaw))
+- Add depTypeList to renovate ([`61ebd65`](https://github.com/thelounge/thelounge/commit/61ebd65367fa4d829b84ef2a48ad185cb2c8a385) by [@xPaw](https://github.com/xPaw))
+- Update mini-css-extract-plugin ([`a9fb563`](https://github.com/thelounge/thelounge/commit/a9fb563c01a3c4ff9520e5017c42b28911eda38f) by [@xPaw](https://github.com/xPaw))
+- Upgrade to webpack 5 ([`41831d1`](https://github.com/thelounge/thelounge/commit/41831d18b1507275de61bf79bb32cb25a3b590eb) by [@xPaw](https://github.com/xPaw))
+- Update development dependencies to their latest versions:
+  - `pretty-quick` ([#4045](https://github.com/thelounge/thelounge/pull/4045))
+  - `@babel/core` ([#4043](https://github.com/thelounge/thelounge/pull/4043), [#4167](https://github.com/thelounge/thelounge/pull/4167), [#4182](https://github.com/thelounge/thelounge/pull/4182), [#4207](https://github.com/thelounge/thelounge/pull/4207))
+  - `@vue/server-test-utils` ([#4094](https://github.com/thelounge/thelounge/pull/4094))
+  - `@vue/test-utils` ([#4094](https://github.com/thelounge/thelounge/pull/4094))
+  - `vue-loader` ([#4094](https://github.com/thelounge/thelounge/pull/4094))
+  - `eslint-plugin-vue` ([#4141](https://github.com/thelounge/thelounge/pull/4141))
+  - `eslint` ([#4140](https://github.com/thelounge/thelounge/pull/4140), [#4170](https://github.com/thelounge/thelounge/pull/4170), [#4076](https://github.com/thelounge/thelounge/pull/4076))
+  - `dayjs` ([#4139](https://github.com/thelounge/thelounge/pull/4139))
+  - `copy-webpack-plugin` ([#4138](https://github.com/thelounge/thelounge/pull/4138))
+  - `css-loader` ([#4169](https://github.com/thelounge/thelounge/pull/4169))
+  - `@babel/preset-env` ([#4167](https://github.com/thelounge/thelounge/pull/4167), [#4182](https://github.com/thelounge/thelounge/pull/4182), [#4207](https://github.com/thelounge/thelounge/pull/4207))
+  - `@fortawesome/fontawesome-free` ([#4183](https://github.com/thelounge/thelounge/pull/4183))
+  - `chai` ([#4184](https://github.com/thelounge/thelounge/pull/4184))
+
+In the [deb repository](https://github.com/thelounge/thelounge-deb):
+
+- Add node 14 to GitHub action ([`56c7ba6`](https://github.com/thelounge/thelounge-deb/commit/56c7ba6cc598ccf9da1e04876b4e107f98cc3ed2) by [@xPaw](https://github.com/xPaw))
+- Upgrade TravisCI to Bionic ([#77](https://github.com/thelounge/thelounge-deb/pull/77) by [@maxpoulin64](https://github.com/maxpoulin64))
+- systemd: Don't force enable units ([#74](https://github.com/thelounge/thelounge-deb/pull/74) by [@brunnre8](https://github.com/brunnre8))
+- Use dedicated npm cache dir ([#76](https://github.com/thelounge/thelounge-deb/pull/76) by [@brunnre8](https://github.com/brunnre8))
+- Make all files root owned ([#75](https://github.com/thelounge/thelounge-deb/pull/75) by [@brunnre8](https://github.com/brunnre8))
+
+## v4.3.0-rc.2 - 2021-11-18 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/thelounge/compare/v4.3.0-rc.1...v4.3.0-rc.2)
+
+This is a release candidate (RC) for v4.3.0 to ensure maximum stability for public release.
+Bugs may be fixed, but no further features will be added until the next stable version.
+
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+yarn global add thelounge@next
+```
+
+## v4.3.0-rc.1 - 2021-11-17 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/thelounge/compare/v4.3.0-pre.6...v4.3.0-rc.1)
+
+This is a release candidate (RC) for v4.3.0 to ensure maximum stability for public release.
+Bugs may be fixed, but no further features will be added until the next stable version.
+
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+yarn global add thelounge@next
+```
+
+## v4.3.0-pre.6 - 2021-11-04 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/thelounge/compare/v4.3.0-pre.5...v4.3.0-pre.6)
+
+This is a pre-release for v4.3.0 to offer latest changes without having to wait for a stable release.
+At this stage, features may still be added or modified until the first release candidate for this version gets released.
+
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+yarn global add thelounge@next
+```
+
+## v4.3.0-pre.5 - 2021-11-03 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/thelounge/compare/v4.3.0-pre.4...v4.3.0-pre.5)
+
+This is a pre-release for v4.3.0 to offer latest changes without having to wait for a stable release.
+At this stage, features may still be added or modified until the first release candidate for this version gets released.
+
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+yarn global add thelounge@next
+```
+
 ## v4.3.0-pre.4 - 2021-07-01 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v4.3.0-pre.3...v4.3.0-pre.4)

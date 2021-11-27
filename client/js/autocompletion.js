@@ -311,10 +311,19 @@ function completeNicks(word, isFuzzy) {
 	return users.filter((w) => !w.toLowerCase().indexOf(word));
 }
 
-function completeCommands(word) {
-	const words = constants.commands.slice();
+function getCommands() {
+	let cmds = constants.commands.slice();
 
-	return fuzzyGrep(word, words);
+	if (!store.state.settings.searchEnabled) {
+		cmds = cmds.filter((c) => c !== "/search");
+	}
+
+	return cmds;
+}
+
+function completeCommands(word) {
+	const commands = getCommands();
+	return fuzzyGrep(word, commands);
 }
 
 function completeChans(word) {
