@@ -77,7 +77,7 @@ function Network(attr) {
 			name: this.name,
 			type: Chan.Type.LOBBY,
 			// The lobby only starts as muted if every channel is muted. This is A) easier to implement and B) stops some confusion on startup.
-			muted: this.channels.every((chan) => chan.muted),
+			muted: this.channels.length >= 1 && this.channels.every((chan) => chan.muted),
 		})
 	);
 }
