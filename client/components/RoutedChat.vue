@@ -3,7 +3,7 @@
 		v-if="activeChannel"
 		:network="activeChannel.network"
 		:channel="activeChannel.channel"
-		:focused="this.$route.query.focused"
+		:focused="$route.query.focused"
 	/>
 </template>
 
