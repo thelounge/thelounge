@@ -2585,10 +2585,10 @@ core-js-compat@^3.16.0:
     browserslist "^4.17.0"
     semver "7.0.0"
 
-core-js@^3.15.1:
-  version "3.15.2"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.15.2.tgz#740660d2ff55ef34ce664d7e2455119c5bdd3d61"
-  integrity sha512-tKs41J7NJVuaya8DxIOCnl8QuPHx5/ZVbFo1oKgVl1qHFBBrDctzQGtuLjPpRdNTWmKPH6oEvgN/MUID+l485Q==
+core-js@^3.19.1:
+  version "3.19.2"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.19.2.tgz#ae216d7f4f7e924d9a2e3ff1e4b1940220f9157b"
+  integrity sha512-ciYCResnLIATSsXuXnIOH4CbdfgV+H1Ltg16hJFN7/v6OxqnFr/IFGeLacaZ+fHLAm0TBbXwNK9/DNBzBUrO/g==
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -4366,20 +4366,20 @@ ipaddr.js@1.9.1:
   resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.9.1.tgz#bff38543eeb8984825079ff3a2a8e6cbd46781b3"
   integrity sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==
 
-irc-framework@4.11.0:
-  version "4.11.0"
-  resolved "https://registry.yarnpkg.com/irc-framework/-/irc-framework-4.11.0.tgz#409e6423680c16d6631c83af4ecef82cb105dc49"
-  integrity sha512-A7AoNxAGzViARQv4sVchmTzRiWiQZMCuQVnCOhrggEgAMsc8Vr345U5/JMN5I45gqL4LVfjtruWokp5YiU23Iw==
+irc-framework@4.12.0:
+  version "4.12.0"
+  resolved "https://registry.yarnpkg.com/irc-framework/-/irc-framework-4.12.0.tgz#ca18c573eea702bd53314e7738096b37895338ba"
+  integrity sha512-gy/zLH5nRWHGiIf3idx8NKE7tEVaLLtCuRstSOh7hVEdvnT4i+9b7zVbB2ZiXhGPPVUZ/898fZ4OEv0FytD1NQ==
   dependencies:
     buffer "^6.0.3"
-    core-js "^3.15.1"
+    core-js "^3.19.1"
     eventemitter3 "^4.0.7"
     grapheme-splitter "^1.0.4"
     iconv-lite "^0.6.3"
     isomorphic-textencoder "^1.0.1"
     lodash "^4.17.21"
     middleware-handler "^0.2.0"
-    regenerator-runtime "^0.13.7"
+    regenerator-runtime "^0.13.9"
     socks "^2.6.1"
     stream-browserify "^3.0.0"
     util "^0.12.4"
@@ -7092,10 +7092,15 @@ regenerate@^1.4.0:
   resolved "https://registry.yarnpkg.com/regenerate/-/regenerate-1.4.2.tgz#b9346d8827e8f5a32f7ba29637d398b69014848a"
   integrity sha512-zrceR/XhGYU/d/opr2EKO7aRHUeiBI8qjtfHqADTwZd6Szfy16la6kqD0MIUs5z5hx6AaKa+PixpPrR289+I0A==
 
-regenerator-runtime@^0.13.4, regenerator-runtime@^0.13.7:
+regenerator-runtime@^0.13.4:
   version "0.13.7"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.7.tgz#cac2dacc8a1ea675feaabaeb8ae833898ae46f55"
   integrity sha512-a54FxoJDIr27pgf7IgeQGxmqUNYrcV338lf/6gH456HZ/PhX+5BcwHXG9ajESmwe6WRO0tAzRUrRmNONWgkrew==
+
+regenerator-runtime@^0.13.9:
+  version "0.13.9"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.9.tgz#8925742a98ffd90814988d7566ad30ca3b263b52"
+  integrity sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA==
 
 regenerator-transform@^0.14.2:
   version "0.14.5"
