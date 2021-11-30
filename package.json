@@ -47,7 +47,7 @@
     "commander": "7.2.0",
     "content-disposition": "0.5.3",
     "express": "4.17.1",
-    "file-type": "16.2.0",
+    "file-type": "16.5.3",
     "filenamify": "4.2.0",
     "got": "11.8.3",
     "irc-framework": "4.11.0",
