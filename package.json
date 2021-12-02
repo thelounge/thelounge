@@ -59,7 +59,7 @@
     "node-forge": "0.10.0",
     "package-json": "7.0.0",
     "read": "1.0.7",
-    "read-chunk": "3.2.0",
+    "read-chunk": "4.0.2",
     "semver": "7.3.5",
     "socket.io": "3.1.2",
     "tlds": "1.226.0",
