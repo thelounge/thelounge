@@ -108,17 +108,17 @@ module.exports = function (options = {}) {
 
 		if (!keyPath.length || !fs.existsSync(keyPath)) {
 			log.error("Path to SSL key is invalid. Stopping server...");
-			process.exit();
+			process.exit(1);
 		}
 
 		if (!certPath.length || !fs.existsSync(certPath)) {
 			log.error("Path to SSL certificate is invalid. Stopping server...");
-			process.exit();
+			process.exit(1);
 		}
 
 		if (caPath.length && !fs.existsSync(caPath)) {
 			log.error("Path to SSL ca bundle is invalid. Stopping server...");
-			process.exit();
+			process.exit(1);
 		}
 
 		server = require("https");
