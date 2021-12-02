@@ -48,7 +48,7 @@
     "content-disposition": "0.5.3",
     "express": "4.17.1",
     "file-type": "16.5.3",
-    "filenamify": "4.3.0",
+    "filenamify": "5.0.2",
     "got": "11.8.3",
     "irc-framework": "4.12.0",
     "is-utf8": "0.2.1",
