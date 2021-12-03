@@ -4137,10 +4137,10 @@ ipaddr.js@1.9.1:
   resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.9.1.tgz#bff38543eeb8984825079ff3a2a8e6cbd46781b3"
   integrity sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==
 
-irc-framework@4.12.0:
-  version "4.12.0"
-  resolved "https://registry.yarnpkg.com/irc-framework/-/irc-framework-4.12.0.tgz#ca18c573eea702bd53314e7738096b37895338ba"
-  integrity sha512-gy/zLH5nRWHGiIf3idx8NKE7tEVaLLtCuRstSOh7hVEdvnT4i+9b7zVbB2ZiXhGPPVUZ/898fZ4OEv0FytD1NQ==
+irc-framework@4.12.1:
+  version "4.12.1"
+  resolved "https://registry.yarnpkg.com/irc-framework/-/irc-framework-4.12.1.tgz#d622178b47ec1ebf8c7bd1de90a848bb38d82103"
+  integrity sha512-RQBQcn5y4jE/ksPHwM4yoKK/OTC7YSboyqHnX1g/W28HpEWbqdBdYTu6PwfM/2/CCrM6vceaYmCPBO345XY0yg==
   dependencies:
     buffer "^6.0.3"
     core-js "^3.19.1"
