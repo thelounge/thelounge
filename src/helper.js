@@ -73,7 +73,7 @@ function getGitCommit() {
 		return _gitCommit;
 	}
 
-	if (!fs.existsSync(path.resolve(__dirname, "..", ".git", "HEAD"))) {
+	if (!fs.existsSync(path.resolve(__dirname, "..", ".git"))) {
 		_gitCommit = null;
 		return null;
 	}
