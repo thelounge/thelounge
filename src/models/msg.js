@@ -42,16 +42,19 @@ class Msg {
 			return !!this.from.nick;
 		}
 
-		return (
-			this.type !== Msg.Type.MONOSPACE_BLOCK &&
-			this.type !== Msg.Type.ERROR &&
-			this.type !== Msg.Type.TOPIC_SET_BY &&
-			this.type !== Msg.Type.MODE_CHANNEL &&
-			this.type !== Msg.Type.MODE_USER &&
-			this.type !== Msg.Type.RAW &&
-			this.type !== Msg.Type.WHOIS &&
-			this.type !== Msg.Type.PLUGIN
-		);
+		switch (this.type) {
+			case Msg.Type.MONOSPACE_BLOCK:
+			case Msg.Type.ERROR:
+			case Msg.Type.TOPIC_SET_BY:
+			case Msg.Type.MODE_CHANNEL:
+			case Msg.Type.MODE_USER:
+			case Msg.Type.RAW:
+			case Msg.Type.WHOIS:
+			case Msg.Type.PLUGIN:
+				return false;
+			default:
+				return true;
+		}
 	}
 }
 
