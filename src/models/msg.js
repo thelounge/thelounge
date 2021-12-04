@@ -47,6 +47,7 @@ class Msg {
 			this.type !== Msg.Type.ERROR &&
 			this.type !== Msg.Type.TOPIC_SET_BY &&
 			this.type !== Msg.Type.MODE_CHANNEL &&
+			this.type !== Msg.Type.MODE_USER &&
 			this.type !== Msg.Type.RAW &&
 			this.type !== Msg.Type.WHOIS &&
 			this.type !== Msg.Type.PLUGIN
@@ -66,6 +67,7 @@ Msg.Type = {
 	MESSAGE: "message",
 	MODE: "mode",
 	MODE_CHANNEL: "mode_channel",
+	MODE_USER: "mode_user", // RPL_UMODEIS
 	MONOSPACE_BLOCK: "monospace_block",
 	NICK: "nick",
 	NOTICE: "notice",
