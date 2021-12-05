@@ -1,7 +1,7 @@
 "use strict";
 
 const Helper = require("../helper");
-const busboy = require("busboy");
+const busboy = require("@fastify/busboy");
 const {v4: uuidv4} = require("uuid");
 const path = require("path");
 const fs = require("fs");
