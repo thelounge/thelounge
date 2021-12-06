@@ -308,6 +308,7 @@ p {
 #chat .msg[data-type="quit"] .from::before,
 #chat .msg[data-type="topic"] .from::before,
 #chat .msg[data-type="mode_channel"] .from::before,
+#chat .msg[data-type="mode_user"] .from::before,
 #chat .msg[data-type="mode"] .from::before,
 #chat .msg[data-command="motd"] .from::before,
 #chat .msg[data-command="help"] .from::before,
@@ -434,6 +435,7 @@ p {
 }
 
 #chat .msg[data-type="mode_channel"] .from::before,
+#chat .msg[data-type="mode_user"] .from::before,
 #chat .msg[data-type="mode"] .from::before {
 	content: "\f05a"; /* http://fontawesome.io/icon/info-circle/ */
 	color: #2ecc40;
