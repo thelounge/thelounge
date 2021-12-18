@@ -9,13 +9,11 @@ const Msg = require("../../models/msg");
 let sqlite3;
 
 try {
-	sqlite3 = require("sqlite3");
+	sqlite3 = require("@vscode/sqlite3");
 } catch (e) {
 	Helper.config.messageStorage = Helper.config.messageStorage.filter((item) => item !== "sqlite");
 
-	log.error(
-		"Unable to load node-sqlite3 module. See https://github.com/mapbox/node-sqlite3/wiki/Binaries"
-	);
+	log.error("Unable to load node-sqlite3 module", e);
 }
 
 const currentSchemaVersion = 1520239200;
