@@ -348,7 +348,7 @@ export default {
 			event.item.classList.remove("ui-sortable-dragging-touch-cue");
 			this.startDrag = null;
 		},
-		onDraggableTouchStart() {
+		onDraggableTouchStart(event) {
 			if (event.touches.length === 1) {
 				// This prevents an iOS long touch default behavior: selecting
 				// the nearest selectable text.

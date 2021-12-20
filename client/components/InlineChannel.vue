@@ -19,7 +19,7 @@ export default {
 		channel: String,
 	},
 	methods: {
-		openContextMenu() {
+		openContextMenu(event) {
 			eventbus.emit("contextmenu:inline-channel", {
 				event: event,
 				channel: this.channel,

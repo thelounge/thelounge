@@ -227,7 +227,7 @@ export default {
 				network: this.network,
 			});
 		},
-		openMentions() {
+		openMentions(event) {
 			eventbus.emit("mentions:toggle", {
 				event: event,
 			});

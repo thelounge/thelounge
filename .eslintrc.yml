@@ -23,6 +23,10 @@ rules:
   no-duplicate-imports: error
   no-else-return: error
   no-implicit-globals: error
+  no-restricted-globals:
+    - error
+    - event
+    - fdescribe
   no-shadow: error
   no-template-curly-in-string: error
   no-unsafe-negation: error
