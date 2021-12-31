@@ -208,7 +208,7 @@ class Uploader {
 					// if there is still data to be uploaded. Servers will only error in extreme cases like bad
 					// authentication or server-side errors.
 					response = {
-						error: `Upload aborted: HTTP ${this.xhr.status}`,
+						error: `Upload aborted: ${this.xhr.statusText} (HTTP ${this.xhr.status})`,
 					};
 				}
 

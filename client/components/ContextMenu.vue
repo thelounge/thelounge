@@ -39,7 +39,11 @@
 </template>
 
 <script>
-import {generateUserContextMenu, generateChannelContextMenu} from "../js/helpers/contextMenu.js";
+import {
+	generateUserContextMenu,
+	generateChannelContextMenu,
+	generateInlineChannelContextMenu,
+} from "../js/helpers/contextMenu.js";
 import eventbus from "../js/eventbus";
 
 export default {
@@ -65,12 +69,14 @@ export default {
 		eventbus.on("contextmenu:cancel", this.close);
 		eventbus.on("contextmenu:user", this.openUserContextMenu);
 		eventbus.on("contextmenu:channel", this.openChannelContextMenu);
+		eventbus.on("contextmenu:inline-channel", this.openInlineChannelContextMenu);
 	},
 	destroyed() {
 		eventbus.off("escapekey", this.close);
 		eventbus.off("contextmenu:cancel", this.close);
 		eventbus.off("contextmenu:user", this.openUserContextMenu);
 		eventbus.off("contextmenu:channel", this.openChannelContextMenu);
+		eventbus.off("contextmenu:inline-channel", this.openInlineChannelContextMenu);
 
 		this.close();
 	},
@@ -92,6 +98,11 @@ export default {
 			}
 
 			const items = generateChannelContextMenu(this.$root, data.channel, data.network);
+			this.open(data.event, items);
+		},
+		openInlineChannelContextMenu(data) {
+			const {network} = this.$store.state.activeChannel;
+			const items = generateInlineChannelContextMenu(this.$root, data.channel, network);
 			this.open(data.event, items);
 		},
 		openUserContextMenu(data) {

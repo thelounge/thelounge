@@ -110,11 +110,11 @@
 			</div>
 		</div>
 		<div
-			v-if="this.$store.state.currentUserVisibleError"
+			v-if="$store.state.currentUserVisibleError"
 			id="user-visible-error"
 			@click="hideUserVisibleError"
 		>
-			{{ this.$store.state.currentUserVisibleError }}
+			{{ $store.state.currentUserVisibleError }}
 		</div>
 		<ChatInput :network="network" :channel="channel" />
 	</div>
@@ -227,7 +227,7 @@ export default {
 				network: this.network,
 			});
 		},
-		openMentions() {
+		openMentions(event) {
 			eventbus.emit("mentions:toggle", {
 				event: event,
 			});

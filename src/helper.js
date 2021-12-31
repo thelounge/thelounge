@@ -73,7 +73,7 @@ function getGitCommit() {
 		return _gitCommit;
 	}
 
-	if (!fs.existsSync(path.resolve(__dirname, "..", ".git", "HEAD"))) {
+	if (!fs.existsSync(path.resolve(__dirname, "..", ".git"))) {
 		_gitCommit = null;
 		return null;
 	}
@@ -158,6 +158,34 @@ function setHome(newPath) {
 	// Load theme color from the web manifest
 	const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 	this.config.themeColor = manifest.theme_color;
+
+	// log dir probably shouldn't be world accessible.
+	// Create it with the desired permission bits if it doesn't exist yet.
+	let logsStat = undefined;
+
+	try {
+		logsStat = fs.statSync(userLogsPath);
+	} catch {
+		// ignored on purpose, node v14.17.0 will give us {throwIfNoEntry: false}
+	}
+
+	if (!logsStat) {
+		try {
+			fs.mkdirSync(userLogsPath, {recursive: true, mode: 0o750});
+		} catch (e) {
+			log.error("Unable to create logs directory", e);
+		}
+	} else if (logsStat && logsStat.mode & 0o001) {
+		log.warn(
+			"contents of",
+			userLogsPath,
+			"can be accessed by any user, the log files may be exposed"
+		);
+
+		if (os.platform() !== "win32") {
+			log.warn(`run \`chmod o-x ${userLogsPath}\` to correct it`);
+		}
+	}
 }
 
 function getHomePath() {

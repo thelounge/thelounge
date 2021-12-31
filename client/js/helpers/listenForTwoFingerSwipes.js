@@ -39,7 +39,7 @@ function listenForTwoFingerSwipes(onTwoFingerSwipe) {
 
 	document.body.addEventListener(
 		"touchend",
-		function () {
+		function (event) {
 			if (event.touches.length >= 2) {
 				return;
 			}
