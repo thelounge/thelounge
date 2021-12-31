@@ -669,10 +669,12 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 				chan.setMuteStatus(setMutedTo);
 			}
 
-			socket.emit("mute:changed", {
-				target,
-				status: setMutedTo,
-			});
+			for (const attachedClient of Object.keys(client.attachedClients)) {
+				manager.sockets.in(attachedClient).emit("mute:changed", {
+					target,
+					status: setMutedTo,
+				});
+			}
 
 			client.save();
 		});
