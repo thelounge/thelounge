@@ -649,6 +649,17 @@ Client.prototype.names = function (data) {
 	});
 };
 
+Client.prototype.part = function (network, chan) {
+	const client = this;
+	network.channels = _.without(network.channels, chan);
+	client.mentions = client.mentions.filter((msg) => !(msg.chanId === chan.id));
+	chan.destroy();
+	client.save();
+	client.emit("part", {
+		chan: chan.id,
+	});
+};
+
 Client.prototype.quit = function (signOut) {
 	const sockets = this.manager.sockets.sockets;
 	const room = sockets.adapter.rooms.get(this.id);

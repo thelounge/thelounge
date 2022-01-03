@@ -12,10 +12,14 @@ socket.on("part", function (data) {
 
 	const channel = store.getters.findChannel(data.chan);
 
-	if (channel) {
-		channel.network.channels.splice(
-			channel.network.channels.findIndex((c) => c.id === data.chan),
-			1
-		);
+	if (!channel) {
+		return;
 	}
+
+	channel.network.channels.splice(
+		channel.network.channels.findIndex((c) => c.id === data.chan),
+		1
+	);
+
+	store.dispatch("partChannel", channel);
 });
