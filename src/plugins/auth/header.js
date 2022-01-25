@@ -17,7 +17,7 @@ function headerAuth(manager, client, user, password, callback) {
 }
 
 function isHeaderAuthEnabled() {
-	return !Helper.config.public && Helper.config.headerAuth.enabled && Helper.config.reverseProxy;
+	return !Helper.config.public && Helper.config.headerAuth.enabled;
 }
 
 module.exports = {
