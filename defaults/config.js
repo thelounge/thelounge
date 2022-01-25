@@ -365,11 +365,15 @@ module.exports = {
 	// This is set to `null` by default to disable `oidentd` support.
 	oidentd: null,
 
+	// Header authentication
+	// If a header is set which has a username in it, automatically authenticate that user
+	// Warning: if the reverse proxy isn't configured to correctly use this, then clients can send arbitary headers and log in as any user
+
 	headerAuth: {
-		enabled: true,
-		header: "proxy-user",
-		createNewUsers: true,
-		logNewUsers: true,
+		enabled: false,
+		header: "proxy-user", // The header to check. Popular values inclue Proxy-User and REMOTE_USER
+		createNewUsers: true, // If the user doesn't exist, create it?
+		logNewUsers: true, // Default policy for creating new users: store log files on disk?
 	},
 
 	// ## LDAP support

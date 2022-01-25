@@ -179,6 +179,13 @@ module.exports = function (options = {}) {
 			} else {
 				socket.on("auth:perform", performAuthentication);
 				socket.emit("auth:start", serverHash);
+				if (
+					!Helper.config.public &&
+					Helper.config.headerAuth.enabled &&
+					Helper.config.reverseProxy
+				) {
+					socket.emit("auth:header", () => true);
+				}
 			}
 		});
 
@@ -773,7 +780,7 @@ function performAuthentication(data) {
 	let client;
 	let token = null;
 
-	if (Helper.config.headerAuth.enabled && Helper.config.reverseProxy) {
+	if (!Helper.config.public && Helper.config.headerAuth.enabled && Helper.config.reverseProxy) {
 		data.user = socket.handshake.headers[Helper.config.headerAuth.header];
 	}
 
