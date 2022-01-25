@@ -365,6 +365,13 @@ module.exports = {
 	// This is set to `null` by default to disable `oidentd` support.
 	oidentd: null,
 
+	headerAuth: {
+		enabled: true,
+		header: "proxy-user",
+		createNewUsers: true,
+		logNewUsers: true,
+	},
+
 	// ## LDAP support
 
 	// These settings enable and configure LDAP authentication.

@@ -773,6 +773,10 @@ function performAuthentication(data) {
 	let client;
 	let token = null;
 
+	if (Helper.config.headerAuth.enabled && Helper.config.reverseProxy) {
+		data.user = socket.handshake.headers[Helper.config.headerAuth.header];
+	}
+
 	const finalInit = () =>
 		initializeClient(socket, client, token, data.lastMessage || -1, data.openChannel);
 
@@ -846,7 +850,7 @@ function performAuthentication(data) {
 		}
 
 		// If authorization succeeded but there is no loaded user,
-		// load it and find the user again (this happens with LDAP)
+		// load it and find the user again (this happens with LDAP and header auth)
 		if (!client) {
 			client = manager.loadUser(data.user);
 		}

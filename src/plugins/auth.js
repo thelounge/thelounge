@@ -5,7 +5,7 @@ const colors = require("chalk");
 
 // The order defines priority: the first available plugin is used.
 // Always keep 'local' auth plugin at the end of the list; it should always be enabled.
-const plugins = [require("./auth/ldap"), require("./auth/local")];
+const plugins = [require("./auth/header"), require("./auth/ldap"), require("./auth/local")];
 
 function unimplemented(funcName) {
 	log.debug(
