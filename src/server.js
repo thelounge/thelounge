@@ -148,6 +148,12 @@ module.exports = function (options = {}) {
 	server.listen(listenParams, () => {
 		if (typeof listenParams === "string") {
 			log.info("Available on socket " + colors.green(listenParams));
+			fs.chmod(listenParams, Helper.config.socketPermissions, (err) => {
+				if (err) {
+					log.error(`fs chmod error: ${err}. Stopping server...`);
+					process.exit(1);
+				}
+			});
 		} else {
 			const protocol = Helper.config.https.enable ? "https" : "http";
 			const address = server.address();
