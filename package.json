@@ -80,7 +80,7 @@
     "babel-loader": "8.2.3",
     "babel-plugin-istanbul": "6.1.1",
     "chai": "4.3.6",
-    "copy-webpack-plugin": "7.0.0",
+    "copy-webpack-plugin": "10.2.4",
     "css-loader": "6.5.1",
     "cssnano": "5.0.12",
     "dayjs": "1.10.7",

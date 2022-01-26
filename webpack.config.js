@@ -96,22 +96,22 @@ const config = {
 				{
 					from:
 						"./node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff*",
-					to: "fonts/[name].[ext]",
+					to: "fonts/[name][ext]",
 				},
 				{
 					from: "./client/js/loading-error-handlers.js",
-					to: "js/[name].[ext]",
+					to: "js/[name][ext]",
 				},
 				{
 					from: "./client/*",
-					to: "[name].[ext]",
+					to: "[name][ext]",
 					globOptions: {
 						ignore: ["**/index.html.tpl", "**/service-worker.js"],
 					},
 				},
 				{
 					from: "./client/service-worker.js",
-					to: "[name].[ext]",
+					to: "[name][ext]",
 					transform(content) {
 						return content
 							.toString()
@@ -123,15 +123,15 @@ const config = {
 				},
 				{
 					from: "./client/audio/*",
-					to: "audio/[name].[ext]",
+					to: "audio/[name][ext]",
 				},
 				{
 					from: "./client/img/*",
-					to: "img/[name].[ext]",
+					to: "img/[name][ext]",
 				},
 				{
 					from: "./client/themes/*",
-					to: "themes/[name].[ext]",
+					to: "themes/[name][ext]",
 				},
 			],
 		}),
