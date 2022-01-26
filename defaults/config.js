@@ -38,6 +38,7 @@ module.exports = {
 	// ### `socketPermissions`
 	//
 	// Set the permissions of the UNIX domain socket.
+	// Only applies if the `host` option is a UNIX domain socket.
 	//
 	// This value is set to `0o660` by default.
 	socketPermissions: 0o660,
