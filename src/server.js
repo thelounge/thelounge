@@ -831,6 +831,10 @@ function performAuthentication(data) {
 		return;
 	}
 
+	if (data.user == "") {
+		return;
+	}
+
 	const authCallback = (success) => {
 		// Authorization failed
 		if (!success) {

@@ -61,7 +61,7 @@ import socket from "../../js/socket";
 import RevealPassword from "../RevealPassword.vue";
 
 socket.on("auth:header", () => {
-	socket.emit("auth:perform", {user: "", password: ""});
+	socket.emit("auth:perform", {});
 });
 
 export default {
