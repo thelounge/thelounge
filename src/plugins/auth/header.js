@@ -1,8 +1,6 @@
 "use strict";
 
-const log = require("../../log");
 const Helper = require("../../helper");
-const colors = require("chalk");
 
 function headerAuth(manager, client, user, password, callback) {
 	// If no user is found, create it
@@ -13,6 +11,7 @@ function headerAuth(manager, client, user, password, callback) {
 			return callback(false);
 		}
 	}
+
 	return callback(true);
 }
 
