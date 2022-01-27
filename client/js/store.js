@@ -130,6 +130,12 @@ const store = new Vuex.Store({
 			state.messageSearchResults = value;
 		},
 	},
+	actions: {
+		partChannel({commit, state}, netChan) {
+			const mentions = state.mentions.filter((msg) => !(msg.chanId === netChan.channel.id));
+			commit("mentions", mentions);
+		},
+	},
 	getters: {
 		findChannelOnCurrentNetwork: (state) => (name) => {
 			name = name.toLowerCase();

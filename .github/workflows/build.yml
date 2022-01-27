@@ -17,10 +17,6 @@ jobs:
           - os: ubuntu-latest
             node_version: 14.x
 
-          # EOL: June 2021
-          - os: ubuntu-latest
-            node_version: 15.x
-
           # EOL: April 2024
           - os: ubuntu-latest
             node_version: 16.x
