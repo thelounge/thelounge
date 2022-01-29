@@ -28,6 +28,10 @@ socket.on("connect", function () {
 function handleDisconnect(data) {
 	const message = data.message || data;
 
+	if (message === "xhr poll error") {
+		window.location.reload(true);
+	}
+
 	store.commit("isConnected", false);
 
 	if (!socket.io.reconnection()) {
