@@ -43,7 +43,15 @@ self.addEventListener("fetch", function (event) {
 		return;
 	}
 
-	event.respondWith(networkOrCache(event));
+	const response = networkOrCache(event);
+
+	if (response.status === 401) {
+		return;
+	}
+
+	if (response.ok) {
+		event.respondWith(response);
+	}
 });
 
 async function putInCache(request, response) {
@@ -82,6 +90,10 @@ async function networkOrCache(event) {
 				event.waitUntil(putInCache(event.request, response));
 			}
 
+			return response.clone();
+		}
+
+		if (response.status === 401) {
 			return response.clone();
 		}
 
