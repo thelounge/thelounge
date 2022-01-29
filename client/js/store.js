@@ -30,6 +30,7 @@ const store = new Vuex.Store({
 		networks: [],
 		mentions: [],
 		hasServiceWorker: false,
+		headerAuth: false,
 		pushNotificationState: "unsupported",
 		serverConfiguration: null,
 		sessions: [],

@@ -7,6 +7,10 @@ import store from "../store";
 import location from "../location";
 let lastServerHash = null;
 
+socket.on("auth:header", () => {
+	store.state.headerAuth = true;
+});
+
 socket.on("auth:success", function () {
 	store.commit("currentUserVisibleError", "Loading messages…");
 	updateLoadingMessage();

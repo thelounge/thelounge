@@ -28,10 +28,6 @@ socket.on("connect", function () {
 function handleDisconnect(data) {
 	const message = data.message || data;
 
-	if (message === "xhr poll error") {
-		window.location.reload(true);
-	}
-
 	store.commit("isConnected", false);
 
 	if (!socket.io.reconnection()) {
@@ -45,6 +41,11 @@ function handleDisconnect(data) {
 
 	store.commit("currentUserVisibleError", `Waiting to reconnect… (${message})`);
 	updateLoadingMessage();
+
+	if (message === "xhr poll error" && store.state.headerAuth) {
+		socket.disconnect();
+		window.location.reload(true);
+	}
 
 	// If the server shuts down, socket.io skips reconnection
 	// and we have to manually call connect to start the process
