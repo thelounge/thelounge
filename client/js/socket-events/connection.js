@@ -42,11 +42,6 @@ function handleDisconnect(data) {
 	store.commit("currentUserVisibleError", `Waiting to reconnect… (${message})`);
 	updateLoadingMessage();
 
-	if (message === "xhr poll error" && store.state.serverConfiguration.headerAuthEnabled) {
-		socket.disconnect();
-		window.location.reload(true);
-	}
-
 	// If the server shuts down, socket.io skips reconnection
 	// and we have to manually call connect to start the process
 	// However, do not reconnect if TL client manually closed the connection

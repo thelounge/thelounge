@@ -3,7 +3,7 @@
 "use strict";
 
 const cacheName = "__HASH__";
-const excludedPathsFromCache = /^(?:socket\.io|storage|uploads|cdn-cgi)\//;
+const includedPathsInCache = /^(js|css|img|themes|favicon\.ico|fonts|#)\/*/;
 
 self.addEventListener("install", function () {
 	self.skipWaiting();
@@ -38,16 +38,11 @@ self.addEventListener("fetch", function (event) {
 
 	const path = url.substring(scope.length);
 
-	// Skip ignored paths
-	if (excludedPathsFromCache.test(path)) {
+	if (!includedPathsInCache.test(path)) {
 		return;
 	}
 
 	const response = networkOrCache(event);
-
-	if (response.status === 401) {
-		return;
-	}
 
 	event.respondWith(response);
 });

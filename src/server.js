@@ -92,7 +92,7 @@ module.exports = function (options = {}) {
 
 	let server = null;
 
-	if (Helper.config.public && (Helper.config.ldap || Helper.config.headerAuth || {}).enable) {
+	if (Helper.config.public && (Helper.config.ldap.enable || Helper.config.headerAuth.enable)) {
 		log.warn(
 			"Server is public and set to use LDAP / header authentication. Set to private mode if trying to use LDAP / header authentication."
 		);
@@ -179,8 +179,8 @@ module.exports = function (options = {}) {
 			} else {
 				socket.on("auth:perform", performAuthentication);
 				socket.emit("auth:start", {
-					serverHash: serverHash,
-					headerAuthEnabled: Helper.config.headerAuth.enable,
+					serverHash,
+					headerAuthEnabled: Helper.config.headerAuth.enable && Helper.config.public,
 				});
 			}
 		});

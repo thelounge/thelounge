@@ -72,12 +72,10 @@ socket.on("auth:start", function (data) {
 			openChannel,
 			hasConfig: store.state.serverConfiguration !== null,
 		});
+	} else if (headerAuthEnabled) {
+		socket.emit("auth:perform", {});
 	} else {
-		if (headerAuthEnabled) {
-			socket.emit("auth:perform", {});
-		} else {
-			showSignIn();
-		}
+		showSignIn();
 	}
 });
 
