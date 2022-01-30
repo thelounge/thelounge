@@ -370,10 +370,8 @@ module.exports = {
 	// Warning: if the reverse proxy isn't configured to correctly use this, then clients can send arbitary headers and log in as any user
 
 	headerAuth: {
-		enabled: false,
+		enable: false,
 		header: "proxy-user", // The header to check. Popular values inclue Proxy-User and REMOTE_USER
-		createNewUsers: true, // If the user doesn't exist, create it?
-		logNewUsers: true, // Default policy for creating new users: store log files on disk?
 	},
 
 	// ## LDAP support

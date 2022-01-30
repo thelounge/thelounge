@@ -92,9 +92,9 @@ module.exports = function (options = {}) {
 
 	let server = null;
 
-	if (Helper.config.public && (Helper.config.ldap || {}).enable) {
+	if (Helper.config.public && (Helper.config.ldap || Helper.config.headerAuth || {}).enable) {
 		log.warn(
-			"Server is public and set to use LDAP. Set to private mode if trying to use LDAP authentication."
+			"Server is public and set to use LDAP / header authentication. Set to private mode if trying to use LDAP / header authentication."
 		);
 	}
 
@@ -178,11 +178,10 @@ module.exports = function (options = {}) {
 				performAuthentication.call(socket, {});
 			} else {
 				socket.on("auth:perform", performAuthentication);
-				socket.emit("auth:start", serverHash);
-
-				if (!Helper.config.public && Helper.config.headerAuth.enabled) {
-					socket.emit("auth:header", () => true);
-				}
+				socket.emit("auth:start", {
+					serverHash: serverHash,
+					headerAuthEnabled: Helper.config.headerAuth.enable,
+				});
 			}
 		});
 
@@ -434,7 +433,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 		}
 	});
 
-	if (!Helper.config.public && !Helper.config.ldap.enable) {
+	if (!Helper.config.public && !Helper.config.ldap.enable && !Helper.config.headerAuth.enable) {
 		socket.on("change-password", (data) => {
 			if (_.isPlainObject(data)) {
 				const old = data.old_password;
@@ -727,6 +726,7 @@ function getClientConfiguration() {
 
 	config.fileUpload = Helper.config.fileUpload.enable;
 	config.ldapEnabled = Helper.config.ldap.enable;
+	config.headerAuthEnabled = Helper.config.headerAuth.enable;
 
 	if (!config.lockNetwork) {
 		config.defaults = _.clone(Helper.config.defaults);
@@ -777,7 +777,7 @@ function performAuthentication(data) {
 	let client;
 	let token = null;
 
-	if (!Helper.config.public && Helper.config.headerAuth.enabled) {
+	if (!Helper.config.public && Helper.config.headerAuth.enable) {
 		data.user = socket.handshake.headers[Helper.config.headerAuth.header];
 	}
 
@@ -832,6 +832,7 @@ function performAuthentication(data) {
 		return;
 	}
 
+	// Prevent empty headers from creating users with blank / no username
 	if (data.user === "") {
 		return;
 	}

@@ -49,9 +49,7 @@ self.addEventListener("fetch", function (event) {
 		return;
 	}
 
-	if (response.ok) {
-		event.respondWith(response);
-	}
+	event.respondWith(response);
 });
 
 async function putInCache(request, response) {

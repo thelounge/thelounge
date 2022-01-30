@@ -7,10 +7,6 @@ import store from "../store";
 import location from "../location";
 let lastServerHash = null;
 
-socket.on("auth:header", () => {
-	store.state.headerAuth = true;
-});
-
 socket.on("auth:success", function () {
 	store.commit("currentUserVisibleError", "Loading messages…");
 	updateLoadingMessage();
@@ -26,7 +22,10 @@ socket.on("auth:failed", function () {
 	showSignIn();
 });
 
-socket.on("auth:start", function (serverHash) {
+socket.on("auth:start", function (data) {
+	const serverHash = data.serverHash;
+	const headerAuthEnabled = data.headerAuthEnabled;
+
 	// If we reconnected and serverHash differs, that means the server restarted
 	// And we will reload the page to grab the latest version
 	if (lastServerHash && serverHash !== lastServerHash) {
@@ -74,7 +73,11 @@ socket.on("auth:start", function (serverHash) {
 			hasConfig: store.state.serverConfiguration !== null,
 		});
 	} else {
-		showSignIn();
+		if (headerAuthEnabled) {
+			socket.emit("auth:perform", {});
+		} else {
+			showSignIn();
+		}
 	}
 });
 

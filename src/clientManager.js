@@ -27,7 +27,7 @@ ClientManager.prototype.init = function (identHandler, sockets) {
 
 		// LDAP does not have user commands, and users are dynamically
 		// created upon logon, so we don't need to watch for new files
-		if (!Helper.config.ldap.enable) {
+		if (!Helper.config.ldap.enable && !Helper.config.headerAuth.enable) {
 			this.autoloadUsers();
 		}
 	}

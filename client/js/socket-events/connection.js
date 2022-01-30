@@ -42,7 +42,7 @@ function handleDisconnect(data) {
 	store.commit("currentUserVisibleError", `Waiting to reconnect… (${message})`);
 	updateLoadingMessage();
 
-	if (message === "xhr poll error" && store.state.headerAuth) {
+	if (message === "xhr poll error" && store.state.serverConfiguration.headerAuthEnabled) {
 		socket.disconnect();
 		window.location.reload(true);
 	}

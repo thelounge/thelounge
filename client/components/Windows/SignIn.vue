@@ -60,10 +60,6 @@ import storage from "../../js/localStorage";
 import socket from "../../js/socket";
 import RevealPassword from "../RevealPassword.vue";
 
-socket.on("auth:header", () => {
-	socket.emit("auth:perform", {});
-});
-
 export default {
 	name: "SignIn",
 	components: {

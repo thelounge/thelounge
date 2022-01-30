@@ -5,18 +5,14 @@ const Helper = require("../../helper");
 function headerAuth(manager, client, user, password, callback) {
 	// If no user is found, create it
 	if (!client) {
-		if (Helper.config.headerAuth.createNewUsers) {
-			manager.addUser(user, Math.random().toString(), Helper.config.headerAuth.logNewUsers);
-		} else {
-			return callback(false);
-		}
+		manager.addUser(user, null, true);
 	}
 
 	return callback(true);
 }
 
 function isHeaderAuthEnabled() {
-	return !Helper.config.public && Helper.config.headerAuth.enabled;
+	return !Helper.config.public && Helper.config.headerAuth.enable;
 }
 
 module.exports = {
