@@ -2,6 +2,7 @@
   "extends": ["config:base"],
   "ignorePaths": ["test/"],
   "labels": ["Type: Dependencies"],
+  "lockFileMaintenance": {"enabled": true},
   "stabilityDays": 1,
   "vulnerabilityAlerts": {
     "labels": ["Type: Security"]
