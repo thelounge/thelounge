@@ -42,9 +42,7 @@ self.addEventListener("fetch", function (event) {
 		return;
 	}
 
-	const response = networkOrCache(event);
-
-	event.respondWith(response);
+	event.respondWith(networkOrCache(event));
 });
 
 async function putInCache(request, response) {
