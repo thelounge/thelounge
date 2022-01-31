@@ -282,8 +282,7 @@ Client.prototype.connect = function (args, isStartup = false) {
 		network.channels[0].pushMessage(
 			client,
 			new Msg({
-				text:
-					"You have manually disconnected from this network before, use the /connect command to connect again.",
+				text: "You have manually disconnected from this network before, use the /connect command to connect again.",
 			}),
 			true
 		);

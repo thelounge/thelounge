@@ -94,8 +94,7 @@ const config = {
 		new CopyPlugin({
 			patterns: [
 				{
-					from:
-						"./node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff*",
+					from: "./node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff*",
 					to: "fonts/[name][ext]",
 				},
 				{
