@@ -832,11 +832,6 @@ function performAuthentication(data) {
 		return;
 	}
 
-	// Prevent empty headers from creating users with blank / no username
-	if (data.user === "") {
-		return;
-	}
-
 	const authCallback = (success) => {
 		// Authorization failed
 		if (!success) {
