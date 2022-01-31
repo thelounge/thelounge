@@ -180,7 +180,7 @@ module.exports = function (options = {}) {
 				socket.on("auth:perform", performAuthentication);
 				socket.emit("auth:start", {
 					serverHash,
-					headerAuthEnabled: Helper.config.headerAuth.enable && Helper.config.public,
+					headerAuthEnabled: Helper.config.headerAuth.enable && !Helper.config.public,
 				});
 			}
 		});
