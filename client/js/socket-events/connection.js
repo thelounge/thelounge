@@ -1,5 +1,8 @@
-import store from "../store";
+"use strict";
+
 import socket from "../socket";
+import store from "../store";
+import location from "../location";
 
 socket.on("disconnect", handleDisconnect);
 socket.on("connect_error", handleDisconnect);
@@ -38,6 +41,13 @@ function handleDisconnect(data) {
 		updateLoadingMessage();
 		return;
 	}
+
+  // Sorry brunnre8, but I have to consume the error message since there appears to be no way to get the error from anywhere else
+  // We are checking if the server configuration is null because if it is null, then the client never loaded properly and there's a different issue than 401 on the header auth
+  if (store.state.serverConfiguration !== null && message === "xhr poll error" && store.state.serverConfiguration.headerAuthEnabled) {
+    location.reload(true);
+  }
+
 
 	store.commit("currentUserVisibleError", `Waiting to reconnect… (${message})`);
 	updateLoadingMessage();
