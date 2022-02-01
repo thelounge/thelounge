@@ -56,7 +56,7 @@
     "linkify-it": "3.0.3",
     "lodash": "4.17.21",
     "mime-types": "2.1.34",
-    "node-forge": "0.10.0",
+    "node-forge": "1.0.0",
     "package-json": "7.0.0",
     "read": "1.0.7",
     "read-chunk": "3.2.0",
