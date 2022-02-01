@@ -46,7 +46,7 @@
     "cheerio": "1.0.0-rc.10",
     "commander": "7.2.0",
     "content-disposition": "0.5.3",
-    "express": "4.17.1",
+    "express": "4.17.2",
     "file-type": "16.5.3",
     "filenamify": "4.3.0",
     "got": "11.8.3",
