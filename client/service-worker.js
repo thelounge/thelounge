@@ -3,7 +3,7 @@
 "use strict";
 
 const cacheName = "__HASH__";
-const includedPathsInCache = /^(js|css|img|themes|favicon\.ico|fonts|#)\/*/;
+const includedPathsInCache = /^(js|css|img|themes|favicon\.ico|fonts|#|\/)\/*/;
 
 self.addEventListener("install", function () {
 	self.skipWaiting();
