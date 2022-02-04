@@ -93,7 +93,7 @@ async function networkOrCache(event) {
 		}
 
 		if (response.status === 401) {
-      is401 = true;
+			is401 = true;
 		}
 
 		throw new Error(`Request failed with HTTP ${response.status}`);
