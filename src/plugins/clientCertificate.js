@@ -30,7 +30,7 @@ function get(uuid) {
 			certificate: fs.readFileSync(paths.certificatePath, "utf-8"),
 		};
 	} catch (e) {
-		log.error("Unable to remove certificate", e);
+		log.error("Unable to get certificate", e);
 	}
 
 	return null;
