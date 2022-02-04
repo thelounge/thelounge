@@ -4,6 +4,7 @@
 
 const cacheName = "__HASH__";
 const includedPathsInCache = /^(js|css|img|themes|favicon\.ico|fonts|#|\/)\/*/;
+let is401 = false;
 
 self.addEventListener("install", function () {
 	self.skipWaiting();
@@ -42,7 +43,14 @@ self.addEventListener("fetch", function (event) {
 		return;
 	}
 
-	event.respondWith(networkOrCache(event));
+	const response = networkOrCache(event);
+
+	if (is401) {
+		is401 = false;
+		return;
+	}
+
+	event.respondWith(response);
 });
 
 async function putInCache(request, response) {
@@ -85,7 +93,7 @@ async function networkOrCache(event) {
 		}
 
 		if (response.status === 401) {
-			return response.clone();
+      is401 = true;
 		}
 
 		throw new Error(`Request failed with HTTP ${response.status}`);
