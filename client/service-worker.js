@@ -46,7 +46,15 @@ self.addEventListener("fetch", function (event) {
 	const response = networkOrCache(event);
 
 	if (is401) {
-		is401 = false;
+		self.registration.then(function (reg) {
+			if (reg) {
+				reg.unregister().then(function () {
+					window.location.reload(true);
+				});
+			} else {
+				window.location.reload(true);
+			}
+		});
 		return;
 	}
 
@@ -94,7 +102,10 @@ async function networkOrCache(event) {
 
 		if (response.status === 401) {
 			is401 = true;
+			return response.clone();
 		}
+
+		is401 = false;
 
 		throw new Error(`Request failed with HTTP ${response.status}`);
 	} catch (e) {
