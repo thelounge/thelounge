@@ -365,8 +365,20 @@ module.exports = {
 	// This is set to `null` by default to disable `oidentd` support.
 	oidentd: null,
 
-	// Header authentication
-	// If a header is set which has a username in it, automatically authenticate that user
+	// ## Header authentication support
+
+	// These settings enable and configure header-based authentication
+	//
+	// They are only being used in private mode. To know more about private mode,
+	// see the `public` setting above.
+
+	//
+	// The authentication process works as follows:
+	//
+	// 1. A user loads TheLounge
+	// 2. A header is sent to TheLounge (usually by a reverse proxy with authentication enabled) which has a username set
+	// 3. TheLounge automatically authenticates that user
+	//
 	// Warning: if the reverse proxy isn't configured to correctly use this, then clients can send arbitary headers and log in as any user
 
 	headerAuth: {
