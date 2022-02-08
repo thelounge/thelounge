@@ -33,6 +33,7 @@ const events = [
 	"invite",
 	"join",
 	"kick",
+	"list",
 	"mode",
 	"modelist",
 	"motd",
@@ -41,9 +42,9 @@ const events = [
 	"nick",
 	"part",
 	"quit",
+	"sasl",
 	"topic",
 	"welcome",
-	"list",
 	"whois",
 ];
 
