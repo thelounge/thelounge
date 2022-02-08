@@ -176,19 +176,24 @@ export function generateChannelContextMenu($root, channel, network) {
 		query: "conversation",
 	};
 
-	const chanType = humanFriendlyChanTypeMap[channel.type];
+	// We don't allow the muting of Chan.Type.SPECIAL channels
+	const mutableChanTypes = Object.keys(humanFriendlyChanTypeMap);
 
-	items.push({
-		label: channel.muted ? `Unmute ${chanType}` : `Mute ${chanType}`,
-		type: "item",
-		class: "mute",
-		action() {
-			socket.emit("mute:change", {
-				target: channel.id,
-				setMutedTo: !channel.muted,
-			});
-		},
-	});
+	if (mutableChanTypes.includes(channel.type)) {
+		const chanType = humanFriendlyChanTypeMap[channel.type];
+
+		items.push({
+			label: channel.muted ? `Unmute ${chanType}` : `Mute ${chanType}`,
+			type: "item",
+			class: "mute",
+			action() {
+				socket.emit("mute:change", {
+					target: channel.id,
+					setMutedTo: !channel.muted,
+				});
+			},
+		});
+	}
 
 	// Add close menu item
 	items.push({

@@ -663,10 +663,14 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 			// If the user mutes the lobby, we mute the entire network.
 			if (chan.type === Chan.Type.LOBBY) {
 				for (const channel of network.channels) {
-					channel.setMuteStatus(setMutedTo);
+					if (channel.type !== Chan.Type.SPECIAL) {
+						channel.setMuteStatus(setMutedTo);
+					}
 				}
 			} else {
-				chan.setMuteStatus(setMutedTo);
+				if (chan.type !== Chan.Type.SPECIAL) {
+					chan.setMuteStatus(setMutedTo);
+				}
 			}
 
 			for (const attachedClient of Object.keys(client.attachedClients)) {
