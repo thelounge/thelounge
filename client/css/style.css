@@ -304,6 +304,8 @@ p {
 #chat .msg[data-type="invite"] .from::before,
 #chat .msg[data-type="join"] .from::before,
 #chat .msg[data-type="kick"] .from::before,
+#chat .msg[data-type="login"] .from::before,
+#chat .msg[data-type="logout"] .from::before,
 #chat .msg[data-type="part"] .from::before,
 #chat .msg[data-type="quit"] .from::before,
 #chat .msg[data-type="topic"] .from::before,
@@ -423,6 +425,16 @@ p {
 #chat .msg[data-type="invite"] .from::before {
 	content: "\f0e0"; /* https://fontawesome.com/icons/envelope?style=solid */
 	color: #2ecc40;
+}
+
+#chat .msg[data-type="login"] .from::before {
+	content: "\f007"; /* https://fontawesome.com/icons/user?style=solid */
+	color: #2ecc40;
+}
+
+#chat .msg[data-type="logout"] .from::before {
+	content: "\f007"; /* https://fontawesome.com/icons/user?style=solid */
+	color: #ff4136;
 }
 
 #chat .msg[data-type="part"] .from::before,
