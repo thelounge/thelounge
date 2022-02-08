@@ -796,15 +796,12 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<code>/unmute channel [...channel]</code>
+					<code>/unmute [...channel]</code>
 				</div>
 				<div class="description">
 					<p>
-						Re-enable push notifications for a muted channel or private message,
-						activates the highlight indicator and shows messages in the mention window.
-						Unmuting a network lobby mutes the entire network. Not specifying any
-						channel target unmutes the current channel. Mute a channel with
-						<code>/mute</code>.
+						Un-mutes the given channel(s) or the current channel if no channel is
+						provided. See `/mute` for more information.
 					</p>
 				</div>
 			</div>
