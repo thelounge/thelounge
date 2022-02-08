@@ -18,6 +18,10 @@ function args_to_channels(network, args) {
 }
 
 function change_mute_state(client, target, valueToSet) {
+	if (target.type === "special") {
+		return;
+	}
+
 	target.setMuteStatus(valueToSet);
 	client.emit("mute:changed", {
 		target: target.id,
