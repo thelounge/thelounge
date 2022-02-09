@@ -12,7 +12,7 @@ module.exports = function (irc, network) {
 			type: Msg.Type.AUTH,
 			text: "Logged in as: " + data.account,
 		});
-		lobby.pushMessage(client, msg, false);
+		lobby.pushMessage(client, msg, true);
 	});
 
 	irc.on("loggedout", () => {
@@ -22,6 +22,6 @@ module.exports = function (irc, network) {
 			type: Msg.Type.AUTH,
 			text: "Logged out",
 		});
-		lobby.pushMessage(client, msg, false);
+		lobby.pushMessage(client, msg, true);
 	});
 };
