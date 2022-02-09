@@ -259,7 +259,7 @@ ClientManager.prototype.removeUser = function (name) {
 
 ClientManager.prototype.reloadAllUsers = function () {
 	this.clients.forEach((client) => {
-		client.emit("configuration:reload");
+		client.emit("reload");
 	});
 };
 

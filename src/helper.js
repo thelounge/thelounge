@@ -53,11 +53,11 @@ const Helper = {
 	},
 };
 
-function requireConfig(configPath_) {
+function requireConfig(filePath) {
 	// Clear the cached config
-	delete require.cache[configPath_];
+	delete require.cache[filePath];
 
-	return require(configPath_);
+	return require(filePath);
 }
 
 function systemConfig() {

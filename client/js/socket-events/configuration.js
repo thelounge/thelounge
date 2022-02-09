@@ -33,7 +33,7 @@ socket.once("configuration", function (data) {
 	}
 });
 
-socket.on("configuration:reload", function () {
+socket.on("reload", function () {
 	socket.disconnect();
 	location.reload(true);
 });
