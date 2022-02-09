@@ -32,3 +32,8 @@ socket.once("configuration", function (data) {
 		});
 	}
 });
+
+socket.on("configuration:reload", function () {
+	socket.disconnect();
+	location.reload(true);
+});

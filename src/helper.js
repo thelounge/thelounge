@@ -22,6 +22,7 @@ let clientCertificatesPath;
 
 const Helper = {
 	config: null,
+	reloadConfig,
 	expandHome,
 	getHomePath,
 	getPackagesPath,
@@ -52,9 +53,22 @@ const Helper = {
 	},
 };
 
-module.exports = Helper;
+function requireConfig(configPath_) {
+	// Clear the cached config
+	delete require.cache[configPath_];
 
-Helper.config = require(path.resolve(path.join(__dirname, "..", "defaults", "config.js")));
+	return require(configPath_);
+}
+
+function systemConfig() {
+	configPath = path.resolve(path.join(__dirname, "..", "defaults", "config.js"));
+
+	return requireConfig(configPath);
+}
+
+Helper.config = systemConfig();
+
+module.exports = Helper;
 
 function getVersion() {
 	const gitCommit = getGitCommit();
@@ -101,6 +115,10 @@ function getVersionCacheBust() {
 }
 
 function setHome(newPath) {
+	loadAndMergeConfig(this.config, newPath);
+}
+
+function loadAndMergeConfig(config, newPath) {
 	homePath = expandHome(newPath);
 	configPath = path.join(homePath, "config.js");
 	usersPath = path.join(homePath, "users");
@@ -112,7 +130,7 @@ function setHome(newPath) {
 
 	// Reload config from new home location
 	if (fs.existsSync(configPath)) {
-		const userConfig = require(configPath);
+		const userConfig = requireConfig(configPath);
 
 		if (_.isEmpty(userConfig)) {
 			log.warn(
@@ -128,14 +146,14 @@ function setHome(newPath) {
 			log.warn("Using default configuration...");
 		}
 
-		mergeConfig(this.config, userConfig);
+		mergeConfig(config, userConfig);
 	}
 
-	if (this.config.fileUpload.baseUrl) {
+	if (config.fileUpload.baseUrl) {
 		try {
-			new URL("test/file.png", this.config.fileUpload.baseUrl);
+			new URL("test/file.png", config.fileUpload.baseUrl);
 		} catch (e) {
-			this.config.fileUpload.baseUrl = null;
+			config.fileUpload.baseUrl = null;
 
 			log.warn(`The ${colors.bold("fileUpload.baseUrl")} you specified is invalid: ${e}`);
 		}
@@ -157,7 +175,7 @@ function setHome(newPath) {
 
 	// Load theme color from the web manifest
 	const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
-	this.config.themeColor = manifest.theme_color;
+	config.themeColor = manifest.theme_color;
 
 	// log dir probably shouldn't be world accessible.
 	// Create it with the desired permission bits if it doesn't exist yet.
@@ -186,6 +204,25 @@ function setHome(newPath) {
 			log.warn(`run \`chmod o-x ${userLogsPath}\` to correct it`);
 		}
 	}
+}
+
+// Returns whether there was any change to the configuration.
+function reloadConfig() {
+	log.info("reloading configuration...");
+
+	const newConfig = systemConfig();
+	loadAndMergeConfig(newConfig, getHomePath());
+
+	// XXX: JSON.stringify(Helper.config) !== JSON.stringify(newConfig) is probably
+	// faster and good enough (despite being sensitive to key order); should we use
+	// that instead?
+	const hasChanges = !_.isEqual(Helper.config, newConfig);
+
+	// Replace the config only if all went well
+	Helper.config = newConfig;
+	log.info("configuration reloaded");
+
+	return hasChanges;
 }
 
 function getHomePath() {

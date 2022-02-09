@@ -58,9 +58,7 @@ module.exports = function (options = {}) {
 		.use(express.static(path.join(__dirname, "..", "public"), staticOptions))
 		.use("/storage/", express.static(Helper.getStoragePath(), staticOptions));
 
-	if (Helper.config.fileUpload.enable) {
-		Uploader.router(app);
-	}
+	Uploader.router(app);
 
 	// This route serves *installed themes only*. Local themes are served directly
 	// from the `public/themes/` folder as static assets, without entering this
@@ -233,6 +231,14 @@ module.exports = function (options = {}) {
 
 		process.on("SIGINT", exitGracefully);
 		process.on("SIGTERM", exitGracefully);
+		process.on("SIGHUP", function () {
+			const hasChanges = Helper.reloadConfig();
+
+			if (hasChanges) {
+				log.info("configuration has changed; reloading all clients");
+				manager.reloadAllUsers();
+			}
+		});
 
 		// Clear storage folder after server starts successfully
 		if (Helper.config.prefetchStorage) {
@@ -361,9 +367,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 		openChannel = client.lastActiveChannel;
 	}
 
-	if (Helper.config.fileUpload.enable) {
-		new Uploader(socket);
-	}
+	new Uploader(socket);
 
 	socket.on("disconnect", function () {
 		process.nextTick(() => client.clientDetach(socket.id));
