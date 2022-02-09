@@ -69,6 +69,7 @@ rules:
   vue/no-v-html: off
   vue/require-default-prop: off
   vue/v-slot-style: [error, longform]
+  vue/multi-word-component-names: off
 
 plugins:
   - vue
@@ -77,4 +78,3 @@ extends:
   - eslint:recommended
   - plugin:vue/recommended
   - prettier
-  - prettier/vue

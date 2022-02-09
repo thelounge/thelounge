@@ -13,3 +13,7 @@ rules:
   property-no-vendor-prefix: true
   selector-no-vendor-prefix: true
   value-no-vendor-prefix: true
+
+  # renaming would break existing themes
+  selector-class-pattern: null
+  selector-id-pattern: null

@@ -164,7 +164,7 @@ module.exports = function (options = {}) {
 		}
 
 		const sockets = io(server, {
-			wsEngine: "ws",
+			wsEngine: require("ws").Server,
 			cookie: false,
 			serveClient: false,
 			transports: Helper.config.transports,
