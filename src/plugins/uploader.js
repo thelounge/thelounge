@@ -72,15 +72,18 @@ class Uploader {
 	}
 
 	static router(express) {
+		express.use(function (req, res, next) {
+			if (Helper.config.fileUpload.enable) {
+				next();
+			} else {
+				res.status(404).send("Not found (file uploading is disabled");
+			}
+		});
 		express.get("/uploads/:name/:slug*?", Uploader.routeGetFile);
 		express.post("/uploads/new/:token", Uploader.routeUploadFile);
 	}
 
 	static async routeGetFile(req, res) {
-		if (!Helper.config.fileUpload.enable) {
-			return res.status(404).send("Not found (file uploading is disabled");
-		}
-
 		const name = req.params.name;
 
 		const nameRegex = /^[0-9a-f]{16}$/;
@@ -131,10 +134,6 @@ class Uploader {
 	}
 
 	static routeUploadFile(req, res) {
-		if (!Helper.config.fileUpload.enable) {
-			return res.status(404).send("Not found (file uploading is disabled");
-		}
-
 		let busboyInstance;
 		let uploadUrl;
 		let randomName;
