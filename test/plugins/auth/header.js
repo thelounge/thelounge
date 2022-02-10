@@ -25,10 +25,6 @@ function testHeaderAuth() {
 }
 
 describe("Header authentication plugin", function () {
-	// Increase timeout due to unpredictable I/O on CI services
-	this.timeout(TestUtil.isRunningOnCI() ? 25000 : 5000);
-	this.slow(300);
-
 	before(function () {
 		stub(log, "info");
 	});
