@@ -5,7 +5,6 @@ const headerAuth = require("../../../src/plugins/auth/header");
 const Helper = require("../../../src/helper");
 const expect = require("chai").expect;
 const stub = require("sinon").stub;
-const TestUtil = require("../../util");
 
 const user = "toby";
 const correctHeader = "proxy-user";
