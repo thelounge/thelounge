@@ -801,7 +801,7 @@
 				<div class="description">
 					<p>
 						Un-mutes the given channel(s) or the current channel if no channel is
-						provided. See `/mute` for more information.
+						provided. See <code>/mute</code> for more information.
 					</p>
 				</div>
 			</div>
