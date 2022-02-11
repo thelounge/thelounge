@@ -176,7 +176,7 @@ export default {
 				message.channel = this.$store.getters.findChannel(message.chanId);
 			}
 
-			return messages;
+			return messages.filter((message) => !message.channel.channel.muted);
 		},
 	},
 	watch: {

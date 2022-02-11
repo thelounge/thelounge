@@ -202,6 +202,7 @@ Client.prototype.connect = function (args, isStartup = false) {
 					name: chan.name,
 					key: chan.key || "",
 					type: chan.type,
+					muted: chan.muted,
 				})
 			);
 		});

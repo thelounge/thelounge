@@ -23,6 +23,7 @@ const themes = require("./plugins/packages/themes");
 themes.loadLocalThemes();
 
 const packages = require("./plugins/packages/index");
+const Chan = require("./models/chan");
 
 // A random number that will force clients to reload the page if it differs
 const serverHash = Math.floor(Date.now() * Math.random());
@@ -654,6 +655,32 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 			client.search(query).then((results) => {
 				socket.emit("search:results", results);
 			});
+		});
+
+		socket.on("mute:change", ({target, setMutedTo}) => {
+			const {chan, network} = client.find(target);
+
+			// If the user mutes the lobby, we mute the entire network.
+			if (chan.type === Chan.Type.LOBBY) {
+				for (const channel of network.channels) {
+					if (channel.type !== Chan.Type.SPECIAL) {
+						channel.setMuteStatus(setMutedTo);
+					}
+				}
+			} else {
+				if (chan.type !== Chan.Type.SPECIAL) {
+					chan.setMuteStatus(setMutedTo);
+				}
+			}
+
+			for (const attachedClient of Object.keys(client.attachedClients)) {
+				manager.sockets.in(attachedClient).emit("mute:changed", {
+					target,
+					status: setMutedTo,
+				});
+			}
+
+			client.save();
 		});
 	}
 

@@ -76,6 +76,11 @@ function Network(attr) {
 		new Chan({
 			name: this.name,
 			type: Chan.Type.LOBBY,
+			// The lobby only starts as muted if every channel (unless it's special) is muted.
+			// This is A) easier to implement and B) stops some confusion on startup.
+			muted:
+				this.channels.length >= 1 &&
+				this.channels.every((chan) => chan.muted || chan.type === Chan.Type.SPECIAL),
 		})
 	);
 }
@@ -546,7 +551,7 @@ Network.prototype.export = function () {
 			return channel.type === Chan.Type.CHANNEL || channel.type === Chan.Type.QUERY;
 		})
 		.map(function (chan) {
-			const keys = ["name"];
+			const keys = ["name", "muted"];
 
 			if (chan.type === Chan.Type.CHANNEL) {
 				keys.push("key");
