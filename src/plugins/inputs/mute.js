@@ -58,6 +58,4 @@ exports.input = function (network, chan, cmd, args) {
 	for (const target of targets) {
 		change_mute_state(client, target, valueToSet);
 	}
-
-	return true;
 };
