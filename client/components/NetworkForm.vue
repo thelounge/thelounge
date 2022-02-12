@@ -23,10 +23,18 @@
 					<input
 						id="connect:name"
 						v-model="defaults.name"
+						list="default-networks"
 						class="input"
 						name="name"
 						maxlength="100"
 					/>
+					<datalist id="default-networks">
+						<option
+							v-for="defaultNetwork in config.defaults"
+							:key="defaultNetwork.name"
+							:value="defaultNetwork.name"
+						/>
+					</datalist>
 				</div>
 				<div class="connect-row">
 					<label for="connect:host">Server</label>
@@ -461,6 +469,14 @@ export default {
 		displayPasswordField(value) {
 			if (value) {
 				this.$nextTick(() => this.$refs.publicPassword.focus());
+			}
+		},
+		"defaults.name"(name) {
+			for (const defaultNetwork of this.config.defaults) {
+				if (defaultNetwork.name === name) {
+					Object.assign(this.defaults, defaultNetwork);
+					break;
+				}
 			}
 		},
 		"defaults.commands"() {

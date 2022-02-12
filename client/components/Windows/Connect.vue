@@ -23,6 +23,7 @@ export default {
 		);
 		return {
 			disabled: false,
+			defaultNetworks: this.$store.state.serverConfiguration,
 			defaults,
 		};
 	},
