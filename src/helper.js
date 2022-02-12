@@ -40,7 +40,8 @@ const Helper = {
 	getGitCommit,
 	ip2hex,
 	mergeConfig,
-	getDefaultNick,
+	formatDefaultNick,
+	getDefaultNetworks,
 	parseHostmask,
 	compareHostmask,
 	compareWithWildcard,
@@ -271,12 +272,24 @@ function passwordCompare(password, expected) {
 	return bcrypt.compare(password, expected);
 }
 
-function getDefaultNick() {
-	if (!this.config.defaults.nick) {
+function formatDefaultNick(format) {
+	if (!format) {
 		return "thelounge";
 	}
 
-	return this.config.defaults.nick.replace(/%/g, () => Math.floor(Math.random() * 10));
+	return format.replace(/%/g, () => Math.floor(Math.random() * 10));
+}
+
+function getDefaultNetworks() {
+	if (this.config.defaults === undefined) {
+		return [];
+	}
+
+	if (Array.isArray(this.config.defaults)) {
+		return this.config.defaults;
+	}
+
+	return [this.config.defaults];
 }
 
 function mergeConfig(oldConfig, newConfig) {

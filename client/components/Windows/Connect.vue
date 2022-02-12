@@ -18,7 +18,7 @@ export default {
 		// Merge settings from url params into default settings
 		const defaults = Object.assign(
 			{},
-			this.$store.state.serverConfiguration.defaults,
+			this.$store.state.serverConfiguration.defaults[0],
 			this.parseOverrideParams(this.queryParams)
 		);
 		return {
@@ -49,7 +49,7 @@ export default {
 
 				if (
 					!Object.prototype.hasOwnProperty.call(
-						this.$store.state.serverConfiguration.defaults,
+						this.$store.state.serverConfiguration.defaults[0],
 						key
 					)
 				) {
@@ -78,7 +78,7 @@ export default {
 				}
 
 				// Override server provided defaults with parameters passed in the URL if they match the data type
-				switch (typeof this.$store.state.serverConfiguration.defaults[key]) {
+				switch (typeof this.$store.state.serverConfiguration.defaults[0][key]) {
 					case "boolean":
 						if (value === "0" || value === "false") {
 							parsedParams[key] = false;

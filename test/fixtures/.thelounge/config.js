@@ -2,8 +2,8 @@
 
 var config = require("../../../defaults/config.js");
 
-config.defaults.name = "Example IRC Server";
-config.defaults.host = "irc.example.com";
+config.defaults[0].name = "Example IRC Server";
+config.defaults[0].host = "127.0.0.1";
 config.public = true;
 config.prefetch = true;
 config.host = config.bind = "127.0.0.1";

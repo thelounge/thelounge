@@ -92,7 +92,7 @@ Network.prototype.validate = function (client) {
 	// Remove new lines and limit length
 	const cleanString = (str) => str.replace(/[\x00\r\n]/g, "").substring(0, 300);
 
-	this.setNick(cleanNick(String(this.nick || Helper.getDefaultNick())));
+	this.setNick(cleanNick(String(this.nick || Helper.formatDefaultNick())));
 
 	if (!this.username) {
 		// If username is empty, make one from the provided nick
@@ -138,27 +138,35 @@ Network.prototype.validate = function (client) {
 	}
 
 	if (Helper.config.lockNetwork) {
+		// Get the first configured network that matches this one, if any.
+		let defaultNetwork = Helper.getDefaultNetworks().filter(
+			(network) => this.name === network.name
+		)[0];
+
+		// Otherwise, default to the first configured
+		defaultNetwork = defaultNetwork || Helper.getDefaultNetworks()[0];
+
 		// This check is needed to prevent invalid user configurations
 		if (
 			!Helper.config.public &&
 			this.host &&
 			this.host.length > 0 &&
-			this.host !== Helper.config.defaults.host
+			defaultNetwork === undefined
 		) {
 			error(this, `The hostname you specified (${this.host}) is not allowed.`);
 			return false;
 		}
 
 		if (Helper.config.public) {
-			this.name = Helper.config.defaults.name;
+			this.name = defaultNetwork.name;
 			// Sync lobby channel name
-			this.channels[0].name = Helper.config.defaults.name;
+			this.channels[0].name = defaultNetwork.name;
 		}
 
-		this.host = Helper.config.defaults.host;
-		this.port = Helper.config.defaults.port;
-		this.tls = Helper.config.defaults.tls;
-		this.rejectUnauthorized = Helper.config.defaults.rejectUnauthorized;
+		this.host = defaultNetwork.host;
+		this.port = defaultNetwork.port;
+		this.tls = defaultNetwork.tls;
+		this.rejectUnauthorized = defaultNetwork.rejectUnauthorized;
 	}
 
 	if (this.host.length === 0) {

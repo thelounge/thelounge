@@ -63,7 +63,7 @@ describe("Network", function () {
 		});
 
 		it("validate should set correct defaults", function () {
-			Helper.config.defaults.nick = "";
+			Helper.config.defaults[0].nick = "";
 
 			const network = new Network({
 				host: "localhost",
@@ -96,7 +96,7 @@ describe("Network", function () {
 				rejectUnauthorized: false,
 			});
 			expect(network.validate()).to.be.true;
-			expect(network.host).to.equal("irc.example.com");
+			expect(network.host).to.equal("127.0.0.1");
 			expect(network.port).to.equal(6697);
 			expect(network.tls).to.be.true;
 			expect(network.rejectUnauthorized).to.be.true;
@@ -108,9 +108,50 @@ describe("Network", function () {
 				host: "some.fake.tld",
 			});
 			expect(network2.validate()).to.be.true;
-			expect(network2.host).to.equal("irc.example.com");
+			expect(network2.host).to.equal("127.0.0.1");
 
 			Helper.config.lockNetwork = false;
+		});
+
+		it("lockNetwork should allow networks that are not the first one", function () {
+			Helper.config.lockNetwork = true;
+			Helper.config.defaults.push({
+				name: "Other Example Network",
+				host: "irc2.example.com",
+				port: 6667,
+				tls: false,
+				rejectUnauthorized: false,
+			});
+
+			// Make sure we lock in private mode
+			Helper.config.public = false;
+
+			const network = new Network({
+				name: "Other Example Network",
+				host: "illegal.example.com",
+				port: 1337,
+				tls: true,
+				rejectUnauthorized: true,
+			});
+			expect(network.validate()).to.be.true;
+			expect(network.host).to.equal("irc2.example.com");
+			expect(network.port).to.equal(6667);
+			expect(network.tls).to.be.false;
+			expect(network.rejectUnauthorized).to.be.false;
+
+			// Make sure lock in public mode defaults to the first network when
+			// the hostname does not match (also resets public=true and config.defaults
+			// for other tests)
+			Helper.config.public = true;
+
+			const network2 = new Network({
+				host: "some.fake.tld",
+			});
+			expect(network2.validate()).to.be.true;
+			expect(network2.host).to.equal("127.0.0.1");
+
+			Helper.config.lockNetwork = false;
+			Helper.config.defaults.pop();
 		});
 
 		it("editing a network should enforce correct types", function () {

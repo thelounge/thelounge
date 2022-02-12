@@ -758,17 +758,11 @@ function getClientConfiguration() {
 	config.ldapEnabled = Helper.config.ldap.enable;
 
 	if (!config.lockNetwork) {
-		config.defaults = _.clone(Helper.config.defaults);
+		config.defaults = _.clone(Helper.getDefaultNetworks());
 	} else {
-		// Only send defaults that are visible on the client
-		config.defaults = _.pick(Helper.config.defaults, [
-			"name",
-			"nick",
-			"username",
-			"password",
-			"realname",
-			"join",
-		]);
+		config.defaults = Helper.getDefaultNetworks().map((network) =>
+			_.pick(network, ["name", "nick", "username", "password", "realname", "join"])
+		);
 	}
 
 	config.isUpdateAvailable = changelog.isUpdateAvailable;
@@ -777,10 +771,12 @@ function getClientConfiguration() {
 	config.gitCommit = Helper.getGitCommit();
 	config.themes = themes.getAll();
 	config.defaultTheme = Helper.config.theme;
-	config.defaults.nick = Helper.getDefaultNick();
-	config.defaults.sasl = "";
-	config.defaults.saslAccount = "";
-	config.defaults.saslPassword = "";
+	config.defaults.forEach((network) => {
+		network.nick = Helper.formatDefaultNick(network.nick);
+		network.sasl = "";
+		network.saslAccount = "";
+		network.saslPassword = "";
+	});
 
 	if (Uploader) {
 		config.fileUploadMaxFileSize = Uploader.getMaxFileSize();

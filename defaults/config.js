@@ -204,7 +204,7 @@ module.exports = {
 	// default.
 	leaveMessage: "The Lounge - https://thelounge.chat",
 
-	// ## Default network
+	// ## Default networks
 
 	// ### `defaults`
 	//
@@ -235,37 +235,41 @@ module.exports = {
 	// Libera.Chat by default:
 	//
 	// ```js
-	// defaults: {
-	//   name: "Libera.Chat",
-	//   host: "irc.libera.chat",
-	//   port: 6697,
-	//   password: "",
-	//   tls: true,
-	//   rejectUnauthorized: true,
-	//   nick: "thelounge%%",
-	//   username: "thelounge",
-	//   realname: "The Lounge User",
-	//   join: "#thelounge"
-	// }
+	// defaults: [
+	//   {
+	//     name: "Libera.Chat",
+	//     host: "irc.libera.chat",
+	//     port: 6697,
+	//     password: "",
+	//     tls: true,
+	//     rejectUnauthorized: true,
+	//     nick: "thelounge%%",
+	//     username: "thelounge",
+	//     realname: "The Lounge User",
+	//     join: "#thelounge"
+	//   },
+	// ]
 	// ```
-	defaults: {
-		name: "Libera.Chat",
-		host: "irc.libera.chat",
-		port: 6697,
-		password: "",
-		tls: true,
-		rejectUnauthorized: true,
-		nick: "thelounge%%",
-		username: "thelounge",
-		realname: "The Lounge User",
-		join: "#thelounge",
-		leaveMessage: "",
-	},
+	defaults: [
+		{
+			name: "Libera.Chat",
+			host: "irc.libera.chat",
+			port: 6697,
+			password: "",
+			tls: true,
+			rejectUnauthorized: true,
+			nick: "thelounge%%",
+			username: "thelounge",
+			realname: "The Lounge User",
+			join: "#thelounge",
+			leaveMessage: "",
+		},
+	],
 
 	// ### `lockNetwork`
 	//
 	// When set to `true`, users will not be able to modify host, port and TLS
-	// settings and will be limited to the configured network.
+	// settings and will be limited to the configured networks.
 	// These fields will also be hidden from the UI.
 	//
 	// This value is set to `false` by default.

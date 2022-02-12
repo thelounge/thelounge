@@ -233,11 +233,13 @@ Client.prototype.connect = function (args, isStartup = false) {
 			});
 	}
 
+	const defaultNetwork =
+		Helper.getDefaultNetworks().filter((network) => this.name === network.name)[0] ||
+		Helper.getDefaultNetworks()[0];
+
 	const network = new Network({
 		uuid: args.uuid,
-		name: String(
-			args.name || (Helper.config.lockNetwork ? Helper.config.defaults.name : "") || ""
-		),
+		name: String(args.name || (Helper.config.lockNetwork ? defaultNetwork.name : "") || ""),
 		host: String(args.host || ""),
 		port: parseInt(args.port, 10),
 		tls: !!args.tls,
