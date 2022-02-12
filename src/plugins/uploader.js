@@ -117,6 +117,8 @@ class Uploader {
 			detectedMimeType = "audio/wav";
 		} else if (detectedMimeType === "audio/x-flac") {
 			detectedMimeType = "audio/flac";
+		} else if (detectedMimeType === "audio/x-m4a") {
+			detectedMimeType = "audio/mp4";
 		}
 
 		res.setHeader("Content-Disposition", disposition);
