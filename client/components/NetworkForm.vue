@@ -185,13 +185,15 @@
 				<h2>Network settings</h2>
 				<div class="connect-row">
 					<label for="connect:name">Name</label>
-					<input
-						id="connect:name"
-						v-model="defaults.name"
-						class="input"
-						name="name"
-						maxlength="100"
-					/>
+					<select id="connect:name" v-model="defaults.name" name="name">
+						<option
+							v-for="defaultNetwork in config.defaults"
+							:key="defaultNetwork.name"
+							:value="defaultNetwork.name"
+						>
+							{{ defaultNetwork.name }}
+						</option>
+					</select>
 				</div>
 				<div class="connect-row">
 					<label for="connect:password">Password</label>

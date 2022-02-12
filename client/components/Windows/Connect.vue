@@ -58,11 +58,18 @@ export default {
 				}
 
 				// When the network is locked, URL overrides should not affect disabled fields
-				if (
-					this.$store.state.serverConfiguration.lockNetwork &&
-					["name", "host", "port", "tls", "rejectUnauthorized"].includes(key)
-				) {
-					continue;
+				if (this.$store.state.serverConfiguration.lockNetwork) {
+					if (["host", "port", "tls", "rejectUnauthorized"].includes(key)) {
+						continue;
+					}
+
+					// Network name is only disabled if there is a single network
+					if (
+						this.$store.state.serverConfiguration.defaults.length < 2 &&
+						key === "name"
+					) {
+						continue;
+					}
 				}
 
 				if (key === "join") {
