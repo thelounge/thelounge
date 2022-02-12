@@ -280,7 +280,8 @@ p {
 .only-copy {
 	font-size: 0;
 	opacity: 0;
-	width: 0;
+	width: 0.01px;  /* Must be non-zero to be the first selected character on Firefox */
+	display: inline-block;
 }
 
 /* Icons */
