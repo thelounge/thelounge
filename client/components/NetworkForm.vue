@@ -181,37 +181,48 @@
 					</div>
 				</template>
 			</template>
-			<template v-else-if="config.lockNetwork && !$store.state.serverConfiguration.public">
-				<h2>Network settings</h2>
-				<div class="connect-row">
-					<label for="connect:name">Name</label>
-					<select id="connect:name" v-model="defaults.name" name="name">
-						<option
-							v-for="defaultNetwork in config.defaults"
-							:key="defaultNetwork.name"
-							:value="defaultNetwork.name"
+			<template v-else-if="config.lockNetwork">
+				<template
+					v-if="
+						$store.state.serverConfiguration.defaults.length > 1 ||
+						!$store.state.serverConfiguration.public
+					"
+				>
+					<h2>Network settings</h2>
+				</template>
+				<template v-if="$store.state.serverConfiguration.defaults.length > 1">
+					<div class="connect-row">
+						<label for="connect:name">Name</label>
+						<select id="connect:name" v-model="defaults.name" name="name">
+							<option
+								v-for="defaultNetwork in config.defaults"
+								:key="defaultNetwork.name"
+								:value="defaultNetwork.name"
+							>
+								{{ defaultNetwork.name }}
+							</option>
+						</select>
+					</div>
+				</template>
+				<template v-if="!$store.state.serverConfiguration.public">
+					<div class="connect-row">
+						<label for="connect:password">Password</label>
+						<RevealPassword
+							v-slot:default="slotProps"
+							class="input-wrap password-container"
 						>
-							{{ defaultNetwork.name }}
-						</option>
-					</select>
-				</div>
-				<div class="connect-row">
-					<label for="connect:password">Password</label>
-					<RevealPassword
-						v-slot:default="slotProps"
-						class="input-wrap password-container"
-					>
-						<input
-							id="connect:password"
-							v-model="defaults.password"
-							class="input"
-							:type="slotProps.isVisible ? 'text' : 'password'"
-							placeholder="Server password (optional)"
-							name="password"
-							maxlength="300"
-						/>
-					</RevealPassword>
-				</div>
+							<input
+								id="connect:password"
+								v-model="defaults.password"
+								class="input"
+								:type="slotProps.isVisible ? 'text' : 'password'"
+								placeholder="Server password (optional)"
+								name="password"
+								maxlength="300"
+							/>
+						</RevealPassword>
+					</div>
+				</template>
 			</template>
 
 			<h2>User preferences</h2>
