@@ -7,6 +7,7 @@ const User = require("../../src/models/user");
 const Network = require("../../src/models/network");
 const Helper = require("../../src/helper");
 const STSPolicies = require("../../src/plugins/sts");
+const ClientCertificate = require("../../src/plugins/clientCertificate");
 
 describe("Network", function () {
 	describe("Network(attr)", function () {
@@ -200,6 +201,49 @@ describe("Network", function () {
 			expect(network.tls).to.be.false;
 
 			STSPolicies.update("irc.example.com", 7000, 0); // Cleanup
+		});
+
+		it("should remove client certs if TLS is disabled", function () {
+			Helper.config.public = false;
+
+			const client = {idMsg: 1, emit() {}, messageStorage: []};
+
+			const network = new Network({host: "irc.example.com", sasl: "external"});
+			network.createIrcFramework(client);
+			expect(network.irc).to.not.be.null;
+
+			const client_cert = network.irc.options.client_certificate;
+			expect(client_cert).to.not.be.null;
+			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert);
+
+			expect(network.validate(client)).to.be.true; // Deletes the cert
+
+			expect(ClientCertificate.get(network.uuid)).to.not.deep.equal(client_cert); // Because ClientCertificate.get regenerates it
+
+			ClientCertificate.remove(network.uuid);
+			Helper.config.public = true;
+		});
+	});
+
+	describe("#createIrcFramework(client)", function () {
+		it("should generate and use a client certificate when using SASL external", function () {
+			Helper.config.public = false;
+
+			const client = {idMsg: 1, emit() {}};
+			STSPolicies.update("irc.example.com", 7000, 3600);
+
+			let network = new Network({host: "irc.example.com"});
+			network.createIrcFramework(client);
+			expect(network.irc).to.not.be.null;
+			expect(network.irc.options.client_certificate).to.be.null;
+
+			network = new Network({host: "irc.example.com", sasl: "external"});
+			network.createIrcFramework(client);
+			expect(network.irc).to.not.be.null;
+			expect(network.irc.options.client_certificate).to.not.be.null;
+
+			ClientCertificate.remove(network.uuid);
+			Helper.config.public = true;
 		});
 	});
 
