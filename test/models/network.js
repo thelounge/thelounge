@@ -8,6 +8,65 @@ const Network = require("../../src/models/network");
 const Helper = require("../../src/helper");
 
 describe("Network", function () {
+	describe("Network(attr)", function () {
+		it("should generate uuid (v4) for each network", function () {
+			const network1 = new Network();
+			const network2 = new Network();
+
+			expect(network1.uuid).to.have.lengthOf(36);
+			expect(network2.uuid).to.have.lengthOf(36);
+			expect(network1.uuid).to.not.equal(network2.uuid);
+		});
+
+		it("lobby should be at the top", function () {
+			const network = new Network({
+				name: "Super Nice Network",
+				channels: [
+					new Chan({name: "AAAA!", type: Chan.Type.QUERY}),
+					new Chan({name: "#thelounge"}),
+					new Chan({name: "&foobar"}),
+				],
+			});
+			network.channels.push(new Chan({name: "#swag"}));
+
+			expect(network.channels[0].name).to.equal("Super Nice Network");
+			expect(network.channels[0].type).to.equal(Chan.Type.LOBBY);
+		});
+
+		it("should maintain channel reference", function () {
+			const chan = new Chan({
+				name: "#506-bug-fix",
+				messages: [
+					new Msg({
+						text: "message in constructor",
+					}),
+				],
+			});
+
+			const network = new Network({
+				name: "networkName",
+				channels: [chan],
+			});
+
+			chan.messages.push(
+				new Msg({
+					text: "message in original instance",
+				})
+			);
+
+			network.channels[1].messages.push(
+				new Msg({
+					text: "message after network creation",
+				})
+			);
+
+			expect(network.channels[1].messages).to.have.lengthOf(3);
+			expect(network.channels[1].messages[0].text).to.equal("message in constructor");
+			expect(network.channels[1].messages[1].text).to.equal("message in original instance");
+			expect(network.channels[1].messages[2].text).to.equal("message after network creation");
+		});
+	});
+
 	describe("#export()", function () {
 		it("should produce an valid object", function () {
 			const network = new Network({
@@ -180,65 +239,6 @@ describe("Network", function () {
 				"/ping HELLO",
 				"/whois test",
 			]);
-		});
-	});
-
-	describe("Network(attr)", function () {
-		it("should generate uuid (v4) for each network", function () {
-			const network1 = new Network();
-			const network2 = new Network();
-
-			expect(network1.uuid).to.have.lengthOf(36);
-			expect(network2.uuid).to.have.lengthOf(36);
-			expect(network1.uuid).to.not.equal(network2.uuid);
-		});
-
-		it("lobby should be at the top", function () {
-			const network = new Network({
-				name: "Super Nice Network",
-				channels: [
-					new Chan({name: "AAAA!", type: Chan.Type.QUERY}),
-					new Chan({name: "#thelounge"}),
-					new Chan({name: "&foobar"}),
-				],
-			});
-			network.channels.push(new Chan({name: "#swag"}));
-
-			expect(network.channels[0].name).to.equal("Super Nice Network");
-			expect(network.channels[0].type).to.equal(Chan.Type.LOBBY);
-		});
-
-		it("should maintain channel reference", function () {
-			const chan = new Chan({
-				name: "#506-bug-fix",
-				messages: [
-					new Msg({
-						text: "message in constructor",
-					}),
-				],
-			});
-
-			const network = new Network({
-				name: "networkName",
-				channels: [chan],
-			});
-
-			chan.messages.push(
-				new Msg({
-					text: "message in original instance",
-				})
-			);
-
-			network.channels[1].messages.push(
-				new Msg({
-					text: "message after network creation",
-				})
-			);
-
-			expect(network.channels[1].messages).to.have.lengthOf(3);
-			expect(network.channels[1].messages[0].text).to.equal("message in constructor");
-			expect(network.channels[1].messages[1].text).to.equal("message in original instance");
-			expect(network.channels[1].messages[2].text).to.equal("message after network creation");
 		});
 	});
 
