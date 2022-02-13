@@ -241,6 +241,12 @@ Chan.prototype.loadMessages = function (client, network) {
 		return;
 	}
 
+	if (!network.irc) {
+		// Network created, but misconfigured
+		log.warn(`Failed to load messages, network ${network.name} is not initialized.`);
+		return;
+	}
+
 	client.messageProvider
 		.getMessages(network, this)
 		.then((messages) => {
