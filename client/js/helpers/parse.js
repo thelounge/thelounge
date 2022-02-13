@@ -106,12 +106,10 @@ function parse(createElement, text, message = undefined, network = undefined) {
 			const link = createElement(
 				"a",
 				{
-					attrs: {
-						href: textPart.link,
-						dir: preview ? null : "auto",
-						target: "_blank",
-						rel: "noopener",
-					},
+					href: textPart.link,
+					dir: preview ? null : "auto",
+					target: "_blank",
+					rel: "noopener",
 				},
 				fragments
 			);
@@ -125,18 +123,14 @@ function parse(createElement, text, message = undefined, network = undefined) {
 			if (preview.size > 0) {
 				linkEls.push(
 					createElement(LinkPreviewFileSize, {
-						props: {
-							size: preview.size,
-						},
+						size: preview.size,
 					})
 				);
 			}
 
 			linkEls.push(
 				createElement(LinkPreviewToggle, {
-					props: {
-						link: preview,
-					},
+					link: preview,
 				})
 			);
 
@@ -145,9 +139,7 @@ function parse(createElement, text, message = undefined, network = undefined) {
 			return createElement(
 				"span",
 				{
-					attrs: {
-						dir: "auto",
-					},
+					dir: "auto",
 				},
 				linkEls
 			);
@@ -155,9 +147,7 @@ function parse(createElement, text, message = undefined, network = undefined) {
 			return createElement(
 				InlineChannel,
 				{
-					props: {
-						channel: textPart.channel,
-					},
+					channel: textPart.channel,
 				},
 				fragments
 			);
@@ -171,11 +161,9 @@ function parse(createElement, text, message = undefined, network = undefined) {
 				"span",
 				{
 					class: ["emoji"],
-					attrs: {
-						role: "img",
-						"aria-label": title,
-						title: title,
-					},
+					role: "img",
+					"aria-label": title,
+					title: title,
 				},
 				fragments
 			);
@@ -183,16 +171,12 @@ function parse(createElement, text, message = undefined, network = undefined) {
 			return createElement(
 				Username,
 				{
-					props: {
-						user: {
-							nick: textPart.nick,
-						},
-						channel: messageChannel,
-						network,
+					user: {
+						nick: textPart.nick,
 					},
-					attrs: {
-						dir: "auto",
-					},
+					channel: messageChannel,
+					network,
+					dir: "auto",
 				},
 				fragments
 			);

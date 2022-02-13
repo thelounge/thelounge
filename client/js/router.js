@@ -2,10 +2,7 @@
 
 const constants = require("./constants");
 
-import Vue from "vue";
-import VueRouter from "vue-router";
-
-Vue.use(VueRouter);
+import {createRouter, createWebHashHistory} from "vue-router";
 
 import SignIn from "../components/Windows/SignIn.vue";
 import Connect from "../components/Windows/Connect.vue";
@@ -17,7 +14,8 @@ import SearchResults from "../components/Windows/SearchResults.vue";
 import RoutedChat from "../components/RoutedChat.vue";
 import store from "./store";
 
-const router = new VueRouter({
+const router = createRouter({
+	history: createWebHashHistory(),
 	routes: [
 		{
 			name: "SignIn",
@@ -107,12 +105,12 @@ router.beforeEach((to, from, next) => {
 	}
 
 	// Handle closing image viewer with the browser back button
-	if (!router.app.$refs.app) {
+	if (!router.app.$refs) {
 		next();
 		return;
 	}
 
-	const imageViewer = router.app.$root.$refs.app.$refs.imageViewer;
+	const imageViewer = router.app.imageViewer;
 
 	if (imageViewer && imageViewer.link) {
 		imageViewer.closeViewer();

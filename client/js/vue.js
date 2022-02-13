@@ -3,7 +3,7 @@
 const constants = require("./constants");
 
 import "../css/style.css";
-import Vue from "vue";
+import {createApp} from "vue";
 import store from "./store";
 import App from "../components/App.vue";
 import storage from "./localStorage";
@@ -19,12 +19,11 @@ const favicon = document.getElementById("favicon");
 const faviconNormal = favicon.getAttribute("href");
 const faviconAlerted = favicon.dataset.other;
 
-new Vue({
-	el: "#viewport",
-	router,
-	mounted() {
-		socket.open();
-	},
+const app = createApp(App);
+router.app = app;
+app.use(router);
+app.use(store);
+app.mixin({
 	methods: {
 		switchToChannel(channel) {
 			navigate("RoutedChat", {id: channel.id});
@@ -62,14 +61,10 @@ new Vue({
 			});
 		},
 	},
-	render(createElement) {
-		return createElement(App, {
-			ref: "app",
-			props: this,
-		});
-	},
-	store,
 });
+app.mount("body");
+
+socket.open();
 
 store.watch(
 	(state) => state.sidebarOpen,
@@ -112,7 +107,7 @@ store.watch(
 	}
 );
 
-Vue.config.errorHandler = function (e) {
+app.config.errorHandler = function (e) {
 	store.commit("currentUserVisibleError", `Vue error: ${e.message}`);
 	console.error(e); // eslint-disable-line
 };

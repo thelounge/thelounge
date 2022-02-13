@@ -1,6 +1,6 @@
 "use strict";
 
-import Vue from "vue";
+import {nextTick} from "vue";
 import socket from "../socket";
 import storage from "../localStorage";
 import {router, switchToChannel, navigate} from "../router";
@@ -25,7 +25,7 @@ socket.on("init", function (data) {
 			window.g_TheLoungeRemoveLoading();
 		}
 
-		Vue.nextTick(() => {
+		nextTick(() => {
 			// If we handled query parameters like irc:// links or just general
 			// connect parameters in public mode, then nothing to do here
 			if (!handleQueryParams()) {

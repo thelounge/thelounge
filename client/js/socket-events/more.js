@@ -1,6 +1,6 @@
 "use strict";
 
-import Vue from "vue";
+import {nextTick} from "vue";
 
 import socket from "../socket";
 import store from "../store";
@@ -23,7 +23,7 @@ socket.on("more", function (data) {
 		data.totalMessages > channel.messages.length + data.messages.length;
 	channel.messages.unshift(...data.messages);
 
-	Vue.nextTick(() => {
+	nextTick(() => {
 		channel.historyLoading = false;
 	});
 });
