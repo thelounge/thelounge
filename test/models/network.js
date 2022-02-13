@@ -6,6 +6,7 @@ const Msg = require("../../src/models/msg");
 const User = require("../../src/models/user");
 const Network = require("../../src/models/network");
 const Helper = require("../../src/helper");
+const STSPolicies = require("../../src/plugins/sts");
 
 describe("Network", function () {
 	describe("Network(attr)", function () {
@@ -172,6 +173,33 @@ describe("Network", function () {
 			expect(network2.host).to.equal("irc.example.com");
 
 			Helper.config.lockNetwork = false;
+		});
+
+		it("should apply STS policies iff they match", function () {
+			const client = {idMsg: 1, emit() {}};
+			STSPolicies.update("irc.example.com", 7000, 3600);
+
+			let network = new Network({
+				host: "irc.example.com",
+				port: 1337,
+				tls: false,
+			});
+
+			expect(network.validate(client)).to.be.true;
+			expect(network.port).to.equal(7000);
+			expect(network.tls).to.be.true;
+
+			network = new Network({
+				host: "irc2.example.com",
+				port: 1337,
+				tls: false,
+			});
+
+			expect(network.validate(client)).to.be.true;
+			expect(network.port).to.equal(1337);
+			expect(network.tls).to.be.false;
+
+			STSPolicies.update("irc.example.com", 7000, 0); // Cleanup
 		});
 	});
 
