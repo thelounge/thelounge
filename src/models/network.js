@@ -114,6 +114,17 @@ Network.prototype.validate = function (client) {
 	this.proxyPassword = cleanString(this.proxyPassword);
 	this.proxyEnabled = !!this.proxyEnabled;
 
+	const error = function (network, text) {
+		network.channels[0].pushMessage(
+			client,
+			new Msg({
+				type: Msg.Type.ERROR,
+				text: text,
+			}),
+			true
+		);
+	};
+
 	if (!this.port) {
 		this.port = this.tls ? 6697 : 6667;
 	}
@@ -134,15 +145,7 @@ Network.prototype.validate = function (client) {
 			this.host.length > 0 &&
 			this.host !== Helper.config.defaults.host
 		) {
-			this.channels[0].pushMessage(
-				client,
-				new Msg({
-					type: Msg.Type.ERROR,
-					text: "Hostname you specified is not allowed.",
-				}),
-				true
-			);
-
+			error(this, "Hostname you specified is not allowed.");
 			return false;
 		}
 
@@ -159,28 +162,16 @@ Network.prototype.validate = function (client) {
 	}
 
 	if (this.host.length === 0) {
-		this.channels[0].pushMessage(
-			client,
-			new Msg({
-				type: Msg.Type.ERROR,
-				text: "You must specify a hostname to connect.",
-			}),
-			true
-		);
-
+		error(this, "You must specify a hostname to connect.");
 		return false;
 	}
 
 	const stsPolicy = STSPolicies.get(this.host);
 
 	if (stsPolicy && !this.tls) {
-		this.channels[0].pushMessage(
-			client,
-			new Msg({
-				type: Msg.Type.ERROR,
-				text: `${this.host} has an active strict transport security policy, will connect to port ${stsPolicy.port} over a secure connection.`,
-			}),
-			true
+		error(
+			this,
+			`${this.host} has an active strict transport security policy, will connect to port ${stsPolicy.port} over a secure connection.`
 		);
 
 		this.port = stsPolicy.port;
