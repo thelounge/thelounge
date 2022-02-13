@@ -61,8 +61,10 @@ describe("Network", function () {
 				ignoreList: [],
 			});
 		});
+	});
 
-		it("validate should set correct defaults", function () {
+	describe("#validate()", function () {
+		it("should set correct defaults", function () {
 			Helper.config.defaults.nick = "";
 
 			const network = new Network({
@@ -83,7 +85,7 @@ describe("Network", function () {
 			expect(network2.username).to.equal("InvalidNick");
 		});
 
-		it("lockNetwork should be enforced when validating", function () {
+		it("should enforce lockNetwork", function () {
 			Helper.config.lockNetwork = true;
 
 			// Make sure we lock in private mode
@@ -112,8 +114,10 @@ describe("Network", function () {
 
 			Helper.config.lockNetwork = false;
 		});
+	});
 
-		it("editing a network should enforce correct types", function () {
+	describe("#edit(client, args)", function () {
+		it("should enforce correct types", function () {
 			let saveCalled = false;
 			let nameEmitCalled = false;
 
@@ -177,7 +181,9 @@ describe("Network", function () {
 				"/whois test",
 			]);
 		});
+	});
 
+	describe("Network(attr)", function () {
 		it("should generate uuid (v4) for each network", function () {
 			const network1 = new Network();
 			const network2 = new Network();
