@@ -55,10 +55,10 @@
 			</template>
 
 			<template v-if="message.whois.special">
-				<template v-for="special in message.whois.special">
-					<dt :key="special">Special:</dt>
-					<dd :key="special">{{ special }}</dd>
-				</template>
+				<div v-for="special in message.whois.special" :key="special">
+					<dt>Special:</dt>
+					<dd>{{ special }}</dd>
+				</div>
 			</template>
 
 			<template v-if="message.whois.operator">

@@ -1,6 +1,6 @@
 <template>
 	<div
-		v-if="$store.state.networks.length === 0"
+		v-if="store.state.networks.length === 0"
 		class="empty"
 		role="navigation"
 		aria-label="Network and Channel list"
@@ -55,7 +55,7 @@
 		</div>
 		<Draggable
 			v-else
-			:list="$store.state.networks"
+			:list="store.state.networks"
 			:delay="LONG_TOUCH_DURATION"
 			:delay-on-touch-only="true"
 			:touch-start-threshold="10"
@@ -70,7 +70,7 @@
 			@unchoose="onDraggableUnchoose"
 		>
 			<div
-				v-for="network in $store.state.networks"
+				v-for="network in store.state.networks"
 				:id="'network-' + network.uuid"
 				:key="network.uuid"
 				:class="{
@@ -90,8 +90,8 @@
 					:network="network"
 					:is-join-channel-shown="network.isJoinChannelShown"
 					:active="
-						$store.state.activeChannel &&
-						network.channels[0] === $store.state.activeChannel.channel
+						store.state.activeChannel &&
+						network.channels[0] === store.state.activeChannel.channel
 					"
 					@toggle-join-channel="network.isJoinChannelShown = !network.isJoinChannelShown"
 				/>
@@ -123,8 +123,8 @@
 							:channel="channel"
 							:network="network"
 							:active="
-								$store.state.activeChannel &&
-								channel === $store.state.activeChannel.channel
+								store.state.activeChannel &&
+								channel === store.state.activeChannel.channel
 							"
 						/>
 					</template>
@@ -197,7 +197,8 @@
 
 <script>
 import Mousetrap from "mousetrap";
-import Draggable from "vuedraggable";
+import {VueDraggableNext} from "vue-draggable-next";
+import {useStore} from "vuex";
 import {filter as fuzzyFilter} from "fuzzy";
 import NetworkLobby from "./NetworkLobby.vue";
 import Channel from "./Channel.vue";
@@ -215,7 +216,13 @@ export default {
 		JoinChannel,
 		NetworkLobby,
 		Channel,
-		Draggable,
+		Draggable: VueDraggableNext,
+	},
+	setup() {
+		const store = useStore();
+		return {
+			store,
+		};
 	},
 	data() {
 		return {
@@ -227,11 +234,11 @@ export default {
 		items() {
 			const items = [];
 
-			for (const network of this.$store.state.networks) {
+			for (const network of this.store.state.networks) {
 				for (const channel of network.channels) {
 					if (
-						this.$store.state.activeChannel &&
-						channel === this.$store.state.activeChannel.channel
+						this.store.state.activeChannel &&
+						channel === this.store.state.activeChannel.channel
 					) {
 						continue;
 					}
@@ -275,8 +282,8 @@ export default {
 				return true;
 			}
 
-			if (this.$store.state.activeChannel) {
-				collapseNetwork(this.$store.state.activeChannel.network, false);
+			if (this.store.state.activeChannel) {
+				collapseNetwork(this.store.state.activeChannel.network, false);
 			}
 
 			return false;
@@ -286,8 +293,8 @@ export default {
 				return true;
 			}
 
-			if (this.$store.state.activeChannel) {
-				collapseNetwork(this.$store.state.activeChannel.network, true);
+			if (this.store.state.activeChannel) {
+				collapseNetwork(this.store.state.activeChannel.network, true);
 			}
 
 			return false;
@@ -299,7 +306,7 @@ export default {
 
 			socket.emit("sort", {
 				type: "networks",
-				order: this.$store.state.networks.map((n) => n.uuid),
+				order: this.store.state.networks.map((n) => n.uuid),
 			});
 		},
 		onChannelSort(e) {
@@ -307,7 +314,7 @@ export default {
 				return;
 			}
 
-			const channel = this.$store.getters.findChannel(e.moved.element.id);
+			const channel = this.store.getters.findChannel(e.moved.element.id);
 
 			if (!channel) {
 				return;
@@ -390,8 +397,8 @@ export default {
 				return;
 			}
 
-			this.sidebarWasClosed = this.$store.state.sidebarOpen ? false : true;
-			this.$store.commit("sidebarOpen", true);
+			this.sidebarWasClosed = this.store.state.sidebarOpen ? false : true;
+			this.store.commit("sidebarOpen", true);
 			this.$nextTick(() => {
 				this.$refs.searchInput.focus();
 			});
@@ -402,7 +409,7 @@ export default {
 			this.$refs.searchInput.blur();
 
 			if (this.sidebarWasClosed) {
-				this.$store.commit("sidebarOpen", false);
+				this.store.commit("sidebarOpen", false);
 			}
 		},
 		setSearchText(e) {

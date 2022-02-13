@@ -1,11 +1,11 @@
 <template>
 	<div id="viewport" :class="viewportClasses" role="tablist">
-		<Sidebar v-if="$store.state.appLoaded" :overlay="$refs.overlay" />
+		<Sidebar v-if="store.state.appLoaded" :overlay="overlay" />
 		<div
 			id="sidebar-overlay"
 			ref="overlay"
 			aria-hidden="true"
-			@click="$store.commit('sidebarOpen', false)"
+			@click="store.commit('sidebarOpen', false)"
 		/>
 		<router-view ref="window"></router-view>
 		<Mentions />
@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import {ref} from "vue";
+import {useStore} from "vuex";
 const constants = require("../js/constants");
 import eventbus from "../js/eventbus";
 import Mousetrap from "mousetrap";
@@ -39,13 +41,29 @@ export default {
 		ConfirmDialog,
 		Mentions,
 	},
+	setup() {
+		const store = useStore();
+		const overlay = ref(null);
+		const window = ref(null);
+		const imageViewer = ref(null);
+		const contextMenu = ref(null);
+		const confirmDialog = ref(null);
+		return {
+			overlay,
+			window,
+			imageViewer,
+			contextMenu,
+			confirmDialog,
+			store,
+		};
+	},
 	computed: {
 		viewportClasses() {
 			return {
-				notified: this.$store.getters.highlightCount > 0,
-				"menu-open": this.$store.state.appLoaded && this.$store.state.sidebarOpen,
-				"menu-dragging": this.$store.state.sidebarDragging,
-				"userlist-open": this.$store.state.userlistOpen,
+				notified: this.store.getters.highlightCount > 0,
+				"menu-open": this.store.state.appLoaded && this.store.state.sidebarOpen,
+				"menu-dragging": this.store.state.sidebarDragging,
+				"userlist-open": this.store.state.userlistOpen,
 			};
 		},
 	},
@@ -92,7 +110,7 @@ export default {
 				return true;
 			}
 
-			this.$store.commit("toggleSidebar");
+			this.store.commit("toggleSidebar");
 
 			return false;
 		},
@@ -101,12 +119,12 @@ export default {
 				return true;
 			}
 
-			this.$store.commit("toggleUserlist");
+			this.store.commit("toggleUserlist");
 
 			return false;
 		},
 		toggleMentions() {
-			if (this.$store.state.networks.length !== 0) {
+			if (this.store.state.networks.length !== 0) {
 				eventbus.emit("mentions:toggle");
 			}
 		},
@@ -122,7 +140,7 @@ export default {
 			let isUserlistOpen = storage.get("thelounge.state.userlist");
 
 			if (viewportWidth > constants.mobileViewportPixels) {
-				this.$store.commit(
+				this.store.commit(
 					"sidebarOpen",
 					storage.get("thelounge.state.sidebar") !== "false"
 				);
@@ -134,7 +152,7 @@ export default {
 				isUserlistOpen = "true";
 			}
 
-			this.$store.commit("userlistOpen", isUserlistOpen === "true");
+			this.store.commit("userlistOpen", isUserlistOpen === "true");
 		},
 	},
 };

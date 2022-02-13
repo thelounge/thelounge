@@ -20,40 +20,43 @@
 				<p v-if="isLoading">Loading…</p>
 				<p v-else>You have no recent mentions.</p>
 			</template>
-			<template v-for="message in resolvedMessages" v-else>
-				<div :key="message.msgId" :class="['msg', message.type]">
-					<div class="mentions-info">
-						<div>
-							<span class="from">
-								<Username :user="message.from" />
-								<template v-if="message.channel">
-									in {{ message.channel.channel.name }} on
-									{{ message.channel.network.name }}
-								</template>
-								<template v-else> in unknown channel </template>
-							</span>
-							<span :title="message.localetime" class="time">
-								{{ messageTime(message.time) }}
-							</span>
-						</div>
-						<div>
-							<span
-								class="close-tooltip tooltipped tooltipped-w"
-								aria-label="Dismiss this mention"
-							>
-								<button
-									class="msg-dismiss"
-									aria-label="Dismiss this mention"
-									@click="dismissMention(message)"
-								></button>
-							</span>
-						</div>
+			<div
+				v-for="message in resolvedMessages"
+				v-else
+				:key="message.msgId"
+				:class="['msg', message.type]"
+			>
+				<div class="mentions-info">
+					<div>
+						<span class="from">
+							<Username :user="message.from" />
+							<template v-if="message.channel">
+								in {{ message.channel.channel.name }} on
+								{{ message.channel.network.name }}
+							</template>
+							<template v-else> in unknown channel </template>
+						</span>
+						<span :title="message.localetime" class="time">
+							{{ messageTime(message.time) }}
+						</span>
 					</div>
-					<div class="content" dir="auto">
-						<ParsedMessage :network="null" :message="message" />
+					<div>
+						<span
+							class="close-tooltip tooltipped tooltipped-w"
+							aria-label="Dismiss this mention"
+						>
+							<button
+								class="msg-dismiss"
+								aria-label="Dismiss this mention"
+								@click="dismissMention(message)"
+							></button>
+						</span>
 					</div>
 				</div>
-			</template>
+				<div class="content" dir="auto">
+					<ParsedMessage :network="null" :message="message" />
+				</div>
+			</div>
 		</div>
 	</div>
 </template>

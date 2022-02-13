@@ -61,22 +61,25 @@
 							aria-live="polite"
 							aria-relevant="additions"
 						>
-							<template v-for="(message, id) in messages">
-								<div :key="message.id" class="result" @:click="jump(message, id)">
-									<DateMarker
-										v-if="shouldDisplayDateMarker(message, id)"
-										:key="message.date"
-										:message="message"
-									/>
-									<Message
-										:key="message.id"
-										:channel="channel"
-										:network="network"
-										:message="message"
-										:data-id="message.id"
-									/>
-								</div>
-							</template>
+							<div
+								v-for="(message, id) in messages"
+								:key="message.id"
+								class="result"
+								@:click="jump(message, id)"
+							>
+								<DateMarker
+									v-if="shouldDisplayDateMarker(message, id)"
+									:key="message.date"
+									:message="message"
+								/>
+								<Message
+									:key="message.id"
+									:channel="channel"
+									:network="network"
+									:message="message"
+									:data-id="message.id"
+								/>
+							</div>
 						</div>
 					</div>
 				</div>

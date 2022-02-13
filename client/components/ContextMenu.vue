@@ -19,21 +19,20 @@
 			@mouseleave="activeItem = -1"
 			@keydown.enter.prevent="clickActiveItem"
 		>
-			<template v-for="(item, id) of items">
-				<li
-					:key="item.name"
-					:class="[
-						'context-menu-' + item.type,
-						item.class ? 'context-menu-' + item.class : null,
-						{active: id === activeItem},
-					]"
-					role="menuitem"
-					@mouseenter="hoverItem(id)"
-					@click="clickItem(item)"
-				>
-					{{ item.label }}
-				</li>
-			</template>
+			<li
+				v-for="(item, id) of items"
+				:key="item.name"
+				:class="[
+					'context-menu-' + item.type,
+					item.class ? 'context-menu-' + item.class : null,
+					{active: id === activeItem},
+				]"
+				role="menuitem"
+				@mouseenter="hoverItem(id)"
+				@click="clickItem(item)"
+			>
+				{{ item.label }}
+			</li>
 		</ul>
 	</div>
 </template>
