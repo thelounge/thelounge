@@ -223,6 +223,28 @@ describe("Network", function () {
 			ClientCertificate.remove(network.uuid);
 			Helper.config.public = true;
 		});
+
+		it("should remove client certs if there is a STS policy", function () {
+			Helper.config.public = false;
+
+			const client = {idMsg: 1, emit() {}, messageStorage: []};
+			STSPolicies.update("irc.example.com", 7000, 3600);
+
+			const network = new Network({host: "irc.example.com", sasl: "external"});
+			network.createIrcFramework(client);
+			expect(network.irc).to.not.be.null;
+
+			const client_cert = network.irc.options.client_certificate;
+			expect(client_cert).to.not.be.null;
+			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert);
+
+			expect(network.validate(client)).to.be.true;
+
+			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert); // Should be unchanged
+
+			ClientCertificate.remove(network.uuid);
+			Helper.config.public = true;
+		});
 	});
 
 	describe("#createIrcFramework(client)", function () {
