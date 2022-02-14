@@ -1,15 +1,3 @@
-<template>
-	<span
-		:class="['user', nickColor, {active: active}]"
-		:data-name="user.nick"
-		role="button"
-		v-on="onHover ? {mouseenter: hover} : {}"
-		@click.prevent="openContextMenu"
-		@contextmenu.prevent="openContextMenu"
-		><slot>{{ mode }}{{ user.nick }}</slot></span
-	>
-</template>
-
 <script>
 import eventbus from "../js/eventbus";
 import colorClass from "../js/helpers/colorClass";
@@ -49,5 +37,13 @@ export default {
 			});
 		},
 	},
+	template: `<span
+			:class="['user', nickColor, {active: active}]"
+			:data-name="user.nick"
+			role="button"
+			v-on="onHover ? {mouseenter: hover} : {}"
+			@click.prevent="openContextMenu"
+			@contextmenu.prevent="openContextMenu"
+		><slot>{{ mode }}{{ user.nick }}</slot></span>`,
 };
 </script>
