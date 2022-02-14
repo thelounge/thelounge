@@ -29,8 +29,8 @@ export default {
 		channel: Object,
 	},
 	methods: {
-		getLocaletime(date) {
-			return localetime(date);
+		getLocaletime(datetime) {
+			return localetime(datetime);
 		},
 	},
 };
