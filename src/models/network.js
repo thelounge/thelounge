@@ -106,7 +106,7 @@ Network.prototype.validate = function (client) {
 	this.host = cleanString(this.host).toLowerCase();
 	this.name = cleanString(this.name);
 	this.saslAccount = cleanString(this.saslAccount);
-	this.saslPassword = cleanString(this.saslPassword);
+	this.saslPassword = this.saslPassword.replace(/[\x00\r\n]/g, ""); // Clean but don't truncate
 
 	this.proxyHost = cleanString(this.proxyHost);
 	this.proxyPort = this.proxyPort || 1080;
