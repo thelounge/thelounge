@@ -1,5 +1,6 @@
 <template>
-	<table class="ignore-list">
+	<div v-if="channel.data.length === 0" class="empty-list">Your ignorelist is empty.</div>
+	<table v-else class="ignore-list">
 		<thead>
 			<tr>
 				<th class="hostmask">Hostmask</th>
@@ -14,6 +15,12 @@
 		</tbody>
 	</table>
 </template>
+
+<style scoped>
+.empty-list {
+	padding: 0 0.5rem;
+}
+</style>
 
 <script>
 import ParsedMessage from "../ParsedMessage.vue";
