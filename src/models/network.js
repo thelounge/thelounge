@@ -145,7 +145,7 @@ Network.prototype.validate = function (client) {
 			this.host.length > 0 &&
 			this.host !== Helper.config.defaults.host
 		) {
-			error(this, `Hostname you specified (${this.host}) is not allowed.`);
+			error(this, `The hostname you specified (${this.host}) is not allowed.`);
 			return false;
 		}
 
