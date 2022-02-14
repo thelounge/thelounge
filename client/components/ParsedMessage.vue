@@ -1,5 +1,4 @@
 <script>
-import {h} from "vue";
 import parse from "../js/helpers/parse";
 
 export default {
@@ -10,12 +9,11 @@ export default {
 		message: Object,
 		network: Object,
 	},
-	render() {
+	render(context) {
 		return parse(
-			h,
-			typeof this.text !== "undefined" ? this.text : this.message.text,
-			this.message,
-			this.network
+			typeof context.text !== "undefined" ? context.text : context.message.text,
+			context.message,
+			context.network
 		);
 	},
 };
