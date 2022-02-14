@@ -1,22 +1,21 @@
 "use strict";
 
 const expect = require("chai").expect;
+global.SVGElement = Element;
 
-import {renderToString} from "@vue/server-test-utils";
-import ParsedMessageTestWrapper from "../../components/ParsedMessageTestWrapper.vue";
+import {mount} from "@vue/test-utils";
+import ParsedMessage from "../../../../client/components/ParsedMessage.vue";
 
-async function getParsedMessageContents(text, message) {
-	let contents = await renderToString(ParsedMessageTestWrapper, {
-		propsData: {
+function getParsedMessageContents(text, message) {
+	const wrapper = mount(ParsedMessage, {
+		props: {
 			text,
 			message,
 		},
 	});
 
 	// The wrapper adds a surrounding div to the message html, so we clean that out here
-	contents = contents.replace(/^<div data-server-rendered="true">([^]+)<\/div>$/m, "$1");
-
-	return contents;
+	return wrapper.html();
 }
 
 describe("IRC formatted message parser", () => {
@@ -25,12 +24,12 @@ describe("IRC formatted message parser", () => {
 			{
 				input: "<img onerror='location.href=\"//youtube.com\"'>",
 				expected:
-					'&lt;img onerror=\'location.href=&quot;<a href="http://youtube.com" dir="auto" target="_blank" rel="noopener">//youtube.com</a>&quot;\'&gt;',
+					'&lt;img onerror=\'location.href="<a href="http://youtube.com" dir="auto" target="_blank" rel="noopener">//youtube.com</a>"\'&gt;',
 			},
 			{
 				input: '#&">bug',
 				expected:
-					'<span dir="auto" role="button" tabindex="0" class="inline-channel">#&amp;&quot;&gt;bug</span>',
+					'<span class="inline-channel" dir="auto" role="button" tabindex="0">#&amp;"&gt;bug</span>',
 			},
 		];
 
@@ -193,21 +192,21 @@ describe("IRC formatted message parser", () => {
 			{
 				input: "#a",
 				expected:
-					'<span dir="auto" role="button" tabindex="0" class="inline-channel">' +
+					'<span class="inline-channel" dir="auto" role="button" tabindex="0">' +
 					"#a" +
 					"</span>",
 			},
 			{
 				input: "#test",
 				expected:
-					'<span dir="auto" role="button" tabindex="0" class="inline-channel">' +
+					'<span class="inline-channel" dir="auto" role="button" tabindex="0">' +
 					"#test" +
 					"</span>",
 			},
 			{
 				input: "#äöü",
 				expected:
-					'<span dir="auto" role="button" tabindex="0" class="inline-channel">' +
+					'<span class="inline-channel" dir="auto" role="button" tabindex="0">' +
 					"#äöü" +
 					"</span>",
 			},
@@ -215,7 +214,7 @@ describe("IRC formatted message parser", () => {
 				input: "inline #channel text",
 				expected:
 					"inline " +
-					'<span dir="auto" role="button" tabindex="0" class="inline-channel">' +
+					'<span class="inline-channel" dir="auto" role="button" tabindex="0">' +
 					"#channel" +
 					"</span>" +
 					" text",
@@ -223,7 +222,7 @@ describe("IRC formatted message parser", () => {
 			{
 				input: "#1,000",
 				expected:
-					'<span dir="auto" role="button" tabindex="0" class="inline-channel">' +
+					'<span class="inline-channel" dir="auto" role="button" tabindex="0">' +
 					"#1,000" +
 					"</span>",
 			},
@@ -231,7 +230,7 @@ describe("IRC formatted message parser", () => {
 				input: "@#a",
 				expected:
 					"@" +
-					'<span dir="auto" role="button" tabindex="0" class="inline-channel">' +
+					'<span class="inline-channel" dir="auto" role="button" tabindex="0">' +
 					"#a" +
 					"</span>",
 			},
@@ -289,12 +288,13 @@ describe("IRC formatted message parser", () => {
 		{
 			name: "hex foreground color",
 			input: "\x04663399rebeccapurple",
-			expected: '<span style="color:#663399;">rebeccapurple</span>',
+			expected: '<span style="color: rgb(102, 51, 153);">rebeccapurple</span>',
 		},
 		{
 			name: "hex foreground and background colors",
 			input: "\x04415364,ff9e18The Lounge",
-			expected: '<span style="color:#415364;background-color:#FF9E18;">The Lounge</span>',
+			expected:
+				'<span style="color: rgb(65, 83, 100); background-color: rgb(255, 158, 24);">The Lounge</span>',
 		},
 		{
 			name: "italic",
@@ -370,7 +370,7 @@ describe("IRC formatted message parser", () => {
 				input: "test, MaxLeiter",
 				expected:
 					"test, " +
-					'<span data-name="MaxLeiter" role="button" dir="auto" class="user color-12">' +
+					'<span class="user color-12" data-name="MaxLeiter" role="button" dir="auto">' +
 					"MaxLeiter" +
 					"</span>",
 			},
@@ -390,7 +390,7 @@ describe("IRC formatted message parser", () => {
 				users: ["MaxLeiter, test"],
 				input: "#test-channelMaxLeiter",
 				expected:
-					'<span dir="auto" role="button" tabindex="0" class="inline-channel">' +
+					'<span class="inline-channel" dir="auto" role="button" tabindex="0">' +
 					"#test-channelMaxLeiter" +
 					"</span>",
 			},
@@ -428,7 +428,7 @@ describe("IRC formatted message parser", () => {
 			{
 				input: "\x02#\x038,9thelounge",
 				expected:
-					'<span dir="auto" role="button" tabindex="0" class="inline-channel">' +
+					'<span class="inline-channel" dir="auto" role="button" tabindex="0">' +
 					'<span class="irc-bold">#</span>' +
 					'<span class="irc-bold irc-fg8 irc-bg9">thelounge</span>' +
 					"</span>",
@@ -449,36 +449,36 @@ describe("IRC formatted message parser", () => {
 			name: "in text",
 			input: "Hello💬",
 			expected:
-				'Hello<span role="img" aria-label="Emoji: speech balloon" title="Emoji: speech balloon" class="emoji">💬</span>',
+				'Hello<span class="emoji" role="img" aria-label="Emoji: speech balloon" title="Emoji: speech balloon">💬</span>',
 		},
 		{
 			name: "complicated zero-join-width emoji",
 			input: "🤦🏿‍♀️",
 			expected:
-				'<span role="img" aria-label="Emoji: woman facepalming" title="Emoji: woman facepalming" class="emoji">🤦🏿‍♀️</span>',
+				'<span class="emoji" role="img" aria-label="Emoji: woman facepalming" title="Emoji: woman facepalming">🤦🏿‍♀️</span>',
 		},
 		{
 			name: "unicode 12 emojis",
 			input: "🧘🏿👨‍👨‍👧‍👧",
 			expected:
-				'<span role="img" aria-label="Emoji: person in lotus position" title="Emoji: person in lotus position" class="emoji">🧘🏿</span><span role="img" aria-label="Emoji: family: man, man, girl, girl" title="Emoji: family: man, man, girl, girl" class="emoji">👨‍👨‍👧‍👧</span>',
+				'<span class="emoji" role="img" aria-label="Emoji: person in lotus position" title="Emoji: person in lotus position">🧘🏿</span><span class="emoji" role="img" aria-label="Emoji: family: man, man, girl, girl" title="Emoji: family: man, man, girl, girl">👨‍👨‍👧‍👧</span>',
 		},
 		{
 			name: "unicode 12 emojis with multiple modifiers",
 			input: "👩🏾‍🤝‍👨🏽",
-			expected: '<span role="img" class="emoji">👩🏾‍🤝‍👨🏽</span>',
+			expected: '<span class="emoji" role="img">👩🏾‍🤝‍👨🏽</span>',
 		},
 		{
 			name: "with modifiers",
 			input: "🤷‍♀️",
 			expected:
-				'<span role="img" aria-label="Emoji: woman shrugging" title="Emoji: woman shrugging" class="emoji">🤷‍♀️</span>',
+				'<span class="emoji" role="img" aria-label="Emoji: woman shrugging" title="Emoji: woman shrugging">🤷‍♀️</span>',
 		},
 		{
 			name: "with emoji variant selector",
 			input: "\u{2695}\u{FE0F}",
 			expected:
-				'<span role="img" aria-label="Emoji: medical symbol" title="Emoji: medical symbol" class="emoji">\u{2695}\u{FE0F}</span>',
+				'<span class="emoji" role="img" aria-label="Emoji: medical symbol" title="Emoji: medical symbol">\u{2695}\u{FE0F}</span>',
 		},
 		{
 			name: "with text variant selector",
@@ -495,7 +495,7 @@ describe("IRC formatted message parser", () => {
 			name: "wrapped in style",
 			input: "Super \x034💚 green!",
 			expected:
-				'Super <span role="img" aria-label="Emoji: green heart" title="Emoji: green heart" class="emoji"><span class="irc-fg4">💚</span></span><span class="irc-fg4"> green!</span>',
+				'Super <span class="emoji" role="img" aria-label="Emoji: green heart" title="Emoji: green heart"><span class="irc-fg4">💚</span></span><span class="irc-fg4"> green!</span>',
 		},
 		{
 			name: "wrapped in URLs",
@@ -509,7 +509,7 @@ describe("IRC formatted message parser", () => {
 			input: "#i❤️thelounge",
 			// FIXME: Emoji in text should be `<span class="emoji">❤️</span>`. See https://github.com/thelounge/thelounge/issues/1784
 			expected:
-				'<span dir="auto" role="button" tabindex="0" class="inline-channel">#i❤️thelounge</span>',
+				'<span class="inline-channel" dir="auto" role="button" tabindex="0">#i❤️thelounge</span>',
 		},
 	].forEach(({name, input, expected}) => {
 		it(`should find emoji: ${name}`, async () => {
@@ -523,8 +523,8 @@ describe("IRC formatted message parser", () => {
 				input: 'test \x0312#\x0312\x0312"te\x0312st\x0312\x0312\x0312\x0312\x0312\x0312\x0312\x0312\x0312\x0312\x0312a',
 				expected:
 					"test " +
-					'<span dir="auto" role="button" tabindex="0" class="inline-channel">' +
-					'<span class="irc-fg12">#&quot;testa</span>' +
+					'<span class="inline-channel" dir="auto" role="button" tabindex="0">' +
+					'<span class="irc-fg12">#"testa</span>' +
 					"</span>",
 			},
 		];
@@ -590,7 +590,7 @@ describe("IRC formatted message parser", () => {
 
 		expect(actual).to.equal(
 			'Url: <a href="http://example.com/path" dir="auto" target="_blank" rel="noopener">http://example.com/path</a> ' +
-				'Channel: <span dir="auto" role="button" tabindex="0" class="inline-channel">##channel</span>'
+				'Channel: <span class="inline-channel" dir="auto" role="button" tabindex="0">##channel</span>'
 		);
 	});
 
@@ -599,7 +599,7 @@ describe("IRC formatted message parser", () => {
 		const actual = await getParsedMessageContents(input);
 
 		expect(actual).to.equal(
-			'<span dir="auto" role="button" tabindex="0" class="inline-channel">' +
+			'<span class="inline-channel" dir="auto" role="button" tabindex="0">' +
 				"#test-https://example.com" +
 				"</span>"
 		);
