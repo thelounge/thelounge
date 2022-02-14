@@ -36,14 +36,18 @@ config.optimization.splitChunks = false;
 config.plugins = [
 	new VueLoaderPlugin(),
 
+	new webpack.DefinePlugin({
+		__VUE_OPTIONS_API__: JSON.stringify(true),
+		__VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+	}),
+
+	new webpack.IgnorePlugin({resourceRegExp: /canvas/}),
+
 	// Client tests that require Vue may end up requireing socket.io
 	new webpack.NormalModuleReplacementPlugin(
 		/js(\/|\\)socket\.js/,
 		path.resolve(__dirname, "scripts/noop.js")
 	),
-
-	// "Fixes" Critical dependency: the request of a dependency is an expression
-	new webpack.ContextReplacementPlugin(/vue-server-renderer$/),
 ];
 
 module.exports = config;
