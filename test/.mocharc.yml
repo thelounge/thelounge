@@ -5,4 +5,10 @@ reporter: dot
 interactive: false
 spec: "test/**/*.js"
 ignore: "test/client/**"
-require: "test/fixtures/env"
+require:
+  - "test/fixtures/env"
+  - "global-jsdom/register"
+globals:
+  - "__VUE_OPTIONS_API__"
+  - "__VUE_PROD_DEVTOOLS__"
+  - "__VUE__"
