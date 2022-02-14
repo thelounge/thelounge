@@ -62,7 +62,7 @@ app.mixin({
 		},
 	},
 });
-app.mount("body");
+app.mount("#app");
 
 socket.open();
 
