@@ -25,4 +25,11 @@ if (!require("semver").satisfies(process.version, pkg.engines.node)) {
 	process.exit(1);
 }
 
+const dns = require("dns");
+
+// Set DNS result order early before anything that may depend on it happens.
+if (dns.setDefaultResultOrder) {
+	dns.setDefaultResultOrder("verbatim");
+}
+
 require("./src/command-line");
