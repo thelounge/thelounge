@@ -280,14 +280,6 @@ function formatDefaultNick(format) {
 	return format.replace(/%/g, () => Math.floor(Math.random() * 10));
 }
 
-const warnLegacyDefaultNetworks = _.debounce((defaults) => {
-	const key = colors.bold("defaults");
-	const newDefaults = JSON.stringify([defaults], null, "\t");
-	log.warn(
-		`Key "${key}" should now be an array of networks, please update your config. It should look like this:\ndefaults: ${newDefaults},`
-	);
-});
-
 function getDefaultNetworks() {
 	if (this.config.defaults === undefined) {
 		return [];
@@ -297,7 +289,10 @@ function getDefaultNetworks() {
 		return this.config.defaults;
 	}
 
-	warnLegacyDefaultNetworks(this.config.defaults);
+	const key = colors.bold("defaults");
+	log.warn(
+		`Key "${key}" should now be an array of networks. Support for the old object format will be removed in a future version, please update your config. https://thelounge.chat/docs/configuration#default-networks`
+	);
 	return [this.config.defaults];
 }
 
