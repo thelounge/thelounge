@@ -181,6 +181,68 @@ describe("SQLite Message Storage", function () {
 		}
 	});
 
+	it("should search messages with escaped wildcards", function () {
+		function assertResults(query, expected) {
+			return store
+				.search({
+					searchTerm: query,
+					networkUuid: "this-is-a-network-guid2",
+				})
+				.then((messages) => {
+					expect(messages.results.map((i) => i.text)).to.deep.equal(expected);
+				});
+		}
+
+		const originalMaxHistory = Helper.config.maxHistory;
+
+		try {
+			Helper.config.maxHistory = 3;
+
+			store.index(
+				{uuid: "this-is-a-network-guid2"},
+				{name: "#channel"},
+				new Msg({
+					time: 123456790,
+					text: `foo % bar _ baz`,
+				})
+			);
+
+			store.index(
+				{uuid: "this-is-a-network-guid2"},
+				{name: "#channel"},
+				new Msg({
+					time: 123456791,
+					text: `foo bar x baz`,
+				})
+			);
+
+			store.index(
+				{uuid: "this-is-a-network-guid2"},
+				{name: "#channel"},
+				new Msg({
+					time: 123456792,
+					text: `bar @ baz`,
+				})
+			);
+
+			return (
+				store
+					.getMessages({uuid: "this-is-a-network-guid2"}, {name: "#channel"})
+					// .getMessages() waits for store.index() transactions to commit
+					.then(() => assertResults("foo", ["foo % bar _ baz", "foo bar x baz"]))
+					.then(() => assertResults("%", ["foo % bar _ baz"]))
+					.then(() => assertResults("foo % bar ", ["foo % bar _ baz"]))
+					.then(() => assertResults("_", ["foo % bar _ baz"]))
+					.then(() => assertResults("bar _ baz", ["foo % bar _ baz"]))
+					.then(() => assertResults("%%", []))
+					.then(() => assertResults("@%", []))
+					.then(() => assertResults("@", ["bar @ baz"]))
+			);
+		} finally {
+			Helper.config.maxHistory = originalMaxHistory;
+		}
+	});
+
 	it("should close database", function (done) {
 		store.close((err) => {
 			expect(err).to.be.null;
