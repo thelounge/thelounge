@@ -1,5 +1,5 @@
 <template>
-	<div v-if="channel.data.length === 0" class="empty-list">Your ignorelist is empty.</div>
+	<div v-if="channel.data.length === 0" class="empty-ignore-list">Your ignorelist is empty.</div>
 	<table v-else class="ignore-list">
 		<thead>
 			<tr>
@@ -17,7 +17,7 @@
 </template>
 
 <style scoped>
-.empty-list {
+.empty-ignore-list {
 	padding: 0 0.5rem;
 }
 </style>
