@@ -241,6 +241,14 @@ Chan.prototype.loadMessages = function (client, network) {
 		return;
 	}
 
+	if (!network.irc) {
+		// Network created, but misconfigured
+		log.warn(
+			`Failed to load messages for ${client.name}, network ${network.name} is not initialized.`
+		);
+		return;
+	}
+
 	client.messageProvider
 		.getMessages(network, this)
 		.then((messages) => {
@@ -270,7 +278,7 @@ Chan.prototype.loadMessages = function (client, network) {
 				requestZncPlayback(this, network, from);
 			}
 		})
-		.catch((err) => log.error(`Failed to load messages: ${err}`));
+		.catch((err) => log.error(`Failed to load messages for ${client.name}: ${err}`));
 };
 
 Chan.prototype.isLoggable = function () {
