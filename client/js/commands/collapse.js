@@ -22,7 +22,7 @@ function input() {
 	}
 
 	// Tell the server we're toggling so it remembers at page reload
-	if (messageIds.length > 0) {
+	if (!document.body.classList.contains("public") && messageIds.length > 0) {
 		socket.emit("msg:preview:toggle", {
 			target: store.state.activeChannel.channel.id,
 			messageIds: messageIds,
