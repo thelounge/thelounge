@@ -503,43 +503,49 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 		);
 	});
 
-	socket.on("msg:preview:toggle", (data) => {
-		if (!_.isPlainObject(data)) {
-			return;
-		}
-
-		const networkAndChan = client.find(data.target);
-		const newState = Boolean(data.shown);
-
-		if (!networkAndChan) {
-			return;
-		}
-
-		// Process multiple message at once for /collapse and /expand commands
-		if (Array.isArray(data.messageIds)) {
-			for (const msgId of data.messageIds) {
-				const message = networkAndChan.chan.findMessage(msgId);
-
-				for (const preview of message.previews) {
-					preview.shown = newState;
-				}
+	// In public mode only one client can be connected,
+	// so there's no need to handle msg:preview:toggle
+	if (!Helper.config.public) {
+		socket.on("msg:preview:toggle", (data) => {
+			if (_.isPlainObject(data)) {
+				return;
 			}
 
-			return;
-		}
+			const networkAndChan = client.find(data.target);
+			const newState = Boolean(data.shown);
 
-		const message = networkAndChan.chan.findMessage(data.msgId);
+			if (!networkAndChan) {
+				return;
+			}
 
-		if (!message) {
-			return;
-		}
+			// Process multiple message at once for /collapse and /expand commands
+			if (Array.isArray(data.messageIds)) {
+				for (const msgId of data.messageIds) {
+					const message = networkAndChan.chan.findMessage(msgId);
 
-		const preview = message.findPreview(data.link);
+					if (message) {
+						for (const preview of message.previews) {
+							preview.shown = newState;
+						}
+					}
+				}
 
-		if (preview) {
-			preview.shown = newState;
-		}
-	});
+				return;
+			}
+
+			const message = networkAndChan.chan.findMessage(data.msgId);
+
+			if (!message) {
+				return;
+			}
+
+			const preview = message.findPreview(data.link);
+
+			if (preview) {
+				preview.shown = newState;
+			}
+		});
+	}
 
 	socket.on("mentions:get", () => {
 		socket.emit("mentions:list", client.mentions);
