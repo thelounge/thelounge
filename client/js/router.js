@@ -17,6 +17,11 @@ import SearchResults from "../components/Windows/SearchResults.vue";
 import RoutedChat from "../components/RoutedChat.vue";
 import store from "./store";
 
+import AppearanceSettings from "../components/Settings/Appearance.vue";
+import GeneralSettings from "../components/Settings/General.vue";
+import UserSettings from "../components/Settings/User.vue";
+import NotificationSettings from "../components/Settings/Notifications.vue";
+
 const router = new VueRouter({
 	routes: [
 		{
@@ -40,9 +45,30 @@ const router = new VueRouter({
 			props: (route) => ({queryParams: route.query}),
 		},
 		{
-			name: "Settings",
 			path: "/settings",
 			component: Settings,
+			children: [
+				{
+					name: "General",
+					path: "",
+					component: GeneralSettings,
+				},
+				{
+					name: "Appearance",
+					path: "appearance",
+					component: AppearanceSettings,
+				},
+				{
+					name: "User Settings",
+					path: "user",
+					component: UserSettings,
+				},
+				{
+					name: "Notifications",
+					path: "notifications",
+					component: NotificationSettings,
+				},
+			],
 		},
 		{
 			name: "Help",
