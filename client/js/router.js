@@ -19,7 +19,7 @@ import store from "./store";
 
 import AppearanceSettings from "../components/Settings/Appearance.vue";
 import GeneralSettings from "../components/Settings/General.vue";
-import UserSettings from "../components/Settings/User.vue";
+import AccountSettings from "../components/Settings/Account.vue";
 import NotificationSettings from "../components/Settings/Notifications.vue";
 
 const router = new VueRouter({
@@ -59,9 +59,9 @@ const router = new VueRouter({
 					component: AppearanceSettings,
 				},
 				{
-					name: "User Settings",
-					path: "user",
-					component: UserSettings,
+					name: "Account",
+					path: "account",
+					component: AccountSettings,
 				},
 				{
 					name: "Notifications",

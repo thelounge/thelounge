@@ -1,17 +1,23 @@
 <template>
 	<div class="tabs">
-		<h1 class="title">Settings</h1>
-
 		<ul role="navigation" aria-label="Settings tabs">
 			<SettingTabItem name="General" class-name="general" to="" />
 			<SettingTabItem name="Appearance" class-name="appearance" to="appearance" />
 			<SettingTabItem name="Notifications" class-name="notifications" to="notifications" />
-			<SettingTabItem name="User Settings" class-name="user" to="user" />
+			<SettingTabItem name="Account" class-name="account" to="account" />
 		</ul>
 	</div>
 </template>
 
 <style>
+.tabs {
+	position: relative;
+	margin: 0 auto;
+	/* to match the .container */
+	width: 480px;
+	padding: 0 15px;
+}
+
 .tabs ul {
 	padding: 0;
 	border-radius: 5px;
@@ -44,7 +50,7 @@
 	content: "\f1fc"; /* http://fontawesome.io/icon/paint-brush/ */
 }
 
-.tabs .user::before {
+.tabs .account::before {
 	content: "\f007"; /* http://fontawesome.io/icon/user/ */
 }
 
@@ -73,6 +79,12 @@
 .tabs button.active {
 	background-color: #303e4a;
 	cursor: default;
+}
+
+/* Float left on desktops */
+@media screen and (min-width: calc(768px + 220px + 400px)) {
+	.tabs {
+	}
 }
 </style>
 
