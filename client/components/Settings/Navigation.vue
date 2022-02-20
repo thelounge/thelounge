@@ -12,11 +12,10 @@
 <style>
 .tabs ul {
 	padding: 0;
-	border-radius: 5px;
 }
 
 .tabs li {
-	font-size: 20px;
+	font-size: 18px;
 	list-style: none;
 }
 
@@ -26,20 +25,22 @@
 	height: 100%;
 	display: inline-block;
 	text-align: left;
-	margin: 8px 0;
-	border-bottom: 1px solid var();
+}
+
+.tabs li:not(:last-of-type) button {
+	margin-bottom: 8px;
 }
 
 .tabs button::before {
-	width: 20px;
-	height: 20px;
+	width: 18px;
+	height: 18px;
 	display: inline-block;
 	content: "";
-	margin-right: 10px;
+	margin-right: 8px;
 }
 
 .tabs .appearance::before {
-	content: "\f108"; /* http://fontawesome.io/icon/paint-brush/ */
+	content: "\f108"; /* http://fontawesome.io/icon/desktop/ */
 }
 
 .tabs .account::before {
