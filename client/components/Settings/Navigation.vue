@@ -10,14 +10,6 @@
 </template>
 
 <style>
-.tabs {
-	position: relative;
-	margin: 0 auto;
-	/* to match the .container */
-	width: 480px;
-	padding: 0 15px;
-}
-
 .tabs ul {
 	padding: 0;
 	border-radius: 5px;
@@ -47,7 +39,7 @@
 }
 
 .tabs .appearance::before {
-	content: "\f1fc"; /* http://fontawesome.io/icon/paint-brush/ */
+	content: "\f108"; /* http://fontawesome.io/icon/paint-brush/ */
 }
 
 .tabs .account::before {
@@ -79,12 +71,6 @@
 .tabs button.active {
 	background-color: #303e4a;
 	cursor: default;
-}
-
-/* Float left on desktops */
-@media screen and (min-width: calc(768px + 220px + 400px)) {
-	.tabs {
-	}
 }
 </style>
 
