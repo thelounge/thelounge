@@ -1,25 +1,46 @@
 <template>
-	<div class="tabs">
+	<!-- 220px is the width of the sidebar, and we add 100px to allow for the text -->
+	<aside class="settings-menu">
+		<h2>Settings</h2>
 		<ul role="navigation" aria-label="Settings tabs">
 			<SettingTabItem name="General" class-name="general" to="" />
 			<SettingTabItem name="Appearance" class-name="appearance" to="appearance" />
 			<SettingTabItem name="Notifications" class-name="notifications" to="notifications" />
 			<SettingTabItem name="Account" class-name="account" to="account" />
 		</ul>
-	</div>
+	</aside>
 </template>
 
 <style>
-.tabs ul {
+.settings-menu {
+	position: fixed;
+	/* top: Header + (padding bottom of h2 - border) */
+	top: calc(45px + 5px);
+	/* Mid page minus width of container and 30 pixels for padding */
+	margin-left: calc(50% - 480px - 30px);
+}
+
+/** The calculation is mobile +  2/3 of container width. Fairly arbitrary. */
+@media screen and (max-width: calc(768px + 320px)) {
+	.settings-menu {
+		position: static;
+		width: 480px;
+		align-self: center;
+		margin: 0 auto;
+		padding: 0 15px;
+	}
+}
+
+.settings-menu ul {
 	padding: 0;
 }
 
-.tabs li {
+.settings-menu li {
 	font-size: 18px;
 	list-style: none;
 }
 
-.tabs button {
+.settings-menu button {
 	color: var(--body-color-muted);
 	width: 100%;
 	height: 100%;
@@ -27,11 +48,11 @@
 	text-align: left;
 }
 
-.tabs li:not(:last-of-type) button {
+.settings-menu li:not(:last-of-type) button {
 	margin-bottom: 8px;
 }
 
-.tabs button::before {
+.settings-menu button::before {
 	width: 18px;
 	height: 18px;
 	display: inline-block;
@@ -39,38 +60,32 @@
 	margin-right: 8px;
 }
 
-.tabs .appearance::before {
+.settings-menu .appearance::before {
 	content: "\f108"; /* http://fontawesome.io/icon/desktop/ */
 }
 
-.tabs .account::before {
+.settings-menu .account::before {
 	content: "\f007"; /* http://fontawesome.io/icon/user/ */
 }
 
-.tabs .messages::before {
+.settings-menu .messages::before {
 	content: "\f0e0"; /* http://fontawesome.io/icon/envelope/ */
 }
 
-.tabs .notifications::before {
+.settings-menu .notifications::before {
 	content: "\f0f3"; /* http://fontawesome.io/icon/bell/ */
 }
 
-.tabs .general::before {
+.settings-menu .general::before {
 	content: "\f013"; /* http://fontawesome.io/icon/cog/ */
 }
 
-.tabs button:hover,
-.tabs button.active {
-	color: #fff;
+.settings-menu button:hover,
+.settings-menu button.active {
+	color: var(--body-color);
 }
 
-.tabs button:hover,
-.tabs button:focus {
-	background-color: rgb(48 62 74 / 50%); /* #303e4a x 50% alpha */
-}
-
-.tabs button.active {
-	background-color: #303e4a;
+.settings-menu button.active {
 	cursor: default;
 }
 </style>

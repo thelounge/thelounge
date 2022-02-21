@@ -298,7 +298,7 @@ p {
 #connect .extra-help,
 #settings .extra-help,
 #settings #play::before,
-#settings .tabs .icon::before,
+#settings .settings-menu .icon::before,
 #form #upload::before,
 #form #submit::before,
 #chat .msg[data-type="away"] .from::before,

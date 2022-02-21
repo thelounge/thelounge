@@ -3,11 +3,9 @@
 		<div class="header">
 			<SidebarToggle />
 		</div>
+		<Navigation />
 
 		<div class="container">
-			<h1 class="title">Settings</h1>
-			<Navigation />
-
 			<form ref="settingsForm" autocomplete="off" @change="onChange" @submit.prevent>
 				<router-view></router-view>
 			</form>
