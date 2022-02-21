@@ -17,8 +17,8 @@
 			aria-hidden="true"
 			:aria-label="messageTimeLocale"
 			class="time tooltipped tooltipped-e"
-			>{{ messageTime }}</span
-		>
+			>{{ messageTime }}
+		</span>
 		<template v-if="message.type === 'unhandled'">
 			<span class="from">[{{ message.command }}]</span>
 			<span class="content">
