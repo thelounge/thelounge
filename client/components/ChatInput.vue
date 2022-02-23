@@ -13,6 +13,7 @@
 			:aria-label="getInputPlaceholder(channel)"
 			@input="setPendingMessage"
 			@keypress.enter.exact.prevent="onSubmit"
+			@blur="onBlur"
 		/>
 		<span
 			v-if="$store.state.serverConfiguration.fileUpload"
@@ -278,6 +279,11 @@ export default {
 		},
 		blurInput() {
 			this.$refs.input.blur();
+		},
+		onBlur() {
+			if (autocompletionRef) {
+				autocompletionRef.hide();
+			}
 		},
 	},
 };
