@@ -30,19 +30,17 @@
 				</div>
 				<div class="chat-content">
 					<div ref="chat" class="chat" tabindex="-1">
-						<div v-show="moreResultsAvailable" class="show-more">
-							<button
-								ref="loadMoreButton"
+						<div v-show="moreResultsAvailable" ref="loadMoreButton" class="show-more">
+							<styled-button
 								:disabled="
 									$store.state.messageSearchInProgress ||
 									!$store.state.isConnected
 								"
-								class="btn"
 								@click="onShowMoreClick"
 							>
 								<span v-if="$store.state.messageSearchInProgress">Loading…</span>
 								<span v-else>Show older messages</span>
-							</button>
+							</styled-button>
 						</div>
 
 						<div
@@ -108,6 +106,7 @@ import SidebarToggle from "../SidebarToggle.vue";
 import Message from "../Message.vue";
 import MessageSearchForm from "../MessageSearchForm.vue";
 import DateMarker from "../DateMarker.vue";
+import StyledButton from "../StyledButton.vue";
 
 export default {
 	name: "SearchResults",
@@ -116,6 +115,7 @@ export default {
 		Message,
 		DateMarker,
 		MessageSearchForm,
+		StyledButton,
 	},
 	data() {
 		return {

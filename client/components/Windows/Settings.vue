@@ -25,22 +25,12 @@
 
 			<div v-if="canRegisterProtocol || hasInstallPromptEvent">
 				<h2>Native app</h2>
-				<button
-					v-if="hasInstallPromptEvent"
-					type="button"
-					class="btn"
-					@click.prevent="nativeInstallPrompt"
-				>
+				<styled-button v-if="hasInstallPromptEvent" @click.prevent="nativeInstallPrompt">
 					Add The Lounge to Home screen
-				</button>
-				<button
-					v-if="canRegisterProtocol"
-					type="button"
-					class="btn"
-					@click.prevent="registerProtocol"
-				>
+				</styled-button>
+				<styled-button v-if="canRegisterProtocol" @click.prevent="registerProtocol">
 					Open irc:// URLs with The Lounge
-				</button>
+				</styled-button>
 			</div>
 
 			<div v-if="!$store.state.serverConfiguration.public && $store.state.settings.advanced">
@@ -63,9 +53,9 @@
 							Use the button below to enable synchronization, and override any
 							settings already synced to the server.
 						</p>
-						<button type="button" class="btn btn-small" @click="onForceSyncClick">
+						<styled-button :small="true" @click="onForceSyncClick">
 							Sync settings and enable
-						</button>
+						</styled-button>
 					</div>
 					<div v-else class="settings-sync-panel">
 						<p>
@@ -267,10 +257,8 @@ This may break orientation if your browser does not support that."
 			<template v-if="!$store.state.serverConfiguration.public">
 				<h2>Push Notifications</h2>
 				<div>
-					<button
+					<styled-button
 						id="pushNotifications"
-						type="button"
-						class="btn"
 						:disabled="
 							$store.state.pushNotificationState !== 'supported' &&
 							$store.state.pushNotificationState !== 'subscribed'
@@ -284,7 +272,7 @@ This may break orientation if your browser does not support that."
 							Loading…
 						</template>
 						<template v-else> Subscribe to push notifications </template>
-					</button>
+					</styled-button>
 					<div v-if="$store.state.pushNotificationState === 'nohttps'" class="error">
 						<strong>Warning</strong>: Push notifications are only supported over HTTPS
 						connections.
@@ -479,9 +467,7 @@ your nickname or expressions defined in custom highlights."
 					{{ passwordErrors[passwordChangeStatus.error] }}
 				</div>
 				<div>
-					<button type="submit" class="btn" @click.prevent="changePassword">
-						Change password
-					</button>
+					<styled-button @click.prevent="changePassword"> Change password </styled-button>
 				</div>
 			</div>
 
@@ -633,6 +619,7 @@ import webpush from "../../js/webpush";
 import RevealPassword from "../RevealPassword.vue";
 import Session from "../Session.vue";
 import SidebarToggle from "../SidebarToggle.vue";
+import StyledButton from "../StyledButton.vue";
 
 let installPromptEvent = null;
 
@@ -647,6 +634,7 @@ export default {
 		RevealPassword,
 		Session,
 		SidebarToggle,
+		StyledButton,
 	},
 	data() {
 		return {

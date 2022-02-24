@@ -172,55 +172,9 @@ p {
 	margin: 0 0 10px;
 }
 
-.btn {
-	border: 2px solid var(--button-color);
-	border-radius: 3px;
-	color: var(--button-color);
-	display: inline-block;
-	font-size: 12px;
-	font-weight: bold;
-	letter-spacing: 1px;
-	margin-bottom: 10px;
-	padding: 9px 17px;
-	text-transform: uppercase;
-	transition: background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
-	word-spacing: 3px;
-	cursor: pointer; /* This is useful for `<button>` elements */
-}
-
-.btn-small {
-	padding: 5px 13px;
-}
-
-.btn:disabled,
-.btn:hover,
-.btn:focus {
-	background: var(--button-color);
-	color: var(--button-text-color-hover);
-	opacity: 1;
-}
-
-.input:focus,
-.btn:active,
-.btn:focus {
+.input:focus {
 	outline: 0;
 	box-shadow: 0 0 0 3px rgb(132 206 136 / 50%);
-}
-
-.btn:active {
-	opacity: 0.8;
-}
-
-.btn:disabled {
-	opacity: 0.6;
-}
-
-.btn-sm {
-	padding: 4px 8px;
-	border-width: 1px;
-	letter-spacing: 0;
-	word-spacing: 0;
-	text-transform: none;
 }
 
 #js-copy-hack,

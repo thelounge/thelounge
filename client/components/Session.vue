@@ -15,10 +15,10 @@
 			</p>
 		</div>
 		<div class="session-item-btn">
-			<button class="btn" @click.prevent="signOut">
+			<styled-button @click.prevent="signOut">
 				<template v-if="session.current">Sign out</template>
 				<template v-else>Revoke</template>
-			</button>
+			</styled-button>
 		</div>
 	</div>
 </template>
@@ -49,9 +49,13 @@
 import localetime from "../js/helpers/localetime";
 import Auth from "../js/auth";
 import socket from "../js/socket";
+import StyledButton from "./StyledButton.vue";
 
 export default {
 	name: "Session",
+	components: {
+		StyledButton,
+	},
 	props: {
 		session: Object,
 	},

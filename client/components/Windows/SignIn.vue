@@ -50,7 +50,7 @@
 
 			<div v-if="errorShown" class="error">Authentication failed.</div>
 
-			<button :disabled="inFlight" type="submit" class="btn">Sign in</button>
+			<styled-button :disabled="inFlight">Sign in</styled-button>
 		</form>
 	</div>
 </template>
@@ -99,11 +99,13 @@ label {
 import storage from "../../js/localStorage";
 import socket from "../../js/socket";
 import RevealPassword from "../RevealPassword.vue";
+import StyledButton from "../StyledButton.vue";
 
 export default {
 	name: "SignIn",
 	components: {
 		RevealPassword,
+		StyledButton,
 	},
 	data() {
 		return {

@@ -6,8 +6,8 @@
 				<p>{{ data.text }}</p>
 			</div>
 			<div class="confirm-buttons">
-				<button class="btn btn-cancel" @click="close(false)">Cancel</button>
-				<button class="btn btn-danger" @click="close(true)">{{ data.button }}</button>
+				<styled-button type="cancel" @click="close(false)">Cancel</styled-button>
+				<styled-button @click="close(true)">{{ data.button }}</styled-button>
 			</div>
 		</div>
 	</div>
@@ -52,9 +52,12 @@
 
 <script>
 import eventbus from "../js/eventbus";
-
+import StyledButton from "./StyledButton.vue";
 export default {
 	name: "ConfirmDialog",
+	components: {
+		StyledButton,
+	},
 	data() {
 		return {
 			data: null,

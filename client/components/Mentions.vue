@@ -8,13 +8,13 @@
 		<div class="mentions-popup">
 			<div class="mentions-popup-title">
 				Recent mentions
-				<button
+				<styled-button
 					v-if="resolvedMessages.length"
-					class="btn dismiss-all-mentions"
+					class="dismiss-all-mentions"
 					@click="dismissAllMentions()"
 				>
 					Dismiss all
-				</button>
+				</styled-button>
 			</div>
 			<template v-if="resolvedMessages.length === 0">
 				<p v-if="isLoading">Loading…</p>
@@ -158,6 +158,7 @@ import eventbus from "../js/eventbus";
 import localetime from "../js/helpers/localetime";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import StyledButton from "./StyledButton.vue";
 
 dayjs.extend(relativeTime);
 
@@ -166,6 +167,7 @@ export default {
 	components: {
 		Username,
 		ParsedMessage,
+		StyledButton,
 	},
 	data() {
 		return {

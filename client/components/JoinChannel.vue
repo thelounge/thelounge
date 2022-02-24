@@ -31,7 +31,7 @@
 			title="The channel password may not contain spaces"
 			autocomplete="new-password"
 		/>
-		<button type="submit" class="btn btn-small">Join</button>
+		<styled-button small="true">Join</styled-button>
 	</form>
 </template>
 
@@ -54,9 +54,13 @@
 
 <script>
 import socket from "../js/socket";
+import StyledButton from "./StyledButton.vue";
 
 export default {
 	name: "JoinChannel",
+	components: {
+		StyledButton,
+	},
 	directives: {
 		focus: {
 			inserted(el) {
@@ -79,23 +83,19 @@ export default {
 			const existingChannel = this.$store.getters.findChannelOnCurrentNetwork(
 				this.inputChannel
 			);
-
 			if (existingChannel) {
 				this.$root.switchToChannel(existingChannel);
 			} else {
 				const chanTypes = this.network.serverOptions.CHANTYPES;
 				let channel = this.inputChannel;
-
 				if (chanTypes && chanTypes.length > 0 && !chanTypes.includes(channel[0])) {
 					channel = chanTypes[0] + channel;
 				}
-
 				socket.emit("input", {
 					text: `/join ${channel} ${this.inputPassword}`,
 					target: this.channel.id,
 				});
 			}
-
 			this.inputChannel = "";
 			this.inputPassword = "";
 			this.$emit("toggle-join-channel");

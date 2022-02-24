@@ -1,15 +1,13 @@
 <template>
 	<div ref="chat" class="chat" tabindex="-1">
-		<div v-show="channel.moreHistoryAvailable" class="how-more">
-			<button
-				ref="loadMoreButton"
+		<div v-show="channel.moreHistoryAvailable" ref="loadMoreButton" class="show-more">
+			<styled-button
 				:disabled="channel.historyLoading || !$store.state.isConnected"
-				class="btn"
 				@click="onShowMoreClick"
 			>
 				<span v-if="channel.historyLoading">Loading…</span>
 				<span v-else>Show older messages</span>
-			</button>
+			</styled-button>
 		</div>
 		<div
 			class="messages"
@@ -92,6 +90,7 @@ import socket from "../js/socket";
 import Message from "./Message.vue";
 import MessageCondensed from "./MessageCondensed.vue";
 import DateMarker from "./DateMarker.vue";
+import StyledButton from "./StyledButton.vue";
 
 let unreadMarkerShown = false;
 
@@ -101,6 +100,7 @@ export default {
 		Message,
 		MessageCondensed,
 		DateMarker,
+		StyledButton,
 	},
 	props: {
 		network: Object,

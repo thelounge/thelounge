@@ -18,19 +18,19 @@
 		<template v-if="$store.state.versionStatus === 'up-to-date'">
 			<p>The Lounge is up to date!</p>
 
-			<button
+			<styled-button
 				v-if="$store.state.versionDataExpired"
 				id="check-now"
-				class="btn btn-small"
+				:small="true"
 				@click="checkNow"
 			>
 				Check now
-			</button>
+			</styled-button>
 		</template>
 		<template v-if="$store.state.versionStatus === 'error'">
 			<p>Information about latest release could not be retrieved.</p>
 
-			<button id="check-now" class="btn btn-small" @click="checkNow">Try again</button>
+			<styled-button id="check-now" :small="true" @click="checkNow">Try again</styled-button>
 		</template>
 	</div>
 </template>
@@ -102,9 +102,11 @@
 </style>
 <script>
 import socket from "../js/socket";
+import StyledButton from "./StyledButton.vue";
 
 export default {
 	name: "VersionChecker",
+	components: {StyledButton},
 	mounted() {
 		if (!this.$store.state.versionData) {
 			this.checkNow();

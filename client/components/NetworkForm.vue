@@ -398,10 +398,10 @@ the server tab on new connection"
 			</template>
 
 			<div>
-				<button type="submit" class="btn" :disabled="disabled ? true : false">
+				<styled-button :disabled="disabled ? true : false">
 					<template v-if="defaults.uuid">Save network</template>
 					<template v-else>Connect</template>
-				</button>
+				</styled-button>
 			</div>
 		</form>
 	</div>
@@ -504,12 +504,14 @@ input[name="proxyEnabled"] {
 <script>
 import RevealPassword from "./RevealPassword.vue";
 import SidebarToggle from "./SidebarToggle.vue";
+import StyledButton from "./StyledButton.vue";
 
 export default {
 	name: "NetworkForm",
 	components: {
 		RevealPassword,
 		SidebarToggle,
+		StyledButton,
 	},
 	props: {
 		handleSubmit: Function,
