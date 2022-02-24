@@ -89,6 +89,10 @@
 	color: #b7c5d1; /* same as .channel-list-item color */
 }
 
+#viewport.menu-open #sidebar {
+	display: flex;
+}
+
 #sidebar .scrollable-area {
 	overflow-x: auto;
 	flex-grow: 1;
@@ -142,6 +146,23 @@
 	border-radius: 50%;
 	color: var(--link-color);
 	background: var(--body-bg-color);
+}
+
+@media (max-width: 768px) {
+	#sidebar .logo-container {
+		margin-top: 5px;
+	}
+
+	#sidebar {
+		display: flex;
+		background: var(--body-bg-color);
+		height: 100%;
+		position: absolute;
+		left: -220px;
+		z-index: 10;
+		transition: transform 160ms;
+		transform: translateZ(0);
+	}
 }
 </style>
 <script>

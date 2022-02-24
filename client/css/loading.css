@@ -1,0 +1,49 @@
+
+#loading {
+	display: flex;
+	font-size: 14px;
+	height: 100%;
+}
+
+#loading .window {
+	height: initial;
+	display: flex;
+	flex-direction: column;
+}
+
+#loading p {
+	margin-top: 10px;
+}
+
+#loading-slow,
+#loading-reload {
+	visibility: hidden;
+}
+
+#loading summary {
+	outline: none;
+	cursor: pointer;
+}
+
+#loading pre {
+	text-align: left;
+	white-space: normal;
+}
+
+#loading-reload-container,
+#loading-status-container {
+	flex: 1 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+#loading-reload-container {
+	flex-grow: 0;
+}
+
+#loading .logo-inverted,
+.window .logo-inverted {
+	display: none; /* In dark themes, inverted logo must be used instead */
+}

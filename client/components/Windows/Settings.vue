@@ -621,6 +621,10 @@ textarea#user-specified-css-input {
 	color: #e74c3c;
 	margin-top: 0.2em;
 }
+
+#settings .extra-help {
+	cursor: help;
+}
 </style>
 
 <script>

@@ -87,6 +87,12 @@ label {
 .password-container .reveal-password {
 	top: 31px;
 }
+
+@media (max-width: 479px) {
+	#sign-in .btn {
+		width: 100%;
+	}
+}
 </style>
 
 <script>

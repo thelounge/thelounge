@@ -33,6 +33,20 @@
 </template>
 
 <style scoped>
+.channel-list-item {
+	display: flex;
+	padding: 8px 14px;
+	position: relative;
+	cursor: pointer;
+	font-size: 14px;
+}
+
+/* Channels/queries must be white on hover and active */
+.channel-list-item:hover,
+.channel-list-item.active {
+	color: #fff;
+}
+
 .channel-list-item .not-connected-tooltip,
 .channel-list-item .not-secure-tooltip,
 .channel-list-item .parted-channel-tooltip {

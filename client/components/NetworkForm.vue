@@ -484,6 +484,21 @@ input[name="proxyEnabled"] {
 #connect\:proxyEnabled[type="checkbox"]:is(:checked) {
 	margin-bottom: 10px;
 }
+
+#connect .extra-help {
+	cursor: help;
+}
+
+@media (max-width: 479px) {
+	#connect .connect-row {
+		flex-direction: column;
+	}
+
+	#connect .connect-row > .input,
+	#connect .connect-row > .input-wrap {
+		flex-grow: 1;
+	}
+}
 </style>
 
 <script>

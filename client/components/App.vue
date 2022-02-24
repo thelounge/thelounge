@@ -117,6 +117,29 @@
 	line-height: 1;
 }
 
+.header {
+	line-height: 45px;
+	height: 45px;
+	padding: 0 6px;
+	display: flex;
+	flex-shrink: 0;
+	overflow: hidden;
+}
+
+#form,
+.messages .msg,
+.userlist {
+	font-size: 14px;
+	line-height: 1.4;
+}
+
+/* All lobbies/channels/queries and footer buttons must have a half-transparent
+background on hover (unless active) */
+.channel-list-item:hover,
+#footer button:hover {
+	background-color: rgb(48 62 74 / 50%); /* #303e4a x 50% alpha */
+}
+
 /* Correctly handle multiple successive whitespace characters.
    For example: user has quit ( ===> L   O   L <=== )  */
 
@@ -131,6 +154,44 @@
 #chat .new-topic,
 #chat table.channel-list .topic {
 	white-space: pre-wrap;
+}
+
+@media (max-width: 768px) {
+	#sidebar-overlay {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background: var(--overlay-bg-color);
+		opacity: 0;
+		visibility: hidden;
+		transition: opacity 160ms, visibility 160ms;
+		z-index: 9;
+	}
+
+	#viewport.menu-open #sidebar-overlay {
+		opacity: 1;
+	}
+
+	#viewport.menu-open #sidebar {
+		transform: translate3d(220px, 0, 0);
+	}
+
+	#viewport.menu-dragging #sidebar-overlay,
+	#viewport.menu-dragging #sidebar {
+		transition: none;
+	}
+
+	#viewport.menu-open #sidebar,
+	#viewport.menu-dragging #sidebar {
+		box-shadow: 0 0 25px 0 rgb(0 0 0 / 50%);
+	}
+
+	#viewport.menu-open #sidebar-overlay,
+	#viewport.menu-dragging #sidebar-overlay {
+		visibility: visible;
+	}
 }
 </style>
 

@@ -109,6 +109,19 @@
 	flex-shrink: 0;
 	line-height: 1;
 }
+
+.channel-list-item[data-type="lobby"] {
+	color: #84ce88;
+	font-size: 15px;
+	font-weight: bold;
+	padding-left: 0;
+}
+
+.channel-list-item .lobby-wrap {
+	display: flex;
+	flex-grow: 1;
+	overflow: hidden;
+}
 </style>
 <script>
 import collapseNetwork from "../js/helpers/collapseNetwork";

@@ -1,6 +1,7 @@
 @import "../../node_modules/normalize.css/normalize.css";
 @import "fontawesome.css";
 @import "../../node_modules/primer-tooltips/build/build.css";
+@import "./loading.css";
 
 :root {
 	/* Main text color */
@@ -41,8 +42,8 @@
 	/* Color of the progress bar that appears as a file is being uploaded to the server. Defaults to button color */
 	--upload-progressbar-color: var(--button-color);
 
-	/* Used to fade out long text in channel list and topic */
-	--fade-long-text: linear-gradient(to left, transparent, black 20px);
+	/* Used to fade out long text via mask-image */
+	--fade-long-text: linear-gradient(to left, transparent, black 15px);
 
 	/* Used for connect, settings, help pages */
 	--page-content-width: 480px;
@@ -100,10 +101,6 @@ body {
 	  * See http://stackoverflow.com/a/29313685/1935861
 	  */
 	overflow: hidden; /* iOS Safari requires overflow rather than overflow-y */
-}
-
-body.force-no-select * {
-	user-select: none !important;
 }
 
 a,
@@ -247,13 +244,6 @@ p {
 	display: block;
 }
 
-.only-copy {
-	font-size: 0;
-	opacity: 0;
-	width: 0.01px;  /* Must be non-zero to be the first selected character on Firefox */
-	display: inline-block;
-}
-
 #viewport {
 	display: flex;
 	height: 100%;
@@ -271,57 +261,11 @@ p {
 	opacity: 0.6;
 }
 
-#viewport.userlist-open #chat .userlist {
-	display: flex;
-}
-
-#viewport.menu-open #sidebar {
-	display: flex;
-}
-
-.channel-list-item,
-#sidebar .empty {
-	font-size: 14px;
-}
-
-.channel-list-item {
-	display: flex;
-	padding: 8px 14px;
-	position: relative;
-	cursor: pointer;
-}
-
-/* Channels/queries must be white on hover and active */
-.channel-list-item:hover,
-.channel-list-item.active {
-	color: #fff;
-}
-
-/* All lobbies/channels/queries and footer buttons must have a half-transparent
-background on hover (unless active) */
-.channel-list-item:hover,
-#footer button:hover {
-	background-color: rgb(48 62 74 / 50%); /* #303e4a x 50% alpha */
-}
-
 /* Darker background and defualt cursor for active channels */
 #footer button.active,
 .channel-list-item.active {
 	background-color: #303e4a;
 	cursor: default;
-}
-
-.channel-list-item[data-type="lobby"] {
-	color: #84ce88;
-	font-size: 15px;
-	font-weight: bold;
-	padding-left: 0;
-}
-
-.channel-list-item .lobby-wrap {
-	display: flex;
-	flex-grow: 1;
-	overflow: hidden;
 }
 
 .input {
@@ -355,99 +299,11 @@ textarea.input {
 	line-height: 1.5;
 }
 
-.header {
-	line-height: 45px;
-	height: 45px;
-	padding: 0 6px;
-	display: flex;
-	flex-shrink: 0;
-	overflow: hidden;
-}
-
-#chat .msg[data-type="condensed"] {
-	flex-wrap: wrap;
-}
-
-#chat .msg[data-type="condensed"] .content {
-	flex: 1;
-}
-
-/* Ensures expanded status messages always take up the full width */
-#chat .msg[data-type="condensed"] .msg {
-	flex-basis: 100%;
-}
-
-#chat .condensed-summary .content {
-	display: block;
-	cursor: pointer;
-	user-select: none;
-}
-
-#chat .condensed-summary {
-	display: flex;
-}
-
-#chat .condensed-summary .content:hover {
-	text-decoration: underline;
-}
-
-#chat .msg.closed[data-type="condensed"] .msg {
-	display: none;
-}
-
-#chat .condensed-summary .time {
-	visibility: hidden;
-}
-
-#form,
-.messages .msg,
-.userlist {
-	font-size: 14px;
-	line-height: 1.4;
-}
-
-#chat .chat-content {
-	display: flex;
-	flex-direction: row-reverse;
-	flex-grow: 1;
-	overflow: hidden;
-	position: relative;
-}
-
-#chat .chat {
-	overflow: auto;
-	overflow-x: hidden;
-	display: flex;
-	flex-grow: 1;
-	flex-direction: column;
-	scrollbar-width: thin;
-	overscroll-behavior: contain;
-	-webkit-overflow-scrolling: touch;
-	outline: none;
-}
-
 /**
   * Toggled via JavaScript
   */
 .userlist-open .chat-view[data-type="channel"] .scroll-down {
 	right: 196px;
-}
-
-#chat .chat-view:not([data-type="special"]) .messages {
-	margin-top: auto;
-}
-
-#chat.time-12h .time,
-#chat.time-seconds .time {
-	width: 75px;
-}
-
-#chat.time-seconds.time-12h .time {
-	width: 90px;
-}
-
-#chat .msg[data-type="unhandled"] .from {
-	color: var(--body-color-muted);
 }
 
 /* Parsed nicks and channels */
@@ -463,152 +319,8 @@ textarea.input {
 }
 
 /* Nicknames */
-
-#chat .user {
-	color: #50a656;
-}
-
-#chat .self .content {
-	color: var(--body-color-muted);
-}
-
-#chat .msg.channel_list_loading .text {
-	color: #999;
-	font-style: italic;
-	padding-left: 20px;
-}
-
-#chat .msg.channel_list_truncated .text {
-	color: #f00;
-	padding-left: 20px;
-}
-
-#chat .msg[data-type="monospace_block"] .text {
-	background: #f6f6f6;
-	display: inline-block;
-	border-radius: 4px;
-	padding: 6px;
-}
-
-#chat .msg[data-type="condensed"] .content,
-#chat .msg[data-type="away"] .content,
-#chat .msg[data-type="back"] .content,
-#chat .msg[data-type="join"] .content,
-#chat .msg[data-type="kick"] .content,
-#chat .msg[data-type="mode"] .content,
-#chat .msg[data-type="nick"] .content,
-#chat .msg[data-type="part"] .content,
-#chat .msg[data-type="quit"] .content,
-#chat .msg[data-type="topic"] .content,
-#chat .msg[data-type="topic_set_by"] .content {
-	color: var(--body-color-muted);
-}
-
-#chat .msg[data-type="action"] .from,
-#chat .msg[data-type="action"] .content,
-#chat .msg[data-type="action"] .user {
-	color: #f39c12;
-}
-
-#chat .msg[data-type="notice"] .time,
-#chat .msg[data-type="wallops"] .time,
-#chat .msg[data-type="notice"] .content,
-#chat .msg[data-type="wallops"] .content,
-#chat .msg[data-type="notice"] .user,
-#chat .msg[data-type="wallops"] .user {
-	color: #0074d9;
-}
-
-#chat .msg[data-type="notice"] .from .user::before {
-	content: "Notice: ";
-}
-
-#chat .msg[data-type="wallops"] .from .user::before {
-	content: "Wallops: ";
-}
-
-#chat .msg[data-type="error"],
-#chat .msg[data-type="error"] .from {
-	color: #e74c3c;
-}
-
-#chat .chat-view[data-type="channel"] .msg.highlight {
-	background-color: var(--highlight-bg-color);
-	border-left: 5px solid var(--highlight-border-color);
-}
-
-#chat .chat-view[data-type="channel"] .msg.highlight .time {
-	padding-left: 5px;
-	color: #696969;
-}
-
-#chat .chat-view[data-type="channel"] .msg.highlight .content {
-	border-left: 1px solid var(--highlight-bg-color);
-}
-
-#chat .preview-size {
-	margin-left: 5px;
-	user-select: none;
-}
-
-#chat .toggle-content.opened .more-caret, /* Expand/Collapse link previews */
-#chat .toggle-button.opened, /* Thumbnail toggle */
-#chat .msg:not(.closed)[data-type="condensed"] .toggle-button { /* Expanded status message toggle */
-	transform: rotate(90deg);
-}
-
-#loading {
-	display: flex;
-	font-size: 14px;
-	height: 100%;
-}
-
-#loading .window {
-	height: initial;
-	display: flex;
-	flex-direction: column;
-}
-
-#loading p {
-	margin-top: 10px;
-}
-
-#loading-slow,
-#loading-reload {
-	visibility: hidden;
-}
-
-#loading summary {
-	outline: none;
-	cursor: pointer;
-}
-
-#loading pre {
-	text-align: left;
-	white-space: normal;
-}
-
-#loading-reload-container,
-#loading-status-container {
-	flex: 1 0 auto;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: column;
-}
-
-#loading-reload-container {
-	flex-grow: 0;
-}
-
-#loading .logo-inverted,
 .window .logo-inverted {
 	display: none; /* In dark themes, inverted logo must be used instead */
-}
-
-#connect .extra-help,
-#settings .extra-help {
-	cursor: help;
 }
 
 .password-container {
@@ -714,14 +426,6 @@ textarea.input {
 	font-size: 12px;
 }
 
-@media (min-width: var(--page-content-width)) {
-	/* Fade out for long usernames */
-	#chat .from {
-		padding-left: 10px;
-		mask-image: linear-gradient(to left, transparent, black 10px);
-	}
-}
-
 @media (max-width: 768px) {
 	/**
 	  * TODO Replace this with `@media (hover: hover)` when Firefox supports it
@@ -737,10 +441,6 @@ textarea.input {
 		opacity: 0;
 	}
 
-	#sidebar .logo-container {
-		margin-top: 5px;
-	}
-
 	.channel-list-item,
 	#sidebar .empty,
 	.window label,
@@ -753,81 +453,6 @@ textarea.input {
 	.textcomplete-menu,
 	.messages .msg {
 		font-size: 15px;
-	}
-
-	#sidebar {
-		display: flex;
-		background: var(--body-bg-color);
-		height: 100%;
-		position: absolute;
-		left: -220px;
-		z-index: 10;
-		transition: transform 160ms;
-		transform: translateZ(0);
-	}
-
-	#sidebar-overlay {
-		position: fixed;
-		top: 0;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		background: var(--overlay-bg-color);
-		opacity: 0;
-		visibility: hidden;
-		transition: opacity 160ms, visibility 160ms;
-		z-index: 9;
-	}
-
-	#viewport.menu-open #sidebar-overlay {
-		opacity: 1;
-	}
-
-	#viewport.menu-open #sidebar {
-		transform: translate3d(220px, 0, 0);
-	}
-
-	#viewport.menu-dragging #sidebar-overlay,
-	#viewport.menu-dragging #sidebar {
-		transition: none;
-	}
-
-	#viewport.menu-open #sidebar,
-	#viewport.menu-dragging #sidebar {
-		box-shadow: 0 0 25px 0 rgb(0 0 0 / 50%);
-	}
-
-	#viewport.menu-open #sidebar-overlay,
-	#viewport.menu-dragging #sidebar-overlay {
-		visibility: visible;
-	}
-
-	/* On mobile display, channel list button stays at the top */
-	#viewport .lt {
-		position: relative;
-	}
-
-	#chat .userlist {
-		background-color: var(--window-bg-color);
-		height: 100%;
-		position: absolute;
-		right: 0;
-		transform: translateX(180px);
-		transition: transform 0.2s;
-		z-index: 1;
-	}
-
-	#viewport.userlist-open #chat .userlist {
-		transform: translateX(0);
-	}
-
-	#chat .header .title {
-		padding-left: 6px;
-	}
-
-	#chat .toggle-content .thumb {
-		max-height: 58px;
-		max-width: 104px;
 	}
 }
 
@@ -843,69 +468,6 @@ textarea.input {
 
 	.input {
 		margin-bottom: 2px;
-	}
-
-	#connect .connect-row {
-		flex-direction: column;
-	}
-
-	#connect .connect-row > .input,
-	#connect .connect-row > .input-wrap {
-		flex-grow: 1;
-	}
-
-	#help .help-version-title {
-		flex-direction: column;
-	}
-
-	#chat .messages {
-		display: block;
-		padding: 5px 0;
-	}
-
-	#chat .msg {
-		display: block;
-		padding: 2px 10px;
-	}
-
-	#chat .msg[data-type="condensed"] .msg {
-		padding: 2px 0;
-	}
-
-	#chat .time,
-	#chat .from,
-	#chat .content {
-		border: 0;
-		display: inline;
-		padding: 0;
-	}
-
-	#chat .from::after {
-		/* Add a space because mobile view changes to block display without paddings */
-		content: " ";
-		white-space: pre;
-	}
-
-	#chat .chat-view[data-type="channel"] .msg.highlight {
-		padding-left: 5px;
-	}
-
-	#chat .chat-view[data-type="channel"] .msg.highlight .time {
-		padding-left: 0;
-	}
-
-	#chat .condensed-summary .time,
-	#chat .condensed-summary .from {
-		display: none;
-	}
-
-	#help .help-item .subject {
-		display: inline-block;
-		padding-bottom: 4px;
-	}
-
-	#help .help-item .description {
-		display: block;
 	}
 }
 
@@ -967,68 +529,4 @@ textarea.input {
 #confirm-dialog-overlay,
 #image-viewer {
 	background: rgb(0 0 0 / 90%);
-}
-
-#image-viewer .close-btn,
-#image-viewer .open-btn,
-#image-viewer .previous-image-btn,
-#image-viewer .next-image-btn {
-	position: fixed;
-	top: 0;
-	width: 2em;
-	font-size: 36px;
-	color: white;
-	opacity: 0.6;
-	transition: 0.2s opacity;
-}
-
-#image-viewer .close-btn {
-	right: 0;
-	height: 2em;
-	z-index: 1002;
-}
-
-#image-viewer .close-btn::before {
-	content: "×";
-}
-
-#image-viewer .open-btn {
-	right: 0;
-	bottom: 0;
-	top: auto;
-	height: 2em;
-	z-index: 1002;
-}
-
-#image-viewer .previous-image-btn,
-#image-viewer .next-image-btn {
-	bottom: 0;
-	z-index: 1001;
-}
-
-#image-viewer .previous-image-btn {
-	left: 0;
-}
-
-#image-viewer .next-image-btn {
-	right: 0;
-}
-
-#image-viewer .close-btn:hover,
-#image-viewer .previous-image-btn:hover,
-#image-viewer .next-image-btn:hover {
-	opacity: 1;
-}
-
-#image-viewer > img {
-	cursor: grab;
-	position: absolute;
-	transform-origin: 50% 50%;
-
-	/* Checkered background for transparent images */
-	background-position: 0 0, 10px 10px;
-	background-size: 20px 20px;
-	background-image:
-		linear-gradient(45deg, #eee 25%, rgb(0 0 0 / 0%) 25%, rgb(0 0 0 / 0%) 75%, #eee 75%, #eee 100%),
-		linear-gradient(45deg, #eee 25%, #fff 25%, #fff 75%, #eee 75%, #eee 100%);
 }

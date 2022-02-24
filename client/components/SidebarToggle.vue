@@ -32,6 +32,13 @@
 #viewport.notified .lt::after {
 	opacity: 1;
 }
+
+@media (max-width: 768px) {
+	/* On mobile display, channel list button stays at the top */
+	#viewport .lt {
+		position: relative;
+	}
+}
 </style>
 
 <script>

@@ -17,6 +17,58 @@
 	</div>
 </template>
 
+<style scoped>
+#chat .msg:not(.closed)[data-type="condensed"] .toggle-button {
+	/* Expanded status message toggle */
+	transform: rotate(90deg);
+}
+
+#chat .msg[data-type="condensed"] {
+	flex-wrap: wrap;
+}
+
+#chat .msg[data-type="condensed"] .content {
+	flex: 1;
+}
+
+#chat .condensed-summary .content {
+	display: block;
+	cursor: pointer;
+	user-select: none;
+}
+
+#chat .condensed-summary {
+	display: flex;
+}
+
+#chat .condensed-summary .content:hover {
+	text-decoration: underline;
+}
+
+#chat .msg.closed[data-type="condensed"] .msg {
+	display: none;
+}
+
+#chat .condensed-summary .time {
+	visibility: hidden;
+}
+
+/* Ensures expanded status messages always take up the full width */
+.msg[data-type="condensed"] /deep/ .msg {
+	flex-basis: 100%;
+}
+
+@media (max-width: 479px) {
+	#chat .msg[data-type="condensed"] /deep/ .msg {
+		padding: 2px 0;
+	}
+
+	#chat .condensed-summary .time,
+	#chat .condensed-summary .from {
+		display: none;
+	}
+}
+</style>
 <script>
 const constants = require("../js/constants");
 import Message from "./Message.vue";

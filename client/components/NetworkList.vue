@@ -235,6 +235,11 @@
 	line-height: 1.6;
 	padding: 40px 20px;
 	text-align: center;
+	font-size: 14px;
+}
+
+body.force-no-select * {
+	user-select: none !important;
 }
 
 /deep/ .channel-list-item .badge {

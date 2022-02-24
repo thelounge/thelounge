@@ -254,6 +254,18 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #chat .preview:empty {
 	display: none;
 }
+
+#chat .toggle-content.opened .more-caret, /* Expand/Collapse link previews */
+#chat .toggle-button.opened /* Thumbnail toggle */ {
+	transform: rotate(90deg);
+}
+
+@media (max-width: 768px) {
+	#chat .toggle-content .thumb {
+		max-height: 58px;
+		max-width: 104px;
+	}
+}
 </style>
 <script>
 import eventbus from "../js/eventbus";

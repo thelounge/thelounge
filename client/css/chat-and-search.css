@@ -1,3 +1,8 @@
+/*
+* The search results page is currently a basic copy of the chat page,
+* so certain styles are here instead of in each component.
+*/
+
 #chat {
 	overflow: hidden;
 	flex: 1 0 auto;
@@ -49,4 +54,46 @@
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+#chat .chat-content {
+	display: flex;
+	flex-direction: row-reverse;
+	flex-grow: 1;
+	overflow: hidden;
+	position: relative;
+}
+
+#chat .chat {
+	overflow: auto;
+	overflow-x: hidden;
+	display: flex;
+	flex-grow: 1;
+	flex-direction: column;
+	scrollbar-width: thin;
+	overscroll-behavior: contain;
+	-webkit-overflow-scrolling: touch;
+	outline: none;
+}
+
+#chat.time-12h .time,
+#chat.time-seconds .time {
+	width: 75px;
+}
+
+#chat.time-seconds.time-12h .time {
+	width: 90px;
+}
+
+@media (max-width: 479px) {
+	#chat .messages {
+		display: block;
+		padding: 5px 0;
+	}
+}
+
+@media (max-width: 768px) {
+	#chat .header .title {
+		padding-left: 6px;
+	}
 }

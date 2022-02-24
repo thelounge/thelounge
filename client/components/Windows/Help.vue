@@ -896,6 +896,21 @@ kbd {
 	border-radius: 4px;
 	box-shadow: 0 2px 0 #bbb, inset 0 1px 1px #fff, inset 0 -1px 3px #ccc;
 }
+
+@media (max-width: 479px) {
+	#help .help-item .subject {
+		display: inline-block;
+		padding-bottom: 4px;
+	}
+
+	#help .help-item .description {
+		display: block;
+	}
+
+	#help .help-version-title {
+		flex-direction: column;
+	}
+}
 </style>
 
 <script>

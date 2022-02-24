@@ -38,6 +38,78 @@
 	</div>
 </template>
 
+<style scoped>
+#image-viewer .close-btn,
+#image-viewer .open-btn,
+#image-viewer .previous-image-btn,
+#image-viewer .next-image-btn {
+	position: fixed;
+	top: 0;
+	width: 2em;
+	font-size: 36px;
+	color: white;
+	opacity: 0.6;
+	transition: 0.2s opacity;
+}
+
+#image-viewer .close-btn {
+	right: 0;
+	height: 2em;
+	z-index: 1002;
+}
+
+#image-viewer .close-btn::before {
+	content: "×";
+}
+
+#image-viewer .open-btn {
+	right: 0;
+	bottom: 0;
+	top: auto;
+	height: 2em;
+	z-index: 1002;
+}
+
+#image-viewer .previous-image-btn,
+#image-viewer .next-image-btn {
+	bottom: 0;
+	z-index: 1001;
+}
+
+#image-viewer .previous-image-btn {
+	left: 0;
+}
+
+#image-viewer .next-image-btn {
+	right: 0;
+}
+
+#image-viewer .close-btn:hover,
+#image-viewer .previous-image-btn:hover,
+#image-viewer .next-image-btn:hover {
+	opacity: 1;
+}
+
+#image-viewer > img {
+	cursor: grab;
+	position: absolute;
+	transform-origin: 50% 50%;
+
+	/* Checkered background for transparent images */
+	background-position: 0 0, 10px 10px;
+	background-size: 20px 20px;
+	background-image: linear-gradient(
+			45deg,
+			#eee 25%,
+			rgb(0 0 0 / 0%) 25%,
+			rgb(0 0 0 / 0%) 75%,
+			#eee 75%,
+			#eee 100%
+		),
+		linear-gradient(45deg, #eee 25%, #fff 25%, #fff 75%, #eee 75%, #eee 100%);
+}
+</style>
+
 <script>
 import Mousetrap from "mousetrap";
 import eventbus from "../js/eventbus";

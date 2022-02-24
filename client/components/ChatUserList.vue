@@ -64,6 +64,10 @@
 	touch-action: pan-y;
 }
 
+#viewport.userlist-open #chat .userlist {
+	display: flex;
+}
+
 #chat .userlist .count {
 	background: #fafafa;
 	height: 45px;
@@ -139,6 +143,22 @@
 
 #chat .user-mode.normal::before {
 	content: "Users";
+}
+
+@media (max-width: 768px) {
+	#chat .userlist {
+		background-color: var(--window-bg-color);
+		height: 100%;
+		position: absolute;
+		right: 0;
+		transform: translateX(180px);
+		transition: transform 0.2s;
+		z-index: 1;
+	}
+
+	#viewport.userlist-open #chat .userlist {
+		transform: translateX(0);
+	}
 }
 </style>
 <script>

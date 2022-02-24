@@ -95,6 +95,19 @@
 	</div>
 </template>
 
+<style scoped>
+#chat .chat-view[data-type="channel"] .msg.highlight {
+	background-color: var(--highlight-bg-color);
+	border-left: 5px solid var(--highlight-border-color);
+}
+.only-copy {
+	font-size: 0;
+	opacity: 0;
+	width: 0.01px; /* Must be non-zero to be the first selected character on Firefox */
+	display: inline-block;
+}
+</style>
+
 <script>
 const constants = require("../js/constants");
 import localetime from "../js/helpers/localetime";
