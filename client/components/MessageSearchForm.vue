@@ -22,16 +22,16 @@
 	</form>
 </template>
 
-<style>
-form.message-search {
+<style scoped>
+.message-search {
 	display: flex;
 }
 
-form.message-search .input-wrapper {
+.message-search .input-wrapper {
 	display: flex;
 }
 
-form.message-search input {
+.message-search input {
 	width: 100%;
 	height: auto !important;
 	margin: 7px 0;
@@ -41,21 +41,21 @@ form.message-search input {
 	appearance: none;
 }
 
-form.message-search input::placeholder {
+.message-search input::placeholder {
 	color: rgba(0, 0, 0, 0.35);
 }
 
-@media (min-width: 480px) {
-	form.message-search input {
+@media (min-width: var(--page-content-width)) {
+	.message-search input {
 		min-width: 140px;
 	}
 
-	form.message-search input:focus {
+	.message-search input:focus {
 		min-width: 220px;
 	}
 }
 
-form.message-search .input-wrapper {
+.message-search .input-wrapper {
 	position: absolute;
 	top: 45px;
 	left: 0;
@@ -66,15 +66,14 @@ form.message-search .input-wrapper {
 	background: var(--window-bg-color);
 }
 
-form.message-search .input-wrapper input {
+.message-search .input-wrapper input {
 	margin: 7px;
 }
 
-form.message-search.opened .input-wrapper {
+.message-search.opened .input-wrapper {
 	height: 50px;
 }
-
-#chat form.message-search button {
+.message-search button {
 	display: flex;
 	color: #607992;
 }

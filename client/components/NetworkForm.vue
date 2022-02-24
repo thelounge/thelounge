@@ -407,31 +407,82 @@ the server tab on new connection"
 	</div>
 </template>
 
-<style>
-#connect .connect-auth {
+<style scoped>
+.connect-row {
+	display: flex;
+}
+.connect-auth {
 	display: block;
 	margin-bottom: 10px;
 }
 
-#connect .connect-auth .opt {
+.connect-auth .opt {
 	display: block;
 	width: 100%;
 }
 
-#connect .connect-auth input {
+.connect-auth input {
 	margin: 3px 10px 0 0;
 }
 
-#connect .connect-sasl-external {
+.connect-sasl-external {
 	padding: 10px;
 	border-radius: 2px;
 	background-color: #d9edf7;
 	color: #31708f;
 }
 
-#connect .connect-sasl-external pre {
+.connect-sasl-external pre {
 	margin: 0;
 	user-select: text;
+}
+
+.connect-row > .input,
+.connect-row > .input-wrap {
+	flex-grow: 1;
+}
+
+label {
+	width: 25%;
+	flex-shrink: 0;
+	margin-top: 11px;
+}
+
+.tls {
+	width: 100%;
+	display: block;
+	margin-top: 6px;
+}
+
+.tls input,
+input[name="proxyEnabled"] {
+	margin: 3px 10px 0 0;
+}
+
+#connect\:host,
+#connect\:proxyHost {
+	width: 70%;
+}
+
+#connect\:port,
+#connect\:proxyPort {
+	width: 25%;
+}
+
+#connect\:portseparator,
+#connect\:proxyPortSeparator {
+	width: 5%;
+	text-align: center;
+	display: inline-block;
+}
+
+.btn {
+	margin-top: 15px;
+	width: 100%;
+}
+
+#connect\:proxyEnabled[type="checkbox"]:is(:checked) {
+	margin-bottom: 10px;
 }
 </style>
 

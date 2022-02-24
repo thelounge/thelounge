@@ -38,6 +38,31 @@
 	</div>
 </template>
 
+<style scoped>
+#context-menu-container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1000;
+	background: transparent;
+}
+
+.passthrough {
+	pointer-events: none;
+}
+
+.passthrough > * {
+	pointer-events: auto;
+}
+
+.context-menu-divider {
+	height: 1px;
+	margin: 6px 0;
+	background-color: rgb(0 0 0 / 10%);
+}
+</style>
 <script>
 import {
 	generateUserContextMenu,

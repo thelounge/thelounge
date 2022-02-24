@@ -79,6 +79,71 @@
 	</aside>
 </template>
 
+<style scoped>
+#sidebar {
+	display: none;
+	flex-direction: column;
+	width: 220px;
+	max-height: 100%;
+	will-change: transform;
+	color: #b7c5d1; /* same as .channel-list-item color */
+}
+
+#sidebar .scrollable-area {
+	overflow-x: auto;
+	flex-grow: 1;
+	touch-action: pan-y;
+	scrollbar-width: thin;
+	overscroll-behavior: contain;
+	-webkit-overflow-scrolling: touch;
+}
+
+#sidebar .logo-container {
+	text-align: center;
+}
+
+#sidebar .logo,
+#sidebar .logo-inverted {
+	height: 45px;
+}
+
+#sidebar .logo {
+	display: none;
+}
+
+#footer {
+	height: 45px;
+	font-size: 14px;
+	flex-shrink: 0;
+	display: flex;
+	justify-content: center;
+}
+
+#footer button {
+	color: #b7c5d1;
+	display: inline-block;
+	width: 45px;
+	height: 100%;
+	border-radius: 5px;
+}
+
+#footer button:hover,
+#footer button.active {
+	color: #fff;
+}
+
+#footer .help.notified::after {
+	content: "\f021";
+	position: absolute;
+	bottom: 10px;
+	right: 7px;
+	padding: 2px;
+	font-size: 10px;
+	border-radius: 50%;
+	color: var(--link-color);
+	background: var(--body-bg-color);
+}
+</style>
 <script>
 import NetworkList from "./NetworkList.vue";
 

@@ -32,6 +32,44 @@
 	</div>
 </template>
 
+<style scoped>
+.channel-list-item .not-connected-tooltip,
+.channel-list-item .not-secure-tooltip,
+.channel-list-item .parted-channel-tooltip {
+	margin: 0 8px;
+}
+
+.channel-list-item.not-secure {
+	color: #f39c12;
+}
+
+.channel-list-item.not-secure:hover,
+.channel-list-item.not-secure.active {
+	color: #f8c572;
+}
+
+.channel-list-item.not-connected,
+.channel-list-item.parted-channel {
+	color: #e74c3c;
+}
+
+.channel-list-item.not-connected:hover,
+.channel-list-item.not-connected.active,
+.channel-list-item.parted-channel:hover,
+.channel-list-item.parted-channel.active {
+	color: #f1978e;
+}
+
+.channel-list-item.is-muted {
+	opacity: 0.5;
+}
+
+.channel-list-item::before {
+	width: 14px;
+	margin-right: 12px;
+	line-height: 18px;
+}
+</style>
 <script>
 import eventbus from "../js/eventbus";
 import isChannelCollapsed from "../js/helpers/isChannelCollapsed";

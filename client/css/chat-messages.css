@@ -1,0 +1,42 @@
+
+#chat .time,
+#chat .from,
+#chat .content {
+	padding: 3px 0;
+	flex: 0 0 auto;
+}
+
+#chat .msg {
+	word-wrap: break-word;
+	word-break: break-word; /* Webkit-specific */
+	display: flex;
+	align-items: flex-start;
+	position: relative;
+}
+
+#chat .time {
+	color: var(--body-color-muted);
+	padding-left: 10px;
+	width: 55px;
+	font-variant-numeric: tabular-nums;
+	box-sizing: content-box; /* highlights have a border-left */
+}
+
+#chat .from {
+	padding-right: 10px;
+	text-align: right;
+	width: 134px;
+	overflow: hidden;
+	white-space: nowrap;
+	position: relative;
+}
+
+#chat .content {
+	flex: 1 1 auto;
+	min-width: 0;
+	padding-left: 10px;
+	padding-right: 6px;
+	border-left: 1px solid #f6f6f6;
+	overflow: hidden; /* Prevents Zalgo text to expand beyond messages */
+	text-align: left; /* so RTL text will still be aligned left, not right */
+}

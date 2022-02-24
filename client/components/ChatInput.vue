@@ -51,6 +51,86 @@
 	</form>
 </template>
 
+<style scoped>
+#upload-progressbar {
+	background: var(--upload-progressbar-color);
+	box-shadow: 0 0 10px var(--upload-progressbar-color);
+	width: 0%;
+	height: 2px;
+	visibility: hidden;
+	position: absolute;
+	top: -1px; /* put it on top of #form's border */
+	left: 0;
+}
+
+#upload-progressbar.upload-progressbar-visible {
+	visibility: visible;
+	transition: 0.3s width ease-in-out;
+}
+
+#form {
+	flex: 0 0 auto;
+	border: 0;
+	border-top: 1px solid #e7e7e7;
+	border-radius: 0;
+	margin: 0;
+	padding: 6px;
+	background: white;
+	display: flex;
+	align-items: flex-end;
+	position: relative;
+}
+
+#form #nick {
+	background: #f6f6f6;
+	color: #666;
+	font-size: 13px;
+	margin: 4px;
+	line-height: 24px;
+	padding: 0 8px;
+	border-radius: 2px;
+	display: none;
+}
+
+.public #form #nick {
+	display: block;
+}
+
+#form #input {
+	background: transparent;
+	border: none;
+	font: inherit;
+	min-height: 19px; /* Required when computing input height at char deletion */
+	height: 19px;
+	max-height: 95px; /* min-height/height x number of lines maximum */
+	line-height: 19px; /* should match height */
+	outline: none;
+	margin: 5px;
+	padding: 0;
+	resize: none;
+	flex: 1 0 auto;
+	align-self: center;
+	touch-action: pan-y;
+}
+
+#form #upload-input {
+	display: none;
+}
+
+#form #upload,
+#form #submit {
+	color: #607992;
+	font-size: 14px;
+	height: 32px;
+	width: 32px;
+	flex: 0 0 auto;
+}
+
+#form #upload[disabled],
+#form #submit[disabled] {
+	opacity: 0.5;
+}
+</style>
 <script>
 import Mousetrap from "mousetrap";
 import {wrapCursor} from "undate";

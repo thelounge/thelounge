@@ -74,7 +74,6 @@
 				:id="'network-' + network.uuid"
 				:key="network.uuid"
 				:class="{
-					collapsed: network.isCollapsed,
 					'not-connected': !network.status.connected,
 					'not-secure': !network.status.secure,
 				}"
@@ -134,7 +133,7 @@
 	</div>
 </template>
 
-<style>
+<style scoped>
 .jump-to-input {
 	margin: 8px;
 	position: relative;
@@ -192,6 +191,81 @@
 
 .jump-to-results .channel-list-item[data-type="lobby"]::before {
 	content: "\f233";
+}
+
+/* Remove background on hovered/active channel when sorting/drag-and-dropping */
+.ui-sortable-ghost,
+.ui-sortable-dragging .channel-list-item,
+.ui-sortable-dragging,
+.ui-sortable-dragging:hover,
+.ui-sortable-dragging.active,
+.ui-sortable-dragging-touch-cue .channel-list-item,
+.ui-sortable-dragging-touch-cue,
+.ui-sortable-dragging-touch-cue:hover,
+.ui-sortable-dragging-touch-cue.active {
+	background: transparent;
+}
+
+.ui-sortable-ghost::after,
+.ui-sortable-dragging-touch-cue:not(.ui-sortable-dragging)::after {
+	background: var(--body-bg-color);
+	border: 1px dashed #99a2b4;
+	border-radius: 6px;
+	content: " ";
+	display: block;
+	position: absolute;
+	left: 10px;
+	top: 0;
+	bottom: 0;
+	right: 10px;
+}
+
+.ui-sortable-dragging-touch-cue:not(.ui-sortable-ghost)::after {
+	background: transparent;
+}
+
+#sidebar .network {
+	position: relative;
+	margin-bottom: 20px;
+	touch-action: pan-y;
+}
+
+#sidebar .empty {
+	flex-grow: 1;
+	line-height: 1.6;
+	padding: 40px 20px;
+	text-align: center;
+}
+
+/deep/ .channel-list-item .badge {
+	flex-shrink: 0;
+	line-height: 1;
+}
+
+/deep/ .channel-list-item .badge {
+	background: rgb(255 255 255 / 6%);
+	border-radius: 3px;
+	color: #afb6c0;
+	font-size: 10px;
+	padding: 4px 6px;
+	transition: background-color 0.2s, color 0.2s;
+}
+
+/deep/ .channel-list-item .badge:empty {
+	display: none;
+}
+
+/deep/ .channel-list-item .badge.highlight {
+	background: #fff;
+	color: #49505a;
+}
+
+/deep/ .channel-list-item .name {
+	position: relative;
+	flex-grow: 1;
+	overflow: hidden;
+	white-space: nowrap;
+	margin-right: 5px;
 }
 </style>
 

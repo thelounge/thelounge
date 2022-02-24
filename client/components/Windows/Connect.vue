@@ -1,7 +1,6 @@
 <template>
 	<NetworkForm :handle-submit="handleSubmit" :defaults="defaults" :disabled="disabled" />
 </template>
-
 <script>
 import socket from "../../js/socket";
 import NetworkForm from "../NetworkForm.vue";

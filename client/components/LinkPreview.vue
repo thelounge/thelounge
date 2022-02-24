@@ -129,6 +129,132 @@
 	</div>
 </template>
 
+<style scoped>
+#chat .preview {
+	display: flex; /* Fix odd margin added by inline-flex in .toggle-content */
+}
+
+#chat .toggle-content {
+	background: #f6f6f6;
+	border-radius: 5px;
+	max-width: 100%;
+	margin: 0;
+	margin-top: 6px;
+	overflow: hidden;
+	box-shadow: 0 1px 3px rgb(0 0 0 / 20%);
+	display: inline-flex !important;
+	align-items: flex-start;
+	white-space: normal;
+}
+
+/* This applies to images of preview-type-image and thumbnails of preview-type-link */
+#chat .toggle-content img {
+	max-width: 100%;
+	max-height: 128px;
+	display: block;
+	cursor: zoom-in;
+}
+
+#chat .toggle-content pre.prefetch-error {
+	padding: 0;
+	margin: 0;
+	color: inherit;
+	background-color: transparent;
+}
+
+#chat .toggle-content .prefetch-error {
+	display: none;
+}
+
+#chat .toggle-content.opened .prefetch-error {
+	display: inline;
+}
+
+/* This applies to thumbnails of preview-type-link only */
+#chat .toggle-content .thumb {
+	max-height: 54px;
+	max-width: 96px;
+}
+
+#chat .toggle-type-error,
+#chat .toggle-content .toggle-text {
+	padding: 8px 10px;
+}
+
+#chat .toggle-content .toggle-text {
+	white-space: nowrap;
+	overflow: hidden;
+	text-align: initial;
+}
+
+#chat .toggle-content.opened .toggle-text {
+	white-space: normal;
+}
+
+#chat .toggle-content .head {
+	display: flex;
+	align-items: flex-start;
+	font-weight: bold;
+}
+
+#chat .toggle-type-error,
+#chat .toggle-text .body {
+	color: #717171;
+}
+
+#chat .toggle-text a {
+	color: inherit;
+}
+
+#chat .toggle-text .overflowable {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	flex-grow: 1;
+}
+#chat .toggle-content .more {
+	color: var(--link-color);
+	font-weight: normal;
+	margin-left: 10px;
+	flex-shrink: 0;
+}
+
+#chat .toggle-content .more:hover {
+	text-decoration: underline;
+}
+
+#chat .toggle-content .more::after {
+	content: " " attr(aria-label);
+}
+
+#chat .toggle-content .more-caret {
+	display: inline-block;
+	transition: transform 0.2s;
+}
+
+#chat .toggle-content .more-caret::before {
+	content: "\f0da"; /* https://fontawesome.com/icons/caret-right?style=solid */
+}
+
+#chat audio {
+	width: 600px;
+	max-width: 100%;
+}
+
+#chat .toggle-type-video {
+	max-width: 640px;
+}
+
+#chat video {
+	max-width: 100%;
+	max-height: 240px;
+}
+
+/* Do not display an empty div when there are no previews. Useful for example in
+part/quit messages where we don't load previews (adds a blank line otherwise) */
+#chat .preview:empty {
+	display: none;
+}
+</style>
 <script>
 import eventbus from "../js/eventbus";
 import friendlysize from "../js/helpers/friendlysize";

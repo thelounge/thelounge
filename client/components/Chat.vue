@@ -120,6 +120,128 @@
 	</div>
 </template>
 
+<style scoped>
+@import "../css/special-channels.css";
+@import "../css/colored-nicks.css";
+
+#chat.hide-motd .msg[data-command="motd"] {
+	display: none !important;
+}
+
+#user-visible-error {
+	font-size: 14px;
+	line-height: 1.5;
+	font-weight: 600;
+	padding: 10px;
+	word-spacing: 3px;
+	text-transform: uppercase;
+	background: #e74c3c;
+	color: #fff;
+	text-align: center;
+	cursor: pointer;
+}
+
+.scroll-down {
+	position: absolute;
+	bottom: 16px;
+	right: 16px;
+	z-index: 2;
+	pointer-events: none;
+	opacity: 0;
+	transform: translateY(16px);
+	transition: transform 0.2s, opacity 0.2s;
+	cursor: pointer;
+}
+
+.scroll-down-shown {
+	opacity: 1;
+	transform: none;
+	pointer-events: auto;
+}
+
+.scroll-down-arrow {
+	width: 36px;
+	height: 36px;
+	line-height: 34px;
+	border-radius: 50%;
+	background: var(--window-bg-color);
+	color: var(--button-color);
+	border: 2px solid var(--button-color);
+	text-align: center;
+	transition: background 0.2s, color 0.2s;
+	box-shadow: 0 6px 10px 0 rgb(0 0 0 / 15%);
+}
+
+.scroll-down:hover .scroll-down-arrow {
+	background: var(--button-color);
+	color: var(--button-text-color-hover);
+}
+
+.scroll-down-arrow::after {
+	content: "\f107"; /* https://fontawesome.com/icons/angle-down?style=solid */
+}
+
+#chat .chat-view[data-type="special"] table th {
+	word-break: normal;
+}
+
+.topic-container {
+	position: relative;
+	flex-grow: 1;
+	padding-left: 10px;
+}
+
+.header .topic.empty {
+	min-width: 0;
+}
+
+.header .topic-input {
+	color: inherit;
+	background: transparent;
+	border: 1px solid #cdd3da;
+	border-radius: 2px;
+	padding-right: 37px;
+	padding-left: 10px;
+	width: 100%;
+	height: 35px;
+	overflow: hidden;
+	font-size: 14px;
+	line-height: normal;
+	outline: none;
+}
+
+.topic-container .save-topic {
+	position: absolute;
+	top: 6px;
+	right: 0;
+}
+
+.topic-container .save-topic span {
+	font-size: 16px;
+	color: #607992;
+	width: 35px;
+	height: 35px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	appearance: none;
+}
+
+.topic-container .save-topic span:hover {
+	opacity: 0.6;
+}
+
+/deep/ table.channel-list .channel,
+/deep/ table.channel-list .topic,
+/deep/ table.ban-list .hostmask,
+/deep/ table.ban-list .banned_by,
+/deep/ table.ban-list .banned_at,
+/deep/ table.ignore-list .hostmask,
+/deep/ table.ignore-list .when {
+	text-align: left;
+}
+</style>
 <script>
 import socket from "../js/socket";
 import eventbus from "../js/eventbus";

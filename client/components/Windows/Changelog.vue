@@ -42,6 +42,24 @@
 	</div>
 </template>
 
+<style scoped>
+.changelog-text {
+	line-height: 1.5;
+}
+
+.changelog-text p {
+	margin-bottom: 16px;
+}
+
+h3 {
+	font-size: 20px;
+	border-bottom: 1px solid currentcolor;
+	color: var(--window-heading-color);
+	margin: 30px 0 10px;
+	padding-bottom: 7px;
+}
+</style>
+
 <script>
 import socket from "../../js/socket";
 import SidebarToggle from "../SidebarToggle.vue";

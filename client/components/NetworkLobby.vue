@@ -5,7 +5,7 @@
 			:aria-controls="'network-' + network.uuid"
 			:aria-label="getExpandLabel(network)"
 			:aria-expanded="!network.isCollapsed"
-			class="collapse-network"
+			:class="['collapse-network', {collapsed: network.isCollapsed}]"
 			@click.stop="onCollapseClick"
 		>
 			<span class="collapse-network-icon" />
@@ -45,6 +45,71 @@
 	</ChannelWrapper>
 </template>
 
+<style scoped>
+.collapse-network {
+	width: 40px;
+	opacity: 0.4;
+	padding-left: 11px;
+	transition: opacity 0.2s;
+	flex-shrink: 0;
+}
+
+.collapse-network-icon {
+	display: block;
+	width: 20px;
+	height: 20px;
+	transition: transform 0.2s;
+}
+
+.collapsed .collapse-network-icon {
+	transform: rotate(-90deg);
+}
+
+.collapse-network-icon::before {
+	content: "\f0d7"; /* http://fontawesome.io/icon/caret-down/ */
+	color: #fff;
+}
+
+.collapse-network:hover {
+	opacity: 1;
+}
+
+.channel-list-item[data-type="lobby"] .add-channel {
+	border-radius: 3px;
+	width: 18px;
+	height: 18px;
+	opacity: 0.4;
+	transition: opacity 0.2s, background-color 0.2s, transform 0.2s;
+}
+
+.channel-list-item[data-type="lobby"] .add-channel::before {
+	font-size: 20px;
+	font-weight: normal;
+	display: inline-block;
+	line-height: 16px;
+	text-align: center;
+	content: "+";
+	color: #fff;
+}
+
+.channel-list-item[data-type="lobby"] .add-channel:hover {
+	opacity: 1;
+}
+
+.channel-list-item[data-type="lobby"] .add-channel.opened {
+	/* translateZ(0) enables hardware acceleration, this is to avoid jittering when animating */
+	transform: rotate(45deg) translateZ(0);
+}
+
+.channel-list-item[data-type="lobby"]:hover,
+.channel-list-item[data-type="lobby"].active {
+	color: #c0f8c3;
+}
+.add-channel-tooltip {
+	flex-shrink: 0;
+	line-height: 1;
+}
+</style>
 <script>
 import collapseNetwork from "../js/helpers/collapseNetwork";
 import roundBadgeNumber from "../js/helpers/roundBadgeNumber";

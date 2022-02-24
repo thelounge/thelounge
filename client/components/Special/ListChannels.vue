@@ -18,6 +18,17 @@
 	</table>
 </template>
 
+<style scoped>
+#chat table.channel-list .channel {
+	width: 80px;
+}
+
+#chat table.channel-list .users {
+	text-align: center;
+	width: 50px;
+}
+</style>
+
 <script>
 import ParsedMessage from "../ParsedMessage.vue";
 

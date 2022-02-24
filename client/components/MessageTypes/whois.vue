@@ -111,6 +111,23 @@
 	</span>
 </template>
 
+<style scoped>
+.whois {
+	display: grid;
+	grid-template-columns: max-content auto;
+	margin: 0;
+}
+
+.whois dt {
+	grid-column-start: 1;
+	margin-right: 20px;
+}
+
+.whois dd {
+	grid-column-start: 2;
+}
+</style>
+
 <script>
 import localetime from "../../js/helpers/localetime";
 import ParsedMessage from "../ParsedMessage.vue";

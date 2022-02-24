@@ -16,6 +16,124 @@
 	</div>
 </template>
 
+<style>
+@import "../css/icons.css";
+@import "../css/chat-and-search.css";
+@import "../css/chat-messages.css";
+
+/* Global styles */
+.container {
+	padding: 0 15px;
+	margin-bottom: 20px;
+	width: var(--page-content-width);
+	align-self: center;
+	touch-action: pan-y;
+}
+
+.window li,
+.window p,
+.window label,
+#settings .error {
+	font-size: 14px;
+}
+
+.window {
+	background: var(--window-bg-color);
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 auto;
+	position: relative;
+	overflow-y: auto;
+	height: 100%;
+	scrollbar-width: thin;
+	overscroll-behavior: contain;
+	-webkit-overflow-scrolling: touch;
+}
+
+#loading,
+#chat .chat-view {
+	/* flexbox does not seem to scroll without doing this */
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	top: 0;
+}
+
+.window h1 {
+	font-size: 36px;
+}
+
+.window h2 {
+	border-bottom: 1px solid currentcolor;
+	color: var(--window-heading-color);
+	font-size: 22px;
+	margin: 30px 0 10px;
+	padding-bottom: 7px;
+}
+
+.window h2 small {
+	font-size: 16px;
+	line-height: 30px;
+}
+
+.window h3 {
+	color: var(--window-heading-color);
+	font-size: 18px;
+	margin: 20px 0 10px;
+}
+
+.window#chat-container {
+	/*
+		Chat has its own scrollbar, so remove the one on parent
+		This caused a performance issue in Chrome
+	*/
+	overflow: hidden;
+}
+
+/* Form elements */
+/* stylelint-disable selector-no-vendor-prefix */
+
+#chat-container ::-moz-placeholder {
+	color: #b7c5d1;
+	opacity: 0.75;
+}
+
+#chat-container ::-webkit-input-placeholder {
+	color: #b7c5d1;
+	opacity: 0.75;
+}
+
+#chat-container :-ms-input-placeholder {
+	color: #b7c5d1;
+	opacity: 0.75;
+}
+
+/* stylelint-enable selector-no-vendor-prefix */
+
+.emoji {
+	font-size: 1.4em;
+	vertical-align: text-top;
+	line-height: 1;
+}
+
+/* Correctly handle multiple successive whitespace characters.
+   For example: user has quit ( ===> L   O   L <=== )  */
+
+.header .topic,
+#chat .msg[data-type="action"] .content,
+#chat .msg[data-type="message"] .content,
+#chat .msg[data-type="monospace_block"] .content,
+#chat .msg[data-type="notice"] .content,
+#chat .ctcp-message,
+#chat .part-reason,
+#chat .quit-reason,
+#chat .new-topic,
+#chat table.channel-list .topic {
+	white-space: pre-wrap;
+}
+</style>
+
 <script>
 const constants = require("../js/constants");
 import eventbus from "../js/eventbus";

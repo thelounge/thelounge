@@ -35,6 +35,23 @@
 	</form>
 </template>
 
+<style scoped>
+.join-form {
+	padding: 0 18px 8px;
+}
+
+.join-form .input {
+	display: block;
+	margin: 5px auto;
+}
+
+.join-form .btn {
+	display: block;
+	width: 100%;
+	margin: auto;
+}
+</style>
+
 <script>
 import socket from "../js/socket";
 

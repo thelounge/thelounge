@@ -85,9 +85,18 @@
 	</div>
 </template>
 
-<style>
+<style scoped>
+@import "../../css/chat-and-search.css";
+@import "../../css/colored-nicks.css";
 .channel-name {
 	font-weight: 700;
+}
+
+.chat-view[data-type="search-results"] .search-status {
+	display: flex;
+	height: 100%;
+	justify-content: center;
+	align-items: center;
 }
 </style>
 

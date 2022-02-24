@@ -829,6 +829,75 @@
 	</div>
 </template>
 
+<style scoped>
+#help .website-link::before,
+#help .documentation-link::before,
+#help .report-issue-link::before {
+	display: inline-block;
+	margin-right: 5px;
+
+	/* These 2 directives are loosely taken from .fa-fw */
+	width: 1.35em;
+	text-align: center;
+}
+
+#help .website-link::before {
+	content: "\f0ac"; /* http://fontawesome.io/icon/globe/ */
+}
+#help .documentation-link::before {
+	content: "\f19d"; /* http://fontawesome.io/icon/graduation-cap/ */
+}
+#help .report-issue-link::before {
+	content: "\f188"; /* http://fontawesome.io/icon/bug/ */
+}
+
+#help .help-version-title {
+	display: flex;
+	justify-content: space-between;
+}
+
+#help .help-item {
+	display: table-row;
+	font-size: 14px;
+}
+
+#help .help-item .subject,
+#help .help-item .description {
+	display: table-cell;
+	padding-bottom: 15px;
+}
+
+#help .help-item .subject {
+	white-space: nowrap;
+	padding-right: 15px;
+}
+
+#help .help-item .subject.gesture {
+	font-weight: bold;
+}
+
+#help .help-item .description p {
+	margin-bottom: 0;
+}
+
+kbd {
+	display: inline-block;
+	font-family: inherit;
+	line-height: 1em;
+	min-width: 28px; /* Ensure 1-char keys have the same width */
+	margin: 0 1px;
+	padding: 4px 6px;
+	color: #444;
+	text-align: center;
+	text-shadow: 0 1px 0 #fff;
+	background-color: white;
+	background-image: linear-gradient(180deg, rgb(0 0 0 / 5%), transparent);
+	border: 1px solid #bbb;
+	border-radius: 4px;
+	box-shadow: 0 2px 0 #bbb, inset 0 1px 1px #fff, inset 0 -1px 3px #ccc;
+}
+</style>
+
 <script>
 import SidebarToggle from "../SidebarToggle.vue";
 import VersionChecker from "../VersionChecker.vue";

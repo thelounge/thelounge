@@ -1,6 +1,6 @@
 <template>
 	<div ref="chat" class="chat" tabindex="-1">
-		<div v-show="channel.moreHistoryAvailable" class="show-more">
+		<div v-show="channel.moreHistoryAvailable" class="how-more">
 			<button
 				ref="loadMoreButton"
 				:disabled="channel.historyLoading || !$store.state.isConnected"
@@ -57,6 +57,33 @@
 	</div>
 </template>
 
+<style scoped>
+#chat .unread-marker {
+	position: relative;
+	text-align: center;
+	margin: 0 10px;
+	z-index: 0;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+#chat .unread-marker::before {
+	position: absolute;
+	z-index: -1;
+	content: "";
+	left: 0;
+	right: 0;
+	top: 50%;
+	border-top: 1px solid var(--unread-marker-color);
+}
+
+#chat .unread-marker-text::before {
+	content: "New messages";
+	background-color: var(--window-bg-color);
+	color: var(--unread-marker-color);
+	padding: 0 10px;
+}
+</style>
 <script>
 const constants = require("../js/constants");
 import eventbus from "../js/eventbus";

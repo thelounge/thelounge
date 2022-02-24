@@ -27,6 +27,43 @@
 	</ChannelWrapper>
 </template>
 
+<style scoped>
+.channel-list-item .close-tooltip {
+	flex-shrink: 0;
+	line-height: 1;
+}
+
+.channel-list-item .close {
+	width: 18px;
+	height: 18px;
+	display: none;
+	transition: opacity 0.2s, background-color 0.2s;
+}
+
+.channel-list-item .close::before {
+	font-size: 20px;
+	font-weight: normal;
+	display: inline-block;
+	line-height: 16px;
+	text-align: center;
+	content: "×";
+	color: #fff;
+}
+
+.channel-list-item.active .close {
+	opacity: 0.4;
+	display: unset;
+}
+
+.channel-list-item.active .close:hover {
+	opacity: 1;
+}
+
+.channel-list-item .name {
+	mask-image: var(--fade-long-text);
+}
+</style>
+
 <script>
 import roundBadgeNumber from "../js/helpers/roundBadgeNumber";
 import ChannelWrapper from "./ChannelWrapper.vue";

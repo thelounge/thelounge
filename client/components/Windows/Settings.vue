@@ -374,7 +374,7 @@ This may break orientation if your browser does not support that."
 						Custom highlights
 						<span
 							class="tooltipped tooltipped-n tooltipped-no-delay"
-							aria-label="If a message contains any of these comma-separated 
+							aria-label="If a message contains any of these comma-separated
 expressions, it will trigger a highlight."
 						>
 							<button class="extra-help" />
@@ -398,8 +398,8 @@ expressions, it will trigger a highlight."
 						Highlight exceptions
 						<span
 							class="tooltipped tooltipped-n tooltipped-no-delay"
-							aria-label="If a message contains any of these comma-separated 
-expressions, it will not trigger a highlight even if it contains 
+							aria-label="If a message contains any of these comma-separated
+expressions, it will not trigger a highlight even if it contains
 your nickname or expressions defined in custom highlights."
 						>
 							<button class="extra-help" />
@@ -530,9 +530,96 @@ your nickname or expressions defined in custom highlights."
 	</div>
 </template>
 
-<style>
+<style scoped>
 textarea#user-specified-css-input {
 	height: 100px;
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
+}
+
+#settings .apple-push-unsupported,
+#settings .settings-sync-panel {
+	padding: 10px;
+	margin-bottom: 16px;
+	border-radius: 2px;
+	background-color: #d9edf7;
+	color: #31708f;
+}
+
+#settings .settings-sync-panel p:last-child {
+	margin-bottom: 0;
+}
+
+#settings .settings-sync-panel .btn {
+	color: #007bff;
+	border-color: #007bff;
+	margin-bottom: 0;
+}
+
+#settings .settings-sync-panel .btn:hover,
+#settings .settings-sync-panel .btn:focus {
+	background-color: #007bff;
+	color: #fff;
+}
+
+#settings .settings-sync-panel .btn:active,
+#settings .settings-sync-panel .btn:focus {
+	box-shadow: 0 0 0 3px rgb(0 123 255 / 50%);
+}
+
+#settings .apple-push-unsupported a {
+	color: inherit;
+	text-decoration: underline;
+}
+
+#settings .opt {
+	display: block;
+	padding: 5px 0 5px 1px;
+}
+
+#settings .opt input {
+	margin-right: 6px;
+}
+
+#settings h2 .extra-help {
+	font-size: 0.8em;
+}
+
+#settings #play {
+	font-size: 14px;
+	transition: opacity 0.2s;
+	color: var(--window-heading-color);
+}
+
+#settings #play:hover {
+	opacity: 0.8;
+}
+
+#settings #change-password .error,
+#settings #change-password .success {
+	margin-bottom: 1em;
+}
+
+#settings #change-password .error {
+	color: #e74c3c;
+}
+
+#settings #change-password .success {
+	color: #2ecc40;
+}
+
+#settings .error {
+	color: #e74c3c;
+	margin-top: 0.2em;
 }
 </style>
 

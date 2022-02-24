@@ -6,6 +6,34 @@
 	</div>
 </template>
 
+<style scoped>
+.date-marker {
+	position: relative;
+	text-align: center;
+	margin: 0 10px;
+	z-index: 0;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+.date-marker::before {
+	position: absolute;
+	z-index: -1;
+	content: "";
+	left: 0;
+	right: 0;
+	top: 50%;
+	border-top: 1px solid var(--date-marker-color);
+}
+
+.date-marker-text::before {
+	content: attr(aria-label);
+	background-color: var(--window-bg-color);
+	color: var(--date-marker-color);
+	padding: 0 10px;
+}
+</style>
+
 <script>
 import dayjs from "dayjs";
 import calendar from "dayjs/plugin/calendar";

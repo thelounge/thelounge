@@ -55,6 +55,40 @@
 	</div>
 </template>
 
+<style scoped>
+.container {
+	flex: 1 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+label {
+	display: block;
+	margin-top: 10px;
+	width: 100%;
+}
+
+.btn {
+	margin-top: 25px;
+}
+
+.error {
+	color: #e74c3c;
+	margin-top: 1em;
+	width: 100%;
+}
+
+.password-container {
+	width: 100%;
+}
+
+.password-container .reveal-password {
+	top: 31px;
+}
+</style>
+
 <script>
 import storage from "../../js/localStorage";
 import socket from "../../js/socket";

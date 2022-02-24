@@ -1,3 +1,7 @@
+<style scoped>
+@import "../css/irc-message-styles.css";
+</style>
+
 <script>
 import parse from "../js/helpers/parse";
 

@@ -35,6 +35,71 @@
 	</div>
 </template>
 
+<style scoped>
+#version-checker {
+	display: flex;
+	align-items: center;
+	padding: 10px;
+	margin-bottom: 16px;
+	border-radius: 2px;
+	transition: color 0.2s, background-color 0.2s;
+}
+
+#version-checker p,
+#version-checker button {
+	margin-bottom: 0;
+}
+
+#version-checker p {
+	flex: 1;
+	padding-top: 6px;
+	padding-bottom: 6px;
+}
+
+#version-checker::before {
+	margin-left: 6px;
+	margin-right: 12px;
+	font-size: 1.2em;
+}
+
+#version-checker.loading {
+	background-color: #d9edf7;
+	color: #31708f;
+}
+
+#version-checker.loading::before {
+	content: "\f253"; /* https://fontawesome.com/icons/hourglass-end?style=solid */
+}
+
+#version-checker.new-version,
+#version-checker.new-packages {
+	color: #8a6d3b;
+	background-color: #fcf8e3;
+}
+
+#version-checker.new-version::before,
+#version-checker.new-packages::before {
+	content: "\f164"; /* https://fontawesome.com/icons/thumbs-up?style=solid */
+}
+
+#version-checker.error {
+	color: #a94442;
+	background-color: #f2dede;
+}
+
+#version-checker.error::before {
+	content: "\f06a"; /* http://fontawesome.io/icon/exclamation-circle/ */
+}
+
+#version-checker.up-to-date {
+	background-color: #dff0d8;
+	color: #3c763d;
+}
+
+#version-checker.up-to-date::before {
+	content: "\f00c"; /* http://fontawesome.io/icon/check/ */
+}
+</style>
 <script>
 import socket from "../js/socket";
 
