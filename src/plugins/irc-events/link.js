@@ -271,6 +271,7 @@ function parse(msg, chan, preview, res, client) {
 		case "video/webm":
 		case "video/ogg":
 		case "video/mp4":
+		case "video/quicktime":
 			if (!preview.link.startsWith("https://")) {
 				break;
 			}
