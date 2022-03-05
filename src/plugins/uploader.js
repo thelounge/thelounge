@@ -78,7 +78,7 @@ class Uploader {
 
 	static async routeGetFile(req, res) {
 		if (!Helper.config.fileUpload.enable) {
-			return res.status(404).send("Not found (file uploading is disabled");
+			return res.status(404).send("Not found");
 		}
 
 		const name = req.params.name;
@@ -132,7 +132,7 @@ class Uploader {
 
 	static routeUploadFile(req, res) {
 		if (!Helper.config.fileUpload.enable) {
-			return res.status(404).send("Not found (file uploading is disabled");
+			return res.status(404).send("Not found");
 		}
 
 		let busboyInstance;
