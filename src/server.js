@@ -236,7 +236,7 @@ module.exports = function (options = {}) {
 
 			if (hasChanges) {
 				log.info("configuration has changed; reloading all clients");
-				manager.reloadAllUsers();
+				manager.clients.forEach((client) => client.emit("reload"));
 			}
 		});
 

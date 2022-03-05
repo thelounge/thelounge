@@ -257,12 +257,6 @@ ClientManager.prototype.removeUser = function (name) {
 	return true;
 };
 
-ClientManager.prototype.reloadAllUsers = function () {
-	this.clients.forEach((client) => {
-		client.emit("reload");
-	});
-};
-
 function readUserConfig(name) {
 	const userPath = Helper.getUserConfigPath(name);
 
