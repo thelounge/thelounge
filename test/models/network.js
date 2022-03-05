@@ -203,7 +203,7 @@ describe("Network", function () {
 			STSPolicies.update("irc.example.com", 7000, 0); // Cleanup
 		});
 
-		it("should remove client certs if TLS is disabled", function () {
+		it("should not remove client certs if TLS is disabled", function () {
 			Helper.config.public = false;
 
 			const client = {idMsg: 1, emit() {}, messageStorage: []};
@@ -216,15 +216,15 @@ describe("Network", function () {
 			expect(client_cert).to.not.be.null;
 			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert);
 
-			expect(network.validate(client)).to.be.true; // Deletes the cert
+			expect(network.validate(client)).to.be.true;
 
-			expect(ClientCertificate.get(network.uuid)).to.not.deep.equal(client_cert); // Because ClientCertificate.get regenerates it
+			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert); // Should be unchanged
 
 			ClientCertificate.remove(network.uuid);
 			Helper.config.public = true;
 		});
 
-		it("should remove client certs if there is a STS policy", function () {
+		it("should not remove client certs if there is a STS policy", function () {
 			Helper.config.public = false;
 
 			const client = {idMsg: 1, emit() {}, messageStorage: []};

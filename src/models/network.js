@@ -184,10 +184,6 @@ Network.prototype.validate = function (client) {
 		this.rejectUnauthorized = true;
 	}
 
-	if (!this.tls) {
-		ClientCertificate.remove(this.uuid);
-	}
-
 	return true;
 };
 
