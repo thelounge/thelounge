@@ -18,23 +18,29 @@
 			</h1>
 			<template v-if="!config.lockNetwork">
 				<h2>Network settings</h2>
+				<template v-if="config.defaults.length > 0">
+					<div class="connect-row">
+						<label for="connect:presetName">Preset</label>
+						<select id="connect:presetName" v-model="presetName" name="presetName">
+							<option
+								v-for="defaultNetwork in config.defaults"
+								:key="defaultNetwork.name"
+								:value="defaultNetwork.name"
+							>
+								{{ defaultNetwork.name }}
+							</option>
+						</select>
+					</div>
+				</template>
 				<div class="connect-row">
 					<label for="connect:name">Name</label>
 					<input
 						id="connect:name"
 						v-model="defaults.name"
-						list="default-networks"
 						class="input"
 						name="name"
 						maxlength="100"
 					/>
-					<datalist id="default-networks">
-						<option
-							v-for="defaultNetwork in config.defaults"
-							:key="defaultNetwork.name"
-							:value="defaultNetwork.name"
-						/>
-					</datalist>
 				</div>
 				<div class="connect-row">
 					<label for="connect:host">Server</label>
@@ -476,6 +482,7 @@ export default {
 			config: this.$store.state.serverConfiguration,
 			previousUsername: this.defaults.username,
 			displayPasswordField: false,
+			presetName: "",
 		};
 	},
 	watch: {
@@ -484,7 +491,7 @@ export default {
 				this.$nextTick(() => this.$refs.publicPassword.focus());
 			}
 		},
-		"defaults.name"(name) {
+		presetName(name) {
 			for (const defaultNetwork of this.config.defaults) {
 				if (defaultNetwork.name === name) {
 					Object.assign(this.defaults, defaultNetwork);
