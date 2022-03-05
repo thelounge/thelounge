@@ -198,7 +198,7 @@
 				</template>
 				<template v-if="$store.state.serverConfiguration.defaults.length > 1">
 					<div class="connect-row">
-						<label for="connect:name">Name</label>
+						<label for="connect:name">Network</label>
 						<select id="connect:name" v-model="defaults.name" name="name">
 							<option
 								v-for="defaultNetwork in config.defaults"
