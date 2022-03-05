@@ -90,7 +90,7 @@ Network.prototype.validate = function (client) {
 	const cleanNick = (str) => str.replace(/[\x00\s:!@]/g, "_").substring(0, 100);
 
 	// Remove new lines and limit length
-	const cleanString = (str) => str.replace(/[\x00\r\n]/g, "").substring(0, 300);
+	const cleanString = (str, length = 300) => str.replace(/[\x00\r\n]/g, "").substring(0, length);
 
 	this.setNick(cleanNick(String(this.nick || Helper.getDefaultNick())));
 
@@ -106,7 +106,7 @@ Network.prototype.validate = function (client) {
 	this.host = cleanString(this.host).toLowerCase();
 	this.name = cleanString(this.name);
 	this.saslAccount = cleanString(this.saslAccount);
-	this.saslPassword = this.saslPassword.replace(/[\x00\r\n]/g, ""); // Clean but don't truncate
+	this.saslPassword = cleanString(this.saslPassword, 1000);
 
 	this.proxyHost = cleanString(this.proxyHost);
 	this.proxyPort = this.proxyPort || 1080;
