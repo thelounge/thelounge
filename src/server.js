@@ -232,7 +232,7 @@ module.exports = function (options = {}) {
 		process.on("SIGINT", exitGracefully);
 		process.on("SIGTERM", exitGracefully);
 		process.on("SIGHUP", function () {
-			const hasChanges = Helper.reloadConfigIfChanged();
+			const hasChanges = Helper.reloadConfig();
 
 			if (hasChanges) {
 				log.info("configuration has changed; reloading all clients");

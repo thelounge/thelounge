@@ -22,7 +22,7 @@ let clientCertificatesPath;
 
 const Helper = {
 	config: null,
-	reloadConfigIfChanged,
+	reloadConfig,
 	expandHome,
 	getHomePath,
 	getPackagesPath,
@@ -207,7 +207,7 @@ function loadAndMergeConfig(config, newPath) {
 }
 
 // Returns whether there was any change to the configuration.
-function reloadConfigIfChanged() {
+function reloadConfig() {
 	log.info("reloading configuration...");
 
 	const newConfig = systemConfig();
