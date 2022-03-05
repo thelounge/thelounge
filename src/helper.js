@@ -213,12 +213,9 @@ function reloadConfig() {
 	const newConfig = systemConfig();
 	loadAndMergeConfig(newConfig, getHomePath());
 
-	// XXX: JSON.stringify(Helper.config) !== JSON.stringify(newConfig) is probably
-	// faster and good enough (despite being sensitive to key order); should we use
-	// that instead?
 	const hasChanges = !_.isEqual(Helper.config, newConfig);
 
-	// Replace the config only if all went well
+	// Replace the config if all went well
 	Helper.config = newConfig;
 	log.info("configuration reloaded");
 
