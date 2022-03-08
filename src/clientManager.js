@@ -145,6 +145,10 @@ ClientManager.prototype.loadUser = function (name) {
 };
 
 ClientManager.prototype.getUsers = function () {
+	if (!fs.existsSync(Helper.getUsersPath())) {
+		return [];
+	}
+
 	return fs
 		.readdirSync(Helper.getUsersPath())
 		.filter((file) => file.endsWith(".json"))
