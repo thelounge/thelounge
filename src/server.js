@@ -23,6 +23,7 @@ const themes = require("./plugins/packages/themes");
 themes.loadLocalThemes();
 
 const packages = require("./plugins/packages/index");
+const Chan = require("./models/chan");
 
 // A random number that will force clients to reload the page if it differs
 const serverHash = Math.floor(Date.now() * Math.random());
@@ -164,7 +165,7 @@ module.exports = function (options = {}) {
 		}
 
 		const sockets = io(server, {
-			wsEngine: "ws",
+			wsEngine: require("ws").Server,
 			cookie: false,
 			serveClient: false,
 			transports: Helper.config.transports,
@@ -505,43 +506,49 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 		);
 	});
 
-	socket.on("msg:preview:toggle", (data) => {
-		if (!_.isPlainObject(data)) {
-			return;
-		}
-
-		const networkAndChan = client.find(data.target);
-		const newState = Boolean(data.shown);
-
-		if (!networkAndChan) {
-			return;
-		}
-
-		// Process multiple message at once for /collapse and /expand commands
-		if (Array.isArray(data.messageIds)) {
-			for (const msgId of data.messageIds) {
-				const message = networkAndChan.chan.findMessage(msgId);
-
-				for (const preview of message.previews) {
-					preview.shown = newState;
-				}
+	// In public mode only one client can be connected,
+	// so there's no need to handle msg:preview:toggle
+	if (!Helper.config.public) {
+		socket.on("msg:preview:toggle", (data) => {
+			if (_.isPlainObject(data)) {
+				return;
 			}
 
-			return;
-		}
+			const networkAndChan = client.find(data.target);
+			const newState = Boolean(data.shown);
 
-		const message = networkAndChan.chan.findMessage(data.msgId);
+			if (!networkAndChan) {
+				return;
+			}
 
-		if (!message) {
-			return;
-		}
+			// Process multiple message at once for /collapse and /expand commands
+			if (Array.isArray(data.messageIds)) {
+				for (const msgId of data.messageIds) {
+					const message = networkAndChan.chan.findMessage(msgId);
 
-		const preview = message.findPreview(data.link);
+					if (message) {
+						for (const preview of message.previews) {
+							preview.shown = newState;
+						}
+					}
+				}
 
-		if (preview) {
-			preview.shown = newState;
-		}
-	});
+				return;
+			}
+
+			const message = networkAndChan.chan.findMessage(data.msgId);
+
+			if (!message) {
+				return;
+			}
+
+			const preview = message.findPreview(data.link);
+
+			if (preview) {
+				preview.shown = newState;
+			}
+		});
+	}
 
 	socket.on("mentions:get", () => {
 		socket.emit("mentions:list", client.mentions);
@@ -657,6 +664,32 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 			client.search(query).then((results) => {
 				socket.emit("search:results", results);
 			});
+		});
+
+		socket.on("mute:change", ({target, setMutedTo}) => {
+			const {chan, network} = client.find(target);
+
+			// If the user mutes the lobby, we mute the entire network.
+			if (chan.type === Chan.Type.LOBBY) {
+				for (const channel of network.channels) {
+					if (channel.type !== Chan.Type.SPECIAL) {
+						channel.setMuteStatus(setMutedTo);
+					}
+				}
+			} else {
+				if (chan.type !== Chan.Type.SPECIAL) {
+					chan.setMuteStatus(setMutedTo);
+				}
+			}
+
+			for (const attachedClient of Object.keys(client.attachedClients)) {
+				manager.sockets.in(attachedClient).emit("mute:changed", {
+					target,
+					status: setMutedTo,
+				});
+			}
+
+			client.save();
 		});
 	}
 

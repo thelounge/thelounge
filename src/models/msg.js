@@ -60,13 +60,15 @@ class Msg {
 
 Msg.Type = {
 	UNHANDLED: "unhandled",
-	AWAY: "away",
 	ACTION: "action",
+	AWAY: "away",
 	BACK: "back",
 	ERROR: "error",
 	INVITE: "invite",
 	JOIN: "join",
 	KICK: "kick",
+	LOGIN: "login",
+	LOGOUT: "logout",
 	MESSAGE: "message",
 	MODE: "mode",
 	MODE_CHANNEL: "mode_channel",

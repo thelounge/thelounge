@@ -2,16 +2,15 @@
   "extends": ["config:base"],
   "ignorePaths": ["test/"],
   "labels": ["Type: Dependencies"],
-  "rebaseStalePrs": true,
-  "statusCheckVerify": true,
+  "lockFileMaintenance": {"enabled": true},
   "stabilityDays": 1,
   "vulnerabilityAlerts": {
     "labels": ["Type: Security"]
   },
   "packageRules": [
     {
-      "depTypeList": ["dependencies", "devDependencies"],
-      "extends": ["schedule:monthly"]
+      "extends": ["schedule:monthly"],
+      "matchDepTypes": ["dependencies", "devDependencies"]
     }
   ]
 }

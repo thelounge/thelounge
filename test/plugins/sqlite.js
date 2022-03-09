@@ -61,14 +61,12 @@ describe("SQLite Message Storage", function () {
 					{
 						name: "options",
 						tbl_name: "options",
-						sql:
-							"CREATE TABLE options (name TEXT, value TEXT, CONSTRAINT name_unique UNIQUE (name))",
+						sql: "CREATE TABLE options (name TEXT, value TEXT, CONSTRAINT name_unique UNIQUE (name))",
 					},
 					{
 						name: "messages",
 						tbl_name: "messages",
-						sql:
-							"CREATE TABLE messages (network TEXT, channel TEXT, time INTEGER, type TEXT, msg TEXT)",
+						sql: "CREATE TABLE messages (network TEXT, channel TEXT, time INTEGER, type TEXT, msg TEXT)",
 					},
 				]);
 

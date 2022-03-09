@@ -17,7 +17,7 @@
 	--button-text-color-hover: #fff;
 
 	/* Color for sidebar overlay and other things that dim the viewport when something else is on top */
-	--overlay-bg-color: rgba(0, 0, 0, 0.5);
+	--overlay-bg-color: rgb(0 0 0 / 50%);
 
 	/* Links and link-looking buttons */
 	--link-color: #50a656;
@@ -29,10 +29,10 @@
 	--window-heading-color: #6c797a;
 
 	/* Color of the date marker, text and separator */
-	--date-marker-color: rgba(0, 107, 59, 0.5);
+	--date-marker-color: rgb(0 107 59 / 50%);
 
 	/* Color of the unread message marker, text and separator */
-	--unread-marker-color: rgba(231, 76, 60, 0.5);
+	--unread-marker-color: rgb(231 76 60 / 50%);
 
 	/* Background and left-border color of highlight messages */
 	--highlight-bg-color: #efe8dc;
@@ -43,7 +43,7 @@
 }
 
 ::placeholder {
-	color: rgba(0, 0, 0, 0.35);
+	color: rgb(0 0 0 / 35%);
 	opacity: 1; /* fix opacity in Firefox */
 }
 
@@ -168,7 +168,7 @@ pre {
 	padding: 9.5px;
 	margin: 0 0 10px;
 	font-size: 13px;
-	line-height: 1.42857143;
+	line-height: 1.4286;
 	color: #333;
 	word-break: break-all;
 	word-wrap: break-word;
@@ -187,7 +187,7 @@ kbd {
 	text-align: center;
 	text-shadow: 0 1px 0 #fff;
 	background-color: white;
-	background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.05), transparent);
+	background-image: linear-gradient(180deg, rgb(0 0 0 / 5%), transparent);
 	border: 1px solid #bbb;
 	border-radius: 4px;
 	box-shadow: 0 2px 0 #bbb, inset 0 1px 1px #fff, inset 0 -1px 3px #ccc;
@@ -229,7 +229,7 @@ p {
 .btn:active,
 .btn:focus {
 	outline: 0;
-	box-shadow: 0 0 0 3px rgba(132, 206, 136, 0.5);
+	box-shadow: 0 0 0 3px rgb(132 206 136 / 50%);
 }
 
 .btn:active {
@@ -280,7 +280,8 @@ p {
 .only-copy {
 	font-size: 0;
 	opacity: 0;
-	width: 0;
+	width: 0.01px;  /* Must be non-zero to be the first selected character on Firefox */
+	display: inline-block;
 }
 
 /* Icons */
@@ -304,6 +305,8 @@ p {
 #chat .msg[data-type="invite"] .from::before,
 #chat .msg[data-type="join"] .from::before,
 #chat .msg[data-type="kick"] .from::before,
+#chat .msg[data-type="login"] .from::before,
+#chat .msg[data-type="logout"] .from::before,
 #chat .msg[data-type="part"] .from::before,
 #chat .msg[data-type="quit"] .from::before,
 #chat .msg[data-type="topic"] .from::before,
@@ -367,6 +370,7 @@ p {
 .context-menu-network::before { content: "\f233"; /* https://fontawesome.com/icons/server?style=solid */ }
 .context-menu-edit::before { content: "\f303"; /* https://fontawesome.com/icons/pencil-alt?style=solid */ }
 .context-menu-clear-history::before { content: "\f1f8"; /* https://fontawesome.com/icons/trash?style=solid */ }
+.context-menu-mute::before { content: "\f6a9"; /* https://fontawesome.com/v5.15/icons/volume-mute?style=solid */ }
 
 .channel-list-item .not-secure-icon::before {
 	content: "\f071"; /* https://fontawesome.com/icons/exclamation-triangle?style=solid */
@@ -379,14 +383,18 @@ p {
 
 .context-menu-query::before,
 .context-menu-action-query::before,
-.channel-list-item[data-type="query"]::before { content: "\f075"; /* https://fontawesome.com/icons/comment?style=solid */ }
+.channel-list-item[data-type="query"]::before {
+	content: "\f075"; /* https://fontawesome.com/icons/comment?style=solid */
+}
 
 .context-menu-chan::before,
 .channel-list-item[data-type="channel"]::before { content: "\f086"; /* http://fontawesome.io/icon/comments/ */ }
 
 .channel-list-item[data-type="special"]::before { content: "\f03a"; /* http://fontawesome.io/icon/list/ */ }
 
-.channel-list-item.has-draft:not(.active):not([data-type="lobby"])::before { content: "\f304"; /* https://fontawesome.com/icons/pen?style=solid */ }
+.channel-list-item.has-draft:not(.active):not([data-type="lobby"])::before {
+	content: "\f304"; /* https://fontawesome.com/icons/pen?style=solid */
+}
 
 #footer .connect::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
 #footer .settings::before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
@@ -419,6 +427,16 @@ p {
 #chat .msg[data-type="invite"] .from::before {
 	content: "\f0e0"; /* https://fontawesome.com/icons/envelope?style=solid */
 	color: #2ecc40;
+}
+
+#chat .msg[data-type="login"] .from::before {
+	content: "\f007"; /* https://fontawesome.com/icons/user?style=solid */
+	color: #2ecc40;
+}
+
+#chat .msg[data-type="logout"] .from::before {
+	content: "\f007"; /* https://fontawesome.com/icons/user?style=solid */
+	color: #ff4136;
 }
 
 #chat .msg[data-type="part"] .from::before,
@@ -702,7 +720,7 @@ p {
 background on hover (unless active) */
 .channel-list-item:hover,
 #footer button:hover {
-	background-color: rgba(48, 62, 74, 0.5); /* #303e4a x 50% alpha */
+	background-color: rgb(48 62 74 / 50%); /* #303e4a x 50% alpha */
 }
 
 /* Darker background and defualt cursor for active channels */
@@ -801,6 +819,10 @@ background on hover (unless active) */
 	color: #f1978e;
 }
 
+.channel-list-item.is-muted {
+	opacity: 0.5;
+}
+
 .channel-list-item::before {
 	width: 14px;
 	margin-right: 12px;
@@ -828,7 +850,7 @@ background on hover (unless active) */
 }
 
 .channel-list-item .badge {
-	background: rgba(255, 255, 255, 0.06);
+	background: rgb(255 255 255 / 6%);
 	border-radius: 3px;
 	color: #afb6c0;
 	font-size: 10px;
@@ -1020,7 +1042,7 @@ textarea.input {
 }
 
 .window h2 {
-	border-bottom: 1px solid currentColor;
+	border-bottom: 1px solid currentcolor;
 	color: var(--window-heading-color);
 	font-size: 22px;
 	margin: 30px 0 10px;
@@ -1209,10 +1231,7 @@ textarea.input {
 
 #sidebar .join-form .input {
 	display: block;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 5px;
-	margin-bottom: 5px;
+	margin: 5px auto;
 }
 
 #sidebar .join-form .btn {
@@ -1261,7 +1280,7 @@ textarea.input {
 	border: 2px solid var(--button-color);
 	text-align: center;
 	transition: background 0.2s, color 0.2s;
-	box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.15);
+	box-shadow: 0 6px 10px 0 rgb(0 0 0 / 15%);
 }
 
 .scroll-down:hover .scroll-down-arrow {
@@ -1591,7 +1610,7 @@ textarea.input {
 	margin: 0;
 	margin-top: 6px;
 	overflow: hidden;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 1px 3px rgb(0 0 0 / 20%);
 	display: inline-flex !important;
 	align-items: flex-start;
 	white-space: normal;
@@ -1928,7 +1947,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #settings .settings-sync-panel .btn:active,
 #settings .settings-sync-panel .btn:focus {
-	box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+	box-shadow: 0 0 0 3px rgb(0 123 255 / 50%);
 }
 
 #settings .apple-push-unsupported a {
@@ -2083,7 +2102,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 .window#changelog h3 {
 	font-size: 20px;
-	border-bottom: 1px solid currentColor;
+	border-bottom: 1px solid currentcolor;
 	color: var(--window-heading-color);
 	margin: 30px 0 10px;
 	padding-bottom: 7px;
@@ -2282,8 +2301,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	min-width: 180px;
 	font-size: 14px;
 	background-color: #fff;
-	box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
-	border: 1px solid rgba(0, 0, 0, 0.15);
+	box-shadow: 0 3px 12px rgb(0 0 0 / 15%);
+	border: 1px solid rgb(0 0 0 / 15%);
 	border-radius: 5px;
 	outline: 0;
 }
@@ -2291,7 +2310,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 .context-menu-divider {
 	height: 1px;
 	margin: 6px 0;
-	background-color: rgba(0, 0, 0, 0.1);
+	background-color: rgb(0 0 0 / 10%);
 }
 
 .context-menu-item,
@@ -2312,7 +2331,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 .textcomplete-item:hover,
 .textcomplete-menu .active,
 #chat .userlist .user.active {
-	background-color: rgba(0, 0, 0, 0.1);
+	background-color: rgb(0 0 0 / 10%);
 }
 
 .context-menu-item::before,
@@ -2653,7 +2672,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 	#viewport.menu-open #sidebar,
 	#viewport.menu-dragging #sidebar {
-		box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.5);
+		box-shadow: 0 0 25px 0 rgb(0 0 0 / 50%);
 	}
 
 	#viewport.menu-open #sidebar-overlay,
@@ -2770,20 +2789,20 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 ::-webkit-scrollbar {
 	width: 8px;
-	background-color: rgba(0, 0, 0, 0);
+	background-color: rgb(0 0 0 / 0%);
 }
 
 ::-webkit-scrollbar:hover {
-	background-color: rgba(0, 0, 0, 0.09);
+	background-color: rgb(0 0 0 / 9%);
 }
 
 ::-webkit-scrollbar-thumb:vertical {
-	background: rgba(0, 0, 0, 0.5);
+	background: rgb(0 0 0 / 50%);
 	border-radius: 100px;
 }
 
 ::-webkit-scrollbar-thumb:vertical:active {
-	background: rgba(0, 0, 0, 0.6);
+	background: rgb(0 0 0 / 60%);
 }
 
 /* Image viewer and drag-and-drop overlay */
@@ -2825,7 +2844,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #confirm-dialog-overlay,
 #image-viewer {
-	background: rgba(0, 0, 0, 0.9);
+	background: rgb(0 0 0 / 90%);
 }
 
 #image-viewer .close-btn,
@@ -2888,7 +2907,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	background-position: 0 0, 10px 10px;
 	background-size: 20px 20px;
 	background-image:
-		linear-gradient(45deg, #eee 25%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 75%, #eee 75%, #eee 100%),
+		linear-gradient(45deg, #eee 25%, rgb(0 0 0 / 0%) 25%, rgb(0 0 0 / 0%) 75%, #eee 75%, #eee 100%),
 		linear-gradient(45deg, #eee 25%, #fff 25%, #fff 75%, #eee 75%, #eee 100%);
 }
 

@@ -678,8 +678,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 
 	it("should not try to fetch links with username or password", function () {
 		const message = this.irc.createMessage({
-			text:
-				"http://root:'some%pass'@hostname/database http://a:%p@c http://a:%p@example.com http://test@example.com",
+			text: "http://root:'some%pass'@hostname/database http://a:%p@c http://a:%p@example.com http://test@example.com",
 		});
 
 		expect(message.previews).to.be.empty;

@@ -83,6 +83,7 @@ fork.
 Before submitting any change, make sure to:
 
 - Read the [Contributing instructions](https://github.com/thelounge/thelounge/blob/master/.github/CONTRIBUTING.md#contributing)
-- Run `yarn test` to execute linters and test suite
+- Run `yarn test` to execute linters and the test suite
+  - Run `yarn format:prettier` if linting fails
 - Run `yarn build` if you change or add anything in `client/js` or `client/components`
 - `yarn dev` can be used to start The Lounge with hot module reloading

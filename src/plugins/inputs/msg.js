@@ -55,8 +55,7 @@ exports.input = function (network, chan, cmd, args) {
 						this,
 						new Msg({
 							type: Msg.Type.ERROR,
-							text:
-								"You can not open query windows for names starting with a user prefix.",
+							text: "You can not open query windows for names starting with a user prefix.",
 						})
 					);
 					return;

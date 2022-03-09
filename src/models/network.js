@@ -76,6 +76,11 @@ function Network(attr) {
 		new Chan({
 			name: this.name,
 			type: Chan.Type.LOBBY,
+			// The lobby only starts as muted if every channel (unless it's special) is muted.
+			// This is A) easier to implement and B) stops some confusion on startup.
+			muted:
+				this.channels.length >= 1 &&
+				this.channels.every((chan) => chan.muted || chan.type === Chan.Type.SPECIAL),
 		})
 	);
 }
@@ -109,6 +114,17 @@ Network.prototype.validate = function (client) {
 	this.proxyPassword = cleanString(this.proxyPassword);
 	this.proxyEnabled = !!this.proxyEnabled;
 
+	const error = function (network, text) {
+		network.channels[0].pushMessage(
+			client,
+			new Msg({
+				type: Msg.Type.ERROR,
+				text: text,
+			}),
+			true
+		);
+	};
+
 	if (!this.port) {
 		this.port = this.tls ? 6697 : 6667;
 	}
@@ -129,15 +145,7 @@ Network.prototype.validate = function (client) {
 			this.host.length > 0 &&
 			this.host !== Helper.config.defaults.host
 		) {
-			this.channels[0].pushMessage(
-				client,
-				new Msg({
-					type: Msg.Type.ERROR,
-					text: "Hostname you specified is not allowed.",
-				}),
-				true
-			);
-
+			error(this, `The hostname you specified (${this.host}) is not allowed.`);
 			return false;
 		}
 
@@ -154,28 +162,16 @@ Network.prototype.validate = function (client) {
 	}
 
 	if (this.host.length === 0) {
-		this.channels[0].pushMessage(
-			client,
-			new Msg({
-				type: Msg.Type.ERROR,
-				text: "You must specify a hostname to connect.",
-			}),
-			true
-		);
-
+		error(this, "You must specify a hostname to connect.");
 		return false;
 	}
 
 	const stsPolicy = STSPolicies.get(this.host);
 
 	if (stsPolicy && !this.tls) {
-		this.channels[0].pushMessage(
-			client,
-			new Msg({
-				type: Msg.Type.ERROR,
-				text: `${this.host} has an active strict transport security policy, will connect to port ${stsPolicy.port} over a secure connection.`,
-			}),
-			true
+		error(
+			this,
+			`${this.host} has an active strict transport security policy, will connect to port ${stsPolicy.port} over a secure connection.`
 		);
 
 		this.port = stsPolicy.port;
@@ -546,7 +542,7 @@ Network.prototype.export = function () {
 			return channel.type === Chan.Type.CHANNEL || channel.type === Chan.Type.QUERY;
 		})
 		.map(function (chan) {
-			const keys = ["name"];
+			const keys = ["name", "muted"];
 
 			if (chan.type === Chan.Type.CHANNEL) {
 				keys.push("key");
