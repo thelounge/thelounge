@@ -14,7 +14,7 @@ try {
 	Helper.config.messageStorage = Helper.config.messageStorage.filter((item) => item !== "sqlite");
 
 	log.error(
-		"Unable to load node-sqlite3 module. See https://github.com/mapbox/node-sqlite3/wiki/Binaries"
+		"Unable to load sqlite3 module. See https://github.com/mapbox/node-sqlite3/wiki/Binaries"
 	);
 }
 
