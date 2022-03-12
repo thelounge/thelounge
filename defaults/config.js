@@ -15,6 +15,8 @@ module.exports = {
 	//   kept even when they are not using or logged in to the client. All joined
 	//   channels and scrollbacks are available when they come back.
 	//
+	// The Lounge needs to be restarted after changing this value.
+	//
 	// This value is set to `false` by default.
 	public: false,
 
@@ -25,6 +27,8 @@ module.exports = {
 	//
 	// For UNIX domain sockets, use `"unix:/absolute/path/to/file.sock"`.
 	//
+	// The Lounge needs to be restarted after changing this value.
+	//
 	// This value is set to `undefined` by default to listen on all interfaces.
 	host: undefined,
 
@@ -32,12 +36,16 @@ module.exports = {
 	//
 	// Set the port to listen to.
 	//
+	// The Lounge needs to be restarted after changing this value.
+	//
 	// This value is set to `9000` by default.
 	port: 9000,
 
 	// ### `bind`
 	//
 	// Set the local IP to bind to for outgoing connections.
+	//
+	// The Lounge needs to be restarted after changing this value.
 	//
 	// This value is set to `undefined` by default to let the operating system
 	// pick its preferred one.
@@ -48,6 +56,8 @@ module.exports = {
 	// When set to `true`, The Lounge is marked as served behind a reverse proxy
 	// and will honor the `X-Forwarded-For` header.
 	//
+	// This value can be reloaded without a restart.
+	//
 	// This value is set to `false` by default.
 	reverseProxy: false,
 
@@ -56,6 +66,8 @@ module.exports = {
 	// Defines the maximum number of history lines that will be kept in memory per
 	// channel/query, in order to reduce the memory usage of the server. Setting
 	// this to `-1` will keep unlimited amount.
+	//
+	// This value can be reloaded without a restart.
 	//
 	// This value is set to `10000` by default.
 	maxHistory: 10000,
@@ -74,6 +86,8 @@ module.exports = {
 	// - `key`: Path to the private key file.
 	// - `certificate`: Path to the certificate.
 	// - `ca`: Path to the CA bundle.
+	//
+	// The Lounge needs to be restarted after changing this value.
 	//
 	// The value of `enable` is set to `false` to disable HTTPS by default, in
 	// which case the other two string settings are ignored.
@@ -99,6 +113,8 @@ module.exports = {
 	// example, the value for Morning would be `morning`, and the value for
 	// Solarized would be `thelounge-theme-solarized`.
 	//
+	// The Lounge needs to be restarted after changing this value.
+	//
 	// This value is set to `"default"` by default.
 	theme: "default",
 
@@ -106,6 +122,8 @@ module.exports = {
 	//
 	// When set to `true`, The Lounge will load thumbnails and site descriptions
 	// from URLs posted in channels and private messages.
+	//
+	// This value can be reloaded without a restart.
 	//
 	// This value is set to `false` by default.
 	prefetch: false,
@@ -118,6 +136,8 @@ module.exports = {
 	// images proxied via the The Lounge will be previewed.
 	//
 	// This has no effect if `prefetch` is set to `false`.
+	//
+	// This value can be reloaded without a restart.
 	//
 	// This value is set to `false` by default.
 	disableMediaPreview: false,
@@ -139,6 +159,8 @@ module.exports = {
 	// (controlled by `maxHistory`), and the folder is cleaned up when The Lounge
 	// restarts.
 	//
+	// The Lounge should be restarted after changing this value.
+	//
 	// This value is set to `false` by default.
 	prefetchStorage: false,
 
@@ -146,6 +168,8 @@ module.exports = {
 	//
 	// When `prefetch` is enabled, images will only be displayed if their file
 	// size does not exceed this limit.
+	//
+	// This value can be reloaded without a restart.
 	//
 	// This value is set to `2048` kilobytes by default.
 	prefetchMaxImageSize: 2048,
@@ -156,6 +180,8 @@ module.exports = {
 	// Graph tags for link previews. The entire response is temporarily stored
 	// in memory and for some sites like YouTube this can easily exceed 300
 	// kilobytes.
+	//
+	// This value can be reloaded without a restart.
 	//
 	// This value is set to `50` kilobytes by default.
 	prefetchMaxSearchSize: 50,
@@ -182,6 +208,8 @@ module.exports = {
 	//   If you use this option, you must have a reverse proxy configured,
 	//   to correctly proxy the uploads URLs back to The Lounge.
 	//   This value is set to `null` by default.
+	//
+	// These values can be reloaded without a restart.
 	fileUpload: {
 		enable: false,
 		maxFileSize: 10240,
@@ -192,6 +220,8 @@ module.exports = {
 	//
 	// Set `socket.io` transports.
 	//
+	// The Lounge needs to be restarted after changing this value.
+	//
 	// This value is set to `["polling", "websocket"]` by default.
 	transports: ["polling", "websocket"],
 
@@ -199,6 +229,8 @@ module.exports = {
 	//
 	// Set users' default `quit` and `part` messages if they are not providing
 	// one.
+	//
+	// This value can be reloaded without a restart.
 	//
 	// This value is set to `"The Lounge - https://thelounge.chat"` by
 	// default.
@@ -230,6 +262,8 @@ module.exports = {
 	// - `realname`: Real name.
 	// - `leaveMessage`: Network specific leave message (overrides global leaveMessage)
 	// - `join`: Comma-separated list of channels to auto-join once connected.
+	//
+	// This value can be reloaded without a restart.
 	//
 	// This value is set to connect to the official channel of The Lounge on
 	// Libera.Chat by default:
@@ -268,6 +302,8 @@ module.exports = {
 	// settings and will be limited to the configured network.
 	// These fields will also be hidden from the UI.
 	//
+	// This value can be reloaded without a restart.
+	//
 	// This value is set to `false` by default.
 	lockNetwork: false,
 
@@ -287,6 +323,8 @@ module.exports = {
 	// `[]`. Logging is also controlled per user individually in the `log` key of
 	// their JSON configuration file.
 	//
+	// The Lounge needs to be restarted after changing this value.
+	//
 	// This value is set to `["sqlite", "text"]` by default.
 	messageStorage: ["sqlite", "text"],
 
@@ -297,6 +335,9 @@ module.exports = {
 	// This is done to share the real user IP address with the server for host
 	// masking purposes. This is encoded in the `username` field and only supports
 	// IPv4.
+	//
+	// This value can be reloaded without a restart; but it will not affect connections
+	// that are already open.
 	//
 	// This value is set to `false` by default.
 	useHexIp: false,
@@ -335,6 +376,9 @@ module.exports = {
 	//   },
 	//   ```
 	//
+	// This value can be reloaded without a restart; but it will not affect connections
+	// that are already open.
+	//
 	// This value is set to `null` to disable WEBIRC by default.
 	webirc: null,
 
@@ -349,6 +393,8 @@ module.exports = {
 	// - `enable`: When `true`, the identd daemon runs on server start.
 	// - `port`: Port to listen for ident requests.
 	//
+	// The Lounge needs to be restarted after changing this value.
+	//
 	// The value of `enable` is set to `false` to disable `identd` support by
 	// default, in which case the value of `port` is ignored. The default value of
 	// `port` is 113.
@@ -361,6 +407,8 @@ module.exports = {
 	//
 	// When this setting is a string, this enables `oidentd` support using the
 	// configuration file located at the given path.
+	//
+	// The Lounge needs to be restarted after changing this value.
 	//
 	// This is set to `null` by default to disable `oidentd` support.
 	oidentd: null,
@@ -398,6 +446,8 @@ module.exports = {
 	// `<bindDN>,<primaryKey>=<username>`, where `<username>` is the user name
 	// provided in the log in request, and `<bindDN>` and `<primaryKey>` are
 	// provided by the configuration.
+	//
+	// The Lounge needs to be restarted after changing any of these values.
 	//
 	// The available keys for the `ldap` object are:
 	ldap: {
@@ -462,6 +512,9 @@ module.exports = {
 	// Lounge. Use them to learn more about an issue you are noticing but be aware
 	// this may produce more logging or may affect connection performance so it is
 	// not recommended to use them by default.
+	//
+	// These value can be reloaded without a restart; but it will not affect connections
+	// that are already open.
 	//
 	// All values in the `debug` object are set to `false`.
 	debug: {
