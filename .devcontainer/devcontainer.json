@@ -1,0 +1,21 @@
+{
+  "name": "The Lounge",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "extensions": [
+    "dbaeumer.vscode-eslint",
+    "EditorConfig.EditorConfig",
+    "esbenp.prettier-vscode",
+    "octref.vetur",
+    "ms-azuretools.vscode-docker",
+    "Gruntfuggly.todo-tree"
+  ],
+  "forwardPorts": [9000],
+  "postStartCommand": "yarn install",
+  "postAttachCommand": "yarn dev",
+  "remoteUser": "node",
+  "mounts": [
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.thelounge,target=/home/node/.thelounge,type=bind,consistency=cached"
+  ]
+}
