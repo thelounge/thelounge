@@ -1,7 +1,5 @@
 FROM node:lts-alpine
 
-ENV NODE_ENV production yarn build
-
 ENV THELOUNGE_HOME "~/.thelounge"
 VOLUME "${THELOUNGE_HOME}"
 
