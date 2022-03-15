@@ -7,9 +7,7 @@
     "dbaeumer.vscode-eslint",
     "EditorConfig.EditorConfig",
     "esbenp.prettier-vscode",
-    "octref.vetur",
-    "ms-azuretools.vscode-docker",
-    "Gruntfuggly.todo-tree"
+    "octref.vetur"
   ],
   "forwardPorts": [9000],
   "postStartCommand": "yarn install",
