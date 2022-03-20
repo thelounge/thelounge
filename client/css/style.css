@@ -89,6 +89,8 @@ html,
 body {
 	height: 100%;
 	overscroll-behavior: none; /* prevent overscroll navigation actions */
+	margin-top: env(safe-area-inset-top);
+	padding-bottom: env(safe-area-inset-bottom);
 }
 
 body {
@@ -668,6 +670,7 @@ p {
 	max-height: 100%;
 	will-change: transform;
 	color: #b7c5d1; /* same as .channel-list-item color */
+	margin-left: env(safe-area-inset-left);
 }
 
 #viewport.menu-open #sidebar {
@@ -954,6 +957,7 @@ background on hover (unless active) */
 	flex-shrink: 0;
 	display: flex;
 	justify-content: center;
+	margin-bottom: env(safe-area-inset-bottom);
 }
 
 #footer button {
@@ -1067,6 +1071,8 @@ textarea.input {
 	display: flex;
 	flex-shrink: 0;
 	overflow: hidden;
+	padding-right: env(safe-area-inset-right);
+	padding-left: env(safe-area-inset-left);
 }
 
 #chat .header {
@@ -1199,6 +1205,7 @@ textarea.input {
 	flex-grow: 1;
 	overflow: hidden;
 	position: relative;
+	padding-left: env(safe-area-inset-left);
 }
 
 #chat .chat {
@@ -2207,6 +2214,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	display: flex;
 	align-items: flex-end;
 	position: relative;
+	padding-left: env(safe-area-inset-left);
 }
 
 #user-visible-error {
@@ -2707,6 +2715,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 		max-height: 58px;
 		max-width: 104px;
 	}
+
+	.mentions-popup {
+		top: calc(45px + env(safe-area-inset-top));
+	}
 }
 
 @media (max-width: 479px) {
@@ -2932,4 +2944,8 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	height: 100%;
 	justify-content: center;
 	align-items: center;
+}
+
+#submit-tooltip {
+	padding-right: env(safe-area-inset-right);
 }
