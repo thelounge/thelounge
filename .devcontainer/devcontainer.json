@@ -11,7 +11,7 @@
     "octref.vetur"
   ],
   "forwardPorts": [9000],
-  "postStartCommand": "yarn install",
+  "postStartCommand": "yarn install && NODE_ENV=production yarn build",
   "postAttachCommand": "yarn dev",
   "remoteUser": "node"
 }
