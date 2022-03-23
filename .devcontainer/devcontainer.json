@@ -3,6 +3,7 @@
   "build": {
     "dockerfile": "Dockerfile"
   },
+  "overrideCommand": false,
   "runArgs": ["--volume=${localEnv:HOME}${localEnv:USERPROFILE}/.thelounge:/home/node/.thelounge"],
   "extensions": [
     "dbaeumer.vscode-eslint",
