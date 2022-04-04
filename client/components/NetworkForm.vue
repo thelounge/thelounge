@@ -24,7 +24,7 @@
 					<label for="connect:name">Name</label>
 					<input
 						id="connect:name"
-						v-model="defaults.name"
+						v-model.trim="defaults.name"
 						class="input"
 						name="name"
 						maxlength="100"
@@ -35,7 +35,7 @@
 					<div class="input-wrap">
 						<input
 							id="connect:host"
-							v-model="defaults.host"
+							v-model.trim="defaults.host"
 							class="input"
 							name="host"
 							aria-label="Server address"
@@ -122,7 +122,7 @@
 						<div class="input-wrap">
 							<input
 								id="connect:proxyHost"
-								v-model="defaults.proxyHost"
+								v-model.trim="defaults.proxyHost"
 								class="input"
 								name="proxyHost"
 								aria-label="Proxy host"
@@ -147,7 +147,7 @@
 						<input
 							id="connect:proxyUsername"
 							ref="proxyUsernameInput"
-							v-model="defaults.proxyUsername"
+							v-model.trim="defaults.proxyUsername"
 							class="input username"
 							name="proxyUsername"
 							maxlength="100"
@@ -181,7 +181,7 @@
 					<label for="connect:name">Name</label>
 					<input
 						id="connect:name"
-						v-model="defaults.name"
+						v-model.trim="defaults.name"
 						class="input"
 						name="name"
 						maxlength="100"
@@ -226,7 +226,7 @@
 					<input
 						id="connect:username"
 						ref="usernameInput"
-						v-model="defaults.username"
+						v-model.trim="defaults.username"
 						class="input username"
 						name="username"
 						maxlength="100"
@@ -237,7 +237,7 @@
 				<label for="connect:realname">Real name</label>
 				<input
 					id="connect:realname"
-					v-model="defaults.realname"
+					v-model.trim="defaults.realname"
 					class="input"
 					name="realname"
 					maxlength="300"
@@ -247,7 +247,7 @@
 				<label for="connect:leaveMessage">Leave message</label>
 				<input
 					id="connect:leaveMessage"
-					v-model="defaults.leaveMessage"
+					v-model.trim="defaults.leaveMessage"
 					autocomplete="off"
 					class="input"
 					name="leaveMessage"
@@ -283,7 +283,7 @@ the server tab on new connection"
 					<label for="connect:channels">Channels</label>
 					<input
 						id="connect:channels"
-						v-model="defaults.join"
+						v-model.trim="defaults.join"
 						class="input"
 						name="join"
 					/>
@@ -364,7 +364,7 @@ the server tab on new connection"
 						<label for="connect:username">Account</label>
 						<input
 							id="connect:saslAccount"
-							v-model="defaults.saslAccount"
+							v-model.trim="defaults.saslAccount"
 							class="input"
 							name="saslAccount"
 							maxlength="100"
