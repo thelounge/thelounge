@@ -390,7 +390,7 @@ function fetch(uri, headers) {
 		try {
 			const gotStream = got.stream(uri, {
 				retry: 0,
-				timeout: 5000,
+				timeout: Helper.config.prefetchTimeout, // milliseconds
 				headers: getRequestHeaders(headers),
 				https: {
 					rejectUnauthorized: false,
