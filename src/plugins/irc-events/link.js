@@ -12,7 +12,6 @@ const imageTypeRegex = /^image\/.+/;
 const mediaTypeRegex = /^(audio|video)\/.+/;
 const log = require("../../log");
 
-
 module.exports = function (client, chan, msg, cleanText) {
 	if (!Helper.config.prefetch) {
 		return;
@@ -386,7 +385,9 @@ function fetch(uri, headers) {
 	const prefetchTimeout = Helper.config.prefetchTimeout;
 
 	if (!prefetchTimeout) {
-		log.warn("prefetchTimeout is missing from your The Lounge configuration, defaulting to 5000 ms");
+		log.warn(
+			"prefetchTimeout is missing from your The Lounge configuration, defaulting to 5000 ms"
+		);
 	}
 
 	promise = new Promise((resolve, reject) => {

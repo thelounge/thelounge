@@ -159,7 +159,7 @@ module.exports = {
 	//
 	// This value is set to `50` kilobytes by default.
 	prefetchMaxSearchSize: 50,
-	
+
 	// ### `prefetchTimeout`
 	//
 	// When `prefetch` is enabled, this value sets the number of milliseconds
