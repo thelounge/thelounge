@@ -10,6 +10,8 @@ const storage = require("../storage");
 const currentFetchPromises = new Map();
 const imageTypeRegex = /^image\/.+/;
 const mediaTypeRegex = /^(audio|video)\/.+/;
+const log = require("../../log");
+
 
 module.exports = function (client, chan, msg, cleanText) {
 	if (!Helper.config.prefetch) {
@@ -381,6 +383,12 @@ function fetch(uri, headers) {
 		return promise;
 	}
 
+	const prefetchTimeout = Helper.config.prefetchTimeout;
+
+	if (!prefetchTimeout) {
+		log.warn("prefetchTimeout is missing from your The Lounge configuration, defaulting to 5000 ms");
+	}
+
 	promise = new Promise((resolve, reject) => {
 		let buffer = Buffer.from("");
 		let contentLength = 0;
@@ -390,7 +398,7 @@ function fetch(uri, headers) {
 		try {
 			const gotStream = got.stream(uri, {
 				retry: 0,
-				timeout: Helper.config.prefetchTimeout, // milliseconds
+				timeout: prefetchTimeout || 5000, // milliseconds
 				headers: getRequestHeaders(headers),
 				https: {
 					rejectUnauthorized: false,
