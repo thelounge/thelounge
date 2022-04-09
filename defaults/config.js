@@ -170,6 +170,8 @@ module.exports = {
 	// performance issues or even a denial of service, since The Lounge will not
 	// be able to clean up outgoing connections as quickly. Usually the default
 	// value is appropriate, so only change it if necessary.
+	//
+	// This value is set to `5000` milliseconds by default.
 	prefetchTimeout: 5000,
 
 	// ### `fileUpload`
