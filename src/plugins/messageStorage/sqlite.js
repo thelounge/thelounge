@@ -205,9 +205,12 @@ class MessageStorage {
 			return Promise.resolve([]);
 		}
 
+		// Using the '@' character to escape '%' and '_' in patterns.
+		const escapedSearchTerm = query.searchTerm.replace(/([%_@])/g, "@$1");
+
 		let select =
-			'SELECT msg, type, time, network, channel FROM messages WHERE type = "message" AND json_extract(msg, "$.text") LIKE ?';
-		const params = [`%${query.searchTerm}%`];
+			'SELECT msg, type, time, network, channel FROM messages WHERE type = "message" AND json_extract(msg, "$.text") LIKE ? ESCAPE \'@\'';
+		const params = [`%${escapedSearchTerm}%`];
 
 		if (query.networkUuid) {
 			select += " AND network = ? ";
