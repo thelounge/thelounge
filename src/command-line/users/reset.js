@@ -63,7 +63,9 @@ function change(name, password) {
 
 	// Write to a temp file first, in case the write fails
 	// we do not lose the original file (for example when disk is full)
-	fs.writeFileSync(pathTemp, newUser);
+	fs.writeFileSync(pathTemp, newUser, {
+		mode: 0o600,
+	});
 	fs.renameSync(pathTemp, pathReal);
 
 	log.info(`Successfully reset password for ${colors.bold(name)}.`);
