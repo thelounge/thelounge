@@ -69,7 +69,7 @@
     "yarn": "1.22.17"
   },
   "optionalDependencies": {
-    "sqlite3": "https://github.com/mapbox/node-sqlite3#918052b538b0effe6c4a44c74a16b2749c08a0d2"
+    "sqlite3": "https://github.com/mapbox/node-sqlite3#982f46ec63cc0105713a6e3776938afe0371c040"
   },
   "devDependencies": {
     "@babel/core": "7.17.9",
