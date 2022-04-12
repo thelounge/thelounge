@@ -109,7 +109,9 @@ function loadPackage(packageName) {
 
 		if (
 			packageInfo.thelounge.supports &&
-			!semver.satisfies(Helper.getVersionNumber(), packageInfo.thelounge.supports)
+			!semver.satisfies(Helper.getVersionNumber(), packageInfo.thelounge.supports, {
+				includePrerelease: true, // our pre-releases should respect the semver guarantees
+			})
 		) {
 			throw `v${packageInfo.version} does not support this version of The Lounge. Supports: ${packageInfo.thelounge.supports}`;
 		}
