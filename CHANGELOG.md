@@ -4,6 +4,74 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v4.3.1 - 2022-04-11
+
+For more details, [see the full changelog](https://github.com/thelounge/thelounge/compare/v4.3.0...v4.3.1) and [milestone](https://github.com/thelounge/thelounge/milestone/39?closed=1).
+
+4.3.1 closes numerous bugs and introduces one prominent new feature closing [one of our most voted-on issues](https://github.com/thelounge/thelounge/issues/2490): muting! Users now have the ability to mute channels, networks, and private messages. Muted channels are dimmed in the channel list and notifications from them (including nick mentions) are disabled.
+
+Also note that the npm package manager is no longer officially supported by The Lounge and we now only support using [yarn](https://yarnpkg.com).
+
+### Added
+
+- Add context menu when clicking inline channel name ([#4376](https://github.com/thelounge/thelounge/pull/4376) by [@sfan5](https://github.com/sfan5))
+- Add /kickban ([#4361](https://github.com/thelounge/thelounge/pull/4361) by [@supertassu](https://github.com/supertassu))
+- Add the option to mute channels, queries, and networks ([#4282](https://github.com/thelounge/thelounge/pull/4282) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Handle RPL_UMODEIS ([#4427](https://github.com/thelounge/thelounge/pull/4427) by [@brunnre8](https://github.com/brunnre8))
+- Don't download image contents during prefetch if not needed ([#4363](https://github.com/thelounge/thelounge/pull/4363) by [@sfan5](https://github.com/sfan5))
+- Emit a message for SASL loggedin/loggedout events ([`1e3a7b1`](https://github.com/thelounge/thelounge/commit/1e3a7b12500d8898500eaf54c01e52f8d5a0b3fd) by [@progval](https://github.com/progval))
+- Log when file permissions should be changed ([#4373](https://github.com/thelounge/thelounge/pull/4373) by [@brunnre8](https://github.com/brunnre8))
+
+### Changed
+
+- Count number of mode changes, not mode messages in condensed messages ([#4438](https://github.com/thelounge/thelounge/pull/4438) by [@supertassu](https://github.com/supertassu))
+- upload: improve error message ([#4435](https://github.com/thelounge/thelounge/pull/4435) by [@brunnre8](https://github.com/brunnre8))
+- Use non 0 exit code in abnormal shutdown ([#4423](https://github.com/thelounge/thelounge/pull/4423) by [@brunnre8](https://github.com/brunnre8))
+- Show a nicer error in Chan.loadMessages() when network is misconfigured ([#4476](https://github.com/thelounge/thelounge/pull/4476) by [@progval](https://github.com/progval))
+- Remove uses of window.event. ([#4434](https://github.com/thelounge/thelounge/pull/4434) by [@itsjohncs](https://github.com/itsjohncs))
+- Upload m4a as audio/mp4; embed audio/mp4, x-flac, and x-m4a ([#4470](https://github.com/thelounge/thelounge/pull/4470) by [@xnaas](https://github.com/xnaas))
+- Use the DNS result order returned by the OS ([#4484](https://github.com/thelounge/thelounge/pull/4484) by [@sfan5](https://github.com/sfan5))
+- Update dependencies to their latest versions:
+  - Production: `irc-framework` ([#4425](https://github.com/thelounge/thelounge/pull/4425)), `got` ([#4377](https://github.com/thelounge/thelounge/commit/cb404cd986416a9202a8d452bb29960520703b44)), `mime-types` ([#4378](https://github.com/thelounge/thelounge/commit/b54cdf7880a45387561125d1702a539ec0dca36b)), `yarn` ([#4380](https://github.com/thelounge/thelounge/pull/4380)), `file-type` ([#4384](https://github.com/thelounge/thelounge/pull/4384)), `css-loader` ([#4381](https://github.com/thelounge/thelounge/pull/4381)), `ua-parser-js` ([#4389](https://github.com/thelounge/thelounge/pull/4389)), `filenamify` ([#4391](https://github.com/thelounge/thelounge/pull/4391)), `irc-framework` ([#4392](https://github.com/thelounge/thelounge/pull/4392)), `tlds` ([#4397](https://github.com/thelounge/thelounge/pull/4397)), `vue monorepo` ([#4403](https://github.com/thelounge/thelounge/pull/4403)), `package-json` ([#4414](https://github.com/thelounge/thelounge/pull/4414)), `express` ([#4520](https://github.com/thelounge/thelounge/pull/4520)), `sqlite3` ([#4446](https://github.com/thelounge/thelounge/pull/4446))
+  - Development: `babel`, `babel-plugin-istanbul`, `cssnano`, `dayjs`, `mini-css-extract-plugin`, `mocha`, `postcss`, `postcss-preset-env`, `posscss-loader`, `webpack`, `webpack-cli`,
+- Bump most deps ([#4453](https://github.com/thelounge/thelounge/pull/4453) by [@brunnre8](https://github.com/brunnre8))
+- Switch busboy implementation to `@fastify/busboy` ([#4428](https://github.com/thelounge/thelounge/pull/4428) by [@maxpoulin64](https://github.com/maxpoulin64))
+
+### Fixed
+
+- Clear obsolete mentions upon channel part ([#4436](https://github.com/thelounge/thelounge/pull/4436) by [@brunnre8](https://github.com/brunnre8))
+- clientCert: fix up error message ([#4462](https://github.com/thelounge/thelounge/pull/4462) by [@brunnre8](https://github.com/brunnre8))
+- getGitCommit: allow git worktrees ([#4426](https://github.com/thelounge/thelounge/pull/4426) by [@brunnre8](https://github.com/brunnre8))
+- Make sure the leading '<' is select when copypasting a message ([#4473](https://github.com/thelounge/thelounge/pull/4473) by [@progval](https://github.com/progval))
+- Mentions window: filter list when we part a chan ([#4436](https://github.com/thelounge/thelounge/pull/4436) by [@brunnre8](https://github.com/brunnre8))
+- Fix /collapse and /expand from interacting with the server in public mode ([#4488](https://github.com/thelounge/thelounge/pull/4488) by [@MaxLeiter](https://github.com/MaxLeiter))
+
+### Documentation
+
+In the main repository:
+
+- Remove extra 'be' in default config.js LDAP comment ([#4430](https://github.com/thelounge/thelounge/pull/4430) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Adding 'to' in a sentence in config.js ([#4459](https://github.com/thelounge/thelounge/pull/4459) by [@fnutt](https://github.com/fnutt))
+- Remove downloads badge and add thelounge/thelounge-docker link to README ([#4371](https://github.com/thelounge/thelounge/pull/4371) by [@MaxLeiter](https://github.com/MaxLeiter))
+- README: suggest running 'yarn format:prettier' when linting fails ([#4467](https://github.com/thelounge/thelounge/pull/4467) by [@progval](https://github.com/progval))
+
+On the [website repository](https://github.com/thelounge/thelounge.github.io):
+
+- update lsio link ([#255](https://github.com/thelounge/thelounge.github.io/pull/255) by [@xnaas](https://github.com/xnaas))
+- Document prefetchMaxSearchSize config option ([#256](https://github.com/thelounge/thelounge.github.io/pull/256) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Update custom-css.md (#258) ([`de8c020`](https://github.com/thelounge/thelounge.github.io/commit/de8c02017cdd8c9bd46e60b899a3bd6a2d8977ec) by [@PeGaSuS-Coder](https://github.com/PeGaSuS-Coder))
+- Remove analytics ([`3eb7fdc`](https://github.com/thelounge/thelounge.github.io/commit/3eb7fdc0bf07ade96829bcfe858e06a47e796ab2) by [@xPaw](https://github.com/xPaw))
+- Remove star button ([`eec5b9c`](https://github.com/thelounge/thelounge.github.io/commit/eec5b9c99ec48a28b6ccfc5de7f7273eb284f558) by [@xPaw](https://github.com/xPaw))
+- Bump addressable from 2.5.2 to 2.8.0 ([#246](https://github.com/thelounge/thelounge.github.io/pull/246) by [@dependabot](https://github.com/apps/dependabot))
+- Update to Jekyll ~> 4.2.1 (#259) ([`db06e52`](https://github.com/thelounge/thelounge.github.io/commit/db06e524fdd2c55a929b0751abeaa761c8550882) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Update config documentation for 4.3.1 (#260) ([`94a1179`](https://github.com/thelounge/thelounge.github.io/commit/94a1179e7fa513ee6c1006455d4cdd9729033429) by [@MaxLeiter](https://github.com/MaxLeiter))
+
+### Internals
+
+- Remove node 15.x from build matrix ([#4449](https://github.com/thelounge/thelounge/pull/4449) by [@brunnre8](https://github.com/brunnre8))
+- Fix vue/this-in-template linter warning ([#4418](https://github.com/thelounge/thelounge/pull/4418) by [@brunnre8](https://github.com/brunnre8))
+- Update actions/setup-node action to v3 ([#4496](https://github.com/thelounge/thelounge/pull/4496) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+
 ## v4.3.1-rc.1 - 2022-03-02 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v4.3.0...v4.3.1-rc.1)
