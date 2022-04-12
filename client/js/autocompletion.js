@@ -3,8 +3,8 @@
 const constants = require("./constants");
 
 import Mousetrap from "mousetrap";
-const {Textcomplete} = require("@textcomplete/core");
-const {TextareaEditor} = require("@textcomplete/textarea");
+import {Textcomplete} from "@textcomplete/core/dist/Textcomplete";
+import {TextareaEditor} from "@textcomplete/textarea/dist/TextareaEditor";
 
 import fuzzy from "fuzzy";
 
