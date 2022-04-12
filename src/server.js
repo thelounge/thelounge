@@ -199,7 +199,12 @@ module.exports = function (options = {}) {
 			Helper.config.themeColor = defaultTheme.themeColor;
 		}
 
-		new Identification((identHandler) => {
+		new Identification((identHandler, err) => {
+			if (err) {
+				log.error(`Could not start identd server, ${err.message}`);
+				process.exit(1);
+			}
+
 			manager.init(identHandler, sockets);
 		});
 

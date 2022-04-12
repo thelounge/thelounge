@@ -27,7 +27,9 @@ class Identification {
 
 			const server = net.createServer(this.serverConnection.bind(this));
 
-			server.on("error", (err) => log.error(`Identd server error: ${err}`));
+			server.on("error", (err) => {
+				startedCallback(this, err);
+			});
 
 			server.listen(
 				{
