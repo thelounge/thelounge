@@ -613,7 +613,6 @@ p {
 	line-height: 1;
 	height: 36px;
 	width: 36px;
-	margin-top: 6px;
 	flex-shrink: 0;
 }
 
@@ -1061,6 +1060,7 @@ textarea.input {
 }
 
 .header {
+	align-items: center;
 	line-height: 45px;
 	height: 45px;
 	padding: 0 6px;
