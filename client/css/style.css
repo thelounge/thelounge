@@ -2913,8 +2913,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 /* Correctly handle multiple successive whitespace characters.
    For example: user has quit ( ===> L   O   L <=== )  */
-
-.header .topic,
 #chat .msg[data-type="action"] .content,
 #chat .msg[data-type="message"] .content,
 #chat .msg[data-type="monospace_block"] .content,
@@ -2922,9 +2920,13 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #chat .ctcp-message,
 #chat .part-reason,
 #chat .quit-reason,
-#chat .new-topic,
-#chat table.channel-list .topic {
+#chat .new-topic {
 	white-space: pre-wrap;
+}
+
+#chat table.channel-list .topic,
+.header .topic {
+	white-space: nowrap;
 }
 
 .chat-view[data-type="search-results"] .search-status {
