@@ -128,6 +128,6 @@
     }
   },
   "resolutions": {
-    "sortablejs": "git+https://github.com/thelounge/Sortable.git"
+    "sortablejs": "1.15.0"
   }
 }

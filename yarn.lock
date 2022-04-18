@@ -6530,9 +6530,10 @@ socks@^2.6.1:
     ip "^1.1.5"
     smart-buffer "^4.2.0"
 
-sortablejs@1.10.2, "sortablejs@git+https://github.com/thelounge/Sortable.git":
-  version "1.14.0"
-  resolved "git+https://github.com/thelounge/Sortable.git#9730c70cd48da38d8feb3dd6808b1893157d8dfb"
+sortablejs@1.10.2, sortablejs@1.15.0:
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/sortablejs/-/sortablejs-1.15.0.tgz#53230b8aa3502bb77a29e2005808ffdb4a5f7e2a"
+  integrity sha512-bv9qgVMjUMf89wAvM6AxVvS/4MX3sPeN0+agqShejLU5z5GX4C75ow1O2e5k4L6XItUyAK3gH6AxSbXrOM5e8w==
 
 source-map-js@^1.0.2:
   version "1.0.2"
