@@ -176,7 +176,7 @@ module.exports = {
 	//   this limit will be prompted with an error message in their browser. A value of
 	//   `-1` disables the file size limit and allows files of any size. **Use at
 	//   your own risk.** This value is set to `10240` kilobytes by default.
-	// - `baseUrl`: If you want change the URL where uploaded files are accessed,
+	// - `baseUrl`: If you want to change the URL where uploaded files are accessed,
 	//   you can set this option to `"https://example.com/folder/"` and the final URL
 	//   would look like `"https://example.com/folder/aabbccddeeff1234/name.png"`.
 	//   If you use this option, you must have a reverse proxy configured,
@@ -384,7 +384,7 @@ module.exports = {
 	//
 	// The search query takes a couple of parameters in `searchDN`:
 	//
-	// - a base DN `searchDN/base`. Only children nodes of this DN will be likely
+	// - a base DN `searchDN/base`. Only children nodes of this DN will likely
 	//   be returned;
 	// - a search scope `searchDN/scope` (see LDAP documentation);
 	// - the query itself, built as `(&(<primaryKey>=<username>) <filter>)`

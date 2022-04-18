@@ -31,5 +31,5 @@ function initalizeConfig() {
 		log.info(`Configuration file created at ${colors.green(Helper.getConfigPath())}.`);
 	}
 
-	fs.mkdirSync(Helper.getUsersPath(), {recursive: true});
+	fs.mkdirSync(Helper.getUsersPath(), {recursive: true, mode: 0o700});
 }

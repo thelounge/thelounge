@@ -3,7 +3,7 @@
 const Chan = require("../../models/chan");
 const Msg = require("../../models/msg");
 
-exports.commands = ["ban", "unban", "banlist"];
+exports.commands = ["ban", "unban", "banlist", "kickban"];
 
 exports.input = function ({irc}, chan, cmd, args) {
 	if (chan.type !== Chan.Type.CHANNEL) {
@@ -33,6 +33,9 @@ exports.input = function ({irc}, chan, cmd, args) {
 	}
 
 	switch (cmd) {
+		case "kickban":
+			irc.raw("KICK", chan.name, args[0], args.slice(1).join(" "));
+		// fall through
 		case "ban":
 			irc.ban(chan.name, args[0]);
 			break;

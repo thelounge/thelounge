@@ -42,30 +42,37 @@ class Msg {
 			return !!this.from.nick;
 		}
 
-		return (
-			this.type !== Msg.Type.MONOSPACE_BLOCK &&
-			this.type !== Msg.Type.ERROR &&
-			this.type !== Msg.Type.TOPIC_SET_BY &&
-			this.type !== Msg.Type.MODE_CHANNEL &&
-			this.type !== Msg.Type.RAW &&
-			this.type !== Msg.Type.WHOIS &&
-			this.type !== Msg.Type.PLUGIN
-		);
+		switch (this.type) {
+			case Msg.Type.MONOSPACE_BLOCK:
+			case Msg.Type.ERROR:
+			case Msg.Type.TOPIC_SET_BY:
+			case Msg.Type.MODE_CHANNEL:
+			case Msg.Type.MODE_USER:
+			case Msg.Type.RAW:
+			case Msg.Type.WHOIS:
+			case Msg.Type.PLUGIN:
+				return false;
+			default:
+				return true;
+		}
 	}
 }
 
 Msg.Type = {
 	UNHANDLED: "unhandled",
-	AWAY: "away",
 	ACTION: "action",
+	AWAY: "away",
 	BACK: "back",
 	ERROR: "error",
 	INVITE: "invite",
 	JOIN: "join",
 	KICK: "kick",
+	LOGIN: "login",
+	LOGOUT: "logout",
 	MESSAGE: "message",
 	MODE: "mode",
 	MODE_CHANNEL: "mode_channel",
+	MODE_USER: "mode_user", // RPL_UMODEIS
 	MONOSPACE_BLOCK: "monospace_block",
 	NICK: "nick",
 	NOTICE: "notice",

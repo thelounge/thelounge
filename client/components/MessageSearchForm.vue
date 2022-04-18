@@ -9,6 +9,7 @@
 				class="input"
 				placeholder="Search messages…"
 				@blur="closeSearch"
+				@keyup.esc="closeSearch"
 			/>
 		</div>
 		<button
@@ -113,6 +114,7 @@ export default {
 	methods: {
 		closeSearch() {
 			if (!this.onSearchPage) {
+				this.searchInput = "";
 				this.searchOpened = false;
 			}
 		},

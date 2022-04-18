@@ -35,7 +35,11 @@
 							<span type="button" aria-label="Save topic"></span>
 						</span>
 					</div>
-					<span v-else :title="channel.topic" class="topic" @dblclick="editTopic"
+					<span
+						v-else
+						:title="channel.topic"
+						:class="{topic: true, empty: !channel.topic}"
+						@dblclick="editTopic"
 						><ParsedMessage
 							v-if="channel.topic"
 							:network="network"
@@ -106,11 +110,11 @@
 			</div>
 		</div>
 		<div
-			v-if="this.$store.state.currentUserVisibleError"
+			v-if="$store.state.currentUserVisibleError"
 			id="user-visible-error"
 			@click="hideUserVisibleError"
 		>
-			{{ this.$store.state.currentUserVisibleError }}
+			{{ $store.state.currentUserVisibleError }}
 		</div>
 		<ChatInput :network="network" :channel="channel" />
 	</div>
@@ -223,7 +227,7 @@ export default {
 				network: this.network,
 			});
 		},
-		openMentions() {
+		openMentions(event) {
 			eventbus.emit("mentions:toggle", {
 				event: event,
 			});

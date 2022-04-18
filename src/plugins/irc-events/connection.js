@@ -82,8 +82,7 @@ module.exports = function (irc, network) {
 		network.channels[0].pushMessage(
 			client,
 			new Msg({
-				text:
-					"Disconnected from the network, and will not reconnect. Use /connect to reconnect again.",
+				text: "Disconnected from the network, and will not reconnect. Use /connect to reconnect again.",
 			}),
 			true
 		);

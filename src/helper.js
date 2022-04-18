@@ -43,6 +43,7 @@ const Helper = {
 	getDefaultNick,
 	parseHostmask,
 	compareHostmask,
+	compareWithWildcard,
 
 	password: {
 		hash: passwordHash,
@@ -72,7 +73,7 @@ function getGitCommit() {
 		return _gitCommit;
 	}
 
-	if (!fs.existsSync(path.resolve(__dirname, "..", ".git", "HEAD"))) {
+	if (!fs.existsSync(path.resolve(__dirname, "..", ".git"))) {
 		_gitCommit = null;
 		return null;
 	}
@@ -157,6 +158,34 @@ function setHome(newPath) {
 	// Load theme color from the web manifest
 	const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 	this.config.themeColor = manifest.theme_color;
+
+	// log dir probably shouldn't be world accessible.
+	// Create it with the desired permission bits if it doesn't exist yet.
+	let logsStat = undefined;
+
+	try {
+		logsStat = fs.statSync(userLogsPath);
+	} catch {
+		// ignored on purpose, node v14.17.0 will give us {throwIfNoEntry: false}
+	}
+
+	if (!logsStat) {
+		try {
+			fs.mkdirSync(userLogsPath, {recursive: true, mode: 0o750});
+		} catch (e) {
+			log.error("Unable to create logs directory", e);
+		}
+	} else if (logsStat && logsStat.mode & 0o001) {
+		log.warn(
+			"contents of",
+			userLogsPath,
+			"can be accessed by any user, the log files may be exposed"
+		);
+
+		if (os.platform() !== "win32") {
+			log.warn(`run \`chmod o-x ${userLogsPath}\` to correct it`);
+		}
+	}
 }
 
 function getHomePath() {
@@ -314,8 +343,27 @@ function parseHostmask(hostmask) {
 
 function compareHostmask(a, b) {
 	return (
-		(a.nick.toLowerCase() === b.nick.toLowerCase() || a.nick === "*") &&
-		(a.ident.toLowerCase() === b.ident.toLowerCase() || a.ident === "*") &&
-		(a.hostname.toLowerCase() === b.hostname.toLowerCase() || a.hostname === "*")
+		compareWithWildcard(a.nick, b.nick) &&
+		compareWithWildcard(a.ident, b.ident) &&
+		compareWithWildcard(a.hostname, b.hostname)
 	);
+}
+
+function compareWithWildcard(a, b) {
+	// we allow '*' and '?' wildcards in our comparison.
+	// this is mostly aligned with https://modern.ircdocs.horse/#wildcard-expressions
+	// but we do not support the escaping. The ABNF does not seem to be clear as to
+	// how to escape the escape char '\', which is valid in a nick,
+	// whereas the wildcards tend not to be (as per RFC1459).
+
+	// The "*" wildcard is ".*" in regex, "?" is "."
+	// so we tokenize and join with the proper char back together,
+	// escaping any other regex modifier
+	const wildmany_split = a.split("*").map((sub) => {
+		const wildone_split = sub.split("?").map((p) => _.escapeRegExp(p));
+		return wildone_split.join(".");
+	});
+	const user_regex = wildmany_split.join(".*");
+	const re = new RegExp(`^${user_regex}$`, "i"); // case insensitive
+	return re.test(b);
 }

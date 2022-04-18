@@ -46,6 +46,13 @@ const packageApis = function (packageInfo) {
 		},
 		Config: {
 			getConfig: () => Helper.config,
+			getPersistentStorageDir: getPersistentStorageDir.bind(this, packageInfo.packageName),
+		},
+		Logger: {
+			error: (...args) => log.error(`[${packageInfo.packageName}]`, ...args),
+			warn: (...args) => log.warn(`[${packageInfo.packageName}]`, ...args),
+			info: (...args) => log.info(`[${packageInfo.packageName}]`, ...args),
+			debug: (...args) => log.debug(`[${packageInfo.packageName}]`, ...args),
 		},
 	};
 };
@@ -81,6 +88,12 @@ function getEnabledPackages(packageJson) {
 	return [];
 }
 
+function getPersistentStorageDir(packageName) {
+	const dir = path.join(Helper.getPackagesPath(), packageName);
+	fs.mkdirSync(dir, {recursive: true}); // we don't care if it already exists or not
+	return dir;
+}
+
 function loadPackage(packageName) {
 	let packageInfo;
 	let packageFile;
@@ -96,7 +109,9 @@ function loadPackage(packageName) {
 
 		if (
 			packageInfo.thelounge.supports &&
-			!semver.satisfies(Helper.getVersionNumber(), packageInfo.thelounge.supports)
+			!semver.satisfies(Helper.getVersionNumber(), packageInfo.thelounge.supports, {
+				includePrerelease: true, // our pre-releases should respect the semver guarantees
+			})
 		) {
 			throw `v${packageInfo.version} does not support this version of The Lounge. Supports: ${packageInfo.thelounge.supports}`;
 		}

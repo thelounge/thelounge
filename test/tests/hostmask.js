@@ -48,7 +48,14 @@ describe("Hostmask", function () {
 
 	it(".compareHostmask (wildcard)", function () {
 		const a = Helper.parseHostmask("nick!user@host");
-		const b = Helper.parseHostmask("nick!*@*");
+		const b = Helper.parseHostmask("n?ck!*@*");
+		expect(Helper.compareHostmask(b, a)).to.be.true;
+		expect(Helper.compareHostmask(a, b)).to.be.false;
+	});
+
+	it(".compareHostmask (wildcard - partial)", function () {
+		const a = Helper.parseHostmask("nicky!user@host");
+		const b = Helper.parseHostmask("nick*!*e?@?os*");
 		expect(Helper.compareHostmask(b, a)).to.be.true;
 		expect(Helper.compareHostmask(a, b)).to.be.false;
 	});
@@ -59,4 +66,48 @@ describe("Hostmask", function () {
 		expect(Helper.compareHostmask(b, a)).to.be.true;
 		expect(Helper.compareHostmask(a, b)).to.be.true;
 	});
+});
+
+describe("compareWithWildcard", function () {
+	const goodPairs = [
+		["asdf", "asdf"],
+		["AsDf", "asdf"],
+		["a?df*", "asdf"],
+		["*asdf*", "asdf"],
+		["*asdf", "asdf"],
+		["asd?", "asdf"],
+		["asd?*", "asdf"],
+		["a??f", "asdf"],
+		["a*", "asdf"],
+		["*f", "asdf"],
+		["*s*", "asdf"],
+		["*", ""],
+		["**", ""],
+	];
+
+	for (const t of goodPairs) {
+		it(`("${t[0]}", "${t[1]}")`, function () {
+			expect(Helper.compareWithWildcard(t[0], t[1])).to.be.true;
+		});
+	}
+
+	const badPairs = [
+		["asdf", "fdsa"],
+		["a?df*", "adfg"],
+		["?", ""],
+		["?asdf", "asdf"],
+		["?*", ""],
+		["*?*", ""],
+		["*?", ""],
+		["asd", "asdf"],
+		["sdf", "asdf"],
+		["sd", "asdf"],
+		["", "asdf"],
+	];
+
+	for (const t of badPairs) {
+		it(`("${t[0]}", "${t[1]}")`, function () {
+			expect(Helper.compareWithWildcard(t[0], t[1])).to.be.false;
+		});
+	}
 });

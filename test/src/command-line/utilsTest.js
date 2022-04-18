@@ -116,9 +116,9 @@ describe("Utils", function () {
 			});
 
 			it("should maintain existing properties of a nested object", function () {
-				expect(
-					Utils.parseConfigOptions("foo.bar=true", {foo: {baz: false}})
-				).to.deep.equal({foo: {bar: true, baz: false}});
+				expect(Utils.parseConfigOptions("foo.bar=true", {foo: {baz: false}})).to.deep.equal(
+					{foo: {bar: true, baz: false}}
+				);
 			});
 
 			it("should maintain existing entries of an array", function () {

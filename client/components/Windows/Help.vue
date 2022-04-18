@@ -583,10 +583,22 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<code>/kick nick</code>
+					<code>/kick nick [reason]</code>
 				</div>
 				<div class="description">
 					<p>Kick a user from the current channel.</p>
+				</div>
+			</div>
+
+			<div class="help-item">
+				<div class="subject">
+					<code>/kickban nick [reason]</code>
+				</div>
+				<div class="description">
+					<p>
+						Kick and ban (<code>+b</code>) a user from the current channel. Unlike
+						<code>/ban</code>, only nicknames (and not host masks) can be used.
+					</p>
 				</div>
 			</div>
 
@@ -630,6 +642,20 @@
 				</div>
 				<div class="description">
 					<p>Send a message to the specified channel.</p>
+				</div>
+			</div>
+
+			<div class="help-item">
+				<div class="subject">
+					<code>/mute [...channel]</code>
+				</div>
+				<div class="description">
+					<p>
+						Prevent messages from generating any feedback for a channel. This turns off
+						the highlight indicator, hides mentions and inhibits push notifications.
+						Muting a network lobby mutes the entire network. Not specifying any channel
+						target mutes the current channel. Revert with <code>/unmute</code>.
+					</p>
 				</div>
 			</div>
 
@@ -723,7 +749,7 @@
 				</div>
 			</div>
 
-			<div class="help-item">
+			<div v-if="$store.state.settings.searchEnabled" class="help-item">
 				<div class="subject">
 					<code>/search query</code>
 				</div>
@@ -764,6 +790,18 @@
 					<p>
 						Unblock messages from the specified user on the current network. This can be
 						a nickname or a hostmask.
+					</p>
+				</div>
+			</div>
+
+			<div class="help-item">
+				<div class="subject">
+					<code>/unmute [...channel]</code>
+				</div>
+				<div class="description">
+					<p>
+						Un-mutes the given channel(s) or the current channel if no channel is
+						provided. See <code>/mute</code> for more information.
 					</p>
 				</div>
 			</div>

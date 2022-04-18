@@ -170,6 +170,31 @@ export function generateChannelContextMenu($root, channel, network) {
 		});
 	}
 
+	const humanFriendlyChanTypeMap = {
+		lobby: "network",
+		channel: "channel",
+		query: "conversation",
+	};
+
+	// We don't allow the muting of Chan.Type.SPECIAL channels
+	const mutableChanTypes = Object.keys(humanFriendlyChanTypeMap);
+
+	if (mutableChanTypes.includes(channel.type)) {
+		const chanType = humanFriendlyChanTypeMap[channel.type];
+
+		items.push({
+			label: channel.muted ? `Unmute ${chanType}` : `Mute ${chanType}`,
+			type: "item",
+			class: "mute",
+			action() {
+				socket.emit("mute:change", {
+					target: channel.id,
+					setMutedTo: !channel.muted,
+				});
+			},
+		});
+	}
+
 	// Add close menu item
 	items.push({
 		label: closeMap[channel.type],
@@ -181,6 +206,43 @@ export function generateChannelContextMenu($root, channel, network) {
 	});
 
 	return items;
+}
+
+export function generateInlineChannelContextMenu($root, chan, network) {
+	const join = () => {
+		const channel = network.channels.find((c) => c.name === chan);
+
+		if (channel) {
+			$root.switchToChannel(channel);
+		}
+
+		socket.emit("input", {
+			target: $root.$store.state.activeChannel.channel.id,
+			text: "/join " + chan,
+		});
+	};
+
+	const channel = network.channels.find((c) => c.name === chan);
+
+	if (channel) {
+		return [
+			{
+				label: "Go to channel",
+				type: "item",
+				class: "chan",
+				link: `/chan-${channel.id}`,
+			},
+		];
+	}
+
+	return [
+		{
+			label: "Join channel",
+			type: "item",
+			class: "join",
+			action: join,
+		},
+	];
 }
 
 export function generateUserContextMenu($root, channel, network, user) {

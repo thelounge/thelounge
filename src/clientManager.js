@@ -145,6 +145,10 @@ ClientManager.prototype.loadUser = function (name) {
 };
 
 ClientManager.prototype.getUsers = function () {
+	if (!fs.existsSync(Helper.getUsersPath())) {
+		return [];
+	}
+
 	return fs
 		.readdirSync(Helper.getUsersPath())
 		.filter((file) => file.endsWith(".json"))
@@ -169,7 +173,9 @@ ClientManager.prototype.addUser = function (name, password, enableLog) {
 	};
 
 	try {
-		fs.writeFileSync(userPath, JSON.stringify(user, null, "\t"));
+		fs.writeFileSync(userPath, JSON.stringify(user, null, "\t"), {
+			mode: 0o600,
+		});
 	} catch (e) {
 		log.error(`Failed to create user ${colors.green(name)} (${e})`);
 		throw e;
@@ -231,7 +237,9 @@ ClientManager.prototype.saveUser = function (client, callback) {
 	try {
 		// Write to a temp file first, in case the write fails
 		// we do not lose the original file (for example when disk is full)
-		fs.writeFileSync(pathTemp, newUser);
+		fs.writeFileSync(pathTemp, newUser, {
+			mode: 0o600,
+		});
 		fs.renameSync(pathTemp, pathReal);
 
 		return callback ? callback() : true;

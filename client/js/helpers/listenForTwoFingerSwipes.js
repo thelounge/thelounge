@@ -1,5 +1,7 @@
 "use strict";
 
+import distance from "./distance";
+
 // onTwoFingerSwipe will be called with a cardinal direction ("n", "e", "s" or
 // "w") as its only argument.
 function listenForTwoFingerSwipes(onTwoFingerSwipe) {
@@ -37,7 +39,7 @@ function listenForTwoFingerSwipes(onTwoFingerSwipe) {
 
 	document.body.addEventListener(
 		"touchend",
-		function () {
+		function (event) {
 			if (event.touches.length >= 2) {
 				return;
 			}
@@ -87,10 +89,6 @@ function getSwipe(hist) {
 	}
 
 	return getCardinalDirection(hist[0].center, hist[hist.length - 1].center);
-}
-
-function distance([x1, y1], [x2, y2]) {
-	return Math.hypot(x1 - x2, y1 - y2);
 }
 
 function getCardinalDirection([x1, y1], [x2, y2]) {

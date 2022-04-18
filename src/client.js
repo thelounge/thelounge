@@ -33,6 +33,7 @@ const events = [
 	"invite",
 	"join",
 	"kick",
+	"list",
 	"mode",
 	"modelist",
 	"motd",
@@ -41,9 +42,9 @@ const events = [
 	"nick",
 	"part",
 	"quit",
+	"sasl",
 	"topic",
 	"welcome",
-	"list",
 	"whois",
 ];
 
@@ -201,6 +202,7 @@ Client.prototype.connect = function (args, isStartup = false) {
 					name: chan.name,
 					key: chan.key || "",
 					type: chan.type,
+					muted: chan.muted,
 				})
 			);
 		});
@@ -282,8 +284,7 @@ Client.prototype.connect = function (args, isStartup = false) {
 		network.channels[0].pushMessage(
 			client,
 			new Msg({
-				text:
-					"You have manually disconnected from this network before, use the /connect command to connect again.",
+				text: "You have manually disconnected from this network before, use the /connect command to connect again.",
 			}),
 			true
 		);
@@ -646,6 +647,17 @@ Client.prototype.names = function (data) {
 	client.emit("names", {
 		id: target.chan.id,
 		users: target.chan.getSortedUsers(target.network.irc),
+	});
+};
+
+Client.prototype.part = function (network, chan) {
+	const client = this;
+	network.channels = _.without(network.channels, chan);
+	client.mentions = client.mentions.filter((msg) => !(msg.chanId === chan.id));
+	chan.destroy();
+	client.save();
+	client.emit("part", {
+		chan: chan.id,
 	});
 };
 

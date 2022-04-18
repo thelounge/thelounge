@@ -1,4 +1,4 @@
-@import 'default.css';
+@import "default.css";
 
 :root {
 	--body-color: #f3f3f3;
@@ -13,7 +13,7 @@
 }
 
 body {
-	scrollbar-color: rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0.05);
+	scrollbar-color: rgb(0 0 0 / 30%) rgb(0 0 0 / 5%);
 }
 
 #chat .chat-view[data-type="channel"] .msg.highlight .time {
@@ -107,7 +107,7 @@ body {
 }
 
 .window {
-	box-shadow: 0 0 25px rgba(0, 0, 0, 0.75);
+	box-shadow: 0 0 25px rgb(0 0 0 / 75%);
 }
 
 #viewport .lt,
@@ -146,7 +146,7 @@ kbd {
 	text-shadow: 0 -1px 0 #000;
 	border-color: #000;
 	background-color: #333;
-	background-image: linear-gradient(rgba(0, 0, 0, 0.25), transparent);
+	background-image: linear-gradient(rgb(0 0 0 / 25%), transparent);
 	box-shadow: 0 2px 0 #000, inset 0 1px 1px #777, inset 0 -1px 3px #222;
 }
 

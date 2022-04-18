@@ -13,6 +13,7 @@
 			:aria-label="getInputPlaceholder(channel)"
 			@input="setPendingMessage"
 			@keypress.enter.exact.prevent="onSubmit"
+			@blur="onBlur"
 		/>
 		<span
 			v-if="$store.state.serverConfiguration.fileUpload"
@@ -140,10 +141,11 @@ export default {
 				return;
 			}
 
-			const oldValue = this.$refs.input.value;
-			const oldPosition = this.$refs.input.selectionStart;
-			const onRow = (oldValue.slice(null, oldPosition).match(/\n/g) || []).length;
-			const totalRows = (oldValue.match(/\n/g) || []).length;
+			const onRow = (
+				this.$refs.input.value.slice(null, this.$refs.input.selectionStart).match(/\n/g) ||
+				[]
+			).length;
+			const totalRows = (this.$refs.input.value.match(/\n/g) || []).length;
 
 			const {channel} = this;
 
@@ -164,29 +166,7 @@ export default {
 			}
 
 			channel.pendingMessage = channel.inputHistory[channel.inputHistoryPosition];
-			const newValue = channel.pendingMessage;
-			this.$refs.input.value = newValue;
-
-			let newPosition;
-
-			if (key === "up") {
-				const lastIndexOfNewLine = newValue.lastIndexOf("\n");
-				const lastLine = newValue.slice(null, lastIndexOfNewLine);
-				newPosition =
-					oldPosition > lastLine.length
-						? newValue.length
-						: lastIndexOfNewLine + oldPosition + 1;
-			} else {
-				const lastPositionOnFirstLine =
-					newValue.indexOf("\n") === -1 ? newValue.length + 1 : newValue.indexOf("\n");
-				const relativeRowPos = oldPosition - oldValue.lastIndexOf("\n") - 1;
-				newPosition =
-					relativeRowPos > lastPositionOnFirstLine
-						? lastPositionOnFirstLine
-						: relativeRowPos;
-			}
-
-			this.$refs.input.setSelectionRange(newPosition, newPosition);
+			this.$refs.input.value = channel.pendingMessage;
 			this.setInputSize();
 
 			return false;
@@ -299,6 +279,11 @@ export default {
 		},
 		blurInput() {
 			this.$refs.input.blur();
+		},
+		onBlur() {
+			if (autocompletionRef) {
+				autocompletionRef.hide();
+			}
 		},
 	},
 };

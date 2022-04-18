@@ -1,6 +1,5 @@
 "use strict";
 
-const _ = require("lodash");
 const Msg = require("../../models/msg");
 const Chan = require("../../models/chan");
 const Helper = require("../../helper");
@@ -41,12 +40,7 @@ exports.input = function (network, chan, cmd, args) {
 		!network.irc.connection ||
 		!network.irc.connection.connected
 	) {
-		network.channels = _.without(network.channels, target);
-		target.destroy();
-		this.emit("part", {
-			chan: target.id,
-		});
-		this.save();
+		this.part(network, target);
 	} else {
 		const partMessage = args.join(" ") || network.leaveMessage || Helper.config.leaveMessage;
 		network.irc.part(target.name, partMessage);

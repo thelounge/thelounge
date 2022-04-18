@@ -46,7 +46,19 @@ export default {
 			});
 
 			for (const message of this.messages) {
-				obj[message.type]++;
+				// special case since one MODE message can change multiple modes
+				if (message.type === "mode") {
+					// syntax: +vv-t maybe-some targets
+					// we want the number of mode changes in the message, so count the
+					// number of chars other than + and - before the first space
+					const modeChangesCount = message.text
+						.split(" ")[0]
+						.split("")
+						.filter((char) => char !== "+" && char !== "-").length;
+					obj[message.type] += modeChangesCount;
+				} else {
+					obj[message.type]++;
+				}
 			}
 
 			// Count quits as parts in condensed messages to reduce information density

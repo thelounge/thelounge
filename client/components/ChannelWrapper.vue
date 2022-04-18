@@ -15,6 +15,7 @@
 					channel.type === 'lobby' && network.status.connected && !network.status.secure,
 			},
 			{'not-connected': channel.type === 'lobby' && !network.status.connected},
+			{'is-muted': channel.muted},
 		]"
 		:aria-label="getAriaLabel()"
 		:title="getAriaLabel()"
@@ -82,15 +83,11 @@ export default {
 			this.$root.switchToChannel(this.channel);
 		},
 		openContextMenu(event) {
-			// events.buttons will be 0 when the event is caused by a long
-			// touch on Android.
-			if (event.buttons !== 0) {
-				eventbus.emit("contextmenu:channel", {
-					event: event,
-					channel: this.channel,
-					network: this.network,
-				});
-			}
+			eventbus.emit("contextmenu:channel", {
+				event: event,
+				channel: this.channel,
+				network: this.network,
+			});
 		},
 	},
 };

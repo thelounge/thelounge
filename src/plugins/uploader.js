@@ -1,7 +1,7 @@
 "use strict";
 
 const Helper = require("../helper");
-const busboy = require("busboy");
+const busboy = require("@fastify/busboy");
 const {v4: uuidv4} = require("uuid");
 const path = require("path");
 const fs = require("fs");
@@ -117,6 +117,10 @@ class Uploader {
 			detectedMimeType = "audio/wav";
 		} else if (detectedMimeType === "audio/x-flac") {
 			detectedMimeType = "audio/flac";
+		} else if (detectedMimeType === "audio/x-m4a") {
+			detectedMimeType = "audio/mp4";
+		} else if (detectedMimeType === "video/quicktime") {
+			detectedMimeType = "video/mp4";
 		}
 
 		res.setHeader("Content-Disposition", disposition);
