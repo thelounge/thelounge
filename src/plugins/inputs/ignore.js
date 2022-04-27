@@ -12,15 +12,18 @@ exports.input = function (network, chan, cmd, args) {
 	let hostmask;
 	let create_new_ignored_window = false;
 
-	if (cmd !== "ignorelist" && (args.length === 0 || args[0].trim().length === 0)) {
+	function emitError(msg) {
 		chan.pushMessage(
 			client,
 			new Msg({
 				type: Msg.Type.ERROR,
-				text: `Usage: /${cmd} <nick>[!ident][@host]`,
+				text: msg,
 			})
 		);
+	}
 
+	if (cmd !== "ignorelist" && (args.length === 0 || args[0].trim().length === 0)) {
+		emitError(`Usage: /${cmd} <nick>[!ident][@host]`);
 		return;
 	}
 
@@ -34,13 +37,7 @@ exports.input = function (network, chan, cmd, args) {
 		case "ignore": {
 			// IRC nicks are case insensitive
 			if (hostmask.nick.toLowerCase() === network.nick.toLowerCase()) {
-				chan.pushMessage(
-					client,
-					new Msg({
-						type: Msg.Type.ERROR,
-						text: "You can't ignore yourself",
-					})
-				);
+				emitError("You can't ignore yourself");
 			} else if (
 				!network.ignoreList.some(function (entry) {
 					return Helper.compareHostmask(entry, hostmask);
@@ -50,21 +47,11 @@ exports.input = function (network, chan, cmd, args) {
 				network.ignoreList.push(hostmask);
 
 				client.save();
-				chan.pushMessage(
-					client,
-					new Msg({
-						type: Msg.Type.ERROR,
-						text: `\u0002${hostmask.nick}!${hostmask.ident}@${hostmask.hostname}\u000f added to ignorelist`,
-					})
+				emitError(
+					`\u0002${hostmask.nick}!${hostmask.ident}@${hostmask.hostname}\u000f added to ignorelist`
 				);
 			} else {
-				chan.pushMessage(
-					client,
-					new Msg({
-						type: Msg.Type.ERROR,
-						text: "The specified user/hostmask is already ignored",
-					})
-				);
+				emitError("The specified user/hostmask is already ignored");
 			}
 
 			break;
@@ -80,22 +67,12 @@ exports.input = function (network, chan, cmd, args) {
 			if (idx !== -1) {
 				network.ignoreList.splice(idx, 1);
 				client.save();
-
-				chan.pushMessage(
-					client,
-					new Msg({
-						type: Msg.Type.ERROR,
-						text: `Successfully removed \u0002${hostmask.nick}!${hostmask.ident}@${hostmask.hostname}\u000f from ignorelist`,
-					})
+				// TODO: This should not be an error, that's the happy path for gods sake...
+				emitError(
+					`Successfully removed \u0002${hostmask.nick}!${hostmask.ident}@${hostmask.hostname}\u000f from ignorelist`
 				);
 			} else {
-				chan.pushMessage(
-					client,
-					new Msg({
-						type: Msg.Type.ERROR,
-						text: "The specified user/hostmask is not ignored",
-					})
-				);
+				emitError("The specified user/hostmask is not ignored");
 			}
 
 			break;
