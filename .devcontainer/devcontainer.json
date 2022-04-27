@@ -9,6 +9,9 @@
     // the "volume" syntax is used to create .thelounge config directory on host if nonexistent.
     "--volume=${localEnv:HOME}${localEnv:USERPROFILE}/.thelounge:/home/node/.thelounge"
   ],
+  "mounts": [
+    "type=volume,source=thelounge-dev-node_modules,target=${containerWorkspaceFolder}/node_modules"
+  ],
   "extensions": [
     "dbaeumer.vscode-eslint",
     "EditorConfig.EditorConfig",
