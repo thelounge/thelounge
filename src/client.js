@@ -45,7 +45,6 @@ const events = [
 	"sasl",
 	"topic",
 	"welcome",
-	"whois",
 ];
 
 function Client(manager, name, config = {}) {
