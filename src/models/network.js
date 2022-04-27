@@ -133,10 +133,6 @@ Network.prototype.validate = function (client) {
 		this.sasl = "";
 	}
 
-	if (!this.tls) {
-		ClientCertificate.remove(this.uuid);
-	}
-
 	if (Helper.config.lockNetwork) {
 		// This check is needed to prevent invalid user configurations
 		if (

@@ -6,8 +6,69 @@ const Msg = require("../../src/models/msg");
 const User = require("../../src/models/user");
 const Network = require("../../src/models/network");
 const Helper = require("../../src/helper");
+const STSPolicies = require("../../src/plugins/sts");
+const ClientCertificate = require("../../src/plugins/clientCertificate");
 
 describe("Network", function () {
+	describe("Network(attr)", function () {
+		it("should generate uuid (v4) for each network", function () {
+			const network1 = new Network();
+			const network2 = new Network();
+
+			expect(network1.uuid).to.have.lengthOf(36);
+			expect(network2.uuid).to.have.lengthOf(36);
+			expect(network1.uuid).to.not.equal(network2.uuid);
+		});
+
+		it("lobby should be at the top", function () {
+			const network = new Network({
+				name: "Super Nice Network",
+				channels: [
+					new Chan({name: "AAAA!", type: Chan.Type.QUERY}),
+					new Chan({name: "#thelounge"}),
+					new Chan({name: "&foobar"}),
+				],
+			});
+			network.channels.push(new Chan({name: "#swag"}));
+
+			expect(network.channels[0].name).to.equal("Super Nice Network");
+			expect(network.channels[0].type).to.equal(Chan.Type.LOBBY);
+		});
+
+		it("should maintain channel reference", function () {
+			const chan = new Chan({
+				name: "#506-bug-fix",
+				messages: [
+					new Msg({
+						text: "message in constructor",
+					}),
+				],
+			});
+
+			const network = new Network({
+				name: "networkName",
+				channels: [chan],
+			});
+
+			chan.messages.push(
+				new Msg({
+					text: "message in original instance",
+				})
+			);
+
+			network.channels[1].messages.push(
+				new Msg({
+					text: "message after network creation",
+				})
+			);
+
+			expect(network.channels[1].messages).to.have.lengthOf(3);
+			expect(network.channels[1].messages[0].text).to.equal("message in constructor");
+			expect(network.channels[1].messages[1].text).to.equal("message in original instance");
+			expect(network.channels[1].messages[2].text).to.equal("message after network creation");
+		});
+	});
+
 	describe("#export()", function () {
 		it("should produce an valid object", function () {
 			const network = new Network({
@@ -61,8 +122,10 @@ describe("Network", function () {
 				ignoreList: [],
 			});
 		});
+	});
 
-		it("validate should set correct defaults", function () {
+	describe("#validate()", function () {
+		it("should set correct defaults", function () {
 			Helper.config.defaults.nick = "";
 
 			const network = new Network({
@@ -83,7 +146,7 @@ describe("Network", function () {
 			expect(network2.username).to.equal("InvalidNick");
 		});
 
-		it("lockNetwork should be enforced when validating", function () {
+		it("should enforce lockNetwork", function () {
 			Helper.config.lockNetwork = true;
 
 			// Make sure we lock in private mode
@@ -113,7 +176,101 @@ describe("Network", function () {
 			Helper.config.lockNetwork = false;
 		});
 
-		it("editing a network should enforce correct types", function () {
+		it("should apply STS policies iff they match", function () {
+			const client = {idMsg: 1, emit() {}};
+			STSPolicies.update("irc.example.com", 7000, 3600);
+
+			let network = new Network({
+				host: "irc.example.com",
+				port: 1337,
+				tls: false,
+			});
+
+			expect(network.validate(client)).to.be.true;
+			expect(network.port).to.equal(7000);
+			expect(network.tls).to.be.true;
+
+			network = new Network({
+				host: "irc2.example.com",
+				port: 1337,
+				tls: false,
+			});
+
+			expect(network.validate(client)).to.be.true;
+			expect(network.port).to.equal(1337);
+			expect(network.tls).to.be.false;
+
+			STSPolicies.update("irc.example.com", 7000, 0); // Cleanup
+		});
+
+		it("should not remove client certs if TLS is disabled", function () {
+			Helper.config.public = false;
+
+			const client = {idMsg: 1, emit() {}, messageStorage: []};
+
+			const network = new Network({host: "irc.example.com", sasl: "external"});
+			network.createIrcFramework(client);
+			expect(network.irc).to.not.be.null;
+
+			const client_cert = network.irc.options.client_certificate;
+			expect(client_cert).to.not.be.null;
+			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert);
+
+			expect(network.validate(client)).to.be.true;
+
+			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert); // Should be unchanged
+
+			ClientCertificate.remove(network.uuid);
+			Helper.config.public = true;
+		});
+
+		it("should not remove client certs if there is a STS policy", function () {
+			Helper.config.public = false;
+
+			const client = {idMsg: 1, emit() {}, messageStorage: []};
+			STSPolicies.update("irc.example.com", 7000, 3600);
+
+			const network = new Network({host: "irc.example.com", sasl: "external"});
+			network.createIrcFramework(client);
+			expect(network.irc).to.not.be.null;
+
+			const client_cert = network.irc.options.client_certificate;
+			expect(client_cert).to.not.be.null;
+			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert);
+
+			expect(network.validate(client)).to.be.true;
+
+			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert); // Should be unchanged
+
+			ClientCertificate.remove(network.uuid);
+			Helper.config.public = true;
+		});
+	});
+
+	describe("#createIrcFramework(client)", function () {
+		it("should generate and use a client certificate when using SASL external", function () {
+			Helper.config.public = false;
+
+			const client = {idMsg: 1, emit() {}};
+			STSPolicies.update("irc.example.com", 7000, 3600);
+
+			let network = new Network({host: "irc.example.com"});
+			network.createIrcFramework(client);
+			expect(network.irc).to.not.be.null;
+			expect(network.irc.options.client_certificate).to.be.null;
+
+			network = new Network({host: "irc.example.com", sasl: "external"});
+			network.createIrcFramework(client);
+			expect(network.irc).to.not.be.null;
+			expect(network.irc.options.client_certificate).to.not.be.null;
+
+			ClientCertificate.remove(network.uuid);
+			Helper.config.public = true;
+		});
+	});
+
+	describe("#edit(client, args)", function () {
+		it("should enforce correct types", function () {
 			let saveCalled = false;
 			let nameEmitCalled = false;
 
@@ -176,63 +333,6 @@ describe("Network", function () {
 				"/ping HELLO",
 				"/whois test",
 			]);
-		});
-
-		it("should generate uuid (v4) for each network", function () {
-			const network1 = new Network();
-			const network2 = new Network();
-
-			expect(network1.uuid).to.have.lengthOf(36);
-			expect(network2.uuid).to.have.lengthOf(36);
-			expect(network1.uuid).to.not.equal(network2.uuid);
-		});
-
-		it("lobby should be at the top", function () {
-			const network = new Network({
-				name: "Super Nice Network",
-				channels: [
-					new Chan({name: "AAAA!", type: Chan.Type.QUERY}),
-					new Chan({name: "#thelounge"}),
-					new Chan({name: "&foobar"}),
-				],
-			});
-			network.channels.push(new Chan({name: "#swag"}));
-
-			expect(network.channels[0].name).to.equal("Super Nice Network");
-			expect(network.channels[0].type).to.equal(Chan.Type.LOBBY);
-		});
-
-		it("should maintain channel reference", function () {
-			const chan = new Chan({
-				name: "#506-bug-fix",
-				messages: [
-					new Msg({
-						text: "message in constructor",
-					}),
-				],
-			});
-
-			const network = new Network({
-				name: "networkName",
-				channels: [chan],
-			});
-
-			chan.messages.push(
-				new Msg({
-					text: "message in original instance",
-				})
-			);
-
-			network.channels[1].messages.push(
-				new Msg({
-					text: "message after network creation",
-				})
-			);
-
-			expect(network.channels[1].messages).to.have.lengthOf(3);
-			expect(network.channels[1].messages[0].text).to.equal("message in constructor");
-			expect(network.channels[1].messages[1].text).to.equal("message in original instance");
-			expect(network.channels[1].messages[2].text).to.equal("message after network creation");
 		});
 	});
 
