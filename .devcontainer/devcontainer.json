@@ -18,6 +18,11 @@
     "esbenp.prettier-vscode",
     "octref.vetur"
   ],
+  "portsAttributes": {
+    "9000": {
+      "label": "The Lounge Dev"
+    }
+  },
   "forwardPorts": [9000],
   "postStartCommand": "yarn install && NODE_ENV=production yarn build",
   "postAttachCommand": "yarn dev",
