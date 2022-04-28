@@ -196,13 +196,8 @@ Network.prototype.createIrcFramework = function (client) {
 
 	this.irc.requestCap([
 		"znc.in/self-message", // Legacy echo-message for ZNC
+		"znc.in/playback", // See http://wiki.znc.in/Playback
 	]);
-
-	// Request only new messages from ZNC if we have sqlite logging enabled
-	// See http://wiki.znc.in/Playback
-	if (client.messageProvider) {
-		this.irc.requestCap("znc.in/playback");
-	}
 };
 
 Network.prototype.setIrcFrameworkOptions = function (client) {
