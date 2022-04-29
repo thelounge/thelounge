@@ -10,7 +10,14 @@ exports.input = function ({irc}, chan, cmd, args) {
 
 	const sendToClient = (data) => {
 		if (data.error) {
-			// no-op, the server will send an error handled by components/MessageTypes/error.vue
+			chan.pushMessage(
+				client,
+				new Msg({
+					type: Msg.Type.ERROR,
+					error: data.error,
+					nick: targetNick,
+				})
+			);
 		} else {
 			// Absolute datetime in milliseconds since nick is idle
 			data.idleTime = Date.now() - data.idle * 1000;
@@ -26,14 +33,15 @@ exports.input = function ({irc}, chan, cmd, args) {
 		}
 	};
 
-	if (cmd === "whois") {
-		irc.whois(targetNick, (data) => {
-			sendToClient(data);
-		});
-	} else if (cmd === "whowas") {
-		irc.whowas(targetNick, (data) => {
-			data.whowas = true;
-			sendToClient(data);
-		});
+	switch (cmd) {
+		case "whois":
+			irc.whois(target, targetNick, sendToClient);
+			break;
+		case "whowas":
+			irc.whowas(target, (data) => {
+				data.whowas = true;
+				sendToClient(data);
+			});
+			break;
 	}
 };
