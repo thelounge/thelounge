@@ -33,6 +33,13 @@ exports.input = function ({irc}, chan, cmd, args) {
 		}
 	};
 
+	if (!target) {
+		sendToClient({
+			error: `/${cmd} needs a target nick`,
+		});
+		return;
+	}
+
 	switch (cmd) {
 		case "whois":
 			irc.whois(target, targetNick, sendToClient);
