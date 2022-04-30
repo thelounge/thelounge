@@ -24,7 +24,7 @@
 @media screen and (max-width: calc(768px + 320px)) {
 	.settings-menu {
 		position: static;
-		width: 480px;
+		width: min(480px, 100%);
 		align-self: center;
 		margin: 0 auto;
 		padding: 0 15px;
