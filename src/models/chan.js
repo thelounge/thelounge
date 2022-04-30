@@ -237,7 +237,7 @@ Chan.prototype.writeUserLog = function (client, msg) {
 };
 
 Chan.prototype.loadMessages = function (client, network) {
-	if (!this.isLoggable() || !client.messageProvider) {
+	if (!this.isLoggable()) {
 		return;
 	}
 
@@ -246,6 +246,16 @@ Chan.prototype.loadMessages = function (client, network) {
 		log.warn(
 			`Failed to load messages for ${client.name}, network ${network.name} is not initialized.`
 		);
+		return;
+	}
+
+	if (!client.messageProvider) {
+		if (network.irc.network.cap.isEnabled("znc.in/playback")) {
+			// if we do have a message provider we might be able to only fetch partial history,
+			// so delay the cap in this case.
+			requestZncPlayback(this, network, 0);
+		}
+
 		return;
 	}
 
