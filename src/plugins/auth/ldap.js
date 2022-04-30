@@ -1,12 +1,12 @@
 "use strict";
 
 const log = require("../../log");
-const Helper = require("../../helper");
+const Config = require("../../config");
 const ldap = require("ldapjs");
 const colors = require("chalk");
 
 function ldapAuthCommon(user, bindDN, password, callback) {
-	const config = Helper.config;
+	const config = Config.values;
 
 	const ldapclient = ldap.createClient({
 		url: config.ldap.url,
@@ -35,7 +35,7 @@ function simpleLdapAuth(user, password, callback) {
 		return callback(false);
 	}
 
-	const config = Helper.config;
+	const config = Config.values;
 
 	const userDN = user.replace(/([,\\/#+<>;"= ])/g, "\\$1");
 	const bindDN = `${config.ldap.primaryKey}=${userDN},${config.ldap.baseDN}`;
@@ -53,7 +53,7 @@ function advancedLdapAuth(user, password, callback) {
 		return callback(false);
 	}
 
-	const config = Helper.config;
+	const config = Config.values;
 	const userDN = user.replace(/([,\\/#+<>;"= ])/g, "\\$1");
 
 	const ldapclient = ldap.createClient({
@@ -132,7 +132,7 @@ function ldapAuth(manager, client, user, password, callback) {
 
 	let auth;
 
-	if ("baseDN" in Helper.config.ldap) {
+	if ("baseDN" in Config.values.ldap) {
 		auth = simpleLdapAuth;
 	} else {
 		auth = advancedLdapAuth;
@@ -147,7 +147,7 @@ function ldapAuth(manager, client, user, password, callback) {
  */
 
 function advancedLdapLoadUsers(users, callbackLoadUser) {
-	const config = Helper.config;
+	const config = Config.values;
 
 	const ldapclient = ldap.createClient({
 		url: config.ldap.url,
@@ -212,7 +212,7 @@ function advancedLdapLoadUsers(users, callbackLoadUser) {
 }
 
 function ldapLoadUsers(users, callbackLoadUser) {
-	if ("baseDN" in Helper.config.ldap) {
+	if ("baseDN" in Config.values.ldap) {
 		// simple LDAP case can't test for user existence without access to the
 		// user's unhashed password, so indicate need to fallback to default
 		// loadUser behaviour by returning false
@@ -223,7 +223,7 @@ function ldapLoadUsers(users, callbackLoadUser) {
 }
 
 function isLdapEnabled() {
-	return !Helper.config.public && Helper.config.ldap.enable;
+	return !Config.values.public && Config.values.ldap.enable;
 }
 
 module.exports = {

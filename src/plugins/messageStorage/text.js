@@ -4,7 +4,7 @@ const log = require("../../log");
 const fs = require("fs");
 const path = require("path");
 const filenamify = require("filenamify");
-const Helper = require("../../helper");
+const Config = require("../../config");
 const Msg = require("../../models/msg");
 
 class TextFileMessageStorage {
@@ -31,7 +31,7 @@ class TextFileMessageStorage {
 		}
 
 		const logPath = path.join(
-			Helper.getUserLogsPath(),
+			Config.getUserLogsPath(),
 			this.client.name,
 			TextFileMessageStorage.getNetworkFolderName(network)
 		);
@@ -117,7 +117,7 @@ class TextFileMessageStorage {
 		}
 
 		const logPath = path.join(
-			Helper.getUserLogsPath(),
+			Config.getUserLogsPath(),
 			this.client.name,
 			TextFileMessageStorage.getNetworkFolderName(network),
 			TextFileMessageStorage.getChannelFileName(channel)

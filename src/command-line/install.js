@@ -5,6 +5,7 @@ const colors = require("chalk");
 const semver = require("semver");
 const program = require("commander");
 const Helper = require("../helper");
+const Config = require("../config");
 const Utils = require("./utils");
 
 program
@@ -17,8 +18,8 @@ program
 		const path = require("path");
 		const packageJson = require("package-json");
 
-		if (!fs.existsSync(Helper.getConfigPath())) {
-			log.error(`${Helper.getConfigPath()} does not exist.`);
+		if (!fs.existsSync(Config.getConfigPath())) {
+			log.error(`${Config.getConfigPath()} does not exist.`);
 			return;
 		}
 

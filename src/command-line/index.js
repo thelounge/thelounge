@@ -6,6 +6,7 @@ const path = require("path");
 const colors = require("chalk");
 const program = require("commander");
 const Helper = require("../helper");
+const Config = require("../config");
 const Utils = require("./utils");
 
 program
@@ -20,7 +21,7 @@ program
 // Parse options from `argv` returning `argv` void of these options.
 const argvWithoutOptions = program.parseOptions(process.argv);
 
-Helper.setHome(process.env.THELOUNGE_HOME || Utils.defaultHome());
+Config.setHome(process.env.THELOUNGE_HOME || Utils.defaultHome());
 
 // Check config file owner and warn if we're running under a different user
 try {
@@ -34,11 +35,11 @@ try {
 createPackagesFolder();
 
 // Merge config key-values passed as CLI options into the main config
-Helper.mergeConfig(Helper.config, program.opts().config);
+Config.merge(program.opts().config);
 
 require("./start");
 
-if (!Helper.config.public) {
+if (!Config.values.public) {
 	require("./users");
 }
 
@@ -56,7 +57,7 @@ require("./outdated");
 program.parse(argvWithoutOptions.operands.concat(argvWithoutOptions.unknown));
 
 function createPackagesFolder() {
-	const packagesPath = Helper.getPackagesPath();
+	const packagesPath = Config.getPackagesPath();
 	const packagesConfig = path.join(packagesPath, "package.json");
 
 	// Create node_modules folder, otherwise yarn will start walking upwards to find one
@@ -95,7 +96,7 @@ function verifyFileOwner() {
 		);
 	}
 
-	const configStat = fs.statSync(path.join(Helper.getHomePath(), "config.js"));
+	const configStat = fs.statSync(path.join(Config.getHomePath(), "config.js"));
 
 	if (configStat && configStat.uid !== uid) {
 		log.warn(

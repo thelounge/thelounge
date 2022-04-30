@@ -4,7 +4,7 @@ const log = require("../../log");
 const colors = require("chalk");
 const program = require("commander");
 const fs = require("fs");
-const Helper = require("../../helper");
+const Config = require("../../config");
 const Utils = require("../utils");
 
 program
@@ -12,8 +12,8 @@ program
 	.description("Remove an existing user")
 	.on("--help", Utils.extraHelp)
 	.action(function (name) {
-		if (!fs.existsSync(Helper.getUsersPath())) {
-			log.error(`${Helper.getUsersPath()} does not exist.`);
+		if (!fs.existsSync(Config.getUsersPath())) {
+			log.error(`${Config.getUsersPath()} does not exist.`);
 			return;
 		}
 

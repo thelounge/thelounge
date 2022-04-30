@@ -5,7 +5,7 @@ const Chan = require("../../src/models/chan");
 const Msg = require("../../src/models/msg");
 const User = require("../../src/models/user");
 const Network = require("../../src/models/network");
-const Helper = require("../../src/helper");
+const Config = require("../../src/config");
 const STSPolicies = require("../../src/plugins/sts");
 const ClientCertificate = require("../../src/plugins/clientCertificate");
 
@@ -126,7 +126,7 @@ describe("Network", function () {
 
 	describe("#validate()", function () {
 		it("should set correct defaults", function () {
-			Helper.config.defaults.nick = "";
+			Config.values.defaults.nick = "";
 
 			const network = new Network({
 				host: "localhost",
@@ -147,10 +147,10 @@ describe("Network", function () {
 		});
 
 		it("should enforce lockNetwork", function () {
-			Helper.config.lockNetwork = true;
+			Config.values.lockNetwork = true;
 
 			// Make sure we lock in private mode
-			Helper.config.public = false;
+			Config.values.public = false;
 
 			const network = new Network({
 				host: "",
@@ -165,7 +165,7 @@ describe("Network", function () {
 			expect(network.rejectUnauthorized).to.be.true;
 
 			// Make sure we lock in public mode (also resets public=true for other tests)
-			Helper.config.public = true;
+			Config.values.public = true;
 
 			const network2 = new Network({
 				host: "some.fake.tld",
@@ -173,7 +173,7 @@ describe("Network", function () {
 			expect(network2.validate()).to.be.true;
 			expect(network2.host).to.equal("irc.example.com");
 
-			Helper.config.lockNetwork = false;
+			Config.values.lockNetwork = false;
 		});
 
 		it("should apply STS policies iff they match", function () {
@@ -204,7 +204,7 @@ describe("Network", function () {
 		});
 
 		it("should not remove client certs if TLS is disabled", function () {
-			Helper.config.public = false;
+			Config.values.public = false;
 
 			const client = {idMsg: 1, emit() {}, messageStorage: []};
 
@@ -221,11 +221,11 @@ describe("Network", function () {
 			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert); // Should be unchanged
 
 			ClientCertificate.remove(network.uuid);
-			Helper.config.public = true;
+			Config.values.public = true;
 		});
 
 		it("should not remove client certs if there is a STS policy", function () {
-			Helper.config.public = false;
+			Config.values.public = false;
 
 			const client = {idMsg: 1, emit() {}, messageStorage: []};
 			STSPolicies.update("irc.example.com", 7000, 3600);
@@ -243,13 +243,13 @@ describe("Network", function () {
 			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert); // Should be unchanged
 
 			ClientCertificate.remove(network.uuid);
-			Helper.config.public = true;
+			Config.values.public = true;
 		});
 	});
 
 	describe("#createIrcFramework(client)", function () {
 		it("should generate and use a client certificate when using SASL external", function () {
-			Helper.config.public = false;
+			Config.values.public = false;
 
 			const client = {idMsg: 1, emit() {}};
 			STSPolicies.update("irc.example.com", 7000, 3600);
@@ -265,7 +265,7 @@ describe("Network", function () {
 			expect(network.irc.options.client_certificate).to.not.be.null;
 
 			ClientCertificate.remove(network.uuid);
-			Helper.config.public = true;
+			Config.values.public = true;
 		});
 	});
 

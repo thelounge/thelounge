@@ -7,7 +7,7 @@ const Chan = require("./models/chan");
 const crypto = require("crypto");
 const Msg = require("./models/msg");
 const Network = require("./models/network");
-const Helper = require("./helper");
+const Config = require("./config");
 const UAParser = require("ua-parser-js");
 const {v4: uuidv4} = require("uuid");
 const escapeRegExp = require("lodash/escapeRegExp");
@@ -72,13 +72,13 @@ function Client(manager, name, config = {}) {
 	client.config.log = Boolean(client.config.log);
 	client.config.password = String(client.config.password);
 
-	if (!Helper.config.public && client.config.log) {
-		if (Helper.config.messageStorage.includes("sqlite")) {
+	if (!Config.values.public && client.config.log) {
+		if (Config.values.messageStorage.includes("sqlite")) {
 			client.messageProvider = new MessageStorage(client);
 			client.messageStorage.push(client.messageProvider);
 		}
 
-		if (Helper.config.messageStorage.includes("text")) {
+		if (Config.values.messageStorage.includes("text")) {
 			client.messageStorage.push(new TextFileMessageStorage(client));
 		}
 
@@ -236,7 +236,7 @@ Client.prototype.connect = function (args, isStartup = false) {
 	const network = new Network({
 		uuid: args.uuid,
 		name: String(
-			args.name || (Helper.config.lockNetwork ? Helper.config.defaults.name : "") || ""
+			args.name || (Config.values.lockNetwork ? Config.values.defaults.name : "") || ""
 		),
 		host: String(args.host || ""),
 		port: parseInt(args.port, 10),
@@ -759,7 +759,7 @@ Client.prototype.unregisterPushSubscription = function (token) {
 
 Client.prototype.save = _.debounce(
 	function SaveClient() {
-		if (Helper.config.public) {
+		if (Config.values.public) {
 			return;
 		}
 

@@ -2,7 +2,7 @@
 
 const log = require("../../../src/log");
 const ldapAuth = require("../../../src/plugins/auth/ldap");
-const Helper = require("../../../src/helper");
+const Config = require("../../../src/config");
 const ldap = require("ldapjs");
 const expect = require("chai").expect;
 const stub = require("sinon").stub;
@@ -23,7 +23,7 @@ function normalizeDN(dn) {
 function startLdapServer(callback) {
 	const server = ldap.createServer();
 
-	const searchConf = Helper.config.ldap.searchDN;
+	const searchConf = Config.values.ldap.searchDN;
 	const userDN = primaryKey + "=" + user + "," + baseDN;
 
 	// Two users are authorized: john doe and the root user in case of
@@ -143,34 +143,34 @@ describe("LDAP authentication plugin", function () {
 	});
 
 	beforeEach(function () {
-		Helper.config.public = false;
-		Helper.config.ldap.enable = true;
-		Helper.config.ldap.url = "ldap://localhost:" + String(serverPort);
-		Helper.config.ldap.primaryKey = primaryKey;
+		Config.values.public = false;
+		Config.values.ldap.enable = true;
+		Config.values.ldap.url = "ldap://localhost:" + String(serverPort);
+		Config.values.ldap.primaryKey = primaryKey;
 	});
 
 	afterEach(function () {
-		Helper.config.public = true;
-		Helper.config.ldap.enable = false;
+		Config.values.public = true;
+		Config.values.ldap.enable = false;
 	});
 
 	describe("LDAP authentication availability", function () {
 		it("checks that the configuration is correctly tied to isEnabled()", function () {
-			Helper.config.ldap.enable = true;
+			Config.values.ldap.enable = true;
 			expect(ldapAuth.isEnabled()).to.equal(true);
 
-			Helper.config.ldap.enable = false;
+			Config.values.ldap.enable = false;
 			expect(ldapAuth.isEnabled()).to.equal(false);
 		});
 	});
 
 	describe("Simple LDAP authentication (predefined DN pattern)", function () {
-		Helper.config.ldap.baseDN = baseDN;
+		Config.values.ldap.baseDN = baseDN;
 		testLdapAuth();
 	});
 
 	describe("Advanced LDAP authentication (DN found by a prior search query)", function () {
-		delete Helper.config.ldap.baseDN;
+		delete Config.values.ldap.baseDN;
 		testLdapAuth();
 	});
 });

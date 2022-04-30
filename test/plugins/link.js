@@ -3,7 +3,7 @@
 const path = require("path");
 const expect = require("chai").expect;
 const util = require("../util");
-const Helper = require("../../src/helper");
+const Config = require("../../src/config");
 const link = require("../../src/plugins/irc-events/link.js");
 
 describe("Link plugin", function () {
@@ -36,7 +36,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 		this.irc = util.createClient();
 		this.network = util.createNetwork();
 
-		Helper.config.prefetchStorage = false;
+		Config.values.prefetchStorage = false;
 	});
 
 	afterEach(function (done) {
@@ -224,11 +224,11 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 
 	describe("test disableMediaPreview", function () {
 		beforeEach(function (done) {
-			Helper.config.disableMediaPreview = true;
+			Config.values.disableMediaPreview = true;
 			done();
 		});
 		afterEach(function (done) {
-			Helper.config.disableMediaPreview = false;
+			Config.values.disableMediaPreview = false;
 			done();
 		});
 		it("should ignore og:image if disableMediaPreview", function (done) {

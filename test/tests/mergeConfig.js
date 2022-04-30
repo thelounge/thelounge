@@ -3,7 +3,7 @@
 const log = require("../../src/log");
 const expect = require("chai").expect;
 const stub = require("sinon").stub;
-const mergeConfig = require("../../src/helper").mergeConfig;
+const Config = require("../../src/config");
 const TestUtil = require("../util");
 
 describe("mergeConfig", function () {
@@ -13,7 +13,7 @@ describe("mergeConfig", function () {
 		};
 
 		expect(
-			mergeConfig(config, {
+			Config._merge_config_objects(config, {
 				ip: "overridden",
 			})
 		).to.deep.equal({
@@ -27,7 +27,7 @@ describe("mergeConfig", function () {
 
 	it("should merge new properties", function () {
 		expect(
-			mergeConfig(
+			Config._merge_config_objects(
 				{
 					ip: "default",
 					newProp: "this should appear too",
@@ -44,7 +44,7 @@ describe("mergeConfig", function () {
 
 	it("should extend objects", function () {
 		expect(
-			mergeConfig(
+			Config._merge_config_objects(
 				{
 					tlsOptions: {},
 				},
@@ -68,7 +68,7 @@ describe("mergeConfig", function () {
 		stub(log, "warn").callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
 
 		expect(
-			mergeConfig(
+			Config._merge_config_objects(
 				{
 					optionOne: 123,
 				},
@@ -88,7 +88,7 @@ describe("mergeConfig", function () {
 
 	it("should not warn for unknown second level keys", function () {
 		expect(
-			mergeConfig(
+			Config._merge_config_objects(
 				{
 					optionOne: {
 						subOne: 123,
@@ -111,7 +111,7 @@ describe("mergeConfig", function () {
 
 	it("should allow changing nulls", function () {
 		expect(
-			mergeConfig(
+			Config._merge_config_objects(
 				{
 					oidentd: null,
 				},
@@ -126,7 +126,7 @@ describe("mergeConfig", function () {
 
 	it("should allow changing nulls with objects", function () {
 		expect(
-			mergeConfig(
+			Config._merge_config_objects(
 				{
 					webirc: null,
 				},
@@ -149,7 +149,7 @@ describe("mergeConfig", function () {
 		const callbackFunction = () => ({});
 
 		expect(
-			mergeConfig(
+			Config._merge_config_objects(
 				{
 					webirc: null,
 				},
@@ -168,7 +168,7 @@ describe("mergeConfig", function () {
 
 	it("should keep new properties inside of objects", function () {
 		expect(
-			mergeConfig(
+			Config._merge_config_objects(
 				{
 					nestedOnce: {
 						ip: "default",
@@ -206,7 +206,7 @@ describe("mergeConfig", function () {
 
 	it("should not merge arrays", function () {
 		expect(
-			mergeConfig(
+			Config._merge_config_objects(
 				{
 					test: ["sqlite", "text"],
 				},
@@ -219,7 +219,7 @@ describe("mergeConfig", function () {
 		});
 
 		expect(
-			mergeConfig(
+			Config._merge_config_objects(
 				{
 					test: ["sqlite", "text"],
 				},
@@ -234,7 +234,7 @@ describe("mergeConfig", function () {
 
 	it("should change order in arrays", function () {
 		expect(
-			mergeConfig(
+			Config._merge_config_objects(
 				{
 					test: ["sqlite", "text"],
 				},
@@ -251,7 +251,7 @@ describe("mergeConfig", function () {
 		stub(log, "warn");
 
 		expect(
-			mergeConfig(
+			Config._merge_config_objects(
 				{
 					shouldBeObject: {
 						thing: "yes",
@@ -268,7 +268,7 @@ describe("mergeConfig", function () {
 		});
 
 		expect(
-			mergeConfig(
+			Config._merge_config_objects(
 				{
 					shouldBeString: "string",
 				},

@@ -1,7 +1,7 @@
 "use strict";
 
 const fs = require("fs");
-const Helper = require("../../helper");
+const Config = require("../../config");
 const path = require("path");
 const _ = require("lodash");
 const themes = new Map();
@@ -61,7 +61,7 @@ function makePackageThemeObject(moduleName, module) {
 	}
 
 	const themeColor = /^#[0-9A-F]{6}$/i.test(module.themeColor) ? module.themeColor : null;
-	const modulePath = Helper.getPackageModulePath(moduleName);
+	const modulePath = Config.getPackageModulePath(moduleName);
 	return {
 		displayName: module.name || moduleName,
 		filename: path.join(modulePath, module.css),

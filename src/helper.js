@@ -2,45 +2,20 @@
 
 const pkg = require("../package.json");
 const _ = require("lodash");
-const log = require("./log");
 const path = require("path");
 const os = require("os");
 const fs = require("fs");
 const net = require("net");
 const bcrypt = require("bcryptjs");
-const colors = require("chalk");
 const crypto = require("crypto");
 
-let homePath;
-let configPath;
-let usersPath;
-let storagePath;
-let packagesPath;
-let fileUploadPath;
-let userLogsPath;
-let clientCertificatesPath;
-
 const Helper = {
-	config: null,
 	expandHome,
-	getHomePath,
-	getPackagesPath,
-	getPackageModulePath,
-	getStoragePath,
-	getConfigPath,
-	getFileUploadPath,
-	getUsersPath,
-	getUserConfigPath,
-	getUserLogsPath,
-	getClientCertificatesPath,
-	setHome,
 	getVersion,
 	getVersionCacheBust,
 	getVersionNumber,
 	getGitCommit,
 	ip2hex,
-	mergeConfig,
-	getDefaultNick,
 	parseHostmask,
 	compareHostmask,
 	compareWithWildcard,
@@ -53,8 +28,6 @@ const Helper = {
 };
 
 module.exports = Helper;
-
-Helper.config = require(path.resolve(path.join(__dirname, "..", "defaults", "config.js")));
 
 function getVersion() {
 	const gitCommit = getGitCommit();
@@ -100,134 +73,6 @@ function getVersionCacheBust() {
 	return hash.substring(0, 10);
 }
 
-function setHome(newPath) {
-	homePath = expandHome(newPath);
-	configPath = path.join(homePath, "config.js");
-	usersPath = path.join(homePath, "users");
-	storagePath = path.join(homePath, "storage");
-	fileUploadPath = path.join(homePath, "uploads");
-	packagesPath = path.join(homePath, "packages");
-	userLogsPath = path.join(homePath, "logs");
-	clientCertificatesPath = path.join(homePath, "certificates");
-
-	// Reload config from new home location
-	if (fs.existsSync(configPath)) {
-		const userConfig = require(configPath);
-
-		if (_.isEmpty(userConfig)) {
-			log.warn(
-				`The file located at ${colors.green(
-					configPath
-				)} does not appear to expose anything.`
-			);
-			log.warn(
-				`Make sure it is non-empty and the configuration is exported using ${colors.bold(
-					"module.exports = { ... }"
-				)}.`
-			);
-			log.warn("Using default configuration...");
-		}
-
-		mergeConfig(this.config, userConfig);
-	}
-
-	if (this.config.fileUpload.baseUrl) {
-		try {
-			new URL("test/file.png", this.config.fileUpload.baseUrl);
-		} catch (e) {
-			this.config.fileUpload.baseUrl = null;
-
-			log.warn(`The ${colors.bold("fileUpload.baseUrl")} you specified is invalid: ${e}`);
-		}
-	}
-
-	const manifestPath = path.resolve(
-		path.join(__dirname, "..", "public", "thelounge.webmanifest")
-	);
-
-	// Check if manifest exists, if not, the app most likely was not built
-	if (!fs.existsSync(manifestPath)) {
-		log.error(
-			`The client application was not built. Run ${colors.bold(
-				"NODE_ENV=production yarn build"
-			)} to resolve this.`
-		);
-		process.exit(1);
-	}
-
-	// Load theme color from the web manifest
-	const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
-	this.config.themeColor = manifest.theme_color;
-
-	// log dir probably shouldn't be world accessible.
-	// Create it with the desired permission bits if it doesn't exist yet.
-	let logsStat = undefined;
-
-	try {
-		logsStat = fs.statSync(userLogsPath);
-	} catch {
-		// ignored on purpose, node v14.17.0 will give us {throwIfNoEntry: false}
-	}
-
-	if (!logsStat) {
-		try {
-			fs.mkdirSync(userLogsPath, {recursive: true, mode: 0o750});
-		} catch (e) {
-			log.error("Unable to create logs directory", e);
-		}
-	} else if (logsStat && logsStat.mode & 0o001) {
-		log.warn(
-			"contents of",
-			userLogsPath,
-			"can be accessed by any user, the log files may be exposed"
-		);
-
-		if (os.platform() !== "win32") {
-			log.warn(`run \`chmod o-x ${userLogsPath}\` to correct it`);
-		}
-	}
-}
-
-function getHomePath() {
-	return homePath;
-}
-
-function getConfigPath() {
-	return configPath;
-}
-
-function getFileUploadPath() {
-	return fileUploadPath;
-}
-
-function getUsersPath() {
-	return usersPath;
-}
-
-function getUserConfigPath(name) {
-	return path.join(usersPath, name + ".json");
-}
-
-function getUserLogsPath() {
-	return userLogsPath;
-}
-
-function getClientCertificatesPath() {
-	return clientCertificatesPath;
-}
-
-function getStoragePath() {
-	return storagePath;
-}
-
-function getPackagesPath() {
-	return packagesPath;
-}
-
-function getPackageModulePath(packageName) {
-	return path.join(Helper.getPackagesPath(), "node_modules", packageName);
-}
-
 function ip2hex(address) {
 	// no ipv6 support
 	if (!net.isIPv4(address)) {
@@ -269,40 +114,6 @@ function passwordHash(password) {
 
 function passwordCompare(password, expected) {
 	return bcrypt.compare(password, expected);
-}
-
-function getDefaultNick() {
-	if (!this.config.defaults.nick) {
-		return "thelounge";
-	}
-
-	return this.config.defaults.nick.replace(/%/g, () => Math.floor(Math.random() * 10));
-}
-
-function mergeConfig(oldConfig, newConfig) {
-	for (const key in newConfig) {
-		if (!Object.prototype.hasOwnProperty.call(oldConfig, key)) {
-			log.warn(`Unknown key "${colors.bold(key)}", please verify your config.`);
-		}
-	}
-
-	return _.mergeWith(oldConfig, newConfig, (objValue, srcValue, key) => {
-		// Do not override config variables if the type is incorrect (e.g. object changed into a string)
-		if (
-			typeof objValue !== "undefined" &&
-			objValue !== null &&
-			typeof objValue !== typeof srcValue
-		) {
-			log.warn(`Incorrect type for "${colors.bold(key)}", please verify your config.`);
-
-			return objValue;
-		}
-
-		// For arrays, simply override the value with user provided one.
-		if (_.isArray(objValue)) {
-			return srcValue;
-		}
-	});
 }
 
 function parseHostmask(hostmask) {
