@@ -5,11 +5,11 @@ const log = require("../log");
 const fs = require("fs");
 const path = require("path");
 const WebPushAPI = require("web-push");
-const Helper = require("../helper");
+const Config = require("../config");
 
 class WebPush {
 	constructor() {
-		const vapidPath = path.join(Helper.getHomePath(), "vapid.json");
+		const vapidPath = path.join(Config.getHomePath(), "vapid.json");
 
 		let vapidStat = undefined;
 

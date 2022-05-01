@@ -1,7 +1,7 @@
 "use strict";
 
 const log = require("../src/log");
-const Helper = require("../src/helper");
+const Config = require("../src/config");
 const expect = require("chai").expect;
 const stub = require("sinon").stub;
 const got = require("got");
@@ -28,7 +28,7 @@ describe("Server", function () {
 		changelog.checkForUpdates.restore();
 	});
 
-	const webURL = `http://${Helper.config.host}:${Helper.config.port}/`;
+	const webURL = `http://${Config.values.host}:${Config.values.port}/`;
 
 	describe("Express", () => {
 		it("should run a web server on " + webURL, async () => {
@@ -84,7 +84,7 @@ describe("Server", function () {
 					nick: "test-user",
 					join: "#thelounge, #spam",
 					name: "Test Network",
-					host: Helper.config.host,
+					host: Config.values.host,
 					port: 6667,
 				});
 			});

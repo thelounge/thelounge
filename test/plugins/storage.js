@@ -5,7 +5,7 @@ const path = require("path");
 const crypto = require("crypto");
 const expect = require("chai").expect;
 const util = require("../util");
-const Helper = require("../../src/helper");
+const Config = require("../../src/config");
 const storage = require("../../src/plugins/storage");
 const link = require("../../src/plugins/irc-events/link.js");
 
@@ -55,7 +55,7 @@ describe("Image storage", function () {
 	after(function (done) {
 		// After storage tests run, remove the remaining empty
 		// storage folder so we return to the clean state
-		const dir = Helper.getStoragePath();
+		const dir = Config.getStoragePath();
 		fs.rmdir(dir, done);
 	});
 
@@ -63,11 +63,11 @@ describe("Image storage", function () {
 		this.irc = util.createClient();
 		this.network = util.createNetwork();
 
-		Helper.config.prefetchStorage = true;
+		Config.values.prefetchStorage = true;
 	});
 
 	afterEach(function () {
-		Helper.config.prefetchStorage = false;
+		Config.values.prefetchStorage = false;
 	});
 
 	it("should store the thumbnail", function (done) {
@@ -135,7 +135,7 @@ describe("Image storage", function () {
 	});
 
 	it("should clear storage folder", function () {
-		const dir = Helper.getStoragePath();
+		const dir = Config.getStoragePath();
 
 		expect(fs.readdirSync(dir)).to.not.be.empty;
 		storage.emptyDir();

@@ -2,7 +2,7 @@
 
 const _ = require("lodash");
 const log = require("../log");
-const Helper = require("../helper");
+const Config = require("../config");
 const User = require("./user");
 const Msg = require("./msg");
 const storage = require("../plugins/storage");
@@ -81,7 +81,7 @@ Chan.prototype.pushMessage = function (client, msg, increasesUnread) {
 
 	// Never store messages in public mode as the session
 	// is completely destroyed when the page gets closed
-	if (Helper.config.public) {
+	if (Config.values.public) {
 		return;
 	}
 
@@ -92,19 +92,19 @@ Chan.prototype.pushMessage = function (client, msg, increasesUnread) {
 
 	this.writeUserLog(client, msg);
 
-	if (Helper.config.maxHistory >= 0 && this.messages.length > Helper.config.maxHistory) {
-		const deleted = this.messages.splice(0, this.messages.length - Helper.config.maxHistory);
+	if (Config.values.maxHistory >= 0 && this.messages.length > Config.values.maxHistory) {
+		const deleted = this.messages.splice(0, this.messages.length - Config.values.maxHistory);
 
 		// If maxHistory is 0, image would be dereferenced before client had a chance to retrieve it,
 		// so for now, just don't implement dereferencing for this edge case.
-		if (Helper.config.maxHistory > 0) {
+		if (Config.values.maxHistory > 0) {
 			this.dereferencePreviews(deleted);
 		}
 	}
 };
 
 Chan.prototype.dereferencePreviews = function (messages) {
-	if (!Helper.config.prefetch || !Helper.config.prefetchStorage) {
+	if (!Config.values.prefetch || !Config.values.prefetchStorage) {
 		return;
 	}
 

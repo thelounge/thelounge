@@ -4,11 +4,11 @@ const _ = require("lodash");
 const fs = require("fs");
 const path = require("path");
 const log = require("../log");
-const Helper = require("../helper");
+const Config = require("../config");
 
 class STSPolicies {
 	constructor() {
-		this.stsFile = path.join(Helper.getHomePath(), "sts-policies.json");
+		this.stsFile = path.join(Config.getHomePath(), "sts-policies.json");
 		this.policies = new Map();
 		this.refresh = _.debounce(this.saveFile, 10000, {maxWait: 60000});
 

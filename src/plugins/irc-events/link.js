@@ -4,7 +4,7 @@ const cheerio = require("cheerio");
 const got = require("got");
 const URL = require("url").URL;
 const mime = require("mime-types");
-const Helper = require("../../helper");
+const Config = require("../../config");
 const {findLinksWithSchema} = require("../../../client/js/helpers/ircmessageparser/findLinks");
 const storage = require("../storage");
 const currentFetchPromises = new Map();
@@ -13,7 +13,7 @@ const mediaTypeRegex = /^(audio|video)\/.+/;
 const log = require("../../log");
 
 module.exports = function (client, chan, msg, cleanText) {
-	if (!Helper.config.prefetch) {
+	if (!Config.values.prefetch) {
 		return;
 	}
 
@@ -90,7 +90,7 @@ function parseHtml(preview, res, client) {
 					preview.body = preview.body.substr(0, 300);
 				}
 
-				if (!Helper.config.prefetchStorage && Helper.config.disableMediaPreview) {
+				if (!Config.values.prefetchStorage && Config.values.disableMediaPreview) {
 					resolve(res);
 					return;
 				}
@@ -113,7 +113,7 @@ function parseHtml(preview, res, client) {
 							if (
 								resThumb !== null &&
 								imageTypeRegex.test(resThumb.type) &&
-								resThumb.size <= Helper.config.prefetchMaxImageSize * 1024
+								resThumb.size <= Config.values.prefetchMaxImageSize * 1024
 							) {
 								preview.thumbActualUrl = thumb;
 							}
@@ -130,7 +130,7 @@ function parseHtml(preview, res, client) {
 
 function parseHtmlMedia($, preview, client) {
 	return new Promise((resolve, reject) => {
-		if (Helper.config.disableMediaPreview) {
+		if (Config.values.disableMediaPreview) {
 			reject();
 			return;
 		}
@@ -226,14 +226,14 @@ function parse(msg, chan, preview, res, client) {
 		case "image/jxl":
 		case "image/webp":
 		case "image/avif":
-			if (!Helper.config.prefetchStorage && Helper.config.disableMediaPreview) {
+			if (!Config.values.prefetchStorage && Config.values.disableMediaPreview) {
 				return removePreview(msg, preview);
 			}
 
-			if (res.size > Helper.config.prefetchMaxImageSize * 1024) {
+			if (res.size > Config.values.prefetchMaxImageSize * 1024) {
 				preview.type = "error";
 				preview.error = "image-too-big";
-				preview.maxSize = Helper.config.prefetchMaxImageSize * 1024;
+				preview.maxSize = Config.values.prefetchMaxImageSize * 1024;
 			} else {
 				preview.type = "image";
 				preview.thumbActualUrl = preview.link;
@@ -259,7 +259,7 @@ function parse(msg, chan, preview, res, client) {
 				break;
 			}
 
-			if (Helper.config.disableMediaPreview) {
+			if (Config.values.disableMediaPreview) {
 				return removePreview(msg, preview);
 			}
 
@@ -276,7 +276,7 @@ function parse(msg, chan, preview, res, client) {
 				break;
 			}
 
-			if (Helper.config.disableMediaPreview) {
+			if (Config.values.disableMediaPreview) {
 				return removePreview(msg, preview);
 			}
 
@@ -301,7 +301,7 @@ function handlePreview(client, chan, msg, preview, res) {
 	const thumb = preview.thumbActualUrl || "";
 	delete preview.thumbActualUrl;
 
-	if (!thumb.length || !Helper.config.prefetchStorage) {
+	if (!thumb.length || !Config.values.prefetchStorage) {
 		preview.thumb = thumb;
 		return emitPreview(client, chan, msg, preview);
 	}
@@ -382,7 +382,7 @@ function fetch(uri, headers) {
 		return promise;
 	}
 
-	const prefetchTimeout = Helper.config.prefetchTimeout;
+	const prefetchTimeout = Config.values.prefetchTimeout;
 
 	if (!prefetchTimeout) {
 		log.warn(
@@ -394,7 +394,7 @@ function fetch(uri, headers) {
 		let buffer = Buffer.from("");
 		let contentLength = 0;
 		let contentType;
-		let limit = Helper.config.prefetchMaxImageSize * 1024;
+		let limit = Config.values.prefetchMaxImageSize * 1024;
 
 		try {
 			const gotStream = got.stream(uri, {
@@ -415,7 +415,7 @@ function fetch(uri, headers) {
 						// response is an image
 						// if Content-Length header reports a size exceeding the prefetch limit, abort fetch
 						// and if file is not to be stored we don't need to download further either
-						if (contentLength > limit || !Helper.config.prefetchStorage) {
+						if (contentLength > limit || !Config.values.prefetchStorage) {
 							gotStream.destroy();
 						}
 					} else if (mediaTypeRegex.test(contentType)) {
@@ -426,8 +426,8 @@ function fetch(uri, headers) {
 						// twitter.com sends opengraph meta tags within ~20kb of data for individual tweets, the default is set to 50.
 						// for sites like Youtube the og tags are in the first 300K and hence this is configurable by the admin
 						limit =
-							"prefetchMaxSearchSize" in Helper.config
-								? Helper.config.prefetchMaxSearchSize * 1024
+							"prefetchMaxSearchSize" in Config.values
+								? Config.values.prefetchMaxSearchSize * 1024
 								: // set to the previous size if config option is unset
 								  50 * 1024;
 					}

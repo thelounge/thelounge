@@ -5,6 +5,7 @@ const colors = require("chalk");
 const program = require("commander");
 const fs = require("fs");
 const Helper = require("../../helper");
+const Config = require("../../config");
 const Utils = require("../utils");
 
 program
@@ -14,8 +15,8 @@ program
 	.option("--password [password]", "new password, will be prompted if not specified")
 	.option("--save-logs", "if password is specified, this enables saving logs to disk")
 	.action(function (name, cmdObj) {
-		if (!fs.existsSync(Helper.getUsersPath())) {
-			log.error(`${Helper.getUsersPath()} does not exist.`);
+		if (!fs.existsSync(Config.getUsersPath())) {
+			log.error(`${Config.getUsersPath()} does not exist.`);
 			return;
 		}
 
@@ -76,5 +77,5 @@ function add(manager, name, password, enableLog) {
 	manager.addUser(name, hash, enableLog);
 
 	log.info(`User ${colors.bold(name)} created.`);
-	log.info(`User file located at ${colors.green(Helper.getUserConfigPath(name))}.`);
+	log.info(`User file located at ${colors.green(Config.getUserConfigPath(name))}.`);
 }

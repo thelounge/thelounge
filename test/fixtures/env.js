@@ -3,7 +3,7 @@
 const fs = require("fs");
 
 const home = require("path").join(__dirname, ".thelounge");
-require("../../src/helper").setHome(home);
+require("../../src/config").setHome(home);
 
 const STSPolicies = require("../../src/plugins/sts"); // Must be imported *after* setHome
 

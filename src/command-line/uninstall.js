@@ -3,7 +3,7 @@
 const log = require("../log");
 const colors = require("chalk");
 const program = require("commander");
-const Helper = require("../helper");
+const Config = require("../config");
 const Utils = require("./utils");
 
 program
@@ -14,7 +14,7 @@ program
 		const fs = require("fs");
 		const path = require("path");
 
-		const packagesConfig = path.join(Helper.getPackagesPath(), "package.json");
+		const packagesConfig = path.join(Config.getPackagesPath(), "package.json");
 		const packages = JSON.parse(fs.readFileSync(packagesConfig, "utf-8"));
 
 		if (
