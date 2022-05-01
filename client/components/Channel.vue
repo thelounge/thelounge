@@ -1,6 +1,6 @@
 <template>
 	<ChannelWrapper ref="wrapper" v-bind="$props">
-		<span class="name">{{ channel.name }}</span>
+		<span class="name">{{ name() }}</span>
 		<span
 			v-if="channel.unread"
 			:class="{highlight: channel.highlight && !channel.muted}"
@@ -50,6 +50,9 @@ export default {
 	methods: {
 		close() {
 			this.$root.closeChannel(this.channel);
+		},
+		name() {
+			return this.channel.displayName ? this.channel.displayName : this.channel.name;
 		},
 	},
 };

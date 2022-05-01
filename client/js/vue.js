@@ -90,6 +90,13 @@ store.watch(
 );
 
 store.watch(
+	(state) => state.favoritesOpen,
+	(favoritesOpen) => {
+		storage.set("thelounge.state.favorites", favoritesOpen);
+	}
+);
+
+store.watch(
 	(_, getters) => getters.title,
 	(title) => {
 		document.title = title;

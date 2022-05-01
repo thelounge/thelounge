@@ -1,16 +1,6 @@
 <template>
 	<ChannelWrapper v-bind="$props" :channel="channel">
-		<button
-			v-if="network.channels.length > 1"
-			:aria-controls="'network-' + network.uuid"
-			:aria-label="getExpandLabel(network)"
-			:aria-expanded="!network.isCollapsed"
-			class="collapse-network"
-			@click.stop="onCollapseClick"
-		>
-			<span class="collapse-network-icon" />
-		</button>
-		<span v-else class="collapse-network" />
+		<CollapseNetworkButton :network="network" :on-collapse-click="onCollapseClick" />
 		<div class="lobby-wrap">
 			<span :title="channel.name" class="name">{{ channel.name }}</span>
 			<span
@@ -49,11 +39,13 @@
 import collapseNetwork from "../js/helpers/collapseNetwork";
 import roundBadgeNumber from "../js/helpers/roundBadgeNumber";
 import ChannelWrapper from "./ChannelWrapper.vue";
+import CollapseNetworkButton from "./CollapseNetworkButton.vue";
 
 export default {
 	name: "Channel",
 	components: {
 		ChannelWrapper,
+		CollapseNetworkButton,
 	},
 	props: {
 		network: Object,
@@ -75,9 +67,6 @@ export default {
 	methods: {
 		onCollapseClick() {
 			collapseNetwork(this.network, !this.network.isCollapsed);
-		},
-		getExpandLabel(network) {
-			return network.isCollapsed ? "Expand" : "Collapse";
 		},
 	},
 };

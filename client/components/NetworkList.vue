@@ -70,6 +70,19 @@
 			@unchoose="onDraggableUnchoose"
 		>
 			<div
+				v-if="$store.state.favoriteChannels.length"
+				id="favorites"
+				aria-label="Favorite channels"
+				class="network"
+				:class="{
+					collapsed: !$store.state.favoritesOpen,
+				}"
+				role="region"
+				aria-live="polite"
+			>
+				<Favorites :channels="$store.state.favoriteChannels" />
+			</div>
+			<div
 				v-for="network in $store.state.networks"
 				:id="'network-' + network.uuid"
 				:key="network.uuid"
@@ -101,7 +114,6 @@
 					:channel="network.channels[0]"
 					@toggle-join-channel="network.isJoinChannelShown = !network.isJoinChannelShown"
 				/>
-
 				<Draggable
 					draggable=".channel-list-item"
 					ghost-class="ui-sortable-ghost"
@@ -118,7 +130,7 @@
 				>
 					<template v-for="(channel, index) in network.channels">
 						<Channel
-							v-if="index > 0"
+							v-if="index > 0 && !channel.favorite"
 							:key="channel.id"
 							:channel="channel"
 							:network="network"
@@ -200,6 +212,7 @@ import Mousetrap from "mousetrap";
 import Draggable from "vuedraggable";
 import {filter as fuzzyFilter} from "fuzzy";
 import NetworkLobby from "./NetworkLobby.vue";
+import Favorites from "./Favorites.vue";
 import Channel from "./Channel.vue";
 import JoinChannel from "./JoinChannel.vue";
 
@@ -216,6 +229,7 @@ export default {
 		NetworkLobby,
 		Channel,
 		Draggable,
+		Favorites,
 	},
 	data() {
 		return {
@@ -263,6 +277,8 @@ export default {
 		Mousetrap.bind("alt+shift+right", this.expandNetwork);
 		Mousetrap.bind("alt+shift+left", this.collapseNetwork);
 		Mousetrap.bind("alt+j", this.toggleSearch);
+
+		console.log(this.$store.state.favoriteChannels[0]);
 	},
 	beforeDestroy() {
 		Mousetrap.unbind("alt+shift+right", this.expandNetwork);

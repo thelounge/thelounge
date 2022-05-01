@@ -1,0 +1,27 @@
+.collapse-network {
+	width: 40px;
+	opacity: 0.4;
+	padding-left: 11px;
+	transition: opacity 0.2s;
+	flex-shrink: 0;
+}
+
+.collapse-network-icon {
+	display: block;
+	width: 20px;
+	height: 20px;
+	transition: transform 0.2s;
+}
+
+.network.collapsed .collapse-network-icon {
+	transform: rotate(-90deg);
+}
+
+.collapse-network-icon::before {
+	content: "\f0d7"; /* http://fontawesome.io/icon/caret-down/ */
+	color: #fff;
+}
+
+.collapse-network:hover {
+	opacity: 1;
+}
