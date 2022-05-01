@@ -15,13 +15,27 @@
 			>
 				<span class="parted-channel-icon" />
 			</span>
-			<span class="close-tooltip tooltipped tooltipped-w" aria-label="Leave">
-				<button class="close" aria-label="Leave" @click.stop="close" />
+			<span
+				class="close-tooltip tooltipped tooltipped-w"
+				:aria-label="channel.favorite ? 'Unfavorite' : 'Leave'"
+			>
+				<button
+					class="close"
+					:aria-label="channel.favorite ? 'Unfavorite' : 'Leave'"
+					@click.stop="close"
+				/>
 			</span>
 		</template>
 		<template v-else>
-			<span class="close-tooltip tooltipped tooltipped-w" aria-label="Close">
-				<button class="close" aria-label="Close" @click.stop="close" />
+			<span
+				class="close-tooltip tooltipped tooltipped-w"
+				:aria-label="channel.favorite ? 'Unfavorite' : 'Close'"
+			>
+				<button
+					class="close"
+					:aria-label="channel.favorite ? 'Unfavorite' : 'Close'"
+					@click.stop="close"
+				/>
 			</span>
 		</template>
 	</ChannelWrapper>

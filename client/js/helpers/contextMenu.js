@@ -97,9 +97,9 @@ export function generateChannelContextMenu($root, channel, network) {
 			class: "favorite",
 			action() {
 				if (channel.favorite) {
-					socket.emit("favorites:remove", channel.id);
+					socket.emit("favorites:remove", Number(channel.id));
 				} else {
-					socket.emit("favorites:add", channel.id);
+					socket.emit("favorites:add", Number(channel.id));
 				}
 			},
 		});
@@ -210,7 +210,6 @@ export function generateChannelContextMenu($root, channel, network) {
 		});
 	}
 
-	// Add close menu item
 	items.push({
 		label: closeMap[channel.type],
 		type: "item",

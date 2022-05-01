@@ -132,7 +132,6 @@ const store = new Vuex.Store({
 			state.messageSearchResults = value;
 		},
 		favoriteChannels(state, payload) {
-			console.log("payload", payload);
 			state.favoriteChannels.forEach((channel) => {
 				channel.favorite = false;
 				channel.displayName = "";
@@ -159,7 +158,7 @@ const store = new Vuex.Store({
 						);
 
 						netChan.channel.displayName =
-							netChan.channel.name + `(${netChan.network.name})`;
+							netChan.channel.name + ` (${netChan.network.name})`;
 
 						otherNetChan.channel.displayName =
 							otherNetChan.channel.name + ` (${otherNetChan.network.name})`;

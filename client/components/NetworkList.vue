@@ -80,7 +80,12 @@
 				role="region"
 				aria-live="polite"
 			>
-				<Favorites :channels="$store.state.favoriteChannels" />
+				<Favorites
+					:channels="$store.state.favoriteChannels"
+					:long-touch-duration="LONG_TOUCH_DURATION"
+					:on-draggable-unchoose="onDraggableUnchoose"
+					:on-draggable-choose="onDraggableChoose"
+				/>
 			</div>
 			<div
 				v-for="network in $store.state.networks"
@@ -277,8 +282,6 @@ export default {
 		Mousetrap.bind("alt+shift+right", this.expandNetwork);
 		Mousetrap.bind("alt+shift+left", this.collapseNetwork);
 		Mousetrap.bind("alt+j", this.toggleSearch);
-
-		console.log(this.$store.state.favoriteChannels[0]);
 	},
 	beforeDestroy() {
 		Mousetrap.unbind("alt+shift+right", this.expandNetwork);

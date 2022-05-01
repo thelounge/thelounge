@@ -4,31 +4,39 @@
 			<div class="lobby-wrap">
 				<CollapseFavoritesButton :on-collapse-click="onCollapseClick" />
 				<span title="Favorites" class="name">Favorites</span>
-				<span v-if="unreadCount > 0" class="badge">{{ unreadCount }}</span>
 			</div>
 		</div>
-		<div v-for="channel in $store.state.favoriteChannels" :key="channel.id">
-			<Channel
-				:channel="channel"
-				:network="network"
-				:is-filtering="false"
-				:active="
-					$store.state.activeChannel && channel === $store.state.activeChannel.channel
-				"
-			/>
-		</div>
+		<Draggable
+			draggable=".channel-list-item"
+			ghost-class="ui-sortable-ghost"
+			drag-class="ui-sortable-dragging"
+			:group="network.uuid"
+			:list="channels"
+			:delay="longTouchDuration"
+			:delay-on-touch-only="true"
+			:touch-start-threshold="10"
+			class="channels"
+			@choose="onDraggableChoose"
+			@unchoose="onDraggableUnchoose"
+		>
+			<template v-for="channel in channels">
+				<Channel
+					:key="channel.id"
+					:channel="channel"
+					:network="network"
+					:is-filtering="false"
+					:active="
+						$store.state.activeChannel && channel === $store.state.activeChannel.channel
+					"
+				/>
+			</template>
+		</Draggable>
 	</div>
 </template>
 
-<style scoped>
-.lobby-wrap {
-	display: flex;
-	/* margin-left: 40px; */
-}
-</style>
 <script>
+import Draggable from "vuedraggable";
 import eventbus from "../js/eventbus";
-import roundBadgeNumber from "../js/helpers/roundBadgeNumber";
 import Channel from "./Channel.vue";
 import CollapseFavoritesButton from "./CollapseFavoritesButton.vue";
 
@@ -37,9 +45,13 @@ export default {
 	components: {
 		Channel,
 		CollapseFavoritesButton,
+		Draggable,
 	},
 	props: {
 		channels: Array,
+		onDraggableUnchoose: Function,
+		onDraggableChoose: Function,
+		longTouchDuration: Number,
 	},
 	computed: {
 		network() {
@@ -52,7 +64,6 @@ export default {
 			};
 		},
 	},
-
 	methods: {
 		onCollapseClick() {
 			this.$store.commit("toggleFavorites");
@@ -62,13 +73,6 @@ export default {
 				event: event,
 				channel: this.channel,
 			});
-		},
-		unreadCount() {
-			const unread = this.channels.reduce((acc, channel) => {
-				return acc + channel.unread || 0;
-			}, 0);
-
-			return roundBadgeNumber(unread);
 		},
 	},
 };

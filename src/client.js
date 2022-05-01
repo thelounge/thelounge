@@ -120,18 +120,7 @@ function Client(manager, name, config = {}) {
 		}
 	});
 
-	(client.config.networks || []).forEach((network) => {
-		client.connect(network, true);
-
-		for (const chan of network.channels) {
-			if (chan.favorite) {
-				// third argument is whether to save or not;
-				// we don't need to here as the config is loaded from the filesystem
-				console.log(network.uuid, chan.id);
-				client.addToFavorites(network.uuid, chan.id);
-			}
-		}
-	});
+	(client.config.networks || []).forEach((network) => client.connect(network, true));
 
 	// Networks are stored directly in the client object
 	// We don't need to keep it in the config object
@@ -215,6 +204,7 @@ Client.prototype.connect = function (args, isStartup = false) {
 					key: chan.key || "",
 					type: chan.type,
 					muted: chan.muted,
+					favorite: chan.favorite,
 				})
 			);
 		});
@@ -308,6 +298,15 @@ Client.prototype.connect = function (args, isStartup = false) {
 		client.save();
 		channels.forEach((channel) => channel.loadMessages(client, network));
 	}
+
+	channels.forEach((chan) => {
+		if (chan.favorite) {
+			// The third argument for addToFavorites is whether to save,
+			// we will only be adding in this case if the favorite is loaded from disk,
+			// so we can safely set it to false.
+			this.addToFavorites(network.uuid, chan.id, false);
+		}
+	});
 };
 
 Client.prototype.generateToken = function (callback) {
@@ -666,7 +665,7 @@ Client.prototype.part = function (network, chan) {
 	const client = this;
 	network.channels = _.without(network.channels, chan);
 	client.mentions = client.mentions.filter((msg) => !(msg.chanId === chan.id));
-	client.favoriteChannels = client.favoriteChannels.filter((fav) => fav.id !== chan.id);
+	client.favoriteChannels = client.favoriteChannels.filter((fav) => fav.channelId !== chan.id);
 	chan.destroy();
 	client.save();
 	client.emit("part", {

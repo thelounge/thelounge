@@ -50,16 +50,16 @@ new Vue({
 						});
 					}
 				);
+			} else if (channel.favorite) {
+				socket.emit("favorites:remove", Number(channel.id));
+			} else {
+				channel.closed = true;
 
-				return;
+				socket.emit("input", {
+					target: Number(channel.id),
+					text: "/close",
+				});
 			}
-
-			channel.closed = true;
-
-			socket.emit("input", {
-				target: Number(channel.id),
-				text: "/close",
-			});
 		},
 	},
 	render(createElement) {

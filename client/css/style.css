@@ -372,6 +372,8 @@ p {
 .context-menu-clear-favorites::before,
 .context-menu-clear-history::before { content: "\f1f8"; /* https://fontawesome.com/icons/trash?style=solid */ }
 .context-menu-mute::before { content: "\f6a9"; /* https://fontawesome.com/v5.15/icons/volume-mute?style=solid */ }
+.context-menu-favorite::before { content: "\f005"; /* http://fontawesome.io/icon/star/ */ }
+
 
 .channel-list-item .not-secure-icon::before {
 	content: "\f071"; /* https://fontawesome.com/icons/exclamation-triangle?style=solid */
@@ -509,6 +511,7 @@ p {
 	content: "\f359"; /* https://fontawesome.com/icons/arrow-alt-circle-left?style=solid */
 	color: #2ecc40;
 }
+
 
 #chat .msg[data-type="action"] .from::before {
 	content: "\f005"; /* http://fontawesome.io/icon/star/ */
