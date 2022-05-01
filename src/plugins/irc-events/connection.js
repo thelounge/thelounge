@@ -44,7 +44,7 @@ module.exports = function (irc, network) {
 			const commands = network.commands.map(
 				(cmd) =>
 					new Promise((resolve) => {
-						if (cmd.toLowerCase().startsWith("/wait")) {
+						if (cmd.toLowerCase().startsWith("/wait ")) {
 							try {
 								delay = parseInt(cmd.substring(6), 10) * 1000;
 
