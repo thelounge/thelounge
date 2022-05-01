@@ -271,7 +271,11 @@
 							class="tooltipped tooltipped-ne tooltipped-no-delay"
 							aria-label="One /command per line.
 Each command will be executed in
-the server tab on every connection."
+the server tab on every connection.
+
+If you want to wait for a time between
+commands, you can use `/wait <seconds>`,
+like `/wait 5`."
 						>
 							<button class="extra-help" />
 						</span>
