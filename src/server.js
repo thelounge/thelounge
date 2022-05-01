@@ -395,8 +395,11 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 		if (_.isPlainObject(data)) {
 			// prevent people from overriding webirc settings
 			data.uuid = null;
-			data.commands = null;
 			data.ignoreList = null;
+
+			if (Helper.config.webirc !== null) {
+				data.commands = null;
+			}
 
 			client.connect(data);
 		}

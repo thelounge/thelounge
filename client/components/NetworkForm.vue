@@ -252,7 +252,18 @@
 					placeholder="The Lounge - https://thelounge.chat"
 				/>
 			</div>
-			<template v-if="defaults.uuid && !$store.state.serverConfiguration.public">
+			<template v-if="!defaults.uuid">
+				<div class="connect-row">
+					<label for="connect:channels">Channels</label>
+					<input
+						id="connect:channels"
+						v-model="defaults.join"
+						class="input"
+						name="join"
+					/>
+				</div>
+			</template>
+			<template v-if="!$store.state.serverConfiguration.public">
 				<div class="connect-row">
 					<label for="connect:commands">
 						Commands
@@ -260,7 +271,7 @@
 							class="tooltipped tooltipped-ne tooltipped-no-delay"
 							aria-label="One /command per line.
 Each command will be executed in
-the server tab on new connection"
+the server tab on every connection."
 						>
 							<button class="extra-help" />
 						</span>
@@ -273,17 +284,6 @@ the server tab on new connection"
 						class="input"
 						name="commands"
 						@input="resizeCommandsInput"
-					/>
-				</div>
-			</template>
-			<template v-else-if="!defaults.uuid">
-				<div class="connect-row">
-					<label for="connect:channels">Channels</label>
-					<input
-						id="connect:channels"
-						v-model="defaults.join"
-						class="input"
-						name="join"
 					/>
 				</div>
 			</template>
