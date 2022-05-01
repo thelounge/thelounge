@@ -75,7 +75,7 @@
     "@babel/core": "7.17.9",
     "@babel/preset-env": "7.16.11",
     "@fortawesome/fontawesome-free": "5.15.4",
-    "@textcomplete/core": "0.1.10",
+    "@textcomplete/core": "0.1.11",
     "@textcomplete/textarea": "0.1.10",
     "@vue/server-test-utils": "1.3.0",
     "@vue/test-utils": "1.3.0",
