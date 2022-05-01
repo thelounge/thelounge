@@ -77,6 +77,10 @@ class Uploader {
 	}
 
 	static async routeGetFile(req, res) {
+		if (!Helper.config.fileUpload.enable) {
+			return res.status(404).send("Not found");
+		}
+
 		const name = req.params.name;
 
 		const nameRegex = /^[0-9a-f]{16}$/;
@@ -131,6 +135,10 @@ class Uploader {
 	}
 
 	static routeUploadFile(req, res) {
+		if (!Helper.config.fileUpload.enable) {
+			return res.status(404).send("Not found");
+		}
+
 		let busboyInstance;
 		let uploadUrl;
 		let randomName;
