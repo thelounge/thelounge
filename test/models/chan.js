@@ -220,7 +220,8 @@ describe("Chan", function () {
 					"topic",
 					"type",
 					"unread",
-					"users"
+					"users",
+					"favorite"
 				);
 		});
 
