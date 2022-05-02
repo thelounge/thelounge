@@ -1,7 +1,7 @@
 "use strict";
 
-const colors = require("chalk");
-const read = require("read");
+import colors from "chalk";
+import read from "read";
 
 function timestamp() {
 	const datetime = new Date().toISOString().split(".")[0].replace("T", " ");
@@ -9,26 +9,29 @@ function timestamp() {
 	return colors.dim(datetime);
 }
 
-module.exports = {
+export default {
 	/* eslint-disable no-console */
-	error(...args) {
+	error(...args: string[]) {
 		console.error(timestamp(), colors.red("[ERROR]"), ...args);
 	},
-	warn(...args) {
+	warn(...args: string[]) {
 		console.error(timestamp(), colors.yellow("[WARN]"), ...args);
 	},
-	info(...args) {
+	info(...args: string[]) {
 		console.log(timestamp(), colors.blue("[INFO]"), ...args);
 	},
-	debug(...args) {
+	debug(...args: string[]) {
 		console.log(timestamp(), colors.green("[DEBUG]"), ...args);
 	},
-	raw(...args) {
+	raw(...args: string[]) {
 		console.log(...args);
 	},
 	/* eslint-enable no-console */
 
-	prompt(options, callback) {
+	prompt(
+		options: {prompt: string; text: string},
+		callback: (error, result, isDefault) => void
+	): void {
 		options.prompt = [timestamp(), colors.cyan("[PROMPT]"), options.text].join(" ");
 		read(options, callback);
 	},

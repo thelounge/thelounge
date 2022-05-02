@@ -1,10 +1,14 @@
 "use strict";
 
-const Chan = require("../../models/chan");
-const Msg = require("../../models/msg");
-const User = require("../../models/user");
+import {ChanState} from "src/types/models/channel";
+import {MessageType} from "src/types/models/message";
+import {Network} from "src/types/models/network";
 
-module.exports = function (irc, network) {
+import Chan from "../../models/chan";
+import Msg from "../../models/msg";
+import User from "../../models/user";
+
+module.exports = function (irc: Network["irc"], network: Network) {
 	const client = this;
 
 	irc.on("join", function (data) {
@@ -13,7 +17,7 @@ module.exports = function (irc, network) {
 		if (typeof chan === "undefined") {
 			chan = client.createChannel({
 				name: data.channel,
-				state: Chan.State.JOINED,
+				state: ChanState.JOINED,
 			});
 
 			client.emit("join", {
@@ -28,7 +32,7 @@ module.exports = function (irc, network) {
 			// Request channels' modes
 			network.irc.raw("MODE", chan.name);
 		} else if (data.nick === irc.user.nick) {
-			chan.state = Chan.State.JOINED;
+			chan.state = ChanState.JOINED;
 
 			client.emit("channel:state", {
 				chan: chan.id,
@@ -43,7 +47,7 @@ module.exports = function (irc, network) {
 			hostmask: data.ident + "@" + data.hostname,
 			gecos: data.gecos,
 			account: data.account,
-			type: Msg.Type.JOIN,
+			type: MessageType.JOIN,
 			self: data.nick === irc.user.nick,
 		});
 		chan.pushMessage(client, msg);

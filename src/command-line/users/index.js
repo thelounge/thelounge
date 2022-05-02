@@ -1,10 +1,12 @@
 "use strict";
 
-if (!require("../../config").values.ldap.enable) {
-	require("./add");
-	require("./reset");
+import config from "../../config";
+
+if (!config.values.ldap.enable) {
+	import("./add");
+	import("./reset");
 }
 
-require("./list");
-require("./remove");
-require("./edit");
+import "./list";
+import "./remove";
+import "./edit";

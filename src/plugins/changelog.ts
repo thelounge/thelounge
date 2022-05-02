@@ -1,13 +1,14 @@
 "use strict";
 
-const got = require("got");
-const colors = require("chalk");
-const log = require("../log");
-const pkg = require("../../package.json");
+import got, {Response} from "got";
+import colors from "chalk";
+import log from "../log";
+import pkg from "../../package.json";
+import ClientManager from "src/clientManager";
 
 const TIME_TO_LIVE = 15 * 60 * 1000; // 15 minutes, in milliseconds
 
-module.exports = {
+export default {
 	isUpdateAvailable: false,
 	fetch,
 	checkForUpdates,
@@ -16,7 +17,11 @@ module.exports = {
 const versions = {
 	current: {
 		version: `v${pkg.version}`,
+		changelog: undefined,
 	},
+	expiresAt: -1,
+	latest: undefined,
+	packages: undefined,
 };
 
 async function fetch() {
@@ -50,9 +55,9 @@ async function fetch() {
 	return versions;
 }
 
-function updateVersions(response) {
-	let i;
-	let release;
+function updateVersions(response: Response<string>) {
+	let i: number;
+	let release: {tag_name: string; body_html: any; prerelease: boolean; html_url: any};
 	let prerelease = false;
 
 	const body = JSON.parse(response.body);
@@ -90,7 +95,7 @@ function updateVersions(response) {
 	}
 }
 
-function checkForUpdates(manager) {
+function checkForUpdates(manager: ClientManager) {
 	fetch().then((versionData) => {
 		if (!module.exports.isUpdateAvailable) {
 			// Check for updates every 24 hours + random jitter of <3 hours

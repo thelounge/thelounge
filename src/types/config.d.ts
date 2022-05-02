@@ -52,6 +52,10 @@ type ServerConfiguration = Config & {
 	stylesheets: string[];
 };
 
+type IndexTemplateConfiguration = ServerConfiguration & {
+	cacheBust: string;
+};
+
 // TODO: Type this
 type WebIRC = {
 	[key: string]: any;

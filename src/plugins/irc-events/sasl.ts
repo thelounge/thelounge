@@ -1,15 +1,18 @@
 "use strict";
 
-const Msg = require("../../models/msg");
+import Network from "src/models/network";
+import {MessageType} from "src/types/models/message";
 
-module.exports = function (irc, network) {
+import Msg from "../../models/msg";
+
+export default function (irc: Network["irc"], network: Network) {
 	const client = this;
 
 	irc.on("loggedin", (data) => {
 		const lobby = network.channels[0];
 
 		const msg = new Msg({
-			type: Msg.Type.LOGIN,
+			type: MessageType.LOGIN,
 			text: "Logged in as: " + data.account,
 		});
 		lobby.pushMessage(client, msg, true);
@@ -19,9 +22,9 @@ module.exports = function (irc, network) {
 		const lobby = network.channels[0];
 
 		const msg = new Msg({
-			type: Msg.Type.LOGOUT,
+			type: MessageType.LOGOUT,
 			text: "Logged out",
 		});
 		lobby.pushMessage(client, msg, true);
 	});
-};
+}

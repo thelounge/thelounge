@@ -25,6 +25,9 @@ class Chan {
 	type: ChanType;
 	state: ChanState;
 
+	// TODO: this only exists when it's a query... should be better typed
+	userAway: boolean;
+
 	constructor(attr: Partial<Chan>) {
 		_.defaults(this, attr, {
 			id: 0,

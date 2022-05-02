@@ -1,9 +1,11 @@
 "use strict";
 
-const Chan = require("../../models/chan");
-const Msg = require("../../models/msg");
+import Network from "src/models/network";
+import {ChanType} from "src/types/models/channel";
+import {MessageType} from "src/types/models/message";
+import Msg from "../../models/msg";
 
-module.exports = function (irc, network) {
+export default function (irc: Network["irc"], network: Network) {
 	const client = this;
 
 	irc.on("whois", handleWhois);
@@ -42,7 +44,7 @@ module.exports = function (irc, network) {
 
 		if (data.error) {
 			msg = new Msg({
-				type: Msg.Type.ERROR,
+				type: MessageType.ERROR,
 				text: "No such nick: " + data.nick,
 			});
 		} else {
@@ -51,11 +53,11 @@ module.exports = function (irc, network) {
 			// Absolute datetime in milliseconds when nick logged on.
 			data.logonTime = data.logon * 1000;
 			msg = new Msg({
-				type: Msg.Type.WHOIS,
+				type: MessageType.WHOIS,
 				whois: data,
 			});
 		}
 
 		chan.pushMessage(client, msg);
 	}
-};
+}

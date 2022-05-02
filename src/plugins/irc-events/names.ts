@@ -1,6 +1,8 @@
 "use strict";
 
-module.exports = function (irc, network) {
+import Network from "src/models/network";
+
+export default function (irc: Network["irc"], network: Network) {
 	const client = this;
 
 	irc.on("userlist", function (data) {
@@ -25,4 +27,4 @@ module.exports = function (irc, network) {
 			chan: chan.id,
 		});
 	});
-};
+}

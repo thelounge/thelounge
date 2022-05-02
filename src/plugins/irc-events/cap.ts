@@ -1,9 +1,10 @@
 "use strict";
 
-const Msg = require("../../models/msg");
-const STSPolicies = require("../sts");
+import Network from "src/models/network";
+import Msg from "../../models/msg";
+import STSPolicies from "../sts";
 
-module.exports = function (irc, network) {
+export default function (irc: Network["irc"], network: Network) {
 	const client = this;
 
 	irc.on("cap ls", (data) => {
@@ -20,7 +21,7 @@ module.exports = function (irc, network) {
 		}
 
 		const isSecure = irc.connection.transport.socket.encrypted;
-		const values = {};
+		const values = {} as any;
 
 		data.capabilities.sts.split(",").map((value) => {
 			value = value.split("=", 2);
@@ -75,4 +76,4 @@ module.exports = function (irc, network) {
 			client.save();
 		}
 	}
-};
+}

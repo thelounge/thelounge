@@ -1,8 +1,11 @@
 "use strict";
 
-const Msg = require("../../models/msg");
+import Network from "src/models/network";
+import {MessageType} from "src/types/models/message";
 
-module.exports = function (irc, network) {
+import Msg from "src/models/msg";
+
+export default function (irc: Network["irc"], network: Network) {
 	const client = this;
 
 	// If server supports CHGHOST cap, then changing the hostname does not require
@@ -17,7 +20,7 @@ module.exports = function (irc, network) {
 
 			const msg = new Msg({
 				time: data.time,
-				type: Msg.Type.CHGHOST,
+				type: MessageType.CHGHOST,
 				new_ident: data.ident !== data.new_ident ? data.new_ident : "",
 				new_host: data.hostname !== data.new_hostname ? data.new_hostname : "",
 				self: data.nick === irc.user.nick,
@@ -27,4 +30,4 @@ module.exports = function (irc, network) {
 			chan.pushMessage(client, msg);
 		});
 	});
-};
+}
