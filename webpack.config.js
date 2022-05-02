@@ -73,7 +73,7 @@ const config = {
 			},
 			{
 				test: /\.{js,ts,tsx}$/,
-				include: [path.resolve(__dirname, "client")],
+				include: [path.resolve(__dirname, "client/dist")],
 				use: {
 					loader: "babel-loader",
 <<<<<<< HEAD

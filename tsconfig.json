@@ -10,10 +10,13 @@
     "allowJs": true,
     "resolveJsonModule": true
   },
-  "exclude": ["src/node_modules", "public/*", "client/*"],
-  "include": ["src/**/*"],
-  "files": ["src/index.d.ts", "src/types/**/*.d.ts"],
-  "ts-node": {
-    "files": true
-  }
+  "exclude": ["src/node_modules", "public/*"],
+  "references": [
+    {
+      "path": "./src"
+    },
+    {
+      "path": "./client"
+    }
+  ]
 }

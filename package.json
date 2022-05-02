@@ -12,7 +12,7 @@
   },
   "homepage": "https://thelounge.chat/",
   "scripts": {
-    "build": "tsc client/ && webpack",
+    "build": "tsc --build . && webpack",
     "coverage": "run-s test:* && nyc --nycrc-path=test/.nycrc-report.json report",
     "dev": "ts-node index start --dev",
     "format:prettier": "prettier --write \"**/*.*\"",
@@ -128,6 +128,7 @@
     "ts-loader": "9.3.0",
     "ts-migrate": "0.1.28",
     "ts-node": "10.7.0",
+    "tsconfig-paths": "3.14.1",
     "tsconfig-paths-webpack-plugin": "3.5.2",
     "typescript": "4.6.4",
     "undate": "0.3.0",
