@@ -8,7 +8,6 @@ import fs from "fs";
 import net from "net";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import User from "./models/user";
 
 const Helper = {
 	expandHome,

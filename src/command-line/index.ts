@@ -38,16 +38,16 @@ createPackagesFolder();
 // Merge config key-values passed as CLI options into the main config
 Config.merge(program.opts().config);
 
-require("./start");
+import("./start");
 
 if (!Config.values.public) {
-	require("./users");
+	import("./users");
 }
 
-require("./install");
-require("./uninstall");
-require("./upgrade");
-require("./outdated");
+import "./install";
+import "./uninstall";
+import "./upgrade";
+import "./outdated";
 
 // `parse` expects to be passed `process.argv`, but we need to remove to give it
 // a version of `argv` that does not contain options already parsed by

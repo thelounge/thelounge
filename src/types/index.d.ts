@@ -3,3 +3,4 @@
 /// <reference path="config.d.ts" />
 /// <reference path="helper.d.ts" />
 /// <reference path="server.d.ts" />
+/// <reference path="client.d.ts" />

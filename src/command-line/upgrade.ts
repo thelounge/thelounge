@@ -1,10 +1,10 @@
 "use strict";
 
-const log = require("../log");
-const colors = require("chalk");
-const {Command} = require("commander");
-const Config = require("../config");
-const Utils = require("./utils");
+import log from "../log";
+import colors from "chalk";
+import {Command} from "commander";
+import Config from "../config";
+import Utils from "./utils";
 
 const program = new Command();
 program
@@ -49,7 +49,7 @@ program
 			return;
 		}
 
-		return Utils.executeYarnCommand(...argsList)
+		return Utils.executeYarnCommand(argsList.shift(), ...argsList)
 			.then(() => {
 				log.info("Package(s) have been successfully upgraded.");
 			})

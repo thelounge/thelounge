@@ -1,11 +1,15 @@
 {
   "extends": "../tsconfig.json",
-  "files": ["index.d.ts"],
-  "include": ["./**/*.ts", "./**/*.js"],
+  // "files": ["index.d.ts", "types/**/*.d.ts"],
+  // "include": ["./**/*.ts", "./**/*.js"],
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
     "types": ["node"],
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "moduleResolution": "node"
+  },
+  "ts-node": {
+    "files": true
   }
 }
