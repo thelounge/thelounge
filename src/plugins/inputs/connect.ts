@@ -1,11 +1,14 @@
 "use strict";
 
-const Msg = require("../../models/msg");
+import Network from "src/models/network";
+import {Channel} from "src/types/models/channel";
+import {MessageType} from "src/types/models/message";
+import Msg from "../../models/msg";
 
-exports.commands = ["connect", "server"];
-exports.allowDisconnected = true;
+const commands = ["connect", "server"];
+const allowDisconnected = true;
 
-exports.input = function (network, chan, cmd, args) {
+const input = function (network: Network, chan: Channel, cmd: string, args: string[]) {
 	if (args.length === 0) {
 		network.userDisconnected = false;
 		this.save();
@@ -20,7 +23,7 @@ exports.input = function (network, chan, cmd, args) {
 			chan.pushMessage(
 				this,
 				new Msg({
-					type: Msg.Type.ERROR,
+					type: MessageType.ERROR,
 					text: "You are already connected.",
 				})
 			);
@@ -43,4 +46,9 @@ exports.input = function (network, chan, cmd, args) {
 	this.connect({host, port, tls});
 
 	return true;
+};
+
+export default {
+	commands,
+	input,
 };

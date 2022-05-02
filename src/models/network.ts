@@ -12,7 +12,7 @@ import STSPolicies from "../plugins/sts";
 import ClientCertificate from "../plugins/clientCertificate";
 import {Channel, ChanType} from "src/types/models/channel";
 import Client from "src/client";
-import {NetworkStatus} from "src/types/models/network";
+import {IgnoreList, NetworkStatus} from "src/types/models/network";
 import {MessageType} from "src/types/models/message";
 import {WebIRC} from "src/types/config";
 
@@ -81,7 +81,7 @@ class Network {
 	};
 
 	chanCache: Chan[];
-	ignoreList: string[];
+	ignoreList: IgnoreList;
 	keepNick?: string;
 
 	status: NetworkStatus;

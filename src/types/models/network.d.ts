@@ -6,3 +6,9 @@ export type NetworkStatus = {
 	connected: boolean;
 	secure: boolean;
 };
+
+type IgnoreListItem = Hostmask & {
+	when?: number;
+};
+
+type IgnoreList = IgnoreListItem[];

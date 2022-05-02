@@ -1,16 +1,19 @@
 "use strict";
 
-const Msg = require("../../models/msg");
+import Chan from "src/models/chan";
+import Network from "src/models/network";
+import {MessageType} from "src/types/models/message";
+import Msg from "../../models/msg";
 
-exports.commands = ["nick"];
-exports.allowDisconnected = true;
+const commands = ["nick"];
+const allowDisconnected = true;
 
-exports.input = function (network, chan, cmd, args) {
+const input = function (network: Network, chan: Chan, cmd: string, args: string[]) {
 	if (args.length === 0) {
 		chan.pushMessage(
 			this,
 			new Msg({
-				type: Msg.Type.ERROR,
+				type: MessageType.ERROR,
 				text: "Usage: /nick <your new nick>",
 			})
 		);
@@ -21,7 +24,7 @@ exports.input = function (network, chan, cmd, args) {
 		chan.pushMessage(
 			this,
 			new Msg({
-				type: Msg.Type.ERROR,
+				type: MessageType.ERROR,
 				text: "Nicknames may not contain spaces.",
 			})
 		);
@@ -34,7 +37,7 @@ exports.input = function (network, chan, cmd, args) {
 		chan.pushMessage(
 			this,
 			new Msg({
-				type: Msg.Type.ERROR,
+				type: MessageType.ERROR,
 				text: "Nicknames may not be this long.",
 			})
 		);
@@ -64,4 +67,10 @@ exports.input = function (network, chan, cmd, args) {
 	});
 
 	this.save();
+};
+
+export default {
+	commands,
+	input,
+	allowDisconnected,
 };

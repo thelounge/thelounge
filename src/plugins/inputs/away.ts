@@ -1,8 +1,11 @@
 "use strict";
 
-exports.commands = ["away", "back"];
+import Network from "src/models/network";
+import {Channel} from "src/types/models/channel";
 
-exports.input = function (network, chan, cmd, args) {
+const commands = ["away", "back"];
+
+const input = function (network: Network, chan: Channel, cmd: string, args: string[]) {
 	let reason = "";
 
 	if (cmd === "away") {
@@ -17,4 +20,9 @@ exports.input = function (network, chan, cmd, args) {
 	network.awayMessage = reason;
 
 	this.save();
+};
+
+export default {
+	commands,
+	input,
 };
