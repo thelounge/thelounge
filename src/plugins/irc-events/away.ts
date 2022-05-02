@@ -1,13 +1,15 @@
 "use strict";
 
-const Chan = require("../../models/chan");
-const Msg = require("../../models/msg");
+import Network from "src/models/network";
+import {ChanType} from "src/types/models/channel";
+import {MessageType} from "src/types/models/message";
+import Msg from "../../models/msg";
 
-module.exports = function (irc, network) {
+export default function (irc: Network["irc"], network: Network) {
 	const client = this;
 
-	irc.on("away", (data) => handleAway(Msg.Type.AWAY, data));
-	irc.on("back", (data) => handleAway(Msg.Type.BACK, data));
+	irc.on("away", (data) => handleAway(MessageType.AWAY, data));
+	irc.on("back", (data) => handleAway(MessageType.BACK, data));
 
 	function handleAway(type, data) {
 		const away = data.message;
@@ -28,7 +30,7 @@ module.exports = function (irc, network) {
 		network.channels.forEach((chan) => {
 			let user;
 
-			switch (ChanType) {
+			switch (chan.type) {
 				case ChanType.QUERY: {
 					if (data.nick.toLowerCase() !== chan.name.toLowerCase()) {
 						return;
@@ -70,4 +72,4 @@ module.exports = function (irc, network) {
 			}
 		});
 	}
-};
+}

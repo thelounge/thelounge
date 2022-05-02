@@ -2,7 +2,7 @@
 
 const Chan = require("../../models/chan");
 
-module.exports = function (irc, network) {
+module.exports = function (irc: Network["irc"], network: Network) {
 	const client = this;
 	const MAX_CHANS = 500;
 

@@ -1,8 +1,10 @@
 "use strict";
 
-const Msg = require("../../models/msg");
+import Network from "src/models/network";
+import {MessageType} from "src/types/models/message";
+import Msg from "../../models/msg";
 
-module.exports = function (irc, network) {
+export default function (irc: Network["irc"], network: Network) {
 	const client = this;
 
 	irc.on("quit", function (data) {
@@ -15,7 +17,7 @@ module.exports = function (irc, network) {
 
 			const msg = new Msg({
 				time: data.time,
-				type: Msg.Type.QUIT,
+				type: MessageType.QUIT,
 				text: data.message || "",
 				hostmask: data.ident + "@" + data.hostname,
 				from: user,
@@ -31,4 +33,4 @@ module.exports = function (irc, network) {
 			network.keepNick = null;
 		}
 	});
-};
+}

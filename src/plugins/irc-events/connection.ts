@@ -3,7 +3,6 @@
 import _ from "lodash";
 import log from "../../log";
 import Msg from "../../models/msg";
-import Chan from "../../models/chan";
 import Helper from "../../helper";
 import Config from "../../config";
 import Network from "src/models/network";

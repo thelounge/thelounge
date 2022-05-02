@@ -1,9 +1,13 @@
 "use strict";
 
-const Chan = require("../../models/chan");
-const Msg = require("../../models/msg");
+import Network from "src/models/network";
+import {ChanState} from "src/types/models/channel";
+import {MessageType} from "src/types/models/message";
 
-module.exports = function (irc, network) {
+import Chan from "../../models/chan";
+import Msg from "../../models/msg";
+
+export default function (irc: Network["irc"], network: Network) {
 	const client = this;
 
 	irc.on("kick", function (data) {
@@ -14,7 +18,7 @@ module.exports = function (irc, network) {
 		}
 
 		const msg = new Msg({
-			type: Msg.Type.KICK,
+			type: MessageType.KICK,
 			time: data.time,
 			from: chan.getUser(data.nick),
 			target: chan.getUser(data.kicked),
@@ -26,7 +30,7 @@ module.exports = function (irc, network) {
 
 		if (data.kicked === irc.user.nick) {
 			chan.users = new Map();
-			chan.state = Chan.State.PARTED;
+			chan.state = ChanState.PARTED;
 
 			client.emit("channel:state", {
 				chan: chan.id,
@@ -36,4 +40,4 @@ module.exports = function (irc, network) {
 			chan.removeUser(msg.target);
 		}
 	});
-};
+}

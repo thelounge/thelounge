@@ -1,8 +1,10 @@
 "use strict";
 
-const Msg = require("../../models/msg");
+import Network from "src/models/network";
+import {MessageType} from "src/types/models/message";
+import Msg from "../../models/msg";
 
-module.exports = function (irc, network) {
+export default function (irc: Network["irc"], network: Network) {
 	const client = this;
 
 	irc.on("unknown command", function (command) {
@@ -27,11 +29,11 @@ module.exports = function (irc, network) {
 		target.pushMessage(
 			client,
 			new Msg({
-				type: Msg.Type.UNHANDLED,
+				type: MessageType.UNHANDLED,
 				command: command.command,
 				params: command.params,
 			}),
 			true
 		);
 	});
-};
+}

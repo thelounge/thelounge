@@ -51,7 +51,7 @@ module.exports = class PublicClient {
 		chan.pushMessage(
 			this.client,
 			new Msg({
-				type: Msg.Type.PLUGIN,
+				type: MessageType.PLUGIN,
 				text: text,
 				from: {
 					nick: this.packageInfo.name || this.packageInfo.packageName,

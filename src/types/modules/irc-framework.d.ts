@@ -17,6 +17,7 @@ declare module "irc-framework" {
 
 		transport: any;
 		write: (data: string) => void;
+		end: () => void;
 	};
 
 	export class Client extends EventEmitter {
@@ -29,11 +30,13 @@ declare module "irc-framework" {
 				CHANTYPES: string;
 				PREFIX: any;
 				CHANMODES: string;
+				NICKLEN: string;
 			};
 			cap: {
 				isEnabled: (cap: string) => boolean;
 				enabled: string[];
 			};
+			extractTargetGroup: (target: string) => any;
 		};
 		// End of added by Max
 
@@ -258,6 +261,7 @@ declare module "irc-framework" {
 		message: string;
 		nick: string;
 		time?: any;
+		channel?: string;
 	}
 	interface Mode {
 		mode: string;
@@ -310,6 +314,7 @@ declare module "irc-framework" {
 		nick: string;
 		username: string;
 		gecos: string;
+		host: string;
 	}
 
 	class IrcChannel extends EventEmitter {

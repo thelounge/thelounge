@@ -1,8 +1,10 @@
 "use strict";
 
-const Msg = require("../../models/msg");
+import Network from "src/models/network";
+import {MessageType} from "src/types/models/message";
+import Msg from "../../models/msg";
 
-module.exports = function (irc, network) {
+export default function (irc: Network["irc"], network: Network) {
 	const client = this;
 
 	irc.on("motd", function (data) {
@@ -10,7 +12,7 @@ module.exports = function (irc, network) {
 
 		if (data.motd) {
 			const msg = new Msg({
-				type: Msg.Type.MONOSPACE_BLOCK,
+				type: MessageType.MONOSPACE_BLOCK,
 				command: "motd",
 				text: data.motd,
 			});
@@ -19,11 +21,11 @@ module.exports = function (irc, network) {
 
 		if (data.error) {
 			const msg = new Msg({
-				type: Msg.Type.MONOSPACE_BLOCK,
+				type: MessageType.MONOSPACE_BLOCK,
 				command: "motd",
 				text: data.error,
 			});
 			lobby.pushMessage(client, msg);
 		}
 	});
-};
+}

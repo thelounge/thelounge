@@ -112,7 +112,7 @@ class TextFileMessageStorage implements MessageStorage {
 			line,
 			(e) => {
 				if (e) {
-					log.error("Failed to write user log", e);
+					log.error("Failed to write user log", e.message);
 				}
 			}
 		);

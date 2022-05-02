@@ -1,8 +1,10 @@
 "use strict";
 
-const Msg = require("../../models/msg");
+import Network from "src/models/network";
+import {MessageType} from "src/types/models/message";
+import Msg from "../../models/msg";
 
-module.exports = function (irc, network) {
+export default function (irc: Network["irc"], network: Network) {
 	const client = this;
 
 	irc.on("invite", function (data) {
@@ -15,7 +17,7 @@ module.exports = function (irc, network) {
 		const invitedYou = data.invited === irc.user.nick;
 
 		const msg = new Msg({
-			type: Msg.Type.INVITE,
+			type: MessageType.INVITE,
 			time: data.time,
 			from: chan.getUser(data.nick),
 			target: chan.getUser(data.invited),
@@ -25,4 +27,4 @@ module.exports = function (irc, network) {
 		});
 		chan.pushMessage(client, msg);
 	});
-};
+}

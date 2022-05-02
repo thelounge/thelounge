@@ -1,9 +1,13 @@
 "use strict";
 
-const Chan = require("../../models/chan");
-const Msg = require("../../models/msg");
+import Network from "src/models/network";
+import {ChanType, SpecialChanType} from "src/types/models/channel";
+import {MessageType} from "src/types/models/message";
 
-module.exports = function (irc, network) {
+import Chan from "../../models/chan";
+import Msg from "../../models/msg";
+
+export default function (irc: Network["irc"], network: Network) {
 	const client = this;
 
 	irc.on("banlist", (list) => {
@@ -13,7 +17,7 @@ module.exports = function (irc, network) {
 			banned_at: ban.banned_at * 1000,
 		}));
 
-		handleList(Chan.SpecialType.BANLIST, "Ban list", list.channel, data);
+		handleList(SpecialChanType.BANLIST, "Ban list", list.channel, data);
 	});
 
 	irc.on("inviteList", (list) => {
@@ -23,14 +27,23 @@ module.exports = function (irc, network) {
 			invited_at: invite.invited_at * 1000,
 		}));
 
-		handleList(Chan.SpecialType.INVITELIST, "Invite list", list.channel, data);
+		handleList(SpecialChanType.INVITELIST, "Invite list", list.channel, data);
 	});
 
-	function handleList(type, name, channel, data) {
+	function handleList(
+		type: SpecialChanType,
+		name: string,
+		channel: string,
+		data: {
+			hostmask: string;
+			invited_by?: string;
+			inivted_at?: number;
+		}[]
+	) {
 		if (data.length === 0) {
 			const msg = new Msg({
-				time: Date.now(),
-				type: Msg.Type.ERROR,
+				time: new Date(),
+				type: MessageType.ERROR,
 				text: `${name} is empty`,
 			});
 			let chan = network.getChannel(channel);
@@ -62,6 +75,7 @@ module.exports = function (irc, network) {
 				index: network.addChannel(chan),
 			});
 		} else {
+			//@ts-ignore TODO
 			chan.data = data;
 
 			client.emit("msg:special", {
@@ -70,4 +84,4 @@ module.exports = function (irc, network) {
 			});
 		}
 	}
-};
+}

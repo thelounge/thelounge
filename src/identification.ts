@@ -122,7 +122,7 @@ class Identification {
 
 		fs.writeFile(this.oidentdFile, file, {flag: "w+"}, function (err) {
 			if (err) {
-				log.error("Failed to update oidentd file!", err);
+				log.error("Failed to update oidentd file!", err.message);
 			}
 		});
 	}

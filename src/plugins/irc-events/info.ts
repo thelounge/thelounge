@@ -1,8 +1,11 @@
 "use strict";
 
-const Msg = require("../../models/msg");
+import Network from "src/models/network";
+import {MessageType} from "src/types/models/message";
 
-module.exports = function (irc, network) {
+import Msg from "../../models/msg";
+
+export default function (irc: Network["irc"], network: Network) {
 	const client = this;
 
 	irc.on("info", function (data) {
@@ -10,11 +13,11 @@ module.exports = function (irc, network) {
 
 		if (data.info) {
 			const msg = new Msg({
-				type: Msg.Type.MONOSPACE_BLOCK,
+				type: MessageType.MONOSPACE_BLOCK,
 				command: "info",
 				text: data.info,
 			});
 			lobby.pushMessage(client, msg, true);
 		}
 	});
-};
+}

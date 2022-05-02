@@ -1,9 +1,11 @@
 "use strict";
 
-const _ = require("lodash");
-const Msg = require("../../models/msg");
+import _ from "lodash";
+import Network from "src/models/network";
+import {MessageType} from "src/types/models/message";
+import Msg from "../../models/msg";
 
-module.exports = function (irc, network) {
+export default function (irc: Network["irc"], network: Network) {
 	const client = this;
 
 	// The following saves the channel key based on channel mode instead of
@@ -33,7 +35,7 @@ module.exports = function (irc, network) {
 		});
 
 		const msg = new Msg({
-			type: Msg.Type.MODE_CHANNEL,
+			type: MessageType.MODE_CHANNEL,
 			text: `${data.raw_modes} ${data.raw_params.join(" ")}`,
 		});
 		targetChan.pushMessage(client, msg);
@@ -43,7 +45,7 @@ module.exports = function (irc, network) {
 		const serverChan = network.channels[0];
 
 		const msg = new Msg({
-			type: Msg.Type.MODE_USER,
+			type: MessageType.MODE_USER,
 			raw_modes: data.raw_modes,
 			self: false,
 			showInActive: true,
@@ -66,7 +68,7 @@ module.exports = function (irc, network) {
 
 		const msg = new Msg({
 			time: data.time,
-			type: Msg.Type.MODE,
+			type: MessageType.MODE,
 			from: targetChan.getUser(data.nick),
 			text: `${data.raw_modes} ${data.raw_params.join(" ")}`,
 			self: data.nick === irc.user.nick,
@@ -144,4 +146,4 @@ module.exports = function (irc, network) {
 			});
 		}
 	});
-};
+}

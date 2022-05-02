@@ -1,8 +1,11 @@
 "use strict";
 
-const Msg = require("../../models/msg");
+import Network from "src/models/network";
+import {MessageType} from "src/types/models/message";
 
-module.exports = function (irc, network) {
+import Msg from "../../models/msg";
+
+export default function (irc: Network["irc"], network: Network) {
 	const client = this;
 
 	irc.on("part", function (data) {
@@ -14,7 +17,7 @@ module.exports = function (irc, network) {
 
 		const user = chan.getUser(data.nick);
 		const msg = new Msg({
-			type: Msg.Type.PART,
+			type: MessageType.PART,
 			time: data.time,
 			text: data.message || "",
 			hostmask: data.ident + "@" + data.hostname,
@@ -29,4 +32,4 @@ module.exports = function (irc, network) {
 			chan.removeUser(user);
 		}
 	});
-};
+}

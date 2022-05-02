@@ -174,7 +174,7 @@ class Client {
 		return chan;
 	}
 
-	emit(event: string, data: any) {
+	emit(event: string, data?: any) {
 		if (this.manager !== null) {
 			this.manager.sockets.in(this.id.toString()).emit(event, data);
 		}
