@@ -1,7 +1,7 @@
 {
-  // "extends": "../tsconfig.json",
+  "extends": "../tsconfig.json",
   "files": ["index.d.ts"],
-  "include": ["./**/*.ts"],
+  "include": ["./**/*.ts", "./**/*.js"],
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
