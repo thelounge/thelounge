@@ -1,0 +1,1 @@
+{"version":3,"file":"cleanIrcMessage.js","sourceRoot":"","sources":["../../../../js/helpers/ircmessageparser/cleanIrcMessage.js"],"names":[],"mappings":"AAAA,YAAY,CAAC;AAEb,MAAM,eAAe,GACpB,gHAAgH,CAAC;AAElH,MAAM,CAAC,OAAO,GAAG,CAAC,OAAO,EAAE,EAAE,CAAC,OAAO,CAAC,OAAO,CAAC,eAAe,EAAE,EAAE,CAAC,CAAC,IAAI,EAAE,CAAC"}

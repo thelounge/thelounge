@@ -29,7 +29,7 @@ export default {
 	/* eslint-enable no-console */
 
 	prompt(
-		options: {prompt: string; text: string},
+		options: {prompt?: string; default?: string; text: string; silent?: boolean},
 		callback: (error, result, isDefault) => void
 	): void {
 		options.prompt = [timestamp(), colors.cyan("[PROMPT]"), options.text].join(" ");

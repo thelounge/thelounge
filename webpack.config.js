@@ -35,11 +35,11 @@ const config = {
 				test: /\.ts$/,
 				use: {
 					loader: "ts-loader",
-					// options: {
-					// 	compilerOptions: {
-					// 		preserveWhitespace: false,
-					// 	},
-					// },
+					options: {
+						compilerOptions: {
+							preserveWhitespace: false,
+						},
+					},
 					options: {
 						appendTsSuffixTo: [/\.vue$/],
 					},
@@ -84,7 +84,7 @@ const config = {
 					},
 =======
 					options: {
-						presets: ["@babel/env", "babel-preset-typescript-vue"],
+						presets: ["@babel/preset-env", "babel-preset-typescript-vue"],
 					},
 >>>>>>> f6bd9354 (ts progress)
 				},

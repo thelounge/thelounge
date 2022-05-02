@@ -1,6 +1,12 @@
-const Msg = require("../../models/msg");
+import Client from "src/client";
+import Chan from "src/models/chan";
+import {MessageType, UserInMessage} from "src/types/models/message";
+import Msg from "../../models/msg";
 
-module.exports = class PublicClient {
+export default class PublicClient {
+	private client: Client;
+	private packageInfo: any;
+
 	constructor(client, packageInfo) {
 		this.client = client;
 		this.packageInfo = packageInfo;
@@ -47,7 +53,7 @@ module.exports = class PublicClient {
 	 * @param {String} text the message to send
 	 * @param {Chan} chan the channel to send the message to
 	 */
-	sendMessage(text, chan) {
+	sendMessage(text: string, chan: Chan) {
 		chan.pushMessage(
 			this.client,
 			new Msg({
@@ -55,8 +61,8 @@ module.exports = class PublicClient {
 				text: text,
 				from: {
 					nick: this.packageInfo.name || this.packageInfo.packageName,
-				},
+				} as UserInMessage,
 			})
 		);
 	}
-};
+}

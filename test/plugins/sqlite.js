@@ -121,7 +121,7 @@ describe("SQLite Message Storage", function () {
 				const msg = messages[0];
 
 				expect(msg.text).to.equal("Hello from sqlite world!");
-				expect(msg.type).to.equal(Msg.Type.MESSAGE);
+				expect(msg.type).to.equal(MessageType.MESSAGE);
 				expect(msg.time.getTime()).to.equal(123456789);
 			});
 	});

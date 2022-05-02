@@ -1,10 +1,11 @@
 "use strict";
 
-const log = require("../../log");
-const colors = require("chalk");
-const program = require("commander");
-const Utils = require("../utils");
+import log from "../../log";
+import colors from "chalk";
+import {Command} from "commander";
+import Utils from "../utils";
 
+const program = new Command();
 program
 	.command("list")
 	.description("List all users")

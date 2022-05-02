@@ -1,7 +1,7 @@
 "use strict";
 
 import Network from "src/models/network";
-import {ChanType} from "src/types/models/channel";
+import {ChanType} from "../../types/models/channel";
 import {MessageType} from "src/types/models/message";
 import Chan from "../../models/chan";
 import Msg from "../../models/msg";
