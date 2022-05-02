@@ -24,7 +24,7 @@ describe("Network", function () {
 			const network = new Network({
 				name: "Super Nice Network",
 				channels: [
-					new Chan({name: "AAAA!", type: Chan.Type.QUERY}),
+					new Chan({name: "AAAA!", type: ChanType.QUERY}),
 					new Chan({name: "#thelounge"}),
 					new Chan({name: "&foobar"}),
 				],
@@ -32,7 +32,7 @@ describe("Network", function () {
 			network.channels.push(new Chan({name: "#swag"}));
 
 			expect(network.channels[0].name).to.equal("Super Nice Network");
-			expect(network.channels[0].type).to.equal(Chan.Type.LOBBY);
+			expect(network.channels[0].type).to.equal(ChanType.LOBBY);
 		});
 
 		it("should maintain channel reference", function () {
@@ -83,8 +83,8 @@ describe("Network", function () {
 					new Chan({name: "&foobar", key: "", muted: false}),
 					new Chan({name: "#secret", key: "foo", muted: false}),
 					new Chan({name: "&secure", key: "bar", muted: true}),
-					new Chan({name: "Channel List", type: Chan.Type.SPECIAL}),
-					new Chan({name: "PrivateChat", type: Chan.Type.QUERY, muted: true}),
+					new Chan({name: "Channel List", type: ChanType.SPECIAL}),
+					new Chan({name: "PrivateChat", type: ChanType.QUERY, muted: true}),
 				],
 			});
 			network.setNick("chillin`");
@@ -420,7 +420,7 @@ describe("Network", function () {
 				channels: [chan1, chan2],
 			});
 
-			const newUser = new Chan({name: "mcinkay", type: Chan.Type.QUERY});
+			const newUser = new Chan({name: "mcinkay", type: ChanType.QUERY});
 			network.addChannel(newUser);
 
 			expect(network.channels[1]).to.equal(chan1);
@@ -431,14 +431,14 @@ describe("Network", function () {
 		it("should sort users alphabetically", function () {
 			const chan1 = new Chan({name: "#abc"});
 			const chan2 = new Chan({name: "#THELOUNGE"});
-			const user1 = new Chan({name: "astorije", type: Chan.Type.QUERY});
-			const user2 = new Chan({name: "xpaw", type: Chan.Type.QUERY});
+			const user1 = new Chan({name: "astorije", type: ChanType.QUERY});
+			const user2 = new Chan({name: "xpaw", type: ChanType.QUERY});
 
 			const network = new Network({
 				channels: [chan1, chan2, user1, user2],
 			});
 
-			const newUser = new Chan({name: "mcinkay", type: Chan.Type.QUERY});
+			const newUser = new Chan({name: "mcinkay", type: ChanType.QUERY});
 			network.addChannel(newUser);
 
 			expect(network.channels[1]).to.equal(chan1);
@@ -451,14 +451,14 @@ describe("Network", function () {
 		it("should not sort special channels", function () {
 			const chan1 = new Chan({name: "#abc"});
 			const chan2 = new Chan({name: "#THELOUNGE"});
-			const user1 = new Chan({name: "astorije", type: Chan.Type.QUERY});
-			const user2 = new Chan({name: "xpaw", type: Chan.Type.QUERY});
+			const user1 = new Chan({name: "astorije", type: ChanType.QUERY});
+			const user2 = new Chan({name: "xpaw", type: ChanType.QUERY});
 
 			const network = new Network({
 				channels: [chan1, chan2, user1, user2],
 			});
 
-			const newBanlist = new Chan({name: "Banlist for #THELOUNGE", type: Chan.Type.SPECIAL});
+			const newBanlist = new Chan({name: "Banlist for #THELOUNGE", type: ChanType.SPECIAL});
 			network.addChannel(newBanlist);
 
 			expect(network.channels[1]).to.equal(chan1);
@@ -471,15 +471,15 @@ describe("Network", function () {
 		it("should not compare against special channels", function () {
 			const chan1 = new Chan({name: "#abc"});
 			const chan2 = new Chan({name: "#THELOUNGE"});
-			const user1 = new Chan({name: "astorije", type: Chan.Type.QUERY});
+			const user1 = new Chan({name: "astorije", type: ChanType.QUERY});
 
 			const network = new Network({
 				channels: [chan1, chan2, user1],
 			});
 
-			const newBanlist = new Chan({name: "Banlist for #THELOUNGE", type: Chan.Type.SPECIAL});
+			const newBanlist = new Chan({name: "Banlist for #THELOUNGE", type: ChanType.SPECIAL});
 			network.addChannel(newBanlist);
-			const newUser = new Chan({name: "mcinkay", type: Chan.Type.QUERY});
+			const newUser = new Chan({name: "mcinkay", type: ChanType.QUERY});
 			network.addChannel(newUser);
 
 			expect(network.channels[1]).to.equal(chan1);
@@ -490,9 +490,9 @@ describe("Network", function () {
 		});
 
 		it("should insert before first special channel", function () {
-			const banlist = new Chan({name: "Banlist for #THELOUNGE", type: Chan.Type.SPECIAL});
+			const banlist = new Chan({name: "Banlist for #THELOUNGE", type: ChanType.SPECIAL});
 			const chan1 = new Chan({name: "#thelounge"});
-			const user1 = new Chan({name: "astorije", type: Chan.Type.QUERY});
+			const user1 = new Chan({name: "astorije", type: ChanType.QUERY});
 
 			const network = new Network({
 				channels: [banlist, chan1, user1],

@@ -28,8 +28,7 @@ const timeFormats = {
 	msg12hWithSeconds: "hh:mm:ss A",
 };
 
-// This file is required by server, can't use es6 export
-module.exports = {
+export default {
 	colorCodeMap,
 	commands: [],
 	condensedTypes,

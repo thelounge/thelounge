@@ -13,7 +13,7 @@ exports.input = function ({irc}, chan, cmd, args) {
 
 	if (args.length === 2) {
 		irc.raw("INVITE", args[0], args[1]); // Channel provided in the command
-	} else if (args.length === 1 && chan.type === Chan.Type.CHANNEL) {
+	} else if (args.length === 1 && chan.type === ChanType.CHANNEL) {
 		irc.raw("INVITE", args[0], chan.name); // Current channel
 	} else {
 		chan.pushMessage(

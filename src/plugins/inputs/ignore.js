@@ -119,7 +119,7 @@ exports.input = function (network, chan, cmd, args) {
 
 				if (typeof newChan === "undefined") {
 					newChan = client.createChannel({
-						type: Chan.Type.SPECIAL,
+						type: ChanType.SPECIAL,
 						special: Chan.SpecialType.IGNORELIST,
 						name: chanName,
 						data: ignored,

@@ -6,7 +6,7 @@ const Msg = require("../../models/msg");
 exports.commands = ["topic"];
 
 exports.input = function ({irc}, chan, cmd, args) {
-	if (chan.type !== Chan.Type.CHANNEL) {
+	if (chan.type !== ChanType.CHANNEL) {
 		chan.pushMessage(
 			this,
 			new Msg({
