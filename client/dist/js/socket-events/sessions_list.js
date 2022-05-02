@@ -1,0 +1,8 @@
+"use strict";
+import socket from "../socket";
+import store from "../store";
+socket.on("sessions:list", function (data) {
+	data.sort((a, b) => b.lastUse - a.lastUse);
+	store.commit("sessions", data);
+});
+//# sourceMappingURL=sessions_list.js.map

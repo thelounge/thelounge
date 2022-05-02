@@ -1,12 +1,13 @@
 "use strict";
 
-const log = require("../log");
-const fs = require("fs");
-const path = require("path");
-const crypto = require("crypto");
-const Config = require("../config");
+import log from "../log";
+import fs from "fs";
+import path from "path";
+import crypto from "crypto";
+import Config from "../config";
 
 class Storage {
+	references: Map<string, number>;
 	constructor() {
 		this.references = new Map();
 	}
@@ -48,12 +49,12 @@ class Storage {
 
 		fs.unlink(filePath, (err) => {
 			if (err) {
-				log.error("Failed to delete stored file", err);
+				log.error("Failed to delete stored file", err.message);
 			}
 		});
 	}
 
-	store(data, extension, callback) {
+	store(data, extension: string, callback: (url: string) => void) {
 		const hash = crypto.createHash("sha256").update(data).digest("hex");
 		const a = hash.substring(0, 2);
 		const b = hash.substring(2, 4);
@@ -70,14 +71,14 @@ class Storage {
 
 		fs.mkdir(folder, {recursive: true}, (mkdirErr) => {
 			if (mkdirErr) {
-				log.error("Failed to create storage folder", mkdirErr);
+				log.error("Failed to create storage folder", mkdirErr.message);
 
 				return callback("");
 			}
 
 			fs.writeFile(filePath, data, (err) => {
 				if (err) {
-					log.error("Failed to store a file", err);
+					log.error("Failed to store a file", err.message);
 
 					return callback("");
 				}
@@ -88,9 +89,9 @@ class Storage {
 	}
 }
 
-module.exports = new Storage();
+export default new Storage();
 
-function deleteFolder(dir) {
+function deleteFolder(dir: string) {
 	fs.readdirSync(dir).forEach((item) => {
 		item = path.join(dir, item);
 

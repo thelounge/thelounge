@@ -1,13 +1,14 @@
 "use strict";
 
-const log = require("../../log");
-const colors = require("chalk");
-const program = require("commander");
-const fs = require("fs");
-const Helper = require("../../helper");
-const Config = require("../../config");
-const Utils = require("../utils");
+import log from "../../log";
+import colors from "chalk";
+import {Command} from "commander";
+import fs from "fs";
+import Helper from "../../helper";
+import Config from "../../config";
+import Utils from "../utils";
 
+const program = new Command();
 program
 	.command("add <name>")
 	.description("Add a new user")
