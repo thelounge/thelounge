@@ -1,8 +1,12 @@
 "use strict";
 
-const Chan = require("../../models/chan");
+import Msg from "src/models/msg";
+import {ChanType, SpecialChanType} from "src/types/models/channel";
+import {Network} from "src/types/models/network";
 
-module.exports = function (irc: Network["irc"], network: Network) {
+import Chan from "../../models/chan";
+
+export default function (irc: Network["irc"], network: Network) {
 	const client = this;
 	const MAX_CHANS = 500;
 
@@ -30,13 +34,13 @@ module.exports = function (irc: Network["irc"], network: Network) {
 		network.chanCache = [];
 	});
 
-	function updateListStatus(msg) {
+	function updateListStatus(msg: Msg) {
 		let chan = network.getChannel("Channel List");
 
 		if (typeof chan === "undefined") {
 			chan = client.createChannel({
 				type: ChanType.SPECIAL,
-				special: Chan.SpecialType.CHANNELLIST,
+				special: SpecialChanType.CHANNELLIST,
 				name: "Channel List",
 				data: msg,
 			});
@@ -47,6 +51,8 @@ module.exports = function (irc: Network["irc"], network: Network) {
 				index: network.addChannel(chan),
 			});
 		} else {
+			//TODO
+			//@ts-ignore
 			chan.data = msg;
 
 			client.emit("msg:special", {
@@ -55,4 +61,4 @@ module.exports = function (irc: Network["irc"], network: Network) {
 			});
 		}
 	}
-};
+}

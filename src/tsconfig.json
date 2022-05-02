@@ -1,15 +1,24 @@
 {
   "extends": "../tsconfig.json",
-  // "files": ["index.d.ts", "types/**/*.d.ts"],
-  // "include": ["./**/*.ts", "./**/*.js"],
+  "exclude": ["../client/*", "./dist/*"],
+  "ts-node": {
+    "files": true
+  },
+  "include": ["**/*.ts", "**/*.js", "**/*.d.ts"],
+  "files": ["index.d.ts"],
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
     "types": ["node"],
+    "baseUrl": ".",
+    "noImplicitAny": false,
+    "outDir": "dist",
     "resolveJsonModule": true,
-    "moduleResolution": "node"
-  },
-  "ts-node": {
-    "files": true
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "paths": {
+      "src/*": ["./*"],
+      "client/*": ["../client/*"]
+    }
   }
 }

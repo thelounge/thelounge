@@ -1,4 +1,4 @@
-import Chan from "src/models/chan";
+import Chan from "../../models/chan";
 
 export type Channel = Chan;
 
