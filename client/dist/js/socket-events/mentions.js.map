@@ -1,1 +1,0 @@
-{"version":3,"file":"mentions.js","sourceRoot":"","sources":["../../../js/socket-events/mentions.js"],"names":[],"mappings":"AAAA,YAAY,CAAC;AAEb,OAAO,MAAM,MAAM,WAAW,CAAC;AAC/B,OAAO,KAAK,MAAM,UAAU,CAAC;AAE7B,MAAM,CAAC,EAAE,CAAC,eAAe,EAAE,UAAU,IAAI;IACxC,KAAK,CAAC,MAAM,CAAC,UAAU,EAAE,IAAI,CAAC,CAAC;AAChC,CAAC,CAAC,CAAC"}
