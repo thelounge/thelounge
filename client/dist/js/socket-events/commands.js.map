@@ -1,1 +1,0 @@
-{"version":3,"file":"commands.js","sourceRoot":"","sources":["../../../js/socket-events/commands.js"],"names":[],"mappings":"AAAA,MAAM,SAAS,GAAG,OAAO,CAAC,cAAc,CAAC,CAAC;AAC1C,OAAO,MAAM,MAAM,WAAW,CAAC;AAE/B,MAAM,CAAC,EAAE,CAAC,UAAU,EAAE,UAAU,QAAQ;IACvC,IAAI,QAAQ,EAAE;QACb,SAAS,CAAC,QAAQ,GAAG,QAAQ,CAAC;KAC9B;AACF,CAAC,CAAC,CAAC"}
