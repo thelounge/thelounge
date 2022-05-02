@@ -1,16 +1,17 @@
 "use strict";
 
-const Chan = require("../../models/chan");
-const Msg = require("../../models/msg");
+import Network from "src/models/network";
+import {MessageType} from "src/types/models/message";
+import Chan from "../../models/chan";
+import Msg from "../../models/msg";
 
-exports.commands = ["slap", "me"];
-
-exports.input = function ({irc}, chan, cmd, args) {
+const commands = ["slap", "me"];
+const input = function ({irc}: Network, chan: Chan, cmd: string, args: string[]) {
 	if (chan.type !== ChanType.CHANNEL && chan.type !== ChanType.QUERY) {
 		chan.pushMessage(
 			this,
 			new Msg({
-				type: Msg.Type.ERROR,
+				type: MessageType.ERROR,
 				text: `${cmd} command can only be used in channels and queries.`,
 			})
 		);
@@ -45,4 +46,9 @@ exports.input = function ({irc}, chan, cmd, args) {
 	}
 
 	return true;
+};
+
+export default {
+	commands,
+	input,
 };

@@ -1,21 +1,26 @@
 "use strict";
 
-const Chan = require("../../models/chan");
-const Msg = require("../../models/msg");
-const Helper = require("../../helper");
+import Network from "src/models/network";
+import {MessageType} from "src/types/models/message";
 
-exports.commands = ["ignore", "unignore", "ignorelist"];
+import Chan from "src/models/chan";
+import Msg from "src/models/msg";
+import Helper from "src/helper";
+import {IgnoreListItem} from "src/types/models/network";
+import {SpecialChanType} from "src/types/models/channel";
 
-exports.input = function (network, chan, cmd, args) {
+const commands = ["ignore", "unignore", "ignorelist"];
+
+const input = function (network: Network, chan: Chan, cmd: string, args: string[]) {
 	const client = this;
-	let target;
-	let hostmask;
+	let target: string;
+	let hostmask: IgnoreListItem;
 
 	if (cmd !== "ignorelist" && (args.length === 0 || args[0].trim().length === 0)) {
 		chan.pushMessage(
 			client,
 			new Msg({
-				type: Msg.Type.ERROR,
+				type: MessageType.ERROR,
 				text: `Usage: /${cmd} <nick>[!ident][@host]`,
 			})
 		);
@@ -26,7 +31,7 @@ exports.input = function (network, chan, cmd, args) {
 	if (cmd !== "ignorelist") {
 		// Trim to remove any spaces from the hostmask
 		target = args[0].trim();
-		hostmask = Helper.parseHostmask(target);
+		hostmask = Helper.parseHostmask(target) as IgnoreListItem;
 	}
 
 	switch (cmd) {
@@ -36,7 +41,7 @@ exports.input = function (network, chan, cmd, args) {
 				chan.pushMessage(
 					client,
 					new Msg({
-						type: Msg.Type.ERROR,
+						type: MessageType.ERROR,
 						text: "You can't ignore yourself",
 					})
 				);
@@ -52,7 +57,7 @@ exports.input = function (network, chan, cmd, args) {
 				chan.pushMessage(
 					client,
 					new Msg({
-						type: Msg.Type.ERROR,
+						type: MessageType.ERROR,
 						text: `\u0002${hostmask.nick}!${hostmask.ident}@${hostmask.hostname}\u000f added to ignorelist`,
 					})
 				);
@@ -60,7 +65,7 @@ exports.input = function (network, chan, cmd, args) {
 				chan.pushMessage(
 					client,
 					new Msg({
-						type: Msg.Type.ERROR,
+						type: MessageType.ERROR,
 						text: "The specified user/hostmask is already ignored",
 					})
 				);
@@ -83,7 +88,7 @@ exports.input = function (network, chan, cmd, args) {
 				chan.pushMessage(
 					client,
 					new Msg({
-						type: Msg.Type.ERROR,
+						type: MessageType.ERROR,
 						text: `Successfully removed \u0002${hostmask.nick}!${hostmask.ident}@${hostmask.hostname}\u000f from ignorelist`,
 					})
 				);
@@ -91,7 +96,7 @@ exports.input = function (network, chan, cmd, args) {
 				chan.pushMessage(
 					client,
 					new Msg({
-						type: Msg.Type.ERROR,
+						type: MessageType.ERROR,
 						text: "The specified user/hostmask is not ignored",
 					})
 				);
@@ -105,7 +110,7 @@ exports.input = function (network, chan, cmd, args) {
 				chan.pushMessage(
 					client,
 					new Msg({
-						type: Msg.Type.ERROR,
+						type: MessageType.ERROR,
 						text: "Ignorelist is empty",
 					})
 				);
@@ -120,7 +125,7 @@ exports.input = function (network, chan, cmd, args) {
 				if (typeof newChan === "undefined") {
 					newChan = client.createChannel({
 						type: ChanType.SPECIAL,
-						special: Chan.SpecialType.IGNORELIST,
+						special: SpecialChanType.IGNORELIST,
 						name: chanName,
 						data: ignored,
 					});
@@ -130,6 +135,8 @@ exports.input = function (network, chan, cmd, args) {
 						index: network.addChannel(newChan),
 					});
 				} else {
+					// TODO: add type for this chan/event
+					//@ts-expect-error
 					newChan.data = ignored;
 
 					client.emit("msg:special", {
@@ -141,4 +148,9 @@ exports.input = function (network, chan, cmd, args) {
 
 			break;
 	}
+};
+
+export default {
+	commands,
+	input,
 };

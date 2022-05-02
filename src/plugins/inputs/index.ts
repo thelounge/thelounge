@@ -1,3 +1,6 @@
+import Chan from "src/models/chan";
+import Network from "src/models/network";
+
 const clientSideCommands = ["/collapse", "/expand", "/search"];
 
 const passThroughCommands = [
@@ -37,8 +40,12 @@ const userInputs = [
 	"whois",
 	"mute",
 ].reduce(function (plugins, name) {
-	const plugin = require(`./${name}`);
-	plugin.commands.forEach((command) => plugins.set(command, plugin));
+	const plugin = require(`./${name}`) as {
+		commands: string[];
+		input: (network: Network, chan: Chan, cmd: string, args: string[]) => void;
+		allowDisconnected?: boolean;
+	};
+	plugin.commands.forEach((command: string) => plugins.set(command, plugin));
 	return plugins;
 }, new Map());
 
@@ -57,7 +64,7 @@ const addPluginCommand = (packageInfo, command, func) => {
 	pluginCommands.set(command, func);
 };
 
-module.exports = {
+export default {
 	addPluginCommand,
 	getCommands,
 	pluginCommands,

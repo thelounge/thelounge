@@ -1,16 +1,18 @@
 "use strict";
 
-const Chan = require("../../models/chan");
-const Msg = require("../../models/msg");
+import Network from "src/models/network";
+import Chan from "src/models/chan";
+import Msg from "src/models/msg";
+import {MessageType} from "src/types/models/message";
 
-exports.commands = ["ban", "unban", "banlist", "kickban"];
+const commands = ["ban", "unban", "banlist", "kickban"];
 
-exports.input = function ({irc}, chan, cmd, args) {
+const input = function ({irc}: Network, chan: Chan, cmd: string, args: string[]) {
 	if (chan.type !== ChanType.CHANNEL) {
 		chan.pushMessage(
 			this,
 			new Msg({
-				type: Msg.Type.ERROR,
+				type: MessageType.ERROR,
 				text: `${cmd} command can only be used in channels.`,
 			})
 		);
@@ -23,7 +25,7 @@ exports.input = function ({irc}, chan, cmd, args) {
 			chan.pushMessage(
 				this,
 				new Msg({
-					type: Msg.Type.ERROR,
+					type: MessageType.ERROR,
 					text: `Usage: /${cmd} <nick>`,
 				})
 			);
@@ -46,4 +48,9 @@ exports.input = function ({irc}, chan, cmd, args) {
 			irc.banlist(chan.name);
 			break;
 	}
+};
+
+export default {
+	commands,
+	input,
 };

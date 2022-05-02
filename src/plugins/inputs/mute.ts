@@ -1,7 +1,11 @@
 "use strict";
-const Msg = require("../../models/msg");
+import Chan from "src/models/chan";
+import Network from "src/models/network";
+import {MessageType} from "src/types/models/message";
+import Msg from "../../models/msg";
 
-exports.commands = ["mute", "unmute"];
+const commands = ["mute", "unmute"];
+const allowDisconnected = true;
 
 function args_to_channels(network, args) {
 	const targets = [];
@@ -29,7 +33,7 @@ function change_mute_state(client, target, valueToSet) {
 	});
 }
 
-exports.input = function (network, chan, cmd, args) {
+const input = function (network: Network, chan: Chan, cmd: string, args: string[]) {
 	const valueToSet = cmd === "mute" ? true : false;
 	const client = this;
 
@@ -46,7 +50,7 @@ exports.input = function (network, chan, cmd, args) {
 		chan.pushMessage(
 			client,
 			new Msg({
-				type: Msg.Type.ERROR,
+				type: MessageType.ERROR,
 				text: `No open ${
 					missing.length === 1 ? "channel or user" : "channels or users"
 				} found for ${missing.join(",")}`,
@@ -58,4 +62,10 @@ exports.input = function (network, chan, cmd, args) {
 	for (const target of targets) {
 		change_mute_state(client, target, valueToSet);
 	}
+};
+
+export default {
+	commands,
+	input,
+	allowDisconnected,
 };

@@ -1,11 +1,14 @@
 "use strict";
 
-const Chan = require("../../models/chan");
-const Msg = require("../../models/msg");
+import Network from "src/models/network";
+import {ChanType} from "src/types/models/channel";
+import {MessageType} from "src/types/models/message";
+import Chan from "../../models/chan";
+import Msg from "../../models/msg";
 
-exports.commands = ["invite", "invitelist"];
+const commands = ["invite", "invitelist"];
 
-exports.input = function ({irc}, chan, cmd, args) {
+const input = function ({irc}: Network, chan: Chan, cmd: string, args: string[]) {
 	if (cmd === "invitelist") {
 		irc.inviteList(chan.name);
 		return;
@@ -19,9 +22,14 @@ exports.input = function ({irc}, chan, cmd, args) {
 		chan.pushMessage(
 			this,
 			new Msg({
-				type: Msg.Type.ERROR,
+				type: MessageType.ERROR,
 				text: `${cmd} command can only be used in channels or by specifying a target.`,
 			})
 		);
 	}
+};
+
+export default {
+	commands,
+	input,
 };

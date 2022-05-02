@@ -1,12 +1,14 @@
 "use strict";
 
-const _ = require("lodash");
-const ClientCertificate = require("../clientCertificate");
+import _ from "lodash";
+import Chan from "src/models/chan";
+import Network from "src/models/network";
+import ClientCertificate from "../clientCertificate";
 
-exports.commands = ["quit"];
-exports.allowDisconnected = true;
+const commands = ["quit"];
+const allowDisconnected = true;
 
-exports.input = function (network, chan, cmd, args) {
+const input = function (network: Network, chan: Chan, cmd: string, args: string[]) {
 	const client = this;
 
 	client.networks = _.without(client.networks, network);
@@ -22,4 +24,10 @@ exports.input = function (network, chan, cmd, args) {
 	ClientCertificate.remove(network.uuid);
 
 	return true;
+};
+
+export default {
+	commands,
+	input,
+	allowDisconnected,
 };

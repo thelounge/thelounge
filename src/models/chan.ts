@@ -46,7 +46,7 @@ class Chan {
 		this.dereferencePreviews(this.messages);
 	}
 
-	pushMessage(client: Client, msg: Msg, increasesUnread: boolean) {
+	pushMessage(client: Client, msg: Msg, increasesUnread = false) {
 		const chan = this.id;
 		const obj = {chan, msg} as any;
 
@@ -164,7 +164,7 @@ class Chan {
 	 *                                         If true, channel is assumed active.
 	 * @param {int} lastMessage - Last message id seen by active client to avoid sending duplicates.
 	 */
-	getFilteredClone(lastActiveChannel: number | boolean, lastMessage: number): FilteredChannel {
+	getFilteredClone(lastActiveChannel: number | boolean, lastMessage?: number): FilteredChannel {
 		return Object.keys(this).reduce((newChannel, prop) => {
 			if (prop === "users") {
 				// Do not send users, client requests updated user list whenever needed

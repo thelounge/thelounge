@@ -1,13 +1,16 @@
 "use strict";
 
-const Msg = require("../../models/msg");
-const Chan = require("../../models/chan");
-const Config = require("../../config");
+import Msg from "src/models/msg";
+import Chan from "src/models/chan";
+import Config from "src/config";
+import Network from "src/models/network";
+import {MessageType} from "src/types/models/message";
+import {ChanState, ChanType} from "src/types/models/channel";
 
-exports.commands = ["close", "leave", "part"];
-exports.allowDisconnected = true;
+const commands = ["close", "leave", "part"];
+const allowDisconnected = true;
 
-exports.input = function (network, chan, cmd, args) {
+const input = function (network: Network, chan: Chan, cmd: string, args: string[]) {
 	let target = chan;
 
 	if (args.length > 0) {
@@ -24,7 +27,7 @@ exports.input = function (network, chan, cmd, args) {
 		chan.pushMessage(
 			this,
 			new Msg({
-				type: Msg.Type.ERROR,
+				type: MessageType.ERROR,
 				text: "You can not part from networks, use /quit instead.",
 			})
 		);
@@ -35,7 +38,7 @@ exports.input = function (network, chan, cmd, args) {
 	// Otherwise send part to the server and wait for response
 	if (
 		target.type !== ChanType.CHANNEL ||
-		target.state === Chan.State.PARTED ||
+		target.state === ChanState.PARTED ||
 		!network.irc ||
 		!network.irc.connection ||
 		!network.irc.connection.connected
@@ -47,4 +50,10 @@ exports.input = function (network, chan, cmd, args) {
 	}
 
 	return true;
+};
+
+export default {
+	commands,
+	input,
+	allowDisconnected,
 };
