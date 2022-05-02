@@ -23,7 +23,7 @@ module.exports = function (irc, network) {
 				chan = network.channels[0];
 			} else {
 				chan = client.createChannel({
-					type: Chan.Type.QUERY,
+					type: ChanType.QUERY,
 					name: data.nick,
 				});
 

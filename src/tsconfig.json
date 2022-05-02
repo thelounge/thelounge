@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig.json",
+  "files": ["index.d.ts"],
+
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "types": ["node"],
+    "resolveJsonModule": true
+  }
+}

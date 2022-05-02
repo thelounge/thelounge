@@ -13,7 +13,7 @@ describe("Commands", function () {
 
 		const lobby = new Chan({
 			name: "Network Lobby",
-			type: Chan.Type.LOBBY,
+			type: ChanType.LOBBY,
 		});
 
 		const testableNetwork = {

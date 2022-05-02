@@ -56,7 +56,7 @@ module.exports = function (irc, network) {
 			data.from_server &&
 			(!data.target ||
 				!network.getChannel(data.target) ||
-				network.getChannel(data.target).type !== Chan.Type.CHANNEL)
+				network.getChannel(data.target).type !== ChanType.CHANNEL)
 		) {
 			chan = network.channels[0];
 			from = chan.getUser(data.nick);
@@ -81,7 +81,7 @@ module.exports = function (irc, network) {
 					chan = network.channels[0];
 				} else {
 					chan = client.createChannel({
-						type: Chan.Type.QUERY,
+						type: ChanType.QUERY,
 						name: target,
 					});
 
@@ -98,9 +98,9 @@ module.exports = function (irc, network) {
 			from = chan.getUser(data.nick);
 
 			// Query messages (unless self or muted) always highlight
-			if (chan.type === Chan.Type.QUERY) {
+			if (chan.type === ChanType.QUERY) {
 				highlight = !self;
-			} else if (chan.type === Chan.Type.CHANNEL) {
+			} else if (chan.type === ChanType.CHANNEL) {
 				from.lastMessage = data.time || Date.now();
 			}
 		}
@@ -166,7 +166,7 @@ module.exports = function (irc, network) {
 			if (msg.type === Msg.Type.ACTION) {
 				// For actions, do not include colon in the message
 				body = `${data.nick} ${body}`;
-			} else if (chan.type !== Chan.Type.QUERY) {
+			} else if (chan.type !== ChanType.QUERY) {
 				// In channels, prepend sender nickname to the message
 				body = `${data.nick}: ${body}`;
 			}
@@ -174,7 +174,7 @@ module.exports = function (irc, network) {
 			// If a channel is active on any client, highlight won't increment and notification will say (0 mention)
 			if (chan.highlight > 0) {
 				title += ` (${chan.highlight} ${
-					chan.type === Chan.Type.QUERY ? "new message" : "mention"
+					chan.type === ChanType.QUERY ? "new message" : "mention"
 				}${chan.highlight > 1 ? "s" : ""})`;
 			}
 
@@ -198,7 +198,7 @@ module.exports = function (irc, network) {
 		}
 
 		// Keep track of all mentions in channels for this client
-		if (msg.highlight && chan.type === Chan.Type.CHANNEL) {
+		if (msg.highlight && chan.type === ChanType.CHANNEL) {
 			client.mentions.push({
 				chanId: chan.id,
 				msgId: msg.id,

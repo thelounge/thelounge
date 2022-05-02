@@ -1,5 +1,6 @@
 "use strict";
 
+const {ChanType} = require("src/types/models/channel");
 const Chan = require("../../models/chan");
 const Msg = require("../../models/msg");
 
@@ -63,7 +64,7 @@ exports.input = function (network, chan, cmd, args) {
 			}
 
 			const newChan = this.createChannel({
-				type: Chan.Type.QUERY,
+				type: ChanType.QUERY,
 				name: targetName,
 			});
 
