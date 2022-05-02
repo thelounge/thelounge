@@ -5,13 +5,14 @@ const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const VueLoaderPlugin = require("vue-loader/lib/plugin");
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const Helper = require("./src/helper.js");
 
 const isProduction = process.env.NODE_ENV === "production";
 const config = {
 	mode: isProduction ? "production" : "development",
 	entry: {
-		"js/bundle.js": [path.resolve(__dirname, "client/js/vue.js")],
+		"js/bundle.js": [path.resolve(__dirname, "client/js/vue.ts")],
 	},
 	devtool: "source-map",
 	output: {
@@ -26,14 +27,22 @@ const config = {
 		rules: [
 			{
 				test: /\.vue$/,
+				loader: "vue-loader",
+			},
+			{
+				test: /\.ts$/,
 				use: {
-					loader: "vue-loader",
+					loader: "ts-loader",
+					// options: {
+					// 	compilerOptions: {
+					// 		preserveWhitespace: false,
+					// 	},
+					// },
 					options: {
-						compilerOptions: {
-							preserveWhitespace: false,
-						},
+						appendTsSuffixTo: [/\.vue$/],
 					},
 				},
+				exclude: path.resolve(__dirname, "node_modules"),
 			},
 			{
 				test: /\.css$/,
@@ -61,12 +70,12 @@ const config = {
 				],
 			},
 			{
-				test: /\.js$/,
+				test: /\.{js,ts,tsx}$/,
 				include: [path.resolve(__dirname, "client")],
 				use: {
 					loader: "babel-loader",
 					options: {
-						presets: [["@babel/env"]],
+						presets: ["@babel/env", "babel-preset-typescript-vue"],
 					},
 				},
 			},
@@ -83,11 +92,27 @@ const config = {
 			},
 		},
 	},
+	resolve: {
+		alias: {
+			vue$: "vue/dist/vue.esm.js",
+		},
+		extensions: [".js", ".vue", ".json", ".ts"],
+		// modules: ["node_modules", path.resolve(__dirname, "client")],
+		plugins: [
+			new TsconfigPathsPlugin({
+				configFile: path.resolve(__dirname, "client/tsconfig.json"),
+				extensions: [".js", ".vue", ".json", ".ts"],
+				baseUrl: path.resolve(__dirname, "client"),
+			}),
+		],
+	},
 	externals: {
 		json3: "JSON", // socket.io uses json3.js, but we do not target any browsers that need it
 	},
 	plugins: [
-		new VueLoaderPlugin(),
+		new VueLoaderPlugin({
+			esModule: true,
+		}),
 		new MiniCssExtractPlugin({
 			filename: "css/style.css",
 		}),

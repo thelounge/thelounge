@@ -16,21 +16,30 @@
 	</div>
 </template>
 
-<script>
-const constants = require("../js/constants");
-import eventbus from "../js/eventbus";
+<script lang="ts">
+import constants from "@/js/constants";
+import eventbus from "@/js/eventbus";
 import Mousetrap from "mousetrap";
 import throttle from "lodash/throttle";
-import storage from "../js/localStorage";
-import isIgnoredKeybind from "../js/helpers/isIgnoredKeybind";
+import storage from "@/js/localStorage";
+import isIgnoredKeybind from "@/js/helpers/isIgnoredKeybind";
 
 import Sidebar from "./Sidebar.vue";
 import ImageViewer from "./ImageViewer.vue";
 import ContextMenu from "./ContextMenu.vue";
 import ConfirmDialog from "./ConfirmDialog.vue";
 import Mentions from "./Mentions.vue";
+import Vue from "vue";
 
-export default {
+// This stops Vue from complaining about adding objects to the component context
+declare module "vue/types/vue" {
+	interface Vue {
+		debouncedResize: () => void;
+		dayChangeTimeout: number;
+	}
+}
+
+export default Vue.extend({
 	name: "App",
 	components: {
 		Sidebar,
@@ -40,7 +49,7 @@ export default {
 		Mentions,
 	},
 	computed: {
-		viewportClasses() {
+		viewportClasses(): Object {
 			return {
 				notified: this.$store.getters.highlightCount > 0,
 				"menu-open": this.$store.state.appLoaded && this.$store.state.sidebarOpen,
@@ -58,7 +67,6 @@ export default {
 		Mousetrap.bind("alt+s", this.toggleSidebar);
 		Mousetrap.bind("alt+m", this.toggleMentions);
 
-		// Make a single throttled resize listener available to all components
 		this.debouncedResize = throttle(() => {
 			eventbus.emit("resize");
 		}, 100);
@@ -75,19 +83,19 @@ export default {
 		this.dayChangeTimeout = setTimeout(emitDayChange, this.msUntilNextDay());
 	},
 	beforeDestroy() {
-		Mousetrap.unbind("esc", this.escapeKey);
-		Mousetrap.unbind("alt+u", this.toggleUserList);
-		Mousetrap.unbind("alt+s", this.toggleSidebar);
-		Mousetrap.unbind("alt+m", this.toggleMentions);
+		Mousetrap.unbind("esc");
+		Mousetrap.unbind("alt+u");
+		Mousetrap.unbind("alt+s");
+		Mousetrap.unbind("alt+m");
 
 		window.removeEventListener("resize", this.debouncedResize);
 		clearTimeout(this.dayChangeTimeout);
 	},
 	methods: {
-		escapeKey() {
+		escapeKey(): void {
 			eventbus.emit("escapekey");
 		},
-		toggleSidebar(e) {
+		toggleSidebar(e): boolean {
 			if (isIgnoredKeybind(e)) {
 				return true;
 			}
@@ -96,7 +104,7 @@ export default {
 
 			return false;
 		},
-		toggleUserList(e) {
+		toggleUserList(e): boolean {
 			if (isIgnoredKeybind(e)) {
 				return true;
 			}
@@ -105,19 +113,23 @@ export default {
 
 			return false;
 		},
-		toggleMentions() {
+		toggleMentions(): void {
 			if (this.$store.state.networks.length !== 0) {
 				eventbus.emit("mentions:toggle");
 			}
 		},
-		msUntilNextDay() {
+		msUntilNextDay(): number {
 			// Compute how many milliseconds are remaining until the next day starts
 			const today = new Date();
-			const tommorow = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+			const tommorow = new Date(
+				today.getFullYear(),
+				today.getMonth(),
+				today.getDate() + 1
+			).getTime();
 
-			return tommorow - today;
+			return tommorow - today.getTime();
 		},
-		prepareOpenStates() {
+		prepareOpenStates(): void {
 			const viewportWidth = window.innerWidth;
 			let isUserlistOpen = storage.get("thelounge.state.userlist");
 
@@ -137,5 +149,5 @@ export default {
 			this.$store.commit("userlistOpen", isUserlistOpen === "true");
 		},
 	},
-};
+});
 </script>

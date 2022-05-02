@@ -11,7 +11,7 @@ exports.input = function ({irc, nick}, chan, cmd, args) {
 
 		return;
 	} else if (cmd !== "mode") {
-		if (chan.type !== Chan.Type.CHANNEL) {
+		if (chan.type !== ChanType.CHANNEL) {
 			chan.pushMessage(
 				this,
 				new Msg({
@@ -59,7 +59,7 @@ exports.input = function ({irc, nick}, chan, cmd, args) {
 
 	if (args.length === 0 || args[0][0] === "+" || args[0][0] === "-") {
 		args.unshift(
-			chan.type === Chan.Type.CHANNEL || chan.type === Chan.Type.QUERY ? chan.name : nick
+			chan.type === ChanType.CHANNEL || chan.type === ChanType.QUERY ? chan.name : nick
 		);
 	}
 

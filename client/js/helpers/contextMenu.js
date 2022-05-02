@@ -176,7 +176,7 @@ export function generateChannelContextMenu($root, channel, network) {
 		query: "conversation",
 	};
 
-	// We don't allow the muting of Chan.Type.SPECIAL channels
+	// We don't allow the muting of ChanType.SPECIAL channels
 	const mutableChanTypes = Object.keys(humanFriendlyChanTypeMap);
 
 	if (mutableChanTypes.includes(channel.type)) {

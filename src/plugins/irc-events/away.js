@@ -28,8 +28,8 @@ module.exports = function (irc, network) {
 		network.channels.forEach((chan) => {
 			let user;
 
-			switch (chan.type) {
-				case Chan.Type.QUERY: {
+			switch (ChanType) {
+				case ChanType.QUERY: {
 					if (data.nick.toLowerCase() !== chan.name.toLowerCase()) {
 						return;
 					}
@@ -56,7 +56,7 @@ module.exports = function (irc, network) {
 					break;
 				}
 
-				case Chan.Type.CHANNEL: {
+				case ChanType.CHANNEL: {
 					user = chan.findUser(data.nick);
 
 					if (!user || user.away === away) {

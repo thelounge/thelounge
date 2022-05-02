@@ -3,6 +3,7 @@ root: true
 
 parserOptions:
   ecmaVersion: 2022
+  parser: "babel-eslint"
 
 env:
   es6: true

@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "lib": ["es2019"],
+    "baseUrl": ".",
+    "allowJs": true
+  },
+  "exclude": ["src/node_modules", "public/*", "client/*"],
+  "include": ["src/**/*"]
+}
