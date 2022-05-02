@@ -1,8 +1,11 @@
 "use strict";
 
-exports.commands = ["whois"];
+import Chan from "src/models/chan";
+import Network from "src/models/network";
 
-exports.input = function ({irc}, chan, cmd, args) {
+const commands = ["whois"];
+
+const input = function ({irc}: Network, chan: Chan, cmd: string, args: string[]) {
 	if (args.length === 1) {
 		// This queries server of the other user and not of the current user, which
 		// does not know idle time.
@@ -12,4 +15,9 @@ exports.input = function ({irc}, chan, cmd, args) {
 		// Re-assembling the command parsed in client.js
 		irc.raw(`${cmd} ${args.join(" ")}`);
 	}
+};
+
+export default {
+	commands,
+	input,
 };

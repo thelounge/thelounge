@@ -1,5 +1,6 @@
 // https://raw.githubusercontent.com/eternagame/HTML-Chat/vue-rewrite/src/app/types/modules/irc-framework/irc-framework.d.ts
-
+// TODO: Fix this
+type Event = any;
 declare module "irc-framework" {
 	import {EventEmitter} from "eventemitter3";
 	// import { DuplexStream } from 'stream';
@@ -15,6 +16,7 @@ declare module "irc-framework" {
 		registered: boolean;
 
 		transport: any;
+		write: (data: string) => void;
 	};
 
 	export class Client extends EventEmitter {
@@ -98,7 +100,7 @@ declare module "irc-framework" {
 
 		mode(channel: string, mode: string, extra_args?: string[]): void;
 
-		inviteList(channel: string, cb: (e: Event) => any): void;
+		inviteList(channel: string, cb?: (e: Event) => any): void;
 
 		// TODO: typeof e?
 		invite(channel: string, nick: string): void;
@@ -107,7 +109,7 @@ declare module "irc-framework" {
 
 		removeInvite(channel: string, mask: string): void;
 
-		banlist(channel: string, cb: (e: Event) => any): void;
+		banlist(channel: string, cb?: (e: Event) => any): void;
 
 		ban(channel: string, mask: string): void;
 
@@ -115,13 +117,13 @@ declare module "irc-framework" {
 
 		setTopic(channel: string, newTopic: string): void;
 
-		ctcpRequest(target: string, type: string /* , ...params: Array<any> */): void;
+		ctcpRequest(target: string, type: string, ...params: Array<string>): void;
 
-		ctcpResponse(target: string, type: string /* , params: Array<any> */): void;
+		ctcpResponse(target: string, type: string, ...params: Array<string>): void;
 
 		action(target: string, message: string): string[];
 
-		whowas(target: string, cb: (event: Event) => any): void;
+		whowas(target: string, cb?: (event: Event) => any): void;
 
 		whois(nick: string, cb: (event: any) => void): void;
 
@@ -132,7 +134,7 @@ declare module "irc-framework" {
 		 */
 		who(target: string, cb: (event: any) => void): void;
 
-		list(/* params: Array<string> */): void;
+		list(...params: Array<string>): void;
 
 		channel(channel_name: string): IrcChannel;
 

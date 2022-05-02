@@ -1,11 +1,13 @@
 "use strict";
 
-const Chan = require("../../models/chan");
-const Msg = require("../../models/msg");
+import {ChanType} from "src/types/models/channel";
+import {MessageType} from "src/types/models/message";
+import Chan from "../../models/chan";
+import Msg from "../../models/msg";
 
-exports.commands = ["mode", "umode", "op", "deop", "hop", "dehop", "voice", "devoice"];
+const commands = ["mode", "umode", "op", "deop", "hop", "dehop", "voice", "devoice"];
 
-exports.input = function ({irc, nick}, chan, cmd, args) {
+const input = function ({irc, nick}, chan, cmd, args) {
 	if (cmd === "umode") {
 		irc.raw("MODE", nick, ...args);
 
@@ -15,7 +17,7 @@ exports.input = function ({irc, nick}, chan, cmd, args) {
 			chan.pushMessage(
 				this,
 				new Msg({
-					type: Msg.Type.ERROR,
+					type: MessageType.ERROR,
 					text: `${cmd} command can only be used in channels.`,
 				})
 			);
@@ -29,7 +31,7 @@ exports.input = function ({irc, nick}, chan, cmd, args) {
 			chan.pushMessage(
 				this,
 				new Msg({
-					type: Msg.Type.ERROR,
+					type: MessageType.ERROR,
 					text: `Usage: /${cmd} <nick> [...nick]`,
 				})
 			);
@@ -64,4 +66,9 @@ exports.input = function ({irc, nick}, chan, cmd, args) {
 	}
 
 	irc.raw("MODE", ...args);
+};
+
+export default {
+	commands,
+	input,
 };

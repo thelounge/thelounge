@@ -1,10 +1,12 @@
 "use strict";
 
-const {ChanType} = require("src/types/models/channel");
-const Chan = require("../../models/chan");
-const Msg = require("../../models/msg");
+import Network from "src/models/network";
+import {ChanType} from "src/types/models/channel";
+import {MessageType} from "src/types/models/message";
+import Chan from "src/models/chan";
+import Msg from "src/models/msg";
 
-exports.commands = ["query", "msg", "say"];
+const commands = ["query", "msg", "say"];
 
 function getTarget(cmd, args, chan) {
 	switch (cmd) {
@@ -16,7 +18,7 @@ function getTarget(cmd, args, chan) {
 	}
 }
 
-exports.input = function (network, chan, cmd, args) {
+const input = function (network: Network, chan: Chan, cmd: string, args: string[]) {
 	let targetName = getTarget(cmd, args, chan);
 
 	if (cmd === "query") {
@@ -24,7 +26,7 @@ exports.input = function (network, chan, cmd, args) {
 			chan.pushMessage(
 				this,
 				new Msg({
-					type: Msg.Type.ERROR,
+					type: MessageType.ERROR,
 					text: "You cannot open a query window without an argument.",
 				})
 			);
@@ -43,7 +45,7 @@ exports.input = function (network, chan, cmd, args) {
 				chan.pushMessage(
 					this,
 					new Msg({
-						type: Msg.Type.ERROR,
+						type: MessageType.ERROR,
 						text: "You can not open query windows for channels, use /join instead.",
 					})
 				);
@@ -55,7 +57,7 @@ exports.input = function (network, chan, cmd, args) {
 					chan.pushMessage(
 						this,
 						new Msg({
-							type: Msg.Type.ERROR,
+							type: MessageType.ERROR,
 							text: "You can not open query windows for names starting with a user prefix.",
 						})
 					);
@@ -115,4 +117,9 @@ exports.input = function (network, chan, cmd, args) {
 	}
 
 	return true;
+};
+
+export default {
+	commands,
+	input,
 };

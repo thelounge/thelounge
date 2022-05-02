@@ -1,15 +1,18 @@
 "use strict";
 
-const Msg = require("../../models/msg");
+import Chan from "src/models/chan";
+import Network from "src/models/network";
+import {MessageType} from "src/types/models/message";
+import Msg from "../../models/msg";
 
-exports.commands = ["ctcp"];
+const commands = ["ctcp"];
 
-exports.input = function ({irc}, chan, cmd, args) {
+const input = function ({irc}: Network, chan: Chan, cmd: string, args: string[]) {
 	if (args.length < 2) {
 		chan.pushMessage(
 			this,
 			new Msg({
-				type: Msg.Type.ERROR,
+				type: MessageType.ERROR,
 				text: "Usage: /ctcp <nick> <ctcp_type>",
 			})
 		);
@@ -19,11 +22,17 @@ exports.input = function ({irc}, chan, cmd, args) {
 	chan.pushMessage(
 		this,
 		new Msg({
-			type: Msg.Type.CTCP_REQUEST,
+			type: MessageType.CTCP_REQUEST,
 			ctcpMessage: `"${args.slice(1).join(" ")}" to ${args[0]}`,
 			from: chan.getUser(irc.user.nick),
 		})
 	);
 
-	irc.ctcpRequest(...args);
+	// TODO: check. Was ctcpRequest(...args)
+	irc.ctcpRequest(args.shift(), args.shift(), ...args);
+};
+
+export default {
+	commands,
+	input,
 };

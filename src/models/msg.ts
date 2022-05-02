@@ -21,6 +21,7 @@ class Msg {
 	showInActive: boolean;
 	new_ident: string;
 	new_host: string;
+	ctcpMessage: string;
 
 	constructor(attr: Partial<Msg>) {
 		// Some properties need to be copied in the Msg object instead of referenced

@@ -1,8 +1,11 @@
 "use strict";
 
-exports.commands = ["notice"];
+import Chan from "src/models/chan";
+import Network from "src/models/network";
 
-exports.input = function (network, chan, cmd, args) {
+const commands = ["notice"];
+
+const input = function (network: Network, chan: Chan, cmd: string, args: string[]) {
 	if (!args[1]) {
 		return;
 	}
@@ -36,4 +39,9 @@ exports.input = function (network, chan, cmd, args) {
 	}
 
 	return true;
+};
+
+export default {
+	commands,
+	input,
 };

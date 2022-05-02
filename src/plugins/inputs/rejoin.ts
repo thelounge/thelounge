@@ -1,16 +1,19 @@
 "use strict";
 
-const Msg = require("../../models/msg");
-const Chan = require("../../models/chan");
+import Msg from "../../models/msg";
+import Chan from "../../models/chan";
+import {ChanType} from "src/types/models/channel";
+import {MessageType} from "src/types/models/message";
+import Network from "src/models/network";
 
-exports.commands = ["cycle", "rejoin"];
+const commands = ["cycle", "rejoin"];
 
-exports.input = function ({irc}, chan) {
+const input = function ({irc}: Network, chan: Chan) {
 	if (chan.type !== ChanType.CHANNEL) {
 		chan.pushMessage(
 			this,
 			new Msg({
-				type: Msg.Type.ERROR,
+				type: MessageType.ERROR,
 				text: "You can only rejoin channels.",
 			})
 		);
@@ -21,4 +24,9 @@ exports.input = function ({irc}, chan) {
 	irc.join(chan.name);
 
 	return true;
+};
+
+export default {
+	commands,
+	input,
 };

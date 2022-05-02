@@ -1,9 +1,17 @@
 "use strict";
 
-exports.commands = ["list"];
+import Chan from "src/models/chan";
+import Network from "src/models/network";
 
-exports.input = function (network, chan, cmd, args) {
+const commands = ["list"];
+
+const input = function (network: Network, chan: Chan, cmd: string, args: string[]) {
 	network.chanCache = [];
 	network.irc.list(...args);
 	return true;
+};
+
+export default {
+	commands,
+	input,
 };
