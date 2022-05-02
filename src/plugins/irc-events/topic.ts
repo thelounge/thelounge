@@ -1,8 +1,10 @@
 "use strict";
 
-const Msg = require("../../models/msg");
+import Network from "src/models/network";
+import {MessageType} from "src/types/models/message";
+import Msg from "../../models/msg";
 
-module.exports = function (irc, network) {
+export default function (irc: Network["irc"], network: Network) {
 	const client = this;
 
 	irc.on("topic", function (data) {
@@ -14,7 +16,7 @@ module.exports = function (irc, network) {
 
 		const msg = new Msg({
 			time: data.time,
-			type: Msg.Type.TOPIC,
+			type: MessageType.TOPIC,
 			from: data.nick && chan.getUser(data.nick),
 			text: data.topic,
 			self: data.nick === irc.user.nick,
@@ -36,11 +38,11 @@ module.exports = function (irc, network) {
 		}
 
 		const msg = new Msg({
-			type: Msg.Type.TOPIC_SET_BY,
+			type: MessageType.TOPIC_SET_BY,
 			from: chan.getUser(data.nick),
 			when: new Date(data.when * 1000),
 			self: data.nick === irc.user.nick,
 		});
 		chan.pushMessage(client, msg);
 	});
-};
+}

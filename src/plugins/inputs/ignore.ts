@@ -7,7 +7,7 @@ import Chan from "src/models/chan";
 import Msg from "src/models/msg";
 import Helper from "src/helper";
 import {IgnoreListItem} from "src/types/models/network";
-import {SpecialChanType} from "src/types/models/channel";
+import {ChanType, SpecialChanType} from "src/types/models/channel";
 
 const commands = ["ignore", "unignore", "ignorelist"];
 

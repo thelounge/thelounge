@@ -1,18 +1,23 @@
 "use strict";
 
-const cheerio = require("cheerio");
-const got = require("got");
-const URL = require("url").URL;
-const mime = require("mime-types");
-const Config = require("../../config");
-const {findLinksWithSchema} = require("../../../client/js/helpers/ircmessageparser/findLinks");
-const storage = require("../storage");
+import * as cheerio from "cheerio";
+import got from "got";
+import {URL} from "url";
+import mime from "mime-types";
+
+import Config from "../../config";
+import {findLinksWithSchema} from "client/js/helpers/ircmessageparser/findLinks";
+import storage from "../storage";
+import log from "src/log";
+import Client from "src/client";
+import Chan from "src/models/chan";
+import Msg from "src/models/msg";
+
 const currentFetchPromises = new Map();
 const imageTypeRegex = /^image\/.+/;
 const mediaTypeRegex = /^(audio|video)\/.+/;
-const log = require("../../log");
 
-module.exports = function (client, chan, msg, cleanText) {
+export default function (client: Client, chan: Chan, msg: Msg, cleanText: string) {
 	if (!Config.values.prefetch) {
 		return;
 	}
@@ -43,6 +48,8 @@ module.exports = function (client, chan, msg, cleanText) {
 			size: -1,
 			link: link.link, // Send original matched link to the client
 			shown: null,
+			error: undefined,
+			message: undefined,
 		};
 
 		cleanLinks.push(preview);
@@ -63,9 +70,9 @@ module.exports = function (client, chan, msg, cleanText) {
 
 		return cleanLinks;
 	}, []);
-};
+}
 
-function parseHtml(preview, res, client) {
+function parseHtml(preview, res, client: Client) {
 	return new Promise((resolve) => {
 		const $ = cheerio.load(res.data);
 
@@ -128,7 +135,7 @@ function parseHtml(preview, res, client) {
 	});
 }
 
-function parseHtmlMedia($, preview, client) {
+function parseHtmlMedia($: cheerio.CheerioAPI, preview, client) {
 	return new Promise((resolve, reject) => {
 		if (Config.values.disableMediaPreview) {
 			reject();
@@ -202,8 +209,8 @@ function parseHtmlMedia($, preview, client) {
 		}
 	});
 }
-
-function parse(msg, chan, preview, res, client) {
+// TODO: type preview
+function parse(msg: Msg, chan: Chan, preview: any, res, client: Client) {
 	let promise;
 
 	preview.size = res.size;
@@ -467,7 +474,7 @@ function fetch(uri, headers) {
 	return promise;
 }
 
-function normalizeURL(link, baseLink, disallowHttp = false) {
+function normalizeURL(link: string, baseLink?: string, disallowHttp = false) {
 	try {
 		const url = new URL(link, baseLink);
 

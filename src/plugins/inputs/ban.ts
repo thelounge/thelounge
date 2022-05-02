@@ -4,6 +4,7 @@ import Network from "src/models/network";
 import Chan from "src/models/chan";
 import Msg from "src/models/msg";
 import {MessageType} from "src/types/models/message";
+import {ChanType} from "src/types/models/channel";
 
 const commands = ["ban", "unban", "banlist", "kickban"];
 

@@ -1,19 +1,23 @@
 "use strict";
 
-const Msg = require("../../models/msg");
-const Config = require("../../config");
+import Msg from "../../models/msg";
+import Config from "../../config";
+import Network from "src/models/network";
+import {MessageType} from "src/types/models/message";
 
-module.exports = function (irc, network) {
+export default function (irc: Network["irc"], network: Network) {
 	const client = this;
 
 	irc.on("irc error", function (data) {
 		const msg = new Msg({
-			type: Msg.Type.ERROR,
+			type: MessageType.ERROR,
 			error: data.error,
 			showInActive: true,
+			// @ts-ignore
 			nick: data.nick,
 			channel: data.channel,
 			reason: data.reason,
+			// @ts-ignore TODO
 			command: data.command,
 		});
 
@@ -48,7 +52,7 @@ module.exports = function (irc, network) {
 
 		const lobby = network.channels[0];
 		const msg = new Msg({
-			type: Msg.Type.ERROR,
+			type: MessageType.ERROR,
 			text: message,
 			showInActive: true,
 		});
@@ -74,7 +78,7 @@ module.exports = function (irc, network) {
 	irc.on("nick invalid", function (data) {
 		const lobby = network.channels[0];
 		const msg = new Msg({
-			type: Msg.Type.ERROR,
+			type: MessageType.ERROR,
 			text: data.nick + ": " + (data.reason || "Nickname is invalid."),
 			showInActive: true,
 		});
@@ -89,4 +93,4 @@ module.exports = function (irc, network) {
 			nick: irc.user.nick,
 		});
 	});
-};
+}

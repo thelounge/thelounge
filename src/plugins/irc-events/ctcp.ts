@@ -1,10 +1,13 @@
 "use strict";
 
-const _ = require("lodash");
-const Helper = require("../../helper");
-const Msg = require("../../models/msg");
-const User = require("../../models/user");
-const pkg = require("../../../package.json");
+import Network from "src/models/network";
+import {MessageType} from "src/types/models/message";
+
+import _ from "lodash";
+import Helper from "../../helper";
+import Msg from "../../models/msg";
+import User from "../../models/user";
+import pkg from "../../../package.json";
 
 const ctcpResponses = {
 	CLIENTINFO: () =>
@@ -16,7 +19,7 @@ const ctcpResponses = {
 	VERSION: () => pkg.name + " " + Helper.getVersion() + " -- " + pkg.homepage,
 };
 
-module.exports = function (irc, network) {
+export default function (irc: Network["irc"], network: Network) {
 	const client = this;
 	const lobby = network.channels[0];
 
@@ -36,7 +39,7 @@ module.exports = function (irc, network) {
 		}
 
 		const msg = new Msg({
-			type: Msg.Type.CTCP,
+			type: MessageType.CTCP,
 			time: data.time,
 			from: chan.getUser(data.nick),
 			ctcpMessage: data.message,
@@ -76,7 +79,7 @@ module.exports = function (irc, network) {
 
 				// Let user know someone is making a CTCP request against their nick
 				const msg = new Msg({
-					type: Msg.Type.CTCP_REQUEST,
+					type: MessageType.CTCP_REQUEST,
 					time: data.time,
 					from: new User({nick: target}),
 					hostmask: data.ident + "@" + data.hostname,
@@ -88,4 +91,4 @@ module.exports = function (irc, network) {
 			{trailing: false}
 		)
 	);
-};
+}

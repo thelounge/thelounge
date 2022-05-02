@@ -22,6 +22,23 @@ class Msg {
 	new_ident: string;
 	new_host: string;
 	ctcpMessage: string;
+	command: string;
+	invitedYou: boolean;
+	gecos: string;
+	account: boolean;
+
+	// these are all just for error:
+	error: string;
+	nick: string;
+	channel: string;
+	reason: string;
+
+	raw_modes: any;
+	when: Date;
+	whois: any;
+	users: UserInMessage[];
+	statusmsgGroup: string;
+	params: string[];
 
 	constructor(attr: Partial<Msg>) {
 		// Some properties need to be copied in the Msg object instead of referenced
