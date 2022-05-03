@@ -16,7 +16,7 @@
     "coverage": "run-s test:* && nyc --nycrc-path=test/.nycrc-report.json report",
     "dev": "node index start --dev",
     "format:prettier": "prettier --write \"**/*.*\"",
-    "lint:check-eslint": "eslint-config-prettier .eslintrc.yml",
+    "lint:check-eslint": "eslint-config-prettier .eslintrc.cjs",
     "lint:eslint": "eslint . --ext .js,.vue --report-unused-disable-directives --color",
     "lint:prettier": "prettier --list-different \"**/*.*\"",
     "lint:stylelint": "stylelint --color \"client/**/*.css\"",
