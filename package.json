@@ -22,7 +22,7 @@
     "lint:stylelint": "stylelint --color \"client/**/*.css\"",
     "start": "node index start",
     "test": "run-p --aggregate-output --continue-on-error lint:* test:*",
-    "test:mocha": "webpack --config webpack.config-test.js && nyc --nycrc-path=test/.nycrc-mocha.json mocha --colors --config=test/.mocharc.yml",
+    "test:mocha": "webpack --mode=development && nyc --nycrc-path=test/.nycrc-mocha.json mocha --colors --config=test/.mocharc.yml",
     "watch": "webpack --watch"
   },
   "keywords": [
