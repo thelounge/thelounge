@@ -11,6 +11,21 @@ const UNDERLINE = "\x1f";
 const STRIKETHROUGH = "\x1e";
 const MONOSPACE = "\x11";
 
+export type ParsedStyle = {
+	bold?: boolean;
+	textColor?: string;
+	bgColor?: string;
+	hexColor?: string;
+	hexBgColor?: string;
+	italic?: boolean;
+	underline?: boolean;
+	strikethrough?: boolean;
+	monospace?: boolean;
+	text: string;
+	start: number;
+	end: number;
+};
+
 // Color code matcher, with format `XX,YY` where both `XX` and `YY` are
 // integers, `XX` is the text color and `YY` is an optional background color.
 const colorRx = /^(\d{1,2})(?:,(\d{1,2}))?/;
@@ -26,8 +41,8 @@ const controlCodesRx = /[\u0000-\u0009\u000B-\u001F]/g;
 // similarly styled section of the text. Each object carries the `text`, style
 // information (`bold`, `textColor`, `bgcolor`, `italic`,
 // `underline`, `strikethrough`, `monospace`), and `start`/`end` cursors.
-function parseStyle(text) {
-	const result = [];
+function parseStyle(text: string) {
+	const result: ParsedStyle[] = [];
 	let start = 0;
 	let position = 0;
 
@@ -213,12 +228,12 @@ const properties = [
 	"monospace",
 ];
 
-function prepare(text) {
+function prepare(text: string) {
 	return (
 		parseStyle(text)
 			// This optimizes fragments by combining them together when all their values
 			// for the properties defined above are equal.
-			.reduce((prev, curr) => {
+			.reduce((prev: ParsedStyle[], curr) => {
 				if (prev.length) {
 					const lastEntry = prev[prev.length - 1];
 
