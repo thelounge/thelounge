@@ -1,9 +1,5 @@
 {
   "compilerOptions": {
-    "paths": {
-      "@src/*": ["src/*"],
-      "@client/*": ["client/*"]
-    },
     "target": "esnext",
     "module": "commonjs",
     "outDir": "dist",

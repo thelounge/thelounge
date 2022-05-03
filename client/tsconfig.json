@@ -16,12 +16,7 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "baseUrl": "./",
-    // "paths": {
-    //   "@/js/*": ["./js/*"],
-    //   "@/css/*": ["./css/*"],
-    //   "@/img/*": ["./img/*"],
-    //   "@/components/*": ["./components/*"],
-    // },
+
     "jsx": "preserve"
   }
 }

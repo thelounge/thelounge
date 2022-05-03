@@ -1,6 +1,6 @@
 "use strict";
 
-const constants = require("./constants");
+import constants from "./constants";
 
 import "../css/style.css";
 import Vue from "vue";
@@ -15,7 +15,7 @@ import "./socket-events";
 import "./webpush";
 import "./keybinds";
 
-import type {Channel} from "@/backend/models/channel";
+import type {Channel} from "@src/models/channel";
 
 const favicon = document.getElementById("favicon");
 const faviconNormal = favicon?.getAttribute("href") || "";
