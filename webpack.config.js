@@ -65,9 +65,6 @@ const config = {
 				include: [path.resolve(__dirname, "client")],
 				use: {
 					loader: "babel-loader",
-					options: {
-						presets: [["@babel/env"]],
-					},
 				},
 			},
 		],
