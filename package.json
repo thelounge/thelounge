@@ -16,13 +16,13 @@
     "coverage": "run-s test:* && nyc --nycrc-path=test/.nycrc-report.json report",
     "dev": "ts-node index start --dev",
     "format:prettier": "prettier --write \"**/*.*\"",
-    "lint:check-eslint": "eslint-config-prettier .eslintrc.yml",
+    "lint:check-eslint": "eslint-config-prettier .eslintrc.cjs",
     "lint:eslint": "eslint . --ext .js,.vue --report-unused-disable-directives --color",
     "lint:prettier": "prettier --list-different \"**/*.*\"",
     "lint:stylelint": "stylelint --color \"client/**/*.css\"",
     "start": "node index start",
     "test": "run-p --aggregate-output --continue-on-error lint:* test:*",
-    "test:mocha": "webpack --config webpack.config-test.js && nyc --nycrc-path=test/.nycrc-mocha.json mocha --colors --config=test/.mocharc.yml",
+    "test:mocha": "webpack --mode=development && nyc --nycrc-path=test/.nycrc-mocha.json mocha --colors --config=test/.mocharc.yml",
     "watch": "webpack --watch"
   },
   "keywords": [
