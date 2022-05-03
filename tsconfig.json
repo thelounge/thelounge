@@ -2,6 +2,7 @@
   "extends": "./tsconfig.base.json",
   "files": ["./webpack.config.ts", "./babel.config.cjs", "./src/helper.ts"],
   "compilerOptions": {
+    "types": ["node"],
     "paths": {
       "@src/*": ["src/*"],
       "@client/*": ["client/*"]
