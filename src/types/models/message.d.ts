@@ -10,6 +10,7 @@ declare global {
 	type MessagePreview = {
 		shown: boolean;
 		link: string;
+		body: string;
 	};
 
 	export enum MessageType {

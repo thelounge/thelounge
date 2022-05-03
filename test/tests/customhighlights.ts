@@ -1,10 +1,10 @@
 "use strict";
 
 import {expect} from "chai";
-const stub = require("sinon").stub;
-const log = require("../../src/log");
-const Client = require("../../src/client");
-const TestUtil = require("../util");
+import {stub} from "sinon";
+import log from "../../src/log";
+import Client from "../../src/client";
+import TestUtil from "../util";
 
 describe("Custom highlights", function () {
 	let userLoadedLog = "";
@@ -19,7 +19,7 @@ describe("Custom highlights", function () {
 					newHash: "",
 				};
 			},
-		},
+		} as any,
 		"test",
 		{
 			clientSettings: {
@@ -46,7 +46,7 @@ describe("Custom highlights", function () {
 		];
 
 		for (const teststring of teststrings) {
-			expect(teststring).to.not.match(client.highlightRegex);
+			expect(teststring).to.not.match(client.highlightRegex!);
 		}
 	});
 
@@ -81,7 +81,7 @@ describe("Custom highlights", function () {
 		];
 
 		for (const teststring of teststrings) {
-			expect(teststring).to.match(client.highlightRegex);
+			expect(teststring).to.match(client.highlightRegex!);
 		}
 	});
 
@@ -110,7 +110,7 @@ describe("Custom highlights", function () {
 		];
 
 		for (const teststring of teststrings) {
-			expect(teststring).to.match(client.highlightExceptionRegex);
+			expect(teststring).to.match(client.highlightExceptionRegex!);
 		}
 	});
 
@@ -145,7 +145,7 @@ describe("Custom highlights", function () {
 		];
 
 		for (const teststring of teststrings) {
-			expect(teststring).to.not.match(client.highlightExceptionRegex);
+			expect(teststring).to.not.match(client.highlightExceptionRegex!);
 		}
 	});
 });

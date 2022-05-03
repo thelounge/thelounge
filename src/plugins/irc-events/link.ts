@@ -165,6 +165,7 @@ function parseHtmlMedia($: cheerio.CheerioAPI, preview, client) {
 
 			$(`meta[property="og:${type}:type"]`).each(function (i) {
 				const mimeType = $(this).attr("content");
+
 				if (!mimeType) {
 					return;
 				}
@@ -172,6 +173,7 @@ function parseHtmlMedia($: cheerio.CheerioAPI, preview, client) {
 				if (mediaTypeRegex.test(mimeType)) {
 					// If we match a clean video or audio tag, parse that as a preview instead
 					let mediaUrl = $($(`meta[property="og:${type}"]`).get(i)).attr("content");
+
 					if (!mediaUrl) {
 						return;
 					}
@@ -216,6 +218,7 @@ function parseHtmlMedia($: cheerio.CheerioAPI, preview, client) {
 		}
 	});
 }
+
 // TODO: type preview
 function parse(msg: Msg, chan: Chan, preview: any, res, client: Client) {
 	let promise;

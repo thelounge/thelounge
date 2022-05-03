@@ -55,8 +55,8 @@ export default <IrcEventHandler>function (irc, network) {
 				index: network.addChannel(chan),
 			});
 		} else {
-			//TODO
-			//@ts-ignore
+			// TODO
+			// @ts-ignore
 			chan.data = msg;
 
 			client.emit("msg:special", {

@@ -43,6 +43,7 @@ class Identification {
 				},
 				() => {
 					const address = server.address();
+
 					if (typeof address === "string") {
 						log.info(`Identd server available on ${colors.green(address)}`);
 					} else if (address?.address) {

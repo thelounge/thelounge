@@ -1,4 +1,4 @@
-const constants = require("../constants");
+import constants from "../constants";
 import socket from "../socket";
 
 socket.on("commands", function (commands) {

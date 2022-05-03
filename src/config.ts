@@ -13,7 +13,7 @@ class Config {
 	values = require(path.resolve(
 		path.join(__dirname, "..", "defaults", "config.js")
 	)) as ConfigType;
-	#homePath: string = "";
+	#homePath = "";
 
 	getHomePath() {
 		return this.#homePath;

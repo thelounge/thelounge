@@ -126,9 +126,11 @@ function loadPackage(packageName: string) {
 		packageFile = require(packagePath);
 	} catch (e: any) {
 		log.error(`Package ${colors.bold(packageName)} could not be loaded: ${colors.red(e)}`);
+
 		if (e instanceof Error) {
 			log.debug(e.stack ? e.stack : e.message);
 		}
+
 		return;
 	}
 
@@ -143,7 +145,7 @@ function loadPackage(packageName: string) {
 
 	if (packageInfo.type === "theme") {
 		// TODO: investigate
-		//@ts-ignore
+		// @ts-ignore
 		themes.addTheme(packageName, packageInfo);
 
 		if (packageInfo.files) {

@@ -32,7 +32,7 @@ class Chan {
 	closed?: boolean;
 	num_users?: number;
 
-	constructor(attr: Partial<Chan>) {
+	constructor(attr?: Partial<Chan>) {
 		_.defaults(this, attr, {
 			id: 0,
 			messages: [],
@@ -125,7 +125,7 @@ class Chan {
 			}
 		});
 	}
-	getSortedUsers(irc) {
+	getSortedUsers(irc?: Network["irc"]) {
 		const users = Array.from(this.users.values());
 
 		if (!irc || !irc.network || !irc.network.options || !irc.network.options.PREFIX) {
@@ -207,7 +207,7 @@ class Chan {
 			return;
 		}
 
-		let targetChannel: Chan = this;
+		const targetChannel: Chan = this;
 
 		// Is this particular message or channel loggable
 		if (!msg.isLoggable() || !this.isLoggable()) {

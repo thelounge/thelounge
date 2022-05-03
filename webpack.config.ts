@@ -5,7 +5,6 @@ import * as path from "path";
 import CopyPlugin from "copy-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 // TODO; we should add a declaration file
-//@ts-ignore
 import VueLoaderPlugin from "vue-loader/lib/plugin";
 import babelConfig from "./babel.config.cjs";
 import Helper from "./src/helper";
@@ -158,9 +157,9 @@ export default (env: any, argv: any) => {
 
 		// Add the istanbul plugin to babel-loader options
 		for (const rule of config.module!.rules!) {
-			//@ts-ignore
+			// @ts-ignore
 			if (rule.use.loader === "babel-loader") {
-				//@ts-ignore
+				// @ts-ignore
 				rule.use.options.plugins = ["istanbul"];
 			}
 		}

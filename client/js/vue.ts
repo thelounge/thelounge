@@ -104,6 +104,7 @@ store.watch(
 
 		// TODO: investigate types
 		const nav = navigate as any;
+
 		if (nav.setAppBadge) {
 			if (highlightCount > 0) {
 				nav.setAppBadge(highlightCount);

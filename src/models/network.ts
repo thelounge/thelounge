@@ -67,7 +67,7 @@ class Network {
 	// TODO: this is only available on export
 	hasSTSPolicy!: boolean;
 
-	constructor(attr: Partial<Network>) {
+	constructor(attr?: Partial<Network>) {
 		_.defaults(this, attr, {
 			name: "",
 			nick: "",
@@ -237,7 +237,7 @@ class Network {
 			auto_reconnect_max_retries: 30,
 		});
 
-		//@ts-ignore TODO: `this` should now be a NetworkWithIrcFramework
+		// @ts-ignore TODO: `this` should now be a NetworkWithIrcFramework
 		this.setIrcFrameworkOptions(client);
 
 		this.irc.requestCap([
@@ -391,9 +391,14 @@ class Network {
 			}
 
 			this.setIrcFrameworkOptions(client);
-			if (this.irc.options?.username) this.irc.user.username = this.irc.options.username;
 
-			if (this.irc.options?.gecos) this.irc.user.gecos = this.irc.options.gecos;
+			if (this.irc.options?.username) {
+				this.irc.user.username = this.irc.options.username;
+			}
+
+			if (this.irc.options?.gecos) {
+				this.irc.user.gecos = this.irc.options.gecos;
+			}
 		}
 
 		client.save();

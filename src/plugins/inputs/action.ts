@@ -3,6 +3,7 @@
 import Msg from "../../models/msg";
 
 const commands = ["slap", "me"];
+
 const input: PluginInputHandler = function ({irc}, chan, cmd, args) {
 	if (chan.type !== ChanType.CHANNEL && chan.type !== ChanType.QUERY) {
 		chan.pushMessage(

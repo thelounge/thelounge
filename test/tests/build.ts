@@ -1,8 +1,8 @@
 "use strict";
 
 import {expect} from "chai";
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
 describe("public folder", function () {
 	const publicFolder = path.join(__dirname, "..", "..", "public");

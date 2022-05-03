@@ -7,7 +7,7 @@ import path from "path";
 import WebPushAPI from "web-push";
 import Config from "../config";
 import Client from "client";
-
+import * as os from "os";
 class WebPush {
 	vapidKeys?: {
 		publicKey: string;
@@ -34,7 +34,7 @@ class WebPush {
 					"is world readable. The file contains secrets. Please fix the permissions"
 				);
 
-				if (require("os").platform() !== "win32") {
+				if (os.platform() !== "win32") {
 					log.warn(`run \`chmod o= ${vapidPath}\` to correct it`);
 				}
 			}
