@@ -5,7 +5,10 @@ import distance from "./distance";
 // onTwoFingerSwipe will be called with a cardinal direction ("n", "e", "s" or
 // "w") as its only argument.
 function listenForTwoFingerSwipes(onTwoFingerSwipe) {
-	let history = [];
+	let history: {
+		center: number[];
+		timestamp: number;
+	}[] = [];
 
 	document.body.addEventListener(
 		"touchmove",
@@ -16,6 +19,10 @@ function listenForTwoFingerSwipes(onTwoFingerSwipe) {
 
 			const a = event.touches.item(0);
 			const b = event.touches.item(1);
+
+			if (!a || !b) {
+				return;
+			}
 
 			const timestamp = window.performance.now();
 			const center = [(a.screenX + b.screenX) / 2, (a.screenY + b.screenY) / 2];

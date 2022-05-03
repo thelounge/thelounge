@@ -3,6 +3,23 @@
 import socket from "../socket";
 import eventbus from "../eventbus";
 
+type ContextMenuItem =
+	| ({
+			label: string;
+			type: string;
+			class: string;
+	  } & (
+			| {
+					link?: string;
+			  }
+			| {
+					action?: () => void;
+			  }
+	  ))
+	| {
+			type: "divider";
+	  };
+
 export function generateChannelContextMenu($root, channel, network) {
 	const typeMap = {
 		lobby: "network",
@@ -18,7 +35,7 @@ export function generateChannelContextMenu($root, channel, network) {
 		special: "Close",
 	};
 
-	let items = [
+	let items: ContextMenuItem[] = [
 		{
 			label: channel.name,
 			type: "item",
