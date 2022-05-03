@@ -111,3 +111,5 @@ function verifyFileOwner() {
 		);
 	}
 }
+
+export default program;

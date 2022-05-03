@@ -11,7 +11,7 @@ import storage from "../storage";
 import log from "log";
 import Client from "client";
 import Chan from "models/chan";
-import Msg from "models/msg";
+import Msg from "../../models/msg";
 import {Preview} from "types/plugins/preview";
 
 const currentFetchPromises = new Map();

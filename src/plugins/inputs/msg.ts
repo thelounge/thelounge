@@ -2,7 +2,7 @@
 
 import Network from "models/network";
 
-import Msg from "models/msg";
+import Msg from "../../models/msg";
 
 const commands = ["query", "msg", "say"];
 
