@@ -1,12 +1,15 @@
 "use strict";
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'expect'.
 const expect = require("chai").expect;
 const {
 	findLinks,
 	findLinksWithSchema,
 } = require("../../../../../client/js/helpers/ircmessageparser/findLinks");
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("findLinks", () => {
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should find url", () => {
 		const input = "irc://irc.example.com/thelounge";
 		const expected = [
@@ -22,6 +25,7 @@ describe("findLinks", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should find urls with www", () => {
 		const input = "www.nooooooooooooooo.com";
 		const expected = [
@@ -37,6 +41,7 @@ describe("findLinks", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should find urls in strings", () => {
 		const input = "look at https://thelounge.chat/ for more information";
 		const expected = [
@@ -52,6 +57,7 @@ describe("findLinks", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should find urls in strings starting with www", () => {
 		const input = "use www.duckduckgo.com for privacy reasons";
 		const expected = [
@@ -67,6 +73,7 @@ describe("findLinks", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should find urls with odd surroundings", () => {
 		const input = "<https://theos.kyriasis.com/~kyrias/stats/archlinux.html>";
 		const expected = [
@@ -82,6 +89,7 @@ describe("findLinks", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should find urls with starting with http:// and odd surroundings", () => {
 		const input = ".:http://www.github.com:. .:www.github.com:.";
 		const expected = [
@@ -97,15 +105,19 @@ describe("findLinks", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should not find urls", () => {
 		const input = "text www. text";
+		// @ts-expect-error ts-migrate(7034) FIXME: Variable 'expected' implicitly has type 'any[]' in... Remove this comment to see the full error message
 		const expected = [];
 
 		const actual = findLinks(input);
 
+		// @ts-expect-error ts-migrate(7005) FIXME: Variable 'expected' implicitly has an 'any[]' type... Remove this comment to see the full error message
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should handle multiple www. correctly", () => {
 		const input = "www.www.test.com";
 		const expected = [
@@ -121,6 +133,7 @@ describe("findLinks", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should find domains without www. but valid tld", () => {
 		const input = "google.com google.lv google.museum";
 		const expected = [
@@ -146,6 +159,7 @@ describe("findLinks", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should find .onion domains", () => {
 		const input = "facebookcorewwwi.onion/test?url";
 		const expected = [
@@ -161,15 +175,19 @@ describe("findLinks", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should not consider invalid TLDs as domains", () => {
 		const input = "google.wtfgugl google.xx www.google.wtfgugl www.google.xx";
+		// @ts-expect-error ts-migrate(7034) FIXME: Variable 'expected' implicitly has type 'any[]' in... Remove this comment to see the full error message
 		const expected = [];
 
 		const actual = findLinks(input);
 
+		// @ts-expect-error ts-migrate(7005) FIXME: Variable 'expected' implicitly has an 'any[]' type... Remove this comment to see the full error message
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should consider invalid TLDs as domains if protocol is specified", () => {
 		const input =
 			"http://google.wtfgugl http://google.xx http://www.google.wtfgugl http://www.google.xx";
@@ -201,6 +219,7 @@ describe("findLinks", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should correctly stop at punctuation", () => {
 		// Issue #2351
 		const input =
@@ -260,6 +279,7 @@ describe("findLinks", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should correctly stop at apostrophe", () => {
 		const input = "https://www.google.com's www.google.com's google.com's"; // Issue #1302
 		const expected = [
@@ -285,6 +305,7 @@ describe("findLinks", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("does not find invalid urls", () => {
 		const input = "www.example.com ssh://-oProxyCommand=whois"; // Issue #1412
 		const expected = [
@@ -318,6 +339,7 @@ describe("findLinks", () => {
 		expect(actual2).to.deep.equal(expected2);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("keeps parsing after finding an invalid url", () => {
 		const input = "www.example.com http://a:%p@c http://thelounge.chat";
 		const expected = [
@@ -343,6 +365,7 @@ describe("findLinks", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should add protocol to protocol-aware urls", () => {
 		const input = "//example.com";
 		const expected = [
@@ -358,6 +381,7 @@ describe("findLinks", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should not return urls with no schema if flag is specified", () => {
 		const input = "https://example.global //example.com http://example.group example.py";
 		const expected = [
