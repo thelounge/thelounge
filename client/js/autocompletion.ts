@@ -1,6 +1,6 @@
 "use strict";
 
-const constants = require("./constants");
+import constants from "./constants";
 
 import Mousetrap from "mousetrap";
 import {Textcomplete} from "@textcomplete/core/dist/Textcomplete";
@@ -17,7 +17,7 @@ const emojiSearchTerms = Object.keys(emojiMap);
 const emojiStrategy = {
 	id: "emoji",
 	match: /(^|\s):([-+\w:?]{2,}):?$/,
-	search(term, callback) {
+	search(term: string, callback: (matches) => void) {
 		// Trim colon from the matched term,
 		// as we are unable to get a clean string from match regex
 		term = term.replace(/:$/, "");
@@ -267,7 +267,7 @@ function replaceNick(original, position = 1) {
 	return original + store.state.settings.nickPostfix;
 }
 
-function fuzzyGrep(term, array) {
+function fuzzyGrep<T>(term: string, array: Array<T>) {
 	const results = fuzzy.filter(term, array, {
 		pre: "<b>",
 		post: "</b>",
@@ -276,6 +276,10 @@ function fuzzyGrep(term, array) {
 }
 
 function rawNicks() {
+	if (!store.state.activeChannel) {
+		return [];
+	}
+
 	if (store.state.activeChannel.channel.users.length > 0) {
 		const users = store.state.activeChannel.channel.users.slice();
 
@@ -294,7 +298,7 @@ function rawNicks() {
 	return [me];
 }
 
-function completeNicks(word, isFuzzy) {
+function completeNicks(word: string, isFuzzy: boolean) {
 	const users = rawNicks();
 	word = word.toLowerCase();
 

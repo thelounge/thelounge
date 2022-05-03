@@ -39,7 +39,7 @@ class Msg {
 	statusmsgGroup!: string;
 	params!: string[];
 
-	constructor(attr: Partial<Msg>) {
+	constructor(attr?: Partial<Msg>) {
 		// Some properties need to be copied in the Msg object instead of referenced
 		if (attr) {
 			["from", "target"].forEach((prop) => {

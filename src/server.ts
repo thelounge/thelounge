@@ -24,7 +24,6 @@ import themes from "./plugins/packages/themes";
 themes.loadLocalThemes();
 
 import packages from "./plugins/packages/index";
-import Chan from "./models/chan";
 import {
 	ClientConfiguration,
 	Defaults,
@@ -33,6 +32,7 @@ import {
 } from "./types/config";
 
 import {Server as wsServer} from "ws";
+import {ServerOptions} from "types/server";
 
 // A random number that will force clients to reload the page if it differs
 const serverHash = Math.floor(Date.now() * Math.random());
@@ -367,7 +367,13 @@ function indexRequest(req, res) {
 	);
 }
 
-function initializeClient(socket, client, token, lastMessage, openChannel) {
+function initializeClient(
+	socket: Socket,
+	client: Client,
+	token: string,
+	lastMessage: number,
+	openChannel: number
+) {
 	socket.off("auth:perform", performAuthentication);
 	socket.emit("auth:success");
 
@@ -445,7 +451,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 			return;
 		}
 
-		network.edit(client, data);
+		(network as NetworkWithIrcFramework).edit(client, data);
 	});
 
 	socket.on("history:clear", (data) => {

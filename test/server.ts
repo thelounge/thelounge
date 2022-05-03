@@ -1,25 +1,27 @@
 "use strict";
 
-const log = require("../src/log");
-const Config = require("../src/config");
-const expect = require("chai").expect;
-const stub = require("sinon").stub;
-const got = require("got");
-const io = require("socket.io-client");
-const util = require("./util");
-const changelog = require("../src/plugins/changelog");
+import log from "../src/log";
+import Config from "../src/config";
+import {expect} from "chai";
+import {stub} from "sinon";
+import got from "got";
+import io from "socket.io-client";
+import util from "./util";
+import changelog from "../src/plugins/changelog";
+import Client from "../src/client";
+import Server from "../src/Server";
 
 describe("Server", function () {
 	// Increase timeout due to unpredictable I/O on CI services
 	this.timeout(util.isRunningOnCI() ? 25000 : 5000);
 
-	let server;
+	let server: any;
 
-	before(function () {
+	before(async function () {
 		stub(log, "info");
 		stub(changelog, "checkForUpdates");
 
-		server = require("../src/server")();
+		server = Server();
 	});
 
 	after(function (done) {
@@ -51,7 +53,7 @@ describe("Server", function () {
 	describe("WebSockets", function () {
 		this.slow(300);
 
-		let client;
+		let client: Client;
 
 		beforeEach(() => {
 			client = io(webURL, {

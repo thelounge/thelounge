@@ -1,3 +1,3 @@
-type ServerOptions = {
+export type ServerOptions = {
 	dev: boolean;
 };

@@ -1,4 +1,4 @@
-import NetworkClass from "models/network";
+import NetworkClass from "../../models/network";
 import {Client as IRCClient} from "irc-framework";
 import {WebIRC} from "../config";
 declare global {

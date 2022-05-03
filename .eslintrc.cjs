@@ -2,13 +2,24 @@ module.exports = {
 	root: true,
 	parserOptions: {
 		ecmaVersion: 2022,
+		parser: "@typescript-eslint/parser",
+		// project: ["./eslint.tsconfig.json"],
+		// extraFileExtensions: [".vue", ".cjs"],
 	},
+	parser: "@typescript-eslint/parser",
+	plugins: ["vue", "@typescript-eslint"],
 	env: {
 		es6: true,
 		browser: true,
 		mocha: true,
 		node: true,
 	},
+	extends: [
+		"eslint:recommended",
+		"plugin:vue/recommended",
+		"plugin:@typescript-eslint/recommended",
+		"prettier",
+	],
 	rules: {
 		"block-scoped-var": "error",
 		curly: ["error", "all"],
@@ -74,6 +85,4 @@ module.exports = {
 		"vue/v-slot-style": ["error", "longform"],
 		"vue/multi-word-component-names": "off",
 	},
-	plugins: ["vue"],
-	extends: ["eslint:recommended", "plugin:vue/recommended", "prettier"],
 };

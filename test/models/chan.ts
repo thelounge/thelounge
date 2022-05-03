@@ -1,10 +1,9 @@
 "use strict";
+import {expect} from "chai";
 
-const expect = require("chai").expect;
-const Chan = require("../../src/models/chan");
-const Msg = require("../../src/models/msg");
-const User = require("../../src/models/user");
-
+import Chan from "../../src/models/chan";
+import Msg from "../../src/models/msg";
+import User from "../../src/models/user";
 describe("Chan", function () {
 	const network = {
 		network: {

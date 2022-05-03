@@ -19,5 +19,5 @@
     // "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
   },
-  "files": ["./package.json", "./src/index.d.ts"]
+  "files": ["./package.json", "./src/**/*.d.ts"]
 }
