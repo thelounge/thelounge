@@ -2,10 +2,9 @@
 
 import Msg from "../../models/msg";
 import Config from "../../config";
-import Network from "src/models/network";
-import {MessageType} from "src/types/models/message";
+import Network from "@src/models/network";
 
-export default function (irc: Network["irc"], network: Network) {
+export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
 	irc.on("irc error", function (data) {
@@ -93,4 +92,4 @@ export default function (irc: Network["irc"], network: Network) {
 			nick: irc.user.nick,
 		});
 	});
-}
+};

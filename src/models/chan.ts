@@ -6,27 +6,31 @@ import Config from "../config";
 import User from "./user";
 import Msg from "./msg";
 import storage from "../plugins/storage";
-import {ChanState, ChanType, FilteredChannel} from "src/types/models/channel";
-import Client from "src/client";
+import Client from "@src/client";
 import Network from "./network";
-import {MessageType} from "src/types/models/message";
+import Prefix from "./prefix";
 
 class Chan {
-	id: number;
-	messages: Msg[];
-	name: string;
-	key: string;
-	topic: string;
-	firstUnread: number;
-	unread: number;
-	highlight: number;
-	users: Map<string, User>;
-	muted: boolean;
-	type: ChanType;
-	state: ChanState;
+	// TODO: don't force existence, figure out how to make TS infer it.
+	id!: number;
+	messages!: Msg[];
+	name!: string;
+	key!: string;
+	topic!: string;
+	firstUnread!: number;
+	unread!: number;
+	highlight!: number;
+	users!: Map<string, User>;
+	muted!: boolean;
+	type!: ChanType;
+	state!: ChanState;
 
 	// TODO: this only exists when it's a query... should be better typed
-	userAway: boolean;
+	userAway!: boolean;
+	special?: SpecialChanType;
+	data?: any;
+	closed?: boolean;
+	num_users?: number;
 
 	constructor(attr: Partial<Chan>) {
 		_.defaults(this, attr, {
@@ -150,7 +154,7 @@ class Chan {
 		return this.users.get(nick.toLowerCase());
 	}
 	getUser(nick: string) {
-		return this.findUser(nick) || new User({nick});
+		return this.findUser(nick) || new User({nick}, new Prefix([]));
 	}
 	setUser(user: User) {
 		this.users.set(user.nick.toLowerCase(), user);
@@ -174,7 +178,7 @@ class Chan {
 				newChannel[prop] = [];
 			} else if (prop === "messages") {
 				// If client is reconnecting, only send new messages that client has not seen yet
-				if (lastMessage > -1) {
+				if (lastMessage && lastMessage > -1) {
 					// When reconnecting, always send up to 100 messages to prevent message gaps on the client
 					// See https://github.com/thelounge/thelounge/issues/1883
 					newChannel[prop] = this[prop].filter((m) => m.id > lastMessage).slice(-100);
@@ -210,7 +214,7 @@ class Chan {
 			// Because notices are nasty and can be shown in active channel on the client
 			// if there is no open query, we want to always log notices in the sender's name
 			if (msg.type === MessageType.NOTICE && msg.showInActive) {
-				targetChannel.name = msg.from.nick;
+				targetChannel.name = msg.from.nick || ""; // TODO: check if || works
 			} else {
 				return;
 			}
@@ -254,7 +258,7 @@ class Chan {
 			.getMessages(network, this)
 			.then((messages) => {
 				if (messages.length === 0) {
-					if (network.irc.network.cap.isEnabled("znc.in/playback")) {
+					if (network.irc!.network.cap.isEnabled("znc.in/playback")) {
 						requestZncPlayback(this, network, 0);
 					}
 
@@ -273,7 +277,7 @@ class Chan {
 					totalMessages: messages.length,
 				});
 
-				if (network.irc.network.cap.isEnabled("znc.in/playback")) {
+				if (network.irc!.network.cap.isEnabled("znc.in/playback")) {
 					const from = Math.floor(messages[messages.length - 1].time.getTime() / 1000);
 
 					requestZncPlayback(this, network, from);
@@ -284,7 +288,7 @@ class Chan {
 	isLoggable() {
 		return this.type === ChanType.CHANNEL || this.type === ChanType.QUERY;
 	}
-	setMuteStatus(muted) {
+	setMuteStatus(muted: boolean) {
 		this.muted = !!muted;
 	}
 }

@@ -37,6 +37,8 @@ declare module "irc-framework" {
 				enabled: string[];
 			};
 			extractTargetGroup: (target: string) => any;
+			supports(feature: "MODES"): string;
+			supports(feature: string): boolean;
 		};
 		// End of added by Max
 

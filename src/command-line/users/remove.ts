@@ -7,9 +7,9 @@ import fs from "fs";
 import Config from "../../config";
 import Utils from "../utils";
 
-const program = new Command();
+const program = new Command("remove");
 program
-	.command("remove <name>")
+	.usage("remove <name>")
 	.description("Remove an existing user")
 	.on("--help", Utils.extraHelp)
 	.action(function (name) {
@@ -27,7 +27,9 @@ program
 			} else {
 				log.error(`User ${colors.bold(name)} does not exist.`);
 			}
-		} catch (e) {
+		} catch (e: any) {
 			// There was an error, already logged
 		}
 	});
+
+export default program;

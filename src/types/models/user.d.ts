@@ -1,3 +1,4 @@
-import UserClass from "src/models/user";
-
-export type User = UserClass;
+import UserClass from "@src/models/user";
+declare global {
+	export type User = UserClass;
+}

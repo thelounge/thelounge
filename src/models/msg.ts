@@ -1,44 +1,43 @@
 "use strict";
 
 import _ from "lodash";
-import {UserInMessage, MessagePreview, MessageType} from "src/types/models/message";
 
 class Msg {
-	from: UserInMessage;
-	id: number;
-	previews: MessagePreview[];
-	text: string;
-	type: MessageType;
-	self: boolean;
-	time: Date;
-	hostmask: string;
-	target: UserInMessage;
+	from!: UserInMessage;
+	id!: number;
+	previews!: MessagePreview[];
+	text!: string;
+	type!: MessageType;
+	self!: boolean;
+	time!: Date;
+	hostmask!: string;
+	target!: UserInMessage;
 	// TODO: new_nick is only on MessageType.NICK,
 	// we should probably make Msgs that extend this class and use those
 	// throughout. I'll leave any similar fields below.
-	new_nick: string;
-	highlight: boolean;
-	showInActive: boolean;
-	new_ident: string;
-	new_host: string;
-	ctcpMessage: string;
-	command: string;
-	invitedYou: boolean;
-	gecos: string;
-	account: boolean;
+	new_nick!: string;
+	highlight!: boolean;
+	showInActive?: boolean;
+	new_ident!: string;
+	new_host!: string;
+	ctcpMessage!: string;
+	command!: string;
+	invitedYou!: boolean;
+	gecos!: string;
+	account!: boolean;
 
 	// these are all just for error:
-	error: string;
-	nick: string;
-	channel: string;
-	reason: string;
+	error!: string;
+	nick!: string;
+	channel!: string;
+	reason!: string;
 
-	raw_modes: any;
-	when: Date;
-	whois: any;
-	users: UserInMessage[];
-	statusmsgGroup: string;
-	params: string[];
+	raw_modes!: any;
+	when!: Date;
+	whois!: any;
+	users!: UserInMessage[];
+	statusmsgGroup!: string;
+	params!: string[];
 
 	constructor(attr: Partial<Msg>) {
 		// Some properties need to be copied in the Msg object instead of referenced

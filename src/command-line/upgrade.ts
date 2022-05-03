@@ -6,9 +6,9 @@ import {Command} from "commander";
 import Config from "../config";
 import Utils from "./utils";
 
-const program = new Command();
+const program = new Command("upgrade");
 program
-	.command("upgrade [packages...]")
+	.usage("upgrade [packages...]")
 	.description("Upgrade installed themes and packages to their latest versions")
 	.on("--help", Utils.extraHelp)
 	.action(function (packages) {
@@ -58,3 +58,5 @@ program
 				process.exit(1);
 			});
 	});
+
+export default program;

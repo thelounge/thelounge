@@ -11,17 +11,15 @@ import log from "./log";
 import Chan from "./models/chan";
 import Msg from "./models/msg";
 import Config from "./config";
-import constants from "../client/js/constants.js";
+import constants from "../client/js/constants";
 
 import inputs from "./plugins/inputs";
 import PublicClient from "./plugins/packages/publicClient";
 import SqliteMessageStorage from "./plugins/messageStorage/sqlite";
 import TextFileMessageStorage from "./plugins/messageStorage/text";
-import {ClientConfig, Mention, PushSubscription} from "src/types/client";
+import {ClientConfig, Mention, PushSubscription} from "./types/client";
 import Network from "./models/network";
 import ClientManager from "./clientManager";
-import {MessageType} from "./types/models/message";
-import {ChanType} from "./types/models/channel";
 import {MessageStorage} from "./types/plugins/messageStorage";
 
 const events = [
@@ -52,27 +50,27 @@ const events = [
 	"whois",
 ];
 class Client {
-	awayMessage: string;
-	lastActiveChannel: number;
-	attachedClients: {
+	awayMessage!: string;
+	lastActiveChannel!: number;
+	attachedClients!: {
 		[socketId: string]: {token: string; openChannel: number};
 	};
-	config: ClientConfig & {
-		networks: Network[];
+	config!: ClientConfig & {
+		networks?: Network[];
 	};
-	id: number;
-	idMsg: number;
-	idChan: number;
-	name: string;
-	networks: Network[];
-	mentions: Mention[];
-	manager: ClientManager;
-	messageStorage: MessageStorage[];
+	id!: number;
+	idMsg!: number;
+	idChan!: number;
+	name!: string;
+	networks!: Network[];
+	mentions!: Mention[];
+	manager!: ClientManager;
+	messageStorage!: MessageStorage[];
 	highlightRegex?: RegExp;
 	highlightExceptionRegex?: RegExp;
 	messageProvider?: SqliteMessageStorage;
 
-	fileHash: string;
+	fileHash!: string;
 
 	constructor(manager: ClientManager, name?: string, config = {} as ClientConfig) {
 		_.merge(this, {
@@ -181,8 +179,8 @@ class Client {
 	}
 
 	find(channelId: number) {
-		let network = null;
-		let chan = null;
+		let network: Network | null = null;
+		let chan: Chan | null | undefined = null;
 
 		for (const i in this.networks) {
 			const n = this.networks[i];
@@ -203,7 +201,7 @@ class Client {
 
 	connect(args: any, isStartup = false) {
 		const client = this;
-		let channels = [];
+		let channels: Chan[] = [];
 
 		// Get channel id for lobby before creating other channels for nicer ids
 		const lobbyChannelId = client.idChan++;
@@ -275,6 +273,7 @@ class Client {
 			networks: [network.getFilteredClone(this.lastActiveChannel, -1)],
 		});
 
+		// @ts-ignore it complains because validate expects this to be NetworkWith
 		if (!network.validate(client)) {
 			return;
 		}
@@ -294,7 +293,9 @@ class Client {
 				true
 			);
 		} else if (!isStartup) {
-			network.irc.connect();
+			// irc is created in createIrcFramework
+			// TODO; fix type
+			network.irc!.connect();
 		}
 
 		if (!isStartup) {
@@ -427,7 +428,8 @@ class Client {
 				);
 			}
 		} else if (connected) {
-			irc.raw(text);
+			// TODO: fix
+			irc!.raw(text);
 		}
 
 		if (!connected) {
@@ -444,7 +446,7 @@ class Client {
 	compileCustomHighlights() {
 		function compileHighlightRegex(customHighlightString) {
 			if (typeof customHighlightString !== "string") {
-				return null;
+				return undefined;
 			}
 
 			// Ensure we don't have empty strings in the list of highlights
@@ -454,7 +456,7 @@ class Client {
 				.filter((highlight) => highlight.length > 0);
 
 			if (highlightsTokens.length === 0) {
-				return null;
+				return undefined;
 			}
 
 			return new RegExp(
@@ -480,7 +482,7 @@ class Client {
 		}
 
 		const chan = target.chan;
-		let messages = [];
+		let messages: Msg[] = [];
 		let index = 0;
 
 		// If client requests -1, send last 100 messages
@@ -669,8 +671,8 @@ class Client {
 		});
 	}
 
-	quit(signOut: boolean) {
-		const sockets = this.manager.sockets;
+	quit(signOut?: boolean) {
+		const sockets = this.manager.sockets.sockets;
 		const room = sockets.adapter.rooms.get(this.id.toString());
 
 		if (room) {
@@ -766,12 +768,12 @@ class Client {
 	}
 
 	unregisterPushSubscription(token: string) {
-		this.config.sessions[token].pushSubscription = null;
+		this.config.sessions[token].pushSubscription = undefined;
 		this.save();
 	}
 
 	save = _.debounce(
-		function SaveClient() {
+		function SaveClient(this: Client) {
 			if (Config.values.public) {
 				return;
 			}

@@ -39,10 +39,10 @@ function getVersionNumber() {
 	return pkg.version;
 }
 
-let _gitCommit;
+let _gitCommit: string | null = null;
 
 function getGitCommit() {
-	if (_gitCommit !== undefined) {
+	if (_gitCommit) {
 		return _gitCommit;
 	}
 
@@ -60,7 +60,7 @@ function getGitCommit() {
 			.toString()
 			.trim();
 		return _gitCommit;
-	} catch (e) {
+	} catch (e: any) {
 		// Not a git repository or git is not installed
 		_gitCommit = null;
 		return null;
@@ -120,7 +120,7 @@ function parseHostmask(hostmask: string): Hostmask {
 	let nick = "";
 	let ident = "*";
 	let hostname = "*";
-	let parts = [];
+	let parts: string[] = [];
 
 	// Parse hostname first, then parse the rest
 	parts = hostmask.split("@");

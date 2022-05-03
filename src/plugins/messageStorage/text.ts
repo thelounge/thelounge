@@ -6,11 +6,8 @@ import path from "path";
 import filenamify from "filenamify";
 import Config from "../../config";
 import Msg from "../../models/msg";
-import {Network} from "src/types/models/network";
-import {Channel} from "src/types/models/channel";
-import {Message, MessageType} from "src/types/models/message";
-import {MessageStorage} from "src/types/plugins/messageStorage";
-import Client from "src/client";
+import {MessageStorage} from "@src/types/plugins/messageStorage";
+import Client from "@src/client";
 
 class TextFileMessageStorage implements MessageStorage {
 	client: Client;
@@ -46,8 +43,8 @@ class TextFileMessageStorage implements MessageStorage {
 
 		try {
 			fs.mkdirSync(logPath, {recursive: true});
-		} catch (e) {
-			log.error("Unable to create logs directory", e);
+		} catch (e: any) {
+			log.error("Unable to create logs directory", e as string);
 			return;
 		}
 

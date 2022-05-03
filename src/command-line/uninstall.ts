@@ -6,9 +6,9 @@ import {Command} from "commander";
 import Config from "../config";
 import Utils from "./utils";
 
-const program = new Command();
+const program = new Command("uninstall");
 program
-	.command("uninstall <package>")
+	.usage("uninstall <package>")
 	.description("Uninstall a theme or a package")
 	.on("--help", Utils.extraHelp)
 	.action(function (packageName) {
@@ -37,3 +37,5 @@ program
 				process.exit(1);
 			});
 	});
+
+export default program;

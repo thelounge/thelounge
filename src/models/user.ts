@@ -4,14 +4,14 @@ import _ from "lodash";
 import Prefix from "./prefix";
 
 class User {
-	modes: string[];
+	modes!: string[];
 	// Users in the channel have only one mode assigned
-	mode: string;
-	away: string;
-	nick: string;
-	lastMessage: number;
+	mode!: string;
+	away!: string;
+	nick!: string;
+	lastMessage!: number;
 
-	constructor(attr: Partial<User>, prefix?: Prefix) {
+	constructor(attr: Partial<User>, prefix: Prefix) {
 		_.defaults(this, attr, {
 			modes: [],
 			away: "",

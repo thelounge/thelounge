@@ -4,8 +4,9 @@ import log from "../../log";
 import Config from "../../config";
 import ldap, {SearchOptions} from "ldapjs";
 import colors from "chalk";
-import ClientManager from "src/clientManager";
-import Client from "src/client";
+import ClientManager from "@src/clientManager";
+import Client from "@src/client";
+import {AuthHandler} from "@src/types/plugins/auth";
 
 function ldapAuthCommon(
 	user: string,
@@ -104,7 +105,8 @@ function advancedLdapAuth(user: string, password: string, callback: (success: bo
 				log.info(`Auth against LDAP ${config.ldap.url} with found bindDN ${bindDN}`);
 				ldapclient.unbind();
 
-				ldapAuthCommon(user, bindDN, password, callback);
+				// TODO: Fix type !
+				ldapAuthCommon(user, bindDN!, password, callback);
 			});
 
 			res.on("error", function (err3) {
@@ -116,7 +118,9 @@ function advancedLdapAuth(user: string, password: string, callback: (success: bo
 				ldapclient.unbind();
 
 				if (!found) {
-					log.warn(`LDAP Search did not find anything for: ${userDN} (${result.status})`);
+					log.warn(
+						`LDAP Search did not find anything for: ${userDN} (${result?.status})`
+					);
 					callback(false);
 				}
 			});
@@ -124,13 +128,7 @@ function advancedLdapAuth(user: string, password: string, callback: (success: bo
 	});
 }
 
-function ldapAuth(
-	manager: ClientManager,
-	client: Client,
-	user: string,
-	password: string,
-	callback: (success: boolean) => void
-) {
+const ldapAuth: AuthHandler = (manager, client, user, password, callback) => {
 	// TODO: Enable the use of starttls() as an alternative to ldaps
 
 	// TODO: move this out of here and get rid of `manager` and `client` in
@@ -152,14 +150,14 @@ function ldapAuth(
 	}
 
 	return auth(user, password, callbackWrapper);
-}
+};
 
 /**
  * Use the LDAP filter from config to check that users still exist before loading them
  * via the supplied callback function.
  */
 
-function advancedLdapLoadUsers(users, callbackLoadUser) {
+function advancedLdapLoadUsers(users: string[], callbackLoadUser) {
 	const config = Config.values;
 
 	const ldapclient = ldap.createClient({
@@ -226,7 +224,7 @@ function advancedLdapLoadUsers(users, callbackLoadUser) {
 	return true;
 }
 
-function ldapLoadUsers(users, callbackLoadUser) {
+function ldapLoadUsers(users: string[], callbackLoadUser) {
 	if ("baseDN" in Config.values.ldap) {
 		// simple LDAP case can't test for user existence without access to the
 		// user's unhashed password, so indicate need to fallback to default

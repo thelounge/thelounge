@@ -1,11 +1,8 @@
 "use strict";
 
-import Chan from "src/models/chan";
-import Network from "src/models/network";
-
 const commands = ["whois"];
 
-const input = function ({irc}: Network, chan: Chan, cmd: string, args: string[]) {
+const input: PluginInputHandler = function ({irc}, chan, cmd, args) {
 	if (args.length === 1) {
 		// This queries server of the other user and not of the current user, which
 		// does not know idle time.

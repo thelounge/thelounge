@@ -1,7 +1,6 @@
 "use strict";
 
-import Network from "src/models/network";
-import {MessageType} from "src/types/models/message";
+import Network from "@src/models/network";
 
 import _ from "lodash";
 import Helper from "../../helper";
@@ -19,7 +18,7 @@ const ctcpResponses = {
 	VERSION: () => pkg.name + " " + Helper.getVersion() + " -- " + pkg.homepage,
 };
 
-export default function (irc: Network["irc"], network: Network) {
+export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 	const lobby = network.channels[0];
 
@@ -91,4 +90,4 @@ export default function (irc: Network["irc"], network: Network) {
 			{trailing: false}
 		)
 	);
-}
+};

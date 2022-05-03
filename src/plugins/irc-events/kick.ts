@@ -1,13 +1,12 @@
 "use strict";
 
-import Network from "src/models/network";
-import {ChanState} from "src/types/models/channel";
-import {MessageType} from "src/types/models/message";
+import Network from "@src/models/network";
+import {ChanState} from "@src/types/models/channel";
 
 import Chan from "../../models/chan";
 import Msg from "../../models/msg";
 
-export default function (irc: Network["irc"], network: Network) {
+export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
 	irc.on("kick", function (data) {
@@ -40,4 +39,4 @@ export default function (irc: Network["irc"], network: Network) {
 			chan.removeUser(msg.target);
 		}
 	});
-}
+};

@@ -138,7 +138,7 @@ class Utils {
 							if (line.type === "success") {
 								success = true;
 							}
-						} catch (e) {
+						} catch (e: any) {
 							// Stdout buffer has limitations and yarn may print
 							// big package trees, for example in the upgrade command
 							// See https://github.com/thelounge/thelounge/issues/3679

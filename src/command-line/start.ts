@@ -8,10 +8,9 @@ import {Command} from "commander";
 import Config from "../config";
 import Utils from "./utils";
 
-const program = new Command();
-
+const program = new Command("start");
 program
-	.command("start")
+	.usage("start")
 	.description("Start the server")
 	.option("--dev", "Development mode with hot module reloading")
 	.on("--help", Utils.extraHelp)
@@ -19,7 +18,7 @@ program
 		initalizeConfig();
 
 		const server = require("../server");
-		server(options);
+		server.default(options);
 	});
 
 function initalizeConfig() {
@@ -35,3 +34,5 @@ function initalizeConfig() {
 
 	fs.mkdirSync(Config.getUsersPath(), {recursive: true, mode: 0o700});
 }
+
+export default program;

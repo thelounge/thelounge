@@ -22,7 +22,7 @@ class Storage {
 
 		try {
 			items = fs.readdirSync(dir);
-		} catch (e) {
+		} catch (e: any) {
 			fs.mkdirSync(dir, {recursive: true});
 			return;
 		}

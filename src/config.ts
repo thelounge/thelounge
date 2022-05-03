@@ -1,19 +1,19 @@
 "use strict";
 
 import path from "path";
-import fs from "fs";
+import fs, {Stats} from "fs";
 import os from "os";
 import _ from "lodash";
 import colors from "chalk";
 import log from "./log";
 import Helper from "./helper";
-import {Config as ConfigType} from "src/types/config";
+import {Config as ConfigType} from "./types/config";
 
 class Config {
 	values = require(path.resolve(
 		path.join(__dirname, "..", "defaults", "config.js")
 	)) as ConfigType;
-	#homePath: string;
+	#homePath: string = "";
 
 	getHomePath() {
 		return this.#homePath;
@@ -127,8 +127,8 @@ class Config {
 		if (this.values.fileUpload.baseUrl) {
 			try {
 				new URL("test/file.png", this.values.fileUpload.baseUrl);
-			} catch (e) {
-				this.values.fileUpload.baseUrl = null;
+			} catch (e: any) {
+				this.values.fileUpload.baseUrl = undefined;
 
 				log.warn(`The ${colors.bold("fileUpload.baseUrl")} you specified is invalid: ${e}`);
 			}
@@ -154,7 +154,7 @@ class Config {
 
 		// log dir probably shouldn't be world accessible.
 		// Create it with the desired permission bits if it doesn't exist yet.
-		let logsStat = undefined;
+		let logsStat: Stats | undefined = undefined;
 
 		const userLogsPath = this.getUserLogsPath();
 
@@ -167,7 +167,7 @@ class Config {
 		if (!logsStat) {
 			try {
 				fs.mkdirSync(userLogsPath, {recursive: true, mode: 0o750});
-			} catch (e) {
+			} catch (e: any) {
 				log.error("Unable to create logs directory", e);
 			}
 		} else if (logsStat && logsStat.mode & 0o001) {

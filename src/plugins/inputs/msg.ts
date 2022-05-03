@@ -1,10 +1,8 @@
 "use strict";
 
-import Network from "src/models/network";
-import {ChanType} from "src/types/models/channel";
-import {MessageType} from "src/types/models/message";
-import Chan from "src/models/chan";
-import Msg from "src/models/msg";
+import Network from "@src/models/network";
+
+import Msg from "@src/models/msg";
 
 const commands = ["query", "msg", "say"];
 
@@ -18,7 +16,7 @@ function getTarget(cmd, args, chan) {
 	}
 }
 
-const input = function (network: Network, chan: Chan, cmd: string, args: string[]) {
+const input: PluginInputHandler = function (network, chan, cmd, args) {
 	let targetName = getTarget(cmd, args, chan);
 
 	if (cmd === "query") {

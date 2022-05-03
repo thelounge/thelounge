@@ -4,7 +4,7 @@ import got, {Response} from "got";
 import colors from "chalk";
 import log from "../log";
 import pkg from "../../package.json";
-import ClientManager from "src/clientManager";
+import ClientManager from "@src/clientManager";
 
 const TIME_TO_LIVE = 15 * 60 * 1000; // 15 minutes, in milliseconds
 
@@ -22,6 +22,18 @@ const versions = {
 	expiresAt: -1,
 	latest: undefined,
 	packages: undefined,
+} as {
+	current: {
+		version: string;
+		changelog?: string;
+	};
+	expiresAt: number;
+	latest?: {
+		prerelease: boolean;
+		version: string;
+		url: string;
+	};
+	packages?: boolean;
 };
 
 async function fetch() {

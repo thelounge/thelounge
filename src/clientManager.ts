@@ -11,19 +11,19 @@ import Client from "./client";
 import Config from "./config";
 import WebPush from "./plugins/webpush";
 import log from "./log";
-import {Namespace, Server, Socket} from "socket.io";
+import {Server} from "socket.io";
 
 class ClientManager {
 	clients: Client[];
-	sockets: Namespace;
+	sockets!: Server;
 	identHandler: any;
-	webPush: WebPush;
+	webPush!: WebPush;
 
 	constructor() {
 		this.clients = [];
 	}
 
-	init(identHandler, sockets: Namespace) {
+	init(identHandler, sockets: Server) {
 		this.sockets = sockets;
 		this.identHandler = identHandler;
 		this.webPush = new WebPush();
@@ -163,7 +163,7 @@ class ClientManager {
 			.map((file) => file.slice(0, -5));
 	};
 
-	addUser(name: string, password: string, enableLog: boolean) {
+	addUser(name: string, password: string | null, enableLog?: boolean) {
 		if (path.basename(name) !== name) {
 			throw new Error(`${name} is an invalid username.`);
 		}
@@ -184,7 +184,7 @@ class ClientManager {
 			fs.writeFileSync(userPath, JSON.stringify(user, null, "\t"), {
 				mode: 0o600,
 			});
-		} catch (e) {
+		} catch (e: any) {
 			log.error(`Failed to create user ${colors.green(name)} (${e})`);
 			throw e;
 		}
@@ -213,7 +213,7 @@ class ClientManager {
 				);
 				fs.chownSync(userPath, userFolderStat.uid, userFolderStat.gid);
 			}
-		} catch (e) {
+		} catch (e: any) {
 			// We're simply verifying file owner as a safe guard for users
 			// that run `thelounge add` as root, so we don't care if it fails
 		}
@@ -231,7 +231,7 @@ class ClientManager {
 		return {newUser, newHash};
 	}
 
-	saveUser(client: Client, callback: (err?: Error) => void) {
+	saveUser(client: Client, callback?: (err?: any) => void) {
 		const {newUser, newHash} = this.getDataToSave(client);
 
 		// Do not write to disk if the exported data hasn't actually changed
@@ -251,7 +251,7 @@ class ClientManager {
 			fs.renameSync(pathTemp, pathReal);
 
 			return callback ? callback() : true;
-		} catch (e) {
+		} catch (e: any) {
 			log.error(`Failed to update user ${colors.green(client.name)} (${e})`);
 
 			if (callback) {
@@ -284,7 +284,7 @@ class ClientManager {
 		try {
 			const data = fs.readFileSync(userPath, "utf-8");
 			return JSON.parse(data);
-		} catch (e) {
+		} catch (e: any) {
 			log.error(`Failed to read user ${colors.bold(name)}: ${e}`);
 		}
 

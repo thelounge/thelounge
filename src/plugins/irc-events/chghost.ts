@@ -1,11 +1,8 @@
 "use strict";
 
-import Network from "src/models/network";
-import {MessageType} from "src/types/models/message";
+import Msg from "@src/models/msg";
 
-import Msg from "src/models/msg";
-
-export default function (irc: Network["irc"], network: Network) {
+export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
 	// If server supports CHGHOST cap, then changing the hostname does not require
@@ -30,4 +27,4 @@ export default function (irc: Network["irc"], network: Network) {
 			chan.pushMessage(client, msg);
 		});
 	});
-}
+};

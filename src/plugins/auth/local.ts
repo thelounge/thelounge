@@ -1,10 +1,11 @@
 "use strict";
 
-const log = require("../../log");
-const Helper = require("../../helper");
-const colors = require("chalk");
+import colors from "chalk";
+import log from "../../log";
+import Helper from "../../helper";
+import {AuthHandler} from "@src/types/plugins/auth";
 
-function localAuth(manager, client, user, password, callback) {
+const localAuth: AuthHandler = (manager, client, user, password, callback) => {
 	// If no user is found, or if the client has not provided a password,
 	// fail the authentication straight away
 	if (!client || !password) {
@@ -43,9 +44,9 @@ function localAuth(manager, client, user, password, callback) {
 		.catch((error) => {
 			log.error(`Error while checking users password. Error: ${error}`);
 		});
-}
+};
 
-module.exports = {
+export default {
 	moduleName: "local",
 	auth: localAuth,
 	isEnabled: () => true,

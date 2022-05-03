@@ -1,11 +1,8 @@
 "use strict";
 
-import Chan from "src/models/chan";
-import Network from "src/models/network";
-
 const commands = ["notice"];
 
-const input = function (network: Network, chan: Chan, cmd: string, args: string[]) {
+const input: PluginInputHandler = function (network, chan, cmd, args) {
 	if (!args[1]) {
 		return;
 	}

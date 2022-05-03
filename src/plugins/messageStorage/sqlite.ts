@@ -6,17 +6,14 @@ import fs from "fs";
 import Config from "../../config";
 import Msg from "../../models/msg";
 import type {Database} from "sqlite3";
-import {Network} from "src/types/models/network";
-import {Channel} from "src/types/models/channel";
-import {Message} from "src/types/models/message";
-import Client from "src/client";
-import Chan from "src/models/chan";
+import Client from "@src/client";
+import Chan from "@src/models/chan";
 
 let sqlite3;
 
 try {
 	sqlite3 = require("sqlite3");
-} catch (e) {
+} catch (e: any) {
 	Config.values.messageStorage = Config.values.messageStorage.filter((item) => item !== "sqlite");
 
 	log.error(
@@ -37,7 +34,7 @@ const schema = [
 class SqliteMessageStorage implements SqliteMessageStorage {
 	client: Client;
 	isEnabled: boolean;
-	database: Database;
+	database!: Database;
 
 	constructor(client: Client) {
 		this.client = client;
@@ -50,8 +47,8 @@ class SqliteMessageStorage implements SqliteMessageStorage {
 
 		try {
 			fs.mkdirSync(logsPath, {recursive: true});
-		} catch (e) {
-			log.error("Unable to create logs directory", e);
+		} catch (e: any) {
+			log.error("Unable to create logs directory", e as string);
 
 			return;
 		}
@@ -108,7 +105,7 @@ class SqliteMessageStorage implements SqliteMessageStorage {
 		});
 	}
 
-	close(callback?: (error?: Error) => void) {
+	close(callback?: (error?: Error | null) => void) {
 		if (!this.isEnabled) {
 			return;
 		}
@@ -265,7 +262,7 @@ class SqliteMessageStorage implements SqliteMessageStorage {
 export default SqliteMessageStorage;
 
 function parseSearchRowsToMessages(id, rows) {
-	const messages = [];
+	const messages: Msg[] = [];
 
 	for (const row of rows) {
 		const msg = JSON.parse(row.msg);

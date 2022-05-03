@@ -5,9 +5,9 @@ import colors from "chalk";
 import {Command} from "commander";
 import Utils from "../utils";
 
-const program = new Command();
+const program = new Command("list");
 program
-	.command("list")
+	.usage("list")
 	.description("List all users")
 	.on("--help", Utils.extraHelp)
 	.action(function () {
@@ -33,3 +33,5 @@ program
 			log.info(`${i + 1}. ${colors.bold(user)}`);
 		});
 	});
+
+export default program;

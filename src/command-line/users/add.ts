@@ -8,9 +8,9 @@ import Helper from "../../helper";
 import Config from "../../config";
 import Utils from "../utils";
 
-const program = new Command();
+const program = new Command("add");
 program
-	.command("add <name>")
+	.usage("add <name>")
 	.description("Add a new user")
 	.on("--help", Utils.extraHelp)
 	.option("--password [password]", "new password, will be prompted if not specified")
@@ -80,3 +80,5 @@ function add(manager, name, password, enableLog) {
 	log.info(`User ${colors.bold(name)} created.`);
 	log.info(`User file located at ${colors.green(Config.getUserConfigPath(name))}.`);
 }
+
+export default program;

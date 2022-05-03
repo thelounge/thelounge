@@ -1,16 +1,18 @@
 "use strict";
 
-const Config = require("../config");
-const busboy = require("@fastify/busboy");
-const {v4: uuidv4} = require("uuid");
-const path = require("path");
-const fs = require("fs");
-const fileType = require("file-type");
-const readChunk = require("read-chunk");
-const crypto = require("crypto");
-const isUtf8 = require("is-utf8");
-const log = require("../log");
-const contentDisposition = require("content-disposition");
+import Config from "../config";
+import busboy, {BusboyHeaders} from "@fastify/busboy";
+import {v4 as uuidv4} from "uuid";
+import path from "path";
+import fs from "fs";
+import fileType from "file-type";
+import readChunk from "read-chunk";
+import crypto from "crypto";
+import isUtf8 from "is-utf8";
+import log from "../log";
+import contentDisposition from "content-disposition";
+import type {Socket} from "socket.io";
+import {Request, Response} from "express";
 
 // Map of allowed mime types to their respecive default filenames
 // that will be rendered in browser without forcing them to be downloaded
@@ -38,7 +40,7 @@ const inlineContentDispositionTypes = {
 const uploadTokens = new Map();
 
 class Uploader {
-	constructor(socket) {
+	constructor(socket: Socket) {
 		socket.on("upload:auth", () => {
 			const token = uuidv4();
 
@@ -67,16 +69,17 @@ class Uploader {
 		});
 	}
 
-	static createTokenTimeout(token) {
+	static createTokenTimeout(token: string) {
 		return setTimeout(() => uploadTokens.delete(token), 60 * 1000);
 	}
 
-	static router(express) {
+	// TODO: type
+	static router(express: any) {
 		express.get("/uploads/:name/:slug*?", Uploader.routeGetFile);
 		express.post("/uploads/new/:token", Uploader.routeUploadFile);
 	}
 
-	static async routeGetFile(req, res) {
+	static async routeGetFile(req: Request, res: Response) {
 		const name = req.params.name;
 
 		const nameRegex = /^[0-9a-f]{16}$/;
@@ -130,13 +133,13 @@ class Uploader {
 		return res.sendFile(filePath);
 	}
 
-	static routeUploadFile(req, res) {
-		let busboyInstance;
-		let uploadUrl;
-		let randomName;
-		let destDir;
-		let destPath;
-		let streamWriter;
+	static routeUploadFile(req: Request, res: Response) {
+		let busboyInstance: NodeJS.WritableStream | busboy | null | undefined;
+		let uploadUrl: string | URL;
+		let randomName: string;
+		let destDir: fs.PathLike;
+		let destPath: fs.PathLike | null;
+		let streamWriter: fs.WriteStream | null;
 
 		const doneCallback = () => {
 			// detach the stream and drain any remaining data
@@ -155,7 +158,7 @@ class Uploader {
 			}
 		};
 
-		const abortWithError = (err) => {
+		const abortWithError = (err: any) => {
 			doneCallback();
 
 			// if we ended up erroring out, delete the output file from disk
@@ -173,12 +176,17 @@ class Uploader {
 		}
 
 		// if the request does not contain any body data, bail out
-		if (req.headers["content-length"] < 1) {
+		if (req.headers["content-length"] && parseInt(req.headers["content-length"]) < 1) {
 			return abortWithError(Error("Length Required"));
 		}
 
 		// Only allow multipart, as busboy can throw an error on unsupported types
-		if (!req.headers["content-type"].startsWith("multipart/form-data")) {
+		if (
+			!(
+				req.headers["content-type"] &&
+				req.headers["content-type"].startsWith("multipart/form-data")
+			)
+		) {
 			return abortWithError(Error("Unsupported Content Type"));
 		}
 
@@ -186,7 +194,7 @@ class Uploader {
 		// because it can throw on malformed headers
 		try {
 			busboyInstance = new busboy({
-				headers: req.headers,
+				headers: req.headers as BusboyHeaders,
 				limits: {
 					files: 1, // only allow one file per upload
 					fileSize: Uploader.getMaxFileSize(),
@@ -216,8 +224,8 @@ class Uploader {
 		// too many files on one folder
 		try {
 			fs.mkdirSync(destDir, {recursive: true});
-		} catch (err) {
-			log.err(`Error ensuring ${destDir} exists for uploads: ${err.message}`);
+		} catch (err: any) {
+			log.error(`Error ensuring ${destDir} exists for uploads: ${err.message}`);
 			return abortWithError(err);
 		}
 
@@ -225,28 +233,47 @@ class Uploader {
 		streamWriter = fs.createWriteStream(destPath);
 		streamWriter.on("error", abortWithError);
 
-		busboyInstance.on("file", (fieldname, fileStream, filename) => {
-			uploadUrl = `${randomName}/${encodeURIComponent(filename)}`;
+		busboyInstance.on(
+			"file",
+			(
+				fieldname: any,
+				fileStream: {
+					on: (
+						arg0: string,
+						arg1: {(err: any): Response<any, Record<string, any>>; (): void}
+					) => void;
+					unpipe: (arg0: any) => void;
+					read: {bind: (arg0: any) => any};
+					pipe: (arg0: any) => void;
+				},
+				filename: string | number | boolean
+			) => {
+				uploadUrl = `${randomName}/${encodeURIComponent(filename)}`;
 
-			if (Config.values.fileUpload.baseUrl) {
-				uploadUrl = new URL(uploadUrl, Config.values.fileUpload.baseUrl).toString();
-			} else {
-				uploadUrl = `uploads/${uploadUrl}`;
+				if (Config.values.fileUpload.baseUrl) {
+					uploadUrl = new URL(uploadUrl, Config.values.fileUpload.baseUrl).toString();
+				} else {
+					uploadUrl = `uploads/${uploadUrl}`;
+				}
+
+				// if the busboy data stream errors out or goes over the file size limit
+				// abort the processing with an error
+
+				// TODO: fix types
+				//@ts-ignore
+				fileStream.on("error", abortWithError);
+				//@ts-ignore
+				fileStream.on("limit", () => {
+					fileStream.unpipe(streamWriter);
+					fileStream.on("readable", fileStream.read.bind(fileStream));
+
+					abortWithError(Error("File size limit reached"));
+				});
+
+				// Attempt to write the stream to file
+				fileStream.pipe(streamWriter);
 			}
-
-			// if the busboy data stream errors out or goes over the file size limit
-			// abort the processing with an error
-			fileStream.on("error", abortWithError);
-			fileStream.on("limit", () => {
-				fileStream.unpipe(streamWriter);
-				fileStream.on("readable", fileStream.read.bind(fileStream));
-
-				abortWithError(Error("File size limit reached"));
-			});
-
-			// Attempt to write the stream to file
-			fileStream.pipe(streamWriter);
-		});
+		);
 
 		busboyInstance.on("finish", () => {
 			doneCallback();
@@ -279,7 +306,7 @@ class Uploader {
 
 	// Returns null if an error occurred (e.g. file not found)
 	// Returns a string with the type otherwise
-	static async getFileType(filePath) {
+	static async getFileType(filePath: string) {
 		try {
 			const buffer = await readChunk(filePath, 0, 5120);
 
@@ -298,7 +325,7 @@ class Uploader {
 
 			// otherwise assume it's random binary data
 			return "application/octet-stream";
-		} catch (e) {
+		} catch (e: any) {
 			if (e.code !== "ENOENT") {
 				log.warn(`Failed to read ${filePath}: ${e.message}`);
 			}
@@ -308,4 +335,4 @@ class Uploader {
 	}
 }
 
-module.exports = Uploader;
+export default Uploader;

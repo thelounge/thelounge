@@ -12,7 +12,7 @@ const packageMap = new Map();
 import inputs from "../inputs";
 import fs from "fs";
 import Utils from "../../command-line/utils";
-import Client from "src/client";
+import Client from "@src/client";
 
 const stylesheets: string[] = [];
 const files: string[] = [];
@@ -33,22 +33,26 @@ export default {
 	outdated,
 };
 
+// TODO: verify binds worked. Used to be 'this' instead of 'packageApis'
 const packageApis = function (packageInfo) {
 	return {
 		Stylesheets: {
-			addFile: addStylesheet.bind(this, packageInfo.packageName),
+			addFile: addStylesheet.bind(packageApis, packageInfo.packageName),
 		},
 		PublicFiles: {
-			add: addFile.bind(this, packageInfo.packageName),
+			add: addFile.bind(packageApis, packageInfo.packageName),
 		},
 		Commands: {
-			add: inputs.addPluginCommand.bind(this, packageInfo),
+			add: inputs.addPluginCommand.bind(packageApis, packageInfo),
 			runAsUser: (command: string, targetId: number, client: Client) =>
 				client.inputLine({target: targetId, text: command}),
 		},
 		Config: {
 			getConfig: () => Config.values,
-			getPersistentStorageDir: getPersistentStorageDir.bind(this, packageInfo.packageName),
+			getPersistentStorageDir: getPersistentStorageDir.bind(
+				packageApis,
+				packageInfo.packageName
+			),
 		},
 		Logger: {
 			error: (...args) => log.error(`[${packageInfo.packageName}]`, ...args),
@@ -83,7 +87,7 @@ function getEnabledPackages(packageJson: string) {
 	try {
 		const json = JSON.parse(fs.readFileSync(packageJson, "utf-8"));
 		return Object.keys(json.dependencies);
-	} catch (e) {
+	} catch (e: any) {
 		log.error(`Failed to read packages/package.json: ${colors.red(e)}`);
 	}
 
@@ -120,9 +124,11 @@ function loadPackage(packageName: string) {
 		}
 
 		packageFile = require(packagePath);
-	} catch (e) {
+	} catch (e: any) {
 		log.error(`Package ${colors.bold(packageName)} could not be loaded: ${colors.red(e)}`);
-		log.debug(e.stack);
+		if (e instanceof Error) {
+			log.debug(e.stack ? e.stack : e.message);
+		}
 		return;
 	}
 
@@ -136,6 +142,8 @@ function loadPackage(packageName: string) {
 	packageMap.set(packageName, packageFile);
 
 	if (packageInfo.type === "theme") {
+		// TODO: investigate
+		//@ts-ignore
 		themes.addTheme(packageName, packageInfo);
 
 		if (packageInfo.files) {

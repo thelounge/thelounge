@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 import log from "../log";
 import Config from "../config";
-import type {PolicyMap, PolicyOption} from "src/types/plugins/sts";
+import type {PolicyMap, PolicyOption} from "@src/types/plugins/sts";
 
 class STSPolicies {
 	private stsFile: string;
@@ -76,7 +76,7 @@ class STSPolicies {
 	}
 
 	saveFile() {
-		const policiesToStore = [];
+		const policiesToStore: PolicyOption[] = [];
 
 		this.policies.forEach((value, key) => {
 			policiesToStore.push({
@@ -91,7 +91,7 @@ class STSPolicies {
 
 		fs.writeFile(this.stsFile, file, {flag: "w+"}, (err) => {
 			if (err) {
-				log.error("Failed to update STS policies file!", err);
+				log.error("Failed to update STS policies file!", err.message);
 			}
 		});
 	}

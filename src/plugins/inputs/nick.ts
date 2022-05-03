@@ -1,14 +1,11 @@
 "use strict";
 
-import Chan from "src/models/chan";
-import Network from "src/models/network";
-import {MessageType} from "src/types/models/message";
 import Msg from "../../models/msg";
 
 const commands = ["nick"];
 const allowDisconnected = true;
 
-const input = function (network: Network, chan: Chan, cmd: string, args: string[]) {
+const input: PluginInputHandler = function (network, chan, cmd, args) {
 	if (args.length === 0) {
 		chan.pushMessage(
 			this,

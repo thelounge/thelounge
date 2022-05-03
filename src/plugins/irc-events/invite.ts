@@ -1,10 +1,10 @@
 "use strict";
 
-import Network from "src/models/network";
-import {MessageType} from "src/types/models/message";
+import Network from "@src/models/network";
+
 import Msg from "../../models/msg";
 
-export default function (irc: Network["irc"], network: Network) {
+export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
 	irc.on("invite", function (data) {
@@ -27,4 +27,4 @@ export default function (irc: Network["irc"], network: Network) {
 		});
 		chan.pushMessage(client, msg);
 	});
-}
+};

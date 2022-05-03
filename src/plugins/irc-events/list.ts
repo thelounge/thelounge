@@ -1,12 +1,10 @@
 "use strict";
 
-import Msg from "src/models/msg";
-import {ChanType, SpecialChanType} from "src/types/models/channel";
-import {Network} from "src/types/models/network";
+import Msg from "@src/models/msg";
 
 import Chan from "../../models/chan";
 
-export default function (irc: Network["irc"], network: Network) {
+export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 	const MAX_CHANS = 500;
 
@@ -28,13 +26,19 @@ export default function (irc: Network["irc"], network: Network) {
 
 	irc.on("channel list end", function () {
 		updateListStatus(
-			network.chanCache.sort((a, b) => b.num_users - a.num_users).slice(0, MAX_CHANS)
+			network.chanCache.sort((a, b) => b.num_users! - a.num_users!).slice(0, MAX_CHANS)
 		);
 
 		network.chanCache = [];
 	});
 
-	function updateListStatus(msg: Msg) {
+	function updateListStatus(
+		msg:
+			| {
+					text: string;
+			  }
+			| Chan[]
+	) {
 		let chan = network.getChannel("Channel List");
 
 		if (typeof chan === "undefined") {
@@ -61,4 +65,4 @@ export default function (irc: Network["irc"], network: Network) {
 			});
 		}
 	}
-}
+};
