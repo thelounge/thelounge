@@ -1,6 +1,5 @@
 // https://raw.githubusercontent.com/eternagame/HTML-Chat/vue-rewrite/src/app/types/modules/irc-framework/irc-framework.d.ts
 // TODO: Fix this
-type Event = any;
 declare module "irc-framework" {
 	import {EventEmitter} from "eventemitter3";
 	// import { DuplexStream } from 'stream';
@@ -264,6 +263,7 @@ declare module "irc-framework" {
 		nick: string;
 		time?: any;
 		channel?: string;
+		kicked?: string;
 	}
 	interface Mode {
 		mode: string;

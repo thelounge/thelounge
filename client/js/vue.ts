@@ -15,7 +15,7 @@ import "./socket-events";
 import "./webpush";
 import "./keybinds";
 
-import type {Channel} from "@src/models/channel";
+import type {Channel} from "../../src/types/modules/channel";
 
 const favicon = document.getElementById("favicon");
 const faviconNormal = favicon?.getAttribute("href") || "";

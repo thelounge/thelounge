@@ -6,7 +6,7 @@ import Config from "../config";
 import User from "./user";
 import Msg from "./msg";
 import storage from "../plugins/storage";
-import Client from "@src/client";
+import Client from "../client";
 import Network from "./network";
 import Prefix from "./prefix";
 

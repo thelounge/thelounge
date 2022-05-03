@@ -1,7 +1,5 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "commonjs",
     "outDir": "dist",
     "declaration": true,
     // "lib": ["es2019" ],
@@ -17,14 +15,5 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
   },
-  "files": ["./src/index.d.ts"],
-  "exclude": ["./node_modules", "./public/*"],
-  "references": [
-    {
-      "path": "./src,"
-    },
-    {
-      "path": "./client"
-    }
-  ]
+  "files": ["./src/index.d.ts"]
 }

@@ -1,16 +1,12 @@
 "use strict";
 
-import Network from "@src/models/network";
-import {ChanState} from "@src/types/models/channel";
-
-import Chan from "../../models/chan";
 import Msg from "../../models/msg";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
 	irc.on("kick", function (data) {
-		const chan = network.getChannel(data.channel);
+		const chan = network.getChannel(data.channel!);
 
 		if (typeof chan === "undefined") {
 			return;
@@ -20,7 +16,7 @@ export default <IrcEventHandler>function (irc, network) {
 			type: MessageType.KICK,
 			time: data.time,
 			from: chan.getUser(data.nick),
-			target: chan.getUser(data.kicked),
+			target: chan.getUser(data.kicked!),
 			text: data.message || "",
 			highlight: data.kicked === irc.user.nick,
 			self: data.nick === irc.user.nick,
@@ -36,7 +32,7 @@ export default <IrcEventHandler>function (irc, network) {
 				state: chan.state,
 			});
 		} else {
-			chan.removeUser(msg.target);
+			chan.removeUser(msg.target as User);
 		}
 	});
 };

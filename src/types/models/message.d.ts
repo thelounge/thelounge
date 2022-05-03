@@ -1,5 +1,5 @@
-import Msg from "@src/models/msg";
-import User from "@src/models/user";
+import Msg from "models/msg";
+
 declare global {
 	type Message = Msg;
 

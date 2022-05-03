@@ -17,7 +17,6 @@ import inputs from "./plugins/inputs";
 import PublicClient from "./plugins/packages/publicClient";
 import SqliteMessageStorage from "./plugins/messageStorage/sqlite";
 import TextFileMessageStorage from "./plugins/messageStorage/text";
-import {ClientConfig, Mention, PushSubscription} from "./types/client";
 import Network from "./models/network";
 import ClientManager from "./clientManager";
 import {MessageStorage} from "./types/plugins/messageStorage";
@@ -735,7 +734,7 @@ class Client {
 	// TODO: type session to this.attachedClients
 	registerPushSubscription(
 		session: any,
-		subscription: PushSubscription,
+		subscription: ClientPushSubscription,
 		noSave: boolean = false
 	) {
 		if (

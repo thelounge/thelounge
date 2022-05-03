@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 import log from "../log";
 import Config from "../config";
-import type {PolicyMap, PolicyOption} from "@src/types/plugins/sts";
+import type {PolicyMap, PolicyOption} from "types/plugins/sts";
 
 class STSPolicies {
 	private stsFile: string;

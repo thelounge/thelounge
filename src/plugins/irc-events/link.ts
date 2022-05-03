@@ -8,11 +8,11 @@ import mime from "mime-types";
 import Config from "../../config";
 import {findLinksWithSchema} from "../../../client/js/helpers/ircmessageparser/findLinks";
 import storage from "../storage";
-import log from "@src/log";
-import Client from "@src/client";
-import Chan from "@src/models/chan";
-import Msg from "@src/models/msg";
-import {Preview} from "@src/types/plugins/preview";
+import log from "log";
+import Client from "client";
+import Chan from "models/chan";
+import Msg from "models/msg";
+import {Preview} from "types/plugins/preview";
 
 const currentFetchPromises = new Map();
 const imageTypeRegex = /^image\/.+/;

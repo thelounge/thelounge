@@ -6,8 +6,8 @@ import path from "path";
 import filenamify from "filenamify";
 import Config from "../../config";
 import Msg from "../../models/msg";
-import {MessageStorage} from "@src/types/plugins/messageStorage";
-import Client from "@src/client";
+import {MessageStorage} from "types/plugins/messageStorage";
+import Client from "client";
 
 class TextFileMessageStorage implements MessageStorage {
 	client: Client;

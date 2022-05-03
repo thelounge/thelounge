@@ -13,9 +13,6 @@
   },
   "include": ["./**/*.ts", "./**/*.js", "./**/*.d.ts"],
   "compilerOptions": {
-    "paths": {
-      "@src/*": ["src/*"]
-    },
     "allowJs": true,
     "checkJs": true,
     "types": ["node"],

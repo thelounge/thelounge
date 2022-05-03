@@ -4,7 +4,7 @@ import got, {Response} from "got";
 import colors from "chalk";
 import log from "../log";
 import pkg from "../../package.json";
-import ClientManager from "@src/clientManager";
+import ClientManager from "clientManager";
 
 const TIME_TO_LIVE = 15 * 60 * 1000; // 15 minutes, in milliseconds
 

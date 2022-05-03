@@ -1,7 +1,7 @@
 "use strict";
 
-import Msg from "@src/models/msg";
-import Helper from "@src/helper";
+import Msg from "models/msg";
+import Helper from "helper";
 
 const commands = ["ignore", "unignore", "ignorelist"];
 
