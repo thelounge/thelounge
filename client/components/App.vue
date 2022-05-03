@@ -29,7 +29,7 @@ import ImageViewer from "./ImageViewer.vue";
 import ContextMenu from "./ContextMenu.vue";
 import ConfirmDialog from "./ConfirmDialog.vue";
 import Mentions from "./Mentions.vue";
-import Vue from "vue";
+import VueApp from "vue";
 
 // This stops Vue from complaining about adding objects to the component context
 declare module "vue/types/vue" {
@@ -39,7 +39,7 @@ declare module "vue/types/vue" {
 	}
 }
 
-export default Vue.extend({
+export default VueApp.extend({
 	name: "App",
 	components: {
 		Sidebar,
@@ -49,7 +49,7 @@ export default Vue.extend({
 		Mentions,
 	},
 	computed: {
-		viewportClasses(): Object {
+		viewportClasses(): Record<string, boolean> {
 			return {
 				notified: this.$store.getters.highlightCount > 0,
 				"menu-open": this.$store.state.appLoaded && this.$store.state.sidebarOpen,
