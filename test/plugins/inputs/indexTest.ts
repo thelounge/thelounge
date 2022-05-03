@@ -1,7 +1,7 @@
 "use strict";
 
-const expect = require("chai").expect;
-const inputs = require("../../../src/plugins/inputs");
+import {expect} from "chai";
+import inputs from "../../../src/plugins/inputs";
 
 describe("inputs", function () {
 	describe(".getCommands", function () {

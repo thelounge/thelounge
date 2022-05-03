@@ -3,6 +3,7 @@ import {expect} from "chai";
 
 import Chan from "../../src/models/chan";
 import Msg from "../../src/models/msg";
+import Prefix from "../../src/models/prefix";
 import User from "../../src/models/user";
 describe("Chan", function () {
 	const network = {
@@ -19,7 +20,7 @@ describe("Chan", function () {
 		},
 	};
 
-	const prefixLookup = {modeToSymbol: {}};
+	const prefixLookup = {modeToSymbol: {}} as Prefix;
 
 	network.network.options.PREFIX.forEach((mode) => {
 		prefixLookup.modeToSymbol[mode.mode] = mode.symbol;
@@ -38,7 +39,7 @@ describe("Chan", function () {
 		});
 
 		it("should find a message in the list of messages", function () {
-			expect(chan.findMessage(2).text).to.equal("Message to be found");
+			expect(chan.findMessage(2)?.text).to.equal("Message to be found");
 		});
 
 		it("should not find a message that does not exist", function () {
@@ -82,7 +83,7 @@ describe("Chan", function () {
 	});
 
 	describe("#getSortedUsers(irc)", function () {
-		const getUserNames = function (chan) {
+		const getUserNames = function (chan: Chan) {
 			return chan.getSortedUsers(network).map((u) => u.nick);
 		};
 

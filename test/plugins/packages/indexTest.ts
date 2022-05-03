@@ -1,9 +1,9 @@
 "use strict";
 
-const log = require("../../../src/log");
-const expect = require("chai").expect;
-const stub = require("sinon").stub;
-const TestUtil = require("../../util");
+import log from "../../../src/log";
+import {expect} from "chai";
+import {stub} from "sinon";
+import TestUtil from "../../util";
 
 let packages;
 

@@ -1,13 +1,14 @@
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
-const crypto = require("crypto");
-const expect = require("chai").expect;
-const util = require("../util");
-const Config = require("../../src/config");
-const storage = require("../../src/plugins/storage");
-const link = require("../../src/plugins/irc-events/link.js");
+import fs from "fs";
+import path from "path";
+import crypto from "crypto";
+import {expect} from "chai";
+import util from "../util";
+import Config from "../../src/config";
+import storage from "../../src/plugins/storage";
+import link from "../../src/plugins/irc-events/link.js";
+import {Request, Response} from "express";
 
 describe("Image storage", function () {
 	// Increase timeout due to unpredictable I/O on CI services
@@ -116,7 +117,7 @@ describe("Image storage", function () {
 			text: "http://localhost:" + port + "/svg-preview",
 		});
 
-		this.app.get("/svg-preview", function (req, res) {
+		this.app.get("/svg-preview", function (req: Request, res: Response) {
 			res.send(
 				"<title>test title</title><meta property='og:image' content='http://localhost:" +
 					port +

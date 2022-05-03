@@ -1,13 +1,13 @@
 "use strict";
 
-const expect = require("chai").expect;
-const Chan = require("../../src/models/chan");
-const Msg = require("../../src/models/msg");
-const User = require("../../src/models/user");
-const Network = require("../../src/models/network");
-const Config = require("../../src/config");
-const STSPolicies = require("../../src/plugins/sts");
-const ClientCertificate = require("../../src/plugins/clientCertificate");
+import {expect} from "chai";
+import Chan from "../../src/models/chan";
+import Msg from "../../src/models/msg";
+import User from "../../src/models/user";
+import Network from "../../src/models/network";
+import Config from "../../src/config";
+import STSPolicies from "../../src/plugins/sts";
+import ClientCertificate from "../../src/plugins/clientCertificate";
 
 describe("Network", function () {
 	describe("Network(attr)", function () {

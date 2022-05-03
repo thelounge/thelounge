@@ -1,6 +1,6 @@
 "use strict";
 
-const expect = require("chai").expect;
+import {expect} from "chai";
 const TextFileMessageStorage = require("../../src/plugins/messageStorage/text");
 
 describe("TextFileMessageStorage", function () {

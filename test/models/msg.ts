@@ -1,9 +1,9 @@
 "use strict";
 
-const expect = require("chai").expect;
+import {expect} from "chai";
 
-const Msg = require("../../src/models/msg");
-const User = require("../../src/models/user");
+import Msg from "../../src/models/msg";
+import User from "../../src/models/user";
 
 describe("Msg", function () {
 	["from", "target"].forEach((prop) => {

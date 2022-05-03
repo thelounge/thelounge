@@ -1,10 +1,10 @@
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
-const {expect} = require("chai");
-const ClientCertificate = require("../../src/plugins/clientCertificate");
-const Config = require("../../src/config");
+import fs from "fs";
+import path from "path";
+import {expect} from "chai";
+import ClientCertificate from "../../src/plugins/clientCertificate";
+import Config from "../../src/config";
 
 describe("ClientCertificate", function () {
 	it("should not generate a client certificate in public mode", function () {

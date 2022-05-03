@@ -1,7 +1,7 @@
 "use strict";
 
 const log = require("../../src/log");
-const expect = require("chai").expect;
+import {expect} from "chai";
 const stub = require("sinon").stub;
 const Config = require("../../src/config");
 const TestUtil = require("../util");

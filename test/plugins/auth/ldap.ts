@@ -1,12 +1,12 @@
 "use strict";
 
-const log = require("../../../src/log");
-const ldapAuth = require("../../../src/plugins/auth/ldap");
-const Config = require("../../../src/config");
-const ldap = require("ldapjs");
-const expect = require("chai").expect;
-const stub = require("sinon").stub;
-const TestUtil = require("../../util");
+import log from "../../../src/log";
+import ldapAuth from "../../../src/plugins/auth/ldap";
+import Config from "../../../src/config";
+import ldap from "ldapjs";
+import {expect} from "chai";
+import {stub} from "sinon";
+import TestUtil from "../../util";
 
 const user = "johndoe";
 const wrongUser = "eve";

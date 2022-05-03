@@ -1,12 +1,9 @@
 "use strict";
 
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'expect'.
-const expect = require("chai").expect;
-const localetime = require("../../../../client/js/helpers/localetime").default;
+import {expect} from "chai";
+import localetime from "../../../../client/js/helpers/localetime";
 
-// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("localetime helper", () => {
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should render a human-readable date", () => {
 		// 12PM in UTC time
 		const date = new Date("2014-05-22T12:00:00Z");

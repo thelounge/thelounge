@@ -1,6 +1,6 @@
 "use strict";
 
-const expect = require("chai").expect;
+import {expect} from "chai";
 const stub = require("sinon").stub;
 const log = require("../../src/log");
 const Client = require("../../src/client");
