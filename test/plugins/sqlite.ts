@@ -1,12 +1,12 @@
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
-const expect = require("chai").expect;
-const util = require("../util");
-const Msg = require("../../src/models/msg");
-const Config = require("../../src/config");
-const MessageStorage = require("../../src/plugins/messageStorage/sqlite.js");
+import fs from "fs";
+import path from "path";
+import {expect} from "chai";
+import util from "../util";
+import Msg from "../../src/models/msg";
+import Config from "../../src/config";
+import MessageStorage from "../../src/plugins/messageStorage/sqlite.js";
 
 describe("SQLite Message Storage", function () {
 	// Increase timeout due to unpredictable I/O on CI services

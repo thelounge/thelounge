@@ -1,6 +1,6 @@
 "use strict";
 
-const expect = require("chai").expect;
+import {expect} from "chai";
 const fs = require("fs");
 const path = require("path");
 

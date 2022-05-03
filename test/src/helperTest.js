@@ -1,6 +1,6 @@
 "use strict";
 
-const expect = require("chai").expect;
+import {expect} from "chai";
 const os = require("os");
 const Helper = require("../../src/helper");
 

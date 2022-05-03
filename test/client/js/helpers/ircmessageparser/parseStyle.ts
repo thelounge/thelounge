@@ -1,12 +1,9 @@
 "use strict";
 
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'expect'.
-const expect = require("chai").expect;
-const parseStyle = require("../../../../../client/js/helpers/ircmessageparser/parseStyle").default;
+import {expect} from "chai";
+import parseStyle from "../../../../../client/js/helpers/ircmessageparser/parseStyle";
 
-// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("parseStyle", () => {
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should replace control codes", () => {
 		const input = "text\x01with\x04control\x05codes";
 		const expected = [
@@ -32,7 +29,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should parse bold", () => {
 		const input = "\x02bold";
 		const expected = [
@@ -58,7 +54,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should parse strikethrough", () => {
 		const input = "\x1estrikethrough text\x1e";
 		const expected = [
@@ -84,7 +79,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should parse monospace", () => {
 		const input = "\x11monospace text\x1e";
 		const expected = [
@@ -110,7 +104,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should toggle monospace correctly", () => {
 		const input = "toggling \x11on and \x11off and \x11on again\x11";
 		const expected = [
@@ -181,7 +174,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should parse monospace and underline", () => {
 		const input =
 			"\x1funderline formatting \x11with monospace\x1f no underline \x11 and vanilla";
@@ -253,7 +245,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should parse monospace and text colors", () => {
 		const input = "\x037,9\x11text with color and monospace\x11\x03";
 		const expected = [
@@ -279,7 +270,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should parse strikethrough and italics", () => {
 		const input = "\x1ditalic formatting \x1ewith strikethrough\x1d no italic \x1e and vanilla";
 		const expected = [
@@ -350,7 +340,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should parse strikethrough and text colors", () => {
 		const input = "\x031,2text with color \x1eand strikethrough\x1e\x03";
 		const expected = [
@@ -391,7 +380,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should correctly parse multiple unclosed format tokens", () => {
 		const input = "\x1e\x02\x1d\x033,4string with multiple unclosed formats";
 		const expected = [
@@ -417,7 +405,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should toggle strikethrough correctly", () => {
 		const input = "toggling \x1eon and \x1eoff and \x1eon again\x1e";
 		const expected = [
@@ -488,7 +475,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should parse textColor", () => {
 		const input = "\x038yellowText";
 		const expected = [
@@ -514,7 +500,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should parse textColor and background", () => {
 		const input = "\x034,8yellowBG redText";
 		const expected = [
@@ -540,7 +525,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should parse extended colors", () => {
 		const input = "\x0370,99some text";
 		const expected = [
@@ -566,7 +550,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should parse italic", () => {
 		const input = "\x1ditalic";
 		const expected = [
@@ -592,7 +575,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should parse hex colors", () => {
 		const input =
 			"test \x04FFFFFFnice \x02\x04RES006 \x0303,04\x04ff00FFcolored\x04eeeaFF,001122 background\x04\x03\x02?";
@@ -694,7 +676,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should reverse and format color", () => {
 		const input = "\x032,9text with fg and bg \x16with text reversed";
 		const expected = [
@@ -735,7 +716,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should toggle reverse correctly", () => {
 		const input = "\x0305,11text \x16reversed and \x16back again and \x16reversed";
 		const expected = [
@@ -806,7 +786,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should escape reverse when a new style is applied", () => {
 		const input = "\x0311,02text \x16 reversed \x0304,05 and new style";
 		const expected = [
@@ -862,7 +841,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should not reverse if color is specified after reverse tag", () => {
 		const input = "\x16\x032,9text with fg and bg";
 		const expected = [
@@ -888,7 +866,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should reverse, bold, and italics", () => {
 		const input = "\x034,13\x16\x02some text with \x1ditalics";
 		const expected = [
@@ -929,7 +906,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should carry state correctly forward", () => {
 		const input = "\x02bold\x038yellow\x02nonBold\x03default";
 		const expected = [
@@ -1000,7 +976,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should toggle bold correctly", () => {
 		const input = "\x02bold\x02 \x02bold\x02";
 		const expected = [
@@ -1056,7 +1031,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should reset all styles", () => {
 		const input = "\x11\x1e\x02\x034\x16\x1d\x1ffull\x0fnone";
 		const expected = [
@@ -1097,7 +1071,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should not emit empty fragments", () => {
 		const input = "\x031\x031,2\x031\x031,2\x031\x031,2\x03a";
 		const expected = [
@@ -1123,7 +1096,6 @@ describe("parseStyle", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should optimize fragments", () => {
 		const rawString = "oh hi test text";
 		const colorCode = "\x0312";

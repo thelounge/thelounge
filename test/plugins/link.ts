@@ -1,10 +1,10 @@
 "use strict";
 
-const path = require("path");
-const expect = require("chai").expect;
-const util = require("../util");
-const Config = require("../../src/config");
-const link = require("../../src/plugins/irc-events/link.js");
+import path from "path";
+import {expect} from "chai";
+import util from "../util";
+import Config from "../../src/config";
+import link from "../../src/plugins/irc-events/link.js";
 
 describe("Link plugin", function () {
 	// Increase timeout due to unpredictable I/O on CI services
