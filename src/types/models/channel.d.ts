@@ -1,4 +1,5 @@
-import Chan from "models/chan";
+import Chan from "../../models/chan";
+
 declare global {
 	export type Channel = Chan;
 

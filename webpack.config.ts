@@ -36,11 +36,12 @@ const config: webpack.Configuration = {
 						compilerOptions: {
 							preserveWhitespace: false,
 						},
+						appendTsSuffixTo: [/\.vue$/],
 					},
 				},
 			},
 			{
-				test: /\.{js,ts,d.ts}$/,
+				test: /\.{js,ts}$/,
 				include: [path.resolve(__dirname, "client/")],
 				exclude: path.resolve(__dirname, "node_modules"),
 				use: {

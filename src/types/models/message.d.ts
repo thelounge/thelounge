@@ -8,6 +8,7 @@ declare global {
 	};
 
 	type MessagePreview = {
+		shown: boolean;
 		link: string;
 	};
 

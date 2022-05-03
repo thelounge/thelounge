@@ -3,12 +3,14 @@
   "files": [
     "../package.json",
     "../client/js/constants.ts",
-    "../client/js/helpers/ircmessageparser/findLinks.ts"
+    "../client/js/helpers/ircmessageparser/findLinks.ts",
+    "../client/js/helpers/ircmessageparser/cleanIrcMessage.ts"
   ],
   "include": ["**/*"],
   "compilerOptions": {
     "types": ["node"],
     "baseUrl": ".",
     "noImplicitAny": false
-  }
+  },
+  "references": [{"path": "../"}]
 }

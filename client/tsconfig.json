@@ -1,13 +1,19 @@
 {
   "extends": "../tsconfig.base.json",
-  "include": ["./**/*"],
-  "files": ["../src/types/models/channel.d.ts"],
+  "include": ["./**/*", "../src/models/*"],
+  "files": [
+    "../src/types/models/channel.d.ts",
+    "js/helpers/simplemap.json",
+    "js/helpers/fullnamemap.json",
+    "../package.json"
+  ],
   "compilerOptions": {
     // https://v2.vuejs.org/v2/guide/typescript.html?redirect=true#Recommended-Configuration
     "target": "ES5",
     "strict": true,
     "lib": ["ES2020", "dom"],
     "sourceMap": false,
+    "resolveJsonModule": true,
     "baseUrl": "./",
     "jsx": "preserve"
   }

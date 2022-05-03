@@ -1,9 +1,9 @@
 "use strict";
 
-const expect = require("chai").expect;
+import {expect} from "chai";
 
-const Chan = require("../../src/models/chan");
-const ModeCommand = require("../../src/plugins/inputs/mode");
+import Chan from "../../src/models/chan";
+import ModeCommand from "../../src/plugins/inputs/mode";
 
 describe("Commands", function () {
 	describe("/mode", function () {
@@ -22,18 +22,18 @@ describe("Commands", function () {
 			nick: "xPaw",
 			irc: {
 				network: {
-					supports(type) {
+					supports(type: string) {
 						if (type.toUpperCase() === "MODES") {
 							return "4";
 						}
 					},
 				},
-				raw(...args) {
+				raw(...args: string[]) {
 					testableNetwork.firstCommand = testableNetwork.lastCommand;
 					testableNetwork.lastCommand = args.join(" ");
 				},
 			},
-		};
+		} as any;
 
 		const testableNetworkNoSupports = Object.assign({}, testableNetwork, {
 			irc: {
@@ -42,7 +42,7 @@ describe("Commands", function () {
 						return null;
 					},
 				},
-				raw(...args) {
+				raw(...args: string[]) {
 					testableNetworkNoSupports.firstCommand = testableNetworkNoSupports.lastCommand;
 					testableNetworkNoSupports.lastCommand = args.join(" ");
 				},
@@ -50,7 +50,7 @@ describe("Commands", function () {
 		});
 
 		it("should not mess with the given target", function () {
-			const test = function (expected, args) {
+			const test = function (expected: string, args: string[]) {
 				ModeCommand.input(testableNetwork, channel, "mode", Array.from(args));
 				expect(testableNetwork.lastCommand).to.equal(expected);
 

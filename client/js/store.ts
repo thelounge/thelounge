@@ -21,10 +21,10 @@ function detectDesktopNotificationState() {
 
 export type State = {
 	appLoaded: boolean;
-	activeChannel: {
+	activeChannel?: {
 		network: Network;
 		channel: Channel;
-	} | null;
+	};
 	currentUserVisibleError: string | null;
 	desktopNotificationState: "granted" | "blocked" | "nohttps" | "unsupported";
 	isAutoCompleting: boolean;

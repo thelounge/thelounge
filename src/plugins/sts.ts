@@ -8,9 +8,10 @@ import Config from "../config";
 import type {PolicyMap, PolicyOption} from "types/plugins/sts";
 
 class STSPolicies {
-	private stsFile: string;
+	stsFile: string;
+	refresh: _.DebouncedFunc<any>;
+
 	private policies: PolicyMap;
-	private refresh: _.DebouncedFunc<any>;
 
 	constructor() {
 		this.stsFile = path.join(Config.getHomePath(), "sts-policies.json");
