@@ -1,11 +1,19 @@
 {
   "extends": "./tsconfig.base.json",
   "files": ["./webpack.config.ts", "./babel.config.cjs"],
-  "references": [{"path": "./src/"}, {"path": "./client/"}],
   "compilerOptions": {
     "paths": {
       "@src/*": ["src/*"],
       "@client/*": ["client/*"]
     }
-  }
+  },
+  "exclude": ["./node_modules", "./public/*"],
+  "references": [
+    {
+      "path": "./src,"
+    },
+    {
+      "path": "./client"
+    }
+  ]
 }

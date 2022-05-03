@@ -2,7 +2,7 @@ import {Channel} from "../../models/channel";
 import {Message} from "../../models/message";
 import {Network} from "../../models/network";
 import sqlite from "sqlite3";
-import Client from "@src/client";
+import Client from "client";
 
 interface MessageStorage {
 	client: Client;

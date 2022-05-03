@@ -4,9 +4,7 @@ import log from "../../log";
 import Config from "../../config";
 import ldap, {SearchOptions} from "ldapjs";
 import colors from "chalk";
-import ClientManager from "@src/clientManager";
-import Client from "@src/client";
-import {AuthHandler} from "@src/types/plugins/auth";
+import {AuthHandler} from "types/plugins/auth";
 
 function ldapAuthCommon(
 	user: string,

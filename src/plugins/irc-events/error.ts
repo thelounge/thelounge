@@ -2,7 +2,7 @@
 
 import Msg from "../../models/msg";
 import Config from "../../config";
-import Network from "@src/models/network";
+import Network from "models/network";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;

@@ -6,7 +6,7 @@ import fs from "fs";
 import path from "path";
 import WebPushAPI from "web-push";
 import Config from "../config";
-import Client from "@src/client";
+import Client from "client";
 
 class WebPush {
 	vapidKeys?: {

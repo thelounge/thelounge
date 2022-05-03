@@ -6,8 +6,8 @@ import fs from "fs";
 import Config from "../../config";
 import Msg from "../../models/msg";
 import type {Database} from "sqlite3";
-import Client from "@src/client";
-import Chan from "@src/models/chan";
+import Client from "client";
+import Chan from "models/chan";
 
 let sqlite3;
 

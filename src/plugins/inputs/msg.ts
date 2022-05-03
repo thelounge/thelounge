@@ -1,8 +1,8 @@
 "use strict";
 
-import Network from "@src/models/network";
+import Network from "models/network";
 
-import Msg from "@src/models/msg";
+import Msg from "models/msg";
 
 const commands = ["query", "msg", "say"];
 

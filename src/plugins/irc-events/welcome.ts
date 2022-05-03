@@ -1,6 +1,5 @@
 "use strict";
 
-import Network from "@src/models/network";
 import Msg from "../../models/msg";
 
 export default <IrcEventHandler>function (irc, network) {

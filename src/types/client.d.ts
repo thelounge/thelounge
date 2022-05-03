@@ -1,5 +1,3 @@
-import {MessageType, UserInMessage} from "./models/message";
-
 type ClientConfig = {
 	log: boolean;
 	password: string;
@@ -8,7 +6,7 @@ type ClientConfig = {
 			lastUse: number;
 			ip: string;
 			agent: string;
-			pushSubscription?: PushSubscription;
+			pushSubscription?: ClientPushSubscription;
 		};
 	};
 	clientSettings: {
@@ -22,7 +20,7 @@ type ClientConfig = {
 	};
 };
 
-type PushSubscription = {
+type ClientPushSubscription = {
 	endpoint: string;
 	keys: {
 		p256dh: string;

@@ -1,4 +1,4 @@
-import Client from "@src/client";
+import Client from "client";
 
 declare global {
 	type PluginInputHandler = (

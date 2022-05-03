@@ -10,7 +10,7 @@ import Helper from "../helper";
 import Config from "../config";
 import STSPolicies from "../plugins/sts";
 import ClientCertificate from "../plugins/clientCertificate";
-import Client from "@src/client";
+import Client from "../client";
 
 /**
  * @type {Object} List of keys which should be sent to the client by default.

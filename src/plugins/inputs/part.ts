@@ -1,7 +1,7 @@
 "use strict";
 
-import Msg from "@src/models/msg";
-import Config from "@src/config";
+import Msg from "models/msg";
+import Config from "config";
 
 const commands = ["close", "leave", "part"];
 const allowDisconnected = true;

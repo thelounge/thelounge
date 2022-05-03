@@ -1,5 +1,5 @@
-import Chan from "@src/models/chan";
-import Network from "@src/models/network";
+import Chan from "models/chan";
+import Network from "models/network";
 
 const clientSideCommands = ["/collapse", "/expand", "/search"];
 

@@ -12,7 +12,7 @@ const packageMap = new Map();
 import inputs from "../inputs";
 import fs from "fs";
 import Utils from "../../command-line/utils";
-import Client from "@src/client";
+import Client from "client";
 
 const stylesheets: string[] = [];
 const files: string[] = [];
