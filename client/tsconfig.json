@@ -1,7 +1,6 @@
 {
   "extends": "../tsconfig.base.json",
-  "include": ["./**/*.ts", "./**/*.js", "./**/*.d.ts", "./**/*/json"],
-  "exclude": ["./dist/*"],
+  "include": ["./**/*"],
   "files": ["../src/types/models/channel.d.ts"],
   "compilerOptions": {
     // https://v2.vuejs.org/v2/guide/typescript.html?redirect=true#Recommended-Configuration
@@ -9,10 +8,7 @@
     "strict": true,
     "lib": ["ES2020", "dom"],
     "sourceMap": false,
-    "outDir": "./dist",
-    "noImplicitAny": false,
     "baseUrl": "./",
-
     "jsx": "preserve"
   }
 }

@@ -2,15 +2,10 @@
   "extends": "../tsconfig.base.json",
   "files": [
     "../package.json",
-    "../client/js/constants.js",
+    "../client/js/constants.ts",
     "../client/js/helpers/ircmessageparser/findLinks.ts"
   ],
-  // "exclude": ["../client/*", "./dist/*"],
-  "exclude": ["./dist/*"],
-  "ts-node": {
-    "files": true
-  },
-  "include": ["./**/*.ts", "./**/*.js", "./**/*.d.ts"],
+  "include": ["**/*"],
   "compilerOptions": {
     "types": ["node"],
     "baseUrl": ".",

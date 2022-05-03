@@ -40,7 +40,7 @@ const config: webpack.Configuration = {
 				},
 			},
 			{
-				test: /\.{js,ts}$/,
+				test: /\.{js,ts,d.ts}$/,
 				include: [path.resolve(__dirname, "client/")],
 				exclude: path.resolve(__dirname, "node_modules"),
 				use: {
