@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "paths": {
+      "@src/*": ["src/*"],
+      "@client/*": ["client/*"]
+    },
     "target": "esnext",
     "module": "commonjs",
     "outDir": "dist",
@@ -21,7 +25,7 @@
   "exclude": ["./node_modules", "./public/*"],
   "references": [
     {
-      "path": "./src"
+      "path": "./src,"
     },
     {
       "path": "./client"

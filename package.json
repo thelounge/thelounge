@@ -12,7 +12,7 @@
   },
   "homepage": "https://thelounge.chat/",
   "scripts": {
-    "build": "tsc --resolveJsonModule --esModuleInterop --lib DOM webpack.config.ts && webpack --config webpack.config.js",
+    "build": "webpack",
     "coverage": "run-s test:* && nyc --nycrc-path=test/.nycrc-report.json report",
     "dev": "TS_NODE_PROJECT='./src/tsconfig.json' ts-node index start --dev",
     "format:prettier": "prettier --write \"**/*.*\"",

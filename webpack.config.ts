@@ -100,11 +100,11 @@ const config: webpack.Configuration = {
 		extensions: [".js", ".vue", ".json", ".ts"],
 		// modules: ["node_modules", path.resolve(__dirname, "client")],
 		plugins: [
-			new TsconfigPathsPlugin({
-				configFile: path.resolve(__dirname, "client/tsconfig.json"),
-				extensions: [".js", ".vue", ".json", ".ts"],
-				baseUrl: path.resolve(__dirname, "client"),
-			}),
+			// new TsconfigPathsPlugin({
+			// 	configFile: path.resolve(__dirname, "client/tsconfig.json"),
+			// 	extensions: [".js", ".vue", ".json", ".ts"],
+			// 	baseUrl: path.resolve(__dirname, "client"),
+			// }),
 		],
 	},
 	externals: {

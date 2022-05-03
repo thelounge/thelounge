@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.base.json",
+  "files": ["./webpack.config.ts"],
+  "references": [{"path": "./src/"}, {"path": "./client/"}]
+}

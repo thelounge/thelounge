@@ -21,10 +21,6 @@
     "outDir": "dist",
     // "resolveJsonModule": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
-    "paths": {
-      "@src/*": ["./*"],
-      "@client/*": ["../client/*"]
-    }
+    "moduleResolution": "node"
   }
 }
