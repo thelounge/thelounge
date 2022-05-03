@@ -12,7 +12,7 @@ const packageMap = new Map();
 import inputs from "../inputs";
 import fs from "fs";
 import Utils from "../../command-line/utils";
-import Client from "client";
+import Client from "../../client";
 
 const stylesheets: string[] = [];
 const files: string[] = [];
@@ -34,7 +34,7 @@ export default {
 };
 
 // TODO: verify binds worked. Used to be 'this' instead of 'packageApis'
-const packageApis = function (packageInfo) {
+const packageApis = function (packageInfo: PackageInfo) {
 	return {
 		Stylesheets: {
 			addFile: addStylesheet.bind(packageApis, packageInfo.packageName),

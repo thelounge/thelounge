@@ -1,21 +1,21 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
     "declaration": true,
     // "lib": ["es2019" ],
     "module": "commonjs",
     "target": "ESNext",
     "baseUrl": ".",
-    "rootDir": "./",
     "allowJs": true,
+    "noImplicitAny": false,
     "checkJs": true,
     "resolveJsonModule": true,
     "composite": true,
     "strict": true /* Enable all strict type-checking options. */,
-    "typeRoots": ["./src/"],
+    "typeRoots": ["./src/types/"],
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    // "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
   },
   "files": ["./src/index.d.ts"]

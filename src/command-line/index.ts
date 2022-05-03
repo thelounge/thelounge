@@ -44,7 +44,7 @@ program.addCommand(require("./uninstall").default);
 program.addCommand(require("./upgrade").default);
 program.addCommand(require("./outdated").default);
 if (!Config.values.public) {
-	require("./users").default.forEach((command) => {
+	require("./users").default.forEach((command: Command) => {
 		if (command) program.addCommand(command);
 	});
 }
