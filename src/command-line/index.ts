@@ -43,11 +43,15 @@ program.addCommand(require("./install").default);
 program.addCommand(require("./uninstall").default);
 program.addCommand(require("./upgrade").default);
 program.addCommand(require("./outdated").default);
+
 if (!Config.values.public) {
 	require("./users").default.forEach((command: Command) => {
-		if (command) program.addCommand(command);
+		if (command) {
+			program.addCommand(command);
+		}
 	});
 }
+
 // `parse` expects to be passed `process.argv`, but we need to remove to give it
 // a version of `argv` that does not contain options already parsed by
 // `parseOptions` above.

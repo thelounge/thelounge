@@ -10,6 +10,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 	let target: string;
 	// let hostmask: cmd === "ignoreList" ? string : undefined;
 	let hostmask: IgnoreListItem | undefined;
+
 	if (cmd !== "ignorelist" && (args.length === 0 || args[0].trim().length === 0)) {
 		chan.pushMessage(
 			client,

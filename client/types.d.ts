@@ -5,3 +5,7 @@ declare module "*.vue" {
 interface LoungeWindow extends Window {
 	g_TheLoungeRemoveLoading?: () => void;
 }
+
+type ClientChan = Chan & {
+	moreHistoryAvailable: boolean;
+};

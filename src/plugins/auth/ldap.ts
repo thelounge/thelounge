@@ -191,8 +191,8 @@ function advancedLdapLoadUsers(users: string[], callbackLoadUser) {
 			}
 
 			res.on("searchEntry", function (entry) {
-				//@ts-ignore
-				//TODO
+				// @ts-ignore
+				// TODO
 				const user = entry.attributes[0]._vals[0].toString();
 
 				if (remainingUsers.has(user)) {

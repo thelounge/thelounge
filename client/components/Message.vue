@@ -96,7 +96,7 @@
 </template>
 
 <script>
-const constants = require("../js/constants");
+import constants from "../js/constants";
 import localetime from "../js/helpers/localetime";
 import dayjs from "dayjs";
 import Username from "./Username.vue";

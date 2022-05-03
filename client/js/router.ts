@@ -1,6 +1,6 @@
 "use strict";
 
-const constants = require("./constants");
+import constants from "./constants";
 
 import Vue from "vue";
 import VueRouter from "vue-router";
@@ -138,7 +138,7 @@ router.beforeEach((to, from, next) => {
 		return;
 	}
 
-	const imageViewer = router.app.$root.$refs.app.$refs.imageViewer;
+	const imageViewer = router.app.$root.$refs.app?.$refs.imageViewer;
 
 	if (imageViewer && imageViewer.link) {
 		imageViewer.closeViewer();
@@ -175,18 +175,20 @@ router.afterEach((to) => {
 	}
 });
 
-function navigate(routeName, params = {}) {
+function navigate(routeName: string, params: any = {}) {
 	if (router.currentRoute.name) {
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		router.push({name: routeName, params}).catch(() => {});
 	} else {
 		// If current route is null, replace the history entry
 		// This prevents invalid entries from lingering in history,
 		// and then the route guard preventing proper navigation
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		router.replace({name: routeName, params}).catch(() => {});
 	}
 }
 
-function switchToChannel(channel) {
+function switchToChannel(channel: ClientChan) {
 	return navigate("RoutedChat", {id: channel.id});
 }
 

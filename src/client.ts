@@ -200,7 +200,7 @@ class Client {
 
 	connect(args: any, isStartup = false) {
 		const client = this;
-		let channels: Chan[] = [];
+		const channels: Chan[] = [];
 
 		// Get channel id for lobby before creating other channels for nicer ids
 		const lobbyChannelId = client.idChan++;
@@ -279,8 +279,11 @@ class Client {
 
 		network.createIrcFramework(client);
 
-		events.forEach((plugin) => {
-			require(`./plugins/irc-events/${plugin}`).apply(client, [network.irc, network]);
+		events.forEach(async (plugin) => {
+			(await import(`./plugins/irc-events/${plugin}`)).default.apply(client, [
+				network.irc,
+				network,
+			]);
 		});
 
 		if (network.userDisconnected) {
@@ -732,11 +735,7 @@ class Client {
 	}
 
 	// TODO: type session to this.attachedClients
-	registerPushSubscription(
-		session: any,
-		subscription: ClientPushSubscription,
-		noSave: boolean = false
-	) {
+	registerPushSubscription(session: any, subscription: ClientPushSubscription, noSave = false) {
 		if (
 			!_.isPlainObject(subscription) ||
 			!_.isPlainObject(subscription.keys) ||

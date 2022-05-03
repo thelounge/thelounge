@@ -11,7 +11,7 @@ class User {
 	nick!: string;
 	lastMessage!: number;
 
-	constructor(attr: Partial<User>, prefix: Prefix) {
+	constructor(attr: Partial<User>, prefix?: Prefix) {
 		_.defaults(this, attr, {
 			modes: [],
 			away: "",
@@ -25,7 +25,7 @@ class User {
 			},
 		});
 
-		this.setModes(this.modes, prefix);
+		this.setModes(this.modes, prefix || new Prefix([]));
 	}
 
 	setModes(modes: string[], prefix: Prefix) {

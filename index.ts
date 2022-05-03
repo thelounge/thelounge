@@ -8,7 +8,9 @@ process.chdir(__dirname);
 // Doing this check as soon as possible allows us to
 // avoid ES6 parser errors or other issues
 import pkg from "./package.json";
-if (!require("semver").satisfies(process.version, pkg.engines.node)) {
+import {satisfies} from "semver";
+
+if (!satisfies(process.version, pkg.engines.node)) {
 	/* eslint-disable no-console */
 	console.error(
 		"The Lounge requires Node.js " +
@@ -24,10 +26,11 @@ if (!require("semver").satisfies(process.version, pkg.engines.node)) {
 	process.exit(1);
 }
 
-import dns from "dns";
+import * as dns from "dns";
 
 // Set DNS result order early before anything that may depend on it happens.
 if (dns.setDefaultResultOrder) {
 	dns.setDefaultResultOrder("verbatim");
 }
+
 import "./src/command-line";

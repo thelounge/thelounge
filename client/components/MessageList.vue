@@ -58,7 +58,7 @@
 </template>
 
 <script>
-const constants = require("../js/constants");
+import constants from "../js/constants";
 import eventbus from "../js/eventbus";
 import clipboard from "../js/clipboard";
 import socket from "../js/socket";

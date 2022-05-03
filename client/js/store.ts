@@ -23,7 +23,7 @@ export type State = {
 	appLoaded: boolean;
 	activeChannel?: {
 		network: Network;
-		channel: Channel;
+		channel: ClientChan;
 	};
 	currentUserVisibleError: string | null;
 	desktopNotificationState: "granted" | "blocked" | "nohttps" | "unsupported";

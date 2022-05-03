@@ -6,7 +6,8 @@ module.exports = {
 		// project: ["./eslint.tsconfig.json"],
 		// extraFileExtensions: [".vue", ".cjs"],
 	},
-	parser: "@typescript-eslint/parser",
+	// TODO: this should  just be for client?
+	parser: "vue-eslint-parser",
 	plugins: ["vue", "@typescript-eslint"],
 	env: {
 		es6: true,
@@ -84,5 +85,9 @@ module.exports = {
 		"vue/require-default-prop": "off",
 		"vue/v-slot-style": ["error", "longform"],
 		"vue/multi-word-component-names": "off",
+		"@typescript-eslint/no-explicit-any": "off",
+		"@typescript-eslint/no-non-null-assertion": "off",
+		"@typescript-eslint/no-unused-vars": "off",
+		"@typescript-eslint/no-this-alias": "off",
 	},
 };

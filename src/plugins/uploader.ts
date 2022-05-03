@@ -260,9 +260,9 @@ class Uploader {
 				// abort the processing with an error
 
 				// TODO: fix types
-				//@ts-ignore
+				// @ts-ignore
 				fileStream.on("error", abortWithError);
-				//@ts-ignore
+				// @ts-ignore
 				fileStream.on("limit", () => {
 					fileStream.unpipe(streamWriter);
 					fileStream.on("readable", fileStream.read.bind(fileStream));

@@ -136,7 +136,7 @@ export default async function (
 			process.exit(1);
 		}
 
-		server = require("https");
+		server = await import("https");
 		server = server.createServer(
 			{
 				key: fs.readFileSync(keyPath),
@@ -160,7 +160,7 @@ export default async function (
 
 	server.on("error", (err) => log.error(`${err}`));
 
-	server.listen(listenParams, () => {
+	server.listen(listenParams, async () => {
 		if (typeof listenParams === "string") {
 			log.info("Available on socket " + colors.green(listenParams));
 		} else {
@@ -216,18 +216,18 @@ export default async function (
 		}
 
 		new Identification((identHandler, err) => {
-			if (err) {
+			if (err || !manager) {
 				log.error(`Could not start identd server, ${err.message}`);
 				process.exit(1);
 			}
 
-			manager!.init(identHandler, sockets);
+			manager.init(identHandler, sockets);
 		});
 
 		// Handle ctrl+c and kill gracefully
 		let suicideTimeout: NodeJS.Timeout | null = null;
 
-		const exitGracefully = function () {
+		const exitGracefully = async function () {
 			if (suicideTimeout !== null) {
 				return;
 			}
@@ -235,12 +235,14 @@ export default async function (
 			log.info("Exiting...");
 
 			// Close all client and IRC connections
-			manager!.clients.forEach((client) => client.quit());
+			if (manager) {
+				manager.clients.forEach((client) => client.quit());
+			}
 
 			if (Config.values.prefetchStorage) {
 				log.info("Clearing prefetch storage folder, this might take a while...");
 
-				require("./plugins/storage").emptyDir();
+				(await import("./plugins/storage")).default.emptyDir();
 			}
 
 			// Forcefully exit after 3 seconds
@@ -251,6 +253,7 @@ export default async function (
 				if (suicideTimeout !== null) {
 					clearTimeout(suicideTimeout);
 				}
+
 				process.exit(0);
 			});
 		};
@@ -260,7 +263,7 @@ export default async function (
 
 		// Clear storage folder after server starts successfully
 		if (Config.values.prefetchStorage) {
-			require("./plugins/storage").emptyDir();
+			(await import("./plugins/storage")).default.emptyDir();
 		}
 
 		changelog.checkForUpdates(manager);
@@ -949,7 +952,9 @@ function reverseDnsLookup(ip, callback) {
 
 		dns.resolve(hostnames[0], net.isIP(ip) === 6 ? "AAAA" : "A", (resolveErr, resolvedIps) => {
 			// TODO: investigate SoaRecord class
-			if (!Array.isArray(resolvedIps)) return callback(ip);
+			if (!Array.isArray(resolvedIps)) {
+				return callback(ip);
+			}
 
 			if (resolveErr || resolvedIps.length < 1) {
 				return callback(ip);

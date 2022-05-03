@@ -109,7 +109,7 @@ declare module "irc-framework" {
 		// TODO: typeof e?
 		invite(channel: string, nick: string): void;
 
-		addInvite(channel: String, mask: string): void;
+		addInvite(channel: string, mask: string): void;
 
 		removeInvite(channel: string, mask: string): void;
 
@@ -353,7 +353,7 @@ declare module "irc-framework" {
 		 * one_way (false) Only relay messages to target_chan, not the reverse
 		 * replay_nicks (true) Include the sending nick as part of the relayed message
 		 */
-		relay(target_chan: IrcChannel | String, opts: Object): void;
+		relay(target_chan: IrcChannel | string, opts: Object): void;
 
 		// stream(stream_ops: Object): DuplexStream;
 

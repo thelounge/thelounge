@@ -16,7 +16,7 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    // "skipLibCheck": true,
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
   },
   "files": ["./package.json", "./src/**/*.d.ts"]
