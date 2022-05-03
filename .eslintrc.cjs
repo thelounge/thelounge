@@ -3,6 +3,7 @@ module.exports = {
 	parserOptions: {
 		ecmaVersion: 2022,
 		parser: "@typescript-eslint/parser",
+		sourceType: "module",
 		// project: ["./eslint.tsconfig.json"],
 		// extraFileExtensions: [".vue", ".cjs"],
 	},
@@ -16,8 +17,8 @@ module.exports = {
 		node: true,
 	},
 	extends: [
-		"eslint:recommended",
 		"plugin:vue/recommended",
+		"eslint:recommended",
 		"plugin:@typescript-eslint/recommended",
 		"prettier",
 	],
@@ -90,4 +91,21 @@ module.exports = {
 		"@typescript-eslint/no-unused-vars": "off",
 		"@typescript-eslint/no-this-alias": "off",
 	},
+
+	// TODO: verify
+	overrides: [
+		{
+			files: ["*.vue", "*.d.ts"],
+			rules: {
+				"import/no-default-export": 0,
+			},
+		},
+		{
+			files: ["*.vue"],
+			rules: {
+				"@typescript-eslint/prefer-readonly": 0, // can be used in template
+				"import/unambiguous": 0, // vue SFC can miss script tags
+			},
+		},
+	],
 };

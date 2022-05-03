@@ -25,6 +25,9 @@ const config: webpack.Configuration = {
 	performance: {
 		hints: false,
 	},
+	resolve: {
+		extensions: [".ts", ".js", ".vue"],
+	},
 	module: {
 		rules: [
 			{
@@ -40,8 +43,8 @@ const config: webpack.Configuration = {
 				},
 			},
 			{
-				test: /\.{js,ts}$/,
-				include: [path.resolve(__dirname, "client/")],
+				test: /\.ts$/,
+				include: [path.resolve(__dirname, "client")],
 				exclude: path.resolve(__dirname, "node_modules"),
 				use: {
 					loader: "babel-loader",
@@ -93,6 +96,10 @@ const config: webpack.Configuration = {
 		new VueLoaderPlugin(),
 		new MiniCssExtractPlugin({
 			filename: "css/style.css",
+		}),
+		// TODO: verify necessary
+		new webpack.ProvidePlugin({
+			Vue: ["vue/dist/vue.esm.js", "default"],
 		}),
 		new CopyPlugin({
 			patterns: [

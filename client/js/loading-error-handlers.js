@@ -54,8 +54,8 @@
 
 	window.addEventListener("error", errorHandler);
 
-	(window as LoungeWindow).g_TheLoungeRemoveLoading = () => {
-		delete (window as LoungeWindow).g_TheLoungeRemoveLoading;
+	window.g_TheLoungeRemoveLoading = () => {
+		delete window.g_TheLoungeRemoveLoading;
 		window.clearTimeout(loadingSlowTimeout);
 		window.removeEventListener("error", errorHandler);
 		document.getElementById("loading")?.remove();

@@ -55,12 +55,13 @@
 	</div>
 </template>
 
-<script>
+<script lang="ts">
 import storage from "../../js/localStorage";
 import socket from "../../js/socket";
 import RevealPassword from "../RevealPassword.vue";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
 	name: "SignIn",
 	components: {
 		RevealPassword,
@@ -101,5 +102,5 @@ export default {
 			return storage.get("user");
 		},
 	},
-};
+});
 </script>
