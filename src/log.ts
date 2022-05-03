@@ -9,7 +9,7 @@ function timestamp() {
 	return colors.dim(datetime);
 }
 
-export default {
+const log = {
 	/* eslint-disable no-console */
 	error(...args: string[]) {
 		console.error(timestamp(), colors.red("[ERROR]"), ...args);
@@ -36,3 +36,5 @@ export default {
 		read(options, callback);
 	},
 };
+
+export default log;

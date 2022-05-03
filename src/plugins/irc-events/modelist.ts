@@ -1,13 +1,12 @@
 "use strict";
 
-import Network from "src/models/network";
-import {ChanType, SpecialChanType} from "src/types/models/channel";
-import {MessageType} from "src/types/models/message";
+import Network from "@src/models/network";
+import {ChanType, SpecialChanType} from "@src/types/models/channel";
 
 import Chan from "../../models/chan";
 import Msg from "../../models/msg";
 
-export default function (irc: Network["irc"], network: Network) {
+export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
 	irc.on("banlist", (list) => {
@@ -84,4 +83,4 @@ export default function (irc: Network["irc"], network: Network) {
 			});
 		}
 	}
-}
+};

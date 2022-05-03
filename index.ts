@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env ts-node
 
 "use strict";
 
@@ -7,8 +7,7 @@ process.chdir(__dirname);
 // Perform node version check before loading any other files or modules
 // Doing this check as soon as possible allows us to
 // avoid ES6 parser errors or other issues
-const pkg = require("./package.json");
-
+import pkg from "./package.json";
 if (!require("semver").satisfies(process.version, pkg.engines.node)) {
 	/* eslint-disable no-console */
 	console.error(
@@ -25,11 +24,10 @@ if (!require("semver").satisfies(process.version, pkg.engines.node)) {
 	process.exit(1);
 }
 
-const dns = require("dns");
+import dns from "dns";
 
 // Set DNS result order early before anything that may depend on it happens.
 if (dns.setDefaultResultOrder) {
 	dns.setDefaultResultOrder("verbatim");
 }
-
-require("./src/command-line");
+import "./src/command-line";

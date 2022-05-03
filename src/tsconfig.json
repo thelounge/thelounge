@@ -1,11 +1,17 @@
 {
-  "extends": "../tsconfig.json",
-  "exclude": ["../client/*", "./dist/*"],
+  "extends": "../tsconfig.base.json",
+  "files": [
+    "../package.json",
+    "../client/js/constants.js",
+    "../client/js/helpers/ircmessageparser/findLinks.ts",
+    "./index.d.ts"
+  ],
+  // "exclude": ["../client/*", "./dist/*"],
+  "exclude": ["./dist/*"],
   "ts-node": {
     "files": true
   },
-  "include": ["**/*.ts", "**/*.js", "**/*.d.ts"],
-  "files": ["index.d.ts"],
+  "include": ["./**/*.ts", "./**/*.js", "./**/*.d.ts"],
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
@@ -13,12 +19,12 @@
     "baseUrl": ".",
     "noImplicitAny": false,
     "outDir": "dist",
-    "resolveJsonModule": true,
+    // "resolveJsonModule": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
     "paths": {
-      "src/*": ["./*"],
-      "client/*": ["../client/*"]
+      "@src/*": ["./*"],
+      "@client/*": ["../client/*"]
     }
   }
 }

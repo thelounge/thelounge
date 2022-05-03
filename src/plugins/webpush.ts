@@ -1,17 +1,23 @@
 "use strict";
 
-const _ = require("lodash");
-const log = require("../log");
-const fs = require("fs");
-const path = require("path");
-const WebPushAPI = require("web-push");
-const Config = require("../config");
+import _ from "lodash";
+import log from "../log";
+import fs from "fs";
+import path from "path";
+import WebPushAPI from "web-push";
+import Config from "../config";
+import Client from "@src/client";
 
 class WebPush {
+	vapidKeys?: {
+		publicKey: string;
+		privateKey: string;
+	};
+
 	constructor() {
 		const vapidPath = path.join(Config.getHomePath(), "vapid.json");
 
-		let vapidStat = undefined;
+		let vapidStat: fs.Stats | undefined = undefined;
 
 		try {
 			vapidStat = fs.statSync(vapidPath);
@@ -64,7 +70,7 @@ class WebPush {
 		);
 	}
 
-	push(client, payload, onlyToOffline) {
+	push(client: Client, payload: any, onlyToOffline: boolean) {
 		_.forOwn(client.config.sessions, ({pushSubscription}, token) => {
 			if (pushSubscription) {
 				if (onlyToOffline && _.find(client.attachedClients, {token}) !== undefined) {
@@ -76,7 +82,7 @@ class WebPush {
 		});
 	}
 
-	pushSingle(client, subscription, payload) {
+	pushSingle(client: Client, subscription: WebPushAPI.PushSubscription, payload: any) {
 		WebPushAPI.sendNotification(subscription, JSON.stringify(payload)).catch((error) => {
 			if (error.statusCode >= 400 && error.statusCode < 500) {
 				log.warn(
@@ -97,4 +103,4 @@ class WebPush {
 	}
 }
 
-module.exports = WebPush;
+export default WebPush;

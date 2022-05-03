@@ -1,11 +1,8 @@
 "use strict";
 
-import Network from "src/models/network";
-import {ChanType} from "src/types/models/channel";
-import {MessageType} from "src/types/models/message";
 import Msg from "../../models/msg";
 
-export default function (irc: Network["irc"], network: Network) {
+export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
 	irc.on("away", (data) => handleAway(MessageType.AWAY, data));
@@ -72,4 +69,4 @@ export default function (irc: Network["irc"], network: Network) {
 			}
 		});
 	}
-}
+};

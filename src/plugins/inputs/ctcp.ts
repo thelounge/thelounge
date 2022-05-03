@@ -1,13 +1,10 @@
 "use strict";
 
-import Chan from "src/models/chan";
-import Network from "src/models/network";
-import {MessageType} from "src/types/models/message";
 import Msg from "../../models/msg";
 
 const commands = ["ctcp"];
 
-const input = function ({irc}: Network, chan: Chan, cmd: string, args: string[]) {
+const input: PluginInputHandler = function ({irc}, chan, cmd, args) {
 	if (args.length < 2) {
 		chan.pushMessage(
 			this,
@@ -29,7 +26,10 @@ const input = function ({irc}: Network, chan: Chan, cmd: string, args: string[])
 	);
 
 	// TODO: check. Was ctcpRequest(...args)
-	irc.ctcpRequest(args.shift(), args.shift(), ...args);
+	const target = args.shift()!;
+	const type = args.shift()!;
+
+	irc.ctcpRequest(target, type, ...args);
 };
 
 export default {

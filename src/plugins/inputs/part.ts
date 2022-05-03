@@ -1,16 +1,12 @@
 "use strict";
 
-import Msg from "src/models/msg";
-import Chan from "src/models/chan";
-import Config from "src/config";
-import Network from "src/models/network";
-import {MessageType} from "src/types/models/message";
-import {ChanState, ChanType} from "src/types/models/channel";
+import Msg from "@src/models/msg";
+import Config from "@src/config";
 
 const commands = ["close", "leave", "part"];
 const allowDisconnected = true;
 
-const input = function (network: Network, chan: Chan, cmd: string, args: string[]) {
+const input: PluginInputHandler = function (network, chan, cmd, args) {
 	let target = chan;
 
 	if (args.length > 0) {

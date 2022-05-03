@@ -8,9 +8,9 @@ import Helper from "../../helper";
 import Config from "../../config";
 import Utils from "../utils";
 
-const program = new Command();
+const program = new Command("reset");
 program
-	.command("reset <name>")
+	.usage("reset <name>")
 	.description("Reset user password")
 	.on("--help", Utils.extraHelp)
 	.option("--password [password]", "new password, will be prompted if not specified")
@@ -72,3 +72,5 @@ function change(name, password) {
 
 	log.info(`Successfully reset password for ${colors.bold(name)}.`);
 }
+
+export default program;

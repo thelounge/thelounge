@@ -8,3 +8,10 @@ type ThemeModule = Module & {
 	themeColor: string;
 	css: string;
 };
+
+type ThemeForClient = {
+	displayName: string;
+	filename?: string;
+	name: string;
+	themeColor: string | null;
+};

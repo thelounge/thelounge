@@ -1,11 +1,8 @@
 "use strict";
 
-import Chan from "src/models/chan";
-import Network from "src/models/network";
-
 const commands = ["kill"];
 
-const input = function ({irc}: Network, chan: Chan, cmd: string, args: string[]) {
+const input: PluginInputHandler = function ({irc}, chan, cmd, args) {
 	if (args.length !== 0) {
 		irc.raw("KILL", args[0], args.slice(1).join(" "));
 	}

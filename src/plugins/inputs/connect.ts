@@ -1,14 +1,12 @@
 "use strict";
 
-import Network from "src/models/network";
-import {Channel} from "src/types/models/channel";
-import {MessageType} from "src/types/models/message";
+import Network from "@src/models/network";
 import Msg from "../../models/msg";
 
 const commands = ["connect", "server"];
 const allowDisconnected = true;
 
-const input = function (network: Network, chan: Channel, cmd: string, args: string[]) {
+const input: PluginInputHandler = function (network, chan, cmd, args) {
 	if (args.length === 0) {
 		network.userDisconnected = false;
 		this.save();
@@ -51,4 +49,5 @@ const input = function (network: Network, chan: Channel, cmd: string, args: stri
 export default {
 	commands,
 	input,
+	allowDisconnected,
 };

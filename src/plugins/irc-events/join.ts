@@ -1,8 +1,8 @@
 "use strict";
 
-import {ChanState} from "src/types/models/channel";
-import {MessageType} from "src/types/models/message";
-import {Network} from "src/types/models/network";
+import {ChanState} from "@src/types/models/channel";
+
+import {Network} from "@src/types/models/network";
 
 import Chan from "../../models/chan";
 import Msg from "../../models/msg";

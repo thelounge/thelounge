@@ -2,15 +2,15 @@
 
 import log from "./log";
 import fs from "fs";
-import net from "net";
+import net, {Socket} from "net";
 import colors from "chalk";
 import Helper from "./helper";
 import Config from "./config";
 
 class Identification {
-	private connectionId: number;
-	private connections: Map<any, any>;
-	private oidentdFile: string;
+	private connectionId!: number;
+	private connections!: Map<number, any>;
+	private oidentdFile?: string;
 
 	constructor(startedCallback: Function) {
 		this.connectionId = 0;
@@ -45,7 +45,7 @@ class Identification {
 					const address = server.address();
 					if (typeof address === "string") {
 						log.info(`Identd server available on ${colors.green(address)}`);
-					} else if (address.address) {
+					} else if (address?.address) {
 						log.info(
 							`Identd server available on ${colors.green(
 								address.address + ":" + address.port
@@ -61,7 +61,7 @@ class Identification {
 		}
 	}
 
-	serverConnection(socket) {
+	serverConnection(socket: Socket) {
 		socket.on("error", (err) => log.error(`Identd socket error: ${err}`));
 		socket.on("data", (data) => {
 			this.respondToIdent(socket, data);
@@ -69,8 +69,8 @@ class Identification {
 		});
 	}
 
-	respondToIdent(socket, data) {
-		data = data.toString().split(",");
+	respondToIdent(socket: Socket, buffer: Buffer) {
+		const data = buffer.toString().split(",");
 
 		const lport = parseInt(data[0], 10) || 0;
 		const fport = parseInt(data[1], 10) || 0;
@@ -90,7 +90,7 @@ class Identification {
 		socket.write(`${lport}, ${fport} : ERROR : NO-USER\r\n`);
 	}
 
-	addSocket(socket, user) {
+	addSocket(socket: Socket, user: string) {
 		const id = ++this.connectionId;
 
 		this.connections.set(id, {socket, user});
@@ -120,11 +120,13 @@ class Identification {
 				` { reply "${connection.user}" }\n`;
 		});
 
-		fs.writeFile(this.oidentdFile, file, {flag: "w+"}, function (err) {
-			if (err) {
-				log.error("Failed to update oidentd file!", err.message);
-			}
-		});
+		if (this.oidentdFile) {
+			fs.writeFile(this.oidentdFile, file, {flag: "w+"}, function (err) {
+				if (err) {
+					log.error("Failed to update oidentd file!", err.message);
+				}
+			});
+		}
 	}
 }
 

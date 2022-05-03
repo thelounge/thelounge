@@ -1,12 +1,17 @@
 "use strict";
 
 import config from "../../config";
+import list from "./list";
+import remove from "./remove";
+import edit from "./edit";
 
-if (!config.values.ldap.enable) {
-	import("./add");
-	import("./reset");
-}
+let add, reset;
 
-import "./list";
-import "./remove";
-import "./edit";
+(async () => {
+	if (config.values.ldap.enable) {
+		add = (await import("./add")).default;
+		reset = (await import("./reset")).default;
+	}
+})();
+
+export default [list, remove, edit, add, reset];

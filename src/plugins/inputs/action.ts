@@ -1,13 +1,9 @@
 "use strict";
 
-import Network from "src/models/network";
-import {ChanType} from "../../types/models/channel";
-import {MessageType} from "src/types/models/message";
-import Chan from "../../models/chan";
 import Msg from "../../models/msg";
 
 const commands = ["slap", "me"];
-const input = function ({irc}: Network, chan: Chan, cmd: string, args: string[]) {
+const input: PluginInputHandler = function ({irc}, chan, cmd, args) {
 	if (chan.type !== ChanType.CHANNEL && chan.type !== ChanType.QUERY) {
 		chan.pushMessage(
 			this,

@@ -8,16 +8,16 @@ import Config from "../config";
 import Utils from "./utils";
 import {Command} from "commander";
 
-const program = new Command();
+const program = new Command("install");
 program
-	.command("install <package>")
+	.usage("install <package>")
 	.description("Install a theme or a package")
 	.on("--help", Utils.extraHelp)
-	.action(function (packageName) {
-		const fs = require("fs");
+	.action(async function (packageName) {
+		const fs = await import("fs");
 		const fspromises = fs.promises;
-		const path = require("path");
-		const packageJson = require("package-json");
+		const path = await import("path");
+		const packageJson = await import("package-json");
 
 		if (!fs.existsSync(Config.getConfigPath())) {
 			log.error(`${Config.getConfigPath()} does not exist.`);
@@ -25,7 +25,8 @@ program
 		}
 
 		log.info("Retrieving information about the package...");
-		let readFile = null;
+		// TODO: type
+		let readFile: any = null;
 		let isLocalFile = false;
 
 		if (packageName.startsWith("file:")) {
@@ -38,10 +39,15 @@ program
 			packageName = split[0];
 			const packageVersion = split[1] || "latest";
 
-			readFile = packageJson(packageName, {
+			readFile = packageJson.default(packageName, {
 				fullMetadata: true,
 				version: packageVersion,
 			});
+		}
+
+		if (!readFile) {
+			// no-op, error should've been thrown before this point
+			return;
 		}
 
 		readFile
@@ -93,3 +99,5 @@ program
 				process.exit(1);
 			});
 	});
+
+export default program;

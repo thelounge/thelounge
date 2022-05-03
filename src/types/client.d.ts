@@ -8,7 +8,7 @@ type ClientConfig = {
 			lastUse: number;
 			ip: string;
 			agent: string;
-			pushSubscription: PushSubscription;
+			pushSubscription?: PushSubscription;
 		};
 	};
 	clientSettings: {

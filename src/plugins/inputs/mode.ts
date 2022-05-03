@@ -1,13 +1,10 @@
 "use strict";
 
-import {ChanType} from "src/types/models/channel";
-import {MessageType} from "src/types/models/message";
-import Chan from "../../models/chan";
 import Msg from "../../models/msg";
 
 const commands = ["mode", "umode", "op", "deop", "hop", "dehop", "voice", "devoice"];
 
-const input = function ({irc, nick}, chan, cmd, args) {
+const input: PluginInputHandler = function ({irc, nick}, chan, cmd, args) {
 	if (cmd === "umode") {
 		irc.raw("MODE", nick, ...args);
 
@@ -52,7 +49,7 @@ const input = function ({irc, nick}, chan, cmd, args) {
 
 		for (let i = 0; i < target.length; i += limit) {
 			const targets = target.slice(i, i + limit);
-			const amode = `${mode[0]}${mode[1].repeat(targets.length)}`;
+			const amode = `${mode![0]}${mode![1].repeat(targets.length)}`;
 			irc.raw("MODE", chan.name, amode, ...targets);
 		}
 

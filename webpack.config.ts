@@ -1,19 +1,20 @@
 "use strict";
 
-const webpack = require("webpack");
-const fs = require("fs");
-const path = require("path");
-const CopyPlugin = require("copy-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const VueLoaderPlugin = require("vue-loader/lib/plugin");
-const Helper = require("./src/helper.js");
-const babelConfig = require("./babel.config.cjs");
+import * as webpack from "webpack";
+import * as path from "path";
+import CopyPlugin from "copy-webpack-plugin";
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
+// TODO; we should add a declaration file
+//@ts-ignore
+import VueLoaderPlugin from "vue-loader/lib/plugin";
+import TsconfigPathsPlugin from "tsconfig-paths-webpack-plugin";
+import Helper from "./src/helper";
 
 const isProduction = process.env.NODE_ENV === "production";
-const config = {
+const config: webpack.Configuration = {
 	mode: isProduction ? "production" : "development",
 	entry: {
-		"js/bundle.js": [path.resolve(__dirname, "client/js/vue.js")],
+		"js/bundle.js": [path.resolve(__dirname, "client/js/vue.ts")],
 	},
 	devtool: "source-map",
 	output: {
@@ -28,12 +29,29 @@ const config = {
 		rules: [
 			{
 				test: /\.vue$/,
+				loader: "vue-loader",
+			},
+			// {
+			// 	test: /\.ts$/,
+			// 	use: {
+			// 		loader: "ts-loader",
+			// 		options: {
+			// 			compilerOptions: {
+			// 				preserveWhitespace: false,
+			// 			},
+			// 			appendTsSuffixTo: [/\.vue$/],
+			// 		},
+			// 	},
+			// 	exclude: path.resolve(__dirname, "node_modules"),
+			// },
+			{
+				test: /\.{js,ts}$/,
+				include: [path.resolve(__dirname, "client/")],
+				exclude: path.resolve(__dirname, "node_modules"),
 				use: {
-					loader: "vue-loader",
+					loader: "babel-loader",
 					options: {
-						compilerOptions: {
-							preserveWhitespace: false,
-						},
+						presets: ["@babel/preset-env", "babel-preset-typescript-vue"],
 					},
 				},
 			},
@@ -62,14 +80,6 @@ const config = {
 					},
 				],
 			},
-			{
-				test: /\.js$/,
-				include: [path.resolve(__dirname, "client")],
-				use: {
-					loader: "babel-loader",
-					options: babelConfig,
-				},
-			},
 		],
 	},
 	optimization: {
@@ -83,11 +93,27 @@ const config = {
 			},
 		},
 	},
+	resolve: {
+		// alias: {
+		// 	vue$: "vue/dist/vue.esm.js",
+		// },
+		extensions: [".js", ".vue", ".json", ".ts"],
+		// modules: ["node_modules", path.resolve(__dirname, "client")],
+		plugins: [
+			new TsconfigPathsPlugin({
+				configFile: path.resolve(__dirname, "client/tsconfig.json"),
+				extensions: [".js", ".vue", ".json", ".ts"],
+				baseUrl: path.resolve(__dirname, "client"),
+			}),
+		],
+	},
 	externals: {
 		json3: "JSON", // socket.io uses json3.js, but we do not target any browsers that need it
 	},
 	plugins: [
-		new VueLoaderPlugin(),
+		new VueLoaderPlugin({
+			esModule: true,
+		}),
 		new MiniCssExtractPlugin({
 			filename: "css/style.css",
 		}),
@@ -142,52 +168,4 @@ const config = {
 	],
 };
 
-module.exports = (env, argv) => {
-	if (argv.mode === "development") {
-		const testFile = path.resolve(__dirname, "test/public/testclient.js");
-
-		if (fs.existsSync(testFile)) {
-			fs.unlinkSync(testFile);
-		}
-
-		config.target = "node";
-		config.devtool = "eval";
-		config.stats = "errors-only";
-		config.output.path = path.resolve(__dirname, "test/public");
-		config.entry = {
-			"testclient.js": [path.resolve(__dirname, "test/client/index.js")],
-		};
-
-		// Add the istanbul plugin to babel-loader options
-		for (const rule of config.module.rules) {
-			if (rule.use.loader === "babel-loader") {
-				rule.use.options.plugins = ["istanbul"];
-			}
-		}
-
-		// `optimization.splitChunks` is incompatible with a `target` of `node`. See:
-		// - https://github.com/zinserjan/mocha-webpack/issues/84
-		// - https://github.com/webpack/webpack/issues/6727#issuecomment-372589122
-		config.optimization.splitChunks = false;
-
-		// Disable plugins like copy files, it is not required
-		config.plugins = [
-			new VueLoaderPlugin(),
-
-			// Client tests that require Vue may end up requireing socket.io
-			new webpack.NormalModuleReplacementPlugin(
-				/js(\/|\\)socket\.js/,
-				path.resolve(__dirname, "scripts/noop.js")
-			),
-
-			// "Fixes" Critical dependency: the request of a dependency is an expression
-			new webpack.ContextReplacementPlugin(/vue-server-renderer$/),
-		];
-	}
-
-	if (argv.mode === "production") {
-		// ...
-	}
-
-	return config;
-};
+export default config;

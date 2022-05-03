@@ -1,11 +1,8 @@
 "use strict";
 
-import Network from "src/models/network";
-import {Channel} from "src/types/models/channel";
-
 const commands = ["away", "back"];
 
-const input = function (network: Network, chan: Channel, cmd: string, args: string[]) {
+const input: PluginInputHandler = function (network, chan, cmd, args) {
 	let reason = "";
 
 	if (cmd === "away") {

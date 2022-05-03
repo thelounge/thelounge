@@ -10,11 +10,7 @@ import Helper from "../helper";
 import Config from "../config";
 import STSPolicies from "../plugins/sts";
 import ClientCertificate from "../plugins/clientCertificate";
-import {Channel, ChanType} from "src/types/models/channel";
-import Client from "src/client";
-import {IgnoreList, NetworkStatus} from "src/types/models/network";
-import {MessageType} from "src/types/models/message";
-import {WebIRC} from "src/types/config";
+import Client from "@src/client";
 
 /**
  * @type {Object} List of keys which should be sent to the client by default.
@@ -27,73 +23,49 @@ const fieldsForClient = {
 };
 
 class Network {
-	nick: string;
-	name: string;
-	host: string;
-	port: number;
-	tls: boolean;
-	userDisconnected: boolean;
-	rejectUnauthorized: boolean;
-	password: string;
-	awayMessage: string;
-	commands: any[];
-	username: string;
-	realname: string;
-	leaveMessage: string;
-	sasl: string;
-	saslAccount: string;
-	saslPassword: string;
-	channels: Chan[];
-	uuid: string;
-	proxyHost: string;
-	proxyPort: number;
-	proxyUsername: string;
-	proxyPassword: string;
-	proxyEnabled: boolean;
+	nick!: string;
+	name!: string;
+	host!: string;
+	port!: number;
+	tls!: boolean;
+	userDisconnected!: boolean;
+	rejectUnauthorized!: boolean;
+	password!: string;
+	awayMessage!: string;
+	commands!: any[];
+	username!: string;
+	realname!: string;
+	leaveMessage!: string;
+	sasl!: string;
+	saslAccount!: string;
+	saslPassword!: string;
+	channels!: Chan[];
+	uuid!: string;
+	proxyHost!: string;
+	proxyPort!: number;
+	proxyUsername!: string;
+	proxyPassword!: string;
+	proxyEnabled!: boolean;
 	highlightRegex?: RegExp;
 
 	irc?: IrcFramework.Client & {
-		options?: {
-			host: string;
-			port: number;
-			password: string;
-			nick: string;
-			username: string;
-			gecos: string;
-			tls: boolean;
-			rejectUnauthorized: boolean;
-			webirc: WebIRC;
-			client_certificate?: ClientCertificate;
-			socks: {
-				host: string;
-				port: number;
-				user: string;
-				pass: string;
-			};
-			sasl_mechanism: string;
-			account:
-				| {
-						account: string;
-						password: string;
-				  }
-				| {};
-		};
+		options?: NetworkIrcOptions;
 	};
 
-	chanCache: Chan[];
-	ignoreList: IgnoreList;
-	keepNick?: string;
+	chanCache!: Chan[];
+	ignoreList!: IgnoreList;
+	keepNick!: string | null;
 
-	status: NetworkStatus;
+	status!: NetworkStatus;
 
-	serverOptions: {
+	serverOptions!: {
 		CHANTYPES: string[];
 		PREFIX: Prefix;
 		NETWORK: string;
 	};
 
 	// TODO: this is only available on export
-	hasSTSPolicy: boolean;
+	hasSTSPolicy!: boolean;
 
 	constructor(attr: Partial<Network>) {
 		_.defaults(this, attr, {
@@ -158,7 +130,7 @@ class Network {
 		);
 	}
 
-	validate(client: Client) {
+	validate(this: NetworkWithIrcFramework, client: Client) {
 		// Remove !, :, @ and whitespace characters from nicknames and usernames
 		const cleanNick = (str: string) => str.replace(/[\x00\s:!@]/g, "_").substring(0, 100);
 
@@ -251,7 +223,7 @@ class Network {
 		return true;
 	}
 
-	createIrcFramework(client: Client) {
+	createIrcFramework(this: Network, client: Client) {
 		this.irc = new IrcFramework.Client({
 			version: false, // We handle it ourselves
 			outgoing_addr: Config.values.bind,
@@ -265,6 +237,7 @@ class Network {
 			auto_reconnect_max_retries: 30,
 		});
 
+		//@ts-ignore TODO: `this` should now be a NetworkWithIrcFramework
 		this.setIrcFrameworkOptions(client);
 
 		this.irc.requestCap([
@@ -273,13 +246,13 @@ class Network {
 		]);
 	}
 
-	setIrcFrameworkOptions(client: Client) {
+	setIrcFrameworkOptions(this: NetworkWithIrcFramework, client: Client) {
 		this.irc.options.host = this.host;
 		this.irc.options.port = this.port;
 		this.irc.options.password = this.password;
 		this.irc.options.nick = this.nick;
 		this.irc.options.username = Config.values.useHexIp
-			? Helper.ip2hex(client.config.browser.ip)
+			? Helper.ip2hex(client.config.browser!.ip!)
 			: this.username;
 		this.irc.options.gecos = this.realname;
 		this.irc.options.tls = this.tls;
@@ -325,12 +298,12 @@ class Network {
 		const webircObject = {
 			password: Config.values.webirc[this.host],
 			username: "thelounge",
-			address: client.config.browser.ip,
-			hostname: client.config.browser.hostname,
+			address: client.config.browser?.ip,
+			hostname: client.config.browser?.hostname,
 		} as any;
 
 		// https://ircv3.net/specs/extensions/webirc#options
-		if (client.config.browser.isSecure) {
+		if (client.config.browser?.isSecure) {
 			webircObject.options = {
 				secure: true,
 			};
@@ -344,7 +317,7 @@ class Network {
 		return webircObject;
 	}
 
-	edit(client: Client, args: any) {
+	edit(this: NetworkWithIrcFramework, client: Client, args: any) {
 		const oldNetworkName = this.name;
 		const oldNick = this.nick;
 		const oldRealname = this.realname;
@@ -418,9 +391,9 @@ class Network {
 			}
 
 			this.setIrcFrameworkOptions(client);
+			if (this.irc.options?.username) this.irc.user.username = this.irc.options.username;
 
-			this.irc.user.username = this.irc.options.username;
-			this.irc.user.gecos = this.irc.options.gecos;
+			if (this.irc.options?.gecos) this.irc.user.gecos = this.irc.options.gecos;
 		}
 
 		client.save();
@@ -430,7 +403,7 @@ class Network {
 		this.channels.forEach((channel) => channel.destroy());
 	}
 
-	setNick(nick: string) {
+	setNick(this: NetworkWithIrcFramework, nick: string) {
 		this.nick = nick;
 		this.highlightRegex = new RegExp(
 			// Do not match characters and numbers (unless IRC color)
@@ -448,9 +421,7 @@ class Network {
 			this.keepNick = null;
 		}
 
-		if (this.irc) {
-			this.irc.options.nick = nick;
-		}
+		this.irc.options.nick = nick;
 	}
 
 	getFilteredClone(lastActiveChannel: number, lastMessage: number) {

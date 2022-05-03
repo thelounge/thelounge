@@ -6,12 +6,13 @@ import {URL} from "url";
 import mime from "mime-types";
 
 import Config from "../../config";
-import {findLinksWithSchema} from "client/js/helpers/ircmessageparser/findLinks";
+import {findLinksWithSchema} from "../../../client/js/helpers/ircmessageparser/findLinks";
 import storage from "../storage";
-import log from "src/log";
-import Client from "src/client";
-import Chan from "src/models/chan";
-import Msg from "src/models/msg";
+import log from "@src/log";
+import Client from "@src/client";
+import Chan from "@src/models/chan";
+import Msg from "@src/models/msg";
+import {Preview} from "@src/types/plugins/preview";
 
 const currentFetchPromises = new Map();
 const imageTypeRegex = /^image\/.+/;
@@ -22,7 +23,7 @@ export default function (client: Client, chan: Chan, msg: Msg, cleanText: string
 		return;
 	}
 
-	msg.previews = findLinksWithSchema(cleanText).reduce((cleanLinks, link) => {
+	msg.previews = findLinksWithSchema(cleanText).reduce((cleanLinks: Preview[], link) => {
 		const url = normalizeURL(link.link);
 
 		// If the URL is invalid and cannot be normalized, don't fetch it
@@ -40,7 +41,7 @@ export default function (client: Client, chan: Chan, msg: Msg, cleanText: string
 			return cleanLinks;
 		}
 
-		const preview = {
+		const preview: Preview = {
 			type: "loading",
 			head: "",
 			body: "",
@@ -56,7 +57,7 @@ export default function (client: Client, chan: Chan, msg: Msg, cleanText: string
 
 		fetch(url, {
 			accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-			language: client.config.browser.language,
+			language: client.config.browser?.language,
 		})
 			.then((res) => {
 				parse(msg, chan, preview, res, client);
@@ -115,7 +116,7 @@ function parseHtml(preview, res, client: Client) {
 
 				// Verify that thumbnail pic exists and is under allowed size
 				if (thumb.length) {
-					fetch(thumb, {language: client.config.browser.language})
+					fetch(thumb, {language: client.config.browser?.language})
 						.then((resThumb) => {
 							if (
 								resThumb !== null &&
@@ -164,10 +165,16 @@ function parseHtmlMedia($: cheerio.CheerioAPI, preview, client) {
 
 			$(`meta[property="og:${type}:type"]`).each(function (i) {
 				const mimeType = $(this).attr("content");
+				if (!mimeType) {
+					return;
+				}
 
 				if (mediaTypeRegex.test(mimeType)) {
 					// If we match a clean video or audio tag, parse that as a preview instead
 					let mediaUrl = $($(`meta[property="og:${type}"]`).get(i)).attr("content");
+					if (!mediaUrl) {
+						return;
+					}
 
 					// Make sure media is a valid url
 					mediaUrl = normalizeURL(mediaUrl, preview.link, true);
@@ -184,7 +191,7 @@ function parseHtmlMedia($: cheerio.CheerioAPI, preview, client) {
 							type === "video"
 								? "video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5"
 								: "audio/webm, audio/ogg, audio/wav, audio/*;q=0.9, application/ogg;q=0.7, video/*;q=0.6; */*;q=0.5",
-						language: client.config.browser.language,
+						language: client.config.browser?.language,
 					})
 						.then((resMedia) => {
 							if (resMedia === null || !mediaTypeRegex.test(resMedia.type)) {
@@ -460,7 +467,7 @@ function fetch(uri, headers) {
 
 					resolve({data: buffer, type, size});
 				});
-		} catch (e) {
+		} catch (e: any) {
 			return reject(e);
 		}
 	});
@@ -480,25 +487,25 @@ function normalizeURL(link: string, baseLink?: string, disallowHttp = false) {
 
 		// Only fetch http and https links
 		if (url.protocol !== "http:" && url.protocol !== "https:") {
-			return null;
+			return undefined;
 		}
 
 		if (disallowHttp && url.protocol === "http:") {
-			return null;
+			return undefined;
 		}
 
 		// Do not fetch links without hostname or ones that contain authorization
 		if (!url.hostname || url.username || url.password) {
-			return null;
+			return undefined;
 		}
 
 		// Drop hash from the url, if any
 		url.hash = "";
 
 		return url.toString();
-	} catch (e) {
+	} catch (e: any) {
 		// if an exception was thrown, the url is not valid
 	}
 
-	return null;
+	return undefined;
 }

@@ -8,7 +8,7 @@ import ClientManager from "./clientManager";
 import express from "express";
 import fs from "fs";
 import path from "path";
-import {Server} from "socket.io";
+import {Server, Socket} from "socket.io";
 import dns from "dns";
 import Uploader from "./plugins/uploader";
 import Helper from "./helper";
@@ -33,14 +33,13 @@ import {
 } from "./types/config";
 
 import {Server as wsServer} from "ws";
-import {ChanType} from "./types/models/channel";
 
 // A random number that will force clients to reload the page if it differs
 const serverHash = Math.floor(Date.now() * Math.random());
 
-let manager = null;
+let manager: ClientManager | null = null;
 
-export default function (
+export default async function (
 	options: ServerOptions = {
 		dev: false,
 	}
@@ -59,7 +58,7 @@ export default function (
 	const app = express();
 
 	if (options.dev) {
-		require("./plugins/dev-server.js")(app);
+		(await import("./plugins/dev-server.js")).default(app);
 	}
 
 	app.set("env", "production")
@@ -105,7 +104,8 @@ export default function (
 		return res.sendFile(path.join(packagePath, fileName));
 	});
 
-	let server = null;
+	// TODO; type to ReturnType<createServer
+	let server: any = null;
 
 	if (Config.values.public && (Config.values.ldap || {}).enable) {
 		log.warn(
@@ -114,8 +114,8 @@ export default function (
 	}
 
 	if (!Config.values.https.enable) {
-		server = require("http");
-		server = server.createServer(app);
+		const createServer = (await import("http")).createServer;
+		server = createServer(app);
 	} else {
 		const keyPath = Helper.expandHome(Config.values.https.key);
 		const certPath = Helper.expandHome(Config.values.https.certificate);
@@ -221,11 +221,11 @@ export default function (
 				process.exit(1);
 			}
 
-			manager.init(identHandler, sockets);
+			manager!.init(identHandler, sockets);
 		});
 
 		// Handle ctrl+c and kill gracefully
-		let suicideTimeout = null;
+		let suicideTimeout: NodeJS.Timeout | null = null;
 
 		const exitGracefully = function () {
 			if (suicideTimeout !== null) {
@@ -235,7 +235,7 @@ export default function (
 			log.info("Exiting...");
 
 			// Close all client and IRC connections
-			manager.clients.forEach((client) => client.quit());
+			manager!.clients.forEach((client) => client.quit());
 
 			if (Config.values.prefetchStorage) {
 				log.info("Clearing prefetch storage folder, this might take a while...");
@@ -248,7 +248,9 @@ export default function (
 
 			// Close http server
 			server.close(() => {
-				clearTimeout(suicideTimeout);
+				if (suicideTimeout !== null) {
+					clearTimeout(suicideTimeout);
+				}
 				process.exit(0);
 			});
 		};
@@ -481,7 +483,10 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 						const hash = Helper.password.hash(p1);
 
 						client.setPassword(hash, (success: boolean) => {
-							const obj = {success: false, error: undefined};
+							const obj = {success: false, error: undefined} as {
+								success: boolean;
+								error: string | undefined;
+							};
 
 							if (success) {
 								obj.success = true;
@@ -701,7 +706,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 			}
 
 			for (const attachedClient of Object.keys(client.attachedClients)) {
-				manager.sockets.in(attachedClient).emit("mute:changed", {
+				manager!.sockets.in(attachedClient).emit("mute:changed", {
 					target,
 					status: setMutedTo,
 				});
@@ -730,10 +735,10 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 				return;
 			}
 
-			const socketToRemove = manager.sockets.of("/").sockets.get(socketId);
+			const socketToRemove = manager!.sockets.of("/").sockets.get(socketId);
 
-			socketToRemove.emit("sign-out");
-			socketToRemove.disconnect();
+			socketToRemove!.emit("sign-out");
+			socketToRemove!.disconnect();
 		});
 
 		// Do not send updated session list if user simply logs out
@@ -798,7 +803,7 @@ function getClientConfiguration(): ClientConfiguration {
 	}
 
 	config.isUpdateAvailable = changelog.isUpdateAvailable;
-	config.applicationServerKey = manager.webPush.vapidKeys.publicKey;
+	config.applicationServerKey = manager!.webPush.vapidKeys!.publicKey;
 	config.version = pkg.version;
 	config.gitCommit = Helper.getGitCommit();
 	config.themes = themes.getAll();
@@ -823,7 +828,7 @@ function getServerConfiguration(): ServerConfiguration {
 	return config;
 }
 
-function performAuthentication(data) {
+function performAuthentication(this: Socket, data) {
 	if (!_.isPlainObject(data)) {
 		return;
 	}
@@ -858,19 +863,19 @@ function performAuthentication(data) {
 			return finalInit();
 		}
 
-		reverseDnsLookup(client.config.browser.ip, (hostname) => {
-			client.config.browser.hostname = hostname;
+		reverseDnsLookup(client.config.browser?.ip, (hostname) => {
+			client.config.browser!.hostname = hostname;
 
 			finalInit();
 		});
 	};
 
 	if (Config.values.public) {
-		client = new Client(manager);
-		manager.clients.push(client);
+		client = new Client(manager!);
+		manager!.clients.push(client);
 
 		socket.on("disconnect", function () {
-			manager.clients = _.without(manager.clients, client);
+			manager!.clients = _.without(manager!.clients, client);
 			client.quit();
 		});
 
@@ -907,13 +912,13 @@ function performAuthentication(data) {
 		// If authorization succeeded but there is no loaded user,
 		// load it and find the user again (this happens with LDAP)
 		if (!client) {
-			client = manager.loadUser(data.user);
+			client = manager!.loadUser(data.user);
 		}
 
 		initClient();
 	};
 
-	client = manager.findClient(data.user);
+	client = manager!.findClient(data.user);
 
 	// We have found an existing user and client has provided a token
 	if (client && data.token) {

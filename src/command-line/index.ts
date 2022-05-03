@@ -9,7 +9,7 @@ import Helper from "../helper";
 import Config from "../config";
 import Utils from "./utils";
 
-const program = new Command();
+const program = new Command("thelounge");
 program
 	.version(Helper.getVersion(), "-v, --version")
 	.option(
@@ -27,7 +27,7 @@ Config.setHome(process.env.THELOUNGE_HOME || Utils.defaultHome());
 // Check config file owner and warn if we're running under a different user
 try {
 	verifyFileOwner();
-} catch (e) {
+} catch (e: any) {
 	// We do not care about failures of these checks
 	// fs.statSync will throw if config.js does not exist (e.g. first run)
 }
@@ -38,17 +38,16 @@ createPackagesFolder();
 // Merge config key-values passed as CLI options into the main config
 Config.merge(program.opts().config);
 
-import("./start");
-
+program.addCommand(require("./start").default);
+program.addCommand(require("./install").default);
+program.addCommand(require("./uninstall").default);
+program.addCommand(require("./upgrade").default);
+program.addCommand(require("./outdated").default);
 if (!Config.values.public) {
-	import("./users");
+	require("./users").default.forEach((command) => {
+		if (command) program.addCommand(command);
+	});
 }
-
-import "./install";
-import "./uninstall";
-import "./upgrade";
-import "./outdated";
-
 // `parse` expects to be passed `process.argv`, but we need to remove to give it
 // a version of `argv` that does not contain options already parsed by
 // `parseOptions` above.

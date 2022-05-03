@@ -37,9 +37,9 @@ type ClientConfiguration = Pick<
 	isUpdateAvailable: boolean;
 	applicationServerKey: string;
 	version: string;
-	gitCommit: string;
+	gitCommit: string | null;
 	defaultTheme: string;
-	themes: string[];
+	themes: ThemeForClient[];
 	defaults: Defaults & {
 		sasl?: string;
 		saslAccount?: string;
@@ -99,6 +99,7 @@ export type Ldap = {
 	tlsOptions: any;
 	primaryKey: string;
 	searchDN: SearchDN;
+	baseDN?: string;
 };
 
 export type TlsOptions = any;

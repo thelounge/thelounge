@@ -1,21 +1,15 @@
 "use strict";
 
-import Network from "src/models/network";
-import {MessageType} from "src/types/models/message";
-
-import Chan from "src/models/chan";
-import Msg from "src/models/msg";
-import Helper from "src/helper";
-import {IgnoreListItem} from "src/types/models/network";
-import {ChanType, SpecialChanType} from "src/types/models/channel";
+import Msg from "@src/models/msg";
+import Helper from "@src/helper";
 
 const commands = ["ignore", "unignore", "ignorelist"];
 
-const input = function (network: Network, chan: Chan, cmd: string, args: string[]) {
+const input: PluginInputHandler = function (network, chan, cmd, args) {
 	const client = this;
 	let target: string;
-	let hostmask: IgnoreListItem;
-
+	// let hostmask: cmd === "ignoreList" ? string : undefined;
+	let hostmask: IgnoreListItem | undefined;
 	if (cmd !== "ignorelist" && (args.length === 0 || args[0].trim().length === 0)) {
 		chan.pushMessage(
 			client,
@@ -37,7 +31,7 @@ const input = function (network: Network, chan: Chan, cmd: string, args: string[
 	switch (cmd) {
 		case "ignore": {
 			// IRC nicks are case insensitive
-			if (hostmask.nick.toLowerCase() === network.nick.toLowerCase()) {
+			if (hostmask!.nick.toLowerCase() === network.nick.toLowerCase()) {
 				chan.pushMessage(
 					client,
 					new Msg({
@@ -47,18 +41,20 @@ const input = function (network: Network, chan: Chan, cmd: string, args: string[
 				);
 			} else if (
 				!network.ignoreList.some(function (entry) {
-					return Helper.compareHostmask(entry, hostmask);
+					return Helper.compareHostmask(entry, hostmask!);
 				})
 			) {
-				hostmask.when = Date.now();
-				network.ignoreList.push(hostmask);
+				hostmask!.when = Date.now();
+				network.ignoreList.push(hostmask!);
 
 				client.save();
 				chan.pushMessage(
 					client,
 					new Msg({
 						type: MessageType.ERROR,
-						text: `\u0002${hostmask.nick}!${hostmask.ident}@${hostmask.hostname}\u000f added to ignorelist`,
+						text: `\u0002${hostmask!.nick}!${hostmask!.ident}@${
+							hostmask!.hostname
+						}\u000f added to ignorelist`,
 					})
 				);
 			} else {
@@ -76,7 +72,7 @@ const input = function (network: Network, chan: Chan, cmd: string, args: string[
 
 		case "unignore": {
 			const idx = network.ignoreList.findIndex(function (entry) {
-				return Helper.compareHostmask(entry, hostmask);
+				return Helper.compareHostmask(entry, hostmask!);
 			});
 
 			// Check if the entry exists before removing it, otherwise
@@ -89,7 +85,9 @@ const input = function (network: Network, chan: Chan, cmd: string, args: string[
 					client,
 					new Msg({
 						type: MessageType.ERROR,
-						text: `Successfully removed \u0002${hostmask.nick}!${hostmask.ident}@${hostmask.hostname}\u000f from ignorelist`,
+						text: `Successfully removed \u0002${hostmask!.nick}!${hostmask!.ident}@${
+							hostmask!.hostname
+						}\u000f from ignorelist`,
 					})
 				);
 			} else {
@@ -136,7 +134,6 @@ const input = function (network: Network, chan: Chan, cmd: string, args: string[
 					});
 				} else {
 					// TODO: add type for this chan/event
-					//@ts-expect-error
 					newChan.data = ignored;
 
 					client.emit("msg:special", {

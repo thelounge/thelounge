@@ -5,9 +5,9 @@ import Utils from "./utils";
 import packageManager from "../plugins/packages";
 import log from "../log";
 
-const program = new Command();
+const program = new Command("outdated");
 program
-	.command("outdated")
+	.usage("outdated")
 	.description("Check for any outdated packages")
 	.on("--help", Utils.extraHelp)
 	.action(async () => {
@@ -26,3 +26,5 @@ program
 				log.error("Error finding outdated packages.");
 			});
 	});
+
+export default program;

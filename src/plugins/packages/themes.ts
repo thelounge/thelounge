@@ -26,7 +26,7 @@ function loadLocalThemes() {
 		.forEach((theme) => themes.set(theme.name, theme));
 }
 
-function addTheme(packageName: string, packageObject) {
+function addTheme(packageName: string, packageObject: ThemeModule) {
 	const theme = makePackageThemeObject(packageName, packageObject);
 
 	if (theme) {
@@ -35,7 +35,7 @@ function addTheme(packageName: string, packageObject) {
 }
 
 function getAll() {
-	const filteredThemes = [];
+	const filteredThemes: ThemeForClient[] = [];
 
 	for (const theme of themes.values()) {
 		filteredThemes.push(_.pick(theme, ["displayName", "name", "themeColor"]));
@@ -44,7 +44,7 @@ function getAll() {
 	return _.sortBy(filteredThemes, "displayName");
 }
 
-function getByName(name) {
+function getByName(name: string) {
 	return themes.get(name);
 }
 
@@ -57,7 +57,10 @@ function makeLocalThemeObject(css: string) {
 	};
 }
 
-function makePackageThemeObject(moduleName: string, module: ThemeModule) {
+function makePackageThemeObject(
+	moduleName: string,
+	module: ThemeModule
+): ThemeForClient | undefined {
 	if (!module || module.type !== "theme") {
 		return;
 	}

@@ -12,7 +12,7 @@ export default {
 	remove,
 };
 
-function get(uuid: string): ClientCertificate {
+function get(uuid: string): ClientCertificate | null {
 	if (Config.values.public) {
 		return null;
 	}
@@ -29,7 +29,7 @@ function get(uuid: string): ClientCertificate {
 			private_key: fs.readFileSync(paths.privateKeyPath, "utf-8"),
 			certificate: fs.readFileSync(paths.certificatePath, "utf-8"),
 		} as ClientCertificate;
-	} catch (e) {
+	} catch (e: any) {
 		log.error("Unable to get certificate", e);
 	}
 
@@ -51,7 +51,7 @@ function remove(uuid: string) {
 		if (fs.existsSync(paths.certificatePath)) {
 			fs.unlinkSync(paths.certificatePath);
 		}
-	} catch (e) {
+	} catch (e: any) {
 		log.error("Unable to remove certificate", e);
 	}
 }
@@ -70,8 +70,8 @@ function generateAndWrite(folderPath: string, paths: {privateKeyPath: any; certi
 		});
 
 		return certificate;
-	} catch (e) {
-		log.error("Unable to write certificate", e);
+	} catch (e: any) {
+		log.error("Unable to write certificate", e as string);
 	}
 
 	return null;

@@ -1,6 +1,5 @@
-import Client from "src/client";
-import Chan from "src/models/chan";
-import {MessageType, UserInMessage} from "src/types/models/message";
+import Client from "@src/client";
+import Chan from "@src/models/chan";
 import Msg from "../../models/msg";
 
 export default class PublicClient {

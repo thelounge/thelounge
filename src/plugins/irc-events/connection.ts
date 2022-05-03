@@ -5,11 +5,8 @@ import log from "../../log";
 import Msg from "../../models/msg";
 import Helper from "../../helper";
 import Config from "../../config";
-import Network from "src/models/network";
-import {ChanState, ChanType} from "src/types/models/channel";
-import {MessageType} from "src/types/models/message";
 
-export default function (irc: Network["irc"], network: Network) {
+export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
 	network.channels[0].pushMessage(
@@ -97,7 +94,7 @@ export default function (irc: Network["irc"], network: Network) {
 		let ident = client.name || network.username;
 
 		if (Config.values.useHexIp) {
-			ident = Helper.ip2hex(client.config.browser.ip);
+			ident = Helper.ip2hex(client.config.browser!.ip!);
 		}
 
 		identSocketId = client.manager.identHandler.addSocket(socket, ident);
@@ -221,4 +218,4 @@ export default function (irc: Network["irc"], network: Network) {
 
 		client.emit("network:status", toSend);
 	}
-}
+};

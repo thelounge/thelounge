@@ -4,12 +4,11 @@ import Msg from "../../models/msg";
 import LinkPrefetch from "./link";
 import cleanIrcMessage from "../../../client/js/helpers/ircmessageparser/cleanIrcMessage";
 import Helper from "../../helper";
-import Network from "src/models/network";
-import {ChanType} from "src/types/models/channel";
-import {MessageType} from "src/types/models/message";
+import Network from "@src/models/network";
+
 const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\w[\]\\`^{|}-]+)/g;
 
-export default function (irc: Network["irc"], network: Network) {
+export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
 	irc.on("notice", function (data) {
@@ -215,4 +214,4 @@ export default function (irc: Network["irc"], network: Network) {
 			}
 		}
 	}
-}
+};
