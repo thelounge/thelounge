@@ -19,7 +19,44 @@ function detectDesktopNotificationState() {
 	return "blocked";
 }
 
-const store = new Vuex.Store({
+export type State = {
+	appLoaded: boolean;
+	activeChannel: {
+		network: Network;
+		channel: Channel;
+	} | null;
+	currentUserVisibleError: string | null;
+	desktopNotificationState: "granted" | "blocked" | "nohttps" | "unsupported";
+	isAutoCompleting: boolean;
+	isConnected: boolean;
+	networks: Network[];
+	// TODO: type
+	mentions: any[];
+	hasServiceWorker: boolean;
+	pushNotificationState: string;
+	serverConfiguration: null;
+	sessions: [];
+	sidebarOpen: boolean;
+	sidebarDragging: boolean;
+	userlistOpen: boolean;
+	versionData: null | {
+		latest: {
+			version: string;
+			prerelease: boolean;
+		};
+	};
+	versionStatus: "loading" | "new-version" | "new-packages" | "up-to-date" | "error";
+	versionDataExpired: boolean;
+	serverHasSettings: boolean;
+	messageSearchResults: {
+		results: any[];
+	} | null;
+	messageSearchInProgress: boolean;
+	searchEnabled: boolean;
+};
+
+export type SettingsState = {};
+const store = new Vuex.Store<Omit<State, "settings">>({
 	state: {
 		appLoaded: false,
 		activeChannel: null,
@@ -124,8 +161,12 @@ const store = new Vuex.Store({
 			state.messageSearchResults = value;
 		},
 		addMessageSearchResults(state, value) {
-			// Append the search results and add networks and channels to new messages
-			value.results = [...state.messageSearchResults.results, ...value.results];
+			if (state.messageSearchResults!.results) {
+				// Append the search results and add networks and channels to new messages
+				value.results = [...state.messageSearchResults!.results, ...value.results];
+			} else {
+				value.results = value.results;
+			}
 
 			state.messageSearchResults = value;
 		},
@@ -139,7 +180,7 @@ const store = new Vuex.Store({
 	getters: {
 		findChannelOnCurrentNetwork: (state) => (name) => {
 			name = name.toLowerCase();
-			return state.activeChannel.network.channels.find((c) => c.name.toLowerCase() === name);
+			return state.activeChannel?.network.channels.find((c) => c.name.toLowerCase() === name);
 		},
 		findChannelOnNetwork: (state) => (networkUuid, channelName) => {
 			for (const network of state.networks) {

@@ -1,8 +1,10 @@
 import storage from "./localStorage";
 import socket from "./socket";
 import {config, createState} from "./settings";
+import {Store} from "vuex";
+import {State} from "./store";
 
-export function createSettingsStore(store) {
+export function createSettingsStore(store: Store<State>) {
 	return {
 		namespaced: true,
 		state: assignStoredSettings(createState(), loadFromLocalStorage()),
@@ -72,7 +74,7 @@ function loadFromLocalStorage() {
 	let storedSettings;
 
 	try {
-		storedSettings = JSON.parse(storage.get("settings"));
+		storedSettings = JSON.parse(storage.get("settings") || "{}");
 	} catch (e) {
 		storage.remove("settings");
 	}
