@@ -4,6 +4,7 @@
     // "lib": ["es2019" ],
     "module": "commonjs",
     "target": "ESNext",
+    "rootDir": ".",
     "baseUrl": ".",
     "allowJs": true,
     "noImplicitAny": false,
@@ -18,5 +19,5 @@
     // "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
   },
-  "files": ["./src/index.d.ts"]
+  "files": ["./package.json", "./src/index.d.ts"]
 }
