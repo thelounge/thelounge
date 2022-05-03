@@ -4,7 +4,7 @@
 	</div>
 </template>
 
-<script>
+<script lang="ts">
 import ParsedMessage from "../../../client/components/ParsedMessage.vue";
 
 export default {

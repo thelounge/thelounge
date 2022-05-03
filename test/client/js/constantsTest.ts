@@ -1,10 +1,9 @@
 "use strict";
 
-// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'expect'.
-const expect = require("chai").expect;
-const constants = require("../../../client/js/constants");
+import {expect} from "chai";
+import constants from "../../../client/js/constants";
+import {describe} from "mocha";
 
-// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("client-side constants", function () {
 	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 	describe(".colorCodeMap", function () {
@@ -15,7 +14,6 @@ describe("client-side constants", function () {
 
 		// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 		it("should be made of pairs of strings", function () {
-			// @ts-expect-error ts-migrate(7031) FIXME: Binding element 'code' implicitly has an 'any' typ... Remove this comment to see the full error message
 			constants.colorCodeMap.forEach(([code, name]) => {
 				expect(code)
 					.to.be.a("string")
