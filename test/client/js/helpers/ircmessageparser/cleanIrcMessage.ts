@@ -1,9 +1,12 @@
 "use strict";
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'expect'.
 const expect = require("chai").expect;
 const cleanIrcMessage = require("../../../../../client/js/helpers/ircmessageparser/cleanIrcMessage");
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("cleanIrcMessage", function () {
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should remove all formatting", function () {
 		const testCases = [
 			{

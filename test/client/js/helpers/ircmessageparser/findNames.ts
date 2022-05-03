@@ -1,9 +1,12 @@
 "use strict";
 
+// @ts-expect-error ts-migrate(2451) FIXME: Cannot redeclare block-scoped variable 'expect'.
 const expect = require("chai").expect;
 const findNames = require("../../../../../client/js/helpers/ircmessageparser/findNames").default;
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("findNames", () => {
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should find nicks in text", () => {
 		const input = "<MaxLeiter>: Hello, xPaw, how's it going?";
 		const expected = [
@@ -24,6 +27,7 @@ describe("findNames", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should not find nicks as part of a bigger string (issue #1776)", () => {
 		const input = "you're very unlucky, luck";
 		const expected = [
@@ -39,6 +43,7 @@ describe("findNames", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should find nicks as short as one character (issue #1885)", () => {
 		const input = "aaa aa abc a";
 		const expected = [
@@ -54,6 +59,7 @@ describe("findNames", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should find same nick multiple times", () => {
 		const input = "xPaw xPaw xPaw";
 		const expected = [

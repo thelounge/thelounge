@@ -3,9 +3,10 @@
 const expect = require("chai").expect;
 
 import {renderToString} from "@vue/server-test-utils";
+// @ts-expect-error ts-migrate(2307) FIXME: Cannot find module '../../components/ParsedMessage... Remove this comment to see the full error message
 import ParsedMessageTestWrapper from "../../components/ParsedMessageTestWrapper.vue";
 
-async function getParsedMessageContents(text, message) {
+async function getParsedMessageContents(text: any, message: any) {
 	let contents = await renderToString(ParsedMessageTestWrapper, {
 		propsData: {
 			text,
@@ -19,7 +20,9 @@ async function getParsedMessageContents(text, message) {
 	return contents;
 }
 
+// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'describe'. Do you need to instal... Remove this comment to see the full error message
 describe("IRC formatted message parser", () => {
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should not introduce xss", async () => {
 		const testCases = [
 			{
@@ -35,6 +38,7 @@ describe("IRC formatted message parser", () => {
 		];
 
 		const actual = await Promise.all(
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 			testCases.map((testCase) => getParsedMessageContents(testCase.input))
 		);
 		const expected = testCases.map((testCase) => testCase.expected);
@@ -42,6 +46,7 @@ describe("IRC formatted message parser", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should skip all <32 ASCII codes except linefeed", async () => {
 		const testCases = [
 			{
@@ -52,6 +57,7 @@ describe("IRC formatted message parser", () => {
 		];
 
 		const actual = await Promise.all(
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 			testCases.map((testCase) => getParsedMessageContents(testCase.input))
 		);
 		const expected = testCases.map((testCase) => testCase.expected);
@@ -59,6 +65,7 @@ describe("IRC formatted message parser", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should find urls", async () => {
 		const testCases = [
 			{
@@ -103,6 +110,7 @@ describe("IRC formatted message parser", () => {
 		];
 
 		const actual = await Promise.all(
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 			testCases.map((testCase) => getParsedMessageContents(testCase.input))
 		);
 		const expected = testCases.map((testCase) => testCase.expected);
@@ -110,6 +118,7 @@ describe("IRC formatted message parser", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("url with a dot parsed correctly", async () => {
 		const input =
 			"bonuspunkt: your URL parser misparses this URL: https://msdn.microsoft.com/en-us/library/windows/desktop/ms644989(v=vs.85).aspx";
@@ -119,11 +128,13 @@ describe("IRC formatted message parser", () => {
 			"https://msdn.microsoft.com/en-us/library/windows/desktop/ms644989(v=vs.85).aspx" +
 			"</a>";
 
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 		const actual = await getParsedMessageContents(input);
 
 		expect(actual).to.deep.equal(correctResult);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should balance brackets", async () => {
 		const testCases = [
 			{
@@ -161,6 +172,7 @@ describe("IRC formatted message parser", () => {
 		];
 
 		const actual = await Promise.all(
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 			testCases.map((testCase) => getParsedMessageContents(testCase.input))
 		);
 		const expected = testCases.map((testCase) => testCase.expected);
@@ -168,6 +180,7 @@ describe("IRC formatted message parser", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should not find urls", async () => {
 		const testCases = [
 			{
@@ -181,6 +194,7 @@ describe("IRC formatted message parser", () => {
 		];
 
 		const actual = await Promise.all(
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 			testCases.map((testCase) => getParsedMessageContents(testCase.input))
 		);
 		const expected = testCases.map((testCase) => testCase.expected);
@@ -188,6 +202,7 @@ describe("IRC formatted message parser", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should find channels", async () => {
 		const testCases = [
 			{
@@ -238,6 +253,7 @@ describe("IRC formatted message parser", () => {
 		];
 
 		const actual = await Promise.all(
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 			testCases.map((testCase) => getParsedMessageContents(testCase.input))
 		);
 		const expected = testCases.map((testCase) => testCase.expected);
@@ -245,6 +261,7 @@ describe("IRC formatted message parser", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should not find channels", async () => {
 		const testCases = [
 			{
@@ -258,6 +275,7 @@ describe("IRC formatted message parser", () => {
 		];
 
 		const actual = await Promise.all(
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 			testCases.map((testCase) => getParsedMessageContents(testCase.input))
 		);
 		const expected = testCases.map((testCase) => testCase.expected);
@@ -356,11 +374,14 @@ describe("IRC formatted message parser", () => {
 				'<span class="irc-bold">bold</span>' + " " + '<span class="irc-bold">bold</span>',
 		},
 	].forEach(({name, input, expected}) => {
+		// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 		it(`should handle style characters: ${name}`, async () => {
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 			expect(await getParsedMessageContents(input)).to.equal(expected);
 		});
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should find nicks", async () => {
 		const testCases = [
 			{
@@ -384,6 +405,7 @@ describe("IRC formatted message parser", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should not find nicks", async () => {
 		const testCases = [
 			{
@@ -405,6 +427,7 @@ describe("IRC formatted message parser", () => {
 		];
 
 		const actual = await Promise.all(
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 			testCases.map((testCase) => getParsedMessageContents(testCase.input))
 		);
 		const expected = testCases.map((testCase) => testCase.expected);
@@ -412,6 +435,7 @@ describe("IRC formatted message parser", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should go bonkers like mirc", async () => {
 		const testCases = [
 			{
@@ -436,6 +460,7 @@ describe("IRC formatted message parser", () => {
 		];
 
 		const actual = await Promise.all(
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 			testCases.map((testCase) => getParsedMessageContents(testCase.input))
 		);
 		const expected = testCases.map((testCase) => testCase.expected);
@@ -512,11 +537,14 @@ describe("IRC formatted message parser", () => {
 				'<span dir="auto" role="button" tabindex="0" class="inline-channel">#i❤️thelounge</span>',
 		},
 	].forEach(({name, input, expected}) => {
+		// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 		it(`should find emoji: ${name}`, async () => {
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 			expect(await getParsedMessageContents(input)).to.equal(expected);
 		});
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should optimize generated html", async () => {
 		const testCases = [
 			{
@@ -530,6 +558,7 @@ describe("IRC formatted message parser", () => {
 		];
 
 		const actual = await Promise.all(
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 			testCases.map((testCase) => getParsedMessageContents(testCase.input))
 		);
 		const expected = testCases.map((testCase) => testCase.expected);
@@ -537,6 +566,7 @@ describe("IRC formatted message parser", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should trim common protocols", async () => {
 		const testCases = [
 			{
@@ -558,6 +588,7 @@ describe("IRC formatted message parser", () => {
 		];
 
 		const actual = await Promise.all(
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 			testCases.map((testCase) => getParsedMessageContents(testCase.input))
 		);
 		const expected = testCases.map((testCase) => testCase.expected);
@@ -565,6 +596,7 @@ describe("IRC formatted message parser", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should not find channel in fragment", async () => {
 		const testCases = [
 			{
@@ -577,6 +609,7 @@ describe("IRC formatted message parser", () => {
 		];
 
 		const actual = await Promise.all(
+			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 			testCases.map((testCase) => getParsedMessageContents(testCase.input))
 		);
 		const expected = testCases.map((testCase) => testCase.expected);
@@ -584,8 +617,10 @@ describe("IRC formatted message parser", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should not overlap parts", async () => {
 		const input = "Url: http://example.com/path Channel: ##channel";
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 		const actual = await getParsedMessageContents(input);
 
 		expect(actual).to.equal(
@@ -594,8 +629,10 @@ describe("IRC formatted message parser", () => {
 		);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should handle overlapping parts by using first starting", async () => {
 		const input = "#test-https://example.com";
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 		const actual = await getParsedMessageContents(input);
 
 		expect(actual).to.equal(
@@ -605,8 +642,10 @@ describe("IRC formatted message parser", () => {
 		);
 	});
 
+	// @ts-expect-error ts-migrate(2582) FIXME: Cannot find name 'it'. Do you need to install type... Remove this comment to see the full error message
 	it("should find links separated by tab character", async () => {
 		const input = "example.com\texample.org";
+		// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
 		const actual = await getParsedMessageContents(input);
 
 		expect(actual).to.equal(
