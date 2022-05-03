@@ -7,15 +7,10 @@
     // https://v2.vuejs.org/v2/guide/typescript.html?redirect=true#Recommended-Configuration
     "target": "ES5",
     "strict": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
     "lib": ["ES2020", "dom"],
     "sourceMap": false,
     "outDir": "./dist",
-    "allowJs": true,
     "noImplicitAny": false,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
     "baseUrl": "./",
 
     "jsx": "preserve"

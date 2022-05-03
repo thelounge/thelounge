@@ -1,6 +1,6 @@
 "use strict";
 
-import Msg from "models/msg";
+import Msg from "../../models/msg";
 import Config from "config";
 
 const commands = ["close", "leave", "part"];

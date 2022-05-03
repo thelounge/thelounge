@@ -1,4 +1,4 @@
-import Msg from "models/msg";
+import Msg from "../../models/msg";
 
 declare global {
 	type Message = Msg;

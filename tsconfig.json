@@ -7,7 +7,7 @@
       "@client/*": ["client/*"]
     }
   },
-  "exclude": ["./node_modules", "./public/*"],
+  "exclude": ["./node_modules"],
   "references": [
     {
       "path": "./src,"

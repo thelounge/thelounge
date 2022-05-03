@@ -3,8 +3,7 @@
   "files": [
     "../package.json",
     "../client/js/constants.js",
-    "../client/js/helpers/ircmessageparser/findLinks.ts",
-    "./index.d.ts"
+    "../client/js/helpers/ircmessageparser/findLinks.ts"
   ],
   // "exclude": ["../client/*", "./dist/*"],
   "exclude": ["./dist/*"],
@@ -13,14 +12,8 @@
   },
   "include": ["./**/*.ts", "./**/*.js", "./**/*.d.ts"],
   "compilerOptions": {
-    "allowJs": true,
-    "checkJs": true,
     "types": ["node"],
     "baseUrl": ".",
-    "noImplicitAny": false,
-    "outDir": "dist",
-    // "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "moduleResolution": "node"
+    "noImplicitAny": false
   }
 }
