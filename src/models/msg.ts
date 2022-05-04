@@ -7,8 +7,9 @@ export type UserInMessage = Partial<User> & {
 	mode: string;
 };
 
+// TODO: this should be a part of preview in src/plugins/links
 export type MessagePreview = {
-	shown: boolean;
+	shown: boolean | null;
 	link: string;
 	body: string;
 };
@@ -58,7 +59,7 @@ class Msg {
 	// we should probably make Msgs that extend this class and use those
 	// throughout. I'll leave any similar fields below.
 	new_nick!: string;
-	highlight!: boolean;
+	highlight?: boolean;
 	showInActive?: boolean;
 	new_ident!: string;
 	new_host!: string;
@@ -103,7 +104,7 @@ class Msg {
 			self: false,
 		});
 
-		if (this.time.getTime() > 0) {
+		if (this.time?.getTime() > 0) {
 			this.time = new Date(this.time);
 		} else {
 			this.time = new Date();

@@ -13,16 +13,18 @@ export default (app) => {
 		"webpack-hot-middleware/client?path=storage/__webpack_hmr"
 	);
 
+	webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+
 	const compiler = webpack(webpackConfig);
 
 	app.use(
 		webpackDevMiddleware(compiler, {
 			index: "/",
-			publicPath: webpackConfig.output.publicPath,
+			publicPath: webpackConfig.output?.publicPath,
 		})
 	).use(
 		webpackDevMiddleware(compiler, {
-			path: "/storage/__webpack_hmr",
+			publicPath: "/storage/__webpack_hmr",
 		})
 	);
 };

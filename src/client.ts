@@ -83,7 +83,7 @@ type Mention = {
 	chanId: number;
 	msgId: number;
 	type: MessageType;
-	time: number;
+	time: Date;
 	text: string;
 	from: UserInMessage;
 };
@@ -312,7 +312,7 @@ class Client {
 			networks: [network.getFilteredClone(this.lastActiveChannel, -1)],
 		});
 
-		if (!(network as NetworkWithIrcFramework).validate(client)) {
+		if (!network.validate(client)) {
 			return;
 		}
 

@@ -4,6 +4,7 @@ import _ from "lodash";
 import {IrcEventHandler} from "../../client";
 
 import Msg, {MessageType} from "../../models/msg";
+import User from "../../models/user";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
@@ -74,7 +75,7 @@ export default <IrcEventHandler>function (irc, network) {
 			self: data.nick === irc.user.nick,
 		});
 
-		const users = [];
+		const users: User[] = [];
 
 		for (const param of data.raw_params) {
 			if (targetChan.findUser(param)) {
@@ -88,7 +89,7 @@ export default <IrcEventHandler>function (irc, network) {
 
 		targetChan.pushMessage(client, msg);
 
-		let usersUpdated;
+		let usersUpdated = false;
 		const userModeSortPriority = {};
 		const supportsMultiPrefix = network.irc.network.cap.isEnabled("multi-prefix");
 

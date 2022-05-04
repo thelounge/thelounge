@@ -177,7 +177,7 @@ class Network {
 		);
 	}
 
-	validate(this: NetworkWithIrcFramework, client: Client) {
+	validate(this: Network, client: Client) {
 		// Remove !, :, @ and whitespace characters from nicknames and usernames
 		const cleanNick = (str: string) => str.replace(/[\x00\s:!@]/g, "_").substring(0, 100);
 
@@ -454,7 +454,7 @@ class Network {
 		this.channels.forEach((channel) => channel.destroy());
 	}
 
-	setNick(this: NetworkWithIrcFramework, nick: string) {
+	setNick(this: Network, nick: string) {
 		this.nick = nick;
 		this.highlightRegex = new RegExp(
 			// Do not match characters and numbers (unless IRC color)
@@ -472,7 +472,10 @@ class Network {
 			this.keepNick = null;
 		}
 
-		this.irc.options.nick = nick;
+		// TODO: setNick is called in validate() before irc exists. Is that a problem?
+		if (this.irc) {
+			this.irc.options.nick = nick;
+		}
 	}
 
 	getFilteredClone(lastActiveChannel: number, lastMessage: number) {

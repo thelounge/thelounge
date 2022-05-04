@@ -58,7 +58,7 @@ export default <IrcEventHandler>function (irc, network) {
 			data.from_server &&
 			(!data.target ||
 				!network.getChannel(data.target) ||
-				network.getChannel(data.target).type !== ChanType.CHANNEL)
+				network.getChannel(data.target)?.type !== ChanType.CHANNEL)
 		) {
 			chan = network.channels[0];
 			from = chan.getUser(data.nick);
@@ -128,7 +128,7 @@ export default <IrcEventHandler>function (irc, network) {
 		// Self messages in channels are never highlighted
 		// Non-self messages are highlighted as soon as the nick is detected
 		if (!msg.highlight && !msg.self) {
-			msg.highlight = network.highlightRegex.test(data.message);
+			msg.highlight = network.highlightRegex?.test(data.message);
 
 			// If we still don't have a highlight, test against custom highlights if there's any
 			if (!msg.highlight && client.highlightRegex) {
@@ -205,7 +205,7 @@ export default <IrcEventHandler>function (irc, network) {
 				chanId: chan.id,
 				msgId: msg.id,
 				type: msg.type,
-				time: msg.time.getTime(),
+				time: msg.time,
 				text: msg.text,
 				from: msg.from,
 			});
