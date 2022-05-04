@@ -1,4 +1,5 @@
 "use strict";
+import {PluginInputHandler} from "./index";
 
 const commands = ["kill"];
 

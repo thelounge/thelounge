@@ -3,7 +3,7 @@
 import colors from "chalk";
 import log from "../../log";
 import Helper from "../../helper";
-import {AuthHandler} from "../../types/plugins/auth";
+import type {AuthHandler} from "../auth";
 
 const localAuth: AuthHandler = (manager, client, user, password, callback) => {
 	// If no user is found, or if the client has not provided a password,

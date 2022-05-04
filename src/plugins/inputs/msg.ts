@@ -1,8 +1,7 @@
 "use strict";
-
-import Network from "../../models/network";
-
-import Msg from "../../models/msg";
+import {PluginInputHandler} from "./index";
+import Msg, {MessageType} from "../../models/msg";
+import {ChanType} from "../../models/chan";
 
 const commands = ["query", "msg", "say"];
 

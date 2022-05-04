@@ -16,24 +16,50 @@ import Client from "./client";
 import ClientManager from "./clientManager";
 import Uploader from "./plugins/uploader";
 import Helper from "./helper";
-import Config from "./config";
+import Config, {ConfigType, Defaults} from "./config";
 import Identification from "./identification";
 import changelog from "./plugins/changelog";
 import inputs from "./plugins/inputs";
 import Auth from "./plugins/auth";
 
-import themes from "./plugins/packages/themes";
+import themes, {ThemeForClient} from "./plugins/packages/themes";
 themes.loadLocalThemes();
 
 import packages from "./plugins/packages/index";
-import type {
-	ClientConfiguration,
-	Defaults,
-	IndexTemplateConfiguration,
-	ServerConfiguration,
-} from "./types/config";
+import {NetworkWithIrcFramework} from "./models/network";
+import {ChanType} from "./models/chan";
 
-import type {ServerOptions} from "./types/server";
+type ServerOptions = {
+	dev: boolean;
+};
+
+type ServerConfiguration = ConfigType & {
+	stylesheets: string[];
+};
+
+type IndexTemplateConfiguration = ServerConfiguration & {
+	cacheBust: string;
+};
+
+type ClientConfiguration = Pick<
+	ConfigType,
+	"public" | "lockNetwork" | "useHexIp" | "prefetch" | "defaults"
+> & {
+	fileUpload: boolean;
+	ldapEnabled: boolean;
+	isUpdateAvailable: boolean;
+	applicationServerKey: string;
+	version: string;
+	gitCommit: string | null;
+	defaultTheme: string;
+	themes: ThemeForClient[];
+	defaults: Defaults & {
+		sasl?: string;
+		saslAccount?: string;
+		saslPassword?: string;
+	};
+	fileUploadMaxFileSize?: number;
+};
 
 // A random number that will force clients to reload the page if it differs
 const serverHash = Math.floor(Date.now() * Math.random());
@@ -59,7 +85,7 @@ export default async function (
 	const app = express();
 
 	if (options.dev) {
-		(await import("./plugins/dev-server.js")).default(app);
+		(await import("./plugins/dev-server")).default(app);
 	}
 
 	app.set("env", "production")
@@ -85,7 +111,7 @@ export default async function (
 		const themeName = req.params.theme;
 		const theme = themes.getByName(themeName);
 
-		if (theme === undefined) {
+		if (theme === undefined || theme.filename === undefined) {
 			return res.status(404).send("Not found");
 		}
 

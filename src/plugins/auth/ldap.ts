@@ -1,10 +1,10 @@
 "use strict";
+import ldap, {SearchOptions} from "ldapjs";
+import colors from "chalk";
 
 import log from "../../log";
 import Config from "../../config";
-import ldap, {SearchOptions} from "ldapjs";
-import colors from "chalk";
-import {AuthHandler} from "types/plugins/auth";
+import type {AuthHandler} from "../auth";
 
 function ldapAuthCommon(
 	user: string,
@@ -191,9 +191,8 @@ function advancedLdapLoadUsers(users: string[], callbackLoadUser) {
 			}
 
 			res.on("searchEntry", function (entry) {
-				// @ts-ignore
-				// TODO
-				const user = entry.attributes[0]._vals[0].toString();
+				// TODO: was _vals.
+				const user = entry.attributes[0].vals[0].toString();
 
 				if (remainingUsers.has(user)) {
 					remainingUsers.delete(user);

@@ -1,8 +1,9 @@
 "use strict";
 
-import Network from "../../models/network";
+import {IrcEventHandler} from "../../client";
+import {ChanType} from "../../models/chan";
 
-import Msg from "../../models/msg";
+import Msg, {MessageType} from "../../models/msg";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;

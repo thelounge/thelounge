@@ -19,6 +19,83 @@ declare module "irc-framework" {
 		end: () => void;
 	};
 
+	export interface MessageEventArgs {
+		account?: any;
+		group?: any;
+		hostname: string;
+		ident: string;
+		message: string;
+		nick: string;
+		reply: (message: string) => void;
+		tags: {[key: string]: string};
+		target: string;
+		time?: any;
+		type: "privmsg" | "action"; // TODO
+	}
+	export interface JoinEventArgs {
+		// todo: is that wrong?
+		account: boolean;
+		channel: string;
+		gecos: string;
+		hostname: string;
+		ident: string;
+		nick: string;
+		time?: any;
+	}
+	export interface KickEventArgs {
+		kicked: string;
+		nick: string;
+		ident: string;
+		hostname: string;
+		channel: string;
+		message: string;
+		time: number;
+	}
+	export interface RawEventArgs {
+		from_server: boolean;
+		line: string;
+	}
+	export interface RegisteredEventArgs {
+		nick: string;
+	}
+	export interface QuitEventArgs {
+		hostname: string;
+		ident: string;
+		message: string;
+		nick: string;
+		time?: any;
+		channel?: string;
+		kicked?: string;
+	}
+	interface Mode {
+		mode: string;
+		param: string;
+	}
+	export interface ModeEventArgs {
+		modes: Mode[];
+		nick: string;
+		raw_modes: string;
+		raw_params: string[];
+		target: string;
+		time?: any;
+	}
+	export interface ServerOptionsEventArgs {
+		options: any;
+		cap: any;
+	}
+	export interface NickInvalidEventArgs {
+		nick: string;
+		reason: string;
+	}
+	export interface NickInUseEventArgs {
+		nick: string;
+		reason: string;
+	}
+	export interface IrcErrorEventArgs {
+		error: string;
+		channel: string;
+		reason: string;
+	}
 	export class Client extends EventEmitter {
 		constructor(options: ClientConstructorParameters);
 
@@ -176,11 +253,11 @@ declare module "irc-framework" {
 
 		on(eventType: "mode", cb: (event: ModeEventArgs) => any): this;
 
-		on(eventType: "socket close", cb: (event: {}) => any): this;
+		on(eventType: "socket close", cb: (event: Record<string, unknown>) => any): this;
 
-		on(eventType: "socket connected", cb: (event: {}) => any): this;
+		on(eventType: "socket connected", cb: (event: Record<string, unknown>) => any): this;
 
-		on(eventType: "raw socket connected", cb: (event: {}) => any): this;
+		on(eventType: "raw socket connected", cb: (event: Record<string, unknown>) => any): this;
 
 		on(eventType: "server options", cb: (event: ServerOptionsEventArgs) => any): this;
 
@@ -217,83 +294,7 @@ declare module "irc-framework" {
 
 		type: string;
 	}
-	export interface MessageEventArgs {
-		account?: any;
-		group?: any;
-		hostname: string;
-		ident: string;
-		message: string;
-		nick: string;
-		reply: (message: string) => void;
-		tags: {[key: string]: string};
-		target: string;
-		time?: any;
-		type: "privmsg" | "action"; // TODO
-	}
-	export interface JoinEventArgs {
-		// todo: is that wrong?
-		account: boolean;
-		channel: string;
-		gecos: string;
-		hostname: string;
-		ident: string;
-		nick: string;
-		time?: any;
-	}
-	export interface KickEventArgs {
-		kicked: string;
-		nick: string;
-		ident: string;
-		hostname: string;
-		channel: string;
-		message: string;
-		time: number;
-	}
-	export interface RawEventArgs {
-		from_server: boolean;
-		line: string;
-	}
-	export interface RegisteredEventArgs {
-		nick: string;
-	}
-	export interface QuitEventArgs {
-		hostname: string;
-		ident: string;
-		message: string;
-		nick: string;
-		time?: any;
-		channel?: string;
-		kicked?: string;
-	}
-	interface Mode {
-		mode: string;
-		param: string;
-	}
-	export interface ModeEventArgs {
-		modes: Mode[];
-		nick: string;
-		raw_modes: string;
-		raw_params: string[];
-		target: string;
-		time?: any;
-	}
-	export interface ServerOptionsEventArgs {
-		options: any;
-		cap: any;
-	}
-	export interface NickInvalidEventArgs {
-		nick: string;
-		reason: string;
-	}
-	export interface NickInUseEventArgs {
-		nick: string;
-		reason: string;
-	}
-	export interface IrcErrorEventArgs {
-		error: string;
-		channel: string;
-		reason: string;
-	}
+
 	// interface IrcUser {
 	//   /**The current nick you are currently using.*/
 	//   nick: string;

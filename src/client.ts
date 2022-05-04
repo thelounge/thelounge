@@ -8,8 +8,8 @@ import crypto from "crypto";
 import colors from "chalk";
 
 import log from "./log";
-import Chan from "./models/chan";
-import Msg from "./models/msg";
+import Chan, {ChanType} from "./models/chan";
+import Msg, {MessageType, UserInMessage} from "./models/msg";
 import Config from "./config";
 import constants from "../client/js/constants";
 
@@ -17,7 +17,7 @@ import inputs from "./plugins/inputs";
 import PublicClient from "./plugins/packages/publicClient";
 import SqliteMessageStorage from "./plugins/messageStorage/sqlite";
 import TextFileMessageStorage from "./plugins/messageStorage/text";
-import Network from "./models/network";
+import Network, {NetworkWithIrcFramework} from "./models/network";
 import ClientManager from "./clientManager";
 import {MessageStorage} from "./types/plugins/messageStorage";
 
@@ -48,6 +48,46 @@ const events = [
 	"welcome",
 	"whois",
 ];
+
+type ClientPushSubscription = {
+	endpoint: string;
+	keys: {
+		p256dh: string;
+		auth: string;
+	};
+};
+
+type ClientConfig = {
+	log: boolean;
+	password: string;
+	sessions: {
+		[token: string]: {
+			lastUse: number;
+			ip: string;
+			agent: string;
+			pushSubscription?: ClientPushSubscription;
+		};
+	};
+	clientSettings: {
+		[key: string]: any;
+	};
+	browser?: {
+		language?: string;
+		ip?: string;
+		hostname?: string;
+		isSecure?: boolean;
+	};
+};
+
+type Mention = {
+	chanId: number;
+	msgId: number;
+	type: MessageType;
+	time: number;
+	text: string;
+	from: UserInMessage;
+};
+
 class Client {
 	awayMessage!: string;
 	lastActiveChannel!: number;
@@ -272,12 +312,11 @@ class Client {
 			networks: [network.getFilteredClone(this.lastActiveChannel, -1)],
 		});
 
-		// @ts-ignore it complains because validate expects this to be NetworkWith
-		if (!network.validate(client)) {
+		if (!(network as NetworkWithIrcFramework).validate(client)) {
 			return;
 		}
 
-		network.createIrcFramework(client);
+		(network as NetworkWithIrcFramework).createIrcFramework(client);
 
 		events.forEach(async (plugin) => {
 			(await import(`./plugins/irc-events/${plugin}`)).default.apply(client, [
@@ -412,6 +451,11 @@ class Client {
 
 		if (inputs.userInputs.has(cmd)) {
 			const plugin = inputs.userInputs.get(cmd);
+
+			if (!plugin) {
+				// should be a no-op
+				throw new Error(`Plugin ${cmd} not found`);
+			}
 
 			if (typeof plugin.input === "function" && (connected || plugin.allowDisconnected)) {
 				connected = true;
@@ -785,3 +829,10 @@ class Client {
 }
 
 export default Client;
+
+// TODO: this should exist elsewhere?
+export type IrcEventHandler = (
+	this: Client,
+	irc: NetworkWithIrcFramework["irc"],
+	network: NetworkWithIrcFramework
+) => void;

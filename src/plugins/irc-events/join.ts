@@ -1,14 +1,11 @@
 "use strict";
 
-import {ChanState} from "../../types/models/channel";
-
-import {Network} from "../../types/models/network";
-
-import Chan from "../../models/chan";
-import Msg from "../../models/msg";
+import Msg, {MessageType} from "../../models/msg";
 import User from "../../models/user";
+import type {IrcEventHandler} from "../../client";
+import {ChanState} from "../../models/chan";
 
-module.exports = function (irc: Network["irc"], network: Network) {
+export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
 	irc.on("join", function (data) {

@@ -6,7 +6,24 @@ import _ from "lodash";
 
 import Config from "../../config";
 
-const themes = new Map();
+type Module = {
+	type: string;
+	name: string;
+};
+
+type ThemeModule = Module & {
+	themeColor: string;
+	css: string;
+};
+
+export type ThemeForClient = {
+	displayName: string;
+	filename?: string;
+	name: string;
+	themeColor: string | null;
+};
+
+const themes = new Map<string, ThemeForClient>();
 
 export default {
 	addTheme,

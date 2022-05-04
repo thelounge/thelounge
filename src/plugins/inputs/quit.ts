@@ -1,7 +1,7 @@
 "use strict";
-
 import _ from "lodash";
 
+import {PluginInputHandler} from "./index";
 import ClientCertificate from "../clientCertificate";
 
 const commands = ["quit"];

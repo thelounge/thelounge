@@ -14,6 +14,14 @@ import fs from "fs";
 import Utils from "../../command-line/utils";
 import Client from "../../client";
 
+type PackageInfo = {
+	packageName: string;
+	thelounge?: {supports: any};
+	version: string;
+	type?: string;
+	files?: string[];
+};
+
 const stylesheets: string[] = [];
 const files: string[] = [];
 

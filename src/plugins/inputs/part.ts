@@ -1,7 +1,9 @@
 "use strict";
+import {PluginInputHandler} from "./index";
 
-import Msg from "../../models/msg";
-import Config from "config";
+import Msg, {MessageType} from "../../models/msg";
+import Config from "../../config";
+import {ChanType, ChanState} from "../../models/chan";
 
 const commands = ["close", "leave", "part"];
 const allowDisconnected = true;

@@ -1,8 +1,8 @@
 "use strict";
+import {IrcEventHandler} from "../../client";
 
-import Msg from "../../models/msg";
+import Msg, {MessageType} from "../../models/msg";
 import Config from "../../config";
-import Network from "../../models/network";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;

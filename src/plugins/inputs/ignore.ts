@@ -1,7 +1,10 @@
 "use strict";
 
-import Msg from "../../models/msg";
-import Helper from "helper";
+import Msg, {MessageType} from "../../models/msg";
+import Helper from "../../helper";
+import {PluginInputHandler} from "./index";
+import {IgnoreListItem} from "../../models/network";
+import {ChanType, SpecialChanType} from "../../models/chan";
 
 const commands = ["ignore", "unignore", "ignorelist"];
 

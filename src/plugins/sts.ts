@@ -5,7 +5,15 @@ import fs from "fs";
 import path from "path";
 import log from "../log";
 import Config from "../config";
-import type {PolicyMap, PolicyOption} from "../types/plugins/sts";
+
+type PolicyOption = {
+	port: number;
+	duration: number;
+	expires: number;
+	host: string;
+};
+
+type PolicyMap = Map<string, Omit<PolicyOption, "host">>;
 
 class STSPolicies {
 	stsFile: string;

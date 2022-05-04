@@ -1,6 +1,7 @@
 "use strict";
 
-import Msg from "../../models/msg";
+import Msg, {MessageType} from "../../models/msg";
+import {PluginInputHandler} from "./index";
 
 const commands = ["ctcp"];
 

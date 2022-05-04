@@ -1,5 +1,20 @@
-import Chan from "../../models/chan";
-import Network from "../../models/network";
+import Client from "../../client";
+import Chan, {Channel} from "../../models/chan";
+import Network, {NetworkWithIrcFramework} from "../../models/network";
+
+export type PluginInputHandler = (
+	this: Client,
+	network: NetworkWithIrcFramework,
+	chan: Channel,
+	cmd: string,
+	args: string[]
+) => void;
+
+type Plugin = {
+	commands: string[];
+	input: (network: Network, chan: Chan, cmd: string, args: string[]) => void;
+	allowDisconnected?: boolean | undefined;
+};
 
 const clientSideCommands = ["/collapse", "/expand", "/search"];
 
@@ -16,7 +31,8 @@ const passThroughCommands = [
 	"/rs",
 ];
 
-const userInputs = [
+const userInputs = new Map<string, Plugin>();
+const builtInInputs = [
 	"action",
 	"away",
 	"ban",
@@ -39,8 +55,10 @@ const userInputs = [
 	"topic",
 	"whois",
 	"mute",
-].reduce(function (plugins, name) {
-	const plugin = import(`./${name}`).then(
+];
+
+for (const input of builtInInputs) {
+	import(`./${input}`).then(
 		(plugin: {
 			default: {
 				commands: string[];
@@ -48,11 +66,26 @@ const userInputs = [
 				allowDisconnected?: boolean;
 			};
 		}) => {
-			plugin.default.commands.forEach((command: string) => plugins.set(command, plugin));
+			plugin.default.commands.forEach((command: string) =>
+				userInputs.set(command, plugin.default)
+			);
 		}
 	);
-	return plugins;
-}, new Map());
+}
+
+// .reduce(async function (plugins, name) {
+// 	return import(`./${name}`).then(
+// 		(plugin: {
+// 			default: {
+// 				commands: string[];
+// 				input: (network: Network, chan: Chan, cmd: string, args: string[]) => void;
+// 				allowDisconnected?: boolean;
+// 			};
+// 		}) => {
+// 			plugin.default.commands.forEach((command: string) => plugins.set(command, plugin));
+// 		}
+// 	);
+// }, Promise.resolve(new Map()));
 
 const pluginCommands = new Map();
 

@@ -9,14 +9,24 @@ import log from "../../log";
 import Config from "../../config";
 import {findLinksWithSchema} from "../../../client/js/helpers/ircmessageparser/findLinks";
 import storage from "../storage";
-import Client from "../../client";
+import Client, {IrcEventHandler} from "../../client";
 import Chan from "../../models/chan";
 import Msg from "../../models/msg";
-import {Preview} from "../../types/plugins/preview";
-
 const currentFetchPromises = new Map();
 const imageTypeRegex = /^image\/.+/;
 const mediaTypeRegex = /^(audio|video)\/.+/;
+
+type Preview = {
+	type: string;
+	head: string;
+	body: string;
+	thumb: string;
+	size: number;
+	link: string; // Send original matched link to the client
+	shown: boolean | null;
+	error: undefined | any;
+	message: undefined | string;
+};
 
 export default function (client: Client, chan: Chan, msg: Msg, cleanText: string) {
 	if (!Config.values.prefetch) {
@@ -136,7 +146,7 @@ function parseHtml(preview, res, client: Client) {
 	});
 }
 
-function parseHtmlMedia($: cheerio.CheerioAPI, preview, client) {
+function parseHtmlMedia($: cheerio.Root, preview, client) {
 	return new Promise((resolve, reject) => {
 		if (Config.values.disableMediaPreview) {
 			reject();
