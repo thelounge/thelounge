@@ -17,12 +17,12 @@
 </template>
 
 <script lang="ts">
-import constants from "@/js/constants";
-import eventbus from "@/js/eventbus";
+import constants from "../js/constants";
+import eventbus from "../js/eventbus";
 import Mousetrap from "mousetrap";
 import throttle from "lodash/throttle";
-import storage from "@/js/localStorage";
-import isIgnoredKeybind from "@/js/helpers/isIgnoredKeybind";
+import storage from "../js/localStorage";
+import isIgnoredKeybind from "../js/helpers/isIgnoredKeybind";
 
 import Sidebar from "./Sidebar.vue";
 import ImageViewer from "./ImageViewer.vue";

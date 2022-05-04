@@ -20,7 +20,7 @@
     "lint:eslint": "eslint . --ext .js,.vue --report-unused-disable-directives --color",
     "lint:prettier": "prettier --list-different \"**/*.*\"",
     "lint:stylelint": "stylelint --color \"client/**/*.css\"",
-    "start": "node index start",
+    "start": "ts-node index start",
     "test": "run-p --aggregate-output --continue-on-error lint:* test:*",
     "test:mocha": "webpack --mode=development && nyc --nycrc-path=test/.nycrc-mocha.json mocha --colors --config=test/.mocharc.yml",
     "watch": "webpack --watch"
