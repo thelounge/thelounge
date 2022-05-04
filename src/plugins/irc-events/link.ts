@@ -12,7 +12,14 @@ import storage from "../storage";
 import Client, {IrcEventHandler} from "../../client";
 import Chan from "../../models/chan";
 import Msg from "../../models/msg";
-const currentFetchPromises = new Map();
+import {Cheerio} from "cheerio";
+
+type FetchRequest = {
+	data: Record<string, any>;
+	type: string;
+	size: number;
+};
+const currentFetchPromises = new Map<string, Promise<FetchRequest>>();
 const imageTypeRegex = /^image\/.+/;
 const mediaTypeRegex = /^(audio|video)\/.+/;
 
@@ -146,7 +153,7 @@ function parseHtml(preview, res, client: Client) {
 	});
 }
 
-function parseHtmlMedia($: cheerio.Root, preview, client) {
+function parseHtmlMedia($: Cheerio, preview, client: Client) {
 	return new Promise((resolve, reject) => {
 		if (Config.values.disableMediaPreview) {
 			reject();
@@ -417,10 +424,10 @@ function fetch(uri, headers) {
 		);
 	}
 
-	promise = new Promise((resolve, reject) => {
+	promise = new Promise<FetchRequest>((resolve, reject) => {
 		let buffer = Buffer.from("");
 		let contentLength = 0;
-		let contentType;
+		let contentType: string | undefined;
 		let limit = Config.values.prefetchMaxImageSize * 1024;
 
 		try {
@@ -438,14 +445,14 @@ function fetch(uri, headers) {
 					contentLength = parseInt(res.headers["content-length"], 10) || 0;
 					contentType = res.headers["content-type"];
 
-					if (imageTypeRegex.test(contentType)) {
+					if (contentType && imageTypeRegex.test(contentType)) {
 						// response is an image
 						// if Content-Length header reports a size exceeding the prefetch limit, abort fetch
 						// and if file is not to be stored we don't need to download further either
 						if (contentLength > limit || !Config.values.prefetchStorage) {
 							gotStream.destroy();
 						}
-					} else if (mediaTypeRegex.test(contentType)) {
+					} else if (contentType && mediaTypeRegex.test(contentType)) {
 						// We don't need to download the file any further after we received content-type header
 						gotStream.destroy();
 					} else {

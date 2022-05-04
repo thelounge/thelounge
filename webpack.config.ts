@@ -152,8 +152,8 @@ const config: webpack.Configuration = {
 	],
 };
 
-export default (env: any, argv: any) => {
-	if (argv.mode === "development") {
+export default (env?: any, argv?: any) => {
+	if (argv?.mode === "development" || env === "development") {
 		const testFile = path.resolve(__dirname, "test/public/testclient.js");
 
 		if (fs.existsSync(testFile)) {
@@ -164,9 +164,7 @@ export default (env: any, argv: any) => {
 		config.devtool = "eval";
 		config.stats = "errors-only";
 		config.output!.path = path.resolve(__dirname, "test/public");
-		config.entry = {
-			"testclient.js": [path.resolve(__dirname, "test/client/index.js")],
-		};
+		config.entry!["testclient.js"] = [path.resolve(__dirname, "test/client/index.js")];
 
 		// Add the istanbul plugin to babel-loader options
 		for (const rule of config.module!.rules!) {
@@ -197,7 +195,7 @@ export default (env: any, argv: any) => {
 		];
 	}
 
-	if (argv.mode === "production") {
+	if (argv?.mode === "production" || env === "production") {
 		// ...
 	}
 
