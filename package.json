@@ -12,9 +12,10 @@
   },
   "homepage": "https://thelounge.chat/",
   "scripts": {
-    "build": "webpack",
+    "build:client": "webpack",
+    "build:server": "tsc -p src/tsconfig.json index.ts",
     "coverage": "run-s test:* && nyc --nycrc-path=test/.nycrc-report.json report",
-    "dev": "ts-node index start --dev",
+    "dev": "ts-node --project tsconfig.json index.ts start --dev",
     "format:prettier": "prettier --write \"**/*.*\"",
     "lint:check-eslint": "eslint-config-prettier .eslintrc.cjs",
     "lint:eslint": "eslint . --ext .js,.vue --report-unused-disable-directives --color",

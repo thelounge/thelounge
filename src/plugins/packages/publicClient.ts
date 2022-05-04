@@ -1,5 +1,5 @@
-import Client from "client";
-import Chan from "models/chan";
+import Client from "../../client";
+import Chan from "../../models/chan";
 import Msg from "../../models/msg";
 
 export default class PublicClient {

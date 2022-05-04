@@ -35,7 +35,8 @@ import VueApp from "vue";
 declare module "vue/types/vue" {
 	interface Vue {
 		debouncedResize: () => void;
-		dayChangeTimeout: number;
+		// TODO; type as Timeout
+		dayChangeTimeout: any;
 	}
 }
 

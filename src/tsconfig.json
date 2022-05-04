@@ -6,11 +6,15 @@
     "../client/js/helpers/ircmessageparser/findLinks.ts",
     "../client/js/helpers/ircmessageparser/cleanIrcMessage.ts"
   ],
+  // TODO: these should be imported from the base config,
+  // but ts-node doesn't seem to care.
   "include": ["**/*"],
+  "typeRoots": ["./src/types/"],
+
   "compilerOptions": {
     "types": ["node"],
     "baseUrl": ".",
     "noImplicitAny": false
-  },
-  "references": [{"path": "../"}]
+  }
+  // "references": [{"path": "../"}]
 }

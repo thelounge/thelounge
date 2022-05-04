@@ -5,14 +5,14 @@ import got from "got";
 import {URL} from "url";
 import mime from "mime-types";
 
+import log from "../../log";
 import Config from "../../config";
 import {findLinksWithSchema} from "../../../client/js/helpers/ircmessageparser/findLinks";
 import storage from "../storage";
-import log from "log";
-import Client from "client";
-import Chan from "models/chan";
+import Client from "../../client";
+import Chan from "../../models/chan";
 import Msg from "../../models/msg";
-import {Preview} from "types/plugins/preview";
+import {Preview} from "../../types/plugins/preview";
 
 const currentFetchPromises = new Map();
 const imageTypeRegex = /^image\/.+/;

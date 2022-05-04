@@ -57,7 +57,7 @@
 	</div>
 </template>
 
-<script>
+<script lang="ts">
 import constants from "../js/constants";
 import eventbus from "../js/eventbus";
 import clipboard from "../js/clipboard";
@@ -65,10 +65,18 @@ import socket from "../js/socket";
 import Message from "./Message.vue";
 import MessageCondensed from "./MessageCondensed.vue";
 import DateMarker from "./DateMarker.vue";
+import Vue, {PropType} from "vue";
+import type Network from "../../src/types/models/network";
+import type Channel from "../../src/types/models/channel";
 
 let unreadMarkerShown = false;
 
-export default {
+type CondensedMessage = Message & {
+	// TODO; better type
+	type: "condensed" | string;
+	messages: Message[];
+};
+export default Vue.extend({
 	name: "MessageList",
 	components: {
 		Message,
@@ -76,8 +84,8 @@ export default {
 		DateMarker,
 	},
 	props: {
-		network: Object,
-		channel: Object,
+		network: Object as PropType<Network>,
+		channel: Object as PropType<ClientChan>,
 		focused: String,
 	},
 	computed: {
@@ -98,8 +106,8 @@ export default {
 				return this.channel.messages;
 			}
 
-			const condensed = [];
-			let lastCondensedContainer = null;
+			const condensed: CondensedMessage[] = [];
+			let lastCondensedContainer: null | CondensedMessage = null;
 
 			for (const message of this.channel.messages) {
 				// If this message is not condensable, or its an action affecting our user,
@@ -123,14 +131,14 @@ export default {
 						messages: [],
 					};
 
-					condensed.push(lastCondensedContainer);
+					condensed.push(lastCondensedContainer!);
 				}
 
-				lastCondensedContainer.messages.push(message);
+				lastCondensedContainer!.messages.push(message);
 
 				// Set id of the condensed container to last message id,
 				// which is required for the unread marker to work correctly
-				lastCondensedContainer.id = message.id;
+				lastCondensedContainer!.id = message.id;
 
 				// If this message is the unread boundary, create a split condensed container
 				if (message.id === this.channel.firstUnread) {
@@ -354,5 +362,5 @@ export default {
 			el.scrollTop = el.scrollHeight;
 		},
 	},
-};
+});
 </script>

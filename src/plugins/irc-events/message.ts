@@ -4,7 +4,7 @@ import Msg from "../../models/msg";
 import LinkPrefetch from "./link";
 import cleanIrcMessage from "../../../client/js/helpers/ircmessageparser/cleanIrcMessage";
 import Helper from "../../helper";
-import Network from "models/network";
+import Network from "../../models/network";
 
 const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\w[\]\\`^{|}-]+)/g;
 

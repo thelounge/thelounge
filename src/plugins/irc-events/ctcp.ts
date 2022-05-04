@@ -1,6 +1,6 @@
 "use strict";
 
-import Network from "models/network";
+import Network from "../../models/network";
 
 import _ from "lodash";
 import Helper from "../../helper";
