@@ -1,13 +1,12 @@
 "use strict";
-
-import log from "../../log";
 import fs from "fs";
 import path from "path";
 import filenamify from "filenamify";
+
+import log from "../../log";
 import Config from "../../config";
-import Msg from "../../models/msg";
-import {MessageStorage} from "types/plugins/messageStorage";
-import Client from "client";
+import {MessageStorage} from "../../types/plugins/messageStorage";
+import Client from "../../client";
 
 class TextFileMessageStorage implements MessageStorage {
 	client: Client;

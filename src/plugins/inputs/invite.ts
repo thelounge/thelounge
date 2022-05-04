@@ -1,6 +1,6 @@
 "use strict";
 
-import Network from "models/network";
+import Network from "../../models/network";
 
 import Chan from "../../models/chan";
 import Msg from "../../models/msg";

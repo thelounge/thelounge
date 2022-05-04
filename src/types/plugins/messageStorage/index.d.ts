@@ -1,8 +1,9 @@
+import type {Database} from "sqlite3";
+
 import {Channel} from "../../models/channel";
 import {Message} from "../../models/message";
 import {Network} from "../../models/network";
-import sqlite from "sqlite3";
-import Client from "client";
+import Client from "../../client";
 
 interface MessageStorage {
 	client: Client;
@@ -21,6 +22,6 @@ interface MessageStorage {
 	canProvideMessages(): boolean;
 }
 
-interface SqliteMessageStorage extends MessageStorage {
-	database: sqlite.Database;
+export interface SqliteMessageStorage extends MessageStorage {
+	database: Database;
 }

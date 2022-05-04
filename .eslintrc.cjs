@@ -36,7 +36,6 @@ module.exports = {
 		"no-else-return": "error",
 		"no-implicit-globals": "error",
 		"no-restricted-globals": ["error", "event", "fdescribe"],
-		"no-shadow": "error",
 		"no-template-curly-in-string": "error",
 		"no-unsafe-negation": "error",
 		"no-useless-computed-key": "error",
@@ -90,12 +89,14 @@ module.exports = {
 		"@typescript-eslint/no-non-null-assertion": "off",
 		"@typescript-eslint/no-unused-vars": "off",
 		"@typescript-eslint/no-this-alias": "off",
+		"no-shadow": "off",
+		"@typescript-eslint/no-shadow": "error",
 	},
 
 	// TODO: verify
 	overrides: [
 		{
-			files: ["*.vue", "*.d.ts"],
+			files: ["*.vue"],
 			rules: {
 				"import/no-default-export": 0,
 			},

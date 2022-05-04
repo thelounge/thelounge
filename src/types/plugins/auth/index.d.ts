@@ -1,5 +1,5 @@
-import Client from "client";
-import ClientManager from "clientManager";
+import Client from "../../client";
+import ClientManager from "../../clientManager";
 
 type AuthHandler = (
 	manager: ClientManager,

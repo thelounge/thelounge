@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.base.json",
-  "files": ["./webpack.config.ts", "./babel.config.cjs", "./src/helper.ts"],
+  "files": ["index.ts", "./src/index.d.ts", "./webpack.config.ts", "./src/helper.ts"],
   "compilerOptions": {
     "types": ["node"],
     "paths": {
@@ -8,7 +8,11 @@
       "@client/*": ["client/*"]
     }
   },
+  "ts-node": {
+    "files": true
+  },
   "exclude": ["./node_modules"],
+  "include": ["./src/**/*"],
   "references": [
     {
       "path": "./src"

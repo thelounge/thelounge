@@ -1,20 +1,22 @@
 "use strict";
 
 import _ from "lodash";
-import log from "./log";
-import pkg from "../package.json";
-import Client from "./client";
-import ClientManager from "./clientManager";
+import {Server as wsServer} from "ws";
 import express from "express";
 import fs from "fs";
 import path from "path";
 import {Server, Socket} from "socket.io";
 import dns from "dns";
+import colors from "chalk";
+import net from "net";
+
+import log from "./log";
+import pkg from "../package.json";
+import Client from "./client";
+import ClientManager from "./clientManager";
 import Uploader from "./plugins/uploader";
 import Helper from "./helper";
 import Config from "./config";
-import colors from "chalk";
-import net from "net";
 import Identification from "./identification";
 import changelog from "./plugins/changelog";
 import inputs from "./plugins/inputs";
@@ -24,15 +26,14 @@ import themes from "./plugins/packages/themes";
 themes.loadLocalThemes();
 
 import packages from "./plugins/packages/index";
-import {
+import type {
 	ClientConfiguration,
 	Defaults,
 	IndexTemplateConfiguration,
 	ServerConfiguration,
 } from "./types/config";
 
-import {Server as wsServer} from "ws";
-import {ServerOptions} from "types/server";
+import type {ServerOptions} from "./types/server";
 
 // A random number that will force clients to reload the page if it differs
 const serverHash = Math.floor(Date.now() * Math.random());
@@ -699,7 +700,13 @@ function initializeClient(
 		});
 
 		socket.on("mute:change", ({target, setMutedTo}) => {
-			const {chan, network} = client.find(target);
+			const networkAndChan = client.find(target);
+
+			if (!networkAndChan) {
+				return;
+			}
+
+			const {chan, network} = networkAndChan;
 
 			// If the user mutes the lobby, we mute the entire network.
 			if (chan.type === ChanType.LOBBY) {
@@ -756,7 +763,7 @@ function initializeClient(
 		}
 	});
 
-	socket.join(client.id);
+	socket.join(client.id?.toString());
 
 	const sendInitEvent = (tokenToSend) => {
 		socket.emit("init", {
@@ -844,7 +851,7 @@ function performAuthentication(this: Socket, data) {
 
 	const socket = this;
 	let client;
-	let token = null;
+	let token: string;
 
 	const finalInit = () =>
 		initializeClient(socket, client, token, data.lastMessage || -1, data.openChannel);

@@ -1,10 +1,10 @@
 "use strict";
-import Chan from "models/chan";
-import Network from "models/network";
+import Chan from "../../models/chan";
+import Network from "../../models/network";
 
 import Msg from "../../models/msg";
 
-import Client from "client";
+import Client from "../../client";
 
 const commands = ["mute", "unmute"];
 const allowDisconnected = true;

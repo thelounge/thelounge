@@ -1,15 +1,18 @@
 "use strict";
 
+import type {Database} from "sqlite3";
+
 import log from "../../log";
 import path from "path";
 import fs from "fs";
 import Config from "../../config";
 import Msg from "../../models/msg";
-import type {Database} from "sqlite3";
-import Client from "client";
-import Chan from "models/chan";
+import Client from "../../client";
+import Chan from "../../models/chan";
+import type {SqliteMessageStorage as ISqliteMessageStorage} from "../../types/plugins/messageStorage";
 
-let sqlite3;
+// TODO; type
+let sqlite3: any;
 
 try {
 	sqlite3 = require("sqlite3");
@@ -31,7 +34,7 @@ const schema = [
 	"CREATE INDEX IF NOT EXISTS time ON messages (time)",
 ];
 
-class SqliteMessageStorage implements SqliteMessageStorage {
+class SqliteMessageStorage implements ISqliteMessageStorage {
 	client: Client;
 	isEnabled: boolean;
 	database!: Database;

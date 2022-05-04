@@ -1,7 +1,7 @@
 "use strict";
 
 import _ from "lodash";
-import Network from "models/network";
+import Network from "../../models/network";
 
 import Msg from "../../models/msg";
 
