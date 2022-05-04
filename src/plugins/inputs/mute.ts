@@ -1,8 +1,9 @@
 "use strict";
 import Chan from "../../models/chan";
 import Network from "../../models/network";
+import {PluginInputHandler} from "./index";
 
-import Msg from "../../models/msg";
+import Msg, {MessageType} from "../../models/msg";
 
 import Client from "../../client";
 

@@ -1,10 +1,11 @@
 "use strict";
 
-import Msg from "../../models/msg";
+import Msg, {MessageType} from "../../models/msg";
 import LinkPrefetch from "./link";
 import cleanIrcMessage from "../../../client/js/helpers/ircmessageparser/cleanIrcMessage";
 import Helper from "../../helper";
-import Network from "../../models/network";
+import {IrcEventHandler} from "../../client";
+import {ChanType} from "../../models/chan";
 
 const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\w[\]\\`^{|}-]+)/g;
 
@@ -204,7 +205,7 @@ export default <IrcEventHandler>function (irc, network) {
 				chanId: chan.id,
 				msgId: msg.id,
 				type: msg.type,
-				time: msg.time,
+				time: msg.time.getTime(),
 				text: msg.text,
 				from: msg.from,
 			});

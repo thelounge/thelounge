@@ -12,7 +12,12 @@ export default {
 	remove,
 };
 
-function get(uuid: string): ClientCertificate | null {
+export type ClientCertificateType = {
+	private_key: string;
+	certificate: string;
+};
+
+function get(uuid: string): ClientCertificateType | null {
 	if (Config.values.public) {
 		return null;
 	}
@@ -28,7 +33,7 @@ function get(uuid: string): ClientCertificate | null {
 		return {
 			private_key: fs.readFileSync(paths.privateKeyPath, "utf-8"),
 			certificate: fs.readFileSync(paths.certificatePath, "utf-8"),
-		} as ClientCertificate;
+		} as ClientCertificateType;
 	} catch (e: any) {
 		log.error("Unable to get certificate", e);
 	}
@@ -121,7 +126,7 @@ function generate() {
 	const pem = {
 		private_key: pki.privateKeyToPem(keys.privateKey),
 		certificate: pki.certificateToPem(cert),
-	} as ClientCertificate;
+	} as ClientCertificateType;
 
 	return pem;
 }

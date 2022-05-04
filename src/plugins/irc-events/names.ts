@@ -1,6 +1,6 @@
 "use strict";
 
-import Network from "../../models/network";
+import {IrcEventHandler} from "../../client";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;

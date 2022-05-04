@@ -4,11 +4,36 @@ import _ from "lodash";
 import log from "../log";
 import Config from "../config";
 import User from "./user";
-import Msg from "./msg";
+import Msg, {MessageType} from "./msg";
 import storage from "../plugins/storage";
 import Client from "../client";
 import Network from "./network";
 import Prefix from "./prefix";
+
+export enum ChanType {
+	CHANNEL = "channel",
+	LOBBY = "lobby",
+	QUERY = "query",
+	SPECIAL = "special",
+}
+
+export enum SpecialChanType {
+	BANLIST = "list_bans",
+	INVITELIST = "list_invites",
+	CHANNELLIST = "list_channels",
+	IGNORELIST = "list_ignored",
+}
+
+export enum ChanState {
+	PARTED = 0,
+	JOINED = 1,
+}
+
+// eslint-disable-next-line no-use-before-define
+export type FilteredChannel = Chan & {
+	users: [];
+	totalMessages: number;
+};
 
 class Chan {
 	// TODO: don't force existence, figure out how to make TS infer it.
@@ -298,3 +323,5 @@ function requestZncPlayback(channel, network, from) {
 }
 
 export default Chan;
+
+export type Channel = Chan;

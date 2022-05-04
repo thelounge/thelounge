@@ -1,6 +1,8 @@
 "use strict";
 
-import Msg from "../../models/msg";
+import {ChanType} from "../../models/chan";
+import Msg, {MessageType} from "../../models/msg";
+import {PluginInputHandler} from "./index";
 
 const commands = ["ban", "unban", "banlist", "kickban"];
 

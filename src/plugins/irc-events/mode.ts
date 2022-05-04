@@ -1,9 +1,9 @@
 "use strict";
 
 import _ from "lodash";
-import Network from "../../models/network";
+import {IrcEventHandler} from "../../client";
 
-import Msg from "../../models/msg";
+import Msg, {MessageType} from "../../models/msg";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;

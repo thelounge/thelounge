@@ -1,5 +1,12 @@
 "use strict";
 
+type PrefixSymbol = string;
+
+type PrefixObject = {
+	symbol: PrefixSymbol;
+	mode: string;
+};
+
 class Prefix {
 	prefix: PrefixObject[];
 	modeToSymbol: {[mode: string]: string};

@@ -1,6 +1,8 @@
 "use strict";
+import {PluginInputHandler} from "./index";
 
-import Msg from "../../models/msg";
+import Msg, {MessageType} from "../../models/msg";
+import {ChanType} from "../../models/chan";
 
 const commands = ["topic"];
 

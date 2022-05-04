@@ -1,7 +1,17 @@
 "use strict";
 
 import colors from "chalk";
+import Client from "../client";
+import ClientManager from "../clientManager";
 import log from "../log";
+
+export type AuthHandler = (
+	manager: ClientManager,
+	client: Client,
+	user: string,
+	password: string,
+	callback: (success: boolean) => void
+) => void;
 
 // The order defines priority: the first available plugin is used.
 // Always keep 'local' auth plugin at the end of the list; it should always be enabled.

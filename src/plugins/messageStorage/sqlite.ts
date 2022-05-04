@@ -6,10 +6,11 @@ import log from "../../log";
 import path from "path";
 import fs from "fs";
 import Config from "../../config";
-import Msg from "../../models/msg";
+import Msg, {Message} from "../../models/msg";
 import Client from "../../client";
-import Chan from "../../models/chan";
+import Chan, {Channel} from "../../models/chan";
 import type {SqliteMessageStorage as ISqliteMessageStorage} from "../../types/plugins/messageStorage";
+import Network from "../../models/network";
 
 // TODO; type
 let sqlite3: any;

@@ -8,7 +8,12 @@ import fs from "fs";
 import net from "net";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import {Hostmask} from "./types/helper";
+
+export type Hostmask = {
+	nick: string;
+	ident: string;
+	hostname: string;
+};
 
 const Helper = {
 	expandHome,

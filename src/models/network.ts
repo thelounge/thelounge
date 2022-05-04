@@ -2,14 +2,14 @@
 
 import _ from "lodash";
 import {v4 as uuidv4} from "uuid";
-import IrcFramework from "irc-framework";
-import Chan from "./chan";
-import Msg from "./msg";
+import IrcFramework, {Client as IRCClient} from "irc-framework";
+import Chan, {Channel, ChanType} from "./chan";
+import Msg, {MessageType} from "./msg";
 import Prefix from "./prefix";
-import Helper from "../helper";
-import Config from "../config";
+import Helper, {Hostmask} from "../helper";
+import Config, {WebIRC} from "../config";
 import STSPolicies from "../plugins/sts";
-import ClientCertificate from "../plugins/clientCertificate";
+import ClientCertificate, {ClientCertificateType} from "../plugins/clientCertificate";
 import Client from "../client";
 
 /**
@@ -20,6 +20,53 @@ const fieldsForClient = {
 	name: true,
 	nick: true,
 	serverOptions: true,
+};
+
+type NetworkIrcOptions = {
+	host: string;
+	port: number;
+	password: string;
+	nick: string;
+	username: string;
+	gecos: string;
+	tls: boolean;
+	rejectUnauthorized: boolean;
+	webirc: WebIRC;
+	client_certificate: ClientCertificateType | null;
+	socks?: {
+		host: string;
+		port: number;
+		user: string;
+		pass: string;
+	};
+	sasl_mechanism?: string;
+	account?:
+		| {
+				account: string;
+				password: string;
+		  }
+		| Record<string, never>;
+};
+
+type NetworkStatus = {
+	connected: boolean;
+	secure: boolean;
+};
+
+export type IgnoreListItem = Hostmask & {
+	when?: number;
+};
+
+type IgnoreList = IgnoreListItem[];
+
+type NonNullableIRCWithOptions = NonNullable<IRCClient & {options: NetworkIrcOptions}>;
+
+// eslint-disable-next-line no-use-before-define
+export type NetworkWithIrcFramework = Network & {
+	// eslint-disable-next-line no-use-before-define
+	irc: NonNullable<Network["irc"]> & {
+		options: NonNullableIRCWithOptions;
+	};
 };
 
 class Network {
@@ -223,7 +270,7 @@ class Network {
 		return true;
 	}
 
-	createIrcFramework(this: Network, client: Client) {
+	createIrcFramework(this: NetworkWithIrcFramework, client: Client) {
 		this.irc = new IrcFramework.Client({
 			version: false, // We handle it ourselves
 			outgoing_addr: Config.values.bind,
@@ -237,7 +284,6 @@ class Network {
 			auto_reconnect_max_retries: 30,
 		});
 
-		// @ts-ignore TODO: `this` should now be a NetworkWithIrcFramework
 		this.setIrcFrameworkOptions(client);
 
 		this.irc.requestCap([

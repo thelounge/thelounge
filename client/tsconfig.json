@@ -5,7 +5,8 @@
     "../src/types/models/channel.d.ts",
     "js/helpers/simplemap.json",
     "js/helpers/fullnamemap.json",
-    "../package.json"
+    "../package.json",
+    "./types.d.ts"
   ],
   "compilerOptions": {
     // "paths": {

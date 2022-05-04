@@ -1,3 +1,5 @@
+import Chan from "../src/models/chan";
+
 declare module "*.vue" {
 	import Vue from "vue";
 	export default Vue;

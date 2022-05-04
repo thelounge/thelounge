@@ -1,6 +1,6 @@
 import Client from "../../client";
 import Chan from "../../models/chan";
-import Msg from "../../models/msg";
+import Msg, {MessageType, UserInMessage} from "../../models/msg";
 
 export default class PublicClient {
 	private client: Client;
@@ -16,7 +16,7 @@ export default class PublicClient {
 	 * @param {String} command - IRC command to run, this is in the same format that a client would send to the server (eg: JOIN #test)
 	 * @param {String} targetId - The id of the channel to simulate the command coming from. Replies will go to this channel if appropriate
 	 */
-	runAsUser(command, targetId) {
+	runAsUser(command: string, targetId: string) {
 		this.client.inputLine({target: targetId, text: command});
 	}
 
@@ -34,7 +34,7 @@ export default class PublicClient {
 	 * @param {String} event - Name of the event, must be something the browser will recognise
 	 * @param {Object} data - Body of the event, can be anything, but will need to be properly interpreted by the client
 	 */
-	sendToBrowser(event, data) {
+	sendToBrowser(event: string, data) {
 		this.client.emit(event, data);
 	}
 
@@ -42,7 +42,7 @@ export default class PublicClient {
 	 *
 	 * @param {Number} chanId
 	 */
-	getChannel(chanId) {
+	getChannel(chanId: number) {
 		return this.client.find(chanId);
 	}
 
