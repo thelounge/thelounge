@@ -8,6 +8,9 @@
     "../package.json"
   ],
   "compilerOptions": {
+    // "paths": {
+    //   "@js/*": ["js/*"]
+    // },
     // https://v2.vuejs.org/v2/guide/typescript.html?redirect=true#Recommended-Configuration
     "target": "ES5",
     "strict": true,

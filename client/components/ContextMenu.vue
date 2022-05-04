@@ -43,7 +43,7 @@ import {
 	generateUserContextMenu,
 	generateChannelContextMenu,
 	generateInlineChannelContextMenu,
-} from "../js/helpers/contextMenu.js";
+} from "../js/helpers/contextMenu";
 import eventbus from "../js/eventbus";
 
 export default {
