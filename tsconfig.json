@@ -1,9 +1,5 @@
 {
   "extends": "./tsconfig.base.json",
-  "compilerOptions": {
-    // TODO: enable
-    "noImplicitAny": false
-  },
   "files": ["./webpack.config.ts", "./babel.config.cjs", "./src/helper.ts"],
   "references": [
     {
@@ -12,5 +8,8 @@
     {
       "path": "./client"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "noImplicitAny": false // TODO: Remove eventually
+  }
 }

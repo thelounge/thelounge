@@ -4,7 +4,7 @@
   "version": "4.3.1",
   "preferGlobal": true,
   "bin": {
-    "thelounge": "index.js"
+    "thelounge": "src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -19,9 +19,10 @@
     "dev": "NODE_ENV=development ts-node --project src/tsconfig.json src/index.ts start --dev",
     "format:prettier": "prettier --write \"**/*.*\"",
     "lint:check-eslint": "eslint-config-prettier .eslintrc.cjs",
-    "lint:eslint": "eslint . --ext .js,.vue --report-unused-disable-directives --color",
+    "lint:eslint": "eslint . --report-unused-disable-directives --color",
     "lint:prettier": "prettier --list-different \"**/*.*\"",
     "lint:stylelint": "stylelint --color \"client/**/*.css\"",
+    "lint:tsc": "tsc --noEmit",
     "start": "node src/dist/src/index start",
     "test": "run-p --aggregate-output --continue-on-error lint:* test:*",
     "test:mocha": "webpack --mode=development && nyc --nycrc-path=test/.nycrc-mocha.json mocha --colors --config=test/.mocharc.yml",
