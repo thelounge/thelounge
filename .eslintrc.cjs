@@ -1,15 +1,32 @@
 module.exports = {
 	root: true,
+	overrides: [
+		{
+			files: ["**/*.ts"],
+			parser: "@typescript-eslint/parser",
+			parserOptions: {
+				tsconfigRootDir: __dirname,
+				parser: "@typescript-eslint/parser",
+				project: ["./tsconfig.json", "./client/tsconfig.json", "./src/tsconfig.json"],
+			},
+			plugins: ["@typescript-eslint"],
+			extends: [
+				"eslint:recommended",
+				"plugin:@typescript-eslint/recommended",
+				"plugin:@typescript-eslint/recommended-requiring-type-checking",
+				"prettier",
+			],
+		},
+	],
 	parserOptions: {
 		ecmaVersion: 2022,
-		parser: "@typescript-eslint/parser",
-		sourceType: "module",
+		// sourceType: "module",
 		// project: ["./eslint.tsconfig.json"],
 		// extraFileExtensions: [".vue", ".cjs"],
 	},
 	// TODO: this should  just be for client?
 	parser: "vue-eslint-parser",
-	plugins: ["vue", "@typescript-eslint"],
+	plugins: ["vue"],
 	env: {
 		es6: true,
 		browser: true,

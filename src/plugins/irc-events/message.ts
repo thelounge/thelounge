@@ -145,10 +145,11 @@ export default <IrcEventHandler>function (irc, network) {
 			msg.statusmsgGroup = data.group;
 		}
 
-		let match;
+		let match: RegExpExecArray | null;
 
 		while ((match = nickRegExp.exec(data.message))) {
 			if (chan.findUser(match[1])) {
+				// @ts-ignore TODO: fix this
 				msg.users.push(match[1]);
 			}
 		}

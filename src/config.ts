@@ -5,8 +5,10 @@ import fs, {Stats} from "fs";
 import os from "os";
 import _ from "lodash";
 import colors from "chalk";
+
 import log from "./log";
 import Helper from "./helper";
+import Utils from "./command-line/utils";
 
 // TODO: Type this
 export type WebIRC = {
@@ -224,9 +226,7 @@ class Config {
 			}
 		}
 
-		const manifestPath = path.resolve(
-			path.join(__dirname, "..", "public", "thelounge.webmanifest")
-		);
+		const manifestPath = Utils.getFileFromRelativeToRoot("public", "thelounge.webmanifest");
 
 		// Check if manifest exists, if not, the app most likely was not built
 		if (!fs.existsSync(manifestPath)) {

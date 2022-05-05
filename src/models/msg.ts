@@ -78,7 +78,7 @@ class Msg {
 	raw_modes!: any;
 	when!: Date;
 	whois!: any;
-	users!: UserInMessage[];
+	users!: UserInMessage[] | string[];
 	statusmsgGroup!: string;
 	params!: string[];
 
@@ -104,7 +104,7 @@ class Msg {
 			self: false,
 		});
 
-		if (this.time?.getTime() > 0) {
+		if (this.time) {
 			this.time = new Date(this.time);
 		} else {
 			this.time = new Date();

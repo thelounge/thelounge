@@ -28,6 +28,7 @@ themes.loadLocalThemes();
 import packages from "./plugins/packages/index";
 import {NetworkWithIrcFramework} from "./models/network";
 import {ChanType} from "./models/chan";
+import Utils from "./command-line/utils";
 
 type ServerOptions = {
 	dev: boolean;
@@ -96,7 +97,7 @@ export default async function (
 		.get("/service-worker.js", forceNoCacheRequest)
 		.get("/js/bundle.js.map", forceNoCacheRequest)
 		.get("/css/style.css.map", forceNoCacheRequest)
-		.use(express.static(path.join(__dirname, "..", "public"), staticOptions))
+		.use(express.static(Utils.getFileFromRelativeToRoot("public"), staticOptions))
 		.use("/storage/", express.static(Config.getStoragePath(), staticOptions));
 
 	if (Config.values.fileUpload.enable) {
@@ -382,7 +383,7 @@ function indexRequest(req, res) {
 	res.setHeader("Content-Type", "text/html");
 
 	return fs.readFile(
-		path.join(__dirname, "..", "client", "index.html.tpl"),
+		Utils.getFileFromRelativeToRoot("client/index.html.tpl"),
 		"utf-8",
 		(err, file) => {
 			if (err) {

@@ -5,6 +5,7 @@ import path from "path";
 import _ from "lodash";
 
 import Config from "../../config";
+import Utils from "../../command-line/utils";
 
 type Module = {
 	type: string;
@@ -33,9 +34,7 @@ export default {
 };
 
 function loadLocalThemes() {
-	const builtInThemes = fs.readdirSync(
-		path.join(__dirname, "..", "..", "..", "public", "themes")
-	);
+	const builtInThemes = fs.readdirSync(Utils.getFileFromRelativeToRoot("public", "themes"));
 
 	builtInThemes
 		.filter((theme) => theme.endsWith(".css"))

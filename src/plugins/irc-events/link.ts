@@ -11,11 +11,10 @@ import {findLinksWithSchema} from "../../../client/js/helpers/ircmessageparser/f
 import storage from "../storage";
 import Client, {IrcEventHandler} from "../../client";
 import Chan from "../../models/chan";
-import Msg from "../../models/msg";
-import {Cheerio} from "cheerio";
+import Msg, {MessagePreview} from "../../models/msg";
 
 type FetchRequest = {
-	data: Record<string, any>;
+	data: Buffer;
 	type: string;
 	size: number;
 };
@@ -23,7 +22,7 @@ const currentFetchPromises = new Map<string, Promise<FetchRequest>>();
 const imageTypeRegex = /^image\/.+/;
 const mediaTypeRegex = /^(audio|video)\/.+/;
 
-type Preview = {
+type LinkPreview = {
 	type: string;
 	head: string;
 	body: string;
@@ -40,11 +39,11 @@ export default function (client: Client, chan: Chan, msg: Msg, cleanText: string
 		return;
 	}
 
-	msg.previews = findLinksWithSchema(cleanText).reduce((cleanLinks: Preview[], link) => {
+	msg.previews = findLinksWithSchema(cleanText).reduce((cleanLinks: LinkPreview[], link) => {
 		const url = normalizeURL(link.link);
 
 		// If the URL is invalid and cannot be normalized, don't fetch it
-		if (url === null) {
+		if (!url) {
 			return cleanLinks;
 		}
 
@@ -58,7 +57,7 @@ export default function (client: Client, chan: Chan, msg: Msg, cleanText: string
 			return cleanLinks;
 		}
 
-		const preview: Preview = {
+		const preview: LinkPreview = {
 			type: "loading",
 			head: "",
 			body: "",
@@ -74,7 +73,7 @@ export default function (client: Client, chan: Chan, msg: Msg, cleanText: string
 
 		fetch(url, {
 			accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-			language: client.config.browser?.language,
+			language: client.config.browser?.language || "",
 		})
 			.then((res) => {
 				parse(msg, chan, preview, res, client);
@@ -133,7 +132,7 @@ function parseHtml(preview, res, client: Client) {
 
 				// Verify that thumbnail pic exists and is under allowed size
 				if (thumb.length) {
-					fetch(thumb, {language: client.config.browser?.language})
+					fetch(thumb, {language: client.config.browser?.language || ""})
 						.then((resThumb) => {
 							if (
 								resThumb !== null &&
@@ -153,7 +152,8 @@ function parseHtml(preview, res, client: Client) {
 	});
 }
 
-function parseHtmlMedia($: Cheerio, preview, client: Client) {
+// TODO: type $
+function parseHtmlMedia($: any, preview, client: Client) {
 	return new Promise((resolve, reject) => {
 		if (Config.values.disableMediaPreview) {
 			reject();
@@ -180,7 +180,7 @@ function parseHtmlMedia($: Cheerio, preview, client: Client) {
 				return;
 			}
 
-			$(`meta[property="og:${type}:type"]`).each(function (i) {
+			$(`meta[property="og:${type}:type"]`).each(function (this: cheerio.Element, i: number) {
 				const mimeType = $(this).attr("content");
 
 				if (!mimeType) {
@@ -210,7 +210,7 @@ function parseHtmlMedia($: Cheerio, preview, client: Client) {
 							type === "video"
 								? "video/webm,video/ogg,video/*;q=0.9,application/ogg;q=0.7,audio/*;q=0.6,*/*;q=0.5"
 								: "audio/webm, audio/ogg, audio/wav, audio/*;q=0.9, application/ogg;q=0.7, video/*;q=0.6; */*;q=0.5",
-						language: client.config.browser?.language,
+						language: client.config.browser?.language || "",
 					})
 						.then((resMedia) => {
 							if (resMedia === null || !mediaTypeRegex.test(resMedia.type)) {
@@ -361,7 +361,7 @@ function handlePreview(client, chan, msg, preview, res) {
 	});
 }
 
-function emitPreview(client, chan, msg, preview) {
+function emitPreview(client: Client, chan: Chan, msg: Msg, preview: LinkPreview) {
 	// If there is no title but there is preview or description, set title
 	// otherwise bail out and show no preview
 	if (!preview.head.length && preview.type === "link") {
@@ -389,7 +389,7 @@ function removePreview(msg, preview) {
 	}
 }
 
-function getRequestHeaders(headers) {
+function getRequestHeaders(headers: Record<string, string>) {
 	const formattedHeaders = {
 		// Certain websites like Amazon only add <meta> tags to known bots,
 		// lets pretend to be them to get the metadata
@@ -407,7 +407,7 @@ function getRequestHeaders(headers) {
 	return formattedHeaders;
 }
 
-function fetch(uri, headers) {
+function fetch(uri: string, headers: Record<string, string>) {
 	// Stringify the object otherwise the objects won't compute to the same value
 	const cacheKey = JSON.stringify([uri, headers]);
 	let promise = currentFetchPromises.get(cacheKey);
@@ -476,13 +476,13 @@ function fetch(uri, headers) {
 				})
 				.on("end", () => gotStream.destroy())
 				.on("close", () => {
-					let type = "";
+					let type: string = "";
 
 					// If we downloaded more data then specified in Content-Length, use real data size
 					const size = contentLength > buffer.length ? contentLength : buffer.length;
 
 					if (contentType) {
-						type = contentType.split(/ *; */).shift();
+						type = contentType.split(/ *; */).shift() || "";
 					}
 
 					resolve({data: buffer, type, size});

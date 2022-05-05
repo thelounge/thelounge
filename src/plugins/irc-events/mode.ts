@@ -75,7 +75,7 @@ export default <IrcEventHandler>function (irc, network) {
 			self: data.nick === irc.user.nick,
 		});
 
-		const users: User[] = [];
+		const users: string[] = [];
 
 		for (const param of data.raw_params) {
 			if (targetChan.findUser(param)) {

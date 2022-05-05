@@ -2,6 +2,9 @@
   "extends": "../tsconfig.base.json",
   "files": [
     "../package.json",
+    "../webpack.config.ts",
+    "../babel.config.cjs",
+    "../defaults/config.js",
     "../client/js/constants.ts",
     "../client/js/helpers/ircmessageparser/findLinks.ts",
     "../client/js/helpers/ircmessageparser/cleanIrcMessage.ts"
@@ -11,13 +14,15 @@
   },
   // TODO: these should be imported from the base config,
   // but ts-node doesn't seem to care.
-  // "include": ["**/*"],
+  "include": ["**/*"],
   // "typeRoots": ["./types/"],
 
   "compilerOptions": {
     "types": ["node"],
     "baseUrl": ".",
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "outDir": "./dist",
+    "noEmit": false
   }
   // "references": [{"path": "../"}]
 }
