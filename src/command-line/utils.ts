@@ -8,7 +8,6 @@ import Helper from "../helper";
 import Config from "../config";
 import path from "path";
 import {spawn} from "child_process";
-
 let home: string;
 
 class Utils {
@@ -28,46 +27,58 @@ class Utils {
 			return home;
 		}
 
-		const distConfig = path.resolve(path.join(__dirname, "..", "..", ".thelounge_home"));
+		const distConfig = Utils.getFileFromRelativeToRoot(".thelounge_home");
 
 		home = fs.readFileSync(distConfig, "utf-8").trim();
 
 		return home;
 	}
 
+	// TODO: handle this more elegantly?
+	static getFileFromRelativeToRoot(...fileName: string[]) {
+		if (process.env.NODE_ENV === "test" || process.env.NODE_ENV === "development") {
+			return path.resolve(path.join(__dirname, "..", "..", ...fileName));
+		} else {
+			return path.resolve(path.join(__dirname, "..", "..", "..", "..", ...fileName));
+		}
+	}
+
 	// Parses CLI options such as `-c public=true`, `-c debug.raw=true`, etc.
-	static parseConfigOptions(val, memo) {
+	static parseConfigOptions(val: string, memo) {
 		// Invalid option that is not of format `key=value`, do nothing
 		if (!val.includes("=")) {
 			return memo;
 		}
 
-		const parseValue = (value) => {
-			if (value === "true") {
-				return true;
-			} else if (value === "false") {
-				return false;
-			} else if (value === "undefined") {
-				return undefined;
-			} else if (value === "null") {
-				return null;
-			} else if (/^-?[0-9]+$/.test(value)) {
-				// Numbers like port
-				value = parseInt(value, 10);
-			} else if (/^\[.*\]$/.test(value)) {
-				// Arrays
-				// Supporting arrays `[a,b]` and `[a, b]`
-				const array = value.slice(1, -1).split(/,\s*/);
+		const parseValue = (value: string) => {
+			switch (value) {
+				case "true":
+					return true;
+				case "false":
+					return false;
+				case "undefined":
+					return undefined;
+				case "null":
+					return null;
+				default:
+					if (/^-?[0-9]+$/.test(value)) {
+						// Numbers like port
+						return parseInt(value, 10);
+					} else if (/^\[.*\]$/.test(value)) {
+						// Arrays
+						// Supporting arrays `[a,b]` and `[a, b]`
+						const array = value.slice(1, -1).split(/,\s*/);
 
-				// If [] is given, it will be parsed as `[ "" ]`, so treat this as empty
-				if (array.length === 1 && array[0] === "") {
-					return [];
-				}
+						// If [] is given, it will be parsed as `[ "" ]`, so treat this as empty
+						if (array.length === 1 && array[0] === "") {
+							return [];
+						}
 
-				return array.map(parseValue); // Re-parses all values of the array
+						return array.map(parseValue); // Re-parses all values of the array
+					}
+
+					return value;
 			}
-
-			return value;
 		};
 
 		// First time the option is parsed, memo is not set

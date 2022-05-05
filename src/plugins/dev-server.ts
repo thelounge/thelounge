@@ -1,8 +1,11 @@
 "use strict";
-import log from "../log";
 import webpackDevMiddleware from "webpack-dev-middleware";
+import webpackHotMiddleware from "webpack-hot-middleware";
+import express from "express";
 
-export default (app) => {
+import log from "../log";
+
+export default (app: express.Application) => {
 	log.debug("Starting server in development mode");
 
 	const webpack = require("webpack");
@@ -23,8 +26,9 @@ export default (app) => {
 			publicPath: webpackConfig.output?.publicPath,
 		})
 	).use(
-		webpackDevMiddleware(compiler, {
-			publicPath: "/storage/__webpack_hmr",
+		// TODO: Fix compiler type
+		webpackHotMiddleware(compiler as any, {
+			path: "/storage/__webpack_hmr",
 		})
 	);
 };

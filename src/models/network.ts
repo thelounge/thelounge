@@ -282,7 +282,9 @@ class Network {
 			// Exponential backoff maxes out at 300 seconds after 9 reconnects,
 			// it will keep trying for well over an hour (plus the timeouts)
 			auto_reconnect_max_retries: 30,
-		});
+
+			// TODO: this type should be set after setIrcFrameworkOptions
+		}) as NetworkWithIrcFramework["irc"];
 
 		this.setIrcFrameworkOptions(client);
 
@@ -473,7 +475,7 @@ class Network {
 		}
 
 		// TODO: setNick is called in validate() before irc exists. Is that a problem?
-		if (this.irc) {
+		if (this.irc?.options) {
 			this.irc.options.nick = nick;
 		}
 	}

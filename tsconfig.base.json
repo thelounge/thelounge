@@ -7,18 +7,16 @@
     "rootDir": ".",
     "baseUrl": ".",
     "allowJs": true,
-    "noImplicitAny": false,
     "checkJs": true,
     "resolveJsonModule": true,
     "composite": true,
     "strict": true /* Enable all strict type-checking options. */,
-    "typeRoots": ["./src/types/"],
+    // "typeRoots": ["./src/types/"],
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */
   },
-  "files": ["./package.json"],
-  "include": ["./src/types/*"]
+  "files": ["./package.json"]
 }

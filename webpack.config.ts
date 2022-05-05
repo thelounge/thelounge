@@ -104,22 +104,25 @@ const config: webpack.Configuration = {
 		new CopyPlugin({
 			patterns: [
 				{
-					from: "./node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff*",
+					from: path.resolve(
+						__dirname,
+						"node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff"
+					),
 					to: "fonts/[name][ext]",
 				},
 				{
-					from: "./client/js/loading-error-handlers.js",
+					from: path.resolve(__dirname, "./client/js/loading-error-handlers.js"),
 					to: "js/[name][ext]",
 				},
 				{
-					from: "./client/*",
+					from: path.resolve(__dirname, "./client/*"),
 					to: "[name][ext]",
 					globOptions: {
 						ignore: ["**/index.html.tpl", "**/service-worker.js"],
 					},
 				},
 				{
-					from: "./client/service-worker.js",
+					from: path.resolve(__dirname, "./client/service-worker.js"),
 					to: "[name][ext]",
 					transform(content) {
 						return content
@@ -131,15 +134,15 @@ const config: webpack.Configuration = {
 					},
 				},
 				{
-					from: "./client/audio/*",
+					from: path.resolve(__dirname, "./client/audio/*"),
 					to: "audio/[name][ext]",
 				},
 				{
-					from: "./client/img/*",
+					from: path.resolve(__dirname, "./client/img/*"),
 					to: "img/[name][ext]",
 				},
 				{
-					from: "./client/themes/*",
+					from: path.resolve(__dirname, "./client/themes/*"),
 					to: "themes/[name][ext]",
 				},
 			],
