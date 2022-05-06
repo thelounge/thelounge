@@ -1,28 +1,21 @@
 {
   "extends": "../tsconfig.base.json",
+  "include": ["**/*"],
   "files": [
-    "../package.json",
-    "../webpack.config.ts",
     "../babel.config.cjs",
-    "../defaults/config.js",
     "../client/js/constants.ts",
+    "../client/js/helpers/ircmessageparser/cleanIrcMessage.ts",
     "../client/js/helpers/ircmessageparser/findLinks.ts",
-    "../client/js/helpers/ircmessageparser/cleanIrcMessage.ts"
+    "../defaults/config.js",
+    "../package.json",
+    "../webpack.config.ts"
   ],
   "ts-node": {
     "files": true
   },
-  // TODO: these should be imported from the base config,
-  // but ts-node doesn't seem to care.
-  "include": ["**/*"],
-  // "typeRoots": ["./types/"],
-
   "compilerOptions": {
-    "types": ["node"],
-    "baseUrl": ".",
-    "noImplicitAny": false,
+    "noImplicitAny": false, // TODO: Remove eventually
     "outDir": "./dist",
     "noEmit": false
   }
-  // "references": [{"path": "../"}]
 }

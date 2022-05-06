@@ -5,6 +5,9 @@ import * as path from "path";
 import CopyPlugin from "copy-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 // TODO; we should add a declaration file
+// ! vue-loader 15.x does not have typescript declarations
+// ! vue-loader 16.x does have typescript declarations, but is built for vue 3.x
+// ! this is currently working because of noImplicitAny being set in the root tsconfig.json and many eslint rules disabled in .eslintrc.cjs
 import VueLoaderPlugin from "vue-loader/lib/plugin";
 import babelConfig from "./babel.config.cjs";
 import Helper from "./src/helper";
@@ -43,7 +46,7 @@ const config: webpack.Configuration = {
 				},
 			},
 			{
-				test: /\.js$|\.ts$/,
+				test: /\.(ts|js)x?$/i,
 				include: [path.resolve(__dirname, "client")],
 				exclude: path.resolve(__dirname, "node_modules"),
 				use: {
