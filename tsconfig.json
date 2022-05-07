@@ -1,15 +1,23 @@
 {
-  "extends": "./tsconfig.base.json",
-  "files": ["./webpack.config.ts", "./babel.config.cjs", "./src/helper.ts"],
+  "extends": "./tsconfig.base.json" /* Path to base configuration file to inherit from. Requires TypeScript version 2.1 or later. */,
+  "files": [
+    "./webpack.config.ts",
+    "./babel.config.cjs",
+    "./src/helper.ts"
+  ] /* If no 'files' or 'include' property is present in a tsconfig.json, the compiler defaults to including all files in the containing directory and subdirectories except those specified by 'exclude'. When a 'files' property is specified, only those files and those specified by 'include' are included. */,
   "references": [
     {
-      "path": "./src"
+      "path": "./client" /* Path to referenced tsconfig or to folder containing tsconfig. */
     },
     {
-      "path": "./client"
+      "path": "./src" /* Path to referenced tsconfig or to folder containing tsconfig. */
+    },
+    {
+      "path": "./test" /* Path to referenced tsconfig or to folder containing tsconfig. */
     }
-  ],
+  ] /* Referenced projects. Requires TypeScript version 3.0 or later. */,
   "compilerOptions": {
-    "noImplicitAny": false // TODO: Remove eventually
-  }
+    // TODO: Remove eventually
+    "noImplicitAny": false /*Enable error reporting for expressions and declarations with an implied any type. See more: https://www.typescriptlang.org/tsconfig#noImplicitAny */
+  } /* Instructs the TypeScript compiler how to compile .ts files. */
 }
