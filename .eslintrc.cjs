@@ -92,6 +92,11 @@ const tsRules = defineConfig({
 		// note you must disable the base rule as it can report incorrect errors
 		"no-shadow": "off",
 		"@typescript-eslint/no-shadow": ["error"],
+	},
+}).rules;
+
+const tsRulesTemp = defineConfig({
+	rules: {
 		// TODO: eventually remove these
 		"@typescript-eslint/ban-ts-comment": "off",
 		"@typescript-eslint/no-explicit-any": "off",
@@ -127,7 +132,7 @@ module.exports = defineConfig({
 				"plugin:@typescript-eslint/recommended-requiring-type-checking",
 				"prettier",
 			],
-			rules: {...baseRules, ...tsRules},
+			rules: {...baseRules, ...tsRules, ...tsRulesTemp},
 		},
 		// TODO: verify
 		{
@@ -150,7 +155,7 @@ module.exports = defineConfig({
 				"plugin:@typescript-eslint/recommended-requiring-type-checking",
 				"prettier",
 			],
-			rules: {...baseRules, ...tsRules, ...vueRules},
+			rules: {...baseRules, ...tsRules, ...tsRulesTemp, ...vueRules},
 		},
 	],
 	env: {
