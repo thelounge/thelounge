@@ -1,5 +1,3 @@
-"use strict";
-
 import storage from "../localStorage";
 
 export default (network, isCollapsed) => {

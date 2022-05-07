@@ -1,5 +1,3 @@
-"use strict";
-
 import socket from "../socket";
 import upload from "../upload";
 import store from "../store";

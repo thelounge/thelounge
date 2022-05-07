@@ -1,5 +1,3 @@
-"use strict";
-
 const nickRegExp = /([\w[\]\\`^{|}-]+)/g;
 
 function findNames(text, users) {

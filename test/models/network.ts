@@ -1,13 +1,14 @@
 "use strict";
 
 import {expect} from "chai";
-import Chan from "../../src/models/chan";
+import Chan, {ChanType} from "../../src/models/chan";
 import Msg from "../../src/models/msg";
 import User from "../../src/models/user";
-import Network from "../../src/models/network";
+import Network, {NetworkWithIrcFramework} from "../../src/models/network";
 import Config from "../../src/config";
 import STSPolicies from "../../src/plugins/sts";
 import ClientCertificate from "../../src/plugins/clientCertificate";
+import Client from "../../src/client";
 
 describe("Network", function () {
 	describe("Network(attr)", function () {
@@ -132,7 +133,7 @@ describe("Network", function () {
 				host: "localhost",
 			});
 
-			expect(network.validate()).to.be.true;
+			expect(network.validate({} as any)).to.be.true;
 			expect(network.nick).to.equal("thelounge");
 			expect(network.username).to.equal("thelounge");
 			expect(network.realname).to.equal("The Lounge User");
@@ -142,7 +143,7 @@ describe("Network", function () {
 				host: "localhost",
 				nick: "@Invalid Nick?",
 			});
-			expect(network2.validate()).to.be.true;
+			expect(network2.validate({} as any)).to.be.true;
 			expect(network2.username).to.equal("InvalidNick");
 		});
 
@@ -158,7 +159,7 @@ describe("Network", function () {
 				tls: false,
 				rejectUnauthorized: false,
 			});
-			expect(network.validate()).to.be.true;
+			expect(network.validate({} as any)).to.be.true;
 			expect(network.host).to.equal("irc.example.com");
 			expect(network.port).to.equal(6697);
 			expect(network.tls).to.be.true;
@@ -170,14 +171,14 @@ describe("Network", function () {
 			const network2 = new Network({
 				host: "some.fake.tld",
 			});
-			expect(network2.validate()).to.be.true;
+			expect(network2.validate({} as any)).to.be.true;
 			expect(network2.host).to.equal("irc.example.com");
 
 			Config.values.lockNetwork = false;
 		});
 
 		it("should apply STS policies iff they match", function () {
-			const client = {idMsg: 1, emit() {}};
+			const client = {idMsg: 1, emit() {}} as any;
 			STSPolicies.update("irc.example.com", 7000, 3600);
 
 			let network = new Network({
@@ -209,7 +210,7 @@ describe("Network", function () {
 			const client = {idMsg: 1, emit() {}, messageStorage: []};
 
 			const network = new Network({host: "irc.example.com", sasl: "external"});
-			network.createIrcFramework(client);
+			(network as any).createIrcFramework(client);
 			expect(network.irc).to.not.be.null;
 
 			const client_cert = network.irc.options.client_certificate;
@@ -231,14 +232,14 @@ describe("Network", function () {
 			STSPolicies.update("irc.example.com", 7000, 3600);
 
 			const network = new Network({host: "irc.example.com", sasl: "external"});
-			network.createIrcFramework(client);
+			(network as any).createIrcFramework(client);
 			expect(network.irc).to.not.be.null;
 
 			const client_cert = network.irc.options.client_certificate;
 			expect(client_cert).to.not.be.null;
 			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert);
 
-			expect(network.validate(client)).to.be.true;
+			expect(network.validate(client as any)).to.be.true;
 
 			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert); // Should be unchanged
 
@@ -254,7 +255,7 @@ describe("Network", function () {
 			const client = {idMsg: 1, emit() {}};
 			STSPolicies.update("irc.example.com", 7000, 3600);
 
-			let network = new Network({host: "irc.example.com"});
+			let network: any = new Network({host: "irc.example.com"});
 			network.createIrcFramework(client);
 			expect(network.irc).to.not.be.null;
 			expect(network.irc.options.client_certificate).to.be.null;
@@ -275,7 +276,7 @@ describe("Network", function () {
 			let nameEmitCalled = false;
 
 			const network = new Network();
-			network.edit(
+			(network as any).edit(
 				{
 					emit(name, data) {
 						if (name === "network:name") {

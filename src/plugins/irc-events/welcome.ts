@@ -1,4 +1,3 @@
-"use strict";
 import {IrcEventHandler} from "../../client";
 
 import Msg from "../../models/msg";

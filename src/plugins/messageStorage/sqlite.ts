@@ -1,5 +1,3 @@
-"use strict";
-
 import type {Database} from "sqlite3";
 
 import log from "../../log";
@@ -118,7 +116,7 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 
 		this.database.close((err) => {
 			if (err) {
-				log.error(`Failed to close sqlite database: ${err}`);
+				log.error(`Failed to close sqlite database: ${err.message}`);
 			}
 
 			if (callback) {
@@ -211,7 +209,7 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 		}) as Promise<Message[]>;
 	}
 
-	search(query) {
+	search(query: {searchTerm: string; networkUuid: string; channelName: string; offset: string}) {
 		if (!this.isEnabled) {
 			return Promise.resolve([]);
 		}
@@ -237,7 +235,7 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 
 		select += " ORDER BY time DESC LIMIT ? OFFSET ? ";
 		params.push(maxResults.toString());
-		query.offset = parseInt(query.offset, 10) || 0;
+		const offset = parseInt(query.offset, 10) || 0;
 		params.push(query.offset);
 
 		return new Promise((resolve, reject) => {
@@ -249,7 +247,7 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 						searchTerm: query.searchTerm,
 						target: query.channelName,
 						networkUuid: query.networkUuid,
-						offset: query.offset,
+						offset: offset,
 						results: parseSearchRowsToMessages(query.offset, rows).reverse(),
 					};
 					resolve(response);

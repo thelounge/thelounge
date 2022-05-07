@@ -1,5 +1,3 @@
-"use strict";
-
 import log from "../log";
 import colors from "chalk";
 import fs from "fs";

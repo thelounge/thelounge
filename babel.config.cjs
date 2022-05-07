@@ -6,5 +6,4 @@ module.exports = {
 		// "@vue/babel-preset-jsx",
 	],
 	targets: "> 0.25%, not dead",
-	// plugins: [["@babel/transform-typescript", {allowNamespaces: true}]],
 };

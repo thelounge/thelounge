@@ -1,5 +1,3 @@
-"use strict";
-
 import {ParsedStyle} from "./parseStyle";
 
 // Return true if any section of "a" or "b" parts (defined by their start/end

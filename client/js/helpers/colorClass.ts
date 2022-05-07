@@ -1,5 +1,3 @@
-"use strict";
-
 // Generates a string from "color-1" to "color-32" based on an input string
 export default (str) => {
 	let hash = 0;

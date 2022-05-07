@@ -1,5 +1,3 @@
-"use strict";
-
 import {ParsedStyle} from "./parseStyle";
 
 // Create plain text entries corresponding to areas of the text that match no

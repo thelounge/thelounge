@@ -1,5 +1,3 @@
-"use strict";
-
 import Mousetrap from "mousetrap";
 
 import store from "./store";

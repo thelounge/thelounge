@@ -1,5 +1,3 @@
-"use strict";
-
 import log from "../../log";
 import {Command} from "commander";
 import child from "child_process";

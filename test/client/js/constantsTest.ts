@@ -1,5 +1,3 @@
-"use strict";
-
 import {expect} from "chai";
 import constants from "../../../client/js/constants";
 import {describe} from "mocha";

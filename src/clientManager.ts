@@ -1,5 +1,3 @@
-"use strict";
-
 import _ from "lodash";
 import colors from "chalk";
 import crypto from "crypto";

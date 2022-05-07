@@ -1,7 +1,5 @@
 #!/usr/bin/env ts-node
 
-"use strict";
-
 process.chdir(__dirname);
 
 // Perform node version check before loading any other files or modules

@@ -1,5 +1,3 @@
-"use strict";
-
 import {ChanType} from "../../models/chan";
 import Msg, {MessageType} from "../../models/msg";
 import {PluginInputHandler} from "./index";

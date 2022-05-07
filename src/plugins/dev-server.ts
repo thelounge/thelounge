@@ -1,4 +1,3 @@
-"use strict";
 import webpackDevMiddleware from "webpack-dev-middleware";
 import webpackHotMiddleware from "webpack-hot-middleware";
 import express from "express";

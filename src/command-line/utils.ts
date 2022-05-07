@@ -1,5 +1,3 @@
-"use strict";
-
 import _ from "lodash";
 import log from "../log";
 import colors from "chalk";

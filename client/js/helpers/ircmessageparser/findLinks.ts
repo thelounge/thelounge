@@ -1,5 +1,3 @@
-"use strict";
-
 import LinkifyIt, {Match} from "linkify-it";
 
 type OurMatch = Match & {

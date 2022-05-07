@@ -1,5 +1,3 @@
-"use strict";
-
 import Msg, {MessageType} from "../../models/msg";
 import LinkPrefetch from "./link";
 import cleanIrcMessage from "../../../client/js/helpers/ircmessageparser/cleanIrcMessage";

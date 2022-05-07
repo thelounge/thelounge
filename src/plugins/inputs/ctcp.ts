@@ -1,5 +1,3 @@
-"use strict";
-
 import Msg, {MessageType} from "../../models/msg";
 import {PluginInputHandler} from "./index";
 

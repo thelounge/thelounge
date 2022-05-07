@@ -1,5 +1,3 @@
-"use strict";
-
 import {expect} from "chai";
 import {stub} from "sinon";
 import Auth from "../../../client/js/auth";

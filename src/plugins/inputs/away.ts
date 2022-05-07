@@ -1,5 +1,3 @@
-"use strict";
-
 const commands = ["away", "back"];
 import {PluginInputHandler} from "./index";
 

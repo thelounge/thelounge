@@ -1,3 +1,5 @@
+const projects = ["./tsconfig.json", "./client/tsconfig.json", "./src/tsconfig.json"];
+
 module.exports = {
 	root: true,
 	overrides: [
@@ -10,7 +12,8 @@ module.exports = {
 			parserOptions: {
 				tsconfigRootDir: __dirname,
 				project: ["./tsconfig.json", "./client/tsconfig.json", "./src/tsconfig.json"],
-				// extraFileExtensions: [".vue"],
+				extraFileExtensions: [".vue"],
+				projects: projects,
 			},
 			plugins: ["@typescript-eslint"],
 			extends: [
@@ -58,7 +61,7 @@ module.exports = {
 					"<template>": "espree",
 				},
 				tsconfigRootDir: __dirname,
-				project: ["./tsconfig.json", "./client/tsconfig.json", "./src/tsconfig.json"],
+				project: projects,
 			},
 			plugins: ["vue"],
 			extends: [

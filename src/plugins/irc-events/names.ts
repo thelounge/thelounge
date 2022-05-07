@@ -1,5 +1,3 @@
-"use strict";
-
 import {IrcEventHandler} from "../../client";
 
 export default <IrcEventHandler>function (irc, network) {

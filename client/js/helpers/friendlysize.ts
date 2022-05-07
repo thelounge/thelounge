@@ -1,5 +1,3 @@
-"use strict";
-
 const sizes = ["Bytes", "KiB", "MiB", "GiB", "TiB", "PiB"];
 
 export default (size: number) => {

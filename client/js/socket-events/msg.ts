@@ -1,5 +1,3 @@
-"use strict";
-
 import socket from "../socket";
 import cleanIrcMessage from "../helpers/ircmessageparser/cleanIrcMessage";
 import store from "../store";

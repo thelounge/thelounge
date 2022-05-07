@@ -1,5 +1,3 @@
-"use strict";
-
 import {update as updateCursor} from "undate";
 
 import socket from "./socket";

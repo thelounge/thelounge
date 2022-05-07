@@ -1,5 +1,3 @@
-"use strict";
-
 const colorCodeMap = [
 	["00", "White"],
 	["01", "Black"],

@@ -1,5 +1,3 @@
-"use strict";
-
 import parseStyle from "./ircmessageparser/parseStyle";
 import findChannels from "./ircmessageparser/findChannels";
 import {findLinks} from "./ircmessageparser/findLinks";

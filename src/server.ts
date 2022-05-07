@@ -1,5 +1,3 @@
-"use strict";
-
 import _ from "lodash";
 import {Server as wsServer} from "ws";
 import express from "express";

@@ -1,5 +1,3 @@
-"use strict";
-
 import constants from "./constants";
 
 import Vue from "vue";

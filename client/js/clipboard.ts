@@ -1,5 +1,3 @@
-"use strict";
-
 export default function (chat) {
 	// Disable in Firefox as it already copies flex text correctly
 	if (typeof window.InstallTrigger !== "undefined") {

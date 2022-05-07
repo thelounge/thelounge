@@ -1,5 +1,3 @@
-"use strict";
-
 import * as cheerio from "cheerio";
 import got from "got";
 import {URL} from "url";
