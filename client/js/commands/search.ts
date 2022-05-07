@@ -1,5 +1,3 @@
-"use strict";
-
 import store from "../store";
 import {router} from "../router";
 

@@ -1,5 +1,3 @@
-"use strict";
-
 import pkg from "../package.json";
 import _ from "lodash";
 import path from "path";

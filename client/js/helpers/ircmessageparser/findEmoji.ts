@@ -1,5 +1,3 @@
-"use strict";
-
 const emojiRegExp = require("emoji-regex")();
 
 function findEmoji(text) {

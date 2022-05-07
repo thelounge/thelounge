@@ -10,11 +10,12 @@
 
 (function () {
 	const msg = document.getElementById("loading-page-message");
-	msg.textContent = "Loading the app…";
 
-	document
-		.getElementById("loading-reload")
-		.addEventListener("click", () => location.reload(true));
+	if (msg) {
+		msg.textContent = "Loading the app…";
+	}
+
+	document.getElementById("loading-reload")?.addEventListener("click", () => location.reload());
 
 	const displayReload = () => {
 		const loadingReload = document.getElementById("loading-reload");
@@ -26,7 +27,11 @@
 
 	const loadingSlowTimeout = setTimeout(() => {
 		const loadingSlow = document.getElementById("loading-slow");
-		loadingSlow.style.visibility = "visible";
+
+		if (loadingSlow) {
+			loadingSlow.style.visibility = "visible";
+		}
+
 		displayReload();
 	}, 5000);
 

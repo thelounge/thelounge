@@ -1,4 +1,3 @@
-"use strict";
 import webpackDevMiddleware from "webpack-dev-middleware";
 import webpackHotMiddleware from "webpack-hot-middleware";
 
@@ -10,7 +9,7 @@ import webpackConfig from "../../webpack.config";
 
 export default (app: express.Application) => {
 	log.debug("Starting server in development mode");
-	const config = webpackConfig("development");
+	const config = webpackConfig(undefined, {mode: "development"});
 	const compiler = webpack(config);
 
 	app.use(

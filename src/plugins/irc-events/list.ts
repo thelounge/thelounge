@@ -1,5 +1,3 @@
-"use strict";
-
 import {IrcEventHandler} from "../../client";
 
 import Chan, {ChanType, SpecialChanType} from "../../models/chan";

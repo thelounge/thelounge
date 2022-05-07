@@ -1,5 +1,3 @@
-"use strict";
-
 import colors from "chalk";
 import log from "../../log";
 import Helper from "../../helper";

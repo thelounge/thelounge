@@ -1,5 +1,3 @@
-"use strict";
-
 import {expect} from "chai";
 import fill from "../../../../../client/js/helpers/ircmessageparser/fill";
 

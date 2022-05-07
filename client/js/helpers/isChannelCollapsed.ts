@@ -1,5 +1,3 @@
-"use strict";
-
 import store from "../store";
 
 export default (network, channel) => {

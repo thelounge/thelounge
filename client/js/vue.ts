@@ -1,5 +1,3 @@
-"use strict";
-
 import constants from "./constants";
 
 import "../css/style.css";

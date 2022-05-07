@@ -1,5 +1,3 @@
-"use strict";
-
 import log from "./log";
 import fs from "fs";
 import net, {Socket} from "net";

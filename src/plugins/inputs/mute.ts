@@ -1,4 +1,3 @@
-"use strict";
 import Chan from "../../models/chan";
 import Network from "../../models/network";
 import {PluginInputHandler} from "./index";

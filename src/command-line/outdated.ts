@@ -1,5 +1,3 @@
-"use strict";
-
 import {Command} from "commander";
 import Utils from "./utils";
 import packageManager from "../plugins/packages";

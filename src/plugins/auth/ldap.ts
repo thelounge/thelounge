@@ -1,4 +1,3 @@
-"use strict";
 import ldap, {SearchOptions} from "ldapjs";
 import colors from "chalk";
 

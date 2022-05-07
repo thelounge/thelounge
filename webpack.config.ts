@@ -158,8 +158,13 @@ const config: webpack.Configuration = {
 	],
 };
 
-export default (env?: any, argv?: any) => {
-	if (argv?.mode === "development" && env === "test") {
+export default (
+	env?: any,
+	argv?: {
+		mode: "production" | "development";
+	}
+) => {
+	if (argv?.mode === "development" && process.env.NODE_ENV?.toLowerCase() === "test") {
 		const testFile = path.resolve(__dirname, "test/public/testclient.js");
 
 		if (fs.existsSync(testFile)) {
@@ -170,7 +175,7 @@ export default (env?: any, argv?: any) => {
 		config.devtool = "eval";
 		config.stats = "errors-only";
 		config.output!.path = path.resolve(__dirname, "test/public");
-		config.entry!["testclient.js"] = [path.resolve(__dirname, "test/client/index.js")];
+		config.entry!["testclient.js"] = [path.resolve(__dirname, "test/client/index.ts")];
 
 		// Add the istanbul plugin to babel-loader options
 		for (const rule of config.module!.rules!) {
@@ -201,7 +206,7 @@ export default (env?: any, argv?: any) => {
 		];
 	}
 
-	if (env === "development") {
+	if (argv?.mode === "development") {
 		config.plugins?.push(new webpack.HotModuleReplacementPlugin());
 
 		if (!config.entry || !config.entry!["js/bundle.js"]) {
@@ -213,7 +218,7 @@ export default (env?: any, argv?: any) => {
 		}
 	}
 
-	if (argv?.mode === "production" || env === "production") {
+	if (argv?.mode === "production") {
 		// ...
 	}
 

@@ -1,5 +1,3 @@
-"use strict";
-
 import Vue from "vue";
 import socket from "../socket";
 import storage from "../localStorage";

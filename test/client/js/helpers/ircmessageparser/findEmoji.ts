@@ -1,5 +1,3 @@
-"use strict";
-
 import {expect} from "chai";
 import findEmoji from "../../../../../client/js/helpers/ircmessageparser/findEmoji";
 

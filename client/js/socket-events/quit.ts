@@ -1,5 +1,3 @@
-"use strict";
-
 import socket from "../socket";
 import {switchToChannel, navigate} from "../router";
 import store from "../store";

@@ -1,5 +1,3 @@
-"use strict";
-
 import {expect} from "chai";
 import findChannels from "../../../../../client/js/helpers/ircmessageparser/findChannels";
 

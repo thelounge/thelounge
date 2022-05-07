@@ -1,5 +1,3 @@
-"use strict";
-
 import {expect} from "chai";
 
 import {renderToString} from "@vue/server-test-utils";

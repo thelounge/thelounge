@@ -1,5 +1,3 @@
-"use strict";
-
 import {expect} from "chai";
 import findNames from "../../../../../client/js/helpers/ircmessageparser/findNames";
 

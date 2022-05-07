@@ -1,5 +1,3 @@
-"use strict";
-
 // This is a simple localStorage wrapper because browser can throw errors
 // in different situations, including:
 // - Unable to store data if storage is full

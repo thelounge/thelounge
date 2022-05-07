@@ -1,5 +1,3 @@
-"use strict";
-
 import anyIntersection from "./anyIntersection";
 import fill from "./fill";
 

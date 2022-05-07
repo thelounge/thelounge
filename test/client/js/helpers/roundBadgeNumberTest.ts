@@ -1,5 +1,3 @@
-"use strict";
-
 import {expect} from "chai";
 import roundBadgeNumber from "../../../../client/js/helpers/roundBadgeNumber";
 

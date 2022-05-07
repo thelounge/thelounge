@@ -3,11 +3,8 @@ const events = new Map();
 class EventBus {
 	/**
 	 * Register an event handler for the given type.
-	 *
-	 * @param  {String} type    Type of event to listen for.
-	 * @param  {Function} handler Function to call in response to given event.
 	 */
-	on(type, handler) {
+	on(type: string, handler: Function) {
 		if (events.has(type)) {
 			events.get(type).push(handler);
 		} else {
@@ -21,11 +18,11 @@ class EventBus {
 	 * @param  {String} type    Type of event to unregister `handler` from.
 	 * @param  {Function} handler Handler function to remove.
 	 */
-	off(type, handler) {
+	off(type: string, handler: Function) {
 		if (events.has(type)) {
 			events.set(
 				type,
-				events.get(type).filter((item) => item !== handler)
+				events.get(type).filter((item: Function) => item !== handler)
 			);
 		}
 	}
@@ -36,12 +33,12 @@ class EventBus {
 	 * @param {String} type  The event type to invoke.
 	 * @param {Any} [evt]  Any value (object is recommended and powerful), passed to each handler.
 	 */
-	emit(type, ...evt) {
+	emit(type: string, ...evt: any) {
 		if (events.has(type)) {
 			events
 				.get(type)
 				.slice()
-				.map((handler) => {
+				.map((handler: (...evt: any[]) => void) => {
 					handler(...evt);
 				});
 		}

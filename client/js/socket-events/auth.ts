@@ -1,5 +1,3 @@
-"use strict";
-
 import socket from "../socket";
 import storage from "../localStorage";
 import {router, navigate} from "../router";

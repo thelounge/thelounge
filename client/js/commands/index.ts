@@ -1,5 +1,3 @@
-"use strict";
-
 // Taken from views/index.js
 
 // This creates a version of `require()` in the context of the current

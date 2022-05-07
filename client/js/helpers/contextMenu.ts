@@ -1,5 +1,3 @@
-"use strict";
-
 import socket from "../socket";
 import eventbus from "../eventbus";
 

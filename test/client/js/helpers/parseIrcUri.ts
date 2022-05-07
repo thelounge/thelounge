@@ -1,5 +1,3 @@
-"use strict";
-
 import {expect} from "chai";
 import parseIrcUri from "../../../../client/js/helpers/parseIrcUri";
 

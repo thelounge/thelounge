@@ -1,5 +1,3 @@
-"use strict";
-
 import _ from "lodash";
 import UAParser from "ua-parser-js";
 import {v4 as uuidv4} from "uuid";

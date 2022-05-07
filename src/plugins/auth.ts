@@ -1,5 +1,3 @@
-"use strict";
-
 import colors from "chalk";
 import Client from "../client";
 import ClientManager from "../clientManager";

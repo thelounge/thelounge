@@ -1,5 +1,3 @@
-"use strict";
-
 export default (event: MouseEvent | Mousetrap.ExtendedKeyboardEvent) => {
 	if (
 		(event.target as HTMLElement).tagName !== "TEXTAREA" &&

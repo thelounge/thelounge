@@ -1,5 +1,3 @@
-"use strict";
-
 import colors from "chalk";
 import read from "read";
 

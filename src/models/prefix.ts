@@ -1,5 +1,3 @@
-"use strict";
-
 type PrefixSymbol = string;
 
 type PrefixObject = {

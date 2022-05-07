@@ -1,5 +1,3 @@
-"use strict";
-
 import distance from "./distance";
 
 // onTwoFingerSwipe will be called with a cardinal direction ("n", "e", "s" or

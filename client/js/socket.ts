@@ -1,9 +1,7 @@
-"use strict";
-
-import io from "socket.io-client";
+import io, {Socket} from "socket.io-client";
 
 const socket = io({
-	transports: JSON.parse(document.body.dataset.transports),
+	transports: JSON.parse(document.body.dataset.transports || "['polling', 'websocket']"),
 	path: window.location.pathname + "socket.io/",
 	autoConnect: false,
 	reconnection: !document.body.classList.contains("public"),
@@ -12,6 +10,12 @@ const socket = io({
 // Ease debugging socket during development
 if (process.env.NODE_ENV === "development") {
 	window.socket = socket;
+}
+
+declare global {
+	interface Window {
+		socket: Socket;
+	}
 }
 
 export default socket;

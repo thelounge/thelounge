@@ -1,5 +1,3 @@
-"use strict";
-
 // Styling control codes
 const BOLD = "\x02";
 const COLOR = "\x03";
