@@ -7,10 +7,13 @@
   ] /* If no 'files' or 'include' property is present in a tsconfig.json, the compiler defaults to including all files in the containing directory and subdirectories except those specified by 'exclude'. When a 'files' property is specified, only those files and those specified by 'include' are included. */,
   "references": [
     {
+      "path": "./client" /* Path to referenced tsconfig or to folder containing tsconfig. */
+    },
+    {
       "path": "./src" /* Path to referenced tsconfig or to folder containing tsconfig. */
     },
     {
-      "path": "./client" /* Path to referenced tsconfig or to folder containing tsconfig. */
+      "path": "./test" /* Path to referenced tsconfig or to folder containing tsconfig. */
     }
   ] /* Referenced projects. Requires TypeScript version 3.0 or later. */,
   "compilerOptions": {

@@ -21,5 +21,5 @@
 
     // TODO: Remove eventually
     "noImplicitAny": false /*Enable error reporting for expressions and declarations with an implied any type. See more: https://www.typescriptlang.org/tsconfig#noImplicitAny */
-  }
+  } /* Instructs the TypeScript compiler how to compile .ts files. */
 }

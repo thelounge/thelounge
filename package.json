@@ -19,7 +19,7 @@
     "dev": "NODE_ENV=development ts-node --project src/tsconfig.json src/index.ts start --dev",
     "format:prettier": "prettier --write \"**/*.*\"",
     "lint:check-eslint": "eslint-config-prettier .eslintrc.cjs",
-    "lint:eslint": "eslint . --ext .js,.ts,.vue --report-unused-disable-directives --color",
+    "lint:eslint": "eslint . --report-unused-disable-directives --color",
     "lint:prettier": "prettier --list-different \"**/*.*\"",
     "lint:stylelint": "stylelint --color \"client/**/*.css\"",
     "lint:tsc": "tsc --noEmit",
