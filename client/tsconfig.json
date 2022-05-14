@@ -6,6 +6,7 @@
   "files": [
     "../package.json"
   ] /* If no 'files' or 'include' property is present in a tsconfig.json, the compiler defaults to including all files in the containing directory and subdirectories except those specified by 'exclude'. When a 'files' property is specified, only those files and those specified by 'include' are included. */,
+  // "exclude": [],
   "compilerOptions": {
     "sourceMap": false /*Create source map files for emitted JavaScript files. See more: https://www.typescriptlang.org/tsconfig#sourceMap */,
     "jsx": "preserve" /* Specify what JSX code is generated. */,
@@ -19,6 +20,8 @@
     "module": "es2015",
     "moduleResolution": "node",
 
+    // TODO: Remove eventually, this is due to typescript checking vue files that don't have lang="ts".
+    "checkJs": false,
     // TODO: Remove eventually
     "noImplicitAny": false /*Enable error reporting for expressions and declarations with an implied any type. See more: https://www.typescriptlang.org/tsconfig#noImplicitAny */
   } /* Instructs the TypeScript compiler how to compile .ts files. */

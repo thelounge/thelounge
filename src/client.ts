@@ -17,7 +17,7 @@ import SqliteMessageStorage from "./plugins/messageStorage/sqlite";
 import TextFileMessageStorage from "./plugins/messageStorage/text";
 import Network, {NetworkWithIrcFramework} from "./models/network";
 import ClientManager from "./clientManager";
-import {MessageStorage} from "./types/plugins/messageStorage";
+import {MessageStorage, SearchQuery, SearchResponse} from "./plugins/messageStorage/types";
 
 const events = [
 	"away",
@@ -598,9 +598,15 @@ class Client {
 		}
 	}
 
-	search(query: string) {
+	search(query: SearchQuery): Promise<SearchResponse> {
 		if (this.messageProvider === undefined) {
-			return Promise.resolve([]);
+			return Promise.resolve({
+				results: [],
+				target: "",
+				networkUuid: "",
+				offset: 0,
+				searchTerm: query?.searchTerm,
+			});
 		}
 
 		return this.messageProvider.search(query);

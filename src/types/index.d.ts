@@ -1,2 +1,1 @@
 import "./modules";
-import "./plugins";

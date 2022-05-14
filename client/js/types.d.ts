@@ -1,4 +1,5 @@
-import Chan from "../src/models/chan";
+import Chan from "../../src/models/chan";
+import Network from "../../src/models/network";
 
 declare module "*.vue" {
 	import Vue from "vue";
@@ -10,4 +11,9 @@ interface LoungeWindow extends Window {
 
 type ClientChan = Chan & {
 	moreHistoryAvailable: boolean;
+	editTopic: boolean;
+};
+
+type ClientNetwork = Network & {
+	isJoinChannelShown: boolean;
 };

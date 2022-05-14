@@ -4,7 +4,7 @@ import store from "../store";
 function input() {
 	const messageIds = [];
 
-	for (const message of store.state.activeChannel.channel.messages) {
+	for (const message of store.state.activeChannel?.channel.messages) {
 		let toggled = false;
 
 		for (const preview of message.previews) {
@@ -22,7 +22,7 @@ function input() {
 	// Tell the server we're toggling so it remembers at page reload
 	if (!document.body.classList.contains("public") && messageIds.length > 0) {
 		socket.emit("msg:preview:toggle", {
-			target: store.state.activeChannel.channel.id,
+			target: store.state.activeChannel?.channel.id,
 			messageIds: messageIds,
 			shown: false,
 		});

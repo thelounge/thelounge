@@ -4,7 +4,7 @@ import filenamify from "filenamify";
 
 import log from "../../log";
 import Config from "../../config";
-import {MessageStorage} from "../../types/plugins/messageStorage";
+import {MessageStorage} from "./types";
 import Client from "../../client";
 import Channel from "../../models/chan";
 import {Message, MessageType} from "../../models/msg";

@@ -195,7 +195,7 @@
 }
 </style>
 
-<script lang="ts">
+<script>
 import Mousetrap from "mousetrap";
 import Draggable from "vuedraggable";
 import {filter as fuzzyFilter} from "fuzzy";
@@ -209,10 +209,7 @@ import isIgnoredKeybind from "../js/helpers/isIgnoredKeybind";
 import distance from "../js/helpers/distance";
 import eventbus from "../js/eventbus";
 
-import NetworkModel from "../../src/models/network";
-import ChannelMode from "../../src/models/chan";
-
-export default {
+export default Vue.extend({
 	name: "NetworkList",
 	components: {
 		JoinChannel,
@@ -484,5 +481,5 @@ export default {
 			});
 		},
 	},
-};
+});
 </script>

@@ -10,7 +10,7 @@ config.setHome(home);
 
 import STSPolicies from "../../src/plugins/sts"; // Must be imported *after* setHome
 
-const mochaGlobalTeardown = async function () {
+const mochaGlobalTeardown = function () {
 	STSPolicies.refresh.cancel(); // Cancel debounced function, so it does not write later
 	fs.unlinkSync(STSPolicies.stsFile);
 };

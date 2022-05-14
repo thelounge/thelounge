@@ -12,12 +12,14 @@ import fs from "fs";
 import Utils from "../../command-line/utils";
 import Client from "../../client";
 
-type PackageInfo = {
+export type PackageInfo = {
 	packageName: string;
 	thelounge?: {supports: any};
 	version: string;
 	type?: string;
 	files?: string[];
+	// Legacy support
+	name?: string;
 };
 
 const stylesheets: string[] = [];

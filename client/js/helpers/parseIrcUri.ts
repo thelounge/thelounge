@@ -1,4 +1,4 @@
-export default (stringUri) => {
+export default (stringUri: string) => {
 	const data = {};
 
 	try {

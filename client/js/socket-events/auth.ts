@@ -5,6 +5,12 @@ import store from "../store";
 import location from "../location";
 let lastServerHash = null;
 
+declare global {
+	interface Window {
+		g_TheLoungeRemoveLoading: () => void;
+	}
+}
+
 socket.on("auth:success", function () {
 	store.commit("currentUserVisibleError", "Loading messages…");
 	updateLoadingMessage();
@@ -83,10 +89,10 @@ function showSignIn() {
 	}
 }
 
-function reloadPage(message) {
+function reloadPage(message: string) {
 	socket.disconnect();
 	store.commit("currentUserVisibleError", message);
-	location.reload(true);
+	location.reload();
 }
 
 function updateLoadingMessage() {

@@ -12,22 +12,31 @@ import eventbus from "./eventbus";
 import "./socket-events";
 import "./webpush";
 import "./keybinds";
+import {ClientChan} from "./types";
 
 const favicon = document.getElementById("favicon");
 const faviconNormal = favicon?.getAttribute("href") || "";
 const faviconAlerted = favicon?.dataset.other || "";
 
-new Vue({
+type Data = {};
+export type Methods = {
+	switchToChannel: (channel: ClientChan) => void;
+	closeChannel: (channel: ClientChan) => void;
+};
+type Computed = {};
+type Props = {};
+
+new Vue<Data, Methods, Computed, Props>({
 	el: "#viewport",
 	router,
 	mounted() {
 		socket.open();
 	},
 	methods: {
-		switchToChannel(channel: Channel) {
+		switchToChannel(channel: ClientChan) {
 			navigate("RoutedChat", {id: channel.id});
 		},
-		closeChannel(channel: Channel) {
+		closeChannel(channel: ClientChan) {
 			if (channel.type === "lobby") {
 				eventbus.emit(
 					"confirm-dialog",

@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import {createSettingsStore} from "./store-settings";
 import storage from "./localStorage";
+import {ClientChan, ClientNetwork} from "./types";
 
 const appName = document.title;
 
@@ -21,15 +22,15 @@ function detectDesktopNotificationState() {
 
 export type State = {
 	appLoaded: boolean;
-	activeChannel?: {
-		network: Network;
+	activeChannel: {
+		network: ClientNetwork;
 		channel: ClientChan;
 	};
 	currentUserVisibleError: string | null;
 	desktopNotificationState: "granted" | "blocked" | "nohttps" | "unsupported";
 	isAutoCompleting: boolean;
 	isConnected: boolean;
-	networks: Network[];
+	networks: ClientNetwork[];
 	// TODO: type
 	mentions: any[];
 	hasServiceWorker: boolean;

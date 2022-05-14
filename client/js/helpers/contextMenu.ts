@@ -1,6 +1,7 @@
 import socket from "../socket";
 import eventbus from "../eventbus";
-
+import type {ClientChan, ClientNetwork} from "../types";
+import type {Methods} from "../vue";
 type ContextMenuItem =
 	| ({
 			label: string;
@@ -18,7 +19,11 @@ type ContextMenuItem =
 			type: "divider";
 	  };
 
-export function generateChannelContextMenu($root, channel, network) {
+export function generateChannelContextMenu(
+	$root: Methods,
+	channel: ClientChan,
+	network: ClientNetwork
+) {
 	const typeMap = {
 		lobby: "network",
 		channel: "chan",

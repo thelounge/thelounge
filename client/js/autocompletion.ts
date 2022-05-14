@@ -274,10 +274,6 @@ function fuzzyGrep<T>(term: string, array: Array<T>) {
 }
 
 function rawNicks() {
-	if (!store.state.activeChannel) {
-		return [];
-	}
-
 	if (store.state.activeChannel.channel.users.length > 0) {
 		const users = store.state.activeChannel.channel.users.slice();
 

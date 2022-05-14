@@ -1,6 +1,7 @@
 import Client from "../../client";
 import Chan, {Channel} from "../../models/chan";
 import Network, {NetworkWithIrcFramework} from "../../models/network";
+import {PackageInfo} from "../packages";
 
 export type PluginInputHandler = (
 	this: Client,
@@ -97,7 +98,7 @@ const getCommands = () =>
 		.concat(passThroughCommands)
 		.sort();
 
-const addPluginCommand = (packageInfo, command, func) => {
+const addPluginCommand = (packageInfo: PackageInfo, command, func) => {
 	func.packageInfo = packageInfo;
 	pluginCommands.set(command, func);
 };

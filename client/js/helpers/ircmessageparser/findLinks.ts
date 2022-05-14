@@ -1,4 +1,5 @@
 import LinkifyIt, {Match} from "linkify-it";
+import {Part} from "./merge";
 
 type OurMatch = Match & {
 	noschema?: boolean;
@@ -24,7 +25,8 @@ LinkifyIt.prototype.normalize = function normalize(match: OurMatch) {
 	}
 };
 
-const linkify = LinkifyIt().tlds(require("tlds")).tlds("onion", true);
+import tlds from "tlds";
+const linkify = LinkifyIt().tlds(tlds).tlds("onion", true);
 
 // Known schemes to detect in text
 const commonSchemes = [
@@ -68,12 +70,16 @@ function findLinksWithSchema(text: string) {
 	return matches.filter((url) => !url.noschema).map(returnUrl);
 }
 
-function returnUrl(url: OurMatch) {
+function returnUrl(url: OurMatch): LinkPart {
 	return {
 		start: url.index,
 		end: url.lastIndex,
 		link: url.url,
 	};
 }
+
+export type LinkPart = Part & {
+	link: string;
+};
 
 export {findLinks, findLinksWithSchema};

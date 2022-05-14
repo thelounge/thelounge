@@ -1,15 +1,16 @@
-import {ParsedStyle} from "./parseStyle";
-
 // Create plain text entries corresponding to areas of the text that match no
 // existing entries. Returns an empty array if all parts of the text have been
+
+import {Part} from "./merge";
+
 // parsed into recognizable entries already.
-function fill(existingEntries: ParsedStyle[], text: string) {
+function fill(existingEntries: Part[], text: string) {
 	let position = 0;
 
 	// Fill inner parts of the text. For example, if text is `foobarbaz` and both
 	// `foo` and `baz` have matched into an entry, this will return a dummy entry
 	// corresponding to `bar`.
-	const result = existingEntries.reduce((acc: Omit<ParsedStyle, "text">[], textSegment) => {
+	const result = existingEntries.reduce<Part[]>((acc, textSegment) => {
 		if (textSegment.start > position) {
 			acc.push({
 				start: position,

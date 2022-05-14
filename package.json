@@ -25,7 +25,7 @@
     "lint:tsc": "tsc --noEmit",
     "start": "node src/dist/src/index start",
     "test": "run-p --aggregate-output --continue-on-error lint:* test:*",
-    "test:mocha": "NODE_ENV=test webpack --mode=development && nyc --nycrc-path=test/.nycrc-mocha.json mocha --colors --config=test/.mocharc.yml",
+    "test:mocha": "NODE_ENV=test webpack --mode=development && nyc --nycrc-path=test/.nycrc-mocha.json mocha --require ts-node/register --colors --config=test/.mocharc.yml",
     "watch": "webpack --watch"
   },
   "keywords": [

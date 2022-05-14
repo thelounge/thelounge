@@ -2,13 +2,14 @@
 // ")", "[", "]", "{", "}", and "|" in string.
 // See https://lodash.com/docs/#escapeRegExp
 import escapeRegExp from "lodash/escapeRegExp";
+import {Part} from "./merge";
 
 // Given an array of channel prefixes (such as "#" and "&") and an array of user
 // modes (such as "@" and "+"), this function extracts channels and nicks from a
 // text.
 // It returns an array of objects for each channel found with their start index,
 // end index and channel name.
-function findChannels(text, channelPrefixes, userModes) {
+function findChannels(text: string, channelPrefixes: string[], userModes: string[]) {
 	// `userModePattern` is necessary to ignore user modes in /whois responses.
 	// For example, a voiced user in #thelounge will have a /whois response of:
 	// > foo is on the following channels: +#thelounge
@@ -18,7 +19,7 @@ function findChannels(text, channelPrefixes, userModes) {
 	const channelPattern = `(?:^|\\s)[${userModePattern}]*([${channelPrefixPattern}][^ \u0007]+)`;
 	const channelRegExp = new RegExp(channelPattern, "g");
 
-	const result = [];
+	const result: ChannelPart[] = [];
 	let match;
 
 	do {
@@ -37,5 +38,9 @@ function findChannels(text, channelPrefixes, userModes) {
 
 	return result;
 }
+
+export type ChannelPart = Part & {
+	channel: string;
+};
 
 export default findChannels;

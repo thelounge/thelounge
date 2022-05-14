@@ -7,8 +7,9 @@ import Config from "../../config";
 import Msg, {Message} from "../../models/msg";
 import Client from "../../client";
 import Chan, {Channel} from "../../models/chan";
-import type {SqliteMessageStorage as ISqliteMessageStorage} from "../../types/plugins/messageStorage";
+import type {SearchResponse, SqliteMessageStorage as ISqliteMessageStorage} from "./types";
 import Network from "../../models/network";
+import {SearchQuery} from "./types";
 
 // TODO; type
 let sqlite3: any;
@@ -209,9 +210,15 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 		}) as Promise<Message[]>;
 	}
 
-	search(query: {searchTerm: string; networkUuid: string; channelName: string; offset: string}) {
+	search(query: SearchQuery): Promise<SearchResponse> {
 		if (!this.isEnabled) {
-			return Promise.resolve([]);
+			return Promise.resolve({
+				results: [],
+				target: "",
+				networkUuid: "",
+				offset: 0,
+				searchTerm: query?.searchTerm,
+			});
 		}
 
 		// Using the '@' character to escape '%' and '_' in patterns.
@@ -243,7 +250,7 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 				if (err) {
 					reject(err);
 				} else {
-					const response = {
+					const response: SearchResponse = {
 						searchTerm: query.searchTerm,
 						target: query.channelName,
 						networkUuid: query.networkUuid,
@@ -263,7 +270,8 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 
 export default SqliteMessageStorage;
 
-function parseSearchRowsToMessages(id, rows) {
+// TODO: type any
+function parseSearchRowsToMessages(id: string, rows: any[]) {
 	const messages: Msg[] = [];
 
 	for (const row of rows) {

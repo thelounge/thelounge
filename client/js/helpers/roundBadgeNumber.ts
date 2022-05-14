@@ -1,4 +1,4 @@
-export default (count) => {
+export default (count: number) => {
 	if (count < 1000) {
 		return count.toString();
 	}

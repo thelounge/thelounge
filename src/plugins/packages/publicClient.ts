@@ -1,12 +1,13 @@
+import {PackageInfo} from "./index";
 import Client from "../../client";
 import Chan from "../../models/chan";
 import Msg, {MessageType, UserInMessage} from "../../models/msg";
 
 export default class PublicClient {
 	private client: Client;
-	private packageInfo: any;
+	private packageInfo: PackageInfo;
 
-	constructor(client, packageInfo) {
+	constructor(client: Client, packageInfo: PackageInfo) {
 		this.client = client;
 		this.packageInfo = packageInfo;
 	}
@@ -24,7 +25,7 @@ export default class PublicClient {
 	 *
 	 * @param {Object} attributes
 	 */
-	createChannel(attributes) {
+	createChannel(attributes: Partial<Chan>) {
 		return this.client.createChannel(attributes);
 	}
 

@@ -1,6 +1,6 @@
 import io, {Socket} from "socket.io-client";
 
-const socket = io({
+const socket: Socket = io({
 	transports: JSON.parse(document.body.dataset.transports || "['polling', 'websocket']"),
 	path: window.location.pathname + "socket.io/",
 	autoConnect: false,

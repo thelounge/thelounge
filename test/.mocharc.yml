@@ -5,4 +5,4 @@ reporter: dot
 interactive: false
 spec: "test/**/*.ts"
 ignore: "test/client/**"
-require: "test/fixtures/env"
+require: "test/fixtures/env.ts"
