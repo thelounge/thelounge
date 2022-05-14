@@ -285,15 +285,15 @@ function getDefaultNetworks() {
 		return [];
 	}
 
-	if (Array.isArray(this.config.defaults)) {
-		return this.config.defaults;
+	if (!Array.isArray(this.config.defaults)) {
+		const key = colors.bold("defaults");
+		log.warn(
+			`Configuration key "${key}" should now be an array of networks. Support for the old object format will be removed in a future version, please update your config. https://thelounge.chat/docs/configuration#default-networks`
+		);
+		this.config.defaults = [this.config.defaults];
 	}
 
-	const key = colors.bold("defaults");
-	log.warn(
-		`Configuration key "${key}" should now be an array of networks. Support for the old object format will be removed in a future version, please update your config. https://thelounge.chat/docs/configuration#default-networks`
-	);
-	return [this.config.defaults];
+	return this.config.defaults;
 }
 
 function mergeConfig(oldConfig, newConfig) {
