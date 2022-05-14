@@ -291,7 +291,7 @@ function getDefaultNetworks() {
 
 	const key = colors.bold("defaults");
 	log.warn(
-		`Key "${key}" should now be an array of networks. Support for the old object format will be removed in a future version, please update your config. https://thelounge.chat/docs/configuration#default-networks`
+		`Configuration key "${key}" should now be an array of networks. Support for the old object format will be removed in a future version, please update your config. https://thelounge.chat/docs/configuration#default-networks`
 	);
 	return [this.config.defaults];
 }
