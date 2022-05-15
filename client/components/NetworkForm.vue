@@ -482,7 +482,7 @@ export default {
 			config: this.$store.state.serverConfiguration,
 			previousUsername: this.defaults.username,
 			displayPasswordField: false,
-			presetName: "",
+			presetName: this.$store.state.serverConfiguration.defaults[0].name,
 		};
 	},
 	watch: {
