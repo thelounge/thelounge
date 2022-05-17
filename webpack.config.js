@@ -1,7 +1,6 @@
 "use strict";
 
 const webpack = require("webpack");
-const fs = require("fs");
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -17,6 +16,7 @@ const config = {
 	},
 	devtool: "source-map",
 	output: {
+		clean: true, // Clean the output directory before emit.
 		path: path.resolve(__dirname, "public"),
 		filename: "[name]",
 		publicPath: "/",
@@ -144,17 +144,13 @@ const config = {
 
 module.exports = (env, argv) => {
 	if (argv.mode === "development") {
-		const testFile = path.resolve(__dirname, "test/public/testclient.js");
-
-		if (fs.existsSync(testFile)) {
-			fs.unlinkSync(testFile);
-		}
-
 		config.target = "node";
 		config.devtool = "eval";
 		config.stats = "errors-only";
 		config.output.path = path.resolve(__dirname, "test/public");
-		config.entry["testclient.js"] = [path.resolve(__dirname, "test/client/index.js")];
+		config.entry = {
+			"testclient.js": [path.resolve(__dirname, "test/client/index.js")],
+		};
 
 		// Add the istanbul plugin to babel-loader options
 		for (const rule of config.module.rules) {
@@ -169,9 +165,11 @@ module.exports = (env, argv) => {
 		config.optimization.splitChunks = false;
 
 		// Disable plugins like copy files, it is not required
-		config.plugins.push(
+		config.plugins = [
 			new VueLoaderPlugin(),
-
+			new MiniCssExtractPlugin({
+				filename: "css/style.css",
+			}),
 			// Client tests that require Vue may end up requireing socket.io
 			new webpack.NormalModuleReplacementPlugin(
 				/js(\/|\\)socket\.js/,
@@ -179,8 +177,8 @@ module.exports = (env, argv) => {
 			),
 
 			// "Fixes" Critical dependency: the request of a dependency is an expression
-			new webpack.ContextReplacementPlugin(/vue-server-renderer$/)
-		);
+			new webpack.ContextReplacementPlugin(/vue-server-renderer$/),
+		];
 	}
 
 	if (argv.mode === "production") {

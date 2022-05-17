@@ -6,7 +6,7 @@ module.exports = (app) => {
 	log.debug("Starting server in development mode");
 
 	const webpack = require("webpack");
-	const webpackConfig = require("../../webpack.config.js")(undefined, {mode: "development"});
+	const webpackConfig = require("../../webpack.config.js")(undefined, {mode: "production"});
 
 	webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
 	webpackConfig.entry["js/bundle.js"].push(
