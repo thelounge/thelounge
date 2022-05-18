@@ -5,7 +5,7 @@ const colors = require("chalk");
 const fs = require("fs");
 const path = require("path");
 const program = require("commander");
-const Helper = require("../helper");
+const Config = require("../config");
 const Utils = require("./utils");
 
 program
@@ -21,15 +21,15 @@ program
 	});
 
 function initalizeConfig() {
-	if (!fs.existsSync(Helper.getConfigPath())) {
-		fs.mkdirSync(Helper.getHomePath(), {recursive: true});
-		fs.chmodSync(Helper.getHomePath(), "0700");
+	if (!fs.existsSync(Config.getConfigPath())) {
+		fs.mkdirSync(Config.getHomePath(), {recursive: true});
+		fs.chmodSync(Config.getHomePath(), "0700");
 		fs.copyFileSync(
 			path.resolve(path.join(__dirname, "..", "..", "defaults", "config.js")),
-			Helper.getConfigPath()
+			Config.getConfigPath()
 		);
-		log.info(`Configuration file created at ${colors.green(Helper.getConfigPath())}.`);
+		log.info(`Configuration file created at ${colors.green(Config.getConfigPath())}.`);
 	}
 
-	fs.mkdirSync(Helper.getUsersPath(), {recursive: true});
+	fs.mkdirSync(Config.getUsersPath(), {recursive: true, mode: 0o700});
 }

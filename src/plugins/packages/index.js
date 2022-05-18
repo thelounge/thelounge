@@ -6,6 +6,7 @@ const colors = require("chalk");
 const path = require("path");
 const semver = require("semver");
 const Helper = require("../../helper");
+const Config = require("../../config");
 const themes = require("./themes");
 const packageMap = new Map();
 const inputs = require("../inputs");
@@ -45,7 +46,7 @@ const packageApis = function (packageInfo) {
 				client.inputLine({target: targetId, text: command}),
 		},
 		Config: {
-			getConfig: () => Helper.config,
+			getConfig: () => Config.values,
 			getPersistentStorageDir: getPersistentStorageDir.bind(this, packageInfo.packageName),
 		},
 		Logger: {
@@ -89,7 +90,7 @@ function getEnabledPackages(packageJson) {
 }
 
 function getPersistentStorageDir(packageName) {
-	const dir = path.join(Helper.getPackagesPath(), packageName);
+	const dir = path.join(Config.getPackagesPath(), packageName);
 	fs.mkdirSync(dir, {recursive: true}); // we don't care if it already exists or not
 	return dir;
 }
@@ -99,7 +100,7 @@ function loadPackage(packageName) {
 	let packageFile;
 
 	try {
-		const packagePath = Helper.getPackageModulePath(packageName);
+		const packagePath = Config.getPackageModulePath(packageName);
 
 		packageInfo = JSON.parse(fs.readFileSync(path.join(packagePath, "package.json"), "utf-8"));
 
@@ -109,7 +110,9 @@ function loadPackage(packageName) {
 
 		if (
 			packageInfo.thelounge.supports &&
-			!semver.satisfies(Helper.getVersionNumber(), packageInfo.thelounge.supports)
+			!semver.satisfies(Helper.getVersionNumber(), packageInfo.thelounge.supports, {
+				includePrerelease: true, // our pre-releases should respect the semver guarantees
+			})
 		) {
 			throw `v${packageInfo.version} does not support this version of The Lounge. Supports: ${packageInfo.thelounge.supports}`;
 		}
@@ -153,7 +156,7 @@ function loadPackage(packageName) {
 }
 
 function loadPackages() {
-	const packageJson = path.join(Helper.getPackagesPath(), "package.json");
+	const packageJson = path.join(Config.getPackagesPath(), "package.json");
 	const packages = getEnabledPackages(packageJson);
 
 	packages.forEach(loadPackage);
@@ -191,7 +194,7 @@ async function outdated(cacheTimeout = TIME_TO_LIVE) {
 	}
 
 	// Get paths to the location of packages directory
-	const packagesPath = Helper.getPackagesPath();
+	const packagesPath = Config.getPackagesPath();
 	const packagesConfig = path.join(packagesPath, "package.json");
 	const packagesList = JSON.parse(fs.readFileSync(packagesConfig, "utf-8")).dependencies;
 	const argsList = [

@@ -5,6 +5,7 @@ const log = require("../../log");
 const Msg = require("../../models/msg");
 const Chan = require("../../models/chan");
 const Helper = require("../../helper");
+const Config = require("../../config");
 
 module.exports = function (irc, network) {
 	const client = this;
@@ -93,7 +94,7 @@ module.exports = function (irc, network) {
 	irc.on("raw socket connected", function (socket) {
 		let ident = client.name || network.username;
 
-		if (Helper.config.useHexIp) {
+		if (Config.values.useHexIp) {
 			ident = Helper.ip2hex(client.config.browser.ip);
 		}
 
@@ -138,7 +139,7 @@ module.exports = function (irc, network) {
 		sendStatus();
 	});
 
-	if (Helper.config.debug.ircFramework) {
+	if (Config.values.debug.ircFramework) {
 		irc.on("debug", function (message) {
 			log.debug(
 				`[${client.name} (${client.id}) on ${network.name} (${network.uuid}]`,
@@ -147,7 +148,7 @@ module.exports = function (irc, network) {
 		});
 	}
 
-	if (Helper.config.debug.raw) {
+	if (Config.values.debug.raw) {
 		irc.on("raw", function (message) {
 			network.channels[0].pushMessage(
 				client,

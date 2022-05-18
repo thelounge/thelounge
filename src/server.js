@@ -12,6 +12,7 @@ const io = require("socket.io");
 const dns = require("dns");
 const Uploader = require("./plugins/uploader");
 const Helper = require("./helper");
+const Config = require("./config");
 const colors = require("chalk");
 const net = require("net");
 const Identification = require("./identification");
@@ -35,7 +36,7 @@ module.exports = function (options = {}) {
 (Node.js ${colors.green(process.versions.node)} on ${colors.green(process.platform)} ${
 		process.arch
 	})`);
-	log.info(`Configuration file: ${colors.green(Helper.getConfigPath())}`);
+	log.info(`Configuration file: ${colors.green(Config.getConfigPath())}`);
 
 	const staticOptions = {
 		redirect: false,
@@ -57,9 +58,9 @@ module.exports = function (options = {}) {
 		.get("/js/bundle.js.map", forceNoCacheRequest)
 		.get("/css/style.css.map", forceNoCacheRequest)
 		.use(express.static(path.join(__dirname, "..", "public"), staticOptions))
-		.use("/storage/", express.static(Helper.getStoragePath(), staticOptions));
+		.use("/storage/", express.static(Config.getStoragePath(), staticOptions));
 
-	if (Helper.config.fileUpload.enable) {
+	if (Config.values.fileUpload.enable) {
 		Uploader.router(app);
 	}
 
@@ -87,25 +88,25 @@ module.exports = function (options = {}) {
 			return res.status(404).send("Not found");
 		}
 
-		const packagePath = Helper.getPackageModulePath(packageName);
+		const packagePath = Config.getPackageModulePath(packageName);
 		return res.sendFile(path.join(packagePath, fileName));
 	});
 
 	let server = null;
 
-	if (Helper.config.public && (Helper.config.ldap.enable || Helper.config.headerAuth.enable)) {
+	if (Config.values.public && (Config.values.ldap.enable || Config.values.headerAuth.enable)) {
 		log.warn(
 			"Server is public and set to use LDAP / header authentication. Set to private mode if trying to use LDAP / header authentication."
 		);
 	}
 
-	if (!Helper.config.https.enable) {
+	if (!Config.values.https.enable) {
 		server = require("http");
 		server = server.createServer(app);
 	} else {
-		const keyPath = Helper.expandHome(Helper.config.https.key);
-		const certPath = Helper.expandHome(Helper.config.https.certificate);
-		const caPath = Helper.expandHome(Helper.config.https.ca);
+		const keyPath = Helper.expandHome(Config.values.https.key);
+		const certPath = Helper.expandHome(Config.values.https.certificate);
+		const caPath = Helper.expandHome(Config.values.https.ca);
 
 		if (!keyPath.length || !fs.existsSync(keyPath)) {
 			log.error("Path to SSL key is invalid. Stopping server...");
@@ -135,12 +136,12 @@ module.exports = function (options = {}) {
 
 	let listenParams;
 
-	if (typeof Helper.config.host === "string" && Helper.config.host.startsWith("unix:")) {
-		listenParams = Helper.config.host.replace(/^unix:/, "");
+	if (typeof Config.values.host === "string" && Config.values.host.startsWith("unix:")) {
+		listenParams = Config.values.host.replace(/^unix:/, "");
 	} else {
 		listenParams = {
-			port: Helper.config.port,
-			host: Helper.config.host,
+			port: Config.values.port,
+			host: Config.values.host,
 		};
 	}
 
@@ -150,7 +151,7 @@ module.exports = function (options = {}) {
 		if (typeof listenParams === "string") {
 			log.info("Available on socket " + colors.green(listenParams));
 		} else {
-			const protocol = Helper.config.https.enable ? "https" : "http";
+			const protocol = Config.values.https.enable ? "https" : "http";
 			const address = server.address();
 
 			if (address.family === "IPv6") {
@@ -160,7 +161,7 @@ module.exports = function (options = {}) {
 			log.info(
 				"Available at " +
 					colors.green(`${protocol}://${address.address}:${address.port}/`) +
-					` in ${colors.bold(Helper.config.public ? "public" : "private")} mode`
+					` in ${colors.bold(Config.values.public ? "public" : "private")} mode`
 			);
 		}
 
@@ -168,20 +169,20 @@ module.exports = function (options = {}) {
 			wsEngine: require("ws").Server,
 			cookie: false,
 			serveClient: false,
-			transports: Helper.config.transports,
+			transports: Config.values.transports,
 			pingTimeout: 60000,
 		});
 
 		sockets.on("connect", (socket) => {
 			socket.on("error", (err) => log.error(`io socket error: ${err}`));
 
-			if (Helper.config.public) {
+			if (Config.values.public) {
 				performAuthentication.call(socket, {});
 			} else {
 				socket.on("auth:perform", performAuthentication);
 				socket.emit("auth:start", {
 					serverHash,
-					headerAuthEnabled: Helper.config.headerAuth.enable && !Helper.config.public,
+					headerAuthEnabled: Config.values.headerAuth.enable && !Config.values.public,
 				});
 			}
 		});
@@ -189,20 +190,25 @@ module.exports = function (options = {}) {
 		manager = new ClientManager();
 		packages.loadPackages();
 
-		const defaultTheme = themes.getByName(Helper.config.theme);
+		const defaultTheme = themes.getByName(Config.values.theme);
 
 		if (defaultTheme === undefined) {
 			log.warn(
 				`The specified default theme "${colors.red(
-					Helper.config.theme
+					Config.values.theme
 				)}" does not exist, verify your config.`
 			);
-			Helper.config.theme = "default";
+			Config.values.theme = "default";
 		} else if (defaultTheme.themeColor) {
-			Helper.config.themeColor = defaultTheme.themeColor;
+			Config.values.themeColor = defaultTheme.themeColor;
 		}
 
-		new Identification((identHandler) => {
+		new Identification((identHandler, err) => {
+			if (err) {
+				log.error(`Could not start identd server, ${err.message}`);
+				process.exit(1);
+			}
+
 			manager.init(identHandler, sockets);
 		});
 
@@ -219,7 +225,7 @@ module.exports = function (options = {}) {
 			// Close all client and IRC connections
 			manager.clients.forEach((client) => client.quit());
 
-			if (Helper.config.prefetchStorage) {
+			if (Config.values.prefetchStorage) {
 				log.info("Clearing prefetch storage folder, this might take a while...");
 
 				require("./plugins/storage").emptyDir();
@@ -239,7 +245,7 @@ module.exports = function (options = {}) {
 		process.on("SIGTERM", exitGracefully);
 
 		// Clear storage folder after server starts successfully
-		if (Helper.config.prefetchStorage) {
+		if (Config.values.prefetchStorage) {
 			require("./plugins/storage").emptyDir();
 		}
 
@@ -263,7 +269,7 @@ function getClientLanguage(socket) {
 function getClientIp(socket) {
 	let ip = socket.handshake.address || "127.0.0.1";
 
-	if (Helper.config.reverseProxy) {
+	if (Config.values.reverseProxy) {
 		const forwarded = (socket.handshake.headers["x-forwarded-for"] || "")
 			.split(/\s*,\s*/)
 			.filter(Boolean);
@@ -279,7 +285,7 @@ function getClientIp(socket) {
 function getClientSecure(socket) {
 	let secure = socket.handshake.secure;
 
-	if (Helper.config.reverseProxy && socket.handshake.headers["x-forwarded-proto"] === "https") {
+	if (Config.values.reverseProxy && socket.handshake.headers["x-forwarded-proto"] === "https") {
 		secure = true;
 	}
 
@@ -308,7 +314,7 @@ function addSecurityHeaders(req, res, next) {
 	// If prefetch is enabled, but storage is not, we have to allow mixed content
 	// - https://user-images.githubusercontent.com is where we currently push our changelog screenshots
 	// - data: is required for the HTML5 video player
-	if (Helper.config.prefetchStorage || !Helper.config.prefetch) {
+	if (Config.values.prefetchStorage || !Config.values.prefetch) {
 		policies.push("img-src 'self' data: https://user-images.githubusercontent.com");
 		policies.unshift("block-all-mixed-content");
 	} else {
@@ -365,7 +371,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 		openChannel = client.lastActiveChannel;
 	}
 
-	if (Helper.config.fileUpload.enable) {
+	if (Config.values.fileUpload.enable) {
 		new Uploader(socket);
 	}
 
@@ -434,7 +440,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 		}
 	});
 
-	if (!Helper.config.public && !Helper.config.ldap.enable && !Helper.config.headerAuth.enable) {
+	if (!Config.values.public && !Config.values.ldap.enable && !Config.values.headerAuth.enable) {
 		socket.on("change-password", (data) => {
 			if (_.isPlainObject(data)) {
 				const old = data.old_password;
@@ -508,7 +514,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 
 	// In public mode only one client can be connected,
 	// so there's no need to handle msg:preview:toggle
-	if (!Helper.config.public) {
+	if (!Config.values.public) {
 		socket.on("msg:preview:toggle", (data) => {
 			if (_.isPlainObject(data)) {
 				return;
@@ -569,7 +575,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 		client.mentions = [];
 	});
 
-	if (!Helper.config.public) {
+	if (!Config.values.public) {
 		socket.on("push:register", (subscription) => {
 			if (!Object.prototype.hasOwnProperty.call(client.config.sessions, token)) {
 				return;
@@ -612,7 +618,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 
 	socket.on("sessions:get", sendSessionList);
 
-	if (!Helper.config.public) {
+	if (!Config.values.public) {
 		socket.on("setting:set", (newSetting) => {
 			if (!_.isPlainObject(newSetting)) {
 				return;
@@ -737,7 +743,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 		socket.emit("commands", inputs.getCommands());
 	};
 
-	if (Helper.config.public) {
+	if (Config.values.public) {
 		sendInitEvent(null);
 	} else if (token === null) {
 		client.generateToken((newToken) => {
@@ -755,17 +761,17 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 }
 
 function getClientConfiguration() {
-	const config = _.pick(Helper.config, ["public", "lockNetwork", "useHexIp", "prefetch"]);
+	const config = _.pick(Config.values, ["public", "lockNetwork", "useHexIp", "prefetch"]);
 
-	config.fileUpload = Helper.config.fileUpload.enable;
-	config.ldapEnabled = Helper.config.ldap.enable;
-	config.headerAuthEnabled = Helper.config.headerAuth.enable;
+	config.fileUpload = Config.values.fileUpload.enable;
+	config.ldapEnabled = Config.values.ldap.enable;
+	config.headerAuthEnabled = Config.values.headerAuth.enable;
 
 	if (!config.lockNetwork) {
-		config.defaults = _.clone(Helper.config.defaults);
+		config.defaults = _.clone(Config.values.defaults);
 	} else {
 		// Only send defaults that are visible on the client
-		config.defaults = _.pick(Helper.config.defaults, [
+		config.defaults = _.pick(Config.values.defaults, [
 			"name",
 			"nick",
 			"username",
@@ -780,8 +786,8 @@ function getClientConfiguration() {
 	config.version = pkg.version;
 	config.gitCommit = Helper.getGitCommit();
 	config.themes = themes.getAll();
-	config.defaultTheme = Helper.config.theme;
-	config.defaults.nick = Helper.getDefaultNick();
+	config.defaultTheme = Config.values.theme;
+	config.defaults.nick = Config.getDefaultNick();
 	config.defaults.sasl = "";
 	config.defaults.saslAccount = "";
 	config.defaults.saslPassword = "";
@@ -794,7 +800,7 @@ function getClientConfiguration() {
 }
 
 function getServerConfiguration() {
-	const config = _.clone(Helper.config);
+	const config = _.clone(Config.values);
 
 	config.stylesheets = packages.getStylesheets();
 
@@ -810,8 +816,8 @@ function performAuthentication(data) {
 	let client;
 	let token = null;
 
-	if (!Helper.config.public && Helper.config.headerAuth.enable) {
-		data.user = socket.handshake.headers[Helper.config.headerAuth.header];
+	if (!Config.values.public && Config.values.headerAuth.enable) {
+		data.user = socket.handshake.headers[Config.values.headerAuth.header];
 	}
 
 	const finalInit = () =>
@@ -836,7 +842,7 @@ function performAuthentication(data) {
 		};
 
 		// If webirc is enabled perform reverse dns lookup
-		if (Helper.config.webirc === null) {
+		if (Config.values.webirc === null) {
 			return finalInit();
 		}
 
@@ -847,7 +853,7 @@ function performAuthentication(data) {
 		});
 	};
 
-	if (Helper.config.public) {
+	if (Config.values.public) {
 		client = new Client(manager);
 		manager.clients.push(client);
 

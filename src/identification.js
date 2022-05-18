@@ -5,20 +5,21 @@ const fs = require("fs");
 const net = require("net");
 const colors = require("chalk");
 const Helper = require("./helper");
+const Config = require("./config");
 
 class Identification {
 	constructor(startedCallback) {
 		this.connectionId = 0;
 		this.connections = new Map();
 
-		if (typeof Helper.config.oidentd === "string") {
-			this.oidentdFile = Helper.expandHome(Helper.config.oidentd);
+		if (typeof Config.values.oidentd === "string") {
+			this.oidentdFile = Helper.expandHome(Config.values.oidentd);
 			log.info(`Oidentd file: ${colors.green(this.oidentdFile)}`);
 
 			this.refresh();
 		}
 
-		if (Helper.config.identd.enable) {
+		if (Config.values.identd.enable) {
 			if (this.oidentdFile) {
 				log.warn(
 					"Using both identd and oidentd at the same time, this is most likely not intended."
@@ -27,12 +28,14 @@ class Identification {
 
 			const server = net.createServer(this.serverConnection.bind(this));
 
-			server.on("error", (err) => log.error(`Identd server error: ${err}`));
+			server.on("error", (err) => {
+				startedCallback(this, err);
+			});
 
 			server.listen(
 				{
-					port: Helper.config.identd.port || 113,
-					host: Helper.config.bind,
+					port: Config.values.identd.port || 113,
+					host: Config.values.bind,
 				},
 				() => {
 					const address = server.address();

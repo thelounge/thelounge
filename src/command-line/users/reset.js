@@ -5,6 +5,7 @@ const colors = require("chalk");
 const program = require("commander");
 const fs = require("fs");
 const Helper = require("../../helper");
+const Config = require("../../config");
 const Utils = require("../utils");
 
 program
@@ -13,8 +14,8 @@ program
 	.on("--help", Utils.extraHelp)
 	.option("--password [password]", "new password, will be prompted if not specified")
 	.action(function (name, cmdObj) {
-		if (!fs.existsSync(Helper.getUsersPath())) {
-			log.error(`${Helper.getUsersPath()} does not exist.`);
+		if (!fs.existsSync(Config.getUsersPath())) {
+			log.error(`${Config.getUsersPath()} does not exist.`);
 			return;
 		}
 
@@ -52,7 +53,7 @@ program
 	});
 
 function change(name, password) {
-	const pathReal = Helper.getUserConfigPath(name);
+	const pathReal = Config.getUserConfigPath(name);
 	const pathTemp = pathReal + ".tmp";
 	const user = JSON.parse(fs.readFileSync(pathReal, "utf-8"));
 
@@ -63,7 +64,9 @@ function change(name, password) {
 
 	// Write to a temp file first, in case the write fails
 	// we do not lose the original file (for example when disk is full)
-	fs.writeFileSync(pathTemp, newUser);
+	fs.writeFileSync(pathTemp, newUser, {
+		mode: 0o600,
+	});
 	fs.renameSync(pathTemp, pathReal);
 
 	log.info(`Successfully reset password for ${colors.bold(name)}.`);

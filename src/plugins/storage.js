@@ -4,7 +4,7 @@ const log = require("../log");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
-const helper = require("../helper");
+const Config = require("../config");
 
 class Storage {
 	constructor() {
@@ -16,7 +16,7 @@ class Storage {
 		// Deletes directory contents if the directory is not empty.
 		// If the directory does not exist, it is created.
 
-		const dir = helper.getStoragePath();
+		const dir = Config.getStoragePath();
 		let items;
 
 		try {
@@ -44,7 +44,7 @@ class Storage {
 		this.references.delete(url);
 
 		// Drop "storage/" from url and join it with full storage path
-		const filePath = path.join(helper.getStoragePath(), url.substring(8));
+		const filePath = path.join(Config.getStoragePath(), url.substring(8));
 
 		fs.unlink(filePath, (err) => {
 			if (err) {
@@ -57,7 +57,7 @@ class Storage {
 		const hash = crypto.createHash("sha256").update(data).digest("hex");
 		const a = hash.substring(0, 2);
 		const b = hash.substring(2, 4);
-		const folder = path.join(helper.getStoragePath(), a, b);
+		const folder = path.join(Config.getStoragePath(), a, b);
 		const filePath = path.join(folder, `${hash.substring(4)}.${extension}`);
 		const url = `storage/${a}/${b}/${hash.substring(4)}.${extension}`;
 

@@ -33,22 +33,22 @@ describe("Header authentication plugin", function () {
 	});
 
 	beforeEach(function () {
-		Helper.config.public = false;
-		Helper.config.headerAuth.enable = true;
-		Helper.config.headerAuth.header = correctHeader;
+		Config.values.public = false;
+		Config.values.headerAuth.enable = true;
+		Config.values.headerAuth.header = correctHeader;
 	});
 
 	afterEach(function () {
-		Helper.config.public = true;
-		Helper.config.headerAuth.enable = false;
+		Config.values.public = true;
+		Config.values.headerAuth.enable = false;
 	});
 
 	describe("Header authentication availibility", function () {
 		it("checks that the configuration is correctly tied to isEnabled()", function () {
-			Helper.config.headerAuth.enable = false;
+			Config.values.headerAuth.enable = false;
 			expect(headerAuth.isEnabled()).to.equal(false);
 
-			Helper.config.headerAuth.enable = true;
+			Config.values.headerAuth.enable = true;
 			expect(headerAuth.isEnabled()).to.equal(true);
 		});
 	});

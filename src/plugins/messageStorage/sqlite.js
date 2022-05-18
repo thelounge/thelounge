@@ -3,7 +3,7 @@
 const log = require("../../log");
 const path = require("path");
 const fs = require("fs");
-const Helper = require("../../helper");
+const Config = require("../../config");
 const Msg = require("../../models/msg");
 
 let sqlite3;
@@ -11,10 +11,10 @@ let sqlite3;
 try {
 	sqlite3 = require("sqlite3");
 } catch (e) {
-	Helper.config.messageStorage = Helper.config.messageStorage.filter((item) => item !== "sqlite");
+	Config.values.messageStorage = Config.values.messageStorage.filter((item) => item !== "sqlite");
 
 	log.error(
-		"Unable to load node-sqlite3 module. See https://github.com/mapbox/node-sqlite3/wiki/Binaries"
+		"Unable to load sqlite3 module. See https://github.com/mapbox/node-sqlite3/wiki/Binaries"
 	);
 }
 
@@ -35,7 +35,7 @@ class MessageStorage {
 	}
 
 	enable() {
-		const logsPath = Helper.getUserLogsPath();
+		const logsPath = Config.getUserLogsPath();
 		const sqlitePath = path.join(logsPath, `${this.client.name}.sqlite3`);
 
 		try {
@@ -165,12 +165,12 @@ class MessageStorage {
 	 * @param Chan channel - Channel object for which to load messages for
 	 */
 	getMessages(network, channel) {
-		if (!this.isEnabled || Helper.config.maxHistory === 0) {
+		if (!this.isEnabled || Config.values.maxHistory === 0) {
 			return Promise.resolve([]);
 		}
 
 		// If unlimited history is specified, load 100k messages
-		const limit = Helper.config.maxHistory < 0 ? 100000 : Helper.config.maxHistory;
+		const limit = Config.values.maxHistory < 0 ? 100000 : Config.values.maxHistory;
 
 		return new Promise((resolve, reject) => {
 			this.database.serialize(() =>
@@ -205,9 +205,12 @@ class MessageStorage {
 			return Promise.resolve([]);
 		}
 
+		// Using the '@' character to escape '%' and '_' in patterns.
+		const escapedSearchTerm = query.searchTerm.replace(/([%_@])/g, "@$1");
+
 		let select =
-			'SELECT msg, type, time, network, channel FROM messages WHERE type = "message" AND json_extract(msg, "$.text") LIKE ?';
-		const params = [`%${query.searchTerm}%`];
+			'SELECT msg, type, time, network, channel FROM messages WHERE type = "message" AND json_extract(msg, "$.text") LIKE ? ESCAPE \'@\'';
+		const params = [`%${escapedSearchTerm}%`];
 
 		if (query.networkUuid) {
 			select += " AND network = ? ";

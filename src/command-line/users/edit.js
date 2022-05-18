@@ -5,16 +5,16 @@ const program = require("commander");
 const child = require("child_process");
 const colors = require("chalk");
 const fs = require("fs");
-const Helper = require("../../helper");
+const Config = require("../../config");
 const Utils = require("../utils");
 
 program
 	.command("edit <name>")
-	.description(`Edit user file located at ${colors.green(Helper.getUserConfigPath("<name>"))}`)
+	.description(`Edit user file located at ${colors.green(Config.getUserConfigPath("<name>"))}`)
 	.on("--help", Utils.extraHelp)
 	.action(function (name) {
-		if (!fs.existsSync(Helper.getUsersPath())) {
-			log.error(`${Helper.getUsersPath()} does not exist.`);
+		if (!fs.existsSync(Config.getUsersPath())) {
+			log.error(`${Config.getUsersPath()} does not exist.`);
 			return;
 		}
 
@@ -33,12 +33,12 @@ program
 
 		const child_spawn = child.spawn(
 			process.env.EDITOR || "vi",
-			[Helper.getUserConfigPath(name)],
+			[Config.getUserConfigPath(name)],
 			{stdio: "inherit"}
 		);
 		child_spawn.on("error", function () {
 			log.error(
-				`Unable to open ${colors.green(Helper.getUserConfigPath(name))}. ${colors.bold(
+				`Unable to open ${colors.green(Config.getUserConfigPath(name))}. ${colors.bold(
 					"$EDITOR"
 				)} is not set, and ${colors.bold("vi")} was not found.`
 			);

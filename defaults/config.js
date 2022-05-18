@@ -160,6 +160,20 @@ module.exports = {
 	// This value is set to `50` kilobytes by default.
 	prefetchMaxSearchSize: 50,
 
+	// ### `prefetchTimeout`
+	//
+	// When `prefetch` is enabled, this value sets the number of milliseconds
+	// before The Lounge gives up attempting to fetch a link. This can be useful
+	// if you've increased the `prefetchMaxImageSize`.
+	//
+	// Take caution, however, that an inordinately large value may lead to
+	// performance issues or even a denial of service, since The Lounge will not
+	// be able to clean up outgoing connections as quickly. Usually the default
+	// value is appropriate, so only change it if necessary.
+	//
+	// This value is set to `5000` milliseconds by default.
+	prefetchTimeout: 5000,
+
 	// ### `fileUpload`
 	//
 	// Allow uploading files to the server hosting The Lounge.

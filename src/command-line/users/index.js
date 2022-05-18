@@ -1,7 +1,8 @@
 "use strict";
+const Config = require("./config");
 const Helper = require("../../helper");
 
-if (!Helper.config.ldap.enable && !Helper.config.headerAuth.enable) {
+if (!Config.values.ldap.enable && !Config.values.headerAuth.enable) {
 	require("./add");
 	require("./reset");
 }

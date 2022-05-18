@@ -20,7 +20,7 @@ function headerAuth(manager, client, user, password, callback) {
 }
 
 function isHeaderAuthEnabled() {
-	return !Helper.config.public && Helper.config.headerAuth.enable;
+	return !Config.values.public && Config.values.headerAuth.enable;
 }
 
 module.exports = {

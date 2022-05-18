@@ -5,7 +5,7 @@ const path = require("path");
 const expect = require("chai").expect;
 const util = require("../util");
 const Msg = require("../../src/models/msg");
-const Helper = require("../../src/helper");
+const Config = require("../../src/config");
 const MessageStorage = require("../../src/plugins/messageStorage/sqlite.js");
 
 describe("SQLite Message Storage", function () {
@@ -13,7 +13,7 @@ describe("SQLite Message Storage", function () {
 	this.timeout(util.isRunningOnCI() ? 25000 : 5000);
 	this.slow(300);
 
-	const expectedPath = path.join(Helper.getHomePath(), "logs", "testUser.sqlite3");
+	const expectedPath = path.join(Config.getHomePath(), "logs", "testUser.sqlite3");
 	let store;
 
 	before(function (done) {
@@ -34,7 +34,7 @@ describe("SQLite Message Storage", function () {
 		// After tests run, remove the logs folder
 		// so we return to the clean state
 		fs.unlinkSync(expectedPath);
-		fs.rmdir(path.join(Helper.getHomePath(), "logs"), done);
+		fs.rmdir(path.join(Config.getHomePath(), "logs"), done);
 	});
 
 	it("should resolve an empty array when disabled", function () {
@@ -127,10 +127,10 @@ describe("SQLite Message Storage", function () {
 	});
 
 	it("should retrieve latest LIMIT messages in order", function () {
-		const originalMaxHistory = Helper.config.maxHistory;
+		const originalMaxHistory = Config.values.maxHistory;
 
 		try {
-			Helper.config.maxHistory = 2;
+			Config.values.maxHistory = 2;
 
 			for (let i = 0; i < 200; ++i) {
 				store.index(
@@ -150,15 +150,15 @@ describe("SQLite Message Storage", function () {
 					expect(messages.map((i) => i.text)).to.deep.equal(["msg 198", "msg 199"]);
 				});
 		} finally {
-			Helper.config.maxHistory = originalMaxHistory;
+			Config.values.maxHistory = originalMaxHistory;
 		}
 	});
 
 	it("should search messages", function () {
-		const originalMaxHistory = Helper.config.maxHistory;
+		const originalMaxHistory = Config.values.maxHistory;
 
 		try {
-			Helper.config.maxHistory = 2;
+			Config.values.maxHistory = 2;
 
 			return store
 				.search({
@@ -177,7 +177,69 @@ describe("SQLite Message Storage", function () {
 					expect(messages.results.map((i) => i.text)).to.deep.equal(expectedMessages);
 				});
 		} finally {
-			Helper.config.maxHistory = originalMaxHistory;
+			Config.values.maxHistory = originalMaxHistory;
+		}
+	});
+
+	it("should search messages with escaped wildcards", function () {
+		function assertResults(query, expected) {
+			return store
+				.search({
+					searchTerm: query,
+					networkUuid: "this-is-a-network-guid2",
+				})
+				.then((messages) => {
+					expect(messages.results.map((i) => i.text)).to.deep.equal(expected);
+				});
+		}
+
+		const originalMaxHistory = Config.values.maxHistory;
+
+		try {
+			Config.values.maxHistory = 3;
+
+			store.index(
+				{uuid: "this-is-a-network-guid2"},
+				{name: "#channel"},
+				new Msg({
+					time: 123456790,
+					text: `foo % bar _ baz`,
+				})
+			);
+
+			store.index(
+				{uuid: "this-is-a-network-guid2"},
+				{name: "#channel"},
+				new Msg({
+					time: 123456791,
+					text: `foo bar x baz`,
+				})
+			);
+
+			store.index(
+				{uuid: "this-is-a-network-guid2"},
+				{name: "#channel"},
+				new Msg({
+					time: 123456792,
+					text: `bar @ baz`,
+				})
+			);
+
+			return (
+				store
+					.getMessages({uuid: "this-is-a-network-guid2"}, {name: "#channel"})
+					// .getMessages() waits for store.index() transactions to commit
+					.then(() => assertResults("foo", ["foo % bar _ baz", "foo bar x baz"]))
+					.then(() => assertResults("%", ["foo % bar _ baz"]))
+					.then(() => assertResults("foo % bar ", ["foo % bar _ baz"]))
+					.then(() => assertResults("_", ["foo % bar _ baz"]))
+					.then(() => assertResults("bar _ baz", ["foo % bar _ baz"]))
+					.then(() => assertResults("%%", []))
+					.then(() => assertResults("@%", []))
+					.then(() => assertResults("@", ["bar @ baz"]))
+			);
+		} finally {
+			Config.values.maxHistory = originalMaxHistory;
 		}
 	});
 

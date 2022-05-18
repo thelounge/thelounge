@@ -7,6 +7,7 @@ const Chan = require("./chan");
 const Msg = require("./msg");
 const Prefix = require("./prefix");
 const Helper = require("../helper");
+const Config = require("../config");
 const STSPolicies = require("../plugins/sts");
 const ClientCertificate = require("../plugins/clientCertificate");
 
@@ -92,7 +93,7 @@ Network.prototype.validate = function (client) {
 	// Remove new lines and limit length
 	const cleanString = (str) => str.replace(/[\x00\r\n]/g, "").substring(0, 300);
 
-	this.setNick(cleanNick(String(this.nick || Helper.getDefaultNick())));
+	this.setNick(cleanNick(String(this.nick || Config.getDefaultNick())));
 
 	if (!this.username) {
 		// If username is empty, make one from the provided nick
@@ -133,32 +134,28 @@ Network.prototype.validate = function (client) {
 		this.sasl = "";
 	}
 
-	if (!this.tls) {
-		ClientCertificate.remove(this.uuid);
-	}
-
-	if (Helper.config.lockNetwork) {
+	if (Config.values.lockNetwork) {
 		// This check is needed to prevent invalid user configurations
 		if (
-			!Helper.config.public &&
+			!Config.values.public &&
 			this.host &&
 			this.host.length > 0 &&
-			this.host !== Helper.config.defaults.host
+			this.host !== Config.values.defaults.host
 		) {
 			error(this, `The hostname you specified (${this.host}) is not allowed.`);
 			return false;
 		}
 
-		if (Helper.config.public) {
-			this.name = Helper.config.defaults.name;
+		if (Config.values.public) {
+			this.name = Config.values.defaults.name;
 			// Sync lobby channel name
-			this.channels[0].name = Helper.config.defaults.name;
+			this.channels[0].name = Config.values.defaults.name;
 		}
 
-		this.host = Helper.config.defaults.host;
-		this.port = Helper.config.defaults.port;
-		this.tls = Helper.config.defaults.tls;
-		this.rejectUnauthorized = Helper.config.defaults.rejectUnauthorized;
+		this.host = Config.values.defaults.host;
+		this.port = Config.values.defaults.port;
+		this.tls = Config.values.defaults.tls;
+		this.rejectUnauthorized = Config.values.defaults.rejectUnauthorized;
 	}
 
 	if (this.host.length === 0) {
@@ -185,7 +182,7 @@ Network.prototype.validate = function (client) {
 Network.prototype.createIrcFramework = function (client) {
 	this.irc = new IrcFramework.Client({
 		version: false, // We handle it ourselves
-		outgoing_addr: Helper.config.bind,
+		outgoing_addr: Config.values.bind,
 		enable_chghost: true,
 		enable_echomessage: true,
 		enable_setname: true,
@@ -200,13 +197,8 @@ Network.prototype.createIrcFramework = function (client) {
 
 	this.irc.requestCap([
 		"znc.in/self-message", // Legacy echo-message for ZNC
+		"znc.in/playback", // See http://wiki.znc.in/Playback
 	]);
-
-	// Request only new messages from ZNC if we have sqlite logging enabled
-	// See http://wiki.znc.in/Playback
-	if (client.messageProvider) {
-		this.irc.requestCap("znc.in/playback");
-	}
 };
 
 Network.prototype.setIrcFrameworkOptions = function (client) {
@@ -214,7 +206,7 @@ Network.prototype.setIrcFrameworkOptions = function (client) {
 	this.irc.options.port = this.port;
 	this.irc.options.password = this.password;
 	this.irc.options.nick = this.nick;
-	this.irc.options.username = Helper.config.useHexIp
+	this.irc.options.username = Config.values.useHexIp
 		? Helper.ip2hex(client.config.browser.ip)
 		: this.username;
 	this.irc.options.gecos = this.realname;
@@ -252,14 +244,14 @@ Network.prototype.setIrcFrameworkOptions = function (client) {
 
 Network.prototype.createWebIrc = function (client) {
 	if (
-		!Helper.config.webirc ||
-		!Object.prototype.hasOwnProperty.call(Helper.config.webirc, this.host)
+		!Config.values.webirc ||
+		!Object.prototype.hasOwnProperty.call(Config.values.webirc, this.host)
 	) {
 		return null;
 	}
 
 	const webircObject = {
-		password: Helper.config.webirc[this.host],
+		password: Config.values.webirc[this.host],
 		username: "thelounge",
 		address: client.config.browser.ip,
 		hostname: client.config.browser.hostname,
@@ -272,9 +264,9 @@ Network.prototype.createWebIrc = function (client) {
 		};
 	}
 
-	if (typeof Helper.config.webirc[this.host] === "function") {
+	if (typeof Config.values.webirc[this.host] === "function") {
 		webircObject.password = null;
-		return Helper.config.webirc[this.host](webircObject, this);
+		return Config.values.webirc[this.host](webircObject, this);
 	}
 
 	return webircObject;
@@ -471,7 +463,7 @@ Network.prototype.quit = function (quitMessage) {
 	// https://ircv3.net/specs/extensions/sts#rescheduling-expiry-on-disconnect
 	STSPolicies.refreshExpiration(this.host);
 
-	this.irc.quit(quitMessage || this.leaveMessage || Helper.config.leaveMessage);
+	this.irc.quit(quitMessage || this.leaveMessage || Config.values.leaveMessage);
 };
 
 Network.prototype.exportForEdit = function () {
@@ -495,7 +487,7 @@ Network.prototype.exportForEdit = function () {
 		"proxyPassword",
 	];
 
-	if (!Helper.config.lockNetwork) {
+	if (!Config.values.lockNetwork) {
 		fieldsToReturn.push("host");
 		fieldsToReturn.push("port");
 		fieldsToReturn.push("tls");

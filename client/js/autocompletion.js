@@ -3,7 +3,9 @@
 const constants = require("./constants");
 
 import Mousetrap from "mousetrap";
-import {Textcomplete, Textarea} from "textcomplete";
+import {Textcomplete} from "@textcomplete/core/dist/Textcomplete";
+import {TextareaEditor} from "@textcomplete/textarea/dist/TextareaEditor";
+
 import fuzzy from "fuzzy";
 
 import emojiMap from "./helpers/simplemap.json";
@@ -214,29 +216,21 @@ function enableAutocomplete(input) {
 		"keydown"
 	);
 
-	const editor = new Textarea(input);
-	const textcomplete = new Textcomplete(editor, {
-		dropdown: {
-			className: "textcomplete-menu",
-			placement: "top",
-		},
-	});
-
-	textcomplete.register([
+	const strategies = [
 		emojiStrategy,
 		nicksStrategy,
 		chanStrategy,
 		commandStrategy,
 		foregroundColorStrategy,
 		backgroundColorStrategy,
-	]);
+	];
 
-	// Activate the first item by default
-	// https://github.com/yuku-t/textcomplete/issues/93
-	textcomplete.on("rendered", () => {
-		if (textcomplete.dropdown.items.length > 0) {
-			textcomplete.dropdown.items[0].activate();
-		}
+	const editor = new TextareaEditor(input);
+	const textcomplete = new Textcomplete(editor, strategies, {
+		dropdown: {
+			className: "textcomplete-menu",
+			placement: "top",
+		},
 	});
 
 	textcomplete.on("show", () => {

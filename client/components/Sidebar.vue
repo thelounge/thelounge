@@ -52,7 +52,7 @@
 					aria-label="Settings"
 					role="tab"
 					aria-controls="settings"
-					:aria-selected="$route.name === 'Settings'"
+					:aria-selected="$route.name === 'General'"
 			/></span>
 			<span
 				class="tooltipped tooltipped-n tooltipped-no-touch"

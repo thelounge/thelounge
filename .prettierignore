@@ -1,6 +1,7 @@
 coverage/
 public/
 test/fixtures/.thelounge/logs/
+test/fixtures/.thelounge/certificates/
 test/fixtures/.thelounge/storage/
 
 *.log

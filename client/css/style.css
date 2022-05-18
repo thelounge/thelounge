@@ -298,6 +298,7 @@ p {
 #connect .extra-help,
 #settings .extra-help,
 #settings #play::before,
+#settings .settings-menu .icon::before,
 #form #upload::before,
 #form #submit::before,
 #chat .msg[data-type="away"] .from::before,
@@ -397,7 +398,9 @@ p {
 }
 
 #footer .connect::before { content: "\f067"; /* http://fontawesome.io/icon/plus/ */ }
+
 #footer .settings::before { content: "\f013"; /* http://fontawesome.io/icon/cog/ */ }
+
 #footer .help::before { content: "\f059"; /* http://fontawesome.io/icon/question/ */ }
 
 #form #upload::before { content: "\f0c6"; /* https://fontawesome.com/icons/paperclip?style=solid */ }
@@ -613,7 +616,6 @@ p {
 	line-height: 1;
 	height: 36px;
 	width: 36px;
-	margin-top: 6px;
 	flex-shrink: 0;
 }
 
@@ -723,7 +725,7 @@ background on hover (unless active) */
 	background-color: rgb(48 62 74 / 50%); /* #303e4a x 50% alpha */
 }
 
-/* Darker background and defualt cursor for active channels */
+/* Darker background and default cursor for active channels */
 #footer button.active,
 .channel-list-item.active {
 	background-color: #303e4a;
@@ -1061,6 +1063,7 @@ textarea.input {
 }
 
 .header {
+	align-items: center;
 	line-height: 45px;
 	height: 45px;
 	padding: 0 6px;
@@ -2913,8 +2916,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 /* Correctly handle multiple successive whitespace characters.
    For example: user has quit ( ===> L   O   L <=== )  */
-
-.header .topic,
 #chat .msg[data-type="action"] .content,
 #chat .msg[data-type="message"] .content,
 #chat .msg[data-type="monospace_block"] .content,
@@ -2922,9 +2923,13 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #chat .ctcp-message,
 #chat .part-reason,
 #chat .quit-reason,
-#chat .new-topic,
-#chat table.channel-list .topic {
+#chat .new-topic {
 	white-space: pre-wrap;
+}
+
+#chat table.channel-list .topic,
+.header .topic {
+	white-space: nowrap;
 }
 
 .chat-view[data-type="search-results"] .search-status {

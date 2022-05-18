@@ -1,7 +1,7 @@
 {
   "name": "thelounge",
   "description": "The self-hosted Web IRC client",
-  "version": "4.3.1-rc.1",
+  "version": "4.3.1",
   "preferGlobal": true,
   "bin": {
     "thelounge": "index.js"
@@ -16,13 +16,13 @@
     "coverage": "run-s test:* && nyc --nycrc-path=test/.nycrc-report.json report",
     "dev": "node index start --dev",
     "format:prettier": "prettier --write \"**/*.*\"",
-    "lint:check-eslint": "eslint-config-prettier .eslintrc.yml",
+    "lint:check-eslint": "eslint-config-prettier .eslintrc.cjs",
     "lint:eslint": "eslint . --ext .js,.vue --report-unused-disable-directives --color",
     "lint:prettier": "prettier --list-different \"**/*.*\"",
     "lint:stylelint": "stylelint --color \"client/**/*.css\"",
     "start": "node index start",
     "test": "run-p --aggregate-output --continue-on-error lint:* test:*",
-    "test:mocha": "webpack --config webpack.config-test.js && nyc --nycrc-path=test/.nycrc-mocha.json mocha --colors --config=test/.mocharc.yml",
+    "test:mocha": "webpack --mode=development && nyc --nycrc-path=test/.nycrc-mocha.json mocha --colors --config=test/.mocharc.yml",
     "watch": "webpack --watch"
   },
   "keywords": [
@@ -37,7 +37,7 @@
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=14.0.0"
   },
   "dependencies": {
     "@fastify/busboy": "1.0.0",
@@ -46,7 +46,7 @@
     "cheerio": "1.0.0-rc.10",
     "commander": "9.0.0",
     "content-disposition": "0.5.4",
-    "express": "4.17.2",
+    "express": "4.17.3",
     "file-type": "16.5.3",
     "filenamify": "4.3.0",
     "got": "11.8.3",
@@ -56,7 +56,7 @@
     "linkify-it": "3.0.3",
     "lodash": "4.17.21",
     "mime-types": "2.1.34",
-    "node-forge": "1.2.1",
+    "node-forge": "1.3.0",
     "package-json": "7.0.0",
     "read": "1.0.7",
     "read-chunk": "3.2.0",
@@ -69,15 +69,17 @@
     "yarn": "1.22.17"
   },
   "optionalDependencies": {
-    "sqlite3": "https://github.com/mapbox/node-sqlite3#918052b538b0effe6c4a44c74a16b2749c08a0d2"
+    "sqlite3": "5.0.6"
   },
   "devDependencies": {
-    "@babel/core": "7.17.5",
-    "@babel/preset-env": "7.16.11",
+    "@babel/core": "7.17.10",
+    "@babel/preset-env": "7.17.10",
     "@fortawesome/fontawesome-free": "5.15.4",
+    "@textcomplete/core": "0.1.11",
+    "@textcomplete/textarea": "0.1.10",
     "@vue/server-test-utils": "1.3.0",
     "@vue/test-utils": "1.3.0",
-    "babel-loader": "8.2.3",
+    "babel-loader": "8.2.5",
     "babel-plugin-istanbul": "6.1.1",
     "chai": "4.3.6",
     "copy-webpack-plugin": "10.2.4",
@@ -107,7 +109,6 @@
     "socket.io-client": "4.4.1",
     "stylelint": "14.3.0",
     "stylelint-config-standard": "24.0.0",
-    "textcomplete": "0.18.2",
     "undate": "0.3.0",
     "vue": "2.6.14",
     "vue-loader": "15.9.8",
@@ -127,6 +128,6 @@
     }
   },
   "resolutions": {
-    "sortablejs": "git+https://github.com/thelounge/Sortable.git"
+    "sortablejs": "1.15.0"
   }
 }

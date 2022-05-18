@@ -2,7 +2,7 @@
 
 const Msg = require("../../models/msg");
 const Chan = require("../../models/chan");
-const Helper = require("../../helper");
+const Config = require("../../config");
 
 exports.commands = ["close", "leave", "part"];
 exports.allowDisconnected = true;
@@ -42,7 +42,7 @@ exports.input = function (network, chan, cmd, args) {
 	) {
 		this.part(network, target);
 	} else {
-		const partMessage = args.join(" ") || network.leaveMessage || Helper.config.leaveMessage;
+		const partMessage = args.join(" ") || network.leaveMessage || Config.values.leaveMessage;
 		network.irc.part(target.name, partMessage);
 	}
 

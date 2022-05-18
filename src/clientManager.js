@@ -8,7 +8,7 @@ const fs = require("fs");
 const path = require("path");
 const Auth = require("./plugins/auth");
 const Client = require("./client");
-const Helper = require("./helper");
+const Config = require("./config");
 const WebPush = require("./plugins/webpush");
 
 module.exports = ClientManager;
@@ -22,12 +22,12 @@ ClientManager.prototype.init = function (identHandler, sockets) {
 	this.identHandler = identHandler;
 	this.webPush = new WebPush();
 
-	if (!Helper.config.public) {
+	if (!Config.values.public) {
 		this.loadUsers();
 
 		// LDAP / header auth do not have user commands, and users are dynamically
 		// created upon logon, so we don't need to watch for new files
-		if (!Helper.config.ldap.enable && !Helper.config.headerAuth.enable) {
+		if (!Config.values.ldap.enable && !Config.values.headerAuth.enable) {
 			this.autoloadUsers();
 		}
 	}
@@ -81,7 +81,7 @@ ClientManager.prototype.loadUsers = function () {
 
 ClientManager.prototype.autoloadUsers = function () {
 	fs.watch(
-		Helper.getUsersPath(),
+		Config.getUsersPath(),
 		_.debounce(
 			() => {
 				const loaded = this.clients.map((c) => c.name);
@@ -145,8 +145,12 @@ ClientManager.prototype.loadUser = function (name) {
 };
 
 ClientManager.prototype.getUsers = function () {
+	if (!fs.existsSync(Config.getUsersPath())) {
+		return [];
+	}
+
 	return fs
-		.readdirSync(Helper.getUsersPath())
+		.readdirSync(Config.getUsersPath())
 		.filter((file) => file.endsWith(".json"))
 		.map((file) => file.slice(0, -5));
 };
@@ -156,7 +160,7 @@ ClientManager.prototype.addUser = function (name, password, enableLog) {
 		throw new Error(`${name} is an invalid username.`);
 	}
 
-	const userPath = Helper.getUserConfigPath(name);
+	const userPath = Config.getUserConfigPath(name);
 
 	if (fs.existsSync(userPath)) {
 		log.error(`User ${colors.green(name)} already exists.`);
@@ -169,14 +173,16 @@ ClientManager.prototype.addUser = function (name, password, enableLog) {
 	};
 
 	try {
-		fs.writeFileSync(userPath, JSON.stringify(user, null, "\t"));
+		fs.writeFileSync(userPath, JSON.stringify(user, null, "\t"), {
+			mode: 0o600,
+		});
 	} catch (e) {
 		log.error(`Failed to create user ${colors.green(name)} (${e})`);
 		throw e;
 	}
 
 	try {
-		const userFolderStat = fs.statSync(Helper.getUsersPath());
+		const userFolderStat = fs.statSync(Config.getUsersPath());
 		const userFileStat = fs.statSync(userPath);
 
 		if (
@@ -225,13 +231,15 @@ ClientManager.prototype.saveUser = function (client, callback) {
 		return;
 	}
 
-	const pathReal = Helper.getUserConfigPath(client.name);
+	const pathReal = Config.getUserConfigPath(client.name);
 	const pathTemp = pathReal + ".tmp";
 
 	try {
 		// Write to a temp file first, in case the write fails
 		// we do not lose the original file (for example when disk is full)
-		fs.writeFileSync(pathTemp, newUser);
+		fs.writeFileSync(pathTemp, newUser, {
+			mode: 0o600,
+		});
 		fs.renameSync(pathTemp, pathReal);
 
 		return callback ? callback() : true;
@@ -245,7 +253,7 @@ ClientManager.prototype.saveUser = function (client, callback) {
 };
 
 ClientManager.prototype.removeUser = function (name) {
-	const userPath = Helper.getUserConfigPath(name);
+	const userPath = Config.getUserConfigPath(name);
 
 	if (!fs.existsSync(userPath)) {
 		log.error(`Tried to remove non-existing user ${colors.green(name)}.`);
@@ -258,7 +266,7 @@ ClientManager.prototype.removeUser = function (name) {
 };
 
 function readUserConfig(name) {
-	const userPath = Helper.getUserConfigPath(name);
+	const userPath = Config.getUserConfigPath(name);
 
 	if (!fs.existsSync(userPath)) {
 		log.error(`Tried to read non-existing user ${colors.green(name)}`);

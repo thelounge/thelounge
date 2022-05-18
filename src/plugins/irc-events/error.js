@@ -1,7 +1,7 @@
 "use strict";
 
 const Msg = require("../../models/msg");
-const Helper = require("../../helper");
+const Config = require("../../config");
 
 module.exports = function (irc, network) {
 	const client = this;
@@ -36,7 +36,7 @@ module.exports = function (irc, network) {
 	irc.on("nick in use", function (data) {
 		let message = data.nick + ": " + (data.reason || "Nickname is already in use.");
 
-		if (irc.connection.registered === false && !Helper.config.public) {
+		if (irc.connection.registered === false && !Config.values.public) {
 			message += " An attempt to use it will be made when this nick quits.";
 
 			// Clients usually get nick in use on connect when reconnecting to a network
@@ -81,7 +81,7 @@ module.exports = function (irc, network) {
 		lobby.pushMessage(client, msg, true);
 
 		if (irc.connection.registered === false) {
-			irc.changeNick(Helper.getDefaultNick());
+			irc.changeNick(Config.getDefaultNick());
 		}
 
 		client.emit("nick", {

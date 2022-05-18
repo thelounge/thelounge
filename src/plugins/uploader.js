@@ -1,6 +1,6 @@
 "use strict";
 
-const Helper = require("../helper");
+const Config = require("../config");
 const busboy = require("@fastify/busboy");
 const {v4: uuidv4} = require("uuid");
 const path = require("path");
@@ -86,7 +86,7 @@ class Uploader {
 		}
 
 		const folder = name.substring(0, 2);
-		const uploadPath = Helper.getFileUploadPath();
+		const uploadPath = Config.getFileUploadPath();
 		const filePath = path.join(uploadPath, folder, name);
 		let detectedMimeType = await Uploader.getFileType(filePath);
 
@@ -119,6 +119,8 @@ class Uploader {
 			detectedMimeType = "audio/flac";
 		} else if (detectedMimeType === "audio/x-m4a") {
 			detectedMimeType = "audio/mp4";
+		} else if (detectedMimeType === "video/quicktime") {
+			detectedMimeType = "video/mp4";
 		}
 
 		res.setHeader("Content-Disposition", disposition);
@@ -205,7 +207,7 @@ class Uploader {
 		// that already exists on disk
 		do {
 			randomName = crypto.randomBytes(8).toString("hex");
-			destDir = path.join(Helper.getFileUploadPath(), randomName.substring(0, 2));
+			destDir = path.join(Config.getFileUploadPath(), randomName.substring(0, 2));
 			destPath = path.join(destDir, randomName);
 		} while (fs.existsSync(destPath));
 
@@ -226,8 +228,8 @@ class Uploader {
 		busboyInstance.on("file", (fieldname, fileStream, filename) => {
 			uploadUrl = `${randomName}/${encodeURIComponent(filename)}`;
 
-			if (Helper.config.fileUpload.baseUrl) {
-				uploadUrl = new URL(uploadUrl, Helper.config.fileUpload.baseUrl).toString();
+			if (Config.values.fileUpload.baseUrl) {
+				uploadUrl = new URL(uploadUrl, Config.values.fileUpload.baseUrl).toString();
 			} else {
 				uploadUrl = `uploads/${uploadUrl}`;
 			}
@@ -264,7 +266,7 @@ class Uploader {
 	}
 
 	static getMaxFileSize() {
-		const configOption = Helper.config.fileUpload.maxFileSize;
+		const configOption = Config.values.fileUpload.maxFileSize;
 
 		// Busboy uses Infinity to allow unlimited file size
 		if (configOption < 1) {

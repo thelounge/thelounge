@@ -5,6 +5,7 @@ const log = require("../log");
 const colors = require("chalk");
 const fs = require("fs");
 const Helper = require("../helper");
+const Config = require("../config");
 const path = require("path");
 
 let home;
@@ -91,7 +92,7 @@ class Utils {
 
 	static executeYarnCommand(command, ...parameters) {
 		const yarn = require.resolve("yarn/bin/yarn.js");
-		const packagesPath = Helper.getPackagesPath();
+		const packagesPath = Config.getPackagesPath();
 		const cachePath = path.join(packagesPath, "package_manager_cache");
 
 		const staticParameters = [
