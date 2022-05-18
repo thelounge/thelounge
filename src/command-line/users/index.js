@@ -1,5 +1,5 @@
 "use strict";
-const Config = require("./config");
+const Config = require("../../config");
 
 if (!Config.values.ldap.enable && !Config.values.headerAuth.enable) {
 	require("./add");
