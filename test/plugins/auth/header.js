@@ -2,7 +2,7 @@
 
 const log = require("../../../src/log");
 const headerAuth = require("../../../src/plugins/auth/header");
-const Config = require("./config");
+const Config = require("../../../src/config");
 const expect = require("chai").expect;
 const stub = require("sinon").stub;
 

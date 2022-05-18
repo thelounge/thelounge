@@ -1,6 +1,6 @@
 "use strict";
 
-const Config = require("./config");
+const Config = require("../../config");
 const log = require("../../log");
 
 function headerAuth(manager, client, user, password, callback) {
