@@ -1,7 +1,6 @@
 "use strict";
 
 const webpack = require("webpack");
-const fs = require("fs");
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -17,6 +16,7 @@ const config = {
 	},
 	devtool: "source-map",
 	output: {
+		clean: true, // Clean the output directory before emit.
 		path: path.resolve(__dirname, "public"),
 		filename: "[name]",
 		publicPath: "/",
@@ -144,12 +144,6 @@ const config = {
 
 module.exports = (env, argv) => {
 	if (argv.mode === "development") {
-		const testFile = path.resolve(__dirname, "test/public/testclient.js");
-
-		if (fs.existsSync(testFile)) {
-			fs.unlinkSync(testFile);
-		}
-
 		config.target = "node";
 		config.devtool = "eval";
 		config.stats = "errors-only";
@@ -173,7 +167,9 @@ module.exports = (env, argv) => {
 		// Disable plugins like copy files, it is not required
 		config.plugins = [
 			new VueLoaderPlugin(),
-
+			new MiniCssExtractPlugin({
+				filename: "css/style.css",
+			}),
 			// Client tests that require Vue may end up requireing socket.io
 			new webpack.NormalModuleReplacementPlugin(
 				/js(\/|\\)socket\.js/,
