@@ -240,34 +240,73 @@ export default {
 				autocompletionRef.hide();
 			}
 
-			this.channel.inputHistoryPosition = 0;
-			this.channel.pendingMessage = "";
-			this.$refs.input.value = "";
-			this.setInputSize();
+			const resetInput = () => {
+				this.channel.inputHistoryPosition = 0;
+				this.channel.pendingMessage = "";
+				this.$refs.input.value = "";
+				this.setInputSize();
+			};
 
-			// Store new message in history if last message isn't already equal
-			if (this.channel.inputHistory[1] !== text) {
-				this.channel.inputHistory.splice(1, 0, text);
-			}
+			const sendMessage = () => {
+				resetInput();
 
-			// Limit input history to a 100 entries
-			if (this.channel.inputHistory.length > 100) {
-				this.channel.inputHistory.pop();
-			}
+				// Store new message in history if last message isn't already equal
+				if (this.channel.inputHistory[1] !== text) {
+					this.channel.inputHistory.splice(1, 0, text);
+				}
 
-			if (text[0] === "/") {
-				const args = text.substr(1).split(" ");
-				const cmd = args.shift().toLowerCase();
+				// Limit input history to 100 entries
+				if (this.channel.inputHistory.length > 100) {
+					this.channel.inputHistory.pop();
+				}
 
-				if (
-					Object.prototype.hasOwnProperty.call(commands, cmd) &&
-					commands[cmd].input(args)
-				) {
+				if (text[0] === "/") {
+					const args = text.substr(1).split(" ");
+					const cmd = args.shift().toLowerCase();
+
+					if (
+						Object.prototype.hasOwnProperty.call(commands, cmd) &&
+						commands[cmd].input(args)
+					) {
+						return false;
+					}
+				}
+
+				socket.emit("input", {target, text});
+			};
+
+			if (this.$store.state.serverConfiguration.fileUpload) {
+				const lines = 1 + (text.match(/\n/g) || "").length;
+
+				if (lines > 3 || text.length > 700) {
+					eventbus.emit(
+						"confirm-dialog",
+						{
+							title: "Upload as file?",
+							text: `You're trying to send a lot of text. Would you like to upload it?`,
+							confirmButton: "Upload",
+							cancelButton: "Send anyway",
+						},
+						(result) => {
+							if (!result) {
+								sendMessage();
+								return;
+							}
+
+							resetInput();
+
+							const file = new File([text], "paste.txt", {
+								type: "text/plain",
+							});
+							upload.triggerUpload([file]);
+						}
+					);
+
 					return false;
 				}
 			}
 
-			socket.emit("input", {target, text});
+			sendMessage();
 		},
 		onUploadInputChange() {
 			const files = Array.from(this.$refs.uploadInput.files);

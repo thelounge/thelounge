@@ -154,7 +154,7 @@ export function generateChannelContextMenu($root, channel, network) {
 					{
 						title: "Clear history",
 						text: `Are you sure you want to clear history for ${channel.name}? This cannot be undone.`,
-						button: "Clear history",
+						confirmButton: "Clear history",
 					},
 					(result) => {
 						if (!result) {
