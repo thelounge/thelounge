@@ -23,6 +23,18 @@ const fieldsForClient = {
 	serverOptions: true,
 };
 
+const parseCommands = function (commands) {
+	if (!commands) {
+		return [];
+	}
+
+	// Split commands into an array
+	return commands
+		.replace(/\r\n|\r|\n/g, "\n")
+		.split("\n")
+		.filter((command) => command.length > 0);
+};
+
 function Network(attr) {
 	_.defaults(this, attr, {
 		name: "",
@@ -84,6 +96,10 @@ function Network(attr) {
 				this.channels.every((chan) => chan.muted || chan.type === Chan.Type.SPECIAL),
 		})
 	);
+
+	if (this.commands && !Array.isArray(this.commands)) {
+		this.commands = parseCommands(this.commands);
+	}
 }
 
 Network.prototype.validate = function (client) {
@@ -299,10 +315,7 @@ Network.prototype.edit = function (client, args) {
 	this.proxyEnabled = !!args.proxyEnabled;
 
 	// Split commands into an array
-	this.commands = String(args.commands || "")
-		.replace(/\r\n|\r|\n/g, "\n")
-		.split("\n")
-		.filter((command) => command.length > 0);
+	this.commands = parseCommands(String(args.commands || ""));
 
 	// Sync lobby channel name
 	this.channels[0].name = this.name;

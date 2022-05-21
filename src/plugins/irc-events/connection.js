@@ -7,6 +7,8 @@ const Chan = require("../../models/chan");
 const Helper = require("../../helper");
 const Config = require("../../config");
 
+const MAX_DELAY_LENGTH_SECONDS = 10;
+
 module.exports = function (irc, network) {
 	const client = this;
 
@@ -40,15 +42,34 @@ module.exports = function (irc, network) {
 		let delay = 1000;
 
 		if (Array.isArray(network.commands)) {
-			network.commands.forEach((cmd) => {
-				setTimeout(function () {
-					client.input({
-						target: network.channels[0].id,
-						text: cmd,
-					});
-				}, delay);
-				delay += 1000;
-			});
+			const commands = network.commands.map(
+				(cmd) =>
+					new Promise((resolve) => {
+						if (cmd.toLowerCase().startsWith("/wait ")) {
+							try {
+								delay = parseInt(cmd.substring(6), 10) * 1000;
+
+								if (delay > MAX_DELAY_LENGTH_SECONDS * 1000) {
+									delay = MAX_DELAY_LENGTH_SECONDS * 1000;
+								}
+							} catch {
+								delay = 1000;
+							}
+
+							resolve();
+						} else {
+							setTimeout(() => {
+								client.input({
+									target: network.channels[0].id,
+									text: cmd,
+								});
+								resolve();
+							}, delay);
+						}
+					})
+			);
+
+			Promise.all(commands);
 		}
 
 		network.channels.forEach((chan) => {
