@@ -52,6 +52,7 @@ module.exports = function (irc, network) {
 			client.emit("msg:special", {
 				chan: chan.id,
 				data: msg,
+				focus: false,
 			});
 		}
 	}

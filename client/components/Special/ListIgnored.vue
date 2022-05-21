@@ -1,5 +1,6 @@
 <template>
-	<table class="ignore-list">
+	<div v-if="channel.data.length === 0" class="empty-ignore-list">Your ignorelist is empty.</div>
+	<table v-else class="ignore-list">
 		<thead>
 			<tr>
 				<th class="hostmask">Hostmask</th>
@@ -9,11 +10,17 @@
 		<tbody>
 			<tr v-for="user in channel.data" :key="user.hostmask">
 				<td class="hostmask"><ParsedMessage :network="network" :text="user.hostmask" /></td>
-				<td class="when">{{ localetime(user.when) }}</td>
+				<td class="when">{{ getLocaletime(user.when) }}</td>
 			</tr>
 		</tbody>
 	</table>
 </template>
+
+<style scoped>
+.empty-ignore-list {
+	padding: 0 0.5rem;
+}
+</style>
 
 <script>
 import ParsedMessage from "../ParsedMessage.vue";
@@ -29,8 +36,8 @@ export default {
 		channel: Object,
 	},
 	methods: {
-		localetime(date) {
-			return localetime(date);
+		getLocaletime(datetime) {
+			return localetime(datetime);
 		},
 	},
 };

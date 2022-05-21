@@ -10,6 +10,7 @@ exports.input = function (network, chan, cmd, args) {
 	const client = this;
 	let target;
 	let hostmask;
+	let create_new_ignored_window = false;
 
 	if (cmd !== "ignorelist" && (args.length === 0 || args[0].trim().length === 0)) {
 		chan.pushMessage(
@@ -110,35 +111,41 @@ exports.input = function (network, chan, cmd, args) {
 					})
 				);
 			} else {
-				const chanName = "Ignored users";
-				const ignored = network.ignoreList.map((data) => ({
-					hostmask: `${data.nick}!${data.ident}@${data.hostname}`,
-					when: data.when,
-				}));
-				let newChan = network.getChannel(chanName);
-
-				if (typeof newChan === "undefined") {
-					newChan = client.createChannel({
-						type: Chan.Type.SPECIAL,
-						special: Chan.SpecialType.IGNORELIST,
-						name: chanName,
-						data: ignored,
-					});
-					client.emit("join", {
-						network: network.uuid,
-						chan: newChan.getFilteredClone(true),
-						index: network.addChannel(newChan),
-					});
-				} else {
-					newChan.data = ignored;
-
-					client.emit("msg:special", {
-						chan: newChan.id,
-						data: ignored,
-					});
-				}
+				create_new_ignored_window = true;
 			}
 
 			break;
+	}
+
+	const chanName = "Ignored users";
+	const channel = network.getChannel(chanName);
+
+	if (typeof channel === "undefined" && !create_new_ignored_window) {
+		return;
+	}
+
+	const ignored = network.ignoreList.map((data) => ({
+		hostmask: `${data.nick}!${data.ident}@${data.hostname}`,
+		when: data.when,
+	}));
+
+	if (typeof channel === "undefined" && create_new_ignored_window) {
+		const newChan = client.createChannel({
+			type: Chan.Type.SPECIAL,
+			special: Chan.SpecialType.IGNORELIST,
+			name: chanName,
+			data: ignored,
+		});
+		client.emit("join", {
+			network: network.uuid,
+			chan: newChan.getFilteredClone(true),
+			index: network.addChannel(newChan),
+		});
+	} else {
+		client.emit("msg:special", {
+			chan: channel.id,
+			data: ignored,
+			focus: false,
+		});
 	}
 };
