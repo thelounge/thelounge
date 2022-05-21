@@ -28,6 +28,7 @@ const store = new Vuex.Store({
 		isAutoCompleting: false,
 		isConnected: false,
 		networks: [],
+		favoriteChannels: [],
 		mentions: [],
 		hasServiceWorker: false,
 		pushNotificationState: "unsupported",
@@ -43,6 +44,7 @@ const store = new Vuex.Store({
 		messageSearchResults: null,
 		messageSearchInProgress: false,
 		searchEnabled: false,
+		favoritesOpen: storage.get("thelounge.state.favorites") !== "false",
 	},
 	mutations: {
 		appLoaded(state) {
@@ -129,10 +131,58 @@ const store = new Vuex.Store({
 
 			state.messageSearchResults = value;
 		},
+		favoriteChannels(state, payload) {
+			state.favoriteChannels.forEach((channel) => {
+				channel.favorite = false;
+				channel.displayName = "";
+			});
+
+			store.favoriteChannels = [];
+
+			// Channels can have the same name across networks, so we need to track and distinguish duplicates.
+			// We use a map so we can go back and update the channel that the name is a duplicate of.
+			// If they have a the same names on two different networks that have the same name,
+			// that's on them. I'm not paid to do this.
+			const names = new Map(); // Map of name --> { channelId, networkuuId }
+			state.favoriteChannels = payload.map(({channelId, networkUuid}) => {
+				const netChan = this.getters.findChannelOnNetworkById(networkUuid, channelId);
+				netChan.channel.favorite = true;
+
+				if (names.has(netChan.channel.name)) {
+					const dupe = names.get(netChan.channel.name);
+
+					if (dupe) {
+						const otherNetChan = this.getters.findChannelOnNetworkById(
+							dupe.networkId,
+							dupe.channelId
+						);
+
+						netChan.channel.displayName =
+							netChan.channel.name + ` (${netChan.network.name})`;
+
+						otherNetChan.channel.displayName =
+							otherNetChan.channel.name + ` (${otherNetChan.network.name})`;
+					}
+				} else {
+					names.set(netChan.channel.name, {
+						channelId: netChan.channel.id,
+						networkId: netChan.network.uuid,
+					});
+				}
+
+				return netChan.channel;
+			});
+		},
+		toggleFavorites(state) {
+			state.favoritesOpen = !state.favoritesOpen;
+		},
 	},
 	actions: {
 		partChannel({commit, state}, netChan) {
 			const mentions = state.mentions.filter((msg) => !(msg.chanId === netChan.channel.id));
+			const favorites = state.favoriteChannels.filter((fav) => fav.id !== netChan.channel.id);
+
+			commit("favoriteChannels", favorites);
 			commit("mentions", mentions);
 		},
 	},
@@ -149,6 +199,21 @@ const store = new Vuex.Store({
 
 				for (const channel of network.channels) {
 					if (channel.name === channelName) {
+						return {network, channel};
+					}
+				}
+			}
+
+			return null;
+		},
+		findChannelOnNetworkById: (state) => (networkUuid, channelId) => {
+			for (const network of state.networks) {
+				if (network.uuid !== networkUuid) {
+					continue;
+				}
+
+				for (const channel of network.channels) {
+					if (channel.id === channelId) {
 						return {network, channel};
 					}
 				}

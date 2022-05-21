@@ -59,6 +59,7 @@ function Client(manager, name, config = {}) {
 		idMsg: 1,
 		name: name,
 		networks: [],
+		favoriteChannels: [],
 		mentions: [],
 		manager: manager,
 		messageStorage: [],
@@ -203,6 +204,7 @@ Client.prototype.connect = function (args, isStartup = false) {
 					key: chan.key || "",
 					type: chan.type,
 					muted: chan.muted,
+					favorite: chan.favorite,
 				})
 			);
 		});
@@ -296,6 +298,15 @@ Client.prototype.connect = function (args, isStartup = false) {
 		client.save();
 		channels.forEach((channel) => channel.loadMessages(client, network));
 	}
+
+	channels.forEach((chan) => {
+		if (chan.favorite) {
+			// The third argument for addToFavorites is whether to save,
+			// we will only be adding in this case if the favorite is loaded from disk,
+			// so we can safely set it to false.
+			this.addToFavorites(network.uuid, chan.id, false);
+		}
+	});
 };
 
 Client.prototype.generateToken = function (callback) {
@@ -654,6 +665,7 @@ Client.prototype.part = function (network, chan) {
 	const client = this;
 	network.channels = _.without(network.channels, chan);
 	client.mentions = client.mentions.filter((msg) => !(msg.chanId === chan.id));
+	client.favoriteChannels = client.favoriteChannels.filter((fav) => fav.channelId !== chan.id);
 	chan.destroy();
 	client.save();
 	client.emit("part", {
@@ -769,3 +781,81 @@ Client.prototype.save = _.debounce(
 	5000,
 	{maxWait: 20000}
 );
+
+Client.prototype.addToFavorites = function (networkUuid, chanId, shouldSave = true) {
+	const client = this;
+	const favorites = client.favoriteChannels;
+	const isFavorited = favorites.find(({channelId}) => channelId === chanId);
+
+	if (!isFavorited) {
+		favorites.push({
+			channelId: chanId,
+			networkUuid: networkUuid,
+		});
+
+		if (shouldSave) {
+			client.save();
+		}
+	}
+
+	client.emitToAttachedClients("favorites", {
+		favoriteChannels: client.favoriteChannels,
+	});
+
+	const netChan = client.find(chanId);
+
+	if (netChan.chan) {
+		netChan.chan.favorite = true;
+	}
+};
+
+Client.prototype.removeFromFavorites = function (chanId) {
+	const client = this;
+	const favorites = client.favoriteChannels;
+	const isFavorited = favorites.find(({channelId}) => channelId === chanId);
+
+	if (isFavorited) {
+		favorites.splice(favorites.indexOf(isFavorited), 1);
+		client.save();
+	}
+
+	client.emitToAttachedClients("favorites", {
+		favoriteChannels: client.favoriteChannels,
+	});
+
+	const netChan = client.find(chanId);
+
+	if (netChan.chan) {
+		netChan.chan.favorite = false;
+	}
+};
+
+Client.prototype.clearFavorites = function () {
+	const client = this;
+
+	for (const favorite of client.favoriteChannels) {
+		const netChan = client.find(favorite.channelId);
+
+		if (netChan.chan) {
+			netChan.chan.favorite = false;
+		}
+	}
+
+	client.favoriteChannels = [];
+	client.save();
+	client.emitToAttachedClients("favorites", {
+		favoriteChannels: client.favoriteChannels,
+	});
+};
+
+Client.prototype.emitToAttachedClients = function (event, data) {
+	const client = this;
+
+	for (const socketId in client.attachedClients) {
+		const socket = client.manager.sockets.in(socketId);
+
+		if (socket) {
+			socket.emit(event, data);
+		}
+	}
+};

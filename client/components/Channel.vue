@@ -1,6 +1,6 @@
 <template>
 	<ChannelWrapper ref="wrapper" v-bind="$props">
-		<span class="name">{{ channel.name }}</span>
+		<span class="name">{{ name() }}</span>
 		<span
 			v-if="channel.unread"
 			:class="{highlight: channel.highlight && !channel.muted}"
@@ -15,13 +15,27 @@
 			>
 				<span class="parted-channel-icon" />
 			</span>
-			<span class="close-tooltip tooltipped tooltipped-w" aria-label="Leave">
-				<button class="close" aria-label="Leave" @click.stop="close" />
+			<span
+				class="close-tooltip tooltipped tooltipped-w"
+				:aria-label="channel.favorite ? 'Unfavorite' : 'Leave'"
+			>
+				<button
+					class="close"
+					:aria-label="channel.favorite ? 'Unfavorite' : 'Leave'"
+					@click.stop="close"
+				/>
 			</span>
 		</template>
 		<template v-else>
-			<span class="close-tooltip tooltipped tooltipped-w" aria-label="Close">
-				<button class="close" aria-label="Close" @click.stop="close" />
+			<span
+				class="close-tooltip tooltipped tooltipped-w"
+				:aria-label="channel.favorite ? 'Unfavorite' : 'Close'"
+			>
+				<button
+					class="close"
+					:aria-label="channel.favorite ? 'Unfavorite' : 'Close'"
+					@click.stop="close"
+				/>
 			</span>
 		</template>
 	</ChannelWrapper>
@@ -50,6 +64,9 @@ export default {
 	methods: {
 		close() {
 			this.$root.closeChannel(this.channel);
+		},
+		name() {
+			return this.channel.displayName ? this.channel.displayName : this.channel.name;
 		},
 	},
 };

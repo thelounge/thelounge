@@ -534,15 +534,7 @@ Network.prototype.export = function () {
 			return channel.type === Chan.Type.CHANNEL || channel.type === Chan.Type.QUERY;
 		})
 		.map(function (chan) {
-			const keys = ["name", "muted"];
-
-			if (chan.type === Chan.Type.CHANNEL) {
-				keys.push("key");
-			} else if (chan.type === Chan.Type.QUERY) {
-				keys.push("type");
-			}
-
-			return _.pick(chan, keys);
+			return chan.export();
 		});
 
 	return network;

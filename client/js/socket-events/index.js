@@ -27,3 +27,4 @@ import "./history_clear";
 import "./mentions";
 import "./search";
 import "./mute_changed";
+import "./favorites";

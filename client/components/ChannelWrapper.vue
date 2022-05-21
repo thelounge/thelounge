@@ -57,6 +57,10 @@ export default {
 			const extra = [];
 			const type = this.channel.type;
 
+			if (this.channel.favorite) {
+				`favorited on ${this.network.name}`;
+			}
+
 			if (this.channel.unread > 0) {
 				if (this.channel.unread > 1) {
 					extra.push(`${this.channel.unread} unread messages`);

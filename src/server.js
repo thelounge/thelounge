@@ -685,12 +685,10 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 				}
 			}
 
-			for (const attachedClient of Object.keys(client.attachedClients)) {
-				manager.sockets.in(attachedClient).emit("mute:changed", {
-					target,
-					status: setMutedTo,
-				});
-			}
+			client.emitToAttachedClients("mute:changed", {
+				target,
+				status: setMutedTo,
+			});
 
 			client.save();
 		});
@@ -727,6 +725,38 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 		}
 	});
 
+	socket.on("favorites:add", (channelId) => {
+		if (!channelId) {
+			return;
+		}
+
+		const {network, chan} = client.find(channelId);
+
+		if (!network || !chan) {
+			return;
+		}
+
+		client.addToFavorites(network.uuid, chan.id);
+	});
+
+	socket.on("favorites:remove", (channelId) => {
+		if (!channelId) {
+			return;
+		}
+
+		const {network, chan} = client.find(channelId);
+
+		if (!network || !chan) {
+			return;
+		}
+
+		client.removeFromFavorites(chan.id);
+	});
+
+	socket.on("favorites:clear", () => {
+		client.clearFavorites();
+	});
+
 	socket.join(client.id);
 
 	const sendInitEvent = (tokenToSend) => {
@@ -736,6 +766,7 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 				network.getFilteredClone(openChannel, lastMessage)
 			),
 			token: tokenToSend,
+			favoriteChannels: client.favoriteChannels,
 		});
 		socket.emit("commands", inputs.getCommands());
 	};

@@ -43,6 +43,7 @@ import {
 	generateUserContextMenu,
 	generateChannelContextMenu,
 	generateInlineChannelContextMenu,
+	generateFavoritesContextMenu,
 } from "../js/helpers/contextMenu.js";
 import eventbus from "../js/eventbus";
 
@@ -70,6 +71,7 @@ export default {
 		eventbus.on("contextmenu:user", this.openUserContextMenu);
 		eventbus.on("contextmenu:channel", this.openChannelContextMenu);
 		eventbus.on("contextmenu:inline-channel", this.openInlineChannelContextMenu);
+		eventbus.on("contextmenu:favorites", this.openFavoritesContextMenu);
 	},
 	destroyed() {
 		eventbus.off("escapekey", this.close);
@@ -77,6 +79,7 @@ export default {
 		eventbus.off("contextmenu:user", this.openUserContextMenu);
 		eventbus.off("contextmenu:channel", this.openChannelContextMenu);
 		eventbus.off("contextmenu:inline-channel", this.openInlineChannelContextMenu);
+		eventbus.off("contextmenu:favorites", this.openFavoritesContextMenu);
 
 		this.close();
 	},
@@ -117,6 +120,10 @@ export default {
 					modes: [],
 				}
 			);
+			this.open(data.event, items);
+		},
+		openFavoritesContextMenu(data) {
+			const items = generateFavoritesContextMenu();
 			this.open(data.event, items);
 		},
 		open(event, items) {

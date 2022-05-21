@@ -88,6 +88,21 @@ export function generateChannelContextMenu($root, channel, network) {
 							}),
 				  },
 		];
+		// Add menu items for all except lobbies
+	} else {
+		// Add favorites item
+		items.push({
+			label: channel.favorite ? "Remove from favorites" : "Add to favorites",
+			type: "item",
+			class: "favorite",
+			action() {
+				if (channel.favorite) {
+					socket.emit("favorites:remove", Number(channel.id));
+				} else {
+					socket.emit("favorites:add", Number(channel.id));
+				}
+			},
+		});
 	}
 
 	// Add menu items for channels
@@ -195,13 +210,27 @@ export function generateChannelContextMenu($root, channel, network) {
 		});
 	}
 
-	// Add close menu item
 	items.push({
 		label: closeMap[channel.type],
 		type: "item",
 		class: "close",
 		action() {
 			$root.closeChannel(channel);
+		},
+	});
+
+	return items;
+}
+
+export function generateFavoritesContextMenu() {
+	const items = [];
+
+	items.push({
+		label: "Clear favorites",
+		type: "item",
+		class: "clear-favorites",
+		action() {
+			socket.emit("favorites:clear");
 		},
 	});
 

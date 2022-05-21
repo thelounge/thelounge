@@ -50,16 +50,16 @@ new Vue({
 						});
 					}
 				);
+			} else if (channel.favorite) {
+				socket.emit("favorites:remove", Number(channel.id));
+			} else {
+				channel.closed = true;
 
-				return;
+				socket.emit("input", {
+					target: Number(channel.id),
+					text: "/close",
+				});
 			}
-
-			channel.closed = true;
-
-			socket.emit("input", {
-				target: Number(channel.id),
-				text: "/close",
-			});
 		},
 	},
 	render(createElement) {
@@ -86,6 +86,13 @@ store.watch(
 	(userlistOpen) => {
 		storage.set("thelounge.state.userlist", userlistOpen);
 		eventbus.emit("resize");
+	}
+);
+
+store.watch(
+	(state) => state.favoritesOpen,
+	(favoritesOpen) => {
+		storage.set("thelounge.state.favorites", favoritesOpen);
 	}
 );
 

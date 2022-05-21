@@ -11,6 +11,7 @@ socket.on("init", function (data) {
 	store.commit("networks", mergeNetworkData(data.networks));
 	store.commit("isConnected", true);
 	store.commit("currentUserVisibleError", null);
+	store.commit("favoriteChannels", data.favoriteChannels);
 
 	if (data.token) {
 		storage.set("token", data.token);

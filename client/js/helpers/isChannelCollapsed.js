@@ -3,7 +3,12 @@
 import store from "../store";
 
 export default (network, channel) => {
-	if (!network.isCollapsed || channel.highlight || channel.type === "lobby") {
+	if (
+		!network.isCollapsed ||
+		channel.highlight ||
+		channel.type === "lobby" ||
+		(channel.favorite === true && store.state.favoritesOpen)
+	) {
 		return false;
 	}
 

@@ -13,13 +13,13 @@
 				:id="'chan-' + channel.id"
 				class="chat-view"
 				:data-type="channel.type"
-				:aria-label="channel.name"
+				:aria-label="channel.displayName ? channel.displayName : channel.name"
 				role="tabpanel"
 			>
 				<div class="header">
 					<SidebarToggle />
 					<span class="title" :aria-label="'Currently open ' + channel.type">{{
-						channel.name
+						channel.displayName ? channel.displayName : channel.name
 					}}</span>
 					<div v-if="channel.editTopic === true" class="topic-container">
 						<input

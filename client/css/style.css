@@ -370,8 +370,11 @@ p {
 .context-menu-action-revoke-mode::before { content: "\f068"; /* http://fontawesome.io/icon/minus/ */ }
 .context-menu-network::before { content: "\f233"; /* https://fontawesome.com/icons/server?style=solid */ }
 .context-menu-edit::before { content: "\f303"; /* https://fontawesome.com/icons/pencil-alt?style=solid */ }
+
+.context-menu-clear-favorites::before,
 .context-menu-clear-history::before { content: "\f1f8"; /* https://fontawesome.com/icons/trash?style=solid */ }
 .context-menu-mute::before { content: "\f6a9"; /* https://fontawesome.com/v5.15/icons/volume-mute?style=solid */ }
+.context-menu-favorite::before { content: "\f005"; /* http://fontawesome.io/icon/star/ */ }
 
 .channel-list-item .not-secure-icon::before {
 	content: "\f071"; /* https://fontawesome.com/icons/exclamation-triangle?style=solid */
@@ -920,34 +923,6 @@ background on hover (unless active) */
 .channel-list-item[data-type="lobby"] .add-channel.opened {
 	/* translateZ(0) enables hardware acceleration, this is to avoid jittering when animating */
 	transform: rotate(45deg) translateZ(0);
-}
-
-#sidebar .network .collapse-network {
-	width: 40px;
-	opacity: 0.4;
-	padding-left: 11px;
-	transition: opacity 0.2s;
-	flex-shrink: 0;
-}
-
-#sidebar .network .collapse-network-icon {
-	display: block;
-	width: 20px;
-	height: 20px;
-	transition: transform 0.2s;
-}
-
-#sidebar .network.collapsed .collapse-network-icon {
-	transform: rotate(-90deg);
-}
-
-#sidebar .network .collapse-network-icon::before {
-	content: "\f0d7"; /* http://fontawesome.io/icon/caret-down/ */
-	color: #fff;
-}
-
-#sidebar .collapse-network:hover {
-	opacity: 1;
 }
 
 #footer {

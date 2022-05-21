@@ -42,6 +42,7 @@ function Chan(attr) {
 		highlight: 0,
 		users: new Map(),
 		muted: false,
+		favorite: false,
 	});
 }
 
@@ -297,6 +298,18 @@ Chan.prototype.isLoggable = function () {
 
 Chan.prototype.setMuteStatus = function (muted) {
 	this.muted = !!muted;
+};
+
+Chan.prototype.export = function () {
+	const keys = ["name", "muted", "favorite"];
+
+	if (this.type === Chan.Type.CHANNEL) {
+		keys.push("key");
+	} else if (this.type === Chan.Type.QUERY) {
+		keys.push("type");
+	}
+
+	return _.pick(this, keys);
 };
 
 function requestZncPlayback(channel, network, from) {
