@@ -8,7 +8,7 @@
 export default {
 	name: "MessageChannelMode",
 	props: {
-		network: Object,
+		network: Object as PropType<ClientNetwork>,
 		message: Object,
 	},
 };

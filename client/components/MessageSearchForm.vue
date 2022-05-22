@@ -84,8 +84,8 @@ form.message-search.opened .input-wrapper {
 export default {
 	name: "MessageSearchForm",
 	props: {
-		network: Object,
-		channel: Object,
+		network: Object as PropType<ClientNetwork>,
+		channel: Object as PropType<ClientChan>,
 	},
 	data() {
 		return {

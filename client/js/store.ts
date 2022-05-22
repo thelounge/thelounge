@@ -1,8 +1,8 @@
 import Vue from "vue";
-import Vuex from "vuex";
+import Vuex, {GetterTree, Store} from "vuex";
 import {createSettingsStore} from "./store-settings";
 import storage from "./localStorage";
-import {ClientChan, ClientNetwork} from "./types";
+import type {ClientChan, ClientNetwork, InitClientChan} from "./types";
 
 const appName = document.title;
 
@@ -20,7 +20,7 @@ function detectDesktopNotificationState() {
 	return "blocked";
 }
 
-export type State = {
+export interface State {
 	appLoaded: boolean;
 	activeChannel: {
 		network: ClientNetwork;
@@ -54,13 +54,15 @@ export type State = {
 	} | null;
 	messageSearchInProgress: boolean;
 	searchEnabled: boolean;
-};
+}
 
-export type SettingsState = {};
-const store = new Vuex.Store<Omit<State, "settings">>({
+const store = new Store<State>({
 	state: {
 		appLoaded: false,
-		activeChannel: null,
+		activeChannel: {
+			network: {} as ClientNetwork,
+			channel: {} as ClientChan,
+		},
 		currentUserVisibleError: null,
 		desktopNotificationState: detectDesktopNotificationState(),
 		isAutoCompleting: false,
@@ -162,14 +164,16 @@ const store = new Vuex.Store<Omit<State, "settings">>({
 			state.messageSearchResults = value;
 		},
 		addMessageSearchResults(state, value) {
-			if (state.messageSearchResults!.results) {
-				// Append the search results and add networks and channels to new messages
-				value.results = [...state.messageSearchResults!.results, ...value.results];
-			} else {
-				value.results = value.results;
+			// Append the search results and add networks and channels to new messages
+			if (!state.messageSearchResults) {
+				state.messageSearchResults = {results: []};
 			}
 
-			state.messageSearchResults = value;
+			const results = [...state.messageSearchResults.results, ...value.results];
+
+			state.messageSearchResults = {
+				results,
+			};
 		},
 	},
 	actions: {
@@ -179,11 +183,11 @@ const store = new Vuex.Store<Omit<State, "settings">>({
 		},
 	},
 	getters: {
-		findChannelOnCurrentNetwork: (state) => (name) => {
+		findChannelOnCurrentNetwork: (state) => (name: string) => {
 			name = name.toLowerCase();
 			return state.activeChannel?.network.channels.find((c) => c.name.toLowerCase() === name);
 		},
-		findChannelOnNetwork: (state) => (networkUuid, channelName) => {
+		findChannelOnNetwork: (state) => (networkUuid: string, channelName: string) => {
 			for (const network of state.networks) {
 				if (network.uuid !== networkUuid) {
 					continue;
@@ -198,7 +202,7 @@ const store = new Vuex.Store<Omit<State, "settings">>({
 
 			return null;
 		},
-		findChannel: (state) => (id) => {
+		findChannel: (state) => (id: number) => {
 			for (const network of state.networks) {
 				for (const channel of network.channels) {
 					if (channel.id === id) {
@@ -209,7 +213,7 @@ const store = new Vuex.Store<Omit<State, "settings">>({
 
 			return null;
 		},
-		findNetwork: (state) => (uuid) => {
+		findNetwork: (state) => (uuid: string) => {
 			for (const network of state.networks) {
 				if (network.uuid === uuid) {
 					return network;
@@ -233,14 +237,16 @@ const store = new Vuex.Store<Omit<State, "settings">>({
 
 			return highlightCount;
 		},
+		// TODO: type
 		title(state, getters) {
-			const alertEventCount = getters.highlightCount ? `(${getters.highlightCount}) ` : "";
+			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+			const alertEventCount = getters?.highlightCount ? `(${getters.highlightCount}) ` : "";
 
 			const channelname = state.activeChannel ? `${state.activeChannel.channel.name} — ` : "";
 
 			return alertEventCount + channelname + appName;
 		},
-		initChannel: () => (channel) => {
+		initChannel: () => (channel: InitClientChan) => {
 			// TODO: This should be a mutation
 			channel.pendingMessage = "";
 			channel.inputHistoryPosition = 0;
@@ -250,20 +256,20 @@ const store = new Vuex.Store<Omit<State, "settings">>({
 					.filter((m) => m.self && m.text && m.type === "message")
 					.map((m) => m.text)
 					.reverse()
-					.slice(null, 99)
+					.slice(0, 99)
 			);
 			channel.historyLoading = false;
 			channel.scrolledToBottom = true;
 			channel.editTopic = false;
 
-			channel.moreHistoryAvailable = channel.totalMessages > channel.messages.length;
+			channel.moreHistoryAvailable = channel.totalMessages! > channel.messages.length;
 			delete channel.totalMessages;
 
 			if (channel.type === "channel") {
 				channel.usersOutdated = true;
 			}
 
-			return channel;
+			return channel as ClientChan;
 		},
 	},
 });

@@ -27,8 +27,8 @@ export default {
 		ParsedMessage,
 	},
 	props: {
-		network: Object,
-		channel: Object,
+		network: Object as PropType<ClientNetwork>,
+		channel: Object as PropType<ClientChan>,
 	},
 	methods: {
 		localetime(date) {

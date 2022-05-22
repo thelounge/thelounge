@@ -48,8 +48,8 @@ export default {
 		},
 	},
 	props: {
-		network: Object,
-		channel: Object,
+		network: Object as PropType<ClientNetwork>,
+		channel: Object as PropType<ClientChan>,
 	},
 	data() {
 		return {

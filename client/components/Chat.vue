@@ -145,8 +145,8 @@ export default {
 		MessageSearchForm,
 	},
 	props: {
-		network: Object,
-		channel: Object,
+		network: Object as PropType<ClientNetwork>,
+		channel: Object as PropType<ClientChan>,
 		focused: String,
 	},
 	computed: {

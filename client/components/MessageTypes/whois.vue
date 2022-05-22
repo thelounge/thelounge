@@ -123,7 +123,7 @@ export default {
 		Username,
 	},
 	props: {
-		network: Object,
+		network: Object as PropType<ClientNetwork>,
 		message: Object,
 	},
 	methods: {

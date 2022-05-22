@@ -56,7 +56,7 @@ export default {
 		ChannelWrapper,
 	},
 	props: {
-		network: Object,
+		network: Object as PropType<ClientNetwork>,
 		isJoinChannelShown: Boolean,
 		active: Boolean,
 		isFiltering: Boolean,

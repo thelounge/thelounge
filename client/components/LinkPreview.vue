@@ -138,7 +138,7 @@ export default {
 	props: {
 		link: Object,
 		keepScrollPosition: Function,
-		channel: Object,
+		channel: Object as PropType<ClientChan>,
 	},
 	data() {
 		return {

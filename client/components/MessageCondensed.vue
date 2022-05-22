@@ -27,7 +27,7 @@ export default {
 		Message,
 	},
 	props: {
-		network: Object,
+		network: Object as PropType<ClientNetwork>,
 		messages: Array,
 		keepScrollPosition: Function,
 		focused: Boolean,

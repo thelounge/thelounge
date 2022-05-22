@@ -4,6 +4,7 @@ import storage from "../localStorage";
 import {router, switchToChannel, navigate} from "../router";
 import store from "../store";
 import parseIrcUri from "../helpers/parseIrcUri";
+import {ClientChan, ClientNetwork, InitClientChan} from "../types";
 
 socket.on("init", function (data) {
 	store.commit("networks", mergeNetworkData(data.networks));
@@ -47,8 +48,9 @@ socket.on("init", function (data) {
 	}
 });
 
-function mergeNetworkData(newNetworks) {
-	const collapsedNetworks = new Set(JSON.parse(storage.get("thelounge.networks.collapsed")));
+function mergeNetworkData(newNetworks: ClientNetwork[]) {
+	const stored = storage.get("thelounge.networks.collapsed");
+	const collapsedNetworks = stored ? new Set(JSON.parse(stored)) : new Set();
 
 	for (let n = 0; n < newNetworks.length; n++) {
 		const network = newNetworks[n];
@@ -74,7 +76,7 @@ function mergeNetworkData(newNetworks) {
 			if (key === "channels") {
 				currentNetwork.channels = mergeChannelData(
 					currentNetwork.channels,
-					network.channels
+					network.channels as InitClientChan[]
 				);
 			} else {
 				currentNetwork[key] = network[key];
@@ -87,7 +89,7 @@ function mergeNetworkData(newNetworks) {
 	return newNetworks;
 }
 
-function mergeChannelData(oldChannels, newChannels) {
+function mergeChannelData(oldChannels: InitClientChan[], newChannels: InitClientChan[]) {
 	for (let c = 0; c < newChannels.length; c++) {
 		const channel = newChannels[c];
 		const currentChannel = oldChannels.find((chan) => chan.id === channel.id);
@@ -131,7 +133,7 @@ function mergeChannelData(oldChannels, newChannels) {
 			// on the client, and decide whether theres more messages to load from server
 			if (key === "totalMessages") {
 				currentChannel.moreHistoryAvailable =
-					channel.totalMessages > currentChannel.messages.length;
+					channel.totalMessages! > currentChannel.messages.length;
 
 				continue;
 			}
@@ -167,10 +169,12 @@ function handleQueryParams() {
 	if (params.has("uri")) {
 		// Set default connection settings from IRC protocol links
 		const uri = params.get("uri");
-		const queryParams = parseIrcUri(uri);
+		const queryParams = parseIrcUri(uri as string);
 
 		cleanParams();
-		router.push({name: "Connect", query: queryParams});
+		router.push({name: "Connect", query: queryParams}).catch(() => {
+			// Ignore errors
+		});
 
 		return true;
 	} else if (document.body.classList.contains("public") && document.location.search) {
@@ -178,7 +182,9 @@ function handleQueryParams() {
 		const queryParams = Object.fromEntries(params.entries());
 
 		cleanParams();
-		router.push({name: "Connect", query: queryParams});
+		router.push({name: "Connect", query: queryParams}).catch(() => {
+			// Ignore errors
+		});
 
 		return true;
 	}

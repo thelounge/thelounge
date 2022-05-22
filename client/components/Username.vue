@@ -20,8 +20,8 @@ export default {
 		user: Object,
 		active: Boolean,
 		onHover: Function,
-		channel: Object,
-		network: Object,
+		channel: Object as PropType<ClientChan>,
+		network: Object as PropType<ClientNetwork>,
 	},
 	computed: {
 		mode() {

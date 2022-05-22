@@ -13,7 +13,7 @@ export default {
 		ParsedMessage,
 	},
 	props: {
-		network: Object,
+		network: Object as PropType<ClientNetwork>,
 		message: Object,
 	},
 	computed: {

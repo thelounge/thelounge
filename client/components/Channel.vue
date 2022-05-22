@@ -27,30 +27,32 @@
 	</ChannelWrapper>
 </template>
 
-<script>
+<script lang="ts">
+import Vue, {PropType} from "vue";
 import roundBadgeNumber from "../js/helpers/roundBadgeNumber";
+import {ClientChan, ClientNetwork} from "../js/types";
 import ChannelWrapper from "./ChannelWrapper.vue";
 
-export default {
+export default Vue.extend({
 	name: "Channel",
 	components: {
 		ChannelWrapper,
 	},
 	props: {
-		network: Object,
-		channel: Object,
+		network: Object as PropType<ClientNetwork>,
+		channel: Object as PropType<ClientChan>,
 		active: Boolean,
 		isFiltering: Boolean,
 	},
 	computed: {
-		unreadCount() {
+		unreadCount(): string {
 			return roundBadgeNumber(this.channel.unread);
 		},
 	},
 	methods: {
-		close() {
+		close(): void {
 			this.$root.closeChannel(this.channel);
 		},
 	},
-};
+});
 </script>

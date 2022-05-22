@@ -6,7 +6,7 @@
 export default {
 	name: "MessageTypeRaw",
 	props: {
-		network: Object,
+		network: Object as PropType<ClientNetwork>,
 		message: Object,
 	},
 };

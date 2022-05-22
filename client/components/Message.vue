@@ -113,8 +113,8 @@ export default {
 	components: MessageTypes,
 	props: {
 		message: Object,
-		channel: Object,
-		network: Object,
+		channel: Object as PropType<ClientChan>,
+		network: Object as PropType<ClientNetwork>,
 		keepScrollPosition: Function,
 		isPreviousSource: Boolean,
 		focused: Boolean,

@@ -74,7 +74,7 @@ export default {
 		Username,
 	},
 	props: {
-		channel: Object,
+		channel: Object as PropType<ClientChan>,
 	},
 	data() {
 		return {

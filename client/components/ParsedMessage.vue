@@ -7,7 +7,7 @@ export default {
 	props: {
 		text: String,
 		message: Object,
-		network: Object,
+		network: Object as PropType<ClientNetwork>,
 	},
 	render(createElement, context) {
 		return parse(

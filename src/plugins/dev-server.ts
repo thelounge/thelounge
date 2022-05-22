@@ -4,11 +4,22 @@ import express from "express";
 
 import log from "../log";
 
+import webpack from "webpack";
+import config from "../../webpack.config";
+
 export default (app: express.Application) => {
 	log.debug("Starting server in development mode");
 
-	const webpack = require("webpack");
-	const webpackConfig = require("../../webpack.config.js")(undefined, { mode: "production" });
+	const webpackConfig = config(undefined, {mode: "production"});
+
+	if (
+		!webpackConfig ||
+		!webpackConfig.plugins?.length ||
+		!webpackConfig.entry ||
+		!webpackConfig.entry["js/bundle.js"]
+	) {
+		throw new Error("No valid production webpack config found");
+	}
 
 	webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
 	webpackConfig.entry["js/bundle.js"].push(

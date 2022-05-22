@@ -31,15 +31,6 @@ import ConfirmDialog from "./ConfirmDialog.vue";
 import Mentions from "./Mentions.vue";
 import VueApp from "vue";
 
-// This stops Vue from complaining about adding objects to the component context
-declare module "vue/types/vue" {
-	interface Vue {
-		debouncedResize: () => void;
-		// TODO; type as Timeout
-		dayChangeTimeout: any;
-	}
-}
-
 export default VueApp.extend({
 	name: "App",
 	components: {

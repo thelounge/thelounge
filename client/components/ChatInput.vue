@@ -91,8 +91,8 @@ let autocompletionRef = null;
 export default {
 	name: "ChatInput",
 	props: {
-		network: Object,
-		channel: Object,
+		network: Object as PropType<ClientNetwork>,
+		channel: Object as PropType<ClientChan>,
 	},
 	watch: {
 		"channel.id"() {

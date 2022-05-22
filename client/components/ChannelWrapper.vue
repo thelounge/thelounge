@@ -32,15 +32,17 @@
 	</div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue, {PropType} from "vue";
 import eventbus from "../js/eventbus";
 import isChannelCollapsed from "../js/helpers/isChannelCollapsed";
+import {ClientNetwork, ClientChan} from "../js/types";
 
-export default {
+export default Vue.extend({
 	name: "ChannelWrapper",
 	props: {
-		network: Object,
-		channel: Object,
+		network: Object as PropType<ClientNetwork>,
+		channel: Object as PropType<ClientChan>,
 		active: Boolean,
 		isFiltering: Boolean,
 	},
@@ -53,7 +55,7 @@ export default {
 		},
 	},
 	methods: {
-		getAriaLabel() {
+		getAriaLabel(): string {
 			const extra = [];
 			const type = this.channel.type;
 
@@ -75,14 +77,14 @@ export default {
 
 			return `${type}: ${this.channel.name} ${extra.length ? `(${extra.join(", ")})` : ""}`;
 		},
-		click() {
+		click(): void {
 			if (this.isFiltering) {
 				return;
 			}
 
 			this.$root.switchToChannel(this.channel);
 		},
-		openContextMenu(event) {
+		openContextMenu(event): void {
 			eventbus.emit("contextmenu:channel", {
 				event: event,
 				channel: this.channel,
@@ -90,5 +92,5 @@ export default {
 			});
 		},
 	},
-};
+});
 </script>

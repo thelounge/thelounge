@@ -2,7 +2,7 @@ import constants from "./constants";
 
 import "../css/style.css";
 import Vue from "vue";
-import store from "./store";
+import store, {State} from "./store";
 import App from "../components/App.vue";
 import storage from "./localStorage";
 import {router, navigate} from "./router";
@@ -13,20 +13,26 @@ import "./socket-events";
 import "./webpush";
 import "./keybinds";
 import {ClientChan} from "./types";
+import {Store} from "vuex";
 
 const favicon = document.getElementById("favicon");
 const faviconNormal = favicon?.getAttribute("href") || "";
 const faviconAlerted = favicon?.dataset.other || "";
 
-type Data = {};
-export type Methods = {
-	switchToChannel: (channel: ClientChan) => void;
-	closeChannel: (channel: ClientChan) => void;
-};
-type Computed = {};
-type Props = {};
+declare module "vue/types/vue" {
+	interface Vue {
+		debouncedResize: () => void;
+		// TODO; type as Timeout
+		dayChangeTimeout: any;
 
-new Vue<Data, Methods, Computed, Props>({
+		switchToChannel: (channel: ClientChan) => void;
+		closeChannel: (channel: ClientChan) => void;
+
+		$store: Store<State>;
+	}
+}
+
+new Vue({
 	el: "#viewport",
 	router,
 	mounted() {

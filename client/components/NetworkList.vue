@@ -209,7 +209,7 @@ import isIgnoredKeybind from "../js/helpers/isIgnoredKeybind";
 import distance from "../js/helpers/distance";
 import eventbus from "../js/eventbus";
 
-export default Vue.extend({
+export default {
 	name: "NetworkList",
 	components: {
 		JoinChannel,
@@ -481,5 +481,5 @@ export default Vue.extend({
 			});
 		},
 	},
-});
+};
 </script>
