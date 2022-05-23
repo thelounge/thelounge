@@ -27,10 +27,15 @@ type ClientUser = User & {
 	//
 };
 
-type ClientChan = Omit<Chan, "users"> & {
+type ClientMessage = Message & {
+	time: number;
+};
+
+type ClientChan = Omit<Chan, "users" | "messages"> & {
 	moreHistoryAvailable: boolean;
 	editTopic: boolean;
 	users: ClientUser[];
+	messages: ClientMessage[];
 
 	// these are added in store/initChannel
 	pendingMessage: string;
@@ -53,10 +58,6 @@ type ClientNetwork = Omit<Network, "channels"> & {
 	channels: ClientChan[];
 };
 
-type ClientMessage = Message & {
-	//
-};
-
 type NetChan = {
 	channel: ClientChan;
 	network: ClientNetwork;
@@ -68,7 +69,9 @@ type ClientMention = Mention & {
 	channel: NetChan | null;
 };
 
-type LinkPreview = LinkPreview;
+type ClientLinkPreview = LinkPreview & {
+	sourceLoaded?: boolean;
+};
 
 declare module "*.vue" {
 	const Component: ReturnType<typeof defineComponent>;

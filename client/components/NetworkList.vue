@@ -199,7 +199,7 @@
 import {computed, watch, defineComponent, nextTick, onBeforeUnmount, onMounted, ref} from "vue";
 
 import Mousetrap from "mousetrap";
-import Draggable from "vuedraggable";
+import {VueDraggableNext} from "vue-draggable-next";
 import {filter as fuzzyFilter} from "fuzzy";
 import NetworkLobby from "./NetworkLobby.vue";
 import Channel from "./Channel.vue";
@@ -220,7 +220,7 @@ export default defineComponent({
 		JoinChannel,
 		NetworkLobby,
 		Channel,
-		Draggable,
+		Draggable: VueDraggableNext,
 	},
 	setup() {
 		const store = useStore();
@@ -280,7 +280,7 @@ export default defineComponent({
 			}
 
 			if (store.state.activeChannel) {
-				collapseNetwork(store.state.activeChannel.network, false);
+				collapseNetworkHelper(store.state.activeChannel.network, false);
 			}
 
 			return false;
@@ -533,7 +533,7 @@ export default defineComponent({
 			scrollToActive,
 			selectResult,
 			navigateResults,
-
+			onChannelSort,
 			onNetworkSort,
 			onDraggableTouchStart,
 			onDraggableTouchMove,

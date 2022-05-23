@@ -160,11 +160,11 @@ router.afterEach((to) => {
 		}
 
 		// When switching out of a channel, mark everything as read
-		if (channel.messages.length > 0) {
+		if (channel.messages?.length > 0) {
 			channel.firstUnread = channel.messages[channel.messages.length - 1].id;
 		}
 
-		if (channel.messages.length > 100) {
+		if (channel.messages?.length > 100) {
 			channel.messages.splice(0, channel.messages.length - 100);
 			channel.moreHistoryAvailable = true;
 		}
@@ -172,7 +172,7 @@ router.afterEach((to) => {
 });
 
 function navigate(routeName: string, params: any = {}) {
-	if (router.currentRoute.name) {
+	if (router.currentRoute.value.name) {
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		router.push({name: routeName, params}).catch(() => {});
 	} else {

@@ -42,7 +42,7 @@
 import Mousetrap from "mousetrap";
 import {computed, defineComponent, ref, watch} from "vue";
 import eventbus from "../js/eventbus";
-import {ClientChan, ClientMessage, LinkPreview} from "../js/types";
+import {ClientChan, ClientMessage, ClientLinkPreview} from "../js/types";
 
 export default defineComponent({
 	name: "ImageViewer",
@@ -50,9 +50,9 @@ export default defineComponent({
 		const viewer = ref<HTMLDivElement>();
 		const image = ref<HTMLImageElement>();
 
-		const link = ref<LinkPreview | null>(null);
-		const previousImage = ref<LinkPreview | null>();
-		const nextImage = ref<LinkPreview | null>();
+		const link = ref<ClientLinkPreview | null>(null);
+		const previousImage = ref<ClientLinkPreview | null>();
+		const nextImage = ref<ClientLinkPreview | null>();
 		const channel = ref<ClientChan | null>();
 
 		const position = ref<{
@@ -98,7 +98,7 @@ export default defineComponent({
 		};
 
 		const setPrevNextImages = () => {
-			if (!channel.value) {
+			if (!channel.value || !link.value) {
 				return null;
 			}
 
@@ -107,7 +107,7 @@ export default defineComponent({
 				.flat()
 				.filter((preview) => preview.thumb);
 
-			const currentIndex = links.indexOf(this.link);
+			const currentIndex = links.indexOf(link.value);
 
 			previousImage.value = links[currentIndex - 1] || null;
 			nextImage.value = links[currentIndex + 1] || null;
@@ -123,10 +123,6 @@ export default defineComponent({
 			if (nextImage.value) {
 				link.value = nextImage.value;
 			}
-		};
-
-		const onImageLoad = () => {
-			prepareImage();
 		};
 
 		const prepareImage = () => {
@@ -146,6 +142,10 @@ export default defineComponent({
 			transform.value.scale = Math.max(scale, 0.1);
 			transform.value.x = width / 2;
 			transform.value.y = height / 2;
+		};
+
+		const onImageLoad = () => {
+			prepareImage();
 		};
 
 		const calculateZoomShift = (newScale: number, x: number, y: number, oldScale: number) => {
@@ -241,7 +241,7 @@ export default defineComponent({
 		// 1. Move around by dragging it with one finger
 		// 2. Change image scale by using two fingers
 		const onImageTouchStart = (e: TouchEvent) => {
-			const image = this.$refs.image;
+			const img = image.value;
 			let touch = reduceTouches(e.touches);
 			let currentTouches = e.touches;
 			let touchEndFingers = 0;
@@ -313,12 +313,12 @@ export default defineComponent({
 
 				correctPosition();
 
-				image.removeEventListener("touchmove", touchMove, {passive: true});
-				image.removeEventListener("touchend", touchEnd, {passive: true});
+				img?.removeEventListener("touchmove", touchMove);
+				img?.removeEventListener("touchend", touchEnd);
 			};
 
-			image.addEventListener("touchmove", touchMove, {passive: true});
-			image.addEventListener("touchend", touchEnd, {passive: true});
+			img?.addEventListener("touchmove", touchMove, {passive: true});
+			img?.addEventListener("touchend", touchEnd, {passive: true});
 		};
 
 		// Image mouse manipulation:

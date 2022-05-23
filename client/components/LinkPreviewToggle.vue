@@ -9,12 +9,12 @@
 
 <script lang="ts">
 import {computed, defineComponent, PropType} from "vue";
-import {ClientMessage, LinkPreview} from "../js/types";
+import {ClientMessage, ClientLinkPreview} from "../js/types";
 
 export default defineComponent({
 	name: "LinkPreviewToggle",
 	props: {
-		link: {type: Object as PropType<LinkPreview>, required: true},
+		link: {type: Object as PropType<ClientLinkPreview>, required: true},
 		message: {type: Object as PropType<ClientMessage>, required: true},
 	},
 	emits: ["toggle-link-preview"],

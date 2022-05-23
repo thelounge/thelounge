@@ -29,9 +29,35 @@ import ImageViewer from "./ImageViewer.vue";
 import ContextMenu from "./ContextMenu.vue";
 import ConfirmDialog from "./ConfirmDialog.vue";
 import Mentions from "./Mentions.vue";
-import {computed, defineComponent, onBeforeUnmount, onMounted, ref} from "vue";
+import {
+	computed,
+	provide,
+	defineComponent,
+	onBeforeUnmount,
+	onMounted,
+	ref,
+	Ref,
+	InjectionKey,
+	inject,
+} from "vue";
 import {useStore} from "../js/store";
 import type {DebouncedFunc} from "lodash";
+
+const imageViewerKey = Symbol() as InjectionKey<Ref<typeof ImageViewer | null>>;
+const contextMenuKey = Symbol() as InjectionKey<Ref<typeof ContextMenu | null>>;
+const confirmDialogKey = Symbol() as InjectionKey<Ref<typeof ConfirmDialog | null>>;
+
+export const useImageViewer = () => {
+	return inject(imageViewerKey) as Ref<typeof ImageViewer | null>;
+};
+
+export const useContextMenu = () => {
+	return inject(contextMenuKey) as Ref<typeof ContextMenu | null>;
+};
+
+export const useConfirmDialog = () => {
+	return inject(confirmDialogKey) as Ref<typeof ConfirmDialog | null>;
+};
 
 export default defineComponent({
 	name: "App",
@@ -50,6 +76,10 @@ export default defineComponent({
 		const imageViewer = ref(null);
 		const contextMenu = ref(null);
 		const confirmDialog = ref(null);
+
+		provide(imageViewerKey, imageViewer);
+		provide(contextMenuKey, contextMenu);
+		provide(confirmDialogKey, confirmDialog);
 
 		const viewportClasses = computed(() => {
 			return {

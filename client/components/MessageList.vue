@@ -78,7 +78,8 @@ import {
 	watch,
 } from "vue";
 import {useStore} from "../js/store";
-import type {ClientChan, ClientMessage, ClientNetwork, LinkPreview} from "../js/types";
+import {ClientChan, ClientMessage, ClientNetwork, ClientLinkPreview} from "../js/types";
+import Msg from "../../src/models/msg";
 
 type CondensedMessageContainer = {
 	type: "condensed";
@@ -107,8 +108,8 @@ export default defineComponent({
 		const historyObserver = ref<IntersectionObserver | null>(null);
 		const skipNextScrollEvent = ref(false);
 		const unreadMarkerShown = ref(false);
-		// TODO: make this a ref?
-		let isWaitingForNextTick = false;
+
+		const isWaitingForNextTick = ref(false);
 
 		const jumpToBottom = () => {
 			skipNextScrollEvent.value = true;
@@ -243,7 +244,7 @@ export default defineComponent({
 		});
 
 		const shouldDisplayDateMarker = (
-			message: ClientMessage | CondensedMessageContainer,
+			message: Msg | ClientMessage | CondensedMessageContainer,
 			id: number
 		) => {
 			const previousMessage = condensedMessages[id - 1];
@@ -271,7 +272,7 @@ export default defineComponent({
 			return false;
 		};
 
-		const isPreviousSource = (currentMessage: ClientMessage, id: number) => {
+		const isPreviousSource = (currentMessage: ClientMessage | Msg, id: number) => {
 			const previousMessage = condensedMessages[id - 1];
 			return !!(
 				previousMessage &&
@@ -291,7 +292,7 @@ export default defineComponent({
 		const keepScrollPosition = () => {
 			// If we are already waiting for the next tick to force scroll position,
 			// we have no reason to perform more checks and set it again in the next tick
-			if (isWaitingForNextTick) {
+			if (isWaitingForNextTick.value) {
 				return;
 			}
 
@@ -305,10 +306,10 @@ export default defineComponent({
 				if (props.channel.historyLoading) {
 					const heightOld = el.scrollHeight - el.scrollTop;
 
-					isWaitingForNextTick = true;
+					isWaitingForNextTick.value = true;
 
 					nextTick(() => {
-						isWaitingForNextTick = false;
+						isWaitingForNextTick.value = false;
 						skipNextScrollEvent.value = true;
 						el.scrollTop = el.scrollHeight - heightOld;
 					}).catch(() => {
@@ -319,16 +320,16 @@ export default defineComponent({
 				return;
 			}
 
-			isWaitingForNextTick = true;
+			isWaitingForNextTick.value = true;
 			nextTick(() => {
-				isWaitingForNextTick = false;
+				isWaitingForNextTick.value = false;
 				jumpToBottom();
 			}).catch(() => {
 				// no-op
 			});
 		};
 
-		const onLinkPreviewToggle = (preview: LinkPreview, message: ClientMessage) => {
+		const onLinkPreviewToggle = (preview: ClientLinkPreview, message: ClientMessage) => {
 			keepScrollPosition();
 
 			// Tell the server we're toggling so it remembers at page reload

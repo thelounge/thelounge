@@ -161,7 +161,7 @@ export default defineComponent({
 	name: "NotificationSettings",
 	setup() {
 		const store = useStore();
-
+		console.log(store);
 		const isIOS = computed(
 			() =>
 				[

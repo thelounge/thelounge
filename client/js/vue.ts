@@ -83,7 +83,3 @@ VueApp.config.errorHandler = function (e) {
 	// eslint-disable-next-line no-console
 	console.error(e);
 };
-
-VueApp.config.globalProperties = {
-	$store: store as TypedStore,
-};

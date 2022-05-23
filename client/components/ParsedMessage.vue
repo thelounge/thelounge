@@ -12,17 +12,14 @@ export default defineComponent({
 		network: {type: Object as PropType<ClientNetwork>, required: false},
 	},
 	setup(props) {
-		const render = () => {
-			return parse(
-				typeof props.text !== "undefined" ? props.text : props.message!.text,
-				props.message,
-				props.network
-			);
-		};
-
-		return {
-			render,
-		};
+		//
+	},
+	render(context) {
+		return parse(
+			typeof context.text !== "undefined" ? context.text : context.message.text,
+			context.message,
+			context.network
+		);
 	},
 });
 </script>

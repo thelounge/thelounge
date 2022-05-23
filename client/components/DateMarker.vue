@@ -33,7 +33,7 @@ export default defineComponent({
 		const localeDate = computed(() => dayjs(props.message.time).format("D MMMM YYYY"));
 
 		const hoursPassed = () => {
-			return (Date.now() - Date.parse(props.message.time?.toISOString())) / 3600000;
+			return (Date.now() - Date.parse(props.message.time.toString())) / 3600000;
 		};
 
 		const dayChange = () => {

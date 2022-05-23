@@ -28,7 +28,7 @@ export type LinkPreview = {
 	size: number;
 	link: string; // Send original matched link to the client
 	shown: boolean | null;
-	error: undefined | any;
+	error: undefined | string;
 	message: undefined | string;
 };
 
