@@ -66,6 +66,7 @@ import Message from "./Message.vue";
 import MessageCondensed from "./MessageCondensed.vue";
 import DateMarker from "./DateMarker.vue";
 import {
+	defineExpose,
 	computed,
 	defineComponent,
 	nextTick,
@@ -247,7 +248,7 @@ export default defineComponent({
 			message: Msg | ClientMessage | CondensedMessageContainer,
 			id: number
 		) => {
-			const previousMessage = condensedMessages[id - 1];
+			const previousMessage = condensedMessages.value[id - 1];
 
 			if (!previousMessage) {
 				return true;
@@ -431,6 +432,7 @@ export default defineComponent({
 			shouldDisplayUnreadMarker,
 			keepScrollPosition,
 			isPreviousSource,
+			jumpToBottom,
 			onLinkPreviewToggle,
 		};
 	},

@@ -120,7 +120,7 @@ function parse(text: string, message?: ClientMessage, network?: ClientNetwork) {
 						rel: "noopener",
 					},
 				},
-				fragments
+				() => fragments
 			);
 
 			if (!preview) {
@@ -159,8 +159,9 @@ function parse(text: string, message?: ClientMessage, network?: ClientNetwork) {
 						dir: "auto",
 					},
 				},
-				linkEls
+				() => linkEls
 			);
+
 			// @ts-ignore
 		} else if (textPart.channel) {
 			return createElement(
@@ -171,8 +172,9 @@ function parse(text: string, message?: ClientMessage, network?: ClientNetwork) {
 						channel: textPart.channel,
 					},
 				},
-				fragments
+				() => fragments
 			);
+
 			// @ts-ignore
 		} else if (textPart.emoji) {
 			// @ts-ignore
@@ -191,7 +193,7 @@ function parse(text: string, message?: ClientMessage, network?: ClientNetwork) {
 						title: title,
 					},
 				},
-				fragments
+				() => fragments
 			);
 			// @ts-ignore
 		} else if (textPart.nick) {
@@ -205,14 +207,14 @@ function parse(text: string, message?: ClientMessage, network?: ClientNetwork) {
 							nick: textPart.nick,
 						},
 						// @ts-ignore
-						channel: messageChannel,
+						channel: textPart.channel,
 						network,
 					},
 					attrs: {
 						dir: "auto",
 					},
 				},
-				fragments
+				() => fragments
 			);
 		}
 

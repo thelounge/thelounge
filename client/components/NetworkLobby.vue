@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, PropType} from "vue";
+import {computed, defineComponent, PropType} from "vue";
 import collapseNetwork from "../js/helpers/collapseNetwork";
 import roundBadgeNumber from "../js/helpers/roundBadgeNumber";
 import ChannelWrapper from "./ChannelWrapper.vue";
@@ -68,24 +68,34 @@ export default defineComponent({
 		isFiltering: Boolean,
 	},
 	emits: ["toggle-join-channel"],
-	computed: {
-		channel(): ClientChan {
-			return this.network.channels[0];
-		},
-		joinChannelLabel(): string {
-			return this.isJoinChannelShown ? "Cancel" : "Join a channel…";
-		},
-		unreadCount(): string {
-			return roundBadgeNumber(this.channel.unread);
-		},
-	},
-	methods: {
-		onCollapseClick(): void {
-			collapseNetwork(this.network, !this.network.isCollapsed);
-		},
-		getExpandLabel(network: ClientNetwork): string {
+	setup(props) {
+		const channel = computed(() => {
+			return props.network.channels[0];
+		});
+
+		const joinChannelLabel = computed(() => {
+			return props.isJoinChannelShown ? "Cancel" : "Join a channel…";
+		});
+
+		const unreadCount = computed(() => {
+			return roundBadgeNumber(channel.value.unread);
+		});
+
+		const onCollapseClick = () => {
+			collapseNetwork(props.network, !props.network.isCollapsed);
+		};
+
+		const getExpandLabel = (network: ClientNetwork) => {
 			return network.isCollapsed ? "Expand" : "Collapse";
-		},
+		};
+
+		return {
+			channel,
+			joinChannelLabel,
+			unreadCount,
+			onCollapseClick,
+			getExpandLabel,
+		};
 	},
 });
 </script>

@@ -1,5 +1,5 @@
 // Generates a string from "color-1" to "color-32" based on an input string
-export default (str) => {
+export default (str: string) => {
 	let hash = 0;
 
 	for (let i = 0; i < str.length; i++) {
@@ -11,5 +11,5 @@ export default (str) => {
 		due to A being ascii 65 (100 0001)
 		 while a being ascii 97 (110 0001)
 	*/
-	return "color-" + (1 + (hash % 32));
+	return "color-" + (1 + (hash % 32)).toString();
 };

@@ -79,13 +79,10 @@ declare module "*.vue" {
 }
 
 declare module "vue" {
-	interface ComponentCustomProperties {
-		// vue-router should do this for us
-		$router: import("vue-router").Router;
-
-		// TODO: Vue struggles with typing using the options API, so we should switch to composition API
-		// $root
-	}
+	// interface ComponentCustomProperties {
+	// 	// TODO: Vue struggles with typing using the options API, so we should switch to composition API
+	// 	// $root
+	// }
 }
 
 declare module "vue-router" {

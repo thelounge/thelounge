@@ -14,7 +14,10 @@
 			id="context-menu"
 			ref="contextMenu"
 			role="menu"
-			:style="style"
+			:style="{
+				top: style.top + 'px',
+				left: style.left + 'px',
+			}"
 			tabindex="-1"
 			@mouseleave="activeItem = -1"
 			@keydown.enter.prevent="clickActiveItem"

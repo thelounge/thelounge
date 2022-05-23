@@ -1,29 +1,27 @@
 import {expect} from "chai";
 
-import {renderToString} from "@vue/server-test-utils";
-import ParsedMessageTestWrapper from "../../components/ParsedMessageTestWrapper.vue";
+import {mount} from "@vue/test-utils";
+import ParsedMessage from "../../../../client/components/ParsedMessage.vue";
+import {ClientMessage} from "../../../../client/js/types";
 
-async function getParsedMessageContents(text: any, message: any) {
-	let contents = await renderToString(ParsedMessageTestWrapper, {
-		propsData: {
+function getParsedMessageContents(text: string, message?: any) {
+	const wrapper = mount(ParsedMessage, {
+		props: {
 			text,
 			message,
 		},
 	});
 
-	// The wrapper adds a surrounding div to the message html, so we clean that out here
-	contents = contents.replace(/^<div data-server-rendered="true">([^]+)<\/div>$/m, "$1");
-
-	return contents;
+	return wrapper.html();
 }
 
 describe("IRC formatted message parser", () => {
-	it("should not introduce xss", async () => {
+	it("should not introduce xss", () => {
 		const testCases = [
 			{
 				input: "<img onerror='location.href=\"//youtube.com\"'>",
 				expected:
-					'&lt;img onerror=\'location.href=&quot;<a href="http://youtube.com" dir="auto" target="_blank" rel="noopener">//youtube.com</a>&quot;\'&gt;',
+					'&lt;img onerror=\'location.href="<a href="http://youtube.com" dir="auto" target="_blank" rel="noopener">//youtube.com</a>"\'&gt;',
 			},
 			{
 				input: '#&">bug',
@@ -32,16 +30,13 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = await Promise.all(
-			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
-			testCases.map((testCase) => getParsedMessageContents(testCase.input))
-		);
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should skip all <32 ASCII codes except linefeed", async () => {
+	it("should skip all <32 ASCII codes except linefeed", () => {
 		const testCases = [
 			{
 				input: "\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0B\x0C\x0D\x0E\x0F\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1A\x1B\x1C\x1B\x1D\x1D\x1E\x1Ftext\x0Awithcontrolcodestest",
@@ -50,16 +45,13 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = await Promise.all(
-			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
-			testCases.map((testCase) => getParsedMessageContents(testCase.input))
-		);
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should find urls", async () => {
+	it("should find urls", () => {
 		const testCases = [
 			{
 				input: "irc://irc.example.com/thelounge",
@@ -102,16 +94,13 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = await Promise.all(
-			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
-			testCases.map((testCase) => getParsedMessageContents(testCase.input))
-		);
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("url with a dot parsed correctly", async () => {
+	it("url with a dot parsed correctly", () => {
 		const input =
 			"bonuspunkt: your URL parser misparses this URL: https://msdn.microsoft.com/en-us/library/windows/desktop/ms644989(v=vs.85).aspx";
 		const correctResult =
@@ -120,13 +109,12 @@ describe("IRC formatted message parser", () => {
 			"https://msdn.microsoft.com/en-us/library/windows/desktop/ms644989(v=vs.85).aspx" +
 			"</a>";
 
-		// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
-		const actual = await getParsedMessageContents(input);
+		const actual = getParsedMessageContents(input);
 
 		expect(actual).to.deep.equal(correctResult);
 	});
 
-	it("should balance brackets", async () => {
+	it("should balance brackets", () => {
 		const testCases = [
 			{
 				input: "<https://theos.kyriasis.com/~kyrias/stats/archlinux.html>",
@@ -162,16 +150,13 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = await Promise.all(
-			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
-			testCases.map((testCase) => getParsedMessageContents(testCase.input))
-		);
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should not find urls", async () => {
+	it("should not find urls", () => {
 		const testCases = [
 			{
 				input: "text www. text",
@@ -183,16 +168,13 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = await Promise.all(
-			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
-			testCases.map((testCase) => getParsedMessageContents(testCase.input))
-		);
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should find channels", async () => {
+	it("should find channels", () => {
 		const testCases = [
 			{
 				input: "#a",
@@ -241,16 +223,13 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = await Promise.all(
-			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
-			testCases.map((testCase) => getParsedMessageContents(testCase.input))
-		);
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should not find channels", async () => {
+	it("should not find channels", () => {
 		const testCases = [
 			{
 				input: "hi#test",
@@ -262,10 +241,7 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = await Promise.all(
-			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
-			testCases.map((testCase) => getParsedMessageContents(testCase.input))
-		);
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
@@ -362,9 +338,8 @@ describe("IRC formatted message parser", () => {
 				'<span class="irc-bold">bold</span>' + " " + '<span class="irc-bold">bold</span>',
 		},
 	].forEach(({name, input, expected}) => {
-		it(`should handle style characters: ${name}`, async () => {
-			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
-			expect(await getParsedMessageContents(input)).to.equal(expected);
+		it(`should handle style characters: ${name}`, () => {
+			expect(getParsedMessageContents(input)).to.equal(expected);
 		});
 	});
 
@@ -391,7 +366,7 @@ describe("IRC formatted message parser", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should not find nicks", async () => {
+	it("should not find nicks", () => {
 		const testCases = [
 			{
 				users: ["MaxLeiter, test"],
@@ -411,16 +386,13 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = await Promise.all(
-			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
-			testCases.map((testCase) => getParsedMessageContents(testCase.input))
-		);
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should go bonkers like mirc", async () => {
+	it("should go bonkers like mirc", () => {
 		const testCases = [
 			{
 				input: "\x02irc\x0f://\x1dirc.example.com\x0f/\x034,8thelounge",
@@ -443,10 +415,7 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = await Promise.all(
-			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
-			testCases.map((testCase) => getParsedMessageContents(testCase.input))
-		);
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
@@ -521,13 +490,12 @@ describe("IRC formatted message parser", () => {
 				'<span dir="auto" role="button" tabindex="0" class="inline-channel">#i❤️thelounge</span>',
 		},
 	].forEach(({name, input, expected}) => {
-		it(`should find emoji: ${name}`, async () => {
-			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
-			expect(await getParsedMessageContents(input)).to.equal(expected);
+		it(`should find emoji: ${name}`, () => {
+			expect(getParsedMessageContents(input)).to.equal(expected);
 		});
 	});
 
-	it("should optimize generated html", async () => {
+	it("should optimize generated html", () => {
 		const testCases = [
 			{
 				input: 'test \x0312#\x0312\x0312"te\x0312st\x0312\x0312\x0312\x0312\x0312\x0312\x0312\x0312\x0312\x0312\x0312a',
@@ -539,16 +507,13 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = await Promise.all(
-			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
-			testCases.map((testCase) => getParsedMessageContents(testCase.input))
-		);
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should trim common protocols", async () => {
+	it("should trim common protocols", () => {
 		const testCases = [
 			{
 				input: "like..http://example.com",
@@ -568,16 +533,13 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = await Promise.all(
-			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
-			testCases.map((testCase) => getParsedMessageContents(testCase.input))
-		);
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should not find channel in fragment", async () => {
+	it("should not find channel in fragment", () => {
 		const testCases = [
 			{
 				input: "http://example.com/#hash",
@@ -588,19 +550,15 @@ describe("IRC formatted message parser", () => {
 			},
 		];
 
-		const actual = await Promise.all(
-			// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
-			testCases.map((testCase) => getParsedMessageContents(testCase.input))
-		);
+		const actual = testCases.map((testCase) => getParsedMessageContents(testCase.input));
 		const expected = testCases.map((testCase) => testCase.expected);
 
 		expect(actual).to.deep.equal(expected);
 	});
 
-	it("should not overlap parts", async () => {
+	it("should not overlap parts", () => {
 		const input = "Url: http://example.com/path Channel: ##channel";
-		// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
-		const actual = await getParsedMessageContents(input);
+		const actual = getParsedMessageContents(input);
 
 		expect(actual).to.equal(
 			'Url: <a href="http://example.com/path" dir="auto" target="_blank" rel="noopener">http://example.com/path</a> ' +
@@ -608,10 +566,9 @@ describe("IRC formatted message parser", () => {
 		);
 	});
 
-	it("should handle overlapping parts by using first starting", async () => {
+	it("should handle overlapping parts by using first starting", () => {
 		const input = "#test-https://example.com";
-		// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
-		const actual = await getParsedMessageContents(input);
+		const actual = getParsedMessageContents(input);
 
 		expect(actual).to.equal(
 			'<span dir="auto" role="button" tabindex="0" class="inline-channel">' +
@@ -620,10 +577,9 @@ describe("IRC formatted message parser", () => {
 		);
 	});
 
-	it("should find links separated by tab character", async () => {
+	it("should find links separated by tab character", () => {
 		const input = "example.com\texample.org";
-		// @ts-expect-error ts-migrate(2554) FIXME: Expected 2 arguments, but got 1.
-		const actual = await getParsedMessageContents(input);
+		const actual = getParsedMessageContents(input);
 
 		expect(actual).to.equal(
 			'<a href="http://example.com" dir="auto" target="_blank" rel="noopener">example.com</a>' +

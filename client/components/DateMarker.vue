@@ -24,11 +24,6 @@ export default defineComponent({
 		},
 		focused: Boolean,
 	},
-	// methods: {
-	// 	forceUpdate(){
-	// 		this.$forceUpdate()
-	// 	}
-	// },
 	setup(props) {
 		const localeDate = computed(() => dayjs(props.message.time).format("D MMMM YYYY"));
 
