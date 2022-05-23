@@ -120,10 +120,7 @@ module.exports = defineConfig({
 	},
 	overrides: [
 		{
-			files: [
-				"**/*.ts",
-				// "**/*.vue"
-			],
+			files: ["**/*.ts", "**/*.vue"],
 			parser: "@typescript-eslint/parser",
 			parserOptions: {
 				tsconfigRootDir: __dirname,
@@ -159,7 +156,7 @@ module.exports = defineConfig({
 			plugins: ["vue"],
 			extends: [
 				"eslint:recommended",
-				"plugin:vue/recommended",
+				"plugin:vue/vue3-recommended",
 				"plugin:@typescript-eslint/recommended",
 				"plugin:@typescript-eslint/recommended-requiring-type-checking",
 				"prettier",

@@ -1,4 +1,5 @@
 <template>
+	<!-- TODO: investigate -->
 	<ChannelWrapper ref="wrapper" v-bind="$props">
 		<span class="name">{{ channel.name }}</span>
 		<span
@@ -28,31 +29,61 @@
 </template>
 
 <script lang="ts">
-import Vue, {PropType} from "vue";
+import {PropType, defineComponent, computed} from "vue";
 import roundBadgeNumber from "../js/helpers/roundBadgeNumber";
+import useCloseChannel from "../js/hooks/use-close-channel";
 import {ClientChan, ClientNetwork} from "../js/types";
 import ChannelWrapper from "./ChannelWrapper.vue";
 
-export default Vue.extend({
+// export default defineComponent({
+// 	name: "Channel",
+// 	components: {
+// 		ChannelWrapper,
+// 	},
+// 	props: {
+// 		network: {type: Object as PropType<ClientNetwork>, required: true},
+// 		channel: {type: Object as PropType<ClientChan>, required: true},
+// 		active: Boolean,
+// 		isFiltering: Boolean,
+// 	},
+// 	computed: {
+// 		unreadCount(): string {
+// 			return roundBadgeNumber(this.channel.unread);
+// 		},
+// 	},
+// 	methods: {
+// 		close(): void {
+// 			this.$root?.closeChannel(this.channel);
+// 		},
+// 	},
+// });
+//
+
+export default defineComponent({
 	name: "Channel",
 	components: {
 		ChannelWrapper,
 	},
 	props: {
-		network: Object as PropType<ClientNetwork>,
-		channel: Object as PropType<ClientChan>,
+		network: {
+			type: Object as PropType<ClientNetwork>,
+			required: true,
+		},
+		channel: {
+			type: Object as PropType<ClientChan>,
+			required: true,
+		},
 		active: Boolean,
 		isFiltering: Boolean,
 	},
-	computed: {
-		unreadCount(): string {
-			return roundBadgeNumber(this.channel.unread);
-		},
-	},
-	methods: {
-		close(): void {
-			this.$root.closeChannel(this.channel);
-		},
+	setup(props) {
+		const unreadCount = computed(() => roundBadgeNumber(props.channel.unread));
+		const close = useCloseChannel(props.channel);
+
+		return {
+			unreadCount,
+			close,
+		};
 	},
 });
 </script>

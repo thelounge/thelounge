@@ -1,8 +1,8 @@
 import constants from "./constants";
 
 import "../css/style.css";
-import Vue from "vue";
-import store, {State} from "./store";
+import {createApp} from "vue";
+import store, {CallableGetters, key, State, TypedStore} from "./store";
 import App from "../components/App.vue";
 import storage from "./localStorage";
 import {router, navigate} from "./router";
@@ -12,77 +12,21 @@ import eventbus from "./eventbus";
 import "./socket-events";
 import "./webpush";
 import "./keybinds";
-import {ClientChan} from "./types";
 import {Store} from "vuex";
+import {LoungeWindow} from "./types";
 
 const favicon = document.getElementById("favicon");
 const faviconNormal = favicon?.getAttribute("href") || "";
 const faviconAlerted = favicon?.dataset.other || "";
 
-declare module "vue/types/vue" {
-	interface Vue {
-		debouncedResize: () => void;
-		// TODO; type as Timeout
-		dayChangeTimeout: any;
+export const VueApp = createApp(App);
 
-		switchToChannel: (channel: ClientChan) => void;
-		closeChannel: (channel: ClientChan) => void;
+router.app = VueApp;
+VueApp.use(router);
+VueApp.use(store, key);
 
-		$store: Store<State>;
-	}
-}
-
-new Vue({
-	el: "#viewport",
-	router,
-	mounted() {
-		socket.open();
-	},
-	methods: {
-		switchToChannel(channel: ClientChan) {
-			navigate("RoutedChat", {id: channel.id});
-		},
-		closeChannel(channel: ClientChan) {
-			if (channel.type === "lobby") {
-				eventbus.emit(
-					"confirm-dialog",
-					{
-						title: "Remove network",
-						text: `Are you sure you want to quit and remove ${channel.name}? This cannot be undone.`,
-						button: "Remove network",
-					},
-					(result: boolean) => {
-						if (!result) {
-							return;
-						}
-
-						channel.closed = true;
-						socket.emit("input", {
-							target: Number(channel.id),
-							text: "/quit",
-						});
-					}
-				);
-
-				return;
-			}
-
-			channel.closed = true;
-
-			socket.emit("input", {
-				target: Number(channel.id),
-				text: "/close",
-			});
-		},
-	},
-	render(createElement) {
-		return createElement(App, {
-			ref: "app",
-			props: this,
-		});
-	},
-	store,
-});
+VueApp.mount("#app");
+socket.open();
 
 store.watch(
 	(state) => state.sidebarOpen,
@@ -103,7 +47,7 @@ store.watch(
 );
 
 store.watch(
-	(_, getters) => getters.title,
+	(_, getters: CallableGetters) => getters.title,
 	(title) => {
 		document.title = title;
 	}
@@ -111,24 +55,35 @@ store.watch(
 
 // Toggles the favicon to red when there are unread notifications
 store.watch(
-	(_, getters) => getters.highlightCount,
+	(_, getters: CallableGetters) => getters.highlightCount,
 	(highlightCount) => {
 		favicon?.setAttribute("href", highlightCount > 0 ? faviconAlerted : faviconNormal);
 
-		// TODO: investigate types
-		const nav = navigate as any;
+		const nav: LoungeWindow["navigator"] = window.navigator;
 
 		if (nav.setAppBadge) {
 			if (highlightCount > 0) {
 				nav.setAppBadge(highlightCount);
 			} else {
-				nav.clearAppBadge();
+				if (nav.clearAppBadge) {
+					nav.clearAppBadge();
+				}
 			}
 		}
 	}
 );
 
-Vue.config.errorHandler = function (e) {
-	store.commit("currentUserVisibleError", `Vue error: ${e.message}`);
-	console.error(e); // eslint-disable-line
+VueApp.config.errorHandler = function (e) {
+	if (e instanceof Error) {
+		store.commit("currentUserVisibleError", `Vue error: ${e.message}`);
+	} else {
+		store.commit("currentUserVisibleError", `Vue error: ${e as string}`);
+	}
+
+	// eslint-disable-next-line no-console
+	console.error(e);
+};
+
+VueApp.config.globalProperties = {
+	$store: store as TypedStore,
 };

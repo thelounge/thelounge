@@ -7,44 +7,64 @@
 	/>
 </template>
 
-<script>
+<script lang="ts">
+import {defineComponent, onMounted, ref, watch} from "vue";
+import {useRoute} from "vue-router";
+import {switchToChannel} from "../../js/router";
 import socket from "../../js/socket";
-import NetworkForm from "../NetworkForm.vue";
+import {useStore} from "../../js/store";
+import NetworkForm, {NetworkFormDefaults} from "../NetworkForm.vue";
 
-export default {
+export default defineComponent({
 	name: "NetworkEdit",
 	components: {
 		NetworkForm,
 	},
-	data() {
-		return {
-			disabled: false,
-			networkData: null,
+	setup() {
+		const route = useRoute();
+		const store = useStore();
+
+		const disabled = ref(false);
+		const networkData = ref<NetworkFormDefaults | null>(null);
+
+		const setNetworkData = () => {
+			socket.emit("network:get", route.params.uuid);
+			networkData.value = store.getters.findNetwork(route.params.uuid as string);
 		};
-	},
-	watch: {
-		"$route.params.uuid"() {
-			this.setNetworkData();
-		},
-	},
-	mounted() {
-		this.setNetworkData();
-	},
-	methods: {
-		setNetworkData() {
-			socket.emit("network:get", this.$route.params.uuid);
-			this.networkData = this.$store.getters.findNetwork(this.$route.params.uuid);
-		},
-		handleSubmit(data) {
-			this.disabled = true;
+
+		const handleSubmit = (data: {uuid: string; name: string}) => {
+			disabled.value = true;
 			socket.emit("network:edit", data);
 
 			// TODO: move networks to vuex and update state when the network info comes in
-			const network = this.$store.getters.findNetwork(data.uuid);
+			const network = store.getters.findNetwork(data.uuid);
 			network.name = network.channels[0].name = data.name;
 
-			this.$root.switchToChannel(network.channels[0]);
-		},
+			switchToChannel(network.channels[0]);
+		};
+
+		// TODO: verify we dont need to watch uuid specifically
+		// was:
+		// watch: {
+		// 	"$route.params.uuid"() {
+		// 		this.setNetworkData();
+		// 	},
+		// },
+		watch(route.params, (newValue) => {
+			if (newValue.uuid) {
+				setNetworkData();
+			}
+		});
+
+		onMounted(() => {
+			setNetworkData();
+		});
+
+		return {
+			disabled,
+			networkData,
+			handleSubmit,
+		};
 	},
-};
+});
 </script>

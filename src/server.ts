@@ -1,6 +1,6 @@
 import _ from "lodash";
 import {Server as wsServer} from "ws";
-import express from "express";
+import express, {NextFunction, Request, Response} from "express";
 import fs from "fs";
 import path from "path";
 import {Server, Socket} from "socket.io";
@@ -40,7 +40,7 @@ type IndexTemplateConfiguration = ServerConfiguration & {
 	cacheBust: string;
 };
 
-type ClientConfiguration = Pick<
+export type ClientConfiguration = Pick<
 	ConfigType,
 	"public" | "lockNetwork" | "useHexIp" | "prefetch" | "defaults"
 > & {
@@ -52,11 +52,7 @@ type ClientConfiguration = Pick<
 	gitCommit: string | null;
 	defaultTheme: string;
 	themes: ThemeForClient[];
-	defaults: Defaults & {
-		sasl?: string;
-		saslAccount?: string;
-		saslPassword?: string;
-	};
+	defaults: Defaults;
 	fileUploadMaxFileSize?: number;
 };
 
@@ -130,8 +126,7 @@ export default async function (
 		return res.sendFile(path.join(packagePath, fileName));
 	});
 
-	// TODO; type to ReturnType<createServer
-	let server: any = null;
+	let server: import("http").Server | import("https").Server | null = null;
 
 	if (Config.values.public && (Config.values.ldap || {}).enable) {
 		log.warn(
@@ -162,8 +157,8 @@ export default async function (
 			process.exit(1);
 		}
 
-		server = await import("https");
-		server = server.createServer(
+		const createServer = (await import("https")).createServer;
+		server = createServer(
 			{
 				key: fs.readFileSync(keyPath),
 				cert: fs.readFileSync(certPath),
@@ -173,7 +168,12 @@ export default async function (
 		);
 	}
 
-	let listenParams;
+	let listenParams:
+		| string
+		| {
+				port: number;
+				host: string | undefined;
+		  };
 
 	if (typeof Config.values.host === "string" && Config.values.host.startsWith("unix:")) {
 		listenParams = Config.values.host.replace(/^unix:/, "");
@@ -184,24 +184,32 @@ export default async function (
 		};
 	}
 
+	// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 	server.on("error", (err) => log.error(`${err}`));
 
-	server.listen(listenParams, async () => {
+	server.listen(listenParams, () => {
 		if (typeof listenParams === "string") {
 			log.info("Available on socket " + colors.green(listenParams));
 		} else {
 			const protocol = Config.values.https.enable ? "https" : "http";
-			const address = server.address();
+			const address = server?.address();
 
-			if (address.family === "IPv6") {
-				address.address = "[" + address.address + "]";
+			if (address && typeof address !== "string") {
+				if (address.family === "IPv6") {
+					address.address = "[" + address.address + "]";
+				}
+
+				log.info(
+					"Available at " +
+						colors.green(`${protocol}://${address.address}:${address.port}/`) +
+						` in ${colors.bold(Config.values.public ? "public" : "private")} mode`
+				);
 			}
+		}
 
-			log.info(
-				"Available at " +
-					colors.green(`${protocol}://${address.address}:${address.port}/`) +
-					` in ${colors.bold(Config.values.public ? "public" : "private")} mode`
-			);
+		// This should never happen
+		if (!server) {
+			return;
 		}
 
 		const sockets = new Server(server, {
@@ -215,6 +223,7 @@ export default async function (
 		});
 
 		sockets.on("connect", (socket) => {
+			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			socket.on("error", (err) => log.error(`io socket error: ${err}`));
 
 			if (Config.values.public) {
@@ -242,8 +251,11 @@ export default async function (
 		}
 
 		new Identification((identHandler, err) => {
-			if (err || !manager) {
+			if (err) {
 				log.error(`Could not start identd server, ${err.message}`);
+				process.exit(1);
+			} else if (!manager) {
+				log.error("Could not start identd server, ClientManager is undefined");
 				process.exit(1);
 			}
 
@@ -275,7 +287,7 @@ export default async function (
 			suicideTimeout = setTimeout(() => process.exit(1), 3000);
 
 			// Close http server
-			server.close(() => {
+			server?.close(() => {
 				if (suicideTimeout !== null) {
 					clearTimeout(suicideTimeout);
 				}
@@ -284,12 +296,20 @@ export default async function (
 			});
 		};
 
+		/* eslint-disable @typescript-eslint/no-misused-promises */
 		process.on("SIGINT", exitGracefully);
 		process.on("SIGTERM", exitGracefully);
+		/* eslint-enable @typescript-eslint/no-misused-promises */
 
 		// Clear storage folder after server starts successfully
 		if (Config.values.prefetchStorage) {
-			(await import("./plugins/storage")).default.emptyDir();
+			import("./plugins/storage")
+				.then(({default: storage}) => {
+					storage.emptyDir();
+				})
+				.catch((err: Error) => {
+					log.error(`Could not clear storage folder, ${err.message}`);
+				});
 		}
 
 		changelog.checkForUpdates(manager);
@@ -298,7 +318,7 @@ export default async function (
 	return server;
 }
 
-function getClientLanguage(socket) {
+function getClientLanguage(socket: Socket): string | null {
 	const acceptLanguage = socket.handshake.headers["accept-language"];
 
 	if (typeof acceptLanguage === "string" && /^[\x00-\x7F]{1,50}$/.test(acceptLanguage)) {
@@ -309,11 +329,11 @@ function getClientLanguage(socket) {
 	return null;
 }
 
-function getClientIp(socket) {
+function getClientIp(socket: Socket) {
 	let ip = socket.handshake.address || "127.0.0.1";
 
 	if (Config.values.reverseProxy) {
-		const forwarded = (socket.handshake.headers["x-forwarded-for"] || "")
+		const forwarded = ((socket.handshake.headers["x-forwarded-for"] || "") as string)
 			.split(/\s*,\s*/)
 			.filter(Boolean);
 
@@ -325,7 +345,7 @@ function getClientIp(socket) {
 	return ip.replace(/^::ffff:/, "");
 }
 
-function getClientSecure(socket) {
+function getClientSecure(socket: Socket) {
 	let secure = socket.handshake.secure;
 
 	if (Config.values.reverseProxy && socket.handshake.headers["x-forwarded-proto"] === "https") {
@@ -335,12 +355,12 @@ function getClientSecure(socket) {
 	return secure;
 }
 
-function allRequests(req, res, next) {
+function allRequests(req: Request, res: Response, next: NextFunction) {
 	res.setHeader("X-Content-Type-Options", "nosniff");
 	return next();
 }
 
-function addSecurityHeaders(req, res, next) {
+function addSecurityHeaders(req: Request, res: Response, next: NextFunction) {
 	const policies = [
 		"default-src 'none'", // default to nothing
 		"base-uri 'none'", // disallow <base>, has no fallback to default-src
@@ -370,14 +390,14 @@ function addSecurityHeaders(req, res, next) {
 	return next();
 }
 
-function forceNoCacheRequest(req, res, next) {
+function forceNoCacheRequest(req: Request, res: Response, next: NextFunction) {
 	// Intermittent proxies must not cache the following requests,
 	// browsers must fetch the latest version of these files (service worker, source maps)
 	res.setHeader("Cache-Control", "no-cache, no-transform");
 	return next();
 }
 
-function indexRequest(req, res) {
+function indexRequest(req: Request, res: Response) {
 	res.setHeader("Content-Type", "text/html");
 
 	return fs.readFile(
@@ -533,6 +553,7 @@ function initializeClient(
 						});
 					})
 					.catch((error: any) => {
+						// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 						log.error(`Error while checking users password. Error: ${error}`);
 					});
 			}
@@ -556,12 +577,15 @@ function initializeClient(
 	});
 
 	socket.on("changelog", () => {
-		Promise.all([changelog.fetch(), packages.outdated()]).then(
-			([changelogData, packageUpdate]) => {
+		Promise.all([changelog.fetch(), packages.outdated()])
+			.then(([changelogData, packageUpdate]) => {
 				changelogData.packages = packageUpdate;
 				socket.emit("changelog", changelogData);
-			}
-		);
+			})
+			.catch((error: any) => {
+				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+				log.error(`Error while fetching changelog. Error: ${error}`);
+			});
 	});
 
 	// In public mode only one client can be connected,
@@ -652,6 +676,7 @@ function initializeClient(
 	}
 
 	const sendSessionList = () => {
+		// TODO: this should use the ClientSession type currently in client
 		const sessions = _.map(client.config.sessions, (session, sessionToken) => ({
 			current: sessionToken === token,
 			active: _.reduce(
@@ -719,7 +744,7 @@ function initializeClient(
 		});
 
 		socket.on("search", (query) => {
-			client.search(query).then((results) => {
+			void client.search(query).then((results) => {
 				socket.emit("search:results", results);
 			});
 		});
@@ -788,7 +813,7 @@ function initializeClient(
 		}
 	});
 
-	socket.join(client.id?.toString());
+	void socket.join(client.id?.toString());
 
 	const sendInitEvent = (tokenToSend) => {
 		socket.emit("init", {
@@ -976,7 +1001,7 @@ function performAuthentication(this: Socket, data) {
 	Auth.auth(manager, client, data.user, data.password, authCallback);
 }
 
-function reverseDnsLookup(ip, callback) {
+function reverseDnsLookup(ip: string, callback: (hostname: string) => void) {
 	dns.reverse(ip, (reverseErr, hostnames) => {
 		if (reverseErr || hostnames.length < 1) {
 			return callback(ip);

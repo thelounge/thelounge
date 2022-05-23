@@ -9,7 +9,7 @@ import {spawn} from "child_process";
 let home: string;
 
 class Utils {
-	static extraHelp() {
+	static extraHelp(this: void) {
 		[
 			"",
 			"Environment variable:",
@@ -36,15 +36,16 @@ class Utils {
 	static getFileFromRelativeToRoot(...fileName: string[]) {
 		if (process.env.NODE_ENV === "test" || process.env.NODE_ENV === "development") {
 			return path.resolve(path.join(__dirname, "..", "..", ...fileName));
-		} else {
-			return path.resolve(path.join(__dirname, "..", "..", "..", "..", ...fileName));
 		}
+
+		return path.resolve(path.join(__dirname, "..", "..", "..", "..", ...fileName));
 	}
 
 	// Parses CLI options such as `-c public=true`, `-c debug.raw=true`, etc.
-	static parseConfigOptions(val: string, memo) {
+	static parseConfigOptions(this: void, val: string, memo: any) {
 		// Invalid option that is not of format `key=value`, do nothing
 		if (!val.includes("=")) {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 			return memo;
 		}
 
@@ -72,7 +73,7 @@ class Utils {
 							return [];
 						}
 
-						return array.map(parseValue); // Re-parses all values of the array
+						return array.map(parseValue) as Array<Record<string, string>>; // Re-parses all values of the array
 					}
 
 					return value;
@@ -97,10 +98,11 @@ class Utils {
 			memo = _.set(memo, key, parsedValue);
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 		return memo;
 	}
 
-	static executeYarnCommand(command, ...parameters) {
+	static executeYarnCommand(command: string, ...parameters: string[]) {
 		const yarn = require.resolve("yarn/bin/yarn.js");
 		const packagesPath = Config.getPackagesPath();
 		const cachePath = path.join(packagesPath, "package_manager_cache");
@@ -159,7 +161,7 @@ class Utils {
 				data.toString()
 					.trim()
 					.split("\n")
-					.forEach((line) => {
+					.forEach((line: string) => {
 						const json = JSON.parse(line);
 
 						if (json.type === "error") {
@@ -169,7 +171,7 @@ class Utils {
 			});
 
 			add.on("error", (e) => {
-				log.error(`${e}`);
+				log.error(`${e.message}:`, e.stack || "");
 				process.exit(1);
 			});
 

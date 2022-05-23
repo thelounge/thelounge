@@ -129,16 +129,21 @@
 	</div>
 </template>
 
-<script>
+<script lang="ts">
+import {defineComponent, PropType} from "vue";
 import eventbus from "../js/eventbus";
 import friendlysize from "../js/helpers/friendlysize";
+import type {ClientChan} from "../js/types";
 
-export default {
+export default defineComponent({
 	name: "LinkPreview",
 	props: {
-		link: Object,
+		link: {
+			type: Object,
+			required: true,
+		},
 		keepScrollPosition: Function,
-		channel: Object as PropType<ClientChan>,
+		channel: {type: Object as PropType<ClientChan>, required: true},
 	},
 	data() {
 		return {
@@ -147,10 +152,10 @@ export default {
 		};
 	},
 	computed: {
-		moreButtonLabel() {
+		moreButtonLabel(): string {
 			return this.isContentShown ? "Less" : "More";
 		},
-		imageMaxSize() {
+		imageMaxSize(): string | undefined {
 			if (!this.link.maxSize) {
 				return;
 			}
@@ -172,10 +177,10 @@ export default {
 
 		this.onPreviewUpdate();
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		eventbus.off("resize", this.handleResize);
 	},
-	destroyed() {
+	unmounted() {
 		// Let this preview go through load/canplay events again,
 		// Otherwise the browser can cause a resize on video elements
 		this.link.sourceLoaded = false;
@@ -231,6 +236,9 @@ export default {
 
 				this.showMoreButton =
 					this.$refs.content.offsetWidth >= this.$refs.container.offsetWidth;
+			}).catch((e) => {
+				// eslint-disable-next-line no-console
+				console.error("Error in LinkPreview.handleResize", e);
 			});
 		},
 		updateShownState() {
@@ -245,21 +253,21 @@ export default {
 				case "error":
 					// Collapse all errors by default unless its a message about image being too big
 					if (this.link.error === "image-too-big") {
-						defaultState = this.$store.state.settings.media;
+						defaultState = this.$accessor.settings.media;
 					}
 
 					break;
 
 				case "link":
-					defaultState = this.$store.state.settings.links;
+					defaultState = this.$accessor.settings.links;
 					break;
 
 				default:
-					defaultState = this.$store.state.settings.media;
+					defaultState = this.$accessor.settings.media;
 			}
 
 			this.link.shown = defaultState;
 		},
 	},
-};
+});
 </script>

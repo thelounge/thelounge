@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import log from "../log";
 import colors from "chalk";
 import {Command} from "commander";
@@ -47,12 +48,19 @@ program
 			return;
 		}
 
-		return Utils.executeYarnCommand(argsList.shift(), ...argsList)
+		const command = argsList.shift();
+		const params = argsList;
+
+		if (!command) {
+			return;
+		}
+
+		return Utils.executeYarnCommand(command, ...params)
 			.then(() => {
 				log.info("Package(s) have been successfully upgraded.");
 			})
 			.catch((code) => {
-				log.error(`Failed to upgrade package(s). Exit code ${code}`);
+				log.error(`Failed to upgrade package(s). Exit code ${code as string}`);
 				process.exit(1);
 			});
 	});

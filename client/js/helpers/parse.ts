@@ -9,28 +9,27 @@ import LinkPreviewToggle from "../../components/LinkPreviewToggle.vue";
 import LinkPreviewFileSize from "../../components/LinkPreviewFileSize.vue";
 import InlineChannel from "../../components/InlineChannel.vue";
 import Username from "../../components/Username.vue";
-import {VNode} from "vue";
-import Network from "src/models/network";
-import {Message} from "src/models/msg";
+import {h as createElement, VNode} from "vue";
+import {ClientMessage, ClientNetwork} from "../types";
 
 const emojiModifiersRegex = /[\u{1f3fb}-\u{1f3ff}]|\u{fe0f}/gu;
 
-type createElement = (tag: string, props: any, children: any) => VNode;
-
 // Create an HTML `span` with styling information for a given fragment
 // TODO: remove any
-function createFragment(fragment: Record<any, string>, createElement: createElement) {
-	const classes = [];
+function createFragment(fragment: Record<any, any>) {
+	const classes: string[] = [];
 
 	if (fragment.bold) {
 		classes.push("irc-bold");
 	}
 
 	if (fragment.textColor !== undefined) {
+		// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 		classes.push("irc-fg" + fragment.textColor);
 	}
 
 	if (fragment.bgColor !== undefined) {
+		// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 		classes.push("irc-bg" + fragment.bgColor);
 	}
 
@@ -50,7 +49,7 @@ function createFragment(fragment: Record<any, string>, createElement: createElem
 		classes.push("irc-monospace");
 	}
 
-	const data = {} as any;
+	const data = {} as Record<string, any>;
 	let hasData = false;
 
 	if (classes.length > 0) {
@@ -61,20 +60,22 @@ function createFragment(fragment: Record<any, string>, createElement: createElem
 	if (fragment.hexColor) {
 		hasData = true;
 		data.style = {
+			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			color: `#${fragment.hexColor}`,
 		};
 
 		if (fragment.hexBgColor) {
+			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			data.style["background-color"] = `#${fragment.hexBgColor}`;
 		}
 	}
 
-	return hasData ? createElement("span", data, fragment.text) : fragment.text;
+	return hasData ? createElement("span", data, fragment.text) : (fragment.text as string);
 }
 
 // Transform an IRC message potentially filled with styling control codes, URLs,
 // nicknames, and channels into a string of HTML elements to display on the client.
-function parse(createElement: createElement, text: string, message?: Message, network?: Network) {
+function parse(text: string, message?: ClientMessage, network?: ClientNetwork) {
 	// Extract the styling information and get the plain text version from it
 	const styleFragments = parseStyle(text);
 	const cleanText = styleFragments.map((fragment) => fragment.text).join("");
@@ -92,26 +93,27 @@ function parse(createElement: createElement, text: string, message?: Message, ne
 
 	const parts = [...channelParts, ...linkParts, ...emojiParts, ...nameParts];
 
-	// The channel the message belongs to might not exist if the user isn't joined to it.
-	const messageChannel = message ? message.channel : null;
-
 	// Merge the styling information with the channels / URLs / nicks / text objects and
 	// generate HTML strings with the resulting fragments
 	return merge(parts, styleFragments, cleanText).map((textPart) => {
-		const fragments = textPart.fragments?.map((fragment) =>
-			createFragment(fragment, createElement)
-		);
+		const fragments = textPart.fragments?.map((fragment) => createFragment(fragment)) as (
+			| VNode
+			| string
+		)[];
 
 		// Wrap these potentially styled fragments with links and channel buttons
+		// TODO: fix typing
 		if ("link" in textPart) {
 			const preview =
 				message &&
 				message.previews &&
+				// @ts-ignore
 				message.previews.find((p) => p.link === textPart.link);
 			const link = createElement(
 				"a",
 				{
 					attrs: {
+						// @ts-ignore
 						href: textPart.link,
 						dir: preview ? null : "auto",
 						target: "_blank",
@@ -129,6 +131,7 @@ function parse(createElement: createElement, text: string, message?: Message, ne
 
 			if (preview.size > 0) {
 				linkEls.push(
+					// @ts-ignore
 					createElement(LinkPreviewFileSize, {
 						props: {
 							size: preview.size,
@@ -138,9 +141,11 @@ function parse(createElement: createElement, text: string, message?: Message, ne
 			}
 
 			linkEls.push(
+				// @ts-ignore
 				createElement(LinkPreviewToggle, {
 					props: {
 						link: preview,
+						message: message,
 					},
 				})
 			);
@@ -156,20 +161,24 @@ function parse(createElement: createElement, text: string, message?: Message, ne
 				},
 				linkEls
 			);
+			// @ts-ignore
 		} else if (textPart.channel) {
 			return createElement(
 				InlineChannel,
 				{
 					props: {
+						// @ts-ignore
 						channel: textPart.channel,
 					},
 				},
 				fragments
 			);
+			// @ts-ignore
 		} else if (textPart.emoji) {
+			// @ts-ignore
 			const emojiWithoutModifiers = textPart.emoji.replace(emojiModifiersRegex, "");
 			const title = emojiMap[emojiWithoutModifiers]
-				? `Emoji: ${emojiMap[emojiWithoutModifiers]}`
+				? `Emoji: ${emojiMap[emojiWithoutModifiers] as string}`
 				: null;
 
 			return createElement(
@@ -184,14 +193,18 @@ function parse(createElement: createElement, text: string, message?: Message, ne
 				},
 				fragments
 			);
+			// @ts-ignore
 		} else if (textPart.nick) {
 			return createElement(
+				// @ts-ignore
 				Username,
 				{
 					props: {
 						user: {
+							// @ts-ignore
 							nick: textPart.nick,
 						},
+						// @ts-ignore
 						channel: messageChannel,
 						network,
 					},

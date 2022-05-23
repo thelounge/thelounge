@@ -4,7 +4,7 @@ class EventBus {
 	/**
 	 * Register an event handler for the given type.
 	 */
-	on(type: string, handler: Function) {
+	on(type: string, handler: (...evt: any[]) => void) {
 		if (events.has(type)) {
 			events.get(type).push(handler);
 		} else {
@@ -18,11 +18,11 @@ class EventBus {
 	 * @param  {String} type    Type of event to unregister `handler` from.
 	 * @param  {Function} handler Handler function to remove.
 	 */
-	off(type: string, handler: Function) {
+	off(type: string, handler: (...evt: any[]) => void) {
 		if (events.has(type)) {
 			events.set(
 				type,
-				events.get(type).filter((item: Function) => item !== handler)
+				events.get(type).filter((item: (...evt: any[]) => void) => item !== handler)
 			);
 		}
 	}
@@ -38,7 +38,7 @@ class EventBus {
 			events
 				.get(type)
 				.slice()
-				.map((handler: (...evt: any[]) => void) => {
+				.map((handler: (...evts: any[]) => void) => {
 					handler(...evt);
 				});
 		}

@@ -120,7 +120,7 @@
 	</div>
 </template>
 
-<script>
+<script lang="ts">
 import socket from "../js/socket";
 import eventbus from "../js/eventbus";
 import ParsedMessage from "./ParsedMessage.vue";
@@ -133,8 +133,10 @@ import ListBans from "./Special/ListBans.vue";
 import ListInvites from "./Special/ListInvites.vue";
 import ListChannels from "./Special/ListChannels.vue";
 import ListIgnored from "./Special/ListIgnored.vue";
+import {Component, defineComponent, PropType} from "vue";
+import type {ClientNetwork, ClientChan} from "../js/types";
 
-export default {
+export default defineComponent({
 	name: "Chat",
 	components: {
 		ParsedMessage,
@@ -145,12 +147,12 @@ export default {
 		MessageSearchForm,
 	},
 	props: {
-		network: Object as PropType<ClientNetwork>,
-		channel: Object as PropType<ClientChan>,
+		network: {type: Object as PropType<ClientNetwork>, required: true},
+		channel: {type: Object as PropType<ClientChan>, required: true},
 		focused: String,
 	},
 	computed: {
-		specialComponent() {
+		specialComponent(): Component {
 			switch (this.channel.special) {
 				case "list_bans":
 					return ListBans;
@@ -173,6 +175,9 @@ export default {
 			if (newValue) {
 				this.$nextTick(() => {
 					this.$refs.topicInput.focus();
+				}).catch((e) => {
+					// eslint-disable-next-line no-console
+					console.error(e);
 				});
 			}
 		},
@@ -233,5 +238,5 @@ export default {
 			});
 		},
 	},
-};
+});
 </script>

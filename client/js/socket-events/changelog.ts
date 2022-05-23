@@ -33,5 +33,9 @@ socket.on("changelog", function (data) {
 });
 
 socket.on("changelog:newversion", () => {
+	if (!store.state.serverConfiguration) {
+		return;
+	}
+
 	store.state.serverConfiguration.isUpdateAvailable = true;
 });

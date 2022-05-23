@@ -5,10 +5,7 @@ import * as path from "path";
 import CopyPlugin from "copy-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 // TODO; we should add a declaration file
-// ! vue-loader 15.x does not have typescript declarations
-// ! vue-loader 16.x does have typescript declarations, but is built for vue 3.x
-// ! this is currently working because of noImplicitAny being set in the root tsconfig.json and many eslint rules disabled in .eslintrc.cjs
-import VueLoaderPlugin from "vue-loader/lib/plugin";
+import {VueLoaderPlugin} from "vue-loader";
 import babelConfig from "./babel.config.cjs";
 import Helper from "./src/helper";
 
@@ -97,9 +94,15 @@ const config: webpack.Configuration = {
 	},
 	plugins: [
 		new VueLoaderPlugin(),
+		new webpack.DefinePlugin({
+			__VUE_OPTIONS_API__: true,
+			__VUE_PROD_DEVTOOLS__: false,
+		}),
 		new MiniCssExtractPlugin({
 			filename: "css/style.css",
 		}),
+		new webpack.IgnorePlugin({resourceRegExp: /canvas/}),
+
 		// TODO: verify necessary
 		new webpack.ProvidePlugin({
 			Vue: ["vue/dist/vue.esm.js", "default"],
@@ -196,9 +199,6 @@ export default (env: any, argv: any) => {
 				/js(\/|\\)socket\.js/,
 				path.resolve(__dirname, "scripts/noop.js")
 			),
-
-			// "Fixes" Critical dependency: the request of a dependency is an expression
-			new webpack.ContextReplacementPlugin(/vue-server-renderer$/),
 		];
 	}
 

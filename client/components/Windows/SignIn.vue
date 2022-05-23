@@ -59,9 +59,9 @@
 import storage from "../../js/localStorage";
 import socket from "../../js/socket";
 import RevealPassword from "../RevealPassword.vue";
-import Vue from "vue";
+import {defineComponent} from "vue";
 
-export default Vue.extend({
+export default defineComponent({
 	name: "SignIn",
 	components: {
 		RevealPassword,
@@ -75,7 +75,7 @@ export default Vue.extend({
 	mounted() {
 		socket.on("auth:failed", this.onAuthFailed);
 	},
-	beforeDestroy() {
+	beforeUnmount() {
 		socket.off("auth:failed", this.onAuthFailed);
 	},
 	methods: {

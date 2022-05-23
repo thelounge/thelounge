@@ -7,9 +7,9 @@ import log from "../../log";
 import Config from "../../config";
 import {findLinksWithSchema} from "../../../client/js/helpers/ircmessageparser/findLinks";
 import storage from "../storage";
-import Client, {IrcEventHandler} from "../../client";
+import Client from "../../client";
 import Chan from "../../models/chan";
-import Msg, {MessagePreview} from "../../models/msg";
+import Msg from "../../models/msg";
 
 type FetchRequest = {
 	data: Buffer;
@@ -20,7 +20,7 @@ const currentFetchPromises = new Map<string, Promise<FetchRequest>>();
 const imageTypeRegex = /^image\/.+/;
 const mediaTypeRegex = /^(audio|video)\/.+/;
 
-type LinkPreview = {
+export type LinkPreview = {
 	type: string;
 	head: string;
 	body: string;

@@ -2,8 +2,10 @@
 	<button class="lt" aria-label="Toggle channel list" @click="$store.commit('toggleSidebar')" />
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import {defineComponent} from "vue";
+
+export default defineComponent({
 	name: "SidebarToggle",
-};
+});
 </script>

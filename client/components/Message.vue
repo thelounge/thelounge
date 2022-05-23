@@ -95,56 +95,73 @@
 	</div>
 </template>
 
-<script>
+<script lang="ts">
+import {computed, defineComponent, PropType} from "vue";
+import dayjs from "dayjs";
+
 import constants from "../js/constants";
 import localetime from "../js/helpers/localetime";
-import dayjs from "dayjs";
 import Username from "./Username.vue";
 import LinkPreview from "./LinkPreview.vue";
 import ParsedMessage from "./ParsedMessage.vue";
 import MessageTypes from "./MessageTypes";
 
+import type {ClientChan, ClientMessage, ClientNetwork} from "../js/types";
+import {useStore} from "../js/store";
+
 MessageTypes.ParsedMessage = ParsedMessage;
 MessageTypes.LinkPreview = LinkPreview;
 MessageTypes.Username = Username;
 
-export default {
+export default defineComponent({
 	name: "Message",
 	components: MessageTypes,
 	props: {
-		message: Object,
-		channel: Object as PropType<ClientChan>,
-		network: Object as PropType<ClientNetwork>,
+		message: {type: Object as PropType<ClientMessage>, required: true},
+		channel: {type: Object as PropType<ClientChan>, required: false},
+		network: {type: Object as PropType<ClientNetwork>, required: true},
 		keepScrollPosition: Function,
 		isPreviousSource: Boolean,
 		focused: Boolean,
 	},
-	computed: {
-		timeFormat() {
-			let format;
+	setup(props) {
+		const store = useStore();
 
-			if (this.$store.state.settings.use12hClock) {
-				format = this.$store.state.settings.showSeconds ? "msg12hWithSeconds" : "msg12h";
+		const timeFormat = computed(() => {
+			let format: keyof typeof constants.timeFormats;
+
+			if (store.state.settings.use12hClock) {
+				format = store.state.settings.showSeconds ? "msg12hWithSeconds" : "msg12h";
 			} else {
-				format = this.$store.state.settings.showSeconds ? "msgWithSeconds" : "msgDefault";
+				format = store.state.settings.showSeconds ? "msgWithSeconds" : "msgDefault";
 			}
 
 			return constants.timeFormats[format];
-		},
-		messageTime() {
-			return dayjs(this.message.time).format(this.timeFormat);
-		},
-		messageTimeLocale() {
-			return localetime(this.message.time);
-		},
-		messageComponent() {
-			return "message-" + this.message.type;
-		},
+		});
+
+		const messageTime = computed(() => {
+			return dayjs(props.message.time).format(timeFormat.value);
+		});
+
+		const messageTimeLocale = computed(() => {
+			return localetime(props.message.time);
+		});
+
+		const messageComponent = computed(() => {
+			return "message-" + props.message.type;
+		});
+
+		const isAction = () => {
+			return typeof MessageTypes["message-" + props.message.type] !== "undefined";
+		};
+
+		return {
+			timeFormat,
+			messageTime,
+			messageTimeLocale,
+			messageComponent,
+			isAction,
+		};
 	},
-	methods: {
-		isAction() {
-			return typeof MessageTypes["message-" + this.message.type] !== "undefined";
-		},
-	},
-};
+});
 </script>

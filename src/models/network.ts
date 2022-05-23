@@ -11,7 +11,7 @@ import ClientCertificate, {ClientCertificateType} from "../plugins/clientCertifi
 import Client from "../client";
 
 /**
- * @type {Object} List of keys which should be sent to the client by default.
+ * List of keys which should be sent to the client by default.
  */
 const fieldsForClient = {
 	uuid: true,
@@ -29,7 +29,7 @@ type NetworkIrcOptions = {
 	gecos: string;
 	tls: boolean;
 	rejectUnauthorized: boolean;
-	webirc: WebIRC;
+	webirc: WebIRC | null;
 	client_certificate: ClientCertificateType | null;
 	socks?: {
 		host: string;
@@ -346,7 +346,8 @@ class Network {
 			username: "thelounge",
 			address: client.config.browser?.ip,
 			hostname: client.config.browser?.hostname,
-		} as any;
+			options: {},
+		};
 
 		// https://ircv3.net/specs/extensions/webirc#options
 		if (client.config.browser?.isSecure) {
@@ -357,7 +358,8 @@ class Network {
 
 		if (typeof Config.values.webirc[this.host] === "function") {
 			webircObject.password = null;
-			return Config.values.webirc[this.host](webircObject, this);
+
+			return Config.values.webirc[this.host](webircObject, this) as typeof webircObject;
 		}
 
 		return webircObject;

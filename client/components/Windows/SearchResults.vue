@@ -3,9 +3,9 @@
 		<div
 			id="chat"
 			:class="{
-				'colored-nicks': $store.state.settings.coloredNicks,
-				'time-seconds': $store.state.settings.showSeconds,
-				'time-12h': $store.state.settings.use12hClock,
+				'colored-nicks': store.state.settings.coloredNicks,
+				'time-seconds': store.state.settings.showSeconds,
+				'time-12h': store.state.settings.use12hClock,
 			}"
 		>
 			<div
@@ -14,12 +14,12 @@
 				aria-label="Search results"
 				role="tabpanel"
 			>
-				<div class="header">
+				<div v-if="network && channel" class="header">
 					<SidebarToggle />
 					<span class="title"
 						>Searching in <span class="channel-name">{{ channel.name }}</span> for</span
 					>
-					<span class="topic">{{ $route.query.q }}</span>
+					<span class="topic">{{ route.query.q }}</span>
 					<MessageSearchForm :network="network" :channel="channel" />
 					<button
 						class="close"
@@ -28,25 +28,24 @@
 						@click="closeSearch"
 					/>
 				</div>
-				<div class="chat-content">
+				<div v-if="network && channel" class="chat-content">
 					<div ref="chat" class="chat" tabindex="-1">
 						<div v-show="moreResultsAvailable" class="show-more">
 							<button
 								ref="loadMoreButton"
 								:disabled="
-									$store.state.messageSearchInProgress ||
-									!$store.state.isConnected
+									store.state.messageSearchInProgress || !store.state.isConnected
 								"
 								class="btn"
 								@click="onShowMoreClick"
 							>
-								<span v-if="$store.state.messageSearchInProgress">Loading…</span>
+								<span v-if="store.state.messageSearchInProgress">Loading…</span>
 								<span v-else>Show older messages</span>
 							</button>
 						</div>
 
 						<div
-							v-if="$store.state.messageSearchInProgress && !offset"
+							v-if="store.state.messageSearchInProgress && !offset"
 							class="search-status"
 						>
 							Searching…
@@ -55,28 +54,32 @@
 							No results found.
 						</div>
 						<div
-							v-else
 							class="messages"
 							role="log"
 							aria-live="polite"
 							aria-relevant="additions"
 						>
-							<template v-for="(message, id) in messages">
-								<div :key="message.id" class="result" @:click="jump(message, id)">
-									<DateMarker
-										v-if="shouldDisplayDateMarker(message, id)"
-										:key="message.date"
-										:message="message"
-									/>
-									<Message
-										:key="message.id"
-										:channel="channel"
-										:network="network"
-										:message="message"
-										:data-id="message.id"
-									/>
-								</div>
-							</template>
+							<div
+								v-for="(message, id) in messages"
+								:key="message.id"
+								class="result"
+								@:click="jump(message, id)"
+							>
+								<!-- TODO: this was message.date  -->
+								<DateMarker
+									v-if="shouldDisplayDateMarker(message, id)"
+									:key="message.when.toString()"
+									:message="message"
+								/>
+								<!-- todo channel and network ! -->
+								<Message
+									:key="message.id"
+									:channel="channel!"
+									:network="network!"
+									:message="message"
+									:data-id="message.id"
+								/>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -91,7 +94,7 @@
 }
 </style>
 
-<script>
+<script lang="ts">
 import socket from "../../js/socket";
 import eventbus from "../../js/eventbus";
 
@@ -99,8 +102,14 @@ import SidebarToggle from "../SidebarToggle.vue";
 import Message from "../Message.vue";
 import MessageSearchForm from "../MessageSearchForm.vue";
 import DateMarker from "../DateMarker.vue";
+import {watch, computed, defineComponent, nextTick, ref, onMounted, onUnmounted} from "vue";
+import type {ClientMessage} from "../../js/types";
 
-export default {
+import {useStore} from "../../js/store";
+import {useRoute, useRouter} from "vue-router";
+import {switchToChannel} from "../../js/router";
+
+export default defineComponent({
 	name: "SearchResults",
 	components: {
 		SidebarToggle,
@@ -108,145 +117,214 @@ export default {
 		DateMarker,
 		MessageSearchForm,
 	},
-	data() {
-		return {
-			offset: 0,
-			moreResultsAvailable: false,
-			oldScrollTop: 0,
-			oldChatHeight: 0,
-		};
-	},
-	computed: {
-		search() {
-			return this.$store.state.messageSearchResults;
-		},
-		messages() {
-			if (!this.search) {
+	setup() {
+		const store = useStore();
+		const route = useRoute();
+		const router = useRouter();
+
+		const chat = ref<HTMLDivElement>();
+		const chatRef = chat.value;
+
+		const loadMoreButton = ref<HTMLButtonElement>();
+
+		const offset = ref(0);
+		const moreResultsAvailable = ref(false);
+		const oldScrollTop = ref(0);
+		const oldChatHeight = ref(0);
+
+		const search = computed(() => store.state.messageSearchResults);
+		const messages = computed(() => {
+			if (!search.value) {
 				return [];
 			}
 
-			return this.search.results;
-		},
-		chan() {
-			const chanId = parseInt(this.$route.params.id, 10);
-			return this.$store.getters.findChannel(chanId);
-		},
-		network() {
-			if (!this.chan) {
+			return search.value.results;
+		});
+
+		const chan = computed(() => {
+			const chanId = parseInt(route.params.id as string, 10);
+			return store.getters.findChannel(chanId);
+		});
+
+		const network = computed(() => {
+			if (!chan.value) {
 				return null;
 			}
 
-			return this.chan.network;
-		},
-		channel() {
-			if (!this.chan) {
+			return chan.value.network;
+		});
+
+		const channel = computed(() => {
+			if (!chan.value) {
 				return null;
 			}
 
-			return this.chan.channel;
-		},
-	},
-	watch: {
-		"$route.params.id"() {
-			this.doSearch();
-			this.setActiveChannel();
-		},
-		"$route.query.q"() {
-			this.doSearch();
-			this.setActiveChannel();
-		},
-		messages() {
-			this.moreResultsAvailable = this.messages.length && !(this.messages.length % 100);
+			return chan.value.channel;
+		});
 
-			if (!this.offset) {
-				this.jumpToBottom();
-			} else {
-				this.$nextTick(() => {
-					const currentChatHeight = this.$refs.chat.scrollHeight;
-					this.$refs.chat.scrollTop =
-						this.oldScrollTop + currentChatHeight - this.oldChatHeight;
-				});
+		const setActiveChannel = () => {
+			if (!chan.value) {
+				return;
 			}
-		},
-	},
-	mounted() {
-		this.setActiveChannel();
-		this.doSearch();
 
-		eventbus.on("escapekey", this.closeSearch);
-		this.$root.$on("re-search", this.doSearch); // Enable MessageSearchForm to search for the same query again
-	},
-	beforeDestroy() {
-		this.$root.$off("re-search");
-	},
-	destroyed() {
-		eventbus.off("escapekey", this.closeSearch);
-	},
-	methods: {
-		setActiveChannel() {
-			this.$store.commit("activeChannel", this.chan);
-		},
-		closeSearch() {
-			this.$root.switchToChannel(this.channel);
-		},
-		shouldDisplayDateMarker(message, id) {
-			const previousMessage = this.messages[id - 1];
+			store.commit("activeChannel", chan.value);
+		};
+
+		const closeSearch = () => {
+			if (!channel.value) {
+				return;
+			}
+
+			switchToChannel(channel.value);
+		};
+
+		const shouldDisplayDateMarker = (message: ClientMessage, id: number) => {
+			const previousMessage = messages.value[id - 1];
 
 			if (!previousMessage) {
 				return true;
 			}
 
 			return new Date(previousMessage.time).getDay() !== new Date(message.time).getDay();
-		},
-		doSearch() {
-			this.offset = 0;
-			this.$store.commit("messageSearchInProgress", true);
+		};
 
-			if (!this.offset) {
-				this.$store.commit("messageSearchResults", null); // Only reset if not getting offset
+		const doSearch = () => {
+			offset.value = 0;
+			store.commit("messageSearchInProgress", true);
+
+			if (!offset.value) {
+				store.commit("messageSearchInProgress", undefined); // Only reset if not getting offset
 			}
 
 			socket.emit("search", {
-				networkUuid: this.network.uuid,
-				channelName: this.channel.name,
-				searchTerm: this.$route.query.q,
-				offset: this.offset,
+				networkUuid: network.value?.uuid,
+				channelName: channel.value?.name,
+				searchTerm: route.query.q,
+				offset: offset.value,
 			});
-		},
-		onShowMoreClick() {
-			this.offset += 100;
-			this.$store.commit("messageSearchInProgress", true);
+		};
 
-			this.oldScrollTop = this.$refs.chat.scrollTop;
-			this.oldChatHeight = this.$refs.chat.scrollHeight;
+		const onShowMoreClick = () => {
+			if (!chatRef) {
+				return;
+			}
+
+			offset.value += 100;
+			store.commit("messageSearchInProgress", true);
+
+			oldScrollTop.value = chatRef.scrollTop;
+			oldChatHeight.value = chatRef.scrollHeight;
 
 			socket.emit("search", {
-				networkUuid: this.network.uuid,
-				channelName: this.channel.name,
-				searchTerm: this.$route.query.q,
-				offset: this.offset + 1,
+				networkUuid: network.value?.uuid,
+				channelName: channel.value?.name,
+				searchTerm: route.query.q,
+				offset: offset.value + 1,
 			});
-		},
-		jumpToBottom() {
-			this.$nextTick(() => {
-				const el = this.$refs.chat;
+		};
+
+		const jumpToBottom = () => {
+			nextTick(() => {
+				if (!chatRef) {
+					return;
+				}
+
+				const el = chatRef;
 				el.scrollTop = el.scrollHeight;
+			}).catch((e) => {
+				// eslint-disable-next-line no-console
+				console.error(e);
 			});
-		},
-		jump(message, id) {
+		};
+
+		const jump = (message: ClientMessage, id: number) => {
 			// TODO: Implement jumping to messages!
 			// This is difficult because it means client will need to handle a potentially nonlinear message set
 			// (loading IntersectionObserver both before AND after the messages)
-			this.$router.push({
-				name: "MessageList",
-				params: {
-					id: this.chan.id,
-				},
-				query: {
-					focused: id,
-				},
-			});
-		},
+			router
+				.push({
+					name: "MessageList",
+					params: {
+						id: channel.value?.id,
+					},
+					query: {
+						focused: id,
+					},
+				})
+				.catch((e) => {
+					// eslint-disable-next-line no-console
+					console.error(`Failed to navigate to message ${id}`, e);
+				});
+		};
+
+		const routeIdRef = ref(route.params.id);
+		const routeQueryRef = ref(route.query);
+
+		watch(routeIdRef, () => {
+			doSearch();
+			setActiveChannel();
+		});
+
+		watch(routeQueryRef, () => {
+			doSearch();
+			setActiveChannel();
+		});
+
+		watch(messages, () => {
+			moreResultsAvailable.value = !!(
+				messages.value.length && !(messages.value.length % 100)
+			);
+
+			if (!offset.value) {
+				jumpToBottom();
+			} else {
+				nextTick(() => {
+					if (!chatRef) {
+						return;
+					}
+
+					const currentChatHeight = chatRef.scrollHeight;
+					chatRef.scrollTop =
+						oldScrollTop.value + currentChatHeight - oldChatHeight.value;
+				}).catch((e) => {
+					// eslint-disable-next-line no-console
+					console.error("Failed to scroll to bottom", e);
+				});
+			}
+		});
+
+		onMounted(() => {
+			setActiveChannel();
+			doSearch();
+
+			eventbus.on("escapekey", closeSearch);
+			eventbus.on("re-search", doSearch);
+		});
+
+		onUnmounted(() => {
+			eventbus.off("escapekey", closeSearch);
+			eventbus.off("re-search", doSearch);
+		});
+
+		return {
+			chat,
+			loadMoreButton,
+			messages,
+			moreResultsAvailable,
+			search,
+			network,
+			channel,
+			route,
+			offset,
+			store,
+			setActiveChannel,
+			closeSearch,
+			shouldDisplayDateMarker,
+			doSearch,
+			onShowMoreClick,
+			jumpToBottom,
+			jump,
+		};
 	},
-};
+});
 </script>

@@ -65,7 +65,7 @@ function togglePushSubscription() {
 
 				return registration.pushManager
 					.subscribe({
-						applicationServerKey: store.state.serverConfiguration.applicationServerKey,
+						applicationServerKey: store.state.serverConfiguration?.applicationServerKey,
 						userVisibleOnly: true,
 					})
 					.then((subscription) => {

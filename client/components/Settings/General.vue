@@ -19,12 +19,12 @@
 				Open irc:// URLs with The Lounge
 			</button>
 		</div>
-		<div v-if="$store.state.serverConfiguration.fileUpload">
+		<div v-if="store.state.serverConfiguration?.fileUpload">
 			<h2>File uploads</h2>
 			<div>
 				<label class="opt">
 					<input
-						:checked="$store.state.settings.uploadCanvas"
+						:checked="store.state.settings.uploadCanvas"
 						type="checkbox"
 						name="uploadCanvas"
 					/>
@@ -39,18 +39,18 @@
 				</label>
 			</div>
 		</div>
-		<div v-if="!$store.state.serverConfiguration.public">
+		<div v-if="!store.state.serverConfiguration?.public">
 			<h2>Settings synchronisation</h2>
 			<label class="opt">
 				<input
-					:checked="$store.state.settings.syncSettings"
+					:checked="store.state.settings.syncSettings"
 					type="checkbox"
 					name="syncSettings"
 				/>
 				Synchronize settings with other clients
 			</label>
-			<template v-if="!$store.state.settings.syncSettings">
-				<div v-if="$store.state.serverHasSettings" class="settings-sync-panel">
+			<template v-if="!store.state.settings.syncSettings">
+				<div v-if="store.state.serverHasSettings" class="settings-sync-panel">
 					<p>
 						<strong>Warning:</strong> Checking this box will override the settings of
 						this client with those stored on the server.
@@ -71,14 +71,14 @@
 				</div>
 			</template>
 		</div>
-		<div v-if="!$store.state.serverConfiguration.public">
+		<div v-if="!store.state.serverConfiguration?.public">
 			<h2>Automatic away message</h2>
 
 			<label class="opt">
 				<label for="awayMessage" class="sr-only">Automatic away message</label>
 				<input
 					id="awayMessage"
-					:value="$store.state.settings.awayMessage"
+					:value="store.state.settings.awayMessage"
 					type="text"
 					name="awayMessage"
 					class="input"
@@ -91,53 +91,77 @@
 
 <style></style>
 
-<script>
-let installPromptEvent = null;
+<script lang="ts">
+import {computed, defineComponent, onMounted, ref} from "vue";
+import {useStore} from "../../js/store";
+import {BeforeInstallPromptEvent} from "../../js/types";
+
+let installPromptEvent: BeforeInstallPromptEvent | null = null;
 
 window.addEventListener("beforeinstallprompt", (e) => {
 	e.preventDefault();
-	installPromptEvent = e;
+	installPromptEvent = e as BeforeInstallPromptEvent;
 });
 
-export default {
+export default defineComponent({
 	name: "GeneralSettings",
-	data() {
-		return {
-			canRegisterProtocol: false,
-		};
-	},
-	computed: {
-		hasInstallPromptEvent() {
+	setup() {
+		const store = useStore();
+		const canRegisterProtocol = ref(false);
+
+		const hasInstallPromptEvent = computed(() => {
 			// TODO: This doesn't hide the button after clicking
 			return installPromptEvent !== null;
-		},
-	},
-	mounted() {
-		// Enable protocol handler registration if supported,
-		// and the network configuration is not locked
-		this.canRegisterProtocol =
-			window.navigator.registerProtocolHandler &&
-			!this.$store.state.serverConfiguration.lockNetwork;
-	},
-	methods: {
-		nativeInstallPrompt() {
-			installPromptEvent.prompt();
+		});
+
+		onMounted(() => {
+			// Enable protocol handler registration if supported,
+			// and the network configuration is not locked
+			canRegisterProtocol.value =
+				// @ts-ignore
+				window.navigator.registerProtocolHandler &&
+				!store.state.serverConfiguration?.lockNetwork;
+		});
+
+		const nativeInstallPrompt = () => {
+			if (!installPromptEvent) {
+				return;
+			}
+
+			installPromptEvent.prompt().catch((e) => {
+				// eslint-disable-next-line no-console
+				console.error(e);
+			});
+
 			installPromptEvent = null;
-		},
-		onForceSyncClick() {
-			this.$store.dispatch("settings/syncAll", true);
-			this.$store.dispatch("settings/update", {
+		};
+
+		const onForceSyncClick = () => {
+			void store.dispatch("settings/syncAll", true);
+			void store.dispatch("settings/update", {
 				name: "syncSettings",
 				value: true,
 				sync: true,
 			});
-		},
-		registerProtocol() {
-			const uri = document.location.origin + document.location.pathname + "?uri=%s";
+		};
 
+		const registerProtocol = () => {
+			const uri = document.location.origin + document.location.pathname + "?uri=%s";
+			// @ts-ignore
+			// see why at https://developer.mozilla.org/en-US/docs/Web/API/Navigator/registerProtocolHandler
 			window.navigator.registerProtocolHandler("irc", uri, "The Lounge");
+			// @ts-ignore
 			window.navigator.registerProtocolHandler("ircs", uri, "The Lounge");
-		},
+		};
+
+		return {
+			store,
+			canRegisterProtocol,
+			hasInstallPromptEvent,
+			nativeInstallPrompt,
+			onForceSyncClick,
+			registerProtocol,
+		};
 	},
-};
+});
 </script>

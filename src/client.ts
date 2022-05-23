@@ -77,7 +77,7 @@ type ClientConfig = {
 	};
 };
 
-type Mention = {
+export type Mention = {
 	chanId: number;
 	msgId: number;
 	type: MessageType;

@@ -17,23 +17,25 @@
 	</table>
 </template>
 
-<script>
+<script lang="ts">
 import ParsedMessage from "../ParsedMessage.vue";
 import localetime from "../../js/helpers/localetime";
+import {defineComponent, PropType} from "vue";
+import type {ClientNetwork, ClientChan} from "../../js/types";
 
-export default {
+export default defineComponent({
 	name: "ListBans",
 	components: {
 		ParsedMessage,
 	},
 	props: {
-		network: Object as PropType<ClientNetwork>,
-		channel: Object as PropType<ClientChan>,
+		network: {type: Object as PropType<ClientNetwork>, required: true},
+		channel: {type: Object as PropType<ClientChan>, required: true},
 	},
 	methods: {
-		localetime(date) {
+		localetime(date: number | Date): string {
 			return localetime(date);
 		},
 	},
-};
+});
 </script>

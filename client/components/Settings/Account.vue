@@ -2,8 +2,8 @@
 	<div>
 		<div
 			v-if="
-				!$store.state.serverConfiguration.public &&
-				!$store.state.serverConfiguration.ldapEnabled
+				!store.state.serverConfiguration?.public &&
+				!store.state.serverConfiguration?.ldapEnabled
 			"
 			id="change-password"
 			role="group"
@@ -68,7 +68,7 @@
 			</div>
 		</div>
 
-		<div v-if="!$store.state.serverConfiguration.public" class="session-list" role="group">
+		<div v-if="!store.state.serverConfiguration?.public" class="session-list" role="group">
 			<h2>Sessions</h2>
 
 			<h3>Current session</h3>
@@ -84,7 +84,7 @@
 			</template>
 
 			<h3>Other sessions</h3>
-			<p v-if="$store.state.sessions.length === 0">Loading…</p>
+			<p v-if="store.state.sessions.length === 0">Loading…</p>
 			<p v-else-if="otherSessions.length === 0">
 				<em>You are not currently logged in to any other device.</em>
 			</p>
@@ -98,46 +98,51 @@
 	</div>
 </template>
 
-<script>
+<script lang="ts">
 import socket from "../../js/socket";
 import RevealPassword from "../RevealPassword.vue";
 import Session from "../Session.vue";
+import {computed, defineComponent, onMounted, ref} from "vue";
+import store from "../../js/store";
 
-export default {
+export default defineComponent({
 	name: "UserSettings",
 	components: {
 		RevealPassword,
 		Session,
 	},
-	data() {
-		return {
-			passwordChangeStatus: null,
-			passwordErrors: {
-				missing_fields: "Please enter a new password",
-				password_mismatch: "Both new password fields must match",
-				password_incorrect:
-					"The current password field does not match your account password",
-				update_failed: "Failed to update your password",
-			},
+	setup() {
+		const settingsForm = ref<HTMLFormElement>();
+		const passwordErrors = {
+			missing_fields: "Please enter a new password",
+			password_mismatch: "Both new password fields must match",
+			password_incorrect: "The current password field does not match your account password",
+			update_failed: "Failed to update your password",
 		};
-	},
-	computed: {
-		currentSession() {
-			return this.$store.state.sessions.find((item) => item.current);
-		},
-		activeSessions() {
-			return this.$store.state.sessions.filter((item) => !item.current && item.active > 0);
-		},
-		otherSessions() {
-			return this.$store.state.sessions.filter((item) => !item.current && !item.active);
-		},
-	},
-	mounted() {
-		socket.emit("sessions:get");
-	},
-	methods: {
-		changePassword() {
-			const allFields = new FormData(this.$refs.settingsForm);
+
+		const passwordChangeStatus = ref<{
+			success: boolean;
+			error: keyof typeof passwordErrors;
+		}>();
+
+		const currentSession = computed(() => {
+			return store.state.sessions.find((item) => item.current);
+		});
+
+		const activeSessions = computed(() => {
+			return store.state.sessions.filter((item) => !item.current && item.active > 0);
+		});
+
+		const otherSessions = computed(() => {
+			return store.state.sessions.filter((item) => !item.current && !item.active);
+		});
+
+		onMounted(() => {
+			socket.emit("sessions:get");
+		});
+
+		const changePassword = () => {
+			const allFields = new FormData(settingsForm.value);
 			const data = {
 				old_password: allFields.get("old_password"),
 				new_password: allFields.get("new_password"),
@@ -145,7 +150,7 @@ export default {
 			};
 
 			if (!data.old_password || !data.new_password || !data.verify_password) {
-				this.passwordChangeStatus = {
+				passwordChangeStatus.value = {
 					success: false,
 					error: "missing_fields",
 				};
@@ -153,7 +158,7 @@ export default {
 			}
 
 			if (data.new_password !== data.verify_password) {
-				this.passwordChangeStatus = {
+				passwordChangeStatus.value = {
 					success: false,
 					error: "password_mismatch",
 				};
@@ -161,11 +166,21 @@ export default {
 			}
 
 			socket.once("change-password", (response) => {
-				this.passwordChangeStatus = response;
+				passwordChangeStatus.value = response;
 			});
 
 			socket.emit("change-password", data);
-		},
+		};
+
+		return {
+			store,
+			passwordChangeStatus,
+			passwordErrors,
+			currentSession,
+			activeSessions,
+			otherSessions,
+			changePassword,
+		};
 	},
-};
+});
 </script>

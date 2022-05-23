@@ -2,13 +2,27 @@ import anyIntersection from "./anyIntersection";
 import fill from "./fill";
 import {ChannelPart} from "./findChannels";
 import {EmojiPart} from "./findEmoji";
+import {LinkPart} from "./findLinks";
 import {NamePart} from "./findNames";
+
+export type Part = {
+	start: number;
+	end: number;
+};
 
 type TextPart = Part & {
 	text: string;
 };
 
-type Fragment = TextPart;
+type Fragment = {
+	start: number;
+	end: number;
+	text: string;
+};
+
+type PartWithFragments = Part & {
+	fragments: Fragment[];
+};
 
 // Merge text part information within a styling fragment
 function assign(textPart: Part, fragment: Fragment) {
@@ -24,15 +38,7 @@ function sortParts(a: Part, b: Part) {
 	return a.start - b.start || b.end - a.end;
 }
 
-export type Part = {
-	start: number;
-	end: number;
-	fragments?: Fragment;
-};
-
-type MergedPart = TextPart | NamePart | EmojiPart | ChannelPart;
-
-type MergedPartWithFragments = MergedPart & {fragments: Fragment[]};
+type MergedParts = (TextPart | NamePart | EmojiPart | ChannelPart | LinkPart)[];
 
 // Merge the style fragments within the text parts, taking into account
 // boundaries and text sections that have not matched to links or channels.
@@ -42,12 +48,12 @@ type MergedPartWithFragments = MergedPart & {fragments: Fragment[]};
 // "o", and the second resulting part will contain "b" and "ar". "o" and "b"
 // fragments will contain duplicate styling attributes.
 function merge(
-	textParts: MergedPart[],
+	parts: MergedParts,
 	styleFragments: Fragment[],
 	cleanText: string
-): MergedPart[] {
+): PartWithFragments[] {
 	// Remove overlapping parts
-	textParts = textParts.sort(sortParts).reduce<MergedPart[]>((prev, curr) => {
+	parts = parts.sort(sortParts).reduce<MergedParts>((prev, curr) => {
 		const intersection = prev.some((p) => anyIntersection(p, curr));
 
 		if (intersection) {
@@ -61,17 +67,16 @@ function merge(
 	// is filled with "text" parts, dummy objects with start/end but no extra
 	// metadata.
 
-	const filled = fill(textParts, cleanText) as TextPart[];
-	const allParts: MergedPart[] = [...textParts, ...filled].sort(sortParts); // Sort all parts identified based on their position in the original text
+	const filled = fill(parts, cleanText) as TextPart[];
+	const allParts: MergedParts = [...parts, ...filled].sort(sortParts); // Sort all parts identified based on their position in the original text
 
 	// Distribute the style fragments within the text parts
-	return allParts.map((textPart) => {
-		// TODO: remove any type casting.
-		(textPart as any).fragments = styleFragments
-			.filter((fragment) => anyIntersection(textPart, fragment))
-			.map((fragment) => assign(textPart, fragment));
+	return allParts.map((part: any) => {
+		part.fragments = styleFragments
+			.filter((fragment) => anyIntersection(part, fragment))
+			.map((fragment) => assign(part, fragment));
 
-		return textPart;
+		return part as PartWithFragments;
 	});
 }
 

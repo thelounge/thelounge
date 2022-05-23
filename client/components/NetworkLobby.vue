@@ -45,40 +45,47 @@
 	</ChannelWrapper>
 </template>
 
-<script>
+<script lang="ts">
+import {defineComponent, PropType} from "vue";
 import collapseNetwork from "../js/helpers/collapseNetwork";
 import roundBadgeNumber from "../js/helpers/roundBadgeNumber";
 import ChannelWrapper from "./ChannelWrapper.vue";
 
-export default {
+import type {ClientChan, ClientNetwork} from "../js/types";
+
+export default defineComponent({
 	name: "Channel",
 	components: {
 		ChannelWrapper,
 	},
 	props: {
-		network: Object as PropType<ClientNetwork>,
+		network: {
+			type: Object as PropType<ClientNetwork>,
+			required: true,
+		},
 		isJoinChannelShown: Boolean,
 		active: Boolean,
 		isFiltering: Boolean,
 	},
+	emits: ["toggle-join-channel"],
 	computed: {
-		channel() {
+		channel(): ClientChan {
 			return this.network.channels[0];
 		},
-		joinChannelLabel() {
+		joinChannelLabel(): string {
 			return this.isJoinChannelShown ? "Cancel" : "Join a channel…";
 		},
-		unreadCount() {
+		unreadCount(): string {
 			return roundBadgeNumber(this.channel.unread);
 		},
 	},
 	methods: {
-		onCollapseClick() {
+		onCollapseClick(): void {
 			collapseNetwork(this.network, !this.network.isCollapsed);
 		},
-		getExpandLabel(network) {
+		getExpandLabel(network: ClientNetwork): string {
 			return network.isCollapsed ? "Expand" : "Collapse";
 		},
 	},
-};
+});
 </script>

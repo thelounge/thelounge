@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<slot :isVisible="isVisible" />
+		<slot :is-visible="isVisible" />
 		<span
 			ref="revealButton"
 			type="button"
@@ -16,18 +16,22 @@
 	</div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import {defineComponent, ref} from "vue";
+
+export default defineComponent({
 	name: "RevealPassword",
-	data() {
+	setup() {
+		const isVisible = ref(false);
+
+		const onClick = () => {
+			isVisible.value = !isVisible.value;
+		};
+
 		return {
-			isVisible: false,
+			isVisible,
+			onClick,
 		};
 	},
-	methods: {
-		onClick() {
-			this.isVisible = !this.isVisible;
-		},
-	},
-};
+});
 </script>

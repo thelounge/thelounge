@@ -1,5 +1,3 @@
-import Vue from "vue";
-
 import socket from "../socket";
 import store from "../store";
 import {switchToChannel} from "../router";
@@ -59,7 +57,7 @@ socket.on("network:info", function (data) {
 	}
 
 	for (const key in data) {
-		Vue.set(network, key, data[key]);
+		network[key] = data[key];
 	}
 });
 

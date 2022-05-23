@@ -1,15 +1,9 @@
 import _ from "lodash";
+import {LinkPreview} from "../plugins/irc-events/link";
 import User from "./user";
 
 export type UserInMessage = Partial<User> & {
 	mode: string;
-};
-
-// TODO: this should be a part of preview in src/plugins/links
-export type MessagePreview = {
-	shown: boolean | null;
-	link: string;
-	body: string;
 };
 
 export enum MessageType {
@@ -46,7 +40,7 @@ export enum MessageType {
 class Msg {
 	from!: UserInMessage;
 	id!: number;
-	previews!: MessagePreview[];
+	previews!: LinkPreview[];
 	text!: string;
 	type!: MessageType;
 	self!: boolean;

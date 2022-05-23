@@ -1,13 +1,13 @@
 <template>
 	<div id="viewport" :class="viewportClasses" role="tablist">
-		<Sidebar v-if="$store.state.appLoaded" :overlay="$refs.overlay" />
+		<Sidebar v-if="store.state.appLoaded" :overlay="overlay" />
 		<div
 			id="sidebar-overlay"
 			ref="overlay"
 			aria-hidden="true"
-			@click="$store.commit('sidebarOpen', false)"
+			@click="store.commit('sidebarOpen', false)"
 		/>
-		<router-view ref="window"></router-view>
+		<router-view ref="loungeWindow"></router-view>
 		<Mentions />
 		<ImageViewer ref="imageViewer" />
 		<ContextMenu ref="contextMenu" />
@@ -19,7 +19,7 @@
 <script lang="ts">
 import constants from "../js/constants";
 import eventbus from "../js/eventbus";
-import Mousetrap from "mousetrap";
+import Mousetrap, {ExtendedKeyboardEvent} from "mousetrap";
 import throttle from "lodash/throttle";
 import storage from "../js/localStorage";
 import isIgnoredKeybind from "../js/helpers/isIgnoredKeybind";
@@ -29,9 +29,11 @@ import ImageViewer from "./ImageViewer.vue";
 import ContextMenu from "./ContextMenu.vue";
 import ConfirmDialog from "./ConfirmDialog.vue";
 import Mentions from "./Mentions.vue";
-import VueApp from "vue";
+import {computed, defineComponent, onBeforeUnmount, onMounted, ref} from "vue";
+import {useStore} from "../js/store";
+import type {DebouncedFunc} from "lodash";
 
-export default VueApp.extend({
+export default defineComponent({
 	name: "App",
 	components: {
 		Sidebar,
@@ -40,77 +42,58 @@ export default VueApp.extend({
 		ConfirmDialog,
 		Mentions,
 	},
-	computed: {
-		viewportClasses(): Record<string, boolean> {
+	setup() {
+		const store = useStore();
+
+		const overlay = ref(null);
+		const loungeWindow = ref(null);
+		const imageViewer = ref(null);
+		const contextMenu = ref(null);
+		const confirmDialog = ref(null);
+
+		const viewportClasses = computed(() => {
 			return {
-				notified: this.$store.getters.highlightCount > 0,
-				"menu-open": this.$store.state.appLoaded && this.$store.state.sidebarOpen,
-				"menu-dragging": this.$store.state.sidebarDragging,
-				"userlist-open": this.$store.state.userlistOpen,
+				notified: store.getters.highlightCount > 0,
+				"menu-open": store.state.appLoaded && store.state.sidebarOpen,
+				"menu-dragging": store.state.sidebarDragging,
+				"userlist-open": store.state.userlistOpen,
 			};
-		},
-	},
-	created() {
-		this.prepareOpenStates();
-	},
-	mounted() {
-		Mousetrap.bind("esc", this.escapeKey);
-		Mousetrap.bind("alt+u", this.toggleUserList);
-		Mousetrap.bind("alt+s", this.toggleSidebar);
-		Mousetrap.bind("alt+m", this.toggleMentions);
+		});
 
-		this.debouncedResize = throttle(() => {
-			eventbus.emit("resize");
-		}, 100);
+		const debouncedResize = ref<DebouncedFunc<() => void>>();
+		const dayChangeTimeout = ref<any>();
 
-		window.addEventListener("resize", this.debouncedResize, {passive: true});
-
-		// Emit a daychange event every time the day changes so date markers know when to update themselves
-		const emitDayChange = () => {
-			eventbus.emit("daychange");
-			// This should always be 24h later but re-computing exact value just in case
-			this.dayChangeTimeout = setTimeout(emitDayChange, this.msUntilNextDay());
+		const escapeKey = () => {
+			eventbus.emit("escapekey");
 		};
 
-		this.dayChangeTimeout = setTimeout(emitDayChange, this.msUntilNextDay());
-	},
-	beforeDestroy() {
-		Mousetrap.unbind("esc");
-		Mousetrap.unbind("alt+u");
-		Mousetrap.unbind("alt+s");
-		Mousetrap.unbind("alt+m");
-
-		window.removeEventListener("resize", this.debouncedResize);
-		clearTimeout(this.dayChangeTimeout);
-	},
-	methods: {
-		escapeKey(): void {
-			eventbus.emit("escapekey");
-		},
-		toggleSidebar(e): boolean {
+		const toggleSidebar = (e: ExtendedKeyboardEvent) => {
 			if (isIgnoredKeybind(e)) {
 				return true;
 			}
 
-			this.$store.commit("toggleSidebar");
+			store.commit("toggleSidebar");
 
 			return false;
-		},
-		toggleUserList(e): boolean {
+		};
+
+		const toggleUserList = (e: ExtendedKeyboardEvent) => {
 			if (isIgnoredKeybind(e)) {
 				return true;
 			}
 
-			this.$store.commit("toggleUserlist");
+			store.commit("toggleUserlist");
 
 			return false;
-		},
-		toggleMentions(): void {
-			if (this.$store.state.networks.length !== 0) {
+		};
+
+		const toggleMentions = () => {
+			if (store.state.networks.length !== 0) {
 				eventbus.emit("mentions:toggle");
 			}
-		},
-		msUntilNextDay(): number {
+		};
+
+		const msUntilNextDay = () => {
 			// Compute how many milliseconds are remaining until the next day starts
 			const today = new Date();
 			const tommorow = new Date(
@@ -120,16 +103,14 @@ export default VueApp.extend({
 			).getTime();
 
 			return tommorow - today.getTime();
-		},
-		prepareOpenStates(): void {
+		};
+
+		const prepareOpenStates = () => {
 			const viewportWidth = window.innerWidth;
 			let isUserlistOpen = storage.get("thelounge.state.userlist");
 
 			if (viewportWidth > constants.mobileViewportPixels) {
-				this.$store.commit(
-					"sidebarOpen",
-					storage.get("thelounge.state.sidebar") !== "false"
-				);
+				store.commit("sidebarOpen", storage.get("thelounge.state.sidebar") !== "false");
 			}
 
 			// If The Lounge is opened on a small screen (less than 1024px), and we don't have stored
@@ -138,8 +119,61 @@ export default VueApp.extend({
 				isUserlistOpen = "true";
 			}
 
-			this.$store.commit("userlistOpen", isUserlistOpen === "true");
-		},
+			store.commit("userlistOpen", isUserlistOpen === "true");
+		};
+
+		prepareOpenStates();
+
+		onMounted(() => {
+			Mousetrap.bind("esc", escapeKey);
+			Mousetrap.bind("alt+u", toggleUserList);
+			Mousetrap.bind("alt+s", toggleSidebar);
+			Mousetrap.bind("alt+m", toggleMentions);
+
+			debouncedResize.value = throttle(() => {
+				eventbus.emit("resize");
+			}, 100);
+
+			window.addEventListener("resize", debouncedResize.value, {passive: true});
+
+			// Emit a daychange event every time the day changes so date markers know when to update themselves
+			const emitDayChange = () => {
+				eventbus.emit("daychange");
+				// This should always be 24h later but re-computing exact value just in case
+				dayChangeTimeout.value = setTimeout(emitDayChange, msUntilNextDay());
+			};
+
+			dayChangeTimeout.value = setTimeout(emitDayChange, msUntilNextDay());
+		});
+
+		onBeforeUnmount(() => {
+			Mousetrap.unbind("esc");
+			Mousetrap.unbind("alt+u");
+			Mousetrap.unbind("alt+s");
+			Mousetrap.unbind("alt+m");
+
+			if (debouncedResize.value) {
+				window.removeEventListener("resize", debouncedResize.value);
+			}
+
+			if (dayChangeTimeout.value) {
+				clearTimeout(dayChangeTimeout.value);
+			}
+		});
+
+		return {
+			viewportClasses,
+			escapeKey,
+			toggleSidebar,
+			toggleUserList,
+			toggleMentions,
+			store,
+			overlay,
+			loungeWindow,
+			imageViewer,
+			contextMenu,
+			confirmDialog,
+		};
 	},
 });
 </script>

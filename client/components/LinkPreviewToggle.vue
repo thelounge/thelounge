@@ -7,23 +7,32 @@
 	/>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import {computed, defineComponent, PropType} from "vue";
+import {ClientMessage, LinkPreview} from "../js/types";
+
+export default defineComponent({
 	name: "LinkPreviewToggle",
 	props: {
-		link: Object,
+		link: {type: Object as PropType<LinkPreview>, required: true},
+		message: {type: Object as PropType<ClientMessage>, required: true},
 	},
-	computed: {
-		ariaLabel() {
-			return this.link.shown ? "Collapse preview" : "Expand preview";
-		},
-	},
-	methods: {
-		onClick() {
-			this.link.shown = !this.link.shown;
+	emits: ["toggle-link-preview"],
+	setup(props, {emit}) {
+		const ariaLabel = computed(() => {
+			return props.link.shown ? "Collapse preview" : "Expand preview";
+		});
 
-			this.$parent.$emit("toggle-link-preview", this.link, this.$parent.message);
-		},
+		const onClick = () => {
+			props.link.shown = !props.link.shown;
+			emit("toggle-link-preview", props.link, props.message);
+			// this.$parent.$emit("toggle-link-preview", this.link, this.$parent.message);
+		};
+
+		return {
+			ariaLabel,
+			onClick,
+		};
 	},
-};
+});
 </script>

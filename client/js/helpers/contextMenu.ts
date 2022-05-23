@@ -1,29 +1,37 @@
 import socket from "../socket";
 import eventbus from "../eventbus";
-import type {ClientChan, ClientNetwork} from "../types";
-import type {Methods} from "../vue";
-type ContextMenuItem =
-	| ({
-			label: string;
-			type: string;
-			class: string;
-	  } & (
-			| {
-					link?: string;
-			  }
-			| {
-					action?: () => void;
-			  }
-	  ))
-	| {
-			type: "divider";
-	  };
+import type {ClientChan, ClientNetwork, ClientUser} from "../types";
+import {switchToChannel} from "../router";
+import {TypedStore} from "../store";
+import closeChannel from "../hooks/use-close-channel";
+
+type BaseContextMenuItem = {
+	label: string;
+	type: string;
+	class: string;
+};
+
+type ContextMenuItemWithAction = BaseContextMenuItem & {
+	action: () => void;
+};
+
+type ContextMenuItemWithLink = BaseContextMenuItem & {
+	link?: string;
+};
+
+type ContextMenuDividerItem = {
+	type: "divider";
+};
+
+export type ContextMenuItem =
+	| ContextMenuItemWithAction
+	| ContextMenuItemWithLink
+	| ContextMenuDividerItem;
 
 export function generateChannelContextMenu(
-	$root: Methods,
 	channel: ClientChan,
 	network: ClientNetwork
-) {
+): ContextMenuItem[] {
 	const typeMap = {
 		lobby: "network",
 		channel: "chan",
@@ -118,7 +126,7 @@ export function generateChannelContextMenu(
 			class: "edit",
 			action() {
 				channel.editTopic = true;
-				$root.switchToChannel(channel);
+				switchToChannel(channel);
 			},
 		});
 		items.push({
@@ -142,7 +150,7 @@ export function generateChannelContextMenu(
 				type: "item",
 				class: "action-whois",
 				action() {
-					$root.switchToChannel(channel);
+					switchToChannel(channel);
 					socket.emit("input", {
 						target: channel.id,
 						text: "/whois " + channel.name,
@@ -200,7 +208,7 @@ export function generateChannelContextMenu(
 	const mutableChanTypes = Object.keys(humanFriendlyChanTypeMap);
 
 	if (mutableChanTypes.includes(channel.type)) {
-		const chanType = humanFriendlyChanTypeMap[channel.type];
+		const chanType = humanFriendlyChanTypeMap[channel.type] as string;
 
 		items.push({
 			label: channel.muted ? `Unmute ${chanType}` : `Mute ${chanType}`,
@@ -221,23 +229,27 @@ export function generateChannelContextMenu(
 		type: "item",
 		class: "close",
 		action() {
-			$root.closeChannel(channel);
+			closeChannel(channel);
 		},
 	});
 
 	return items;
 }
 
-export function generateInlineChannelContextMenu($root, chan, network) {
+export function generateInlineChannelContextMenu(
+	store: TypedStore,
+	chan: string,
+	network: ClientNetwork
+): ContextMenuItem[] {
 	const join = () => {
 		const channel = network.channels.find((c) => c.name === chan);
 
 		if (channel) {
-			$root.switchToChannel(channel);
+			switchToChannel(channel);
 		}
 
 		socket.emit("input", {
-			target: $root.$store.state.activeChannel.channel.id,
+			target: store.state.activeChannel.channel.id,
 			text: "/join " + chan,
 		});
 	};
@@ -265,8 +277,13 @@ export function generateInlineChannelContextMenu($root, chan, network) {
 	];
 }
 
-export function generateUserContextMenu($root, channel, network, user) {
-	const currentChannelUser = channel
+export function generateUserContextMenu(
+	store: TypedStore,
+	channel: ClientChan,
+	network: ClientNetwork,
+	user: Pick<ClientUser, "nick" | "modes">
+): ContextMenuItem[] {
+	const currentChannelUser: ClientUser | Record<string, never> = channel
 		? channel.users.find((u) => u.nick === network.nick) || {}
 		: {};
 
@@ -274,7 +291,7 @@ export function generateUserContextMenu($root, channel, network, user) {
 		const chan = network.channels.find((c) => c.name === user.nick);
 
 		if (chan) {
-			$root.switchToChannel(chan);
+			switchToChannel(chan);
 		}
 
 		socket.emit("input", {
@@ -283,7 +300,7 @@ export function generateUserContextMenu($root, channel, network, user) {
 		});
 	};
 
-	const items = [
+	const items: ContextMenuItem[] = [
 		{
 			label: user.nick,
 			type: "item",
@@ -315,10 +332,10 @@ export function generateUserContextMenu($root, channel, network, user) {
 			type: "item",
 			class: "action-query",
 			action() {
-				const chan = $root.$store.getters.findChannelOnCurrentNetwork(user.nick);
+				const chan = store.getters.findChannelOnCurrentNetwork(user.nick);
 
 				if (chan) {
-					$root.switchToChannel(chan);
+					switchToChannel(chan);
 				}
 
 				socket.emit("input", {
@@ -345,13 +362,23 @@ export function generateUserContextMenu($root, channel, network, user) {
 
 	// Labels for the mode changes.  For example .rev({mode: "a", symbol: "&"}) => 'Revoke admin (-a)'
 	const modeTextTemplate = {
-		revoke(m) {
+		revoke(m: {symbol: string; mode: string}) {
 			const name = modeCharToName[m.symbol];
+
+			if (typeof name !== "string") {
+				return "";
+			}
+
 			const res = name ? `Revoke ${name} (-${m.mode})` : `Mode -${m.mode}`;
 			return res;
 		},
-		give(m) {
+		give(m: {symbol: string; mode: string}) {
 			const name = modeCharToName[m.symbol];
+
+			if (typeof name !== "string") {
+				return "";
+			}
+
 			const res = name ? `Give ${name} (+${m.mode})` : `Mode +${m.mode}`;
 			return res;
 		},
@@ -371,7 +398,7 @@ export function generateUserContextMenu($root, channel, network, user) {
 	 *
 	 * @return {boolean} whether p1 can perform an action on p2
 	 */
-	function compare(p1, p2) {
+	function compare(p1: string, p2: string): boolean {
 		// The modes ~ and @ can perform actions on their own mode.  The others on modes below.
 		return "~@".indexOf(p1) > -1
 			? networkModeSymbols.indexOf(p1) <= networkModeSymbols.indexOf(p2)

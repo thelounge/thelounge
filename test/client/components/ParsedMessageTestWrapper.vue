@@ -1,3 +1,4 @@
+z
 <template>
 	<div>
 		<ParsedMessage :text="text" :message="message" :network="network" />
@@ -7,7 +8,7 @@
 <script lang="ts">
 import ParsedMessage from "../../../client/components/ParsedMessage.vue";
 
-export default {
+export default defineComponent({
 	name: "ParsedMessageTestWrapper",
 	components: {
 		ParsedMessage,
@@ -15,7 +16,7 @@ export default {
 	props: {
 		text: String,
 		message: Object,
-		network: Object as PropType<ClientNetwork>,
+		network: {type: Object as PropType<ClientNetwork>, required: true},
 	},
-};
+});
 </script>

@@ -7,7 +7,7 @@
 			:aria-label="name"
 			role="tab"
 			aria-controls="settings"
-			:aria-selected="$route.name === name"
+			:aria-selected="route.name === name"
 			custom
 		>
 			<button :class="{active: isExactActive}" @click="navigate" @keypress.enter="navigate">
@@ -17,8 +17,11 @@
 	</li>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import {defineComponent} from "vue";
+import {useRoute} from "vue-router";
+
+export default defineComponent({
 	name: "SettingTabListItem",
 	props: {
 		name: {
@@ -34,5 +37,12 @@ export default {
 			required: true,
 		},
 	},
-};
+	setup() {
+		const route = useRoute();
+
+		return {
+			route,
+		};
+	},
+});
 </script>

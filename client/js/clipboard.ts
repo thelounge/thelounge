@@ -1,10 +1,15 @@
-export default function (chat) {
+export default function (chat: HTMLDivElement) {
 	// Disable in Firefox as it already copies flex text correctly
+	// @ts-ignore
 	if (typeof window.InstallTrigger !== "undefined") {
 		return;
 	}
 
 	const selection = window.getSelection();
+
+	if (!selection) {
+		return;
+	}
 
 	// If selection does not span multiple elements, do nothing
 	if (selection.anchorNode === selection.focusNode) {

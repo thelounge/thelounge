@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<template v-if="!$store.state.serverConfiguration.public">
+		<template v-if="!store.state.serverConfiguration?.public">
 			<h2>Push Notifications</h2>
 			<div>
 				<button
@@ -8,24 +8,24 @@
 					type="button"
 					class="btn"
 					:disabled="
-						$store.state.pushNotificationState !== 'supported' &&
-						$store.state.pushNotificationState !== 'subscribed'
+						store.state.pushNotificationState !== 'supported' &&
+						store.state.pushNotificationState !== 'subscribed'
 					"
 					@click="onPushButtonClick"
 				>
-					<template v-if="$store.state.pushNotificationState === 'subscribed'">
+					<template v-if="store.state.pushNotificationState === 'subscribed'">
 						Unsubscribe from push notifications
 					</template>
-					<template v-else-if="$store.state.pushNotificationState === 'loading'">
+					<template v-else-if="store.state.pushNotificationState === 'loading'">
 						Loading…
 					</template>
 					<template v-else> Subscribe to push notifications </template>
 				</button>
-				<div v-if="$store.state.pushNotificationState === 'nohttps'" class="error">
+				<div v-if="store.state.pushNotificationState === 'nohttps'" class="error">
 					<strong>Warning</strong>: Push notifications are only supported over HTTPS
 					connections.
 				</div>
-				<div v-if="$store.state.pushNotificationState === 'unsupported'" class="error">
+				<div v-if="store.state.pushNotificationState === 'unsupported'" class="error">
 					<strong>Warning</strong>:
 					<span>Push notifications are not supported by your browser.</span>
 
@@ -48,17 +48,17 @@
 			<label class="opt">
 				<input
 					id="desktopNotifications"
-					:checked="$store.state.settings.desktopNotifications"
-					:disabled="$store.state.desktopNotificationState === 'nohttps'"
+					:checked="store.state.settings.desktopNotifications"
+					:disabled="store.state.desktopNotificationState === 'nohttps'"
 					type="checkbox"
 					name="desktopNotifications"
 				/>
 				Enable browser notifications<br />
-				<div v-if="$store.state.desktopNotificationState === 'unsupported'" class="error">
+				<div v-if="store.state.desktopNotificationState === 'unsupported'" class="error">
 					<strong>Warning</strong>: Notifications are not supported by your browser.
 				</div>
 				<div
-					v-if="$store.state.desktopNotificationState === 'nohttps'"
+					v-if="store.state.desktopNotificationState === 'nohttps'"
 					id="warnBlockedDesktopNotifications"
 					class="error"
 				>
@@ -66,7 +66,7 @@
 					connections.
 				</div>
 				<div
-					v-if="$store.state.desktopNotificationState === 'blocked'"
+					v-if="store.state.desktopNotificationState === 'blocked'"
 					id="warnBlockedDesktopNotifications"
 					class="error"
 				>
@@ -77,7 +77,7 @@
 		<div>
 			<label class="opt">
 				<input
-					:checked="$store.state.settings.notification"
+					:checked="store.state.settings.notification"
 					type="checkbox"
 					name="notification"
 				/>
@@ -93,7 +93,7 @@
 		<div>
 			<label class="opt">
 				<input
-					:checked="$store.state.settings.notifyAllMessages"
+					:checked="store.state.settings.notifyAllMessages"
 					type="checkbox"
 					name="notifyAllMessages"
 				/>
@@ -101,7 +101,7 @@
 			</label>
 		</div>
 
-		<div v-if="!$store.state.serverConfiguration.public">
+		<div v-if="!store.state.serverConfiguration?.public">
 			<label class="opt">
 				<label for="highlights" class="opt">
 					Custom highlights
@@ -115,7 +115,7 @@ expressions, it will trigger a highlight."
 				</label>
 				<input
 					id="highlights"
-					:value="$store.state.settings.highlights"
+					:value="store.state.settings.highlights"
 					type="text"
 					name="highlights"
 					class="input"
@@ -125,7 +125,7 @@ expressions, it will trigger a highlight."
 			</label>
 		</div>
 
-		<div v-if="!$store.state.serverConfiguration.public">
+		<div v-if="!store.state.serverConfiguration?.public">
 			<label class="opt">
 				<label for="highlightExceptions" class="opt">
 					Highlight exceptions
@@ -140,7 +140,7 @@ your nickname or expressions defined in custom highlights."
 				</label>
 				<input
 					id="highlightExceptions"
-					:value="$store.state.settings.highlightExceptions"
+					:value="store.state.settings.highlightExceptions"
 					type="text"
 					name="highlightExceptions"
 					class="input"
@@ -152,15 +152,18 @@ your nickname or expressions defined in custom highlights."
 	</div>
 </template>
 
-<script>
+<script lang="ts">
+import {computed, defineComponent} from "vue";
+import {useStore} from "../../js/store";
 import webpush from "../../js/webpush";
 
-export default {
+export default defineComponent({
 	name: "NotificationSettings",
-	data() {
-		return {
-			// https://stackoverflow.com/questions/9038625/detect-if-device-is-ios
-			isIOS: () =>
+	setup() {
+		const store = useStore();
+
+		const isIOS = computed(
+			() =>
 				[
 					"iPad Simulator",
 					"iPhone Simulator",
@@ -170,18 +173,25 @@ export default {
 					"iPod",
 				].includes(navigator.platform) ||
 				// iPad on iOS 13 detection
-				(navigator.userAgent.includes("Mac") && "ontouchend" in document),
-		};
-	},
-	methods: {
-		playNotification() {
+				(navigator.userAgent.includes("Mac") && "ontouchend" in document)
+		);
+
+		const playNotification = async () => {
 			const pop = new Audio();
 			pop.src = "audio/pop.wav";
-			pop.play();
-		},
-		onPushButtonClick() {
+			await pop.play();
+		};
+
+		const onPushButtonClick = () => {
 			webpush.togglePushSubscription();
-		},
+		};
+
+		return {
+			isIOS,
+			playNotification,
+			onPushButtonClick,
+			store,
+		};
 	},
-};
+});
 </script>

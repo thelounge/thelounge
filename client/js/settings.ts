@@ -1,12 +1,14 @@
 import socket from "./socket";
+import {TypedStore} from "./store";
 
 const defaultSettingConfig = {
+	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	apply() {},
 	default: null,
 	sync: null,
 };
 
-export const config = normalizeConfig({
+const defaultConfig = {
 	syncSettings: {
 		default: true,
 		sync: "never",
@@ -32,13 +34,19 @@ export const config = normalizeConfig({
 	desktopNotifications: {
 		default: false,
 		sync: "never",
-		apply(store, value) {
+		apply(store: TypedStore, value: boolean) {
+			// TODO: investigate ignores
+			// @ts-ignore
 			store.commit("refreshDesktopNotificationState", null, {root: true});
 
 			if ("Notification" in window && value && Notification.permission !== "granted") {
 				Notification.requestPermission(() =>
+					// @ts-ignore
 					store.commit("refreshDesktopNotificationState", null, {root: true})
-				);
+				).catch((e) => {
+					// eslint-disable-next-line no-console
+					console.error(e);
+				});
 			}
 		},
 	},
@@ -77,22 +85,31 @@ export const config = normalizeConfig({
 		default: "condensed",
 	},
 	theme: {
-		default: document.getElementById("theme").dataset.serverTheme,
-		apply(store, value) {
-			const themeEl = document.getElementById("theme");
+		default: document.getElementById("theme")?.dataset.serverTheme,
+		apply(store: TypedStore, value: string) {
+			const themeEl = document.getElementById("theme") as any;
 			const themeUrl = `themes/${value}.css`;
 
-			if (themeEl.attributes.href.value === themeUrl) {
+			if (themeEl?.attributes.href.value === themeUrl) {
 				return;
 			}
 
 			themeEl.attributes.href.value = themeUrl;
-			const newTheme = store.state.serverConfiguration.themes.filter(
+
+			if (!store.state.serverConfiguration) {
+				return;
+			}
+
+			const newTheme = store.state.serverConfiguration?.themes.filter(
 				(theme) => theme.name === value
 			)[0];
-			const themeColor =
-				newTheme.themeColor || document.querySelector('meta[name="theme-color"]').content;
-			document.querySelector('meta[name="theme-color"]').content = themeColor;
+
+			const metaSelector = document.querySelector('meta[name="theme-color"]');
+
+			if (metaSelector) {
+				const themeColor = newTheme.themeColor || (metaSelector as any).content;
+				(metaSelector as any).content = themeColor;
+			}
 		},
 	},
 	media: {
@@ -105,14 +122,20 @@ export const config = normalizeConfig({
 		default: "",
 		apply(store, value) {
 			if (!/[?&]nocss/.test(window.location.search)) {
-				document.getElementById("user-specified-css").innerHTML = value;
+				const element = document.getElementById("user-specified-css");
+
+				if (element) {
+					element.innerHTML = value;
+				}
 			}
 		},
 	},
 	searchEnabled: {
 		default: false,
 	},
-});
+};
+
+export const config = normalizeConfig(defaultConfig);
 
 export function createState() {
 	const state = {};
@@ -124,12 +147,17 @@ export function createState() {
 	return state;
 }
 
-function normalizeConfig(obj) {
-	const newConfig = {};
+function normalizeConfig(obj: any) {
+	const newConfig: Partial<typeof defaultConfig> = {};
 
 	for (const settingName in obj) {
 		newConfig[settingName] = {...defaultSettingConfig, ...obj[settingName]};
 	}
 
-	return newConfig;
+	return newConfig as typeof defaultConfig;
 }
+
+// flatten to type of default
+export type SettingsState = {
+	[key in keyof typeof defaultConfig]: typeof defaultConfig[key]["default"];
+};

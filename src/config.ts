@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import path from "path";
 import fs, {Stats} from "fs";
 import os from "os";
@@ -7,6 +8,7 @@ import colors from "chalk";
 import log from "./log";
 import Helper from "./helper";
 import Utils from "./command-line/utils";
+import Network from "./models/network";
 
 // TODO: Type this
 export type WebIRC = {
@@ -26,18 +28,23 @@ type FileUpload = {
 	baseUrl?: string;
 };
 
-export type Defaults = {
-	name: string;
-	host: string;
-	port: number;
-	password: string;
-	tls: boolean;
-	rejectUnauthorized: boolean;
-	nick: string;
-	username: string;
-	realname: string;
-	join: string;
-	leaveMessage: string;
+export type Defaults = Pick<
+	Network,
+	| "name"
+	| "host"
+	| "port"
+	| "password"
+	| "tls"
+	| "rejectUnauthorized"
+	| "nick"
+	| "username"
+	| "realname"
+	| "leaveMessage"
+	| "sasl"
+	| "saslAccount"
+	| "saslPassword"
+> & {
+	join?: string;
 };
 
 type Identd = {
@@ -178,11 +185,13 @@ class Config {
 			) {
 				log.warn(`Incorrect type for "${colors.bold(key)}", please verify your config.`);
 
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 				return objValue;
 			}
 
 			// For arrays, simply override the value with user provided one.
 			if (_.isArray(objValue)) {
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 				return srcValue;
 			}
 		});
@@ -220,7 +229,11 @@ class Config {
 			} catch (e: any) {
 				this.values.fileUpload.baseUrl = undefined;
 
-				log.warn(`The ${colors.bold("fileUpload.baseUrl")} you specified is invalid: ${e}`);
+				log.warn(
+					`The ${colors.bold("fileUpload.baseUrl")} you specified is invalid: ${
+						e as string
+					}`
+				);
 			}
 		}
 

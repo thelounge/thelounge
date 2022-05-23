@@ -21,11 +21,11 @@ const emojiStrategy = {
 		term = term.replace(/:$/, "");
 		callback(fuzzyGrep(term, emojiSearchTerms));
 	},
-	template([string, original]) {
-		return `<span class="emoji">${emojiMap[original]}</span> ${string}`;
+	template([string, original]: [string, string]) {
+		return `<span class="emoji">${emojiMap[original] as string}</span> ${string}`;
 	},
 	replace([, original]) {
-		return "$1" + emojiMap[original];
+		return "$1" + (emojiMap[original] as string);
 	},
 	index: 2,
 };
@@ -33,19 +33,21 @@ const emojiStrategy = {
 const nicksStrategy = {
 	id: "nicks",
 	match: /(^|\s)(@([a-zA-Z_[\]\\^{}|`@][a-zA-Z0-9_[\]\\^{}|`-]*)?)$/,
-	search(term, callback) {
+	search(term: string, callback: (matches: string[] | string[][]) => void) {
 		term = term.slice(1);
 
 		if (term[0] === "@") {
+			// TODO: type
+			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 			callback(completeNicks(term.slice(1), true).map((val) => ["@" + val[0], "@" + val[1]]));
 		} else {
 			callback(completeNicks(term, true));
 		}
 	},
-	template([string]) {
+	template([string]: [string, string]) {
 		return string;
 	},
-	replace([, original]) {
+	replace([, original]: [string, string]) {
 		return "$1" + replaceNick(original);
 	},
 	index: 2,
@@ -54,13 +56,13 @@ const nicksStrategy = {
 const chanStrategy = {
 	id: "chans",
 	match: /(^|\s)((?:#|\+|&|![A-Z0-9]{5})(?:[^\s]+)?)$/,
-	search(term, callback) {
+	search(term: string, callback: (matches: string[][]) => void) {
 		callback(completeChans(term));
 	},
-	template([string]) {
+	template([string]: [string, string]) {
 		return string;
 	},
-	replace([, original]) {
+	replace([, original]: [string, string]) {
 		return "$1" + original;
 	},
 	index: 2,
@@ -69,13 +71,13 @@ const chanStrategy = {
 const commandStrategy = {
 	id: "commands",
 	match: /^\/(\w*)$/,
-	search(term, callback) {
+	search(term: string, callback: (matches: string[][]) => void) {
 		callback(completeCommands("/" + term));
 	},
-	template([string]) {
+	template([string]: [string, string]) {
 		return string;
 	},
-	replace([, original]) {
+	replace([, original]: [string, string]) {
 		return original;
 	},
 	index: 1,
@@ -84,7 +86,7 @@ const commandStrategy = {
 const foregroundColorStrategy = {
 	id: "foreground-colors",
 	match: /\x03(\d{0,2}|[A-Za-z ]{0,10})$/,
-	search(term, callback) {
+	search(term: string, callback: (matches: string[][]) => void) {
 		term = term.toLowerCase();
 
 		const matchingColorCodes = constants.colorCodeMap
@@ -105,10 +107,10 @@ const foregroundColorStrategy = {
 
 		callback(matchingColorCodes);
 	},
-	template(value) {
+	template(value: string[]) {
 		return `<span class="irc-fg${parseInt(value[0], 10)}">${value[1]}</span>`;
 	},
-	replace(value) {
+	replace(value: string) {
 		return "\x03" + value[0];
 	},
 	index: 1,
@@ -117,7 +119,7 @@ const foregroundColorStrategy = {
 const backgroundColorStrategy = {
 	id: "background-colors",
 	match: /\x03(\d{2}),(\d{0,2}|[A-Za-z ]{0,10})$/,
-	search(term, callback, match) {
+	search(term: string, callback: (matchingColorCodes: string[][]) => void, match: string[]) {
 		term = term.toLowerCase();
 		const matchingColorCodes = constants.colorCodeMap
 			.filter((i) => fuzzy.test(term, i[0]) || fuzzy.test(term, i[1]))
@@ -138,25 +140,25 @@ const backgroundColorStrategy = {
 
 		callback(matchingColorCodes);
 	},
-	template(value) {
+	template(value: string[]) {
 		return `<span class="irc-fg${parseInt(value[2], 10)} irc-bg irc-bg${parseInt(
 			value[0],
 			10
 		)}">${value[1]}</span>`;
 	},
-	replace(value) {
+	replace(value: string[]) {
 		return "\x03$1," + value[0];
 	},
 	index: 2,
 };
 
-function enableAutocomplete(input) {
+function enableAutocomplete(input: HTMLTextAreaElement) {
 	let tabCount = 0;
 	let lastMatch = "";
-	let currentMatches = [];
+	let currentMatches: string[] | string[][] = [];
 
 	input.addEventListener("input", (e) => {
-		if (e.detail === "autocomplete") {
+		if ((e as CustomEvent).detail === "autocomplete") {
 			return;
 		}
 
@@ -177,7 +179,7 @@ function enableAutocomplete(input) {
 			const text = input.value;
 
 			if (tabCount === 0) {
-				lastMatch = text.substring(0, input.selectionStart).split(/\s/).pop();
+				lastMatch = text.substring(0, input.selectionStart).split(/\s/).pop() || "";
 
 				if (lastMatch.length === 0) {
 					return;
@@ -192,12 +194,14 @@ function enableAutocomplete(input) {
 
 			const position = input.selectionStart - lastMatch.length;
 			const newMatch = replaceNick(
-				currentMatches[tabCount % currentMatches.length],
+				// TODO: type this properly
+				currentMatches[tabCount % currentMatches.length] as string,
 				position
 			);
-			const remainder = text.substr(input.selectionStart);
+			const remainder = text.substring(input.selectionStart);
 
 			input.value = text.substr(0, position) + newMatch + remainder;
+
 			input.selectionStart -= remainder.length;
 			input.selectionEnd = input.selectionStart;
 
@@ -250,7 +254,7 @@ function enableAutocomplete(input) {
 	};
 }
 
-function replaceNick(original, position = 1) {
+function replaceNick(original: string, position = 1) {
 	// If no postfix specified, return autocompleted nick as-is
 	if (!store.state.settings.nickPostfix) {
 		return original;

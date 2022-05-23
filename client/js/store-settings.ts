@@ -71,7 +71,7 @@ export function createSettingsStore(store: Store<State>) {
 }
 
 function loadFromLocalStorage() {
-	let storedSettings;
+	let storedSettings: Record<string, any> = {};
 
 	try {
 		storedSettings = JSON.parse(storage.get("settings") || "{}");
@@ -98,7 +98,10 @@ function loadFromLocalStorage() {
  * @param {object} defaultSettings
  * @param {object} storedSettings
  */
-function assignStoredSettings(defaultSettings, storedSettings) {
+function assignStoredSettings(
+	defaultSettings: Record<string, any>,
+	storedSettings: Record<string, any>
+) {
 	const newSettings = {...defaultSettings};
 
 	for (const key in defaultSettings) {

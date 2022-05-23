@@ -16,7 +16,7 @@
 			@blur="onBlur"
 		/>
 		<span
-			v-if="$store.state.serverConfiguration.fileUpload"
+			v-if="$store.state.serverConfiguration?.fileUpload"
 			id="upload-tooltip"
 			class="tooltipped tooltipped-w tooltipped-no-touch"
 			aria-label="Upload file"
@@ -52,7 +52,7 @@
 	</form>
 </template>
 
-<script>
+<script lang="ts">
 import Mousetrap from "mousetrap";
 import {wrapCursor} from "undate";
 import autocompletion from "../js/autocompletion";
@@ -60,6 +60,8 @@ import commands from "../js/commands/index";
 import socket from "../js/socket";
 import upload from "../js/upload";
 import eventbus from "../js/eventbus";
+import {defineComponent, PropType} from "vue";
+import type {ClientNetwork, ClientChan} from "../js/types";
 
 const formattingHotkeys = {
 	"mod+k": "\x03",
@@ -88,11 +90,11 @@ const bracketWraps = {
 
 let autocompletionRef = null;
 
-export default {
+export default defineComponent({
 	name: "ChatInput",
 	props: {
-		network: Object as PropType<ClientNetwork>,
-		channel: Object as PropType<ClientChan>,
+		network: {type: Object as PropType<ClientNetwork>, required: true},
+		channel: {type: Object as PropType<ClientChan>, required: true},
 	},
 	watch: {
 		"channel.id"() {
@@ -107,7 +109,7 @@ export default {
 	mounted() {
 		eventbus.on("escapekey", this.blurInput);
 
-		if (this.$store.state.settings.autocomplete) {
+		if (this.$accessor.settings.autocomplete) {
 			autocompletionRef = autocompletion(this.$refs.input);
 		}
 
@@ -126,7 +128,7 @@ export default {
 		});
 
 		inputTrap.bind(Object.keys(bracketWraps), function (e, key) {
-			if (e.target.selectionStart !== e.target.selectionEnd) {
+			if (e.target?.selectionStart !== e.target.selectionEnd) {
 				wrapCursor(e.target, key, bracketWraps[key]);
 
 				return false;
@@ -135,7 +137,7 @@ export default {
 
 		inputTrap.bind(["up", "down"], (e, key) => {
 			if (
-				this.$store.state.isAutoCompleting ||
+				this.$accessor.isAutoCompleting ||
 				e.target.selectionStart !== e.target.selectionEnd
 			) {
 				return;
@@ -172,11 +174,11 @@ export default {
 			return false;
 		});
 
-		if (this.$store.state.serverConfiguration.fileUpload) {
+		if (this.$accessor.serverConfiguration.fileUpload) {
 			upload.mounted();
 		}
 	},
-	destroyed() {
+	unmounted() {
 		eventbus.off("escapekey", this.blurInput);
 
 		if (autocompletionRef) {
@@ -225,7 +227,7 @@ export default {
 			this.$refs.input.click();
 			this.$refs.input.focus();
 
-			if (!this.$store.state.isConnected) {
+			if (!this.$accessor.isConnected) {
 				return false;
 			}
 
@@ -286,5 +288,5 @@ export default {
 			}
 		},
 	},
-};
+});
 </script>

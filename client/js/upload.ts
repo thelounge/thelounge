@@ -102,7 +102,7 @@ class Uploader {
 		}
 
 		const wasQueueEmpty = this.fileQueue.length === 0;
-		const maxFileSize = store.state.serverConfiguration.fileUploadMaxFileSize;
+		const maxFileSize = store.state.serverConfiguration?.fileUploadMaxFileSize;
 
 		for (const file of files) {
 			if (maxFileSize > 0 && file.size > maxFileSize) {

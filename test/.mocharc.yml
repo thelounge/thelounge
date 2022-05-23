@@ -5,4 +5,11 @@ reporter: dot
 interactive: false
 spec: "test/**/*.ts"
 ignore: "test/client/**"
-require: "test/fixtures/env.ts"
+require:
+  - "test/fixtures/env.ts"
+  # TODO: verify with typescript. The below line is from vue 3 PR.
+  - "global-jsdom/register"
+globals:
+  - "__VUE_OPTIONS_API__"
+  - "__VUE_PROD_DEVTOOLS__"
+  - "__VUE__"

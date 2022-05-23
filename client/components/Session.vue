@@ -45,30 +45,39 @@
 }
 </style>
 
-<script>
+<script lang="ts">
+import {computed, defineComponent, PropType} from "vue";
 import localetime from "../js/helpers/localetime";
 import Auth from "../js/auth";
 import socket from "../js/socket";
+import {ClientSession} from "../js/store";
 
-export default {
+export default defineComponent({
 	name: "Session",
 	props: {
-		session: Object,
-	},
-	computed: {
-		lastUse() {
-			return localetime(this.session.lastUse);
+		session: {
+			type: Object as PropType<ClientSession>,
+			required: true,
 		},
 	},
-	methods: {
-		signOut() {
-			if (!this.session.current) {
-				socket.emit("sign-out", this.session.token);
+	setup(props) {
+		const lastUse = computed(() => {
+			return localetime(props.session.lastUse);
+		});
+
+		const signOut = () => {
+			if (!props.session.current) {
+				socket.emit("sign-out", props.session.token);
 			} else {
 				socket.emit("sign-out");
 				Auth.signout();
 			}
-		},
+		};
+
+		return {
+			lastUse,
+			signOut,
+		};
 	},
-};
+});
 </script>

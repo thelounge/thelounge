@@ -6,15 +6,20 @@ import semver from "semver";
 import Helper from "../../helper";
 import Config from "../../config";
 import themes from "./themes";
-const packageMap = new Map();
 import inputs from "../inputs";
 import fs from "fs";
 import Utils from "../../command-line/utils";
 import Client from "../../client";
 
+type Package = {
+	onServerStart: (packageApis: any) => void;
+};
+
+const packageMap = new Map<string, Package>();
+
 export type PackageInfo = {
 	packageName: string;
-	thelounge?: {supports: any};
+	thelounge?: {supports: string};
 	version: string;
 	type?: string;
 	files?: string[];
@@ -63,15 +68,15 @@ const packageApis = function (packageInfo: PackageInfo) {
 			),
 		},
 		Logger: {
-			error: (...args) => log.error(`[${packageInfo.packageName}]`, ...args),
-			warn: (...args) => log.warn(`[${packageInfo.packageName}]`, ...args),
-			info: (...args) => log.info(`[${packageInfo.packageName}]`, ...args),
-			debug: (...args) => log.debug(`[${packageInfo.packageName}]`, ...args),
+			error: (...args: string[]) => log.error(`[${packageInfo.packageName}]`, ...args),
+			warn: (...args: string[]) => log.warn(`[${packageInfo.packageName}]`, ...args),
+			info: (...args: string[]) => log.info(`[${packageInfo.packageName}]`, ...args),
+			debug: (...args: string[]) => log.debug(`[${packageInfo.packageName}]`, ...args),
 		},
 	};
 };
 
-function addStylesheet(packageName, filename) {
+function addStylesheet(packageName: string, filename: string) {
 	stylesheets.push(packageName + "/" + filename);
 }
 
@@ -87,7 +92,7 @@ function getFiles() {
 	return files.concat(stylesheets);
 }
 
-function getPackage(name) {
+function getPackage(name: string) {
 	return packageMap.get(name);
 }
 
@@ -111,7 +116,7 @@ function getPersistentStorageDir(packageName: string) {
 function loadPackage(packageName: string) {
 	let packageInfo: PackageInfo;
 	// TODO: type
-	let packageFile: any;
+	let packageFile: Package;
 
 	try {
 		const packagePath = Config.getPackageModulePath(packageName);
@@ -240,9 +245,16 @@ async function outdated(cacheTimeout = TIME_TO_LIVE) {
 		return false;
 	}
 
+	const command = argsList.shift();
+	const params = argsList;
+
+	if (!command) {
+		return;
+	}
+
 	// If we get an error from calling outdated and the code isn't 0, then there are no outdated packages
 	// TODO: was (...argsList), verify this works
-	await Utils.executeYarnCommand(argsList.shift(), ...argsList)
+	await Utils.executeYarnCommand(command, ...params)
 		.then(() => updateOutdated(false))
 		.catch((code) => updateOutdated(code !== 0));
 
