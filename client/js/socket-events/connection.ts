@@ -1,4 +1,4 @@
-import store from "../store";
+import {store} from "../store";
 import socket from "../socket";
 
 socket.on("disconnect", handleDisconnect);
@@ -26,7 +26,7 @@ socket.on("connect", function () {
 });
 
 function handleDisconnect(data) {
-	const message = data.message || data;
+	const message = (data.message || data) as string;
 
 	store.commit("isConnected", false);
 
@@ -45,6 +45,7 @@ function handleDisconnect(data) {
 	// If the server shuts down, socket.io skips reconnection
 	// and we have to manually call connect to start the process
 	// However, do not reconnect if TL client manually closed the connection
+	// @ts-ignore TODO
 	if (socket.io.skipReconnect && message !== "io client disconnect") {
 		requestIdleCallback(() => socket.connect(), 2000);
 	}

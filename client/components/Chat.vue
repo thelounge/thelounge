@@ -152,7 +152,8 @@ export default defineComponent({
 		channel: {type: Object as PropType<ClientChan>, required: true},
 		focused: String,
 	},
-	setup(props) {
+	emits: ["channel-changed"],
+	setup(props, {emit}) {
 		const store = useStore();
 
 		const messageList = ref<typeof MessageList>();
@@ -175,8 +176,9 @@ export default defineComponent({
 
 		const channelChanged = () => {
 			// Triggered when active channel is set or changed
-			props.channel.highlight = 0;
-			props.channel.unread = 0;
+			// props.channel.highlight = 0;
+			// props.channel.unread = 0;
+			emit("channel-changed", props.channel);
 
 			socket.emit("open", props.channel.id);
 
@@ -229,9 +231,12 @@ export default defineComponent({
 			});
 		};
 
-		watch(props.channel, () => {
-			channelChanged();
-		});
+		watch(
+			() => props.channel,
+			() => {
+				channelChanged();
+			}
+		);
 
 		const editTopicRef = ref(props.channel.editTopic);
 		watch(editTopicRef, (newTopic) => {

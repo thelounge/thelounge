@@ -43,20 +43,12 @@ import {
 import {useStore} from "../js/store";
 import type {DebouncedFunc} from "lodash";
 
-const imageViewerKey = Symbol() as InjectionKey<Ref<typeof ImageViewer | null>>;
+export const imageViewerKey = Symbol() as InjectionKey<Ref<typeof ImageViewer | null>>;
 const contextMenuKey = Symbol() as InjectionKey<Ref<typeof ContextMenu | null>>;
 const confirmDialogKey = Symbol() as InjectionKey<Ref<typeof ConfirmDialog | null>>;
 
 export const useImageViewer = () => {
 	return inject(imageViewerKey) as Ref<typeof ImageViewer | null>;
-};
-
-export const useContextMenu = () => {
-	return inject(contextMenuKey) as Ref<typeof ContextMenu | null>;
-};
-
-export const useConfirmDialog = () => {
-	return inject(confirmDialogKey) as Ref<typeof ConfirmDialog | null>;
 };
 
 export default defineComponent({
@@ -70,7 +62,6 @@ export default defineComponent({
 	},
 	setup() {
 		const store = useStore();
-
 		const overlay = ref(null);
 		const loungeWindow = ref(null);
 		const imageViewer = ref(null);

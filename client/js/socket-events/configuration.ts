@@ -1,13 +1,13 @@
 import socket from "../socket";
 import upload from "../upload";
-import store from "../store";
+import {store} from "../store";
 
 socket.once("configuration", function (data) {
 	store.commit("serverConfiguration", data);
 
 	// 'theme' setting depends on serverConfiguration.themes so
 	// settings cannot be applied before this point
-	store.dispatch("settings/applyAll");
+	void store.dispatch("settings/applyAll");
 
 	if (data.fileUpload) {
 		upload.initialize();
@@ -18,9 +18,14 @@ socket.once("configuration", function (data) {
 	const currentTheme = data.themes.find((t) => t.name === store.state.settings.theme);
 
 	if (currentTheme === undefined) {
-		store.dispatch("settings/update", {name: "theme", value: data.defaultTheme, sync: true});
+		void store.dispatch("settings/update", {
+			name: "theme",
+			value: data.defaultTheme,
+			sync: true,
+		});
 	} else if (currentTheme.themeColor) {
-		document.querySelector('meta[name="theme-color"]').content = currentTheme.themeColor;
+		(document.querySelector('meta[name="theme-color"]') as HTMLMetaElement).content =
+			currentTheme.themeColor;
 	}
 
 	if (document.body.classList.contains("public")) {

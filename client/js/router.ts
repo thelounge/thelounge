@@ -9,7 +9,7 @@ import Changelog from "../components/Windows/Changelog.vue";
 import NetworkEdit from "../components/Windows/NetworkEdit.vue";
 import SearchResults from "../components/Windows/SearchResults.vue";
 import RoutedChat from "../components/RoutedChat.vue";
-import store from "./store";
+import {store} from "./store";
 
 import AppearanceSettings from "../components/Settings/Appearance.vue";
 import GeneralSettings from "../components/Settings/General.vue";

@@ -1,5 +1,5 @@
 import socket from "./socket";
-import {TypedStore} from "./store";
+import type {TypedStore} from "./store";
 
 const defaultSettingConfig = {
 	// eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -35,7 +35,14 @@ const defaultConfig = {
 		default: false,
 		sync: "never",
 		apply(store: TypedStore, value: boolean) {
-			// TODO: investigate ignores
+			// TODO: investigate
+			if (!store) {
+				return;
+				// throw new Error("store is not defined");
+			}
+
+			// Commit a mutation. options can have root: true that allows to commit root mutations in namespaced modules.
+			// https://vuex.vuejs.org/api/#store-instance-methods. not typed?
 			// @ts-ignore
 			store.commit("refreshDesktopNotificationState", null, {root: true});
 
@@ -87,14 +94,24 @@ const defaultConfig = {
 	theme: {
 		default: document.getElementById("theme")?.dataset.serverTheme,
 		apply(store: TypedStore, value: string) {
-			const themeEl = document.getElementById("theme") as any;
+			const themeEl = document.getElementById("theme");
 			const themeUrl = `themes/${value}.css`;
 
-			if (themeEl?.attributes.href.value === themeUrl) {
+			if (!(themeEl instanceof HTMLLinkElement)) {
+				throw new Error("theme element is not a link");
+			}
+
+			const hrefAttr = themeEl.attributes.getNamedItem("href");
+
+			if (!hrefAttr) {
+				throw new Error("theme is missing href attribute");
+			}
+
+			if (hrefAttr.value === themeUrl) {
 				return;
 			}
 
-			themeEl.attributes.href.value = themeUrl;
+			hrefAttr.value = themeUrl;
 
 			if (!store.state.serverConfiguration) {
 				return;
@@ -106,9 +123,13 @@ const defaultConfig = {
 
 			const metaSelector = document.querySelector('meta[name="theme-color"]');
 
+			if (!(metaSelector instanceof HTMLMetaElement)) {
+				throw new Error("theme meta element is not a meta element");
+			}
+
 			if (metaSelector) {
-				const themeColor = newTheme.themeColor || (metaSelector as any).content;
-				(metaSelector as any).content = themeColor;
+				const themeColor = newTheme.themeColor || metaSelector.content;
+				metaSelector.content = themeColor;
 			}
 		},
 	},

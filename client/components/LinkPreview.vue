@@ -130,24 +130,23 @@
 </template>
 
 <script lang="ts">
-import Vue, {
+import {
 	computed,
 	defineComponent,
+	inject,
 	nextTick,
 	onBeforeUnmount,
 	onMounted,
 	onUnmounted,
 	PropType,
 	ref,
-	inject,
-	Ref,
 	watch,
 } from "vue";
 import eventbus from "../js/eventbus";
 import friendlysize from "../js/helpers/friendlysize";
 import {useStore} from "../js/store";
 import type {ClientChan, ClientLinkPreview} from "../js/types";
-import {useImageViewer} from "./App.vue";
+import {imageViewerKey, useImageViewer} from "./App.vue";
 
 export default defineComponent({
 	name: "LinkPreview",
@@ -235,7 +234,7 @@ export default defineComponent({
 
 		const onThumbnailClick = (e: MouseEvent) => {
 			e.preventDefault();
-			const imageViewer = useImageViewer();
+			const imageViewer = inject(imageViewerKey);
 
 			if (!imageViewer.value) {
 				return;
@@ -280,11 +279,13 @@ export default defineComponent({
 
 		updateShownState();
 
-		const linkTypeRef = ref(props.link.type);
-		watch(linkTypeRef, () => {
-			updateShownState();
-			onPreviewUpdate();
-		});
+		watch(
+			() => props.link.type,
+			() => {
+				updateShownState();
+				onPreviewUpdate();
+			}
+		);
 
 		onMounted(() => {
 			eventbus.on("resize", handleResize);
@@ -301,6 +302,20 @@ export default defineComponent({
 			// Otherwise the browser can cause a resize on video elements
 			props.link.sourceLoaded = false;
 		});
+
+		return {
+			moreButtonLabel,
+			imageMaxSize,
+			onThumbnailClick,
+			onThumbnailError,
+			onMoreClick,
+			onPreviewReady,
+			onPreviewUpdate,
+			showMoreButton,
+			isContentShown,
+			content,
+			container,
+		};
 	},
 });
 </script>

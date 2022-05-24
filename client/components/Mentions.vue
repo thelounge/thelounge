@@ -33,7 +33,7 @@
 								<template v-else> in unknown channel </template>
 							</span>
 							<span :title="message.localetime" class="time">
-								{{ messageTime(message.time) }}
+								{{ messageTime(message.time.toString()) }}
 							</span>
 						</div>
 						<div>
@@ -50,7 +50,7 @@
 						</div>
 					</div>
 					<div class="content" dir="auto">
-						<ParsedMessage :network="null" :message="message" />
+						<ParsedMessage message="message" />
 					</div>
 				</div>
 			</template>
@@ -179,9 +179,12 @@ export default defineComponent({
 			return messages.filter((message) => !message.channel?.channel.muted);
 		});
 
-		watch(store.state.mentions, () => {
-			isLoading.value = false;
-		});
+		watch(
+			() => store.state.mentions,
+			() => {
+				isLoading.value = false;
+			}
+		);
 
 		const messageTime = (time: string) => {
 			return dayjs(time).fromNow();

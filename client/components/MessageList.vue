@@ -89,6 +89,9 @@ type CondensedMessageContainer = {
 	id: number;
 };
 
+// TODO; move into component
+let unreadMarkerShown = false;
+
 export default defineComponent({
 	name: "MessageList",
 	components: {
@@ -108,7 +111,6 @@ export default defineComponent({
 		const loadMoreButton = ref<HTMLButtonElement | null>(null);
 		const historyObserver = ref<IntersectionObserver | null>(null);
 		const skipNextScrollEvent = ref(false);
-		const unreadMarkerShown = ref(false);
 
 		const isWaitingForNextTick = ref(false);
 
@@ -265,8 +267,8 @@ export default defineComponent({
 		};
 
 		const shouldDisplayUnreadMarker = (id: number) => {
-			if (!unreadMarkerShown.value && id > props.channel.firstUnread) {
-				unreadMarkerShown.value = true;
+			if (!unreadMarkerShown && id > props.channel.firstUnread) {
+				unreadMarkerShown = true;
 				return true;
 			}
 
@@ -380,35 +382,41 @@ export default defineComponent({
 			});
 		});
 
-		const channelId = ref(props.channel.id);
-		watch(channelId, () => {
-			props.channel.scrolledToBottom = true;
+		watch(
+			() => props.channel.id,
+			() => {
+				props.channel.scrolledToBottom = true;
 
-			// Re-add the intersection observer to trigger the check again on channel switch
-			// Otherwise if last channel had the button visible, switching to a new channel won't trigger the history
-			if (historyObserver.value && loadMoreButton.value) {
-				historyObserver.value.unobserve(loadMoreButton.value);
-				historyObserver.value.observe(loadMoreButton.value);
+				// Re-add the intersection observer to trigger the check again on channel switch
+				// Otherwise if last channel had the button visible, switching to a new channel won't trigger the history
+				if (historyObserver.value && loadMoreButton.value) {
+					historyObserver.value.unobserve(loadMoreButton.value);
+					historyObserver.value.observe(loadMoreButton.value);
+				}
 			}
-		});
+		);
 
-		const channelMessages = ref(props.channel.messages);
-		watch(channelMessages, () => {
-			keepScrollPosition();
-		});
-
-		const pendingMessage = ref(props.channel.pendingMessage);
-		watch(pendingMessage, () => {
-			nextTick(() => {
-				// Keep the scroll stuck when input gets resized while typing
+		watch(
+			() => props.channel.messages,
+			() => {
 				keepScrollPosition();
-			}).catch(() => {
-				// no-op
-			});
-		});
+			}
+		);
+
+		watch(
+			() => props.channel.pendingMessage,
+			() => {
+				nextTick(() => {
+					// Keep the scroll stuck when input gets resized while typing
+					keepScrollPosition();
+				}).catch(() => {
+					// no-op
+				});
+			}
+		);
 
 		onBeforeUpdate(() => {
-			unreadMarkerShown.value = false;
+			unreadMarkerShown = false;
 		});
 
 		onBeforeUnmount(() => {

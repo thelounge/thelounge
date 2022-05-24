@@ -499,27 +499,30 @@ export default defineComponent({
 			)}px`;
 		};
 
-		const commands = ref(props.defaults?.commands);
-
-		watch(commands, () => {
-			nextTick(() => {
-				resizeCommandsInput();
-			}).catch((e) => {
-				// no-op
-			});
-		});
-
-		const tls = ref(props.defaults?.tls);
-		watch(tls, (isSecureChecked) => {
-			const ports = [6667, 6697];
-			const newPort = isSecureChecked ? 0 : 1;
-
-			// If you disable TLS and current port is 6697,
-			// set it to 6667, and vice versa
-			if (props.defaults?.port === ports[newPort]) {
-				props.defaults.port = ports[1 - newPort];
+		watch(
+			() => props.defaults?.commands,
+			() => {
+				nextTick(() => {
+					resizeCommandsInput();
+				}).catch((e) => {
+					// no-op
+				});
 			}
-		});
+		);
+
+		watch(
+			() => props.defaults?.tls,
+			(isSecureChecked) => {
+				const ports = [6667, 6697];
+				const newPort = isSecureChecked ? 0 : 1;
+
+				// If you disable TLS and current port is 6697,
+				// set it to 6667, and vice versa
+				if (props.defaults?.port === ports[newPort]) {
+					props.defaults.port = ports[1 - newPort];
+				}
+			}
+		);
 
 		const setSaslAuth = (type: string) => {
 			if (props.defaults) {
@@ -559,10 +562,8 @@ export default defineComponent({
 			config,
 			displayPasswordField,
 			publicPassword,
-			commands,
 			commandsInput,
 			resizeCommandsInput,
-			tls,
 			setSaslAuth,
 			usernameInput,
 			onNickChanged,

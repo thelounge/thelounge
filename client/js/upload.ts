@@ -1,14 +1,17 @@
 import {update as updateCursor} from "undate";
 
 import socket from "./socket";
-import store from "./store";
+import {store} from "./store";
 
 class Uploader {
-	init() {
-		this.xhr = null;
-		this.fileQueue = [];
-		this.tokenKeepAlive = null;
+	xhr: XMLHttpRequest | null = null;
+	fileQueue: File[] = [];
+	tokenKeepAlive: NodeJS.Timeout | null = null;
 
+	overlay: HTMLDivElement | null = null;
+	uploadProgressbar: HTMLSpanElement | null = null;
+
+	init() {
 		document.addEventListener("dragenter", (e) => this.dragEnter(e));
 		document.addEventListener("dragover", (e) => this.dragOver(e));
 		document.addEventListener("dragleave", (e) => this.dragLeave(e));
@@ -19,45 +22,45 @@ class Uploader {
 	}
 
 	mounted() {
-		this.overlay = document.getElementById("upload-overlay");
-		this.uploadProgressbar = document.getElementById("upload-progressbar");
+		this.overlay = document.getElementById("upload-overlay") as HTMLDivElement;
+		this.uploadProgressbar = document.getElementById("upload-progressbar") as HTMLSpanElement;
 	}
 
-	dragOver(event) {
-		if (event.dataTransfer.types.includes("Files")) {
+	dragOver(event: DragEvent) {
+		if (event.dataTransfer?.types.includes("Files")) {
 			// Prevent dragover event completely and do nothing with it
 			// This stops the browser from trying to guess which cursor to show
 			event.preventDefault();
 		}
 	}
 
-	dragEnter(event) {
+	dragEnter(event: DragEvent) {
 		// relatedTarget is the target where we entered the drag from
 		// when dragging from another window, the target is null, otherwise its a DOM element
-		if (!event.relatedTarget && event.dataTransfer.types.includes("Files")) {
+		if (!event.relatedTarget && event.dataTransfer?.types.includes("Files")) {
 			event.preventDefault();
 
-			this.overlay.classList.add("is-dragover");
+			this.overlay?.classList.add("is-dragover");
 		}
 	}
 
-	dragLeave(event) {
+	dragLeave(event: DragEvent) {
 		// If relatedTarget is null, that means we are no longer dragging over the page
 		if (!event.relatedTarget) {
 			event.preventDefault();
-			this.overlay.classList.remove("is-dragover");
+			this.overlay?.classList.remove("is-dragover");
 		}
 	}
 
-	drop(event) {
-		if (!event.dataTransfer.types.includes("Files")) {
+	drop(event: DragEvent) {
+		if (!event.dataTransfer?.types.includes("Files")) {
 			return;
 		}
 
 		event.preventDefault();
-		this.overlay.classList.remove("is-dragover");
+		this.overlay?.classList.remove("is-dragover");
 
-		let files;
+		let files: (File | null)[];
 
 		if (event.dataTransfer.items) {
 			files = Array.from(event.dataTransfer.items)
@@ -70,13 +73,17 @@ class Uploader {
 		this.triggerUpload(files);
 	}
 
-	paste(event) {
-		const items = event.clipboardData.items;
-		const files = [];
+	paste(event: ClipboardEvent) {
+		const items = event.clipboardData?.items;
+		const files: (File | null)[] = [];
 
-		for (const item of items) {
-			if (item.kind === "file") {
-				files.push(item.getAsFile());
+		if (!items) {
+			return;
+		}
+
+		for (let i = 0; i < items.length; i++) {
+			if (items[i].kind === "file") {
+				files.push(items[i].getAsFile());
 			}
 		}
 
@@ -88,7 +95,7 @@ class Uploader {
 		this.triggerUpload(files);
 	}
 
-	triggerUpload(files) {
+	triggerUpload(files: (File | null)[]) {
 		if (!files.length) {
 			return;
 		}
@@ -102,9 +109,13 @@ class Uploader {
 		}
 
 		const wasQueueEmpty = this.fileQueue.length === 0;
-		const maxFileSize = store.state.serverConfiguration?.fileUploadMaxFileSize;
+		const maxFileSize = store.state.serverConfiguration?.fileUploadMaxFileSize || 0;
 
 		for (const file of files) {
+			if (!file) {
+				return;
+			}
+
 			if (maxFileSize > 0 && file.size > maxFileSize) {
 				this.handleResponse({
 					error: `File ${file.name} is over the maximum allowed size`,
@@ -127,13 +138,21 @@ class Uploader {
 		socket.emit("upload:auth");
 	}
 
-	setProgress(value) {
+	setProgress(value: number) {
+		if (!this.uploadProgressbar) {
+			return;
+		}
+
 		this.uploadProgressbar.classList.toggle("upload-progressbar-visible", value > 0);
-		this.uploadProgressbar.style.width = value + "%";
+		this.uploadProgressbar.style.width = `${value}%`;
 	}
 
-	uploadNextFileInQueue(token) {
+	uploadNextFileInQueue(token: string) {
 		const file = this.fileQueue.shift();
+
+		if (!file) {
+			return;
+		}
 
 		// Tell the server that we are still upload to this token
 		// so it does not become invalidated and fail the upload.
@@ -153,7 +172,7 @@ class Uploader {
 		}
 	}
 
-	renderImage(file, callback) {
+	renderImage(file: File, callback: (file: File) => void) {
 		const fileReader = new FileReader();
 
 		fileReader.onabort = () => callback(file);
@@ -169,20 +188,25 @@ class Uploader {
 				canvas.width = img.width;
 				canvas.height = img.height;
 				const ctx = canvas.getContext("2d");
+
+				if (!ctx) {
+					throw new Error("Could not get canvas context in upload");
+				}
+
 				ctx.drawImage(img, 0, 0);
 
 				canvas.toBlob((blob) => {
-					callback(new File([blob], file.name));
+					callback(new File([blob!], file.name));
 				}, file.type);
 			};
 
-			img.src = fileReader.result;
+			img.src = fileReader.result as string;
 		};
 
 		fileReader.readAsDataURL(file);
 	}
 
-	performUpload(token, file) {
+	performUpload(token: string, file: File) {
 		this.xhr = new XMLHttpRequest();
 
 		this.xhr.upload.addEventListener(
@@ -195,7 +219,7 @@ class Uploader {
 		);
 
 		this.xhr.onreadystatechange = () => {
-			if (this.xhr.readyState === XMLHttpRequest.DONE) {
+			if (this.xhr?.readyState === XMLHttpRequest.DONE) {
 				let response;
 
 				try {
@@ -227,7 +251,7 @@ class Uploader {
 		this.xhr.send(formData);
 	}
 
-	handleResponse(response) {
+	handleResponse(response: {error?: string; url?: string}) {
 		this.setProgress(0);
 
 		if (this.tokenKeepAlive) {
@@ -245,9 +269,14 @@ class Uploader {
 		}
 	}
 
-	insertUploadUrl(url) {
-		const fullURL = new URL(url, location).toString();
+	insertUploadUrl(url: string) {
+		const fullURL = new URL(url, location.toString()).toString();
 		const textbox = document.getElementById("input");
+
+		if (!textbox) {
+			throw new Error("Could not find textbox in upload");
+		}
+
 		const initStart = textbox.selectionStart;
 
 		// Get the text before the cursor, and add a space if it's not in the beginning

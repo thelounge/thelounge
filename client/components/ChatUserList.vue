@@ -83,7 +83,6 @@ export default defineComponent({
 		const userSearchInput = ref("");
 		const activeUser = ref<UserInMessage | null>();
 		const userlist = ref<HTMLDivElement>();
-
 		const filteredUsers = computed(() => {
 			if (!userSearchInput.value) {
 				return;

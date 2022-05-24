@@ -8,11 +8,8 @@ export default defineComponent({
 	functional: true,
 	props: {
 		text: String,
-		message: {type: Object as PropType<ClientMessage>, required: false},
+		message: {type: Object as PropType<ClientMessage | string>, required: false},
 		network: {type: Object as PropType<ClientNetwork>, required: false},
-	},
-	setup(props) {
-		//
 	},
 	render(context) {
 		return parse(

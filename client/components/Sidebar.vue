@@ -34,26 +34,32 @@
 				class="tooltipped tooltipped-n tooltipped-no-touch"
 				aria-label="Connect to network"
 				><router-link
+					v-slot:default="{navigate, isActive}"
 					to="/connect"
-					tag="button"
-					active-class="active"
-					:class="['icon', 'connect']"
-					aria-label="Connect to network"
 					role="tab"
 					aria-controls="connect"
-					:aria-selected="route.name === 'Connect'"
-			/></span>
+				>
+					<button
+						:class="['icon', 'connect', {active: isActive}]"
+						:aria-selected="isActive"
+						@click="navigate"
+						@keypress.enter="navigate"
+					/> </router-link
+			></span>
 			<span class="tooltipped tooltipped-n tooltipped-no-touch" aria-label="Settings"
 				><router-link
+					v-slot:default="{navigate, isActive}"
 					to="/settings"
-					tag="button"
-					active-class="active"
-					:class="['icon', 'settings']"
-					aria-label="Settings"
 					role="tab"
 					aria-controls="settings"
-					:aria-selected="route.name === 'General'"
-			/></span>
+				>
+					<button
+						:class="['icon', 'settings', {active: isActive}]"
+						:aria-selected="isActive"
+						@click="navigate"
+						@keypress.enter="navigate"
+					></button> </router-link
+			></span>
 			<span
 				class="tooltipped tooltipped-n tooltipped-no-touch"
 				:aria-label="
@@ -62,19 +68,23 @@
 						: 'Help'
 				"
 				><router-link
+					v-slot:default="{navigate, isActive}"
 					to="/help"
-					tag="button"
-					active-class="active"
-					:class="[
-						'icon',
-						'help',
-						{notified: store.state.serverConfiguration?.isUpdateAvailable},
-					]"
-					aria-label="Help"
 					role="tab"
 					aria-controls="help"
-					:aria-selected="route.name === 'Help'"
-			/></span>
+				>
+					<button
+						:aria-selected="route.name === 'Help'"
+						:class="[
+							'icon',
+							'help',
+							{notified: store.state.serverConfiguration?.isUpdateAvailable},
+							{active: isActive},
+						]"
+						@click="navigate"
+						@keypress.enter="navigate"
+					></button> </router-link
+			></span>
 		</footer>
 	</aside>
 </template>

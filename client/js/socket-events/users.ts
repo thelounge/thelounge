@@ -1,5 +1,5 @@
 import socket from "../socket";
-import store from "../store";
+import {store} from "../store";
 
 socket.on("users", function (data) {
 	if (store.state.activeChannel && store.state.activeChannel.channel.id === data.chan) {

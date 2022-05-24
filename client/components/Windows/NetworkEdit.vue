@@ -50,11 +50,12 @@ export default defineComponent({
 		// 		this.setNetworkData();
 		// 	},
 		// },
-		watch(route.params, (newValue) => {
-			if (newValue.uuid) {
+		watch(
+			() => route.params.uuid,
+			(newValue) => {
 				setNetworkData();
 			}
-		});
+		);
 
 		onMounted(() => {
 			setNetworkData();

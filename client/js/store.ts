@@ -4,7 +4,6 @@ import {ActionContext, createStore, Store, useStore as baseUseStore} from "vuex"
 import {createSettingsStore} from "./store-settings";
 import storage from "./localStorage";
 import type {
-	Mention,
 	ClientChan,
 	ClientConfiguration,
 	ClientNetwork,
@@ -13,16 +12,8 @@ import type {
 	ClientMessage,
 	ClientMention,
 } from "./types";
-import type {InjectionKey, WatchOptions} from "vue";
+import type {InjectionKey} from "vue";
 
-// import {
-// 	useAccessor,
-// 	getterTree,
-// 	mutationTree,
-// 	actionTree,
-// 	getAccessorType,
-// } from 'typed-vuex'
-import {VueApp} from "./vue";
 import {SettingsState} from "./settings";
 
 const appName = document.title;
@@ -397,13 +388,7 @@ const storePattern = {
 	getters,
 };
 
-export const store = createStore(storePattern);
-
 const settingsStore = createSettingsStore(store);
-
-// Settings module is registered dynamically because it benefits
-// from a direct reference to the store
-store.registerModule("settings", settingsStore);
 
 // https://vuex.vuejs.org/guide/typescript-support.html#typing-usestore-composition-function
 export const key: InjectionKey<Store<State>> = Symbol();
@@ -417,7 +402,11 @@ export type TypedStore = Omit<Store<State>, "getters" | "commit"> & {
 	};
 };
 
-export default store;
+export const store = createStore(storePattern) as TypedStore;
+
+// Settings module is registered dynamically because it benefits
+// from a direct reference to the store
+store.registerModule("settings", settingsStore);
 
 export function useStore() {
 	return baseUseStore(key) as TypedStore;

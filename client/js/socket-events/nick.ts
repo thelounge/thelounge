@@ -1,5 +1,5 @@
 import socket from "../socket";
-import store from "../store";
+import {store} from "../store";
 
 socket.on("nick", function (data) {
 	const network = store.getters.findNetwork(data.network);

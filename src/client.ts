@@ -598,7 +598,7 @@ class Client {
 		}
 	}
 
-	search(query: SearchQuery): Promise<SearchResponse> {
+	search(query: SearchQuery) {
 		if (this.messageProvider === undefined) {
 			return Promise.resolve({
 				results: [],

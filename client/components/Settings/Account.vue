@@ -103,7 +103,7 @@ import socket from "../../js/socket";
 import RevealPassword from "../RevealPassword.vue";
 import Session from "../Session.vue";
 import {computed, defineComponent, onMounted, ref} from "vue";
-import store from "../../js/store";
+import {useStore} from "../../js/store";
 
 export default defineComponent({
 	name: "UserSettings",
@@ -112,6 +112,7 @@ export default defineComponent({
 		Session,
 	},
 	setup() {
+		const store = useStore();
 		const settingsForm = ref<HTMLFormElement>();
 		const passwordErrors = {
 			missing_fields: "Please enter a new password",

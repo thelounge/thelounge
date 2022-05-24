@@ -1,16 +1,11 @@
 <template>
-	<li :aria-label="name">
-		<router-link
-			v-slot:default="{navigate, isExactActive}"
-			:to="'/settings/' + to"
-			:class="['icon', className]"
-			:aria-label="name"
-			role="tab"
-			aria-controls="settings"
-			:aria-selected="route.name === name"
-			custom
-		>
-			<button :class="{active: isExactActive}" @click="navigate" @keypress.enter="navigate">
+	<li :aria-label="name" role="tab" :aria-selected="route.name === name" aria-controls="settings">
+		<router-link v-slot:default="{navigate, isExactActive}" :to="'/settings/' + to" custom>
+			<button
+				:class="['icon', className, {active: isExactActive}]"
+				@click="navigate"
+				@keypress.enter="navigate"
+			>
 				{{ name }}
 			</button>
 		</router-link>
@@ -18,6 +13,14 @@
 </template>
 
 <script lang="ts">
+// v-slot:default="{navigate, isExactActive}"
+// :to="'/settings/' + to"
+// :class="['icon', className]"
+// :aria-label="name"
+// role="tab"
+// aria-controls="settings"
+// :aria-selected="route.name === name"
+// custom
 import {defineComponent} from "vue";
 import {useRoute} from "vue-router";
 

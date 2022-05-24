@@ -1,5 +1,5 @@
 import socket from "../socket";
-import store from "../store";
+import {store} from "../store";
 
 function input() {
 	const messageIds = [];

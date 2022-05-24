@@ -1,6 +1,6 @@
 import Mousetrap from "mousetrap";
 
-import store from "./store";
+import {store} from "./store";
 import {switchToChannel, router, navigate} from "./router";
 import isChannelCollapsed from "./helpers/isChannelCollapsed";
 import isIgnoredKeybind from "./helpers/isIgnoredKeybind";

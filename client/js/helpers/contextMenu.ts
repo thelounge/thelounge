@@ -3,7 +3,7 @@ import eventbus from "../eventbus";
 import type {ClientChan, ClientNetwork, ClientUser} from "../types";
 import {switchToChannel} from "../router";
 import {TypedStore} from "../store";
-import closeChannel from "../hooks/use-close-channel";
+import useCloseChannel from "../hooks/use-close-channel";
 
 type BaseContextMenuItem = {
 	label: string;
@@ -32,6 +32,8 @@ export function generateChannelContextMenu(
 	channel: ClientChan,
 	network: ClientNetwork
 ): ContextMenuItem[] {
+	const closeChannel = useCloseChannel(channel);
+
 	const typeMap = {
 		lobby: "network",
 		channel: "chan",
@@ -229,7 +231,7 @@ export function generateChannelContextMenu(
 		type: "item",
 		class: "close",
 		action() {
-			closeChannel(channel);
+			closeChannel();
 		},
 	});
 

@@ -68,7 +68,7 @@
 								<!-- TODO: this was message.date  -->
 								<DateMarker
 									v-if="shouldDisplayDateMarker(message, id)"
-									:key="message.when.toString()"
+									:key="message.time"
 									:message="message"
 								/>
 								<!-- todo channel and network ! -->
@@ -257,18 +257,21 @@ export default defineComponent({
 				});
 		};
 
-		const routeIdRef = ref(route.params.id);
-		const routeQueryRef = ref(route.query);
+		watch(
+			() => route.params.id,
+			() => {
+				doSearch();
+				setActiveChannel();
+			}
+		);
 
-		watch(routeIdRef, () => {
-			doSearch();
-			setActiveChannel();
-		});
-
-		watch(routeQueryRef, () => {
-			doSearch();
-			setActiveChannel();
-		});
+		watch(
+			() => route.query,
+			() => {
+				doSearch();
+				setActiveChannel();
+			}
+		);
 
 		watch(messages, () => {
 			moreResultsAvailable.value = !!(

@@ -9,7 +9,7 @@
 <script lang="ts">
 import dayjs from "dayjs";
 import calendar from "dayjs/plugin/calendar";
-import Vue, {computed, defineComponent, onBeforeUnmount, onMounted, PropType} from "vue";
+import {computed, defineComponent, onBeforeUnmount, onMounted, PropType} from "vue";
 import eventbus from "../js/eventbus";
 import {ClientMessage} from "../js/types";
 
@@ -33,8 +33,8 @@ export default defineComponent({
 
 		const dayChange = () => {
 			// TODO: this is nasty. and maybe doesnt work?
-			const instance = Vue.getCurrentInstance();
-			instance?.proxy?.$forceUpdate();
+			// const instance = Vue.getCurrentInstance();
+			// instance?.proxy?.$forceUpdate();
 
 			if (hoursPassed() >= 48) {
 				eventbus.off("daychange", dayChange);

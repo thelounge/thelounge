@@ -1,6 +1,6 @@
 import socket from "../socket";
 import cleanIrcMessage from "../helpers/ircmessageparser/cleanIrcMessage";
-import store from "../store";
+import {store} from "../store";
 import {switchToChannel} from "../router";
 
 let pop;

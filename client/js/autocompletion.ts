@@ -7,7 +7,7 @@ import {TextareaEditor} from "@textcomplete/textarea/dist/TextareaEditor";
 import fuzzy from "fuzzy";
 
 import emojiMap from "./helpers/simplemap.json";
-import store from "./store";
+import {store} from "./store";
 
 export default enableAutocomplete;
 

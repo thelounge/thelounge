@@ -112,13 +112,11 @@ function parse(text: string, message?: ClientMessage, network?: ClientNetwork) {
 			const link = createElement(
 				"a",
 				{
-					attrs: {
-						// @ts-ignore
-						href: textPart.link,
-						dir: preview ? null : "auto",
-						target: "_blank",
-						rel: "noopener",
-					},
+					// @ts-ignore
+					"^href": textPart.link,
+					"^dir": preview ? null : "auto",
+					"^target": "_blank",
+					"^rel": "noopener",
 				},
 				() => fragments
 			);

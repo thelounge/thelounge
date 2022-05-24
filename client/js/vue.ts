@@ -2,7 +2,7 @@ import constants from "./constants";
 
 import "../css/style.css";
 import {createApp} from "vue";
-import store, {CallableGetters, key, State, TypedStore} from "./store";
+import {store, CallableGetters, key} from "./store";
 import App from "../components/App.vue";
 import storage from "./localStorage";
 import {router, navigate} from "./router";
@@ -12,7 +12,6 @@ import eventbus from "./eventbus";
 import "./socket-events";
 import "./webpush";
 import "./keybinds";
-import {Store} from "vuex";
 import {LoungeWindow} from "./types";
 
 const favicon = document.getElementById("favicon");

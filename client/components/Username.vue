@@ -48,7 +48,7 @@ export default defineComponent({
 			return props.user.mode;
 		});
 
-		const nickColor = computed(() => colorClass(props.user.nick));
+		const nickColor = computed(() => colorClass(props.user.nick!));
 
 		const hover = () => {
 			if (props.onHover) {

@@ -2,7 +2,7 @@ import {nextTick} from "vue";
 import socket from "../socket";
 import storage from "../localStorage";
 import {router, switchToChannel, navigate} from "../router";
-import store from "../store";
+import {store} from "../store";
 import parseIrcUri from "../helpers/parseIrcUri";
 import {ClientNetwork, InitClientChan} from "../types";
 

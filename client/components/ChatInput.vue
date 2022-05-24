@@ -222,17 +222,21 @@ export default defineComponent({
 			}
 		};
 
-		const channelId = ref(props.channel.id);
-		watch(channelId, () => {
-			if (autocompletionRef.value) {
-				autocompletionRef.value.hide();
+		watch(
+			() => props.channel.id,
+			() => {
+				if (autocompletionRef.value) {
+					autocompletionRef.value.hide();
+				}
 			}
-		});
+		);
 
-		const pendingMessage = ref(props.channel.pendingMessage);
-		watch(pendingMessage, () => {
-			setInputSize();
-		});
+		watch(
+			() => props.channel.pendingMessage,
+			() => {
+				setInputSize();
+			}
+		);
 
 		onMounted(() => {
 			eventbus.on("escapekey", blurInput);
@@ -347,8 +351,6 @@ export default defineComponent({
 			openFileUpload,
 			blurInput,
 			onBlur,
-			channelId,
-			pendingMessage,
 			setInputSize,
 			upload,
 			getInputPlaceholder,

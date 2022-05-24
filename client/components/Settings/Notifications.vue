@@ -161,7 +161,7 @@ export default defineComponent({
 	name: "NotificationSettings",
 	setup() {
 		const store = useStore();
-		console.log(store);
+
 		const isIOS = computed(
 			() =>
 				[
@@ -176,10 +176,12 @@ export default defineComponent({
 				(navigator.userAgent.includes("Mac") && "ontouchend" in document)
 		);
 
-		const playNotification = async () => {
+		const playNotification = () => {
 			const pop = new Audio();
 			pop.src = "audio/pop.wav";
-			await pop.play();
+
+			// eslint-disable-next-line
+			pop.play();
 		};
 
 		const onPushButtonClick = () => {
@@ -188,9 +190,9 @@ export default defineComponent({
 
 		return {
 			isIOS,
+			store,
 			playNotification,
 			onPushButtonClick,
-			store,
 		};
 	},
 });

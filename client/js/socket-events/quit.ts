@@ -1,6 +1,6 @@
 import socket from "../socket";
 import {switchToChannel, navigate} from "../router";
-import store from "../store";
+import {store} from "../store";
 
 socket.on("quit", function (data) {
 	// If we're in a channel, and it's on the network that is being removed,

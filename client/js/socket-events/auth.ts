@@ -1,7 +1,7 @@
 import socket from "../socket";
 import storage from "../localStorage";
 import {router, navigate} from "../router";
-import store from "../store";
+import {store} from "../store";
 import location from "../location";
 let lastServerHash = null;
 
