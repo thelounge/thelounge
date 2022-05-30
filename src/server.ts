@@ -677,18 +677,21 @@ function initializeClient(
 
 	const sendSessionList = () => {
 		// TODO: this should use the ClientSession type currently in client
-		const sessions = _.map(client.config.sessions, (session, sessionToken) => ({
-			current: sessionToken === token,
-			active: _.reduce(
-				client.attachedClients,
-				(count, attachedClient) => count + (attachedClient.token === sessionToken ? 1 : 0),
-				0
-			),
-			lastUse: session.lastUse,
-			ip: session.ip,
-			agent: session.agent,
-			token: sessionToken, // TODO: Ideally don't expose actual tokens to the client
-		}));
+		const sessions = _.map(client.config.sessions, (session, sessionToken) => {
+			return {
+				current: sessionToken === token,
+				active: _.reduce(
+					client.attachedClients,
+					(count, attachedClient) =>
+						count + (attachedClient.token === sessionToken ? 1 : 0),
+					0
+				),
+				lastUse: session.lastUse,
+				ip: session.ip,
+				agent: session.agent,
+				token: sessionToken, // TODO: Ideally don't expose actual tokens to the client
+			};
+		});
 
 		socket.emit("sessions:list", sessions);
 	};
@@ -815,7 +818,7 @@ function initializeClient(
 
 	void socket.join(client.id?.toString());
 
-	const sendInitEvent = (tokenToSend) => {
+	const sendInitEvent = (tokenToSend: string | null) => {
 		socket.emit("init", {
 			active: openChannel,
 			networks: client.networks.map((network) =>
@@ -828,13 +831,12 @@ function initializeClient(
 
 	if (Config.values.public) {
 		sendInitEvent(null);
-	} else if (token === null) {
+	} else if (!token) {
 		client.generateToken((newToken) => {
 			token = client.calculateTokenHash(newToken);
 			client.attachedClients[socket.id].token = token;
 
 			client.updateSession(token, getClientIp(socket), socket.request);
-
 			sendInitEvent(newToken);
 		});
 	} else {

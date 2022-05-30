@@ -58,6 +58,7 @@ const router = createRouter({
 					name: "Account",
 					path: "account",
 					component: AccountSettings,
+					props: true,
 				},
 				{
 					name: "Notifications",

@@ -102,7 +102,7 @@
 import socket from "../../js/socket";
 import RevealPassword from "../RevealPassword.vue";
 import Session from "../Session.vue";
-import {computed, defineComponent, onMounted, ref} from "vue";
+import {computed, defineComponent, onMounted, PropType, ref} from "vue";
 import {useStore} from "../../js/store";
 
 export default defineComponent({
@@ -111,9 +111,15 @@ export default defineComponent({
 		RevealPassword,
 		Session,
 	},
-	setup() {
+	props: {
+		settingsForm: {
+			type: Object as PropType<HTMLFormElement>,
+			required: true,
+		},
+	},
+	setup(props) {
 		const store = useStore();
-		const settingsForm = ref<HTMLFormElement>();
+
 		const passwordErrors = {
 			missing_fields: "Please enter a new password",
 			password_mismatch: "Both new password fields must match",
@@ -143,7 +149,8 @@ export default defineComponent({
 		});
 
 		const changePassword = () => {
-			const allFields = new FormData(settingsForm.value);
+			const allFields = new FormData(props.settingsForm);
+
 			const data = {
 				old_password: allFields.get("old_password"),
 				new_password: allFields.get("new_password"),
