@@ -997,8 +997,10 @@ function performAuthentication(this: Socket, data) {
 		}
 	}
 
-	// Perform password checking
-	Auth.auth(manager, client, data.user, data.password, authCallback);
+	Auth.initialize().then(() => {
+		// Perform password checking
+		Auth.auth(manager, client, data.user, data.password, authCallback);
+	});
 }
 
 function reverseDnsLookup(ip: string, callback: (hostname: string) => void) {
