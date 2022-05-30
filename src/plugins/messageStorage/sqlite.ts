@@ -48,6 +48,9 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 		const logsPath = Config.getUserLogsPath();
 		const sqlitePath = path.join(logsPath, `${this.client.name}.sqlite3`);
 
+		log.info("Logs path", logsPath);
+		log.info("Sqlite path", sqlitePath);
+
 		try {
 			fs.mkdirSync(logsPath, {recursive: true});
 		} catch (e: any) {

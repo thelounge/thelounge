@@ -123,7 +123,7 @@ router.beforeEach((to, from, next) => {
 	}
 
 	// Disallow navigating to invalid networks
-	if (to.name === "NetworkEdit" && !store.getters.findNetwork(to.params.uuid)) {
+	if (to.name === "NetworkEdit" && !store.getters.findNetwork(String(to.params.uuid))) {
 		next(false);
 		return;
 	}
@@ -156,7 +156,7 @@ router.afterEach((to) => {
 		const channel = store.state.activeChannel.channel;
 
 		if (to.name !== "RoutedChat") {
-			store.commit("activeChannel", null);
+			store.commit("activeChannel", undefined);
 		}
 
 		// When switching out of a channel, mark everything as read
