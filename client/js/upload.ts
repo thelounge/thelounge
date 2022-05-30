@@ -273,11 +273,15 @@ class Uploader {
 		const fullURL = new URL(url, location.toString()).toString();
 		const textbox = document.getElementById("input");
 
-		if (!textbox) {
+		if (!(textbox instanceof HTMLTextAreaElement)) {
 			throw new Error("Could not find textbox in upload");
 		}
 
 		const initStart = textbox.selectionStart;
+
+		if (!initStart) {
+			throw new Error("Could not find selection start in textbox in upload");
+		}
 
 		// Get the text before the cursor, and add a space if it's not in the beginning
 		const headToCursor = initStart > 0 ? textbox.value.substr(0, initStart) + " " : "";

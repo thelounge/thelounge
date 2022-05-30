@@ -27,8 +27,9 @@ type ClientUser = User & {
 	//
 };
 
-type ClientMessage = Message & {
+type ClientMessage = Omit<Message, "users"> & {
 	time: number;
+	users: string[];
 };
 
 type ClientChan = Omit<Chan, "users" | "messages"> & {

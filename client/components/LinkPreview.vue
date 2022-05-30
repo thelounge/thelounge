@@ -146,7 +146,7 @@ import eventbus from "../js/eventbus";
 import friendlysize from "../js/helpers/friendlysize";
 import {useStore} from "../js/store";
 import type {ClientChan, ClientLinkPreview} from "../js/types";
-import {imageViewerKey, useImageViewer} from "./App.vue";
+import {imageViewerKey} from "./App.vue";
 
 export default defineComponent({
 	name: "LinkPreview",
@@ -166,6 +166,7 @@ export default defineComponent({
 
 		const showMoreButton = ref(false);
 		const isContentShown = ref(false);
+		const imageViewer = inject(imageViewerKey);
 
 		const content = ref<HTMLDivElement | null>(null);
 		const container = ref<HTMLDivElement | null>(null);
@@ -234,9 +235,8 @@ export default defineComponent({
 
 		const onThumbnailClick = (e: MouseEvent) => {
 			e.preventDefault();
-			const imageViewer = inject(imageViewerKey);
 
-			if (!imageViewer.value) {
+			if (!imageViewer?.value) {
 				return;
 			}
 

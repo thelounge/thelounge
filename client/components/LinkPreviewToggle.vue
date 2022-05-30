@@ -26,7 +26,6 @@ export default defineComponent({
 		const onClick = () => {
 			props.link.shown = !props.link.shown;
 			emit("toggle-link-preview", props.link, props.message);
-			// this.$parent.$emit("toggle-link-preview", this.link, this.$parent.message);
 		};
 
 		return {

@@ -38,7 +38,7 @@ function sortParts(a: Part, b: Part) {
 	return a.start - b.start || b.end - a.end;
 }
 
-type MergedParts = (TextPart | NamePart | EmojiPart | ChannelPart | LinkPart)[];
+export type MergedParts = (TextPart | NamePart | EmojiPart | ChannelPart | LinkPart)[];
 
 // Merge the style fragments within the text parts, taking into account
 // boundaries and text sections that have not matched to links or channels.

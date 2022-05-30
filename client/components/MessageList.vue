@@ -104,7 +104,8 @@ export default defineComponent({
 		channel: {type: Object as PropType<ClientChan>, required: true},
 		focused: String,
 	},
-	setup(props) {
+	emits: ["scrolled-to-bottom"],
+	setup(props, {emit}) {
 		const store = useStore();
 
 		const chat = ref<HTMLDivElement | null>(null);
@@ -116,7 +117,7 @@ export default defineComponent({
 
 		const jumpToBottom = () => {
 			skipNextScrollEvent.value = true;
-			props.channel.scrolledToBottom = true;
+			emit("scrolled-to-bottom", true);
 
 			const el = chat.value;
 
@@ -358,7 +359,7 @@ export default defineComponent({
 				return;
 			}
 
-			props.channel.scrolledToBottom = el.scrollHeight - el.scrollTop - el.offsetHeight <= 30;
+			emit("scrolled-to-bottom", el.scrollHeight - el.scrollTop - el.offsetHeight <= 30);
 		};
 
 		const handleResize = () => {
@@ -385,7 +386,7 @@ export default defineComponent({
 		watch(
 			() => props.channel.id,
 			() => {
-				props.channel.scrolledToBottom = true;
+				emit("scrolled-to-bottom", true);
 
 				// Re-add the intersection observer to trigger the check again on channel switch
 				// Otherwise if last channel had the button visible, switching to a new channel won't trigger the history
@@ -434,6 +435,7 @@ export default defineComponent({
 			chat,
 			store,
 			onShowMoreClick,
+			loadMoreButton,
 			onCopy,
 			condensedMessages,
 			shouldDisplayDateMarker,

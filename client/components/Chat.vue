@@ -105,6 +105,7 @@
 						:network="network"
 						:channel="channel"
 						:focused="focused"
+						@scrolled-to-bottom="onScrolledToBottom"
 					/>
 				</div>
 			</div>
@@ -174,10 +175,12 @@ export default defineComponent({
 			return undefined;
 		});
 
+		const onScrolledToBottom = (data: boolean) => {
+			props.channel.scrolledToBottom = data;
+		};
+
 		const channelChanged = () => {
 			// Triggered when active channel is set or changed
-			// props.channel.highlight = 0;
-			// props.channel.unread = 0;
 			emit("channel-changed", props.channel);
 
 			socket.emit("open", props.channel.id);
@@ -268,6 +271,7 @@ export default defineComponent({
 			topicInput,
 			specialComponent,
 			editTopicRef,
+			onScrolledToBottom,
 			hideUserVisibleError,
 			editTopic,
 			saveTopic,

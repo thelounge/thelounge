@@ -42,7 +42,6 @@ import {switchToChannel} from "../js/router";
 
 export default defineComponent({
 	name: "ChannelWrapper",
-
 	props: {
 		network: {
 			type: Object as PropType<ClientNetwork>,
@@ -82,7 +81,7 @@ export default defineComponent({
 				}
 			}
 
-			return `${type}: ${props.channel.name} ${extra.length ? `(${extra.join(", ")})` : ""}`;
+			return `${type}: ${props.channel.name}${extra.length ? `(${extra.join(", ")})` : ""}`;
 		};
 
 		const click = () => {

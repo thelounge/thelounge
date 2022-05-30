@@ -122,6 +122,40 @@ export default defineComponent({
 			store.commit("sidebarOpen", state);
 		};
 
+		const onTouchEnd = () => {
+			if (!touchStartPos.value?.screenX || !touchCurPos.value?.screenX) {
+				return;
+			}
+
+			const diff = touchCurPos.value.screenX - touchStartPos.value.screenX;
+			const absDiff = Math.abs(diff);
+
+			if (
+				absDiff > menuWidth.value / 2 ||
+				(Date.now() - touchStartTime.value < 180 && absDiff > 50)
+			) {
+				toggle(diff > 0);
+			}
+
+			document.body.removeEventListener("touchmove", onTouchMove);
+			document.body.removeEventListener("touchend", onTouchEnd);
+
+			store.commit("sidebarDragging", false);
+
+			if (sidebar.value) {
+				sidebar.value.style.transform = "";
+			}
+
+			if (props.overlay) {
+				props.overlay.style.opacity = "";
+			}
+
+			touchStartPos.value = null;
+			touchCurPos.value = null;
+			touchStartTime.value = 0;
+			menuIsMoving.value = false;
+		};
+
 		const onTouchMove = (e: TouchEvent) => {
 			const touch = (touchCurPos.value = e.touches.item(0));
 
@@ -173,42 +207,16 @@ export default defineComponent({
 				sidebar.value.style.transform = "translate3d(" + distX.toString() + "px, 0, 0)";
 			}
 
-			props.overlay.style.opacity = `${distX / menuWidth.value}`;
-		};
-
-		const onTouchEnd = () => {
-			if (!touchStartPos.value?.screenX || !touchCurPos.value?.screenX) {
-				return;
+			if (props.overlay) {
+				props.overlay.style.opacity = `${distX / menuWidth.value}`;
 			}
-
-			const diff = touchCurPos.value.screenX - touchStartPos.value.screenX;
-			const absDiff = Math.abs(diff);
-
-			if (
-				absDiff > menuWidth.value / 2 ||
-				(Date.now() - touchStartTime.value < 180 && absDiff > 50)
-			) {
-				toggle(diff > 0);
-			}
-
-			document.body.removeEventListener("touchmove", onTouchMove);
-			document.body.removeEventListener("touchend", onTouchEnd);
-
-			store.commit("sidebarDragging", false);
-
-			if (sidebar.value) {
-				sidebar.value.style.transform = "";
-			}
-
-			props.overlay.style.opacity = "";
-
-			touchStartPos.value = null;
-			touchCurPos.value = null;
-			touchStartTime.value = 0;
-			menuIsMoving.value = false;
 		};
 
 		const onTouchStart = (e: TouchEvent) => {
+			if (!sidebar.value) {
+				return;
+			}
+
 			touchStartPos.value = touchCurPos.value = e.touches.item(0);
 
 			if (e.touches.length !== 1) {
@@ -216,7 +224,7 @@ export default defineComponent({
 				return;
 			}
 
-			const styles = window.getComputedStyle(this.$refs.sidebar);
+			const styles = window.getComputedStyle(sidebar.value);
 
 			menuWidth.value = parseFloat(styles.width);
 			menuIsAbsolute.value = styles.position === "absolute";

@@ -17,11 +17,10 @@ import eventbus from "../js/eventbus";
 import colorClass from "../js/helpers/colorClass";
 import type {ClientChan, ClientNetwork, ClientUser} from "../js/types";
 
-type UsernameUser = Partial<UserInMessage> &
-	Partial<{
-		nick: string;
-		mode: string;
-	}>;
+type UsernameUser = Partial<UserInMessage> & {
+	mode?: string;
+	nick: string;
+};
 
 export default defineComponent({
 	name: "Username",
@@ -47,8 +46,7 @@ export default defineComponent({
 
 			return props.user.mode;
 		});
-
-		const nickColor = computed(() => colorClass(props.user.nick!));
+		const nickColor = computed(() => colorClass(props.user.nick));
 
 		const hover = () => {
 			if (props.onHover) {

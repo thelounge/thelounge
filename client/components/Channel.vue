@@ -17,12 +17,12 @@
 				<span class="parted-channel-icon" />
 			</span>
 			<span class="close-tooltip tooltipped tooltipped-w" aria-label="Leave">
-				<button class="close" aria-label="Leave" @click.stop="close()" />
+				<button class="close" aria-label="Leave" @click.stop="close" />
 			</span>
 		</template>
 		<template v-else>
 			<span class="close-tooltip tooltipped tooltipped-w" aria-label="Close">
-				<button class="close" aria-label="Close" @click.stop="close()" />
+				<button class="close" aria-label="Close" @click.stop="close" />
 			</span>
 		</template>
 	</ChannelWrapper>
@@ -34,30 +34,6 @@ import roundBadgeNumber from "../js/helpers/roundBadgeNumber";
 import useCloseChannel from "../js/hooks/use-close-channel";
 import {ClientChan, ClientNetwork} from "../js/types";
 import ChannelWrapper from "./ChannelWrapper.vue";
-
-// export default defineComponent({
-// 	name: "Channel",
-// 	components: {
-// 		ChannelWrapper,
-// 	},
-// 	props: {
-// 		network: {type: Object as PropType<ClientNetwork>, required: true},
-// 		channel: {type: Object as PropType<ClientChan>, required: true},
-// 		active: Boolean,
-// 		isFiltering: Boolean,
-// 	},
-// 	computed: {
-// 		unreadCount(): string {
-// 			return roundBadgeNumber(this.channel.unread);
-// 		},
-// 	},
-// 	methods: {
-// 		close(): void {
-// 			this.$root?.closeChannel(this.channel);
-// 		},
-// 	},
-// });
-//
 
 export default defineComponent({
 	name: "Channel",

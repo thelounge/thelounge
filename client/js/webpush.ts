@@ -26,7 +26,7 @@ socket.once("push:issubscribed", function (hasSubscriptionOnServer) {
 				// If client has push registration but the server knows nothing about it,
 				// this subscription is broken and client has to register again
 				if (subscription && hasSubscriptionOnServer === false) {
-					subscription.unsubscribe().then((successful) => {
+					void subscription.unsubscribe().then((successful) => {
 						store.commit(
 							"pushNotificationState",
 							successful ? "supported" : "unsupported"

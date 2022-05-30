@@ -15,7 +15,7 @@ import inputs from "./plugins/inputs";
 import PublicClient from "./plugins/packages/publicClient";
 import SqliteMessageStorage from "./plugins/messageStorage/sqlite";
 import TextFileMessageStorage from "./plugins/messageStorage/text";
-import Network, {NetworkWithIrcFramework} from "./models/network";
+import Network, {IgnoreListItem, NetworkWithIrcFramework} from "./models/network";
 import ClientManager from "./clientManager";
 import {MessageStorage, SearchQuery, SearchResponse} from "./plugins/messageStorage/types";
 
@@ -219,8 +219,7 @@ class Client {
 		let network: Network | null = null;
 		let chan: Chan | null | undefined = null;
 
-		for (const i in this.networks) {
-			const n = this.networks[i];
+		for (const n of this.networks) {
 			chan = _.find(n.channels, {id: channelId});
 
 			if (chan) {
@@ -236,7 +235,7 @@ class Client {
 		return false;
 	}
 
-	connect(args: any, isStartup = false) {
+	connect(args: Record<string, any>, isStartup = false) {
 		const client = this;
 		const channels: Chan[] = [];
 
@@ -267,19 +266,20 @@ class Client {
 					"User '" +
 						client.name +
 						"' on network '" +
-						args.name +
+						(args.name as string) +
 						"' has an invalid channel which has been ignored"
 				);
 			}
 		}
 
+		// TODO; better typing for args
 		const network = new Network({
-			uuid: args.uuid,
+			uuid: args.uuid as string,
 			name: String(
 				args.name || (Config.values.lockNetwork ? Config.values.defaults.name : "") || ""
 			),
 			host: String(args.host || ""),
-			port: parseInt(args.port, 10),
+			port: parseInt(args.port as string, 10),
 			tls: !!args.tls,
 			userDisconnected: !!args.userDisconnected,
 			rejectUnauthorized: !!args.rejectUnauthorized,
@@ -291,9 +291,9 @@ class Client {
 			sasl: String(args.sasl || ""),
 			saslAccount: String(args.saslAccount || ""),
 			saslPassword: String(args.saslPassword || ""),
-			commands: args.commands || [],
+			commands: (args.commands as string[]) || [],
 			channels: channels,
-			ignoreList: args.ignoreList ? args.ignoreList : [],
+			ignoreList: args.ignoreList ? (args.ignoreList as IgnoreListItem[]) : [],
 
 			proxyEnabled: !!args.proxyEnabled,
 			proxyHost: String(args.proxyHost || ""),
@@ -316,6 +316,8 @@ class Client {
 
 		(network as NetworkWithIrcFramework).createIrcFramework(client);
 
+		// TODO
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		events.forEach(async (plugin) => {
 			(await import(`./plugins/irc-events/${plugin}`)).default.apply(client, [
 				network.irc,
@@ -363,7 +365,7 @@ class Client {
 		let friendlyAgent = "";
 
 		if (agent.browser.name) {
-			friendlyAgent = `${agent.browser.name} ${agent.browser.major}`;
+			friendlyAgent = `${agent.browser.name} ${agent.browser.major || ""}`;
 		} else {
 			friendlyAgent = "Unknown browser";
 		}
@@ -421,7 +423,7 @@ class Client {
 		// so that reloading the page will open this channel
 		this.lastActiveChannel = target.chan.id;
 
-		let text = data.text;
+		let text: string = data.text;
 
 		// This is either a normal message or a command escaped with a leading '/'
 		if (text.charAt(0) !== "/" || text.charAt(1) === "/") {
@@ -438,11 +440,11 @@ class Client {
 
 			text = "say " + text.replace(/^\//, "");
 		} else {
-			text = text.substr(1);
+			text = text.substring(1);
 		}
 
 		const args = text.split(" ");
-		const cmd = args.shift().toLowerCase();
+		const cmd = args?.shift()?.toLowerCase() || "";
 
 		const irc = target.network.irc;
 		let connected = irc && irc.connection && irc.connection.connected;

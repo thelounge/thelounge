@@ -326,7 +326,9 @@ export default defineComponent({
 		// 2. If image is zoomed in, simply dragging it will move it around
 		const onImageMouseDown = (e: MouseEvent) => {
 			// todo: ignore if in touch event currently?
+
 			// only left mouse
+			// TODO: e.buttons?
 			if (e.which !== 1) {
 				return;
 			}
@@ -467,6 +469,7 @@ export default defineComponent({
 			nextImage,
 			onImageTouchStart,
 			computeImageStyles,
+			viewer,
 		};
 	},
 });

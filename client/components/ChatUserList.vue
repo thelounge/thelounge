@@ -35,8 +35,8 @@
 						v-for="user in users"
 						:key="user.original.nick + '-search'"
 						:on-hover="hoverUser"
-						:active="user.original === (activeUser as any)"
-						:user="user.original"
+						:active="user.original === activeUser"
+						:user="(user.original as any)"
 						v-html="user.string"
 					/>
 				</template>
@@ -241,6 +241,7 @@ export default defineComponent({
 			groupedUsers,
 			userSearchInput,
 			activeUser,
+			userlist,
 
 			setUserSearchInput,
 			getModeClass,

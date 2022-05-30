@@ -1,22 +1,44 @@
+// TODO: type
+// @ts-nocheck
+
+"use strict";
+
+import {h as createElement, VNode} from "vue";
 import parseStyle from "./ircmessageparser/parseStyle";
-import findChannels from "./ircmessageparser/findChannels";
-import {findLinks} from "./ircmessageparser/findLinks";
-import findEmoji from "./ircmessageparser/findEmoji";
-import findNames from "./ircmessageparser/findNames";
-import merge from "./ircmessageparser/merge";
+import findChannels, {ChannelPart} from "./ircmessageparser/findChannels";
+import {findLinks, LinkPart} from "./ircmessageparser/findLinks";
+import findEmoji, {EmojiPart} from "./ircmessageparser/findEmoji";
+import findNames, {NamePart} from "./ircmessageparser/findNames";
+import merge, {MergedParts, Part} from "./ircmessageparser/merge";
 import emojiMap from "./fullnamemap.json";
 import LinkPreviewToggle from "../../components/LinkPreviewToggle.vue";
 import LinkPreviewFileSize from "../../components/LinkPreviewFileSize.vue";
 import InlineChannel from "../../components/InlineChannel.vue";
 import Username from "../../components/Username.vue";
-import {h as createElement, VNode} from "vue";
 import {ClientMessage, ClientNetwork} from "../types";
 
 const emojiModifiersRegex = /[\u{1f3fb}-\u{1f3ff}]|\u{fe0f}/gu;
 
+type Fragment = {
+	class?: string[];
+	text?: string;
+};
+
+type StyledFragment = Fragment & {
+	textColor?: string;
+	bgColor?: string;
+	hexColor?: string;
+	hexBgColor?: string;
+
+	bold?: boolean;
+	italic?: boolean;
+	underline?: boolean;
+	monospace?: boolean;
+	strikethrough?: boolean;
+};
+
 // Create an HTML `span` with styling information for a given fragment
-// TODO: remove any
-function createFragment(fragment: Record<any, any>) {
+function createFragment(fragment: StyledFragment): VNode | string | undefined {
 	const classes: string[] = [];
 
 	if (fragment.bold) {
@@ -24,12 +46,10 @@ function createFragment(fragment: Record<any, any>) {
 	}
 
 	if (fragment.textColor !== undefined) {
-		// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 		classes.push("irc-fg" + fragment.textColor);
 	}
 
 	if (fragment.bgColor !== undefined) {
-		// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 		classes.push("irc-bg" + fragment.bgColor);
 	}
 
@@ -49,7 +69,14 @@ function createFragment(fragment: Record<any, any>) {
 		classes.push("irc-monospace");
 	}
 
-	const data = {} as Record<string, any>;
+	const data: {
+		class?: string[];
+		style?: Record<string, string>;
+	} = {
+		class: undefined,
+		style: undefined,
+	};
+
 	let hasData = false;
 
 	if (classes.length > 0) {
@@ -60,17 +87,15 @@ function createFragment(fragment: Record<any, any>) {
 	if (fragment.hexColor) {
 		hasData = true;
 		data.style = {
-			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			color: `#${fragment.hexColor}`,
 		};
 
 		if (fragment.hexBgColor) {
-			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			data.style["background-color"] = `#${fragment.hexBgColor}`;
 		}
 	}
 
-	return hasData ? createElement("span", data, fragment.text) : (fragment.text as string);
+	return hasData ? createElement("span", data, fragment.text) : fragment.text;
 }
 
 // Transform an IRC message potentially filled with styling control codes, URLs,
@@ -83,42 +108,40 @@ function parse(text: string, message?: ClientMessage, network?: ClientNetwork) {
 	// On the plain text, find channels and URLs, returned as "parts". Parts are
 	// arrays of objects containing start and end markers, as well as metadata
 	// depending on what was found (channel or link).
-	const channelPrefixes = network?.serverOptions?.CHANTYPES || ["#", "&"];
-	const userModes = network?.serverOptions?.PREFIX.symbols || ["!", "@", "%", "+"];
+	const channelPrefixes = network ? network.serverOptions.CHANTYPES : ["#", "&"];
+	const userModes = network
+		? network.serverOptions.PREFIX?.prefix?.map((pref) => pref.symbol)
+		: ["!", "@", "%", "+"];
 	const channelParts = findChannels(cleanText, channelPrefixes, userModes);
 	const linkParts = findLinks(cleanText);
 	const emojiParts = findEmoji(cleanText);
-	// TODO: remove type casting.
-	const nameParts = findNames(cleanText, message ? (message.users as string[]) || [] : []);
+	const nameParts = findNames(cleanText, message ? message.users || [] : []);
 
-	const parts = [...channelParts, ...linkParts, ...emojiParts, ...nameParts];
+	const parts = (channelParts as MergedParts)
+		.concat(linkParts)
+		.concat(emojiParts)
+		.concat(nameParts);
 
 	// Merge the styling information with the channels / URLs / nicks / text objects and
 	// generate HTML strings with the resulting fragments
 	return merge(parts, styleFragments, cleanText).map((textPart) => {
-		const fragments = textPart.fragments?.map((fragment) => createFragment(fragment)) as (
-			| VNode
-			| string
-		)[];
+		const fragments = textPart.fragments.map((fragment) => createFragment(fragment));
 
 		// Wrap these potentially styled fragments with links and channel buttons
-		// TODO: fix typing
-		if ("link" in textPart) {
+		if (textPart.link) {
 			const preview =
 				message &&
 				message.previews &&
-				// @ts-ignore
 				message.previews.find((p) => p.link === textPart.link);
 			const link = createElement(
 				"a",
 				{
-					// @ts-ignore
-					"^href": textPart.link,
-					"^dir": preview ? null : "auto",
-					"^target": "_blank",
-					"^rel": "noopener",
+					href: textPart.link,
+					dir: preview ? null : "auto",
+					target: "_blank",
+					rel: "noopener",
 				},
-				() => fragments
+				fragments
 			);
 
 			if (!preview) {
@@ -129,22 +152,16 @@ function parse(text: string, message?: ClientMessage, network?: ClientNetwork) {
 
 			if (preview.size > 0) {
 				linkEls.push(
-					// @ts-ignore
 					createElement(LinkPreviewFileSize, {
-						props: {
-							size: preview.size,
-						},
+						size: preview.size,
 					})
 				);
 			}
 
 			linkEls.push(
-				// @ts-ignore
 				createElement(LinkPreviewToggle, {
-					props: {
-						link: preview,
-						message: message,
-					},
+					link: preview,
+					message: message,
 				})
 			);
 
@@ -153,66 +170,49 @@ function parse(text: string, message?: ClientMessage, network?: ClientNetwork) {
 			return createElement(
 				"span",
 				{
-					attrs: {
-						dir: "auto",
-					},
+					dir: "auto",
 				},
-				() => linkEls
+				linkEls
 			);
-
-			// @ts-ignore
 		} else if (textPart.channel) {
 			return createElement(
 				InlineChannel,
 				{
-					props: {
-						// @ts-ignore
-						channel: textPart.channel,
-					},
+					channel: textPart.channel,
 				},
-				() => fragments
+				{
+					default: () => fragments,
+				}
 			);
-
-			// @ts-ignore
 		} else if (textPart.emoji) {
-			// @ts-ignore
 			const emojiWithoutModifiers = textPart.emoji.replace(emojiModifiersRegex, "");
 			const title = emojiMap[emojiWithoutModifiers]
-				? `Emoji: ${emojiMap[emojiWithoutModifiers] as string}`
+				? // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+				  `Emoji: ${emojiMap[emojiWithoutModifiers]}`
 				: null;
 
 			return createElement(
 				"span",
 				{
 					class: ["emoji"],
-					attrs: {
-						role: "img",
-						"aria-label": title,
-						title: title,
-					},
+					role: "img",
+					"aria-label": title,
+					title: title,
 				},
-				() => fragments
+				fragments
 			);
-			// @ts-ignore
 		} else if (textPart.nick) {
 			return createElement(
-				// @ts-ignore
 				Username,
 				{
-					props: {
-						user: {
-							// @ts-ignore
-							nick: textPart.nick,
-						},
-						// @ts-ignore
-						channel: textPart.channel,
-						network,
+					user: {
+						nick: textPart.nick,
 					},
-					attrs: {
-						dir: "auto",
-					},
+					dir: "auto",
 				},
-				() => fragments
+				{
+					default: () => fragments,
+				}
 			);
 		}
 

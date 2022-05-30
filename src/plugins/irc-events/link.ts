@@ -30,6 +30,9 @@ export type LinkPreview = {
 	shown: boolean | null;
 	error: undefined | string;
 	message: undefined | string;
+
+	media: string;
+	mediaType: string;
 };
 
 export default function (client: Client, chan: Chan, msg: Msg, cleanText: string) {
@@ -65,6 +68,8 @@ export default function (client: Client, chan: Chan, msg: Msg, cleanText: string
 			shown: null,
 			error: undefined,
 			message: undefined,
+			media: "",
+			mediaType: "",
 		};
 
 		cleanLinks.push(preview);
@@ -88,11 +93,13 @@ export default function (client: Client, chan: Chan, msg: Msg, cleanText: string
 }
 
 function parseHtml(preview, res, client: Client) {
-	return new Promise((resolve) => {
+	// TODO:
+	// eslint-disable-next-line @typescript-eslint/no-misused-promises
+	return new Promise((resolve: (preview: LinkPreview | null) => void) => {
 		const $ = cheerio.load(res.data);
 
 		return parseHtmlMedia($, preview, client)
-			.then((newRes) => resolve(newRes))
+			.then((newRes) => resolve(newRes as any))
 			.catch(() => {
 				preview.type = "link";
 				preview.head =
@@ -140,6 +147,8 @@ function parseHtml(preview, res, client: Client) {
 								preview.thumbActualUrl = thumb;
 							}
 
+							// TODO
+							// @ts-ignore
 							resolve(resThumb);
 						})
 						.catch(() => resolve(null));
@@ -466,7 +475,10 @@ function fetch(uri: string, headers: Record<string, string>) {
 				})
 				.on("error", (e) => reject(e))
 				.on("data", (data) => {
-					buffer = Buffer.concat([buffer, data], buffer.length + data.length);
+					buffer = Buffer.concat(
+						[buffer, data],
+						buffer.length + (data as Array<any>).length
+					);
 
 					if (buffer.length >= limit) {
 						gotStream.destroy();
@@ -474,7 +486,7 @@ function fetch(uri: string, headers: Record<string, string>) {
 				})
 				.on("end", () => gotStream.destroy())
 				.on("close", () => {
-					let type: string = "";
+					let type = "";
 
 					// If we downloaded more data then specified in Content-Length, use real data size
 					const size = contentLength > buffer.length ? contentLength : buffer.length;
