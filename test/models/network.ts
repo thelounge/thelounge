@@ -8,7 +8,6 @@ import Network, {NetworkWithIrcFramework} from "../../src/models/network";
 import Config from "../../src/config";
 import STSPolicies from "../../src/plugins/sts";
 import ClientCertificate from "../../src/plugins/clientCertificate";
-import Client from "../../src/client";
 
 describe("Network", function () {
 	describe("Network(attr)", function () {

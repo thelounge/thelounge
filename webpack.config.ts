@@ -94,6 +94,15 @@ const config: webpack.Configuration = {
 	},
 	plugins: [
 		new VueLoaderPlugin(),
+		// new ForkTsCheckerWebpackPlugin({
+		// 	typescript: {
+		// 		diagnosticOptions: {
+		// 			semantic: true,
+		// 			syntactic: true,
+		// 		},
+		// 		configFile: path.resolve(__dirname, "client/tsconfig.json"),
+		// 	},
+		// }),
 		new webpack.DefinePlugin({
 			__VUE_OPTIONS_API__: true,
 			__VUE_PROD_DEVTOOLS__: false,
