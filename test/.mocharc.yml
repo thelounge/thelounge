@@ -8,7 +8,7 @@ ignore: "test/client/**"
 extension: ["ts", "js"]
 require:
   - "ts-node/register"
-  - "jsdom-global/register"
+  # - "jsdom-global/register"
   - "test/fixtures/env.ts"
 globals:
   - "__VUE_OPTIONS_API__"
