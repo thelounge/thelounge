@@ -229,9 +229,12 @@ export default defineComponent({
 			});
 		};
 
-		watch(props.channel, () => {
-			channelChanged();
-		});
+		watch(
+			() => props.channel,
+			() => {
+				channelChanged();
+			}
+		);
 
 		const editTopicRef = ref(props.channel.editTopic);
 		watch(editTopicRef, (newTopic) => {
