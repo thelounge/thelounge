@@ -31,7 +31,7 @@ export default <IrcEventHandler>function (irc, network) {
 		handleMessage(data);
 	});
 
-	function handleMessage(data) {
+	function handleMessage(data: any) {
 		let chan;
 		let from;
 		let highlight = false;

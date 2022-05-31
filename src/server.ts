@@ -27,6 +27,12 @@ import packages from "./plugins/packages/index";
 import {NetworkWithIrcFramework} from "./models/network";
 import {ChanType} from "./models/chan";
 import Utils from "./command-line/utils";
+import type {
+	ClientToServerEvents,
+	ServerToClientEvents,
+	InterServerEvents,
+	SocketData,
+} from "./types/socket-events";
 
 type ServerOptions = {
 	dev: boolean;
@@ -212,7 +218,12 @@ export default async function (
 			return;
 		}
 
-		const sockets = new Server(server, {
+		const sockets = new Server<
+			ClientToServerEvents,
+			ServerToClientEvents,
+			InterServerEvents,
+			SocketData
+		>(server, {
 			wsEngine: wsServer,
 			cookie: false,
 			serveClient: false,

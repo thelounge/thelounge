@@ -24,7 +24,7 @@ socket.on("init", function (data) {
 			window.g_TheLoungeRemoveLoading();
 		}
 
-		nextTick(() => {
+		void nextTick(() => {
 			// If we handled query parameters like irc:// links or just general
 			// connect parameters in public mode, then nothing to do here
 			if (!handleQueryParams()) {

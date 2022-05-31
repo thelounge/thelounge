@@ -28,7 +28,7 @@ export default defineComponent({
 		const networkData = ref<NetworkFormDefaults | null>(null);
 
 		const setNetworkData = () => {
-			socket.emit("network:get", route.params.uuid);
+			socket.emit("network:get", String(route.params.uuid));
 			networkData.value = store.getters.findNetwork(route.params.uuid as string);
 		};
 
@@ -43,13 +43,6 @@ export default defineComponent({
 			switchToChannel(network.channels[0]);
 		};
 
-		// TODO: verify we dont need to watch uuid specifically
-		// was:
-		// watch: {
-		// 	"$route.params.uuid"() {
-		// 		this.setNetworkData();
-		// 	},
-		// },
 		watch(
 			() => route.params.uuid,
 			(newValue) => {

@@ -174,7 +174,8 @@ export default defineComponent({
 			}
 
 			socket.once("change-password", (response) => {
-				passwordChangeStatus.value = response;
+				// TODO type
+				passwordChangeStatus.value = response as any;
 			});
 
 			socket.emit("change-password", data);

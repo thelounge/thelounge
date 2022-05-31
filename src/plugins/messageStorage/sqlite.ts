@@ -7,9 +7,12 @@ import Config from "../../config";
 import Msg, {Message} from "../../models/msg";
 import Client from "../../client";
 import Chan, {Channel} from "../../models/chan";
-import type {SearchResponse, SqliteMessageStorage as ISqliteMessageStorage} from "./types";
+import type {
+	SearchResponse,
+	SearchQuery,
+	SqliteMessageStorage as ISqliteMessageStorage,
+} from "./types";
 import Network from "../../models/network";
-import {SearchQuery} from "./types";
 
 // TODO; type
 let sqlite3: any;
@@ -69,7 +72,7 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 				"SELECT value FROM options WHERE name = 'schema_version'",
 				(err, row) => {
 					if (err) {
-						return log.error(`Failed to retrieve schema version: ${err}`);
+						return log.error(`Failed to retrieve schema version: ${err.toString()}`);
 					}
 
 					// New table

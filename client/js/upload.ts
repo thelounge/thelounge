@@ -279,15 +279,11 @@ class Uploader {
 
 		const initStart = textbox.selectionStart;
 
-		if (!initStart) {
-			throw new Error("Could not find selection start in textbox in upload");
-		}
-
 		// Get the text before the cursor, and add a space if it's not in the beginning
-		const headToCursor = initStart > 0 ? textbox.value.substr(0, initStart) + " " : "";
+		const headToCursor = initStart > 0 ? textbox.value.substring(0, initStart) + " " : "";
 
 		// Get the remaining text after the cursor
-		const cursorToTail = textbox.value.substr(initStart);
+		const cursorToTail = textbox.value.substring(initStart);
 
 		// Construct the value until the point where we want the cursor to be
 		const textBeforeTail = headToCursor + fullURL + " ";

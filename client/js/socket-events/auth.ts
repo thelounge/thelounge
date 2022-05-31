@@ -3,7 +3,7 @@ import storage from "../localStorage";
 import {router, navigate} from "../router";
 import {store} from "../store";
 import location from "../location";
-let lastServerHash = null;
+let lastServerHash: string | null = null;
 
 declare global {
 	interface Window {

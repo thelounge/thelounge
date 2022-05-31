@@ -28,7 +28,7 @@ const timeFormats = {
 
 export default {
 	colorCodeMap,
-	commands: [],
+	commands: [] as string[],
 	condensedTypes,
 	timeFormats,
 	// Same value as media query in CSS that forces sidebars to become overlays

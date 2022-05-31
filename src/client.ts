@@ -17,7 +17,7 @@ import SqliteMessageStorage from "./plugins/messageStorage/sqlite";
 import TextFileMessageStorage from "./plugins/messageStorage/text";
 import Network, {IgnoreListItem, NetworkWithIrcFramework} from "./models/network";
 import ClientManager from "./clientManager";
-import {MessageStorage, SearchQuery, SearchResponse} from "./plugins/messageStorage/types";
+import {MessageStorage, SearchQuery} from "./plugins/messageStorage/types";
 
 const events = [
 	"away",

@@ -1,6 +1,7 @@
 import io, {Socket} from "socket.io-client";
+import type {ServerToClientEvents, ClientToServerEvents} from "../../src/types/socket-events";
 
-const socket: Socket = io({
+const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io({
 	transports: JSON.parse(document.body.dataset.transports || "['polling', 'websocket']"),
 	path: window.location.pathname + "socket.io/",
 	autoConnect: false,

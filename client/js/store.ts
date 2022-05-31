@@ -63,19 +63,22 @@ export type State = {
 	sidebarOpen: boolean;
 	sidebarDragging: boolean;
 	userlistOpen: boolean;
-	versionData: null | {
-		latest: {
-			version: string;
-			prerelease: boolean;
-			url: string;
-		};
-		current: {
-			version: string;
-			prerelease: boolean;
-			url: string;
-			changelog: string;
-		};
-	};
+	versionData:
+		| null
+		| undefined
+		| {
+				latest: {
+					version: string;
+					prerelease: boolean;
+					url: string;
+				};
+				current: {
+					version: string;
+					prerelease: boolean;
+					url: string;
+					changelog: string;
+				};
+		  };
 	versionStatus: "loading" | "new-version" | "new-packages" | "up-to-date" | "error";
 	versionDataExpired: boolean;
 	serverHasSettings: boolean;
@@ -388,8 +391,6 @@ const storePattern = {
 	getters,
 };
 
-const settingsStore = createSettingsStore(store);
-
 // https://vuex.vuejs.org/guide/typescript-support.html#typing-usestore-composition-function
 export const key: InjectionKey<Store<State>> = Symbol();
 
@@ -403,6 +404,8 @@ export type TypedStore = Omit<Store<State>, "getters" | "commit"> & {
 };
 
 export const store = createStore(storePattern) as TypedStore;
+
+const settingsStore = createSettingsStore(store);
 
 // Settings module is registered dynamically because it benefits
 // from a direct reference to the store

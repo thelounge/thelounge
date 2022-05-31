@@ -199,7 +199,7 @@ export default defineComponent({
 			socket.emit("search", {
 				networkUuid: network.value?.uuid,
 				channelName: channel.value?.name,
-				searchTerm: route.query.q,
+				searchTerm: String(route.query.q),
 				offset: offset.value,
 			});
 		};
@@ -218,7 +218,7 @@ export default defineComponent({
 			socket.emit("search", {
 				networkUuid: network.value?.uuid,
 				channelName: channel.value?.name,
-				searchTerm: route.query.q,
+				searchTerm: String(route.query.q),
 				offset: offset.value + 1,
 			});
 		};

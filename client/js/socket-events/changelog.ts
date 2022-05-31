@@ -2,6 +2,8 @@ import socket from "../socket";
 import {store} from "../store";
 
 socket.on("changelog", function (data) {
+	// TODO
+	// @ts-ignore
 	store.commit("versionData", data);
 	store.commit("versionDataExpired", false);
 

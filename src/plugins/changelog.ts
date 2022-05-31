@@ -11,16 +11,7 @@ export default {
 	fetch,
 	checkForUpdates,
 };
-
-const versions = {
-	current: {
-		version: `v${pkg.version}`,
-		changelog: undefined,
-	},
-	expiresAt: -1,
-	latest: undefined,
-	packages: undefined,
-} as {
+export type ChangelogData = {
 	current: {
 		version: string;
 		changelog?: string;
@@ -33,6 +24,16 @@ const versions = {
 	};
 	packages?: boolean;
 };
+
+const versions = {
+	current: {
+		version: `v${pkg.version}`,
+		changelog: undefined,
+	},
+	expiresAt: -1,
+	latest: undefined,
+	packages: undefined,
+} as ChangelogData;
 
 async function fetch() {
 	const time = Date.now();
