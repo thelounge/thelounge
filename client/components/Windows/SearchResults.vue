@@ -123,7 +123,6 @@ export default defineComponent({
 		const router = useRouter();
 
 		const chat = ref<HTMLDivElement>();
-		const chatRef = chat.value;
 
 		const loadMoreButton = ref<HTMLButtonElement>();
 
@@ -205,15 +204,15 @@ export default defineComponent({
 		};
 
 		const onShowMoreClick = () => {
-			if (!chatRef) {
+			if (!chat.value) {
 				return;
 			}
 
 			offset.value += 100;
 			store.commit("messageSearchInProgress", true);
 
-			oldScrollTop.value = chatRef.scrollTop;
-			oldChatHeight.value = chatRef.scrollHeight;
+			oldScrollTop.value = chat.value.scrollTop;
+			oldChatHeight.value = chat.value.scrollHeight;
 
 			socket.emit("search", {
 				networkUuid: network.value?.uuid,
@@ -223,18 +222,16 @@ export default defineComponent({
 			});
 		};
 
-		const jumpToBottom = () => {
-			nextTick(() => {
-				if (!chatRef) {
-					return;
-				}
+		const jumpToBottom = async () => {
+			await nextTick();
 
-				const el = chatRef;
-				el.scrollTop = el.scrollHeight;
-			}).catch((e) => {
-				// eslint-disable-next-line no-console
-				console.error(e);
-			});
+			const el = chat.value;
+
+			if (!el) {
+				return;
+			}
+
+			el.scrollTop = el.scrollHeight;
 		};
 
 		const jump = (message: ClientMessage, id: number) => {
@@ -265,28 +262,34 @@ export default defineComponent({
 			}
 		);
 
-		watch(route.query, () => {
-			doSearch();
-			setActiveChannel();
-		});
+		watch(
+			() => route.query,
+			() => {
+				doSearch();
+				setActiveChannel();
+			}
+		);
 
-		watch(messages, () => {
+		watch(messages, async () => {
 			moreResultsAvailable.value = !!(
 				messages.value.length && !(messages.value.length % 100)
 			);
 
-			if (!offset.value) {
-				jumpToBottom();
-			} else {
-				void nextTick(() => {
-					if (!chatRef) {
-						return;
-					}
+			console.log("offset", offset.value);
 
-					const currentChatHeight = chatRef.scrollHeight;
-					chatRef.scrollTop =
-						oldScrollTop.value + currentChatHeight - oldChatHeight.value;
-				});
+			if (!offset.value) {
+				await jumpToBottom();
+			} else {
+				await nextTick();
+
+				const el = chat.value;
+
+				if (!el) {
+					return;
+				}
+
+				const currentChatHeight = el.scrollHeight;
+				el.scrollTop = oldScrollTop.value + currentChatHeight - oldChatHeight.value;
 			}
 		});
 
