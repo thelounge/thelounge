@@ -230,9 +230,9 @@ class Config {
 				this.values.fileUpload.baseUrl = undefined;
 
 				log.warn(
-					`The ${colors.bold("fileUpload.baseUrl")} you specified is invalid: ${
-						e as string
-					}`
+					`The ${colors.bold("fileUpload.baseUrl")} you specified is invalid: ${String(
+						e
+					)}`
 				);
 			}
 		}

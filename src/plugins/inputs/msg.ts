@@ -1,10 +1,10 @@
 import {PluginInputHandler} from "./index";
 import Msg, {MessageType} from "../../models/msg";
-import {ChanType} from "../../models/chan";
+import Chan, {ChanType} from "../../models/chan";
 
 const commands = ["query", "msg", "say"];
 
-function getTarget(cmd, args, chan) {
+function getTarget(cmd: string, args: string[], chan: Chan) {
 	switch (cmd) {
 		case "msg":
 		case "query":

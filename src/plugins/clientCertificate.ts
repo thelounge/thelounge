@@ -74,7 +74,7 @@ function generateAndWrite(folderPath: string, paths: {privateKeyPath: any; certi
 
 		return certificate;
 	} catch (e: any) {
-		log.error("Unable to write certificate", e as string);
+		log.error("Unable to write certificate", String(e));
 	}
 
 	return null;

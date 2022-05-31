@@ -61,7 +61,7 @@ program
 				log.info("Package(s) have been successfully upgraded.");
 			})
 			.catch((code) => {
-				log.error(`Failed to upgrade package(s). Exit code ${code as string}`);
+				log.error(`Failed to upgrade package(s). Exit code ${String(code)}`);
 				process.exit(1);
 			});
 	});

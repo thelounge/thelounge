@@ -242,7 +242,7 @@ class Client {
 		// Get channel id for lobby before creating other channels for nicer ids
 		const lobbyChannelId = client.idChan++;
 
-		if (args.channels) {
+		if (Array.isArray(args.channels)) {
 			let badName = false;
 
 			args.channels.forEach((chan: Chan) => {
@@ -266,7 +266,7 @@ class Client {
 					"User '" +
 						client.name +
 						"' on network '" +
-						(args.name as string) +
+						String(args.name) +
 						"' has an invalid channel which has been ignored"
 				);
 			}
@@ -289,12 +289,12 @@ class Client {
 
 		// TODO; better typing for args
 		const network = new Network({
-			uuid: args.uuid as string,
+			uuid: String(args.uuid),
 			name: String(
 				args.name || (Config.values.lockNetwork ? Config.values.defaults.name : "") || ""
 			),
 			host: String(args.host || ""),
-			port: parseInt(args.port as string, 10),
+			port: parseInt(String(args.port), 10),
 			tls: !!args.tls,
 			userDisconnected: !!args.userDisconnected,
 			rejectUnauthorized: !!args.rejectUnauthorized,

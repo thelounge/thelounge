@@ -180,7 +180,7 @@ export default <IrcEventHandler>function (irc, network) {
 			new Msg({
 				text: `Disconnected from the network. Reconnecting in ${Math.round(
 					data.wait / 1000
-				)} seconds… (Attempt ${data.attempt})`,
+				)} seconds… (Attempt ${Number(data.attempt)})`,
 			}),
 			true
 		);

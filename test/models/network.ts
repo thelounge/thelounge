@@ -178,7 +178,6 @@ describe("Network", function () {
 		});
 
 		it("should apply STS policies iff they match", function () {
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			const client = {idMsg: 1, emit() {}} as any;
 			STSPolicies.update("irc.example.com", 7000, 3600);
 

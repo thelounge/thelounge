@@ -54,7 +54,7 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 		try {
 			fs.mkdirSync(logsPath, {recursive: true});
 		} catch (e: any) {
-			log.error("Unable to create logs directory", e as string);
+			log.error("Unable to create logs directory", String(e));
 
 			return;
 		}

@@ -19,7 +19,7 @@ class User {
 
 		Object.defineProperty(this, "mode", {
 			get() {
-				return (this.modes[0] as string) || "";
+				return String(this.modes[0]);
 			},
 		});
 

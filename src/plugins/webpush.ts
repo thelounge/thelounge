@@ -84,9 +84,9 @@ class WebPush {
 		WebPushAPI.sendNotification(subscription, JSON.stringify(payload)).catch((error) => {
 			if (error.statusCode >= 400 && error.statusCode < 500) {
 				log.warn(
-					`WebPush subscription for ${client.name} returned an error (${
-						error.statusCode as string
-					}), removing subscription`
+					`WebPush subscription for ${client.name} returned an error (${String(
+						error.statusCode
+					)}), removing subscription`
 				);
 
 				_.forOwn(client.config.sessions, ({pushSubscription}, token) => {
@@ -98,7 +98,7 @@ class WebPush {
 				return;
 			}
 
-			log.error(`WebPush Error (${error as string})`);
+			log.error(`WebPush Error (${String(error)})`);
 		});
 	}
 }

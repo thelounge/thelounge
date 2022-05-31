@@ -344,7 +344,7 @@ function getClientIp(socket: Socket) {
 	let ip = socket.handshake.address || "127.0.0.1";
 
 	if (Config.values.reverseProxy) {
-		const forwarded = ((socket.handshake.headers["x-forwarded-for"] || "") as string)
+		const forwarded = String(socket.handshake.headers["x-forwarded-for"])
 			.split(/\s*,\s*/)
 			.filter(Boolean);
 
