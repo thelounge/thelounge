@@ -175,11 +175,9 @@ export default defineComponent({
 
 		const scrollToActiveUser = () => {
 			// Scroll the list if needed after the active class is applied
-			nextTick(() => {
+			void nextTick(() => {
 				const el = userlist.value?.querySelector(".active");
 				el?.scrollIntoView({block: "nearest", inline: "nearest"});
-			}).catch(() => {
-				// no-op
 			});
 		};
 

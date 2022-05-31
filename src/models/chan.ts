@@ -306,7 +306,9 @@ class Chan {
 					requestZncPlayback(this, network, from);
 				}
 			})
-			.catch((err) => log.error(`Failed to load messages for ${client.name}: ${err}`));
+			.catch((err: Error) =>
+				log.error(`Failed to load messages for ${client.name}: ${err.toString()}`)
+			);
 	}
 	isLoggable() {
 		return this.type === ChanType.CHANNEL || this.type === ChanType.QUERY;

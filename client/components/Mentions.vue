@@ -179,12 +179,9 @@ export default defineComponent({
 			return messages.filter((message) => !message.channel?.channel.muted);
 		});
 
-		watch(
-			() => store.state.mentions,
-			() => {
-				isLoading.value = false;
-			}
-		);
+		watch(store.state.mentions, () => {
+			isLoading.value = false;
+		});
 
 		const messageTime = (time: string) => {
 			return dayjs(time).fromNow();

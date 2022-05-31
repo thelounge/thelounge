@@ -172,27 +172,26 @@ router.afterEach((to) => {
 	}
 });
 
-function navigate(routeName: string, params: any = {}) {
+async function navigate(routeName: string, params: any = {}) {
 	if (router.currentRoute.value.name) {
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		router.push({name: routeName, params}).catch(() => {});
+		await router.push({name: routeName, params});
 	} else {
 		// If current route is null, replace the history entry
 		// This prevents invalid entries from lingering in history,
 		// and then the route guard preventing proper navigation
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
-		router.replace({name: routeName, params}).catch(() => {});
+		await router.replace({name: routeName, params}).catch(() => {});
 	}
 }
 
 function switchToChannel(channel: ClientChan) {
-	return navigate("RoutedChat", {id: channel.id});
+	return void navigate("RoutedChat", {id: channel.id});
 }
 
 if ("serviceWorker" in navigator) {
 	navigator.serviceWorker.addEventListener("message", (event) => {
 		if (event.data && event.data.type === "open") {
-			const id = parseInt(event.data.channel.substr(5), 10); // remove "chan-" prefix
+			const id = parseInt(event.data.channel.substring(5), 10); // remove "chan-" prefix
 
 			const channelTarget = store.getters.findChannel(id);
 

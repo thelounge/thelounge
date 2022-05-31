@@ -265,13 +265,10 @@ export default defineComponent({
 			}
 		);
 
-		watch(
-			() => route.query,
-			() => {
-				doSearch();
-				setActiveChannel();
-			}
-		);
+		watch(route.query, () => {
+			doSearch();
+			setActiveChannel();
+		});
 
 		watch(messages, () => {
 			moreResultsAvailable.value = !!(
@@ -281,7 +278,7 @@ export default defineComponent({
 			if (!offset.value) {
 				jumpToBottom();
 			} else {
-				nextTick(() => {
+				void nextTick(() => {
 					if (!chatRef) {
 						return;
 					}
@@ -289,9 +286,6 @@ export default defineComponent({
 					const currentChatHeight = chatRef.scrollHeight;
 					chatRef.scrollTop =
 						oldScrollTop.value + currentChatHeight - oldChatHeight.value;
-				}).catch((e) => {
-					// eslint-disable-next-line no-console
-					console.error("Failed to scroll to bottom", e);
 				});
 			}
 		});

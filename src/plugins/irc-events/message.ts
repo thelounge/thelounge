@@ -3,7 +3,8 @@ import LinkPrefetch from "./link";
 import cleanIrcMessage from "../../../client/js/helpers/ircmessageparser/cleanIrcMessage";
 import Helper from "../../helper";
 import {IrcEventHandler} from "../../client";
-import {ChanType} from "../../models/chan";
+import Chan, {ChanType} from "../../models/chan";
+import User from "../../models/user";
 
 const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\w[\]\\`^{|}-]+)/g;
 
@@ -12,28 +13,39 @@ export default <IrcEventHandler>function (irc, network) {
 
 	irc.on("notice", function (data) {
 		data.type = MessageType.NOTICE as any;
-		handleMessage(data);
+		handleMessage(data as any);
 	});
 
 	irc.on("action", function (data) {
 		data.type = MessageType.ACTION;
-		handleMessage(data);
+		handleMessage(data as any);
 	});
 
 	irc.on("privmsg", function (data) {
 		data.type = MessageType.MESSAGE;
-		handleMessage(data);
+		handleMessage(data as any);
 	});
 
 	irc.on("wallops", function (data) {
 		data.from_server = true;
 		data.type = MessageType.WALLOPS;
-		handleMessage(data);
+		handleMessage(data as any);
 	});
 
-	function handleMessage(data: any) {
-		let chan;
-		let from;
+	function handleMessage(data: {
+		nick: string;
+		from_server: boolean;
+		hostname: string;
+		ident: string;
+		target: string;
+		type: MessageType;
+		time: number;
+		text: string;
+		message: string;
+		group?: string;
+	}) {
+		let chan: Chan | undefined;
+		let from: User;
 		let highlight = false;
 		let showInActive = false;
 		const self = data.nick === irc.user.nick;
@@ -108,7 +120,7 @@ export default <IrcEventHandler>function (irc, network) {
 		// msg is constructed down here because `from` is being copied in the constructor
 		const msg = new Msg({
 			type: data.type,
-			time: data.time,
+			time: data.time as any,
 			text: data.message,
 			self: self,
 			from: from,

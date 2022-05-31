@@ -102,7 +102,7 @@ export default defineComponent({
 		const autocompletionRef = ref<ReturnType<typeof autocompletion>>();
 
 		const setInputSize = () => {
-			nextTick(() => {
+			void nextTick(() => {
 				if (!input.value) {
 					return;
 				}
@@ -120,8 +120,6 @@ export default defineComponent({
 				input.value.style.height = `${
 					Math.ceil(input.value.scrollHeight / lineHeight) * lineHeight
 				}px`;
-			}).catch(() => {
-				// no-op
 			});
 		};
 

@@ -105,7 +105,6 @@
 						:network="network"
 						:channel="channel"
 						:focused="focused"
-						@scrolled-to-bottom="onScrolledToBottom"
 					/>
 				</div>
 			</div>
@@ -175,10 +174,6 @@ export default defineComponent({
 			return undefined;
 		});
 
-		const onScrolledToBottom = (data: boolean) => {
-			props.channel.scrolledToBottom = data;
-		};
-
 		const channelChanged = () => {
 			// Triggered when active channel is set or changed
 			emit("channel-changed", props.channel);
@@ -234,21 +229,15 @@ export default defineComponent({
 			});
 		};
 
-		watch(
-			() => props.channel,
-			() => {
-				channelChanged();
-			}
-		);
+		watch(props.channel, () => {
+			channelChanged();
+		});
 
 		const editTopicRef = ref(props.channel.editTopic);
 		watch(editTopicRef, (newTopic) => {
 			if (newTopic) {
-				nextTick(() => {
+				void nextTick(() => {
 					topicInput.value?.focus();
-				}).catch((e) => {
-					// eslint-disable-next-line no-console
-					console.error(e);
 				});
 			}
 		});
@@ -257,10 +246,8 @@ export default defineComponent({
 			channelChanged();
 
 			if (props.channel.editTopic) {
-				nextTick(() => {
+				void nextTick(() => {
 					topicInput.value?.focus();
-				}).catch(() => {
-					// no-op
 				});
 			}
 		});
@@ -271,7 +258,6 @@ export default defineComponent({
 			topicInput,
 			specialComponent,
 			editTopicRef,
-			onScrolledToBottom,
 			hideUserVisibleError,
 			editTopic,
 			saveTopic,

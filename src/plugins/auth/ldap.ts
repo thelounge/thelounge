@@ -18,8 +18,8 @@ function ldapAuthCommon(
 		tlsOptions: config.ldap.tlsOptions,
 	});
 
-	ldapclient.on("error", function (err) {
-		log.error(`Unable to connect to LDAP server: ${err}`);
+	ldapclient.on("error", function (err: Error) {
+		log.error(`Unable to connect to LDAP server: ${err.toString()}`);
 		callback(false);
 	});
 
@@ -27,7 +27,7 @@ function ldapAuthCommon(
 		ldapclient.unbind();
 
 		if (err) {
-			log.error(`LDAP bind failed: ${err}`);
+			log.error(`LDAP bind failed: ${err.toString()}`);
 			callback(false);
 		} else {
 			callback(true);
@@ -43,7 +43,7 @@ function simpleLdapAuth(user: string, password: string, callback: (success: bool
 	const config = Config.values;
 
 	const userDN = user.replace(/([,\\/#+<>;"= ])/g, "\\$1");
-	const bindDN = `${config.ldap.primaryKey}=${userDN},${config.ldap.baseDN}`;
+	const bindDN = `${config.ldap.primaryKey}=${userDN},${config.ldap.baseDN || ""}`;
 
 	log.info(`Auth against LDAP ${config.ldap.url} with provided bindDN ${bindDN}`);
 
@@ -73,8 +73,8 @@ function advancedLdapAuth(user: string, password: string, callback: (success: bo
 		attributes: ["dn"],
 	} as SearchOptions;
 
-	ldapclient.on("error", function (err) {
-		log.error(`Unable to connect to LDAP server: ${err}`);
+	ldapclient.on("error", function (err: Error) {
+		log.error(`Unable to connect to LDAP server: ${err.toString()}`);
 		callback(false);
 	});
 
@@ -99,15 +99,15 @@ function advancedLdapAuth(user: string, password: string, callback: (success: bo
 			res.on("searchEntry", function (entry) {
 				found = true;
 				const bindDN = entry.objectName;
-				log.info(`Auth against LDAP ${config.ldap.url} with found bindDN ${bindDN}`);
+				log.info(`Auth against LDAP ${config.ldap.url} with found bindDN ${bindDN || ""}`);
 				ldapclient.unbind();
 
 				// TODO: Fix type !
 				ldapAuthCommon(user, bindDN!, password, callback);
 			});
 
-			res.on("error", function (err3) {
-				log.error(`LDAP error: ${err3}`);
+			res.on("error", function (err3: Error) {
+				log.error(`LDAP error: ${err3.toString()}`);
 				callback(false);
 			});
 
@@ -116,7 +116,9 @@ function advancedLdapAuth(user: string, password: string, callback: (success: bo
 
 				if (!found) {
 					log.warn(
-						`LDAP Search did not find anything for: ${userDN} (${result?.status})`
+						`LDAP Search did not find anything for: ${userDN} (${
+							result?.status.toString() || "unknown"
+						})`
 					);
 					callback(false);
 				}
@@ -138,7 +140,7 @@ const ldapAuth: AuthHandler = (manager, client, user, password, callback) => {
 		callback(valid);
 	}
 
-	let auth;
+	let auth: typeof simpleLdapAuth | typeof advancedLdapAuth;
 
 	if ("baseDN" in Config.values.ldap) {
 		auth = simpleLdapAuth;
@@ -164,8 +166,8 @@ function advancedLdapLoadUsers(users: string[], callbackLoadUser) {
 
 	const base = config.ldap.searchDN.base;
 
-	ldapclient.on("error", function (err) {
-		log.error(`Unable to connect to LDAP server: ${err}`);
+	ldapclient.on("error", function (err: Error) {
+		log.error(`Unable to connect to LDAP server: ${err.toString()}`);
 	});
 
 	ldapclient.bind(config.ldap.searchDN.rootDN, config.ldap.searchDN.rootPassword, function (err) {
@@ -185,7 +187,7 @@ function advancedLdapLoadUsers(users: string[], callbackLoadUser) {
 
 		ldapclient.search(base, searchOptions, function (err2, res) {
 			if (err2) {
-				log.error(`LDAP search error: ${err2}`);
+				log.error(`LDAP search error: ${err2?.toString()}`);
 				return true;
 			}
 
@@ -200,7 +202,7 @@ function advancedLdapLoadUsers(users: string[], callbackLoadUser) {
 			});
 
 			res.on("error", function (err3) {
-				log.error(`LDAP error: ${err3}`);
+				log.error(`LDAP error: ${err3.toString()}`);
 			});
 
 			res.on("end", function () {

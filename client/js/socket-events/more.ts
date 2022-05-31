@@ -2,8 +2,9 @@ import {nextTick} from "vue";
 
 import socket from "../socket";
 import {store} from "../store";
+import {ClientMessage} from "../types";
 
-socket.on("more", function (data) {
+socket.on("more", async (data) => {
 	const channel = store.getters.findChannel(data.chan)?.channel;
 
 	if (!channel) {
@@ -15,13 +16,12 @@ socket.on("more", function (data) {
 			.filter((m) => m.self && m.text && m.type === "message")
 			.map((m) => m.text)
 			.reverse()
-			.slice(null, 100 - channel.inputHistory.length)
+			.slice(undefined, 100 - channel.inputHistory.length)
 	);
 	channel.moreHistoryAvailable =
 		data.totalMessages > channel.messages.length + data.messages.length;
-	channel.messages.unshift(...data.messages);
+	channel.messages.unshift(...(data.messages as ClientMessage[]));
 
-	nextTick(() => {
-		channel.historyLoading = false;
-	});
+	await nextTick();
+	channel.historyLoading = false;
 });

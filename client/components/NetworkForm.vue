@@ -475,10 +475,8 @@ export default defineComponent({
 
 		watch(displayPasswordField, (newValue) => {
 			if (newValue) {
-				nextTick(() => {
+				void nextTick(() => {
 					publicPassword.value?.focus();
-				}).catch(() => {
-					// no-op
 				});
 			}
 		});
@@ -502,10 +500,8 @@ export default defineComponent({
 		watch(
 			() => props.defaults?.commands,
 			() => {
-				nextTick(() => {
+				void nextTick(() => {
 					resizeCommandsInput();
-				}).catch((e) => {
-					// no-op
 				});
 			}
 		);

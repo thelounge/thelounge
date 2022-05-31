@@ -66,7 +66,6 @@ import Message from "./Message.vue";
 import MessageCondensed from "./MessageCondensed.vue";
 import DateMarker from "./DateMarker.vue";
 import {
-	defineExpose,
 	computed,
 	defineComponent,
 	nextTick,
@@ -104,7 +103,6 @@ export default defineComponent({
 		channel: {type: Object as PropType<ClientChan>, required: true},
 		focused: String,
 	},
-	emits: ["scrolled-to-bottom"],
 	setup(props, {emit}) {
 		const store = useStore();
 
@@ -117,7 +115,7 @@ export default defineComponent({
 
 		const jumpToBottom = () => {
 			skipNextScrollEvent.value = true;
-			emit("scrolled-to-bottom", true);
+			props.channel.scrolledToBottom = true;
 
 			const el = chat.value;
 
@@ -173,8 +171,9 @@ export default defineComponent({
 			}
 
 			jumpToBottom();
-		}).catch(() => {
-			// no-op
+		}).catch((e) => {
+			// eslint-disable-next-line no-console
+			console.error("Error in new IntersectionObserver", e);
 		});
 
 		const condensedMessages = computed(() => {
@@ -293,7 +292,9 @@ export default defineComponent({
 			}
 		};
 
-		const keepScrollPosition = () => {
+		const keepScrollPosition = async () => {
+			console.log("keepScrollPosition");
+
 			// If we are already waiting for the next tick to force scroll position,
 			// we have no reason to perform more checks and set it again in the next tick
 			if (isWaitingForNextTick.value) {
@@ -306,40 +307,44 @@ export default defineComponent({
 				return;
 			}
 
+			console.log(el);
+
 			if (!props.channel.scrolledToBottom) {
 				if (props.channel.historyLoading) {
 					const heightOld = el.scrollHeight - el.scrollTop;
 
 					isWaitingForNextTick.value = true;
 
-					nextTick(() => {
-						isWaitingForNextTick.value = false;
-						skipNextScrollEvent.value = true;
-						el.scrollTop = el.scrollHeight - heightOld;
-					}).catch(() => {
-						// no-op
-					});
+					await nextTick();
+
+					isWaitingForNextTick.value = false;
+					skipNextScrollEvent.value = true;
+
+					console.log("old top", heightOld);
+					el.scrollTop = el.scrollHeight - heightOld;
+					console.log("new top", el.scrollTop);
 				}
 
 				return;
 			}
 
 			isWaitingForNextTick.value = true;
-			nextTick(() => {
-				isWaitingForNextTick.value = false;
-				jumpToBottom();
-			}).catch(() => {
-				// no-op
-			});
+			await nextTick();
+			isWaitingForNextTick.value = false;
+
+			console.log("HERE");
+			jumpToBottom();
 		};
 
-		const onLinkPreviewToggle = (preview: ClientLinkPreview, message: ClientMessage) => {
-			keepScrollPosition();
+		const onLinkPreviewToggle = async (preview: ClientLinkPreview, message: ClientMessage) => {
+			await keepScrollPosition();
 
 			// Tell the server we're toggling so it remembers at page reload
 			socket.emit("msg:preview:toggle", {
 				target: props.channel.id,
 				msgId: message.id,
+				// TODO: type
+				// @ts-ignore
 				link: preview.link,
 				shown: preview.shown,
 			});
@@ -359,7 +364,7 @@ export default defineComponent({
 				return;
 			}
 
-			emit("scrolled-to-bottom", el.scrollHeight - el.scrollTop - el.offsetHeight <= 30);
+			props.channel.scrolledToBottom = el.scrollHeight - el.scrollTop - el.offsetHeight <= 30;
 		};
 
 		const handleResize = () => {
@@ -374,19 +379,17 @@ export default defineComponent({
 
 			eventbus.on("resize", handleResize);
 
-			nextTick(() => {
+			void nextTick(() => {
 				if (historyObserver.value && loadMoreButton.value) {
 					historyObserver.value.observe(loadMoreButton.value);
 				}
-			}).catch(() => {
-				// no-op
 			});
 		});
 
 		watch(
 			() => props.channel.id,
 			() => {
-				emit("scrolled-to-bottom", true);
+				props.channel.scrolledToBottom = true;
 
 				// Re-add the intersection observer to trigger the check again on channel switch
 				// Otherwise if last channel had the button visible, switching to a new channel won't trigger the history
@@ -399,20 +402,19 @@ export default defineComponent({
 
 		watch(
 			() => props.channel.messages,
-			() => {
-				keepScrollPosition();
+			async () => {
+				await keepScrollPosition();
+			},
+			{
+				deep: true,
 			}
 		);
 
 		watch(
 			() => props.channel.pendingMessage,
-			() => {
-				nextTick(() => {
-					// Keep the scroll stuck when input gets resized while typing
-					keepScrollPosition();
-				}).catch(() => {
-					// no-op
-				});
+			async () => {
+				// Keep the scroll stuck when input gets resized while typing
+				await keepScrollPosition();
 			}
 		);
 

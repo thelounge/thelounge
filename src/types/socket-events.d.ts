@@ -107,11 +107,13 @@ interface ClientToServerEvents {
 	"msg:preview:toggle": ({
 		target,
 		messageIds,
+		msgId,
 		shown,
 	}: {
 		target: number;
-		messageIds: number[];
-		shown: boolean;
+		messageIds?: number[];
+		msgId?: number;
+		shown?: boolean;
 	}) => void;
 
 	"network:get": (uuid: string) => void;
@@ -133,6 +135,8 @@ interface ClientToServerEvents {
 	}) => void;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface InterServerEvents {}
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface SocketData {}

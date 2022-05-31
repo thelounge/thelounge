@@ -383,10 +383,8 @@ export default defineComponent({
 			sidebarWasClosed.value = store.state.sidebarOpen ? false : true;
 			store.commit("sidebarOpen", true);
 
-			nextTick(() => {
+			void nextTick(() => {
 				searchInput.value?.focus();
-			}).catch(() => {
-				// no-op
 			});
 		};
 
@@ -432,14 +430,12 @@ export default defineComponent({
 
 		const scrollToActive = () => {
 			// Scroll the list if needed after the active class is applied
-			nextTick(() => {
+			void nextTick(() => {
 				const el = networklist.value?.querySelector(".channel-list-item.active");
 
 				if (el) {
 					el.scrollIntoView({block: "nearest", inline: "nearest"});
 				}
-			}).catch(() => {
-				// no-op
 			});
 		};
 

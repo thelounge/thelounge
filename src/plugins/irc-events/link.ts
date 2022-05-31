@@ -27,9 +27,9 @@ export type LinkPreview = {
 	thumb: string;
 	size: number;
 	link: string; // Send original matched link to the client
-	shown: boolean | null;
-	error: undefined | string;
-	message: undefined | string;
+	shown?: boolean;
+	error?: string;
+	message?: string;
 
 	media: string;
 	mediaType: string;
@@ -65,7 +65,7 @@ export default function (client: Client, chan: Chan, msg: Msg, cleanText: string
 			thumb: "",
 			size: -1,
 			link: link.link, // Send original matched link to the client
-			shown: null,
+			shown: undefined,
 			error: undefined,
 			message: undefined,
 			media: "",

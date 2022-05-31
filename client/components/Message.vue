@@ -120,7 +120,7 @@ export default defineComponent({
 		message: {type: Object as PropType<ClientMessage>, required: true},
 		channel: {type: Object as PropType<ClientChan>, required: false},
 		network: {type: Object as PropType<ClientNetwork>, required: true},
-		keepScrollPosition: Function,
+		keepScrollPosition: Function as PropType<() => void>,
 		isPreviousSource: Boolean,
 		focused: Boolean,
 	},
