@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 
 import Auth from "./plugins/auth";
-import Client from "./client";
+import Client, {UserConfig} from "./client";
 import Config from "./config";
 import WebPush from "./plugins/webpush";
 import log from "./log";
@@ -183,6 +183,7 @@ class ClientManager {
 				mode: 0o600,
 			});
 		} catch (e: any) {
+			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			log.error(`Failed to create user ${colors.green(name)} (${e})`);
 			throw e;
 		}
@@ -250,6 +251,7 @@ class ClientManager {
 
 			return callback ? callback() : true;
 		} catch (e: any) {
+			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			log.error(`Failed to update user ${colors.green(client.name)} (${e})`);
 
 			if (callback) {
@@ -281,8 +283,9 @@ class ClientManager {
 
 		try {
 			const data = fs.readFileSync(userPath, "utf-8");
-			return JSON.parse(data);
+			return JSON.parse(data) as UserConfig;
 		} catch (e: any) {
+			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			log.error(`Failed to read user ${colors.bold(name)}: ${e}`);
 		}
 

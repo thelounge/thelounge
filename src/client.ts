@@ -55,7 +55,7 @@ type ClientPushSubscription = {
 	};
 };
 
-type ClientConfig = {
+export type UserConfig = {
 	log: boolean;
 	password: string;
 	sessions: {
@@ -92,7 +92,7 @@ class Client {
 	attachedClients!: {
 		[socketId: string]: {token: string; openChannel: number};
 	};
-	config!: ClientConfig & {
+	config!: UserConfig & {
 		networks?: Network[];
 	};
 	id!: number;
@@ -109,7 +109,7 @@ class Client {
 
 	fileHash!: string;
 
-	constructor(manager: ClientManager, name?: string, config = {} as ClientConfig) {
+	constructor(manager: ClientManager, name?: string, config = {} as UserConfig) {
 		_.merge(this, {
 			awayMessage: "",
 			lastActiveChannel: -1,

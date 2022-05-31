@@ -79,20 +79,6 @@ for (const input of builtInInputs) {
 		});
 }
 
-// .reduce(async function (plugins, name) {
-// 	return import(`./${name}`).then(
-// 		(plugin: {
-// 			default: {
-// 				commands: string[];
-// 				input: (network: Network, chan: Chan, cmd: string, args: string[]) => void;
-// 				allowDisconnected?: boolean;
-// 			};
-// 		}) => {
-// 			plugin.default.commands.forEach((command: string) => plugins.set(command, plugin));
-// 		}
-// 	);
-// }, Promise.resolve(new Map()));
-
 const pluginCommands = new Map();
 
 const getCommands = () =>
