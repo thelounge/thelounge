@@ -50,7 +50,7 @@
 						</div>
 					</div>
 					<div class="content" dir="auto">
-						<ParsedMessage message="message" />
+						<ParsedMessage :message="(message as any)" />
 					</div>
 				</div>
 			</template>
