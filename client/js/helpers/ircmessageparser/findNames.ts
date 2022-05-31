@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 import {Part} from "./merge";
 
 const nickRegExp = /([\w[\]\\`^{|}-]+)/g;

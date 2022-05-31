@@ -5,6 +5,7 @@ import {switchToChannel, router, navigate} from "./router";
 import isChannelCollapsed from "./helpers/isChannelCollapsed";
 import isIgnoredKeybind from "./helpers/isIgnoredKeybind";
 import listenForTwoFingerSwipes from "./helpers/listenForTwoFingerSwipes";
+import {ClientChan} from "./types";
 
 // Switch to the next/previous window in the channel list.
 Mousetrap.bind(["alt+up", "alt+down"], function (e, keys) {
@@ -17,18 +18,18 @@ Mousetrap.bind(["alt+up", "alt+down"], function (e, keys) {
 	return false;
 });
 
-listenForTwoFingerSwipes(function (cardinalDirection) {
+listenForTwoFingerSwipes(function (cardinalDirection: string) {
 	if (cardinalDirection === "e" || cardinalDirection === "w") {
 		navigateWindow(cardinalDirection === "e" ? -1 : 1);
 	}
 });
 
-function navigateWindow(direction) {
+function navigateWindow(direction: number) {
 	if (store.state.networks.length === 0) {
 		return;
 	}
 
-	const flatChannels = [];
+	const flatChannels: ClientChan[] = [];
 	let index = -1;
 
 	for (const network of store.state.networks) {
@@ -116,12 +117,12 @@ Mousetrap.bind(["alt+a"], function (e) {
 });
 
 // Show the help menu.
-Mousetrap.bind(["alt+/"], function (e) {
+Mousetrap.bind(["alt+/"], async function (e) {
 	if (isIgnoredKeybind(e)) {
 		return true;
 	}
 
-	navigate("Help");
+	await navigate("Help");
 
 	return false;
 });
@@ -176,7 +177,7 @@ const ignoredKeys = {
 
 document.addEventListener("keydown", (e) => {
 	// Allow navigating back to the previous page when on the help screen.
-	if (e.key === "Escape" && router.currentRoute.name === "Help") {
+	if (e.key === "Escape" && router.currentRoute.value.name === "Help") {
 		router.go(-1);
 		return;
 	}
@@ -197,13 +198,13 @@ document.addEventListener("keydown", (e) => {
 		const chat = document.querySelector(".window .chat-content .chat");
 
 		if (chat) {
-			chat.focus();
+			(chat as HTMLDivElement).focus();
 		}
 
 		return;
 	}
 
-	const tagName = e.target.tagName;
+	const tagName = (e.target as HTMLElement).tagName;
 
 	// Ignore if we're already typing into <input> or <textarea>
 	if (tagName === "INPUT" || tagName === "TEXTAREA") {
