@@ -1,6 +1,7 @@
-import {ClientNetwork} from "../../client/js/types";
+import {ClientMessage, ClientNetwork} from "../../client/js/types";
 import {Mention} from "../client";
 import Msg from "../models/msg";
+import Network from "../models/network";
 import {ChangelogData} from "../plugins/changelog";
 import {ClientConfiguration} from "../server";
 
@@ -37,7 +38,6 @@ interface ServerToClientEvents {
 	"mentions:list": (data: Mention[]) => void;
 
 	"setting:new": ({name: string, value: any}) => void;
-
 	"setting:all": (settings: {[key: string]: any}) => void;
 
 	more: ({
@@ -61,6 +61,10 @@ interface ServerToClientEvents {
 		networks: ClientNetwork[];
 		token: string;
 	}) => void;
+
+	"search:results": (response: {results: ClientMessage[]}) => void;
+
+	quit: ({network}: {network: string}) => void;
 }
 
 interface ClientToServerEvents {

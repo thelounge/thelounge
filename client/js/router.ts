@@ -171,7 +171,7 @@ async function navigate(routeName: string, params: any = {}) {
 }
 
 function switchToChannel(channel: ClientChan) {
-	return void navigate("RoutedChat", {id: channel.id});
+	void navigate("RoutedChat", {id: channel.id});
 }
 
 if ("serviceWorker" in navigator) {

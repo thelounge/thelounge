@@ -9,9 +9,10 @@ import {Command} from "commander";
 const program = new Command("install");
 program
 	.usage("install <package>")
+	.argument("<package>", "package to install")
 	.description("Install a theme or a package")
 	.on("--help", Utils.extraHelp)
-	.action(async function (packageName) {
+	.action(async function (packageName: string) {
 		const fs = await import("fs");
 		const fspromises = fs.promises;
 		const path = await import("path");
@@ -31,7 +32,7 @@ program
 			isLocalFile = true;
 			readFile = fspromises
 				.readFile(path.join(packageName.substr("file:".length), "package.json"), "utf-8")
-				.then((data) => JSON.parse(data));
+				.then((data) => JSON.parse(data) as typeof packageJson);
 		} else {
 			const split = packageName.split("@");
 			packageName = split[0];

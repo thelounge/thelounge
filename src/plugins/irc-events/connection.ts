@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 import _ from "lodash";
 import {IrcEventHandler} from "../../client";
 

@@ -2,7 +2,7 @@ import socket from "../socket";
 import {switchToChannel, navigate} from "../router";
 import {store} from "../store";
 
-socket.on("quit", function (data) {
+socket.on("quit", async function (data) {
 	// If we're in a channel, and it's on the network that is being removed,
 	// then open another channel window
 	const isCurrentNetworkBeingRemoved =
@@ -17,6 +17,6 @@ socket.on("quit", function (data) {
 	if (store.state.networks.length > 0) {
 		switchToChannel(store.state.networks[0].channels[0]);
 	} else {
-		navigate("Connect");
+		await navigate("Connect");
 	}
 });

@@ -9,6 +9,7 @@ program
 	.description("List all users")
 	.on("--help", Utils.extraHelp)
 	.action(function () {
+		// eslint-disable-next-line @typescript-eslint/no-var-requires
 		const ClientManager = require("../../clientManager");
 		const users = new ClientManager().getUsers();
 

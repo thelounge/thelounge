@@ -7,10 +7,13 @@ import Utils from "./utils";
 const program = new Command("uninstall");
 program
 	.usage("uninstall <package>")
+	.argument("<package>", "The package to uninstall")
 	.description("Uninstall a theme or a package")
 	.on("--help", Utils.extraHelp)
-	.action(function (packageName) {
+	.action(function (packageName: string) {
+		// eslint-disable-next-line @typescript-eslint/no-var-requires
 		const fs = require("fs");
+		// eslint-disable-next-line @typescript-eslint/no-var-requires
 		const path = require("path");
 
 		const packagesConfig = path.join(Config.getPackagesPath(), "package.json");
@@ -20,20 +23,22 @@ program
 			!packages.dependencies ||
 			!Object.prototype.hasOwnProperty.call(packages.dependencies, packageName)
 		) {
+			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			log.warn(`${colors.green(packageName)} is not installed.`);
 			process.exit(1);
 		}
 
 		log.info(`Uninstalling ${colors.green(packageName)}...`);
 
-		return Utils.executeYarnCommand("remove", packageName)
-			.then(() => {
+		try {
+			void Utils.executeYarnCommand("remove", packageName).then(() => {
 				log.info(`${colors.green(packageName)} has been successfully uninstalled.`);
-			})
-			.catch((code) => {
-				log.error(`Failed to uninstall ${colors.green(packageName)}. Exit code: ${code}`);
-				process.exit(1);
 			});
+		} catch (code_1) {
+			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+			log.error(`Failed to uninstall ${colors.green(packageName)}. Exit code: ${code_1}`);
+			process.exit(1);
+		}
 	});
 
 export default program;

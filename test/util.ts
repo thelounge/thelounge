@@ -1,11 +1,11 @@
 "use strict";
 
-import util from "util";
 import _ from "lodash";
 import express from "express";
 import Network from "../src/models/network";
 import Chan from "../src/models/chan";
 import {EventEmitter} from "events";
+import {Message} from "../src/models/msg";
 
 class MockClient extends EventEmitter {
 	config: {
@@ -29,7 +29,7 @@ class MockClient extends EventEmitter {
 				previews: [],
 			},
 			opts
-		);
+		) as Message;
 
 		return message;
 	}

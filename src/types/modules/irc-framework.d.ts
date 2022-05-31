@@ -1,5 +1,5 @@
 // @ts-nocheck
-// @eslint-disable
+// eslint-disable
 
 // https://raw.githubusercontent.com/eternagame/HTML-Chat/vue-rewrite/src/app/types/modules/irc-framework/irc-framework.d.ts
 // TODO: Fix this
