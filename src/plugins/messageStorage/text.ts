@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import fs from "fs";
 import path from "path";
 import filenamify from "filenamify";
@@ -162,7 +163,7 @@ class TextFileMessageStorage implements MessageStorage {
 
 export default TextFileMessageStorage;
 
-function cleanFilename(name) {
+function cleanFilename(name: string) {
 	name = filenamify(name, {replacement: "_"});
 	name = name.toLowerCase();
 

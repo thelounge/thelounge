@@ -15,7 +15,9 @@ program
 	.action(function (options) {
 		initalizeConfig();
 
-		const server = require("../server");
+		const newLocal = "../server";
+		// eslint-disable-next-line @typescript-eslint/no-var-requires
+		const server = require(newLocal);
 		server.default(options);
 	});
 

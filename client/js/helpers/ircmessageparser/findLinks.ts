@@ -1,6 +1,10 @@
 import LinkifyIt, {Match} from "linkify-it";
 import {Part} from "./merge";
 
+export type LinkPart = Part & {
+	link: string;
+};
+
 type OurMatch = Match & {
 	noschema?: boolean;
 };
@@ -77,9 +81,5 @@ function returnUrl(url: OurMatch): LinkPart {
 		link: url.url,
 	};
 }
-
-export type LinkPart = Part & {
-	link: string;
-};
 
 export {findLinks, findLinksWithSchema};

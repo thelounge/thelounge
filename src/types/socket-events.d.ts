@@ -36,6 +36,10 @@ interface ServerToClientEvents {
 
 	"mentions:list": (data: Mention[]) => void;
 
+	"setting:new": ({name: string, value: any}) => void;
+
+	"setting:all": (settings: {[key: string]: any}) => void;
+
 	more: ({
 		chan,
 		messages,
