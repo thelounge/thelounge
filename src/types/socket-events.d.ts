@@ -133,11 +133,6 @@ interface ClientToServerEvents {
 	}) => void;
 }
 
-interface InterServerEvents {
-	ping: () => void;
-}
+interface InterServerEvents {}
 
-interface SocketData {
-	name: string;
-	age: number;
-}
+interface SocketData {}

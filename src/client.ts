@@ -146,6 +146,10 @@ class Client {
 			for (const messageStorage of client.messageStorage) {
 				messageStorage.enable();
 			}
+
+			console.log(
+				"Message storage: " + client.messageStorage.map((m) => m.isEnabled).join(", ")
+			);
 		}
 
 		if (!_.isPlainObject(client.config.sessions)) {

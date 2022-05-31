@@ -30,6 +30,8 @@ const toExport = {
 	initialized: false,
 	// TODO: fix typing
 	async initialize() {
+		log.info("Auth initializing", toExport.initialized);
+
 		if (toExport.initialized) {
 			return;
 		}
@@ -38,6 +40,8 @@ const toExport = {
 		const resolvedPlugins = await Promise.all(plugins);
 
 		for (const {default: plugin} of resolvedPlugins) {
+			log.info("Auth plugin", plugin.moduleName, "enabled", plugin.isEnabled().toString());
+
 			if (plugin.isEnabled()) {
 				toExport.initialized = true;
 
