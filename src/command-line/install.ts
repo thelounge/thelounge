@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import log from "../log";
 import colors from "chalk";
 import semver from "semver";
@@ -5,6 +6,13 @@ import Helper from "../helper";
 import Config from "../config";
 import Utils from "./utils";
 import {Command} from "commander";
+import {FullMetadata} from "package-json";
+
+type CustomMetadata = FullMetadata & {
+	thelounge: {
+		supports: string;
+	};
+};
 
 const program = new Command("install");
 program
@@ -50,7 +58,7 @@ program
 		}
 
 		readFile
-			.then((json) => {
+			.then((json: CustomMetadata) => {
 				const humanVersion = isLocalFile ? packageName : `${json.name} v${json.version}`;
 
 				if (!("thelounge" in json)) {

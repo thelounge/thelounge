@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 "use strict";
 
 import {expect} from "chai";

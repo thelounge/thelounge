@@ -8,9 +8,8 @@ program
 	.usage("list")
 	.description("List all users")
 	.on("--help", Utils.extraHelp)
-	.action(function () {
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
-		const ClientManager = require("../../clientManager");
+	.action(async function () {
+		const ClientManager = (await import("../../clientManager")).default;
 		const users = new ClientManager().getUsers();
 
 		if (users === undefined) {

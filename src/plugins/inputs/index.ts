@@ -1,4 +1,5 @@
 import Client from "../../client";
+import log from "../../log";
 import Chan, {Channel} from "../../models/chan";
 import Network, {NetworkWithIrcFramework} from "../../models/network";
 import {PackageInfo} from "../packages";
@@ -59,19 +60,23 @@ const builtInInputs = [
 ];
 
 for (const input of builtInInputs) {
-	import(`./${input}`).then(
-		(plugin: {
-			default: {
-				commands: string[];
-				input: (network: Network, chan: Chan, cmd: string, args: string[]) => void;
-				allowDisconnected?: boolean;
-			};
-		}) => {
-			plugin.default.commands.forEach((command: string) =>
-				userInputs.set(command, plugin.default)
-			);
-		}
-	);
+	import(`./${input}`)
+		.then(
+			(plugin: {
+				default: {
+					commands: string[];
+					input: (network: Network, chan: Chan, cmd: string, args: string[]) => void;
+					allowDisconnected?: boolean;
+				};
+			}) => {
+				plugin.default.commands.forEach((command: string) =>
+					userInputs.set(command, plugin.default)
+				);
+			}
+		)
+		.catch((err) => {
+			log.error(err);
+		});
 }
 
 // .reduce(async function (plugins, name) {
