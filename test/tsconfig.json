@@ -7,7 +7,8 @@
   ] /* Specifies a list of glob patterns that match files to be included in compilation. If no 'files' or 'include' property is present in a tsconfig.json, the compiler defaults to including all files in the containing directory and subdirectories except those specified by 'exclude'. Requires TypeScript version 2.0 or later. */,
   "files": [
     "../babel.config.cjs",
-    "../src/helper.ts"
+    "../src/helper.ts",
+    "../src/index.d.ts"
   ] /* If no 'files' or 'include' property is present in a tsconfig.json, the compiler defaults to including all files in the containing directory and subdirectories except those specified by 'exclude'. When a 'files' property is specified, only those files and those specified by 'include' are included. */,
   "ts-node": {
     "files": true

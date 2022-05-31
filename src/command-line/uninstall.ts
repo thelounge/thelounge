@@ -23,7 +23,6 @@ program
 			!packages.dependencies ||
 			!Object.prototype.hasOwnProperty.call(packages.dependencies, packageName)
 		) {
-			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			log.warn(`${colors.green(packageName)} is not installed.`);
 			process.exit(1);
 		}

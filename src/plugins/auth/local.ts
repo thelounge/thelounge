@@ -40,6 +40,7 @@ const localAuth: AuthHandler = (manager, client, user, password, callback) => {
 			callback(matching);
 		})
 		.catch((error) => {
+			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			log.error(`Error while checking users password. Error: ${error}`);
 		});
 };

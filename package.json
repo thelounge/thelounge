@@ -22,6 +22,7 @@
     "lint:eslint": "eslint . --report-unused-disable-directives --color",
     "lint:prettier": "prettier --list-different \"**/*.*\"",
     "lint:stylelint": "stylelint --color \"client/**/*.css\"",
+    "lint": "run-p --aggregate-output --continue-on-error lint:*",
     "start": "node src/dist/src/index start",
     "test": "run-p --aggregate-output --continue-on-error lint:* test:*",
     "test:mocha": "NODE_ENV=test webpack --mode=development && NODE_ENV=test TS_NODE_PROJECT='./test/tsconfig.json' nyc --nycrc-path=test/.nycrc-mocha.json mocha --require ts-node/register --colors --config=test/.mocharc.yml",
