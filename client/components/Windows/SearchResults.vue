@@ -141,7 +141,7 @@ export default defineComponent({
 		});
 
 		const chan = computed(() => {
-			const chanId = parseInt(String(route.params.id), 10);
+			const chanId = parseInt(String(route.params.id || ""), 10);
 			return store.getters.findChannel(chanId);
 		});
 
@@ -198,7 +198,7 @@ export default defineComponent({
 			socket.emit("search", {
 				networkUuid: network.value?.uuid,
 				channelName: channel.value?.name,
-				searchTerm: String(route.query.q),
+				searchTerm: String(route.query.q || ""),
 				offset: offset.value,
 			});
 		};
@@ -217,7 +217,7 @@ export default defineComponent({
 			socket.emit("search", {
 				networkUuid: network.value?.uuid,
 				channelName: channel.value?.name,
-				searchTerm: String(route.query.q),
+				searchTerm: String(route.query.q || ""),
 				offset: offset.value + 1,
 			});
 		};

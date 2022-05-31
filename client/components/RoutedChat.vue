@@ -3,7 +3,7 @@
 		v-if="activeChannel"
 		:network="activeChannel.network"
 		:channel="activeChannel.channel"
-		:focused="String(route.query.focused)"
+		:focused="String(route.query.focused || '')"
 		@channel-changed="channelChanged"
 	/>
 </template>
@@ -27,7 +27,7 @@ export default defineComponent({
 		const store = useStore();
 
 		const activeChannel = computed(() => {
-			const chanId = parseInt(String(route.params.id), 10);
+			const chanId = parseInt(String(route.params.id || ""), 10);
 			const channel = store.getters.findChannel(chanId);
 			return channel;
 		});

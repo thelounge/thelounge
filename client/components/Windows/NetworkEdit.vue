@@ -28,8 +28,8 @@ export default defineComponent({
 		const networkData = ref<NetworkFormDefaults | null>(null);
 
 		const setNetworkData = () => {
-			socket.emit("network:get", String(route.params.uuid));
-			networkData.value = store.getters.findNetwork(String(route.params.uuid));
+			socket.emit("network:get", String(route.params.uuid || ""));
+			networkData.value = store.getters.findNetwork(String(route.params.uuid || ""));
 		};
 
 		const handleSubmit = (data: {uuid: string; name: string}) => {

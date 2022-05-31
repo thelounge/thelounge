@@ -240,8 +240,8 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 
 		select += " ORDER BY time DESC LIMIT ? OFFSET ? ";
 		params.push(maxResults.toString());
-		const offset = parseInt(query.offset, 10) || 0;
-		params.push(query.offset);
+		query.offset = parseInt(query.offset as string, 10) || 0;
+		params.push(String(query.offset));
 
 		return new Promise((resolve, reject) => {
 			this.database.all(select, params, (err, rows) => {
@@ -252,8 +252,8 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 						searchTerm: query.searchTerm,
 						target: query.channelName,
 						networkUuid: query.networkUuid,
-						offset: offset,
-						results: parseSearchRowsToMessages(query.offset, rows).reverse(),
+						offset: query.offset as number,
+						results: parseSearchRowsToMessages(query.offset as number, rows).reverse(),
 					};
 					resolve(response);
 				}
@@ -269,7 +269,7 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 export default SqliteMessageStorage;
 
 // TODO: type any
-function parseSearchRowsToMessages(id: string, rows: any[]) {
+function parseSearchRowsToMessages(id: number, rows: any[]) {
 	const messages: Msg[] = [];
 
 	for (const row of rows) {

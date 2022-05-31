@@ -127,7 +127,7 @@ Mousetrap.bind(["alt+/"], async function (e) {
 	return false;
 });
 
-function jumpToChannel(targetChannel) {
+function jumpToChannel(targetChannel: ClientChan) {
 	switchToChannel(targetChannel);
 
 	const element = document.querySelector(

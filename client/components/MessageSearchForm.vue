@@ -111,7 +111,7 @@ export default defineComponent({
 		});
 
 		onMounted(() => {
-			searchInput.value = String(route.query.q);
+			searchInput.value = String(route.query.q || "");
 			searchOpened.value = onSearchPage.value;
 
 			if (searchInputField.value && !searchInput.value && searchOpened.value) {
