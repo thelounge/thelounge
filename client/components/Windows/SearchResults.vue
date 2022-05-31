@@ -275,8 +275,6 @@ export default defineComponent({
 				messages.value.length && !(messages.value.length % 100)
 			);
 
-			console.log("offset", offset.value);
-
 			if (!offset.value) {
 				await jumpToBottom();
 			} else {

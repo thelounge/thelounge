@@ -3,33 +3,31 @@
 import log from "../src/log";
 import Config from "../src/config";
 import {expect} from "chai";
-import {stub} from "sinon";
 import got from "got";
 import io from "socket.io-client";
 import util from "./util";
 import changelog from "../src/plugins/changelog";
-import Client from "../src/client";
-import Server from "../src/Server";
+
+import sinon from "ts-sinon";
 
 describe("Server", function () {
 	// Increase timeout due to unpredictable I/O on CI services
 	this.timeout(util.isRunningOnCI() ? 25000 : 5000);
 
-	let server: any;
+	let server;
 
 	before(async function () {
-		stub(log, "info");
-		stub(changelog, "checkForUpdates");
-
-		server = Server();
+		sinon.stub(log, "info");
+		sinon.stub(changelog, "checkForUpdates");
+		server = await (await import("../src/server")).default({} as any);
 	});
 
 	after(function (done) {
 		server.close(done);
-		log.info.restore();
-		changelog.checkForUpdates.restore();
+		sinon.restore();
 	});
 
+	// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 	const webURL = `http://${Config.values.host}:${Config.values.port}/`;
 
 	describe("Express", () => {
@@ -53,7 +51,7 @@ describe("Server", function () {
 	describe("WebSockets", function () {
 		this.slow(300);
 
-		let client: Client;
+		let client: ReturnType<typeof io>;
 
 		beforeEach(() => {
 			client = io(webURL, {

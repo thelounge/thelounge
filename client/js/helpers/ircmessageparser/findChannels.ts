@@ -1,8 +1,13 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 // Escapes the RegExp special characters "^", "$", "", ".", "*", "+", "?", "(",
 // ")", "[", "]", "{", "}", and "|" in string.
 // See https://lodash.com/docs/#escapeRegExp
 import escapeRegExp from "lodash/escapeRegExp";
 import {Part} from "./merge";
+
+export type ChannelPart = Part & {
+	channel: string;
+};
 
 // Given an array of channel prefixes (such as "#" and "&") and an array of user
 // modes (such as "@" and "+"), this function extracts channels and nicks from a
@@ -38,9 +43,5 @@ function findChannels(text: string, channelPrefixes: string[], userModes: string
 
 	return result;
 }
-
-export type ChannelPart = Part & {
-	channel: string;
-};
 
 export default findChannels;

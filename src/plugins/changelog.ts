@@ -60,6 +60,7 @@ async function fetch() {
 		// Add expiration date to the data to send to the client for later refresh
 		versions.expiresAt = time + TIME_TO_LIVE;
 	} catch (error) {
+		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 		log.error(`Failed to fetch changelog: ${error}`);
 	}
 
@@ -107,7 +108,7 @@ function updateVersions(response: Response<string>) {
 }
 
 function checkForUpdates(manager: ClientManager) {
-	fetch().then((versionData) => {
+	void fetch().then((versionData) => {
 		if (!module.exports.isUpdateAvailable) {
 			// Check for updates every 24 hours + random jitter of <3 hours
 			setTimeout(

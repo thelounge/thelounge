@@ -10,7 +10,7 @@ const ctcpResponses = {
 		Object.getOwnPropertyNames(ctcpResponses)
 			.filter((key) => key !== "CLIENTINFO" && typeof ctcpResponses[key] === "function")
 			.join(" "),
-	PING: ({message}) => message.substring(5),
+	PING: ({message}: {message: string}) => message.substring(5),
 	SOURCE: () => pkg.repository.url,
 	VERSION: () => pkg.name + " " + Helper.getVersion() + " -- " + pkg.homepage,
 };
@@ -78,6 +78,7 @@ export default <IrcEventHandler>function (irc, network) {
 					type: MessageType.CTCP_REQUEST,
 					time: data.time,
 					from: new User({nick: target}),
+					// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 					hostmask: data.ident + "@" + data.hostname,
 					ctcpMessage: data.message,
 				});

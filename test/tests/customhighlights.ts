@@ -1,14 +1,15 @@
 "use strict";
 
 import {expect} from "chai";
-import {stub} from "sinon";
 import log from "../../src/log";
 import Client from "../../src/client";
 import TestUtil from "../util";
+import sinon from "ts-sinon";
 
 describe("Custom highlights", function () {
 	let userLoadedLog = "";
-	stub(log, "info").callsFake(TestUtil.sanitizeLog((str) => (userLoadedLog += str)));
+	const logInfoStub = sinon.stub(log, "info");
+	logInfoStub.callsFake(TestUtil.sanitizeLog((str) => (userLoadedLog += str)));
 
 	const client = new Client(
 		{
@@ -26,10 +27,9 @@ describe("Custom highlights", function () {
 				highlights: "foo, @all,   sp ace   , 고",
 				highlightExceptions: "foo bar, bar @all, test sp ace test",
 			},
-		}
+		} as any
 	);
-
-	log.info.restore();
+	logInfoStub.restore();
 	expect(userLoadedLog).to.equal("User test loaded\n");
 
 	it("should NOT highlight", function () {

@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 "use strict";
 
 import path from "path";
 import {expect} from "chai";
 import util from "../util";
 import Config from "../../src/config";
-import link from "../../src/plugins/irc-events/link.js";
+import link, {LinkPreview} from "../../src/plugins/irc-events/link";
 
 describe("Link plugin", function () {
 	// Increase timeout due to unpredictable I/O on CI services
@@ -479,7 +481,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			res.send("<title>second title</title>");
 		});
 
-		const previews = [];
+		const previews: LinkPreview[] = [];
 
 		this.irc.on("msg:preview", function (data) {
 			if (data.preview.link === "http://localhost:" + port + "/one") {
@@ -601,7 +603,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			res.send(`<title>${req.query.q}</title>`);
 		});
 
-		const previews = [];
+		const previews: LinkPreview[] = [];
 
 		this.irc.on("msg:preview", function (data) {
 			previews.push(data.preview.link);
@@ -617,7 +619,9 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			}
 
 			if (previews.length === 5) {
-				expect(message.previews.map((preview) => preview.link)).to.have.members(previews);
+				expect(
+					message.previews.map((preview) => preview.link as LinkPreview)
+				).to.have.members(previews);
 				done();
 			}
 		});
@@ -729,7 +733,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			text: "http://localhost:" + this.port + "/basic-og-once-lang",
 		});
 
-		const requests = [];
+		const requests: string[] = [];
 		let responses = 0;
 
 		this.irc.config.browser.language = "first language";

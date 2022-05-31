@@ -13,6 +13,7 @@ function input(args) {
 			if (chanTypes && chanTypes.length > 0) {
 				for (let c = 0; c < channelList.length; c++) {
 					if (!chanTypes.includes(channelList[c][0])) {
+						// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 						channelList[c] = chanTypes[0] + channelList[c];
 					}
 				}
@@ -26,6 +27,7 @@ function input(args) {
 				switchToChannel(chan);
 			} else {
 				socket.emit("input", {
+					// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 					text: `/join ${channels} ${args.length > 1 ? args[1] : ""}`,
 					target: store.state.activeChannel.channel.id,
 				});

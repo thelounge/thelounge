@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 "use strict";
 
 import fs from "fs";
@@ -7,7 +8,7 @@ import {expect} from "chai";
 import util from "../util";
 import Config from "../../src/config";
 import storage from "../../src/plugins/storage";
-import link from "../../src/plugins/irc-events/link.js";
+import link from "../../src/plugins/irc-events/link";
 import {Request, Response} from "express";
 
 describe("Image storage", function () {

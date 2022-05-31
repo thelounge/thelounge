@@ -29,15 +29,17 @@ export type SearchQuery = {
 	offset: string;
 };
 
-export type SearchResponse = Omit<SearchQuery, "channelName" | "offset"> & {
-	results: Message[];
-	target: string;
-	offset: number;
-};
+export type SearchResponse =
+	| (Omit<SearchQuery, "channelName" | "offset"> & {
+			results: Message[];
+			target: string;
+			offset: number;
+	  })
+	| [];
 
 type SearchFunction = (query: SearchQuery) => Promise<SearchResponse>;
 
 export interface SqliteMessageStorage extends MessageStorage {
 	database: Database;
-	search: SearchFunction;
+	search: SearchFunction | [];
 }

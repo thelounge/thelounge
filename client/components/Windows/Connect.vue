@@ -4,7 +4,6 @@
 
 <script lang="ts">
 import {defineComponent, ref} from "vue";
-import {Defaults} from "../../../src/config";
 
 import socket from "../../js/socket";
 import {useStore} from "../../js/store";

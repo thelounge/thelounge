@@ -3,6 +3,7 @@ import {expect} from "chai";
 
 import Chan from "../../src/models/chan";
 import Msg from "../../src/models/msg";
+import Network from "../../src/models/network";
 import Prefix from "../../src/models/prefix";
 import User from "../../src/models/user";
 describe("Chan", function () {
@@ -84,7 +85,7 @@ describe("Chan", function () {
 
 	describe("#getSortedUsers(irc)", function () {
 		const getUserNames = function (chan: Chan) {
-			return chan.getSortedUsers(network).map((u) => u.nick);
+			return chan.getSortedUsers(network as Network["irc"]).map((u) => u.nick);
 		};
 
 		it("returns unsorted list on null irc object", function () {

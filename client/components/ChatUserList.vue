@@ -31,6 +31,7 @@
 				:class="['user-mode', getModeClass(mode as string)]"
 			>
 				<template v-if="userSearchInput.length > 0">
+					<!-- eslint-disable -->
 					<Username
 						v-for="user in users"
 						:key="user.original.nick + '-search'"
@@ -39,6 +40,7 @@
 						:user="(user.original as any)"
 						v-html="user.string"
 					/>
+					<!-- eslint-enable -->
 				</template>
 				<template v-else>
 					<Username

@@ -4,7 +4,6 @@ import * as webpack from "webpack";
 import * as path from "path";
 import CopyPlugin from "copy-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
-// TODO; we should add a declaration file
 import {VueLoaderPlugin} from "vue-loader";
 import babelConfig from "./babel.config.cjs";
 import Helper from "./src/helper";
@@ -121,7 +120,7 @@ const config: webpack.Configuration = {
 				{
 					from: path.resolve(
 						__dirname,
-						"node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff"
+						"node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff*"
 					),
 					to: "fonts/[name][ext]",
 				},

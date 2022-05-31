@@ -24,8 +24,6 @@
     "module": "es2015",
     "moduleResolution": "node",
 
-    // TODO: Remove eventually, this is due to typescript checking vue files that don't have lang="ts".
-    "checkJs": false,
     // TODO: Remove eventually
     "noImplicitAny": false /*Enable error reporting for expressions and declarations with an implied any type. See more: https://www.typescriptlang.org/tsconfig#noImplicitAny */
   } /* Instructs the TypeScript compiler how to compile .ts files. */

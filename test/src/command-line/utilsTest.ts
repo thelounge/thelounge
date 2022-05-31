@@ -1,21 +1,21 @@
 "use strict";
 
-const log = require("../../../src/log");
+import log from "../../../src/log";
 import {expect} from "chai";
-const stub = require("sinon").stub;
-const TestUtil = require("../../util");
-const Utils = require("../../../src/command-line/utils");
+import TestUtil from "../../util";
+import Utils from "../../../src/command-line/utils";
+import sinon from "ts-sinon";
 
 describe("Utils", function () {
 	describe(".extraHelp", function () {
 		afterEach(function () {
-			log.raw.restore();
+			sinon.restore();
 		});
 
 		it("should start and end with empty lines to display correctly with --help", function () {
 			// Mock `log.raw` to extract its effect into an array
-			const stdout = [];
-			stub(log, "raw").callsFake(TestUtil.sanitizeLog((str) => stdout.push(str)));
+			const stdout: string[] = [];
+			sinon.stub(log).raw.callsFake(TestUtil.sanitizeLog((str) => stdout.push(str)));
 
 			Utils.extraHelp();
 
@@ -31,7 +31,7 @@ describe("Utils", function () {
 		it("should contain information about THELOUNGE_HOME env var", function () {
 			// Mock `log.raw` to extract its effect into a concatenated string
 			let stdout = "";
-			stub(log, "raw").callsFake(TestUtil.sanitizeLog((str) => (stdout += str)));
+			sinon.stub(log).raw.callsFake(TestUtil.sanitizeLog((str) => (stdout += str)));
 
 			Utils.extraHelp();
 
@@ -129,11 +129,11 @@ describe("Utils", function () {
 
 			describe("when given the same key multiple times", function () {
 				afterEach(function () {
-					log.warn.restore();
+					sinon.restore();
 				});
 
 				it("should not override options", function () {
-					stub(log, "warn");
+					sinon.stub(log, "warn");
 
 					expect(Utils.parseConfigOptions("foo=baz", {foo: "bar"})).to.deep.equal({
 						foo: "bar",
@@ -142,7 +142,9 @@ describe("Utils", function () {
 
 				it("should display a warning", function () {
 					let warning = "";
-					stub(log, "warn").callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
+					sinon
+						.stub(log, "warn")
+						.callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
 
 					Utils.parseConfigOptions("foo=bar", {foo: "baz"});
 

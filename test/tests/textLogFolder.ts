@@ -1,7 +1,8 @@
 "use strict";
 
 import {expect} from "chai";
-const TextFileMessageStorage = require("../../src/plugins/messageStorage/text");
+import Network from "../../src/models/network";
+import TextFileMessageStorage from "../../src/plugins/messageStorage/text";
 
 describe("TextFileMessageStorage", function () {
 	it("should combine network name and uuid into a safe name", function () {
@@ -9,7 +10,7 @@ describe("TextFileMessageStorage", function () {
 			TextFileMessageStorage.getNetworkFolderName({
 				name: "Freenode",
 				uuid: "f9042ec9-4016-45e0-a8a8-d378fb252628",
-			})
+			} as Network)
 		).to.equal("freenode-4016-45e0-a8a8-d378fb252628");
 	});
 
@@ -18,7 +19,7 @@ describe("TextFileMessageStorage", function () {
 			TextFileMessageStorage.getNetworkFolderName({
 				name: '@ TeSt ../..\\<>:"/\\|?*',
 				uuid: "f9042ec9-4016-45e0-a8a8-d378fb252628",
-			})
+			} as Network)
 		).to.equal("@-test-.._..--45e0-a8a8-d378fb252628");
 	});
 
@@ -27,7 +28,7 @@ describe("TextFileMessageStorage", function () {
 			TextFileMessageStorage.getNetworkFolderName({
 				name: "Freenod",
 				uuid: "f9042ec9-4016-45e0-a8a8-d378fb252628",
-			})
+			} as Network)
 		).to.equal("freenod--4016-45e0-a8a8-d378fb252628");
 	});
 
@@ -36,7 +37,7 @@ describe("TextFileMessageStorage", function () {
 			TextFileMessageStorage.getNetworkFolderName({
 				name: "This network name is longer than the uuid itself but it should be limited",
 				uuid: "f9042ec9-4016-45e0-a8a8-d378fb252628",
-			})
+			} as Network)
 		).to.equal("this-network-name-is-lo-d378fb252628");
 	});
 });

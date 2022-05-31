@@ -116,7 +116,7 @@ interface ClientToServerEvents {
 		target: number;
 		messageIds?: number[];
 		msgId?: number;
-		shown?: boolean;
+		shown?: boolean | null;
 	}) => void;
 
 	"network:get": (uuid: string) => void;

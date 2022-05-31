@@ -182,7 +182,6 @@ export default defineComponent({
 				return;
 			}
 
-			// @ts-ignore
 			return friendlysize(props.link.maxSize);
 		});
 

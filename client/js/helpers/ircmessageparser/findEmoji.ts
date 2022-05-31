@@ -3,6 +3,10 @@ import {Part} from "./merge";
 
 const regExp = emojiRegExp();
 
+export type EmojiPart = Part & {
+	emoji: string;
+};
+
 function findEmoji(text: string) {
 	const result: EmojiPart[] = [];
 	let match;
@@ -10,6 +14,7 @@ function findEmoji(text: string) {
 	while ((match = regExp.exec(text))) {
 		result.push({
 			start: match.index,
+			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 			end: match.index + match[0].length,
 			emoji: match[0],
 		});
@@ -17,9 +22,5 @@ function findEmoji(text: string) {
 
 	return result;
 }
-
-export type EmojiPart = Part & {
-	emoji: string;
-};
 
 export default findEmoji;

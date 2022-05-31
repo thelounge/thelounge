@@ -26,7 +26,8 @@ export default defineComponent({
 	name: "Username",
 	props: {
 		user: {
-			type: Object as PropType<UsernameUser>,
+			// TODO: UserInMessage shouldn't be necessary here.
+			type: Object as PropType<UsernameUser | UserInMessage>,
 			required: true,
 		},
 		active: Boolean,
@@ -46,7 +47,9 @@ export default defineComponent({
 
 			return props.user.mode;
 		});
-		const nickColor = computed(() => colorClass(props.user.nick));
+
+		// TODO: Nick must be ! because our user prop union includes UserInMessage
+		const nickColor = computed(() => colorClass(props.user.nick!));
 
 		const hover = () => {
 			if (props.onHover) {

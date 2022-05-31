@@ -42,7 +42,7 @@ class Utils {
 	}
 
 	// Parses CLI options such as `-c public=true`, `-c debug.raw=true`, etc.
-	static parseConfigOptions(this: void, val: string, memo: any) {
+	static parseConfigOptions(this: void, val: string, memo?: any) {
 		// Invalid option that is not of format `key=value`, do nothing
 		if (!val.includes("=")) {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-return

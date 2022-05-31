@@ -24,7 +24,7 @@
     "lint:stylelint": "stylelint --color \"client/**/*.css\"",
     "start": "node src/dist/src/index start",
     "test": "run-p --aggregate-output --continue-on-error lint:* test:*",
-    "test:mocha": "NODE_ENV=test webpack --mode=development && TS_NODE_PROJECT='./test/tsconfig.json' nyc --nycrc-path=test/.nycrc-mocha.json mocha --require ts-node/register --colors --config=test/.mocharc.yml",
+    "test:mocha": "NODE_ENV=test webpack --mode=development && NODE_ENV=test TS_NODE_PROJECT='./test/tsconfig.json' nyc --nycrc-path=test/.nycrc-mocha.json mocha --require ts-node/register --colors --config=test/.mocharc.yml",
     "watch": "webpack --watch"
   },
   "keywords": [
@@ -152,6 +152,7 @@
     "ts-loader": "9.3.0",
     "ts-migrate": "0.1.28",
     "ts-node": "10.7.0",
+    "ts-sinon": "2.0.2",
     "tsconfig-paths": "3.14.1",
     "tsconfig-paths-webpack-plugin": "3.5.2",
     "typescript": "4.7.2",

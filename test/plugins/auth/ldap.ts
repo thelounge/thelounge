@@ -5,8 +5,9 @@ import ldapAuth from "../../../src/plugins/auth/ldap";
 import Config from "../../../src/config";
 import ldap from "ldapjs";
 import {expect} from "chai";
-import {stub} from "sinon";
 import TestUtil from "../../util";
+import ClientManager from "../../../src/clientManager";
+import sinon from "ts-sinon";
 
 const user = "johndoe";
 const wrongUser = "eve";
@@ -16,8 +17,8 @@ const baseDN = "ou=accounts,dc=example,dc=com";
 const primaryKey = "uid";
 const serverPort = 1389;
 
-function normalizeDN(dn) {
-	return ldap.parseDN(dn).toString();
+function normalizeDN(dn: string) {
+	return ldap.parseDN(dn).toString() as string;
 }
 
 function startLdapServer(callback) {
@@ -33,7 +34,7 @@ function startLdapServer(callback) {
 	authorizedUsers[normalizeDN(searchConf.rootDN)] = searchConf.rootPassword;
 	authorizedUsers[normalizeDN(userDN)] = correctPassword;
 
-	function authorize(req, res, next) {
+	function authorize(req: any, res: any, next: (error?: any) => void) {
 		const bindDN = req.connection.ldap.bindDN;
 
 		if (bindDN in authorizedUsers) {
@@ -44,7 +45,7 @@ function startLdapServer(callback) {
 	}
 
 	Object.keys(authorizedUsers).forEach(function (dn) {
-		server.bind(dn, function (req, res, next) {
+		server.bind(dn, function (req, res, next: (error?: any) => void) {
 			const bindDN = req.dn.toString();
 			const password = req.credentials;
 
@@ -86,11 +87,12 @@ function startLdapServer(callback) {
 function testLdapAuth() {
 	// Create mock manager and client. When client is true, manager should not
 	// be used. But ideally the auth plugin should not use any of those.
-	const manager = {};
+	const manager = {} as ClientManager;
 	const client = true;
 
 	it("should successfully authenticate with correct password", function (done) {
-		ldapAuth.auth(manager, client, user, correctPassword, function (valid) {
+		// TODO: why is client = true?
+		ldapAuth.auth(manager, client as any, user, correctPassword, function (valid) {
 			expect(valid).to.equal(true);
 			done();
 		});
@@ -98,26 +100,31 @@ function testLdapAuth() {
 
 	it("should fail to authenticate with incorrect password", function (done) {
 		let error = "";
-		stub(log, "error").callsFake(TestUtil.sanitizeLog((str) => (error += str)));
 
-		ldapAuth.auth(manager, client, user, wrongPassword, function (valid) {
+		const errorLogStub = sinon
+			.stub(log, "error")
+			.callsFake(TestUtil.sanitizeLog((str) => (error += str)));
+
+		ldapAuth.auth(manager, client as any, user, wrongPassword, function (valid) {
 			expect(valid).to.equal(false);
 			expect(error).to.equal(
 				"LDAP bind failed: InsufficientAccessRightsError: InsufficientAccessRightsError\n"
 			);
-			log.error.restore();
+			errorLogStub.restore();
 			done();
 		});
 	});
 
 	it("should fail to authenticate with incorrect username", function (done) {
 		let warning = "";
-		stub(log, "warn").callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
+		const warnLogStub = sinon
+			.stub(log, "warn")
+			.callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
 
-		ldapAuth.auth(manager, client, wrongUser, correctPassword, function (valid) {
+		ldapAuth.auth(manager, client as any, wrongUser, correctPassword, function (valid) {
 			expect(valid).to.equal(false);
 			expect(warning).to.equal("LDAP Search did not find anything for: eve (0)\n");
-			log.warn.restore();
+			warnLogStub.restore();
 			done();
 		});
 	});
@@ -128,18 +135,21 @@ describe("LDAP authentication plugin", function () {
 	this.timeout(TestUtil.isRunningOnCI() ? 25000 : 5000);
 	this.slow(300);
 
-	let server;
+	let server: ldap.Server;
+	let infoLogStub: any;
 
 	before(function (done) {
-		stub(log, "info");
+		infoLogStub = sinon.stub(log, "info");
 
 		server = startLdapServer(done);
 	});
 
 	after(function () {
-		server.close();
+		server.close(() => {
+			// no-op
+		});
 
-		log.info.restore();
+		infoLogStub.restore();
 	});
 
 	beforeEach(function () {

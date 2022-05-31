@@ -67,17 +67,17 @@ class Uploader {
 		});
 	}
 
-	static createTokenTimeout(token: string) {
+	static createTokenTimeout(this: void, token: string) {
 		return setTimeout(() => uploadTokens.delete(token), 60 * 1000);
 	}
 
 	// TODO: type
-	static router(express: any) {
+	static router(this: void, express: any) {
 		express.get("/uploads/:name/:slug*?", Uploader.routeGetFile);
 		express.post("/uploads/new/:token", Uploader.routeUploadFile);
 	}
 
-	static async routeGetFile(req: Request, res: Response) {
+	static async routeGetFile(this: void, req: Request, res: Response) {
 		const name = req.params.name;
 
 		const nameRegex = /^[0-9a-f]{16}$/;
@@ -131,7 +131,7 @@ class Uploader {
 		return res.sendFile(filePath);
 	}
 
-	static routeUploadFile(req: Request, res: Response) {
+	static routeUploadFile(this: void, req: Request, res: Response) {
 		let busboyInstance: NodeJS.WritableStream | busboy | null | undefined;
 		let uploadUrl: string | URL;
 		let randomName: string;
@@ -223,7 +223,9 @@ class Uploader {
 		try {
 			fs.mkdirSync(destDir, {recursive: true});
 		} catch (err: any) {
+			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			log.error(`Error ensuring ${destDir} exists for uploads: ${err.message}`);
+
 			return abortWithError(err);
 		}
 
@@ -325,6 +327,7 @@ class Uploader {
 			return "application/octet-stream";
 		} catch (e: any) {
 			if (e.code !== "ENOENT") {
+				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 				log.warn(`Failed to read ${filePath}: ${e.message}`);
 			}
 		}

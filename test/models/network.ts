@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 "use strict";
 
 import {expect} from "chai";
 import Chan, {ChanType} from "../../src/models/chan";
 import Msg from "../../src/models/msg";
 import User from "../../src/models/user";
-import Network, {NetworkWithIrcFramework} from "../../src/models/network";
+import Network from "../../src/models/network";
 import Config from "../../src/config";
 import STSPolicies from "../../src/plugins/sts";
 import ClientCertificate from "../../src/plugins/clientCertificate";
@@ -177,6 +178,7 @@ describe("Network", function () {
 		});
 
 		it("should apply STS policies iff they match", function () {
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
 			const client = {idMsg: 1, emit() {}} as any;
 			STSPolicies.update("irc.example.com", 7000, 3600);
 
@@ -212,11 +214,11 @@ describe("Network", function () {
 			(network as any).createIrcFramework(client);
 			expect(network.irc).to.not.be.null;
 
-			const client_cert = network.irc.options.client_certificate;
+			const client_cert = network.irc?.options?.client_certificate;
 			expect(client_cert).to.not.be.null;
 			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert);
 
-			expect(network.validate(client)).to.be.true;
+			expect(network.validate(client as any)).to.be.true;
 
 			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert); // Should be unchanged
 
@@ -234,7 +236,7 @@ describe("Network", function () {
 			(network as any).createIrcFramework(client);
 			expect(network.irc).to.not.be.null;
 
-			const client_cert = network.irc.options.client_certificate;
+			const client_cert = network.irc?.options?.client_certificate;
 			expect(client_cert).to.not.be.null;
 			expect(ClientCertificate.get(network.uuid)).to.deep.equal(client_cert);
 
@@ -311,7 +313,11 @@ describe("Network", function () {
 			expect(saveCalled).to.be.true;
 			expect(nameEmitCalled).to.be.true;
 			expect(network.uuid).to.not.equal("newuuid");
+
+			// @ts-ignore
 			expect(network.ip).to.be.undefined;
+
+			// @ts-ignore
 			expect(network.hostname).to.be.undefined;
 
 			expect(network.name).to.equal("Lounge Test Network");

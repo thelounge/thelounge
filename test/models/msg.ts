@@ -4,6 +4,7 @@ import {expect} from "chai";
 
 import Msg from "../../src/models/msg";
 import User from "../../src/models/user";
+import {LinkPreview} from "../../src/plugins/irc-events/link";
 
 describe("Msg", function () {
 	["from", "target"].forEach((prop) => {
@@ -14,12 +15,12 @@ describe("Msg", function () {
 					modes: ["o"],
 					nick: "foo",
 				},
-				prefixLookup
+				prefixLookup as any
 			);
 			const msg = new Msg({[prop]: user});
 
 			// Mutating the user
-			user.setModes(["a"], prefixLookup);
+			user.setModes(["a"], prefixLookup as any);
 			user.nick = "bar";
 
 			// Message's `.from`/etc. should still refer to the original user
@@ -46,11 +47,11 @@ describe("Msg", function () {
 					type: "link",
 					shown: true,
 				},
-			],
+			] as LinkPreview[],
 		});
 
 		it("should find a preview given an existing link", function () {
-			expect(msg.findPreview("https://thelounge.chat/").head).to.equal("The Lounge");
+			expect(msg.findPreview("https://thelounge.chat/")?.head).to.equal("The Lounge");
 		});
 
 		it("should not find a preview that does not exist", function () {

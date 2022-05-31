@@ -1,12 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 "use strict";
 
 import fs from "fs";
 import path from "path";
 import {expect} from "chai";
 import util from "../util";
-import Msg from "../../src/models/msg";
+import Msg, {MessageType} from "../../src/models/msg";
 import Config from "../../src/config";
-import MessageStorage from "../../src/plugins/messageStorage/sqlite.js";
+import MessageStorage from "../../src/plugins/messageStorage/sqlite";
+import Client from "../../src/client";
 
 describe("SQLite Message Storage", function () {
 	// Increase timeout due to unpredictable I/O on CI services
@@ -14,13 +16,13 @@ describe("SQLite Message Storage", function () {
 	this.slow(300);
 
 	const expectedPath = path.join(Config.getHomePath(), "logs", "testUser.sqlite3");
-	let store;
+	let store: MessageStorage;
 
 	before(function (done) {
 		store = new MessageStorage({
 			name: "testUser",
 			idMsg: 1,
-		});
+		} as Client);
 
 		// Delete database file from previous test run
 		if (fs.existsSync(expectedPath)) {
@@ -38,7 +40,7 @@ describe("SQLite Message Storage", function () {
 	});
 
 	it("should resolve an empty array when disabled", function () {
-		return store.getMessages(null, null).then((messages) => {
+		return store.getMessages(null as any, null as any).then((messages) => {
 			expect(messages).to.be.empty;
 		});
 	});
@@ -94,14 +96,14 @@ describe("SQLite Message Storage", function () {
 		store.index(
 			{
 				uuid: "this-is-a-network-guid",
-			},
+			} as any,
 			{
 				name: "#thisISaCHANNEL",
-			},
+			} as any,
 			new Msg({
 				time: 123456789,
 				text: "Hello from sqlite world!",
-			})
+			} as any)
 		);
 	});
 
@@ -110,10 +112,10 @@ describe("SQLite Message Storage", function () {
 			.getMessages(
 				{
 					uuid: "this-is-a-network-guid",
-				},
+				} as any,
 				{
 					name: "#thisisaCHANNEL",
-				}
+				} as any
 			)
 			.then((messages) => {
 				expect(messages).to.have.lengthOf(1);
@@ -134,17 +136,20 @@ describe("SQLite Message Storage", function () {
 
 			for (let i = 0; i < 200; ++i) {
 				store.index(
-					{uuid: "retrieval-order-test-network"},
-					{name: "#channel"},
+					{uuid: "retrieval-order-test-network"} as any,
+					{name: "#channel"} as any,
 					new Msg({
 						time: 123456789 + i,
 						text: `msg ${i}`,
-					})
+					} as any)
 				);
 			}
 
 			return store
-				.getMessages({uuid: "retrieval-order-test-network"}, {name: "#channel"})
+				.getMessages(
+					{uuid: "retrieval-order-test-network"} as any,
+					{name: "#channel"} as any
+				)
 				.then((messages) => {
 					expect(messages).to.have.lengthOf(2);
 					expect(messages.map((i) => i.text)).to.deep.equal(["msg 198", "msg 199"]);
@@ -164,16 +169,18 @@ describe("SQLite Message Storage", function () {
 				.search({
 					searchTerm: "msg",
 					networkUuid: "retrieval-order-test-network",
-				})
+				} as any)
 				.then((messages) => {
+					// @ts-ignore
 					expect(messages.results).to.have.lengthOf(100);
 
-					const expectedMessages = [];
+					const expectedMessages: string[] = [];
 
 					for (let i = 100; i < 200; ++i) {
 						expectedMessages.push(`msg ${i}`);
 					}
 
+					// @ts-ignore
 					expect(messages.results.map((i) => i.text)).to.deep.equal(expectedMessages);
 				});
 		} finally {
@@ -187,8 +194,9 @@ describe("SQLite Message Storage", function () {
 				.search({
 					searchTerm: query,
 					networkUuid: "this-is-a-network-guid2",
-				})
+				} as any)
 				.then((messages) => {
+					// @ts-ignore
 					expect(messages.results.map((i) => i.text)).to.deep.equal(expected);
 				});
 		}
@@ -199,35 +207,38 @@ describe("SQLite Message Storage", function () {
 			Config.values.maxHistory = 3;
 
 			store.index(
-				{uuid: "this-is-a-network-guid2"},
-				{name: "#channel"},
+				{uuid: "this-is-a-network-guid2"} as any,
+				{name: "#channel"} as any,
 				new Msg({
 					time: 123456790,
 					text: `foo % bar _ baz`,
-				})
+				} as any)
 			);
 
 			store.index(
-				{uuid: "this-is-a-network-guid2"},
-				{name: "#channel"},
+				{uuid: "this-is-a-network-guid2"} as any,
+				{name: "#channel"} as any,
 				new Msg({
 					time: 123456791,
 					text: `foo bar x baz`,
-				})
+				} as any)
 			);
 
 			store.index(
-				{uuid: "this-is-a-network-guid2"},
-				{name: "#channel"},
+				{uuid: "this-is-a-network-guid2"} as any,
+				{name: "#channel"} as any,
 				new Msg({
 					time: 123456792,
 					text: `bar @ baz`,
-				})
+				} as any)
 			);
 
 			return (
 				store
-					.getMessages({uuid: "this-is-a-network-guid2"}, {name: "#channel"})
+					.getMessages(
+						{uuid: "this-is-a-network-guid2"} as any,
+						{name: "#channel"} as any
+					)
 					// .getMessages() waits for store.index() transactions to commit
 					.then(() => assertResults("foo", ["foo % bar _ baz", "foo bar x baz"]))
 					.then(() => assertResults("%", ["foo % bar _ baz"]))

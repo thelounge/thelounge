@@ -2,21 +2,25 @@
 
 import log from "../../../src/log";
 import {expect} from "chai";
-import {stub} from "sinon";
 import TestUtil from "../../util";
+import sinon from "ts-sinon";
+import packagePlugin from "../../../src/plugins/packages";
 
-let packages;
+let packages: typeof packagePlugin;
 
 describe("packages", function () {
+	let logStub: sinon.SinonStub<string[], void>;
+
 	beforeEach(function () {
-		stub(log, "info");
+		logStub = sinon.stub(log, "info");
 
 		delete require.cache[require.resolve("../../../src/plugins/packages")];
-		packages = require("../../../src/plugins/packages");
+		// eslint-disable-next-line @typescript-eslint/no-var-requires
+		packages = require("../../../src/plugins/packages").default;
 	});
 
 	afterEach(function () {
-		log.info.restore();
+		logStub.restore();
 	});
 
 	describe(".getStylesheets", function () {
@@ -46,10 +50,11 @@ describe("packages", function () {
 	describe(".loadPackages", function () {
 		it("should display report about loading packages", function () {
 			// Mock `log.info` to extract its effect into a string
-			log.info.restore();
+			logStub.restore();
 			let stdout = "";
-			stub(log, "info").callsFake(TestUtil.sanitizeLog((str) => (stdout += str)));
-
+			logStub = sinon
+				.stub(log, "info")
+				.callsFake(TestUtil.sanitizeLog((str) => (stdout += str)));
 			packages.loadPackages();
 
 			expect(stdout).to.deep.equal(

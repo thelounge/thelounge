@@ -1,8 +1,10 @@
+// @ts-nocheck TODO re-enable
 "use strict";
 
 import {expect} from "chai";
+import Client from "../../src/client";
 
-import Chan from "../../src/models/chan";
+import Chan, {ChanType} from "../../src/models/chan";
 import ModeCommand from "../../src/plugins/inputs/mode";
 
 describe("Commands", function () {
@@ -33,7 +35,17 @@ describe("Commands", function () {
 					testableNetwork.lastCommand = args.join(" ");
 				},
 			},
-		} as any;
+		} as {
+			firstCommand: string | null;
+			lastCommand: string | null;
+			nick: string;
+			irc: {
+				network: {
+					supports(type: string): string;
+				};
+				raw(...args: string[]): void;
+			};
+		};
 
 		const testableNetworkNoSupports = Object.assign({}, testableNetwork, {
 			irc: {
@@ -49,7 +61,7 @@ describe("Commands", function () {
 			},
 		});
 
-		it("should not mess with the given target", function () {
+		it("should not mess with the given target", function (this: CommandContext) {
 			const test = function (expected: string, args: string[]) {
 				ModeCommand.input(testableNetwork, channel, "mode", Array.from(args));
 				expect(testableNetwork.lastCommand).to.equal(expected);

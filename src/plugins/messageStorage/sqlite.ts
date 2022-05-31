@@ -213,15 +213,10 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 		}) as Promise<Message[]>;
 	}
 
-	search(query: SearchQuery): Promise<SearchResponse> {
+	search(query: SearchQuery): Promise<SearchResponse | []> {
 		if (!this.isEnabled) {
-			return Promise.resolve({
-				results: [],
-				target: "",
-				networkUuid: "",
-				offset: 0,
-				searchTerm: query?.searchTerm,
-			});
+			// TODO: this should return an empty SearchResponse?
+			return Promise.resolve([]);
 		}
 
 		// Using the '@' character to escape '%' and '_' in patterns.

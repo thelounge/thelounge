@@ -1,21 +1,22 @@
 "use strict";
 
-const log = require("../../src/log");
 import {expect} from "chai";
-const stub = require("sinon").stub;
-const Config = require("../../src/config");
-const TestUtil = require("../util");
+import sinon from "ts-sinon";
+
+import log from "../../src/log";
+import Config from "../../src/config";
+import TestUtil from "../util";
 
 describe("mergeConfig", function () {
 	it("should mutate object", function () {
 		const config = {
 			ip: "default",
-		};
+		} as any;
 
 		expect(
 			Config._merge_config_objects(config, {
 				ip: "overridden",
-			})
+			} as any)
 		).to.deep.equal({
 			ip: "overridden",
 		});
@@ -31,10 +32,10 @@ describe("mergeConfig", function () {
 				{
 					ip: "default",
 					newProp: "this should appear too",
-				},
+				} as any,
 				{
 					ip: "overridden",
-				}
+				} as any
 			)
 		).to.deep.equal({
 			ip: "overridden",
@@ -47,13 +48,13 @@ describe("mergeConfig", function () {
 			Config._merge_config_objects(
 				{
 					tlsOptions: {},
-				},
+				} as any,
 				{
 					tlsOptions: {
 						user: "test",
 						thing: 123,
 					},
-				}
+				} as any
 			)
 		).to.deep.equal({
 			tlsOptions: {
@@ -65,24 +66,24 @@ describe("mergeConfig", function () {
 
 	it("should warn for unknown top level keys", function () {
 		let warning = "";
-		stub(log, "warn").callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
+		sinon.stub(log, "warn").callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
 
 		expect(
 			Config._merge_config_objects(
 				{
 					optionOne: 123,
-				},
+				} as any,
 				{
 					optionOne: 456,
 					optionTwo: 789,
-				}
+				} as any
 			)
 		).to.deep.equal({
 			optionOne: 456,
 			optionTwo: 789,
 		});
 
-		log.warn.restore();
+		sinon.restore();
 		expect(warning).to.equal('Unknown key "optionTwo", please verify your config.\n');
 	});
 
@@ -93,13 +94,13 @@ describe("mergeConfig", function () {
 					optionOne: {
 						subOne: 123,
 					},
-				},
+				} as any,
 				{
 					optionOne: {
 						subOne: 123,
 						subTwo: 123,
 					},
-				}
+				} as any
 			)
 		).to.deep.equal({
 			optionOne: {
@@ -114,10 +115,10 @@ describe("mergeConfig", function () {
 			Config._merge_config_objects(
 				{
 					oidentd: null,
-				},
+				} as any,
 				{
 					oidentd: "some path",
-				}
+				} as any
 			)
 		).to.deep.equal({
 			oidentd: "some path",
@@ -129,13 +130,13 @@ describe("mergeConfig", function () {
 			Config._merge_config_objects(
 				{
 					webirc: null,
-				},
+				} as any,
 				{
 					webirc: {
 						serverone: "password",
 						servertwo: "password2",
 					},
-				}
+				} as any
 			)
 		).to.deep.equal({
 			webirc: {
@@ -152,12 +153,12 @@ describe("mergeConfig", function () {
 			Config._merge_config_objects(
 				{
 					webirc: null,
-				},
+				} as any,
 				{
 					webirc: {
 						servercb: callbackFunction,
 					},
-				}
+				} as any
 			)
 		).to.deep.equal({
 			webirc: {
@@ -180,7 +181,7 @@ describe("mergeConfig", function () {
 							newThing: "but also this",
 						},
 					},
-				},
+				} as any,
 				{
 					nestedOnce: {},
 					nestedTwice: {
@@ -188,7 +189,7 @@ describe("mergeConfig", function () {
 							otherThing: "overridden",
 						},
 					},
-				}
+				} as any
 			)
 		).to.deep.equal({
 			nestedOnce: {
@@ -209,10 +210,10 @@ describe("mergeConfig", function () {
 			Config._merge_config_objects(
 				{
 					test: ["sqlite", "text"],
-				},
+				} as any,
 				{
 					test: ["sqlite"],
-				}
+				} as any
 			)
 		).to.deep.equal({
 			test: ["sqlite"],
@@ -222,10 +223,10 @@ describe("mergeConfig", function () {
 			Config._merge_config_objects(
 				{
 					test: ["sqlite", "text"],
-				},
+				} as any,
 				{
 					test: [],
-				}
+				} as any
 			)
 		).to.deep.equal({
 			test: [],
@@ -237,10 +238,10 @@ describe("mergeConfig", function () {
 			Config._merge_config_objects(
 				{
 					test: ["sqlite", "text"],
-				},
+				} as any,
 				{
 					test: ["text", "sqlite"],
-				}
+				} as any
 			)
 		).to.deep.equal({
 			test: ["text", "sqlite"],
@@ -248,7 +249,7 @@ describe("mergeConfig", function () {
 	});
 
 	it("should only merge same type", function () {
-		stub(log, "warn");
+		sinon.stub(log, "warn");
 
 		expect(
 			Config._merge_config_objects(
@@ -256,10 +257,10 @@ describe("mergeConfig", function () {
 					shouldBeObject: {
 						thing: "yes",
 					},
-				},
+				} as any,
 				{
 					shouldBeObject: "bad type",
-				}
+				} as any
 			)
 		).to.deep.equal({
 			shouldBeObject: {
@@ -271,15 +272,15 @@ describe("mergeConfig", function () {
 			Config._merge_config_objects(
 				{
 					shouldBeString: "string",
-				},
+				} as any,
 				{
 					shouldBeString: 1234567,
-				}
+				} as any
 			)
 		).to.deep.equal({
 			shouldBeString: "string",
 		});
 
-		log.warn.restore();
+		sinon.restore();
 	});
 });

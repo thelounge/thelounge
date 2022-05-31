@@ -1,7 +1,7 @@
 "use strict";
 
 import {expect} from "chai";
-const Helper = require("../../src/helper");
+import Helper from "../../src/helper";
 
 describe("Client passwords", function () {
 	this.slow(1500);

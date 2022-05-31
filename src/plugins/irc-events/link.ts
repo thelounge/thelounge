@@ -27,12 +27,14 @@ export type LinkPreview = {
 	thumb: string;
 	size: number;
 	link: string; // Send original matched link to the client
-	shown?: boolean;
+	shown?: boolean | null;
 	error?: string;
 	message?: string;
 
-	media: string;
-	mediaType: string;
+	media?: string;
+	mediaType?: string;
+	maxSize?: number;
+	thumbActualUrl?: string;
 };
 
 export default function (client: Client, chan: Chan, msg: Msg, cleanText: string) {
@@ -65,11 +67,7 @@ export default function (client: Client, chan: Chan, msg: Msg, cleanText: string
 			thumb: "",
 			size: -1,
 			link: link.link, // Send original matched link to the client
-			shown: undefined,
-			error: undefined,
-			message: undefined,
-			media: "",
-			mediaType: "",
+			shown: null,
 		};
 
 		cleanLinks.push(preview);
@@ -244,7 +242,7 @@ function parseHtmlMedia($: any, preview, client: Client) {
 }
 
 // TODO: type preview
-function parse(msg: Msg, chan: Chan, preview: any, res, client: Client) {
+function parse(msg: Msg, chan: Chan, preview: LinkPreview, res, client: Client) {
 	let promise;
 
 	preview.size = res.size;
@@ -338,7 +336,7 @@ function parse(msg: Msg, chan: Chan, preview: any, res, client: Client) {
 	promise.then((newRes) => handlePreview(client, chan, msg, preview, newRes));
 }
 
-function handlePreview(client, chan, msg, preview, res) {
+function handlePreview(client: Client, chan: Chan, msg: Msg, preview: LinkPreview, res) {
 	const thumb = preview.thumbActualUrl || "";
 	delete preview.thumbActualUrl;
 
@@ -386,7 +384,7 @@ function emitPreview(client: Client, chan: Chan, msg: Msg, preview: LinkPreview)
 	});
 }
 
-function removePreview(msg, preview) {
+function removePreview(msg: Msg, preview: LinkPreview) {
 	// If a preview fails to load, remove the link from msg object
 	// So that client doesn't attempt to display an preview on page reload
 	const index = msg.previews.indexOf(preview);

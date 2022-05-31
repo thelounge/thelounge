@@ -22,6 +22,7 @@ class STSPolicies {
 	constructor() {
 		this.stsFile = path.join(Config.getHomePath(), "sts-policies.json");
 		this.policies = new Map();
+		// eslint-disable-next-line @typescript-eslint/unbound-method
 		this.refresh = _.debounce(this.saveFile, 10000, {maxWait: 60000});
 
 		if (!fs.existsSync(this.stsFile)) {

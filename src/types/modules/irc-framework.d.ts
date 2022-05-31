@@ -1,3 +1,4 @@
+// @ts-nocheck
 // https://raw.githubusercontent.com/eternagame/HTML-Chat/vue-rewrite/src/app/types/modules/irc-framework/irc-framework.d.ts
 // TODO: Fix this
 declare module "irc-framework" {
@@ -320,6 +321,12 @@ declare module "irc-framework" {
 		host: string;
 	}
 
+	export interface ChannelInfoEventArgs {
+		channel: string;
+		created_at?: number;
+		modes?: Mode[]; // TODO: check type
+		url?: string;
+	}
 	class IrcChannel extends EventEmitter {
 		constructor(irc_client: Client, channel_name: string, key: string);
 
@@ -354,7 +361,7 @@ declare module "irc-framework" {
 		 * one_way (false) Only relay messages to target_chan, not the reverse
 		 * replay_nicks (true) Include the sending nick as part of the relayed message
 		 */
-		relay(target_chan: IrcChannel | string, opts: Object): void;
+		relay(target_chan: IrcChannel | string, opts: Record<string, any>): void;
 
 		// stream(stream_ops: Object): DuplexStream;
 
@@ -364,12 +371,7 @@ declare module "irc-framework" {
 
 		on(eventType: string | symbol, cb: (event: any) => any): this;
 	}
-	export interface ChannelInfoEventArgs {
-		channel: string;
-		created_at?: number;
-		modes?: Mode[]; // TODO: check type
-		url?: string;
-	}
+
 	export interface UserListEventArgs {
 		channel: string;
 		users: IrcUser[]; // TODO: check type

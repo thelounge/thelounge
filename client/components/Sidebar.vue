@@ -122,40 +122,6 @@ export default defineComponent({
 			store.commit("sidebarOpen", state);
 		};
 
-		const onTouchEnd = () => {
-			if (!touchStartPos.value?.screenX || !touchCurPos.value?.screenX) {
-				return;
-			}
-
-			const diff = touchCurPos.value.screenX - touchStartPos.value.screenX;
-			const absDiff = Math.abs(diff);
-
-			if (
-				absDiff > menuWidth.value / 2 ||
-				(Date.now() - touchStartTime.value < 180 && absDiff > 50)
-			) {
-				toggle(diff > 0);
-			}
-
-			document.body.removeEventListener("touchmove", onTouchMove);
-			document.body.removeEventListener("touchend", onTouchEnd);
-
-			store.commit("sidebarDragging", false);
-
-			if (sidebar.value) {
-				sidebar.value.style.transform = "";
-			}
-
-			if (props.overlay) {
-				props.overlay.style.opacity = "";
-			}
-
-			touchStartPos.value = null;
-			touchCurPos.value = null;
-			touchStartTime.value = 0;
-			menuIsMoving.value = false;
-		};
-
 		const onTouchMove = (e: TouchEvent) => {
 			const touch = (touchCurPos.value = e.touches.item(0));
 
@@ -176,6 +142,7 @@ export default defineComponent({
 				// menu must be open; gestures in 45°-90° (>1) are considered vertical, so
 				// chat windows must be scrolled.
 				if (Math.abs(distY / distX) >= 1) {
+					// eslint-disable-next-line no-use-before-define
 					onTouchEnd();
 					return;
 				}
@@ -210,6 +177,40 @@ export default defineComponent({
 			if (props.overlay) {
 				props.overlay.style.opacity = `${distX / menuWidth.value}`;
 			}
+		};
+
+		const onTouchEnd = () => {
+			if (!touchStartPos.value?.screenX || !touchCurPos.value?.screenX) {
+				return;
+			}
+
+			const diff = touchCurPos.value.screenX - touchStartPos.value.screenX;
+			const absDiff = Math.abs(diff);
+
+			if (
+				absDiff > menuWidth.value / 2 ||
+				(Date.now() - touchStartTime.value < 180 && absDiff > 50)
+			) {
+				toggle(diff > 0);
+			}
+
+			document.body.removeEventListener("touchmove", onTouchMove);
+			document.body.removeEventListener("touchend", onTouchEnd);
+
+			store.commit("sidebarDragging", false);
+
+			if (sidebar.value) {
+				sidebar.value.style.transform = "";
+			}
+
+			if (props.overlay) {
+				props.overlay.style.opacity = "";
+			}
+
+			touchStartPos.value = null;
+			touchCurPos.value = null;
+			touchStartTime.value = 0;
+			menuIsMoving.value = false;
 		};
 
 		const onTouchStart = (e: TouchEvent) => {

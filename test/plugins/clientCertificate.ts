@@ -3,7 +3,7 @@
 import fs from "fs";
 import path from "path";
 import {expect} from "chai";
-import ClientCertificate from "../../src/plugins/clientCertificate";
+import ClientCertificate, {ClientCertificateType} from "../../src/plugins/clientCertificate";
 import Config from "../../src/config";
 
 describe("ClientCertificate", function () {
@@ -16,12 +16,12 @@ describe("ClientCertificate", function () {
 
 	it("should generate a client certificate", function () {
 		Config.values.public = false;
-		const certificate = ClientCertificate.get("this-is-test-uuid");
+		const certificate = ClientCertificate.get("this-is-test-uuid") as ClientCertificateType;
 
 		expect(certificate.certificate).to.match(/^-----BEGIN CERTIFICATE-----/);
 		expect(certificate.private_key).to.match(/^-----BEGIN RSA PRIVATE KEY-----/);
 
-		const certificate2 = ClientCertificate.get("this-is-test-uuid");
+		const certificate2 = ClientCertificate.get("this-is-test-uuid") as ClientCertificateType;
 		expect(certificate2.certificate).to.equal(certificate.certificate);
 		expect(certificate2.private_key).to.equal(certificate.private_key);
 

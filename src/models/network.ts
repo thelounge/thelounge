@@ -480,7 +480,7 @@ class Network {
 		}
 	}
 
-	getFilteredClone(lastActiveChannel: number, lastMessage: number) {
+	getFilteredClone(lastActiveChannel?: number, lastMessage?: number) {
 		const filteredNetwork = Object.keys(this).reduce((newNetwork, prop) => {
 			if (prop === "channels") {
 				// Channels objects perform their own cloning

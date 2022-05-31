@@ -103,8 +103,8 @@ class Client {
 	mentions!: Mention[];
 	manager!: ClientManager;
 	messageStorage!: MessageStorage[];
-	highlightRegex?: RegExp;
-	highlightExceptionRegex?: RegExp;
+	highlightRegex!: RegExp | null;
+	highlightExceptionRegex!: RegExp | null;
 	messageProvider?: SqliteMessageStorage;
 
 	fileHash!: string;
@@ -237,7 +237,7 @@ class Client {
 
 	connect(args: Record<string, any>, isStartup = false) {
 		const client = this;
-		const channels: Chan[] = [];
+		let channels: Chan[] = [];
 
 		// Get channel id for lobby before creating other channels for nicer ids
 		const lobbyChannelId = client.idChan++;
@@ -270,6 +270,21 @@ class Client {
 						"' has an invalid channel which has been ignored"
 				);
 			}
+			// `join` is kept for backwards compatibility when updating from versions <2.0
+			// also used by the "connect" window
+		} else if (args.join) {
+			channels = args.join
+				.replace(/,/g, " ")
+				.split(/\s+/g)
+				.map((chan: string) => {
+					if (!chan.match(/^[#&!+]/)) {
+						chan = `#${chan}`;
+					}
+
+					return client.createChannel({
+						name: chan,
+					});
+				});
 		}
 
 		// TODO; better typing for args
@@ -490,9 +505,9 @@ class Client {
 	}
 
 	compileCustomHighlights() {
-		function compileHighlightRegex(customHighlightString) {
+		function compileHighlightRegex(customHighlightString: string) {
 			if (typeof customHighlightString !== "string") {
-				return undefined;
+				return null;
 			}
 
 			// Ensure we don't have empty strings in the list of highlights
@@ -502,7 +517,7 @@ class Client {
 				.filter((highlight) => highlight.length > 0);
 
 			if (highlightsTokens.length === 0) {
-				return undefined;
+				return null;
 			}
 
 			return new RegExp(

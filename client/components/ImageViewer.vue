@@ -99,8 +99,8 @@ export default defineComponent({
 		};
 
 		onBeforeRouteLeave((to, from, next) => {
-			console.log("HERE", to, from);
 			next();
+
 			// cancel the navigation if the user is trying to close the image viewer
 			if (link.value) {
 				closeViewer();
