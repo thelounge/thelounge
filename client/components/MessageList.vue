@@ -293,8 +293,6 @@ export default defineComponent({
 		};
 
 		const keepScrollPosition = async () => {
-			console.log("keepScrollPosition");
-
 			// If we are already waiting for the next tick to force scroll position,
 			// we have no reason to perform more checks and set it again in the next tick
 			if (isWaitingForNextTick.value) {
@@ -307,8 +305,6 @@ export default defineComponent({
 				return;
 			}
 
-			console.log(el);
-
 			if (!props.channel.scrolledToBottom) {
 				if (props.channel.historyLoading) {
 					const heightOld = el.scrollHeight - el.scrollTop;
@@ -320,9 +316,7 @@ export default defineComponent({
 					isWaitingForNextTick.value = false;
 					skipNextScrollEvent.value = true;
 
-					console.log("old top", heightOld);
 					el.scrollTop = el.scrollHeight - heightOld;
-					console.log("new top", el.scrollTop);
 				}
 
 				return;
@@ -332,7 +326,6 @@ export default defineComponent({
 			await nextTick();
 			isWaitingForNextTick.value = false;
 
-			console.log("HERE");
 			jumpToBottom();
 		};
 

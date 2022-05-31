@@ -1,4 +1,5 @@
 import {ClientNetwork} from "../../client/js/types";
+import {Mention} from "../client";
 import Msg from "../models/msg";
 import {ChangelogData} from "../plugins/changelog";
 import {ClientConfiguration} from "../server";
@@ -32,6 +33,8 @@ interface ServerToClientEvents {
 	"push:unregister": () => void;
 
 	"sessions:list": (data: Session[]) => void;
+
+	"mentions:list": (data: Mention[]) => void;
 
 	more: ({
 		chan,

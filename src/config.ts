@@ -238,6 +238,7 @@ class Config {
 		}
 
 		const manifestPath = Utils.getFileFromRelativeToRoot("public", "thelounge.webmanifest");
+		console.log("manifest", manifestPath);
 
 		// Check if manifest exists, if not, the app most likely was not built
 		if (!fs.existsSync(manifestPath)) {

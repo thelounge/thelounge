@@ -129,20 +129,6 @@ router.beforeEach((to, from, next) => {
 		return;
 	}
 
-	// Handle closing image viewer with the browser back button
-	if (!router.app) {
-		next();
-		return;
-	}
-
-	const imageViewer = router.app.imageViewer;
-
-	if (imageViewer && imageViewer.link) {
-		imageViewer.closeViewer();
-		next(false);
-		return;
-	}
-
 	next();
 });
 

@@ -41,6 +41,7 @@
 <script lang="ts">
 import Mousetrap from "mousetrap";
 import {computed, defineComponent, ref, watch} from "vue";
+import {onBeforeRouteLeave, onBeforeRouteUpdate} from "vue-router";
 import eventbus from "../js/eventbus";
 import {ClientChan, ClientMessage, ClientLinkPreview} from "../js/types";
 
@@ -96,6 +97,16 @@ export default defineComponent({
 			nextImage.value = null;
 			link.value = null;
 		};
+
+		onBeforeRouteLeave((to, from, next) => {
+			console.log("HERE", to, from);
+			next();
+			// cancel the navigation if the user is trying to close the image viewer
+			if (link.value) {
+				closeViewer();
+				return false;
+			}
+		});
 
 		const setPrevNextImages = () => {
 			if (!channel.value || !link.value) {
