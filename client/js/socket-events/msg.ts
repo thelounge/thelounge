@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 import socket from "../socket";
 import cleanIrcMessage from "../helpers/ircmessageparser/cleanIrcMessage";
 import {store} from "../store";
 import {switchToChannel} from "../router";
+import {ClientChan, ClientMention, ClientMessage, NetChan} from "../types";
 
 let pop;
 
@@ -10,6 +12,7 @@ try {
 	pop.src = "audio/pop.wav";
 } catch (e) {
 	pop = {
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		play() {},
 	};
 }
@@ -92,7 +95,12 @@ socket.on("msg", function (data) {
 	}
 });
 
-function notifyMessage(targetId, channel, activeChannel, msg) {
+function notifyMessage(
+	targetId: number,
+	channel: ClientChan,
+	activeChannel: NetChan,
+	msg: ClientMessage
+) {
 	if (channel.muted) {
 		return;
 	}
@@ -132,19 +140,23 @@ function notifyMessage(targetId, channel, activeChannel, msg) {
 					body = cleanIrcMessage(msg.text);
 				}
 
-				const timestamp = Date.parse(msg.time);
+				const timestamp = Date.parse(String(msg.time));
 
 				try {
 					if (store.state.hasServiceWorker) {
-						navigator.serviceWorker.ready.then((registration) => {
-							registration.active.postMessage({
-								type: "notification",
-								chanId: targetId,
-								timestamp: timestamp,
-								title: title,
-								body: body,
+						navigator.serviceWorker.ready
+							.then((registration) => {
+								registration.active?.postMessage({
+									type: "notification",
+									chanId: targetId,
+									timestamp: timestamp,
+									title: title,
+									body: body,
+								});
+							})
+							.catch(() => {
+								// no-op
 							});
-						});
 					} else {
 						const notify = new Notification(title, {
 							tag: `chan-${targetId}`,
@@ -160,7 +172,7 @@ function notifyMessage(targetId, channel, activeChannel, msg) {
 							const channelTarget = store.getters.findChannel(targetId);
 
 							if (channelTarget) {
-								switchToChannel(channelTarget);
+								switchToChannel(channelTarget.channel);
 							}
 						});
 					}

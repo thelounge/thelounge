@@ -26,7 +26,7 @@ socket.on("connect", function () {
 });
 
 function handleDisconnect(data) {
-	const message = (data.message || data) as string;
+	const message = String(data.message || data);
 
 	store.commit("isConnected", false);
 

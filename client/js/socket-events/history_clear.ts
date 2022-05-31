@@ -2,11 +2,13 @@ import socket from "../socket";
 import {store} from "../store";
 
 socket.on("history:clear", function (data) {
-	const {channel} = store.getters.findChannel(data.target);
+	const netChan = store.getters.findChannel(data.target);
 
-	channel.messages = [];
-	channel.unread = 0;
-	channel.highlight = 0;
-	channel.firstUnread = 0;
-	channel.moreHistoryAvailable = false;
+	if (netChan?.channel) {
+		netChan.channel.messages = [];
+		netChan.channel.unread = 0;
+		netChan.channel.highlight = 0;
+		netChan.channel.firstUnread = 0;
+		netChan.channel.moreHistoryAvailable = false;
+	}
 });

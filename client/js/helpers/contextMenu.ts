@@ -200,7 +200,7 @@ export function generateChannelContextMenu(
 		});
 	}
 
-	const humanFriendlyChanTypeMap = {
+	const humanFriendlyChanTypeMap: Record<string, string> = {
 		lobby: "network",
 		channel: "channel",
 		query: "conversation",
@@ -210,7 +210,7 @@ export function generateChannelContextMenu(
 	const mutableChanTypes = Object.keys(humanFriendlyChanTypeMap);
 
 	if (mutableChanTypes.includes(channel.type)) {
-		const chanType = humanFriendlyChanTypeMap[channel.type] as string;
+		const chanType = humanFriendlyChanTypeMap[channel.type];
 
 		items.push({
 			label: channel.muted ? `Unmute ${chanType}` : `Mute ${chanType}`,

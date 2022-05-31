@@ -1,8 +1,11 @@
-import {ClientMessage, ClientNetwork} from "../../client/js/types";
+import {ClientMessage, ClientNetwork, InitClientChan} from "../../client/js/types";
 import {Mention} from "../client";
+import {ChanState} from "../models/chan";
 import Msg from "../models/msg";
 import Network from "../models/network";
+import User from "../models/user";
 import {ChangelogData} from "../plugins/changelog";
+import {LinkPreview} from "../plugins/irc-events/link";
 import {ClientConfiguration} from "../server";
 
 type Session = {
@@ -24,6 +27,8 @@ interface ServerToClientEvents {
 	changelog: (data: ChangelogData) => void;
 	"changelog:newversion": () => void;
 
+	"channel:state": (data: {chan: number; state: ChanState}) => void;
+
 	"change-password": ({success, error}: {success: boolean; error?: any}) => void;
 
 	commands: (data: string[]) => void;
@@ -40,6 +45,44 @@ interface ServerToClientEvents {
 	"setting:new": ({name: string, value: any}) => void;
 	"setting:all": (settings: {[key: string]: any}) => void;
 
+	"history:clear": ({target}: {target: number}) => void;
+
+	"mute:changed": (response: {target: number; status: boolean}) => void;
+
+	names: (data: {id: number; users: User[]}) => void;
+
+	network: (data: {networks: ClientNetwork[]}) => void;
+	"network:options": (data: {network: string; serverOptions: {[key: string]: any}}) => void;
+	"network:status": (data: {network: string; connected: boolean; secure: boolean}) => void;
+	"network:info": (data: {uuid: string}) => void;
+	"network:name": (data: {uuid: string; name: string}) => void;
+
+	nick: (data: {network: string; nick: string}) => void;
+
+	open: (id: number) => void;
+
+	part: (data: {chan: number}) => void;
+
+	"sign-out": () => void;
+
+	sync_sort: (
+		data:
+			| {
+					type: "networks";
+					order: string[];
+					target: string;
+			  }
+			| {
+					type: "channels";
+					order: number[];
+					target: string;
+			  }
+	) => void;
+
+	topic: (data: {chan: number; topic: string}) => void;
+
+	users: (data: {chan: number}) => void;
+
 	more: ({
 		chan,
 		messages,
@@ -50,7 +93,9 @@ interface ServerToClientEvents {
 		totalMessages: number;
 	}) => void;
 
-	"msg:preview": ({id, chan, preview}: {id: number; chan: number; preview: string}) => void;
+	"msg:preview": ({id, chan, preview}: {id: number; chan: number; preview: LinkPreview}) => void;
+	"msg:special": (data: {chan: number}) => void;
+	msg: (data: {msg: ClientMessage; chan: number; highlight?: number; unread?: number}) => void;
 
 	init: ({
 		active,
@@ -64,11 +109,35 @@ interface ServerToClientEvents {
 
 	"search:results": (response: {results: ClientMessage[]}) => void;
 
-	quit: ({network}: {network: string}) => void;
+	quit: (args: {network: string}) => void;
+
+	error: (error: any) => void;
+	connecting: () => void;
+
+	join: (args: {
+		shouldOpen: boolean;
+		index: number;
+		network: string;
+		chan: InitClientChan;
+	}) => void;
 }
 
 interface ClientToServerEvents {
-	"auth:perform": ({user: string, password: string}) => void;
+	"auth:perform":
+		| (({user, password}: {user: string; password: string}) => void)
+		| (({
+				user,
+				token,
+				lastMessage,
+				openChannel,
+				hasConfig,
+		  }: {
+				user: string;
+				token: string;
+				lastMessage: number;
+				openChannel: number | null;
+				hasConfig: boolean;
+		  }) => void);
 
 	changelog: () => void;
 
@@ -87,9 +156,7 @@ interface ClientToServerEvents {
 	"upload:auth": () => void;
 	"upload:ping": (token: string) => void;
 
-	"history:clear": ({target}: {target: number}) => void;
-
-	"mute:change": ({target, setMutedTo}: {target: number; setMutedTo: boolean}) => void;
+	"mute:change": (response: {target: number; setMutedTo: boolean}) => void;
 
 	"push:register": (subscriptionJson: PushSubscriptionJSON) => void;
 	"push:unregister": () => void;
@@ -132,6 +199,8 @@ interface ClientToServerEvents {
 	"network:new": (data: Record<string, any>) => void;
 
 	"sign-out": (token?: string) => void;
+
+	"history:clear": ({target}: {target: number}) => void;
 
 	search: ({
 		networkUuid,

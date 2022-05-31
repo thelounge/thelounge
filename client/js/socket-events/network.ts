@@ -19,7 +19,7 @@ socket.on("network:options", function (data) {
 	const network = store.getters.findNetwork(data.network);
 
 	if (network) {
-		network.serverOptions = data.serverOptions;
+		network.serverOptions = data.serverOptions as typeof network.serverOptions;
 	}
 });
 
@@ -63,5 +63,8 @@ socket.on("network:info", function (data) {
 
 socket.on("network:name", function (data) {
 	const network = store.getters.findNetwork(data.uuid);
-	network.name = network.channels[0].name = data.name;
+
+	if (network) {
+		network.name = network.channels[0].name = data.name;
+	}
 });

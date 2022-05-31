@@ -143,7 +143,7 @@ declare module "irc-framework" {
 
 		use(a: any): any;
 
-		connect(connect_options?: Object): void;
+		connect(connect_options?: Record<string, unknown>): void;
 
 		/**
 		 * Proxy the command handler events onto the client object, with some added sugar
@@ -291,7 +291,7 @@ declare module "irc-framework" {
 
 		reply(e: any): any;
 
-		tags: Object;
+		tags: Record<string, unknown>;
 
 		// any
 		time?: any;

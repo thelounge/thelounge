@@ -200,7 +200,7 @@ class Uploader {
 				}, file.type);
 			};
 
-			img.src = fileReader.result as string;
+			img.src = String(fileReader.result);
 		};
 
 		fileReader.readAsDataURL(file);

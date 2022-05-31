@@ -3,7 +3,9 @@ import {store} from "../store";
 import {switchToChannel} from "../router";
 
 socket.on("msg:special", function (data) {
-	const channel = store.getters.findChannel(data.chan);
-	channel.channel.data = data.data;
-	switchToChannel(channel.channel);
+	const netChan = store.getters.findChannel(data.chan);
+	// @ts-ignore
+	netChan.channel.data = data.data;
+	// @ts-ignore
+	switchToChannel(netChan.channel);
 });

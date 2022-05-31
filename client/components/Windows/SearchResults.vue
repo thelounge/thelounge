@@ -141,7 +141,7 @@ export default defineComponent({
 		});
 
 		const chan = computed(() => {
-			const chanId = parseInt(route.params.id as string, 10);
+			const chanId = parseInt(String(route.params.id), 10);
 			return store.getters.findChannel(chanId);
 		});
 

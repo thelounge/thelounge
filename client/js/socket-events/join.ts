@@ -18,5 +18,12 @@ socket.on("join", function (data) {
 		return;
 	}
 
-	switchToChannel(store.getters.findChannel(data.chan.id).channel);
+	const chan = store.getters.findChannel(data.chan.id);
+
+	if (chan) {
+		switchToChannel(chan.channel);
+	} else {
+		// eslint-disable-next-line no-console
+		console.error("Could not find channel", data.chan.id);
+	}
 });

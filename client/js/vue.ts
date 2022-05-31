@@ -76,7 +76,7 @@ VueApp.config.errorHandler = function (e) {
 	if (e instanceof Error) {
 		store.commit("currentUserVisibleError", `Vue error: ${e.message}`);
 	} else {
-		store.commit("currentUserVisibleError", `Vue error: ${e as string}`);
+		store.commit("currentUserVisibleError", `Vue error: ${String(e)}`);
 	}
 
 	// eslint-disable-next-line no-console

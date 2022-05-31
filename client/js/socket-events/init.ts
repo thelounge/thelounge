@@ -6,7 +6,7 @@ import {store} from "../store";
 import parseIrcUri from "../helpers/parseIrcUri";
 import {ClientNetwork, InitClientChan} from "../types";
 
-socket.on("init", function (data) {
+socket.on("init", async function (data) {
 	store.commit("networks", mergeNetworkData(data.networks));
 	store.commit("isConnected", true);
 	store.commit("currentUserVisibleError", null);
@@ -24,30 +24,27 @@ socket.on("init", function (data) {
 			window.g_TheLoungeRemoveLoading();
 		}
 
-		void nextTick(() => {
-			// If we handled query parameters like irc:// links or just general
-			// connect parameters in public mode, then nothing to do here
-			if (!handleQueryParams()) {
-				// If we are on an unknown route or still on SignIn component
-				// then we can open last known channel on server, or Connect window if none
-				if (
-					!router.currentRoute.value.name ||
-					router.currentRoute.value.name === "SignIn"
-				) {
-					const channel = store.getters.findChannel(data.active);
+		await nextTick();
 
-					if (channel) {
-						switchToChannel(channel.channel);
-					} else if (store.state.networks.length > 0) {
-						// Server is telling us to open a channel that does not exist
-						// For example, it can be unset if you first open the page after server start
-						switchToChannel(store.state.networks[0].channels[0]);
-					} else {
-						navigate("Connect");
-					}
+		// If we handled query parameters like irc:// links or just general
+		// connect parameters in public mode, then nothing to do here
+		if (!handleQueryParams()) {
+			// If we are on an unknown route or still on SignIn component
+			// then we can open last known channel on server, or Connect window if none
+			if (!router.currentRoute.value.name || router.currentRoute.value.name === "SignIn") {
+				const channel = store.getters.findChannel(data.active);
+
+				if (channel) {
+					switchToChannel(channel.channel);
+				} else if (store.state.networks.length > 0) {
+					// Server is telling us to open a channel that does not exist
+					// For example, it can be unset if you first open the page after server start
+					switchToChannel(store.state.networks[0].channels[0]);
+				} else {
+					await navigate("Connect");
 				}
 			}
-		});
+		}
 	}
 });
 
@@ -172,7 +169,7 @@ function handleQueryParams() {
 	if (params.has("uri")) {
 		// Set default connection settings from IRC protocol links
 		const uri = params.get("uri");
-		const queryParams = parseIrcUri(uri as string);
+		const queryParams = parseIrcUri(String(uri));
 
 		cleanParams();
 		router.push({name: "Connect", query: queryParams}).catch(() => {

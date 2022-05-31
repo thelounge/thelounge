@@ -18,7 +18,7 @@ const primaryKey = "uid";
 const serverPort = 1389;
 
 function normalizeDN(dn: string) {
-	return ldap.parseDN(dn).toString() as string;
+	return String(ldap.parseDN(dn).toString());
 }
 
 function startLdapServer(callback) {

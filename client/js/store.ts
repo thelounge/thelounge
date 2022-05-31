@@ -131,7 +131,7 @@ type Getters = {
 		network: ClientNetwork;
 		channel: ClientChan;
 	} | null;
-	findNetwork: (state: State) => (uuid: string) => any;
+	findNetwork: (state: State) => (uuid: string) => ClientNetwork | null;
 	highlightCount(state: State): number;
 	title(state: State, getters: Omit<Getters, "title">): string;
 	initChannel: () => (channel: InitClientChan) => ClientChan;

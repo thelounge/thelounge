@@ -6,7 +6,10 @@ socket.on("sync_sort", function (data) {
 
 	switch (data.type) {
 		case "networks":
-			store.commit("sortNetworks", (a, b) => order.indexOf(a.uuid) - order.indexOf(b.uuid));
+			store.commit(
+				"sortNetworks",
+				(a, b) => (order as string[]).indexOf(a.uuid) - (order as string[]).indexOf(b.uuid)
+			);
 
 			break;
 
@@ -17,7 +20,9 @@ socket.on("sync_sort", function (data) {
 				return;
 			}
 
-			network.channels.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+			network.channels.sort(
+				(a, b) => (order as number[]).indexOf(a.id) - (order as number[]).indexOf(b.id)
+			);
 
 			break;
 		}

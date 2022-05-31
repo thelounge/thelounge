@@ -95,6 +95,7 @@ function generate() {
 	// Set notAfter 100 years into the future just in case
 	// the server actually validates this field
 	cert.validity.notAfter = new Date();
+	// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 	cert.validity.notAfter.setFullYear(cert.validity.notBefore.getFullYear() + 100);
 
 	const attrs = [

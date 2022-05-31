@@ -2,8 +2,8 @@ import socket from "../socket";
 import {store} from "../store";
 
 socket.on("msg:preview", function (data) {
-	const {channel} = store.getters.findChannel(data.chan);
-	const message = channel.messages.find((m) => m.id === data.id);
+	const netChan = store.getters.findChannel(data.chan);
+	const message = netChan?.channel.messages.find((m) => m.id === data.id);
 
 	if (!message) {
 		return;

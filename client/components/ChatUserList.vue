@@ -28,7 +28,7 @@
 			<div
 				v-for="(users, mode) in groupedUsers"
 				:key="mode"
-				:class="['user-mode', getModeClass(mode as string)]"
+				:class="['user-mode', getModeClass(String(mode))]"
 			>
 				<template v-if="userSearchInput.length > 0">
 					<!-- eslint-disable -->

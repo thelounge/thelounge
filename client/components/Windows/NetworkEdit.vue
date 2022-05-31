@@ -29,7 +29,7 @@ export default defineComponent({
 
 		const setNetworkData = () => {
 			socket.emit("network:get", String(route.params.uuid));
-			networkData.value = store.getters.findNetwork(route.params.uuid as string);
+			networkData.value = store.getters.findNetwork(String(route.params.uuid));
 		};
 
 		const handleSubmit = (data: {uuid: string; name: string}) => {
@@ -38,9 +38,12 @@ export default defineComponent({
 
 			// TODO: move networks to vuex and update state when the network info comes in
 			const network = store.getters.findNetwork(data.uuid);
-			network.name = network.channels[0].name = data.name;
 
-			switchToChannel(network.channels[0]);
+			if (network) {
+				network.name = network.channels[0].name = data.name;
+
+				switchToChannel(network.channels[0]);
+			}
 		};
 
 		watch(

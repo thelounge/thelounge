@@ -3,7 +3,7 @@ import storage from "../localStorage";
 import {router, navigate} from "../router";
 import {store} from "../store";
 import location from "../location";
-let lastServerHash: string | null = null;
+let lastServerHash: number | null = null;
 
 declare global {
 	interface Window {
@@ -16,17 +16,17 @@ socket.on("auth:success", function () {
 	updateLoadingMessage();
 });
 
-socket.on("auth:failed", function () {
+socket.on("auth:failed", async function () {
 	storage.remove("token");
 
 	if (store.state.appLoaded) {
 		return reloadPage("Authentication failed, reloading…");
 	}
 
-	showSignIn();
+	await showSignIn();
 });
 
-socket.on("auth:start", function (serverHash) {
+socket.on("auth:start", async function (serverHash) {
 	// If we reconnected and serverHash differs, that means the server restarted
 	// And we will reload the page to grab the latest version
 	if (lastServerHash && serverHash !== lastServerHash) {
@@ -74,18 +74,18 @@ socket.on("auth:start", function (serverHash) {
 			hasConfig: store.state.serverConfiguration !== null,
 		});
 	} else {
-		showSignIn();
+		await showSignIn();
 	}
 });
 
-function showSignIn() {
+async function showSignIn() {
 	// TODO: this flashes grey background because it takes a little time for vue to mount signin
 	if (window.g_TheLoungeRemoveLoading) {
 		window.g_TheLoungeRemoveLoading();
 	}
 
-	if (router.currentRoute.name !== "SignIn") {
-		navigate("SignIn");
+	if (router.currentRoute.value.name !== "SignIn") {
+		await navigate("SignIn");
 	}
 }
 

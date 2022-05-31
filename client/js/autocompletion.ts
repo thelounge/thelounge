@@ -22,10 +22,10 @@ const emojiStrategy = {
 		callback(fuzzyGrep(term, emojiSearchTerms));
 	},
 	template([string, original]: [string, string]) {
-		return `<span class="emoji">${emojiMap[original] as string}</span> ${string}`;
+		return `<span class="emoji">${String(emojiMap[original])}</span> ${string}`;
 	},
 	replace([, original]) {
-		return "$1" + (emojiMap[original] as string);
+		return "$1" + String(emojiMap[original]);
 	},
 	index: 2,
 };
@@ -195,7 +195,7 @@ function enableAutocomplete(input: HTMLTextAreaElement) {
 			const position = input.selectionStart - lastMatch.length;
 			const newMatch = replaceNick(
 				// TODO: type this properly
-				currentMatches[tabCount % currentMatches.length] as string,
+				String(currentMatches[tabCount % currentMatches.length]),
 				position
 			);
 			const remainder = text.substring(input.selectionStart);
@@ -317,13 +317,13 @@ function getCommands() {
 	return cmds;
 }
 
-function completeCommands(word) {
+function completeCommands(word: string) {
 	const commands = getCommands();
 	return fuzzyGrep(word, commands);
 }
 
-function completeChans(word) {
-	const words = [];
+function completeChans(word: string) {
+	const words: string[] = [];
 
 	for (const channel of store.state.activeChannel.network.channels) {
 		// Push all channels that start with the same CHANTYPE
