@@ -243,6 +243,83 @@ describe("SQLite Message Storage", function () {
 		}
 	});
 
+	it("should search messages with keyword queries", function () {
+		function assertResults(query, expected) {
+			return store
+				.search({
+					searchTerm: query,
+					networkUuid: "this-is-a-network-guid3",
+				})
+				.then((messages) => {
+					expect(messages.results.map((i) => i.text)).to.deep.equal(expected);
+				});
+		}
+
+		const originalMaxHistory = Config.values.maxHistory;
+
+		try {
+			Config.values.maxHistory = 3;
+
+			store.index(
+				{uuid: "this-is-a-network-guid3"},
+				{name: "#channel"},
+				new Msg({
+					time: 123456793,
+					text: "my first message",
+					from: {
+						mode: "",
+						nick: "thelounge007",
+					},
+				})
+			);
+
+			store.index(
+				{uuid: "this-is-a-network-guid3"},
+				{name: "#channel"},
+				new Msg({
+					time: 123456794,
+					text: "no, my first message!",
+					from: {
+						mode: "",
+						nick: "thelounge008",
+					},
+				})
+			);
+
+			store.index(
+				{uuid: "this-is-a-network-guid3"},
+				{name: "#channel"},
+				new Msg({
+					time: 123456795,
+					text: "another unrelated message",
+					from: {
+						mode: "",
+						nick: "thelounge007",
+					},
+				})
+			);
+
+			return (
+				store
+					.getMessages({uuid: "this-is-a-network-guid3"}, {name: "#channel"})
+					// .getMessages() waits for store.index() transactions to commit
+					.then(() =>
+						assertResults("from:thelounge007", [
+							"my first message",
+							"another unrelated message",
+						])
+					)
+					.then(() => assertResults("from:thelounge007 first", ["my first message"]))
+					.then(() =>
+						assertResults("first", ["my first message", "no, my first message!"])
+					)
+					.then(() => assertResults("from:nobody", []))
+			);
+		} finally {
+			Config.values.maxHistory = originalMaxHistory;
+		}
+	});
+
 	it("should close database", function (done) {
 		store.close((err) => {
 			expect(err).to.be.null;

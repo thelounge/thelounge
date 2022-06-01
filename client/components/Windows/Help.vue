@@ -825,6 +825,23 @@
 					<p>Retrieve information about the given user on the current network.</p>
 				</div>
 			</div>
+
+			<h2>Search</h2>
+
+			<p>
+				You can search messages simply by clicking the magnifying glass icon on the right
+				side of a channel's titlebar and entering a search term. Here are some additional
+				keywords you can use to fine-tune your search.
+			</p>
+
+			<div class="help-item">
+				<div class="subject">
+					<code>from:<em>nick</em></code>
+				</div>
+				<div class="description">
+					<p>Search messages by author.</p>
+				</div>
+			</div>
 		</div>
 	</div>
 </template>
