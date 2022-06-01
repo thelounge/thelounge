@@ -142,6 +142,7 @@ import {
 	ref,
 	watch,
 } from "vue";
+import {onBeforeRouteUpdate} from "vue-router";
 import eventbus from "../js/eventbus";
 import friendlysize from "../js/helpers/friendlysize";
 import {useStore} from "../js/store";
@@ -167,6 +168,16 @@ export default defineComponent({
 		const showMoreButton = ref(false);
 		const isContentShown = ref(false);
 		const imageViewer = inject(imageViewerKey);
+
+		onBeforeRouteUpdate((to, from, next) => {
+			// cancel the navigation if the user is trying to close the image viewer
+			if (imageViewer?.value?.link) {
+				imageViewer.value.closeViewer();
+				return next(false);
+			}
+
+			next();
+		});
 
 		const content = ref<HTMLDivElement | null>(null);
 		const container = ref<HTMLDivElement | null>(null);

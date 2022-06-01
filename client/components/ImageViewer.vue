@@ -98,16 +98,6 @@ export default defineComponent({
 			link.value = null;
 		};
 
-		onBeforeRouteLeave((to, from, next) => {
-			next();
-
-			// cancel the navigation if the user is trying to close the image viewer
-			if (link.value) {
-				closeViewer();
-				return false;
-			}
-		});
-
 		const setPrevNextImages = () => {
 			if (!channel.value || !link.value) {
 				return null;
