@@ -110,7 +110,7 @@ function testLdapAuth() {
 			expect(error).to.equal(
 				"LDAP bind failed: InsufficientAccessRightsError: InsufficientAccessRightsError\n"
 			);
-			errorLogStub.restore();
+			sinon.restore();
 			done();
 		});
 	});
@@ -124,7 +124,7 @@ function testLdapAuth() {
 		ldapAuth.auth(manager, client as any, wrongUser, correctPassword, function (valid) {
 			expect(valid).to.equal(false);
 			expect(warning).to.equal("LDAP Search did not find anything for: eve (0)\n");
-			warnLogStub.restore();
+			sinon.restore();
 			done();
 		});
 	});
@@ -149,7 +149,7 @@ describe("LDAP authentication plugin", function () {
 			// no-op
 		});
 
-		infoLogStub.restore();
+		sinon.restore();
 	});
 
 	beforeEach(function () {
