@@ -236,14 +236,16 @@ export default defineComponent({
 			}
 		);
 
-		const editTopicRef = ref(props.channel.editTopic);
-		watch(editTopicRef, (newTopic) => {
-			if (newTopic) {
-				void nextTick(() => {
-					topicInput.value?.focus();
-				});
+		watch(
+			() => props.channel.editTopic,
+			(newTopic) => {
+				if (newTopic) {
+					void nextTick(() => {
+						topicInput.value?.focus();
+					});
+				}
 			}
-		});
+		);
 
 		onMounted(() => {
 			channelChanged();
@@ -260,7 +262,6 @@ export default defineComponent({
 			messageList,
 			topicInput,
 			specialComponent,
-			editTopicRef,
 			hideUserVisibleError,
 			editTopic,
 			saveTopic,

@@ -2,7 +2,7 @@ import socket from "../socket";
 import {store} from "../store";
 import {switchToChannel} from "../router";
 
-function input(args) {
+function input(args: string[]) {
 	if (args.length > 0) {
 		let channels = args[0];
 

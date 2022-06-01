@@ -6,7 +6,7 @@
 			<i class="account"> [{{ message.account }}]</i>
 		</template>
 		<template v-if="message.gecos">
-			<i class="realname"> {{ message.gecos }} </i>
+			<i class="realname"> {{ message.gecos }}</i>
 		</template>
 		has joined the channel
 	</span>
