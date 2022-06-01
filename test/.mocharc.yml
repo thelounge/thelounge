@@ -11,6 +11,5 @@ require:
   # - "jsdom-global/register"
   - "test/fixtures/env.ts"
 globals:
-  - "__VUE_OPTIONS_API__"
   - "__VUE_PROD_DEVTOOLS__"
   - "__VUE__"
