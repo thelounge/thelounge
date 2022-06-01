@@ -136,11 +136,9 @@ describe("LDAP authentication plugin", function () {
 	this.slow(300);
 
 	let server: ldap.Server;
-	let infoLogStub: any;
 
 	before(function (done) {
-		infoLogStub = sinon.stub(log, "info");
-
+		sinon.stub(log, "info");
 		server = startLdapServer(done);
 	});
 
@@ -148,7 +146,6 @@ describe("LDAP authentication plugin", function () {
 		server.close(() => {
 			// no-op
 		});
-
 		sinon.restore();
 	});
 
