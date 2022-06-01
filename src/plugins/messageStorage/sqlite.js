@@ -208,9 +208,41 @@ class MessageStorage {
 		// Using the '@' character to escape '%' and '_' in patterns.
 		const escapedSearchTerm = query.searchTerm.replace(/([%_@])/g, "@$1");
 
+		// Additional filtering:
+		// - "from:nick" to find messages sent by a given nick
+		const keywords = ["from"];
+		const joinedKeywords = keywords.map((kw) => kw + ":").join("|");
+		const filterExp = RegExp(`((${joinedKeywords})(\\S+))+`, "g");
+
+		let filters;
+		const filterMatch = escapedSearchTerm.match(filterExp);
+
+		if (filterMatch && filterMatch.length) {
+			filters = filterMatch.reduce((params, filter) => {
+				const [key, value] = filter.split(":");
+				params[key] = value;
+				return params;
+			}, {});
+		}
+
+		// strip "key:value" filter pairs out of search string
+		const mainSearchTerm = escapedSearchTerm.replace(filterExp, "").trim();
+
 		let select =
-			'SELECT msg, type, time, network, channel FROM messages WHERE type = "message" AND json_extract(msg, "$.text") LIKE ? ESCAPE \'@\'';
-		const params = [`%${escapedSearchTerm}%`];
+			'SELECT msg, type, time, network, channel FROM messages WHERE type = "message"';
+		const params = [];
+
+		if (mainSearchTerm.length) {
+			select += " AND json_extract(msg, \"$.text\") LIKE ? ESCAPE '@'";
+			params.push(`%${mainSearchTerm}%`);
+		}
+
+		if (filters && Object.keys(filters).length) {
+			if (filters.from) {
+				select += ' AND json_extract(msg, "$.from.nick") LIKE ?';
+				params.push(filters.from);
+			}
+		}
 
 		if (query.networkUuid) {
 			select += " AND network = ? ";
