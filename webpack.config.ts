@@ -93,28 +93,13 @@ const config: webpack.Configuration = {
 	},
 	plugins: [
 		new VueLoaderPlugin(),
-		// new ForkTsCheckerWebpackPlugin({
-		// 	typescript: {
-		// 		diagnosticOptions: {
-		// 			semantic: true,
-		// 			syntactic: true,
-		// 		},
-		// 		configFile: path.resolve(__dirname, "client/tsconfig.json"),
-		// 	},
-		// }),
 		new webpack.DefinePlugin({
-			__VUE_OPTIONS_API__: true,
 			__VUE_PROD_DEVTOOLS__: false,
 		}),
 		new MiniCssExtractPlugin({
 			filename: "css/style.css",
 		}),
 		new webpack.IgnorePlugin({resourceRegExp: /canvas/}),
-
-		// TODO: verify necessary
-		new webpack.ProvidePlugin({
-			Vue: ["vue/dist/vue.esm.js", "default"],
-		}),
 		new CopyPlugin({
 			patterns: [
 				{
