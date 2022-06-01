@@ -56,6 +56,7 @@ function getGitCommit() {
 	}
 
 	try {
+		// eslint-disable-next-line @typescript-eslint/no-var-requires
 		_gitCommit = require("child_process")
 			.execSync(
 				"git rev-parse --short HEAD", // Returns hash of current commit
