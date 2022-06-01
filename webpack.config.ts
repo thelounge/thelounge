@@ -118,10 +118,12 @@ const config: webpack.Configuration = {
 		new CopyPlugin({
 			patterns: [
 				{
-					from: path.resolve(
-						__dirname,
-						"node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff*"
-					),
+					from: path
+						.resolve(
+							__dirname,
+							"node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff*"
+						)
+						.replace(/\\/g, "/"),
 					to: "fonts/[name][ext]",
 				},
 				{
@@ -129,7 +131,7 @@ const config: webpack.Configuration = {
 					to: "js/[name][ext]",
 				},
 				{
-					from: path.resolve(__dirname, "./client/*"),
+					from: path.resolve(__dirname, "./client/*").replace(/\\/g, "/"),
 					to: "[name][ext]",
 					globOptions: {
 						ignore: ["**/index.html.tpl", "**/service-worker.js"],
@@ -148,15 +150,15 @@ const config: webpack.Configuration = {
 					},
 				},
 				{
-					from: path.resolve(__dirname, "./client/audio/*"),
+					from: path.resolve(__dirname, "./client/audio/*").replace(/\\/g, "/"),
 					to: "audio/[name][ext]",
 				},
 				{
-					from: path.resolve(__dirname, "./client/img/*"),
+					from: path.resolve(__dirname, "./client/img/*").replace(/\\/g, "/"),
 					to: "img/[name][ext]",
 				},
 				{
-					from: path.resolve(__dirname, "./client/themes/*"),
+					from: path.resolve(__dirname, "./client/themes/*").replace(/\\/g, "/"),
 					to: "themes/[name][ext]",
 				},
 			],
