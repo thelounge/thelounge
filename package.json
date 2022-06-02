@@ -85,7 +85,7 @@
     "@babel/preset-typescript": "7.16.7",
     "@fortawesome/fontawesome-free": "5.15.4",
     "@istanbuljs/nyc-config-typescript": "1.0.2",
-    "@textcomplete/core": "0.1.11",
+    "@textcomplete/core": "0.1.10",
     "@textcomplete/textarea": "0.1.10",
     "@types/bcryptjs": "2.4.2",
     "@types/chai": "4.3.1",

@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, PropType} from "vue";
+import {computed, defineComponent, PropType} from "vue";
 import {ClientNetwork, ClientMessage} from "../../js/types";
 import ParsedMessage from "../ParsedMessage.vue";
 
@@ -24,9 +24,9 @@ export default defineComponent({
 			required: true,
 		},
 	},
-	computed: {
-		cleanText() {
-			let lines = this.message.text.split("\n");
+	setup(props) {
+		const cleanText = computed(() => {
+			let lines = props.message.text.split("\n");
 
 			// If all non-empty lines of the MOTD start with a hyphen (which is common
 			// across MOTDs), remove all the leading hyphens.
@@ -39,7 +39,11 @@ export default defineComponent({
 				.map((line) => line.replace(/\s*$/, ""))
 				.join("\n")
 				.replace(/^[\r\n]+|[\r\n]+$/g, "");
-		},
+		});
+
+		return {
+			cleanText,
+		};
 	},
 });
 </script>

@@ -1,8 +1,8 @@
 import constants from "./constants";
 
 import Mousetrap from "mousetrap";
-import {Textcomplete} from "@textcomplete/core/dist/Textcomplete";
-import {TextareaEditor} from "@textcomplete/textarea/dist/TextareaEditor";
+import {Strategy, Textcomplete} from "@textcomplete/core";
+import {TextareaEditor} from "@textcomplete/textarea";
 
 import fuzzy from "fuzzy";
 
@@ -25,7 +25,7 @@ const emojiStrategy = {
 		return `<span class="emoji">${String(emojiMap[original])}</span> ${string}`;
 	},
 	replace([, original]) {
-		return "$1" + String(emojiMap[original]);
+		return String(emojiMap[original]);
 	},
 	index: 2,
 };

@@ -26,8 +26,6 @@ export default (app: express.Application) => {
 		"webpack-hot-middleware/client?path=storage/__webpack_hmr"
 	);
 
-	webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
-
 	const compiler = webpack(webpackConfig);
 
 	app.use(
