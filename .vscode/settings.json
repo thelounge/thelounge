@@ -1,6 +1,5 @@
 {
   "editor.formatOnSave": true,
-  "vetur.format.enable": false,
   "prettier.useEditorConfig": true,
   "prettier.requireConfig": true,
   "prettier.disableLanguages": [],

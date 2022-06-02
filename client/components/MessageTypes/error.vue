@@ -4,17 +4,25 @@
 	</span>
 </template>
 
-<script>
+<script lang="ts">
 import ParsedMessage from "../ParsedMessage.vue";
+import {defineComponent, PropType} from "vue";
+import {ClientNetwork, ClientMessage} from "../../js/types";
 
-export default {
+export default defineComponent({
 	name: "MessageTypeError",
 	components: {
 		ParsedMessage,
 	},
 	props: {
-		network: Object,
-		message: Object,
+		network: {
+			type: Object as PropType<ClientNetwork>,
+			required: true,
+		},
+		message: {
+			type: Object as PropType<ClientMessage>,
+			required: true,
+		},
 	},
 	computed: {
 		errorMessage() {
@@ -54,5 +62,5 @@ export default {
 			}
 		},
 	},
-};
+});
 </script>

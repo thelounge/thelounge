@@ -17,35 +17,45 @@
 	</div>
 </template>
 
-<script>
-const constants = require("../js/constants");
+<script lang="ts">
+import {computed, defineComponent, PropType, ref} from "vue";
+import constants from "../js/constants";
+import {ClientMessage, ClientNetwork} from "../js/types";
 import Message from "./Message.vue";
 
-export default {
+export default defineComponent({
 	name: "MessageCondensed",
 	components: {
 		Message,
 	},
 	props: {
-		network: Object,
-		messages: Array,
-		keepScrollPosition: Function,
+		network: {type: Object as PropType<ClientNetwork>, required: true},
+		messages: {
+			type: Array as PropType<ClientMessage[]>,
+			required: true,
+		},
+		keepScrollPosition: {
+			type: Function as PropType<() => void>,
+			required: true,
+		},
 		focused: Boolean,
 	},
-	data() {
-		return {
-			isCollapsed: true,
+	setup(props) {
+		const isCollapsed = ref(true);
+
+		const onCollapseClick = () => {
+			isCollapsed.value = !isCollapsed.value;
+			props.keepScrollPosition();
 		};
-	},
-	computed: {
-		condensedText() {
-			const obj = {};
+
+		const condensedText = computed(() => {
+			const obj: Record<string, number> = {};
 
 			constants.condensedTypes.forEach((type) => {
 				obj[type] = 0;
 			});
 
-			for (const message of this.messages) {
+			for (const message of props.messages) {
 				// special case since one MODE message can change multiple modes
 				if (message.type === "mode") {
 					// syntax: +vv-t maybe-some targets
@@ -64,13 +74,13 @@ export default {
 			// Count quits as parts in condensed messages to reduce information density
 			obj.part += obj.quit;
 
-			const strings = [];
+			const strings: string[] = [];
 			constants.condensedTypes.forEach((type) => {
 				if (obj[type]) {
 					switch (type) {
 						case "chghost":
 							strings.push(
-								obj[type] +
+								obj[type].toLocaleString() +
 									(obj[type] > 1
 										? " users have changed hostname"
 										: " user has changed hostname")
@@ -78,18 +88,19 @@ export default {
 							break;
 						case "join":
 							strings.push(
-								obj[type] +
+								obj[type].toLocaleString() +
 									(obj[type] > 1 ? " users have joined" : " user has joined")
 							);
 							break;
 						case "part":
 							strings.push(
-								obj[type] + (obj[type] > 1 ? " users have left" : " user has left")
+								obj[type].toLocaleString() +
+									(obj[type] > 1 ? " users have left" : " user has left")
 							);
 							break;
 						case "nick":
 							strings.push(
-								obj[type] +
+								obj[type].toLocaleString() +
 									(obj[type] > 1
 										? " users have changed nick"
 										: " user has changed nick")
@@ -97,33 +108,38 @@ export default {
 							break;
 						case "kick":
 							strings.push(
-								obj[type] +
+								obj[type].toLocaleString() +
 									(obj[type] > 1 ? " users were kicked" : " user was kicked")
 							);
 							break;
 						case "mode":
 							strings.push(
-								obj[type] + (obj[type] > 1 ? " modes were set" : " mode was set")
+								obj[type].toLocaleString() +
+									(obj[type] > 1 ? " modes were set" : " mode was set")
 							);
 							break;
 					}
 				}
 			});
 
-			let text = strings.pop();
-
 			if (strings.length) {
-				text = strings.join(", ") + ", and " + text;
+				let text = strings.pop();
+
+				if (strings.length) {
+					text = strings.join(", ") + ", and " + text!;
+				}
+
+				return text;
 			}
 
-			return text;
-		},
+			return "";
+		});
+
+		return {
+			isCollapsed,
+			condensedText,
+			onCollapseClick,
+		};
 	},
-	methods: {
-		onCollapseClick() {
-			this.isCollapsed = !this.isCollapsed;
-			this.keepScrollPosition();
-		},
-	},
-};
+});
 </script>

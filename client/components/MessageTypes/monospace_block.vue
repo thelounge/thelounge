@@ -4,17 +4,25 @@
 	</span>
 </template>
 
-<script>
+<script lang="ts">
+import {defineComponent, PropType} from "vue";
+import {ClientNetwork, ClientMessage} from "../../js/types";
 import ParsedMessage from "../ParsedMessage.vue";
 
-export default {
+export default defineComponent({
 	name: "MessageTypeMonospaceBlock",
 	components: {
 		ParsedMessage,
 	},
 	props: {
-		network: Object,
-		message: Object,
+		network: {
+			type: Object as PropType<ClientNetwork>,
+			required: true,
+		},
+		message: {
+			type: Object as PropType<ClientMessage>,
+			required: true,
+		},
 	},
 	computed: {
 		cleanText() {
@@ -23,7 +31,7 @@ export default {
 			// If all non-empty lines of the MOTD start with a hyphen (which is common
 			// across MOTDs), remove all the leading hyphens.
 			if (lines.every((line) => line === "" || line[0] === "-")) {
-				lines = lines.map((line) => line.substr(2));
+				lines = lines.map((line) => line.substring(2));
 			}
 
 			// Remove empty lines around the MOTD (but not within it)
@@ -33,5 +41,5 @@ export default {
 				.replace(/^[\r\n]+|[\r\n]+$/g, "");
 		},
 	},
-};
+});
 </script>

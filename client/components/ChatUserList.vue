@@ -28,7 +28,7 @@
 			<div
 				v-for="(users, mode) in groupedUsers"
 				:key="mode"
-				:class="['user-mode', getModeClass(mode)]"
+				:class="['user-mode', getModeClass(String(mode))]"
 			>
 				<template v-if="userSearchInput.length > 0">
 					<Username
@@ -36,8 +36,9 @@
 						:key="user.original.nick + '-search'"
 						:on-hover="hoverUser"
 						:active="user.original === activeUser"
-						:user="user.original"
-						v-html="user.string"
+						:user="(user.original as any)"
+						:html="user.string"
+						:include-status-icon="true"
 					/>
 				</template>
 				<template v-else>
@@ -47,6 +48,7 @@
 						:on-hover="hoverUser"
 						:active="user === activeUser"
 						:user="user"
+						:include-status-icon="true"
 					/>
 				</template>
 			</div>
@@ -54,8 +56,128 @@
 	</aside>
 </template>
 
-<script>
+<style>
+.userlist {
+	border-left: 1px solid #e7e7e7;
+	width: 180px;
+	display: none;
+	flex-direction: column;
+	flex-shrink: 0;
+	touch-action: pan-y;
+}
+
+.userlist .count {
+	background: #fafafa;
+	height: 45px;
+	flex-shrink: 0;
+	position: relative;
+}
+.userlist .search {
+	color: var(--body-color);
+	appearance: none;
+	border: 0;
+	background: none;
+	font: inherit;
+	outline: 0;
+	padding: 13px;
+	padding-right: 30px;
+	width: 100%;
+}
+
+.userlist .names {
+	flex-grow: 1;
+	overflow: auto;
+	overflow-x: hidden;
+	padding-bottom: 10px;
+	width: 100%;
+	touch-action: pan-y;
+	scrollbar-width: thin;
+	overscroll-behavior: contain;
+	-webkit-overflow-scrolling: touch;
+}
+
+#viewport.userlist-open #chat .userlist {
+	display: flex;
+}
+
+#chat .names .user {
+	display: block;
+	line-height: 1.6;
+	padding: 0 16px;
+	white-space: nowrap;
+}
+
+#chat .user-mode {
+	margin-bottom: 15px;
+}
+
+#chat .user-mode::before {
+	background: var(--window-bg-color);
+	color: var(--body-color-muted);
+	display: block;
+	font-size: 0.85em;
+	line-height: 1.6;
+	padding: 5px 16px;
+	position: sticky;
+	top: 0;
+	z-index: 1;
+}
+
+#chat .user-mode.owner::before {
+	content: "Owners";
+}
+
+#chat .user-mode.admin::before {
+	content: "Administrators";
+}
+
+#chat .user-mode.op::before {
+	content: "Operators";
+}
+
+#chat .user-mode.half-op::before {
+	content: "Half-Operators";
+}
+
+#chat .user-mode.voice::before {
+	content: "Voiced";
+}
+
+#chat .user-mode.normal::before {
+	content: "Users";
+}
+
+#chat .user-mode-search::before {
+	content: "Search Results";
+}
+
+/* Status icon */
+#chat .names .status {
+	margin-left: -3px;
+	margin-right: 2px;
+}
+
+@media (max-width: 768px) {
+	#chat .userlist {
+		background-color: var(--window-bg-color);
+		height: 100%;
+		position: absolute;
+		right: 0;
+		transform: translateX(180px);
+		transition: transform 0.2s;
+	}
+
+	#viewport.userlist-open #chat .userlist {
+		transform: translateX(0);
+	}
+}
+</style>
+
+<script lang="ts">
 import {filter as fuzzyFilter} from "fuzzy";
+import {computed, defineComponent, nextTick, PropType, ref} from "vue";
+import type {UserInMessage} from "../../src/models/msg";
+import type {ClientChan, ClientUser} from "../js/types";
 import Username from "./Username.vue";
 
 const modes = {
@@ -68,39 +190,35 @@ const modes = {
 	"": "normal",
 };
 
-export default {
+export default defineComponent({
 	name: "ChatUserList",
 	components: {
 		Username,
 	},
 	props: {
-		channel: Object,
+		channel: {type: Object as PropType<ClientChan>, required: true},
 	},
-	data() {
-		return {
-			userSearchInput: "",
-			activeUser: null,
-		};
-	},
-	computed: {
-		// filteredUsers is computed, to avoid unnecessary filtering
-		// as it is shared between filtering and keybindings.
-		filteredUsers() {
-			if (!this.userSearchInput) {
+	setup(props) {
+		const userSearchInput = ref("");
+		const activeUser = ref<UserInMessage | null>();
+		const userlist = ref<HTMLDivElement>();
+		const filteredUsers = computed(() => {
+			if (!userSearchInput.value) {
 				return;
 			}
 
-			return fuzzyFilter(this.userSearchInput, this.channel.users, {
+			return fuzzyFilter(userSearchInput.value, props.channel.users, {
 				pre: "<b>",
 				post: "</b>",
 				extract: (u) => u.nick,
 			});
-		},
-		groupedUsers() {
+		});
+
+		const groupedUsers = computed(() => {
 			const groups = {};
 
-			if (this.userSearchInput) {
-				const result = this.filteredUsers;
+			if (userSearchInput.value && filteredUsers.value) {
+				const result = filteredUsers.value;
 
 				for (const user of result) {
 					const mode = user.original.modes[0] || "";
@@ -115,7 +233,7 @@ export default {
 					groups[mode].push(user);
 				}
 			} else {
-				for (const user of this.channel.users) {
+				for (const user of props.channel.users) {
 					const mode = user.modes[0] || "";
 
 					if (!groups[mode]) {
@@ -126,24 +244,35 @@ export default {
 				}
 			}
 
-			return groups;
-		},
-	},
-	methods: {
-		setUserSearchInput(e) {
-			this.userSearchInput = e.target.value;
-		},
-		getModeClass(mode) {
-			return modes[mode];
-		},
-		selectUser() {
+			return groups as {
+				[mode: string]: (ClientUser & {
+					original: UserInMessage;
+					string: string;
+				})[];
+			};
+		});
+
+		const setUserSearchInput = (e: Event) => {
+			userSearchInput.value = (e.target as HTMLInputElement).value;
+		};
+
+		const getModeClass = (mode: string) => {
+			return modes[mode] as typeof modes;
+		};
+
+		const selectUser = () => {
 			// Simulate a click on the active user to open the context menu.
 			// Coordinates are provided to position the menu correctly.
-			if (!this.activeUser) {
+			if (!activeUser.value || !userlist.value) {
 				return;
 			}
 
-			const el = this.$refs.userlist.querySelector(".active");
+			const el = userlist.value.querySelector(".active");
+
+			if (!el) {
+				return;
+			}
+
 			const rect = el.getBoundingClientRect();
 			const ev = new MouseEvent("click", {
 				view: window,
@@ -153,38 +282,58 @@ export default {
 				clientY: rect.top + rect.height,
 			});
 			el.dispatchEvent(ev);
-		},
-		hoverUser(user) {
-			this.activeUser = user;
-		},
-		removeHoverUser() {
-			this.activeUser = null;
-		},
-		navigateUserList(event, direction) {
+		};
+
+		const hoverUser = (user: UserInMessage) => {
+			activeUser.value = user;
+		};
+
+		const removeHoverUser = () => {
+			activeUser.value = null;
+		};
+
+		const scrollToActiveUser = () => {
+			// Scroll the list if needed after the active class is applied
+			void nextTick(() => {
+				const el = userlist.value?.querySelector(".active");
+				el?.scrollIntoView({block: "nearest", inline: "nearest"});
+			});
+		};
+
+		const navigateUserList = (event: Event, direction: number) => {
 			// Prevent propagation to stop global keybind handler from capturing pagedown/pageup
 			// and redirecting it to the message list container for scrolling
 			event.stopImmediatePropagation();
 			event.preventDefault();
 
-			let users = this.channel.users;
+			let users = props.channel.users;
 
 			// Only using filteredUsers when we have to avoids filtering when it's not needed
-			if (this.userSearchInput) {
-				users = this.filteredUsers.map((result) => result.original);
+			if (userSearchInput.value && filteredUsers.value) {
+				users = filteredUsers.value.map((result) => result.original);
 			}
 
 			// Bail out if there's no users to select
 			if (!users.length) {
-				this.activeUser = null;
+				activeUser.value = null;
 				return;
 			}
 
-			let currentIndex = users.indexOf(this.activeUser);
+			const abort = () => {
+				activeUser.value = direction ? users[0] : users[users.length - 1];
+				scrollToActiveUser();
+			};
 
 			// If there's no active user select the first or last one depending on direction
-			if (!this.activeUser || currentIndex === -1) {
-				this.activeUser = direction ? users[0] : users[users.length - 1];
-				this.scrollToActiveUser();
+			if (!activeUser.value) {
+				abort();
+				return;
+			}
+
+			let currentIndex = users.indexOf(activeUser.value as ClientUser);
+
+			if (currentIndex === -1) {
+				abort();
 				return;
 			}
 
@@ -200,16 +349,24 @@ export default {
 				currentIndex -= users.length;
 			}
 
-			this.activeUser = users[currentIndex];
-			this.scrollToActiveUser();
-		},
-		scrollToActiveUser() {
-			// Scroll the list if needed after the active class is applied
-			this.$nextTick(() => {
-				const el = this.$refs.userlist.querySelector(".active");
-				el.scrollIntoView({block: "nearest", inline: "nearest"});
-			});
-		},
+			activeUser.value = users[currentIndex];
+			scrollToActiveUser();
+		};
+
+		return {
+			filteredUsers,
+			groupedUsers,
+			userSearchInput,
+			activeUser,
+			userlist,
+
+			setUserSearchInput,
+			getModeClass,
+			selectUser,
+			hoverUser,
+			removeHoverUser,
+			navigateUserList,
+		};
 	},
-};
+});
 </script>

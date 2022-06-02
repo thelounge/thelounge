@@ -1,6 +1,12 @@
 <template>
+	<!-- TODO: investigate -->
 	<ChannelWrapper ref="wrapper" v-bind="$props">
 		<span class="name">{{ channel.name }}</span>
+		<StatusIcon
+			v-if="channel.type === 'query' && network.status.connected"
+			:online="channel.isOnline"
+			:away="!!channel.userAway"
+		/>
 		<span
 			v-if="channel.unread"
 			:class="{highlight: channel.highlight && !channel.muted}"
@@ -27,30 +33,40 @@
 	</ChannelWrapper>
 </template>
 
-<script>
+<script lang="ts">
+import {PropType, defineComponent, computed} from "vue";
 import roundBadgeNumber from "../js/helpers/roundBadgeNumber";
+import useCloseChannel from "../js/hooks/use-close-channel";
+import {ClientChan, ClientNetwork} from "../js/types";
 import ChannelWrapper from "./ChannelWrapper.vue";
+import StatusIcon from "./StatusIcon.vue";
 
-export default {
+export default defineComponent({
 	name: "Channel",
 	components: {
 		ChannelWrapper,
+		StatusIcon,
 	},
 	props: {
-		network: Object,
-		channel: Object,
+		network: {
+			type: Object as PropType<ClientNetwork>,
+			required: true,
+		},
+		channel: {
+			type: Object as PropType<ClientChan>,
+			required: true,
+		},
 		active: Boolean,
 		isFiltering: Boolean,
 	},
-	computed: {
-		unreadCount() {
-			return roundBadgeNumber(this.channel.unread);
-		},
+	setup(props) {
+		const unreadCount = computed(() => roundBadgeNumber(props.channel.unread));
+		const close = useCloseChannel(props.channel);
+
+		return {
+			unreadCount,
+			close,
+		};
 	},
-	methods: {
-		close() {
-			this.$root.closeChannel(this.channel);
-		},
-	},
-};
+});
 </script>

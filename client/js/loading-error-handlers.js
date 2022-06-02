@@ -10,11 +10,12 @@
 
 (function () {
 	const msg = document.getElementById("loading-page-message");
-	msg.textContent = "Loading the app…";
 
-	document
-		.getElementById("loading-reload")
-		.addEventListener("click", () => location.reload(true));
+	if (msg) {
+		msg.textContent = "Loading the app…";
+	}
+
+	document.getElementById("loading-reload")?.addEventListener("click", () => location.reload());
 
 	const displayReload = () => {
 		const loadingReload = document.getElementById("loading-reload");
@@ -26,7 +27,11 @@
 
 	const loadingSlowTimeout = setTimeout(() => {
 		const loadingSlow = document.getElementById("loading-slow");
-		loadingSlow.style.visibility = "visible";
+
+		if (loadingSlow) {
+			loadingSlow.style.visibility = "visible";
+		}
+
 		displayReload();
 	}, 5000);
 
@@ -58,27 +63,37 @@
 		delete window.g_TheLoungeRemoveLoading;
 		window.clearTimeout(loadingSlowTimeout);
 		window.removeEventListener("error", errorHandler);
-		document.getElementById("loading").remove();
+		document.getElementById("loading")?.remove();
 	};
 
 	// Apply user theme as soon as possible, before any other code loads
 	// This prevents flash of white while other code loads and socket connects
 	try {
-		const userSettings = JSON.parse(localStorage.getItem("settings"));
+		const userSettings = JSON.parse(localStorage.getItem("settings") || "{}");
 		const themeEl = document.getElementById("theme");
+
+		if (!themeEl) {
+			return;
+		}
 
 		if (
 			typeof userSettings.theme === "string" &&
-			themeEl.dataset.serverTheme !== userSettings.theme
+			themeEl?.dataset.serverTheme !== userSettings.theme
 		) {
-			themeEl.attributes.href.value = `themes/${userSettings.theme}.css`;
+			themeEl.setAttribute("href", `themes/${userSettings.theme}.css`);
 		}
 
 		if (
 			typeof userSettings.userStyles === "string" &&
 			!/[?&]nocss/.test(window.location.search)
 		) {
-			document.getElementById("user-specified-css").innerHTML = userSettings.userStyles;
+			const userSpecifiedCSSElement = document.getElementById("user-specified-css");
+
+			if (!userSpecifiedCSSElement) {
+				return;
+			}
+
+			userSpecifiedCSSElement.innerHTML = userSettings.userStyles;
 		}
 	} catch (e) {
 		//

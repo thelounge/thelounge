@@ -6,19 +6,27 @@
 	</span>
 </template>
 
-<script>
+<script lang="ts">
+import {defineComponent, PropType} from "vue";
+import {ClientNetwork, ClientMessage} from "../../js/types";
 import ParsedMessage from "../ParsedMessage.vue";
 import Username from "../Username.vue";
 
-export default {
+export default defineComponent({
 	name: "MessageTypeMode",
 	components: {
 		ParsedMessage,
 		Username,
 	},
 	props: {
-		network: Object,
-		message: Object,
+		network: {
+			type: Object as PropType<ClientNetwork>,
+			required: true,
+		},
+		message: {
+			type: Object as PropType<ClientMessage>,
+			required: true,
+		},
 	},
-};
+});
 </script>
