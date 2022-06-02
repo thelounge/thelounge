@@ -81,7 +81,7 @@ export default defineComponent({
 				}
 			}
 
-			return `${type}: ${props.channel.name}${extra.length ? `(${extra.join(", ")})` : ""}`;
+			return `${type}: ${props.channel.name} ${extra.length ? `(${extra.join(", ")})` : ""}`;
 		};
 
 		const click = () => {

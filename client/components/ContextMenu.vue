@@ -102,7 +102,7 @@ export default defineComponent({
 			});
 		};
 
-		const containerClick = (event) => {
+		const containerClick = (event: MouseEvent) => {
 			if (event.currentTarget === event.target) {
 				close();
 			}

@@ -17,12 +17,14 @@
 			aria-hidden="true"
 			:aria-label="messageTimeLocale"
 			class="time tooltipped tooltipped-e"
-			>{{ messageTime }}
+			>{{ `${messageTime}&#32;` }}
 		</span>
 		<template v-if="message.type === 'unhandled'">
 			<span class="from">[{{ message.command }}]</span>
 			<span class="content">
-				<span v-for="(param, id) in message.params" :key="id">{{ param }} </span>
+				<span v-for="(param, id) in message.params" :key="id">{{
+					`&#32;${param}&#32;`
+				}}</span>
 			</span>
 		</template>
 		<template v-else-if="isAction()">
