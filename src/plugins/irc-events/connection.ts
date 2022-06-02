@@ -54,6 +54,10 @@ export default <IrcEventHandler>function (irc, network) {
 
 		network.channels.forEach((chan) => {
 			if (chan.type !== ChanType.CHANNEL) {
+				if (chan.type === ChanType.QUERY) {
+					network.monitor(chan.name);
+				}
+
 				return;
 			}
 
@@ -204,6 +208,7 @@ export default <IrcEventHandler>function (irc, network) {
 		}
 
 		network.serverOptions.NETWORK = data.options.NETWORK;
+		network.serverOptions.MONITOR = data.options.MONITOR;
 
 		client.emit("network:options", {
 			network: network.uuid,

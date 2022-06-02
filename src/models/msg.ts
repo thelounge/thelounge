@@ -35,6 +35,8 @@ export enum MessageType {
 	RAW = "raw",
 	PLUGIN = "plugin",
 	WALLOPS = "wallops",
+	ONLINE = "online",
+	OFFLINE = "offline",
 }
 
 class Msg {
@@ -59,7 +61,7 @@ class Msg {
 	command!: string;
 	invitedYou!: boolean;
 	gecos!: string;
-	account!: boolean;
+	account!: string;
 
 	// these are all just for error:
 	error!: string;

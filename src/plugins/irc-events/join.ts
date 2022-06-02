@@ -1,13 +1,32 @@
 import Msg, {MessageType} from "../../models/msg";
+import Chan, {ChanState, ChanType} from "../../models/chan";
 import User from "../../models/user";
 import type {IrcEventHandler} from "../../client";
-import {ChanState} from "../../models/chan";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
 	irc.on("join", function (data) {
+		const performWhoOnChannel = (chan: Chan) => {
+			if (chan.type !== ChanType.CHANNEL) {
+				return;
+			}
+
+			irc.who(chan.name, (whoData) => {
+				for (const user of whoData.users) {
+					chan.setUser(
+						new User({
+							nick: user.nick,
+							away: user.away,
+							account: user.account,
+						})
+					);
+				}
+			});
+		};
+
 		let chan = network.getChannel(data.channel);
+		const isSelf = data.nick === irc.user.nick;
 
 		if (typeof chan === "undefined") {
 			chan = client.createChannel({
@@ -26,7 +45,7 @@ export default <IrcEventHandler>function (irc, network) {
 
 			// Request channels' modes
 			network.irc.raw("MODE", chan.name);
-		} else if (data.nick === irc.user.nick) {
+		} else if (isSelf) {
 			chan.state = ChanState.JOINED;
 
 			client.emit("channel:state", {
@@ -35,7 +54,7 @@ export default <IrcEventHandler>function (irc, network) {
 			});
 		}
 
-		const user = new User({nick: data.nick});
+		const user = new User({nick: data.nick, account: data.account});
 		const msg = new Msg({
 			time: data.time,
 			from: user,
@@ -43,13 +62,18 @@ export default <IrcEventHandler>function (irc, network) {
 			gecos: data.gecos,
 			account: data.account,
 			type: MessageType.JOIN,
-			self: data.nick === irc.user.nick,
+			self: isSelf,
 		});
 		chan.pushMessage(client, msg);
 
-		chan.setUser(new User({nick: data.nick}));
+		chan.setUser(user);
 		client.emit("users", {
 			chan: chan.id,
 		});
+
+		// If we join a channel, we perform a WHO to get all the users away statuses
+		if (isSelf) {
+			performWhoOnChannel(chan);
+		}
 	});
 };

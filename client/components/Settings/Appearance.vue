@@ -98,6 +98,14 @@
 				/>
 				Enable autocomplete
 			</label>
+			<label class="opt">
+				<input
+					:checked="store.state.settings.statusIcons"
+					type="checkbox"
+					name="statusIcons"
+				/>
+				Enable status icons
+			</label>
 		</div>
 		<div>
 			<label class="opt">

@@ -47,6 +47,7 @@ class Chan {
 	muted!: boolean;
 	type!: ChanType;
 	state!: ChanState;
+	isOnline?: boolean;
 
 	// These are added to the channel elsewhere and should not be saved.
 	userAway!: boolean;
@@ -73,6 +74,10 @@ class Chan {
 			users: new Map(),
 			muted: false,
 		});
+
+		if (this.type === ChanType.QUERY) {
+			this.isOnline = false;
+		}
 	}
 
 	destroy() {

@@ -6,8 +6,25 @@
 		v-on="onHover ? {mouseenter: hover} : {}"
 		@click.prevent="openContextMenu"
 		@contextmenu.prevent="openContextMenu"
-		><slot>{{ mode }}{{ user.nick }}</slot></span
-	>
+		><slot v-if="!html">
+			<StatusIcon
+				v-if="includeStatusIcon"
+				:away="!!user.away"
+				:tooltip-dir="'e'"
+				:online="true"
+			/>
+			{{ mode }}{{ user.nick }}
+		</slot>
+		<slot v-else>
+			<StatusIcon
+				v-if="includeStatusIcon"
+				:away="!!user.away"
+				:tooltip-dir="'e'"
+				:online="true"
+			/>
+			<span class="nick" v-html="html"></span>
+		</slot>
+	</span>
 </template>
 
 <script lang="ts">
@@ -15,7 +32,8 @@ import {computed, defineComponent, PropType} from "vue";
 import {UserInMessage} from "../../src/models/msg";
 import eventbus from "../js/eventbus";
 import colorClass from "../js/helpers/colorClass";
-import type {ClientChan, ClientNetwork, ClientUser} from "../js/types";
+import type {ClientChan, ClientNetwork} from "../js/types";
+import StatusIcon from "./StatusIcon.vue";
 
 type UsernameUser = Partial<UserInMessage> & {
 	mode?: string;
@@ -24,6 +42,9 @@ type UsernameUser = Partial<UserInMessage> & {
 
 export default defineComponent({
 	name: "Username",
+	components: {
+		StatusIcon,
+	},
 	props: {
 		user: {
 			// TODO: UserInMessage shouldn't be necessary here.
@@ -37,6 +58,8 @@ export default defineComponent({
 		},
 		channel: {type: Object as PropType<ClientChan>, required: false},
 		network: {type: Object as PropType<ClientNetwork>, required: false},
+		includeStatusIcon: Boolean,
+		html: String,
 	},
 	setup(props) {
 		const mode = computed(() => {

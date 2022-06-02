@@ -120,6 +120,10 @@ interface ServerToClientEvents {
 		network: string;
 		chan: InitClientChan;
 	}) => void;
+
+	"users:online": (args: {changedChannels: string[]; networkId: string}) => void;
+
+	"users:offline": (args: {changedChannels: string[]; networkId: string}) => void;
 }
 
 interface ClientToServerEvents {

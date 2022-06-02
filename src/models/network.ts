@@ -107,7 +107,11 @@ class Network {
 		CHANTYPES: string[];
 		PREFIX: Prefix;
 		NETWORK: string;
+		MONITOR: number;
 	};
+
+	monitorList!: string[];
+	toBeMonitored!: string[];
 
 	// TODO: this is only available on export
 	hasSTSPolicy!: boolean;
@@ -152,6 +156,8 @@ class Network {
 			chanCache: [],
 			ignoreList: [],
 			keepNick: null,
+			monitorList: [],
+			toBeMonitored: [],
 		});
 
 		if (!this.uuid) {
@@ -288,7 +294,8 @@ class Network {
 
 		this.irc.requestCap([
 			"znc.in/self-message", // Legacy echo-message for ZNC
-			"znc.in/playback", // See http://wiki.znc.in/Playback
+			"znc.in/playback", // See http://wiki.znc.in/Playback,
+			"draft/extended-monitor", // https://ircv3.net/specs/extensions/extended-monitor
 		]);
 	}
 
@@ -521,7 +528,27 @@ class Network {
 		return status;
 	}
 
-	addChannel(newChan: Chan) {
+	monitor(this: NetworkWithIrcFramework, target: string) {
+		this.irc.addMonitor(target);
+
+		if (this.monitorList.length < this.serverOptions.MONITOR) {
+			this.monitorList.push(target);
+		} else {
+			// TODO: ISON fallback?
+			this.toBeMonitored.push(target);
+		}
+	}
+
+	removeMonitor(this: NetworkWithIrcFramework, target: string) {
+		this.irc.removeMonitor(target);
+		this.monitorList = this.monitorList.filter((monitored) => monitored !== target);
+
+		if (this.toBeMonitored.length > 0) {
+			this.monitor(this.toBeMonitored.shift() as string);
+		}
+	}
+
+	addChannel(this: NetworkWithIrcFramework, newChan: Chan) {
 		let index = this.channels.length; // Default to putting as the last item in the array
 
 		// Don't sort special channels in amongst channels/users.
@@ -544,6 +571,13 @@ class Network {
 		}
 
 		this.channels.splice(index, 0, newChan);
+
+		if (newChan.type === ChanType.QUERY) {
+			if (!this.monitorList.includes(newChan.name)) {
+				this.monitor(newChan.name);
+			}
+		}
+
 		return index;
 	}
 

@@ -63,6 +63,11 @@ export default <IrcEventHandler>function (irc, network) {
 					}
 
 					user.away = away;
+					chan.setUser(user);
+
+					client.emit("users", {
+						chan: chan.id,
+					});
 
 					break;
 				}

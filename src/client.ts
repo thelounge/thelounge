@@ -20,6 +20,7 @@ import ClientManager from "./clientManager";
 import {MessageStorage, SearchQuery} from "./plugins/messageStorage/types";
 
 const events = [
+	"account",
 	"away",
 	"cap",
 	"connection",
@@ -45,6 +46,7 @@ const events = [
 	"topic",
 	"welcome",
 	"whois",
+	"users",
 ];
 
 type ClientPushSubscription = {

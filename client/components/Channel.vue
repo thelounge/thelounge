@@ -2,6 +2,11 @@
 	<!-- TODO: investigate -->
 	<ChannelWrapper ref="wrapper" v-bind="$props">
 		<span class="name">{{ channel.name }}</span>
+		<StatusIcon
+			v-if="channel.type === 'query' && network.status.connected"
+			:online="channel.isOnline"
+			:away="!!channel.userAway"
+		/>
 		<span
 			v-if="channel.unread"
 			:class="{highlight: channel.highlight && !channel.muted}"
@@ -34,11 +39,13 @@ import roundBadgeNumber from "../js/helpers/roundBadgeNumber";
 import useCloseChannel from "../js/hooks/use-close-channel";
 import {ClientChan, ClientNetwork} from "../js/types";
 import ChannelWrapper from "./ChannelWrapper.vue";
+import StatusIcon from "./StatusIcon.vue";
 
 export default defineComponent({
 	name: "Channel",
 	components: {
 		ChannelWrapper,
+		StatusIcon,
 	},
 	props: {
 		network: {

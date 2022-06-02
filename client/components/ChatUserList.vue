@@ -31,16 +31,15 @@
 				:class="['user-mode', getModeClass(String(mode))]"
 			>
 				<template v-if="userSearchInput.length > 0">
-					<!-- eslint-disable -->
 					<Username
 						v-for="user in users"
 						:key="user.original.nick + '-search'"
 						:on-hover="hoverUser"
 						:active="user.original === activeUser"
 						:user="(user.original as any)"
-						v-html="user.string"
+						:html="user.string"
+						:include-status-icon="true"
 					/>
-					<!-- eslint-enable -->
 				</template>
 				<template v-else>
 					<Username
@@ -49,12 +48,130 @@
 						:on-hover="hoverUser"
 						:active="user === activeUser"
 						:user="user"
+						:include-status-icon="true"
 					/>
 				</template>
 			</div>
 		</div>
 	</aside>
 </template>
+
+<style>
+.userlist {
+	border-left: 1px solid #e7e7e7;
+	width: 180px;
+	display: none;
+	flex-direction: column;
+	flex-shrink: 0;
+	touch-action: pan-y;
+}
+
+.userlist .count {
+	background: #fafafa;
+	height: 45px;
+	flex-shrink: 0;
+	position: relative;
+}
+.userlist .search {
+	color: var(--body-color);
+	appearance: none;
+	border: 0;
+	background: none;
+	font: inherit;
+	outline: 0;
+	padding: 13px;
+	padding-right: 30px;
+	width: 100%;
+}
+
+.userlist .names {
+	flex-grow: 1;
+	overflow: auto;
+	overflow-x: hidden;
+	padding-bottom: 10px;
+	width: 100%;
+	touch-action: pan-y;
+	scrollbar-width: thin;
+	overscroll-behavior: contain;
+	-webkit-overflow-scrolling: touch;
+}
+
+#viewport.userlist-open #chat .userlist {
+	display: flex;
+}
+
+#chat .names .user {
+	display: block;
+	line-height: 1.6;
+	padding: 0 16px;
+	white-space: nowrap;
+}
+
+#chat .user-mode {
+	margin-bottom: 15px;
+}
+
+#chat .user-mode::before {
+	background: var(--window-bg-color);
+	color: var(--body-color-muted);
+	display: block;
+	font-size: 0.85em;
+	line-height: 1.6;
+	padding: 5px 16px;
+	position: sticky;
+	top: 0;
+	z-index: 1;
+}
+
+#chat .user-mode.owner::before {
+	content: "Owners";
+}
+
+#chat .user-mode.admin::before {
+	content: "Administrators";
+}
+
+#chat .user-mode.op::before {
+	content: "Operators";
+}
+
+#chat .user-mode.half-op::before {
+	content: "Half-Operators";
+}
+
+#chat .user-mode.voice::before {
+	content: "Voiced";
+}
+
+#chat .user-mode.normal::before {
+	content: "Users";
+}
+
+#chat .user-mode-search::before {
+	content: "Search Results";
+}
+
+/* Status icon */
+#chat .names .status {
+	margin-left: -3px;
+	margin-right: 2px;
+}
+
+@media (max-width: 768px) {
+	#chat .userlist {
+		background-color: var(--window-bg-color);
+		height: 100%;
+		position: absolute;
+		right: 0;
+		transform: translateX(180px);
+		transition: transform 0.2s;
+	}
+
+	#viewport.userlist-open #chat .userlist {
+		transform: translateX(0);
+	}
+}
+</style>
 
 <script lang="ts">
 import {filter as fuzzyFilter} from "fuzzy";

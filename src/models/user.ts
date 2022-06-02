@@ -7,6 +7,7 @@ class User {
 	mode!: string;
 	away!: string;
 	nick!: string;
+	account!: string;
 	lastMessage!: number;
 
 	constructor(attr: Partial<User>, prefix?: Prefix) {
@@ -14,6 +15,7 @@ class User {
 			modes: [],
 			away: "",
 			nick: "",
+			account: "",
 			lastMessage: 0,
 		});
 
@@ -37,6 +39,8 @@ class User {
 			nick: this.nick,
 			modes: this.modes,
 			lastMessage: this.lastMessage,
+			away: this.away,
+			account: this.account,
 		};
 	}
 }

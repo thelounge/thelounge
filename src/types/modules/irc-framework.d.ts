@@ -37,8 +37,7 @@ declare module "irc-framework" {
 		type: "privmsg" | "action"; // TODO
 	}
 	export interface JoinEventArgs {
-		// todo: is that wrong?
-		account: boolean;
+		account: string;
 		channel: string;
 		gecos: string;
 		hostname: string;
@@ -234,6 +233,10 @@ declare module "irc-framework" {
 		matchMessage(match_regex: string, cb: (event: Event) => any): void;
 
 		matchAction(match_regex: string, cb: (event: Event) => any): void;
+
+		addMonitor(target: string): void;
+
+		removeMonitor(target: string): void;
 
 		stringToBlocks(str: string, block_size?: number): string[];
 
