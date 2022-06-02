@@ -9,6 +9,7 @@ import Config, {WebIRC} from "../config";
 import STSPolicies from "../plugins/sts";
 import ClientCertificate, {ClientCertificateType} from "../plugins/clientCertificate";
 import Client from "../client";
+import ChatHistoryMiddleware from "../plugins/middleware/chat-history";
 
 /**
  * List of keys which should be sent to the client by default.
@@ -283,6 +284,8 @@ class Network {
 
 			// TODO: this type should be set after setIrcFrameworkOptions
 		}) as NetworkWithIrcFramework["irc"];
+
+		this.irc.use(ChatHistoryMiddleware());
 
 		this.setIrcFrameworkOptions(client);
 
