@@ -48,7 +48,7 @@ class Chan {
 	type!: ChanType;
 	state!: ChanState;
 
-	// These are added to the channel elsewhere and should not be saved.
+	// These are added to the channel elsewhere.
 	userAway!: boolean;
 	special?: SpecialChanType;
 	data?: any;
@@ -56,7 +56,7 @@ class Chan {
 	num_users?: number;
 
 	// temporary for getFilteredClone until the above are moved out
-	keysToIgnore = ["userAway", "special", "data", "closed", "num_users"];
+	keysToIgnore = ["userAway"];
 
 	constructor(attr?: Partial<Chan>) {
 		_.defaults(this, attr, {
