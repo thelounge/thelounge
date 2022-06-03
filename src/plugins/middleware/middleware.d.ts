@@ -7,17 +7,19 @@ type LatestTimestamp = "*" | Timestamp;
 declare module "irc-framework" {
 	interface Client {
 		chatHistory: {
-			batches: Map<number, Promise<void>>;
-			addCallback: (id: number, callback: (data?: void | PromiseLike<void>) => Promise<void>) => void;
-			async runCallback(id: number): void;
-
-			async before(target: string, timestamp: Timestamp, limit: number): Promise<any>;
-			async after(target: string, timestamp: Timestamp, limit: number): Promise<any>;
-			async latest(target: string, timestamp: LatestTimestamp, limit: number): Promise<any>;
-			async around(target: string, timestamp: Timestamp, limit: number): Promise<any>;
-			async between(target: string, timestamp1: Timestamp, timestamp2: Timestamp, limit: number): Promise<any>;
-			async targets(timestamp1: Timestamp, timestamp2: Timestamp, limit: number): Promise<any>;
-			async targets(target: string, timestamp: Timestamp): Promise<any>;
-		}
+			eventbus: EventEmitter;
+			before(target: string, timestamp: Timestamp, limit?: number): void;
+			after(target: string, timestamp: Timestamp, limit?: number): void;
+			latest(target: string, timestamp?: LatestTimestamp, limit?: number): void;
+			around(target: string, timestamp: Timestamp, limit?: number): void;
+			between(
+				target: string,
+				timestamp1: Timestamp,
+				timestamp2: Timestamp,
+				limit?: number
+			): void;
+			targets(timestamp1: Timestamp, timestamp2: Timestamp, limit?: number): void;
+			targets(target: string, timestamp: Timestamp): void;
+		};
 	}
 }

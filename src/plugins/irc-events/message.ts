@@ -41,6 +41,8 @@ export default <IrcEventHandler>function (irc, network) {
 		type: MessageType;
 		time: number;
 		text: string;
+		// TODO: type
+		batch?: any;
 		message: string;
 		group?: string;
 	}) {
@@ -49,6 +51,10 @@ export default <IrcEventHandler>function (irc, network) {
 		let highlight = false;
 		let showInActive = false;
 		const self = data.nick === irc.user.nick;
+
+		if (data.batch?.type === "chathistory") {
+			return;
+		}
 
 		// Some servers send messages without any nickname
 		if (!data.nick) {
@@ -126,6 +132,7 @@ export default <IrcEventHandler>function (irc, network) {
 			from: from,
 			highlight: highlight,
 			users: [],
+			batch: data.batch || undefined,
 		});
 
 		if (showInActive) {

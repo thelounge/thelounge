@@ -8,6 +8,7 @@
 				highlight: message.highlight || focused,
 				'previous-source': isPreviousSource,
 			},
+			batchType,
 		]"
 		:data-type="message.type"
 		:data-command="message.command"
@@ -97,6 +98,12 @@
 	</div>
 </template>
 
+<style scoped css>
+.batch-type-chathistory {
+	opacity: 0.6;
+}
+</style>
+
 <script lang="ts">
 import {computed, defineComponent, PropType} from "vue";
 import dayjs from "dayjs";
@@ -153,6 +160,14 @@ export default defineComponent({
 			return "message-" + props.message.type;
 		});
 
+		const batchType = computed(() => {
+			if (props.message.batch) {
+				return `batch-type-${props.message.batch?.type}`;
+			}
+
+			return undefined;
+		});
+
 		const isAction = () => {
 			return typeof MessageTypes["message-" + props.message.type] !== "undefined";
 		};
@@ -163,6 +178,7 @@ export default defineComponent({
 			messageTimeLocale,
 			messageComponent,
 			isAction,
+			batchType,
 		};
 	},
 });

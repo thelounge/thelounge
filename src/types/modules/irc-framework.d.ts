@@ -5,7 +5,7 @@
 // https://raw.githubusercontent.com/eternagame/HTML-Chat/vue-rewrite/src/app/types/modules/irc-framework/irc-framework.d.ts
 // TODO: Fix this
 declare module "irc-framework" {
-	import { EventEmitter } from "eventemitter3";
+	import {EventEmitter} from "eventemitter3";
 	// import { DuplexStream } from 'stream';
 	import Connection from "irc-framework/src/transports/websocket";
 
@@ -23,7 +23,11 @@ declare module "irc-framework" {
 		end: () => void;
 	};
 
-	export type IRCMiddleware = (client: Client, raw_events: Array<string>, parsed_events: any) => void;
+	export type IRCMiddleware = (
+		client: Client,
+		raw_events: Array<string>,
+		parsed_events: any
+	) => void;
 
 	export interface MessageEventArgs {
 		account?: any;
@@ -33,7 +37,7 @@ declare module "irc-framework" {
 		message: string;
 		nick: string;
 		reply: (message: string) => void;
-		tags: { [key: string]: string };
+		tags: {[key: string]: string};
 		target: string;
 		time?: any;
 		type: "privmsg" | "action"; // TODO
@@ -47,6 +51,7 @@ declare module "irc-framework" {
 		ident: string;
 		nick: string;
 		time?: any;
+		batch?: any;
 	}
 	export interface KickEventArgs {
 		kicked: string;
@@ -72,6 +77,7 @@ declare module "irc-framework" {
 		time?: any;
 		channel?: string;
 		kicked?: string;
+		batch?: any;
 	}
 	interface Mode {
 		mode: string;
@@ -113,7 +119,7 @@ declare module "irc-framework" {
 				PREFIX: any;
 				CHANMODES: string;
 				NICKLEN: string;
-				'DRAFT/CHATHISTORY': number;
+				"DRAFT/CHATHISTORY": number;
 				CHATHISTORY: number;
 			};
 			cap: {
@@ -144,8 +150,6 @@ declare module "irc-framework" {
 
 		// TODO
 		/** Request */ requestCap(capability: string[]): void;
-
-
 
 		use(a: IRCMiddleware): any;
 
@@ -233,7 +237,7 @@ declare module "irc-framework" {
 			match_regex: string,
 			cb: (event: Event) => any,
 			message_type: string
-		): { stop: () => void };
+		): {stop: () => void};
 
 		matchNotice(match_regex: string, cb: (event: Event) => any): void;
 

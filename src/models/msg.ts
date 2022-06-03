@@ -74,6 +74,13 @@ class Msg {
 	statusmsgGroup!: string;
 	params!: string[];
 
+	batch?: {
+		id: number;
+		type: string;
+		params: string[];
+		commands: any[];
+	};
+
 	constructor(attr?: Partial<Msg>) {
 		// Some properties need to be copied in the Msg object instead of referenced
 		if (attr) {

@@ -29,6 +29,11 @@ export default <IrcEventHandler>function (irc, network) {
 		} else if (data.nick === irc.user.nick) {
 			chan.state = ChanState.JOINED;
 
+			// Don't react to our own join
+			if (data.batch?.type !== "chathistory") {
+				network.irc.chatHistory.latest(chan.name);
+			}
+
 			client.emit("channel:state", {
 				chan: chan.id,
 				state: chan.state,
