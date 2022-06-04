@@ -97,12 +97,10 @@ describe("findLinks", () => {
 
 	it("should not find urls", () => {
 		const input = "text www. text";
-		// @ts-expect-error ts-migrate(7034) FIXME: Variable 'expected' implicitly has type 'any[]' in... Remove this comment to see the full error message
 		const expected = [];
 
 		const actual = findLinks(input);
 
-		// @ts-expect-error ts-migrate(7005) FIXME: Variable 'expected' implicitly has an 'any[]' type... Remove this comment to see the full error message
 		expect(actual).to.deep.equal(expected);
 	});
 
@@ -163,12 +161,10 @@ describe("findLinks", () => {
 
 	it("should not consider invalid TLDs as domains", () => {
 		const input = "google.wtfgugl google.xx www.google.wtfgugl www.google.xx";
-		// @ts-expect-error ts-migrate(7034) FIXME: Variable 'expected' implicitly has type 'any[]' in... Remove this comment to see the full error message
 		const expected = [];
 
 		const actual = findLinks(input);
 
-		// @ts-expect-error ts-migrate(7005) FIXME: Variable 'expected' implicitly has an 'any[]' type... Remove this comment to see the full error message
 		expect(actual).to.deep.equal(expected);
 	});
 
