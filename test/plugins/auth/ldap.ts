@@ -1,5 +1,3 @@
-"use strict";
-
 import log from "../../../src/log";
 import ldapAuth from "../../../src/plugins/auth/ldap";
 import Config from "../../../src/config";

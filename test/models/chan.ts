@@ -1,4 +1,3 @@
-"use strict";
 import {expect} from "chai";
 
 import Chan from "../../src/models/chan";

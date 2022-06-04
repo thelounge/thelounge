@@ -1,5 +1,3 @@
-"use strict";
-
 import {expect} from "chai";
 import os from "os";
 import Helper from "../../src/helper";

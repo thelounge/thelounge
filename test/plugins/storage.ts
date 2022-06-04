@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
-"use strict";
-
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";

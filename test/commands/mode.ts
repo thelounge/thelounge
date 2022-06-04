@@ -1,6 +1,4 @@
 // @ts-nocheck TODO re-enable
-"use strict";
-
 import {expect} from "chai";
 import Client from "../../src/client";
 

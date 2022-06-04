@@ -1,5 +1,3 @@
-"use strict";
-
 import {expect} from "chai";
 import inputs from "../../../src/plugins/inputs";
 

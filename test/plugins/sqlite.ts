@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-"use strict";
-
 import fs from "fs";
 import path from "path";
 import {expect} from "chai";
