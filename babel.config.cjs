@@ -6,5 +6,4 @@ module.exports = {
 		// "@vue/babel-preset-jsx",
 	],
 	plugins: ["@babel/plugin-transform-runtime"],
-	targets: "> 0.25%, not dead",
 };
