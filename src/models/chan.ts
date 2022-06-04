@@ -56,7 +56,7 @@ class Chan {
 	num_users?: number;
 
 	// temporary for getFilteredClone until the above are moved out
-	keysToIgnore = ["userAway"];
+	keysToIgnore = ["userAway", "special", "data", "closed", "num_users"];
 
 	constructor(attr?: Partial<Chan>) {
 		_.defaults(this, attr, {

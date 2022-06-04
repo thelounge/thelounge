@@ -152,7 +152,7 @@ describe("LDAP authentication plugin", function () {
 	beforeEach(function () {
 		Config.values.public = false;
 		Config.values.ldap.enable = true;
-		Config.values.ldap.url = "ldap://localhost:" + String(serverPort);
+		Config.values.ldap.url = "ldap://127.0.0.1:" + String(serverPort);
 		Config.values.ldap.primaryKey = primaryKey;
 	});
 
