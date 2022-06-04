@@ -93,66 +93,13 @@ const config: webpack.Configuration = {
 	},
 	plugins: [
 		new VueLoaderPlugin(),
-		new webpack.DefinePlugin({
-			__VUE_PROD_DEVTOOLS__: false,
-			// TODO; we should be able to eventually set this to false once vue-draggable-next updates
-			__VUE_OPTIONS_API__: true,
-		}),
 		new MiniCssExtractPlugin({
 			filename: "css/style.css",
 		}),
-		new webpack.IgnorePlugin({resourceRegExp: /canvas/}),
-		new CopyPlugin({
-			patterns: [
-				{
-					from: path
-						.resolve(
-							__dirname,
-							"node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff*"
-						)
-						.replace(/\\/g, "/"),
-					to: "fonts/[name][ext]",
-				},
-				{
-					from: path.resolve(__dirname, "./client/js/loading-error-handlers.js"),
-					to: "js/[name][ext]",
-				},
-				{
-					from: path.resolve(__dirname, "./client/*").replace(/\\/g, "/"),
-					to: "[name][ext]",
-					globOptions: {
-						ignore: ["**/index.html.tpl", "**/service-worker.js"],
-					},
-				},
-				{
-					from: path.resolve(__dirname, "./client/service-worker.js"),
-					to: "[name][ext]",
-					transform(content) {
-						return content
-							.toString()
-							.replace(
-								"__HASH__",
-								isProduction ? Helper.getVersionCacheBust() : "dev"
-							);
-					},
-				},
-				{
-					from: path.resolve(__dirname, "./client/audio/*").replace(/\\/g, "/"),
-					to: "audio/[name][ext]",
-				},
-				{
-					from: path.resolve(__dirname, "./client/img/*").replace(/\\/g, "/"),
-					to: "img/[name][ext]",
-				},
-				{
-					from: path.resolve(__dirname, "./client/themes/*").replace(/\\/g, "/"),
-					to: "themes/[name][ext]",
-				},
-			],
-		}),
-		// socket.io uses debug, we don't need it
+
+		// Client tests that require Vue may end up requireing socket.io
 		new webpack.NormalModuleReplacementPlugin(
-			/debug/,
+			/js(\/|\\)socket\.js/,
 			path.resolve(__dirname, "scripts/noop.js")
 		),
 	],
@@ -179,28 +126,66 @@ export default (env: any, argv: any) => {
 		// - https://github.com/zinserjan/mocha-webpack/issues/84
 		// - https://github.com/webpack/webpack/issues/6727#issuecomment-372589122
 		config.optimization!.splitChunks = false;
-
-		// Disable plugins like copy files, it is not required
-		config.plugins = [
-			new VueLoaderPlugin(),
-			new MiniCssExtractPlugin({
-				filename: "css/style.css",
-			}),
-
-			new MiniCssExtractPlugin({
-				filename: "css/style.css",
-			}),
-
-			// Client tests that require Vue may end up requireing socket.io
-			new webpack.NormalModuleReplacementPlugin(
-				/js(\/|\\)socket\.js/,
-				path.resolve(__dirname, "scripts/noop.js")
-			),
-		];
 	}
 
 	if (argv?.mode === "production") {
-		// ...
+		// Add production plugins
+		config.plugins!.push(
+			new webpack.DefinePlugin({
+				__VUE_PROD_DEVTOOLS__: false,
+				// TODO; we should be able to eventually set this to false once vue-draggable-next updates
+				__VUE_OPTIONS_API__: true,
+			}),
+			new webpack.IgnorePlugin({resourceRegExp: /canvas/}),
+			new CopyPlugin({
+				patterns: [
+					{
+						from: path
+							.resolve(
+								__dirname,
+								"node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff*"
+							)
+							.replace(/\\/g, "/"),
+						to: "fonts/[name][ext]",
+					},
+					{
+						from: path.resolve(__dirname, "./client/js/loading-error-handlers.js"),
+						to: "js/[name][ext]",
+					},
+					{
+						from: path.resolve(__dirname, "./client/*").replace(/\\/g, "/"),
+						to: "[name][ext]",
+						globOptions: {
+							ignore: ["**/index.html.tpl", "**/service-worker.js"],
+						},
+					},
+					{
+						from: path.resolve(__dirname, "./client/service-worker.js"),
+						to: "[name][ext]",
+						transform(content) {
+							return content
+								.toString()
+								.replace(
+									"__HASH__",
+									isProduction ? Helper.getVersionCacheBust() : "dev"
+								);
+						},
+					},
+					{
+						from: path.resolve(__dirname, "./client/audio/*").replace(/\\/g, "/"),
+						to: "audio/[name][ext]",
+					},
+					{
+						from: path.resolve(__dirname, "./client/img/*").replace(/\\/g, "/"),
+						to: "img/[name][ext]",
+					},
+					{
+						from: path.resolve(__dirname, "./client/themes/*").replace(/\\/g, "/"),
+						to: "themes/[name][ext]",
+					},
+				],
+			})
+		);
 	}
 
 	return config;
