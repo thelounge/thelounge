@@ -96,12 +96,6 @@ const config: webpack.Configuration = {
 		new MiniCssExtractPlugin({
 			filename: "css/style.css",
 		}),
-
-		// Client tests that require Vue may end up requireing socket.io
-		new webpack.NormalModuleReplacementPlugin(
-			/js(\/|\\)socket\.js/,
-			path.resolve(__dirname, "scripts/noop.js")
-		),
 	],
 };
 
@@ -187,6 +181,14 @@ export default (env: any, argv: any) => {
 			})
 		);
 	}
+
+	config.plugins!.push(
+		// Client tests that require Vue may end up requireing socket.io
+		new webpack.NormalModuleReplacementPlugin(
+			/js(\/|\\)socket\.js/,
+			path.resolve(__dirname, "scripts/noop.js")
+		)
+	);
 
 	return config;
 };
