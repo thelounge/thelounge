@@ -1,5 +1,3 @@
-"use strict";
-
 import log from "../src/log";
 import Config from "../src/config";
 import {expect} from "chai";

@@ -1,8 +1,6 @@
 // TODO: type
 // @ts-nocheck
 
-"use strict";
-
 import {h as createElement, VNode} from "vue";
 import parseStyle from "./ircmessageparser/parseStyle";
 import findChannels, {ChannelPart} from "./ircmessageparser/findChannels";

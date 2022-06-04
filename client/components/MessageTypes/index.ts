@@ -1,5 +1,3 @@
-"use strict";
-
 // This creates a version of `require()` in the context of the current
 // directory, so we iterate over its content, which is a map statically built by
 // Webpack.

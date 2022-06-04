@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-"use strict";
-
 import {expect} from "chai";
 import Chan, {ChanType} from "../../src/models/chan";
 import Msg from "../../src/models/msg";

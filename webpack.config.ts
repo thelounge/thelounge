@@ -1,5 +1,3 @@
-"use strict";
-
 import * as webpack from "webpack";
 import * as path from "path";
 import CopyPlugin from "copy-webpack-plugin";

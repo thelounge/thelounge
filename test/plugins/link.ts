@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
-"use strict";
-
 import path from "path";
 import {expect} from "chai";
 import util from "../util";
