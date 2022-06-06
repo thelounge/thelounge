@@ -113,6 +113,15 @@ const tsRulesTemp = defineConfig({
 	},
 }).rules;
 
+const tsTestRulesTemp = defineConfig({
+	rules: {
+		// TODO: remove these
+		"@typescript-eslint/no-unsafe-return": "off",
+		"@typescript-eslint/no-empty-function": "off",
+		"@typescript-eslint/restrict-plus-operands": "off",
+	},
+}).rules;
+
 module.exports = defineConfig({
 	root: true,
 	parserOptions: {
@@ -167,10 +176,10 @@ module.exports = defineConfig({
 			files: ["./tests/**/*.ts"],
 			parser: "@typescript-eslint/parser",
 			rules: {
-				// TODO: remove these
-				"@typescript-eslint/no-unsafe-return": "off",
-				"@typescript-eslint/no-empty-function": "off",
-				"@typescript-eslint/restrict-plus-operands": "off",
+				...baseRules,
+				...tsRules,
+				...tsRulesTemp,
+				...tsTestRulesTemp,
 			},
 		},
 	],
