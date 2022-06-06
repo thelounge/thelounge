@@ -62,7 +62,7 @@ export default defineComponent({
 			type: Object as PropType<ClientMessage>,
 		},
 	},
-	setup(props) {
+	setup() {
 		const store = useStore();
 		const router = useRouter();
 
