@@ -65,71 +65,79 @@
 			drag-class="ui-sortable-dragging"
 			group="networks"
 			class="networks"
+			item-key="uuid"
 			@change="onNetworkSort"
 			@choose="onDraggableChoose"
 			@unchoose="onDraggableUnchoose"
 		>
-			<div
-				v-for="network in store.state.networks"
-				:id="'network-' + network.uuid"
-				:key="network.uuid"
-				:class="{
-					collapsed: network.isCollapsed,
-					'not-connected': !network.status.connected,
-					'not-secure': !network.status.secure,
-				}"
-				class="network"
-				role="region"
-				aria-live="polite"
-				@touchstart="onDraggableTouchStart"
-				@touchmove="onDraggableTouchMove"
-				@touchend="onDraggableTouchEnd"
-				@touchcancel="onDraggableTouchEnd"
-			>
-				<NetworkLobby
-					:network="network"
-					:is-join-channel-shown="network.isJoinChannelShown"
-					:active="
-						store.state.activeChannel &&
-						network.channels[0] === store.state.activeChannel.channel
-					"
-					@toggle-join-channel="network.isJoinChannelShown = !network.isJoinChannelShown"
-				/>
-				<JoinChannel
-					v-if="network.isJoinChannelShown"
-					:network="network"
-					:channel="network.channels[0]"
-					@toggle-join-channel="network.isJoinChannelShown = !network.isJoinChannelShown"
-				/>
-
-				<Draggable
-					draggable=".channel-list-item"
-					ghost-class="ui-sortable-ghost"
-					drag-class="ui-sortable-dragging"
-					:group="network.uuid"
-					:list="network.channels"
-					:delay="LONG_TOUCH_DURATION"
-					:delay-on-touch-only="true"
-					:touch-start-threshold="10"
-					class="channels"
-					@change="onChannelSort"
-					@choose="onDraggableChoose"
-					@unchoose="onDraggableUnchoose"
+			<template v-slot:item="{element: network}">
+				<div
+					:id="'network-' + network.uuid"
+					:key="network.uuid"
+					:class="{
+						collapsed: network.isCollapsed,
+						'not-connected': !network.status.connected,
+						'not-secure': !network.status.secure,
+					}"
+					class="network"
+					role="region"
+					aria-live="polite"
+					@touchstart="onDraggableTouchStart"
+					@touchmove="onDraggableTouchMove"
+					@touchend="onDraggableTouchEnd"
+					@touchcancel="onDraggableTouchEnd"
 				>
-					<template v-for="(channel, index) in network.channels">
-						<Channel
-							v-if="index > 0"
-							:key="channel.id"
-							:channel="channel"
-							:network="network"
-							:active="
-								store.state.activeChannel &&
-								channel === store.state.activeChannel.channel
-							"
-						/>
-					</template>
-				</Draggable>
-			</div>
+					<NetworkLobby
+						:network="network"
+						:is-join-channel-shown="network.isJoinChannelShown"
+						:active="
+							store.state.activeChannel &&
+							network.channels[0] === store.state.activeChannel.channel
+						"
+						@toggle-join-channel="
+							network.isJoinChannelShown = !network.isJoinChannelShown
+						"
+					/>
+					<JoinChannel
+						v-if="network.isJoinChannelShown"
+						:network="network"
+						:channel="network.channels[0]"
+						@toggle-join-channel="
+							network.isJoinChannelShown = !network.isJoinChannelShown
+						"
+					/>
+
+					<Draggable
+						draggable=".channel-list-item"
+						ghost-class="ui-sortable-ghost"
+						drag-class="ui-sortable-dragging"
+						:group="network.uuid"
+						:list="network.channels"
+						:delay="LONG_TOUCH_DURATION"
+						:delay-on-touch-only="true"
+						:touch-start-threshold="10"
+						class="channels"
+						item-key="name"
+						@change="onChannelSort"
+						@choose="onDraggableChoose"
+						@unchoose="onDraggableUnchoose"
+					>
+						<template v-slot:item="{element: channel, index}">
+							<Channel
+								v-if="index > 0"
+								:key="channel.id"
+								:data-item="channel.id"
+								:channel="channel"
+								:network="network"
+								:active="
+									store.state.activeChannel &&
+									channel === store.state.activeChannel.channel
+								"
+							/>
+						</template>
+					</Draggable>
+				</div>
+			</template>
 		</Draggable>
 	</div>
 </template>
@@ -199,7 +207,7 @@
 import {computed, watch, defineComponent, nextTick, onBeforeUnmount, onMounted, ref} from "vue";
 
 import Mousetrap from "mousetrap";
-import {VueDraggableNext} from "vue-draggable-next";
+import Draggable from "./Draggable.vue";
 import {filter as fuzzyFilter} from "fuzzy";
 import NetworkLobby from "./NetworkLobby.vue";
 import Channel from "./Channel.vue";
@@ -213,6 +221,7 @@ import eventbus from "../js/eventbus";
 import {ClientChan, NetChan} from "../js/types";
 import {useStore} from "../js/store";
 import {switchToChannel} from "../js/router";
+import Sortable from "sortablejs";
 
 export default defineComponent({
 	name: "NetworkList",
@@ -220,7 +229,7 @@ export default defineComponent({
 		JoinChannel,
 		NetworkLobby,
 		Channel,
-		Draggable: VueDraggableNext,
+		Draggable,
 	},
 	setup() {
 		const store = useStore();
@@ -234,6 +243,11 @@ export default defineComponent({
 		const networklist = ref<HTMLDivElement | null>(null);
 
 		const sidebarWasClosed = ref(false);
+
+		const moveItemInArray = <T>(array: T[], from: number, to: number) => {
+			const item = array.splice(from, 1)[0];
+			array.splice(to, 0, item);
+		};
 
 		const items = computed(() => {
 			const newItems: NetChan[] = [];
@@ -286,10 +300,14 @@ export default defineComponent({
 			return false;
 		};
 
-		const onNetworkSort = (e: any) => {
-			if (!e.moved) {
+		const onNetworkSort = (e: Sortable.SortableEvent) => {
+			const {oldIndex, newIndex} = e;
+
+			if (oldIndex === undefined || newIndex === undefined || oldIndex === newIndex) {
 				return;
 			}
+
+			moveItemInArray(store.state.networks, oldIndex, newIndex);
 
 			socket.emit("sort", {
 				type: "networks",
@@ -297,21 +315,36 @@ export default defineComponent({
 			});
 		};
 
-		const onChannelSort = (e: any) => {
-			if (!e.moved) {
+		const onChannelSort = (e: Sortable.SortableEvent) => {
+			let {oldIndex, newIndex} = e;
+
+			if (oldIndex === undefined || newIndex === undefined || oldIndex === newIndex) {
 				return;
 			}
 
-			const channel = store.getters.findChannel(e.moved.element.id);
+			// Indexes are offset by one due to the lobby
+			oldIndex += 1;
+			newIndex += 1;
 
-			if (!channel) {
+			const unparsedId = e.item.getAttribute("data-item");
+
+			if (!unparsedId) {
 				return;
 			}
+
+			const id = parseInt(unparsedId);
+			const netChan = store.getters.findChannel(id);
+
+			if (!netChan) {
+				return;
+			}
+
+			moveItemInArray(netChan.network.channels, oldIndex, newIndex);
 
 			socket.emit("sort", {
 				type: "channels",
-				target: channel.network.uuid,
-				order: channel.network.channels.map((c) => c.id),
+				target: netChan.network.uuid,
+				order: netChan.network.channels.map((c) => c.id),
 			});
 		};
 
@@ -511,6 +544,9 @@ export default defineComponent({
 			Mousetrap.unbind("alt+shift+left");
 			Mousetrap.unbind("alt+j");
 		});
+
+		const networkContainerRef = ref<HTMLDivElement>();
+		const channelRefs = ref<{[key: string]: HTMLDivElement}>({});
 
 		return {
 			store,

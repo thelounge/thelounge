@@ -1687,6 +1687,11 @@
   resolved "https://registry.yarnpkg.com/@types/sinonjs__fake-timers/-/sinonjs__fake-timers-8.1.2.tgz#bf2e02a3dbd4aecaf95942ecd99b7402e03fad5e"
   integrity sha512-9GcLXF0/v3t80caGs5p2rRfkB+a8VBGLJZVih6CNFkx8IZ994wiKKLSRs9nuFwk1HevWs/1mnUmkApGrSGsShA==
 
+"@types/sortablejs@1.13.0":
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/@types/sortablejs/-/sortablejs-1.13.0.tgz#870223438f8f2cd81157b128a4c0261adbcaa946"
+  integrity sha512-C3064MH72iEfeGCYEGCt7FCxXoAXaMPG0QPnstcxvPmbl54erpISu06d++FY37Smja64iWy5L8wOyHHBghWbJQ==
+
 "@types/sqlite3@3.1.8":
   version "3.1.8"
   resolved "https://registry.yarnpkg.com/@types/sqlite3/-/sqlite3-3.1.8.tgz#e64310c5841fc01c1a8795d960d951e4cf940296"
@@ -7787,7 +7792,7 @@ socks@^2.6.1:
     ip "^1.1.5"
     smart-buffer "^4.2.0"
 
-sortablejs@1.10.2, sortablejs@1.15.0:
+sortablejs@1.14.0, sortablejs@1.15.0:
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/sortablejs/-/sortablejs-1.15.0.tgz#53230b8aa3502bb77a29e2005808ffdb4a5f7e2a"
   integrity sha512-bv9qgVMjUMf89wAvM6AxVvS/4MX3sPeN0+agqShejLU5z5GX4C75ow1O2e5k4L6XItUyAK3gH6AxSbXrOM5e8w==
@@ -8618,11 +8623,6 @@ verror@^1.8.1:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-vue-draggable-next@2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/vue-draggable-next/-/vue-draggable-next-2.1.1.tgz#49886da82f116d11b3e4df7674320fdacf5d7e04"
-  integrity sha512-f5lmA7t6LMaL4viR7dU30zzvqJzaKQs0ymL0Jy9UDT9uiZ2tXF3MzPzEvpTH2UODXZJkT+SnjeV1fXHMsgXLYA==
-
 vue-eslint-parser@8.3.0:
   version "8.3.0"
   resolved "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-8.3.0.tgz#5d31129a1b3dd89c0069ca0a1c88f970c360bd0d"
@@ -8690,12 +8690,12 @@ vue@3.2.35:
     "@vue/server-renderer" "3.2.35"
     "@vue/shared" "3.2.35"
 
-vuedraggable@2.24.3:
-  version "2.24.3"
-  resolved "https://registry.yarnpkg.com/vuedraggable/-/vuedraggable-2.24.3.tgz#43c93849b746a24ce503e123d5b259c701ba0d19"
-  integrity sha512-6/HDXi92GzB+Hcs9fC6PAAozK1RLt1ewPTLjK0anTYguXLAeySDmcnqE8IC0xa7shvSzRjQXq3/+dsZ7ETGF3g==
+vuedraggable@4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/vuedraggable/-/vuedraggable-4.1.0.tgz#edece68adb8a4d9e06accff9dfc9040e66852270"
+  integrity sha512-FU5HCWBmsf20GpP3eudURW3WdWTKIbEIQxh9/8GE806hydR9qZqRRxRE3RjqX7PkuLuMQG/A7n3cfj9rCEchww==
   dependencies:
-    sortablejs "1.10.2"
+    sortablejs "1.14.0"
 
 vuex@4.0.2:
   version "4.0.2"

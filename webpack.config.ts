@@ -93,8 +93,7 @@ const config: webpack.Configuration = {
 		new VueLoaderPlugin(),
 		new webpack.DefinePlugin({
 			__VUE_PROD_DEVTOOLS__: false,
-			// TODO; we should be able to eventually set this to false once vue-draggable-next updates
-			__VUE_OPTIONS_API__: true,
+			__VUE_OPTIONS_API__: false,
 		}),
 		new MiniCssExtractPlugin({
 			filename: "css/style.css",
