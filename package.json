@@ -164,7 +164,6 @@
     "vue-loader": "17.0.0",
     "vue-router": "4.0.15",
     "vue-server-renderer": "2.6.14",
-    "vuedraggable": "4.1.0",
     "vuex": "4.0.2",
     "webpack": "5.68.0",
     "webpack-cli": "4.9.2",
@@ -175,8 +174,5 @@
     "hooks": {
       "pre-commit": "pretty-quick --staged"
     }
-  },
-  "resolutions": {
-    "sortablejs": "1.15.0"
   }
 }
