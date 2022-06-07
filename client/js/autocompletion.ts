@@ -1,7 +1,7 @@
 import constants from "./constants";
 
 import Mousetrap from "mousetrap";
-import {Strategy, Textcomplete} from "@textcomplete/core";
+import {Strategy, Textcomplete, StrategyProps} from "@textcomplete/core";
 import {TextareaEditor} from "@textcomplete/textarea";
 
 import fuzzy from "fuzzy";
@@ -12,7 +12,7 @@ import {store} from "./store";
 export default enableAutocomplete;
 
 const emojiSearchTerms = Object.keys(emojiMap);
-const emojiStrategy = {
+const emojiStrategy: StrategyProps = {
 	id: "emoji",
 	match: /(^|\s):([-+\w:?]{2,}):?$/,
 	search(term: string, callback: (matches) => void) {
@@ -24,13 +24,13 @@ const emojiStrategy = {
 	template([string, original]: [string, string]) {
 		return `<span class="emoji">${String(emojiMap[original])}</span> ${string}`;
 	},
-	replace([, original]) {
-		return String(emojiMap[original]);
+	replace([, original]: [string, string]) {
+		return "$1" + String(emojiMap[original]);
 	},
 	index: 2,
 };
 
-const nicksStrategy = {
+const nicksStrategy: StrategyProps = {
 	id: "nicks",
 	match: /(^|\s)(@([a-zA-Z_[\]\\^{}|`@][a-zA-Z0-9_[\]\\^{}|`-]*)?)$/,
 	search(term: string, callback: (matches: string[] | string[][]) => void) {
@@ -53,7 +53,7 @@ const nicksStrategy = {
 	index: 2,
 };
 
-const chanStrategy = {
+const chanStrategy: StrategyProps = {
 	id: "chans",
 	match: /(^|\s)((?:#|\+|&|![A-Z0-9]{5})(?:[^\s]+)?)$/,
 	search(term: string, callback: (matches: string[][]) => void) {
@@ -68,7 +68,7 @@ const chanStrategy = {
 	index: 2,
 };
 
-const commandStrategy = {
+const commandStrategy: StrategyProps = {
 	id: "commands",
 	match: /^\/(\w*)$/,
 	search(term: string, callback: (matches: string[][]) => void) {
@@ -83,7 +83,7 @@ const commandStrategy = {
 	index: 1,
 };
 
-const foregroundColorStrategy = {
+const foregroundColorStrategy: StrategyProps = {
 	id: "foreground-colors",
 	match: /\x03(\d{0,2}|[A-Za-z ]{0,10})$/,
 	search(term: string, callback: (matches: string[][]) => void) {
@@ -116,7 +116,7 @@ const foregroundColorStrategy = {
 	index: 1,
 };
 
-const backgroundColorStrategy = {
+const backgroundColorStrategy: StrategyProps = {
 	id: "background-colors",
 	match: /\x03(\d{2}),(\d{0,2}|[A-Za-z ]{0,10})$/,
 	search(term: string, callback: (matchingColorCodes: string[][]) => void, match: string[]) {
