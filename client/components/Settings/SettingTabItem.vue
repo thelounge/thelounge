@@ -13,14 +13,6 @@
 </template>
 
 <script lang="ts">
-// v-slot:default="{navigate, isExactActive}"
-// :to="'/settings/' + to"
-// :class="['icon', className]"
-// :aria-label="name"
-// role="tab"
-// aria-controls="settings"
-// :aria-selected="route.name === name"
-// custom
 import {defineComponent} from "vue";
 import {useRoute} from "vue-router";
 

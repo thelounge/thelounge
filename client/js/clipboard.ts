@@ -1,6 +1,6 @@
 export default function (chat: HTMLDivElement) {
 	// Disable in Firefox as it already copies flex text correctly
-	// @ts-ignore
+	// @ts-expect-error Property 'InstallTrigger' does not exist on type 'Window & typeof globalThis'.ts(2339)
 	if (typeof window.InstallTrigger !== "undefined") {
 		return;
 	}

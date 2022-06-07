@@ -3,6 +3,9 @@ const events = new Map();
 class EventBus {
 	/**
 	 * Register an event handler for the given type.
+	 *
+	 * @param  {String} type    Type of event to listen for.
+	 * @param  {Function} handler Function to call in response to given event.
 	 */
 	on(type: string, handler: (...evt: any[]) => void) {
 		if (events.has(type)) {
