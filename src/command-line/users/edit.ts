@@ -8,8 +8,8 @@ import Utils from "../utils";
 
 const program = new Command("edit");
 program
-	.usage("edit <name>")
 	.description(`Edit user file located at ${colors.green(Config.getUserConfigPath("<name>"))}`)
+	.argument("<name>", "name of the user")
 	.on("--help", Utils.extraHelp)
 	.action(function (name) {
 		if (!fs.existsSync(Config.getUsersPath())) {

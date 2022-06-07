@@ -164,9 +164,9 @@ export default (env: any, argv: any) => {
 
 		// Add the istanbul plugin to babel-loader options
 		for (const rule of config.module!.rules!) {
-			// @ts-ignore
+			// @ts-expect-error Property 'use' does not exist on type 'RuleSetRule | "..."'.
 			if (rule.use.loader === "babel-loader") {
-				// @ts-ignore
+				// @ts-expect-error Property 'use' does not exist on type 'RuleSetRule | "..."'.
 				rule.use.options.plugins = ["istanbul"];
 			}
 		}

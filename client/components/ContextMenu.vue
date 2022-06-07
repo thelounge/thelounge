@@ -96,10 +96,7 @@ export default defineComponent({
 
 		const enablePointerEvents = () => {
 			passthrough.value = false;
-			document.body.removeEventListener("pointerup", enablePointerEvents, {
-				// @ts-ignore TODO
-				passive: true,
-			});
+			document.body.removeEventListener("pointerup", enablePointerEvents);
 		};
 
 		const containerClick = (event: MouseEvent) => {

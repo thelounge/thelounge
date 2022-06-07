@@ -13,14 +13,12 @@ LinkifyIt.prototype.normalize = function normalize(match: OurMatch) {
 	if (!match.schema) {
 		match.schema = "http:";
 		match.url = "http://" + match.url;
-		// @ts-ignore
 		match.noschema = true;
 	}
 
 	if (match.schema === "//") {
 		match.schema = "http:";
 		match.url = "http:" + match.url;
-		// @ts-ignore
 		match.noschema = true;
 	}
 

@@ -118,8 +118,7 @@ export default defineComponent({
 			// Enable protocol handler registration if supported,
 			// and the network configuration is not locked
 			canRegisterProtocol.value =
-				// @ts-ignore
-				window.navigator.registerProtocolHandler &&
+				!!window.navigator.registerProtocolHandler &&
 				!store.state.serverConfiguration?.lockNetwork;
 		});
 

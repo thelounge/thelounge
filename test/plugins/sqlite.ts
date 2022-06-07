@@ -169,7 +169,7 @@ describe("SQLite Message Storage", function () {
 					networkUuid: "retrieval-order-test-network",
 				} as any)
 				.then((messages) => {
-					// @ts-ignore
+					// @ts-expect-error Property 'results' does not exist on type '[]'.
 					expect(messages.results).to.have.lengthOf(100);
 
 					const expectedMessages: string[] = [];
@@ -178,7 +178,7 @@ describe("SQLite Message Storage", function () {
 						expectedMessages.push(`msg ${i}`);
 					}
 
-					// @ts-ignore
+					// @ts-expect-error Property 'results' does not exist on type '[]'.
 					expect(messages.results.map((i) => i.text)).to.deep.equal(expectedMessages);
 				});
 		} finally {
@@ -194,7 +194,7 @@ describe("SQLite Message Storage", function () {
 					networkUuid: "this-is-a-network-guid2",
 				} as any)
 				.then((messages) => {
-					// @ts-ignore
+					// @ts-expect-error Property 'results' does not exist on type '[]'.
 					expect(messages.results.map((i) => i.text)).to.deep.equal(expected);
 				});
 		}

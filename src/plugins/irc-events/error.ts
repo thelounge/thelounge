@@ -11,11 +11,9 @@ export default <IrcEventHandler>function (irc, network) {
 			type: MessageType.ERROR,
 			error: data.error,
 			showInActive: true,
-			// @ts-ignore
 			nick: data.nick,
 			channel: data.channel,
 			reason: data.reason,
-			// @ts-ignore TODO
 			command: data.command,
 		});
 

@@ -336,8 +336,6 @@ export default defineComponent({
 			socket.emit("msg:preview:toggle", {
 				target: props.channel.id,
 				msgId: message.id,
-				// TODO: type
-				// @ts-ignore
 				link: preview.link,
 				shown: preview.shown,
 			});

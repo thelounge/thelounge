@@ -20,5 +20,8 @@
 
     // TODO: Remove eventually
     "noImplicitAny": false /*Enable error reporting for expressions and declarations with an implied any type. See more: https://www.typescriptlang.org/tsconfig#noImplicitAny */
-  } /* Instructs the TypeScript compiler how to compile .ts files. */
+  } /* Instructs the TypeScript compiler how to compile .ts files. */,
+  "exclude": [
+    "./dist"
+  ] /* Specifies a list of glob patterns that match files to be excluded from compilation. Requires TypeScript version 2.0 or later. */
 }

@@ -4,8 +4,11 @@ import {switchToChannel} from "../router";
 
 socket.on("msg:special", function (data) {
 	const netChan = store.getters.findChannel(data.chan);
-	// @ts-ignore
+
+	if (!netChan) {
+		return;
+	}
+
 	netChan.channel.data = data.data;
-	// @ts-ignore
 	switchToChannel(netChan.channel);
 });

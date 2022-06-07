@@ -8,7 +8,6 @@ import Utils from "./utils";
 
 const program = new Command("start");
 program
-	.usage("start")
 	.description("Start the server")
 	.option("--dev", "Development mode with hot module reloading")
 	.on("--help", Utils.extraHelp)

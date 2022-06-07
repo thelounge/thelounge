@@ -157,8 +157,7 @@ function loadPackage(packageName: string) {
 	packageMap.set(packageName, packageFile);
 
 	if (packageInfo.type === "theme") {
-		// TODO: investigate
-		// @ts-ignore
+		// @ts-expect-error Argument of type 'PackageInfo' is not assignable to parameter of type 'ThemeModule'.
 		themes.addTheme(packageName, packageInfo);
 
 		if (packageInfo.files) {

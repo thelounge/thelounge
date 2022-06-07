@@ -5,7 +5,6 @@ import Utils from "../utils";
 
 const program = new Command("list");
 program
-	.usage("list")
 	.description("List all users")
 	.on("--help", Utils.extraHelp)
 	.action(async function () {

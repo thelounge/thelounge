@@ -6,7 +6,6 @@ import Utils from "./utils";
 
 const program = new Command("uninstall");
 program
-	.usage("uninstall <package>")
 	.argument("<package>", "The package to uninstall")
 	.description("Uninstall a theme or a package")
 	.on("--help", Utils.extraHelp)

@@ -6,11 +6,12 @@ import Config from "../../config";
 import Utils from "../../command-line/utils";
 
 type Module = {
-	type: string;
-	name: string;
+	type?: string;
+	name?: string;
 };
 
 type ThemeModule = Module & {
+	type: "theme";
 	themeColor: string;
 	css: string;
 };

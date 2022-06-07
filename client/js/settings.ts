@@ -12,7 +12,7 @@ const defaultConfig = {
 	syncSettings: {
 		default: true,
 		sync: "never",
-		apply(store, value, auto = false) {
+		apply(store: TypedStore, value: boolean, auto = false) {
 			// If applied by settings/applyAll, do not emit to server
 			if (value && !auto) {
 				socket.emit("setting:get");
@@ -35,20 +35,12 @@ const defaultConfig = {
 		default: false,
 		sync: "never",
 		apply(store: TypedStore, value: boolean) {
-			// TODO: investigate
-			if (!store) {
-				return;
-				// throw new Error("store is not defined");
-			}
-
 			// Commit a mutation. options can have root: true that allows to commit root mutations in namespaced modules.
 			// https://vuex.vuejs.org/api/#store-instance-methods. not typed?
-			// @ts-ignore
 			store.commit("refreshDesktopNotificationState", null, {root: true});
 
 			if ("Notification" in window && value && Notification.permission !== "granted") {
 				Notification.requestPermission(() =>
-					// @ts-ignore
 					store.commit("refreshDesktopNotificationState", null, {root: true})
 				).catch((e) => {
 					// eslint-disable-next-line no-console
@@ -141,7 +133,7 @@ const defaultConfig = {
 	},
 	userStyles: {
 		default: "",
-		apply(store, value) {
+		apply(store: TypedStore, value: string) {
 			if (!/[?&]nocss/.test(window.location.search)) {
 				const element = document.getElementById("user-specified-css");
 

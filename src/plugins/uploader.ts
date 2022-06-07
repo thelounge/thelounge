@@ -258,16 +258,13 @@ class Uploader {
 
 				// if the busboy data stream errors out or goes over the file size limit
 				// abort the processing with an error
-
-				// TODO: fix types
-				// @ts-ignore
+				// @ts-expect-error Argument of type '(err: any) => Response<any, Record<string, any>>' is not assignable to parameter of type '{ (err: any): Response<any, Record<string, any>>; (): void; }'.ts(2345)
 				fileStream.on("error", abortWithError);
-				// @ts-ignore
 				fileStream.on("limit", () => {
 					fileStream.unpipe(streamWriter);
 					fileStream.on("readable", fileStream.read.bind(fileStream));
 
-					abortWithError(Error("File size limit reached"));
+					return abortWithError(Error("File size limit reached"));
 				});
 
 				// Attempt to write the stream to file

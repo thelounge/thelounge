@@ -45,7 +45,7 @@ function handleDisconnect(data) {
 	// If the server shuts down, socket.io skips reconnection
 	// and we have to manually call connect to start the process
 	// However, do not reconnect if TL client manually closed the connection
-	// @ts-ignore TODO
+	// @ts-expect-error Property 'skipReconnect' is private and only accessible within class 'Manager<ListenEvents, EmitEvents>'.ts(2341)
 	if (socket.io.skipReconnect && message !== "io client disconnect") {
 		requestIdleCallback(() => socket.connect(), 2000);
 	}

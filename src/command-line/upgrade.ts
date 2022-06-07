@@ -7,7 +7,6 @@ import Utils from "./utils";
 
 const program = new Command("upgrade");
 program
-	.usage("upgrade [packages...]")
 	.arguments("[packages...]")
 	.description("Upgrade installed themes and packages to their latest versions")
 	.on("--help", Utils.extraHelp)

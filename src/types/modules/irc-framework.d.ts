@@ -99,6 +99,8 @@ declare module "irc-framework" {
 		error: string;
 		channel: string;
 		reason: string;
+		nick?: string;
+		command?: string;
 	}
 	export class Client extends EventEmitter {
 		constructor(options: ClientConstructorParameters);

@@ -186,9 +186,7 @@ export default defineComponent({
 			return isContentShown.value ? "Less" : "More";
 		});
 
-		// TODO: type
 		const imageMaxSize = computed(() => {
-			// @ts-ignore
 			if (!props.link.maxSize) {
 				return;
 			}

@@ -8,11 +8,11 @@ import Utils from "../utils";
 
 const program = new Command("add");
 program
-	.usage("add <name>")
 	.description("Add a new user")
 	.on("--help", Utils.extraHelp)
 	.option("--password [password]", "new password, will be prompted if not specified")
 	.option("--save-logs", "if password is specified, this enables saving logs to disk")
+	.argument("<name>", "name of the user")
 	.action(function (name, cmdObj) {
 		if (!fs.existsSync(Config.getUsersPath())) {
 			log.error(`${Config.getUsersPath()} does not exist.`);

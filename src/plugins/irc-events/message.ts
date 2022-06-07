@@ -159,7 +159,7 @@ export default <IrcEventHandler>function (irc, network) {
 
 		while ((match = nickRegExp.exec(data.message))) {
 			if (chan.findUser(match[1])) {
-				// @ts-ignore TODO: fix this
+				// @ts-expect-error Type 'string' is not assignable to type '{ mode: string; }'.ts(2345)
 				msg.users.push(match[1]);
 			}
 		}

@@ -1,22 +1,15 @@
-import config from "../../config";
+import Config from "../../config";
+let add, reset;
+
+if (!Config.values.ldap.enable) {
+	// eslint-disable-next-line @typescript-eslint/no-var-requires
+	add = require("./add").default;
+	// eslint-disable-next-line @typescript-eslint/no-var-requires
+	reset = require("./reset").default;
+}
+
 import list from "./list";
 import remove from "./remove";
 import edit from "./edit";
-import log from "../../log";
-
-let add, reset;
-
-const importAddAndReset = async (): Promise<void> => {
-	if (!config.values.ldap.enable) {
-		add = (await import("./add")).default;
-		reset = (await import("./reset")).default;
-	}
-};
-
-(async () => {
-	await importAddAndReset();
-})().catch((e: any) => {
-	log.error("Unable to load plugins all command-line plugins:", e);
-});
 
 export default [list, remove, edit, add, reset];

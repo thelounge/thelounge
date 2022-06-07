@@ -7,9 +7,9 @@ import Utils from "../utils";
 
 const program = new Command("remove");
 program
-	.usage("remove <name>")
 	.description("Remove an existing user")
 	.on("--help", Utils.extraHelp)
+	.argument("<name>", "name of the user")
 	.action(function (name) {
 		if (!fs.existsSync(Config.getUsersPath())) {
 			log.error(`${Config.getUsersPath()} does not exist.`);

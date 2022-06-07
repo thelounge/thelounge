@@ -5,7 +5,6 @@ import log from "../log";
 
 const program = new Command("outdated");
 program
-	.usage("outdated")
 	.description("Check for any outdated packages")
 	.on("--help", Utils.extraHelp)
 	.action(async () => {

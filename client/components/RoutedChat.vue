@@ -3,7 +3,7 @@
 		v-if="activeChannel"
 		:network="activeChannel.network"
 		:channel="activeChannel.channel"
-		:focused="String(route.query.focused || '')"
+		:focused="parseInt(String(route.query.focused), 10)"
 		@channel-changed="channelChanged"
 	/>
 </template>

@@ -145,8 +145,7 @@ function parseHtml(preview, res, client: Client) {
 								preview.thumbActualUrl = thumb;
 							}
 
-							// TODO
-							// @ts-ignore
+							// @ts-expect-error Argument of type 'FetchRequest' is not assignable to parameter of type 'LinkPreview'.
 							resolve(resThumb);
 						})
 						.catch(() => resolve(null));

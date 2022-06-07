@@ -16,7 +16,6 @@ type CustomMetadata = FullMetadata & {
 
 const program = new Command("install");
 program
-	.usage("install <package>")
 	.argument("<package>", "package to install")
 	.description("Install a theme or a package")
 	.on("--help", Utils.extraHelp)

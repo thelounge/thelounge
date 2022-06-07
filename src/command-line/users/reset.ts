@@ -8,9 +8,9 @@ import Utils from "../utils";
 
 const program = new Command("reset");
 program
-	.usage("reset <name>")
 	.description("Reset user password")
 	.on("--help", Utils.extraHelp)
+	.argument("<name>", "name of the user")
 	.option("--password [password]", "new password, will be prompted if not specified")
 	.action(function (name, cmdObj) {
 		if (!fs.existsSync(Config.getUsersPath())) {

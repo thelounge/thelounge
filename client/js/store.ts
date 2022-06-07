@@ -367,7 +367,8 @@ const mutations: Mutations = {
 
 export type TypedCommit = <T extends keyof Mutations>(
 	type: T,
-	payload?: Parameters<Mutations[T]>[1]
+	payload?: Parameters<Mutations[T]>[1] | null,
+	options?: {root?: boolean}
 ) => ReturnType<Mutations[T]>;
 type TypedActionContext = Omit<ActionContext<State, State>, "commit"> & {
 	commit: TypedCommit;
