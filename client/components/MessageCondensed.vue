@@ -80,7 +80,7 @@ export default defineComponent({
 					switch (type) {
 						case "chghost":
 							strings.push(
-								obj[type].toLocaleString() +
+								String(obj[type]) +
 									(obj[type] > 1
 										? " users have changed hostname"
 										: " user has changed hostname")
@@ -88,19 +88,19 @@ export default defineComponent({
 							break;
 						case "join":
 							strings.push(
-								obj[type].toLocaleString() +
+								String(obj[type]) +
 									(obj[type] > 1 ? " users have joined" : " user has joined")
 							);
 							break;
 						case "part":
 							strings.push(
-								obj[type].toLocaleString() +
+								String(obj[type]) +
 									(obj[type] > 1 ? " users have left" : " user has left")
 							);
 							break;
 						case "nick":
 							strings.push(
-								obj[type].toLocaleString() +
+								String(obj[type]) +
 									(obj[type] > 1
 										? " users have changed nick"
 										: " user has changed nick")
@@ -108,13 +108,13 @@ export default defineComponent({
 							break;
 						case "kick":
 							strings.push(
-								obj[type].toLocaleString() +
+								String(obj[type]) +
 									(obj[type] > 1 ? " users were kicked" : " user was kicked")
 							);
 							break;
 						case "mode":
 							strings.push(
-								obj[type].toLocaleString() +
+								String(obj[type]) +
 									(obj[type] > 1 ? " modes were set" : " mode was set")
 							);
 							break;
