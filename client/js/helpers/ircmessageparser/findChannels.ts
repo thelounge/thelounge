@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
 // Escapes the RegExp special characters "^", "$", "", ".", "*", "+", "?", "(",
 // ")", "[", "]", "{", "}", and "|" in string.
 // See https://lodash.com/docs/#escapeRegExp
@@ -25,7 +24,7 @@ function findChannels(text: string, channelPrefixes: string[], userModes: string
 	const channelRegExp = new RegExp(channelPattern, "g");
 
 	const result: ChannelPart[] = [];
-	let match;
+	let match: RegExpExecArray | null;
 
 	do {
 		// With global ("g") regexes, calling `exec` multiple times will find

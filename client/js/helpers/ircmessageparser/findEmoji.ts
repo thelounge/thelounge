@@ -9,12 +9,11 @@ export type EmojiPart = Part & {
 
 function findEmoji(text: string) {
 	const result: EmojiPart[] = [];
-	let match;
+	let match: RegExpExecArray | null;
 
 	while ((match = regExp.exec(text))) {
 		result.push({
 			start: match.index,
-			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 			end: match.index + match[0].length,
 			emoji: match[0],
 		});

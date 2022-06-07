@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
 import {Part} from "./merge";
 
 const nickRegExp = /([\w[\]\\`^{|}-]+)/g;
@@ -15,7 +14,7 @@ function findNames(text: string, nicks: string[]): NamePart[] {
 		return result;
 	}
 
-	let match;
+	let match: RegExpExecArray | null;
 
 	while ((match = nickRegExp.exec(text))) {
 		if (nicks.indexOf(match[1]) > -1) {
