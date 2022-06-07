@@ -8346,11 +8346,6 @@ type-is@~1.6.18:
     media-typer "0.3.0"
     mime-types "~2.1.24"
 
-typed-vuex@0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/typed-vuex/-/typed-vuex-0.3.0.tgz#60980e0e7c41fc06d35cdb9dcc4e77da46c54101"
-  integrity sha512-4APLXHWYx+ScNX+O9c/d3OVx13CLyMyqLEM6C/gE1lCM8XqejZ40syG24f/pZj154wMXvBjB0AwynewBTMPo5w==
-
 typedarray-to-buffer@^3.1.5:
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/typedarray-to-buffer/-/typedarray-to-buffer-3.1.5.tgz#a97ee7a9ff42691b9f783ff1bc5112fe3fca9080"
