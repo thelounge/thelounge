@@ -113,7 +113,6 @@
     "@typescript-eslint/parser": "5.22.0",
     "@vue/babel-helper-vue-jsx-merge-props": "1.2.1",
     "@vue/babel-preset-jsx": "1.2.4",
-    "@vue/compiler-sfc": "3.2.35",
     "@vue/devtools": "6.1.4",
     "@vue/runtime-dom": "3.2.33",
     "@vue/test-utils": "2.0.0",
