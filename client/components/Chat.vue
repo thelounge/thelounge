@@ -150,7 +150,7 @@ export default defineComponent({
 	props: {
 		network: {type: Object as PropType<ClientNetwork>, required: true},
 		channel: {type: Object as PropType<ClientChan>, required: true},
-		focused: String,
+		focused: Number,
 	},
 	emits: ["channel-changed"],
 	setup(props, {emit}) {

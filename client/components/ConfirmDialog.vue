@@ -1,13 +1,13 @@
 <template>
-	<div v-if="data" id="confirm-dialog-overlay" :class="{opened: data !== null}">
+	<div id="confirm-dialog-overlay" :class="{opened: data !== null}">
 		<div v-if="data !== null" id="confirm-dialog">
 			<div class="confirm-text">
-				<div class="confirm-text-title">{{ data.title }}</div>
-				<p>{{ data.text }}</p>
+				<div class="confirm-text-title">{{ data?.title }}</div>
+				<p>{{ data?.text }}</p>
 			</div>
 			<div class="confirm-buttons">
 				<button class="btn btn-cancel" @click="close(false)">Cancel</button>
-				<button class="btn btn-danger" @click="close(true)">{{ data.button }}</button>
+				<button class="btn btn-danger" @click="close(true)">{{ data?.button }}</button>
 			</div>
 		</div>
 	</div>

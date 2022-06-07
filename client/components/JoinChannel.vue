@@ -46,7 +46,6 @@ export default defineComponent({
 	name: "JoinChannel",
 	directives: {
 		focus: {
-			// TODO: this was inserted
 			mounted: (el: HTMLFormElement) => el.focus(),
 		},
 	},

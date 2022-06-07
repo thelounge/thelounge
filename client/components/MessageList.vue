@@ -23,7 +23,7 @@
 					v-if="shouldDisplayDateMarker(message, id)"
 					:key="message.id + '-date'"
 					:message="message as any"
-					:focused="message.id === parseInt(focused || '')"
+					:focused="message.id === focused"
 				/>
 				<div
 					v-if="shouldDisplayUnreadMarker(message.id)"
@@ -39,7 +39,7 @@
 					:network="network"
 					:keep-scroll-position="keepScrollPosition"
 					:messages="message.messages"
-					:focused="message.id === parseInt(focused || '')"
+					:focused="message.id === focused"
 				/>
 				<Message
 					v-else
@@ -49,7 +49,7 @@
 					:message="message"
 					:keep-scroll-position="keepScrollPosition"
 					:is-previous-source="isPreviousSource(message, id)"
-					:focused="message.id === parseInt(focused || '')"
+					:focused="message.id === focused"
 					@toggle-link-preview="onLinkPreviewToggle"
 				/>
 			</template>
@@ -101,7 +101,7 @@ export default defineComponent({
 	props: {
 		network: {type: Object as PropType<ClientNetwork>, required: true},
 		channel: {type: Object as PropType<ClientChan>, required: true},
-		focused: String,
+		focused: Number,
 	},
 	setup(props, {emit}) {
 		const store = useStore();

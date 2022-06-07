@@ -147,10 +147,10 @@ export default defineComponent({
 
 		const registerProtocol = () => {
 			const uri = document.location.origin + document.location.pathname + "?uri=%s";
-			// @ts-ignore
-			// see why at https://developer.mozilla.org/en-US/docs/Web/API/Navigator/registerProtocolHandler
+			// @ts-expect-error
+			// the third argument is deprecated but recommended for compatibility: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/registerProtocolHandler
 			window.navigator.registerProtocolHandler("irc", uri, "The Lounge");
-			// @ts-ignore
+			// @ts-expect-error
 			window.navigator.registerProtocolHandler("ircs", uri, "The Lounge");
 		};
 

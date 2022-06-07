@@ -31,7 +31,7 @@
 				:class="['user-mode', getModeClass(String(mode))]"
 			>
 				<template v-if="userSearchInput.length > 0">
-					<!-- eslint-disable -->
+					<!-- eslint-disable vue/no-v-text-v-html-on-component -->
 					<Username
 						v-for="user in users"
 						:key="user.original.nick + '-search'"
