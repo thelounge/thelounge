@@ -8,4 +8,4 @@ coverage/
 public/
 client/dist
 src/dist
-dist/
+/dist/

@@ -84,8 +84,6 @@ const vueRules = defineConfig({
 		"vue/no-v-html": "off",
 		"vue/require-default-prop": "off",
 		"vue/v-slot-style": ["error", "longform"],
-		// Should be fixable in Vue 3 / when components use Vue.extend()
-		"@typescript-eslint/unbound-method": "off",
 	},
 }).rules;
 
