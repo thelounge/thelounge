@@ -183,11 +183,6 @@ export default (env: any, argv: any) => {
 			new MiniCssExtractPlugin({
 				filename: "css/style.css",
 			}),
-
-			new MiniCssExtractPlugin({
-				filename: "css/style.css",
-			}),
-
 			// Client tests that require Vue may end up requireing socket.io
 			new webpack.NormalModuleReplacementPlugin(
 				/js(\/|\\)socket\.js/,
