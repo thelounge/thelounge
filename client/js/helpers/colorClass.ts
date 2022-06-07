@@ -1,9 +1,5 @@
 // Generates a string from "color-1" to "color-32" based on an input string
 export default (str: string) => {
-	if (!str) {
-		return "";
-	}
-
 	let hash = 0;
 
 	for (let i = 0; i < str.length; i++) {
