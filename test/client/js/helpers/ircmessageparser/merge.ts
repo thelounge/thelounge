@@ -71,7 +71,7 @@ describe("merge", () => {
 		];
 
 		const actual = merge(
-			textParts,
+			textParts as any,
 			styleFragments,
 			styleFragments.map((fragment) => fragment.text).join("")
 		);

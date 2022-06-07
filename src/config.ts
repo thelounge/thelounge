@@ -173,7 +173,6 @@ class Config {
 		for (const key in newConfig) {
 			if (!Object.prototype.hasOwnProperty.call(oldConfig, key)) {
 				log.warn(`Unknown key "${colors.bold(key)}", please verify your config.`);
-				log.warn(JSON.stringify(newConfig, null, 2));
 			}
 		}
 
