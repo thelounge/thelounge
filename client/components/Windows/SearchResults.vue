@@ -63,7 +63,7 @@
 								v-for="(message, id) in messages"
 								:key="message.id"
 								class="result"
-								@:click="jump(message, id)"
+								@click="jump(message, id)"
 							>
 								<!-- TODO: this was message.date  -->
 								<DateMarker
