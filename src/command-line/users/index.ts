@@ -6,7 +6,7 @@ import log from "../../log";
 
 let add, reset;
 
-const importAddAndReest = async (): Promise<void> => {
+const importAddAndReset = async (): Promise<void> => {
 	if (!config.values.ldap.enable) {
 		add = (await import("./add")).default;
 		reset = (await import("./reset")).default;
@@ -14,7 +14,7 @@ const importAddAndReest = async (): Promise<void> => {
 };
 
 (async () => {
-	await importAddAndReest();
+	await importAddAndReset();
 })().catch((e: any) => {
 	log.error("Unable to load plugins all command-line plugins:", e);
 });
