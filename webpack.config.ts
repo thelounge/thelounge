@@ -98,7 +98,6 @@ const config: webpack.Configuration = {
 		new MiniCssExtractPlugin({
 			filename: "css/style.css",
 		}),
-		new webpack.IgnorePlugin({resourceRegExp: /canvas/}),
 		new CopyPlugin({
 			patterns: [
 				{
