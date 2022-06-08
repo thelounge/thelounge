@@ -15,10 +15,25 @@ describe("Server", function () {
 
 	let server;
 	let logInfoStub: sinon.SinonStub<string[], void>;
+	let logWarnStub: sinon.SinonStub<string[], void>;
 	let checkForUpdatesStub: sinon.SinonStub<[manager: ClientManager], void>;
 
 	before(async function () {
 		logInfoStub = sinon.stub(log, "info");
+		logWarnStub = sinon.stub(log, "warn").callsFake((...args: string[]) => {
+			// vapid.json permissions do not survive in git
+			if (args.length > 1 && args[1] === "is world readable.") {
+				return;
+			}
+
+			if (args.length > 0 && args[0].startsWith("run `chmod")) {
+				return;
+			}
+
+			// eslint-disable-next-line no-console
+			console.error(`Unhandled log.warn in server tests: ${args.join(" ")}`);
+		});
+
 		checkForUpdatesStub = sinon.stub(changelog, "checkForUpdates");
 		server = await (await import("../src/server")).default({} as any);
 	});
@@ -26,6 +41,7 @@ describe("Server", function () {
 	after(function (done) {
 		server.close(done);
 		logInfoStub.restore();
+		logWarnStub.restore();
 		checkForUpdatesStub.restore();
 	});
 

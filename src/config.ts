@@ -273,13 +273,13 @@ class Config {
 			}
 		} else if (logsStat && logsStat.mode & 0o001) {
 			log.warn(
-				"contents of",
 				userLogsPath,
-				"can be accessed by any user, the log files may be exposed"
+				"is world readable.",
+				"The log files may be exposed. Please fix the permissions."
 			);
 
 			if (os.platform() !== "win32") {
-				log.warn(`run \`chmod o-x ${userLogsPath}\` to correct it`);
+				log.warn(`run \`chmod o-x "${userLogsPath}"\` to correct it.`);
 			}
 		}
 	}

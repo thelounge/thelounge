@@ -29,11 +29,12 @@ class WebPush {
 			if (isWorldReadable) {
 				log.warn(
 					vapidPath,
-					"is world readable. The file contains secrets. Please fix the permissions"
+					"is world readable.",
+					"The file contains secrets. Please fix the permissions."
 				);
 
 				if (os.platform() !== "win32") {
-					log.warn(`run \`chmod o= ${vapidPath}\` to correct it`);
+					log.warn(`run \`chmod o= "${vapidPath}"\` to correct it.`);
 				}
 			}
 
