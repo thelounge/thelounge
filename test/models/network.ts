@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import {expect} from "chai";
+import sinon from "ts-sinon";
 import Chan, {ChanType} from "../../src/models/chan";
 import Msg from "../../src/models/msg";
 import User from "../../src/models/user";
@@ -9,6 +10,16 @@ import STSPolicies from "../../src/plugins/sts";
 import ClientCertificate from "../../src/plugins/clientCertificate";
 
 describe("Network", function () {
+	let stsPoliciesRefreshStub: sinon.SinonStub<unknown[], void>;
+
+	before(function () {
+		stsPoliciesRefreshStub = sinon.stub(STSPolicies, "refresh");
+	});
+
+	after(function () {
+		stsPoliciesRefreshStub.restore();
+	});
+
 	describe("Network(attr)", function () {
 		it("should generate uuid (v4) for each network", function () {
 			const network1 = new Network();
@@ -178,6 +189,7 @@ describe("Network", function () {
 		it("should apply STS policies iff they match", function () {
 			const client = {idMsg: 1, emit() {}} as any;
 			STSPolicies.update("irc.example.com", 7000, 3600);
+			expect(STSPolicies.get("irc.example.com")).to.not.be.null;
 
 			let network = new Network({
 				host: "irc.example.com",
@@ -200,6 +212,7 @@ describe("Network", function () {
 			expect(network.tls).to.be.false;
 
 			STSPolicies.update("irc.example.com", 7000, 0); // Cleanup
+			expect(STSPolicies.get("irc.example.com")).to.be.null;
 		});
 
 		it("should not remove client certs if TLS is disabled", function () {
@@ -228,6 +241,7 @@ describe("Network", function () {
 
 			const client = {idMsg: 1, emit() {}, messageStorage: []};
 			STSPolicies.update("irc.example.com", 7000, 3600);
+			expect(STSPolicies.get("irc.example.com")).to.not.be.null;
 
 			const network = new Network({host: "irc.example.com", sasl: "external"});
 			(network as any).createIrcFramework(client);
@@ -243,6 +257,9 @@ describe("Network", function () {
 
 			ClientCertificate.remove(network.uuid);
 			Config.values.public = true;
+
+			STSPolicies.update("irc.example.com", 7000, 0); // Cleanup
+			expect(STSPolicies.get("irc.example.com")).to.be.null;
 		});
 	});
 
@@ -252,6 +269,7 @@ describe("Network", function () {
 
 			const client = {idMsg: 1, emit() {}};
 			STSPolicies.update("irc.example.com", 7000, 3600);
+			expect(STSPolicies.get("irc.example.com")).to.not.be.null;
 
 			let network: any = new Network({host: "irc.example.com"});
 			network.createIrcFramework(client);
@@ -265,6 +283,9 @@ describe("Network", function () {
 
 			ClientCertificate.remove(network.uuid);
 			Config.values.public = true;
+
+			STSPolicies.update("irc.example.com", 7000, 0); // Cleanup
+			expect(STSPolicies.get("irc.example.com")).to.be.null;
 		});
 	});
 
