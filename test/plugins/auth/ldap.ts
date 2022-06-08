@@ -108,7 +108,7 @@ function testLdapAuth() {
 			expect(error).to.equal(
 				"LDAP bind failed: InsufficientAccessRightsError: InsufficientAccessRightsError\n"
 			);
-			sinon.restore();
+			errorLogStub.restore();
 			done();
 		});
 	});
@@ -122,7 +122,7 @@ function testLdapAuth() {
 		ldapAuth.auth(manager, client as any, wrongUser, correctPassword, function (valid) {
 			expect(valid).to.equal(false);
 			expect(warning).to.equal("LDAP Search did not find anything for: eve (0)\n");
-			sinon.restore();
+			warnLogStub.restore();
 			done();
 		});
 	});
@@ -134,9 +134,10 @@ describe("LDAP authentication plugin", function () {
 	this.slow(300);
 
 	let server: ldap.Server;
+	let logStub: sinon.SinonStub<string[], void>;
 
 	before(function (done) {
-		sinon.stub(log, "info");
+		logStub = sinon.stub(log, "info");
 		server = startLdapServer(done);
 	});
 
@@ -144,7 +145,7 @@ describe("LDAP authentication plugin", function () {
 		server.close(() => {
 			// no-op
 		});
-		sinon.restore();
+		logStub.restore();
 	});
 
 	beforeEach(function () {
