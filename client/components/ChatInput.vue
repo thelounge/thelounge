@@ -256,7 +256,6 @@ export default defineComponent({
 					return;
 				}
 
-				// TODO; investigate types
 				wrapCursor(
 					e.target as HTMLTextAreaElement,
 					modifier,

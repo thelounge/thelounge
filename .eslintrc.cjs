@@ -147,7 +147,6 @@ module.exports = defineConfig({
 				...tsRulesTemp,
 			},
 		},
-		// TODO: verify
 		{
 			files: ["**/*.vue"],
 			parser: "vue-eslint-parser",

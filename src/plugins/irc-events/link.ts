@@ -240,9 +240,8 @@ function parseHtmlMedia($: any, preview, client: Client) {
 	});
 }
 
-// TODO: type preview
-function parse(msg: Msg, chan: Chan, preview: LinkPreview, res, client: Client) {
-	let promise;
+function parse(msg: Msg, chan: Chan, preview: LinkPreview, res: FetchRequest, client: Client) {
+	let promise: Promise<LinkPreview | null> | null = null;
 
 	preview.size = res.size;
 
@@ -332,7 +331,7 @@ function parse(msg: Msg, chan: Chan, preview: LinkPreview, res, client: Client) 
 		return handlePreview(client, chan, msg, preview, res);
 	}
 
-	promise.then((newRes) => handlePreview(client, chan, msg, preview, newRes));
+	void promise.then((newRes) => handlePreview(client, chan, msg, preview, newRes));
 }
 
 function handlePreview(client: Client, chan: Chan, msg: Msg, preview: LinkPreview, res) {
