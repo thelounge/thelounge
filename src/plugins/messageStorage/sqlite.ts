@@ -215,7 +215,7 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 
 	search(query: SearchQuery): Promise<SearchResponse | []> {
 		if (!this.isEnabled) {
-			// TODO: this should return an empty SearchResponse?
+			// this should never be hit as messageProvider is checked in client.search()
 			return Promise.resolve([]);
 		}
 
