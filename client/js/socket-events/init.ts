@@ -24,11 +24,13 @@ socket.on("init", async function (data) {
 			window.g_TheLoungeRemoveLoading();
 		}
 
-		await nextTick();
+		await router.isReady();
+
+		const handledQuery = await handleQueryParams();
 
 		// If we handled query parameters like irc:// links or just general
 		// connect parameters in public mode, then nothing to do here
-		if (!handleQueryParams()) {
+		if (!handledQuery) {
 			// If we are on an unknown route or still on SignIn component
 			// then we can open last known channel on server, or Connect window if none
 			if (!router.currentRoute.value.name || router.currentRoute.value.name === "SignIn") {
@@ -153,7 +155,7 @@ function mergeChannelData(oldChannels: InitClientChan[], newChannels: InitClient
 	return newChannels;
 }
 
-function handleQueryParams() {
+async function handleQueryParams() {
 	if (!("URLSearchParams" in window)) {
 		return false;
 	}
@@ -172,9 +174,7 @@ function handleQueryParams() {
 		const queryParams = parseIrcUri(String(uri));
 
 		cleanParams();
-		router.push({name: "Connect", query: queryParams}).catch(() => {
-			// Ignore errors
-		});
+		await router.push({name: "Connect", query: queryParams});
 
 		return true;
 	} else if (document.body.classList.contains("public") && document.location.search) {
@@ -182,9 +182,7 @@ function handleQueryParams() {
 		const queryParams = Object.fromEntries(params.entries());
 
 		cleanParams();
-		router.push({name: "Connect", query: queryParams}).catch(() => {
-			// Ignore errors
-		});
+		await router.push({name: "Connect", query: queryParams});
 
 		return true;
 	}
