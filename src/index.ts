@@ -1,7 +1,5 @@
 #!/usr/bin/env ts-node
 
-process.chdir(__dirname);
-
 // Perform node version check before loading any other files or modules
 // Doing this check as soon as possible allows us to
 // avoid ES6 parser errors or other issues

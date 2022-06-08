@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+process.chdir(__dirname);
+
 const fs = require("fs");
 
 if (fs.existsSync("./src/dist/src/index.js")) {
