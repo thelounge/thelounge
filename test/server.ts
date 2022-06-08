@@ -7,22 +7,26 @@ import util from "./util";
 import changelog from "../src/plugins/changelog";
 
 import sinon from "ts-sinon";
+import ClientManager from "../src/clientManager";
 
 describe("Server", function () {
 	// Increase timeout due to unpredictable I/O on CI services
 	this.timeout(util.isRunningOnCI() ? 25000 : 5000);
 
 	let server;
+	let logInfoStub: sinon.SinonStub<string[], void>;
+	let checkForUpdatesStub: sinon.SinonStub<[manager: ClientManager], void>;
 
 	before(async function () {
-		sinon.stub(log, "info");
-		sinon.stub(changelog, "checkForUpdates");
+		logInfoStub = sinon.stub(log, "info");
+		checkForUpdatesStub = sinon.stub(changelog, "checkForUpdates");
 		server = await (await import("../src/server")).default({} as any);
 	});
 
 	after(function (done) {
 		server.close(done);
-		sinon.restore();
+		logInfoStub.restore();
+		checkForUpdatesStub.restore();
 	});
 
 	// eslint-disable-next-line @typescript-eslint/restrict-template-expressions

@@ -6,16 +6,16 @@ import sinon from "ts-sinon";
 
 describe("Utils", function () {
 	describe(".extraHelp", function () {
-		afterEach(function () {
-			sinon.restore();
-		});
-
 		it("should start and end with empty lines to display correctly with --help", function () {
 			// Mock `log.raw` to extract its effect into an array
 			const stdout: string[] = [];
-			sinon.stub(log).raw.callsFake(TestUtil.sanitizeLog((str) => stdout.push(str)));
+			const logRawStub = sinon
+				.stub(log, "raw")
+				.callsFake(TestUtil.sanitizeLog((str) => stdout.push(str)));
 
 			Utils.extraHelp();
+
+			logRawStub.restore();
 
 			// Starts with 1 empty line
 			expect(stdout[0]).to.equal("\n");
@@ -29,9 +29,14 @@ describe("Utils", function () {
 		it("should contain information about THELOUNGE_HOME env var", function () {
 			// Mock `log.raw` to extract its effect into a concatenated string
 			let stdout = "";
-			sinon.stub(log).raw.callsFake(TestUtil.sanitizeLog((str) => (stdout += str)));
+
+			const logRawStub = sinon
+				.stub(log, "raw")
+				.callsFake(TestUtil.sanitizeLog((str) => (stdout += str)));
 
 			Utils.extraHelp();
+
+			logRawStub.restore();
 
 			expect(stdout).to.include("THELOUNGE_HOME");
 		});
@@ -126,25 +131,27 @@ describe("Utils", function () {
 			});
 
 			describe("when given the same key multiple times", function () {
-				afterEach(function () {
-					sinon.restore();
-				});
-
 				it("should not override options", function () {
-					sinon.stub(log, "warn");
+					const logWarnStub = sinon.stub(log, "warn");
 
-					expect(Utils.parseConfigOptions("foo=baz", {foo: "bar"})).to.deep.equal({
+					const parsed = Utils.parseConfigOptions("foo=baz", {foo: "bar"});
+
+					logWarnStub.restore();
+
+					expect(parsed).to.deep.equal({
 						foo: "bar",
 					});
 				});
 
 				it("should display a warning", function () {
 					let warning = "";
-					sinon
+					const logWarnStub = sinon
 						.stub(log, "warn")
 						.callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
 
 					Utils.parseConfigOptions("foo=bar", {foo: "baz"});
+
+					logWarnStub.restore();
 
 					expect(warning).to.include("foo was already specified");
 				});

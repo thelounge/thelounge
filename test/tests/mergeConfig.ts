@@ -64,7 +64,9 @@ describe("mergeConfig", function () {
 
 	it("should warn for unknown top level keys", function () {
 		let warning = "";
-		sinon.stub(log, "warn").callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
+		const warnStub = sinon
+			.stub(log, "warn")
+			.callsFake(TestUtil.sanitizeLog((str) => (warning += str)));
 
 		expect(
 			Config._merge_config_objects(
@@ -81,7 +83,7 @@ describe("mergeConfig", function () {
 			optionTwo: 789,
 		});
 
-		sinon.restore();
+		warnStub.restore();
 		expect(warning).to.equal('Unknown key "optionTwo", please verify your config.\n');
 	});
 
@@ -247,7 +249,7 @@ describe("mergeConfig", function () {
 	});
 
 	it("should only merge same type", function () {
-		sinon.stub(log, "warn");
+		const logWarnStub = sinon.stub(log, "warn");
 
 		expect(
 			Config._merge_config_objects(
@@ -279,6 +281,6 @@ describe("mergeConfig", function () {
 			shouldBeString: "string",
 		});
 
-		sinon.restore();
+		logWarnStub.restore();
 	});
 });

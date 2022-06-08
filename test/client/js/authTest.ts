@@ -6,13 +6,17 @@ import location from "../../../client/js/location";
 
 describe("Auth", function () {
 	describe(".signout", function () {
+		let localStorageClearStub: sinon.SinonStub<[], void>;
+		let locationReloadStub: sinon.SinonStub<[], void>;
+
 		beforeEach(function () {
-			sinon.stub(localStorage, "clear");
-			sinon.stub(location, "reload");
+			localStorageClearStub = sinon.stub(localStorage, "clear");
+			locationReloadStub = sinon.stub(location, "reload");
 		});
 
 		afterEach(function () {
-			sinon.restore();
+			localStorageClearStub.restore();
+			locationReloadStub.restore();
 		});
 
 		it("should empty the local storage", function () {

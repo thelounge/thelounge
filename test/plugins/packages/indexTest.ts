@@ -7,10 +7,10 @@ import packagePlugin from "../../../src/plugins/packages";
 let packages: typeof packagePlugin;
 
 describe("packages", function () {
-	let logStub: sinon.SinonStub<string[], void>;
+	let logInfoStub: sinon.SinonStub<string[], void>;
 
 	beforeEach(function () {
-		logStub = sinon.stub(log, "info");
+		logInfoStub = sinon.stub(log, "info");
 
 		delete require.cache[require.resolve("../../../src/plugins/packages")];
 		// eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -18,7 +18,7 @@ describe("packages", function () {
 	});
 
 	afterEach(function () {
-		logStub.restore();
+		logInfoStub.restore();
 	});
 
 	describe(".getStylesheets", function () {
@@ -48,9 +48,9 @@ describe("packages", function () {
 	describe(".loadPackages", function () {
 		it("should display report about loading packages", function () {
 			// Mock `log.info` to extract its effect into a string
-			logStub.restore();
+			logInfoStub.restore();
 			let stdout = "";
-			logStub = sinon
+			logInfoStub = sinon
 				.stub(log, "info")
 				.callsFake(TestUtil.sanitizeLog((str) => (stdout += str)));
 			packages.loadPackages();
