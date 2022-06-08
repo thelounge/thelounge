@@ -474,7 +474,6 @@ class Network {
 			this.keepNick = null;
 		}
 
-		// TODO: setNick is called in validate() before irc exists. Is that a problem?
 		if (this.irc?.options) {
 			this.irc.options.nick = nick;
 		}
