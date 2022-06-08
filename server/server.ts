@@ -201,7 +201,9 @@ export default async function (
 			const address = server?.address();
 
 			if (address && typeof address !== "string") {
-				if (address.family === "IPv6") {
+				// TODO: Node may revert the Node 18 family string --> number change
+				// @ts-expect-error This condition will always return 'false' since the types 'string' and 'number' have no overlap.
+				if (address.family === "IPv6" || address.family === 6) {
 					address.address = "[" + address.address + "]";
 				}
 
