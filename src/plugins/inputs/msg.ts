@@ -77,7 +77,11 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 		}
 	}
 
-	if (args.length === 0 || !targetName) {
+	if (args.length === 0) {
+		return true;
+	}
+
+	if (!targetName) {
 		return true;
 	}
 
@@ -94,11 +98,11 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 		let targetGroup;
 
 		if (parsedTarget) {
-			targetName = parsedTarget.target;
+			targetName = parsedTarget.target as string;
 			targetGroup = parsedTarget.target_group;
 		}
 
-		const channel = network.getChannel(String(targetName));
+		const channel = network.getChannel(targetName);
 
 		if (typeof channel !== "undefined") {
 			network.irc.emit("privmsg", {
