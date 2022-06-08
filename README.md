@@ -86,5 +86,7 @@ Before submitting any change, make sure to:
 - Run `yarn test` to execute linters and the test suite
   - Run `yarn format:prettier` if linting fails
 - Run `yarn build:client` if you change or add anything in `client/js` or `client/components`
+  - The built files will be output to `public/` by webpack
 - Run `yarn build:server` if you change anything in `server/`
+  - The built files will be output to `dist/` by tsc
 - `yarn dev` can be used to start The Lounge with hot module reloading

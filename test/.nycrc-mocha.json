@@ -3,7 +3,7 @@
   "all": true,
   "instrument": true,
   "temp-dir": "./node_modules/.cache/nyc_output",
-  "exclude": ["webpack.config*.ts", "server/dist"],
+  "exclude": ["webpack.config*.ts", "dist"],
   "include": ["defaults", "server", "*.ts"],
   "reporter": ["json", "text-summary"],
   "clean": false

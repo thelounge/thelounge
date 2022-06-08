@@ -15,7 +15,7 @@
     "files": true
   },
   "compilerOptions": {
-    "outDir": "./dist" /* Specify an output folder for all emitted files. See more: https://www.typescriptlang.org/tsconfig#outDir */,
+    "outDir": "../dist" /* Specify an output folder for all emitted files. See more: https://www.typescriptlang.org/tsconfig#outDir */,
     "noEmit": false /* Disable emitting file from a compilation. See more: https://www.typescriptlang.org/tsconfig#noEmit */,
 
     // TODO: Remove eventually
