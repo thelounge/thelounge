@@ -26,7 +26,7 @@
 					:focused="message.id === focused"
 				/>
 				<div
-					v-if="shouldDisplayUnreadMarker(message.id)"
+					v-if="shouldDisplayUnreadMarker(Number(message.id))"
 					:key="message.id + '-unread'"
 					class="unread-marker"
 				>
@@ -85,7 +85,7 @@ type CondensedMessageContainer = {
 	type: "condensed";
 	time: Date;
 	messages: ClientMessage[];
-	id: number;
+	id?: number;
 };
 
 // TODO; move into component
@@ -217,10 +217,9 @@ export default defineComponent({
 						time: message.time,
 						type: "condensed",
 						messages: [],
-						// TODO: type
-					} as any;
+					};
 
-					condensed.push(lastCondensedContainer as any);
+					condensed.push(lastCondensedContainer);
 				}
 
 				lastCondensedContainer!.messages.push(message);

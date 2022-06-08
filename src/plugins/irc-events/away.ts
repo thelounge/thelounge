@@ -8,7 +8,7 @@ export default <IrcEventHandler>function (irc, network) {
 	irc.on("away", (data) => handleAway(MessageType.AWAY, data));
 	irc.on("back", (data) => handleAway(MessageType.BACK, data));
 
-	function handleAway(type, data) {
+	function handleAway(type: MessageType, data) {
 		const away = data.message;
 
 		if (data.self) {

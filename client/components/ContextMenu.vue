@@ -70,8 +70,7 @@ export default defineComponent({
 		const passthrough = ref(false);
 
 		const contextMenu = ref<HTMLUListElement | null>();
-		// todo type
-		const previousActiveElement = ref<Element | null>();
+		const previousActiveElement = ref<HTMLElement | null>();
 		const items = ref<ContextMenuItem[]>([]);
 		const activeItem = ref(-1);
 		const style = ref({
@@ -88,8 +87,7 @@ export default defineComponent({
 			items.value = [];
 
 			if (previousActiveElement.value) {
-				// TODO: type
-				(previousActiveElement.value as any).focus();
+				previousActiveElement.value.focus();
 				previousActiveElement.value = null;
 			}
 		};
@@ -161,7 +159,7 @@ export default defineComponent({
 		const open = (event: MouseEvent, newItems: ContextMenuItem[]) => {
 			event.preventDefault();
 
-			previousActiveElement.value = document.activeElement;
+			previousActiveElement.value = document.activeElement as HTMLElement;
 			items.value = newItems;
 			activeItem.value = 0;
 			isOpen.value = true;

@@ -12,35 +12,40 @@ export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
 	irc.on("notice", function (data) {
-		data.type = MessageType.NOTICE as any;
-		handleMessage(data as any);
+		data.type = MessageType.NOTICE;
+
+		type ModifiedData = typeof data & {
+			type: MessageType.NOTICE;
+		};
+
+		handleMessage(data as ModifiedData);
 	});
 
 	irc.on("action", function (data) {
 		data.type = MessageType.ACTION;
-		handleMessage(data as any);
+		handleMessage(data);
 	});
 
 	irc.on("privmsg", function (data) {
 		data.type = MessageType.MESSAGE;
-		handleMessage(data as any);
+		handleMessage(data);
 	});
 
 	irc.on("wallops", function (data) {
 		data.from_server = true;
 		data.type = MessageType.WALLOPS;
-		handleMessage(data as any);
+		handleMessage(data);
 	});
 
 	function handleMessage(data: {
 		nick: string;
-		from_server: boolean;
 		hostname: string;
 		ident: string;
 		target: string;
 		type: MessageType;
 		time: number;
-		text: string;
+		text?: string;
+		from_server?: boolean;
 		message: string;
 		group?: string;
 	}) {

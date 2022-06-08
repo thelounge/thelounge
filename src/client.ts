@@ -6,7 +6,7 @@ import crypto from "crypto";
 import colors from "chalk";
 
 import log from "./log";
-import Chan, {ChanType} from "./models/chan";
+import Chan, {Channel, ChanType} from "./models/chan";
 import Msg, {MessageType, UserInMessage} from "./models/msg";
 import Config from "./config";
 import constants from "../client/js/constants";
@@ -18,6 +18,9 @@ import TextFileMessageStorage from "./plugins/messageStorage/text";
 import Network, {IgnoreListItem, NetworkWithIrcFramework} from "./models/network";
 import ClientManager from "./clientManager";
 import {MessageStorage, SearchQuery} from "./plugins/messageStorage/types";
+
+type OrderItem = Chan["id"] | Network["uuid"];
+type Order = OrderItem[];
 
 const events = [
 	"away",
@@ -633,7 +636,9 @@ class Client {
 		// Due to how socket.io works internally, normal events may arrive later than
 		// the disconnect event, and because we can't control this timing precisely,
 		// process this event normally even if there is no attached client anymore.
-		const attachedClient = this.attachedClients[socketId] || ({} as any);
+		const attachedClient =
+			this.attachedClients[socketId] ||
+			({} as Record<string, typeof this.attachedClients[0]>);
 
 		// Opening a window like settings
 		if (target === null) {
@@ -661,7 +666,7 @@ class Client {
 		this.emit("open", targetNetChan.chan.id);
 	}
 
-	sort(data) {
+	sort(data: {order: Order; type: "networks" | "channels"; target: string}) {
 		const order = data.order;
 
 		if (!_.isArray(order)) {
@@ -713,7 +718,7 @@ class Client {
 		this.save();
 	}
 
-	names(data) {
+	names(data: {target: number}) {
 		const client = this;
 		const target = client.find(data.target);
 

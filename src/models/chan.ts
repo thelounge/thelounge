@@ -81,7 +81,12 @@ class Chan {
 
 	pushMessage(client: Client, msg: Msg, increasesUnread = false) {
 		const chan = this.id;
-		const obj = {chan, msg} as any;
+		const obj = {chan, msg} as {
+			chan: number;
+			msg: Msg;
+			unread?: number;
+			highlight?: number;
+		};
 
 		msg.id = client.idMsg++;
 

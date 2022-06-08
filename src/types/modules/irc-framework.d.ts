@@ -34,10 +34,9 @@ declare module "irc-framework" {
 		tags: {[key: string]: string};
 		target: string;
 		time?: any;
-		type: "privmsg" | "action"; // TODO
+		type: "privmsg" | "action" | "notice" | "wallops";
 	}
 	export interface JoinEventArgs {
-		// todo: is that wrong?
 		account: boolean;
 		channel: string;
 		gecos: string;

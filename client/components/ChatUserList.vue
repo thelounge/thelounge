@@ -37,7 +37,7 @@
 						:key="user.original.nick + '-search'"
 						:on-hover="hoverUser"
 						:active="user.original === activeUser"
-						:user="(user.original as any)"
+						:user="user.original"
 						v-html="user.string"
 					/>
 					<!-- eslint-enable -->

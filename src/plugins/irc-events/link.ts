@@ -93,11 +93,11 @@ export default function (client: Client, chan: Chan, msg: Msg, cleanText: string
 function parseHtml(preview, res, client: Client) {
 	// TODO:
 	// eslint-disable-next-line @typescript-eslint/no-misused-promises
-	return new Promise((resolve: (preview: LinkPreview | null) => void) => {
+	return new Promise((resolve: (preview: FetchRequest | null) => void) => {
 		const $ = cheerio.load(res.data);
 
 		return parseHtmlMedia($, preview, client)
-			.then((newRes) => resolve(newRes as any))
+			.then((newRes) => resolve(newRes))
 			.catch(() => {
 				preview.type = "link";
 				preview.head =
@@ -145,7 +145,6 @@ function parseHtml(preview, res, client: Client) {
 								preview.thumbActualUrl = thumb;
 							}
 
-							// @ts-expect-error Argument of type 'FetchRequest' is not assignable to parameter of type 'LinkPreview'.
 							resolve(resThumb);
 						})
 						.catch(() => resolve(null));
@@ -157,7 +156,7 @@ function parseHtml(preview, res, client: Client) {
 }
 
 // TODO: type $
-function parseHtmlMedia($: any, preview, client: Client) {
+function parseHtmlMedia($: any, preview, client: Client): Promise<FetchRequest> {
 	return new Promise((resolve, reject) => {
 		if (Config.values.disableMediaPreview) {
 			reject();
@@ -241,7 +240,7 @@ function parseHtmlMedia($: any, preview, client: Client) {
 }
 
 function parse(msg: Msg, chan: Chan, preview: LinkPreview, res: FetchRequest, client: Client) {
-	let promise: Promise<LinkPreview | null> | null = null;
+	let promise: Promise<FetchRequest | null> | null = null;
 
 	preview.size = res.size;
 
