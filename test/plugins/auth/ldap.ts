@@ -1,10 +1,10 @@
-import log from "../../../src/log";
-import ldapAuth from "../../../src/plugins/auth/ldap";
-import Config from "../../../src/config";
+import log from "../../../server/log";
+import ldapAuth from "../../../server/plugins/auth/ldap";
+import Config from "../../../server/config";
 import ldap from "ldapjs";
 import {expect} from "chai";
 import TestUtil from "../../util";
-import ClientManager from "../../../src/clientManager";
+import ClientManager from "../../../server/clientManager";
 import sinon from "ts-sinon";
 
 const user = "johndoe";

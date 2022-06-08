@@ -1,8 +1,8 @@
-import log from "../../../src/log";
+import log from "../../../server/log";
 import {expect} from "chai";
 import TestUtil from "../../util";
 import sinon from "ts-sinon";
-import packagePlugin from "../../../src/plugins/packages";
+import packagePlugin from "../../../server/plugins/packages";
 
 let packages: typeof packagePlugin;
 
@@ -12,9 +12,9 @@ describe("packages", function () {
 	beforeEach(function () {
 		logInfoStub = sinon.stub(log, "info");
 
-		delete require.cache[require.resolve("../../../src/plugins/packages")];
+		delete require.cache[require.resolve("../../../server/plugins/packages")];
 		// eslint-disable-next-line @typescript-eslint/no-var-requires
-		packages = require("../../../src/plugins/packages").default;
+		packages = require("../../../server/plugins/packages").default;
 	});
 
 	afterEach(function () {

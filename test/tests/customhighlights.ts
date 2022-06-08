@@ -1,6 +1,6 @@
 import {expect} from "chai";
-import log from "../../src/log";
-import Client from "../../src/client";
+import log from "../../server/log";
+import Client from "../../server/client";
 import TestUtil from "../util";
 import sinon from "ts-sinon";
 

@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import {computed, defineComponent, PropType} from "vue";
-import {UserInMessage} from "../../src/models/msg";
+import {UserInMessage} from "../../server/models/msg";
 import eventbus from "../js/eventbus";
 import colorClass from "../js/helpers/colorClass";
 import type {ClientChan, ClientNetwork, ClientUser} from "../js/types";

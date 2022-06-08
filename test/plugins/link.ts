@@ -3,8 +3,8 @@
 import path from "path";
 import {expect} from "chai";
 import util from "../util";
-import Config from "../../src/config";
-import link, {LinkPreview} from "../../src/plugins/irc-events/link";
+import Config from "../../server/config";
+import link, {LinkPreview} from "../../server/plugins/irc-events/link";
 
 describe("Link plugin", function () {
 	// Increase timeout due to unpredictable I/O on CI services

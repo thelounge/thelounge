@@ -1,8 +1,8 @@
 import fs from "fs";
 import path from "path";
 import {expect} from "chai";
-import ClientCertificate, {ClientCertificateType} from "../../src/plugins/clientCertificate";
-import Config from "../../src/config";
+import ClientCertificate, {ClientCertificateType} from "../../server/plugins/clientCertificate";
+import Config from "../../server/config";
 
 describe("ClientCertificate", function () {
 	it("should not generate a client certificate in public mode", function () {

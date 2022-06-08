@@ -1,8 +1,8 @@
 import {expect} from "chai";
 import sinon from "ts-sinon";
 
-import log from "../../src/log";
-import Config from "../../src/config";
+import log from "../../server/log";
+import Config from "../../server/config";
 import TestUtil from "../util";
 
 describe("mergeConfig", function () {

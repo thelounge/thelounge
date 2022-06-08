@@ -1,6 +1,6 @@
 import {expect} from "chai";
-import Network from "../../src/models/network";
-import TextFileMessageStorage from "../../src/plugins/messageStorage/text";
+import Network from "../../server/models/network";
+import TextFileMessageStorage from "../../server/plugins/messageStorage/text";
 
 describe("TextFileMessageStorage", function () {
 	it("should combine network name and uuid into a safe name", function () {

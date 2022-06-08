@@ -1,9 +1,9 @@
 // @ts-nocheck TODO re-enable
 import {expect} from "chai";
-import Client from "../../src/client";
+import Client from "../../server/client";
 
-import Chan, {ChanType} from "../../src/models/chan";
-import ModeCommand from "../../src/plugins/inputs/mode";
+import Chan, {ChanType} from "../../server/models/chan";
+import ModeCommand from "../../server/plugins/inputs/mode";
 
 describe("Commands", function () {
 	describe("/mode", function () {

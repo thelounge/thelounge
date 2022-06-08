@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import Helper from "../../src/helper";
+import Helper from "../../server/helper";
 
 describe("HexIP", function () {
 	it("should correctly convert IPv4 to hex", function () {

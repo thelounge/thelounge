@@ -86,5 +86,5 @@ Before submitting any change, make sure to:
 - Run `yarn test` to execute linters and the test suite
   - Run `yarn format:prettier` if linting fails
 - Run `yarn build:client` if you change or add anything in `client/js` or `client/components`
-- Run `yarn build:server` if you change anything in `src/`
+- Run `yarn build:server` if you change anything in `server/`
 - `yarn dev` can be used to start The Lounge with hot module reloading

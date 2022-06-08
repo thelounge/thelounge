@@ -27,11 +27,11 @@ if (!require("semver").satisfies(process.version, pkg.engines.node)) {
 
 const fs = require("fs");
 
-if (fs.existsSync("./src/dist/src/index.js")) {
-	require("./src/dist/src/index.js");
+if (fs.existsSync("./server/dist/server/index.js")) {
+	require("./server/dist/server/index.js");
 } else {
 	console.error(
-		"Files in ./src/dist/src/ not found. Please run `yarn build` before trying to run `node index.js`."
+		"Files in ./server/dist/server/ not found. Please run `yarn build` before trying to run `node index.js`."
 	);
 
 	process.exit(1);

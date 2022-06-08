@@ -3,10 +3,10 @@ import fs from "fs";
 import path from "path";
 import {expect} from "chai";
 import util from "../util";
-import Msg, {MessageType} from "../../src/models/msg";
-import Config from "../../src/config";
-import MessageStorage from "../../src/plugins/messageStorage/sqlite";
-import Client from "../../src/client";
+import Msg, {MessageType} from "../../server/models/msg";
+import Config from "../../server/config";
+import MessageStorage from "../../server/plugins/messageStorage/sqlite";
+import Client from "../../server/client";
 
 describe("SQLite Message Storage", function () {
 	// Increase timeout due to unpredictable I/O on CI services

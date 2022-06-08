@@ -1,12 +1,12 @@
 import {defineComponent} from "vue";
 
-import Chan from "../../src/models/chan";
-import Network from "../../src/models/network";
-import User from "../../src/models/user";
-import Message from "../../src/models/msg";
-import {Mention} from "../../src/client";
-import {ClientConfiguration} from "../../src/server";
-import {LinkPreview} from "../../src/plugins/irc-events/link";
+import Chan from "../../server/models/chan";
+import Network from "../../server/models/network";
+import User from "../../server/models/user";
+import Message from "../../server/models/msg";
+import {Mention} from "../../server/client";
+import {ClientConfiguration} from "../../server/server";
+import {LinkPreview} from "../../server/plugins/irc-events/link";
 
 interface LoungeWindow extends Window {
 	g_TheLoungeRemoveLoading?: () => void;

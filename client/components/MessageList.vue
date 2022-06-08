@@ -79,7 +79,7 @@ import {
 } from "vue";
 import {useStore} from "../js/store";
 import {ClientChan, ClientMessage, ClientNetwork, ClientLinkPreview} from "../js/types";
-import Msg from "../../src/models/msg";
+import Msg from "../../server/models/msg";
 
 type CondensedMessageContainer = {
 	type: "condensed";

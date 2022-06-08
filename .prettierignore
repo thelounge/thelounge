@@ -4,7 +4,7 @@ test/fixtures/.thelounge/logs/
 test/fixtures/.thelounge/certificates/
 test/fixtures/.thelounge/storage/
 test/fixtures/.thelounge/sts-policies.json
-src/dist/
+server/dist/
 dist/
 *.log
 *.png

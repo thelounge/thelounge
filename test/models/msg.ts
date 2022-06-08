@@ -1,8 +1,8 @@
 import {expect} from "chai";
 
-import Msg from "../../src/models/msg";
-import User from "../../src/models/user";
-import {LinkPreview} from "../../src/plugins/irc-events/link";
+import Msg from "../../server/models/msg";
+import User from "../../server/models/user";
+import {LinkPreview} from "../../server/plugins/irc-events/link";
 
 describe("Msg", function () {
 	["from", "target"].forEach((prop) => {

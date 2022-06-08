@@ -7,5 +7,4 @@ package-lock.json
 coverage/
 public/
 client/dist
-src/dist
-/dist/
+server/dist

@@ -4,7 +4,7 @@ import CopyPlugin from "copy-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import {VueLoaderPlugin} from "vue-loader";
 import babelConfig from "./babel.config.cjs";
-import Helper from "./src/helper";
+import Helper from "./server/helper";
 
 const isProduction = process.env.NODE_ENV === "production";
 const config: webpack.Configuration = {
@@ -40,7 +40,7 @@ const config: webpack.Configuration = {
 				},
 			},
 			{
-				test: /\.(ts|js)x?$/i,
+				test: /\.(ts|js)?$/i,
 				include: [path.resolve(__dirname, "client")],
 				exclude: path.resolve(__dirname, "node_modules"),
 				use: {
@@ -117,7 +117,12 @@ const config: webpack.Configuration = {
 					from: path.resolve(__dirname, "./client/*").replace(/\\/g, "/"),
 					to: "[name][ext]",
 					globOptions: {
-						ignore: ["**/index.html.tpl", "**/service-worker.js"],
+						ignore: [
+							"**/index.html.tpl",
+							"**/service-worker.js",
+							"**/*.d.ts",
+							"**/tsconfig.json",
+						],
 					},
 				},
 				{

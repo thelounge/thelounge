@@ -4,9 +4,9 @@ import path from "path";
 import crypto from "crypto";
 import {expect} from "chai";
 import util from "../util";
-import Config from "../../src/config";
-import storage from "../../src/plugins/storage";
-import link from "../../src/plugins/irc-events/link";
+import Config from "../../server/config";
+import storage from "../../server/plugins/storage";
+import link from "../../server/plugins/irc-events/link";
 import {Request, Response} from "express";
 
 describe("Image storage", function () {

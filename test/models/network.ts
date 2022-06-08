@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import {expect} from "chai";
 import sinon from "ts-sinon";
-import Chan, {ChanType} from "../../src/models/chan";
-import Msg from "../../src/models/msg";
-import User from "../../src/models/user";
-import Network from "../../src/models/network";
-import Config from "../../src/config";
-import STSPolicies from "../../src/plugins/sts";
-import ClientCertificate from "../../src/plugins/clientCertificate";
+import Chan, {ChanType} from "../../server/models/chan";
+import Msg from "../../server/models/msg";
+import User from "../../server/models/user";
+import Network from "../../server/models/network";
+import Config from "../../server/config";
+import STSPolicies from "../../server/plugins/sts";
+import ClientCertificate from "../../server/plugins/clientCertificate";
 
 describe("Network", function () {
 	let stsPoliciesRefreshStub: sinon.SinonStub<unknown[], void>;

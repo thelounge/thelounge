@@ -10,7 +10,7 @@
       "path": "./client" /* Path to referenced tsconfig or to folder containing tsconfig. */
     },
     {
-      "path": "./src" /* Path to referenced tsconfig or to folder containing tsconfig. */
+      "path": "./server" /* Path to referenced tsconfig or to folder containing tsconfig. */
     },
     {
       "path": "./test" /* Path to referenced tsconfig or to folder containing tsconfig. */

@@ -59,7 +59,7 @@
 <script lang="ts">
 import {filter as fuzzyFilter} from "fuzzy";
 import {computed, defineComponent, nextTick, PropType, ref} from "vue";
-import type {UserInMessage} from "../../src/models/msg";
+import type {UserInMessage} from "../../server/models/msg";
 import type {ClientChan, ClientUser} from "../js/types";
 import Username from "./Username.vue";
 

@@ -1,13 +1,13 @@
-import log from "../src/log";
-import Config from "../src/config";
+import log from "../server/log";
+import Config from "../server/config";
 import {expect} from "chai";
 import got from "got";
 import io from "socket.io-client";
 import util from "./util";
-import changelog from "../src/plugins/changelog";
+import changelog from "../server/plugins/changelog";
 
 import sinon from "ts-sinon";
-import ClientManager from "../src/clientManager";
+import ClientManager from "../server/clientManager";
 
 describe("Server", function () {
 	// Increase timeout due to unpredictable I/O on CI services
@@ -35,7 +35,7 @@ describe("Server", function () {
 		});
 
 		checkForUpdatesStub = sinon.stub(changelog, "checkForUpdates");
-		server = await (await import("../src/server")).default({} as any);
+		server = await (await import("../server/server")).default({} as any);
 	});
 
 	after(function (done) {

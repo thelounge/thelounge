@@ -13,10 +13,10 @@
   "homepage": "https://thelounge.chat/",
   "scripts": {
     "build:client": "webpack",
-    "build:server": "tsc -p src/tsconfig.json",
+    "build:server": "tsc -p server/tsconfig.json",
     "build": "run-p --aggregate-output build:client build:server",
     "coverage": "run-s test:* && nyc --nycrc-path=test/.nycrc-report.json report",
-    "dev": "cross-env NODE_ENV=development ts-node --project src/tsconfig.json src/index.ts start --dev",
+    "dev": "cross-env NODE_ENV=development ts-node --project server/tsconfig.json server/index.ts start --dev",
     "format:prettier": "prettier --write \"**/*.*\"",
     "lint:check-eslint": "eslint-config-prettier .eslintrc.cjs",
     "lint:eslint": "eslint . --report-unused-disable-directives --color",
