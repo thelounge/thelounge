@@ -4,7 +4,7 @@
   "version": "4.3.1",
   "preferGlobal": true,
   "bin": {
-    "thelounge": "src/index.ts"
+    "thelounge": "index.js"
   },
   "repository": {
     "type": "git",
