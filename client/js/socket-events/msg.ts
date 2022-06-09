@@ -98,7 +98,7 @@ socket.on("msg", function (data) {
 function notifyMessage(
 	targetId: number,
 	channel: ClientChan,
-	activeChannel: NetChan,
+	activeChannel: NetChan | undefined,
 	msg: ClientMessage
 ) {
 	if (channel.muted) {
@@ -120,14 +120,14 @@ function notifyMessage(
 				"Notification" in window &&
 				Notification.permission === "granted"
 			) {
-				let title;
-				let body;
+				let title: string;
+				let body: string;
 
 				if (msg.type === "invite") {
 					title = "New channel invite:";
 					body = msg.from.nick + " invited you to " + msg.channel;
 				} else {
-					title = msg.from.nick;
+					title = String(msg.from.nick);
 
 					if (channel.type !== "query") {
 						title += ` (${channel.name})`;

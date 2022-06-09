@@ -7,7 +7,6 @@
 declare const self: ServiceWorkerGlobalScope;
 export {};
 
-// __HASH__ is replaced by webpack when the client is built
 const cacheName = "__HASH__";
 
 const excludedPathsFromCache = /^(?:socket\.io|storage|uploads|cdn-cgi)\//;
@@ -88,6 +87,8 @@ async function networkOrCache(event: FetchEvent) {
 		}
 
 		if (response.ok) {
+			// __HASH__ is replaced by webpack when the client is built
+			// @ts-expect-error
 			if (cacheName !== "dev") {
 				event.waitUntil(putInCache(event.request, response));
 			}
@@ -118,9 +119,9 @@ async function networkOrCache(event: FetchEvent) {
 	}
 }
 
-// self.addEventListener("message", function (event) {
-// 	showNotification(event, event.data);
-// });
+self.addEventListener("message", function (event) {
+	showNotification(event, event.data);
+});
 
 self.addEventListener("push", function (event) {
 	if (!event.data) {

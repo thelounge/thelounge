@@ -329,10 +329,12 @@ function completeCommands(word: string) {
 function completeChans(word: string) {
 	const words: string[] = [];
 
-	for (const channel of store.state.activeChannel.network.channels) {
-		// Push all channels that start with the same CHANTYPE
-		if (channel.type === "channel" && channel.name[0] === word[0]) {
-			words.push(channel.name);
+	if (store.state.activeChannel) {
+		for (const channel of store.state.activeChannel.network.channels) {
+			// Push all channels that start with the same CHANTYPE
+			if (channel.type === "channel" && channel.name[0] === word[0]) {
+				words.push(channel.name);
+			}
 		}
 	}
 

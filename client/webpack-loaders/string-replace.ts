@@ -14,10 +14,7 @@ const loaderSchema: Schema = {
 	},
 };
 
-const isValidSchemaAndOptions = function (
-	schema: any,
-	options: any
-): options is {
+const isValidSchemaAndOptions = function (options: any): options is {
 	from: string;
 	to: string;
 } {
@@ -31,7 +28,7 @@ const StringReplaceLoader: webpack.LoaderDefinition = function (source) {
 
 	const options = this.getOptions();
 
-	if (isValidSchemaAndOptions(loaderSchema, options)) {
+	if (isValidSchemaAndOptions(options)) {
 		const newSource = source.replaceAll(options.from, options.to);
 		return newSource;
 	}
