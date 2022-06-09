@@ -29,8 +29,9 @@ const StringReplaceLoader: webpack.LoaderDefinition = function (source) {
 	const options = this.getOptions();
 
 	if (isValidSchemaAndOptions(options)) {
-		const newSource = source.replaceAll(options.from, options.to);
-		return newSource;
+		// replace all without using replaceAll
+		const regex = new RegExp(options.from, "g");
+		return source.replace(regex, options.to);
 	}
 
 	throw new Error(
