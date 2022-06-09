@@ -20,11 +20,16 @@ socket.on("init", async function (data) {
 
 		socket.emit("setting:get");
 
+		try {
+			await router.isReady();
+		} catch (e: any) {
+			// if the router throws an error, it means the route isn't matched,
+			// so we can continue on.
+		}
+
 		if (window.g_TheLoungeRemoveLoading) {
 			window.g_TheLoungeRemoveLoading();
 		}
-
-		await router.isReady();
 
 		const handledQuery = await handleQueryParams();
 
@@ -33,7 +38,10 @@ socket.on("init", async function (data) {
 		if (!handledQuery) {
 			// If we are on an unknown route or still on SignIn component
 			// then we can open last known channel on server, or Connect window if none
-			if (!router.currentRoute.value.name || router.currentRoute.value.name === "SignIn") {
+			if (
+				!router.currentRoute?.value?.name ||
+				router.currentRoute?.value?.name === "SignIn"
+			) {
 				const channel = store.getters.findChannel(data.active);
 
 				if (channel) {
