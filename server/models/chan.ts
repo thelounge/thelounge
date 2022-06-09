@@ -48,15 +48,12 @@ class Chan {
 	type!: ChanType;
 	state!: ChanState;
 
-	// These are added to the channel elsewhere.
-	userAway!: boolean;
+	userAway?: boolean;
 	special?: SpecialChanType;
 	data?: any;
 	closed?: boolean;
 	num_users?: number;
-
-	// temporary for getFilteredClone until the above are moved out
-	keysToIgnore = ["userAway", "special", "data", "closed", "num_users"];
+	static optionalProperties = ["userAway", "special", "data", "closed", "num_users"];
 
 	constructor(attr?: Partial<Chan>) {
 		_.defaults(this, attr, {
@@ -204,8 +201,10 @@ class Chan {
 	 */
 	getFilteredClone(lastActiveChannel?: number | boolean, lastMessage?: number): FilteredChannel {
 		return Object.keys(this).reduce((newChannel, prop) => {
-			if (this.keysToIgnore.includes(prop) || prop === "keysToIgnore") {
-				// no-op
+			if (Chan.optionalProperties.includes(prop)) {
+				if (this[prop] !== undefined || (Array.isArray(this[prop]) && this[prop].length)) {
+					newChannel[prop] = this[prop];
+				}
 			} else if (prop === "users") {
 				// Do not send users, client requests updated user list whenever needed
 				newChannel[prop] = [];
