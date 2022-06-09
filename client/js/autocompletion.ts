@@ -261,7 +261,7 @@ function replaceNick(original: string, position = 1) {
 	}
 
 	// If there is whitespace in the input already, append space to nick
-	if (position > 0 && /\s/.test(store.state.activeChannel.channel.pendingMessage)) {
+	if (position > 0 && /\s/.test(store.state.activeChannel?.channel.pendingMessage || "")) {
 		return original + " ";
 	}
 
@@ -278,6 +278,10 @@ function fuzzyGrep<T>(term: string, array: Array<T>) {
 }
 
 function rawNicks() {
+	if (!store.state.activeChannel) {
+		return [];
+	}
+
 	if (store.state.activeChannel.channel.users.length > 0) {
 		const users = store.state.activeChannel.channel.users.slice();
 

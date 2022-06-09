@@ -7,7 +7,7 @@ let lastServerHash: number | null = null;
 
 declare global {
 	interface Window {
-		g_TheLoungeRemoveLoading: () => void;
+		g_TheLoungeRemoveLoading?: () => void;
 	}
 }
 

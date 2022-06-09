@@ -48,7 +48,7 @@ export type ClientSession = {
 
 export type State = {
 	appLoaded: boolean;
-	activeChannel: NetChan;
+	activeChannel?: NetChan;
 	currentUserVisibleError: string | null;
 	desktopNotificationState: DesktopNotificationState;
 	isAutoCompleting: boolean;
@@ -92,10 +92,7 @@ export type State = {
 const state = () =>
 	({
 		appLoaded: false,
-		activeChannel: {
-			network: {} as ClientNetwork,
-			channel: {} as ClientChan,
-		},
+		activeChannel: undefined,
 		currentUserVisibleError: null,
 		desktopNotificationState: detectDesktopNotificationState(),
 		isAutoCompleting: false,
@@ -145,7 +142,7 @@ export type CallableGetters = {
 const getters: Getters = {
 	findChannelOnCurrentNetwork: (state) => (name: string) => {
 		name = name.toLowerCase();
-		return state.activeChannel.network.channels.find((c) => c.name.toLowerCase() === name);
+		return state.activeChannel?.network.channels.find((c) => c.name.toLowerCase() === name);
 	},
 	findChannelOnNetwork: (state) => (networkUuid: string, channelName: string) => {
 		for (const network of state.networks) {

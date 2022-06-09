@@ -35,7 +35,14 @@
 		displayReload();
 	}, 5000);
 
+	/**
+	 * @param {ErrorEvent} e
+	 **/
 	const errorHandler = (e) => {
+		if (!msg) {
+			return;
+		}
+
 		msg.textContent = "An error has occurred that prevented the client from loading correctly.";
 
 		const summary = document.createElement("summary");
@@ -51,7 +58,7 @@
 		details.appendChild(summary);
 		details.appendChild(data);
 		details.appendChild(info);
-		msg.parentNode.insertBefore(details, msg.nextSibling);
+		msg.parentNode?.insertBefore(details, msg.nextSibling);
 
 		window.clearTimeout(loadingSlowTimeout);
 		displayReload();
@@ -104,8 +111,10 @@
 		navigator.serviceWorker.register("service-worker.js");
 
 		// Handler for messages coming from the service worker
-		const messageHandler = (event) => {
+
+		const messageHandler = (/** @type {MessageEvent} */ event) => {
 			if (event.data.type === "fetch-error") {
+				// @ts-expect-error Argument of type '{ message: string; }' is not assignable to parameter of type 'ErrorEvent'.
 				errorHandler({
 					message: `Service worker failed to fetch an url: ${event.data.message}`,
 				});

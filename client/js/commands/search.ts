@@ -10,7 +10,7 @@ function input(args: string[]) {
 		.push({
 			name: "SearchResults",
 			params: {
-				id: store.state.activeChannel.channel.id,
+				id: store.state.activeChannel?.channel.id,
 			},
 			query: {
 				q: args.join(" "),

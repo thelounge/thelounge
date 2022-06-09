@@ -38,11 +38,7 @@ function navigateWindow(direction: number) {
 				continue;
 			}
 
-			if (
-				index === -1 &&
-				store.state.activeChannel &&
-				store.state.activeChannel.channel === channel
-			) {
+			if (index === -1 && store.state.activeChannel?.channel === channel) {
 				index = flatChannels.length;
 			}
 
@@ -74,10 +70,10 @@ Mousetrap.bind(["alt+shift+up", "alt+shift+down"], function (e, keys) {
 
 	// If we're in another window, jump to first lobby
 	if (store.state.activeChannel) {
-		index = store.state.networks.findIndex((n) => n === store.state.activeChannel.network);
+		index = store.state.networks.findIndex((n) => n === store.state.activeChannel?.network);
 
 		// If we're in a channel, and it's not the lobby, jump to lobby of this network when going up
-		if (direction !== -1 || store.state.activeChannel.channel.type === "lobby") {
+		if (direction !== -1 || store.state.activeChannel?.channel.type === "lobby") {
 			index = (((index + direction) % length) + length) % length;
 		}
 	}

@@ -7,7 +7,7 @@ function input(args: string[]) {
 		let channels = args[0];
 
 		if (channels.length > 0) {
-			const chanTypes = store.state.activeChannel.network.serverOptions.CHANTYPES;
+			const chanTypes = store.state.activeChannel?.network.serverOptions.CHANTYPES;
 			const channelList = args[0].split(",");
 
 			if (chanTypes && chanTypes.length > 0) {
@@ -25,15 +25,17 @@ function input(args: string[]) {
 			if (chan) {
 				switchToChannel(chan);
 			} else {
-				socket.emit("input", {
-					text: `/join ${channels} ${args.length > 1 ? args[1] : ""}`,
-					target: store.state.activeChannel.channel.id,
-				});
+				if (store.state.activeChannel) {
+					socket.emit("input", {
+						text: `/join ${channels} ${args.length > 1 ? args[1] : ""}`,
+						target: store.state.activeChannel.channel.id,
+					});
+				}
 
 				return true;
 			}
 		}
-	} else if (store.state.activeChannel.channel.type === "channel") {
+	} else if (store.state.activeChannel?.channel.type === "channel") {
 		// If `/join` command is used without any arguments, re-join current channel
 		socket.emit("input", {
 			target: store.state.activeChannel.channel.id,

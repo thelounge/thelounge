@@ -2,6 +2,10 @@ import socket from "../socket";
 import {store} from "../store";
 
 function input() {
+	if (!store.state.activeChannel) {
+		return;
+	}
+
 	const messageIds: number[] = [];
 
 	for (const message of store.state.activeChannel.channel.messages) {
