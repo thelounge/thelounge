@@ -65,17 +65,15 @@
 								class="result"
 								@click="jump(message, id)"
 							>
-								<!-- TODO: this was message.date  -->
 								<DateMarker
 									v-if="shouldDisplayDateMarker(message, id)"
-									:key="message.time"
+									:key="message.id + '-date'"
 									:message="message"
 								/>
-								<!-- todo channel and network ! -->
 								<Message
 									:key="message.id"
-									:channel="channel!"
-									:network="network!"
+									:channel="channel"
+									:network="network"
 									:message="message"
 									:data-id="message.id"
 								/>
