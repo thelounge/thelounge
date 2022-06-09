@@ -11,7 +11,6 @@ const config: webpack.Configuration = {
 	mode: isProduction ? "production" : "development",
 	entry: {
 		"js/bundle.js": [path.resolve(__dirname, "client/js/vue.ts")],
-		"service-worker.js": [path.resolve(__dirname, "client/service-worker.ts")],
 	},
 	devtool: "source-map",
 	output: {
@@ -47,16 +46,6 @@ const config: webpack.Configuration = {
 				use: {
 					loader: "babel-loader",
 					options: babelConfig,
-				},
-			},
-			{
-				test: /service-worker\.ts$/,
-				use: {
-					loader: path.resolve(__dirname, "client/webpack-loaders/string-replace.ts"),
-					options: {
-						from: "__HASH__",
-						to: isProduction ? Helper.getVersionCacheBust() : "dev",
-					},
 				},
 			},
 			{
@@ -130,25 +119,24 @@ const config: webpack.Configuration = {
 					globOptions: {
 						ignore: [
 							"**/index.html.tpl",
+							"**/service-worker.js",
 							"**/*.d.ts",
 							"**/tsconfig.json",
-							"**/service-worker.ts",
-							"**/webpack-loaders",
 						],
 					},
 				},
-				// {
-				// 	from: path.resolve(__dirname, "./client/service-worker.ts"),
-				// 	to: "[name][ext]",
-				// 	transform(content) {
-				// 		return content
-				// 			.toString()
-				// 			.replace(
-				// 				"__HASH__",
-				// 				isProduction ? Helper.getVersionCacheBust() : "dev"
-				// 			);
-				// 	},
-				// },
+				{
+					from: path.resolve(__dirname, "./client/service-worker.js"),
+					to: "[name][ext]",
+					transform(content) {
+						return content
+							.toString()
+							.replace(
+								"__HASH__",
+								isProduction ? Helper.getVersionCacheBust() : "dev"
+							);
+					},
+				},
 				{
 					from: path.resolve(__dirname, "./client/audio/*").replace(/\\/g, "/"),
 					to: "audio/[name][ext]",

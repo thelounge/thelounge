@@ -1,21 +1,13 @@
+// @ts-nocheck
 // The Lounge - https://github.com/thelounge/thelounge
 /* global clients */
-
-// eslint-disable-next-line spaced-comment
-/// <reference lib="webworker" />
-
-declare const self: ServiceWorkerGlobalScope;
-export {};
+"use strict";
 
 const cacheName = "__HASH__";
-
 const excludedPathsFromCache = /^(?:socket\.io|storage|uploads|cdn-cgi)\//;
 
 self.addEventListener("install", function () {
-	self.skipWaiting().catch((reason: any) => {
-		// eslint-disable-next-line no-console
-		console.error("Could not install new service worker", reason);
-	});
+	self.skipWaiting();
 });
 
 self.addEventListener("activate", function (event) {
@@ -55,12 +47,12 @@ self.addEventListener("fetch", function (event) {
 	event.respondWith(networkOrCache(event));
 });
 
-async function putInCache(request: Request, response: Response) {
+async function putInCache(request, response) {
 	const cache = await caches.open(cacheName);
 	await cache.put(request, response);
 }
 
-async function cleanRedirect(response: Response) {
+async function cleanRedirect(response) {
 	// Not all browsers support the Response.body stream, so fall back
 	// to reading the entire body into memory as a blob.
 	const bodyPromise = "body" in response ? Promise.resolve(response.body) : response.blob();
@@ -75,7 +67,7 @@ async function cleanRedirect(response: Response) {
 	});
 }
 
-async function networkOrCache(event: FetchEvent) {
+async function networkOrCache(event) {
 	try {
 		let response = await fetch(event.request, {
 			cache: "no-cache",
@@ -87,8 +79,6 @@ async function networkOrCache(event: FetchEvent) {
 		}
 
 		if (response.ok) {
-			// __HASH__ is replaced by webpack when the client is built
-			// @ts-expect-error
 			if (cacheName !== "dev") {
 				event.waitUntil(putInCache(event.request, response));
 			}
@@ -97,12 +87,12 @@ async function networkOrCache(event: FetchEvent) {
 		}
 
 		throw new Error(`Request failed with HTTP ${response.status}`);
-	} catch (e: any) {
+	} catch (e) {
 		// eslint-disable-next-line no-console
 		console.error(e.message, event.request.url);
 
 		if (event.clientId) {
-			const client = await self.clients.get(event.clientId);
+			const client = await clients.get(event.clientId);
 
 			if (client) {
 				client.postMessage({
@@ -131,16 +121,7 @@ self.addEventListener("push", function (event) {
 	showNotification(event, event.data.json());
 });
 
-function showNotification(
-	event: FetchEvent | PushEvent,
-	payload: {
-		chanId: number;
-		type: string;
-		title: string;
-		timestamp?: number;
-		body?: string;
-	}
-) {
+function showNotification(event, payload) {
 	if (payload.type !== "notification") {
 		return;
 	}
@@ -170,34 +151,36 @@ function showNotification(
 self.addEventListener("notificationclick", function (event) {
 	event.notification.close();
 
-	event.waitUntil(async function () {
-		const clients = await self.clients.matchAll({
-			includeUncontrolled: true,
-			type: "window",
-		});
+	event.waitUntil(
+		clients
+			.matchAll({
+				includeUncontrolled: true,
+				type: "window",
+			})
+			.then((clientList) => {
+				if (clientList.length === 0) {
+					if (clients.openWindow) {
+						return clients.openWindow(`.#/${event.notification.tag}`);
+					}
 
-		if (clients.length === 0) {
-			if (self.clients.openWindow) {
-				return self.clients.openWindow(`.#/${event.notification.tag}`);
-			}
+					return;
+				}
 
-			return;
-		}
+				const client = findSuitableClient(clientList);
 
-		const client = findSuitableClient(clients);
+				client.postMessage({
+					type: "open",
+					channel: event.notification.tag,
+				});
 
-		client.postMessage({
-			type: "open",
-			channel: event.notification.tag,
-		});
-
-		if ("focus" in client) {
-			await client.focus();
-		}
-	});
+				if ("focus" in client) {
+					client.focus();
+				}
+			})
+	);
 });
 
-function findSuitableClient(clientList: readonly WindowClient[]) {
+function findSuitableClient(clientList) {
 	for (let i = 0; i < clientList.length; i++) {
 		const client = clientList[i];
 
