@@ -16,7 +16,7 @@ socket.on("more", async (data) => {
 			.filter((m) => m.self && m.text && m.type === "message")
 			.map((m) => m.text)
 			.reverse()
-			.slice(undefined, 100 - channel.inputHistory.length)
+			.slice(0, 100 - channel.inputHistory.length)
 	);
 	channel.moreHistoryAvailable =
 		data.totalMessages > channel.messages.length + data.messages.length;
