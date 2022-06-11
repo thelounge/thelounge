@@ -108,26 +108,30 @@ function updateVersions(response: Response<string>) {
 }
 
 function checkForUpdates(manager: ClientManager) {
-	void fetch().then((versionData) => {
-		if (!module.exports.isUpdateAvailable) {
-			// Check for updates every 24 hours + random jitter of <3 hours
-			setTimeout(
-				() => checkForUpdates(manager),
-				24 * 3600 * 1000 + Math.floor(Math.random() * 10000000)
+	fetch()
+		.then((versionData) => {
+			if (!module.exports.isUpdateAvailable) {
+				// Check for updates every 24 hours + random jitter of <3 hours
+				setTimeout(
+					() => checkForUpdates(manager),
+					24 * 3600 * 1000 + Math.floor(Math.random() * 10000000)
+				);
+			}
+
+			if (!versionData.latest) {
+				return;
+			}
+
+			log.info(
+				`The Lounge ${colors.green(
+					versionData.latest.version
+				)} is available. Read more on GitHub: ${versionData.latest.url}`
 			);
-		}
 
-		if (!versionData.latest) {
-			return;
-		}
-
-		log.info(
-			`The Lounge ${colors.green(
-				versionData.latest.version
-			)} is available. Read more on GitHub: ${versionData.latest.url}`
-		);
-
-		// Notify all connected clients about the new version
-		manager.clients.forEach((client) => client.emit("changelog:newversion"));
-	});
+			// Notify all connected clients about the new version
+			manager.clients.forEach((client) => client.emit("changelog:newversion"));
+		})
+		.catch((error: Error) => {
+			log.error(`Failed to check for updates: ${error.message}`);
+		});
 }

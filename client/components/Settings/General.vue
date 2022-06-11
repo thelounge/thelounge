@@ -136,12 +136,21 @@ export default defineComponent({
 		};
 
 		const onForceSyncClick = () => {
-			void store.dispatch("settings/syncAll", true);
-			void store.dispatch("settings/update", {
-				name: "syncSettings",
-				value: true,
-				sync: true,
+			store.dispatch("settings/syncAll", true).catch((e) => {
+				// eslint-disable-next-line no-console
+				console.error(e);
 			});
+
+			store
+				.dispatch("settings/update", {
+					name: "syncSettings",
+					value: true,
+					sync: true,
+				})
+				.catch((e) => {
+					// eslint-disable-next-line no-console
+					console.error(e);
+				});
 		};
 
 		const registerProtocol = () => {

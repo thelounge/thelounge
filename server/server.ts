@@ -565,9 +565,8 @@ function initializeClient(
 							socket.emit("change-password", obj);
 						});
 					})
-					.catch((error: any) => {
-						// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-						log.error(`Error while checking users password. Error: ${error}`);
+					.catch((error: Error) => {
+						log.error(`Error while checking users password. Error: ${error.message}`);
 					});
 			}
 		});
@@ -595,9 +594,8 @@ function initializeClient(
 				changelogData.packages = packageUpdate;
 				socket.emit("changelog", changelogData);
 			})
-			.catch((error: any) => {
-				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-				log.error(`Error while fetching changelog. Error: ${error}`);
+			.catch((error: Error) => {
+				log.error(`Error while fetching changelog. Error: ${error.message}`);
 			});
 	});
 
@@ -759,8 +757,8 @@ function initializeClient(
 			socket.emit("setting:all", clientSettings);
 		});
 
-		socket.on("search", (query) => {
-			void client.search(query).then((results) => {
+		socket.on("search", async (query) => {
+			await client.search(query).then((results) => {
 				socket.emit("search:results", results);
 			});
 		});
@@ -829,6 +827,7 @@ function initializeClient(
 		}
 	});
 
+	// socket.join is a promise depending on the adapter.
 	void socket.join(client.id?.toString());
 
 	const sendInitEvent = (tokenToSend: string | null) => {
