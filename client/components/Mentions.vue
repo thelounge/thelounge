@@ -30,8 +30,8 @@
 									in {{ message.channel.channel.name }} on
 									{{ message.channel.network.name }}
 								</template>
-								<template v-else> in unknown channel </template>
-							</span>
+								<template v-else> in unknown channel </template> </span
+							>{{ ` ` }}
 							<span :title="message.localetime" class="time">
 								{{ messageTime(message.time.toString()) }}
 							</span>
