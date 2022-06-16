@@ -445,7 +445,7 @@ export default defineComponent({
 			return false;
 		};
 
-		const setSearchText = (e) => {
+		const setSearchText = (e: Event) => {
 			searchText.value = (e.target as HTMLInputElement).value;
 		};
 

@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, PropType, watch, onUnmounted} from "vue";
+import {defineComponent, ref, PropType, watch, onUnmounted, onBeforeUnmount} from "vue";
 import Sortable from "sortablejs";
 
 const Props = {
@@ -77,18 +77,17 @@ const Props = {
 	},
 };
 
-let sortable: Sortable | undefined;
-
 export default defineComponent({
 	name: "Draggable",
 	props: Props,
 	emits: ["change", "choose", "unchoose"],
 	setup(props, {emit}) {
 		const containerRef = ref<HTMLElement | null>(null);
+		const sortable = ref<Sortable | null>(null);
 
 		watch(containerRef, (newDraggable) => {
 			if (newDraggable) {
-				sortable = new Sortable(newDraggable, {
+				sortable.value = new Sortable(newDraggable, {
 					...props,
 
 					onChoose(event) {
@@ -106,9 +105,9 @@ export default defineComponent({
 			}
 		});
 
-		onUnmounted(() => {
-			if (sortable) {
-				sortable.destroy();
+		onBeforeUnmount(() => {
+			if (sortable.value) {
+				sortable.value.destroy();
 				containerRef.value = null;
 			}
 		});
