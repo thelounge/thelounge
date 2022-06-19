@@ -7,42 +7,52 @@
 
 		<div class="container">
 			<form ref="settingsForm" autocomplete="off" @change="onChange" @submit.prevent>
-				<router-view></router-view>
+				<router-view :settings-form="settingsForm"></router-view>
 			</form>
 		</div>
 	</div>
 </template>
 
-<script>
+<script lang="ts">
+import {defineComponent, ref} from "vue";
 import SidebarToggle from "../SidebarToggle.vue";
 import Navigation from "../Settings/Navigation.vue";
+import {useStore} from "../../js/store";
 
-export default {
+export default defineComponent({
 	name: "Settings",
 	components: {
 		SidebarToggle,
 		Navigation,
 	},
-	methods: {
-		onChange(event) {
+	setup() {
+		const store = useStore();
+		const settingsForm = ref<HTMLFormElement>();
+
+		const onChange = (event: Event) => {
 			const ignore = ["old_password", "new_password", "verify_password"];
 
-			const name = event.target.name;
+			const name = (event.target as HTMLInputElement).name;
 
 			if (ignore.includes(name)) {
 				return;
 			}
 
-			let value;
+			let value: boolean | string;
 
-			if (event.target.type === "checkbox") {
-				value = event.target.checked;
+			if ((event.target as HTMLInputElement).type === "checkbox") {
+				value = (event.target as HTMLInputElement).checked;
 			} else {
-				value = event.target.value;
+				value = (event.target as HTMLInputElement).value;
 			}
 
-			this.$store.dispatch("settings/update", {name, value, sync: true});
-		},
+			void store.dispatch("settings/update", {name, value, sync: true});
+		};
+
+		return {
+			onChange,
+			settingsForm,
+		};
 	},
-};
+});
 </script>

@@ -1,13 +1,13 @@
 <template>
-	<div id="confirm-dialog-overlay" :class="{opened: data !== null}">
+	<div id="confirm-dialog-overlay" :class="{opened: !!data}">
 		<div v-if="data !== null" id="confirm-dialog">
 			<div class="confirm-text">
-				<div class="confirm-text-title">{{ data.title }}</div>
-				<p>{{ data.text }}</p>
+				<div class="confirm-text-title">{{ data?.title }}</div>
+				<p>{{ data?.text }}</p>
 			</div>
 			<div class="confirm-buttons">
 				<button class="btn btn-cancel" @click="close(false)">Cancel</button>
-				<button class="btn btn-danger" @click="close(true)">{{ data.button }}</button>
+				<button class="btn btn-danger" @click="close(true)">{{ data?.button }}</button>
 			</div>
 		</div>
 	</div>
@@ -50,37 +50,53 @@
 }
 </style>
 
-<script>
+<script lang="ts">
 import eventbus from "../js/eventbus";
+import {defineComponent, onMounted, onUnmounted, ref} from "vue";
 
-export default {
+type ConfirmDialogData = {
+	title: string;
+	text: string;
+	button: string;
+};
+
+type ConfirmDialogCallback = {
+	(confirmed: boolean): void;
+};
+
+export default defineComponent({
 	name: "ConfirmDialog",
-	data() {
+	setup() {
+		const data = ref<ConfirmDialogData>();
+		const callback = ref<ConfirmDialogCallback>();
+
+		const open = (incoming: ConfirmDialogData, cb: ConfirmDialogCallback) => {
+			data.value = incoming;
+			callback.value = cb;
+		};
+
+		const close = (result: boolean) => {
+			data.value = undefined;
+
+			if (callback.value) {
+				callback.value(!!result);
+			}
+		};
+
+		onMounted(() => {
+			eventbus.on("escapekey", close);
+			eventbus.on("confirm-dialog", open);
+		});
+
+		onUnmounted(() => {
+			eventbus.off("escapekey", close);
+			eventbus.off("confirm-dialog", open);
+		});
+
 		return {
-			data: null,
-			callback: null,
+			data,
+			close,
 		};
 	},
-	mounted() {
-		eventbus.on("escapekey", this.close);
-		eventbus.on("confirm-dialog", this.open);
-	},
-	destroyed() {
-		eventbus.off("escapekey", this.close);
-		eventbus.off("confirm-dialog", this.open);
-	},
-	methods: {
-		open(data, callback) {
-			this.data = data;
-			this.callback = callback;
-		},
-		close(result) {
-			this.data = null;
-
-			if (this.callback) {
-				this.callback(!!result);
-			}
-		},
-	},
-};
+});
 </script>

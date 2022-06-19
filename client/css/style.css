@@ -587,6 +587,11 @@ p {
 
 /* End icons */
 
+#app {
+	height: 100%;
+	width: 100%;
+}
+
 #viewport {
 	display: flex;
 	height: 100%;

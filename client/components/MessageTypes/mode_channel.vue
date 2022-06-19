@@ -4,12 +4,21 @@
 	</span>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import {defineComponent, PropType} from "vue";
+import {ClientNetwork, ClientMessage} from "../../js/types";
+
+export default defineComponent({
 	name: "MessageChannelMode",
 	props: {
-		network: Object,
-		message: Object,
+		network: {
+			type: Object as PropType<ClientNetwork>,
+			required: true,
+		},
+		message: {
+			type: Object as PropType<ClientMessage>,
+			required: true,
+		},
 	},
-};
+});
 </script>

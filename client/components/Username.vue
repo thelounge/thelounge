@@ -10,44 +10,71 @@
 	>
 </template>
 
-<script>
+<script lang="ts">
+import {computed, defineComponent, PropType} from "vue";
+import {UserInMessage} from "../../server/models/msg";
 import eventbus from "../js/eventbus";
 import colorClass from "../js/helpers/colorClass";
+import type {ClientChan, ClientNetwork, ClientUser} from "../js/types";
 
-export default {
+type UsernameUser = Partial<UserInMessage> & {
+	mode?: string;
+	nick: string;
+};
+
+export default defineComponent({
 	name: "Username",
 	props: {
-		user: Object,
+		user: {
+			// TODO: UserInMessage shouldn't be necessary here.
+			type: Object as PropType<UsernameUser | UserInMessage>,
+			required: true,
+		},
 		active: Boolean,
-		onHover: Function,
-		channel: Object,
-		network: Object,
+		onHover: {
+			type: Function as PropType<(user: UserInMessage) => void>,
+			required: false,
+		},
+		channel: {type: Object as PropType<ClientChan>, required: false},
+		network: {type: Object as PropType<ClientNetwork>, required: false},
 	},
-	computed: {
-		mode() {
+	setup(props) {
+		const mode = computed(() => {
 			// Message objects have a singular mode, but user objects have modes array
-			if (this.user.modes) {
-				return this.user.modes[0];
+			if (props.user.modes) {
+				return props.user.modes[0];
 			}
 
-			return this.user.mode;
-		},
-		nickColor() {
-			return colorClass(this.user.nick);
-		},
-	},
-	methods: {
-		hover() {
-			return this.onHover(this.user);
-		},
-		openContextMenu(event) {
+			return props.user.mode;
+		});
+
+		// TODO: Nick must be ! because our user prop union includes UserInMessage
+		const nickColor = computed(() => colorClass(props.user.nick!));
+
+		const hover = () => {
+			if (props.onHover) {
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+				return props.onHover(props.user as UserInMessage);
+			}
+
+			return null;
+		};
+
+		const openContextMenu = (event: Event) => {
 			eventbus.emit("contextmenu:user", {
 				event: event,
-				user: this.user,
-				network: this.network,
-				channel: this.channel,
+				user: props.user,
+				network: props.network,
+				channel: props.channel,
 			});
-		},
+		};
+
+		return {
+			mode,
+			nickColor,
+			hover,
+			openContextMenu,
+		};
 	},
-};
+});
 </script>

@@ -129,137 +129,201 @@
 	</div>
 </template>
 
-<script>
+<script lang="ts">
+import {
+	computed,
+	defineComponent,
+	inject,
+	nextTick,
+	onBeforeUnmount,
+	onMounted,
+	onUnmounted,
+	PropType,
+	ref,
+	watch,
+} from "vue";
+import {onBeforeRouteUpdate} from "vue-router";
 import eventbus from "../js/eventbus";
 import friendlysize from "../js/helpers/friendlysize";
+import {useStore} from "../js/store";
+import type {ClientChan, ClientLinkPreview} from "../js/types";
+import {imageViewerKey} from "./App.vue";
 
-export default {
+export default defineComponent({
 	name: "LinkPreview",
 	props: {
-		link: Object,
-		keepScrollPosition: Function,
-		channel: Object,
-	},
-	data() {
-		return {
-			showMoreButton: false,
-			isContentShown: false,
-		};
-	},
-	computed: {
-		moreButtonLabel() {
-			return this.isContentShown ? "Less" : "More";
+		link: {
+			type: Object as PropType<ClientLinkPreview>,
+			required: true,
 		},
-		imageMaxSize() {
-			if (!this.link.maxSize) {
+		keepScrollPosition: {
+			type: Function as PropType<() => void>,
+			required: true,
+		},
+		channel: {type: Object as PropType<ClientChan>, required: true},
+	},
+	setup(props) {
+		const store = useStore();
+
+		const showMoreButton = ref(false);
+		const isContentShown = ref(false);
+		const imageViewer = inject(imageViewerKey);
+
+		onBeforeRouteUpdate((to, from, next) => {
+			// cancel the navigation if the user is trying to close the image viewer
+			if (imageViewer?.value?.link) {
+				imageViewer.value.closeViewer();
+				return next(false);
+			}
+
+			next();
+		});
+
+		const content = ref<HTMLDivElement | null>(null);
+		const container = ref<HTMLDivElement | null>(null);
+
+		const moreButtonLabel = computed(() => {
+			return isContentShown.value ? "Less" : "More";
+		});
+
+		const imageMaxSize = computed(() => {
+			if (!props.link.maxSize) {
 				return;
 			}
 
-			return friendlysize(this.link.maxSize);
-		},
-	},
-	watch: {
-		"link.type"() {
-			this.updateShownState();
-			this.onPreviewUpdate();
-		},
-	},
-	created() {
-		this.updateShownState();
-	},
-	mounted() {
-		eventbus.on("resize", this.handleResize);
+			return friendlysize(props.link.maxSize);
+		});
 
-		this.onPreviewUpdate();
-	},
-	beforeDestroy() {
-		eventbus.off("resize", this.handleResize);
-	},
-	destroyed() {
-		// Let this preview go through load/canplay events again,
-		// Otherwise the browser can cause a resize on video elements
-		this.link.sourceLoaded = false;
-	},
-	methods: {
-		onPreviewUpdate() {
+		const handleResize = () => {
+			nextTick(() => {
+				if (!content.value || !container.value) {
+					return;
+				}
+
+				showMoreButton.value = content.value.offsetWidth >= container.value.offsetWidth;
+			}).catch((e) => {
+				// eslint-disable-next-line no-console
+				console.error("Error in LinkPreview.handleResize", e);
+			});
+		};
+
+		const onPreviewReady = () => {
+			props.link.sourceLoaded = true;
+
+			props.keepScrollPosition();
+
+			if (props.link.type === "link") {
+				handleResize();
+			}
+		};
+
+		const onPreviewUpdate = () => {
 			// Don't display previews while they are loading on the server
-			if (this.link.type === "loading") {
+			if (props.link.type === "loading") {
 				return;
 			}
 
 			// Error does not have any media to render
-			if (this.link.type === "error") {
-				this.onPreviewReady();
+			if (props.link.type === "error") {
+				onPreviewReady();
 			}
 
 			// If link doesn't have a thumbnail, render it
-			if (this.link.type === "link") {
-				this.handleResize();
-				this.keepScrollPosition();
+			if (props.link.type === "link") {
+				handleResize();
+				props.keepScrollPosition();
 			}
-		},
-		onPreviewReady() {
-			this.$set(this.link, "sourceLoaded", true);
+		};
 
-			this.keepScrollPosition();
-
-			if (this.link.type === "link") {
-				this.handleResize();
-			}
-		},
-		onThumbnailError() {
+		const onThumbnailError = () => {
 			// If thumbnail fails to load, hide it and show the preview without it
-			this.link.thumb = "";
-			this.onPreviewReady();
-		},
-		onThumbnailClick(e) {
+			props.link.thumb = "";
+			onPreviewReady();
+		};
+
+		const onThumbnailClick = (e: MouseEvent) => {
 			e.preventDefault();
 
-			const imageViewer = this.$root.$refs.app.$refs.imageViewer;
-			imageViewer.channel = this.channel;
-			imageViewer.link = this.link;
-		},
-		onMoreClick() {
-			this.isContentShown = !this.isContentShown;
-			this.keepScrollPosition();
-		},
-		handleResize() {
-			this.$nextTick(() => {
-				if (!this.$refs.content) {
-					return;
-				}
+			if (!imageViewer?.value) {
+				return;
+			}
 
-				this.showMoreButton =
-					this.$refs.content.offsetWidth >= this.$refs.container.offsetWidth;
-			});
-		},
-		updateShownState() {
+			imageViewer.value.channel = props.channel;
+			imageViewer.value.link = props.link;
+		};
+
+		const onMoreClick = () => {
+			isContentShown.value = !isContentShown.value;
+			props.keepScrollPosition();
+		};
+
+		const updateShownState = () => {
 			// User has manually toggled the preview, do not apply default
-			if (this.link.shown !== null) {
+			if (props.link.shown !== null) {
 				return;
 			}
 
 			let defaultState = false;
 
-			switch (this.link.type) {
+			switch (props.link.type) {
 				case "error":
 					// Collapse all errors by default unless its a message about image being too big
-					if (this.link.error === "image-too-big") {
-						defaultState = this.$store.state.settings.media;
+					if (props.link.error === "image-too-big") {
+						defaultState = store.state.settings.media;
 					}
 
 					break;
 
 				case "link":
-					defaultState = this.$store.state.settings.links;
+					defaultState = store.state.settings.links;
 					break;
 
 				default:
-					defaultState = this.$store.state.settings.media;
+					defaultState = store.state.settings.media;
 			}
 
-			this.link.shown = defaultState;
-		},
+			props.link.shown = defaultState;
+		};
+
+		updateShownState();
+
+		watch(
+			() => props.link.type,
+			() => {
+				updateShownState();
+				onPreviewUpdate();
+			}
+		);
+
+		onMounted(() => {
+			eventbus.on("resize", handleResize);
+
+			onPreviewUpdate();
+		});
+
+		onBeforeUnmount(() => {
+			eventbus.off("resize", handleResize);
+		});
+
+		onUnmounted(() => {
+			// Let this preview go through load/canplay events again,
+			// Otherwise the browser can cause a resize on video elements
+			props.link.sourceLoaded = false;
+		});
+
+		return {
+			moreButtonLabel,
+			imageMaxSize,
+			onThumbnailClick,
+			onThumbnailError,
+			onMoreClick,
+			onPreviewReady,
+			onPreviewUpdate,
+			showMoreButton,
+			isContentShown,
+			content,
+			container,
+		};
 	},
-};
+});
 </script>

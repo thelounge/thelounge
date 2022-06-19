@@ -90,13 +90,14 @@
 }
 </style>
 
-<script>
+<script lang="ts">
 import SettingTabItem from "./SettingTabItem.vue";
+import {defineComponent} from "vue";
 
-export default {
+export default defineComponent({
 	name: "SettingsTabs",
 	components: {
 		SettingTabItem,
 	},
-};
+});
 </script>

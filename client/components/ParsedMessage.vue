@@ -1,23 +1,22 @@
-<script>
+<script lang="ts">
+import {defineComponent, PropType, h} from "vue";
 import parse from "../js/helpers/parse";
+import type {ClientMessage, ClientNetwork} from "../js/types";
 
-export default {
+export default defineComponent({
 	name: "ParsedMessage",
 	functional: true,
 	props: {
 		text: String,
-		message: Object,
-		network: Object,
+		message: {type: Object as PropType<ClientMessage | string>, required: false},
+		network: {type: Object as PropType<ClientNetwork>, required: false},
 	},
-	render(createElement, context) {
+	render(context) {
 		return parse(
-			createElement,
-			typeof context.props.text !== "undefined"
-				? context.props.text
-				: context.props.message.text,
-			context.props.message,
-			context.props.network
+			typeof context.text !== "undefined" ? context.text : context.message.text,
+			context.message,
+			context.network
 		);
 	},
-};
+});
 </script>
