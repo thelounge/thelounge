@@ -2,13 +2,13 @@ import log from "../../log";
 import colors from "chalk";
 import {Command} from "commander";
 import Utils from "../utils";
+import ClientManager from "../../clientManager";
 
 const program = new Command("list");
 program
 	.description("List all users")
 	.on("--help", Utils.extraHelp)
-	.action(async function () {
-		const ClientManager = (await import("../../clientManager")).default;
+	.action(function () {
 		const users = new ClientManager().getUsers();
 
 		if (users === undefined) {

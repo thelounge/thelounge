@@ -4,6 +4,7 @@ import {Command} from "commander";
 import fs from "fs";
 import Config from "../../config";
 import Utils from "../utils";
+import ClientManager from "../../clientManager";
 
 const program = new Command("remove");
 program
@@ -16,8 +17,6 @@ program
 			return;
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
-		const ClientManager = require("../../clientManager").default;
 		const manager = new ClientManager();
 
 		try {

@@ -5,6 +5,7 @@ import colors from "chalk";
 import fs from "fs";
 import Config from "../../config";
 import Utils from "../utils";
+import ClientManager from "../../clientManager";
 
 const program = new Command("edit");
 program
@@ -17,8 +18,6 @@ program
 			return;
 		}
 
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
-		const ClientManager = require("../../clientManager").default;
 		const users = new ClientManager().getUsers();
 
 		if (users === undefined) {
