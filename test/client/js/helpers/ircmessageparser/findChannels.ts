@@ -122,6 +122,21 @@ describe("findChannels", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	it("should work with - in usermodes", () => {
+		const input = "-#a some -text";
+		const expected = [
+			{
+				channel: "#a",
+				start: 1,
+				end: 3,
+			},
+		];
+
+		const actual = findChannels(input, ["#"], ["#", "+", "-"]);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
 	it("should handle multiple channelPrefix correctly", () => {
 		const input = "##test";
 		const expected = [

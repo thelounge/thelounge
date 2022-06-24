@@ -8,6 +8,13 @@ export type ChannelPart = Part & {
 	channel: string;
 };
 
+// escapes a regex in a way that's compatible to shove it in
+// a regex char set (meaning it also escapes -)
+function escapeRegExpCharSet(raw: string): string {
+	const escaped: string = escapeRegExp(raw);
+	return escaped.replace("-", "\\-");
+}
+
 // Given an array of channel prefixes (such as "#" and "&") and an array of user
 // modes (such as "@" and "+"), this function extracts channels and nicks from a
 // text.
@@ -18,8 +25,8 @@ function findChannels(text: string, channelPrefixes: string[], userModes: string
 	// For example, a voiced user in #thelounge will have a /whois response of:
 	// > foo is on the following channels: +#thelounge
 	// We need to explicitly ignore user modes to parse such channels correctly.
-	const userModePattern = userModes.map(escapeRegExp).join("");
-	const channelPrefixPattern = channelPrefixes.map(escapeRegExp).join("");
+	const userModePattern = userModes.map(escapeRegExpCharSet).join("");
+	const channelPrefixPattern = channelPrefixes.map(escapeRegExpCharSet).join("");
 	const channelPattern = `(?:^|\\s)[${userModePattern}]*([${channelPrefixPattern}][^ \u0007]+)`;
 	const channelRegExp = new RegExp(channelPattern, "g");
 
