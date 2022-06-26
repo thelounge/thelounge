@@ -11,12 +11,18 @@ class Uploader {
 	overlay: HTMLDivElement | null = null;
 	uploadProgressbar: HTMLSpanElement | null = null;
 
+	onDragEnter = (e: DragEvent) => this.dragEnter(e);
+	onDragOver = (e: DragEvent) => this.dragOver(e);
+	onDragLeave = (e: DragEvent) => this.dragLeave(e);
+	onDrop = (e: DragEvent) => this.drop(e);
+	onPaste = (e: ClipboardEvent) => this.paste(e);
+
 	init() {
-		document.addEventListener("dragenter", (e) => this.dragEnter(e));
-		document.addEventListener("dragover", (e) => this.dragOver(e));
-		document.addEventListener("dragleave", (e) => this.dragLeave(e));
-		document.addEventListener("drop", (e) => this.drop(e));
-		document.addEventListener("paste", (e) => this.paste(e));
+		document.addEventListener("dragenter", this.onDragEnter);
+		document.addEventListener("dragover", this.onDragOver);
+		document.addEventListener("dragleave", this.onDragLeave);
+		document.addEventListener("drop", this.onDrop);
+		document.addEventListener("paste", this.onPaste);
 
 		socket.on("upload:auth", (token) => this.uploadNextFileInQueue(token));
 	}
@@ -302,6 +308,12 @@ class Uploader {
 			this.xhr.abort();
 			this.xhr = null;
 		}
+
+		document.removeEventListener("dragenter", this.onDragEnter);
+		document.removeEventListener("dragover", this.onDragOver);
+		document.removeEventListener("dragleave", this.onDragLeave);
+		document.removeEventListener("drop", this.onDrop);
+		document.removeEventListener("paste", this.onPaste);
 	}
 }
 
