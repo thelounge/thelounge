@@ -292,7 +292,7 @@ class Client {
 
 		// TODO; better typing for args
 		const network = new Network({
-			uuid: String(args.uuid),
+			uuid: args.uuid,
 			name: String(
 				args.name || (Config.values.lockNetwork ? Config.values.defaults.name : "") || ""
 			),
