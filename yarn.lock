@@ -1234,10 +1234,10 @@
   dependencies:
     defer-to-connect "^2.0.0"
 
-"@textcomplete/core@0.1.10":
-  version "0.1.10"
-  resolved "https://registry.yarnpkg.com/@textcomplete/core/-/core-0.1.10.tgz#80211c20f28a378cc9ee8b6633ddf2034785d8c3"
-  integrity sha512-+T7dOElhJivE7+V0JUeDK5TdHUU8Sbuhvnp8VmtHimLaTruv5FJS1dgSjAqGlRcMw9AX459JY9JCbkX9ezGh2g==
+"@textcomplete/core@0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@textcomplete/core/-/core-0.1.12.tgz#c7b455b6eb73bbbbdb2ca150f039f74b9535ba98"
+  integrity sha512-37Q8Wic3IGpZHtknlJ/ODKMyvaBhVMM56Vl7aoBfno2Qq099fFqoCL0VzKhTn8qvTf1Z/8ymlHwPCBzPvW7KSQ==
   dependencies:
     eventemitter3 "^4.0.4"
 
