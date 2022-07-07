@@ -16,17 +16,16 @@ const input: PluginInputHandler = function ({irc}, chan, cmd, args) {
 	}
 
 	const target = args.shift()!;
+	const type = args.shift()!;
 
 	chan.pushMessage(
 		this,
 		new Msg({
 			type: MessageType.CTCP_REQUEST,
-			ctcpMessage: `"${target}" to ${args[0]}`,
+			ctcpMessage: `"${type}" to ${target}`,
 			from: chan.getUser(irc.user.nick),
 		})
 	);
-
-	const type = args.shift()!;
 
 	irc.ctcpRequest(target, type, ...args);
 };
