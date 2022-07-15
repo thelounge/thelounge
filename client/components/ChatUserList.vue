@@ -28,9 +28,10 @@
 			<div
 				v-for="(users, mode) in groupedUsers"
 				:key="mode"
-				:class="['user-mode', getModeClass(mode)]"
+				:class="['user-mode', getModeClass(String(mode))]"
 			>
 				<template v-if="userSearchInput.length > 0">
+					<!-- eslint-disable vue/no-v-text-v-html-on-component -->
 					<Username
 						v-for="user in users"
 						:key="user.original.nick + '-search'"
@@ -39,6 +40,7 @@
 						:user="user.original"
 						v-html="user.string"
 					/>
+					<!-- eslint-enable -->
 				</template>
 				<template v-else>
 					<Username
@@ -54,8 +56,11 @@
 	</aside>
 </template>
 
-<script>
+<script lang="ts">
 import {filter as fuzzyFilter} from "fuzzy";
+import {computed, defineComponent, nextTick, PropType, ref} from "vue";
+import type {UserInMessage} from "../../server/models/msg";
+import type {ClientChan, ClientUser} from "../js/types";
 import Username from "./Username.vue";
 
 const modes = {
@@ -68,39 +73,35 @@ const modes = {
 	"": "normal",
 };
 
-export default {
+export default defineComponent({
 	name: "ChatUserList",
 	components: {
 		Username,
 	},
 	props: {
-		channel: Object,
+		channel: {type: Object as PropType<ClientChan>, required: true},
 	},
-	data() {
-		return {
-			userSearchInput: "",
-			activeUser: null,
-		};
-	},
-	computed: {
-		// filteredUsers is computed, to avoid unnecessary filtering
-		// as it is shared between filtering and keybindings.
-		filteredUsers() {
-			if (!this.userSearchInput) {
+	setup(props) {
+		const userSearchInput = ref("");
+		const activeUser = ref<UserInMessage | null>();
+		const userlist = ref<HTMLDivElement>();
+		const filteredUsers = computed(() => {
+			if (!userSearchInput.value) {
 				return;
 			}
 
-			return fuzzyFilter(this.userSearchInput, this.channel.users, {
+			return fuzzyFilter(userSearchInput.value, props.channel.users, {
 				pre: "<b>",
 				post: "</b>",
 				extract: (u) => u.nick,
 			});
-		},
-		groupedUsers() {
+		});
+
+		const groupedUsers = computed(() => {
 			const groups = {};
 
-			if (this.userSearchInput) {
-				const result = this.filteredUsers;
+			if (userSearchInput.value && filteredUsers.value) {
+				const result = filteredUsers.value;
 
 				for (const user of result) {
 					const mode = user.original.modes[0] || "";
@@ -115,7 +116,7 @@ export default {
 					groups[mode].push(user);
 				}
 			} else {
-				for (const user of this.channel.users) {
+				for (const user of props.channel.users) {
 					const mode = user.modes[0] || "";
 
 					if (!groups[mode]) {
@@ -126,24 +127,35 @@ export default {
 				}
 			}
 
-			return groups;
-		},
-	},
-	methods: {
-		setUserSearchInput(e) {
-			this.userSearchInput = e.target.value;
-		},
-		getModeClass(mode) {
-			return modes[mode];
-		},
-		selectUser() {
+			return groups as {
+				[mode: string]: (ClientUser & {
+					original: UserInMessage;
+					string: string;
+				})[];
+			};
+		});
+
+		const setUserSearchInput = (e: Event) => {
+			userSearchInput.value = (e.target as HTMLInputElement).value;
+		};
+
+		const getModeClass = (mode: string) => {
+			return modes[mode] as typeof modes;
+		};
+
+		const selectUser = () => {
 			// Simulate a click on the active user to open the context menu.
 			// Coordinates are provided to position the menu correctly.
-			if (!this.activeUser) {
+			if (!activeUser.value || !userlist.value) {
 				return;
 			}
 
-			const el = this.$refs.userlist.querySelector(".active");
+			const el = userlist.value.querySelector(".active");
+
+			if (!el) {
+				return;
+			}
+
 			const rect = el.getBoundingClientRect();
 			const ev = new MouseEvent("click", {
 				view: window,
@@ -153,38 +165,58 @@ export default {
 				clientY: rect.top + rect.height,
 			});
 			el.dispatchEvent(ev);
-		},
-		hoverUser(user) {
-			this.activeUser = user;
-		},
-		removeHoverUser() {
-			this.activeUser = null;
-		},
-		navigateUserList(event, direction) {
+		};
+
+		const hoverUser = (user: UserInMessage) => {
+			activeUser.value = user;
+		};
+
+		const removeHoverUser = () => {
+			activeUser.value = null;
+		};
+
+		const scrollToActiveUser = () => {
+			// Scroll the list if needed after the active class is applied
+			void nextTick(() => {
+				const el = userlist.value?.querySelector(".active");
+				el?.scrollIntoView({block: "nearest", inline: "nearest"});
+			});
+		};
+
+		const navigateUserList = (event: Event, direction: number) => {
 			// Prevent propagation to stop global keybind handler from capturing pagedown/pageup
 			// and redirecting it to the message list container for scrolling
 			event.stopImmediatePropagation();
 			event.preventDefault();
 
-			let users = this.channel.users;
+			let users = props.channel.users;
 
 			// Only using filteredUsers when we have to avoids filtering when it's not needed
-			if (this.userSearchInput) {
-				users = this.filteredUsers.map((result) => result.original);
+			if (userSearchInput.value && filteredUsers.value) {
+				users = filteredUsers.value.map((result) => result.original);
 			}
 
 			// Bail out if there's no users to select
 			if (!users.length) {
-				this.activeUser = null;
+				activeUser.value = null;
 				return;
 			}
 
-			let currentIndex = users.indexOf(this.activeUser);
+			const abort = () => {
+				activeUser.value = direction ? users[0] : users[users.length - 1];
+				scrollToActiveUser();
+			};
 
 			// If there's no active user select the first or last one depending on direction
-			if (!this.activeUser || currentIndex === -1) {
-				this.activeUser = direction ? users[0] : users[users.length - 1];
-				this.scrollToActiveUser();
+			if (!activeUser.value) {
+				abort();
+				return;
+			}
+
+			let currentIndex = users.indexOf(activeUser.value as ClientUser);
+
+			if (currentIndex === -1) {
+				abort();
 				return;
 			}
 
@@ -200,16 +232,24 @@ export default {
 				currentIndex -= users.length;
 			}
 
-			this.activeUser = users[currentIndex];
-			this.scrollToActiveUser();
-		},
-		scrollToActiveUser() {
-			// Scroll the list if needed after the active class is applied
-			this.$nextTick(() => {
-				const el = this.$refs.userlist.querySelector(".active");
-				el.scrollIntoView({block: "nearest", inline: "nearest"});
-			});
-		},
+			activeUser.value = users[currentIndex];
+			scrollToActiveUser();
+		};
+
+		return {
+			filteredUsers,
+			groupedUsers,
+			userSearchInput,
+			activeUser,
+			userlist,
+
+			setUserSearchInput,
+			getModeClass,
+			selectUser,
+			hoverUser,
+			removeHoverUser,
+			navigateUserList,
+		};
 	},
-};
+});
 </script>

@@ -2,11 +2,14 @@
 	<NetworkForm :handle-submit="handleSubmit" :defaults="defaults" :disabled="disabled" />
 </template>
 
-<script>
-import socket from "../../js/socket";
-import NetworkForm from "../NetworkForm.vue";
+<script lang="ts">
+import {defineComponent, ref} from "vue";
 
-export default {
+import socket from "../../js/socket";
+import {useStore} from "../../js/store";
+import NetworkForm, {NetworkFormDefaults} from "../NetworkForm.vue";
+
+export default defineComponent({
 	name: "Connect",
 	components: {
 		NetworkForm,
@@ -14,25 +17,22 @@ export default {
 	props: {
 		queryParams: Object,
 	},
-	data() {
-		// Merge settings from url params into default settings
-		const defaults = Object.assign(
-			{},
-			this.$store.state.serverConfiguration.defaults,
-			this.parseOverrideParams(this.queryParams)
-		);
-		return {
-			disabled: false,
-			defaults,
-		};
-	},
-	methods: {
-		handleSubmit(data) {
-			this.disabled = true;
+	setup(props) {
+		const store = useStore();
+
+		const disabled = ref(false);
+
+		const handleSubmit = (data: Record<string, any>) => {
+			disabled.value = true;
 			socket.emit("network:new", data);
-		},
-		parseOverrideParams(params) {
-			const parsedParams = {};
+		};
+
+		const parseOverrideParams = (params?: Record<string, string>) => {
+			if (!params) {
+				return {};
+			}
+
+			const parsedParams: Record<string, any> = {};
 
 			for (let key of Object.keys(params)) {
 				let value = params[key];
@@ -49,7 +49,7 @@ export default {
 
 				if (
 					!Object.prototype.hasOwnProperty.call(
-						this.$store.state.serverConfiguration.defaults,
+						store.state.serverConfiguration?.defaults,
 						key
 					)
 				) {
@@ -58,7 +58,7 @@ export default {
 
 				// When the network is locked, URL overrides should not affect disabled fields
 				if (
-					this.$store.state.serverConfiguration.lockNetwork &&
+					store.state.serverConfiguration?.lockNetwork &&
 					["name", "host", "port", "tls", "rejectUnauthorized"].includes(key)
 				) {
 					continue;
@@ -78,7 +78,7 @@ export default {
 				}
 
 				// Override server provided defaults with parameters passed in the URL if they match the data type
-				switch (typeof this.$store.state.serverConfiguration.defaults[key]) {
+				switch (typeof store.state.serverConfiguration?.defaults[key]) {
 					case "boolean":
 						if (value === "0" || value === "false") {
 							parsedParams[key] = false;
@@ -97,7 +97,21 @@ export default {
 			}
 
 			return parsedParams;
-		},
+		};
+
+		const defaults = ref<Partial<NetworkFormDefaults>>(
+			Object.assign(
+				{},
+				store.state.serverConfiguration?.defaults,
+				parseOverrideParams(props.queryParams)
+			)
+		);
+
+		return {
+			defaults,
+			disabled,
+			handleSubmit,
+		};
 	},
-};
+});
 </script>

@@ -18,17 +18,19 @@
 	</table>
 </template>
 
-<script>
+<script lang="ts">
+import {defineComponent, PropType} from "vue";
+import {ClientChan, ClientNetwork} from "../../js/types";
 import ParsedMessage from "../ParsedMessage.vue";
 
-export default {
+export default defineComponent({
 	name: "ListChannels",
 	components: {
 		ParsedMessage,
 	},
 	props: {
-		network: Object,
-		channel: Object,
+		network: {type: Object as PropType<ClientNetwork>, required: true},
+		channel: {type: Object as PropType<ClientChan>, required: true},
 	},
-};
+});
 </script>

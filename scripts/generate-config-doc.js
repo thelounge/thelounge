@@ -10,7 +10,7 @@
 
 const {readFileSync, writeFileSync} = require("fs");
 const colors = require("chalk");
-const log = require("../src/log");
+const log = require("../server/log");
 const {join} = require("path");
 const {spawnSync} = require("child_process");
 

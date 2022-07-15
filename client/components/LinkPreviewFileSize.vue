@@ -2,18 +2,21 @@
 	<span class="preview-size">({{ previewSize }})</span>
 </template>
 
-<script>
+<script lang="ts">
+import {defineComponent} from "vue";
 import friendlysize from "../js/helpers/friendlysize";
 
-export default {
+export default defineComponent({
 	name: "LinkPreviewFileSize",
 	props: {
-		size: Number,
+		size: {type: Number, required: true},
 	},
-	computed: {
-		previewSize() {
-			return friendlysize(this.size);
-		},
+	setup(props) {
+		const previewSize = friendlysize(props.size);
+
+		return {
+			previewSize,
+		};
 	},
-};
+});
 </script>

@@ -6,52 +6,61 @@
 	</div>
 </template>
 
-<script>
+<script lang="ts">
 import dayjs from "dayjs";
 import calendar from "dayjs/plugin/calendar";
+import {computed, defineComponent, onBeforeUnmount, onMounted, PropType} from "vue";
 import eventbus from "../js/eventbus";
+import type {ClientMessage} from "../js/types";
 
 dayjs.extend(calendar);
 
-export default {
+export default defineComponent({
 	name: "DateMarker",
 	props: {
-		message: Object,
+		message: {
+			type: Object as PropType<ClientMessage>,
+			required: true,
+		},
 		focused: Boolean,
 	},
-	computed: {
-		localeDate() {
-			return dayjs(this.message.time).format("D MMMM YYYY");
-		},
-	},
-	mounted() {
-		if (this.hoursPassed() < 48) {
-			eventbus.on("daychange", this.dayChange);
-		}
-	},
-	beforeDestroy() {
-		eventbus.off("daychange", this.dayChange);
-	},
-	methods: {
-		hoursPassed() {
-			return (Date.now() - Date.parse(this.message.time)) / 3600000;
-		},
-		dayChange() {
-			this.$forceUpdate();
+	setup(props) {
+		const localeDate = computed(() => dayjs(props.message.time).format("D MMMM YYYY"));
 
-			if (this.hoursPassed() >= 48) {
-				eventbus.off("daychange", this.dayChange);
+		const hoursPassed = () => {
+			return (Date.now() - Date.parse(props.message.time.toString())) / 3600000;
+		};
+
+		const dayChange = () => {
+			if (hoursPassed() >= 48) {
+				eventbus.off("daychange", dayChange);
 			}
-		},
-		friendlyDate() {
+		};
+
+		const friendlyDate = () => {
 			// See http://momentjs.com/docs/#/displaying/calendar-time/
-			return dayjs(this.message.time).calendar(null, {
+			return dayjs(props.message.time).calendar(null, {
 				sameDay: "[Today]",
 				lastDay: "[Yesterday]",
 				lastWeek: "D MMMM YYYY",
 				sameElse: "D MMMM YYYY",
 			});
-		},
+		};
+
+		onMounted(() => {
+			if (hoursPassed() < 48) {
+				eventbus.on("daychange", dayChange);
+			}
+		});
+
+		onBeforeUnmount(() => {
+			eventbus.off("daychange", dayChange);
+		});
+
+		return {
+			localeDate,
+			friendlyDate,
+		};
 	},
-};
+});
 </script>
