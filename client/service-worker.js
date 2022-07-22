@@ -1,3 +1,4 @@
+// @ts-nocheck
 // The Lounge - https://github.com/thelounge/thelounge
 /* global clients */
 "use strict";

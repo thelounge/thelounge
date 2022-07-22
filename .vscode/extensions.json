@@ -3,7 +3,8 @@
     "EditorConfig.EditorConfig",
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
-    "octref.vetur"
+    "Vue.volar",
+    "Vue.vscode-typescript-vue-plugin"
   ],
   "unwantedRecommendations": []
 }

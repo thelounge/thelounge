@@ -7,44 +7,61 @@
 	/>
 </template>
 
-<script>
+<script lang="ts">
+import {defineComponent, onMounted, ref, watch} from "vue";
+import {useRoute} from "vue-router";
+import {switchToChannel} from "../../js/router";
 import socket from "../../js/socket";
-import NetworkForm from "../NetworkForm.vue";
+import {useStore} from "../../js/store";
+import NetworkForm, {NetworkFormDefaults} from "../NetworkForm.vue";
 
-export default {
+export default defineComponent({
 	name: "NetworkEdit",
 	components: {
 		NetworkForm,
 	},
-	data() {
-		return {
-			disabled: false,
-			networkData: null,
+	setup() {
+		const route = useRoute();
+		const store = useStore();
+
+		const disabled = ref(false);
+		const networkData = ref<NetworkFormDefaults | null>(null);
+
+		const setNetworkData = () => {
+			socket.emit("network:get", String(route.params.uuid || ""));
+			networkData.value = store.getters.findNetwork(String(route.params.uuid || ""));
 		};
-	},
-	watch: {
-		"$route.params.uuid"() {
-			this.setNetworkData();
-		},
-	},
-	mounted() {
-		this.setNetworkData();
-	},
-	methods: {
-		setNetworkData() {
-			socket.emit("network:get", this.$route.params.uuid);
-			this.networkData = this.$store.getters.findNetwork(this.$route.params.uuid);
-		},
-		handleSubmit(data) {
-			this.disabled = true;
+
+		const handleSubmit = (data: {uuid: string; name: string}) => {
+			disabled.value = true;
 			socket.emit("network:edit", data);
 
 			// TODO: move networks to vuex and update state when the network info comes in
-			const network = this.$store.getters.findNetwork(data.uuid);
-			network.name = network.channels[0].name = data.name;
+			const network = store.getters.findNetwork(data.uuid);
 
-			this.$root.switchToChannel(network.channels[0]);
-		},
+			if (network) {
+				network.name = network.channels[0].name = data.name;
+
+				switchToChannel(network.channels[0]);
+			}
+		};
+
+		watch(
+			() => route.params.uuid,
+			(newValue) => {
+				setNetworkData();
+			}
+		);
+
+		onMounted(() => {
+			setNetworkData();
+		});
+
+		return {
+			disabled,
+			networkData,
+			handleSubmit,
+		};
 	},
-};
+});
 </script>

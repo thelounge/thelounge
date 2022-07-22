@@ -6,17 +6,25 @@
 	</span>
 </template>
 
-<script>
+<script lang="ts">
+import {defineComponent, PropType} from "vue";
+import {ClientNetwork, ClientMessage} from "../../js/types";
 import Username from "../Username.vue";
 
-export default {
+export default defineComponent({
 	name: "MessageTypeNick",
 	components: {
 		Username,
 	},
 	props: {
-		network: Object,
-		message: Object,
+		network: {
+			type: Object as PropType<ClientNetwork>,
+			required: true,
+		},
+		message: {
+			type: Object as PropType<ClientMessage>,
+			required: true,
+		},
 	},
-};
+});
 </script>

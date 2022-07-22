@@ -1,4 +1,5 @@
 <template>
+	<!-- TODO: investigate -->
 	<ChannelWrapper ref="wrapper" v-bind="$props">
 		<span class="name">{{ channel.name }}</span>
 		<span
@@ -27,30 +28,38 @@
 	</ChannelWrapper>
 </template>
 
-<script>
+<script lang="ts">
+import {PropType, defineComponent, computed} from "vue";
 import roundBadgeNumber from "../js/helpers/roundBadgeNumber";
+import useCloseChannel from "../js/hooks/use-close-channel";
+import {ClientChan, ClientNetwork} from "../js/types";
 import ChannelWrapper from "./ChannelWrapper.vue";
 
-export default {
+export default defineComponent({
 	name: "Channel",
 	components: {
 		ChannelWrapper,
 	},
 	props: {
-		network: Object,
-		channel: Object,
+		network: {
+			type: Object as PropType<ClientNetwork>,
+			required: true,
+		},
+		channel: {
+			type: Object as PropType<ClientChan>,
+			required: true,
+		},
 		active: Boolean,
 		isFiltering: Boolean,
 	},
-	computed: {
-		unreadCount() {
-			return roundBadgeNumber(this.channel.unread);
-		},
+	setup(props) {
+		const unreadCount = computed(() => roundBadgeNumber(props.channel.unread));
+		const close = useCloseChannel(props.channel);
+
+		return {
+			unreadCount,
+			close,
+		};
 	},
-	methods: {
-		close() {
-			this.$root.closeChannel(this.channel);
-		},
-	},
-};
+});
 </script>
