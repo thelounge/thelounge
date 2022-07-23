@@ -8,6 +8,7 @@ import colors from "chalk";
 import log from "./log";
 import Chan, {ChanConfig, Channel, ChanType} from "./models/chan";
 import Msg, {MessageType, UserInMessage} from "./models/msg";
+import {ClientTagKey, TypingStatus} from "./models/client-tags";
 import Config from "./config";
 import {condensedTypes} from "../shared/irc";
 
@@ -435,6 +436,22 @@ class Client {
 
 			return callback(true);
 		});
+	}
+
+	setTyping({target, status}: {target: string; status: TypingStatus}) {
+		const targetNode = this.find(+target);
+
+		if (!targetNode) {
+			return;
+		}
+
+		const irc = targetNode.network.irc;
+
+		if (irc && irc.connection && irc.connection.connected) {
+			irc!.tagmsg(targetNode.chan.name, {
+				[`+${ClientTagKey.TYPING}`]: status,
+			});
+		}
 	}
 
 	input(data) {

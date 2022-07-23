@@ -61,6 +61,10 @@ const defaultConfig = {
 		default: "",
 		sync: "always",
 	},
+	enableTypingNotifications: {
+		default: false,
+		sync: "never",
+	},
 	links: {
 		default: true,
 	},

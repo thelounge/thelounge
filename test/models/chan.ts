@@ -57,8 +57,8 @@ describe("Chan", function () {
 
 		it("should update user object", function () {
 			const chan = new Chan();
-			chan.setUser(new User({nick: "TestUser"}, prefixLookup));
-			chan.setUser(new User({nick: "TestUseR", modes: ["o"]}, prefixLookup));
+			chan.setUser(User.withPrefixLookup({nick: "TestUser"}, prefixLookup));
+			chan.setUser(User.withPrefixLookup({nick: "TestUseR", modes: ["o"]}, prefixLookup));
 			const user = chan.getUser("TestUSER");
 
 			expect(user.mode).to.equal("@");
@@ -68,13 +68,13 @@ describe("Chan", function () {
 	describe("#getUser(nick)", function () {
 		it("should returning existing object", function () {
 			const chan = new Chan();
-			chan.setUser(new User({nick: "TestUseR", modes: ["o"]}, prefixLookup));
+			chan.setUser(User.withPrefixLookup({nick: "TestUseR", modes: ["o"]}, prefixLookup));
 			const user = chan.getUser("TestUSER");
 
 			expect(user.mode).to.equal("@");
 		});
 
-		it("should make new User object if not found", function () {
+		it("should make User.withPrefixLookup object if not found", function () {
 			const chan = new Chan();
 			const user = chan.getUser("very-testy-user");
 
@@ -105,7 +105,7 @@ describe("Chan", function () {
 		it("should sort a simple user list", function () {
 			const chan = new Chan();
 			["JocelynD", "YaManicKill", "astorije", "xPaw", "Max-P"].forEach((nick) =>
-				chan.setUser(new User({nick}, prefixLookup))
+				chan.setUser(User.withPrefixLookup({nick}, prefixLookup))
 			);
 
 			expect(getUserNames(chan)).to.deep.equal([
@@ -119,11 +119,13 @@ describe("Chan", function () {
 
 		it("should group users by modes", function () {
 			const chan = new Chan();
-			chan.setUser(new User({nick: "JocelynD", modes: ["a", "o"]}, prefixLookup));
-			chan.setUser(new User({nick: "YaManicKill", modes: ["v"]}, prefixLookup));
-			chan.setUser(new User({nick: "astorije", modes: ["h"]}, prefixLookup));
-			chan.setUser(new User({nick: "xPaw", modes: ["q"]}, prefixLookup));
-			chan.setUser(new User({nick: "Max-P", modes: ["o"]}, prefixLookup));
+			chan.setUser(
+				User.withPrefixLookup({nick: "JocelynD", modes: ["a", "o"]}, prefixLookup)
+			);
+			chan.setUser(User.withPrefixLookup({nick: "YaManicKill", modes: ["v"]}, prefixLookup));
+			chan.setUser(User.withPrefixLookup({nick: "astorije", modes: ["h"]}, prefixLookup));
+			chan.setUser(User.withPrefixLookup({nick: "xPaw", modes: ["q"]}, prefixLookup));
+			chan.setUser(User.withPrefixLookup({nick: "Max-P", modes: ["o"]}, prefixLookup));
 
 			expect(getUserNames(chan)).to.deep.equal([
 				"xPaw",
@@ -136,11 +138,11 @@ describe("Chan", function () {
 
 		it("should sort a mix of users and modes", function () {
 			const chan = new Chan();
-			chan.setUser(new User({nick: "JocelynD"}, prefixLookup));
-			chan.setUser(new User({nick: "YaManicKill", modes: ["o"]}, prefixLookup));
-			chan.setUser(new User({nick: "astorije"}, prefixLookup));
-			chan.setUser(new User({nick: "xPaw"}, prefixLookup));
-			chan.setUser(new User({nick: "Max-P", modes: ["o"]}, prefixLookup));
+			chan.setUser(User.withPrefixLookup({nick: "JocelynD"}, prefixLookup));
+			chan.setUser(User.withPrefixLookup({nick: "YaManicKill", modes: ["o"]}, prefixLookup));
+			chan.setUser(User.withPrefixLookup({nick: "astorije"}, prefixLookup));
+			chan.setUser(User.withPrefixLookup({nick: "xPaw"}, prefixLookup));
+			chan.setUser(User.withPrefixLookup({nick: "Max-P", modes: ["o"]}, prefixLookup));
 
 			expect(getUserNames(chan)).to.deep.equal([
 				"Max-P",
@@ -154,7 +156,7 @@ describe("Chan", function () {
 		it("should be case-insensitive", function () {
 			const chan = new Chan();
 			["aB", "Ad", "AA", "ac"].forEach((nick) =>
-				chan.setUser(new User({nick}, prefixLookup))
+				chan.setUser(User.withPrefixLookup({nick}, prefixLookup))
 			);
 
 			expect(getUserNames(chan)).to.deep.equal(["AA", "aB", "ac", "Ad"]);
@@ -175,7 +177,7 @@ describe("Chan", function () {
 				"!foo",
 				"+foo",
 				"Foo",
-			].forEach((nick) => chan.setUser(new User({nick}, prefixLookup)));
+			].forEach((nick) => chan.setUser(User.withPrefixLookup({nick}, prefixLookup)));
 
 			expect(getUserNames(chan)).to.deep.equal([
 				"!foo",

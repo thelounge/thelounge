@@ -14,7 +14,7 @@ export default <IrcEventHandler>function (irc, network) {
 
 		data.users.forEach((user) => {
 			const newUser = chan.getUser(user.nick);
-			newUser.setModes(user.modes, network.serverOptions.PREFIX);
+			newUser.setModesForServer(user.modes, network.serverOptions.PREFIX);
 
 			newUsers.set(user.nick.toLowerCase(), newUser);
 		});

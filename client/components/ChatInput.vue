@@ -1,4 +1,20 @@
 <template>
+	<span
+		v-if="
+			channel.users.filter((user) => user.isTyping && user.nick !== network.nick).length > 0
+		"
+		id="activeTypers"
+	>
+		<span
+			v-for="(user, index) in channel.users.filter(
+				(user) => user.isTyping && user.nick !== network.nick
+			)"
+		>
+			<span v-if="index != 0">, </span>
+			<Username :user="user" :key="user.nick + '-typing'" />
+		</span>
+		is typing...
+	</span>
 	<form id="form" method="post" action="" @submit.prevent="onSubmit">
 		<span id="upload-progressbar" />
 		<span id="nick">{{ network.nick }}</span>
@@ -63,6 +79,9 @@ import eventbus from "../js/eventbus";
 import {watch, defineComponent, nextTick, onMounted, PropType, ref, onUnmounted} from "vue";
 import type {ClientNetwork, ClientChan} from "../js/types";
 import {useStore} from "../js/store";
+import {TypingStatus} from "../../server/models/client-tags";
+import Username from "./Username.vue";
+import _ from "lodash";
 
 const formattingHotkeys = {
 	"mod+k": "\x03",
@@ -91,6 +110,9 @@ const bracketWraps = {
 
 export default defineComponent({
 	name: "ChatInput",
+	components: {
+		Username,
+	},
 	props: {
 		network: {type: Object as PropType<ClientNetwork>, required: true},
 		channel: {type: Object as PropType<ClientChan>, required: true},
@@ -123,9 +145,35 @@ export default defineComponent({
 			});
 		};
 
+		const sendTypingNotification = _.debounce(
+			(status) => {
+				const {channel} = props;
+
+				if (channel.type === "channel" || channel.type === "query") {
+					console.log("emitting", status, Date.now());
+					console.trace();
+					socket.emit("input:typing", {target: props.channel.id, status});
+				}
+			},
+			3 * 1000,
+			{leading: true, trailing: false}
+		); // At least, every 3 seconds
+
 		const setPendingMessage = (e: Event) => {
 			props.channel.pendingMessage = (e.target as HTMLInputElement).value;
 			props.channel.inputHistoryPosition = 0;
+
+			if (input.value?.value.length === 0) {
+				sendTypingNotification(TypingStatus.DONE);
+			} else if (
+				input.value &&
+				input.value.value.length > 0 &&
+				input.value.value[0] !== "/"
+			) {
+				console.log("send active", Date.now());
+				sendTypingNotification(TypingStatus.ACTIVE);
+			}
+
 			setInputSize();
 		};
 
@@ -165,6 +213,7 @@ export default defineComponent({
 			props.channel.inputHistoryPosition = 0;
 			props.channel.pendingMessage = "";
 			input.value.value = "";
+			sendTypingNotification.cancel();
 			setInputSize();
 
 			// Store new message in history if last message isn't already equal
@@ -217,6 +266,10 @@ export default defineComponent({
 		const onBlur = () => {
 			if (autocompletionRef.value) {
 				autocompletionRef.value.hide();
+			}
+
+			if (input.value?.value.length > 0 && input.value?.value[0] !== "/") {
+				sendTypingNotification(TypingStatus.PAUSED);
 			}
 		};
 

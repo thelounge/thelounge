@@ -1,5 +1,6 @@
 import {expect} from "chai";
 
+import Prefix from "../../server/models/prefix";
 import Msg from "../../server/models/msg";
 import User from "../../server/models/user";
 import {LinkPreview} from "../../server/plugins/irc-events/link";
@@ -8,17 +9,17 @@ describe("Msg", function () {
 	["from", "target"].forEach((prop) => {
 		it(`should keep a copy of the original user in the \`${prop}\` property`, function () {
 			const prefixLookup = {modeToSymbol: {a: "&", o: "@"}};
-			const user = new User(
+			const user = User.withPrefixLookup(
 				{
 					modes: ["o"],
 					nick: "foo",
 				},
-				prefixLookup as any
+				prefixLookup as unknown as Prefix
 			);
 			const msg = new Msg({[prop]: user});
 
 			// Mutating the user
-			user.setModes(["a"], prefixLookup as any);
+			user.setModesForServer(["a"], prefixLookup as any);
 			user.nick = "bar";
 
 			// Message's `.from`/etc. should still refer to the original user

@@ -133,16 +133,20 @@ export default <IrcEventHandler>function (irc, network) {
 						from.lastPausedTyping = data.time || Date.now();
 					}
 
-					client.emit("isTyping", {
+					client.emit("channel:isTyping", {
 						network: network.uuid,
 						chanId: chan.id,
 						from: from.toJSON(),
-						status
+						status,
 					});
 
 					return;
 				}
 			}
+
+			// Any other message should stop
+			// the typing indicator.
+			from.stopTyping();
 
 			// Query messages (unless self or muted) always highlight
 			if (chan.type === ChanType.QUERY) {
