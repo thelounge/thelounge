@@ -5,7 +5,7 @@ import Helper from "../../helper";
 import {IrcEventHandler} from "../../client";
 import Chan, {ChanType} from "../../models/chan";
 import User from "../../models/user";
-import {ClientTags} from "../../models/client-tags";
+import {ClientTags, ClientTagKey, TypingStatus} from "../../models/client-tags";
 
 const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\w[\]\\`^{|}-]+)/g;
 
@@ -120,6 +120,29 @@ export default <IrcEventHandler>function (irc, network) {
 			}
 
 			from = chan.getUser(data.nick);
+
+			if (data.type === MessageType.TAGMSG) {
+				const typingTag = `+${ClientTagKey.TYPING}` as const;
+
+				if (Object.hasOwn(data.tags, typingTag)) {
+					const status = data.tags[typingTag];
+
+					if (status === TypingStatus.ACTIVE) {
+						from.lastActiveTyping = data.time || Date.now();
+					} else if (status === TypingStatus.PAUSED) {
+						from.lastPausedTyping = data.time || Date.now();
+					}
+
+					client.emit("isTyping", {
+						network: network.uuid,
+						chanId: chan.id,
+						from: from.toJSON(),
+						status
+					});
+
+					return;
+				}
+			}
 
 			// Query messages (unless self or muted) always highlight
 			if (chan.type === ChanType.QUERY) {

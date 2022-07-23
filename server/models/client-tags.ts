@@ -12,6 +12,12 @@ export enum ClientTagKey {
 	TYPING = "typing",
 }
 
+export enum TypingStatus {
+	ACTIVE = "active",
+	PAUSED = "paused",
+	DONE = "done",
+}
+
 export class ClientTags {
 	reaction?: string;
 	repliedTo?: string;
