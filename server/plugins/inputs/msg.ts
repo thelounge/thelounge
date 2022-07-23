@@ -16,6 +16,7 @@ function getTarget(cmd: string, args: string[], chan: Chan) {
 
 const input: PluginInputHandler = function (network, chan, cmd, args) {
 	let targetName = getTarget(cmd, args, chan);
+	const tags = {};
 
 	if (cmd === "query") {
 		if (!targetName) {
@@ -91,7 +92,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 		return true;
 	}
 
-	network.irc.say(targetName, msg);
+	network.irc.say(targetName, msg, tags);
 
 	// If the IRCd does not support echo-message, simulate the message
 	// being sent back to us.

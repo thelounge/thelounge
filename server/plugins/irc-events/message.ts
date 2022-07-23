@@ -5,6 +5,7 @@ import Helper from "../../helper";
 import {IrcEventHandler} from "../../client";
 import Chan, {ChanType} from "../../models/chan";
 import User from "../../models/user";
+import {ClientTags} from "../../models/client-tags";
 
 const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\w[\]\\`^{|}-]+)/g;
 
@@ -26,6 +27,11 @@ export default <IrcEventHandler>function (irc, network) {
 		handleMessage(data);
 	});
 
+	irc.on("tagmsg", function (data) {
+		data.type = MessageType.TAGMSG;
+		handleMessage(data);
+	});
+
 	irc.on("privmsg", function (data) {
 		data.type = MessageType.MESSAGE;
 		handleMessage(data);
@@ -44,6 +50,7 @@ export default <IrcEventHandler>function (irc, network) {
 		target: string;
 		type: MessageType;
 		time: number;
+		tags: Record<string, string>;
 		text?: string;
 		from_server?: boolean;
 		message: string;
@@ -131,14 +138,20 @@ export default <IrcEventHandler>function (irc, network) {
 			from: from,
 			highlight: highlight,
 			users: [],
+			client_tags: new ClientTags(data.tags),
 		});
 
 		if (showInActive) {
 			msg.showInActive = true;
 		}
 
-		// remove IRC formatting for custom highlight testing
-		const cleanMessage = cleanIrcMessage(data.message);
+		// Not all messages have bodies.
+		let cleanMessage = data.message;
+
+		if (data.message) {
+			// remove IRC formatting for custom highlight testing
+			cleanMessage = cleanIrcMessage(data.message);
+		}
 
 		// Self messages in channels are never highlighted
 		// Non-self messages are highlighted as soon as the nick is detected
@@ -174,10 +187,19 @@ export default <IrcEventHandler>function (irc, network) {
 			LinkPrefetch(client, chan, msg, cleanMessage);
 		}
 
+		if (!data.message) {
+			return;
+		}
+
 		chan.pushMessage(client, msg, !msg.self);
 
 		// Do not send notifications if the channel is muted or for messages older than 15 minutes (znc buffer for example)
-		if (!chan.muted && msg.highlight && (!data.time || data.time > Date.now() - 900000)) {
+		if (
+			!chan.muted &&
+			msg.highlight &&
+			(!data.time || data.time > Date.now() - 900000) &&
+			msg.type !== MessageType.TAGMSG
+		) {
 			let title = chan.name;
 			let body = cleanMessage;
 
