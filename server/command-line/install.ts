@@ -16,7 +16,10 @@ type CustomMetadata = FullMetadata & {
 
 const program = new Command("install");
 program
-	.argument("<package>", "package to install")
+	.argument(
+		"<package>",
+		"package to install. Use `file:$path_to_package_dir` to install a local package"
+	)
 	.description("Install a theme or a package")
 	.on("--help", Utils.extraHelp)
 	.action(async function (packageName: string) {
