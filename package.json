@@ -50,7 +50,7 @@
     "commander": "9.0.0",
     "content-disposition": "0.5.4",
     "express": "4.17.3",
-    "file-type": "16.5.3",
+    "file-type": "16.5.4",
     "filenamify": "4.3.0",
     "got": "11.8.5",
     "irc-framework": "4.12.1",
