@@ -47,7 +47,6 @@ const events = [
 	"sasl",
 	"topic",
 	"welcome",
-	"whois",
 ];
 
 type ClientPushSubscription = {
