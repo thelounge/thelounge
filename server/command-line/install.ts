@@ -37,8 +37,11 @@ program
 
 		if (packageName.startsWith("file:")) {
 			isLocalFile = true;
+			// our yarn invocation sets $HOME to the cachedir, so we must expand ~ now
+			// else the path will be invalid when npm expands it.
+			packageName = expandTildeInLocalPath(packageName);
 			readFile = fspromises
-				.readFile(path.join(packageName.substr("file:".length), "package.json"), "utf-8")
+				.readFile(path.join(packageName.substring("file:".length), "package.json"), "utf-8")
 				.then((data) => JSON.parse(data) as typeof packageJson);
 		} else {
 			const split = packageName.split("@");
@@ -105,5 +108,10 @@ program
 				process.exit(1);
 			});
 	});
+
+function expandTildeInLocalPath(packageName: string): string {
+	const path = packageName.substring("file:".length);
+	return "file:" + Helper.expandHome(path);
+}
 
 export default program;
