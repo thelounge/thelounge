@@ -13,11 +13,13 @@ import constants from "../client/js/constants";
 
 import inputs from "./plugins/inputs";
 import PublicClient from "./plugins/packages/publicClient";
+import packages from "./plugins/packages/index";
 import SqliteMessageStorage from "./plugins/messageStorage/sqlite";
 import TextFileMessageStorage from "./plugins/messageStorage/text";
 import Network, {IgnoreListItem, NetworkWithIrcFramework} from "./models/network";
 import ClientManager from "./clientManager";
 import {MessageStorage, SearchQuery} from "./plugins/messageStorage/types";
+import {ClientEmitter, ClientEvents} from "./events";
 
 type OrderItem = Chan["id"] | Network["uuid"];
 type Order = OrderItem[];
@@ -89,6 +91,11 @@ export type Mention = {
 	from: UserInMessage;
 };
 
+const packageEvents = new Map<keyof ClientEvents, any>([
+	["message", packages.emitMessage],
+	["notification", packages.emitNotification],
+]);
+
 class Client {
 	awayMessage!: string;
 	lastActiveChannel!: number;
@@ -109,6 +116,7 @@ class Client {
 	highlightRegex!: RegExp | null;
 	highlightExceptionRegex!: RegExp | null;
 	messageProvider?: SqliteMessageStorage;
+	events!: ClientEmitter;
 
 	fileHash!: string;
 
@@ -129,9 +137,14 @@ class Client {
 			highlightRegex: null,
 			highlightExceptionRegex: null,
 			messageProvider: undefined,
+			events: new ClientEmitter(),
 		});
 
 		const client = this;
+
+		packageEvents.forEach((listener, event) => {
+			client.events.on(event, listener);
+		});
 
 		client.config.log = Boolean(client.config.log);
 		client.config.password = String(client.config.password);

@@ -8,6 +8,27 @@ import User from "../../models/user";
 
 const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\w[\]\\`^{|}-]+)/g;
 
+export type MessageData = {
+	nick: string;
+	hostname: string;
+	ident: string;
+	target: string;
+	type: MessageType;
+	time: number;
+	text?: string;
+	from_server?: boolean;
+	message: string;
+	group?: string;
+};
+
+export type NotificationData = {
+	type: string;
+	chanId: number;
+	timestamp: number;
+	title: string;
+	body: string;
+};
+
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
@@ -37,18 +58,7 @@ export default <IrcEventHandler>function (irc, network) {
 		handleMessage(data);
 	});
 
-	function handleMessage(data: {
-		nick: string;
-		hostname: string;
-		ident: string;
-		target: string;
-		type: MessageType;
-		time: number;
-		text?: string;
-		from_server?: boolean;
-		message: string;
-		group?: string;
-	}) {
+	function handleMessage(data: MessageData) {
 		let chan: Chan | undefined;
 		let from: User;
 		let highlight = false;
@@ -60,6 +70,8 @@ export default <IrcEventHandler>function (irc, network) {
 			data.from_server = true;
 			data.nick = data.hostname || network.host;
 		}
+
+		client.events.emit("message", irc, network, client, data);
 
 		// Check if the sender is in our ignore list
 		const shouldIgnore =
@@ -202,17 +214,17 @@ export default <IrcEventHandler>function (irc, network) {
 				}`;
 			}
 
-			client.manager.webPush.push(
-				client,
-				{
-					type: "notification",
-					chanId: chan.id,
-					timestamp: data.time || Date.now(),
-					title: title,
-					body: body,
-				},
-				true
-			);
+			const notificationData: NotificationData = {
+				type: "notification",
+				chanId: chan.id,
+				timestamp: data.time || Date.now(),
+				title: title,
+				body: body,
+			};
+
+			client.manager.webPush.push(client, notificationData, true);
+
+			client.events.emit("notification", irc, network, client, data, notificationData);
 		}
 
 		// Keep track of all mentions in channels for this client

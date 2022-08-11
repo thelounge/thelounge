@@ -10,12 +10,16 @@ import inputs from "../inputs";
 import fs from "fs";
 import Utils from "../../command-line/utils";
 import Client from "../../client";
+import {ClientEmitter} from "../../events";
+import {NetworkWithIrcFramework} from "../../models/network";
+import {MessageData, NotificationData} from "../irc-events/message";
 
 type Package = {
 	onServerStart: (packageApis: any) => void;
 };
 
 const packageMap = new Map<string, Package>();
+const packageEvents = new Map<string, ClientEmitter>();
 
 export type PackageInfo = {
 	packageName: string;
@@ -44,11 +48,37 @@ export default {
 	getPackage,
 	loadPackages,
 	outdated,
+	emitMessage,
+	emitNotification,
 };
+
+function emitMessage(
+	irc: NetworkWithIrcFramework["irc"],
+	network: NetworkWithIrcFramework,
+	client: Client,
+	data: MessageData
+) {
+	packageEvents.forEach((emitter) => {
+		emitter.emit("message", irc, network, client, data);
+	});
+}
+
+function emitNotification(
+	irc: NetworkWithIrcFramework["irc"],
+	network: NetworkWithIrcFramework,
+	client: Client,
+	data: MessageData,
+	notificationData: NotificationData
+) {
+	packageEvents.forEach((emitter) => {
+		emitter.emit("notification", irc, network, client, data, notificationData);
+	});
+}
 
 // TODO: verify binds worked. Used to be 'this' instead of 'packageApis'
 const packageApis = function (packageInfo: PackageInfo) {
 	return {
+		Events: packageEvents.get(packageInfo.packageName!)!,
 		Stylesheets: {
 			addFile: addStylesheet.bind(packageApis, packageInfo.packageName),
 		},
@@ -155,6 +185,7 @@ function loadPackage(packageName: string) {
 	};
 
 	packageMap.set(packageName, packageFile);
+	packageEvents.set(packageName, new ClientEmitter());
 
 	if (packageInfo.type === "theme") {
 		// @ts-expect-error Argument of type 'PackageInfo' is not assignable to parameter of type 'ThemeModule'.
