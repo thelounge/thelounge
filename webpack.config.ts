@@ -1,10 +1,27 @@
 import * as webpack from "webpack";
 import * as path from "path";
 import CopyPlugin from "copy-webpack-plugin";
+import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import {VueLoaderPlugin} from "vue-loader";
 import babelConfig from "./babel.config.cjs";
 import Helper from "./server/helper";
+
+const tsCheckerPlugin = new ForkTsCheckerWebpackPlugin({
+	typescript: {
+		diagnosticOptions: {
+			semantic: true,
+			syntactic: true,
+		},
+		build: true,
+	},
+});
+
+const vueLoaderPlugin = new VueLoaderPlugin();
+
+const miniCssExtractPlugin = new MiniCssExtractPlugin({
+	filename: "css/style.css",
+});
 
 const isProduction = process.env.NODE_ENV === "production";
 const config: webpack.Configuration = {
@@ -90,14 +107,13 @@ const config: webpack.Configuration = {
 		json3: "JSON", // socket.io uses json3.js, but we do not target any browsers that need it
 	},
 	plugins: [
-		new VueLoaderPlugin(),
+		tsCheckerPlugin,
+		vueLoaderPlugin,
 		new webpack.DefinePlugin({
 			__VUE_PROD_DEVTOOLS__: false,
 			__VUE_OPTIONS_API__: false,
 		}),
-		new MiniCssExtractPlugin({
-			filename: "css/style.css",
-		}),
+		miniCssExtractPlugin,
 		new CopyPlugin({
 			patterns: [
 				{
@@ -183,10 +199,9 @@ export default (env: any, argv: any) => {
 
 		// Disable plugins like copy files, it is not required
 		config.plugins = [
-			new VueLoaderPlugin(),
-			new MiniCssExtractPlugin({
-				filename: "css/style.css",
-			}),
+			tsCheckerPlugin,
+			vueLoaderPlugin,
+			miniCssExtractPlugin,
 			// Client tests that require Vue may end up requireing socket.io
 			new webpack.NormalModuleReplacementPlugin(
 				/js(\/|\\)socket\.js/,
