@@ -67,16 +67,16 @@ export type State = {
 		| null
 		| undefined
 		| {
-				latest: {
+				latest?: {
 					version: string;
 					prerelease: boolean;
 					url: string;
 				};
-				current: {
+				current?: {
 					version: string;
 					prerelease: boolean;
 					url: string;
-					changelog: string;
+					changelog?: string;
 				};
 		  };
 	versionStatus: "loading" | "new-version" | "new-packages" | "up-to-date" | "error";
