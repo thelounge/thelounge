@@ -3,6 +3,13 @@ check-leaks: true
 recursive: true
 reporter: dot
 interactive: false
-spec: "test/**/*.js"
+spec: "test/**/*.ts"
 ignore: "test/client/**"
-require: "test/fixtures/env"
+extension: ["ts", "js"]
+require:
+  - "ts-node/register"
+  # - "jsdom-global/register"
+  - "test/fixtures/env.ts"
+globals:
+  - "__VUE_PROD_DEVTOOLS__"
+  - "__VUE__"

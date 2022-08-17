@@ -3,38 +3,64 @@
 		v-if="activeChannel"
 		:network="activeChannel.network"
 		:channel="activeChannel.channel"
-		:focused="$route.query.focused"
+		:focused="parseInt(String(route.query.focused), 10)"
+		@channel-changed="channelChanged"
 	/>
 </template>
 
-<script>
+<script lang="ts">
+import {watch, computed, defineComponent, onMounted} from "vue";
+import {useRoute} from "vue-router";
+import {useStore} from "../js/store";
+import {ClientChan} from "../js/types";
+
 // Temporary component for routing channels and lobbies
 import Chat from "./Chat.vue";
 
-export default {
+export default defineComponent({
 	name: "RoutedChat",
 	components: {
 		Chat,
 	},
-	computed: {
-		activeChannel() {
-			const chanId = parseInt(this.$route.params.id, 10);
-			const channel = this.$store.getters.findChannel(chanId);
+	setup() {
+		const route = useRoute();
+		const store = useStore();
+
+		const activeChannel = computed(() => {
+			const chanId = parseInt(String(route.params.id || ""), 10);
+			const channel = store.getters.findChannel(chanId);
 			return channel;
-		},
+		});
+
+		const setActiveChannel = () => {
+			if (activeChannel.value) {
+				store.commit("activeChannel", activeChannel.value);
+			}
+		};
+
+		watch(activeChannel, () => {
+			setActiveChannel();
+		});
+
+		onMounted(() => {
+			setActiveChannel();
+		});
+
+		const channelChanged = (channel: ClientChan) => {
+			const chanId = channel.id;
+			const chanInStore = store.getters.findChannel(chanId);
+
+			if (chanInStore?.channel) {
+				chanInStore.channel.unread = 0;
+				chanInStore.channel.highlight = 0;
+			}
+		};
+
+		return {
+			route,
+			activeChannel,
+			channelChanged,
+		};
 	},
-	watch: {
-		activeChannel() {
-			this.setActiveChannel();
-		},
-	},
-	mounted() {
-		this.setActiveChannel();
-	},
-	methods: {
-		setActiveChannel() {
-			this.$store.commit("activeChannel", this.activeChannel);
-		},
-	},
-};
+});
 </script>

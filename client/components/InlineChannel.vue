@@ -10,21 +10,26 @@
 	></span>
 </template>
 
-<script>
+<script lang="ts">
+import {defineComponent} from "vue";
 import eventbus from "../js/eventbus";
 
-export default {
+export default defineComponent({
 	name: "InlineChannel",
 	props: {
 		channel: String,
 	},
-	methods: {
-		openContextMenu(event) {
+	setup(props) {
+		const openContextMenu = (event) => {
 			eventbus.emit("contextmenu:inline-channel", {
 				event: event,
-				channel: this.channel,
+				channel: props.channel,
 			});
-		},
+		};
+
+		return {
+			openContextMenu,
+		};
 	},
-};
+});
 </script>

@@ -80,77 +80,96 @@ form.message-search.opened .input-wrapper {
 }
 </style>
 
-<script>
-export default {
+<script lang="ts">
+import {computed, defineComponent, onMounted, PropType, ref, watch} from "vue";
+import {useRoute, useRouter} from "vue-router";
+import eventbus from "../js/eventbus";
+import {ClientNetwork, ClientChan} from "../js/types";
+
+export default defineComponent({
 	name: "MessageSearchForm",
 	props: {
-		network: Object,
-		channel: Object,
+		network: {type: Object as PropType<ClientNetwork>, required: true},
+		channel: {type: Object as PropType<ClientChan>, required: true},
 	},
-	data() {
-		return {
-			searchOpened: false,
-			searchInput: "",
-		};
-	},
-	computed: {
-		onSearchPage() {
-			return this.$route.name === "SearchResults";
-		},
-	},
-	watch: {
-		"$route.query.q"() {
-			this.searchInput = this.$route.query.q;
-		},
-	},
-	mounted() {
-		this.searchInput = this.$route.query.q;
-		this.searchOpened = this.onSearchPage;
+	setup(props) {
+		const searchOpened = ref(false);
+		const searchInput = ref("");
+		const router = useRouter();
+		const route = useRoute();
 
-		if (!this.searchInput && this.searchOpened) {
-			this.$refs.searchInputField.focus();
-		}
-	},
-	methods: {
-		closeSearch() {
-			if (!this.onSearchPage) {
-				this.searchInput = "";
-				this.searchOpened = false;
+		const searchInputField = ref<HTMLInputElement | null>(null);
+
+		const onSearchPage = computed(() => {
+			return route.name === "SearchResults";
+		});
+
+		watch(route, (newValue) => {
+			if (newValue.query.q) {
+				searchInput.value = String(newValue.query.q);
 			}
-		},
-		toggleSearch() {
-			if (this.searchOpened) {
-				this.$refs.searchInputField.blur();
+		});
+
+		onMounted(() => {
+			searchInput.value = String(route.query.q || "");
+			searchOpened.value = onSearchPage.value;
+
+			if (searchInputField.value && !searchInput.value && searchOpened.value) {
+				searchInputField.value.focus();
+			}
+		});
+
+		const closeSearch = () => {
+			if (!onSearchPage.value) {
+				searchInput.value = "";
+				searchOpened.value = false;
+			}
+		};
+
+		const toggleSearch = () => {
+			if (searchOpened.value) {
+				searchInputField.value?.blur();
 				return;
 			}
 
-			this.searchOpened = true;
-			this.$refs.searchInputField.focus();
-		},
-		searchMessages(event) {
+			searchOpened.value = true;
+			searchInputField.value?.focus();
+		};
+
+		const searchMessages = (event: Event) => {
 			event.preventDefault();
 
-			if (!this.searchInput) {
+			if (!searchInput.value) {
 				return;
 			}
 
-			this.$router
+			router
 				.push({
 					name: "SearchResults",
 					params: {
-						id: this.channel.id,
+						id: props.channel.id,
 					},
 					query: {
-						q: this.searchInput,
+						q: searchInput.value,
 					},
 				})
 				.catch((err) => {
 					if (err.name === "NavigationDuplicated") {
 						// Search for the same query again
-						this.$root.$emit("re-search");
+						eventbus.emit("re-search");
 					}
 				});
-		},
+		};
+
+		return {
+			searchOpened,
+			searchInput,
+			searchInputField,
+			closeSearch,
+			toggleSearch,
+			searchMessages,
+			onSearchPage,
+		};
 	},
-};
+});
 </script>
