@@ -1,7 +1,9 @@
 import storage from "../localStorage";
 
 export default (network, isCollapsed) => {
-	const networks = new Set(JSON.parse(storage.get("thelounge.networks.collapsed")));
+	const stored = storage.get("thelounge.networks.collapsed");
+	const networks = stored ? new Set(JSON.parse(stored)) : new Set();
+
 	network.isCollapsed = isCollapsed;
 
 	if (isCollapsed) {
