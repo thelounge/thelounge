@@ -2,6 +2,7 @@
 	<span
 		:class="['user', nickColor, {active: active}]"
 		:data-name="user.nick"
+		:user-mode="mode"
 		role="button"
 		v-on="onHover ? {mouseenter: hover} : {}"
 		@click.prevent="openContextMenu"
