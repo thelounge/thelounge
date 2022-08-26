@@ -13,8 +13,10 @@ export default {
 };
 export type ChangelogData = {
 	current: {
+		prerelease: boolean;
 		version: string;
 		changelog?: string;
+		url: string;
 	};
 	expiresAt: number;
 	latest?: {

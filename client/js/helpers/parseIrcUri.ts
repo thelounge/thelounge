@@ -1,5 +1,11 @@
 export default (stringUri: string) => {
-	const data = {};
+	const data = {
+		name: "",
+		host: "",
+		port: "",
+		join: "",
+		tls: false,
+	};
 
 	try {
 		// https://tools.ietf.org/html/draft-butcher-irc-url-04
@@ -11,15 +17,13 @@ export default (stringUri: string) => {
 			uri.protocol = "http:";
 
 			if (!uri.port) {
-				uri.port = 6667;
+				uri.port = "6667";
 			}
-
-			data.tls = false;
 		} else if (uri.protocol === "ircs:") {
 			uri.protocol = "https:";
 
 			if (!uri.port) {
-				uri.port = 6697;
+				uri.port = "6697";
 			}
 
 			data.tls = true;

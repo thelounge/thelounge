@@ -250,10 +250,15 @@ export function generateInlineChannelContextMenu(
 			switchToChannel(channel);
 		}
 
-		socket.emit("input", {
-			target: store.state.activeChannel.channel.id,
-			text: "/join " + chan,
-		});
+		if (store.state.activeChannel) {
+			socket.emit("input", {
+				target: store.state.activeChannel.channel.id,
+				text: "/join " + chan,
+			});
+		} else {
+			// eslint-disable-next-line no-console
+			console.error("Unable to join channel: activeChannel is undefined");
+		}
 	};
 
 	const channel = network.channels.find((c) => c.name === chan);
