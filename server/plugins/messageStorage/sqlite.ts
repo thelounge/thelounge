@@ -195,10 +195,10 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 		}) as Message[];
 	}
 
-	search(query: SearchQuery): Promise<SearchResponse> {
+	async search(query: SearchQuery): Promise<SearchResponse> {
 		if (!this.isEnabled) {
 			// this should never be hit as messageProvider is checked in client.search()
-			return Promise.reject(
+			throw new Error(
 				"search called but sqlite provider not enabled. This is a programming error"
 			);
 		}
@@ -227,22 +227,16 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 		query.offset = parseInt(query.offset as string, 10) || 0;
 		params.push(String(query.offset));
 
-		return new Promise((resolve, reject) => {
-			this.database.all(select, params, (err, rows) => {
-				if (err) {
-					reject(err);
-				} else {
-					const response: SearchResponse = {
-						searchTerm: query.searchTerm,
-						target: query.channelName,
-						networkUuid: query.networkUuid,
-						offset: query.offset as number,
-						results: parseSearchRowsToMessages(query.offset as number, rows).reverse(),
-					};
-					resolve(response);
-				}
-			});
-		});
+		const rows = await this.serialize_fetchall(select, ...params);
+		const response: SearchResponse = {
+			searchTerm: query.searchTerm,
+			target: query.channelName,
+			networkUuid: query.networkUuid,
+			offset: query.offset as number,
+			results: parseSearchRowsToMessages(query.offset as number, rows).reverse(),
+		};
+
+		return response;
 	}
 
 	canProvideMessages() {
