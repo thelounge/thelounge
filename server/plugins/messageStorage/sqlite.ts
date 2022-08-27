@@ -168,7 +168,7 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 	 * @param network Network - Network object where the channel is
 	 * @param channel Channel - Channel object for which to load messages for
 	 */
-	getMessages(network: Network, channel: Channel) {
+	async getMessages(network: Network, channel: Channel): Promise<Message[]> {
 		if (!this.isEnabled || Config.values.maxHistory === 0) {
 			return Promise.resolve([]);
 		}
@@ -176,32 +176,23 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 		// If unlimited history is specified, load 100k messages
 		const limit = Config.values.maxHistory < 0 ? 100000 : Config.values.maxHistory;
 
-		return new Promise((resolve, reject) => {
-			this.database.serialize(() =>
-				this.database.all(
-					"SELECT msg, type, time FROM messages WHERE network = ? AND channel = ? ORDER BY time DESC LIMIT ?",
-					[network.uuid, channel.name.toLowerCase(), limit],
-					(err, rows) => {
-						if (err) {
-							return reject(err);
-						}
+		const rows = await this.serialize_fetchall(
+			"SELECT msg, type, time FROM messages WHERE network = ? AND channel = ? ORDER BY time DESC LIMIT ?",
+			network.uuid,
+			channel.name.toLowerCase(),
+			limit
+		);
 
-						resolve(
-							rows.reverse().map((row) => {
-								const msg = JSON.parse(row.msg);
-								msg.time = row.time;
-								msg.type = row.type;
+		return rows.reverse().map((row: any) => {
+			const msg = JSON.parse(row.msg);
+			msg.time = row.time;
+			msg.type = row.type;
 
-								const newMsg = new Msg(msg);
-								newMsg.id = this.client.idMsg++;
+			const newMsg = new Msg(msg);
+			newMsg.id = this.client.idMsg++;
 
-								return newMsg;
-							})
-						);
-					}
-				)
-			);
-		}) as Promise<Message[]>;
+			return newMsg;
+		}) as Message[];
 	}
 
 	search(query: SearchQuery): Promise<SearchResponse> {
