@@ -63,7 +63,7 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 
 		this.database = new sqlite3.Database(sqlitePath);
 		this.database.serialize(() => {
-			schema.forEach((line) => this.database.run(line));
+			schema.forEach((line) => this.run(line));
 
 			this.database.get(
 				"SELECT value FROM options WHERE name = 'schema_version'",
@@ -74,13 +74,10 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 
 					// New table
 					if (row === undefined) {
-						this.database.serialize(() =>
-							this.database.run(
-								"INSERT INTO options (name, value) VALUES ('schema_version', ?)",
-								currentSchemaVersion
-							)
+						this.run(
+							"INSERT INTO options (name, value) VALUES ('schema_version', ?)",
+							currentSchemaVersion
 						);
-
 						return;
 					}
 
@@ -100,11 +97,9 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 						`sqlite messages schema version is out of date (${storedSchemaVersion} < ${currentSchemaVersion}). Running migrations if any.`
 					);
 
-					this.database.serialize(() =>
-						this.database.run(
-							"UPDATE options SET value = ? WHERE name = 'schema_version'",
-							currentSchemaVersion
-						)
+					this.run(
+						"UPDATE options SET value = ? WHERE name = 'schema_version'",
+						currentSchemaVersion
 					);
 				}
 			);
@@ -145,15 +140,13 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 			return newMsg;
 		}, {});
 
-		this.database.serialize(() =>
-			this.database.run(
-				"INSERT INTO messages(network, channel, time, type, msg) VALUES(?, ?, ?, ?, ?)",
-				network.uuid,
-				channel.name.toLowerCase(),
-				msg.time.getTime(),
-				msg.type,
-				JSON.stringify(clonedMsg)
-			)
+		this.run(
+			"INSERT INTO messages(network, channel, time, type, msg) VALUES(?, ?, ?, ?, ?)",
+			network.uuid,
+			channel.name.toLowerCase(),
+			msg.time.getTime(),
+			msg.type,
+			JSON.stringify(clonedMsg)
 		);
 	}
 
@@ -162,12 +155,10 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 			return;
 		}
 
-		this.database.serialize(() =>
-			this.database.run(
-				"DELETE FROM messages WHERE network = ? AND channel = ?",
-				network.uuid,
-				channel.name.toLowerCase()
-			)
+		this.run(
+			"DELETE FROM messages WHERE network = ? AND channel = ?",
+			network.uuid,
+			channel.name.toLowerCase()
 		);
 	}
 
@@ -265,6 +256,28 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 
 	canProvideMessages() {
 		return this.isEnabled;
+	}
+
+	private run(stmt: string, ...params: any[]) {
+		this.serialize_run(stmt, params).catch((err) =>
+			log.error(`failed to run ${stmt}`, String(err))
+		);
+	}
+
+	private serialize_run(stmt: string, params: any[]): Promise<void> {
+		return new Promise((resolve, reject) => {
+			this.database.serialize(() => {
+				this.database.run(stmt, params, (err) => {
+
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve();
+				});
+			});
+		});
 	}
 }
 
