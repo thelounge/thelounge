@@ -279,6 +279,21 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 			});
 		});
 	}
+
+	private serialize_fetchall(stmt: string, ...params: any[]): Promise<any> {
+		return new Promise((resolve, reject) => {
+			this.database.serialize(() => {
+				this.database.all(stmt, params, (err, rows) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve(rows);
+				});
+			});
+		});
+	}
 }
 
 // TODO: type any
