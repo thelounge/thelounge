@@ -174,8 +174,8 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 	/**
 	 * Load messages for given channel on a given network and resolve a promise with loaded messages.
 	 *
-	 * @param Network network - Network object where the channel is
-	 * @param Chan channel - Channel object for which to load messages for
+	 * @param network Network - Network object where the channel is
+	 * @param channel Channel - Channel object for which to load messages for
 	 */
 	getMessages(network: Network, channel: Channel) {
 		if (!this.isEnabled || Config.values.maxHistory === 0) {
