@@ -268,8 +268,6 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 	}
 }
 
-export default SqliteMessageStorage;
-
 // TODO: type any
 function parseSearchRowsToMessages(id: number, rows: any[]) {
 	const messages: Msg[] = [];
@@ -287,3 +285,5 @@ function parseSearchRowsToMessages(id: number, rows: any[]) {
 
 	return messages;
 }
+
+export default SqliteMessageStorage;
