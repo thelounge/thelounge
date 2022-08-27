@@ -14,7 +14,7 @@
 					alt="The Lounge"
 					role="presentation"
 				/>
-				<span
+				<!-- <span
 					v-if="isDevelopment"
 					title="The Lounge has been built in development mode"
 					:style="{
@@ -25,7 +25,7 @@
 						fontSize: '12px',
 					}"
 					>DEVELOPER</span
-				>
+				> -->
 			</div>
 			<NetworkList />
 		</div>
