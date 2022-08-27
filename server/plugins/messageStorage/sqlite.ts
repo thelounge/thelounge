@@ -213,10 +213,12 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 		}) as Promise<Message[]>;
 	}
 
-	search(query: SearchQuery): Promise<SearchResponse | []> {
+	search(query: SearchQuery): Promise<SearchResponse> {
 		if (!this.isEnabled) {
 			// this should never be hit as messageProvider is checked in client.search()
-			return Promise.resolve([]);
+			return Promise.reject(
+				"search called but sqlite provider not enabled. This is a programming error"
+			);
 		}
 
 		// Using the '@' character to escape '%' and '_' in patterns.
