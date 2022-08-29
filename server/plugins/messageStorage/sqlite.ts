@@ -62,6 +62,11 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 		this.isEnabled = true;
 
 		this.database = new sqlite3.Database(sqlitePath);
+
+		this.run_migrations()
+	}
+
+	private run_migrations() {
 		this.database.serialize(() => {
 			schema.forEach((line) => this.run(line));
 
