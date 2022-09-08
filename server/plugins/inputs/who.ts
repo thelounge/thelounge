@@ -7,8 +7,6 @@ const commands = ["who"];
 const parseWhoxResponse = (user: ClientUser, args: string) => {
 	const parseFieldNameForLounge = (field: string) => {
 		switch (field) {
-			case "channel":
-				return "channel"; // no-op for now
 			case "nickname":
 				return "nick";
 			case "username":
