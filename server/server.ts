@@ -478,6 +478,12 @@ function initializeClient(
 	});
 
 	socket.on("network:new", (data) => {
+		if (Config.values.lockNetwork) {
+			if (client.networks.length > 0) {
+				return;
+			}
+		}
+
 		if (_.isPlainObject(data)) {
 			// prevent people from overriding webirc settings
 			data.uuid = null;
