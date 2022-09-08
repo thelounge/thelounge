@@ -34,7 +34,10 @@ export default defineComponent({
 		};
 
 		onMounted(() => {
-			if (store.state.serverConfiguration?.lockNetwork) {
+			if (
+				store.state.serverConfiguration?.lockNetwork &&
+				store.state.serverConfiguration?.allowMultipleSameHostConnections
+			) {
 				if (store.state.networks.length > 0) {
 					disabled.value = true;
 					disabledReason.value = "You have already connected and cannot connect again.";

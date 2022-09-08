@@ -131,6 +131,7 @@ describe("Server", function () {
 				expect(data.defaultTheme).to.equal("default");
 				expect(data.themes).to.be.an("array");
 				expect(data.lockNetwork).to.equal(false);
+
 				expect(data.useHexIp).to.equal(false);
 
 				done();

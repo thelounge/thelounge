@@ -96,6 +96,7 @@ export type ConfigType = {
 	leaveMessage: string;
 	defaults: Defaults;
 	lockNetwork: boolean;
+	allowMultipleSameHostConnections: boolean;
 	messageStorage: string[];
 	useHexIp: boolean;
 	webirc?: WebIRC;
