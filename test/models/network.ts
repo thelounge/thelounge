@@ -145,7 +145,7 @@ describe("Network", function () {
 			expect(network.validate({} as any)).to.be.true;
 			expect(network.nick).to.equal("thelounge");
 			expect(network.username).to.equal("thelounge");
-			expect(network.realname).to.equal("The Lounge User");
+			expect(network.realname).to.equal("thelounge");
 			expect(network.port).to.equal(6667);
 
 			const network2 = new Network({
@@ -184,6 +184,27 @@ describe("Network", function () {
 			expect(network2.host).to.equal("irc.example.com");
 
 			Config.values.lockNetwork = false;
+		});
+
+		it("realname should be set to nick only if realname is empty", function () {
+			const network = new Network({
+				host: "localhost",
+				nick: "dummy",
+			});
+
+			expect(network.validate({} as any)).to.be.true;
+			expect(network.nick).to.equal("dummy");
+			expect(network.realname).to.equal("dummy");
+
+			const network2 = new Network({
+				host: "localhost",
+				nick: "dummy",
+				realname: "notdummy",
+			});
+
+			expect(network2.validate({} as any)).to.be.true;
+			expect(network2.nick).to.equal("dummy");
+			expect(network2.realname).to.equal("notdummy");
 		});
 
 		it("should apply STS policies iff they match", function () {

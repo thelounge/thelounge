@@ -241,7 +241,7 @@ module.exports = {
 	// - `nick`: Nick name. Percent signs (`%`) will be replaced by random
 	//   numbers from 0 to 9. For example, `Guest%%%` may become `Guest123`.
 	// - `username`: User name.
-	// - `realname`: Real name.
+	// - `realname`: Real name displayed by some clients. Defaults to the nick if set to ""
 	// - `leaveMessage`: Network specific leave message (overrides global leaveMessage)
 	// - `join`: Comma-separated list of channels to auto-join once connected.
 	//
@@ -271,7 +271,7 @@ module.exports = {
 		rejectUnauthorized: true,
 		nick: "thelounge%%",
 		username: "thelounge",
-		realname: "The Lounge User",
+		realname: "",
 		join: "#thelounge",
 		leaveMessage: "",
 	},
