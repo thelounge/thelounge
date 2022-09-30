@@ -244,6 +244,26 @@
 				/>
 			</div>
 			<div class="connect-row">
+				<label for="connect:discourseURL">discourseURL</label>
+				<input
+					id="connect:discourseURL"
+					v-model.trim="defaults.discourseURL"
+					class="input"
+					name="discourseURL"
+					maxlength="300"
+				/>
+			</div>
+			<div class="connect-row">
+				<label for="connect:MC_BOT">MC-BOT</label>
+				<input
+					id="connect:MC_BOT"
+					v-model.trim="defaults.MC_BOT"
+					class="input"
+					name="MC_BOT"
+					maxlength="300"
+				/>
+			</div>
+			<div class="connect-row">
 				<label for="connect:leaveMessage">Leave message</label>
 				<input
 					id="connect:leaveMessage"

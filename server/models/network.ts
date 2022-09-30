@@ -92,6 +92,8 @@ class Network {
 	proxyPassword!: string;
 	proxyEnabled!: boolean;
 	highlightRegex?: RegExp;
+	discourseURL!: string;
+	MC_BOT!: string;
 
 	irc?: IrcFramework.Client & {
 		options?: NetworkIrcOptions;
@@ -148,6 +150,8 @@ class Network {
 			proxyUsername: "",
 			proxyPassword: "",
 			proxyEnabled: false,
+			discourseURL: "",
+			MC_BOT: "",
 
 			chanCache: [],
 			ignoreList: [],
@@ -203,6 +207,8 @@ class Network {
 		this.proxyUsername = cleanString(this.proxyUsername);
 		this.proxyPassword = cleanString(this.proxyPassword);
 		this.proxyEnabled = !!this.proxyEnabled;
+		this.discourseURL = cleanString(this.discourseURL);
+		this.MC_BOT = cleanString(this.MC_BOT);
 
 		const error = function (network: Network, text: string) {
 			network.channels[0].pushMessage(
@@ -390,6 +396,10 @@ class Network {
 		this.proxyUsername = String(args.proxyUsername || "");
 		this.proxyPassword = String(args.proxyPassword || "");
 		this.proxyEnabled = !!args.proxyEnabled;
+		this.discourseURL = String(args.discourseURL || "");
+		this.MC_BOT = String(args.MC_BOT || "");
+		// eslint-disable-next-line no-console
+		console.log(args.disconnected);
 
 		// Split commands into an array
 		this.commands = String(args.commands || "")
@@ -576,6 +586,8 @@ class Network {
 			"proxyPort",
 			"proxyUsername",
 			"proxyPassword",
+			"discourseURL",
+			"MC_BOT",
 		];
 
 		if (!Config.values.lockNetwork) {
@@ -618,6 +630,8 @@ class Network {
 			"proxyUsername",
 			"proxyEnabled",
 			"proxyPassword",
+			"discourseURL",
+			"MC_BOT",
 		]) as Network;
 
 		network.channels = this.channels

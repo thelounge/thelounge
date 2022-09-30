@@ -43,6 +43,8 @@ export type Defaults = Pick<
 	| "sasl"
 	| "saslAccount"
 	| "saslPassword"
+	| "discourseURL"
+	| "MC_BOT"
 > & {
 	join?: string;
 };

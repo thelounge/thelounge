@@ -318,6 +318,8 @@ class Client {
 			proxyPort: parseInt(args.proxyPort, 10),
 			proxyUsername: String(args.proxyUsername || ""),
 			proxyPassword: String(args.proxyPassword || ""),
+			discourseURL: String(args.discourseURL || ""),
+			MC_BOT: String(args.MC_BOT || ""),
 		});
 
 		// Set network lobby channel id

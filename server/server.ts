@@ -879,6 +879,8 @@ function getClientConfiguration(): ClientConfiguration {
 			"password",
 			"realname",
 			"join",
+			"discourseURL",
+			"MC_BOT",
 		]) as Defaults;
 	}
 
