@@ -60,7 +60,7 @@
 					v-if="
 						message.from &&
 						message.from.nick == network.MC_BOT &&
-						message.text.substring(0, 4) == `09[`
+						message.text.substring(0, 4) == `03[`
 					"
 				>
 					<!-- && (message.text.split(/:/).length) -->
@@ -107,7 +107,7 @@
 					v-if="
 						message.from &&
 						message.from.nick == network.MC_BOT &&
-						message.text.substring(0, 4) == `09[`
+						message.text.substring(0, 4) == `03[`
 					"
 				>
 					<ParsedMessage
