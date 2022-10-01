@@ -1412,10 +1412,10 @@
   resolved "https://registry.yarnpkg.com/@types/http-cache-semantics/-/http-cache-semantics-4.0.1.tgz#0ea7b61496902b95890dc4c3a116b60cb8dae812"
   integrity sha512-SZs7ekbP8CN0txVG2xVRH6EgKmEm31BOxA07vkFaETzZz1xh+cbt8BcI0slpymvwhx5dlFnQG2rTlPVQn+iRPQ==
 
-"@types/is-utf8@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@types/is-utf8/-/is-utf8-0.2.0.tgz#819a0cbfc17047f036991e9d07a0aee548680ad0"
-  integrity sha512-qItpikdfKSDBiC6t15PIVgR3jnakgkpbPeOR5+Vn/xh+8+VAjkQC9//mfItTx0eRniIFZWt02h1XybSfzCO/QQ==
+"@types/is-utf8@0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@types/is-utf8/-/is-utf8-0.2.1.tgz#2cecf393ce44a73d3d052224e8375709098b4d25"
+  integrity sha512-4tSeTnvbhBsWZy+NTB7g3mbRDZKN0tgS199YlY2JngABhpxSlKyaUX65Lxw8VnLa6IG4tHxBMi0ffhnFhio7jw==
   dependencies:
     "@types/node" "*"
 
