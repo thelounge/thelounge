@@ -619,7 +619,7 @@ class Client {
 	}
 
 	search(query: SearchQuery) {
-		if (this.messageProvider === undefined) {
+		if (!this.messageProvider?.isEnabled) {
 			return Promise.resolve({
 				results: [],
 				target: "",
