@@ -72,7 +72,7 @@
     "yarn": "1.22.17"
   },
   "optionalDependencies": {
-    "sqlite3": "5.0.10"
+    "sqlite3": "5.1.2"
   },
   "devDependencies": {
     "@babel/core": "7.17.10",
