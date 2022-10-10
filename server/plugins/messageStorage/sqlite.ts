@@ -63,52 +63,47 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 
 		this.database = new sqlite3.Database(sqlitePath);
 
-		this.run_migrations()
+		this.run_migrations().catch((err) => {
+			log.error("Migration failed", String(err));
+			this.isEnabled = false;
+		});
 	}
 
-	private run_migrations() {
-		this.database.serialize(() => {
-			schema.forEach((line) => this.run(line));
+	async run_migrations() {
+		for (const stmt of schema) {
+			await this.serialize_run(stmt, []);
+		}
 
-			this.database.get(
-				"SELECT value FROM options WHERE name = 'schema_version'",
-				(err, row) => {
-					if (err) {
-						return log.error(`Failed to retrieve schema version: ${err.toString()}`);
-					}
+		const version = await this.serialize_get(
+			"SELECT value FROM options WHERE name = 'schema_version'"
+		);
 
-					// New table
-					if (row === undefined) {
-						this.run(
-							"INSERT INTO options (name, value) VALUES ('schema_version', ?)",
-							currentSchemaVersion
-						);
-						return;
-					}
-
-					const storedSchemaVersion = parseInt(row.value, 10);
-
-					if (storedSchemaVersion === currentSchemaVersion) {
-						return;
-					}
-
-					if (storedSchemaVersion > currentSchemaVersion) {
-						return log.error(
-							`sqlite messages schema version is higher than expected (${storedSchemaVersion} > ${currentSchemaVersion}). Is The Lounge out of date?`
-						);
-					}
-
-					log.info(
-						`sqlite messages schema version is out of date (${storedSchemaVersion} < ${currentSchemaVersion}). Running migrations if any.`
-					);
-
-					this.run(
-						"UPDATE options SET value = ? WHERE name = 'schema_version'",
-						currentSchemaVersion
-					);
-				}
+		if (version === undefined) {
+			// new table
+			await this.serialize_run(
+				"INSERT INTO options (name, value) VALUES ('schema_version', ?)",
+				[currentSchemaVersion]
 			);
-		});
+			return;
+		}
+
+		const storedSchemaVersion = parseInt(version.value, 10);
+
+		if (storedSchemaVersion === currentSchemaVersion) {
+			return;
+		}
+
+		if (storedSchemaVersion > currentSchemaVersion) {
+			throw `sqlite messages schema version is higher than expected (${storedSchemaVersion} > ${currentSchemaVersion}). Is The Lounge out of date?`;
+		}
+
+		log.info(
+			`sqlite messages schema version is out of date (${storedSchemaVersion} < ${currentSchemaVersion}). Running migrations if any.`
+		);
+
+		await this.serialize_run("UPDATE options SET value = ? WHERE name = 'schema_version'", [
+			currentSchemaVersion,
+		]);
 	}
 
 	close(callback?: (error?: Error | null) => void) {
