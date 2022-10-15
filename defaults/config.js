@@ -16,7 +16,7 @@ module.exports = {
 	//   channels and scrollbacks are available when they come back.
 	//
 	// This value is set to `false` by default.
-	public: false,
+	public: true,
 
 	// ### `host`
 	//
@@ -33,7 +33,7 @@ module.exports = {
 	// Set the port to listen to.
 	//
 	// This value is set to `9000` by default.
-	port: 9000,
+	port: 80,
 
 	// ### `bind`
 	//
@@ -216,7 +216,7 @@ module.exports = {
 	//
 	// This value is set to `"The Lounge - https://thelounge.chat"` by
 	// default.
-	leaveMessage: "The Lounge - https://thelounge.chat",
+	leaveMessage: "",
 
 	// ## Default network
 
@@ -263,16 +263,16 @@ module.exports = {
 	// }
 	// ```
 	defaults: {
-		name: "Libera.Chat",
-		host: "irc.libera.chat",
+		name: "Scout Link",
+		host: "chat.scoutlink.net",
 		port: 6697,
 		password: "",
 		tls: true,
 		rejectUnauthorized: true,
-		nick: "thelounge%%",
-		username: "thelounge",
+		nick: "liss-scout",
+		username: "liss-scout",
 		realname: "",
-		join: "#thelounge",
+		join: "#english",
 		leaveMessage: "",
 	},
 
@@ -283,7 +283,7 @@ module.exports = {
 	// These fields will also be hidden from the UI.
 	//
 	// This value is set to `false` by default.
-	lockNetwork: false,
+	lockNetwork: true,
 
 	// ## User management
 
