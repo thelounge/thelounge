@@ -75,7 +75,7 @@ socket.on("msg", function (data) {
 		const usrNick = receivingChannel.network.nick;
 		const obj: MsgObj = {
 			channel: channel.name.startsWith("#") ? channel.name : undefined,
-			explicit: false,
+			explicit: data.msg.text.includes("__"),
 			is_sender: data.msg.self,
 			jid: undefined,
 			msg: data.msg.text,
