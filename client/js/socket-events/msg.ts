@@ -76,7 +76,7 @@ socket.on("msg", function (data) {
 		const arr = /[0-9][A-z][A-z][0-9][0-9][A-z]/.exec(data.msg.text);
 
 		if (arr) {
-			jid = arr[0];
+			jid = arr[0].toUpperCase();
 		}
 	}
 

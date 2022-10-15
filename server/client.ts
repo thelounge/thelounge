@@ -907,14 +907,6 @@ class Client {
 					break;
 				}
 			}
-
-			if (/[0-9][A-z][A-z][0-9][0-9][A-z]/.test(text)) {
-				const arr = /[0-9][A-z][A-z][0-9][0-9][A-z]/.exec(text);
-
-				if (arr) {
-					console.log(arr[0]);
-				}
-			}
 		}
 
 		text = arraytext.join(" ");
