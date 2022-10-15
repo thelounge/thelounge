@@ -1,3 +1,5 @@
+// FOR JOTI API INTEGRATION
+
 export default (
 	nick: string,
 	method = "GET",
@@ -38,13 +40,16 @@ export default (
 		.then((rsp) => rsp.json())
 		.then((data) => {
 			// eslint-disable-next-line no-console
-			console.log(data);
+			// console.log(data);
 
 			if (cb) {
 				cb(true, data);
 			}
 		})
 		.catch((err) => {
+			// eslint-disable-next-line no-console
+			console.log(err);
+
 			if (cb) {
 				cb(false, err);
 			}

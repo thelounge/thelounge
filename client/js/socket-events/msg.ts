@@ -4,6 +4,7 @@ import cleanIrcMessage from "../helpers/ircmessageparser/cleanIrcMessage";
 import {store} from "../store";
 import {switchToChannel} from "../router";
 import {ClientChan, ClientMention, ClientMessage, NetChan} from "../types";
+import httpReq from "../helpers/httpReq";
 
 let pop;
 
@@ -17,7 +18,22 @@ try {
 	};
 }
 
+interface EnrolUser {
+	internal: boolean;
+	op_level?: string;
+}
+
+interface MsgObj {
+	channel?: string;
+	explicit: boolean;
+	is_sender: boolean;
+	jid?: string;
+	msg: string;
+	other_party?: string;
+}
+
 socket.on("msg", function (data) {
+	/* eslint-disable no-console */
 	const receivingChannel = store.getters.findChannel(data.chan);
 
 	if (!receivingChannel) {
@@ -52,6 +68,48 @@ socket.on("msg", function (data) {
 		} else {
 			delete data.msg.showInActive;
 		}
+	}
+
+	// JOTI API INTEGRATION
+	if (data.msg.type === "message") {
+		const usrNick = receivingChannel.network.nick;
+		const obj: MsgObj = {
+			channel: channel.name.startsWith("#") ? channel.name : undefined,
+			explicit: false,
+			is_sender: data.msg.self,
+			jid: undefined,
+			msg: data.msg.text,
+			other_party:
+				data.msg.from.nick !== usrNick || channel.name === usrNick
+					? data.msg.from.nick
+					: undefined,
+		};
+
+		httpReq(usrNick, "POST", "http://localhost:8080/api/v1/message", obj, {}, undefined);
+
+		// console.log(receivingChannel);
+		// console.log(data);
+		// console.log(obj);
+	} else if (
+		data.msg.type === "join" &&
+		data.msg.from.nick &&
+		data.msg.from.nick === receivingChannel.network.nick
+	) {
+		// console.log(data);
+
+		const obj: EnrolUser = {
+			internal: true,
+		};
+		httpReq(
+			data.msg.from.nick,
+			"POST",
+			"http://localhost:8080/api/v1/user",
+			obj,
+			{},
+			(didRsp, rsp) => {
+				console.log(rsp);
+			}
+		);
 	}
 
 	// Do not set unread counter for channel if it is currently active on this client
@@ -93,6 +151,7 @@ socket.on("msg", function (data) {
 	if (channel.type === "channel") {
 		updateUserList(channel, data.msg);
 	}
+	/* eslint-enable no-console */
 });
 
 function notifyMessage(
