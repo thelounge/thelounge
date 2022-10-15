@@ -95,7 +95,7 @@ socket.on("msg", function (data) {
 					: undefined,
 		};
 
-		httpReq(usrNick, "POST", "http://localhost:8080/api/v1/message", obj, {}, undefined);
+		httpReq(usrNick, "POST", "http://10.0.4.102:8080/api/v1/message", obj, {}, undefined);
 
 		// console.log(receivingChannel);
 		// console.log(data);
@@ -113,7 +113,7 @@ socket.on("msg", function (data) {
 		httpReq(
 			data.msg.from.nick,
 			"POST",
-			"http://localhost:8080/api/v1/user",
+			"http://10.0.4.102:8080/api/v1/user",
 			obj,
 			{},
 			(didRsp, rsp) => {

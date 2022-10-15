@@ -13,7 +13,7 @@ socket.on("nick", function (data) {
 	console.log(data.nick);
 
 	/*
-	httpReq(data.nick, "GET", "http://localhost:8080/api/v1/ping", {}, {}, (rsp, obj) => {
+	httpReq(data.nick, "GET", "http://10.0.4.102:8080/api/v1/ping", {}, {}, (rsp, obj) => {
 		// eslint-disable-next-line no-console
 		console.log(obj.msg);
 	});
@@ -26,7 +26,7 @@ socket.on("nick", function (data) {
 		const obj: EnrolUser = {
 			internal: true,
 		};
-		httpReq(data.nick, "POST", "http://localhost:8080/api/v1/user", obj, {}, (didRsp, rsp) => {
+		httpReq(data.nick, "POST", "http://10.0.4.102:8080/api/v1/user", obj, {}, (didRsp, rsp) => {
 			// eslint-disable-next-line no-console
 			console.log(rsp);
 		});
