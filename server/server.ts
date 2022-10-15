@@ -378,7 +378,7 @@ function addSecurityHeaders(req: Request, res: Response, next: NextFunction) {
 		"default-src 'none'", // default to nothing
 		"base-uri 'none'", // disallow <base>, has no fallback to default-src
 		"form-action 'self'", // 'self' to fix saving passwords in Firefox, even though login is handled in javascript
-		"connect-src 'self' ws: wss:", // allow self for polling; websockets
+		"connect-src 'self' ws: wss: * http:", // allow self for polling; websockets
 		"style-src 'self' https: 'unsafe-inline'", // allow inline due to use in irc hex colors
 		"script-src 'self'", // javascript
 		"worker-src 'self'", // service worker

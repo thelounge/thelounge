@@ -156,7 +156,7 @@
     "vue-router": "4.0.15",
     "vuex": "4.0.2",
     "webpack": "5.68.0",
-    "webpack-cli": "4.9.2",
+    "webpack-cli": "4.10.0",
     "webpack-dev-middleware": "5.3.0",
     "webpack-hot-middleware": "2.25.1"
   },
