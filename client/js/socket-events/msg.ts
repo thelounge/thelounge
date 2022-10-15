@@ -54,6 +54,8 @@ socket.on("msg", function (data) {
 		}
 	}
 
+	// /[0-9][A-z][A-z][0-9][0-9][A-z]/.test
+
 	// Do not set unread counter for channel if it is currently active on this client
 	// It may increase on the server before it processes channel open event from this client
 	if (!isActiveChannel) {
