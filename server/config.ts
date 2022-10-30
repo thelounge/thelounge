@@ -94,7 +94,7 @@ export type ConfigType = {
 	fileUpload: FileUpload;
 	transports: string[];
 	leaveMessage: string;
-	defaults: Defaults;
+	defaults: Defaults[];
 	lockNetwork: boolean;
 	messageStorage: string[];
 	useHexIp: boolean;
@@ -152,14 +152,16 @@ class Config {
 		return path.join(this.getPackagesPath(), "node_modules", packageName);
 	}
 
-	getDefaultNick() {
-		if (!this.values.defaults.nick) {
+	getDefaultNickForNetwork(networkName: string) {
+		const defaultNick = this.values.defaults.find(
+			(network) => network.name === networkName
+		)?.nick;
+
+		if (!defaultNick) {
 			return "thelounge";
 		}
 
-		return this.values.defaults.nick.replace(/%/g, () =>
-			Math.floor(Math.random() * 10).toString()
-		);
+		return defaultNick.replace(/%/g, () => Math.floor(Math.random() * 10).toString());
 	}
 
 	merge(newConfig: ConfigType) {
@@ -178,15 +180,36 @@ class Config {
 
 		return _.mergeWith(oldConfig, newConfig, (objValue, srcValue, key) => {
 			// Do not override config variables if the type is incorrect (e.g. object changed into a string)
+			// note that Arrays, Objects, Classes et al all have an 'object' type and can't be differentiated
 			if (
 				typeof objValue !== "undefined" &&
 				objValue !== null &&
 				typeof objValue !== typeof srcValue
 			) {
 				log.warn(`Incorrect type for "${colors.bold(key)}", please verify your config.`);
-
 				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 				return objValue;
+			}
+
+			if (key === "defaults") {
+				if (srcValue === undefined || srcValue === null) {
+					return [];
+				}
+
+				log.warn(
+					`Configuration key "${colors.bold(
+						key
+					)}" should be an array of networks. Support for the old object format will be removed in a future version, please update your config. https://thelounge.chat/docs/configuration#default-networks`
+				);
+
+				// we assume that the user provided value is actually valid... this might be a mistake
+				if (Array.isArray(srcValue)) {
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+					return srcValue;
+				}
+
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+				return [srcValue];
 			}
 
 			// For arrays, simply override the value with user provided one.

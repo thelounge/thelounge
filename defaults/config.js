@@ -218,14 +218,14 @@ module.exports = {
 	// default.
 	leaveMessage: "The Lounge - https://thelounge.chat",
 
-	// ## Default network
+	// ## Default networks
 
 	// ### `defaults`
 	//
-	// Specifies default network information that will be used as placeholder
-	// values in the *Connect* window.
+	// Specifies a list of default network information that will be used as
+	// placeholder values in the *Connect* window.
 	//
-	// The available keys for the `defaults` object are:
+	// The available keys for the individual items are:
 	//
 	// - `name`: Name to display in the channel list of The Lounge. This value is
 	//   not forwarded to the IRC network.
@@ -249,37 +249,41 @@ module.exports = {
 	// Libera.Chat by default:
 	//
 	// ```js
-	// defaults: {
-	//   name: "Libera.Chat",
-	//   host: "irc.libera.chat",
-	//   port: 6697,
-	//   password: "",
-	//   tls: true,
-	//   rejectUnauthorized: true,
-	//   nick: "thelounge%%",
-	//   username: "thelounge",
-	//   realname: "The Lounge User",
-	//   join: "#thelounge"
-	// }
+	// defaults: [
+	//   {
+	//     name: "Libera.Chat",
+	//     host: "irc.libera.chat",
+	//     port: 6697,
+	//     password: "",
+	//     tls: true,
+	//     rejectUnauthorized: true,
+	//     nick: "thelounge%%",
+	//     username: "thelounge",
+	//     realname: "The Lounge User",
+	//     join: "#thelounge"
+	//   },
+	// ]
 	// ```
-	defaults: {
-		name: "Libera.Chat",
-		host: "irc.libera.chat",
-		port: 6697,
-		password: "",
-		tls: true,
-		rejectUnauthorized: true,
-		nick: "thelounge%%",
-		username: "thelounge",
-		realname: "",
-		join: "#thelounge",
-		leaveMessage: "",
-	},
+	defaults: [
+		{
+			name: "Libera.Chat",
+			host: "irc.libera.chat",
+			port: 6697,
+			password: "",
+			tls: true,
+			rejectUnauthorized: true,
+			nick: "thelounge%%",
+			username: "thelounge",
+			realname: "",
+			join: "#thelounge",
+			leaveMessage: "",
+		},
+	],
 
 	// ### `lockNetwork`
 	//
 	// When set to `true`, users will not be able to modify host, port and TLS
-	// settings and will be limited to the configured network.
+	// settings and will be limited to the configured networks.
 	// These fields will also be hidden from the UI.
 	//
 	// This value is set to `false` by default.

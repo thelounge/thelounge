@@ -290,12 +290,15 @@ class Client {
 				});
 		}
 
+		// BUG: this isn't the name of the network, but the username
+		const defaultNetwork =
+			Config.values.defaults.find((network) => this.name === network.name) ||
+			Config.values.defaults[0];
+
 		// TODO; better typing for args
 		const network = new Network({
 			uuid: args.uuid,
-			name: String(
-				args.name || (Config.values.lockNetwork ? Config.values.defaults.name : "") || ""
-			),
+			name: String(args.name || (Config.values.lockNetwork ? defaultNetwork.name : "") || ""),
 			host: String(args.host || ""),
 			port: parseInt(String(args.port), 10),
 			tls: !!args.tls,

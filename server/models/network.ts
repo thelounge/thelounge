@@ -182,7 +182,7 @@ class Network {
 		// Remove new lines and limit length
 		const cleanString = (str: string) => str.replace(/[\x00\r\n]/g, "").substring(0, 300);
 
-		this.setNick(cleanNick(String(this.nick || Config.getDefaultNick())));
+		this.setNick(cleanNick(String(this.nick || Config.getDefaultNickForNetwork(this.name))));
 
 		if (!this.username) {
 			// If username is empty, make one from the provided nick
@@ -224,27 +224,38 @@ class Network {
 		}
 
 		if (Config.values.lockNetwork) {
+			// Get the first configured network that matches this one, if any.
+			let defaultNetwork = Config.values.defaults.find(
+				(network) => this.name === network.name
+			);
+
+			// BUG: This should probably be an error, not just a silent disregard of the value
+			// Otherwise, default to the first configured
+			if (defaultNetwork === undefined) {
+				defaultNetwork = Config.values.defaults[0];
+			}
+
 			// This check is needed to prevent invalid user configurations
 			if (
 				!Config.values.public &&
 				this.host &&
 				this.host.length > 0 &&
-				this.host !== Config.values.defaults.host
+				defaultNetwork === undefined
 			) {
 				error(this, `The hostname you specified (${this.host}) is not allowed.`);
 				return false;
 			}
 
 			if (Config.values.public) {
-				this.name = Config.values.defaults.name;
+				this.name = defaultNetwork.name;
 				// Sync lobby channel name
-				this.channels[0].name = Config.values.defaults.name;
+				this.channels[0].name = defaultNetwork.name;
 			}
 
-			this.host = Config.values.defaults.host;
-			this.port = Config.values.defaults.port;
-			this.tls = Config.values.defaults.tls;
-			this.rejectUnauthorized = Config.values.defaults.rejectUnauthorized;
+			this.host = defaultNetwork.host;
+			this.port = defaultNetwork.port;
+			this.tls = defaultNetwork.tls;
+			this.rejectUnauthorized = defaultNetwork.rejectUnauthorized;
 		}
 
 		if (this.host.length === 0) {

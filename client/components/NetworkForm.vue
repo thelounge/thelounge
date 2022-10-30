@@ -20,6 +20,20 @@
 			</h1>
 			<template v-if="!config?.lockNetwork">
 				<h2>Network settings</h2>
+				<template v-if="config.defaults.length > 0">
+					<div class="connect-row">
+						<label for="connect:presetName">Preset</label>
+						<select id="connect:presetName" v-model="presetName" name="presetName">
+							<option
+								v-for="defaultNetwork in config.defaults"
+								:key="defaultNetwork.name"
+								:value="defaultNetwork.name"
+							>
+								{{ defaultNetwork.name }}
+							</option>
+						</select>
+					</div>
+				</template>
 				<div class="connect-row">
 					<label for="connect:name">Name</label>
 					<input
@@ -175,35 +189,48 @@
 					</div>
 				</template>
 			</template>
-			<template v-else-if="config.lockNetwork && !store.state.serverConfiguration?.public">
-				<h2>Network settings</h2>
-				<div class="connect-row">
-					<label for="connect:name">Name</label>
-					<input
-						id="connect:name"
-						v-model.trim="defaults.name"
-						class="input"
-						name="name"
-						maxlength="100"
-					/>
-				</div>
-				<div class="connect-row">
-					<label for="connect:password">Password</label>
-					<RevealPassword
-						v-slot:default="slotProps"
-						class="input-wrap password-container"
-					>
-						<input
-							id="connect:password"
-							v-model="defaults.password"
-							class="input"
-							:type="slotProps.isVisible ? 'text' : 'password'"
-							placeholder="Server password (optional)"
-							name="password"
-							maxlength="300"
-						/>
-					</RevealPassword>
-				</div>
+			<template v-else-if="config.lockNetwork">
+				<template
+					v-if="
+						$store.state.serverConfiguration.defaults.length > 1 ||
+						!$store.state.serverConfiguration.public
+					"
+				>
+					<h2>Network settings</h2>
+				</template>
+				<template v-if="$store.state.serverConfiguration.defaults.length > 1">
+					<div class="connect-row">
+						<label for="connect:name">Network</label>
+						<select id="connect:name" v-model="defaults.name" name="name">
+							<option
+								v-for="defaultNetwork in config.defaults"
+								:key="defaultNetwork.name"
+								:value="defaultNetwork.name"
+							>
+								{{ defaultNetwork.name }}
+							</option>
+						</select>
+					</div>
+				</template>
+				<template v-if="!$store.state.serverConfiguration.public">
+					<div class="connect-row">
+						<label for="connect:password">Password</label>
+						<RevealPassword
+							v-slot:default="slotProps"
+							class="input-wrap password-container"
+						>
+							<input
+								id="connect:password"
+								v-model="defaults.password"
+								class="input"
+								:type="slotProps.isVisible ? 'text' : 'password'"
+								placeholder="Server password (optional)"
+								name="password"
+								maxlength="300"
+							/>
+						</RevealPassword>
+					</div>
+				</template>
 			</template>
 
 			<h2>User preferences</h2>
@@ -470,6 +497,7 @@ export default defineComponent({
 		const config = ref(store.state.serverConfiguration);
 		const previousUsername = ref(props.defaults?.username);
 		const displayPasswordField = ref(false);
+		const presetName = ref(store.state.serverConfiguration.defaults[0]?.name);
 
 		const publicPassword = ref<HTMLInputElement | null>(null);
 
@@ -479,6 +507,18 @@ export default defineComponent({
 					publicPassword.value?.focus();
 				});
 			}
+		});
+
+		watch(presetName, (newValue) => {
+			const defaults = store.state.serverConfiguration.defaults.find(
+				(def) => def.name === newValue
+			);
+
+			if (!defaults) {
+				return;
+			}
+
+			Object.assign(props.defaults, defaults);
 		});
 
 		const commandsInput = ref<HTMLInputElement | null>(null);
@@ -557,6 +597,7 @@ export default defineComponent({
 			store,
 			config,
 			displayPasswordField,
+			presetName,
 			publicPassword,
 			commandsInput,
 			resizeCommandsInput,
