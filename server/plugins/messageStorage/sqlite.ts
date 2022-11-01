@@ -74,6 +74,7 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 		this.isEnabled = true;
 
 		this.database = new sqlite3.Database(sqlitePath);
+		this.database.on("trace", (sql) => log.debug(`sql-${this.stmt_id()} ${sql}`));
 
 		try {
 			await this.run_migrations();
@@ -272,6 +273,11 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 
 	canProvideMessages() {
 		return this.isEnabled;
+	}
+
+	private _stmt_id = 0;
+	private stmt_id(): string {
+		return (this._stmt_id++).toString();
 	}
 
 	private serialize_run(stmt: string, params: any[]): Promise<void> {
