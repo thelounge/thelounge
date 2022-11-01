@@ -2,11 +2,12 @@ import type {Database} from "sqlite3";
 
 import log from "../../log";
 import path from "path";
-import fs from "fs";
+import fs from "fs/promises";
 import Config from "../../config";
 import Msg, {Message} from "../../models/msg";
 import Client from "../../client";
 import Chan, {Channel} from "../../models/chan";
+import Helper from "../../helper";
 import type {
 	SearchResponse,
 	SearchQuery,
@@ -47,26 +48,26 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 		this.isEnabled = false;
 	}
 
-	enable() {
+	async enable() {
 		const logsPath = Config.getUserLogsPath();
 		const sqlitePath = path.join(logsPath, `${this.client.name}.sqlite3`);
 
 		try {
-			fs.mkdirSync(logsPath, {recursive: true});
-		} catch (e: any) {
-			log.error("Unable to create logs directory", String(e));
-
-			return;
+			await fs.mkdir(logsPath, {recursive: true});
+		} catch (e) {
+			throw Helper.catch_to_error("Unable to create logs directory", e);
 		}
 
 		this.isEnabled = true;
 
 		this.database = new sqlite3.Database(sqlitePath);
 
-		this.run_migrations().catch((err) => {
-			log.error("Migration failed", String(err));
+		try {
+			await this.run_migrations();
+		} catch (e) {
 			this.isEnabled = false;
-		});
+			throw Helper.catch_to_error("Migration failed", e);
+		}
 	}
 
 	async run_migrations() {
@@ -106,25 +107,26 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 		]);
 	}
 
-	close(callback?: (error?: Error | null) => void) {
+	async close() {
 		if (!this.isEnabled) {
 			return;
 		}
 
 		this.isEnabled = false;
 
-		this.database.close((err) => {
-			if (err) {
-				log.error(`Failed to close sqlite database: ${err.message}`);
-			}
+		return new Promise<void>((resolve, reject) => {
+			this.database.close((err) => {
+				if (err) {
+					reject(`Failed to close sqlite database: ${err.message}`);
+					return;
+				}
 
-			if (callback) {
-				callback(err);
-			}
+				resolve();
+			});
 		});
 	}
 
-	index(network: Network, channel: Chan, msg: Msg) {
+	async index(network: Network, channel: Chan, msg: Msg) {
 		if (!this.isEnabled) {
 			return;
 		}
@@ -140,26 +142,27 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 			return newMsg;
 		}, {});
 
-		this.run(
+		await this.serialize_run(
 			"INSERT INTO messages(network, channel, time, type, msg) VALUES(?, ?, ?, ?, ?)",
-			network.uuid,
-			channel.name.toLowerCase(),
-			msg.time.getTime(),
-			msg.type,
-			JSON.stringify(clonedMsg)
+			[
+				network.uuid,
+				channel.name.toLowerCase(),
+				msg.time.getTime(),
+				msg.type,
+				JSON.stringify(clonedMsg),
+			]
 		);
 	}
 
-	deleteChannel(network: Network, channel: Channel) {
+	async deleteChannel(network: Network, channel: Channel) {
 		if (!this.isEnabled) {
 			return;
 		}
 
-		this.run(
-			"DELETE FROM messages WHERE network = ? AND channel = ?",
+		await this.serialize_run("DELETE FROM messages WHERE network = ? AND channel = ?", [
 			network.uuid,
-			channel.name.toLowerCase()
-		);
+			channel.name.toLowerCase(),
+		]);
 	}
 
 	/**
@@ -170,7 +173,7 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 	 */
 	async getMessages(network: Network, channel: Channel): Promise<Message[]> {
 		if (!this.isEnabled || Config.values.maxHistory === 0) {
-			return Promise.resolve([]);
+			return [];
 		}
 
 		// If unlimited history is specified, load 100k messages
@@ -183,7 +186,7 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 			limit
 		);
 
-		return rows.reverse().map((row: any) => {
+		return rows.reverse().map((row: any): Message => {
 			const msg = JSON.parse(row.msg);
 			msg.time = row.time;
 			msg.type = row.type;
@@ -192,7 +195,7 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 			newMsg.id = this.client.idMsg++;
 
 			return newMsg;
-		}) as Message[];
+		});
 	}
 
 	async search(query: SearchQuery): Promise<SearchResponse> {
@@ -243,17 +246,10 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 		return this.isEnabled;
 	}
 
-	private run(stmt: string, ...params: any[]) {
-		this.serialize_run(stmt, params).catch((err) =>
-			log.error(`failed to run ${stmt}`, String(err))
-		);
-	}
-
 	private serialize_run(stmt: string, params: any[]): Promise<void> {
 		return new Promise((resolve, reject) => {
 			this.database.serialize(() => {
 				this.database.run(stmt, params, (err) => {
-
 					if (err) {
 						reject(err);
 						return;
@@ -265,7 +261,7 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 		});
 	}
 
-	private serialize_fetchall(stmt: string, ...params: any[]): Promise<any> {
+	private serialize_fetchall(stmt: string, ...params: any[]): Promise<any[]> {
 		return new Promise((resolve, reject) => {
 			this.database.serialize(() => {
 				this.database.all(stmt, params, (err, rows) => {
@@ -281,12 +277,9 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 	}
 
 	private serialize_get(stmt: string, ...params: any[]): Promise<any> {
-		const log_id = this.stmt_id();
 		return new Promise((resolve, reject) => {
 			this.database.serialize(() => {
 				this.database.get(stmt, params, (err, row) => {
-					log.debug(log_id, "callback", stmt);
-
 					if (err) {
 						reject(err);
 						return;

@@ -9,13 +9,13 @@ interface MessageStorage {
 	client: Client;
 	isEnabled: boolean;
 
-	enable(): void;
+	enable(): Promise<void>;
 
-	close(callback?: () => void): void;
+	close(): Promise<void>;
 
-	index(network: Network, channel: Channel, msg: Message): void;
+	index(network: Network, channel: Channel, msg: Message): Promise<void>;
 
-	deleteChannel(network: Network, channel: Channel);
+	deleteChannel(network: Network, channel: Channel): Promise<void>;
 
 	getMessages(network: Network, channel: Channel): Promise<Message[]>;
 
@@ -30,12 +30,11 @@ export type SearchQuery = {
 };
 
 export type SearchResponse =
-	| (Omit<SearchQuery, "channelName" | "offset"> & {
+	| Omit<SearchQuery, "channelName" | "offset"> & {
 			results: Message[];
 			target: string;
 			offset: number;
-	  })
-	| [];
+	  };
 
 type SearchFunction = (query: SearchQuery) => Promise<SearchResponse>;
 

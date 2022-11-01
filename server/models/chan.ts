@@ -260,7 +260,7 @@ class Chan {
 		}
 
 		for (const messageStorage of client.messageStorage) {
-			messageStorage.index(target.network, targetChannel, msg);
+			messageStorage.index(target.network, targetChannel, msg).catch((e) => log.error(e));
 		}
 	}
 	loadMessages(client: Client, network: Network) {
