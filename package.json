@@ -90,7 +90,7 @@
     "@types/is-utf8": "0.2.1",
     "@types/ldapjs": "2.2.2",
     "@types/linkify-it": "3.0.2",
-    "@types/lodash": "4.14.182",
+    "@types/lodash": "4.14.188",
     "@types/mime-types": "2.1.1",
     "@types/mocha": "9.1.1",
     "@types/mousetrap": "1.6.9",
