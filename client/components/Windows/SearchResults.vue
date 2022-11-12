@@ -189,11 +189,6 @@ export default defineComponent({
 		const doSearch = () => {
 			offset.value = 0;
 			store.commit("messageSearchInProgress", true);
-
-			if (!offset.value) {
-				store.commit("messageSearchInProgress", undefined); // Only reset if not getting offset
-			}
-
 			socket.emit("search", {
 				networkUuid: network.value?.uuid,
 				channelName: channel.value?.name,
