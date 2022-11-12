@@ -186,9 +186,14 @@ export default defineComponent({
 			return new Date(previousMessage.time).getDay() !== new Date(message.time).getDay();
 		};
 
-		const doSearch = () => {
+		const clearSearchState = () => {
 			offset.value = 0;
-			store.commit("messageSearchInProgress", true);
+			store.commit("messageSearchInProgress", false);
+			store.commit("messageSearchResults", null);
+		};
+
+		const doSearch = () => {
+			clearSearchState(); // this is a new search, so we need to clear anything before that
 			socket.emit("search", {
 				networkUuid: network.value?.uuid,
 				channelName: channel.value?.name,
@@ -296,6 +301,7 @@ export default defineComponent({
 		onUnmounted(() => {
 			eventbus.off("escapekey", closeSearch);
 			eventbus.off("re-search", doSearch);
+			clearSearchState();
 		});
 
 		return {
