@@ -167,7 +167,9 @@ describe("SQLite Message Storage", function () {
 				.search({
 					searchTerm: "msg",
 					networkUuid: "retrieval-order-test-network",
-				} as any)
+					channelName: "",
+					offset: 0,
+				})
 				.then((messages) => {
 					// @ts-expect-error Property 'results' does not exist on type '[]'.
 					expect(messages.results).to.have.lengthOf(100);
@@ -192,7 +194,9 @@ describe("SQLite Message Storage", function () {
 				.search({
 					searchTerm: query,
 					networkUuid: "this-is-a-network-guid2",
-				} as any)
+					channelName: "",
+					offset: 0,
+				})
 				.then((messages) => {
 					// @ts-expect-error Property 'results' does not exist on type '[]'.
 					expect(messages.results.map((i) => i.text)).to.deep.equal(expected);

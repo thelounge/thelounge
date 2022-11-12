@@ -26,7 +26,7 @@ export type SearchQuery = {
 	searchTerm: string;
 	networkUuid: string;
 	channelName: string;
-	offset: number | string;
+	offset: number;
 };
 
 export type SearchResponse =
