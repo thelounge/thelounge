@@ -129,13 +129,14 @@ export default defineComponent({
 		const oldScrollTop = ref(0);
 		const oldChatHeight = ref(0);
 
-		const search = computed(() => store.state.messageSearchResults);
 		const messages = computed(() => {
-			if (!search.value) {
+			const results = store.state.messageSearchResults?.results;
+
+			if (!results) {
 				return [];
 			}
 
-			return search.value.results;
+			return results;
 		});
 
 		const chan = computed(() => {
@@ -307,7 +308,6 @@ export default defineComponent({
 			loadMoreButton,
 			messages,
 			moreResultsAvailable,
-			search,
 			network,
 			channel,
 			route,
