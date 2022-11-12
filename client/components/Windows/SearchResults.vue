@@ -212,7 +212,7 @@ export default defineComponent({
 				networkUuid: network.value?.uuid,
 				channelName: channel.value?.name,
 				searchTerm: String(route.query.q || ""),
-				offset: offset.value + 1,
+				offset: offset.value,
 			});
 		};
 
