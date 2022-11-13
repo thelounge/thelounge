@@ -236,20 +236,6 @@ export default defineComponent({
 			// TODO: Implement jumping to messages!
 			// This is difficult because it means client will need to handle a potentially nonlinear message set
 			// (loading IntersectionObserver both before AND after the messages)
-			router
-				.push({
-					name: "MessageList",
-					params: {
-						id: channel.value?.id,
-					},
-					query: {
-						focused: id,
-					},
-				})
-				.catch((e) => {
-					// eslint-disable-next-line no-console
-					console.error(`Failed to navigate to message ${id}`, e);
-				});
 		};
 
 		watch(
