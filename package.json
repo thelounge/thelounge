@@ -108,7 +108,7 @@
     "@typescript-eslint/eslint-plugin": "5.22.0",
     "@typescript-eslint/parser": "5.22.0",
     "@vue/runtime-dom": "3.2.33",
-    "@vue/test-utils": "2.2.1",
+    "@vue/test-utils": "2.2.2",
     "babel-loader": "8.2.5",
     "babel-plugin-istanbul": "6.1.1",
     "babel-preset-typescript-vue3": "2.0.17",
