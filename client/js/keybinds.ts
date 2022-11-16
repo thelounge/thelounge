@@ -113,13 +113,13 @@ Mousetrap.bind(["alt+a"], function (e) {
 });
 
 // Show the help menu.
-Mousetrap.bind(["alt+/"], async function (e) {
+Mousetrap.bind(["alt+/"], function (e) {
 	if (isIgnoredKeybind(e)) {
 		return true;
 	}
 
-	await navigate("Help");
-
+	/* eslint-disable no-console */
+	navigate("Help").catch((err) => console.log(err));
 	return false;
 });
 
