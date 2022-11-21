@@ -5,7 +5,7 @@ import {createApp} from "vue";
 import {store, CallableGetters, key} from "./store";
 import App from "../components/App.vue";
 import storage from "./localStorage";
-import {router, navigate} from "./router";
+import {router} from "./router";
 import socket from "./socket";
 import eventbus from "./eventbus";
 
@@ -20,7 +20,6 @@ const faviconAlerted = favicon?.dataset.other || "";
 
 export const VueApp = createApp(App);
 
-router.app = VueApp;
 VueApp.use(router);
 VueApp.use(store, key);
 

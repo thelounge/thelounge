@@ -67,14 +67,6 @@ type ClientLinkPreview = LinkPreview & {
 	sourceLoaded?: boolean;
 };
 
-declare module "vue-router" {
-	import Vue from "./vue";
-
-	interface Router {
-		app: Vue.VueApp;
-	}
-}
-
 interface BeforeInstallPromptEvent extends Event {
 	/**
 	 * Returns an array of DOMString items containing the platforms on which the event was dispatched.
