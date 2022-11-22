@@ -132,13 +132,13 @@ export default async function (
 		return res.sendFile(path.join(packagePath, fileName));
 	});
 
-	let server: import("http").Server | import("https").Server | null = null;
-
 	if (Config.values.public && (Config.values.ldap || {}).enable) {
 		log.warn(
 			"Server is public and set to use LDAP. Set to private mode if trying to use LDAP authentication."
 		);
 	}
+
+	let server: import("http").Server | import("https").Server;
 
 	if (!Config.values.https.enable) {
 		const createServer = (await import("http")).createServer;
