@@ -421,8 +421,10 @@ function indexRequest(req: Request, res: Response) {
 				throw err;
 			}
 
-			const config = getServerConfiguration() as IndexTemplateConfiguration;
-			config.cacheBust = Helper.getVersionCacheBust();
+			const config: IndexTemplateConfiguration = {
+				...getServerConfiguration(),
+				...{cacheBust: Helper.getVersionCacheBust()},
+			};
 
 			res.send(_.template(file)(config));
 		}
@@ -901,11 +903,7 @@ function getClientConfiguration(): ClientConfiguration {
 }
 
 function getServerConfiguration(): ServerConfiguration {
-	const config = _.clone(Config.values) as ServerConfiguration;
-
-	config.stylesheets = packages.getStylesheets();
-
-	return config;
+	return {...Config.values, ...{stylesheets: packages.getStylesheets()}};
 }
 
 function performAuthentication(this: Socket, data) {
