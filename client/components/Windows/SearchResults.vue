@@ -129,13 +129,14 @@ export default defineComponent({
 		const oldScrollTop = ref(0);
 		const oldChatHeight = ref(0);
 
-		const search = computed(() => store.state.messageSearchResults);
 		const messages = computed(() => {
-			if (!search.value) {
+			const results = store.state.messageSearchResults?.results;
+
+			if (!results) {
 				return [];
 			}
 
-			return search.value.results;
+			return results;
 		});
 
 		const chan = computed(() => {
@@ -185,14 +186,14 @@ export default defineComponent({
 			return new Date(previousMessage.time).getDay() !== new Date(message.time).getDay();
 		};
 
-		const doSearch = () => {
+		const clearSearchState = () => {
 			offset.value = 0;
-			store.commit("messageSearchInProgress", true);
+			store.commit("messageSearchInProgress", false);
+			store.commit("messageSearchResults", null);
+		};
 
-			if (!offset.value) {
-				store.commit("messageSearchInProgress", undefined); // Only reset if not getting offset
-			}
-
+		const doSearch = () => {
+			clearSearchState(); // this is a new search, so we need to clear anything before that
 			socket.emit("search", {
 				networkUuid: network.value?.uuid,
 				channelName: channel.value?.name,
@@ -216,7 +217,7 @@ export default defineComponent({
 				networkUuid: network.value?.uuid,
 				channelName: channel.value?.name,
 				searchTerm: String(route.query.q || ""),
-				offset: offset.value + 1,
+				offset: offset.value,
 			});
 		};
 
@@ -286,6 +287,7 @@ export default defineComponent({
 		onUnmounted(() => {
 			eventbus.off("escapekey", closeSearch);
 			eventbus.off("re-search", doSearch);
+			clearSearchState();
 		});
 
 		return {
@@ -293,7 +295,6 @@ export default defineComponent({
 			loadMoreButton,
 			messages,
 			moreResultsAvailable,
-			search,
 			network,
 			channel,
 			route,

@@ -224,7 +224,7 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 
 		let select =
 			'SELECT msg, type, time, network, channel FROM messages WHERE type = "message" AND json_extract(msg, "$.text") LIKE ? ESCAPE \'@\'';
-		const params = [`%${escapedSearchTerm}%`];
+		const params: any[] = [`%${escapedSearchTerm}%`];
 
 		if (query.networkUuid) {
 			select += " AND network = ? ";
@@ -239,9 +239,8 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 		const maxResults = 100;
 
 		select += " ORDER BY time DESC LIMIT ? OFFSET ? ";
-		params.push(maxResults.toString());
-		query.offset = parseInt(query.offset as string, 10) || 0;
-		params.push(String(query.offset));
+		params.push(maxResults);
+		params.push(query.offset);
 
 		return new Promise((resolve, reject) => {
 			this.database.all(select, params, (err, rows) => {
@@ -252,8 +251,8 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 						searchTerm: query.searchTerm,
 						target: query.channelName,
 						networkUuid: query.networkUuid,
-						offset: query.offset as number,
-						results: parseSearchRowsToMessages(query.offset as number, rows).reverse(),
+						offset: query.offset,
+						results: parseSearchRowsToMessages(query.offset, rows).reverse(),
 					};
 					resolve(response);
 				}
