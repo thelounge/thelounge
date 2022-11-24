@@ -147,7 +147,7 @@ class Client {
 			}
 
 			for (const messageStorage of client.messageStorage) {
-				messageStorage.enable();
+				messageStorage.enable().catch((e) => log.error(e));
 			}
 		}
 
@@ -614,12 +614,12 @@ class Client {
 		}
 
 		for (const messageStorage of this.messageStorage) {
-			messageStorage.deleteChannel(target.network, target.chan);
+			messageStorage.deleteChannel(target.network, target.chan).catch((e) => log.error(e));
 		}
 	}
 
 	search(query: SearchQuery) {
-		if (this.messageProvider === undefined) {
+		if (!this.messageProvider?.isEnabled) {
 			return Promise.resolve({
 				results: [],
 				target: "",
@@ -767,7 +767,7 @@ class Client {
 		});
 
 		for (const messageStorage of this.messageStorage) {
-			messageStorage.close();
+			messageStorage.close().catch((e) => log.error(e));
 		}
 	}
 

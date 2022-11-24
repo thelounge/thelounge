@@ -37,18 +37,16 @@ describe("SQLite Message Storage", function () {
 		fs.rmdir(path.join(Config.getHomePath(), "logs"), done);
 	});
 
-	it("should resolve an empty array when disabled", function () {
-		return store.getMessages(null as any, null as any).then((messages) => {
-			expect(messages).to.be.empty;
-		});
+	it("should resolve an empty array when disabled", async function () {
+		const messages = await store.getMessages(null as any, null as any);
+		expect(messages).to.be.empty;
 	});
 
-	it("should create database file", function () {
+	it("should create database file", async function () {
 		expect(store.isEnabled).to.be.false;
 		expect(fs.existsSync(expectedPath)).to.be.false;
 
-		store.enable();
-
+		await store.enable();
 		expect(store.isEnabled).to.be.true;
 	});
 
@@ -90,8 +88,8 @@ describe("SQLite Message Storage", function () {
 		);
 	});
 
-	it("should store a message", function () {
-		store.index(
+	it("should store a message", async function () {
+		await store.index(
 			{
 				uuid: "this-is-a-network-guid",
 			} as any,
@@ -105,35 +103,30 @@ describe("SQLite Message Storage", function () {
 		);
 	});
 
-	it("should retrieve previously stored message", function () {
-		return store
-			.getMessages(
-				{
-					uuid: "this-is-a-network-guid",
-				} as any,
-				{
-					name: "#thisisaCHANNEL",
-				} as any
-			)
-			.then((messages) => {
-				expect(messages).to.have.lengthOf(1);
-
-				const msg = messages[0];
-
-				expect(msg.text).to.equal("Hello from sqlite world!");
-				expect(msg.type).to.equal(MessageType.MESSAGE);
-				expect(msg.time.getTime()).to.equal(123456789);
-			});
+	it("should retrieve previously stored message", async function () {
+		const messages = await store.getMessages(
+			{
+				uuid: "this-is-a-network-guid",
+			} as any,
+			{
+				name: "#thisisaCHANNEL",
+			} as any
+		);
+		expect(messages).to.have.lengthOf(1);
+		const msg = messages[0];
+		expect(msg.text).to.equal("Hello from sqlite world!");
+		expect(msg.type).to.equal(MessageType.MESSAGE);
+		expect(msg.time.getTime()).to.equal(123456789);
 	});
 
-	it("should retrieve latest LIMIT messages in order", function () {
+	it("should retrieve latest LIMIT messages in order", async function () {
 		const originalMaxHistory = Config.values.maxHistory;
 
 		try {
 			Config.values.maxHistory = 2;
 
 			for (let i = 0; i < 200; ++i) {
-				store.index(
+				await store.index(
 					{uuid: "retrieval-order-test-network"} as any,
 					{name: "#channel"} as any,
 					new Msg({
@@ -143,64 +136,51 @@ describe("SQLite Message Storage", function () {
 				);
 			}
 
-			return store
-				.getMessages(
-					{uuid: "retrieval-order-test-network"} as any,
-					{name: "#channel"} as any
-				)
-				.then((messages) => {
-					expect(messages).to.have.lengthOf(2);
-					expect(messages.map((i) => i.text)).to.deep.equal(["msg 198", "msg 199"]);
-				});
+			const messages = await store.getMessages(
+				{uuid: "retrieval-order-test-network"} as any,
+				{name: "#channel"} as any
+			);
+			expect(messages).to.have.lengthOf(2);
+			expect(messages.map((i_1) => i_1.text)).to.deep.equal(["msg 198", "msg 199"]);
 		} finally {
 			Config.values.maxHistory = originalMaxHistory;
 		}
 	});
 
-	it("should search messages", function () {
+	it("should search messages", async function () {
 		const originalMaxHistory = Config.values.maxHistory;
 
 		try {
 			Config.values.maxHistory = 2;
 
-			return store
-				.search({
-					searchTerm: "msg",
-					networkUuid: "retrieval-order-test-network",
-					channelName: "",
-					offset: 0,
-				})
-				.then((messages) => {
-					// @ts-expect-error Property 'results' does not exist on type '[]'.
-					expect(messages.results).to.have.lengthOf(100);
+			const search = await store.search({
+				searchTerm: "msg",
+				networkUuid: "retrieval-order-test-network",
+				channelName: "",
+				offset: 0,
+			});
+			expect(search.results).to.have.lengthOf(100);
+			const expectedMessages: string[] = [];
 
-					const expectedMessages: string[] = [];
+			for (let i = 100; i < 200; ++i) {
+				expectedMessages.push(`msg ${i}`);
+			}
 
-					for (let i = 100; i < 200; ++i) {
-						expectedMessages.push(`msg ${i}`);
-					}
-
-					// @ts-expect-error Property 'results' does not exist on type '[]'.
-					expect(messages.results.map((i) => i.text)).to.deep.equal(expectedMessages);
-				});
+			expect(search.results.map((i_1) => i_1.text)).to.deep.equal(expectedMessages);
 		} finally {
 			Config.values.maxHistory = originalMaxHistory;
 		}
 	});
 
-	it("should search messages with escaped wildcards", function () {
-		function assertResults(query, expected) {
-			return store
-				.search({
-					searchTerm: query,
-					networkUuid: "this-is-a-network-guid2",
-					channelName: "",
-					offset: 0,
-				})
-				.then((messages) => {
-					// @ts-expect-error Property 'results' does not exist on type '[]'.
-					expect(messages.results.map((i) => i.text)).to.deep.equal(expected);
-				});
+	it("should search messages with escaped wildcards", async function () {
+		async function assertResults(query: string, expected: string[]) {
+			const search = await store.search({
+				searchTerm: query,
+				networkUuid: "this-is-a-network-guid2",
+				channelName: "",
+				offset: 0,
+			});
+			expect(search.results.map((i) => i.text)).to.deep.equal(expected);
 		}
 
 		const originalMaxHistory = Config.values.maxHistory;
@@ -208,7 +188,7 @@ describe("SQLite Message Storage", function () {
 		try {
 			Config.values.maxHistory = 3;
 
-			store.index(
+			await store.index(
 				{uuid: "this-is-a-network-guid2"} as any,
 				{name: "#channel"} as any,
 				new Msg({
@@ -217,7 +197,7 @@ describe("SQLite Message Storage", function () {
 				} as any)
 			);
 
-			store.index(
+			await store.index(
 				{uuid: "this-is-a-network-guid2"} as any,
 				{name: "#channel"} as any,
 				new Msg({
@@ -226,7 +206,7 @@ describe("SQLite Message Storage", function () {
 				} as any)
 			);
 
-			store.index(
+			await store.index(
 				{uuid: "this-is-a-network-guid2"} as any,
 				{name: "#channel"} as any,
 				new Msg({
@@ -235,32 +215,21 @@ describe("SQLite Message Storage", function () {
 				} as any)
 			);
 
-			return (
-				store
-					.getMessages(
-						{uuid: "this-is-a-network-guid2"} as any,
-						{name: "#channel"} as any
-					)
-					// .getMessages() waits for store.index() transactions to commit
-					.then(() => assertResults("foo", ["foo % bar _ baz", "foo bar x baz"]))
-					.then(() => assertResults("%", ["foo % bar _ baz"]))
-					.then(() => assertResults("foo % bar ", ["foo % bar _ baz"]))
-					.then(() => assertResults("_", ["foo % bar _ baz"]))
-					.then(() => assertResults("bar _ baz", ["foo % bar _ baz"]))
-					.then(() => assertResults("%%", []))
-					.then(() => assertResults("@%", []))
-					.then(() => assertResults("@", ["bar @ baz"]))
-			);
+			await assertResults("foo", ["foo % bar _ baz", "foo bar x baz"]);
+			await assertResults("%", ["foo % bar _ baz"]);
+			await assertResults("foo % bar ", ["foo % bar _ baz"]);
+			await assertResults("_", ["foo % bar _ baz"]);
+			await assertResults("bar _ baz", ["foo % bar _ baz"]);
+			await assertResults("%%", []);
+			await assertResults("@%", []);
+			await assertResults("@", ["bar @ baz"]);
 		} finally {
 			Config.values.maxHistory = originalMaxHistory;
 		}
 	});
 
-	it("should close database", function (done) {
-		store.close((err) => {
-			expect(err).to.be.null;
-			expect(fs.existsSync(expectedPath)).to.be.true;
-			done();
-		});
+	it("should close database", async function () {
+		await store.close();
+		expect(fs.existsSync(expectedPath)).to.be.true;
 	});
 });

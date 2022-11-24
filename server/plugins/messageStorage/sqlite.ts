@@ -2,11 +2,12 @@ import type {Database} from "sqlite3";
 
 import log from "../../log";
 import path from "path";
-import fs from "fs";
+import fs from "fs/promises";
 import Config from "../../config";
 import Msg, {Message} from "../../models/msg";
 import Client from "../../client";
 import Chan, {Channel} from "../../models/chan";
+import Helper from "../../helper";
 import type {
 	SearchResponse,
 	SearchQuery,
@@ -47,89 +48,85 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 		this.isEnabled = false;
 	}
 
-	enable() {
+	async enable() {
 		const logsPath = Config.getUserLogsPath();
 		const sqlitePath = path.join(logsPath, `${this.client.name}.sqlite3`);
 
 		try {
-			fs.mkdirSync(logsPath, {recursive: true});
-		} catch (e: any) {
-			log.error("Unable to create logs directory", String(e));
-
-			return;
+			await fs.mkdir(logsPath, {recursive: true});
+		} catch (e) {
+			throw Helper.catch_to_error("Unable to create logs directory", e);
 		}
 
 		this.isEnabled = true;
 
 		this.database = new sqlite3.Database(sqlitePath);
-		this.database.serialize(() => {
-			schema.forEach((line) => this.database.run(line));
 
-			this.database.get(
-				"SELECT value FROM options WHERE name = 'schema_version'",
-				(err, row) => {
-					if (err) {
-						return log.error(`Failed to retrieve schema version: ${err.toString()}`);
-					}
-
-					// New table
-					if (row === undefined) {
-						this.database.serialize(() =>
-							this.database.run(
-								"INSERT INTO options (name, value) VALUES ('schema_version', ?)",
-								currentSchemaVersion
-							)
-						);
-
-						return;
-					}
-
-					const storedSchemaVersion = parseInt(row.value, 10);
-
-					if (storedSchemaVersion === currentSchemaVersion) {
-						return;
-					}
-
-					if (storedSchemaVersion > currentSchemaVersion) {
-						return log.error(
-							`sqlite messages schema version is higher than expected (${storedSchemaVersion} > ${currentSchemaVersion}). Is The Lounge out of date?`
-						);
-					}
-
-					log.info(
-						`sqlite messages schema version is out of date (${storedSchemaVersion} < ${currentSchemaVersion}). Running migrations if any.`
-					);
-
-					this.database.serialize(() =>
-						this.database.run(
-							"UPDATE options SET value = ? WHERE name = 'schema_version'",
-							currentSchemaVersion
-						)
-					);
-				}
-			);
-		});
+		try {
+			await this.run_migrations();
+		} catch (e) {
+			this.isEnabled = false;
+			throw Helper.catch_to_error("Migration failed", e);
+		}
 	}
 
-	close(callback?: (error?: Error | null) => void) {
+	async run_migrations() {
+		for (const stmt of schema) {
+			await this.serialize_run(stmt, []);
+		}
+
+		const version = await this.serialize_get(
+			"SELECT value FROM options WHERE name = 'schema_version'"
+		);
+
+		if (version === undefined) {
+			// new table
+			await this.serialize_run(
+				"INSERT INTO options (name, value) VALUES ('schema_version', ?)",
+				[currentSchemaVersion]
+			);
+			return;
+		}
+
+		const storedSchemaVersion = parseInt(version.value, 10);
+
+		if (storedSchemaVersion === currentSchemaVersion) {
+			return;
+		}
+
+		if (storedSchemaVersion > currentSchemaVersion) {
+			throw `sqlite messages schema version is higher than expected (${storedSchemaVersion} > ${currentSchemaVersion}). Is The Lounge out of date?`;
+		}
+
+		log.info(
+			`sqlite messages schema version is out of date (${storedSchemaVersion} < ${currentSchemaVersion}). Running migrations if any.`
+		);
+
+		await this.serialize_run("UPDATE options SET value = ? WHERE name = 'schema_version'", [
+			currentSchemaVersion,
+		]);
+	}
+
+	async close() {
 		if (!this.isEnabled) {
 			return;
 		}
 
 		this.isEnabled = false;
 
-		this.database.close((err) => {
-			if (err) {
-				log.error(`Failed to close sqlite database: ${err.message}`);
-			}
+		return new Promise<void>((resolve, reject) => {
+			this.database.close((err) => {
+				if (err) {
+					reject(`Failed to close sqlite database: ${err.message}`);
+					return;
+				}
 
-			if (callback) {
-				callback(err);
-			}
+				resolve();
+			});
 		});
 	}
 
-	index(network: Network, channel: Chan, msg: Msg) {
+	async index(network: Network, channel: Chan, msg: Msg) {
 		if (!this.isEnabled) {
 			return;
 		}
@@ -145,78 +142,68 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 			return newMsg;
 		}, {});
 
-		this.database.serialize(() =>
-			this.database.run(
-				"INSERT INTO messages(network, channel, time, type, msg) VALUES(?, ?, ?, ?, ?)",
+		await this.serialize_run(
+			"INSERT INTO messages(network, channel, time, type, msg) VALUES(?, ?, ?, ?, ?)",
+			[
 				network.uuid,
 				channel.name.toLowerCase(),
 				msg.time.getTime(),
 				msg.type,
-				JSON.stringify(clonedMsg)
-			)
+				JSON.stringify(clonedMsg),
+			]
 		);
 	}
 
-	deleteChannel(network: Network, channel: Channel) {
+	async deleteChannel(network: Network, channel: Channel) {
 		if (!this.isEnabled) {
 			return;
 		}
 
-		this.database.serialize(() =>
-			this.database.run(
-				"DELETE FROM messages WHERE network = ? AND channel = ?",
-				network.uuid,
-				channel.name.toLowerCase()
-			)
-		);
+		await this.serialize_run("DELETE FROM messages WHERE network = ? AND channel = ?", [
+			network.uuid,
+			channel.name.toLowerCase(),
+		]);
 	}
 
 	/**
 	 * Load messages for given channel on a given network and resolve a promise with loaded messages.
 	 *
-	 * @param Network network - Network object where the channel is
-	 * @param Chan channel - Channel object for which to load messages for
+	 * @param network Network - Network object where the channel is
+	 * @param channel Channel - Channel object for which to load messages for
 	 */
-	getMessages(network: Network, channel: Channel) {
+	async getMessages(network: Network, channel: Channel): Promise<Message[]> {
 		if (!this.isEnabled || Config.values.maxHistory === 0) {
-			return Promise.resolve([]);
+			return [];
 		}
 
 		// If unlimited history is specified, load 100k messages
 		const limit = Config.values.maxHistory < 0 ? 100000 : Config.values.maxHistory;
 
-		return new Promise((resolve, reject) => {
-			this.database.serialize(() =>
-				this.database.all(
-					"SELECT msg, type, time FROM messages WHERE network = ? AND channel = ? ORDER BY time DESC LIMIT ?",
-					[network.uuid, channel.name.toLowerCase(), limit],
-					(err, rows) => {
-						if (err) {
-							return reject(err);
-						}
+		const rows = await this.serialize_fetchall(
+			"SELECT msg, type, time FROM messages WHERE network = ? AND channel = ? ORDER BY time DESC LIMIT ?",
+			network.uuid,
+			channel.name.toLowerCase(),
+			limit
+		);
 
-						resolve(
-							rows.reverse().map((row) => {
-								const msg = JSON.parse(row.msg);
-								msg.time = row.time;
-								msg.type = row.type;
+		return rows.reverse().map((row: any): Message => {
+			const msg = JSON.parse(row.msg);
+			msg.time = row.time;
+			msg.type = row.type;
 
-								const newMsg = new Msg(msg);
-								newMsg.id = this.client.idMsg++;
+			const newMsg = new Msg(msg);
+			newMsg.id = this.client.idMsg++;
 
-								return newMsg;
-							})
-						);
-					}
-				)
-			);
-		}) as Promise<Message[]>;
+			return newMsg;
+		});
 	}
 
-	search(query: SearchQuery): Promise<SearchResponse | []> {
+	async search(query: SearchQuery): Promise<SearchResponse> {
 		if (!this.isEnabled) {
 			// this should never be hit as messageProvider is checked in client.search()
-			return Promise.resolve([]);
+			throw new Error(
+				"search called but sqlite provider not enabled. This is a programming error"
+			);
 		}
 
 		// Using the '@' character to escape '%' and '_' in patterns.
@@ -242,30 +229,67 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 		params.push(maxResults);
 		params.push(query.offset);
 
-		return new Promise((resolve, reject) => {
-			this.database.all(select, params, (err, rows) => {
-				if (err) {
-					reject(err);
-				} else {
-					const response: SearchResponse = {
-						searchTerm: query.searchTerm,
-						target: query.channelName,
-						networkUuid: query.networkUuid,
-						offset: query.offset,
-						results: parseSearchRowsToMessages(query.offset, rows).reverse(),
-					};
-					resolve(response);
-				}
-			});
-		});
+		const rows = await this.serialize_fetchall(select, ...params);
+		const response: SearchResponse = {
+			searchTerm: query.searchTerm,
+			target: query.channelName,
+			networkUuid: query.networkUuid,
+			offset: query.offset,
+			results: parseSearchRowsToMessages(query.offset, rows).reverse(),
+		};
+
+		return response;
 	}
 
 	canProvideMessages() {
 		return this.isEnabled;
 	}
-}
 
-export default SqliteMessageStorage;
+	private serialize_run(stmt: string, params: any[]): Promise<void> {
+		return new Promise((resolve, reject) => {
+			this.database.serialize(() => {
+				this.database.run(stmt, params, (err) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve();
+				});
+			});
+		});
+	}
+
+	private serialize_fetchall(stmt: string, ...params: any[]): Promise<any[]> {
+		return new Promise((resolve, reject) => {
+			this.database.serialize(() => {
+				this.database.all(stmt, params, (err, rows) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve(rows);
+				});
+			});
+		});
+	}
+
+	private serialize_get(stmt: string, ...params: any[]): Promise<any> {
+		return new Promise((resolve, reject) => {
+			this.database.serialize(() => {
+				this.database.get(stmt, params, (err, row) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve(row);
+				});
+			});
+		});
+	}
+}
 
 // TODO: type any
 function parseSearchRowsToMessages(id: number, rows: any[]) {
@@ -284,3 +308,5 @@ function parseSearchRowsToMessages(id: number, rows: any[]) {
 
 	return messages;
 }
+
+export default SqliteMessageStorage;

@@ -23,6 +23,7 @@ const Helper = {
 	parseHostmask,
 	compareHostmask,
 	compareWithWildcard,
+	catch_to_error,
 
 	password: {
 		hash: passwordHash,
@@ -182,4 +183,18 @@ function compareWithWildcard(a: string, b: string) {
 	const user_regex = wildmany_split.join(".*");
 	const re = new RegExp(`^${user_regex}$`, "i"); // case insensitive
 	return re.test(b);
+}
+
+function catch_to_error(prefix: string, err: any): Error {
+	let msg: string;
+
+	if (err instanceof Error) {
+		msg = err.message;
+	} else if (typeof err === "string") {
+		msg = err;
+	} else {
+		msg = err.toString();
+	}
+
+	return new Error(`${prefix}: ${msg}`);
 }
