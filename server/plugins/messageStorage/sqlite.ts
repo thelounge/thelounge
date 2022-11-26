@@ -38,17 +38,30 @@ const schema = [
 	"CREATE INDEX IF NOT EXISTS time ON messages (time)",
 ];
 
+class Deferred {
+	resolve!: () => void;
+	promise: Promise<void>;
+
+	constructor() {
+		this.promise = new Promise((resolve) => {
+			this.resolve = resolve;
+		});
+	}
+}
+
 class SqliteMessageStorage implements ISqliteMessageStorage {
 	client: Client;
 	isEnabled: boolean;
 	database!: Database;
+	initDone: Deferred;
 
 	constructor(client: Client) {
 		this.client = client;
 		this.isEnabled = false;
+		this.initDone = new Deferred();
 	}
 
-	async enable() {
+	async _enable() {
 		const logsPath = Config.getUserLogsPath();
 		const sqlitePath = path.join(logsPath, `${this.client.name}.sqlite3`);
 
@@ -67,6 +80,14 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 		} catch (e) {
 			this.isEnabled = false;
 			throw Helper.catch_to_error("Migration failed", e);
+		}
+	}
+
+	async enable() {
+		try {
+			await this._enable();
+		} finally {
+			this.initDone.resolve(); // unblock the instance methods
 		}
 	}
 
@@ -127,6 +148,8 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 	}
 
 	async index(network: Network, channel: Chan, msg: Msg) {
+		await this.initDone.promise;
+
 		if (!this.isEnabled) {
 			return;
 		}
@@ -155,6 +178,8 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 	}
 
 	async deleteChannel(network: Network, channel: Channel) {
+		await this.initDone.promise;
+
 		if (!this.isEnabled) {
 			return;
 		}
@@ -172,6 +197,8 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 	 * @param channel Channel - Channel object for which to load messages for
 	 */
 	async getMessages(network: Network, channel: Channel): Promise<Message[]> {
+		await this.initDone.promise;
+
 		if (!this.isEnabled || Config.values.maxHistory === 0) {
 			return [];
 		}
@@ -199,6 +226,8 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 	}
 
 	async search(query: SearchQuery): Promise<SearchResponse> {
+		await this.initDone.promise;
+
 		if (!this.isEnabled) {
 			// this should never be hit as messageProvider is checked in client.search()
 			throw new Error(
