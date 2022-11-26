@@ -29,12 +29,9 @@ export type SearchQuery = {
 	offset: number;
 };
 
-export type SearchResponse =
-	| Omit<SearchQuery, "channelName" | "offset"> & {
-			results: Message[];
-			target: string;
-			offset: number;
-	  };
+export type SearchResponse = SearchQuery & {
+	results: Message[];
+};
 
 type SearchFunction = (query: SearchQuery) => Promise<SearchResponse>;
 

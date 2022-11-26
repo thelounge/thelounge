@@ -33,18 +33,19 @@
 							<button
 								ref="loadMoreButton"
 								:disabled="
-									store.state.messageSearchInProgress || !store.state.isConnected
+									!!store.state.messageSearchPendingQuery ||
+									!store.state.isConnected
 								"
 								class="btn"
 								@click="onShowMoreClick"
 							>
-								<span v-if="store.state.messageSearchInProgress">Loading…</span>
+								<span v-if="store.state.messageSearchPendingQuery">Loading…</span>
 								<span v-else>Show older messages</span>
 							</button>
 						</div>
 
 						<div
-							v-if="store.state.messageSearchInProgress && !offset"
+							v-if="store.state.messageSearchPendingQuery && !offset"
 							class="search-status"
 						>
 							Searching…
@@ -105,6 +106,7 @@ import type {ClientMessage} from "../../js/types";
 import {useStore} from "../../js/store";
 import {useRoute, useRouter} from "vue-router";
 import {switchToChannel} from "../../js/router";
+import {SearchQuery} from "../../../server/plugins/messageStorage/types";
 
 export default defineComponent({
 	name: "SearchResults",
@@ -187,37 +189,44 @@ export default defineComponent({
 
 		const clearSearchState = () => {
 			offset.value = 0;
-			store.commit("messageSearchInProgress", false);
 			store.commit("messageSearchResults", null);
+			store.commit("messageSearchPendingQuery", null);
 		};
 
 		const doSearch = () => {
+			if (!network.value || !channel.value) {
+				return;
+			}
+
 			clearSearchState(); // this is a new search, so we need to clear anything before that
-			socket.emit("search", {
-				networkUuid: network.value?.uuid,
-				channelName: channel.value?.name,
+			const query: SearchQuery = {
+				networkUuid: network.value.uuid,
+				channelName: channel.value.name,
 				searchTerm: String(route.query.q || ""),
 				offset: offset.value,
-			});
+			};
+			store.commit("messageSearchPendingQuery", query);
+			socket.emit("search", query);
 		};
 
 		const onShowMoreClick = () => {
-			if (!chat.value) {
+			if (!chat.value || !network.value || !channel.value) {
 				return;
 			}
 
 			offset.value += 100;
-			store.commit("messageSearchInProgress", true);
 
 			oldScrollTop.value = chat.value.scrollTop;
 			oldChatHeight.value = chat.value.scrollHeight;
 
-			socket.emit("search", {
-				networkUuid: network.value?.uuid,
-				channelName: channel.value?.name,
+			const query: SearchQuery = {
+				networkUuid: network.value.uuid,
+				channelName: channel.value.name,
 				searchTerm: String(route.query.q || ""),
 				offset: offset.value,
-			});
+			};
+			store.commit("messageSearchPendingQuery", query);
+			socket.emit("search", query);
 		};
 
 		const jumpToBottom = async () => {

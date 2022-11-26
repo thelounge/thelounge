@@ -17,7 +17,7 @@ import SqliteMessageStorage from "./plugins/messageStorage/sqlite";
 import TextFileMessageStorage from "./plugins/messageStorage/text";
 import Network, {IgnoreListItem, NetworkWithIrcFramework} from "./models/network";
 import ClientManager from "./clientManager";
-import {MessageStorage, SearchQuery} from "./plugins/messageStorage/types";
+import {MessageStorage, SearchQuery, SearchResponse} from "./plugins/messageStorage/types";
 
 type OrderItem = Chan["id"] | Network["uuid"];
 type Order = OrderItem[];
@@ -618,15 +618,12 @@ class Client {
 		}
 	}
 
-	search(query: SearchQuery) {
+	async search(query: SearchQuery): Promise<SearchResponse> {
 		if (!this.messageProvider?.isEnabled) {
-			return Promise.resolve({
+			return {
+				...query,
 				results: [],
-				target: "",
-				networkUuid: "",
-				offset: 0,
-				searchTerm: query?.searchTerm,
-			});
+			};
 		}
 
 		return this.messageProvider.search(query);

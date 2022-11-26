@@ -760,9 +760,8 @@ function initializeClient(
 		});
 
 		socket.on("search", async (query) => {
-			await client.search(query).then((results) => {
-				socket.emit("search:results", results);
-			});
+			const results = await client.search(query);
+			socket.emit("search:results", results);
 		});
 
 		socket.on("mute:change", ({target, setMutedTo}) => {

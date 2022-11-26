@@ -15,6 +15,7 @@ import type {
 import type {InjectionKey} from "vue";
 
 import {SettingsState} from "./settings";
+import {SearchQuery} from "../../server/plugins/messageStorage/types";
 
 const appName = document.title;
 
@@ -85,7 +86,7 @@ export type State = {
 	messageSearchResults: {
 		results: ClientMessage[];
 	} | null;
-	messageSearchInProgress: boolean;
+	messageSearchPendingQuery: SearchQuery | null;
 	searchEnabled: boolean;
 };
 
@@ -111,7 +112,7 @@ const state = () =>
 		versionDataExpired: false,
 		serverHasSettings: false,
 		messageSearchResults: null,
-		messageSearchInProgress: false,
+		messageSearchPendingQuery: null,
 		searchEnabled: false,
 	} as State);
 
@@ -260,7 +261,7 @@ type Mutations = {
 	versionStatus(state: State, payload: State["versionStatus"]): void;
 	versionDataExpired(state: State, payload: State["versionDataExpired"]): void;
 	serverHasSettings(state: State, value: State["serverHasSettings"]): void;
-	messageSearchInProgress(state: State, value: State["messageSearchInProgress"]): void;
+	messageSearchPendingQuery(state: State, value: State["messageSearchPendingQuery"]): void;
 	messageSearchResults(state: State, value: State["messageSearchResults"]): void;
 	addMessageSearchResults(state: State, value: NonNullable<State["messageSearchResults"]>): void;
 };
@@ -338,8 +339,8 @@ const mutations: Mutations = {
 	serverHasSettings(state, value) {
 		state.serverHasSettings = value;
 	},
-	messageSearchInProgress(state, value) {
-		state.messageSearchInProgress = value;
+	messageSearchPendingQuery(state, value) {
+		state.messageSearchPendingQuery = value;
 	},
 	messageSearchResults(state, value) {
 		state.messageSearchResults = value;
