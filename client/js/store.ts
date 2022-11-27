@@ -354,7 +354,7 @@ const mutations: Mutations = {
 			return;
 		}
 
-		const results = [...state.messageSearchResults.results, ...value.results];
+		const results = [...value.results, ...state.messageSearchResults.results];
 
 		state.messageSearchResults = {
 			results,
