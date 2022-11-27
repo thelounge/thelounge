@@ -262,7 +262,7 @@ type Mutations = {
 	serverHasSettings(state: State, value: State["serverHasSettings"]): void;
 	messageSearchInProgress(state: State, value: State["messageSearchInProgress"]): void;
 	messageSearchResults(state: State, value: State["messageSearchResults"]): void;
-	addMessageSearchResults(state: State, value: State["messageSearchResults"]): void;
+	addMessageSearchResults(state: State, value: NonNullable<State["messageSearchResults"]>): void;
 };
 
 const mutations: Mutations = {
