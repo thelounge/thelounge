@@ -37,17 +37,19 @@ describe("SQLite Message Storage", function () {
 		fs.rmdir(path.join(Config.getHomePath(), "logs"), done);
 	});
 
-	it("should resolve an empty array when disabled", async function () {
-		const messages = await store.getMessages(null as any, null as any);
-		expect(messages).to.be.empty;
-	});
-
 	it("should create database file", async function () {
 		expect(store.isEnabled).to.be.false;
 		expect(fs.existsSync(expectedPath)).to.be.false;
 
 		await store.enable();
 		expect(store.isEnabled).to.be.true;
+	});
+
+	it("should resolve an empty array when disabled", async function () {
+		store.isEnabled = false;
+		const messages = await store.getMessages(null as any, null as any);
+		expect(messages).to.be.empty;
+		store.isEnabled = true;
 	});
 
 	it("should create tables", function (done) {
