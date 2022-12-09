@@ -9,10 +9,6 @@ jobs:
     strategy:
       matrix:
         include:
-          # EOL: April 2022
-          - os: ubuntu-latest
-            node_version: 12.x
-
           # EOL: April 2023
           - os: ubuntu-latest
             node_version: 14.x
@@ -25,13 +21,17 @@ jobs:
           - os: windows-latest
             node_version: 16.x
 
+          # EOL: April 2025
+          - os: ubuntu-latest
+            node_version: 18.x
+
     runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@master
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node_version }}
 

@@ -53,7 +53,7 @@ const got = require("got");
 const dayjs = require("dayjs");
 const semver = require("semver");
 const util = require("util");
-const log = require("../src/log");
+const log = require("../server/log");
 const packageJson = require("../package.json");
 let token = process.env.CHANGELOG_TOKEN;
 

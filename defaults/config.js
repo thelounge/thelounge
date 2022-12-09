@@ -160,6 +160,20 @@ module.exports = {
 	// This value is set to `50` kilobytes by default.
 	prefetchMaxSearchSize: 50,
 
+	// ### `prefetchTimeout`
+	//
+	// When `prefetch` is enabled, this value sets the number of milliseconds
+	// before The Lounge gives up attempting to fetch a link. This can be useful
+	// if you've increased the `prefetchMaxImageSize`.
+	//
+	// Take caution, however, that an inordinately large value may lead to
+	// performance issues or even a denial of service, since The Lounge will not
+	// be able to clean up outgoing connections as quickly. Usually the default
+	// value is appropriate, so only change it if necessary.
+	//
+	// This value is set to `5000` milliseconds by default.
+	prefetchTimeout: 5000,
+
 	// ### `fileUpload`
 	//
 	// Allow uploading files to the server hosting The Lounge.
@@ -208,10 +222,10 @@ module.exports = {
 
 	// ### `defaults`
 	//
-	// Specifies default network information that will be used as placeholder
-	// values in the *Connect* window.
+	// Specifies a list of default network information that will be used as
+	// placeholder values in the *Connect* window.
 	//
-	// The available keys for the `defaults` object are:
+	// The available keys for the individual items are:
 	//
 	// - `name`: Name to display in the channel list of The Lounge. This value is
 	//   not forwarded to the IRC network.
@@ -227,7 +241,7 @@ module.exports = {
 	// - `nick`: Nick name. Percent signs (`%`) will be replaced by random
 	//   numbers from 0 to 9. For example, `Guest%%%` may become `Guest123`.
 	// - `username`: User name.
-	// - `realname`: Real name.
+	// - `realname`: Real name displayed by some clients. Defaults to the nick if set to ""
 	// - `leaveMessage`: Network specific leave message (overrides global leaveMessage)
 	// - `join`: Comma-separated list of channels to auto-join once connected.
 	//
@@ -260,7 +274,7 @@ module.exports = {
 			rejectUnauthorized: true,
 			nick: "thelounge%%",
 			username: "thelounge",
-			realname: "The Lounge User",
+			realname: "",
 			join: "#thelounge",
 			leaveMessage: "",
 		},
@@ -447,7 +461,7 @@ module.exports = {
 			//   - `rootPassword`: Password of The Lounge LDAP system user.
 			rootPassword: "1234",
 
-			//   - `ldapFilter`: it is set to `"(objectClass=person)(memberOf=ou=accounts,dc=example,dc=com)"`
+			//   - `filter`: it is set to `"(objectClass=person)(memberOf=ou=accounts,dc=example,dc=com)"`
 			//     by default.
 			filter: "(objectClass=person)(memberOf=ou=accounts,dc=example,dc=com)",
 

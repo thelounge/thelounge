@@ -38,121 +38,125 @@
 	</div>
 </template>
 
-<script>
+<script lang="ts">
 import Mousetrap from "mousetrap";
+import {computed, defineComponent, ref, watch} from "vue";
+import {onBeforeRouteLeave, onBeforeRouteUpdate} from "vue-router";
 import eventbus from "../js/eventbus";
+import {ClientChan, ClientMessage, ClientLinkPreview} from "../js/types";
 
-export default {
+export default defineComponent({
 	name: "ImageViewer",
-	data() {
-		return {
-			link: null,
-			previousImage: null,
-			nextImage: null,
-			channel: null,
+	setup() {
+		const viewer = ref<HTMLDivElement>();
+		const image = ref<HTMLImageElement>();
 
-			position: {
-				x: 0,
-				y: 0,
-			},
-			transform: {
-				x: 0,
-				y: 0,
-				scale: 0,
-			},
-		};
-	},
-	computed: {
-		computeImageStyles() {
+		const link = ref<ClientLinkPreview | null>(null);
+		const previousImage = ref<ClientLinkPreview | null>();
+		const nextImage = ref<ClientLinkPreview | null>();
+		const channel = ref<ClientChan | null>();
+
+		const position = ref<{
+			x: number;
+			y: number;
+		}>({
+			x: 0,
+			y: 0,
+		});
+
+		const transform = ref<{
+			scale: number;
+			x: number;
+			y: number;
+		}>({
+			scale: 1,
+			x: 0,
+			y: 0,
+		});
+
+		const computeImageStyles = computed(() => {
 			// Sub pixels may cause the image to blur in certain browsers
 			// round it down to prevent that
-			const transformX = Math.floor(this.transform.x);
-			const transformY = Math.floor(this.transform.y);
+			const transformX = Math.floor(transform.value.x);
+			const transformY = Math.floor(transform.value.y);
 
 			return {
-				left: `${this.position.x}px`,
-				top: `${this.position.y}px`,
-				transform: `translate3d(${transformX}px, ${transformY}px, 0) scale3d(${this.transform.scale}, ${this.transform.scale}, 1)`,
+				left: `${position.value.x}px`,
+				top: `${position.value.y}px`,
+				transform: `translate3d(${transformX}px, ${transformY}px, 0) scale3d(${transform.value.scale}, ${transform.value.scale}, 1)`,
 			};
-		},
-	},
-	watch: {
-		link(newLink, oldLink) {
-			// TODO: history.pushState
-			if (newLink === null) {
-				eventbus.off("escapekey", this.closeViewer);
-				eventbus.off("resize", this.correctPosition);
-				Mousetrap.unbind("left", this.previous);
-				Mousetrap.unbind("right", this.next);
+		});
+
+		const closeViewer = () => {
+			if (link.value === null) {
 				return;
 			}
 
-			this.setPrevNextImages();
+			channel.value = null;
+			previousImage.value = null;
+			nextImage.value = null;
+			link.value = null;
+		};
 
-			if (!oldLink) {
-				eventbus.on("escapekey", this.closeViewer);
-				eventbus.on("resize", this.correctPosition);
-				Mousetrap.bind("left", this.previous);
-				Mousetrap.bind("right", this.next);
-			}
-		},
-	},
-	methods: {
-		closeViewer() {
-			if (this.link === null) {
-				return;
-			}
-
-			this.channel = null;
-			this.previousImage = null;
-			this.nextImage = null;
-			this.link = null;
-		},
-		setPrevNextImages() {
-			if (!this.channel) {
+		const setPrevNextImages = () => {
+			if (!channel.value || !link.value) {
 				return null;
 			}
 
-			const links = this.channel.messages
+			const links = channel.value.messages
 				.map((msg) => msg.previews)
 				.flat()
 				.filter((preview) => preview.thumb);
 
-			const currentIndex = links.indexOf(this.link);
+			const currentIndex = links.indexOf(link.value);
 
-			this.previousImage = links[currentIndex - 1] || null;
-			this.nextImage = links[currentIndex + 1] || null;
-		},
-		previous() {
-			if (this.previousImage) {
-				this.link = this.previousImage;
-			}
-		},
-		next() {
-			if (this.nextImage) {
-				this.link = this.nextImage;
-			}
-		},
-		onImageLoad() {
-			this.prepareImage();
-		},
-		prepareImage() {
-			const viewer = this.$refs.viewer;
-			const image = this.$refs.image;
-			const width = viewer.offsetWidth;
-			const height = viewer.offsetHeight;
-			const scale = Math.min(1, width / image.width, height / image.height);
+			previousImage.value = links[currentIndex - 1] || null;
+			nextImage.value = links[currentIndex + 1] || null;
+		};
 
-			this.position.x = Math.floor(-image.naturalWidth / 2);
-			this.position.y = Math.floor(-image.naturalHeight / 2);
-			this.transform.scale = Math.max(scale, 0.1);
-			this.transform.x = width / 2;
-			this.transform.y = height / 2;
-		},
-		calculateZoomShift(newScale, x, y, oldScale) {
-			const imageWidth = this.$refs.image.width;
-			const centerX = this.$refs.viewer.offsetWidth / 2;
-			const centerY = this.$refs.viewer.offsetHeight / 2;
+		const previous = () => {
+			if (previousImage.value) {
+				link.value = previousImage.value;
+			}
+		};
+
+		const next = () => {
+			if (nextImage.value) {
+				link.value = nextImage.value;
+			}
+		};
+
+		const prepareImage = () => {
+			const viewerEl = viewer.value;
+			const imageEl = image.value;
+
+			if (!viewerEl || !imageEl) {
+				return;
+			}
+
+			const width = viewerEl.offsetWidth;
+			const height = viewerEl.offsetHeight;
+			const scale = Math.min(1, width / imageEl.width, height / imageEl.height);
+
+			position.value.x = Math.floor(-image.value!.naturalWidth / 2);
+			position.value.y = Math.floor(-image.value!.naturalHeight / 2);
+			transform.value.scale = Math.max(scale, 0.1);
+			transform.value.x = width / 2;
+			transform.value.y = height / 2;
+		};
+
+		const onImageLoad = () => {
+			prepareImage();
+		};
+
+		const calculateZoomShift = (newScale: number, x: number, y: number, oldScale: number) => {
+			if (!image.value || !viewer.value) {
+				return;
+			}
+
+			const imageWidth = image.value.width;
+			const centerX = viewer.value.offsetWidth / 2;
+			const centerY = viewer.value.offsetHeight / 2;
 
 			return {
 				x:
@@ -164,32 +168,40 @@ export default {
 					((centerY - (oldScale - (imageWidth * x) / 2)) / x) * newScale +
 					(imageWidth * newScale) / 2,
 			};
-		},
-		correctPosition() {
-			const image = this.$refs.image;
-			const widthScaled = image.width * this.transform.scale;
-			const heightScaled = image.height * this.transform.scale;
-			const containerWidth = this.$refs.viewer.offsetWidth;
-			const containerHeight = this.$refs.viewer.offsetHeight;
+		};
+
+		const correctPosition = () => {
+			const imageEl = image.value;
+			const viewerEl = viewer.value;
+
+			if (!imageEl || !viewerEl) {
+				return;
+			}
+
+			const widthScaled = imageEl.width * transform.value.scale;
+			const heightScaled = imageEl.height * transform.value.scale;
+			const containerWidth = viewerEl.offsetWidth;
+			const containerHeight = viewerEl.offsetHeight;
 
 			if (widthScaled < containerWidth) {
-				this.transform.x = containerWidth / 2;
-			} else if (this.transform.x - widthScaled / 2 > 0) {
-				this.transform.x = widthScaled / 2;
-			} else if (this.transform.x + widthScaled / 2 < containerWidth) {
-				this.transform.x = containerWidth - widthScaled / 2;
+				transform.value.x = containerWidth / 2;
+			} else if (transform.value.x - widthScaled / 2 > 0) {
+				transform.value.x = widthScaled / 2;
+			} else if (transform.value.x + widthScaled / 2 < containerWidth) {
+				transform.value.x = containerWidth - widthScaled / 2;
 			}
 
 			if (heightScaled < containerHeight) {
-				this.transform.y = containerHeight / 2;
-			} else if (this.transform.y - heightScaled / 2 > 0) {
-				this.transform.y = heightScaled / 2;
-			} else if (this.transform.y + heightScaled / 2 < containerHeight) {
-				this.transform.y = containerHeight - heightScaled / 2;
+				transform.value.y = containerHeight / 2;
+			} else if (transform.value.y - heightScaled / 2 > 0) {
+				transform.value.y = heightScaled / 2;
+			} else if (transform.value.y + heightScaled / 2 < containerHeight) {
+				transform.value.y = containerHeight - heightScaled / 2;
 			}
-		},
+		};
+
 		// Reduce multiple touch points into a single x/y/scale
-		reduceTouches(touches) {
+		const reduceTouches = (touches: TouchList) => {
 			let totalX = 0;
 			let totalY = 0;
 			let totalScale = 0;
@@ -219,17 +231,19 @@ export default {
 				y: totalY / touches.length,
 				scale: totalScale / touches.length,
 			};
-		},
-		onTouchStart(e) {
+		};
+
+		const onTouchStart = (e: TouchEvent) => {
 			// prevent sidebar touchstart event, we don't want to interact with sidebar while in image viewer
 			e.stopImmediatePropagation();
-		},
+		};
+
 		// Touch image manipulation:
 		// 1. Move around by dragging it with one finger
 		// 2. Change image scale by using two fingers
-		onImageTouchStart(e) {
-			const image = this.$refs.image;
-			let touch = this.reduceTouches(e.touches);
+		const onImageTouchStart = (e: TouchEvent) => {
+			const img = image.value;
+			let touch = reduceTouches(e.touches);
 			let currentTouches = e.touches;
 			let touchEndFingers = 0;
 
@@ -240,21 +254,21 @@ export default {
 			};
 
 			const startTransform = {
-				x: this.transform.x,
-				y: this.transform.y,
-				scale: this.transform.scale,
+				x: transform.value.x,
+				y: transform.value.y,
+				scale: transform.value.scale,
 			};
 
 			const touchMove = (moveEvent) => {
-				touch = this.reduceTouches(moveEvent.touches);
+				touch = reduceTouches(moveEvent.touches);
 
 				if (currentTouches.length !== moveEvent.touches.length) {
 					currentTransform.x = touch.x;
 					currentTransform.y = touch.y;
 					currentTransform.scale = touch.scale;
-					startTransform.x = this.transform.x;
-					startTransform.y = this.transform.y;
-					startTransform.scale = this.transform.scale;
+					startTransform.x = transform.value.x;
+					startTransform.y = transform.value.y;
+					startTransform.scale = transform.value.scale;
 				}
 
 				const deltaX = touch.x - currentTransform.x;
@@ -264,20 +278,25 @@ export default {
 				touchEndFingers = 0;
 
 				const newScale = Math.min(3, Math.max(0.1, startTransform.scale * deltaScale));
-				const fixedPosition = this.calculateZoomShift(
+
+				const fixedPosition = calculateZoomShift(
 					newScale,
 					startTransform.scale,
 					startTransform.x,
 					startTransform.y
 				);
 
-				this.transform.x = fixedPosition.x + deltaX;
-				this.transform.y = fixedPosition.y + deltaY;
-				this.transform.scale = newScale;
-				this.correctPosition();
+				if (!fixedPosition) {
+					return;
+				}
+
+				transform.value.x = fixedPosition.x + deltaX;
+				transform.value.y = fixedPosition.y + deltaY;
+				transform.value.scale = newScale;
+				correctPosition();
 			};
 
-			const touchEnd = (endEvent) => {
+			const touchEnd = (endEvent: TouchEvent) => {
 				const changedTouches = endEvent.changedTouches.length;
 
 				if (currentTouches.length > changedTouches + touchEndFingers) {
@@ -287,27 +306,30 @@ export default {
 
 				// todo: this is swipe to close, but it's not working very well due to unfinished delta calculation
 				/* if (
-					this.transform.scale <= 1 &&
+					transform.value.scale <= 1 &&
 					endEvent.changedTouches[0].clientY - startTransform.y <= -70
 				) {
 					return this.closeViewer();
 				}*/
 
-				this.correctPosition();
+				correctPosition();
 
-				image.removeEventListener("touchmove", touchMove, {passive: true});
-				image.removeEventListener("touchend", touchEnd, {passive: true});
+				img?.removeEventListener("touchmove", touchMove);
+				img?.removeEventListener("touchend", touchEnd);
 			};
 
-			image.addEventListener("touchmove", touchMove, {passive: true});
-			image.addEventListener("touchend", touchEnd, {passive: true});
-		},
+			img?.addEventListener("touchmove", touchMove, {passive: true});
+			img?.addEventListener("touchend", touchEnd, {passive: true});
+		};
+
 		// Image mouse manipulation:
 		// 1. Mouse wheel scrolling will zoom in and out
 		// 2. If image is zoomed in, simply dragging it will move it around
-		onImageMouseDown(e) {
+		const onImageMouseDown = (e: MouseEvent) => {
 			// todo: ignore if in touch event currently?
+
 			// only left mouse
+			// TODO: e.buttons?
 			if (e.which !== 1) {
 				return;
 			}
@@ -315,22 +337,26 @@ export default {
 			e.stopPropagation();
 			e.preventDefault();
 
-			const viewer = this.$refs.viewer;
-			const image = this.$refs.image;
+			const viewerEl = viewer.value;
+			const imageEl = image.value;
+
+			if (!viewerEl || !imageEl) {
+				return;
+			}
 
 			const startX = e.clientX;
 			const startY = e.clientY;
-			const startTransformX = this.transform.x;
-			const startTransformY = this.transform.y;
-			const widthScaled = image.width * this.transform.scale;
-			const heightScaled = image.height * this.transform.scale;
-			const containerWidth = viewer.offsetWidth;
-			const containerHeight = viewer.offsetHeight;
-			const centerX = this.transform.x - widthScaled / 2;
-			const centerY = this.transform.y - heightScaled / 2;
+			const startTransformX = transform.value.x;
+			const startTransformY = transform.value.y;
+			const widthScaled = imageEl.width * transform.value.scale;
+			const heightScaled = imageEl.height * transform.value.scale;
+			const containerWidth = viewerEl.offsetWidth;
+			const containerHeight = viewerEl.offsetHeight;
+			const centerX = transform.value.x - widthScaled / 2;
+			const centerY = transform.value.y - heightScaled / 2;
 			let movedDistance = 0;
 
-			const mouseMove = (moveEvent) => {
+			const mouseMove = (moveEvent: MouseEvent) => {
 				moveEvent.stopPropagation();
 				moveEvent.preventDefault();
 
@@ -340,66 +366,112 @@ export default {
 				movedDistance = Math.max(movedDistance, Math.abs(newX), Math.abs(newY));
 
 				if (centerX < 0 || widthScaled + centerX > containerWidth) {
-					this.transform.x = startTransformX + newX;
+					transform.value.x = startTransformX + newX;
 				}
 
 				if (centerY < 0 || heightScaled + centerY > containerHeight) {
-					this.transform.y = startTransformY + newY;
+					transform.value.y = startTransformY + newY;
 				}
 
-				this.correctPosition();
+				correctPosition();
 			};
 
-			const mouseUp = (upEvent) => {
-				this.correctPosition();
+			const mouseUp = (upEvent: MouseEvent) => {
+				correctPosition();
 
 				if (movedDistance < 2 && upEvent.button === 0) {
-					this.closeViewer();
+					closeViewer();
 				}
 
-				image.removeEventListener("mousemove", mouseMove);
-				image.removeEventListener("mouseup", mouseUp);
+				image.value?.removeEventListener("mousemove", mouseMove);
+				image.value?.removeEventListener("mouseup", mouseUp);
 			};
 
-			image.addEventListener("mousemove", mouseMove);
-			image.addEventListener("mouseup", mouseUp);
-		},
+			image.value?.addEventListener("mousemove", mouseMove);
+			image.value?.addEventListener("mouseup", mouseUp);
+		};
+
 		// If image is zoomed in, holding ctrl while scrolling will move the image up and down
-		onMouseWheel(e) {
+		const onMouseWheel = (e: WheelEvent) => {
 			// if image viewer is closing (css animation), you can still trigger mousewheel
 			// TODO: Figure out a better fix for this
-			if (this.link === null) {
+			if (link.value === null) {
 				return;
 			}
 
 			e.preventDefault(); // TODO: Can this be passive?
 
 			if (e.ctrlKey) {
-				this.transform.y += e.deltaY;
+				transform.value.y += e.deltaY;
 			} else {
 				const delta = e.deltaY > 0 ? 0.1 : -0.1;
-				const newScale = Math.min(3, Math.max(0.1, this.transform.scale + delta));
-				const fixedPosition = this.calculateZoomShift(
+				const newScale = Math.min(3, Math.max(0.1, transform.value.scale + delta));
+				const fixedPosition = calculateZoomShift(
 					newScale,
-					this.transform.scale,
-					this.transform.x,
-					this.transform.y
+					transform.value.scale,
+					transform.value.x,
+					transform.value.y
 				);
-				this.transform.scale = newScale;
-				this.transform.x = fixedPosition.x;
-				this.transform.y = fixedPosition.y;
+
+				if (!fixedPosition) {
+					return;
+				}
+
+				transform.value.scale = newScale;
+				transform.value.x = fixedPosition.x;
+				transform.value.y = fixedPosition.y;
 			}
 
-			this.correctPosition();
-		},
-		onClick(e) {
+			correctPosition();
+		};
+
+		const onClick = (e: Event) => {
 			// If click triggers on the image, ignore it
-			if (e.target === this.$refs.image) {
+			if (e.target === image.value) {
 				return;
 			}
 
-			this.closeViewer();
-		},
+			closeViewer();
+		};
+
+		watch(link, (newLink, oldLink) => {
+			// TODO: history.pushState
+			if (newLink === null) {
+				eventbus.off("escapekey", closeViewer);
+				eventbus.off("resize", correctPosition);
+				Mousetrap.unbind("left");
+				Mousetrap.unbind("right");
+				return;
+			}
+
+			setPrevNextImages();
+
+			if (!oldLink) {
+				eventbus.on("escapekey", closeViewer);
+				eventbus.on("resize", correctPosition);
+				Mousetrap.bind("left", previous);
+				Mousetrap.bind("right", next);
+			}
+		});
+
+		return {
+			link,
+			image,
+			transform,
+			closeViewer,
+			next,
+			previous,
+			onImageLoad,
+			onImageMouseDown,
+			onMouseWheel,
+			onClick,
+			onTouchStart,
+			previousImage,
+			nextImage,
+			onImageTouchStart,
+			computeImageStyles,
+			viewer,
+		};
 	},
-};
+});
 </script>

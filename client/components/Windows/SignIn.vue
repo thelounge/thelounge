@@ -55,51 +55,69 @@
 	</div>
 </template>
 
-<script>
+<script lang="ts">
 import storage from "../../js/localStorage";
 import socket from "../../js/socket";
 import RevealPassword from "../RevealPassword.vue";
+import {defineComponent, onBeforeUnmount, onMounted, ref} from "vue";
 
-export default {
+export default defineComponent({
 	name: "SignIn",
 	components: {
 		RevealPassword,
 	},
-	data() {
-		return {
-			inFlight: false,
-			errorShown: false,
+	setup() {
+		const inFlight = ref(false);
+		const errorShown = ref(false);
+
+		const username = ref<HTMLInputElement | null>(null);
+		const password = ref<HTMLInputElement | null>(null);
+
+		const onAuthFailed = () => {
+			inFlight.value = false;
+			errorShown.value = true;
 		};
-	},
-	mounted() {
-		socket.on("auth:failed", this.onAuthFailed);
-	},
-	beforeDestroy() {
-		socket.off("auth:failed", this.onAuthFailed);
-	},
-	methods: {
-		onAuthFailed() {
-			this.inFlight = false;
-			this.errorShown = true;
-		},
-		onSubmit(event) {
+
+		const onSubmit = (event: Event) => {
 			event.preventDefault();
 
-			this.inFlight = true;
-			this.errorShown = false;
+			if (!username.value || !password.value) {
+				return;
+			}
+
+			inFlight.value = true;
+			errorShown.value = false;
 
 			const values = {
-				user: this.$refs.username.value,
-				password: this.$refs.password.value,
+				user: username.value?.value,
+				password: password.value?.value,
 			};
 
 			storage.set("user", values.user);
 
 			socket.emit("auth:perform", values);
-		},
-		getStoredUser() {
+		};
+
+		const getStoredUser = () => {
 			return storage.get("user");
-		},
+		};
+
+		onMounted(() => {
+			socket.on("auth:failed", onAuthFailed);
+		});
+
+		onBeforeUnmount(() => {
+			socket.off("auth:failed", onAuthFailed);
+		});
+
+		return {
+			inFlight,
+			errorShown,
+			username,
+			password,
+			onSubmit,
+			getStoredUser,
+		};
 	},
-};
+});
 </script>
