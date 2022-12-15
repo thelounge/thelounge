@@ -101,6 +101,12 @@
 
 			userSpecifiedCSSElement.innerHTML = userSettings.userStyles;
 		}
+		if (
+			typeof userSettings.userScripts === "string" &&
+			!/[?&]nocss/.test(window.location.search)
+		) {
+			eval(userSettings.userScripts);
+		}
 	} catch (e) {
 		//
 	}

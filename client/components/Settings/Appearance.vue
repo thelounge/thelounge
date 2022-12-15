@@ -153,6 +153,18 @@
 				placeholder="/* You can override any style with CSS here */"
 			/>
 		</div>
+		<div>
+			<h2>Custom Javascript</h2>
+			<label for="user-specified-js-input" class="sr-only">
+				Custom Javascript. Go nuts.
+			</label>
+			<textarea
+				id="user-specified-js-input"
+				:value="store.state.settings.userScripts"
+				class="input"
+				name="userScripts"
+			/>
+		</div>
 	</div>
 </template>
 

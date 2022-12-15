@@ -143,6 +143,18 @@ const defaultConfig = {
 			}
 		},
 	},
+	userScripts: {
+		default: "",
+		apply(store: TypedStore, value: string) {
+			if (!/[?&]nojs/.test(window.location.search)) {
+				const element = document.getElementById("user-specified-js");
+
+				if (element) {
+					element.innerHTML = value;
+				}
+			}
+		},
+	},
 	searchEnabled: {
 		default: false,
 	},

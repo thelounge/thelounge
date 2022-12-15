@@ -380,7 +380,7 @@ function addSecurityHeaders(req: Request, res: Response, next: NextFunction) {
 		"form-action 'self'", // 'self' to fix saving passwords in Firefox, even though login is handled in javascript
 		"connect-src 'self' ws: wss:", // allow self for polling; websockets
 		"style-src 'self' https: 'unsafe-inline'", // allow inline due to use in irc hex colors
-		"script-src 'self'", // javascript
+		"script-src 'self' 'unsafe-eval'", // javascript
 		"worker-src 'self'", // service worker
 		"manifest-src 'self'", // manifest.json
 		"font-src 'self' https:", // allow loading fonts from secure sites (e.g. google fonts)
