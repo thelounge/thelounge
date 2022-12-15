@@ -169,7 +169,8 @@
 </template>
 
 <style>
-textarea#user-specified-css-input {
+textarea#user-specified-css-input,
+textarea#user-specified-js-input {
 	height: 100px;
 }
 </style>
