@@ -275,7 +275,7 @@ export default defineComponent({
 		};
 
 		const isPreviousSource = (currentMessage: ClientMessage | Msg, id: number) => {
-			const previousMessage = condensedMessages[id - 1];
+			const previousMessage = condensedMessages.value[id - 1];
 			return !!(
 				previousMessage &&
 				currentMessage.type === "message" &&
