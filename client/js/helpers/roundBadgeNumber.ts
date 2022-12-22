@@ -8,5 +8,5 @@ export default (count: number) => {
 	const {divisor, suffix} =
 		suffixes[Math.min(suffixes.length - 1, Math.floor(Math.log10(count) / 3))];
 
-	return (count / divisor).toFixed(2).slice(0, -1) + suffix;
+	return String(Math.ceil((count / divisor) * 10) / 10).concat(suffix);
 };
