@@ -1,13 +1,12 @@
 export default (count: number) => {
-	if (count < 1000) {
-		return count.toString();
-	}
+	const suffixes = [
+		{divisor: 1, suffix: ""},
+		{divisor: 1000, suffix: "k"},
+		{divisor: 1000000, suffix: "m"},
+	];
 
-	if (count >= 1000 && count < 1000000) {
-		return (count / 1000).toFixed(2).slice(0, -1) + "k";
-	}
+	const {divisor, suffix} =
+		suffixes[Math.min(suffixes.length - 1, Math.floor(Math.log10(count) / 3))];
 
-	if (count >= 1000000) {
-		return (count / 1000000).toFixed(2).slice(0, -1) + "m";
-	}
+	return (count / divisor).toFixed(2).slice(0, -1) + suffix;
 };
