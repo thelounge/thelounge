@@ -1,12 +1,11 @@
 export default (count: number) => {
-	const suffixes = [
-		{divisor: 1, suffix: ""},
-		{divisor: 1000, suffix: "k"},
-		{divisor: 1000000, suffix: "m"},
-	];
+	if (count < 1000) {
+		return count.toString();
+	}
 
-	const {divisor, suffix} =
-		suffixes[Math.min(suffixes.length - 1, Math.floor(Math.log10(count) / 3))];
-
-	return String(Math.ceil((count / divisor) * 10) / 10).concat(suffix);
+	const suffixes = ["", "k", "M"];
+	const magnitudeIndex = Math.min(Math.floor(Math.log10(count) / 3), suffixes.length - 1);
+	const magnitude = 1000 ** magnitudeIndex;
+	const roundedCount = (count / magnitude).toFixed(1);
+	return roundedCount + suffixes[magnitudeIndex];
 };

@@ -10,9 +10,9 @@ describe("roundBadgeNumber helper", function () {
 		expect(roundBadgeNumber(1000)).to.be.equal("1.0k");
 	});
 
-	it("should return numbers above 999999 with a 'm' suffix", function () {
-		expect(roundBadgeNumber(1000000)).to.be.equal("1.0m");
-		expect(roundBadgeNumber(1234567)).to.be.equal("1.2m");
+	it("should return numbers above 999999 with a 'M' suffix", function () {
+		expect(roundBadgeNumber(1000000)).to.be.equal("1.0M");
+		expect(roundBadgeNumber(1234567)).to.be.equal("1.2M");
 	});
 
 	it("should round and not floor", function () {
