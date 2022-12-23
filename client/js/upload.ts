@@ -116,7 +116,6 @@ class Uploader {
 
 		const wasQueueEmpty = this.fileQueue.length === 0;
 		const maxFileSize = store.state.serverConfiguration?.fileUploadMaxFileSize || 0;
-		const maxFileSizeInMB = (maxFileSize / 1024 / 1024).toFixed(0);
 
 		for (const file of files) {
 			if (!file) {
@@ -124,6 +123,7 @@ class Uploader {
 			}
 
 			if (maxFileSize > 0 && file.size > maxFileSize) {
+				const maxFileSizeInMB = (maxFileSize / 1024 / 1024).toFixed(0);
 				this.handleResponse({
 					error: `File "${file.name}" is larger than the maximum allowed size of ${maxFileSizeInMB} MB.`,
 				});
