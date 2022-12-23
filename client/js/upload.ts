@@ -125,7 +125,7 @@ class Uploader {
 			if (maxFileSize > 0 && file.size > maxFileSize) {
 				const maxFileSizeInMB = (maxFileSize / 1024 / 1024).toFixed(0);
 				this.handleResponse({
-					error: `File "${file.name}" is larger than the maximum allowed size of ${maxFileSizeInMB} MB.`,
+					error: `File "${file.name}" is larger than the maximum allowed size of ${maxFileSizeInMB} MB`,
 				});
 
 				continue;
