@@ -1,8 +1,15 @@
 const sizes = ["Bytes", "KiB", "MiB", "GiB", "TiB", "PiB"];
 
-export default (size: number) => {
-	// Loosely inspired from https://stackoverflow.com/a/18650828/1935861
-	const i = size > 0 ? Math.floor(Math.log(size) / Math.log(1024)) : 0;
-	const fixedSize = parseFloat((size / Math.pow(1024, i)).toFixed(1));
-	return `${fixedSize} ${sizes[i]}`;
-};
+export default function formatSize(size: number): string {
+	if (size <= 0) {
+		throw new Error("Size must be a positive number");
+	}
+
+	const i = Math.floor(Math.log(size) / Math.log(1024));
+
+	if (i >= sizes.length) {
+		throw new Error("Size is out of range");
+	}
+
+	return `${(size / Math.pow(1024, i)).toFixed(1)} ${sizes[i]}`;
+}
