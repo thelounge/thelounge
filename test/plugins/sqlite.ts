@@ -5,7 +5,7 @@ import {expect} from "chai";
 import util from "../util";
 import Msg, {MessageType} from "../../server/models/msg";
 import Config from "../../server/config";
-import MessageStorage from "../../server/plugins/messageStorage/sqlite";
+import MessageStorage, {currentSchemaVersion} from "../../server/plugins/messageStorage/sqlite";
 
 describe("SQLite Message Storage", function () {
 	// Increase timeout due to unpredictable I/O on CI services
@@ -53,11 +53,8 @@ describe("SQLite Message Storage", function () {
 			"SELECT value FROM options WHERE name = 'schema_version'",
 			(err, row) => {
 				expect(err).to.be.null;
-
-				// Should be sqlite.currentSchemaVersion,
 				// compared as string because it's returned as such from the database
-				expect(row.value).to.equal("1520239200");
-
+				expect(row.value).to.equal(currentSchemaVersion.toString());
 				done();
 			}
 		);

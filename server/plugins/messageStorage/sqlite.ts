@@ -23,7 +23,7 @@ try {
 	);
 }
 
-const currentSchemaVersion = 1520239200;
+export const currentSchemaVersion = 1520239200;
 
 const schema = [
 	// Schema version #1
