@@ -23,15 +23,20 @@ try {
 	);
 }
 
-export const currentSchemaVersion = 1520239200;
+type Migration = {version: number; stmts: string[]};
 
+export const currentSchemaVersion = 1520239200; // use `new Date().getTime()`
+
+// Desired schema, adapt to the newest version and add migrations to the array below
 const schema = [
-	// Schema version #1
 	"CREATE TABLE IF NOT EXISTS options (name TEXT, value TEXT, CONSTRAINT name_unique UNIQUE (name))",
 	"CREATE TABLE IF NOT EXISTS messages (network TEXT, channel TEXT, time INTEGER, type TEXT, msg TEXT)",
 	"CREATE INDEX IF NOT EXISTS network_channel ON messages (network, channel)",
 	"CREATE INDEX IF NOT EXISTS time ON messages (time)",
 ];
+
+// the migrations will be executed in an exclusive transaction as a whole
+export const migrations = [];
 
 class Deferred {
 	resolve!: () => void;
@@ -324,6 +329,10 @@ function parseSearchRowsToMessages(id: number, rows: any[]) {
 	}
 
 	return messages;
+}
+
+export function necessaryMigrations(since: number): Migration[] {
+	return migrations.filter((m) => m.version > since);
 }
 
 export default SqliteMessageStorage;
