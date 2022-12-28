@@ -48,29 +48,6 @@ describe("SQLite Message Storage", function () {
 		store.isEnabled = true;
 	});
 
-	it("should create tables", function (done) {
-		store.database.all(
-			"SELECT name, tbl_name, sql FROM sqlite_master WHERE type = 'table'",
-			(err, row) => {
-				expect(err).to.be.null;
-				expect(row).to.deep.equal([
-					{
-						name: "options",
-						tbl_name: "options",
-						sql: "CREATE TABLE options (name TEXT, value TEXT, CONSTRAINT name_unique UNIQUE (name))",
-					},
-					{
-						name: "messages",
-						tbl_name: "messages",
-						sql: "CREATE TABLE messages (network TEXT, channel TEXT, time INTEGER, type TEXT, msg TEXT)",
-					},
-				]);
-
-				done();
-			}
-		);
-	});
-
 	it("should insert schema version to options table", function (done) {
 		store.database.get(
 			"SELECT value FROM options WHERE name = 'schema_version'",
