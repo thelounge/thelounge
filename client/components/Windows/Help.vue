@@ -583,7 +583,7 @@
 			
 			<div class="help-item">
 				<div class="subject">
-					<code>/join channel password</code>
+					<code>/join channel [password]</code>
 				</div>
 				<div class="description">
 					<p>Join a channel with channel key (specify the pass after the join).</p>
