@@ -574,10 +574,13 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<code>/join channel</code>
+					<code>/join channel [password]</code>
 				</div>
 				<div class="description">
-					<p>Join a channel.</p>
+					<p>
+						Join a channel. Password is only needed in protected channels and can
+						usually be omitted.
+					</p>
 				</div>
 			</div>
 
