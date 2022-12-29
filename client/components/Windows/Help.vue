@@ -577,21 +577,7 @@
 					<code>/join channel [password]</code>
 				</div>
 				<div class="description">
-					<p>Join a channel. If
-						<code>password</code> is omitted, user will join channel without channel key.</p>
-				</div>
-			</div>
-			
-			<div class="help-item">
-				<div class="subject">
-					<code>/invite nick [channel]</code>
-				</div>
-				<div class="description">
-					<p>
-						Invite a user to the specified channel. If
-						<code>channel</code> is omitted, user will be invited to the current
-						channel.
-					</p>
+					<p>Join a channel. Password is only needed in protected channels and can usually be omitted.</p>
 				</div>
 			</div>
 
