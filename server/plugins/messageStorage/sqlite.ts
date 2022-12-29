@@ -36,7 +36,20 @@ const schema = [
 ];
 
 // the migrations will be executed in an exclusive transaction as a whole
-export const migrations = [];
+// add new migrations to the end, with the version being the new 'currentSchemaVersion'
+export const migrations: Migration[] = [
+	{
+		version: 1672236339873,
+		stmts: [
+			"CREATE TABLE messages_new (id INTEGER PRIMARY KEY AUTOINCREMENT, network TEXT, channel TEXT, time INTEGER, type TEXT, msg TEXT);",
+			"INSERT INTO messages_new(network, channel, time, type, msg) select network, channel, time, type, msg from messages order by time asc;",
+			"DROP TABLE messages;",
+			"ALTER TABLE messages_new RENAME TO messages;",
+			"CREATE INDEX network_channel ON messages (network, channel);",
+			"CREATE INDEX time ON messages (time);",
+		],
+	},
+];
 
 class Deferred {
 	resolve!: () => void;
@@ -91,9 +104,23 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		}
 	}
 
-	async run_migrations() {
+	async setup_new_db() {
 		for (const stmt of schema) {
 			await this.serialize_run(stmt, []);
+		}
+
+		await this.serialize_run("INSERT INTO options (name, value) VALUES ('schema_version', ?)", [
+			currentSchemaVersion.toString(),
+		]);
+	}
+
+	async current_version(): Promise<number> {
+		const have_options = await this.serialize_get(
+			"select 1 from sqlite_master where type = 'table' and name = 'options'"
+		);
+
+		if (!have_options) {
+			return 0;
 		}
 
 		const version = await this.serialize_get(
@@ -101,31 +128,55 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		);
 
 		if (version === undefined) {
-			// new table
-			await this.serialize_run(
-				"INSERT INTO options (name, value) VALUES ('schema_version', ?)",
-				[currentSchemaVersion]
-			);
-			return;
+			// technically shouldn't happen, means something created a schema but didn't populate it
+			// we'll try our best to recover
+			return 0;
 		}
 
 		const storedSchemaVersion = parseInt(version.value, 10);
+		return storedSchemaVersion;
+	}
 
-		if (storedSchemaVersion === currentSchemaVersion) {
-			return;
-		}
-
-		if (storedSchemaVersion > currentSchemaVersion) {
-			throw `sqlite messages schema version is higher than expected (${storedSchemaVersion} > ${currentSchemaVersion}). Is The Lounge out of date?`;
-		}
-
+	async _run_migrations(dbVersion: number) {
 		log.info(
-			`sqlite messages schema version is out of date (${storedSchemaVersion} < ${currentSchemaVersion}). Running migrations if any.`
+			`sqlite messages schema version is out of date (${dbVersion} < ${currentSchemaVersion}). Running migrations.`
 		);
 
+		const to_execute = necessaryMigrations(dbVersion);
+
+		for (const stmt of to_execute.map((m) => m.stmts).flat()) {
+			await this.serialize_run(stmt, []);
+		}
+
 		await this.serialize_run("UPDATE options SET value = ? WHERE name = 'schema_version'", [
-			currentSchemaVersion,
+			currentSchemaVersion.toString(),
 		]);
+	}
+
+	async run_migrations() {
+		const version = await this.current_version();
+
+		if (version > currentSchemaVersion) {
+			throw `sqlite messages schema version is higher than expected (${version} > ${currentSchemaVersion}). Is The Lounge out of date?`;
+		} else if (version === currentSchemaVersion) {
+			return; // nothing to do
+		}
+
+		await this.serialize_run("BEGIN EXCLUSIVE TRANSACTION", []);
+
+		try {
+			if (version === 0) {
+				await this.setup_new_db();
+			} else {
+				await this._run_migrations(version);
+			}
+		} catch (err) {
+			await this.serialize_run("ROLLBACK", []);
+			throw err;
+		}
+
+		await this.serialize_run("COMMIT", []);
+		await this.serialize_run("VACUUM", []);
 	}
 
 	async close() {
