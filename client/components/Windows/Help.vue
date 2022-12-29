@@ -574,19 +574,24 @@
 
 			<div class="help-item">
 				<div class="subject">
-					<code>/join channel</code>
+					<code>/join channel [password]</code>
 				</div>
 				<div class="description">
-					<p>Join a channel.</p>
+					<p>Join a channel. If
+						<code>password</code> is omitted, user will join channel without channel key.</p>
 				</div>
 			</div>
 			
 			<div class="help-item">
 				<div class="subject">
-					<code>/join channel [password]</code>
+					<code>/invite nick [channel]</code>
 				</div>
 				<div class="description">
-					<p>Join a channel with channel key (specify the pass after the join).</p>
+					<p>
+						Invite a user to the specified channel. If
+						<code>channel</code> is omitted, user will be invited to the current
+						channel.
+					</p>
 				</div>
 			</div>
 
