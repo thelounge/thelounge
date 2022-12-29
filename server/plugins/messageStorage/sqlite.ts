@@ -25,12 +25,12 @@ try {
 
 type Migration = {version: number; stmts: string[]};
 
-export const currentSchemaVersion = 1520239200; // use `new Date().getTime()`
+export const currentSchemaVersion = 1672236339873; // use `new Date().getTime()`
 
 // Desired schema, adapt to the newest version and add migrations to the array below
 const schema = [
 	"CREATE TABLE IF NOT EXISTS options (name TEXT, value TEXT, CONSTRAINT name_unique UNIQUE (name))",
-	"CREATE TABLE IF NOT EXISTS messages (network TEXT, channel TEXT, time INTEGER, type TEXT, msg TEXT)",
+	"CREATE TABLE IF NOT EXISTS messages (id INTEGER PRIMARY KEY AUTOINCREMENT, network TEXT, channel TEXT, time INTEGER, type TEXT, msg TEXT)",
 	"CREATE INDEX IF NOT EXISTS network_channel ON messages (network, channel)",
 	"CREATE INDEX IF NOT EXISTS time ON messages (time)",
 ];
