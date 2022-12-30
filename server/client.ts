@@ -138,7 +138,7 @@ class Client {
 
 		if (!Config.values.public && client.config.log) {
 			if (Config.values.messageStorage.includes("sqlite")) {
-				client.messageProvider = new SqliteMessageStorage(client);
+				client.messageProvider = new SqliteMessageStorage(client.name);
 				client.messageStorage.push(client.messageProvider);
 			}
 

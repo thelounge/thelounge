@@ -6,7 +6,6 @@ import util from "../util";
 import Msg, {MessageType} from "../../server/models/msg";
 import Config from "../../server/config";
 import MessageStorage from "../../server/plugins/messageStorage/sqlite";
-import Client from "../../server/client";
 
 describe("SQLite Message Storage", function () {
 	// Increase timeout due to unpredictable I/O on CI services
@@ -17,10 +16,7 @@ describe("SQLite Message Storage", function () {
 	let store: MessageStorage;
 
 	before(function (done) {
-		store = new MessageStorage({
-			name: "testUser",
-			idMsg: 1,
-		} as Client);
+		store = new MessageStorage("testUser");
 
 		// Delete database file from previous test run
 		if (fs.existsSync(expectedPath)) {
@@ -47,7 +43,7 @@ describe("SQLite Message Storage", function () {
 
 	it("should resolve an empty array when disabled", async function () {
 		store.isEnabled = false;
-		const messages = await store.getMessages(null as any, null as any);
+		const messages = await store.getMessages(null as any, null as any, null as any);
 		expect(messages).to.be.empty;
 		store.isEnabled = true;
 	});
@@ -106,13 +102,15 @@ describe("SQLite Message Storage", function () {
 	});
 
 	it("should retrieve previously stored message", async function () {
+		let msgid = 0;
 		const messages = await store.getMessages(
 			{
 				uuid: "this-is-a-network-guid",
 			} as any,
 			{
 				name: "#thisisaCHANNEL",
-			} as any
+			} as any,
+			() => msgid++
 		);
 		expect(messages).to.have.lengthOf(1);
 		const msg = messages[0];
@@ -138,9 +136,11 @@ describe("SQLite Message Storage", function () {
 				);
 			}
 
+			let msgId = 0;
 			const messages = await store.getMessages(
 				{uuid: "retrieval-order-test-network"} as any,
-				{name: "#channel"} as any
+				{name: "#channel"} as any,
+				() => msgId++
 			);
 			expect(messages).to.have.lengthOf(2);
 			expect(messages.map((i_1) => i_1.text)).to.deep.equal(["msg 198", "msg 199"]);
