@@ -6,7 +6,6 @@ import {Network} from "../../models/network";
 import Client from "../../client";
 
 interface MessageStorage {
-	client: Client;
 	isEnabled: boolean;
 
 	enable(): Promise<void>;
@@ -38,7 +37,6 @@ export type SearchResponse =
 
 type SearchFunction = (query: SearchQuery) => Promise<SearchResponse>;
 
-export interface SqliteMessageStorage extends MessageStorage {
-	database: Database;
-	search: SearchFunction | [];
+export interface SearchableMessageStorage extends MessageStorage {
+	search: SearchFunction;
 }

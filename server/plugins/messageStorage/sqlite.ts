@@ -8,11 +8,7 @@ import Msg, {Message} from "../../models/msg";
 import Client from "../../client";
 import Chan, {Channel} from "../../models/chan";
 import Helper from "../../helper";
-import type {
-	SearchResponse,
-	SearchQuery,
-	SqliteMessageStorage as ISqliteMessageStorage,
-} from "./types";
+import type {SearchResponse, SearchQuery, SearchableMessageStorage} from "./types";
 import Network from "../../models/network";
 
 // TODO; type
@@ -49,11 +45,11 @@ class Deferred {
 	}
 }
 
-class SqliteMessageStorage implements ISqliteMessageStorage {
-	client: Client;
+class SqliteMessageStorage implements SearchableMessageStorage {
 	isEnabled: boolean;
 	database!: Database;
 	initDone: Deferred;
+	client: Client;
 
 	constructor(client: Client) {
 		this.client = client;
