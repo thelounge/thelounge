@@ -5,17 +5,16 @@ import filenamify from "filenamify";
 
 import Config from "../../config";
 import {MessageStorage} from "./types";
-import Client from "../../client";
 import Channel from "../../models/chan";
 import {Message, MessageType} from "../../models/msg";
 import Network from "../../models/network";
 
 class TextFileMessageStorage implements MessageStorage {
-	client: Client;
 	isEnabled: boolean;
+	username: string;
 
-	constructor(client: Client) {
-		this.client = client;
+	constructor(username: string) {
+		this.username = username;
 		this.isEnabled = false;
 	}
 
@@ -36,7 +35,7 @@ class TextFileMessageStorage implements MessageStorage {
 
 		const logPath = path.join(
 			Config.getUserLogsPath(),
-			this.client.name,
+			this.username,
 			TextFileMessageStorage.getNetworkFolderName(network)
 		);
 

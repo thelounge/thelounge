@@ -143,7 +143,7 @@ class Client {
 			}
 
 			if (Config.values.messageStorage.includes("text")) {
-				client.messageStorage.push(new TextFileMessageStorage(client));
+				client.messageStorage.push(new TextFileMessageStorage(client.name));
 			}
 
 			for (const messageStorage of client.messageStorage) {
