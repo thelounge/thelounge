@@ -273,7 +273,7 @@ class ClientManager {
 		return true;
 	}
 
-	private readUserConfig(name: string) {
+	readUserConfig(name: string) {
 		const userPath = Config.getUserConfigPath(name);
 
 		if (!fs.existsSync(userPath)) {
