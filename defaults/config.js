@@ -470,6 +470,15 @@ module.exports = {
 		},
 	},
 
+	openid: {
+		enable: false,
+		issuerURL: "https://auth.example.com",
+		baseURL: "https://thelounge.example.com",
+		clientID: "clientId",
+		secret: "secret",
+		logout: true,
+	},
+
 	// ## Debugging settings
 
 	// The `debug` object contains several settings to enable debugging in The

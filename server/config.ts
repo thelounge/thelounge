@@ -69,6 +69,15 @@ type Ldap = {
 	baseDN?: string;
 };
 
+type OpenID = {
+	enable: boolean;
+	issuerURL: string;
+	baseURL: string;
+	clientID: string;
+	secret: string;
+	logout: boolean;
+};
+
 type TlsOptions = any;
 
 type Debug = {
@@ -102,6 +111,7 @@ export type ConfigType = {
 	identd: Identd;
 	oidentd?: string;
 	ldap: Ldap;
+	openid: OpenID;
 	debug: Debug;
 	themeColor: string;
 };

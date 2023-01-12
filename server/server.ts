@@ -23,6 +23,8 @@ import Auth from "./plugins/auth";
 import themes, {ThemeForClient} from "./plugins/packages/themes";
 themes.loadLocalThemes();
 
+import auth = require("express-openid-connect");
+
 import packages from "./plugins/packages/index";
 import {NetworkWithIrcFramework} from "./models/network";
 import {ChanType} from "./models/chan";
@@ -52,6 +54,7 @@ export type ClientConfiguration = Pick<
 > & {
 	fileUpload: boolean;
 	ldapEnabled: boolean;
+	openidEnabled: boolean;
 	isUpdateAvailable: boolean;
 	applicationServerKey: string;
 	version: string;
@@ -100,6 +103,20 @@ export default async function (
 		.use(express.static(Utils.getFileFromRelativeToRoot("public"), staticOptions))
 		.use("/storage/", express.static(Config.getStoragePath(), staticOptions));
 
+	if (Config.values.openid.enable) {
+		app.use(
+			auth({
+				issuerBaseURL: Config.values.openid.issuerURL,
+				baseURL: Config.values.openid.baseURL,
+				clientID: Config.values.openid.clientID,
+				secret: Config.values.openid.secret,
+				// TODO: Check if authRequired will interfere with file upload endpoint
+				authRequired: true,
+				idpLogout: Config.values.openid.logout,
+			})
+		);
+	}
+
 	if (Config.values.fileUpload.enable) {
 		Uploader.router(app);
 	}
@@ -132,9 +149,9 @@ export default async function (
 		return res.sendFile(path.join(packagePath, fileName));
 	});
 
-	if (Config.values.public && (Config.values.ldap || {}).enable) {
+	if (Config.values.public && (Config.values.ldap || Config.values.openid || {}).enable) {
 		log.warn(
-			"Server is public and set to use LDAP. Set to private mode if trying to use LDAP authentication."
+			"Server is public and set to use LDAP or OpenID. Set to private mode if trying to use LDAP or OpenID authentication."
 		);
 	}
 
@@ -524,7 +541,7 @@ function initializeClient(
 		}
 	});
 
-	if (!Config.values.public && !Config.values.ldap.enable) {
+	if (!Config.values.public && !Config.values.ldap.enable && !Config.values.openid.enable) {
 		socket.on("change-password", (data) => {
 			if (_.isPlainObject(data)) {
 				const old = data.old_password;
@@ -799,6 +816,7 @@ function initializeClient(
 	}
 
 	socket.on("sign-out", (tokenToSignOut) => {
+		// TODO: Add OpenID hook
 		// If no token provided, sign same client out
 		if (!tokenToSignOut || typeof tokenToSignOut !== "string") {
 			tokenToSignOut = token;
@@ -869,6 +887,7 @@ function getClientConfiguration(): ClientConfiguration {
 
 	config.fileUpload = Config.values.fileUpload.enable;
 	config.ldapEnabled = Config.values.ldap.enable;
+	config.openidEnabled = Config.values.openid.enable;
 
 	if (!config.lockNetwork) {
 		config.defaults = _.clone(Config.values.defaults);
@@ -988,7 +1007,7 @@ function performAuthentication(this: Socket, data) {
 		}
 
 		// If authorization succeeded but there is no loaded user,
-		// load it and find the user again (this happens with LDAP)
+		// load it and find the user again (this happens with LDAP and OpenID)
 		if (!client) {
 			client = manager!.loadUser(data.user);
 		}
