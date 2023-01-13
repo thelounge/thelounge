@@ -20,10 +20,10 @@ import changelog from "./plugins/changelog";
 import inputs from "./plugins/inputs";
 import Auth from "./plugins/auth";
 
+import {BaseClient, Issuer} from "openid-client";
+
 import themes, {ThemeForClient} from "./plugins/packages/themes";
 themes.loadLocalThemes();
-
-import auth = require("express-openid-connect");
 
 import packages from "./plugins/packages/index";
 import {NetworkWithIrcFramework} from "./models/network";
@@ -68,6 +68,10 @@ export type ClientConfiguration = Pick<
 // A random number that will force clients to reload the page if it differs
 const serverHash = Math.floor(Date.now() * Math.random());
 
+var issuer: Issuer;
+
+var openidClient: BaseClient;
+
 let manager: ClientManager | null = null;
 
 export default async function (
@@ -104,17 +108,14 @@ export default async function (
 		.use("/storage/", express.static(Config.getStoragePath(), staticOptions));
 
 	if (Config.values.openid.enable) {
-		app.use(
-			auth({
-				issuerBaseURL: Config.values.openid.issuerURL,
-				baseURL: Config.values.openid.baseURL,
-				clientID: Config.values.openid.clientID,
-				secret: Config.values.openid.secret,
-				// TODO: Check if authRequired will interfere with file upload endpoint
-				authRequired: true,
-				idpLogout: Config.values.openid.logout,
-			})
-		);
+		issuer = await Issuer.discover(Config.values.openid.issuerURL);
+		log.info("Discovered issuer %s", issuer.metadata.issuer);
+		openidClient = new issuer.Client({
+			client_id: Config.values.openid.clientID,
+			client_secret: Config.values.openid.secret,
+			redirect_uris: [Config.values.openid.baseURL + "/r"],
+			response_types: ["code"],
+		});
 	}
 
 	if (Config.values.fileUpload.enable) {
@@ -864,6 +865,7 @@ function initializeClient(
 	if (Config.values.public) {
 		sendInitEvent(null);
 	} else if (!token) {
+		// TODO: Add OpenID option here to use OpenID token instead of a randomly generated one
 		client.generateToken((newToken) => {
 			token = client.calculateTokenHash(newToken);
 			client.attachedClients[socket.id].token = token;
@@ -1026,6 +1028,14 @@ function performAuthentication(this: Socket, data) {
 
 			return authCallback(true);
 		}
+	}
+
+	// FIXME: Get rid of this (debug use only)
+	log.info(JSON.stringify(socket.handshake));
+
+	if (Config.values.openid.enable) {
+		data.user = socket.handshake.auth;
+		data.password = socket.handshake.headers.cookie;
 	}
 
 	Auth.initialize().then(() => {
