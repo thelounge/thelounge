@@ -17,7 +17,17 @@ const colorCodeMap = [
 	["15", "Light Grey"],
 ];
 
-const condensedTypes = new Set(["chghost", "join", "part", "quit", "nick", "kick", "mode"]);
+const condensedTypes = new Set([
+	"away",
+	"back",
+	"chghost",
+	"join",
+	"kick",
+	"mode",
+	"nick",
+	"part",
+	"quit",
+]);
 
 const timeFormats = {
 	msgDefault: "HH:mm",

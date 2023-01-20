@@ -118,6 +118,18 @@ export default defineComponent({
 									(obj[type] > 1 ? " modes were set" : " mode was set")
 							);
 							break;
+						case "away":
+							strings.push(
+								"marked away " +
+									(obj[type] > 1 ? String(obj[type]) + " times" : "once")
+							);
+							break;
+						case "back":
+							strings.push(
+								"marked back " +
+									(obj[type] > 1 ? String(obj[type]) + " times" : "once")
+							);
+							break;
 					}
 				}
 			});
