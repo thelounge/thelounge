@@ -20,7 +20,7 @@ import changelog from "./plugins/changelog";
 import inputs from "./plugins/inputs";
 import Auth from "./plugins/auth";
 
-import {BaseClient, Issuer} from "openid-client";
+import {BaseClient, Issuer, generators} from "openid-client";
 
 import themes, {ThemeForClient} from "./plugins/packages/themes";
 themes.loadLocalThemes();
@@ -67,6 +67,7 @@ export type ClientConfiguration = Pick<
 
 // A random number that will force clients to reload the page if it differs
 const serverHash = Math.floor(Date.now() * Math.random());
+const code_verifier = generators.codeVerifier();
 
 var issuer: Issuer;
 
@@ -101,22 +102,28 @@ export default async function (
 		.use(allRequests)
 		.use(addSecurityHeaders)
 		.get("/", indexRequest)
+		.get("/openid-redirect", openidRedirectRequest)
 		.get("/service-worker.js", forceNoCacheRequest)
 		.get("/js/bundle.js.map", forceNoCacheRequest)
 		.get("/css/style.css.map", forceNoCacheRequest)
 		.use(express.static(Utils.getFileFromRelativeToRoot("public"), staticOptions))
 		.use("/storage/", express.static(Config.getStoragePath(), staticOptions));
 
-	if (Config.values.openid.enable) {
-		issuer = await Issuer.discover(Config.values.openid.issuerURL);
-		log.info("Discovered issuer %s", issuer.metadata.issuer);
-		openidClient = new issuer.Client({
-			client_id: Config.values.openid.clientID,
-			client_secret: Config.values.openid.secret,
-			redirect_uris: [Config.values.openid.baseURL + "/r"],
-			response_types: ["code"],
-		});
-	}
+	issuer = await Issuer.discover(Config.values.openid.issuerURL);
+	log.info("Discovered issuer", issuer.metadata.issuer);
+	openidClient = new issuer.Client({
+		client_id: Config.values.openid.clientID,
+		client_secret: Config.values.openid.secret,
+		redirect_uris: [Config.values.openid.baseURL + "/openid-redirect"],
+		response_types: ["code"],
+	});
+	const code_challenge = generators.codeChallenge(code_verifier);
+	var redirectUrl = openidClient.authorizationUrl({
+		scope: "openid email profile",
+		code_challenge,
+		code_challenge_method: "S256",
+	});
+	log.info(redirectUrl);
 
 	if (Config.values.fileUpload.enable) {
 		Uploader.router(app);
@@ -426,6 +433,25 @@ function forceNoCacheRequest(req: Request, res: Response, next: NextFunction) {
 	// browsers must fetch the latest version of these files (service worker, source maps)
 	res.setHeader("Cache-Control", "no-cache, no-transform");
 	return next();
+}
+
+async function openidRedirectRequest(req: Request, res: Response) {
+	openidClient = new issuer.Client({
+		client_id: Config.values.openid.clientID,
+		client_secret: Config.values.openid.secret,
+		redirect_uris: [Config.values.openid.baseURL + "/openid-redirect"],
+		response_types: ["code"],
+	});
+	const params = openidClient.callbackParams(req);
+	const tokenSet = await openidClient.callback(
+		Config.values.openid.baseURL + "/openid-redirect",
+		params,
+		{code_verifier}
+	);
+	log.info("received and validated tokens", JSON.stringify(tokenSet));
+	log.info("validated ID Token claims", JSON.stringify(tokenSet.claims()));
+	const userinfo = await openidClient.userinfo(tokenSet);
+	log.info("userinfo", JSON.stringify(userinfo));
 }
 
 function indexRequest(req: Request, res: Response) {
@@ -862,17 +888,22 @@ function initializeClient(
 		socket.emit("commands", inputs.getCommands());
 	};
 
+	// TODO: OpenID Set token to header value in cookie
+
 	if (Config.values.public) {
 		sendInitEvent(null);
 	} else if (!token) {
-		// TODO: Add OpenID option here to use OpenID token instead of a randomly generated one
-		client.generateToken((newToken) => {
-			token = client.calculateTokenHash(newToken);
-			client.attachedClients[socket.id].token = token;
+		if (!Config.values.openid.enable) {
+			client.generateToken((newToken) => {
+				token = client.calculateTokenHash(newToken);
+				client.attachedClients[socket.id].token = token;
 
-			client.updateSession(token, getClientIp(socket), socket.request);
-			sendInitEvent(newToken);
-		});
+				client.updateSession(token, getClientIp(socket), socket.request);
+				sendInitEvent(newToken);
+			});
+		} else {
+			// TODO: OpenID error since no token was given
+		}
 	} else {
 		client.updateSession(token, getClientIp(socket), socket.request);
 		sendInitEvent(null);
@@ -1034,8 +1065,9 @@ function performAuthentication(this: Socket, data) {
 	log.info(JSON.stringify(socket.handshake));
 
 	if (Config.values.openid.enable) {
-		data.user = socket.handshake.auth;
-		data.password = socket.handshake.headers.cookie;
+		// TODO: OpenID values
+		// set data.user to openid preferred_username
+		// set data.password to openid token
 	}
 
 	Auth.initialize().then(() => {
