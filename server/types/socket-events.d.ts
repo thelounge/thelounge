@@ -107,7 +107,7 @@ interface ServerToClientEvents {
 		token: string;
 	}) => void;
 
-	"search:results": (response: {results: ClientMessage[]}) => void;
+	"search:results": (response: SearchResponse) => void;
 
 	quit: (args: {network: string}) => void;
 

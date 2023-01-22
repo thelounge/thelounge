@@ -259,15 +259,10 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 		params.push(query.offset);
 
 		const rows = await this.serialize_fetchall(select, ...params);
-		const response: SearchResponse = {
-			searchTerm: query.searchTerm,
-			target: query.channelName,
-			networkUuid: query.networkUuid,
-			offset: query.offset,
+		return {
+			...query,
 			results: parseSearchRowsToMessages(query.offset, rows).reverse(),
 		};
-
-		return response;
 	}
 
 	canProvideMessages() {
