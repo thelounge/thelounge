@@ -9,7 +9,6 @@ import colors from "chalk";
 import net from "net";
 
 import log from "./log";
-import pkg from "../package.json";
 import Client from "./client";
 import ClientManager from "./clientManager";
 import Uploader from "./plugins/uploader";
@@ -885,7 +884,7 @@ function getClientConfiguration(): ClientConfiguration {
 
 	config.isUpdateAvailable = changelog.isUpdateAvailable;
 	config.applicationServerKey = manager!.webPush.vapidKeys!.publicKey;
-	config.version = pkg.version;
+	config.version = Helper.getVersionNumber();
 	config.gitCommit = Helper.getGitCommit();
 	config.themes = themes.getAll();
 	config.defaultTheme = Config.values.theme;
