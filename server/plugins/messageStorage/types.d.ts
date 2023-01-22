@@ -6,7 +6,6 @@ import {Network} from "../../models/network";
 import Client from "../../client";
 
 interface MessageStorage {
-	client: Client;
 	isEnabled: boolean;
 
 	enable(): Promise<void>;
@@ -17,7 +16,7 @@ interface MessageStorage {
 
 	deleteChannel(network: Network, channel: Channel): Promise<void>;
 
-	getMessages(network: Network, channel: Channel): Promise<Message[]>;
+	getMessages(network: Network, channel: Channel, nextID: () => number): Promise<Message[]>;
 
 	canProvideMessages(): boolean;
 }
@@ -35,7 +34,6 @@ export type SearchResponse = SearchQuery & {
 
 type SearchFunction = (query: SearchQuery) => Promise<SearchResponse>;
 
-export interface SqliteMessageStorage extends MessageStorage {
-	database: Database;
-	search: SearchFunction | [];
+export interface SearchableMessageStorage extends MessageStorage {
+	search: SearchFunction;
 }

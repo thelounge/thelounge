@@ -287,7 +287,7 @@ class Chan {
 		}
 
 		client.messageProvider
-			.getMessages(network, this)
+			.getMessages(network, this, () => client.idMsg++)
 			.then((messages) => {
 				if (messages.length === 0) {
 					if (network.irc!.network.cap.isEnabled("znc.in/playback")) {

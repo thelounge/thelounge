@@ -5,14 +5,9 @@ import path from "path";
 import fs from "fs/promises";
 import Config from "../../config";
 import Msg, {Message} from "../../models/msg";
-import Client from "../../client";
 import Chan, {Channel} from "../../models/chan";
 import Helper from "../../helper";
-import type {
-	SearchResponse,
-	SearchQuery,
-	SqliteMessageStorage as ISqliteMessageStorage,
-} from "./types";
+import type {SearchResponse, SearchQuery, SearchableMessageStorage} from "./types";
 import Network from "../../models/network";
 
 // TODO; type
@@ -49,21 +44,21 @@ class Deferred {
 	}
 }
 
-class SqliteMessageStorage implements ISqliteMessageStorage {
-	client: Client;
+class SqliteMessageStorage implements SearchableMessageStorage {
 	isEnabled: boolean;
 	database!: Database;
 	initDone: Deferred;
+	userName: string;
 
-	constructor(client: Client) {
-		this.client = client;
+	constructor(userName: string) {
+		this.userName = userName;
 		this.isEnabled = false;
 		this.initDone = new Deferred();
 	}
 
 	async _enable() {
 		const logsPath = Config.getUserLogsPath();
-		const sqlitePath = path.join(logsPath, `${this.client.name}.sqlite3`);
+		const sqlitePath = path.join(logsPath, `${this.userName}.sqlite3`);
 
 		try {
 			await fs.mkdir(logsPath, {recursive: true});
@@ -190,13 +185,11 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 		]);
 	}
 
-	/**
-	 * Load messages for given channel on a given network and resolve a promise with loaded messages.
-	 *
-	 * @param network Network - Network object where the channel is
-	 * @param channel Channel - Channel object for which to load messages for
-	 */
-	async getMessages(network: Network, channel: Channel): Promise<Message[]> {
+	async getMessages(
+		network: Network,
+		channel: Channel,
+		nextID: () => number
+	): Promise<Message[]> {
 		await this.initDone.promise;
 
 		if (!this.isEnabled || Config.values.maxHistory === 0) {
@@ -219,7 +212,7 @@ class SqliteMessageStorage implements ISqliteMessageStorage {
 			msg.type = row.type;
 
 			const newMsg = new Msg(msg);
-			newMsg.id = this.client.idMsg++;
+			newMsg.id = nextID();
 
 			return newMsg;
 		});
