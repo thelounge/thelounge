@@ -477,6 +477,9 @@ module.exports = {
 		clientID: "clientId",
 		secret: "secret",
 		logout: true,
+		usernameClaim: "preferred_username",
+		roleClaim: "roles",
+		requiredRoles: ["thelounge"],
 	},
 
 	// ## Debugging settings

@@ -67,7 +67,10 @@ export type ClientConfiguration = Pick<
 
 // A random number that will force clients to reload the page if it differs
 const serverHash = Math.floor(Date.now() * Math.random());
+
+// OpenID code generators and verifiers
 const code_verifier = generators.codeVerifier();
+const code_challenge = generators.codeChallenge(code_verifier);
 
 var issuer: Issuer;
 
@@ -102,7 +105,6 @@ export default async function (
 		.use(allRequests)
 		.use(addSecurityHeaders)
 		.get("/", indexRequest)
-		.get("/openid-redirect", openidRedirectRequest)
 		.get("/service-worker.js", forceNoCacheRequest)
 		.get("/js/bundle.js.map", forceNoCacheRequest)
 		.get("/css/style.css.map", forceNoCacheRequest)
@@ -114,10 +116,9 @@ export default async function (
 	openidClient = new issuer.Client({
 		client_id: Config.values.openid.clientID,
 		client_secret: Config.values.openid.secret,
-		redirect_uris: [Config.values.openid.baseURL + "/openid-redirect"],
+		redirect_uris: [Config.values.openid.baseURL],
 		response_types: ["code"],
 	});
-	const code_challenge = generators.codeChallenge(code_verifier);
 	var redirectUrl = openidClient.authorizationUrl({
 		scope: "openid email profile",
 		code_challenge,
@@ -433,25 +434,6 @@ function forceNoCacheRequest(req: Request, res: Response, next: NextFunction) {
 	// browsers must fetch the latest version of these files (service worker, source maps)
 	res.setHeader("Cache-Control", "no-cache, no-transform");
 	return next();
-}
-
-async function openidRedirectRequest(req: Request, res: Response) {
-	openidClient = new issuer.Client({
-		client_id: Config.values.openid.clientID,
-		client_secret: Config.values.openid.secret,
-		redirect_uris: [Config.values.openid.baseURL + "/openid-redirect"],
-		response_types: ["code"],
-	});
-	const params = openidClient.callbackParams(req);
-	const tokenSet = await openidClient.callback(
-		Config.values.openid.baseURL + "/openid-redirect",
-		params,
-		{code_verifier}
-	);
-	log.info("received and validated tokens", JSON.stringify(tokenSet));
-	log.info("validated ID Token claims", JSON.stringify(tokenSet.claims()));
-	const userinfo = await openidClient.userinfo(tokenSet);
-	log.info("userinfo", JSON.stringify(userinfo));
 }
 
 function indexRequest(req: Request, res: Response) {
@@ -958,7 +940,7 @@ function getServerConfiguration(): ServerConfiguration {
 	return {...Config.values, ...{stylesheets: packages.getStylesheets()}};
 }
 
-function performAuthentication(this: Socket, data) {
+async function performAuthentication(this: Socket, data) {
 	if (!_.isPlainObject(data)) {
 		return;
 	}
@@ -1061,13 +1043,17 @@ function performAuthentication(this: Socket, data) {
 		}
 	}
 
-	// FIXME: Get rid of this (debug use only)
-	log.info(JSON.stringify(socket.handshake));
-
 	if (Config.values.openid.enable) {
-		// TODO: OpenID values
-		// set data.user to openid preferred_username
-		// set data.password to openid token
+		const params = openidClient.callbackParams(data.password);
+		const tokenSet = await openidClient.callback(
+			Config.values.openid.baseURL + "/openid-redirect",
+			params,
+			{code_verifier}
+		);
+		// TODO: OpenID handle undefined better
+		// TODO: OpenID role check
+		const userinfo = await openidClient.userinfo(tokenSet);
+		data.user = userinfo[Config.values.openid.usernameClaim];
 	}
 
 	Auth.initialize().then(() => {

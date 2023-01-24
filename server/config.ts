@@ -76,6 +76,9 @@ type OpenID = {
 	clientID: string;
 	secret: string;
 	logout: boolean;
+	usernameClaim: string;
+	roleClaim: string;
+	requiredRoles: string[];
 };
 
 type TlsOptions = any;
