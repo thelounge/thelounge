@@ -470,15 +470,49 @@ module.exports = {
 		},
 	},
 
+	// ## OpenID Support
+
+	// These settings enable and configure OpenID authentication.
+	//
+	// They are only being used in private mode. To know more about private mode,
+	// see the `public` setting above.
+
+	// The authentication process works as follows:
+	//
+	// 1. The Lounge generates a redirect URL based on the OpenID provider's information.
+	// 2. When the client goes to the URL, it gets back tokens in the URL params.
+	// 3. The client sends the tokens through the websocket and the server validates it.
+	// 4. The server makes sure that the tokens have the correct permissions.
+	// 5. The server continues with the normal authentication process.
+	//
+	// The available keys for the `openid` object are:
 	openid: {
+		// - `enable`: when set to `false`, LDAP support is disabled and all other
+		//   values are ignored.
 		enable: false,
+
+		// - `issuerURL`: An OpenID provider URL. Must have a `.well-known/openid-configuration` endpoint available.
 		issuerURL: "https://auth.example.com",
+
+		// - `baseURL`: Where The Lounge is running. This is required to create the redirect.
 		baseURL: "https://thelounge.example.com",
+
+		// - `clientID`: OpenID client ID.
 		clientID: "clientId",
+
+		// - `secret`: OpenID secret.
 		secret: "secret",
+
+		// - `logout`: Enable front-channel logout (pressing log out will log you out of the app)
 		logout: true,
+
+		// - `usernameClaim`: OpenID claim to take the username from.
 		usernameClaim: "preferred_username",
+
+		// - `roleClaim`: OpenID claim that represents a list of roles that a user has. Set blank to disable role checking.
 		roleClaim: "roles",
+
+		// - `requiredRoles`: what OpenID roles are required for logging in.
 		requiredRoles: ["thelounge"],
 	},
 
