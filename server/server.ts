@@ -114,7 +114,7 @@ export default async function (
 		.use("/storage/", express.static(Config.getStoragePath(), staticOptions));
 
 	issuer = await Issuer.discover(Config.values.openid.issuerURL);
-	log.info("Discovered issuer", issuer.metadata.issuer);
+	log.info("Discovered OpenID issuer", issuer.metadata.issuer);
 	openidClient = new issuer.Client({
 		client_id: Config.values.openid.clientID,
 		client_secret: Config.values.openid.secret,
@@ -126,7 +126,6 @@ export default async function (
 		code_challenge,
 		code_challenge_method: "S256",
 	});
-	log.info(redirectUrl);
 	issuerURL = redirectUrl;
 
 	if (Config.values.fileUpload.enable) {
@@ -1045,17 +1044,27 @@ async function performAuthentication(this: Socket, data) {
 	}
 
 	if (Config.values.openid.enable) {
-		// TODO: OpenID handle error if data.password is invalid
 		try {
 			const tokenSet = await openidClient.callback(
 				Config.values.openid.baseURL,
 				openidClient.callbackParams(data.password),
 				{code_verifier}
 			);
-			// TODO: OpenID handle undefined better
 			// TODO: OpenID role check
 			const userinfo = await openidClient.userinfo(tokenSet);
+			log.info(JSON.stringify(userinfo));
 			data.user = userinfo[Config.values.openid.usernameClaim];
+			if (Config.values.openid.roleClaim !== "") {
+				const availabeRoles = _.get(userinfo, Config.values.openid.roleClaim) as string[];
+				const requiredRoles = Config.values.openid.requiredRoles;
+				const userAuthorized = requiredRoles.every((element) =>
+					availabeRoles.includes(element)
+				);
+				if (!userAuthorized) {
+					data.user = "";
+					data.password = "";
+				}
+			}
 		} catch (e) {
 			// Guaranteed to fail, probably
 			data.user = "";
