@@ -4,9 +4,7 @@ import type {AuthHandler} from "../auth";
 
 const openIDAuth: AuthHandler = (manager, client, user, _, callback) => {
 	if (user === "") {
-		log.error(
-			`Authentication failed using header auth: empty username. Have you selected the right header?`
-		);
+		log.error(`Authentication failed`);
 		return callback(false);
 	}
 

@@ -3,7 +3,8 @@
 		<div
 			v-if="
 				!store.state.serverConfiguration?.public &&
-				!store.state.serverConfiguration?.ldapEnabled
+				!store.state.serverConfiguration?.ldapEnabled &&
+				!store.state.serverConfiguration?.openidEnabled
 			"
 			id="change-password"
 			role="group"

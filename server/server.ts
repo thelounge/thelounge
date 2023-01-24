@@ -269,7 +269,10 @@ export default async function (
 				performAuthentication.call(socket, {});
 			} else {
 				socket.on("auth:perform", performAuthentication);
-				socket.emit("auth:start", serverHash);
+				socket.emit("auth:start", {
+					serverHash,
+					openidEnabled: Config.values.openid.enable && !Config.values.public,
+				});
 			}
 		});
 
@@ -870,22 +873,16 @@ function initializeClient(
 		socket.emit("commands", inputs.getCommands());
 	};
 
-	// TODO: OpenID Set token to header value in cookie
-
 	if (Config.values.public) {
 		sendInitEvent(null);
 	} else if (!token) {
-		if (!Config.values.openid.enable) {
-			client.generateToken((newToken) => {
-				token = client.calculateTokenHash(newToken);
-				client.attachedClients[socket.id].token = token;
+		client.generateToken((newToken) => {
+			token = client.calculateTokenHash(newToken);
+			client.attachedClients[socket.id].token = token;
 
-				client.updateSession(token, getClientIp(socket), socket.request);
-				sendInitEvent(newToken);
-			});
-		} else {
-			// TODO: OpenID error since no token was given
-		}
+			client.updateSession(token, getClientIp(socket), socket.request);
+			sendInitEvent(newToken);
+		});
 	} else {
 		client.updateSession(token, getClientIp(socket), socket.request);
 		sendInitEvent(null);
@@ -1044,16 +1041,22 @@ async function performAuthentication(this: Socket, data) {
 	}
 
 	if (Config.values.openid.enable) {
-		const params = openidClient.callbackParams(data.password);
-		const tokenSet = await openidClient.callback(
-			Config.values.openid.baseURL + "/openid-redirect",
-			params,
-			{code_verifier}
-		);
-		// TODO: OpenID handle undefined better
-		// TODO: OpenID role check
-		const userinfo = await openidClient.userinfo(tokenSet);
-		data.user = userinfo[Config.values.openid.usernameClaim];
+		log.info(data.password);
+		// TODO: OpenID handle error if data.password is invalid
+		try {
+			const tokenSet = await openidClient.callback(
+				Config.values.openid.baseURL,
+				openidClient.callbackParams(data.password),
+				{code_verifier}
+			);
+			// TODO: OpenID handle undefined better
+			// TODO: OpenID role check
+			const userinfo = await openidClient.userinfo(tokenSet);
+			data.user = userinfo[Config.values.openid.usernameClaim];
+		} catch (e) {
+			data.user = "";
+			data.password = "";
+		}
 	}
 
 	Auth.initialize().then(() => {
