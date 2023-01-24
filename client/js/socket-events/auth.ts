@@ -29,6 +29,7 @@ socket.on("auth:failed", async function () {
 socket.on("auth:start", async function (data) {
 	const serverHash = data.serverHash;
 	const openidEnabled = data.openidEnabled;
+	const openidInit = data.openidInit;
 	// If we reconnected and serverHash differs, that means the server restarted
 	// And we will reload the page to grab the latest version
 	if (lastServerHash && serverHash !== lastServerHash) {
@@ -75,10 +76,11 @@ socket.on("auth:start", async function (data) {
 			openChannel,
 			hasConfig: store.state.serverConfiguration !== null,
 		});
-	} else if (openidEnabled) {
-		// TODO: OpenID check for parameters before sending
+	} else if (openidEnabled && window.location.search.includes("code=")) {
 		socket.emit("auth:perform", {user: "", password: window.location.href});
 		window.history.replaceState({}, document.title, "/");
+	} else if (openidEnabled) {
+		window.location.replace(openidInit);
 	} else {
 		await showSignIn();
 	}

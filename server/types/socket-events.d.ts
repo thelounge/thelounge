@@ -19,7 +19,7 @@ type Session = {
 
 interface ServerToClientEvents {
 	"auth:failed": () => void;
-	"auth:start": (data: {serverHash: number; openidEnabled}) => void;
+	"auth:start": (data: {serverHash: number; openidEnabled; openidInit: string}) => void;
 	"auth:success": () => void;
 
 	"upload:auth": (token: string) => void;

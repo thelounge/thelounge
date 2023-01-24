@@ -76,6 +76,8 @@ var issuer: Issuer;
 
 var openidClient: BaseClient;
 
+var issuerURL: string;
+
 let manager: ClientManager | null = null;
 
 export default async function (
@@ -125,6 +127,7 @@ export default async function (
 		code_challenge_method: "S256",
 	});
 	log.info(redirectUrl);
+	issuerURL = redirectUrl;
 
 	if (Config.values.fileUpload.enable) {
 		Uploader.router(app);
@@ -272,6 +275,7 @@ export default async function (
 				socket.emit("auth:start", {
 					serverHash,
 					openidEnabled: Config.values.openid.enable && !Config.values.public,
+					openidInit: issuerURL,
 				});
 			}
 		});
@@ -1041,7 +1045,6 @@ async function performAuthentication(this: Socket, data) {
 	}
 
 	if (Config.values.openid.enable) {
-		log.info(data.password);
 		// TODO: OpenID handle error if data.password is invalid
 		try {
 			const tokenSet = await openidClient.callback(
@@ -1054,6 +1057,7 @@ async function performAuthentication(this: Socket, data) {
 			const userinfo = await openidClient.userinfo(tokenSet);
 			data.user = userinfo[Config.values.openid.usernameClaim];
 		} catch (e) {
+			// Guaranteed to fail, probably
 			data.user = "";
 			data.password = "";
 		}
