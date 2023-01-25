@@ -72,11 +72,11 @@ const serverHash = Math.floor(Date.now() * Math.random());
 const code_verifier = generators.codeVerifier();
 const code_challenge = generators.codeChallenge(code_verifier);
 
-var issuer: Issuer;
+let issuer: Issuer;
 
-var openidClient: BaseClient;
+let openidClient: BaseClient;
 
-var issuerURL: string;
+let issuerURL: string;
 
 let manager: ClientManager | null = null;
 
@@ -121,7 +121,7 @@ export default async function (
 		redirect_uris: [Config.values.openid.baseURL],
 		response_types: ["code"],
 	});
-	var redirectUrl = openidClient.authorizationUrl({
+	const redirectUrl = openidClient.authorizationUrl({
 		scope: "openid email profile",
 		code_challenge,
 		code_challenge_method: "S256",
@@ -268,7 +268,7 @@ export default async function (
 			socket.on("error", (err) => log.error(`io socket error: ${err}`));
 
 			if (Config.values.public) {
-				performAuthentication.call(socket, {});
+				void performAuthentication.call(socket, {});
 			} else {
 				socket.on("auth:perform", performAuthentication);
 				socket.emit("auth:start", {
@@ -470,6 +470,7 @@ function initializeClient(
 	lastMessage: number,
 	openChannel: number
 ) {
+	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	socket.off("auth:perform", performAuthentication);
 	socket.emit("auth:success");
 
@@ -1054,12 +1055,14 @@ async function performAuthentication(this: Socket, data) {
 			const userinfo = await openidClient.userinfo(tokenSet);
 			log.info(JSON.stringify(userinfo));
 			data.user = userinfo[Config.values.openid.usernameClaim];
+
 			if (Config.values.openid.roleClaim !== "") {
 				const availabeRoles = _.get(userinfo, Config.values.openid.roleClaim) as string[];
 				const requiredRoles = Config.values.openid.requiredRoles;
 				const userAuthorized = requiredRoles.every((element) =>
 					availabeRoles.includes(element)
 				);
+
 				if (!userAuthorized) {
 					data.user = "";
 					data.password = "";

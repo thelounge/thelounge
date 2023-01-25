@@ -30,6 +30,7 @@ socket.on("auth:start", async function (data) {
 	const serverHash = data.serverHash;
 	const openidEnabled = data.openidEnabled;
 	const openidInit = data.openidInit;
+
 	// If we reconnected and serverHash differs, that means the server restarted
 	// And we will reload the page to grab the latest version
 	if (lastServerHash && serverHash !== lastServerHash) {
