@@ -457,9 +457,9 @@ module.exports = {
 			//   - `rootPassword`: Password of The Lounge LDAP system user.
 			rootPassword: "1234",
 
-			//   - `filter`: it is set to `"(objectClass=person)(memberOf=ou=accounts,dc=example,dc=com)"`
+			//   - `filter`: it is set to `"(&(objectClass=person)(memberOf=ou=accounts,dc=example,dc=com))"`
 			//     by default.
-			filter: "(objectClass=person)(memberOf=ou=accounts,dc=example,dc=com)",
+			filter: "(&(objectClass=person)(memberOf=ou=accounts,dc=example,dc=com))",
 
 			//   - `base`: LDAP search base (search only within this node). It is set
 			//     to `"dc=example,dc=com"` by default.
