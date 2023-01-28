@@ -1,25 +1,34 @@
-# This file must not contain generated assets listed in .gitignore.
-# npm-debug.log and node_modules/ are ignored by default.
+# Patterns specified here are excluded from packages produced by `yarn pack`
 # See https://docs.npmjs.com/misc/developers#keeping-files-out-of-your-package
 
-# Ignore all dot files except for .thelounge_home
-.*
-!.thelounge_home
+# in theory we should be using an include list, but yarn can't cope
+# with negative patterns in the package.json's "files" field
+# see https://github.com/yarnpkg/yarn/issues/8332
+# so we monky patch one ourselves
 
-# Ignore client folder as it's being built into public/ folder
-# except for the specified files which are used by the server
-client/**
-!client/js/constants.ts
-!client/js/helpers/ircmessageparser/findLinks.ts
-!client/js/helpers/ircmessageparser/cleanIrcMessage.ts
+# Note some files are protected and always included, so the list is not exhaustive
+
+!.thelounge_home
+!index.js
+# give yarn global add a chance to use the right deps
+!yarn.lock
+
+!dist/package.json
+
+!dist/server/**/*.js
+
+!dist/defaults/**/*.js
+
+!dist/shared/**/*.js
+
+# this doesn't get copied to dist/ so we need to manually include it
+# TODO: this should be fixed by copying it to dist/ in the webpack build
 !client/index.html.tpl
 
+# ignore specific files in public/
 public/js/bundle.vendor.js.map
-coverage/
-scripts/
-test/
-appveyor.yml
-webpack.config*.js
-postcss.config.js
-renovate.json
+# then include the rest
+!public/**
 
+# Ignore all files not explicitly excluded above
+*
