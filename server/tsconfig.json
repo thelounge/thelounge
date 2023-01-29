@@ -15,13 +15,8 @@
     "files": true
   },
   "compilerOptions": {
-    "outDir": "../dist" /* Specify an output folder for all emitted files. See more: https://www.typescriptlang.org/tsconfig#outDir */,
     "noEmit": false /* Disable emitting file from a compilation. See more: https://www.typescriptlang.org/tsconfig#noEmit */,
-
     // TODO: Remove eventually
     "noImplicitAny": false /*Enable error reporting for expressions and declarations with an implied any type. See more: https://www.typescriptlang.org/tsconfig#noImplicitAny */
-  } /* Instructs the TypeScript compiler how to compile .ts files. */,
-  "exclude": [
-    "./dist"
-  ] /* Specifies a list of glob patterns that match files to be excluded from compilation. Requires TypeScript version 2.0 or later. */
+  } /* Instructs the TypeScript compiler how to compile .ts files. */
 }
