@@ -17,18 +17,6 @@ const colorCodeMap = [
 	["15", "Light Grey"],
 ];
 
-const condensedTypes = new Set([
-	"away",
-	"back",
-	"chghost",
-	"join",
-	"kick",
-	"mode",
-	"nick",
-	"part",
-	"quit",
-]);
-
 const timeFormats = {
 	msgDefault: "HH:mm",
 	msgWithSeconds: "HH:mm:ss",
@@ -39,7 +27,6 @@ const timeFormats = {
 export default {
 	colorCodeMap,
 	commands: [] as string[],
-	condensedTypes,
 	timeFormats,
 	// Same value as media query in CSS that forces sidebars to become overlays
 	mobileViewportPixels: 768,

@@ -9,7 +9,7 @@ import log from "./log";
 import Chan, {Channel, ChanType} from "./models/chan";
 import Msg, {MessageType, UserInMessage} from "./models/msg";
 import Config from "./config";
-import constants from "../client/js/constants";
+import {condensedTypes} from "../shared/irc";
 
 import inputs from "./plugins/inputs";
 import PublicClient from "./plugins/packages/publicClient";
@@ -569,7 +569,7 @@ class Client {
 					startIndex--;
 
 					// Do not count condensed messages towards the 100 messages
-					if (constants.condensedTypes.has(chan.messages[i].type)) {
+					if (condensedTypes.has(chan.messages[i].type)) {
 						continue;
 					}
 

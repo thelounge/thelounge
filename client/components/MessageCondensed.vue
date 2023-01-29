@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import {computed, defineComponent, PropType, ref} from "vue";
-import constants from "../js/constants";
+import {condensedTypes} from "../../shared/irc";
 import {ClientMessage, ClientNetwork} from "../js/types";
 import Message from "./Message.vue";
 
@@ -51,7 +51,7 @@ export default defineComponent({
 		const condensedText = computed(() => {
 			const obj: Record<string, number> = {};
 
-			constants.condensedTypes.forEach((type) => {
+			condensedTypes.forEach((type) => {
 				obj[type] = 0;
 			});
 
@@ -75,7 +75,7 @@ export default defineComponent({
 			obj.part += obj.quit;
 
 			const strings: string[] = [];
-			constants.condensedTypes.forEach((type) => {
+			condensedTypes.forEach((type) => {
 				if (obj[type]) {
 					switch (type) {
 						case "chghost":
