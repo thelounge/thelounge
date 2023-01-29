@@ -3,11 +3,11 @@
 
 import {h as createElement, VNode} from "vue";
 import parseStyle from "./ircmessageparser/parseStyle";
-import findChannels, {ChannelPart} from "./ircmessageparser/findChannels";
-import {findLinks, LinkPart} from "./ircmessageparser/findLinks";
-import findEmoji, {EmojiPart} from "./ircmessageparser/findEmoji";
-import findNames, {NamePart} from "./ircmessageparser/findNames";
-import merge, {MergedParts, Part} from "./ircmessageparser/merge";
+import findChannels from "./ircmessageparser/findChannels";
+import {findLinks} from "../../../shared/linkify";
+import findEmoji from "./ircmessageparser/findEmoji";
+import findNames from "./ircmessageparser/findNames";
+import merge, {MergedParts} from "./ircmessageparser/merge";
 import emojiMap from "./fullnamemap.json";
 import LinkPreviewToggle from "../../components/LinkPreviewToggle.vue";
 import LinkPreviewFileSize from "../../components/LinkPreviewFileSize.vue";
