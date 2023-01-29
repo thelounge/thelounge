@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import cleanIrcMessage from "../../../../../client/js/helpers/ircmessageparser/cleanIrcMessage";
+import {cleanIrcMessage} from "../../shared/irc";
 
 describe("cleanIrcMessage", function () {
 	it("should remove all formatting", function () {
