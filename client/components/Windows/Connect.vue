@@ -49,7 +49,7 @@ export default defineComponent({
 
 				if (
 					!Object.prototype.hasOwnProperty.call(
-						store.state.serverConfiguration?.defaults,
+						store.state.serverConfiguration?.defaults[0],
 						key
 					)
 				) {
@@ -57,11 +57,15 @@ export default defineComponent({
 				}
 
 				// When the network is locked, URL overrides should not affect disabled fields
-				if (
-					store.state.serverConfiguration?.lockNetwork &&
-					["name", "host", "port", "tls", "rejectUnauthorized"].includes(key)
-				) {
-					continue;
+				if (store.state.serverConfiguration?.lockNetwork) {
+					if (["host", "port", "tls", "rejectUnauthorized"].includes(key)) {
+						continue;
+					}
+
+					// Network name is only disabled if there is a single network
+					if (key === "name" && store.state.serverConfiguration?.defaults.length < 2) {
+						continue;
+					}
 				}
 
 				if (key === "join") {
@@ -78,7 +82,7 @@ export default defineComponent({
 				}
 
 				// Override server provided defaults with parameters passed in the URL if they match the data type
-				switch (typeof store.state.serverConfiguration?.defaults[key]) {
+				switch (typeof store.state.serverConfiguration?.defaults[0][key]) {
 					case "boolean":
 						if (value === "0" || value === "false") {
 							parsedParams[key] = false;
@@ -102,7 +106,7 @@ export default defineComponent({
 		const defaults = ref<Partial<NetworkFormDefaults>>(
 			Object.assign(
 				{},
-				store.state.serverConfiguration?.defaults,
+				store.state.serverConfiguration?.defaults[0],
 				parseOverrideParams(props.queryParams)
 			)
 		);

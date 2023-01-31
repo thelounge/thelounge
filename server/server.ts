@@ -58,7 +58,6 @@ export type ClientConfiguration = Pick<
 	gitCommit: string | null;
 	defaultTheme: string;
 	themes: ThemeForClient[];
-	defaults: Defaults;
 	fileUploadMaxFileSize?: number;
 };
 
@@ -873,14 +872,17 @@ function getClientConfiguration(): ClientConfiguration {
 		config.defaults = _.clone(Config.values.defaults);
 	} else {
 		// Only send defaults that are visible on the client
-		config.defaults = _.pick(Config.values.defaults, [
-			"name",
-			"nick",
-			"username",
-			"password",
-			"realname",
-			"join",
-		]) as Defaults;
+		config.defaults = Config.values.defaults.map(
+			(network) =>
+				_.pick(network, [
+					"name",
+					"nick",
+					"username",
+					"password",
+					"realname",
+					"join",
+				]) as Defaults
+		);
 	}
 
 	config.isUpdateAvailable = changelog.isUpdateAvailable;
@@ -889,10 +891,12 @@ function getClientConfiguration(): ClientConfiguration {
 	config.gitCommit = Helper.getGitCommit();
 	config.themes = themes.getAll();
 	config.defaultTheme = Config.values.theme;
-	config.defaults.nick = Config.getDefaultNick();
-	config.defaults.sasl = "";
-	config.defaults.saslAccount = "";
-	config.defaults.saslPassword = "";
+	config.defaults.forEach((network) => {
+		network.nick = Config.getDefaultNickForNetwork(network.name);
+		network.sasl = "";
+		network.saslAccount = "";
+		network.saslPassword = "";
+	});
 
 	if (Uploader) {
 		config.fileUploadMaxFileSize = Uploader.getMaxFileSize();

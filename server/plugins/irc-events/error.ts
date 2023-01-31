@@ -83,7 +83,7 @@ export default <IrcEventHandler>function (irc, network) {
 		lobby.pushMessage(client, msg, true);
 
 		if (irc.connection.registered === false) {
-			irc.changeNick(Config.getDefaultNick());
+			irc.changeNick(Config.getDefaultNickForNetwork(network.name));
 		}
 
 		client.emit("nick", {

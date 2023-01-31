@@ -2,8 +2,8 @@
 
 import config from "../../../defaults/config.js";
 
-config.defaults.name = "Example IRC Server";
-config.defaults.host = "irc.example.com";
+config.defaults[0].name = "Example IRC Server";
+config.defaults[0].host = "irc.example.com";
 config.public = true;
 config.prefetch = true;
 // @ts-ignore
