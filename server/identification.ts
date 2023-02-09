@@ -118,7 +118,13 @@ class Identification {
 
 		this.connections.forEach((connection) => {
 			if (!connection.socket.remotePort || !connection.socket.localPort) {
-				throw new Error("Socket has no remote or local port");
+				// Race condition: this can happen when more than one socket gets disconnected at
+				// once, since we `refresh()` for each one being added/removed. This results
+				// in there possibly be one or more disconnected sockets remaining when we get here.
+				//
+				// Simply skip this socket and not crash the server.
+				log.warn("oidentd: socket has no remote or local port?");
+				return;
 			}
 
 			file +=
