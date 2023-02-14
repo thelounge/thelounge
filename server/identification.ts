@@ -120,9 +120,9 @@ class Identification {
 			if (!connection.socket.remotePort || !connection.socket.localPort) {
 				// Race condition: this can happen when more than one socket gets disconnected at
 				// once, since we `refresh()` for each one being added/removed. This results
-				// in there possibly be one or more disconnected sockets remaining when we get here.
+				// in there possibly being one or more disconnected sockets remaining when we get here.
 				//
-				// Simply skip this socket and not crash the server.
+				// Simply skip this socket and do not crash the server.
 				log.warn("oidentd: socket has no remote or local port?");
 				return;
 			}
