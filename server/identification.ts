@@ -123,7 +123,7 @@ class Identification {
 				// in there possibly being one or more disconnected sockets remaining when we get here.
 				//
 				// Simply skip this socket and do not crash the server.
-				log.warn("oidentd: socket has no remote or local port?");
+				log.warn("oidentd: socket has no remote or local port. See https://github.com/thelounge/thelounge/pull/4695.");
 				return;
 			}
 
