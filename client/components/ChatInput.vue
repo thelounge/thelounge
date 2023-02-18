@@ -337,6 +337,7 @@ export default defineComponent({
 				autocompletionRef.value = undefined;
 			}
 
+			upload.unmounted();
 			upload.abort();
 		});
 
