@@ -104,6 +104,7 @@ export type ConfigType = {
 	ldap: Ldap;
 	debug: Debug;
 	themeColor: string;
+	authModule: string;
 };
 
 class Config {
