@@ -1,15 +1,19 @@
 import LinkifyIt, {Match} from "linkify-it";
-import {Part} from "./merge";
+import tlds from "tlds";
 
-export type LinkPart = Part & {
+export type NoSchemaMatch = Match & {
+	noschema: boolean;
+};
+
+export type LinkPart = {
+	start: number;
+	end: number;
 	link: string;
 };
 
-type OurMatch = Match & {
-	noschema?: boolean;
-};
+LinkifyIt.prototype.normalize = function normalize(match: NoSchemaMatch) {
+	match.noschema = false;
 
-LinkifyIt.prototype.normalize = function normalize(match: OurMatch) {
 	if (!match.schema) {
 		match.schema = "http:";
 		match.url = "http://" + match.url;
@@ -27,7 +31,6 @@ LinkifyIt.prototype.normalize = function normalize(match: OurMatch) {
 	}
 };
 
-import tlds from "tlds";
 const linkify = LinkifyIt().tlds(tlds).tlds("onion", true);
 
 // Known schemes to detect in text
@@ -52,32 +55,30 @@ for (const schema of commonSchemes) {
 	linkify.add(schema + ":", "http:");
 }
 
-function findLinks(text: string) {
-	const matches = linkify.match(text) as OurMatch[];
+export function findLinks(text: string) {
+	const matches = linkify.match(text) as NoSchemaMatch[];
 
 	if (!matches) {
 		return [];
 	}
 
-	return matches.map(returnUrl);
+	return matches.map(makeLinkPart);
 }
 
-function findLinksWithSchema(text: string) {
-	const matches = linkify.match(text) as OurMatch[];
+export function findLinksWithSchema(text: string) {
+	const matches = linkify.match(text) as NoSchemaMatch[];
 
 	if (!matches) {
 		return [];
 	}
 
-	return matches.filter((url) => !url.noschema).map(returnUrl);
+	return matches.filter((url) => !url.noschema).map(makeLinkPart);
 }
 
-function returnUrl(url: OurMatch): LinkPart {
+function makeLinkPart(url: NoSchemaMatch): LinkPart {
 	return {
 		start: url.index,
 		end: url.lastIndex,
 		link: url.url,
 	};
 }
-
-export {findLinks, findLinksWithSchema};

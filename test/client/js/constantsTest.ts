@@ -18,19 +18,6 @@ describe("client-side constants", function () {
 		});
 	});
 
-	describe(".condensedTypes", function () {
-		it("should be a non-empty array", function () {
-			expect(constants.condensedTypes).to.be.an.instanceof(Set).that.is.not.empty;
-		});
-
-		it("should only contain ASCII strings", function () {
-			// @ts-expect-error ts-migrate(7006) FIXME: Parameter 'type' implicitly has an 'any' type.
-			constants.condensedTypes.forEach((type) => {
-				expect(type).to.be.a("string").that.does.match(/^\w+$/);
-			});
-		});
-	});
-
 	describe(".timeFormats", function () {
 		it("should be objects of strings", function () {
 			expect(constants.timeFormats.msgDefault).to.be.an("string").that.is.not.empty;

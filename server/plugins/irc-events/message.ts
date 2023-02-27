@@ -1,6 +1,6 @@
 import Msg, {MessageType} from "../../models/msg";
 import LinkPrefetch from "./link";
-import cleanIrcMessage from "../../../client/js/helpers/ircmessageparser/cleanIrcMessage";
+import {cleanIrcMessage} from "../../../shared/irc";
 import Helper from "../../helper";
 import {IrcEventHandler} from "../../client";
 import Chan, {ChanType} from "../../models/chan";

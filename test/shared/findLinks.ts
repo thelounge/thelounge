@@ -1,8 +1,5 @@
 import {expect} from "chai";
-import {
-	findLinks,
-	findLinksWithSchema,
-} from "../../../../../client/js/helpers/ircmessageparser/findLinks";
+import {findLinks, findLinksWithSchema} from "../../shared/linkify";
 
 describe("findLinks", () => {
 	it("should find url", () => {

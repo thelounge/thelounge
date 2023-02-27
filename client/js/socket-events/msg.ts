@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 import socket from "../socket";
-import cleanIrcMessage from "../helpers/ircmessageparser/cleanIrcMessage";
+import {cleanIrcMessage} from "../../../shared/irc";
 import {store} from "../store";
 import {switchToChannel} from "../router";
 import {ClientChan, ClientMention, ClientMessage, NetChan} from "../types";
