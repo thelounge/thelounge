@@ -20,7 +20,7 @@ export default <IrcEventHandler>function (irc, network) {
 		if (typeof chan === "undefined") {
 			// Do not create new windows for errors as they may contain illegal characters
 			if (data.error) {
-				chan = network.channels[0];
+				chan = network.getLobby();
 			} else {
 				chan = client.createChannel({
 					type: ChanType.QUERY,

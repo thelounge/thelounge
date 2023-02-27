@@ -5,7 +5,7 @@ export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
 	irc.on("info", function (data) {
-		const lobby = network.channels[0];
+		const lobby = network.getLobby();
 
 		if (data.info) {
 			const msg = new Msg({

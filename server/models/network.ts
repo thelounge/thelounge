@@ -208,7 +208,7 @@ class Network {
 		this.proxyEnabled = !!this.proxyEnabled;
 
 		const error = function (network: Network, text: string) {
-			network.channels[0].pushMessage(
+			network.getLobby().pushMessage(
 				client,
 				new Msg({
 					type: MessageType.ERROR,
@@ -241,7 +241,7 @@ class Network {
 			if (Config.values.public) {
 				this.name = Config.values.defaults.name;
 				// Sync lobby channel name
-				this.channels[0].name = Config.values.defaults.name;
+				this.getLobby().name = Config.values.defaults.name;
 			}
 
 			this.host = Config.values.defaults.host;
@@ -401,7 +401,7 @@ class Network {
 			.filter((command) => command.length > 0);
 
 		// Sync lobby channel name
-		this.channels[0].name = this.name;
+		this.getLobby().name = this.name;
 
 		if (this.name !== oldNetworkName) {
 			// Send updated network name to all connected clients
@@ -650,6 +650,10 @@ class Network {
 			// Skip network lobby (it's always unshifted into first position)
 			return i > 0 && that.name.toLowerCase() === name;
 		});
+	}
+
+	getLobby() {
+		return this.channels[0];
 	}
 }
 

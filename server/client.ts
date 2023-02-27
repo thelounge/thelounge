@@ -321,7 +321,7 @@ class Client {
 		});
 
 		// Set network lobby channel id
-		network.channels[0].id = lobbyChannelId;
+		network.getLobby().id = lobbyChannelId;
 
 		client.networks.push(network);
 		client.emit("network", {
@@ -344,7 +344,7 @@ class Client {
 		});
 
 		if (network.userDisconnected) {
-			network.channels[0].pushMessage(
+			network.getLobby().pushMessage(
 				client,
 				new Msg({
 					text: "You have manually disconnected from this network before, use the /connect command to connect again.",

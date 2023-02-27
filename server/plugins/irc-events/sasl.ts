@@ -6,7 +6,7 @@ export default <IrcEventHandler>function (irc, network) {
 	const client = this;
 
 	irc.on("loggedin", (data) => {
-		const lobby = network.channels[0];
+		const lobby = network.getLobby();
 
 		const msg = new Msg({
 			type: MessageType.LOGIN,
@@ -17,7 +17,7 @@ export default <IrcEventHandler>function (irc, network) {
 	});
 
 	irc.on("loggedout", () => {
-		const lobby = network.channels[0];
+		const lobby = network.getLobby();
 
 		const msg = new Msg({
 			type: MessageType.LOGOUT,

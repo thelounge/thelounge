@@ -47,7 +47,7 @@ export default <IrcEventHandler>function (irc, network) {
 			// Send error to lobby if we receive empty list for a channel we're not in
 			if (typeof chan === "undefined") {
 				msg.showInActive = true;
-				chan = network.channels[0];
+				chan = network.getLobby();
 			}
 
 			chan.pushMessage(client, msg, true);
