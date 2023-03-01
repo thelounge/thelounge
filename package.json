@@ -151,7 +151,7 @@
     "undate": "0.3.0",
     "vue": "3.2.35",
     "vue-eslint-parser": "8.3.0",
-    "vue-loader": "17.0.0",
+    "vue-loader": "17.0.1",
     "vue-router": "4.0.15",
     "vuex": "4.0.2",
     "webpack": "5.68.0",
