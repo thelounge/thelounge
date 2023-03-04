@@ -3,6 +3,7 @@ import log from "../../log";
 import Chan, {Channel} from "../../models/chan";
 import Network, {NetworkWithIrcFramework} from "../../models/network";
 import {PackageInfo} from "../packages";
+import PublicClient from "../packages/publicClient";
 
 export type PluginInputHandler = (
 	this: Client,
@@ -15,7 +16,18 @@ export type PluginInputHandler = (
 type Plugin = {
 	commands: string[];
 	input: (network: Network, chan: Chan, cmd: string, args: string[]) => void;
-	allowDisconnected?: boolean | undefined;
+	allowDisconnected?: boolean;
+};
+
+type ExternalPluginCommand = {
+	packageInfo: PackageInfo;
+	input: (
+		pub: PublicClient,
+		netChan: {network: Network; chan: Chan},
+		cmd: string,
+		args: string[]
+	) => void;
+	allowDisconnected?: boolean;
 };
 
 const clientSideCommands = ["/collapse", "/expand", "/search"];
@@ -79,7 +91,7 @@ for (const input of builtInInputs) {
 		});
 }
 
-const pluginCommands = new Map();
+const pluginCommands = new Map<string, ExternalPluginCommand>();
 
 const getCommands = () =>
 	Array.from(userInputs.keys())
@@ -89,9 +101,22 @@ const getCommands = () =>
 		.concat(passThroughCommands)
 		.sort();
 
-const addPluginCommand = (packageInfo: PackageInfo, command, func) => {
-	func.packageInfo = packageInfo;
-	pluginCommands.set(command, func);
+const addPluginCommand = (packageInfo: PackageInfo, command: any, obj: any) => {
+	if (typeof command !== "string") {
+		log.error(`plugin {packageInfo.packageName} tried to register a bad command`);
+		return;
+	} else if (!obj || typeof obj.input !== "function") {
+		log.error(
+			`plugin ${packageInfo.packageName} tried to register command "${command} without a callback"`
+		);
+		return;
+	}
+
+	pluginCommands.set(command, {
+		packageInfo: packageInfo,
+		input: obj.input,
+		allowDisconnected: obj.allowDisconnected,
+	});
 };
 
 export default {
