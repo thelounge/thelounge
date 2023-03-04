@@ -47,7 +47,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 	// If connected to IRC, send to server and wait for ACK
 	// otherwise update the nick and UI straight away
 	if (network.irc) {
-		if (network.irc.connection && network.irc.connection.connected) {
+		if (network.irc.connected) {
 			network.irc.changeNick(newNick);
 
 			return;

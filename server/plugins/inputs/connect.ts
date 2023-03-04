@@ -15,7 +15,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 			return;
 		}
 
-		if (irc.connection && irc.connection.connected) {
+		if (irc.connected) {
 			chan.pushMessage(
 				this,
 				new Msg({
