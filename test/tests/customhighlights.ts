@@ -27,6 +27,7 @@ describe("Custom highlights", function () {
 			},
 		} as any
 	);
+	client.connect();
 	logInfoStub.restore();
 	expect(userLoadedLog).to.equal("User test loaded\n");
 

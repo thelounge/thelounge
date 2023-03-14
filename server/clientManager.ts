@@ -145,6 +145,7 @@ class ClientManager {
 			}
 		} else {
 			client = new Client(this, name, userConfig);
+			client.connect();
 			this.clients.push(client);
 		}
 
