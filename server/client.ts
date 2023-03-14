@@ -15,7 +15,7 @@ import inputs from "./plugins/inputs";
 import PublicClient from "./plugins/packages/publicClient";
 import SqliteMessageStorage from "./plugins/messageStorage/sqlite";
 import TextFileMessageStorage from "./plugins/messageStorage/text";
-import Network, {IgnoreListItem, NetworkWithIrcFramework} from "./models/network";
+import Network, {IgnoreListItem, NetworkConfig, NetworkWithIrcFramework} from "./models/network";
 import ClientManager from "./clientManager";
 import {MessageStorage, SearchQuery, SearchResponse} from "./plugins/messageStorage/types";
 
@@ -96,7 +96,7 @@ class Client {
 		[socketId: string]: {token: string; openChannel: number};
 	};
 	config!: UserConfig & {
-		networks?: Network[];
+		networks?: NetworkConfig[];
 	};
 	id!: number;
 	idMsg!: number;
@@ -112,7 +112,11 @@ class Client {
 
 	fileHash!: string;
 
-	constructor(manager: ClientManager, name?: string, config = {} as UserConfig) {
+	constructor(
+		manager: ClientManager,
+		name?: string,
+		config = {} as UserConfig & {networks: NetworkConfig[]}
+	) {
 		_.merge(this, {
 			awayMessage: "",
 			lastActiveChannel: -1,

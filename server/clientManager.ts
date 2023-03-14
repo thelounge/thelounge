@@ -7,6 +7,7 @@ import path from "path";
 import Auth from "./plugins/auth";
 import Client, {UserConfig} from "./client";
 import Config from "./config";
+import {NetworkConfig} from "./models/network";
 import WebPush from "./plugins/webpush";
 import log from "./log";
 import {Server} from "socket.io";
@@ -283,7 +284,7 @@ class ClientManager {
 
 		try {
 			const data = fs.readFileSync(userPath, "utf-8");
-			return JSON.parse(data) as UserConfig;
+			return JSON.parse(data) as UserConfig & {networks: NetworkConfig[]};
 		} catch (e: any) {
 			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			log.error(`Failed to read user ${colors.bold(name)}: ${e}`);

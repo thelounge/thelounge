@@ -1,7 +1,7 @@
 import _ from "lodash";
 import {v4 as uuidv4} from "uuid";
 import IrcFramework, {Client as IRCClient} from "irc-framework";
-import Chan, {Channel, ChanType} from "./chan";
+import Chan, {ChanConfig, Channel, ChanType} from "./chan";
 import Msg, {MessageType} from "./msg";
 import Prefix from "./prefix";
 import Helper, {Hostmask} from "../helper";
@@ -65,6 +65,34 @@ export type NetworkWithIrcFramework = Network & {
 	irc: NonNullable<Network["irc"]> & {
 		options: NonNullableIRCWithOptions;
 	};
+};
+
+export type NetworkConfig = {
+	nick: string;
+	name: string;
+	host: string;
+	port: number;
+	tls: boolean;
+	userDisconnected: boolean;
+	rejectUnauthorized: boolean;
+	password: string;
+	awayMessage: string;
+	commands: any[];
+	username: string;
+	realname: string;
+	leaveMessage: string;
+	sasl: string;
+	saslAccount: string;
+	saslPassword: string;
+	channels: ChanConfig[];
+	uuid: string;
+	proxyHost: string;
+	proxyPort: number;
+	proxyUsername: string;
+	proxyPassword: string;
+	proxyEnabled: boolean;
+	highlightRegex?: string;
+	ignoreList: any[];
 };
 
 class Network {

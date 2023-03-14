@@ -33,6 +33,13 @@ export type FilteredChannel = Chan & {
 	totalMessages: number;
 };
 
+export type ChanConfig = {
+	name: string;
+	key?: string;
+	muted?: boolean;
+	type?: string;
+};
+
 class Chan {
 	id: number;
 	messages: Msg[];
