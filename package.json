@@ -42,6 +42,15 @@
   "engines": {
     "node": ">=14.0.0"
   },
+  "files": [
+    "./.thelounge_home",
+    "./index.js",
+    "./yarn.lock",
+    "./client/index.html.tpl",
+    "./dist/package.json",
+    "./dist/**/*.js",
+    "./public/**"
+  ],
   "dependencies": {
     "@fastify/busboy": "1.0.0",
     "bcryptjs": "2.4.3",
