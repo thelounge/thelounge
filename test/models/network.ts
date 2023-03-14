@@ -30,7 +30,7 @@ describe("Network", function () {
 			expect(network1.uuid).to.not.equal(network2.uuid);
 		});
 
-		it("lobby should be at the top", function () {
+		it("should keep the lobby at the top", function () {
 			const network = new Network({
 				name: "Super Nice Network",
 				channels: [
