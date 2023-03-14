@@ -6,7 +6,7 @@ import crypto from "crypto";
 import colors from "chalk";
 
 import log from "./log";
-import Chan, {Channel, ChanType} from "./models/chan";
+import Chan, {ChanConfig, Channel, ChanType} from "./models/chan";
 import Msg, {MessageType, UserInMessage} from "./models/msg";
 import Config from "./config";
 import {condensedTypes} from "../shared/irc";
@@ -251,11 +251,13 @@ class Client {
 		let channels: Chan[] = [];
 
 		if (Array.isArray(args.channels)) {
-			let badName = false;
+			let badChanConf = false;
 
-			args.channels.forEach((chan: Chan) => {
-				if (!chan.name) {
-					badName = true;
+			args.channels.forEach((chan: ChanConfig) => {
+				const type = ChanType[(chan.type || "channel").toUpperCase()];
+
+				if (!chan.name || !type) {
+					badChanConf = true;
 					return;
 				}
 
@@ -263,13 +265,13 @@ class Client {
 					client.createChannel({
 						name: chan.name,
 						key: chan.key || "",
-						type: chan.type,
+						type: type,
 						muted: chan.muted,
 					})
 				);
 			});
 
-			if (badName && client.name) {
+			if (badChanConf && client.name) {
 				log.warn(
 					"User '" +
 						client.name +
