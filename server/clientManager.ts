@@ -285,7 +285,7 @@ class ClientManager {
 
 		try {
 			const data = fs.readFileSync(userPath, "utf-8");
-			return JSON.parse(data) as UserConfig & {networks: NetworkConfig[]};
+			return JSON.parse(data) as UserConfig;
 		} catch (e: any) {
 			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			log.error(`Failed to read user ${colors.bold(name)}: ${e}`);

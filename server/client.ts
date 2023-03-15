@@ -78,6 +78,7 @@ export type UserConfig = {
 		hostname?: string;
 		isSecure?: boolean;
 	};
+	networks?: NetworkConfig[];
 };
 
 export type Mention = {
@@ -95,9 +96,7 @@ class Client {
 	attachedClients!: {
 		[socketId: string]: {token: string; openChannel: number};
 	};
-	config!: UserConfig & {
-		networks?: NetworkConfig[];
-	};
+	config!: UserConfig;
 	id!: number;
 	idMsg!: number;
 	idChan!: number;
@@ -112,11 +111,7 @@ class Client {
 
 	fileHash!: string;
 
-	constructor(
-		manager: ClientManager,
-		name?: string,
-		config = {} as UserConfig & {networks: NetworkConfig[]}
-	) {
+	constructor(manager: ClientManager, name?: string, config = {} as UserConfig) {
 		_.merge(this, {
 			awayMessage: "",
 			lastActiveChannel: -1,
