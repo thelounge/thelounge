@@ -476,10 +476,9 @@ class Client {
 				})
 			);
 		};
-
-		if (inputs.userInputs.has(cmd)) {
-			const plugin = inputs.userInputs.get(cmd)!; // this is only save because we just checked it
-
+		
+		let plugin = inputs.userInputs.get(cmd);
+		if (plugin) {
 			if (!connected && !plugin.allowDisconnected) {
 				emitFailureDisconnected();
 				return;
@@ -489,9 +488,8 @@ class Client {
 			return;
 		}
 
-		if (inputs.pluginCommands.has(cmd)) {
-			const plugin = inputs.pluginCommands.get(cmd)!; // this is only save because we just checked it
-
+		plugin = inputs.pluginCommands.get(cmd);
+		if (plugin) {
 			if (!connected && !plugin.allowDisconnected) {
 				emitFailureDisconnected();
 				return;
