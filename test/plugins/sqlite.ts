@@ -74,7 +74,7 @@ describe("SQLite Message Storage", function () {
 	it("should insert schema version to options table", function (done) {
 		store.database.get(
 			"SELECT value FROM options WHERE name = 'schema_version'",
-			(err, row) => {
+			(err, row: {value: string}) => {
 				expect(err).to.be.null;
 
 				// Should be sqlite.currentSchemaVersion,
