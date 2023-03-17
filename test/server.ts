@@ -39,10 +39,10 @@ describe("Server", function () {
 	});
 
 	after(function (done) {
-		server.close(done);
 		logInfoStub.restore();
 		logWarnStub.restore();
 		checkForUpdatesStub.restore();
+		server.close(done);
 	});
 
 	// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
