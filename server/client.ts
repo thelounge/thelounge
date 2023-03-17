@@ -15,7 +15,7 @@ import inputs from "./plugins/inputs";
 import PublicClient from "./plugins/packages/publicClient";
 import SqliteMessageStorage from "./plugins/messageStorage/sqlite";
 import TextFileMessageStorage from "./plugins/messageStorage/text";
-import Network, {IgnoreListItem, NetworkWithIrcFramework} from "./models/network";
+import Network, {IgnoreListItem, NetworkConfig, NetworkWithIrcFramework} from "./models/network";
 import ClientManager from "./clientManager";
 import {MessageStorage, SearchQuery, SearchResponse} from "./plugins/messageStorage/types";
 
@@ -78,6 +78,7 @@ export type UserConfig = {
 		hostname?: string;
 		isSecure?: boolean;
 	};
+	networks?: NetworkConfig[];
 };
 
 export type Mention = {
@@ -95,9 +96,7 @@ class Client {
 	attachedClients!: {
 		[socketId: string]: {token: string; openChannel: number};
 	};
-	config!: UserConfig & {
-		networks?: Network[];
-	};
+	config!: UserConfig;
 	id!: number;
 	idMsg!: number;
 	idChan!: number;
@@ -176,8 +175,16 @@ class Client {
 				this.registerPushSubscription(session, session.pushSubscription, true);
 			}
 		});
+	}
 
-		(client.config.networks || []).forEach((network) => client.connect(network, true));
+	connect() {
+		const client = this;
+
+		if (client.networks.length !== 0) {
+			throw new Error(`${client.name} is already connected`);
+		}
+
+		(client.config.networks || []).forEach((network) => client.connectToNetwork(network, true));
 
 		// Networks are stored directly in the client object
 		// We don't need to keep it in the config object
@@ -188,7 +195,7 @@ class Client {
 
 			// Networks are created instantly, but to reduce server load on startup
 			// We randomize the IRC connections and channel log loading
-			let delay = manager.clients.length * 500;
+			let delay = client.manager.clients.length * 500;
 			client.networks.forEach((network) => {
 				setTimeout(() => {
 					network.channels.forEach((channel) => channel.loadMessages(client, network));
@@ -201,7 +208,7 @@ class Client {
 				delay += 1000 + Math.floor(Math.random() * 1000);
 			});
 
-			client.fileHash = manager.getDataToSave(client).newHash;
+			client.fileHash = client.manager.getDataToSave(client).newHash;
 		}
 	}
 
@@ -238,12 +245,10 @@ class Client {
 		return false;
 	}
 
-	connect(args: Record<string, any>, isStartup = false) {
+	networkFromConfig(args: Record<string, any>): Network {
 		const client = this;
-		let channels: Chan[] = [];
 
-		// Get channel id for lobby before creating other channels for nicer ids
-		const lobbyChannelId = client.idChan++;
+		let channels: Chan[] = [];
 
 		if (Array.isArray(args.channels)) {
 			let badName = false;
@@ -291,7 +296,7 @@ class Client {
 		}
 
 		// TODO; better typing for args
-		const network = new Network({
+		return new Network({
 			uuid: args.uuid,
 			name: String(
 				args.name || (Config.values.lockNetwork ? Config.values.defaults.name : "") || ""
@@ -319,6 +324,15 @@ class Client {
 			proxyUsername: String(args.proxyUsername || ""),
 			proxyPassword: String(args.proxyPassword || ""),
 		});
+	}
+
+	connectToNetwork(args: Record<string, any>, isStartup = false) {
+		const client = this;
+
+		// Get channel id for lobby before creating other channels for nicer ids
+		const lobbyChannelId = client.idChan++;
+
+		const network = this.networkFromConfig(args);
 
 		// Set network lobby channel id
 		network.getLobby().id = lobbyChannelId;
@@ -359,7 +373,7 @@ class Client {
 
 		if (!isStartup) {
 			client.save();
-			channels.forEach((channel) => channel.loadMessages(client, network));
+			network.channels.forEach((channel) => channel.loadMessages(client, network));
 		}
 	}
 

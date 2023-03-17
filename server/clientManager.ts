@@ -7,6 +7,7 @@ import path from "path";
 import Auth from "./plugins/auth";
 import Client, {UserConfig} from "./client";
 import Config from "./config";
+import {NetworkConfig} from "./models/network";
 import WebPush from "./plugins/webpush";
 import log from "./log";
 import {Server} from "socket.io";
@@ -144,6 +145,7 @@ class ClientManager {
 			}
 		} else {
 			client = new Client(this, name, userConfig);
+			client.connect();
 			this.clients.push(client);
 		}
 

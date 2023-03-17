@@ -485,7 +485,7 @@ function initializeClient(
 			data.commands = null;
 			data.ignoreList = null;
 
-			client.connect(data);
+			client.connectToNetwork(data);
 		}
 	});
 
@@ -948,6 +948,7 @@ function performAuthentication(this: Socket, data) {
 
 	if (Config.values.public) {
 		client = new Client(manager!);
+		client.connect();
 		manager!.clients.push(client);
 
 		socket.on("disconnect", function () {
