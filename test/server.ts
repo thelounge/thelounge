@@ -39,6 +39,8 @@ describe("Server", function () {
 	});
 
 	after(function (done) {
+		// Tear down test fixtures in the order they were setup,
+		// in case setup crashed for any reason
 		logInfoStub.restore();
 		logWarnStub.restore();
 		checkForUpdatesStub.restore();
