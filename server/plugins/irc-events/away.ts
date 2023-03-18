@@ -19,7 +19,7 @@ export default <IrcEventHandler>function (irc, network) {
 				time: data.time,
 			});
 
-			network.channels[0].pushMessage(client, msg, true);
+			network.getLobby().pushMessage(client, msg, true);
 
 			return;
 		}

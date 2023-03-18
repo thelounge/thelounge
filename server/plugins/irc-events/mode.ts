@@ -41,7 +41,7 @@ export default <IrcEventHandler>function (irc, network) {
 	});
 
 	irc.on("user info", function (data) {
-		const serverChan = network.channels[0];
+		const serverChan = network.getLobby();
 
 		const msg = new Msg({
 			type: MessageType.MODE_USER,
@@ -56,7 +56,7 @@ export default <IrcEventHandler>function (irc, network) {
 		let targetChan;
 
 		if (data.target === irc.user.nick) {
-			targetChan = network.channels[0];
+			targetChan = network.getLobby();
 		} else {
 			targetChan = network.getChannel(data.target);
 

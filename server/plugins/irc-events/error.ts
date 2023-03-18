@@ -17,7 +17,7 @@ export default <IrcEventHandler>function (irc, network) {
 			command: data.command,
 		});
 
-		let target = network.channels[0];
+		let target = network.getLobby();
 
 		// If this error is channel specific and a channel
 		// with this name exists, put this error in that channel
@@ -46,7 +46,7 @@ export default <IrcEventHandler>function (irc, network) {
 			network.keepNick = irc.user.nick;
 		}
 
-		const lobby = network.channels[0];
+		const lobby = network.getLobby();
 		const msg = new Msg({
 			type: MessageType.ERROR,
 			text: message,
@@ -74,7 +74,7 @@ export default <IrcEventHandler>function (irc, network) {
 	});
 
 	irc.on("nick invalid", function (data) {
-		const lobby = network.channels[0];
+		const lobby = network.getLobby();
 		const msg = new Msg({
 			type: MessageType.ERROR,
 			text: data.nick + ": " + (data.reason || "Nickname is invalid."),

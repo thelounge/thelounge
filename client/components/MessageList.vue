@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts">
-import constants from "../js/constants";
+import {condensedTypes} from "../../shared/irc";
 import eventbus from "../js/eventbus";
 import clipboard from "../js/clipboard";
 import socket from "../js/socket";
@@ -184,7 +184,7 @@ export default defineComponent({
 			// If actions are hidden, just return a message list with them excluded
 			if (store.state.settings.statusMessages === "hidden") {
 				return props.channel.messages.filter(
-					(message) => !constants.condensedTypes.has(message.type)
+					(message) => !condensedTypes.has(message.type)
 				);
 			}
 
@@ -200,11 +200,7 @@ export default defineComponent({
 			for (const message of props.channel.messages) {
 				// If this message is not condensable, or its an action affecting our user,
 				// then just append the message to container and be done with it
-				if (
-					message.self ||
-					message.highlight ||
-					!constants.condensedTypes.has(message.type)
-				) {
+				if (message.self || message.highlight || !condensedTypes.has(message.type)) {
 					lastCondensedContainer = null;
 
 					condensed.push(message);

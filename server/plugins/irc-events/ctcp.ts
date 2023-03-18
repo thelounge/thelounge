@@ -17,7 +17,7 @@ const ctcpResponses = {
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
-	const lobby = network.channels[0];
+	const lobby = network.getLobby();
 
 	irc.on("ctcp response", function (data) {
 		const shouldIgnore = network.ignoreList.some(function (entry) {

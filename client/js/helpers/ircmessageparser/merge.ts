@@ -2,7 +2,7 @@ import anyIntersection from "./anyIntersection";
 import fill from "./fill";
 import {ChannelPart} from "./findChannels";
 import {EmojiPart} from "./findEmoji";
-import {LinkPart} from "./findLinks";
+import {LinkPart} from "../../../../shared/linkify";
 import {NamePart} from "./findNames";
 
 export type Part = {

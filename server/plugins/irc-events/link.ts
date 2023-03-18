@@ -5,7 +5,7 @@ import mime from "mime-types";
 
 import log from "../../log";
 import Config from "../../config";
-import {findLinksWithSchema} from "../../../client/js/helpers/ircmessageparser/findLinks";
+import {findLinksWithSchema} from "../../../shared/linkify";
 import storage from "../storage";
 import Client from "../../client";
 import Chan from "../../models/chan";

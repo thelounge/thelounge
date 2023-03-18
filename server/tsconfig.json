@@ -2,10 +2,9 @@
   "extends": "../tsconfig.base.json" /* Path to base configuration file to inherit from. Requires TypeScript version 2.1 or later. */,
   "include": [
     "**/*",
-    "../client/js/helpers/ircmessageparser/*.ts"
+    "../shared/"
   ] /* Specifies a list of glob patterns that match files to be included in compilation. If no 'files' or 'include' property is present in a tsconfig.json, the compiler defaults to including all files in the containing directory and subdirectories except those specified by 'exclude'. Requires TypeScript version 2.0 or later. */,
   "files": [
-    "../client/js/constants.ts",
     "../babel.config.cjs",
     "../defaults/config.js",
     "../package.json",
@@ -15,13 +14,8 @@
     "files": true
   },
   "compilerOptions": {
-    "outDir": "../dist" /* Specify an output folder for all emitted files. See more: https://www.typescriptlang.org/tsconfig#outDir */,
     "noEmit": false /* Disable emitting file from a compilation. See more: https://www.typescriptlang.org/tsconfig#noEmit */,
-
     // TODO: Remove eventually
     "noImplicitAny": false /*Enable error reporting for expressions and declarations with an implied any type. See more: https://www.typescriptlang.org/tsconfig#noImplicitAny */
-  } /* Instructs the TypeScript compiler how to compile .ts files. */,
-  "exclude": [
-    "./dist"
-  ] /* Specifies a list of glob patterns that match files to be excluded from compilation. Requires TypeScript version 2.0 or later. */
+  } /* Instructs the TypeScript compiler how to compile .ts files. */
 }

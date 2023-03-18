@@ -9,7 +9,7 @@ export default <IrcEventHandler>function (irc, network) {
 		let chan = network.getChannel(data.channel);
 
 		if (typeof chan === "undefined") {
-			chan = network.channels[0];
+			chan = network.getLobby();
 		}
 
 		const invitedYou = data.invited === irc.user.nick;

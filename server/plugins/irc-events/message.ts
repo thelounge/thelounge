@@ -1,6 +1,6 @@
 import Msg, {MessageType} from "../../models/msg";
 import LinkPrefetch from "./link";
-import cleanIrcMessage from "../../../client/js/helpers/ircmessageparser/cleanIrcMessage";
+import {cleanIrcMessage} from "../../../shared/irc";
 import Helper from "../../helper";
 import {IrcEventHandler} from "../../client";
 import Chan, {ChanType} from "../../models/chan";
@@ -75,7 +75,7 @@ export default <IrcEventHandler>function (irc, network) {
 				!network.getChannel(data.target) ||
 				network.getChannel(data.target)?.type !== ChanType.CHANNEL)
 		) {
-			chan = network.channels[0];
+			chan = network.getLobby();
 			from = chan.getUser(data.nick);
 		} else {
 			if (shouldIgnore) {
@@ -95,7 +95,7 @@ export default <IrcEventHandler>function (irc, network) {
 				// Send notices that are not targeted at us into the server window
 				if (data.type === MessageType.NOTICE) {
 					showInActive = true;
-					chan = network.channels[0];
+					chan = network.getLobby();
 				} else {
 					chan = client.createChannel({
 						type: ChanType.QUERY,
