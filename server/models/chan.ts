@@ -41,18 +41,19 @@ export type ChanConfig = {
 };
 
 class Chan {
-	id: number;
-	messages: Msg[];
-	name: string;
-	key: string;
-	topic: string;
-	firstUnread: number;
-	unread: number;
-	highlight: number;
-	users: Map<string, User>;
-	muted: boolean;
-	type: ChanType;
-	state: ChanState;
+	// TODO: don't force existence, figure out how to make TS infer it.
+	id!: number;
+	messages!: Msg[];
+	name!: string;
+	key!: string;
+	topic!: string;
+	firstUnread!: number;
+	unread!: number;
+	highlight!: number;
+	users!: Map<string, User>;
+	muted!: boolean;
+	type!: ChanType;
+	state!: ChanState;
 
 	userAway?: boolean;
 	special?: SpecialChanType;
@@ -62,22 +63,20 @@ class Chan {
 	static optionalProperties = ["userAway", "special", "data", "closed", "num_users"];
 
 	constructor(attr?: Partial<Chan>) {
-		this.id = 0;
-		this.messages = [];
-		this.name = "";
-		this.key = "";
-		this.topic = "";
-		this.type = ChanType.CHANNEL;
-		this.state = ChanState.PARTED;
-		this.firstUnread = 0;
-		this.unread = 0;
-		this.highlight = 0;
-		this.users = new Map();
-		this.muted = false;
-
-		if (attr) {
-			Object.assign(this, attr);
-		}
+		_.defaults(this, attr, {
+			id: 0,
+			messages: [],
+			name: "",
+			key: "",
+			topic: "",
+			type: ChanType.CHANNEL,
+			state: ChanState.PARTED,
+			firstUnread: 0,
+			unread: 0,
+			highlight: 0,
+			users: new Map(),
+			muted: false,
+		});
 	}
 
 	destroy() {
