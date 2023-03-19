@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v4.4.0-pre.2 - 2023-03-19 [Pre-release]
+
+[See the full changelog](https://github.com/thelounge/thelounge/compare/v4.4.0-pre.1...v4.4.0-pre.2)
+
+Hot fix for a bug that lead to channel loss upon restart of TL.
+
 ## v4.4.0-pre.1 - 2023-03-19 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v4.3.1...v4.4.0-pre.1)
