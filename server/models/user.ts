@@ -1,27 +1,30 @@
+import _ from "lodash";
 import Prefix from "./prefix";
 
 class User {
-	modes: string[];
+	modes!: string[];
 	// Users in the channel have only one mode assigned
-	away: string;
-	nick: string;
-	lastMessage: number;
+	mode!: string;
+	away!: string;
+	nick!: string;
+	lastMessage!: number;
 
 	constructor(attr: Partial<User>, prefix?: Prefix) {
-		this.modes = [];
-		this.away = "";
-		this.nick = "";
-		this.lastMessage = 0;
+		_.defaults(this, attr, {
+			modes: [],
+			away: "",
+			nick: "",
+			lastMessage: 0,
+		});
 
-		if (attr) {
-			Object.assign(this, attr);
-		}
+		Object.defineProperty(this, "mode", {
+			get() {
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+				return this.modes[0] || "";
+			},
+		});
 
 		this.setModes(this.modes, prefix || new Prefix([]));
-	}
-
-	get mode() {
-		return this.modes[0] || "";
 	}
 
 	setModes(modes: string[], prefix: Prefix) {
