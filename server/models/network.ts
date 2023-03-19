@@ -96,93 +96,96 @@ export type NetworkConfig = {
 };
 
 class Network {
-	nick!: string;
-	name!: string;
-	host!: string;
-	port!: number;
-	tls!: boolean;
-	userDisconnected!: boolean;
-	rejectUnauthorized!: boolean;
-	password!: string;
-	awayMessage!: string;
-	commands!: any[];
-	username!: string;
-	realname!: string;
-	leaveMessage!: string;
-	sasl!: string;
-	saslAccount!: string;
-	saslPassword!: string;
-	channels!: Chan[];
-	uuid!: string;
-	proxyHost!: string;
-	proxyPort!: number;
-	proxyUsername!: string;
-	proxyPassword!: string;
-	proxyEnabled!: boolean;
+	nick: string;
+	name: string;
+	host: string;
+	port: number;
+	tls: boolean;
+	userDisconnected: boolean;
+	rejectUnauthorized: boolean;
+	password: string;
+	awayMessage: string;
+	commands: any[];
+	username: string;
+	realname: string;
+	leaveMessage: string;
+	sasl: string;
+	saslAccount: string;
+	saslPassword: string;
+	channels: Chan[];
+	uuid: string;
+	proxyHost: string;
+	proxyPort: number;
+	proxyUsername: string;
+	proxyPassword: string;
+	proxyEnabled: boolean;
 	highlightRegex?: RegExp;
 
 	irc?: IrcFramework.Client & {
 		options?: NetworkIrcOptions;
 	};
 
-	chanCache!: Chan[];
-	ignoreList!: IgnoreList;
-	keepNick!: string | null;
+	chanCache: Chan[];
+	ignoreList: IgnoreList;
+	keepNick: string | null;
 
-	status!: NetworkStatus;
-
-	serverOptions!: {
+	serverOptions: {
 		CHANTYPES: string[];
 		PREFIX: Prefix;
 		NETWORK: string;
 	};
 
 	// TODO: this is only available on export
-	hasSTSPolicy!: boolean;
+	hasSTSPolicy: boolean;
+	status: NetworkStatus;
 
 	constructor(attr?: Partial<Network>) {
-		_.defaults(this, attr, {
-			name: "",
-			nick: "",
-			host: "",
-			port: 6667,
-			tls: false,
-			userDisconnected: false,
-			rejectUnauthorized: false,
-			password: "",
-			awayMessage: "",
-			commands: [],
-			username: "",
-			realname: "",
-			leaveMessage: "",
-			sasl: "",
-			saslAccount: "",
-			saslPassword: "",
-			channels: [],
-			irc: null,
-			serverOptions: {
-				CHANTYPES: ["#", "&"],
-				PREFIX: new Prefix([
-					{symbol: "!", mode: "Y"},
-					{symbol: "@", mode: "o"},
-					{symbol: "%", mode: "h"},
-					{symbol: "+", mode: "v"},
-				]),
-				NETWORK: "",
-			},
+		this.name = "";
+		this.nick = "";
+		this.host = "";
+		this.port = 6667;
+		this.tls = false;
+		this.userDisconnected = false;
+		this.rejectUnauthorized = false;
+		this.password = "";
+		this.awayMessage = "";
+		this.commands = [];
+		this.username = "";
+		this.realname = "";
+		this.leaveMessage = "";
+		this.sasl = "";
+		this.saslAccount = "";
+		this.saslPassword = "";
+		this.channels = [];
+		this.serverOptions = {
+			CHANTYPES: ["#", "&"],
+			PREFIX: new Prefix([
+				{symbol: "!", mode: "Y"},
+				{symbol: "@", mode: "o"},
+				{symbol: "%", mode: "h"},
+				{symbol: "+", mode: "v"},
+			]),
+			NETWORK: "",
+		};
+		this.proxyHost = "";
+		this.proxyPort = 1080;
+		this.proxyUsername = "";
+		this.proxyPassword = "";
+		this.proxyEnabled = false;
 
-			proxyHost: "",
-			proxyPort: 1080,
-			proxyUsername: "",
-			proxyPassword: "",
-			proxyEnabled: false,
+		this.chanCache = [];
+		this.ignoreList = [];
+		this.keepNick = null;
+		this.hasSTSPolicy = false;
+		this.uuid = "invalid"; // sentinel value that makes us generate a new one
 
-			chanCache: [],
-			ignoreList: [],
-			keepNick: null,
-		});
+		this.status = {connected: false, secure: false};
 
-		if (!this.uuid) {
+		if (attr) {
+			Object.assign(this, attr);
+		}
+
+		if (this.uuid === "invalid" || !this.uuid) {
 			this.uuid = uuidv4();
 		}
 
