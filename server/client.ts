@@ -479,38 +479,9 @@ class Client {
 		const cmd = args?.shift()?.toLowerCase() || "";
 
 		const irc = target.network.irc;
-		let connected = irc && irc.connection && irc.connection.connected;
+		const connected = irc?.connected;
 
-		if (inputs.userInputs.has(cmd)) {
-			const plugin = inputs.userInputs.get(cmd);
-
-			if (!plugin) {
-				// should be a no-op
-				throw new Error(`Plugin ${cmd} not found`);
-			}
-
-			if (typeof plugin.input === "function" && (connected || plugin.allowDisconnected)) {
-				connected = true;
-				plugin.input.apply(client, [target.network, target.chan, cmd, args]);
-			}
-		} else if (inputs.pluginCommands.has(cmd)) {
-			const plugin = inputs.pluginCommands.get(cmd);
-
-			if (typeof plugin.input === "function" && (connected || plugin.allowDisconnected)) {
-				connected = true;
-				plugin.input(
-					new PublicClient(client, plugin.packageInfo),
-					{network: target.network, chan: target.chan},
-					cmd,
-					args
-				);
-			}
-		} else if (connected) {
-			// TODO: fix
-			irc!.raw(text);
-		}
-
-		if (!connected) {
+		const emitFailureDisconnected = () => {
 			target.chan.pushMessage(
 				this,
 				new Msg({
@@ -518,7 +489,44 @@ class Client {
 					text: "You are not connected to the IRC network, unable to send your command.",
 				})
 			);
+		};
+
+		const plugin = inputs.userInputs.get(cmd);
+
+		if (plugin) {
+			if (!connected && !plugin.allowDisconnected) {
+				emitFailureDisconnected();
+				return;
+			}
+
+			plugin.input.apply(client, [target.network, target.chan, cmd, args]);
+			return;
 		}
+
+		const extPlugin = inputs.pluginCommands.get(cmd);
+
+		if (extPlugin) {
+			if (!connected && !extPlugin.allowDisconnected) {
+				emitFailureDisconnected();
+				return;
+			}
+
+			extPlugin.input(
+				new PublicClient(client, extPlugin.packageInfo),
+				{network: target.network, chan: target.chan},
+				cmd,
+				args
+			);
+			return;
+		}
+
+		if (!connected) {
+			emitFailureDisconnected();
+			return;
+		}
+
+		// TODO: fix
+		irc!.raw(text);
 	}
 
 	compileCustomHighlights() {
