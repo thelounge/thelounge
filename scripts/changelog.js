@@ -53,12 +53,37 @@ const got = require("got");
 const dayjs = require("dayjs");
 const semver = require("semver");
 const util = require("util");
-const log = require("../server/log");
 const packageJson = require("../package.json");
 let token = process.env.CHANGELOG_TOKEN;
 
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
+
+function timestamp() {
+	const datetime = new Date().toISOString().split(".")[0].replace("T", " ");
+
+	return colors.dim(datetime);
+}
+
+const log = {
+	/* eslint-disable no-console */
+	error(...args) {
+		console.error(timestamp(), colors.red("[ERROR]"), ...args);
+	},
+	warn(...args) {
+		console.error(timestamp(), colors.yellow("[WARN]"), ...args);
+	},
+	info(...args) {
+		console.log(timestamp(), colors.blue("[INFO]"), ...args);
+	},
+	debug(...args) {
+		console.log(timestamp(), colors.green("[DEBUG]"), ...args);
+	},
+	raw(...args) {
+		console.log(...args);
+	},
+	/* eslint-enable no-console */
+};
 
 const changelogPath = path.resolve(__dirname, "..", "CHANGELOG.md");
 
