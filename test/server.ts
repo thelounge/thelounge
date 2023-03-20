@@ -39,10 +39,12 @@ describe("Server", function () {
 	});
 
 	after(function (done) {
-		server.close(done);
+		// Tear down test fixtures in the order they were setup,
+		// in case setup crashed for any reason
 		logInfoStub.restore();
 		logWarnStub.restore();
 		checkForUpdatesStub.restore();
+		server.close(done);
 	});
 
 	// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
