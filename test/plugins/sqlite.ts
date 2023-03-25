@@ -9,8 +9,8 @@ import MessageStorage, {
 	currentSchemaVersion,
 	migrations,
 	necessaryMigrations,
+	rollbacks,
 } from "../../server/plugins/messageStorage/sqlite";
-import Client from "../../server/client";
 import sqlite3 from "sqlite3";
 
 const orig_schema = [
@@ -89,13 +89,38 @@ describe("SQLite migrations", function () {
 		db.close(done);
 	});
 
-	it("has working migrations", async function () {
+	it("has a down migration for every migration", function () {
+		expect(migrations.length).to.eq(rollbacks.length);
+		expect(migrations.map((m) => m.version)).to.have.ordered.members(
+			rollbacks.map((r) => r.version)
+		);
+	});
+
+	it("has working up-migrations", async function () {
 		const to_execute = necessaryMigrations(v1_schema_version);
 		expect(to_execute.length).to.eq(migrations.length);
 		await serialize_run("BEGIN EXCLUSIVE TRANSACTION");
 
 		for (const stmt of to_execute.map((m) => m.stmts).flat()) {
 			await serialize_run(stmt);
+		}
+
+		await serialize_run("COMMIT TRANSACTION");
+	});
+
+	it("has working down-migrations", async function () {
+		await serialize_run("BEGIN EXCLUSIVE TRANSACTION");
+
+		for (const rollback of rollbacks.reverse()) {
+			if (rollback.rollback_forbidden) {
+				throw Error(
+					"Try to write a down migration, if you really can't, flip this to a break"
+				);
+			}
+
+			for (const stmt of rollback.stmts) {
+				await serialize_run(stmt);
+			}
 		}
 
 		await serialize_run("COMMIT TRANSACTION");
@@ -109,6 +134,36 @@ describe("SQLite Message Storage", function () {
 
 	const expectedPath = path.join(Config.getHomePath(), "logs", "testUser.sqlite3");
 	let store: MessageStorage;
+
+	function db_get_one(stmt: string, ...params: any[]): Promise<any> {
+		return new Promise((resolve, reject) => {
+			store.database.serialize(() => {
+				store.database.get(stmt, params, (err, row) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve(row);
+				});
+			});
+		});
+	}
+
+	function db_get_mult(stmt: string, ...params: any[]): Promise<any[]> {
+		return new Promise((resolve, reject) => {
+			store.database.serialize(() => {
+				store.database.all(stmt, params, (err, rows) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve(rows);
+				});
+			});
+		});
+	}
 
 	before(function (done) {
 		store = new MessageStorage("testUser");
@@ -143,16 +198,17 @@ describe("SQLite Message Storage", function () {
 		store.isEnabled = true;
 	});
 
-	it("should insert schema version to options table", function (done) {
-		store.database.get(
-			"SELECT value FROM options WHERE name = 'schema_version'",
-			(err, row) => {
-				expect(err).to.be.null;
-				// compared as string because it's returned as such from the database
-				expect(row.value).to.equal(currentSchemaVersion.toString());
-				done();
-			}
+	it("should insert schema version to options table", async function () {
+		const row = await db_get_one("SELECT value FROM options WHERE name = 'schema_version'");
+		expect(row.value).to.equal(currentSchemaVersion.toString());
+	});
+
+	it("should insert migrations", async function () {
+		const row = await db_get_one(
+			"SELECT id, version FROM migrations WHERE version = ?",
+			currentSchemaVersion
 		);
+		expect(row).to.not.be.undefined;
 	});
 
 	it("should store a message", async function () {
@@ -296,6 +352,19 @@ describe("SQLite Message Storage", function () {
 			await assertResults("@", ["bar @ baz"]);
 		} finally {
 			Config.values.maxHistory = originalMaxHistory;
+		}
+	});
+
+	it("should be able to downgrade", async function () {
+		for (const rollback of rollbacks.reverse()) {
+			if (rollback.rollback_forbidden) {
+				throw Error(
+					"Try to write a down migration, if you really can't, flip this to a break"
+				);
+			}
+
+			const new_version = await store.downgrade_to(rollback.version);
+			expect(new_version).to.equal(rollback.version);
 		}
 	});
 
