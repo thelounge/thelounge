@@ -35,4 +35,3 @@ your contributions.
   on save ([see VS Code one here](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)).
 - We have a git hook to automatically run prettier before commit, in case you don't install the plugin.
 - If for any reason, prettier does not work for you, you can run `yarn format:prettier` and that should format everything.
-- When using VS Code, configuration files have been provided to take advantage of their [container development infrastructure](https://code.visualstudio.com/docs/remote/containers).
