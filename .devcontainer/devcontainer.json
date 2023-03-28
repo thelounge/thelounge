@@ -1,29 +1,22 @@
 {
   "name": "The Lounge Dev",
-  "build": {
-    "dockerfile": "Dockerfile"
-  },
-  "overrideCommand": false,
-  "runArgs": [
-    "--name=thelounge-dev",
-    // the "volume" syntax is used to create .thelounge config directory on host if nonexistent.
-    "--volume=${localEnv:HOME}${localEnv:USERPROFILE}/.thelounge:/home/node/.thelounge"
-  ],
-  "mounts": [
-    "type=volume,source=thelounge-dev-node_modules,target=${containerWorkspaceFolder}/node_modules"
-  ],
-  "extensions": [
-    "dbaeumer.vscode-eslint",
-    "EditorConfig.EditorConfig",
-    "esbenp.prettier-vscode",
-    "octref.vetur"
-  ],
+  "image": "mcr.microsoft.com/devcontainers/typescript-node",
   "portsAttributes": {
     "9000": {
       "label": "The Lounge Dev"
     }
   },
-  "forwardPorts": [9000],
-  "postStartCommand": "yarn install && NODE_ENV=production yarn build && yarn dev",
-  "remoteUser": "node"
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "EditorConfig.EditorConfig",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "Vue.volar",
+        "Vue.vscode-typescript-vue-plugin"
+      ]
+    }
+  },
+  "onCreateCommand": "sudo ln -s $(pwd)/index.js /usr/local/bin/thelounge",
+  "postStartCommand": "yarn install && sudo chown node node_modules && NODE_ENV=production yarn build && yarn dev"
 }
