@@ -28,17 +28,6 @@
 				<div v-if="store.state.pushNotificationState === 'unsupported'" class="error">
 					<strong>Warning</strong>:
 					<span>Push notifications are not supported by your browser.</span>
-
-					<div v-if="isIOS" class="apple-push-unsupported">
-						Safari does
-						<a
-							href="https://bugs.webkit.org/show_bug.cgi?id=182566"
-							target="_blank"
-							rel="noopener"
-							>not support the web push notification specification</a
-						>, and because all browsers on iOS use Safari under the hood, The Lounge is
-						unable to provide push notifications on iOS devices.
-					</div>
 				</div>
 			</div>
 		</template>

@@ -1928,7 +1928,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	width: 100%;
 }
 
-#settings .apple-push-unsupported,
 #settings .settings-sync-panel {
 	padding: 10px;
 	margin-bottom: 16px;
@@ -1956,11 +1955,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 #settings .settings-sync-panel .btn:active,
 #settings .settings-sync-panel .btn:focus {
 	box-shadow: 0 0 0 3px rgb(0 123 255 / 50%);
-}
-
-#settings .apple-push-unsupported a {
-	color: inherit;
-	text-decoration: underline;
 }
 
 #settings .opt {
