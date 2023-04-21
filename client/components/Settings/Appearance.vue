@@ -19,6 +19,12 @@
 		</div>
 		<div>
 			<label class="opt">
+				<input :checked="store.state.settings.parseMd" type="checkbox" name="parseMd" />
+				Parse markdown in messages
+			</label>
+		</div>
+		<div>
+			<label class="opt">
 				<input
 					:checked="store.state.settings.use12hClock"
 					type="checkbox"
