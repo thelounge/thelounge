@@ -4,6 +4,194 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v4.4.0 - 2023-04-22
+
+For more details, [see the full changelog](https://github.com/thelounge/thelounge/compare/v4.3.1...v4.4.0) and [milestone](https://github.com/thelounge/thelounge/milestone/42?closed=1).
+
+This is mostly a developer focused release. Max, Eric and others rewrote the whole thing in TypeScript / Vue 3,
+which should make it much easier to add features and find bugs in the future. So huge kudos from the rest of the team!
+
+Additionally, there's the obvious grab bag of fixes, dependency updates and improvements.  
+Settings are now grouped and easier to navigate for new users.
+
+Following the Node.js maintenance schedule, The Lounge now needs at least Node.js 14 to run.
+
+A big thanks to everyone who contributed in any way to this release, your help is much appreciated.
+
+Considering that a bunch of our dependencies had security issues assigned to them, all users are advised to update to the new version.
+
+Packagers: Considering the switch to TypeScript, the server build now emits to the dist/ folder.  
+You might need to adapt your build scripts.
+
+### Added
+
+- Add prefetchTimeout ([`aa7db1e`](https://github.com/thelounge/thelounge/commit/aa7db1e7f787350f4102f98b85a2e8173173f92a) by [@brunnre8](https://github.com/brunnre8))
+
+### Changed
+
+- Refactor settings to their own tabs and routes ([#4489](https://github.com/thelounge/thelounge/pull/4489) by [@MaxLeiter](https://github.com/MaxLeiter))
+- allow away and back to be collapsed ([#4669](https://github.com/thelounge/thelounge/pull/4669) by [@brunnre8](https://github.com/brunnre8))
+- Kill TL when ident can't start up (#4512) ([`37d7de7`](https://github.com/thelounge/thelounge/commit/37d7de7671cf07f8a7fb3a8b3ea32122a738b646) by [@brunnre8](https://github.com/brunnre8))
+- enable znc/playback even without message storage ([`c8115e2`](https://github.com/thelounge/thelounge/commit/c8115e22acf4a6e34a1546fd2fc273c76cbb7e86) by [@brunnre8](https://github.com/brunnre8))
+- Remove node 12, add node 18. Bump minimum node version 14 (#4552) ([`9dbb6e5`](https://github.com/thelounge/thelounge/commit/9dbb6e5e1923dc1a2d3d69b0eac2778ff8cf5d3b) by [@xPaw](https://github.com/xPaw))
+- linkPreviews: Enforce TLS validity ([`621fa92`](https://github.com/thelounge/thelounge/commit/621fa92036d59aa6558df828a1ff48136eed19ce) by [@brunnre8](https://github.com/brunnre8))
+- Use nick as a realname fallback ([`30e9f45`](https://github.com/thelounge/thelounge/commit/30e9f45fac5b675ddadf5f904f0d0f05a7cdb5f9) by [@brunnre8](https://github.com/brunnre8))
+- Plugins: include pre-releases in compatibility lookup (#4506) ([`e4840b4`](https://github.com/thelounge/thelounge/commit/e4840b4d75ff4dc79083955ebd9dfbdd7dd7ea8a) by [@brunnre8](https://github.com/brunnre8))
+- install: expand ~ for local paths ([`e221e70`](https://github.com/thelounge/thelounge/commit/e221e708c1237eaa3088d97aebf8bf4869843dc6) by [@brunnre8](https://github.com/brunnre8))
+
+### Fixed
+
+- Fix the alignment of the header buttons ([#4539](https://github.com/thelounge/thelounge/pull/4539) by [@ronilaukkarinen](https://github.com/ronilaukkarinen))
+- Fix user commands not working ([#4594](https://github.com/thelounge/thelounge/pull/4594) by [@xPaw](https://github.com/xPaw))
+- Don't crash on oidentd socket race condition ([#4695](https://github.com/thelounge/thelounge/pull/4695) by [@maxpoulin64](https://github.com/maxpoulin64))
+- cli: don't error if the user folder doesn't exist (#4508) ([`8153198`](https://github.com/thelounge/thelounge/commit/815319810c28ffe17119a5dc62f7eac33eba12f5) by [@brunnre8](https://github.com/brunnre8))
+- Fix user file permissions on create (#4507) ([`d7bba32`](https://github.com/thelounge/thelounge/commit/d7bba325a73b1898edfa4299c4525749e174bbac) by [@brunnre8](https://github.com/brunnre8))
+- sqlite: Escape '%' and '\_' in search queries. (#4487) ([`20ed3e6`](https://github.com/thelounge/thelounge/commit/20ed3e6dc5cf482e38d537444163e98b2bae0879) by [@progval](https://github.com/progval))
+- set 'video/quicktime' to 'video/mp4' (#4495) ([`57b1e51`](https://github.com/thelounge/thelounge/commit/57b1e51e9f0f65e0866f5a809b12efaaf277536a) by [@xnaas](https://github.com/xnaas))
+- Preserve client certificate ([`c9c8cad`](https://github.com/thelounge/thelounge/commit/c9c8cadb1a00f01d00920792cc129077aa6934fd) by [@brunnre8](https://github.com/brunnre8))
+- Remove uploading event listeners on ChatInput unmount (#4600) ([`80f65c5`](https://github.com/thelounge/thelounge/commit/80f65c5b7276c466d2032fb3a7822fa39df3c685) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Potentially fix saving new networks (#4599) ([`d72d869`](https://github.com/thelounge/thelounge/commit/d72d8694bbea9fde7bf86275fb77b4c4c8a168ec) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Fix regex escape for prefix patterns ([`d6e1af0`](https://github.com/thelounge/thelounge/commit/d6e1af0e7dedb34dcd9932105ee4f2ddbe98e221) by [@brunnre8](https://github.com/brunnre8))
+- Fix ctcp request message (#4603) ([`c8cd405`](https://github.com/thelounge/thelounge/commit/c8cd4057bc4ef19271720fc6b893b9c74e690457) by [@brunnre8](https://github.com/brunnre8))
+- connect: Trim white space from user input fields (#4623) ([`0fa2035`](https://github.com/thelounge/thelounge/commit/0fa203569a62ee6bc6062b781729c7d801ccb8ba) by [@brunnre8](https://github.com/brunnre8))
+- Search: Clear earlier searches when a new one is executed ([`83e11b0`](https://github.com/thelounge/thelounge/commit/83e11b0143e599a40924cab856636beeca6df27c) by [@brunnre8](https://github.com/brunnre8))
+- Fix previous-source calculation (#4656) ([`073a38e`](https://github.com/thelounge/thelounge/commit/073a38ef1ef3c46740a028d4cbe7ebe4c7a08526) by [@brunnre8](https://github.com/brunnre8))
+- Fix sidebar swipe flicker after letting go ([`502780c`](https://github.com/thelounge/thelounge/commit/502780c5a3e3455d977d8873506f1be51946fa68) by [@xPaw](https://github.com/xPaw))
+- search: ignore searchResults if it isn't the active query ([`0ebc3a5`](https://github.com/thelounge/thelounge/commit/0ebc3a574c42185c818ca8795a56d8eb58a20f4e) by [@brunnre8](https://github.com/brunnre8))
+- fix motd display to match settings ([#4726])(https://github.com/thelounge/thelounge/pull/4726) by [@SpaceLenore](https://github.com/SpaceLenore))
+
+### Documentation
+
+- Fix misleading LDAP filiter in default config ([`f785acb`](https://github.com/thelounge/thelounge/commit/f785acb07d78ae791a24a39821a93afb81616934) by [@goodspeed34](https://github.com/goodspeed34))
+- Use correct option name (filter instead of ldapFilter) in config.js c… ([`4af5fc6`](https://github.com/thelounge/thelounge/commit/4af5fc6f33b43d64adcebcbf5aa8c4dceaad493f) by [@murph](https://github.com/murph))
+- Add password param to /join docs ([`8b1a4f7`](https://github.com/thelounge/thelounge/commit/8b1a4f72fa79e12b43ff3073f0d48b13d93008e7) by [@aab12345](https://github.com/aab12345))
+- install: Document file: prefix in cli help ([`31739b8`](https://github.com/thelounge/thelounge/commit/31739b8ac9ff95a03c374b32cc9bce2163d05d1e) by [@brunnre8](https://github.com/brunnre8))
+
+On the [website repository](https://github.com/thelounge/thelounge.github.io):
+
+- Link directly to themes on npm (#261) ([`410f5d0`](https://github.com/thelounge/thelounge.github.io/commit/410f5d077676cf597397b01acdc81414cc3dbc01) by [@jeremiah-rs](https://github.com/jeremiah-rs))
+- Don't use yarn link for source installs ([#262](https://github.com/thelounge/thelounge.github.io/pull/262) by [@brunnre8](https://github.com/brunnre8))
+- Add Insecure Warning CSS (#264) ([`95efa48`](https://github.com/thelounge/thelounge.github.io/commit/95efa482668af7997c7058cf01dff611efdea644) by [@aab12345](https://github.com/aab12345))
+- Add custom nick colors section to custom css guide (#265) ([`63847c3`](https://github.com/thelounge/thelounge.github.io/commit/63847c346b6e49ddcdb34f5b733b57e3db8cc2df) by [@xnaas](https://github.com/xnaas))
+- Fix Apache configuration syntax ([`41cb84e`](https://github.com/thelounge/thelounge.github.io/commit/41cb84ee70f5dc4a6920dfd1916fdf5eb00f190c) by [@lucaswerkmeister](https://github.com/lucaswerkmeister))
+- Be more explicit about needing Yarn 1 (Classic) (#268) ([`1eff267`](https://github.com/thelounge/thelounge.github.io/commit/1eff26768a437e2bac1b62982da5ae02fdbda950) by [@SyntaxColoring](https://github.com/SyntaxColoring))
+- Don't mention `npm` command for installation ([`7e936c2`](https://github.com/thelounge/thelounge.github.io/commit/7e936c2814b2902855570e928e0f13a40e17fce7) by [@SyntaxColoring](https://github.com/SyntaxColoring))
+- Update reverse-proxies.md ([`afc7e29`](https://github.com/thelounge/thelounge.github.io/commit/afc7e2957211f0fa9a4f986fb4a0a03547384a6d) by [@PeGaSuS-Coder](https://github.com/PeGaSuS-Coder))
+
+### Internals
+
+- Decouple server ([#4686](https://github.com/thelounge/thelounge/pull/4686) by [@brunnre8](https://github.com/brunnre8))
+- Tests/server: Tear down test fixtures in the order they were setup ([#4715](https://github.com/thelounge/thelounge/pull/4715) by [@progval](https://github.com/progval))
+- Refactor config out of Helper (#4558) ([`d4cc2dd`](https://github.com/thelounge/thelounge/commit/d4cc2dd361bd2f166924dd18efdc57634d67bc19) by [@brunnre8](https://github.com/brunnre8))
+- Convert configs to cjs, move babel to own file, combine webpack confi… ([`c205b89`](https://github.com/thelounge/thelounge/commit/c205b895233f5d7c58ef44bad31ccee777f3b95d) by [@nemchik](https://github.com/nemchik))
+- Fix yarn dev (#4574) ([`2e3d9a6`](https://github.com/thelounge/thelounge/commit/2e3d9a6265d4c0d0168729a60b319bea236e098b) by [@nemchik](https://github.com/nemchik))
+- TypeScript and Vue 3 (#4559) ([`dd05ee3`](https://github.com/thelounge/thelounge/commit/dd05ee3a656cb5eb5d0ab7620dbc7a1cfa4102ab) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Added client type checking to webpack (#4619) ([`117c5fa`](https://github.com/thelounge/thelounge/commit/117c5fa3fdbd2787bc1df521627b7b07fc1522c6) by [@antoniomika](https://github.com/antoniomika))
+- don't call search on a disabled msg provider ([`bea4545`](https://github.com/thelounge/thelounge/commit/bea4545abffe738dfeb025b36817490c1b5fa61d) by [@brunnre8](https://github.com/brunnre8))
+- extract migrations ([`f04a066`](https://github.com/thelounge/thelounge/commit/f04a06682d3690b571dc0b9720baa79b687b9465) by [@brunnre8](https://github.com/brunnre8))
+- sqlite: error if sqlite isn't enabled but search() is called ([`cebc6d0`](https://github.com/thelounge/thelounge/commit/cebc6d069fa609de918881854414768fadc87fed) by [@brunnre8](https://github.com/brunnre8))
+- sqlite: move export to bottom of the file ([`f6b2921`](https://github.com/thelounge/thelounge/commit/f6b292107ee4e627562d170babcb272cfa102a1e) by [@brunnre8](https://github.com/brunnre8))
+- sqlite: fix docstring ([`e62b169`](https://github.com/thelounge/thelounge/commit/e62b169a6abab4b2a0df34a5da21c92136ba3790) by [@brunnre8](https://github.com/brunnre8))
+- sqlite: add run helper function ([`89ee537`](https://github.com/thelounge/thelounge/commit/89ee5373643d1c5cb664401de745109bf7bcb77c) by [@brunnre8](https://github.com/brunnre8))
+- sqlite: create serialize_fetchall helper function ([`cc3302e`](https://github.com/thelounge/thelounge/commit/cc3302e8743633b3b87e15fb54a964510b2466d1) by [@brunnre8](https://github.com/brunnre8))
+- sqlite: use serialize_fetchall in getMessages ([`ee8223c`](https://github.com/thelounge/thelounge/commit/ee8223c2006ad31fc746824b495125b321da4bf8) by [@brunnre8](https://github.com/brunnre8))
+- sqlite: use serialize_fetchall in search ([`5e1cbe3`](https://github.com/thelounge/thelounge/commit/5e1cbe32f95aca776fe4dff550a0c8c369460417) by [@brunnre8](https://github.com/brunnre8))
+- sqlite: add serialize_get ([`bbe81bb`](https://github.com/thelounge/thelounge/commit/bbe81bb2fa9001762df90c1a267afa0239ebb7c7) by [@brunnre8](https://github.com/brunnre8))
+- sqlite: convert migrations to async ([`f068fd4`](https://github.com/thelounge/thelounge/commit/f068fd429012c47648faf8c4d751f972062709bd) by [@brunnre8](https://github.com/brunnre8))
+- messageStorage: convert to async ([`d62dd3e`](https://github.com/thelounge/thelounge/commit/d62dd3e62d106009cbded2fd9af13fe9fae35ae5) by [@brunnre8](https://github.com/brunnre8))
+- SearchResults: remove computed search prop ([`6b617f8`](https://github.com/thelounge/thelounge/commit/6b617f893d73fb9e8304d228336cf574c29992a3) by [@brunnre8](https://github.com/brunnre8))
+- SearchResults: Fix search progess upon search ([`dca2024`](https://github.com/thelounge/thelounge/commit/dca202427aa543d43d18fb72ae10ffa51b3b6c60) by [@brunnre8](https://github.com/brunnre8))
+- SearchResults: remove dead code (#4639) ([`53f6041`](https://github.com/thelounge/thelounge/commit/53f6041f42ac36b5d69fc05cc66618ea0fe67a88) by [@brunnre8](https://github.com/brunnre8))
+- SearchQuery: offset is always a number ([`8095d9e`](https://github.com/thelounge/thelounge/commit/8095d9e88a0018d2ac559ab01488d2736b4fe5e6) by [@brunnre8](https://github.com/brunnre8))
+- Search: fix off by one offset error ([`51c9ce0`](https://github.com/thelounge/thelounge/commit/51c9ce078d15efafd677cff525b681dcec51fdd5) by [@brunnre8](https://github.com/brunnre8))
+- keybinds: Fix invalid return ([`0765d20`](https://github.com/thelounge/thelounge/commit/0765d209f2ce204e2a3e86c56a7c2108a0487a6f) by [@brunnre8](https://github.com/brunnre8))
+- server: the http{,s} server can't be null ([`1597c2c`](https://github.com/thelounge/thelounge/commit/1597c2c56ec932859ebc77e31eda8c164f196388) by [@brunnre8](https://github.com/brunnre8))
+- make getClientConfiguration type safe ([`fd14b4a`](https://github.com/thelounge/thelounge/commit/fd14b4a17203bc043b8c9c1f371c2c5ced96eef7) by [@brunnre8](https://github.com/brunnre8))
+- remove VueApp from router ([`dfb4217`](https://github.com/thelounge/thelounge/commit/dfb4217167bd20232bf2bdc443454a7ea9cc1094) by [@brunnre8](https://github.com/brunnre8))
+- search: fix order of result merging ([`8204c34`](https://github.com/thelounge/thelounge/commit/8204c3481ad1e5eb3f59cabdb5c3c52936094b48) by [@brunnre8](https://github.com/brunnre8))
+- store: addMessageSearchResults shouldn't accept null ([`982816f`](https://github.com/thelounge/thelounge/commit/982816ff2015077fe2903180df6420005c73b33e) by [@brunnre8](https://github.com/brunnre8))
+- sqlite: synchronize enable() internally ([`2d4143b`](https://github.com/thelounge/thelounge/commit/2d4143b7798c9cf0600280a5a79cb9061585be0e) by [@brunnre8](https://github.com/brunnre8))
+- messagestorage: remove implementation details from interface ([`661d5cb`](https://github.com/thelounge/thelounge/commit/661d5cb5b0d6c3aebb9a83ac4c5115d0411b3f39) by [@brunnre8](https://github.com/brunnre8))
+- textStorage: rip out client instance ([`52b8a2a`](https://github.com/thelounge/thelounge/commit/52b8a2a78e62dfdcdd2313e8c7e81a7b07f383e2) by [@brunnre8](https://github.com/brunnre8))
+- sqlite: Remove client from sqlitestorage ([`958a948`](https://github.com/thelounge/thelounge/commit/958a948456d1a0c3c97bb60e8759e8f9f5578ac8) by [@brunnre8](https://github.com/brunnre8))
+- Fix uploader mount/unmount lifecycle ([`2ce374f`](https://github.com/thelounge/thelounge/commit/2ce374fe858992c5c930b0c49bf40cba2928f839) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Fix git commit not being available in dist build ([`2f04150`](https://github.com/thelounge/thelounge/commit/2f04150461fbd538b09e58d8c1beb33ee0db18ce) by [@xPaw](https://github.com/xPaw))
+- network: add getLobby accessor ([`fade6a8`](https://github.com/thelounge/thelounge/commit/fade6a8d2ec5d621d761e2f6a716c5e59f4a9770) by [@brunnre8](https://github.com/brunnre8))
+- pluginCommand: type it and guard against bad input ([`4023323`](https://github.com/thelounge/thelounge/commit/402332340b727d7f4087b1f24dcd4eecf16b0891) by [@brunnre8](https://github.com/brunnre8))
+- packaging: Use an include list in package.json ([`efd24fd`](https://github.com/thelounge/thelounge/commit/efd24fd12cad9192d6f333c5a3c01c33ad23b0c6) by [@brunnre8](https://github.com/brunnre8))
+- Fix incorrect typing of dehydrated networks and channels ([`76098d7`](https://github.com/thelounge/thelounge/commit/76098d7e766ad074eb6278ee487410f1f02817c3) [@progval](https://github.com/progval))
+- Client: move socket connection out of the constructor ([`a049a01`](https://github.com/thelounge/thelounge/commit/a049a01aeb2b09edaaf46411bb764c14a607b343) [@progval](https://github.com/progval))
+- Fix test wording ([`d58fb84`](https://github.com/thelounge/thelounge/commit/d58fb845651fe2859313c05a80cdcdebc27a8c68) [@progval](https://github.com/progval))
+- Remove override of UserConfig ([`320075e`](https://github.com/thelounge/thelounge/commit/320075e376eecc0843f57b2f9b3207f8f245930e) [@progval](https://github.com/progval))
+- Fix sqlite query invocation in test ([`845daba`](https://github.com/thelounge/thelounge/commit/845dabad53c4a47b6c39f7529ad02ec810c5ed48) by [@brunnre8](https://github.com/brunnre8))
+- Fix config typing and make Client easier to test ([`eb509f7`](https://github.com/thelounge/thelounge/commit/eb509f7100869427d3f8b4dbd54692bf12630e67) by [@brunnre8](https://github.com/brunnre8))
+- server/client: refactor command input ([`4e954b9`](https://github.com/thelounge/thelounge/commit/4e954b919c86ad17f6c7f934de4aa8d6fe5b9b1d) by [@brunnre8](https://github.com/brunnre8))
+- Clean up command input code ([`e8b6434`](https://github.com/thelounge/thelounge/commit/e8b6434144998693532ce2853c049e878f158d63) by [@brunnre8](https://github.com/brunnre8))
+- Inline logger into changelog script ([#4717](https://github.com/thelounge/thelounge/pull/4717) by [@brunnre8](https://github.com/brunnre8))
+- Fix load of channels from user config ([`0c7cc85`](https://github.com/thelounge/thelounge/commit/0c7cc85184d9f90987000ffcddfa2b9581bb96cb) Val Lorentz)
+- style: Put user colors into the smallest possible scope ([`f55f772`](https://github.com/thelounge/thelounge/commit/f55f772659a505ceb8751d8728c22c810afed018) by [@brunnre8](https://github.com/brunnre8))
+- Fix Morning theme nick colors ([#4690](https://github.com/thelounge/thelounge/pull/4690) by [@maxpoulin64](https://github.com/maxpoulin64))
+- Publish to npm with provenance ([#4724])(https://github.com/thelounge/thelounge/pull/4724) by [@xPaw](https://github.com/xPaw))
+
+### Dependency updates
+
+_Aka the boring bits... It's the last section too, so feel free to gloss over it_
+
+- fix(deps): update dependency got to v11.8.5 [security] ([#4596](https://github.com/thelounge/thelounge/pull/4596) by [@renovate](https://github.com/apps/renovate))
+- `sqlite3` ([#4541](https://github.com/thelounge/thelounge/pull/4541))
+- chore(deps): update dependency sqlite3 to v5.0.6 ([`da02350`](https://github.com/thelounge/thelounge/commit/da02350725291be79c0d6c5d15261a2e0ef72313) by [@renovate-bot](https://github.com/renovate-bot))
+- chore(deps): update dependency @textcomplete/core to v0.1.11 (#4555) ([`99c48db`](https://github.com/thelounge/thelounge/commit/99c48dbcea2ebe08d64a38946d81301fbfe66ee2) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update babel monorepo (#4554) ([`38f1352`](https://github.com/thelounge/thelounge/commit/38f13525e6104ee332c64d2df20bfe2694bc7fe5) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency mocha to v9.2.2 (#4581) ([`194b85b`](https://github.com/thelounge/thelounge/commit/194b85be4d93813f763b06264124d5545ba8aa27) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency sqlite3 to v5.0.8 (#4564) ([`ddcee53`](https://github.com/thelounge/thelounge/commit/ddcee5371acfe960c53e85e97405d005953dec3c) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @textcomplete/textarea to v0.1.12 ([`e972165`](https://github.com/thelounge/thelounge/commit/e97216518adb9ac7d6ef458c362a591a0f56ed14) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/content-disposition to v0.5.5 ([`740618c`](https://github.com/thelounge/thelounge/commit/740618ca499aeb2efb8ffd4f0363b5cf841a49dc) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @textcomplete/core to v0.1.12 ([`0cb4791`](https://github.com/thelounge/thelounge/commit/0cb4791cd02c0fd2e578edc1366124117529ac10) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency sqlite3 to v5.0.10 ([`520646a`](https://github.com/thelounge/thelounge/commit/520646a212e08f971c870e6f464712a90e198d66) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- fix(deps): update dependency file-type to v16.5.4 [security] ([`0495761`](https://github.com/thelounge/thelounge/commit/0495761c4485ac86b43ced638a361b905e7ddc60) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): lock file maintenance ([`57ed37c`](https://github.com/thelounge/thelounge/commit/57ed37c1fda4024ae655de2defdf4af68ade69fe) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- Revert "chore(deps): update dependency @textcomplete/core to v0.1.12" ([`3240997`](https://github.com/thelounge/thelounge/commit/32409973478ecb88290447faa7f2639a6d5c4d1f) by [@brunnre8](https://github.com/brunnre8))
+- chore(deps): update dependency sqlite3 to v5.1.2 ([`5a803cc`](https://github.com/thelounge/thelounge/commit/5a803ccd239e42fe8853b4c615e82ef2c64bbc14) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @vue/test-utils to v2.2.1 ([`cb17f8d`](https://github.com/thelounge/thelounge/commit/cb17f8d87f9eac3b3449455d47c5ddaec09c0c5d) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency postcss to v8.4.18 ([`5a4a39b`](https://github.com/thelounge/thelounge/commit/5a4a39b9d1f4a49ddc2f9c5551f9fd28d0307a4b) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency chai to v4.3.7 ([`0ad033f`](https://github.com/thelounge/thelounge/commit/0ad033fe0aac01e0f4512428fda0e93ddefdcfb6) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/is-utf8 to v0.2.1 ([`b5ea7cc`](https://github.com/thelounge/thelounge/commit/b5ea7cceb3ff6a13f0ee20f4ed1c017b983d7d8c) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/lodash to v4.14.188 ([`dfe288e`](https://github.com/thelounge/thelounge/commit/dfe288ef166a0ac07f538ee5a07c2f7b65ee15f9) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/chai to v4.3.4 ([`19307d0`](https://github.com/thelounge/thelounge/commit/19307d05e70f8b7ed9ab3d6177c7c9ae6c93a438) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency postcss to v8.4.19 ([`2218841`](https://github.com/thelounge/thelounge/commit/221884166df61feb43513205c982b271b299f074) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/lodash to v4.14.191 ([`d61ab7e`](https://github.com/thelounge/thelounge/commit/d61ab7e7a084018d68444c4b0ef8d14702142d84) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency sqlite3 to v5.1.4 ([`c854d27`](https://github.com/thelounge/thelounge/commit/c854d27d3d8451ea25051dc356dc8f101542f9a1) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/ws to v8.5.4 ([`502fb7a`](https://github.com/thelounge/thelounge/commit/502fb7a7050edbecd8e34b6c30664e0bdcfc4a6c) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @vue/test-utils to v2.2.7 ([`6b23b87`](https://github.com/thelounge/thelounge/commit/6b23b87063c893ce588321929598e579401e16ee) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency sinon to v13.0.2 ([`90d17ca`](https://github.com/thelounge/thelounge/commit/90d17cacc155a3a6bafd76411b2e00997347a24b) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency vue-loader to v17.0.1 ([`2f8dc01`](https://github.com/thelounge/thelounge/commit/2f8dc01930f921f4de23dff29abfc703fdbefdbc) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency webpack-dev-middleware to v5.3.3 ([`4742a07`](https://github.com/thelounge/thelounge/commit/4742a077211229191867033320c0efc876a9404c) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @vue/test-utils to v2.3.1 ([`50e8d2a`](https://github.com/thelounge/thelounge/commit/50e8d2a8903b1c1c826208850f46a5d98dbf6458) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency postcss to v8.4.21 ([`8e249d4`](https://github.com/thelounge/thelounge/commit/8e249d46afb234a4a1def2cbcc0204c4edd52bdc) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency sqlite3 to v5.1.5 [security] ([`bc4c308`](https://github.com/thelounge/thelounge/commit/bc4c3082b852e175e55003c8b91b2a69a7d8283f) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency webpack to v5.76.0 [security] ([`a67cee1`](https://github.com/thelounge/thelounge/commit/a67cee1ee43da01afd8c7584b44d46e6e8dc990d) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency sqlite3 to v5.1.6 ([`34a01c2`](https://github.com/thelounge/thelounge/commit/34a01c2dd164b60d7470b588f7c0e0ed3d3b7647) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/mousetrap to v1.6.11 ([`5037383`](https://github.com/thelounge/thelounge/commit/5037383c4c9a87a53eaa358ffbe7492ab6ad6365) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- Autocomplete: update to @textcomplete package and close on blur (#4493) ([`bdd6e71`](https://github.com/thelounge/thelounge/commit/bdd6e71049a4ddc65eca8d6acc52ce5c7eb3f6fd) by [@MaxLeiter](https://github.com/MaxLeiter))
+- Update sqlite3 to 5.0.3 ([`7db0d46`](https://github.com/thelounge/thelounge/commit/7db0d4619d98ad473eff7a1dbdf41c8b0167d0dd) by [@xPaw](https://github.com/xPaw))
+- Merge sqlite3 upgrade to v5.0.6 ([`abf8906`](https://github.com/thelounge/thelounge/commit/abf89067575810339fa3c723af54a7ea670fe4e5) by [@brunnre8](https://github.com/brunnre8))
+- bump socket.io to 4.5.2 ([`d4bbd91`](https://github.com/thelounge/thelounge/commit/d4bbd9191cd78f065386fe25c7e8e90b1171a159) by [@brunnre8](https://github.com/brunnre8))
+- bump socket.io-client to 4.5.0 ([`4c7337b`](https://github.com/thelounge/thelounge/commit/4c7337b6257af2428e6e9f8af570126da094d266) by [@brunnre8](https://github.com/brunnre8))
+- Bump engine.io from 6.2.0 to 6.2.1 ([`f8eb0eb`](https://github.com/thelounge/thelounge/commit/f8eb0ebafdf8824bfe316fd2ad8adb3b8beda2d2) by [@dependabot[bot]](https://github.com/dependabot%5Bbot%5D))
+- Bump loader-utils from 2.0.2 to 2.0.4 ([`8924545`](https://github.com/thelounge/thelounge/commit/89245455ceceba157821437a3f8f4e80f3b03268) by [@dependabot[bot]](https://github.com/dependabot%5Bbot%5D))
+- Bump loader-utils from 2.0.2 to 2.0.4 ([`21c8b0d`](https://github.com/thelounge/thelounge/commit/21c8b0d17fc7e09d1cad77990fa833fdcad62927) by [@brunnre8](https://github.com/brunnre8))
+- update dependency @types/mousetrap to v1.6.11 ([`7ee4b80`](https://github.com/thelounge/thelounge/commit/7ee4b80a6e744b09385fc686cdca1fbf0e7784ac) by [@brunnre8](https://github.com/brunnre8))
+- update dependency @types/lodash to v4.14.191 ([`c67df36`](https://github.com/thelounge/thelounge/commit/c67df36a29a04bacc9e3197a32368493ae0a2ae9) by [@brunnre8](https://github.com/brunnre8))
+- caniuse-lite: update db ([`efd3b64`](https://github.com/thelounge/thelounge/commit/efd3b645642ff75639ecb27a8ff9d6f6e1c0ccab) by [@brunnre8](https://github.com/brunnre8))
+- build(deps): bump json5 from 2.2.1 to 2.2.3 ([`ce3ad56`](https://github.com/thelounge/thelounge/commit/ce3ad56ced3b498def5bb65065b4185a46a20995) by [@dependabot[bot]](https://github.com/dependabot%5Bbot%5D))
+- fix(deps): update dependency ua-parser-js to v1.0.33 [security] ([`bde5c3d`](https://github.com/thelounge/thelounge/commit/bde5c3d443dc1e965bdd2641abb94b526600ddec) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- build(deps): bump http-cache-semantics from 4.1.0 to 4.1.1 ([`7304acd`](https://github.com/thelounge/thelounge/commit/7304acd8e072af33dfdd1ea2f108b91a6e449f65) by [@dependabot[bot]](https://github.com/dependabot%5Bbot%5D))
+- update dependency postcss to v8.4.21 ([`95e5630`](https://github.com/thelounge/thelounge/commit/95e56300db48bbb75b3463267eb0809ee9739686) by [@brunnre8](https://github.com/brunnre8))
+- update dependency sinon to v13.0.2 ([`0183d89`](https://github.com/thelounge/thelounge/commit/0183d89384405ad944863ecffd783c99f0c36517) by [@brunnre8](https://github.com/brunnre8))
+- update dependency vue-loader to v17.0.1 ([`eddcbcc`](https://github.com/thelounge/thelounge/commit/eddcbcc7660e5f51d9b794ab0302abb9790c6b3c) by [@brunnre8](https://github.com/brunnre8))
+- update dependency webpack-dev-middleware to v5.3.3 ([`4831c20`](https://github.com/thelounge/thelounge/commit/4831c2080415a72492e97d55be8512c86c4324b3) by [@brunnre8](https://github.com/brunnre8))
+- update dependency webpack to v5.76.0 ([`6b00ccf`](https://github.com/thelounge/thelounge/commit/6b00ccf82b60503b31e4fee1e32f2765c234d8cc) by [@brunnre8](https://github.com/brunnre8))
+
 ## v4.4.0-pre.2 - 2023-03-19 [Pre-release]
 
 [See the full changelog](https://github.com/thelounge/thelounge/compare/v4.4.0-pre.1...v4.4.0-pre.2)
