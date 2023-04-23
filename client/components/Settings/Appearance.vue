@@ -20,7 +20,7 @@
 		<div>
 			<label class="opt">
 				<input :checked="store.state.settings.parseMd" type="checkbox" name="parseMd" />
-				Parse markdown in messages
+				Render inline markdown in messages
 			</label>
 		</div>
 		<div>
