@@ -13,9 +13,9 @@ jobs:
           - os: ubuntu-latest
             node_version: 16.x
           - os: macOS-latest
-            node_version: 16.x
+            node_version: 18.x
           - os: windows-latest
-            node_version: 16.x
+            node_version: 18.x
           # EOL: April 2025
           - os: ubuntu-latest
             node_version: 18.x
