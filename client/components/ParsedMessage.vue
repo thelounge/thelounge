@@ -186,20 +186,32 @@ export default defineComponent({
 
 		if (context?.message?.type === "message" && this.store.state.settings.parseMd) {
 			const htmls: Map<number, ParseFragment> = new Map();
-			const standins: string[] = [];
+			const standIns: string[] = [];
+			let standInCount = 0;
 
-			for (let i = 0; i < parsed.length; i++) {
-				if (parsed[i] instanceof Array) {
-					standins.push(parsed[i][0]);
-				} else {
-					htmls.set(i, parsed[i]);
-					standins.push(
-						`<thelounge-mdparse-placeholder>${i}</thelounge-mdparse-placeholder>`
-					);
+			const generateStandIns = (nodes) => {
+				const result: string[] = [];
+
+				for (let i = 0; i < nodes.length; i++) {
+					if (nodes[i] instanceof Array) {
+						result.push(...generateStandIns(nodes[i]));
+					} else {
+						if (typeof nodes[i] === "string") {
+							result.push(nodes[i]);
+						} else {
+							htmls.set(standInCount, nodes[i]);
+							result.push(
+								`<thelounge-mdparse-placeholder>${standInCount++}</thelounge-mdparse-placeholder>`
+							);
+						}
+					}
 				}
-			}
 
-			return rehydrate(parseMd("".concat(...standins)), htmls);
+				return result;
+			};
+
+			const toParse = "".concat(...generateStandIns(parsed));
+			return rehydrate(parseMd(toParse), htmls);
 		}
 
 		return parsed;
