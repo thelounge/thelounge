@@ -4,6 +4,13 @@ import parse from "../js/helpers/parse";
 import type {ClientMessage, ClientNetwork} from "../js/types";
 import {useStore} from "../js/store";
 
+const MD_PLACEHOLDER_TAG = "thelounge-mdparse-placeholder";
+const MD_PLACEHOLDER_OPEN = `<${MD_PLACEHOLDER_TAG}>`;
+const MD_PLACEHOLDER_CLOSE = `</${MD_PLACEHOLDER_TAG}>`;
+
+const createPlaceholder = (idx: number | string) =>
+	`${MD_PLACEHOLDER_OPEN}${idx}${MD_PLACEHOLDER_CLOSE}`;
+
 type ParseFragment =
 	| string
 	| VNode<
@@ -59,7 +66,33 @@ const parseMd = (src: string) => {
 		checkChar("`", false);
 
 		if (src[i]) {
-			result.push(src[i]);
+			if (src[i] === "<") {
+				if (src.slice(i, i + 31) === MD_PLACEHOLDER_OPEN) {
+					let j = -1;
+
+					if ((j = src.indexOf(MD_PLACEHOLDER_CLOSE, i)) !== -1) {
+						const idx = src.slice(i + MD_PLACEHOLDER_OPEN.length, j);
+						let placeholder = createPlaceholder(idx);
+
+						i += placeholder.length - 1;
+						const NUMERIC_TEST = /^\d(\.\d+)?$/;
+
+						if (!idx.match(NUMERIC_TEST)) {
+							placeholder = placeholder
+								.replaceAll("<", "&lt;")
+								.replaceAll(">", "&gt;");
+						}
+
+						result.push(placeholder);
+					} else {
+						result.push("&lt;");
+					}
+				} else {
+					result.push("&lt;");
+				}
+			} else {
+				result.push(src[i]);
+			}
 		}
 
 		i++;
@@ -74,7 +107,7 @@ type DomElementRepr = {
 	attributes?: Record<string, string>;
 };
 
-function mapDOM(element): DomElementRepr {
+function mapDOM(element: HTMLElement | string): DomElementRepr {
 	const treeObject: any = {};
 	let docNode: Document | null = null;
 
@@ -89,7 +122,7 @@ function mapDOM(element): DomElementRepr {
 			throw new Error("Error parsing XML");
 		}
 
-		element = docNode.querySelector("body");
+		element = docNode.querySelector("body")!;
 	}
 
 	// Recursively loop through DOM elements and assign properties to object
@@ -135,19 +168,32 @@ const rehydrate = (parsed: string, htmls: Map<number, ParseFragment>) => {
 	const create = (content: typeof parsedDom.content) => {
 		const children: typeof result = [];
 
+		if (!content) {
+			return [];
+		}
+
 		for (const item of content) {
 			if (typeof item === "string") {
 				children.push(item);
 			} else if (item?.type) {
-				if (item.type.toLowerCase() === "thelounge-mdparse-placeholder") {
-					const elt = htmls.get(parseInt(item.content[0] as string)) as ParseFragment;
-					children.push(elt);
+				if (item.type.toLowerCase() === MD_PLACEHOLDER_TAG) {
+					if (!item?.content) {
+						continue;
+					}
+
+					const elt = htmls.get(parseFloat(item.content[0] as string));
+
+					if (!elt) {
+						children.push(createPlaceholder(item.content[0] as string));
+					} else {
+						children.push(elt);
+					}
 				} else {
 					children.push(
 						h(
 							item.type,
 							{...item.attributes},
-							...item.content.map((elt) => [elt]).map(create)
+							...(item?.content ? item.content.map((elt) => [elt]).map(create) : [])
 						)
 					);
 				}
@@ -186,8 +232,7 @@ export default defineComponent({
 
 		if (context?.message?.type === "message" && this.store.state.settings.parseMd) {
 			const htmls: Map<number, ParseFragment> = new Map();
-			const standIns: string[] = [];
-			let standInCount = 0;
+			const ids = new Set<number>();
 
 			const generateStandIns = (nodes) => {
 				const result: string[] = [];
@@ -199,10 +244,16 @@ export default defineComponent({
 						if (typeof nodes[i] === "string") {
 							result.push(nodes[i]);
 						} else {
-							htmls.set(standInCount, nodes[i]);
-							result.push(
-								`<thelounge-mdparse-placeholder>${standInCount++}</thelounge-mdparse-placeholder>`
-							);
+							let id = Math.random();
+
+							while (ids.has(id)) {
+								id = Math.random();
+							}
+
+							ids.add(id);
+
+							htmls.set(id, nodes[i]);
+							result.push(createPlaceholder(id));
 						}
 					}
 				}
