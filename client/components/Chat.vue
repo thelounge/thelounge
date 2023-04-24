@@ -3,7 +3,7 @@
 		<div
 			id="chat"
 			:class="{
-				'hide-motd': store.state.settings.motd,
+				'hide-motd': !store.state.settings.motd,
 				'time-seconds': store.state.settings.showSeconds,
 				'time-12h': store.state.settings.use12hClock,
 				'colored-nicks': true, // TODO temporarily fixes themes, to be removed in next major version
