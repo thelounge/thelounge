@@ -80,6 +80,9 @@ const defaultConfig = {
 	parseMd: {
 		default: false,
 	},
+	renderMdSrc: {
+		default: false,
+	},
 	use12hClock: {
 		default: false,
 	},

@@ -28,7 +28,7 @@ export type ParseFragment =
 			| undefined
 	  )[];
 
-export const parseMd = (src: string) => {
+export const parseMd = (src: string, renderMdSrc) => {
 	let i = 0;
 	const result: string[] = [];
 
@@ -44,10 +44,14 @@ export const parseMd = (src: string) => {
 				"`": "monospace",
 			}[c];
 
+			const srcBlock = renderMdSrc ? (double ? c + c : c) : "";
+			const spanContents = `${srcBlock}${parseMd(
+				src.slice(i + n, end),
+				renderMdSrc
+			)}${srcBlock}`;
+
 			if (end !== -1) {
-				result.push(
-					`<span class='irc-${className}'>${parseMd(src.slice(i + n, end))}</span>`
-				);
+				result.push(`<span class='irc-${className}'>${spanContents}</span>`);
 				i = end + n;
 			}
 		}

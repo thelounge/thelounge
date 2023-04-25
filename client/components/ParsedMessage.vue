@@ -59,7 +59,7 @@ export default defineComponent({
 			};
 
 			const toParse = "".concat(...generateStandIns(parsed));
-			return rehydrate(parseMd(toParse), htmls);
+			return rehydrate(parseMd(toParse, this.store.state.settings.renderMdSrc), htmls);
 		}
 
 		return parsed;
