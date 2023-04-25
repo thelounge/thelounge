@@ -554,9 +554,8 @@ function printPullRequest(pullRequest) {
 
 // Builds a Markdown list item for a commit made directly in `master`
 function printCommit(commit) {
-	return `- ${commit.messageHeadline} (${printEntryLink(commit)} ${printAuthorLink(
-		commit.author.user
-	)})`;
+	const author_link = commit.author.user ? printAuthorLink(commit.author.user) : "unknown author";
+	return `- ${commit.messageHeadline} (${printEntryLink(commit)} ${author_link})`;
 }
 
 // Builds a Markdown list of all given items
@@ -812,15 +811,31 @@ function dedupeEntries(changelog, items) {
 // (with format `@username`) of everyone who contributed to this version.
 function extractContributors(entries) {
 	const set = Object.values(entries).reduce((memo, {__typename, author}) => {
-		if (__typename === "PullRequest" && author.__typename !== "Bot") {
-			memo.add("@" + author.login);
-			// Commit authors are *always* of type "User", so have to discriminate some
-			// other way. Making the assumption of a suffix for now, see how that goes.
-		} else if (__typename === "Commit" && !author.user.login.endsWith("-bot")) {
-			memo.add("@" + author.user.login);
+		if (!author) {
+			// author can be null if GH doesn't recognize them
+			return memo;
 		}
 
-		return memo;
+		switch (__typename) {
+			case "PullRequest":
+				if (author.__typename !== "Bot") {
+					memo.add("@" + author.login);
+				}
+
+				return memo;
+			case "Commit":
+				// Commit authors are *always* of type "User", so have to discriminate some
+				// other way. Making the assumption of a suffix for now, see how that goes.
+				// author.user can be nil if GH doesn't recognize the email
+				if (!author.user || author.user.login.endsWith("-bot")) {
+					return memo;
+				}
+
+				memo.add("@" + author.user.login);
+				return memo;
+			default:
+				throw new Error(`got an unexpected type for extractContributors: ${__typename}`);
+		}
 	}, new Set());
 
 	return Array.from(set).sort((a, b) => a.localeCompare(b, "en", {sensitivity: "base"}));
