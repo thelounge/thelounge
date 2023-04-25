@@ -1,5 +1,9 @@
 name: Release
 
+permissions:
+  contents: read
+  id-token: write
+
 on:
   push:
     tags: v*
@@ -29,15 +33,18 @@ jobs:
       - name: Test
         run: yarn test
 
+      - name: Update npm
+        run: npm install -g npm
+
       - name: Publish latest
         if: "!contains(github.ref, '-')"
-        run: npm publish --tag latest
+        run: npm publish --tag latest --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
 
       - name: Publish next
         if: contains(github.ref, '-')
-        run: npm publish --tag next
+        run: npm publish --tag next --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
 
