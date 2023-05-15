@@ -38,7 +38,6 @@ import {
 	ref,
 	Ref,
 	InjectionKey,
-	inject,
 } from "vue";
 import {useStore} from "../js/store";
 import type {DebouncedFunc} from "lodash";
@@ -46,10 +45,6 @@ import type {DebouncedFunc} from "lodash";
 export const imageViewerKey = Symbol() as InjectionKey<Ref<typeof ImageViewer | null>>;
 const contextMenuKey = Symbol() as InjectionKey<Ref<typeof ContextMenu | null>>;
 const confirmDialogKey = Symbol() as InjectionKey<Ref<typeof ConfirmDialog | null>>;
-
-export const useImageViewer = () => {
-	return inject(imageViewerKey) as Ref<typeof ImageViewer | null>;
-};
 
 export default defineComponent({
 	name: "App",
