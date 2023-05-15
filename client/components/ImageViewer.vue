@@ -456,6 +456,7 @@ export default defineComponent({
 
 		return {
 			link,
+			channel,
 			image,
 			transform,
 			closeViewer,
