@@ -60,6 +60,14 @@ module.exports = {
 	// This value is set to `10000` by default.
 	maxHistory: 10000,
 
+	// ### `dbHistoryDays`
+	//
+	// Defines the maximum number of days of history to store in the database.
+	// Undefined/-1/0 is treated an unlimited.
+	// The limit is seen as a soft target but not an exact goal. Only a few
+	// thousand rows are pruned at a time to avoid slowing down the service.
+	dbHistoryDays: undefined,
+
 	// ### `https`
 	//
 	// These settings are used to run The Lounge's web server using encrypted TLS.

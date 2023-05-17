@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import fs from "fs";
+import _ from "lodash";
+import fs from "fs/promises";
 import path from "path";
 import {expect} from "chai";
 import util from "../util";
@@ -7,7 +8,24 @@ import Msg, {MessageType} from "../../server/models/msg";
 import Config from "../../server/config";
 import MessageStorage from "../../server/plugins/messageStorage/sqlite";
 
-describe("SQLite Message Storage", function () {
+async function exists(filePath: string) {
+	try {
+		await fs.access(filePath);
+		return true;
+	} catch {
+		return false;
+	}
+}
+
+async function cleanup() {
+	const dirpath = path.join(Config.getHomePath(), "logs");
+
+	if (await exists(dirpath)) {
+		await fs.rm(dirpath, {recursive: true});
+	}
+}
+
+describe("SQLite Message Storage (stateful tests)", function () {
 	// Increase timeout due to unpredictable I/O on CI services
 	this.timeout(util.isRunningOnCI() ? 25000 : 5000);
 	this.slow(300);
@@ -15,27 +33,22 @@ describe("SQLite Message Storage", function () {
 	const expectedPath = path.join(Config.getHomePath(), "logs", "testUser.sqlite3");
 	let store: MessageStorage;
 
-	before(function (done) {
-		store = new MessageStorage("testUser");
-
+	before(async function () {
 		// Delete database file from previous test run
-		if (fs.existsSync(expectedPath)) {
-			fs.unlink(expectedPath, done);
-		} else {
-			done();
-		}
+		await cleanup();
+
+		store = new MessageStorage("testUser");
 	});
 
-	after(function (done) {
+	after(async function () {
 		// After tests run, remove the logs folder
 		// so we return to the clean state
-		fs.unlinkSync(expectedPath);
-		fs.rmdir(path.join(Config.getHomePath(), "logs"), done);
+		await cleanup();
 	});
 
 	it("should create database file", async function () {
 		expect(store.isEnabled).to.be.false;
-		expect(fs.existsSync(expectedPath)).to.be.false;
+		expect(await exists(expectedPath)).to.be.false;
 
 		await store.enable();
 		expect(store.isEnabled).to.be.true;
@@ -232,6 +245,89 @@ describe("SQLite Message Storage", function () {
 
 	it("should close database", async function () {
 		await store.close();
-		expect(fs.existsSync(expectedPath)).to.be.true;
+		expect(await exists(expectedPath)).to.be.true;
+	});
+});
+
+describe("SQLite Message Storage (stateless tests)", function () {
+	// Increase timeout due to unpredictable I/O on CI services
+	this.timeout(util.isRunningOnCI() ? 25000 : 5000);
+	this.slow(300);
+
+	let store: MessageStorage;
+	beforeEach(async function () {
+		await cleanup();
+		store = new MessageStorage("testUser");
+	});
+
+	afterEach(async function () {
+		await store.close();
+		await cleanup();
+	});
+
+	it("Should not schedule pruning", async function () {
+		const originalMaxDays = Config.values.dbHistoryDays;
+
+		Config.values.dbHistoryDays = undefined;
+		await store.enable();
+		expect(store.scheduledIntervalId).to.be.undefined;
+
+		Config.values.dbHistoryDays = originalMaxDays;
+	});
+
+	it("Should schedule pruning", async function () {
+		const originalMaxDays = Config.values.dbHistoryDays;
+
+		Config.values.dbHistoryDays = 100;
+		await store.enable();
+		expect(store.scheduledIntervalId).to.not.be.undefined;
+
+		Config.values.dbHistoryDays = originalMaxDays;
+	});
+
+	it("Should only prune old messages", async function () {
+		// First insert lots of messages.
+		await store.enable();
+
+		const dayInMs = 24 * 60 * 60 * 1000;
+		const now = Date.now();
+
+		const network = {uuid: "network-guid"};
+		const chan = {name: "#channel"};
+
+		for (let i = 0; i < 100; ++i) {
+			// Each event is 1 day older
+			await store.index(
+				network as any,
+				chan as any,
+				new Msg({
+					time: new Date(now - i * dayInMs),
+					text: `${i}`,
+				})
+			);
+		}
+
+		let msgid = 0;
+		let messages = await store.getMessages(network as any, chan as any, () => msgid++);
+		expect(messages).to.have.length(100);
+
+		// Delete events older than 90 days but limit to only 1 event
+		await store.pruneOldEvents(90, 1);
+
+		messages = await store.getMessages(network as any, chan as any, () => msgid++);
+		expect(messages).to.have.length(99);
+		// make sure the oldest event (text = 99) was deleted
+		const found_msgs = new Set(messages.map((msg) => msg.text));
+		expect(found_msgs.has("99")).to.be.false;
+
+		// Delete events older than 90 days
+		await store.pruneOldEvents(90, 1000);
+		messages = await store.getMessages(network as any, chan as any, () => msgid++);
+		expect(messages).to.have.length(90);
+
+		// Delete events older than 1 day
+		await store.pruneOldEvents(1, 1000);
+		messages = await store.getMessages(network as any, chan as any, () => msgid++);
+		expect(messages).to.have.length(1);
 	});
 });

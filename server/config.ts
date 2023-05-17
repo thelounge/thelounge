@@ -83,6 +83,7 @@ export type ConfigType = {
 	bind: string | undefined;
 	reverseProxy: boolean;
 	maxHistory: number;
+	dbHistoryDays: number | undefined;
 	https: Https;
 	theme: string;
 	prefetch: boolean;

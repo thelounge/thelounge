@@ -50,6 +50,8 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 	initDone: Deferred;
 	userName: string;
 
+	scheduledIntervalId: ReturnType<typeof setInterval> | undefined;
+
 	constructor(userName: string) {
 		this.userName = userName;
 		this.isEnabled = false;
@@ -76,6 +78,8 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			this.isEnabled = false;
 			throw Helper.catch_to_error("Migration failed", e);
 		}
+
+		this.schedulePruning();
 	}
 
 	async enable() {
@@ -124,6 +128,11 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 	}
 
 	async close() {
+		if (this.scheduledIntervalId) {
+			clearInterval(this.scheduledIntervalId);
+			this.scheduledIntervalId = undefined;
+		}
+
 		if (!this.isEnabled) {
 			return;
 		}
@@ -169,6 +178,49 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 				msg.type,
 				JSON.stringify(clonedMsg),
 			]
+		);
+	}
+
+	schedulePruning() {
+		if (!Config.values.dbHistoryDays || Config.values.dbHistoryDays <= 0) {
+			return;
+		}
+
+		if (this.scheduledIntervalId) {
+			clearInterval(this.scheduledIntervalId);
+		}
+
+		const keepNdays = Config.values.dbHistoryDays;
+
+		// Probably best to not make these things configurable
+		// to avoid users setting high values and freezing their instance
+		const runFrequencyMilliseconds = 1000 * 60 * 5; // Every 5 min
+		const deleteAtMostN = 1000;
+
+		this.scheduledIntervalId = setInterval(() => {
+			this.pruneOldEvents(keepNdays, deleteAtMostN).catch((err) =>
+				log.error("Pruning failed: ", err)
+			);
+		}, runFrequencyMilliseconds);
+	}
+
+	async pruneOldEvents(keepNdays: number, deleteAtMostN: number) {
+		// Delete oldest events (up to `deleteAtMostN`) older than `keepNdays`
+		await this.initDone.promise;
+
+		if (!this.isEnabled) {
+			return;
+		}
+
+		// We roughly get a timestamp from N days before.
+		// We don't adjust for daylight savings time or other weird time jumps
+		const millisecondsInDay = 24 * 60 * 60 * 1000;
+		const deleteBefore = Date.now() - keepNdays * millisecondsInDay;
+		await this.serialize_run(
+			`DELETE FROM messages WHERE rowid in (
+				SELECT rowid FROM messages WHERE time < ? ORDER BY time ASC LIMIT ?
+			)`,
+			[deleteBefore, deleteAtMostN]
 		);
 	}
 
