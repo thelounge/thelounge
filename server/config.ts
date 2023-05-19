@@ -76,6 +76,12 @@ type Debug = {
 	raw: boolean;
 };
 
+type SqliteConfig =
+	| {
+			maxDaysHistory: number | undefined;
+	  }
+	| undefined;
+
 export type ConfigType = {
 	public: boolean;
 	host: string | undefined;
@@ -83,7 +89,6 @@ export type ConfigType = {
 	bind: string | undefined;
 	reverseProxy: boolean;
 	maxHistory: number;
-	dbHistoryDays: number | undefined;
 	https: Https;
 	theme: string;
 	prefetch: boolean;
@@ -98,6 +103,7 @@ export type ConfigType = {
 	defaults: Defaults;
 	lockNetwork: boolean;
 	messageStorage: string[];
+	sqliteConfig: SqliteConfig;
 	useHexIp: boolean;
 	webirc?: WebIRC;
 	identd: Identd;

@@ -37,7 +37,7 @@ describe("SQLite Message Storage (stateful tests)", function () {
 		// Delete database file from previous test run
 		await cleanup();
 
-		store = new MessageStorage("testUser");
+		store = new MessageStorage("testUser", undefined as any);
 	});
 
 	after(async function () {
@@ -257,7 +257,6 @@ describe("SQLite Message Storage (stateless tests)", function () {
 	let store: MessageStorage;
 	beforeEach(async function () {
 		await cleanup();
-		store = new MessageStorage("testUser");
 	});
 
 	afterEach(async function () {
@@ -265,28 +264,41 @@ describe("SQLite Message Storage (stateless tests)", function () {
 		await cleanup();
 	});
 
-	it("Should not schedule pruning", async function () {
-		const originalMaxDays = Config.values.dbHistoryDays;
+	it("Should not schedule pruning because of server and client settings", async function () {
+		const originalMaxDays = Config.values?.sqliteConfig?.maxDaysHistory;
+		_.set(Config.values, "sqliteConfig.maxDaysHistory", undefined);
 
-		Config.values.dbHistoryDays = undefined;
+		store = new MessageStorage("testUser", {maxDaysHistory: 0});
 		await store.enable();
 		expect(store.scheduledIntervalId).to.be.undefined;
 
-		Config.values.dbHistoryDays = originalMaxDays;
+		_.set(Config.values, "sqliteConfig.maxDaysHistory", originalMaxDays);
 	});
 
-	it("Should schedule pruning", async function () {
-		const originalMaxDays = Config.values.dbHistoryDays;
+	it("Should schedule pruning because of client settings", async function () {
+		const originalMaxDays = Config.values?.sqliteConfig?.maxDaysHistory;
 
-		Config.values.dbHistoryDays = 100;
+		_.set(Config.values, "sqliteConfig.maxDaysHistory", undefined);
+		store = new MessageStorage("testUser", {maxDaysHistory: 1});
 		await store.enable();
 		expect(store.scheduledIntervalId).to.not.be.undefined;
 
-		Config.values.dbHistoryDays = originalMaxDays;
+		_.set(Config.values, "sqliteConfig.maxDaysHistory", originalMaxDays);
+	});
+
+	it("Should schedule pruning because of server settings", async function () {
+		const originalMaxDays = Config.values?.sqliteConfig?.maxDaysHistory;
+
+		_.set(Config.values, "sqliteConfig.maxDaysHistory", 1);
+		store = new MessageStorage("testUser", {maxDaysHistory: 0});
+		await store.enable();
+		expect(store.scheduledIntervalId).to.not.be.undefined;
+
+		_.set(Config.values, "sqliteConfig.maxDaysHistory", originalMaxDays);
 	});
 
 	it("Should only prune old messages", async function () {
-		// First insert lots of messages.
+		store = new MessageStorage("testUser", undefined);
 		await store.enable();
 
 		const dayInMs = 24 * 60 * 60 * 1000;
@@ -295,6 +307,7 @@ describe("SQLite Message Storage (stateless tests)", function () {
 		const network = {uuid: "network-guid"};
 		const chan = {name: "#channel"};
 
+		// First insert lots of messages.
 		for (let i = 0; i < 100; ++i) {
 			// Each event is 1 day older
 			await store.index(

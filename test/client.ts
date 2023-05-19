@@ -57,6 +57,7 @@ describe("Client", function () {
 			sessions: {},
 			clientSettings: {},
 			networks: [networkConfig],
+			storage: undefined,
 		});
 
 		// The client would normally do it as part of client.connect();
@@ -92,6 +93,7 @@ describe("Client", function () {
 			sessions: {},
 			clientSettings: {},
 			networks: [networkConfig],
+			storage: undefined,
 		});
 
 		// The client would normally do it as part of client.connect();

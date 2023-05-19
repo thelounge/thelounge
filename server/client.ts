@@ -69,6 +69,7 @@ export type UserConfig = {
 			pushSubscription?: ClientPushSubscription;
 		};
 	};
+	storage: typeof Config.values.sqliteConfig;
 	clientSettings: {
 		[key: string]: any;
 	};
@@ -137,7 +138,10 @@ class Client {
 
 		if (!Config.values.public && client.config.log) {
 			if (Config.values.messageStorage.includes("sqlite")) {
-				client.messageProvider = new SqliteMessageStorage(client.name);
+				client.messageProvider = new SqliteMessageStorage(
+					client.name,
+					client.config.storage
+				);
 				client.messageStorage.push(client.messageProvider);
 			}
 

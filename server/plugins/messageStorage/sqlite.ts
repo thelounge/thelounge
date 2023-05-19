@@ -44,18 +44,36 @@ class Deferred {
 	}
 }
 
+type SqliteConfig = typeof Config.values.sqliteConfig;
+
 class SqliteMessageStorage implements SearchableMessageStorage {
 	isEnabled: boolean;
 	database!: Database;
 	initDone: Deferred;
 	userName: string;
+	mergedConfig: typeof Config.values.sqliteConfig;
 
 	scheduledIntervalId: ReturnType<typeof setInterval> | undefined;
 
-	constructor(userName: string) {
+	constructor(userName: string, clientStorageConfig: SqliteConfig) {
 		this.userName = userName;
 		this.isEnabled = false;
 		this.initDone = new Deferred();
+
+		this.mergedConfig = this.mergeClientConfig(clientStorageConfig);
+	}
+
+	mergeClientConfig(clientStorageConfig: SqliteConfig) {
+		const globalDays = Config.values?.sqliteConfig?.maxDaysHistory || 0;
+		const clientDays = clientStorageConfig?.maxDaysHistory || 0;
+		return {
+			maxDaysHistory:
+				globalDays <= 0
+					? clientDays
+					: clientDays > 0
+					? Math.min(globalDays, clientDays)
+					: globalDays,
+		};
 	}
 
 	async _enable() {
@@ -182,15 +200,15 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 	}
 
 	schedulePruning() {
-		if (!Config.values.dbHistoryDays || Config.values.dbHistoryDays <= 0) {
+		const keepNdays = this.mergedConfig?.maxDaysHistory || 0;
+
+		if (!keepNdays || keepNdays <= 0) {
 			return;
 		}
 
 		if (this.scheduledIntervalId) {
 			clearInterval(this.scheduledIntervalId);
 		}
-
-		const keepNdays = Config.values.dbHistoryDays;
 
 		// Probably best to not make these things configurable
 		// to avoid users setting high values and freezing their instance
