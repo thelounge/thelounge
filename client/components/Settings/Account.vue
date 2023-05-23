@@ -118,7 +118,7 @@ export default defineComponent({
 		const store = useStore();
 
 		const passwordErrors = {
-			missing_fields: "Please enter a new password",
+			missing_fields: "Please fill in all fields",
 			password_mismatch: "Both new password fields must match",
 			password_incorrect: "The current password field does not match your account password",
 			update_failed: "Failed to update your password",
