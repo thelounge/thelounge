@@ -33,8 +33,10 @@ const input: PluginInputHandler = function ({irc}, chan, cmd, args) {
 
 	switch (cmd) {
 		case "kickban":
+			// issue ban first to avoid race condition
+			irc.ban(chan.name, args[0]);
 			irc.raw("KICK", chan.name, args[0], args.slice(1).join(" "));
-		// fall through
+			break;
 		case "ban":
 			irc.ban(chan.name, args[0]);
 			break;
