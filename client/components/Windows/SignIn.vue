@@ -26,6 +26,7 @@
 				autocapitalize="none"
 				autocorrect="off"
 				autocomplete="username"
+				pattern="[^\s]+"
 				:value="getStoredUser()"
 				required
 				autofocus
