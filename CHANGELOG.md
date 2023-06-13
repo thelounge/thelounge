@@ -4,6 +4,41 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v4.4.1 - 2023-06-13
+
+Small bug fix release that addresses the bugs reported since v4.4.0
+
+- fixes the image preview buttons disappearing.
+- Restores the ability to change the password via the user interface.
+
+Following the [Node.js maintenance schedule](https://nodejs.dev/en/about/releases/), The Lounge now needs at least Node.js 16 to run.
+
+For more details, [see the full changelog](https://github.com/thelounge/thelounge/compare/v4.4.0...v4.4.1) and [milestone](https://github.com/thelounge/thelounge/milestone/43?closed=1).
+
+### Fixed
+
+- linkPreview: Pass channel prop ([`9388960`](https://github.com/thelounge/thelounge/commit/93889604973eeefb3a875e3ad5c9de737638888c) by [@brunnre8](https://github.com/brunnre8))
+- client: fix password change input ([`8f08cf3`](https://github.com/thelounge/thelounge/commit/8f08cf3d0bd5b839016000afca1c700c74193f39) by [@brunnre8](https://github.com/brunnre8))
+
+### Documentation
+
+On the [website repository](https://github.com/thelounge/thelounge.github.io):
+
+- Document local installation of packages ([`c72092e`](https://github.com/thelounge/thelounge.github.io/commit/c72092e2f8feab66f912b2c63c5a0572b123ea29) by [@brunnre8](https://github.com/brunnre8))
+- docs: update docker image to point to the new ghcr.io repository ([`b43d002`](https://github.com/thelounge/thelounge.github.io/commit/b43d002584757709fff19dfdcf558c9d378f3d61) by [@williamboman](https://github.com/williamboman))
+- Fix deb link ([`485570d`](https://github.com/thelounge/thelounge.github.io/commit/485570d4c4027296c546c2773272e4b44b0db06a) by [@brunnre8](https://github.com/brunnre8))
+- deb: directly link to latest ([`c9a8ad9`](https://github.com/thelounge/thelounge.github.io/commit/c9a8ad95bbfc62f9ef704581fc742b069ff605fe) by [@brunnre8](https://github.com/brunnre8))
+
+### Internals
+
+- Remove unused code ([`7bce779`](https://github.com/thelounge/thelounge/commit/7bce77925449e2bcfa2db5d66dc5f808e04058c7) by [@brunnre8](https://github.com/brunnre8))
+- settings: make missing_field msg descriptive ([`7a9ddc0`](https://github.com/thelounge/thelounge/commit/7a9ddc01e1819da8d28860548a82736f35283ab0) by [@brunnre8](https://github.com/brunnre8))
+
+### Dependency updates
+
+- build(deps): bump socket.io-parser from 4.2.1 to 4.2.3 ([`af49ef2`](https://github.com/thelounge/thelounge/commit/af49ef21ea3fed54c0807a4d87f9c0f9f70017c3) by [@dependabot[bot]](https://github.com/dependabot%5Bbot%5D))
+- bump socket.io-parser from 4.2.1 to 4.2.3 ([`4d60d9c`](https://github.com/thelounge/thelounge/commit/4d60d9c282490ad63a1ff61e57e9a6c7a5fb9684) by [@brunnre8](https://github.com/brunnre8))
+
 ## v4.4.1-rc.2 - 2023-05-27 [Pre-release]
 
 Restore the ability to change the password via the user interface.
