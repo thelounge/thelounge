@@ -19,14 +19,13 @@
 			<label for="signin-username">Username</label>
 			<input
 				id="signin-username"
-				ref="username"
+				v-model="username"
 				class="input"
 				type="text"
 				name="username"
 				autocapitalize="none"
 				autocorrect="off"
 				autocomplete="username"
-				:value="getStoredUser()"
 				required
 				autofocus
 			/>
@@ -36,9 +35,8 @@
 				<RevealPassword v-slot:default="slotProps">
 					<input
 						id="signin-password"
-						ref="password"
+						v-model="password"
 						:type="slotProps.isVisible ? 'text' : 'password'"
-						name="password"
 						class="input"
 						autocapitalize="none"
 						autocorrect="off"
@@ -70,8 +68,8 @@ export default defineComponent({
 		const inFlight = ref(false);
 		const errorShown = ref(false);
 
-		const username = ref<HTMLInputElement | null>(null);
-		const password = ref<HTMLInputElement | null>(null);
+		const username = ref(storage.get("user") || "");
+		const password = ref("");
 
 		const onAuthFailed = () => {
 			inFlight.value = false;
@@ -89,17 +87,13 @@ export default defineComponent({
 			errorShown.value = false;
 
 			const values = {
-				user: username.value?.value,
-				password: password.value?.value,
+				user: username.value,
+				password: password.value,
 			};
 
 			storage.set("user", values.user);
 
 			socket.emit("auth:perform", values);
-		};
-
-		const getStoredUser = () => {
-			return storage.get("user");
 		};
 
 		onMounted(() => {
@@ -116,7 +110,6 @@ export default defineComponent({
 			username,
 			password,
 			onSubmit,
-			getStoredUser,
 		};
 	},
 });
