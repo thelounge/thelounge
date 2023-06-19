@@ -28,7 +28,7 @@ export type ParseFragment =
 			| undefined
 	  )[];
 
-export const parseMd = (src: string, renderMdSrc) => {
+const parseMd = (src: string, renderMdSrc) => {
 	let i = 0;
 	const result: string[] = [];
 
@@ -161,7 +161,7 @@ function mapDOM(element: HTMLElement | string): DomElementRepr {
 	return treeObject as DomElementRepr;
 }
 
-export const rehydrate = (parsed: string, htmls: Map<number, ParseFragment>) => {
+const rehydrate = (parsed: string, htmls: Map<number, ParseFragment>) => {
 	const parsedDom = mapDOM(parsed);
 	const result: (ParseFragment | string)[] = [];
 
@@ -208,7 +208,7 @@ export const rehydrate = (parsed: string, htmls: Map<number, ParseFragment>) => 
 	return result;
 };
 
-export const idGenerator = () => {
+const idGenerator = () => {
 	const ids = new Set();
 
 	const genId = () => {
@@ -222,4 +222,39 @@ export const idGenerator = () => {
 	};
 
 	return genId;
+};
+
+export const parseMarkdownMessage = (
+	message: (
+		| VNode<RendererNode, RendererElement, {[key: string]: any}>
+		| (string | VNode<RendererNode, RendererElement, {[key: string]: any}> | undefined)[]
+	)[],
+	renderMdSrc: boolean
+): ParseFragment[] => {
+	const htmls: Map<number, ParseFragment> = new Map();
+	const id = idGenerator();
+
+	const generateStandIns = (nodes): string[] => {
+		const result: string[] = [];
+
+		for (let i = 0; i < nodes.length; i++) {
+			if (nodes[i] instanceof Array) {
+				result.push(...generateStandIns(nodes[i]));
+			} else {
+				if (typeof nodes[i] === "string") {
+					result.push(nodes[i]);
+				} else {
+					const nextId = id();
+
+					htmls.set(nextId, nodes[i]);
+					result.push(createPlaceholder(nextId));
+				}
+			}
+		}
+
+		return result;
+	};
+
+	const toParse = "".concat(...generateStandIns(message));
+	return rehydrate(parseMd(toParse, renderMdSrc), htmls);
 };
