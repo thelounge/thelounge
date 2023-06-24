@@ -5,7 +5,127 @@ import {expect} from "chai";
 import util from "../util";
 import Msg, {MessageType} from "../../server/models/msg";
 import Config from "../../server/config";
-import MessageStorage from "../../server/plugins/messageStorage/sqlite";
+import MessageStorage, {
+	currentSchemaVersion,
+	migrations,
+	necessaryMigrations,
+	rollbacks,
+} from "../../server/plugins/messageStorage/sqlite";
+import sqlite3 from "sqlite3";
+
+const orig_schema = [
+	// Schema version #1
+	// DO NOT CHANGE THIS IN ANY WAY, it's needed to properly test migrations
+	"CREATE TABLE IF NOT EXISTS options (name TEXT, value TEXT, CONSTRAINT name_unique UNIQUE (name))",
+	"CREATE TABLE IF NOT EXISTS messages (network TEXT, channel TEXT, time INTEGER, type TEXT, msg TEXT)",
+	"CREATE INDEX IF NOT EXISTS network_channel ON messages (network, channel)",
+	"CREATE INDEX IF NOT EXISTS time ON messages (time)",
+];
+
+const v1_schema_version = 1520239200;
+
+const v1_dummy_messages = [
+	{
+		network: "8f650427-79a2-4950-b8af-94088b61b37c",
+		channel: "##linux",
+		time: 1594845354280,
+		type: "message",
+		msg: '{"from":{"mode":"","nick":"rascul"},"text":"db on a flash drive doesn\'t sound very nice though","self":false,"highlight":false,"users":[]}',
+	},
+	{
+		network: "8f650427-79a2-4950-b8af-94088b61b37c",
+		channel: "##linux",
+		time: 1594845357234,
+		type: "message",
+		msg: '{"from":{"mode":"","nick":"GrandPa-G"},"text":"that\'s the point of changing to make sure.","self":false,"highlight":false,"users":[]}',
+	},
+	{
+		network: "8f650427-79a2-4950-b8af-94088b61b37c",
+		channel: "#pleroma-dev",
+		time: 1594845358464,
+		type: "message",
+		msg: '{"from":{"mode":"@","nick":"rinpatch"},"text":"it\'s complicated","self":false,"highlight":false,"users":[]}',
+	},
+];
+
+describe("SQLite migrations", function () {
+	let db: sqlite3.Database;
+
+	function serialize_run(stmt: string, ...params: any[]): Promise<void> {
+		return new Promise((resolve, reject) => {
+			db.serialize(() => {
+				db.run(stmt, params, (err) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve();
+				});
+			});
+		});
+	}
+
+	before(async function () {
+		db = new sqlite3.Database(":memory:");
+
+		for (const stmt of orig_schema) {
+			await serialize_run(stmt);
+		}
+
+		for (const msg of v1_dummy_messages) {
+			await serialize_run(
+				"INSERT INTO messages(network, channel, time, type, msg) VALUES(?, ?, ?, ?, ?)",
+				msg.network,
+				msg.channel,
+				msg.time,
+				msg.type,
+				msg.msg
+			);
+		}
+	});
+
+	after(function (done) {
+		db.close(done);
+	});
+
+	it("has a down migration for every migration", function () {
+		expect(migrations.length).to.eq(rollbacks.length);
+		expect(migrations.map((m) => m.version)).to.have.ordered.members(
+			rollbacks.map((r) => r.version)
+		);
+	});
+
+	it("has working up-migrations", async function () {
+		const to_execute = necessaryMigrations(v1_schema_version);
+		expect(to_execute.length).to.eq(migrations.length);
+		await serialize_run("BEGIN EXCLUSIVE TRANSACTION");
+
+		for (const stmt of to_execute.map((m) => m.stmts).flat()) {
+			await serialize_run(stmt);
+		}
+
+		await serialize_run("COMMIT TRANSACTION");
+	});
+
+	it("has working down-migrations", async function () {
+		await serialize_run("BEGIN EXCLUSIVE TRANSACTION");
+
+		for (const rollback of rollbacks.reverse()) {
+			if (rollback.rollback_forbidden) {
+				throw Error(
+					"Try to write a down migration, if you really can't, flip this to a break"
+				);
+			}
+
+			for (const stmt of rollback.stmts) {
+				await serialize_run(stmt);
+			}
+		}
+
+		await serialize_run("COMMIT TRANSACTION");
+	});
+});
 
 describe("SQLite Message Storage", function () {
 	// Increase timeout due to unpredictable I/O on CI services
@@ -14,6 +134,36 @@ describe("SQLite Message Storage", function () {
 
 	const expectedPath = path.join(Config.getHomePath(), "logs", "testUser.sqlite3");
 	let store: MessageStorage;
+
+	function db_get_one(stmt: string, ...params: any[]): Promise<any> {
+		return new Promise((resolve, reject) => {
+			store.database.serialize(() => {
+				store.database.get(stmt, params, (err, row) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve(row);
+				});
+			});
+		});
+	}
+
+	function db_get_mult(stmt: string, ...params: any[]): Promise<any[]> {
+		return new Promise((resolve, reject) => {
+			store.database.serialize(() => {
+				store.database.all(stmt, params, (err, rows) => {
+					if (err) {
+						reject(err);
+						return;
+					}
+
+					resolve(rows);
+				});
+			});
+		});
+	}
 
 	before(function (done) {
 		store = new MessageStorage("testUser");
@@ -48,42 +198,17 @@ describe("SQLite Message Storage", function () {
 		store.isEnabled = true;
 	});
 
-	it("should create tables", function (done) {
-		store.database.all(
-			"SELECT name, tbl_name, sql FROM sqlite_master WHERE type = 'table'",
-			(err, row) => {
-				expect(err).to.be.null;
-				expect(row).to.deep.equal([
-					{
-						name: "options",
-						tbl_name: "options",
-						sql: "CREATE TABLE options (name TEXT, value TEXT, CONSTRAINT name_unique UNIQUE (name))",
-					},
-					{
-						name: "messages",
-						tbl_name: "messages",
-						sql: "CREATE TABLE messages (network TEXT, channel TEXT, time INTEGER, type TEXT, msg TEXT)",
-					},
-				]);
-
-				done();
-			}
-		);
+	it("should insert schema version to options table", async function () {
+		const row = await db_get_one("SELECT value FROM options WHERE name = 'schema_version'");
+		expect(row.value).to.equal(currentSchemaVersion.toString());
 	});
 
-	it("should insert schema version to options table", function (done) {
-		store.database.get(
-			"SELECT value FROM options WHERE name = 'schema_version'",
-			(err, row: {value: string}) => {
-				expect(err).to.be.null;
-
-				// Should be sqlite.currentSchemaVersion,
-				// compared as string because it's returned as such from the database
-				expect(row.value).to.equal("1520239200");
-
-				done();
-			}
+	it("should insert migrations", async function () {
+		const row = await db_get_one(
+			"SELECT id, version FROM migrations WHERE version = ?",
+			currentSchemaVersion
 		);
+		expect(row).to.not.be.undefined;
 	});
 
 	it("should store a message", async function () {
@@ -227,6 +352,19 @@ describe("SQLite Message Storage", function () {
 			await assertResults("@", ["bar @ baz"]);
 		} finally {
 			Config.values.maxHistory = originalMaxHistory;
+		}
+	});
+
+	it("should be able to downgrade", async function () {
+		for (const rollback of rollbacks.reverse()) {
+			if (rollback.rollback_forbidden) {
+				throw Error(
+					"Try to write a down migration, if you really can't, flip this to a break"
+				);
+			}
+
+			const new_version = await store.downgrade_to(rollback.version);
+			expect(new_version).to.equal(rollback.version);
 		}
 	});
 
