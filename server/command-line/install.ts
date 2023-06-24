@@ -74,7 +74,9 @@ program
 
 				if (
 					json.thelounge.supports &&
-					!semver.satisfies(Helper.getVersionNumber(), json.thelounge.supports)
+					!semver.satisfies(Helper.getVersionNumber(), json.thelounge.supports, {
+						includePrerelease: true,
+					})
 				) {
 					log.error(
 						`${colors.red(
