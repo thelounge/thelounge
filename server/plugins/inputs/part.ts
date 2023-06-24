@@ -36,9 +36,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 	if (
 		target.type !== ChanType.CHANNEL ||
 		target.state === ChanState.PARTED ||
-		!network.irc ||
-		!network.irc.connection ||
-		!network.irc.connection.connected
+		!network.irc.connected
 	) {
 		this.part(network, target);
 	} else {

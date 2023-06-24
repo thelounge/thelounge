@@ -441,10 +441,8 @@ class Network {
 		}
 
 		if (this.irc) {
-			const connected = this.irc.connection && this.irc.connection.connected;
-
 			if (this.nick !== oldNick) {
-				if (connected) {
+				if (this.irc.connected) {
 					// Send new nick straight away
 					this.irc.changeNick(this.nick);
 				} else {
@@ -459,7 +457,7 @@ class Network {
 			}
 
 			if (
-				connected &&
+				this.irc.connected &&
 				this.realname !== oldRealname &&
 				this.irc.network.cap.isEnabled("setname")
 			) {
