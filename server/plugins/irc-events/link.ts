@@ -437,6 +437,7 @@ function fetch(uri: string, headers: Record<string, string>) {
 				retry: 0,
 				timeout: prefetchTimeout || 5000, // milliseconds
 				headers: getRequestHeaders(headers),
+				localAddress: Config.values.bind,
 			});
 
 			gotStream

@@ -3,6 +3,7 @@ import colors from "chalk";
 import log from "../log";
 import pkg from "../../package.json";
 import ClientManager from "../clientManager";
+import Config from "../config";
 
 const TIME_TO_LIVE = 15 * 60 * 1000; // 15 minutes, in milliseconds
 
@@ -51,6 +52,7 @@ async function fetch() {
 				Accept: "application/vnd.github.v3.html", // Request rendered markdown
 				"User-Agent": pkg.name + "; +" + pkg.repository.url, // Identify the client
 			},
+			localAddress: Config.values.bind,
 		});
 
 		if (response.statusCode !== 200) {
