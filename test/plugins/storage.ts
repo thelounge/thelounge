@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
@@ -42,10 +42,12 @@ describe("Image storage", function () {
 		this.app.get("/logo.svg", function (req, res) {
 			res.sendFile(testSvgPath);
 		});
-		this.connection = this.app.listen(0, () => {
+		this.connection = this.app.listen(0, "127.0.0.1", () => {
 			this.port = this.connection.address().port;
+			this.host = this.connection.address().address;
 			done();
 		});
+		this._makeUrl = (_path: string): string => `http://${this.host}:${this.port}/${_path}`;
 	});
 
 	after(function (done) {
@@ -71,64 +73,60 @@ describe("Image storage", function () {
 	});
 
 	it("should store the thumbnail", function (done) {
-		const port = this.port;
+		const thumb_url = this._makeUrl("thumb");
 		const message = this.irc.createMessage({
-			text: "http://localhost:" + port + "/thumb",
+			text: thumb_url,
 		});
 
 		link(this.irc, this.network.channels[0], message, message.text);
 
+		const real_test_img_url = this._makeUrl("real-test-image.png");
 		this.app.get("/thumb", function (req, res) {
 			res.send(
-				"<title>Google</title><meta property='og:image' content='http://localhost:" +
-					port +
-					"/real-test-image.png'>"
+				`<title>Google</title><meta property='og:image' content='${real_test_img_url}'>`
 			);
 		});
 
 		this.irc.once("msg:preview", function (data) {
 			expect(data.preview.head).to.equal("Google");
-			expect(data.preview.link).to.equal("http://localhost:" + port + "/thumb");
+			expect(data.preview.link).to.equal(thumb_url);
 			expect(data.preview.thumb).to.equal(correctImageURL);
 			done();
 		});
 	});
 
 	it("should store the image", function (done) {
-		const port = this.port;
+		const real_test_img_url = this._makeUrl("real-test-image.png");
 		const message = this.irc.createMessage({
-			text: "http://localhost:" + port + "/real-test-image.png",
+			text: real_test_img_url,
 		});
 
 		link(this.irc, this.network.channels[0], message, message.text);
 
 		this.irc.once("msg:preview", function (data) {
 			expect(data.preview.type).to.equal("image");
-			expect(data.preview.link).to.equal("http://localhost:" + port + "/real-test-image.png");
+			expect(data.preview.link).to.equal(real_test_img_url);
 			expect(data.preview.thumb).to.equal(correctImageURL);
 			done();
 		});
 	});
 
 	it("should lookup correct extension type", function (done) {
-		const port = this.port;
+		const msg_url = this._makeUrl("svg-preview");
 		const message = this.irc.createMessage({
-			text: "http://localhost:" + port + "/svg-preview",
+			text: msg_url,
 		});
 
+		const logo_url = this._makeUrl("logo.svg");
 		this.app.get("/svg-preview", function (req: Request, res: Response) {
-			res.send(
-				"<title>test title</title><meta property='og:image' content='http://localhost:" +
-					port +
-					"/logo.svg'>"
-			);
+			res.send(`<title>test title</title><meta property='og:image' content='${logo_url}'>`);
 		});
 
 		link(this.irc, this.network.channels[0], message, message.text);
 
 		this.irc.once("msg:preview", function (data) {
 			expect(data.preview.type).to.equal("link");
-			expect(data.preview.link).to.equal("http://localhost:" + port + "/svg-preview");
+			expect(data.preview.link).to.equal(msg_url);
 			expect(data.preview.thumb).to.equal(correctSvgURL);
 			done();
 		});
