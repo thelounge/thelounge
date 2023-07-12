@@ -127,7 +127,7 @@
     "css-loader": "6.5.1",
     "cssnano": "5.0.17",
     "dayjs": "1.10.8",
-    "emoji-regex": "9.2.2",
+    "emoji-regex": "10.2.1",
     "eslint": "8.16.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-define-config": "1.5.1",
