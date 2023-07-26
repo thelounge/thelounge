@@ -111,7 +111,7 @@ describe("SQLite migrations", function () {
 	it("has working down-migrations", async function () {
 		await serialize_run("BEGIN EXCLUSIVE TRANSACTION");
 
-		for (const rollback of rollbacks.reverse()) {
+		for (const rollback of rollbacks.slice().reverse()) {
 			if (rollback.rollback_forbidden) {
 				throw Error(
 					"Try to write a down migration, if you really can't, flip this to a break"
@@ -356,7 +356,7 @@ describe("SQLite Message Storage", function () {
 	});
 
 	it("should be able to downgrade", async function () {
-		for (const rollback of rollbacks.reverse()) {
+		for (const rollback of rollbacks.slice().reverse()) {
 			if (rollback.rollback_forbidden) {
 				throw Error(
 					"Try to write a down migration, if you really can't, flip this to a break"
