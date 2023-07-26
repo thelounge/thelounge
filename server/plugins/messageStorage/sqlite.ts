@@ -274,7 +274,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 					stmts: [raw.statement],
 				});
 			} else {
-				last.stmts.push(raw.statment);
+				last.stmts.push(raw.statement);
 			}
 		}
 
