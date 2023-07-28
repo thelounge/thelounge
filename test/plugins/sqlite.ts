@@ -382,36 +382,47 @@ describe("SQLite Message Storage", function () {
 	});
 
 	it("should search messages", async function () {
-		const originalMaxHistory = Config.values.maxHistory;
-
-		try {
-			Config.values.maxHistory = 2;
-
-			const search = await store.search({
-				searchTerm: "msg",
-				networkUuid: "retrieval-order-test-network",
-				channelName: "",
-				offset: 0,
-			});
-			expect(search.results).to.have.lengthOf(100);
-			const expectedMessages: string[] = [];
-
-			for (let i = 100; i < 200; ++i) {
-				expectedMessages.push(`msg ${i}`);
-			}
-
-			expect(search.results.map((i_1) => i_1.text)).to.deep.equal(expectedMessages);
-		} finally {
-			Config.values.maxHistory = originalMaxHistory;
+		for (let i = 0; i < 101; ++i) {
+			await store.index(
+				{uuid: "searchNet"} as any,
+				{name: "#channel"} as any,
+				new Msg({
+					time: 123456789 + i,
+					text: `msg ${i}`,
+				} as any)
+			);
+			await store.index(
+				{uuid: "searchNet"} as any,
+				{name: "#channel"} as any,
+				new Msg({
+					time: 123456789 + i,
+					text: `no match ${i}`,
+				} as any)
+			);
 		}
+
+		const search = await store.search({
+			searchTerm: "msg",
+			networkUuid: "searchNet",
+			channelName: "#channel",
+			offset: 0,
+		});
+		expect(search.results).to.have.lengthOf(100);
+		const expectedMessages: string[] = [];
+
+		for (let i = 1; i < 101; ++i) {
+			expectedMessages.push(`msg ${i}`);
+		}
+
+		expect(search.results.map((i_1) => i_1.text)).to.deep.equal(expectedMessages);
 	});
 
-	it("should search messages with escaped wildcards", async function () {
+	it("should search messages when symbols are given", async function () {
 		async function assertResults(query: string, expected: string[]) {
 			const search = await store.search({
 				searchTerm: query,
 				networkUuid: "this-is-a-network-guid2",
-				channelName: "",
+				channelName: "#channel",
 				offset: 0,
 			});
 			expect(search.results.map((i) => i.text)).to.deep.equal(expected);
@@ -422,12 +433,16 @@ describe("SQLite Message Storage", function () {
 		try {
 			Config.values.maxHistory = 3;
 
+			const foo_bar_baz = `foo % bar _ baz`;
+			const bar_baz = `bar @ " baz`;
+			const foo_bar_x_baz = `👻 foo bar x baz`;
+
 			await store.index(
 				{uuid: "this-is-a-network-guid2"} as any,
 				{name: "#channel"} as any,
 				new Msg({
 					time: 123456790,
-					text: `foo % bar _ baz`,
+					text: foo_bar_baz,
 				} as any)
 			);
 
@@ -436,7 +451,7 @@ describe("SQLite Message Storage", function () {
 				{name: "#channel"} as any,
 				new Msg({
 					time: 123456791,
-					text: `foo bar x baz`,
+					text: foo_bar_x_baz,
 				} as any)
 			);
 
@@ -445,18 +460,23 @@ describe("SQLite Message Storage", function () {
 				{name: "#channel"} as any,
 				new Msg({
 					time: 123456792,
-					text: `bar @ baz`,
+					text: bar_baz,
 				} as any)
 			);
 
-			await assertResults("foo", ["foo % bar _ baz", "foo bar x baz"]);
-			await assertResults("%", ["foo % bar _ baz"]);
-			await assertResults("foo % bar ", ["foo % bar _ baz"]);
-			await assertResults("_", ["foo % bar _ baz"]);
-			await assertResults("bar _ baz", ["foo % bar _ baz"]);
+			await assertResults("foo", [foo_bar_baz, foo_bar_x_baz]);
+			await assertResults("foo % bar ", [foo_bar_baz, foo_bar_x_baz]);
+			await assertResults("bar _ baz", [foo_bar_baz, bar_baz]);
+			await assertResults("👻 foo", [foo_bar_baz, foo_bar_x_baz]);
+			// Our tokenizer doesn't care at all about non text, this just serves as documentation
+			// as to what one can expect from it and to check that we can't crash the search with "funny" symbols
+			await assertResults("%", []);
+			await assertResults("_", []);
 			await assertResults("%%", []);
 			await assertResults("@%", []);
-			await assertResults("@", ["bar @ baz"]);
+			await assertResults("@ '", []);
+			await assertResults('"', []);
+			await assertResults('"👻', []);
 		} finally {
 			Config.values.maxHistory = originalMaxHistory;
 		}
