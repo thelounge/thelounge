@@ -307,7 +307,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		await this.delete_migrations_older_than(version);
 		await this.update_version_in_db();
 
-		return _rollbacks.at(-1)!.version; // assert valid due to length guard above
+		return version;
 	}
 
 	async downgrade_to(version: number) {
