@@ -90,31 +90,30 @@ export type State = {
 	searchEnabled: boolean;
 };
 
-const state = () =>
-	({
-		appLoaded: false,
-		activeChannel: undefined,
-		currentUserVisibleError: null,
-		desktopNotificationState: detectDesktopNotificationState(),
-		isAutoCompleting: false,
-		isConnected: false,
-		networks: [],
-		mentions: [],
-		hasServiceWorker: false,
-		pushNotificationState: "unsupported",
-		serverConfiguration: null,
-		sessions: [],
-		sidebarOpen: false,
-		sidebarDragging: false,
-		userlistOpen: storage.get("thelounge.state.userlist") !== "false",
-		versionData: null,
-		versionStatus: "loading",
-		versionDataExpired: false,
-		serverHasSettings: false,
-		messageSearchResults: null,
-		messageSearchPendingQuery: null,
-		searchEnabled: false,
-	} as State);
+const state = (): State => ({
+	appLoaded: false,
+	activeChannel: undefined,
+	currentUserVisibleError: null,
+	desktopNotificationState: detectDesktopNotificationState(),
+	isAutoCompleting: false,
+	isConnected: false,
+	networks: [],
+	mentions: [],
+	hasServiceWorker: false,
+	pushNotificationState: "unsupported",
+	serverConfiguration: null,
+	sessions: [],
+	sidebarOpen: false,
+	sidebarDragging: false,
+	userlistOpen: storage.get("thelounge.state.userlist") !== "false",
+	versionData: null,
+	versionStatus: "loading",
+	versionDataExpired: false,
+	serverHasSettings: false,
+	messageSearchResults: null,
+	messageSearchPendingQuery: null,
+	searchEnabled: false,
+});
 
 type Getters = {
 	findChannelOnCurrentNetwork: (state: State) => (name: string) => ClientChan | undefined;
