@@ -46,6 +46,9 @@
 	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="theme-color" content="<%- themeColor %>">
 
+	<!-- Block Referer header from being sent when clicking links -->
+	<meta name="referrer" content="no-referrer">
+
 	</head>
 	<body class="<%- public ? " public" : "" %>" data-transports="<%- JSON.stringify(transports) %>">
 		<div id="app"></div>
