@@ -49,6 +49,8 @@ interface ServerToClientEvents {
 
 	"mute:changed": (response: {target: number; status: boolean}) => void;
 
+	"notifyAll:changed": (response: {target: number; status: boolean}) => void;
+
 	names: (data: {id: number; users: User[]}) => void;
 
 	network: (data: {networks: ClientNetwork[]}) => void;
@@ -157,6 +159,8 @@ interface ClientToServerEvents {
 	"upload:ping": (token: string) => void;
 
 	"mute:change": (response: {target: number; setMutedTo: boolean}) => void;
+
+	"notifyAll:change": (response: {target: number; setNotifyAllTo: boolean}) => void;
 
 	"push:register": (subscriptionJson: PushSubscriptionJSON) => void;
 	"push:unregister": () => void;

@@ -177,7 +177,11 @@ export default <IrcEventHandler>function (irc, network) {
 		chan.pushMessage(client, msg, !msg.self);
 
 		// Do not send notifications if the channel is muted or for messages older than 15 minutes (znc buffer for example)
-		if (!chan.muted && msg.highlight && (!data.time || data.time > Date.now() - 900000)) {
+		if (
+			!chan.muted &&
+			(msg.highlight || chan.notifyAll) &&
+			(!data.time || data.time > Date.now() - 900000)
+		) {
 			let title = chan.name;
 			let body = cleanMessage;
 

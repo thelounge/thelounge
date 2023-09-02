@@ -37,6 +37,7 @@ export type ChanConfig = {
 	name: string;
 	key?: string;
 	muted?: boolean;
+	notifyAll?: boolean;
 	type?: string;
 };
 
@@ -52,6 +53,7 @@ class Chan {
 	highlight!: number;
 	users!: Map<string, User>;
 	muted!: boolean;
+	notifyAll!: boolean;
 	type!: ChanType;
 	state!: ChanState;
 
@@ -76,6 +78,7 @@ class Chan {
 			highlight: 0,
 			users: new Map(),
 			muted: false,
+			notifyAll: false,
 		});
 	}
 
@@ -331,6 +334,9 @@ class Chan {
 	}
 	setMuteStatus(muted: boolean) {
 		this.muted = !!muted;
+	}
+	setNotifyAll(notifyAll: boolean) {
+		this.notifyAll = !!notifyAll;
 	}
 }
 

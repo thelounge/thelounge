@@ -25,3 +25,4 @@ import "./history_clear";
 import "./mentions";
 import "./search";
 import "./mute_changed";
+import "./notify_all_changed";

@@ -89,7 +89,7 @@ describe("Network", function () {
 				saslAccount: "testaccount",
 				saslPassword: "testpassword",
 				channels: [
-					new Chan({name: "#thelounge", key: "", muted: false}),
+					new Chan({name: "#thelounge", key: "", muted: false, notifyAll: true}),
 					new Chan({name: "&foobar", key: "", muted: false}),
 					new Chan({name: "#secret", key: "foo", muted: false}),
 					new Chan({name: "&secure", key: "bar", muted: true}),
@@ -123,11 +123,11 @@ describe("Network", function () {
 				proxyPassword: "",
 				proxyUsername: "",
 				channels: [
-					{name: "#thelounge", key: "", muted: false},
-					{name: "&foobar", key: "", muted: false},
-					{name: "#secret", key: "foo", muted: false},
-					{name: "&secure", key: "bar", muted: true},
-					{name: "PrivateChat", type: "query", muted: true},
+					{name: "#thelounge", key: "", muted: false, notifyAll: true},
+					{name: "&foobar", key: "", muted: false, notifyAll: false},
+					{name: "#secret", key: "foo", muted: false, notifyAll: false},
+					{name: "&secure", key: "bar", muted: true, notifyAll: false},
+					{name: "PrivateChat", type: "query", muted: true, notifyAll: false},
 				],
 				ignoreList: [],
 			});

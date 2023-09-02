@@ -794,6 +794,38 @@ function initializeClient(
 
 			client.save();
 		});
+
+		socket.on("notifyAll:change", ({target, setNotifyAllTo}) => {
+			const networkAndChan = client.find(target);
+
+			if (!networkAndChan) {
+				return;
+			}
+
+			const {chan, network} = networkAndChan;
+
+			// If the user set's notify all in the lobby, we notify on all messages for the entire network.
+			if (chan.type === ChanType.LOBBY) {
+				for (const channel of network.channels) {
+					if (channel.type !== ChanType.SPECIAL) {
+						channel.setNotifyAll(setNotifyAllTo);
+					}
+				}
+			} else {
+				if (chan.type !== ChanType.SPECIAL) {
+					chan.setNotifyAll(setNotifyAllTo);
+				}
+			}
+
+			for (const attachedClient of Object.keys(client.attachedClients)) {
+				manager!.sockets.in(attachedClient).emit("notifyAll:changed", {
+					target,
+					status: setNotifyAllTo,
+				});
+			}
+
+			client.save();
+		});
 	}
 
 	socket.on("sign-out", (tokenToSignOut) => {

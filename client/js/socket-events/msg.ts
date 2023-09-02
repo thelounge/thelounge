@@ -105,7 +105,11 @@ function notifyMessage(
 		return;
 	}
 
-	if (msg.highlight || (store.state.settings.notifyAllMessages && msg.type === "message")) {
+	if (
+		channel.notifyAll ||
+		msg.highlight ||
+		(store.state.settings.notifyAllMessages && msg.type === "message")
+	) {
 		if (!document.hasFocus() || !activeChannel || activeChannel.channel !== channel) {
 			if (store.state.settings.notification) {
 				try {

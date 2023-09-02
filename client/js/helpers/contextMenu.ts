@@ -223,6 +223,20 @@ export function generateChannelContextMenu(
 				});
 			},
 		});
+
+		items.push({
+			label: channel.notifyAll
+				? `Don't notify on all messages for ${chanType}`
+				: `Notify on all messages for ${chanType}`,
+			type: "item",
+			class: "notify-all",
+			action() {
+				socket.emit("notifyAll:change", {
+					target: channel.id,
+					setNotifyAllTo: !channel.notifyAll,
+				});
+			},
+		});
 	}
 
 	// Add close menu item

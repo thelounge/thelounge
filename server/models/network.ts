@@ -199,6 +199,8 @@ class Network {
 				muted:
 					this.channels.length >= 1 &&
 					this.channels.every((chan) => chan.muted || chan.type === ChanType.SPECIAL),
+				notifyAll:
+					this.channels.length >= 1 && this.channels.every((chan) => chan.notifyAll),
 			})
 		);
 	}
@@ -651,7 +653,7 @@ class Network {
 				return channel.type === ChanType.CHANNEL || channel.type === ChanType.QUERY;
 			})
 			.map(function (chan) {
-				const keys = ["name", "muted"];
+				const keys = ["name", "muted", "notifyAll"];
 
 				if (chan.type === ChanType.CHANNEL) {
 					keys.push("key");
