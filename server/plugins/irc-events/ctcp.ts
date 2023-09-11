@@ -1,4 +1,5 @@
 import _ from "lodash";
+import Config from "../../config";
 import {IrcEventHandler} from "../../client";
 import Helper from "../../helper";
 import Msg, {MessageType} from "../../models/msg";
@@ -12,7 +13,11 @@ const ctcpResponses = {
 			.join(" "),
 	PING: ({message}: {message: string}) => message.substring(5),
 	SOURCE: () => pkg.repository.url,
-	VERSION: () => pkg.name + " " + Helper.getVersion() + " -- " + pkg.homepage,
+	VERSION: () =>
+		Config.values.versionResponse
+			.replace("%product-name%", pkg.name)
+			.replace("%version%", Helper.getVersion())
+			.replace("%url%", pkg.homepage),
 };
 
 export default <IrcEventHandler>function (irc, network) {

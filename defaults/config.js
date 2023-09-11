@@ -218,6 +218,19 @@ module.exports = {
 	// default.
 	leaveMessage: "The Lounge - https://thelounge.chat",
 
+	// ### `versionResponse`
+	//
+	// A template string to format thelounge's response to CTCP VERSION requests. The
+	// tokens `%product-name%`, `%version%`, and `%url%` will be replaced by the
+	// appropriate values for the currently running version of The Lounge.
+	//
+	// You can use this to remove version information from the CTCP VERSION response
+	// for hardening.
+	//
+	// The default template string results in a response of
+	// `thelounge vX.Y.Z -- https://thelounge.chat`.
+	versionResponse: "%product-name% %version% -- %url%",
+
 	// ## Default network
 
 	// ### `defaults`

@@ -94,6 +94,7 @@ export type ConfigType = {
 	fileUpload: FileUpload;
 	transports: string[];
 	leaveMessage: string;
+	versionResponse: string;
 	defaults: Defaults;
 	lockNetwork: boolean;
 	messageStorage: string[];
