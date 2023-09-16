@@ -91,7 +91,7 @@
     "@istanbuljs/nyc-config-typescript": "1.0.2",
     "@textcomplete/core": "0.1.10",
     "@textcomplete/textarea": "0.1.12",
-    "@types/bcryptjs": "2.4.2",
+    "@types/bcryptjs": "2.4.4",
     "@types/chai": "4.3.5",
     "@types/cheerio": "0.22.31",
     "@types/content-disposition": "0.5.5",
