@@ -116,7 +116,21 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		this.initDone = new Deferred();
 	}
 
-	async _enable() {
+	async _enable(connection_string: string) {
+		this.database = new sqlite3.Database(connection_string);
+
+		try {
+			await this.run_pragmas(); // must be done outside of a transaction
+			await this.run_migrations();
+		} catch (e) {
+			this.isEnabled = false;
+			throw Helper.catch_to_error("Migration failed", e);
+		}
+
+		this.isEnabled = true;
+	}
+
+	async enable() {
 		const logsPath = Config.getUserLogsPath();
 		const sqlitePath = path.join(logsPath, `${this.userName}.sqlite3`);
 
@@ -126,22 +140,8 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			throw Helper.catch_to_error("Unable to create logs directory", e);
 		}
 
-		this.isEnabled = true;
-
-		this.database = new sqlite3.Database(sqlitePath);
-
 		try {
-			await this.run_pragmas(); // must be done outside of a transaction
-			await this.run_migrations();
-		} catch (e) {
-			this.isEnabled = false;
-			throw Helper.catch_to_error("Migration failed", e);
-		}
-	}
-
-	async enable() {
-		try {
-			await this._enable();
+			await this._enable(sqlitePath);
 		} finally {
 			this.initDone.resolve(); // unblock the instance methods
 		}
