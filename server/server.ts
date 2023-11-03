@@ -1015,28 +1015,40 @@ function performAuthentication(this: Socket, data) {
 }
 
 function reverseDnsLookup(ip: string, callback: (hostname: string) => void) {
-	dns.reverse(ip, (reverseErr, hostnames) => {
-		if (reverseErr || hostnames.length < 1) {
-			return callback(ip);
-		}
-
-		dns.resolve(hostnames[0], net.isIP(ip) === 6 ? "AAAA" : "A", (resolveErr, resolvedIps) => {
-			// TODO: investigate SoaRecord class
-			if (!Array.isArray(resolvedIps)) {
+	// node can throw, even if we provide valid input based on the DNS server
+	// returning SERVFAIL it seems: https://github.com/thelounge/thelounge/issues/4768
+	// so we manually resolve with the ip as a fallback in case something fails
+	try {
+		dns.reverse(ip, (reverseErr, hostnames) => {
+			if (reverseErr || hostnames.length < 1) {
 				return callback(ip);
 			}
 
-			if (resolveErr || resolvedIps.length < 1) {
-				return callback(ip);
-			}
+			dns.resolve(
+				hostnames[0],
+				net.isIP(ip) === 6 ? "AAAA" : "A",
+				(resolveErr, resolvedIps) => {
+					// TODO: investigate SoaRecord class
+					if (!Array.isArray(resolvedIps)) {
+						return callback(ip);
+					}
 
-			for (const resolvedIp of resolvedIps) {
-				if (ip === resolvedIp) {
-					return callback(hostnames[0]);
+					if (resolveErr || resolvedIps.length < 1) {
+						return callback(ip);
+					}
+
+					for (const resolvedIp of resolvedIps) {
+						if (ip === resolvedIp) {
+							return callback(hostnames[0]);
+						}
+					}
+
+					return callback(ip);
 				}
-			}
-
-			return callback(ip);
+			);
 		});
-	});
+	} catch (err) {
+		log.error(`failed to resolve rDNS for ${ip}, using ip instead`, (err as any).toString());
+		setImmediate(callback, ip); // makes sure we always behave asynchronously
+	}
 }
