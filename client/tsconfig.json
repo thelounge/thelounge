@@ -11,6 +11,7 @@
     "../server/log.ts",
     "../server/config.ts",
     "../server/client.ts",
+    "../server/storageCleaner.ts",
     "../server/clientManager.ts",
     "../server/identification.ts",
     "../server/plugins/changelog.ts",
