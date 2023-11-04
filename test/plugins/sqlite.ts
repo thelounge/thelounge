@@ -12,6 +12,7 @@ import MessageStorage, {
 	rollbacks,
 } from "../../server/plugins/messageStorage/sqlite";
 import sqlite3 from "sqlite3";
+import {DeletionRequest} from "../../server/plugins/messageStorage/types";
 
 const orig_schema = [
 	// Schema version #1
@@ -124,6 +125,112 @@ describe("SQLite migrations", function () {
 		}
 
 		await serialize_run("COMMIT TRANSACTION");
+	});
+});
+
+describe("SQLite unit tests", function () {
+	let store: MessageStorage;
+
+	beforeEach(async function () {
+		store = new MessageStorage("testUser");
+		await store._enable(":memory:");
+		store.initDone.resolve();
+	});
+
+	afterEach(async function () {
+		await store.close();
+	});
+
+	it("deletes messages when asked to", async function () {
+		const baseDate = new Date();
+
+		const net = {uuid: "testnet"} as any;
+		const chan = {name: "#channel"} as any;
+
+		for (let i = 0; i < 14; ++i) {
+			await store.index(
+				net,
+				chan,
+				new Msg({
+					time: dateAddDays(baseDate, -i),
+					text: `msg ${i}`,
+				})
+			);
+		}
+
+		const limit = 1;
+		const delReq: DeletionRequest = {
+			messageTypes: [MessageType.MESSAGE],
+			limit: limit,
+			olderThanDays: 2,
+		};
+
+		let deleted = await store.deleteMessages(delReq);
+		expect(deleted).to.equal(limit, "number of deleted messages doesn't match");
+
+		let id = 0;
+		let messages = await store.getMessages(net, chan, () => id++);
+		expect(messages.find((m) => m.text === "msg 13")).to.be.undefined; // oldest gets deleted first
+
+		// let's test if it properly cleans now
+		delReq.limit = 100;
+		deleted = await store.deleteMessages(delReq);
+		expect(deleted).to.equal(11, "number of deleted messages doesn't match");
+		messages = await store.getMessages(net, chan, () => id++);
+		expect(messages.map((m) => m.text)).to.have.ordered.members(["msg 1", "msg 0"]);
+	});
+
+	it("deletes only the types it should", async function () {
+		const baseDate = new Date();
+
+		const net = {uuid: "testnet"} as any;
+		const chan = {name: "#channel"} as any;
+
+		for (let i = 0; i < 6; ++i) {
+			await store.index(
+				net,
+				chan,
+				new Msg({
+					time: dateAddDays(baseDate, -i),
+					text: `msg ${i}`,
+					type: [
+						MessageType.ACTION,
+						MessageType.AWAY,
+						MessageType.JOIN,
+						MessageType.PART,
+						MessageType.KICK,
+						MessageType.MESSAGE,
+					][i],
+				})
+			);
+		}
+
+		const delReq: DeletionRequest = {
+			messageTypes: [MessageType.ACTION, MessageType.JOIN, MessageType.KICK],
+			limit: 100, // effectively no limit
+			olderThanDays: 0,
+		};
+
+		let deleted = await store.deleteMessages(delReq);
+		expect(deleted).to.equal(3, "number of deleted messages doesn't match");
+
+		let id = 0;
+		let messages = await store.getMessages(net, chan, () => id++);
+		expect(messages.map((m) => m.type)).to.have.ordered.members([
+			MessageType.MESSAGE,
+			MessageType.PART,
+			MessageType.AWAY,
+		]);
+
+		delReq.messageTypes = [
+			MessageType.JOIN, // this is not in the remaining set, just here as a dummy
+			MessageType.PART,
+			MessageType.MESSAGE,
+		];
+		deleted = await store.deleteMessages(delReq);
+		expect(deleted).to.equal(2, "number of deleted messages doesn't match");
+		messages = await store.getMessages(net, chan, () => id++);
+		expect(messages.map((m) => m.type)).to.have.ordered.members([MessageType.AWAY]);
 	});
 });
 
@@ -373,3 +480,9 @@ describe("SQLite Message Storage", function () {
 		expect(fs.existsSync(expectedPath)).to.be.true;
 	});
 });
+
+function dateAddDays(date: Date, days: number) {
+	const ret = new Date(date.valueOf());
+	ret.setDate(date.getDate() + days);
+	return ret;
+}

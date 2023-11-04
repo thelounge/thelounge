@@ -7,7 +7,7 @@ import Config from "../../config";
 import Msg, {Message} from "../../models/msg";
 import Chan, {Channel} from "../../models/chan";
 import Helper from "../../helper";
-import type {SearchResponse, SearchQuery, SearchableMessageStorage} from "./types";
+import type {SearchResponse, SearchQuery, SearchableMessageStorage, DeletionRequest} from "./types";
 import Network from "../../models/network";
 
 // TODO; type
@@ -231,6 +231,11 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		}
 
 		await this.serialize_run("COMMIT");
+		await this.serialize_run("VACUUM");
+	}
+
+	// helper method that vacuums the db, meant to be used by migration related cli commands
+	async vacuum() {
 		await this.serialize_run("VACUUM");
 	}
 
@@ -481,6 +486,33 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		};
 	}
 
+	async deleteMessages(req: DeletionRequest): Promise<number> {
+		await this.initDone.promise;
+		let sql = "delete from messages where id in (select id from messages where\n";
+
+		// We roughly get a timestamp from N days before.
+		// We don't adjust for daylight savings time or other weird time jumps
+		const millisecondsInDay = 24 * 60 * 60 * 1000;
+		const deleteBefore = Date.now() - req.olderThanDays * millisecondsInDay;
+		sql += `time <= ${deleteBefore}\n`;
+
+		let typeClause = "";
+
+		if (req.messageTypes !== null) {
+			typeClause = `type in (${req.messageTypes.map((type) => `'${type}'`).join(",")})\n`;
+		}
+
+		if (typeClause) {
+			sql += `and ${typeClause}`;
+		}
+
+		sql += "order by time asc\n";
+		sql += `limit ${req.limit}\n`;
+		sql += ")";
+
+		return this.serialize_run(sql);
+	}
+
 	canProvideMessages() {
 		return this.isEnabled;
 	}
@@ -488,13 +520,13 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 	private serialize_run(stmt: string, ...params: any[]): Promise<number> {
 		return new Promise((resolve, reject) => {
 			this.database.serialize(() => {
-				this.database.run(stmt, params, (err) => {
+				this.database.run(stmt, params, function (err) {
 					if (err) {
 						reject(err);
 						return;
 					}
 
-					resolve();
+					resolve(this.changes); // number of affected rows, `this` is re-bound by sqlite3
 				});
 			});
 		});
