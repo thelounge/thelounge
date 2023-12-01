@@ -93,7 +93,7 @@
     "@textcomplete/textarea": "0.1.12",
     "@types/bcryptjs": "2.4.5",
     "@types/chai": "4.3.5",
-    "@types/cheerio": "0.22.33",
+    "@types/cheerio": "0.22.35",
     "@types/content-disposition": "0.5.7",
     "@types/express": "4.17.13",
     "@types/is-utf8": "0.2.2",
