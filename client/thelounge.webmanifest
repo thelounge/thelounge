@@ -14,6 +14,12 @@
 			"sizes": "120x120"
 		},
 		{
+			"src": "img/logo-grey-bg-144x144px.png",
+			"type": "image/png",
+			"purpose": "any",
+			"sizes": "144x144"
+		},
+		{
 			"src": "img/logo-grey-bg-152x152px.png",
 			"type": "image/png",
 			"purpose": "maskable",
@@ -52,15 +58,15 @@
 	],
 	"screenshots": [
 		{
-			"src": "./screenshots/homescreen.png",
-			"sizes": "2880x1576",
+			"src": "img/homescreen-desktop.png",
+			"sizes": "1884x933",
 			"type": "image/png",
 			"form_factor": "wide",
 			"label": "Browser homescreen of TheLounge"
 		},
 		{
-			"src": "./screenshots/homescreen-mobile.png",
-			"sizes": "644x1396",
+			"src": "img/homescreen-mobile.png",
+			"sizes": "471x834",
 			"type": "image/png",
 			"label": "Mobile homescreen of TheLounge"
 		}
