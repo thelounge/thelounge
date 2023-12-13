@@ -143,11 +143,11 @@ class Utils {
 				data.toString()
 					.trim()
 					.split("\n")
-					.forEach((line) => {
+					.forEach((line: string) => {
 						try {
-							line = JSON.parse(line);
+							const json = JSON.parse(line);
 
-							if (line.type === "success") {
+							if (json.type === "success") {
 								success = true;
 							}
 						} catch (e: any) {
@@ -163,11 +163,26 @@ class Utils {
 					.trim()
 					.split("\n")
 					.forEach((line: string) => {
-						const json = JSON.parse(line);
+						try {
+							const json = JSON.parse(line);
 
-						if (json.type === "error") {
-							log.error(json.data);
+							switch (json.type) {
+								case "error":
+									log.error(json.data);
+									break;
+								case "warning":
+									// this includes pointless things like "ignored scripts due to flag"
+									// so let's hide it
+									break;
+							}
+
+							return;
+						} catch (e: any) {
+							// we simply fall through and log at debug... chances are there's nothing the user can do about it
+							// as it includes things like deprecation warnings, but we might want to know as developers
 						}
+
+						log.debug(line);
 					});
 			});
 
