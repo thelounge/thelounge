@@ -304,6 +304,26 @@ module.exports = {
 	// This value is set to `["sqlite", "text"]` by default.
 	messageStorage: ["sqlite", "text"],
 
+	// ### `storagePolicy`
+
+	// When the sqlite storage is in use, control the maximum storage duration.
+	// A background task will periodically clean up messages older than the limit.
+
+	// The available keys for the `storagePolicy` object are:
+	//
+	// - `enabled`: If this is false, the cleaning task is not running.
+	// - `maxAgeDays`: Maximum age of an entry in days.
+	// - `deletionPolicy`: Controls what types of messages are being deleted.
+	//   Valid options are:
+	//   - `statusOnly`: Only delete message types which are status related (e.g. away, back, join, parts, mode, ctcp...)
+	//     but keep actual messages from nicks. This keeps the DB size down while retaining "precious" messages.
+	//   - `everything`: Delete everything, including messages from irc nicks
+	storagePolicy: {
+		enabled: false,
+		maxAgeDays: 7,
+		deletionPolicy: "statusOnly",
+	},
+
 	// ### `useHexIp`
 	//
 	// When set to `true`, users' IP addresses will be encoded as hex.

@@ -76,6 +76,12 @@ type Debug = {
 	raw: boolean;
 };
 
+type StoragePolicy = {
+	enabled: boolean;
+	maxAgeDays: number;
+	deletionPolicy: "statusOnly" | "everything";
+};
+
 export type ConfigType = {
 	public: boolean;
 	host: string | undefined;
@@ -97,6 +103,7 @@ export type ConfigType = {
 	defaults: Defaults;
 	lockNetwork: boolean;
 	messageStorage: string[];
+	storagePolicy: StoragePolicy;
 	useHexIp: boolean;
 	webirc?: WebIRC;
 	identd: Identd;

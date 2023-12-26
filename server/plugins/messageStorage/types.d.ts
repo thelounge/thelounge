@@ -4,6 +4,13 @@ import {Channel} from "../../models/channel";
 import {Message} from "../../models/message";
 import {Network} from "../../models/network";
 import Client from "../../client";
+import type {MessageType} from "../../models/msg";
+
+export type DeletionRequest = {
+	olderThanDays: number;
+	messageTypes: MessageType[] | null; // null means no restriction
+	limit: number; // -1 means unlimited
+};
 
 interface MessageStorage {
 	isEnabled: boolean;

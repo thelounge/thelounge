@@ -18,6 +18,7 @@ import TextFileMessageStorage from "./plugins/messageStorage/text";
 import Network, {IgnoreListItem, NetworkConfig, NetworkWithIrcFramework} from "./models/network";
 import ClientManager from "./clientManager";
 import {MessageStorage, SearchQuery, SearchResponse} from "./plugins/messageStorage/types";
+import {StorageCleaner} from "./storageCleaner";
 
 type OrderItem = Chan["id"] | Network["uuid"];
 type Order = OrderItem[];
@@ -138,6 +139,15 @@ class Client {
 		if (!Config.values.public && client.config.log) {
 			if (Config.values.messageStorage.includes("sqlite")) {
 				client.messageProvider = new SqliteMessageStorage(client.name);
+
+				if (Config.values.storagePolicy.enabled) {
+					log.info(
+						`Activating storage cleaner. Policy: ${Config.values.storagePolicy.deletionPolicy}. MaxAge: ${Config.values.storagePolicy.maxAgeDays} days`
+					);
+					const cleaner = new StorageCleaner(client.messageProvider);
+					cleaner.start();
+				}
+
 				client.messageStorage.push(client.messageProvider);
 			}
 
