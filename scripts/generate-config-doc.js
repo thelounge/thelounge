@@ -1,16 +1,16 @@
 "use strict";
 
-// Usage: `node generate-config-doc.js DOC_REPO_PATH`
+// Usage: `npm run generate:config:doc DOC_REPO_PATH`
 //
 // Example:
 //
 // ```sh
-// node scripts/generate-config-doc.js ../thelounge.github.io/
+// npm run generate:config:doc ../thelounge.github.io/
 // ```
 
 const {readFileSync, writeFileSync} = require("fs");
 const colors = require("chalk");
-const log = require("../server/log");
+const log = require("../server/log").default;
 const {join} = require("path");
 const {spawnSync} = require("child_process");
 
@@ -20,7 +20,17 @@ function getGitUsername() {
 
 const configContent = readFileSync(join(__dirname, "..", "defaults", "config.js"), "utf8");
 
+const docRoot = process.argv[2];
+
+if (!docRoot) {
+	log.error("Missing DOC_REPO_PATH. Pass the path to the cloned `thelounge.github.io` repo.");
+	process.exit(1);
+}
+
 const docPath = join(process.argv[2], "_includes", "config.js.md");
+
+/** @type {string[]} */
+const acc = [];
 
 const extractedDoc = configContent
 	.replace(/https:\/\/thelounge\.chat\/docs/g, "/docs") // make links relative
@@ -37,7 +47,7 @@ const extractedDoc = configContent
 		}
 
 		return acc;
-	}, [])
+	}, acc)
 	.join("\n");
 
 const infoBlockHeader = `<!--

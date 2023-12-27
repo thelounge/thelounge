@@ -18,6 +18,7 @@
     "coverage": "run-s test:* && nyc --nycrc-path=test/.nycrc-report.json report",
     "dev": "cross-env NODE_ENV=development ts-node --project server/tsconfig.json server/index.ts start --dev",
     "format:prettier": "prettier --write \"**/*.*\"",
+    "generate:config:doc": "ts-node scripts/generate-config-doc.js",
     "lint:check-eslint": "eslint-config-prettier .eslintrc.cjs",
     "lint:eslint": "eslint . --report-unused-disable-directives --color",
     "lint:prettier": "prettier --list-different \"**/*.*\"",
