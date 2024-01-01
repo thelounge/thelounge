@@ -1456,10 +1456,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/content-disposition@0.5.7":
-  version "0.5.7"
-  resolved "https://registry.yarnpkg.com/@types/content-disposition/-/content-disposition-0.5.7.tgz#3b98d4bf8c80640f93b042511acb5aad18139748"
-  integrity sha512-V9/5u21RHFR1zfdm3rQ6pJUKV+zSSVQt+yq16i1YhdivVzWgPEoKedc3GdT8aFjsqQbakdxuy3FnEdePUQOamQ==
+"@types/content-disposition@0.5.8":
+  version "0.5.8"
+  resolved "https://registry.yarnpkg.com/@types/content-disposition/-/content-disposition-0.5.8.tgz#6742a5971f490dc41e59d277eee71361fea0b537"
+  integrity sha512-QVSSvno3dE0MgO76pJhmv4Qyi/j0Yk9pBp0Y7TJ2Tlj+KCgJWY6qX7nnxCOLkZ3VYRSIk1WTxCvwUSdx6CCLdg==
 
 "@types/cookie@^0.4.1":
   version "0.4.1"
