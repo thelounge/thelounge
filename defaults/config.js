@@ -285,6 +285,15 @@ module.exports = {
 	// This value is set to `false` by default.
 	lockNetwork: false,
 
+	// ### `sameHostLockedNetworkConnections`
+	//
+	// When set to `true`, users will be able to connect to the configured
+	// network multiple times. This can be useful if you connect to
+	// a bouncer like ZNC. Requires `lockNetwork` to be set to `true`.
+	//
+	// This value is set to `false` by default.
+	allowMultipleSameHostConnections: false,
+
 	// ## User management
 
 	// ### `messageStorage`
