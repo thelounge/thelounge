@@ -372,4 +372,34 @@ describe("findLinks", () => {
 
 		expect(actual).to.deep.equal(expected);
 	});
+
+	it("should find web+ap urls", () => {
+		const input = "web+ap://instance.example/@Example";
+		const expected = [
+			{
+				link: "web+ap://instance.example/@Example",
+				start: 0,
+				end: 34,
+			},
+		];
+
+		const actual = findLinks(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should find web+ap urls if scheme required flag is specified", () => {
+		const input = "web+ap://instance.example/@Example";
+		const expected = [
+			{
+				link: "web+ap://instance.example/@Example",
+				start: 0,
+				end: 34,
+			},
+		];
+
+		const actual = findLinksWithSchema(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
 });

@@ -11,6 +11,8 @@ export type LinkPart = {
 	link: string;
 };
 
+const webplus_scheme_chars = /^[a-z]+:/i;
+
 LinkifyIt.prototype.normalize = function normalize(match: NoSchemaMatch) {
 	match.noschema = false;
 
@@ -24,6 +26,10 @@ LinkifyIt.prototype.normalize = function normalize(match: NoSchemaMatch) {
 		match.schema = "http:";
 		match.url = "http:" + match.url;
 		match.noschema = true;
+	}
+
+	if (match.schema === "web+") {
+		match.schema = "web+" + match.url.slice(4).match(webplus_scheme_chars)![0];
 	}
 
 	if (match.schema === "mailto:" && !/^mailto:/i.test(match.url)) {
@@ -54,6 +60,25 @@ const commonSchemes = [
 for (const schema of commonSchemes) {
 	linkify.add(schema + ":", "http:");
 }
+
+linkify.add("web+", {
+	validate(text: string, pos: number, self: LinkifyIt.LinkifyIt) {
+		const tail = text.slice(pos);
+
+		if (webplus_scheme_chars.test(tail)) {
+			const offset = tail.match(webplus_scheme_chars)![0].length;
+			const result = self.testSchemaAt(text, "http:", pos + offset);
+
+			if (result === 0) {
+				return 0;
+			}
+
+			return offset + result;
+		}
+
+		return 0;
+	},
+});
 
 export function findLinks(text: string) {
 	const matches = linkify.match(text) as NoSchemaMatch[];
