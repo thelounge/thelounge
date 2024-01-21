@@ -353,6 +353,26 @@ describe("findLinks", () => {
 		expect(actual).to.deep.equal(expected);
 	});
 
+	it("should parse mailto links", () => {
+		const input = "mail@example.com mailto:mail@example.org";
+		const expected = [
+			{
+				link: "mailto:mail@example.com",
+				start: 0,
+				end: 16,
+			},
+			{
+				link: "mailto:mail@example.org",
+				start: 17,
+				end: 40,
+			},
+		];
+
+		const actual = findLinks(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
 	it("should not return urls with no schema if flag is specified", () => {
 		const input = "https://example.global //example.com http://example.group example.py";
 		const expected = [
@@ -369,6 +389,21 @@ describe("findLinks", () => {
 		];
 
 		const actual = findLinksWithSchema(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should use http for protocol-less URLs", () => {
+		const input = "//example.com";
+		const expected = [
+			{
+				link: "http://example.com",
+				start: 0,
+				end: 13,
+			},
+		];
+
+		const actual = findLinks(input);
 
 		expect(actual).to.deep.equal(expected);
 	});
