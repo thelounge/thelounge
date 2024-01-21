@@ -372,4 +372,52 @@ describe("findLinks", () => {
 
 		expect(actual).to.deep.equal(expected);
 	});
+
+	it("should find web+ schema urls", () => {
+		const input = "web+ap://instance.example/@Example web+whatever://example.com?some=value";
+		const expected = [
+			{
+				link: "web+ap://instance.example/@Example",
+				start: 0,
+				end: 34,
+			},
+			{
+				link: "web+whatever://example.com?some=value",
+				start: 35,
+				end: 72,
+			},
+		];
+
+		const actual = findLinks(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should find web+ schema urls if scheme required flag is specified", () => {
+		const input =
+			"web+ap://instance.example/@Example web+Whatever://example.com?some=value example.org";
+		const expected = [
+			{
+				link: "web+ap://instance.example/@Example",
+				start: 0,
+				end: 34,
+			},
+			{
+				link: "web+Whatever://example.com?some=value",
+				start: 35,
+				end: 72,
+			},
+		];
+
+		const actual = findLinksWithSchema(input);
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it("should disregard invalid web+ links", () => {
+		const input = "web+://whatever.example";
+		const actual = findLinksWithSchema(input);
+
+		expect(actual).to.be.empty;
+	});
 });

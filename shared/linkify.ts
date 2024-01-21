@@ -55,6 +55,28 @@ for (const schema of commonSchemes) {
 	linkify.add(schema + ":", "http:");
 }
 
+linkify.add("web+", {
+	validate(text: string, pos: number, self: LinkifyIt.LinkifyIt) {
+		const webSchemaRe = /^[a-z]+:/gi;
+
+		if (!webSchemaRe.test(text.slice(pos))) {
+			return 0;
+		}
+
+		const linkEnd = self.testSchemaAt(text, "http:", pos + webSchemaRe.lastIndex);
+
+		if (linkEnd === 0) {
+			return 0;
+		}
+
+		return webSchemaRe.lastIndex + linkEnd;
+	},
+	normalize(match) {
+		match.schema = match.text.slice(0, match.text.indexOf(":") + 1);
+		LinkifyIt.prototype.normalize(match); // hand over to the global override
+	},
+});
+
 export function findLinks(text: string) {
 	const matches = linkify.match(text) as NoSchemaMatch[];
 
