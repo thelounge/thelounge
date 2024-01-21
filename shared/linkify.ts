@@ -11,25 +11,27 @@ export type LinkPart = {
 	link: string;
 };
 
-LinkifyIt.prototype.normalize = function normalize(match: NoSchemaMatch) {
-	match.noschema = false;
+function normalizeMatch(match: Match): NoSchemaMatch {
+	const res: NoSchemaMatch = {...match, noschema: false};
 
-	if (!match.schema) {
-		match.schema = "http:";
-		match.url = "http://" + match.url;
-		match.noschema = true;
+	if (!res.schema) {
+		res.schema = "http:";
+		res.url = "http://" + res.url;
+		res.noschema = true;
 	}
 
-	if (match.schema === "//") {
-		match.schema = "http:";
-		match.url = "http:" + match.url;
-		match.noschema = true;
+	if (res.schema === "//") {
+		res.schema = "http:";
+		res.url = "http:" + res.url;
+		res.noschema = true;
 	}
 
-	if (match.schema === "mailto:" && !/^mailto:/i.test(match.url)) {
-		match.url = "mailto:" + match.url;
+	if (res.schema === "mailto:" && !/^mailto:/i.test(res.url)) {
+		res.url = "mailto:" + res.url;
 	}
-};
+
+	return res;
+}
 
 const linkify = LinkifyIt().tlds(tlds).tlds("onion", true);
 
@@ -73,18 +75,17 @@ linkify.add("web+", {
 	},
 	normalize(match) {
 		match.schema = match.text.slice(0, match.text.indexOf(":") + 1);
-		LinkifyIt.prototype.normalize(match); // hand over to the global override
 	},
 });
 
 export function findLinks(text: string) {
-	const matches = linkify.match(text) as NoSchemaMatch[];
+	const matches = linkify.match(text);
 
 	if (!matches) {
 		return [];
 	}
 
-	return matches.map(makeLinkPart);
+	return matches.map(normalizeMatch).map(makeLinkPart);
 }
 
 export function findLinksWithSchema(text: string) {
@@ -94,7 +95,10 @@ export function findLinksWithSchema(text: string) {
 		return [];
 	}
 
-	return matches.filter((url) => !url.noschema).map(makeLinkPart);
+	return matches
+		.map(normalizeMatch)
+		.filter((url) => !url.noschema)
+		.map(makeLinkPart);
 }
 
 function makeLinkPart(url: NoSchemaMatch): LinkPart {
