@@ -12,19 +12,19 @@ jobs:
     strategy:
       matrix:
         include:
-          # EOL: April 2024
-          - os: ubuntu-latest
-            node_version: 16.x
+          # EOL: April 2025
           - os: macOS-latest
             node_version: 18.x
           - os: windows-latest
             node_version: 18.x
-          # EOL: April 2025
           - os: ubuntu-latest
             node_version: 18.x
           # EOL: April 2026
           - os: ubuntu-latest
             node_version: 20.x
+          # EOL: April June 2024
+          - os: ubuntu-latest
+            node_version: 21.x
 
     runs-on: ${{ matrix.os }}
 
