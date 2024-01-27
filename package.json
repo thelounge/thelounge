@@ -48,7 +48,7 @@
   "files": [
     "./.thelounge_home",
     "./index.js",
-    "./yarn.lock",
+    "./pnpm-lock.yaml",
     "./client/index.html.tpl",
     "./dist/package.json",
     "./dist/**/*.js",
@@ -80,8 +80,7 @@
     "tlds": "1.228.0",
     "ua-parser-js": "1.0.33",
     "uuid": "8.3.2",
-    "web-push": "3.4.5",
-    "yarn": "1.22.17"
+    "web-push": "3.4.5"
   },
   "optionalDependencies": {
     "sqlite3": "5.1.6"
@@ -169,5 +168,6 @@
     "webpack-cli": "4.9.2",
     "webpack-dev-middleware": "5.3.3",
     "webpack-hot-middleware": "2.25.4"
-  }
+  },
+  "packageManager": "pnpm@8.15.0+sha256.fd1eab68a6d403f35cf3259c53780d70b0f14bd74e39da2f917d201f554d8665"
 }

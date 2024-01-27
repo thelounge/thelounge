@@ -29,7 +29,11 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -37,12 +41,12 @@ jobs:
           node-version: ${{ matrix.node_version }}
 
       - name: Install
-        run: yarn --frozen-lockfile --non-interactive
+        run: pnpm --frozen-lockfile --non-interactive
 
       - name: Build
-        run: yarn build
+        run: pnpm build
         env:
           NODE_ENV: production
 
       - name: Test
-        run: yarn test
+        run: pnpm test

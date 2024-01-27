@@ -31,7 +31,7 @@ if (fs.existsSync("./dist/server/index.js")) {
 	require("./dist/server/index.js");
 } else {
 	console.error(
-		"Files in ./dist/server/ not found. Please run `yarn build` before trying to run `node index.js`."
+		"Files in ./dist/server/ not found. Please run `pnpm build` before trying to run `node index.js`."
 	);
 
 	process.exit(1);

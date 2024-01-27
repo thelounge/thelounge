@@ -24,7 +24,7 @@
 	<a href="https://demo.thelounge.chat/"><img
 		alt="#thelounge IRC channel on Libera.Chat"
 		src="https://img.shields.io/badge/Libera.Chat-%23thelounge-415364.svg?colorA=ff9e18"></a>
-	<a href="https://yarn.pm/thelounge"><img
+	<a href="https://npmjs.com/thelounge"><img
 		alt="npm version"
 		src="https://img.shields.io/npm/v/thelounge.svg?colorA=333a41&maxAge=3600"></a>
 	<a href="https://github.com/thelounge/thelounge/actions"><img
@@ -51,7 +51,7 @@ The Lounge is the official and community-managed fork of [Shout](https://github.
 ## Installation and usage
 
 The Lounge requires latest [Node.js](https://nodejs.org/) LTS version or more recent.
-The [Yarn package manager](https://yarnpkg.com/) is also recommended.
+The [pnpm package manager](https://pnpm.io/) is also recommended.
 If you want to install with npm, `--unsafe-perm` is required for a correct install.
 
 ### Running stable releases
@@ -65,9 +65,9 @@ The following commands install and run the development version of The Lounge:
 ```sh
 git clone https://github.com/thelounge/thelounge.git
 cd thelounge
-yarn install
-NODE_ENV=production yarn build
-yarn start
+pnpm install
+NODE_ENV=production pnpm build
+pnpm start
 ```
 
 When installed like this, `thelounge` executable is not created. Use `node index <command>` to run commands.
@@ -83,13 +83,13 @@ fork.
 Before submitting any change, make sure to:
 
 - Read the [Contributing instructions](https://github.com/thelounge/thelounge/blob/master/.github/CONTRIBUTING.md#contributing)
-- Run `yarn test` to execute linters and the test suite
-  - Run `yarn format:prettier` if linting fails
-- Run `yarn build:client` if you change or add anything in `client/js` or `client/components`
+- Run `pnpm test` to execute linters and the test suite
+  - Run `pnpm format:prettier` if linting fails
+- Run `pnpm build:client` if you change or add anything in `client/js` or `client/components`
   - The built files will be output to `public/` by webpack
-- Run `yarn build:server` if you change anything in `server/`
+- Run `pnpm build:server` if you change anything in `server/`
   - The built files will be output to `dist/` by tsc
-- `yarn dev` can be used to start The Lounge with hot module reloading
+- `pnpm dev` can be used to start The Lounge with hot module reloading
 
 To ensure that you don't commit files that fail the linting, you can install a pre-commit git hook.
-Execute `yarn githooks-install` to do so.
+Execute `pnpm githooks-install` to do so.
