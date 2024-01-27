@@ -26,7 +26,7 @@
     "lint": "run-p --aggregate-output --continue-on-error lint:*",
     "start": "node index start",
     "test": "run-p --aggregate-output --continue-on-error lint:* test:*",
-    "test:mocha": "cross-env NODE_ENV=test webpack --mode=development && cross-env NODE_ENV=test TS_NODE_PROJECT='./test/tsconfig.json' nyc --nycrc-path=test/.nycrc-mocha.json mocha --require ts-node/register --colors --config=test/.mocharc.yml",
+    "test:mocha": "cross-env NODE_ENV=test webpack --mode=development && cross-env NODE_ENV=test TS_NODE_PROJECT='./test/tsconfig.json' mocha --require ts-node/register --colors --config=test/.mocharc.yml",
     "watch": "webpack --watch"
   },
   "keywords": [
