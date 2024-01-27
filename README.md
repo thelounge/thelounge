@@ -90,3 +90,17 @@ Before submitting any change, make sure to:
 - Run `yarn build:server` if you change anything in `server/`
   - The built files will be output to `dist/` by tsc
 - `yarn dev` can be used to start The Lounge with hot module reloading
+
+### Dev Container
+
+If you already have VS Code and Docker installed, you can click the badge below to get started. Clicking the badge will cause vscode to automatically install the Dev Containers extension if needed, clone the source code into a container volume, and spin up a dev container for use.
+
+[![Open in Dev Containers](https://img.shields.io/static/v1?label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/thelounge/thelounge)
+
+Other options to getting started with this repository in a dev container are to have the [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) extension installed and:
+
+- Simply open vscode and trigger the command palette(`Ctrl + Shift + P`) and type "clone" for the options `Clone Repository in (Named) Container Volume` or `Clone GitHub Pull Request in Container Volume`.
+
+- Clone the repository to your machine, and after opening it vscode, click the "Reopen in Container" dialog. If the dialog doesn't trigger you can use the command palette and type "Reopen in Container".
+
+Further Dev Container resources can be found [here](https://code.visualstudio.com/docs/devcontainers/containers).

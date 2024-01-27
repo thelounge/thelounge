@@ -1,0 +1,22 @@
+{
+  "name": "The Lounge Dev",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node",
+  "portsAttributes": {
+    "9000": {
+      "label": "The Lounge Dev"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "EditorConfig.EditorConfig",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "Vue.volar",
+        "Vue.vscode-typescript-vue-plugin"
+      ]
+    }
+  },
+  "onCreateCommand": "sudo ln -s $(pwd)/index.js /usr/local/bin/thelounge",
+  "postStartCommand": "yarn install && sudo chown node node_modules && NODE_ENV=production yarn build && yarn dev"
+}
