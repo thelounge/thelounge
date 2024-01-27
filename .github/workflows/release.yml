@@ -15,7 +15,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -23,15 +27,15 @@ jobs:
           registry-url: "https://registry.npmjs.org/"
 
       - name: Install
-        run: yarn --frozen-lockfile --non-interactive
+        run: pnpm --frozen-lockfile
 
       - name: Build
-        run: yarn build
+        run: pnpm build
         env:
           NODE_ENV: production
 
       - name: Test
-        run: yarn test
+        run: pnpm test
 
       - name: Update npm
         run: npm install -g npm

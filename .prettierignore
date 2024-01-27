@@ -25,4 +25,7 @@ yarn.lock
 .gitattributes
 .browserslistrc
 
+.pnpm-debug.log*
+.pnpm
+
 *.css
