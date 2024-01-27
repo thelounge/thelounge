@@ -2,7 +2,6 @@ color: true
 check-leaks: true
 recursive: true
 reporter: dot
-spec: "test/**/*.ts"
 ignore: "test/client/**"
 extension: ["ts", "js"]
 require:
