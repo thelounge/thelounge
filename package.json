@@ -25,7 +25,7 @@
     "lint:stylelint": "stylelint --color \"client/**/*.css\"",
     "lint": "run-p --aggregate-output --continue-on-error lint:*",
     "start": "node index start",
-    "test": "run-p --aggregate-output --continue-on-error lint:* test:*",
+    "test": "run-p --aggregate-output --continue-on-error lint:* test:mocha",
     "test:mocha": "webpack --mode=development && cross-env NODE_ENV=test TS_NODE_PROJECT='./test/tsconfig.json' mocha --config=test/.mocharc.yml 'test/**/*.ts'",
     "test:nospec": "webpack --mode=development && cross-env NODE_ENV=test TS_NODE_PROJECT='./test/tsconfig.json' mocha --config=test/.mocharc.yml",
     "watch": "webpack --watch"
