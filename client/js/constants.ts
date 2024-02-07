@@ -24,10 +24,19 @@ const timeFormats = {
 	msg12hWithSeconds: "hh:mm:ss A",
 };
 
+const modeCharToName = {
+	"~": "owner",
+	"&": "admin",
+	"@": "operator",
+	"%": "half-op",
+	"+": "voice",
+};
+
 export default {
 	colorCodeMap,
 	commands: [] as string[],
 	timeFormats,
+	modeCharToName,
 	// Same value as media query in CSS that forces sidebars to become overlays
 	mobileViewportPixels: 768,
 };

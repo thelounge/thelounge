@@ -22,6 +22,7 @@ import eventbus from "../js/eventbus";
 import colorClass from "../js/helpers/colorClass";
 import type {ClientChan, ClientNetwork, ClientUser} from "../js/types";
 import {useStore} from "../js/store";
+import constants from "../js/constants";
 
 type UsernameUser = Partial<UserInMessage> & {
 	mode?: string;
@@ -77,18 +78,10 @@ export default defineComponent({
 
 		const store = useStore();
 
-		const userModes = {
-			"~": "owner",
-			"&": "admin",
-			"!": "admin",
-			"@": "op",
-			"%": "half-op",
-			"+": "voice",
-			"": "normal",
-		};
+		const modeName = constants.modeCharToName;
 
 		return {
-			userModes,
+			modeName,
 			mode,
 			nickColor,
 			hover,

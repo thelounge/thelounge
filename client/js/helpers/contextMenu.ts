@@ -4,6 +4,7 @@ import type {ClientChan, ClientNetwork, ClientUser} from "../types";
 import {switchToChannel} from "../router";
 import {TypedStore} from "../store";
 import useCloseChannel from "../hooks/use-close-channel";
+import constants from "../constants";
 
 type BaseContextMenuItem = {
 	label: string;
@@ -358,19 +359,11 @@ export function generateUserContextMenu(
 		return items;
 	}
 
-	// Names of the standard modes we are able to change
-	const modeCharToName = {
-		"~": "owner",
-		"&": "admin",
-		"@": "operator",
-		"%": "half-op",
-		"+": "voice",
-	};
-
 	// Labels for the mode changes.  For example .rev({mode: "a", symbol: "&"}) => 'Revoke admin (-a)'
+
 	const modeTextTemplate = {
 		revoke(m: {symbol: string; mode: string}) {
-			const name = modeCharToName[m.symbol];
+			const name = constants.modeCharToName[m.symbol];
 
 			if (typeof name !== "string") {
 				return "";
@@ -380,7 +373,7 @@ export function generateUserContextMenu(
 			return res;
 		},
 		give(m: {symbol: string; mode: string}) {
-			const name = modeCharToName[m.symbol];
+			const name = constants.modeCharToName[m.symbol];
 
 			if (typeof name !== "string") {
 				return "";
