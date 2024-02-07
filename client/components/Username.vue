@@ -1,6 +1,11 @@
 <template>
 	<span
-		:class="['user', {[nickColor]: store.state.settings.coloredNicks}, {active: active}]"
+		:class="[
+			'user ',
+			{[nickColor]: store.state.settings.coloredNicks},
+			{active: active},
+			[mode ? userModes[mode] : ''],
+		]"
 		:data-name="user.nick"
 		role="button"
 		v-on="onHover ? {mouseenter: hover} : {}"
@@ -72,7 +77,18 @@ export default defineComponent({
 
 		const store = useStore();
 
+		const userModes = {
+			"~": "owner",
+			"&": "admin",
+			"!": "admin",
+			"@": "op",
+			"%": "half-op",
+			"+": "voice",
+			"": "normal",
+		};
+
 		return {
+			userModes,
 			mode,
 			nickColor,
 			hover,
