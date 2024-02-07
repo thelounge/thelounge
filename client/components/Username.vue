@@ -1,11 +1,7 @@
 <template>
 	<span
-		:class="[
-			'user ',
-			{[nickColor]: store.state.settings.coloredNicks},
-			{active: active},
-			[mode ? userModes[mode] : ''],
-		]"
+		:class="['user ', {[nickColor]: store.state.settings.coloredNicks}, {active: active}]"
+		:data-mode="mode ? modeName[mode] : null"
 		:data-name="user.nick"
 		role="button"
 		v-on="onHover ? {mouseenter: hover} : {}"
