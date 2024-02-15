@@ -1,5 +1,5 @@
 import io, {Socket} from "socket.io-client";
-import type {ServerToClientEvents, ClientToServerEvents} from "../../server/types/socket-events";
+import type {ServerToClientEvents, ClientToServerEvents} from "../../shared/types/socket-events";
 
 const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io({
 	transports: JSON.parse(document.body.dataset.transports || "['polling', 'websocket']"),

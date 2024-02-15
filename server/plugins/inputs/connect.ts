@@ -1,5 +1,6 @@
-import Msg, {MessageType} from "../../models/msg";
+import Msg from "../../models/msg";
 import {PluginInputHandler} from "./index";
+import {MessageType} from "../../../shared/types/msg";
 
 const commands = ["connect", "server"];
 const allowDisconnected = true;

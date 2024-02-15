@@ -2,13 +2,14 @@ import _ from "lodash";
 import {v4 as uuidv4} from "uuid";
 import IrcFramework, {Client as IRCClient} from "irc-framework";
 import Chan, {ChanConfig, Channel, ChanType} from "./chan";
-import Msg, {MessageType} from "./msg";
+import Msg from "./msg";
 import Prefix from "./prefix";
 import Helper, {Hostmask} from "../helper";
 import Config, {WebIRC} from "../config";
 import STSPolicies from "../plugins/sts";
 import ClientCertificate, {ClientCertificateType} from "../plugins/clientCertificate";
 import Client from "../client";
+import {MessageType} from "../../shared/types/msg";
 
 /**
  * List of keys which should be sent to the client by default.

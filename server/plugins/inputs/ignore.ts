@@ -1,8 +1,9 @@
-import Msg, {MessageType} from "../../models/msg";
+import Msg from "../../models/msg";
 import Helper from "../../helper";
 import {PluginInputHandler} from "./index";
 import {IgnoreListItem} from "../../models/network";
 import {ChanType, SpecialChanType} from "../../models/chan";
+import {MessageType} from "../../../shared/types/msg";
 
 const commands = ["ignore", "unignore", "ignorelist"];
 

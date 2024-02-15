@@ -2,11 +2,12 @@ import _ from "lodash";
 import log from "../log";
 import Config from "../config";
 import User from "./user";
-import Msg, {MessageType} from "./msg";
+import Msg from "./msg";
 import storage from "../plugins/storage";
 import Client from "../client";
 import Network from "./network";
 import Prefix from "./prefix";
+import {MessageType} from "../../shared/types/msg";
 
 export enum ChanType {
 	CHANNEL = "channel",
