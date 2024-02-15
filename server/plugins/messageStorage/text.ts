@@ -6,8 +6,9 @@ import filenamify from "filenamify";
 import Config from "../../config";
 import {MessageStorage} from "./types";
 import Channel from "../../models/chan";
-import {Message, MessageType} from "../../models/msg";
+import {Message} from "../../models/msg";
 import Network from "../../models/network";
+import {MessageType} from "../../../shared/types/msg";
 
 class TextFileMessageStorage implements MessageStorage {
 	isEnabled: boolean;

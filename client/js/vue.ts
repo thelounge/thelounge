@@ -9,7 +9,6 @@ import {router} from "./router";
 import socket from "./socket";
 import eventbus from "./eventbus";
 
-import "./socket-events";
 import "./webpush";
 import "./keybinds";
 import {LoungeWindow} from "./types";

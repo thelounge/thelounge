@@ -4,7 +4,7 @@ import {Channel} from "../../models/channel";
 import {Message} from "../../models/message";
 import {Network} from "../../models/network";
 import Client from "../../client";
-import type {MessageType} from "../../models/msg";
+import type {MessageType} from "../../../shared/types/msg";
 
 export type DeletionRequest = {
 	olderThanDays: number;

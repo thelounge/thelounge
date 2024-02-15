@@ -1,6 +1,7 @@
 import {PluginInputHandler} from "./index";
 
-import Msg, {MessageType} from "../../models/msg";
+import Msg from "../../models/msg";
+import {MessageType} from "../../../shared/types/msg";
 
 const commands = ["nick"];
 const allowDisconnected = true;

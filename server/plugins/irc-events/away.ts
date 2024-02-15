@@ -1,6 +1,7 @@
 import {IrcEventHandler} from "../../client";
 import {ChanType} from "../../models/chan";
-import Msg, {MessageType} from "../../models/msg";
+import Msg from "../../models/msg";
+import {MessageType} from "../../../shared/types/msg";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;

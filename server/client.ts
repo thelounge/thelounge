@@ -7,9 +7,10 @@ import colors from "chalk";
 
 import log from "./log";
 import Chan, {ChanConfig, Channel, ChanType} from "./models/chan";
-import Msg, {MessageType, UserInMessage} from "./models/msg";
+import Msg from "./models/msg";
 import Config from "./config";
 import {condensedTypes} from "../shared/irc";
+import {MessageType, UserInMessage} from "../shared/types/msg";
 
 import inputs from "./plugins/inputs";
 import PublicClient from "./plugins/packages/publicClient";

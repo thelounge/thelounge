@@ -1,7 +1,8 @@
 import {PackageInfo} from "./index";
 import Client from "../../client";
 import Chan from "../../models/chan";
-import Msg, {MessageType, UserInMessage} from "../../models/msg";
+import Msg from "../../models/msg";
+import {MessageType, UserInMessage} from "../../../shared/types/msg";
 
 export default class PublicClient {
 	private client: Client;

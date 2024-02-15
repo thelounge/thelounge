@@ -31,7 +31,7 @@ import type {
 	ServerToClientEvents,
 	InterServerEvents,
 	SocketData,
-} from "./types/socket-events";
+} from "../shared/types/socket-events";
 
 type ServerOptions = {
 	dev: boolean;
