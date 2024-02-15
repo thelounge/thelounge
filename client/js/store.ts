@@ -15,7 +15,7 @@ import type {
 import type {InjectionKey} from "vue";
 
 import {SettingsState} from "./settings";
-import {SearchQuery} from "../../server/plugins/messageStorage/types";
+import {SearchQuery} from "../../shared/types/storage";
 
 const appName = document.title;
 
