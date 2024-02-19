@@ -12,7 +12,7 @@ const ctcpResponses = {
 			.join(" "),
 	PING: ({message}: {message: string}) => message.substring(5),
 	SOURCE: () => pkg.repository.url,
-	VERSION: () => pkg.name + " " + Helper.getVersion() + " -- " + pkg.homepage,
+	VERSION: () => pkg.name + " -- " + pkg.homepage,
 };
 
 export default <IrcEventHandler>function (irc, network) {
