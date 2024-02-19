@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v4.4.2-rc.1 - 2024-02-19 [Pre-release]
+
+The Lounge finally gains the ability to automatically clean up sqlite databases.
+Note that cleaning existing, large databases can take a significant amount of time
+and running a database `VACUUM` will use up ~2x the current DB disc space for a short period.
+If you enable the storagePolicy, stop the running instance and run `thelounge storage clean`.
+This will force a full cleanup once, rather than doing so incrementally and will release all the
+disc space back to the OS.
+
+As usual, we follow the Node.js release schedule, so the minimum Node.js version required is now 18.
+
+[See the full changelog](https://github.com/thelounge/thelounge/compare/v4.4.1...v4.4.2-rc.1)
+
+This is a release candidate (RC) for v4.4.2 to ensure maximum stability for public release.
+Bugs may be fixed, but no further features will be added until the next stable version.
+
+Please refer to the commit list given above for a complete list of changes, or wait for the stable release to get a thoroughly prepared change log entry.
+
+As with all pre-releases, this version requires explicit use of the `next` tag to be installed:
+
+```sh
+yarn global add thelounge@next
+```
+
 ## v4.4.1 - 2023-06-13
 
 Small bug fix release that addresses the bugs reported since v4.4.0
