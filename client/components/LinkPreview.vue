@@ -8,7 +8,11 @@
 	>
 		<div
 			ref="content"
-			:class="['toggle-content', 'toggle-type-' + link.type, {opened: isContentShown}]"
+			:class="[
+				'toggle-content',
+				'toggle-type-' + link.type,
+				{opened: isContentShown, 'with-filename': link.filename},
+			]"
 		>
 			<template v-if="link.type === 'link'">
 				<a
@@ -64,13 +68,20 @@
 			<template v-else-if="link.type === 'image'">
 				<a
 					:href="link.link"
-					class="toggle-thumbnail"
+					:title="link.filename"
+					:class="['toggle-thumbnail', {'wide-view': useWideImageView}]"
 					target="_blank"
 					rel="noopener"
 					@click="onThumbnailClick"
 				>
+					<div v-if="link.filename" class="image-filename">
+						<span class="inner-image-filename">
+							{{ link.filename }}
+						</span>
+					</div>
 					<img
 						v-show="link.sourceLoaded"
+						ref="image"
 						:src="link.thumb"
 						decoding="async"
 						alt=""
@@ -79,6 +90,7 @@
 				</a>
 			</template>
 			<template v-else-if="link.type === 'video'">
+				<span v-if="link.filename" class="video-filename">{{ link.filename }}</span>
 				<video
 					v-show="link.sourceLoaded"
 					preload="metadata"
@@ -89,14 +101,28 @@
 				</video>
 			</template>
 			<template v-else-if="link.type === 'audio'">
-				<audio
-					v-show="link.sourceLoaded"
-					controls
-					preload="metadata"
-					@canplay="onPreviewReady"
-				>
-					<source :src="link.media" :type="link.mediaType" />
-				</audio>
+				<div>
+					<a
+						v-if="link.filename"
+						:href="link.link"
+						:title="link.filename"
+						target="_blank"
+						rel="noopener"
+						class="audio-filename"
+					>
+						<span class="inner-audio-filename">
+							{{ link.filename }}
+						</span>
+					</a>
+					<audio
+						v-show="link.sourceLoaded"
+						controls
+						preload="metadata"
+						@canplay="onPreviewReady"
+					>
+						<source :src="link.media" :type="link.mediaType" />
+					</audio>
+				</div>
 			</template>
 			<template v-else-if="link.type === 'error'">
 				<em v-if="link.error === 'image-too-big'">
@@ -167,7 +193,9 @@ export default defineComponent({
 
 		const showMoreButton = ref(false);
 		const isContentShown = ref(false);
+		const useWideImageView = ref(false);
 		const imageViewer = inject(imageViewerKey);
+		const image = ref(null);
 
 		onBeforeRouteUpdate((to, from, next) => {
 			// cancel the navigation if the user is trying to close the image viewer
@@ -217,6 +245,20 @@ export default defineComponent({
 			}
 		};
 
+		const updateWideImageViewDecision = () => {
+			if (window.innerWidth < 480) {
+				// Mobile
+				useWideImageView.value =
+					(image.value && image.value.naturalWidth / image.value.naturalHeight <= 1.34) ||
+					false; // aspect ratio around 4:3 and slimmer
+			} else {
+				// Desktop
+				useWideImageView.value =
+					(image.value && image.value.naturalWidth / image.value.naturalHeight <= 1.6) ||
+					false; // aspect ratio 16:10 and slimmer
+			}
+		};
+
 		const onPreviewUpdate = () => {
 			// Don't display previews while they are loading on the server
 			if (props.link.type === "loading") {
@@ -233,6 +275,8 @@ export default defineComponent({
 				handleResize();
 				props.keepScrollPosition();
 			}
+
+			updateWideImageViewDecision();
 		};
 
 		const onThumbnailError = () => {
@@ -321,8 +365,11 @@ export default defineComponent({
 			onPreviewUpdate,
 			showMoreButton,
 			isContentShown,
+			useWideImageView,
+			image,
 			content,
 			container,
+			updateWideImageViewDecision,
 		};
 	},
 });

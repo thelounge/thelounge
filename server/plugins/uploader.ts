@@ -20,6 +20,7 @@ const inlineContentDispositionTypes = {
 	"audio/mpeg": "audio.mp3",
 	"audio/ogg": "audio.ogg",
 	"audio/vnd.wave": "audio.wav",
+	"audio/flac": "audio.flac",
 	"audio/x-flac": "audio.flac",
 	"audio/x-m4a": "audio.m4a",
 	"image/bmp": "image.bmp",
@@ -122,6 +123,12 @@ class Uploader {
 			detectedMimeType = "audio/mp4";
 		} else if (detectedMimeType === "video/quicktime") {
 			detectedMimeType = "video/mp4";
+		}
+
+		if (detectedMimeType === "audio/x-flac") {
+			// Send a more common mime type for wave audio files
+			// so that browsers can play them correctly
+			detectedMimeType = "audio/flac";
 		}
 
 		res.setHeader("Content-Disposition", disposition);
