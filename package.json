@@ -105,7 +105,7 @@
     "@types/lodash": "4.14.202",
     "@types/mime-types": "2.1.1",
     "@types/mocha": "9.1.1",
-    "@types/mousetrap": "1.6.13",
+    "@types/mousetrap": "1.6.15",
     "@types/node": "17.0.31",
     "@types/read": "0.0.29",
     "@types/semver": "7.3.9",
