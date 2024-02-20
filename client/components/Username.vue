@@ -1,7 +1,7 @@
 <template>
 	<span
 		:class="['user', {[nickColor]: store.state.settings.coloredNicks}, {active: active}]"
-		:data-mode="mode ? modeName[mode] : null"
+		:data-mode="mode ? modeCharToName[mode] : null"
 		:data-name="user.nick"
 		role="button"
 		v-on="onHover ? {mouseenter: hover} : {}"
@@ -74,10 +74,8 @@ export default defineComponent({
 
 		const store = useStore();
 
-		const modeName = constants.modeCharToName;
-
 		return {
-			modeName,
+			modeCharToName: constants.modeCharToName,
 			mode,
 			nickColor,
 			hover,
