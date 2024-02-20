@@ -27,9 +27,11 @@ const timeFormats = {
 const modeCharToName = {
 	"~": "owner",
 	"&": "admin",
-	"@": "operator",
+	"!": "admin",
+	"@": "op",
 	"%": "half-op",
 	"+": "voice",
+	"": "normal",
 };
 
 export default {
