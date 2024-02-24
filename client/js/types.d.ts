@@ -1,9 +1,9 @@
 import {defineComponent} from "vue";
 
-import Chan from "../../server/models/chan";
 import Network from "../../server/models/network";
-import User from "../../server/models/user";
 import SharedMessage from "../../shared/types/msg";
+import SharedChan from "../../shared/types/chan";
+import SharedUser from "../../shared/models/user";
 import {Mention} from "../../server/client";
 import {ClientConfiguration} from "../../server/server";
 import {LinkPreview} from "../../server/plugins/irc-events/link";
@@ -16,7 +16,7 @@ interface LoungeWindow extends Window {
 	};
 }
 
-type ClientUser = User & {
+type ClientUser = SharedUser & {
 	//
 };
 
@@ -25,7 +25,7 @@ type ClientMessage = Omit<SharedMessage, "users"> & {
 	users: string[];
 };
 
-type ClientChan = Omit<Chan, "users" | "messages"> & {
+type ClientChan = Omit<SharedChan, "users" | "messages"> & {
 	moreHistoryAvailable: boolean;
 	editTopic: boolean;
 	users: ClientUser[];
