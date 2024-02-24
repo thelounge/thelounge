@@ -1,7 +1,7 @@
 import {PluginInputHandler} from "./index";
 import Msg from "../../models/msg";
-import {ChanType} from "../../models/chan";
 import {MessageType} from "../../../shared/types/msg";
+import {ChanType} from "../../../shared/types/chan";
 
 const commands = ["kick"];
 

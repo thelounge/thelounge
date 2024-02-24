@@ -8,25 +8,7 @@ import Client from "../client";
 import Network from "./network";
 import Prefix from "./prefix";
 import {MessageType} from "../../shared/types/msg";
-
-export enum ChanType {
-	CHANNEL = "channel",
-	LOBBY = "lobby",
-	QUERY = "query",
-	SPECIAL = "special",
-}
-
-export enum SpecialChanType {
-	BANLIST = "list_bans",
-	INVITELIST = "list_invites",
-	CHANNELLIST = "list_channels",
-	IGNORELIST = "list_ignored",
-}
-
-export enum ChanState {
-	PARTED = 0,
-	JOINED = 1,
-}
+import {ChanType, SpecialChanType, ChanState} from "../../shared/types/chan";
 
 // eslint-disable-next-line no-use-before-define
 export type FilteredChannel = Chan & {

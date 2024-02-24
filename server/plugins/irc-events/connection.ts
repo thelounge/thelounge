@@ -6,8 +6,8 @@ import log from "../../log";
 import Msg from "../../models/msg";
 import Helper from "../../helper";
 import Config from "../../config";
-import {ChanType, ChanState} from "../../models/chan";
 import {MessageType} from "../../../shared/types/msg";
+import {ChanType, ChanState} from "../../../shared/types/chan";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;

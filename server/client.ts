@@ -6,7 +6,7 @@ import crypto from "crypto";
 import colors from "chalk";
 
 import log from "./log";
-import Chan, {ChanConfig, Channel, ChanType} from "./models/chan";
+import Chan, {ChanConfig} from "./models/chan";
 import Msg from "./models/msg";
 import Config from "./config";
 import {condensedTypes} from "../shared/irc";
@@ -21,6 +21,7 @@ import ClientManager from "./clientManager";
 import {MessageStorage, SearchResponse} from "./plugins/messageStorage/types";
 import {StorageCleaner} from "./storageCleaner";
 import {SearchQuery} from "../shared/types/storage";
+import {ChanType} from "../shared/types/chan";
 
 type OrderItem = Chan["id"] | Network["uuid"];
 type Order = OrderItem[];

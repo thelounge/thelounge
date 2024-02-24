@@ -3,9 +3,10 @@ import LinkPrefetch from "./link";
 import {cleanIrcMessage} from "../../../shared/irc";
 import Helper from "../../helper";
 import {IrcEventHandler} from "../../client";
-import Chan, {ChanType} from "../../models/chan";
+import Chan from "../../models/chan";
 import User from "../../models/user";
 import {MessageType} from "../../../shared/types/msg";
+import {ChanType} from "../../../shared/types/chan";
 
 const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\w[\]\\`^{|}-]+)/g;
 
