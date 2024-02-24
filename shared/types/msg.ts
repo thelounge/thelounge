@@ -96,3 +96,8 @@ export type SharedMsg = {
 	statusmsgGroup?: string;
 	params?: string[];
 };
+
+export type ClientMessage = Omit<SharedMsg, "users"> & {
+	time: Date;
+	users: string[];
+};
