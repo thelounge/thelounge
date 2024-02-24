@@ -3,7 +3,7 @@ import {SharedMention} from "../../shared/types/mention";
 import {ChanState} from "../../shared/types/chan";
 import {SharedMsg, ClientMessage} from "../../shared/types/msg";
 import {SharedUser} from "../../shared/types/user";
-import {ChangelogData} from "../plugins/changelog";
+import {SharedChangelogData} from "../../shared/types/changelog";
 import {LinkPreview} from "../plugins/irc-events/link";
 import {ClientConfiguration} from "../server";
 
@@ -23,7 +23,7 @@ interface ServerToClientEvents {
 
 	"upload:auth": (token: string) => void;
 
-	changelog: (data: ChangelogData) => void;
+	changelog: (data: SharedChangelogData) => void;
 	"changelog:newversion": () => void;
 
 	"channel:state": (data: {chan: number; state: ChanState}) => void;

@@ -4,6 +4,7 @@ import log from "../log";
 import pkg from "../../package.json";
 import ClientManager from "../clientManager";
 import Config from "../config";
+import {SharedChangelogData} from "../../shared/types/changelog";
 
 const TIME_TO_LIVE = 15 * 60 * 1000; // 15 minutes, in milliseconds
 
@@ -12,23 +13,7 @@ export default {
 	fetch,
 	checkForUpdates,
 };
-export type ChangelogData = {
-	current: {
-		prerelease: boolean;
-		version: string;
-		changelog?: string;
-		url: string;
-	};
-	expiresAt: number;
-	latest?: {
-		prerelease: boolean;
-		version: string;
-		url: string;
-	};
-	packages?: boolean;
-};
-
-const versions: ChangelogData = {
+const versions: SharedChangelogData = {
 	current: {
 		prerelease: false,
 		version: `v${pkg.version}`,
@@ -36,6 +21,8 @@ const versions: ChangelogData = {
 		url: "", // TODO: properly init
 	},
 	expiresAt: -1,
+	latest: undefined,
+	packages: undefined,
 };
 
 async function fetch() {
