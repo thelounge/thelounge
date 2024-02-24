@@ -1,6 +1,5 @@
 import {defineComponent} from "vue";
 
-import {SharedMessage} from "../../shared/types/msg";
 import {SharedChan} from "../../shared/types/chan";
 import {SharedNetwork} from "../../shared/types/network";
 import {SharedUser} from "../../shared/models/user";
@@ -18,11 +17,6 @@ interface LoungeWindow extends Window {
 
 type ClientUser = SharedUser & {
 	//
-};
-
-type ClientMessage = Omit<SharedMessage, "users"> & {
-	time: Date;
-	users: string[];
 };
 
 type ClientChan = Omit<SharedChan, "users" | "messages"> & {

@@ -1,9 +1,8 @@
-import {ClientMessage, ClientNetwork, InitClientChan} from "../../client/js/types";
-import {Mention} from "../client";
-import {ChanState} from "../models/chan";
-import Msg from "../models/msg";
-import Network from "../models/network";
-import User from "../models/user";
+import {ClientNetwork, InitClientChan} from "../../client/js/types";
+import {SharedMention} from "../../shared/types/mention";
+import {ChanState} from "../../shared/types/chan";
+import {SharedMsg, ClientMessage} from "../../shared/types/msg";
+import {SharedUser} from "../../shared/types/user";
 import {ChangelogData} from "../plugins/changelog";
 import {LinkPreview} from "../plugins/irc-events/link";
 import {ClientConfiguration} from "../server";
@@ -40,7 +39,7 @@ interface ServerToClientEvents {
 
 	"sessions:list": (data: Session[]) => void;
 
-	"mentions:list": (data: Mention[]) => void;
+	"mentions:list": (data: SharedMention[]) => void;
 
 	"setting:new": ({name: string, value: any}) => void;
 	"setting:all": (settings: {[key: string]: any}) => void;
@@ -49,7 +48,7 @@ interface ServerToClientEvents {
 
 	"mute:changed": (response: {target: number; status: boolean}) => void;
 
-	names: (data: {id: number; users: User[]}) => void;
+	names: (data: {id: number; users: SharedUser[]}) => void;
 
 	network: (data: {networks: ClientNetwork[]}) => void;
 	"network:options": (data: {network: string; serverOptions: {[key: string]: any}}) => void;
@@ -89,7 +88,7 @@ interface ServerToClientEvents {
 		totalMessages,
 	}: {
 		chan: number;
-		messages: Msg[];
+		messages: SharedMsg[];
 		totalMessages: number;
 	}) => void;
 
