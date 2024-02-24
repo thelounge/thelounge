@@ -79,7 +79,7 @@ import {
 } from "vue";
 import {useStore} from "../js/store";
 import {ClientChan, ClientMessage, ClientNetwork, ClientLinkPreview} from "../js/types";
-import Msg from "../../server/models/msg";
+import {SharedMsg} from "../../shared/types/msg";
 
 type CondensedMessageContainer = {
 	type: "condensed";
@@ -242,7 +242,7 @@ export default defineComponent({
 		});
 
 		const shouldDisplayDateMarker = (
-			message: Msg | ClientMessage | CondensedMessageContainer,
+			message: SharedMsg | ClientMessage | CondensedMessageContainer,
 			id: number
 		) => {
 			const previousMessage = condensedMessages.value[id - 1];
@@ -270,7 +270,7 @@ export default defineComponent({
 			return false;
 		};
 
-		const isPreviousSource = (currentMessage: ClientMessage | Msg, id: number) => {
+		const isPreviousSource = (currentMessage: ClientMessage | SharedMsg, id: number) => {
 			const previousMessage = condensedMessages.value[id - 1];
 			return !!(
 				previousMessage &&

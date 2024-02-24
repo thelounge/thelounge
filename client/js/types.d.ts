@@ -3,7 +3,7 @@ import {defineComponent} from "vue";
 import Chan from "../../server/models/chan";
 import Network from "../../server/models/network";
 import User from "../../server/models/user";
-import Message from "../../server/models/msg";
+import SharedMessage from "../../shared/types/msg";
 import {Mention} from "../../server/client";
 import {ClientConfiguration} from "../../server/server";
 import {LinkPreview} from "../../server/plugins/irc-events/link";
@@ -20,8 +20,8 @@ type ClientUser = User & {
 	//
 };
 
-type ClientMessage = Omit<Message, "users"> & {
-	time: number;
+type ClientMessage = Omit<SharedMessage, "users"> & {
+	time: Date;
 	users: string[];
 };
 
