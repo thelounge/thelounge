@@ -1,0 +1,53 @@
+const config_example = {
+	public: false,
+	lockNetwork: false,
+	useHexIp: false,
+	prefetch: true,
+	fileUpload: true,
+	ldapEnabled: false,
+	defaults: {
+		name: "test",
+		host: "irc.libera.chat",
+		port: 6697,
+		password: "",
+		tls: true,
+		rejectUnauthorized: true,
+		nick: "butler",
+		username: "",
+		realname: "",
+		join: "#thelounge-test",
+		leaveMessage: "",
+		sasl: "",
+		saslAccount: "",
+		saslPassword: "",
+	},
+	isUpdateAvailable: false,
+	applicationServerKey:
+		"BHcIWSuK8Yt_1nkWqKFcSdLQtuLuZyfegdugXQa_UBv02dOZtDhwEJocb1h8bxOSzLgkNRAAArw8BC126rTuc5Q",
+	version: "4.4.2-rc.1",
+	gitCommit: "1f66dd2af",
+	themes: [
+		{
+			displayName: "Default",
+			name: "default",
+			themeColor: null,
+		},
+		{
+			displayName: "Gruvbox",
+			name: "thelounge-theme-gruvbox",
+			themeColor: "#282828",
+		},
+		{
+			displayName: "Morning",
+			name: "morning",
+			themeColor: null,
+		},
+		{
+			displayName: "Solarized",
+			name: "thelounge-theme-solarized",
+			themeColor: "#002b36",
+		},
+	],
+	defaultTheme: "default",
+	fileUploadMaxFileSize: 10485760,
+};
