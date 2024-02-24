@@ -28,15 +28,15 @@ export type ChangelogData = {
 	packages?: boolean;
 };
 
-const versions = {
+const versions: ChangelogData = {
 	current: {
+		prerelease: false,
 		version: `v${pkg.version}`,
 		changelog: undefined,
+		url: "", // TODO: properly init
 	},
 	expiresAt: -1,
-	latest: undefined,
-	packages: undefined,
-} as ChangelogData;
+};
 
 async function fetch() {
 	const time = Date.now();
