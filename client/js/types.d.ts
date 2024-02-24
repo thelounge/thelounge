@@ -1,8 +1,8 @@
 import {defineComponent} from "vue";
 
-import Network from "../../server/models/network";
 import {SharedMessage} from "../../shared/types/msg";
 import {SharedChan} from "../../shared/types/chan";
+import {SharedNetwork} from "../../shared/types/network";
 import {SharedUser} from "../../shared/models/user";
 import {SharedMention} from "../../shared/models/mention";
 import {ClientConfiguration} from "../../server/server";
@@ -46,7 +46,7 @@ type InitClientChan = ClientChan & {
 };
 
 // We omit channels so we can use ClientChan[] instead of Chan[]
-type ClientNetwork = Omit<Network, "channels"> & {
+type ClientNetwork = Omit<SharedNetwork, "channels"> & {
 	isJoinChannelShown: boolean;
 	isCollapsed: boolean;
 	channels: ClientChan[];

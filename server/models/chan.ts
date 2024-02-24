@@ -9,12 +9,7 @@ import Network from "./network";
 import Prefix from "./prefix";
 import {MessageType} from "../../shared/types/msg";
 import {ChanType, SpecialChanType, ChanState} from "../../shared/types/chan";
-
-// eslint-disable-next-line no-use-before-define
-export type FilteredChannel = Chan & {
-	users: [];
-	totalMessages: number;
-};
+import {SharedNetworkChan} from "../../shared/types/network";
 
 export type ChanConfig = {
 	name: string;
@@ -189,7 +184,10 @@ class Chan {
 	 *                                         If true, channel is assumed active.
 	 * @param {int} lastMessage - Last message id seen by active client to avoid sending duplicates.
 	 */
-	getFilteredClone(lastActiveChannel?: number | boolean, lastMessage?: number): FilteredChannel {
+	getFilteredClone(
+		lastActiveChannel?: number | boolean,
+		lastMessage?: number
+	): SharedNetworkChan {
 		return Object.keys(this).reduce((newChannel, prop) => {
 			if (Chan.optionalProperties.includes(prop)) {
 				if (this[prop] !== undefined || (Array.isArray(this[prop]) && this[prop].length)) {
@@ -213,13 +211,13 @@ class Chan {
 					newChannel[prop] = this[prop].slice(-messagesToSend);
 				}
 
-				(newChannel as FilteredChannel).totalMessages = this[prop].length;
+				(newChannel as SharedNetworkChan).totalMessages = this[prop].length;
 			} else {
 				newChannel[prop] = this[prop];
 			}
 
 			return newChannel;
-		}, {}) as FilteredChannel;
+		}, {}) as SharedNetworkChan;
 	}
 	writeUserLog(client: Client, msg: Msg) {
 		this.messages.push(msg);
