@@ -1,10 +1,10 @@
 import {defineComponent} from "vue";
 
 import Network from "../../server/models/network";
-import SharedMessage from "../../shared/types/msg";
-import SharedChan from "../../shared/types/chan";
-import SharedUser from "../../shared/models/user";
-import {Mention} from "../../server/client";
+import {SharedMessage} from "../../shared/types/msg";
+import {SharedChan} from "../../shared/types/chan";
+import {SharedUser} from "../../shared/models/user";
+import {SharedMention} from "../../shared/models/mention";
 import {ClientConfiguration} from "../../server/server";
 import {LinkPreview} from "../../server/plugins/irc-events/link";
 
@@ -58,7 +58,7 @@ type NetChan = {
 };
 
 type ClientConfiguration = ClientConfiguration;
-type ClientMention = Mention & {
+type ClientMention = SharedMention & {
 	localetime: string;
 	channel: NetChan | null;
 };

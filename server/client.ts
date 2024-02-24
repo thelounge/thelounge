@@ -10,7 +10,8 @@ import Chan, {ChanConfig} from "./models/chan";
 import Msg from "./models/msg";
 import Config from "./config";
 import {condensedTypes} from "../shared/irc";
-import {MessageType, UserInMessage} from "../shared/types/msg";
+import {MessageType} from "../shared/types/msg";
+import {SharedMention} from "../shared/types/mention";
 
 import inputs from "./plugins/inputs";
 import PublicClient from "./plugins/packages/publicClient";
@@ -85,15 +86,6 @@ export type UserConfig = {
 	networks?: NetworkConfig[];
 };
 
-export type Mention = {
-	chanId: number;
-	msgId: number;
-	type: MessageType;
-	time: Date;
-	text: string;
-	from: UserInMessage;
-};
-
 class Client {
 	awayMessage!: string;
 	lastActiveChannel!: number;
@@ -106,7 +98,7 @@ class Client {
 	idChan!: number;
 	name!: string;
 	networks!: Network[];
-	mentions!: Mention[];
+	mentions!: SharedMention[];
 	manager!: ClientManager;
 	messageStorage!: MessageStorage[];
 	highlightRegex!: RegExp | null;
