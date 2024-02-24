@@ -24,7 +24,6 @@ themes.loadLocalThemes();
 
 import packages from "./plugins/packages/index";
 import {NetworkWithIrcFramework} from "./models/network";
-import {ChanType} from "./models/chan";
 import Utils from "./command-line/utils";
 import type {
 	ClientToServerEvents,
@@ -32,6 +31,7 @@ import type {
 	InterServerEvents,
 	SocketData,
 } from "../shared/types/socket-events";
+import {ChanType} from "../shared/types/chan";
 
 type ServerOptions = {
 	dev: boolean;
