@@ -4,6 +4,7 @@ import {cleanIrcMessage} from "../../../shared/irc";
 import {store} from "../store";
 import {switchToChannel} from "../router";
 import {ClientChan, ClientMention, ClientMessage, NetChan} from "../types";
+import {MessageType} from "../../../server/models/msg";
 
 let pop;
 
@@ -63,6 +64,15 @@ socket.on("msg", function (data) {
 
 		if (typeof data.unread !== "undefined") {
 			channel.unread = data.unread;
+		}
+	}
+
+	// Reset typing indicator
+	if (data.msg.type === MessageType.MESSAGE) {
+		const user = channel.users.find((u) => u.nick === data.msg.from.nick);
+
+		if (user) {
+			user.stopTyping();
 		}
 	}
 

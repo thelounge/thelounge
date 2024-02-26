@@ -86,6 +86,18 @@
 				/>
 			</label>
 		</div>
+		<div>
+			<h2>IRCv3 features</h2>
+
+			<label class="opt">
+				<input
+					:checked="store.state.settings.enableTypingNotifications"
+					type="checkbox"
+					name="enableTypingNotifications"
+				/>
+				Send typing notifications to others
+			</label>
+		</div>
 	</div>
 </template>
 
