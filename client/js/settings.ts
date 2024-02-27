@@ -77,6 +77,12 @@ const defaultConfig = {
 	showSeconds: {
 		default: false,
 	},
+	parseMd: {
+		default: false,
+	},
+	renderMdSrc: {
+		default: false,
+	},
 	use12hClock: {
 		default: false,
 	},
