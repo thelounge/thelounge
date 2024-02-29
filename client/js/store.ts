@@ -3,19 +3,13 @@
 import {ActionContext, createStore, Store, useStore as baseUseStore} from "vuex";
 import {createSettingsStore} from "./store-settings";
 import storage from "./localStorage";
-import type {
-	ClientChan,
-	ClientConfiguration,
-	ClientNetwork,
-	InitClientChan,
-	NetChan,
-	ClientMessage,
-	ClientMention,
-} from "./types";
+import type {ClientChan, ClientNetwork, InitClientChan, NetChan, ClientMention} from "./types";
 import type {InjectionKey} from "vue";
 
 import {SettingsState} from "./settings";
 import {SearchQuery} from "../../shared/types/storage";
+import {ClientMessage} from "../../shared/types/msg";
+import {SharedConfiguration, LockedSharedConfiguration} from "../../shared/types/config";
 
 const appName = document.title;
 
@@ -59,7 +53,7 @@ export type State = {
 	mentions: ClientMention[];
 	hasServiceWorker: boolean;
 	pushNotificationState: string;
-	serverConfiguration: ClientConfiguration | null;
+	serverConfiguration: SharedConfiguration | LockedSharedConfiguration | null;
 	sessions: ClientSession[];
 	sidebarOpen: boolean;
 	sidebarDragging: boolean;

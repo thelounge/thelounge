@@ -3,7 +3,8 @@ import socket from "../socket";
 import {cleanIrcMessage} from "../../../shared/irc";
 import {store} from "../store";
 import {switchToChannel} from "../router";
-import {ClientChan, ClientMention, ClientMessage, NetChan} from "../types";
+import {ClientChan, NetChan} from "../types";
+import {ClientMessage} from "../../../shared/types/msg";
 
 let pop;
 
