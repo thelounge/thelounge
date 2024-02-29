@@ -1,53 +1,50 @@
-const config_example = {
-	public: false,
-	lockNetwork: false,
-	useHexIp: false,
-	prefetch: true,
-	fileUpload: true,
-	ldapEnabled: false,
-	defaults: {
-		name: "test",
-		host: "irc.libera.chat",
-		port: 6697,
-		password: "",
-		tls: true,
-		rejectUnauthorized: true,
-		nick: "butler",
-		username: "",
-		realname: "",
-		join: "#thelounge-test",
-		leaveMessage: "",
-		sasl: "",
-		saslAccount: "",
-		saslPassword: "",
-	},
-	isUpdateAvailable: false,
-	applicationServerKey:
-		"BHcIWSuK8Yt_1nkWqKFcSdLQtuLuZyfegdugXQa_UBv02dOZtDhwEJocb1h8bxOSzLgkNRAAArw8BC126rTuc5Q",
-	version: "4.4.2-rc.1",
-	gitCommit: "1f66dd2af",
-	themes: [
-		{
-			displayName: "Default",
-			name: "default",
-			themeColor: null,
-		},
-		{
-			displayName: "Gruvbox",
-			name: "thelounge-theme-gruvbox",
-			themeColor: "#282828",
-		},
-		{
-			displayName: "Morning",
-			name: "morning",
-			themeColor: null,
-		},
-		{
-			displayName: "Solarized",
-			name: "thelounge-theme-solarized",
-			themeColor: "#002b36",
-		},
-	],
-	defaultTheme: "default",
-	fileUploadMaxFileSize: 10485760,
+export type ConfigTheme = {
+	displayName: string;
+	name: string;
+	themeColor: string | null;
+};
+type SharedConfigurationBase = {
+	public: boolean;
+	useHexIp: boolean;
+	prefetch: boolean;
+	fileUpload: boolean;
+	ldapEnabled: boolean;
+	isUpdateAvailable: boolean;
+	applicationServerKey: string;
+	version: string;
+	gitCommit: string | null;
+	themes: ConfigTheme[];
+	defaultTheme: string;
+	fileUploadMaxFileSize?: number;
+};
+
+export type ConfigNetDefaults = {
+	name: string;
+	host: string;
+	port: number;
+	password: string;
+	tls: boolean;
+	rejectUnauthorized: boolean;
+	nick: string;
+	username: string;
+	realname: string;
+	join: string;
+	leaveMessage: string;
+	sasl: string;
+	saslAccount: string;
+	saslPassword: string;
+};
+export type LockedConfigNetDefaults = Pick<
+	ConfigNetDefaults,
+	"name" | "nick" | "username" | "password" | "realname" | "join"
+>;
+
+export type LockedSharedConfiguration = SharedConfigurationBase & {
+	lockNetwork: true;
+	defaults: LockedConfigNetDefaults;
+};
+
+export type SharedConfiguration = SharedConfigurationBase & {
+	lockNetwork: false;
+	defaults: ConfigNetDefaults;
 };

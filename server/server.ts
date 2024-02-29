@@ -32,6 +32,12 @@ import type {
 	SocketData,
 } from "../shared/types/socket-events";
 import {ChanType} from "../shared/types/chan";
+import {
+	LockedSharedConfiguration,
+	SharedConfiguration,
+	ConfigNetDefaults,
+	LockedConfigNetDefaults,
+} from "../shared/types/config";
 
 type ServerOptions = {
 	dev: boolean;
@@ -43,22 +49,6 @@ type ServerConfiguration = ConfigType & {
 
 type IndexTemplateConfiguration = ServerConfiguration & {
 	cacheBust: string;
-};
-
-export type ClientConfiguration = Pick<
-	ConfigType,
-	"public" | "lockNetwork" | "useHexIp" | "prefetch" | "defaults"
-> & {
-	fileUpload: boolean;
-	ldapEnabled: boolean;
-	isUpdateAvailable: boolean;
-	applicationServerKey: string;
-	version: string;
-	gitCommit: string | null;
-	defaultTheme: string;
-	themes: ThemeForClient[];
-	defaults: Defaults;
-	fileUploadMaxFileSize?: number;
 };
 
 // A random number that will force clients to reload the page if it differs
@@ -857,47 +847,58 @@ function initializeClient(
 	}
 }
 
-function getClientConfiguration(): ClientConfiguration {
-	const config = _.pick(Config.values, [
-		"public",
-		"lockNetwork",
-		"useHexIp",
-		"prefetch",
-	]) as ClientConfiguration;
+function getClientConfiguration(): SharedConfiguration | LockedSharedConfiguration {
+	const common = {
+		fileUpload: Config.values.fileUpload.enable,
+		ldapEnabled: Config.values.ldap.enable,
+		isUpdateAvailable: changelog.isUpdateAvailable,
+		applicationServerKey: manager!.webPush.vapidKeys!.publicKey,
+		version: Helper.getVersionNumber(),
+		gitCommit: Helper.getGitCommit(),
+		themes: themes.getAll(),
+		defaultTheme: Config.values.theme,
+		public: Config.values.public,
+		useHexIp: Config.values.useHexIp,
+		prefetch: Config.values.prefetch,
+		fileUploadMaxFileSize: Uploader ? Uploader.getMaxFileSize() : undefined, // TODO can't be undefined?
+	};
 
-	config.fileUpload = Config.values.fileUpload.enable;
-	config.ldapEnabled = Config.values.ldap.enable;
+	const defaultsOverride = {
+		nick: Config.getDefaultNick(), // expand the number part
 
-	if (!config.lockNetwork) {
-		config.defaults = _.clone(Config.values.defaults);
-	} else {
-		// Only send defaults that are visible on the client
-		config.defaults = _.pick(Config.values.defaults, [
-			"name",
-			"nick",
-			"username",
-			"password",
-			"realname",
-			"join",
-		]) as Defaults;
+		// TODO: this doesn't seem right, if the client needs this as a buffer
+		// the client ought to add it on its own
+		sasl: "",
+		saslAccount: "",
+		saslPassword: "",
+	};
+
+	if (!Config.values.lockNetwork) {
+		const defaults: ConfigNetDefaults = {
+			..._.clone(Config.values.defaults),
+			...defaultsOverride,
+		};
+		const result: SharedConfiguration = {
+			...common,
+			defaults: defaults,
+			lockNetwork: Config.values.lockNetwork,
+		};
+		return result;
 	}
 
-	config.isUpdateAvailable = changelog.isUpdateAvailable;
-	config.applicationServerKey = manager!.webPush.vapidKeys!.publicKey;
-	config.version = Helper.getVersionNumber();
-	config.gitCommit = Helper.getGitCommit();
-	config.themes = themes.getAll();
-	config.defaultTheme = Config.values.theme;
-	config.defaults.nick = Config.getDefaultNick();
-	config.defaults.sasl = "";
-	config.defaults.saslAccount = "";
-	config.defaults.saslPassword = "";
+	// Only send defaults that are visible on the client
+	const defaults: LockedConfigNetDefaults = {
+		..._.pick(Config.values.defaults, ["name", "username", "password", "realname", "join"]),
+		...defaultsOverride,
+	};
 
-	if (Uploader) {
-		config.fileUploadMaxFileSize = Uploader.getMaxFileSize();
-	}
+	const result: LockedSharedConfiguration = {
+		...common,
+		lockNetwork: Config.values.lockNetwork,
+		defaults: defaults,
+	};
 
-	return config;
+	return result;
 }
 
 function getServerConfiguration(): ServerConfiguration {

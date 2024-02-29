@@ -4,7 +4,7 @@ import {SharedChan} from "../../shared/types/chan";
 import {SharedNetwork} from "../../shared/types/network";
 import {SharedUser} from "../../shared/models/user";
 import {SharedMention} from "../../shared/models/mention";
-import {ClientConfiguration} from "../../server/server";
+import {SharedConfiguration, LockedSharedConfiguration} from "../../shared/types/config";
 import {LinkPreview} from "../../server/plugins/irc-events/link";
 
 interface LoungeWindow extends Window {
@@ -51,7 +51,6 @@ type NetChan = {
 	network: ClientNetwork;
 };
 
-type ClientConfiguration = ClientConfiguration;
 type ClientMention = SharedMention & {
 	localetime: string;
 	channel: NetChan | null;

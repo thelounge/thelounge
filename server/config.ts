@@ -44,7 +44,7 @@ export type Defaults = Pick<
 	| "saslAccount"
 	| "saslPassword"
 > & {
-	join?: string;
+	join: string;
 };
 
 type Identd = {

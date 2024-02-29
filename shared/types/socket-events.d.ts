@@ -5,7 +5,7 @@ import {SharedMsg, ClientMessage} from "../../shared/types/msg";
 import {SharedUser} from "../../shared/types/user";
 import {SharedChangelogData} from "../../shared/types/changelog";
 import {LinkPreview} from "../plugins/irc-events/link";
-import {ClientConfiguration} from "../server";
+import {SharedConfiguration, LockedSharedConfiguration} from "../../shared/types/config";
 
 type Session = {
 	current: boolean;
@@ -32,7 +32,7 @@ interface ServerToClientEvents {
 
 	commands: (data: string[]) => void;
 
-	configuration: (config: ClientConfiguration) => void;
+	configuration: (config: SharedConfiguration | LockedSharedConfiguration) => void;
 
 	"push:issubscribed": (isSubscribed: boolean) => void;
 	"push:unregister": () => void;
