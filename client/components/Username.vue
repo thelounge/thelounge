@@ -12,10 +12,10 @@
 
 <script lang="ts">
 import {computed, defineComponent, PropType} from "vue";
-import {UserInMessage} from "../../server/models/msg";
+import {UserInMessage} from "../../shared/types/msg";
 import eventbus from "../js/eventbus";
 import colorClass from "../js/helpers/colorClass";
-import type {ClientChan, ClientNetwork, ClientUser} from "../js/types";
+import type {ClientChan, ClientNetwork} from "../js/types";
 import {useStore} from "../js/store";
 
 type UsernameUser = Partial<UserInMessage> & {
