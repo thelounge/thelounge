@@ -15,9 +15,7 @@ interface LoungeWindow extends Window {
 	};
 }
 
-type ClientUser = SharedUser & {
-	//
-};
+type ClientUser = SharedUser;
 
 type ClientChan = Omit<SharedChan, "users" | "messages"> & {
 	moreHistoryAvailable: boolean;
