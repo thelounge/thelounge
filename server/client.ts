@@ -19,9 +19,9 @@ import SqliteMessageStorage from "./plugins/messageStorage/sqlite";
 import TextFileMessageStorage from "./plugins/messageStorage/text";
 import Network, {IgnoreListItem, NetworkConfig, NetworkWithIrcFramework} from "./models/network";
 import ClientManager from "./clientManager";
-import {MessageStorage, SearchResponse} from "./plugins/messageStorage/types";
+import {MessageStorage} from "./plugins/messageStorage/types";
 import {StorageCleaner} from "./storageCleaner";
-import {SearchQuery} from "../shared/types/storage";
+import {SearchQuery, SearchResponse} from "../shared/types/storage";
 import {ChanType} from "../shared/types/chan";
 
 type OrderItem = Chan["id"] | Network["uuid"];
