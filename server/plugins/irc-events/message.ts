@@ -5,8 +5,22 @@ import Helper from "../../helper";
 import {IrcEventHandler} from "../../client";
 import Chan, {ChanType} from "../../models/chan";
 import User from "../../models/user";
+import {ClientTags} from "../../models/client-tags";
 
 const nickRegExp = /(?:\x03[0-9]{1,2}(?:,[0-9]{1,2})?)?([\w[\]\\`^{|}-]+)/g;
+type MessageData = {
+	nick: string;
+	hostname: string;
+	ident: string;
+	target: string;
+	type: MessageType;
+	time: number;
+	tags: Record<string, string>;
+	text?: string;
+	from_server?: boolean;
+	message: string;
+	group?: string;
+};
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
@@ -26,6 +40,11 @@ export default <IrcEventHandler>function (irc, network) {
 		handleMessage(data);
 	});
 
+	irc.on("tagmsg", function (data) {
+		data.type = MessageType.TAGMSG;
+		// TODO: handleTagMessage(data);
+	});
+
 	irc.on("privmsg", function (data) {
 		data.type = MessageType.MESSAGE;
 		handleMessage(data);
@@ -37,18 +56,7 @@ export default <IrcEventHandler>function (irc, network) {
 		handleMessage(data);
 	});
 
-	function handleMessage(data: {
-		nick: string;
-		hostname: string;
-		ident: string;
-		target: string;
-		type: MessageType;
-		time: number;
-		text?: string;
-		from_server?: boolean;
-		message: string;
-		group?: string;
-	}) {
+	function handleMessage(data: MessageData) {
 		let chan: Chan | undefined;
 		let from: User;
 		let highlight = false;
@@ -131,6 +139,7 @@ export default <IrcEventHandler>function (irc, network) {
 			from: from,
 			highlight: highlight,
 			users: [],
+			client_tags: new ClientTags(data.tags),
 		});
 
 		if (showInActive) {

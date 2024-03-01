@@ -31,7 +31,7 @@ declare module "irc-framework" {
 		message: string;
 		nick: string;
 		reply: (message: string) => void;
-		tags: {[key: string]: string};
+		tags: Record<string, string>;
 		target: string;
 		time?: any;
 		type: "privmsg" | "action" | "notice" | "wallops";
@@ -44,6 +44,7 @@ declare module "irc-framework" {
 		ident: string;
 		nick: string;
 		time?: any;
+		tags: Record<string, string>;
 	}
 	export interface KickEventArgs {
 		kicked: string;
@@ -176,9 +177,22 @@ declare module "irc-framework" {
 
 		sendMessage(commandName: string, target: string, message: string): string[];
 
+		sendMessage(
+			commandName: string,
+			target: string,
+			message: string,
+			tags: Record<string, string> = {}
+		): string[];
+
 		say(target: string, message: string): string[];
 
+		say(target: string, message: string, tags: Record<string, string>): string[];
+
 		notice(target: string, message: string): string[];
+
+		notice(target: string, message: string, tags: Record<string, string>): string[];
+
+		tagmsg(target: string, tags: Record<string, string> = {}): string[];
 
 		join(channel: string, key?: string): void;
 
@@ -292,7 +306,7 @@ declare module "irc-framework" {
 
 		reply(e: any): any;
 
-		tags: Record<string, unknown>;
+		tags: Record<string, string>;
 
 		// any
 		time?: any;
