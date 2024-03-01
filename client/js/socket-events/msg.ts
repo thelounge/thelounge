@@ -123,12 +123,14 @@ function notifyMessage(
 			) {
 				let title: string;
 				let body: string;
+				// TODO: fix msg type and get rid of that conditional
+				const nick = msg.from && msg.from.nick ? msg.from.nick : "unkonown";
 
 				if (msg.type === "invite") {
 					title = "New channel invite:";
-					body = msg.from.nick + " invited you to " + msg.channel;
+					body = nick + " invited you to " + msg.channel;
 				} else {
-					title = String(msg.from.nick);
+					title = nick;
 
 					if (channel.type !== "query") {
 						title += ` (${channel.name})`;
@@ -138,7 +140,8 @@ function notifyMessage(
 						title += " says:";
 					}
 
-					body = cleanIrcMessage(msg.text);
+					// TODO: fix msg type and get rid of that conditional
+					body = cleanIrcMessage(msg.text ? msg.text : "");
 				}
 
 				const timestamp = Date.parse(String(msg.time));

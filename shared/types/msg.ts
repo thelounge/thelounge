@@ -100,4 +100,5 @@ export type SharedMsg = {
 export type ClientMessage = Omit<SharedMsg, "users"> & {
 	time: Date;
 	users: string[];
+	id: number;
 };
