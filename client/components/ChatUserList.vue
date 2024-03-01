@@ -59,7 +59,7 @@
 <script lang="ts">
 import {filter as fuzzyFilter} from "fuzzy";
 import {computed, defineComponent, nextTick, PropType, ref} from "vue";
-import type {UserInMessage} from "../../server/models/msg";
+import type {UserInMessage} from "../../shared/types/msg";
 import type {ClientChan, ClientUser} from "../js/types";
 import Username from "./Username.vue";
 
@@ -104,7 +104,7 @@ export default defineComponent({
 				const result = filteredUsers.value;
 
 				for (const user of result) {
-					const mode = user.original.modes[0] || "";
+					const mode: string = user.original.modes[0] || "";
 
 					if (!groups[mode]) {
 						groups[mode] = [];
