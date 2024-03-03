@@ -31,7 +31,6 @@ export type SharedChan = {
 	firstUnread: number;
 	unread: number;
 	highlight: number;
-	users: Map<string, SharedUser>;
 	muted: boolean;
 	type: ChanType;
 	state: ChanState;
