@@ -818,7 +818,7 @@ function initializeClient(
 	});
 
 	// socket.join is a promise depending on the adapter.
-	void socket.join(client.id?.toString());
+	void socket.join(client.id);
 
 	const sendInitEvent = (tokenToSend: string | null) => {
 		socket.emit("init", {

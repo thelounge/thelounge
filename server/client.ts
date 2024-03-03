@@ -93,7 +93,7 @@ class Client {
 		[socketId: string]: {token: string; openChannel: number};
 	};
 	config!: UserConfig;
-	id!: number;
+	id: string;
 	idMsg!: number;
 	idChan!: number;
 	name!: string;
@@ -108,12 +108,12 @@ class Client {
 	fileHash!: string;
 
 	constructor(manager: ClientManager, name?: string, config = {} as UserConfig) {
+		this.id = uuidv4();
 		_.merge(this, {
 			awayMessage: "",
 			lastActiveChannel: -1,
 			attachedClients: {},
 			config: config,
-			id: uuidv4(),
 			idChan: 1,
 			idMsg: 1,
 			name: name,
@@ -226,7 +226,7 @@ class Client {
 
 	emit(event: string, data?: any) {
 		if (this.manager !== null) {
-			this.manager.sockets.in(this.id.toString()).emit(event, data);
+			this.manager.sockets.in(this.id).emit(event, data);
 		}
 	}
 
@@ -771,7 +771,7 @@ class Client {
 
 	quit(signOut?: boolean) {
 		const sockets = this.manager.sockets.sockets;
-		const room = sockets.adapter.rooms.get(this.id.toString());
+		const room = sockets.adapter.rooms.get(this.id);
 
 		if (room) {
 			for (const user of room) {
