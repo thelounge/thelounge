@@ -1,5 +1,6 @@
 import {SharedMsg} from "./msg";
 import {SharedUser} from "./user";
+import {SharedNetworkChan} from "./network";
 
 export enum ChanType {
 	CHANNEL = "channel",
@@ -40,4 +41,11 @@ export type SharedChan = {
 	data?: any;
 	closed?: boolean;
 	num_users?: number;
+};
+
+export type InitClientChan = {
+	network: string;
+	chan: SharedNetworkChan;
+	shouldOpen: boolean;
+	index: number;
 };

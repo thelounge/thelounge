@@ -1,11 +1,10 @@
-import {ClientNetwork, InitClientChan} from "../../client/js/types";
-import {SharedMention} from "../../shared/types/mention";
-import {ChanState} from "../../shared/types/chan";
-import {SharedMsg, ClientMessage} from "../../shared/types/msg";
-import {SharedUser} from "../../shared/types/user";
-import {SharedChangelogData} from "../../shared/types/changelog";
-import {LinkPreview} from "../plugins/irc-events/link";
-import {SharedConfiguration, LockedSharedConfiguration} from "../../shared/types/config";
+import {SharedMention} from "./mention";
+import {ChanState, InitClientChan} from "./chan";
+import {SharedNetwork} from "./network";
+import {SharedMsg, ClientMessage, LinkPreview} from "./msg";
+import {SharedUser} from "./user";
+import {SharedChangelogData} from "./changelog";
+import {SharedConfiguration, LockedSharedConfiguration} from "./config";
 
 type Session = {
 	current: boolean;
@@ -50,7 +49,7 @@ interface ServerToClientEvents {
 
 	names: (data: {id: number; users: SharedUser[]}) => void;
 
-	network: (data: {networks: ClientNetwork[]}) => void;
+	network: (data: {networks: SharedNetwork[]}) => void;
 	"network:options": (data: {network: string; serverOptions: {[key: string]: any}}) => void;
 	"network:status": (data: {network: string; connected: boolean; secure: boolean}) => void;
 	"network:info": (data: {uuid: string}) => void;
@@ -102,7 +101,7 @@ interface ServerToClientEvents {
 		token,
 	}: {
 		active: number;
-		networks: ClientNetwork[];
+		networks: SharedNetwork[];
 		token: string;
 	}) => void;
 

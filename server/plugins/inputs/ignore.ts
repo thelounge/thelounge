@@ -133,6 +133,7 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 					client.emit("join", {
 						network: network.uuid,
 						chan: newChan.getFilteredClone(true),
+						shouldOpen: false,
 						index: network.addChannel(newChan),
 					});
 				} else {

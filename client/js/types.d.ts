@@ -2,10 +2,10 @@ import {defineComponent} from "vue";
 
 import {SharedChan} from "../../shared/types/chan";
 import {SharedNetwork} from "../../shared/types/network";
-import {SharedUser} from "../../shared/models/user";
+import {SharedUser} from "../../shared/types/user";
 import {SharedMention} from "../../shared/models/mention";
 import {SharedConfiguration, LockedSharedConfiguration} from "../../shared/types/config";
-import {LinkPreview} from "../../server/plugins/irc-events/link";
+import {LinkPreview} from "../../shared/types/msg";
 
 interface LoungeWindow extends Window {
 	g_TheLoungeRemoveLoading?: () => void;

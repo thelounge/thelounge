@@ -29,9 +29,9 @@ export default <IrcEventHandler>function (irc, network) {
 				});
 
 				client.emit("join", {
-					shouldOpen: true,
 					network: network.uuid,
 					chan: chan.getFilteredClone(true),
+					shouldOpen: true,
 					index: network.addChannel(chan),
 				});
 				chan.loadMessages(client, network);
