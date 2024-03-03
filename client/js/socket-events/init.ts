@@ -1,4 +1,3 @@
-import {nextTick} from "vue";
 import socket from "../socket";
 import storage from "../localStorage";
 import {router, switchToChannel, navigate} from "../router";
