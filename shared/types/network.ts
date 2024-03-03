@@ -6,7 +6,6 @@ export type SharedPrefixObject = {
 };
 
 export type SharedNetworkChan = SharedChan & {
-	users: []; // TODO: this thing appears useless
 	totalMessages: number;
 };
 
