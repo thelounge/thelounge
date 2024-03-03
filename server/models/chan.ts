@@ -122,6 +122,7 @@ class Chan {
 			}
 		}
 	}
+
 	dereferencePreviews(messages) {
 		if (!Config.values.prefetch || !Config.values.prefetchStorage) {
 			return;
@@ -138,6 +139,7 @@ class Chan {
 			}
 		});
 	}
+
 	getSortedUsers(irc?: Network["irc"]) {
 		const users = Array.from(this.users.values());
 
@@ -160,21 +162,27 @@ class Chan {
 			return userModeSortPriority[a.mode] - userModeSortPriority[b.mode];
 		});
 	}
+
 	findMessage(msgId: number) {
 		return this.messages.find((message) => message.id === msgId);
 	}
+
 	findUser(nick: string) {
 		return this.users.get(nick.toLowerCase());
 	}
+
 	getUser(nick: string) {
 		return this.findUser(nick) || new User({nick}, new Prefix([]));
 	}
+
 	setUser(user: User) {
 		this.users.set(user.nick.toLowerCase(), user);
 	}
+
 	removeUser(user: User) {
 		this.users.delete(user.nick.toLowerCase());
 	}
+
 	/**
 	 * Get a clean clone of this channel that will be sent to the client.
 	 * This function performs manual cloning of channel object for
@@ -219,6 +227,7 @@ class Chan {
 			return newChannel;
 		}, {}) as SharedNetworkChan;
 	}
+
 	writeUserLog(client: Client, msg: Msg) {
 		this.messages.push(msg);
 
@@ -251,6 +260,7 @@ class Chan {
 			messageStorage.index(target.network, targetChannel, msg).catch((e) => log.error(e));
 		}
 	}
+
 	loadMessages(client: Client, network: Network) {
 		if (!this.isLoggable()) {
 			return;
@@ -307,9 +317,11 @@ class Chan {
 				log.error(`Failed to load messages for ${client.name}: ${err.toString()}`)
 			);
 	}
+
 	isLoggable() {
 		return this.type === ChanType.CHANNEL || this.type === ChanType.QUERY;
 	}
+
 	setMuteStatus(muted: boolean) {
 		this.muted = !!muted;
 	}
