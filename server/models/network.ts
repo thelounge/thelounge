@@ -11,16 +11,7 @@ import ClientCertificate, {ClientCertificateType} from "../plugins/clientCertifi
 import Client from "../client";
 import {MessageType} from "../../shared/types/msg";
 import {ChanType} from "../../shared/types/chan";
-
-/**
- * List of keys which should be sent to the client by default.
- */
-const fieldsForClient = {
-	uuid: true,
-	name: true,
-	nick: true,
-	serverOptions: true,
-};
+import {SharedNetwork} from "../../shared/types/network";
 
 type NetworkIrcOptions = {
 	host: string;
@@ -507,24 +498,17 @@ class Network {
 		}
 	}
 
-	getFilteredClone(lastActiveChannel?: number, lastMessage?: number) {
-		const filteredNetwork = Object.keys(this).reduce((newNetwork, prop) => {
-			if (prop === "channels") {
-				// Channels objects perform their own cloning
-				newNetwork[prop] = this[prop].map((channel) =>
-					channel.getFilteredClone(lastActiveChannel, lastMessage)
-				);
-			} else if (fieldsForClient[prop]) {
-				// Some properties that are not useful for the client are skipped
-				newNetwork[prop] = this[prop];
-			}
-
-			return newNetwork;
-		}, {}) as Network;
-
-		filteredNetwork.status = this.getNetworkStatus();
-
-		return filteredNetwork;
+	getFilteredClone(lastActiveChannel?: number, lastMessage?: number): SharedNetwork {
+		return {
+			uuid: this.uuid,
+			name: this.name,
+			nick: this.nick,
+			serverOptions: this.serverOptions,
+			status: this.getNetworkStatus(),
+			channels: this.channels.map((channel) =>
+				channel.getFilteredClone(lastActiveChannel, lastMessage)
+			),
+		};
 	}
 
 	getNetworkStatus() {
