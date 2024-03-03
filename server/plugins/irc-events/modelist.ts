@@ -69,6 +69,7 @@ export default <IrcEventHandler>function (irc, network) {
 			client.emit("join", {
 				network: network.uuid,
 				chan: chan.getFilteredClone(true),
+				shouldOpen: false,
 				index: network.addChannel(chan),
 			});
 		} else {
