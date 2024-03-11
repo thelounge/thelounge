@@ -58,19 +58,11 @@
 				<div class="connect-row">
 					<label for="connect:password">Password</label>
 					<RevealPassword
-						v-slot:default="slotProps"
-						class="input-wrap password-container"
-					>
-						<input
-							id="connect:password"
-							v-model="defaults.password"
-							class="input"
-							:type="slotProps.isVisible ? 'text' : 'password'"
-							placeholder="Server password (optional)"
-							name="password"
-							maxlength="300"
-						/>
-					</RevealPassword>
+						id="connect:password"
+						v-model:password="defaults.password"
+						name="password"
+						placeholder="Server password (optional)"
+					/>
 				</div>
 				<div class="connect-row">
 					<label></label>
@@ -158,20 +150,12 @@
 					<div class="connect-row">
 						<label for="connect:proxyPassword">Proxy password</label>
 						<RevealPassword
-							v-slot:default="slotProps"
-							class="input-wrap password-container"
-						>
-							<input
-								id="connect:proxyPassword"
-								ref="proxyPassword"
-								v-model="defaults.proxyPassword"
-								class="input"
-								:type="slotProps.isVisible ? 'text' : 'password'"
-								placeholder="Proxy password"
-								name="proxyPassword"
-								maxlength="300"
-							/>
-						</RevealPassword>
+							id="connect:proxyPassword"
+							ref="proxyPassword"
+							v-model:password="defaults.proxyPassword"
+							name="proxyPassword"
+							placeholder="Proxy password"
+						/>
 					</div>
 				</template>
 			</template>
@@ -190,19 +174,11 @@
 				<div class="connect-row">
 					<label for="connect:password">Password</label>
 					<RevealPassword
-						v-slot:default="slotProps"
-						class="input-wrap password-container"
-					>
-						<input
-							id="connect:password"
-							v-model="defaults.password"
-							class="input"
-							:type="slotProps.isVisible ? 'text' : 'password'"
-							placeholder="Server password (optional)"
-							name="password"
-							maxlength="300"
-						/>
-					</RevealPassword>
+						id="connect:password"
+						v-model:password="defaults.password"
+						placeholder="Server password (optional)"
+						name="password"
+					/>
 				</div>
 			</template>
 
@@ -304,20 +280,12 @@ the server tab on new connection"
 					<div v-if="displayPasswordField" class="connect-row">
 						<label for="connect:password">Password</label>
 						<RevealPassword
-							v-slot:default="slotProps"
-							class="input-wrap password-container"
-						>
-							<input
-								id="connect:password"
-								ref="publicPassword"
-								v-model="defaults.password"
-								class="input"
-								:type="slotProps.isVisible ? 'text' : 'password'"
-								placeholder="Server password (optional)"
-								name="password"
-								maxlength="300"
-							/>
-						</RevealPassword>
+							id="connect:password"
+							ref="publicPassword"
+							v-model:password="defaults.password"
+							placeholder="Server password (optional)"
+							name="password"
+						/>
 					</div>
 				</template>
 			</template>
@@ -374,19 +342,12 @@ the server tab on new connection"
 					<div class="connect-row">
 						<label for="connect:password">Password</label>
 						<RevealPassword
-							v-slot:default="slotProps"
-							class="input-wrap password-container"
-						>
-							<input
-								id="connect:saslPassword"
-								v-model="defaults.saslPassword"
-								class="input"
-								:type="slotProps.isVisible ? 'text' : 'password'"
-								name="saslPassword"
-								maxlength="300"
-								required
-							/>
-						</RevealPassword>
+							id="connect:saslPassword"
+							v-model:password="defaults.saslPassword"
+							class="input"
+							name="saslPassword"
+							required
+						/>
 					</div>
 				</template>
 				<div v-else-if="defaults.sasl === 'external'" class="connect-sasl-external">
