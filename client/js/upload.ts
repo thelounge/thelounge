@@ -2,6 +2,7 @@ import {update as updateCursor} from "undate";
 
 import socket from "./socket";
 import {store} from "./store";
+import friendlysize from "../js/helpers/friendlysize";
 
 class Uploader {
 	xhr: XMLHttpRequest | null = null;
@@ -131,8 +132,9 @@ class Uploader {
 			}
 
 			if (maxFileSize > 0 && file.size > maxFileSize) {
+				const maxFileSizeHR = friendlysize(maxFileSize);
 				this.handleResponse({
-					error: `File ${file.name} is over the maximum allowed size`,
+					error: `File "${file.name}" is larger than the maximum allowed size of ${maxFileSizeHR}`,
 				});
 
 				continue;
