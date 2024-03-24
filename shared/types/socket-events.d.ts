@@ -166,3 +166,9 @@ interface ClientToServerEvents {
 		offset: number;
 	}>;
 }
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface InterServerEvents {}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface SocketData {}

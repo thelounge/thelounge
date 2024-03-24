@@ -25,7 +25,12 @@ themes.loadLocalThemes();
 import packages from "./plugins/packages/index";
 import {NetworkWithIrcFramework} from "./models/network";
 import Utils from "./command-line/utils";
-import type {ClientToServerEvents, ServerToClientEvents} from "../shared/types/socket-events";
+import type {
+	ClientToServerEvents,
+	ServerToClientEvents,
+	InterServerEvents,
+	SocketData,
+} from "../shared/types/socket-events";
 import {ChanType} from "../shared/types/chan";
 import {
 	LockedSharedConfiguration,
@@ -204,7 +209,12 @@ export default async function (
 			return;
 		}
 
-		const sockets = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
+		const sockets = new Server<
+			ClientToServerEvents,
+			ServerToClientEvents,
+			InterServerEvents,
+			SocketData
+		>(server, {
 			wsEngine: wsServer,
 			cookie: false,
 			serveClient: false,
