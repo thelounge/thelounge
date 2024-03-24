@@ -5,6 +5,7 @@ import {SharedMsg, ClientMessage, LinkPreview} from "./msg";
 import {SharedUser} from "./user";
 import {SharedChangelogData} from "./changelog";
 import {SharedConfiguration, LockedSharedConfiguration} from "./config";
+import {SearchResponse} from "./storage";
 
 type Session = {
 	current: boolean;
