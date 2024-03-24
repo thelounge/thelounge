@@ -309,8 +309,7 @@ export default defineComponent({
 
 			moveItemInArray(store.state.networks, oldIndex, newIndex);
 
-			socket.emit("sort", {
-				type: "networks",
+			socket.emit("sort:networks", {
 				order: store.state.networks.map((n) => n.uuid),
 			});
 		};
