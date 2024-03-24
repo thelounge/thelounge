@@ -22,10 +22,8 @@ import ClientManager from "./clientManager";
 import {MessageStorage} from "./plugins/messageStorage/types";
 import {StorageCleaner} from "./storageCleaner";
 import {SearchQuery, SearchResponse} from "../shared/types/storage";
-import {ChanType} from "../shared/types/chan";
-
-type OrderItem = Chan["id"] | Network["uuid"];
-type Order = OrderItem[];
+import {SharedChan, ChanType} from "../shared/types/chan";
+import {SharedNetwork} from "../shared/types/network";
 
 const events = [
 	"away",
@@ -692,56 +690,39 @@ class Client {
 		this.emit("open", targetNetChan.chan.id);
 	}
 
-	sort(data: {order: Order; type: "networks" | "channels"; target: string}) {
-		const order = data.order;
+	sortChannels(netid: SharedNetwork["uuid"], order: SharedChan["id"][]) {
+		const network = _.find(this.networks, {uuid: netid});
 
-		if (!_.isArray(order)) {
+		if (!network) {
 			return;
 		}
 
-		switch (data.type) {
-			case "networks":
-				this.networks.sort((a, b) => order.indexOf(a.uuid) - order.indexOf(b.uuid));
-
-				// Sync order to connected clients
-				this.emit("sync_sort", {
-					order: this.networks.map((obj) => obj.uuid),
-					type: data.type,
-				});
-
-				break;
-
-			case "channels": {
-				const network = _.find(this.networks, {uuid: data.target});
-
-				if (!network) {
-					return;
-				}
-
-				network.channels.sort((a, b) => {
-					// Always sort lobby to the top regardless of what the client has sent
-					// Because there's a lot of code that presumes channels[0] is the lobby
-					if (a.type === ChanType.LOBBY) {
-						return -1;
-					} else if (b.type === ChanType.LOBBY) {
-						return 1;
-					}
-
-					return order.indexOf(a.id) - order.indexOf(b.id);
-				});
-
-				// Sync order to connected clients
-				this.emit("sync_sort", {
-					order: network.channels.map((obj) => obj.id),
-					type: data.type,
-					target: network.uuid,
-				});
-
-				break;
+		network.channels.sort((a, b) => {
+			// Always sort lobby to the top regardless of what the client has sent
+			// Because there's a lot of code that presumes channels[0] is the lobby
+			if (a.type === ChanType.LOBBY) {
+				return -1;
+			} else if (b.type === ChanType.LOBBY) {
+				return 1;
 			}
-		}
 
+			return order.indexOf(a.id) - order.indexOf(b.id);
+		});
 		this.save();
+		// Sync order to connected clients
+		this.emit("sync_sort:channels", {
+			target: network.uuid,
+			order: network.channels.map((obj) => obj.id),
+		});
+	}
+
+	sortNetworks(order: SharedNetwork["uuid"][]) {
+		this.networks.sort((a, b) => order.indexOf(a.uuid) - order.indexOf(b.uuid));
+		this.save();
+		// Sync order to connected clients
+		this.emit("sync_sort:networks", {
+			order: this.networks.map((obj) => obj.uuid),
+		});
 	}
 
 	names(data: {target: number}) {

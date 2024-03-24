@@ -1,30 +1,16 @@
 import socket from "../socket";
 import {store} from "../store";
 
-socket.on("sync_sort", function (data) {
-	const order = data.order;
+socket.on("sync_sort:networks", function (data) {
+	store.commit("sortNetworks", (a, b) => data.order.indexOf(a.uuid) - data.order.indexOf(b.uuid));
+});
 
-	switch (data.type) {
-		case "networks":
-			store.commit(
-				"sortNetworks",
-				(a, b) => (order as string[]).indexOf(a.uuid) - (order as string[]).indexOf(b.uuid)
-			);
+socket.on("sync_sort:channels", function (data) {
+	const network = store.getters.findNetwork(data.network);
 
-			break;
-
-		case "channels": {
-			const network = store.getters.findNetwork(data.target);
-
-			if (!network) {
-				return;
-			}
-
-			network.channels.sort(
-				(a, b) => (order as number[]).indexOf(a.id) - (order as number[]).indexOf(b.id)
-			);
-
-			break;
-		}
+	if (!network) {
+		return;
 	}
+
+	network.channels.sort((a, b) => data.order.indexOf(a.id) - data.order.indexOf(b.id));
 });

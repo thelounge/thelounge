@@ -569,10 +569,28 @@ function initializeClient(
 		client.open(socket.id, data);
 	});
 
-	socket.on("sort", (data) => {
-		if (_.isPlainObject(data)) {
-			client.sort(data);
+	socket.on("sort:networks", (data) => {
+		if (!_.isPlainObject(data)) {
+			return;
 		}
+
+		if (!Array.isArray(data.order)) {
+			return;
+		}
+
+		client.sortNetworks(data.order);
+	});
+
+	socket.on("sort:channels", (data) => {
+		if (!_.isPlainObject(data)) {
+			return;
+		}
+
+		if (!Array.isArray(data.order) || typeof data.network !== "string") {
+			return;
+		}
+
+		client.sortChannels(data.network, data.order);
 	});
 
 	socket.on("names", (data) => {

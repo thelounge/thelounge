@@ -1,5 +1,5 @@
 import {SharedMention} from "./mention";
-import {ChanState, InitClientChan} from "./chan";
+import {ChanState, InitClientChan, SharedChan} from "./chan";
 import {SharedNetwork} from "./network";
 import {SharedMsg, ClientMessage, LinkPreview} from "./msg";
 import {SharedUser} from "./user";
@@ -67,10 +67,11 @@ interface ServerToClientEvents {
 
 	"sign-out": NoPayloadEventHandler;
 
-	sync_sort: EventHandler<
-		| {type: "networks"; order: string[]; target: string}
-		| {type: "channels"; order: number[]; target: string}
-	>;
+	"sync_sort:networks": EventHandler<{order: SharedNetwork["uuid"][]}>;
+	"sync_sort:channels": EventHandler<{
+		network: SharedNetwork["uuid"];
+		order: SharedChan["id"][];
+	}>;
 
 	topic: EventHandler<{chan: number; topic: string}>;
 
@@ -134,7 +135,11 @@ interface ClientToServerEvents {
 
 	"sessions:get": NoPayloadEventHandler;
 
-	sort: EventHandler<{type: string; order: any; target?: string}>;
+	"sort:networks": EventHandler<{order: SharedNetwork["uuid"][]}>;
+	"sort:channels": EventHandler<{
+		network: SharedNetwork["uuid"];
+		order: SharedChan["id"][];
+	}>;
 
 	"mentions:dismiss": (msgId: number) => void;
 	"mentions:dismiss_all": NoPayloadEventHandler;
