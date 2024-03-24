@@ -5,7 +5,7 @@ import {SharedNetwork} from "../../shared/types/network";
 import {SharedUser} from "../../shared/types/user";
 import {SharedMention} from "../../shared/models/mention";
 import {SharedConfiguration, LockedSharedConfiguration} from "../../shared/types/config";
-import {LinkPreview} from "../../shared/types/msg";
+import {LinkPreview, ClientMessage} from "../../shared/types/msg";
 
 interface LoungeWindow extends Window {
 	g_TheLoungeRemoveLoading?: () => void;
@@ -17,10 +17,13 @@ interface LoungeWindow extends Window {
 
 type ClientUser = SharedUser;
 
+// we will eventually need to put client specific fields here
+// which are not shared with the server
+export type ClientMessage = SharedMsg;
+
 type ClientChan = Omit<SharedChan, "messages"> & {
 	moreHistoryAvailable: boolean;
 	editTopic: boolean;
-	users: ClientUser[];
 	messages: ClientMessage[];
 
 	// these are added in store/initChannel

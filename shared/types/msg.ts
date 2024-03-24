@@ -61,12 +61,12 @@ export type LinkPreview = {
 
 export type SharedMsg = {
 	from?: UserInMessage;
-	id?: number;
+	id: number;
 	previews?: LinkPreview[];
 	text?: string;
 	type?: MessageType;
 	self?: boolean;
-	time?: Date;
+	time: Date;
 	hostmask?: string;
 	target?: UserInMessage;
 	// TODO: new_nick is only on MessageType.NICK,
@@ -92,13 +92,9 @@ export type SharedMsg = {
 	raw_modes?: any;
 	when?: Date;
 	whois?: any;
-	users?: UserInMessage[] | string[];
+
+	users: string[];
+
 	statusmsgGroup?: string;
 	params?: string[];
-};
-
-export type ClientMessage = Omit<SharedMsg, "users"> & {
-	time: Date;
-	users: string[];
-	id: number;
 };

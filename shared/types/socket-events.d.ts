@@ -81,9 +81,9 @@ interface ServerToClientEvents {
 
 	"msg:preview": EventHandler<{id: number; chan: number; preview: LinkPreview}>;
 	"msg:special": EventHandler<{chan: number; data?: Record<string, any>}>;
-	msg: EventHandler<{msg: ClientMessage; chan: number; highlight?: number; unread?: number}>;
+	msg: EventHandler<{msg: SharedMsg; chan: number; highlight?: number; unread?: number}>;
 
-	init: EventHandler<{active: number; networks: SharedNetwork[]; token: string}>;
+	init: EventHandler<{active: number; networks: SharedNetwork[]; token?: string}>;
 
 	"search:results": (response: SearchResponse) => void;
 
