@@ -16,202 +16,153 @@ type Session = {
 	token: string;
 };
 
+type EventHandler<T> = (data: T) => void;
+type NoPayloadEventHandler = EventHandler<void>;
+
 interface ServerToClientEvents {
-	"auth:failed": () => void;
 	"auth:start": (serverHash: number) => void;
-	"auth:success": () => void;
+	"auth:failed": NoPayloadEventHandler;
+	"auth:success": NoPayloadEventHandler;
 
 	"upload:auth": (token: string) => void;
 
-	changelog: (data: SharedChangelogData) => void;
-	"changelog:newversion": () => void;
+	changelog: EventHandler<SharedChangelogData>;
+	"changelog:newversion": NoPayloadEventHandler;
 
-	"channel:state": (data: {chan: number; state: ChanState}) => void;
+	"channel:state": EventHandler<{chan: number; state: ChanState}>;
 
-	"change-password": ({success, error}: {success: boolean; error?: any}) => void;
+	"change-password": EventHandler<{success: boolean; error?: any}>;
 
-	commands: (data: string[]) => void;
+	commands: EventHandler<string[]>;
 
-	configuration: (config: SharedConfiguration | LockedSharedConfiguration) => void;
+	configuration: EventHandler<SharedConfiguration | LockedSharedConfiguration>;
 
-	"push:issubscribed": (isSubscribed: boolean) => void;
-	"push:unregister": () => void;
+	"push:issubscribed": EventHandler<boolean>;
+	"push:unregister": NoPayloadEventHandler;
 
-	"sessions:list": (data: Session[]) => void;
+	"sessions:list": EventHandler<Session[]>;
 
-	"mentions:list": (data: SharedMention[]) => void;
+	"mentions:list": EventHandler<SharedMention[]>;
 
-	"setting:new": ({name: string, value: any}) => void;
-	"setting:all": (settings: {[key: string]: any}) => void;
+	"setting:new": EventHandler<{name: string; value: any}>;
+	"setting:all": EventHandler<{[key: string]: any}>;
 
-	"history:clear": ({target}: {target: number}) => void;
+	"history:clear": EventHandler<{target: number}>;
 
-	"mute:changed": (response: {target: number; status: boolean}) => void;
+	"mute:changed": EventHandler<{target: number; status: boolean}>;
 
-	names: (data: {id: number; users: SharedUser[]}) => void;
+	names: EventHandler<{id: number; users: SharedUser[]}>;
 
-	network: (data: {networks: SharedNetwork[]}) => void;
-	"network:options": (data: {network: string; serverOptions: {[key: string]: any}}) => void;
-	"network:status": (data: {network: string; connected: boolean; secure: boolean}) => void;
-	"network:info": (data: {uuid: string}) => void;
-	"network:name": (data: {uuid: string; name: string}) => void;
+	network: EventHandler<{networks: SharedNetwork[]}>;
+	"network:options": EventHandler<{network: string; serverOptions: {[key: string]: any}}>;
+	"network:status": EventHandler<{network: string; connected: boolean; secure: boolean}>;
+	"network:info": EventHandler<{uuid: string}>;
+	"network:name": EventHandler<{uuid: string; name: string}>;
 
-	nick: (data: {network: string; nick: string}) => void;
+	nick: EventHandler<{network: string; nick: string}>;
 
 	open: (id: number) => void;
 
-	part: (data: {chan: number}) => void;
+	part: EventHandler<{chan: number}>;
 
-	"sign-out": () => void;
+	"sign-out": NoPayloadEventHandler;
 
-	sync_sort: (
-		data:
-			| {
-					type: "networks";
-					order: string[];
-					target: string;
-			  }
-			| {
-					type: "channels";
-					order: number[];
-					target: string;
-			  }
-	) => void;
+	sync_sort: EventHandler<
+		| {type: "networks"; order: string[]; target: string}
+		| {type: "channels"; order: number[]; target: string}
+	>;
 
-	topic: (data: {chan: number; topic: string}) => void;
+	topic: EventHandler<{chan: number; topic: string}>;
 
-	users: (data: {chan: number}) => void;
+	users: EventHandler<{chan: number}>;
 
-	more: ({
-		chan,
-		messages,
-		totalMessages,
-	}: {
-		chan: number;
-		messages: SharedMsg[];
-		totalMessages: number;
-	}) => void;
+	more: EventHandler<{chan: number; messages: SharedMsg[]; totalMessages: number}>;
 
-	"msg:preview": ({id, chan, preview}: {id: number; chan: number; preview: LinkPreview}) => void;
-	"msg:special": (data: {chan: number; data?: Record<string, any>}) => void;
-	msg: (data: {msg: ClientMessage; chan: number; highlight?: number; unread?: number}) => void;
+	"msg:preview": EventHandler<{id: number; chan: number; preview: LinkPreview}>;
+	"msg:special": EventHandler<{chan: number; data?: Record<string, any>}>;
+	msg: EventHandler<{msg: ClientMessage; chan: number; highlight?: number; unread?: number}>;
 
-	init: ({
-		active,
-		networks,
-		token,
-	}: {
-		active: number;
-		networks: SharedNetwork[];
-		token: string;
-	}) => void;
+	init: EventHandler<{active: number; networks: SharedNetwork[]; token: string}>;
 
 	"search:results": (response: SearchResponse) => void;
 
-	quit: (args: {network: string}) => void;
+	quit: EventHandler<{network: string}>;
 
 	error: (error: any) => void;
-	connecting: () => void;
 
-	join: (args: {
-		shouldOpen: boolean;
-		index: number;
-		network: string;
-		chan: InitClientChan;
-	}) => void;
+	connecting: NoPayloadEventHandler;
+
+	join: EventHandler<{shouldOpen: boolean; index: number; network: string; chan: InitClientChan}>;
 }
 
 interface ClientToServerEvents {
-	"auth:perform":
-		| (({user, password}: {user: string; password: string}) => void)
-		| (({
-				user,
-				token,
-				lastMessage,
-				openChannel,
-				hasConfig,
-		  }: {
+	"auth:perform": EventHandler<
+		| {user: string; password: string}
+		| {
 				user: string;
 				token: string;
 				lastMessage: number;
 				openChannel: number | null;
 				hasConfig: boolean;
-		  }) => void);
+		  }
+	>;
 
-	changelog: () => void;
+	changelog: NoPayloadEventHandler;
 
-	"change-password": ({
-		old_password: string,
-		new_password: string,
-		verify_password: string,
-	}) => void;
+	"change-password": EventHandler<{
+		old_password: string;
+		new_password: string;
+		verify_password: string;
+	}>;
 
 	open: (channelId: number) => void;
 
-	names: ({target: number}) => void;
+	names: EventHandler<{target: number}>;
 
-	input: ({target, text}: {target: number; text: string}) => void;
+	input: EventHandler<{target: number; text: string}>;
 
-	"upload:auth": () => void;
+	"upload:auth": NoPayloadEventHandler;
 	"upload:ping": (token: string) => void;
 
-	"mute:change": (response: {target: number; setMutedTo: boolean}) => void;
+	"mute:change": EventHandler<{target: number; setMutedTo: boolean}>;
 
-	"push:register": (subscriptionJson: PushSubscriptionJSON) => void;
-	"push:unregister": () => void;
+	"push:register": EventHandler<PushSubscriptionJSON>;
+	"push:unregister": NoPayloadEventHandler;
 
-	"setting:get": () => void;
-	"setting:set": ({name: string, value: any}) => void;
+	"setting:get": NoPayloadEventHandler;
+	"setting:set": EventHandler<{name: string; value: any}>;
 
-	"sessions:get": () => void;
+	"sessions:get": NoPayloadEventHandler;
 
-	sort: ({type, order}: {type: string; order: any; target?: string}) => void;
+	sort: EventHandler<{type: string; order: any; target?: string}>;
 
 	"mentions:dismiss": (msgId: number) => void;
-	"mentions:dismiss_all": () => void;
-	"mentions:get": () => void;
+	"mentions:dismiss_all": NoPayloadEventHandler;
+	"mentions:get": NoPayloadEventHandler;
 
-	more: ({
-		target,
-		lastId,
-		condensed,
-	}: {
-		target: number;
-		lastId: number;
-		condensed: boolean;
-	}) => void;
+	more: EventHandler<{target: number; lastId: number; condensed: boolean}>;
 
-	"msg:preview:toggle": ({
-		target,
-		messageIds,
-		msgId,
-		shown,
-		link,
-	}: {
+	"msg:preview:toggle": EventHandler<{
 		target: number;
 		messageIds?: number[];
 		msgId?: number;
 		shown?: boolean | null;
 		link?: string;
-	}) => void;
+	}>;
 
 	"network:get": (uuid: string) => void;
+	// TODO typing
 	"network:edit": (data: Record<string, any>) => void;
 	"network:new": (data: Record<string, any>) => void;
 
 	"sign-out": (token?: string) => void;
 
-	"history:clear": ({target}: {target: number}) => void;
+	"history:clear": EventHandler<{target: number}>;
 
-	search: ({
-		networkUuid,
-		channelName,
-		searchTerm,
-		offset,
-	}: {
+	search: EventHandler<{
 		networkUuid?: string;
 		channelName?: string;
 		searchTerm?: string;
 		offset: number;
-	}) => void;
+	}>;
 }
