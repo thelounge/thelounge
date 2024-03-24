@@ -840,7 +840,7 @@ function initializeClient(
 	// socket.join is a promise depending on the adapter.
 	void socket.join(client.id);
 
-	const sendInitEvent = (tokenToSend: string | null) => {
+	const sendInitEvent = (tokenToSend?: string) => {
 		socket.emit("init", {
 			active: openChannel,
 			networks: client.networks.map((network) =>
@@ -852,7 +852,7 @@ function initializeClient(
 	};
 
 	if (Config.values.public) {
-		sendInitEvent(null);
+		sendInitEvent();
 	} else if (!token) {
 		client.generateToken((newToken) => {
 			token = client.calculateTokenHash(newToken);
@@ -863,7 +863,7 @@ function initializeClient(
 		});
 	} else {
 		client.updateSession(token, getClientIp(socket), socket.request);
-		sendInitEvent(null);
+		sendInitEvent();
 	}
 }
 

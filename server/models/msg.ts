@@ -34,7 +34,7 @@ class Msg {
 	raw_modes!: any;
 	when!: Date;
 	whois!: any;
-	users!: UserInMessage[] | string[];
+	users!: string[];
 	statusmsgGroup!: string;
 	params!: string[];
 

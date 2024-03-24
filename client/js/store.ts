@@ -3,7 +3,7 @@
 import {ActionContext, createStore, Store, useStore as baseUseStore} from "vuex";
 import {createSettingsStore} from "./store-settings";
 import storage from "./localStorage";
-import type {ClientChan, ClientNetwork, InitClientChan, NetChan, ClientMention} from "./types";
+import type {ClientChan, ClientNetwork, NetChan, ClientMention} from "./types";
 import type {InjectionKey} from "vue";
 
 import {SettingsState} from "./settings";
@@ -125,7 +125,6 @@ type Getters = {
 	findNetwork: (state: State) => (uuid: string) => ClientNetwork | null;
 	highlightCount(state: State): number;
 	title(state: State, getters: Omit<Getters, "title">): string;
-	initChannel: () => (channel: InitClientChan) => ClientChan;
 };
 
 // getters without the state argument
@@ -195,31 +194,6 @@ const getters: Getters = {
 		const channelname = state.activeChannel ? `${state.activeChannel.channel.name} — ` : "";
 
 		return alertEventCount + channelname + appName;
-	},
-	initChannel: () => (channel: InitClientChan) => {
-		// TODO: This should be a mutation
-		channel.pendingMessage = "";
-		channel.inputHistoryPosition = 0;
-
-		channel.inputHistory = [""].concat(
-			channel.messages
-				.filter((m) => m.self && m.text && m.type === "message")
-				.map((m) => m.text)
-				.reverse()
-				.slice(0, 99)
-		);
-		channel.historyLoading = false;
-		channel.scrolledToBottom = true;
-		channel.editTopic = false;
-
-		channel.moreHistoryAvailable = channel.totalMessages! > channel.messages.length;
-		delete channel.totalMessages;
-
-		if (channel.type === "channel") {
-			channel.usersOutdated = true;
-		}
-
-		return channel as ClientChan;
 	},
 };
 
