@@ -4,6 +4,109 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
+## v4.4.2 - 2024-04-01
+
+The Lounge finally gains the ability to automatically clean up sqlite databases.
+Note that cleaning existing, large databases can take a significant amount of time
+and running a database `VACUUM` will use up ~2x the current DB disc space for a short period.
+
+If you enable the storagePolicy, stop the running instance and run `thelounge storage clean`.
+This will force a full cleanup once, rather than doing so incrementally and will release all the
+disc space back to the OS.
+
+As usual, we follow the Node.js release schedule, so the minimum Node.js version required is now 18.
+
+Many thanks to all the contributors to this release, be that documentation, code or maintaining the packages.  
+Your help is greatly appreciated!
+
+For more details, [see the full changelog](https://github.com/thelounge/thelounge/compare/v4.4.1...v4.4.2)
+
+### Added
+
+- Sign in: use v-model ([`c5326e8`](https://github.com/thelounge/thelounge/commit/c5326e87958b1e99ca9405da5c8d17e3f45c983c) by [@brunnre8](https://github.com/brunnre8))
+- Add comments explaining behavior when echo-message is not available ([`43a2b39`](https://github.com/thelounge/thelounge/commit/43a2b397a2efc65c7214893846831376bb880138) by [@brunnre8](https://github.com/brunnre8))
+- Fix semver for prerelease versions #4744 ([`8aa5e33`](https://github.com/thelounge/thelounge/commit/8aa5e33b1d9e0a56e51481c227bf7d61fdd7b21f) by [@brunnre8](https://github.com/brunnre8))
+- sqlite: add migrations support and introduce primary key ([`2ef8b37`](https://github.com/thelounge/thelounge/commit/2ef8b3700945deb9a113ddf4e3010ad36556deef) by [@brunnre8](https://github.com/brunnre8))
+- test/link: use helper for url creation ([`c6b1913`](https://github.com/thelounge/thelounge/commit/c6b1913b919421ab2b70093218422a390d822c75) by [@brunnre8](https://github.com/brunnre8))
+- test/storage: use helper for url creation ([`79fae26`](https://github.com/thelounge/thelounge/commit/79fae26f396081b6f557ae7b4f0c8fd4649b6a74) by [@brunnre8](https://github.com/brunnre8))
+- Respect bind setting for all outgoing requests ([`3af4ad1`](https://github.com/thelounge/thelounge/commit/3af4ad1076330428da41f4205bb069d714b2a4e2) by [@brunnre8](https://github.com/brunnre8))
+- bump emoji-regex to latest ([`ed0a47f`](https://github.com/thelounge/thelounge/commit/ed0a47fe2c10a2512832c9365a863967f9fc1ee0) by [@brunnre8](https://github.com/brunnre8))
+- use shebang for generate-emoji script ([`1a1153a`](https://github.com/thelounge/thelounge/commit/1a1153aed638de0e5e2ca4089cb7656bbfa4394a) by [@brunnre8](https://github.com/brunnre8))
+- Respect bind setting for all outgoing requests ([`2878f87`](https://github.com/thelounge/thelounge/commit/2878f87879cab30eabedbe2376507dae33295f22) by [@brunnre8](https://github.com/brunnre8))
+- store: use return type over a type cast ([#4770](https://github.com/thelounge/thelounge/pull/4770) by [@brunnre8](https://github.com/brunnre8))
+- don't crash on rDNS failure ([`8c54cd5`](https://github.com/thelounge/thelounge/commit/8c54cd50d8431481a70dec26a66a5343f2bbbd2c) by [@brunnre8](https://github.com/brunnre8))
+- sqlite: fix typo fetch_rollbacks ([`884a92c`](https://github.com/thelounge/thelounge/commit/884a92c74bb669ff9a94c5a1c164912a9bd9891b) by [@brunnre8](https://github.com/brunnre8))
+- sqlite: don't modify global array during tests ([`ec75ff0`](https://github.com/thelounge/thelounge/commit/ec75ff00cb8fdcef1857749ce6d033860e1ca157) by [@brunnre8](https://github.com/brunnre8))
+- sqlite: return new version in downgrade() ([`d1561f8`](https://github.com/thelounge/thelounge/commit/d1561f8ebccacd0277d185626f3737bfd23bc99e) by [@brunnre8](https://github.com/brunnre8))
+- cli: don't fail if stderr is not in json format ([`97f553e`](https://github.com/thelounge/thelounge/commit/97f553eea8ed4a57f6d760a767425159f6451e08) by [@brunnre8](https://github.com/brunnre8))
+- sqlite: use variadic function for serialize_run ([`60ddf17`](https://github.com/thelounge/thelounge/commit/60ddf17124af8e451412b14a11910ded894979d8) by [@brunnre8](https://github.com/brunnre8))
+- sqlite: accept db connection string ([`aec8d0b`](https://github.com/thelounge/thelounge/commit/aec8d0b03341691a0211d172538afc61560a919c) by [@brunnre8](https://github.com/brunnre8))
+- sqlite: implement deleteMessages ([`14d9ff2`](https://github.com/thelounge/thelounge/commit/14d9ff247d51e77640bc0f37464804eadc822dd7) by [@brunnre8](https://github.com/brunnre8))
+- introduce storage cleaner ([`74aff7e`](https://github.com/thelounge/thelounge/commit/74aff7ee5a9440a653859879390191031f81153e) by [@brunnre8](https://github.com/brunnre8))
+- cleaner: expose cli task to do cleaning + vacuum ([`21b1152`](https://github.com/thelounge/thelounge/commit/21b1152f5357f47586456949cadfb9876a0613da) by [@brunnre8](https://github.com/brunnre8))
+- wire up storage cleaner upon server start ([`b0ca8e5`](https://github.com/thelounge/thelounge/commit/b0ca8e51fb21b23859f95406f41dfe1ce273f419) by [@brunnre8](https://github.com/brunnre8))
+- sqlite: add msg type index to speed up cleaner ([`edb1226`](https://github.com/thelounge/thelounge/commit/edb1226b474e9dc74d096201220d8e675821ac21) by [@brunnre8](https://github.com/brunnre8))
+- add storage cleaner ([`7f0b721`](https://github.com/thelounge/thelounge/commit/7f0b7217906abf90343f5b91dc7ceaa650dd058f) by [@brunnre8](https://github.com/brunnre8))
+- scripts: fix generate-config-doc, handle usage errors ([#4807](https://github.com/thelounge/thelounge/pull/4807) by [@flotwig](https://github.com/flotwig))
+- router: don't use next() in router guards ([#4783](https://github.com/thelounge/thelounge/pull/4783) by [@brunnre8](https://github.com/brunnre8))
+- linkify: Add web+ schema support ([`ae6bae6`](https://github.com/thelounge/thelounge/commit/ae6bae69ac2c915c3dcac4262168da46f8eddf39) by [@SoniEx2](https://github.com/SoniEx2))
+- linkify: simplify noscheme detection logic ([`dd24cb1`](https://github.com/thelounge/thelounge/commit/dd24cb13002b76ba0a67abfa11faedaa455df828) by [@brunnre8](https://github.com/brunnre8))
+- Add shortcut to navigate between channels with undread msgs ([`daabb76`](https://github.com/thelounge/thelounge/commit/daabb7678172fc6b6d7c6eebc6fad40b6f84ea39) by [@Nachtalb](https://github.com/Nachtalb))
+- Remove husky, add githooks-install ([#4826](https://github.com/thelounge/thelounge/pull/4826) by [@brunnre8](https://github.com/brunnre8))
+- Testing setup ([#4825](https://github.com/thelounge/thelounge/pull/4825) by [@brunnre8](https://github.com/brunnre8))
+- Remove Node.js 16 from package.json and testing matrix ([`113e9bd`](https://github.com/thelounge/thelounge/commit/113e9bd2fb9a5154c048234d8ebbd8c0a61070d1) by [@MaxLeiter](https://github.com/MaxLeiter))
+- server: remove version from CTCP response ([`45563d9`](https://github.com/thelounge/thelounge/commit/45563d9a5938ae4fa46da8a2d6c51fc829ebb910) by [@flotwig](https://github.com/flotwig))
+
+### Documentation
+
+On the [website repository](https://github.com/thelounge/thelounge.github.io):
+
+- Merge branch 'localInstall' ([`8c0d5a5`](https://github.com/thelounge/thelounge.github.io/commit/8c0d5a58075fc1035f5c71675847823751e1f98d) by [@brunnre8](https://github.com/brunnre8))
+- docs: update docker image to point to the new ghcr.io repository ([`5d7c993`](https://github.com/thelounge/thelounge.github.io/commit/5d7c993b9e26050b482550cb3f16aa11e0b99d9e) by [@brunnre8](https://github.com/brunnre8))
+- Add "Hide all chat messages containing a link in a specific channel" … ([`993cf8b`](https://github.com/thelounge/thelounge.github.io/commit/993cf8b00e35ffeff1c20d122defc32d09e236b3) by [@zDEFz](https://github.com/zDEFz))
+- ctcp: remove stale link to code (#273) ([`379c34d`](https://github.com/thelounge/thelounge.github.io/commit/379c34d88aa73dd86078af7757a4536bb9958e02) by [@brunnre8](https://github.com/brunnre8))
+- docs: sync config.js.md (add prefetchTimeout, update ldap) (#275) ([`51dfc80`](https://github.com/thelounge/thelounge.github.io/commit/51dfc803415946e985c36317ea362ba625c67a3c) by [@flotwig](https://github.com/flotwig))
+- Removing #thelounge-scandinavia due to inactivity (#278) ([`403cc6a`](https://github.com/thelounge/thelounge.github.io/commit/403cc6aa05cd30a0f9a86b81369ec0c9f1ffd24f) by [@fnutt](https://github.com/fnutt))
+- Nodejs documentation link update (#277) ([`06e4725`](https://github.com/thelounge/thelounge.github.io/commit/06e47254cc6b98eabe4d527b1ce6be6f7ea7b9eb) by [@xfisbest](https://github.com/xfisbest))
+- Add installation instructions for Gentoo (#276) ([`52be432`](https://github.com/thelounge/thelounge.github.io/commit/52be432b36cabc7a9d393a07e7702e3aebff8075) by [@rahilarious](https://github.com/rahilarious))
+
+### Dependency updates
+
+- chore(deps): update dependency webpack-hot-middleware to v2.25.4 ([`06f1387`](https://github.com/thelounge/thelounge/commit/06f1387f7b5ff374b52bc4aeac06d6e936bc00f4) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @vue/test-utils to v2.4.0 ([`303f53f`](https://github.com/thelounge/thelounge/commit/303f53fe72a6cde53410821b2d59c81db90d308a) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency postcss to v8.4.26 ([`54ff563`](https://github.com/thelounge/thelounge/commit/54ff56324714bd5c6221250d02491f20b7ede6df) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/linkify-it to v3.0.3 ([`2985727`](https://github.com/thelounge/thelounge/commit/2985727996c1e84fefce06e5c2a0da02a8b6ccb6) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/bcryptjs to v2.4.4 ([`48301b1`](https://github.com/thelounge/thelounge/commit/48301b1ca31f0eb145695f320c81d0047e6883e6) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- build(deps): bump word-wrap from 1.2.3 to 1.2.5 ([`08413c7`](https://github.com/thelounge/thelounge/commit/08413c7b6b78f460bdee31239a87e6f86e14dda2) by [@dependabot[bot]](https://github.com/dependabot%5Bbot%5D))
+- chore(deps): update dependency postcss to v8.4.31 [security] ([`ff77a33`](https://github.com/thelounge/thelounge/commit/ff77a3366305c23180e6e509f5f39d285edca8d1) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/cheerio to v0.22.33 ([`b686059`](https://github.com/thelounge/thelounge/commit/b686059c6bf2f2014497d7dceb093422c5fb8fc2) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/content-disposition to v0.5.7 ([`bcca111`](https://github.com/thelounge/thelounge/commit/bcca111a4dd42e8b648acee1da9548a0c677d056) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/lodash to v4.14.200 ([`d4d5a8e`](https://github.com/thelounge/thelounge/commit/d4d5a8e386df60c69826fb9b1c63c138a1503640) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/mousetrap to v1.6.13 ([`250433c`](https://github.com/thelounge/thelounge/commit/250433c87549b59f34cd4d3933364a3766cf587e) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update actions/setup-node action to v4 ([`785ec0a`](https://github.com/thelounge/thelounge/commit/785ec0a0e26f2233ddea6f51ef16cd5cc5e14e40) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/bcryptjs to v2.4.5 ([`b506966`](https://github.com/thelounge/thelounge/commit/b506966b08fba11ab9b8b88268c9371dac78c314) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/is-utf8 to v0.2.2 ([`59de6af`](https://github.com/thelounge/thelounge/commit/59de6afd3fdbeb894e8cf39321c786220bbcf66b) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/bcryptjs to v2.4.6 ([`2f40d9d`](https://github.com/thelounge/thelounge/commit/2f40d9dbcca6fff43f1a66a2e0efb826e22cd4b4) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/cheerio to v0.22.35 ([`73a529a`](https://github.com/thelounge/thelounge/commit/73a529acea765705c1903762106d8f8f3221e6fc) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/content-disposition to v0.5.8 ([`aa95032`](https://github.com/thelounge/thelounge/commit/aa95032760761cc7e28d802ed9bec93d4a807335) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/is-utf8 to v0.2.3 ([`eaa70ca`](https://github.com/thelounge/thelounge/commit/eaa70caad7e578af4bf5f1603c5008b9159a04e6) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/linkify-it to v3.0.5 ([`1d2fdd9`](https://github.com/thelounge/thelounge/commit/1d2fdd95b0ee698bbdc85eb70fd02f47d46e86da) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/lodash to v4.14.202 ([`fe50a90`](https://github.com/thelounge/thelounge/commit/fe50a9023509412b8c6d981053b469e27b5a49c0) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/mousetrap to v1.6.15 ([`a77fbb8`](https://github.com/thelounge/thelounge/commit/a77fbb894ff550cabf7d6f54e06296babdeb2b67) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- chore(deps): update dependency @types/node to v17.0.45 ([`e2fda1f`](https://github.com/thelounge/thelounge/commit/e2fda1fb84da9cdbb445d6ebfe0f9795cb83633d) by [@renovate[bot]](https://github.com/renovate%5Bbot%5D))
+- build(deps): bump semver from 7.3.5 to 7.5.2 ([`447a237`](https://github.com/thelounge/thelounge/commit/447a237fc6d54e59e563e982a406e16011c57b7a) by [@dependabot[bot]](https://github.com/dependabot%5Bbot%5D))
+- build(deps): bump get-func-name from 2.0.0 to 2.0.2 ([`d308e74`](https://github.com/thelounge/thelounge/commit/d308e7418367e880f1b5454ade8267f5996bd035) by [@dependabot[bot]](https://github.com/dependabot%5Bbot%5D))
+- build(deps): bump @babel/traverse from 7.18.9 to 7.23.6 ([`20227b1`](https://github.com/thelounge/thelounge/commit/20227b174c4bf375af1168c60ef57e6124c199f4) by [@dependabot[bot]](https://github.com/dependabot%5Bbot%5D))
+- update emoji ([`607b9fc`](https://github.com/thelounge/thelounge/commit/607b9fc96a9ca933154dcc082fb2bb6dd545a2db) by [@brunnre8](https://github.com/brunnre8))
+- update dependency cheerio to v1.0.0-rc.12 ([`3e21bfc`](https://github.com/thelounge/thelounge/commit/3e21bfcbea579c08f0c02d692e59242653b553b3) by [@brunnre8](https://github.com/brunnre8))
+- update dependency webpack-hot-middleware to v2.25.4 ([`57c4d55`](https://github.com/thelounge/thelounge/commit/57c4d5513cfe6f0770a89330932dc07623c35e26) by [@brunnre8](https://github.com/brunnre8))
+- update dependency @vue/test-utils to v2.4.0 ([`4f9ca3e`](https://github.com/thelounge/thelounge/commit/4f9ca3e1923837f2886a58df4605255229b200b2) by [@brunnre8](https://github.com/brunnre8))
+- update dependency @types/lodash to v4.14.195 ([`2e019a2`](https://github.com/thelounge/thelounge/commit/2e019a2fdba684ad4cef15f55e514ae7a1bc8edf) by [@brunnre8](https://github.com/brunnre8))
+- update dependency @types/chai to v4.3.5 ([`816b768`](https://github.com/thelounge/thelounge/commit/816b7686e36aaac36371a5bfbcd2648443bc4e48) by [@brunnre8](https://github.com/brunnre8))
+- update dependency postcss to v8.4.26 ([`430a865`](https://github.com/thelounge/thelounge/commit/430a865e9fd7218ac8b0deaa6fc0841341b823ab) by [@brunnre8](https://github.com/brunnre8))
+- update @types/mousetrap ([`139ce47`](https://github.com/thelounge/thelounge/commit/139ce47b73a4907da0e2737dbb245bc686330ec1) by [@brunnre8](https://github.com/brunnre8))
+- bump caniuse-lite ([`22ae594`](https://github.com/thelounge/thelounge/commit/22ae594cc3d6905c82aa2238f4cd68506acf79a3) by [@brunnre8](https://github.com/brunnre8))
+
 ## v4.4.2-rc.1 - 2024-02-19 [Pre-release]
 
 The Lounge finally gains the ability to automatically clean up sqlite databases.
