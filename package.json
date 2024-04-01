@@ -98,7 +98,7 @@
     "@types/chai": "4.3.5",
     "@types/cheerio": "0.22.35",
     "@types/content-disposition": "0.5.8",
-    "@types/express": "4.17.13",
+    "@types/express": "4.17.21",
     "@types/is-utf8": "0.2.3",
     "@types/ldapjs": "2.2.2",
     "@types/linkify-it": "3.0.5",
