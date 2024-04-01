@@ -12,7 +12,7 @@ export function toClientChan(shared: SharedNetworkChan): ClientChan {
 			.slice(0, 99)
 	);
 	// filter the unused vars
-	const {messages, totalMessages: __, ...props} = shared;
+	const {messages, totalMessages: _, ...props} = shared;
 	const channel: ClientChan = {
 		...props,
 		editTopic: false,
