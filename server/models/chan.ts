@@ -38,7 +38,6 @@ class Chan {
 	data?: any;
 	closed?: boolean;
 	num_users?: number;
-	static optionalProperties = ["userAway", "special", "data", "closed", "num_users"];
 
 	constructor(attr?: Partial<Chan>) {
 		_.defaults(this, attr, {
@@ -232,6 +231,7 @@ class Chan {
 			num_users: this.num_users,
 		};
 		// TODO: funny array mutation below might need to be reproduced
+		// static optionalProperties = ["userAway", "special", "data", "closed", "num_users"];
 		// return Object.keys(this).reduce((newChannel, prop) => {
 		// 	if (Chan.optionalProperties.includes(prop)) {
 		// 		if (this[prop] !== undefined || (Array.isArray(this[prop]) && this[prop].length)) {
