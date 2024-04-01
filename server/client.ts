@@ -812,12 +812,13 @@ class Client {
 	}
 
 	// TODO: type session to this.attachedClients
-	registerPushSubscription(session: any, subscription: ClientPushSubscription, noSave = false) {
+	registerPushSubscription(session: any, subscription: PushSubscriptionJSON, noSave = false) {
 		if (
 			!_.isPlainObject(subscription) ||
-			!_.isPlainObject(subscription.keys) ||
 			typeof subscription.endpoint !== "string" ||
 			!/^https?:\/\//.test(subscription.endpoint) ||
+			!_.isPlainObject(subscription.keys) ||
+			!subscription.keys || // TS compiler doesn't understand isPlainObject
 			typeof subscription.keys.p256dh !== "string" ||
 			typeof subscription.keys.auth !== "string"
 		) {
