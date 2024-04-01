@@ -640,13 +640,13 @@ function initializeClient(
 				return;
 			}
 
-			const message = networkAndChan.chan.findMessage(data.msgId);
+			const message = data.msgId ? networkAndChan.chan.findMessage(data.msgId) : null;
 
 			if (!message) {
 				return;
 			}
 
-			const preview = message.findPreview(data.link);
+			const preview = data.link ? message.findPreview(data.link) : null;
 
 			if (preview) {
 				preview.shown = newState;
