@@ -7,7 +7,7 @@ import storage from "../plugins/storage";
 import Client from "../client";
 import Network from "./network";
 import Prefix from "./prefix";
-import {MessageType} from "../../shared/types/msg";
+import {MessageType, SharedMsg} from "../../shared/types/msg";
 import {ChanType, SpecialChanType, ChanState} from "../../shared/types/chan";
 import {SharedNetworkChan} from "../../shared/types/network";
 
@@ -196,36 +196,48 @@ class Chan {
 		lastActiveChannel?: number | boolean,
 		lastMessage?: number
 	): SharedNetworkChan {
-		return Object.keys(this).reduce((newChannel, prop) => {
-			if (Chan.optionalProperties.includes(prop)) {
-				if (this[prop] !== undefined || (Array.isArray(this[prop]) && this[prop].length)) {
-					newChannel[prop] = this[prop];
-				}
-			} else if (prop === "users") {
-				// Do not send users, client requests updated user list whenever needed
-				newChannel[prop] = [];
-			} else if (prop === "messages") {
-				// If client is reconnecting, only send new messages that client has not seen yet
-				if (lastMessage && lastMessage > -1) {
-					// When reconnecting, always send up to 100 messages to prevent message gaps on the client
-					// See https://github.com/thelounge/thelounge/issues/1883
-					newChannel[prop] = this[prop].filter((m) => m.id > lastMessage).slice(-100);
-				} else {
-					// If channel is active, send up to 100 last messages, for all others send just 1
-					// Client will automatically load more messages whenever needed based on last seen messages
-					const messagesToSend =
-						lastActiveChannel === true || this.id === lastActiveChannel ? 100 : 1;
+		let msgs: SharedMsg[];
 
-					newChannel[prop] = this[prop].slice(-messagesToSend);
-				}
+		// If client is reconnecting, only send new messages that client has not seen yet
+		if (lastMessage && lastMessage > -1) {
+			// When reconnecting, always send up to 100 messages to prevent message gaps on the client
+			// See https://github.com/thelounge/thelounge/issues/1883
+			msgs = this.messages.filter((m) => m.id > lastMessage).slice(-100);
+		} else {
+			// If channel is active, send up to 100 last messages, for all others send just 1
+			// Client will automatically load more messages whenever needed based on last seen messages
+			const messagesToSend =
+				lastActiveChannel === true || this.id === lastActiveChannel ? 100 : 1;
+			msgs = this.messages.slice(-messagesToSend);
+		}
 
-				(newChannel as SharedNetworkChan).totalMessages = this[prop].length;
-			} else {
-				newChannel[prop] = this[prop];
-			}
+		return {
+			id: this.id,
+			messages: msgs,
+			totalMessages: this.messages.length,
+			name: this.name,
+			key: this.key,
+			topic: this.topic,
+			firstUnread: this.firstUnread,
+			unread: this.unread,
+			highlight: this.highlight,
+			muted: this.muted,
+			type: this.type,
+			state: this.state,
 
-			return newChannel;
-		}, {}) as SharedNetworkChan;
+			userAway: this.userAway,
+			special: this.special,
+			data: this.data,
+			closed: this.closed,
+			num_users: this.num_users,
+		};
+		// TODO: funny array mutation below might need to be reproduced
+		// return Object.keys(this).reduce((newChannel, prop) => {
+		// 	if (Chan.optionalProperties.includes(prop)) {
+		// 		if (this[prop] !== undefined || (Array.isArray(this[prop]) && this[prop].length)) {
+		// 			newChannel[prop] = this[prop];
+		// 		}
+		// 	}
 	}
 
 	writeUserLog(client: Client, msg: Msg) {
