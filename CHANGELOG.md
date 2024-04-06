@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 <!-- New entries go after this line -->
 
-## v4.4.2 - 2024-04-01
+## v4.4.3 - 2024-04-01
 
 The Lounge finally gains the ability to automatically clean up sqlite databases.
 Note that cleaning existing, large databases can take a significant amount of time
@@ -19,7 +19,7 @@ As usual, we follow the Node.js release schedule, so the minimum Node.js version
 Many thanks to all the contributors to this release, be that documentation, code or maintaining the packages.  
 Your help is greatly appreciated!
 
-For more details, [see the full changelog](https://github.com/thelounge/thelounge/compare/v4.4.1...v4.4.2)
+For more details, [see the full changelog](https://github.com/thelounge/thelounge/compare/v4.4.1...v4.4.3)
 
 ### Added
 
