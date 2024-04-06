@@ -20,6 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
+          node-version: "latest"
           registry-url: "https://registry.npmjs.org/"
 
       - name: Install
@@ -32,9 +33,6 @@ jobs:
 
       - name: Test
         run: yarn test
-
-      - name: Update npm
-        run: npm install -g npm
 
       - name: Publish latest
         if: "!contains(github.ref, '-')"
