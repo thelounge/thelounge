@@ -24,6 +24,7 @@ import {StorageCleaner} from "./storageCleaner";
 import {SearchQuery, SearchResponse} from "../shared/types/storage";
 import {SharedChan, ChanType} from "../shared/types/chan";
 import {SharedNetwork} from "../shared/types/network";
+import {ServerToClientEvents} from "../shared/types/socket-events";
 
 const events = [
 	"away",
@@ -222,9 +223,12 @@ class Client {
 		return chan;
 	}
 
-	emit(event: string, data?: any) {
+	emit<Ev extends keyof ServerToClientEvents>(
+		event: Ev,
+		...args: Parameters<ServerToClientEvents[Ev]>
+	) {
 		if (this.manager !== null) {
-			this.manager.sockets.in(this.id).emit(event, data);
+			this.manager.sockets.in(this.id).emit(event, ...args);
 		}
 	}
 
