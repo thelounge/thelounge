@@ -715,7 +715,7 @@ class Client {
 		this.save();
 		// Sync order to connected clients
 		this.emit("sync_sort:channels", {
-			target: network.uuid,
+			network: network.uuid,
 			order: network.channels.map((obj) => obj.id),
 		});
 	}
