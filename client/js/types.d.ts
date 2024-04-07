@@ -33,6 +33,8 @@ type ClientChan = Omit<SharedChan, "messages"> & {
 	historyLoading: boolean;
 	scrolledToBottom: boolean;
 	usersOutdated: boolean;
+
+	users: ClientUser[];
 };
 
 type InitClientChan = ClientChan & {

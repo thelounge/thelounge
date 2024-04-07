@@ -20,6 +20,7 @@ export function toClientChan(shared: SharedNetworkChan): ClientChan {
 		inputHistoryPosition: 0,
 		historyLoading: false,
 		scrolledToBottom: true,
+		users: [],
 		usersOutdated: shared.type === "channel" ? true : false,
 		moreHistoryAvailable: shared.totalMessages > shared.messages.length,
 		inputHistory: history,
