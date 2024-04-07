@@ -3,6 +3,7 @@ import {store} from "../store";
 import {switchToChannel} from "../router";
 import {toClientChan} from "../chan";
 import {ClientNetwork} from "../types";
+import {ChanState} from "../../../shared/types/chan";
 
 socket.on("network", function (data) {
 	const network: ClientNetwork = {
@@ -38,8 +39,7 @@ socket.on("network:status", function (data) {
 
 	if (!data.connected) {
 		network.channels.forEach((channel) => {
-			channel.users = [];
-			channel.state = 0;
+			channel.state = ChanState.PARTED;
 		});
 	}
 });
