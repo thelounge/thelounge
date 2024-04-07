@@ -10,7 +10,7 @@ import Config from "./config";
 import {NetworkConfig} from "./models/network";
 import WebPush from "./plugins/webpush";
 import log from "./log";
-import {Server} from "socket.io";
+import {Server} from "./server";
 
 class ClientManager {
 	clients: Client[];

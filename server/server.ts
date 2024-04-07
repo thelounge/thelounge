@@ -3,7 +3,7 @@ import {Server as wsServer} from "ws";
 import express, {NextFunction, Request, Response} from "express";
 import fs from "fs";
 import path from "path";
-import {Server, Socket as ioSocket} from "socket.io";
+import {Server as ioServer, Socket as ioSocket} from "socket.io";
 import dns from "dns";
 import colors from "chalk";
 import net from "net";
@@ -52,6 +52,12 @@ type IndexTemplateConfiguration = ServerConfiguration & {
 };
 
 type Socket = ioSocket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>;
+export type Server = ioServer<
+	ClientToServerEvents,
+	ServerToClientEvents,
+	InterServerEvents,
+	SocketData
+>;
 
 // A random number that will force clients to reload the page if it differs
 const serverHash = Math.floor(Date.now() * Math.random());
@@ -211,12 +217,7 @@ export default async function (
 			return;
 		}
 
-		const sockets = new Server<
-			ClientToServerEvents,
-			ServerToClientEvents,
-			InterServerEvents,
-			SocketData
-		>(server, {
+		const sockets: Server = new ioServer(server, {
 			wsEngine: wsServer,
 			cookie: false,
 			serveClient: false,
