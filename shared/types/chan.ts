@@ -41,10 +41,3 @@ export type SharedChan = {
 	closed?: boolean;
 	num_users?: number;
 };
-
-export type InitClientChan = {
-	network: string;
-	chan: SharedNetworkChan;
-	shouldOpen: boolean;
-	index: number;
-};

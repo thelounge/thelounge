@@ -1,5 +1,5 @@
 import {SharedMention} from "./mention";
-import {ChanState, InitClientChan, SharedChan} from "./chan";
+import {ChanState, SharedChan} from "./chan";
 import {SharedNetwork} from "./network";
 import {SharedMsg, LinkPreview} from "./msg";
 import {SharedUser} from "./user";
@@ -93,7 +93,12 @@ interface ServerToClientEvents {
 
 	connecting: NoPayloadEventHandler;
 
-	join: EventHandler<{shouldOpen: boolean; index: number; network: string; chan: InitClientChan}>;
+	join: EventHandler<{
+		shouldOpen: boolean;
+		index: number;
+		network: string;
+		chan: SharedNetworkChan;
+	}>;
 }
 
 interface ClientToServerEvents {
