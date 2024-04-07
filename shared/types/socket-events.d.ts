@@ -5,7 +5,7 @@ import {SharedMsg, ClientMessage, LinkPreview} from "./msg";
 import {SharedUser} from "./user";
 import {SharedChangelogData} from "./changelog";
 import {SharedConfiguration, LockedSharedConfiguration} from "./config";
-import {SearchResponse} from "./storage";
+import {SearchResponse, SearchQuery} from "./storage";
 
 type Session = {
 	current: boolean;
@@ -164,12 +164,7 @@ interface ClientToServerEvents {
 
 	"history:clear": EventHandler<{target: number}>;
 
-	search: EventHandler<{
-		networkUuid?: string;
-		channelName?: string;
-		searchTerm?: string;
-		offset: number;
-	}>;
+	search: EventHandler<SearchQuery>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
