@@ -344,7 +344,7 @@ class Client {
 
 		client.networks.push(network);
 		client.emit("network", {
-			networks: [network.getFilteredClone(this.lastActiveChannel, -1)],
+			network: network.getFilteredClone(this.lastActiveChannel, -1),
 		});
 
 		if (!network.validate(client)) {

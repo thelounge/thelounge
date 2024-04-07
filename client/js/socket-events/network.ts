@@ -3,7 +3,7 @@ import {store} from "../store";
 import {switchToChannel} from "../router";
 
 socket.on("network", function (data) {
-	const network = data.networks[0];
+	const network = data.network;
 
 	network.isJoinChannelShown = false;
 	network.isCollapsed = false;
