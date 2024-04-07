@@ -10,9 +10,34 @@
 
 const {readFileSync, writeFileSync} = require("fs");
 const colors = require("chalk");
-const log = require("../server/log").default;
 const {join} = require("path");
 const {spawnSync} = require("child_process");
+
+function timestamp() {
+	const datetime = new Date().toISOString().split(".")[0].replace("T", " ");
+
+	return colors.dim(datetime);
+}
+
+const log = {
+	/* eslint-disable no-console */
+	error(...args) {
+		console.error(timestamp(), colors.red("[ERROR]"), ...args);
+	},
+	warn(...args) {
+		console.error(timestamp(), colors.yellow("[WARN]"), ...args);
+	},
+	info(...args) {
+		console.log(timestamp(), colors.blue("[INFO]"), ...args);
+	},
+	debug(...args) {
+		console.log(timestamp(), colors.green("[DEBUG]"), ...args);
+	},
+	raw(...args) {
+		console.log(...args);
+	},
+	/* eslint-enable no-console */
+};
 
 function getGitUsername() {
 	return spawnSync("git", ["config", "user.name"], {encoding: "utf8"}).stdout.trim();
