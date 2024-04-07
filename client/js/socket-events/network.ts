@@ -1,13 +1,16 @@
 import socket from "../socket";
 import {store} from "../store";
 import {switchToChannel} from "../router";
+import {toClientChan} from "../chan";
+import {ClientNetwork} from "../types";
 
 socket.on("network", function (data) {
-	const network = data.network;
-
-	network.isJoinChannelShown = false;
-	network.isCollapsed = false;
-	network.channels.forEach(store.getters.initChannel);
+	const network: ClientNetwork = {
+		...data.network,
+		channels: data.network.channels.map(toClientChan),
+		isJoinChannelShown: false,
+		isCollapsed: false,
+	};
 
 	store.commit("networks", [...store.state.networks, network]);
 
