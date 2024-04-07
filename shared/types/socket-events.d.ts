@@ -1,7 +1,7 @@
 import {SharedMention} from "./mention";
 import {ChanState, InitClientChan, SharedChan} from "./chan";
 import {SharedNetwork} from "./network";
-import {SharedMsg, ClientMessage, LinkPreview} from "./msg";
+import {SharedMsg, LinkPreview} from "./msg";
 import {SharedUser} from "./user";
 import {SharedChangelogData} from "./changelog";
 import {SharedConfiguration, LockedSharedConfiguration} from "./config";
