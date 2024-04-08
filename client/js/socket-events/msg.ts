@@ -3,8 +3,8 @@ import socket from "../socket";
 import {cleanIrcMessage} from "../../../shared/irc";
 import {store} from "../store";
 import {switchToChannel} from "../router";
-import {ClientChan, NetChan} from "../types";
-import {ClientMessage} from "../../../shared/types/msg";
+import {ClientChan, NetChan, ClientMessage} from "../types";
+import {SharedMsg} from "../../../shared/types/msg";
 
 let pop;
 
@@ -188,24 +188,40 @@ function notifyMessage(
 	}
 }
 
-function updateUserList(channel, msg) {
-	if (msg.type === "message" || msg.type === "action") {
-		const user = channel.users.find((u) => u.nick === msg.from.nick);
+function updateUserList(channel: ClientChan, msg: SharedMsg) {
+	switch (msg.type) {
+		case "message": // fallthrough
 
-		if (user) {
-			user.lastMessage = new Date(msg.time).getTime() || Date.now();
+		case "action": {
+			const user = channel.users.find((u) => u.nick === msg.from.nick);
+
+			if (user) {
+				user.lastMessage = new Date(msg.time).getTime() || Date.now();
+			}
+
+			break;
 		}
-	} else if (msg.type === "quit" || msg.type === "part") {
-		const idx = channel.users.findIndex((u) => u.nick === msg.from.nick);
 
-		if (idx > -1) {
-			channel.users.splice(idx, 1);
+		case "quit": // fallthrough
+
+		case "part": {
+			const idx = channel.users.findIndex((u) => u.nick === msg.from.nick);
+
+			if (idx > -1) {
+				channel.users.splice(idx, 1);
+			}
+
+			break;
 		}
-	} else if (msg.type === "kick") {
-		const idx = channel.users.findIndex((u) => u.nick === msg.target.nick);
 
-		if (idx > -1) {
-			channel.users.splice(idx, 1);
+		case "kick": {
+			const idx = channel.users.findIndex((u) => u.nick === msg.target.nick);
+
+			if (idx > -1) {
+				channel.users.splice(idx, 1);
+			}
+
+			break;
 		}
 	}
 }
