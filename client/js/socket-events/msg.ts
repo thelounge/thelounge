@@ -193,7 +193,7 @@ function updateUserList(channel: ClientChan, msg: SharedMsg) {
 		case "message": // fallthrough
 
 		case "action": {
-			const user = channel.users.find((u) => u.nick === msg.from.nick);
+			const user = channel.users.find((u) => u.nick === msg.from?.nick);
 
 			if (user) {
 				user.lastMessage = new Date(msg.time).getTime() || Date.now();
@@ -205,7 +205,7 @@ function updateUserList(channel: ClientChan, msg: SharedMsg) {
 		case "quit": // fallthrough
 
 		case "part": {
-			const idx = channel.users.findIndex((u) => u.nick === msg.from.nick);
+			const idx = channel.users.findIndex((u) => u.nick === msg.from?.nick);
 
 			if (idx > -1) {
 				channel.users.splice(idx, 1);
@@ -215,7 +215,7 @@ function updateUserList(channel: ClientChan, msg: SharedMsg) {
 		}
 
 		case "kick": {
-			const idx = channel.users.findIndex((u) => u.nick === msg.target.nick);
+			const idx = channel.users.findIndex((u) => u.nick === msg.target?.nick);
 
 			if (idx > -1) {
 				channel.users.splice(idx, 1);
