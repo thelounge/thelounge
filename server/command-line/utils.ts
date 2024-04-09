@@ -6,7 +6,6 @@ import Helper from "../helper";
 import Config from "../config";
 import path from "path";
 import {spawn} from "child_process";
-let home: string;
 
 class Utils {
 	static extraHelp(this: void) {
@@ -14,22 +13,28 @@ class Utils {
 			"",
 			"Environment variable:",
 			`  THELOUNGE_HOME            Path for all configuration files and folders. Defaults to ${colors.green(
-				Helper.expandHome(Utils.defaultHome())
+				Helper.expandHome(Config.getHomePath())
 			)}`,
 			"",
 		].forEach((e) => log.raw(e));
 	}
 
 	static defaultHome() {
-		if (home) {
-			return home;
-		}
-
 		const distConfig = Utils.getFileFromRelativeToRoot(".thelounge_home");
 
-		home = fs.readFileSync(distConfig, "utf-8").trim();
+		try {
+			const home = fs.readFileSync(distConfig, "utf-8").trim();
 
-		return home;
+			if (!home) {
+				throw new Error("Is the file empty?");
+			}
+
+			return home;
+		} catch (e: any) {
+			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+			log.error(`Failed get home directory from ${distConfig}. (${e.message})`);
+			process.exit(1);
+		}
 	}
 
 	static getFileFromRelativeToRoot(...fileName: string[]) {
