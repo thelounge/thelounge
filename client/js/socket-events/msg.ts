@@ -96,6 +96,14 @@ socket.on("msg", function (data) {
 	}
 });
 
+declare global {
+	// this extends the interface from lib.dom with additional stuff which is not
+	// exactly standard but implemented in some browsers
+	interface NotificationOptions {
+		timestamp?: number; // chrome has it, other browsers ignore it
+	}
+}
+
 function notifyMessage(
 	targetId: number,
 	channel: ClientChan,
