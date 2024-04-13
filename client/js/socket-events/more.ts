@@ -2,7 +2,7 @@ import {nextTick} from "vue";
 
 import socket from "../socket";
 import {store} from "../store";
-import {ClientMessage} from "../../../shared/types/msg";
+import type {ClientChan, ClientMessage} from "../types";
 
 socket.on("more", async (data) => {
 	const channel = store.getters.findChannel(data.chan)?.channel;
@@ -22,8 +22,7 @@ socket.on("more", async (data) => {
 	);
 	channel.moreHistoryAvailable =
 		data.totalMessages > channel.messages.length + data.messages.length;
-	// TODO: invalid type cast
-	channel.messages.unshift(...(data.messages as ClientMessage[]));
+	channel.messages.unshift(...data.messages);
 
 	await nextTick();
 	channel.historyLoading = false;
