@@ -3,7 +3,7 @@ import {defineComponent} from "vue";
 import {SharedChan} from "../../shared/types/chan";
 import {SharedNetwork} from "../../shared/types/network";
 import {SharedUser} from "../../shared/types/user";
-import {SharedMention} from "../../shared/models/mention";
+import {SharedMention} from "../../shared/types/mention";
 import {SharedConfiguration, LockedSharedConfiguration} from "../../shared/types/config";
 import {LinkPreview} from "../../shared/types/msg";
 
