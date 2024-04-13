@@ -23,7 +23,7 @@ socket.on("network:options", function (data) {
 	const network = store.getters.findNetwork(data.network);
 
 	if (network) {
-		network.serverOptions = data.serverOptions as typeof network.serverOptions;
+		network.serverOptions = data.serverOptions;
 	}
 });
 
