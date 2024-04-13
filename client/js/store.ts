@@ -3,12 +3,11 @@
 import {ActionContext, createStore, Store, useStore as baseUseStore} from "vuex";
 import {createSettingsStore} from "./store-settings";
 import storage from "./localStorage";
-import type {ClientChan, ClientNetwork, NetChan, ClientMention} from "./types";
+import type {ClientChan, ClientNetwork, NetChan, ClientMention, ClientMessage} from "./types";
 import type {InjectionKey} from "vue";
 
 import {SettingsState} from "./settings";
 import {SearchQuery} from "../../shared/types/storage";
-import {ClientMessage} from "./types";
 import {SharedConfiguration, LockedSharedConfiguration} from "../../shared/types/config";
 
 const appName = document.title;
