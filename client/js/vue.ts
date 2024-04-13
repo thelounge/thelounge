@@ -7,6 +7,7 @@ import App from "../components/App.vue";
 import storage from "./localStorage";
 import {router} from "./router";
 import socket from "./socket";
+import "./socket-events"; // this sets up all socket event listeners, do not remove
 import eventbus from "./eventbus";
 
 import "./webpush";
