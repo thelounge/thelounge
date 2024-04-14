@@ -1,5 +1,6 @@
 import {ClientMessage, ClientNetwork, InitClientChan} from "../../client/js/types";
 import {Mention} from "../client";
+import {ServerTypingNotification} from "../client/js/socket-events/typing";
 import {ChanState} from "../models/chan";
 import Msg from "../models/msg";
 import Network from "../models/network";
@@ -28,6 +29,7 @@ interface ServerToClientEvents {
 	"changelog:newversion": () => void;
 
 	"channel:state": (data: {chan: number; state: ChanState}) => void;
+	"channel:isTyping": (data: ServerTypingNotification) => void;
 
 	"change-password": ({success, error}: {success: boolean; error?: any}) => void;
 

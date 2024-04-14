@@ -189,7 +189,7 @@ class Chan {
 		return this.users.get(nick.toLowerCase());
 	}
 	getUser(nick: string) {
-		return this.findUser(nick) || new User({nick}, new Prefix([]));
+		return this.findUser(nick) || new User({nick});
 	}
 	setUser(user: User) {
 		this.users.set(user.nick.toLowerCase(), user);

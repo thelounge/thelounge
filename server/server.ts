@@ -468,6 +468,12 @@ function initializeClient(
 		}
 	});
 
+	socket.on("input:typing", (data) => {
+		if (_.isPlainObject(data)) {
+			client.setTyping(data);
+		}
+	});
+
 	socket.on("more", (data) => {
 		if (_.isPlainObject(data)) {
 			const history = client.more(data);

@@ -2198,6 +2198,12 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	transition: 0.3s width ease-in-out;
 }
 
+#activeTypers {
+	border-top: 1px solid #e7e7e7;
+	padding: 6px;
+	margin: 0 6px;
+}
+
 #form {
 	flex: 0 0 auto;
 	border: 0;
