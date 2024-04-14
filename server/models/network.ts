@@ -45,7 +45,7 @@ type NetworkStatus = {
 };
 
 export type IgnoreListItem = Hostmask & {
-	when?: number;
+	when: number;
 };
 
 type IgnoreList = IgnoreListItem[];
