@@ -61,18 +61,13 @@ class Chan {
 	}
 
 	pushMessage(client: Client, msg: Msg, increasesUnread = false) {
-		const chan = this.id;
-		const obj = {chan, msg} as {
-			chan: number;
-			msg: Msg;
-			unread?: number;
-			highlight?: number;
-		};
+		const chanId = this.id;
+		const obj = {chan: chanId, msg, unread: undefined, highlight: undefined};
 
 		msg.id = client.idMsg++;
 
 		// If this channel is open in any of the clients, do not increase unread counter
-		const isOpen = _.find(client.attachedClients, {openChannel: chan}) !== undefined;
+		const isOpen = _.find(client.attachedClients, {openChannel: chanId}) !== undefined;
 
 		if (msg.self) {
 			// reset counters/markers when receiving self-/echo-message
@@ -85,15 +80,15 @@ class Chan {
 			}
 
 			if (increasesUnread || msg.highlight) {
-				obj.unread = ++this.unread;
+				this.unread++;
 			}
 
 			if (msg.highlight) {
-				obj.highlight = ++this.highlight;
+				this.highlight++;
 			}
 		}
 
-		client.emit("msg", obj);
+		client.emit("msg", {chan: chanId, msg, unread: this.unread, highlight: this.highlight});
 
 		// Never store messages in public mode as the session
 		// is completely destroyed when the page gets closed
