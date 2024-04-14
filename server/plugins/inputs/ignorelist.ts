@@ -5,7 +5,7 @@ import {MessageType} from "../../../shared/types/msg";
 
 const commands = ["ignorelist"];
 
-const input: PluginInputHandler = function (network, chan, cmd, args) {
+const input: PluginInputHandler = function (network, chan, _cmd, _args) {
 	const client = this;
 
 	if (network.ignoreList.length === 0) {
