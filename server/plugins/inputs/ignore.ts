@@ -1,7 +1,6 @@
 import Msg from "../../models/msg";
 import Helper from "../../helper";
 import {PluginInputHandler} from "./index";
-import {IgnoreListItem} from "../../models/network";
 import {MessageType} from "../../../shared/types/msg";
 
 const commands = ["ignore", "unignore"];
