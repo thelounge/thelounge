@@ -67,11 +67,11 @@ function advancedLdapAuth(user: string, password: string, callback: (success: bo
 	});
 
 	const base = config.ldap.searchDN.base;
-	const searchOptions = {
+	const searchOptions: SearchOptions = {
 		scope: config.ldap.searchDN.scope,
 		filter: `(&(${config.ldap.primaryKey}=${userDN})${config.ldap.searchDN.filter})`,
 		attributes: ["dn"],
-	} as SearchOptions;
+	};
 
 	ldapclient.on("error", function (err: Error) {
 		log.error(`Unable to connect to LDAP server: ${err.toString()}`);
@@ -178,12 +178,12 @@ function advancedLdapLoadUsers(users: string[], callbackLoadUser) {
 
 		const remainingUsers = new Set(users);
 
-		const searchOptions = {
+		const searchOptions: SearchOptions = {
 			scope: config.ldap.searchDN.scope,
 			filter: `${config.ldap.searchDN.filter}`,
 			attributes: [config.ldap.primaryKey],
 			paged: true,
-		} as SearchOptions;
+		};
 
 		ldapclient.search(base, searchOptions, function (err2, res) {
 			if (err2) {
