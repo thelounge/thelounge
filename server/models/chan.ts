@@ -62,8 +62,6 @@ class Chan {
 
 	pushMessage(client: Client, msg: Msg, increasesUnread = false) {
 		const chanId = this.id;
-		const obj = {chan: chanId, msg, unread: undefined, highlight: undefined};
-
 		msg.id = client.idMsg++;
 
 		// If this channel is open in any of the clients, do not increase unread counter
@@ -117,7 +115,7 @@ class Chan {
 		}
 	}
 
-	dereferencePreviews(messages) {
+	dereferencePreviews(messages: Msg[]) {
 		if (!Config.values.prefetch || !Config.values.prefetchStorage) {
 			return;
 		}
@@ -334,7 +332,13 @@ class Chan {
 	}
 }
 
-function requestZncPlayback(channel, network, from) {
+function requestZncPlayback(channel: Chan, network: Network, from: number) {
+	if (!network.irc) {
+		throw new Error(
+			`requestZncPlayback: no irc field on network "${network.name}", this is a bug`
+		);
+	}
+
 	network.irc.raw("ZNC", "*playback", "PLAY", channel.name, from.toString());
 }
 
