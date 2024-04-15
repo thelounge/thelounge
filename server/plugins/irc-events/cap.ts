@@ -14,7 +14,7 @@ export default <IrcEventHandler>function (irc, network) {
 		handleSTS(data, false);
 	});
 
-	function handleSTS(data, shouldReconnect) {
+	function handleSTS(data, shouldReconnect: boolean) {
 		if (!Object.prototype.hasOwnProperty.call(data.capabilities, "sts")) {
 			return;
 		}
