@@ -546,18 +546,10 @@ function initializeClient(
 						const hash = Helper.password.hash(p1);
 
 						client.setPassword(hash, (success: boolean) => {
-							const obj = {success: false, error: undefined} as {
-								success: boolean;
-								error: string | undefined;
-							};
-
-							if (success) {
-								obj.success = true;
-							} else {
-								obj.error = "update_failed";
-							}
-
-							socket.emit("change-password", obj);
+							socket.emit("change-password", {
+								success: success,
+								error: success ? undefined : "update_failed",
+							});
 						});
 					})
 					.catch((error: Error) => {
