@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import {expect} from "chai";
 import sinon from "ts-sinon";
-import Chan, {ChanType} from "../../server/models/chan";
+import Chan from "../../server/models/chan";
+import {ChanType} from "../../shared/types/chan";
 import Msg from "../../server/models/msg";
 import User from "../../server/models/user";
 import Network from "../../server/models/network";
