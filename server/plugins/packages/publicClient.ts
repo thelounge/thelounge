@@ -2,7 +2,7 @@ import {PackageInfo} from "./index";
 import Client from "../../client";
 import Chan from "../../models/chan";
 import Msg from "../../models/msg";
-import {MessageType, UserInMessage} from "../../../shared/types/msg";
+import {MessageType} from "../../../shared/types/msg";
 
 export default class PublicClient {
 	private client: Client;
@@ -39,8 +39,8 @@ export default class PublicClient {
 	// FIXME: this is utterly bonkers
 	// This needs to get wrapped into its own, typed plugin event
 	// Plus it is completely insane to let a plugin inject arbitrary events like that
-	sendToBrowser(event: string, data) {
-		this.client.emit(event as any, data as any);
+	sendToBrowser(event: string, data: any) {
+		this.client.emit(event as any, data);
 	}
 
 	/**
@@ -65,7 +65,8 @@ export default class PublicClient {
 				text: text,
 				from: {
 					nick: this.packageInfo.name || this.packageInfo.packageName,
-				} as UserInMessage,
+					mode: "",
+				},
 			})
 		);
 	}
