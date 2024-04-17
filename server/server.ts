@@ -360,12 +360,12 @@ function getClientSecure(socket: Socket) {
 	return secure;
 }
 
-function allRequests(req: Request, res: Response, next: NextFunction) {
+function allRequests(_req: Request, res: Response, next: NextFunction) {
 	res.setHeader("X-Content-Type-Options", "nosniff");
 	return next();
 }
 
-function addSecurityHeaders(req: Request, res: Response, next: NextFunction) {
+function addSecurityHeaders(_req: Request, res: Response, next: NextFunction) {
 	const policies = [
 		"default-src 'none'", // default to nothing
 		"base-uri 'none'", // disallow <base>, has no fallback to default-src
@@ -395,14 +395,14 @@ function addSecurityHeaders(req: Request, res: Response, next: NextFunction) {
 	return next();
 }
 
-function forceNoCacheRequest(req: Request, res: Response, next: NextFunction) {
+function forceNoCacheRequest(_req: Request, res: Response, next: NextFunction) {
 	// Intermittent proxies must not cache the following requests,
 	// browsers must fetch the latest version of these files (service worker, source maps)
 	res.setHeader("Cache-Control", "no-cache, no-transform");
 	return next();
 }
 
-function indexRequest(req: Request, res: Response) {
+function indexRequest(_req: Request, res: Response) {
 	res.setHeader("Content-Type", "text/html");
 
 	return fs.readFile(
