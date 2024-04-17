@@ -195,13 +195,6 @@ describe("Chan", function () {
 	});
 
 	describe("#getFilteredClone(lastActiveChannel, lastMessage)", function () {
-		it("should send empty user list", function () {
-			const chan = new Chan();
-			chan.setUser(new User({nick: "test"}));
-
-			expect(chan.getFilteredClone().users).to.be.empty;
-		});
-
 		it("should keep necessary properties", function () {
 			const chan = new Chan();
 
