@@ -13,13 +13,13 @@ import Client from "./client";
 import ClientManager from "./clientManager";
 import Uploader from "./plugins/uploader";
 import Helper from "./helper";
-import Config, {ConfigType, Defaults} from "./config";
+import Config, {ConfigType} from "./config";
 import Identification from "./identification";
 import changelog from "./plugins/changelog";
 import inputs from "./plugins/inputs";
 import Auth from "./plugins/auth";
 
-import themes, {ThemeForClient} from "./plugins/packages/themes";
+import themes from "./plugins/packages/themes";
 themes.loadLocalThemes();
 
 import packages from "./plugins/packages/index";
@@ -30,6 +30,7 @@ import type {
 	ServerToClientEvents,
 	InterServerEvents,
 	SocketData,
+	AuthPerformData,
 } from "../shared/types/socket-events";
 import {ChanType} from "../shared/types/chan";
 import {
@@ -323,7 +324,7 @@ export default async function (
 	return server;
 }
 
-function getClientLanguage(socket: Socket): string | null {
+function getClientLanguage(socket: Socket): string | undefined {
 	const acceptLanguage = socket.handshake.headers["accept-language"];
 
 	if (typeof acceptLanguage === "string" && /^[\x00-\x7F]{1,50}$/.test(acceptLanguage)) {
@@ -331,10 +332,10 @@ function getClientLanguage(socket: Socket): string | null {
 		return acceptLanguage;
 	}
 
-	return null;
+	return undefined;
 }
 
-function getClientIp(socket: Socket) {
+function getClientIp(socket: Socket): string {
 	let ip = socket.handshake.address || "127.0.0.1";
 
 	if (Config.values.reverseProxy) {
@@ -926,22 +927,46 @@ function getServerConfiguration(): ServerConfiguration {
 	return {...Config.values, ...{stylesheets: packages.getStylesheets()}};
 }
 
-function performAuthentication(this: Socket, data) {
+function performAuthentication(this: Socket, data: AuthPerformData) {
 	if (!_.isPlainObject(data)) {
 		return;
 	}
 
 	const socket = this;
-	let client;
+	let client: Client | undefined;
 	let token: string;
 
-	const finalInit = () =>
-		initializeClient(socket, client, token, data.lastMessage || -1, data.openChannel);
+	const finalInit = () => {
+		let lastMessage = -1;
+
+		if (data && "lastMessage" in data && data.lastMessage) {
+			lastMessage = data.lastMessage;
+		}
+
+		// TODO: bonkers, but for now good enough until we rewrite the logic properly
+		// initializeClient will check for if(openChannel) and as 0 is falsey it does the fallback...
+		let openChannel = 0;
+
+		if (data && "openChannel" in data && data.openChannel) {
+			openChannel = data.openChannel;
+		}
+
+		// TODO: remove this once the logic is cleaned up
+		if (!client) {
+			throw new Error("finalInit called with undefined client, this is a bug");
+		}
+
+		initializeClient(socket, client, token, lastMessage, openChannel);
+	};
 
 	const initClient = () => {
+		if (!client) {
+			throw new Error("initClient called with undefined client");
+		}
+
 		// Configuration does not change during runtime of TL,
 		// and the client listens to this event only once
-		if (!data.hasConfig) {
+		if (data && (!("hasConfig" in data) || !data.hasConfig)) {
 			socket.emit("configuration", getClientConfiguration());
 
 			socket.emit(
@@ -950,8 +975,10 @@ function performAuthentication(this: Socket, data) {
 			);
 		}
 
+		const clientIP = getClientIp(socket);
+
 		client.config.browser = {
-			ip: getClientIp(socket),
+			ip: clientIP,
 			isSecure: getClientSecure(socket),
 			language: getClientLanguage(socket),
 		};
@@ -961,8 +988,9 @@ function performAuthentication(this: Socket, data) {
 			return finalInit();
 		}
 
-		reverseDnsLookup(client.config.browser?.ip, (hostname) => {
-			client.config.browser!.hostname = hostname;
+		const cb_client = client; // ensure that TS figures out that client can't be nil
+		reverseDnsLookup(clientIP, (hostname) => {
+			cb_client.config.browser!.hostname = hostname;
 
 			finalInit();
 		});
@@ -973,9 +1001,10 @@ function performAuthentication(this: Socket, data) {
 		client.connect();
 		manager!.clients.push(client);
 
+		const cb_client = client; // ensure TS can see we never have a nil client
 		socket.on("disconnect", function () {
-			manager!.clients = _.without(manager!.clients, client);
-			client.quit();
+			manager!.clients = _.without(manager!.clients, cb_client);
+			cb_client.quit();
 		});
 
 		initClient();
@@ -987,7 +1016,7 @@ function performAuthentication(this: Socket, data) {
 		return;
 	}
 
-	const authCallback = (success) => {
+	const authCallback = (success: boolean) => {
 		// Authorization failed
 		if (!success) {
 			if (!client) {
@@ -1012,6 +1041,10 @@ function performAuthentication(this: Socket, data) {
 		// load it and find the user again (this happens with LDAP)
 		if (!client) {
 			client = manager!.loadUser(data.user);
+
+			if (!client) {
+				throw new Error(`authCallback: ${data.user} not found after second lookup`);
+			}
 		}
 
 		initClient();
@@ -1020,14 +1053,21 @@ function performAuthentication(this: Socket, data) {
 	client = manager!.findClient(data.user);
 
 	// We have found an existing user and client has provided a token
-	if (client && data.token) {
+	if (client && "token" in data && data.token) {
 		const providedToken = client.calculateTokenHash(data.token);
 
 		if (Object.prototype.hasOwnProperty.call(client.config.sessions, providedToken)) {
 			token = providedToken;
 
-			return authCallback(true);
+			authCallback(true);
+			return;
 		}
+	}
+
+	if (!("user" in data && "password" in data)) {
+		log.warn("performAuthentication: callback data has no user or no password");
+		authCallback(false);
+		return;
 	}
 
 	Auth.initialize().then(() => {

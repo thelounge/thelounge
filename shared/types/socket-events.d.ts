@@ -101,17 +101,19 @@ interface ServerToClientEvents {
 	}>;
 }
 
+type AuthPerformData =
+	| Record<string, never> // funny way of saying an empty object
+	| {user: string; password: string}
+	| {
+			user: string;
+			token: string;
+			lastMessage: number;
+			openChannel: number | null;
+			hasConfig: boolean;
+	  };
+
 interface ClientToServerEvents {
-	"auth:perform": EventHandler<
-		| {user: string; password: string}
-		| {
-				user: string;
-				token: string;
-				lastMessage: number;
-				openChannel: number | null;
-				hasConfig: boolean;
-		  }
-	>;
+	"auth:perform": EventHandler<AuthPerformData>;
 
 	changelog: NoPayloadEventHandler;
 
