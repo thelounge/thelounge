@@ -41,9 +41,9 @@
 <script lang="ts">
 import Mousetrap from "mousetrap";
 import {computed, defineComponent, ref, watch} from "vue";
-import {onBeforeRouteLeave, onBeforeRouteUpdate} from "vue-router";
 import eventbus from "../js/eventbus";
-import {ClientChan, ClientMessage, ClientLinkPreview} from "../js/types";
+import {ClientChan, ClientLinkPreview} from "../js/types";
+import {SharedMsg} from "../../shared/types/msg";
 
 export default defineComponent({
 	name: "ImageViewer",
@@ -104,9 +104,9 @@ export default defineComponent({
 			}
 
 			const links = channel.value.messages
-				.map((msg) => msg.previews)
+				.map((msg: SharedMsg) => msg.previews)
 				.flat()
-				.filter((preview) => preview.thumb);
+				.filter((preview) => preview && preview.thumb);
 
 			const currentIndex = links.indexOf(link.value);
 
