@@ -211,7 +211,6 @@ describe("Chan", function () {
 				"topic",
 				"type",
 				"unread",
-				"users",
 				// the following are there in special cases, need to fix the types
 				"num_users",
 				"special",
