@@ -1,6 +1,7 @@
 import _ from "lodash";
 import {LinkPreview} from "../plugins/irc-events/link";
 import User from "./user";
+import {ClientTags} from "./client-tags";
 
 export type UserInMessage = Partial<User> & {
 	mode: string;
@@ -18,6 +19,7 @@ export enum MessageType {
 	LOGIN = "login",
 	LOGOUT = "logout",
 	MESSAGE = "message",
+	TAGMSG = "tagmsg",
 	MODE = "mode",
 	MODE_CHANNEL = "mode_channel",
 	MODE_USER = "mode_user", // RPL_UMODEIS
@@ -61,6 +63,8 @@ class Msg {
 	gecos!: string;
 	account!: boolean;
 
+	client_tags: ClientTags;
+
 	// these are all just for error:
 	error!: string;
 	nick!: string;
@@ -86,6 +90,8 @@ class Msg {
 				}
 			});
 		}
+
+		this.client_tags = new ClientTags({});
 
 		_.defaults(this, attr, {
 			from: {},
