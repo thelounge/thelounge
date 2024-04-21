@@ -1,9 +1,14 @@
 <template>
-	<NetworkForm :handle-submit="handleSubmit" :defaults="defaults" :disabled="disabled" />
+	<NetworkForm
+		:disabled-reason="disabledReason"
+		:handle-submit="handleSubmit"
+		:defaults="defaults"
+		:disabled="disabled"
+	/>
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from "vue";
+import {defineComponent, onMounted, ref} from "vue";
 
 import socket from "../../js/socket";
 import {useStore} from "../../js/store";
@@ -21,11 +26,27 @@ export default defineComponent({
 		const store = useStore();
 
 		const disabled = ref(false);
+		const disabledReason = ref("");
 
 		const handleSubmit = (data: Record<string, any>) => {
 			disabled.value = true;
 			socket.emit("network:new", data);
 		};
+
+		onMounted(() => {
+			if (
+				store.state.serverConfiguration?.lockNetwork &&
+				store.state.serverConfiguration?.allowMultipleSameHostConnections
+			) {
+				if (store.state.networks.length > 0) {
+					disabled.value = true;
+					disabledReason.value = "You have already connected and cannot connect again.";
+				} else {
+					disabled.value = false;
+					disabledReason.value = "";
+				}
+			}
+		});
 
 		const parseOverrideParams = (params?: Record<string, string>) => {
 			if (!params) {

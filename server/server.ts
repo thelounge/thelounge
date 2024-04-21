@@ -47,7 +47,12 @@ type IndexTemplateConfiguration = ServerConfiguration & {
 
 export type ClientConfiguration = Pick<
 	ConfigType,
-	"public" | "lockNetwork" | "useHexIp" | "prefetch" | "defaults"
+	| "public"
+	| "lockNetwork"
+	| "useHexIp"
+	| "prefetch"
+	| "defaults"
+	| "allowMultipleSameHostConnections"
 > & {
 	fileUpload: boolean;
 	ldapEnabled: boolean;
@@ -479,6 +484,12 @@ function initializeClient(
 	});
 
 	socket.on("network:new", (data) => {
+		if (Config.values.lockNetwork && Config.values.allowMultipleSameHostConnections) {
+			if (client.networks.length > 0) {
+				return;
+			}
+		}
+
 		if (_.isPlainObject(data)) {
 			// prevent people from overriding webirc settings
 			data.uuid = null;
@@ -863,6 +874,8 @@ function getClientConfiguration(): ClientConfiguration {
 		"lockNetwork",
 		"useHexIp",
 		"prefetch",
+		"allowMultipleSameHostConnections",
+		// TODO: remove this type cast
 	]) as ClientConfiguration;
 
 	config.fileUpload = Config.values.fileUpload.enable;

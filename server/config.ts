@@ -102,6 +102,7 @@ export type ConfigType = {
 	leaveMessage: string;
 	defaults: Defaults;
 	lockNetwork: boolean;
+	allowMultipleSameHostConnections: boolean;
 	messageStorage: string[];
 	storagePolicy: StoragePolicy;
 	useHexIp: boolean;
