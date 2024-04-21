@@ -10,11 +10,14 @@ import storage from "../storage";
 import Client from "../../client";
 import Chan from "../../models/chan";
 import Msg from "../../models/msg";
+import contentDisposition from "content-disposition";
+import path from "path";
 
 type FetchRequest = {
 	data: Buffer;
 	type: string;
 	size: number;
+	filename: string | null;
 };
 const currentFetchPromises = new Map<string, Promise<FetchRequest>>();
 const imageTypeRegex = /^image\/.+/;
@@ -30,6 +33,7 @@ export type LinkPreview = {
 	shown?: boolean | null;
 	error?: string;
 	message?: string;
+	filename: string | null;
 
 	media?: string;
 	mediaType?: string;
@@ -68,6 +72,7 @@ export default function (client: Client, chan: Chan, msg: Msg, cleanText: string
 			size: -1,
 			link: link.link, // Send original matched link to the client
 			shown: null,
+			filename: null,
 		};
 
 		cleanLinks.push(preview);
@@ -243,6 +248,7 @@ function parse(msg: Msg, chan: Chan, preview: LinkPreview, res: FetchRequest, cl
 	let promise: Promise<FetchRequest | null> | null = null;
 
 	preview.size = res.size;
+	preview.filename = res.filename;
 
 	switch (res.type) {
 		case "text/html":
@@ -431,6 +437,7 @@ function fetch(uri: string, headers: Record<string, string>) {
 		let contentLength = 0;
 		let contentType: string | undefined;
 		let limit = Config.values.prefetchMaxImageSize * 1024;
+		let filename: string | null = null;
 
 		try {
 			const gotStream = got.stream(uri, {
@@ -444,6 +451,17 @@ function fetch(uri: string, headers: Record<string, string>) {
 				.on("response", function (res) {
 					contentLength = parseInt(res.headers["content-length"], 10) || 0;
 					contentType = res.headers["content-type"];
+
+					filename =
+						"content-disposition" in res.headers
+							? contentDisposition?.parse(res.headers["content-disposition"])
+									.parameters.filename || null
+							: null;
+
+					if (filename === null) {
+						const basename = decodeURI(path.basename(new URL(uri).pathname));
+						filename = basename.indexOf(".") > 0 ? basename : null;
+					}
 
 					if (contentType && imageTypeRegex.test(contentType)) {
 						// response is an image
@@ -488,7 +506,7 @@ function fetch(uri: string, headers: Record<string, string>) {
 						type = contentType.split(/ *; */).shift() || "";
 					}
 
-					resolve({data: buffer, type, size});
+					resolve({data: buffer, type, size, filename});
 				});
 		} catch (e: any) {
 			return reject(e);

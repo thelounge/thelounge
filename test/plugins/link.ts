@@ -56,6 +56,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 		expect(message.previews).to.deep.equal([
 			{
 				body: "",
+				filename: null,
 				head: "",
 				link: url,
 				thumb: "",
@@ -93,6 +94,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 		expect(message.previews).to.deep.equal([
 			{
 				body: "",
+				filename: null,
 				head: "",
 				link: url,
 				thumb: "",
@@ -425,6 +427,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 		expect(message.previews).to.eql([
 			{
 				body: "",
+				filename: null,
 				head: "",
 				link: url_one,
 				thumb: "",
@@ -434,6 +437,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 			},
 			{
 				body: "",
+				filename: null,
 				head: "",
 				link: url_two,
 				thumb: "",
@@ -608,6 +612,7 @@ Vivamus bibendum vulputate tincidunt. Sed vitae ligula felis.`;
 		expect(message.previews).to.deep.equal([
 			{
 				type: "loading",
+				filename: null,
 				head: "",
 				body: "",
 				thumb: "",
