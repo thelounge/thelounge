@@ -5,7 +5,7 @@ import {SharedNetwork} from "../../shared/types/network";
 import {SharedUser} from "../../shared/types/user";
 import {SharedMention} from "../../shared/types/mention";
 import {SharedConfiguration, LockedSharedConfiguration} from "../../shared/types/config";
-import {LinkPreview} from "../../shared/types/msg";
+import {LinkPreview, SharedMsg} from "../../shared/types/msg";
 
 interface LoungeWindow extends Window {
 	g_TheLoungeRemoveLoading?: () => void;
