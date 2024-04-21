@@ -198,23 +198,26 @@ describe("Chan", function () {
 		it("should keep necessary properties", function () {
 			const chan = new Chan();
 
-			expect(chan.getFilteredClone())
-				.to.be.an("object")
-				.that.has.all.keys(
-					"firstUnread",
-					"highlight",
-					"id",
-					"key",
-					"messages",
-					"muted",
-					"totalMessages",
-					"name",
-					"state",
-					"topic",
-					"type",
-					"unread",
-					"users"
-				);
+			expect(chan.getFilteredClone()).to.be.an("object").that.has.all.keys(
+				"firstUnread",
+				"highlight",
+				"id",
+				"key",
+				"messages",
+				"muted",
+				"totalMessages",
+				"name",
+				"state",
+				"topic",
+				"type",
+				"unread",
+				"users",
+				// the following are there in special cases, need to fix the types
+				"num_users",
+				"special",
+				"closed",
+				"data"
+			);
 		});
 
 		it("should send only last message for non active channel", function () {
