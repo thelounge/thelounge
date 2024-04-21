@@ -217,7 +217,6 @@ class Chan {
 			type: this.type,
 			state: this.state,
 
-			userAway: this.userAway,
 			special: this.special,
 			data: this.data,
 			closed: this.closed,
