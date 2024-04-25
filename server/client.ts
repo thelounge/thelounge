@@ -6,10 +6,12 @@ import crypto from "crypto";
 import colors from "chalk";
 
 import log from "./log";
-import Chan, {ChanConfig, Channel, ChanType} from "./models/chan";
-import Msg, {MessageType, UserInMessage} from "./models/msg";
+import Chan, {ChanConfig} from "./models/chan";
+import Msg from "./models/msg";
 import Config from "./config";
 import {condensedTypes} from "../shared/irc";
+import {MessageType} from "../shared/types/msg";
+import {SharedMention} from "../shared/types/mention";
 
 import inputs from "./plugins/inputs";
 import PublicClient from "./plugins/packages/publicClient";
@@ -17,11 +19,12 @@ import SqliteMessageStorage from "./plugins/messageStorage/sqlite";
 import TextFileMessageStorage from "./plugins/messageStorage/text";
 import Network, {IgnoreListItem, NetworkConfig, NetworkWithIrcFramework} from "./models/network";
 import ClientManager from "./clientManager";
-import {MessageStorage, SearchQuery, SearchResponse} from "./plugins/messageStorage/types";
+import {MessageStorage} from "./plugins/messageStorage/types";
 import {StorageCleaner} from "./storageCleaner";
-
-type OrderItem = Chan["id"] | Network["uuid"];
-type Order = OrderItem[];
+import {SearchQuery, SearchResponse} from "../shared/types/storage";
+import {SharedChan, ChanType} from "../shared/types/chan";
+import {SharedNetwork} from "../shared/types/network";
+import {ServerToClientEvents} from "../shared/types/socket-events";
 
 const events = [
 	"away",
@@ -82,15 +85,6 @@ export type UserConfig = {
 	networks?: NetworkConfig[];
 };
 
-export type Mention = {
-	chanId: number;
-	msgId: number;
-	type: MessageType;
-	time: Date;
-	text: string;
-	from: UserInMessage;
-};
-
 class Client {
 	awayMessage!: string;
 	lastActiveChannel!: number;
@@ -98,12 +92,12 @@ class Client {
 		[socketId: string]: {token: string; openChannel: number};
 	};
 	config!: UserConfig;
-	id!: number;
+	id: string;
 	idMsg!: number;
 	idChan!: number;
 	name!: string;
 	networks!: Network[];
-	mentions!: Mention[];
+	mentions!: SharedMention[];
 	manager!: ClientManager;
 	messageStorage!: MessageStorage[];
 	highlightRegex!: RegExp | null;
@@ -113,12 +107,12 @@ class Client {
 	fileHash!: string;
 
 	constructor(manager: ClientManager, name?: string, config = {} as UserConfig) {
+		this.id = uuidv4();
 		_.merge(this, {
 			awayMessage: "",
 			lastActiveChannel: -1,
 			attachedClients: {},
 			config: config,
-			id: uuidv4(),
 			idChan: 1,
 			idMsg: 1,
 			name: name,
@@ -229,9 +223,12 @@ class Client {
 		return chan;
 	}
 
-	emit(event: string, data?: any) {
+	emit<Ev extends keyof ServerToClientEvents>(
+		event: Ev,
+		...args: Parameters<ServerToClientEvents[Ev]>
+	) {
 		if (this.manager !== null) {
-			this.manager.sockets.in(this.id.toString()).emit(event, data);
+			this.manager.sockets.in(this.id).emit(event, ...args);
 		}
 	}
 
@@ -351,7 +348,7 @@ class Client {
 
 		client.networks.push(network);
 		client.emit("network", {
-			networks: [network.getFilteredClone(this.lastActiveChannel, -1)],
+			network: network.getFilteredClone(this.lastActiveChannel, -1),
 		});
 
 		if (!network.validate(client)) {
@@ -697,56 +694,39 @@ class Client {
 		this.emit("open", targetNetChan.chan.id);
 	}
 
-	sort(data: {order: Order; type: "networks" | "channels"; target: string}) {
-		const order = data.order;
+	sortChannels(netid: SharedNetwork["uuid"], order: SharedChan["id"][]) {
+		const network = _.find(this.networks, {uuid: netid});
 
-		if (!_.isArray(order)) {
+		if (!network) {
 			return;
 		}
 
-		switch (data.type) {
-			case "networks":
-				this.networks.sort((a, b) => order.indexOf(a.uuid) - order.indexOf(b.uuid));
-
-				// Sync order to connected clients
-				this.emit("sync_sort", {
-					order: this.networks.map((obj) => obj.uuid),
-					type: data.type,
-				});
-
-				break;
-
-			case "channels": {
-				const network = _.find(this.networks, {uuid: data.target});
-
-				if (!network) {
-					return;
-				}
-
-				network.channels.sort((a, b) => {
-					// Always sort lobby to the top regardless of what the client has sent
-					// Because there's a lot of code that presumes channels[0] is the lobby
-					if (a.type === ChanType.LOBBY) {
-						return -1;
-					} else if (b.type === ChanType.LOBBY) {
-						return 1;
-					}
-
-					return order.indexOf(a.id) - order.indexOf(b.id);
-				});
-
-				// Sync order to connected clients
-				this.emit("sync_sort", {
-					order: network.channels.map((obj) => obj.id),
-					type: data.type,
-					target: network.uuid,
-				});
-
-				break;
+		network.channels.sort((a, b) => {
+			// Always sort lobby to the top regardless of what the client has sent
+			// Because there's a lot of code that presumes channels[0] is the lobby
+			if (a.type === ChanType.LOBBY) {
+				return -1;
+			} else if (b.type === ChanType.LOBBY) {
+				return 1;
 			}
-		}
 
+			return order.indexOf(a.id) - order.indexOf(b.id);
+		});
 		this.save();
+		// Sync order to connected clients
+		this.emit("sync_sort:channels", {
+			network: network.uuid,
+			order: network.channels.map((obj) => obj.id),
+		});
+	}
+
+	sortNetworks(order: SharedNetwork["uuid"][]) {
+		this.networks.sort((a, b) => order.indexOf(a.uuid) - order.indexOf(b.uuid));
+		this.save();
+		// Sync order to connected clients
+		this.emit("sync_sort:networks", {
+			order: this.networks.map((obj) => obj.uuid),
+		});
 	}
 
 	names(data: {target: number}) {
@@ -776,7 +756,7 @@ class Client {
 
 	quit(signOut?: boolean) {
 		const sockets = this.manager.sockets.sockets;
-		const room = sockets.adapter.rooms.get(this.id.toString());
+		const room = sockets.adapter.rooms.get(this.id);
 
 		if (room) {
 			for (const user of room) {
@@ -836,12 +816,13 @@ class Client {
 	}
 
 	// TODO: type session to this.attachedClients
-	registerPushSubscription(session: any, subscription: ClientPushSubscription, noSave = false) {
+	registerPushSubscription(session: any, subscription: PushSubscriptionJSON, noSave = false) {
 		if (
 			!_.isPlainObject(subscription) ||
-			!_.isPlainObject(subscription.keys) ||
 			typeof subscription.endpoint !== "string" ||
 			!/^https?:\/\//.test(subscription.endpoint) ||
+			!_.isPlainObject(subscription.keys) ||
+			!subscription.keys || // TS compiler doesn't understand isPlainObject
 			typeof subscription.keys.p256dh !== "string" ||
 			typeof subscription.keys.auth !== "string"
 		) {

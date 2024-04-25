@@ -1,6 +1,7 @@
 import {expect} from "chai";
 import {NetworkConfig} from "../server/models/network";
-import {ChanConfig, ChanType} from "../server/models/chan";
+import {ChanConfig} from "../server/models/chan";
+import {ChanType} from "../shared/types/chan";
 import ClientManager from "../server/clientManager";
 import Client from "../server/client";
 import log from "../server/log";

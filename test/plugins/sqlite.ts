@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 import fs from "fs";
 import path from "path";
 import {expect} from "chai";
 import util from "../util";
-import Msg, {MessageType} from "../../server/models/msg";
+import Msg from "../../server/models/msg";
+import {MessageType} from "../../shared/types/msg";
 import Config from "../../server/config";
 import MessageStorage, {
 	currentSchemaVersion,

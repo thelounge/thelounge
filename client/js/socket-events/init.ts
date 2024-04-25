@@ -1,10 +1,11 @@
-import {nextTick} from "vue";
 import socket from "../socket";
 import storage from "../localStorage";
+import {toClientChan} from "../chan";
 import {router, switchToChannel, navigate} from "../router";
 import {store} from "../store";
 import parseIrcUri from "../helpers/parseIrcUri";
-import {ClientNetwork, InitClientChan} from "../types";
+import {ClientNetwork, ClientChan} from "../types";
+import {SharedNetwork, SharedNetworkChan} from "../../../shared/types/network";
 
 socket.on("init", async function (data) {
 	store.commit("networks", mergeNetworkData(data.networks));
@@ -31,54 +32,54 @@ socket.on("init", async function (data) {
 			window.g_TheLoungeRemoveLoading();
 		}
 
-		const handledQuery = await handleQueryParams();
+		if (await handleQueryParams()) {
+			// If we handled query parameters like irc:// links or just general
+			// connect parameters in public mode, then nothing to do here
+			return;
+		}
 
-		// If we handled query parameters like irc:// links or just general
-		// connect parameters in public mode, then nothing to do here
-		if (!handledQuery) {
-			// If we are on an unknown route or still on SignIn component
-			// then we can open last known channel on server, or Connect window if none
-			if (
-				!router.currentRoute?.value?.name ||
-				router.currentRoute?.value?.name === "SignIn"
-			) {
-				const channel = store.getters.findChannel(data.active);
+		// If we are on an unknown route or still on SignIn component
+		// then we can open last known channel on server, or Connect window if none
+		if (!router.currentRoute?.value?.name || router.currentRoute?.value?.name === "SignIn") {
+			const channel = store.getters.findChannel(data.active);
 
-				if (channel) {
-					switchToChannel(channel.channel);
-				} else if (store.state.networks.length > 0) {
-					// Server is telling us to open a channel that does not exist
-					// For example, it can be unset if you first open the page after server start
-					switchToChannel(store.state.networks[0].channels[0]);
-				} else {
-					await navigate("Connect");
-				}
+			if (channel) {
+				switchToChannel(channel.channel);
+			} else if (store.state.networks.length > 0) {
+				// Server is telling us to open a channel that does not exist
+				// For example, it can be unset if you first open the page after server start
+				switchToChannel(store.state.networks[0].channels[0]);
+			} else {
+				await navigate("Connect");
 			}
 		}
 	}
 });
 
-function mergeNetworkData(newNetworks: ClientNetwork[]) {
+function mergeNetworkData(newNetworks: SharedNetwork[]): ClientNetwork[] {
 	const stored = storage.get("thelounge.networks.collapsed");
 	const collapsedNetworks = stored ? new Set(JSON.parse(stored)) : new Set();
+	const result: ReturnType<typeof mergeNetworkData> = [];
 
-	for (let n = 0; n < newNetworks.length; n++) {
-		const network = newNetworks[n];
-		const currentNetwork = store.getters.findNetwork(network.uuid);
+	for (const sharedNet of newNetworks) {
+		const currentNetwork = store.getters.findNetwork(sharedNet.uuid);
 
 		// If this network is new, set some default variables and initalize channel variables
 		if (!currentNetwork) {
-			network.isJoinChannelShown = false;
-			network.isCollapsed = collapsedNetworks.has(network.uuid);
-			network.channels.forEach(store.getters.initChannel);
-
+			const newNet: ClientNetwork = {
+				...sharedNet,
+				channels: sharedNet.channels.map(toClientChan),
+				isJoinChannelShown: false,
+				isCollapsed: collapsedNetworks.has(sharedNet.uuid),
+			};
+			result.push(newNet);
 			continue;
 		}
 
 		// Merge received network object into existing network object on the client
 		// so the object reference stays the same (e.g. for currentChannel state)
-		for (const key in network) {
-			if (!Object.prototype.hasOwnProperty.call(network, key)) {
+		for (const key in sharedNet) {
+			if (!Object.prototype.hasOwnProperty.call(sharedNet, key)) {
 				continue;
 			}
 
@@ -86,81 +87,82 @@ function mergeNetworkData(newNetworks: ClientNetwork[]) {
 			if (key === "channels") {
 				currentNetwork.channels = mergeChannelData(
 					currentNetwork.channels,
-					network.channels as InitClientChan[]
+					sharedNet.channels
 				);
 			} else {
-				currentNetwork[key] = network[key];
+				currentNetwork[key] = sharedNet[key];
 			}
 		}
 
-		newNetworks[n] = currentNetwork;
+		result.push(currentNetwork);
 	}
 
-	return newNetworks;
+	return result;
 }
 
-function mergeChannelData(oldChannels: InitClientChan[], newChannels: InitClientChan[]) {
-	for (let c = 0; c < newChannels.length; c++) {
-		const channel = newChannels[c];
-		const currentChannel = oldChannels.find((chan) => chan.id === channel.id);
+function mergeChannelData(
+	oldChannels: ClientChan[],
+	newChannels: SharedNetworkChan[]
+): ClientChan[] {
+	const result: ReturnType<typeof mergeChannelData> = [];
 
-		// This is a new channel that was joined while client was disconnected, initialize it
+	for (const newChannel of newChannels) {
+		const currentChannel = oldChannels.find((chan) => chan.id === newChannel.id);
+
 		if (!currentChannel) {
-			store.getters.initChannel(channel);
-
+			// This is a new channel that was joined while client was disconnected, initialize it
+			const current = toClientChan(newChannel);
+			result.push(current);
+			emitNamesOrMarkUsersOudated(current); // TODO: this should not carry logic like that
 			continue;
 		}
 
 		// Merge received channel object into existing currentChannel
 		// so the object references are exactly the same (e.g. in store.state.activeChannel)
-		for (const key in channel) {
-			if (!Object.prototype.hasOwnProperty.call(channel, key)) {
-				continue;
-			}
 
-			// Server sends an empty users array, client requests it whenever needed
-			if (key === "users") {
-				if (channel.type === "channel") {
-					if (
-						store.state.activeChannel &&
-						store.state.activeChannel.channel === currentChannel
-					) {
-						// For currently open channel, request the user list straight away
-						socket.emit("names", {
-							target: channel.id,
-						});
-					} else {
-						// For all other channels, mark the user list as outdated
-						// so an update will be requested whenever user switches to these channels
-						currentChannel.usersOutdated = true;
-					}
-				}
+		emitNamesOrMarkUsersOudated(currentChannel); // TODO: this should not carry logic like that
 
-				continue;
-			}
-
-			// Server sends total count of messages in memory, we compare it to amount of messages
-			// on the client, and decide whether theres more messages to load from server
-			if (key === "totalMessages") {
-				currentChannel.moreHistoryAvailable =
-					channel.totalMessages! > currentChannel.messages.length;
-
-				continue;
-			}
-
-			// Reconnection only sends new messages, so merge it on the client
-			// Only concat if server sent us less than 100 messages so we don't introduce gaps
-			if (key === "messages" && currentChannel.messages && channel.messages.length < 100) {
-				currentChannel.messages = currentChannel.messages.concat(channel.messages);
-			} else {
-				currentChannel[key] = channel[key];
-			}
+		// Reconnection only sends new messages, so merge it on the client
+		// Only concat if server sent us less than 100 messages so we don't introduce gaps
+		if (currentChannel.messages && newChannel.messages.length < 100) {
+			currentChannel.messages = currentChannel.messages.concat(newChannel.messages);
+		} else {
+			currentChannel.messages = newChannel.messages;
 		}
 
-		newChannels[c] = currentChannel;
+		// TODO: this is copies more than what the compiler knows about
+		for (const key in newChannel) {
+			if (!Object.hasOwn(currentChannel, key)) {
+				continue;
+			}
+
+			if (key === "messages") {
+				// already handled
+				continue;
+			}
+
+			currentChannel[key] = newChannel[key];
+		}
+
+		result.push(currentChannel);
 	}
 
-	return newChannels;
+	return result;
+}
+
+function emitNamesOrMarkUsersOudated(chan: ClientChan) {
+	if (store.state.activeChannel && store.state.activeChannel.channel === chan) {
+		// For currently open channel, request the user list straight away
+		socket.emit("names", {
+			target: chan.id,
+		});
+		chan.usersOutdated = false;
+		return;
+	}
+
+	// For all other channels, mark the user list as outdated
+	// so an update will be requested whenever user switches to these channels
+	chan.usersOutdated = true;
 }
 
 async function handleQueryParams() {
@@ -170,30 +172,28 @@ async function handleQueryParams() {
 
 	const params = new URLSearchParams(document.location.search);
 
-	const cleanParams = () => {
-		// Remove query parameters from url without reloading the page
-		const cleanUri = window.location.origin + window.location.pathname + window.location.hash;
-		window.history.replaceState({}, document.title, cleanUri);
-	};
-
 	if (params.has("uri")) {
 		// Set default connection settings from IRC protocol links
 		const uri = params.get("uri");
 		const queryParams = parseIrcUri(String(uri));
-
-		cleanParams();
+		removeQueryParams();
 		await router.push({name: "Connect", query: queryParams});
-
 		return true;
-	} else if (document.body.classList.contains("public") && document.location.search) {
+	}
+
+	if (document.body.classList.contains("public") && document.location.search) {
 		// Set default connection settings from url params
 		const queryParams = Object.fromEntries(params.entries());
-
-		cleanParams();
+		removeQueryParams();
 		await router.push({name: "Connect", query: queryParams});
-
 		return true;
 	}
 
 	return false;
+}
+
+// Remove query parameters from url without reloading the page
+function removeQueryParams() {
+	const cleanUri = window.location.origin + window.location.pathname + window.location.hash;
+	window.history.replaceState(null, "", cleanUri);
 }

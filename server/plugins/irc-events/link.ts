@@ -6,6 +6,7 @@ import mime from "mime-types";
 import log from "../../log";
 import Config from "../../config";
 import {findLinksWithSchema} from "../../../shared/linkify";
+import {LinkPreview} from "../../../shared/types/msg";
 import storage from "../storage";
 import Client from "../../client";
 import Chan from "../../models/chan";
@@ -19,23 +20,6 @@ type FetchRequest = {
 const currentFetchPromises = new Map<string, Promise<FetchRequest>>();
 const imageTypeRegex = /^image\/.+/;
 const mediaTypeRegex = /^(audio|video)\/.+/;
-
-export type LinkPreview = {
-	type: string;
-	head: string;
-	body: string;
-	thumb: string;
-	size: number;
-	link: string; // Send original matched link to the client
-	shown?: boolean | null;
-	error?: string;
-	message?: string;
-
-	media?: string;
-	mediaType?: string;
-	maxSize?: number;
-	thumbActualUrl?: string;
-};
 
 export default function (client: Client, chan: Chan, msg: Msg, cleanText: string) {
 	if (!Config.values.prefetch) {

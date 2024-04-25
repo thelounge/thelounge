@@ -3,19 +3,12 @@
 import {ActionContext, createStore, Store, useStore as baseUseStore} from "vuex";
 import {createSettingsStore} from "./store-settings";
 import storage from "./localStorage";
-import type {
-	ClientChan,
-	ClientConfiguration,
-	ClientNetwork,
-	InitClientChan,
-	NetChan,
-	ClientMessage,
-	ClientMention,
-} from "./types";
+import type {ClientChan, ClientNetwork, NetChan, ClientMention, ClientMessage} from "./types";
 import type {InjectionKey} from "vue";
 
 import {SettingsState} from "./settings";
-import {SearchQuery} from "../../server/plugins/messageStorage/types";
+import {SearchQuery} from "../../shared/types/storage";
+import {SharedConfiguration, LockedSharedConfiguration} from "../../shared/types/config";
 
 const appName = document.title;
 
@@ -59,7 +52,7 @@ export type State = {
 	mentions: ClientMention[];
 	hasServiceWorker: boolean;
 	pushNotificationState: string;
-	serverConfiguration: ClientConfiguration | null;
+	serverConfiguration: SharedConfiguration | LockedSharedConfiguration | null;
 	sessions: ClientSession[];
 	sidebarOpen: boolean;
 	sidebarDragging: boolean;
@@ -131,7 +124,6 @@ type Getters = {
 	findNetwork: (state: State) => (uuid: string) => ClientNetwork | null;
 	highlightCount(state: State): number;
 	title(state: State, getters: Omit<Getters, "title">): string;
-	initChannel: () => (channel: InitClientChan) => ClientChan;
 };
 
 // getters without the state argument
@@ -201,31 +193,6 @@ const getters: Getters = {
 		const channelname = state.activeChannel ? `${state.activeChannel.channel.name} — ` : "";
 
 		return alertEventCount + channelname + appName;
-	},
-	initChannel: () => (channel: InitClientChan) => {
-		// TODO: This should be a mutation
-		channel.pendingMessage = "";
-		channel.inputHistoryPosition = 0;
-
-		channel.inputHistory = [""].concat(
-			channel.messages
-				.filter((m) => m.self && m.text && m.type === "message")
-				.map((m) => m.text)
-				.reverse()
-				.slice(0, 99)
-		);
-		channel.historyLoading = false;
-		channel.scrolledToBottom = true;
-		channel.editTopic = false;
-
-		channel.moreHistoryAvailable = channel.totalMessages! > channel.messages.length;
-		delete channel.totalMessages;
-
-		if (channel.type === "channel") {
-			channel.usersOutdated = true;
-		}
-
-		return channel as ClientChan;
 	},
 };
 

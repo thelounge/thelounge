@@ -26,36 +26,43 @@ export default defineComponent({
 	},
 	setup(props) {
 		const errorMessage = computed(() => {
+			// TODO: enforce chan and nick fields so that we can get rid of that
+			const chan = props.message.channel || "!UNKNOWN_CHAN";
+			const nick = props.message.nick || "!UNKNOWN_NICK";
+
 			switch (props.message.error) {
 				case "bad_channel_key":
-					return `Cannot join ${props.message.channel} - Bad channel key.`;
+					return `Cannot join ${chan} - Bad channel key.`;
 				case "banned_from_channel":
-					return `Cannot join ${props.message.channel} - You have been banned from the channel.`;
+					return `Cannot join ${chan} - You have been banned from the channel.`;
 				case "cannot_send_to_channel":
-					return `Cannot send to channel ${props.message.channel}`;
+					return `Cannot send to channel ${chan}`;
 				case "channel_is_full":
-					return `Cannot join ${props.message.channel} - Channel is full.`;
+					return `Cannot join ${chan} - Channel is full.`;
 				case "chanop_privs_needed":
 					return "Cannot perform action: You're not a channel operator.";
 				case "invite_only_channel":
-					return `Cannot join ${props.message.channel} - Channel is invite only.`;
+					return `Cannot join ${chan} - Channel is invite only.`;
 				case "no_such_nick":
-					return `User ${props.message.nick} hasn't logged in or does not exist.`;
+					return `User ${nick} hasn't logged in or does not exist.`;
 				case "not_on_channel":
 					return "Cannot perform action: You're not on the channel.";
 				case "password_mismatch":
 					return "Password mismatch.";
 				case "too_many_channels":
-					return `Cannot join ${props.message.channel} - You've already reached the maximum number of channels allowed.`;
+					return `Cannot join ${chan} - You've already reached the maximum number of channels allowed.`;
 				case "unknown_command":
-					return `Unknown command: ${props.message.command}`;
+					// TODO: not having message.command should never happen, so force existence
+					return `Unknown command: ${props.message.command || "!UNDEFINED_COMMAND_BUG"}`;
 				case "user_not_in_channel":
-					return `User ${props.message.nick} is not on the channel.`;
+					return `User ${nick} is not on the channel.`;
 				case "user_on_channel":
-					return `User ${props.message.nick} is already on the channel.`;
+					return `User ${nick} is already on the channel.`;
 				default:
 					if (props.message.reason) {
-						return `${props.message.reason} (${props.message.error})`;
+						return `${props.message.reason} (${
+							props.message.error || "!UNDEFINED_ERR"
+						})`;
 					}
 
 					return props.message.error;

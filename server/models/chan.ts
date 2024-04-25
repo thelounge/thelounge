@@ -2,36 +2,14 @@ import _ from "lodash";
 import log from "../log";
 import Config from "../config";
 import User from "./user";
-import Msg, {MessageType} from "./msg";
+import Msg from "./msg";
 import storage from "../plugins/storage";
 import Client from "../client";
 import Network from "./network";
 import Prefix from "./prefix";
-
-export enum ChanType {
-	CHANNEL = "channel",
-	LOBBY = "lobby",
-	QUERY = "query",
-	SPECIAL = "special",
-}
-
-export enum SpecialChanType {
-	BANLIST = "list_bans",
-	INVITELIST = "list_invites",
-	CHANNELLIST = "list_channels",
-	IGNORELIST = "list_ignored",
-}
-
-export enum ChanState {
-	PARTED = 0,
-	JOINED = 1,
-}
-
-// eslint-disable-next-line no-use-before-define
-export type FilteredChannel = Chan & {
-	users: [];
-	totalMessages: number;
-};
+import {MessageType, SharedMsg} from "../../shared/types/msg";
+import {ChanType, SpecialChanType, ChanState} from "../../shared/types/chan";
+import {SharedNetworkChan} from "../../shared/types/network";
 
 export type ChanConfig = {
 	name: string;
@@ -60,7 +38,6 @@ class Chan {
 	data?: any;
 	closed?: boolean;
 	num_users?: number;
-	static optionalProperties = ["userAway", "special", "data", "closed", "num_users"];
 
 	constructor(attr?: Partial<Chan>) {
 		_.defaults(this, attr, {
@@ -84,18 +61,11 @@ class Chan {
 	}
 
 	pushMessage(client: Client, msg: Msg, increasesUnread = false) {
-		const chan = this.id;
-		const obj = {chan, msg} as {
-			chan: number;
-			msg: Msg;
-			unread?: number;
-			highlight?: number;
-		};
-
+		const chanId = this.id;
 		msg.id = client.idMsg++;
 
 		// If this channel is open in any of the clients, do not increase unread counter
-		const isOpen = _.find(client.attachedClients, {openChannel: chan}) !== undefined;
+		const isOpen = _.find(client.attachedClients, {openChannel: chanId}) !== undefined;
 
 		if (msg.self) {
 			// reset counters/markers when receiving self-/echo-message
@@ -108,15 +78,15 @@ class Chan {
 			}
 
 			if (increasesUnread || msg.highlight) {
-				obj.unread = ++this.unread;
+				this.unread++;
 			}
 
 			if (msg.highlight) {
-				obj.highlight = ++this.highlight;
+				this.highlight++;
 			}
 		}
 
-		client.emit("msg", obj);
+		client.emit("msg", {chan: chanId, msg, unread: this.unread, highlight: this.highlight});
 
 		// Never store messages in public mode as the session
 		// is completely destroyed when the page gets closed
@@ -144,7 +114,8 @@ class Chan {
 			}
 		}
 	}
-	dereferencePreviews(messages) {
+
+	dereferencePreviews(messages: Msg[]) {
 		if (!Config.values.prefetch || !Config.values.prefetchStorage) {
 			return;
 		}
@@ -160,6 +131,7 @@ class Chan {
 			}
 		});
 	}
+
 	getSortedUsers(irc?: Network["irc"]) {
 		const users = Array.from(this.users.values());
 
@@ -182,21 +154,27 @@ class Chan {
 			return userModeSortPriority[a.mode] - userModeSortPriority[b.mode];
 		});
 	}
+
 	findMessage(msgId: number) {
 		return this.messages.find((message) => message.id === msgId);
 	}
+
 	findUser(nick: string) {
 		return this.users.get(nick.toLowerCase());
 	}
+
 	getUser(nick: string) {
 		return this.findUser(nick) || new User({nick}, new Prefix([]));
 	}
+
 	setUser(user: User) {
 		this.users.set(user.nick.toLowerCase(), user);
 	}
+
 	removeUser(user: User) {
 		this.users.delete(user.nick.toLowerCase());
 	}
+
 	/**
 	 * Get a clean clone of this channel that will be sent to the client.
 	 * This function performs manual cloning of channel object for
@@ -206,38 +184,54 @@ class Chan {
 	 *                                         If true, channel is assumed active.
 	 * @param {int} lastMessage - Last message id seen by active client to avoid sending duplicates.
 	 */
-	getFilteredClone(lastActiveChannel?: number | boolean, lastMessage?: number): FilteredChannel {
-		return Object.keys(this).reduce((newChannel, prop) => {
-			if (Chan.optionalProperties.includes(prop)) {
-				if (this[prop] !== undefined || (Array.isArray(this[prop]) && this[prop].length)) {
-					newChannel[prop] = this[prop];
-				}
-			} else if (prop === "users") {
-				// Do not send users, client requests updated user list whenever needed
-				newChannel[prop] = [];
-			} else if (prop === "messages") {
-				// If client is reconnecting, only send new messages that client has not seen yet
-				if (lastMessage && lastMessage > -1) {
-					// When reconnecting, always send up to 100 messages to prevent message gaps on the client
-					// See https://github.com/thelounge/thelounge/issues/1883
-					newChannel[prop] = this[prop].filter((m) => m.id > lastMessage).slice(-100);
-				} else {
-					// If channel is active, send up to 100 last messages, for all others send just 1
-					// Client will automatically load more messages whenever needed based on last seen messages
-					const messagesToSend =
-						lastActiveChannel === true || this.id === lastActiveChannel ? 100 : 1;
+	getFilteredClone(
+		lastActiveChannel?: number | boolean,
+		lastMessage?: number
+	): SharedNetworkChan {
+		let msgs: SharedMsg[];
 
-					newChannel[prop] = this[prop].slice(-messagesToSend);
-				}
+		// If client is reconnecting, only send new messages that client has not seen yet
+		if (lastMessage && lastMessage > -1) {
+			// When reconnecting, always send up to 100 messages to prevent message gaps on the client
+			// See https://github.com/thelounge/thelounge/issues/1883
+			msgs = this.messages.filter((m) => m.id > lastMessage).slice(-100);
+		} else {
+			// If channel is active, send up to 100 last messages, for all others send just 1
+			// Client will automatically load more messages whenever needed based on last seen messages
+			const messagesToSend =
+				lastActiveChannel === true || this.id === lastActiveChannel ? 100 : 1;
+			msgs = this.messages.slice(-messagesToSend);
+		}
 
-				(newChannel as FilteredChannel).totalMessages = this[prop].length;
-			} else {
-				newChannel[prop] = this[prop];
-			}
+		return {
+			id: this.id,
+			messages: msgs,
+			totalMessages: this.messages.length,
+			name: this.name,
+			key: this.key,
+			topic: this.topic,
+			firstUnread: this.firstUnread,
+			unread: this.unread,
+			highlight: this.highlight,
+			muted: this.muted,
+			type: this.type,
+			state: this.state,
 
-			return newChannel;
-		}, {}) as FilteredChannel;
+			special: this.special,
+			data: this.data,
+			closed: this.closed,
+			num_users: this.num_users,
+		};
+		// TODO: funny array mutation below might need to be reproduced
+		// static optionalProperties = ["userAway", "special", "data", "closed", "num_users"];
+		// return Object.keys(this).reduce((newChannel, prop) => {
+		// 	if (Chan.optionalProperties.includes(prop)) {
+		// 		if (this[prop] !== undefined || (Array.isArray(this[prop]) && this[prop].length)) {
+		// 			newChannel[prop] = this[prop];
+		// 		}
+		// 	}
 	}
+
 	writeUserLog(client: Client, msg: Msg) {
 		this.messages.push(msg);
 
@@ -270,6 +264,7 @@ class Chan {
 			messageStorage.index(target.network, targetChannel, msg).catch((e) => log.error(e));
 		}
 	}
+
 	loadMessages(client: Client, network: Network) {
 		if (!this.isLoggable()) {
 			return;
@@ -326,15 +321,23 @@ class Chan {
 				log.error(`Failed to load messages for ${client.name}: ${err.toString()}`)
 			);
 	}
+
 	isLoggable() {
 		return this.type === ChanType.CHANNEL || this.type === ChanType.QUERY;
 	}
+
 	setMuteStatus(muted: boolean) {
 		this.muted = !!muted;
 	}
 }
 
-function requestZncPlayback(channel, network, from) {
+function requestZncPlayback(channel: Chan, network: Network, from: number) {
+	if (!network.irc) {
+		throw new Error(
+			`requestZncPlayback: no irc field on network "${network.name}", this is a bug`
+		);
+	}
+
 	network.irc.raw("ZNC", "*playback", "PLAY", channel.name, from.toString());
 }
 

@@ -106,7 +106,7 @@ import type {ClientMessage} from "../../js/types";
 import {useStore} from "../../js/store";
 import {useRoute, useRouter} from "vue-router";
 import {switchToChannel} from "../../js/router";
-import {SearchQuery} from "../../../server/plugins/messageStorage/types";
+import {SearchQuery} from "../../../shared/types/storage";
 
 export default defineComponent({
 	name: "SearchResults",

@@ -4,7 +4,8 @@ import {Channel} from "../../models/channel";
 import {Message} from "../../models/message";
 import {Network} from "../../models/network";
 import Client from "../../client";
-import type {MessageType} from "../../models/msg";
+import {SearchQuery, SearchResponse} from "../../../shared/types/storage";
+import type {MessageType} from "../../../shared/types/msg";
 
 export type DeletionRequest = {
 	olderThanDays: number;
@@ -27,17 +28,6 @@ interface MessageStorage {
 
 	canProvideMessages(): boolean;
 }
-
-export type SearchQuery = {
-	searchTerm: string;
-	networkUuid: string;
-	channelName: string;
-	offset: number;
-};
-
-export type SearchResponse = SearchQuery & {
-	results: Message[];
-};
 
 type SearchFunction = (query: SearchQuery) => Promise<SearchResponse>;
 

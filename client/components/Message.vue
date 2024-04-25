@@ -150,10 +150,14 @@ export default defineComponent({
 		});
 
 		const messageComponent = computed(() => {
-			return "message-" + props.message.type;
+			return "message-" + (props.message.type || "invalid"); // TODO: force existence of type in sharedmsg
 		});
 
 		const isAction = () => {
+			if (!props.message.type) {
+				return false;
+			}
+
 			return typeof MessageTypes["message-" + props.message.type] !== "undefined";
 		};
 

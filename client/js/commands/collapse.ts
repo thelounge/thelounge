@@ -11,7 +11,7 @@ function input() {
 	for (const message of store.state.activeChannel.channel.messages) {
 		let toggled = false;
 
-		for (const preview of message.previews) {
+		for (const preview of message.previews || []) {
 			if (preview.shown) {
 				preview.shown = false;
 				toggled = true;

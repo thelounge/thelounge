@@ -1,7 +1,8 @@
 import {IrcEventHandler} from "../../client";
-import {SpecialChanType, ChanType} from "../../models/chan";
 
-import Msg, {MessageType} from "../../models/msg";
+import Msg from "../../models/msg";
+import {MessageType} from "../../../shared/types/msg";
+import {SpecialChanType, ChanType} from "../../../shared/types/chan";
 
 export default <IrcEventHandler>function (irc, network) {
 	const client = this;
@@ -68,6 +69,7 @@ export default <IrcEventHandler>function (irc, network) {
 			client.emit("join", {
 				network: network.uuid,
 				chan: chan.getFilteredClone(true),
+				shouldOpen: false,
 				index: network.addChannel(chan),
 			});
 		} else {

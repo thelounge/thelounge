@@ -7,8 +7,9 @@ import Config from "../../config";
 import Msg, {Message} from "../../models/msg";
 import Chan, {Channel} from "../../models/chan";
 import Helper from "../../helper";
-import type {SearchResponse, SearchQuery, SearchableMessageStorage, DeletionRequest} from "./types";
+import type {SearchableMessageStorage, DeletionRequest} from "./types";
 import Network from "../../models/network";
+import {SearchQuery, SearchResponse} from "../../../shared/types/storage";
 
 // TODO; type
 let sqlite3: any;

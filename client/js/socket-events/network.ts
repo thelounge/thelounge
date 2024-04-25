@@ -1,13 +1,17 @@
 import socket from "../socket";
 import {store} from "../store";
 import {switchToChannel} from "../router";
+import {toClientChan} from "../chan";
+import {ClientNetwork} from "../types";
+import {ChanState} from "../../../shared/types/chan";
 
 socket.on("network", function (data) {
-	const network = data.networks[0];
-
-	network.isJoinChannelShown = false;
-	network.isCollapsed = false;
-	network.channels.forEach(store.getters.initChannel);
+	const network: ClientNetwork = {
+		...data.network,
+		channels: data.network.channels.map(toClientChan),
+		isJoinChannelShown: false,
+		isCollapsed: false,
+	};
 
 	store.commit("networks", [...store.state.networks, network]);
 
@@ -19,7 +23,7 @@ socket.on("network:options", function (data) {
 	const network = store.getters.findNetwork(data.network);
 
 	if (network) {
-		network.serverOptions = data.serverOptions as typeof network.serverOptions;
+		network.serverOptions = data.serverOptions;
 	}
 });
 
@@ -35,8 +39,8 @@ socket.on("network:status", function (data) {
 
 	if (!data.connected) {
 		network.channels.forEach((channel) => {
-			channel.users = [];
-			channel.state = 0;
+			channel.users = []; // TODO: untangle this
+			channel.state = ChanState.PARTED;
 		});
 	}
 });

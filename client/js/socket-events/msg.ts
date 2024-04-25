@@ -3,7 +3,8 @@ import socket from "../socket";
 import {cleanIrcMessage} from "../../../shared/irc";
 import {store} from "../store";
 import {switchToChannel} from "../router";
-import {ClientChan, ClientMention, ClientMessage, NetChan} from "../types";
+import {ClientChan, NetChan, ClientMessage} from "../types";
+import {SharedMsg} from "../../../shared/types/msg";
 
 let pop;
 
@@ -95,6 +96,14 @@ socket.on("msg", function (data) {
 	}
 });
 
+declare global {
+	// this extends the interface from lib.dom with additional stuff which is not
+	// exactly standard but implemented in some browsers
+	interface NotificationOptions {
+		timestamp?: number; // chrome has it, other browsers ignore it
+	}
+}
+
 function notifyMessage(
 	targetId: number,
 	channel: ClientChan,
@@ -122,12 +131,14 @@ function notifyMessage(
 			) {
 				let title: string;
 				let body: string;
+				// TODO: fix msg type and get rid of that conditional
+				const nick = msg.from && msg.from.nick ? msg.from.nick : "unkonown";
 
 				if (msg.type === "invite") {
 					title = "New channel invite:";
-					body = msg.from.nick + " invited you to " + msg.channel;
+					body = nick + " invited you to " + msg.channel;
 				} else {
-					title = String(msg.from.nick);
+					title = nick;
 
 					if (channel.type !== "query") {
 						title += ` (${channel.name})`;
@@ -137,7 +148,8 @@ function notifyMessage(
 						title += " says:";
 					}
 
-					body = cleanIrcMessage(msg.text);
+					// TODO: fix msg type and get rid of that conditional
+					body = cleanIrcMessage(msg.text ? msg.text : "");
 				}
 
 				const timestamp = Date.parse(String(msg.time));
@@ -184,24 +196,40 @@ function notifyMessage(
 	}
 }
 
-function updateUserList(channel, msg) {
-	if (msg.type === "message" || msg.type === "action") {
-		const user = channel.users.find((u) => u.nick === msg.from.nick);
+function updateUserList(channel: ClientChan, msg: SharedMsg) {
+	switch (msg.type) {
+		case "message": // fallthrough
 
-		if (user) {
-			user.lastMessage = new Date(msg.time).getTime() || Date.now();
+		case "action": {
+			const user = channel.users.find((u) => u.nick === msg.from?.nick);
+
+			if (user) {
+				user.lastMessage = new Date(msg.time).getTime() || Date.now();
+			}
+
+			break;
 		}
-	} else if (msg.type === "quit" || msg.type === "part") {
-		const idx = channel.users.findIndex((u) => u.nick === msg.from.nick);
 
-		if (idx > -1) {
-			channel.users.splice(idx, 1);
+		case "quit": // fallthrough
+
+		case "part": {
+			const idx = channel.users.findIndex((u) => u.nick === msg.from?.nick);
+
+			if (idx > -1) {
+				channel.users.splice(idx, 1);
+			}
+
+			break;
 		}
-	} else if (msg.type === "kick") {
-		const idx = channel.users.findIndex((u) => u.nick === msg.target.nick);
 
-		if (idx > -1) {
-			channel.users.splice(idx, 1);
+		case "kick": {
+			const idx = channel.users.findIndex((u) => u.nick === msg.target?.nick);
+
+			if (idx > -1) {
+				channel.users.splice(idx, 1);
+			}
+
+			break;
 		}
 	}
 }

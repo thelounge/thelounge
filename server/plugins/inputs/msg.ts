@@ -1,6 +1,8 @@
 import {PluginInputHandler} from "./index";
-import Msg, {MessageType} from "../../models/msg";
-import Chan, {ChanType} from "../../models/chan";
+import Msg from "../../models/msg";
+import Chan from "../../models/chan";
+import {MessageType} from "../../../shared/types/msg";
+import {ChanType} from "../../../shared/types/chan";
 
 const commands = ["query", "msg", "say"];
 
@@ -97,10 +99,10 @@ const input: PluginInputHandler = function (network, chan, cmd, args) {
 	// being sent back to us.
 	if (!network.irc.network.cap.isEnabled("echo-message")) {
 		const parsedTarget = network.irc.network.extractTargetGroup(targetName);
-		let targetGroup;
+		let targetGroup: string | undefined = undefined;
 
 		if (parsedTarget) {
-			targetName = parsedTarget.target as string;
+			targetName = parsedTarget.target;
 			targetGroup = parsedTarget.target_group;
 		}
 
