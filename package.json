@@ -158,7 +158,7 @@
     "ts-loader": "9.3.0",
     "ts-node": "10.7.0",
     "ts-sinon": "2.0.2",
-    "typescript": "4.7.2",
+    "typescript": "5.4.5",
     "undate": "0.3.0",
     "vue": "3.2.35",
     "vue-eslint-parser": "8.3.0",
