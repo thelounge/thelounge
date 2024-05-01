@@ -62,16 +62,9 @@ import {computed, defineComponent, nextTick, PropType, ref} from "vue";
 import type {UserInMessage} from "../../shared/types/msg";
 import type {ClientChan, ClientUser} from "../js/types";
 import Username from "./Username.vue";
+import constants from "../js/constants";
 
-const modes = {
-	"~": "owner",
-	"&": "admin",
-	"!": "admin",
-	"@": "op",
-	"%": "half-op",
-	"+": "voice",
-	"": "normal",
-};
+const modes = constants.modeCharToName;
 
 export default defineComponent({
 	name: "ChatUserList",
