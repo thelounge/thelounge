@@ -56,7 +56,7 @@
 import Mousetrap from "mousetrap";
 import {wrapCursor} from "undate";
 import autocompletion from "../js/autocompletion";
-import commands from "../js/commands/index";
+import {commands} from "../js/commands/index";
 import socket from "../js/socket";
 import upload from "../js/upload";
 import eventbus from "../js/eventbus";
@@ -185,10 +185,7 @@ export default defineComponent({
 					return false;
 				}
 
-				if (
-					Object.prototype.hasOwnProperty.call(commands, cmd) &&
-					commands[cmd].input(args)
-				) {
+				if (Object.prototype.hasOwnProperty.call(commands, cmd) && commands[cmd](args)) {
 					return false;
 				}
 			}
