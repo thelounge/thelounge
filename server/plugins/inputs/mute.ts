@@ -6,6 +6,7 @@ import Msg from "../../models/msg";
 
 import Client from "../../client";
 import {MessageType} from "../../../shared/types/msg";
+import {ChanType} from "../../../shared/types/chan";
 
 const commands = ["mute", "unmute"];
 const allowDisconnected = true;
@@ -25,7 +26,7 @@ function args_to_channels(network: Network, args: string[]) {
 }
 
 function change_mute_state(client: Client, target: Chan, valueToSet: boolean) {
-	if (target.type === "special") {
+	if (target.type === ChanType.SPECIAL) {
 		return;
 	}
 

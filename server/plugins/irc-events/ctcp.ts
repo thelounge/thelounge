@@ -79,7 +79,6 @@ export default <IrcEventHandler>function (irc, network) {
 					type: MessageType.CTCP_REQUEST,
 					time: data.time,
 					from: new User({nick: target}),
-					// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 					hostmask: data.ident + "@" + data.hostname,
 					ctcpMessage: data.message,
 				});

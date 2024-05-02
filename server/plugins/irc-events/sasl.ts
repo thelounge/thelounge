@@ -11,7 +11,6 @@ export default <IrcEventHandler>function (irc, network) {
 
 		const msg = new Msg({
 			type: MessageType.LOGIN,
-			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 			text: "Logged in as: " + data.account,
 		});
 		lobby.pushMessage(client, msg, true);

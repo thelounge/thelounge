@@ -61,10 +61,10 @@ store.watch(
 
 		if (nav.setAppBadge) {
 			if (highlightCount > 0) {
-				nav.setAppBadge(highlightCount);
+				nav.setAppBadge(highlightCount).catch(() => {});
 			} else {
 				if (nav.clearAppBadge) {
-					nav.clearAppBadge();
+					nav.clearAppBadge().catch(() => {});
 				}
 			}
 		}

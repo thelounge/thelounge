@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";

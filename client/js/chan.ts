@@ -1,11 +1,12 @@
 import {ClientChan, ClientMessage} from "./types";
 import {SharedNetworkChan} from "../../shared/types/network";
-import {SharedMsg} from "../../shared/types/msg";
+import {SharedMsg, MessageType} from "../../shared/types/msg";
+import {ChanType} from "../../shared/types/chan";
 
 export function toClientChan(shared: SharedNetworkChan): ClientChan {
 	const history: string[] = [""].concat(
 		shared.messages
-			.filter((m) => m.self && m.text && m.type === "message")
+			.filter((m) => m.self && m.text && m.type === MessageType.MESSAGE)
 			// TS is too stupid to see the nil guard on filter... so we monkey patch it
 			.map((m): string => (m.text ? m.text : ""))
 			.reverse()
@@ -21,7 +22,7 @@ export function toClientChan(shared: SharedNetworkChan): ClientChan {
 		historyLoading: false,
 		scrolledToBottom: true,
 		users: [],
-		usersOutdated: shared.type === "channel" ? true : false,
+		usersOutdated: shared.type === ChanType.CHANNEL ? true : false,
 		moreHistoryAvailable: shared.totalMessages > shared.messages.length,
 		inputHistory: history,
 		messages: sharedMsgToClientMsg(messages),

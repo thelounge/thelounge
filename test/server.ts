@@ -47,7 +47,6 @@ describe("Server", function () {
 		server.close(done);
 	});
 
-	// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 	const webURL = `http://${Config.values.host}:${Config.values.port}/`;
 
 	describe("Express", () => {

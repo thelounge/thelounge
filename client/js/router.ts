@@ -162,7 +162,6 @@ async function navigate(routeName: string, params: any = {}) {
 		// If current route is null, replace the history entry
 		// This prevents invalid entries from lingering in history,
 		// and then the route guard preventing proper navigation
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		await router.replace({name: routeName, params}).catch(() => {});
 	}
 }

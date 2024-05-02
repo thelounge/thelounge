@@ -136,6 +136,7 @@ import ListIgnored from "./Special/ListIgnored.vue";
 import {defineComponent, PropType, ref, computed, watch, nextTick, onMounted, Component} from "vue";
 import type {ClientNetwork, ClientChan} from "../js/types";
 import {useStore} from "../js/store";
+import {SpecialChanType, ChanType} from "../../shared/types/chan";
 
 export default defineComponent({
 	name: "Chat",
@@ -161,13 +162,13 @@ export default defineComponent({
 
 		const specialComponent = computed(() => {
 			switch (props.channel.special) {
-				case "list_bans":
+				case SpecialChanType.BANLIST:
 					return ListBans as Component;
-				case "list_invites":
+				case SpecialChanType.INVITELIST:
 					return ListInvites as Component;
-				case "list_channels":
+				case SpecialChanType.CHANNELLIST:
 					return ListChannels as Component;
-				case "list_ignored":
+				case SpecialChanType.IGNORELIST:
 					return ListIgnored as Component;
 			}
 
@@ -194,7 +195,7 @@ export default defineComponent({
 		};
 
 		const editTopic = () => {
-			if (props.channel.type === "channel") {
+			if (props.channel.type === ChanType.CHANNEL) {
 				props.channel.editTopic = true;
 			}
 		};

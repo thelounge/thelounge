@@ -58,7 +58,6 @@ export default <IrcEventHandler>function (irc, network) {
 		if (irc.connection.registered === false) {
 			const nickLen = parseInt(network.irc.network.options.NICKLEN, 10) || 16;
 
-			// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 			const random = (data.nick || irc.user.nick) + Math.floor(Math.random() * 10);
 
 			// Safeguard nick changes up to allowed length
