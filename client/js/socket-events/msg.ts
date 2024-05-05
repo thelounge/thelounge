@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
 import socket from "../socket";
 import {cleanIrcMessage} from "../../../shared/irc";
 import {store} from "../store";
 import {switchToChannel} from "../router";
 import {ClientChan, NetChan, ClientMessage} from "../types";
-import {SharedMsg} from "../../../shared/types/msg";
+import {SharedMsg, MessageType} from "../../../shared/types/msg";
+import {ChanType} from "../../../shared/types/chan";
 
 let pop;
 
@@ -13,7 +13,6 @@ try {
 	pop.src = "audio/pop.wav";
 } catch (e) {
 	pop = {
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		play() {},
 	};
 }
@@ -91,7 +90,7 @@ socket.on("msg", function (data) {
 		channel.moreHistoryAvailable = true;
 	}
 
-	if (channel.type === "channel") {
+	if (channel.type === ChanType.CHANNEL) {
 		updateUserList(channel, data.msg);
 	}
 });
@@ -114,7 +113,10 @@ function notifyMessage(
 		return;
 	}
 
-	if (msg.highlight || (store.state.settings.notifyAllMessages && msg.type === "message")) {
+	if (
+		msg.highlight ||
+		(store.state.settings.notifyAllMessages && msg.type === MessageType.MESSAGE)
+	) {
 		if (!document.hasFocus() || !activeChannel || activeChannel.channel !== channel) {
 			if (store.state.settings.notification) {
 				try {
@@ -134,17 +136,17 @@ function notifyMessage(
 				// TODO: fix msg type and get rid of that conditional
 				const nick = msg.from && msg.from.nick ? msg.from.nick : "unkonown";
 
-				if (msg.type === "invite") {
+				if (msg.type === MessageType.INVITE) {
 					title = "New channel invite:";
 					body = nick + " invited you to " + msg.channel;
 				} else {
 					title = nick;
 
-					if (channel.type !== "query") {
+					if (channel.type !== ChanType.QUERY) {
 						title += ` (${channel.name})`;
 					}
 
-					if (msg.type === "message") {
+					if (msg.type === MessageType.MESSAGE) {
 						title += " says:";
 					}
 
@@ -198,9 +200,9 @@ function notifyMessage(
 
 function updateUserList(channel: ClientChan, msg: SharedMsg) {
 	switch (msg.type) {
-		case "message": // fallthrough
+		case MessageType.MESSAGE: // fallthrough
 
-		case "action": {
+		case MessageType.ACTION: {
 			const user = channel.users.find((u) => u.nick === msg.from?.nick);
 
 			if (user) {
@@ -210,9 +212,9 @@ function updateUserList(channel: ClientChan, msg: SharedMsg) {
 			break;
 		}
 
-		case "quit": // fallthrough
+		case MessageType.QUIT: // fallthrough
 
-		case "part": {
+		case MessageType.PART: {
 			const idx = channel.users.findIndex((u) => u.nick === msg.from?.nick);
 
 			if (idx > -1) {
@@ -222,7 +224,7 @@ function updateUserList(channel: ClientChan, msg: SharedMsg) {
 			break;
 		}
 
-		case "kick": {
+		case MessageType.KICK: {
 			const idx = channel.users.findIndex((u) => u.nick === msg.target?.nick);
 
 			if (idx > -1) {

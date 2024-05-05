@@ -44,7 +44,6 @@ export default <IrcEventHandler>function (irc, network) {
 		if (data.error) {
 			msg = new Msg({
 				type: MessageType.ERROR,
-				// eslint-disable-next-line @typescript-eslint/restrict-plus-operands
 				text: "No such nick: " + data.nick,
 			});
 		} else {

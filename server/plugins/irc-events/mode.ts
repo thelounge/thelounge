@@ -35,7 +35,6 @@ export default <IrcEventHandler>function (irc, network) {
 
 		const msg = new Msg({
 			type: MessageType.MODE_CHANNEL,
-			// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 			text: `${data.raw_modes} ${data.raw_params.join(" ")}`,
 		});
 		targetChan.pushMessage(client, msg);

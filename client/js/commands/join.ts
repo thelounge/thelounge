@@ -1,8 +1,9 @@
 import socket from "../socket";
 import {store} from "../store";
 import {switchToChannel} from "../router";
+import {ChanType} from "../../../shared/types/chan";
 
-function input(args: string[]) {
+export function input(args: string[]): boolean {
 	if (args.length > 0) {
 		let channels = args[0];
 
@@ -35,7 +36,7 @@ function input(args: string[]) {
 				return true;
 			}
 		}
-	} else if (store.state.activeChannel?.channel.type === "channel") {
+	} else if (store.state.activeChannel?.channel.type === ChanType.CHANNEL) {
 		// If `/join` command is used without any arguments, re-join current channel
 		socket.emit("input", {
 			target: store.state.activeChannel.channel.id,
@@ -44,6 +45,6 @@ function input(args: string[]) {
 
 		return true;
 	}
-}
 
-export default {input};
+	return false;
+}

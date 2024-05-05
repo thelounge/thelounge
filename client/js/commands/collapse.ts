@@ -1,9 +1,9 @@
 import socket from "../socket";
 import {store} from "../store";
 
-function input() {
+export function input(): boolean {
 	if (!store.state.activeChannel) {
-		return;
+		return false;
 	}
 
 	const messageIds: number[] = [];
@@ -34,5 +34,3 @@ function input() {
 
 	return true;
 }
-
-export default {input};

@@ -56,13 +56,14 @@
 import Mousetrap from "mousetrap";
 import {wrapCursor} from "undate";
 import autocompletion from "../js/autocompletion";
-import commands from "../js/commands/index";
+import {commands} from "../js/commands/index";
 import socket from "../js/socket";
 import upload from "../js/upload";
 import eventbus from "../js/eventbus";
 import {watch, defineComponent, nextTick, onMounted, PropType, ref, onUnmounted} from "vue";
 import type {ClientNetwork, ClientChan} from "../js/types";
 import {useStore} from "../js/store";
+import {ChanType} from "../../shared/types/chan";
 
 const formattingHotkeys = {
 	"mod+k": "\x03",
@@ -130,7 +131,7 @@ export default defineComponent({
 		};
 
 		const getInputPlaceholder = (channel: ClientChan) => {
-			if (channel.type === "channel" || channel.type === "query") {
+			if (channel.type === ChanType.CHANNEL || channel.type === ChanType.QUERY) {
 				return `Write to ${channel.name}`;
 			}
 
@@ -185,10 +186,7 @@ export default defineComponent({
 					return false;
 				}
 
-				if (
-					Object.prototype.hasOwnProperty.call(commands, cmd) &&
-					commands[cmd].input(args)
-				) {
+				if (Object.prototype.hasOwnProperty.call(commands, cmd) && commands[cmd](args)) {
 					return false;
 				}
 			}

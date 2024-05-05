@@ -185,8 +185,7 @@ function parse(text: string, message?: ClientMessage, network?: ClientNetwork) {
 		} else if (textPart.emoji) {
 			const emojiWithoutModifiers = textPart.emoji.replace(emojiModifiersRegex, "");
 			const title = emojiMap[emojiWithoutModifiers]
-				? // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-				  `Emoji: ${emojiMap[emojiWithoutModifiers]}`
+				? `Emoji: ${emojiMap[emojiWithoutModifiers]}`
 				: null;
 
 			return createElement(

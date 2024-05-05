@@ -2,7 +2,7 @@ import {nextTick} from "vue";
 
 import socket from "../socket";
 import {store} from "../store";
-import type {ClientChan, ClientMessage} from "../types";
+import {MessageType} from "../../../shared/types/msg";
 
 socket.on("more", async (data) => {
 	const channel = store.getters.findChannel(data.chan)?.channel;
@@ -13,7 +13,7 @@ socket.on("more", async (data) => {
 
 	channel.inputHistory = channel.inputHistory.concat(
 		data.messages
-			.filter((m) => m.self && m.text && m.type === "message")
+			.filter((m) => m.self && m.text && m.type === MessageType.MESSAGE)
 			// TS is too stupid to see the guard in .filter(), so we monkey patch it
 			// to please the compiler
 			.map((m) => (m.text ? m.text : ""))

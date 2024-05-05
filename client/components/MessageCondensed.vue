@@ -20,6 +20,7 @@
 <script lang="ts">
 import {computed, defineComponent, PropType, ref} from "vue";
 import {condensedTypes} from "../../shared/irc";
+import {MessageType} from "../../shared/types/msg";
 import {ClientMessage, ClientNetwork} from "../js/types";
 import Message from "./Message.vue";
 
@@ -57,16 +58,23 @@ export default defineComponent({
 
 			for (const message of props.messages) {
 				// special case since one MODE message can change multiple modes
-				if (message.type === "mode") {
+				if (message.type === MessageType.MODE) {
 					// syntax: +vv-t maybe-some targets
 					// we want the number of mode changes in the message, so count the
 					// number of chars other than + and - before the first space
-					const modeChangesCount = message.text
+					const text = message.text ? message.text : "";
+					const modeChangesCount = text
 						.split(" ")[0]
 						.split("")
 						.filter((char) => char !== "+" && char !== "-").length;
 					obj[message.type] += modeChangesCount;
 				} else {
+					if (!message.type) {
+						/* eslint-disable no-console */
+						console.log(`empty message type, this should not happen: ${message.id}`);
+						continue;
+					}
+
 					obj[message.type]++;
 				}
 			}

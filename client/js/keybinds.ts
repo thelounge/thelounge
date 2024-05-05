@@ -6,6 +6,7 @@ import isChannelCollapsed from "./helpers/isChannelCollapsed";
 import isIgnoredKeybind from "./helpers/isIgnoredKeybind";
 import listenForTwoFingerSwipes from "./helpers/listenForTwoFingerSwipes";
 import {ClientChan} from "./types";
+import {ChanType} from "../../shared/types/chan";
 
 // Switch to the next/previous window in the channel list.
 Mousetrap.bind(["alt+up", "alt+down"], function (e, keys) {
@@ -73,7 +74,7 @@ Mousetrap.bind(["alt+shift+up", "alt+shift+down"], function (e, keys) {
 		index = store.state.networks.findIndex((n) => n === store.state.activeChannel?.network);
 
 		// If we're in a channel, and it's not the lobby, jump to lobby of this network when going up
-		if (direction !== -1 || store.state.activeChannel?.channel.type === "lobby") {
+		if (direction !== -1 || store.state.activeChannel?.channel.type === ChanType.LOBBY) {
 			index = (((index + direction) % length) + length) % length;
 		}
 	}

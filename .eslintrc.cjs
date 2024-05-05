@@ -93,6 +93,7 @@ const tsRules = defineConfig({
 		// note you must disable the base rule as it can report incorrect errors
 		"no-shadow": "off",
 		"@typescript-eslint/no-shadow": ["error"],
+		"@typescript-eslint/no-redundant-type-constituents": "off",
 	},
 }).rules;
 

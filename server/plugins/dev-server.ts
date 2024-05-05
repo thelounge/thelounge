@@ -29,6 +29,7 @@ export default (app: express.Application) => {
 	const compiler = webpack(webpackConfig);
 
 	app.use(
+		// eslint-disable-next-line @typescript-eslint/no-misused-promises
 		webpackDevMiddleware(compiler, {
 			index: "/",
 			publicPath: webpackConfig.output?.publicPath,

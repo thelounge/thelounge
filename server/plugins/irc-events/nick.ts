@@ -14,7 +14,6 @@ export default <IrcEventHandler>function (irc, network) {
 
 			const lobby = network.getLobby();
 			const msg = new Msg({
-				// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 				text: `You're now known as ${data.new_nick}`,
 			});
 			lobby.pushMessage(client, msg, true);

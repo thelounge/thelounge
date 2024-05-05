@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import path from "path";
 import {expect} from "chai";
 import util from "../util";

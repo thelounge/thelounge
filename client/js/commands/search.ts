@@ -1,7 +1,7 @@
 import {store} from "../store";
 import {router} from "../router";
 
-function input(args: string[]) {
+export function input(args: string[]): boolean {
 	if (!store.state.settings.searchEnabled) {
 		return false;
 	}
@@ -23,5 +23,3 @@ function input(args: string[]) {
 
 	return true;
 }
-
-export default {input};
