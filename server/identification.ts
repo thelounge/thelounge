@@ -66,6 +66,14 @@ class Identification {
 
 	serverConnection(socket: Socket) {
 		socket.on("error", (err: string) => log.error(`Identd socket error: ${err}`));
+		socket.setTimeout(5000, () => {
+			log.warn(
+				`identd: no data received, closing connection to ${
+					socket.remoteAddress || "undefined"
+				}`
+			);
+			socket.destroy();
+		});
 		socket.once("data", (data) => {
 			this.respondToIdent(socket, data);
 			socket.end();
