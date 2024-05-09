@@ -66,7 +66,7 @@ class Identification {
 
 	serverConnection(socket: Socket) {
 		socket.on("error", (err: string) => log.error(`Identd socket error: ${err}`));
-		socket.on("data", (data) => {
+		socket.once("data", (data) => {
 			this.respondToIdent(socket, data);
 			socket.end();
 		});
