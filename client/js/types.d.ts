@@ -9,10 +9,6 @@ import {LinkPreview, SharedMsg} from "../../shared/types/msg";
 
 interface LoungeWindow extends Window {
 	g_TheLoungeRemoveLoading?: () => void;
-	navigator: Window["navigator"] & {
-		setAppBadge?: (highlightCount: number) => void;
-		clearAppBadge?: () => void;
-	};
 }
 
 type ClientUser = SharedUser;
