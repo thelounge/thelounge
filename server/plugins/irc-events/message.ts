@@ -17,7 +17,7 @@ type HandleInput = {
 	ident: string;
 	target: string;
 	type: MessageType;
-	time: number;
+	time?: number;
 	text?: string;
 	from_server?: boolean;
 	message: string;
@@ -25,7 +25,7 @@ type HandleInput = {
 };
 
 function convertForHandle(type: MessageType, data: MessageEventArgs): HandleInput {
-	return {...data, time: data.time ? data.time : new Date().getTime(), type: type};
+	return {...data, type: type};
 }
 
 export default <IrcEventHandler>function (irc, network) {
@@ -36,19 +36,16 @@ export default <IrcEventHandler>function (irc, network) {
 	});
 
 	irc.on("action", function (data) {
-		data.type = MessageType.ACTION;
-		handleMessage(data);
+		handleMessage(convertForHandle(MessageType.ACTION, data));
 	});
 
 	irc.on("privmsg", function (data) {
-		data.type = MessageType.MESSAGE;
-		handleMessage(data);
+		handleMessage(convertForHandle(MessageType.MESSAGE, data));
 	});
 
 	irc.on("wallops", function (data) {
 		data.from_server = true;
-		data.type = MessageType.WALLOPS;
-		handleMessage(data);
+		handleMessage(convertForHandle(MessageType.WALLOPS, data));
 	});
 
 	function handleMessage(data: HandleInput) {
@@ -129,7 +126,7 @@ export default <IrcEventHandler>function (irc, network) {
 		// msg is constructed down here because `from` is being copied in the constructor
 		const msg = new Msg({
 			type: data.type,
-			time: new Date(data.time),
+			time: data.time ? new Date(data.time) : undefined,
 			text: data.message,
 			self: self,
 			from: from,
