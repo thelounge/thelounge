@@ -1,4 +1,4 @@
-import type {Database} from "sqlite3";
+import {Database} from "node-sqlite3-wasm";
 
 import log from "../../log";
 import path from "path";
@@ -10,19 +10,6 @@ import Helper from "../../helper";
 import type {SearchableMessageStorage, DeletionRequest} from "./types";
 import Network from "../../models/network";
 import {SearchQuery, SearchResponse} from "../../../shared/types/storage";
-
-// TODO; type
-let sqlite3: any;
-
-try {
-	sqlite3 = require("sqlite3");
-} catch (e: any) {
-	Config.values.messageStorage = Config.values.messageStorage.filter((item) => item !== "sqlite");
-
-	log.error(
-		"Unable to load sqlite3 module. See https://github.com/mapbox/node-sqlite3/wiki/Binaries"
-	);
-}
 
 type Migration = {version: number; stmts: string[]};
 type Rollback = {version: number; rollback_forbidden?: boolean; stmts: string[]};
@@ -127,7 +114,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 	}
 
 	async _enable(connection_string: string) {
-		this.database = new sqlite3.Database(connection_string);
+		this.database = new Database(connection_string);
 
 		try {
 			await this.run_pragmas(); // must be done outside of a transaction
@@ -256,16 +243,8 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 
 		this.isEnabled = false;
 
-		return new Promise<void>((resolve, reject) => {
-			this.database.close((err) => {
-				if (err) {
-					reject(`Failed to close sqlite database: ${err.message}`);
-					return;
-				}
-
-				resolve();
-			});
-		});
+		this.database.close();
+		return Promise.resolve();
 	}
 
 	async fetch_rollbacks(since_version: number) {
@@ -470,7 +449,7 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 		const escapedSearchTerm = query.searchTerm.replace(/([%_@])/g, "@$1");
 
 		let select =
-			'SELECT msg, type, time, network, channel FROM messages WHERE type = "message" AND json_extract(msg, "$.text") LIKE ? ESCAPE \'@\'';
+			"SELECT msg, type, time, network, channel FROM messages WHERE type = 'message' AND json_extract(msg, '$.text') LIKE ? ESCAPE '@'";
 		const params: any[] = [`%${escapedSearchTerm}%`];
 
 		if (query.networkUuid) {
@@ -528,48 +507,27 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 	}
 
 	private serialize_run(stmt: string, ...params: any[]): Promise<number> {
-		return new Promise((resolve, reject) => {
-			this.database.serialize(() => {
-				this.database.run(stmt, params, function (err) {
-					if (err) {
-						reject(err);
-						return;
-					}
-
-					resolve(this.changes); // number of affected rows, `this` is re-bound by sqlite3
-				});
-			});
-		});
+		try {
+			return Promise.resolve(this.database.run(stmt, params).changes);
+		} catch (e) {
+			return Promise.reject(e);
+		}
 	}
 
 	private serialize_fetchall(stmt: string, ...params: any[]): Promise<any[]> {
-		return new Promise((resolve, reject) => {
-			this.database.serialize(() => {
-				this.database.all(stmt, params, (err, rows) => {
-					if (err) {
-						reject(err);
-						return;
-					}
-
-					resolve(rows);
-				});
-			});
-		});
+		try {
+			return Promise.resolve(this.database.all(stmt, params));
+		} catch (e) {
+			return Promise.reject(e);
+		}
 	}
 
 	private serialize_get(stmt: string, ...params: any[]): Promise<any> {
-		return new Promise((resolve, reject) => {
-			this.database.serialize(() => {
-				this.database.get(stmt, params, (err, row) => {
-					if (err) {
-						reject(err);
-						return;
-					}
-
-					resolve(row);
-				});
-			});
-		});
+		try {
+			return Promise.resolve(this.database.get(stmt, params));
+		} catch (e) {
+			return Promise.reject(e);
+		}
 	}
 }
 
