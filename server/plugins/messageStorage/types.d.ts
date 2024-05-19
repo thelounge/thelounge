@@ -1,4 +1,4 @@
-import type {Database} from "sqlite3";
+import type {Database} from "node-sqlite3-wasm";
 
 import {Channel} from "../../models/channel";
 import {Message} from "../../models/message";

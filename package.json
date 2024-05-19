@@ -72,6 +72,7 @@
     "lodash": "4.17.21",
     "mime-types": "2.1.34",
     "node-forge": "1.3.0",
+    "node-sqlite3-wasm": "0.8.14",
     "package-json": "7.0.0",
     "read": "1.0.7",
     "read-chunk": "3.2.0",
@@ -82,9 +83,6 @@
     "uuid": "8.3.2",
     "web-push": "3.4.5",
     "yarn": "1.22.17"
-  },
-  "optionalDependencies": {
-    "sqlite3": "5.1.7"
   },
   "devDependencies": {
     "@babel/core": "7.17.10",
@@ -110,7 +108,6 @@
     "@types/read": "0.0.32",
     "@types/semver": "7.3.9",
     "@types/sortablejs": "1.13.0",
-    "@types/sqlite3": "3.1.11",
     "@types/ua-parser-js": "0.7.39",
     "@types/uuid": "8.3.4",
     "@types/web-push": "3.3.2",

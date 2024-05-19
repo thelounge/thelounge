@@ -11,7 +11,7 @@ import MessageStorage, {
 	necessaryMigrations,
 	rollbacks,
 } from "../../server/plugins/messageStorage/sqlite";
-import sqlite3 from "sqlite3";
+import sqlite3 from "node-sqlite3-wasm";
 import {DeletionRequest} from "../../server/plugins/messageStorage/types";
 
 const orig_schema = [
@@ -53,18 +53,13 @@ describe("SQLite migrations", function () {
 	let db: sqlite3.Database;
 
 	function serialize_run(stmt: string, ...params: any[]): Promise<void> {
-		return new Promise((resolve, reject) => {
-			db.serialize(() => {
-				db.run(stmt, params, (err) => {
-					if (err) {
-						reject(err);
-						return;
-					}
+		try {
+			db.run(stmt, params);
+		} catch (e) {
+			return Promise.reject(e);
+		}
 
-					resolve();
-				});
-			});
-		});
+		return Promise.resolve();
 	}
 
 	before(async function () {
@@ -87,7 +82,15 @@ describe("SQLite migrations", function () {
 	});
 
 	after(function (done) {
-		db.close(done);
+		let err: any;
+
+		try {
+			db.close();
+		} catch (e: any) {
+			err = e;
+		}
+
+		done(err);
 	});
 
 	it("has a down migration for every migration", function () {
@@ -243,33 +246,19 @@ describe("SQLite Message Storage", function () {
 	let store: MessageStorage;
 
 	function db_get_one(stmt: string, ...params: any[]): Promise<any> {
-		return new Promise((resolve, reject) => {
-			store.database.serialize(() => {
-				store.database.get(stmt, params, (err, row) => {
-					if (err) {
-						reject(err);
-						return;
-					}
-
-					resolve(row);
-				});
-			});
-		});
+		try {
+			return Promise.resolve(store.database.get(stmt, params));
+		} catch (e) {
+			return Promise.reject(e);
+		}
 	}
 
 	function db_get_mult(stmt: string, ...params: any[]): Promise<any[]> {
-		return new Promise((resolve, reject) => {
-			store.database.serialize(() => {
-				store.database.all(stmt, params, (err, rows) => {
-					if (err) {
-						reject(err);
-						return;
-					}
-
-					resolve(rows);
-				});
-			});
-		});
+		try {
+			return Promise.resolve(store.database.all(stmt, params));
+		} catch (e) {
+			return Promise.reject(e);
+		}
 	}
 
 	before(function (done) {
