@@ -10,44 +10,65 @@
 		{
 			"src": "img/logo-grey-bg-120x120px.png",
 			"type": "image/png",
-			"purpose": "maskable any",
+			"purpose": "maskable",
 			"sizes": "120x120"
+		},
+		{
+			"src": "img/logo-grey-bg-144x144px.png",
+			"type": "image/png",
+			"purpose": "any",
+			"sizes": "144x144"
 		},
 		{
 			"src": "img/logo-grey-bg-152x152px.png",
 			"type": "image/png",
-			"purpose": "maskable any",
+			"purpose": "maskable",
 			"sizes": "152x152"
 		},
 		{
 			"src": "img/logo-grey-bg-167x167px.png",
 			"type": "image/png",
-			"purpose": "maskable any",
+			"purpose": "maskable",
 			"sizes": "167x167"
 		},
 		{
 			"src": "img/logo-grey-bg-180x180px.png",
 			"type": "image/png",
-			"purpose": "maskable any",
+			"purpose": "maskable",
 			"sizes": "180x180"
 		},
 		{
 			"src": "img/logo-grey-bg-192x192px.png",
 			"type": "image/png",
-			"purpose": "maskable any",
+			"purpose": "maskable",
 			"sizes": "192x192"
 		},
 		{
 			"src": "img/logo-grey-bg-512x512px.png",
 			"type": "image/png",
-			"purpose": "maskable any",
+			"purpose": "maskable",
 			"sizes": "512x512"
 		},
 		{
 			"src": "img/logo-grey-bg.svg",
 			"type": "image/svg+xml",
-			"purpose": "maskable any",
-			"sizes": "513x513"
+			"purpose": "maskable",
+			"sizes": "150x150"
+		}
+	],
+	"screenshots": [
+		{
+			"src": "img/homescreen-desktop.png",
+			"sizes": "1884x933",
+			"type": "image/png",
+			"form_factor": "wide",
+			"label": "Browser homescreen of TheLounge"
+		},
+		{
+			"src": "img/homescreen-mobile.png",
+			"sizes": "471x834",
+			"type": "image/png",
+			"label": "Mobile homescreen of TheLounge"
 		}
 	]
 }
