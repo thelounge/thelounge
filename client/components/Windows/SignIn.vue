@@ -30,21 +30,14 @@
 				autofocus
 			/>
 
-			<div class="password-container">
-				<label for="signin-password">Password</label>
-				<RevealPassword v-slot:default="slotProps">
-					<input
-						id="signin-password"
-						v-model="password"
-						:type="slotProps.isVisible ? 'text' : 'password'"
-						class="input"
-						autocapitalize="none"
-						autocorrect="off"
-						autocomplete="current-password"
-						required
-					/>
-				</RevealPassword>
-			</div>
+			<label for="signin-password">Password</label>
+			<RevealPassword
+				id="signin-password"
+				v-model:password="password"
+				name="password"
+				autocomplete="current-password"
+				required
+			/>
 
 			<div v-if="errorShown" class="error">Authentication failed.</div>
 
