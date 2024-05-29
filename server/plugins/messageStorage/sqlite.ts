@@ -27,7 +27,7 @@ try {
 type Migration = {version: number; stmts: string[]};
 type Rollback = {version: number; rollback_forbidden?: boolean; stmts: string[]};
 
-export const currentSchemaVersion = 1703322560448; // use `new Date().getTime()`
+export const currentSchemaVersion = 1706445634804; // use `new Date().getTime()`
 
 // Desired schema, adapt to the newest version and add migrations to the array below
 const schema = [
@@ -47,6 +47,35 @@ const schema = [
 	"CREATE INDEX network_channel ON messages (network, channel)",
 	"CREATE INDEX time ON messages (time)",
 	"CREATE INDEX msg_type_idx on messages (type)", // needed for efficient storageCleaner queries
+	`CREATE VIEW msg_search_view (id, type, text) AS
+		select
+		id,
+		type,
+		msg ->> '$.text'
+		from messages
+		where type in ('message', 'action', 'notice')`,
+	`CREATE VIRTUAL TABLE msg_fts USING fts5(
+		text,
+		tokenize='porter unicode61 remove_diacritics 2',
+		content='msg_search_view',
+		content_rowid=id
+	)`,
+	`CREATE TRIGGER msg_fts_insert AFTER INSERT ON messages
+		WHEN new.type in ('message', 'action', 'notice')
+		BEGIN
+			INSERT INTO msg_fts(rowid, text) VALUES (new.id, new.msg ->> '$.text');
+		END`,
+	`CREATE TRIGGER msg_fts_delete AFTER DELETE ON messages
+		WHEN old.type in ('message', 'action', 'notice')
+		BEGIN
+			INSERT INTO msg_fts(msg_fts, rowid, text) VALUES ('delete', old.id, old.msg ->> '$.text');
+		END`,
+	`CREATE TRIGGER msg_fts_update AFTER UPDATE ON messages
+		WHEN old.type in ('message', 'action', 'notice')
+		BEGIN
+			INSERT INTO msg_fts(msg_fts, rowid, text) VALUES ('delete', old.id, old.msg ->> '$.text');
+			INSERT INTO msg_fts(rowid, text) VALUES (new.id, new.msg ->> '$.text');
+		END`,
 ];
 
 // the migrations will be executed in an exclusive transaction as a whole
@@ -84,6 +113,42 @@ export const migrations: Migration[] = [
 		version: 1703322560448,
 		stmts: ["CREATE INDEX msg_type_idx on messages (type)"],
 	},
+	{
+		version: 1706445634804,
+		stmts: [
+			`CREATE VIEW msg_search_view (id, type, text) AS
+				select
+				id,
+				type,
+				msg ->> '$.text'
+				from messages
+				where type in ('message', 'action', 'notice')`,
+			`CREATE VIRTUAL TABLE msg_fts USING fts5(
+				text,
+				tokenize='porter unicode61 remove_diacritics 2',
+				content='msg_search_view',
+				content_rowid=id
+			)`,
+			`CREATE TRIGGER msg_fts_insert AFTER INSERT ON messages
+				WHEN new.type in ('message', 'action', 'notice')
+				BEGIN
+					INSERT INTO msg_fts(rowid, text) VALUES (new.id, new.msg ->> '$.text');
+				END`,
+			`CREATE TRIGGER msg_fts_delete AFTER DELETE ON messages
+				WHEN old.type in ('message', 'action', 'notice')
+				BEGIN
+					INSERT INTO msg_fts(msg_fts, rowid, text) VALUES ('delete', old.id, old.msg ->> '$.text');
+				END`,
+			`CREATE TRIGGER msg_fts_update AFTER UPDATE ON messages
+				WHEN old.type in ('message', 'action', 'notice')
+				BEGIN
+					INSERT INTO msg_fts(msg_fts, rowid, text) VALUES ('delete', old.id, old.msg ->> '$.text');
+					INSERT INTO msg_fts(rowid, text) VALUES (new.id, new.msg ->> '$.text');
+				END`,
+			`INSERT into msg_fts (rowid, text) SELECT id, text FROM msg_search_view
+				WHERE type in ('message', 'action', 'notice');`,
+		],
+	},
 ];
 
 // down migrations need to restore the state of the prior version.
@@ -100,6 +165,16 @@ export const rollbacks: Rollback[] = [
 	{
 		version: 1703322560448,
 		stmts: ["drop INDEX msg_type_idx"],
+	},
+	{
+		version: 1706445634804,
+		stmts: [
+			"drop table msg_fts",
+			"drop view msg_search_view",
+			"drop trigger msg_fts_insert",
+			"drop trigger msg_fts_update",
+			"drop trigger msg_fts_delete",
+		],
 	},
 ];
 
@@ -466,30 +541,24 @@ class SqliteMessageStorage implements SearchableMessageStorage {
 			);
 		}
 
-		// Using the '@' character to escape '%' and '_' in patterns.
-		const escapedSearchTerm = query.searchTerm.replace(/([%_@])/g, "@$1");
+		const rows = await this.serialize_fetchall(
+			`SELECT msg, type, time, network, channel
+			FROM messages
+			WHERE network = ?
+			AND channel = ?
+			AND messages.id in (
+				SELECT rowid FROM msg_fts WHERE msg_fts MATCH ?
+			)
+			ORDER BY time DESC
+			LIMIT ?
+			OFFSET ?`,
+			query.networkUuid,
+			query.channelName.toLowerCase(),
+			fts5_escape(query.searchTerm),
+			100, // limit
+			query.offset
+		);
 
-		let select =
-			'SELECT msg, type, time, network, channel FROM messages WHERE type = "message" AND json_extract(msg, "$.text") LIKE ? ESCAPE \'@\'';
-		const params: any[] = [`%${escapedSearchTerm}%`];
-
-		if (query.networkUuid) {
-			select += " AND network = ? ";
-			params.push(query.networkUuid);
-		}
-
-		if (query.channelName) {
-			select += " AND channel = ? ";
-			params.push(query.channelName.toLowerCase());
-		}
-
-		const maxResults = 100;
-
-		select += " ORDER BY time DESC LIMIT ? OFFSET ? ";
-		params.push(maxResults);
-		params.push(query.offset);
-
-		const rows = await this.serialize_fetchall(select, ...params);
 		return {
 			...query,
 			results: parseSearchRowsToMessages(query.offset, rows).reverse(),
@@ -589,6 +658,11 @@ function parseSearchRowsToMessages(id: number, rows: any[]) {
 	}
 
 	return messages;
+}
+
+function fts5_escape(s: string): string {
+	s = s.replaceAll('"', '""'); // doubled quotes escape the quote
+	return `"${s}"`; // this makes it a string, rather than hoping it still fits the bareword
 }
 
 export function necessaryMigrations(since: number): Migration[] {
