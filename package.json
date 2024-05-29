@@ -92,7 +92,7 @@
     "@babel/preset-env": "7.17.10",
     "@fortawesome/fontawesome-free": "5.15.4",
     "@istanbuljs/nyc-config-typescript": "1.0.2",
-    "@textcomplete/core": "0.1.10",
+    "@textcomplete/core": "0.1.13",
     "@textcomplete/textarea": "0.1.13",
     "@types/bcryptjs": "2.4.6",
     "@types/chai": "4.3.5",
