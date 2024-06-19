@@ -368,7 +368,7 @@ export function generateUserContextMenu(
 		"+": "voice",
 	};
 
-	// Labels for the mode changes.  For example .rev({mode: "a", symbol: "&"}) => 'Revoke admin (-a)'
+	// Labels for the mode changes.  For example .rev({mode: "a", symbol: "&"}) => 'Take admin (-a)'
 	const modeTextTemplate = {
 		revoke(m: {symbol: string; mode: string}) {
 			const name = modeCharToName[m.symbol];
@@ -377,7 +377,7 @@ export function generateUserContextMenu(
 				return "";
 			}
 
-			const res = name ? `Revoke ${name} (-${m.mode})` : `Mode -${m.mode}`;
+			const res = name ? `Take ${name} (-${m.mode})` : `Mode -${m.mode}`;
 			return res;
 		},
 		give(m: {symbol: string; mode: string}) {
