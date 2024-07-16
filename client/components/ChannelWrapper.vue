@@ -22,7 +22,7 @@
 		:data-name="channel.name"
 		:data-type="channel.type"
 		:aria-controls="'#chan-' + channel.id"
-		:aria-selected="active"
+		:aria-selected="true"
 		:style="channel.closed ? {transition: 'none', opacity: 0.4} : undefined"
 		role="tab"
 		@click="click"

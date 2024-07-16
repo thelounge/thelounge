@@ -2,19 +2,20 @@
 	<form id="form" method="post" action="" @submit.prevent="onSubmit">
 		<span id="upload-progressbar" />
 		<span id="nick">{{ network.nick }}</span>
-		<textarea
-			id="input"
-			ref="input"
-			dir="auto"
-			class="mousetrap"
-			enterkeyhint="send"
-			:value="channel.pendingMessage"
-			:placeholder="getInputPlaceholder(channel)"
-			:aria-label="getInputPlaceholder(channel)"
-			@input="setPendingMessage"
-			@keypress.enter.exact.prevent="onSubmit"
-			@blur="onBlur"
-		/>
+		<label :aria-label="getInputPlaceholder(channel)">
+			<textarea
+				id="input"
+				ref="input"
+				dir="auto"
+				class="mousetrap"
+				enterkeyhint="send"
+				:value="channel.pendingMessage"
+				:placeholder="getInputPlaceholder(channel)"
+				@input="setPendingMessage"
+				@keypress.enter.exact.prevent="onSubmit"
+				@blur="onBlur"
+			/>
+		</label>
 		<span
 			v-if="store.state.serverConfiguration?.fileUpload"
 			id="upload-tooltip"

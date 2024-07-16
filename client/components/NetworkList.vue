@@ -9,23 +9,23 @@
 	</div>
 	<div v-else ref="networklist" role="navigation" aria-label="Network and Channel list">
 		<div class="jump-to-input">
-			<input
-				ref="searchInput"
-				:value="searchText"
-				placeholder="Jump to..."
-				type="search"
-				class="search input mousetrap"
-				aria-label="Search among the channel list"
-				tabindex="-1"
-				@input="setSearchText"
-				@keydown.up="navigateResults($event, -1)"
-				@keydown.down="navigateResults($event, 1)"
-				@keydown.page-up="navigateResults($event, -10)"
-				@keydown.page-down="navigateResults($event, 10)"
-				@keydown.enter="selectResult"
-				@keydown.escape="deactivateSearch"
-				@focus="activateSearch"
-			/>
+			<label aria-label="Search among the channel list">
+				<input
+					ref="searchInput"
+					:value="searchText"
+					placeholder="Jump to..."
+					type="search"
+					class="search input mousetrap"
+					@input="setSearchText"
+					@keydown.up="navigateResults($event, -1)"
+					@keydown.down="navigateResults($event, 1)"
+					@keydown.page-up="navigateResults($event, -10)"
+					@keydown.page-down="navigateResults($event, 10)"
+					@keydown.enter="selectResult"
+					@keydown.escape="deactivateSearch"
+					@focus="activateSearch"
+				/>
+			</label>
 		</div>
 		<div v-if="searchText" class="jump-to-results">
 			<div v-if="results.length">
